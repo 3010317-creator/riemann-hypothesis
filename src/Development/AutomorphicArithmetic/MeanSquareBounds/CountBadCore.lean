@@ -1,7 +1,7 @@
 module
 
 public import Formalism.GL3MeanSquares.SecondEstimateOfIntervalHypothesis
-public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.JacobiCharacterSums.CountZAll
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.JacobiCharacterSums.CountSt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,6 +43,8 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 import Formalism.GL3MeanSquares.GenusMeanAsymptotics.JacobiCharacterSums.MeanSquareHypWIff
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsBoundRight
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ReLtOneOfZero
 
 @[expose] public section
 
@@ -60,13 +62,37 @@ private theorem aux (Q : ℝ) (M : ℕ) [NeZero M] (ψ : DirichletCharacter ℂ 
   push Not at hz
   exact hz
 
+private theorem zero_density_box :
+    Formalism.HermitianLattices.Ext.PrimitiveCharacterCasts.ZeroDensityBox := by
+  classical
+  obtain ⟨C, -, hC⟩ := GlobalTheory.ZeroDensityMult.zero_density_mult
+  refine ⟨C, fun Q S hQ hS => ?_⟩
+  have hex := fun p hp => (hS p hp).2.2
+  choose! z hz using hex
+  let g : (Σ N : ℕ, DirichletCharacter ℂ (N + 1)) → (Σ N : ℕ, DirichletCharacter ℂ (N + 1) × ℂ) :=
+    fun p => ⟨p.1, p.2, z p⟩
+  have hinj : Function.Injective g :=
+    Function.LeftInverse.injective (g := fun q => ⟨q.1, q.2.1⟩) fun _ => rfl
+  have h1 := hC Q hQ (S.image g) (by
+    intro q hq
+    obtain ⟨p, hp, rfl⟩ := Finset.mem_image.1 hq
+    exact ⟨(hS p hp).2.1, (hS p hp).1, (hz p hp).2.2, (hz p hp).1.le, (hz p hp).2.1⟩)
+  rw [Finset.sum_image hinj.injOn] at h1
+  refine le_trans ?_ h1
+  have h2 : S.card ≤ ∑ p ∈ S, analyticOrderNatAt (DirichletCharacter.LFunction (g p).2.1) (g p).2.2 := by
+    rw [Finset.card_eq_sum_ones]
+    refine Finset.sum_le_sum fun p hp => ?_
+    have hre := GlobalTheory.ZeroDensityMult.re_lt_one_of_zero p.2 (hS p hp).1 (hz p hp).2.2
+    exact GlobalTheory.GoodHeight.one_le_order p.2 (fun h : z p = 1 => by simp [h] at hre) (hz p hp).2.2
+  exact_mod_cast h2
+
 theorem count_bad_core :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ (Q F : ℝ) (S : Finset ℕ), 3 ≤ Q →
       (∀ q ∈ S, q.Prime ∧ F < q ∧ ∃ (N f : ℕ) (_ : NeZero N) (ψ : DirichletCharacter ℂ N),
         N = f * q ∧ (f : ℝ) ≤ F ∧ ψ.IsPrimitive ∧ (N : ℝ) ≤ Q ∧ ¬ ZeroFreeBox Q ψ) →
       (S.card : ℝ) ≤ C * Q ^ (1 / 4 : ℝ) := by
   classical
-  obtain ⟨C, hC⟩ := Formalism.HermitianLattices.Ext.PrimitiveCharacterCasts.ZD.zero_density_box
+  obtain ⟨C, hC⟩ := zero_density_box
   refine ⟨max C 0, le_max_right _ _, fun Q F S hQ hS => ?_⟩
   have key : ∀ q : ℕ, ∃ p : (Σ N : ℕ, DirichletCharacter ℂ (N + 1)), q ∈ S →
       (∃ f : ℕ, p.1 + 1 = f * q ∧ (f : ℝ) ≤ F) ∧ p.2.IsPrimitive ∧ ((p.1 + 1 : ℕ) : ℝ) ≤ Q ∧
