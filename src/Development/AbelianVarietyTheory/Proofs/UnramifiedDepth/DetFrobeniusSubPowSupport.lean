@@ -91,7 +91,7 @@ theorem Good.add {n d s : ℕ} {p q : MvPolynomial (α ⊕ α) ℤ} (hp : Good l
 theorem Good.neg {n d s : ℕ} {p : MvPolynomial (α ⊕ α) ℤ} (hp : Good l L E n d s p) :
     Good l L E n d s (-p) := by
   intro m hm
-  rw [coeff_neg] at hm ⊢
+  rw [MvPolynomial.coeff_neg] at hm ⊢
   have h : AddMonoidAlgebra.coeff p m ≠ 0 := by simpa using hm
   exact ⟨(hp m h).1, (hp m h).2.1, (hp m h).2.2.neg_right⟩
 

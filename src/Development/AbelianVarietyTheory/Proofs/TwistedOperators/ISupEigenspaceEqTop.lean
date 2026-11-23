@@ -357,7 +357,7 @@ private theorem coeff_apply_of_diagonal_on_monomials {σ : Type*} (g : MvPolynom
     rw [h, map_smul, hg, smul_smul]
 
   conv_lhs => rw [P.as_sum, map_sum]
-  simp only [hmon, coeff_sum, coeff_smul, smul_eq_mul]
+  simp only [hmon, coeff_sum, MvPolynomial.coeff_smul, smul_eq_mul]
   simp only [MvPolynomial.coeff_monomial, mul_ite, mul_one, mul_zero]
   rw [Finset.sum_ite_eq']
   split_ifs with h
@@ -375,11 +375,11 @@ theorem colOp_eq_smul_iff {σ I J : Type*} [Fintype I] (z : I × J → σ) (k : 
   constructor
   · intro h m hm
     have h1 := congrArg (AddMonoidAlgebra.coeff · m) h
-    rw [coeff_apply_of_diagonal_on_monomials _ _ hw, coeff_smul, smul_eq_mul] at h1
+    rw [coeff_apply_of_diagonal_on_monomials _ _ hw, MvPolynomial.coeff_smul, smul_eq_mul] at h1
     exact mul_right_cancel₀ (mem_support_iff.mp hm) h1
   · intro h
     ext m
-    rw [coeff_apply_of_diagonal_on_monomials _ _ hw, coeff_smul, smul_eq_mul]
+    rw [coeff_apply_of_diagonal_on_monomials _ _ hw, MvPolynomial.coeff_smul, smul_eq_mul]
     by_cases hm : m ∈ P.support
     · rw [h m hm]
     · rw [notMem_support_iff.mp hm, mul_zero, mul_zero]
@@ -395,11 +395,11 @@ theorem rowOp_eq_smul_iff {σ I J : Type*} [Fintype J] (z : I × J → σ) (a : 
   constructor
   · intro h m hm
     have h1 := congrArg (AddMonoidAlgebra.coeff · m) h
-    rw [coeff_apply_of_diagonal_on_monomials _ _ hw, coeff_smul, smul_eq_mul] at h1
+    rw [coeff_apply_of_diagonal_on_monomials _ _ hw, MvPolynomial.coeff_smul, smul_eq_mul] at h1
     exact mul_right_cancel₀ (mem_support_iff.mp hm) h1
   · intro h
     ext m
-    rw [coeff_apply_of_diagonal_on_monomials _ _ hw, coeff_smul, smul_eq_mul]
+    rw [coeff_apply_of_diagonal_on_monomials _ _ hw, MvPolynomial.coeff_smul, smul_eq_mul]
     by_cases hm : m ∈ P.support
     · rw [h m hm]
     · rw [notMem_support_iff.mp hm, mul_zero, mul_zero]

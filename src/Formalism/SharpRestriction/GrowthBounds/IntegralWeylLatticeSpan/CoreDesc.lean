@@ -68,7 +68,7 @@ theorem desc_fun (ℓ : Kf →ₗ[LL] LL) (t : Finset (MvPolynomial ι LL)) (c :
   have hm := congrArg (fun P => ℓ (AddMonoidAlgebra.coeff P m)) h
 
   simp only [coeff_sum, coeff_C_mul, coeff_map, map_sum] at hm
-  simp only [coeff_sum, coeff_smul, smul_eq_mul]
+  simp only [coeff_sum, MvPolynomial.coeff_smul, smul_eq_mul]
   have e : ∀ (a : Kf) (r : LL), ℓ (a * algebraMap LL Kf r) = ℓ a * r := by
     intro a r
     rw [mul_comm, ← Algebra.smul_def, LinearMap.map_smul, smul_eq_mul, mul_comm]

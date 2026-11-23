@@ -71,7 +71,7 @@ theorem mem_span_map_of_eval_mem (k : Type) [Field k] [Infinite k] (σ τ : Type
   have hdec : P = ∑ γ ∈ Γ, (monomial γ (1 : k) : MvPolynomial τ k) • map (algebraMap k (MvPolynomial τ k)) (Q γ) := by
     ext m : 1
     rw [coeff_sum]
-    simp only [coeff_smul, coeff_map, hQ, smul_eq_mul, MvPolynomial.algebraMap_eq]
+    simp only [MvPolynomial.coeff_smul, coeff_map, hQ, smul_eq_mul, MvPolynomial.algebraMap_eq]
     have : ∀ γ, (monomial γ (1 : k) : MvPolynomial τ k) * C (AddMonoidAlgebra.coeff (AddMonoidAlgebra.coeff P m) γ) = monomial γ (AddMonoidAlgebra.coeff (AddMonoidAlgebra.coeff P m) γ) := by
       intro γ; rw [mul_comm, C_mul_monomial, mul_one]
     simp only [this]

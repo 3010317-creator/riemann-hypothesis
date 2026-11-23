@@ -138,21 +138,21 @@ lemma fockInner_smul_left (c : ℂ) (P Q : MvPolynomial σ ℂ) :
   rw [fockInner_eq_sum_right (c • P) Q Q.support (Finset.Subset.refl _),
     fockInner_eq_sum_right P Q Q.support (Finset.Subset.refl _), Finset.mul_sum]
   refine Finset.sum_congr rfl (fun α _ => ?_)
-  simp only [coeff_smul, smul_eq_mul, map_mul]
+  simp only [MvPolynomial.coeff_smul, smul_eq_mul, map_mul]
   ring
 
 lemma fockInner_smul_right (c : ℂ) (P Q : MvPolynomial σ ℂ) :
     FockH1Action.fockInner P (c • Q) = c * FockH1Action.fockInner P Q := by
   rw [fockInner_eq_sum_support_left, fockInner_eq_sum_support_left P Q, Finset.mul_sum]
   refine Finset.sum_congr rfl (fun α _ => ?_)
-  simp only [coeff_smul, smul_eq_mul]
+  simp only [MvPolynomial.coeff_smul, smul_eq_mul]
   ring
 
 lemma fockInner_neg_right (P Q : MvPolynomial σ ℂ) :
     FockH1Action.fockInner P (-Q) = - FockH1Action.fockInner P Q := by
   rw [fockInner_eq_sum_support_left, fockInner_eq_sum_support_left P Q, ← Finset.sum_neg_distrib]
   refine Finset.sum_congr rfl (fun α _ => ?_)
-  rw [coeff_neg]
+  rw [MvPolynomial.coeff_neg]
   ring
 
 lemma fockInner_neg_left (P Q : MvPolynomial σ ℂ) :
@@ -161,7 +161,7 @@ lemma fockInner_neg_left (P Q : MvPolynomial σ ℂ) :
     fockInner_eq_sum_right P Q Q.support (Finset.Subset.refl _),
     ← Finset.sum_neg_distrib]
   refine Finset.sum_congr rfl (fun α _ => ?_)
-  rw [coeff_neg, map_neg]
+  rw [MvPolynomial.coeff_neg, map_neg]
   ring
 
 lemma fockInner_zero_left (Q : MvPolynomial σ ℂ) : FockH1Action.fockInner 0 Q = 0 := by

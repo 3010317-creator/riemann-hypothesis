@@ -393,7 +393,7 @@ theorem vanish (LL : Letters N) (n : ℕ) (ρ : Fin r) (G : MvPolynomial (Fin (N
   · have hl : ((Fin.last N : Fin (N + 1)) : ℕ) < N + 1 := (Fin.last N).isLt
     rw [if_pos hl] at hc0
     simp only [snoc_vec_last, Bool.false_eq_true, ↓reduceIte, LinearMap.neg_apply, LinearMap.comp_apply,
-      LinearMap.mulLeft_apply, coeff_neg, neg_eq_zero] at hc0
+      LinearMap.mulLeft_apply, MvPolynomial.coeff_neg, neg_eq_zero] at hc0
     rw [MvPolynomial.coeff_X_mul', if_pos (by simp [hm'])] at hc0
     erw [MvPolynomial.coeff_pderiv] at hc0
     have e1 : m' - Finsupp.single (Fin.last N, ρ) 1 + Finsupp.single (Fin.last N, c) 1 = m := by
@@ -415,7 +415,7 @@ theorem vanish (LL : Letters N) (n : ℕ) (ρ : Fin r) (G : MvPolynomial (Fin (N
     split_ifs
     · simp only [LinearMap.comp_apply, LinearMap.mulLeft_apply]
       exact coeff_X_pderiv_castSucc ρ G m' hG' i c ρ
-    · simp only [LinearMap.neg_apply, LinearMap.comp_apply, LinearMap.mulLeft_apply, coeff_neg, neg_eq_zero]
+    · simp only [LinearMap.neg_apply, LinearMap.comp_apply, LinearMap.mulLeft_apply, MvPolynomial.coeff_neg, neg_eq_zero]
       exact coeff_X_pderiv_castSucc ρ G m' hG' i ρ c
 
 end Formalism.GM.M.FB

@@ -63,7 +63,7 @@ def wjSub (w : O) (j : ℕ) : Submodule O (MvPolynomial σ (KK O)) where
   smul_mem' := by
     intro c P hP m
     obtain ⟨a, ha⟩ := hP m
-    exact ⟨c * a, by rw [coeff_smul, ha, Algebra.smul_def, ← map_mul]; congr 1; ring⟩
+    exact ⟨c * a, by rw [MvPolynomial.coeff_smul, ha, Algebra.smul_def, ← map_mul]; congr 1; ring⟩
 
 theorem inA_iff_wj (w : O) {P : MvPolynomial σ (KK O)} : InA (O := O) P ↔ InWj w P 0 := by
   unfold InA InWj
@@ -73,7 +73,7 @@ theorem wj_smul_pow {w : O} {j : ℕ} {P : MvPolynomial σ (KK O)} (h : InWj w P
     InWj w ((w ^ e) • P) (j + e) := by
   intro m
   obtain ⟨a, ha⟩ := h m
-  exact ⟨a, by rw [coeff_smul, ha, Algebra.smul_def, ← map_mul]; congr 1; ring⟩
+  exact ⟨a, by rw [MvPolynomial.coeff_smul, ha, Algebra.smul_def, ← map_mul]; congr 1; ring⟩
 
 theorem wj_mono {w : O} {j j' : ℕ} (hj : j' ≤ j) {P : MvPolynomial σ (KK O)} (h : InWj w P j) : InWj w P j' := by
   intro m

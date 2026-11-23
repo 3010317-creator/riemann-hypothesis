@@ -160,7 +160,7 @@ theorem PairNumberExpansionIndependence.proof (hC2 : VerticalDivisorsCommute.Sta
       rw [hlen i j μ hμ]
       exact hP
     have hc := cycEval_vNumL_comm hC2 hϖ _ hP' (hD i) (hD j)
-    simp only [V, coeff_neg]
+    simp only [V, MvPolynomial.coeff_neg]
     rw [hc]
     ring
   rw [hexp]

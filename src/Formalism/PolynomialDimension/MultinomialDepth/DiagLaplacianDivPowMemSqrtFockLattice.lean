@@ -262,13 +262,13 @@ theorem add_mem_fockLattice (R : Subring K) (f g : PolXY K k) (hf : f ∈ FockLa
 theorem smul_mem_fockLattice (R : Subring K) (r : K) (hr : r ∈ R) (f : PolXY K k) (hf : f ∈ FockLat R) :
     r • f ∈ FockLat R := by
   intro m
-  rw [coeff_smul, smul_eq_mul, mul_left_comm]
+  rw [MvPolynomial.coeff_smul, smul_eq_mul, mul_left_comm]
   exact R.mul_mem hr (hf m)
 
 theorem diagMul_divPow_mem_fockLattice (R : Subring K) (i : Fin k) (n : ℕ) (f : PolXY K k) (hf : f ∈ FockLat R) :
     (((n.factorial : K)⁻¹) • h3e K i ^ n) f ∈ FockLat R := by
   intro m
-  rw [LinearMap.smul_apply, coeff_smul, smul_eq_mul, coeff_diagMul_pow]
+  rw [LinearMap.smul_apply, MvPolynomial.coeff_smul, smul_eq_mul, coeff_diagMul_pow]
   split_ifs with h
   · obtain ⟨m', rfl⟩ : ∃ m', m = m' + h3s i n := ⟨m - h3s i n, (tsub_add_cancel_of_le h).symm⟩
     rw [add_tsub_cancel_right, xFactorial_add_diagExponent]
@@ -284,7 +284,7 @@ theorem diagMul_divPow_mem_fockLattice (R : Subring K) (i : Fin k) (n : ℕ) (f 
 theorem diagLaplacian_divPow_mem_fockLattice (R : Subring K) (i : Fin k) (n : ℕ) (f : PolXY K k) (hf : f ∈ FockLat R) :
     (((n.factorial : K)⁻¹) • h3d K i ^ n) f ∈ FockLat R := by
   intro m
-  rw [LinearMap.smul_apply, coeff_smul, smul_eq_mul, coeff_diagLaplacian_pow]
+  rw [LinearMap.smul_apply, MvPolynomial.coeff_smul, smul_eq_mul, coeff_diagLaplacian_pow]
   have hn : (n.factorial : K) ≠ 0 := Nat.cast_ne_zero.2 (Nat.factorial_ne_zero n)
   have h1 := hf (m + h3s i n)
   rw [xFactorial_add_diagExponent] at h1

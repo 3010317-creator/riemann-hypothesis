@@ -151,7 +151,7 @@ theorem isWeightedHomogeneous_smul {R σ B : Type*} [CommRing R] [AddCommMonoid 
   apply hF
   intro h0
   apply hd
-  rw [coeff_smul, h0, smul_zero]
+  rw [MvPolynomial.coeff_smul, h0, smul_zero]
 
 private theorem bm_whcSame_lemma {R σ B : Type*} [CommRing R] [AddCommMonoid B] {w : σ → B} {m : B}
     {φ : MvPolynomial σ R} (h : IsWeightedHomogeneous w φ m) : weightedHomogeneousComponent w m φ = φ := by
@@ -490,7 +490,7 @@ theorem lastRowDiagDeriv_coeff (R : Type*) [CommRing R] (n : ℕ) (s : Fin n) (F
 theorem bmZ_euler (R : Type*) [CommRing R] (n : ℕ) (β : Fin n → ℤ) (s : Fin n) (F : BP R n)
     (hF : IsWeightedHomogeneous (zW n) F β) : bmZ R n s s F = ((β s : ℤ) : R) • F := by
   ext m
-  rw [lastRowDiagDeriv_coeff, coeff_smul, smul_eq_mul]
+  rw [lastRowDiagDeriv_coeff, MvPolynomial.coeff_smul, smul_eq_mul]
   by_cases hc : AddMonoidAlgebra.coeff F m = 0
   · rw [hc, mul_zero, mul_zero]
   · have h1 := hF hc
@@ -1046,7 +1046,7 @@ theorem bm_mem_dualWeyl_iff {R : Type} [CommRing R] [IsDomain R] [CharZero R] {r
     · intro m hm
       funext s
       have h1 := congrArg (AddMonoidAlgebra.coeff · m) (heul s)
-      rw [ndEul_coeff, coeff_smul, smul_eq_mul] at h1
+      rw [ndEul_coeff, MvPolynomial.coeff_smul, smul_eq_mul] at h1
       have h2 := mul_right_cancel₀ hm h1
       rw [← nd_weight_apply]
       exact_mod_cast h2

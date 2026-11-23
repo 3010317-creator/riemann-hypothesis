@@ -87,7 +87,7 @@ theorem coeffMap_mem_weyl {R S : Type} [CommRing R] [CommRing S] (φ : R →+* S
           c s • Formalism.GradedWeylDivisibility.applyWord R w (Formalism.GradedWeylDivisibility.hw R hn ν) := by
         ext m
         rw [coeff_coeffMap, ← Formalism.GradedWeylDivisibility.lclosedeq_hw_map φ, Formalism.GradedWeylDivisibility.lclosedeq_applyWord_map,
-          coeff_smul, coeff_smul, coeff_map, smul_eq_mul, smul_eq_mul, hc]
+          MvPolynomial.coeff_smul, MvPolynomial.coeff_smul, coeff_map, smul_eq_mul, smul_eq_mul, hc]
       show coeffMap c (s • Formalism.GradedWeylDivisibility.applyWord S w (Formalism.GradedWeylDivisibility.hw S hn ν)) ∈ _
       rw [this]
       exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨w, rfl⟩)

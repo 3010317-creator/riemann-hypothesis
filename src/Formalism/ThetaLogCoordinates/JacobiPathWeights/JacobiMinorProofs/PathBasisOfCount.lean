@@ -79,7 +79,7 @@ theorem expand (m : X → σ →₀ ℕ) (hm : Function.Injective m) (F : X → 
   classical
   ext d
   rw [coeff_map, MvPolynomial.coeff_sum]
-  simp only [coeff_smul, coeff_monomial, Matrix.map_apply, cmat, Matrix.of_apply, smul_eq_mul,
+  simp only [MvPolynomial.coeff_smul, coeff_monomial, Matrix.map_apply, cmat, Matrix.of_apply, smul_eq_mul,
     mul_ite, mul_one, mul_zero]
   by_cases hd : d ∈ Set.range m
   · obtain ⟨y₀, rfl⟩ := hd

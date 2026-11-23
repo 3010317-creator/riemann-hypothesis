@@ -94,13 +94,13 @@ def fockL : MvPolynomial σ K →ₗ⋆[K] MvPolynomial σ K →ₗ[K] K :=
       intro c f g
       rw [fockS_eq_sum (c • f) g f.support (support_smul), fockS, smul_eq_mul, Finset.mul_sum]
       refine Finset.sum_congr rfl fun m _ => ?_
-      rw [coeff_smul, smul_eq_mul, star_mul', starRingEnd_apply]; ring)
+      rw [MvPolynomial.coeff_smul, smul_eq_mul, star_mul', starRingEnd_apply]; ring)
     (by
       intro f g g'
       simp only [fockS, MvPolynomial.coeff_add, mul_add, add_mul, Finset.sum_add_distrib])
     (by
       intro c f g
-      simp only [fockS, coeff_smul, smul_eq_mul, RingHom.id_apply, Finset.mul_sum]
+      simp only [fockS, MvPolynomial.coeff_smul, smul_eq_mul, RingHom.id_apply, Finset.mul_sum]
       refine Finset.sum_congr rfl fun m _ => ?_
       ring)
 

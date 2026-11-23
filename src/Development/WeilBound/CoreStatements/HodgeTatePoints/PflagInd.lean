@@ -298,7 +298,7 @@ private theorem genNum_smul (F : Type) [Field F] (K : Type) [Fintype K] [Decidab
   rw [genNum_eq_sum_of_support_subset F K ι W b (c • P) Q P.support (MvPolynomial.support_smul),
     genNum_eq_sum_of_support_subset F K ι W b P Q P.support subset_rfl, Finset.mul_sum]
   refine Finset.sum_congr rfl fun μ _ => ?_
-  rw [coeff_smul, smul_eq_mul, mul_assoc]
+  rw [MvPolynomial.coeff_smul, smul_eq_mul, mul_assoc]
 
 private theorem genNum_hsymm_eq_of_intNumL_rootList_sum_eq (F : Type) [Field F] (K : Type) [Fintype K] [DecidableEq K]
     (ι : K → Type) [∀ k, Fintype (ι k)] (W : Ideal (MRing ι F)) (e : ℕ) (hP : IsMultiProjPrime W)

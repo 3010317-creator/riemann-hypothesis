@@ -473,7 +473,7 @@ theorem fockInner_add_left (P P' Q : MvPolynomial σ 𝕜) :
 theorem fockInner_smul_left (c : 𝕜) (P Q : MvPolynomial σ 𝕜) :
     fockInner (c • P) Q = c * fockInner P Q := by
   simp only [fockInner_eq_sum_of_subset_right _ (subset_refl Q.support), mul_sum]
-  exact sum_congr rfl fun α _ ↦ by rw [coeff_smul, smul_eq_mul]; ring
+  exact sum_congr rfl fun α _ ↦ by rw [MvPolynomial.coeff_smul, smul_eq_mul]; ring
 
 theorem fockInner_add_right (P Q Q' : MvPolynomial σ 𝕜) :
     fockInner P (Q + Q') = fockInner P Q + fockInner P Q' := by
@@ -482,7 +482,7 @@ theorem fockInner_add_right (P Q Q' : MvPolynomial σ 𝕜) :
 theorem fockInner_smul_right (c : 𝕜) (P Q : MvPolynomial σ 𝕜) :
     fockInner P (c • Q) = starRingEnd 𝕜 c * fockInner P Q := by
   simp only [fockInner, mul_sum]
-  exact sum_congr rfl fun α _ ↦ by rw [coeff_smul, smul_eq_mul, map_mul]; ring
+  exact sum_congr rfl fun α _ ↦ by rw [MvPolynomial.coeff_smul, smul_eq_mul, map_mul]; ring
 
 def fockInnerₛₗ (σ 𝕜 : Type*) [RCLike 𝕜] :
     MvPolynomial σ 𝕜 →ₗ[𝕜] MvPolynomial σ 𝕜 →ₗ⋆[𝕜] 𝕜 :=

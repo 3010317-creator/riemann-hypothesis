@@ -128,14 +128,14 @@ theorem fockInner_smul_right (P Q : MvPolynomial σ ℂ) (c : ℂ) :
     fockInner P (c • Q) = c * fockInner P Q := by
   rw [fockInner_eq_support P (c • Q), fockInner_eq_support P Q, Finset.mul_sum]
   refine Finset.sum_congr rfl (fun α _ => ?_)
-  rw [coeff_smul, smul_eq_mul]
+  rw [MvPolynomial.coeff_smul, smul_eq_mul]
   ring
 
 theorem fockInner_neg_right (P Q : MvPolynomial σ ℂ) :
     fockInner P (-Q) = - fockInner P Q := by
   rw [fockInner_eq_support P (-Q), fockInner_eq_support P Q, ← Finset.sum_neg_distrib]
   refine Finset.sum_congr rfl (fun α _ => ?_)
-  rw [coeff_neg]
+  rw [MvPolynomial.coeff_neg]
   ring
 
 theorem fockInner_sub_right (P Q₁ Q₂ : MvPolynomial σ ℂ) :
@@ -158,7 +158,7 @@ theorem fockInner_smul_left (P Q : MvPolynomial σ ℂ) (c : ℂ) :
     fockInner (c • P) Q = (starRingEnd ℂ) c * fockInner P Q := by
   rw [fockInner_eq_sum_support_right (c • P) Q, fockInner_eq_sum_support_right P Q, Finset.mul_sum]
   refine Finset.sum_congr rfl (fun α _ => ?_)
-  rw [coeff_smul, smul_eq_mul, map_mul]
+  rw [MvPolynomial.coeff_smul, smul_eq_mul, map_mul]
   ring
 
 theorem fockInner_neg_left (P Q : MvPolynomial σ ℂ) :
@@ -166,7 +166,7 @@ theorem fockInner_neg_left (P Q : MvPolynomial σ ℂ) :
   rw [fockInner_eq_sum_support_right (-P) Q, fockInner_eq_sum_support_right P Q,
     ← Finset.sum_neg_distrib]
   refine Finset.sum_congr rfl (fun α _ => ?_)
-  rw [coeff_neg, map_neg]
+  rw [MvPolynomial.coeff_neg, map_neg]
   ring
 
 theorem fockInner_sum_right {ι : Type*} (s : Finset ι) (P : MvPolynomial σ ℂ)

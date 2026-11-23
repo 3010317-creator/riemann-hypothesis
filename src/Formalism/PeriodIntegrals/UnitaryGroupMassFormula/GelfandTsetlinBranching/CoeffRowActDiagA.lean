@@ -178,7 +178,7 @@ theorem coeff_rowAct_diag_A {r c : ℕ} (s : Fin r → ℂ) (f : MvPolynomial (F
     AddMonoidAlgebra.coeff (rowAct ℂ (Matrix.diagonal s) f) m = (∏ ρ, s ρ ^ (∑ j : Fin c, m (ρ, j))) * AddMonoidAlgebra.coeff f m := by
   induction f using MvPolynomial.induction_on' with
   | monomial m' k =>
-    rw [rowActDiagWeight ℂ r c s _ _ (isWeightedHomogeneous_monomial _ _ _ rfl), coeff_smul, coeff_monomial,
+    rw [rowActDiagWeight ℂ r c s _ _ (isWeightedHomogeneous_monomial _ _ _ rfl), MvPolynomial.coeff_smul, coeff_monomial,
       smul_eq_mul]
     split_ifs with h
     · subst h
@@ -225,7 +225,7 @@ theorem fixed_rowDeg_A (lam : DomWeight (n + 1)) (mu : DomWeight n) (f : MvPolyn
   unfold sqAct detPow at hg
   rw [hdiag] at hg
   have hc := congrArg (AddMonoidAlgebra.coeff · m) hg
-  rw [coeff_smul, coeff_smul, coeff_rowAct_diag_A, smul_eq_mul, smul_eq_mul, Units.val_zpow_eq_zpow_val, hdet]
+  rw [MvPolynomial.coeff_smul, MvPolynomial.coeff_smul, coeff_rowAct_diag_A, smul_eq_mul, smul_eq_mul, Units.val_zpow_eq_zpow_val, hdet]
     at hc
   have hcf : AddMonoidAlgebra.coeff f m ≠ 0 := mem_support_iff.mp hm
   have hprod : (∏ ρ : Fin (n + 1), (if ρ = Fin.castSucc a then (2 : ℂ) else 1) ^ (∑ j, m (ρ, j))) =

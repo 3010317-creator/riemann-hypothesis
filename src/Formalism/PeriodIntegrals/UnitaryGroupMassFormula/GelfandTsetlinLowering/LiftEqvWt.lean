@@ -108,7 +108,7 @@ theorem coeff_sqAct_diag {r : ℕ} (lam : DomWeight r) (t : Fin r → ℂˣ) (f 
       Matrix.diagonal fun a => (t a : ℂ) :=
     Matrix.diagonal_transpose _
   unfold sqAct
-  rw [coeff_smul, smul_eq_mul, hdet, htr, rowAct_diagonal, coeff_aeval_scale,
+  rw [MvPolynomial.coeff_smul, smul_eq_mul, hdet, htr, rowAct_diagonal, coeff_aeval_scale,
     prod_rowDeg (fun a => (t a : ℂ)) m]
 
 theorem weight_rowW_apply {r c : ℕ} (m : Fin r × Fin c →₀ ℕ) (a : Fin r) :
@@ -198,7 +198,7 @@ theorem coeff_eq_of_eqv {n : ℕ} (lam : DomWeight (n + 1)) (mu : DomWeight n)
   have h1 := hφ.2 (diagGL ℂ n t) s hs
   rw [hκ, map_smul, embGL_diagGL] at h1
   have h2 := congrArg (AddMonoidAlgebra.coeff · m) h1
-  rw [coeff_smul, coeff_sqAct_diag, smul_eq_mul, Fin.prod_univ_castSucc, Fin.prod_univ_castSucc] at h2
+  rw [MvPolynomial.coeff_smul, coeff_sqAct_diag, smul_eq_mul, Fin.prod_univ_castSucc, Fin.prod_univ_castSucc] at h2
   simp only [Fin.coe_castSucc, Fin.is_lt, dite_true, dif_pos, Fin.eta, Fin.val_last, lt_self_iff_false,
     dite_false, Units.val_one, one_pow, mul_one] at h2
   exact mul_right_cancel₀ hm (by linear_combination (-1 : ℂ) * h2)
@@ -213,7 +213,7 @@ theorem equivariant_last_degree_coeff {n : ℕ} (lam : DomWeight (n + 1)) (mu : 
   have hκ : sqAct ℂ n mu (diagGL ℂ n t) s =
       ((∏ i : Fin n, (t i : ℂ)) ^ mu.detShift * (2 : ℂ) ^ (∑ j, mu.natW j)) • s := by
     ext m'
-    rw [coeff_sqAct_diag, coeff_smul, smul_eq_mul]
+    rw [coeff_sqAct_diag, MvPolynomial.coeff_smul, smul_eq_mul]
     by_cases h0 : AddMonoidAlgebra.coeff s m' = 0
     · simp [h0]
     · have hs' := sum_rowDeg_of_mem mu s hs m' h0
@@ -279,7 +279,7 @@ theorem equivariant_partial_weight : EqvRowWt := by
     have hκ : sqAct ℂ n mu (diagGL ℂ n t) s =
         ((∏ j, (t j : ℂ)) ^ mu.detShift * ∏ j, (t j : ℂ) ^ ω j) • s := by
       ext m'
-      rw [coeff_sqAct_diag, coeff_smul, smul_eq_mul]
+      rw [coeff_sqAct_diag, MvPolynomial.coeff_smul, smul_eq_mul]
       by_cases h0 : AddMonoidAlgebra.coeff s m' = 0
       · simp [h0]
       · have hw := hω h0

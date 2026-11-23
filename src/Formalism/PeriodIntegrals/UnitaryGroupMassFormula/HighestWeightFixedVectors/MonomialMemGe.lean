@@ -75,7 +75,7 @@ def Ge (w : σ → ℕ) (d : ℕ) : Submodule K (MvPolynomial σ K) where
     intro c F hF
     rw [Set.mem_setOf_eq] at hF ⊢
     intro m hm
-    rw [coeff_smul, hF m hm, smul_zero]
+    rw [MvPolynomial.coeff_smul, hF m hm, smul_zero]
 
 theorem mem_Ge {w : σ → ℕ} {d : ℕ} {F : MvPolynomial σ K} :
     F ∈ Ge w d ↔ ∀ m, Finsupp.weight w m < d → AddMonoidAlgebra.coeff F m = 0 := Iff.rfl
@@ -226,7 +226,7 @@ theorem sc_eq_sum (w : σ → ℕ) (c : K) (F : MvPolynomial σ K) (N : ℕ)
   classical
   ext m
   rw [coeff_sc, coeff_sum]
-  simp only [coeff_smul, coeff_weightedHomogeneousComponent, smul_eq_mul, mul_ite, mul_zero]
+  simp only [MvPolynomial.coeff_smul, coeff_weightedHomogeneousComponent, smul_eq_mul, mul_ite, mul_zero]
   rw [Finset.sum_ite_eq]
   split_ifs with h
   · rfl

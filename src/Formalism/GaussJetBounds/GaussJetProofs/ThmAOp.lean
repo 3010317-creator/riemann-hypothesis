@@ -84,7 +84,7 @@ def opInt (K : Type u) [NormedField K] [IsUltrametricDist K] (σ : Type) :
     simp
   neg_mem' := by
     intro P hP κ
-    rw [coeff_neg, norm_neg]
+    rw [MvPolynomial.coeff_neg, norm_neg]
     exact hP κ
 
 def opA {K : Type u} [Field K] {d N0 : ℕ} (TT : Finset (ZMod d))

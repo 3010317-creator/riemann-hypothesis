@@ -89,7 +89,7 @@ theorem lehw_dom {r n : ℕ} (ν : Fin n → ℕ) (hnr : n ≤ r) (hν : Antiton
     rw [mem_support_iff]
     intro h0
     have e := congrArg (AddMonoidAlgebra.coeff · m) hu
-    rw [coeff_map, h0, map_zero, coeff_smul, smul_eq_mul] at e
+    rw [coeff_map, h0, map_zero, MvPolynomial.coeff_smul, smul_eq_mul] at e
     exact (mem_support_iff.mp hm) ((mul_eq_zero.mp e.symm).resolve_left hN0)
   exact (dualWeylDominanceZ r n ν hnr hν u huD m hmu).1 k
 

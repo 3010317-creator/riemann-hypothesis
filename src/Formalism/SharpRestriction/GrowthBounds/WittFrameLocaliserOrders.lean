@@ -81,7 +81,7 @@ theorem inWj_add {P Q : MvPolynomial σ (KK O)} {j : ℕ} (hP : InWj w P j) (hQ 
 
 theorem inWj_neg {P : MvPolynomial σ (KK O)} {j : ℕ} (hP : InWj w P j) : InWj w (-P) j := fun m => by
   obtain ⟨a, ha⟩ := hP m
-  exact ⟨-a, by rw [coeff_neg, ha, ← map_neg]; ring_nf⟩
+  exact ⟨-a, by rw [MvPolynomial.coeff_neg, ha, ← map_neg]; ring_nf⟩
 
 theorem inWj_sub {P Q : MvPolynomial σ (KK O)} {j : ℕ} (hP : InWj w P j) (hQ : InWj w Q j) :
     InWj w (P - Q) j := by
@@ -1216,7 +1216,7 @@ theorem order_mem_add {w : O} {P Q : MvPolynomial σ (KK O)} {j : ℕ} (hP : InW
 
 theorem inWPow_neg {w : O} {P : MvPolynomial σ (KK O)} {j : ℕ} (hP : InWj w P j) : InWj w (-P) j := fun m => by
   obtain ⟨a, ha⟩ := hP m
-  exact ⟨-a, by rw [coeff_neg, ha, ← map_neg, mul_neg]⟩
+  exact ⟨-a, by rw [MvPolynomial.coeff_neg, ha, ← map_neg, mul_neg]⟩
 
 theorem inWPow_antitone {w : O} {P : MvPolynomial σ (KK O)} {i j : ℕ} (h : i ≤ j) (hP : InWj w P j) :
     InWj w P i := fun m => by
@@ -4645,10 +4645,10 @@ theorem bc_restTail (D : Formalism.BasicNotions.D7) : bc_RestTail D := by
     by_cases hm : m ∈ ka0.support
     · obtain ⟨c2, hc2⟩ := h0 m
       refine ⟨c1 - c2, ?_⟩
-      rw [hTdef, coeff_sub, hc1, hc2, hnd m hm, ← map_sub]
+      rw [hTdef, MvPolynomial.coeff_sub, hc1, hc2, hnd m hm, ← map_sub]
       congr 1
       ring
-    · exact ⟨c1, by rw [hTdef, coeff_sub, hc1, notMem_support_iff.1 hm, sub_zero]⟩
+    · exact ⟨c1, by rw [hTdef, MvPolynomial.coeff_sub, hc1, notMem_support_iff.1 hm, sub_zero]⟩
   have hTop : ∀ v ∈ T.vars, v.1 ∈ Fr.TT := by
     intro v hv
     rw [hTdef] at hv

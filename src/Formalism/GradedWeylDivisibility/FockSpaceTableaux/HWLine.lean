@@ -92,7 +92,7 @@ theorem highest_weight_line : HWLine := by
     · intro l j hlj c'
       rw [map_sub, map_smul, hfP.2 l j hlj c', hhP.2 l j hlj c']
     · intro D hD
-      rw [lhwline_diag hn ν _ hgw D hD, coeff_sub, coeff_smul, hch, ← hcf]
+      rw [lhwline_diag hn ν _ hgw D hD, MvPolynomial.coeff_sub, MvPolynomial.coeff_smul, hch, ← hcf]
       simp
   exact sub_eq_zero.mp hg0
 

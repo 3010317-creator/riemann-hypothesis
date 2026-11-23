@@ -145,7 +145,7 @@ theorem op_smul (a : ℂ) (u : Sym m n) (f : PX m n) : op (a • u) f = a • op
   classical
   rw [op_eq_of_subset (a • u) u.support MvPolynomial.support_smul, op, Finset.smul_sum]
   refine Finset.sum_congr rfl fun t _ => ?_
-  rw [coeff_smul, smul_eq_mul, mul_smul]
+  rw [MvPolynomial.coeff_smul, smul_eq_mul, mul_smul]
 
 theorem op_zero (f : PX m n) : op (0 : Sym m n) f = 0 := by simp [op]
 

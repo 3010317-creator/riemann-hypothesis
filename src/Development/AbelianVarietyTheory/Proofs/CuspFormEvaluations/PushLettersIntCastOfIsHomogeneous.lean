@@ -76,7 +76,7 @@ theorem exists_eq_sum_basisComponent (b : Module.Basis ι R S) (P : MvPolynomial
   classical
   refine ⟨P.support.biUnion fun m => (b.repr (AddMonoidAlgebra.coeff P m)).support, ?_⟩
   ext m
-  simp only [coeff_sum, coeff_smul, coeff_map, coeff_basisComponent, smul_eq_mul]
+  simp only [coeff_sum, MvPolynomial.coeff_smul, coeff_map, coeff_basisComponent, smul_eq_mul]
   conv_lhs => rw [← b.linearCombination_repr (AddMonoidAlgebra.coeff P m), Finsupp.linearCombination_apply]
   rw [Finsupp.sum_of_support_subset (s := P.support.biUnion fun m => (b.repr (AddMonoidAlgebra.coeff P m)).support)]
   · exact Finset.sum_congr rfl fun i _ => by rw [Algebra.smul_def, mul_comm]
@@ -91,7 +91,7 @@ theorem basisComponent_sum (b : Module.Basis ι R S) (J : Finset ι) (Q : ι →
   classical
   ext m
 
-  simp only [coeff_basisComponent, coeff_sum, coeff_smul, coeff_map, smul_eq_mul, mul_comm (b _),
+  simp only [coeff_basisComponent, coeff_sum, MvPolynomial.coeff_smul, coeff_map, smul_eq_mul, mul_comm (b _),
   ← Algebra.smul_def, map_sum, map_smul, Module.Basis.repr_self, Finsupp.coe_finsetSum,
   Finset.sum_apply, Finsupp.smul_apply, Finsupp.single_apply]
   rw [Finset.sum_eq_single i] <;> simp +contextual [hi]
