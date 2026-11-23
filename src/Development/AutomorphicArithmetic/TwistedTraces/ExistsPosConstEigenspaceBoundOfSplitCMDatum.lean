@@ -1071,7 +1071,7 @@ theorem UpperTheory.exists_pos_const_eigenspace_bound_of_split_CMDatum :
         rw [a1, Set.indicator_of_mem (by exact a2)]
         rfl
       exact Filter.eventually_cofinite.1 hev
-    rw [e1, finprod_split _ hwi _ hsupp]
+    rw [e1, UpperTheory.EigenspaceProjectionTraces.finprod_split _ hwi _ hsupp]
     congr 1
     · exact Finset.prod_congr rfl fun i _ => by rw [hh1 i]
     · refine finprod_congr fun u => finprod_congr fun hu => ?_
@@ -1088,7 +1088,7 @@ theorem UpperTheory.exists_pos_const_eigenspace_bound_of_split_CMDatum :
     ⟨Fin.castAdd r₂ i, by
       show (T.mk' (pp (Fin.castAdd r₂ i))).1 = (T.mk' (p₁ i)).1
       rw [hl]⟩
-  have hlist := list_prj μ hco (List.ofFn wsp) (List.nodup_ofFn.2 hwsp)
+  have hlist := UpperTheory.EigenspaceProjectionTraces.list_prj μ hco (List.ofFn wsp) (List.nodup_ofFn.2 hwsp)
     {u | u ∉ Set.range fun i => (T.mk' (pp i)).1} (fun v hv hc => by
       obtain ⟨i, rfl⟩ := (List.mem_ofFn' _ _).1 hv
       exact hc (hwsp_mem i))
