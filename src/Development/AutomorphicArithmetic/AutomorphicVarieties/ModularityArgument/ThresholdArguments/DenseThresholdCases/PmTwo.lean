@@ -441,7 +441,7 @@ theorem UpperTheory.V.Keep.ineQ : UpperTheory.V.Keep.IneQ := by
   · intro A hA g hgA hgH
     obtain ⟨hF, hK⟩ := Subgroup.mem_inf.mp hgH
     obtain ⟨s, rfl⟩ := UpperTheory.V.Ws.exists_resQ hF
-    have hs : s ∈ (T.fr ∅).N := ⟨A, by simpa [Raw.Away] using hA, (resQ_Ine T.F A s).mpr hgA, hK⟩
+    have hs : s ∈ (T.fr ∅).N := ⟨A, by simpa only [Raw.Away, Finset.mem_insert, Finset.notMem_empty, or_false, forall_eq] using hA, (resQ_Ine T.F A s).mpr hgA, hK⟩
     have h1 : X.P.r s = 1 := X.pair.kill s hs
     have h2 : r (resQ T.F s) = (X.P.map ↑y).r s := by rw [← hr]; rfl
     apply Units.ext
@@ -555,7 +555,7 @@ theorem UpperTheory.V.Keep.flagQ :
   intro hInf hUp Ω _ _ _ l _ c D T hD r hfl v hv A hA
   have hl : A.valuation (l : Ω) < 1 := by
     have := (hA ((l : ℕ) : 𝓞 ℚ)).2 hv
-    simpa using this
+    simpa only [map_natCast, eq_natCast, Nat.cast_id] using this
   obtain ⟨κ, hκ⟩ := hfl A hl
   obtain ⟨a, ha⟩ := hκ.flag
   obtain ⟨U, hUo, hw⟩ := hκ.wts
@@ -619,7 +619,7 @@ theorem UpperTheory.V.Keep.unlL :
   intro Ω _ _ _ l _ c D T hD ho r h w hw A hA
   have hl : A.valuation (l : Ω) < 1 := by
     have h' := (hA ((l : ℕ) : 𝓞 T.L)).2 hw
-    simpa using h'
+    simpa only [map_natCast, eq_natCast, Nat.cast_id] using h'
   obtain ⟨κ, hκ, hne⟩ := h A hl
   let ρ : ↥(Dec (F := T.L) A) →* ↥(Dec (F := T.F) A) :=
     ((resLe T.F_le).comp (Dec (F := T.L) A).subtype).codRestrict _ fun s =>
@@ -823,11 +823,13 @@ section Place
 variable {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω]
 
 private theorem val_lt_one_iff (A : ValuationSubring Ω) (x : Ω) : A.valuation x < 1 ↔ x = 0 ∨ x⁻¹ ∉ A := by
+  have : Nontrivial A.ValueGroup := GroupWithZero.toNontrivial
   by_cases hx : x = 0
-  · simp [hx]
-  · have h0 : 0 < A.valuation x := zero_lt_iff.2 ((_root_.map_ne_zero _).2 hx)
+  · subst hx
+    exact iff_of_true (by rw [map_zero]; exact zero_lt_one) (Or.inl rfl)
+  · have h0 : 0 < A.valuation x := pos_iff_ne_zero.2 ((_root_.map_ne_zero _).2 hx)
     rw [← A.valuation_le_one_iff, map_inv₀, not_le, one_lt_inv₀ h0]
-    simp [hx]
+    exact ⟨Or.inr, fun h => h.resolve_left hx⟩
 
 private theorem smul_place {A B : ValuationSubring Ω} {g : G F Ω} (hg : ∀ x, g x ∈ A ↔ x ∈ B) : g • B = A := by
   ext x
@@ -868,7 +870,7 @@ private theorem up_diag {K : Type} [CommRing K] {X Y : M4 K} (hX : IsUp X) (hY :
     rcases lt_or_gt_of_ne hb with h | h
     · rw [hX i b h, zero_mul]
     · rw [hY b i h, mul_zero]
-  · simp
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 private theorem adj_map {R R' : Type} [CommRing R] [CommRing R'] (f : R →+* R') (X : M4 R) :
     adj (X.map f) = (adj X).map f := by
@@ -1618,6 +1620,7 @@ theorem UpperTheory.V.Ws.exists_pow_maximalIdeal_le_of_modular_phi :
   rintro q ⟨hq, hp⟩
   have hl : l ∈ D.S := hT.2.elim (fun x => x.1.1.l_mem) fun x => x.1.1.l_mem
   let π : X.B →ₐ[c'.O] X.B ⧸ q := Ideal.Quotient.mkₐ c'.O q
+  have : Nontrivial (X.B ⧸ q) := Ideal.Quotient.nontrivial_iff.mpr hp.ne_top
   haveI : IsCO c'.O (X.B ⧸ q) := co_quot c'.O X.B _ π Ideal.Quotient.mk_surjective
   have hπ : ∀ b, π b = 0 ↔ b ∈ q := fun b => Ideal.Quotient.eq_zero_iff_mem
   have h0 : ∀ a ∈ maximalIdeal c'.O, algebraMap c'.O (X.B ⧸ q) a = 0 := fun a ha => by
