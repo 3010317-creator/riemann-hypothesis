@@ -1330,8 +1330,8 @@ theorem weil_intertwine : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ) (ψ
           ψ (Bd (AF F) a (s + y) u) := by
       rw [← AddChar.map_add_eq_mul, ← AddChar.map_add_eq_mul]
       congr 1
-      have e1 := Bd_comm a u y
-      have e2 := Bd_comm a x y
+      have e1 := HeisenbergBilinear.Bd_comm (R := AF F) a u y
+      have e2 := HeisenbergBilinear.Bd_comm (R := AF F) a x y
       simp only [Bd_add_left, Bd_add_right, Bd_neg_left]
       linear_combination e1 + algebraMap F (AF F) (1 / 2) * e2 + Bd (AF F) a y x * hh
     linear_combination (Φ s) * key
