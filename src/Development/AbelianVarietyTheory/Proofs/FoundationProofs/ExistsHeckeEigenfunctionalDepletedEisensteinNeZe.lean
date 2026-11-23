@@ -560,7 +560,7 @@ theorem adjoint_U : ∀ (k L N l : ℕ) (ε : DirichletCharacter ℂ N) (ρ : �
       intro δ hδ
       obtain ⟨h1, h2, -⟩ := hδ
       exact ⟨h1, (Int.natCast_dvd_natCast.2 hNL).trans h2⟩)
-    ((_root_.GlobalTheory.EisM.zrepU L l hl).1 hlL) (_root_.GlobalTheory.EisM.RightRepU.rrep L l hL hl hlL) hh.1.2 ha.2 hcontH hcontA hint
+    ((_root_.GlobalTheory.EisM.zrepU L l hl).1 hlL) (_root_.GlobalTheory.EisM.RightRepU.rrep L l hl hlL hL) hh.1.2 ha.2 hcontH hcontA hint
   have e1 : qs (Uo l a) = hsum k (ch ε) (repU l) (qs a) := by
     funext τ
     rw [hUa τ]
