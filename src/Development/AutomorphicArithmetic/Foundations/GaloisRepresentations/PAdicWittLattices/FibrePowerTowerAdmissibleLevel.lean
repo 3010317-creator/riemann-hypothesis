@@ -476,7 +476,7 @@ section -- clump:auto
 
 open UpperTheory.Gal.G3
 
-private theorem congOne_conj {p : ℕ} [Fact p.Prime] {D : GlobalTheory.UPel.HT.Datum p} {G : GlobalTheory.LKTrip.HTGroup p}
+private theorem congOne_conj_nsmul {p : ℕ} [Fact p.Prime] {D : GlobalTheory.UPel.HT.Datum p} {G : GlobalTheory.LKTrip.HTGroup p}
     (L : GlobalTheory.LKGeo.Link D G) (N : ℕ) (g : G.GAf) (j j' : ℕ) (hj' : 0 < j')
     (hj : ∀ v ∈ GlobalTheory.LKGeo.LaHat D, j • L.actG g v ∈ GlobalTheory.LKGeo.LaHat D)
     (hi : ∀ v ∈ GlobalTheory.LKGeo.LaHat D, j' • L.actG g⁻¹ v ∈ GlobalTheory.LKGeo.LaHat D)
@@ -515,10 +515,10 @@ theorem UpperTheory.Gal.G3.pKNBasic :
     obtain ⟨j', hj0', hjp', hj'⟩ := GlobalTheory.T.exists_coprime_nsmul_endomorphism_preserves_completion p D (L.actG g⁻¹)
     refine ⟨j * j', ?_, fun u hu => ⟨?_, ?_⟩⟩
     · exact Nat.Coprime.mul_left hjp hjp'
-    · exact congOne_conj L N g j j' hj0' hj hj' u hu.1
+    · exact congOne_conj_nsmul L N g j j' hj0' hj hj' u hu.1
     · have e : (g * u * g⁻¹)⁻¹ = g * u⁻¹ * g⁻¹ := by group
       rw [e]
-      exact congOne_conj L N g j j' hj0' hj hj' _ hu.2
+      exact congOne_conj_nsmul L N g j j' hj0' hj hj' _ hu.2
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicWittLattices.PKNBasic =====
