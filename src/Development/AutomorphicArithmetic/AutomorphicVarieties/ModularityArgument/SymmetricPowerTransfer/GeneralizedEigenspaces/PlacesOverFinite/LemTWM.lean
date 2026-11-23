@@ -62,6 +62,14 @@ import Mathlib.Topology.Algebra.Ring.Compact
 import Mathlib.Topology.Connected.Separation
 import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 
+-- `IsCO.toIsLocalRing` has an undetermined coefficient ring `O`, so every `IsLocalRing` search
+-- enumerates all `CommRing ?O` instances and times out.
+attribute [-instance] UpperTheory.V.Alg.IsCO.toIsLocalRing
+attribute [-instance] UpperTheory.V.Pr.IsCD.toIsDiscreteValuationRing
+-- `rulesCommRing` is a high-priority instance on a Pi-type abbrev; it makes searches for
+-- `CommRing ?R` with unknown `R` explode.
+attribute [-instance] Formalism.L2.Pj.rulesCommRing
+
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TwistedAutomorphicForms.AwayTriv, Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TwistedAutomorphicForms.Descend, Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TwistedAutomorphicForms.FrobSplit, Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TwistedAutomorphicForms.GlueExt, Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TwistedAutomorphicForms.InfTriv, Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TwistedAutomorphicForms.Kron, Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TwistedAutomorphicForms.LevPow, Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TwistedAutomorphicForms.LocProd, Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TwistedAutomorphicForms.SplitIso, Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TwistedAutomorphicForms.PhiPart, Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TwistedAutomorphicForms.UnrAE, Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TwistedAutomorphicForms.VerGroup, Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.GeneralizedEigenspaces.PlacesOverFinite.LemTWM
 
@@ -1087,7 +1095,7 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-attribute [-instance] UpperTheory.V.Pr.IsCD.toIsDomain UpperTheory.V.Pr.IsCD.toIsDiscreteValuationRing UpperTheory.V.Pr.IsCD.complete UpperTheory.V.Pr.IsCD.isLocalHom UpperTheory.V.Pr.IsCD.fin
+attribute [-instance] UpperTheory.V.Pr.IsCD.toIsDomain UpperTheory.V.Pr.IsCD.complete UpperTheory.V.Pr.IsCD.isLocalHom UpperTheory.V.Pr.IsCD.fin
 
 open NumberField IsDedekindDomain Neutral.B1 ReciprocityTheory.Neutral.Bridge.HCFR Formalism.L2.Host Formalism.ConjugateSelfDual ReciprocityTheory.Gal
 open GlobalTheory.HeckeGal GlobalTheory.GalOfCusp UpperTheory.V.Af UpperTheory.V.Af.Tw
@@ -1110,7 +1118,7 @@ private theorem loc_unit {K : Type} [Field K] [NumberField K] {v : HeightOneSpec
   · subst h
     rw [loc_self]
     exact hx
-  · rw [loc_ne h, map_one]
+  · rw [_root_.loc_ne h, map_one]
 
 private theorem lev_one {K : Type} [Field K] [NumberField K] {a : Ideles K} : a ∈ lev K 1 ↔ a ∈ unitIdl K :=
   ⟨fun h => h.1, fun h => ⟨h, fun v => by
@@ -1128,7 +1136,7 @@ private theorem loc_lev {K : Type} [Field K] [NumberField K] {l : ℕ} {v : Heig
         exact (HeightOneSpectrum.valuation_eq_one_iff_notMem w).2 hv
       rw [e]
       exact Valuation.map_sub_le _ (loc_unit hx w).le (map_one _).le
-    · rw [loc_ne h, sub_self, map_zero]
+    · rw [_root_.loc_ne h, sub_self, map_zero]
       exact zero_le⟩
 
 private theorem isDiv_qbar (l : ℕ) [Fact l.Prime] : KStar.Choice.IsDiv (Qbar l)ˣ := fun n hn a => by
@@ -1206,9 +1214,9 @@ private theorem ideleExt_of (hG : Glue) (hP : LevPow) (hK : Kron) (hΦ : PhiPart
   · have e : ∀ w, z.val.2 w = 1 := fun w => by rw [hz]; rfl
     rw [hV z ⟨fun w => by rw [e, map_one], fun w => by rw [e, sub_self, map_zero]; exact zero_le⟩,
       p3 z fun w _ _ => e w, map_one]
-  · rw [hV _ (loc_lev hw hx), p3 _ fun u hu _ => loc_ne (by rintro rfl; exact hw hu) x, map_one]
+  · rw [hV _ (loc_lev hw hx), p3 _ fun u hu _ => _root_.loc_ne (by rintro rfl; exact hw hu) x, map_one]
   · have hu := loc_unit hx
-    rw [h4 _ hu, MonoidHom.comp_apply, p3 _ fun u _ hu' => loc_ne (by rintro rfl; exact hw hu') x, map_one, one_mul]
+    rw [h4 _ hu, MonoidHom.comp_apply, p3 _ fun u _ hu' => _root_.loc_ne (by rintro rfl; exact hw hu') x, map_one, one_mul]
     exact h6 _ (div_mem hu (lev_one.1 (c3 1 _ (lev_one.2 hu))))
 
 private theorem frob_val {L Ω B : Type} [Field L] [NumberField L] [Field Ω] [Algebra L Ω] [CommGroup B] [TopologicalSpace B]
