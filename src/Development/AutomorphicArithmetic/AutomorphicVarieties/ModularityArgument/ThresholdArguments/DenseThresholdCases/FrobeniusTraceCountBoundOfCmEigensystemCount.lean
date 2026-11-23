@@ -111,6 +111,13 @@ import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.CountSys
 import Mathlib.Algebra.Order.Star.Int
 
+-- `rulesCommRing` is a high-priority instance on a Pi-type abbrev; it makes searches for
+-- `CommRing ?R` with unknown `R` explode.
+attribute [-instance] Formalism.L2.Pj.rulesCommRing
+-- These instances have undetermined parameters and make valuation-related searches time out.
+attribute [-instance] UpperTheory.V.Pr.IsCD.toIsDomain UpperTheory.V.Pr.IsCD.toIsDiscreteValuationRing
+attribute [-instance] UpperTheory.V.Alg.IsCO.toIsLocalRing
+
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.BlockConjugateRankThreeRep, Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.PowCong, Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.FrobeniusPowResDegPlaceNorm, Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.MapTraceEqSumRootsOfCharpolyMap, Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.CrystallineBaseChange.FrobEx, Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.BrCardP, Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.TConjK, Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.VConjP, Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AdmissibleResidues.WinSat, Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.FrobeniusTraceCountBoundOfCmEigensystemCount
 
@@ -781,7 +788,7 @@ private theorem dual_conj {n q : ℕ} (hn : 1 ≤ n) (hq : q ≠ 0) (σ : ℂ �
 theorem UpperTheory.GalN.V.conjP_alt :
     _root_.UpperTheory.V.Af.Hypotheses' → UpperTheory.V.Br.ConjP := by
   intro P K _ _ _ hK n hn m hm M hM σ π ⟨hinf, ⟨χ, hpol⟩, hfix⟩
-  have hreg := regAlg_of_infOf hm hinf
+  have hreg := _root_.regAlg_of_infOf hm hinf
   obtain ⟨π', τ, τ', h1, h2, h3, h4⟩ := P.conjC K n (by omega) π hreg σ
   obtain ⟨hs, hs'⟩ := sep_of_conj h1 h2 h3
   have hsat : ∀ w B, (CG.mk π).HasSat w B →
@@ -798,7 +805,7 @@ theorem UpperTheory.GalN.V.conjP_alt :
   obtain ⟨χ', hsg, hv⟩ := UpperTheory.V.Br.charConj _ hF χ a ha σ
   refine ⟨χ', fun v => (hsg v).trans (hpol.sign v),
     UpperTheory.polOfSat_of_thetaSat UpperTheory.theta_satake_parameters_inverse P.litN.aut.js.1 P.litN.aut.gk K n (by omega) π' _ ?_⟩
-  have hM1 := eventually_notMem (K := K) hM
+  have hM1 := _root_.eventually_notMem (K := K) hM
   filter_upwards [eventually_unr (K := K) χ, hM1,
     (conjSrc_injective (IsCMField.complexConj K).toRingEquiv).tendsto_cofinite.eventually hM1] with w hw a1 a2
   obtain ⟨B, hB⟩ := _root_.UpperTheory.V.Af.satake_k_of_printed_results P K n M π hfix w a1
@@ -901,8 +908,7 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-attribute [-instance] UpperTheory.V.Pr.IsCD.toIsDomain UpperTheory.V.Pr.IsCD.toIsDiscreteValuationRing
-
+-- (the `IsCD` instances are already removed at the top of this file)
 
 
 section
