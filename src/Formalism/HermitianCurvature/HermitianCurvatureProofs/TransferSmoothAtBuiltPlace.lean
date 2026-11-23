@@ -1284,7 +1284,7 @@ theorem word_polynomial_vector_holds : WordPSVOfCut := by
     | zero =>
       intro w hl _
       rw [List.length_eq_zero_iff.mp hl]
-      refine psv_congr (fun ζ hζ => ?_) (psc_const hPS hTpos X₀)
+      refine WA.psv_congr (fun ζ hζ => ?_) (psc_const hPS hTpos X₀)
       rw [wordR_nil, ← hmu]
       exact (hX₀ c hc ζ hζ).symm
     | succ n ih =>
@@ -1313,7 +1313,7 @@ theorem word_polynomial_vector_holds : WordPSVOfCut := by
           fun t => psc_lin hPS hTpos (ContinuousLinearMap.compL ℂ Wq Wp Wp (Formalism.FourierDecayAlt.P.QrD.ecOp Bs.π (B₂ t))).toLinearMap hIH
         have hT3 := psc_dz hPS hTpos hIH
         have hT4 := psc_dzb hPS hTpos hIH
-        refine psv_congr (fun ζ hζ => ?_) (psc_add hPS hTpos (psc_add hPS hTpos (psc_add hPS hTpos
+        refine WA.psv_congr (fun ζ hζ => ?_) (psc_add hPS hTpos (psc_add hPS hTpos (psc_add hPS hTpos
           (psc_fsum hPS hTpos Finset.univ _ fun t _ => psc_smul hPS hTpos (hb₁ t) (hT1 t))
           (psc_fsum hPS hTpos Finset.univ _ fun t _ => psc_smul hPS hTpos (hb₂ t) (hT2 t)))
           (psc_smul hPS hTpos hβ₁ hT3)) (psc_smul hPS hTpos hβ₂ hT4))
@@ -1351,14 +1351,14 @@ theorem word_polynomial_vector_holds : WordPSVOfCut := by
       have hZdec := kl_decomp (kl_of_glc hZ)
       rw [← Fintype.sum_prod_type' (f := fun a b => Z (wI P.k P.r a) (wI P.k P.r b) •
         Matrix.single (wI P.k P.r a) (wI P.k P.r b) (1 : ℂ))] at hZdec
-      refine psv_congr (fun ζ hζ => ?_) (psc_fsum hPS hTpos Finset.univ _
+      refine WA.psv_congr (fun ζ hζ => ?_) (psc_fsum hPS hTpos Finset.univ _
         fun p _ => psc_smul hPS hTpos (ps_const hPS hTpos (Z (wI P.k P.r p.1) (wI P.k P.r p.2))) (hunit p))
       obtain ⟨-, -, hμ, -⟩ := hSec P.k P.r Bs.z Bs.z' hk1 Bs.z_mem Bs.z'_mem Bs.T_pos Bs.T'_pos ζ (hTT ▸ hζ)
       rw [wordR_cons]
       conv_rhs => rw [hZdec]
       rw [rc_lincomb hLin hDo hF hμ _ _ _ fun p _ => glc_of_kl (kl_single p.1 p.2)]
   intro w hw
-  exact psv_congr (fun ζ _ => by simp only [hmu]) (main _ w rfl hw)
+  exact WA.psv_congr (fun ζ _ => by simp only [hmu]) (main _ w rfl hw)
 
 end
 
