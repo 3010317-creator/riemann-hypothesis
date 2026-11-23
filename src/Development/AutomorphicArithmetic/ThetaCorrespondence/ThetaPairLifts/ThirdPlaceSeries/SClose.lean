@@ -1568,7 +1568,7 @@ section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT NumberField IsDedekindDomain Polynomial GlobalTheory.HeightCounting GlobalTheory.RowTie GlobalTheory.SplitRead GlobalTheory.NPin
 namespace UpperTheory.GalS
 theorem galClose_alt : _root_.GlobalTheory.NRows.ThetaLocalInputsAlt → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D), AutomorphicGaloisAdmissible D.nd D.naut :=
-  fun hP hL D P => _root_.UpperTheory.GalS.Prod.automorphic_galois_admissible_of_theta_local_inputs hP (_root_.UpperTheory.GalS.mergeP'_alt hP.fin hL hP.gal hP.car hP.clo) hL D P
+  fun hP hL D P => _root_.UpperTheory.GalS.Prod.automorphic_galois_admissible_of_theta_local_inputs hP hP.car hL D P
 theorem trivialLocalCondition_of_inputs (_ : _root_.GlobalTheory.NRows.ThetaLocalInputsAlt) (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (_ : _root_.GlobalTheory.NPin.CharacterChoiceData hL D)
     (_ : JumpsCard D.nd D.naut) (i : D.nd.Loc) : UnusedSlot55 D.nd D.naut i := trivial
 theorem a_close_main : _root_.GlobalTheory.RowsAClose.mainTheorem := by
