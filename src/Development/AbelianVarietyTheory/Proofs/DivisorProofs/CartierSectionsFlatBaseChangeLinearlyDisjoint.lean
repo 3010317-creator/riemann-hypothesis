@@ -276,7 +276,7 @@ open GlobalTheory.Desc
 open TensorProduct
 
 theorem _root_.GlobalTheory.T.linearlyDisjoint_of_flat_baseChange_embeds : ∀ (R R₁ K L : Type) [CommRing R] [CommRing R₁] [CommRing K] [CommRing L] [Algebra R R₁] [Algebra R K] [Module.Flat R R₁] (θ : K →+* L) (c : R₁ →+* L), (∀ (n : ℕ) (u : Fin n → K) (r : Fin n → R₁), ∑ j, c (r j) * θ (u j) = 0 → ∑ j, u j ⊗ₜ[R] r j = 0) → LinDisj (algebraMap R K) c θ := by
-  first | exact @GlobalTheory.Desc.FlatLinDisj.linDisj_of_flat | exact GlobalTheory.Desc.FlatLinDisj.linDisj_of_flat | (intros; apply GlobalTheory.Desc.FlatLinDisj.linDisj_of_flat <;> assumption)
+  first | exact @GlobalTheory.Desc.FlatLinDisj.linDisj_of_flat
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearlyDisjointOfFlatBaseChangeEmbedsStatement =====
@@ -451,7 +451,7 @@ open GlobalTheory.Desc
 open TensorProduct
 
 theorem _root_.GlobalTheory.T.tensor_fraction_injective_of_tensor_injective : ∀ (R R₁ B K L : Type) [CommRing R] [CommRing R₁] [CommRing B] [Field K] [Field L] [Algebra R R₁] [Algebra R B] [Algebra R K] [Algebra B K] [IsScalarTower R B K] [IsFractionRing B K] (θ : K →+* L) (c : R₁ →+* L) (β : B ⊗[R] R₁ →+ L), Function.Injective β → (∀ b r, β (b ⊗ₜ[R] r) = θ (algebraMap B K b) * c r) → ∀ (n : ℕ) (u : Fin n → K) (r : Fin n → R₁), ∑ j, c (r j) * θ (u j) = 0 → ∑ j, u j ⊗ₜ[R] r j = 0 := by
-  first | exact @GlobalTheory.tensor_fraction_injective_of_injective | exact GlobalTheory.tensor_fraction_injective_of_injective | (intros; apply GlobalTheory.tensor_fraction_injective_of_injective <;> assumption)
+  first | exact @GlobalTheory.tensor_fraction_injective_of_injective
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorFractionInjectiveOfTensorInjectiveStatement =====

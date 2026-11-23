@@ -946,9 +946,6 @@ theorem tame_of_pow : Ev fun K => ∀ X : Stages, K.Over X.B.toPre → (∀ (k :
       have h2 := X.toD7.R.two_le_m
       first
       | (show 1 ≤ X.toD7.R.k + X.toD7.R.m - 1; omega)
-      | omega
-      | (simp only [Formalism.MainNotions.Ranks.r]; omega)
-      | (unfold Formalism.MainNotions.Ranks.r; omega)
     have e : X.toD7.nd.chiT k v = fun j : Fin X.B.R.m => w ^ (2 * (j.1 + 1)) := funext hchi
     haveI : Fact (X.toD7.host.g k).Prime := ⟨X.toD7.host.g_prime k⟩
     have h := GlobalTheory.EX.DC.TameGen.tameDistinct_gen X.toD7.R.r (X.toD7.host.g k) X.B.R.m w hw hb hr
@@ -958,17 +955,9 @@ theorem tame_of_pow : Ev fun K => ∀ X : Stages, K.Over X.B.toPre → (∀ (k :
   refine ⟨1, one_pos, ?_⟩
   intro eps C8 _ _ _ _
   refine ⟨?k0, fun C _ _ _ => ⟨0, fun cD _ => ⟨0, fun ch _ => ⟨0, fun K => ?_⟩⟩⟩⟩
-  case k0 => first | exact ⟨0, 0, 0, 0⟩ | exact default | exact Classical.arbitrary _
+  case k0 => first | exact ⟨0, 0, 0, 0⟩
   first
-  | exact key K
-  | exact fun _ => key K
-  | exact fun _ _ => key K
-  | exact fun _ _ _ => key K
-  | exact fun _ _ _ _ => key K
   | exact fun _ _ _ _ _ => key K
-  | exact fun _ _ _ _ _ _ => key K
-  | exact fun _ _ _ _ _ _ _ => key K
-  | exact fun _ _ _ _ _ _ _ _ => key K
 
 end GlobalTheory.Mem.Top.TamePow
 end -- clump:auto
@@ -1307,7 +1296,7 @@ section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Pk Formalism.MainNotions.Lnk Formalism.MainNotions.GlobalTheoryTheory Formalism.L2.GlobalTheoryTheory Formalism.MainNotions.RT GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Fc
 
 theorem _root_.GlobalTheory.T.hTu_cTmin_of_genusMass : (∀ D, MassRatioUnderVolume D) → (∀ D, Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.GenusMassAt D 2) → ∀ (Q : V4.Slot) (Lk : LkT _root_.GlobalTheory.Fc.BundleCondition), Row Q Lk fun 𝒜 _ => R1.H_hTu (fun _ y => Formalism.MainNotions.StandardLattice.HarishChandraReduction.cTmin y) 𝒜 := by
-  first | exact @_root_.GlobalTheory.Fc.row_hTu_cTmin_alt | exact _root_.GlobalTheory.Fc.row_hTu_cTmin_alt | (intros; apply _root_.GlobalTheory.Fc.row_hTu_cTmin_alt <;> assumption)
+  first | exact @_root_.GlobalTheory.Fc.row_hTu_cTmin_alt
 end
 end -- clump:auto
 end -- clump:auto

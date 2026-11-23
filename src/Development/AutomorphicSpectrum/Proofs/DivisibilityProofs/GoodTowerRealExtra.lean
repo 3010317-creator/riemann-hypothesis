@@ -184,7 +184,7 @@ theorem cptEx : CptEx := by
     have h3 : spMap (𝔐.cst.comp (algebraMap (𝓞 ↥c.F) ↥c.F)) = spMap 𝔐.cst ≫ spMap (algebraMap (𝓞 ↥c.F) ↥c.F) := by
       simp [spMap, CommRingCat.ofHom_comp, Spec.map_comp]
     rw [h3] at h2
-    simp only [Scheme.Hom.comp_apply] at h2
+    simp only at h2
     rw [← hfx]
     exact h2.symm
   have hsx2 : genPt 𝔐.ξ₀ ∈ Set.range (pullback.fst Y.s (spMap (algebraMap (𝓞 ↥c.F) ↥c.F))) := by
@@ -500,7 +500,7 @@ theorem pointEx : PointEx := by
     change 𝔐.f (genPt 𝔐.ξ) ∉ C
     rw [CptIn.Intr.genPt_dominates 𝔐.fn_over, hgen]
     have h1 : genPt (Z.ξ₀ ≫ Y.j) = pullback.fst Y.s (spMap (algebraMap (𝓞 c.F) c.F)) (Y.jQ (genPt Z.ξ₀)) := by
-      simp [genPt, Model.j, Scheme.Hom.comp_apply]
+      simp [genPt, Model.j]
       rfl
     rw [h1]
     intro hin
@@ -822,7 +822,7 @@ theorem discriminant_bound_sqrt_neg_prime (b : Module.Basis J ℤ O) (d : ℕ) (
   let C : Matrix J J ℤ := fun i j => (Algebra.traceMatrix ℤ b * Algebra.leftMulMatrix b r) i j / d
   have hTL : Algebra.traceMatrix ℤ b * Algebra.leftMulMatrix b r = (d : ℤ) • C := by
     ext i j
-    simp only [C, Matrix.smul_apply, smul_eq_mul]
+    simp only [C]
     exact (Int.mul_ediv_cancel' (hent i j)).symm
   have hL2 : (Algebra.leftMulMatrix b r).det ^ 2 = (-(d : ℤ)) ^ Fintype.card J := by
     rw [sq, ← Matrix.det_mul, ← map_mul, ← sq, hr]
@@ -882,7 +882,7 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Fl
 
 theorem _root_.GlobalTheory.CompanionTheory.Relay.sqrt_discriminant_bounds_cm_field : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E), 1 ≤ Real.sqrt H.d ∧ Real.sqrt H.d ≤ rootDiscr E := by
-  first | exact @PositivityTheory.Xgf.sqrt_discriminant_bounds_cm_field | exact PositivityTheory.Xgf.sqrt_discriminant_bounds_cm_field
+  first | exact @PositivityTheory.Xgf.sqrt_discriminant_bounds_cm_field
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.AdelicProofs.SqrtDiscriminantBoundsCmField =====
@@ -1650,7 +1650,7 @@ open AlgebraicGeometry CategoryTheory NumberField ReciprocityTheory.ChartRestric
 open GroundTheory.Heights₂.Heights.LowerBoundFree (ComponentData ComponentSetting degMu ArLimExists slX)
 
 theorem _root_.GlobalTheory.CompanionTheory.Relay.good_tower_real_extra : Fl.FlatDegree → Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsAbelianGalois ℚ E] (H : Host E) (D : Datum H) (Xo : ∀ l : Level H, Moduli D l) (l : Level H) (c : Coeff l) (Y : Model (Xo l) c (algebraMap (𝓞 c.F) c.F)) [DecidableEq (CMType H)] (T : RootTower (CMType H) (D.p + D.q)) (o : GoodOrigin Y T) (II : IntersectionSystem), IsGlobal Xo l c Y → o.Extra → IsFullIntersectionSystem II → 1 ≤ D.p → 1 ≤ D.q → ∀ a τ, ∃ R : Flat.RootFlat (T.M 2 a) τ, Flat.NearRecord (D.p + D.q) T.bad (hostRd E) (hostLval H) R.ht := by
-  first | exact @RootFieldNumerics.global_model_tower_final_condition | exact RootFieldNumerics.global_model_tower_final_condition
+  first | exact @RootFieldNumerics.global_model_tower_final_condition
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.GoodTowerRealExtra =====

@@ -374,7 +374,7 @@ theorem exists_tangent_point : ∀ {o : Type} [CommRing o] (X : Scheme.{0}) (s :
       by_cases hac : a = c
       · subst hac
         simp
-      · simp [hac, Pi.single_apply, Ne.symm hac]
+      · simp [hac, Ne.symm hac]
     rw [LinearMap.zero_apply, ← hv]
     rw [dirMap, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, TrivSqZeroExt.snd_map] at e
     exact e
@@ -637,7 +637,7 @@ theorem fst_base {K o V : Type} [Field K] [CommRing o] [AddCommGroup V] [Module 
     [IsCentralScalar K V] (β : o →+* K) :
     spMap (TrivSqZeroExt.fstHom K K V).toRingHom ≫ spMap ((algebraMap K (TrivSqZeroExt K V)).comp β) = spMap β := by
   rw [← spMap_comp']
-  congr 1 <;> exact RingHom.ext fun z => (TrivSqZeroExt.fstHom K K V).commutes (β z)
+  congr 1
 
 theorem constPt_base {K o : Type} [Field K] [CommRing o] {X : Scheme.{0}} (β : o →+* K) (x : Sp (DualNumber K) ⟶ X)
     (s : X ⟶ Sp o) (hx : x ≫ s = spMap ((algebraMap K (DualNumber K)).comp β)) :
@@ -681,7 +681,7 @@ theorem lam_decomp (K : Type) [Field K] (d : ℕ) (lam : (Fin (d + 1) → K) →
     funext i
     refine Fin.lastCases ?_ (fun j => ?_) i
     · simp [incl]
-    · simp [incl, drop, GlobalTheory.InnerAutomorphism.dropLast, Pi.single_apply, Fin.castSucc_ne_last]
+    · simp [incl, drop, GlobalTheory.InnerAutomorphism.dropLast, Fin.castSucc_ne_last]
   conv_lhs => rw [hv]
   simp [lastC, mul_comm]
 
@@ -988,7 +988,7 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.spec_fibreProduct_localArtinian_glue_existsUnique : ∀ (P B₁ B₂ B₀ : CommRingCat.{0}) (f₁ : P ⟶ B₁) (f₂ : P ⟶ B₂) (g₁ : B₁ ⟶ B₀) (g₂ : B₂ ⟶ B₀), IsPullback f₁ f₂ g₁ g₂ → IsLocalRing P → IsArtinianRing P → Function.Surjective f₁ → Function.Surjective f₂ → Nontrivial B₀ → ∀ (Z : Scheme.{0}) (a : Spec B₁ ⟶ Z) (b : Spec B₂ ⟶ Z), Spec.map g₁ ≫ a = Spec.map g₂ ≫ b → ∃! w : Spec P ⟶ Z, Spec.map f₁ ≫ w = a ∧ Spec.map f₂ ≫ w = b := by
-  first | exact @GlobalTheory.spec_pullback_localArtinian_glue_existsUnique | exact GlobalTheory.spec_pullback_localArtinian_glue_existsUnique | (intros; apply GlobalTheory.spec_pullback_localArtinian_glue_existsUnique <;> assumption)
+  first | exact @GlobalTheory.spec_pullback_localArtinian_glue_existsUnique
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecFibreProductLocalArtinianGlueExistsUniqueStatement =====
@@ -1438,7 +1438,7 @@ theorem ext_affine : ∀ (R : Type) [CommRing R] (I : Ideal R), IsHausdorff I R 
     have he := h e
     rw [← Spec.map_preimage f, ← Spec.map_preimage f', Out.thick, ← Spec.map_comp, ← Spec.map_comp] at he
     have he' := congrArg (fun q => q.hom a) (Spec.map_injective he)
-    simp only [CommRingCat.comp_apply, CommRingCat.hom_ofHom] at he'
+    simp only at he'
     rw [SModEq, Submodule.Quotient.eq, smul_eq_mul, Ideal.mul_top]
     exact Ideal.Quotient.eq.1 he'
 

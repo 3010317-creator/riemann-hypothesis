@@ -261,7 +261,7 @@ theorem specAt_blockAct (τ₀ : ι) (y : ι × Fin n × Fin n → K) (M : Matri
       simp only [AlgHom.comp_apply, Formalism.GradedWeylDivisibility.blockAct, specAt, MvPolynomial.aeval_X, hτ, if_false, map_sum, map_mul,
         MvPolynomial.aeval_C, Matrix.one_apply]
       rw [Finset.sum_eq_single a]
-      · simp [hτ]
+      · simp
       · intro c _ hc; simp [Ne.symm hc]
       · simp
   exact congrArg (fun f : Formalism.L2.DIV.Pol K ι n →ₐ[K] MvPolynomial (Fin n × Fin n) K => f P) h
@@ -333,7 +333,7 @@ theorem fam_eval (τ : L →+* K) (B : GL (Fin n) K) :
       Formalism.L2.NX.evPtF (IsCMField.complexConj L : L →+* L) τ B := by
   funext p
   simp only [fam, Formalism.L2.NX.evPtF]
-  split_ifs <;> simp_all [inside₂, Matrix.one_apply]
+  split_ifs <;> simp_all [inside₂]
 
 end Fam
 
@@ -443,7 +443,7 @@ theorem hw_eigvec_transport : ∀ (L : Type) [Field L] [NumberField L] [IsCMFiel
 
     rw [map_sub, ← h1, h2, map_sum]
 
-    simp only [map_sum, MvPolynomial.eval_mul, MvPolynomial.eval_C, Matrix.mul_apply, Finset.sum_mul]
+    simp only [map_sum, MvPolynomial.eval_mul, MvPolynomial.eval_C, Matrix.mul_apply]
     rw [sub_eq_zero, Finset.sum_comm]
     refine Finset.sum_congr rfl fun j _ => ?_
     erw [Matrix.mul_apply]
@@ -1193,7 +1193,7 @@ open scoped TensorProduct
 
 theorem _root_.GlobalTheory.T.infG_eq_half_integer : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E →+* Qb) (A : _root_.GlobalTheory.HeightCounting.CharFrameHostEmbedding D cf jE) (t : D.what₂.Tau) (sh : ℂ),
     D.naut.infG D.naut.etaT (embT D t) = {sh} → ∃ z : ℤ, sh = (z : ℂ) + 1 / 2 := by
-  first | exact @_root_.GlobalTheory.EtaTildeShift.sh_half_alt | exact _root_.GlobalTheory.EtaTildeShift.sh_half_alt | (intros; apply _root_.GlobalTheory.EtaTildeShift.sh_half_alt <;> assumption)
+  first | exact @_root_.GlobalTheory.EtaTildeShift.sh_half_alt
 end
 end -- clump:auto
 end -- clump:auto
@@ -1288,7 +1288,7 @@ theorem _root_.GlobalTheory.T.exists_weight_data_integral_alt : GlobalTheory.Pub
         ∀ (t : D.what₂.Tau) (sh : ℂ) (lam : Fin D.R.nV → ℤ),
           D.naut.infG D.naut.etaT (embT D t) = {sh} → NX.HWAtF (NX.cE D) (wt.rhoW i j b).dual (kEmbT D T i b t) lam →
           NG.infOf lam = NG.paramV D.R (D.hc t) ⟨j - 1, by omega⟩ sh := by
-  first | exact @_root_.GlobalTheory.HeightCounting.FormsStep.wt_weights_alt | exact _root_.GlobalTheory.HeightCounting.FormsStep.wt_weights_alt | (intros; apply _root_.GlobalTheory.HeightCounting.FormsStep.wt_weights_alt <;> assumption)
+  first | exact @_root_.GlobalTheory.HeightCounting.FormsStep.wt_weights_alt
 end
 end -- clump:auto
 end -- clump:auto

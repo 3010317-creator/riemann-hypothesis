@@ -81,7 +81,7 @@ theorem least_lt_add_smul : ∀ (s : ℕ) (W : Matrix (Fin s) (Fin s) ℤ), PosW
   have hq := qW_add_zsmul W β mu₀ nu
   have h1 : 0 ≤ qW W β (mu₀ + nu) := qW_nonneg hW hs hβ _
   rw [← one_zsmul nu, hq 1] at h1
-  simp only [one_mul, one_pow] at h1
+  simp only [one_pow] at h1
   have hN' : qW W β (mu₀ + N₁ • nu) = qW W β mu₀ + (N₁ : ℤ) * cross W β mu₀ nu + (N₁ : ℤ) ^ 2 * qW W β nu := by
     rw [← hq, natCast_zsmul]
   rw [hN']
@@ -117,7 +117,7 @@ open ReciprocityTheory.AnForm.R GlobalTheory.ZH GlobalTheory.Poinc GlobalTheory.
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.least_vector_unique_in_class_mod : ∀ (s : ℕ) (W : Matrix (Fin s) (Fin s) ℤ), PosW W → ∀ (X : Type) [AddCommGroup X] (β : LinearMap.BilinForm ℤ X), (∀ a b, β a b = β b a) → (∀ a, 0 ≤ β a a) → ∀ (H : AddSubgroup (Fin s → X)), (∀ mu ∈ H, mu ≠ 0 → 0 < qW W β mu) → ∀ mu₀ ∈ H, mu₀ ≠ 0 → (∀ mu ∈ H, mu ≠ 0 → qW W β mu₀ ≤ qW W β mu) → ∀ N₁ : ℕ, 3 ≤ N₁ → ∀ nu ∈ H, nu ≠ 0 → qW W β mu₀ < qW W β (mu₀ + N₁ • nu) := by
-  first | exact @GlobalTheory.Poinc.LeastVec.least_lt_add_smul | exact GlobalTheory.Poinc.LeastVec.least_lt_add_smul | (intros; apply GlobalTheory.Poinc.LeastVec.least_lt_add_smul <;> assumption)
+  first | exact @GlobalTheory.Poinc.LeastVec.least_lt_add_smul
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeastVectorUniqueInClassModStatement =====

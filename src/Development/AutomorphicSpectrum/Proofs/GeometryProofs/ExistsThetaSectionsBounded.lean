@@ -281,7 +281,7 @@ theorem exists_lin_gen {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G]
     simp only [Matrix.cons_val_zero, Matrix.cons_val_succ, Fin.succ_zero_eq_one, Fin.succ_one_eq_two, hx,
       _root_.one_mul, _root_.mul_one, mul_comm a x, mul_comm (a ^ m) x]
     apply Additive.ofMul.injective
-    simp [ofMul_mul, ofMul_inv, ofMul_zpow]
+    simp [ofMul_mul, ofMul_inv]
     module
   · rw [FG.v_mul hJ, FG.v_inv]
     show val t₂ ρ.left z J * (val t₁ ρ.left z J)⁻¹ = 1
@@ -332,10 +332,6 @@ theorem values_units_identity {G : Type*} [CommGroup G] (m N : ℕ)
   first
     | (simp only [ofMul_mul, ofMul_inv, ofMul_pow, ofMul_one, ← natCast_zsmul, Nat.cast_pow,
           Nat.cast_mul] at e3 e4 e5 e7 e8 e9 e10 ⊢
-       linear_combination (norm := module) e7 + (((m : ℤ) ^ 2) ^ 2) • e3
-         - (((m : ℤ) ^ 2) ^ 2) • e4 - ((N : ℤ) ^ 2 * ((m : ℤ) ^ 2) ^ 2) • e5
-         + ((N : ℤ) ^ 2 * (m : ℤ) ^ 2) • e9 + e8 + ((N : ℤ) ^ 2) • e10)
-    | (simp only [ofMul_mul, ofMul_inv, ofMul_pow, ofMul_one] at e3 e4 e5 e7 e8 e9 e10 ⊢
        linear_combination (norm := module) e7 + (((m : ℤ) ^ 2) ^ 2) • e3
          - (((m : ℤ) ^ 2) ^ 2) • e4 - ((N : ℤ) ^ 2 * ((m : ℤ) ^ 2) ^ 2) • e5
          + ((N : ℤ) ^ 2 * (m : ℤ) ^ 2) • e9 + e8 + ((N : ℤ) ^ 2) • e10)

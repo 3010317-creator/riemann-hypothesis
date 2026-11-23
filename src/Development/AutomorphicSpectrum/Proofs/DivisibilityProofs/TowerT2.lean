@@ -236,7 +236,7 @@ theorem coeff_shift {ι : Type} [Fintype ι] [DecidableEq ι] (w : ι → ℝ) (
       have hB : (s.factorial : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero _)
       have hD : ((a x0 - s).factorial : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero _)
       rw [Nat.cast_choose ℝ hs]
-      field_simp <;> ring
+      field_simp
     rw [hsign, neg_pow (w x0)]
     linear_combination (-((-1 : ℝ) ^ (a x0 - s) * (-1) ^ (∑ x ∈ Finset.univ.erase x0, a x) *
       (n.factorial : ℝ) * (∏ x ∈ Finset.univ.erase x0, (((a x).factorial : ℝ)⁻¹ * w x ^ a x)) *
@@ -434,7 +434,7 @@ theorem col_sum (τ : Ψ) (k m : ℕ) (hk : 1 ≤ k) (hkN : k ≤ N) (hm : 1 ≤
         · subst c1
           simp [lower, bump, hne, hne.symm]; omega
         · subst c2
-          simp [lower, bump, hne, hne.symm]; omega
+          simp [lower, bump, hne.symm]; omega
         · simp [lower, bump, c1, c2]
       · intro t ht
         funext c
@@ -612,7 +612,7 @@ theorem gdet_bump (k : ℕ) (hk : 1 ≤ k) (U : ℝ) (hU : 0 < U) (v : Fin N →
       rw [Matrix.updateRow_apply]
       by_cases hi : i = c
       · subst hi
-        simp only [if_pos rfl, if_true, Matrix.of_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, hA]
+        simp only [if_true, Matrix.of_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, hA]
         rw [← hwv b, pow_eq_sum_rr w _ b b.isLt, Finset.mul_sum]
         refine Finset.sum_congr rfl (fun c' _ => ?_)
         have hP : C ((((N - 1 - (c' : ℕ)).factorial : ℕ) : ℝ)) * C ((((N - 1 - (c' : ℕ)).factorial : ℕ) : ℝ))⁻¹
@@ -651,7 +651,7 @@ theorem maj_lin (r e c A : ℝ) (hA : 0 ≤ A) (hr : |r| ≤ c) (he : |e| ≤ c 
   · simpa using hr
   · simpa using he
   · have : (Polynomial.C r + Polynomial.C e * Polynomial.X).coeff (s + 1 + 1) = 0 := by
-      simp [Polynomial.coeff_X, Polynomial.coeff_C]
+      simp
     rw [this, abs_zero]
     positivity
 
@@ -1218,7 +1218,7 @@ theorem deltaTerm_eq : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) (
       rw [← tsum_mul_right]
       exact tsum_congr (fun n => by rw [hrank]; ring)
     simp only [deltaTerm, restTerm, hsum]
-    simp only [if_true, Nat.one_lt_ofNat, Nat.not_ofNat_le_one, if_false]
+    simp only [if_true, Nat.not_ofNat_le_one, if_false]
     field_simp
     ring
   · have h2 : 2 ≤ k := by omega

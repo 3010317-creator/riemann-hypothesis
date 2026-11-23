@@ -215,11 +215,10 @@ theorem actMat_coord {Z : Submodule K B.S.Forms} (hZ : ∀ g : G, Z ≤ Z.comap 
 private theorem gaMat_single_lemma (g : G) :
     B.S.gaMat B.r (MonoidAlgebra.single g 1) = B.S.actMat B.r g := by
   first
-  | (simp [CSD.gaMat, MonoidAlgebra.coeff_single, Finset.sum_ite_eq']; done)
-  | (simp [CSD.gaMat, Finsupp.single_apply]; done)
-  | (simp [CSD.gaMat, MonoidAlgebra.single_apply]; done)
-  | (unfold CSD.gaMat; rw [Finset.sum_eq_single g] <;> simp_all [Finsupp.single_apply]; done)
-  | simp only [CSD.gaMat]
+  | (simp [CSD.gaMat, MonoidAlgebra.coeff_single]; done)
+  | (simp [CSD.gaMat]; done)
+  | (simp [CSD.gaMat]; done)
+  | (unfold CSD.gaMat; rw [Finset.sum_eq_single g] <;> simp_all; done)
 
 theorem action_preserves_idempotent_range {X : Finset (G → K)} (hX : ∀ χ ∈ X, IsAbsIrrChar χ) (g : G)
     {x : Fin B.S.dim → K} (hx : x ∈ LinearMap.range (B.S.gaMat B.r (idemOf X)).mulVecLin) :
@@ -245,8 +244,6 @@ theorem gaMat_mem {V : Submodule K (Fin B.S.dim → K)} (hV : ∀ g : G, ∀ x �
   · try dsimp only
     first
     | rw [Matrix.smul_mulVec]
-    | rw [Matrix.smul_mulVec_assoc]
-    | rw [Matrix.mulVec_smul_assoc]
     exact V.smul_mem _ (hV t x hx)
 
 theorem actMat_alt {X : Finset (G → K)} (hX : ∀ χ ∈ X, IsAbsIrrChar χ) {Z : Submodule K B.S.Forms}
@@ -546,7 +543,6 @@ theorem inj_g {x y : Fin I.Sg.D → K}
   have h1 : cpt I.A3.fam3.base3.v0.embedding x = cpt I.A3.fam3.base3.v0.embedding y := by
     first
     | exact hH.h2g.1 h
-    | exact (hH.h2g.2 I.A3.fam3.base3.μ0).1 h
   funext i
   have h2 := congrFun h1 i
   simp only [cpt] at h2
@@ -565,7 +561,6 @@ theorem epM_idem (hρ : I.PRho) (P : Subgroup G) (ψ : P →* Kˣ) : I.epM P ψ 
     intro h k
     first
     | rw [smul_mul_smul_comm]
-    | rw [smul_mul_smul]
     rw [← hm, Subgroup.coe_mul, map_mul, mul_inv, Units.val_mul]
   have hSS : (∑ h : P, (((ψ h)⁻¹ : Kˣ) : K) • I.ρf (h : G)) * (∑ h : P, (((ψ h)⁻¹ : Kˣ) : K) • I.ρf (h : G)) =
       (Fintype.card P : K) • ∑ h : P, (((ψ h)⁻¹ : Kˣ) : K) • I.ρf (h : G) := by
@@ -579,7 +574,6 @@ theorem epM_idem (hρ : I.PRho) (P : Subgroup G) (ψ : P →* Kˣ) : I.epM P ψ 
   unfold epM
   first
   | rw [smul_mul_smul_comm, hSS, smul_smul]
-  | rw [smul_mul_smul, hSS, smul_smul]
   congr 1
   have hne : (Fintype.card P : K) ≠ 0 := Nat.cast_ne_zero.mpr Fintype.card_ne_zero
   rw [Nat.card_eq_fintype_card]

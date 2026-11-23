@@ -204,8 +204,8 @@ theorem gIdx_frame : ∀ (L : Type) [Field L] [NumberField L] (n : ℕ) (C : Mat
   obtain ⟨S, hSe⟩ : ∃ S : Matrix (Fin n) (Fin n) (𝓞 L), S = d • 1 := ⟨_, rfl⟩
   have hS : S.map (algebraMap (𝓞 L) L) = δ • 1 := by
     ext i j
-    by_cases h : i = j <;> simp [hSe, hδe, Matrix.smul_apply, Matrix.one_apply, h]
-  have hSdet : S.det = d ^ n := by simp [hSe, Matrix.det_smul]
+    by_cases h : i = j <;> simp [hSe, hδe, Matrix.smul_apply, h]
+  have hSdet : S.det = d ^ n := by simp [hSe]
   have hDdet : algebraMap (𝓞 L) L D.det = δ ^ n * C.det := by
     rw [coe_det, hDC, Matrix.det_smul, Fintype.card_fin]
   have hS0 : S.det ≠ 0 := by rw [hSdet]; exact pow_ne_zero _ hd
@@ -842,7 +842,6 @@ theorem gIdx_locAt_frame (L : Type) [Field L] [NumberField L] (n : ℕ) (v : Fin
     rw [Matrix.smul_apply]
     have : c • T i j = algebraMap (NumberField.RingOfIntegers L) L r := by
       rw [hr, smul_eq_mul, Algebra.smul_def]
-      all_goals rfl
     rw [this]
     exact place_int_le_one v r
   have hcI : ∀ i j, v ((c • (1 : Matrix (Fin n) (Fin n) L)) i j) ≤ 1 := by

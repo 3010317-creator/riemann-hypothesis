@@ -569,7 +569,7 @@ theorem centre_ident (e : FamExp t.G M B ψ) {b : Fin n → ℂ} (hb : b ∈ B) 
           (t3 A φ g' u ℓ hφ hℓ _).2 ⟨_, rfl⟩⟩)
         by_cases hc : c = a
         · subst hc; simp
-        · simp [hc, Finsupp.single_apply]
+        · simp [hc]
 
       rw [e1, map_sum, star_sum, Matrix.mulVec_sum]
       refine Finset.sum_eq_zero fun a _ => ?_
@@ -788,7 +788,7 @@ theorem centre_phi (C : Flat.BdryChart Xo σ₀ n a) {X : Scheme.{0}} {tt : SAB 
       funext j
       by_cases h : j = i
       · subst h; simp
-      · simp [Pi.single_apply, h]
+      · simp [h]
     rwa [h2] at h1
   obtain ⟨Φ, f1, f2, f3, f4⟩ := centre_ident e hbρ P' hP Mz hL MV ρV I₀ hf hact hI₀ hh (L.B 0) hB Hb hH
     (fun y hy y' hy' => by

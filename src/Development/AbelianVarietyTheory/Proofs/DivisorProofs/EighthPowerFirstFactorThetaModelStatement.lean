@@ -144,7 +144,7 @@ theorem matUnits_univ_of_idem : ∀ {S : Scheme.{0}} (G H : Over S) [GrpObj G] [
       · intro h; exact absurd (Finset.mem_univ b) h
     rw [← Category.assoc, hx, ← hri]
     simp only [Category.assoc]
-    simp only [reassoc_of% hir, hir, Category.comp_id]
+    simp only [hir, Category.comp_id]
   · intro z hz
     calc z = z ≫ ∏ b, E b b := by rw [hsum, Category.comp_id]
       _ = ∏ b, z ≫ E b b := comp_prod' _ _ _
@@ -170,7 +170,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 
 theorem _root_.GlobalTheory.T.eighthPower_of_matrixUnits_idempotent_split : ∀ {S : Scheme.{0}} (G H : Over S) [GrpObj G] [IsCommMonObj G] [GrpObj H] (E : Fin 8 → Fin 8 → (G ⟶ G)) (hE : ∀ a b, IsMonHom (E a b)) (hrel : ∀ a b c d, E a b ≫ E c d = if b = c then E a d else 1) (hsum : ∏ a, E a a = 𝟙 G) (i : H ⟶ G) (r : G ⟶ H) (hi : IsMonHom i) (hr : IsMonHom r) (hir : i ≫ r = 𝟙 H) (hri : r ≫ i = E 0 0), ∀ (T : Over S) (y : Fin 8 → (T ⟶ H)), ∃! x : T ⟶ G, ∀ a, x ≫ (E a 0 ≫ r) = y a := by
-  first | exact @GlobalTheory.matUnits_univ_of_idem | exact GlobalTheory.matUnits_univ_of_idem | (intros; apply GlobalTheory.matUnits_univ_of_idem <;> assumption)
+  first | exact @GlobalTheory.matUnits_univ_of_idem
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EighthPowerOfMatrixUnitsIdempotentSplitStatement =====
@@ -216,7 +216,7 @@ theorem eighthPower_inj_exists : ∀ {S : Scheme.{0}} (P C : Over S) [GrpObj P] 
   intro b
   haveI := hpr b
   rw [Fin.prod_univ_eight]
-  simp only [MonObj.mul_comp, Category.assoc, hinj, MonObj.comp_one, Category.id_comp, Category.comp_id]
+  simp only [MonObj.mul_comp, Category.assoc, hinj, Category.id_comp]
   fin_cases b <;> simp
 
 end GlobalTheory
@@ -237,7 +237,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 
 theorem _root_.GlobalTheory.T.exists_injections_eighthPower_grpObj : ∀ {S : Scheme.{0}} (P C : Over S) [GrpObj P] [IsCommMonObj P] [GrpObj C] (pr : Fin 8 → (P ⟶ C)) (hpr : ∀ a, IsMonHom (pr a)) (huniv : ∀ (T : Over S) (y : Fin 8 → (T ⟶ C)), ∃! x : T ⟶ P, ∀ a, x ≫ pr a = y a), ∃ inj : Fin 8 → (C ⟶ P), (∀ a, IsMonHom (inj a)) ∧ (∀ a b, inj a ≫ pr b = if a = b then 𝟙 C else 1) ∧ ∏ a, (pr a ≫ inj a) = 𝟙 P := by
-  first | exact @GlobalTheory.eighthPower_inj_exists | exact GlobalTheory.eighthPower_inj_exists | (intros; apply GlobalTheory.eighthPower_inj_exists <;> assumption)
+  first | exact @GlobalTheory.eighthPower_inj_exists
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInjectionsEighthPowerGrpObjStatement =====
@@ -291,7 +291,7 @@ theorem exists_isGrpPullback_of_retracts : ∀ {S S' B : Scheme.{0}} (j : S' ⟶
         · simp only [Category.assoc, mψ, h₂, pullback.lift_fst_assoc, pk]
         · simp only [Category.assoc, mh, we', pullback.lift_snd, hφ.1.lift_snd]
       rw [reassoc_of% hm, reassoc_of% h₁, hφ.1.lift_fst_assoc, ← ri]
-      simp only [Category.assoc, reassoc_of% ir, ir, Category.comp_id]
+      simp only [Category.assoc, ir, Category.comp_id]
     · intro s
       exact pullback.lift_snd _ _ _
     · intro s n hn1 hn2
@@ -346,7 +346,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 
 theorem _root_.GlobalTheory.T.exists_isGrpPullback_of_compatible_retracts : ∀ {S S' B : Scheme.{0}} (j : S' ⟶ S) (f : S' ⟶ B) (G : Over S) [GrpObj G] (G' : Over S') [GrpObj G'] (P : Over B) [GrpObj P] (φ : G'.left ⟶ G.left) (ψ : G'.left ⟶ P.left) (hφ : IsGrpPullback G' G j φ) (hψ : IsGrpPullback G' P f ψ) (e : G ⟶ G) (e₀ : P ⟶ P) (e' : G' ⟶ G') (he' : IsMonHom e') (h₁ : e'.left ≫ φ = φ ≫ e.left) (h₂ : e'.left ≫ ψ = ψ ≫ e₀.left) (H : Over S) [GrpObj H] (i : H ⟶ G) (r : G ⟶ H) (hi : IsMonHom i) (hr : IsMonHom r) (hir : i ≫ r = 𝟙 H) (hri : r ≫ i = e) (C : Over B) [GrpObj C] (k : C ⟶ P) (p : P ⟶ C) (hk : IsMonHom k) (hp : IsMonHom p) (hkp : k ≫ p = 𝟙 C) (hpk : p ≫ k = e₀), ∃ (C' : Over S') (_ : GrpObj C') (a : C'.left ⟶ H.left) (b : C'.left ⟶ C.left), IsGrpPullback C' H j a ∧ IsGrpPullback C' C f b := by
-  first | exact @GlobalTheory.RetractPullback.exists_isGrpPullback_of_retracts | exact GlobalTheory.RetractPullback.exists_isGrpPullback_of_retracts | (intros; apply GlobalTheory.RetractPullback.exists_isGrpPullback_of_retracts <;> assumption)
+  first | exact @GlobalTheory.RetractPullback.exists_isGrpPullback_of_retracts
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsGrpPullbackOfCompatibleRetractsStatement =====
@@ -473,7 +473,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 
 theorem _root_.GlobalTheory.T.exists_matrixUnits_extend_normal_noetherian : ∀ {S B : Scheme.{0}} [AlgebraicGeometry.IsNoetherian S] (hS : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme S) (U₀ : S.Opens) (hU : Dense (U₀ : Set S)) (G : Over S) [GrpObj G] [IsCommMonObj G] (hG : IsSemiAbelian G) (G' : Over U₀.toScheme) [GrpObj G'] (P : Over B) [GrpObj P] [IsCommMonObj P] (f : U₀.toScheme ⟶ B) (φ : G'.left ⟶ G.left) (ψ : G'.left ⟶ P.left) (hφ : IsGrpPullback G' G U₀.ι φ) (hψ : IsGrpPullback G' P f ψ) (E' : Fin 8 → Fin 8 → (P ⟶ P)) (hE' : ∀ a b, IsMonHom (E' a b)) (hrel : ∀ a b c d, E' a b ≫ E' c d = if b = c then E' a d else 1) (hsum : ∏ a, E' a a = 𝟙 P), ∃ E : Fin 8 → Fin 8 → (G ⟶ G), (∀ a b, IsMonHom (E a b)) ∧ (∀ a b c d, E a b ≫ E c d = if b = c then E a d else 1) ∧ ∏ a, E a a = 𝟙 G ∧ ∀ a b, ∃ e : G' ⟶ G', IsMonHom e ∧ e.left ≫ φ = φ ≫ (E a b).left ∧ e.left ≫ ψ = ψ ≫ (E' a b).left := by
-  first | exact @GlobalTheory.EighthPowerUnits.exists_matrixUnits_extend | exact GlobalTheory.EighthPowerUnits.exists_matrixUnits_extend | (intros; apply GlobalTheory.EighthPowerUnits.exists_matrixUnits_extend <;> assumption)
+  first | exact @GlobalTheory.EighthPowerUnits.exists_matrixUnits_extend
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMatrixUnitsExtendNormalNoetherianStatement =====
@@ -596,7 +596,7 @@ theorem repr_left (hV : V ≤ U) (y : Γ(F, V)) (i : Fin n) :
       rw [IsFrame.basis_apply, Fin.append_right, ← app_resM, QCoh.coe_appLinear, QCoh.app_app, h₄]
       change _ = ((he₁.basis hV).repr 0) i
       rw [map_zero, Finsupp.single_apply]
-      simp only [Finsupp.coe_zero, Pi.zero_apply, ite_eq_right_iff, one_ne_zero, imp_false]
+      simp only [Finsupp.coe_zero, Pi.zero_apply, ite_eq_right_iff]
       intro e
       have := congrArg Fin.val e
       simp at this
@@ -617,7 +617,7 @@ theorem repr_right (hV : V ≤ U) (y : Γ(F, V)) (i : Fin m) :
       rw [IsFrame.basis_apply, Fin.append_left, ← app_resM, QCoh.coe_appLinear, QCoh.app_app, h₃]
       change _ = ((he₂.basis hV).repr 0) i
       rw [map_zero, Finsupp.single_apply]
-      simp only [Finsupp.coe_zero, Pi.zero_apply, ite_eq_right_iff, one_ne_zero, imp_false]
+      simp only [Finsupp.coe_zero, Pi.zero_apply, ite_eq_right_iff]
       intro e
       have := congrArg Fin.val e
       simp at this
@@ -861,7 +861,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 
 theorem _root_.GlobalTheory.T.isNoetherian_functionFieldModel_arithBase : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (M : RatModel o Ω), AlgebraicGeometry.IsNoetherian M.Z := by
-  first | exact @GlobalTheory.ratModel_isNoetherian_of_arithBase | exact GlobalTheory.ratModel_isNoetherian_of_arithBase | (intros; apply GlobalTheory.ratModel_isNoetherian_of_arithBase <;> assumption)
+  first | exact @GlobalTheory.ratModel_isNoetherian_of_arithBase
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsNoetherianFunctionFieldModelArithBaseStatement =====
@@ -893,7 +893,6 @@ theorem isSeparated_toZ : ∀ {g n : ℕ} (F : SFam g n (zetaAway n)), IsSeparat
   have ht : toZ F.X = F.s ≫ toZ (Sp (cycAway n)) := by
     first
     | exact specULiftZIsTerminal.hom_ext _ _
-    | exact specZIsTerminal.hom_ext _ _
   rw [ht]
   infer_instance
 
@@ -917,7 +916,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 
 theorem _root_.GlobalTheory.T.isSeparated_siegelModuli_over_integers : ∀ {g n : ℕ} (F : SFam g n (zetaAway n)), IsSeparated (toZ F.X) := by
-  first | exact @GlobalTheory.SepSiegel.isSeparated_toZ | exact GlobalTheory.SepSiegel.isSeparated_toZ | (intros; apply GlobalTheory.SepSiegel.isSeparated_toZ <;> assumption)
+  first | exact @GlobalTheory.SepSiegel.isSeparated_toZ
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSeparatedSiegelModuliOverIntegersStatement =====
@@ -1045,7 +1044,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 
 theorem _root_.GlobalTheory.T.semiAbelian_pullback_abelian_over_open : ∀ {S X : Scheme.{0}} [IsIntegral S] [AlgebraicGeometry.IsNoetherian S] (hS : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme S) (hX : IsSeparated (toZ X)) (A : Over X) [GrpObj A] (hA : IsAbelianScheme A) (H : Over S) [GrpObj H] (hH : IsSemiAbelian H) (U₀ U : S.Opens) (hU₀ : (U₀ : Set S).Nonempty) (hU : (U : Set S).Nonempty) (u' : U₀.toScheme ⟶ X) (c : U.toScheme ⟶ X) (A₀ : Over U₀.toScheme) [GrpObj A₀] (e₀ : A₀.left ⟶ H.left) (e₁ : A₀.left ⟶ A.left) (h₀ : IsGrpPullback A₀ H U₀.ι e₀) (h₁ : IsGrpPullback A₀ A u' e₁) (K : Type) [Field K] (pt : Sp K ⟶ S) (hpt : Set.range pt = {genericPoint S}) (hgen : ∀ (x : Sp K ⟶ U.toScheme) (y : Sp K ⟶ U₀.toScheme), x ≫ U.ι = pt → y ≫ U₀.ι = pt → x ≫ c = y ≫ u'), ∃ e : pullback A.hom c ⟶ H.left, IsGrpPullback ((Over.pullback c).obj A) H U.ι e := by
-  first | exact @GlobalTheory.FactorOverOpen.factor_over_open | exact GlobalTheory.FactorOverOpen.factor_over_open | (intros; apply GlobalTheory.FactorOverOpen.factor_over_open <;> assumption)
+  first | exact @GlobalTheory.FactorOverOpen.factor_over_open
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianPullbackAbelianOverOpenStatement =====
@@ -1103,7 +1102,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 
 theorem _root_.GlobalTheory.T.smoothOfRelativeDimension_of_eighth_power : ∀ {S : Scheme.{0}} [IsIntegral S] (G H : Over S) [GrpObj G] [GrpObj H] (g : ℕ) (pr : Fin 8 → (H ⟶ G)) (huniv : ∀ (T : Over S) (y : Fin 8 → (T ⟶ G)), ∃! x : T ⟶ H, ∀ u, x ≫ pr u = y u) (hG : IsSemiAbelian G) (hH : SmoothOfRelativeDimension (8 * g) H.hom), SmoothOfRelativeDimension g G.hom := by
-  first | exact @GlobalTheory.PowDim.smoothOfRelativeDimension_of_eighthPower | exact GlobalTheory.PowDim.smoothOfRelativeDimension_of_eighthPower | (intros; apply GlobalTheory.PowDim.smoothOfRelativeDimension_of_eighthPower <;> assumption)
+  first | exact @GlobalTheory.PowDim.smoothOfRelativeDimension_of_eighthPower
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothOfRelativeDimensionOfEighthPowerStatement =====

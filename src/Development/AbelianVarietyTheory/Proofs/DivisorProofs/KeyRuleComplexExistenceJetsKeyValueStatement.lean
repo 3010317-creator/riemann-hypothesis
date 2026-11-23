@@ -211,11 +211,11 @@ theorem thetaChar_empty [IsEmpty (Fin g)] (τ : Matrix (Fin g) (Fin g) ℂ) (a b
     thetaChar τ a b z = 1 := by
   unfold thetaChar
   rw [tsum_fintype, Fintype.sum_unique]
-  simp [dot_empty]
+  simp
 
 theorem autV_empty [IsEmpty (Fin g)] (τ : Matrix (Fin g) (Fin g) ℂ) (a b : Fin g → ℂ) (M N : Fin g → ℤ) (z : Fin g → ℂ) :
     autV τ a b M N z = 1 := by
-  simp [autV, dot_empty]
+  simp [autV]
 
 theorem posDef_empty [IsEmpty (Fin g)] (A : Matrix (Fin g) (Fin g) ℝ) : A.PosDef :=
   ⟨by ext i; exact isEmptyElim i, fun x hx => (hx (Subsingleton.elim _ _)).elim⟩
@@ -592,7 +592,7 @@ theorem wQ_fr {m t : ℕ} (ht : m ^ 2 = 2 * t + 1) (M Nn : Fin g → ℤ) (p : N
   obtain ⟨nB, hB⟩ := half_int (half_bF d σ) Nn
   have hw : (m : ℂ) ^ 2 * ((m : ℂ) ^ 2)⁻¹ = 1 := mul_inv_cancel₀ (pow_ne_zero _ m0)
   have htc : (m : ℂ) ^ 2 = 2 * t + 1 := by exact_mod_cast ht
-  simp only [autV, ← Complex.exp_add, ← Complex.exp_nat_mul, dotProduct_zero, mul_zero, sub_zero]
+  simp only [← Complex.exp_add, ← Complex.exp_nat_mul, dotProduct_zero, mul_zero, sub_zero]
   rw [Complex.exp_eq_exp_iff_exists_int]
   refine ⟨-(nL + nA - nB), ?_⟩
   push_cast
@@ -1120,7 +1120,7 @@ theorem co_basis {X : Type} [AddCommGroup X] {r : ℕ} (bX : Module.Basis (Fin r
   ext l'
   by_cases h : l' = l
   · subst h; simp [co]
-  · simp [co, h, Finsupp.single_apply, Ne.symm h]
+  · simp [co, h]
 
 theorem exists_quad {X : Type} [AddCommGroup X] {r : ℕ} (bX : Module.Basis (Fin r) ℤ X) (Ψ : X → ℂˣ)
     (hev : ∀ a, Ψ (-a) = Ψ a)
@@ -1242,8 +1242,8 @@ theorem full_mulVec (d : CD N g' r bX) (σ : Fin g ≃ Fin g' ⊕ Fin r) (S : Ma
   ext i
   simp only [CD.full, Matrix.submatrix_mulVec_equiv, Function.comp_apply, Pi.add_apply, Matrix.fromBlocks_mulVec]
   rcases h : σ i with j | j
-  · simp [tP]
-  · simp [tP, Matrix.add_mulVec, add_assoc]
+  · simp
+  · simp [Matrix.add_mulVec, add_assoc]
     rfl
 
 theorem leftComponent_fullMatrix_mulVec (d : CD N g' r bX) (σ : Fin g ≃ Fin g' ⊕ Fin r) (S : Matrix (Fin r) (Fin r) ℂ) (x : Fin g → ℂ) :
@@ -1342,8 +1342,7 @@ theorem main_eq {N : NumD ℂ} {g' r g : ℕ} {bX : Module.Basis (Fin r) ℤ N.X
     linear_combination t * this
   rw [← Complex.exp_nat_mul]
   refine key _ _ _ _ _ _ ?_
-  simp only [Matrix.add_mulVec, dotProduct_add, dotProduct_smul, smul_eq_mul, add_zero, Matrix.zero_mulVec,
-    dotProduct_zero, h1, h2, h3, hK]
+  simp only [Matrix.add_mulVec, dotProduct_add, dotProduct_smul, smul_eq_mul, add_zero, h1, h2, h3, hK]
   field_simp
   ring
 
@@ -1572,7 +1571,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.MBLow.Cl Matrix
 
 theorem _root_.GlobalTheory.T.fourierJacobiExpansion_fderiv_termwise : AllCD fun {N} {g'} {r} {g} {bX} d σ => ∀ S : Matrix (Fin r) (Fin r) ℂ, S.IsSymm → ((d.full σ S).map Complex.im).PosDef → (∀ χ, Differentiable ℂ (d.fj σ S χ)) ∧ ∀ Z W, (Summable fun χ => ‖fderiv ℂ (d.fj σ S χ) Z W‖) ∧ ∑' χ, fderiv ℂ (d.fj σ S χ) Z W = fderiv ℂ (thetaChar (d.full σ S) (d.aF σ) (d.bF σ)) Z W := by
-  first | exact @GlobalTheory.MBLow.Cl.fj_expansion_fderiv | exact GlobalTheory.MBLow.Cl.fj_expansion_fderiv | (intros; apply GlobalTheory.MBLow.Cl.fj_expansion_fderiv <;> assumption)
+  first | exact @GlobalTheory.MBLow.Cl.fj_expansion_fderiv
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FourierJacobiExpansionFderivTermwiseStatement =====
@@ -1590,7 +1589,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.MBLow.Cl Matrix
 
 theorem _root_.GlobalTheory.T.thetaChar_blockPeriodMatrix_fourierJacobiExpansion : AllCD fun {N} {g'} {r} {g} {bX} d σ => ∀ S : Matrix (Fin r) (Fin r) ℂ, S.IsSymm → ((d.full σ S).map Complex.im).PosDef → ∀ Z, (Summable fun χ => ‖d.fj σ S χ Z‖) ∧ ∑' χ, d.fj σ S χ Z = thetaChar (d.full σ S) (d.aF σ) (d.bF σ) Z := by
-  first | exact @GlobalTheory.MBLow.Cl.fj_expansion | exact GlobalTheory.MBLow.Cl.fj_expansion | (intros; apply GlobalTheory.MBLow.Cl.fj_expansion <;> assumption)
+  first | exact @GlobalTheory.MBLow.Cl.fj_expansion
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaCharBlockPeriodMatrixFourierJacobiExpansionStatement =====
@@ -1825,11 +1824,11 @@ theorem exists_vec (κ : Rule) {R : Type} [CommRing R] [IsDomain R] [IsNoetheria
       have e := congrArg TrivSqZeroExt.snd (((hT _ (hW0 _ l rfl) (bX l')).symm).trans ((hr l).2 (bX l')))
       have hc : co bX (bX l') = Pi.single l' 1 := by
         funext i
-        by_cases hi : i = l' <;> simp [co, hi, Finsupp.single_apply, eq_comm]
+        by_cases hi : i = l' <;> simp [co, hi]
       rw [hc, single_one_dotProduct] at e
       simp only [TrivSqZeroExt.snd_add, TrivSqZeroExt.snd_one, TrivSqZeroExt.snd_inr, zero_add, Module.Basis.repr_self] at e
       refine e.trans ?_
-      by_cases hi : l' = l <;> simp [hi, Finsupp.single_apply]
+      by_cases hi : l' = l <;> simp [hi]
   obtain ⟨hd, hv⟩ := hK vB (fun i => (gm (σ.symm (Sum.inl i))).b) MB k₀ hb hl (fun i => by
     change IsD ν d.toAB ((2 * Real.pi * Complex.I : ℂ)⁻¹ • (2 * Real.pi * Complex.I : ℂ) • W (σ.symm (Sum.inl i))) _
     rw [hs]; exact hW _) hk
@@ -1935,7 +1934,7 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.keyRule_complex_existence_jets_key_value : ∀ κ : Rule, Rule4 κ → Arch κ := by
-  first | exact @GlobalTheory.MBLow.ArchProof.arch_of_rule4 | exact GlobalTheory.MBLow.ArchProof.arch_of_rule4 | (intros; apply GlobalTheory.MBLow.ArchProof.arch_of_rule4 <;> assumption)
+  first | exact @GlobalTheory.MBLow.ArchProof.arch_of_rule4
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.KeyRuleComplexExistenceJetsKeyValueStatement =====

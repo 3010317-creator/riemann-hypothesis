@@ -243,8 +243,8 @@ private lemma det_one_sub_smul_matrix {n : Type} [Fintype n] [DecidableEq n]
   congr 1
   ext i j
   by_cases h : i = j
-  · subst h; simp [Matrix.one_apply]; ring
-  · simp [Matrix.one_apply, h]; ring
+  · subst h; simp; ring
+  · simp [h]; ring
 
 private lemma det_one_sub_smul_linear {V : Type} [AddCommGroup V] [Module ℂ V]
     [FiniteDimensional ℂ V] (f : V →ₗ[ℂ] V) (y : ℂ) :
@@ -439,7 +439,7 @@ theorem UpperTheory.Gal.W2.fibDet_of :
     rw [LinearMap.toMatrix_apply, hf, map_smul, bb.repr_self]
     by_cases h : x = z
     · subst h; simp
-    · simp [Matrix.diagonal_apply, Finsupp.single_apply, h, Ne.symm h]
+    · simp [h]
   rw [hmat, Matrix.det_diagonal, Fintype.prod_sigma]
 end -- clump:auto
 end -- clump:auto
@@ -826,14 +826,14 @@ theorem UpperTheory.Gal.W2.markDiag_of :
       by_cases hj : j = i₀
       · subst hj
         simp [(hmemS _).2 rfl]
-      · simp [Pi.single_apply, hj]
+      · simp [hj]
     · rw [hcol _ _ hH, ← Matrix.mulVec_smul]
       congr 1
       funext j
       by_cases hj : j = i₀
       · subst hj
         simp [h]
-      · simp [Pi.single_apply, hj]
+      · simp [hj]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.PMarkDiag =====
@@ -1823,10 +1823,10 @@ theorem UpperTheory.Gal.W2.fibW_of :
         ε τ = 1 ∧ ε (ComplexEmbedding.conjugate τ) = 0) with ⟨e1, e2⟩ | ⟨e1, e2⟩
     · rw [e1, Nat.mul_zero, Multiset.card_eq_zero] at hc1
       rw [hc1, e1]
-      simp [Function.comp_def]
+      simp
     · rw [e2, Nat.mul_zero, Multiset.card_eq_zero] at hc2
       rw [hc2, e1]
-      simp [Function.comp_def]
+      simp
   have hr0 : (rts χ t₀).erase mu = (evAt ty ev (ComplexEmbedding.conjugate t₀)).map (starRingEnd ℂ) := by
     rw [hrts, evFull, hmu, Multiset.singleton_add, Multiset.erase_cons_head]
   have hpair : A t₀ * B t₀ * (A (ComplexEmbedding.conjugate t₀) * B (ComplexEmbedding.conjugate t₀)) =

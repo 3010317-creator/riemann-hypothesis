@@ -242,7 +242,7 @@ section -- clump:auto
 
 
 theorem _root_.GlobalTheory.T.conj_dual_parts_killed_of_perfect_pairing : ∀ (O : Type) [CommRing O] (bar : O →+* O) (U : Type) [CommRing U] [IsDomain U] (M M' : Type) [CommGroup M] [CommGroup M'] (α : O → M →* M) (α' : O → M' →* M'), (∀ y, α 1 y = y) → (∀ a b y, α (a * b) y = α a (α b y)) → (∀ a b y, α (a + b) y = α a y * α b y) → (∀ x, α' 1 x = x) → (∀ a b x, α' (a * b) x = α' a (α' b x)) → (∀ a b x, α' (a + b) x = α' a x * α' b x) → (∀ a, bar (bar a) = a) → ∀ (e : M' →* M →* Uˣ) (e' : M →* M' →* Uˣ), Function.Injective e → Function.Injective e' → (∀ a x y, e (α' a x) y = e x (α (bar a) y)) → (∀ a y x, e' (α a y) x = e' y (α' (bar a) x)) → ∀ (u w : Ideal O) (n : ℕ), u ≤ w → u ⊔ u.map bar = ⊤ → (∀ a ∈ (u * u.map bar) ^ n, (∀ y, α a y = 1) ∧ ∀ x, α' a x = 1) → (∀ y, (∃ m : ℕ, ∀ a ∈ u ^ m, α a y = 1) → ∀ a ∈ w, α a y = 1) → Finite {y : M // ∀ a ∈ w, α a y = 1} → (∀ x, (∃ m : ℕ, ∀ a ∈ (u.map bar) ^ m, α' a x = 1) → ∀ a ∈ w.map bar, α' a x = 1) ∧ Nat.card {x : M' // ∀ a ∈ w.map bar, α' a x = 1} = Nat.card {y : M // ∀ a ∈ w, α a y = 1} := by
-  first | (exact @GlobalTheory.DualParts.conj_dual_parts) | (exact GlobalTheory.DualParts.conj_dual_parts) | (intros; apply GlobalTheory.DualParts.conj_dual_parts <;> assumption)
+  first | (exact @GlobalTheory.DualParts.conj_dual_parts)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjDualPartsKilledOfPerfectPairingStatement =====
@@ -360,7 +360,7 @@ def tr (y : T ⟶ A) : A ⊗ T ⟶ A ⊗ T := lift (fst A T * (snd A T ≫ y)) (
 
 theorem tr_mul (y y' : T ⟶ A) : tr (y * y') = tr y ≫ tr y' := by
   apply CartesianMonoidalCategory.hom_ext
-  · simp only [tr, Category.assoc, lift_fst, MonObj.comp_mul, lift_fst_assoc, lift_snd_assoc, _root_.mul_assoc]
+  · simp only [tr, Category.assoc, lift_fst, MonObj.comp_mul, lift_snd_assoc, _root_.mul_assoc]
   · simp [tr]
 
 theorem tr_whisker {B : Over S} [GrpObj B] (f : A ⟶ B) [IsMonHom f] (y : T ⟶ A) :
@@ -486,7 +486,7 @@ theorem gm_id_eq_one {V Z : Scheme.{0}} (i : V ⟶ Z) [IsOpenImmersion i] (w : V
     (asIso (i.stalkMap w)).commRingCatIsoToRingEquiv.injective
   apply hinj
   rw [map_one, ← h1]
-  simp only [Scheme.Hom.id_app, CommRingCat.hom_id, RingHom.id_apply]
+  simp only [Scheme.Hom.id_app]
   exact Scheme.Hom.germ_stalkMap_apply i ⊤ w trivial _
 
 theorem exists_gen_of_val_eq (hL : L.IsLB) {E F : Scheme.{0}} (π : E ⟶ F) (hF : Flat π) (hS : Surjective π)
@@ -647,7 +647,6 @@ theorem exists_pairing {s : S ⟶ Sp R} {c : ℕ} {o o' : Obj b N s} {ψ : o.A �
     rw [tr_whisker, show y.1 ≫ ψ = 1 from y.2, tr_one, Category.comp_id]
   have hch : ∀ (g : kerPts ψ' T) (y : kerPts ψ T), ∃ u, Ch (σ g) y.1 u := fun g y =>
     exists_ch o.ab hL (σ g) (hσ g) y.1 fun _ => by
-      change _ ≫ φ g.1 = φ g.1
       rw [← hφ, ← Category.assoc, ← Over.comp_left, htr]
   choose u hu using hch
   have hinv : ∀ {K : Type} [Fintype K] {θ : K → ((o'.A ⊗ T).left ⟶ (G2 o'.A).left)} {ε : K → ℤ}
@@ -774,7 +773,7 @@ theorem exists_pairing {s : S ⟶ Sp R} {c : ℕ} {o o' : Obj b N s} {ψ : o.A �
       rw [← Over.comp_left, ← Over.comp_left, comp_lift, comp_lift, whiskerRight_snd_assoc, whiskerRight_snd_assoc,
         whiskerRight_fst_assoc, whiskerRight_fst_assoc, hl]
     simp only [Fintype.prod_sum_type, Fin.prod_univ_two, Sum.elim_inl, Sum.elim_inr, Fintype.prod_unique,
-      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val, e₁, e₂, zpow_one, zpow_neg]
+      Matrix.cons_val_zero, Matrix.cons_val_one, e₁, e₂, zpow_one, zpow_neg]
     rw [inv_mul_cancel_right]
     rfl
 

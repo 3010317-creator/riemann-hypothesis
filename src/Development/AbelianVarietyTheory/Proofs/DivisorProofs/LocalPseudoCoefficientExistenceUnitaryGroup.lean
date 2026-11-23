@@ -752,7 +752,7 @@ theorem iteratedDeriv_scale_eq_zero {G : ℝ → ℝ} (hG : ∀ x, 1 ≤ x → G
     filter_upwards [hopen.mem_nhds hx] with y hy
     exact hG _ (le_of_lt hy)
   rw [hev.iteratedDeriv_eq k]
-  simp [iteratedDeriv_const]
+  simp
 
 theorem isCutFn_iteratedDeriv_scale {G : ℝ → ℝ} (hGs : ContDiff ℝ ∞ G) (hG : ∀ x, 1 ≤ x → G x = 0) {t : ℝ}
     (ht : 0 < t) (k : ℕ) : IsCutFn (iteratedDeriv k (fun y => G (t * y))) := by
@@ -1525,11 +1525,7 @@ def TT (n : ℕ) : Poly n →ₐ[ℂ] MvPolynomial ((Fin n × Fin n) ⊕ (Fin n 
 
 theorem TT_deg {n : ℕ} (P : Poly n) : (TT n P).totalDegree ≤ P.totalDegree := by
   first
-  | exact @_root_.GlobalTheory.TotalDegreeBounds.main
-  | exact _root_.GlobalTheory.TotalDegreeBounds.main
   | (apply _root_.GlobalTheory.TotalDegreeBounds.main <;> assumption)
-  | (intros; apply _root_.GlobalTheory.TotalDegreeBounds.main <;> assumption)
-  | (intros; apply @_root_.GlobalTheory.TotalDegreeBounds.main <;> first | assumption | infer_instance)
   | (intros; exact _root_.GlobalTheory.TotalDegreeBounds.main ..)
 
 theorem ev_conjT_mul {n : ℕ} (A M : Mat n) (P : Poly n) :

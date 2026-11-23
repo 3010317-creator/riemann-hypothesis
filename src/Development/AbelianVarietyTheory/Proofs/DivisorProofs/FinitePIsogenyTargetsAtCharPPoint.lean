@@ -231,7 +231,7 @@ theorem inK_iff {A B : Over (Sp k)} [GrpObj B] (π : A ⟶ B) {T : Scheme.{0}} (
   refine ⟨fun ⟨z, hz⟩ => ?_, fun h => ⟨_, h.symm⟩⟩
   have e : z = y ≫ A.hom := by
     have := congrArg (· ≫ B.hom) hz
-    simp only [Category.assoc, hη, Category.comp_id, Over.w π] at this
+    simp only [Category.assoc, hη, Over.w π] at this
     exact this
   rw [← hz, e]
 
@@ -1704,7 +1704,7 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open ReciprocityTheory.ChartRestriction.G.Out (RingAct)
 
 theorem _root_.GlobalTheory.T.finite_kernels_pIsogenies_harrisTaylor_charP : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → D.m = 1 → ∀ (c : ℕ) (k : Type) [Field k] [IsAlgClosed k] [CharP k p] (s : Sp k ⟶ Sp R) (o : Obj b N s), Set.Finite {P : ∀ T : Over (Sp k), (T ⟶ o.A) → Prop | ∃ (o' : Obj b N s) (ψ : o.A ⟶ o'.A), IsPIsog c o o' ψ ∧ P = fun T x => x ≫ ψ = 1} := by
-  first | (exact @GlobalTheory.UPel.HT.ES.KerFin.finite_kernels) | (exact GlobalTheory.UPel.HT.ES.KerFin.finite_kernels) | (intros; apply GlobalTheory.UPel.HT.ES.KerFin.finite_kernels  <;> assumption)
+  first | (exact @GlobalTheory.UPel.HT.ES.KerFin.finite_kernels)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteKernelsPIsogeniesHarrisTaylorCharPStatement =====

@@ -333,7 +333,6 @@ theorem pack_eq (D : D7) (u : D.what₂.Word)
     (ψ : Formalism.L2.Herm.awayFrom₂ Lc (D.what₂.places.resChar w) →* (ORec D w (nFr D (D.what₂.places.resChar w)))ˣ) :
     pack D u Lc w h5 h2 he I ψ = locPackC D u Lc w h5 h2 he I ψ := by
   first
-    | with_reducible rfl
     | (delta pack locPackC frobOrder nFr; with_reducible rfl)
 
 end Bridge
@@ -413,7 +412,7 @@ theorem natAct_mul (A B : ∀ v, GL (Fin (P.m + 1)) (P.Qq v)) (F : P.Xsp) :
   simp only [AlgHom.comp_apply] at h
   simp only [Places.natAct, LinearMap.smul_apply, AlgHom.toLinearMap_apply, map_smul, smul_smul, h,
     mul_inv_rev, Units.val_mul, gPos_mul, Matrix.det_mul, mul_zpow, Finset.prod_mul_distrib]
-  first | rfl | (congr 1; exact mul_comm _ _)
+  first | (congr 1; exact mul_comm _ _)
 
 theorem natAct_one (F : P.Xsp) : P.natAct (fun _ => 1) F = F := by
   simp only [Places.natAct, inv_one, Units.val_one, gPos_one, Matrix.det_one, one_zpow, Finset.prod_const_one,

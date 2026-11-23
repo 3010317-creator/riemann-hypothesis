@@ -702,7 +702,7 @@ theorem low_coeff_of_param (p : ℕ) [Fact p.Prime] (ι : Type) [Fintype ι] (K1
     have hkS := hS k hk
 
     rw [hWdef, map_sub, map_sum]
-    simp only [MvPowerSeries.coeff_smul, MvPowerSeries.coeff_monomial, smul_eq_mul, mul_ite, mul_one, mul_zero]
+    simp only [MvPowerSeries.coeff_smul, MvPowerSeries.coeff_monomial, mul_ite, mul_one, mul_zero]
     rw [Finset.sum_ite_eq S k]
     simp [hkS, hc]
   have hV : MvPowerSeries.subst (Pf.en_Ec p K1) W =
@@ -718,7 +718,7 @@ theorem low_coeff_of_param (p : ℕ) [Fact p.Prime] (ι : Type) [Fintype ι] (K1
   rw [hV, map_sub, map_sum, sub_eq_zero] at h0
   rw [h0]
   refine Finset.sum_congr rfl fun n _ => ?_
-  simp only [MvPowerSeries.coeff_smul, MvPowerSeries.coeff_map, hc, smul_eq_mul]
+  simp only [MvPowerSeries.coeff_smul, MvPowerSeries.coeff_map, hc]
 
 end GlobalTheory.TwU
 end -- clump:auto
@@ -947,12 +947,12 @@ theorem fock_rows_of_fills : ∀ (D : D7) (u : D.what₂.Word) (w : D.what₂.pl
     have hl : (((D.gat u w hg).P.lam0 v s ⟨r + 1 - 1, by omega⟩ : ℤ) : ℚ) =
         (D.hcW u (hT.gat_pos u w hg ⟨v, s⟩)).u ⟨r, h1⟩ - ((D.R.k : ℚ) - 1) / 2 + r := by
       rw [hT.gat_lam, (D.fm u).lam_eq 0 (Nat.zero_le _)]
-      simp [hcToWeightQ, rhoVec, Ranks.N, h1]
+      simp [hcToWeightQ, rhoVec, h1]
       ring
     have hlR := congrArg (Rat.cast : ℚ → ℝ) hl
     push_cast at hlR ⊢
     rw [hlR, hw i hi]
-    simp only [kaJ, Ranks.N, Nat.add_sub_cancel]
+    simp only [kaJ, Ranks.N]
     push_cast
     ring
   · rw [if_neg (by omega)]

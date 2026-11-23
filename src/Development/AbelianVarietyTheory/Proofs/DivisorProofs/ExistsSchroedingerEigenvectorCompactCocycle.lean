@@ -157,7 +157,7 @@ open scoped GlobalTheory.VacAny
 theorem _root_.GlobalTheory.T.exists_schwartzBruhat_schroedingerFixed_localField : ∀ {F : Type} [Field F] [NumberField F] (v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F)) (ψ : AddChar (Fv F v) ℂ),
     Continuous ψ → ∀ {κ : Type} [Fintype κ], ∃ φ₁ ∈ GlobalTheory.WeilM.SB (κ → Fv F v), φ₁ ≠ 0 ∧
       ∃ U ∈ nhds (0 : (κ → Fv F v) × (κ → Fv F v)), ∀ w ∈ U, GlobalTheory.WeilM.schr ψ w φ₁ = φ₁ := by
-  first | exact @GlobalTheory.SchrTestVec.exists_fixed | exact GlobalTheory.SchrTestVec.exists_fixed | (intros; apply GlobalTheory.SchrTestVec.exists_fixed <;> assumption)
+  first | exact @GlobalTheory.SchrTestVec.exists_fixed
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSchwartzBruhatSchroedingerFixedLocalFieldStatement =====
@@ -222,7 +222,7 @@ theorem _root_.GlobalTheory.SympDualNbhd.exists_dual_nbhd : ∀ {F : Type} [Fiel
     intro i y hy j
     by_cases hj : j = i
     · subst hj; simpa using hy
-    · simp [Pi.single_apply, hj, hRpos.le]
+    · simp [hj, hRpos.le]
   refine ⟨Y, ?_, Metric.ball 0 (δ / R), Metric.ball_mem_nhds _ (div_pos hδ hRpos), ?_⟩
   · intro w' hw'
     have h1 : ∀ i, ‖w'.1 i‖ < ε := by
@@ -304,7 +304,7 @@ theorem _root_.GlobalTheory.T.exists_subgroup_symplecticAnnihilator_localField :
     ∃ Y : AddSubgroup ((κ → Fv F v) × (κ → Fv F v)),
       (∀ w' : (κ → Fv F v) × (κ → Fv F v), (∀ w ∈ Y, ψ (w'.1 ⬝ᵥ w.2 - w.1 ⬝ᵥ w'.2) = 1) → w' ∈ N) ∧
       ∃ N' ∈ nhds (0 : (κ → Fv F v) × (κ → Fv F v)), ∀ w' ∈ N', ∀ w ∈ Y, ψ (w'.1 ⬝ᵥ w.2 - w.1 ⬝ᵥ w'.2) = 1 := by
-  first | exact @GlobalTheory.SympDualNbhd.exists_dual_nbhd | exact GlobalTheory.SympDualNbhd.exists_dual_nbhd | (intros; apply GlobalTheory.SympDualNbhd.exists_dual_nbhd <;> assumption)
+  first | exact @GlobalTheory.SympDualNbhd.exists_dual_nbhd
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSubgroupSymplecticAnnihilatorLocalFieldStatement =====
@@ -329,7 +329,7 @@ open scoped GlobalTheory.VacAny
 theorem _root_.GlobalTheory.T.schroedinger_mem_schwartzBruhat_finitePlace : ∀ {F : Type} [Field F] [NumberField F] (v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F)) (ψ : AddChar (Fv F v) ℂ),
     Continuous ψ → ∀ {κ : Type} [Fintype κ] (w : (κ → Fv F v) × (κ → Fv F v)) (φ : (κ → Fv F v) → ℂ),
     φ ∈ GlobalTheory.WeilM.SB (κ → Fv F v) → GlobalTheory.WeilM.schr ψ w φ ∈ GlobalTheory.WeilM.SB (κ → Fv F v) := by
-  first | exact @GlobalTheory.SchrSBFin.schr_mem_SB | exact GlobalTheory.SchrSBFin.schr_mem_SB | (intros; apply GlobalTheory.SchrSBFin.schr_mem_SB <;> assumption)
+  first | exact @GlobalTheory.SchrSBFin.schr_mem_SB
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerMemSchwartzBruhatFinitePlaceStatement =====

@@ -735,7 +735,7 @@ theorem UpperTheory.V.Ws.Eb.conjOf :
       rfl
   have hyg : y g * (ρ g : Matrix (Fin n) (Fin n) K) = 1 * (ρ g : Matrix (Fin n) (Fin n) K) * X + (1 * 0 + -X * (ρ g : Matrix (Fin n) (Fin n) K)) * 1 := by
     rw [hy g]
-    simp only [Loc.adGL, MonoidHom.coe_mk, OneHom.coe_mk, LinearMap.coe_mk, AddHom.coe_mk, sub_mul, mul_assoc, ← Matrix.coe_units_inv, Units.inv_mul, mul_one, one_mul, mul_zero, zero_add, neg_mul, sub_eq_add_neg]
+    simp only [Loc.adGL, MonoidHom.coe_mk, OneHom.coe_mk, LinearMap.coe_mk, AddHom.coe_mk, mul_assoc, ← Matrix.coe_units_inv, Units.inv_mul, mul_one, one_mul, mul_zero, zero_add, neg_mul, sub_eq_add_neg]
     rw [add_mul, mul_assoc, mul_assoc, Units.inv_mul, mul_one, neg_mul]
   ext i j : 2
   rw [Units.val_mul, Units.val_mul, hp, Units.inv_mk]
@@ -982,11 +982,11 @@ private theorem factor_abs {n : ℕ} {A G H : Type} [CommRing A] [Group G] [Grou
       have hm : MonoidAlgebra.mapRingHom K (algebraMap A B) (MonoidAlgebra.single 1 r)
           = MonoidAlgebra.single 1 (algebraMap A B r) := by
         ext g
-        simp [MonoidAlgebra.coeff_single, Finsupp.single_apply]
+        simp [MonoidAlgebra.coeff_single]
       rw [hr, map_mul, map_mul, map_mul, hx, Matrix.map_mul, hm, repAlg_single, repAlg_single, map_one]
       congr 1
       ext i j
-      by_cases h : i = j <;> simp [Matrix.one_apply, h]
+      by_cases h : i = j <;> simp [h]
   have chi_eq {K : Type} [Group K] (R : K →* Matrix (Fin n) (Fin n) A) (y : MonoidAlgebra A K) :
       (W.GDet.ofRep R).chi y = (W.GDet.repAlg R A y).charpoly := by
     unfold W.GDet.chi
@@ -995,7 +995,7 @@ private theorem factor_abs {n : ℕ} {A G H : Type} [CommRing A] [Group G] [Grou
     rw [Matrix.charpoly]
     congr 1
     ext i j
-    by_cases h : i = j <;> simp [Matrix.charmatrix_apply, Matrix.one_apply, h]
+    by_cases h : i = j <;> simp [h]
   have tr_eq (y : MonoidAlgebra A H) :
       (W.GDet.ofRep (W.mat ρ)).tr y = (W.GDet.repAlg (W.mat ρ) A y).trace := by
     haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
@@ -1071,10 +1071,10 @@ theorem UpperTheory.V.AlgebraTools.lemma_L :
     (MonoidAlgebra.lift R (Matrix (Fin n) (Fin n) R) Γ ((Units.coeHom _).comp r) z) with he
   have hρ : MonoidAlgebra.lift R (Matrix (Fin n) (Fin n) R) Γ ((Units.coeHom _).comp r)
       (MonoidAlgebra.of R Γ s) = ((r s : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) := by
-    simp [MonoidAlgebra.lift_of]
+    simp
   have hχ : ∀ i, MonoidAlgebra.lift R R Γ ((Units.coeHom R).comp (ψ i)) (MonoidAlgebra.of R Γ s)
       = ((ψ i s : Rˣ) : R) := fun i => by
-    simp [MonoidAlgebra.lift_of]
+    simp
   have hinv : ((g⁻¹ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) * (g : Matrix (Fin n) (Fin n) R) = 1 :=
     Units.inv_mul g
   have key : ∀ i j, ((g * r s * g⁻¹ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) i j =
@@ -1083,7 +1083,6 @@ theorem UpperTheory.V.AlgebraTools.lemma_L :
     intro i j
     refine (UpperTheory.V.AlgebraTools.entry_of_single (((g * r s * g⁻¹ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R)) i j).symm.trans ?_
     rw [← hg i, ← hg j]
-    congr 1
     simp only [Units.val_mul, Matrix.mul_assoc]
     simp only [← Matrix.mul_assoc (((g⁻¹ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R)), hinv, Matrix.one_mul]
   refine ⟨fun i j hji => ?_, fun i => ?_⟩
@@ -1293,7 +1292,7 @@ private theorem ptDer_eq_zero_of_vanish_on_X {l : ℕ} [Fact l.Prime] (c : Coef 
         refine TrivSqZeroExt.ext ?_ ?_ <;> simp
       map_add' := by
         intro f g
-        refine TrivSqZeroExt.ext ?_ ?_ <;> simp <;> ring
+        refine TrivSqZeroExt.ext ?_ ?_ <;> simp
       commutes' := by
         intro r
         refine TrivSqZeroExt.ext ?_ ?_
@@ -1756,8 +1755,7 @@ private theorem rf_star_single (R : Type) [CommRing R] [Algebra O R] (n : ℕ) (
       MonoidAlgebra.single (F.conj g)⁻¹ (a * ((F.eps O R g ^ (1 - (n : ℤ)) : Rˣ) : R)) := by
   simp only [W.GFrame.star, W.GFrame.starOp]
   rw [MonoidAlgebra.lift_single]
-  simp only [MonoidHom.coe_mk, OneHom.coe_mk, MulOpposite.unop_smul, MulOpposite.unop_op, MonoidAlgebra.smul_single',
-    smul_eq_mul]
+  simp only [MonoidHom.coe_mk, OneHom.coe_mk, MulOpposite.unop_smul, MulOpposite.unop_op, MonoidAlgebra.smul_single']
 
 private noncomputable def rf_dual (K : Type) [CommRing K] [Algebra O K] (n : ℕ) (r : F.G₀ →* GL (Fin n) K) :
     F.G₀ →* Matrix (Fin n) (Fin n) K where

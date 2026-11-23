@@ -170,7 +170,7 @@ theorem det_flat_mul (A : ι → Matrix (Fin p) (Fin p) ℂ) (B : ι → Matrix 
     change unflat (L (flat x)) τ = A τ * x τ * B τ
     rw [hL]; rfl
   rw [← LinearMap.det_conj L E, key, LinearMap.det_pi]
-  simp only [GlobalTheory.ModuLR.det_lrLin, Fintype.card_fin]
+  simp only [GlobalTheory.ModuLR.det_lrLin]
 
 theorem model_smooth (h : Fintype.card (ι × Fin p × Fin q) = n) {u : ReciprocityTheory.L2DbarEstimates.V n}
     (hu : GlobalTheory.UnifDens.flatL h u ∈ DomFlat ι p q) (τ : ι) :
@@ -875,7 +875,7 @@ theorem graph_prodCongrRight (σ : ι → Equiv.Perm γ) :
   unfold glue graph
   simp only [Finsupp.mapDomain_finsetSum, Finsupp.mapDomain_single]
   rw [Fintype.sum_prod_type]
-  simp only [Finsupp.mapDomain_finsetSum, Finsupp.mapDomain_single, emb, Equiv.prodCongrRight_apply]
+  simp only [emb, Equiv.prodCongrRight_apply]
 
 theorem exists_prodCongrRight (w : Equiv.Perm (ι × γ)) (hw : ∀ a, (w a).1 = a.1) :
     ∃ σ : ι → Equiv.Perm γ, Equiv.prodCongrRight σ = w := by
@@ -1121,7 +1121,7 @@ theorem contDiff_hP_entry (ι : Type) [Fintype ι] (p q n : ℕ)
   have hs : ContDiff ℝ 2 (fun w : ReciprocityTheory.L2DbarEstimates.V n => star (GlobalTheory.UnifDens.flatL h w (τ, b, k))) := by
     have := (Complex.conjCLE.contDiff (n := 2)).comp (hz (τ, b, k))
     convert this using 2
-    simp [Function.comp, Complex.conjCLE_apply, Complex.star_def]
+    simp [Function.comp]
   exact (hz (τ, a, k)).mul hs
 
 theorem invT_contDiffAt_and_isUnit : ∀ (ι : Type) [Fintype ι] (p q n : ℕ) (h : Fintype.card (ι × Fin p × Fin q) = n) (v : ReciprocityTheory.L2DbarEstimates.V n), GlobalTheory.UnifDens.flatL h v ∈ DomFlat ι p q → ∀ τ : ι, MContDiffAt 2 (fun w => ((hP (unflat (GlobalTheory.UnifDens.flatL h w) τ))⁻¹)ᵀ) v ∧ IsUnit (((hP (unflat (GlobalTheory.UnifDens.flatL h v) τ))⁻¹)ᵀ).det := by

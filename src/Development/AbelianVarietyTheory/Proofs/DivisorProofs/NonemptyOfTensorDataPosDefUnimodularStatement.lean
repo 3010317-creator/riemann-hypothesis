@@ -471,7 +471,7 @@ theorem pairing_factor : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R
         refine Finset.prod_eq_one fun j _ => ?_
         rw [Fin.prod_univ_four, if_neg hi]
         simp only [GlobalTheory.PolDeg.lamPts, Oε, _root_.one_mul]
-        simp [zpow_mul, zpow_neg]
+        simp
         apply Additive.ofMul.injective
         simp only [ofMul_mul, ofMul_zpow, ofMul_one]
         module)
@@ -551,7 +551,7 @@ theorem _root_.GlobalTheory.T.mumfordIso_periods_factor_tensor_polarised : ∀ (
         val (Q.tau a b) (𝟙 _) z J' =
           lamVal w' (lift (toUnit (TK R) ≫ Q.c a) (toUnit (TK R) ≫ Q.c b)).left z J J' *
             val (D'.toPre.tau (PowLim.xi xe i₀ a) (TensO.binv (symUnitOf W h) • PowLim.xi xe i₀ b)) (𝟙 _) z J := by
-  first | exact @GlobalTheory.Mum.PolPair.pairing_factor | exact GlobalTheory.Mum.PolPair.pairing_factor | (intros; apply GlobalTheory.Mum.PolPair.pairing_factor <;> assumption)
+  first | exact @GlobalTheory.Mum.PolPair.pairing_factor
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MumfordIsoPeriodsFactorTensorPolarisedStatement =====
@@ -1259,7 +1259,7 @@ theorem _root_.GlobalTheory.T.tensorData_periods_balanced_integralMatrices : ∀
     letI := PowLim.mod xe (symUnitOf W h)
     ∀ a : TensO (symUnitOf W h), D'.toPre.TauBal (PowLim.act pr hl (TensO.mat _ a)) (PowLim.act pr hl (TensO.mat _ (star a)))
       (fun y => a • y) (fun y => star a • y) := by
-  first | exact @GlobalTheory.Mum.PolTens.tauBal_polTens | exact GlobalTheory.Mum.PolTens.tauBal_polTens | (intros; apply GlobalTheory.Mum.PolTens.tauBal_polTens <;> assumption)
+  first | exact @GlobalTheory.Mum.PolTens.tauBal_polTens
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorDataPeriodsBalancedIntegralMatricesStatement =====
@@ -1464,7 +1464,7 @@ theorem _root_.GlobalTheory.T.nonempty_of_tensorData_posDef_unimodular : ∀ (R 
       val (D'.toPre.psi y) (𝟙 _) z J' = gm (D'.toPre.xK y) z _ (w.s (fun k => J (D'.toPre.xK y ≫ tensφ pr k), J' (D'.toPre.xK y))) *
         ∏ i, ∏ j, val (Q.tau (xe y i) (xe y j)) (𝟙 _) z J ^ W i j) →
     Nonempty (PFactor Q D'.toPre) := by
-  first | exact @GlobalTheory.Mum.PFactor.nonempty_of_tens | exact GlobalTheory.Mum.PFactor.nonempty_of_tens | (intros; apply GlobalTheory.Mum.PFactor.nonempty_of_tens <;> assumption)
+  first | exact @GlobalTheory.Mum.PFactor.nonempty_of_tens
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyOfTensorDataPosDefUnimodularStatement =====

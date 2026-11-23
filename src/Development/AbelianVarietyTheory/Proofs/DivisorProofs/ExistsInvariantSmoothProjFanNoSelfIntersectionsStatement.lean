@@ -73,7 +73,7 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.exists_invariant_smoothProjFan_noSelfIntersections : ∀ g : ℕ, ∃ φ : InvFun ℤ, IsPolFan (id : ℤ → ℤ) g φ ∧ NoSelfInt (id : ℤ → ℤ) g φ := by
-  first | exact @GlobalTheory.PolDeg.exists_inv_smooth_fan_noSelfInt | exact GlobalTheory.PolDeg.exists_inv_smooth_fan_noSelfInt | (intros; apply GlobalTheory.PolDeg.exists_inv_smooth_fan_noSelfInt <;> assumption)
+  first | exact @GlobalTheory.PolDeg.exists_inv_smooth_fan_noSelfInt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvariantSmoothProjFanNoSelfIntersectionsStatement =====

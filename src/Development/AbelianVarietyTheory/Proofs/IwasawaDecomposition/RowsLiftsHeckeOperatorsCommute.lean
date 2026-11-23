@@ -166,7 +166,7 @@ theorem exists_unif_star (P : HeightOneSpectrum (𝓞 E)) (hP : conjPrime₂ P =
   have key : (x : E) * (r1 : E) - (r2 : E) = ((x : E) - star (x : E)) * star (a : E) := by
     change algebraMap (𝓞 E) E x * algebraMap (𝓞 E) E (a + cO E a) - algebraMap (𝓞 E) E (x * a + cO E (x * a)) =
       (algebraMap (𝓞 E) E x - star (algebraMap (𝓞 E) E x)) * star (algebraMap (𝓞 E) E a)
-    simp only [map_add (f := _), map_mul, algebraMap_cO, star_mul]
+    simp only [map_add (f := _), map_mul, algebraMap_cO]
     ring
   have hvx : P.valuation E ((x : E) - star (x : E)) = 1 := by
     have e : ((x : E) - star (x : E)) = -(algebraMap (𝓞 E) E (cO E x - x)) := by
@@ -423,7 +423,7 @@ theorem exists_smul_mem_of_fg {R M : Type*} [CommRing R] [AddCommGroup M] [Modul
       rw [Finset.coe_insert, Submodule.mem_span_insert] at hx
       obtain ⟨r, y, hy, rfl⟩ := hx
       have e : (t * s) • (r • a + y) = (r * s) • (t • a) + t • (s • y) := by
-        simp only [smul_add, smul_smul, mul_comm, mul_assoc, mul_left_comm]
+        simp only [smul_add, smul_smul, mul_comm, mul_left_comm]
       rw [e]
       exact B.add_mem (B.smul_mem _ hta) (B.smul_mem _ (hsG y hy))
   exact key G subset_rfl
@@ -576,7 +576,7 @@ open NumberField IsDedekindDomain Formalism.HermitianLatticesTheory Formalism.L2
 open Classical
 
 theorem _root_.GlobalTheory.T.localization_hermitianDual_eq : ∀ {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ} (Q : HeightOneSpectrum (𝓞 E)) (A B : Submodule (𝓞 E) (Sp E n)), Submodule.IsLattice E A → Submodule.IsLattice E B → localization₂ (conjPrime₂ Q).asIdeal A = localization₂ (conjPrime₂ Q).asIdeal B → localization₂ Q.asIdeal (dual (hStd E n) A) = localization₂ Q.asIdeal (dual (hStd E n) B) := by
-  first | exact @GlobalTheory.DualLoc.use₅ | exact GlobalTheory.DualLoc.use₅ | (intros; apply GlobalTheory.DualLoc.use₅ <;> assumption)
+  first | exact @GlobalTheory.DualLoc.use₅
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalizationHermitianDualEqStatement =====
@@ -678,7 +678,6 @@ theorem _root_.GlobalTheory.T.submodulePatchAtPrime_isLattice_locP : ∀ {E : Ty
   intro E _ _ _ n P A B hA hB
   first
   | exact GlobalTheory.InertExchange.patchAt_isLattice_locP P A B hA hB
-  | exact GlobalTheory.InertExchange.patchAt_isLattice_locP P A B hA.toIsLattice hB.toIsLattice
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SubmodulePatchAtPrimeIsLatticeLocPStatement =====

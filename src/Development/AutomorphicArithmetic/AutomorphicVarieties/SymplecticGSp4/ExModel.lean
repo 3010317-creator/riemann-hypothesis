@@ -113,7 +113,7 @@ private theorem dm_mul (X Z X' Z' : M4 O) : dm X Z * dm X' Z' = dm (X * X') (X *
   intro a b
   constructor
   · simp [Matrix.mul_apply, dm_fst, TrivSqZeroExt.fst_sum]
-  · simp [Matrix.mul_apply, dm_fst, dm_snd, TrivSqZeroExt.snd_sum, Matrix.add_apply, Finset.sum_add_distrib, mul_comm]
+  · simp [Matrix.mul_apply, dm_fst, dm_snd, TrivSqZeroExt.snd_sum, Matrix.add_apply, Finset.sum_add_distrib]
 
 private theorem dm_one : dm (1 : M4 O) 0 = 1 := by
   symm
@@ -122,7 +122,7 @@ private theorem dm_one : dm (1 : M4 O) 0 = 1 := by
   by_cases h : a = b
   · subst h
     simp
-  · simp [Matrix.one_apply, h]
+  · simp [h]
 
 private theorem dm_adj (X Z : M4 O) : adj (dm X Z) = dm (adj X) (adj Z) := by
   apply dm_ext
@@ -135,11 +135,11 @@ private theorem dm_smul (a : O) : algebraMap O (DualNumber O) a • (1 : M4 (Dua
   by_cases h : i = j
   · subst h
     simp [TrivSqZeroExt.algebraMap_eq_inl]
-  · simp [Matrix.one_apply, h]
+  · simp [h]
 
 private theorem adj_mul_eq_adj_mul_adj (A B : M4 O) : adj (A * B) = adj B * adj A := by
   ext i j
-  simp only [adj_apply, Matrix.mul_apply, Fin.sum_univ_four, Matrix.of_apply]
+  simp only [adj_apply, Matrix.mul_apply, Fin.sum_univ_four]
   fin_cases i <;> fin_cases j <;> simp [sgn] <;> ring
 
 private theorem adj_sub_eq_adj_sub_adj (A B : M4 O) : adj (A - B) = adj A - adj B := by
@@ -163,7 +163,7 @@ private theorem dm_gsp {ν : O} {X Y : M4 O} (hX : IsGSp ν X) (hY : Y ∈ sp4 O
 
 private theorem adj_one_eq_one : adj (1 : M4 O) = 1 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [adj_apply, sgn, Matrix.one_apply] <;> decide
+  fin_cases i <;> fin_cases j <;> simp [adj_apply, sgn]
 
 private theorem dm_sp {Y : M4 O} (hY : Y ∈ sp4 O) : IsGSp 1 (dm 1 Y) := by
   have hY' : adj Y = -Y := hY
@@ -290,7 +290,7 @@ theorem UpperTheory.exists_pointDerivation_framed_commutator_tangent :
       rw [dm_mul, dm_mul]
       congr 1
       · simp
-      · simp only [mul_sub, sub_mul, Matrix.mul_one, Matrix.one_mul, Matrix.mul_assoc]
+      · simp only [mul_sub, sub_mul, Matrix.mul_one, Matrix.one_mul]
         abel
   obtain ⟨y, ⟨hyi, hyr, hyα⟩, -⟩ := F.univ (DualNumber c.O) i' r' α' hfr
   have hyR : ∀ g a b, y (F.r.hom g a b) = r'.hom g a b := by
@@ -537,17 +537,17 @@ private theorem tw_gsp (A B : M4 O) (q : Q) (ν : O) (h1 : IsGSp ν A) (h2 : adj
   have h := tw_mul (adj A) (adj B) A B (adj B * A) q q (-1) rfl (by rw [h2]; simp)
   rw [tw_adj, ← h, h1]
   ext i j
-  · rw [tw_fst]; by_cases h : i = j <;> simp [Matrix.one_apply, h, TrivSqZeroExt.algebraMap_eq_inl]
-  · rw [tw_snd]; by_cases h : i = j <;> simp [Matrix.one_apply, h, TrivSqZeroExt.algebraMap_eq_inl]
+  · rw [tw_fst]; by_cases h : i = j <;> simp [h, TrivSqZeroExt.algebraMap_eq_inl]
+  · rw [tw_snd]; by_cases h : i = j <;> simp [h, TrivSqZeroExt.algebraMap_eq_inl]
 
 private theorem dg_comm (d : Fin 4 → O) (u : O) (h2 : d 2 = u * d 0) (h3 : d 3 = u * d 1) :
     Matrix.diagonal d * Xm O = u • (Xm O * Matrix.diagonal d) := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [Xm, Matrix.single_apply, Matrix.diagonal_mul, Matrix.mul_diagonal, Matrix.add_mul, Matrix.mul_add, h2, h3]
+  fin_cases i <;> fin_cases j <;> simp [Xm, Matrix.diagonal_mul, Matrix.mul_diagonal, Matrix.add_mul, h2, h3]
 
 private theorem adj_dg (d : Fin 4 → O) : adj (Matrix.diagonal d) = Matrix.diagonal fun i => d i.rev := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [adj_apply, sgn, Fin.rev, Matrix.diagonal_apply]
+  fin_cases i <;> fin_cases j <;> simp [adj_apply, sgn, Fin.rev]
 
 private theorem dg_gsp (d : Fin 4 → O) (ν : O) (h : ∀ i, d i * d i.rev = ν) : IsGSp ν (Matrix.diagonal d) := by
   unfold IsGSp
@@ -561,15 +561,15 @@ private theorem dg_adj (d : Fin 4 → O) :
   rw [adj_dg]
   ext i j
   rw [Matrix.neg_apply, Matrix.mul_diagonal, Matrix.diagonal_mul, adj_apply, Matrix.mul_diagonal, Matrix.mul_diagonal]
-  fin_cases i <;> fin_cases j <;> simp [Xm, Matrix.single_apply, sgn, Fin.rev]
+  fin_cases i <;> fin_cases j <;> simp [Xm, sgn, Fin.rev]
 
 private theorem Xm_sp : Xm O ∈ sp4 O := by
   show adj _ = -_
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [adj_apply, sgn, Xm, Fin.rev, Matrix.single_apply]
+  fin_cases i <;> fin_cases j <;> simp [adj_apply, sgn, Xm, Fin.rev]
 
 private theorem Xm_wt (i j : Fin 4) (h : wt i j ≠ -wPs) : Xm O i j = 0 := by
-  fin_cases i <;> fin_cases j <;> first | exact absurd (by decide) h | simp [Xm, Matrix.single_apply]
+  fin_cases i <;> fin_cases j <;> first | exact absurd (by decide) h | simp [Xm]
 
 private theorem ac_lc {Γ R : Type} [TopologicalSpace Γ] [CommRing R] (I : Ideal R) {f : Γ → R} (h : IsLocallyConstant f) :
     AdicCont I f := fun _ => h.comp _
@@ -1048,8 +1048,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.sixBlock :
   have E10 := E 1 0
   have E13 := E 1 3
   have E20 := E 2 0
-  simp [Matrix.mul_apply, Fin.sum_univ_four, adj_apply, sgn, h01, h03, h21, h10, h30, h12,
-    Matrix.one_apply] at errorNonneg bivariateExponentMonomial E11 E10 E13 E20
+  simp [Matrix.mul_apply, Fin.sum_univ_four, adj_apply, sgn, h01, h03, h21, h10, h30, h12] at errorNonneg bivariateExponentMonomial E11 E10 E13 E20
   have u00 : IsUnit (g 0 0) :=
     UpperTheory.V.GradeZeroInterpolatingElement.sixBlock_unit (w := g 3 3) (h := g 2 0) hν (hoff 1 3 (by decide)) (by rw [← errorNonneg]; ring)
   have u11 : IsUnit (g 1 1) :=
@@ -1067,7 +1066,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.sixBlock :
     have h31 : g 3 1 = 0 := by simpa [h11, h20, h00] using E20
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [Matrix.one_apply, h00, h01, h02, h03, h10, h11, h12, h13, h20, h21, h22, h23, h30, h31, h32, h33]
+      simp [h00, h01, h02, h03, h10, h11, h12, h13, h20, h21, h22, h23, h30, h31, h32, h33]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.SymplecticGSp4.SixBlock =====
@@ -1369,7 +1368,7 @@ private theorem rootVec (O : Type) [CommRing O] (k : Fin 6) :
     ext i j; fin_cases i <;> fin_cases j <;> simp [adj_apply, sgn, Fin.rev]
 
 private theorem Xm_wt (O : Type) [CommRing O] (a b : Fin 4) (h : wt a b ≠ -wPs) : Xm O a b = 0 := by
-  fin_cases a <;> fin_cases b <;> first | (exfalso; revert h; decide) | simp [Xm, Matrix.single_apply]
+  fin_cases a <;> fin_cases b <;> first | (exfalso; revert h; decide) | simp [Xm]
 
 private theorem card_prod {A B : Type} (p : B → Prop) : Nat.card {k : A × B // p k.2} = Nat.card A * Nat.card {b // p b} := by
   rw [← Nat.card_prod]

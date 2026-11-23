@@ -642,7 +642,6 @@ theorem UpperTheory.Gal.Wt.famEx_of : NeatLev → EllC → Twist → TwistBd →
   have hε' : 0 ≤ ε / R := (div_pos hε hR0).le
   have hv : f.1 (b g i) g = (F q₀).1 (b g i) g := by
     rw [hFv, ← hfC ((c q₀)⁻¹ * ℓ g : C) ⟨Subtype.prop _, h0⟩ (b g i) (g * ((ℓ g)⁻¹ * c q₀ : C))]
-    congr 1
     simp only [Subgroup.coe_mul, Subgroup.coe_inv]
     group
   have hδ : ∀ q, (φ (c q))⁻¹ * φ (ℓ g) = φ ((c q)⁻¹ * ℓ g) := fun q => by rw [map_mul, map_inv]
@@ -1746,7 +1745,7 @@ private theorem tor_conj (a k : ℕ) (z : Circle) :
     rw [Circle.coe_inv]
     exact eq_inv_of_mul_eq_one_left (circ_mul_conj z)
   ext i j
-  simp only [Matrix.GeneralLinearGroup.map_apply, tor_coe, Matrix.map_apply, Matrix.diagonal_apply]
+  simp only [Matrix.GeneralLinearGroup.map_apply, tor_coe, Matrix.diagonal_apply]
   split_ifs <;> simp [hinv]
 
 theorem torFacts_of : TorFacts := fun a k z =>

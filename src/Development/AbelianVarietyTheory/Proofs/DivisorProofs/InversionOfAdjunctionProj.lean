@@ -462,7 +462,7 @@ theorem sections_inter_eq_sub_of_subsingleton_cohOn : ∀ (Y : Scheme.{0}) (F : 
   refine ⟨(sectionsOn.toΓ F W₁).symm aa, (sectionsOn.toΓ F W₂).symm bb, ?_⟩
   apply (sectionsOn.toΓ F _).injective
   rw [map_sub, sectionsOn.toΓ_res, sectionsOn.toΓ_res]
-  simp only [AddEquiv.apply_symm_apply]
+  simp only
   apply hinj
   change _ = S.f.hom.app _ (S.X₁.obj.map _ bb - S.X₁.obj.map _ aa)
   erw [map_sub]
@@ -1170,7 +1170,7 @@ theorem exists_stalk_equiv_of_fromSpecStalk (X : Scheme.{0}) (x : X)
     intro U hxU
     ext s
     have h3 := congrArg (fun f => f.hom s) (TopCat.Presheaf.germ_stalkSpecializes X.presheaf hxU hs)
-    simp only [CommRingCat.hom_comp, RingHom.comp_apply, CommRingCat.hom_ofHom] at h3
+    simp only [CommRingCat.hom_comp, RingHom.comp_apply] at h3
     change e ((X.presheaf.stalkSpecializes hs).hom ((X.presheaf.germ U _ hxU).hom s)) =
       algebraMap _ (Localization.AtPrime p.asIdeal) ((X.presheaf.germ U _ hxU).hom s)
     rw [h3]

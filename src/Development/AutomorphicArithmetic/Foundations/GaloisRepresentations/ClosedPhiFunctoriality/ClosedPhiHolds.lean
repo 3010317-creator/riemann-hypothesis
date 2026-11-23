@@ -149,7 +149,7 @@ theorem closedTr_of (h1 : CoverJ) (h2 : FrEx) (h3 : OpEx2) (h4 : FixOf) (h5 : Ti
       simpa [jl, mapRep] using this
     · refine MonoidHom.ext fun g => LinearMap.ext fun v => ?_
       rw [hR]
-      simp [LocBridge.repE, Matrix.toLin'_apply]
+      simp [LocBridge.repE]
   obtain ⟨bk⟩ := GlobalTheory.BSP.nonempty_bk_of_finExt l Bw.Kw
   obtain ⟨τp, hτp⟩ := GlobalTheory.BSP.exists_isPer l Bw.Kw bk
   obtain ⟨N, F, F₀, rr, hF, hF₀, hlink⟩ := h2 l Bw.Kw Bw.LL bk τp hτp P AI T a Bw.LL_split (r.comp jl) _ (Cv.pull jl hjl) J'
@@ -930,7 +930,7 @@ theorem linkRec_holds : LinkRec := by
       = (u * t) • (D4 * (Q₁.map φ * β₁')) - (u * s) • (Q * (D5 * β₁')) := by
     rw [hmap, e3, e1, e2, ← hu]
     simp only [Matrix.sub_mul, Matrix.smul_mul, smul_sub, smul_smul, Matrix.mul_assoc, h1,
-      Matrix.mul_smul, Matrix.mul_one, Matrix.mul_sub]
+      Matrix.mul_smul, Matrix.mul_one]
     module
   intro i j
   rw [key, Matrix.sub_apply, Matrix.smul_apply, Matrix.smul_apply, smul_eq_mul, smul_eq_mul,
@@ -1410,7 +1410,7 @@ theorem secU_holds : CoreU → SecU := by
     intro f
     rw [← Matrix.map_mul, hA]
     ext i j
-    by_cases hij : i = j <;> simp [Matrix.one_apply, hij]
+    by_cases hij : i = j <;> simp [hij]
   have hfE : fB bk.E = (l : Per.Acris l) * v := hv
   have hfE0 : fB0 bk.E = (l : Per.Acris l) * w0 := hP0
   have hcoef : ∀ (c y : Per.Acris l), c * y = 1 → c ^ N * c ^ N * ((l : Per.Acris l) * y) ^ (2 * N) = (l : Per.Acris l) ^ (2 * N) := by
@@ -1493,7 +1493,7 @@ theorem UpperTheory.Gal.ClosedPhiFromClosedTrace.testTr_holds :
   simp only [Algebra.smul_def] at h2
   have h3 := congrArg T.eB h2
 
-  simp only [map_sum, map_mul, map_one, mul_one, RingEquiv.apply_symm_apply] at h3
+  simp only [map_sum, map_mul, mul_one, RingEquiv.apply_symm_apply] at h3
   have h4 : ∑ i, uB T (lam (t i)) * v₀ i = uB T (lam p) := h3
   simp only [Pi.smul_apply, smul_eq_mul]
   rw [← h4, Finset.mul_sum]
@@ -1674,7 +1674,7 @@ theorem UpperTheory.Gal.ClosedPhiFromClosedTrace.trLin_holds :
       rw [hexp (T y) i]
 
       simp only [hrepr, map_sum, map_mul, Matrix.mul_apply, X, Tm, Matrix.of_apply,
-      Matrix.map_apply, Finset.mul_sum, Finset.sum_mul]
+      Matrix.map_apply, Finset.sum_mul]
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl fun m _ => Finset.sum_congr rfl fun m' _ => by ring
     rw [Matrix.mul_apply]
@@ -1901,7 +1901,7 @@ theorem UpperTheory.Gal.ClosedPhiFromClosedTrace.zeroAp_holds :
     | zero =>
       refine ⟨Matrix.of fun i j => (hdiv' i j).choose, 0, ?_⟩
       ext i j
-      simp only [mul_zero, pow_zero, pow_one, one_smul, smul_zero, add_zero, Matrix.smul_apply,
+      simp only [mul_zero, pow_zero, pow_one, smul_zero, add_zero, Matrix.smul_apply,
         Matrix.of_apply, smul_eq_mul]
       rw [one_mul]
       exact (hdiv' i j).choose_spec

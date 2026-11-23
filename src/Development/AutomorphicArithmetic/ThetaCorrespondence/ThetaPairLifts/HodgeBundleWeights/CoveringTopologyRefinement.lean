@@ -146,9 +146,9 @@ theorem isRelPrime_X_sub_X {σ : Type} {a b c d : σ} (h : a ≠ b) (h' : c ≠ 
   refine (irreducible_X_sub_X h).isRelPrime_iff_not_dvd.2 fun hd => ?_
   rcases hn with ⟨h1, h2⟩ | ⟨h1, h2⟩
   · have := map_dvd (eval (Pi.single c (1 : ℝ))) hd
-    simp [Pi.single_apply, h1.symm, h2.symm, h'.symm] at this
+    simp [h1.symm, h2.symm, h'.symm] at this
   · have := map_dvd (eval (Pi.single d (1 : ℝ))) hd
-    simp [Pi.single_apply, h1.symm, h2.symm, h'] at this
+    simp [h1.symm, h2.symm, h'] at this
 
 theorem rootDiscr_dvd (ι : Type) [Fintype ι] (m : ι → ℕ) (P : MvPolynomial (Root m) ℝ)
     (hP : ∀ (τ : ι) (i j : Fin (m τ)), i < j → (X ⟨τ, j⟩ - X ⟨τ, i⟩ : MvPolynomial (Root m) ℝ) ∣ P) :
@@ -282,7 +282,7 @@ namespace GlobalTheory
 theorem X_sub_X_dvd_sub_aeval_update_variable {σ : Type} [DecidableEq σ] (a b : σ) (P : MvPolynomial σ ℝ) :
     (X b - X a : MvPolynomial σ ℝ) ∣ P - aeval (Function.update (X : σ → MvPolynomial σ ℝ) b (X a)) P := by
   induction P using MvPolynomial.induction_on with
-  | C r => simp [aeval_C]
+  | C r => simp
   | add p q hp hq =>
     have h := dvd_add hp hq
     rw [map_add (f := _)]
@@ -1194,7 +1194,7 @@ theorem entryLe_antisymm_del : ∀ (K : Type) [Fintype K] (X A Ta Tb Dab Dba dAa
         + ((wa * wb : ℝ) : ℂ) • (X * (ddAab - ddAba)) := by
     push_cast
     simp only [Matrix.smul_mul, Matrix.mul_smul, smul_smul, smul_sub, smul_add, Matrix.mul_add,
-      Matrix.add_mul, Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_assoc, mul_comm (wb : ℂ) (wa : ℂ)]
+      Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_assoc, mul_comm (wb : ℂ) (wa : ℂ)]
     abel
   have hwa : wa * b ≤ b := by nlinarith
   have hwb : wb * b ≤ b := by nlinarith
@@ -1685,7 +1685,7 @@ theorem mumfordProportionality_of_goodChernWeil (h : GlobalTheory.Published.Good
     ((∑ x : Root Dw.mult, MvPolynomial.C (-(GlobalTheory.AllWt.exOf Dw la 0 (some x) : ℝ)) * MvPolynomial.X x) ^ (Φ.C k).Y.dim)
   rw [GlobalTheory.Member.selfInter_Lw_interPoly (Φ.C k) la]
   have key := hasChernIntegral_unique (h.flag hf hg hH hG hR) (hint la R hR)
-  convert key using 3 <;> exact Subsingleton.elim _ _
+  convert key using 3
 
 end GlobalTheory.Proportionality
 end -- clump:auto
@@ -1709,7 +1709,7 @@ section
 open GlobalTheory.CovTop GlobalTheory.BigTop
 
 theorem _root_.GlobalTheory.T.covering_topology_refinement : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → _root_.GlobalTheory.CovTop.Hypotheses'' := by
-  first | exact @_root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems.toClassicalTheorems | exact _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems.toClassicalTheorems | (intros; apply _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems.toClassicalTheorems <;> assumption)
+  first | exact @_root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems.toClassicalTheorems
 end
 end -- clump:auto
 end -- clump:auto

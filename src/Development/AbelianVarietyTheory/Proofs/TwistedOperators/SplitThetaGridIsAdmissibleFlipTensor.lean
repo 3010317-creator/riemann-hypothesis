@@ -140,7 +140,7 @@ def srcDiff (e : Edge) : ℤ := (e.src.1 : ℤ) - e.src.2
 
 theorem srcDiff_of_join {e e' : Edge} (h : e.tgt = e'.src) : srcDiff e' = srcDiff e + 1 := by
   cases e <;> cases e' <;> simp only [Edge.src, Edge.tgt, Prod.mk.injEq] at h <;>
-    simp only [srcDiff, Edge.src] <;> omega
+    simp only [srcDiff] <;> omega
 
 theorem pairwise_of_isPath {γ : List Edge} (h : IsPath γ) :
     γ.Pairwise fun a b => srcDiff a < srcDiff b := by
@@ -205,7 +205,7 @@ namespace GlobalTheory.SplitFlip
 def pathInnerDiff (X : ℕ × ℕ) : ℤ := (X.1 : ℤ) - X.2
 
 theorem pathInnerDiff_tgt (e : Edge) : pathInnerDiff e.tgt = pathInnerDiff e.src + 1 := by
-  cases e <;> simp [pathInnerDiff, Edge.tgt, Edge.src] <;> push_cast <;> ring
+  cases e <;> simp [pathInnerDiff] <;> push_cast <;> ring
 
 theorem IsPath.pairwise_lt_source_index_difference_along_path {γ : List Edge} (hγ : IsPath γ) :
     (γ.map fun e => pathInnerDiff e.src).Pairwise (· < ·) := by
@@ -410,7 +410,7 @@ theorem _root_.GlobalTheory.T.inversePartialFourierSum_comp_fromBlocks : ∀ {k 
     ∀ M₁ ∈ KO k D₁, ∀ M₂ ∈ KO k D₂, ∀ X : Matrix A (D₁ ⊕ D₂) k,
       invFourierSum ψ ϖ e (Assignment.one.block D₁ D₂)ᶜ (fun Z => Φ (Z * fromBlocks M₁.val 0 0 (invT M₂).val)) X =
         invFourierSum ψ ϖ e (Assignment.one.block D₁ D₂)ᶜ Φ (X * fromBlocks M₁.val 0 0 M₂.val) := by
-  first | exact @GlobalTheory.BlockSubstFourier.invFourierSum_comp_fromBlocks | exact GlobalTheory.BlockSubstFourier.invFourierSum_comp_fromBlocks | (intros; apply GlobalTheory.BlockSubstFourier.invFourierSum_comp_fromBlocks <;> assumption)
+  first | exact @GlobalTheory.BlockSubstFourier.invFourierSum_comp_fromBlocks
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.InversePartialFourierSumCompFromBlocksStatement =====
@@ -594,7 +594,7 @@ theorem _root_.GlobalTheory.T.partialFourierSum_firstBlock_blockDiagonal : ∀ {
     ∀ Φ : Matrix A (D₁ ⊕ D₂) k → ℂ, IsNatDatum ϖ e Φ → ∀ M₁ ∈ KO k D₁, ∀ M₂ ∈ KO k D₂, ∀ Y : Matrix A (D₁ ⊕ D₂) k,
       fourierSum ψ ϖ e (Assignment.one.block D₁ D₂) (fun Z => Φ (Z * fromBlocks M₁.val 0 0 M₂.val)) Y =
         fourierSum ψ ϖ e (Assignment.one.block D₁ D₂) Φ (Y * fromBlocks (invT M₁).val 0 0 M₂.val) := by
-  first | exact @GlobalTheory.BlockSubst.fourierSum_blockDiag_one | exact GlobalTheory.BlockSubst.fourierSum_blockDiag_one | (intros; apply GlobalTheory.BlockSubst.fourierSum_blockDiag_one <;> assumption)
+  first | exact @GlobalTheory.BlockSubst.fourierSum_blockDiag_one
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.PartialFourierSumFirstBlockBlockDiagonalStatement =====
@@ -744,7 +744,7 @@ theorem _root_.GlobalTheory.T.primitiveFrameDatum_blockSubstitution : ∀ {k : T
           (fun Y => Ψ (Y * fromBlocks (invT M₁).val 0 0 M₂.val)) X =
         (ν (gdet M₁) : ℂ) * (((ν (gdet M₂))⁻¹ : ℂˣ) : ℂ) *
           phiA μ σ ν ϖ e (blockLat ϖ e (Assignment.one.block D₁ D₂)) Ψ (X * fromBlocks M₁.val 0 0 (invT M₂).val) := by
-  first | exact @GlobalTheory.FrameSubst.phiA_blockSubst | exact GlobalTheory.FrameSubst.phiA_blockSubst | (intros; apply GlobalTheory.FrameSubst.phiA_blockSubst <;> assumption)
+  first | exact @GlobalTheory.FrameSubst.phiA_blockSubst
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.PrimitiveFrameDatumBlockSubstitutionStatement =====
@@ -815,7 +815,7 @@ theorem _root_.GlobalTheory.T.squareFlip_equivariant_blockDiagonal_columnSubstit
       squareFlip μ σ ψ ν ϖ e (Assignment.one.block D₁ D₂) (fun Z => Φ (Z * fromBlocks M₁.val 0 0 M₂.val)) X =
         (ν (gdet M₁) : ℂ) * (((ν (gdet M₂))⁻¹ : ℂˣ) : ℂ) *
           squareFlip μ σ ψ ν ϖ e (Assignment.one.block D₁ D₂) Φ (X * fromBlocks M₁.val 0 0 M₂.val) := by
-  first | exact @GlobalTheory.SquareFlipCols.squareFlip_blockDiag_cols | exact GlobalTheory.SquareFlipCols.squareFlip_blockDiag_cols | (intros; apply GlobalTheory.SquareFlipCols.squareFlip_blockDiag_cols <;> assumption)
+  first | exact @GlobalTheory.SquareFlipCols.squareFlip_blockDiag_cols
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.SquareFlipEquivariantBlockDiagonalColumnSubstituStatement =====
@@ -864,7 +864,7 @@ theorem fFun_transpose_mul_of_mem_KO : ∀ {k : Type} [Field k] [ValuativeRel k]
     rw [hh', gdet_mul, gdet_invT]
     congr 2
     ext
-    simp [m, P, Matrix.GeneralLinearGroup.val_det_apply, det_submatrix_equiv_self, det_fromBlocks_zero₂₁]
+    simp [m, P, Matrix.GeneralLinearGroup.val_det_apply, det_submatrix_equiv_self]
   have hv : valuation k ((gdet u)⁻¹ : kˣ) = 1 := by
     rw [← map_inv]; exact valuation_gdet_of_mem_KO (inv_mem hu)
   rw [e1, splitTheta_fFun_frameFirstBlock_mul, splitTheta_fFun_frameFirstBlock_mul, e2, e3, apow_mul, apow_of_valuation_eq_one hv, map_mul, Units.val_mul, map_inv]
@@ -890,7 +890,7 @@ open GlobalTheory.TopLevelInv
 theorem _root_.GlobalTheory.T.frameTestFunction_transpose_integralGL_mul_eq_char : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] {A A' D : Type} [Fintype A] [DecidableEq A] [Fintype A'] [DecidableEq A'] [Fintype D] [DecidableEq D]
     (μ : Measure (GL A' k)) [μ.IsHaarMeasure] (σ : A ⊕ A' ≃ D) (ν : kˣ →* ℂˣ) (Ψ : Matrix A' D k → ℂ) (u : GL A k), u ∈ KO k A → ∀ h : GL D k,
       (ν (gdet u) : ℂ) * fFun μ σ ν Ψ (u.valᵀ * (X0 k σ * (invT h).val)) = fFun μ σ ν Ψ (X0 k σ * (invT h).val) := by
-  first | exact @GlobalTheory.FFunLeftInv.fFun_transpose_mul_of_mem_KO | exact GlobalTheory.FFunLeftInv.fFun_transpose_mul_of_mem_KO | (intros; apply GlobalTheory.FFunLeftInv.fFun_transpose_mul_of_mem_KO <;> assumption)
+  first | exact @GlobalTheory.FFunLeftInv.fFun_transpose_mul_of_mem_KO
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrameTestFunctionTransposeIntegralGLMulEqCharStatement =====
@@ -1064,7 +1064,7 @@ theorem _root_.GlobalTheory.T.sum_quotientIntegerMatrices_invariant_integralGL_m
     (ϖ : kˣ) (e : ℕ), IsUnif ϖ → ∀ f : Matrix A B k → ℂ, (∀ Z Z' : Matrix A B k, (∀ i j, Z' i j ∈ 𝒪[k]) → f (Z + Z') = f Z) →
     ∀ M : GL A k, M ∈ KO k A →
       ∑ S : A → B → Res k e, f (M.val * ((ϖ ^ e)⁻¹ • liftRes S)) = ∑ S : A → B → Res k e, f ((ϖ ^ e)⁻¹ • liftRes S) := by
-  first | exact @GlobalTheory.ResSumInv.sum_res_mul_left | exact GlobalTheory.ResSumInv.sum_res_mul_left | (intros; apply GlobalTheory.ResSumInv.sum_res_mul_left <;> assumption)
+  first | exact @GlobalTheory.ResSumInv.sum_res_mul_left
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.SumQuotientIntegerMatricesInvariantIntegralGLMulStatement =====
@@ -1136,7 +1136,7 @@ theorem squareFlip_one_rows : ∀ {k : Type} [Field k] [ValuativeRel k] [Topolog
     rcases j with c | c
     · simp [setCols, Assignment.block, hX', Matrix.mul_apply, Matrix.toCols₁]
     · simp [setCols, Assignment.block, Matrix.mul_apply]
-      first | rfl | exact Matrix.mul_apply | (erw [Matrix.mul_apply]; simp)
+      first | rfl
   have hsub : X'.submatrix id (Subtype.val : Assignment.two.block D₁ D₂ → D₁ ⊕ D₂) =
       (u⁻¹).val * X.submatrix id (Subtype.val : Assignment.two.block D₁ D₂ → D₁ ⊕ D₂) := by
     ext i ⟨j, hj⟩
@@ -1204,7 +1204,7 @@ theorem _root_.GlobalTheory.T.squareFlip_rows_integralGL_invariant : ∀ {k : Ty
       (ν (gdet u) : ℂ) * squareFlip μ σ ψ ν ϖ e (Assignment.one.block D₁ D₂) Φ
           (fromCols (u.valᵀ * X.toCols₁) ((u⁻¹).val * X.toCols₂)) =
         squareFlip μ σ ψ ν ϖ e (Assignment.one.block D₁ D₂) Φ X := by
-  first | exact @GlobalTheory.SquareFlipRows.squareFlip_one_rows | exact GlobalTheory.SquareFlipRows.squareFlip_one_rows | (intros; apply GlobalTheory.SquareFlipRows.squareFlip_one_rows <;> assumption)
+  first | exact @GlobalTheory.SquareFlipRows.squareFlip_one_rows
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.SquareFlipRowsIntegralGLInvariantStatement =====
@@ -1332,7 +1332,7 @@ theorem edgeFactor_square (i j : ℕ) (g : G.VertexGroup) (hg : g (i, j) = 1) (h
     apow_of_valuation_eq_one (valuation_gdet_of_mem_KO (Assignment.one.read_mem_KO (hK Y))) z
   have hap : ∀ z, apow (1 : kˣ) z = 1 := fun z => apow_of_valuation_eq_one (by simp) z
   simp only [Grid.edgeFactor, Edge.src, Edge.tgt, ha, mul_one, hg, map_one, hap]
-  simp only [Grid.kappa, Grid.blockChar, Grid.nu, gdet, map_one, MonoidHom.div_apply, Units.val_div_eq_div_val,
+  simp only [Grid.kappa, Grid.blockChar, Grid.nu, gdet, MonoidHom.div_apply, Units.val_div_eq_div_val,
     Units.val_inv_eq_inv_val, Units.val_one, inv_one, mul_one, one_mul]
   field_simp
 end

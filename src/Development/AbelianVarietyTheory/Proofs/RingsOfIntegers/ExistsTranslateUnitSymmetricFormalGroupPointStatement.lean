@@ -132,9 +132,7 @@ theorem ptOf_const_left : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteVa
     have hj : ∀ p : Fin 1 × Fin d, jetA (V := V) (Fin 1 × Fin d) m (MvPowerSeries.X p) =
         Ideal.Quotient.mk _ (MvPolynomial.X p) := fun p => by
       first
-      | exact (mk_psTrunc m _ (MvPowerSeries.constantCoeff_X p)).trans (Chart.pj_X m p)
       | exact FBIdSy.mk_psTrunc_X m p
-      | exact (mk_psTrunc m _ (MvPowerSeries.constantCoeff_X p)).symm.trans (Chart.pj_X m p)
     have k : ψ.comp (jetA (Fin 1 × Fin d) m) = (Ideal.Quotient.mkₐ V (maximalIdeal V ^ (m + 1))).comp χ := by
       have hv : ∀ p, (ψ.comp (jetA (Fin 1 × Fin d) m)) (MvPowerSeries.X p) = Ideal.Quotient.mk _ (α p.2) :=
         fun p => by rw [AlgHom.comp_apply, hj, hψ]
@@ -177,7 +175,7 @@ open GlobalTheory.PlaceInt
 open GlobalTheory.TransUnit
 
 theorem _root_.GlobalTheory.T.constantSection_eq_limitChart_point : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [IsAdicComplete (maximalIdeal V) V] [CharZero V] (d : ℕ) (O : Type) [CommRing O] [StarRing O] (B : FB V d O) (G : Over (Sp V)) (x : ∀ m, jOG (𝟙 (Sp V)) d m 1 ⟶ G) (X : limO V d 1 ⟶ G), IsLimit x X → ∀ (α : Fin d → V) (hα : Small α) (aV : Sp V ⟶ G.left), (∀ m : ℕ, ∃ ψ : Jet V (Fin 1 × Fin d) m →ₐ[V] V ⧸ maximalIdeal V ^ (m + 1), (∀ p, ψ (Ideal.Quotient.mk _ (MvPolynomial.X p)) = Ideal.Quotient.mk _ (α p.2)) ∧ spMap (Ideal.Quotient.mk (maximalIdeal V ^ (m + 1))) ≫ aV = spMap (ψ : Jet V (Fin 1 × Fin d) m →+* V ⧸ maximalIdeal V ^ (m + 1)) ≫ (x m).left) → ∀ n : ℕ, (ptOf X (Sm.const B α hα : Sm B n)).left = spMap (algebraMap V (PS V n d)) ≫ aV := by
-  first | exact @GlobalTheory.TransUnit.ptOf_const_left | exact GlobalTheory.TransUnit.ptOf_const_left | (intros; apply GlobalTheory.TransUnit.ptOf_const_left <;> assumption)
+  first | exact @GlobalTheory.TransUnit.ptOf_const_left
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ConstantSectionEqLimitChartPointStatement =====
@@ -404,7 +402,7 @@ open GlobalTheory.PlaceInt
 open GlobalTheory.TransUnit
 
 theorem _root_.GlobalTheory.T.eval_iotaSeries_eq_quadratic_inversion_partials : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [IsAdicComplete (maximalIdeal V) V] [CharZero V] (d : ℕ) (O : Type) [CommRing O] [StarRing O] (B : FB V d O) (K : Type) [Field K] [Algebra ℚ K] [Algebra V K] [IsFractionRing V K] (h : PS K 2 d) (w0 : O), B.IsCanonGauge K h → ∀ (p₁ p₂ : (PS V 3 d)ˣ), p₁.val = B.ph1 → p₂.val = B.ph2 → ∀ jo : PS V 1 d, IsIota B K h w0 jo → ∀ (n : ℕ) (x : Sm B n), evA ![x] jo = (quadN (u3 p₁) (u3 p₂) (Sm.act B w0) x).val := by
-  first | exact @GlobalTheory.TransUnit.evA_iota_eq_quadN | exact GlobalTheory.TransUnit.evA_iota_eq_quadN | (intros; apply GlobalTheory.TransUnit.evA_iota_eq_quadN <;> assumption)
+  first | exact @GlobalTheory.TransUnit.evA_iota_eq_quadN
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.EvalIotaSeriesEqQuadraticInversionPartialsStatement =====
@@ -529,7 +527,7 @@ open GlobalTheory.PlaceInt
 open GlobalTheory.TransUnit
 
 theorem _root_.GlobalTheory.T.exists_powerSeries_limit_of_compatible_jetPoints : ∀ (V : Type) [CommRing V] [IsLocalRing V] (G : Over (Sp V)) (d : ℕ) (x : ∀ m, jOG (𝟙 (Sp V)) d m 1 ⟶ G), (∀ m, Formalism.L2.Pj.homAt (𝟙 (Sp V)) (jetTrunc : Jet V (Fin 1 × Fin d) (m + 1) →ₐ[V] Jet V (Fin 1 × Fin d) m) ≫ x (m + 1) = x m) → ∃ X : limO V d 1 ⟶ G, IsLimit x X := by
-  first | exact @GlobalTheory.TransUnit.LimEx.exists_isLimit | exact GlobalTheory.TransUnit.LimEx.exists_isLimit | (intros; apply GlobalTheory.TransUnit.LimEx.exists_isLimit <;> assumption)
+  first | exact @GlobalTheory.TransUnit.LimEx.exists_isLimit
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsPowerSeriesLimitOfCompatibleJetPointsStatement =====
@@ -619,7 +617,7 @@ theorem exists_symConst (hs : Function.Surjective (fst T A).left.appTop.hom) (hL
     rw [show ∀ f : T ⊗ A ⟶ A, f ≫ (GrpObj.inv : A ⟶ A) = f⁻¹ from fun _ => rfl]
     rw [mul_inv_rev, inv_inv, mul_comm]
   simp only [Fintype.prod_sum_type, Fin.prod_univ_two, Sum.elim_inl, Sum.elim_inr, Matrix.cons_val_zero,
-    Matrix.cons_val_one, Matrix.head_cons, neg_neg, hb, hc, hd]
+    Matrix.cons_val_one, neg_neg, hb, hc, hd]
   apply Additive.ofMul.injective
   simp only [ofMul_mul, ofMul_zpow, ofMul_one, neg_smul]
   abel
@@ -687,7 +685,7 @@ theorem exists_gen_neg (L : RigLB A) (h : L.IsSymmetric) (k : ℤ) (T : Over S) 
   refine (exists_gen (K' := Fin 2) L.isLB (φ' := ![(snd T A).left, (snd T A ≫ (GrpObj.inv : A ⟶ A)).left])
     (ε' := ![k, -k]) ?_ s2 hs2).elim fun nu hnu => ⟨nu, hnu.1⟩
   intro U _ hh
-  simp only [Fin.prod_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, Over.comp_left,
+  simp only [Fin.prod_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one, Over.comp_left,
     _root_.mul_one, mul_neg, neg_neg]
   simp only [Category.comp_id]
   exact _root_.mul_comm _ _
@@ -718,7 +716,7 @@ open GlobalTheory.PlaceInt
 open GlobalTheory.TransUnit
 
 theorem _root_.GlobalTheory.T.exists_symmetric_lift_odd_order_localRing : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (V : Type) [CommRing V] [IsLocalRing V] (t : SAB H (Sp V)), Function.Surjective (t.G ⊗ t.G).hom.appTop.hom → ∀ (k : ℕ), Odd k → ∀ a : baseOver (Sp V) ⟶ t.G, a ^ k = 1 → ∃ U : ThetaGrp t.G t.PP.L (k : ℤ) (baseOver (Sp V)), SymLift t.G t.PP.L (k : ℤ) k a U := by
-  first | exact @GlobalTheory.SymLiftConst.exists_symLift_local | exact GlobalTheory.SymLiftConst.exists_symLift_local | (intros; apply GlobalTheory.SymLiftConst.exists_symLift_local <;> assumption)
+  first | exact @GlobalTheory.SymLiftConst.exists_symLift_local
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsSymmetricLiftOddOrderLocalRingStatement =====
@@ -911,7 +909,7 @@ open GlobalTheory.PlaceInt
 open GlobalTheory.TransUnit
 
 theorem _root_.GlobalTheory.T.germ_symmetricTranslate_fibre_eq_model : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), FrTrunc C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.eT → ∀ (k : ℕ), Odd k → ∀ (a : ptO Xo (xOf y) ⟶ Xo.univ.t.G) (aV : baseOver (Sp T.V) ⟶ C.I.G.G) (r : Sp T.Fr ⟶ C.I.t'.G.left), r ≫ C.I.t'.G.hom = 𝟙 _ → r ≫ C.I.m1.φ = a.left → r ≫ C.I.m2.φ = spMap (algebraMap T.V T.Fr) ≫ aV.left → ∀ U : ThetaGrp C.I.G.G C.I.G.PP.L (k : ℤ) (baseOver (Sp T.V)), SymLift C.I.G.G C.I.G.PP.L (k : ℤ) k aV U → ∀ (F F' : SecN Xo (xOf y) k) (f f' : PS T.V 1 (chD C.ch)), Regular C k F → GermIs C k F f → Moves Xo a F F' → (∀ σ σ' : LB.Sec (LPow C.I.G.G C.I.G.PP.L (k : ℤ) (baseOver (Sp T.V))), IsGermG C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.actT C.eT C.wPT k σ f → IsActOf C.I.G.G C.I.G.PP.L (k : ℤ) U σ σ' → IsGermG C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.actT C.eT C.wPT k σ' f') → GermIs C k F' f' := by
-  first | exact @GlobalTheory.TransportGerm.germIs_translate | exact GlobalTheory.TransportGerm.germIs_translate | (intros; apply GlobalTheory.TransportGerm.germIs_translate <;> assumption)
+  first | exact @GlobalTheory.TransportGerm.germIs_translate
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.GermSymmetricTranslateFibreEqModelStatement =====
@@ -981,7 +979,7 @@ open GlobalTheory.PlaceInt
 open GlobalTheory.TransUnit
 
 theorem _root_.GlobalTheory.T.spec_powerSeries_hom_ext_of_jets : ∀ (V : Type) [CommRing V] [IsLocalRing V] (κ : Type) [Fintype κ] [DecidableEq κ] (Y : Scheme.{0}) (f g : Sp (MvPowerSeries κ V) ⟶ Y), (∀ m, spMap (jetA (V := V) κ m : MvPowerSeries κ V →+* Jet V κ m) ≫ f = spMap (jetA (V := V) κ m : MvPowerSeries κ V →+* Jet V κ m) ≫ g) → f = g := by
-  first | exact @GlobalTheory.TransUnit.hom_ext_of_jets | exact GlobalTheory.TransUnit.hom_ext_of_jets | (intros; apply GlobalTheory.TransUnit.hom_ext_of_jets <;> assumption)
+  first | exact @GlobalTheory.TransUnit.hom_ext_of_jets
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.SpecPowerSeriesHomExtOfJetsStatement =====
@@ -1269,7 +1267,7 @@ open GlobalTheory.PlaceInt
 open GlobalTheory.TransUnit
 
 theorem _root_.GlobalTheory.T.symmetricLift_order_symmetry_multiplicativity : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (S : Scheme.{0}) (t : SAB H S), Function.Surjective (t.G ⊗ t.G).hom.appTop.hom → ∀ (wP : PrimTyG t), wP.IsGen → ∀ (k : ℕ) (a : baseOver S ⟶ t.G) (U : ThetaGrp t.G t.PP.L (k : ℤ) (baseOver S)), SymLift t.G t.PP.L (k : ℤ) k a U → ∀ (T : Over S) (σ : T ⟶ baseOver S) (z : T.left) (J : (T.left ⟶ t.G.left) → t.PP.L.ι), Good t.PP.L z J → LiftLaws (cubV t.cub z J) (fun p : T ⟶ t.G => val wP p.left z J) (fun p : T ⟶ t.G => GlobalTheory.CommPairing.tval U (lift σ p).left z J) (fun p : T ⟶ t.G => p ≫ t.act.act H.w0) (σ ≫ a) k := by
-  first | exact @GlobalTheory.TransUnit.liftLaws_of_symLift | exact GlobalTheory.TransUnit.liftLaws_of_symLift | (intros; apply GlobalTheory.TransUnit.liftLaws_of_symLift <;> assumption)
+  first | exact @GlobalTheory.TransUnit.liftLaws_of_symLift
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.SymmetricLiftOrderSymmetryMultiplicativityStatement =====
@@ -1331,7 +1329,7 @@ theorem trU_laws {θ p₁ p₂ : Γ → Γ → Γ → U} {ρ φ : Γ → U} {e :
   · have := congrArg Additive.ofMul (m x y)
     rw [quadQ_of_diff w h₁ h₂] at this
     apply Additive.ofMul.injective
-    simp only [trU, c3, _root_.mul_one, _root_.one_mul, e₁, mul_comm a, ofMul_mul, ofMul_div, ofMul_pow, ofMul_inv, ofMul_one] at this ⊢
+    simp only [trU, c3, _root_.mul_one, _root_.one_mul, e₁, mul_comm a, ofMul_mul, ofMul_div, ofMul_pow, ofMul_inv] at this ⊢
     linear_combination (norm := module) this
   · simp only [trU]
     rw [Finset.prod_mul_distrib, o, _root_.one_mul, Finset.prod_pow]
@@ -1931,7 +1929,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.PlaceInt
 
 theorem _root_.GlobalTheory.T.exists_translateUnit_symmetric_formalGroup_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), FrTrunc C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.eT → ∀ B : FB T.V (chD C.ch) (𝓞 E), IsBT C B → ∀ (Θ : PS T.V 3 (chD C.ch)) (jo : PS T.V 1 (chD C.ch)), IsTheta B T.Fr (gaugeOf C) H.w0 Θ → IsIota B T.Fr (gaugeOf C) H.w0 jo → ∀ (k : ℕ), Odd k → ∀ (a : (ptO Xo (xOf y) ⟶ Xo.univ.t.G)) α, FormPt C a α → a ^ k = 1 → ∃ u : PS T.V 1 (chD C.ch), TrUnit B Θ jo k α u ∧ ∀ (F F' : SecN Xo (xOf y) k) (f : PS T.V 1 (chD C.ch)), GlobalTheory.PlaceInt.Regular C k F → GermIs C k F f → Moves Xo a F F' → GermIs C k F' (u * shift B.G.F (fun _ => α) f) := by
-  first | exact @GlobalTheory.TransUnit.exists_trUnit | exact GlobalTheory.TransUnit.exists_trUnit | (intros; apply GlobalTheory.TransUnit.exists_trUnit <;> assumption)
+  first | exact @GlobalTheory.TransUnit.exists_trUnit
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsTranslateUnitSymmetricFormalGroupPointStatement =====

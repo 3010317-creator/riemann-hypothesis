@@ -452,7 +452,7 @@ theorem act_eq_one_of_gen (t : SAB H S) (hK : KTriv t.G t.PP.L) (π : 𝓞 E) (a
     have h := (cls_eq_zero_iff (LB.isLB_linComb hL _ _)).2 ⟨α₀, hα⟩
     rw [cls_linComb hL, Fin.sum_univ_two] at h
     have h' := congrArg (pull x.left) h
-    simp only [Matrix.cons_val_zero, Matrix.cons_val_one, map_add (f := _), map_zsmul, map_zero, ← pull_comp, Category.comp_id,
+    simp only [Matrix.cons_val_zero, Matrix.cons_val_one, map_add (f := _), map_zero, ← pull_comp, Category.comp_id,
       ← Over.comp_left, neg_smul, natCast_zsmul, map_neg, map_nsmul] at h'
     exact add_neg_eq_zero.1 h'
   have Bab : ∀ {T : Over S} (x y : T ⟶ t.G), a • B x y = b • B (x ≫ t.act.act π) (y ≫ t.act.act π) := fun x y => by
@@ -1242,7 +1242,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.HkIntegral
 
 theorem _root_.GlobalTheory.T.sum_symmetricTranslates_thetaPullback_extends : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (I : IntData Xo c T io y.1) (M : ℕ) (t : LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((M : ℤ) ^ 2) (Over.mk (xOf y)))), (∃ U : PELUnif (IsLocalRing.maximalIdeal T.V) I.G, U.TorsionIso) → IsUnit (M : T.V) → letI := io.toAlgebra; IsTranslSum M y.1.s t → Reg I M t := by
-  first | exact @GlobalTheory.HkIntegral.RegSum.reg_of_isTranslSum | exact GlobalTheory.HkIntegral.RegSum.reg_of_isTranslSum | (intros; apply GlobalTheory.HkIntegral.RegSum.reg_of_isTranslSum <;> assumption)
+  first | exact @GlobalTheory.HkIntegral.RegSum.reg_of_isTranslSum
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.SumSymmetricTranslatesThetaPullbackExtendsStatement =====

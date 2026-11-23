@@ -315,7 +315,7 @@ theorem false_of_dependent_derivatives {k A κ : Type} [Field k] [CharZero k] [C
   have e2 : ∑ i ∈ J, c i • ∑ p, t (i, p) • D k κ (algebraMap A κ (f p)) = 0 := by
     have : ∑ i ∈ J, c i • ∑ p, t (i, p) • D k κ (algebraMap A κ (f p)) =
         ∑ l, (∑ i ∈ J, c i * ∑ p, t (i, p) * algebraMap A κ (δ l (f p))) • m l := by
-      simp only [hdψ, Finset.smul_sum, Finset.sum_smul, Finset.mul_sum, smul_smul, mul_assoc]
+      simp only [hdψ, Finset.smul_sum, Finset.sum_smul, Finset.mul_sum, smul_smul]
       conv_rhs => rw [Finset.sum_comm]
       exact Finset.sum_congr rfl fun i _ => Finset.sum_comm
     rw [this]
@@ -552,7 +552,7 @@ theorem cotangent_relation_derivation {k A R : Type} [CommRing k] [CommRing A] [
   have hcoe : ((∑ j ∈ J, algebraMap A R (a j) • (⟨_, hg j⟩ : maximalIdeal R) : maximalIdeal R) : R)
       = algebraMap A R y := by
 
-    simp [hy, Submodule.coe_sum, map_sum, map_mul, Algebra.smul_def]
+    simp [hy, map_sum, map_mul, Algebra.smul_def]
   rw [hcoe, ← IsLocalization.AtPrime.map_eq_maximalIdeal q R, ← Ideal.map_pow,
     IsLocalization.mem_map_algebraMap_iff q.primeCompl R] at hT
   obtain ⟨⟨x, s⟩, hxs⟩ := hT
@@ -746,7 +746,7 @@ theorem smooth_quotient_of_isEtCoord (Y : Scheme.{0}) (q : Y ⟶ Sp ℂ) (n : �
     rw [AlgEquiv.symm_apply_eq, Algebra.TensorProduct.quotIdealMapEquivTensorQuot_mk]
   rw [k1, k2]
   simp only [e, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom, RingEquiv.trans_apply,
-    AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_ringEquiv, Algebra.TensorProduct.comm_tmul, k3,
+    AlgEquiv.coe_toRingEquiv, Algebra.TensorProduct.comm_tmul, k3,
     Ideal.quotEquivOfEq_mk]
 
 theorem smooth_coordStratum : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (q : Y ⟶ Sp ℂ) (n : ℕ) [SmoothOfRelativeDimension n q], ∀ (U : Y.Opens) (z : Fin n → Γ(Y, U)), IsFrame (dOn q z) → ∀ J : Finset (Fin n), ((Ideal.Quotient.mk (Ideal.span (z '' (J : Set (Fin n))))).comp (algX q U)).Smooth := by

@@ -271,8 +271,7 @@ theorem half_props {C J : Matrix (Fin n) (Fin n) ℂ} (hh : Cᴴ = C) (hi : C * 
   have c : (1 + t • J) * C = C * (1 + t • J) := by
     simp only [Matrix.add_mul, Matrix.mul_add, Matrix.one_mul, Matrix.mul_one, smul_mul_assoc, mul_smul_comm, hJ]
   have s : (1 + t • J) * (1 + t • J) = (2 : ℂ) • (1 + t • J) := by
-    simp only [Matrix.add_mul, Matrix.mul_add, Matrix.one_mul, Matrix.mul_one, smul_mul_assoc, mul_smul_comm, hJJ,
-      smul_smul, ht]
+    simp only [Matrix.add_mul, Matrix.mul_add, Matrix.one_mul, Matrix.mul_one, smul_mul_assoc, mul_smul_comm, hJJ]
     match_scalars <;> first | linear_combination ht | ring
   have e : C * (1 + t • J) * (C * (1 + t • J)) = (2 : ℂ) • (C * (1 + t • J)) := by
     rw [Matrix.mul_assoc, ← Matrix.mul_assoc (1 + t • J), c, Matrix.mul_assoc, s, ← Matrix.mul_assoc, hi,
@@ -699,14 +698,11 @@ theorem exists_unitary_assemble : ∀ {n D m : ℕ} (J : Matrix (Fin n) (Fin n) 
   · rw [Matrix.mem_unitaryGroup_iff, star_eq_conjTranspose]
     simp only [Matrix.add_mul, Matrix.mul_add, conjTranspose_add, conjTranspose_mul,
       conjTranspose_conjTranspose, hJh, Matrix.mul_assoc, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10,
-      hCC, c2, hCR, hRR, hRC, hJJ, hJR, hRJ, hk₀, hkR, Matrix.mul_zero, Matrix.zero_mul,
-      add_zero, zero_add, Matrix.mul_one, Matrix.one_mul]
+      Matrix.mul_zero, add_zero, zero_add]
     rw [← hs]
   all_goals
     simp only [Matrix.add_mul, Matrix.mul_add, conjTranspose_add, conjTranspose_mul,
-      conjTranspose_conjTranspose, hJh, Matrix.mul_assoc, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10,
-      a11, hCC, c2, hCR, hRR, hRC, hJJ, hJR, hRJ, hk₀, hkR, hkRJ, Matrix.mul_zero, Matrix.zero_mul,
-      add_zero, zero_add, Matrix.mul_one, Matrix.one_mul]
+      conjTranspose_conjTranspose, hJh, Matrix.mul_assoc, a3, a6, a7, a8, a11, hCC, c2, hCR, hRR, hRC, hJJ, hJR, hRJ, Matrix.mul_zero, add_zero, zero_add, Matrix.mul_one]
     try abel
 
 end GlobalTheory.CompanionTheory.UnitaryAssembly

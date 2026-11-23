@@ -175,7 +175,7 @@ open Classical
 theorem _root_.GlobalTheory.T.exists_monomialPeriods_symmetric_exponentForm : ∀ (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W], GlobalTheory.LN.CDvr W → ∀ ϖ : W, Irreducible ϖ →
     ∀ D : DegData W (maximalIdeal W), ∃ β : LinearMap.BilinForm ℤ D.toPre.X, (∀ a b, β a b = β b a) ∧
       IsMonomial D.toPre ![ϖ] ![β] := by
-  first | exact @GlobalTheory.MonPeriods.exists_isMonomial_symm | exact GlobalTheory.MonPeriods.exists_isMonomial_symm | (intros; apply GlobalTheory.MonPeriods.exists_isMonomial_symm <;> assumption)
+  first | exact @GlobalTheory.MonPeriods.exists_isMonomial_symm
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMonomialPeriodsSymmetricExponentFormStatement =====
@@ -291,7 +291,7 @@ theorem _root_.GlobalTheory.T.exists_completeDVR_finite_map_of_finiteAlgebra : �
       ∃ (W : Type) (_ : CommRing W) (_ : IsDomain W) (_ : IsLocalRing W) (f : V →+* W) (ψ : R₁ →+* FractionRing W),
         GlobalTheory.LN.CDvr W ∧ Function.Injective f ∧ IsLocalHom f ∧ f.Finite ∧
         ∀ a, ψ (algebraMap (FractionRing V) R₁ (algebraMap V _ a)) = algebraMap W _ (f a) := by
-  first | exact @GlobalTheory.CdvrFiniteAlgebra.exists_cdvr_map_of_finite | exact GlobalTheory.CdvrFiniteAlgebra.exists_cdvr_map_of_finite | (intros; apply GlobalTheory.CdvrFiniteAlgebra.exists_cdvr_map_of_finite <;> assumption)
+  first | exact @GlobalTheory.CdvrFiniteAlgebra.exists_cdvr_map_of_finite
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompleteDVRFiniteMapOfFiniteAlgebraStatement =====
@@ -423,7 +423,7 @@ theorem _root_.GlobalTheory.T.exists_lambdaPolarisation_siegelObject_charZeroFie
     ∀ (K : Type) [Field K] [CharZero K] (f : Sp K ⟶ S), ∃ (R₁ : Type) (_ : CommRing R₁) (_ : Algebra K R₁),
       Module.Finite K R₁ ∧ Nontrivial R₁ ∧ ∃ (P : PolAV (Sp R₁)) (α : P.A.left ⟶ c.A.left) (α₂ : (G2 P.A).left ⟶ (G2 c.A).left),
         IsGrpPullback P.A c.A (spMap (algebraMap K R₁) ≫ f) α ∧ IsSquare α α₂ ∧ LBIso (abelian₂ P.A P.L) (c.P.pull α₂) := by
-  first | exact @GlobalTheory.SiegelSqrtField.exists_sqrt_field | exact GlobalTheory.SiegelSqrtField.exists_sqrt_field | (intros; apply GlobalTheory.SiegelSqrtField.exists_sqrt_field <;> assumption)
+  first | exact @GlobalTheory.SiegelSqrtField.exists_sqrt_field
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLambdaPolarisationSiegelObjectCharZeroFielStatement =====
@@ -449,7 +449,7 @@ theorem _root_.GlobalTheory.T.exists_semiAbelianModel_finiteExt_completeDVR : �
         LBIso A.L (P.L.pull β) ∧
         ∃ (G : Over (Sp V₁)) (_ : GrpObj G) (_ : IsCommMonObj G) (gen : (Over.pullback (jK V₁)).obj G ≅ A.A),
           IsSemiAbelian G ∧ IsMonHom gen.hom := by
-  first | exact @GlobalTheory.PolSemiAbModel.exists_model | exact GlobalTheory.PolSemiAbModel.exists_model | (intros; apply GlobalTheory.PolSemiAbModel.exists_model <;> assumption)
+  first | exact @GlobalTheory.PolSemiAbModel.exists_model
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSemiAbelianModelFiniteExtCompleteDVRStatement =====
@@ -531,7 +531,7 @@ theorem _root_.GlobalTheory.T.exists_polarisedAbelian_semiAbelian_siegelPoint : 
           IsGrpPullback A.A F.univ.A (spMap fK ≫ y) α ∧ IsSquare α α₂ ∧ LBIso (abelian₂ A.A A.L) (F.univ.P.pull α₂) ∧
           ∃ (G : Over (Sp V₁)) (_ : GrpObj G) (_ : IsCommMonObj G) (gen : (Over.pullback (jK V₁)).obj G ≅ A.A),
             IsSemiAbelian G ∧ IsMonHom gen.hom := by
-  first | exact @GlobalTheory.CExtGen.exists_polAV_semiAbelian | exact GlobalTheory.CExtGen.exists_polAV_semiAbelian | (intros; apply GlobalTheory.CExtGen.exists_polAV_semiAbelian <;> assumption)
+  first | exact @GlobalTheory.CExtGen.exists_polAV_semiAbelian
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPolarisedAbelianSemiAbelianSiegelPointStatement =====
@@ -729,7 +729,7 @@ theorem _root_.GlobalTheory.T.exists_uniformisation_finiteExtension_siegelFamily
           (α₂' : (G2 A'.A).left ⟶ (G2 F.univ.A).left),
           IsSemiAbelian G' ∧ IsGrpPullback A'.A F.univ.A (spMap fK ≫ y₁) α' ∧ IsSquare α' α₂' ∧
           LBIso (abelian₂ A'.A A'.L) (F.univ.P.pull α₂') := by
-  first | exact @GlobalTheory.PoincUnif.exists_unif_finExt | exact GlobalTheory.PoincUnif.exists_unif_finExt | (intros; apply GlobalTheory.PoincUnif.exists_unif_finExt <;> assumption)
+  first | exact @GlobalTheory.PoincUnif.exists_unif_finExt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisationFiniteExtensionSiegelFamilyStatement =====

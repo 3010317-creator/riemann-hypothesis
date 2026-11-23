@@ -416,7 +416,7 @@ open ReciprocityTheory.AnForm.R GlobalTheory.ZH GlobalTheory.Poinc GlobalTheory.
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.fourierMonomial_mem_radical_extended_maximalIdeal : ∀ (O : Type) [CommRing O] (bar : O → O) (q s : ℕ) (W : Matrix (Fin s) (Fin s) ℤ) (A : Type) [CommRing A] [IsLocalRing A] (Φ : VPre bar q W A) (N₁ : ℕ), 3 ≤ N₁ → Φ.Exact N₁ → ∀ (y : Φ.Y) (nu : Fin s → Φ.X y), nu ≠ 0 → mono W (Φ.t y) (Φ.δ y) nu ∈ ((maximalIdeal A).map (Φ.ev y)).radical := by
-  first | exact @GlobalTheory.Poinc.RadQ.mono_mem_radical | exact GlobalTheory.Poinc.RadQ.mono_mem_radical | (intros; apply GlobalTheory.Poinc.RadQ.mono_mem_radical <;> assumption)
+  first | exact @GlobalTheory.Poinc.RadQ.mono_mem_radical
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FourierMonomialMemRadicalExtendedMaximalIdealStatement =====
@@ -633,7 +633,7 @@ theorem coeffZero_approx : ∀ (O : Type) [CommRing O] (bar : O → O) (q s : �
     have h0 : (0 : Fin 1 × Fin s → Φ.X y) ∈ S := by
       by_contra h0
       have := htail 0 UnitZero.zero_mem_orbit h0
-      simp only [lin, qW, Pi.zero_apply, map_zero, LinearMap.zero_apply, mul_zero, Finset.sum_const_zero] at this
+      simp only [lin, qW, Pi.zero_apply, map_zero, mul_zero, Finset.sum_const_zero] at this
       omega
     rw [← Finset.add_sum_erase S _ h0] at hap
     have hz : (∏ i : Fin 1, Φ.u y (fun v => (0 : Fin 1 × Fin s → Φ.X y) (i, v)) c₀ *
@@ -672,7 +672,7 @@ open ReciprocityTheory.AnForm.R GlobalTheory.ZH GlobalTheory.Poinc GlobalTheory.
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.fourierTermSystem_indexZero_coefficient_approx : ∀ (O : Type) [CommRing O] (bar : O → O) (q s : ℕ) (W : Matrix (Fin s) (Fin s) ℤ) (A : Type) [CommRing A] [IsLocalRing A] (Φ : VPre bar q W A) (N₁ : ℕ), 3 ≤ N₁ → Φ.Exact N₁ → Φ.abelian₂ → Φ.Four N₁ → (∀ y y', Φ.m y ≠ 1 → Φ.m y' ≠ 1 → y = y') → ∀ (c₀ : Φ.Q) (e : ℕ), ∃ a : A, ∀ y, Φ.ev y a - Φ.u y 0 c₀ ∈ (maximalIdeal A ^ e).map (Φ.ev y) := by
-  first | exact @GlobalTheory.Poinc.Sep.coeffZero_approx | exact GlobalTheory.Poinc.Sep.coeffZero_approx | (intros; apply GlobalTheory.Poinc.Sep.coeffZero_approx <;> assumption)
+  first | exact @GlobalTheory.Poinc.Sep.coeffZero_approx
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FourierTermSystemIndexZeroCoefficientApproxStatement =====

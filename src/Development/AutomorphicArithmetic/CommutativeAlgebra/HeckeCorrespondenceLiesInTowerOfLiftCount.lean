@@ -109,7 +109,7 @@ open GlobalTheory GlobalTheory.HTLat GlobalTheory.Published.AbVarRed GlobalTheor
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.exists_lift_of_etale_surjective' : ∀ (K : Type) [Field K] [IsAlgClosed K] (X Y : Scheme.{0}) (π : Y ⟶ X), Etale π → Surjective π → ∀ x : Sp K ⟶ X, ∃ y : Sp K ⟶ Y, y ≫ π = x := by
-  first | exact @GlobalTheory.exists_lift_of_etale_surjective | exact GlobalTheory.exists_lift_of_etale_surjective | (intros; apply GlobalTheory.exists_lift_of_etale_surjective; all_goals assumption)
+  first | exact @GlobalTheory.exists_lift_of_etale_surjective
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftOfEtaleSurjectiveStatement =====
@@ -220,7 +220,7 @@ theorem UpperTheory.card_fiber_eq_relIndex_of_normal_quotient :
       rw [h1, ← QuotientGroup.out_eq' c]
       refine QuotientGroup.eq.mpr ?_
       rw [Subgroup.mem_subgroupOf]
-      simp [Subgroup.mem_subgroupOf]
+      simp
     refine Prod.ext hc ?_
     show act (uu x) = act u
     congr 1

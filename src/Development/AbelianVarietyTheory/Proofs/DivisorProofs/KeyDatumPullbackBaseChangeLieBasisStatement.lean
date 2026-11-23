@@ -218,7 +218,7 @@ theorem keyOn_pullback : ∀ (A B K : Type) [CommRing A] [CommRing B] [CommRing 
     · have e1 := hF1 a
       simp only [TrivSqZeroExt.algebraMap_eq_inl] at e1
       rw [e1]
-      simp [Chart.dualMapR, TrivSqZeroExt.algebraMap_eq_inl]
+      simp [Chart.dualMapR]
     · rw [hF2]
       ext <;> simp [Chart.dualMapR]
   have hv' : ∀ i, (x.v i).left ≫ φ' = spMap (Chart.dualMapR h) ≫ (y' i).left := fun i => by
@@ -253,7 +253,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open Classical
 
 theorem _root_.GlobalTheory.T.keyDatum_pullback_baseChange_lieBasis : ∀ (A B K : Type) [CommRing A] [CommRing B] [CommRing K] (f : A →+* B) (h : B →+* K) (G : Over (Sp A)) [GrpObj G] [IsCommMonObj G] (L : RigLB G) (σ : L.L.Sec) (x : KeyIn K) (y : Fin x.P.g → (epsR A ⟶ G)), IsSemiAbelian G → IsLieBasis y → NzFib σ → KeyOn (h.comp f) x G L σ y → ∀ [IsCommMonObj ((Over.pullback (spMap f)).obj G)], ∃ (L' : RigLB ((Over.pullback (spMap f)).obj G)) (σ' : L'.L.Sec) (y' : Fin x.P.g → (epsR B ⟶ (Over.pullback (spMap f)).obj G)), LBIso (L.L.pull (pullback.fst G.hom (spMap f))) L'.L ∧ IsLieBasis y' ∧ NzFib σ' ∧ KeyOn h x ((Over.pullback (spMap f)).obj G) L' σ' y' := by
-  first | exact @GlobalTheory.KeyEvenBC.keyOn_pullback | exact GlobalTheory.KeyEvenBC.keyOn_pullback | (intros; apply GlobalTheory.KeyEvenBC.keyOn_pullback <;> assumption)
+  first | exact @GlobalTheory.KeyEvenBC.keyOn_pullback
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.KeyDatumPullbackBaseChangeLieBasisStatement =====

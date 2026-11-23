@@ -155,7 +155,7 @@ theorem exists_genDer_extend : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   set η₀ := genericPoint (X₀ TF.Y Z) with hη₀
   have hη : W.ι η₀ ∈ U.1 := by
     have e := congrArg (fun f : Sp (X₀ TF.Y Z).functionField ⟶ TF.Y.X => f (IsLocalRing.closedPoint _)) hρ
-    simp only [Scheme.Hom.comp_apply] at e
+    simp only at e
     show W.ι η₀ ∈ (U.1 : Set TF.Y.X)
     rw [← U.2.range_fromSpec]
     refine ⟨_, e.trans ?_⟩
@@ -255,11 +255,11 @@ theorem GlobalTheory.LogKSDiv.boundary_germ_snc : ∀ (E : Type) [Field E] [Numb
     obtain ⟨z, hz⟩ := hin
     have hzB : z ∈ TF.Y.j ⁻¹ᵁ barComp TF.Y Z := by
       show TF.Y.j z ∈ barComp TF.Y Z
-      rw [hz]; first | exact x.2 | simp | exact (barComp TF.Y Z).range_ι.le ⟨x, rfl⟩
+      rw [hz]; first | exact x.2
     refine ⟨⟨z, hzB⟩, (barComp TF.Y Z).ι.isOpenEmbedding.injective ?_⟩
     have h2 := congrArg (fun f => f.base ⟨z, hzB⟩) (j₀_ι TF.Y Z)
-    simp only [Scheme.Hom.comp_base, TopCat.comp_app] at h2
-    first | exact h2.trans hz | (refine Eq.trans ?_ hz; exact h2) | (rw [Scheme.Hom.comp_apply] at h2; exact h2.trans hz)
+    simp only [Scheme.Hom.comp_base] at h2
+    first | exact h2.trans hz
   · have e1 : Ideal.map (GlobalTheory.LogKSDiv.stalkHom TF Z x U hx)
         ((Scheme.IdealSheafData.vanishingIdeal (LogKS.interior TF.Y).compl).ideal U) =
         Ideal.map φ.toRingHom (Ideal.map (TF.Y.X.presheaf.germ U.1 _ hx).hom
@@ -1164,7 +1164,7 @@ theorem GlobalTheory.LogKSDiv.exists_spread_eigFrame : ∀ (E : Type) [Field E] 
         LinearMap.toMatrix' (proj (rho hx') (embK c) α τ) := by
       ext i j
       have s : (Pi.single j 1 : Fin n → k) = ψ ∘ Pi.single j 1 := funext fun r => by
-        by_cases hj : r = j <;> simp [hj, Pi.single_apply]
+        by_cases hj : r = j <;> simp [hj]
       rw [Matrix.map_apply, LinearMap.toMatrix'_apply, LinearMap.toMatrix'_apply, s]
       exact (congrFun (pr _ _) i).symm
     intro v

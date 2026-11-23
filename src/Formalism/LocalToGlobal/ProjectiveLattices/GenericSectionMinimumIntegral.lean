@@ -127,7 +127,7 @@ theorem der_aeval {δ : F → F} (h : IsDer δ) {E : Type} [CommRing E] [Algebra
       by_cases hi : i = n
       · subst hi
         simp
-      · simp [MvPolynomial.pderiv_X, Pi.single_apply, hi, Ne.symm hi]
+      · simp [MvPolynomial.pderiv_X, hi, Ne.symm hi]
     simp only [map_mul, MvPolynomial.aeval_X, h.mul, hp, MvPolynomial.pderiv_mul, map_add (f := _), hsingle,
       add_mul, Finset.sum_add_distrib, mul_ite, mul_one, mul_zero, ite_mul, zero_mul,
       Finset.sum_ite_eq', Finset.mem_univ, if_true]
@@ -189,7 +189,7 @@ theorem algIndep_of_der {E : Type} [Field E] [CharZero E] [Algebra E F] {N : ℕ
           simp only [Finsupp.coe_add, Finsupp.coe_tsub, Pi.add_apply, Pi.sub_apply,
             Finsupp.single_eq_same]
           omega
-        · simp [Finsupp.single_apply, Ne.symm hj]
+        · simp [Ne.symm hj]
       have hc := MvPolynomial.coeff_pderiv (i := l) P (s - Finsupp.single l 1)
       rw [hder l, MvPolynomial.coeff_zero, hs'] at hc
       rw [MvPolynomial.mem_support_iff] at hs
@@ -232,8 +232,8 @@ theorem gauss_indep {K Ω U τ : Type} [Field K] [Field Ω] [Field U] [Algebra K
       residue V ((ReciprocityTheory.MultiplicativeHeights.comapInclusion V (algebraMap Ω U)).comp
         (ReciprocityTheory.MultiplicativeHeights.comapInclusion (V.comap (algebraMap Ω U)) (algebraMap K Ω)) x) := by
     intro x
-    simp only [_ia, _iW, _io, ReciprocityTheory.MultiplicativeHeights.residueAlgebra, RingHom.algebraMap_toAlgebra,
-      RingHom.comp_apply, IsLocalRing.ResidueField.map_residue] <;> rfl
+    simp only [_ia, _iW, _io, RingHom.algebraMap_toAlgebra,
+      RingHom.comp_apply, IsLocalRing.ResidueField.map_residue]
   set f0 := (ReciprocityTheory.MultiplicativeHeights.comapInclusion V (algebraMap Ω U)).comp
     (ReciprocityTheory.MultiplicativeHeights.comapInclusion (V.comap (algebraMap Ω U)) (algebraMap K Ω)) with hf0
   refine (injective_iff_map_eq_zero (MvPolynomial.aeval
@@ -630,7 +630,7 @@ theorem isIntegral_xr (hfd : FiniteDimensional (Kp X la N) (OsK X la w)) (k : Fi
     intro u hu'
     obtain ⟨u', hu''⟩ := hu'.exists_right_inv
     have e := congrArg (fun z => V.valuation (algebraMap (Op X la N) (OsK X la w ⧸ m) z)) hu''
-    simp only [map_mul, Valuation.map_mul, map_one, Valuation.map_one] at e
+    simp only [map_mul, map_one] at e
     refine le_antisymm (hOle u) ?_
     calc (1 : _) = V.valuation (algebraMap (Op X la N) (OsK X la w ⧸ m) u) *
           V.valuation (algebraMap (Op X la N) (OsK X la w ⧸ m) u') := e.symm

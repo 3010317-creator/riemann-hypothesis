@@ -288,7 +288,7 @@ theorem similitude_bij_mod (h N m : ℕ) (T : (Fin h ⊕ Fin h → ℤ) →ₗ[�
     rw [map_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [show Pi.single j (a j) = a j • (Pi.single j 1 : Fin h ⊕ Fin h → ℤ) by
-      ext i; by_cases hi : i = j <;> simp [Pi.single_apply, hi], map_smul]
+      ext i; by_cases hi : i = j <;> simp [hi], map_smul]
   have reduction_uniformizerPoint : ∀ a, red (T a) = TN (red a) := by
     intro a; funext i
     simp only [red, TN, M]
@@ -414,7 +414,7 @@ theorem part_two (h N : ℕ) (B : Type) [CommRing B] (b : TBase B N) (hN : Odd N
     have hext : f₁ = f₂ := by
       refine AddMonoidHom.functions_ext _ _ _ fun i k => ?_
       rw [show (Pi.single i k : Fin h ⊕ Fin h → ℤ) = k • Pi.single i 1 by
-        ext j; by_cases hj : j = i <;> simp [Pi.single_apply, hj], map_zsmul, map_zsmul]
+        ext j; by_cases hj : j = i <;> simp [hj], map_zsmul, map_zsmul]
       congr 1
       show Additive.ofMul (ψ (p (Pi.single i 1))) = Additive.ofMul (toUnit Tx ≫ C.lev (T (Pi.single i 1)))
       rw [← ha' i]
@@ -506,7 +506,7 @@ theorem omegaStd_add_nsmul_modEq {h : ℕ} (N : ℕ) (x y b c : Fin h ⊕ Fin h 
   unfold omegaStd
   rw [← Finset.sum_sub_distrib]
   refine Finset.dvd_sum fun i _ => ?_
-  simp only [Pi.add_apply, Pi.smul_apply, nsmul_eq_mul, Pi.mul_apply, Pi.natCast_apply]
+  simp only [Pi.add_apply, nsmul_eq_mul, Pi.mul_apply, Pi.natCast_apply]
   exact ⟨-(b (.inl i) * y (.inr i) + x (.inl i) * c (.inr i) + N * b (.inl i) * c (.inr i)) +
     (b (.inr i) * y (.inl i) + x (.inr i) * c (.inl i) + N * b (.inr i) * c (.inl i)), by ring⟩
 
@@ -514,10 +514,10 @@ theorem exists_eq_nsmul_iff {ι : Type*} (N : ℕ) (hN : N ≠ 0) (a : ι → �
     (∃ b, a = N • b) ↔ ∀ j, (N : ℤ) ∣ a j := by
   constructor
   · rintro ⟨b, rfl⟩ j
-    simp [nsmul_eq_mul]
+    simp
   · intro hd
     refine ⟨fun j => a j / N, funext fun j => ?_⟩
-    simp [nsmul_eq_mul, Int.mul_ediv_cancel' (hd j)]
+    simp [Int.mul_ediv_cancel' (hd j)]
 
 theorem symplecticSimilitude_modN : ∀ (h N m : ℕ) (T : (Fin h ⊕ Fin h → ℤ) →ₗ[ℤ] (Fin h ⊕ Fin h → ℤ)), N ≠ 0 →
     m.Coprime N → (∀ x y, omegaStd (T x) (T y) ≡ m * omegaStd x y [ZMOD N]) →

@@ -245,7 +245,7 @@ theorem two_re_le (ε : Fin n → Bool) (B : Mode ε → ℂ) :
     intro w
     rw [← hinv, Matrix.exp_conj _ _ hunit, Matrix.exp_diagonal, Pi.exp_def, ← Complex.exp_eq_exp_ℂ]
   have hdn : diagonal (fun i => -d i) = -diagonal d := by
-    ext i j; by_cases h : i = j <;> simp [diagonal_apply, h]
+    ext i j; by_cases h : i = j <;> simp [h]
   have hneg : -pB ε B = U * diagonal (fun i => -d i) * star U := by
     rw [hdec, hdn, Matrix.mul_neg, Matrix.neg_mul]
   have hmul : ∀ v w : Fin n → ℂ, (U * diagonal v * star U) * (U * diagonal w * star U) =
@@ -289,7 +289,7 @@ theorem stExpLow : StExpLow := by
   have h2 := two_re_le ε B
   rw [trace_neg_side, trace_projection_mul_modeMatrix_mul_self, Complex.ofReal_re] at h2
   have hT : (∑ x, ‖B x‖ ^ 2) ≤ T.re := by
-    have : (T - -T).re = 2 * T.re := by simp [Complex.sub_re, Complex.neg_re]; ring
+    have : (T - -T).re = 2 * T.re := by simp; ring
     rw [this] at h2; linarith
   have hTn : ‖T‖ ≤ ∑ x : Mode ε, ‖B x‖ * ‖E x.1.1 x.1.2‖ := by
     rw [show T = ∑ x : Mode ε, B x * E x.1.2 x.1.1 from trace_projection_mul_modeMatrix_mul ε B E]
@@ -548,7 +548,7 @@ theorem left (ε : Fin n → Bool) (μ : Measure (UJ ε)) (c : ℝ≥0) (hc : c 
     NNReal.smul_def, ← integral_smul]
   congr 1
   funext B
-  simp only [pol, NNReal.smul_def, smul_eq_mul, Complex.real_smul]
+  simp only [pol, NNReal.smul_def, Complex.real_smul]
   push_cast
   ring
 
@@ -1005,7 +1005,7 @@ theorem exp_conj_entries_hasFDerivAt_zero : ∀ (n : ℕ) (ι : Type) [Fintype �
     refine ⟨_, ?_, (Ec.hasFDerivAt).comp (0 : ι → ℂ) hprod⟩
     intro w x
     have hA0' : A 0 = 0 := map_zero A
-    simp only [Ec, E, Ac, hA0', NormedSpace.exp_zero, Pi.mul_apply, map_zero, neg_zero]
+    simp only [Ec, E, Ac, NormedSpace.exp_zero, Pi.mul_apply, map_zero]
     change ((1 * s) * A w + (1 * 0 + (-(A w)) * s) * 1 : Matrix (Fin n) (Fin n) ℂ) (p x).1 (p x).2 = (s * A w - A w * s) (p x).1 (p x).2
     rw [one_mul, mul_zero, zero_add, mul_one, neg_mul, ← sub_eq_add_neg]
 

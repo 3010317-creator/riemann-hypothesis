@@ -258,7 +258,7 @@ theorem _root_.GlobalTheory.T.rationalMap_columns_mem_latG_iff_moved_finitePart 
       (∀ a, (fun m => ∑ n, Yr m n * b n a) ∈ latG (Wc D i) y) ↔
         actO (Vc D i) (Wc D i) 1 y⁻¹ (ratW (Wc D i) (Vc D i) Yr - GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.realPt (Vc D i) (Wc D i) Yr) ∈
           latO (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) fun _ => True := by
-  first | exact @GlobalTheory.ColSplit.cols_mem_iff | exact GlobalTheory.ColSplit.cols_mem_iff | (intros; apply GlobalTheory.ColSplit.cols_mem_iff <;> assumption)
+  first | exact @GlobalTheory.ColSplit.cols_mem_iff
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -395,7 +395,7 @@ theorem _root_.GlobalTheory.T.thetaDictionary_lattice_of_frameCoordinates : ∀ 
     ∀ v : Fin D.R.r → D.host.E,
       v ∈ ((T.U ((i : ℕ) + 1) σ).X (GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV g).1).Λ ↔
         (fun m => v (Fin.cast (rank_Wc i) m)) ∈ latG (Wc D i) (γ * g) := by
-  first | exact @GlobalTheory.DictLatPin.lat_of_frAt | exact GlobalTheory.DictLatPin.lat_of_frAt | (intros; apply GlobalTheory.DictLatPin.lat_of_frAt <;> assumption)
+  first | exact @GlobalTheory.DictLatPin.lat_of_frAt
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -507,7 +507,7 @@ theorem _root_.GlobalTheory.T.columns_mem_periodLattice_iff_finitePart_movedLatt
       (∀ a, GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.perVec Wt (GlobalTheory.AHPhase.colB b Yr a) ∈ Set.range Wt.Pm) ↔
         actO (Vc D i) (Wc D i) 1 (γ * g)⁻¹ (ratW (Wc D i) (Vc D i) Yr - GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.realPt (Vc D i) (Wc D i) Yr) ∈
           latO (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) fun _ => True := by
-  first | exact @GlobalTheory.AHPhase.cols_per_iff_latO | exact GlobalTheory.AHPhase.cols_per_iff_latO | (intros; apply GlobalTheory.AHPhase.cols_per_iff_latO <;> assumption)
+  first | exact @GlobalTheory.AHPhase.cols_per_iff_latO
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -706,7 +706,7 @@ theorem _root_.GlobalTheory.T.stdChar_symplectic_realAdelicPoints_modelForm : �
     ψ (symplOH V W (GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.realPt V W Xm) (GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.realPt V W Ym)) =
       Complex.exp (Real.pi * Complex.I * ∑ a, ((Algebra.trace ℚ D.host.E (-X.ξ0 * ReciprocityTheory.ChartRestriction.G.FD.herm X.Gm
         (fun m => ∑ n, Xm (Fin.cast hr.symm m) n * b n a) (fun m => ∑ n, Ym (Fin.cast hr.symm m) n * b n a)) : ℚ) : ℂ)) := by
-  first | exact @GlobalTheory.ArchPhase.psi_symplOH_realPt | exact GlobalTheory.ArchPhase.psi_symplOH_realPt | (intros; apply GlobalTheory.ArchPhase.psi_symplOH_realPt <;> assumption)
+  first | exact @GlobalTheory.ArchPhase.psi_symplOH_realPt
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

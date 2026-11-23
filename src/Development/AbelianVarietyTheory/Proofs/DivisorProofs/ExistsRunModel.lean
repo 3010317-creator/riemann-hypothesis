@@ -241,7 +241,7 @@ theorem isTransp_comp : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : 
     have ef : castFrame hm.psi (lact (a * a') x) =
         castFrame m₂.psi (lact a (castFrame m₁.psi (lact a' x))) := by
       funext τ
-      simp only [castFrame, lact, mat, Units.val_mul, Matrix.map_mul, Matrix.of_apply]
+      simp only [castFrame, lact, mat, Units.val_mul, Matrix.map_mul]
       rw [mul_assoc]
       rfl
     set Xo := (r.used v).full.Q.Xo ((i : ℕ) + 1)
@@ -582,7 +582,7 @@ open scoped Matrix TensorProduct Pointwise
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem _root_.GlobalTheory.T.congruence_on_selfDual_lattice_completion : ∀ {D : D7} (V : HSp D) {β : GL (Fin V.rank) (Lev.EAf D)} {Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)}, IsSDFrame V β Λ 1 → ∀ (K : Matrix (Fin V.rank) (Fin V.rank) (FiniteAdeleRing (𝓞 D.host.F) D.host.F ⊗[D.host.F] D.host.E)) (t : FiniteAdeleRing (𝓞 D.host.F) D.host.F ⊗[D.host.F] D.host.E) (M : ℕ), (∀ x ∈ Λ, ∃ y ∈ latHat V, t • (K *ᵥ finVec V x - finVec V x) = M • y) → ∀ z ∈ latHat V, ∃ y ∈ latHat V, t • (K *ᵥ z - z) = M • y := by
-  first | exact @GlobalTheory.LatHatCong.cong_on_hat | exact GlobalTheory.LatHatCong.cong_on_hat | (intros; apply GlobalTheory.LatHatCong.cong_on_hat <;> assumption)
+  first | exact @GlobalTheory.LatHatCong.cong_on_hat
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CongruenceOnSelfDualLatticeCompletionStatement =====
@@ -707,7 +707,7 @@ open scoped Matrix TensorProduct Pointwise
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem _root_.GlobalTheory.T.congruence_on_selfDual_lattice_of_datum_image : ∀ {D : D7} (V : HSp D) {β : GL (Fin V.rank) (Lev.EAf D)} {Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)}, IsSDFrame V β Λ 1 → ∀ {La : Type} [AddCommGroup La] [Module (𝓞 D.host.E) La] {ι : La →ₗ[𝓞 D.host.E] (Fin V.rank → D.host.E)}, LatEmb V ι → ∀ (K : Matrix (Fin V.rank) (Fin V.rank) (FiniteAdeleRing (𝓞 D.host.F) D.host.F ⊗[D.host.F] D.host.E)) (t : FiniteAdeleRing (𝓞 D.host.F) D.host.F ⊗[D.host.F] D.host.E) (M : ℕ), (∀ a : La, ∃ w ∈ latGHat V 1, t • (K *ᵥ finVec V (ι a) - finVec V (ι a)) = M • w) → ∀ x ∈ Λ, ∃ y ∈ latHat V, t • (K *ᵥ finVec V x - finVec V x) = M • y := by
-  first | exact @GlobalTheory.LevelLatticeCong.cong_on_sdLattice | exact GlobalTheory.LevelLatticeCong.cong_on_sdLattice | (intros; apply GlobalTheory.LevelLatticeCong.cong_on_sdLattice <;> assumption)
+  first | exact @GlobalTheory.LevelLatticeCong.cong_on_sdLattice
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CongruenceOnSelfDualLatticeOfDatumImageStatement =====

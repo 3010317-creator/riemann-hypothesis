@@ -158,7 +158,7 @@ theorem exp_lattice_torsion_count : ∀ (Q : Type) [Group Q] (g r N : ℕ) (e : 
       obtain ⟨a, ha⟩ := hsurj p.1 p.2
       exact ⟨fun j => (a j : ZMod N), Subtype.ext (by show F _ = _; rw [hFval, ha])⟩
     rw [← Nat.card_eq_of_bijective _ hbij]
-    simp [Nat.card_eq_fintype_card, Fintype.card_fun, ZMod.card]
+    simp [Nat.card_eq_fintype_card, ZMod.card]
   refine ⟨{s | F s ∈ T}, ?_, ?_⟩
   · have hS : Nat.card {s | F s ∈ T} = Nat.card T := by
       have hbij : Function.Bijective (fun s : {s | F s ∈ T} => (⟨F s.1, s.2⟩ : T)) := by
@@ -193,7 +193,7 @@ open scoped Matrix CategoryTheory.Obj Topology
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.torsion_count_through_exponential_lattice_kernel : ∀ (Q : Type) [Group Q] (g r N : ℕ) (e : (Fin g → ℂ) → Q) (b : Fin r → Fin g → ℂ) (T : Set Q), 0 < N → (∀ v w, e (v + w) = e v * e w) → Function.Surjective e → IsLatBasis {w | e w = 1} b → (∀ τ ∈ T, τ ^ N = 1) → Nat.card {p : Q // p ^ N = 1} * Nat.card T = N ^ (2 * g) → ∃ S : Set (Fin r → ZMod N), N ^ r * Nat.card S = N ^ (2 * g) ∧ ∀ a : Fin r → ℤ, (fun j => (a j : ZMod N)) ∈ S → e ((N : ℂ)⁻¹ • ∑ j, a j • b j) ∈ T := by
-  first | exact @GlobalTheory.ShFam.Hor.LogCh.exp_lattice_torsion_count | exact GlobalTheory.ShFam.Hor.LogCh.exp_lattice_torsion_count | (intros; apply GlobalTheory.ShFam.Hor.LogCh.exp_lattice_torsion_count <;> assumption)
+  first | exact @GlobalTheory.ShFam.Hor.LogCh.exp_lattice_torsion_count
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TorsionCountThroughExponentialLatticeKernelStatement =====

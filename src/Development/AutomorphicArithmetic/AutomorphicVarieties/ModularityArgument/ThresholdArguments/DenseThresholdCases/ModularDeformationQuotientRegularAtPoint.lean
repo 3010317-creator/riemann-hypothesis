@@ -612,23 +612,23 @@ private theorem eq_zero_of_smul_mul_eq_mul_of_isNilpotent_constantCoeff {K : Typ
 private theorem charpoly_mat_map_constantCoeff_eq_prod_X_sub_C {l : ℕ} [Fact (Nat.Prime l)] {F : W.GFrame l} {O : Type} [CommRing O] [IsLocalRing O] [Algebra ℤ_[l] O] {n : ℕ} {r : W.Resid F O n} (x : W.Point r) (g : F.G₀) :
     Matrix.charpoly ((W.mat x.ρ g).map PowerSeries.constantCoeff) = ∏ i, (Polynomial.X - Polynomial.C (algebraMap (ResidueField O) x.K (r.chib i g : ResidueField O))) := by
   have h := congrArg (fun D : W.GDet n x.K F.G₀ => D.D (Polynomial x.K) (MonoidAlgebra.single 1 Polynomial.X - MonoidAlgebra.single g 1)) x.red
-  simp only [W.GDet.map, W.GDet.ofRep, W.Resid.Dbar, MonoidHom.coe_comp, Function.comp_apply, map_sub, W.GDet.repAlg, MonoidAlgebra.lift_single] at h
-  simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, map_sub, MonoidAlgebra.lift_single, map_one, Matrix.coe_detMonoidHom, MonoidHom.coe_comp, Function.comp_apply, one_smul] at h
+  simp only [W.GDet.map, W.GDet.ofRep, W.Resid.Dbar, MonoidHom.coe_comp, Function.comp_apply, W.GDet.repAlg] at h
+  simp only [AlgHom.toRingHom_eq_coe, Matrix.coe_detMonoidHom] at h
   rw [← Matrix.det_diagonal, Matrix.charpoly]
   convert h using 2
   · ext i j
     by_cases hij : i = j
     · subst hij
-      simp [Matrix.charmatrix_apply, Matrix.one_apply]
+      simp
       rfl
-    · simp [Matrix.charmatrix_apply, Matrix.one_apply, hij]
+    · simp [hij]
       rfl
   · ext i j
     by_cases hij : i = j
     · subst hij
-      simp [W.diagRep, Matrix.one_apply]
+      simp [W.diagRep]
       rfl
-    · simp [W.diagRep, Matrix.one_apply, hij]
+    · simp [W.diagRep, hij]
 
 theorem UpperTheory.V.Ws.P1.n4V0 :
     ∀ (l : ℕ) [Fact l.Prime] (F : W.GFrame l) (O : Type) [CommRing O] [IsLocalRing O] [Algebra ℤ_[l] O] (n : ℕ) (r : W.Resid F O n), r.V0ok → ∀ x : W.Point r, x.N4 := by
@@ -788,7 +788,7 @@ theorem UpperTheory.V.Ws.P1.gspForm :
     fin_cases i <;> fin_cases j <;> simp [UpperTheory.V.Ws.P1.formJ]
   · intro ν g hg
     have h : UpperTheory.V.GradeZeroInterpolatingElement.adj g * g = ν • 1 := hg
-    simp only [Units.val_mk]
+    simp only
     rw [UpperTheory.V.Ws.P1.formJ_adj, mul_assoc, h, Matrix.mul_smul, Matrix.mul_one]
 end -- clump:auto
 end -- clump:auto
@@ -1158,7 +1158,6 @@ theorem UpperTheory.V.Ws.P1.redDet :
     intro a
     first
       | rfl
-      | simp
   rw [W.Resid.Dbar, (AlgebraTools.Det.repApi (W.diagRep K.r.chib)).2.2.2.2.2.1 (algebraMap (ResidueField c'.O) k)]
   apply P1.detExt
   intro g
@@ -1218,7 +1217,6 @@ theorem UpperTheory.V.Ws.P1.redPsi :
     intro a
     first
       | rfl
-      | simp
   constructor
   · intro v i
     ext g

@@ -278,7 +278,7 @@ def balBilEquiv : balBil H.bar (J → 𝓞 E) ≃ₗ[ℤ] (J → J → (𝓞 E �
     simp only [formOfFamily_apply, LinearMap.coe_comp, Function.comp_apply, LinearMap.coe_single]
     rw [Finset.sum_eq_single i, Finset.sum_eq_single j]
     · simp
-    · intro j' _ hj; simp [Pi.single_apply, hj]
+    · intro j' _ hj; simp [hj]
     · simp
     · intro i' _ hi; simp [Pi.single_apply, hi]
     · simp
@@ -380,12 +380,12 @@ def symPart : GlobalTheory.BalRank.balBil H.bar X →ₗ[ℤ] balForms H.bar X w
   map_add' β γ := by
     apply Subtype.ext
     ext y z
-    simp only [Submodule.coe_add, LinearMap.add_apply, LinearMap.flip_apply, LinearMap.BilinForm.flip_apply]
+    simp only [Submodule.coe_add, LinearMap.add_apply, LinearMap.BilinForm.flip_apply]
     ring
   map_smul' n β := by
     apply Subtype.ext
     ext y z
-    simp only [SetLike.val_smul, LinearMap.add_apply, LinearMap.smul_apply, LinearMap.flip_apply, LinearMap.BilinForm.flip_apply, RingHom.id_apply, smul_eq_mul]
+    simp only [SetLike.val_smul, LinearMap.add_apply, LinearMap.smul_apply, LinearMap.BilinForm.flip_apply, RingHom.id_apply, smul_eq_mul]
     ring
 
 def antiPart : GlobalTheory.BalRank.balBil H.bar X →ₗ[ℤ] balForms H.bar X where
@@ -398,12 +398,12 @@ def antiPart : GlobalTheory.BalRank.balBil H.bar X →ₗ[ℤ] balForms H.bar X 
   map_add' β γ := by
     apply Subtype.ext
     ext y z
-    simp only [Submodule.coe_add, LinearMap.comp_apply, LinearMap.sub_apply, LinearMap.add_apply, LinearMap.flip_apply, LinearMap.BilinForm.flip_apply]
+    simp only [Submodule.coe_add, LinearMap.comp_apply, LinearMap.sub_apply, LinearMap.add_apply, LinearMap.BilinForm.flip_apply]
     ring
   map_smul' n β := by
     apply Subtype.ext
     ext y z
-    simp only [SetLike.val_smul, LinearMap.comp_apply, LinearMap.sub_apply, LinearMap.smul_apply, LinearMap.flip_apply, LinearMap.BilinForm.flip_apply,
+    simp only [SetLike.val_smul, LinearMap.comp_apply, LinearMap.sub_apply, LinearMap.smul_apply, LinearMap.BilinForm.flip_apply,
       RingHom.id_apply, smul_eq_mul]
     ring
 
@@ -502,7 +502,7 @@ section -- clump:auto
 open NumberField ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.PolFan
 
 theorem _root_.GlobalTheory.T.two_mul_finrank_balancedSymmIntBilinForms : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Host E) (X : Type) [AddCommGroup X] [Module (𝓞 E) X] [Module.Free ℤ X] [Module.Finite ℤ X], 2 * Module.finrank ℤ (balForms H.bar X) = Module.finrank ℤ (GlobalTheory.BalRank.balBil H.bar X) := by
-  first | exact @GlobalTheory.BalRankSym.two_mul_finrank_balForms | exact GlobalTheory.BalRankSym.two_mul_finrank_balForms | (intros; apply GlobalTheory.BalRankSym.two_mul_finrank_balForms <;> assumption)
+  first | exact @GlobalTheory.BalRankSym.two_mul_finrank_balForms
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoMulFinrankBalancedSymmIntBilinFormsStatement =====
@@ -545,7 +545,7 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.finrank_balancedSymmIntBilinForms_eq : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Host E) (X : Type) [AddCommGroup X] [Module (𝓞 E) X] [Module.Free ℤ X] [Module.Finite ℤ X], Module.finrank ℤ (balForms H.bar X) = Module.finrank ℚ E / 2 * Module.finrank (𝓞 E) X * Module.finrank (𝓞 E) X := by
-  first | exact @GlobalTheory.BalRank.finrank_balForms | exact GlobalTheory.BalRank.finrank_balForms | (intros; apply GlobalTheory.BalRank.finrank_balForms <;> assumption)
+  first | exact @GlobalTheory.BalRank.finrank_balForms
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankBalancedSymmIntBilinFormsEqStatement =====
@@ -731,7 +731,7 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.ringKrullDim_add_trdeg_completion_polynomial : ∀ (F W R : Type) [Field F] [CommRing W] [IsDomain W] [IsLocalRing W] [CommRing R] [IsLocalRing R] (b : F →+* W), b.EssFiniteType → ∀ (I : Type) [Fintype I] (ψ : MvPolynomial I W →+* R), GlobalTheory.TChart.IsComplAt ψ → IsLocalHom (ψ.comp MvPolynomial.C) → ∀ bR : F →+* R, (ψ.comp MvPolynomial.C).comp b = bR → ((residue R).comp bR).EssFiniteType ∧ ∀ a t : ℕ, ringKrullDim W = a → (letI := ((residue W).comp b).toAlgebra; Algebra.trdeg F (ResidueField W) = t) → ∃ a' t' : ℕ, ringKrullDim R = a' ∧ (letI := ((residue R).comp bR).toAlgebra; Algebra.trdeg F (ResidueField R) = t') ∧ a' + t' = a + t + Fintype.card I := by
-  first | exact @GlobalTheory.CDimAlg.ringKrullDim_add_trdeg_of_isComplAt | exact GlobalTheory.CDimAlg.ringKrullDim_add_trdeg_of_isComplAt | (intros; apply GlobalTheory.CDimAlg.ringKrullDim_add_trdeg_of_isComplAt <;> assumption)
+  first | exact @GlobalTheory.CDimAlg.ringKrullDim_add_trdeg_of_isComplAt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingKrullDimAddTrdegCompletionPolynomialStatement =====
@@ -758,7 +758,7 @@ theorem canon_residue_dim : ∀ {E : Type} [Field E] [NumberField E] [IsCMField 
   obtain ⟨a', t', ha', ht', hat'⟩ := h2 a t ha ht
   have hdimR : ringKrullDim (ChartRing k m e) = ((m + e : ℕ) : WithBot ℕ∞) := by
     rw [GlobalTheory.FormalIsogeny.ringKrullDim_mvPowerSeries k (Fin m ⊕ Fin e), ringKrullDim_eq_zero_of_field]
-    simp [Nat.card_sum]
+    simp
   have hma : a' = m + e := by
     rw [hdimR] at ha'
     exact_mod_cast ha'.symm
@@ -792,7 +792,7 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.canonicalChart_residueField_dimension : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), ∀ {k : Type} [Field k] {m e : ℕ} (C : MonoFam Xo c φ (ChartRing k m e)), Canon C → ((residue (ChartRing k m e)).comp C.b).EssFiniteType ∧ (letI := ((residue (ChartRing k m e)).comp C.b).toAlgebra; ((m + e : ℕ) : Cardinal) + Algebra.trdeg c.F (ResidueField (ChartRing k m e)) = Dw.dim) := by
-  first | exact @GlobalTheory.UCanon.canon_residue_dim | exact GlobalTheory.UCanon.canon_residue_dim | (intros; apply GlobalTheory.UCanon.canon_residue_dim <;> assumption)
+  first | exact @GlobalTheory.UCanon.canon_residue_dim
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CanonicalChartResidueFieldDimensionStatement =====

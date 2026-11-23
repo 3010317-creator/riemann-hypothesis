@@ -1088,7 +1088,7 @@ theorem UpperTheory.V.Ws.exists_iwasawaRank_bound_of_ferreroWashington :
     unfold ReciprocityTheory.Gal.cycMod ReciprocityTheory.Gal.cycZ at h
     unfold UpperTheory.V.Two.galChar
     rw [Units.ext_iff] at h ⊢
-    simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe] at h
+    simp only [MonoidHom.comp_apply, Units.coe_map] at h
     erw [cyclotomicCharacter.toZModPow] at h
     exact h
   have hμ : ∃ ζ : K, IsPrimitiveRoot ζ (if l = 2 then 4 else l) := by
@@ -1650,7 +1650,7 @@ theorem UpperTheory.Reformulated.B.LocallyConstantOpenPreimage.lc_of_open :
   intro x
   refine ⟨(fun y => x⁻¹ * y) ⁻¹' (ψ.ker : Set Γ),
     h.preimage (continuous_const.mul continuous_id), ?_, ?_⟩
-  · simp [MonoidHom.mem_ker]
+  · simp
   · intro y hy
     have hk : ψ (x⁻¹ * y) = 1 := MonoidHom.mem_ker.mp hy
     rw [map_mul, map_inv] at hk

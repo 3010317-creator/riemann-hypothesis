@@ -1078,7 +1078,7 @@ theorem _root_.GlobalTheory.T.hecke_point_eq_unipotent_frame_change_coset_rep : 
           (∀ τ (n : Fin ((T.Q.Dw ((i : ℕ) + 1)).mult τ)), A τ n n = toC (t' (some ⟨τ, n⟩) : CAt σ)) →
           ∃ a ∈ Rc, ∃ (hx' : (GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV (h * a)).2 ∈ ((T.U ((i : ℕ) + 1) σ).X (GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV (h * a)).1).dom) (t : Ix (T.Q.Dw ((i : ℕ) + 1)) → (CAt σ)ˣ),
             (∀ j, j ≠ none → t j = 1) ∧ FrBor t ((T.U ((i : ℕ) + 1) σ).un (GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV (h * a)).1 ⟨(GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV (h * a)).2, hx'⟩) z := by
-  first | exact @GlobalTheory.HeckePointCoset.exists_coset_frBor | exact GlobalTheory.HeckePointCoset.exists_coset_frBor | (intros; apply GlobalTheory.HeckePointCoset.exists_coset_frBor <;> assumption)
+  first | exact @GlobalTheory.HeckePointCoset.exists_coset_frBor
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1109,7 +1109,7 @@ theorem spMap_epsMul_one {Y : Scheme.{0}} (v : Sp (DualNumber ℂ) ⟶ Y) : spMa
     ext <;> simp [epsMul]
   rw [e0]
   have : spMap (RingHom.id (DualNumber ℂ)) = 𝟙 _ := by
-    first | rfl | exact Spec.map_id _ | simp [spMap] | (rw [CommRingCat.ofHom_id]; exact Spec.map_id _)
+    first | exact Spec.map_id _
   rw [this, Category.id_comp]
 
 
@@ -1295,7 +1295,7 @@ theorem _root_.GlobalTheory.T.exists_heckeKernel_coset_framedPoint : ∀ (D : D7
         ∃ a ∈ Rc, ∀ z, hkRelFr P.asIdeal p k (GlobalTheory.ThetaTrace.hkTr (T.Q.Xo ((i : ℕ) + 1)) T.Q.c p) (CAt σ) ((T.U ((i : ℕ) + 1) σ).un (GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV h).1 ⟨(GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV h).2, hx⟩) C z →
           ∃ (hx' : (GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV (h * a)).2 ∈ ((T.U ((i : ℕ) + 1) σ).X (GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV (h * a)).1).dom) (t : Ix (T.Q.Dw ((i : ℕ) + 1)) → (CAt σ)ˣ),
             (∀ j, j ≠ none → t j = 1) ∧ FrBor t ((T.U ((i : ℕ) + 1) σ).un (GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV (h * a)).1 ⟨(GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV (h * a)).2, hx'⟩) z := by
-  first | exact @GlobalTheory.HeckeExist.exists_coset_frBor_of_hkKer | exact GlobalTheory.HeckeExist.exists_coset_frBor_of_hkKer | (intros; apply GlobalTheory.HeckeExist.exists_coset_frBor_of_hkKer <;> assumption)
+  first | exact @GlobalTheory.HeckeExist.exists_coset_frBor_of_hkKer
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

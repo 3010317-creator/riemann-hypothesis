@@ -294,7 +294,7 @@ open Formalism.BasicNotions.Loc GlobalTheory.Pst GlobalTheory.WeilDeligne
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 theorem _root_.GlobalTheory.T.potSemistableParameter_blockSum_eq_directSum : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (ι : Om l ≃+* ℂ) {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] {A : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)} {O : Type} [CommRing O] [Algebra ℤ_[l] O] [TopologicalSpace O] (Bw : LocBridge l E Ω (Dec (F := E) A) O) (h : IsPlaceOver A w) (hj : Induces Bw) {L : FinExt l} {a b : ℕ} (s : ↥(Dec (F := E) A) →* GL (Fin a) ↥L.1) (s' : ↥(Dec (F := E) A) →* GL (Fin b) ↥L.1), IsPst P (Bw.repE L s) → IsPst P (Bw.repE L s') → IsPst P (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.sumRep s s')) → wdPst P ι Bw h hj (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.sumRep s s')) = (wdPst P ι Bw h hj (Bw.repE L s)).lpSum (wdPst P ι Bw h hj (Bw.repE L s')) := by
-  first | exact @GlobalTheory.Pst.SumOneField.wdPst_sumRep | exact GlobalTheory.Pst.SumOneField.wdPst_sumRep | (intros; apply GlobalTheory.Pst.SumOneField.wdPst_sumRep <;> assumption)
+  first | exact @GlobalTheory.Pst.SumOneField.wdPst_sumRep
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.PotSemistableParameterBlockSumEqDirectSumStatement =====
@@ -330,7 +330,7 @@ theorem mapRep_sumRep {Γ : Type} [Group Γ] {A B : Type} [CommRing A] [CommRing
   obtain ⟨i, rfl⟩ := finSumFinEquiv.surjective i
   obtain ⟨j, rfl⟩ := finSumFinEquiv.surjective j
   rcases i with i | i <;> rcases j with j | j <;>
-    simp [Matrix.reindexAlgEquiv_apply, Matrix.reindex_apply, MulEquiv.prodUnits]
+    simp [Matrix.reindex_apply, MulEquiv.prodUnits]
 end GlobalTheory.Pst.SumParam
 
 namespace GlobalTheory.Pst.SumParam

@@ -404,7 +404,7 @@ def awMap {R S : Type} [CommRing R] [CommRing S] (ψ : R →+* S) (g : R) (g' : 
 
 theorem awMap_alg {R S : Type} [CommRing R] [CommRing S] (ψ : R →+* S) (g : R) (g' : S) (hg : ψ g = g') :
     (awMap ψ g g' hg).comp (algebraMap R _) = (algebraMap S _).comp ψ := by
-  ext x; simp [awMap, IsLocalization.map_eq]
+  ext x; simp [awMap]
 
 theorem opIso_sq {R S : CommRingCat.{0}} (ψ : R ⟶ S) (g : R) (g' : S) (hg : ψ.hom g = g')
     (U : (Spec R).Opens) (hU : U = PrimeSpectrum.basicOpen g)
@@ -958,7 +958,7 @@ theorem sq_le {X' X : Scheme.{0}} (f : X' ⟶ X) (U V : X.Opens) (U' V' : X'.Ope
   rw [← Functor.map_comp, ← Functor.map_comp]
   congr 1
   rw [← cancel_mono (Scheme.Opens.ι _), ← cancel_mono (Scheme.Opens.ι _)]
-  simp only [Category.assoc, Scheme.Hom.resLE_comp_ι, Scheme.Hom.resLE_comp_ι_assoc, Scheme.Opens.isoOfLE_inv_ι,
+  simp only [Category.assoc, Scheme.Hom.resLE_comp_ι, Scheme.Opens.isoOfLE_inv_ι,
     Scheme.Opens.isoOfLE_inv_ι_assoc]
 
 theorem ocg_BL : OCG_BL := by
@@ -1004,7 +1004,7 @@ theorem resLE_comp_isoOpenInfPreimage_hom_naturality {X' X : Scheme.{0}} (f : X'
   rw [← Functor.map_comp, ← Functor.map_comp]
   congr 1
   rw [← cancel_mono (Scheme.Opens.ι _), ← cancel_mono (Scheme.Opens.ι _)]
-  simp only [Category.assoc, Scheme.Hom.resLE_comp_ι, Scheme.Hom.resLE_comp_ι_assoc, isoW_ι]
+  simp only [Category.assoc, Scheme.Hom.resLE_comp_ι, isoW_ι]
   rw [← Category.assoc (isoW U' V' W' e').hom, ← Category.assoc ((isoW U' V' W' e').hom ≫ _), Category.assoc (isoW U' V' W' e').hom, isoW_ι]
 
 theorem ocg_AL : OCG_AL := by
@@ -1100,7 +1100,7 @@ theorem etale_excision_sheaf_level_of_excision : LateralTheory.CohomologicalPuri
 theorem etale_excision_isomorphism_of_excision : LateralTheory.CohomologicalPurity.LeafExc := by
   apply LateralTheory.CohomologicalPurity.LeafExc_of <;> first | exact etale_excision_formal_reduction_of_excision | exact etale_excision_sheaf_level_of_excision
 theorem etale_excision_inductive_of_reduction : LateralTheory.CohomologicalPurity.LeafIndExc := by
-  apply LateralTheory.Fix.LeafIndExc.intersectionNumber_baseChange <;> first | exact etale_boundary_map_of_thom_isomorphism | exact etale_excision_isomorphism_of_excision
+  apply LateralTheory.Fix.LeafIndExc.intersectionNumber_baseChange
 theorem intersectionNumber_baseChange : LateralTheory.CohomologicalPurity.LeafIndExc := etale_excision_inductive_of_reduction
 end LateralTheory.Fin.LeafIndExc
 end -- clump:auto

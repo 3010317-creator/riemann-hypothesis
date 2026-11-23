@@ -637,8 +637,7 @@ private theorem Pz_iff_pos {W : Type} [AddCommGroup W] [Module ℝ W] [FiniteDim
 private theorem actOn_tmul {C V : Type} [Ring C] [Algebra ℚ C] [AddCommGroup V] [Module ℚ V]
     (rep : C →ₐ[ℚ] Module.End ℚ V) (r s : ℝ) (c : C) (v : V) :
     actOn rep ℝ (r ⊗ₜ c) (s ⊗ₜ v) = (r * s) ⊗ₜ rep c v := by
-  simp only [actOn, Algebra.TensorProduct.lift_tmul, Algebra.ofId_apply, Module.End.mul_apply,
-    Algebra.algebraMap_eq_smul_one]
+  simp only [actOn]
   change r • (((1 : Module.End ℝ (ℝ ⊗[ℚ] V))) ((rep c).baseChange ℝ (s ⊗ₜ v))) = _
   rw [LinearMap.baseChange_tmul, Module.End.one_apply, TensorProduct.smul_tmul', smul_eq_mul]
 
@@ -703,7 +702,7 @@ private theorem E_adj {p : ℕ} [Fact p.Prime] {D : Datum p} {G : HTGroup p} (L 
     | tmul s v =>
       induction y using TensorProduct.induction_on with
       | zero => simp
-      | add y y' h h' => simp only [map_add (f := _), LinearMap.add_apply, h, h']
+      | add y y' h h' => simp only [map_add (f := _), h, h']
       | tmul t w =>
         have h := L.adj c v w
         rw [show sh G c = (G.star c).unop from rfl] at h
@@ -721,8 +720,8 @@ private theorem Pz_matrix {n : ℕ} (H M : Matrix (Fin n) (Fin n) ℂ) (hH : H.P
   let π : Matrix (Fin n) (Fin n) ℂ →ₐ[ℝ] Module.End ℝ (Fin n → ℂ) :=
     AlgHom.ofLinearMap
       { toFun := fun m => (Matrix.mulVecLin m).restrictScalars ℝ
-        map_add' := fun a b => LinearMap.ext fun x => by simp [Matrix.add_mulVec]
-        map_smul' := fun r a => LinearMap.ext fun x => by simp [Matrix.smul_mulVec] }
+        map_add' := fun a b => LinearMap.ext fun x => by simp
+        map_smul' := fun r a => LinearMap.ext fun x => by simp }
       (LinearMap.ext fun x => by simp)
       (fun a b => LinearMap.ext fun x => by
         change (a * b) *ᵥ x = a *ᵥ (b *ᵥ x)
@@ -905,7 +904,7 @@ private lemma embedding_trace_mulLeft_eq_mul_trace {F A : Type} [Field F] [Ring 
     | zero => simp
     | tmul z a =>
       rw [TensorProduct.comm_tmul]
-      simp only [G, H, Algebra.TensorProduct.lift_tmul, AlgHom.restrictScalars_apply, ι, Algebra.ofId_apply]
+      simp only [G, H, ι]
       exact Algebra.commutes z _
     | add x y hx hy => simp [map_add (f := _), hx, hy]
   have hG : Function.Injective G := by
@@ -930,7 +929,7 @@ private lemma embedding_trace_mulLeft_eq_mul_trace {F A : Type} [Field F] [Ring 
     | zero => simp
     | tmul z a =>
       rw [LinearMap.baseChange_tmul]
-      simp only [G, Algebra.TensorProduct.lift_tmul, ι, Algebra.ofId_apply, LinearMap.mulLeft_apply]
+      simp only [G, ι, LinearMap.mulLeft_apply]
       show algebraMap ℂ _ z * φ (c * a) = φ c * (algebraMap ℂ _ z * φ a)
       rw [map_mul, ← mul_assoc, ← mul_assoc, Algebra.commutes z (φ c)]
     | add x y hx hy => simp [map_add (f := _), hx, hy, mul_add]
@@ -1089,7 +1088,7 @@ private theorem psiE_F {p : ℕ} [Fact p.Prime] (G : HTGroup p) (σ : G.F →+* 
       (InfinitePlace.embedding_mk_eq σ).resolve_left h
     rw [RingHom.comp_apply, G.psi_F, h2]
     ext i j
-    by_cases hij : i = j <;> simp [Matrix.scalar_apply, Matrix.diagonal_apply, hij, ComplexEmbedding.conjugate_coe_eq]
+    by_cases hij : i = j <;> simp [Matrix.scalar_apply, hij, ComplexEmbedding.conjugate_coe_eq]
 
 private theorem sum_psiE {p : ℕ} [Fact p.Prime] (G : HTGroup p) (c : G.C) :
     ∑ σ : G.F →+* ℂ, Matrix.trace (psiE G σ c) =
@@ -1792,7 +1791,7 @@ theorem UpperTheory.Gal.W2.placeEx_of :
     obtain ⟨a1, a2, a3, a4, a5⟩ := hw2 n hn hc
     refine ⟨a1, a2, a3, a4, fun a a' => ?_⟩
     have h5 := a5 a a'
-    simp only [Datum.plat, LinearMap.smul_apply, nsmul_eq_mul, Nat.cast_ofNat] at h5
+    simp only [Datum.plat] at h5
     exact h5
   obtain ⟨x, c, htriv, -⟩ := hAd p D G L β D' j hplace f ν hwit
   let F : LKCx.Form G := ⟨β, hβs, ⟨x, c, htriv⟩, hR⟩

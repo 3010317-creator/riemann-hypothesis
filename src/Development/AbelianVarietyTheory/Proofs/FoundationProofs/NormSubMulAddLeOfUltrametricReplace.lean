@@ -404,10 +404,10 @@ theorem rat_unram_to_int_unram : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field
         have hdet := h2 s hs s' hs' i i'
         fin_cases j
         · simp only [Fin.zero_eta, Fin.isValue] at hαu ⊢
-          simp [Pi.single_apply]
+          simp
           linear_combination (-(A s' i' 0 * v 0 + A s' i' 1 * v 1)) * hαu + u * v 1 * hdet
         · simp only [Fin.mk_one, Fin.isValue] at hαu ⊢
-          simp [Pi.single_apply]
+          simp
           linear_combination (-(A s' i' 0 * v 0 + A s' i' 1 * v 1)) * hαu - u * v 0 * hdet
     · push_neg at h1
       refine ⟨0, fun Y v _ hYv => ⟨0, fun _ => zero_mem _, fun s hs => ?_⟩⟩
@@ -657,7 +657,7 @@ theorem core (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] (W
     simp only [push]
     refine Finset.sum_nbij' (fun p => p.2) (fun x' => (a, x')) ?_ ?_ ?_ ?_ ?_
     · intro p hp; simp only [Finset.mem_filter, Finset.mem_univ, true_and, Prod.map, Prod.mk.injEq] at hp ⊢; exact hp.2
-    · intro x' hx'; simp only [Finset.mem_filter, Finset.mem_univ, true_and, Prod.map, Prod.mk.injEq, id] at hx' ⊢; first | exact hx' | exact ⟨rfl, hx'⟩
+    · intro x' hx'; simp only [Finset.mem_filter, Finset.mem_univ, true_and, Prod.map, Prod.mk.injEq, id] at hx' ⊢; first | exact hx'
     · intro p hp; simp only [Finset.mem_filter, Finset.mem_univ, true_and, Prod.map, Prod.mk.injEq, id] at hp
       exact Prod.ext hp.1.symm rfl
     · intro x' _; rfl
@@ -1013,7 +1013,7 @@ theorem exists_cob_of_coprime : ∀ (Γ : Type) [Group Γ] [TopologicalSpace Γ]
         congr 1
         · simp
         · ext i k
-          fin_cases i <;> simp [hc s s.2 t t.2, Matrix.mul_apply, Matrix.mulVec, dotProduct, add_comm]
+          fin_cases i <;> simp [hc s s.2 t t.2, Matrix.mul_apply, add_comm]
         · simp
         · simp }
   obtain ⟨N, hn, ho, hN⟩ := exists_open_ker M hcop

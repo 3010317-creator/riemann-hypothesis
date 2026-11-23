@@ -137,7 +137,7 @@ theorem UpperTheory.Gal.crystallineComparison.detCo_of :
       simp [co, onR, hT, Matrix.mulVec, dotProduct, TensorProduct.sum_tmul,
         Algebra.TensorProduct.tmul_mul_tmul]
     | add x y hx hy =>
-      simp only [map_add (f := _), Pi.add_apply] at hx hy ⊢
+      simp only [map_add (f := _)] at hx hy ⊢
       simp_all [co, Matrix.mulVec, dotProduct, mul_add, Finset.sum_add_distrib]
   · convert (AlgebraTensorModule.congr (LinearEquiv.funUnique (Fin 1) L L)
       (LinearEquiv.refl F B)).bijective using 1
@@ -433,7 +433,7 @@ private theorem core (hCo : CoFacts) (hCore : DetCore) (a : ℕ)
       rw [RingHom.mapMatrix_apply] at e1
       rw [← e1, ← hB, Matrix.det_fin_one]
     rw [e]
-    simp [Matrix.mulVec, dotProduct, Fin.sum_univ_one]
+    simp [Matrix.mulVec, dotProduct]
 end
 
 
@@ -871,7 +871,7 @@ theorem UpperTheory.Gal.Int.Div.phiSeed_of :
         Matrix.GeneralLinearGroup.det ((r.comp (Dec (F := E) A).subtype) x) := by
       intro x
       apply Units.ext
-      simp [rk1, Matrix.det_fin_one, hdet]
+      simp [rk1, hdet]
     obtain ⟨J, hCl⟩ := hψ.2 w hw B hB
     obtain ⟨hcC, -, -, hcP⟩ := hCl.2 P AI hT A h O Bw hj
     have hcPst := ((hConj l P AI hT E Ω A O Bw 1 ((rk1 ψ).comp (Dec (F := E) A).subtype)

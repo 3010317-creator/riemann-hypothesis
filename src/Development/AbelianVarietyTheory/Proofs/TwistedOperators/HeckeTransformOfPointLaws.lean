@@ -556,7 +556,7 @@ theorem isHecke_mul [IsLocallyNoetherian S] (o : Ob D l s) (P : Ideal (𝓞 E)) 
   · have hN := o.t.PP.isLB
     have h₂ := (CechPic.cls_eq_zero_iff (LB.isLB_linComb hN _ _)).2 (hL.mulPull S Q p)
     rw [CechPic.cls_linComb hN] at h₂
-    simp only [Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one, CechPic.pull_id, one_zsmul,
+    simp only [Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one, one_zsmul,
       neg_zsmul] at h₂
     refine (CechPic.cls_eq_iff (LB.isLB_linComb hN _ _) (LB.isLB_linComb hN _ _)).1 ?_
     rw [CechPic.cls_lbPow hN, CechPic.cls_pull hN, e, ← add_neg_eq_zero.1 h₂, ← natCast_zsmul, Nat.cast_pow]
@@ -898,7 +898,7 @@ theorem algHom_eq_eval : ∀ {K : Type} [inst : Field K] {P : Type} [Fintype P] 
     ext x
     by_cases hx : x = p
     · subst hx; simp
-    · simp [Pi.single_apply, hx]
+    · simp [hx]
   have h2 := congrArg θ hz
   rw [map_mul, map_mul, AlgHom.commutes, Algebra.algebraMap_self, RingHom.id_apply] at h2
   exact mul_right_cancel₀ hp h2
@@ -927,11 +927,7 @@ open TensorProduct
 theorem exists_eq_eval {K : Type} [Field K] {P : Type} [Fintype P] [DecidableEq P]
     (θ : (P → K) →ₐ[K] K) : ∃ p : P, ∀ z : P → K, θ z = z p := by
   first
-  | exact @_root_.GlobalTheory.AlgHomEqEval.algHom_eq_eval
-  | exact _root_.GlobalTheory.AlgHomEqEval.algHom_eq_eval
   | (apply _root_.GlobalTheory.AlgHomEqEval.algHom_eq_eval <;> assumption)
-  | (intros; apply _root_.GlobalTheory.AlgHomEqEval.algHom_eq_eval <;> assumption)
-  | (intros; apply @_root_.GlobalTheory.AlgHomEqEval.algHom_eq_eval <;> first | assumption | infer_instance)
   | (intros; exact _root_.GlobalTheory.AlgHomEqEval.algHom_eq_eval ..)
 
 theorem trace_pi_self {K : Type} [Field K] {P : Type} [Fintype P] [DecidableEq P] (z : P → K) :
@@ -939,7 +935,7 @@ theorem trace_pi_self {K : Type} [Field K] {P : Type} [Fintype P] [DecidableEq P
   let b := Pi.basisFun K P
   rw [Algebra.trace_eq_matrix_trace b, Matrix.trace]
   refine Finset.sum_congr rfl fun p _ => ?_
-  simp [Algebra.leftMulMatrix_eq_repr_mul, b, Pi.single_apply]
+  simp [Algebra.leftMulMatrix_eq_repr_mul, b]
 
 theorem exists_trace_eq_finsum : ∀ (R B : Type) [CommRing R] [CommRing B] [Algebra R B], Module.Finite R B →
     Algebra.Etale R B → ∀ b : B, ∃ v : R, ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (φ : R →+* Ω),

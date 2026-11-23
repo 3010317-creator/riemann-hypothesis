@@ -330,7 +330,7 @@ theorem exists_cell_section : ∀ {E : Type} [Field E] [NumberField E] [IsCMFiel
     refine ⟨⟨b, hb⟩, ?_⟩
     simp only [g, LinearMap.comp_apply, Submodule.subtype_apply, Submodule.mkQ_apply, he]
     rw [Submodule.Quotient.eq]
-    exact ⟨e, by simp [mulN, muln]⟩
+    exact ⟨e, by simp [muln]⟩
   obtain ⟨s, hs⟩ := Module.projective_lifting_property g (S.mkQ ∘ₗ ε) hg
   have hs' : ∀ a, ∃ e, y (s a) = ε a + n • e := by
     intro a
@@ -347,7 +347,7 @@ theorem exists_cell_section : ∀ {E : Type} [Field E] [NumberField E] [IsCMFiel
     exact add_mem (h.proj a).2 (Z'.nsmul_mem (s (q a)).2 N)
   · have hqb : q b = 0 := by rw [hqa, h.proj_of_mem hb, sub_self]
     simp only [LinearMap.add_apply, LinearMap.smul_apply, LinearMap.comp_apply, Submodule.subtype_apply, hqb,
-      map_zero, ZeroMemClass.coe_zero, smul_zero, add_zero]
+      map_zero, smul_zero, add_zero]
     exact h.proj_of_mem hb
   · obtain ⟨e, he⟩ := hs' (q a)
     refine ⟨N • e, ?_⟩
@@ -820,7 +820,7 @@ open NumberField ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.LowDa
 
 
 theorem _root_.GlobalTheory.T.exists_oppositeIsotropicPair : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} (D : Datum H) (Z : Submodule (𝓞 E) D.La), IsIsoSat D Z → ∃ Z' : Submodule (𝓞 E) D.La, IsOpp D Z Z' := by
-  first | exact @GlobalTheory.LowFilt.Opp.exists_opp | exact GlobalTheory.LowFilt.Opp.exists_opp | (intros; apply GlobalTheory.LowFilt.Opp.exists_opp <;> assumption)
+  first | exact @GlobalTheory.LowFilt.Opp.exists_opp
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1081,7 +1081,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 theorem _root_.GlobalTheory.T.exists_equiv_latticePart_zero_iff_mem_nsmul : ∀ (R : Type) [CommRing R] [IsDomain R] (D₀ : DegPre R), D₀.TauBimult →
     ∀ (F : Type) [Field F] [Algebra (FractionRing R) F] (n : ℕ), 0 < n → ∀ p : QkPt D₀ F n,
     (∃ q : QkPt D₀ F n, QkPt.Equiv D₀ F p q ∧ q.y = 0) ↔ ∃ e, p.y = n • e := by
-  first | exact @GlobalTheory.LowFilt.exists_equiv_y_eq_zero_iff | exact GlobalTheory.LowFilt.exists_equiv_y_eq_zero_iff | (intros; apply GlobalTheory.LowFilt.exists_equiv_y_eq_zero_iff <;> assumption)
+  first | exact @GlobalTheory.LowFilt.exists_equiv_y_eq_zero_iff
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1191,7 +1191,7 @@ theorem _root_.GlobalTheory.T.exists_levelIsometry_extension_algClosed : ∀ {E 
     ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F],
     ∃ I : (letI := H.starRing; TateIsoQ Dw C.P.D.toPre C.P.oD F), GlobalTheory.LowDat.XFLevel C tK m1 m2 F I ∧
       ∀ n a, (I.ev n a).y = (I₀.ev n a).y := by
-  first | exact @GlobalTheory.LowDat.exists_xfLevel_ext | exact GlobalTheory.LowDat.exists_xfLevel_ext | (intros; apply GlobalTheory.LowDat.exists_xfLevel_ext <;> assumption)
+  first | exact @GlobalTheory.LowDat.exists_xfLevel_ext
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1483,7 +1483,7 @@ theorem _root_.GlobalTheory.T.exists_levelIsometry_genericFibre_boundaryChart : 
     (m1 : SABMap tK C.t (jK R)) (m2 : SABMap tK Xo.univ.t (C.y ≫ pullback.fst _ _))
     (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F],
     ∃ I : (letI := H.starRing; TateIsoQ Dw C.P.D.toPre C.P.oD F), GlobalTheory.LowDat.XFLevel C tK m1 m2 F I := by
-  first | exact @GlobalTheory.LowDat.exists_xfLevel | exact GlobalTheory.LowDat.exists_xfLevel | (intros; apply GlobalTheory.LowDat.exists_xfLevel <;> assumption)
+  first | exact @GlobalTheory.LowDat.exists_xfLevel
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1567,7 +1567,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 theorem _root_.GlobalTheory.T.finrank_uChart_le_min_signature : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H} (Xo : Moduli Dw l) (c : Coeff l) (R : Type) [CommRing R] [IsDomain R]
     [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ C : GlobalTheory.UChart.Fam Xo c R,
     Module.finrank (𝓞 E) C.P.D.toPre.X ≤ min Dw.p Dw.q := by
-  first | exact @GlobalTheory.UChart.Fam.finrank_le_min | exact GlobalTheory.UChart.Fam.finrank_le_min | (intros; apply GlobalTheory.UChart.Fam.finrank_le_min <;> assumption)
+  first | exact @GlobalTheory.UChart.Fam.finrank_le_min
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1837,7 +1837,7 @@ theorem _root_.GlobalTheory.T.tateIso_latticePart_surjective_coisotropicKernel :
     ∀ (F : Type) [Field F] [IsAlgClosed F] [CharZero F] [Algebra (FractionRing R) F] (I : TateIsoQ D D₀ oa F),
     ∃ y : ℕ → D.La →ₗ[𝓞 E] D₀.X, (∀ n, 0 < n → ∀ a, ∃ e, y n a = (I.ev n a).y + n • e) ∧
       ∀ n, 0 < n → Cois D (y n) n := by
-  first | exact @GlobalTheory.LowFilt.tateIsoQ_y_cois | exact GlobalTheory.LowFilt.tateIsoQ_y_cois | (intros; apply GlobalTheory.LowFilt.tateIsoQ_y_cois <;> assumption)
+  first | exact @GlobalTheory.LowFilt.tateIsoQ_y_cois
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1971,7 +1971,7 @@ theorem _root_.GlobalTheory.T.exists_isotropic_saturated_weight_filtration : ∀
       ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F],
         ∃ I : (letI := H.starRing; TateIsoQ Dw C.P.D.toPre C.P.oD F),
           GlobalTheory.LowDat.XFLevel C tK m1 m2 F I ∧ GlobalTheory.LowDat.FiltGraded C Z F I := by
-  first | exact @GlobalTheory.LowFilt.exists_filt | exact GlobalTheory.LowFilt.exists_filt | (intros; apply GlobalTheory.LowFilt.exists_filt <;> assumption)
+  first | exact @GlobalTheory.LowFilt.exists_filt
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

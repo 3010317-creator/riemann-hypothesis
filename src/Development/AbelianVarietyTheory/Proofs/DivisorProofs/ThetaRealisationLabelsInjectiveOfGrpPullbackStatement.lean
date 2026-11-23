@@ -95,7 +95,7 @@ theorem realPt_inj_of_grpPullback : ∀ {o₂ Ω₂ : Type} [CommRing o₂] [Fie
     rw [← hsmul]
     have : (S₂.r * S₂.N) • a = 0 := by
       funext i
-      simp [Pi.smul_apply, nsmul_eq_mul, ZMod.natCast_self]
+      simp [Pi.smul_apply, nsmul_eq_mul]
     rw [this, hzero]
   let K := AlgebraicClosure Ω₂
   let x₀ : Sp K ⟶ Sp S₂.R := spMap ((algebraMap Ω₂ K).comp (S₂.R.val : S₂.R →+* Ω₂))
@@ -128,7 +128,7 @@ open GlobalTheory.UT ReciprocityTheory.ChartRestriction.G.DVR
 
 
 theorem _root_.GlobalTheory.T.thetaRealisation_labels_injective_of_grpPullback : ∀ {o₂ Ω₂ : Type} [CommRing o₂] [Field Ω₂] [Algebra o₂ Ω₂] (S₂ : ThetaSys o₂ Ω₂) (ρ₂ : S₂.Real) {T : Scheme.{0}} (G : Over T) [GrpObj G] (f : Sp S₂.R ⟶ T) (φ : ρ₂.P.A.left ⟶ G.left), IsGrpPullback ρ₂.P.A G f φ → ∀ x y : S₂.Gam, (ρ₂.pt x).left ≫ φ = (ρ₂.pt y).left ≫ φ → x = y := by
-  first | exact @GlobalTheory.Poinc.Sep.realPt_inj_of_grpPullback | exact GlobalTheory.Poinc.Sep.realPt_inj_of_grpPullback | (intros; apply GlobalTheory.Poinc.Sep.realPt_inj_of_grpPullback <;> assumption)
+  first | exact @GlobalTheory.Poinc.Sep.realPt_inj_of_grpPullback
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaRealisationLabelsInjectiveOfGrpPullbackStatement =====

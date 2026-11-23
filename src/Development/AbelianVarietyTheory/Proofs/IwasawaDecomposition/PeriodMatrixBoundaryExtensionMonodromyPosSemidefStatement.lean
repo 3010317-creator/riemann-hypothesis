@@ -222,7 +222,7 @@ theorem monodromy_dotProduct_nonneg : ∀ (n a g : ℕ) (ha : a ≤ n) (ρ₁ : 
     ext i
     by_cases hi : i = j
     · subst hi; simp [u]
-    · simp [u, hi, Function.update_of_ne hi, Pi.single_apply]
+    · simp [u, hi]
   have hcast : v' ⬝ᵥ ((B k).map (Int.cast : ℤ → ℂ) *ᵥ v') = ((v ⬝ᵥ (B k *ᵥ v) : ℤ) : ℂ) := by
     simp [v', dotProduct, Matrix.mulVec, Matrix.map_apply]
   have hper : ∀ t : ℂ, t.re < Real.log ρ₁ → f (t + 2 * Real.pi * Complex.I) = f t + ((v ⬝ᵥ (B k *ᵥ v) : ℤ) : ℂ) := by
@@ -1308,7 +1308,7 @@ theorem periodVec_extends : ∀ (n a g : ℕ) (ha : a ≤ n) (ρ₁ : ℝ) (τ :
         have : ¬ (j : ℕ) < a := by
           intro hlt; apply hj; exact ⟨⟨j, hlt⟩, by simp, Fin.ext rfl⟩
         simp [m', this]
-      · intro k _; simp [m', Fin.coe_castLE, k.isLt]
+      · intro k _; simp [m', k.isLt]
     have hexp : ∀ k : Fin a, (z (Fin.castLE ha k)) ^ (m k).toNat
         = Complex.exp (s (Fin.castLE ha k) * ((m k : ℤ) : ℂ)) := by
       intro k
@@ -1428,7 +1428,7 @@ theorem logExp_add_single {n a : ℕ} (s : Fin n → ℂ) (j : Fin n) (hj : (j :
   by_cases hk : k = j
   · subst hk
     simp [hj, Complex.exp_add]
-  · simp [Pi.single_apply, hk]
+  · simp [hk]
 
 theorem mem_logDom_add_single {n a : ℕ} {s : Fin n → ℂ} (hs : s ∈ logDom n a) (j : Fin n) (hj : (j : ℕ) < a) :
     s + Pi.single j (2 * Real.pi * Complex.I) ∈ logDom n a := by
@@ -1455,7 +1455,7 @@ theorem cast_single {g : ℕ} (i : Fin g) : (fun l => ((Pi.single i (1 : ℤ) : 
   funext l
   by_cases h : l = i
   · subst h; simp
-  · simp [Pi.single_apply, h]
+  · simp [h]
 
 theorem cast_single_add {g : ℕ} (i j : Fin g) :
     (fun l => (((Pi.single i (1 : ℤ) + Pi.single j 1 : Fin g → ℤ)) l : ℂ)) = Pi.single i 1 + Pi.single j 1 := by
@@ -1575,7 +1575,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 
 theorem _root_.GlobalTheory.T.periodMatrix_boundaryExtension_monodromy_posSemidef : ∀ (n a g : ℕ) (ha : a ≤ n) (ρ₁ : ℝ) (τ : (Fin n → ℂ) → Matrix (Fin g) (Fin g) ℂ) (B : Fin a → Matrix (Fin g) (Fin g) ℤ), 0 < ρ₁ → ρ₁ ≤ 1 → (∀ i j, DifferentiableOn ℂ (fun s => τ s i j) {s | s ∈ logDom n a ∧ logExp a s ∈ Metric.ball (0 : Fin n → ℂ) ρ₁}) → (∀ s ∈ logDom n a, logExp a s ∈ Metric.ball (0 : Fin n → ℂ) ρ₁ → (τ s).IsSymm ∧ ((τ s).map Complex.im).PosDef) → (∀ s ∈ logDom n a, logExp a s ∈ Metric.ball (0 : Fin n → ℂ) ρ₁ → ∀ k : Fin a, τ (s + Pi.single (Fin.castLE ha k) (2 * Real.pi * Complex.I)) = τ s + (B k).map (Int.cast : ℤ → ℂ)) → (∀ k, ((B k).map (Int.cast : ℤ → ℝ)).PosSemidef) ∧ ∃ τ₀ : (Fin n → ℂ) → Matrix (Fin g) (Fin g) ℂ, (∀ i j, DifferentiableOn ℂ (fun z => τ₀ z i j) (Metric.ball 0 ρ₁)) ∧ (∀ z ∈ Metric.ball (0 : Fin n → ℂ) ρ₁, (τ₀ z).IsSymm) ∧ ∀ s ∈ logDom n a, logExp a s ∈ Metric.ball (0 : Fin n → ℂ) ρ₁ → τ s = τ₀ (logExp a s) + ∑ k, (s (Fin.castLE ha k) / (2 * Real.pi * Complex.I)) • (B k).map (Int.cast : ℤ → ℂ) := by
-  first | exact @GlobalTheory.ShFam.Hor.LogCh.PerExt.periodMatrix_extension | exact GlobalTheory.ShFam.Hor.LogCh.PerExt.periodMatrix_extension | (intros; apply GlobalTheory.ShFam.Hor.LogCh.PerExt.periodMatrix_extension <;> assumption)
+  first | exact @GlobalTheory.ShFam.Hor.LogCh.PerExt.periodMatrix_extension
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodMatrixBoundaryExtensionMonodromyPosSemidefStatement =====

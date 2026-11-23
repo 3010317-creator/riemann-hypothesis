@@ -352,7 +352,7 @@ theorem power_sum_term_linked_tower : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq 
   have hSeq : S.map ⟨(fun p : Nat.Primes => (p : ℕ)), Nat.Primes.coe_nat_injective⟩ =
       (Finset.Ioc B₀ B).filter (fun p => p.Prime ∧ p ∉ T.bad) := by
     ext n
-    simp only [Finset.mem_map, Finset.mem_filter, Finset.mem_Ioc, Function.Embedding.coeFn_mk]
+    simp only [Finset.mem_map, Finset.mem_filter, Finset.mem_Ioc]
     constructor
     · rintro ⟨p, hp, rfl⟩
       have h := (hS p).1 hp
@@ -387,7 +387,7 @@ theorem linA_eq (c : Option (Ψ × Fin N) → ℝ) :
     linA (fun τ i => c (some (τ, i))) (-c none) = -∑ x, C (c x) * X x := by
   rw [Fintype.sum_option]
 
-  simp only [linA, toA, linRoot, map_neg, map_sum, map_mul, rename_C, rename_X, neg_add_rev, C_neg]
+  simp only [linA, toA, linRoot, map_neg, map_sum, map_mul, rename_C, rename_X, neg_add_rev]
   simp only [Prod.mk.eta]
   ring
 

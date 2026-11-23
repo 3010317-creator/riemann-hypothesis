@@ -116,7 +116,7 @@ theorem cubN_pow (a x : A) (n k : ℕ) :
     apply Additive.ofMul.injective
     have e' := congrArg Additive.ofMul e
     have ih' := congrArg Additive.ofMul ih
-    simp only [ofMul_mul, ofMul_inv, ofMul_pow] at e' ih' ⊢
+    simp only [ofMul_mul, ofMul_pow] at e' ih' ⊢
     simp only [add_nsmul, one_nsmul, nsmul_add]
     linear_combination (norm := abel) e' + ih'
 
@@ -167,7 +167,7 @@ theorem exists_mult_pow_eq_one {c : X → A} (hc : ∀ χ χ', c (χ + χ') = c 
     rw [e₁]
     apply Additive.ofMul.injective
     have e₂' := congrArg Additive.ofMul e₂
-    simp only [ofMul_mul, ofMul_inv, ofMul_pow, nsmul_add, nsmul_neg] at e₂' ⊢
+    simp only [ofMul_mul, ofMul_inv, ofMul_pow, nsmul_add] at e₂' ⊢
     rw [smul_neg, smul_neg, e₂']
     abel
   choose r hr using wroot
@@ -238,7 +238,7 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.exists_torusExtension_torsion_lift_zero : ∀ {R : Type} [CommRing R] [IsDomain R] (D : DegPre R), D.TauBimult → ∀ (n : ℕ), 1 ≤ n → ∀ (c' : D.X → (𝟙_ (Over (Sp R)) ⟶ D.P.A)), (∀ χ, c' χ ^ n = D.c χ) → ∀ (F : Type) [Field F] [Algebra (FractionRing R) F] (b : TF (R := R) F ⟶ D.P.A), b ^ n = 1 → ∃ p : QkPt D F n, p.y = 0 ∧ p.g.b = b := by
-  first | exact @GlobalTheory.TorsLiftRoot.exists_qk_zero_of_pow_eq | exact GlobalTheory.TorsLiftRoot.exists_qk_zero_of_pow_eq | (intros; apply GlobalTheory.TorsLiftRoot.exists_qk_zero_of_pow_eq <;> assumption)
+  first | exact @GlobalTheory.TorsLiftRoot.exists_qk_zero_of_pow_eq
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTorusExtensionTorsionLiftZeroStatement =====

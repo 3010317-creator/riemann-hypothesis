@@ -208,11 +208,7 @@ theorem exists_smul_mem {E : Type} [Field E] [NumberField E] {N : ℕ} (Lb : Sub
     (hsp : Submodule.span E (Lb : Set (Fin N → E)) = ⊤) (v : Fin N → E) :
     ∃ c : 𝓞 E, c ≠ 0 ∧ c • v ∈ Lb := by
   first
-  | exact @_root_.GlobalTheory.ExistsSmulMem.exists_smul_mem
-  | exact _root_.GlobalTheory.ExistsSmulMem.exists_smul_mem
   | (apply _root_.GlobalTheory.ExistsSmulMem.exists_smul_mem <;> assumption)
-  | (intros; apply _root_.GlobalTheory.ExistsSmulMem.exists_smul_mem <;> assumption)
-  | (intros; apply @_root_.GlobalTheory.ExistsSmulMem.exists_smul_mem <;> first | assumption | infer_instance)
   | (intros; exact _root_.GlobalTheory.ExistsSmulMem.exists_smul_mem ..)
 
 theorem hform_single {E : Type} [Field E] {N : ℕ} (σ : E →+* E) (J : Matrix (Fin N) (Fin N) E)
@@ -720,7 +716,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 
 theorem _root_.GlobalTheory.T.chartBaseFrame_badPrime_eq_companion_lattice : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => ∀ (i : ℕ) (hi : i ≤ D.R.m) (β : (St i hi).Ch) (x : UA D i hi) p, IsPtAd A a i hi β x p → ∀ P : SB t μ, mvL (A.fb i hi β P) (stdAt D.host.E (D.R.N i) (seamP t.seam P.1)) = Formalism.HermitianLatticesTheory.localization₂ (seamP t.seam P.1).asIdeal (compan (sp := D.sp) (gramN D i hi) a ((St i hi).K β).lev.Lb)) := by
-  first | exact @GlobalTheory.TwV.baseFrame_std_eq_compan | exact GlobalTheory.TwV.baseFrame_std_eq_compan | (intros; apply GlobalTheory.TwV.baseFrame_std_eq_compan <;> assumption)
+  first | exact @GlobalTheory.TwV.baseFrame_std_eq_compan
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ChartBaseFrameBadPrimeEqCompanionLatticeStatement =====

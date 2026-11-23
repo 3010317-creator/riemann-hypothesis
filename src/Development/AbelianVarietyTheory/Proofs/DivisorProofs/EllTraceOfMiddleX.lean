@@ -252,8 +252,8 @@ theorem integral_hasSum_eq_integral_indicator_hasSum :
       if i ∈ p then k i else fun _ => 0 := by
     intro i
     by_cases hp : i ∈ p
-    · funext x; simp [Set.indicator_of_mem hp, hp]
-    · funext x; simp [Set.indicator_of_notMem hp, hp]
+    · funext x; simp [hp]
+    · funext x; simp [hp]
   rw [integral_congr_ae hKae, integral_congr_ae hKpae,
     MeasureTheory.integral_finsetSum s (fun i _ => hk i),
     MeasureTheory.integral_finsetSum s (fun i _ => by
@@ -398,7 +398,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.TruncKer
 
 theorem _root_.GlobalTheory.T.isRegularSemisimple_of_testFunction_ne_zero : GlobalTheory.IndefiniteRowSideFullHecke.IwahoriSubgroup.IwahoriEigenvalues → ∀ (D : D7) (V : HSp D) (T : TypeDataG V) (U : AuxiliaryPlaceHermitianSpace V) (μf : ∀ v, Measure (GLoc D.sp.cm.sig V.gram v)) (ff : ∀ v, GLoc D.sp.cm.sig V.gram v → ℂ), IsTestFin T U μf ff → ∀ (fa : ∀ w, GArch D.sp.cm.sig V.gram w → ℂ) (δ : GF V) (x : GA D V), tensor D.sp.cm.sig V.gram fa ff (x⁻¹ * rat V δ * x) ≠ 0 → IsRegSS δ.1.1 := by
-  first | exact @GlobalTheory.RegSupp.isRegSS_of_tensor_ne_zero | exact GlobalTheory.RegSupp.isRegSS_of_tensor_ne_zero | (intros; apply GlobalTheory.RegSupp.isRegSS_of_tensor_ne_zero <;> assumption)
+  first | exact @GlobalTheory.RegSupp.isRegSS_of_tensor_ne_zero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsRegularSemisimpleOfTestFunctionNeZeroStatement =====
@@ -882,7 +882,7 @@ lemma tsum_single [DecidableEq I] (i : I) (x : Ω) : ∑' j, (lp.single 1 i (1 :
   rw [tsum_eq_single i]
   · simp [lp.single_apply]
   · intro j hj
-    simp [lp.single_apply, Pi.single_apply, hj]
+    simp [lp.single_apply, hj]
 
 end MainStatements.WeightKernel.PClosedGraph
 

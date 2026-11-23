@@ -219,7 +219,7 @@ private theorem exists_coords {K C V : Type} [Field K] [Ring C] [Algebra K C] [A
       map_add' := fun c c' => by ext w; simp
       map_smul' := fun x c => by
         ext w
-        simp [hsm, Algebra.smul_def, Module.End.mul_apply] }
+        simp [hsm, Algebra.smul_def] }
     (by ext w; simp) (fun c c' => by ext w; simp [Module.End.mul_apply])
   have hr : ∀ c w, r c w = rep c w := fun _ _ => rfl
   let s : C →ₐ[K] Matrix (Fin n) (Fin n) K := (LinearMap.toMatrixAlgEquiv b).toAlgHom.comp r
@@ -540,7 +540,7 @@ theorem UpperTheory.Gal.W2.coordOcc_of :
   obtain ⟨Q, hQ, hrel⟩ := (RD B).per a.2
   have hev : Even (Module.finrank ℚ D.F) := by
     rw [← NumberField.InfinitePlace.card_add_two_mul_card_eq_rank]
-    simp [NumberField.IsTotallyComplex.nrRealPlaces_eq_zero]
+    simp
   have hg : 2 * D.g = Module.finrank ℤ D.La := by
     obtain ⟨k, hk⟩ := hev
     rw [D.rankLa, Datum.g, hk, ← two_mul, mul_left_comm, Nat.mul_div_cancel_left _ (by norm_num : 0 < 2)]
@@ -572,8 +572,7 @@ theorem UpperTheory.Gal.W2.embAll_of :
   · obtain ⟨i, σ, hσ⟩ := G.emb_all _ h
     refine ⟨i, σ, Or.inr fun x => ?_⟩
     have hx := congrArg (fun f : G.F →+* PadicAlgCl p => f (IsCMField.complexConj G.F x)) hσ
-    simp only [RingHom.comp_apply, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom,
-      conjQ_apply] at hx
+    simp only [RingHom.comp_apply, RingEquiv.coe_toRingHom] at hx
     have hc : (conjQ G.F).toRingHom ((IsCMField.complexConj G.F) x) = x := by
       simp [conjQ_apply]
     rw [hc] at hx
@@ -979,14 +978,14 @@ theorem UpperTheory.Gal.W2.lineBasis_of :
     have h2 : c ⬝ᵥ e = 0 := by simp [he, hc]
     have h3 : e ⬝ᵥ e = 1 := by simp [he]
     rw [h2]
-    simp [h3, he]
+    simp [he]
   · intro i hi
     rw [← Matrix.mulVec_mulVec, one_add_col_mul_rank_one_mulVec, one_add_col_mul_rank_one_mulVec]
     have h2 : c ⬝ᵥ (Pi.single i 1 : Fin n → ℂ) = hv M (Pi.single i 1) z / hv M z z := by
       simp [hc, hi]
     have h3 : e ⬝ᵥ ((Pi.single i 1 : Fin n → ℂ) + (hv M (Pi.single i 1) z / hv M z z) • (-e)) =
         - (hv M (Pi.single i 1) z / hv M z z) := by
-      simp [he, dotProduct_add, Pi.single_apply, hi]
+      simp [he, dotProduct_add, hi]
     rw [h2, h3]
     have h4 : (Pi.single i 1 : Fin n → ℂ) + (hv M (Pi.single i 1) z / hv M z z) • (-e) +
         (-(hv M (Pi.single i 1) z / hv M z z)) • (z - e) =
@@ -1027,8 +1026,8 @@ theorem UpperTheory.Gal.W2.memDual_of :
           by_cases hj : j = i
           · subst hj
             simpa using hz0
-          · simp [Pi.single_apply, hj]
-        · simp [Pi.single_apply, hw]
+          · simp [hj]
+        · simp [hw]
       have hp := ha _ hz
       have he : pairL a (Pi.single w (Pi.single i z0) : Loc G) =
           Algebra.trace ℚ_[p] (G.Fw w) (a w i * z0) := by
@@ -1036,7 +1035,7 @@ theorem UpperTheory.Gal.W2.memDual_of :
         rw [Finset.sum_eq_single w]
         · simp
         · intro w' _ hw'
-          simp [Pi.single_apply, hw']
+          simp [hw']
         · simp
       rwa [he] at hp)
     simpa [mul_comm] using key
@@ -1368,7 +1367,6 @@ theorem UpperTheory.Gal.W2.pkTop_of :
   · rintro N hN ⟨s, hs, hP⟩
     obtain ⟨g, hg⟩ := hOnto p D G L B.β A hm N s hN hs hP
     refine ⟨i g, ?_⟩
-    change M (i.symm (i g)) = N
     rw [i.symm_apply_apply]
     ext x
     rw [hM, hg]
@@ -1580,7 +1578,7 @@ private theorem actOn_inC {p : ℕ} [Fact p.Prime] {D : Datum p} {G : HTGroup p}
     actOn L.rep (AfP p) (inC G (AfP p) c) ((1 : AfP p) ⊗ₜ w) = (1 : AfP p) ⊗ₜ (L.rep c w) := by
   simp only [actOn, inC, RingHom.coe_coe, Algebra.TensorProduct.includeRight_apply]
   erw [Algebra.TensorProduct.lift_tmul]
-  simp only [map_one, one_mul, Module.End.baseChangeHom, AlgHom.comp_apply]
+  simp only [map_one, Module.End.baseChangeHom, AlgHom.comp_apply]
   exact LinearMap.baseChange_tmul _ _ _
 
 private theorem actG_toAf {p : ℕ} [Fact p.Prime] {D : Datum p} {G : HTGroup p} (L : Link D G) (B : GlobalTheory.LKCx.Form G)
@@ -1594,7 +1592,7 @@ private theorem actG_toAf {p : ℕ} [Fact p.Prime] {D : Datum p} {G : HTGroup p}
     show (trivX B : AfP p ⊗[ℚ] G.C) * inC G (AfP p) (((y : G.Cˣ × ℚˣ).1 : G.Cˣ) : G.C)
           * (((trivX B)⁻¹ : (AfP p ⊗[ℚ] G.C)ˣ) : AfP p ⊗[ℚ] G.C) * (trivX B : AfP p ⊗[ℚ] G.C)
         = (trivX B : AfP p ⊗[ℚ] G.C) * inC G (AfP p) (((y : G.Cˣ × ℚˣ).1 : G.Cˣ) : G.C) by
-      simp [mul_assoc],
+      simp,
     map_mul, Module.End.mul_apply, actOn_inC]
 
 theorem rdAct_of : RdAct := by
@@ -1717,7 +1715,7 @@ theorem UpperTheory.Gal.W2.rdForm_of :
   unfold rd
   rw [actG_form_eq_sim, adj_actOn_afP, ← Module.End.mul_apply, ← map_mul, key, map_mul,
     AlgHom.commutes, Module.End.mul_apply, Module.algebraMap_end_apply]
-  simp only [inC, AlgHom.coe_toRingHom, RingHom.coe_coe, Algebra.TensorProduct.includeRight_apply]
+  simp only [inC, RingHom.coe_coe, Algebra.TensorProduct.includeRight_apply]
   rw [actOn_tmul_tmul', TensorProduct.smul_tmul', LinearMap.BilinForm.baseChange_tmul, formB,
     L.adj, hsh, Units.val_mul]
   simp only [smul_eq_mul]

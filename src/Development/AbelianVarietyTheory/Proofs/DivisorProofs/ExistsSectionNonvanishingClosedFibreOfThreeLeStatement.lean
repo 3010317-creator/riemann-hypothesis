@@ -524,7 +524,7 @@ theorem _root_.GlobalTheory.T.exists_section_expansion_weightZero_coefficient : 
       ∀ σ : D.toPre.SecB k 0, ∃ (s : H0 U.LG.L k) (f : ∀ α : D.toPre.X, D.toPre.SecB k α), f 0 = σ ∧
         (∀ α, α ≠ 0 → ∀ j : Fin 4 → D.toPre.P.L.ι, ((U.gt 0).pG.left.app _).hom ((f α).f j) = 0) ∧
         U.toUnifPre.ExpandsAt 0 k s f := by
-  first | exact @GlobalTheory.Mum.LeadZero.exists_expandsAt_lead_zero | exact GlobalTheory.Mum.LeadZero.exists_expandsAt_lead_zero | (intros; apply GlobalTheory.Mum.LeadZero.exists_expandsAt_lead_zero <;> assumption)
+  first | exact @GlobalTheory.Mum.LeadZero.exists_expandsAt_lead_zero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionExpansionWeightZeroCoefficientStatement =====
@@ -650,7 +650,7 @@ theorem _root_.GlobalTheory.Mum.exists_secB_zero_mem_basicOpen : ∀ (R : Type) 
   have hy : (snd T P.A).left y = x := by
     have e4 : ptSecT P.A xb ≫ snd T P.A = xb := lift_snd _ _
     have e5 := congrArg (fun q => q.left (closedPoint K)) e4
-    simp only [Over.comp_left, Scheme.Hom.comp_apply] at e5
+    simp only [Over.comp_left] at e5
     exact e5.trans (hu _)
   have c0 := c_zero D.toPre
   have a0 : (snd T P.A).left ≫ D.toPre.famφB 0 0 = (snd T P.A).left := Category.comp_id _
@@ -708,7 +708,7 @@ theorem _root_.GlobalTheory.T.exists_weightZero_section_not_vanishing_closedFibr
     ∀ (D : DegData R (maximalIdeal R)) (k : ℕ), 2 ≤ k → ∀ x : D.toPre.P.A.left,
       D.toPre.P.A.hom x = closedPoint R →
       ∃ (σ : D.toPre.SecB k 0) (j : Fin 4 → D.toPre.P.L.ι), x ∈ D.toPre.P.A.left.basicOpen (σ.f j) := by
-  first | exact @GlobalTheory.Mum.exists_secB_zero_mem_basicOpen | exact GlobalTheory.Mum.exists_secB_zero_mem_basicOpen | (intros; apply GlobalTheory.Mum.exists_secB_zero_mem_basicOpen <;> assumption)
+  first | exact @GlobalTheory.Mum.exists_secB_zero_mem_basicOpen
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeightZeroSectionNotVanishingClosedFibreStatement =====
@@ -734,7 +734,7 @@ theorem _root_.GlobalTheory.T.section_nonzero_of_expansion_mod_maximalIdeal : �
           (((U.gt 0).pG.left.app _).hom ((f 0).f j))) →
       ∃ i : Fin 1 → U.LG.L.ι, y ∈ (thickObj R (maximalIdeal R) 0 G).left.basicOpen
         (((fstG (maximalIdeal R) 0 G).left.app (secChart U.LG.L i)).hom (s.f i)) := by
-  first | exact @GlobalTheory.Mum.ExpandNonzero.nonzero_of_expandsAt_zero | exact GlobalTheory.Mum.ExpandNonzero.nonzero_of_expandsAt_zero | (intros; apply GlobalTheory.Mum.ExpandNonzero.nonzero_of_expandsAt_zero <;> assumption)
+  first | exact @GlobalTheory.Mum.ExpandNonzero.nonzero_of_expandsAt_zero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionNonzeroOfExpansionModMaximalIdealStatement =====
@@ -802,7 +802,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
 theorem _root_.GlobalTheory.T.exists_section_nonvanishing_closedFibre_of_three_le : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ U : Unif (maximalIdeal R) D A G, ∀ k : ℕ, 3 ≤ k → ∀ y : (thickObj R (maximalIdeal R) 0 G).left, ∃ (s : H0 U.LG.L k) (i : Fin 1 → U.LG.L.ι), y ∈ (thickObj R (maximalIdeal R) 0 G).left.basicOpen (((fstG (maximalIdeal R) 0 G).left.app (secChart U.LG.L i)).hom (s.f i)) := by
-  first | exact @GlobalTheory.Mum.ClosedFibreBpf.exists_sec_ne_zero_at | exact GlobalTheory.Mum.ClosedFibreBpf.exists_sec_ne_zero_at | (intros; apply GlobalTheory.Mum.ClosedFibreBpf.exists_sec_ne_zero_at <;> assumption)
+  first | exact @GlobalTheory.Mum.ClosedFibreBpf.exists_sec_ne_zero_at
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionNonvanishingClosedFibreOfThreeLeStatement =====

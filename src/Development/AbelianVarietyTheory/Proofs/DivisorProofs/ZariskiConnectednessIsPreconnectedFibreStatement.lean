@@ -93,8 +93,6 @@ theorem exists_of_thick : ∀ (A : Type) [CommRing A] [IsNoetherianRing A] (I : 
     unfold thickMap
     first
       | (simp only [pullback.map, pullback.lift_fst, Category.comp_id]; done)
-      | exact (pullback.lift_fst _ _ _).trans (Category.comp_id _)
-      | simp [pullback.map]
   have hF₁ : ∀ e, F e ≫ Z.hom = (thickObj A I e X).hom ≫ thick A I e := by
     intro e
     dsimp [F, Z]
@@ -134,7 +132,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
 theorem _root_.GlobalTheory.T.formalFunctions_exists_globalFunction_of_thickenings : ∀ (A : Type) [CommRing A] [IsNoetherianRing A] (I : Ideal A), IsAdicComplete I A → ∀ (X : Over (Sp A)), IsProper X.hom → ∀ f : ∀ e : ℕ, Γ((thickObj A I e X).left, ⊤), (∀ e, (thickMap A I e X).appTop.hom (f (e + 1)) = f e) → ∃ s : Γ(X.left, ⊤), ∀ e, (pullback.fst X.hom (thick A I e)).appTop.hom s = f e := by
-  first | exact @GlobalTheory.FormalFunctions.exists_of_thick | exact GlobalTheory.FormalFunctions.exists_of_thick | (intros; apply GlobalTheory.FormalFunctions.exists_of_thick <;> assumption)
+  first | exact @GlobalTheory.FormalFunctions.exists_of_thick
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalFunctionsExistsGlobalFunctionOfThickeningsStatement =====
@@ -284,7 +282,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
 theorem _root_.GlobalTheory.T.isPreconnected_closedFibre_proper_completeLocalNoetherian : ∀ (A : Type) [CommRing A] [IsNoetherianRing A] [IsLocalRing A], IsAdicComplete (maximalIdeal A) A → ∀ (X : Scheme.{0}) (f : X ⟶ Sp A), IsProper f → PreconnectedSpace X → _root_.IsPreconnected {x : X | f x = closedPoint A} := by
-  first | exact @GlobalTheory.ClosedFibreConn.isPreconnected_closedFibre | exact GlobalTheory.ClosedFibreConn.isPreconnected_closedFibre | (intros; apply GlobalTheory.ClosedFibreConn.isPreconnected_closedFibre <;> assumption)
+  first | exact @GlobalTheory.ClosedFibreConn.isPreconnected_closedFibre
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPreconnectedClosedFibreProperCompleteLocalNoetStatement =====
@@ -416,7 +414,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
 theorem _root_.GlobalTheory.T.zariski_connectedness_isPreconnected_fibre : ∀ (X Y : Scheme.{0}) (a : X ⟶ Y), IsLocallyNoetherian Y → IsProper a → (∀ V : Y.Opens, Function.Bijective (a.app V).hom) → ∀ y : Y, _root_.IsPreconnected {x : X | a x = y} := by
-  first | exact @GlobalTheory.ZConn.isPreconnected_fibre | exact GlobalTheory.ZConn.isPreconnected_fibre | (intros; apply GlobalTheory.ZConn.isPreconnected_fibre <;> assumption)
+  first | exact @GlobalTheory.ZConn.isPreconnected_fibre
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZariskiConnectednessIsPreconnectedFibreStatement =====

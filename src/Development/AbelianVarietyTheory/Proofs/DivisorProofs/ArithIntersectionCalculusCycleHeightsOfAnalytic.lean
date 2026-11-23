@@ -164,7 +164,7 @@ open ReciprocityTheory.ChartRestriction.G.Out (nonzeroLocus)
 open GlobalTheory GlobalTheory.CechPic GlobalTheory.CxPts GlobalTheory.Cartier GlobalTheory.ArInt GlobalTheory.MixHt
 
 theorem _root_.GlobalTheory.T.arithIntersectionNumber_exists_of_mixedHeights : ArchInteg → (∀ (k : Type) [CommRing k] (Y : Scheme.{0}) (q : Y ⟶ Sp k), IsAmb q → ∀ m : ℕ, ∃ T, IsMix q m T) → GlobalTheory.Published.ArFormExists := by
-  first | exact @GlobalTheory.MixHt.arFormExists_of_isMix | exact GlobalTheory.MixHt.arFormExists_of_isMix | (intros; apply GlobalTheory.MixHt.arFormExists_of_isMix <;> assumption)
+  first | exact @GlobalTheory.MixHt.arFormExists_of_isMix
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithIntersectionNumberExistsOfMixedHeightsStatement =====
@@ -329,7 +329,7 @@ theorem arMix_of_mixHt : ArchInteg →
     rw [Fin.prod_univ_succ]
     simp only [Fin.cons_zero, Fin.cons_succ, Finset.prod_const, Finset.card_univ, Fintype.card_fin, lin_intCast,
       Fintype.sum_option, m₀, m₁, Option.elim, zero_smul, zero_add, one_smul]
-    simp only [Pi.zero_apply, Int.cast_zero, Int.cast_one, zsmul_eq_mul, mul_zero, zero_mul, Finset.sum_const_zero, add_zero, mul_one, one_mul]
+    simp only [Pi.zero_apply, Int.cast_zero, zsmul_eq_mul, zero_mul, Finset.sum_const_zero, add_zero]
     ring
   have hval : Φ₀.toAddMonoidHom ((∑ i, n i • (MvPolynomial.X (some i) : MvPolynomial (Option ι) ℝ)) ^ D *
       MvPolynomial.X none) = T (D + 1) (Fin.cons M (fun _ => comb L n)) (genericPoint X) := by

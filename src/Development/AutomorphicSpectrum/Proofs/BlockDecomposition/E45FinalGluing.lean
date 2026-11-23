@@ -118,7 +118,7 @@ theorem adjoin_lie_equiv {E : Type} [Field E] [NumberField E] [_root_.NumberFiel
     intro χ hχ
     obtain ⟨y₁, y₂⟩ := hy χ hχ
     obtain ⟨x₁, x₂⟩ := hx _ y₁
-    exact ⟨by simpa [Module.End.mul_apply] using x₁, by simp [Module.End.mul_apply, x₂, y₂]⟩
+    exact ⟨by simpa [Module.End.mul_apply] using x₁, by simp [x₂, y₂]⟩
 
 theorem capEquiv : CapEquiv := by
   intro E _ _ _ N U T ψ m hU hT hψ hc τ u
@@ -602,11 +602,7 @@ namespace GlobalTheory.IsobaricOfPublished
 theorem multiset_eq_of_prod_map_add {m m' : Multiset ℂ}
     (h : ∀ u : ℂ, (m.map (u + ·)).prod = (m'.map (u + ·)).prod) : m = m' := by
   first
-  | exact @_root_.GlobalTheory.MultisetOfProduct.multiset_eq_of_prod_add_eq
-  | exact _root_.GlobalTheory.MultisetOfProduct.multiset_eq_of_prod_add_eq
   | (apply _root_.GlobalTheory.MultisetOfProduct.multiset_eq_of_prod_add_eq <;> assumption)
-  | (intros; apply _root_.GlobalTheory.MultisetOfProduct.multiset_eq_of_prod_add_eq <;> assumption)
-  | (intros; apply @_root_.GlobalTheory.MultisetOfProduct.multiset_eq_of_prod_add_eq <;> first | assumption | infer_instance)
   | (intros; exact _root_.GlobalTheory.MultisetOfProduct.multiset_eq_of_prod_add_eq ..)
 
 end GlobalTheory.IsobaricOfPublished

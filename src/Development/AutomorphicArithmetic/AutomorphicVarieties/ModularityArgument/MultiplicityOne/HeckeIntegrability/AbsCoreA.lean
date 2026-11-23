@@ -1483,7 +1483,7 @@ theorem levIdx_pf :
     (fun i hi k hk => (hK k).1 hk i (hposition i hi))
   rw [hEq, key, Finset.prod_product]
   refine Finset.prod_congr rfl fun w _ => ?_
-  simp [Fintype.prod_bool, sq]
+  simp [sq]
 
 end UpperTheory.V.Z.Mult.Pi
 end -- clump:auto
@@ -1559,7 +1559,7 @@ private lemma trace_idem {Y : Type} [AddCommGroup Y] [Module ℂ Y] [FiniteDimen
       obtain ⟨c, hc⟩ := hx (φ.smulRight v)
       have h2 := congrArg (fun g : Module.End ℂ Y => g (f y)) hc
       simp only [Module.End.mul_apply, LinearMap.smul_apply, LinearMap.smulRight_apply, hidem, hφ,
-        map_smul, one_smul] at h2
+        one_smul] at h2
       exact Submodule.mem_span_singleton.2 ⟨c, h2.symm⟩
     · rw [Submodule.span_singleton_le_iff_mem]
       exact ⟨y, rfl⟩

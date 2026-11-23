@@ -90,9 +90,9 @@ def dmap {A B : Type} [CommRing A] [CommRing B] (φ : A →+* B) : DualNumber A 
   map_one' := by ext <;> simp
   map_mul' := by
     intro x y
-    ext <;> simp [TrivSqZeroExt.fst_mul, TrivSqZeroExt.snd_mul, smul_eq_mul] <;> ring
+    ext <;> simp [TrivSqZeroExt.fst_mul, TrivSqZeroExt.snd_mul, smul_eq_mul]
   map_zero' := by ext <;> simp
-  map_add' := by intro x y; ext <;> simp <;> ring
+  map_add' := by intro x y; ext <;> simp
 
 @[simp] theorem dmap_fst {A B : Type} [CommRing A] [CommRing B] (φ : A →+* B) (z : DualNumber A) :
     (dmap φ z).fst = φ z.fst := by simp [dmap]
@@ -240,7 +240,7 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.eps_part_value_translate_prod_tangents : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] (S : Type) [CommRing S] (g : Sp S ⟶ G.left) (g' : tEpsG (g ≫ G.hom) ⟶ G), g'.left = spMap (algebraMap S (DualNumber S)) ≫ g → ∀ (n : ℕ) (u : Fin n → (tEpsG (g ≫ G.hom) ⟶ G)), (∀ a, spMap (TrivSqZeroExt.fstHom S S S).toRingHom ≫ (u a).left = (1 : Over.mk (g ≫ G.hom) ⟶ G).left) → ∀ (O : G.left.Opens), ⊤ ≤ g ⁻¹ᵁ O → ∀ f : Γ(G.left, O), (valR (g' * (List.ofFn u).prod).left O f).snd = ∑ a, (valR (g' * u a).left O f).snd := by
-  first | exact @GlobalTheory.EpsAdd.snd_valR_mul_prod | exact GlobalTheory.EpsAdd.snd_valR_mul_prod | (intros; apply GlobalTheory.EpsAdd.snd_valR_mul_prod <;> assumption)
+  first | exact @GlobalTheory.EpsAdd.snd_valR_mul_prod
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EpsPartValueTranslateProdTangentsStatement =====

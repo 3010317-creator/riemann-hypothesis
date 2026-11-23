@@ -113,7 +113,7 @@ theorem exists_coeff_gt : ∀ (R : Type) [CommRing R] [IsDomain R] (D : DegPre R
   rw [ha Z r z J hJ, val_mul hJ, val_mul hJ, val_inv, val_inv, val_pow, val_pow, _root_.mul_assoc, _root_.mul_assoc,
     ← Units.val_mul, ← Units.val_mul]
   congr 2
-  simp only [mul_comm, _root_.mul_assoc, mul_left_comm, inv_mul_cancel_left, mul_inv_cancel_left, mul_inv_cancel, inv_mul_cancel, _root_.mul_one]
+  simp only [mul_comm, _root_.mul_assoc, mul_left_comm, inv_mul_cancel_left]
 
 end GlobalTheory.GtCoeff
 end -- clump:auto
@@ -135,7 +135,7 @@ open GlobalTheory.UT ReciprocityTheory.ChartRestriction.G.DVR
 
 
 theorem _root_.GlobalTheory.T.exists_integral_coefficient_section_coordinate_rig : ∀ (R : Type) [CommRing R] [IsDomain R] (D : DegPre R) (g : GtPt D (𝟙_ (Over (Sp R)))) (t : LB.Gen (LB.LinComb D.P.L ![(η[D.P.A]).left, g.b.left] (DegPre.lineε 1))), t.IsGen → ∀ (k : ℕ) (α : D.X) (s : D.SecB k α), ∃ a : R, ∀ (Z : Scheme.{0}) (r : Z ⟶ Sp R) (z : Z) (J : (Z ⟶ D.P.A.left) → D.P.L.ι), Good D.P.L z J → sval s (r ≫ g.b.left) z J * (val (g.s α) r z J).val * (val t r z J ^ k).val = Geo.Tor.cst r z a * (val (L := D.P.L) D.rig r z J ^ k).val := by
-  first | exact @GlobalTheory.GtCoeff.exists_coeff_gt | exact GlobalTheory.GtCoeff.exists_coeff_gt | (intros; apply GlobalTheory.GtCoeff.exists_coeff_gt <;> assumption)
+  first | exact @GlobalTheory.GtCoeff.exists_coeff_gt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralCoefficientSectionCoordinateRigStatement =====

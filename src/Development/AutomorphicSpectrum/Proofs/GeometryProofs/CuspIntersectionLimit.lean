@@ -487,7 +487,7 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.G
 open GroundTheory.Heights₂.Heights.LowerBoundFree GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Cusp
 
 theorem _root_.GlobalTheory.CompanionTheory.Relay.psh_log_growth_bounded_near_puncture : ∀ (n a : ℕ) (ρ C : ℝ) (u : (Fin n → ℂ) → ℝ), 0 < ρ → ρ ≤ 1 → ReciprocityTheory.AnForm.A.IsPsh (Flat.punct n a ρ) u → (∀ t ∈ Flat.punct n a ρ, u t ≤ C * (1 + Real.log (Flat.logSize a t))) → ∃ C' : ℝ, ∀ t ∈ Flat.punct n a (ρ / 2), u t ≤ C' := by
-  first | exact @LevelTowerAlt.psh_log_growth_bounded | exact LevelTowerAlt.psh_log_growth_bounded
+  first | exact @LevelTowerAlt.psh_log_growth_bounded
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.MetricProofs.PshLogGrowthBoundedNearPuncture =====
@@ -1119,7 +1119,7 @@ theorem limit_strong : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n
         funext j
         by_cases hj : j = i
         · subst hj; simp [uCo]
-        · simp [uCo, hj, Finsupp.single_apply, Ne.symm hj]
+        · simp [uCo, hj]
       have h1 := hx.2 (bas (.inl i)) (by simp [chartW, hv0])
       rw [form_coords bas _ h.form L.alt, hv0, hu0] at h1
       simpa using h1

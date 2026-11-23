@@ -376,7 +376,7 @@ private theorem adj_adj (X : M4 R) : adj (adj X) = X := by
 
 private theorem adj_add (X Y : M4 R) : adj (X + Y) = adj X + adj Y := by
   ext i j
-  simp [adj_apply, mul_add]
+  simp [adj_apply]
 
 private theorem adj_sub (X Y : M4 R) : adj (X - Y) = adj X - adj Y := by
   ext i j
@@ -389,7 +389,7 @@ private theorem adj_smul (a : R) (X : M4 R) : adj (a • X) = a • adj X := by
 
 private theorem adj_diag (d : Fin 4 → R) : adj (Matrix.diagonal d) = Matrix.diagonal fun i => d i.rev := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [adj_apply, sgn, Fin.rev, Matrix.diagonal_apply]
+  fin_cases i <;> fin_cases j <;> simp [adj_apply, sgn, Fin.rev]
 
 private theorem adj_one : adj (1 : M4 R) = 1 := adj_diag _
 
@@ -493,7 +493,7 @@ private theorem diagAll [Infinite E] {H : Type} [Group H] (χ : Fin 4 → H →*
         simp only [Matrix.map_apply, RingHom.coe_coe, Finsupp.linearCombination_single, Matrix.smul_apply,
           map_smul] at this ⊢
         rw [this]
-        by_cases h : i = j <;> simp [Matrix.diagonal_apply, h])
+        by_cases h : i = j <;> simp [h])
   have hXc : ∀ (y : H →₀ E) g, r g * Finsupp.linearCombination E (fun g => r g) y =
       Finsupp.linearCombination E (fun g => r g) y * r g := fun y g => by
     induction y using Finsupp.induction_linear with
@@ -870,7 +870,7 @@ private theorem hom_iff (χ : Fin 4 → H →* Eˣ) (γ : H → M4 E) :
         show (if a = b then ((χ a (g * h) : Eˣ) : E) else 0) =
           ∑ c, (if a = c then ((χ a g : Eˣ) : E) else 0) * (if c = b then ((χ c h : Eˣ) : E) else 0)
         simp only [ite_mul, mul_ite, zero_mul, mul_zero,
-          Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, map_mul, Units.val_mul]
+          Finset.sum_ite_eq', Finset.mem_univ, if_true, map_mul, Units.val_mul]
         split_ifs with hab
         · subst hab
           rfl
@@ -897,7 +897,7 @@ private theorem ex_root [CharZero E] (a b : Fin 4) :
     ∃ X ∈ sp4 E, X a b ≠ 0 ∧ ∀ a' b', wt a' b' ≠ wt a b → X a' b' = 0 := by
   refine ⟨Matrix.of fun i j => if i = a ∧ j = b then (1 : E) else if i = b.rev ∧ j = a.rev then -((sgn a * sgn b : ℤ) : E) else 0, ?_, ?_, ?_⟩
   · rw [mem_sp4_iff]
-    fin_cases a <;> fin_cases b <;> intro a' b' <;> fin_cases a' <;> fin_cases b' <;> simp [sgn] <;> norm_num
+    fin_cases a <;> fin_cases b <;> intro a' b' <;> fin_cases a' <;> fin_cases b' <;> simp [sgn]
   · simp
   · intro a' b' h
     have h1 : ¬ (a' = a ∧ b' = b) := by
@@ -1075,7 +1075,7 @@ private theorem dim_zero (χ : Fin 4 → H →* Eˣ) (I : H → Prop) (σ : H)
       fin_cases a <;> simp [d, hua, hua'] <;> ring
     have hdrev : ∀ g a, d g a.rev = -d g a := by
       intro g a
-      fin_cases a <;> simp [d] <;> rfl
+      fin_cases a <;> simp [d]
     have hdI : ∀ g, I g → ∀ a, d g a = 0 := by
       intro g hg a
       fin_cases a <;> simp [d, huI g hg, huI' g hg]
@@ -1401,7 +1401,7 @@ private theorem gsp_map {B B' : Type} [CommRing B] [CommRing B'] (f : B →+* B'
     rw [(grp B).2.2.2.2.2.1, Matrix.map_mul]
   have e2 : f ν • (1 : M4 B') = (ν • (1 : M4 B)).map f := by
     ext i j
-    by_cases h : i = j <;> simp [Matrix.one_apply, h]
+    by_cases h : i = j <;> simp [h]
   unfold IsGSp
   rw [e1, e2]
   exact ⟨fun h => by rw [h], fun hf h => Matrix.map_injective hf h⟩

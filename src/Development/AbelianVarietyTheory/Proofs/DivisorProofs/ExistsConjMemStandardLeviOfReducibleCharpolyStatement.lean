@@ -198,7 +198,7 @@ open scoped TensorProduct
 
 
 theorem _root_.GlobalTheory.T.conj_mem_standardLevi_wittFrame : ∀ {D : D7} {V : HSp D} (Φ : WittFrame V) (γ g : GF V) {a : ℕ} (ha : a ≤ wittIndex V) (j : Fin (wittIndex V)), j.val + 1 = a → ∀ (x x' : Fin a → V.V), (∀ i, GlobalTheory.Cusp.ratAct D.sp.cm V g (x i) = Φ.e (Fin.castLE ha i)) → (∀ i, GlobalTheory.Cusp.ratAct D.sp.cm V g (x' i) = Φ.f (Fin.castLE ha i)) → (∀ v ∈ Submodule.span D.host.E (Set.range x), GlobalTheory.Cusp.ratAct D.sp.cm V γ v ∈ Submodule.span D.host.E (Set.range x)) → (∀ v ∈ Submodule.span D.host.E (Set.range x'), GlobalTheory.Cusp.ratAct D.sp.cm V γ v ∈ Submodule.span D.host.E (Set.range x')) → rat V (g * γ * g⁻¹) ∈ Φ.levi D.sp.cm (AF D.host.F) {stdVec j} := by
-  first | exact @GlobalTheory.Cusp.ConjLevi.conj_mem_levi_stdVec | exact GlobalTheory.Cusp.ConjLevi.conj_mem_levi_stdVec | (intros; apply GlobalTheory.Cusp.ConjLevi.conj_mem_levi_stdVec <;> assumption)
+  first | exact @GlobalTheory.Cusp.ConjLevi.conj_mem_levi_stdVec
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMemStandardLeviWittFrameStatement =====
@@ -371,7 +371,7 @@ open scoped TensorProduct
 
 
 theorem _root_.GlobalTheory.T.exists_dual_bases_isotropic_subspaces_duality : ∀ {D : D7} {V : HSp D} (X X' : Submodule D.host.E V.V), X ≠ ⊥ → X ≤ GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.perp V X → X' ≤ GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.perp V X' → (∀ x ∈ X, (∀ y ∈ X', V.hD x y = 0) → x = 0) → (∀ y ∈ X', (∀ x ∈ X, V.hD x y = 0) → y = 0) → ∃ (a : ℕ) (x x' : Fin a → V.V), 0 < a ∧ a ≤ wittIndex V ∧ Submodule.span D.host.E (Set.range x) = X ∧ Submodule.span D.host.E (Set.range x') = X' ∧ LinearIndependent D.host.E (Sum.elim x x') ∧ (∀ i j, V.hD (x i) (x j) = 0) ∧ (∀ i j, V.hD (x' i) (x' j) = 0) ∧ (∀ i j, V.hD (x i) (x' j) = if i = j then 1 else 0) := by
-  first | exact @GlobalTheory.IsoDuality.exists_dual_bases | exact GlobalTheory.IsoDuality.exists_dual_bases | (intros; apply GlobalTheory.IsoDuality.exists_dual_bases <;> assumption)
+  first | exact @GlobalTheory.IsoDuality.exists_dual_bases
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDualBasesIsotropicSubspacesDualityStatement =====
@@ -446,8 +446,7 @@ theorem exists_root (K : Type) [Field K] [Algebra F K] (h2 : Module.finrank F E 
   let ι := algebraMap K (K ⊗[F] E)
   have hι : ∀ c : F, ι (algebraMap F K c) = (1 : K) ⊗ₜ algebraMap F E c := by
     intro c
-    simp [ι, Algebra.TensorProduct.algebraMap_apply, Algebra.algebraMap_eq_smul_one,
-      TensorProduct.smul_tmul]
+    simp [ι, Algebra.algebraMap_eq_smul_one]
     rw [Algebra.TensorProduct.one_def]
   have hA : A * A = ι (algebraMap F K t) * A - ι (algebraMap F K s) := by
     simp only [hι, A, Algebra.TensorProduct.tmul_mul_tmul, mul_one, ← TensorProduct.tmul_sub, hts]
@@ -593,24 +592,24 @@ theorem exists_isotropic_idempotent : ∀ {F E : Type} [Field F] [CharZero F] [F
   have Q1 : y * y = y := by
     ext j; by_cases h : j = i
     · subst h; simp [y]
-    · simp [y, Pi.single_apply, h]
+    · simp [y, h]
   have Q2 : y * x = x := by
     ext j; by_cases h : j = i
     · subst h; simp [y, x]
-    · simp [y, x, Pi.single_apply, h]
+    · simp [y, x, h]
   have Q3 : w + x = algebraMap F _ t * y := by
     ext j; by_cases h : j = i
     · subst h; simp [y, w, x, Pi.algebraMap_apply, T']
-    · simp [y, w, x, Pi.single_apply, h]
+    · simp [y, w, x, h]
   have Q4 : w * x = algebraMap F _ s * y := by
     ext j; by_cases h : j = i
     · subst h; simp [y, w, x, Pi.algebraMap_apply, T']
       linear_combination -hβ
-    · simp [y, w, x, Pi.single_apply, h]
+    · simp [y, w, x, h]
   have Q5 : z * (w - x) = y := by
     ext j; by_cases h : j = i
     · subst h; simp [y, w, x, z, inv_mul_cancel₀ hdisc]
-    · simp [y, w, x, z, Pi.single_apply, h]
+    · simp [y, w, x, z, h]
   let φ : (∀ j, K j) →ₐ[F] genAlg (γ : Matrix (Fin n) (Fin n) E) :=
     (plusAlg σ J (γ : Matrix (Fin n) (Fin n) E)).val.comp
       (e.symm : (∀ j, K j) →ₐ[F] plusAlg σ J (γ : Matrix (Fin n) (Fin n) E))
@@ -670,7 +669,7 @@ open scoped TensorProduct
 
 
 theorem _root_.GlobalTheory.T.exists_isotropic_idempotent_of_split_factor : ∀ {F E : Type} [Field F] [CharZero F] [Field E] [Algebra F E] {n : ℕ} (σ : E →ₐ[F] E) (J : Matrix (Fin n) (Fin n) E) (γ : GL (Fin n) E), GlobalTheory.IndefiniteRowSideFullHecke.CentralizerTensorForms.IsRegular σ J γ → GlobalTheory.IndefiniteRowSideFullHecke.CentralizerTensorForms.ClauseAlg σ J γ → GlobalTheory.IndefiniteRowSideFullHecke.CentralizerTensorForms.ClausePlus σ J γ → ∀ (k : ℕ) (K : Fin k → Type) [∀ i, Field (K i)] [∀ i, Algebra F (K i)], Nonempty (GlobalTheory.IndefiniteRowSideFullHecke.CentralizerTensorForms.plusAlg σ J (γ : Matrix (Fin n) (Fin n) E) ≃ₐ[F] ∀ i, K i) → ∀ i, ¬ IsField (K i ⊗[F] E) → ∃ ε ∈ GlobalTheory.IndefiniteRowSideFullHecke.CentralizerTensorForms.genAlg (γ : Matrix (Fin n) (Fin n) E), ε * ε = ε ∧ ε ≠ 0 ∧ Formalism.UG.cT (σ : E →+* E) ε * J * ε = 0 := by
-  first | exact @GlobalTheory.SplitFactorIdem.exists_isotropic_idempotent | exact GlobalTheory.SplitFactorIdem.exists_isotropic_idempotent | (intros; apply GlobalTheory.SplitFactorIdem.exists_isotropic_idempotent <;> assumption)
+  first | exact @GlobalTheory.SplitFactorIdem.exists_isotropic_idempotent
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsotropicIdempotentOfSplitFactorStatement =====
@@ -736,7 +735,7 @@ open scoped TensorProduct
 
 
 theorem _root_.GlobalTheory.T.exists_split_factor_regularSemisimple_reducible : ∀ {F E : Type} [Field F] [Field E] [Algebra F E] {n : ℕ} (σ : E →ₐ[F] E) (J : Matrix (Fin n) (Fin n) E) (γ : GL (Fin n) E), 0 < n → IsRegSS (γ : Matrix (Fin n) (Fin n) E) → GlobalTheory.IndefiniteRowSideFullHecke.CentralizerTensorForms.ClauseAlg σ J γ → GlobalTheory.IndefiniteRowSideFullHecke.CentralizerTensorForms.ClauseRank σ J γ → ¬ Irreducible (γ : Matrix (Fin n) (Fin n) E).charpoly → ¬ IsNonFieldAniso σ J (γ : Matrix (Fin n) (Fin n) E) → ∃ (k : ℕ) (K : Fin k → Type) (_ : ∀ i, Field (K i)) (_ : ∀ i, Algebra F (K i)), Nonempty (GlobalTheory.IndefiniteRowSideFullHecke.CentralizerTensorForms.plusAlg σ J (γ : Matrix (Fin n) (Fin n) E) ≃ₐ[F] ∀ i, K i) ∧ ∃ i, ¬ IsField (K i ⊗[F] E) := by
-  first | exact @GlobalTheory.SplitFactor.exists_split_factor | exact GlobalTheory.SplitFactor.exists_split_factor | (intros; apply GlobalTheory.SplitFactor.exists_split_factor <;> assumption)
+  first | exact @GlobalTheory.SplitFactor.exists_split_factor
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitFactorRegularSemisimpleReducibleStatement =====
@@ -848,7 +847,7 @@ open scoped TensorProduct
 
 
 theorem _root_.GlobalTheory.T.exists_unitary_carry_hyperbolicFamily_wittFrame : ∀ {D : D7} {V : HSp D} (Φ : WittFrame V) {a : ℕ} (ha : a ≤ wittIndex V) (x x' : Fin a → V.V), LinearIndependent D.host.E (Sum.elim x x') → (∀ i j, V.hD (x i) (x j) = 0) → (∀ i j, V.hD (x' i) (x' j) = 0) → (∀ i j, V.hD (x i) (x' j) = if i = j then 1 else 0) → ∃ g : GF V, ∀ i, GlobalTheory.Cusp.ratAct D.sp.cm V g (x i) = Φ.e (Fin.castLE ha i) ∧ GlobalTheory.Cusp.ratAct D.sp.cm V g (x' i) = Φ.f (Fin.castLE ha i) := by
-  first | exact @GlobalTheory.WittCarry.exists_GF_carry_hyperbolic | exact GlobalTheory.WittCarry.exists_GF_carry_hyperbolic | (intros; apply GlobalTheory.WittCarry.exists_GF_carry_hyperbolic <;> assumption)
+  first | exact @GlobalTheory.WittCarry.exists_GF_carry_hyperbolic
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryCarryHyperbolicFamilyWittFrameStatement =====
@@ -870,7 +869,7 @@ open scoped TensorProduct
 
 
 theorem _root_.GlobalTheory.T.isRegularSemisimpleUnitaryData_of_regular : ∀ {D : D7} {V : HSp D} (γ : GF V), IsRegSS γ.1.1 → GlobalTheory.IndefiniteRowSideFullHecke.CentralizerTensorForms.IsRegular D.sp.cm.sig V.gram γ.1 := by
-  first | exact @GlobalTheory.ConjLevi.RegularData.isRegular_of_isRegSS | exact GlobalTheory.ConjLevi.RegularData.isRegular_of_isRegSS | (intros; apply GlobalTheory.ConjLevi.RegularData.isRegular_of_isRegSS <;> assumption)
+  first | exact @GlobalTheory.ConjLevi.RegularData.isRegular_of_isRegSS
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRegularSemisimpleUnitaryDataOfRegularStatement =====
@@ -1060,7 +1059,7 @@ open scoped TensorProduct
 
 
 theorem _root_.GlobalTheory.T.isotropicIdempotent_gives_dual_stable_subspaces : ∀ {D : D7} {V : HSp D} (γ : GF V) (ε : Matrix (Fin V.rank) (Fin V.rank) D.host.E), ε ∈ GlobalTheory.IndefiniteRowSideFullHecke.CentralizerTensorForms.genAlg γ.1.1 → ε * ε = ε → ε ≠ 0 → Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) ε * V.gram * ε = 0 → ∃ X X' : Submodule D.host.E V.V, X ≠ ⊥ ∧ X ≤ GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.perp V X ∧ X' ≤ GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.perp V X' ∧ (∀ x ∈ X, GlobalTheory.Cusp.ratAct D.sp.cm V γ x ∈ X) ∧ (∀ x ∈ X', GlobalTheory.Cusp.ratAct D.sp.cm V γ x ∈ X') ∧ (∀ x ∈ X, (∀ y ∈ X', V.hD x y = 0) → x = 0) ∧ (∀ y ∈ X', (∀ x ∈ X, V.hD x y = 0) → y = 0) := by
-  first | exact @GlobalTheory.IdemIsotropic.idem_isotropic_pair | exact GlobalTheory.IdemIsotropic.idem_isotropic_pair | (intros; apply GlobalTheory.IdemIsotropic.idem_isotropic_pair <;> assumption)
+  first | exact @GlobalTheory.IdemIsotropic.idem_isotropic_pair
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsotropicIdempotentGivesDualStableSubspacesStatement =====
@@ -1117,7 +1116,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.TruncKer GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt GlobalTheory.Chamber GlobalTheory.Cusp
 
 theorem _root_.GlobalTheory.T.exists_conj_mem_standardLevi_of_reducible_charpoly : ∀ {D : D7} {V : HSp D}, 0 < V.rank → GlobalTheory.IndefiniteRowSideFullHecke.CentralizerTensorForms.RegularSemisimple → ∀ (Φ : WittFrame V) (γ : GF V), IsRegSS γ.1.1 → ¬ Irreducible γ.1.1.charpoly → ¬ IsNonFieldAniso D.sp.cm.sig V.gram γ.1.1 → ∃ (g : GF V) (P : Finset (SV (wittIndex V))), IsPar P ∧ P.Nonempty ∧ rat V (g * γ * g⁻¹) ∈ Φ.levi D.sp.cm (AF D.host.F) P := by
-  first | exact @GlobalTheory.ConjLevi.exists_conj_mem_levi | exact GlobalTheory.ConjLevi.exists_conj_mem_levi | (intros; apply GlobalTheory.ConjLevi.exists_conj_mem_levi <;> assumption)
+  first | exact @GlobalTheory.ConjLevi.exists_conj_mem_levi
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConjMemStandardLeviOfReducibleCharpolyStatement =====

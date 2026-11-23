@@ -82,7 +82,7 @@ theorem exists_lift_sys : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (h₀ : Mod
     obtain ⟨i, rfl⟩ := hy
     obtain ⟨hw, e⟩ := (key n hn hnp i).choose_spec.choose_spec
     have hbi : h n (b i) = (key n hn hnp i).choose := by
-      rw [hh']; simp [Module.Basis.constr_basis]
+      rw [hh']; simp
     refine ⟨_, hw, e.trans ?_⟩
     rw [hbi]
   | zero =>
@@ -117,7 +117,7 @@ open ReciprocityTheory.DiscreteGroups.LocalClassField
 open scoped TensorProduct
 
 theorem _root_.GlobalTheory.T.lattice_endomorphism_integral_approximation : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (h₀ : Module.End (AfP p) (AfP p ⊗[ℚ] VQ D)), (∀ v ∈ LaHat D, h₀ v ∈ LaHat D) → ∃ h : ℕ → D.La →+ D.La, ∀ n : ℕ, 0 < n → n.Coprime p → ∀ x, ∃ w ∈ LaHat D, h₀ (inAf D x) = inAf D (h n x) + n • w := by
-  first | (exact @GlobalTheory.LKGeo.LiftSys.exists_lift_sys) | (exact GlobalTheory.LKGeo.LiftSys.exists_lift_sys) | (intros; apply GlobalTheory.LKGeo.LiftSys.exists_lift_sys  <;> assumption)
+  first | (exact @GlobalTheory.LKGeo.LiftSys.exists_lift_sys)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeEndomorphismIntegralApproximation =====

@@ -215,7 +215,6 @@ theorem open_secZ {V : Unf Xo c σ r} (hU : IsUnf V) (T : TorFlag Xo c) {e : Ix 
         rw [h1, h2]
         have := chr_ne_zero e t₀
         field_simp
-        try exact mul_comm _ _
       · exact (h.elim (fun h => h hz₀) fun h =>
           h x₀ (GlobalTheory.FlagMod.FlagCover.eq_ptY (hQ₀.lies.frBor ht₀)).symm).elim
     · exact ⟨0, fun x hz Q t hQ ht => (h ⟨x, hz, Q, t, hQ, ht⟩).elim, fun _ => rfl⟩
@@ -374,7 +373,7 @@ theorem tw_of_dec {V : Unf Xo c σ r} (hσ : GoodEmb c σ) (hU : IsUnf V) (κ : 
     exact zero_ne_one e₂
   refine ⟨a, fun _ => M + 1, _, _, g, hDa, hNV _ _ hDa, ⟨fun _ => antitone_const, even_two_mul _⟩, hg, ?_, ?_, ?_⟩
   · rw [← GlobalTheory.AllWt.exZ_wtZ, ← GlobalTheory.AllWt.exZ_wtZ, hEx]
-    exact funext fun i => by first | exact Formalism.L2.Pj.exZ_add _ _ i | exact GlobalTheory.AllWt.exZ_add _ _ i | (cases i <;> rfl)
+    exact funext fun i => by first | exact Formalism.L2.Pj.exZ_add _ _ i
   · rw [← modelWt_wtZ, modelWt_congr V hσ hU hEx, modelWt_add V (hG ▸ Even.zero)
       ⟨(((M + 1) * m : ℕ) : ℤ), by simp [wtZ]; ring⟩, modelWt_wtZ]
   · rw [hgdef, evR_mul']
@@ -1559,7 +1558,7 @@ open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions F
 open scoped ENNReal Classical
 
 theorem _root_.GlobalTheory.CompanionTheory.Relay.extVan_section_has_cusp_form_match : ∀ (D : D7) (T : Core D) (j : ℕ) (Y : Deep T j) (e : ℕ) (o : ℝ), Y.Good e o → 2 < Module.finrank ℚ D.host.E / 2 → ∀ (Z : Comp Y.d.Xo₂ Y.d.c₂) (TF : GlobalTheory.CompHS.TorFlag Y.d.Xo₂ Y.d.c₂) (u : GlobalTheory.AllWt.Weight (T.Q.Dw j)), ∀ f ∈ GlobalTheory.CompanionTheory.Ar.OntoDef.extVanZ TF.X (exOf (T.Q.Dw j) u 0), ∃ g ∈ cuspOn Y.U Z (wtOf (T.Q.Dw j) u 0), ∀ σ : Y.d.c₂.F →+* ℂ, GoodEmb Y.d.c₂ σ → ∀ w ∈ framesOn (Y.U σ) Z, rdU (Y.U σ) f w.1 w.2 = rdU (Y.U σ) g w.1 w.2 := by
-  first | exact @ModelDimension.cusp_form_extension_vanishing | exact ModelDimension.cusp_form_extension_vanishing
+  first | exact @ModelDimension.cusp_form_extension_vanishing
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ExtVanSectionHasCuspFormMatch =====
@@ -1614,7 +1613,7 @@ theorem norm_genVal_le {Z : Comp Xo c} {G : WTZ E} {N m : ℕ} {b : Module.Basis
       ρ (genVal Z ((b j : cuspOn U Z G) : Rul Xo c)) := by
     conv_lhs => rw [← b.sum_repr f]
     set_option synthInstance.maxHeartbeats 100000 in
-      simp only [Submodule.coe_sum, Submodule.coe_smul, map_sum, map_smul, Algebra.smul_def, map_mul, RingHom.comp_apply, AlgHom.commutes]
+      simp only [Submodule.coe_sum, Submodule.coe_smul, map_sum, Algebra.smul_def, map_mul, RingHom.comp_apply, AlgHom.commutes]
   rw [e]
   have h := norm_pairing_le (hF.herm (ρ.comp (algebraMap c.F (Om Z))))
     (fun j => (ρ.comp (algebraMap c.F (Om Z))) (b.repr f j)) (fun i => ρ (genVal Z ((b i : cuspOn U Z G) : Rul Xo c)))

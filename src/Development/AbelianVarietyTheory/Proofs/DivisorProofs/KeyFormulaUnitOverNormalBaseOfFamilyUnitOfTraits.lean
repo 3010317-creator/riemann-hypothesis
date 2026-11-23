@@ -137,7 +137,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open Classical
 
 theorem _root_.GlobalTheory.T.exists_prime_not_mem_ringKrullDim_quotient_eq_one : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] (h : R), h ≠ 0 → h ∈ IsLocalRing.maximalIdeal R → ∃ q : Ideal R, q.IsPrime ∧ h ∉ q ∧ ringKrullDim (R ⧸ q) = 1 := by
-  first | exact @GlobalTheory.exists_prime_notMem_ringKrullDim_quotient_eq_one | exact GlobalTheory.exists_prime_notMem_ringKrullDim_quotient_eq_one | (intros; apply GlobalTheory.exists_prime_notMem_ringKrullDim_quotient_eq_one <;> assumption)
+  first | exact @GlobalTheory.exists_prime_notMem_ringKrullDim_quotient_eq_one
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimeNotMemRingKrullDimQuotientEqOneStatement =====
@@ -183,7 +183,7 @@ theorem finite_residueField_of_dominating (D : Type*) [CommRing D] [IsDomain D] 
     intro x
     obtain ⟨⟨b, c⟩, hbc⟩ := IsLocalization.surj (nonZeroDivisors D) (x : FractionRing D)
     refine ⟨c, nonZeroDivisors.coe_ne_zero c, b, Subtype.ext ?_⟩
-    simp only [Subalgebra.coe_mul] at hbc ⊢
+    simp only at hbc ⊢
     change algebraMap D (FractionRing D) c * x = algebraMap D (FractionRing D) b
     rw [mul_comm]; exact hbc
   have hm : maximalIdeal D ≠ ⊥ := fun h => hD (isField_iff_maximalIdeal_eq.mpr h)
@@ -349,7 +349,7 @@ theorem exists_trait_finite_residueField_charZero_avoiding : ∀ (B : Type) [Com
   refine ⟨V, inferInstance, inferInstance, inferInstance, inferInstance, g.comp φ, hcV, hVfin, ?_, ?_⟩
   · rw [RingHom.comp_apply]; intro e; apply hφh; apply hg; rw [e, map_zero]
   · have hgm : Ideal.comap g (IsLocalRing.maximalIdeal V) = IsLocalRing.maximalIdeal D := by
-      ext x; simp [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, isUnit_map_iff]
+      ext x; simp [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
     rw [← Ideal.comap_comap, hgm, hcomp]
 
 end GlobalTheory
@@ -370,7 +370,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open Classical
 
 theorem _root_.GlobalTheory.T.exists_trait_finiteResidue_charZero_avoiding : ∀ (B : Type) [CommRing B] [IsDomain B] [CharZero B] [Algebra.FiniteType ℤ B] (m : Ideal B) (h : B), m.IsMaximal → h ≠ 0 → ∃ (V : Type) (_ : CommRing V) (_ : IsDomain V) (_ : IsDiscreteValuationRing V) (_ : CharZero V) (t : B →+* V), IsAdicComplete (IsLocalRing.maximalIdeal V) V ∧ Finite (IsLocalRing.ResidueField V) ∧ t h ≠ 0 ∧ (IsLocalRing.maximalIdeal V).comap t = m := by
-  first | exact @GlobalTheory.exists_trait_finite_residueField_charZero_avoiding | exact GlobalTheory.exists_trait_finite_residueField_charZero_avoiding | (intros; apply GlobalTheory.exists_trait_finite_residueField_charZero_avoiding <;> assumption)
+  first | exact @GlobalTheory.exists_trait_finite_residueField_charZero_avoiding
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTraitFiniteResidueCharZeroAvoidingStatement =====
@@ -454,7 +454,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open Classical
 
 theorem _root_.GlobalTheory.T.dvd_of_dvd_in_completeDVRs_finite_residue : ∀ (A : Type) [CommRing A] [IsDomain A] [IsIntegrallyClosed A] [CharZero A] [Algebra.FiniteType ℤ A] (a f : A), f ≠ 0 → (∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [CharZero V], IsAdicComplete (IsLocalRing.maximalIdeal V) V → Finite (IsLocalRing.ResidueField V) → ∀ t : A →+* V, t f ≠ 0 → t f ∣ t a) → f ∣ a := by
-  first | exact @GlobalTheory.KeyEven.dvd_of_forall_fintrait | exact GlobalTheory.KeyEven.dvd_of_forall_fintrait | (intros; apply GlobalTheory.KeyEven.dvd_of_forall_fintrait <;> assumption)
+  first | exact @GlobalTheory.KeyEven.dvd_of_forall_fintrait
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvdOfDvdInCompleteDVRsFiniteResidueStatement =====

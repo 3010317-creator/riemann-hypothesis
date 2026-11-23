@@ -751,7 +751,7 @@ private theorem exists_isUnit_det_apply_eq_sum_of_mem_Nof {C : Type} [CommRing C
   have e20 := congrFun (congrFun h 2) 0
   have e10 := congrFun (congrFun h 1) 0
   have e21 := congrFun (congrFun h 2) 1
-  simp [Matrix.mul_apply, Fin.sum_univ_three, Matrix.mul_diagonal, t10, t20, t21, t00, t11, t22] at e20 e10 e21
+  simp [Matrix.mul_apply, Fin.sum_univ_three, t10, t20, t21, t11, t22] at e20 e10 e21
   have m20 : M 2 0 = 0 := by
     have : (p 2 - p 0) * M 2 0 = 0 := by linear_combination e20
     exact (hp 2 0 (by decide)).mul_right_eq_zero.mp this
@@ -772,9 +772,9 @@ private theorem upperTriangular_fin_three_mul_entries {C : Type} [CommRing C] (A
   obtain ⟨b10, b20, b21⟩ := hB
   refine ⟨fun i => ?_, ?_, ?_, ?_⟩
   · fin_cases i <;> simp [Matrix.mul_apply, Fin.sum_univ_three, a10, a20, a21, b10, b20, b21]
-  · simp [Matrix.mul_apply, Fin.sum_univ_three, a10, a20, a21, b10, b20, b21]
-  · simp [Matrix.mul_apply, Fin.sum_univ_three, a10, a20, a21, b10, b20, b21]
-  · simp [Matrix.mul_apply, Fin.sum_univ_three, a10, a20, a21, b10, b20, b21]
+  · simp [Matrix.mul_apply, Fin.sum_univ_three, b21]
+  · simp [Matrix.mul_apply, Fin.sum_univ_three, a10]
+  · simp [Matrix.mul_apply, Fin.sum_univ_three]
 
 
 open GlobalTheory.OrdLoc in
@@ -1819,7 +1819,7 @@ theorem main : LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {O : Type
       conjBy (Matrix.GeneralLinearGroup.map (q : B' →+* B) h) (push f U.r.hom) (g : GQ l) := by
     simp only [conjBy, push, MonoidHom.comp_apply, MulEquiv.coe_toMonoidHom, MulAut.conj_apply, map_mul, map_inv,
       GG.map_map, hqf']
-    congr 2 <;> simp [GG.ofGL, GG.map, SemidirectProduct.map_inl]
+    congr 2
   rw [MonoidHom.comp_apply, hρ g, ← e1]
   rfl
 
@@ -1892,7 +1892,7 @@ section -- clump:auto
 open Formalism.BasicNotions Formalism.BasicNotions.Loc ReciprocityTheory.Gal Module UpperTheory.V.Loc UpperTheory.V.U3 UpperTheory.V.Alg IsLocalRing Polynomial Topology
 
 theorem _root_.GlobalTheory.T.saturatedOrdIdeal_points_isLCrystalline : LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (D : Dat3 l O) (U : _root_.UpperTheory.V.U3.Univ (_root_.UpperTheory.V.U3.GCond.noCondition O D.η D.Ψ)), GlobalTheory.OrdLoc.PtsCr D U (GlobalTheory.OrdLoc.IY D U) := by
-  first | exact @GlobalTheory.OrdLoc.ptsCr_IY | exact GlobalTheory.OrdLoc.ptsCr_IY | (intros; apply GlobalTheory.OrdLoc.ptsCr_IY <;> assumption)
+  first | exact @GlobalTheory.OrdLoc.ptsCr_IY
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.SaturatedOrdIdealPointsIsLCrystallineStatement =====

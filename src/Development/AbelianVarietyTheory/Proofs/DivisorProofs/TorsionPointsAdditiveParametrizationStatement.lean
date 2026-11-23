@@ -75,7 +75,7 @@ open scoped TensorProduct
 
 
 theorem _root_.GlobalTheory.T.exists_level_structure_on_torsion : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ) (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b N s) (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ S) (ℓ : ℕ), ℓ.Prime → ℓ ≠ p → ∀ j : ℕ, ∃ f : (Fin (D.m * D.n) → 𝓞 D.F ⧸ Ideal.span {((ℓ ^ j : ℕ) : 𝓞 D.F)}) → (Over.mk x ⟶ o.A), (∀ a a', f (a + a') = f a * f a') ∧ (∀ (c : 𝓞 D.F) a, f (Ideal.Quotient.mk (Ideal.span {((ℓ ^ j : ℕ) : 𝓞 D.F)}) c • a) = f a ≫ o.act.act (algebraMap (𝓞 D.F) D.O c)) ∧ Function.Injective f ∧ ∀ g : Over.mk x ⟶ o.A, g ^ (ℓ ^ j) = 1 → ∃ a, f a = g := by
-  first | (exact @GlobalTheory.QuotientCardinalityFinrank.torsion_points_free) | (exact GlobalTheory.QuotientCardinalityFinrank.torsion_points_free) | (intros; apply GlobalTheory.QuotientCardinalityFinrank.torsion_points_free  <;> assumption)
+  first | (exact @GlobalTheory.QuotientCardinalityFinrank.torsion_points_free)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelStructureOnTorsion =====
@@ -243,7 +243,7 @@ theorem core_inj {p : ℕ} [Fact p.Prime] (D : Datum p) {R : Type} [CommRing R] 
     simp only [map_add (f := _), map_mul, map_sub, map_one, Module.End.mul_apply, LinearMap.add_apply, LinearMap.sub_apply,
       Module.End.one_apply, L_int, L_nat, k2] at h
     rw [← hTω, e2, hr2, sub_self] at h
-    simp only [hp, zero_smul, map_zero, zero_add, add_zero] at h
+    simp only [hp, zero_smul, map_zero, add_zero] at h
     exact h.symm
   rw [hv12, z1, z2, add_zero]
 
@@ -292,7 +292,7 @@ open scoped TensorProduct
 
 
 theorem _root_.GlobalTheory.T.harrisTaylor_tangent_injective_away_from_etalePlace : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ) (w0 : Ideal (𝓞 D.F)), IsEtPlace b w0 → ∀ (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b N s) (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ S) (c : 𝓞 D.F), c ≠ 0 → (∀ w : Ideal (𝓞 D.F), w.IsMaximal → ((p : ℕ) : 𝓞 D.F) ∈ w → w ≠ w0 → c ∉ w) → ∀ v : epsPtR x ⟶ o.A, spMap (TrivSqZeroExt.fstHom k k k).toRingHom ≫ v.left = (1 : Over.mk x ⟶ o.A).left → v ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1 → v = 1 := by
-  first | (exact @GlobalTheory.UPel.HT.EtLev.TanInj.tan_eq_one_of_notMem) | (exact GlobalTheory.UPel.HT.EtLev.TanInj.tan_eq_one_of_notMem) | (intros; apply GlobalTheory.UPel.HT.EtLev.TanInj.tan_eq_one_of_notMem  <;> assumption)
+  first | (exact @GlobalTheory.UPel.HT.EtLev.TanInj.tan_eq_one_of_notMem)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorTangentInjectiveAwayFromEtalePlaceStatement =====
@@ -478,7 +478,7 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 
 
 theorem _root_.GlobalTheory.T.card_torsion_killed_by_prime_at_etale_place : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ) (w0 : Ideal (𝓞 D.F)), IsEtPlace b w0 → ∀ (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b N s) (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ S), Nat.card {g : Over.mk x ⟶ o.A // ∀ c ∈ w0, g ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1} = Nat.card (𝓞 D.F ⧸ w0) ^ (D.m * D.n) := by
-  first | (exact @GlobalTheory.UPel.HT.EtLev.GeoCard.card_ker_place) | (exact GlobalTheory.UPel.HT.EtLev.GeoCard.card_ker_place) | (intros; apply GlobalTheory.UPel.HT.EtLev.GeoCard.card_ker_place  <;> assumption)
+  first | (exact @GlobalTheory.UPel.HT.EtLev.GeoCard.card_ker_place)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardTorsionKilledByPrimeAtEtalePlaceStatement =====
@@ -491,7 +491,7 @@ section -- clump:auto
 open NumberField
 
 theorem _root_.GlobalTheory.T.torsionBySet_pow_free_of_card_pow_numberField : ∀ (F : Type) [Field F] [NumberField F] (M : Type) [AddCommGroup M] [Module (𝓞 F) M] (w0 : Ideal (𝓞 F)) (h r : ℕ), w0.IsMaximal → w0 ≠ ⊥ → (∀ j : ℕ, Nat.card (Submodule.torsionBySet (𝓞 F) M ((w0 ^ j : Ideal (𝓞 F)) : Set (𝓞 F))) = Nat.card (𝓞 F ⧸ w0) ^ (j * h)) → ∃ f : (Fin h → 𝓞 F ⧸ w0 ^ r) →+ M, (∀ (c : 𝓞 F) (a : Fin h → 𝓞 F ⧸ w0 ^ r), f (Ideal.Quotient.mk (w0 ^ r) c • a) = c • f a) ∧ Function.Injective f ∧ ∀ g : M, (∀ c ∈ w0 ^ r, c • g = 0) → ∃ a, f a = g := by
-  first | (exact @GlobalTheory.torsionBySet_pow_free_of_natCard) | (exact GlobalTheory.torsionBySet_pow_free_of_natCard) | (intros; apply GlobalTheory.torsionBySet_pow_free_of_natCard  <;> assumption)
+  first | (exact @GlobalTheory.torsionBySet_pow_free_of_natCard)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionBySetPowFreeOfCardPowNumberFieldStatement =====
@@ -627,7 +627,7 @@ theorem _root_.GlobalTheory.T.torsion_points_additive_parametrization : ∀ (p :
     (∀ (c : 𝓞 D.F) a, f (Ideal.Quotient.mk (w0 ^ r) c • a) = f a ≫ o.act.act (algebraMap (𝓞 D.F) D.O c)) ∧
     Function.Injective f ∧
     ∀ g : Over.mk x ⟶ o.A, (∀ c ∈ w0 ^ r, g ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1) → ∃ a, f a = g := by
-  first | (exact @GlobalTheory.UPel.HT.EtLev.TorFree.free_torsion_geomPt) | (exact GlobalTheory.UPel.HT.EtLev.TorFree.free_torsion_geomPt) | (intros; apply GlobalTheory.UPel.HT.EtLev.TorFree.free_torsion_geomPt  <;> assumption)
+  first | (exact @GlobalTheory.UPel.HT.EtLev.TorFree.free_torsion_geomPt)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionPointsAdditiveParametrizationStatement =====

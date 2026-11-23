@@ -284,29 +284,22 @@ theorem transvection_mul_upperFactor {i j : Fin m} (hji : j < i) {x : k} (hx : x
     rw [single_mul_apply_same]
     by_cases hb : b = a
     · subst hb
-      simp [upperFactor, swapLine, transvection, diagonal_mul, single_apply, one_apply,
-        Function.update_apply, hij, hij.symm, hx]
+      simp [upperFactor, swapLine, transvection, diagonal_mul, hij.symm, hx]
     · by_cases hbj : b = j
       · subst hbj
-        simp [upperFactor, swapLine, transvection, diagonal_mul, single_apply, one_apply,
-          Function.update_apply, hij, hij.symm, hx]
-      · simp [upperFactor, swapLine, transvection, diagonal_mul, single_apply, one_apply,
-          Function.update_apply, hij, hij.symm, hx, hb, hbj, Ne.symm hb, Ne.symm hbj]
+        simp [upperFactor, swapLine, transvection, diagonal_mul, hij, hij.symm, hx]
+      · simp [upperFactor, swapLine, transvection, diagonal_mul, hij.symm, Ne.symm hb, Ne.symm hbj]
   · rw [single_mul_apply_of_ne _ _ _ _ _ ha, add_zero]
     by_cases haj : a = j
     · subst haj
       by_cases hb : b = a
       · subst hb
-        simp [upperFactor, swapLine, transvection, diagonal_mul, single_apply, one_apply,
-          Function.update_apply, hij, hij.symm, hx]
+        simp [upperFactor, swapLine, transvection, diagonal_mul, hij, hij.symm]
       · by_cases hbi : b = i
         · subst hbi
-          simp [upperFactor, swapLine, transvection, diagonal_mul, single_apply, one_apply,
-            Function.update_apply, hij, hij.symm, hx]
-        · simp [upperFactor, swapLine, transvection, diagonal_mul, single_apply, one_apply,
-            Function.update_apply, hij, hij.symm, hx, hb, hbi, Ne.symm hb, Ne.symm hbi]
-    · simp [upperFactor, swapLine, transvection, diagonal_mul, single_apply, one_apply,
-        Function.update_apply, hij, hij.symm, hx, ha, haj, Ne.symm ha, Ne.symm haj]
+          simp [upperFactor, swapLine, transvection, diagonal_mul, hij, hij.symm, hx]
+        · simp [upperFactor, swapLine, transvection, diagonal_mul, hij, hij.symm, Ne.symm hb, Ne.symm hbi]
+    · simp [upperFactor, swapLine, transvection, diagonal_mul, ha, haj, Ne.symm ha, Ne.symm haj]
 
 end Lower
 
@@ -1181,7 +1174,7 @@ open GlobalTheory.HSApp
 
 
 theorem _root_.GlobalTheory.T.inverse_of_flat_unit_isIntegral : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → ∀ (D : D7) (T : Core D) (j : ℕ) (Y : Deep T j) (e : ℕ) (o : ℝ), Y.Good e o → 2 < Module.finrank ℚ D.host.E / 2 → ∀ (n : ℤ) (Z : Comp Y.d.Xo₂ Y.d.c₂) (τ : Psi T.Q.H) (s i : Rul Y.d.Xo₂ Y.d.c₂), (s ∈ GlobalTheory.AllWt.secZ Y.d.Xo₂ Y.d.c₂ (Formalism.L2.Pj.exZ (T.Q.Dw j) (wtOf (T.Q.Dw j) (n • GlobalTheory.FlatLine.flatWt (T.Q.Dw j) τ) 0)) ∧ i ∈ GlobalTheory.AllWt.secZ Y.d.Xo₂ Y.d.c₂ (-Formalism.L2.Pj.exZ (T.Q.Dw j) (wtOf (T.Q.Dw j) (n • GlobalTheory.FlatLine.flatWt (T.Q.Dw j) τ) 0)) ∧ GlobalTheory.FlatLine.idem Z * s = s ∧ GlobalTheory.FlatLine.idem Z * i = i ∧ s * i = GlobalTheory.FlatLine.idem Z ∧ (∀ σ, GoodEmb Y.d.c₂ σ → ∃ C : ℝ, ∀ z ∈ framesOn (Y.U σ) Z, GlobalTheory.AllWt.homN (Y.U σ) (xiR D) (wtOf (T.Q.Dw j) (n • GlobalTheory.FlatLine.flatWt (T.Q.Dw j) τ) 0) s z ≤ C ∧ GlobalTheory.AllWt.homN (Y.U σ) (xiR D) (-(wtOf (T.Q.Dw j) (n • GlobalTheory.FlatLine.flatWt (T.Q.Dw j) τ) 0)) i z ≤ C)) → ∃ m : ℕ, 0 < m ∧ ∀ la, ∀ v ∈ GlobalTheory.FlatLine.valOn Z la, 0 ≤ v ((m : Y.d.c₂.F) • s) ∧ 0 ≤ v ((m : Y.d.c₂.F) • i) := by
-  first | exact @_root_.GlobalTheory.FlatUnitInt.flat_unit_inverse_integral | exact _root_.GlobalTheory.FlatUnitInt.flat_unit_inverse_integral | (intros; apply _root_.GlobalTheory.FlatUnitInt.flat_unit_inverse_integral <;> assumption)
+  first | exact @_root_.GlobalTheory.FlatUnitInt.flat_unit_inverse_integral
 end
 end -- clump:auto
 end -- clump:auto

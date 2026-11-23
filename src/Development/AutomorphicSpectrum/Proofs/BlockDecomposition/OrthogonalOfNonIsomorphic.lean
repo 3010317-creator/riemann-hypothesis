@@ -478,7 +478,7 @@ theorem restricted_eq_one {ι : Type*} [DecidableEq ι] {H : ι → Type*} [∀ 
       refine ih _ fun i hi => ?_
       by_cases hia : i = a
       · subst hia
-        simp [RestrictedProduct.mulSingle_eq_same, one_mem]
+        simp [one_mem]
       · simp only [RestrictedProduct.mul_apply, RestrictedProduct.inv_apply,
           RestrictedProduct.mulSingle_eq_of_ne A _ hia, inv_one, mul_one]
         exact hx i (by simp [hia, hi])
@@ -491,12 +491,12 @@ def singleHom {ι : Type*} [DecidableEq ι] {H : ι → Type*} [∀ i, Group (H 
   map_one' := by
     ext j
     by_cases h : j = i
-    · subst h; simp [RestrictedProduct.mulSingle_eq_same]
-    · simp [RestrictedProduct.mulSingle_eq_of_ne A _ h]
+    · subst h; simp
+    · simp
   map_mul' x y := by
     ext j
     by_cases h : j = i
-    · subst h; simp [RestrictedProduct.mulSingle_eq_same]
+    · subst h; simp
     · simp [RestrictedProduct.mulSingle_eq_of_ne A _ h]
 
 end Products
@@ -772,7 +772,7 @@ lemma end_coeff_continuous {M : Type} [AddCommGroup M] [Module ℂ M]
       _ = _ := by
 
           rw [h2, map_sum]
-          simp [LinearMap.single_apply]
+          simp
   simp only [key]
   refine continuous_finsetSum _ fun i _ => ?_
   obtain ⟨ℓ', hℓ'⟩ := LinearMap.exists_extend (c ∘ₗ LinearMap.single ℂ (fun _ : Fin (Module.finrank ℂ A) => (A : Type)) i)
@@ -798,7 +798,7 @@ theorem representing_vector : ∀ {K M H X : Type} [Group K] [TopologicalSpace K
   have hρAmul : ∀ k k', ρA (k * k') = ρA k ∘ₗ ρA k' := by
     intro k k'
     ext a
-    simp [hρA, map_mul, Module.End.mul_apply]
+    simp [hρA, map_mul]
   have hρA1 : ρA 1 = LinearMap.id := by
     ext a
     simp [hρA]

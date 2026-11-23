@@ -305,11 +305,7 @@ theorem exists_dvd_sum {V ι : Type} [CommRing V] [IsDomain V] [ValuationRing V]
 theorem det_mul_eq_sum {V : Type} [CommRing V] {m g : ℕ} (M : Matrix (Fin m) (Fin g) V) (C : Matrix (Fin g) (Fin m) V) :
     (M * C).det = ∑ J : Fin m → Fin g, (∏ i, M i (J i)) * (C.submatrix J id).det := by
   first
-  | exact @_root_.GlobalTheory.DeterminantExpansion.det_mul_expand
-  | exact _root_.GlobalTheory.DeterminantExpansion.det_mul_expand
   | (apply _root_.GlobalTheory.DeterminantExpansion.det_mul_expand <;> assumption)
-  | (intros; apply _root_.GlobalTheory.DeterminantExpansion.det_mul_expand <;> assumption)
-  | (intros; apply @_root_.GlobalTheory.DeterminantExpansion.det_mul_expand <;> first | assumption | infer_instance)
   | (intros; exact _root_.GlobalTheory.DeterminantExpansion.det_mul_expand ..)
 
 theorem exists_minor_dvd : ∀ (V : Type) [CommRing V] [IsDomain V] [ValuationRing V] (m g : ℕ) (M : Matrix (Fin m) (Fin g) V) (C : Matrix (Fin g) (Fin m) V) (δ : V), δ ≠ 0 → M * C = δ • (1 : Matrix (Fin m) (Fin m) V) → (∃ I : Fin m → Fin g, (M.submatrix id I).det ∣ δ ^ m) ∧ ∃ J : Fin m → Fin g, (C.submatrix J id).det ∣ δ ^ m := by
@@ -521,7 +517,7 @@ theorem exists_change {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Re
   have e2 : M.map ι * C.map ι = ((discr E : ℤ) : k) • 1 := by
     rw [← Matrix.map_mul (f := ι), h.2.2]
     ext i j
-    by_cases hij : i = j <;> simp [Matrix.one_apply, hij]
+    by_cases hij : i = j <;> simp [hij]
   have e3 : C' * Matrix.of a * M.map ι = C.map ι * M.map ι := by rw [Matrix.mul_assoc, ← hM, h'.2.1, e1]
   have e4 := congrArg (· * C.map ι) e3
   simp only [Matrix.mul_assoc (C' * Matrix.of a), Matrix.mul_assoc (C.map ι), e2, Matrix.mul_smul, Matrix.mul_one] at e4
@@ -1082,7 +1078,7 @@ theorem exists_change {R : Type} [CommRing R] {ξ : Sp R ⟶ Y.X} {g : ℕ}
   have e2 : M.map ι * C.map ι = ((discr E : ℤ) : k) • 1 := by
     rw [← Matrix.map_mul (f := ι), h.2.2]
     ext i j
-    by_cases hij : i = j <;> simp [Matrix.one_apply, hij]
+    by_cases hij : i = j <;> simp [hij]
   have e3 : C' * Matrix.of a * M.map ι = C.map ι * M.map ι := by rw [Matrix.mul_assoc, ← hM, h'.2.1, e1]
   have e4 := congrArg (· * C.map ι) e3
   simp only [Matrix.mul_assoc (C' * Matrix.of a), Matrix.mul_assoc (C.map ι), e2, Matrix.mul_smul, Matrix.mul_one] at e4
@@ -1493,7 +1489,7 @@ theorem chart_bound {hle : c.F ≤ c'.F} (hr : r ≫ pullback.snd _ _ = pullback
     have := congrFun (congrFun h i) j
     rw [← Matrix.map_mul] at this
     refine this.trans ?_
-    by_cases hij : i = j <;> simp [Matrix.one_apply, hij]
+    by_cases hij : i = j <;> simp [hij]
   obtain ⟨⟨I, d₁, hd₁⟩, -⟩ := exists_minor_dvd T.V _ _ M₁ C₁ _ hδ (hMC _ _ h₁.2.2)
   obtain ⟨-, J, d₂, hd₂⟩ := exists_minor_dvd T.V _ _ M₂ C₂ _ hδ (hMC _ _ h₂.2.2)
   obtain ⟨𝔮, _, _, yy, y, ι₂, hι₂, hy, hyr, hyZ⟩ := exists_local Y r hr Z hb _ h1 h1' h2

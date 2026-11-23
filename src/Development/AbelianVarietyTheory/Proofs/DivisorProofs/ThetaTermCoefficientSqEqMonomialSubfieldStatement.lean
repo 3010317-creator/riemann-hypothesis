@@ -171,7 +171,7 @@ theorem _root_.GlobalTheory.T.cubicalProduct_identity_of_genericPoint : ∀ (V :
       val χt (toUnit (TF (R := V) (FractionRing V))).left z J ^ N) →
     ∀ (T : Over (Sp V)) (z : T.left) J, Good D.P.L z J →
       ∏ i ∈ Finset.range N, cubV D.cub z J (toUnit T ≫ cχ) (toUnit T ≫ b ^ i) (toUnit T ≫ b) = val χt T.hom z J ^ N := by
-  first | exact @GlobalTheory.Poinc.Sep.CubInt.cubProd_of_generic | exact GlobalTheory.Poinc.Sep.CubInt.cubProd_of_generic | (intros; apply GlobalTheory.Poinc.Sep.CubInt.cubProd_of_generic <;> assumption)
+  first | exact @GlobalTheory.Poinc.Sep.CubInt.cubProd_of_generic
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CubicalProductIdentityOfGenericPointStatement =====
@@ -249,7 +249,7 @@ open GlobalTheory.Poinc.ThetaOne GlobalTheory.Poinc.Sep GlobalTheory.FieldBaseCh
 open ReciprocityTheory.ChartRestriction.G.DVR GlobalTheory.Poinc.Sep.Frames GlobalTheory.UT.CoefBasic
 
 theorem _root_.GlobalTheory.T.integralFrame_identity_of_genericPoint : ∀ (V : Type) [CommRing V] [IsDomain V] (D : DegPre V) (N : ℕ) (b : 𝟙_ (Over (Sp V)) ⟶ D.P.A), b ^ N = 1 → ∀ (t : LB.Gen (LB.LinComb D.P.L ![(η[D.P.A]).left, b.left] (DegPre.lineε 1))), t.IsGen → ∀ (κ : LB.Gen (kapLB D (𝟙 D.P.A ^ N) (N ^ 2) 1)), Normd κ → (∀ z J, Good D.P.L z J → val t (toUnit (TF (R := V) (FractionRing V))).left z J ^ (N ^ 2) * val κ ((toUnit (TF (R := V) (FractionRing V))).left ≫ b.left) z J = 1) → ∀ (Z : Scheme.{0}) (r : Z ⟶ Sp V) (z : Z) J, Good D.P.L z J → val t r z J ^ (N ^ 2) * val κ (r ≫ b.left) z J = 1 := by
-  first | exact @GlobalTheory.Poinc.Sep.FrameInt.kap_of_generic | exact GlobalTheory.Poinc.Sep.FrameInt.kap_of_generic | (intros; apply GlobalTheory.Poinc.Sep.FrameInt.kap_of_generic <;> assumption)
+  first | exact @GlobalTheory.Poinc.Sep.FrameInt.kap_of_generic
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralFrameIdentityOfGenericPointStatement =====
@@ -351,7 +351,7 @@ theorem _root_.GlobalTheory.T.isUnit_coefficient_of_thetaSquare_integralTorsion 
         gs r z ⊤ ((Scheme.ΓSpecIso (CommRingCat.of V₁)).inv.hom G) =
           sval (θ : LB.Sec (LB.LinComb D.P.L (D.famφB 0) (DegPre.famε 1))) (r ≫ (b c₁).left) z J ^ 2 *
             (U Z r z J).val) → IsUnit G := by
-  first | exact @GlobalTheory.Poinc.Sep.CoefInt.isUnit_of_theta_sq | exact GlobalTheory.Poinc.Sep.CoefInt.isUnit_of_theta_sq | (intros; apply GlobalTheory.Poinc.Sep.CoefInt.isUnit_of_theta_sq <;> assumption)
+  first | exact @GlobalTheory.Poinc.Sep.CoefInt.isUnit_of_theta_sq
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUnitCoefficientOfThetaSquareIntegralTorsionStatement =====
@@ -481,7 +481,7 @@ theorem _root_.GlobalTheory.T.psi_sq_genericPoint_eq_monomial_mul_symmetric : �
             (val D.sym ((toUnit (TF (R := V) (FractionRing V))).left ≫ (D.c mu).left) z J *
               (val (τ₀ mu (-mu)) (toUnit (TF (R := V) (FractionRing V))).left z J)⁻¹ *
               (rigV D (toUnit (TF (R := V) (FractionRing V))).left z J ^ 2)⁻¹).val := by
-  first | exact @GlobalTheory.PsiSqGeneric.main | exact GlobalTheory.PsiSqGeneric.main | (intros; apply GlobalTheory.PsiSqGeneric.main <;> assumption)
+  first | exact @GlobalTheory.PsiSqGeneric.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PsiSqGenericPointEqMonomialMulSymmetricStatement =====
@@ -546,7 +546,7 @@ open ReciprocityTheory.ChartRestriction.G.DVR GlobalTheory.Poinc.Sep.Frames Glob
 theorem _root_.GlobalTheory.T.psi_zero_mul_rigidificationK_eq_one : ∀ (V : Type) [CommRing V] [IsDomain V] (D : DegPre V), D.TauBimult →
     ∀ (Z : Scheme.{0}) (r : Z ⟶ (TK V).left) (z : Z) J, Good D.P.L z J →
       val (D.psi 0) r z J * val D.rigK r z J = 1 := by
-  first | exact @GlobalTheory.Poinc.Sep.PsiZero.psi_zero_mul_rigK | exact GlobalTheory.Poinc.Sep.PsiZero.psi_zero_mul_rigK | (intros; apply GlobalTheory.Poinc.Sep.PsiZero.psi_zero_mul_rigK <;> assumption)
+  first | exact @GlobalTheory.Poinc.Sep.PsiZero.psi_zero_mul_rigK
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PsiZeroMulRigidificationKEqOneStatement =====
@@ -672,7 +672,7 @@ theorem _root_.GlobalTheory.T.thetaFamily_coefficient_integral_torusPoint : ∀ 
         sval (θ : LB.Sec (LB.LinComb D.P.L (D.famφB 0) (DegPre.famε 1)))
           ((toUnit (TF (R := V) (FractionRing V))).left ≫ (b * D.c χ).left) z J *
         (val (g.s χ) (𝟙 _) z J).val * (val w (𝟙 _) z J).val := by
-  first | exact @GlobalTheory.UT.CoefInt.coef_int | exact GlobalTheory.UT.CoefInt.coef_int | (intros; apply GlobalTheory.UT.CoefInt.coef_int <;> assumption)
+  first | exact @GlobalTheory.UT.CoefInt.coef_int
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaFamilyCoefficientIntegralTorusPointStatement =====
@@ -727,7 +727,7 @@ theorem fn_of_theta : ∀ (V : Type) [CommRing V] [IsDomain V] (D : DegPre V) (�
       Matrix.cons_val_one, Matrix.cons_val_two, Matrix.cons_val_three, Matrix.head_cons, Matrix.tail_cons, Category.comp_id, Nat.cast_one, sub_self,
       comp_padd_c_zero, comp_toUnit_c_zero, comp_toUnit_eta, eSec]
     apply Additive.ofMul.injective
-    simp only [ofMul_mul, ofMul_inv, ofMul_zpow, ofMul_one]
+    simp only [ofMul_mul, ofMul_zpow, ofMul_one]
     abel
   obtain ⟨s', hs'⟩ := exists_sec hL hF (pullMulSec (θ : LB.Sec (LB.LinComb D.P.L (D.famφB 0) (DegPre.famε 1))) b.left
     (LB.mulGen D.P.L _ _ _ _ t (LB.invGen D.P.L _ _ ρ₀)) hu)
@@ -819,7 +819,7 @@ theorem fn_of_theta_sq : ∀ (V : Type) [CommRing V] [IsDomain V] (D : DegPre V)
         Matrix.tail_cons, Category.comp_id, Nat.cast_one, sub_self,
         comp_padd_c_zero, comp_toUnit_c_zero, comp_toUnit_eta, eSec, e0, e1, e2, e4]
       apply Additive.ofMul.injective
-      simp only [ofMul_mul, ofMul_inv, ofMul_zpow, ofMul_pow, ofMul_one]
+      simp only [ofMul_mul, ofMul_zpow, ofMul_pow, ofMul_one]
       abel)
   obtain ⟨a, ha⟩ := GlobalTheory.Poinc.Sep.ConjPt.exists_fn s'
   refine ⟨(Scheme.ΓSpecIso (CommRingCat.of V)).hom.hom a, fun Z r z J hJ => ?_⟩
@@ -862,7 +862,7 @@ theorem _root_.GlobalTheory.T.thetaSquare_product_isFunction_on_spec : ∀ (V : 
         sval (θ : LB.Sec (LB.LinComb D.P.L (D.famφB 0) (DegPre.famε 1))) (r ≫ (b * D.c χ).left) z J ^ 2 *
           (val t r z J ^ 2 * val χt r z J ^ 2 * val D.sym (r ≫ (D.c χ).left) z J *
             (val τ r z J)⁻¹ * (rigV D r z J ^ 2)⁻¹).val := by
-  first | exact @GlobalTheory.IntPointFnSq.fn_of_theta_sq | exact GlobalTheory.IntPointFnSq.fn_of_theta_sq | (intros; apply GlobalTheory.IntPointFnSq.fn_of_theta_sq <;> assumption)
+  first | exact @GlobalTheory.IntPointFnSq.fn_of_theta_sq
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSquareProductIsFunctionOnSpecStatement =====
@@ -1118,7 +1118,7 @@ theorem _root_.GlobalTheory.T.integral_squaredThetaTerms_torusCoordinates : ∀ 
           sval (θ : LB.Sec (LB.LinComb D.P.L (D.famφB 0) (DegPre.famε 1))) (r ≫ (b c * D.c (e mu)).left) z J ^ 2 *
             (val (t c) r z J ^ 2 * val (χt mu c) r z J ^ 2 * val D.sym (r ≫ (D.c (e mu)).left) z J *
               (val (τ₀ (e mu) (-e mu)) r z J)⁻¹ * (rigV D r z J ^ 2)⁻¹).val := by
-  first | exact @GlobalTheory.Poinc.Sep.CoefInt.integral_sq_terms | exact GlobalTheory.Poinc.Sep.CoefInt.integral_sq_terms | (intros; apply GlobalTheory.Poinc.Sep.CoefInt.integral_sq_terms <;> assumption)
+  first | exact @GlobalTheory.Poinc.Sep.CoefInt.integral_sq_terms
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralSquaredThetaTermsTorusCoordinatesStatement =====
@@ -1153,13 +1153,13 @@ theorem coef_sq_mem_monomial : ∀ (N₁ : ℕ), 2 ≤ N₁ → ∀ (V₁ : Type
   have hc₀' : u 0 c₀ * mo 0 = 1 := hc₀
   have hm0 : mo 0 ^ 2 = 1 := by
     have h := hmo2 0
-    simp only [map_zero, LinearMap.map_zero₂, zpow_zero, Finset.prod_const_one] at h
+    simp only [map_zero, zpow_zero, Finset.prod_const_one] at h
     exact IsFractionRing.injective V₁ (FractionRing V₁) (by simpa using h)
   have hu0 : u 0 c₀ ^ 2 = 1 := by
     have h := congrArg (· ^ 2) hc₀'
     simpa only [mul_pow, hm0, _root_.mul_one, one_pow] using h
   have hP0 : ((∏ k, (hs k).unit ^ ε (.inr k) (e 0) (e 0) : V₁ˣ) : V₁) = 1 := by
-    simp only [map_zero, LinearMap.map_zero₂, zpow_zero, Finset.prod_const_one, Units.val_one]
+    simp only [map_zero, zpow_zero, Finset.prod_const_one, Units.val_one]
   have h0 : s₀ = G 0 c₀ := by
     have h := hG 0 c₀
     rw [hu0, _root_.one_mul, hP0, _root_.one_mul] at h
@@ -1196,7 +1196,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory GlobalTheory.USep
 
 theorem _root_.GlobalTheory.T.thetaTerm_coefficient_sq_eq_monomial_subfield : ∀ (N₁ : ℕ), 2 ≤ N₁ → ∀ (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLocalRing V₁], IsCN V₁ → (∀ m : ℕ, m ≠ 0 → IsUnit (m : V₁)) → ∀ (D : DegPre V₁), D.PsiEven → D.TauBimult → ∀ (X C : Type) [AddCommGroup X] (e : X ≃+ D.X) (u : X → C → V₁) (mo : X → V₁), (∀ mu, mo mu ≠ 0 ∧ ∃ c, IsUnit (u mu c)) → GlobalTheory.Poinc.Sep.IsThetaTerms D N₁ e (fun mu c => u mu c * mo mu) → ∀ (K : Type) [Field K] [IsAlgClosed K] (ev : V₁ →+* K) (k₀ : Subfield K), IsAlgClosed k₀ → ∀ (τ₀ : GlobalTheory.UChart.Gens D) (m N : ℕ) (s : Fin m ⊕ Fin N → V₁) (ε : Fin m ⊕ Fin N → LinearMap.BilinForm ℤ D.X), (∀ k, IsUnit (s (.inr k))) → GlobalTheory.UChart.TauIn D τ₀ (fun k => s (finSumFinEquiv.symm k)) (fun k => ε (finSumFinEquiv.symm k)) → (∀ mu, algebraMap V₁ (FractionRing V₁) (mo mu) ^ 2 = ∏ k, algebraMap V₁ (FractionRing V₁) (s (.inl k)) ^ ε (.inl k) (e mu) (e mu)) → ∀ (W₀ : Type) [CommRing W₀] (ib : W₀ →+* V₁), GlobalTheory.UChart.FromBase D τ₀ ib → (∀ a, ev (ib a) ∈ k₀) → ∀ mu c, ∃ r ∈ k₀, ev (u mu c) ^ 2 = r * ∏ k, ev (s (.inr k)) ^ ε (.inr k) (e mu) (e mu) := by
-  first | exact @GlobalTheory.USep.Coef.coef_sq_mem_monomial | exact GlobalTheory.USep.Coef.coef_sq_mem_monomial | (intros; apply GlobalTheory.USep.Coef.coef_sq_mem_monomial <;> assumption)
+  first | exact @GlobalTheory.USep.Coef.coef_sq_mem_monomial
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTermCoefficientSqEqMonomialSubfieldStatement =====

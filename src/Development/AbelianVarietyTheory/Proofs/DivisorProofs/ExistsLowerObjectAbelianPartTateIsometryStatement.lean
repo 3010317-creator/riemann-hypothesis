@@ -813,7 +813,7 @@ theorem _root_.GlobalTheory.T.exists_gradedTateIso_lowerDatum : ∀ {E : Type} [
       (fun n g g' z => Out.WeilIs P.D.toPre.P.A P.D.toPre.P.L n g g' (unitOn z)),
     (∀ n, I'.ζ n = I.ζ n) ∧ ∀ n, 0 < n → ∀ (a : GlobalTheory.LowDat.perp Dw Z) (q : QkPt P.D.toPre F n),
       QkPt.Equiv P.D.toPre F (I.ev n a) q → q.y = 0 → q.g.b = I'.ev n (f a) := by
-  first | exact @GlobalTheory.LowDat.GradedTate.exists_gradedTateIso | exact GlobalTheory.LowDat.GradedTate.exists_gradedTateIso | (intros; apply GlobalTheory.LowDat.GradedTate.exists_gradedTateIso <;> assumption)
+  first | exact @GlobalTheory.LowDat.GradedTate.exists_gradedTateIso
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -912,7 +912,7 @@ theorem _root_.GlobalTheory.T.exists_tateIso_generic_abelian_of_uniformisation :
   ∃ J : TateIso D F (TFK (R := R) F ⟶ P.A.A) (fun a g => g ≫ (letI := H.starRing; P.oA.act a))
       (fun n g g' z => Out.WeilIs P.A.A P.A.L n g g' (unitOn z)),
     (∀ n, J.ζ n = I.ζ n) ∧ ∀ n, 0 < n → ∀ a, P.ToA F n (I.ev n a) (J.ev n a) := by
-  first | exact @GlobalTheory.LowDat.exists_tateIso_toA | exact GlobalTheory.LowDat.exists_tateIso_toA | (intros; apply GlobalTheory.LowDat.exists_tateIso_toA <;> assumption)
+  first | exact @GlobalTheory.LowDat.exists_tateIso_toA
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1114,7 +1114,7 @@ theorem _root_.GlobalTheory.T.tateIso_ev_eq_at_lcm_level : ∀ {E : Type} [Field
   (∀ a, J.ev l.A a = J'.ev l.A a) →
   (∀ a ∈ l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E) • (⊤ : Submodule (𝓞 E) D.La), J.ev l.M a = J'.ev l.M a) →
   ∀ a, J.ev l.M' a = J'.ev l.M' a := by
-  first | exact @GlobalTheory.LowDat.tateIso_ev_lcm_eq | exact GlobalTheory.LowDat.tateIso_ev_lcm_eq | (intros; apply GlobalTheory.LowDat.tateIso_ev_lcm_eq <;> assumption)
+  first | exact @GlobalTheory.LowDat.tateIso_ev_lcm_eq
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1269,7 +1269,7 @@ theorem _root_.GlobalTheory.T.levelPoints_compat_of_tateIsometries : ∀ {E : Ty
   GlobalTheory.LowDat.XFLevel C tK m1 m2 F I → GlobalTheory.LowDat.XFLevel C tK m1 m2 F' I' →
   ∀ (a : Dw.La) (x : TFK (R := R) F ⟶ C.P.A.A) (x' : TFK (R := R) F' ⟶ C.P.A.A),
     C.P.ToA F l.M' (I.ev l.M' a) x → C.P.ToA F' l.M' (I'.ev l.M' a) x' → x'.left = spMap σ.toRingHom ≫ x.left := by
-  first | exact @GlobalTheory.LowDat.level_points_compat | exact GlobalTheory.LowDat.level_points_compat | (intros; apply GlobalTheory.LowDat.level_points_compat <;> assumption)
+  first | exact @GlobalTheory.LowDat.level_points_compat
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1363,7 +1363,7 @@ theorem _root_.GlobalTheory.T.tateIso_spread_generic_noetherian_domain : ∀ {E 
   ∀ (K : Type) [Field K] [IsAlgClosed K] [CharZero K] (x : Sp K ⟶ Sp R) (β : o →+* K), x ≫ s = spMap β →
   ∃ I : TateIso D K (Over.mk x ⟶ P.A) (fun a g => g ≫ act a) (fun n g g' c => Out.WeilIs P.A P.L n g g' (unitOn c)),
     (I.ζ k : K) = β z ∧ ∀ a, toUnit _ ≫ pt a = I.ev k a := by
-  first | exact @GlobalTheory.LowDat.tateIso_spread | exact GlobalTheory.LowDat.tateIso_spread | (intros; apply GlobalTheory.LowDat.tateIso_spread <;> assumption)
+  first | exact @GlobalTheory.LowDat.tateIso_spread
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1414,8 +1414,7 @@ theorem abPartAct_isAdj (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
   refine (cls_eq_iff (LB.isLB_linComb hL _ _) (LB.isLB_linComb hL _ _)).1 ?_
   refine (cls_cube_two hL _ _ _).trans (Eq.trans ?_ (cls_cube_two hL _ _ _).symm)
   have pm : ∀ a b : U.D.toPre.P.A ⊗ U.D.toPre.P.A ⟶ U.D.toPre.P.A, padd U.D.toPre.P.A a b = a * b := fun _ _ => rfl
-  simp only [rosatiφ, rosatiε, lam, pm, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val, Matrix.head_cons,
-    one_smul, neg_smul, Fin.isValue] at h0 ⊢
+  simp only [rosatiφ, rosatiε, lam, pm, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val, one_smul, neg_smul, Fin.isValue] at h0 ⊢
   rw [← sub_eq_zero, ← h0]
   abel
 
@@ -1989,7 +1988,7 @@ theorem _root_.GlobalTheory.T.exists_lowerObject_abelianPart_tateIsometry : ∀ 
       (I : (letI := H.starRing; TateIsoQ Dw C.P.D.toPre C.P.oD F)),
       GlobalTheory.LowDat.XFLevel C tK m1 m2 F I → GlobalTheory.LowDat.FiltGraded C Z F I →
       ∃ I' : GlobalTheory.LowDat.LowTate C D' o' F, GlobalTheory.LowDat.LowGraded C Z D' f o' φB F I I' := by
-  first | exact @GlobalTheory.LowDat.LowObj.exists_lowObj | exact GlobalTheory.LowDat.LowObj.exists_lowObj | (intros; apply GlobalTheory.LowDat.LowObj.exists_lowObj <;> assumption)
+  first | exact @GlobalTheory.LowDat.LowObj.exists_lowObj
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

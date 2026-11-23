@@ -844,7 +844,7 @@ theorem relSpec_map_isIso_over_basicOpen : ∀ (X : Scheme.{0}) (F F' : X.Affine
   have hnat : (relativeGluingData hα).natTrans.app V =
       φ ≫ (relativeGluingData hα').natTrans.app V := by
     subst hαι
-    simp [relativeGluingData, hφ, Spec.map_comp]
+    simp [relativeGluingData, hφ]
   have H : IsPullback φ ((relativeGluingData hα).cover.f V) ((relativeGluingData hα').cover.f V) g := by
     refine IsPullback.of_right ?_ (hg' V).symm ((relativeGluingData hα').isPullback_natTrans_ι_toBase V)
     rw [← hnat, hg]
@@ -1168,7 +1168,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
 theorem _root_.GlobalTheory.T.exists_finite_openImmersion_nbhd_isolatedFibrePoints : ∀ (H X : Scheme.{0}) (φ : H ⟶ X), IsNoetherian X → IsSeparated φ → LocallyOfFiniteType φ → QuasiCompact φ → ∀ Z : Set H, (∀ z ∈ Z, ∃ O : H.Opens, z ∈ O ∧ ∀ w ∈ O, φ w = φ z → w = z) → ∃ (H' : H.Opens) (X' : Scheme.{0}) (ν : X' ⟶ X) (i : H'.toScheme ⟶ X'), Z ⊆ H' ∧ IsFinite ν ∧ IsOpenImmersion i ∧ i ≫ ν = H'.ι ≫ φ ∧ IsDominant i ∧ ∀ V : X'.Opens, Function.Injective (i.app V).hom := by
-  first | exact @GlobalTheory.ZmtNbhd.exists_finite_openImmersion_nbhd | exact GlobalTheory.ZmtNbhd.exists_finite_openImmersion_nbhd | (intros; apply GlobalTheory.ZmtNbhd.exists_finite_openImmersion_nbhd <;> assumption)
+  first | exact @GlobalTheory.ZmtNbhd.exists_finite_openImmersion_nbhd
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteOpenImmersionNbhdIsolatedFibrePointsStatement =====

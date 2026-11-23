@@ -169,7 +169,7 @@ open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.LogKSChart GlobalTheo
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.exists_derivation_stalk_extend_of_app : ∀ (X X' : Scheme.{0}) (f : X' ⟶ X) [IsIso f] (U : X.affineOpens) (d : Derivation ℤ Γ(X, U.1) Γ(X, U.1)) (x : X') (hx : x ∈ f ⁻¹ᵁ U.1), ∃ δ : Derivation ℤ (X'.presheaf.stalk x) (X'.presheaf.stalk x), ∀ r, δ ((X'.presheaf.germ (f ⁻¹ᵁ U.1) x hx).hom ((f.app U.1).hom r)) = (X'.presheaf.germ (f ⁻¹ᵁ U.1) x hx).hom ((f.app U.1).hom (d r)) := by
-  first | exact @GlobalTheory.StalkDer.derivation_extend_stalk_of_iso | exact GlobalTheory.StalkDer.derivation_extend_stalk_of_iso | (intros; apply GlobalTheory.StalkDer.derivation_extend_stalk_of_iso <;> assumption)
+  first | exact @GlobalTheory.StalkDer.derivation_extend_stalk_of_iso
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivationExtendStalkOfIsoStatement =====
@@ -514,7 +514,7 @@ theorem _root_.GlobalTheory.coeff_mem_pow_of_flat_of_indep_mod_max : ∀ {A R : 
     intro l
     have h2 := DFunLike.congr_fun haf l
     rw [LinearMap.pi_apply_eq_sum_univ a f, Finsupp.finsetSum_apply, Fintype.sum_sum_type] at h2
-    simp only [f, e, C, Sum.elim_inl, Sum.elim_inr, Finsupp.smul_apply, smul_eq_mul, neg_mul,
+    simp only [f, Sum.elim_inl, Sum.elim_inr, Finsupp.smul_apply, smul_eq_mul, neg_mul,
       Finset.sum_neg_distrib, Finsupp.coe_zero, Pi.zero_apply] at h2
     linear_combination h2
   have hCm : ∀ c : Fin d → A, (∀ l, ∑ j, c j * C j l ∈ maximalIdeal A) → ∀ j, c j ∈ maximalIdeal A := by
@@ -525,7 +525,7 @@ theorem _root_.GlobalTheory.coeff_mem_pow_of_flat_of_indep_mod_max : ∀ {A R : 
       · rw [hQ, Polynomial.natDegree_zero]; exact lt_of_le_of_lt (Nat.zero_le _) j.2
       · exact (Polynomial.natDegree_lt_iff_degree_lt hQ).mpr (Polynomial.degree_sum_fin_lt c)
     have hQc : Q.coeff j = c j := by
-      simp [Q, Polynomial.finsetSum_coeff, Polynomial.coeff_C_mul, Polynomial.coeff_X_pow, Fin.val_inj]
+      simp [Q, Polynomial.coeff_C_mul, Polynomial.coeff_X_pow, Fin.val_inj]
     have hQe : (Q.map φ).eval θ = ∑ l, φ (∑ j', c j' * C j' l) * w l := by
 
       simp only [Q, Polynomial.map_sum, Polynomial.eval_finsetSum, Polynomial.map_mul, Polynomial.map_C,
@@ -744,7 +744,7 @@ theorem main : ∀ (A : Type) [CommRing A] [IsLocalRing A] (k : Type) [Field k] 
     { toFun := fun a => TrivSqZeroExt.inl (ψ a) + TrivSqZeroExt.inr (ψ (δ a))
       map_one' := by ext <;> simp
       map_zero' := by ext <;> simp
-      map_add' := fun a b => by ext <;> simp <;> ring
+      map_add' := fun a b => by ext <;> simp
       map_mul' := fun a b => by
         ext
         · simp
@@ -823,7 +823,7 @@ open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.LogKSChart GlobalTheo
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.exists_derivation_extension_completedEtaleChart : ∀ (A : Type) [CommRing A] [IsLocalRing A] (k : Type) [Field k] [CharZero k] (m d : ℕ) (ψ : A →+* ChartRing k m d), IsEtaleCompletion ψ → ∀ δ : Derivation ℤ A A, ∃ D' : Derivation ℤ (ChartRing k m d) (ChartRing k m d), ∀ a, D' (ψ a) = ψ (δ a) := by
-  first | exact @GlobalTheory.ChartDerivation.main | exact GlobalTheory.ChartDerivation.main | (intros; apply GlobalTheory.ChartDerivation.main <;> assumption)
+  first | exact @GlobalTheory.ChartDerivation.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDerivationExtensionCompletedEtaleChartStatement =====
@@ -910,7 +910,7 @@ open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.LogKSChart GlobalTheo
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.stalkIdeal_vanishingIdeal_preimage_iso : ∀ (X X' : Scheme.{0}) (f : X' ⟶ X) [IsIso f] (Z : TopologicalSpace.Closeds X) (Z' : TopologicalSpace.Closeds X'), (Z' : Set X') = f ⁻¹' (Z : Set X) → ∀ (U : X.affineOpens) (x : X') (hx : x ∈ f ⁻¹ᵁ U.1), ReciprocityTheory.AnForm.R.FinalTheorems.stalkId (Scheme.IdealSheafData.vanishingIdeal Z') x = ((Scheme.IdealSheafData.vanishingIdeal Z).ideal U).map ((X'.presheaf.germ (f ⁻¹ᵁ U.1) x hx).hom.comp (f.app U.1).hom) := by
-  first | exact @GlobalTheory.StalkVan.stalkId_vanishingIdeal_preimage | exact GlobalTheory.StalkVan.stalkId_vanishingIdeal_preimage | (intros; apply GlobalTheory.StalkVan.stalkId_vanishingIdeal_preimage <;> assumption)
+  first | exact @GlobalTheory.StalkVan.stalkId_vanishingIdeal_preimage
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.StalkIdealVanishingIdealPreimageIsoStatement =====
@@ -1004,7 +1004,7 @@ open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.LogKSChart GlobalTheo
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.toricChart_derivation_boundaryParam_mem_span : ∀ (A : Type) [CommRing A] (k : Type) [Field k] (m d : ℕ) (ψ : A →+* ChartRing k m d) (δ : Derivation ℤ A A) (D' : Derivation ℤ (ChartRing k m d) (ChartRing k m d)) (I : Ideal A), (∀ a ∈ I, δ a ∈ I) → (∀ a, D' (ψ a) = ψ (δ a)) → I.map ψ = Ideal.span {∏ i, bdParam k m d i} → ∀ i, D' (bdParam k m d i) ∈ Ideal.span {bdParam k m d i} := by
-  first | exact @GlobalTheory.ChartDerBd.deriv_bdParam_mem_span | exact GlobalTheory.ChartDerBd.deriv_bdParam_mem_span | (intros; apply GlobalTheory.ChartDerBd.deriv_bdParam_mem_span <;> assumption)
+  first | exact @GlobalTheory.ChartDerBd.deriv_bdParam_mem_span
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToricChartDerivationBoundaryParamMemSpanStatement =====
@@ -1038,7 +1038,7 @@ theorem logDer_extend_chartRing : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     rw [mem_genBd]
     unfold GlobalTheory.LogKS.interior Model.j
     have hc : ∀ w, (Y.jQ ≫ pullback.fst Y.s (spMap (RingHom.id c.F))) w = genι Y (Y.jQ w) := fun w => rfl
-    simp only [Scheme.Hom.coe_opensRange, Set.mem_range, hc]
+    simp only [Set.mem_range]
     constructor
     · rintro h ⟨w, hw⟩
       exact h ⟨w, (genι Y).isOpenEmbedding.injective hw⟩

@@ -474,7 +474,7 @@ theorem exists_casimir (τ : A →ₗ[ℚ] ℚ) (y : A) (hy : ∀ a, a ≠ 0 →
   classical
   let β : LinearMap.BilinForm ℚ A := ((LinearMap.mul ℚ A).compr₂ (τ ∘ₗ LinearMap.mulLeft ℚ y))
   have hβ : ∀ a b, β a b = τ (y * (a * b)) := fun a b => rfl
-  have hs : β.IsSymm := ⟨fun a b => by simp only [hβ, mul_comm a b, RingHom.id_apply]⟩
+  have hs : β.IsSymm := ⟨fun a b => by simp only [hβ, mul_comm a b]⟩
   obtain ⟨v, hv⟩ := LinearMap.BilinForm.exists_orthogonal_basis (K := ℚ) (V := A) (B := β) ⟨hs.eq⟩
   have hpos : ∀ i, 0 < β (v i) (v i) := fun i => by
     rw [hβ, ← sq]; exact hy _ (v.ne_zero i)
@@ -600,9 +600,9 @@ theorem aeval_map_eq {n : ℕ} (T : Matrix (Fin n) (Fin n) ℚ) (P Q : Matrix (F
   induction p using Polynomial.induction_on with
   | C a =>
     have : (diagonal fun _ : Fin n => (a : ℝ)) = (a : ℝ) • (1 : Matrix (Fin n) (Fin n) ℝ) := by
-      ext i j; by_cases h : i = j <;> simp [h, one_apply]
+      ext i j; by_cases h : i = j <;> simp [h]
     simp only [aeval_C, eq_ratCast, this, Matrix.mul_smul, Matrix.smul_mul, mul_one, h1]
-    ext i j; by_cases h : i = j <;> simp [h, one_apply, Matrix.algebraMap_matrix_apply]
+    ext i j; by_cases h : i = j <;> simp [h, Matrix.algebraMap_matrix_apply]
   | add p q hp hq =>
     simp only [map_add (f := _)]
     rw [hm, map_add (f := _), ← hm, ← hm, hp, hq, ← diagonal_add, mul_add, add_mul]
@@ -706,14 +706,14 @@ def imFormRight {g : ℕ} (H : Matrix (Fin g) (Fin g) ℂ) (z : Fin g → ℂ) :
   toFun w := (z ⬝ᵥ H *ᵥ star w).im
   map_add' a b := by simp [star_add, mulVec_add, dotProduct_add]
   map_smul' r w := by
-    simp [star_smul, mulVec_smul, dotProduct_smul, Complex.smul_im]
+    simp [star_smul, mulVec_smul, dotProduct_smul]
 
 def imFormLeft {g : ℕ} (H : Matrix (Fin g) (Fin g) ℂ) (w : Fin g → ℂ) :
     (Fin g → ℂ) →ₗ[ℝ] ℝ where
   toFun z := (z ⬝ᵥ H *ᵥ star w).im
   map_add' a b := by simp [add_dotProduct]
   map_smul' r z := by
-    simp [smul_dotProduct, Complex.smul_im]
+    simp [smul_dotProduct]
 
 theorem herm_endo_matrix_rat : ∀ (g n : ℕ) (e : Module.Basis (Fin n) ℝ (Fin g → ℂ)) (H₁ H₂ : Matrix (Fin g) (Fin g) ℂ),
     (∀ z : Fin g → ℂ, z ≠ 0 → 0 < (z ⬝ᵥ H₁.mulVec (star z)).re) →
@@ -1424,7 +1424,7 @@ theorem exists_finite_ext_compat_of_finite :
     (Ideal.Quotient.mk m).comp (Algebra.TensorProduct.includeRight : k₁ →ₐ[k] K ⊗[k] k₁).toRingHom, ?_⟩
   ext a
   simp only [RingHom.coe_comp, Function.comp_apply, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom,
-    Algebra.TensorProduct.includeRight_apply, Ideal.Quotient.algebraMap_eq]
+    Algebra.TensorProduct.includeRight_apply]
   rw [IsScalarTower.algebraMap_apply K (K ⊗[k] k₁) ((K ⊗[k] k₁) ⧸ m),
     Algebra.TensorProduct.algebraMap_apply]
   congr 1

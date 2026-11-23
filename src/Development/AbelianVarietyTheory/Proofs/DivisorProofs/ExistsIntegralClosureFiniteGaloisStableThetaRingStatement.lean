@@ -129,7 +129,7 @@ theorem exists_integralClosure_finite : ∀ {o₁ Ω₁ : Type} [CommRing o₁] 
       | add y z _ _ hy hz => exact A.add_mem hy hz
       | smul r y _ hy =>
         convert A.mul_mem (hR₁A r.1 (hs ▸ r.2)) hy using 1
-        first | rfl | exact Algebra.smul_def r (y : Ω₂) | simp [Algebra.smul_def]
+        first | exact Algebra.smul_def r (y : Ω₂)
   letI : Algebra R₁ R := h.toAlgebra
   haveI : IsScalarTower R₁ R Ω₂ := .of_algebraMap_eq fun a => rfl
   haveI : IsIntegralClosure R R₁ Ω₂ :=
@@ -169,7 +169,7 @@ open GlobalTheory.UT ReciprocityTheory.ChartRestriction.G.DVR
 
 
 theorem _root_.GlobalTheory.T.exists_integralClosure_finite_galoisStable_thetaRing : ∀ {o₁ Ω₁ : Type} [CommRing o₁] [Field Ω₁] [Algebra o₁ Ω₁] [ArithBase o₁ Ω₁] (R₁ : Subalgebra o₁ Ω₁), R₁.FG → (∀ x : Ω₁, ∃ a ∈ R₁, ∃ b ∈ R₁, x = a / b) → ∀ {o₂ Ω₂ : Type} [CommRing o₂] [Field Ω₂] [Algebra o₂ Ω₂] [ArithBase o₂ Ω₂] [Algebra Ω₁ Ω₂] [FiniteDimensional Ω₁ Ω₂] (κ : o₁ →+* o₂), κ.Finite → (algebraMap o₂ Ω₂).comp κ = (algebraMap Ω₁ Ω₂).comp (algebraMap o₁ Ω₁) → ∃ (R : Subalgebra o₂ Ω₂) (h : R₁ →+* R), R.FG ∧ (∀ x : Ω₂, ∃ a ∈ R, ∃ b ∈ R, x = a / b) ∧ (∀ a, ((h a : R) : Ω₂) = algebraMap Ω₁ Ω₂ a) ∧ h.Finite ∧ IsIntegrallyClosed R ∧ ∀ σ : Ω₂ ≃ₐ[Ω₁] Ω₂, ∀ x ∈ R, σ x ∈ R := by
-  first | exact @GlobalTheory.Poinc.NormalClosureRing.exists_integralClosure_finite | exact GlobalTheory.Poinc.NormalClosureRing.exists_integralClosure_finite | (intros; apply GlobalTheory.Poinc.NormalClosureRing.exists_integralClosure_finite <;> assumption)
+  first | exact @GlobalTheory.Poinc.NormalClosureRing.exists_integralClosure_finite
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralClosureFiniteGaloisStableThetaRingStatement =====

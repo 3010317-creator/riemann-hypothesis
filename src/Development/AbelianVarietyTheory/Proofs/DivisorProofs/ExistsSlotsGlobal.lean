@@ -963,11 +963,6 @@ theorem joint_inj {O L : Type} [CommRing O] [IsDomain O] [Field L] [Algebra O L]
     (hB : (B.map (algebraMap O L)).mulVec x = 0) (hC : (C.map (algebraMap O L)).mulVec x = 0) : x = 0 := by
   first
   | (rename_i h_2 h_3 h_4 h_5 h_6; revert O L h_2 h_3 h_4 h_5 h_6 a b c B C h x hB hC; exact @_root_.GlobalTheory.MulVecZeroDenominator.target)
-  | exact @_root_.GlobalTheory.MulVecZeroDenominator.target
-  | exact _root_.GlobalTheory.MulVecZeroDenominator.target
-  | (apply _root_.GlobalTheory.MulVecZeroDenominator.target <;> assumption)
-  | (intros; apply _root_.GlobalTheory.MulVecZeroDenominator.target <;> assumption)
-  | (intros; apply @_root_.GlobalTheory.MulVecZeroDenominator.target <;> first | assumption | infer_instance)
   | (intros; exact _root_.GlobalTheory.MulVecZeroDenominator.target ..)
 
 theorem exists_equiv {L : Type} [Field L] {n : ℕ} (B : Mx L n (n + 1)) (C : Mx L 1 (n + 1))
@@ -1105,7 +1100,7 @@ theorem choose_max {O R : Type} [CommRing O] [CommRing R] [Algebra O R] {n : ℕ
     · subst hk
       simp [letE]
     · have : k - 1 ≠ j := fun h => hk (by rw [← h]; ring)
-      simp [letE, Pi.single_apply, hk, this]
+      simp [letE, hk, this]
   have hne : ι (letE i) ∉ Ideal.map (algebraMap O R) I := by
     intro h
     have h2 : ∀ k : ℕ, ι (letE (i + k)) ∈ Ideal.map (algebraMap O R) I := fun k => by
@@ -1126,7 +1121,7 @@ theorem choose_max {O R : Type} [CommRing O] [CommRing R] [Algebra O R] {n : ℕ
     rw [← map_mul]
     congr 1
     funext k
-    by_cases hk : k = i <;> simp [letE, Pi.single_apply, hk]
+    by_cases hk : k = i <;> simp [letE, hk]
   have hp : Ideal.map (algebraMap O R) I ⊔ Ideal.span {1 - ι (letE i)} ≠ ⊤ := by
     rw [Ideal.ne_top_iff_one]
     intro h
@@ -1188,7 +1183,7 @@ theorem exists_psi (l : ℕ) [Fact l.Prime] (hl : l ≠ 2) {O R : Type} [CommRin
   have hx : ∀ x : LetA O n, Ideal.Quotient.mk m (ι x) = θ (x i) := fun x => by
     have h1 : (letE i : LetA O n) * x = letE i * fun _ => x i := by
       funext k
-      by_cases hk : k = i <;> simp [letE, Pi.single_apply, hk]
+      by_cases hk : k = i <;> simp [letE, hk]
     have h2 := congrArg (fun z => Ideal.Quotient.mk m (ι z)) h1
     rw [hθ]
     simpa only [map_mul, he, one_mul] using h2

@@ -257,7 +257,7 @@ theorem _root_.GlobalTheory.T.isotropicStabilizer_splitPlace_inConjParabolics : 
         (s.equiv : GLoc D.sp.cm.sig V.gram v →* GL (Fin V.rank) (Fv D.host.F v))) (Module.finrank D.host.E W) ∧
       InConjParabolic ((GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.parab D.sp.cm V (Fv D.host.F v) W).map
         (s.equiv : GLoc D.sp.cm.sig V.gram v →* GL (Fin V.rank) (Fv D.host.F v))) (V.rank - Module.finrank D.host.E W) := by
-  first | exact @GlobalTheory.SplitStab.splitStab | exact GlobalTheory.SplitStab.splitStab | (intros; apply GlobalTheory.SplitStab.splitStab <;> assumption)
+  first | exact @GlobalTheory.SplitStab.splitStab
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -281,7 +281,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem _root_.GlobalTheory.T.totallyIsotropic_dim_bounds_oddRank : ∀ (D : D7) (V : HSp D), Odd V.rank → ∀ W : Submodule D.host.E V.V, GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.IsIsotropic V W →
     0 < Module.finrank D.host.E W ∧ 2 * Module.finrank D.host.E W + 1 ≤ V.rank := by
-  first | exact @GlobalTheory.IsoDim.isotropic_dim_bounds | exact GlobalTheory.IsoDim.isotropic_dim_bounds | (intros; apply GlobalTheory.IsoDim.isotropic_dim_bounds <;> assumption)
+  first | exact @GlobalTheory.IsoDim.isotropic_dim_bounds
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

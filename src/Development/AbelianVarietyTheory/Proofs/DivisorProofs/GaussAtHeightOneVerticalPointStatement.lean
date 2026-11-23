@@ -795,7 +795,7 @@ namespace GlobalTheory.Desc.ResInj
 
 theorem cst_eq_fnOf {X : Scheme.{0}} [IsIntegral X] {R : Type} [CommRing R] (p : X ⟶ Sp R) (V : X.Opens)
     (hV : genericPoint X ∈ V) (r : R) : GlobalTheory.Desc.cst p r = fnOf V hV (GlobalTheory.AbLaw.cst p V r) := by
-  simp only [GlobalTheory.Desc.cst, GlobalTheory.AbLaw.cst, fnOf, RingHom.comp_apply, Scheme.Hom.appLE, CommRingCat.hom_comp]
+  simp only [GlobalTheory.Desc.cst, GlobalTheory.AbLaw.cst, fnOf, RingHom.comp_apply]
   rw [TopCat.Presheaf.germ_res_apply]
 
 theorem zeroAt_fnOf_iff {X : Scheme.{0}} [IsIntegral X] {U : X.Opens} {x : X} (hx : x ∈ U) (b : Γ(X, U)) :
@@ -1365,11 +1365,6 @@ theorem gauss_of_key {O T F F₁ Ω : Type} [CommRing O] [IsLocalRing O] [CommRi
     GaussAt (algebraMap T F₁) (maximalIdeal T) θ (θ ⁻¹' W) W := by
   first
   | (rename_i h_5 h_6 h_7 h_8 h_9 h_10 h_11 h_12 h_13 h_14 h_15 h_16 h_17 h_18 h_19 h_20 h_21 h_22; revert O T F F₁ Ω h_5 h_6 h_7 h_8 h_9 h_10 h_11 h_12 h_13 h_14 h_15 h_16 h_17 h_18 h_19 h_20 h_21 h_22 hc c₀ θ hcomm π hπ W htors key; exact @_root_.GlobalTheory.VandermondeEmbeddingVanishing.gaussAt)
-  | exact @_root_.GlobalTheory.VandermondeEmbeddingVanishing.gaussAt
-  | exact _root_.GlobalTheory.VandermondeEmbeddingVanishing.gaussAt
-  | (apply _root_.GlobalTheory.VandermondeEmbeddingVanishing.gaussAt <;> assumption)
-  | (intros; apply _root_.GlobalTheory.VandermondeEmbeddingVanishing.gaussAt <;> assumption)
-  | (intros; apply @_root_.GlobalTheory.VandermondeEmbeddingVanishing.gaussAt <;> first | assumption | infer_instance)
   | (intros; exact _root_.GlobalTheory.VandermondeEmbeddingVanishing.gaussAt ..)
 
 theorem sp_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
@@ -1642,7 +1637,7 @@ open scoped CategoryTheory.Obj
 open GlobalTheory.Desc
 
 theorem _root_.GlobalTheory.T.gauss_at_height_one_vertical_point : ∀ (σ : Setup) (p : Sp σ.R) (z : (σ.C p).G.left), p.asIdeal.height = 1 → Vert (σ.C p).G.hom (σ.ρ p σ.f) z → GaussAt (GlobalTheory.Desc.cst (σ.C p).G.hom) (maximalIdeal (σ.C p).R) (σ.θ p) (σ.W p) (regSet z) := by
-  first | exact @GlobalTheory.Desc.gaussAt_chart_of_height_one | exact GlobalTheory.Desc.gaussAt_chart_of_height_one | (intros; apply GlobalTheory.Desc.gaussAt_chart_of_height_one <;> assumption)
+  first | exact @GlobalTheory.Desc.gaussAt_chart_of_height_one
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussAtHeightOneVerticalPointStatement =====

@@ -276,7 +276,7 @@ theorem exists_cp_linComb (P : UU.CP G₀) {K : Type} [Fintype K] (f : K → (H 
     have s1 : val P.sym (eSec G₀) y JL = 1 := by
       have := (val_pull hJL P.sym (eSec G₀) (𝟙 _)).symm.trans ((val_corr hJL P.sym_rig (𝟙 _)).trans (val_one _))
       rwa [Category.id_comp] at this
-    simp only [Category.id_comp, Category.assoc, e₂, he, s1, one_zpow, Finset.prod_const_one, mul_inv_cancel,
+    simp only [Category.id_comp, e₂, he, s1, one_zpow, Finset.prod_const_one, mul_inv_cancel,
       _root_.mul_one]
   · intro T x y u z J hJ
     obtain ⟨JL, hJL⟩ := UU.exists_good_pt P.L.isLB z
@@ -374,7 +374,7 @@ open ReciprocityTheory.AnForm.R GlobalTheory.ZH GlobalTheory.Poinc GlobalTheory.
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.cubical_structure_e8_power : ∀ (S : Scheme.{0}) (G₀ : Over S) [GrpObj G₀] [IsCommMonObj G₀] (P : GlobalTheory.UU.CP G₀) (W : Matrix (Fin 8) (Fin 8) ℤ), ∃ Q : GlobalTheory.UU.CP (powObj G₀ 8), Q.L.L = GlobalTheory.PowE8.e8LB G₀ P.L.L W := by
-  first | exact @GlobalTheory.PowE8.exists_cp_e8LB | exact GlobalTheory.PowE8.exists_cp_e8LB | (intros; apply GlobalTheory.PowE8.exists_cp_e8LB <;> assumption)
+  first | exact @GlobalTheory.PowE8.exists_cp_e8LB
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CubicalStructureE8PowerStatement =====

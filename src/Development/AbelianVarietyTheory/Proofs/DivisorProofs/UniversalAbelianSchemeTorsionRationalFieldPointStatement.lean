@@ -213,7 +213,7 @@ theorem exists_sympLevel_of_tate : ∀ {E : Type} [Field E] [NumberField E] [IsC
   have hEF : ∀ a b : D.La, D.EF (u • a) (u • b) = L * D.EF a b + l.M' * D.EF a (w • b) := by
     intro a b
     rw [D.adj, ← mul_smul, hw, add_smul, mul_smul, Nat.cast_smul_eq_nsmul]
-    simp only [Int.cast_natCast, Nat.cast_smul_eq_nsmul, map_add (f := _), map_zsmul, map_nsmul, smul_eq_mul, nsmul_eq_mul]
+    simp only [Int.cast_natCast, Nat.cast_smul_eq_nsmul, map_add (f := _), map_nsmul, nsmul_eq_mul]
   refine ⟨fun a => I.ev l.M' (u • a), ⟨?_, ?_, ?_, ?_, ?_⟩, ?_, ?_⟩
   · intro a b; simp only [smul_add, I.add]
   · intro c a; try simp only
@@ -596,7 +596,7 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.universalAbelianScheme_torsion_rational_fieldPoint : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), ∀ (K K' : Type) [Field K] [Field K'] [IsAlgClosed K'] (κ : K →+* K') (y : Sp K ⟶ Xo.XF c) (x : Over.mk (spMap κ ≫ y ≫ pullback.fst _ _) ⟶ Xo.univ.t.G), x ^ l.M' = 1 → ∃ x₀ : Over.mk (y ≫ pullback.fst _ _) ⟶ Xo.univ.t.G, x₀ ^ l.M' = 1 ∧ x.left = spMap κ ≫ x₀.left := by
-  first | exact @GlobalTheory.XFTorsion.torsion_rational | exact GlobalTheory.XFTorsion.torsion_rational | (intros; apply GlobalTheory.XFTorsion.torsion_rational <;> assumption)
+  first | exact @GlobalTheory.XFTorsion.torsion_rational
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniversalAbelianSchemeTorsionRationalFieldPointStatement =====

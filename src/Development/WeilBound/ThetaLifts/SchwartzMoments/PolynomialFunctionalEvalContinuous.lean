@@ -310,7 +310,7 @@ theorem apply_eq_zero (h : NADual V χ μ) {T : (V → ℂ) → (V → ℂ)}
   have h2 := hm.2 φ hφ
   rw [e, hsmul 0 φ hφ] at h2
   have h3 := congrFun h2 x
-  simp only [Pi.smul_apply, Pi.zero_apply, zero_smul, smul_eq_mul, zero_mul] at h3
+  simp only [Pi.smul_apply, smul_eq_mul, zero_mul] at h3
   exact (mul_eq_zero.mp h3.symm).resolve_left hmx
 
 theorem schur_translations_characters (V : Type) [AddCommGroup V] [TopologicalSpace V] [MeasurableSpace V]
@@ -399,7 +399,7 @@ theorem dop_apply (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) (x : V) :
 theorem dop_add (a b : V) (L M : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) :
     dop (a + b) (L + M) f = dop a L f + dop b M f := by
   ext x
-  simp only [SchwartzMap.add_apply, dop_apply, map_add (f := _), ContinuousLinearMap.add_apply]
+  simp only [SchwartzMap.add_apply, dop_apply, map_add (f := _)]
   push_cast
   ring
 

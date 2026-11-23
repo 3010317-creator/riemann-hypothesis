@@ -480,7 +480,7 @@ private theorem cm_id {K : Type} [Field K] [NumberField K] (v : HeightOneSpectru
     (x : v.adicCompletion K) : completionMap v (selfPl v).1 x = x := by
   refine congrFun ((HeightOneSpectrum.denseRange_algebraMap K v).equalizer
     (continuous_completionMap v (selfPl v).1) continuous_id (funext fun y => ?_)) x
-  simp only [Function.comp_apply, id]
+  simp only [Function.comp_apply]
   rw [completionMap_algebraMap]
   rfl
 
@@ -729,7 +729,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.finSec :
     simp only [LinearMap.smul_apply, LinearMap.sum_apply, LinearMap.comp_apply, map_smul, map_sum]
     have : ∀ g : H, f (ρ g (s₀ (σ g⁻¹ x))) = x := fun g => by
       rw [hf, hs₀', ← hσ, mul_inv_cancel, hσ1]
-    simp only [this, Finset.sum_const, Finset.card_univ, Nat.cast_smul_eq_nsmul]
+    simp only [this, Finset.sum_const, Finset.card_univ]
     rw [← Nat.cast_smul_eq_nsmul ℂ, smul_smul, inv_mul_cancel₀ hc, one_smul]
 end -- clump:auto
 end -- clump:auto
@@ -744,7 +744,7 @@ open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin Semidirect
 open scoped Classical
 
 theorem _root_.GlobalTheory.T.harishChandraInductionGL_isCharacter : ∀ (F : Type) [Field F] [Finite F], ∀ (a b n : ℕ), n = a + b → ∀ (α : GL (Fin a) F → ℂ) (β : GL (Fin b) F → ℂ), IsChar ℂ ℂ α → IsChar ℂ ℂ β → IsChar ℂ ℂ (hc a b α β n) := by
-  first | (exact @GlobalTheory.Shin.HCChar.hc_isChar) | (exact GlobalTheory.Shin.HCChar.hc_isChar) | (intros; apply GlobalTheory.Shin.HCChar.hc_isChar  <;> assumption)
+  first | (exact @GlobalTheory.Shin.HCChar.hc_isChar)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarishChandraInductionGLIsCharacterStatement =====

@@ -111,7 +111,7 @@ theorem exists_finExt_etale_of_isSeparable : ∀ (R : Type) [CommRing R] [IsDoma
     exact (smul_eq_zero.mp h0).resolve_right one_ne_zero
   · ext r
     simp only [RingHom.comp_apply, σ, AlgEquiv.coe_toRingEquiv, RingEquiv.toRingHom_eq_coe,
-      RingHom.coe_coe, AlgEquiv.coe_ringEquiv, AlgEquiv.commutes, AlgHom.toRingHom_eq_coe]
+      RingHom.coe_coe, AlgEquiv.commutes, AlgHom.toRingHom_eq_coe]
     change g2 (algebraMap (ResidueField R) (ResidueField R ⊗[R] A) (residue R r)) = _
     rw [Algebra.TensorProduct.algebraMap_apply]
     simp [g2]
@@ -133,7 +133,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
 theorem _root_.GlobalTheory.T.exists_finiteEtale_local_ext_residueField_separable : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (k' : Type) [Field k'] [Algebra (ResidueField R) k'] [Module.Finite (ResidueField R) k'] [Algebra.IsSeparable (ResidueField R) k'], ∃ (R' : Type) (_ : CommRing R') (_ : IsDomain R') (_ : IsLocalRing R') (ρ : R →+* R') (σ : k' →+* ResidueField R'), FinExt ρ ∧ ρ.Etale ∧ σ.comp ((algebraMap (ResidueField R) k').comp (residue R)) = (residue R').comp ρ := by
-  first | exact @GlobalTheory.Mum.exists_finExt_etale_of_isSeparable | exact GlobalTheory.Mum.exists_finExt_etale_of_isSeparable | (intros; apply GlobalTheory.Mum.exists_finExt_etale_of_isSeparable <;> assumption)
+  first | exact @GlobalTheory.Mum.exists_finExt_etale_of_isSeparable
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteEtaleLocalExtResidueFieldSeparableStatement =====
@@ -150,7 +150,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
 theorem _root_.GlobalTheory.T.exists_lift_residueFieldPoint_smooth_completeLocal : ∀ (R R' : Type) [CommRing R] [CommRing R'] [IsLocalRing R'] [IsNoetherianRing R'], IsAdicComplete (maximalIdeal R') R' → ∀ (ρ : R →+* R') (U : Over (Sp R)), Smooth U.hom → ∀ (x₀ : Sp (ResidueField R') ⟶ U.left), x₀ ≫ U.hom = spMap ((residue R').comp ρ) → ∀ O : U.left.Opens, Set.range x₀ ⊆ O → ∃ a : Sp R' ⟶ U.left, a ≫ U.hom = spMap ρ ∧ Set.range a ⊆ O := by
-  first | exact @GlobalTheory.HenselLift.exists_lift_mem_open | exact GlobalTheory.HenselLift.exists_lift_mem_open | (intros; apply GlobalTheory.HenselLift.exists_lift_mem_open <;> assumption)
+  first | exact @GlobalTheory.HenselLift.exists_lift_mem_open
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionWithRangeInOpenStatement =====
@@ -216,7 +216,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
 theorem _root_.GlobalTheory.T.exists_separable_point_smooth_localRing_open : ∀ (R : Type) [CommRing R] [IsLocalRing R] (U : Over (Sp R)), Smooth U.hom → ∀ O : U.left.Opens, (∃ u ∈ O, U.hom u = closedPoint R) → ∃ (k' : Type) (_ : Field k') (_ : Algebra (ResidueField R) k') (_ : Module.Finite (ResidueField R) k') (_ : Algebra.IsSeparable (ResidueField R) k') (x : Sp k' ⟶ U.left), x ≫ U.hom = spMap ((algebraMap (ResidueField R) k').comp (residue R)) ∧ Set.range x ⊆ O := by
-  first | exact @GlobalTheory.Mum.exists_separable_point_of_smooth | exact GlobalTheory.Mum.exists_separable_point_of_smooth | (intros; apply GlobalTheory.Mum.exists_separable_point_of_smooth <;> assumption)
+  first | exact @GlobalTheory.Mum.exists_separable_point_of_smooth
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSeparablePointSmoothLocalRingOpenStatement =====
@@ -264,7 +264,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
 theorem _root_.GlobalTheory.T.exists_finiteEtale_section_of_smooth_closedFibre : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (U : Over (Sp R)), Smooth U.hom → ∀ O : U.left.Opens, (∃ u ∈ O, U.hom u = closedPoint R) → ∃ (R' : Type) (_ : CommRing R') (_ : IsDomain R') (_ : IsLocalRing R') (ρ : R →+* R') (a : Sp R' ⟶ U.left), FinExt ρ ∧ ρ.Etale ∧ a ≫ U.hom = spMap ρ ∧ Set.range a ⊆ O := by
-  first | exact @GlobalTheory.Mum.exists_finEtale_section_of_smooth | exact GlobalTheory.Mum.exists_finEtale_section_of_smooth | (intros; apply GlobalTheory.Mum.exists_finEtale_section_of_smooth <;> assumption)
+  first | exact @GlobalTheory.Mum.exists_finEtale_section_of_smooth
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteEtaleSectionOfSmoothClosedFibreStatement =====

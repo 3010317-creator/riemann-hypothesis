@@ -436,7 +436,7 @@ theorem UpperTheory.Gal.G3.pHomPull :
     simp only [GlobalTheory.CechPic.pull_id]
     rw [← GlobalTheory.CechPic.pull_comp, ← hsq, GlobalTheory.CechPic.pull_comp, ← h1]
 
-    simp [map_sum, map_zsmul]
+    simp
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicWittLattices.PHomPull =====
@@ -708,7 +708,7 @@ theorem UpperTheory.Gal.G3.pPolUniq :
     refine pic_eq_zero_of_fpqc A A' A hA ψ hfl hsurj hqc _ ?_ ?_
     · rw [← pull_comp_left]
       have : lift (1 : A' ⟶ A) (𝟙 A') ≫ W ≫ E = lift (𝟙 A') (1 : A' ⟶ A') := by
-        apply CartesianMonoidalCategory.hom_ext <;> simp [E, W, one_comp_monHom]
+        apply CartesianMonoidalCategory.hom_ext <;> simp [E, W]
       rw [this, hs2]
     · rw [← pull_comp_left]
       have : lift (fst A A) (snd A A ≫ ψ) ≫ W ≫ E
@@ -968,7 +968,7 @@ open GlobalTheory GlobalTheory.AV GlobalTheory.AV.AbVar GlobalTheory.PDivGroup G
 open ReciprocityTheory.DiscreteGroups.LocalClassField
 
 theorem _root_.GlobalTheory.T.similitude_action_adelic_lattice : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (G : HTGroup p) (L : Link D G) (N : ℕ), 0 < N → N.Coprime p → ∀ t : SimSys D N N, ∃ h ∈ L.KN N, ∀ n : ℕ, 0 < n → n.Coprime p → ∀ x : D.La, ∃ w ∈ LaHat D, L.actG h (inAf D x) = inAf D (t.g n x) + n • w := by
-  first | (exact @GlobalTheory.AdelicSim.exists_mem_KN) | (exact GlobalTheory.AdelicSim.exists_mem_KN) | (intros; apply GlobalTheory.AdelicSim.exists_mem_KN <;> assumption)
+  first | (exact @GlobalTheory.AdelicSim.exists_mem_KN)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimilitudeActionAdelicLatticeStatement =====

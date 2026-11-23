@@ -151,10 +151,10 @@ theorem exists_unit (q : Ideal B) [q.IsMaximal] :
     rw [Finset.smul_prod']
     refine Finset.prod_nbij' (fun g => h * g) (fun g => h⁻¹ * g) ?_ ?_ ?_ ?_ ?_
     · intro g hg
-      simp only [hD, Finset.mem_coe, Finset.mem_filter, Finset.mem_univ, true_and] at hg ⊢
+      simp only [hD, Finset.mem_filter, Finset.mem_univ, true_and] at hg ⊢
       rw [mul_smul, hg, hh]
     · intro g hg
-      simp only [hD, Finset.mem_coe, Finset.mem_filter, Finset.mem_univ, true_and] at hg ⊢
+      simp only [hD, Finset.mem_filter, Finset.mem_univ, true_and] at hg ⊢
       rw [mul_smul, hg, inv_smul_eq_iff, hh]
     · intro g _; simp
     · intro g _; simp
@@ -718,7 +718,7 @@ open ReciprocityTheory.AnForm.R GlobalTheory.ZH GlobalTheory.Poinc GlobalTheory.
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.fourierTermSystem_four_of_galois_class_sums : ∀ (O : Type) [CommRing O] (bar : O → O) (q s : ℕ) (W : Matrix (Fin s) (Fin s) ℤ) (A : Type) [CommRing A] [IsLocalRing A] [IsDomain A] [IsIntegrallyClosed A] (Φ : VPre bar q W A) (N₁ : ℕ), Φ.ClassSums N₁ → Φ.Four N₁ := by
-  first | exact @GlobalTheory.Poinc.SFour.four_of_classSums | exact GlobalTheory.Poinc.SFour.four_of_classSums | (intros; apply GlobalTheory.Poinc.SFour.four_of_classSums <;> assumption)
+  first | exact @GlobalTheory.Poinc.SFour.four_of_classSums
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FourierTermSystemFourOfGaloisClassSumsStatement =====

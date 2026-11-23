@@ -99,7 +99,7 @@ theorem isOpen_ne_one [IsSeparated G.hom] {V : Type} [NormedAddCommGroup V] [Nor
         (hc U 0).1.preimage continuous_subtype_val
       convert this using 1
       ext q
-      simp [q.2]
+      simp
     · have h := (hc U f).2.continuousOn.comp (f := fun q : D => (q : V)) continuous_subtype_val.continuousOn
         (t := {b ∈ D | ⊤ ≤ c b ⁻¹ᵁ U}) (s := {b : D | ⊤ ≤ c b ⁻¹ᵁ U}) fun q hq => ⟨q.2, hq⟩
       exact h
@@ -376,7 +376,7 @@ open scoped Matrix CategoryTheory.Obj Topology
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.T.exponentialKernels_isHolomorphicLatticeFamily : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (X : Scheme.{0}) (t : SAB H X) (m g : ℕ) (B : Set (Fin m → ℂ)) (y : (Fin m → ℂ) → (Sp ℂ ⟶ X)) (ex : ∀ b, (Fin g → ℂ) → (Over.mk (y b) ⟶ t.G)), IsOpen B → IsHolTo (B ×ˢ Set.univ) (fun q : (Fin m → ℂ) × (Fin g → ℂ) => (ex q.1 q.2).left) → (∀ b ∈ B, IsExpAt t (y b) (ex b)) → IsLatFam B (fun b => {w | ex b w = 1}) := by
-  first | exact @GlobalTheory.ShFam.Hor.LogCh.isLatFam_ker | exact GlobalTheory.ShFam.Hor.LogCh.isLatFam_ker | (intros; apply GlobalTheory.ShFam.Hor.LogCh.isLatFam_ker <;> assumption)
+  first | exact @GlobalTheory.ShFam.Hor.LogCh.isLatFam_ker
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExponentialKernelsIsHolomorphicLatticeFamilyStatement =====

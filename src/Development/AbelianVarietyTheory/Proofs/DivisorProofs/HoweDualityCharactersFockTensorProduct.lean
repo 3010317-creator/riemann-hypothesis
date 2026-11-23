@@ -118,7 +118,7 @@ theorem atPl_mul (w : T) (L₁ L₂ : Module.End ℂ (V w)) : atPl w (L₁ * L�
   apply PiTensorProduct.ext
   apply MultilinearMap.ext
   intro f
-  simp [atPl_tprod, Module.End.mul_apply]
+  simp [atPl_tprod]
 
 theorem atPl_one (w : T) : atPl w (1 : Module.End ℂ (V w)) = 1 := by
   apply PiTensorProduct.ext
@@ -376,7 +376,7 @@ theorem mem_tensAll_of_killed : ∀ (T : Type) [Fintype T] [DecidableEq T] (V : 
         by_cases hw : w = a
         · subst hw
           simp [ha]
-        · simp [hw, Function.update_of_ne hw]
+        · simp [hw]
       rw [e, PiTensorProduct.map_comp, LinearMap.comp_apply, ih]
       exact hfix a
   have hy' : PiTensorProduct.map p y = y := by
@@ -855,7 +855,7 @@ abbrev chMod (p q : ℕ) (x : ℚ) : GKMod p q where
   lie := by
     intro X Y
     ext
-    simp [chAct_apply, Matrix.trace_sub, Matrix.trace_mul_comm X Y]
+    simp [chAct_apply, Matrix.trace_mul_comm X Y]
     ring
   kfin := fun _ => ⟨⊤, inferInstance, Submodule.mem_top, fun _ _ _ _ => Submodule.mem_top⟩
   wts := fun v => by
@@ -874,7 +874,7 @@ abbrev shiftMod {r s : ℕ} (M : GKMod r s) (t : ℚ) : GKMod r s where
     have h := LinearMap.congr_fun (M.lie X Y) v
     simp only [LinearMap.sub_apply, LinearMap.smulRight_apply, LinearMap.smul_apply,
       Matrix.traceLinearMap_apply, Module.End.mul_apply, LinearMap.id_apply, map_sub, map_smul,
-      Matrix.trace_sub, Matrix.trace_mul_comm X Y, sub_self, smul_zero, zero_smul, sub_zero] at h ⊢
+      Matrix.trace_mul_comm X Y] at h ⊢
     linear_combination (norm := module) h
   kfin := fun v => by
     obtain ⟨W, fW, hv, sW⟩ := M.kfin v
@@ -1572,7 +1572,7 @@ theorem left_expand (hlu : ∀ i j, l i * u j = u j * l i + if i = j then 1 else
     rw [this, h]
     by_cases hab : a = b
     · subst hab; simp [mul_add, add_mul, mul_assoc]
-    · simp [hab, mul_add, add_mul, mul_assoc]
+    · simp [hab, mul_assoc]
   simp only [Finset.sum_mul_sum, h1, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, if_true,
     Finset.sum_const, Finset.card_univ]
 
@@ -1590,7 +1590,7 @@ theorem right_expand (hlu : ∀ i j, l i * u j = u j * l i + if i = j then 1 els
     rw [this, h]
     by_cases hdc : d = c
     · subst hdc; simp [mul_add, add_mul, mul_assoc]
-    · simp [hdc, mul_add, add_mul, mul_assoc]
+    · simp [hdc, mul_assoc]
   simp only [Finset.sum_mul, h1, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true,
     Finset.sum_const, Finset.card_univ]
 
@@ -1618,7 +1618,7 @@ theorem raiB_comm (l m : Ln P Q R S) : raiB l * raiB m = raiB m * raiB l := by
   · rw [hlm]
   refine LinearMap.ext fun f => ?_
   cases hl : linePos l <;> cases hm : linePos m <;>
-    simp [raiB, hl, hm, MvPolynomial.pderiv_X, Pi.single_apply, hlm, Ne.symm hlm,
+    simp [raiB, hl, hm, MvPolynomial.pderiv_X, hlm, Ne.symm hlm,
       GlobalTheory.FockCasimir.pderiv_pderiv_comm l m, mul_left_comm]
 
 theorem fockSecondAction_matrixUnit_eq (c d : Ix R S) :
@@ -1627,7 +1627,7 @@ theorem fockSecondAction_matrixUnit_eq (c d : Ix R S) :
   rw [fockAct2_Eab]
   simp only [omE, Finset.sum_add_distrib, Prod.mk.injEq, true_and]
   by_cases hcd : c = d
-  · simp [hcd, Finset.sum_const, Finset.card_univ, ← Nat.cast_smul_eq_nsmul ℂ, smul_smul, div_eq_mul_inv, mul_comm]
+  · simp [hcd, Finset.sum_const, Finset.card_univ, ← Nat.cast_smul_eq_nsmul ℂ, smul_smul, div_eq_mul_inv]
   · simp [hcd]
 
 theorem fockFirstAction_matrixUnit_eq (b a : Ix P Q) :
@@ -1636,13 +1636,13 @@ theorem fockFirstAction_matrixUnit_eq (b a : Ix P Q) :
   rw [fockAct1_Eab]
   simp only [omE, Finset.sum_add_distrib, Prod.mk.injEq, and_true]
   by_cases hba : b = a
-  · simp [hba, Finset.sum_const, Finset.card_univ, ← Nat.cast_smul_eq_nsmul ℂ, smul_smul, div_eq_mul_inv, mul_comm]
+  · simp [hba, Finset.sum_const, Finset.card_univ, ← Nat.cast_smul_eq_nsmul ℂ, smul_smul, div_eq_mul_inv]
   · simp [hba]
 
 theorem trace_Eab (b a : Ix P Q) : (Eab b a).trace = if b = a then 1 else 0 := by
   by_cases h : b = a
-  · subst h; simp [Eab, Matrix.trace, Matrix.single_apply]
-  · simp [Eab, Matrix.trace, Matrix.single_apply, h]
+  · subst h; simp [Eab, Matrix.trace]
+  · simp [Eab, Matrix.trace, h]
 
 section Alg
 
@@ -1653,7 +1653,7 @@ theorem sq_shift (X : J → J → A) (k : ℂ) (c e : J) :
       ∑ d, X c d * X d e + (2 * k) • X c e + if c = e then (k * k) • (1 : A) else 0 := by
   simp only [mul_add, add_mul, Finset.sum_add_distrib, ite_mul, mul_ite, zero_mul, mul_zero,
     smul_mul_assoc, one_mul, mul_smul_comm, mul_one, Finset.sum_ite_eq, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true, smul_smul]
+    Finset.mem_univ, if_true]
   by_cases hce : c = e
   · subst hce; simp only [if_true]; module
   · simp only [hce, if_false]; module
@@ -1702,7 +1702,7 @@ theorem qop_mem_coinv (P Q R S : ℕ) (x : ℂ) :
   rw [LinearMap.sum_apply]
   refine Submodule.sum_mem _ fun b _ => ?_
   refine Submodule.subset_span ⟨Eab b a, (raiB (a, c) * lowB (b, e)) f, ?_⟩
-  simp [Module.End.mul_apply, LinearMap.sub_apply]
+  simp [LinearMap.sub_apply]
 
 end GlobalTheory.HoweR.SecondQuad
 
@@ -1786,7 +1786,7 @@ theorem quad_main (h : ∀ b c e, l b c * u b e = u b e * l b c + if c = e then 
         (if a = b then (Fintype.card κ : ℂ) / 2 - x else 0) • (l a i * u b j) := by
     intro a b
     rw [hE]
-    split_ifs <;> simp [add_mul, sub_mul, sub_smul, smul_mul_assoc, add_sub_assoc]
+    split_ifs <;> simp [add_mul, sub_mul, sub_smul, add_sub_assoc]
   simp only [hR, Finset.sum_add_distrib]
   have hD : ∑ a, ∑ b, (if a = b then (Fintype.card κ : ℂ) / 2 - x else 0) • (l a i * u b j) =
       ((Fintype.card κ : ℂ) / 2 - x) • ∑ a, l a i * u a j := by
@@ -1796,7 +1796,7 @@ theorem quad_main (h : ∀ b c e, l b c * u b e = u b e * l b c + if c = e then 
   rw [hD, core2 u l h, ← h1]
   simp only [qop, hG]
   simp only [neg_mul_neg, add_mul, mul_add, smul_mul_assoc, mul_smul_comm, one_mul, mul_one,
-    smul_smul, Finset.sum_add_distrib, ite_smul, zero_smul, ite_mul, zero_mul, mul_ite, mul_zero, Finset.sum_ite_eq,
+    Finset.sum_add_distrib, ite_smul, zero_smul, ite_mul, zero_mul, mul_ite, mul_zero, Finset.sum_ite_eq,
     Finset.sum_ite_eq', Finset.mem_univ, if_true]
   by_cases hij : i = j
   · subst hij

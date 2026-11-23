@@ -384,9 +384,9 @@ theorem span_of_products : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formal
     simp only [h1, Finset.sum_sub_distrib]
     congr 1
     · rw [Fintype.sum_sigma, Finset.sum_eq_single e.1 (fun i' _ hi' => by simp [hi']) (by simp)]
-      simp [Finset.sum_mul, smul_mul_assoc]
+      simp [Finset.sum_mul]
     · rw [Fintype.sum_sigma, Finset.sum_eq_single e.2 (fun i' _ hi' => by simp [hi']) (by simp)]
-      simp [Finset.sum_mul, smul_mul_assoc]
+      simp [Finset.sum_mul]
   let z : κ → ℂ := fun q => cf q.1 q.2
   have hz : ∀ e, ∑ q, z q • rdU (T.U j σ) (A q e) = 0 := by
     intro e
@@ -427,9 +427,9 @@ theorem span_of_products : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formal
         simp only [h1, Finset.sum_sub_distrib]
         congr 1
         · rw [Fintype.sum_sigma, Finset.sum_eq_single i (fun i'' _ hi'' => by simp [hi'']) (by simp)]
-          simp [g', Finset.sum_mul, smul_mul_assoc]
+          simp [g', Finset.sum_mul]
         · rw [Fintype.sum_sigma, Finset.sum_eq_single i' (fun i'' _ hi'' => by simp [hi'']) (by simp)]
-          simp [g', Finset.sum_mul, smul_mul_assoc]
+          simp [g', Finset.sum_mul]
       have := hc (i, i')
       rw [hrowR] at this
       exact sub_eq_zero.1 this
@@ -1026,12 +1026,12 @@ theorem span_conj_eq_top : ∀ (K : Type) [Field K] [NumberField K] (σ : K →+
     { carrier := {z | ∀ φ : ℂ ≃+* ℂ, (∀ x, φ (σ x) = σ x) → ∑ i, z i * φ (e i) = 0}
       add_mem' := by
         intro a b ha hb φ hφ
-        simp only [Set.mem_setOf_eq, Pi.add_apply, add_mul, Finset.sum_add_distrib, ha φ hφ,
+        simp only [Pi.add_apply, add_mul, Finset.sum_add_distrib, ha φ hφ,
           hb φ hφ, add_zero]
       zero_mem' := by intro φ hφ; simp
       smul_mem' := by
         intro c a ha φ hφ
-        simp only [Set.mem_setOf_eq, Pi.smul_apply, smul_eq_mul, mul_assoc, ← Finset.mul_sum,
+        simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, ← Finset.mul_sum,
           ha φ hφ, mul_zero] }
   have hRmem : ∀ z, z ∈ R ↔ ∀ φ : ℂ ≃+* ℂ, (∀ x, φ (σ x) = σ x) → ∑ i, z i * φ (e i) = 0 :=
     fun z => Iff.rfl
@@ -1381,7 +1381,7 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Form
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem _root_.GlobalTheory.T.coverForm_rational_descent_to_base : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Type) (A : FamIn D.what₂.LL G Pl0 T0 D.R.m) (T : CoreJ D) [Algebra T.Q.c.F D.what₂.LL] (R : RealDat D A T.Q.c.F) (F : Face D A) (κ : ∀ i : Fin D.R.m, WeightFamilies.Wt D ((i : ℕ) + 1)) (v₀ : ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), (R.MW i σ).Vec), LawsJ T → R.toLevCh.Is A.μ0 → R.IsGrp F → R.IsFam → R.IsModels → R.IsThP → TieIn T R κ v₀ → ∀ (i : Fin D.R.m), VStd D i → ∀ hV : T.V ((i : ℕ) + 1) T.σ₀ = Wc D i, GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.FramePin T R i T.σ₀ hV → ∀ l : ℕ, l.Prime → ∀ C : Cover T ((i : ℕ) + 1) T.σ₀, GlobalTheory.IndefiniteRowSideFullHecke.TwistSeries.IsTowerCover T i l C → C.IsPinned (wtA (κ i)) (κ i).n → ∀ φ ∈ C.ratForms (wtA (κ i)) (κ i).n, (∀ k ∈ T.Kf ((i : ℕ) + 1) T.σ₀, ∀ h, φ (h * k) = φ h) → ∃ (m : ℕ) (x : Fin m → C.d.c₂.F) (ψ : Fin m → (GA D (T.V ((i : ℕ) + 1) T.σ₀) → ℂ)), (∀ a, ψ a ∈ baseForms T ((i : ℕ) + 1) T.σ₀ (wtA (κ i)) (κ i).n) ∧ φ = ∑ a, C.σ₂ (x a) • ψ a := by
-  first | exact @GlobalTheory.CoverDescRat.cover_desc_rat | exact GlobalTheory.CoverDescRat.cover_desc_rat | (intros; apply GlobalTheory.CoverDescRat.cover_desc_rat <;> assumption)
+  first | exact @GlobalTheory.CoverDescRat.cover_desc_rat
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverFormRationalDescentToBaseStatement =====

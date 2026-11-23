@@ -1574,7 +1574,7 @@ theorem UpperTheory.V.Pa.Det.coefficientExtension_preserves_conditions_and_det :
     intro B _ _ y
     show Matrix.det _ = Matrix.det _
     congr 1
-    simp only [MonoidHom.coe_coe, AlgHom.coe_toRingHom, GDet.repAlg]
+    simp only [GDet.repAlg]
     congr 2
     apply congrArg
     ext g a b
@@ -1714,7 +1714,7 @@ private theorem span_top {n : ℕ} {A L : Type} [CommRing A] [Field L] [Algebra 
   refine Submodule.sum_mem _ fun i _ => Submodule.sum_mem _ fun j _ => ?_
   have e : Matrix.single i j (Z i j) = Z i j • (algebraMap A L).mapMatrix (Matrix.single i j (1 : A)) := by
     ext a b
-    by_cases h : i = a ∧ j = b <;> simp [Matrix.single_apply, h]
+    by_cases h : i = a ∧ j = b <;> simp [h]
   rw [e]
   exact Submodule.smul_mem _ _ (h2 _)
 
@@ -1759,7 +1759,7 @@ private theorem chi_ofRep {n : ℕ} {A G : Type} [CommRing A] [Group G] (ρ : G 
   rw [map_sub, MonoidAlgebra.mapRingHom_single, Matrix.charpoly]
   congr 1
   ext i j : 2
-  by_cases h : i = j <;> simp [GDet.repAlg, Matrix.charmatrix, h, Matrix.one_apply, Matrix.diagonal_apply]
+  by_cases h : i = j <;> simp [GDet.repAlg, Matrix.charmatrix, h]
 
 private theorem map_ofRep {n : ℕ} {A B G : Type} [CommRing A] [CommRing B] [Group G] (ρ : G →* Matrix (Fin n) (Fin n) A)
     (f : A →+* B) : (GDet.ofRep ρ).map f = GDet.ofRep (f.mapMatrix.toMonoidHom.comp ρ) := by
