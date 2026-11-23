@@ -2,18 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.SideFam
 public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPr
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CayleyEndomorphismsModularStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DualTensorCayleyWeightedStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FamilySetupMomentGrowthStatement
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FixesWedgeAndForm
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IsFRepDualStandardUnitaryRep
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LenEqOfUnitriangular
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NumericalFamilyShapeGaps
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PieriTensorDecompositionStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QuotientMeasureAeMemAndMeasurableBesselModelStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SumNormSqHermTranslatesOrthonormalStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TensorBesselTransferStatement
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TensorMomentEstimateStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UnitaryGlProjectionLevelSumSqLeStatement
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.BesselNeZeroOfCyclicOrbit
 import Mathlib.Algebra.Order.Floor.Extended
@@ -140,106 +136,5 @@ theorem param_sub_single {n : ℕ} (lam : Fin n → ℝ) (ν : Fin n → ℤ) (s
   by_cases h : a = s
   · subst h; simp; ring
   · simp [h]
-
-
-
-theorem moment_step : Hyps → ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [CompleteSpace Wp] [FiniteDimensional ℂ Wp] (lam : Fin (2 * r + k + 1) → ℝ) (u : ℕ → ℝ) (b bv ga h : ℝ) (q0 : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (π : Mx k r → (Wp →L[ℂ] Wp)) (μW μN μG νq : Measure (Formalism.QuantumDeterminants.Mt k r)) (R : (Fin (2 * r + k + 1) → ℤ) → Rep k r) (l : ∀ ν, (R ν).H → Wp) (dg : (Fin (2 * r + k + 1) → ℤ) → ℝ) (Q : Mx k r) (E : ∀ ν, Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → Module.End ℂ (R ν).smSub), Setup lam u b bv ga h q0 z π μW μN μG νq R l dg → PI.UpqRep.IsCayleyU k r (PI.BesselPeriodGGP.eps48 k r) Q → (∀ ν, n1 ν ≤ q0 → (R ν).IsE Q (E ν) ∧ Formalism.REAL.GlRel (E ν)) → ∀ ν, n1 ν + 1 ≤ q0 → ∀ (j q : ℕ) (MM : ℝ), j ≤ 4 * (2 * r + k + 1) ^ 2 → 0 ≤ MM → (∀ (s : Fin (2 * r + k + 1)) (y : (R (ν - Pi.single s 1)).smSub), Lev (PI.BesselPeriodGGP.eps48 k r) (E (ν - Pi.single s 1)) (fun a => lam a + (((ν - Pi.single s 1) : Fin (2 * r + k + 1) → ℤ) a : ℝ)) (j + 2) y → ∫⁻ x, ENNReal.ofReal (lenA k r z (Matrix.of x) 0 ^ (2 * q) * (dg (ν - Pi.single s 1) * ‖l (ν - Pi.single s 1) ((R (ν - Pi.single s 1)).σ (Matrix.of x) y)‖ ^ 2)) ∂νq ≤ ENNReal.ofReal (MM * ‖y‖ ^ 2)) → ∀ w : (R ν).smSub, Lev (PI.BesselPeriodGGP.eps48 k r) (E ν) (fun a => lam a + ((ν : Fin (2 * r + k + 1) → ℤ) a : ℝ)) j w → ∫⁻ x, ENNReal.ofReal (lenA k r z (Matrix.of x) 0 ^ (2 * (q + 1)) * (dg ν * ‖l ν ((R ν).σ (Matrix.of x) w)‖ ^ 2)) ∂νq ≤ ENNReal.ofReal ((((2 * r + k + 1) : ℝ) ^ 2 * (Formalism.QuantumDeterminants.Tz k r z * b ^ 4) * (6 * bv) ^ (2 * (2 * r + 2))) * MM * ‖w‖ ^ 2) := by
-  intro hH k r Wp _ _ _ _ lam u b bv ga h q0 z π μW μN μG νq R l dg Q E hS hQ hE ν hν j q MM hj hMM hind w hw
-  have hK : PI.KFinSmooth := hH.1.2.2.1
-  obtain ⟨hNum, hFam, hG, hSide⟩ := id hS
-  have hν0 : n1 ν ≤ q0 := by omega
-  have hνs : ∀ s, n1 (ν - Pi.single s 1) ≤ q0 := fun s => (lOneNorm_sub_single_one_le ν s).trans hν
-  have hDS := hFam ν hν0
-  have hDSs := fun s => hFam _ (hνs s)
-  obtain ⟨hBe, hdg, -⟩ := hSide ν hν0
-  have hBes := fun s => (hSide _ (hνs s)).1
-  have hdgs := fun s => (hSide _ (hνs s)).2.1
-  obtain ⟨hae, -, hmL, hml⟩ := GlobalTheory.T.quotientMeasure_ae_mem_and_measurable_besselModel hK k r _ _ (R ν) Wp z π u μW μN μG νq hDS hG
-  by_cases hnz : NzOn (R ν) (l ν)
-  swap
-  · have : ∫⁻ x, ENNReal.ofReal (lenA k r z (Matrix.of x) 0 ^ (2 * (q + 1)) *
-        (dg ν * ‖l ν ((R ν).σ (Matrix.of x) w)‖ ^ 2)) ∂νq = 0 := by
-      rw [← lintegral_zero (μ := νq)]
-      refine lintegral_congr_ae (hae.mono fun x hx => ?_)
-      have : l ν ((R ν).σ (Matrix.of x) w) = 0 := by
-        by_contra hne
-        exact hnz ⟨_, Formalism.FourierDecayAlt.P.TranslationBesselVanishing.smooth_translate hDS.2 w.2 hx, hne⟩
-      simp [this]
-    rw [this]
-    exact bot_le
-  obtain ⟨io, pr, ep, hT⟩ := (GlobalTheory.T.pieri_tensor_decomposition hH k r lam u b bv ga h q0 R hNum hFam ν).2 hν
-  have hF := GlobalTheory.isFRep_dualM k r
-  have hkap := fun s => GlobalTheory.T.bessel_tensor_projection_scalar_and_adjoint hH k r _ _ dualM (Formalism.QuantumDeterminants.Hpk k r) 1 (R ν)
-    (fun s => R (ν - Pi.single s 1)) io pr ep _ _ _ Wp z π u μW μN μG νq
-    (flat k r (Formalism.QuantumDeterminants.fvec k r z 0)) (l ν) hDS hDSs hF hT hG
-    (fun s hs => (GlobalTheory.FlagFix.fixes_wedge_and_form k r z hG.1 s hs).2) hBe hnz s
-    (l (ν - Pi.single s 1)) (hBes s)
-  choose κ hκ using fun s => (hkap s).1
-  have hdual := fun s => (hkap s).2 (κ s) (hκ s)
-  have hA : ∀ s, ‖(ep s : ℂ) * star (κ s)‖ ^ 2 * dg ν ≤
-      (Formalism.QuantumDeterminants.Tz k r z * b ^ 4) * dg (ν - Pi.single s 1) := by
-    intro s
-    have h1 := GlobalTheory.T.lowering_scalar_sq_mul_degree_ratio_le hH k r Wp lam u b bv ga h q0 z π μW μN μG νq R l dg hS ν hν io pr ep hT hnz s
-      (κ s) (hκ s)
-    rw [div_le_iff₀ (hdgs s)] at h1
-    have h2 : ‖(ep s : ℂ) * star (κ s)‖ = ‖κ s‖ := by
-      rcases hT.ep_sq s with h | h <;> simp [h]
-    rwa [h2]
-  obtain ⟨io', pr', hAlg, hpr⟩ := GlobalTheory.T.dual_tensor_cayley_weighted hK k r _ _ (R ν) hDS (fun s => R (ν - Pi.single s 1)) _ io pr ep Q
-    (E ν) (fun s => E (ν - Pi.single s 1)) hDSs hT hQ (hE ν hν0).1 (fun s => (hE _ (hνs s)).1)
-  have hMod := GlobalTheory.T.cayley_endomorphisms_modular hH k r _ _ (R ν) hNum.1 hDS Q (E ν) hQ (hE ν hν0).1
-  have hMods : ∀ s, IsMod (PI.BesselPeriodGGP.eps48 k r) (E (ν - Pi.single s 1))
-      ((fun a => lam a + (ν a : ℝ)) - Pi.single s 1) := fun s => by
-    rw [← param_sub_single]
-    exact GlobalTheory.T.cayley_endomorphisms_modular hH k r _ _ _ hNum.1 (hDSs s) Q _ hQ (hE _ (hνs s)).1
-  have hShape := ((GlobalTheory.NumFam.num_fam k r lam u b bv ga h q0 hNum).2 ν hν0).2.1
-  have hlev := GlobalTheory.T.unitaryGl_projection_level_sum_sq_le _ _ _ (E ν) (fun s => (R (ν - Pi.single s 1)).smSub) (fun s => E (ν - Pi.single s 1))
-    io' pr' _ k j bv w hMod hMods hAlg hShape hj hw
-  have hexp : 2 * r + k + 1 + 1 - k = 2 * r + 2 := by omega
-  rw [hexp] at hlev
-  have hy : ∀ d s, ((pr' s (Pi.single d w) : (R (ν - Pi.single s 1)).smSub) : (R (ν - Pi.single s 1)).H) =
-      ∑ c, pr s c (tm (R ν) (fun c => Q d c) w c) := by
-    intro d s
-    rw [hpr]
-    refine Finset.sum_congr rfl fun c _ => ?_
-    congr 1
-    rw [Finset.sum_eq_single d]
-    · simp [tm]
-    · intro e _ he; simp [he]
-    · simp
-  have hA0 : 0 ≤ Formalism.QuantumDeterminants.Tz k r z * b ^ 4 := mul_nonneg hG.2.1.le (by positivity)
-  have key := lintegral_le_of_le_sum νq
-    (fun x => lenA k r z (Matrix.of x) 0 ^ (2 * (q + 1)) * (dg ν * ‖l ν ((R ν).σ (Matrix.of x) w)‖ ^ 2))
-    (fun d s x => lenA k r z (Matrix.of x) 0 ^ (2 * q) * (dg (ν - Pi.single s 1) *
-      ‖l (ν - Pi.single s 1) ((R (ν - Pi.single s 1)).σ (Matrix.of x)
-        (pr' s (Pi.single d w) : (R (ν - Pi.single s 1)).smSub))‖ ^ 2))
-    ((Fintype.card (Fin (2 * r + k + 1)) : ℝ) * (Formalism.QuantumDeterminants.Tz k r z * b ^ 4))
-    (fun d s => MM * ‖pr' s (Pi.single d w)‖ ^ 2) (by positivity)
-    (fun d s x => mul_nonneg (by rw [pow_mul]; positivity) (mul_nonneg (hdgs s).le (by positivity)))
-    (fun d s => ((hmL 0).pow_const _).mul
-      ((((GlobalTheory.T.quotientMeasure_ae_mem_and_measurable_besselModel hK k r _ _ _ Wp z π u μW μN μG νq (hDSs s) hG).2.2.2 _ (hBes s).1 _
-        (pr' s (Pi.single d w)).2).norm.aemeasurable.pow_const _).const_mul _))
-    (hae.mono fun x hx => by
-      refine pointwise_le _ _ _ q
-        (fun d => Formalism.QuantumDeterminants.herm (Formalism.QuantumDeterminants.Hpk k r) (dualM (Matrix.of x) *ᵥ (fun c => Q d c))
-          (flat k r (Formalism.QuantumDeterminants.fvec k r z 0)))
-        (fun s => (ep s : ℂ) * star (κ s)) _ _ _ hdg.le ?_ (fun d => ?_) hA
-      · rw [GlobalTheory.T.sum_norm_sq_herm_translates_orthonormal k r _ dualM _ Q 1 _ hF hQ.2 _ hx]
-        exact (GlobalTheory.TensLen.lengths k r z hG.1 hG.2.1 _ hx).2.1
-      · simp only [hy]
-        exact GlobalTheory.T.tensor_bessel_transfer hK k r _ _ dualM (Formalism.QuantumDeterminants.Hpk k r) 1 (R ν) (fun s => R (ν - Pi.single s 1)) io pr _ _ _
-          Wp _ (l ν) (fun s => l (ν - Pi.single s 1)) _ hDS hDSs hT.raw hBe.1.1 hBe.1.2.1 hdual _ w w.2 _ hx)
-    (fun d s => by positivity)
-    (fun d s => hind s _ (by rw [param_sub_single]; exact (hlev d).1 s))
-  refine key.trans (ENNReal.ofReal_le_ofReal ?_)
-  have hsum : ∑ d, ∑ s, MM * ‖pr' s (Pi.single d w)‖ ^ 2 ≤
-      ∑ _d : Fin (2 * r + k + 1), MM * ((6 * bv) ^ (2 * (2 * r + 2)) * ‖w‖ ^ 2) := by
-    refine Finset.sum_le_sum fun d _ => ?_
-    rw [← Finset.mul_sum]
-    exact mul_le_mul_of_nonneg_left (hlev d).2 hMM
-  refine (mul_le_mul_of_nonneg_left hsum (by positivity)).trans (le_of_eq ?_)
-  simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
-  push_cast
-  ring
 
 end GlobalTheory.MomentStep
