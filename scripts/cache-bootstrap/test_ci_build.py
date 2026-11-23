@@ -160,6 +160,46 @@ def resource_tests(ci):
     print("PASS CI resource limits: fail-closed memory scope, secret-free launcher, disk watchdog, normalized signal exits")
 
 
+def snapshot_tests(ci):
+    with tempfile.TemporaryDirectory(prefix="rh-ci-snapshot-") as temporary:
+        candidate, destination = (Path(temporary) / name for name in ("candidate", "snapshot"))
+        (candidate / "src/Nested").mkdir(parents=True)
+        destination.mkdir()
+        (candidate / "src/Nested/Proof.lean").write_text("theorem proof : True := .intro\n")
+        (candidate / "lakefile.toml").write_text('name = "snapshot"\n')
+        (candidate / "lake-manifest.json").write_text("{}\n")
+        (candidate / "lean-toolchain").write_text(ci.TOOLCHAIN + "\n")
+        run(["git", "init", "-q"], candidate)
+        run(["git", "add", "."], candidate)
+        run(["git", "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid", "commit", "-qm", "snapshot"], candidate)
+        head = ci.git(candidate, "rev-parse", "HEAD")
+        ci.snapshot(candidate, head, destination)
+
+        def rejects(message):
+            try:
+                ci.verify_snapshot(candidate, head, destination)
+            except ValueError as error:
+                assert message in str(error)
+            else:
+                raise AssertionError("changed snapshot passed Git verification")
+
+        proof = destination / "src/Nested/Proof.lean"
+        proof.chmod(0o755)
+        rejects("differs from its Git blob")
+        proof.chmod(0o644)
+        proof.write_text("changed")
+        rejects("differs from its Git blob")
+        proof.unlink()
+        rejects("inventory differs from Git blobs")
+        proof.symlink_to(candidate / "src/Nested/Proof.lean")
+        rejects("non-regular archived input")
+        proof.unlink()
+        proof.parent.rmdir()
+        proof.parent.symlink_to(candidate / "src/Nested", target_is_directory=True)
+        rejects("inventory differs from Git blobs")
+    print("PASS snapshot verification: rejects missing or changed files, mode changes, and symlinks")
+
+
 def recovery_tests(ci):
     environment = {**ci.trusted_env(), "ELAN_TOOLCHAIN": ci.TOOLCHAIN}
     toolchain = Path(subprocess.check_output(["elan", "which", "lean"], env=environment, text=True).strip()).parent.parent
@@ -210,6 +250,7 @@ def main():
     ci = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(ci)
     resource_tests(ci)
+    snapshot_tests(ci)
     if args.resource_tests_only:
         return
     recovery_tests(ci)
