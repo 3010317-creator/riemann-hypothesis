@@ -1854,7 +1854,7 @@ theorem biWindow_of (hP : Formalism.L2.FormalSeriesBounds.ThmP) (hV : BiValue) :
   gcongr
 
 theorem biContent_and_biWindow : BiContent ∧ BiWindow :=
-  ⟨biContent, biWindow_of GlobalTheory.OddBlock.windowBound GlobalTheory.T.blockValue_on_rows_eq⟩
+  ⟨biContent, biWindow_of GlobalTheory.OddBlock.windowBound _root_.GlobalTheory.blockValue_rows⟩
 
 end GlobalTheory.OddBlock.BlockContent
 
