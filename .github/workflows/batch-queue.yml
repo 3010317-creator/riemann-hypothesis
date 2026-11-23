@@ -9,9 +9,13 @@ name: batch queue
 # `batch queue` for `building`, and later `batch` comments start a new batch. When a batch is
 # merged, `building` comes off again and the batch branch is removed.
 #
-# Only a comment whose whole text is `batch` or `freeze` counts, letter case and surrounding
-# blank space aside, and only from someone with write access to this repository. Every other
-# comment is ignored. GitHub runs this workflow from the default branch for every event below,
+# Commenting `-batch` takes a pull request out of the queue again: it removes the `batch queue`
+# label and nothing else. Commits already merged into a batch stay there, and no batch is
+# rebuilt, so a build that is under way is never disturbed.
+#
+# Only a comment whose whole text is `batch`, `-batch` or `freeze` counts, letter case and
+# surrounding blank space aside, and only from someone with write access to this repository.
+# Every other comment is ignored. GitHub runs this workflow from the default branch for every event below,
 # so a pull request cannot change what it does. Nothing from a pull request is checked out or
 # run: GitHub performs the merges, and comparisons read git objects only.
 #
@@ -40,7 +44,7 @@ permissions: {}
 
 jobs:
   label:
-    name: Act on a maintainer's `batch` or `freeze` comment
+    name: Act on a maintainer's `batch`, `-batch` or `freeze` comment
     # A first filter, so that most comments start no runner: pull requests only, and the comment
     # has to contain one of the words. The step below makes the exact comparison.
     if: >-
@@ -52,6 +56,7 @@ jobs:
       pull-requests: write
     outputs:
       queued: ${{ steps.label.outputs.queued }}
+      unqueued: ${{ steps.label.outputs.unqueued }}
       frozen: ${{ steps.label.outputs.frozen }}
     steps:
       - name: Check the comment and its author, then add the label
@@ -71,9 +76,9 @@ jobs:
           text="${text#"${text%%[![:space:]]*}"}"
           text="${text%"${text##*[![:space:]]}"}"
           case "$text" in
-            batch | freeze) ;;
+            batch | -batch | freeze) ;;
             *)
-              echo "The comment is not just 'batch' or 'freeze': nothing to do."
+              echo "The comment is not just 'batch', '-batch' or 'freeze': nothing to do."
               exit 0
               ;;
           esac
@@ -86,7 +91,7 @@ jobs:
           case "$permission" in
             admin | write) ;;
             *)
-              echo "$AUTHOR has '$permission' access. Queuing or freezing needs write access."
+              echo "$AUTHOR has '$permission' access. Queuing, unqueuing or freezing needs write access."
               exit 0
               ;;
           esac
@@ -105,6 +110,19 @@ jobs:
             gh api -X POST "repos/$REPO/issues/$PR/labels" -f "labels[]=$FROZEN" --silent
             echo "Froze batch pull request $PR, as $AUTHOR asked."
             echo "frozen=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ "$text" = -batch ]; then
+            # Out of the queue: the label goes and nothing else changes. Commits already merged
+            # into a batch stay there, so no batch is rebuilt and no build is disturbed.
+            if ! gh api "repos/$REPO/issues/$PR/labels" --jq '.[].name' | grep -qxF -- "$LABEL"; then
+              echo "Pull request $PR does not carry '$LABEL': nothing to remove."
+              exit 0
+            fi
+            gh api -X DELETE "repos/$REPO/issues/$PR/labels/$(jq -rn --arg label "$LABEL" '$label | @uri')" --silent
+            echo "Removed '$LABEL' from pull request $PR, as $AUTHOR asked."
+            echo "unqueued=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -192,11 +210,13 @@ jobs:
   sync:
     name: Assemble the batch and keep the labels in step
     needs: [label, started]
-    # After a pull request was queued, after a batch was frozen or merged, or when started by hand.
+    # After a pull request was queued or unqueued, after a batch was frozen or merged, or when
+    # started by hand.
     if: >-
       ${{ always() && (
           github.event_name == 'workflow_dispatch' ||
-          needs.label.outputs.queued == 'true' || needs.label.outputs.frozen == 'true' ||
+          needs.label.outputs.queued == 'true' || needs.label.outputs.unqueued == 'true' ||
+          needs.label.outputs.frozen == 'true' ||
           needs.started.outputs.frozen == 'true' ||
           (github.event_name == 'pull_request_target' && github.event.pull_request.merged &&
            startsWith(github.event.pull_request.head.ref, 'batch/') &&

@@ -25,11 +25,13 @@ class Fake(batch.GitHub):
         super().__init__(REPO, dry_run)
         self.pulls, self.refs, self.comments = {}, {}, {}
         self.inside = {"main0": set()}
+        self.commits = {"main0": {"message": "main", "parents": []}}
         self.conflicting, self.allow_pulls, self.writes, self.after_merge = set(), True, [], None
 
     # Setting the scene.
     def add_pull(self, number, sha, labels=(), ref=None, own=False, base="main", state="open", merged=False):
         self.inside.setdefault(sha, set())
+        self.commits.setdefault(sha, {"message": f"Work for {number}", "parents": [{"sha": "main0"}]})
         self.pulls[number] = {
             "number": number, "state": state, "merged": merged, "labels": [{"name": name} for name in labels],
             "body": "", "title": "",
@@ -72,6 +74,9 @@ class Fake(batch.GitHub):
     def _compare(self, _, base, head):
         return 200, {"ahead_by": 0 if head == base or head in self.inside[base] else 1}
 
+    def _commit(self, _, sha):
+        return 200, self.commits[sha]
+
     def _comments(self, _, number):
         return 200, self.comments.get(int(number), [])
 
@@ -87,6 +92,7 @@ class Fake(batch.GitHub):
             return 204, None
         merged = f"merge-of-{head}-into-{base}"
         self.inside[merged] = self.inside[base] | self.inside[head] | {base, head}
+        self.commits[merged] = {"message": payload["commit_message"], "parents": [{"sha": base}, {"sha": head}]}
         self.refs[payload["base"]] = merged
         for pr in self.pulls.values():
             if pr["head"]["ref"] == payload["base"]:
@@ -129,6 +135,7 @@ class Fake(batch.GitHub):
         (r"GET ", _repo),
         (r"GET git/matching-refs/heads/batch/", _refs),
         (r"GET git/ref/heads/main", _main),
+        (r"GET git/commits/(.+)", _commit),
         (r"GET pulls\?state=all&head=o:(.+)", _pulls_for),
         (r"GET pulls/(\d+)", _pull),
         (r"GET issues\?labels=([^&]+)&state=(\w+)&per_page=100&page=1", _issues),
@@ -241,6 +248,70 @@ class Assembling(unittest.TestCase):
         self.assertNotIn(111, gh.pulls)
 
 
+class LeavingTheQueue(unittest.TestCase):
+    """`-batch` only removes the label. Here that is done directly, as the workflow step would."""
+
+    def unqueue(self, gh, number):
+        gh.pulls[number]["labels"] = [item for item in gh.pulls[number]["labels"] if item["name"] != QUEUED]
+
+    def test_commits_already_in_the_batch_stay_and_the_batch_says_so(self):
+        gh = Fake()
+        queue(gh, 11, 12)
+        batch.sync(gh, NOW)
+        head = gh.refs["batch/2026-11-23-0412"]
+        self.unqueue(gh, 12)
+        gh.writes = []
+        log = batch.sync(gh, NOW)
+        self.assertEqual(gh.refs, {"batch/2026-11-23-0412": head})
+        self.assertFalse([path for method, path, _ in gh.writes if path in ("merges", "git/refs") or method == "DELETE"])
+        body = gh.pulls[112]["body"]
+        self.assertIn("In this batch:\n\n- #11 at `head11`\n\nAlso in this branch:\n\n- #12, no longer queued", body)
+        self.assertEqual(len(gh.comments[12]), 1)
+        self.assertIn("its commits were already merged into the batch #112 and are still there", gh.comments[12][0]["body"])
+        self.assertIn("To build without them, close #112.", gh.comments[12][0]["body"])
+        self.assertIn("told #12 that its commits stay in batch #112", log)
+        # Told once, and nothing more happens on later runs.
+        gh.writes = []
+        batch.sync(gh, NOW)
+        self.assertEqual((len(gh.comments[12]), gh.writes), (1, []))
+
+    def test_left_before_being_merged_is_simply_gone(self):
+        gh = Fake()
+        queue(gh, 11, 12)
+        gh.conflicting.add("head12")
+        batch.sync(gh, NOW)
+        self.unqueue(gh, 12)
+        batch.sync(gh, NOW)
+        self.assertNotIn("#12", gh.pulls[112]["body"])
+        self.assertEqual(len(gh.comments[12]), 1)  # only the earlier note that it could not be merged
+
+    def test_commits_a_maintainer_pushed_on_top_do_not_hide_what_was_merged(self):
+        gh = Fake()
+        queue(gh, 11, 12)
+        batch.sync(gh, NOW)
+        before = gh.refs["batch/2026-11-23-0412"]
+        gh.commits["fix"] = {"message": "Repair the build after the merges", "parents": [{"sha": before}]}
+        gh.inside["fix"] = gh.inside[before] | {before}
+        gh.refs["batch/2026-11-23-0412"] = gh.pulls[112]["head"]["sha"] = "fix"
+        self.unqueue(gh, 12)
+        batch.sync(gh, NOW)
+        self.assertEqual(gh.refs, {"batch/2026-11-23-0412": "fix"})
+        self.assertIn("- #11 at `head11`\n\nAlso in this branch:\n\n- #12, no longer queued", gh.pulls[112]["body"])
+
+    def test_closing_the_batch_lets_the_next_run_assemble_one_without_it(self):
+        gh = Fake()
+        queue(gh, 11, 12)
+        batch.sync(gh, NOW)
+        self.unqueue(gh, 12)
+        gh.pulls[112]["state"] = "closed"
+        batch.sync(gh, NOW + datetime.timedelta(hours=1))
+        newest = gh.pulls[max(gh.pulls)]
+        self.assertEqual(newest["head"]["ref"], "batch/2026-11-23-0512")
+        self.assertIn("- #11 at `head11`", newest["body"])
+        self.assertNotIn("#12", newest["body"])
+        self.assertNotIn("head12", gh.inside[gh.refs["batch/2026-11-23-0512"]])
+
+
 class Freezing(unittest.TestCase):
     def frozen(self):
         gh = Fake()
@@ -260,6 +331,20 @@ class Freezing(unittest.TestCase):
         batch.sync(gh, NOW)
         self.assertEqual((gh.labels(11), gh.labels(12)), ({BUILDING}, {BUILDING}))
         self.assertIn("- #11 at `head11`\n- #12 at `head12`", gh.pulls[112]["body"])
+
+    def test_frozen_batch_notes_what_changed_after_it_was_merged_in(self):
+        gh = self.frozen()
+        batch.sync(gh, NOW)
+        gh.add_pull(12, "head12b", labels=[BUILDING])  # the author pushed again
+        gh.pulls[11]["labels"] = []  # someone took the label off by hand
+        batch.sync(gh, NOW)
+        body = gh.pulls[112]["body"]
+        self.assertIn("- nothing yet\n\nAlso in this branch:\n\n", body)
+        self.assertIn("- #12, which has new commits since it was merged", body)
+        self.assertIn("- #11, no longer queued", body)
+        # A frozen batch is being built: nobody is told to close it.
+        self.assertNotIn(11, gh.comments)
+        self.assertNotIn(12, gh.comments)
 
     def test_arrival_after_the_freeze_starts_a_new_batch(self):
         gh = self.frozen()

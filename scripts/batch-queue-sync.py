@@ -12,6 +12,9 @@ A batch is a branch `batch/...` in this repository, normally with an open pull r
   contains swap `batch queue` for `building`. Later arrivals start a new batch.
 - Once it is merged, the pull requests it contained lose `building`.
 
+Taking a pull request out of the queue never changes a batch. Commits already merged into one
+stay there, and the batch's description says so. No batch is ever rebuilt.
+
 No state is stored. Which pull requests a batch contains is read from its commits each time,
 so a run can be repeated or skipped, and a maintainer can merge something into a batch by hand.
 """
@@ -21,6 +24,7 @@ import argparse
 import datetime
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 
@@ -30,6 +34,10 @@ PREFIX = "batch/"
 # could not be added. The comment names the batch and commit so the attempt is not repeated.
 BODY = "<!-- batch-queue -->"
 REFUSAL = "<!-- batch-queue-refused {branch} {sha} -->"
+# The subject of the merge commit that adds a pull request to a batch, and the comment left on a
+# pull request that was taken out of the queue after its commits had gone into a batch.
+ADDED = re.compile(r"Add #(\d+) to the batch")
+STAYS = "<!-- batch-queue-stays {branch} -->"
 BOT = "github-actions[bot]"
 
 
@@ -150,7 +158,53 @@ def refuse(gh, pr, batch, reason):
     gh.write("POST", f"issues/{pr['number']}/comments", {"body": text})
 
 
-def describe(batch, members, refused):
+def added(gh, batch, main_sha, limit=400):
+    """Pull requests this workflow merged into a batch, oldest last, read from the branch itself.
+
+    Follows first parents from the batch's head back to main. Commits a maintainer pushed on top
+    are stepped over.
+    """
+    numbers, sha = [], batch["sha"]
+    for _ in range(limit):
+        commit = gh.get(f"git/commits/{sha}")
+        match = ADDED.match(commit["message"])
+        if match and len(commit["parents"]) == 2:
+            numbers.append(int(match.group(1)))
+        elif not commit["parents"] or contains(gh, main_sha, sha):
+            break
+        sha = commit["parents"][0]["sha"]
+    return numbers
+
+
+def others(gh, batch, members, main_sha, log):
+    """Pull requests whose commits the workflow merged into a batch but which `members` does not
+    account for, as (number, why). One that left the queue while the batch was still open is told,
+    once, that its commits stay."""
+    seen, rest = {pr["number"] for pr in members}, []
+    for number in added(gh, batch, main_sha):
+        if number in seen:
+            continue
+        seen.add(number)
+        pr = pull(gh, number)
+        if pr["labels"] & {QUEUED, BUILDING}:
+            rest.append((number, "which has new commits since it was merged"))
+            continue
+        rest.append((number, "no longer queued"))
+        marker = STAYS.format(branch=batch["ref"])
+        if batch["frozen"] or not batch["number"] or not pr["open"]:
+            continue
+        if any(marker in (item.get("body") or "") for item in gh.pages(f"issues/{number}/comments")):
+            continue
+        gh.write("POST", f"issues/{number}/comments", {"body": (
+            f"{marker}\n`{QUEUED}` was removed from this pull request, but its commits were already merged into "
+            f"the batch #{batch['number']} and are still there. That batch was not changed.\n\n"
+            f"To build without them, close #{batch['number']}. The next `batch` comment then assembles a new "
+            "batch from what is still queued.\n")})
+        log.append(f"told #{number} that its commits stay in batch #{batch['number']}")
+    return rest
+
+
+def describe(batch, members, refused, also=()):
     """The text of a batch pull request."""
     lines = [BODY, "The batch-queue workflow assembles this pull request. Commenting `batch` on a "
              "pull request merges it in here."]
@@ -162,6 +216,8 @@ def describe(batch, members, refused):
                      f"nothing more is added, and what it contains is relabelled `{BUILDING}`.")
     lines += ["", "In this batch:", ""]
     lines += [f"- #{pr['number']} at `{pr['sha'][:10]}`" for pr in members] or ["- nothing yet"]
+    if also:
+        lines += ["", "Also in this branch:", ""] + [f"- #{number}, {why}" for number, why in also]
     if refused:
         lines += ["", "Left out, because GitHub could not merge them into this branch: "
                   + ", ".join(f"#{pr['number']}" for pr in refused) + "."]
@@ -170,9 +226,9 @@ def describe(batch, members, refused):
     return "\n".join(lines) + "\n"
 
 
-def publish(gh, batch, members, refused, main):
+def publish(gh, batch, members, refused, main, also=()):
     """Open the batch's pull request if it has none, and bring its text up to date."""
-    text = describe(batch, members, refused)
+    text = describe(batch, members, refused, also)
     if batch["number"]:
         if text != batch.get("body"):
             gh.write("PATCH", f"pulls/{batch['number']}", {"body": text})
@@ -193,6 +249,7 @@ def sync(gh, now=None):
     """Bring batches and labels up to date. Returns lines saying what was done."""
     log = []
     main = gh.get("")["default_branch"]
+    main_sha = gh.get(f"git/ref/heads/{main}")["object"]["sha"]
     batches = open_batches(gh)
     queued = [pull(gh, number) for number in labelled(gh, QUEUED)]
     queued = [pr for pr in queued if not is_batch(pr) and pr["base"] == main]
@@ -207,7 +264,8 @@ def sync(gh, now=None):
             log.append(f"#{pr['number']} is in the frozen batch #{batch['number']}: now `{BUILDING}`")
         queued = [pr for pr in queued if pr not in inside]
         members = [pr for pr in building if contains(gh, batch["sha"], pr["sha"])] + inside
-        publish(gh, batch, sorted(members, key=lambda pr: pr["number"]), [], main)
+        members.sort(key=lambda pr: pr["number"])
+        publish(gh, batch, members, [], main, others(gh, batch, members, main_sha, log))
 
     # The batch being assembled takes everything still waiting.
     assembling = sorted((item for item in batches if not item["frozen"]), key=lambda item: item["ref"])
@@ -216,8 +274,7 @@ def sync(gh, now=None):
     for pr in queued:
         if batch is None:
             stamp = (now or datetime.datetime.now(datetime.timezone.utc)).strftime("%Y-%m-%d-%H%M")
-            batch = {"ref": PREFIX + stamp, "sha": gh.get(f"git/ref/heads/{main}")["object"]["sha"],
-                     "number": None, "frozen": False}
+            batch = {"ref": PREFIX + stamp, "sha": main_sha, "number": None, "frozen": False}
             gh.write("POST", "git/refs", {"ref": f"refs/heads/{batch['ref']}", "sha": batch["sha"]})
             log.append(f"started `{batch['ref']}` from `{main}`")
         if contains(gh, batch["sha"], pr["sha"]):
@@ -244,7 +301,7 @@ def sync(gh, now=None):
         refused.append(pr)
         log.append(f"left #{pr['number']} out of `{batch['ref']}`: {reason}")
     if batch and (members or batch["number"]):
-        publish(gh, batch, members, refused, main)
+        publish(gh, batch, members, refused, main, others(gh, batch, members, main_sha, log))
         if len(log) > before:
             log.append(f"batch pull request #{batch['number']} lists {len(members)} pull request(s)"
                        if batch["number"] else f"`{batch['ref']}` has no pull request yet")
