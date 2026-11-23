@@ -1381,9 +1381,10 @@ theorem UpperTheory.Lit.HoweDuality.kerVp :
   have hz : ∀ (h : UA σ G.W.J), Acts (evFin F v) (om (1, h))
       (0 : (Fin a × Fin (a + a') → Fv F v) → ℂ) 0 := by
     intro h r _
-    have h0 : tens (evFin F v) (0 : (Fin a × Fin (a + a') → Fv F v) → ℂ) r = 0 := by
+    have h0 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens (evFin F v)
+        (0 : (Fin a × Fin (a + a') → Fv F v) → ℂ) r = 0 := by
       funext x
-      simp [tens]
+      simp [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens]
     rw [h0, map_zero]
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro x hx
