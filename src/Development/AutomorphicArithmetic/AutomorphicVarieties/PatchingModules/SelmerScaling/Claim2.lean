@@ -937,7 +937,7 @@ theorem UpperTheory.V.Pa.defULift :
       exact e
   · obtain ⟨hc, hop, hsum, -, -⟩ := bndOps x.K G.G₀
     obtain ⟨-, bρi, bκ⟩ := bndRho l L G G0 h n x k
-    refine bnd_mul hU.bnd fun i j => ?_
+    refine _root_.bnd_mul hU.bnd fun i j => ?_
     simp only [first_order_lift_apply]
     refine ⟨bρi i j, fun q => ?_, fun q => hc 0, hc 0⟩
     simp only [Matrix.mul_apply]
@@ -1145,8 +1145,8 @@ private theorem eps_mul (Z : Fin g → Matrix (Fin n) (Fin n) X) (M : Matrix (Fi
       ∀ k i j, (((1 + DD.epM Z) * M.map DD.C : Matrix (Fin n) (Fin n) (DD X g)) i j).ep k = (Z k * M) i j := by
   rw [add_mul, one_mul]
   refine ⟨fun i j => ?_, fun k i j => ?_⟩
-  · simp [Matrix.mul_apply, sum_a, DD.epM]
-  · simp [Matrix.mul_apply, sum_ep, DD.epM]
+  · simp [Matrix.mul_apply, _root_.sum_a, DD.epM]
+  · simp [Matrix.mul_apply, _root_.sum_ep, DD.epM]
 
 private noncomputable def pushU {H : Type} [Group H] (c : Fin e → Fin g → X) (ψ : H →* (DD X e)ˣ)
     (hψ : ∀ t, (ψ t : DD X e).ep = 0) : H →* (DD X g)ˣ :=
@@ -1257,7 +1257,7 @@ theorem UpperTheory.V.Pa.defUPush :
     rw [hu.ord] at h1
     refine RM_uniq h1 RM_zero ?_
     obtain ⟨w1, w2, w3⟩ := r6 v
-    rw [← conj_prod _ _ w1 w2 (fun m => k.ρ1 x.Fr (G0.φ v (t m))) (fun m => algebraMap x.A _ (x.ψ v m (t m) : x.A))
+    rw [← _root_.conj_prod _ _ w1 w2 (fun m => k.ρ1 x.Fr (G0.φ v (t m))) (fun m => algebraMap x.A _ (x.ψ v m (t m) : x.A))
       (fun m => (w3 (t m)).1) (fun m => (w3 (t m)).2 m), map_list_prod, map_list_prod, List.map_ofFn, List.map_ofFn]
     congr 2
     funext m
@@ -1370,6 +1370,7 @@ theorem UpperTheory.V.Pa.phDec :
     ∀ (l : ℕ) [Fact l.Prime] (S : Ctx l), ∀ Φ ∈ S.Ph, ∃ (e : ℕ) (α : Fin e → S.Bh →+ S.F) (μ : Fin e → S.U.N →+ S.F), (∀ k, α k ∈ S.Tp) ∧ (∀ k, μ k ∈ S.La) ∧ ∀ (b : S.Bh) y, Φ (b • y) = S.rF b * Φ y + ∑ k, α k b * μ k y := by
   intro l _ S Φ hΦ
   have : Module.Finite S.F S.Tp := (tpDual l S).1
+  have : Module.Free S.F S.Tp := Module.Free.of_divisionRing S.F S.Tp
   let v := Module.finBasis S.F S.Tp
   let D : S.U.N →+ S.Tp :=
     { toFun := fun y => ⟨phDecD S Φ y, phDecD_mem S Φ hΦ y⟩
