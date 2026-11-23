@@ -10,6 +10,7 @@ git, curl, python3 and elan. See README.md in this directory.
   fragment.py build --queue Q --targets FILE --log LOG [--jobs N] [--creds FILE] [--hide DIR]...
   fragment.py flush --queue Q --creds FILE
   fragment.py result --queue Q --targets FILE --log LOG --out FILE [--timings FILE]
+  fragment.py prune --root DIR                       (reads $GH_TOKEN, $GITHUB_RUN_ID)
 
 The queue directory Q (one per workflow run) persists across reruns: it holds project/ (the
 Lake workspace), job.env, phase, publish-state.json and known-maps/. A rerun restores the pool
@@ -390,6 +391,44 @@ def cmd_flush(a):
     add_timing(a.timings, "flush_s", time.time() - t0)
 
 
+# --- prune ---------------------------------------------------------------------------------------
+
+TREE = re.compile(r"[0-9a-f]{40}-([0-9]+)\Z")
+STALE_DAYS = 7
+
+
+def run_status(run_id):
+    """Workflow run status ("completed", "in_progress", ...) or None if it cannot be read."""
+    token, repo = os.environ.get("GH_TOKEN"), os.environ.get("GITHUB_REPOSITORY")
+    if not token or not repo:
+        return None
+    req = urllib.request.Request(f"https://api.github.com/repos/{repo}/actions/runs/{run_id}",
+                                 headers={"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json",
+                                          "User-Agent": "rh-buildq-fragment/1"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.load(r).get("status")
+    except (urllib.error.URLError, TimeoutError, ValueError):
+        return None
+
+
+def cmd_prune(a):
+    """Delete other runs' trees once their run has completed (a rerun then restores afresh); keep
+    trees of runs still queued or in progress. If the status is unreadable, fall back to age."""
+    root, current = Path(a.root), os.environ.get("GITHUB_RUN_ID")
+    for d in sorted(root.iterdir()) if root.is_dir() else []:
+        m = TREE.fullmatch(d.name)
+        if not m or not d.is_dir() or m[1] == current:
+            continue
+        status = run_status(m[1])
+        old = time.time() - d.stat().st_mtime > STALE_DAYS * 86400
+        if status == "completed" or (status is None and old):
+            log(f"prune: removing {d} (run {m[1]}: {status or 'status unknown'}, {'stale' if old else 'recent'})")
+            shutil.rmtree(d, ignore_errors=True)
+        else:
+            print(f"prune: keeping {d} (run {m[1]}: {status or 'status unknown'})")
+
+
 # --- result --------------------------------------------------------------------------------------
 
 
@@ -467,11 +506,12 @@ def main():
     s.add_argument("--hide", action="append", default=[]); s.add_argument("--timings")
     s = sub.add_parser("flush"); s.add_argument("--queue", required=True); s.add_argument("--creds")
     s.add_argument("--tmp"); s.add_argument("--timings")
+    s = sub.add_parser("prune"); s.add_argument("--root", required=True)
     s = sub.add_parser("result"); s.add_argument("--queue", required=True); s.add_argument("--targets", required=True)
     s.add_argument("--log", required=True); s.add_argument("--out", required=True); s.add_argument("--timings")
     a = ap.parse_args()
     {"targets": cmd_targets, "credentials": cmd_credentials, "restore": cmd_restore, "build": cmd_build,
-     "flush": cmd_flush, "result": cmd_result}[a.cmd](a)
+     "flush": cmd_flush, "result": cmd_result, "prune": cmd_prune}[a.cmd](a)
 
 
 if __name__ == "__main__":

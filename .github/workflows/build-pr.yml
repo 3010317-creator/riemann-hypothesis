@@ -483,6 +483,7 @@ jobs:
     timeout-minutes: 1440
     permissions:
       contents: read
+      actions: read  # the prune step reads the status of earlier fragment runs
     steps:
       - name: Checkout trusted harness
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -491,7 +492,9 @@ jobs:
           path: trusted
           persist-credentials: false
           sparse-checkout: scripts/rh-buildq
-      - name: Describe the host
+      - name: Describe the host and remove trees of finished runs
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           umask 077
           # RUNNER_TEMP is emptied after every job: the derived keys never outlive it.
@@ -500,9 +503,7 @@ jobs:
           root="${RH_FRAGMENT_ROOT:-$HOME/rh-fragments}"
           mkdir -p "$root"
           echo "RH_FRAGMENT_ROOT=$root" >> "$GITHUB_ENV"
-          # Trees of failed runs are kept for reruns; drop those untouched for a week.
-          find "$root" -mindepth 1 -maxdepth 1 -type d -regextype posix-extended \
-            -regex '.*/[0-9a-f]{40}-[0-9]+' -mtime +7 -print -exec rm -rf -- {} + || true
+          python3 -I trusted/scripts/rh-buildq/fragment.py prune --root "$root" || true
           echo "runner $RUNNER_NAME, $(nproc) cpus, $(awk '/MemTotal/ {printf "%d GiB", $2/1048576}' /proc/meminfo)"
           sed -n 's/^PRETTY_NAME=//p' /etc/os-release; uname -r
           df -h "$root" | tail -n 1
