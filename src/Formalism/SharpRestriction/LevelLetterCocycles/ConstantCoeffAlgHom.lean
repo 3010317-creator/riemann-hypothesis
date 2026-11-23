@@ -34,13 +34,8 @@ theorem coeff_pow_mul_lt {Y : PowerSeries O} (hY : constantCoeff Y = 0) {n d : �
   exact coeff_X_pow_mul_lt h _
 
 theorem trunc_decomp (a : PowerSeries O) (k : ℕ) :
-    ∃ b, a = (trunc k a : PowerSeries O) + X ^ k * b := by
-  have hd : (X : PowerSeries O) ^ k ∣ a - (trunc k a : PowerSeries O) := by
-    rw [PowerSeries.X_pow_dvd_iff]
-    intro m hm
-    rw [map_sub, Polynomial.coeff_coe, PowerSeries.coeff_trunc, if_pos hm, sub_self]
-  obtain ⟨b, hb⟩ := hd
-  exact ⟨b, by rw [← hb]; ring⟩
+    ∃ b, a = (trunc k a : PowerSeries O) + X ^ k * b :=
+  ⟨_, (eq_X_pow_mul_shift_add_trunc k a).trans (add_comm _ _)⟩
 
 theorem algHom_coe (ψ : PowerSeries O →ₐ[O] PowerSeries O) (p : Polynomial O) :
     ψ (p : PowerSeries O) = Polynomial.aeval (ψ X) p := by

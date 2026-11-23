@@ -38,15 +38,12 @@ theorem ringHom_ext_nil {h₁ h₂ : R⟦X⟧ →+* S⟦X⟧} (hC : ∀ r, h₁ 
         _root_.map_mul, _root_.map_mul, _root_.map_pow, _root_.map_pow, hC, hX]
   refine RingHom.ext fun F => sub_eq_zero.mp (PowerSeries.ext fun m => ?_)
   obtain ⟨N, hN⟩ := X_pow_dvd_pow_of_nil (h₁ X) hnil (m + 1)
-  obtain ⟨G, hG⟩ : (X : R⟦X⟧) ^ N ∣ F - (PowerSeries.trunc N F : R⟦X⟧) := by
-    rw [PowerSeries.X_pow_dvd_iff]
-    intro i hi
-    rw [_root_.map_sub, Polynomial.coeff_coe, PowerSeries.coeff_trunc, if_pos hi, sub_self]
+  let G := PowerSeries.mk fun i => coeff (i + N) F
+  have hF : F = X ^ N * G + (PowerSeries.trunc N F : R⟦X⟧) :=
+    eq_X_pow_mul_shift_add_trunc N F
   have hd : h₁ F - h₂ F = h₁ X ^ N * (h₁ G - h₂ G) := by
-    have hF : F = (PowerSeries.trunc N F : R⟦X⟧) + X ^ N * G := by rw [← hG]; ring
     rw [hF]
-    simp only [_root_.map_add (f := _), _root_.map_mul, _root_.map_pow, hpoly, ← hX]
-    ring
+    simp only [_root_.map_add, _root_.map_mul, _root_.map_pow, hpoly, ← hX, add_sub_add_right_eq_sub, mul_sub]
   have hdvd : (X : S⟦X⟧) ^ (m + 1) ∣ h₁ F - h₂ F := by
     rw [hd]
     exact dvd_mul_of_dvd_left hN _
