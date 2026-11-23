@@ -477,7 +477,7 @@ open GlobalTheory.Hk3
 
 section Transfer
 open Polynomial GlobalTheory.Hk3.SplitChain
-open Formalism.L2.Col (heckePolyOf blockPoly)
+open _root_.Formalism.L2.Col (heckePolyOf blockPoly)
 
 theorem blockPoly_ne_zero (ν : ℂ) (q t : ℕ) : blockPoly ν q t ≠ 0 := by
   intro h
@@ -511,12 +511,14 @@ theorem transfer_good {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type}
   obtain ⟨u1, u2⟩ := GlobalTheory.T.splittingCharacters_unramified_offLevels R F hC.lev t _ hG
   obtain ⟨v1, v2⟩ := GlobalTheory.T.splittingCharacters_unramified_offLevels R F hC.lev t _ hG'
   have hm := D.R.two_le_m
-  have hP' : conjPl (conjPl P) ≠ conjPl P := by rw [Formalism.DivisionValues.ValuationRepresentative.conjPl_conjPl]; exact hP.symm
-  obtain ⟨e, he⟩ := GlobalTheory.MovedIdem.exists_isIdemAt (conjPl P) (by
+  have hP' : Formalism.DivisionValues.conjPl (Formalism.DivisionValues.conjPl P) ≠ Formalism.DivisionValues.conjPl P := by
+    rw [Formalism.DivisionValues.ValuationRepresentative.conjPl_conjPl]; exact hP.symm
+  obtain ⟨e, he⟩ := GlobalTheory.MovedIdem.exists_isIdemAt (Formalism.DivisionValues.conjPl P) (by
     rw [Formalism.DivisionValues.GluingInclusion.conjIdeal_eq]
     exact fun h => hP' (HeightOneSpectrum.ext h))
-  obtain ⟨ϖ, h1, h2⟩ : ∃ ϖ ∈ (conjPl P).asIdeal, ϖ ∉ (conjPl P).asIdeal ^ 2 :=
-    SetLike.exists_of_lt (Ideal.pow_lt_self _ (conjPl P).ne_bot (conjPl P).isPrime.ne_top 2 le_rfl)
+  obtain ⟨ϖ, h1, h2⟩ : ∃ ϖ ∈ (Formalism.DivisionValues.conjPl P).asIdeal, ϖ ∉ (Formalism.DivisionValues.conjPl P).asIdeal ^ 2 :=
+    SetLike.exists_of_lt (Ideal.pow_lt_self _ (Formalism.DivisionValues.conjPl P).ne_bot
+      (Formalism.DivisionValues.conjPl P).isPrime.ne_top 2 le_rfl)
   have h0 : (ϖ : D.host.E) ≠ 0 := RingOfIntegers.coe_ne_zero_iff.2 fun h => h2 (h ▸ zero_mem _)
   obtain ⟨x, hx⟩ : ∃ x : (AE D)ˣ, (x : AE D) = e * incA D (ϖ : D.host.E) + (1 - e) :=
     ⟨Formalism.L2.JoinChr.locU he.1.1 (Units.mk0 _ h0), by
