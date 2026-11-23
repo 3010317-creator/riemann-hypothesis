@@ -191,8 +191,7 @@ theorem nonempty_torsion_equiv {S : Scheme.{0}} (G : Over S) [GrpObj G] (n : ℕ
     Nonempty ((Over.mk t ⟶ torsion G n) ≃ {x : 𝟙_ (Over (Sp K)) ⟶ (Over.pullback t).obj G // x ^ n = 1}) := by
   obtain ⟨e, -⟩ := exists_mulEquiv_of_isGrpPullback (isGrpPullback_pullback G t) (𝟙 _) t (Category.id_comp t).symm
   refine ⟨(TorsionUnram.torsionEquiv G n _).trans (e.toEquiv.subtypeEquiv fun x => ?_).symm⟩
-  show x ^ n = 1 ↔ e x ^ n = 1
-  rw [← map_pow, MulEquiv.map_eq_one_iff]
+  exact (MulEquiv.map_eq_one_iff e).symm.trans (by rw [map_pow]; rfl)
 
 theorem isOpen_abLocus {S : Scheme.{0}} (G : Over S) [GrpObj G] (hG : IsSemiAbelian G) {g n : ℕ}
     (hg : SmoothOfRelativeDimension g G.hom) (h2 : 2 ≤ n) (hn : IsUnit (n : Γ(S, ⊤))) : IsOpen (abLocus G) := by
