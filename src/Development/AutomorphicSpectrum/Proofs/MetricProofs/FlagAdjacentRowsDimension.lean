@@ -1327,7 +1327,7 @@ theorem fibre_charts : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fint
   obtain ⟨e⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.Coord.nonempty_equiv_cIdx Ψ N j n d τ ca cb hj hlt hblk hdim
   obtain ⟨lc1, lc2, lc3, lc4, lc5⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.LcFam.lc_main Ψ N j τ ca cb hlt hblk
   haveI hSne := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FibNonempty.flagAn_S_nonempty K ι Φ y Ψ N j M n d BM FA
-  haveI hWne := GlobalTheory.T.flag_adjacent_twisted_resolution_third K ι Φ y Ψ N j M n d BM FA τ a b k₀ ca cb hb hs hk hca hcb RW
+  haveI hWne := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FibNonempty.anLogRes_W_nonempty K ι Φ y Ψ N j M n d BM FA τ a b k₀ ca cb hb hs hk hca hcb RW
   have hpi := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.re_pi_bijective K ι Φ y Ψ N j M n d BM FA
   have hgood := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.bvec_good K ι Φ y Ψ N j M n BM
   have hnot : ∀ z : (Σ k, ι k) → ℂ, z ∉ mcPts FA.Re.J := fun z => by
