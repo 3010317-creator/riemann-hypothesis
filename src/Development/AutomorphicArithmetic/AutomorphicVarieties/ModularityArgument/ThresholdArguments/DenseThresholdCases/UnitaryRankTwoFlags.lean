@@ -132,6 +132,8 @@ section Lift
 variable {O R C : Type} [CommRing O] [IsLocalRing O] [CommRing R] [Algebra O R] [IsCO O R]
   [CommRing C] [Algebra O C] [IsCO O C]
 
+attribute [local instance 2000] UpperTheory.V.Alg.IsCO.toIsLocalRing
+
 private theorem map_max_le (f : R →ₐ[O] C) :
     (maximalIdeal R).map (f : R →+* C) ≤ maximalIdeal C := by
   refine Ideal.map_le_iff_le_comap.2 fun a ha => ?_
@@ -387,7 +389,7 @@ theorem endJ : End := by
         obtain ⟨s, hs1, hs2⟩ := hann x hx
         have e : (s : R.S.R) * ((φ x : R.S.B) : R.S.R) = 0 := by
           have h := congrArg Subtype.val hs2
-          simpa [Fr.Space.inc] using h
+          exact h
         have hξs : ξ (s : R.S.R) ≠ 0 := by
           intro h0
           apply hs1
@@ -934,6 +936,7 @@ theorem mod_l_open_existence
     n4Of Ω l ι c N e ψ η σ g₁ B M H L Φ k c₁ f n ka R, hJ.p1, hJ.p3, hs⟩
   intro Z hZ
   haveI : IsDiscreteValuationRing c₁.O := c₁.dvr
+  haveI : IsNoetherianRing R.B₀.B := UpperTheory.V.Alg.IsCO.toIsNoetherian c₁.O
   have := dimOf c₁.O Λ.Λ R.B₀.B (Λ.toPair R.B₀.u : Λ.Λ →+* R.B₀.B) J _ hΛ hJ.ring.fin hJ.ring.tf Z hZ
   rw [← hd] at this
   exact this
