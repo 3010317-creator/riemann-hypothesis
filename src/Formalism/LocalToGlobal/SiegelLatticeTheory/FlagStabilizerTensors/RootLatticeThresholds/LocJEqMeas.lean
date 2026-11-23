@@ -40,6 +40,8 @@ import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Algebra.Group.Units
 import Mathlib.Topology.Sheaves.Init
 
+set_option backward.isDefEq.respectTransparency false
+
 @[expose] public section
 
 noncomputable section
@@ -173,7 +175,7 @@ theorem rank_one_continuous {V V' : Type*} [NormedAddCommGroup V] [InnerProductS
     (hb : Continuous b) : Continuous fun t => Formalism.L2.SG.TermOp.rk1 (a t) (b t) := by
   unfold Formalism.L2.SG.TermOp.rk1
   have h1 : Continuous fun t => innerSL ℂ (b t) := (innerSL ℂ).continuous.comp hb
-  exact (ContinuousLinearMap.smulRightL ℂ V' V).continuous₂.comp₂ h1 ha
+  exact (StrongDual.smulRightL ℂ V' V).continuous₂.comp₂ h1 ha
 
 theorem integrand_aesm (u u' : D.what₂.Word) (τ : D.what₂.Tau) (γ : Formalism.REAL.UJ (X.B.I.ε (vOf X τ)))
     (ν : Measure (Formalism.REAL.UJ (X.B.I.ε (vOf X τ)))) :

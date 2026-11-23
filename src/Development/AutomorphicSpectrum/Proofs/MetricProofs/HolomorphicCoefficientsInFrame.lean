@@ -58,6 +58,8 @@ public import Mathlib.Topology.Algebra.Module.FiniteDimension
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterGoodD
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 
+set_option backward.isDefEq.respectTransparency false
+
 @[expose] public section
 
 open NumberField Matrix MeasureTheory Filter Topology GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Cusp ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor GroundTheory.Heights₂.Heights.FiniteCovolume GroundTheory.Automorphic GlobalTheory.CompanionTheory.Ar.Cusp.Dict
@@ -108,7 +110,7 @@ theorem differentiableOn_coeff_of_linearIndependent (n m g : ℕ) (U : Set (Fin 
     have hb : ∀ b ∈ (Finset.univ : Finset (Fin m)), DifferentiableAt ℂ (fun t =>
         (ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : Fin m => ℂ) b).smulRight (L (d b t))) t₀ := by
       intro b _
-      exact (ContinuousLinearMap.smulRightL ℂ (Fin m → ℂ) (Fin m → ℂ)
+      exact (StrongDual.smulRightL ℂ (Fin m → ℂ) (Fin m → ℂ)
         (ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : Fin m => ℂ) b)).differentiableAt.comp t₀
         (L.differentiableAt.comp t₀ ((hd b).differentiableAt hUn))
     exact DifferentiableAt.fun_sum hb

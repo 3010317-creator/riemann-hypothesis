@@ -49,6 +49,8 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 
+set_option backward.isDefEq.respectTransparency false
+
 @[expose] public section
 
 noncomputable section
@@ -167,7 +169,7 @@ def compFst : (W →L[ℝ] E) →L[ℝ] (W × V' →L[ℝ] E) :=
 
 variable (W V' E) in
 def coordSnd (i : Fin (Module.finrank ℝ V')) : E →L[ℝ] (W × V' →L[ℝ] E) :=
-  ContinuousLinearMap.smulRightL ℝ (W × V') E
+  StrongDual.smulRightL ℝ (W × V') E
     ((LinearMap.toContinuousLinearMap ((Module.finBasis ℝ V').coord i)).comp (ContinuousLinearMap.snd ℝ W V'))
 
 theorem fderiv_opFst (T : 𝓢(V, ℂ) →L[ℂ] 𝓢(W, E)) (f : 𝓢(V × V', ℂ)) :

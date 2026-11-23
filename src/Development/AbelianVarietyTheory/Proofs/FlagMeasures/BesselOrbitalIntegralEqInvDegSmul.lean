@@ -47,6 +47,8 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
 
+set_option backward.isDefEq.respectTransparency false
+
 @[expose] public section
 
 noncomputable section
@@ -86,7 +88,7 @@ theorem aesm_of_continuousOn {X E : Type*} [TopologicalSpace X] [MeasurableSpace
   rwa [Measure.restrict_eq_self_of_ae_mem hμ] at this
 
 theorem continuous_rankOneOperator : Continuous fun p : Wp × Wq => rk1 p.1 p.2 :=
-  (ContinuousLinearMap.smulRightL ℂ Wq Wp).continuous₂.comp
+  (StrongDual.smulRightL ℂ Wq Wp).continuous₂.comp
     (((innerSL ℂ (E := Wq)).continuous.comp continuous_snd).prodMk continuous_fst)
 
 theorem rankOneInnerOperator_smul_smul (c c' : ℂ) (a : Wp) (b : Wq) : rk1 (c • a) (c' • b) = (c * star c') • rk1 a b := by
@@ -98,7 +100,7 @@ theorem integral_prod_rankOneInnerOperator [CompleteSpace Wp] [CompleteSpace Wq]
     {g : β → Wq} (hf : Integrable f μ) (hg : Integrable g ν) :
     ∫ z, rk1 (f z.1) (g z.2) ∂μ.prod ν = rk1 (∫ x, f x ∂μ) (∫ y, g y ∂ν) := by
   have hg' : Integrable (fun y => innerSL ℂ (g y)) ν := (innerSL ℂ (E := Wq)).integrable_comp hg
-  have h := integral_prod_bilin (ContinuousLinearMap.smulRightL ℂ Wq Wp).flip hf hg'
+  have h := integral_prod_bilin (StrongDual.smulRightL ℂ Wq Wp).flip hf hg'
   have h2 : ∫ y, innerSL ℂ (g y) ∂ν = innerSL ℂ (∫ y, g y ∂ν) :=
     ContinuousLinearMap.integral_comp_commSL RCLike.conj_smul (innerSL ℂ (E := Wq)) hg
   rw [h2] at h

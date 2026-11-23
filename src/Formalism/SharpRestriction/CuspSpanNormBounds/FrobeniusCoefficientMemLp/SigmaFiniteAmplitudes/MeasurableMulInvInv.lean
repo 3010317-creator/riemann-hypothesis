@@ -44,6 +44,8 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
 
+set_option backward.isDefEq.respectTransparency false
+
 @[expose] public section
 
 noncomputable section
@@ -126,7 +128,7 @@ def PsiM (L : LocBessel k r) (w0 v v' : L.Hs) (ξ : L.Wp) (ξ' : L.Wq)
 theorem continuous_rankOne {E F : Type} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
     [NormedAddCommGroup F] [NormedSpace ℂ F] :
     Continuous fun q : E × F => (innerSL ℂ q.1).smulRight q.2 :=
-  (ContinuousLinearMap.smulRightL ℂ E F).continuous₂.comp
+  (StrongDual.smulRightL ℂ E F).continuous₂.comp
     (((innerSL ℂ (E := E)).continuous.comp continuous_fst).prodMk continuous_snd)
 
 theorem sm_PsiM (L : LocBessel k r) (w0 v v' : L.Hs) (ξ : L.Wp) (ξ' : L.Wq)

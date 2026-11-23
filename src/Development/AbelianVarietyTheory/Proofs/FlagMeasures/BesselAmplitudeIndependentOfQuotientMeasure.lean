@@ -43,6 +43,8 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MemConfTOfDetNeZero
 
+set_option backward.isDefEq.respectTransparency false
+
 @[expose] public section
 
 open MeasureTheory Matrix Formalism.QuantumDeterminants Formalism.MainNotions.S GlobalTheory.SgInf GlobalTheory.SnMass
@@ -78,7 +80,7 @@ theorem amp_uniq : ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGroup Wp] [InnerPro
       (innerSL ℂ).continuous.comp_continuousOn hc'
     have h2 : ContinuousOn (fun g => Φ (γ * g)) (GG k r) :=
       hc.comp (continuous_const.mul continuous_id).continuousOn fun g hg => hGm γ hγ g hg
-    exact (ContinuousLinearMap.smulRightL ℂ Wq Wp).continuous₂.comp_continuousOn (h1.prodMk h2)
+    exact (StrongDual.smulRightL ℂ Wq Wp).continuous₂.comp_continuousOn (h1.prodMk h2)
   have hFi : ∀ ρ ∈ Rset k r γ, ∀ x ∈ GG k r, F (ρ * x) = F x := by
     intro ρ hρ x hx
     have hρN : ρ ∈ Nset k r := hρ.1

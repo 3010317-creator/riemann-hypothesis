@@ -45,6 +45,8 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
 
+set_option backward.isDefEq.respectTransparency false
+
 @[expose] public section
 
 open MeasureTheory Matrix Formalism.QuantumDeterminants Formalism.MainNotions.S GlobalTheory.SgInf
@@ -89,7 +91,7 @@ theorem integrable_coord_smul {μ : Measure α} [IsFiniteMeasure μ] {u : α →
 
 theorem continuous_rankOneOperator : Continuous fun p : Wp × Wq => rk1 p.1 p.2 := by
   have : (fun p : Wp × Wq => rk1 p.1 p.2) =
-      fun p => ContinuousLinearMap.smulRightL ℂ Wq Wp (innerSL ℂ p.2) p.1 := by
+      fun p => StrongDual.smulRightL ℂ Wq Wp (innerSL ℂ p.2) p.1 := by
     funext p; ext η; simp [rk1]
   rw [this]
   fun_prop

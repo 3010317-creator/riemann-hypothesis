@@ -47,6 +47,8 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 
+set_option backward.isDefEq.respectTransparency false
+
 @[expose] public section
 
 open Matrix PI.UpqRep
@@ -101,7 +103,7 @@ lemma coef_smoothOnGV {n : ℕ} (ε : Fin n → Bool) {Hs : Type} [NormedAddComm
     Set.mem_iInter.2 hgU, ?_, ?_⟩
   · refine ContDiffOn.sum fun i _ => ?_
     have hL : ContDiff ℝ ∞ (fun y : Hs => (c i).smulRight (P y)) :=
-      (((ContinuousLinearMap.smulRightL ℂ Wq Wp (c i)).comp P).restrictScalars ℝ).contDiff
+      (((StrongDual.smulRightL ℂ Wq Wp (c i)).comp P).restrictScalars ℝ).contDiff
     exact hL.comp_contDiffOn ((hF i).mono (Set.iInter_subset _ i))
   · intro g hg hgJ
     have h' : ∀ i, F i g = τ g (Q (b i)) := fun i => (hEq i g (Set.mem_iInter.1 hg i) hgJ).symm

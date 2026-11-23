@@ -56,6 +56,8 @@ import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.LocWSOf
 import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.ParametersTermRelations
 import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.PoincareConstantEq
 
+set_option backward.isDefEq.respectTransparency false
+
 @[expose] public section
 
 open scoped Classical ENNReal
@@ -78,7 +80,7 @@ theorem continuous_rankOneOperator {Y V V' : Type*} [TopologicalSpace Y] [Normed
     (hg : Continuous g) : Continuous fun y => Formalism.L2.SG.TermOp.rk1 (f y) (g y) := by
   unfold Formalism.L2.SG.TermOp.rk1
   have h1 : Continuous fun y => innerSL ℂ (g y) := (innerSL ℂ).continuous.comp hg
-  exact ((ContinuousLinearMap.smulRightL ℂ V' V).continuous.comp h1).clm_apply hf
+  exact ((StrongDual.smulRightL ℂ V' V).continuous.comp h1).clm_apply hf
 
 def stG {n r : ℕ} (ε : Fin n → Bool) (e : Fin r → Fin n → ℂ) (z z' : Fin n → ℂ) (γ : Formalism.REAL.UJ ε) :
     Subgroup (Formalism.REAL.UJ ε) where

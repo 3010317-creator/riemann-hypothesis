@@ -50,6 +50,8 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
 
+set_option backward.isDefEq.respectTransparency false
+
 @[expose] public section
 
 noncomputable section
@@ -396,7 +398,7 @@ theorem ooIntAll_of (h : OOLint F0 F0' what₂ rows' (X := X) (u := u) (u' := u'
   have h1 : Continuous fun x : X.B.I.Ginf => innerSL ℂ (X.Wu u' (t.pt.1⁻¹ * x)) :=
     (innerSL ℂ).continuous.comp (hW'.comp (continuous_const.mul continuous_id))
   have hcont : Continuous fun x : X.B.I.Ginf => rk1 (X.Wu u x) (X.Wu u' (t.pt.1⁻¹ * x)) := by
-    have h2 := ((ContinuousLinearMap.smulRightL ℂ (X.Vpi u') (X.Vpi u)).continuous.comp h1).clm_apply hW
+    have h2 := ((StrongDual.smulRightL ℂ (X.Vpi u') (X.Vpi u)).continuous.comp h1).clm_apply hW
     simpa [rk1] using h2
   refine ⟨hcont.aestronglyMeasurable, ?_⟩
   unfold HasFiniteIntegral

@@ -41,6 +41,8 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsMultOfFintype
 
+set_option backward.isDefEq.respectTransparency false
+
 @[expose] public section
 
 noncomputable section
@@ -94,7 +96,7 @@ theorem section_orth_cpt_zero : KerUniq → ∀ (n : ℕ) [MeasurableSpace (G n)
   have hκ : ∀ z v, κ z v = ⟪A z, v⟫_ℂ • e := fun z v => by simp [κ]
   have hcont : ContinuousOn κ (GLs n) := by
     have h1 : Continuous fun a : E.V => (innerSL ℂ a).smulRight e :=
-      ((ContinuousLinearMap.smulRightL ℂ E.V E.V).flip e).continuous.comp (innerSL ℂ).continuous
+      ((StrongDual.smulRightL ℂ E.V E.V).flip e).continuous.comp (innerSL ℂ).continuous
     exact h1.comp_continuousOn hA
   have hequi : ∀ z ∈ GLs n, ∀ k₂ : Matrix.unitaryGroup (Fin n) ℂ, κ (z * k₂.1) = κ z * E.ρ k₂ := by
     intro z hz k₂

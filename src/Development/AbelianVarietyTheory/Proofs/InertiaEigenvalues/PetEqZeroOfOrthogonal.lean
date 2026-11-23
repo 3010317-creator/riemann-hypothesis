@@ -61,6 +61,8 @@ import Mathlib.Topology.Sheaves.Init
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GlRes
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsExpLieAlgebraComplexUnits
 
+set_option backward.isDefEq.respectTransparency false
+
 @[expose] public section
 
 open NumberField MeasureTheory Matrix GlobalTheory.AutomorphicL2Unitary GlobalTheory.UnitaryBC GlobalTheory.CuspRep GlobalTheory.CuspRep.CuspidalL2GL GlobalTheory.Petersson Formalism.L2.Host
@@ -266,7 +268,7 @@ theorem hasFDerivAt_coef (hω : ω.IsUnitary) (h' : ψ ∈ bddForms E a ω) {φ 
       (lt_add_one _)).mono fun _ => le_of_lt
   have hi : ∀ i, Integrable (fun q : Quot (latticeGL E a) => (crd i z).smulRight
       (chart (lie E a (bas E a i) φ).1 (q.out * x) z * conj (ψ q.out))) (GlobalTheory.AutomorphicL2Unitary.quotMeasure (latticeGL E a) μ) :=
-    fun i => (ContinuousLinearMap.smulRightL ℝ _ ℂ (crd i z)).integrable_comp (integrable_chart μ hω h' (hl _) x z)
+    fun i => (StrongDual.smulRightL ℝ _ ℂ (crd i z)).integrable_comp (integrable_chart μ hω h' (hl _) x z)
   have key := hasFDerivAt_integral_of_dominated_of_fderiv_le (𝕜 := ℝ) (μ := GlobalTheory.AutomorphicL2Unitary.quotMeasure (latticeGL E a) μ)
     (F := fun y q => chart φ.1 (q.out * x) y * conj (ψ q.out))
     (F' := fun y q => ∑ i, (crd i y).smulRight (chart (lie E a (bas E a i) φ).1 (q.out * x) y * conj (ψ q.out)))
@@ -286,7 +288,7 @@ theorem hasFDerivAt_coef (hω : ω.IsUnitary) (h' : ψ ∈ bddForms E a ω) {φ 
   rw [funext (chart_coef μ φ.1 x)]
   refine key.congr_fderiv (Finset.sum_congr rfl fun i _ => ?_)
   rw [chart_coef]
-  exact (ContinuousLinearMap.smulRightL ℝ _ ℂ (crd i z)).integral_comp_comm (integrable_chart μ hω h' (hl _) x z)
+  exact (StrongDual.smulRightL ℝ _ ℂ (crd i z)).integral_comp_comm (integrable_chart μ hω h' (hl _) x z)
 
 variable {V : Submodule ℂ (Sm E a)}
 

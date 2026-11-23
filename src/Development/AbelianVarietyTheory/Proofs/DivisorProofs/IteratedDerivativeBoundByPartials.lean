@@ -51,6 +51,8 @@ import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasTemperateGrowthE
 public import Mathlib.Analysis.Calculus.ContDiff.Basic
 public import Mathlib.Topology.Algebra.Module.FiniteDimension
 
+set_option backward.isDefEq.respectTransparency false
+
 @[expose] public section
 
 open GlobalTheory.SliceSchwartz GlobalTheory.SliceOp
@@ -63,7 +65,7 @@ theorem GlobalTheory.norm_iteratedFDeriv_succ_le_sum_partial :
   intro X _ _ _
   set b := Module.finBasis ℝ X
   let L : Fin (Module.finrank ℝ X) → ℂ →L[ℝ] X →L[ℝ] ℂ := fun i =>
-    ContinuousLinearMap.smulRightL ℝ X ℂ (LinearMap.toContinuousLinearMap (b.coord i))
+    StrongDual.smulRightL ℝ X ℂ (LinearMap.toContinuousLinearMap (b.coord i))
   refine ⟨∑ i, ‖L i‖, Finset.sum_nonneg (fun i _ => norm_nonneg _), ?_⟩
   intro g hg n z
   have hsm : ∀ i, ContDiff ℝ ∞ (fun w => fderiv ℝ g w (b i)) := fun i =>

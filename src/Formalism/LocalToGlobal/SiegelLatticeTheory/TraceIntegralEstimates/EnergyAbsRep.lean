@@ -44,6 +44,8 @@ public import Mathlib.MeasureTheory.Group.Integral
 public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
 public import Mathlib.MeasureTheory.Integral.Prod
 
+set_option backward.isDefEq.respectTransparency false
+
 @[expose] public section
 
 noncomputable section
@@ -66,7 +68,7 @@ def kG (σ : G → (HH →L[ℂ] HH)) (d : ℝ) (w : HH) (W : G → V) (W' : G �
   ((d : ℂ) * ⟪σ q.1 w, σ γ (σ q.2 w)⟫_ℂ) • rk1A (W q.1) (W' q.2)
 
 theorem rankOne_eq_smulRightL (a : V) (b : V') :
-    rk1A a b = ContinuousLinearMap.smulRightL ℂ V' V (innerSL ℂ b) a := rfl
+    rk1A a b = StrongDual.smulRightL ℂ V' V (innerSL ℂ b) a := rfl
 
 theorem norm_rk1A_le (a : V) (b : V') : ‖rk1A a b‖ ≤ ‖a‖ * ‖b‖ := by
   have h : ‖rk1A a b‖ = ‖innerSL ℂ b‖ * ‖a‖ := ContinuousLinearMap.norm_smulRight_apply _ _
@@ -75,7 +77,7 @@ theorem norm_rk1A_le (a : V) (b : V') : ‖rk1A a b‖ ≤ ‖a‖ * ‖b‖ := 
 theorem continuous_rk1A {α : Type*} [TopologicalSpace α] {f : α → V} {g : α → V'} (hf : Continuous f)
     (hg : Continuous g) : Continuous (fun x => rk1A (f x) (g x)) := by
   simp only [rankOne_eq_smulRightL]
-  exact ((ContinuousLinearMap.smulRightL ℂ V' V).continuous.comp
+  exact ((StrongDual.smulRightL ℂ V' V).continuous.comp
     ((innerSL ℂ).continuous.comp hg)).clm_apply hf
 
 theorem continuous_kG {σ : G → (HH →L[ℂ] HH)} (hσ : IsUnitRep σ) (d : ℝ) (w : HH) {W : G → V} {W' : G → V'}
@@ -112,7 +114,7 @@ theorem integral_kG {μ : Measure G} [μ.IsMulLeftInvariant] [SFinite μ] {σ : 
   have hin : ∀ g' : G, ∫ g, kG σ d w W W' γ (g, g') ∂μ = rk1A (W (γ * g')) (W' g') := by
     intro g'
     have hk : (fun g => kG σ d w W W' γ (g, g'))
-        = fun g => (ContinuousLinearMap.smulRightL ℂ V' V (innerSL ℂ (W' g')))
+        = fun g => (StrongDual.smulRightL ℂ V' V (innerSL ℂ (W' g')))
           (((d : ℂ) * ⟪σ g w, σ (γ * g') w⟫_ℂ) • W g) := by
       funext g
       simp only [kG, map_smul, ← rankOne_eq_smulRightL, hmul, ContinuousLinearMap.mul_apply]

@@ -46,6 +46,8 @@ import Mathlib.Topology.Sheaves.Init
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OneMemGoodCT
 import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.AffineGLForms.GenSpace
 
+set_option backward.isDefEq.respectTransparency false
+
 @[expose] public section
 
 noncomputable section
@@ -154,7 +156,7 @@ def coordL (i : Ix E a) : Lie E a →L[ℝ] (Lie E a →L[ℝ] ℝ) :=
 
 theorem fderiv_chart_eq (φ : Sm E a) (h : GA E a) {y : Lie E a} (hy : y ∈ invSet E a) :
     fderiv ℝ (chart φ.1 h) y = ∑ i : Ix E a,
-      ContinuousLinearMap.smulRightL ℝ (Lie E a) ℂ (coordL i (invL y)) (chart (lie E a (bs E a i) φ).1 h y) := by
+      StrongDual.smulRightL ℝ (Lie E a) ℂ (coordL i (invL y)) (chart (lie E a (bs E a i) φ).1 h y) := by
   ext Z
   obtain ⟨u, hu⟩ := id hy
   have e : y = toL u.val := hu.symm
@@ -192,7 +194,7 @@ theorem integrable_chart {φ : Sm E a} (hφ : LO φ) (g : GA E a) {y : Lie E a} 
 omit [MeasurableSpace (BlockIx a r → Ad E)] [BorelSpace (BlockIx a r → Ad E)] in
 theorem fderiv_fun (φ : Sm E a) (g : GA E a) {y : Lie E a} (hy : y ∈ invSet E a) :
     (fun x : BlockIx a r → Ad E => fderiv ℝ (chart φ.1 (unip x * g)) y) = fun x => ∑ i : Ix E a,
-      ContinuousLinearMap.smulRightL ℝ (Lie E a) ℂ (coordL i (invL y))
+      StrongDual.smulRightL ℝ (Lie E a) ℂ (coordL i (invL y))
         (chart (lie E a (bs E a i) φ).1 (unip x * g) y) :=
   funext fun x => fderiv_chart_eq φ _ hy
 
@@ -204,7 +206,7 @@ theorem integrable_fderiv {φ : Sm E a} (hφ : LO φ) (g : GA E a) {y : Lie E a}
 
 theorem integral_fderiv {φ : Sm E a} (hφ : LO φ) (g : GA E a) {y : Lie E a} (hy : y ∈ invSet E a) :
     ∫ x : BlockIx a r → Ad E, fderiv ℝ (chart φ.1 (unip x * g)) y ∂ν = ∑ i : Ix E a,
-      ContinuousLinearMap.smulRightL ℝ (Lie E a) ℂ (coordL i (invL y)) (ct ν (lie E a (bs E a i) φ) g y) := by
+      StrongDual.smulRightL ℝ (Lie E a) ℂ (coordL i (invL y)) (ct ν (lie E a (bs E a i) φ) g y) := by
   rw [fderiv_fun φ g hy, integral_finsetSum _ fun i _ =>
     ContinuousLinearMap.integrable_comp _ (integrable_chart ν (lo_lie hφ _) g hy)]
   exact Finset.sum_congr rfl fun i _ =>
@@ -262,9 +264,9 @@ theorem contDiffOn_ct (n : ℕ) : ∀ φ : Sm E a, LO φ → ∀ g : GA E a,
       ((hasFDerivAt_ct ν hφ g hy).fderiv.trans (integral_fderiv ν hφ g hy))
     have h1 : ContDiffOn ℝ n (invL (E := E) (a := a)) (invSet E a) := fun z hz =>
       (((invL_smooth (E := E) (a := a)).1 z hz).of_le (mod_cast le_top)).contDiffWithinAt
-    have h2 : ContDiffOn ℝ n (fun z => ContinuousLinearMap.smulRightL ℝ (Lie E a) ℂ (coordL i (invL z)))
+    have h2 : ContDiffOn ℝ n (fun z => StrongDual.smulRightL ℝ (Lie E a) ℂ (coordL i (invL z)))
         (invSet E a) :=
-      (ContinuousLinearMap.smulRightL ℝ (Lie E a) ℂ).contDiff.comp_contDiffOn
+      (StrongDual.smulRightL ℝ (Lie E a) ℂ).contDiff.comp_contDiffOn
         ((coordL i).contDiff.comp_contDiffOn h1)
     exact h2.clm_apply (ih _ (lo_lie hφ _) g)
 
