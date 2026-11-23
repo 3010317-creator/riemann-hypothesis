@@ -104,8 +104,11 @@ theorem squareFlip_zero {A A' Dd : Type} [Fintype A] [DecidableEq A] [Fintype A'
     (P : Finset Dd) : squareFlip μ σ ψ ν ϖ e P 0 = 0 := by
   have h : phiA μ σ ν ϖ e (blockLat ϖ e P) (fourierSum ψ ϖ e P 0) = 0 := by
     funext X
-    simp [phiA, fFun, smallF]
-  rw [squareFlip, h, map_zero]
+    simp only [map_zero, phiA, fFun, smallF, Pi.zero_apply, zero_mul, mul_zero]
+    split_ifs <;> try rfl
+    exact mul_eq_zero_of_right _ (MeasureTheory.integral_zero _ _)
+  unfold squareFlip
+  rw [h, map_zero]
 
 theorem isNatDatum_sliceB {ϖ : kˣ} {e : ℕ} {γ : List Edge} {T : G.Args → ℂ} (hT : G.IsTensor ϖ e γ T) {i j : ℕ}
     (h1 : Edge.theta i j ∈ γ) (h2 : Edge.ex i j ∈ γ) (x : G.Args) : IsNatDatum ϖ e (G.sliceB i j T x) := by
@@ -161,7 +164,8 @@ theorem isTensor_flipTensor {ψ : AddChar k Circle} {ϖ : kˣ} {e : ℕ} (hϖ : 
   have hne : Edge.theta i j ≠ Edge.ex i j := by simp
   have hN : ∀ x, IsNatDatum ϖ e (squareFlip (haarVol ((J (i, j)).map invT)) (stdSplit (G.rank_square i j)) ψ (G.nu i j) ϖ e
       (Assignment.one.block _ _) (G.sliceB i j T x)) := fun x =>
-    isNatDatum_squareFlip _ _ _ _ hϖ hψ he hν (isNatDatum_sliceB hT h1 h2 x)
+    @isNatDatum_squareFlip _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ this _ _ _ _ _ _ hϖ hψ he hν _
+      (isNatDatum_sliceB hT h1 h2 x)
   have hfl : ∀ x, G.flipTensor .one ψ ϖ e i j J T x = squareFlip (haarVol ((J (i, j)).map invT))
       (stdSplit (G.rank_square i j)) ψ (G.nu i j) ϖ e (Assignment.one.block _ _) (G.sliceB i j T x) (G.joinA i j x) :=
     fun _ => rfl
@@ -200,8 +204,8 @@ theorem isTensor_flipTensor {ψ : AddChar k Circle} {ϖ : kˣ} {e : ℕ} (hϖ : 
       rw [mem_matLat_stdLat] at H ⊢
       intro r s
       simpa [Grid.joinA] using H s (Sum.inr r)
-    · rw [hs0 x b hb₀ hb1 hb2 hx, squareFlip_zero]
-      rfl
+    · rw [hs0 x b hb₀ hb1 hb2 hx]
+      exact congrFun (squareFlip_zero _ _ _ _ _ _ _) _
   · have e1 : G.sliceB i j T (x + z) = G.sliceB i j T x := funext fun Z => by
       have key : (Function.update (Function.update (x + z) (.theta i j) Z.toCols₁) (.ex i j) Z.toCols₂ᵀ : G.Args) =
           Function.update (Function.update x (.theta i j) Z.toCols₁) (.ex i j) Z.toCols₂ᵀ +
