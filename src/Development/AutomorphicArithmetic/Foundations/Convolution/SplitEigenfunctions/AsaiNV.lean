@@ -1157,7 +1157,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.asEx_of :
     have := (Classical.choose_spec (den_inv hE hs (hc' v) h.choose_spec)).1
     rw [← den_unique hE h.choose_spec hd]
     exact this
-  have tvM : ∀ v, Maj (Tv v) (4 * normV v) := by
+  have tvM : ∀ v, MultiplicativeMajorants.Maj (Tv v) (4 * normV v) := by
     intro v
     have q1 : (1 : ℝ) ≤ 4 * normV v := by
       have : (1 : ℝ) ≤ normV v := by exact_mod_cast (nv_prime v).one_le
@@ -1178,7 +1178,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.asEx_of :
   have tEq : ∀ v : H.P ℚ, ¬ Bad N v → T (normV v) = Tv v := by
     intro v hb
     have h : ∃ v' : H.P ℚ, normV v' = normV v := ⟨v, rfl⟩
-    simp only [T, if_neg (fun hd => hb (bad_of_dvd v hd)), dif_pos h]
+    simp only [T, if_neg (fun hd => hb (MultiplicativeMajorants.bad_of_dvd v hd)), dif_pos h]
     rw [nv_inj h.choose_spec]
   have h0 : ∀ p : ℕ, p.Prime → PowerSeries.coeff 0 (T p) = 1 := by
     intro p _
@@ -1187,7 +1187,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.asEx_of :
     · simp
     · exact tv0 _
     · simp
-  have hM : ∀ p : ℕ, p.Prime → Maj (T p) (4 * p) := by
+  have hM : ∀ p : ℕ, p.Prime → MultiplicativeMajorants.Maj (T p) (4 * p) := by
     intro p pp
     have q1 : (1 : ℝ) ≤ 4 * p := by
       have : (1 : ℝ) ≤ p := by exact_mod_cast pp.one_le
