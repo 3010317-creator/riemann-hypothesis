@@ -505,6 +505,8 @@ theorem UpperTheory.V.Z.Desc.V0.locE :
       intro i h
       have := hTval t ht i
       rw [h, map_zero] at this
+      have hnt : Nontrivial (ValuativeRel.ValueGroupWithZero k) :=
+        @GroupWithZero.toNontrivial _ inferInstance
       exact zero_ne_one this
     obtain ⟨l, hl⟩ := hMove k n W τ hKir ψ t hψ.1 hψne ht0
     exact UpperTheory.V.Z.Desc.V0.rank_eq_one_of_inj _ l
@@ -676,6 +678,7 @@ private theorem dg_mem_Uo (p : parab k (points (Fin n))) (hp : (p : GL (Fin n) k
   have a1 : valuation k ((dg p i : kˣ) : k) ≤ 1 := (Valuation.mem_integer_iff _ _).1 h1
   have a2 : valuation k ((dg p i : kˣ) : k)⁻¹ ≤ 1 := (Valuation.mem_integer_iff _ _).1 h3
   rw [map_inv₀] at a2
+  have hnt : Nontrivial (ValueGroupWithZero k) := @GroupWithZero.toNontrivial _ inferInstance
   have hne : valuation k ((dg p i : kˣ) : k) ≠ 0 := by simp
   exact le_antisymm a1 ((inv_le_one₀ (zero_lt_iff.2 hne)).1 a2)
 
@@ -1030,7 +1033,7 @@ theorem UpperTheory.V.Z.Desc.P.dense_threshold_bc_of_prop : _root_.UpperTheory.V
       have h' := Polynomial.map_injective ι.toRingHom ι.injective h
       rw [h']
     obtain ⟨P, hP⟩ := Formalism.MainNotions.SumRepresentations.brauerNesbitt_matrix R r hss hs
-      (fun g => by simpa using hChar g⁻¹)
+      (fun g => by simpa only [inv_inv] using hChar g⁻¹)
     exact ⟨P⁻¹, fun g => by rw [hP g, inv_inv]⟩
   have hirr : IsIrr r := by
     obtain ⟨P, hP⟩ := hiso
@@ -1043,7 +1046,7 @@ theorem UpperTheory.V.Z.Desc.P.dense_threshold_bc_of_prop : _root_.UpperTheory.V
       have hComm : T ((R g : Matrix (Fin n) (Fin n) (Qbar l)).mulVec v) =
           (r g : Matrix (Fin n) (Fin n) (Qbar l)).mulVec (T v) := by
         rw [hT, hT, Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, hP g]
-        simp [Matrix.mul_assoc]
+        simp only [Units.val_mul, Matrix.mul_assoc, Units.inv_mul, Matrix.mul_one]
       show T _ ∈ M
       rw [hComm]
       exact hM g _ hv
