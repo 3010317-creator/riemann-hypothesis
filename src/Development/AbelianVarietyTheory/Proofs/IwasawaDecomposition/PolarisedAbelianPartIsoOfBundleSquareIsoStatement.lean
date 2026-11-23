@@ -1380,7 +1380,7 @@ theorem sq_iso_respects_symmetry_pointwise : GlobalFnsSt → ∀ (R : Type) [Com
       rw [val_pull (good_of_sq hJ), val_one, Category.id_comp] at a
       have b := val_corr (good_of_sq hJ') U'.symG_rig (𝟙 _)
       rw [val_pull (good_of_sq hJ'), val_one, Category.id_comp] at b
-      rw [val_sqGen _ hJ, val_sqGen _ hJ', a, b, Fin.prod_univ_two]
+      rw [SqSym.val_sqGen _ hJ, SqSym.val_sqGen _ hJ', a, b, Fin.prod_univ_two]
       simp only [Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, oi, Category.comp_id]
       simp
   set φ : Fin 2 → (G.left ⟶ G.left) := ![(ι[G]).left, 𝟙 G.left] with hφ
@@ -1392,8 +1392,8 @@ theorem sq_iso_respects_symmetry_pointwise : GlobalFnsSt → ∀ (R : Type) [Com
     Set.mem_iInter.2 fun k => by simpa using m1 k
   have h2 : r z ∈ LB.wchart (sqLB U'.LG.L) φ (fun k _ => N' (r ≫ φ k)) :=
     Set.mem_iInter.2 fun k => by simpa using m2 k
-  have e1 := gm_sqGen U.symG (r ≫ 𝟙 G.left) z _ h1
-  have e2 := gm_sqGen U'.symG r z _ h2
+  have e1 := SqSym.gm_sqGen U.symG (r ≫ 𝟙 G.left) z _ h1
+  have e2 := SqSym.gm_sqGen U'.symG r z _ h2
   simp only [Category.comp_id] at e1 e
   exact e1.symm.trans (e.trans (congrArg₂ (· * ·)
     (Finset.prod_congr rfl fun k _ => by rw [gw_isoPullId wL rfl _ z _ _ (m1 k) (m2 k)]) e2))
