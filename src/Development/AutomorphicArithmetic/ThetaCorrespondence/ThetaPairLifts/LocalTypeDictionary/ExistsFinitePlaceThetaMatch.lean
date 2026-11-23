@@ -307,7 +307,10 @@ private theorem smallF_change (ν : kˣ →* ℂˣ) (a' d : ℕ) (Ψ : Matrix (F
   have hne : (ν (gdet g) : ℂ) * apow (gdet g) ((Fintype.card (Fin d) : ℂ) / 2) ≠ 0 :=
     mul_ne_zero (Units.ne_zero _) (apow_ne_zero _ _)
   unfold smallF
-  rw [← integral_mul_left_eq_self (fun y : GL (Fin a') k =>
+  obtain ⟨_, _⟩ := Model.secondCountable_and_t2_local_field (k := k)
+  have : BorelSpace (GL (Fin a') k) := borel_GL
+  have : MeasurableMul (GL (Fin a') k) := inferInstance
+  rw [← integral_mul_left_eq_self (μ := haarVol (KO k (Fin a'))) (fun y : GL (Fin a') k =>
     Ψ (y.val * (Y * M)) * (ν (gdet y) : ℂ) * apow (gdet y) ((Fintype.card (Fin d) : ℂ) / 2)) g, ← integral_const_mul]
   congr 1
   funext a
@@ -1340,7 +1343,7 @@ theorem UpperTheory.isSBHalf_thetaFun_of_halfIdempotent_places :
           exact eq_sum_of_halfEl ((h₀ _).1 (hx i j))
         rw [hx']
         refine sum_mem fun v _ => lat₁ v _ ?_
-        rw [ptO_smul']
+        rw [UpperTheory.FmPlace.ptO_smul']
         by_contra hn
         exact hne (Finset.prod_eq_zero (Finset.mem_univ v) (if_neg hn))
     · rw [if_neg hx, if_neg fun h => hx h.2, mul_zero]
