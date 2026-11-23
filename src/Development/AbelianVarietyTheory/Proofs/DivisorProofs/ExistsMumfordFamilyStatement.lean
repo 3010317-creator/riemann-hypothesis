@@ -1135,7 +1135,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (Q : Dat
     · have := GlobalTheory.RefTauCoord.gm_unitOn (RingHom.id (FractionRing R)) ξ (k i j)
       rw [show spMap (RingHom.id (FractionRing R)) = 𝟙 _ by simp] at this
       exact Units.ext this
-    · rw [toUnit_left, ← Category.comp_id (jK R)]; exact hv
+    · rw [toUnit_left]; rw [Category.comp_id] at hv; exact hv
   choose v hv using hv
   have hc2 : ∀ z : Rˣ, GlobalTheory.TauShift.kK ξ (Units.map (algebraMap R (FractionRing R)).toMonoidHom z) =
       GlobalTheory.TauShift.cK ξ z := fun z => Units.ext rfl
