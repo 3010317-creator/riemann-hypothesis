@@ -1483,10 +1483,11 @@ theorem pullTop_val {Y Z : Scheme.{0}} (f : Y ⟶ Z) (w : Γ(Z, ⊤)ˣ) :
     ((pullTop f w : Γ(Y, ⊤)ˣ) : Γ(Y, ⊤)) = f.appTop.hom (w : Γ(Z, ⊤)) :=
   map_rfl' _
 
+set_option synthInstance.maxHeartbeats 200000 in
 theorem one_fst {S S' : Scheme.{0}} (f : S' ⟶ S) (B : Over S) [GrpObj B] (T : Over S') :
     (toUnit T ≫ η[(Over.pullback f).obj B]).left ≫ pullback.fst B.hom f = T.hom ≫ f ≫ η[B].left := by
-  have e := congrArg (fun z => z.left) (map_one (ReciprocityTheory.ChartRestriction.G.Geo.Tor.pushHom
-    (ReciprocityTheory.ChartRestriction.G.Geo.Tor.isGrpPullback_pullback B f) T))
+  have e := congrArg (fun z => z.left) (ReciprocityTheory.ChartRestriction.G.Geo.Tor.pushHom
+    (ReciprocityTheory.ChartRestriction.G.Geo.Tor.isGrpPullback_pullback B f) T).map_one
   have e₁ : (1 : T ⟶ (Over.pullback f).obj B) = toUnit T ≫ η[(Over.pullback f).obj B] := Hom.one_def
   rw [e₁] at e
   refine e.trans ?_
