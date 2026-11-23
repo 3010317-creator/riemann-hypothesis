@@ -57,6 +57,10 @@ on:
         description: "Fragment: LEAN_NUM_THREADS (empty: all cores)"
         type: string
         default: ''
+      fragment_publish:
+        description: "Fragment: publish the result to the shared cache (only for a commit a maintainer trusts)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -493,7 +497,13 @@ jobs:
           ref: ${{ github.workflow_sha }}
           path: trusted
           persist-credentials: false
-          sparse-checkout: scripts/rh-buildq
+          # main's toolchain and dependency pins: the target must use exactly these.
+          sparse-checkout: |
+            scripts/rh-buildq
+            lakefile.toml
+            lake-manifest.json
+            lean-toolchain
+          sparse-checkout-cone-mode: false
       - name: Describe the host and remove trees of finished runs
         env:
           GH_TOKEN: ${{ github.token }}
@@ -532,14 +542,16 @@ jobs:
           [[ "$target" =~ ^[0-9a-f]{40}$ ]] || { echo "fragment_commit must start with a 40-hex SHA"; exit 1; }
           # One tree per run: concurrent fragments of a commit never share one; reruns resume it.
           echo "FRAGMENT_QUEUE=$RH_FRAGMENT_ROOT/$target-$GITHUB_RUN_ID" >> "$GITHUB_ENV"
-      # Trusted host code clones, installs the (validated, official) toolchain and fetches maps;
-      # Lake and Mathlib's cache tool run in the sandbox with network, `lake cache add` offline.
+      # Trusted host code clones, checks that the target uses main's toolchain and dependency
+      # manifest, prepares those dependencies (Mathlib's cache included) from main's own
+      # configuration, and downloads maps and artifacts. Only `lake cache add` runs target code,
+      # in the offline sandbox.
       - name: Restore Mathlib, the nearest CI cache and the rh-buildq pool
         env:
           COMMIT: ${{ inputs.fragment_commit }}
         run: |
           python3 -I trusted/scripts/rh-buildq/fragment.py restore --queue "$FRAGMENT_QUEUE" --commit "$COMMIT" \
-            --timings "$FRAGMENT_TMP/timings.json"
+            --trusted trusted --timings "$FRAGMENT_TMP/timings.json"
       - name: Build the targets in the offline sandbox
         env:
           JOBS: ${{ inputs.fragment_jobs }}
@@ -599,10 +611,12 @@ jobs:
   # The only job of the fragment mode that sees cache credentials: a fresh GitHub-hosted runner
   # that runs trusted code only. It verifies the staged modules against the target commit
   # (read as Git objects) before deriving the R2 keys, then publishes them. It runs after
-  # failed or cancelled builds too, so their finished modules are not lost.
+  # failed or cancelled builds too, so their finished modules are not lost. Code in the build
+  # can write any input hash into its traces, so this only runs when the dispatcher declares
+  # the commit trusted with fragment_publish (default false); see verification/CACHE.md.
   fragment_publish:
     needs: fragment
-    if: ${{ always() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.mode == 'fragment' && needs.fragment.result != 'skipped' }}
+    if: ${{ always() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.mode == 'fragment' && inputs.fragment_publish && needs.fragment.result != 'skipped' }}
     runs-on: ubuntu-latest
     environment: ci-cache-publish
     timeout-minutes: 240

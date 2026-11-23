@@ -6,23 +6,27 @@ git, curl, python3, bubblewrap and elan. See README.md in this directory for the
 
   fragment.py probe --work DIR                       (fails unless the bwrap sandbox works)
   fragment.py targets SPEC --out FILE
-  fragment.py restore --queue Q --commit SPEC [--timings FILE]
+  fragment.py restore --queue Q --commit SPEC [--trusted DIR] [--timings FILE]
   fragment.py build --queue Q --targets FILE --log LOG [--jobs N] [--timings FILE]
   fragment.py stage --queue Q --out DIR [--timings FILE]
   fragment.py result --queue Q --targets FILE --log LOG --out FILE [--stage DIR] [--timings FILE]
   fragment.py prune --root DIR                       (reads $GH_TOKEN, $GITHUB_RUN_ID)
 
 This script never holds cache credentials. Everything that evaluates the target commit's
-lakefile or runs its code (`lake exe mathlib/cache get`, `lake cache add`, `lake build`) runs
-in the sandbox of sandbox.py, whose only writable host path is Q/project. Host-side code never
+lakefile or runs its code (`lake cache add`, `lake build`) runs in the offline sandbox of
+sandbox.py, whose only writable host path is Q/project. Nothing the target chooses runs with
+network: its lean-toolchain and lake-manifest.json must equal main's (--trusted), and the
+dependencies, Mathlib's cache included, are prepared by trusted code from main's own
+configuration and copied into the tree. Cache artifacts are downloaded by trusted code into
+Q/artifacts, which the sandbox sees read-only at .lake/cache/artifacts. Host-side code never
 writes into Q/project after the first checkout, reads it only through sandbox.read_file (no
 symlinks, no FIFOs), and runs Git there only against Q/project/.git, which the sandbox sees
 read-only. `stage` copies the newly built modules out of the tree; a separate trusted job
 (publish-fragment.py, on a GitHub-hosted runner) verifies and publishes them.
 
 The queue directory Q (one per workflow run) persists across reruns: it holds project/ (the
-Lake workspace), restore/ (maps for the sandbox, read-only there), job.env, phase and
-known-maps/. A rerun restores the pool again (other fragments may have published since) and
+Lake workspace), artifacts/ and restore/ (read-only in the sandbox), job.env, phase and
+known-maps/. Prepared dependencies are shared between runs in <root>/.deps/. A rerun restores the pool again (other fragments may have published since) and
 lets Lake continue where it stopped.
 """
 import argparse, base64, gzip, hashlib, json, os, re, resource, shutil, signal, subprocess, sys, time
@@ -202,7 +206,8 @@ def cmd_restore(a):
             git(P, "update-ref", f"refs/rh-buildq/{target}", sha)
     if len(parts) > 1:
         extra = [parts[2]]  # maps published for the PR head
-    lean_tc = git(P, "show", f"{target}:lean-toolchain")
+    trusted = Path(a.trusted).resolve()
+    lean_tc = check_inputs(git(P, "show", f"{target}:lean-toolchain"), git(P, "show", f"{target}:lake-manifest.json"), trusted)
     toolchain = install_toolchain(lean_tc)
     tcdir = lean_tc.replace("/", "--").replace(":", "---")
     marker = Q / "restored-ancestor"
@@ -213,12 +218,17 @@ def cmd_restore(a):
         if (Q / "exposed").exists():
             raise SystemExit("restore: the work tree has run sandboxed code and is not at the target; start a new run")
         git(P, "checkout", "-q", "--detach", target, capture=False)
+    if not (Q / "packages-ready").exists():
+        if (Q / "exposed").exists():
+            raise SystemExit("restore: the work tree has run sandboxed code without its dependencies; start a new run")
+        phase(Q, "dependencies")
+        install_packages(P, prepare_dependencies(trusted, Q.parent / ".deps"))
+        (Q / "packages-ready").write_text(f"{time.time()}\n")
     add_timing(a.timings, "restore_ancestor_s", time.time() - t0)
     t1 = time.time()
     (Q / "job.env").write_text(f"TARGET={target}\nRESTORE_FROM={src}\nTOOLCHAIN_DIR={tcdir}\n"
                                f"TOOLCHAIN={toolchain}\nPOOL_EXTRA_REVS=\"{' '.join(extra)}\"\n")
-    # One merged map (Mathlib's cache, the validated CI map of src's build inputs, the pool and the
-    # revision maps), registered once while the missing artifacts download. The pool grows while
+    # One merged map (the validated CI map of src's build inputs, the pool and the revision maps), registered once while the missing artifacts download. The pool grows while
     # other fragments publish, so this runs on every job; a rerun registers and fetches only what
     # is new. `lake build` unpacks the restored modules itself. From here on the target's code
     # runs (in the sandbox), so the host no longer writes into the work tree.
@@ -228,7 +238,8 @@ def cmd_restore(a):
     restore = Q / "restore"
     restore.mkdir(exist_ok=True)
     r = subprocess.run([sys.executable, "-I", str(HERE / "pool-restore.py"), "--state", str(restore),
-                        "--toolchain", str(toolchain), "--ancestor", src, str(P), *extra])
+                        "--artifacts", str(Q / "artifacts"), "--toolchain", str(toolchain), "--ancestor", src,
+                        str(P), *extra])
     if r.returncode != 0:
         log("pool restore failed (continuing; Lake will compile what is missing)")
     known = Q / "known-maps"
@@ -243,6 +254,66 @@ def cmd_restore(a):
         shutil.copyfile(pool, known / "pool-restore.jsonl")
     add_timing(a.timings, "restore_pool_s", time.time() - t1)
     phase(Q, "restored")
+
+
+def check_inputs(lean_tc, manifest, trusted):
+    """The target's toolchain and dependency manifest must equal those of the trusted harness
+    (main), so that its dependencies, Mathlib's cache included, can be fetched by trusted code
+    from main's own configuration: nothing the target chooses ever runs with network."""
+    want_tc = (trusted / "lean-toolchain").read_text().strip()
+    if lean_tc.strip() != want_tc:
+        raise SystemExit(f"restore: lean-toolchain {lean_tc.strip()!r} differs from main's {want_tc!r}; "
+                         "toolchain changes need a trusted build")
+    try:
+        got = json.loads(manifest)
+    except ValueError:
+        raise SystemExit("restore: lake-manifest.json is not JSON")
+    want = json.loads((trusted / "lake-manifest.json").read_text())
+    if not isinstance(got, dict) or any(got.get(k) != want.get(k) for k in ("packages", "packagesDir")):
+        raise SystemExit("restore: lake-manifest.json differs from main's (dependency URLs or revisions); "
+                         "dependency changes need a trusted build")
+    return want_tc
+
+
+def prepare_dependencies(trusted, root):
+    """main's dependencies with Mathlib's cache, prepared once per manifest by trusted code from
+    main's own lakefile, manifest and toolchain (as scripts/ci-prepare.py does for quick checks).
+    Runs on the host with network; never sees the target commit. Returns the packages directory."""
+    import fcntl
+    files = ("lakefile.toml", "lake-manifest.json", "lean-toolchain")
+    key = hashlib.sha256(b"".join((trusted / f).read_bytes() for f in files)).hexdigest()[:16]
+    root.mkdir(parents=True, exist_ok=True)
+    deps = root / key
+    with open(root / f"{key}.lock", "w") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        if not (deps / "ready").exists():
+            log(f"preparing main's dependencies in {deps}")
+            deps.mkdir(exist_ok=True)
+            for f in files:
+                shutil.copyfile(trusted / f, deps / f)
+            (deps / "src").mkdir(exist_ok=True)
+            (deps / ".lake").mkdir(exist_ok=True)
+            env = {k: os.environ[k] for k in ("PATH", "HOME", "ELAN_HOME", "SSL_CERT_FILE", "SSL_CERT_DIR") if k in os.environ}
+            env["MATHLIB_CACHE_GET_URL"] = os.environ.get("MATHLIB_CACHE_GET_URL", "https://cache.mathlib.org/mathlib4")
+            for attempt in range(1, 4):
+                if subprocess.run(["lake", "exe", "mathlib/cache", "get"], cwd=deps, env=env,
+                                  stdin=subprocess.DEVNULL).returncode == 0:
+                    break
+                log(f"Mathlib cache get attempt {attempt} failed")
+                time.sleep(20)
+            else:
+                raise SystemExit("restore: could not prepare main's dependencies")
+            (deps / "ready").write_text("ok\n")
+    return deps / ".lake/packages"
+
+
+def install_packages(P, packages):
+    """Copy the prepared dependencies into the work tree (before any sandboxed code has run in
+    it). The copy is private to the run, so code in the sandbox cannot alter the shared ones."""
+    dest = P / ".lake/packages"
+    (P / ".lake").mkdir(exist_ok=True)
+    shutil.rmtree(dest, ignore_errors=True)
+    subprocess.run(["cp", "-a", "--reflink=auto", str(packages), str(dest)], check=True)
 
 
 def install_toolchain(name):
@@ -298,9 +369,9 @@ def cmd_build(a):
     (Q / "sandbox").write_text("bwrap-offline\n")
     log(f"lake build of {len(targets)} targets, LEAN_NUM_THREADS={jobs}, offline bwrap sandbox")
     # Offline: everything the build needs was restored. Only the work tree is writable.
-    prefix = sandbox.command(P, env_file["TOOLCHAIN"], env={
-        "LAKE_CACHE_DIR": str(P / ".lake/cache"), "LAKE_RESTORE_ARTIFACTS": "true",
-        "LEAN_NUM_THREADS": str(jobs), "XDG_CACHE_HOME": str(P / ".lake/rh-xdg-cache")})
+    (Q / "artifacts").mkdir(exist_ok=True)
+    prefix = sandbox.command(P, env_file["TOOLCHAIN"], ro_at=[(Q / "artifacts", P / ".lake/cache/artifacts")], env={
+        "LAKE_CACHE_DIR": str(P / ".lake/cache"), "LAKE_RESTORE_ARTIFACTS": "true", "LEAN_NUM_THREADS": str(jobs)})
     raise_limits()
     outputs = P / outputs_name()
     t0 = time.time()
@@ -573,7 +644,8 @@ def main():
     s = sub.add_parser("probe"); s.add_argument("--work", required=True)
     s = sub.add_parser("targets"); s.add_argument("spec"); s.add_argument("--out", required=True)
     s = sub.add_parser("restore"); s.add_argument("--queue", required=True); s.add_argument("--commit", required=True)
-    s.add_argument("--timings")
+    s.add_argument("--timings"); s.add_argument("--trusted", default=str(HERE.parents[1]),
+                                                help="checkout of main with lakefile.toml, lake-manifest.json, lean-toolchain")
     s = sub.add_parser("build"); s.add_argument("--queue", required=True); s.add_argument("--targets", required=True)
     s.add_argument("--log", required=True); s.add_argument("--jobs", type=int, default=0); s.add_argument("--timings")
     s = sub.add_parser("stage"); s.add_argument("--queue", required=True); s.add_argument("--out", required=True)

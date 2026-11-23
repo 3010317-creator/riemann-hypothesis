@@ -8,16 +8,17 @@ sandbox sees:
     group, localtime and the dynamic loader cache, each bound as a single file;
   * the Lean toolchain, read-only, at /opt/lean (never the rest of ~/.elan);
   * the job's work tree, read-write, at its own path, with its .git read-only;
-  * extra read-only paths the caller names (trusted scripts, restore maps);
+  * extra read-only paths the caller names (restore maps, and the downloaded artifacts, which
+    host code keeps outside the work tree and the sandbox sees at .lake/cache/artifacts);
   * a private tmpfs /tmp (with $HOME at /tmp/home), and fresh /proc and /dev; the rest of
     the sandbox's root is read-only.
 Nothing else of the host filesystem is visible, in particular not $HOME, ~/.ssh, the runner's
 work directory or its credentials. The sandbox runs with --unshare-all (user, PID, IPC, UTS,
 cgroup and network namespaces), --die-with-parent, --new-session, --clearenv and an explicit
-environment. `net=True` keeps the host network (--share-net) for the restore steps that
-download (Lake cloning dependencies, Mathlib's cache, artifact downloads); the filesystem view
-is identical. There is no fallback: if bubblewrap cannot create these namespaces, probe()
-fails and the job stops before running anything from the target commit.
+environment. There is no network variant: everything that downloads is trusted host code that
+never evaluates the target's lakefile. There is no fallback either: if bubblewrap cannot
+create these namespaces, probe() fails and the job stops before running anything from the
+target commit.
 """
 import os, shutil, subprocess, sys
 from pathlib import Path
@@ -52,17 +53,14 @@ def _disable_userns():
     return ["--unshare-user", "--disable-userns"] if _DISABLE_USERNS else []
 
 
-def command(work, toolchain, *, net=False, ro=(), env=None, chdir=None):
+def command(work, toolchain, *, ro=(), ro_at=(), env=None, chdir=None):
     """bwrap argv (ending in "--") that runs a command with `work` as the only writable host path."""
     work = Path(work)
     if work.is_symlink() or not work.is_dir():
         raise SystemExit(f"sandbox: work tree {work} must be a real directory")
     work = work.resolve()
     toolchain = Path(toolchain).resolve(strict=True)
-    cmd = [_bwrap(), "--die-with-parent", "--new-session", "--unshare-all", *_disable_userns()]
-    if net:
-        cmd.append("--share-net")
-    cmd.append("--clearenv")
+    cmd = [_bwrap(), "--die-with-parent", "--new-session", "--unshare-all", *_disable_userns(), "--clearenv"]
     for d in SYSTEM_DIRS:
         if os.path.isdir(d):
             cmd += ["--ro-bind", d, d]
@@ -80,6 +78,8 @@ def command(work, toolchain, *, net=False, ro=(), env=None, chdir=None):
     for p in ro:
         p = Path(p).resolve(strict=True)
         cmd += ["--ro-bind", str(p), str(p)]
+    for src, dest in ro_at:
+        cmd += ["--ro-bind", str(Path(src).resolve(strict=True)), str(dest)]
     full = {"PATH": PATH, "HOME": HOME, "TMPDIR": "/tmp", "LANG": "C.UTF-8", "LEAN_SYSROOT": LEAN,
             "LAKE_HOME": LEAN, "GIT_CONFIG_NOSYSTEM": "1", "XDG_CACHE_HOME": f"{HOME}/.cache"}
     if ca:

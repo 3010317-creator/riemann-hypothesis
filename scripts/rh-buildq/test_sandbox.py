@@ -6,11 +6,13 @@
 RH_TEST_TOOLCHAIN may name a toolchain directory; by default the newest one under ~/.elan.
 The hostile lakefile tries, while Lake elaborates it, to write into $HOME, read ~/.ssh, read
 the runner's files outside the work tree and open network connections. Every attempt must
-fail in the offline sandbox, and all but the network one in the network sandbox, while a
-normal `lake build` of the same project succeeds. The stage step must not follow links that
-code in the sandbox planted in the work tree.
+fail in the sandbox, while a normal `lake build` of the same project succeeds. Code in the
+sandbox must not reach host services on loopback, the cloud metadata address or the host's
+abstract Unix sockets (systemd, D-Bus). The stage step must not follow links that code in the
+sandbox planted in the work tree. A target whose dependency manifest or toolchain differs
+from main's must be refused before anything of it runs.
 """
-import importlib.util, json, os, shutil, subprocess, sys, tempfile, unittest
+import importlib.util, json, os, shutil, socket, subprocess, tempfile, unittest
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -88,33 +90,63 @@ class HostileLakefile(unittest.TestCase):
         CANARY.unlink(missing_ok=True)
         shutil.rmtree(self.tmp, ignore_errors=True)
 
-    def lake(self, *args, net=False):
-        cmd = sandbox.command(self.work, TOOLCHAIN, net=net, env={"LAKE_CACHE_DIR": str(self.work / ".lake/cache")})
+    def lake(self, *args):
+        cmd = sandbox.command(self.work, TOOLCHAIN, env={"LAKE_CACHE_DIR": str(self.work / ".lake/cache")})
         return subprocess.run(cmd + ["lake", *args], env=sandbox.host_env(), capture_output=True, text=True)
 
     def attempts(self):
         lines = (self.work / "attempts.txt").read_text().splitlines()
         return {l.split(":", 1)[0]: l.split(":", 1)[1].strip() for l in lines}
 
-    def check(self, net):
-        r = self.lake("build", "-v", "-o", str(self.work / ".lake/outputs.jsonl"), net=net)
+    def test_hostile_lakefile_is_contained_and_normal_build_succeeds(self):
+        r = self.lake("build", "-v", "-o", str(self.work / ".lake/outputs.jsonl"))
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)  # the normal build succeeds
         got = self.attempts()
-        for name in ("write-home", "read-ssh", "list-ssh", "read-runner-file", "write-usr"):
-            self.assertTrue(got[name].startswith("blocked"), f"{name}: {got[name]}")
+        self.assertEqual(len(got), 7, got)
+        for name, outcome in got.items():
+            self.assertTrue(outcome.startswith("blocked"), f"{name}: {outcome}")
         self.assertFalse(CANARY.exists())
         self.assertTrue((self.work / ".lake/build/lib/lean/Hello.olean").exists())
-        return got
 
-    def test_offline_build_blocks_everything(self):
-        got = self.check(net=False)
-        for name in ("network-https", "network-raw-ip"):
-            self.assertTrue(got[name].startswith("blocked"), f"{name}: {got[name]}")
-
-    def test_network_sandbox_keeps_filesystem_restrictions(self):
-        got = self.check(net=True)
-        if os.environ.get("RH_TEST_EXPECT_NETWORK"):
-            self.assertEqual(got["network-https"], "SUCCEEDED")
+    def test_host_services_are_unreachable(self):
+        abstract = sorted({l.split()[-1][1:] for l in Path("/proc/net/unix").read_text().splitlines()[1:]
+                           if l.split()[-1].startswith("@")})[:20]
+        # Make sure the test means something: the host itself reaches at least one of them.
+        reachable = []
+        for name in abstract:
+            for kind in (socket.SOCK_STREAM, socket.SOCK_DGRAM, socket.SOCK_SEQPACKET):
+                s = socket.socket(socket.AF_UNIX, kind)
+                try:
+                    s.connect("\0" + name)
+                    reachable.append([name, int(kind)])
+                    break
+                except OSError:
+                    pass
+                finally:
+                    s.close()
+        script = r"""
+import socket, sys, json
+bad = []
+for host, port in (("127.0.0.1", 22), ("127.0.0.1", 80), ("169.254.169.254", 80), ("::1", 22)):
+    s = socket.socket(socket.AF_INET6 if ":" in host else socket.AF_INET)
+    s.settimeout(3)
+    try:
+        s.connect((host, port)); bad.append(f"{host}:{port}")
+    except OSError:
+        pass
+for name, kind in json.loads(sys.argv[1]):
+    s = socket.socket(socket.AF_UNIX, kind)
+    try:
+        s.connect("\0" + name); bad.append("@" + name)
+    except OSError:
+        pass
+print(json.dumps(bad))
+"""
+        python = shutil.which("python3")
+        r = subprocess.run(sandbox.command(self.work, TOOLCHAIN) + [python, "-I", "-c", script, json.dumps(reachable)],
+                           env=sandbox.host_env(), capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(json.loads(r.stdout), [], "reachable from the sandbox")
 
     def test_probe(self):
         sandbox.probe(self.tmp / "probe", TOOLCHAIN)
@@ -148,6 +180,41 @@ class HostileLakefile(unittest.TestCase):
         for f in (out / "artifacts").iterdir():
             self.assertFalse(f.is_symlink())
             self.assertNotEqual(f.read_bytes(), SSH.read_bytes())
+
+
+class TrustedInputs(unittest.TestCase):
+    """fragment.check_inputs refuses targets whose dependencies would be chosen by the target."""
+    TRUSTED = HERE.parents[1]
+
+    def manifest(self, **change):
+        m = json.loads((self.TRUSTED / "lake-manifest.json").read_text())
+        mathlib = next(p for p in m["packages"] if p["name"] == "mathlib")
+        mathlib.update(change)
+        return json.dumps(m)
+
+    def toolchain(self):
+        return (self.TRUSTED / "lean-toolchain").read_text()
+
+    def test_main_inputs_accepted(self):
+        self.assertEqual(fragment.check_inputs(self.toolchain(), self.manifest(), self.TRUSTED), self.toolchain().strip())
+
+    def test_mathlib_from_another_repository_refused(self):
+        with self.assertRaises(SystemExit):
+            fragment.check_inputs(self.toolchain(), self.manifest(url="https://github.com/attacker/mathlib4"), self.TRUSTED)
+
+    def test_mathlib_at_another_revision_refused(self):
+        with self.assertRaises(SystemExit):
+            fragment.check_inputs(self.toolchain(), self.manifest(rev="0" * 40), self.TRUSTED)
+
+    def test_extra_dependency_refused(self):
+        m = json.loads(self.manifest())
+        m["packages"].append({"name": "evil", "type": "git", "url": "https://example.com/evil", "rev": "1" * 40})
+        with self.assertRaises(SystemExit):
+            fragment.check_inputs(self.toolchain(), json.dumps(m), self.TRUSTED)
+
+    def test_other_toolchain_refused(self):
+        with self.assertRaises(SystemExit):
+            fragment.check_inputs("leanprover/lean4:v4.30.0\n", self.manifest(), self.TRUSTED)
 
 
 if __name__ == "__main__":
