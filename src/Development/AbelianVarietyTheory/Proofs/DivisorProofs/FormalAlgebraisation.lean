@@ -1352,7 +1352,7 @@ section -- clump:auto
 namespace GlobalTheory
 
 theorem formalAlgebraisation : GlobalTheory.Published.FormalAlgebraisation :=
-  ⟨GlobalTheory.T.formalAlgebraisation_morphisms', GlobalTheory.T.algebraisation_properFormalScheme_ampleBundle⟩
+  ⟨GlobalTheory.T.formalAlgebraisation_morphisms', GlobalTheory.FormalAlg.formalAlgebraisation_schemes⟩
 
 end GlobalTheory
 end -- clump:auto
