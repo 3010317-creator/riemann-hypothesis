@@ -152,7 +152,7 @@ theorem DF_twoW_le (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) {l l' g n : ℕ} (hn : Even
   have hg : (0 : ℝ) ≤ g := Nat.cast_nonneg _
   rw [← hpq, mul_assoc]
   apply mul_le_mul_of_nonneg_left _ hf
-  nlinarith [mul_le_mul_of_nonneg_left hl' hq, mul_nonneg (mul_nonneg hp hq) hg]
+  linarith [mul_le_mul_of_nonneg_left hl' hq, mul_nonneg (mul_nonneg hp hq) hg]
 
 theorem n0_le_Ns (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) : n0 D j ≤ D.R.r + 2 * g0 D * (Dm D + 1) := by
   have key : D.R.f * (D.R.sigW j).1 * (D.R.sigW j).2 ≤ D.R.f * ((D.R.sigW j).1 * (D.R.sigW j).2 +
@@ -355,7 +355,7 @@ theorem wF_size_le (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) : (wF j X).size ≤ ((Dm D 
   have a2 : 0 ≤ (D.R.f : ℝ) * D.R.r * (D.R.r - (D.R.sigW j).1) :=
     mul_nonneg (mul_nonneg hf0 hr0) (by linarith)
   have a3 : 0 ≤ (D.R.f : ℝ) * D.R.r * (mu D j - 1) * (((Dm D : ℝ) + 2) * X.nW - X.nP) :=
-    mul_nonneg (mul_nonneg (mul_nonneg hf0 hr0) (by linarith)) (by nlinarith)
+    mul_nonneg (mul_nonneg (mul_nonneg hf0 hr0) (by linarith)) (by linarith [le_mul_of_one_le_left hW0 (show (1 : ℝ) ≤ (Dm D : ℝ) + 2 by linarith)])
   have hr1 : (1 : ℝ) ≤ D.R.r := by exact_mod_cast r_pos D
   have a4 : 0 ≤ (D.R.f : ℝ) * X.nP * (D.R.r * (D.R.r - 1)) :=
     mul_nonneg (mul_nonneg hf0 hP0) (mul_nonneg hr0 (by linarith))
@@ -385,20 +385,21 @@ theorem domAt_index {L : SizeData₂ D} {nW : ℕ} {CP : ℝ} (h1 : 1 ≤ j) (h2
     have hr : (6 : ℝ) ≤ D.R.r := by exact_mod_cast r_ge D
     have hL : (1 : ℝ) ≤ L.sc.L := one_le_L L
     have hR3 : 0 ≤ (D.R.f : ℝ) * (D.R.r : ℝ) ^ 3 := by positivity
-    have hFR2 : (1 : ℝ) ≤ (D.R.f : ℝ) * (D.R.r : ℝ) ^ 2 := by nlinarith
+    have hFR2 : (1 : ℝ) ≤ (D.R.f : ℝ) * (D.R.r : ℝ) ^ 2 :=
+      one_le_mul_of_one_le_of_one_le (by linarith) (one_le_pow₀ (by linarith))
     have a1 : (D.R.r : ℝ) ≤ (D.R.f : ℝ) * (D.R.r : ℝ) ^ 3 := by
       have := mul_le_mul_of_nonneg_left hFR2 (by linarith : (0 : ℝ) ≤ D.R.r)
-      nlinarith
+      linarith
     have a2 : 64 * ((D.R.f : ℝ) * (D.R.r : ℝ) ^ 3) ≤ ((D.R.f : ℝ) * D.R.r) ^ 3 := by
-      have h64 : (64 : ℝ) ≤ (D.R.f : ℝ) ^ 2 := by nlinarith
+      have h64 : (64 : ℝ) ≤ (D.R.f : ℝ) ^ 2 := by linarith [pow_le_pow_left₀ (by norm_num) hf 2]
       have := mul_le_mul_of_nonneg_right h64 hR3
-      nlinarith
+      linarith
     have hFR : (0 : ℝ) ≤ (D.R.f : ℝ) * D.R.r := by positivity
     have h3 : ((D.R.f : ℝ) * D.R.r) ^ 3 ≤ ((D.R.f : ℝ) * D.R.r * L.sc.L) ^ 3 := by
       apply pow_le_pow_left₀ hFR
-      nlinarith
+      exact le_mul_of_one_le_right hFR hL
     have h4 : (D.R.r : ℝ) + 2 * (2 * 5 ^ 4 * (D.R.r : ℝ)) * ((D.R.f : ℝ) * (D.R.r : ℝ) ^ 2 + 1) ≤
-        1000 * ((D.R.f : ℝ) * D.R.r) ^ 3 := by nlinarith
+        1000 * ((D.R.f : ℝ) * D.R.r) ^ 3 := by linarith
     have hZb : Zb D L = (D.R.f : ℝ) * D.R.r * L.sc.L := rfl
     rw [hZb]
     calc (n0 D j : ℝ) ≤ _ := hN'
@@ -426,7 +427,7 @@ theorem extra_le {A k b s PP TO rd r D2 nW nP q0 : ℝ} (h : Rn A k b s PP TO rd
     rw [sq]; exact mul_le_mul_of_nonneg_left hnW (by linarith)
   have hX : nP + TO * nW ≤ 2 * TO ^ 2 := by linarith
   have h3 : r * (nP + TO * nW) ≤ r * (2 * TO ^ 2) := mul_le_mul_of_nonneg_left hX (by linarith)
-  have h5 : 2 * r ≤ A ^ 2 := by nlinarith
+  have h5 : 2 * r ≤ A ^ 2 := by linarith [mul_le_mul_of_nonneg_right (show (2 : ℝ) ≤ A by linarith) (show (0 : ℝ) ≤ A by linarith), sq A]
   have h4 : r * (2 * TO ^ 2) ≤ A ^ 2 * TO ^ 2 := by
     calc r * (2 * TO ^ 2) = (2 * r) * TO ^ 2 := by ring
       _ ≤ A ^ 2 * TO ^ 2 := mul_le_mul_of_nonneg_right h5 (sq_nonneg _)
@@ -448,7 +449,7 @@ theorem DF_ka_add_le : (DF (ka j (runOf T S hZ)) : ℝ) + 1 ≤ 4 * ((D.R.f : �
   rw [ekl T S hZ, eTq T S hZ, eQ T S hZ] at hD
   have hX : 0 ≤ (D.R.f : ℝ) * D.R.r * ((T.nP : ℝ) + T.TO * T.nWn) := by positivity
   apply R.sK
-  nlinarith [hD, hX]
+  linarith [hD, hX]
 
 theorem ka_size_le : (ka j (runOf T S hZ)).size ≤ 5 * ((D.R.f : ℝ) * D.R.r) * L.sc.b := by
   have R := rn_of T S hZ
@@ -459,7 +460,7 @@ theorem ka_size_le : (ka j (runOf T S hZ)).size ≤ 5 * ((D.R.f : ℝ) * D.R.r) 
   have hE := extra_le R (mu_le_r (D := D) (j := j))
   rw [hs, hn]
   push_cast
-  nlinarith [hD, hE]
+  linarith [hD, hE]
 
 theorem wL_size_le : (wL j (runOf T S hZ)).size * (T.TO : ℝ) ≤ 3 * ((D.R.f : ℝ) * D.R.r) * L.sc.b := by
   have R := rn_of T S hZ
@@ -479,7 +480,7 @@ theorem wL_size_le : (wL j (runOf T S hZ)).size * (T.TO : ℝ) ≤ 3 * ((D.R.f :
   have hP : 0 ≤ mu D j * ((D.R.f : ℝ) * D.R.r) * (T.nP : ℝ) :=
     mul_nonneg (mul_nonneg (by linarith) (by positivity)) (by positivity)
   rw [hs, hn]
-  nlinarith [hD', hL, hE, hP]
+  linarith [hD', hL, hE, hP]
 
 theorem setC_of {B : WeightFamilies.Prov D} {Q : ModuliIntegralCharts.Prov D} (X : PJ D B Q j) (hO : OPO L B) {C A : ℝ} (hD : DomAt D L j T.nWn C) :
     SetC L X 10 C A (ka j (runOf T S hZ)) (wL j (runOf T S hZ)) (wF j (runOf T S hZ)) T.TO T.nP T.nWn (h0R T) := by
@@ -501,7 +502,7 @@ theorem setC_of {B : WeightFamilies.Prov D} {Q : ModuliIntegralCharts.Prov D} (X
     have h' : ((runOf T S hZ).kl : ℝ) + D.R.t + 1 ≤ (ncAt (ka j (runOf T S hZ)) τ : ℝ) := by exact_mod_cast h
     have ht : (0 : ℝ) ≤ D.R.t := Nat.cast_nonneg _
     unfold h0R
-    nlinarith [sq_nonneg (T.TO : ℝ)]
+    linarith [sq_nonneg (T.TO : ℝ)]
   · have e : (ka j (runOf T S hZ)).aP τ i = (runOf T S hZ).kl := prog_last _ _ _ i (by omega)
     rw [e]; unfold h0R; linarith
   · have e : (ka j (runOf T S hZ)).aM τ i = (runOf T S hZ).Tq * (runOf T S hZ).Q0 :=
@@ -517,17 +518,17 @@ theorem setC_of {B : WeightFamilies.Prov D} {Q : ModuliIntegralCharts.Prov D} (X
     have hq0 : (0 : ℝ) ≤ (q0N T : ℝ) := Nat.cast_nonneg _
     have hm := mul_le_mul_of_nonneg_right hTq' hq0
     have hsq : 2 * (T.TO : ℝ) ^ 2 ≤ ((D.R.f : ℝ) * D.R.r) ^ 2 * (T.TO : ℝ) ^ 2 := by
-      apply mul_le_mul_of_nonneg_right _ (sq_nonneg _); nlinarith
+      apply mul_le_mul_of_nonneg_right _ (sq_nonneg _); linarith [pow_le_pow_left₀ (by norm_num) h48 2]
     have ec : (((runOf T S hZ).Tq * (runOf T S hZ).Q0 : ℕ) : ℝ) = ((runOf T S hZ).Tq : ℝ) * (q0N T : ℝ) := by
       push_cast; rfl
     rw [ec]; unfold h0R; linarith
   · have h := ka_size_le T S hZ h1 h2
-    nlinarith
+    linarith
   · unfold sizeConstantAtParamsWeight; exact le_max_of_le_right (le_max_of_le_right (le_max_of_le_right (le_max_left _ _)))
   · have hT : (0 : ℝ) < (T.TO : ℝ) := by exact_mod_cast hTpos
     rw [le_div_iff₀ hT]
     have h := wL_size_le T S hZ h1 h2
-    nlinarith
+    linarith
   · exact hTpos
   · rw [hd]; have := T.TO_40; omega
   · rw [hd]; exact T.TO_40

@@ -340,7 +340,8 @@ theorem frameExp_le (r l : ℕ) (hl : l ≤ r + 1) : 2 * frameExp r l ≤ (2 * r
     Finset.sum_le_sum (fun a _ => Nat.sub_le _ _)
   rw [Finset.sum_const, Nat.card_Icc, smul_eq_mul, show l + 1 - 1 = l by omega] at h1
   have h3 : l * (r + 1) ≤ (r + 1) * (r + 1) := Nat.mul_le_mul_right _ hl
-  nlinarith [h1, h3]
+  zify at h1 h3 ⊢
+  linarith [sq_nonneg (r : ℤ), Int.natCast_nonneg r]
 
 noncomputable def locSize (D : D7) (b C : ℝ) (Z : GramM D) (τ : D.what₂.Tau) : ℝ :=
   ∏ l ∈ Finset.Icc 1 (D.R.rS + 1), max 1 (absDl D Z l τ / b ^ (C * (D.R.m : ℝ) ^ 2))
@@ -363,7 +364,7 @@ theorem lead_le (D : D7) (b C : ℝ) (hb : 1 ≤ b) (hC : 0 ≤ C) (hrd : D.host
       rw [dif_pos (Nat.zero_le _)]
       exact Matrix.det_isEmpty
     rw [h1, map_one, norm_one]
-    nlinarith
+    exact one_le_mul_of_one_le_of_one_le hB1 hloc
   · have hmem : l ∈ Finset.Icc 1 (D.R.rS + 1) := Finset.mem_Icc.mpr ⟨hl0, hl⟩
     have hP0 : 0 < b ^ (C * (D.R.m : ℝ) ^ 2) := Real.rpow_pos_of_pos hb0 _
     have hfac : max 1 (absDl D Z l τ / b ^ (C * (D.R.m : ℝ) ^ 2)) ≤ locSize D b C Z τ := by
@@ -373,10 +374,10 @@ theorem lead_le (D : D7) (b C : ℝ) (hb : 1 ≤ b) (hC : 0 ≤ C) (hrd : D.host
           max 1 (absDl D Z x τ / b ^ (C * (D.R.m : ℝ) ^ 2)) :=
         GlobalTheory.LoopC.GramSize.one_le_prod'' _ _ (fun _ _ => le_max_left _ _)
       have hm1 := le_max_left 1 (absDl D Z l τ / b ^ (C * (D.R.m : ℝ) ^ 2))
-      nlinarith
+      exact le_mul_of_one_le_right (by linarith) hrest
     have hA : absDl D Z l τ ≤ b ^ (C * (D.R.m : ℝ) ^ 2) * locSize D b C Z τ := by
       have h1 := (div_le_iff₀ hP0).mp (le_max_right 1 (absDl D Z l τ / b ^ (C * (D.R.m : ℝ) ^ 2)))
-      nlinarith
+      linarith [mul_le_mul_of_nonneg_left hfac hP0.le]
     have hx : ‖embS D τ (leadMinorE Z l)‖ =
         absDl D Z l τ * D.host.rdE ^ (2 * (frameExp D.R.rS l : ℝ)) := by
       unfold absDl absReal
@@ -428,13 +429,15 @@ theorem prod_le_HH (D : D7) (b C x : ℝ) (hb : 1 ≤ b) (Z : GramM D) (hx : x �
 private theorem exists_ne_zero_smul_mem_of_mem_span' (C CT m : ℝ) (hC : 2 * |CT| + 3 ≤ C) (hm : 1 ≤ m) :
     2 * ((C + 1) * m ^ 2) + 4 * |CT| * m ≤ 2 * C ^ 2 * m ^ 3 := by
   have ha := abs_nonneg CT
-  have hm2 : m ≤ m ^ 2 := by nlinarith
-  have hm3 : m ^ 2 ≤ m ^ 3 := by nlinarith
-  have h1 : 2 * (C + 1) + 4 * |CT| ≤ 2 * C ^ 2 := by nlinarith
-  calc 2 * ((C + 1) * m ^ 2) + 4 * |CT| * m ≤ 2 * (C + 1) * m ^ 2 + 4 * |CT| * m ^ 2 := by nlinarith
+  have hm2 : m ≤ m ^ 2 := le_self_pow₀ hm two_ne_zero
+  have hm3 : m ^ 2 ≤ m ^ 3 := pow_le_pow_right₀ hm (by norm_num)
+  have h1 : 2 * (C + 1) + 4 * |CT| ≤ 2 * C ^ 2 := by
+    linarith [mul_le_mul_of_nonneg_left (show (3 : ℝ) ≤ C by linarith) (show (0 : ℝ) ≤ C by linarith), sq C]
+  calc 2 * ((C + 1) * m ^ 2) + 4 * |CT| * m ≤ 2 * (C + 1) * m ^ 2 + 4 * |CT| * m ^ 2 := by
+        linarith [mul_le_mul_of_nonneg_left hm2 ha]
     _ = (2 * (C + 1) + 4 * |CT|) * m ^ 2 := by ring
-    _ ≤ 2 * C ^ 2 * m ^ 2 := by nlinarith
-    _ ≤ 2 * C ^ 2 * m ^ 3 := by nlinarith
+    _ ≤ 2 * C ^ 2 * m ^ 2 := mul_le_mul_of_nonneg_right h1 (sq_nonneg m)
+    _ ≤ 2 * C ^ 2 * m ^ 3 := mul_le_mul_of_nonneg_left hm3 (by positivity)
 
 private theorem main_lemma_2 {b : ℝ} (hb : 1 ≤ b) (y : ℝ) : (b ^ y) ^ 2 = b ^ (2 * y) := by
   rw [sq, ← Real.rpow_add (by linarith : (0 : ℝ) < b), two_mul]
@@ -482,12 +485,12 @@ theorem main : ∀ Cg cb Cu cT CT C0 A : ℝ, ∃ C₀ : ℝ, ∀ C ≥ C₀, �
       rw [← Real.rpow_mul hb0]
       apply Real.rpow_le_rpow_of_exponent_le hb1
       have hf : (0 : ℝ) ≤ D.R.f := Nat.cast_nonneg _
-      have hC2 : 1 ≤ C ^ 2 := by nlinarith
-      have hm3' : (D.R.m : ℝ) ≤ (D.R.m : ℝ) ^ 3 := by nlinarith
+      have hC2 : 1 ≤ C ^ 2 := one_le_pow₀ (by linarith)
+      have hm3' : (D.R.m : ℝ) ≤ (D.R.m : ℝ) ^ 3 := le_self_pow₀ hm1 (by norm_num)
       have hm3 : (D.R.m : ℝ) ≤ C ^ 2 * (D.R.m : ℝ) ^ 3 := by
-        nlinarith [mul_le_mul_of_nonneg_right hC2 (by positivity : (0 : ℝ) ≤ (D.R.m : ℝ) ^ 3)]
+        linarith [mul_le_mul_of_nonneg_right hC2 (by positivity : (0 : ℝ) ≤ (D.R.m : ℝ) ^ 3)]
       push_cast
-      nlinarith [mul_le_mul_of_nonneg_right hmr hf, mul_le_mul_of_nonneg_right hm3 hf]
+      linarith [mul_le_mul_of_nonneg_right hmr hf, mul_le_mul_of_nonneg_right hm3 hf]
     have e3 : (large₂.sc.b ^ (C * (D.R.m : ℝ) ^ 2 * D.R.f)) ^ (C * (D.R.m : ℝ)) ≤ HHZ D large₂.sc.b C Z := by
       unfold HHZ
       exact le_mul_of_one_le_right (by linarith) (one_le_pow₀ hsz)
@@ -540,8 +543,8 @@ theorem main : ∀ Cg cb Cu cT CT C0 A : ℝ, ∃ C₀ : ℝ, ∀ C ≥ C₀, �
     have hn2 := norm_nonneg (embS D τ (leadMinorE Z D.R.rS))
     have hTT : (1 : ℝ) + (Tu D u : ℝ) * (Tu D u' : ℝ) ≤ ((Tu D u : ℝ) * (Tu D u' : ℝ)) ^ 2 := by
       have h9 : (9 : ℝ) ≤ (Tu D u : ℝ) * (Tu D u' : ℝ) := by
-        nlinarith [mul_le_mul t1 t2 (by norm_num) (by linarith)]
-      nlinarith [h9]
+        linarith [mul_le_mul t1 t2 (by norm_num) (by linarith)]
+      linarith [mul_le_mul_of_nonneg_left h9 (show (0 : ℝ) ≤ (Tu D u : ℝ) * (Tu D u' : ℝ) by linarith), sq ((Tu D u : ℝ) * (Tu D u' : ℝ))]
     have hTT2 : ((Tu D u : ℝ) * (Tu D u' : ℝ)) ^ 2 ≤ large₂.sc.b ^ (4 * |CT| * (D.R.m : ℝ)) := by
       have e : large₂.sc.b ^ (4 * |CT| * (D.R.m : ℝ)) = ((large₂.sc.b ^ (|CT| * (D.R.m : ℝ))) ^ 2) ^ 2 := by
         rw [main_lemma_2 hb1, main_lemma_2 hb1]; ring_nf
