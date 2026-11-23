@@ -3,6 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaPsi
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SettingsFormsExistList
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.NonemptyGrid
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsSameData
 import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyGridDataIff
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GridFirstColumnSpaceRankSignatureSelfDual
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemMulInvIff
@@ -104,29 +105,10 @@ theorem listPin_copy {D D' : D7} {ι : D.what₂.LL →+* D'.what₂.LL} {e : �
     (hP : (∀ k, q0 D' ≠ D'.host.g k) → Nonempty (Places Lc'))
     (h4 : ∀ t, ∀ PP ∈ Lc'.Q t, ((q0 D' : ℕ) : 𝓞 D'.host.E) ∉ PP.asIdeal) {CF b : ℝ} (hp : ListPin D Lc CF b) :
     ListPin D' Lc' CF b := by
-  obtain ⟨a1, a2, a3, nOm, ninstOm, nalgOm, nplOm, nPlG⟩ := h.gal
-  obtain ⟨xcc, xTw, xl, fixedFieldTransport_baseIntegerRing_heq, fixedFieldTransport_baseIntegerCommRing_heq, fixedFieldTransport_baseIntegerAlgebra_heq, fixedFieldTransport_baseIntegerTopology_heq, xO, xcrO, xalgO, xOk, xcrOk, xalgOk, xzk, xpD, xchi1, xSig, xfinSig, xjS, xside, xrhoS, fixedFieldTransport_initialPlaceSet_heq, xhEig, xLam, xsideL, xRCG, xgrpRCG, xfinRCG, xart, xth⟩ := h.set
-  have b1 := h.sp
-  have b2 := h.Tau
-  have b3 := h.instTau
-  have b4 := h.eTau
-  have b5 := h.hc
-  cases D'
-  dsimp only at a1 a2 a3 b1 b2 b3 b4 b5 nOm ninstOm nalgOm nplOm nPlG xcc xTw xl fixedFieldTransport_baseIntegerRing_heq fixedFieldTransport_baseIntegerCommRing_heq fixedFieldTransport_baseIntegerAlgebra_heq fixedFieldTransport_baseIntegerTopology_heq xO xcrO xalgO xOk xcrOk xalgOk xzk xpD xchi1 xSig xfinSig xjS xside xrhoS fixedFieldTransport_initialPlaceSet_heq xhEig xLam xsideL xRCG xgrpRCG xfinRCG xart xth hj hs hX
-  subst a1; subst a2; subst a3; subst b1
-  rename Rows.Data _ => rows'
-  cases rows'
-  dsimp only at b2 b3 b4 b5
-  subst b2; subst b3; subst b4; subst b5
-  rename NData _ _ _ => N'
-  cases N'
-  dsimp only at nOm ninstOm nalgOm nplOm nPlG
-  subst nOm; subst ninstOm; subst nalgOm; subst nplOm; subst nPlG
-  rename NTw _ _ _ _ _ => X'
-  cases X'
-  dsimp only at xcc xTw xl fixedFieldTransport_baseIntegerRing_heq fixedFieldTransport_baseIntegerCommRing_heq fixedFieldTransport_baseIntegerAlgebra_heq fixedFieldTransport_baseIntegerTopology_heq xO xcrO xalgO xOk xcrOk xalgOk xzk xpD xchi1 xSig xfinSig xjS xside xrhoS fixedFieldTransport_initialPlaceSet_heq xhEig xLam xsideL xRCG xgrpRCG xfinRCG xart xth hj hs hX
-  subst xcc; subst xTw; subst xl; subst fixedFieldTransport_baseIntegerRing_heq; subst fixedFieldTransport_baseIntegerCommRing_heq; subst fixedFieldTransport_baseIntegerAlgebra_heq; subst fixedFieldTransport_baseIntegerTopology_heq; subst xO; subst xcrO; subst xalgO; subst xOk; subst xcrOk; subst xalgOk; subst xzk; subst xpD; subst xchi1; subst xSig; subst xfinSig; subst xjS; subst xside; subst xrhoS; subst fixedFieldTransport_initialPlaceSet_heq; subst xhEig; subst xLam; subst xsideL; subst xRCG; subst xgrpRCG; subst xfinRCG; subst xart; subst xth
-  subst hj; subst hs; subst hX
+  obtain ⟨r, rfl⟩ := h.exists_rest
+  have hj' : (overD D r).ntw.jL = D.ntw.jL := (eq_of_heq hj).symm
+  have hs' : (overD D r).ntw.s2 = D.ntw.s2 := (eq_of_heq hs).symm
+  have hX' : (overD D r).ntw.Xv = D.ntw.Xv := (eq_of_heq hX).symm
   obtain ⟨G, hF, hT⟩ := hp
   have hmu := eq_of_heq hmu
   have hd := eq_of_heq hd
@@ -159,7 +141,7 @@ theorem listPin_copy {D D' : D7} {ι : D.what₂.LL →+* D'.what₂.LL} {e : �
     have hw' : (lamOf (⟨P, X, V⟩ : GridData Lc' ⟨1, CF, b⟩)).w0 = (lamOf G).w0 := hw
     refine ⟨by rw [hw']; exact t0, j, fun x => ?_, ?_⟩
     · exact (congrArg j (h.embLL0_eq x).symm).trans ((t1 (e x)).trans (congrArg _ (eq_of_heq (h.emb0 i i HEq.rfl x))))
-    · simp only [GlobalTheory.LamTie.IsLam, BlochKatoReduction.Gen.SOk, hl, hw']
+    · simp only [GlobalTheory.LamTie.IsLam, BlochKatoReduction.Gen.SOk, hl, hw', hj', hs', hX']
       exact t2
 
 theorem twistPlaces_not_over_leastSplitAuxiliaryPrime {B : Base} {f : Top.Fr B.toPre} {T : TwDat B} (w : ColW B f T) (Z : w.Lt) {hX : B.fields.Ok} {Wt : Set B.places.Pl}

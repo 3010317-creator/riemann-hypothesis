@@ -49,15 +49,12 @@ theorem bwit_cf_eq_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (p : 
   intro hL p
   refine GlobalTheory.Fc.EvP.of_all fun _ K _ q c b w _ => ?_
   have hR : b.R.T.n.cf = GlobalTheory.Mem.Col2.TC.cf q.w.I q.w.l q.Z := congrArg Sigma.fst w.recPin.s.chr
-  rw [hR]
   have hC : q.x.what₂.r.z.R.toRealDat.C = GlobalTheory.Mem.Col2.TC.cf q.w.I q.w.l q.Z := q.x.what₂.r.z.lev.C
-  rw [← hC]
-  obtain ⟨x, a, ax, y⟩ := w
-  cases ax
-  obtain ⟨Dc, Sp, Zsc, lam, err, lam_eq, x, pack, _⟩ := a
-  obtain ⟨G, grp, fin, Pl0, I0, T0, A3, core, alg, R, F, cG, _⟩ := x
-  dsimp only at pack ⊢
-  cases pack
-  rfl
+  have hax : w.a.x.R.C = w.x.R.C :=
+    congrArg (fun x => by letI := x.grp; letI := x.fin; letI := x.alg; exact x.R.C) (eq_of_heq w.ax)
+  have hp : w.a.x.R.C = q.x.what₂.r.z.R.toRealDat.C :=
+    congrArg (fun ⟨_, grp, fin, _, _, _, _, _, alg, R, _, _⟩ => by
+      letI := grp; letI := fin; letI := alg; exact R.C) w.a.pack
+  exact hax.symm.trans (hp.trans (hC.trans hR.symm))
 end GlobalTheory.Mem.Top.Bl
 end

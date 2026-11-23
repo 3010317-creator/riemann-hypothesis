@@ -2,6 +2,7 @@ module
 
 public import Mathlib.AlgebraicGeometry.EllipticCurve.Projective.Formula
 public import Mathlib.Tactic.Continuity
+import Mathlib.Algebra.Ring.GrindInstances
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,6 +50,8 @@ import Mathlib.Topology.Sheaves.Init
 open WeierstrassCurve WeierstrassCurve.Projective
 
 namespace GlobalTheory.AddLaw
+
+set_option maxRecDepth 2000
 
 variable {R S : Type*} [CommRing R] [CommRing S]
 
@@ -155,23 +158,23 @@ def diagXYZ (W : Projective R) (P Q : Fin 3 → R) : Fin 3 → R :=
 variable {W : Projective R}
 
 lemma diagX_self {P : Fin 3 → R} (hP : W.Equation P) : diagX W P P = W.dblX P := by
-  linear_combination (norm := (simp only [diagX, dblX]; ring1))
+  linear_combination (norm := (simp only [diagX, dblX]; grind))
     (W.a₁ ^ 3 * P 0 + 4 * W.a₁ * W.a₂ * P 0 + 9 * W.a₃ * P 0 + 2 * W.a₁ ^ 2 * P 1
       + 8 * W.a₂ * P 1 + W.a₁ ^ 2 * W.a₃ * P 2 + 4 * W.a₂ * W.a₃ * P 2) * (sub_eq_zero.mpr <| (equation_iff _).mp hP)
 
 lemma negDiagY_self {P : Fin 3 → R} (hP : W.Equation P) : negDiagY W P P = W.negDblY P := by
-  linear_combination (norm := (simp only [negDiagY, negDblY]; ring1))
+  linear_combination (norm := (simp only [negDiagY, negDblY]; grind))
     (2 * W.a₁ ^ 2 * W.a₂ * P 0 + 8 * W.a₂ ^ 2 * P 0 - 6 * W.a₁ * W.a₃ * P 0 + 3 * W.a₄ * P 0
       - W.a₁ ^ 3 * P 1 - 4 * W.a₁ * W.a₂ * P 1 - 6 * W.a₃ * P 1 - 3 * W.a₃ ^ 2 * P 2
       + W.a₁ ^ 2 * W.a₄ * P 2 + 4 * W.a₂ * W.a₄ * P 2 - 9 * W.a₆ * P 2) * (sub_eq_zero.mpr <| (equation_iff _).mp hP)
 
 lemma diagZ_self {P : Fin 3 → R} (hP : W.Equation P) : diagZ W P P = W.dblZ P := by
-  linear_combination (norm := (simp only [diagZ, dblZ, negY]; ring1))
+  linear_combination (norm := (simp only [diagZ, dblZ, negY]; grind))
     (-3 * W.a₁ * P 0 - 6 * P 1 - 3 * W.a₃ * P 2) * (sub_eq_zero.mpr <| (equation_iff _).mp hP)
 
 lemma diagX_mul_addZ {P Q : Fin 3 → R} (hP : W.Equation P) (hQ : W.Equation Q) :
     diagX W P Q * W.addZ P Q = diagZ W P Q * W.addX P Q := by
-  linear_combination (norm := (simp only [diagX, diagZ, addZ, addX]; ring1))
+  linear_combination (norm := (simp only [diagX, diagZ, addZ, addX]; grind))
     (-3 * W.a₁ * P 2 * Q 0 ^ 2 * Q 1 ^ 2 - 3 * P 2 * Q 0 * Q 1 ^ 3
       + 3 * W.a₁ ^ 2 * P 1 * Q 0 ^ 3 * Q 2 - W.a₁ ^ 3 * W.a₂ * P 2 * Q 0 ^ 3 * Q 2
       - W.a₁ * W.a₂ ^ 2 * P 2 * Q 0 ^ 3 * Q 2 + 3 * W.a₁ ^ 2 * W.a₃ * P 2 * Q 0 ^ 3 * Q 2
@@ -275,7 +278,7 @@ lemma diagX_mul_addZ {P Q : Fin 3 → R} (hP : W.Equation P) (hQ : W.Equation Q)
 
 lemma negDiagY_mul_addZ {P Q : Fin 3 → R} (hP : W.Equation P) (hQ : W.Equation Q) :
     negDiagY W P Q * W.addZ P Q = diagZ W P Q * W.negAddY P Q := by
-  linear_combination (norm := (simp only [negDiagY, diagZ, addZ, negAddY]; ring1))
+  linear_combination (norm := (simp only [negDiagY, diagZ, addZ, negAddY]; grind))
     (9 * W.a₁ * P 1 * Q 0 ^ 4 - 3 * W.a₁ ^ 2 * W.a₂ * P 2 * Q 0 ^ 4
       - 3 * W.a₂ ^ 2 * P 2 * Q 0 ^ 4 + 9 * W.a₁ * W.a₃ * P 2 * Q 0 ^ 4 + 9 * W.a₄ * P 2 * Q 0 ^ 4
       - 9 * W.a₁ * P 0 * Q 0 ^ 3 * Q 1 - 3 * W.a₁ * W.a₂ * P 2 * Q 0 ^ 3 * Q 1
@@ -419,7 +422,7 @@ lemma negDiagY_mul_addZ {P Q : Fin 3 → R} (hP : W.Equation P) (hQ : W.Equation
 
 lemma diagX_mul_negAddY {P Q : Fin 3 → R} (hP : W.Equation P) (hQ : W.Equation Q) :
     diagX W P Q * W.negAddY P Q = negDiagY W P Q * W.addX P Q := by
-  linear_combination (norm := (simp only [diagX, negDiagY, negAddY, addX]; ring1))
+  linear_combination (norm := (simp only [diagX, negDiagY, negAddY, addX]; grind))
     (3 * W.a₁ * W.a₂ * P 1 * Q 0 ^ 4 - W.a₁ ^ 2 * W.a₂ ^ 2 * P 2 * Q 0 ^ 4
       - W.a₂ ^ 3 * P 2 * Q 0 ^ 4 + 3 * W.a₁ * W.a₂ * W.a₃ * P 2 * Q 0 ^ 4
       + 3 * W.a₂ * W.a₄ * P 2 * Q 0 ^ 4 - 3 * W.a₁ * W.a₂ * P 0 * Q 0 ^ 3 * Q 1
@@ -664,12 +667,12 @@ lemma map_diagX (f : R →+* S) (P Q : Fin 3 → R) :
 
 lemma map_negDiagY (f : R →+* S) (P Q : Fin 3 → R) :
     negDiagY (W.map f) (f ∘ P) (f ∘ Q) = f (negDiagY W P Q) := by
-  simp only [negDiagY, map_ofNat, map_neg, map_add (f := _), map_sub, map_mul, map_pow,
+  simp only [negDiagY, map_ofNat, map_add (f := _), map_sub, map_mul, map_pow,
     WeierstrassCurve.map, Function.comp_apply]
 
 lemma map_diagZ (f : R →+* S) (P Q : Fin 3 → R) :
     diagZ (W.map f) (f ∘ P) (f ∘ Q) = f (diagZ W P Q) := by
-  simp only [diagZ, map_ofNat, map_neg, map_add (f := _), map_sub, map_mul, map_pow,
+  simp only [diagZ, map_ofNat, map_add (f := _), map_mul, map_pow,
     WeierstrassCurve.map, Function.comp_apply]
 
 end GlobalTheory.AddLaw

@@ -54,12 +54,11 @@ theorem pgEq_of_linked_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (
   have hk := w.recPin.k.std
   rw [image_congr hk.X_eq hk.seam hk.Pr]
   have hl := q.x.what₂.r.z.lev.Pg
-  obtain ⟨x, a, ax, y, _⟩ := w
-  cases ax
-  obtain ⟨Dc, Sp, Zsc, lam, err, lam_eq, x, pack, _⟩ := a
-  obtain ⟨G, grp, fin, Pl0, I0, T0, A3, core, alg, R, F, cG, _⟩ := x
-  dsimp only at pack ⊢
-  cases pack
-  exact hl.trans (image_refl _ rfl _).symm
+  have hax : w.a.x.R.Pg = w.x.R.Pg :=
+    congrArg (fun x => by letI := x.grp; letI := x.fin; letI := x.alg; exact x.R.Pg) (eq_of_heq w.ax)
+  have hp : w.a.x.R.Pg = q.x.what₂.r.z.R.Pg :=
+    congrArg (fun ⟨_, grp, fin, _, _, _, _, _, alg, R, _, _⟩ => by
+      letI := grp; letI := fin; letI := alg; exact R.Pg) w.a.pack
+  exact hax.symm.trans (hp.trans (hl.trans (image_refl _ rfl _).symm))
 end GlobalTheory.Div.PgTie
 end

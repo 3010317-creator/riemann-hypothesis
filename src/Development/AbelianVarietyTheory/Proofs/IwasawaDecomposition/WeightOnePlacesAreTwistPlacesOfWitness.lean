@@ -56,11 +56,8 @@ theorem finite_T_of_twArgs {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} {
         Set _).Finite :=
       (Set.finite_singleton _).union (tuOf w.I (usedOf w.I T Wt)).finite_toSet
     exact hs.to_subtype
-  obtain ⟨Dc, Sp, Zsc, lam, err, lam_eq, x, pack, _⟩ := a
-  obtain ⟨G, grp, fin, Pl0, I0, T0, A3, core, alg, R, F, cG, _⟩ := x
-  dsimp only at pack ⊢
-  cases pack
-  exact hfin
+  have hT0 : a.x.T = TupU w.I (usedOf w.I T Wt) := congrArg (fun p => p.2.2.2.2.2.1) a.pack
+  exact hT0.symm ▸ hfin
 
 
 

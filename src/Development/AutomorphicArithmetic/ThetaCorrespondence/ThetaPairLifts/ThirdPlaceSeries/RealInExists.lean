@@ -76,16 +76,40 @@ theorem psi_eq_theta_psi_of_recPin (q : WPt p.s K) (R : _root_.Formalism.L2.RecT
     (congrArg (fun z : (Σ a, Formalism.L2.Theta.AllTied (q.w.D q.Z) q.O.ex.th a) => Formalism.L2.Theta.IsStdChar (q.w.D q.Z) z.2.W.ψ (-1)) e).mpr h2
   exact GlobalTheory.StdAdelicChar.isStdChar_unique h1 h3
 
+private abbrev PackSigma (D : D7) :=
+  Σ' (G : Type) (_ : Group G) (_ : Fintype G) (Pl0 I0 T0 : Type)
+    (A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T0 D.R.m) (C : Formalism.L2.Pj.CoreJ D)
+    (_ : Algebra C.Q.c.F D.what₂.LL) (R : RealDat3 D A3 C.Q.c.F) (_ : Face3 D A3), G0 R.Pg D.R.r ≃* G0g D.nd
+
+private def PackNexp {D : D7} (S₀ : Formalism.IndefR.NX.RatDat D.ntw) {α β : Type} (e₀ : α) (f₀ : β) : PackSigma D → Prop
+  | ⟨_, grp, fin, _, _, _, _, _, alg, R, _, cG⟩ =>
+    letI := grp; letI := fin; letI := alg
+    ∃ (Sx : Formalism.IndefR.NX.RatDat D.ntw) (n : Formalism.IndefR.NX.NExpRealS R cG Sx),
+      HEq Sx S₀ ∧ HEq n.eF e₀ ∧ HEq n.fi f₀
+
+private theorem pack_nexp {D : D7} {S₀ : Formalism.IndefR.NX.RatDat D.ntw} {α β : Type} {e₀ : α} {f₀ : β}
+    {G₁ G₂ : Type} {grp₁ : Group G₁} {grp₂ : Group G₂} {fin₁ : Fintype G₁} {fin₂ : Fintype G₂} {Pl₁ Pl₂ I₁ I₂ T₁ T₂ : Type}
+    {A₁ : letI := grp₁; letI := fin₁; FamIn3 D.what₂.LL G₁ Pl₁ I₁ (List ℕ) T₁ D.R.m}
+    {A₂ : letI := grp₂; letI := fin₂; FamIn3 D.what₂.LL G₂ Pl₂ I₂ (List ℕ) T₂ D.R.m}
+    {C₁ C₂ : Formalism.L2.Pj.CoreJ D} {alg₁ : Algebra C₁.Q.c.F D.what₂.LL} {alg₂ : Algebra C₂.Q.c.F D.what₂.LL}
+    {R₁ : letI := grp₁; letI := fin₁; letI := alg₁; RealDat3 D A₁ C₁.Q.c.F}
+    {R₂ : letI := grp₂; letI := fin₂; letI := alg₂; RealDat3 D A₂ C₂.Q.c.F}
+    {F₁ : letI := grp₁; letI := fin₁; Face3 D A₁} {F₂ : letI := grp₂; letI := fin₂; Face3 D A₂}
+    {cG₁ : letI := grp₁; letI := fin₁; letI := alg₁; G0 R₁.Pg D.R.r ≃* G0g D.nd}
+    {cG₂ : letI := grp₂; letI := fin₂; letI := alg₂; G0 R₂.Pg D.R.r ≃* G0g D.nd}
+    (hp : (⟨G₁, grp₁, fin₁, Pl₁, I₁, T₁, A₁, C₁, alg₁, R₁, F₁, cG₁⟩ : PackSigma D) = ⟨G₂, grp₂, fin₂, Pl₂, I₂, T₂, A₂, C₂, alg₂, R₂, F₂, cG₂⟩)
+    (h : letI := grp₂; letI := fin₂; letI := alg₂
+         ∃ (Sx : Formalism.IndefR.NX.RatDat D.ntw) (n : Formalism.IndefR.NX.NExpRealS R₂ cG₂ Sx), HEq Sx S₀ ∧ HEq n.eF e₀ ∧ HEq n.fi f₀) :
+    letI := grp₁; letI := fin₁; letI := alg₁
+    ∃ (Sx : Formalism.IndefR.NX.RatDat D.ntw) (n : Formalism.IndefR.NX.NExpRealS R₁ cG₁ Sx), HEq Sx S₀ ∧ HEq n.eF e₀ ∧ HEq n.fi f₀ :=
+  (congrArg (PackNexp S₀ e₀ f₀) hp).mpr h
+
 theorem exists_ratDat_nExpRealS (q : WPt p.s K) (a : TwArgs q.O.ex q.x.what₂) (x : TwIn q.O.ex) (hx : HEq a.x x) :
     ∃ (Sx : Formalism.IndefR.NX.RatDat (q.w.D q.Z).ntw) (n : Formalism.IndefR.NX.NExpRealS x.R x.cG Sx),
       HEq Sx (Formalism.IndefR.NX.ratDatR (D := (q.w.st q.Z).toD7) q.x.what₂.r.z.R q.x.what₂.r.z.cG q.core_data_of_point.row.kKs q.core_data_of_point.row.hk) ∧
       HEq n.eF q.core_data_of_point.row.nexp.eF ∧ HEq n.fi q.core_data_of_point.row.nexp.fi := by
+  have h := pack_nexp a.pack (nexp_upd (D := (q.w.st q.Z).toD7) q.x.what₂.r.z.R q.x.what₂.r.z.cG _ q.core_data_of_point.row.nexp a.lam a.err)
   obtain rfl : a.x = x := eq_of_heq hx
-  obtain ⟨Dc, Sp, Zsc, lam, err, _, x, pack, _⟩ := a
-  obtain ⟨G, Pl0, I0, T0, A3, core, R, F, cG, _⟩ := x
-  dsimp only at pack ⊢
-  cases pack
-  have h := nexp_upd (D := (q.w.st q.Z).toD7) q.x.what₂.r.z.R q.x.what₂.r.z.cG _ q.core_data_of_point.row.nexp lam err
   exact (by with_unfolding_all exact (h :))
 
 theorem realIn_exists_alt : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CasselmanWallach → GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.GlobalArtinReciprocity → GlobalTheory.NT.RayField → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (Γ : GeoP) (p : _root_.GlobalTheory.Mem.Top.Bl.Parameters hL), p = _root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N SExt.none Γ → (∀ K B f T w Z Wt p0 t nch n xd c, N K B f T w Z Wt p0 t nch n xd c → Nonempty (_root_.GlobalTheory.HeightCounting.Up.extensionWithLaw hL K B f T w Z Wt p0 t nch n xd c)) → ∀ (K : Ctx) (q : WPt p.s K), (∀ X : GlobalTheory.Mem.Stages, K.Over X.B.toPre → HostHyp X.toD7 ∧ X.toD7.host.F = maximalRealSubfield X.toD7.host.E ∧ (∀ i, IsFDiag (Wc X.toD7 i) ∧ IsFDiag (Vc X.toD7 i)) ∧ (∀ i, (Vc X.toD7 i).IsPosDef) ∧ (∀ j, Formalism.IndefR.Seed.FrmC.StdLat (X.toD7.sp.Y j) ∧ Formalism.IndefR.Seed.FrmC.StdLat (X.toD7.sp.V j) ∧ (1 ≤ j → j ≤ X.toD7.R.m → Formalism.IndefR.Seed.FrmC.StdLat (X.toD7.sp.W j))) ∧ Formalism.IndefR.Seed.FrmC.StdLat X.toD7.sp.X' ∧ (∀ i, (∀ a b, (Vc X.toD7 i).hT ((Vc X.toD7 i).frame a) ((Vc X.toD7 i).frame b) = if a = b then 1 else 0) ∧ (Vc X.toD7 i).L0 = Submodule.span (𝓞 X.toD7.host.E) (Set.range (Vc X.toD7 i).frame)) ∧ ((∀ a b, X.toD7.sp.X'.hT (X.toD7.sp.X'.frame a) (X.toD7.sp.X'.frame b) = if a = b then 1 else 0) ∧ X.toD7.sp.X'.L0 = Submodule.span (𝓞 X.toD7.host.E) (Set.range X.toD7.sp.X'.frame))) → GlobalTheory.CuspMult.MultEq q.x.what₂.r.z.R.toRealDat → ∀ (R : _root_.Formalism.L2.RecTAlt q.O.ex), _root_.GlobalTheory.Mem.Top.Bl.RecordCompatibleExtended q R → ∀ (sP : GlobalTheory.Mem.SRe.SPack (q.w.D q.Z) fun u => (R.T.cols.forms u).to0) (sS : GlobalTheory.Mem.SRe.SRest sP), HEq sP q.saturationAtWeightedPoint.P → HEq sS q.saturationAtWeightedPoint.S → ∀ (a : TwArgs q.O.ex q.x.what₂) (x : TwIn q.O.ex), HEq a.x x → ∀ (hin : ∀ u, Formalism.L2.SG.PoincareInHH.PoincareSetting.InHH (sS.toRealSpectralMatching R).X u (sS.toRealSpectralMatching R).Y.hK), HEq (x.F.Sp (zsOf x.R x.F)) (Formalism.IndefR.Cx.spOf (X := (sS.toRealSpectralMatching R).X) (twAt (q.w.D q.Z).what₂.embLL x.A3.A.v0) (x.F.Dc (zsOf x.R x.F)) (sS.toRealSpectralMatching R).Y.hK (sS.toRealSpectralMatching R).G x.wd (fun m => _root_.Formalism.IndefR.pwOf_alt (sS.toRealSpectralMatching R) hin (x.wd m)) x.bR) → ∀ (κ : ℝ) (sEEc : Tw (twAt (q.w.D q.Z).what₂.embLL x.A3.A.v0) x.R.HE.H →ₗ⋆[ℂ] Tw (twAt (q.w.D q.Z).what₂.embLL x.A3.A.v0) (Formalism.L2.SG.PoincareInHH.PoincareSetting.HHX (sS.toRealSpectralMatching R).X)), HEq x.sEE sEEc → 0 < κ → (∀ (v : Tw (twAt (q.w.D q.Z).what₂.embLL x.A3.A.v0) x.R.HE.H) (hx : x.R.HE.e (Tw.out v) ∈ (x.R.toRealDat.EEat (x.R.toRealDat.levR x.F.lv2 true))), sEEc v = Tw.mk (twAt (q.w.D q.Z).what₂.embLL x.A3.A.v0) (((1 : ℂ) * (κ : ℂ)) • (Formalism.IndefR.AutomorphicEvaluation.sEEofTT (x.R.MY 0) x.R.ν0 x.R.fd0 (x.R.toRealDat.EEat (x.R.toRealDat.levR x.F.lv2 true)) (sS.toRealSpectralMatching R).X (sS.toRealSpectralMatching R).G (Formalism.L2.SG.RowsJoinPinned.iotaX sP.X sP.inst).toMulEquiv q.saturationAtWeightedPoint.t q.saturationAtWeightedPoint.c) ⟨x.R.HE.e (Tw.out v), hx⟩) ∧ RealDat.nP x.F.lv2 true * ‖sEEc v‖ ^ 2 = ‖v‖ ^ 2) → ∃ y : _root_.GlobalTheory.Mem.R3.RealInAlt x R (sS.toRealSpectralMatching R), HEq y.tS q.saturationAtWeightedPoint.t ∧ y.cS = q.saturationAtWeightedPoint.c ∧ HEq y.Sx (Formalism.IndefR.NX.ratDatR (D := (q.w.st q.Z).toD7) q.x.what₂.r.z.R q.x.what₂.r.z.cG q.core_data_of_point.row.kKs q.core_data_of_point.row.hk) ∧ HEq y.nexp.eF q.core_data_of_point.row.nexp.eF ∧ HEq y.nexp.fi q.core_data_of_point.row.nexp.fi ∧ y.uS = 1 := by

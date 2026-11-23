@@ -130,18 +130,96 @@ variable {K : Ctx} {B : GlobalTheory.Mem.Base} {f : Top.Fr B.toPre} {T : TwDat B
 
 
 
+private abbrev PackSigma (D : D7) :=
+  Σ' (G : Type) (_ : Group G) (_ : Fintype G) (Pl0 I0 T0 : Type)
+    (A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T0 D.R.m) (C : Formalism.L2.Pj.CoreJ D)
+    (_ : Algebra C.Q.c.F D.what₂.LL) (R : RealDat3 D A3 C.Q.c.F) (_ : Face3 D A3), G0 R.Pg D.R.r ≃* G0g D.nd
+
+private def PackZsc {D : D7} (L' : SizeData₂ D) (Del h0 : ℕ) (c : ℝ) : PackSigma D → Prop
+  | ⟨_, grp, fin, _, _, _, A3, _, _, _, F, _⟩ => letI := grp; letI := fin; F.Zsc = zscRaw A3 F L' Del h0 c
+
+private theorem pack_zsc {D : D7} (L' : SizeData₂ D) (Del h0 : ℕ) (c : ℝ)
+    {G₁ G₂ : Type} {grp₁ : Group G₁} {grp₂ : Group G₂} {fin₁ : Fintype G₁} {fin₂ : Fintype G₂} {Pl₁ Pl₂ I₁ I₂ T₁ T₂ : Type}
+    {A₁ : letI := grp₁; letI := fin₁; FamIn3 D.what₂.LL G₁ Pl₁ I₁ (List ℕ) T₁ D.R.m}
+    {A₂ : letI := grp₂; letI := fin₂; FamIn3 D.what₂.LL G₂ Pl₂ I₂ (List ℕ) T₂ D.R.m}
+    {C₁ C₂ : Formalism.L2.Pj.CoreJ D} {alg₁ : Algebra C₁.Q.c.F D.what₂.LL} {alg₂ : Algebra C₂.Q.c.F D.what₂.LL}
+    {R₁ : letI := grp₁; letI := fin₁; letI := alg₁; RealDat3 D A₁ C₁.Q.c.F}
+    {R₂ : letI := grp₂; letI := fin₂; letI := alg₂; RealDat3 D A₂ C₂.Q.c.F}
+    {F₁ : letI := grp₁; letI := fin₁; Face3 D A₁} {F₂ : letI := grp₂; letI := fin₂; Face3 D A₂}
+    {cG₁ : letI := grp₁; letI := fin₁; letI := alg₁; G0 R₁.Pg D.R.r ≃* G0g D.nd}
+    {cG₂ : letI := grp₂; letI := fin₂; letI := alg₂; G0 R₂.Pg D.R.r ≃* G0g D.nd}
+    (hp : (⟨G₁, grp₁, fin₁, Pl₁, I₁, T₁, A₁, C₁, alg₁, R₁, F₁, cG₁⟩ : PackSigma D) = ⟨G₂, grp₂, fin₂, Pl₂, I₂, T₂, A₂, C₂, alg₂, R₂, F₂, cG₂⟩)
+    (h : letI := grp₂; letI := fin₂; F₂.Zsc = zscRaw A₂ F₂ L' Del h0 c) :
+    letI := grp₁; letI := fin₁; F₁.Zsc = zscRaw A₁ F₁ L' Del h0 c :=
+  (congrArg (PackZsc L' Del h0 c) hp).mpr h
+
+private def PackSp {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (hK : X.LevelSubgroupCharacter)
+    (Gd : Formalism.L2.SG.RowDict.GoodOp X) (pw : ∀ u, PerW X hK u) {α β : Type} (wU₀ : α) (eNu₀ : β) : PackSigma D → Prop
+  | ⟨_, grp, fin, _, _, _, A3, _, alg, R, F, _⟩ =>
+    letI := grp; letI := fin; letI := alg
+    let Dc := F.Dc (zsOf R F)
+    ∃ (wU : D.what₂.Word → Dc.Mem) (bij : Function.Bijective wU)
+      (eNu : ∀ u, (Fin (Dc.a (wU u)) → D.what₂.LL) ≃ₗ[D.what₂.LL] (D.div.Nu u).V),
+      HEq wU wU₀ ∧ HEq eNu eNu₀ ∧ F.Sp (zsOf R F) = spRead X (twAt D.what₂.embLL A3.A.v0) Dc hK Gd pw wU bij eNu
+
+private theorem pack_sp {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (hK : X.LevelSubgroupCharacter)
+    (Gd : Formalism.L2.SG.RowDict.GoodOp X) (pw : ∀ u, PerW X hK u) {α β : Type} (wU₀ : α) (eNu₀ : β)
+    {G₁ G₂ : Type} {grp₁ : Group G₁} {grp₂ : Group G₂} {fin₁ : Fintype G₁} {fin₂ : Fintype G₂} {Pl₁ Pl₂ I₁ I₂ T₁ T₂ : Type}
+    {A₁ : letI := grp₁; letI := fin₁; FamIn3 D.what₂.LL G₁ Pl₁ I₁ (List ℕ) T₁ D.R.m}
+    {A₂ : letI := grp₂; letI := fin₂; FamIn3 D.what₂.LL G₂ Pl₂ I₂ (List ℕ) T₂ D.R.m}
+    {C₁ C₂ : Formalism.L2.Pj.CoreJ D} {alg₁ : Algebra C₁.Q.c.F D.what₂.LL} {alg₂ : Algebra C₂.Q.c.F D.what₂.LL}
+    {R₁ : letI := grp₁; letI := fin₁; letI := alg₁; RealDat3 D A₁ C₁.Q.c.F}
+    {R₂ : letI := grp₂; letI := fin₂; letI := alg₂; RealDat3 D A₂ C₂.Q.c.F}
+    {F₁ : letI := grp₁; letI := fin₁; Face3 D A₁} {F₂ : letI := grp₂; letI := fin₂; Face3 D A₂}
+    {cG₁ : letI := grp₁; letI := fin₁; letI := alg₁; G0 R₁.Pg D.R.r ≃* G0g D.nd}
+    {cG₂ : letI := grp₂; letI := fin₂; letI := alg₂; G0 R₂.Pg D.R.r ≃* G0g D.nd}
+    (hp : (⟨G₁, grp₁, fin₁, Pl₁, I₁, T₁, A₁, C₁, alg₁, R₁, F₁, cG₁⟩ : PackSigma D) = ⟨G₂, grp₂, fin₂, Pl₂, I₂, T₂, A₂, C₂, alg₂, R₂, F₂, cG₂⟩)
+    (h : letI := grp₂; letI := fin₂; letI := alg₂
+         let Dc₂ := F₂.Dc (zsOf R₂ F₂)
+         ∃ (wU₂ : D.what₂.Word → Dc₂.Mem) (bij₂ : Function.Bijective wU₂)
+           (eNu₂ : ∀ u, (Fin (Dc₂.a (wU₂ u)) → D.what₂.LL) ≃ₗ[D.what₂.LL] (D.div.Nu u).V),
+           HEq wU₂ wU₀ ∧ HEq eNu₂ eNu₀ ∧ F₂.Sp (zsOf R₂ F₂) = spRead X (twAt D.what₂.embLL A₂.A.v0) Dc₂ hK Gd pw wU₂ bij₂ eNu₂) :
+    letI := grp₁; letI := fin₁; letI := alg₁
+    let Dc₁ := F₁.Dc (zsOf R₁ F₁)
+    ∃ (wU₁ : D.what₂.Word → Dc₁.Mem) (bij₁ : Function.Bijective wU₁)
+      (eNu₁ : ∀ u, (Fin (Dc₁.a (wU₁ u)) → D.what₂.LL) ≃ₗ[D.what₂.LL] (D.div.Nu u).V),
+      HEq wU₁ wU₀ ∧ HEq eNu₁ eNu₀ ∧ F₁.Sp (zsOf R₁ F₁) = spRead X (twAt D.what₂.embLL A₁.A.v0) Dc₁ hK Gd pw wU₁ bij₁ eNu₁ :=
+  (congrArg (PackSp X hK Gd pw wU₀ eNu₀) hp).mpr h
+
+private def PackSee {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D)
+    (Gd : Formalism.L2.SG.RowDict.GoodOp X) (ι : Formalism.L2.Theta.GA D (Yc D 0) ≃* X.B.I.GA)
+    (g : Formalism.L2.Theta.GA D (Yc D 0)) (c κ : ℝ) {α : Type} (sE : α) : PackSigma D → Prop
+  | ⟨_, grp, fin, _, _, _, A3, _, alg, R, F, _⟩ =>
+    letI := grp; letI := fin; letI := alg
+    ∃ sE' : Tw (twAt D.what₂.embLL A3.A.v0) R.toRealDat.HE.H →ₗ⋆[ℂ] Tw (twAt D.what₂.embLL A3.A.v0) (HHX X),
+      HEq sE sE' ∧ Places R.toRealDat F.lv2 X Gd ι g c (twAt D.what₂.embLL A3.A.v0) κ sE'
+
+private theorem pack_see {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D)
+    (Gd : Formalism.L2.SG.RowDict.GoodOp X) (ι : Formalism.L2.Theta.GA D (Yc D 0) ≃* X.B.I.GA)
+    (g : Formalism.L2.Theta.GA D (Yc D 0)) (c κ : ℝ)
+    {G₁ G₂ : Type} {grp₁ : Group G₁} {grp₂ : Group G₂} {fin₁ : Fintype G₁} {fin₂ : Fintype G₂} {Pl₁ Pl₂ I₁ I₂ T₁ T₂ : Type}
+    {A₁ : letI := grp₁; letI := fin₁; FamIn3 D.what₂.LL G₁ Pl₁ I₁ (List ℕ) T₁ D.R.m}
+    {A₂ : letI := grp₂; letI := fin₂; FamIn3 D.what₂.LL G₂ Pl₂ I₂ (List ℕ) T₂ D.R.m}
+    {C₁ C₂ : Formalism.L2.Pj.CoreJ D} {alg₁ : Algebra C₁.Q.c.F D.what₂.LL} {alg₂ : Algebra C₂.Q.c.F D.what₂.LL}
+    {R₁ : letI := grp₁; letI := fin₁; letI := alg₁; RealDat3 D A₁ C₁.Q.c.F}
+    {R₂ : letI := grp₂; letI := fin₂; letI := alg₂; RealDat3 D A₂ C₂.Q.c.F}
+    {F₁ : letI := grp₁; letI := fin₁; Face3 D A₁} {F₂ : letI := grp₂; letI := fin₂; Face3 D A₂}
+    {cG₁ : letI := grp₁; letI := fin₁; letI := alg₁; G0 R₁.Pg D.R.r ≃* G0g D.nd}
+    {cG₂ : letI := grp₂; letI := fin₂; letI := alg₂; G0 R₂.Pg D.R.r ≃* G0g D.nd}
+    (hp : (⟨G₁, grp₁, fin₁, Pl₁, I₁, T₁, A₁, C₁, alg₁, R₁, F₁, cG₁⟩ : PackSigma D) = ⟨G₂, grp₂, fin₂, Pl₂, I₂, T₂, A₂, C₂, alg₂, R₂, F₂, cG₂⟩)
+    {α : Type} (sE : α)
+    (hsE : letI := grp₂; letI := fin₂; letI := alg₂
+           ∃ sE₂ : Tw (twAt D.what₂.embLL A₂.A.v0) R₂.toRealDat.HE.H →ₗ⋆[ℂ] Tw (twAt D.what₂.embLL A₂.A.v0) (HHX X),
+             HEq sE sE₂ ∧ Places R₂.toRealDat F₂.lv2 X Gd ι g c (twAt D.what₂.embLL A₂.A.v0) κ sE₂) :
+    letI := grp₁; letI := fin₁; letI := alg₁
+    ∃ sE' : Tw (twAt D.what₂.embLL A₁.A.v0) R₁.toRealDat.HE.H →ₗ⋆[ℂ] Tw (twAt D.what₂.embLL A₁.A.v0) (HHX X),
+      HEq sE sE' ∧ Places R₁.toRealDat F₁.lv2 X Gd ι g c (twAt D.what₂.embLL A₁.A.v0) κ sE' :=
+  (congrArg (PackSee X Gd ι g c κ sE) hp).mpr hsE
+
 theorem zsc_pin (a : TwArgs ex t) (x : R3.TwIn ex) (hx : HEq a.x x) (L' : SizeData₂ (w.st Z).toD7) (Del h0 : ℕ) (c : ℝ)
     (h : a.Zsc = zscRaw (famT t) t.r.z.F L' Del h0 c) : x.F.Zsc = zscRaw x.A3 x.F L' Del h0 c := by
   obtain rfl := eq_of_heq hx
-  clear hx
-  cases a with
-  | mk Dc' Sp' Zsc' lam err lam_eq x pack intersectionNumber_baseChange hκ' hv hfw htup htupT hjA hjA0 heMt hPY hPW heFT hIL heE heW hjW heRR =>
-  cases x with
-  | mk G Pl0 I0 T' A3 core R' F cG geo pins err' Y Z' C' sEE div JA amb0 JM mjH =>
-  cases pack
-  exact (by with_unfolding_all exact (h :))
-
-
+  exact pack_zsc L' Del h0 c a.pack (by with_unfolding_all exact (h :))
 
 theorem sp_pin (a : TwArgs ex t) (x : R3.TwIn ex) (hx : HEq a.x x) (X : Formalism.L2.SG.HidaSetting.HidaSetting (w.st Z).toD7) (hK : X.LevelSubgroupCharacter)
     (Gd : Formalism.L2.SG.RowDict.GoodOp X) (pw : ∀ u, PerW X hK u)
@@ -154,27 +232,18 @@ theorem sp_pin (a : TwArgs ex t) (x : R3.TwIn ex) (hx : HEq a.x x) (X : Formalis
     HEq (x.F.Sp (zsOf x.R x.F)) (Formalism.IndefR.Cx.spOf (X := X) (twAt (w.st Z).toD7.what₂.embLL x.A3.A.v0) (x.F.Dc (zsOf x.R x.F)) hK Gd
       x.wd (fun m => pw (x.wd m)) x.bR) := by
   obtain rfl := eq_of_heq hx
-  clear hx
   subst hD
   obtain rfl := eq_of_heq hS
-  clear hS
-  cases a with
-  | mk Dc' Sp' Zsc' lam err lam_eq x pack intersectionNumber_baseChange hκ' hv hfw htup htupT hjA hjA0 heMt hPY hPW heFT hIL heE heW hjW heRR =>
-  cases x with
-  | mk G Pl0 I0 T' A3 core R' F cG geo pins err' Y Z' C' sEE div JA amb0 JM mjH =>
-  cases pack
-  let Dc := Dc' (zsOf t.r.z.R t.r.z.F)
-  let wU' : (w.st Z).toD7.what₂.Word → Dc.Mem := by exact_defeq C'.wU
-  have bij' : Function.Bijective wU' := by exact_defeq C'.bij
-  let eNu' : ∀ u, (Fin (Dc.a (wU' u)) → (w.st Z).toD7.what₂.LL) ≃ₗ[(w.st Z).toD7.what₂.LL] ((w.st Z).toD7.div.Nu u).V :=
-    by exact_defeq C'.eNu
-  have hw : HEq wU' wU := by exact_defeq hW
-  have hn : HEq eNu' eNu := by exact_defeq hN
-  have h := spRead_congr X (twAt (w.st Z).toD7.what₂.embLL (famT t).A.v0) Dc hK Gd pw
-    wU bij eNu wU' bij' eNu' hw hn
-  exact_defeq (heq_of_eq (hz.trans h))
-
-
+  have hsp0_raw :
+      ∃ (wU₂ : (w.st Z).toD7.what₂.Word → (a.Dc (zsOf t.r.z.R t.r.z.F)).Mem) (bij₂ : Function.Bijective wU₂)
+        (eNu₂ : ∀ u, (Fin ((a.Dc (zsOf t.r.z.R t.r.z.F)).a (wU₂ u)) → (w.st Z).toD7.what₂.LL) ≃ₗ[(w.st Z).toD7.what₂.LL] ((w.st Z).toD7.div.Nu u).V),
+        HEq wU₂ wU ∧ HEq eNu₂ eNu ∧
+        a.Sp (zsOf t.r.z.R t.r.z.F) =
+          spRead X (twAt (w.st Z).toD7.what₂.embLL (famT t).A.v0) (a.Dc (zsOf t.r.z.R t.r.z.F)) hK Gd pw wU₂ bij₂ eNu₂ :=
+    ⟨wU, bij, eNu, HEq.rfl, HEq.rfl, hz⟩
+  obtain ⟨wU₁, bij₁, eNu₁, hw₁, hn₁, hz₁⟩ := pack_sp X hK Gd pw wU eNu a.pack (by exact_defeq hsp0_raw)
+  exact_defeq (heq_of_eq (hz₁.trans (spRead_congr X _ _ hK Gd pw wU₁ bij₁ eNu₁ a.x.C.wU a.x.C.bij a.x.C.eNu
+    (hW.trans hw₁.symm) (hN.trans hn₁.symm))))
 
 theorem see_pin (a : TwArgs ex t) (x : R3.TwIn ex) (hx : HEq a.x x) (X : Formalism.L2.SG.HidaSetting.HidaSetting (w.st Z).toD7)
     (Gd : Formalism.L2.SG.RowDict.GoodOp X) (ι : Formalism.L2.Theta.GA (w.st Z).toD7 (Yc (w.st Z).toD7 0) ≃* X.B.I.GA)
@@ -184,16 +253,9 @@ theorem see_pin (a : TwArgs ex t) (x : R3.TwIn ex) (hx : HEq a.x x) (X : Formali
     ∃ sE' : Tw (twAt (w.st Z).toD7.what₂.embLL x.A3.A.v0) x.R.toRealDat.HE.H →ₗ⋆[ℂ] Tw (twAt (w.st Z).toD7.what₂.embLL x.A3.A.v0) (HHX X),
       HEq sE sE' ∧ Places x.R.toRealDat x.F.lv2 X Gd ι g c (twAt (w.st Z).toD7.what₂.embLL x.A3.A.v0) κ sE' := by
   obtain rfl := eq_of_heq hx
-  clear hx
-  cases a with
-  | mk Dc' Sp' Zsc' lam err lam_eq x pack intersectionNumber_baseChange hκ' hv hfw htup htupT hjA hjA0 heMt hPY hPW heFT hIL heE heW hjW heRR =>
-  cases x with
-  | mk G Pl0 I0 T' A3 core R' F cG geo pins err' Y Z' C' sEE div JA amb0 JM mjH =>
-  cases pack
-  refine ⟨(by with_unfolding_all exact (sE :)), ?_, ?_⟩
+  refine pack_see X Gd ι g c κ a.pack sE ⟨(by with_unfolding_all exact (sE :)), ?_, ?_⟩
   · exact (by with_unfolding_all exact (HEq.refl sE :))
   · exact (by with_unfolding_all exact (h :))
-
 
 
 theorem read_cols (Dc : ∀ Zs : DefSub (famT t).fam3.amb3, DefCols ((famT t).side3 t.r.z.F.P1 t.r.z.F.ψ1 Zs)) (Sp₀ : ∀ Zs, SPer (Dc Zs))
