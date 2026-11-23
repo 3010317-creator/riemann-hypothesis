@@ -368,11 +368,7 @@ theorem ne_zero_of_hasProd_inv_prod {ι : Type*} {m : ℕ} {L : ι → ℂ} {P :
     convert this using 1
     funext v
     simp [ha, sub_eq_add_neg]
-  have hne : ∀ v i, (1 - w v i) ≠ 0 := fun v i h ↦ by
-    have h1 : w v i = 1 := by linear_combination -h
-    have := hw1 v i
-    rw [h1, norm_one] at this
-    exact lt_irrefl _ this
+  have hne : ∀ v i, (1 - w v i) ≠ 0 := fun v i ↦ (IsUnit.one_sub_of_norm_lt_one (hw1 v i)).ne_zero
   have h1 := hP.mul hM'
   have h2 : (fun v ↦ L v * ∏ i, (1 - w v i)) = fun _ ↦ (1 : ℂ) := by
     funext v
