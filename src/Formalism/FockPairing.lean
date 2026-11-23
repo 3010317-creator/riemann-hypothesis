@@ -48,7 +48,7 @@ theorem pair_add_left (f g h : MvPolynomial σ R) :
 
 theorem pair_smul_right (a : R) (f g : MvPolynomial σ R) :
     pair f (a • g) = a * pair f g := by
-  simp only [pair, MvPolynomial.coeff_smul, smul_eq_mul, Finset.mul_sum]
+  simp only [pair, AddMonoidAlgebra.coeff_smul, Finsupp.smul_apply, smul_eq_mul, Finset.mul_sum]
   exact Finset.sum_congr rfl fun _ _ => by ac_rfl
 
 theorem pair_smul_left (a : R) (f g : MvPolynomial σ R) :
