@@ -80,6 +80,15 @@ The published source was written for Lean 4.33.1, which has neither `lake compar
 [An older version of this README](https://github.com/leanprover-community/riemann-hypothesis/blob/7cce738ba719a32964ca3822d0994f4c6952c7ae/README.md#checking-it)
 has those steps.
 
+## The formal-conjectures statement
+
+[`comparator/`](comparator/) holds a second Comparator setup. Its challenge states the Riemann
+Hypothesis and the Generalized Riemann Hypothesis the way
+[formal-conjectures](https://github.com/google-deepmind/formal-conjectures/blob/d8d031d4998c78575159ccab9a7a9e95ce043883/FormalConjectures/Millennium/RiemannHypothesis.lean)
+does, in statements that neither the author nor we wrote, and the files next to it prove them
+from `src/Main.lean`. [NOTES.md](verification/NOTES.md#formal-conjectures) says how to check it
+and what has been checked so far.
+
 ## CI
 
 If you have a Linux machine with
@@ -92,3 +101,7 @@ lend it. The scripts behind all this are in [`scripts/`](scripts/) and
 The submission belongs to its author and was published without a license. It is mirrored here
 so that it can be checked. Commit `40e56bab` is the unmodified copy.
 
+The declarations in `comparator/` that are copied from
+[formal-conjectures](https://github.com/google-deepmind/formal-conjectures) are copyright The Formal
+Conjectures Authors, under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+The files that hold them carry the notice.
