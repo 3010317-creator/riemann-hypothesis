@@ -31,6 +31,18 @@ class ClumpTests(unittest.TestCase):
                     self.assertEqual(mod.header, header)
                     self.assertEqual(mod.body, body)
 
+    def test_standalone_import_comments_remain_in_header(self):
+        for modifier, exotic in [("public ", False), ("meta ", True)]:
+            with self.subTest(modifier=modifier):
+                header = ("-- module comment\nmodule\n\n-- dependency π\n"
+                          f"{modifier}import Core\n  -- another dependency\nimport Next\n\n")
+                body = "@[expose] public section\ntheorem sample : True := trivial\n"
+                mod = clump.Module("Lemmata.A", "src/Lemmata/A.lean", header + body)
+                self.assertEqual(mod.imports, [("Core", modifier == "public "), ("Next", False)])
+                self.assertEqual(mod.exotic, exotic)
+                self.assertEqual(mod.header, header)
+                self.assertEqual(mod.body, body)
+
     def test_commented_import_all_still_prevents_clumping(self):
         texts = {
             "Lemmata.A": "module\nimport all External -- unfold a definition\n\ndef a := 1\n",
@@ -47,7 +59,8 @@ class ClumpTests(unittest.TestCase):
             subprocess.run(["git", "init", "-q", str(root)], check=True)
             originals = {
                 "src/Lemmata/Only/Leaf.lean":
-                    "module\n\n@[expose] public section\n-- π\ntheorem leaf : True := trivial",
+                    "module\n-- external dependency\npublic import Core\n\n"
+                    "@[expose] public section\n-- π\ntheorem leaf : True := trivial",
                 "src/Lemmata/Root.lean":
                     "module\npublic import Lemmata.Only.Leaf\n\n"
                     "@[expose] public section\ntheorem root : True := leaf\n",
@@ -60,6 +73,12 @@ class ClumpTests(unittest.TestCase):
                 plan = clump.plan(clump.load(root), 2000)
             self.assertEqual(plan, {"Lemmata.Root": ["Lemmata.Only.Leaf", "Lemmata.Root"]})
             clump.apply(root, plan)
+            combined = (root / "src/Lemmata/Root.lean").read_text()
+            header, members = combined.split(clump.SEAM_BEGIN, 1)
+            self.assertIn("public import Core\n", header)
+            self.assertNotIn("\npublic import Core\n", members)
+            self.assertTrue(clump.is_clump_file(
+                clump.Module("Lemmata.Root", "src/Lemmata/Root.lean", combined)))
             # Git does not preserve the empty directory in a fresh checkout.
             (root / "src/Lemmata/Only").rmdir()
             with contextlib.redirect_stdout(io.StringIO()):

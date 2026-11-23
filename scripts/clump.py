@@ -77,7 +77,7 @@ class Module:
         exotic = False
         for i, l in enumerate(lines):
             s = l.strip()
-            if s == "" or s == "module":
+            if s == "" or s == "module" or s.startswith("--"):
                 continue
             m = IMPORT_RE.match(s)
             if m:
