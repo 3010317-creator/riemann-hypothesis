@@ -78,7 +78,7 @@ section -- clump:auto
 
 namespace GlobalTheory.CuspCharCompare
 
-open CuspElliptic GlobalTheory.IndefiniteRowSideFullHecke.CuspidalCharacters
+open CuspElliptic
 open scoped MonoidAlgebra
 
 section Group
@@ -1026,7 +1026,15 @@ theorem coind_irreducible [Finite G] (P : Subgroup G) (σ : Representation ℂ P
   rw [Representation.IsIrreducible.finrank_intertwiningMap_self σ] at h1
   have : Nontrivial (Representation.IntertwiningMap (Representation.coind P.subtype σ)
     (Representation.coind P.subtype σ)) := ⟨⟨Φ, 0, hΦ⟩⟩
-  have h2 := le_antisymm h1 Module.finrank_pos
+  have hpos : 0 < Module.finrank ℂ (Representation.IntertwiningMap
+      (Representation.coind P.subtype σ) (Representation.coind P.subtype σ)) := by
+    let e := (Representation.IntertwiningMap.equivAlgEnd
+      (ρ := Representation.coind P.subtype σ)).toLinearEquiv
+    have := e.injective.nontrivial
+    have := Module.Finite.equiv e
+    rw [e.finrank_eq]
+    exact Module.finrank_pos
+  have h2 := le_antisymm h1 (Nat.succ_le_of_lt hpos)
   rw [Representation.irreducible_iff_isSimpleModule_asModule]
   refine GlobalTheory.CuspCharCompare.isSimpleModule_of_finrank_end ?_
   rw [← h2]
