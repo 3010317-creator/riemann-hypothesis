@@ -838,7 +838,7 @@ theorem B_vline_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (hU : 
       ∫ u, star (b u) * _root_.PositivityTheory.SiegelWeilFormula.KFP.hg_k R νf (d.T Φ) g u := by
     simp only [_root_.PositivityTheory.SiegelWeilFormula.KFP.B_k, hTv]
     exact _root_.PositivityTheory.SiegelWeilFormula.KFP.integral_jnp_k R hνf hTΦ hg' hb hb1
-  rw [e1]
+  refine e1.trans ?_
   have key : ∀ u, star (b u) * _root_.PositivityTheory.SiegelWeilFormula.KFP.hg_k R νf (d.T Φ) g u =
       ((Real.exp (-(1 / (16 * Real.pi) * ‖z‖ ^ 2 * ‖(-(4 * Real.pi)) • w‖ ^ 2)) : ℝ) : ℂ) *
         Complex.exp (-(z ^ 2 * (‖(-(4 * Real.pi)) • w‖ ^ 2 : ℝ) / (16 * Real.pi))) *
@@ -952,7 +952,7 @@ theorem B_rel'_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (hU : _
       rw [Pi.smul_apply, smul_eq_mul, star_mul', star_pow]
       ring
     simp_rw [e3]
-    rw [integral_const_mul, ← mul_assoc, ← mul_pow, inv_mul_cancel₀ (star_ne_zero.2 hχ), one_pow, one_mul]
+    erw [integral_const_mul, ← mul_assoc, ← mul_pow, inv_mul_cancel₀ (star_ne_zero.2 hχ), one_pow, one_mul]
   have hint : ∀ i : ℕ, Integrable (fun X => d.T (d.om (k ^ i) Φ) X * star (d.T Ψ X)) ν := by
     intro i
     have hA := _root_.PositivityTheory.SiegelWeilFormula.KFP.memLp_schM_k d ν hν ((hT.1 F E σ d).1 (d.om (k ^ i) Φ) (hS.pres (k ^ i) Φ hΦ))
@@ -967,6 +967,7 @@ theorem B_rel'_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (hU : _
         unfold _root_.PositivityTheory.SiegelWeilFormula.KFP.B_k
         rw [integral_finsetSum _ fun i _ => (hint i).const_mul _]
         simp_rw [integral_const_mul]
+        rfl
     _ = ∫ X, _root_.PositivityTheory.SiegelWeilFormula.KFP.TL_k d (∑ i ∈ Finset.range (q.natDegree + 1), q.coeff i • d.om (k ^ i) Φ) X * star (d.T Ψ X) ∂ν := by
         congr 1
         funext X
