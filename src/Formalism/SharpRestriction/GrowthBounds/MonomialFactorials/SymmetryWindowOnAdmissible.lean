@@ -251,7 +251,7 @@ section LI
 variable {σ τ K : Type} [Field K] [DecidableEq σ] (e : τ → σ) (he : Function.Injective e)
 
 def decode (M : Finset (σ →₀ ℕ)) : MvPolynomial σ K →ₗ[K] (M → MvPolynomial τ K) where
-  toFun Q := fun β => kap _ (F_inj e he 0 (β : σ →₀ ℕ)) Q
+  toFun Q := fun β => Formalism.GM.M.SSD.kap _ (F_inj e he 0 (β : σ →₀ ℕ)) Q
   map_add' Q Q' := by funext β; exact kap_add _ _ Q Q'
   map_smul' c Q := by funext β; exact kap_smul _ _ c Q
 
@@ -267,7 +267,7 @@ theorem decode_gen (M : Finset (σ →₀ ℕ)) (hM : ∀ β ∈ M, ∀ x, β (e
     · rw [← h]
       exact hM _ β.2 x
     · exact absurd rfl hw
-  show kap _ (F_inj e he 0 (γ : σ →₀ ℕ)) (rename e y * monomial (β : σ →₀ ℕ) 1) = (Pi.single β y : M → MvPolynomial τ K) γ
+  show Formalism.GM.M.SSD.kap _ (F_inj e he 0 (γ : σ →₀ ℕ)) (rename e y * monomial (β : σ →₀ ℕ) 1) = (Pi.single β y : M → MvPolynomial τ K) γ
   rw [h1, kap_gen e he 0 (γ : σ →₀ ℕ) (hM _ γ.2) y _ hg, MvPolynomial.coeff_monomial, Pi.single_apply]
   by_cases h : γ = β
   · subst h
