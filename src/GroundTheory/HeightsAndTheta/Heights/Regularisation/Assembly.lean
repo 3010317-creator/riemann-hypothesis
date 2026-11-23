@@ -730,7 +730,7 @@ theorem ExpQuadMonomial.proof (hE : RiemannExtensionSlices.Statement)
     congr 1
     rw [Complex.exp_sum]
     refine Finset.prod_congr rfl fun i _ => ?_
-    rw [expCover_castLE P, ← Complex.exp_nat_mul, mul_comm]
+    rw [ExpQuad.expCover_castLE P, ← Complex.exp_nat_mul, mul_comm]
     congr 2
     exact_mod_cast (Int.toNat_of_nonneg (hk i)).symm
 
