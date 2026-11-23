@@ -545,7 +545,9 @@ jobs:
         env:
           JOBS: ${{ inputs.fragment_jobs }}
         run: |
-          python3 -I trusted/scripts/rh-buildq/fragment.py build --queue "$FRAGMENT_QUEUE" \
+          # exec: on cancellation the runner signals this process, which then stops Lake and the
+          # publisher before the flush step runs.
+          exec python3 -I trusted/scripts/rh-buildq/fragment.py build --queue "$FRAGMENT_QUEUE" \
             --targets "$FRAGMENT_TMP/targets.txt" --log "$FRAGMENT_TMP/build.log" --jobs "${JOBS:-0}" \
             --creds "$FRAGMENT_SECRET/r2.json" --hide "$FRAGMENT_SECRET" --timings "$FRAGMENT_TMP/timings.json"
       - name: Publish what is left, even after a failure
