@@ -74,32 +74,39 @@ theorem expo_le {x a J R M F Nn : ℝ} (hx : 0 ≤ x) (ha : 0 ≤ a) (hJ : 0 ≤
   have hM1 : 1 ≤ M := le_trans hR hRM
   have hM0 : 0 ≤ M := by linarith
   have hF0 : 0 ≤ F := by linarith
-  have hRM2 : R ≤ M ^ 2 := by nlinarith
+  have hRM2 : R ≤ M ^ 2 := by
+    calc R ≤ M * 1 := by linarith
+      _ ≤ M * M := mul_le_mul_of_nonneg_left hM1 hM0
+      _ = M ^ 2 := (sq M).symm
   have hc : 1 ≤ 17 + 4 * x + 4 * a := by linarith
   have hA : 6 + x * (2 * (R * R)) + (1 + a * M) * (2 * R) ≤ (8 + 2 * x + 2 * a) * M ^ 2 := by
-    have h1 : R * R ≤ M ^ 2 := by nlinarith
+    have h1 : R * R ≤ M ^ 2 := by
+      calc R * R ≤ M * M := mul_le_mul hRM hRM hR0 hM0
+        _ = M ^ 2 := (sq M).symm
     have h3 : a * M * R ≤ a * M ^ 2 := by
-      have h5 : M * R ≤ M ^ 2 := by nlinarith
-      nlinarith
-    have h4 : (1 : ℝ) ≤ M ^ 2 := by nlinarith
-    nlinarith [mul_le_mul_of_nonneg_left h1 hx]
-  have hB : 2 * Nn * J ≤ 2 * F * R := by nlinarith
+      calc a * M * R = a * (M * R) := by ring
+        _ ≤ a * (M * M) := mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hRM hM0) ha
+        _ = a * M ^ 2 := by ring
+    have h4 : (1 : ℝ) ≤ M ^ 2 := one_le_pow₀ hM1
+    linarith [mul_le_mul_of_nonneg_left h1 hx]
+  have hB : 2 * Nn * J ≤ 2 * F * R := by
+    calc 2 * Nn * J = 2 * (Nn * J) := by ring
+      _ ≤ 2 * (F * R) := mul_le_mul_of_nonneg_left (mul_le_mul hNF hJR hJ hF0) (by norm_num)
+      _ = 2 * F * R := by ring
   have hApos : 0 ≤ 6 + x * (2 * (R * R)) + (1 + a * M) * (2 * R) := by
-    have h1 : 0 ≤ x * (2 * (R * R)) := mul_nonneg hx (by nlinarith)
-    have h2 : 0 ≤ (1 + a * M) * (2 * R) := mul_nonneg (by nlinarith) (by linarith)
+    have h1 : 0 ≤ x * (2 * (R * R)) := mul_nonneg hx (by positivity)
+    have h2 : 0 ≤ (1 + a * M) * (2 * R) := mul_nonneg (by positivity) (by linarith)
     linarith
   have hstep : (6 + x * (2 * (R * R)) + (1 + a * M) * (2 * R)) * (2 * Nn * J) ≤
       (8 + 2 * x + 2 * a) * M ^ 2 * (2 * F * R) :=
-    mul_le_mul hA hB (by nlinarith) (by nlinarith)
-  have hMF : 1 ≤ M ^ 2 * F := by nlinarith
-  have hJ2 : J ≤ M ^ 2 * F * R := by nlinarith
-  have hQ : 0 ≤ (17 + 4 * x + 4 * a) * M ^ 2 * F * R := by
-    have : 0 ≤ M ^ 2 * F * R := by nlinarith
-    nlinarith
+    mul_le_mul hA hB (by positivity) (by positivity)
+  have hMF : 1 ≤ M ^ 2 * F := one_le_mul_of_one_le_of_one_le (one_le_pow₀ hM1) hF
+  have hJ2 : J ≤ M ^ 2 * F * R := le_trans hJR (le_mul_of_one_le_left hR0 hMF)
+  have hQ : 0 ≤ (17 + 4 * x + 4 * a) * M ^ 2 * F * R := by positivity
   have hc2 : (17 + 4 * x + 4 * a) * M ^ 2 * F * R ≤
       (17 + 4 * x + 4 * a) * M ^ 2 * F * ((17 + 4 * x + 4 * a) * R) := by
-    nlinarith [mul_le_mul_of_nonneg_left hc hQ]
-  nlinarith
+    linarith [mul_le_mul_of_nonneg_left hc hQ]
+  linarith
 
 theorem final_arith {L Cl CH rd : ℝ} {r m f n j : ℕ} (hL : 1 < L) (hCl : 0 < Cl) (hrd1 : 1 ≤ rd)
     (hrdL : Real.log rd ≤ L / Cl) (hr : 1 ≤ r) (hrm : r ≤ m) (hjr : j ≤ r) (hnf : n ≤ f) (hf : 1 ≤ f) :
@@ -125,8 +132,8 @@ theorem final_arith {L Cl CH rd : ℝ} {r m f n j : ℕ} (hL : 1 < L) (hCl : 0 <
       ring_nf
     rw [e3]
     apply max_le
-    · nlinarith
-    · nlinarith
+    · exact one_le_mul_of_one_le_of_one_le (by linarith) e2
+    · exact mul_le_mul h2 e1 (Real.rpow_nonneg (Real.exp_pos L).le _) (by linarith)
   have hrdp : rd ^ (((2 * (r * r) : ℕ)) : ℝ) ≤ Real.exp (L * (1 / Cl * (2 * ((r:ℝ) * r)))) := by
     calc rd ^ (((2 * (r * r) : ℕ)) : ℝ) ≤ (Real.exp (L / Cl)) ^ (((2 * (r * r) : ℕ)) : ℝ) :=
           Real.rpow_le_rpow hrdpos.le hrd (by positivity)
@@ -136,7 +143,7 @@ theorem final_arith {L Cl CH rd : ℝ} {r m f n j : ℕ} (hL : 1 < L) (hCl : 0 <
           push_cast
           ring
   have h64 : (64:ℝ) ≤ Real.exp (L * 6) := by
-    rw [show L * 6 = ((6 : ℕ) : ℝ) * L by push_cast; ring, Real.exp_nat_mul]
+    rw [show L * 6 = ((6 : ℕ) : ℝ) * L by push_cast; ring, Real.exp_natCast_mul]
     calc (64:ℝ) = 2 ^ 6 := by norm_num
       _ ≤ Real.exp L ^ 6 := pow_le_pow_left₀ (by norm_num) h2 6
   have hA : 64 * (rd ^ (((2 * (r * r) : ℕ)) : ℝ) * (max 1 (2 * Real.exp L ^ (CH * (m : ℝ)))) ^ (2 * r)) ≤
@@ -157,7 +164,7 @@ theorem final_arith {L Cl CH rd : ℝ} {r m f n j : ℕ} (hL : 1 < L) (hCl : 0 <
         have hB := pow_le_pow_left₀ (pow_nonneg hA0 _) (pow_le_pow_left₀ hA0 hA (2 * n)) j
         exact mul_le_mul h2j hB (pow_nonneg (pow_nonneg hA0 _) _) (by positivity)
     _ = Real.exp (L * ((j:ℝ) + (6 + 1 / Cl * (2 * ((r:ℝ) * r)) + (1 + |CH| * m) * (2 * r)) * (2 * n * j))) := by
-        simp only [← Real.exp_nat_mul, ← Real.exp_add]
+        simp only [← Real.exp_natCast_mul, ← Real.exp_add]
         congr 1
         push_cast
         ring

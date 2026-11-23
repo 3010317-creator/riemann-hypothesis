@@ -88,27 +88,23 @@ theorem sqrt_mul_sqrt_le {c₁ c₂ : ℝ} (h₁ : c₁ ∈ Icc (-1 : ℝ) 1) (h
     (c₁ ≠ c₂ → Real.sqrt (1 - c₁ ^ 2) * Real.sqrt (1 - c₂ ^ 2) < 1 - c₁ * c₂) := by
   obtain ⟨a₁, b₁⟩ := h₁
   obtain ⟨a₂, b₂⟩ := h₂
-  have hs₁ : Real.sqrt (1 - c₁ ^ 2) ^ 2 = 1 - c₁ ^ 2 := Real.sq_sqrt (by nlinarith)
-  have hs₂ : Real.sqrt (1 - c₂ ^ 2) ^ 2 = 1 - c₂ ^ 2 := Real.sq_sqrt (by nlinarith)
+  have hs₁ : Real.sqrt (1 - c₁ ^ 2) ^ 2 = 1 - c₁ ^ 2 :=
+    Real.sq_sqrt (by linarith [mul_nonneg (show 0 ≤ 1 - c₁ by linarith) (show 0 ≤ 1 + c₁ by linarith)])
+  have hs₂ : Real.sqrt (1 - c₂ ^ 2) ^ 2 = 1 - c₂ ^ 2 :=
+    Real.sq_sqrt (by linarith [mul_nonneg (show 0 ≤ 1 - c₂ by linarith) (show 0 ≤ 1 + c₂ by linarith)])
   have hB2 : (Real.sqrt (1 - c₁ ^ 2) * Real.sqrt (1 - c₂ ^ 2)) ^ 2 = (1 - c₁ ^ 2) * (1 - c₂ ^ 2) := by
     rw [mul_pow, hs₁, hs₂]
   set B := Real.sqrt (1 - c₁ ^ 2) * Real.sqrt (1 - c₂ ^ 2)
   have hB : 0 ≤ B := mul_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
-  have hA : 0 ≤ 1 - c₁ * c₂ := by nlinarith
-  have hA' : 0 ≤ 1 + c₁ * c₂ := by nlinarith
-  refine ⟨hB, ?_, ?_, fun hne => ?_⟩
-  · by_contra h
-    rw [not_le] at h
-    nlinarith [sq_nonneg (c₁ - c₂)]
-  · by_contra h
-    rw [not_le] at h
-    nlinarith [sq_nonneg (c₁ + c₂)]
-  · have hd : 0 < (c₁ - c₂) ^ 2 := by
-      have : c₁ - c₂ ≠ 0 := sub_ne_zero.mpr hne
-      positivity
-    by_contra h
-    rw [not_lt] at h
-    nlinarith
+  have hA : 0 ≤ 1 - c₁ * c₂ := by
+    linarith [mul_nonneg (show 0 ≤ 1 - c₁ by linarith) (show 0 ≤ 1 + c₂ by linarith),
+      mul_nonneg (show 0 ≤ 1 + c₁ by linarith) (show 0 ≤ 1 - c₂ by linarith)]
+  have hA' : 0 ≤ 1 + c₁ * c₂ := by
+    linarith [mul_nonneg (show 0 ≤ 1 - c₁ by linarith) (show 0 ≤ 1 - c₂ by linarith),
+      mul_nonneg (show 0 ≤ 1 + c₁ by linarith) (show 0 ≤ 1 + c₂ by linarith)]
+  refine ⟨hB, (sq_le_sq₀ hB hA).mp (by linarith [sq_nonneg (c₁ - c₂)]),
+    (sq_le_sq₀ hB hA').mp (by linarith [sq_nonneg (c₁ + c₂)]),
+    fun hne => lt_of_pow_lt_pow_left₀ 2 hA (by linarith [sq_pos_of_ne_zero (sub_ne_zero.mpr hne)])⟩
 
 theorem kernelL_spherePoint_nonpos {c₁ c₂ : ℝ} (h₁ : c₁ ∈ Icc (-1 : ℝ) 1)
     (h₂ : c₂ ∈ Icc (-1 : ℝ) 1) (φ₁ φ₂ : ℝ) :
@@ -118,8 +114,8 @@ theorem kernelL_spherePoint_nonpos {c₁ c₂ : ℝ} (h₁ : c₁ ∈ Icc (-1 : 
   have hc := Real.neg_one_le_cos (φ₂ - φ₁)
   have hc' := Real.cos_le_one (φ₂ - φ₁)
   rw [inner_spherePoint, kernelL]
-  have e₁ : 0 ≤ (1 - (c₁ * c₂ + B * Real.cos (φ₂ - φ₁))) / 2 := by nlinarith
-  have e₂ : (1 - (c₁ * c₂ + B * Real.cos (φ₂ - φ₁))) / 2 ≤ 1 := by nlinarith
+  have e₁ : 0 ≤ (1 - (c₁ * c₂ + B * Real.cos (φ₂ - φ₁))) / 2 := by linarith [mul_le_mul_of_nonneg_left hc' hB]
+  have e₂ : (1 - (c₁ * c₂ + B * Real.cos (φ₂ - φ₁))) / 2 ≤ 1 := by linarith [mul_le_mul_of_nonneg_left hc hB]
   have := Real.log_nonpos e₁ e₂
   linarith
 
@@ -133,7 +129,7 @@ theorem continuous_kernelL_spherePoint {c₁ c₂ : ℝ} (h₁ : c₁ ∈ Icc (-
   refine continuous_const.mul (Continuous.log (by fun_prop) fun φ₂ => ?_)
   have hc' := Real.cos_le_one (φ₂ - φ₁)
   apply ne_of_gt
-  nlinarith [mul_le_mul_of_nonneg_left hc' hB]
+  linarith [mul_le_mul_of_nonneg_left hc' hB]
 
 theorem integral_longitude (hK : ZonalKernel.Statement) {c₁ c₂ : ℝ} (h₁ : c₁ ∈ Icc (-1 : ℝ) 1)
     (h₂ : c₂ ∈ Icc (-1 : ℝ) 1) (hne : c₁ ≠ c₂) (φ₁ : ℝ) :
@@ -168,12 +164,12 @@ theorem abs_zonalKernel_le {c₁ c₂ : ℝ} (h₁ : c₁ ∈ Ioo (-1 : ℝ) 1) 
   have hmax₂ : max c₁ c₂ ≤ 1 := max_le b₁.le b₂
   have hmin₁ : min c₁ c₂ ≤ c₁ := min_le_left _ _
   have hmin₂ : -1 ≤ min c₁ c₂ := le_min a₁.le a₂
-  have hpos : 0 < (1 - c₁ ^ 2) / 4 := by nlinarith
+  have hpos : 0 < (1 - c₁ ^ 2) / 4 := by linarith [mul_pos (show 0 < 1 - c₁ by linarith) (show 0 < 1 + c₁ by linarith)]
   have hle : (1 - c₁ ^ 2) / 4 ≤ (1 + max c₁ c₂) * (1 - min c₁ c₂) / 4 := by
-    nlinarith [mul_nonneg (by linarith : 0 ≤ 1 + max c₁ c₂) (by linarith : 0 ≤ c₁ - min c₁ c₂),
+    linarith [mul_nonneg (by linarith : 0 ≤ 1 + max c₁ c₂) (by linarith : 0 ≤ c₁ - min c₁ c₂),
       mul_nonneg (by linarith : (0 : ℝ) ≤ 1 - c₁) (by linarith : 0 ≤ max c₁ c₂ - c₁)]
   have hle₁ : (1 + max c₁ c₂) * (1 - min c₁ c₂) / 4 ≤ 1 := by
-    nlinarith [mul_le_mul (by linarith : 1 + max c₁ c₂ ≤ 2) (by linarith : 1 - min c₁ c₂ ≤ 2)
+    linarith [mul_le_mul (by linarith : 1 + max c₁ c₂ ≤ 2) (by linarith : 1 - min c₁ c₂ ≤ 2)
       (by linarith) (by norm_num : (0 : ℝ) ≤ 2)]
   have l₁ := Real.log_le_log hpos hle
   have l₂ := Real.log_nonpos (hpos.le.trans hle) hle₁
@@ -196,7 +192,7 @@ theorem integrableOn_log_one_sub_sq :
   refine i₃.congr_fun (fun c hc => ?_) measurableSet_Ioo
   obtain ⟨a, b⟩ := hc
   rw [show (1 - c ^ 2) / 4 = (1 - c) * (c + 1) / 4 by ring,
-    Real.log_div (by nlinarith) (by norm_num), Real.log_mul (by linarith) (by linarith)]
+    Real.log_div (mul_pos (by linarith) (by linarith)).ne' (by norm_num), Real.log_mul (by linarith) (by linarith)]
 
 abbrev heightLongitudeMeasure : Measure (ℝ × ℝ) :=
   (volume.restrict (Icc (-1 : ℝ) 1)).prod (volume.restrict (Ioc 0 (2 * Real.pi)))
@@ -244,7 +240,7 @@ theorem integral_kernelL_mul (hK : ZonalKernel.Statement) {c₁ : ℝ} (h₁ : c
       have hz' : -(2 * Real.pi * zonalKernel c₁ c₂) ≤
           2 * Real.pi * (-(1 / 2) * Real.log ((1 - c₁ ^ 2) / 4)) := by
         have := neg_abs_le (zonalKernel c₁ c₂)
-        nlinarith [Real.pi_pos]
+        linarith [mul_le_mul_of_nonneg_left (show -zonalKernel c₁ c₂ ≤ -(1 / 2) * Real.log ((1 - c₁ ^ 2) / 4) by linarith) Real.two_pi_pos.le]
       have h0 : 0 ≤ -(2 * Real.pi * zonalKernel c₁ c₂) := by
         rw [← hl]
         exact neg_nonneg.mpr (setIntegral_nonpos measurableSet_Ioc fun φ₂ _ => hnp φ₂)

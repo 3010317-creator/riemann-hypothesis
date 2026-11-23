@@ -68,27 +68,27 @@ theorem sum_total_loss (r J N : ℕ) (k Y A : ℝ) (hr : 2 ≤ r) (hk : 5 ≤ k)
   unfold sumEta
   rw [e5, er]
   have hrk : 0 ≤ (r : ℝ) ^ 2 * k * u := by positivity
-  have h1 : (r : ℝ) ^ 2 * k * u < 1 := by nlinarith
-  have hr2k : 10 * (r : ℝ) ≤ (r : ℝ) ^ 2 * k := by nlinarith
-  have h5 : 5 * u ≤ 1 := by nlinarith
-  have h1u : u ≤ 1 := by nlinarith
-  have hru : (r : ℝ) / 2 * u ≤ 1 := by nlinarith
+  have h1 : (r : ℝ) ^ 2 * k * u < 1 := by linarith [le_mul_of_one_le_left hrk hN']
+  have hr2k : 10 * (r : ℝ) ≤ (r : ℝ) ^ 2 * k := by linarith [mul_le_mul_of_nonneg_right hr' (show (0 : ℝ) ≤ r by positivity), mul_le_mul_of_nonneg_left hk (sq_nonneg (r : ℝ))]
+  have h5 : 5 * u ≤ 1 := by linarith [mul_le_mul_of_nonneg_right (show (5 : ℝ) ≤ (r : ℝ) ^ 2 * k by linarith) hu0.le]
+  have h1u : u ≤ 1 := by linarith
+  have hru : (r : ℝ) / 2 * u ≤ 1 := by linarith [mul_le_mul_of_nonneg_right (show (r : ℝ) / 2 ≤ (r : ℝ) ^ 2 * k by linarith) hu0.le]
   have hru0 : 0 ≤ (r : ℝ) / 2 * u := by positivity
   refine ⟨by linarith, by linarith, by linarith, by linarith, by linarith, by linarith, ?_⟩
-  have hA0 : 0 ≤ A := by nlinarith
+  have hA0 : 0 ≤ A := by linarith
   obtain ⟨s1, p1, q1⟩ := sub_le_mul_one_sub_and_mem_unit_interval (P := 1 - 5 * u) (c := u) (s := 1 - 5 * u) (by linarith) (by linarith) hu0.le h1u le_rfl
   obtain ⟨s2, p2, q2⟩ := sub_le_mul_one_sub_and_mem_unit_interval (c := (r : ℝ) / 2 * u) p1 q1 hru0 hru s1
   set η := (1 - 5 * u) * (1 - u) * (1 - (r : ℝ) / 2 * u) with hη
   have hAη : 1 - (7 + (r : ℝ) / 2) * u ≤ A * η := by
     have : (1 - u / 32) * η ≤ A * η := mul_le_mul_of_nonneg_right hA p2
-    nlinarith
+    linarith [mul_le_of_le_one_right (show 0 ≤ u / 32 by positivity) q2]
   have hε : (7 + (r : ℝ) / 2) * u ≤ (r : ℝ) ^ 2 * k * u := by
     apply mul_le_mul_of_nonneg_right _ hu0.le
-    nlinarith
+    linarith
   have hbase0 : 0 ≤ 1 - (7 + (r : ℝ) / 2) * u := by linarith
   have hpow : A ^ N ≤ A ^ J := pow_le_pow_of_le_one hA0 hA1 hJN
   have hηN : 0 ≤ η ^ N := pow_nonneg p2 N
-  calc 1 - (N : ℝ) * ((r : ℝ) ^ 2 * k * u) ≤ 1 + (N : ℝ) * (-((7 + (r : ℝ) / 2) * u)) := by nlinarith
+  calc 1 - (N : ℝ) * ((r : ℝ) ^ 2 * k * u) ≤ 1 + (N : ℝ) * (-((7 + (r : ℝ) / 2) * u)) := by linarith [mul_le_mul_of_nonneg_left hε (Nat.cast_nonneg N)]
     _ ≤ (1 + -((7 + (r : ℝ) / 2) * u)) ^ N := one_add_mul_le_pow (by linarith) N
     _ ≤ (A * η) ^ N := pow_le_pow_left₀ (by linarith) (by linarith) N
     _ = A ^ N * η ^ N := mul_pow _ _ _
@@ -106,8 +106,7 @@ theorem sum_fac_LL (F : SumFacts X p K) (h5 : 0 ≤ 1 - 5 / X.Y) (h1 : 0 ≤ 1 -
   rw [mul_comm]
   refine mul_le_mul_of_nonneg_left ?_ hb
   unfold sumEta
-  have : (1 - 5 / X.Y) * (1 - 1 / X.Y) ≤ 1 - 5 / X.Y := by nlinarith
-  nlinarith [mul_nonneg h5 h1]
+  exact (mul_le_of_le_one_right (mul_nonneg h5 h1) hr1).trans (mul_le_of_le_one_right h5 h1')
 
 theorem sum_fac_fr (F : SumFacts X p K) (hr : 0 < r) (h5 : 0 ≤ 1 - 5 / X.Y) (h1 : 0 ≤ 1 - 1 / X.Y)
     (hr0 : 0 ≤ 1 - (r : ℝ) / (2 * X.Y)) (j : ℤ) (i : Fin r) :
@@ -160,7 +159,7 @@ theorem restSum_of (hF : ∀ (p n' r K : ℕ) [NeZero n'] [NeZero r] [NeZero K] 
   · rw [hbd]
     have h1 := mul_nonneg (neg_nonneg.mpr hb) hprod0
     have h2 := mul_nonneg hq0.le hRHS0
-    nlinarith
+    linarith
 
   obtain ⟨hA0l, hA00⟩ := first_sum_factor_bounds hX.Y1 F.a32 hNs
   have hA01 : X.firstSumFactor ≤ 1 := by
@@ -233,7 +232,7 @@ theorem restSum_of (hF : ∀ (p n' r K : ℕ) [NeZero n'] [NeZero r] [NeZero K] 
       · exact Finset.prod_le_prod₀ (fun i _ => by positivity) fun i _ => sum_St_fr F hr hp (j : ℤ) i
     have hnn : 0 ≤ ∏ j ∈ Finset.range X.F.J, ∏ x ∈ X.toLate (j : ℤ), X.sumSt p K (posOf n' x) :=
       Finset.prod_nonneg fun j _ => Finset.prod_nonneg fun x _ => sum_St_nonneg _
-    nlinarith
+    linarith [le_mul_of_one_le_left hnn hc, le_mul_of_one_le_right hnn hc]
   have hC0 : 0 ≤ ∏ j ∈ Finset.range X.F.J, (X.firstSumFactor * X.sumWf p K (j : ℤ) * X.sumTf p K (j : ℤ)) :=
     Finset.prod_nonneg fun j _ => mul_nonneg (mul_nonneg hA00 (hWf0 _)) (hTf0 _)
   refine le_trans ?_ (mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left step3 hC0) hq0.le)
