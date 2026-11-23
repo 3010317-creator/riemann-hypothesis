@@ -992,7 +992,7 @@ private theorem isWeightedHomogeneous_sub {τ : Type*} {w : τ → ℕ} {φ ψ :
     (hφ : IsWeightedHomogeneous w φ n) (hψ : IsWeightedHomogeneous w ψ n) :
     IsWeightedHomogeneous w (φ - ψ) n := by
   intro d hd
-  rw [coeff_sub] at hd
+  rw [MvPolynomial.coeff_sub] at hd
   by_cases h1 : AddMonoidAlgebra.coeff φ d = 0
   · rw [h1, zero_sub, neg_ne_zero] at hd
     exact hψ hd

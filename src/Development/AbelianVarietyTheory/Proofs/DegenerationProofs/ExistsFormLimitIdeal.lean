@@ -85,7 +85,7 @@ theorem exists_form_limit_ideal (R : Type) [CommRing R] (I : Ideal R) (hI : IsAd
     induction n, hmn using Nat.le_induction with
     | base => simp
     | succ n hmn ih =>
-      rw [hsn, coeff_sub, ← sub_add]
+      rw [hsn, MvPolynomial.coeff_sub, ← sub_add]
       exact Ideal.add_mem _ ih
         (Ideal.pow_le_pow_right (by omega) (hG2 (e + n) (s n).1 (s n).2.1 (s n).2.2 d))
   have hmem : ∀ (n : ℕ) (z : R), z ∈ (I ^ n • ⊤ : Submodule R R) ↔ z ∈ I ^ n := by
@@ -116,7 +116,7 @@ theorem exists_form_limit_ideal (R : Type) [CommRing R] (I : Ideal R) (hI : IsAd
         simp only [F₁, coeff_sum, coeff_monomial]
         rw [Finset.sum_ite_eq']
         simp [hdt]
-      rw [coeff_sub, this]
+      rw [MvPolynomial.coeff_sub, this]
       exact hL d m
     · rw [((s m).2.1.sub hF₁).coeff_eq_zero hdt]
       exact Ideal.zero_mem _
