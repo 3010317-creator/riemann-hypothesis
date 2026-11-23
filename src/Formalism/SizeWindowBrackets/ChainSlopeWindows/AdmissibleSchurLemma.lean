@@ -440,6 +440,9 @@ theorem band_total : BandTotal := by
   have := Finset.sum_le_card_nsmul (Finset.range I) _ _ hterm
   rwa [Finset.card_range, nsmul_eq_mul] at this
 
+/-- Bound the contribution from bases above `X''`. Only first powers in
+`(X'', X'' * (1 + th))` contribute, each at most `w'' * th` before the logarithmic
+weight. The interval count `X'' * th + 1` gives the two terms in the bound. -/
 theorem high_bucket_bound : HighBucket := by
   intro a at_ w'' X'' th s I w hw'' hth0 hth1 hX ha hat0 hat hs hI hw
   simp only [askAt]
@@ -477,6 +480,7 @@ theorem high_bucket_bound : HighBucket := by
           linarith [hw p hp 1 hiI]
       · rw [if_neg h1]
         apply max_le _ le_rfl
+        -- For `i ≥ 2`, the power in the denominator makes the quotient at most the weight floor.
         have hi2 : 2 ≤ i := by omega
         have hpow : (p : ℝ) ^ 2 ≤ (p : ℝ) ^ i := pow_le_pow_right₀ (by linarith) hi2
         have hp2 : 2 * X'' ≤ (p : ℝ) ^ 2 := by nlinarith
@@ -505,6 +509,7 @@ theorem high_bucket_bound : HighBucket := by
     · simp
   refine (Finset.sum_le_sum hper).trans ?_
   rw [← Finset.sum_filter, Finset.sum_const, nsmul_eq_mul]
+  -- Even an interval of length less than one can contain an integer.
   have hcard := interval_count X'' (X'' * (1 + th))
     (s.filter (fun p : ℕ => (p : ℝ) < X'' * (1 + th))) (by nlinarith) (by
       intro n hn
