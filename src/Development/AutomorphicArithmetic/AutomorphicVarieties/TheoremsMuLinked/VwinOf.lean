@@ -296,7 +296,8 @@ private theorem re_eps {l : ℕ} [Fact l.Prime] (c : Coef l) {H : Type} [Group H
     have h1 : algebraMap ℤ_[l] (PadicAlgCl l) x = algebraMap ℤ_[l] (PadicAlgCl l) y := congrArg Subtype.val hxy
     rw [IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l], IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] _ y] at h1
     exact Subtype.ext ((algebraMap ℚ_[l] (PadicAlgCl l)).injective h1)
-  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := inferInstance
+  haveI : Algebra.IsIntegral ℤ_[l] c.O := Algebra.IsIntegral.of_finite _ _
+  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := Algebra.IsIntegral.isLocalHom _ _
   have hc : Continuous fun g => ‖((ε g : ℤ_[l]ˣ) : ℤ_[l]) - 1‖ := by fun_prop
   refine Subgroup.isOpen_of_mem_nhds _ (g := 1)
     (Filter.mem_of_superset ((isOpen_lt hc continuous_const (g := fun _ => 1)).mem_nhds (by simp)) fun g hg => ?_)
@@ -331,7 +332,8 @@ theorem UpperTheory.V.Hi.resEx :
       exact hB (algebraMap (𝓞 (Lp L)) (𝓞 L) x)
     obtain ⟨b, hb⟩ := re_hecke (n := n) hq (∏ i, (X - C (r.chib i (V.pr φ⁻¹) : ResidueField c.O)))
       (monic_prod_of_monic _ _ fun i _ => monic_X_sub_C _)
-      (by rw [natDegree_prod_of_monic _ _ fun i _ => monic_X_sub_C _]; simp)
+      (by rw [natDegree_prod_of_monic _ _ fun i _ => monic_X_sub_C _]; simp only [natDegree_X_sub_C,
+        Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul, mul_one])
     choose b' hb' using fun i => residue_surjective (b i)
     refine ⟨b', fun B σ hB hσ => ?_⟩
     simp only [hb']
@@ -389,6 +391,8 @@ private theorem th_Uc {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
     (hW.preimage Matrix.GeneralLinearGroup.continuous_det)
   refine ⟨c, fun d hd => ?_⟩
   rintro _ ⟨u, hu, rfl⟩
+  haveI : IsDiscreteValuationRing 𝒪[k] := inferInstance
+  haveI : IsLocalRing 𝒪[k] := IsDiscreteValuationRing.toIsLocalRing
   have h1 : (u : 𝒪[k]) - 1 ∈ maximalIdeal 𝒪[k] ^ c :=
     Ideal.pow_le_pow_right hd (Ideal.Quotient.eq.1 (congrArg Units.val hu))
   have h2 := hc (x := Matrix.GeneralLinearGroup.map (algebraMap 𝒪[k] k) (diagT 𝒪[k] (Fin 1) fun _ => u))
@@ -512,11 +516,11 @@ private theorem th_torus (n : ℕ) {V : Type} [Fintype V] (S : V → Plc F) {R :
     · rw [e, Pi.mulSingle_eq_same]
     · intro j _ hj
       rw [e, Pi.mulSingle_eq_of_ne hj, map_one]
-    · simp
+    · exact fun h => absurd (Finset.mem_univ _) h
     · intro v' _ hv
       rw [show p v' (eV n S v i y) = 1 from Subtype.ext (Pi.mulSingle_eq_of_ne (M := fun v => GLw n (S v)) hv _)]
-      simp
-    · simp
+      exact Finset.prod_eq_one fun j _ => by rw [map_one, Pi.one_apply, map_one]
+    · exact fun h => absurd (Finset.mem_univ _) h
   · choose d hd using fun x : V × Fin n => hc x.1 x.2 N
     refine ⟨Finset.univ.sup d, fun t ht => ?_⟩
     refine Ideal.Quotient.eq.1 ?_
@@ -1104,7 +1108,9 @@ private theorem main (H : GlobalTheory.Published.GlobalArtinReciprocity) {F Ω :
     exact (w.valuation_lt_one_iff_mem _).2 hw
   have hu : ValuativeRel.valuation (w.adicCompletion F) (1 + l : w.adicCompletion F) = 1 :=
     (ValuativeRel.valuation (w.adicCompletion F)).map_one_add_of_lt hl
-  have hu0 : (1 + l : w.adicCompletion F) ≠ 0 := fun h => by simp [h] at hu
+  have hu0 : (1 + l : w.adicCompletion F) ≠ 0 := fun h => by
+    rw [h, map_zero] at hu
+    exact @zero_ne_one _ _ _ (@NeZero.one _ _ GroupWithZero.toNontrivial) hu
   obtain ⟨s, hs⟩ := ha.surj (Units.mk0 _ hu0)
   have hd : deg s = 0 := by
     have h2 := ha.ord_eq s
@@ -1146,7 +1152,13 @@ theorem UpperTheory.V.Th.Nm.regArith :
   intro H l _ L Ω _ _ _ _ _ _ s n h v ψ hI hψ
   obtain ⟨a, ha⟩ := UpperTheory.V.Loc.localArtinReciprocity H (s.hw v)
   have h1 := (s.hA v.1 ((l : ℕ) : 𝓞 (W.Lp L))).2 v.2
-  exact main H.aut.art (s.hw v) ((s.hw v.1 _).1 (by simpa using h1)) ha (h v) (hI v) ψ hψ
+  have e : ∀ (K : Type) [Field K] [Algebra K Ω], algebraMap K Ω (((l : ℕ) : 𝓞 K) : K) = (l : Ω) :=
+    fun K _ _ => (congrArg (algebraMap K Ω) (map_natCast (algebraMap (𝓞 K) K) l)).trans (map_natCast _ l)
+  have h2 : (s.A v.1).valuation (algebraMap L Ω (((l : ℕ) : 𝓞 L) : L)) < 1 := by
+    rw [e]
+    rw [e] at h1
+    exact h1
+  exact main H.aut.art (s.hw v) ((s.hw v.1 _).1 h2) ha (h v) (hI v) ψ hψ
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.TheoremsMuLinked.NormsAndPolarizations.RegArith =====
