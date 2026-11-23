@@ -1181,7 +1181,7 @@ theorem UpperTheory.V.Z.Mult.Pi.absCoreA_pf :
     (fun i q => FreeAlgebra.lift ℂ (b i) q) A
     (fun i W hW => hM i W fun f x hx => by simpa using hW (FreeAlgebra.ι ℂ f) x hx)
     (fun i p h => by
-      rw [lift_lift] at h ⊢
+      rw [ACA.lift_lift] at h ⊢
       exact hrel i _ h)
     (fun i k h f g => lift_commute _ _ (haa i k h) f g)
     (fun i k f g => lift_commute _ _ (hab i k) f g)
