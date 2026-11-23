@@ -148,6 +148,7 @@ namespace TwistIne
 private theorem not_lt_of_not_dvd {Ω : Type} [Field Ω] (A : ValuationSubring Ω) {l : ℕ} (hl : l.Prime)
     (hA : A.valuation (l : Ω) < 1) {d : ℤ} (hd : ¬ (l : ℤ) ∣ d) : ¬ A.valuation (d : Ω) < 1 := by
   intro hdA
+  have : IsBezout ℤ := @IsBezout.of_isPrincipalIdealRing ℤ _ EuclideanDomain.instIsPrincipalIdealRing
   obtain ⟨u, v, huv⟩ := (Nat.prime_iff_prime_int.mp hl).coprime_iff_not_dvd.2 hd
   have e : (1 : Ω) = (u : Ω) * (l : Ω) + (v : Ω) * (d : Ω) := by
     have := congrArg (Int.cast : ℤ → Ω) huv
@@ -288,7 +289,10 @@ theorem twistIne : TwistIne := by
   obtain ⟨w, hw⟩ := (UpperTheory.V.Base.places K' Ω l A).1 hAt
   have hdw : ((discr K' : ℤ) : 𝓞 K') ∉ w.asIdeal := by
     intro hd
-    have h1 : A.valuation ((discr K' : ℤ) : Ω) < 1 := by simpa using (hw _).2 hd
+    have h1 : A.valuation ((discr K' : ℤ) : Ω) < 1 := by
+      have := (hw _).2 hd
+      rwa [show ((((discr K' : ℤ) : 𝓞 K') : K')) = ((discr K' : ℤ) : K') from
+        map_intCast (algebraMap (𝓞 K') K') _, map_intCast] at this
     exact not_lt_of_not_dvd A (Fact.out : l.Prime) hA hdisc h1
   have hYw := hYu w hdw
   obtain ⟨μ, hμ, hM⟩ := hart.exists_isLAdicOf ι (GlobalTheory.Published.CharAboveModel.absPow_isAlgPos K' 1)
@@ -588,13 +592,14 @@ private theorem UpperTheory.V.Cu.FiberPointBoundedGenerators.fib_gen {O Γ : Typ
   let u : Φ.ι × Fin 4 → K := fun x => y (X.P.n x.1 (![1, 2, 3, 2] x.2) (![0, 0, 0, 1] x.2))
   refine ⟨{s, t} ∪ Finset.univ.image u, ?_, fun E hB hT hE z => ?_⟩
   · refine (Finset.card_union_le _ _).trans (add_le_add Finset.card_le_two (Finset.card_image_le.trans ?_))
-    simp [mul_comm]
+    rw [Finset.card_univ, Fintype.card_prod, Fintype.card_fin, Nat.card_eq_fintype_card, mul_comm]
   · have hc : ∀ g n, (mapRep y X.P.r g).charpoly.coeff n ∈ E := fun g n => by
       have : (mapRep y X.P.r g).charpoly.coeff n = y (algebraMap X.B X.A ((X.cp g).coeff n)) := by
         show ((X.P.r g).map y).charpoly.coeff n = _
         rw [Matrix.charpoly_map, ← X.cp_map, coeff_map, coeff_map]
       rw [this]; exact hB _
-    have hr := hst E (hT _ (by simp)) (hT _ (by simp))
+    have hr := hst E (hT _ (Finset.mem_union_left _ (Finset.mem_insert_self _ _)))
+      (hT _ (Finset.mem_union_left _ (Finset.mem_insert_of_mem (Finset.mem_singleton_self _))))
       (fun g => by rw [Matrix.trace_eq_neg_charpoly_coeff]; exact neg_mem (hc _ _))
       (fun i => hE _ _ (Matrix.charpoly_monic _) (hc Φ.g0) (by
         have hd : mapRep y X.P.r Φ.g0 = Matrix.diagonal fun i => mapRep y X.P.r Φ.g0 i i := hp.nrm.diagonal_diag.symm
@@ -1674,6 +1679,7 @@ private theorem chain_rank_four_good {O Γ R : Type} [CommRing O] [Group Γ] [Co
   induction hc with
   | refl => exact ⟨hP, hg⟩
   | tail _ hl _ => exact ⟨Asm.linked_isRes hl.2, hl.1⟩
+set_option linter.overlappingInstances false in
 private theorem allIn_of_chain4 {O Γ : Type} [CommRing O] [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ]
     [TotallyDisconnectedSpace Γ] {Φ : Fr O Γ} {l : ℕ} [Fact l.Prime] {Λ : Type} [CommRing Λ] [IsDomain Λ]
     [IsDiscreteValuationRing Λ] [IsAdicComplete (maximalIdeal Λ) Λ] [Finite (ResidueField Λ)] {a : O →+* Λ} (hΦ : Φ.Std l a)
