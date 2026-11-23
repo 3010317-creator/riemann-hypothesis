@@ -384,17 +384,17 @@ theorem multiProd_comp_invTranspose : ∀ (k : Type) [Field k] [ValuativeRel k] 
   set π' : ∀ a, Representation ℂ (GL (Fin (d (Fin.rev a))) k) (X (Fin.rev a)) :=
     fun a => (π (Fin.rev a)).comp (invTranspose (d (Fin.rev a))) with hπ'
   have key : ∀ (q : parab k e) (hq : invTranspose n (q : GL (Fin n) k) ∈ parab k (revPlace e)),
-      ((twist (revRep π') (deltaHalf k _)).comp (leviProj k (revPlace e))) ⟨invTranspose n q, hq⟩ =
-        ((twist (piTensor π) (deltaHalf k _)).comp (leviProj k e)) q := by
+      ((SmGL.twist (revRep π') (deltaHalf k _)).comp (leviProj k (revPlace e))) ⟨invTranspose n q, hq⟩ =
+        ((SmGL.twist (piTensor π) (deltaHalf k _)).comp (leviProj k e)) q := by
     intro q hq
     refine LinearMap.ext fun v => ?_
-    rw [MonoidHom.comp_apply, MonoidHom.comp_apply, twist_apply, twist_apply, deltaHalf_revPlace e q hq,
+    rw [MonoidHom.comp_apply, MonoidHom.comp_apply, SmGL.twist_apply, SmGL.twist_apply, deltaHalf_revPlace e q hq,
       hπ', revRep_leviProj e π q hq]
   obtain ⟨A⟩ : Nonempty ((parInd (revPlace e) (revRep π')).Equiv
       ((multiProd e π).comp (invTranspose n))) := by
     refine Relabel.smInd_equiv_comp (P := parab k (revPlace e)) (Q := parab k e)
-      (σ := (twist (revRep π') (deltaHalf k _)).comp (leviProj k (revPlace e)))
-      (τ := (twist (piTensor π) (deltaHalf k _)).comp (leviProj k e))
+      (σ := (SmGL.twist (revRep π') (deltaHalf k _)).comp (leviProj k (revPlace e)))
+      (τ := (SmGL.twist (piTensor π) (deltaHalf k _)).comp (leviProj k e))
       (invTranspose n) (invTranspose n) (continuous_invTranspose n) (continuous_invTranspose n)
       (invTranspose_invTranspose n) (invTranspose_invTranspose n)
       (fun q => ⟨⟨_, mem_parab_revPlace e q.2⟩, rfl, key q _⟩) (fun p => ?_)
@@ -507,7 +507,7 @@ theorem twist_comp_invTranspose (n : ℕ) {V : Type} [AddCommGroup V] [Module �
     (twist π (detChar (Fin n) (absPow k s))).comp (GlobalTheory.TypeTame.invTranspose n) =
       twist (π.comp (GlobalTheory.TypeTame.invTranspose n)) (detChar (Fin n) (absPow k (-s))) := by
   ext g v
-  simp only [MonoidHom.comp_apply, twist, MonoidHom.coe_mk, OneHom.coe_mk, absPow_det_invTranspose]
+  simp only [MonoidHom.comp_apply, SmGL.twist_apply, absPow_det_invTranspose]
 
 end GlobalTheory.InvTransposeTwist
 
