@@ -53,6 +53,7 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
+import Mathlib.Data.Fin.Basic
 
 @[expose] public section
 
@@ -66,20 +67,8 @@ namespace WordTransvectionCongruences
 
 variable {L : Type} [Field L] [NumberField L] {N : ℕ}
 
-theorem exists_third {N : ℕ} (hN : 3 ≤ N) (i j : Fin N) : ∃ k : Fin N, k ≠ i ∧ k ≠ j := by
-  by_contra hc
-  push_neg at hc
-  have hsub : (Finset.univ : Finset (Fin N)) ⊆ {i, j} := by
-    intro k _
-    by_cases hk : k = i
-    · simp [hk]
-    · simp [hc k hk]
-  have h1 := Finset.card_le_card hsub
-  have h2 : ({i, j} : Finset (Fin N)).card ≤ 2 := by
-    calc ({i, j} : Finset (Fin N)).card ≤ ({j} : Finset (Fin N)).card + 1 := Finset.card_insert_le _ _
-      _ = 2 := by simp
-  rw [Finset.card_univ, Fintype.card_fin] at h1
-  omega
+theorem exists_third {N : ℕ} (hN : 3 ≤ N) (i j : Fin N) : ∃ k : Fin N, k ≠ i ∧ k ≠ j :=
+  Fin.exists_ne_and_ne_of_two_lt i j hN
 
 theorem mo_tv {i j : Fin N} (h : i ≠ j) (t : 𝓞 L) :
     mo L N (SpecialLinearGroup.transvection h t) = transvection i j (t : L) := by

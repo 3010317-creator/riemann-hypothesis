@@ -42,6 +42,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.TorsTransport
+import Mathlib.Algebra.Ring.Int.Parity
 
 @[expose] public section
 
@@ -97,28 +98,22 @@ theorem half_coords {d : ℕ} (hd : d.Prime) {a b : ℚ}
     rw [ht, hkb, hn]; ring
   exact_mod_cast this
 
+private theorem square_sum_mod_four {d : ℕ} {t k n : ℤ} (h : t ^ 2 + d * k ^ 2 = 4 * n) :
+    (t % 2 + ((d % 4 : ℕ) : ℤ) * (k % 2)) % 4 = 0 := by
+  have hm := congrArg (· % 4) h
+  rw [Int.add_emod, Int.mul_emod (d : ℤ), Int.sq_emod_four, Int.sq_emod_four] at hm
+  change (t % 2 + ((d : ℤ) % 4) * (k % 2)) % 4 = 0
+  omega
+
 theorem even_of_one {d : ℕ} (h4 : d % 4 = 1) {t k n : ℤ} (h : t ^ 2 + d * k ^ 2 = 4 * n) : 2 ∣ t ∧ 2 ∣ k := by
-  obtain ⟨c, rfl⟩ : ∃ c, d = 4 * c + 1 := ⟨d / 4, by omega⟩
-  push_cast at h
-  rcases Int.even_or_odd' t with ⟨p, rfl | rfl⟩ <;> rcases Int.even_or_odd' k with ⟨q, rfl | rfl⟩
-  · exact ⟨⟨p, rfl⟩, ⟨q, rfl⟩⟩
-  · have : 4 * (n - p ^ 2 - c * (2 * q + 1) ^ 2 - q ^ 2 - q) = 1 := by linear_combination -h
-    omega
-  · have : 4 * (n - p ^ 2 - p - c * (2 * q) ^ 2 - q ^ 2) = 1 := by linear_combination -h
-    omega
-  · have : 4 * (n - p ^ 2 - p - c * (2 * q + 1) ^ 2 - q ^ 2 - q) = 2 := by linear_combination -h
-    omega
+  have hm := square_sum_mod_four h
+  rw [h4] at hm
+  omega
 
 theorem even_of_three {d : ℕ} (h4 : d % 4 = 3) {t k n : ℤ} (h : t ^ 2 + d * k ^ 2 = 4 * n) : 2 ∣ t + k := by
-  obtain ⟨c, rfl⟩ : ∃ c, d = 4 * c + 3 := ⟨d / 4, by omega⟩
-  push_cast at h
-  rcases Int.even_or_odd' t with ⟨p, rfl | rfl⟩ <;> rcases Int.even_or_odd' k with ⟨q, rfl | rfl⟩
-  · exact ⟨p + q, by ring⟩
-  · have : 4 * (n - p ^ 2 - c * (2 * q + 1) ^ 2 - 3 * q ^ 2 - 3 * q) = 3 := by linear_combination -h
-    omega
-  · have : 4 * (n - p ^ 2 - p - c * (2 * q) ^ 2 - 3 * q ^ 2) = 1 := by linear_combination -h
-    omega
-  · exact ⟨p + q + 1, by ring⟩
+  have hm := square_sum_mod_four h
+  rw [h4] at hm
+  omega
 
 theorem integers_one {d : ℕ} (hd : d.Prime) (h4 : d % 4 = 1) (x : ℂ) :
     (IsIntegral ℤ x ∧ ∃ a b : ℚ, x = (a : ℂ) + (b : ℂ) * (Complex.I * (Real.sqrt d : ℝ))) ↔
