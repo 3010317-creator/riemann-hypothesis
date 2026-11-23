@@ -145,10 +145,9 @@ theorem coeff_diagonalMultiplier (a : Fin n) (f : ℤ → ℤ) (x : MvPolynomial
 open Classical in
 theorem coeff_monomialRestriction (q : (ι × Fin n →₀ ℕ) → Prop) (x : MvPolynomial (ι × Fin n) R) (m : ι × Fin n →₀ ℕ) :
     AddMonoidAlgebra.coeff (monomialRestriction q x) m = if q m then x.coeff m else 0 := by
-  simp only [monomialRestriction, coeff_sum, coeff_monomial]
-  rw [Finset.sum_ite_eq']
-  simp only [Finset.mem_filter, MvPolynomial.mem_support_iff]
-  by_cases hq : q m <;> by_cases hm : x.coeff m = 0 <;> simp [hq, hm]
+  rw [monomialRestriction, AddMonoidAlgebra.coeff_sum]
+  change ((∑ i ∈ x.coeff.support.filter q, Finsupp.single i (x.coeff i)) : _ →₀ R) m = _
+  rw [← Finsupp.filter_eq_sum, Finsupp.filter_apply]
 
 theorem diagonalMultiplier_mem (W : Submodule R (MvPolynomial (ι × Fin n) R))
     (hW : ∀ a k, ∀ x ∈ W, binomPol R LL S a k x ∈ W) (a : Fin n) (f : ℤ → ℤ) (hf : f ∈ binomialFunctions) :
@@ -205,35 +204,27 @@ end graded
 theorem binomial_stable_contains_components : BinomialStableContainsComponents := by
   intro R _ ι _ LL n S W hW x hx nu
   classical
-  have key : ∀ s : Finset (Fin n), monomialRestriction (fun m => ∀ a ∈ s, wtS LL S m a = nu a) x ∈ W := by
-    intro s
+  have key (s : Finset (Fin n)) : monomialRestriction (fun m => ∀ a ∈ s, wtS LL S m a = nu a) x ∈ W := by
     induction s using Finset.induction_on with
     | empty =>
       have e : monomialRestriction (fun m => ∀ a ∈ (∅ : Finset (Fin n)), wtS LL S m a = nu a) x = x := by
         ext m
-        rw [coeff_monomialRestriction]
-        simp
+        simp [coeff_monomialRestriction]
       rw [e]
       exact hx
     | @insert a s _ ih =>
       have e : monomialRestriction (fun m => ∀ b ∈ insert a s, wtS LL S m b = nu b) x =
           monomialRestriction (fun m => wtS LL S m a = nu a) (monomialRestriction (fun m => ∀ b ∈ s, wtS LL S m b = nu b) x) := by
         ext m
-        rw [coeff_monomialRestriction, coeff_monomialRestriction, coeff_monomialRestriction]
-        by_cases h1 : wtS LL S m a = nu a <;> by_cases h2 : ∀ b ∈ s, wtS LL S m b = nu b <;>
-          simp [h1, h2, Finset.forall_mem_insert]
+        simp only [coeff_monomialRestriction, Finset.forall_mem_insert]
+        by_cases ha : wtS LL S m a = nu a <;> simp [ha]
       rw [e]
       exact weightEntry_restriction_mem LL S W hW a (nu a) _ ih
   have e : weightComponent LL S nu x = monomialRestriction (fun m => ∀ a ∈ Finset.univ, wtS LL S m a = nu a) x := by
     ext m
-    rw [coeff_weightComponent, coeff_monomialRestriction]
-    by_cases h : wtS LL S m = nu
-    · have h' : ∀ a ∈ (Finset.univ : Finset (Fin n)), wtS LL S m a = nu a := fun a _ => by rw [h]
-      rw [if_pos h, if_pos h']
-    · have h' : ¬ ∀ a ∈ (Finset.univ : Finset (Fin n)), wtS LL S m a = nu a :=
-        fun h'' => h (funext fun a => h'' a (Finset.mem_univ a))
-      rw [if_neg h, if_neg h']
+    simp only [coeff_weightComponent, coeff_monomialRestriction, Finset.mem_univ, true_implies, _root_.funext_iff]
+    by_cases h : ∀ a : Fin n, wtS LL S m a = nu a <;> simp [h]
   rw [e]
-  exact key _
+  exact key Finset.univ
 
 end Formalism.MainNotions.G.GLWeightTheory
