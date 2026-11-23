@@ -64,7 +64,7 @@ theorem supportedIn_cokernel_kernelSubobject {X : Scheme.{0}} {F G : X.Modules} 
   have e : (kernelSubobjectIso g).hom ≫ kernel.ι g = (kernelSubobject g).arrow :=
     kernelSubobject_arrow g
   let i : cokernel (kernelSubobject g).arrow ≅ cokernel (kernel.ι g) :=
-    cokernelIsoOfEq e.symm ≪≫ (cokernelEpiComp (kernelSubobjectIso g).hom _)
+    cokernelIsoOfEq e.symm ≪≫ (cokernelEpiComp _ (kernelSubobjectIso g).hom)
   exact h1.of_iso i.symm
 
 theorem toImage_surjective {Y X : Scheme.{0}} (f : Y ⟶ X) [IsProper f] : Surjective f.toImage := by

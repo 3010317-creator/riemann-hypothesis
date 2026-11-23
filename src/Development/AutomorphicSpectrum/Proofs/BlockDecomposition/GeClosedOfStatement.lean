@@ -164,7 +164,7 @@ theorem supportedIn_subOf (J : X.IdealSheafData) :
   have e : (Subobject.underlyingIso (idealModuleι J)).hom ≫ idealModuleι J = (subOf J).arrow :=
     Subobject.underlyingIso_hom_comp_eq_mk _
   let i : cokernel (subOf J).arrow ≅ cokernel (idealModuleι J) :=
-    cokernelIsoOfEq e.symm ≪≫ (cokernelEpiComp (Subobject.underlyingIso (idealModuleι J)).hom _)
+    cokernelIsoOfEq e.symm ≪≫ (cokernelEpiComp _ (Subobject.underlyingIso (idealModuleι J)).hom)
   exact (supportedIn_cokernel_idealModuleι J).of_iso i.symm
 
 theorem support_subset_of_supportedIn (J : X.IdealSheafData) {T : Set X} (hT : IsClosed T)
