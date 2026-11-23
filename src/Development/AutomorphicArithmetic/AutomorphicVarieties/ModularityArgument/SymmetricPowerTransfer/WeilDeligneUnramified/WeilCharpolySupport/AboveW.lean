@@ -157,7 +157,8 @@ private theorem isSubquotient_of_hasSupport (hZ : GlobalTheory.Published.Zelevin
     [TopologicalSpace k] [IsNonarchimedeanLocalField k] {n : ℕ} (τ : IrrRep (GL (Fin n) k)) (μ : Fin n → kˣ →* ℂˣ)
     (hμ : ∀ i, IsSmoothChar (μ i)) (hs : HasSupport τ.ρ (Finset.univ.val.map fun i => IrrGL.ofChar (μ i) (hμ i))) :
     IsSubquotient τ.ρ (prinSeries μ) := by
-  have hd : ∑ i, (IrrGL.ofChar (μ i) (hμ i)).1 = n := by simp [IrrGL.ofChar]
+  have hd : ∑ i, (IrrGL.ofChar (μ i) (hμ i)).1 = n := by
+    simp only [IrrGL.ofChar, Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul, mul_one]
   refine IsSubquotient.trans ?_ (GlobalTheory.SphSeg.isSubquotient_prodIrr_prinSeries _ hd μ hμ fun _ => rfl)
   obtain ⟨Z, Ψ, -, hΨ, -⟩ := hZ k
   have h1 := SupportRing.pos_pc_sub hΨ hs τ.smooth τ.irr
