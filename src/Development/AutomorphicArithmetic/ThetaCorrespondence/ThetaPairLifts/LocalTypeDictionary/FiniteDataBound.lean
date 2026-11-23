@@ -970,6 +970,7 @@ section -- clump:auto
 
 open GlobalTheory.SplitFlip GlobalTheory.SplitWeil
 attribute [-instance] Formalism.DoubleCosetMeasures.instMeasGL Formalism.DoubleCosetMeasures.instMeasMat
+attribute [local instance high] GlobalTheory.SplitWeil.matrixMeasurableSpace
 
 noncomputable section
 
