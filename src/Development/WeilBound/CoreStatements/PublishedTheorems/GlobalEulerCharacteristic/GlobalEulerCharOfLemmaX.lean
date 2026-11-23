@@ -422,7 +422,8 @@ theorem exists_prime_to_part (ℓ : ℕ) [Fact ℓ.Prime]
     change (gsEmbedding (S := S) hL).fieldRange.fixingSubgroup.index ≠ 0
     rw [← IntermediateField.finrank_eq_fixingSubgroup_index,
       ← (gsEmbedding (S := S) hL).equivFieldRange.toLinearEquiv.finrank_eq]
-    exact Module.finrank_pos.ne'
+    haveI : Module.IsTorsionFree K.1 L.1 := DivisionSemiring.to_moduleIsTorsionFree
+    exact (Module.finrank_pos (R := K.1) (M := L.1)).ne'
   have hUo : IsOpen (((gsOpenSubgroup S hL : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) :
       Set (galUnramifiedOutside K.1 ℚ̄ S)) := (gsOpenSubgroup S hL).isOpen
   generalize (gsOpenSubgroup S hL : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)) = U at hN hle hcyc hUi hUo ⊢
@@ -1736,7 +1737,8 @@ theorem ratio_F_exists {l : ℕ} [Fact l.Prime] (h : RatioOne l (fun _ => True))
       (gsRealH0Card S' (Rep.res θ.symm.toMulEquiv.toMonoidHom A) ιr v : ℚ)) ≠ 0 :=
     Finset.prod_ne_zero_iff.2 fun v _ => by
       exact_mod_cast (gsRealH0Card_pos S' (Rep.res θ.symm.toMulEquiv.toMonoidHom A) ιr v).ne'
-  rw [div_eq_one_iff_eq hP, hχ] at h1
+  replace h1 := (div_eq_one_iff_eq hP).1 (by convert h1)
+  rw [hχ] at h1
   have hn : Nat.card (Rep.res θ.symm.toMulEquiv.toMonoidHom A) = Nat.card A := rfl
   rw [hn] at h1
   rw [hcard, h1]
