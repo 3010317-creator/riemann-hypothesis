@@ -318,29 +318,32 @@ theorem den_bound {l : ℕ} [Fact l.Prime] (P : PhiData O l) (y B κ : ℕ) (hy 
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   obtain ⟨u, hu⟩ := l_eq_unit_mul_pow hϖ P.hl0
   set e := eO (O := O) l with he
+  have hassoc : Associated (l : O) (ϖ ^ e) := by
+    rw [hu]
+    exact associated_unit_mul_left _ _ u.isUnit
   have hdiv : ∀ k : ℕ, ϖ ^ (e * k) ∣ x → (l : O) ^ k ∣ x := by
-    rintro k ⟨z, hz⟩
-    refine ⟨((↑(u⁻¹) : O)) ^ k * z, ?_⟩
-    have hone : (↑u : O) ^ k * (↑(u⁻¹) : O) ^ k = 1 := by rw [← mul_pow, Units.mul_inv, one_pow]
-    rw [hz, hu, mul_pow, ← pow_mul]
-    linear_combination (-(ϖ ^ (e * k) * z)) * hone
+    intro k hk
+    rw [pow_mul] at hk
+    exact (hassoc.pow_pow (n := k)).dvd_iff_dvd_left.mpr hk
   set de := ⌈max 0 ((y : ℝ) - B / l + 2 + Real.logb l y)⌉₊ with hde
   by_cases hx0 : x = 0
   · subst hx0
     exact ⟨dvd_zero _, fun _ => dvd_zero _⟩
   obtain ⟨v, ε, hxe⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hx0 hϖ
+  have hϖv : ϖ ^ v ∣ x := by
+    rw [hxe]
+    exact dvd_mul_left _ _
   by_cases hv : e * κ ≤ v
-  · obtain ⟨t, ht⟩ := Nat.exists_eq_add_of_le hv
-    have h1 : (l : O) ^ κ ∣ x := hdiv κ ⟨↑ε * ϖ ^ t, by rw [hxe, ht, pow_add]; ring⟩
+  · have h1 : (l : O) ^ κ ∣ x := hdiv κ ((pow_dvd_pow _ hv).trans hϖv)
     exact ⟨(pow_dvd_pow _ (Nat.sub_le _ _)).trans h1, fun _ => h1⟩
-  push_neg at hv
+  have hvlt : v < e * κ := lt_of_not_ge hv
   set k := e * κ - v with hk
   have hdist := (ContPA.dist_X_pow (O := O) B).1
 
   have hmem : P.p 1 ^ y ∈ Ideal.span {C ϖ ^ k, (X : O⟦X⟧) ^ B} := by
-    have hvk : v + k = e * κ := by omega
+    have hvk : v + k = e * κ := Nat.add_sub_cancel' hvlt.le
     have hlO : (l : O) ^ κ = ϖ ^ v * (ϖ ^ k * (↑u : O) ^ κ) := by
-      rw [hu, mul_pow, ← pow_mul, ← hvk, pow_add]; ring
+      rw [hu, mul_pow, ← pow_mul, ← hvk, pow_add, mul_comm ((u : O) ^ κ), mul_assoc]
     have hlk : (C (l : O) : O⟦X⟧) ^ κ = C ϖ ^ v * (C ϖ ^ k * C ((↑u : O) ^ κ)) := by
       rw [← map_pow, hlO, map_mul, map_mul, map_pow, map_pow]
     have hc : C ϖ ^ v * (P.p 1 ^ y * C (↑ε : O) - C ϖ ^ k * (C ((↑u : O) ^ κ) * U₁)) =
@@ -366,14 +369,12 @@ theorem den_bound {l : ℕ} [Fact l.Prime] (P : PhiData O l) (y B κ : ℕ) (hy 
     have hr : max 0 ((y : ℝ) - B / l + 2 + Real.logb l y) ≤ (de : ℝ) := Nat.le_ceil _
     have he0 : (0 : ℝ) ≤ e := Nat.cast_nonneg _
     have hkr : (k : ℝ) ≤ (e : ℝ) * de := by
-      have := mul_le_mul_of_nonneg_left hr he0
       have hk' : (k : ℝ) ≤ ((cont ϖ ((X : O⟦X⟧) ^ B) (P.p 1 ^ y)).toNat : ℝ) := by exact_mod_cast hkc'
-      linarith
+      exact hk'.trans (hle.trans (mul_le_mul_of_nonneg_left hr he0))
     have hkn : k ≤ e * de := by exact_mod_cast hkr
     apply hdiv
     have hle2 : e * (κ - de) ≤ v := by rw [Nat.mul_sub]; omega
-    obtain ⟨t, ht⟩ := Nat.exists_eq_add_of_le hle2
-    exact ⟨↑ε * ϖ ^ t, by rw [hxe, ht, pow_add]; ring⟩
+    exact (pow_dvd_pow _ hle2).trans hϖv
   · intro hlt
     have h0 := P.cont_X_pow_pow_eq_zero_of_gt hϖ B y hB hy hlt
     rw [h0] at hkc
