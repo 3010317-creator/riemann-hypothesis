@@ -48,6 +48,7 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
+import Mathlib.Data.Nat.Factorization.Basic
 
 @[expose] public section
 
@@ -340,18 +341,6 @@ theorem rho_two {e M i : ℕ} (hM : Nat.Coprime 2 M) (hN : 2 ^ (e + 2) * M ∣ N
   rw [div_le_div_iff₀ (mul_pos ha (mul_pos hp hs)) hp]
   nlinarith [mul_le_mul_of_nonneg_right hkey (le_of_lt (mul_pos hs hp))]
 
-private theorem exists_two_pow_mul_odd_of_le_of_ne_zero (k : ℕ) :
-    ∀ n : ℕ, n ≤ k → n ≠ 0 → ∃ v M : ℕ, ¬ 2 ∣ M ∧ n = 2 ^ v * M := by
-  induction k with
-  | zero => intro n h1 h2; exact absurd (Nat.le_zero.mp h1) h2
-  | succ k ih =>
-    intro n h1 h2
-    by_cases h : 2 ∣ n
-    · obtain ⟨j, rfl⟩ := h
-      obtain ⟨v, M, hM, hj⟩ := ih j (by omega) (by omega)
-      exact ⟨v + 1, M, hM, by rw [hj, pow_succ]; ring⟩
-    · exact ⟨0, n, h, by simp⟩
-
 private theorem sum_range_ite_lt_two_eq_two (e : ℕ) :
     ∑ i ∈ range (e + 2), (if i < 2 then (1 : ℝ) else 0) = 2 := by
   induction e with
@@ -367,7 +356,7 @@ theorem le_SS {e d : ℕ} (h2 : 2 ^ (e + 2) ∣ N) (hd : d.Prime) (hdN : d ∣ N
     ((e : ℝ) + 1 - 1 / 2 ^ e) * Real.log 2 + Real.log d / 2 ≤ SS U := by
   classical
   have hN0 : N ≠ 0 := NeZero.ne N
-  obtain ⟨v, M, hModd, hNvM⟩ := exists_two_pow_mul_odd_of_le_of_ne_zero N N le_rfl hN0
+  obtain ⟨v, M, hModd, hNvM⟩ := Nat.exists_eq_pow_mul_and_not_dvd hN0 2 (by decide)
   have hM : Nat.Coprime 2 M := (Nat.Prime.coprime_iff_not_dvd Nat.prime_two).mpr hModd
   have hv : e + 2 ≤ v := by
     have h1 : 2 ^ (e + 2) ∣ 2 ^ v * M := by rw [← hNvM]; exact h2
