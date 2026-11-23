@@ -674,7 +674,7 @@ theorem sum_log_norm {L : Type*} [Field L] [NumberField L] {x : L} (hx : x ≠ 0
     Real.norm_eq_abs]
 
 theorem isMultiHomog_X {T : Type} [Fintype T] (t : T) :
-    IsMultiHomog (X ⟨(), t⟩ : MRing (fun _ : Unit => T)) (fun _ => 1) := by
+    ReciprocityTheory.ChartRestriction.G.Geo.IsMultiHomog (X ⟨(), t⟩ : MRing (fun _ : Unit => T)) (fun _ => 1) := by
   classical
   intro m hm k
   obtain ⟨⟩ := k
@@ -706,7 +706,7 @@ theorem dualNormSq_point (b : Module.Basis T ℤ (dualLattice F))
     rw [Finset.sum_eq_single σ (fun τ _ hτ => by simp [hτ]) (by simp)]
     simp [hσ]
   rw [dualNormSq, hw, Finset.sum_eq_single σ, Matrix.det_unique]
-  · simp only [w, if_true, gramAt]
+  · simp only [w, ite_true, gramAt]
     rfl
   · intro τ _ hτ
     have h0 : (fun j => w (τ, j)) = 0 := by
@@ -730,7 +730,8 @@ theorem DualPointLineDegree.proof (hPt : DualCurvePoint.Statement) (hPos : Point
   refine ⟨hPos T K' y hW, K', inferInstance, inferInstance, inferInstance, v, hv, ?_⟩
   obtain ⟨t₀, ht₀⟩ := hW.2.1.2.2 ()
   set s : MRing (dualBlocks T) := X ⟨(), t₀⟩ with hs
-  have hs1 : IsMultiHomog s (fun _ => 1) := isMultiHomog_X t₀
+  have hs1 : ReciprocityTheory.ChartRestriction.G.Geo.IsMultiHomog s (fun _ => 1) :=
+    DualPointLineDegreeAlt.isMultiHomog_X t₀
   have hsec : IsSectionOn (mCoordIdeal y) A s := ⟨fun _ => 1, fun _ => rfl, hs1, ht₀⟩
   have hsm : IsSmoothHerm A := (hSemi K i F T b hb).1
   have hy0 : y ⟨(), t₀⟩ ≠ 0 := by
