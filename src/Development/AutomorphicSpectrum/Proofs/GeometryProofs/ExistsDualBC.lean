@@ -221,7 +221,7 @@ theorem tan_denom {O : Type} [CommRing O] [Algebra A O] (S : Submonoid A) [IsLoc
     (e : Li) (v : epsAt z ⟶ G) (hv : IsTanAt G z v)
     (he' : (M.pt e).left = Spec.map (CommRingCat.ofHom (dualMap g)) ≫ v.left) :
     ∃ u ∈ S, ∃ b, algebraMap A Ω u • e = j₀ b := by
-  obtain ⟨u, hu, b, hub⟩ := exists_denom lie_proj G S x M₀ hzs v hv
+  obtain ⟨u, hu, b, hub⟩ := exists_denom G S x M₀ hzs v hv
   have hgu : g (algebraMap A O u) = algebraMap A Ω u := RingHom.congr_fun hg u
   refine ⟨u, hu, b, hgu ▸ M.inj (Over.OverMorphism.ext ?_)⟩
   rw [M.smul, he', hj, ← hg, ← dual_comp, spec_comp, Category.assoc, ← hub, ← Category.assoc, ← Category.assoc,
