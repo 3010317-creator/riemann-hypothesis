@@ -680,7 +680,10 @@ theorem valOne_all : ∀ D : D7, ValOne D := by
   rw [← FIN γ β]
   simp only [QStep.w₁, QStep.w₂]
   push_cast
-  ring
+  first
+    | exact (mul_comm _ _).trans (mul_assoc _ _ _).symm
+    | rfl
+    | ring
 
 end GlobalTheory.ValOneAt
 end
