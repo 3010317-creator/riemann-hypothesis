@@ -1189,9 +1189,9 @@ namespace GlobalTheory.PullIsoCongr
 theorem lbIso_pull_congr (X Y : Scheme.{0}) (Q₁ Q₂ : LB X) (m m' : Y ⟶ X) (h₁ : Q₁.IsLB) (h₂ : Q₂.IsLB)
     (e : LBIso Q₁ Q₂) (f : LBIso (Q₁.pull m) (Q₁.pull m')) : LBIso (Q₂.pull m) (Q₂.pull m') := by
   have a : LBIso (Q₂.pull m) (Q₁.pull m) :=
-    LBIso.chartPull (chartPullPull Q₂ m m rfl) (chartPullPull Q₁ m m rfl) (LBIso.symm e)
+    LBIso.chartPull (chartPullPull Q₂ m) (chartPullPull Q₁ m) (LBIso.symm e)
   have b : LBIso (Q₁.pull m') (Q₂.pull m') :=
-    LBIso.chartPull (chartPullPull Q₁ m' m' rfl) (chartPullPull Q₂ m' m' rfl) e
+    LBIso.chartPull (chartPullPull Q₁ m') (chartPullPull Q₂ m') e
   exact LBIso.trans (pull_isLB h₂ m) (pull_isLB h₁ m') (pull_isLB h₂ m')
     (LBIso.trans (pull_isLB h₂ m) (pull_isLB h₁ m) (pull_isLB h₁ m') a f) b
 
