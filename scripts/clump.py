@@ -49,7 +49,8 @@ CLUMP_MARK = "-- This file was produced by scripts/clump.py from the modules lis
 # Modules in these libraries are never clumped (protected statement / solution files).
 PROTECTED_LIBS = {"Main", "Challenge"}
 
-IMPORT_RE = re.compile(r"^((?:(?:public|private|meta)\s+)*)import\s+((?:all\s+)?)(\S+)\s*$")
+IMPORT_RE = re.compile(
+    r"^((?:(?:public|private|meta)\s+)*)import\s+((?:all\s+)?)(\S+)(?:\s+--.*)?\s*$")
 
 
 def lib_of(mod):
@@ -359,6 +360,7 @@ def unclump(root):
             continue
         for name, content in unclump_text(text).items():
             q = os.path.join(root, "src", *name.split(".")) + ".lean"
+            os.makedirs(os.path.dirname(q), exist_ok=True)
             with open(q, "w", encoding="utf-8") as f:
                 f.write(content)
         n += 1
