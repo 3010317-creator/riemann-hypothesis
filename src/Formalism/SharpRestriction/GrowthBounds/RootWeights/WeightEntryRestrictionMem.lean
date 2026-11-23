@@ -75,66 +75,50 @@ theorem binomialFunctions_shift_mem (s : ℤ) (k : ℕ) : (fun w : ℤ => Ring.c
   exact AddSubgroup.sum_mem _ fun ij _ =>
     AddSubgroup.zsmul_mem _ (AddSubgroup.subset_closure (Set.mem_range_self ij.1)) _
 
-private theorem ring_choose_eq_zero_of_nonneg_of_lt (x : ℤ) (k : ℕ) (h0 : 0 ≤ x) (hk : x < k) : Ring.choose x k = 0 := by
-  obtain ⟨m, rfl⟩ := Int.eq_ofNat_of_zero_le h0
-  rw [Ring.choose_natCast, Nat.choose_eq_zero_of_lt (by omega)]
-  simp
-
-private theorem ring_choose_self_of_eq (x : ℤ) (k : ℕ) (h : x = k) : Ring.choose x k = 1 := by
-  subst h
-  rw [Ring.choose_natCast, Nat.choose_self]
-  simp
-
-private theorem ring_choose_neg_one (k : ℕ) : Ring.choose (-1 : ℤ) k = (-1) ^ k := by
-  induction k with
-  | zero => simp [Ring.choose_zero_right]
-  | succ k ih =>
-    have h := Ring.choose_succ_succ (-1 : ℤ) k
-    rw [neg_add_cancel, Ring.choose_zero_succ, ih] at h
-    rw [pow_succ]
-    linarith
-
 theorem binomialFunctions_window_indicator (w0 : ℤ) (B : ℕ) : ∃ f ∈ binomialFunctions, ∀ w : ℤ, -(B : ℤ) ≤ w → w ≤ B →
     f w = if w = w0 then 1 else 0 := by
-  induction B with
-  | zero =>
-    refine ⟨(if (0 : ℤ) = w0 then 1 else 0) • (fun w : ℤ => Ring.choose w 0),
-      AddSubgroup.zsmul_mem _ (AddSubgroup.subset_closure (Set.mem_range_self 0)) _, ?_⟩
-    intro w h1 h2
-    have hw : w = 0 := by omega
-    subst hw
-    simp [Ring.choose_zero_right]
-  | succ B ih =>
-    obtain ⟨f, hf, hfw⟩ := ih
-    have hg1 : (fun w : ℤ => Ring.choose (w + B) (2 * B + 1)) ∈ binomialFunctions := binomialFunctions_shift_mem _ _
-    have hg2 : (fun w : ℤ => Ring.choose (w + ((B : ℤ) + 1)) (2 * B + 2)) ∈ binomialFunctions := binomialFunctions_shift_mem _ _
-    set g1 : ℤ → ℤ := fun w : ℤ => Ring.choose (w + B) (2 * B + 1) with hg1d
-    set g2 : ℤ → ℤ := fun w : ℤ => Ring.choose (w + ((B : ℤ) + 1)) (2 * B + 2) with hg2d
-    set c1 : ℤ := (if (B : ℤ) + 1 = w0 then 1 else 0) - f ((B : ℤ) + 1) with hc1
-    set c2 : ℤ := (if -((B : ℤ) + 1) = w0 then 1 else 0) - f (-((B : ℤ) + 1)) with hc2
-    refine ⟨f + c1 • g2 + c2 • (g2 - g1),
-      add_mem (add_mem hf (AddSubgroup.zsmul_mem _ hg2 _)) (AddSubgroup.zsmul_mem _ (sub_mem hg2 hg1) _), ?_⟩
-    intro w h1 h2
-    push_cast at h1 h2
-    simp only [Pi.add_apply, Pi.smul_apply, Pi.sub_apply, smul_eq_mul]
-    rcases (by omega : (-(B : ℤ) ≤ w ∧ w ≤ B) ∨ w = B + 1 ∨ w = -((B : ℤ) + 1)) with h | h | h
-    · have e1 : g1 w = 0 := ring_choose_eq_zero_of_nonneg_of_lt _ _ (by omega) (by push_cast; omega)
-      have e2 : g2 w = 0 := ring_choose_eq_zero_of_nonneg_of_lt _ _ (by omega) (by push_cast; omega)
-      rw [e1, e2, hfw w h.1 h.2]
-      ring
-    · subst h
-      have e1 : g1 ((B : ℤ) + 1) = 1 := ring_choose_self_of_eq _ _ (by push_cast; ring)
-      have e2 : g2 ((B : ℤ) + 1) = 1 := ring_choose_self_of_eq _ _ (by push_cast; ring)
-      rw [e1, e2, hc1]
-      ring
-    · subst h
-      have e1 : g1 (-((B : ℤ) + 1)) = -1 := by
-        simp only [hg1d]
-        rw [show -((B : ℤ) + 1) + B = -1 by ring, ring_choose_neg_one, pow_succ, pow_mul]
-        simp
-      have e2 : g2 (-((B : ℤ) + 1)) = 0 := ring_choose_eq_zero_of_nonneg_of_lt _ _ (by omega) (by push_cast; omega)
-      rw [e1, e2, hc2]
-      ring
+  by_cases hw0 : -(B : ℤ) ≤ w0 ∧ w0 ≤ B
+  · obtain ⟨m, hm⟩ := Int.eq_ofNat_of_zero_le (show 0 ≤ w0 + (B : ℤ) by omega)
+    let c (j : ℕ) : ℤ := (-1)^j * (m + j).choose m
+    let f : ℤ → ℤ := ∑ j ∈ Finset.range (2 * B + 1), c j • (fun w : ℤ => Ring.choose (w + B) (m + j))
+    refine ⟨f, ?_, ?_⟩
+    · exact AddSubgroup.sum_mem _ fun j _ =>
+        AddSubgroup.zsmul_mem _ (binomialFunctions_shift_mem (B : ℤ) (m + j)) _
+    · intro w hw1 hw2
+      obtain ⟨x, hx⟩ := Int.eq_ofNat_of_zero_le (show 0 ≤ w + (B : ℤ) by omega)
+      have hxB : x ≤ 2 * B := by omega
+      have heq : w = w0 ↔ x = m := by omega
+      change (∑ j ∈ Finset.range (2 * B + 1), c j • (fun u : ℤ => Ring.choose (u + B) (m + j))) w = _
+      simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, hx, Ring.choose_natCast]
+      have hterm (j : ℕ) : c j * (x.choose (m + j) : ℤ) =
+          (x.choose m : ℤ) * ((-1)^j * (x - m).choose j) := by
+        have h := Nat.choose_mul (n := x) (k := m + j) (s := m) (by omega)
+        rw [show m + j - m = j by omega] at h
+        have hi : (x.choose (m + j) : ℤ) * ((m + j).choose m : ℤ) =
+            (x.choose m : ℤ) * ((x - m).choose j : ℤ) := by exact_mod_cast h
+        calc c j * (x.choose (m + j) : ℤ) =
+            (-1 : ℤ)^j * ((x.choose (m + j) : ℤ) * ((m + j).choose m : ℤ)) := by dsimp [c]; ring
+          _ = _ := by rw [hi]; ring
+      simp_rw [hterm]
+      rw [← Finset.mul_sum]
+      have hcut :
+          (∑ j ∈ Finset.range (2 * B + 1), ((-1)^j * (x - m).choose j : ℤ)) =
+            ∑ j ∈ Finset.range (x - m + 1), ((-1)^j * (x - m).choose j : ℤ) := by
+        symm
+        apply Finset.sum_subset (Finset.range_mono (by omega))
+        intro j _ hj
+        have hj' : x - m < j := by simp only [Finset.mem_range, not_lt] at hj; omega
+        simp [Nat.choose_eq_zero_of_lt hj']
+      rw [hcut, Int.alternating_sum_range_choose]
+      rcases lt_trichotomy x m with hxm | hxm | hxm
+      · simp [mt heq.mp hxm.ne, Nat.choose_eq_zero_of_lt hxm]
+      · simp [hxm, heq.mpr hxm]
+      · have hsub : x - m ≠ 0 := by omega
+        simp [mt heq.mp hxm.ne', hsub]
+  · refine ⟨0, binomialFunctions.zero_mem, ?_⟩
+    intro w hw1 hw2
+    have hne : w ≠ w0 := by omega
+    simp [hne]
 
 section graded
 
