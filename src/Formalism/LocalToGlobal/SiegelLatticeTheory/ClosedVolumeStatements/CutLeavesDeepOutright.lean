@@ -1087,7 +1087,7 @@ theorem unimod_of_norm {G : Type} [Group G] (A B' : Subgroup G) (s : G) (hAB' : 
   have hA'idx : (cj s A).relIndex B' = A.relIndex B' := by rw [← relIndex_cj s A B', hB]
   have e2 := idxCocycle G A (cj s A) B' hA'le (by rw [hA'idx]; exact hf)
   have e3 := idxCocycle G A A B' hAB' hf
-  rw [idxRatio_self] at e3
+  rw [ProdEP2Core.idxRatio_self] at e3
   rw [e2, hA'idx, ← e3]
 
 variable {D : D7} (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep)
