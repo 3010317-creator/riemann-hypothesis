@@ -363,7 +363,7 @@ private lemma isot_factor {G H W W' X Y : Type} [Group G] [Group H] [AddCommGrou
     (κ : Representation ℂ (G × H) X) (κ' : Representation ℂ H Y) (f : W ⊗[ℂ] Y ≃ₗ[ℂ] X)
     (hf : Intw (box ρ κ') κ f.toLinearMap) (h2 : Isot (κ.comp (MonoidHom.inr G H)) τ) :
     Isot κ' τ := by
-  obtain ⟨w0, hw0⟩ := exists_ne (0 : W)
+  obtain ⟨w0, hw0⟩ := _root_.exists_ne (0 : W)
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual ℂ W, φ w0 ≠ 0 := by
     by_contra hcon
     push_neg at hcon
@@ -1387,7 +1387,7 @@ private lemma Pp_equiv {α β : Type} (f : β ≃ α) (h : Pp α) : Pp β := by
   refine pt_eq ((PiTensorProduct.reindex ℂ Wi f).toLinearMap ∘ₗ piRep τ g)
     ((piRep (fun a => τ (f.symm a)) (Equiv.piCongrLeft' Gi f g)) ∘ₗ
       (PiTensorProduct.reindex ℂ Wi f).toLinearMap) (fun m => ?_) x
-  simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, piRep_tprod, PiTensorProduct.reindex_tprod]
+  simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, _root_.piRep_tprod, PiTensorProduct.reindex_tprod]
   rfl
 
 private lemma absIrr_triv : AbsIrr (Representation.trivial ℂ Unit ℂ) := by
@@ -1402,7 +1402,7 @@ private lemma Pp_empty : Pp PEmpty := by
   refine pt_eq ((PiTensorProduct.isEmptyEquiv PEmpty).toLinearMap ∘ₗ piRep τ g)
     (Representation.trivial ℂ Unit ℂ () ∘ₗ (PiTensorProduct.isEmptyEquiv PEmpty).toLinearMap)
     (fun m => ?_) x
-  simp [piRep_tprod, PiTensorProduct.isEmptyEquiv_apply_tprod]
+  simp [_root_.piRep_tprod, PiTensorProduct.isEmptyEquiv_apply_tprod]
 
 private lemma Pp_unit : Pp PUnit := by
   intro Gi Wi _ _ _ τ hτ
@@ -1411,7 +1411,7 @@ private lemma Pp_unit : Pp PUnit := by
   refine pt_eq ((PiTensorProduct.subsingletonEquiv PUnit.unit).toLinearMap ∘ₗ piRep τ g)
     (τ PUnit.unit (g PUnit.unit) ∘ₗ (PiTensorProduct.subsingletonEquiv PUnit.unit).toLinearMap)
     (fun m => ?_) x
-  simp [piRep_tprod, PiTensorProduct.subsingletonEquiv_apply_tprod]
+  simp [_root_.piRep_tprod, PiTensorProduct.subsingletonEquiv_apply_tprod]
 
 private lemma Pp_sum (hB : BoxIrr) {α β : Type} (ha : Pp α) (hb : Pp β) : Pp (α ⊕ β) := by
   intro Gi Wi _ _ _ τ hτ
@@ -1424,10 +1424,10 @@ private lemma Pp_sum (hB : BoxIrr) {α β : Type} (ha : Pp α) (hb : Pp β) : Pp
     ((box (piRep fun a => τ (.inl a)) (piRep fun b => τ (.inr b))
         (fun a => g (.inl a), fun b => g (.inr b))) ∘ₗ
       (PiTensorProduct.tmulEquivDep ℂ Wi).symm.toLinearMap) (fun m => ?_) x
-  simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, piRep_tprod,
+  simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, _root_.piRep_tprod,
     PiTensorProduct.tmulEquivDep_symm_apply]
   simp only [box, Representation.tprod_apply, MonoidHom.comp_apply, TensorProduct.map_tmul]
-  simp [piRep_tprod]
+  simp [_root_.piRep_tprod]
 
 theorem UpperTheory.V.Z.J.D.piIrr :
     BoxIrr → PiIrr := by
