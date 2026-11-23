@@ -268,6 +268,8 @@ theorem UpperTheory.V.J.derCont :
     ∀ (l : ℕ) [Fact l.Prime] (c : Coef l) [Fr.IsCoef l c.O] (R : Type) [CommRing R] [Algebra c.O R] [IsCO c.O R] (y : R →ₐ[c.O] Qbar l),
         ∀ D ∈ PtDer y (Qbar l), ∀ ε : ℝ, 0 < ε → ∃ k : ℕ, ∀ a ∈ maximalIdeal R ^ k, ‖D a‖ ≤ ε ∧ ‖y a‖ ≤ ε := by
   intro l _ c _ R _ _ _ y D hD ε hε
+  have : IsLocalRing R := UpperTheory.V.Alg.IsCO.toIsLocalRing (O := c.O)
+  have : IsLocalHom (algebraMap c.O R) := UpperTheory.V.Alg.IsCO.isLocalHom
   obtain ⟨hfin, hle, hlt⟩ := coPt l c R y
   obtain ⟨p, hp⟩ := IsDiscreteValuationRing.exists_irreducible c.O
   have hpR : algebraMap c.O R p ∈ maximalIdeal R := fun h => hp.not_isUnit (isUnit_of_map_unit _ _ h)
