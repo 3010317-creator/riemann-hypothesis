@@ -1249,6 +1249,7 @@ theorem exists_pullback_ext {k Ω : Type} [Field k] [Field Ω] (f : Sp Ω ⟶ Sp
       apply Over.OverMorphism.ext
       change (p.left ≫ ((Over.pullback f).map T.q).left) ≫ pullback.fst T.B.hom f = p₀.left ≫ T.q.left
       rw [hp, Category.assoc, Category.assoc, hq.w]
+    letI iB : GrpObj ((Over.pullback f).obj T.B) := inferInstance
     change p ≫ (Over.pullback f).map T.q = 1 ↔ p₀ ≫ T.q = 1
     rw [← e1]
     exact (MulEquiv.map_eq_one_iff _).symm
