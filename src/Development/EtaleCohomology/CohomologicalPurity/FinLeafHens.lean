@@ -131,7 +131,7 @@ namespace LateralTheory.CohomologicalPurity.Hz
 
 theorem evalMapHom {R S : Type} [CommRing R] [CommRing S] (f : R →+* S) (p : R[X]) (x : R) :
     (p.map f).eval (f x) = f (p.eval x) := by
-  rw [eval_map, eval₂_at_apply]
+  rw [Polynomial.eval_map, eval₂_at_apply]
 
 theorem Diag.leg_comp_map {A : Type} [CommRing A] {I : Ideal A} (Δ : Diag A I) (c : Cocone Δ.D) {j k : Δ.J}
     (e : j ⟶ k) : (Δ.leg c k).comp (Δ.D.map e).hom = Δ.leg c j :=
@@ -690,7 +690,7 @@ theorem LeafRootStd_of : LeafRootStd := by
       rw [aeval_eq_eval_map, ← hφ]
       have hd := sub_dvd_eval_sub P.X (φ a) ((f.derivative * q).map φ)
       have hev : ((f.derivative * q).map φ).eval (φ a) = φ ((f.derivative * q).eval a) := by
-        rw [eval_map, eval₂_at_apply]
+        rw [Polynomial.eval_map, eval₂_at_apply]
       rw [hev] at hd
       obtain ⟨w, hw⟩ := hd
       rw [hw]; exact Ideal.mul_mem_right _ _ hba
