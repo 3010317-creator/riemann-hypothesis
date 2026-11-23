@@ -876,6 +876,7 @@ private theorem exists_res_approx_of_entries_integral {A : Type} {ϖ : kˣ} (hϖ
   have h2 := (Model.val_le_iff_mem hϖ e _).mp h1
   simpa [liftRes] using h2
 
+attribute [local instance 10000] GlobalTheory.SplitWeil.matrixMeasurableSpace in
 theorem sz_zeta {A : Type} [Fintype A] [DecidableEq A] {J : Subgroup (GL A k)} (hJo : IsOpen (J : Set (GL A k)))
     (hJK : J ≤ KO k A) (ν : kˣ →* ℂˣ) {ϖ : kˣ} {e : ℕ} (hϖ : IsUnif ϖ) (hJ : glLatCong (ϖ ^ e) (SplitFlip.stdLat k A) ≤ J)
     (hν : CondLE ϖ e ν) (hram : ¬ IsUnram ν) (hνU : ∀ u, Un ι τ (ν u : ℂ)) (habs : ∀ u : kˣ, apow u (1 / 2) ∈ Set.range ι)
@@ -886,8 +887,10 @@ theorem sz_zeta {A : Type} [Fintype A] [DecidableEq A] {J : Subgroup (GL A k)} (
   have hB0 : 0 ≤ B := (hB 0).nonneg
   set S : (A → A → Res k e) → Set (GL A k) := fun T =>
     {g | ∀ i j, valuation k ((g : Matrix A A k) i j - liftRes T i j) ≤ valuation k ((ϖ ^ e : kˣ) : k)} with hS
+  have : OpensMeasurableSpace (Matrix A A k) := inferInstanceAs (OpensMeasurableSpace (A → A → k))
   have hSm : ∀ T, MeasurableSet (S T) := fun T =>
-    ((GlobalTheory.SmallFInF.isOpen_cosetM (ϖ ^ e) (liftRes T)).preimage Units.continuous_val).measurableSet
+    ((GlobalTheory.SmallFInF.isOpen_cosetM (ϖ ^ e) (liftRes T)).measurableSet).preimage
+      (Measurable.of_comap_le le_rfl)
   have hconst : ∀ T, ∀ g ∈ S T, φ (g : Matrix A A k) = φ (liftRes T) := by
     intro T g hg
     have := hφ.2 (liftRes T) ((g : Matrix A A k) - liftRes T)
@@ -924,7 +927,7 @@ theorem sz_zeta {A : Type} [Fintype A] [DecidableEq A] {J : Subgroup (GL A k)} (
         ∑ T, φ (liftRes T) * ∫ g in S T, f g ∂(haarVol J) := by
       rw [hF, integral_finsetSum _ (fun T _ => hint.indicator (hSm T))]
       refine Finset.sum_congr rfl fun T _ => ?_
-      rw [integral_indicator (hSm T)]
+      refine (MeasureTheory.integral_indicator (hSm T)).trans ?_
       rw [setIntegral_congr_fun (hSm T) (g := fun g => φ (liftRes T) * f g) (fun g hg => by
         show φ g.val * f g = φ (liftRes T) * f g
         rw [hconst T g hg])]
@@ -1254,6 +1257,7 @@ private theorem additive_character_pow_conductor {W : G.Weil} {w : Pl D.host.E} 
     refine le_trans ?_ hx'
     rw [map_mul, map_mul, Units.val_pow_eq_pow_val, map_pow, Nat.cast_pow, map_pow, hu]
     gcongr
+    all_goals exact zero_le'
   have hNx2 : valuation (Kw w) (((q ^ n : ℕ) : Kw w) * x) ≤ valuation (Kw w) 1 :=
     (e (((q ^ n : ℕ) : Kw w) * x) 1).2 (by rw [map_one]; exact hNx)
   have h1 : psiAt W w ((q ^ n) • x) = 1 := by
