@@ -805,6 +805,10 @@ section -- clump:auto
 open MeasureTheory ValuativeRel Matrix GlobalTheory.SplitWeil GlobalTheory.SplitFlip
 open scoped Pointwise
 
+-- Mathlib's `Matrix.instMeasurableSpace` is not reducibly defeq to the project's
+-- `matrixMeasurableSpace`, which `borel_GL`/`haarVol` are stated with; prefer the latter.
+attribute [local instance 2000] GlobalTheory.SplitWeil.matrixMeasurableSpace
+
 theorem UpperTheory.haarVol_self_eq_one_of_openSubgroup_le_KO :
     ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] {n : Type} [Fintype n] [DecidableEq n] (J : Subgroup (GL n k)), IsOpen (J : Set (GL n k)) → J ≤ KO k n → haarVol (J.map invT) (J : Set (GL n k)) = 1 := by
   intro k _ _ _ _ _ _ n _ _ J hJ hJK
@@ -1677,6 +1681,7 @@ private theorem psi_int {D : D7} {w : Pl D.host.E} {ψ : AddChar (Kw w) Circle} 
     refine le_trans ?_ hx'
     rw [map_mul, map_mul, Units.val_pow_eq_pow_val, map_pow, Nat.cast_pow, map_pow, hu]
     gcongr
+    exact zero_le'
   have hNx2 : valuation (Kw w) (((q ^ n : ℕ) : Kw w) * x) ≤ valuation (Kw w) 1 :=
     (e (((q ^ n : ℕ) : Kw w) * x) 1).2 (by rw [map_one]; exact hNx)
   have h1 : ψ ((q ^ n) • x) = 1 := by
