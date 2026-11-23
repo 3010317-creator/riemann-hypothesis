@@ -1,10 +1,13 @@
 name: batch queue
 
-# A maintainer queues a pull request for a batch build by commenting `batch` on it. This adds
-# the `batch queue` label, records the pull request's head commit at that moment, and merges
-# that commit into the batch being assembled: a branch `batch/...` with its own pull request,
-# which the workflow opens and keeps described. A batch takes only recorded commits. The label
-# on its own queues nothing, and commits pushed later wait for another `batch` comment.
+# A maintainer queues a commit of a pull request for a batch build in one of two ways: by
+# approving the pull request in a review and then commenting `batch`, which queues the commit
+# they approved, or by commenting `batch <commit>` with the full id of the head commit. This
+# records the commit, adds the `batch queue` label, and merges that commit into the batch being
+# assembled: a branch `batch/...` with its own pull request, which the workflow opens and keeps
+# described. A batch takes only recorded commits. The label on its own queues nothing, a plain
+# `batch` from someone who has not approved queues nothing, and commits pushed later wait to be
+# queued themselves.
 #
 # A batch stops growing when it is frozen. That happens when a maintainer comments `freeze` on
 # the batch pull request, or dispatches a build of it. The pull requests inside then swap
@@ -12,15 +15,16 @@ name: batch queue
 # merged, `building` comes off again and the batch branch is removed. When one is closed without
 # being merged, its pull requests go back to `batch queue`.
 #
-# Commenting `-batch` takes a pull request out of the queue again: it removes the `batch queue`
-# label and nothing else. Commits already merged into a batch stay there, and no batch is
-# rebuilt, so a build that is under way is never disturbed.
+# Commenting `-batch` takes a pull request out of the queue again: it withdraws the recorded
+# commit and removes the `batch queue` label, and nothing else. Commits already merged into a
+# batch stay there, and no batch is rebuilt, so a build that is under way is never disturbed.
 #
-# Only a comment whose whole text is `batch`, `-batch` or `freeze` counts, letter case and
-# surrounding blank space aside, and only from someone with write access to this repository.
-# Every other comment is ignored. GitHub runs this workflow from the default branch for every event below,
-# so a pull request cannot change what it does. Nothing from a pull request is checked out or
-# run: GitHub performs the merges, and comparisons read git objects only.
+# Only a comment whose whole text is `batch`, `batch <commit>`, `-batch` or `freeze` counts,
+# letter case and surrounding blank space aside, and only from someone with write access to this
+# repository. Every other comment is ignored. GitHub runs this workflow from the default branch
+# for every event below, so a pull request cannot change what it does. Nothing from a pull
+# request is checked out or run: GitHub performs the merges, and comparisons read git objects
+# only.
 #
 # Queuing also compares the pull request with the others labelled `building` or `batch queue`
 # and comments if git cannot merge it with one of them. That job only reports.
@@ -78,6 +82,13 @@ jobs:
           # Drop blank space, line breaks included, from both ends.
           text="${text#"${text%%[![:space:]]*}"}"
           text="${text%"${text##*[![:space:]]}"}"
+          # `batch <commit>` names the commit to queue.
+          named=''
+          with_commit='^batch[[:space:]]+([0-9a-f]{7,40})$'
+          if [[ "$text" =~ $with_commit ]]; then
+            named=${BASH_REMATCH[1]}
+            text=batch
+          fi
           case "$text" in
             batch | -batch | freeze) ;;
             *)
@@ -99,6 +110,10 @@ jobs:
               ;;
           esac
 
+          say() {
+            gh api -X POST "repos/$REPO/issues/$PR/comments" -f "body=$1" --silent
+          }
+
           if [ "$text" = freeze ]; then
             # Only a batch can be frozen: an open pull request from a batch/... branch of this
             # repository. The label is the record that it is frozen.
@@ -117,17 +132,17 @@ jobs:
           fi
 
           if [ "$text" = -batch ]; then
-            # Out of the queue: the label goes and nothing else changes. Commits already merged
-            # into a batch stay there, so no batch is rebuilt and no build is disturbed.
-            if ! gh api "repos/$REPO/issues/$PR/labels" --jq '.[].name' | grep -qxF -- "$LABEL"; then
-              echo "Pull request $PR does not carry '$LABEL': nothing to remove."
-              exit 0
+            # Out of the queue: the queued commit is withdrawn and the label goes. Commits already
+            # merged into a batch stay there, so no batch is rebuilt and no build is disturbed.
+            # The withdrawal is recorded first, and whether or not the label is still there, so
+            # that putting the label back by hand queues nothing.
+            say "$(printf '<!-- batch-queue-withdrawn -->\nTaken out of the batch queue by `%s`.' "$AUTHOR")"
+            if gh api "repos/$REPO/issues/$PR/labels" --jq '.[].name' | grep -qxF -- "$LABEL"; then
+              gh api -X DELETE "repos/$REPO/issues/$PR/labels/$(jq -rn --arg label "$LABEL" '$label | @uri')" --silent
+              echo "Removed '$LABEL' from pull request $PR, as $AUTHOR asked."
+            else
+              echo "Pull request $PR does not carry '$LABEL'. The withdrawal is recorded all the same."
             fi
-            gh api -X DELETE "repos/$REPO/issues/$PR/labels/$(jq -rn --arg label "$LABEL" '$label | @uri')" --silent
-            echo "Removed '$LABEL' from pull request $PR, as $AUTHOR asked."
-            # Withdraw the queued commit too, so that putting the label back by hand queues nothing.
-            note=$(printf '<!-- batch-queue-withdrawn -->\nTaken out of the batch queue by `%s`.' "$AUTHOR")
-            gh api -X POST "repos/$REPO/issues/$PR/comments" -f "body=$note" --silent
             echo "unqueued=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -139,20 +154,50 @@ jobs:
             exit 1
           fi
 
-          gh api -X POST "repos/$REPO/issues/$PR/labels" -f "labels[]=$LABEL" --silent
-          echo "Added '$LABEL' to pull request $PR, as $AUTHOR asked."
-
-          # Record the commit that was queued. A batch takes this commit and no later one, so
-          # whatever is pushed afterwards waits for another `batch` comment. The sync job trusts
-          # this record only at the start of a comment written by this workflow.
-          sha=$(gh api "repos/$REPO/pulls/$PR" --jq .head.sha)
-          if ! [[ "$sha" =~ ^[0-9a-f]{40}$ ]]; then
+          head=$(gh api "repos/$REPO/pulls/$PR" --jq .head.sha)
+          if ! [[ "$head" =~ ^[0-9a-f]{40}$ ]]; then
             echo "::error::Could not read the head commit of pull request $PR."
             exit 1
           fi
-          note=$(printf '<!-- batch-queue-approved %s -->\nQueued at `%s` by `%s`. A batch takes this commit. Commits pushed after it wait for another `batch` comment.' "$sha" "$sha" "$AUTHOR")
-          gh api -X POST "repos/$REPO/issues/$PR/comments" -f "body=$note" --silent
-          echo "Recorded $sha as the queued commit."
+
+          # The commit to queue has to be one the maintainer chose. This job starts some time
+          # after the comment, and the author is told about the comment, so taking the head as it
+          # is now would let a push made in between pass as approved.
+          if [ -n "$named" ]; then
+            if [ "${#named}" -lt 40 ]; then
+              say "$(printf '<!-- batch-queue-help -->\nNothing was queued. `batch` needs the full 40-character commit id, because another commit can be made to share a shorter one. The head of this pull request is now:\n\n```\nbatch %s\n```' "$head")"
+              echo "A short commit id was given: nothing queued."
+              exit 0
+            fi
+            if [ "$named" != "$head" ]; then
+              say "$(printf '<!-- batch-queue-help -->\nNothing was queued. `%s` is not the head of this pull request, which is now `%s`.' "$named" "$head")"
+              echo "$named is not the head of pull request $PR: nothing queued."
+              exit 0
+            fi
+            commit=$named
+            how='named in the comment'
+          else
+            # The commit of the commenter's latest review, when that review approves. GitHub fixes
+            # that commit when the review is submitted.
+            commit=$(gh api --paginate "repos/$REPO/pulls/$PR/reviews?per_page=100" | jq -rs --arg who "$AUTHOR" '
+              add // []
+              | map(select(.user.login == $who and (.state == "APPROVED" or .state == "CHANGES_REQUESTED" or .state == "DISMISSED")))
+              | last | if . != null and .state == "APPROVED" then .commit_id else empty end')
+            how='approved in a review'
+            if ! [[ "$commit" =~ ^[0-9a-f]{40}$ ]]; then
+              say "$(printf '<!-- batch-queue-help -->\nNothing was queued. A batch takes one exact commit, so `batch` has to know which commit you checked. Either approve this pull request in a review and comment `batch` again, which queues the commit you approved, or name the commit. The head is now:\n\n```\nbatch %s\n```' "$head")"
+              echo "$AUTHOR has not approved pull request $PR and named no commit: nothing queued."
+              exit 0
+            fi
+          fi
+
+          # The record first and the label second, so that a run which sees the label also sees
+          # the record. The sync job trusts the record only at the start of a comment written by
+          # this workflow.
+          say "$(printf '<!-- batch-queue-approved %s -->\nQueued at `%s`, the commit `%s` %s. A batch takes this commit and no other.' "$commit" "$commit" "$AUTHOR" "$how")"
+          echo "Recorded $commit as the queued commit, $how."
+          gh api -X POST "repos/$REPO/issues/$PR/labels" -f "labels[]=$LABEL" --silent
+          echo "Added '$LABEL' to pull request $PR, as $AUTHOR asked."
           echo "queued=true" >> "$GITHUB_OUTPUT"
 
   started:

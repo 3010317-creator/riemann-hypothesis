@@ -4,10 +4,10 @@
 The batch-queue workflow runs this from its trusted checkout. Everything goes through GitHub's
 API: GitHub performs the merges, and nothing from a pull request is checked out or run here.
 
-Which commit goes into a batch. A pull request is queued when a maintainer comments `batch` on
-it. The workflow's label job records the head commit at that moment in a comment of its own, and
-that commit is the only one a batch takes. The `batch queue` label alone queues nothing, and
-commits pushed afterwards wait for another `batch` comment.
+Which commit goes into a batch. A maintainer queues one commit of a pull request, either the
+commit they approved in a review or one they name in the `batch` comment. The workflow's label
+job records that commit in a comment of its own, and it is the only one a batch takes. The
+`batch queue` label alone queues nothing, and commits pushed afterwards wait to be queued.
 
 A batch is a branch `batch/...` in this repository, normally with an open pull request.
 
@@ -17,6 +17,9 @@ A batch is a branch `batch/...` in this repository, normally with an open pull r
   contains swap `batch queue` for `building`. Later arrivals start a new batch.
 - Once it is merged, the pull requests it contained lose `building`.
 - If it is closed without being merged, they swap `building` back for `batch queue`.
+
+A frozen batch that was merged or closed is found by its pull request, which keeps `building`
+until this script has tidied up after it. Its branch may already have been deleted by then.
 
 Taking a pull request out of the queue never changes a batch. Commits already merged into one
 stay there, and the batch's description says so. No batch is ever rebuilt.
@@ -43,6 +46,9 @@ BOT = "github-actions[bot]"
 BUILD_WORKFLOW = "build-pr.yml"
 # Stop early when fewer requests than this are left for the hour, so other workflows keep working.
 RESERVE = 150
+# What was read from a pull request is remembered only once the pull request has been quiet for
+# this long. GitHub's update times are whole seconds, so two changes in one second look like one.
+SETTLE = datetime.timedelta(seconds=120)
 
 # Comments the workflow's label job leaves when a maintainer queues or unqueues a pull request.
 # They count only at the very start of a comment written by the workflow itself.
@@ -118,6 +124,9 @@ class GitHub:
         """Whether the hour's allowance is nearly used up."""
         return self.remaining is not None and self.remaining < RESERVE
 
+    def now(self):
+        return datetime.datetime.now(datetime.timezone.utc)
+
 
 def quoted(label):
     return label.replace(" ", "%20")
@@ -176,8 +185,20 @@ def look(gh, pr, seen):
             sha = match.group(1)
         elif body.startswith(WITHDRAWN):
             sha = None
-    seen[key] = [pr["updated"], sha or ""]
+    if settled(gh, pr["updated"]):
+        seen[key] = [pr["updated"], sha or ""]
+    else:
+        seen.pop(key, None)
     return sha, comments
+
+
+def settled(gh, updated):
+    """Whether a pull request has been left alone long enough for its update time to be trusted."""
+    try:
+        when = datetime.datetime.strptime(updated, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=datetime.timezone.utc)
+    except (TypeError, ValueError):
+        return False
+    return gh.now() - when >= SETTLE
 
 
 def tell(gh, number, comments, marker, text):
@@ -195,27 +216,42 @@ def tell(gh, number, comments, marker, text):
 
 
 def batches(gh, pulls):
-    """Every batch branch, as {ref, sha, number, frozen, body, fate}.
+    """The batches that can still be merged, as {ref, sha, number, frozen, body}, and the names of
+    batch branches left behind by a pull request that was merged or closed.
 
-    `fate` is "open" while the batch can still be merged, and "merged" or "closed" once its pull
-    request is. `number` is None for a branch whose pull request has not been opened yet.
+    `number` is None for a branch whose pull request has not been opened yet.
     """
     owner = gh.repo.split("/")[0]
     live = {pr["ref"]: pr for pr in pulls.values() if is_batch(pr)}
-    found = []
+    found, leftover = [], []
     for ref in gh.get(f"git/matching-refs/heads/{PREFIX}"):
         name = ref["ref"][len("refs/heads/"):]
-        batch = {"ref": name, "sha": ref["object"]["sha"], "number": None, "frozen": False, "body": "", "fate": "open"}
+        batch = {"ref": name, "sha": ref["object"]["sha"], "number": None, "frozen": False, "body": ""}
         if name in live:
             pr = live[name]
             batch.update(number=pr["number"], frozen=BUILDING in pr["labels"], body=pr["body"])
-        else:
-            past = gh.get(f"pulls?state=all&head={owner}:{name}")
-            if past:
-                last = max(past, key=lambda item: item["number"])
-                batch.update(number=last["number"], body=last.get("body") or "",
-                             fate="merged" if last.get("merged_at") else "closed")
+        elif gh.get(f"pulls?state=all&head={owner}:{name}"):
+            leftover.append(name)
+            continue
         found.append(batch)
+    return found, leftover
+
+
+def finished(gh):
+    """Frozen batches that were merged or closed and not yet tidied up after, with a `fate`.
+
+    They are found by their pull requests, which keep `building` until `finish` is done with
+    them. That works whether or not someone has already deleted the branch.
+    """
+    found = []
+    for item in gh.pages(f"issues?state=closed&labels={quoted(BUILDING)}"):
+        if "pull_request" not in item or BODY not in (item.get("body") or ""):
+            continue
+        info = gh.get(f"pulls/{item['number']}")
+        head = info["head"]
+        if (head.get("repo") or {}).get("full_name") == gh.repo and head["ref"].startswith(PREFIX):
+            found.append({"ref": head["ref"], "sha": head["sha"], "number": info["number"], "frozen": True,
+                          "body": info.get("body") or "", "fate": "merged" if info.get("merged") else "closed"})
     return found
 
 
@@ -260,8 +296,9 @@ def recall(gh, batch, main_sha):
 
 def describe(batch, state, members, also=(), refused=(), unapproved=()):
     """The text of a batch pull request."""
-    lines = [BODY, "The batch-queue workflow assembles this pull request. When a maintainer comments "
-             "`batch` on a pull request, its head commit at that moment is merged in here."]
+    lines = [BODY, "The batch-queue workflow assembles this pull request. When a maintainer queues a "
+             "commit of a pull request, by approving it and commenting `batch` or by commenting "
+             "`batch <commit>`, that commit is merged in here."]
     if batch["frozen"]:
         lines.append(f"\nThis batch is frozen at `{batch['sha'][:10]}`. Nothing more is added to it, "
                      "and later `batch` comments start a new batch.")
@@ -277,7 +314,7 @@ def describe(batch, state, members, also=(), refused=(), unapproved=()):
         lines += ["", "Left out, because GitHub could not merge them into this branch: "
                   + ", ".join(f"#{number}" for number in refused) + "."]
     if unapproved:
-        lines += ["", f"Labelled `{QUEUED}` but not queued, because no maintainer has commented `batch` on them: "
+        lines += ["", f"Labelled `{QUEUED}` but not queued, because no maintainer has queued a commit of them: "
                   + ", ".join(f"#{number}" for number in unapproved) + "."]
     lines += ["", "Merge this with a merge commit, not a squash, so that GitHub marks the pull "
               "requests above as merged."]
@@ -312,7 +349,7 @@ def start(gh, main, main_sha, now, log):
         status, data = gh.write("POST", "git/refs", {"ref": f"refs/heads/{name}", "sha": main_sha})
         if status in (0, 201):
             log.append(f"started `{name}` from `{main}`")
-            return {"ref": name, "sha": main_sha, "number": None, "frozen": False, "body": "", "fate": "open"}
+            return {"ref": name, "sha": main_sha, "number": None, "frozen": False, "body": ""}
         if status != 422:
             break
     raise Refused(f"GitHub would not create a batch branch ({status}: {(data or {}).get('message', 'no reason given')}).")
@@ -341,12 +378,12 @@ def frozen_now(gh, batch):
 # One run.
 
 
-def finish(gh, pulls, found, main_sha, log):
-    """Deal with batches that were merged or closed. Returns whether anything went back in the queue."""
+def finish(gh, pulls, found, leftover, main_sha, log):
+    """Tidy up after batches that were merged or closed. Returns whether anything was queued again."""
     requeued = False
-    frozen = [batch for batch in found if batch["fate"] == "open" and batch["frozen"]]
+    frozen = [batch for batch in found if batch["frozen"]]
     elsewhere = {key for batch in frozen for key in recall(gh, batch, main_sha)["merged"]} if frozen else set()
-    for batch in (item for item in found if item["fate"] != "open"):
+    for batch in finished(gh):
         for key in recall(gh, batch, main_sha)["merged"]:
             pr = pulls.get(int(key))
             if batch["fate"] == "merged":
@@ -358,8 +395,13 @@ def finish(gh, pulls, found, main_sha, log):
                 relabel(gh, pr, add=QUEUED, remove=BUILDING)
                 requeued = True
                 log.append(f"batch #{batch['number']} was closed without merging: #{key} is `{QUEUED}` again")
-        gh.write("DELETE", f"git/refs/heads/{batch['ref']}")
-        log.append(f"removed the branch `{batch['ref']}`")
+        # Taking the label off the batch itself marks it as dealt with.
+        relabel(gh, batch["number"], remove=BUILDING)
+        if batch["ref"] not in leftover:
+            log.append(f"tidied up after batch #{batch['number']}; its branch was already gone")
+    for name in leftover:
+        gh.write("DELETE", f"git/refs/heads/{name}")
+        log.append(f"removed the branch `{name}`")
     return requeued
 
 
@@ -369,11 +411,11 @@ def sync(gh, now=None):
     main = gh.get("")["default_branch"]
     main_sha = gh.get(f"git/ref/heads/{main}")["object"]["sha"]
     pulls = open_pulls(gh)
-    found = batches(gh, pulls)
-    requeued = finish(gh, pulls, found, main_sha, log)
+    found, leftover = batches(gh, pulls)
+    requeued = finish(gh, pulls, found, leftover, main_sha, log)
 
     # A frozen batch hands `building` to what it contains.
-    for batch in (item for item in found if item["fate"] == "open" and item["frozen"]):
+    for batch in (item for item in found if item["frozen"]):
         state = recall(gh, batch, main_sha)
         members, also = [], []
         for key, sha in sorted(state["merged"].items(), key=lambda item: int(item[0])):
@@ -393,8 +435,7 @@ def sync(gh, now=None):
         return log
 
     # The batch being assembled takes each commit a maintainer queued.
-    assembling = sorted((item for item in found if item["fate"] == "open" and not item["frozen"]),
-                        key=lambda item: item["ref"])
+    assembling = sorted((item for item in found if not item["frozen"]), key=lambda item: item["ref"])
     batch = assembling[-1] if assembling else None
     state = recall(gh, batch, main_sha) if batch else {"merged": {}, "refused": {}, "seen": {}}
     members, refused, unapproved, stopped, before = [], [], [], False, len(log)
@@ -409,7 +450,8 @@ def sync(gh, now=None):
         if sha != pr["sha"] and comments is not None and tell(
                 gh, number, comments, MOVED.format(sha=sha),
                 f"This pull request was queued at `{sha[:10]}` and its head is now `{pr['sha'][:10]}`. A batch takes "
-                "only the commit that was queued. Comment `batch` again to queue the new one."):
+                "only the commit that was queued. To queue the new one, approve it and comment `batch`, or "
+                f"comment `batch {pr['sha']}`."):
             log.append(f"told #{number} that its head has moved since it was queued")
         if state["merged"].get(key) == sha:
             members.append((number, sha))
@@ -452,7 +494,7 @@ def sync(gh, now=None):
 
     if batch is None:
         if unapproved:
-            log.append(f"labelled `{QUEUED}` but not queued by a `batch` comment: "
+            log.append(f"labelled `{QUEUED}` but no commit of them is queued: "
                        + ", ".join(f"#{number}" for number in unapproved))
         return log or ["nothing to do"]
 
