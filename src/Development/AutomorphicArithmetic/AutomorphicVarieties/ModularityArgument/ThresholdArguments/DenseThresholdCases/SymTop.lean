@@ -369,7 +369,8 @@ private theorem char_eq {l : ℕ} [Fact l.Prime] {G A : Type} [Group G] [Topolog
     have := hcl S hp χ' hopen hT' g
     rw [← map_pow, hval] at this
     rw [← Ideal.Quotient.eq, map_one]
-    simpa using this
+    rw [map_pow, Units.val_pow_eq_pow_val] at this
+    exact this
   have hbot : ((χ g : Aˣ) : A) ^ h - 1 ∈ (⨅ N : ℕ, m ^ N) := Ideal.mem_iInf.2 (fun N => key N g)
   rw [Ideal.iInf_pow_eq_bot_of_isLocalRing m (Ideal.IsPrime.ne_top inferInstance), Ideal.mem_bot,
     sub_eq_zero] at hbot
