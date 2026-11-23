@@ -23,14 +23,18 @@ Poitou–Tate sequence is exact, `Ш¹` and `Ш²` of `M` and of its twisted dua
 to each other, and `Hⁿ(G_S, M)` vanishes for `n ≥ 3`.
 
 Proposed reference:
-[J. S. Milne, *Arithmetic Duality Theorems* (Chapter I, Theorem 4.10)][milne2006], which proves
-these for every finite `G_S`-module whose order is a unit away from `S`. This statement is a
-special case: `S` is finite and `M` is killed by `l ^ r`, and the condition on `l` and `F` makes
-every archimedean term in Milne's sequence vanish, which is why only finite primes appear here and
-why the last clause is vanishing rather than an isomorphism with real local cohomology. It is
-also weaker in two respects: the duality of `Ш` is an abstract isomorphism with equal orders
-rather than Tate's pairing, and two maps of the sequence are only asserted to exist. The
-existence of the invariant maps is local class field theory, which Milne's theorem takes as given.
+[J. S. Milne, *Arithmetic Duality Theorems* (Chapter I, Theorem 4.10, pp. 56–57)][milne2006],
+which proves these for every finite `G_S`-module whose order is a unit away from `S`. This
+statement is a special case: `S` is finite and `M` is killed by `l ^ r`, and the condition on `l`
+and `F` makes every archimedean term in Milne's sequence vanish, which is why only finite primes
+appear here and why the last clause is vanishing rather than an isomorphism with real local
+cohomology. The terms vanish because Milne uses Tate's modified groups at the archimedean places
+(p. 55): at a complex place they are zero, and at a real place, such as
+`Ĥ⁰(ℝ, M) = M^{Gal(ℂ/ℝ)} / N M`, they are killed by 2 as well as by `l ^ r`, so they vanish when
+`l` is odd. It is also weaker in two respects: the duality of `Ш` is an abstract isomorphism with
+equal orders rather than Tate's pairing, and two maps of the sequence are only asserted to exist.
+The existence of the invariant maps is local class field theory, which Milne's theorem takes as
+given.
 This reference is a reader's proposal and has not been checked by a mathematician. -/
 def PoitouTateDuality : Prop :=
   ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω]
