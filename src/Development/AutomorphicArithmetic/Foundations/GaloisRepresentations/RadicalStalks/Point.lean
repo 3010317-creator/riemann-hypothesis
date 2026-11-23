@@ -1619,7 +1619,7 @@ theorem UpperTheory.Gal.Ord.hasse :
   have hcomm : ψ ≫ (o.act.act (algebraMap (𝓞 D.F) D.O π.ε)).left = (o.act.act (algebraMap (𝓞 D.F) D.O π.ε)).left ≫ ψ := by
     haveI := (UpperTheory.Gal.Ord.epi p o.A.left hA).2 f
     rw [← cancel_epi (frobN p o.A.left hA f), ← Category.assoc, ha, ← Category.assoc,
-      frobN_nat hA hA (o.act.act (algebraMap (𝓞 D.F) D.O π.ε)).left f, Category.assoc, ha,
+      frobN_nat (p := p) hA hA (o.act.act (algebraMap (𝓞 D.F) D.O π.ε)).left f, Category.assoc, ha,
       ← Over.comp_left, ← Over.comp_left, ← o.act.mul, ← o.act.mul, ← map_mul, ← map_mul, mul_comm]
   have hz : ∀ z ∈ PrimitiveSubmodule o.A, hom o π.ε h₀ (m.pull z) = 0 := fun z hzF => by
     have e := (Submodule.mem_dualAnnihilator _).1 hd₀ _ (pullback_first_filtration_primitive m hzF)
