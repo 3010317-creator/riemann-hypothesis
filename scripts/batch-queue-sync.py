@@ -4,10 +4,11 @@
 The batch-queue workflow runs this from its trusted checkout. Everything goes through GitHub's
 API: GitHub performs the merges, and nothing from a pull request is checked out or run here.
 
-Which commit goes into a batch. A maintainer queues one commit of a pull request, either the
-commit they approved in a review or one they name in the `batch` comment. The workflow's label
-job records that commit in a comment of its own, and it is the only one a batch takes. The
-`batch queue` label alone queues nothing, and commits pushed afterwards wait to be queued.
+Which commit goes into a batch. A maintainer queues one commit of a pull request by commenting
+`batch`: the commit that was its head when the comment was posted, or one named in the comment.
+The workflow's label job records that commit in a comment of its own, and it is the only one a
+batch takes. The `batch queue` label alone queues nothing, and commits pushed afterwards wait
+for another `batch`.
 
 A batch is a branch `batch/...` in this repository, normally with an open pull request.
 
@@ -296,9 +297,8 @@ def recall(gh, batch, main_sha):
 
 def describe(batch, state, members, also=(), refused=(), unapproved=()):
     """The text of a batch pull request."""
-    lines = [BODY, "The batch-queue workflow assembles this pull request. When a maintainer queues a "
-             "commit of a pull request, by approving it and commenting `batch` or by commenting "
-             "`batch <commit>`, that commit is merged in here."]
+    lines = [BODY, "The batch-queue workflow assembles this pull request. When a maintainer comments "
+             "`batch` on a pull request, the commit that was its head at that moment is merged in here."]
     if batch["frozen"]:
         lines.append(f"\nThis batch is frozen at `{batch['sha'][:10]}`. Nothing more is added to it, "
                      "and later `batch` comments start a new batch.")
@@ -314,7 +314,7 @@ def describe(batch, state, members, also=(), refused=(), unapproved=()):
         lines += ["", "Left out, because GitHub could not merge them into this branch: "
                   + ", ".join(f"#{number}" for number in refused) + "."]
     if unapproved:
-        lines += ["", f"Labelled `{QUEUED}` but not queued, because no maintainer has queued a commit of them: "
+        lines += ["", f"Labelled `{QUEUED}` but not queued, because no maintainer has commented `batch` on them: "
                   + ", ".join(f"#{number}" for number in unapproved) + "."]
     lines += ["", "Merge this with a merge commit, not a squash, so that GitHub marks the pull "
               "requests above as merged."]
@@ -450,8 +450,7 @@ def sync(gh, now=None):
         if sha != pr["sha"] and comments is not None and tell(
                 gh, number, comments, MOVED.format(sha=sha),
                 f"This pull request was queued at `{sha[:10]}` and its head is now `{pr['sha'][:10]}`. A batch takes "
-                "only the commit that was queued. To queue the new one, approve it and comment `batch`, or "
-                f"comment `batch {pr['sha']}`."):
+                "only the commit that was queued. Comment `batch` again to queue the new one."):
             log.append(f"told #{number} that its head has moved since it was queued")
         if state["merged"].get(key) == sha:
             members.append((number, sha))

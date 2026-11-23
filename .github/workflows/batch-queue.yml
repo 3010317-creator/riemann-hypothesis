@@ -1,13 +1,11 @@
 name: batch queue
 
-# A maintainer queues a commit of a pull request for a batch build in one of two ways: by
-# approving the pull request in a review and then commenting `batch`, which queues the commit
-# they approved, or by commenting `batch <commit>` with the full id of the head commit. This
-# records the commit, adds the `batch queue` label, and merges that commit into the batch being
-# assembled: a branch `batch/...` with its own pull request, which the workflow opens and keeps
-# described. A batch takes only recorded commits. The label on its own queues nothing, a plain
-# `batch` from someone who has not approved queues nothing, and commits pushed later wait to be
-# queued themselves.
+# A maintainer queues a pull request for a batch build by commenting `batch` on it. This records
+# the commit that was the pull request's head when the comment was posted, adds the `batch queue`
+# label, and merges that commit into the batch being assembled: a branch `batch/...` with its
+# own pull request, which the workflow opens and keeps described. `batch <commit>`, with the
+# full id of the head commit, names the commit outright. A batch takes only recorded commits.
+# The label on its own queues nothing, and commits pushed later wait for another `batch`.
 #
 # A batch stops growing when it is frozen. That happens when a maintainer comments `freeze` on
 # the batch pull request, or dispatches a build of it. The pull requests inside then swap
@@ -58,7 +56,9 @@ jobs:
       ${{ github.event_name == 'issue_comment' && github.event.issue.pull_request &&
           (contains(github.event.comment.body, 'batch') || contains(github.event.comment.body, 'freeze')) }}
     runs-on: ubuntu-latest
+    # `contents: read` is for the log of pushes to a branch of this repository.
     permissions:
+      contents: read
       issues: write
       pull-requests: write
     outputs:
@@ -74,6 +74,7 @@ jobs:
           PR: ${{ github.event.issue.number }}
           AUTHOR: ${{ github.event.comment.user.login }}
           BODY: ${{ github.event.comment.body }}
+          WHEN: ${{ github.event.comment.created_at }}
           LABEL: batch queue
           FROZEN: building
         run: |
@@ -154,18 +155,23 @@ jobs:
             exit 1
           fi
 
-          head=$(gh api "repos/$REPO/pulls/$PR" --jq .head.sha)
+          # The pull request's head now, and the repository and branch it comes from.
+          {
+            read -r head
+            read -r home
+            read -r branch
+          } < <(gh api "repos/$REPO/pulls/$PR" --jq '.head.sha, (.head.repo.full_name // ""), .head.ref')
           if ! [[ "$head" =~ ^[0-9a-f]{40}$ ]]; then
             echo "::error::Could not read the head commit of pull request $PR."
             exit 1
           fi
 
-          # The commit to queue has to be one the maintainer chose. This job starts some time
-          # after the comment, and the author is told about the comment, so taking the head as it
-          # is now would let a push made in between pass as approved.
+          # The commit to queue is the one the maintainer was looking at, not the head as this job
+          # finds it. The job starts some time after the comment, and the author is told about the
+          # comment, so a push made in between would otherwise pass as approved.
           if [ -n "$named" ]; then
             if [ "${#named}" -lt 40 ]; then
-              say "$(printf '<!-- batch-queue-help -->\nNothing was queued. `batch` needs the full 40-character commit id, because another commit can be made to share a shorter one. The head of this pull request is now:\n\n```\nbatch %s\n```' "$head")"
+              say "$(printf '<!-- batch-queue-help -->\nNothing was queued. `batch <commit>` needs the full 40-character commit id, because another commit can be made to share a shorter one. The head of this pull request is now:\n\n```\nbatch %s\n```' "$head")"
               echo "A short commit id was given: nothing queued."
               exit 0
             fi
@@ -175,18 +181,21 @@ jobs:
               exit 0
             fi
             commit=$named
-            how='named in the comment'
+            why=$(printf 'the commit `%s` named' "$AUTHOR")
           else
-            # The commit of the commenter's latest review, when that review approves. GitHub fixes
-            # that commit when the review is submitted.
-            commit=$(gh api --paginate "repos/$REPO/pulls/$PR/reviews?per_page=100" | jq -rs --arg who "$AUTHOR" '
-              add // []
-              | map(select(.user.login == $who and (.state == "APPROVED" or .state == "CHANGES_REQUESTED" or .state == "DISMISSED")))
-              | last | if . != null and .state == "APPROVED" then .commit_id else empty end')
-            how='approved in a review'
+            # The head as it was when the comment was posted, read from GitHub's log of pushes to
+            # the branch: the newest push before the comment. The times in that log are GitHub's
+            # own. Commit dates would not do, because the author sets them. A push in the same
+            # second as the comment counts as after it.
+            commit=''
+            if [ -n "$home" ]; then
+              pushes="repos/$home/activity?per_page=100&ref=$(jq -rn --arg ref "refs/heads/$branch" '$ref | @uri')"
+              commit=$(gh api "$pushes" | jq -r --arg when "$WHEN" 'map(select(.timestamp < $when)) | first | .after // empty') || commit=''
+            fi
+            why=$(printf 'the head of this pull request when `%s` commented' "$AUTHOR")
             if ! [[ "$commit" =~ ^[0-9a-f]{40}$ ]]; then
-              say "$(printf '<!-- batch-queue-help -->\nNothing was queued. A batch takes one exact commit, so `batch` has to know which commit you checked. Either approve this pull request in a review and comment `batch` again, which queues the commit you approved, or name the commit. The head is now:\n\n```\nbatch %s\n```' "$head")"
-              echo "$AUTHOR has not approved pull request $PR and named no commit: nothing queued."
+              say "$(printf '<!-- batch-queue-help -->\nNothing was queued. GitHub'"'"'s log of pushes to this branch did not show which commit was the head when you commented. Name the commit to queue. The head is now:\n\n```\nbatch %s\n```' "$head")"
+              echo "Could not tell which commit was the head of pull request $PR at $WHEN: nothing queued."
               exit 0
             fi
           fi
@@ -194,8 +203,8 @@ jobs:
           # The record first and the label second, so that a run which sees the label also sees
           # the record. The sync job trusts the record only at the start of a comment written by
           # this workflow.
-          say "$(printf '<!-- batch-queue-approved %s -->\nQueued at `%s`, the commit `%s` %s. A batch takes this commit and no other.' "$commit" "$commit" "$AUTHOR" "$how")"
-          echo "Recorded $commit as the queued commit, $how."
+          say "$(printf '<!-- batch-queue-approved %s -->\nQueued at `%s`, %s. A batch takes this commit and no other.' "$commit" "$commit" "$why")"
+          echo "Recorded $commit as the queued commit."
           gh api -X POST "repos/$REPO/issues/$PR/labels" -f "labels[]=$LABEL" --silent
           echo "Added '$LABEL' to pull request $PR, as $AUTHOR asked."
           echo "queued=true" >> "$GITHUB_OUTPUT"

@@ -289,7 +289,7 @@ class QueuedCommits(unittest.TestCase):
         sync(gh)
         self.assertEqual(merges(gh), [])
         self.assertIn(f"- #12 at `{short('head12')}`", batch_pull(gh)["body"])
-        self.assertIn(f"or comment `batch {sha('head12-later')}`.", gh.said(12)[0])
+        self.assertIn("Comment `batch` again to queue the new one.", gh.said(12)[0])
 
     def test_queuing_again_merges_the_new_commit(self):
         gh = Fake()
@@ -307,7 +307,7 @@ class QueuedCommits(unittest.TestCase):
         gh.add_pull(12, "head12", labels=[QUEUED])  # labelled by hand, for instance with the triage role
         log = sync(gh)
         self.assertEqual(merges(gh), [sha("head11")])
-        self.assertIn("Labelled `batch queue` but not queued, because no maintainer has queued a commit of them: #12.",
+        self.assertIn("Labelled `batch queue` but not queued, because no maintainer has commented `batch` on them: #12.",
                       batch_pull(gh)["body"])
         self.assertEqual(gh.said(12), [])
         self.assertEqual(gh.pulls[12]["labels"], {QUEUED})
@@ -340,7 +340,7 @@ class QueuedCommits(unittest.TestCase):
         gh.label(12, add=QUEUED)  # put back by hand
         sync(gh)
         self.assertEqual(merges(gh), [sha("head11")])
-        self.assertIn("no maintainer has queued a commit of them: #12.", batch_pull(gh)["body"])
+        self.assertIn("no maintainer has commented `batch` on them: #12.", batch_pull(gh)["body"])
 
     def test_a_record_that_arrives_within_the_same_second_is_not_missed(self):
         gh = Fake()
