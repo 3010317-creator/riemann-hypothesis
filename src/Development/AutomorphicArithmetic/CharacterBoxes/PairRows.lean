@@ -127,13 +127,8 @@ private theorem boxes_core {M : ℕ} {eps Y X : ℝ} {q d : ℕ} (hM : 0 < M) (h
   · rw [← ZMod.natCast_zmod_val a, hχv]
     generalize a.val = n
     have hr : (ρ.χ (n : ZMod ρ.N)).im = 0 := hρ _
-    have e1 : (((jacobiSym (n : ℤ) q : ℤ) : ℂ) ^ (i : ℕ)).im = 0 := by
-      rw [← Int.cast_pow]; exact Complex.intCast_im _
-    have e2 : (((jacobiSym (n : ℤ) d : ℤ) : ℂ) ^ (j : ℕ)).im = 0 := by
-      rw [← Int.cast_pow]; exact Complex.intCast_im _
-    simp only [tw, PChar.val]
-    rw [Complex.mul_im, Complex.mul_im, hr, e1, e2]
-    ring
+    simp only [tw, PChar.val, Complex.mul_im, ← Int.cast_pow, Complex.intCast_im, hr,
+      mul_zero, zero_mul, add_zero]
   · rw [hQ, hM2, hM1]
     push_cast
     have hNr : (ρ.N : ℝ) ≤ 8 := by exact_mod_cast Nat.le_of_dvd (by norm_num) h8
