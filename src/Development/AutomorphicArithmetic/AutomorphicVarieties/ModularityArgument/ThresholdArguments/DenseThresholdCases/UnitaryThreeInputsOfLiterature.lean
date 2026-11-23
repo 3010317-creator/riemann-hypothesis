@@ -744,7 +744,8 @@ private theorem isFrob_pow {A : ValuationSubring Ω} {q : ℕ} {σ : G F Ω} (h 
     push_neg at hc
     have hy0 : y ≠ 0 := by
       rintro rfl
-      simp at hc
+      rw [map_zero, map_zero] at hc
+      exact absurd hc (not_lt.2 zero_le')
     have hprod : ∀ z : Ω, z ≠ 0 → A.valuation z * A.valuation z⁻¹ = 1 := fun z hz => by
       rw [← map_mul, mul_inv_cancel₀ hz, map_one]
     have h1 : A.valuation (τ y⁻¹) < 1 := by
@@ -760,7 +761,8 @@ private theorem isFrob_pow {A : ValuationSubring Ω} {q : ℕ} {σ : G F Ω} (h 
   induction k with
   | zero =>
     intro x _
-    simp
+    rw [pow_zero, pow_zero, pow_one, AlgEquiv.one_apply, sub_self]
+    exact (A.valuation_lt_one_iff 0).1 (Ideal.zero_mem _)
   | succ k ih =>
     intro x hx
     set y := (σ ^ k) x with hydef
@@ -789,7 +791,8 @@ private theorem ine_finite [Finite (K →ₐ[F] Ω)] {l : ℕ} [Fact l.Prime] {n
     (r '' (Ine (F := F) A : Set (G F Ω))).Finite := by
   classical
   let c : (K →ₐ[F] Ω) → GL (Fin n) (Qbar l) := fun φ =>
-    if hφ : ∃ g ∈ Ine (F := F) A, resK K g = φ then r (Classical.choose hφ) else 1
+    @dite _ (∃ g ∈ Ine (F := F) A, resK K g = φ) (Classical.propDecidable _)
+      (fun hφ => r (Classical.choose hφ)) (fun _ => 1)
   refine ((Set.finite_univ.prod h).image (fun p : (K →ₐ[F] Ω) × GL (Fin n) (Qbar l) => c p.1 * p.2)).subset ?_
   rintro _ ⟨σ, hσ, rfl⟩
   have hex : ∃ g ∈ Ine (F := F) A, resK K g = resK K σ := ⟨σ, hσ, rfl⟩
@@ -844,6 +847,7 @@ theorem UpperTheory.GalN.V.L.wup :
       unfold normV at hnorm
       haveI := w.isPrime
       obtain ⟨hs, _⟩ := Nat.card_eq_one_iff_unique.1 hnorm
+      haveI : Nontrivial (𝓞 K ⧸ w.asIdeal) := Ideal.Quotient.nontrivial_iff.mpr w.isPrime.ne_top
       exact not_subsingleton _ hs
     · exact h0
   have e : normV w ^ (j * m) = (normV v ^ j) ^ (m * f) := by
