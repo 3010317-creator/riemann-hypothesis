@@ -76,7 +76,7 @@ private theorem aux_one {Ω : Type} [Field Ω] (A : ValuationSubring Ω) {m : �
 private theorem power_bounds_of_between {Ω : Type} [Field Ω] (A : ValuationSubring Ω) {η : Ω} (h1 : A.valuation η = 1)
     (h : A.valuation (η - 1) < 1) (i : ℕ) : A.valuation (1 - η ^ i) < 1 := by
   induction i with
-  | zero => simp
+  | zero => rw [pow_zero, sub_self, map_zero]; exact Units.zero_lt 1
   | succ i ih =>
     have e : 1 - η ^ (i + 1) = η * (1 - η ^ i) - (η - 1) := by ring
     rw [e]
@@ -94,14 +94,15 @@ private theorem root_of_unity_eq_one_of_close_residue {Ω : Type} [Field Ω] (A 
   have e : (m : Ω) = ∑ i ∈ Finset.range m, (1 - η ^ i) := by
     rw [Finset.sum_sub_distrib, hs]; simp
   rw [e]
-  exact A.valuation.map_sum_lt one_ne_zero fun i _ => power_bounds_of_between A (aux_one A hm hη) h i
+  exact A.valuation.map_sum_lt (Units.zero_lt 1).ne' fun i _ => power_bounds_of_between A (aux_one A hm hη) h i
 
 private theorem inertia_fixes_prime_to_roots {Ω : Type} [Field Ω] [CharZero Ω] (A : ValuationSubring Ω) {m : ℕ} (hm : m ≠ 0)
     (hA : ¬ A.valuation (m : Ω) < 1) {g : G ℚ Ω} (hg : g ∈ Ine (F := ℚ) A) {ζ : Ω} (hζ : ζ ^ m = 1) : g ζ = ζ := by
   have hv := aux_one A hm hζ
   have h0 : ζ ≠ 0 := by
     rintro rfl
-    simp at hv
+    rw [map_zero] at hv
+    exact (Units.zero_lt 1).ne hv
   have e : g ζ / ζ - 1 = (g ζ - ζ) / ζ := by field_simp
   have : g ζ / ζ = 1 := by
     refine root_of_unity_eq_one_of_close_residue A hm hA (by rw [div_pow, ← map_pow, hζ, map_one, div_one]) ?_
