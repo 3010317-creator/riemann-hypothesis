@@ -416,7 +416,7 @@ theorem dictLatB_holds : DictLatB := by
   have hXs' : ∀ b a, b < a → Xq X n b a ∈ aaD D b * (aaD D a)⁻¹ := hXs
   have hMs' : ∀ b a, Mq X n b a ∈ aaD D b * aaD D a := hMs
   have hXinv := shape_inv (Xq X n) hup hd hXs'
-  obtain ⟨hYup, hYd⟩ := inv_up (Xq X n) hup hd
+  obtain ⟨hYup, hYd⟩ := LatB.inv_up (Xq X n) hup hd
   have hdet : IsUnit (Xq X n).det := by rw [Xq_det hn]; exact isUnit_one
   have hAeq : Xq X n * Mq X n = Aq X n := by
     unfold Mq; rw [Matrix.mul_nonsing_inv_cancel_left _ _ hdet]
