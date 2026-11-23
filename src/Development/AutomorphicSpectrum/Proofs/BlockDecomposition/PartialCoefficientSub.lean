@@ -87,7 +87,8 @@ theorem pc_sub : PcBound → ∀ (D : D7) (n ρ p : ℕ) (hn : ρ + p = n) (M : 
   haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
   haveI : BorelSpace (hermA D ρ) := Subtype.borelSpace _
   haveI : SecondCountableTopology (Mx D ρ p) := (GlobalTheory.MixModel.lattice_Mx D ρ p).2.2.1
-  haveI : FirstCountableTopology (Mx D ρ p) := inferInstance
+  haveI : FirstCountableTopology (Mx D ρ p) :=
+    TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
   haveI h1 : IsFiniteMeasure (m.lz.restrict m.𝓖) :=
     ⟨by rw [Measure.restrict_apply_univ, m.hz.2.2]; exact ENNReal.one_lt_top⟩
   haveI h2 : IsFiniteMeasure (m.μ.restrict m.𝓕) :=
