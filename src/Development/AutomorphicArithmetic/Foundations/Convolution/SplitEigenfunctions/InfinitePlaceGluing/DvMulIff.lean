@@ -1080,7 +1080,7 @@ theorem UpperTheory.unipotent_conj_congruence_of_pow_five :
     have hu := unit_mul L hL hr
     rw [ht, hTe]
     linear_combination ((a : A E) * ((L : A E) * UpperTheory.ConvolutionTheory.R2.rt D.θ)) * hu
-  have main := conj_entry (Oh E) (L : A E) t oh_add oh_neg
+  have main := conj_entry (Oh E) (L : A E) t OrderAdditiveConjugation.oh_add OrderAdditiveConjugation.oh_neg
     (fun r => ((L ^ 4 : ℕ) : A E) * r)
     (fun r => ((L ^ 2 * a : ℕ) : A E) * (T * r))
     (fun r => ((a ^ 2 : ℕ) : A E) * (T * (T * r)))
