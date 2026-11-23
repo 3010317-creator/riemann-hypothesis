@@ -86,7 +86,7 @@ def runner_directory(path):
     if path.exists():
         info = path.stat()
         if info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) & 0o077:
-            raise ValueError("runner directory must be owned by you, mode0700")
+            raise ValueError("runner directory must be owned by you, mode 0700")
     return path
 
 
@@ -496,8 +496,8 @@ def main():
     configure = commands.add_parser("register", help="register with an operator-issued one-hour token")
     configure.add_argument("--directory", type=Path, default=DEFAULT_DIRECTORY)
     configure.add_argument("--name", default=platform.node().split(".")[0])
-    configure.add_argument("--token-file", type=Path, help="private mode0600 file; otherwise stdin/prompt")
-    configure.add_argument("--policy-file", type=Path, help="required mode0600 fresh GitHub runner-group API receipt")
+    configure.add_argument("--token-file", type=Path, help="private mode 0600 file; otherwise stdin/prompt")
+    configure.add_argument("--policy-file", type=Path, help="required mode 0600 fresh GitHub runner-group API receipt")
     configure.add_argument("--maintenance", action="store_true", help="also accept the exact trusted infrastructure/byo-build-ci branch during operator acceptance")
     configure.add_argument("--ephemeral", action="store_true", help="one job only; requires new enrollment afterward")
     configure.add_argument("--remove", action="store_true", help="use a fresh removal token; stop service first")
