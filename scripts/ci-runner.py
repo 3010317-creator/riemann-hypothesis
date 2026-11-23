@@ -171,6 +171,9 @@ def doctor(args):
             ["systemctl", "--user", "show-environment"], stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL).returncode == 0 if shutil.which("systemctl") else False,
         "cgroup_v2": Path("/sys/fs/cgroup/cgroup.controllers").is_file(),
+        "python": platform.python_version(),
+        # Informational: install needs this (filter="data", Python 3.11.4+); quick checks do not.
+        "tarfile_data_filter": hasattr(tarfile, "data_filter"),
     }
     memory = Path("/proc/meminfo").read_text()
     report["physical_ram_gib"] = round(int(re.search(r"MemTotal:\s+(\d+)", memory)[1]) / 2**20, 1)
@@ -208,6 +211,9 @@ def doctor(args):
 def install(args):
     if sys.platform != "linux" or os.getuid() == 0:
         raise ValueError("install as the dedicated unprivileged Linux runner account")
+    if not hasattr(tarfile, "data_filter"):
+        raise ValueError(f"python3 {platform.python_version()} lacks tarfile extraction filters: "
+                         "need Python 3.11+ with them (upstream CPython 3.11.4 or newer)")
     directory = runner_directory(args.directory)
     if directory.exists() and any(directory.iterdir()):
         raise ValueError("installation directory must be absent or empty")
@@ -448,7 +454,7 @@ def run_jit(args):
 
 def aws_user_data(args):
     print(f"""#cloud-config
-# Debian 12/13 or another compatible apt-based image. No registration credential here.
+# Debian 13 or another apt-based image (Debian 12's own python3 lacks tarfile filters). No registration credential here.
 package_update: true
 packages:
   - ca-certificates

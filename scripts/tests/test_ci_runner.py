@@ -297,6 +297,16 @@ class RunnerChecks(unittest.TestCase):
         self.assertEqual(error, "runner prerequisites failed: " + "; ".join(report["failed"])
                          + ". No host security settings were changed.")
 
+    def test_install_refuses_python_without_tarfile_filters_before_downloading(self):
+        with tempfile.TemporaryDirectory() as name, patch.object(runner, "tarfile", SimpleNamespace()), \
+                patch.object(runner.sys, "platform", "linux"), patch.object(runner.os, "getuid", return_value=1000), \
+                patch.object(runner.urllib.request, "urlopen") as urlopen:
+            directory = Path(name) / "runner"
+            with self.assertRaisesRegex(ValueError, "lacks tarfile extraction filters"):
+                runner.install(SimpleNamespace(directory=directory))
+            urlopen.assert_not_called()
+            self.assertFalse(directory.exists())
+
     def test_policy_rejects_branch_or_repository_expansion(self):
         with tempfile.TemporaryDirectory() as name:
             path = Path(name) / "policy.json"
