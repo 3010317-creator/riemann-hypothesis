@@ -159,8 +159,8 @@ theorem cycEval_divCycle_map (P : Ideal (MRing ι R)) (f : MRing ι R)
     (hdisj : ∀ W ∈ (P ⊔ Ideal.span {f}).minimalPrimes,
       Disjoint ((M₀.map (C (σ := Σ k, ι k)) : Submonoid (MRing ι R)) : Set (MRing ι R)) W)
     (n : Ideal (MRing ι R') → ℤ) :
-    cycEval (fun W ↦ n (W.map (algebraMap (MRing ι R) (MRing ι R')))) (divCycle P f) =
-      cycEval n (divCycle (P.map (algebraMap (MRing ι R) (MRing ι R')))
+    cycEval (fun W ↦ n (W.map (algebraMap (MRing ι R) (MRing ι R')))) (NumbersDVR.divCycle P f) =
+      cycEval n (NumbersDVR.divCycle (P.map (algebraMap (MRing ι R) (MRing ι R')))
         (algebraMap (MRing ι R) (MRing ι R') f)) := by
   classical
   set M : Submonoid (MRing ι R) := M₀.map (C (σ := Σ k, ι k)) with hM
@@ -177,11 +177,12 @@ theorem cycEval_divCycle_map (P : Ideal (MRing ι R)) (f : MRing ι R)
     show (W.map φ).comap φ ∈ J.minimalPrimes
     rw [(hcorr W hW).2]
     exact hW
-  have hkey : ∀ W ∈ J.minimalPrimes, divCycle P f W = divCycle (P.map φ) (φ f) (W.map φ) := by
+  have hkey : ∀ W ∈ J.minimalPrimes,
+      NumbersDVR.divCycle P f W = NumbersDVR.divCycle (P.map φ) (φ f) (W.map φ) := by
     intro W hW
     have hWp : W.IsPrime := hW.1.1
     obtain ⟨hWp', hcomap⟩ := hcorr W hW
-    have hrel : IsRelevant (W.map φ) ↔ IsRelevant W := by
+    have hrel : NumbersDVR.IsRelevant (W.map φ) ↔ NumbersDVR.IsRelevant W := by
       refine forall_congr' fun k ↦ exists_congr fun i ↦ not_congr ?_
       have hX : (X ⟨k, i⟩ : MRing ι R') = φ (X ⟨k, i⟩) := (MvPolynomial.map_X _ _).symm
       rw [hX, ← Ideal.mem_comap, hcomap]
@@ -192,45 +193,46 @@ theorem cycEval_divCycle_map (P : Ideal (MRing ι R)) (f : MRing ι R)
       unfold multAt
       rw [hJ]
       exact GenericCycleCorresp.length_eq M J W (hdisj W hW)
-    unfold divCycle
-    by_cases hr : IsRelevant W
+    unfold NumbersDVR.divCycle
+    by_cases hr : NumbersDVR.IsRelevant W
     · rw [dite_eq_left ⟨hW, hr⟩, dite_eq_left ⟨hmin W hW, hrel.mpr hr⟩, hl]
     · rw [dite_eq_right (fun h ↦ hr h.2), dite_eq_right (fun h ↦ hr (hrel.mp h.2))]
   have hsupp : ∀ (Q : Ideal (MRing ι R')) (x) (W : Ideal (MRing ι R')),
-      divCycle Q x W ≠ 0 → W ∈ (Q ⊔ Ideal.span {x}).minimalPrimes := by
+      NumbersDVR.divCycle Q x W ≠ 0 → W ∈ (Q ⊔ Ideal.span {x}).minimalPrimes := by
     intro Q x W h
-    unfold divCycle at h
+    unfold NumbersDVR.divCycle at h
     split_ifs at h with hh
     · exact hh.1
     · exact absurd rfl h
-  have hsupp0 : ∀ W : Ideal (MRing ι R), divCycle P f W ≠ 0 → W ∈ J.minimalPrimes := by
+  have hsupp0 : ∀ W : Ideal (MRing ι R), NumbersDVR.divCycle P f W ≠ 0 → W ∈ J.minimalPrimes := by
     intro W h
-    unfold divCycle at h
+    unfold NumbersDVR.divCycle at h
     split_ifs at h with hh
     · exact hh.1
     · exact absurd rfl h
   unfold cycEval
-  have hA : (∑ᶠ W, divCycle P f W * n (W.map φ)) =
-      ∑ᶠ W ∈ J.minimalPrimes, divCycle P f W * n (W.map φ) := by
+  have hA : (∑ᶠ W, NumbersDVR.divCycle P f W * n (W.map φ)) =
+      ∑ᶠ W ∈ J.minimalPrimes, NumbersDVR.divCycle P f W * n (W.map φ) := by
     rw [finsum_mem_def]
     congr 1
     funext W
     symm
     rw [Set.indicator_apply_eq_self]
     intro hW
-    have : divCycle P f W = 0 := by
+    have : NumbersDVR.divCycle P f W = 0 := by
       by_contra h
       exact hW (hsupp0 W h)
     rw [this, zero_mul]
-  have hB : (∑ᶠ W, divCycle (P.map φ) (φ f) W * n W) =
-      ∑ᶠ W ∈ (P.map φ ⊔ Ideal.span {φ f}).minimalPrimes, divCycle (P.map φ) (φ f) W * n W := by
+  have hB : (∑ᶠ W, NumbersDVR.divCycle (P.map φ) (φ f) W * n W) =
+      ∑ᶠ W ∈ (P.map φ ⊔ Ideal.span {φ f}).minimalPrimes,
+        NumbersDVR.divCycle (P.map φ) (φ f) W * n W := by
     rw [finsum_mem_def]
     congr 1
     funext W
     symm
     rw [Set.indicator_apply_eq_self]
     intro hW
-    have : divCycle (P.map φ) (φ f) W = 0 := by
+    have : NumbersDVR.divCycle (P.map φ) (φ f) W = 0 := by
       by_contra h
       exact hW (hsupp _ _ W h)
     rw [this, zero_mul]
