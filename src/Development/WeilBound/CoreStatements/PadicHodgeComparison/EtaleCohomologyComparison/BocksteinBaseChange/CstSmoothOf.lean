@@ -425,7 +425,7 @@ theorem loc_bind' {U : Scheme.{0}} {P P' : ∀ V : Scheme.{0}, (V ⟶ U) → Pro
 
 theorem tw_loc (hG : E.InGen) (Q : ℕ) [NeZero Q] (i : ℤ) (U : Scheme.{0}) (y : Sec (tw Q i) U) :
     Loc U fun V g => Sec.res g y = 0 ∨ ∃ (ζ : Prim Q Γ(V, ⊤)) (c : ℕ), Sec.res g y = c • twGen i ζ := by
-  have hsurj : Presheaf.imageSieve (toSheafify Scheme.etaleTopology (Scheme.Γ ⋙ twF Q i)) y ∈ Scheme.etaleTopology U :=
+  have hsurj : Presheaf.imageSieve (toSheafify Scheme.etaleTopology (Scheme.Γ ⋙ GlobalTheory.EtC.twF Q i)) y ∈ Scheme.etaleTopology U :=
     Presheaf.imageSieve_mem Scheme.etaleTopology _ (U := op U) y
   refine loc_bind' ⟨_, hsurj, fun V g hg => hg⟩ ?_
   rintro V g ⟨t, ht⟩
@@ -737,7 +737,7 @@ theorem twLift {Q : ℕ} [NeZero Q] (i : ℤ) (G : Shv (ZMod Q)) (e : ∀ (U : S
     rintro x ⟨ζ, ξ, a, h, rfl⟩
     simp only [SetLike.mem_coe, LinearMap.mem_ker, map_sub, L, Finsupp.linearCombination_single, one_smul]
     rw [hr U ζ ξ a h, sub_self]
-  let η : (Scheme.Γ ⋙ twF Q i) ⟶ G.obj :=
+  let η : (Scheme.Γ ⋙ GlobalTheory.EtC.twF Q i) ⟶ G.obj :=
     { app := fun U => ModuleCat.ofHom ((twRel Q i Γ(U.unop, ⊤)).liftQ (L U.unop) (hL U.unop))
       naturality := fun U V g => by
         refine ModuleCat.hom_ext (Submodule.linearMap_qext _ (Finsupp.lhom_ext fun ζ c => ?_))
@@ -801,10 +801,10 @@ theorem pw_map {Q q : ℕ} [NeZero Q] (h : q ∣ Q) {A B : Type} [CommRing A] [C
 
 theorem twGen_res {q : ℕ} (i : ℤ) {V U : Scheme.{0}} (g : V ⟶ U) (ζ : Prim q Γ(U, ⊤)) :
     Sec.res g (twGen i ζ) = twGen i (ζ.map g.appTop.hom) := by
-  have h := ConcreteCategory.congr_hom ((toSheafify Scheme.etaleTopology (Scheme.Γ ⋙ twF q i)).naturality g.op)
+  have h := ConcreteCategory.congr_hom ((toSheafify Scheme.etaleTopology (Scheme.Γ ⋙ GlobalTheory.EtC.twF q i)).naturality g.op)
     (Submodule.Quotient.mk (Finsupp.single ζ 1) : (Prim q Γ(U, ⊤) →₀ ULift.{1} (ZMod q)) ⧸ twRel q i Γ(U, ⊤))
   refine h.symm.trans ?_
-  change ((toSheafify Scheme.etaleTopology (Scheme.Γ ⋙ twF q i)).app (op V)).hom
+  change ((toSheafify Scheme.etaleTopology (Scheme.Γ ⋙ GlobalTheory.EtC.twF q i)).app (op V)).hom
     (Submodule.Quotient.mk (Finsupp.mapDomain (Prim.map g.appTop.hom) (Finsupp.single ζ 1))) = _
   rw [Finsupp.mapDomain_single]
   rfl
