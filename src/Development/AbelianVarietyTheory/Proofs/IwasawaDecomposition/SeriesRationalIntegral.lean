@@ -1349,7 +1349,7 @@ namespace GlobalTheory
 theorem seriesRatS_and_serInt_of_globalArtin :
     GlobalTheory.Published.GlobalArtinReciprocity → GlobalTheory.SerStd.SeriesRatS ∧ GlobalTheory.IndefiniteRowSideFullHecke.TwistSeries.SerInt :=
   fun hA => ⟨GlobalTheory.T.thetaSeriesRationalOnGoodCovers_of_untwisted (GlobalTheory.Published.GlobalArtinReciprocity.rayClassFieldSt hA) _root_.GlobalTheory.SerStd.untwRatS,
-    GlobalTheory.T.thetaSeries_integral_uniform_prime_power⟩
+    GlobalTheory.serInt_outright⟩
 
 end GlobalTheory
 end -- clump:auto
