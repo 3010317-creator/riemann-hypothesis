@@ -92,6 +92,12 @@ theorem rho_mono (M : Model l K) (m : ℕ) {s s' : ℕ} (h : s ≤ s') (hG : (ch
   rw [e] at H
   exact H
 
+private theorem rhoK_witness {M : Model l K} {a : (dat Amp).Ch M} {j m : ℕ}
+    {x : ((dat Amp).H a).N j} {f : Module.Dual K (HdR M.q j) →+ (S.L m).B}
+    (hf : rhoK S hS hC a j m x f) :
+    ∃ s₀ : ℕ, ∀ s, s₀ ≤ s → (chK S hS hC M m s).Rho (show (M.HS false j).lim from x).1 f :=
+  hf.2
+
 theorem rho_uniq_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m x f f',
     rhoK S hS hC a j m x f → rhoK S hS hC a j m x f' → f = f' := by
   intro M a hM j m x f f' ⟨_, s₀, h⟩ ⟨_, s₀', h'⟩
@@ -112,7 +118,9 @@ theorem rho_ex_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m x
 
 theorem rho_add_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m x y f g,
     rhoK S hS hC a j m x f → rhoK S hS hC a j m y g → rhoK S hS hC a j m (x + y) (f + g) := by
-  intro M a hM j m x y f g ⟨_, s₀, h⟩ ⟨_, s₀', h'⟩
+  intro M a hM j m x y f g hf hg
+  obtain ⟨s₀, h⟩ := rhoK_witness S hS hC hf
+  obtain ⟨s₀', h'⟩ := rhoK_witness S hS hC hg
   exact ⟨hM, max s₀ s₀', fun s hs => GlobalTheory.T.realization_add (chK S hS hC M m s) _ _ f g
     (h s (le_trans (le_max_left _ _) hs)) (h' s (le_trans (le_max_right _ _) hs))⟩
 
