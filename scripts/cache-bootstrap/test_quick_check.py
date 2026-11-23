@@ -7,7 +7,7 @@ class QuickChecks(unittest.TestCase):
  def setUp(self):
   self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup);self.root=Path(self.temp.name);(self.root/'src').mkdir()
  def source(self,name,text):
-  p=self.root/'src'/(name.replace('.','/')+'.lean');p.parent.mkdir(parents=True,exist_ok=True);p.write_text(text);return p
+  p=self.root/'src'/(name.replace('.','/')+'.lean');p.parent.mkdir(parents=True,exist_ok=True);p.write_text(text,encoding='utf-8');return p
  def test_changed_root_closure(self):
   self.source('A','module\npublic import B\n@[expose] public section\ndef x := 1\n');self.source('B','module\nimport Mathlib\n');self.assertEqual(q.dependency_closure(self.root,['A']),['A','B'])
  def test_big_cone_deferred(self):
@@ -20,6 +20,42 @@ class QuickChecks(unittest.TestCase):
  def test_unrecognized_header_deferred(self):
   p=self.source('A','module\nimport «A B»\n')
   with self.assertRaisesRegex(ValueError,'unsupported'):q.imports(p)
+ def test_comment_marker_in_body_string_is_not_header_comment(self):
+  p=self.source('A','import Real\n\ndef s : String := "/-"\n')
+  self.assertEqual(q.imports(p),['Real'])
+ def test_unclosed_body_comment_does_not_affect_import_closure(self):
+  p=self.source('A','import Real\n\ntheorem t : True := by trivial\n/- unclosed\n')
+  self.assertEqual(q.imports(p),['Real'])
+ def test_header_stops_at_first_nonimport_command(self):
+  p=self.source('A','import Real\nnamespace N\nimport NotAHeader\n')
+  self.assertEqual(q.imports(p),['Real'])
+ def test_unterminated_header_comment_is_deferred(self):
+  p=self.source('A','module\nimport Real\n/- unclosed header')
+  with self.assertRaisesRegex(ValueError,'unterminated header comment'):q.imports(p)
+ def test_import_header_nested_comments_across_lines(self):
+  p=self.source('A','/- outer /- nested -/ done -/\nimport First -- trailing\n'
+                '/- across\n lines -/ public import Second.Third\n'
+                'def value := 1\n')
+  self.assertEqual(q.imports(p),['First','Second.Third'])
+ def test_unsupported_multiple_imports_per_line(self):
+  p=self.source('A','import First\nimport Second Third\n')
+  with self.assertRaisesRegex(ValueError,'unsupported import header'):q.imports(p)
+ def test_nonlean_line_separator_is_not_an_import(self):
+  for separator in ('\x0c','\x0b','\u0085','\u2028','\u2029'):
+   with self.subTest(separator=repr(separator)):
+    p=self.source('A','import First'+separator+'import Second\n')
+    with self.assertRaisesRegex(ValueError,'unsupported import header'):q.imports(p)
+ def test_empty_or_body_only_module_has_no_imports(self):
+  self.assertEqual(q.imports(self.source('A','')),[])
+  self.assertEqual(q.imports(self.source('B','example : True := .intro\nimport TooLate\n')),[])
+ def test_crlf_and_utf8_module_names(self):
+  p=self.source('A','\r\nmodule\r\npublic meta import all α.β\r\nimport Two\r\n'
+                'def value := 0\r\n')
+  self.assertEqual(q.imports(p),['α.β','Two'])
+ def test_size_cap_preserved(self):
+  p=self.source('A','')
+  with p.open('wb') as out:out.truncate(4*1024**2+1)
+  with self.assertRaisesRegex(ValueError,'source/header exceeds quick-check limit'):q.imports(p)
  def test_unsafe_source_link_rejected(self):
   real=self.source('B','import Mathlib\n');(self.root/'src/A.lean').symlink_to(real)
   with self.assertRaises(ValueError):q.dependency_closure(self.root,['A'])
