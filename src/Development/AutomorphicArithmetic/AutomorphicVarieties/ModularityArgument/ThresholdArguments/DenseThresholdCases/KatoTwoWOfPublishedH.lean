@@ -477,6 +477,10 @@ private theorem eq_one_of_root {x : WD h} (hu : x.unr) (t : Ine (F := E) A) {z :
     (hz : (x.charPol (ineIncl h t)).IsRoot z) : z = 1 := by
   obtain ⟨m, b, rfl⟩ := x.exists_rep
   rw [WD.unr_mk] at hu
+  have : Module.Free ℂ (Fin m → ℂ) := 
+    have : Module.Free ℂ ℂ := Module.Free.self ℂ
+    Module.Free.function (Fin m) ℂ ℂ
+  have : Module.Finite ℂ (Fin m → ℂ) := Module.Finite.pi
   rw [WD.charPol_mk, hu.2 t, ← Module.End.hasEigenvalue_iff_isRoot_charpoly] at hz
   obtain ⟨v, hv⟩ := hz.exists_hasEigenvector
   have h3 := hv.apply_eq_smul
