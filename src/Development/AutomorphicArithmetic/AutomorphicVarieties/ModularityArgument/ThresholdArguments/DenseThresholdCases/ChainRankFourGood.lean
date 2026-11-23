@@ -145,7 +145,9 @@ theorem UpperTheory.V.Z.Desc.V0.muRange :
   haveI : Module.Projective L P := Module.Projective.of_split i s hsi
   haveI : Module.Finite L P := Module.Finite.of_surjective s (fun x => ⟨i x, by
     rw [← LinearMap.comp_apply, hsi, LinearMap.id_apply]⟩)
+  haveI : Module.Flat L P := Module.Flat.of_projective
   haveI : Module.Free L P := Module.free_of_flat_of_isLocalRing
+  haveI : Module.IsTorsionFree L P := Module.Free.instIsTorsionFree _ _
   let J' : Ideal B := (Module.annihilator B P).radical
   have hD : Dat lam J' P :=
     { hs := hsP
@@ -249,6 +251,8 @@ theorem UpperTheory.V.Z.Desc.V0.muRange :
   have hGc : G a - c • 1 = c • (c⁻¹ • G a - 1) := by
     rw [smul_sub, smul_smul, mul_inv_cancel₀ hya, one_smul]
   rw [hGc, _root_.smul_pow, LinearMap.smul_apply] at hk
+  haveI : Module.Free K (K ⊗[L] P) := Module.Free.of_divisionRing K _
+  haveI : Module.IsTorsionFree K (K ⊗[L] P) := Module.Free.instIsTorsionFree _ _
   have hk2 := (smul_eq_zero.mp hk).resolve_left (pow_ne_zero k hya)
   have hinj2 := (Module.End.isUnit_iff _).mp (hX.pow k)
   exact hw0 (hinj2.1 (by rw [hk2, map_zero]))
@@ -319,6 +323,7 @@ private lemma split_low {O : Type} [CommRing O] (ϖ : O) (n : ℕ) :
     simp only [C_mul]
     ring
 
+set_option linter.overlappingInstances false in
 private lemma pow_mem_of_alg {O R : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     [CommRing R] [IsDomain R] [IsLocalRing R] [Algebra O R] [IsLocalHom (algebraMap O R)]
     (hinj : Function.Injective (algebraMap O R)) {ϖ : O} (hϖ : Irreducible ϖ)
@@ -365,9 +370,11 @@ private lemma pow_mem_of_alg {O R : Type} [CommRing O] [IsDomain O] [IsDiscreteV
   rw [eq_neg_of_add_eq_zero_right h0]
   exact neg_mem (Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton_self _))
 
-private lemma approx_ideal {O R : Type} [CommRing O] [IsLocalRing O] [CommRing R] [Algebra O R]
-    [UpperTheory.V.Alg.IsCO O R] (I : Ideal R) :
+set_option linter.overlappingInstances false in
+private lemma approx_ideal {O R : Type} [CommRing O] [IsLocalRing O] [CommRing R] [IsLocalRing R]
+    [Algebra O R] [UpperTheory.V.Alg.IsCO O R] (I : Ideal R) :
     ∃ M : Submodule O R, M.FG ∧ ∀ z ∈ I, ∃ w ∈ M, z - w ∈ maximalIdeal R * I := by
+  haveI : IsNoetherianRing R := UpperTheory.V.Alg.IsCO.toIsNoetherian (O := O)
   obtain ⟨s, hs⟩ : I.FG := IsNoetherian.noetherian I
   subst hs
   refine ⟨Submodule.span O s, Submodule.fg_span s.finite_toSet, fun z hz => ?_⟩
@@ -392,8 +399,9 @@ private lemma approx_ideal {O R : Type} [CommRing O] [IsLocalRing O] [CommRing R
     rw [smul_eq_mul, Algebra.smul_def]
     ring
 
-private lemma approx_pow {O R : Type} [CommRing O] [IsLocalRing O] [CommRing R] [Algebra O R]
-    [UpperTheory.V.Alg.IsCO O R] (N : ℕ) :
+set_option linter.overlappingInstances false in
+private lemma approx_pow {O R : Type} [CommRing O] [IsLocalRing O] [CommRing R] [IsLocalRing R]
+    [Algebra O R] [UpperTheory.V.Alg.IsCO O R] (N : ℕ) :
     ∃ M : Submodule O R, M.FG ∧ ∀ z : R, ∃ w ∈ M, z - w ∈ maximalIdeal R ^ N := by
   induction N with
   | zero => exact ⟨⊥, Submodule.fg_bot, fun z => ⟨0, zero_mem _, by simp⟩⟩
@@ -496,6 +504,11 @@ theorem UpperTheory.Reformulated.B.Ra2.finite_of_alg :
         (∀ (a : R), ∃ (P : Polynomial O), P ≠ (0 : Polynomial O) ∧ (Polynomial.aeval a : Polynomial O → R) P = (0 : R)) →
           Module.Finite O R := by
   intro O R _ _ _ _ _ _ _ _ hinj halg
+  haveI : IsLocalRing R := UpperTheory.V.Alg.IsCO.toIsLocalRing (O := O)
+  haveI : IsNoetherianRing R := UpperTheory.V.Alg.IsCO.toIsNoetherian (O := O)
+  haveI : IsLocalHom (algebraMap O R) := UpperTheory.V.Alg.IsCO.isLocalHom
+  haveI : IsHausdorff (maximalIdeal R) R :=
+    (UpperTheory.V.Alg.IsCO.complete (O := O) (R := R)).toIsHausdorff
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hrad : maximalIdeal R ≤ (Ideal.span {algebraMap O R ϖ}).radical := fun x hx => by
     obtain ⟨P, hP, hPx⟩ := halg x
@@ -578,6 +591,7 @@ private theorem exists_pair_of_der {O Λ K : Type} [CommRing O] [IsDomain O] [Is
       exact ⟨P, hP, Subtype.ext (by rw [← Subalgebra.aeval_coe]; simpa using h0)⟩
   obtain ⟨G, hG⟩ := hfin.fg_top
   choose ℓ hℓ using hsurj
+  haveI : IsNoetherianRing Λ := IsCO.toIsNoetherian (O := O)
   obtain ⟨Q, hQ⟩ : (RingHom.ker p).FG := IsNoetherian.noetherian _
   let N : Submodule p.range K := Submodule.span p.range (d '' ((G.image ℓ : Finset Λ) ∪ Q : Finset Λ))
   have hsub : ∀ f ∈ (G.image ℓ : Finset Λ) ∪ Q, d f ∈ N := fun f hf =>
@@ -628,8 +642,10 @@ private theorem exists_pair_of_der {O Λ K : Type} [CommRing O] [IsDomain O] [Is
   obtain ⟨T, i1, i2, i3, f₀, f₁, hf⟩ := exists_sqz p.rangeRestrict d' fun f g => Subtype.ext (hd f g)
   exact ⟨T, i1, i2, i3, f₀, f₁, fun a => (hf a).trans ⟨fun h => congrArg Subtype.val h, fun h => Subtype.ext h⟩⟩
 
-private theorem map_mem_max {O Λ T : Type} [CommRing O] [IsLocalRing O] [CommRing Λ] [Algebra O Λ] [IsCO O Λ] [CommRing T]
+private theorem map_mem_max {O Λ T : Type} [CommRing O] [IsLocalRing O] [CommRing Λ] [IsLocalRing Λ]
+    [Algebra O Λ] [IsCO O Λ] [CommRing T] [IsLocalRing T]
     [Algebra O T] [IsCO O T] (f : Λ →ₐ[O] T) {x : Λ} (hx : x ∈ maximalIdeal Λ) : f x ∈ maximalIdeal T := by
+  haveI : IsLocalHom (algebraMap O T) := IsCO.isLocalHom
   by_contra hn
   obtain ⟨b, hb⟩ := IsCO.res_surj (O := O) (f x)
   have hbu : IsUnit (algebraMap O T b) := by
@@ -648,7 +664,8 @@ private theorem map_mem_max {O Λ T : Type} [CommRing O] [IsLocalRing O] [CommRi
   rw [map_sub, f.commutes] at h3
   exact (mem_maximalIdeal _).1 hb h3
 
-private theorem adic_push {O Λ T Γ : Type} [CommRing O] [IsLocalRing O] [CommRing Λ] [Algebra O Λ] [IsCO O Λ] [CommRing T]
+private theorem adic_push {O Λ T Γ : Type} [CommRing O] [IsLocalRing O] [CommRing Λ] [IsLocalRing Λ]
+    [Algebra O Λ] [IsCO O Λ] [CommRing T] [IsLocalRing T]
     [Algebra O T] [IsCO O T] [TopologicalSpace Γ] (f : Λ →ₐ[O] T) {u : Γ → Λ} (h : AdicCont (maximalIdeal Λ) u) :
     AdicCont (maximalIdeal T) fun g => f (u g) := fun N => by
   have hm : Ideal.map (f : Λ →+* T) (maximalIdeal Λ ^ N) ≤ maximalIdeal T ^ N := by
@@ -662,6 +679,8 @@ private theorem adic_push {O Λ T Γ : Type} [CommRing O] [IsLocalRing O] [CommR
 private theorem inert_push {l : ℕ} [Fact l.Prime] {F : W.GFrame l} {O : Type} [CommRing O] [IsLocalRing O] [Algebra ℤ_[l] O]
     {n : ℕ} (r : W.Resid F O n) (Λ : W.LamObj r) {T : Type} [CommRing T] [Algebra O T] [IsCO O T] (f : Λ.Λ →ₐ[O] T) :
     W.IsInert r fun v i => W.pushCh (f : Λ.Λ →+* T) (Λ.κ v i) := fun v i => by
+  haveI : IsLocalRing Λ.Λ := IsCO.toIsLocalRing (O := O)
+  haveI : IsLocalRing T := IsCO.toIsLocalRing (O := O)
   obtain ⟨ψ, h, hk⟩ := Λ.inert v i
   refine ⟨W.pushCh (f : Λ.Λ →+* T) ψ, ⟨adic_push f h.cont, fun g => ?_, fun g => ?_⟩, ?_⟩
   · exact (res_map f _).trans (h.red g)
@@ -815,6 +834,7 @@ theorem UpperTheory.V.Z.Desc.V0.unramified_at_of_dense_purity_num_e_power_series
   haveI : IsIntegrallyClosed (MvPowerSeries (Fin m) c.O) := GlobalTheory.CohenStructure.isIntegrallyClosed_mvPowerSeries c.O m
   haveI : IsIntegrallyClosed Λ.Λ := IsIntegrallyClosed.of_equiv e.toRingEquiv.symm
   haveI : IsNoetherianRing Λ.Λ := UpperTheory.V.Alg.IsCO.toIsNoetherian (O := c.O)
+  haveI : IsLocalRing Λ.Λ := UpperTheory.V.Alg.IsCO.toIsLocalRing (O := c.O)
   haveI : CharZero Λ.Λ := by
     haveI : CharZero c.O :=
       (RingHom.charZero_iff (ϕ := (c.O.val : c.O →ₐ[ℤ_[l]] PadicAlgCl l).toRingHom) Subtype.val_injective).2 inferInstance
