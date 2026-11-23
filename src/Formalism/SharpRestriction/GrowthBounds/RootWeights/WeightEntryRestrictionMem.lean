@@ -156,38 +156,26 @@ theorem diagonalMultiplier_mem (W : Submodule R (MvPolynomial (ι × Fin n) R))
   have hb : ∀ (k : ℕ) (x : MvPolynomial (ι × Fin n) R),
       binomPol R LL S a k x = diagonalMultiplier LL S a (fun w => Ring.choose w k) x := by
     intro k x
-    conv_lhs => rw [x.as_sum]
-
-    rw [map_sum]
-    simp only [binomialOperator_monomial]
+    rw [binomPol, Module.Basis.constr_apply]
+    simp only [Finsupp.sum, MvPolynomial.smul_monomial, smul_eq_mul]
     rfl
-  induction hf using AddSubgroup.closure_induction with
-  | mem f hf =>
-    obtain ⟨k, rfl⟩ := hf
-    intro x hx
+  intro x hx
+  let multiplier : (ℤ → ℤ) →+ MvPolynomial (ι × Fin n) R :=
+    { toFun := fun g => diagonalMultiplier LL S a g x
+      map_zero' := by
+        ext m
+        simp [coeff_diagonalMultiplier]
+      map_add' := by
+        intro g g'
+        ext m
+        simp [coeff_diagonalMultiplier, mul_add] }
+  have hclosure : binomialFunctions ≤ W.toAddSubgroup.comap multiplier := by
+    rw [binomialFunctions, AddSubgroup.closure_le]
+    rintro g ⟨k, rfl⟩
+    change diagonalMultiplier LL S a (fun w => Ring.choose w k) x ∈ W
     rw [← hb]
     exact hW a k x hx
-  | zero =>
-    intro x _
-    have e : diagonalMultiplier LL S a 0 x = 0 := by
-      ext m
-      simp [coeff_diagonalMultiplier]
-    rw [e]
-    exact W.zero_mem
-  | add f g _ _ hf hg =>
-    intro x hx
-    have e : diagonalMultiplier LL S a (f + g) x = diagonalMultiplier LL S a f x + diagonalMultiplier LL S a g x := by
-      ext m
-      simp [coeff_diagonalMultiplier, mul_add]
-    rw [e]
-    exact W.add_mem (hf x hx) (hg x hx)
-  | neg f _ hf =>
-    intro x hx
-    have e : diagonalMultiplier LL S a (-f) x = -diagonalMultiplier LL S a f x := by
-      ext m
-      simp [coeff_diagonalMultiplier]
-    rw [e]
-    exact W.neg_mem (hf x hx)
+  exact hclosure hf
 
 theorem weightEntry_restriction_mem (W : Submodule R (MvPolynomial (ι × Fin n) R))
     (hW : ∀ a k, ∀ x ∈ W, binomPol R LL S a k x ∈ W) (a : Fin n) (w0 : ℤ) :
