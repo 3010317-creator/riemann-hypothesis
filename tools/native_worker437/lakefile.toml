@@ -1,0 +1,6 @@
+name="rhminimalsetup437"
+[[lean_exe]]
+name="proof-worker"
+root="ProofWorker"
+supportInterpreter=true
+moreLinkArgs=["-lLake"]
