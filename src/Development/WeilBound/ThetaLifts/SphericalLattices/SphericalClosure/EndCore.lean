@@ -245,7 +245,7 @@ theorem pla_int (z : AE F E) : ∀ᶠ v : Pl F in cofinite, ∀ t : E →ₐ[F] 
     filter_upwards [h1, h2] with v hv hv' t
     have h3 : t (d • e) ∈ v.adicCompletionIntegers F := apply_coe_mem t (⟨d • e, hi⟩ : 𝓞 E)
     have h4 : t e = algebraMap F (Fv F v) (d : F)⁻¹ * t (d • e) := by
-      rw [← Int.cast_smul_eq_zsmul F, map_smul, Algebra.smul_def, ← mul_assoc, ← map_mul, inv_mul_cancel₀ hd', map_one, one_mul]
+      rw [← Int.cast_smul_eq_zsmul F, AlgHom.map_smul_of_tower, Algebra.smul_def, ← mul_assoc, ← map_mul, inv_mul_cancel₀ hd', map_one, one_mul]
     show evFin F v a * t e ∈ _
     rw [h4]
     exact mul_mem hv' (mul_mem hv h3)
@@ -561,7 +561,7 @@ theorem alphaZero_of (hI : ThKEnd.Iwa) (hC : CTBasic) (hA : IAut) (hU : UnipEx) 
     rintro _ ⟨f, -, φ, h1, h2, rfl⟩
     obtain ⟨g, hg, e⟩ := pure_eq_pureA hM φ h1 h2
     rw [e]
-    exact pureA_mem f hg
+    exact ThKG.pureA_mem f hg
   obtain ⟨hp, hp', -⟩ := hP F E σ B a a' G X om om' hT
   obtain ⟨h1, h2, hW₁⟩ := (hL F E σ B _ _ G.W W₁ H' i₀ i₁ _ _ hT.base hH).2 hT.geo.hW
   have haB := hT.geo.aBig
@@ -598,7 +598,7 @@ theorem betaZero_of (hI : ThKEnd.Iwa) (hC : CTBasic) (hA : IAut) (hU : UnipEx) (
     rintro _ ⟨f, -, φ, h1, h2, rfl⟩
     obtain ⟨g, hg, e⟩ := pure_eq_pureA hM φ h1 h2
     rw [e]
-    exact pureA_mem f hg
+    exact ThKG.pureA_mem f hg
   obtain ⟨hp, hp', hw⟩ := hP F E σ B a a' G X om om' hT
   obtain ⟨h1, h2, hW₁⟩ := (hL F E σ B _ _ G.W W₁ H' i₀ i₁ _ _ hT.base hH).2 hT.geo.hW
   have hlt := hT.geo.lt
@@ -823,8 +823,8 @@ theorem dom_conv (hT : ThetaBasic) (hp : IsPair B M χX χW om r s r' s') {𝓕}
       ENNReal.ofReal (p f * (ht h : ℝ) ^ k) * ∫⁻ g in M.dom, G g ∂M.μ := fun f h => by
     rw [← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
     exact lintegral_mono fun g => hb f g h
-  have hc : ∀ f : SInf F (Fin n × Fin d), pureA F f φ ∈ convS hp := fun f => ⟨pureA_mem f hs, fun h =>
-    ⟨(((hT F E σ B n d X W M χX χW om r s r' s' hp).1 _ (pureA_mem f hs)).1.comp
+  have hc : ∀ f : SInf F (Fin n × Fin d), pureA F f φ ∈ convS hp := fun f => ⟨ThKG.pureA_mem f hs, fun h =>
+    ⟨(((hT F E σ B n d X W M χX χW om r s r' s' hp).1 _ (ThKG.pureA_mem f hs)).1.comp
       (continuous_id.prodMk continuous_const)).aestronglyMeasurable,
       (hl f h).trans_lt (ENNReal.mul_lt_top ENNReal.ofReal_lt_top hG)⟩⟩
   refine ⟨hc, fun h => ?_⟩
@@ -857,7 +857,7 @@ theorem iZero_of (hT : ThetaBasic) (hU : Unimod) (hW : DomWeil) (hD : DomSoU) (h
     refine ⟨h1 f, funext fun h => ?_⟩
     obtain ⟨L, hL⟩ := h2 h
     rw [← hL, hR F E σ B n d X W M χX χW om r s r' s' hp m hm hd hr L fun g _ T hT' f => by
-      rw [hL, hL, ← hT'.1 f φ hs, I_left hU hT hp (pureA_mem f hs)]]
+      rw [hL, hL, ← hT'.1 f φ hs, I_left hU hT hp (ThKG.pureA_mem f hs)]]
     rfl
   obtain ⟨k, hk⟩ := hD F E σ B n d X W M χX χW om r s r' s' hp
   obtain ⟨s1, s2, -⟩ := hF F E σ B n d X W M χX χW om r s r' s' hp
