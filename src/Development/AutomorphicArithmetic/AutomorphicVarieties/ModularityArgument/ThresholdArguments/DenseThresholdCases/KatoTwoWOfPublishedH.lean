@@ -188,7 +188,7 @@ theorem UpperTheory.V.Z.Kato.WeilSphericalRecords.potOf :
   obtain ⟨⟨g, hg⟩, hI⟩ := hE
   have hvA : A.valuation (l : Ω) < 1 := by
     have h1 := (hA (l : 𝓞 F)).2 hl
-    simpa using h1
+    simpa only [map_natCast] using h1
   have hv : ∀ (t : Dec (F := F) A), (t : G F Ω) ∈ Ine A → ∀ i : Fin 2,
       κ i t = cycBar F Ω l ↑t ^ ((![(e : ℤ), -(e : ℤ)] : Fin 2 → ℤ) i) := by
     intro t ht i
@@ -637,7 +637,7 @@ theorem exists_cuspidal_satake_prod_eq_hecke_poly_of_not_dvd_level : _root_.Uppe
     · have h1 := (hw A hA).1 s hs
       have h2 : cycZ ℚ Ω l s = 1 := by
         refine Units.ext (PadicInt.ext_of_toZModPow.mp fun n => ?_)
-        rw [cycZ_toZModPow_eq (v := w) hwl hA (q := 1) (fun x hx => by simpa using hs.2 x hx) n]
+        rw [cycZ_toZModPow_eq (v := w) hwl hA (q := 1) (fun x hx => by simpa only [pow_one] using hs.2 x hx) n]
         simp
       have h3 : (cycBar ℚ Ω l ^ (-(e : ℤ))) s = 1 := by
         rw [MonoidHom.zpow_apply, cycBar, MonoidHom.comp_apply, h2, map_one, one_zpow]
@@ -797,7 +797,8 @@ private theorem cont_diag {Γ : Type} [Group Γ] [TopologicalSpace Γ] {l : ℕ}
     (continuous_const.mul (hr.comp continuous_subtype_val)).mul continuous_const
   exact ((Units.continuous_val.comp h1).matrix_elem i i).congr fun s => (hg s).2 i
 
-private theorem isRoot_of_tri {W : Type} [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W] {n : ℕ}
+private theorem isRoot_of_tri {W : Type} [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W]
+    [Module.Free ℂ W] {n : ℕ}
     (b : Basis (Fin n) ℂ W) (f : End ℂ W) (d : Fin n → ℂ)
     (h0 : ∀ i j, j < i → LinearMap.toMatrix b b f i j = 0) (h1 : ∀ i, LinearMap.toMatrix b b f i i = d i)
     (i : Fin n) : f.charpoly.IsRoot (d i) := by
@@ -860,7 +861,7 @@ theorem isRoot_charPol_wdAt :
       rw [h1, ← hκ, ← hcyc L, Units.val_mul, Units.val_zpow_eq_zpow_val, MulMemClass.coe_mul]
       congr 1) hV
   obtain ⟨b₀, hb₀⟩ := T
-  have h2 := isRoot_of_tri b₀ _ _ (hb₀ (some φ)).1 (hb₀ (some φ)).2 i
+  have h2 := @isRoot_of_tri _ _ _ _ (Module.Free.of_divisionRing ℂ _) _ b₀ _ _ (hb₀ (some φ)).1 (hb₀ (some φ)).2 i
   rw [e, wdPst_of_isPst ι Bw h hj hV, WD.charPol_mk]
   have h3 : μ φ i = ((normV w : ℕ) : ℂ) ^ m i * ι ((κ i (Subgroup.inclusion (Weil_le_Dec h) φ) *
       cycBar F Ω l (φ : G F Ω) ^ (-m i) : (Qbar l)ˣ) : Qbar l) := by
@@ -922,6 +923,7 @@ private theorem tri_avg {G : Type} [Group G] [Finite G] {n : ℕ} (R : G →* Ma
     ∃ P : Matrix (Fin n) (Fin n) ℂ, IsUnit P.det ∧ ∀ g, R g * P = P * Matrix.diagonal (fun i => R g i i) := by
   classical
   letI := Fintype.ofFinite G
+  haveI : Nonempty G := ⟨1⟩
   have hm : ∀ g h i, R (g * h) i i = R g i i * R h i i := fun g h i => by
     rw [map_mul]; exact tri_mul_diag _ _ (hR g) (hR h) i
   refine ⟨∑ h, R h * Matrix.diagonal (fun i => R h⁻¹ i i), ?_, fun g => ?_⟩
@@ -977,7 +979,8 @@ theorem tridiagonal_weil_deligne : UpperTheory.V.Af.Wd.TriDiag := by
     rw [Basis.map_apply, he, h4, ← map_smul]
     congr 1
     rw [Matrix.toLin_self]
-    simp [Matrix.diagonal_apply, ite_smul, Finset.sum_ite_eq']
+    rw [Finset.sum_eq_single j (fun k _ hk => by rw [Matrix.diagonal_apply_ne _ hk, zero_smul])
+      (fun h => absurd (Finset.mem_univ j) h), Matrix.diagonal_apply_eq]
   ext i j
   rw [LinearMap.toMatrix_apply, h3, map_smul, Basis.repr_self, Matrix.diagonal_apply]
   by_cases h : i = j
@@ -1205,7 +1208,8 @@ section -- clump:auto
 
 section
 noncomputable section
-open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N Polynomial
+open Neutral.B1 hiding G Dec
+open NumberField IsDedekindDomain Formalism.L2.Host Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N Polynomial
 open GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.Pst GlobalTheory.LocLanglands GlobalTheory.LocGL GlobalTheory.GalOfCusp UpperTheory.V UpperTheory.V.Af UpperTheory.V.Published
 open UpperTheory.Zero.LLC UpperTheory.V.Z.Win UpperTheory.V.Z.Kato UpperTheory.V.Z.Kato.WeilSphericalRecords
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
@@ -1214,7 +1218,7 @@ theorem UpperTheory.V.Z.Kato.WeilSphericalRecords.local_k_of_printed_rec_compat_
     _root_.UpperTheory.V.Af.Hypotheses' → RecTExists → CompatT → PlainRec → WinPt → RecSph → RecFrob → LocK := by
   intro P hRec hC hPR hW hSph hFrob K Ω _ _ _ _ _ _ l _ hl ι e he r π hc hreg hpol hatt w A κ hlw hA hex hplain
   obtain ⟨hfl, hI⟩ := hex
-  have hAl : A.valuation (l : Ω) < 1 := by simpa using (hA _).2 hlw
+  have hAl : A.valuation (l : Ω) < 1 := by simpa only [map_natCast] using (hA _).2 hlw
   let m : Fin 2 → ℤ := ![(e : ℤ), -(e : ℤ)]
   have hκm : ∀ i (s : ↥(Dec (F := K) A)), (s : G K Ω) ∈ Ine (F := K) A →
       κ i s = cycBar K Ω l s ^ m i * (1 : G K Ω →* (Qbar l)ˣ) s := by
@@ -1451,7 +1455,8 @@ section -- clump:auto
 
 section
 noncomputable section
-open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N Polynomial
+open Neutral.B1 hiding G Dec
+open NumberField IsDedekindDomain Formalism.L2.Host Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N Polynomial
 open GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.Pst GlobalTheory.LocLanglands GlobalTheory.HeckeGal GlobalTheory.LocGL GlobalTheory.GalOfCusp UpperTheory.V UpperTheory.V.Af UpperTheory.V.Published
 open UpperTheory.Zero.LLC UpperTheory.V.Z.Win UpperTheory.V.Z.Kato UpperTheory.V.Z.Kato.WeilSphericalRecords
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
@@ -1490,6 +1495,7 @@ private theorem polar_of_lift (hP : _root_.UpperTheory.V.Af.Hypotheses') {K Ω :
     (Q : CuspSub K 2) (hBC : Br.IsBC0 π Q) (hC : AttC ι (r.comp (Bc.res ℚ Ω K)) Q) (hθ : IsCycWt l wt θ) (hd : DualTw r θ) :
     ∃ χ, GlobalTheory.ContraPair.PolarizedPair Q χ := by
   haveI : IsScalarTower ℚ (maximalRealSubfield K) Ω := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
+  have : Algebra.IsAlgebraic (maximalRealSubfield K) K := Algebra.IsAlgebraic.tower_top (K := ℚ) _
   haveI : IsAlgClosure (maximalRealSubfield K) Ω :=
     ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.trans (maximalRealSubfield K) K Ω⟩
   have hθ' : IsCycWt l (wt + (((2 : ℕ) : ℤ) - 1))
@@ -1571,7 +1577,7 @@ theorem UpperTheory.V.Z.Kato.WeilSphericalRecords.base_change_split_of_printed_q
     fun B => sat_iff hP π Q hBC v w i ⟨hi.cont, hi.loc⟩ B⟩
   · have h1 := (hv ((l : ℕ) : 𝓞 ℚ)).2 hlv
     refine (hw ((l : ℕ) : 𝓞 K)).1 ?_
-    simpa using h1
+    simpa only [map_natCast] using h1
   · rw [← GlobalTheory.LiftAbsPow.absNorm_eq_normV, ← GlobalTheory.LiftAbsPow.absNorm_eq i hi.cont]
     exact absNorm_rat Fact.out v hlv
   · intro g hg x
@@ -1879,7 +1885,7 @@ private theorem sources_of_spherical (P : _root_.UpperTheory.V.Af.HypothesesH') 
     obtain ⟨m, hm, hχm⟩ := pow_eq_one_of_kills hl0 hχ
     obtain ⟨t, ht, htk⟩ := cyc_inf hA
     obtain ⟨h0, h1⟩ := hk ⟨t, Ine_le_Dec A ht⟩ ht
-    rcases eps_mem hA hA' hfl hfl' hn with hc | hc
+    rcases GlobalTheory.Ord2.SrcForm.eps_mem hA hA' hfl hfl' hn with hc | hc
     · rw [← hc] at h0
       simp only at h0
       have he1 : e = 1 := by
