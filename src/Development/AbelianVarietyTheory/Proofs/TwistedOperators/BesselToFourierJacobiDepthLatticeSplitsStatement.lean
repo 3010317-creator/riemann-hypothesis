@@ -263,7 +263,7 @@ theorem colsOf_gram {n c k : ℕ} (G : Matrix (Fin n) (Fin n) D.host.E) (a : Mat
 
 
 
-theorem diag_mem_complId : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {F : Frames G}, Std F →
+theorem diag_mem_complId : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {F : _root_.GlobalTheory.Asc.Frames G}, Std F →
     ∀ (ρ : ℕ) (h : 2 * ρ + 2 ≤ D.R.m) (u : WO (negSp (G.V (.grid (2 * ρ + 2) 0))) (G.V (.grid (2 * ρ + 1) 0))),
     u ∈ latO _ _ (G.Λ (.grid (2 * ρ + 2) 0) : Set _) (G.Λ (.grid (2 * ρ + 1) 0) : Set _) (fun _ => True) →
     ∀ p : Fin ρ, ((F.dJ ρ h).pY ⬝ u ⬝ (F.dB ρ h).jY) p p ∈ complId (D.host.AA * G.pl.stAbar sc) := by
@@ -373,7 +373,7 @@ open GlobalTheory.AscFin
 open GlobalTheory.XCharBF GlobalTheory.XCharBF.DiagCoord
 
 theorem _root_.GlobalTheory.T.besselStep_diagonalCoordinates_mem_complementIdeal :
-    ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {F : Frames G}, Std F →
+    ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {F : _root_.GlobalTheory.Asc.Frames G}, Std F →
     ∀ (ρ : ℕ) (h : 2 * ρ + 2 ≤ D.R.m)
       (u : WO (negSp (G.V (.grid (2 * ρ + 2) 0))) (G.V (.grid (2 * ρ + 1) 0))),
     u ∈ latO _ _ (G.Λ (.grid (2 * ρ + 2) 0) : Set _) (G.Λ (.grid (2 * ρ + 1) 0) : Set _) (fun _ => True) →
@@ -828,7 +828,7 @@ theorem AAbar_ne (D : D7) : D.host.AAbar ≠ 0 := by
   exact mul_ne_zero ((FractionalIdeal.coeIdeal_ne_zero).2 (conj_smul_ne_bot' (host_ccE_ne_bot D)))
     (inv_ne_zero ((FractionalIdeal.coeIdeal_ne_zero).2 (conj_smul_ne_bot' (host_b_ne_bot D))))
 
-variable {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {F : Frames G}
+variable {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {F : _root_.GlobalTheory.Asc.Frames G}
 
 theorem modulBar_ne_bot' (P : Places L) (sc : Consts) : P.modulBar sc ≠ ⊥ := by
   intro h
@@ -932,7 +932,7 @@ theorem gen_eq {m n : ℕ} (α : AF D.host.F) (x : Matrix (Fin m) (Fin n) D.host
   rw [show inclR (AF D.host.F) (x i j) = (1 : AF D.host.F) ⊗ₜ[D.host.F] x i j from rfl,
     Algebra.TensorProduct.tmul_mul_tmul, one_mul, mul_one]
 
-theorem hatMx_coord_mem : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {F : Frames G}, Std F → ∀ (ρ : ℕ) (h : 2 * ρ + 2 ≤ D.R.m) (x : WO (negSp (G.V (.grid (2 * ρ + 2) 0))) (G.V (.grid (2 * ρ + 1) 0))), x ∈ hatMx (G.modul • homLat (G.Λ (.grid (2 * ρ + 2) 0)) (G.Λ (.grid (2 * ρ + 1) 0))) → ∀ p : Fin ρ, ((F.dJ ρ h).pY * x * (F.dB ρ h).jY) p p ∈ complId D.host.AAbar := by
+theorem hatMx_coord_mem : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {F : _root_.GlobalTheory.Asc.Frames G}, Std F → ∀ (ρ : ℕ) (h : 2 * ρ + 2 ≤ D.R.m) (x : WO (negSp (G.V (.grid (2 * ρ + 2) 0))) (G.V (.grid (2 * ρ + 1) 0))), x ∈ hatMx (G.modul • homLat (G.Λ (.grid (2 * ρ + 2) 0)) (G.Λ (.grid (2 * ρ + 1) 0))) → ∀ p : Fin ρ, ((F.dJ ρ h).pY * x * (F.dB ρ h).jY) p p ∈ complId D.host.AAbar := by
   intro D T L sc G F hF ρ h x hx p
   unfold hatMx at hx
   induction hx using AddSubgroup.closure_induction with
@@ -980,7 +980,7 @@ open scoped nonZeroDivisors ContDiff
 open GlobalTheory.AscFin
 open GlobalTheory.XCharBF
 
-theorem _root_.GlobalTheory.T.completed_diagonal_coordinate_mem_completion_conj_AA : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {F : Frames G}, Std F → ∀ (ρ : ℕ) (h : 2 * ρ + 2 ≤ D.R.m) (x : WO (negSp (G.V (.grid (2 * ρ + 2) 0))) (G.V (.grid (2 * ρ + 1) 0))), x ∈ hatMx (G.modul • homLat (G.Λ (.grid (2 * ρ + 2) 0)) (G.Λ (.grid (2 * ρ + 1) 0))) → ∀ p : Fin ρ, ((F.dJ ρ h).pY ⬝ x ⬝ (F.dB ρ h).jY) p p ∈ complId D.host.AAbar := by
+theorem _root_.GlobalTheory.T.completed_diagonal_coordinate_mem_completion_conj_AA : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {F : _root_.GlobalTheory.Asc.Frames G}, Std F → ∀ (ρ : ℕ) (h : 2 * ρ + 2 ≤ D.R.m) (x : WO (negSp (G.V (.grid (2 * ρ + 2) 0))) (G.V (.grid (2 * ρ + 1) 0))), x ∈ hatMx (G.modul • homLat (G.Λ (.grid (2 * ρ + 2) 0)) (G.Λ (.grid (2 * ρ + 1) 0))) → ∀ p : Fin ρ, ((F.dJ ρ h).pY ⬝ x ⬝ (F.dB ρ h).jY) p p ∈ complId D.host.AAbar := by
   first | exact @GlobalTheory.XCharBF.HatCoord.hatMx_coord_mem | exact GlobalTheory.XCharBF.HatCoord.hatMx_coord_mem | (intros; apply GlobalTheory.XCharBF.HatCoord.hatMx_coord_mem <;> assumption)
 end -- clump:auto
 end -- clump:auto
