@@ -1,7 +1,52 @@
 module
 
-public import Formalism.SharpRestriction.GrowthBounds.ValuationLowestDegreeRename
 public import Formalism.SharpRestriction.GrowthBounds.SourceCleaning
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+public import Mathlib.RingTheory.MvPolynomial.EulerIdentity
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -340,7 +385,7 @@ theorem sDegs_det [IsDomain R] {ι : Type} {n : ℕ} (LL : Letters ι) (S : Set 
       intro h
       have := LaurentPolynomial.support_coeff_C_mul_T_of_ne_zero (hne m0 hm0) 1
       rw [h] at this
-      simp at this
+      exact Nat.zero_ne_one (by simpa only [AddMonoidAlgebra.coeff_zero, Finsupp.support_zero, Finset.card_empty, Finset.card_singleton] using congrArg Finset.card this)
     · rw [hc, LaurentPolynomial.support_coeff_C_mul_T_of_ne_zero (hne m0 hm0) 1]
       simp
   · intro k hk
@@ -968,8 +1013,8 @@ theorem crit_alt [NeZero r] {K : ℕ} [NeZero K] (R : Type) [CommRing R] [IsDoma
   have hsum : rename (plVar (K := K)) A₀ * rename (tanVar (r := r)) G₀ = ∑ d' ∈ T', ∑ d'' ∈ T'',
       rename (plVar (K := K)) (polComp R r d' A₀) * rename (tanVar (r := r)) (polComp R K d'' G₀) := by
     conv_lhs => rw [hT', hT'']
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, map_sum, Finset.sum_mul_sum]
+
+    rw [map_sum, map_sum, Finset.sum_mul_sum]
   rw [SetLike.mem_coe, hsum]
   refine Submodule.sum_mem _ fun b' _ => Submodule.sum_mem _ fun b'' _ => ?_
   by_cases hg0 : polComp R K b'' G₀ = 0
@@ -1280,9 +1325,9 @@ theorem li_graded {R : Type} [CommRing R] {σ ι κ : Type} (f : ι → MvPolyno
       refine Finset.sum_congr rfl fun x _ => ?_
       split_ifs with hx
       · rfl
-      · rw [coeff_smul, li_coeff_zero (hmem x) (fun h => hx (hT _ _ m h hm)), smul_zero]
+      · rw [MvPolynomial.coeff_smul, li_coeff_zero (hmem x) (fun h => hx (hT _ _ m h hm)), smul_zero]
     · refine Finset.sum_eq_zero fun x hx => ?_
-      rw [coeff_smul, li_coeff_zero (hmem x) (by rw [(Finset.mem_filter.mp hx).2]; exact hm), smul_zero]
+      rw [MvPolynomial.coeff_smul, li_coeff_zero (hmem x) (by rw [(Finset.mem_filter.mp hx).2]; exact hm), smul_zero]
   have hk : ∑ x ∈ s.subtype (fun x => d x = d x0), g x • f x = 0 := by
     rw [Finset.sum_subtype_eq_sum_filter (f := fun x => g x • f x)]; exact hfil
   exact (linearIndependent_iff'.mp (hli (d x0))) _ (fun x => g x) hk ⟨x0, rfl⟩ (Finset.mem_subtype.mpr hx0)
@@ -1378,8 +1423,8 @@ theorem li_ext {R : Type} [CommRing R] {σ τ α β : Type} (u : α → MvPolyno
   have step : ∀ m : σ →₀ ℕ, ∑ b ∈ s.image Prod.snd, (∑ a ∈ s.image Prod.fst, g' a b * AddMonoidAlgebra.coeff (u a) m) • v b = 0 := by
     intro m
     have h1 := congrArg (fun P => AddMonoidAlgebra.coeff (sumAlgEquiv R σ τ P) m) hs'
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, coeff_sum, coeff_smul, li_key, map_zero, AddMonoidAlgebra.coeff_zero] at h1
+
+    simp only [map_sum, map_smul, coeff_sum, MvPolynomial.coeff_smul, li_key, map_zero, AddMonoidAlgebra.coeff_zero] at h1
     change _ = 0 at h1
     rw [Finset.sum_comm] at h1
     rw [← h1]
@@ -1394,7 +1439,7 @@ theorem li_ext {R : Type} [CommRing R] {σ τ α β : Type} (u : α → MvPolyno
     rw [coeff_sum, AddMonoidAlgebra.coeff_zero]
     change (∑ a ∈ s.image Prod.fst, AddMonoidAlgebra.coeff (g' a b • u a) m) = 0
     rw [← hb b hb' m]
-    exact Finset.sum_congr rfl fun a _ => by rw [coeff_smul, smul_eq_mul]
+    exact Finset.sum_congr rfl fun a _ => by rw [MvPolynomial.coeff_smul, smul_eq_mul]
   have h2 := linearIndependent_iff'.mp hu _ (fun a => g' a x0.2) (ha x0.2 (Finset.mem_image_of_mem _ hx0)) x0.1
     (Finset.mem_image_of_mem _ hx0)
   have hx0' : (x0.1, x0.2) ∈ s := hx0
@@ -1670,14 +1715,14 @@ theorem lift_extOne_map {n : ℕ} {P P' : Type} [CommRing P] [CommRing P'] (g : 
 theorem lift_wedgeR_map {n : ℕ} {P P' : Type} [CommRing P] [CommRing P'] (g : P →+* P') (x : Fin n → P)
     (K : Finset (Fin n) → P) (J : Finset (Fin n)) :
     g (wedgeR x K J) = wedgeR (fun m => g (x m)) (fun J => g (K J)) J := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [wedgeR, map_sum]
+
+  simp [wedgeR, map_sum]
 
 theorem lift_contrR_map {n : ℕ} {P P' : Type} [CommRing P] [CommRing P'] (g : P →+* P') (x : Fin n → P)
     (K : Finset (Fin n) → P) (J : Finset (Fin n)) :
     g (contrR x K J) = contrR (fun m => g (x m)) (fun J => g (K J)) J := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [contrR, map_sum]
+
+  simp [contrR, map_sum]
 
 theorem lift_colStep_map {n : ℕ} {P P' : Type} [CommRing P] [CommRing P'] (g : P →+* P') (c : ℤ) (hP hN : ℕ)
     (x : Fin n → P) (K : Finset (Fin n) → P) (J : Finset (Fin n)) :
@@ -2131,7 +2176,7 @@ theorem jone_coeff_XD (i : Fin N × Fin k) (p : MvPolynomial (Fin N × Fin k) Fd
   classical
   induction p using MvPolynomial.induction_on' with
   | monomial u a =>
-    rw [X_mul_pderiv_monomial, coeff_smul, coeff_monomial]
+    rw [X_mul_pderiv_monomial, MvPolynomial.coeff_smul, coeff_monomial]
     by_cases h : u = mm
     · subst h; simp
     · simp [h]
@@ -2163,7 +2208,7 @@ theorem jone_wt [CharZero Fd] (LL : Letters (Fin N)) (S : Set (Fin N)) (e : Fin 
       rw [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply, sub_eq_zero] at this
       exact this
     have hc := congrArg (AddMonoidAlgebra.coeff · mm) ha
-    rw [jone_coeff_Eaa, coeff_smul, smul_eq_mul] at hc
+    rw [jone_coeff_Eaa, MvPolynomial.coeff_smul, smul_eq_mul] at hc
     exact Int.cast_injective (mul_right_cancel₀ hmm hc)
   rw [jone_weight LL S e he]
   simp_rw [← h]

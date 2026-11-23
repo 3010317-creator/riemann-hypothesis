@@ -1,6 +1,45 @@
 module
 
-public import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.SingularNullSets.WeakApproximationFinitePlace
+public import Development.AbelianVarietyTheory.Definitions.Foundations.HermitianSpaceBaseLatticeEqFrameLattice
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -123,12 +162,12 @@ theorem mem_intLoc_iff (hv : IsGood F E v) (z : Fv F v ⊗[F] E) :
       (algebraMap (𝓞 E) E).toAddMonoidHom
     have e : L x = ∑ l, ((RingOfIntegers.basis E).repr x l) • L (RingOfIntegers.basis E l) := by
       conv_lhs => rw [← (RingOfIntegers.basis E).sum_repr x]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       simp only [map_zsmul]
     change algebraMap F (Fv F v) (L x) ∈ _
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [e, map_sum]
+
+    rw [e, map_sum]
     refine sum_mem fun l _ => ?_
     rw [map_zsmul]
     exact zsmul_mem (hv.ogen l k) _
@@ -144,9 +183,9 @@ theorem mem_intLoc_iff (hv : IsGood F E v) (z : Fv F v ⊗[F] E) :
 theorem trace_tmul (v : HeightOneSpectrum (𝓞 F)) (a : Fv F v) (e : E) :
     Algebra.trace (Fv F v) (Fv F v ⊗[F] E) (a ⊗ₜ[F] e) = a * algebraMap F (Fv F v) (Algebra.trace F E e) := by
   classical
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Algebra.trace_eq_matrix_trace (bV v), Algebra.trace_eq_matrix_trace (bE F E), Matrix.trace, Matrix.trace,
-    map_sum, Finset.mul_sum]
+
+  rw [Algebra.trace_eq_matrix_trace (bV v), Algebra.trace_eq_matrix_trace (bE F E), Matrix.trace, Matrix.trace,
+  map_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [Matrix.diag_apply, Matrix.diag_apply, Algebra.leftMulMatrix_eq_repr_mul, Algebra.leftMulMatrix_eq_repr_mul,
     bV_apply, Algebra.TensorProduct.tmul_mul_tmul, mul_one, crd_tmul]
@@ -155,8 +194,8 @@ theorem trace_eq_sum (v : HeightOneSpectrum (𝓞 F)) (z : Fv F v ⊗[F] E) :
     Algebra.trace (Fv F v) (Fv F v ⊗[F] E) z =
       ∑ k, (bV v).repr z k * algebraMap F (Fv F v) (Algebra.trace F E (bE F E k)) := by
   conv_lhs => rw [← (bV v).sum_repr z]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [bV_apply, TensorProduct.smul_tmul', smul_eq_mul, mul_one, trace_tmul]
 
@@ -175,8 +214,8 @@ theorem mem_of_trace (hv : IsGood F E v) (c : Fv F v ⊗[F] E)
     intro j
     simp only [u]
     conv_lhs => rw [← (bV v).sum_repr c]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Finset.sum_mul, map_sum]
+
+    rw [Finset.sum_mul, map_sum]
     refine Finset.sum_congr rfl fun l _ => ?_
     rw [bV_apply, TensorProduct.smul_tmul', smul_eq_mul, mul_one, Algebra.TensorProduct.tmul_mul_tmul, mul_one,
       trace_tmul]
@@ -189,8 +228,8 @@ theorem mem_of_trace (hv : IsGood F E v) (c : Fv F v ⊗[F] E)
       intro l
       have := congrFun (congrFun hT l) k
       rw [Matrix.mul_apply, Matrix.one_apply] at this
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp_rw [← map_mul, ← map_sum, this]
+
+      simp_rw [← map_mul, ← map_sum, this]
       split_ifs <;> simp
     simp_rw [hu', Finset.sum_mul, mul_assoc]
     rw [Finset.sum_comm]

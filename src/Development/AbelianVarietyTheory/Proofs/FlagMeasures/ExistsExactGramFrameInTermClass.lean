@@ -1,10 +1,53 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardBiUnionLe
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegralOfUnimodular
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LinearFormsBoundedRepresentatives
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardBiUnionLe
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPoint
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsTraceOneIntegerConjDiffPrimeTo
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -63,8 +106,8 @@ theorem frame_indep (hT : T ≠ 0) : LinearIndependent E (frame F) := by
     have h0 : ∀ a, S.hT F.fl.z (F.fl.e a) = 0 := fun a => by
       rw [herm S, F.fl.z_orth, star_zero]
     rw [Fin.sum_univ_castSucc] at this
-    set_option synthInstance.maxHeartbeats 100000 in
-      simpa [frame_cast, frame_last, map_sum, h0, F.fl.z_norm, hT] using this
+
+    simpa [frame_cast, frame_last, map_sum, h0, F.fl.z_norm, hT] using this
   rw [Fin.sum_univ_castSucc, h1, zero_smul, add_zero] at hc
   simp only [frame_cast] at hc
   have h2 := Fintype.linearIndependent_iff.1 F.fl.e_indep _ hc
@@ -100,8 +143,8 @@ theorem exists_partner (hlat : Submodule.IsLattice E Λ) (hΛ : Formalism.Hermit
     rw [mul_inv_cancel₀ (h0 b), FractionalIdeal.mem_one_iff] at h1
     obtain ⟨o, ho⟩ := h1
     refine ⟨o, ?_⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_sum, hφ', ← ho]
+
+    simp [map_sum, hφ', ← ho]
   choose ψ hψ using hint
   let ψ' : M0 →ₗ[𝓞 E] 𝓞 E :=
     { toFun := ψ
@@ -346,8 +389,8 @@ theorem exists_moved (hT : T ≠ 0) (n : S.V ≃ₗ[E] S.V) (hn : n ∈ Formalis
     simpa using hx
   have ho : ∀ x ∈ Xsp F, ∀ b, S.hT x (g b) = 0 := by
     intro x hx b
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [hg, frameAct, map_sum, X_orth_frame hx]
+
+    simp [hg, frameAct, map_sum, X_orth_frame hx]
   have hli : LinearIndependent E g := by
     obtain ⟨η, -, -, e⟩ := uni_inv h1 h2
     have e' : η * B = 1 := mul_eq_one_comm.1 e
@@ -495,8 +538,8 @@ theorem exists_exact_frame : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) 
     refine Matrix.ext fun a b => ?_
     change (hS D).hT (frame (lf D F0) a) (frame G b) = _
     rw [hG]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [frameAct, map_sum, map_smul, hadj, hmf, Matrix.mul_apply, Matrix.map_apply, smul_eq_mul]
+
+    simp only [frameAct, map_sum, map_smul, hadj, hmf, Matrix.mul_apply, Matrix.map_apply, smul_eq_mul]
     refine Finset.sum_congr rfl fun c _ => ?_
     rw [mul_comm]
     congr 1
@@ -512,13 +555,13 @@ theorem exists_exact_frame : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) 
     refine Submodule.add_mem_sup ⟨(aut_mem_iff hn.1 _).2 hx, (mem_Hp_iff rfl hGz he hGe _).2 ⟨fun b => ?_, fun b => ?_⟩⟩
       (Submodule.neg_mem _ (hn.2.2 x (orth_X_of_frame h1)))
     · rw [hadj, hmf]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [frameAct, map_sum, LinearMap.sum_apply, LinearMap.map_smulₛₗ, LinearMap.smul_apply]
+
+      simp only [frameAct, map_sum, LinearMap.sum_apply, LinearMap.map_smulₛₗ, LinearMap.smul_apply]
       refine Finset.sum_eq_zero fun c _ => ?_
       rw [h1, smul_zero]
     · rw [hG]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [frameAct, map_sum, LinearMap.sum_apply, LinearMap.map_smulₛₗ, LinearMap.smul_apply]
+
+      simp only [frameAct, map_sum, LinearMap.sum_apply, LinearMap.map_smulₛₗ, LinearMap.smul_apply]
       refine Finset.sum_eq_zero fun c _ => ?_
       rw [hn.1.1, h2, smul_zero]
 

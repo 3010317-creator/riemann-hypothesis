@@ -1,10 +1,47 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.HalvesFreeAndAdjoint
+public import Formalism.LocalToGlobal.ProjectiveLattices.ThShort
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsQuotEquiv
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeEmbeddingIdealLevel
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OmegaDataLevelForms
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.HalvesFreeAndAdjoint
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -19,8 +56,8 @@ theorem mk_sum_smul {O La : Type} [CommRing O] [AddCommGroup La] [Module O La] (
     (c : Fin r → O) (x : Fin r → La) : (Submodule.Quotient.mk (∑ b, c b • x b) : La ⧸ J) =
       ∑ b, c b • (Submodule.Quotient.mk (x b) : La ⧸ J) := by
   change J.mkQ _ = _
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   rfl
 
 theorem isUnit_det_of_span : ∀ {O La ι : Type} [CommRing O] [AddCommGroup La] [Module O La] (P : Finset ι) (k : ι → Type) [∀ i, CommRing (k i)] (φ : ∀ i, O → k i) {r : ℕ} (ρ : ∀ i, Fin r → La →+ k i), (∀ i a c x, ρ i a (c • x) = φ i c * ρ i a x) → ∀ (J : Submodule O La), (∀ x, x ∈ J → ∀ i ∈ P, ∀ a, ρ i a x = 0) → (∀ t : ∀ i, Fin r → k i, ∃ x, ∀ i ∈ P, ∀ a, ρ i a x = t i a) → ∀ x : Fin r → La, Submodule.span O (Set.range fun b => (Submodule.Quotient.mk (x b) : La ⧸ J)) = ⊤ → ∀ i ∈ P, IsUnit (Matrix.of fun b a => ρ i a (x b)).det := by
@@ -38,8 +75,8 @@ theorem isUnit_det_of_span : ∀ {O La ι : Type} [CommRing O] [AddCommGroup La]
     exact (mk_sum_smul J c x).symm
   refine ⟨fun b => φ i (c b), funext fun a => ?_⟩
   have h1 := hJ _ hw i hi a
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sub, map_sum, sub_eq_zero] at h1
+
+  rw [map_sub, map_sum, sub_eq_zero] at h1
   simp only [hs] at h1
   have h2 := hv i hi a
   rw [Pi.single_eq_same] at h2
@@ -60,8 +97,8 @@ theorem span_of_isUnit_det : ∀ {O La ι : Type} [CommRing O] [AddCommGroup La]
   choose e he using he
   choose c hc using fun b : Fin r => hcrt fun i => e i b
   have hmem : v - ∑ b, c b • x b ∈ J := hJ _ fun i hi a => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sub, map_sum, sub_eq_zero]
+
+    rw [map_sub, map_sum, sub_eq_zero]
     simp only [hs, hc _ i hi]
     have := congrFun (he i hi) a
     rw [← this]

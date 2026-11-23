@@ -1,12 +1,52 @@
 module
 
-public import Mathlib
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsBlockNFZeroOne
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegrableOfMulUnimodular
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsWeilFormulas
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousHermPart
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.EmbeddingXiZeroNeZero
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsTopologicalRingAE
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaSumInvariantUnipotentTranslate
-public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.GinfCSecondCountable
+public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.NumFieldHosCountable
+import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -97,8 +137,8 @@ theorem exists_tF_ne (σ : E →ₐ[F] E) (hσ : ∀ x, σ (σ x) = x) {h : Matr
     rw [hm, Matrix.trace_mul_single, op_smul_eq_mul, mul_comm z, ← mul_assoc, mul_inv_cancel₀ hij, one_mul]
   have h2 : Matrix.trace (h * ct σ m) = σ z := by
     have ht : ∀ X : Matrix (Fin r) (Fin r) E, Matrix.trace (ct σ X) = σ (Matrix.trace X) := fun X => by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp [ct, Matrix.trace, map_sum]
+
+      simp [ct, Matrix.trace, map_sum]
     have hmul : ct σ (m * h) = ct σ h * ct σ m := by
       simp only [ct]
       rw [Matrix.map_mul, Matrix.transpose_mul]
@@ -134,8 +174,8 @@ theorem exists_dual (σ : E →ₐ[F] E) (hσ : ∀ x, σ (σ x) = x) (r : ℕ) 
     conv_rhs => rw [← b.sum_repr x]
     have : (tF (b' i).1 (∑ j, b.repr x j • b j : hermF σ r).1 : F) =
         tB σ (b' i) (∑ j, b.repr x j • b j) := rfl
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [this, map_sum]
+
+    rw [this, map_sum]
     simp only [map_smul, smul_eq_mul]
     rw [Finset.sum_eq_single i]
     · have := hd i i
@@ -206,8 +246,8 @@ theorem uL_apply (m : Matrix (Fin r) (Fin r) D.host.E) (x : Mx D r r) :
 
 theorem trace_rat (M : Matrix (Fin r) (Fin r) D.host.E) :
     Matrix.trace (rat M : Mx D r r) = incA D (Matrix.trace M) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [rat, Matrix.trace, Matrix.diag, Matrix.map_apply, map_sum]
+
+  simp only [rat, Matrix.trace, Matrix.diag, Matrix.map_apply, map_sum]
 
 theorem uL_rat (m h : Matrix (Fin r) (Fin r) D.host.E) :
     uL m (rat h) = algebraMap D.host.F (AF D.host.F) (tF m h) := by
@@ -225,7 +265,7 @@ theorem rat_sum {ι : Type} (s : Finset ι) (f : ι → Matrix (Fin r) (Fin r) D
 theorem adj_rsmul (a : AF D.host.F) (x : Mx D r r) : adj (a • x) = a • adj x :=
   Matrix.ext fun i j => sigR_smul_gen (R := AF D.host.F) D.sp.cm.sig a (x j i)
 
-set_option synthInstance.maxHeartbeats 400000 in
+
 theorem hermPart_smul (a : AF D.host.F) (x : Mx D r r) :
     GlobalTheory.CompanionTheory.HermVol.hermPart D r (a • x) = a • GlobalTheory.CompanionTheory.HermVol.hermPart D r x := by
   rw [GlobalTheory.CompanionTheory.HermVol.hermPart, GlobalTheory.CompanionTheory.HermVol.hermPart, adj_rsmul, ← smul_add]
@@ -343,8 +383,8 @@ def cEquiv {n : ℕ} (e e' : Fin n → Matrix (Fin r) (Fin r) D.host.E)
   invFun b i := uL (e i) b.1
   left_inv v := by
     funext j
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, uL_rat, hd, smul_eq_mul]
+
+    simp only [map_sum, map_smul, uL_rat, hd, smul_eq_mul]
     simp
   right_inv b := Subtype.ext (sum_uL_smul e' e hrec b.2)
   map_add' v w := Subtype.ext (by simp [add_smul, Finset.sum_add_distrib])

@@ -1,9 +1,49 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.JSmul
-public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Saturated
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AevalApplyComm
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -78,9 +118,9 @@ theorem γA_q {δ : W.Gam} (hδ : δ ∈ W.DelF) :
   congr 1
   funext i
   change W.γ₀ δ W.π₀₁ = W.π₀₁
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [LocWach.π₀₁, map_add (f := _), map_sub, map_one, map_natCast, map_sum,
-    ← sum_Del W (fun ε => W.γ₀ ε (1 + PowerSeries.X)) hδ]
+
+  rw [LocWach.π₀₁, map_add (f := _), map_sub, map_one, map_natCast, map_sum,
+  ← sum_Del W (fun ε => W.γ₀ ε (1 + PowerSeries.X)) hδ]
   simp only [map_mul, AlgHom.mul_apply]
 
 theorem γA_e (g : W.Gam) (i : ZMod n₀) : W.γA g (letE i) = letE i := by
@@ -102,8 +142,8 @@ theorem card_Del {l : ℕ} (hl : 2 ≤ l) (hk : (PD.p : k) = 0) (ι : k⸨X⸩ �
     exact hu
   have h4 := congrArg (PowerSeries.constantCoeff (R := k)) h3
   have h5 : PowerSeries.constantCoeff W.π₀₁ = 1 - (PD.p : O) + W.DelF.card := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [LocWach.π₀₁, map_add (f := _), map_sub, map_one, map_natCast, map_sum]
+
+    rw [LocWach.π₀₁, map_add (f := _), map_sub, map_one, map_natCast, map_sum]
     congr 1
     rw [Finset.sum_congr rfl (g := fun _ => (1 : O))]
     · simp
@@ -176,8 +216,8 @@ theorem red_div (hq : Onto T A q) (hk : (PD.p : k) = 0) (hc : (W.DelF.card : k) 
     ∃ z' : ↥(W.NΔ T), red p T A q i y = vv k ^ (s : ℤ) • red p T A q i z' := by
   have hz' : ∑ δ ∈ W.DelF, W.γD T δ z ∈ W.NΔ T := by
     refine ⟨Submodule.sum_mem _ fun δ _ => W.N_Γ T δ z hz, fun δ hδ => ?_⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, ← sum_Del W (fun ε => W.γD T ε z) hδ]
+
+    rw [map_sum, ← sum_Del W (fun ε => W.γD T ε z) hδ]
     simp only [W.γD_mul]
   have he : (letE (τ i) : LetA O n₀) • (y : W.DD T) ∈ DΔ W T := fun δ hδ => by
     rw [γD_smulA, γA_e, y.2.2 δ hδ]

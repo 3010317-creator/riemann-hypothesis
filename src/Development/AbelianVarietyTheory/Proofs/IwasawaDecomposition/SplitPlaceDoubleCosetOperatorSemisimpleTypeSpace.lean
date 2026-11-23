@@ -1,11 +1,57 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitsLiftSpec
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeDoubleCosetOperatorsStandardFacts
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInvariantHermitianWeightForm
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsWildInertiaCyclotomicElement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClassSumEqConstMulPetersson
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInvariantHermitianWeightForm
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteIndexConj
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitPlaceDoubleCosetOperatorsCommuteSpherical
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.NStageTrivialCharacterCoeffEqAlt
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitsLiftSpec
+import Formalism.LocalToGlobal.IndefiniteReal.DoubleCosetOperators.Objects
+import Formalism.LocalToGlobal.NormalizedHeckeFactors.TypesDefs
+import Formalism.LocalToGlobal.NumberFieldFamilies.NPartCBase
+import Formalism.LocalToGlobal.NumberFieldFamilies.NPartCNd
+import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
 
 @[expose] public section
 
@@ -93,15 +139,15 @@ theorem sum_mem_sph {a : NG.AlgWt L n} {v : HeightOneSpectrum (𝓞 L⁺)} {α :
         group) hfix
   rw [Finset.sum_image (mul_right_injective κ).injOn, e1] at e2
   conv_rhs => rw [e2]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, rt_rt]
+
+  simp only [map_sum, rt_rt]
 
 theorem form_sum {a : NG.AlgWt L n} {B : (GAf L n → a.W) →ₗ⋆[ℂ] (GAf L n → a.W) →ₗ[ℂ] ℂ} (hB : IsPetersson a B)
     {v : HeightOneSpectrum (𝓞 L⁺)} {α : GAf L n} {R : Finset (GAf L n)} (h : IsReps v α R)
     {f g : GAf L n → a.W} (hf : f ∈ sph a v) (hg : g ∈ sph a v) :
     B f (∑ γ ∈ R, NG.rt L n γ g) = R.card * B f (NG.rt L n α g) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, ← nsmul_eq_mul, ← Finset.sum_const]
+
+  rw [map_sum, ← nsmul_eq_mul, ← Finset.sum_const]
   refine Finset.sum_congr rfl fun γ hγ => ?_
   obtain ⟨k₁, h₁, k₂, h₂, rfl⟩ := h.1 γ hγ
   rw [← rt_rt, hg.2 k₂ h₂, ← rt_rt]
@@ -112,8 +158,8 @@ theorem form_sum_left {a : NG.AlgWt L n} {B : (GAf L n → a.W) →ₗ⋆[ℂ] (
     {v : HeightOneSpectrum (𝓞 L⁺)} {α : GAf L n} {R : Finset (GAf L n)} (h : IsReps v α R)
     {f g : GAf L n → a.W} (hf : f ∈ sph a v) (hg : g ∈ sph a v) :
     B (∑ γ ∈ R, NG.rt L n γ f) g = R.card * B f (NG.rt L n α⁻¹ g) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, LinearMap.sum_apply, ← nsmul_eq_mul, ← Finset.sum_const]
+
+  rw [map_sum, LinearMap.sum_apply, ← nsmul_eq_mul, ← Finset.sum_const]
   refine Finset.sum_congr rfl fun γ hγ => ?_
   obtain ⟨k₁, h₁, k₂, h₂, rfl⟩ := h.1 γ hγ
   have e : g = NG.rt L n (k₁ * α) (NG.rt L n α⁻¹ g) := by

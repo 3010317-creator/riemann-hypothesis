@@ -1,13 +1,48 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.EllipticCurveLevels.HasLevel
-public import Development.AbelianVarietyTheory.Statements.EllipticCurveLevels.ClosedAtLConclusionOfMem
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousMapPFin
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
-public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatVecUOfIsSphericalU
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SatakeParameterSphericalProductSpehQuotients
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIntPolyEsymmEqPowerSumMultisetStatement
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ElementarySymmetricInverse
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousMapPFin
 
 @[expose] public section
 
@@ -79,10 +114,10 @@ private theorem opOf_zero (ρ : Representation ℂ G V) (A : G →₀ ℂ) : opO
 private theorem opOf_cv (ρ : Representation ℂ G V) (A B : G →₀ ℂ) (v : V) :
     opOf ρ (cv A B) v = opOf ρ A (opOf ρ B v) := by
   rw [opOf_eq, cv]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Finsupp.sum, map_sum, Finsupp.linearCombination_single]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [opOf, Finsupp.sum, map_sum, Finset.smul_sum, map_smul, map_mul, Module.End.mul_apply, mul_smul]
+
+  simp only [Finsupp.sum, map_sum, Finsupp.linearCombination_single]
+
+  simp only [opOf, Finsupp.sum, map_sum, Finset.smul_sum, map_smul, map_mul, Module.End.mul_apply, mul_smul]
 
 private theorem poly_op (R : Subring ℂ) {I : Type} (f : I → G →₀ ℂ) (hf : ∀ i g, f i g ∈ R) (P : MvPolynomial I ℤ) :
     ∃ F : G →₀ ℂ, (∀ g, F g ∈ R) ∧ ∀ (V : Type) [AddCommGroup V] [Module ℂ V] (ρ : Representation ℂ G V) (v : V)
@@ -180,13 +215,13 @@ private theorem exists_Tj_op (R : Subring ℂ) {ϖ : w.adicCompletion E} (hϖ : 
     split_ifs
     · exact hR _
     · exact R.zero_mem
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [opOf_eq, map_sum, GlobalTheory.LFun.heckeVec, finsum_eq_sum_of_support_subset (s := hfin.toFinset)]
-      · simp only [Finsupp.linearCombination_single]
-      · intro c hc
-        simp only [Function.mem_support] at hc
-        simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
-        exact fun h0 => hc (by simp [h0])
+
+  · rw [opOf_eq, map_sum, GlobalTheory.LFun.heckeVec, finsum_eq_sum_of_support_subset (s := hfin.toFinset)]
+    · simp only [Finsupp.linearCombination_single]
+    · intro c hc
+      simp only [Function.mem_support] at hc
+      simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+      exact fun h0 => hc (by simp [h0])
 
 private theorem heckeVec_Ta {ϖ : w.adicCompletion E} {c : GL (Fin a) (w.adicCompletion E)}
     (hc : (c : Matrix (Fin a) (Fin a) (w.adicCompletion E)) = ϖ • 1)

@@ -1,8 +1,47 @@
 module
 
-public import Mathlib
-public import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HermitianSpaceBaseLatticeEqFrameLattice
+public import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -49,8 +88,8 @@ theorem exists_dualFamily_of_isLattice {O K V : Type} [CommRing O] [IsDedekindDo
     have h1 : π (s ⟨y, hy⟩) = ⟨y, hy⟩ := LinearMap.congr_fun hs ⟨y, hy⟩
     have h2 : (π (s ⟨y, hy⟩) : V) = y := by rw [h1]
     rw [pi_eq_sum_univ' (s ⟨y, hy⟩)] at h2
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, Submodule.coe_sum, Submodule.coe_smul] at h2
+
+    simp only [map_sum, map_smul, Submodule.coe_sum, Submodule.coe_smul] at h2
     simp only [LinearMap.sum_apply, LinearMap.smulRight_apply, LinearMap.id_apply]
     refine Eq.trans (Finset.sum_congr rfl fun i _ => ?_) h2
     rw [hf i ⟨y, hy⟩, algebraMap_smul]
@@ -188,9 +227,9 @@ theorem hform_eq_sum {A : Type} [CommRing A] (σ : A →+* A) (J : Matrix (Fin n
     hform σ J x y = ∑ j, σ ((Φ *ᵥ x) j) * (((S.map σ)ᵀ * J) *ᵥ y) j := by
   conv_lhs => rw [← Matrix.one_mulVec x, ← h1, ← Matrix.mulVec_mulVec]
   generalize Φ *ᵥ x = u
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hform, Matrix.mulVec, dotProduct, Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, map_sum,
-    map_mul, Finset.sum_mul, Finset.mul_sum]
+
+  simp only [hform, Matrix.mulVec, dotProduct, Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, map_sum,
+  map_mul, Finset.sum_mul, Finset.mul_sum]
   rw [Finset.sum_comm]
   conv_rhs => rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun b _ => ?_
@@ -381,8 +420,8 @@ private theorem frame_span_eq_top_of_unimodular {E : Type} [Field E] [NumberFiel
       apply S.frame.ext
       intro i
       dsimp only [μ]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum, LinearMap.sum_apply]
+
+      rw [map_sum, LinearMap.sum_apply]
       have hs : ∀ j, S.hT (star (φ (S.frame j)) • bs j) (S.frame i) =
           φ (S.frame j) * (if i = j then 1 else 0) := by
         intro j

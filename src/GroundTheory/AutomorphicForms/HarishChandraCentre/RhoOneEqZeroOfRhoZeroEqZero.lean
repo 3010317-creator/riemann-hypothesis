@@ -1,8 +1,55 @@
 module
 
-public import Mathlib
 public import GroundTheory.AutomorphicForms.HarishChandraCentre.MemCenterOfCommuteE
 public import GroundTheory.AutomorphicForms.HarishChandraCentre.RepBase
+public import Mathlib.RingTheory.Derivation.Lie
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -39,11 +86,11 @@ theorem rhoDeriv_smul (c : Matrix (Fin n) (Fin n) ℂ) (r : ℂ) (M : gl n) :
 theorem rhoDeriv_rhoDeriv_X (c : Matrix (Fin n) (Fin n) ℂ) (P Q : gl n) (a : Fin n × Fin n) :
     rhoDeriv c P (rhoDeriv c Q (X a)) =
       ∑ k, C ((P * Q) k a.1) * (X (k, a.2) + C (c k a.2)) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [rhoDeriv_X, map_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Derivation.leibniz, Derivation.map_add, derivation_C, smul_zero, add_zero,
-    smul_eq_mul, mul_zero, rhoDeriv_X, Matrix.mul_apply, map_sum, Finset.sum_mul, Finset.mul_sum]
+
+  rw [rhoDeriv_X, map_sum]
+
+  simp only [Derivation.leibniz, Derivation.map_add, derivation_C, smul_zero, add_zero,
+  smul_eq_mul, mul_zero, rhoDeriv_X, Matrix.mul_apply, map_sum, Finset.sum_mul, Finset.mul_sum]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun i _ => ?_
   simp only [map_mul]
@@ -152,8 +199,8 @@ theorem rhoDeriv_one_shift (M : gl n) (f : Poly n) :
     rw [map_mul, Derivation.leibniz, Derivation.leibniz, hp, map_add (f := _), smul_eq_mul, smul_eq_mul,
       smul_eq_mul, smul_eq_mul, map_mul, map_mul]
     congr 2
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [shift_X, Derivation.map_add, derivation_C, add_zero, rhoDeriv_X, rhoDeriv_X, map_sum]
+
+    rw [shift_X, Derivation.map_add, derivation_C, add_zero, rhoDeriv_X, rhoDeriv_X, map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     simp [shift_X, shift_C, Matrix.one_apply]
 
@@ -174,7 +221,7 @@ def geDeg (t : ℕ) : Submodule ℂ (Poly n) where
   carrier := {f | ∀ s : Fin n × Fin n →₀ ℕ, s.degree < t → AddMonoidAlgebra.coeff f s = 0}
   add_mem' {f g} hf hg s hs := by rw [MvPolynomial.coeff_add, hf s hs, hg s hs, add_zero]
   zero_mem' s _ := by simp
-  smul_mem' r f hf s hs := by rw [coeff_smul, hf s hs, smul_zero]
+  smul_mem' r f hf s hs := by rw [MvPolynomial.coeff_smul, hf s hs, smul_zero]
 
 theorem geDeg_anti {t t' : ℕ} (h : t' ≤ t) : (geDeg t : Submodule ℂ (Poly n)) ≤ geDeg t' :=
   fun _ hf s hs => hf s (lt_of_lt_of_le hs h)
@@ -202,8 +249,8 @@ theorem mem_geDeg_of_isHomogeneous {f : Poly n} {d : ℕ} (hf : f.IsHomogeneous 
 theorem map_mem_of_monomial (L : Poly n →ₗ[ℂ] Poly n) (P : Submodule ℂ (Poly n))
     (Q : (Fin n × Fin n →₀ ℕ) → Prop) {f : Poly n} (hf : ∀ s, AddMonoidAlgebra.coeff f s ≠ 0 → Q s)
     (h : ∀ s (c : ℂ), Q s → L (monomial s c) ∈ P) : L f ∈ P := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [f.as_sum, map_sum]
+
+  rw [f.as_sum, map_sum]
   exact Submodule.sum_mem _ fun s hs => h s _ (hf s (mem_support_iff.1 hs))
 
 theorem degree_sub_single {s : Fin n × Fin n →₀ ℕ} {a : Fin n × Fin n} (h : s a ≠ 0) :

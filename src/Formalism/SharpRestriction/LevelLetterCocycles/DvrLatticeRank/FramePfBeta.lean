@@ -1,7 +1,48 @@
 module
 
+public import Formalism.SharpRestriction.LevelLetterCocycles.DownSlotProposition
+public import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.FramePfL
 public import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.FramePfAlpha
 public import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.FramePfPhi
+import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.GradNPfA
+import Formalism.SharpRestriction.LevelLetterCocycles.FrobeniusPowUniformizerFactorisation
+import Formalism.SharpRestriction.LevelLetterCocycles.MapCompZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -46,8 +87,8 @@ theorem framepf_φD_vec (H : Matrix (Fin Bs.r) (Fin Bs.r) (PowerSeries O)) (k : 
     W.φD T (framepf_vec Bs π' (c - 1) H k) =
       ∑ m, W.φA (framepf_ι π' (c - 1) (H m k)) • W.φD T (Bs.b m) := by
   unfold framepf_vec
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   exact Finset.sum_congr rfl fun m _ => framepf_φD_smul _ _
 
 def framepf_ebar (j : Fin Bs.r) : LcQ W T π' c :=
@@ -81,11 +122,11 @@ theorem framepf_Ψβ_sum (F : Matrix (Fin Bs.r) (Fin Bs.r) (PowerSeries O)) (a :
     rw [Module.Basis.constr_basis, Finset.smul_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [TensorProduct.smul_tmul', smul_eq_mul, ← map_mul]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Finset.sum_congr rfl fun k _ => e1 k, Finset.sum_comm]
+
+  rw [map_sum, Finset.sum_congr rfl fun k _ => e1 k, Finset.sum_comm]
   refine Finset.sum_congr rfl fun j _ => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← TensorProduct.sum_tmul, ← map_sum]
+
+  rw [← TensorProduct.sum_tmul, ← map_sum]
 
 
 include hπ0 hΔπ γ0 hβφ in
@@ -97,8 +138,8 @@ theorem framepf_Ψβ_Pc (hT : IsCrys PD T.ρ) (F : Matrix (Fin Bs.r) (Fin Bs.r) 
     Subalgebra.sum_mem _ fun k _ => Subalgebra.mul_mem _ (haΔ k) (framepf_φA_ι_mem π' c hπ0 hΔπ γ0 _)
   refine ⟨∑ j, (⟨_, hmem j⟩ : ↥W.AΔ) ⊗ₜ (⟨framepf_ebar Bs π' c hπ0 hΔπ hR2 γ0 hu j, trivial⟩ :
     ↥(⊤ : Submodule O (LcQ W T π' c))), ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hap, framepf_Ψβ_sum Bs π' c hπ0 hΔπ hR2 γ0 hu βφ hβφ, map_sum]
+
+  rw [hap, framepf_Ψβ_sum Bs π' c hπ0 hΔπ hR2 γ0 hu βφ hβφ, map_sum]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [framepf_toLA_tmul]
   congr 2
@@ -172,8 +213,8 @@ include hπ0 in
 theorem framepf_φA_ι_matmul (F H : Matrix (Fin Bs.r) (Fin Bs.r) (PowerSeries O)) (j k : Fin Bs.r) :
     ∑ m, W.φA (framepf_ι π' (c - 1) (F j m)) * W.φA (framepf_ι π' (c - 1) (H m k)) =
       W.φA (framepf_ι π' (c - 1) ((F * H) j k)) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Matrix.mul_apply, framepf_ι_sum π' (c - 1) hπ0, map_sum]
+
+  rw [Matrix.mul_apply, framepf_ι_sum π' (c - 1) hπ0, map_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
   rw [framepf_ι_mul π' (c - 1) (hπ0 _), map_mul]
 

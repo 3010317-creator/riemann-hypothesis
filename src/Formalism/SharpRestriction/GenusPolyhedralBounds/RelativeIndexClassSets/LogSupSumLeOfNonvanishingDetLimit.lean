@@ -1,14 +1,62 @@
 module
 
-public import Mathlib
-public import Formalism.LocalRingCardinality.DataArith
-public import Formalism.FilteredPoleLength.LocalDescentLevels.InvFromBlocksApplyZero
 public import Formalism.PeriodIntegrals.Transference
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.TransferenceMinima
 public import Formalism.SharpRestriction.Divisibility.WeightAlgebra
+public import Mathlib.Algebra.AffineMonoid.Basic
+public import Mathlib.Algebra.Module.StablyFree.Basic
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.PairedCharacterCondition
+public import Formalism.FilteredPoleLength.LocalDescentLevels.InvFromBlocksApplyZero
 public import Formalism.LogFactorialIndices.SignedSubspaceIndex.IdxBase
 public import Formalism.LogFactorialIndices.SignedSubspaceIndex.IdxDet
-public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.PairedCharacterCondition
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+public import Mathlib.NumberTheory.NumberField.Discriminant.Different
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -576,8 +624,8 @@ theorem core_arch {N2 : (K →+* ℂ) → V → ℝ} {dH : ℕ} (Hm : Herm N2 dH
     obtain ⟨a, ha, _⟩ := h i
     exact (norm_nonneg a).trans ha
   have hN : ∀ f, 0 ≤ N2 σ f := fun f => by rw [← Hm.norm_e]; exact norm_nonneg _
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [detPoly_expand, MvPolynomial.coeff_sum, map_sum, Finset.prod_univ_sum, Finset.mul_sum]
+
+  rw [detPoly_expand, MvPolynomial.coeff_sum, map_sum, Finset.prod_univ_sum, Finset.mul_sum]
   refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun b _ => ?_)
   rw [MvPolynomial.coeff_monomial]
   split_ifs
@@ -1133,15 +1181,15 @@ theorem tr_iota_mem_span [FiniteDimensional K V] (Hm : Herm N2 dH) (f : V) :
       tr_iota Hm ((Module.finBasis ℚ K p.2) • (Module.finBasis K V p.1))) := by
   set b := Module.finBasis K V
   set ω := Module.finBasis ℚ K
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← b.sum_repr f, map_sum]
+
+  rw [← b.sum_repr f, map_sum]
   refine Submodule.sum_mem _ fun j _ => ?_
   have hcc : b.repr f j = ∑ i, ((ω.repr (b.repr f j) i : ℚ) : K) * ω i := by
     conv_lhs => rw [← ω.sum_repr (b.repr f j)]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [Algebra.smul_def, eq_ratCast]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hcc, Finset.sum_smul, map_sum]
+
+  rw [hcc, Finset.sum_smul, map_sum]
   refine Submodule.sum_mem _ fun i _ => ?_
   rw [mul_smul, tr_iota_smul_rat]
   exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨(j, i), rfl⟩)
@@ -1727,14 +1775,14 @@ theorem len_sat_le {R F : Type} [CommRing R] [IsDomain R] [IsDiscreteValuationRi
     rw [Matrix.mul_apply]
     have h1 : z k = ∑ l, w.repr (bz k) l • ((w l : U) : V1) := by
       have h := congrArg U.subtype (w.sum_repr (bz k))
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum] at h
+
+      rw [map_sum] at h
       rw [← hbz k]
       simpa using h.symm
     simp only [Matrix.of_apply]
     rw [h1]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, smul_eq_mul]
+
+    simp only [map_sum, map_smul, smul_eq_mul]
     refine Finset.sum_congr rfl fun l _ => ?_
     simp only [C, Wm, RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.of_apply,
       LinearMap.toMatrix_apply, hW0]
@@ -1905,8 +1953,8 @@ theorem len_le_gaussC {M : Submodule (𝓞 K) V} (hfgM : M.FG) {ρ : ℕ} {z : F
 
   have hent : ∀ i k, φ1 i (z1 k) = jF (polyOf (φ i) (z k)) := by
     intro i k
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hz1def, polyOf_eq_sum, map_sum, map_sum]
+
+    rw [hz1def, polyOf_eq_sum, map_sum, map_sum]
     refine Finset.sum_congr rfl fun γ _ => ?_
     rw [map_smul, smul_eq_mul, hφ1, ← map_mul, mul_comm, MvPolynomial.C_mul_monomial, mul_one]
   have hdet : (Matrix.of fun i k => φ1 i (z1 k)).det = jF (detPoly φ z) := by
@@ -1931,8 +1979,8 @@ theorem len_le_gaussC {M : Submodule (𝓞 K) V} (hfgM : M.FG) {ρ : ℕ} {z : F
     have hmv : (Matrix.of fun i k => φ1 i (z1 k)).mulVec g = 0 := by
       funext i
       have := congrArg (φ1 i) hg
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum, map_zero] at this
+
+      rw [map_sum, map_zero] at this
       simp only [map_smul, smul_eq_mul] at this
       simp only [Matrix.mulVec, dotProduct, Matrix.of_apply, Pi.zero_apply]
       rw [← this]

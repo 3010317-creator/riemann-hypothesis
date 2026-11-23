@@ -1,13 +1,62 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
-public import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CntPartners
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DetFromBlocksSingle
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiscriminantOrderCommonFixedLatticeEmbeddedData
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniquePlace
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeDiscriminantOrderNeZeroUnimodula
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLatticeLatIn
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemOfPerpPerp
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiscriminantOrderCommonFixedLatticeEmbeddedData
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DetFromBlocksSingle
+import Formalism.HermitianLattices.HermitianLatticesProofs.DualBasic
+import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
+import Formalism.HermitianLattices.HermitianLatticesProofs.GenusCovol
+import Formalism.SharpRestriction.CuspSpanNormBounds.AbsoluteAmplitudeSecondOfSource
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
 
 @[expose] public section
 
@@ -126,10 +175,10 @@ theorem latDetH_pseudo [DecidableEq ι] (hK : IsCMUnram K) (h : V →ₗ⋆[K] V
   let h' : (ι → K) →ₗ⋆[K] (ι → K) →ₗ[K] K := (h.comp φ).compl₂ φ
   have hh : ∀ x y, h' x y = h (φ x) (φ y) := fun _ _ => rfl
   have hx : ∀ y x, h' y x = ∑ i, star (y i) * (G *ᵥ x) i := fun y x => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hh, hφ, Fintype.linearCombination_apply, map_sum, LinearMap.sum_apply, map_smulₛₗ,
-      LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply, RingHom.id_apply, mulVec, dotProduct, hGd,
-      Matrix.of_apply, Finset.mul_sum]
+
+    simp only [hh, hφ, Fintype.linearCombination_apply, map_sum, LinearMap.sum_apply, map_smulₛₗ,
+    LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply, RingHom.id_apply, mulVec, dotProduct, hGd,
+    Matrix.of_apply, Finset.mul_sum]
     rw [Finset.sum_comm]
     exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
   have hx1 : ∀ i x, h' (Pi.single i 1) x = (G *ᵥ x) i := fun i x => by
@@ -278,8 +327,8 @@ theorem exists_norm_eq (F : FlagG S r T) (F' : FlagG S r T') (hT : T ≠ 0) (hs 
   have h1 : ∀ a, S.hT (F.fvec a) y = if a = Fin.last r then Z.det else 0 := fun a => by
     have := congrFun (congrFun (Matrix.mul_adjugate Z) a) (Fin.last r)
     rw [Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply] at this
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hy, map_sum]
+
+    rw [hy, map_sum]
     simp only [map_smul, smul_eq_mul, mul_ite, mul_one, mul_zero] at this ⊢
     rw [← this]
     exact Finset.sum_congr rfl fun b _ => mul_comm _ _
@@ -288,10 +337,10 @@ theorem exists_norm_eq (F : FlagG S r T) (F' : FlagG S r T') (hT : T ≠ 0) (hs 
     simp only [c, adjugate_fin_succ_eq_det_submatrix, Fin.succAbove_last, ← two_mul, pow_mul]
     simp [hZ]
   have h2 : S.hT y y = -T' * (Dl F F' r * star (Dl F F' r)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hy, map_sum, LinearMap.sum_apply, map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, hT_fvec,
-      diagonal_apply, starRingEnd_apply, RingHom.id_apply, mul_ite, mul_zero, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true, hc]
+
+    simp only [hy, map_sum, LinearMap.sum_apply, map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, hT_fvec,
+    diagonal_apply, starRingEnd_apply, RingHom.id_apply, mul_ite, mul_zero, Finset.sum_ite_eq',
+    Finset.mem_univ, if_true, hc]
     ring
   have h3 : S.hT F.z y = Z.det := by simpa [FlagG.fvec] using h1 (Fin.last r)
   have h4 : S.hT y F.z = star Z.det := by rw [← h3]; exact (S.herm.eq _ _).symm

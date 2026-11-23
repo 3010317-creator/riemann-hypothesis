@@ -1,17 +1,53 @@
 module
 
-public import Mathlib
 public import Formalism.UnipotentAdelicQuotients.WeylLatDual
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DualWeylEqSpanColProd
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.StandardWeylLatticesFockDual
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramInjectivity.InstFintypeColChoice
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WwCauchyBinet
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WwInjective
-public import Formalism.LocalToGlobal.Columns.CoefficientsModP.FkPderivBlockEmbNe
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ColumnMinorProductsFockReproducingDualWeylStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ColumnProductTransitionMatricesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeylLatticeIntegralColumnMinorExpansionStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFockFunctionalOnNablaXProductsStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeylLatticeIntegralColumnMinorExpansionStatement
+import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
+import Formalism.GradedWeylDivisibility.FinalB
+public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WwCauchyBinet
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramInjectivity.InstFintypeColChoice
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -114,8 +150,8 @@ theorem canExpand (p : ℕ) [Fact p.Prime] {Lt T : Type} [Fintype Lt] [Decidable
   have h := PI.WwInjectiveWork.deX_eq_sum N nu cauchy_binet_minors (K := ℂ_[p])
     (fun s => WeylLatticeDuality.colsOf (y (e s)))
   change φ (PI.WwInjective.DeX N nu fun s => WeylLatticeDuality.colsOf (y (e s))) = _
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [h, map_sum]
+
+  rw [h, map_sum]
   let eqv : PI.WwInjective.KM.ColChoice N nu ≃ (∀ s, ∀ c : Fin ((nu s).rowLen 0), Fin ((nu s).colLen c) ↪o Fin N) :=
     ⟨id, id, fun _ => rfl, fun _ => rfl⟩
   refine Fintype.sum_equiv eqv _ _ fun J => ?_
@@ -171,8 +207,8 @@ theorem expand_prod (p : ℕ) [Fact p.Prime] {Lt : Type} [Fintype Lt] [Decidable
     Finset.sum_congr rfl fun k _ => by rw [map_prod, ← Finset.prod_mul_distrib]]
   rw [sum_prod_eq (fun s k => C (M s (i s) k : ℂ_[p]) * rho p N s (v s k))]
   refine Finset.prod_congr rfl fun s _ => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [h s (i s), map_sum]
+
+  rw [h s (i s), map_sum]
   exact Finset.sum_congr rfl fun k _ => rho_zsmul p N s _ _
 
 theorem stmt_holds : WeylLatticeDuality.Stmt := by
@@ -191,16 +227,16 @@ theorem stmt_holds : WeylLatticeDuality.Stmt := by
         (∏ s, (Cm s (i s) (J s) : ℂ_[p])) * φ (map (Int.castRingHom ℂ_[p]) (WeylLatticeDuality.nablaX N nu J)) := by
       intro i
       simp only [hβdef]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [expand_prod p N b _ Cm hCm i, map_sum]
+
+      rw [expand_prod p N b _ Cm hCm i, map_sum]
       refine Finset.sum_congr rfl fun J _ => ?_
       rw [← smul_eq_C_mul, map_smul, smul_eq_mul, hnab]
     have hnabβ : ∀ J : (∀ s, ∀ c : Fin ((nu s).rowLen 0), Fin ((nu s).colLen c) ↪o Fin N),
         φ (map (Int.castRingHom ℂ_[p]) (WeylLatticeDuality.nablaX N nu J)) =
           ∑ i : (∀ s, ι s), (∏ s, (B s (J s) (i s) : ℂ_[p])) * φ (β i) := by
       intro J
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hnab, expand_prod p N _ b B hB J, map_sum]
+
+      rw [hnab, expand_prod p N _ b B hB J, map_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [← smul_eq_C_mul, map_smul, smul_eq_mul]
 
@@ -221,8 +257,8 @@ theorem stmt_holds : WeylLatticeDuality.Stmt := by
       have hds : ∀ s, ev s (d s (i s)) =
           ∑ j, (B s j (i s) : ℂ_[p]) * ev s (GlobalTheory.WeylMinorDual.colProd ℤ N (nu s) (hY s) j) := by
         intro s
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [← hd s (i s), map_sum]
+
+        rw [← hd s (i s), map_sum]
         exact Finset.sum_congr rfl fun j _ => by rw [map_zsmul, zsmul_eq_mul]
       simp only [hds]
       rw [← sum_prod_eq (fun s j => (B s j (i s) : ℂ_[p]) * ev s (GlobalTheory.WeylMinorDual.colProd ℤ N (nu s) (hY s) j)),
@@ -298,8 +334,8 @@ theorem stmt_holds : WeylLatticeDuality.Stmt := by
           have hfs : ∀ s, ev s (f (e s)) = ∑ j, (z s j : ℂ_[p]) * ev s (GlobalTheory.WeylMinorDual.colProd ℤ N (nu s) (hY s) j) := by
             intro s
             conv_lhs => rw [← hz2 s]
-            set_option synthInstance.maxHeartbeats 100000 in
-              rw [map_sum]
+
+            rw [map_sum]
             exact Finset.sum_congr rfl fun j _ => by rw [map_zsmul, zsmul_eq_mul]
           rw [LinearMap.smul_apply, canExpand p e N nu hY Ψ y, smul_eq_mul]
           simp only [hev', hψJ]

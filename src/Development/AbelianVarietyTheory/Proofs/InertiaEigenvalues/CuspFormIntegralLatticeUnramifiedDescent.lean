@@ -1,16 +1,58 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BddGood
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BddGoodOfBddAll
-public import Formalism.LocalToGlobal.ProjectiveLattices.ThGerm
-public import Formalism.LocalToGlobal.ProjectiveLattices.MulCMemSec
 public import Formalism.LocalToGlobal.ProjectiveLattices.ThClassPins
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BddGoodOfBddAll
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspidalSectionBoundedNonzeroMultipleStatement
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.CdvrExtSt
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IntegralFramedPointBaseChangeStable
+import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IntegralFramedPointBaseChangeStable
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IntegralFrameAfterExtIffAnd
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Finiteness.Quotient
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -45,8 +87,8 @@ theorem eq_zero_of_forall_conj {k F Ω ι : Type} [Field k] [Field F] [Field Ω]
   have : ∑ g : F ≃ₐ[k] F, τ (g c) * ∑ j, τ (g (b j)) * x j = x m := by
     simp only [Finset.mul_sum, ← mul_assoc, ← map_mul τ]
     rw [Finset.sum_comm]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [← Finset.sum_mul, ← map_sum τ, hc']
+
+    simp only [← Finset.sum_mul, ← map_sum τ, hc']
     rw [Finset.sum_eq_single m] <;> simp +contextual [eq_comm]
   rw [← this]
   simp [h]
@@ -86,8 +128,8 @@ theorem le_one_of_forall_conj {F ι : Type} [Field F] [Fintype ι] (v : Valuatio
     choose c' hc' using fun j => Ideal.Quotient.mk_surjective (c j)
     rw [← hc', Ideal.Quotient.eq_zero_iff_mem]
     refine hb c' (Ideal.Quotient.eq_zero_iff_mem.1 ?_) j
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← hc, map_sum]
+
+    rw [← hc, map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [← hc', Algebra.smul_def, Algebra.smul_def, map_mul]
     rfl
@@ -97,8 +139,8 @@ theorem le_one_of_forall_conj {F ι : Type} [Field F] [Fintype ι] (v : Valuatio
   obtain ⟨g, rfl⟩ := Ideal.Quotient.stabilizerHom_surjective (L ≃ₐ[K] L) la.asIdeal μ.asIdeal g
   have h4 : ∀ j, τ (Ideal.Quotient.stabilizerHom μ.asIdeal la.asIdeal (L ≃ₐ[K] L) g
       (Ideal.Quotient.mk μ.asIdeal (b j))) = ρ (ψ (g.1 • b j)) := fun j => rfl
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [h4, ← map_mul, ← map_sum, hρ]
+
+  simp only [h4, ← map_mul, ← map_sum, hρ]
   have h5 : ((∑ j, ψ (g.1 • b j) * z j : v.valuationSubring) : F) = (∑ j, σ (g.1 (b j)) * x j) / x j₀ := by
     rw [Finset.sum_div]
     push_cast
@@ -196,8 +238,8 @@ theorem exists_residue_basis [la'.asIdeal.LiesOver la.asIdeal] : ∃ (d : ℕ) (
   choose b hb using fun j => Ideal.Quotient.mk_surjective (B j)
   have e : ∀ x : Fin _ → 𝓞 K, Ideal.Quotient.mk la'.asIdeal (∑ j, x j • b j) =
       ∑ j, Ideal.Quotient.mk la.asIdeal (x j) • B j := fun x => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [← hb, Algebra.smul_def, Algebra.smul_def, map_mul]
     rfl
@@ -224,8 +266,8 @@ theorem exists_approx (hv : ∀ x : K, vLa la' (algebraMap K K' x) = vLa la x) {
     have h1 := (la'.valuation_lt_one_iff_mem (K := K') _).2 hx
     have h2 : a - ∑ j, algebraMap K K' (x j) * b j =
         algebraMap (𝓞 K') K' (a₀ - ∑ j, x j • b j) - (algebraMap (𝓞 K') K' a₀ - a) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sub, map_sum]
+
+      rw [map_sub, map_sum]
       simp only [Algebra.smul_def, map_mul]
       have : ∀ j, algebraMap (𝓞 K') K' (algebraMap (𝓞 K) (𝓞 K') (x j)) = algebraMap K K' (x j) := fun j => rfl
       simp only [this]

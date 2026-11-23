@@ -1,9 +1,54 @@
 module
 
 public import Formalism.HarderNarasimhan.DegSupermodZ
-public import Formalism.LatticeSlopes.ExistsSaturatedSlopeEqMuMax
-public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SatBasic
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.ExistsSmulMemOfFinrankEq
 public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.MuChar
+import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SatBasic
+import Formalism.LatticeSlopes.ExistsSaturatedSlopeEqMuMax
+import Formalism.LatticeSlopes.LatticeSlopesProofs.SlopeInequality
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -53,8 +98,8 @@ private lemma norm_sum_smul_map_le_mul_of_bounded {A : Submodule ℤ E} {B : Sub
     simp [Submodule.coe_sum, Int.cast_smul_eq_zsmul]
   have heF : ((e (∑ i, round ((n : ℝ) * c i) • b i) : B) : F) =
       ∑ i, ((round ((n : ℝ) * c i) : ℤ) : ℝ) • ((e (b i) : B) : F) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_sum, map_zsmul, Submodule.coe_sum, Int.cast_smul_eq_zsmul]
+
+    simp [map_sum, map_zsmul, Submodule.coe_sum, Int.cast_smul_eq_zsmul]
   have dF : (n : ℝ) • ∑ i, c i • ((e (b i) : B) : F) =
       ((e (∑ i, round ((n : ℝ) * c i) • b i) : B) : F) +
         ∑ i, ((n : ℝ) * c i - (round ((n : ℝ) * c i) : ℝ)) • ((e (b i) : B) : F) := by
@@ -184,15 +229,15 @@ theorem norm_starProjection_le {G : Type*} [AddCommGroup G] (α : G →+ E) (β 
     starProjection_orthogonal_apply_eq_zero (hS _ (hsS i))
   have hβ : U'ᗮ.starProjection (β (k • g - ∑ i, round ((k : ℝ) * c i) • s i)) =
       (k : ℝ) • U'ᗮ.starProjection (β g) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_sub, map_sum, map_zsmul, map_nsmul, h0, Nat.cast_smul_eq_nsmul]
+
+    simp [map_sub, map_sum, map_zsmul, map_nsmul, h0, Nat.cast_smul_eq_nsmul]
   have hα : α (k • g - ∑ i, round ((k : ℝ) * c i) • s i) =
       (k : ℝ) • (span ℝ (α '' S))ᗮ.starProjection (α g) +
         ∑ i, ((k : ℝ) * c i - (round ((k : ℝ) * c i) : ℝ)) • α (s i) := by
     have hx : α g = (span ℝ (α '' S))ᗮ.starProjection (α g) + ∑ i, c i • α (s i) := by
       rw [hrep]; abel
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sub, map_nsmul, map_sum, ← Nat.cast_smul_eq_nsmul ℝ]
+
+    rw [map_sub, map_nsmul, map_sum, ← Nat.cast_smul_eq_nsmul ℝ]
     conv_lhs => rw [hx]
     simp only [map_zsmul, smul_add, Finset.smul_sum, sub_smul, Finset.sum_sub_distrib, smul_smul,
       Int.cast_smul_eq_zsmul]

@@ -1,6 +1,64 @@
 module
 
 public import Formalism.HermitianCurvature.StatementG
+public import Mathlib.Analysis.Calculus.LineDeriv.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.Calculus.ContDiff.Bounds
+public import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
+public import Mathlib.Analysis.Complex.OperatorNorm
+public import Mathlib.Analysis.Complex.RemovableSingularity
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.Algebra.Order.Chebyshev
+public import Mathlib.Analysis.Calculus.Deriv.ZPow
+public import Mathlib.Analysis.Calculus.DiffContOnCl
+public import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+public import Mathlib.Analysis.Complex.Liouville
 
 @[expose] public section
 
@@ -67,8 +125,8 @@ theorem hol_clm_decomp (L : (Fin d → ℂ) →L[ℂ] F) :
     · subst hik; simp
     · simp [Pi.single_eq_of_ne hik]
   conv_lhs => rw [hv]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [map_sum]
+
+  simp [map_sum]
 
 theorem hol_radius {Ω : Set (Fin d → ℂ)} (hΩ : IsOpen Ω) {x₀ : Fin d → ℂ} (hx₀ : x₀ ∈ Ω) (v : Fin d → ℂ) :
     ∃ R r : ℝ, 0 < R ∧ 0 < r ∧ Metric.closedBall x₀ R ⊆ Ω ∧
@@ -137,7 +195,7 @@ theorem hol_continuousOn_fderiv {Ω : Set (Fin d → ℂ)} {g : (Fin d → ℂ) 
   rw [h]
   refine continuousOn_finsetSum _ fun k _ => ?_
   have hc : Continuous fun w : F => (ContinuousLinearMap.proj k : (Fin d → ℂ) →L[ℂ] ℂ).smulRight w :=
-    (ContinuousLinearMap.smulRightL ℂ (Fin d → ℂ) F (ContinuousLinearMap.proj k)).continuous
+    (StrongDual.smulRightL ℂ (Fin d → ℂ) F (ContinuousLinearMap.proj k)).continuous
   exact hc.comp_continuousOn (hol_continuousOn_fderiv_apply hΩ hg _)
 
 theorem hol_differentiableOn_fderiv_apply [CompleteSpace F] {Ω : Set (Fin d → ℂ)} {g : (Fin d → ℂ) → F}
@@ -210,7 +268,7 @@ theorem hol_differentiableOn_fderiv [CompleteSpace F] {Ω : Set (Fin d → ℂ)}
     funext x; exact hol_clm_decomp _
   rw [h]
   refine DifferentiableOn.fun_sum fun k _ => ?_
-  exact (ContinuousLinearMap.smulRightL ℂ (Fin d → ℂ) F
+  exact (StrongDual.smulRightL ℂ (Fin d → ℂ) F
     (ContinuousLinearMap.proj k)).differentiable.comp_differentiableOn
       (hol_differentiableOn_fderiv_apply hΩ hg _)
 
@@ -510,8 +568,8 @@ theorem bkb_norm_le_sum {d : ℕ} (L : (Fin d → ℂ) →L[ℂ] ℂ) : ‖L‖ 
     refine Finset.sum_congr rfl fun l _ => ?_
     rw [← Pi.single_smul]; simp
   conv_lhs => rw [hv]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Finset.sum_mul]
+
+  rw [map_sum, Finset.sum_mul]
   refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun l _ => ?_)
   rw [map_smul, norm_smul, mul_comm]
   exact mul_le_mul_of_nonneg_left (norm_le_pi_norm v l) (norm_nonneg _)

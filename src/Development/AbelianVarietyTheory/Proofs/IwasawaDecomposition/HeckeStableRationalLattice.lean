@@ -1,11 +1,48 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExponentAndTwistData
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsCentralGroupAlgebraIdempotentUniversal
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwistedLatticeFinitelyGeneratedSpanning
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GoodTwistSideFormsLeSpanGoodLiftForms
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LatticeInIsotypicSup
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -41,8 +78,8 @@ theorem exists_integral_functional {O K V : Type} [CommRing O] [IsDomain O] [IsP
     obtain ⟨a, ha⟩ := (Submodule.mem_span_range_iff_exists_fun K).mp h
     have h0 : ∑ i, a i • ((e i : N') : V ⧸ (K ∙ v)) = 0 := by
       have h1 := congrArg q ha
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum, hqv] at h1
+
+      rw [map_sum, hqv] at h1
       simpa only [map_smul, hq'] using h1
     have := Fintype.linearIndependent_iff.mp hli a h0
     apply hv
@@ -57,8 +94,8 @@ theorem exists_integral_functional {O K V : Type} [CommRing O] [IsDomain O] [IsP
       have h3 := congrArg Subtype.val (e.sum_repr n')
       rw [Submodule.coe_sum] at h3
       exact h3.symm
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sub, map_sum, sub_eq_zero]
+
+    rw [map_sub, map_sum, sub_eq_zero]
     refine h2.trans (Finset.sum_congr rfl fun i _ => ?_)
     rw [q.map_smul_of_tower, hq']
   obtain ⟨c, hc⟩ := Submodule.mem_span_singleton.mp ((Submodule.Quotient.mk_eq_zero _).mp h1)
@@ -67,8 +104,8 @@ theorem exists_integral_functional {O K V : Type} [CommRing O] [IsDomain O] [IsP
     exact N.sub_mem hn (N.sum_mem fun i _ => N.smul_mem _ (hm i)))
   refine ⟨o, ?_⟩
   have h3 := congrArg f hc
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sub, map_sum, map_smul] at h3
+
+  rw [map_sub, map_sum, map_smul] at h3
   simp only [f.map_smul_of_tower, hfm, smul_zero, Finset.sum_const_zero, sub_zero, smul_eq_mul] at h3
   rw [ho, LinearMap.smul_apply, ← h3, smul_eq_mul]
   field_simp
@@ -98,8 +135,8 @@ theorem exists_integral_reading {LL : Type} [Field LL] [NumberField LL] (L0 : In
     intro a
     rw [← B.sum_repr a]
     push_cast
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine N.sum_mem fun i _ => ?_
     rw [map_zsmul]
     exact zsmul_mem (Submodule.subset_span (Set.mem_range_self (f := fun i => ι (B i : LL)) i)) _
@@ -128,9 +165,9 @@ theorem mem_span_solutions {R O : Type} [CommRing R] [CommRing O] [Algebra R O] 
     induction z using TensorProduct.induction_on with
     | zero => simp
     | tmul a c =>
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [LinearMap.lTensor_tmul, TensorProduct.piScalarRight_apply, TensorProduct.piScalarRightHom_tmul, hg,
-        Algebra.smul_def, map_sum, map_mul, Finset.sum_mul]
+
+      simp only [LinearMap.lTensor_tmul, TensorProduct.piScalarRight_apply, TensorProduct.piScalarRightHom_tmul, hg,
+      Algebra.smul_def, map_sum, map_mul, Finset.sum_mul]
       exact Finset.sum_congr rfl fun t _ => by ring
     | add x y hx hy => simp only [map_add (f := _), Pi.add_apply, hx, hy, add_mul, Finset.sum_add_distrib]
   obtain ⟨z, rfl⟩ := (TensorProduct.piScalarRight R O O ι).surjective o
@@ -209,8 +246,8 @@ theorem exists_integral_descent {LL : Type} [Field LL] [NumberField LL] (L0 : In
     rw [map_smul, Finsupp.smul_apply, smul_eq_mul, hlx, mul_smul]
   · intro f fr hf x
     conv_lhs => rw [← B.sum_repr x]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, map_sum, hΦ x, map_sum]
+
+    rw [map_sum, map_sum, hΦ x, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [map_smul, hB, ← hf ⟨bs k, hb k⟩, key, map_smul, LinearMap.baseChange_tmul]
   · intro w
@@ -278,8 +315,8 @@ theorem exists_integral_descent {LL : Type} [Field LL] [NumberField LL] (L0 : In
   have hsol := mem_span_solutions (fun t (q : κ × Fin n) => A (t, q)) o (by
     rintro ⟨a, k⟩
     apply hinj
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_mul, hs, hA', map_zero]
+
+    simp only [map_sum, map_mul, hs, hA', map_zero]
     have := congrArg (rd ((d : 𝓞 L0) : L0) * ·) (hrel a k)
     simp only [Finset.mul_sum, mul_zero] at this
     rw [← this]
@@ -288,16 +325,16 @@ theorem exists_integral_descent {LL : Type} [Field LL] [NumberField LL] (L0 : In
   rintro _ ⟨c, hc, rfl⟩
   refine ⟨c, fun a => B.repr.injective (Finsupp.ext fun k => ?_), fun t => hs _⟩
   have h1 := congrArg (fun z : 𝓞 L0 => (z : L0)) (hc (a, k))
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [RingOfIntegers.coe_eq_algebraMap, map_sum, map_mul, map_zero] at h1
+
+  simp only [RingOfIntegers.coe_eq_algebraMap, map_sum, map_mul, map_zero] at h1
   simp only [← RingOfIntegers.coe_eq_algebraMap, hA'] at h1
   have h2 : ∑ t, (c t : L0) * α (t, a, k) = 0 := by
     apply mul_left_cancel₀ hd0
     rw [mul_zero, ← h1, Finset.mul_sum]
     exact Finset.sum_congr rfl fun t _ => by ring
   have h3 := congrArg (fun z : L0 => (z : LL)) h2
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul, Finsupp.finsetSum_apply, Finsupp.smul_apply, smul_eq_mul, hα, map_zero, Finsupp.zero_apply]
+
+  simp only [map_sum, map_smul, Finsupp.finsetSum_apply, Finsupp.smul_apply, smul_eq_mul, hα, map_zero, Finsupp.zero_apply]
   simpa using h3
 
 theorem normV_isUnit (D : D7) (T : TwR D.LL0 D.nd) (i : T.Tw) (w : PlE D.host) (hw : w ∉ T.S0 i) :

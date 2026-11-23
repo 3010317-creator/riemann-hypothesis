@@ -1,17 +1,60 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
-public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsHeatZero
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HMatMulVecPerCrd
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DblZMemHn
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.DifferentiableOnDetHMat
+public import Mathlib.Data.Matrix.ColumnRowPartitioned
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ConjKappa
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SummableNormSiegelThetaSeriesTerms
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DblZMemHn
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DoubledHermitianTestFunctionSpecStatement
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HMatMulVecPerCrd
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianHeisenbergOperatorLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianThetaSummableAndDeterminesTestFnStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalSchwartzBruhatAlgebraIntegralLinearStatement
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianThetaSummableAndDeterminesTestFnStatement
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalSchwartzBruhatAlgebraIntegralLinearStatement
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SummableNormSiegelThetaSeriesTerms
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.ConjugateConjugate
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -226,9 +269,9 @@ theorem hD_eq (hs : IsSympl X bas) {x₁ x₂ : Frame X.Ψ r} (h₁ : x₁ ∈ X
       hD_sub_conj _ _ (hZ τ).inv.isHermitian (nonsing_inv_mul _ (hZ τ).det_pos.ne'.isUnit)
         (Data.emb τ.1 (y₁ - y₂)) (Data.emb τ.1 (bv X y₁ y₂))
         (Data.emb τ.1 (a₁ - a₂)) (Data.emb τ.1 (bv X a₁ a₂))
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Finset.sum_sub_distrib, ← map_sum, sub_conj, ← Finset.mul_sum, Finset.sum_sub_distrib,
-      ← trace_pair, ← trace_pair, trace_bv, trace_bv] at e
+
+    rw [Finset.sum_sub_distrib, ← map_sum, sub_conj, ← Finset.mul_sum, Finset.sum_sub_distrib,
+    ← trace_pair, ← trace_pair, trace_bv, trace_bv] at e
     have e2 : -(1 / 2) * EF X (y₁ + y₂) (a₁ - a₂) - -(1 / 2) * EF X (a₁ + a₂) (y₁ - y₂) =
         EF X a₁ y₁ + EF X y₂ a₂ := by
       have hn (v) : crd X bas (-v) = -crd X bas v := by
@@ -361,9 +404,9 @@ theorem isDbl_heis (hs : IsSympl X bas) (hn : Even n) {φ₁ φ₂ : TF n g} (h�
   congr 2
   have e := Finset.sum_congr (s₁ := Finset.univ) rfl fun (k : Fin n) _ =>
     expo_row idx hs h₁ h₂ (y₁ k) (y₂ k) (z k) (w k)
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Finset.sum_add_distrib (s := (Finset.univ : Finset (Fin n))), ← Finset.mul_sum,
-    hermForm_Hm, ← map_sum, ← Rat.cast_sum] at e
+
+  simp only [Finset.sum_add_distrib (s := (Finset.univ : Finset (Fin n))), ← Finset.mul_sum,
+  hermForm_Hm, ← map_sum, ← Rat.cast_sum] at e
   simp only [← Finset.mul_sum, map_neg, map_mul, conj_ofReal, expo]
   simp only [Finset.sum_comm (s := (Finset.univ : Finset X.Ψ))]
   exact (by intro _ _ _ _ _ _ h; rw [h]; ring : ∀ a b c d e f : ℂ,

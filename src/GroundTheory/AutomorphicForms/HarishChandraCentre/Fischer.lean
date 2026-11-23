@@ -1,8 +1,57 @@
 module
 
-public import Mathlib
 public import GroundTheory.AutomorphicForms.HarishChandraCentre.RepBase
 public import GroundTheory.AutomorphicForms.HarishChandraCentre.FischerForm
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+public import Mathlib.RingTheory.Derivation.Lie
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -64,8 +113,8 @@ def rowWt (m : Fin n × Fin n →₀ ℕ) (i : Fin n) : ℕ := ∑ k, m (i, k)
 
 theorem rowOp_self_monomial (i : Fin n) (s : Fin n × Fin n →₀ ℕ) (c : ℂ) :
     rowOp i i (monomial s c) = monomial s (c * (rowWt s i : ℂ)) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [rowOp_apply, rowWt, Nat.cast_sum, Finset.mul_sum, map_sum]
+
+  rw [rowOp_apply, rowWt, Nat.cast_sum, Finset.mul_sum, map_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [pderiv_monomial, X, monomial_mul, one_mul]
   by_cases hk : s (i, k) = 0
@@ -92,7 +141,7 @@ theorem coeff_rowOp_self (i : Fin n) (m : Fin n × Fin n →₀ ℕ) (f : Poly n
 theorem rowWt_eq_of_eigen {h : Poly n} {c : Fin n → ℂ} (hc : ∀ a, rowOp a a h = c a • h)
     {m : Fin n × Fin n →₀ ℕ} (hm : m ∈ h.support) (a : Fin n) : (rowWt m a : ℂ) = c a := by
   have := congrArg (AddMonoidAlgebra.coeff · m) (hc a)
-  rw [coeff_rowOp_self, coeff_smul, smul_eq_mul] at this
+  rw [coeff_rowOp_self, MvPolynomial.coeff_smul, smul_eq_mul] at this
   exact mul_right_cancel₀ (MvPolynomial.mem_support_iff.1 hm) this
 
 noncomputable def wtProj (μ : Fin n → ℕ) : Module.End ℂ (Poly n) where
@@ -109,8 +158,8 @@ noncomputable def wtProj (μ : Fin n → ℕ) : Module.End ℂ (Poly n) where
   map_smul' c f := by
     classical
     ext m
-    simp only [coeff_sum, coeff_monomial, coeff_smul, smul_eq_mul, RingHom.id_apply]
-    simp only [Finset.sum_ite_eq', Finset.mem_filter, MvPolynomial.mem_support_iff, coeff_smul,
+    simp only [coeff_sum, coeff_monomial, MvPolynomial.coeff_smul, smul_eq_mul, RingHom.id_apply]
+    simp only [Finset.sum_ite_eq', Finset.mem_filter, MvPolynomial.mem_support_iff, MvPolynomial.coeff_smul,
       smul_eq_mul]
     by_cases hm : rowWt m = μ <;> simp only [hm, and_true, and_false, if_false]
     · by_cases h1 : AddMonoidAlgebra.coeff f m = 0 <;> by_cases h2 : c * AddMonoidAlgebra.coeff f m = 0 <;> simp_all
@@ -161,7 +210,7 @@ theorem wtProj_wtProj (μ ν : Fin n → ℕ) (f : Poly n) :
 theorem rowOp_self_of_wtProj (μ : Fin n → ℕ) (v : Poly n) (i : Fin n) (h : wtProj μ v = v) :
     rowOp i i v = (μ i : ℂ) • v := by
   ext m
-  rw [coeff_rowOp_self, coeff_smul, smul_eq_mul]
+  rw [coeff_rowOp_self, MvPolynomial.coeff_smul, smul_eq_mul]
   by_cases hm : m ∈ v.support
   · rw [(wtProj_eq_self_iff μ v).1 h m hm]
   · rw [MvPolynomial.notMem_support_iff.1 hm]; simp
@@ -205,8 +254,8 @@ theorem wtProj_comm {T : Module.End ℂ (Poly n)} (hT : ∀ a, T * rowOp a a = r
       have h1 := congrArg (fun S : Module.End ℂ (Poly n) => S (wtProj ν f)) (hT a)
       simp only [mul_apply_eq_comp] at h1
       rw [← h1, rowOp_self_of_wtProj ν _ a (by rw [wtProj_wtProj, if_pos rfl]), map_smul]
-  set_option synthInstance.maxHeartbeats 100000 in
-    conv_lhs => rw [← sum_wtProj f, map_sum, map_sum]
+
+  conv_lhs => rw [← sum_wtProj f, map_sum, map_sum]
   rw [Finset.sum_eq_single μ]
   · exact hν μ
   · intro ν _ hne

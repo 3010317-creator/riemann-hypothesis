@@ -1,6 +1,70 @@
 module
 
-public import Mathlib
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+public import Mathlib.GroupTheory.CosetCover
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+public import Mathlib.RingTheory.Ideal.AssociatedPrime.Finiteness
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Presheaf
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.Algebra.Order.Floor.Semiring
+public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+public import Mathlib.LinearAlgebra.Dual.Lemmas
+public import Mathlib.RingTheory.Ideal.AssociatedPrime.Basic
 
 @[expose] public section
 
@@ -439,7 +503,7 @@ theorem contr_comp (φ : L →ₗ[K] K) (e : ℕ) (F : MvPolynomial σ L) :
 theorem contr_smul_map (φ : L →ₗ[K] K) (c : L) (F : MvPolynomial σ K) :
     contr φ (c • map (algebraMap K L) F) = φ c • F := by
   ext m
-  rw [coeff_contr, coeff_smul, coeff_smul, coeff_map, smul_eq_mul, mul_comm, ← Algebra.smul_def,
+  rw [coeff_contr, AddMonoidAlgebra.coeff_smul_apply, AddMonoidAlgebra.coeff_smul_apply, coeff_map, smul_eq_mul, mul_comm, ← Algebra.smul_def,
     map_smul, smul_eq_mul, smul_eq_mul, mul_comm]
 
 theorem contr_map (φ : L →ₗ[K] K) (F : MvPolynomial σ K) :
@@ -489,8 +553,8 @@ theorem finrank_extSub (W : Submodule K (MvPolynomial σ K)) [Module.Finite K W]
     refine Fintype.linearIndependent_iff.1 hw (fun i => φ (c i)) ?_ i
     ext m
     have := congrArg (fun F => φ (AddMonoidAlgebra.coeff F m)) hc
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [coeff_sum, map_sum, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, map_zero] at this ⊢
+
+    simp only [coeff_sum, map_sum, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, map_zero] at this ⊢
     calc
       _ = ∑ j, φ (AddMonoidAlgebra.coeff (c j • v j) m) := by
         refine Finset.sum_congr rfl fun j _ => ?_
@@ -503,7 +567,7 @@ theorem finrank_extSub (W : Submodule K (MvPolynomial σ K)) [Module.Finite K W]
       have : F = ∑ j ∈ F.support.biUnion fun m => (b.repr (AddMonoidAlgebra.coeff F m)).support,
           b j • map (algebraMap K L) (contr (b.coord j) F) := by
         ext m
-        simp only [coeff_sum, coeff_smul, coeff_map, coeff_contr, smul_eq_mul]
+        simp only [coeff_sum, AddMonoidAlgebra.coeff_smul_apply, coeff_map, coeff_contr, smul_eq_mul]
         conv_lhs => rw [← b.linearCombination_repr (AddMonoidAlgebra.coeff F m), Finsupp.linearCombination_apply]
         rw [Finsupp.sum_of_support_subset (s := F.support.biUnion
           fun m => (b.repr (AddMonoidAlgebra.coeff F m)).support) _ _ _ (by simp)]
@@ -515,10 +579,10 @@ theorem finrank_extSub (W : Submodule K (MvPolynomial σ K)) [Module.Finite K W]
       rw [this]
       refine Submodule.sum_mem _ fun j _ => Submodule.smul_mem _ _ ?_
       have h1 := congrArg W.subtype (w.sum_repr ⟨_, hF (b.coord j)⟩)
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_smul, Submodule.subtype_apply] at h1
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← h1, map_sum]
+
+      simp only [map_sum, map_smul, Submodule.subtype_apply] at h1
+
+      rw [← h1, map_sum]
       refine Submodule.sum_mem _ fun i _ => ?_
       rw [smul_eq_C_mul, map_mul, map_C, C_mul']
       exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)

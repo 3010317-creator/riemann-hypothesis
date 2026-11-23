@@ -1,10 +1,61 @@
 module
 
-public import Mathlib
-public import Formalism.LocalToGlobal.GlobalTheory.GL4.MemDualCrdLat
+public import Formalism.LocalToGlobal.GlobalTheory.GL4.PColSlopeEq
+public import Formalism.LocalToGlobal.HermitianColumns.InLocalDiscriminantKernel
+public import Formalism.LocalToGlobal.LatticeGeometry.GeometryDefinitions.ClsSum
+public import Formalism.QuotientMetricDivisors.Statement
+public import Formalism.LocalRingCardinality.PosOfIsomEmb
 public import Formalism.LocalToGlobal.Columns.BrpStarLatLattice
-public import Formalism.SharpRestriction.GlobalSchurBounds.TotallyPositiveTraceGeOfNormDiscr
+import Formalism.LocalToGlobal.Columns.BrzColLatOneLattice
+public import Formalism.LocalToGlobal.GlobalTheory.GL4.MemDualCrdLat
 public import Formalism.LocalToGlobal.GlobalTheory.GL4.PZBasis
+import Formalism.LocalToGlobal.GlobalTheory.HLatOpsP
+import Formalism.LocalToGlobal.LatticeGeometry.GeometryDefinitions.ExistsFrameOfSig
+public import Formalism.MonomialMeanResidues.ZerosPerVariable
+public import Formalism.SharpRestriction.GlobalSchurBounds.TotallyPositiveTraceGeOfNormDiscr
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -25,11 +76,11 @@ variable {F E K : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Sta
 theorem emb_hform (σ : E →+* ℂ) (hσ : ∀ a, σ (star a) = starRingEnd ℂ (σ a)) {n : ℕ} (H : Matrix (Fin n) (Fin n) E)
     (x y : Fin n → E) :
     σ (Formalism.DivisionValues.hform H x y) = ∑ i, ∑ j, starRingEnd ℂ (σ (x i)) * σ (H i j) * σ (y j) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Formalism.DivisionValues.hform, Matrix.toLinearMapₛₗ₂'_apply, map_sum]
+
+  rw [Formalism.DivisionValues.hform, Matrix.toLinearMapₛₗ₂'_apply, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [smul_eq_mul, smul_eq_mul, map_mul, map_mul, starRingEnd_apply, hσ, RingHom.id_apply]
   ring
@@ -68,9 +119,9 @@ private theorem hform_crd_lemma (S : HSpace E) (y : S.V) :
   unfold crd
   conv_rhs => rw [← S.frame.sum_equivFun y]
   rw [Formalism.DivisionValues.hform, Matrix.toLinearMapₛₗ₂'_apply]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, LinearMap.sum_apply, map_smulₛₗ, LinearMap.smul_apply, Finset.smul_sum, Formalism.BasicNotions.HSpace.gram,
-    smul_eq_mul, RingHom.id_apply, Finset.mul_sum]
+
+  simp only [map_sum, LinearMap.sum_apply, map_smulₛₗ, LinearMap.smul_apply, Finset.smul_sum, Formalism.BasicNotions.HSpace.gram,
+  smul_eq_mul, RingHom.id_apply, Finset.mul_sum]
   conv_rhs => rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   ring
@@ -127,8 +178,8 @@ theorem bc_mu (hc : CMData F E) (S : HSpace E) (hsig : S.SigOK) (hpos : S.IsPosD
     intro y
     show ∑ a, algebraMap E K (crd S y a) • bc (S.frame a) = bc y
     conv_rhs => rw [← S.frame.sum_repr y]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     exact Finset.sum_congr rfl fun a _ => (bc_smul _ _).symm
   have hset : bc '' (L : Set S.V) = f '' (ιm '' (crdLat S L : Set (Fin S.rank → E))) := by
     ext z

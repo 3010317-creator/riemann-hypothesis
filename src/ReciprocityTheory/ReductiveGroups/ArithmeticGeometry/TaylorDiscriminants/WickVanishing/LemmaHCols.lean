@@ -2,8 +2,51 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.GermSCCols
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.SecondColumnOperator
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.LemmaH
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.GEWick
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.LemmaH
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -103,13 +146,13 @@ theorem Mf_prodQ (R : Fin n → MvPolynomial ι k) : Mf mu (prodQ R) = ∏ b, mu
   have hR : ∀ b, colE b (R b) = ∑ α ∈ (R b).support, colE b (monomial α (AddMonoidAlgebra.coeff (R b) α)) := by
     intro b
     conv_lhs => rw [as_sum (R b)]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
   have hmu : ∀ b, mu b (R b) = ∑ α ∈ (R b).support, AddMonoidAlgebra.coeff (R b) α * mu b (monomial α 1) := by
     intro b
     conv_lhs => rw [as_sum (R b)]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     exact Finset.sum_congr rfl fun α _ => by
       rw [show monomial α (AddMonoidAlgebra.coeff (R b) α) = AddMonoidAlgebra.coeff (R b) α • monomial α (1 : k) by
         rw [smul_monomial, smul_eq_mul, mul_one], map_smul, smul_eq_mul]
@@ -169,8 +212,8 @@ theorem colAlg (κ : ι → ι → k) (lam : Fin n → (ι →₀ ℕ) → k)
   have hE : ∀ b α, (monomial α (1 : k)).totalDegree ≤ N →
       lam b α = mu b (E1 κ 1 N (monomial α 1)) := by
     intro b α hα
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hlm, E1, map_sum]
+
+    rw [hlm, E1, map_sum]
     refine Finset.sum_subset (Finset.range_subset_range.2 (Nat.succ_le_succ hα)) (fun i hi hi' => ?_) |>.trans ?_
     · rw [so_iter_eq_zero κ i _ (by simp only [Finset.mem_range] at hi'; omega), smul_zero, map_zero]
     · refine Finset.sum_congr rfl fun i _ => ?_
@@ -203,8 +246,8 @@ theorem colAlg (κ : ι → ι → k) (lam : Fin n → (ι →₀ ℕ) → k)
       (algebraMap ℚ k ((i.factorial : ℚ)⁻¹) * 1 ^ i) * Mf mu ((secondOrder k cc)^[i] P) := by
     intro i
     conv_rhs => rw [as_sum P]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [iter_linear, map_sum, Mf_sum, Finset.mul_sum]
+
+    rw [iter_linear, map_sum, Mf_sum, Finset.mul_sum]
     refine Finset.sum_congr rfl fun mo _ => ?_
     rw [show monomial mo (P.coeff mo) = P.coeff mo • monomial mo (1 : k) by
       rw [smul_monomial, smul_eq_mul, mul_one], map_smul, Mf_smul, ← iter_linear]

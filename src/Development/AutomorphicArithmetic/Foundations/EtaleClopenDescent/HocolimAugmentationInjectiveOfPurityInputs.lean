@@ -1,7 +1,49 @@
 module
 
-public import Mathlib
 public import Development.EtaleCohomology.CohomologicalPurity.LeafAugInjPf
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -140,8 +182,8 @@ theorem key_succ (R : Type) [CommRing R]
     (((((chainsP R).obj (hoc Z)).d (n+2) (n+1)).app W).hom (L Z f π e R (n+1) s)) +
       Lh Z f π e R n (((((chainsP R).obj (hoc Z)).d (n+1) n).app T).hom (gen (hoc Z) (n+1) T s)) =
     gen (hoc Z) (n+1) W (rs Z f s) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [L_good Z f π e R h, d_gen, Fin.sum_univ_succ, d_gen, map_sum, cone_δ_zero]
+
+  rw [L_good Z f π e R h, d_gen, Fin.sum_univ_succ, d_gen, map_sum, cone_δ_zero]
   simp only [Fin.val_zero, pow_zero, one_smul, map_zsmul, Lh_gen]
   rw [add_assoc, ← Finset.sum_add_distrib, Finset.sum_eq_zero, add_zero]
   intro j _
@@ -180,8 +222,8 @@ theorem eq_on_sup {E : Spc} {n : ℕ} {T : Scheme.{0}ᵒᵖ} {M : Type*} [AddCom
     refine Finset.sum_congr rfl fun u _ => ?_
     change Finsupp.single u (w u) = w u • Finsupp.single u (1 : ULift.{1} R)
     rw [Finsupp.smul_single_one]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hw, map_sum, map_sum]
+
+  rw [hw, map_sum, map_sum]
   refine Finset.sum_congr rfl fun u hu => ?_
   rw [map_smul, map_smul, h _ (hz u (Finsupp.mem_support_iff.mp hu))]
 

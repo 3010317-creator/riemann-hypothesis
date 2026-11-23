@@ -1,6 +1,53 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.PolynomialDerivatives.NullStableAlt
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+public import Mathlib.RingTheory.Derivation.Lie
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Bool
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -133,37 +180,37 @@ theorem fockHOp_of : FockHOp := by
   unfold hOp Dop
   rw [← fL_apply hB hc]
   by_cases h : ε a = ε b
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [if_pos h, map_sum, sgn_mul_same ε h]
-      refine Finset.sum_congr rfl fun i _ => ?_
-      rw [map_sub, fL_apply, fL_apply, d1, d2]
-      have e1 := hop_tr_false hB hc b i (pderiv (a, i, true) p)
-      have e2 := hop_tr_true hB hc a i (pderiv (b, i, false) p)
-      rw [hop_pderiv_comm' (b, i, false) (a, i, true)] at e1
-      simp only [sub_self, mul_zero, map_zero, zero_mul, sub_zero, map_one, one_mul]
-      linear_combination e1 - e2
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [if_neg h, map_sum, sgn_mul_diff ε h]
-      have hab : a ≠ b := fun e => h (e ▸ rfl)
-      refine Finset.sum_congr rfl fun i _ => ?_
-      rw [map_sub, map_smul, map_smul, fL_apply, fL_apply, d1, d2, smul_eq_C_mul, smul_eq_C_mul]
-      have t2 := hop_tr_true hB hc a i (pderiv (b, i, false) p)
-      have t3 := hop_tr_true hB hc a i p
-      have t4 := hop_tr_false hB hc b i (X (a, i, false) * p)
-      have e5 : pderiv (b, i, false) (X (a, i, false) * p) = X (a, i, false) * pderiv (b, i, false) p := by
-        rw [Derivation.leibniz, pderiv_X, smul_eq_mul, smul_eq_mul]
-        have : ((b, i, false) : Fin m × Fin n × Bool) ≠ (a, i, false) := by simp [Ne.symm hab]
-        simp [Pi.single_apply, this]
-      rw [e5] at t4
-      rw [hop_pderiv_comm' (a, i, true) (b, i, false)] at t2
-      have e6 : fock c (X (b, i, true) * (X (a, i, false) * p)) = fock c (X (a, i, false) * X (b, i, true) * p) := by
-        congr 1; ring
-      have hK : (C (1 / (2 * c) : ℂ) : PX m n) * C (2 * c : ℂ) = 1 := by
-        rw [← map_mul, show (1 / (2 * c) : ℂ) * (2 * c) = 1 by field_simp, map_one]
-      have e7 : (c : ℂ) * (1 - -1) = 2 * c := by ring
-      simp only [e7, map_neg, map_one, neg_one_mul, neg_neg]
-      linear_combination t2 - X (b, i, false) * t3 - C (1 / (2 * c) : ℂ) * t4 - C (1 / (2 * c) : ℂ) * e6 +
-        (X (b, i, false) * fock c (X (a, i, false) * p) - fock c (X (a, i, false) * pderiv (b, i, false) p)) * hK
+
+  · rw [if_pos h, map_sum, sgn_mul_same ε h]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [map_sub, fL_apply, fL_apply, d1, d2]
+    have e1 := hop_tr_false hB hc b i (pderiv (a, i, true) p)
+    have e2 := hop_tr_true hB hc a i (pderiv (b, i, false) p)
+    rw [hop_pderiv_comm' (b, i, false) (a, i, true)] at e1
+    simp only [sub_self, mul_zero, map_zero, zero_mul, sub_zero, map_one, one_mul]
+    linear_combination e1 - e2
+
+  · rw [if_neg h, map_sum, sgn_mul_diff ε h]
+    have hab : a ≠ b := fun e => h (e ▸ rfl)
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [map_sub, map_smul, map_smul, fL_apply, fL_apply, d1, d2, smul_eq_C_mul, smul_eq_C_mul]
+    have t2 := hop_tr_true hB hc a i (pderiv (b, i, false) p)
+    have t3 := hop_tr_true hB hc a i p
+    have t4 := hop_tr_false hB hc b i (X (a, i, false) * p)
+    have e5 : pderiv (b, i, false) (X (a, i, false) * p) = X (a, i, false) * pderiv (b, i, false) p := by
+      rw [Derivation.leibniz, pderiv_X, smul_eq_mul, smul_eq_mul]
+      have : ((b, i, false) : Fin m × Fin n × Bool) ≠ (a, i, false) := by simp [Ne.symm hab]
+      simp [Pi.single_apply, this]
+    rw [e5] at t4
+    rw [hop_pderiv_comm' (a, i, true) (b, i, false)] at t2
+    have e6 : fock c (X (b, i, true) * (X (a, i, false) * p)) = fock c (X (a, i, false) * X (b, i, true) * p) := by
+      congr 1; ring
+    have hK : (C (1 / (2 * c) : ℂ) : PX m n) * C (2 * c : ℂ) = 1 := by
+      rw [← map_mul, show (1 / (2 * c) : ℂ) * (2 * c) = 1 by field_simp, map_one]
+    have e7 : (c : ℂ) * (1 - -1) = 2 * c := by ring
+    simp only [e7, map_neg, map_one, neg_one_mul, neg_neg]
+    linear_combination t2 - X (b, i, false) * t3 - C (1 / (2 * c) : ℂ) * t4 - C (1 / (2 * c) : ℂ) * e6 +
+      (X (b, i, false) * fock c (X (a, i, false) * p) - fock c (X (a, i, false) * pderiv (b, i, false) p)) * hK
 
 end
 

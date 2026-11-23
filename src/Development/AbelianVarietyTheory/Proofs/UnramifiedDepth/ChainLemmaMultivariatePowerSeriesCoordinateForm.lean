@@ -1,11 +1,58 @@
 module
 
-public import Mathlib
-public import ReciprocityTheory.DualLattices.DetPolyMulCayleyOmegaPow
 public import ReciprocityTheory.DualLattices.VEqZeroOfPowEqOne
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.PeriodValuation
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.PsWeightCalculus
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.WeightedOrderGePrimePowOfSumPurePowersAdd
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Presheaf
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -75,8 +122,8 @@ theorem coeff_pow_congr {f g : MvPowerSeries (Fin M) C} (hf : constantCoeff f = 
       have : β = 0 := by
         rw [← Finsupp.degree_eq_zero_iff]; omega
       subst this
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [coeff_zero_eq_constantCoeff_apply, map_sum]
+
+      rw [coeff_zero_eq_constantCoeff_apply, map_sum]
       refine Finset.sum_eq_zero fun i hi => ?_
       rw [map_mul, map_pow, map_pow, hf, hg, ← pow_add, zero_pow]
       have := Finset.mem_range.1 hi
@@ -161,8 +208,8 @@ theorem ord_of_step {d l : ℕ} (hl : 2 ≤ l) (al : Fin d → ℕ → Fin d →
       simp only [h0, pow_zero, pow_one, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq',
         Finset.mem_univ, if_true] at h5
       convert h2 using 2
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sub, map_sum, coeff_C_mul, h4, h5]
+
+      simp only [map_sub, map_sum, coeff_C_mul, h4, h5]
       ring
   exact fun c α => key _ α rfl c
 
@@ -327,9 +374,9 @@ theorem chain :
       simp only [F, pure, Finset.mul_sum]
       rw [Finset.sum_comm, ← Finset.sum_neg_distrib]
       refine Finset.sum_congr rfl fun j _ => ?_
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← pow_succ, ← neg_mul, ← map_neg, hπ, kap_succ (hp.odd_of_ne_two (by omega)),
-        Finset.mul_sum, ← Finset.sum_neg_distrib, map_sum, Finset.sum_mul]
+
+      rw [← pow_succ, ← neg_mul, ← map_neg, hπ, kap_succ (hp.odd_of_ne_two (by omega)),
+      Finset.mul_sum, ← Finset.sum_neg_distrib, map_sum, Finset.sum_mul]
       refine Finset.sum_congr rfl fun c _ => ?_
       rw [← mul_assoc, ← map_mul]
       congr 2

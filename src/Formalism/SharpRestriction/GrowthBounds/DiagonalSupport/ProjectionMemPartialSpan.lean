@@ -1,6 +1,50 @@
 module
 
 public import Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.MembDefs
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -135,16 +179,16 @@ theorem pj_mul (j : ι) (q : MvPolynomial σ O →ₗ[O] MvPolynomial σ O) {A M
       = pj π j q ((∑ a ∈ A.support, monomial a (AddMonoidAlgebra.coeff A a)) * ∑ b ∈ M.support, monomial b (AddMonoidAlgebra.coeff M b)) := by
         rw [← eA, ← eM]
     _ = ∑ a ∈ A.support, ∑ b ∈ M.support, pj π j q (monomial a (AddMonoidAlgebra.coeff A a) * monomial b (AddMonoidAlgebra.coeff M b)) := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [Finset.sum_mul_sum, map_sum]
-        set_option synthInstance.maxHeartbeats 100000 in
-          simp only [map_sum]
+
+        rw [Finset.sum_mul_sum, map_sum]
+
+        simp only [map_sum]
     _ = ∑ a ∈ A.support, ∑ b ∈ M.support, q (monomial a (AddMonoidAlgebra.coeff A a)) * monomial b (AddMonoidAlgebra.coeff M b) :=
         Finset.sum_congr rfl fun a ha => Finset.sum_congr rfl fun b hb =>
           pj_mono_mul π j q (supp_of_mem hA ha) (supp_of_mem hM hb) _ _
     _ = q A * M := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [← Finset.sum_mul_sum, ← map_sum, ← eA, ← eM]
+
+        rw [← Finset.sum_mul_sum, ← map_sum, ← eA, ← eM]
 
 theorem pj_fix (j : ι) (q : MvPolynomial σ O →ₗ[O] MvPolynomial σ O) (Xj : Submodule O (MvPolynomial σ O))
     (hX : ∀ x ∈ Xj, x ∈ supported O {v | π v = j}) (hq : ∀ x ∈ Xj, q x = x) {F : MvPolynomial σ O}
@@ -185,8 +229,8 @@ theorem projection_mem_partial_span (X : ι → Submodule O (MvPolynomial σ O))
       rw [Finset.mul_sum]
       refine Finset.sum_congr rfl fun b _ => ?_
       rw [mul_left_comm, monomial_mul, mul_one, Finsupp.filter_add_filter_not]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hsum, map_sum]
+
+    rw [hsum, map_sum]
     refine Submodule.sum_mem _ fun b hb => ?_
     have hb1 : monomial (b.filter (fun v => π v = j)) (AddMonoidAlgebra.coeff M b) ∈ supported O {v | π v = j} := by
       refine monomial_mem _ fun v hv => ?_

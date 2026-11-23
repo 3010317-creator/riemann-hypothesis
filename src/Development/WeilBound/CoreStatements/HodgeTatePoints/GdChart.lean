@@ -1,7 +1,56 @@
 module
 
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.IsCompactUnitaryPointsAtPlaceFstMemCompact
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DifferentGeneratorDualIntegral
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.GdDual
-public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.LeadMinor
+public import Development.WeilBound.CoreStatements.HodgeTatePoints.TorusExtensionPairCorrectionEqValueQuotient
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -94,9 +143,9 @@ theorem gen_at_point (hAK : Function.Injective (algebraMap A K))
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [← algebraMap_smul K (u k), hu, ← algebraMap_smul K d, smul_smul])
   have h2 : ι y = φ d • eigProj P.ρΩ (ψ.comp σ) (ι y0) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [y, eigProj, LinearMap.sum_apply, LinearMap.smul_apply, Finset.smul_sum, map_sum,
-      LinearMap.map_smulₛₗ, hred.lin]
+
+    simp only [y, eigProj, LinearMap.sum_apply, LinearMap.smul_apply, Finset.smul_sum, map_sum,
+    LinearMap.map_smulₛₗ, hred.lin]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [← algebraMap_smul C (φ (u k)), ← h, hu, ← algebraMap_smul C (φ d), smul_smul, map_mul, h]
     rfl
@@ -126,9 +175,9 @@ theorem gram_at_point (hAK : Function.Injective (algebraMap A K)) (ψ : K →+* 
   choose z hz using hred.e_eq
   refine ⟨∑ k, φ (u k) * z (Pi.single l (RingOfIntegers.basis E k)) (Pi.single j 1), ?_⟩
   rw [← algebraMap_smul C (φ d)]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [eigProj, HTChart.gram, LinearMap.sum_apply, LinearMap.smul_apply, Finset.smul_sum, map_sum,
-    map_smul, Finset.mul_sum, ← Finset.sum_add_distrib]
+
+  simp only [eigProj, HTChart.gram, LinearMap.sum_apply, LinearMap.smul_apply, Finset.smul_sum, map_sum,
+  map_smul, Finset.mul_sum, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun k _ => ?_
   have h1 := hz (Pi.single l (RingOfIntegers.basis E k)) (Pi.single j 1)
   rw [tate_single, tate_single, map_one, Module.End.one_apply] at h1
@@ -186,8 +235,8 @@ theorem chart_comp_zero_of
   obtain ⟨w', hw', ew'⟩ := exists_alt_bis hv hc P (ψ.comp σ) f
   have htT : ∀ l, P.t l ∈ P.T := fun l => by
     have h1 : P.t l = P.ρ 1 (P.t l) := by simp
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [h1, ← (RingOfIntegers.basis E).sum_repr 1, map_sum, LinearMap.sum_apply]
+
+    rw [h1, ← (RingOfIntegers.basis E).sum_repr 1, map_sum, LinearMap.sum_apply]
     refine Submodule.sum_mem _ fun k _ => ?_
     rw [map_zsmul, LinearMap.smul_apply]
     refine zsmul_mem ?_ _
@@ -203,22 +252,22 @@ theorem chart_comp_zero_of
       have h2 := hf ⟨_, qgen_mem D _ l⟩
       rw [h1, map_add (f := _), map_smul] at h2
       have h3 := congrArg ψ hz1
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hψ, map_add (f := _), map_mul, map_pow, map_natCast, ← h2, map_sum] at h3
+
+      rw [hψ, map_add (f := _), map_mul, map_pow, map_natCast, ← h2, map_sum] at h3
       refine ⟨f ⟨y' l, hy' l⟩ + φ z1 + ∑ k, φ (i w k) * (r * z k l), ?_⟩
       simp only [hz, ew' _ (htT l), mul_add, Finset.sum_add_distrib, map_mul, hψ, hr] at h3 ⊢
       rw [h3]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_add (f := _), map_mul, map_sum, smul_eq_mul, Finset.mul_sum, add_assoc]
+
+      simp only [map_add (f := _), map_mul, map_sum, smul_eq_mul, Finset.mul_sum, add_assoc]
       congr 3
       refine Finset.sum_congr rfl fun k _ => ?_
       ring)
   have h2 : j (1 ⊗ₜ ⟨_, hq⟩) = ((p : O) ^ m) • (y1 + ∑ l, φ (i w l) • y l) := by
     have : (⟨_, hq⟩ : D.omHT σ) = ∑ l, i w l • ⟨_, qgen_mem D σ l⟩ := Subtype.ext (by
       simp [HTChart.q])
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [this, TensorProduct.tmul_sum, map_sum, smul_add, ← e1, Finset.smul_sum,
-      ← Finset.sum_add_distrib]
+
+    rw [this, TensorProduct.tmul_sum, map_sum, smul_add, ← e1, Finset.smul_sum,
+    ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun l _ => ?_
     rw [TensorProduct.tmul_smul, ← algebraMap_smul O (i w l), map_smul, ey, smul_add, smul_comm]
     rfl

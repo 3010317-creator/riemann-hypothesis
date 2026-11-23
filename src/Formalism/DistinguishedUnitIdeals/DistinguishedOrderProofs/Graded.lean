@@ -1,7 +1,58 @@
 module
 
-public import Mathlib
 public import Formalism.DistinguishedUnitIdeals.ExistsConstOfInvariantMod
+public import Mathlib.RingTheory.TensorProduct.Free
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+public import Mathlib.RingTheory.LaurentSeries
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
+public import Mathlib.LinearAlgebra.TensorProduct.RightExactness
 
 @[expose] public section
 
@@ -120,8 +171,8 @@ lemma fixed_const (T : Set (Ks ≃ₐ[LL] Ks))
   refine ⟨∑ i ∈ ((Algebra.TensorProduct.basis Ks b).repr y).support, a i • b i, ?_⟩
   apply (Algebra.TensorProduct.basis Ks b).repr.injective
   ext j
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Algebra.TensorProduct.basis_repr_tmul, one_smul, Finsupp.mapRange_apply, map_sum]
+
+  rw [Algebra.TensorProduct.basis_repr_tmul, one_smul, Finsupp.mapRange_apply, map_sum]
   first
     | (simp only [map_smul, Module.Basis.repr_self, Finsupp.coe_finset_sum, Finset.sum_apply,
         Finsupp.smul_apply, Finsupp.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero,
@@ -269,9 +320,9 @@ lemma aeval_projectionPoly_of_pow_eq_one (T : Module.End LL W) (u : LLˣ) (ℓ E
   have key := aeval_prod_one T (ℓ ^ E) hT (JS.erase 0)
     (fun i => ((u ^ (i * ((ℓ ^ E : ℕ) : ℤ)) : LLˣ) : LL))
   unfold PPoly
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_mul, key, Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul,
-    LinearMap.smul_apply, map_sum]
+
+  rw [map_mul, key, Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul,
+  LinearMap.smul_apply, map_sum]
   first
     | (rw [LinearMap.sum_apply]
        simp only [Polynomial.aeval_X_pow])
@@ -279,8 +330,8 @@ lemma aeval_projectionPoly_of_pow_eq_one (T : Module.End LL W) (u : LLˣ) (ℓ E
 
 lemma sum_pow_fix (T : Module.End LL W) (N : ℕ) (hT : T ^ N = 1) (v : W) :
     T (∑ k ∈ Finset.range N, (T ^ k) v) = ∑ k ∈ Finset.range N, (T ^ k) v := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   have h1 : ∀ k : ℕ, T ((T ^ k) v) = (T ^ (k + 1)) v := fun k => by rw [pow_succ']; rfl
   simp only [h1]
   have h2 := Finset.sum_range_succ' (fun k => (T ^ k) v) N
@@ -644,8 +695,8 @@ lemma trace_sum_descends_to_base (Lev : Level LL Ks Δ) (ℓ s E : ℕ) (h1 : Le
   have hτS : ∀ j, tD D (Lev.τ j) (∑ k ∈ Finset.range (ℓ ^ E), (tD D Lev.σ ^ k) v) =
       ∑ k ∈ Finset.range (ℓ ^ E), (tD D Lev.σ ^ k) v := by
     intro j
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [hcomm, hτ j]
   obtain ⟨w, hw⟩ := fixed_all Lev ℓ s h1 _ hσS hτS
@@ -796,8 +847,8 @@ theorem graded_semilinear_holds : GrdSemi := by
   intro n
   rw [cf_grd]
   unfold cf
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [HahnModule.coeff_smul, HahnModule.coeff_smul, map_sum, Finset.smul_sum]
+
+  rw [HahnModule.coeff_smul, HahnModule.coeff_smul, map_sum, Finset.smul_sum]
   symm
   have hsub : ∀ ij : ℤ × ℤ, ij ∈ Finset.VAddAntidiagonal n
       (Set.VAddAntidiagonal.finite_of_isPWO (grdB τ a x).isPWO_support
@@ -839,8 +890,8 @@ namespace SlopeTestRemainingChoices
 lemma PPoly_map {R R' : Type} [CommRing R] [CommRing R'] (φ : R →+* R') (u : Rˣ) (ℓ E : ℕ)
     (JS : Finset ℤ) : (PPoly u ℓ E JS).map φ = PPoly (Units.map (φ : R →* R') u) ℓ E JS := by
   simp only [PPoly, Polynomial.map_mul]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← Polynomial.coe_mapRingHom, map_prod, map_sum]
+
+  rw [← Polynomial.coe_mapRingHom, map_prod, map_sum]
   simp
   congr 1
   refine Finset.prod_congr rfl fun x _ => ?_
@@ -892,10 +943,10 @@ lemma pr_polyAct (R : LevelModel S LL Ks Δ D) (s : ℕ) (hs : s < ell) (P : Pol
     R.pr s (E.polyAct P (S.gE s) e) =
       (R.lev s).pAct (P.map (algebraMap O LL)) (R.pr s e) := by
   unfold E.polyAct Level.pAct
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Polynomial.sum_over_range' P (fun k => by simp) (P.natDegree + 1) (Nat.lt_succ_self _),
-    Polynomial.sum_over_range' (P.map (algebraMap O LL)) (fun k => by simp) (P.natDegree + 1)
-      (Nat.lt_succ_of_le Polynomial.natDegree_map_le), map_sum]
+
+  rw [Polynomial.sum_over_range' P (fun k => by simp) (P.natDegree + 1) (Nat.lt_succ_self _),
+  Polynomial.sum_over_range' (P.map (algebraMap O LL)) (fun k => by simp) (P.natDegree + 1)
+    (Nat.lt_succ_of_le Polynomial.natDegree_map_le), map_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [R.pr_smul, R.ρ_C, pr_iter R s hs, Polynomial.coeff_map, HahnSeries.ofPowerSeries_C]
   exact HahnModule.single_zero_smul_eq_smul ℤ

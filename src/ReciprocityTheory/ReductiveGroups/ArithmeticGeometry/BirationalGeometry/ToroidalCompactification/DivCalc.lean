@@ -2,6 +2,49 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ValCalc
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsLieBasis
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
 
 @[expose] public section
 
@@ -87,8 +130,8 @@ theorem dvd_of_tensor {V F A : Type} [CommRing V] [IsDomain V] [IsDiscreteValuat
   let b' : Fin n → R := fun i => ⟨b i, (hb i).le⟩
   have hR : a ⊗ₜ[V] (1 : R) = ∑ i, c i ⊗ₜ[V] b' i := by
     apply Module.Flat.lTensor_preserves_injective_linearMap (M := A) incl hincl
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, LinearMap.lTensor_tmul]
+
+    simp only [map_sum, LinearMap.lTensor_tmul]
     exact h
   have hmu1 : mu 1 = 1 := by
     show lam (Ideal.Quotient.mk mI 1) = 1
@@ -99,9 +142,9 @@ theorem dvd_of_tensor {V F A : Type} [CommRing V] [IsDomain V] [IsDiscreteValuat
     rw [Ideal.Quotient.eq_zero_iff_mem.mpr (hb i), map_zero]
   have hk : a ⊗ₜ[V] (1 : V ⧸ (Ideal.span {ϖ} : Ideal V)) = 0 := by
     have e := congrArg (LinearMap.lTensor A mu) hR
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, LinearMap.lTensor_tmul, hmu1, hmub, TensorProduct.tmul_zero,
-      Finset.sum_const_zero] at e
+
+    simp only [map_sum, LinearMap.lTensor_tmul, hmu1, hmub, TensorProduct.tmul_zero,
+    Finset.sum_const_zero] at e
     exact e
   have hq : (Submodule.Quotient.mk a : A ⧸ (Ideal.span {ϖ} : Ideal V) • (⊤ : Submodule V A)) = 0 := by
     rw [← (TensorProduct.tensorQuotEquivQuotSMul A (Ideal.span {ϖ})).apply_symm_apply

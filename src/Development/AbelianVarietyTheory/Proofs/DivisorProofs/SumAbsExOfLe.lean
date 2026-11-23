@@ -1,14 +1,53 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SemiposAtOfPositive
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ToKnownTheoremsOf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsHTFrameCpAndNonempty
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagNeZeroOfLinearIndependent
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HodgeTateInclusionRaynaudExtensionAlgebraicPoint
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMapToModel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilCharSurjectiveAndMapRangeAl
+public import Mathlib.Algebra.AffineMonoid.Basic
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.GradedDifferentComparison
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlCSurjectiveAndLinearIndependentBLie
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagNeZeroOfLinearIndependent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsHTFrameCpAndNonempty
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMapToModel
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HodgeTateInclusionRaynaudExtensionAlgebraicPoint
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearIndependentEvLieOfLieTie
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilCharSurjectiveAndMapRangeAl
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LowerTriIsUnitDet
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.PadicValNatAbsNormEqZero
 
 @[expose] public section
@@ -126,12 +165,12 @@ theorem smul_proj_mem [DecidableEq (E →+* C)] (hv : v.Integers O) {U : Type} [
   obtain ⟨ι, _, b, c, h⟩ := exists_sum_eq (C := C) hd
   have e : φ d • idem (isSplitting_embO hv) φ = ∑ i, φ (b i) ⊗ₜ[ℤ] c i := (isSplitting_embO hv).1 (by
     ext ψ
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_smul, splitMap_idem, map_sum, Finset.sum_apply]
+
+    rw [map_smul, splitMap_idem, map_sum, Finset.sum_apply]
     simp only [splitMap_tmul, RingHom.comp_apply, algebraMap_embO, h, Pi.smul_apply, Pi.single_apply]
     split_ifs <;> simp)
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← algebraMap_smul C, algebraMap_embO, proj, ← LinearMap.smul_apply, ← map_smul, e, map_sum, LinearMap.sum_apply]
+
+  rw [← algebraMap_smul C, algebraMap_embO, proj, ← LinearMap.smul_apply, ← map_smul, e, map_sum, LinearMap.sum_apply]
   refine X.sum_mem fun i _ => ?_
   rw [tensorAction_tmul, ← algebraMap_embO hv, algebraMap_smul]
   exact X.smul_mem _ (hX _ _ hx)
@@ -184,8 +223,8 @@ theorem smul_mem_wRec (hHT : HTChar p v P.Gt) {a : O} (ha0 : a ≠ 0) (ha : v (a
       map_smul' := fun b c => by rw [hsm, P.bLie_scale]; rfl }
   have hL : ∀ y, P.bLie y = ∑ i, e.symm y i • L (Pi.single i 1) := fun y => by
     have h : L (e.symm y) = P.bLie y := congrArg P.bLie (e.apply_symm_apply y)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [← map_smul, ← map_sum, ← h, ← Pi.single_smul, smul_eq_mul, _root_.mul_one, Finset.univ_sum_single]
+
+    simp only [← map_smul, ← map_sum, ← h, ← Pi.single_smul, smul_eq_mul, _root_.mul_one, Finset.univ_sum_single]
   have ht : ∀ i, ∃ s : O ⊗[ℤ_[p]] P.T, ∀ y, P.pairV (P.bLie y) (P.inclT s) = algebraMap O C (a * e.symm y i) := fun i => by
     have hf : (fun y => e.symm y i) ∈ omega P.Gt := ⟨fun y z h => by
         obtain ⟨c, rfl⟩ := e.surjective y
@@ -208,8 +247,8 @@ theorem smul_mem_wRec (hHT : HTChar p v P.Gt) {a : O} (ha0 : a ≠ 0) (ha : v (a
   choose o ho using fun i => pairV_inclT P hg (s i)
   have key : P.bLie (e o) = a • ∑ j, g j • P.bLie (x j) := by
     rw [hL, e.symm_apply_apply]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, hs] at ho
+
+    simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, hs] at ho
     simp only [hL (x _), Finset.smul_sum]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun i _ => ?_

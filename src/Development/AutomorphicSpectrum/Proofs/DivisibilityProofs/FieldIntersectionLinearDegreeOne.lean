@@ -1,8 +1,58 @@
 module
 
-public import Mathlib
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.IsChainFirst
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MultihomogeneousIdeals.IsFieldIntersection
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+public import Mathlib.RingTheory.KrullDimension.Field
+public import Mathlib.RingTheory.KrullDimension.Polynomial
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MultihomogeneousIdeals.InhDivCycleOfSuppEmpty
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.GenericFibreKerTarget
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.PermFinTwoUniv
 
 @[expose] public section
 
@@ -42,10 +92,10 @@ theorem eq_sum_single (c : σ → F) : c = ∑ p, c p • (Pi.single p (1 : F) :
 
 theorem eval_linForm (l : (σ → F) →ₗ[F] F) (c : σ → F) :
     eval (fun q => l (Pi.single q 1)) (linForm c) = l c := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    conv_rhs => rw [eq_sum_single c, map_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [linForm_apply, map_sum]
+
+  conv_rhs => rw [eq_sum_single c, map_sum]
+
+  rw [linForm_apply, map_sum]
   refine Finset.sum_congr rfl fun p _ => ?_
   simp [smul_eval]
 
@@ -107,11 +157,11 @@ def toY : MvPolynomial σ F →ₐ[F] MvPolynomial (Fin (Module.finrank F ((σ �
   aeval fun p => linForm ((qb U).equivFun (U.mkQ (Pi.single p 1)))
 
 theorem toY_linForm (c : σ → F) : toY U (linForm c) = linForm ((qb U).equivFun (U.mkQ c)) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [linForm_apply c, map_sum]
+
+  rw [linForm_apply c, map_sum]
   conv_rhs => rw [eq_sum_single c]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul, toY, aeval_X]
+
+  simp only [map_sum, map_smul, toY, aeval_X]
 
 theorem toY_kill : ∀ a ∈ lin U, toY U a = 0 := by
   intro a ha
@@ -135,8 +185,8 @@ def fromY : MvPolynomial (Fin (Module.finrank F ((σ → F) ⧸ U))) F →ₐ[F]
 
 theorem fromY_linForm (w : Fin (Module.finrank F ((σ → F) ⧸ U)) → F) :
     fromY U (linForm w) = Ideal.Quotient.mkₐ F (lin U) (linForm (∑ t, w t • sec U t)) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [linForm_apply w, map_sum, map_sum, map_sum]
+
+  rw [linForm_apply w, map_sum, map_sum, map_sum]
   refine Finset.sum_congr rfl fun t _ => ?_
   simp only [map_smul, fromY, aeval_X]
 
@@ -163,8 +213,8 @@ def quotEquiv :
       rw [Ideal.Quotient.eq, ← linForm_single (F := F) p, ← map_sub]
       refine linForm_mem ((Submodule.Quotient.eq U).1 ?_)
       change U.mkQ _ = U.mkQ _
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       simp only [map_smul, mkQ_sec]
       exact (qb U).sum_equivFun _)
 
@@ -220,7 +270,7 @@ theorem eq_linForm (k₀ : K) (hK : ∀ a : K, a = k₀) {f : MRingOver F ι}
       exact hb (sigma_mk_injective h).symm
   ext m
   rw [linForm_apply, coeff_sum]
-  simp only [coeff_smul, coeff_X', smul_eq_mul, mul_ite, mul_one, mul_zero]
+  simp only [MvPolynomial.coeff_smul, coeff_X', smul_eq_mul, mul_ite, mul_one, mul_zero]
   by_cases hm : m ∈ f.support
   · obtain ⟨q, rfl⟩ := hsupp m hm
     rw [Finset.sum_eq_single q]

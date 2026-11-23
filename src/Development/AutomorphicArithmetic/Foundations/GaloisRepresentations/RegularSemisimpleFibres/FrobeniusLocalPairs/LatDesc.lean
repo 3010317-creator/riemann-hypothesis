@@ -1,12 +1,48 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.FrobeniusLocalPairs.FrobeniusTwistedHilbertNinetyAlt
-public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.FrobeniusLocalPairs.FrobFacts
-public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.FrobeniusLocalPairs.InflFacts
-public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.FrobeniusLocalPairs.FinAct
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 public import Development.AutomorphicArithmetic.Foundations.Convolution.HermitianDescent.Descent
 public import Development.AutomorphicArithmetic.Foundations.Convolution.HermitianDescent.GalField
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.FrobeniusLocalPairs.FrobFacts
+import GroundTheory.LocalFields.Uniqueness
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -87,8 +123,8 @@ private theorem cp_fix (t : R →+* R) (c b : Matrix (Fin n) (Fin n) R) (hb : c 
 private theorem sum_fix (t : R →+* R) (d : ℕ) (ht : t ^ d = 1) (Y : Matrix (Fin n) (Fin n) R) :
     (∑ i ∈ Finset.range d, Y.map (t ^ i)).map t = ∑ i ∈ Finset.range d, Y.map (t ^ i) := by
   have h1 : (∑ i ∈ Finset.range d, Y.map (t ^ i)).map t = ∑ i ∈ Finset.range d, Y.map (t ^ (i + 1)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← RingHom.mapMatrix_apply, map_sum]
+
+    rw [← RingHom.mapMatrix_apply, map_sum]
     exact Finset.sum_congr rfl fun i _ => map_map_pow t Y i
   have h2 := Finset.sum_range_succ (fun i => Y.map (t ^ i)) d
   rw [Finset.sum_range_succ', ht, pow_zero] at h2
@@ -99,8 +135,8 @@ private theorem lift_red (r : R →+* S) (τ : R →+* R) (t : S →+* S) (hr : 
     (c x : Matrix (Fin n) (Fin n) R) (b : Matrix (Fin n) (Fin n) S) (a : S) (d : ℕ)
     (hb : c.map r * b.map t = b) (ha : ∑ i ∈ Finset.range d, (t ^ i) a = 1) (hx : x.map r = a • b) :
     (∑ i ∈ Finset.range d, cp τ c i * x.map (τ ^ i)).map r = b := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← RingHom.mapMatrix_apply, map_sum]
+
+  rw [← RingHom.mapMatrix_apply, map_sum]
   have h1 : ∀ i, r.mapMatrix (cp τ c i * x.map (τ ^ i)) = (t ^ i) a • b := by
     intro i
     have h2 : (x.map (τ ^ i)).map r = (t ^ i) a • b.map (t ^ i) := by
@@ -136,8 +172,8 @@ private theorem trace_one (σ : F₁ ≃ₐ[F₀] F₁) (d : ℕ) (hG : UpperThe
     have h2 := Finset.sum_range_succ (fun j => (σ ^ j) r) d
     rw [Finset.sum_range_succ', hG.pow, pow_zero] at h2
     have h3 := add_right_cancel h2
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [T, map_sum]
+
+    simp only [T, map_sum]
     rw [← h3]
     exact Finset.sum_congr rfl fun j _ => by rw [pow_succ', AlgEquiv.mul_apply]
   have hTj : ∀ r j, (σ ^ j) (T r) = T r := by
@@ -337,8 +373,8 @@ private theorem lat_main [IsGalois k K] {F₀ F₁ : Type} [Field F₀] [Fintype
   let H : Matrix (Fin n) (Fin n) K := G * B.map ι
   have hH : H = ∑ i ∈ Finset.range (Module.finrank k K), (G * x.map ι).map (s' ^ i) := by
     simp only [H, B]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← RingHom.mapMatrix_apply, map_sum, Finset.mul_sum]
+
+    rw [← RingHom.mapMatrix_apply, map_sum, Finset.mul_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [RingHom.mapMatrix_apply, Matrix.map_mul, ← Matrix.mul_assoc, hcp, Matrix.map_mul]
     congr 1

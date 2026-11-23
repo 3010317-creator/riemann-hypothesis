@@ -1,8 +1,58 @@
 module
 
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.CIndFrFix
+public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.GermDJet
+public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.CPfSym
+public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ExpTieGerm
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ExpTiePf
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.FBIdJet
+public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.FBIdLB
+public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.GermDPf
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.GermFunPf
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.JetSubstPSTrunc
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBCorr
+public import Formalism.LocalToGlobal.ProjectiveLattices.IsChartIff
 
 @[expose] public section
 
@@ -93,8 +143,8 @@ theorem const_lg (G : FGLaw S d) {n : ℕ} (j : Fin n) (i : Fin d) :
   exact ReciprocityTheory.ChartRestriction.G.TB.LogPf.constantCoeff_prim _
 
 theorem const_bilL (G : FGLaw S d) (cc : Fin d → Fin d → S) : MvPowerSeries.constantCoeff (bilL G cc) = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Formalism.MainNotions.ModuliIntegralCharts.H1.CIndFrFix.bilL, map_sum]
+
+  simp only [Formalism.MainNotions.ModuliIntegralCharts.H1.CIndFrFix.bilL, map_sum]
   refine Finset.sum_eq_zero fun i _ => Finset.sum_eq_zero fun l _ => ?_
   have h0 : MvPowerSeries.constantCoeff (lg G (0 : Fin 2) i * lg G (1 : Fin 2) l) = 0 := by
     rw [map_mul, const_lg, zero_mul]
@@ -279,7 +329,7 @@ theorem corr_pull_scale {Y Z : Scheme.{0}} {K : Type} [Fintype K] (φ : K → (Y
     · exact pull_res_lemma h inf_le_right hA inf_le_right (h1 j') (t'.s j')
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem germ_order {S : Type} [CommRing S] [Algebra c.F S] [Algebra ℚ S] [StarRing (𝓞 E)] (y : FrPt Xo c S)
     (C : ChartAt Xo c y) (e' : ∀ m, FrTy y C.d C.x m) (cc : ℕ → Fin C.d → Fin C.d → S)
     (he : ∀ m, ∃ u : (Jet S (Fin 2 × Fin C.d) m)ˣ,

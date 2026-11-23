@@ -1,6 +1,42 @@
 module
 
 public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.StrictMonoIntExists
+public import Formalism.SharpRestriction.GrowthBounds.ValuationLowestDegreeMapFractionField
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -33,8 +69,8 @@ theorem lam_expand (g : Fin J → σ → τ) (e : Fin J → σ → ℕ) (y : Fin
   have h : ∀ j, lam_ph g e j (y j) = ∑ m ∈ (y j).support, monomial (imgMon (g j) (e j) m) (AddMonoidAlgebra.coeff (y j) m) := by
     intro j
     conv_lhs => rw [(y j).as_sum]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     exact Finset.sum_congr rfl fun m _ => aeval_pow_monomial _ _ _ _
   rw [Finset.prod_congr rfl fun j _ => h j, Finset.prod_univ_sum]
   exact Finset.sum_congr rfl fun m _ => lam_prod_monomial _ _ _
@@ -92,7 +128,7 @@ theorem lam_li_fixed (g : Fin J → σ → τ) (e : Fin J → σ → ℕ) (l : �
       rw [coeff_sum, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply] at h1
       rw [← h1]
       refine Finset.sum_congr rfl fun a _ => ?_
-      rw [coeff_smul, lam_coeff g e l S hinj (fun j => u j (a j)) (fun j => hS j (a j)) s hs, smul_eq_mul]
+      rw [MvPolynomial.coeff_smul, lam_coeff g e l S hinj (fun j => u j (a j)) (fun j => hS j (a j)) s hs, smul_eq_mul]
     · push Not at hs
       obtain ⟨j0, hj0⟩ := hs
       refine Finset.sum_eq_zero fun a _ => ?_
@@ -103,8 +139,8 @@ theorem lam_li_fixed (g : Fin J → σ → τ) (e : Fin J → σ → ℕ) (l : �
   have hexp : ∀ j (a : I j), (ψ j (u j a)) (b j) = ∑ m ∈ supp j, AddMonoidAlgebra.coeff (u j a) m * w j m := by
     intro j a
     conv_lhs => rw [(u j a).as_sum]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finsupp.finsetSum_apply]
+
+    rw [map_sum, Finsupp.finsetSum_apply]
     have hsub : (u j a).support ⊆ supp j := fun m hm => Finset.mem_biUnion.mpr ⟨a, Finset.mem_univ _, hm⟩
     rw [← Finset.sum_subset hsub]
     · refine Finset.sum_congr rfl fun m _ => ?_

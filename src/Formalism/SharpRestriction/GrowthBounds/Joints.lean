@@ -1,22 +1,59 @@
 module
 
-public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
-public import Formalism.SharpRestriction.GrowthBounds.CovariantDegrees
-public import Formalism.SharpRestriction.GrowthBounds.StatementOfDegreeAndBound
-public import Formalism.SharpRestriction.GrowthBounds.ValuationLowestDegreeRename
-public import Formalism.SharpRestriction.GrowthBounds.FlipOneThree
 public import Formalism.SharpRestriction.GrowthBounds.TableLineDegreeFive
 public import Formalism.SharpRestriction.GrowthBounds.SourceCleaning
-public import Formalism.SharpRestriction.GrowthBounds.ColumnSystems
 public import Formalism.SharpRestriction.GrowthBounds.Lemma5aAt
-public import Formalism.SharpRestriction.GrowthBounds.SmallOrderPrimes
-public import Formalism.SharpRestriction.GrowthBounds.ConclusionA2
 public import Formalism.SharpRestriction.GrowthBounds.ProjectionLemmaBaseLevel
-public import Formalism.SharpRestriction.GrowthBounds.DefsInst
-public import Formalism.SharpRestriction.GrowthBounds.FormalGroupSystem
-public import Formalism.SharpRestriction.GrowthBounds.TopChoiceBounds
-public import Formalism.SharpRestriction.GrowthBounds.ProjectionOfIsotypicDecomposition
+public import Formalism.SharpRestriction.GrowthBounds.CornerGLContinuity
 public import Formalism.LocalRingCardinality.ColumnWeightSpreadOffTop
+public import Formalism.SharpRestriction.GrowthBounds.ProjectionOfIsotypicDecomposition
+public import Formalism.SharpRestriction.GrowthBounds.TopChoiceBounds
+import Mathlib.Algebra.NoZeroSMulDivisors.Pi
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -1033,7 +1070,7 @@ theorem scale_facts (s : Scale) : 1 < s.a ∧ 0 < s.b' ∧ 0 < s.X' ∧ s.a / s.
   field_simp
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem hypI_69_to_13 (D : D7) (L : SizeData₂ D) (K : Consts) (C₀ CH : ℝ) (hK : K.Nonneg) (hC₀ : C₀ = K.La)
     (hCH0 : 0 ≤ CH) (hCHk : CH ≤ K.kI) (hCHD : CH ≤ K.DI) (hCHr : 2 * CH ≤ K.rho) (hc : 0 ≤ cG L)
     (p n' : ℕ) (TT : Finset (Fin n')) (hp0 : L.sc.p0 D.R.k ≤ (p : ℝ)) (hpX : (p : ℝ) < L.sc.X')
@@ -1277,7 +1314,7 @@ theorem kappa_share_of_least_serving (D : D7) (L : SizeData₂ D) (X : Inst D L)
   exact (hX.mem p n' TT a b).2 W Qq O Kf ι σ j w hS lam0 hbase hdom
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem type_one_hypothesis_of_segments (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) (Cm CH C : ℝ) (hX : KapIDef X K)
     (hK : K.Nonneg) (hCH0 : 0 ≤ CH) (hCHk : CH ≤ K.kI) (hCHD : CH ≤ K.DI) (hCHr : 2 * CH ≤ K.rho) (hC0 : 0 ≤ C)
     (hCt1 : 2 * C ≤ K.kappaThresholdOne) (hCt2 : C ≤ K.kappaThresholdTwo) (hCm : C ≤ Cm) (hc : 0 ≤ cG L) (hOrb : OrbitSegs D L)
@@ -1821,7 +1858,7 @@ def HypIIAt (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) : Prop :=
         L.sc.x ^ Scale.A ≤ L.sc.a - cG L
 
 
-set_option maxHeartbeats 2000000 in
+
 open Classical in
 theorem linear_programming_input_of_hypotheses (D : D7) (L : SizeData₂ D) (X : Inst D L) (Y : LatInst D) (K : Consts)
     (h6 : Formalism.MainNotions.AuxBlock8.adm6 D L K) (h7 : Formalism.MainNotions.AuxBlock8.adm7 D L X K) (hStd : StdSubAt D) (hBC : LPBaseChange)

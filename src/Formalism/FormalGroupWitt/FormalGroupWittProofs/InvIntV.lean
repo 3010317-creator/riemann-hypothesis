@@ -2,6 +2,48 @@ module
 
 public import Formalism.FormalGroupWitt.SubstInjectiveV
 public import Formalism.FormalGroupLog.FormalGroupLogProofs.ChainRule
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -51,8 +93,8 @@ theorem Low.add {m : ℕ} {x y : MvPowerSeries σ K} (hx : Low m x) (hy : Low m 
 theorem Low.sum {α : Type*} {m : ℕ} (s : Finset α) (x : α → MvPowerSeries σ K)
     (h : ∀ a ∈ s, Low m (x a)) : Low m (∑ a ∈ s, x a) := by
   intro d hd
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   exact Finset.sum_eq_zero fun a ha => h a ha d hd
 
 theorem low_one {x : MvPowerSeries σ K} (hx : MvPowerSeries.constantCoeff x = 0) : Low 1 x := by
@@ -129,8 +171,8 @@ theorem decomp {σ : Type*} [Fintype σ] [LinearOrder σ] (m : ℕ) (x : MvPower
       exact hx _ (by omega)
     · rfl
   · ext d
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     have hXm : ∀ i (φ : MvPowerSeries σ K), MvPowerSeries.coeff d (MvPowerSeries.X i * φ) =
         if Finsupp.single i 1 ≤ d then MvPowerSeries.coeff (d - Finsupp.single i 1) φ else 0 := by
       intro i φ
@@ -212,9 +254,9 @@ private theorem subst_diff_lemma {σ τ : Type*} [Fintype σ] [Finite τ] (N : �
       rw [← hy]
       abel
     have hab' : ∀ i, Agree N (a i) (b i) := fun i e he => hab i e (by omega)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hz, hφa, hφb, map_add (f := _), map_add (f := _), AlgHom.commutes, AlgHom.commutes, map_sum, map_sum,
-      add_sub_add_left_eq_sub, ← Finset.sum_sub_distrib]
+
+    rw [hz, hφa, hφb, map_add (f := _), map_add (f := _), AlgHom.commutes, AlgHom.commutes, map_sum, map_sum,
+    add_sub_add_left_eq_sub, ← Finset.sum_sub_distrib]
     apply Low.sum
     intro i _
     beta_reduce
@@ -245,8 +287,8 @@ private theorem low_one_subst_lemma_2 {σ τ : Type*} [Fintype σ] [Finite τ] (
         | exact (congrFun (MvPowerSeries.coe_substAlgHom (R := K) hsa) w).symm
         | rfl
   obtain ⟨y, -, hy⟩ := decomp 0 w hw
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hy, hφa, map_sum]
+
+  rw [hy, hφa, map_sum]
   apply Low.sum
   intro i _
   beta_reduce
@@ -277,8 +319,8 @@ theorem low_subst_diff {σ τ : Type*} [Fintype σ] [Finite τ] (g : MvPowerSeri
         | exact (congrFun (MvPowerSeries.coe_substAlgHom (R := K) hsb) w).symm
         | rfl
   obtain ⟨y, hy1, hy⟩ := decomp 1 g hg
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hy, hφa, hφb, map_sum, map_sum, ← Finset.sum_sub_distrib]
+
+  rw [hy, hφa, hφb, map_sum, map_sum, ← Finset.sum_sub_distrib]
   apply Low.sum
   intro i _
   beta_reduce

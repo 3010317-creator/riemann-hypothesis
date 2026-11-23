@@ -2,6 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasseNormTheoremQuadraticExtension
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsRingHomAdicCompletion
+import Mathlib.Algebra.QuadraticAlgebra.Basic
 
 @[expose] public section
 

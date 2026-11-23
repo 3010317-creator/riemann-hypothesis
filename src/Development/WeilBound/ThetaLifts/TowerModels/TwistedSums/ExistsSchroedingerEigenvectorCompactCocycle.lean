@@ -1,16 +1,53 @@
 module
 
-public import Mathlib
-public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLattice
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousAtPlace
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
-public import Development.WeilBound.ThetaLifts.TowerModels.TwistedSums.IsLocallyConstantHeisenbergLatticeVacuumFunction
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSplittingSplitOm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousCharacterCocycleTrivialNearZeroStatement
-public import Development.WeilBound.ThetaLifts.TowerModels.TwistedSums.ExistsSubgroupSymplecticAnnihilatorLocalField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSplittingSplitOm
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 public import Development.WeilBound.ThetaLifts.TowerModels.TwistedSums.ExistsSchwartzBruhatSchroedingerFixedLocalField
+public import Development.WeilBound.ThetaLifts.TowerModels.TwistedSums.ExistsSubgroupSymplecticAnnihilatorLocalField
+import Development.WeilBound.ThetaLifts.TowerModels.TwistedSums.IsLocallyConstantHeisenbergLatticeVacuumFunction
 public import Development.WeilBound.ThetaLifts.TowerModels.TwistedSums.SchroedingerMemSchwartzBruhatFinitePlace
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Fourier.FiniteAbelian.Orthogonality
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.MetricSpace.Ultra.Pi
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -82,8 +119,8 @@ theorem avg_fixed : ∀ {A X : Type} [AddCommGroup A] [AddCommGroup X] [Module �
     have h : -a + Quotient.out (a : A ⧸ H) ∈ H :=
       QuotientAddGroup.eq.mp (QuotientAddGroup.out_eq' (a : A ⧸ H)).symm
     rw [show Quotient.out (a : A ⧸ H) = a + (-a + Quotient.out (a : A ⧸ H)) by abel, hπ, hx₀ _ h]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   calc ∑ q : A ⧸ H, π b (π (Quotient.out q) x₀) = ∑ q : A ⧸ H, π (b + Quotient.out q) x₀ :=
         Finset.sum_congr rfl fun q _ => (hπ _ _ _).symm
     _ = ∑ q : A ⧸ H, π (Quotient.out ((b : A ⧸ H) + q)) x₀ := by
@@ -126,7 +163,7 @@ theorem schr_comm (v w : (κ → R) × (κ → R)) (φ : (κ → R) → ℂ) :
 end Schr
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem exists_schr_eigen : ∀ {F : Type} [Field F] [NumberField F] (v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F)) (ψ : AddChar (Fv F v) ℂ), Continuous ψ → ψ ≠ 1 →
     ∀ {κ M : Type} [Fintype κ] [Fintype M] (u : M → (κ → Fv F v) × (κ → Fv F v))
       (χ : (M → v.adicCompletionIntegers F) → ℂ), Continuous χ →
@@ -266,9 +303,9 @@ theorem exists_schr_eigen : ∀ {F : Type} [Field F] [NumberField F] (v : Global
     rw [hconj, hπK h hh, (hKs h).mp hh w₀ w₀.2, one_smul]
   have hsum : schr ψ (w₀ : (κ → Fv F v) × (κ → Fv F v)) (∑ q, θ w₀ q • c q) =
       ∑ q : (M → v.adicCompletionIntegers F) ⧸ Ks, πL (Quotient.out q) (schr ψ (w₀ : (κ → Fv F v) × (κ → Fv F v)) φ₁) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [show schr ψ (w₀ : (κ → Fv F v) × (κ → Fv F v)) (∑ q, θ w₀ q • c q) =
-      ∑ q, schr ψ (w₀ : (κ → Fv F v) × (κ → Fv F v)) (θ w₀ q • c q) from map_sum (schrL ψ (w₀ : (κ → Fv F v) × (κ → Fv F v))) _ _]
+
+    rw [show schr ψ (w₀ : (κ → Fv F v) × (κ → Fv F v)) (∑ q, θ w₀ q • c q) =
+    ∑ q, schr ψ (w₀ : (κ → Fv F v) × (κ → Fv F v)) (θ w₀ q • c q) from map_sum (schrL ψ (w₀ : (κ → Fv F v) × (κ → Fv F v))) _ _]
     exact Finset.sum_congr rfl fun q _ => (hconj _ _ _).symm
   refine ⟨∑ q : (M → v.adicCompletionIntegers F) ⧸ Ks, πL (Quotient.out q) (schr ψ (w₀ : (κ → Fv F v) × (κ → Fv F v)) φ₁),
     ?_, ?_, fun a => ?_⟩

@@ -2,6 +2,48 @@ module
 
 public import Formalism.LocalToGlobal.CharacterGerms.RowTiePHaDefs
 public import Formalism.LocalToGlobal.CharacterGerms.RowTiePDescSpanSt
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -78,13 +120,13 @@ theorem comp_zero (lam : K →ₗ[ℚ] ℚ) : comp lam (0 : MvPolynomial σ K) =
 theorem comp_sum (lam : K →ₗ[ℚ] ℚ) {α : Type} (s : Finset α) (f : α → MvPolynomial σ K) :
     comp lam (∑ i ∈ s, f i) = ∑ i ∈ s, comp lam (f i) := by
   ext m
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [coeff_comp, coeff_sum, map_sum]
+
+  simp only [coeff_comp, coeff_sum, map_sum]
 
 theorem comp_smul_map (lam : K →ₗ[ℚ] ℚ) (c : K) (p : MvPolynomial σ ℚ) :
     comp lam (c • map (algebraMap ℚ K) p) = lam c • p := by
   ext m
-  simp only [coeff_comp, coeff_smul, coeff_map, smul_eq_mul]
+  simp only [coeff_comp, MvPolynomial.coeff_smul, coeff_map, smul_eq_mul]
   rw [mul_comm c, ← Algebra.smul_def, map_smul, smul_eq_mul]
   exact mul_comm _ _
 
@@ -100,11 +142,11 @@ theorem comp_comm (lam : K →ₗ[ℚ] ℚ) (Φ : MvPolynomial σ K →ₗ[K] Mv
     unfold comp
     refine Finset.sum_congr rfl fun m _ => ?_
     rw [smul_monomial, smul_eq_mul, mul_one]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hc, map_sum]
+
+  rw [hc, map_sum]
   conv_lhs => rw [hP]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, comp_sum]
+
+  rw [map_sum, comp_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
   rw [map_smul Φ, h, comp_smul_map, map_smul Ψ]
 
@@ -219,7 +261,7 @@ def Wsub (Bd : Finset (Letter Ty r n →₀ ℕ)) : Submodule ℤ (Bd → ℤ) w
     intro c x hx
     have e : map (Int.castRingHom ℚ) (poly Bd (c • x)) = (c : ℚ) • map (Int.castRingHom ℚ) (poly Bd x) := by
       ext m
-      rw [coeff_smul, coeff_map_poly, coeff_map_poly]
+      rw [MvPolynomial.coeff_smul, coeff_map_poly, coeff_map_poly]
       split_ifs <;> simp
     show map (Int.castRingHom ℚ) (poly Bd (c • x)) ∈ HHa r n ℚ cc isX a
     rw [e]
@@ -229,7 +271,7 @@ theorem wsub_sat (Bd : Finset (Letter Ty r n →₀ ℕ)) (z : ℤ) (x : Bd → 
     (hx : z • x ∈ Wsub r n cc isX a Bd) : x ∈ Wsub r n cc isX a Bd := by
   have e : map (Int.castRingHom ℚ) (poly Bd (z • x)) = (z : ℚ) • map (Int.castRingHom ℚ) (poly Bd x) := by
     ext m
-    rw [coeff_smul, coeff_map_poly, coeff_map_poly]
+    rw [MvPolynomial.coeff_smul, coeff_map_poly, coeff_map_poly]
     split_ifs <;> simp
   have hx' : map (Int.castRingHom ℚ) (poly Bd (z • x)) ∈ HHa r n ℚ cc isX a := hx
   rw [e] at hx'
@@ -261,8 +303,8 @@ private theorem fix_sum_lemma {ι : Type} [Fintype ι] [DecidableEq ι] (ρ : (�
   calc z j = ρ z j := (congrFun hz j).symm
     _ = ρ (∑ b, z b • (Pi.single b (1 : ℤ) : ι → ℤ)) j := by rw [← hz']
     _ = ∑ b, z b * ρ (Pi.single b 1) j := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
+
+      simp only [map_sum, map_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
 
 theorem haSpanSt_of (hS : SatRetrSt) (hR : RowInvUpSt) : HaSpanSt := by
   unfold HaSpanSt
@@ -278,7 +320,7 @@ theorem haSpanSt_of (hS : SatRetrSt) (hR : RowInvUpSt) : HaSpanSt := by
     have hzW : z ∈ Wsub r n cc isX a Bd := by
       have e : map (Int.castRingHom ℚ) (poly Bd z) = (N : ℚ) • comp lam P := by
         ext m
-        rw [coeff_map_poly, coeff_smul, coeff_comp, smul_eq_mul]
+        rw [coeff_map_poly, MvPolynomial.coeff_smul, coeff_comp, smul_eq_mul]
         split_ifs with h
         · simpa using hz ⟨m, h⟩
         · have h0 : AddMonoidAlgebra.coeff P m = 0 := by
@@ -292,8 +334,8 @@ theorem haSpanSt_of (hS : SatRetrSt) (hR : RowInvUpSt) : HaSpanSt := by
     have hN' : (N : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr hN
     have hq : (z j : ℚ) = ∑ b, (z b : ℚ) * ((ρ (Pi.single b 1) j : ℤ) : ℚ) := by exact_mod_cast hfix
     simp only [hz] at hq
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sub, map_sum, sub_eq_zero]
+
+    rw [map_sub, map_sum, sub_eq_zero]
     have hl : lam (AddMonoidAlgebra.coeff P j.1) = ∑ b : Bd, lam (AddMonoidAlgebra.coeff P b.1) * ((ρ (Pi.single b 1) j : ℤ) : ℚ) := by
       apply mul_left_cancel₀ hN'
       rw [hq, Finset.mul_sum]
@@ -306,7 +348,7 @@ theorem haSpanSt_of (hS : SatRetrSt) (hR : RowInvUpSt) : HaSpanSt := by
   have hmain : P = ∑ b : Bd, AddMonoidAlgebra.coeff P b.1 • map (Int.castRingHom K) (poly Bd (ρ (Pi.single b 1))) := by
     ext m
     rw [coeff_sum]
-    simp only [coeff_smul, coeff_map_poly, smul_eq_mul]
+    simp only [MvPolynomial.coeff_smul, coeff_map_poly, smul_eq_mul]
     by_cases h : m ∈ Bd
     · simp only [dite_eq_left h, eq_intCast]
       exact key ⟨m, h⟩

@@ -2,12 +2,53 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.FramedTwoCoboundaries
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.HhGroup
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.HomogSpan
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.HhSection
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.LocGradedTop
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.HomogSpan
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.KerCoef
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.LocGradedTop
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ObsCocycle
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ObsCorrect
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -18,8 +59,8 @@ private theorem ac_mul {S A ι : Type} [TopologicalSpace S] [CommRing A] [Fintyp
     ∀ a b, AdicCont I fun s => (M s * N s) a b := by
   intro a b n
   classical
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Matrix.mul_apply, map_sum, map_mul]
+
+  simp only [Matrix.mul_apply, map_sum, map_mul]
   induction (Finset.univ : Finset ι) using Finset.induction_on with
   | empty => simp only [Finset.sum_empty]; exact IsLocallyConstant.const _
   | insert c t hc ih =>
@@ -193,26 +234,26 @@ theorem UpperTheory.V.Alg.obs_class :
   have hx : ∑ u, residue O (c u) • z j u ∈ F.framedTwoCoboundaries (FormData.adRep hbar j) := by
     have h1 : (Submodule.Quotient.mk (∑ u, residue O (c u) • (⟨z j u, z0 j u⟩ : F.framedTwoCocycles (FormData.adRep hbar j))) :
         F.Ob (FormData.adRep hbar j)) = 0 := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← hc, ← Submodule.mkQ_apply, map_sum]
+
+      rw [← hc, ← Submodule.mkQ_apply, map_sum]
       rfl
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap, map_sum] at h1
+
+    rw [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap, map_sum] at h1
     exact h1
   obtain ⟨μ, m1, m2⟩ := ex_mu (O := O) η hη
   have pp : ∀ x, p'' (p' x) = p x := fun x => DFunLike.congr_fun hpp x
   have key : ∀ x, p x = 0 → p' x = μ (∑ u : {u // wf u = j}, residue O (c u) * co u x) := fun x hx => by
     obtain ⟨a, ha, hxa⟩ := k4 x hx
     have : ∑ u : {u // wf u = j}, residue O (c u) * co u x = residue O (∑ u : {u // wf u = j}, a u * c u) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       exact Finset.sum_congr rfl fun u _ => by rw [map_mul, ha, mul_comm]
     rw [this, m1, Finset.sum_smul]
     conv_lhs => rw [hxa]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, ← Fintype.sum_subtype_add_sum_subtype (fun u => wf u = j),
-      Finset.sum_eq_zero (s := (Finset.univ : Finset {u // ¬ wf u = j})) fun u _ => by
-        rw [map_smul, e2 u u.2, smul_zero], add_zero]
+
+    rw [map_sum, ← Fintype.sum_subtype_add_sum_subtype (fun u => wf u = j),
+    Finset.sum_eq_zero (s := (Finset.univ : Finset {u // ¬ wf u = j})) fun u _ => by
+      rw [map_smul, e2 u u.2, smul_zero], add_zero]
     convert Finset.sum_congr rfl fun u _ => ?_
     rw [map_smul, e1, mul_smul]
   have keyM : ∀ (M N : Matrix ι ι A) (Y : {u // wf u = j} → Φ.gw (ResidueField O) j) (g : Matrix ι ι (ResidueField O)),

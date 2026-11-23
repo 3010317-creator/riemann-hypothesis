@@ -1,9 +1,49 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL4GeometricSide.LowTypeA
+public import Development.WeilBound.RepresentationTheoryGL.CasimirAlgebra.TensorRelationsGL.LiftCommEAt
+public import Development.WeilBound.RepresentationTheoryGL.CasimirAlgebra.TensorRelationsGL.PLieInv
 public import Development.WeilBound.RepresentationTheoryGL.CasimirAlgebra.TensorRelationsGL.PTensorGK
 public import Development.WeilBound.RepresentationTheoryGL.CasimirAlgebra.TensorRelationsGL.PTensorGl
-public import Development.WeilBound.RepresentationTheoryGL.CasimirAlgebra.TensorRelationsGL.PLieInv
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -84,8 +124,8 @@ theorem altPair_swap (tl : Fin N → ι) (k k' : Fin N) (hk : k ≠ k') (ht : tl
     · rw [h1, ht]
     · rw [h2, ht]
     · rfl
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [altPair, LinearMap.sum_apply, map_sum, LinearMap.smul_apply, map_smul, ← sum_neg_distrib]
+
+  simp only [altPair, LinearMap.sum_apply, map_sum, LinearMap.smul_apply, map_smul, ← sum_neg_distrib]
   refine sum_equiv (Equiv.mulLeft (Equiv.swap k k')) (fun σ => ?_) fun σ _ => ?_
   · simp only [colG, mem_filter, mem_univ, true_and, Equiv.coe_mulLeft, Equiv.Perm.mul_apply, hs]
   · have e : (dbl (Equiv.swap k k' * σ) : Equiv.Perm (Q ⊕ (Fin N ⊕ Fin N))) = dbl (Equiv.swap k k') * dbl σ := by
@@ -97,8 +137,8 @@ theorem altPair_swap (tl : Fin N → ι) (k k' : Fin N) (hk : k ≠ k') (ht : tl
 theorem altPair_col (tl : Fin N → ι) (p p' : Q) (η : TV n M (Q ⊕ (Fin N ⊕ Fin N)))
     (h : pm (Equiv.swap (Sum.inl p) (Sum.inl p')) η = -η) :
     pm (Equiv.swap (Sum.inl p) (Sum.inl p')) (altPair tl η) = -altPair tl η := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [altPair, LinearMap.sum_apply, map_sum, LinearMap.smul_apply, map_smul, ← sum_neg_distrib]
+
+  simp only [altPair, LinearMap.sum_apply, map_sum, LinearMap.smul_apply, map_smul, ← sum_neg_distrib]
   refine sum_congr rfl fun σ _ => ?_
   have e : Equiv.swap (Sum.inl p) (Sum.inl p') * (dbl σ : Equiv.Perm (Q ⊕ (Fin N ⊕ Fin N))) =
       dbl σ * Equiv.swap (Sum.inl p) (Sum.inl p') := by
@@ -147,8 +187,8 @@ theorem low_abs {ι Γ : Type} [Fintype ι] [DecidableEq ι] [Group Γ] [Topolog
   obtain ⟨q, N, lab, col, b, tl, η, hcl, hb, htl, hsh, hinv, hanti, h0⟩ := hd
   have hT := tensorGK_of tensorGl_holds n M ι Γ bar κ E ρ hK hG _ (lab3 bar lab tl)
   have inv : ∀ γ, actT (lab3 bar lab tl) κ ρ γ (altPair tl η) = altPair tl η := fun γ => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [altPair, LinearMap.sum_apply, map_sum, LinearMap.smul_apply, map_smul]
+
+    simp only [altPair, LinearMap.sum_apply, map_sum, LinearMap.smul_apply, map_smul]
     refine sum_congr rfl fun σ hσ => ?_
     have hσ' : ∀ p, tl (σ p) = tl p := by simpa only [colG, mem_filter, mem_univ, true_and] using hσ
     have hc := hT.2 (dbl σ) (fun p => by

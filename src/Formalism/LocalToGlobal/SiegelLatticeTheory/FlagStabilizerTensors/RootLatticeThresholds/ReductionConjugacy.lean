@@ -1,7 +1,48 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.MemWLat0OfIv
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicClassFiniteness.DictLat
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicClassFiniteness.DictRing
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.GroupTheory.Nilpotent
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -56,8 +97,8 @@ theorem red_eq {p : ℕ} {x : I.Gf} {M : Matrix (Fin I.n) (Fin I.n) (ZMod p)} {b
       ∑ j, (((M j i).val : ℕ) : ℤ) • (Lw I w).mkQ (iv I (b j)) := by
   have hsum : (∑ j, (((M j i).val : ℕ) : ℤ) • (Lw I w).mkQ (iv I (b j))) =
       (Lw I w).mkQ (∑ j, (((M j i).val : ℕ) : I.E ⊗[I.F] Af I.F) • iv I (b j)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_congr rfl (fun j _ => ?_)
     rw [natCast_zsmul, Nat.cast_smul_eq_nsmul, map_nsmul]
   rw [hsum]
@@ -68,8 +109,8 @@ theorem zcoef_q (p : ℕ) (hp : p.Prime) (hcard : Nat.card (𝓞 I.E ⧸ w.asIde
     (hz : ∑ l, z l • (wLat0 I w).mkQ (b l) = 0) (l : Fin I.n) : ((z l : ℤ) : ZMod p) = 0 := by
   refine zcoef I w p hp hcard hb z ?_ l
   have h : (wLat0 I w).mkQ (∑ l, z l • b l) = 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]; simpa only [map_zsmul] using hz
+
+    rw [map_sum]; simpa only [map_zsmul] using hz
   exact (Submodule.Quotient.mk_eq_zero _).1 h
 
 theorem zcoef_A (p : ℕ) (hp : p.Prime) (hcard : Nat.card (𝓞 I.E ⧸ w.asIdeal) = p)
@@ -78,8 +119,8 @@ theorem zcoef_A (p : ℕ) (hp : p.Prime) (hcard : Nat.card (𝓞 I.E ⧸ w.asIde
   refine zcoef I w p hp hcard hb z ?_ l
   refine mem_wLat0_of_iv I w p hp.pos (p_mem I w p hp hcard) _ ?_
   have h : (Lw I w).mkQ (ivH I (∑ l, z l • b l)) = 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, map_sum]; simpa only [map_zsmul, ivH_apply] using hz
+
+    rw [map_sum, map_sum]; simpa only [map_zsmul, ivH_apply] using hz
   exact (Submodule.Quotient.mk_eq_zero _).1 h
 
 end
@@ -112,13 +153,13 @@ theorem reduction_conjugacy : Formalism.L2.SG.Pf.RowDictPf.RedConj0 := by
   have hqC : ∀ i, (wLat0 I w).mkQ (b' i) = ∑ k, CM k i • (wLat0 I w).mkQ (b k) := fun i => by
     have h1 : (wLat0 I w).mkQ (b' i) = (wLat0 I w).mkQ (∑ k, CM k i • b k) :=
       (Submodule.Quotient.eq _).2 (hCz i)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [h1, map_sum]; simp only [map_zsmul]
+
+    rw [h1, map_sum]; simp only [map_zsmul]
   have hqD : ∀ i, (wLat0 I w).mkQ (b i) = ∑ k, DM k i • (wLat0 I w).mkQ (b' k) := fun i => by
     have h1 : (wLat0 I w).mkQ (b i) = (wLat0 I w).mkQ (∑ k, DM k i • b' k) :=
       (Submodule.Quotient.eq _).2 (hDz i)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [h1, map_sum]; simp only [map_zsmul]
+
+    rw [h1, map_sum]; simp only [map_zsmul]
   have hCDz : ∀ l i, ((((1 : Matrix (Fin I.n) (Fin I.n) ℤ) - CM * DM) l i : ℤ) : ZMod p) = 0 := by
     intro l i
     refine zcoef_q I w p hp hcard hb (fun l => ((1 : Matrix (Fin I.n) (Fin I.n) ℤ) - CM * DM) l i) ?_ l
@@ -132,8 +173,8 @@ theorem reduction_conjugacy : Formalism.L2.SG.Pf.RowDictPf.RedConj0 := by
   have hTb' : ∀ j, I.fmat x *ᵥ iv I (b' j) ∈ I.Lf := T_mem I w hb'.1 hMb'
   have hTexp : ∀ i, I.fmat x *ᵥ iv I (b' i - ∑ k, CM k i • b k) =
       I.fmat x *ᵥ iv I (b' i) - ∑ k, CM k i • (I.fmat x *ᵥ iv I (b k)) := fun i => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← TH_apply I x, ← ivH_apply I, map_sub, map_sub, map_sum, map_sum]
+
+    rw [← TH_apply I x, ← ivH_apply I, map_sub, map_sub, map_sum, map_sum]
     simp only [map_zsmul, ivH_apply, TH_apply]
   have hTeL : ∀ i, I.fmat x *ᵥ iv I (b' i - ∑ k, CM k i • b k) ∈ I.Lf := fun i => by
     rw [hTexp]
@@ -151,8 +192,8 @@ theorem reduction_conjugacy : Formalism.L2.SG.Pf.RowDictPf.RedConj0 := by
     have h1 : Formalism.UG.inclE (F := I.F) (Af I.F) (r : I.E) • (I.fmat x *ᵥ iv I e) ∈ Lw I w := by
       have e3 : Formalism.UG.inclE (F := I.F) (Af I.F) (r : I.E) • (I.fmat x *ᵥ iv I e) =
           ∑ j, Formalism.UG.inclE (F := I.F) (Af I.F) (c j : I.E) • (I.fmat x *ᵥ iv I (b j)) := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [← Matrix.mulVec_smul, ← DictLat.iv_smulO, ← hc, ← TH_apply I x, ← ivH_apply I, map_sum, map_sum]
+
+        rw [← Matrix.mulVec_smul, ← DictLat.iv_smulO, ← hc, ← TH_apply I x, ← ivH_apply I, map_sum, map_sum]
         simp only [ivH_apply, DictLat.iv_smulO, TH_apply, Matrix.mulVec_smul]
       rw [e3]
       exact Submodule.sum_mem _ fun j _ => smul_mem_Lw I w (hcw j) (hTb j)
@@ -167,13 +208,13 @@ theorem reduction_conjugacy : Formalism.L2.SG.Pf.RowDictPf.RedConj0 := by
   have hqA' : ∀ j, (Lw I w).mkQ (iv I (b' j)) = ∑ l, CM l j • (Lw I w).mkQ (iv I (b l)) := fun j => by
     have h0 : iv I (b' j) - ∑ l, CM l j • iv I (b l) ∈ Lw I w := by
       have := iv_mem_Lw I w (hCz j)
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← ivH_apply I, map_sub, map_sum] at this
+
+      rw [← ivH_apply I, map_sub, map_sum] at this
       simpa only [map_zsmul, ivH_apply] using this
     have h1 : (Lw I w).mkQ (iv I (b' j)) = (Lw I w).mkQ (∑ l, CM l j • iv I (b l)) :=
       (Submodule.Quotient.eq _).2 h0
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [h1, map_sum]; simp only [map_zsmul]
+
+    rw [h1, map_sum]; simp only [map_zsmul]
   have hA : ∀ i, (Lw I w).mkQ (I.fmat x *ᵥ iv I (b' i)) =
       ∑ l, (CM * M'z) l i • (Lw I w).mkQ (iv I (b l)) := fun i => by
     rw [red_eq I w hMb' i]; simp only [hqA']
@@ -185,8 +226,8 @@ theorem reduction_conjugacy : Formalism.L2.SG.Pf.RowDictPf.RedConj0 := by
       rw [hTexp, sub_add_cancel]
     have hz : (Lw I w).mkQ (I.fmat x *ᵥ iv I (b' i - ∑ k, CM k i • b k)) = 0 :=
       (Submodule.Quotient.mk_eq_zero _).2 (hTe i)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [h0, map_add (f := _), hz, zero_add, map_sum]
+
+    rw [h0, map_add (f := _), hz, zero_add, map_sum]
     simp only [map_zsmul, red_eq I w hMb]
     exact comb (fun l => (Lw I w).mkQ (iv I (b l))) Mz CM i
   have hMCz : ∀ l i, (((Mz * CM - CM * M'z) l i : ℤ) : ZMod p) = 0 := by

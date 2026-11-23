@@ -1,8 +1,62 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeilGroupCharacters.UniversalOrdinaryDeterminantRing
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeilGroupCharacters.RepAlg
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.AdicCompletion.Noetherian
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.RingTheory.MvPolynomial.Basic
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
 
 @[expose] public section
 
@@ -579,8 +633,8 @@ private lemma sum_pc (x : MonoidAlgebra B G) (i : Fin n) :
     intro b
     have := (Commute.all b X).map (aeval (intersection_update_fsHerm_neg_one i x))
     rwa [aeval_X] at this
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← h0, e, map_sum]
+
+  rw [← h0, e, map_sum]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [theta_smul, theta_ext, map_pow, aeval_X]
 
@@ -627,8 +681,8 @@ private theorem cayley_hamilton (D : GDet n A G) (x m r : MonoidAlgebra B G) :
     | mul_X p j hp => rw [map_mul, hη]; exact hp.mul_left (hs i j).symm
   have hkill : ∀ i w, theta η (w * intersection_update_fsHerm_neg_one i q) = 0 := by
     intro i w
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [q, ι, map_sum, map_smul, Finset.mul_sum, mul_smul_comm, theta_smul, ← position_map, hη]
+
+    simp only [q, ι, map_sum, map_smul, Finset.mul_sum, mul_smul_comm, theta_smul, ← position_map, hη]
     have : ∀ j, theta η (w * mapRingHom _ (algebraMap B _) (intersection_update_fsHerm_neg_one i (x ^ j))) * pc n x j =
         theta η w * (pc n x j * intersection_update_fsHerm_neg_one i x ^ j) := fun j => by
       rw [map_pow, theta_mul_ext _ _ fun b => (hcomm i b).pow_right j, mul_assoc, ((hs i j).pow_left j).eq]
@@ -682,8 +736,8 @@ private theorem cayley_hamilton (D : GDet n A G) (x m r : MonoidAlgebra B G) :
         refine h (Finset.mem_biUnion.2 ⟨g, Finsupp.mem_support_iff.2 fun h1 => h0 ?_,
           MvPolynomial.mem_support_iff.2 h0⟩)
         simp [h1]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [e, map_sum, map_sum, map_sum, map_sum]
+
+    rw [e, map_sum, map_sum, map_sum, map_sum]
     refine Finset.sum_congr rfl fun α _ => ?_
     rw [theta_smul, theta_ext, (hP _ _ (hz.map _)).2, map_smul, smul_eq_mul, map_mul, mul_comm]
     congr 1
@@ -692,8 +746,8 @@ private theorem cayley_hamilton (D : GDet n A G) (x m r : MonoidAlgebra B G) :
   have hι : ∀ y, mapRingHom G (ev : MvPolynomial ℕ B →+* B) (ι y) = y := fun y => by
     ext g; simp [ι]
   have hq : mapRingHom G (ev : MvPolynomial ℕ B →+* B) q = Polynomial.aeval x χ := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Polynomial.aeval_eq_sum_range' (Nat.lt_succ_of_le (chi_coeff D x).1), map_sum]
+
+    rw [Polynomial.aeval_eq_sum_range' (Nat.lt_succ_of_le (chi_coeff D x).1), map_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     ext g
     simp [ι, ev, -map_pow, hχ]
@@ -890,9 +944,9 @@ private lemma matrix_units [IsLocalHom (algebraMap A k)] (π : S →ₐ[A] Matri
   have p2 : ∀ j, π (∑ l, N l j • (b l * e)) = Matrix.single j o 1 := by
     intro j
     have : ∀ l, algebraMap A k (N l j) = (1 : Matrix (Fin n) (Fin n) k) l j := fun l => by rw [← hN']; rfl
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_sum, map_smul, map_mul, hb, hπ, Matrix.single_mul_single_same, ← algebraMap_smul k (N _ j),
-        this, Matrix.one_apply, Matrix.single_apply]
+
+    simp [map_sum, map_smul, map_mul, hb, hπ, Matrix.single_mul_single_same, ← algebraMap_smul k (N _ j),
+      this, Matrix.one_apply, Matrix.single_apply]
   have p3 : ∀ i, π (e * c i) = Matrix.single o i 1 := fun i => by
     rw [map_mul, hπ, hc', Matrix.single_mul_single_same, mul_one]
   have p4 : ∀ i, e * (e * c i) = e * c i := fun i => by rw [← mul_assoc, he]
@@ -907,8 +961,8 @@ private lemma matrix_units [IsLocalHom (algebraMap A k)] (π : S →ₐ[A] Matri
     · rw [one_smul, h]
     · rw [zero_smul, mul_zero]
   have hu : IsUnit (∑ i, (∑ l, N l i • (b l * e)) * (e * c i)) := hU _ (by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     simp only [map_mul π _ (e * c _), p2, p3, Matrix.single_mul_single_same, mul_one]
     exact Matrix.sum_single_one)
   apply hu.mul_left_cancel
@@ -1115,8 +1169,8 @@ private lemma eq_ofRep [Field k] [Algebra A k] [IsLocalHom (algebraMap A k)] (D 
       have := rep_map ρ (Algebra.ofId A B) (ε i j)
       rw [hε, Matrix.map_single, map_one] at this
       exact this
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hσ, map_sum, map_smul, this, Matrix.smul_single, smul_eq_mul, mul_one]
+
+    simp only [hσ, map_sum, map_smul, this, Matrix.smul_single, smul_eq_mul, mul_one]
     exact (Matrix.matrix_eq_sum_single M).symm
   have hnat : ∀ (B B' : Type) [CommRing B] [Algebra A B] [CommRing B'] [Algebra A B'] (g : B →ₐ[A] B')
       (M : Matrix (Fin n) (Fin n) B), σ B' (M.map g) = mapRingHom G (g : B →+* B') (σ B M) := by

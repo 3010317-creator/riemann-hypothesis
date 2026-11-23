@@ -1,34 +1,71 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ThetaTranslateRangeGap
-public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffDerivSnoc
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RevPosRevPos
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLeviFlagOfMemParabolic
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffDerivSnoc
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OmegaFormIntegrality
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PureTensorOSmul
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilFiniteVectorFixedPrincipalLevelCoeffSpaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLeviFlagOfMemParabolic
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsCtxBase
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinear
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.WeakWeilRepCarriesDerivativesVacuaFockVectors
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinear
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalUnitaryGroupStructure
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorLaws
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OmegaFormIntegrality
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemSpanThetaSeriesOfBoundedHolomorphicStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsContinuousRealScalarCharacterWeakWeilStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealPointsUnitaryCharacterEqDetPowerStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompactTorusActsFockVectorRowHighestStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsContinuousRealScalarCharacterWeakWeilStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFrameChangeWeakWeilRepresentationStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExtremalVectorValuesLoweringAndTorusStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockPolynomialVectorsReframeSourceStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HolomorphicUpToFactorOfLoweringKilledTorusWeightStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharacterPlacesOddAndPrincipalLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemSpanThetaSeriesOfBoundedHolomorphicStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealPointsUnitaryCharacterEqDetPowerStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ReframeVacuumAndLiftVectorStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.StableFockSpanContainsRowHighestPolynomialsStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaLiftFiniteVectorEqTranslateLevelDatumStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFrameChangeWeakWeilRepresentationStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockPolynomialVectorsReframeSourceStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ReframeVacuumAndLiftVectorStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaSeriesEqThetaLiftDefiniteGroupFormStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExtremalVectorValuesLoweringAndTorusStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharacterPlacesOddAndPrincipalLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RevPosRevPos
+import Formalism.SharpRestriction.GlobalSchurBounds.ThickPlacesCorollaryOfAnyTranslate
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.BitVec
 
 @[expose] public section
 
@@ -60,7 +97,7 @@ theorem fvec_om_fin {S T : HSp D} (C : Ctx S T) {om : GA D S × GA D T →* Modu
   rw [h2.2 Q, show (fun τ => compAt C.θ τ (Formalism.L2.Theta.mt S k)) = fun _ => 1 from funext fun τ => compAt_fin C.θ hk τ]
   rfl
 
-set_option maxHeartbeats 1000000 in
+
 theorem span_std {S T : HSp D} (C : Ctx S T) (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)) (hom : IsWeak C.ψ S T om)
     (hc : ContT C.ψ om) (hsig : T.SigOK) (hsz : 4 * (Module.finrank ℚ D.host.E * T.rank) + 4 ≤ S.rank) (hn : T.rank ≤ S.rank)
     (B₀ : C.Bas) (hB₀ : C.IsB B₀) (BS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ) (hBS : ∀ τ, (BS τ)ᴴ * BS τ = 1)
@@ -158,7 +195,7 @@ theorem isB_onb {S T : HSp D} (C : Ctx S T) {Sp : D.what₂.Tau → SPar} (M : D
     rw [Matrix.nonsing_inv_nonsing_inv _ (hu τ), hJ]
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem span_any {S T : HSp D} (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (-1)) (θ : InfFam D) (hθ : IsInfFam θ)
     (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)) (hom : IsWeak ψ S T om) (hc : ContT ψ om)
     (b : Module.Basis (Fin S.rank) D.host.E S.V) (hb : StdFrame.OrthFrame (reS S b)) (hev : Even S.rank) (p₀ q₀ : ℕ)
@@ -257,7 +294,7 @@ variable {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type} {A : Formalism.L2.DIV.
   {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks)
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem value_mem_span (hP : GlobalTheory.Published.CuspRapidDecay) (hsz : GlobalTheory.IndefiniteRowSideFullHecke.ThetaTranslateSize.SizeOK D) (hL : R.toLevCh.Is A.μ0)
     (hM : R.IsModels) (hT : R.IsThP) (i : Fin D.R.m) (t : T0) (u : ∀ ρ, lowT (R.MW i (sg0 D A)) ρ) (w₀ : (R.cV i).W)
     (hu : IsExtVec (R.MW i (sg0 D A)) (fun ρ => u ρ)) (hΔ : R.ioP i (PiTensorProduct.tprod ℂ u) w₀ = RealDat.Delta i)
@@ -319,7 +356,7 @@ def evAtVec {V : HSp D} {S : D.what₂.Tau → SPar} (M : DSModel V S) (v : M.Ve
   map_smul' _ _ := rfl
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem range_thF (hP : GlobalTheory.Published.CuspRapidDecay) (hsz : GlobalTheory.IndefiniteRowSideFullHecke.ThetaTranslateSize.SizeOK D) (hL : R.toLevCh.Is A.μ0) (hF : R.IsFam)
     (hM : R.IsModels) (hT : R.IsThP) (i : Fin D.R.m) (t : T0) : LinearMap.range (R.thF i t) = R.Wall i (sg0 D A) := by
   refine le_antisymm (by rintro _ ⟨x, rfl⟩; exact hT.thF_mem i t x) fun T hTm => ?_
@@ -346,7 +383,7 @@ theorem span_translates {X H Y Γ : Type} [Group Γ] [AddCommGroup X] [Module �
     rw [hx, ← hy, ← htr, map_one, Module.End.one_apply]
 
 
-set_option maxHeartbeats 1000000 in
+
 open GlobalTheory.IndefiniteRowSideFullHecke.ThetaTranslateSize in
 theorem spanAt (hP : GlobalTheory.Published.CuspRapidDecay) (hsz : SizeOK D) (hL : R.toLevCh.Is A.μ0) (hF : R.IsFam)
     (hM : R.IsModels) (hT : R.IsThP) (i : Fin D.R.m) (t : T0) : SpanAt R i t :=
@@ -354,7 +391,7 @@ theorem spanAt (hP : GlobalTheory.Published.CuspRapidDecay) (hsz : SizeOK D) (hL
     (R.gW i (sg0 D A)) (transl R i) (hM.gW i (sg0 D A))
 
 
-set_option maxHeartbeats 1000000 in
+
 open GlobalTheory.IndefiniteRowSideFullHecke.ThetaTranslateSize in
 theorem goodRangeAt (hP : GlobalTheory.Published.CuspRapidDecay) (hsz : SizeOK D) (hL : R.toLevCh.Is A.μ0) (hG : R.grp_record) (hF : R.IsFam)
     (hM : R.IsModels) (hT : R.IsThP) (i : Fin D.R.m) (t : T0) : GoodRangeAt R i t := by

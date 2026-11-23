@@ -1,6 +1,68 @@
 module
 
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.CasValK
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.Permute
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.BigRep
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.BochIneq
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.CasimirGapAtNoncompactWeight
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.CrossOpSlotBound
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.InnerCrossOpEigEqZero
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.KUnitB
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.LayerBasic
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.LayerOrth
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.LayerWeight
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.NcVOneDecomp
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.NumRho
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.Numerics
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.PhiPerm
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.PositionPrependMemNoncompactPositionSubmodule
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.SchPhiOneApply
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.Weights
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -29,8 +91,8 @@ theorem phi_Wm_last_of_sch (hSch : ∀ x ∈ Wm ε E V, phi E 1 x = 0) {k : ℕ}
     simp only [sch_slice_apply, Fin.update_snoc_last] at h0
     have hs : ∀ x : Fin n × Fin n, (Fin.snocEquiv (fun _ => Fin n × Fin n)) (x, init) = Fin.snoc init x :=
       fun x => rfl
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hs, sch_word_snoc, Module.End.mul_apply, ← map_sum]
+
+    simp only [hs, sch_word_snoc, Module.End.mul_apply, ← map_sum]
     rw [show (∑ x : Fin n × Fin n, (E x.1 x.2) (F (Fin.snoc init x))) = 0 from h0, map_zero]
 
 theorem phi_Wm_position_of_sch (hE : IsGlRep E) (hV : IsKIrrHW ε E (lowK ε lam) V)
@@ -326,8 +388,8 @@ theorem no_of_casimir (hE : IsGlRep E) (hU : IsInfUnitary ε E)
         linarith
   have hsumre : RCLike.re (inner ℂ (casimir E w) w) =
       ∑ c, ∑ d, RCLike.re (inner ℂ (E c d (E d c w)) w) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [casimir, LinearMap.sum_apply, Module.End.mul_apply, sum_inner, map_sum]
+
+    simp only [casimir, LinearMap.sum_apply, Module.End.mul_apply, sum_inner, map_sum]
   have hT : ∑ c, ∑ d, ((if c = d then ν c ^ 2 else 0) + (if c < d ∧ ε d = ε c then ν c - ν d else 0) +
       (if d < c ∧ ε d ≠ ε c then ν c - ν d else 0)) = casValK ε ν - 2 * dot ν (rhoN ε) := by
     rw [← sum_pairs_eq_casValK ν, sub_eq_add_neg, ← sum_opposite_sign_pairs_eq_neg_two_dot_rhoN ν]

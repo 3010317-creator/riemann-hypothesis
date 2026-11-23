@@ -1,19 +1,60 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.Convolution.BlockHeckeSlices.SliceShift
-public import Development.AutomorphicArithmetic.Foundations.Convolution.BlockHeckeSlices.CuspidalNormBounds.UmgOps
-public import Development.AutomorphicArithmetic.Foundations.Convolution.BlockHeckeSlices.CuspidalNormBounds.HkApply
-public import Development.AutomorphicArithmetic.Foundations.Convolution.BlockHeckeSlices.CuspidalNormBounds.GoodSmul
-public import Development.AutomorphicArithmetic.Foundations.Convolution.BlockHeckeSlices.CuspidalNormBounds.SliceUmg
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ConjugateRepresentations.CuspidalSupport.HkSum
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ConjugateRepresentations.CuspidalSupport.Gl2LocalToAdelicEmbedding
-public import Development.AutomorphicArithmetic.WhittakerHecke.IntegrableConstantTermLeviEmbeddingMulConjCuspFo
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ConjugateRepresentations.CuspidalSupport.HkSum
+public import Development.AutomorphicArithmetic.Foundations.Convolution.BlockHeckeSlices.CuspidalNormBounds.GoodSmul
+public import Development.AutomorphicArithmetic.Foundations.Convolution.BlockHeckeSlices.CuspidalNormBounds.HkApply
+public import Development.AutomorphicArithmetic.Foundations.Convolution.BlockHeckeSlices.CuspidalNormBounds.SliceUmg
+import Development.AutomorphicArithmetic.WhittakerHecke.BlockDiagonalEqLeviEmbedding
+public import Development.AutomorphicArithmetic.WhittakerHecke.ConstantTermHeckeOperatorEqSumSatake
 public import Development.AutomorphicArithmetic.WhittakerHecke.DetModuleSatakeTsetEqInvPow
 public import Development.AutomorphicArithmetic.WhittakerHecke.ExistsSatakeTsetSumEigenvector
+public import Development.AutomorphicArithmetic.WhittakerHecke.IntegrableConstantTermLeviEmbeddingMulConjCuspFo
 public import Development.AutomorphicArithmetic.WhittakerHecke.IntegrableTranslateMulConjAndInnerSelfNeZero
 public import Development.AutomorphicArithmetic.WhittakerHecke.IntegralQuotientRightTranslateEqAndIntegrableIff
-public import Development.AutomorphicArithmetic.WhittakerHecke.BlockDiagonalEqLeviEmbedding
-public import Development.AutomorphicArithmetic.WhittakerHecke.ConstantTermHeckeOperatorEqSumSatake
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.FormsFiniteness.OrderedCechToCatCochainsOneApplyValueAtSubset
 
 @[expose] public section
 
@@ -120,9 +161,9 @@ private theorem kappa (b : Blo S r) {w : Pl E} (hw : w ∉ S) {ϖ : w.adicComple
     simpa only [inv_inv] using this
   have h3 := Finset.sum_congr (rfl : (Finset.univ : Finset (Fin n)) = _) fun i _ => h1 i
   rw [← integral_finsetSum _ fun i _ => h2 i] at h3
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [← Finset.mul_sum, ← map_sum, hs', map_mul, mul_left_comm _ (starRingEnd ℂ μ), integral_const_mul,
-    Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] at h3
+
+  simp only [← Finset.mul_sum, ← map_sum, hs', map_mul, mul_left_comm _ (starRingEnd ℂ μ), integral_const_mul,
+  Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] at h3
   rw [mul_assoc, ← h3, inv_mul_cancel_left₀ hn']
 
 private theorem adj (b : Blo S r) {w : Pl E} (hw : w ∉ S) {ϖ : w.adicCompletion E} (hϖ : ϖ ∈ Ov E w) (hu : IsUnifV E w ϖ)

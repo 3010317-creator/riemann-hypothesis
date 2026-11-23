@@ -1,23 +1,48 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.CoefAEqOfHeq
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasDRepIffHasDerivAt
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.GreenCuspidalIff
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsIsBIffCoreB
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.WeilRepresentationUnitaryPair
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.DsExistsOfDiscreteSeriesExists
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Formalism.LocalToGlobal.IndefiniteReal.LinksStage
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IntertwinersExistScalarUpdateInvariant
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GeoHalfUpd
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StandardLatticesDiagonal
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ComplexSidePlacesIffMemNonzeroIndexPlaces
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LinksAnalyticHypothesesOfWeilRepHarishChandra
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonemptyRowLiftFamilyOverColumnChoicesStatement
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.CmQuadraticFormEqAlternatingForm
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StandardLatticesDiagonal
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -37,7 +62,7 @@ variable {X : Stages} {px : PreX X.B.toPre} {I : ColIn X.B px} {hX : X.B.fields.
   {Wt : Set X.B.places.Pl}
 
 
-set_option maxHeartbeats 4000000 in
+
 def geoR (z : Dat X I hX T Wt) (Wt' : Set X.B.places.Pl) (h : Wt' ⊆ Wt) :
     GlobalTheory.RealGeo.GeoHalf z.core ((z.resR h).updS (kapOf (z.resR h)) (z.resR h).lam3).toRealDat fun _ => 1 :=
   ⟨(z.resGeo h).κ, (z.resGeo h).v₀,
@@ -48,7 +73,7 @@ def geoR (z : Dat X I hX T Wt) (Wt' : Set X.B.places.Pl) (h : Wt' ⊆ Wt) :
     (z.resGeo h).rhoGeo, (z.resGeo h).equivAll, (z.resGeo h).cTie, (z.resGeo h).phase⟩
 
 
-set_option maxHeartbeats 4000000 in
+
 def res (z : Dat X I hX T Wt) (e : z.R.toRealDat.ExAt) (Wt' : Set X.B.places.Pl) (h : Wt' ⊆ Wt) (hc : ConjStable X Wt') :
     Dat X I hX T Wt' where
   Xg := z.Xg
@@ -70,24 +95,27 @@ def res (z : Dat X I hX T Wt) (e : z.R.toRealDat.ExAt) (Wt' : Set X.B.places.Pl)
 variable (z : Dat X I hX T Wt) (e : z.R.toRealDat.ExAt) {Wt' : Set X.B.places.Pl} (h : Wt' ⊆ Wt) (hc : ConjStable X Wt')
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem res_exAt : (res z e Wt' h hc).R.toRealDat.ExAt := intertwinersExist_scalar_update_invariant (exAt_res z h e) _ _
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem res_inGeo (hi : GlobalTheory.RealGeo.InGeo z.geo) : GlobalTheory.RealGeo.InGeo (res z e Wt' h hc).geo := by
   have h' := (z.inGeo_resGeo_iff h).2 hi
   exact ⟨h'.jEvExists, h'.jEvBar, h'.evInj, h'.jUnif, h'.geoAct, h'.latFull, h'.dimMatch⟩
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem restrictAdelicDataTwistedPlaces_nonzeroIndexPlaces (F0) : (res z e Wt' h hc).W1 F0 = z.W1 F0 := by
-  ext w
-  rw [Dat.mem_nonzero_index_places_iff_at_place_or_conjugate, Dat.mem_nonzero_index_places_iff_at_place_or_conjugate]
-  exact (nz_updS (z.resR h) _ _ _ F0 _).trans (exists_congr fun j => or_congr (z.nzAt_resR F0 h j _) (z.nzAt_resR F0 h j _))
+  let z' := res z e Wt' h hc
+  exact Set.ext fun v =>
+    (z'.mem_nonzero_index_places_iff_at_place_or_conjugate F0 v).trans
+      ((nz_updS (z.resR h) z'.F (kapOf (z.resR h)) (z.resR h).lam3 F0 (plB X v)).trans
+        ((exists_congr fun j => or_congr (z.nzAt_resR F0 h j _) (z.nzAt_resR F0 h j _)).trans
+          (z.mem_nonzero_index_places_iff_at_place_or_conjugate F0 v).symm))
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem res_std (hs : z.Std) : (res z e Wt' h hc).Std := by
   obtain ⟨⟨c, h1, h2, h5⟩, hV⟩ := hs
   refine ⟨⟨c, h1, fun hc' t φ g x hm => h2 hc' (inclU I (usedOf_mono I T h) t) φ g x hm, h5⟩, fun i => ?_⟩
@@ -106,7 +134,7 @@ theorem of_diag {n : ℕ} {P : Fin n → Fin n → Prop} (H : ∀ i, P i i) (i i
   (Fin.ext h : i = i') ▸ H i
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem res_ext (z : Dat (w.st Z) w.I hX T Wt) (e : z.R.toRealDat.ExAt) {Wt' : Set B.places.Pl} (h : Wt' ⊆ Wt)
     (hc : ConjStable (w.st Z) Wt') : Ext z (res z e Wt' h hc) := by
   exact {
@@ -135,18 +163,17 @@ theorem res_ext (z : Dat (w.st Z) w.I hX T Wt) (e : z.R.toRealDat.ExAt) {Wt' : S
     Pg := HEq.rfl
     eG := HEq.rfl
     Sb := HEq.rfl
-    BV i i' hi := by
-      obtain rfl : i = i' := Fin.ext hi
-      exact ⟨HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl⟩
-    MW i i' hi := by
-      obtain rfl : i = i' := Fin.ext hi
+    BV := of_diag fun _ => ⟨HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl⟩
+    MW := by
+      refine of_diag fun i => ?_
       refine ⟨HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, fun φ φ' hφ => ?_⟩
       have hT : (type_of% φ') = (type_of% φ) := rfl
       have h2 : cast hT φ' = φ := (cast_eq_iff_heq).2 hφ
       subst h2
       exact HEq.rfl
-    forms i i' hi φ φ' hφ k k' hk := by
-      obtain rfl : i = i' := Fin.ext hi
+    forms := by
+      refine of_diag fun i => ?_
+      intro φ φ' hφ k k' hk
       have hT : (type_of% φ') = (type_of% φ) := rfl
       have h2 : cast hT φ' = φ := (cast_eq_iff_heq).2 hφ
       subst h2
@@ -157,11 +184,9 @@ theorem res_ext (z : Dat (w.st Z) w.I hX T Wt) (e : z.R.toRealDat.ExAt) {Wt' : S
       rfl
     W1 v v' hv := by
       have e' : v = v' := (w.D Z).plEq.injective (HeightOneSpectrum.ext (Ideal.ext fun x => hv x x rfl))
-      subst e'
-      rw [restrictAdelicDataTwistedPlaces_nonzeroIndexPlaces]
-    cV i i' hi := by
-      obtain rfl : i = i' := Fin.ext hi
-      exact ⟨HEq.rfl, HEq.rfl⟩
+      exact e' ▸ (Set.ext_iff.mp
+        (restrictAdelicDataTwistedPlaces_nonzeroIndexPlaces z e h hc (fun _ _ => 0)).symm v)
+    cV := of_diag fun _ => ⟨HEq.rfl, HEq.rfl⟩
     pb := HEq.rfl
     ΛY := (HEq.refl z.R.ΛY)
     κ := by
@@ -171,13 +196,14 @@ theorem res_ext (z : Dat (w.st Z) w.I hX T Wt) (e : z.R.toRealDat.ExAt) {Wt' : S
       · exact (Eq.refl (z.geo.κ i).n)
     ref := by
       refine of_diag fun i => ?_
+      let μ := mu0F (X := B.fields) (tuOf w.I (usedOf w.I T Wt))
       refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-      · exact (HEq.refl (z.R.vP i (mu0F (tuOf w.I (usedOf w.I T Wt)))))
-      · exact (HEq.refl (z.R.HV i (mu0F (tuOf w.I (usedOf w.I T Wt)))))
-      · exact (HEq.refl (z.R.thF i (mu0F (tuOf w.I (usedOf w.I T Wt)))))
-      · exact (HEq.refl (z.R.thG i (mu0F (tuOf w.I (usedOf w.I T Wt)))))
-      · exact (HEq.refl (z.R.νV i (mu0F (tuOf w.I (usedOf w.I T Wt)))))
-      · exact (HEq.refl (z.R.fdV i (mu0F (tuOf w.I (usedOf w.I T Wt)))))
+      · exact (HEq.refl (z.R.vP i μ))
+      · exact (HEq.refl (z.R.HV i μ))
+      · exact (HEq.refl (z.R.thF i μ))
+      · exact (HEq.refl (z.R.thG i μ))
+      · exact (HEq.refl (z.R.νV i μ))
+      · exact (HEq.refl (z.R.fdV i μ))
       · exact (HEq.refl (z.R.νW i))
       · exact (HEq.refl (z.R.fdW i))
     jL := by
@@ -198,7 +224,7 @@ theorem stepW_keep_of_ev {Q : Ctx → Prop} (h : Ev Q) (p : WP) : StepW p fun K 
   Step.of_evG ((evG_of_ev h).imp fun _ _ _ _ _ H _ _ _ _ _ _ _ _ _ => H)
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem exists_pre2_of_fine_of_resChar_mem : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.HarishChandraFinite →
     GlobalTheory.Published.CuspRapidDecay → WeightCaseCondition → StepW Start fun K B f T w => ∀ (Z : w.Lt) (hX : B.fields.Ok)
       (z : Dat (w.st Z) w.I hX T {v | B.places.resChar v ∈ T.pl}), GIs2 K w Z.G → GrpTrue Z.N f → GrpAt (w.st Z) w.I →
@@ -213,23 +239,28 @@ theorem exists_pre2_of_fine_of_resChar_mem : GlobalTheory.Published.WeilRepresen
   obtain ⟨⟨-, -, hCoh⟩, hHW', hHost⟩ := H
   intro Z hX z hG2 hGT hGA hKap hFine hsub hSp
   obtain ⟨hEx, hGeo, hCore, hStd⟩ := hFine
-  have hle : z.W1 (F0K K.s (w.D Z)) ⊆ {v | B.places.resChar v ∈ T.pl} := hsub
-  have hc : ConjStable (w.st Z) (z.W1 (F0K K.s (w.D Z))) := fun v hv => z.nonzero_index_places_conj_stable _ v hv
-  let z' := ResStd.res z hEx _ hle hc
-  have hW : z'.W1 (F0K K.s (w.D Z)) = z.W1 (F0K K.s (w.D Z)) := ResStd.restrictAdelicDataTwistedPlaces_nonzeroIndexPlaces z hEx hle hc _
+  let F0 := F0K K.s (w.D Z)
+  let W := z.W1 F0
+  have hle : W ⊆ {v | B.places.resChar v ∈ T.pl} := hsub
+  have hc : ConjStable (w.st Z) W := z.nonzero_index_places_conj_stable F0
+  let z' := ResStd.res z hEx W hle hc
+  have hW : z'.W1 F0 = W := ResStd.restrictAdelicDataTwistedPlaces_nonzeroIndexPlaces z hEx hle hc F0
   have hEx' : z'.R.toRealDat.ExAt := ResStd.res_exAt z hEx hle hc
   have hGeo' : GlobalTheory.RealGeo.InGeo z'.geo := ResStd.res_inGeo z hEx hle hc hGeo
   have hCore' : CoreP z' := hCore
   have hStd' : z'.Std := ResStd.res_std z hEx hle hc hStd
-  have hH : Holds z'.R z'.F := hHW' Z hX _ z' hGT hGA hKap hEx' hGeo' hCore' hG2 hW.symm hsub
-  have hcs : ∀ v, B.places.conj v ∈ z'.W1 (F0K K.s (w.D Z)) ↔ v ∈ z'.W1 (F0K K.s (w.D Z)) := fun v =>
-    ⟨fun h => by simpa only [B.places.conj_conj] using z'.nonzero_index_places_conj_stable _ _ h, fun h => z'.nonzero_index_places_conj_stable _ v h⟩
+  have hH : Holds z'.R z'.F := hHW' Z hX W z' hGT hGA hKap hEx' hGeo' hCore' hG2 hW.symm hsub
+  have hcs (v : B.places.Pl) : B.places.conj v ∈ W ↔ v ∈ W :=
+    ⟨fun hv => (B.places.conj_conj v) ▸ hc (B.places.conj v) hv, hc v⟩
   obtain ⟨-, hFmax, -, -, hSt, -⟩ := hHost (w.st Z) hO
-  obtain ⟨q⟩ := GlobalTheory.T.nonempty_rowLiftFamily_over_columnChoices B f T w Z hX _ z' (hInp _) hFmax (hSt 0).1 (fun i => (hSt _).2.2 (by omega) i.2) hH hcs
+  have hRows : Nonempty (RowPk w z') :=
+    GlobalTheory.T.nonempty_rowLiftFamily_over_columnChoices B f T w Z hX W z' (hInp (w.D Z))
+      hFmax (hSt 0).1 (fun i => (hSt ((i : ℕ) + 1)).2.2 (Nat.zero_lt_succ _) i.2) hH hcs
+  refine hRows.elim fun q => ?_
   exact ⟨{
     Z₀ := Z
     hX := hX
-    Wt := _
+    Wt := W
     z := z'
     q := q
     g := hG2

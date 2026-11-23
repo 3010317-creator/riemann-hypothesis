@@ -1,21 +1,51 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LengthPosOfPosDef
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdjFormula
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ParamsEx
-public import Formalism.LocalToGlobal.IndefiniteReal.LinksStage
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.GaussianBinomialClosedForm
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.SqNormIntegralFundamentalDomainEqL2NormSq
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ActOfMemGfC
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RaisingLoweringOperators
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TranslateMemCoefLatFn
-public import Development.AbelianVarietyTheory.Definitions.Foundations.ForallEventuallyFinLocIff
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.RealLowestKTypeCoeffSquareIntegrable
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsKHwMap
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ScalarWeightSum
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.BitVec
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ParamsEx
 
 @[expose] public section
 
@@ -273,15 +303,15 @@ end Frame
 theorem expand_tor (p : D.what₂.Tau → ℕ) (τ : D.what₂.Tau) (c : Fin n) (z : ℂˣ) (P : PolF D m n) :
     GlobalTheory.ExportSeries.fockSubst p (tor τ c z) P = ∑ s ∈ P.support, ((z : ℂ) ^ wt p τ c s) • monomial s (AddMonoidAlgebra.coeff P s) := by
   conv_lhs => rw [P.as_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   exact Finset.sum_congr rfl fun s _ => tor_monomial p τ c z s _
 
 theorem expand_gder (p : D.what₂.Tau → ℕ) (τ : D.what₂.Tau) (c : Fin n) (P : PolF D m n) :
     gder p τ (Matrix.single c c 1) P = ∑ s ∈ P.support, (wt p τ c s : ℂ) • monomial s (AddMonoidAlgebra.coeff P s) := by
   conv_lhs => rw [P.as_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   exact Finset.sum_congr rfl fun s _ => gder_monomial p τ c s _
 
 end
@@ -374,20 +404,20 @@ theorem subst_comp_gder (p : D.what₂.Tau → ℕ) (τ : D.what₂.Tau) (g : Gl
   have dsum : ∀ (A : Fin n → ℂ) (B : Fin n → Fin n → ℂ) (Y : Fin n → PolF D m n),
       ∑ d, C (A d) * ∑ b, C (B d b) * Y b = ∑ b, C (∑ d, A d * B d b) * Y b := by
     intro A B Y
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [Finset.mul_sum, map_sum, Finset.sum_mul, map_mul, mul_assoc]
+
+    simp only [Finset.mul_sum, map_sum, Finset.sum_mul, map_mul, mul_assoc]
     exact Finset.sum_comm
   have lin : ∀ (E : Derivation ℂ (PolF D m n) (PolF D m n)) (k : Fin n → ℂ) (Y : Fin n → PolF D m n),
       E (∑ b, C (k b) * Y b) = ∑ b, C (k b) * E (Y b) := by
     intro E k Y
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [← smul_eq_C_mul, map_sum, E.map_smul]
+
+    simp only [← smul_eq_C_mul, map_sum, E.map_smul]
   have linS : ∀ (k : Fin n → ℂ) (Y : Fin n → PolF D m n),
       GlobalTheory.ExportSeries.fockSubst (m := m) p g (∑ b, C (k b) * Y b) =
         ∑ b, C (k b) * GlobalTheory.ExportSeries.fockSubst (m := m) p g (Y b) := by
     intro k Y
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_mul, algHom_C, algebraMap_eq]
+
+    simp only [map_sum, map_mul, algHom_C, algebraMap_eq]
   have hS : ∀ (σ : D.what₂.Tau) (i : Fin m) (c : Fin n), GlobalTheory.ExportSeries.fockSubst (m := m) p g (X (σ, i, c)) =
       if (i : ℕ) < p σ then
       ∑ b, C ((((g σ)⁻¹ : GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ) c b) * X (σ, i, b)

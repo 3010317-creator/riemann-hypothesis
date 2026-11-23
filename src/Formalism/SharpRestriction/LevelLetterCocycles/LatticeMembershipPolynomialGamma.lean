@@ -1,10 +1,54 @@
 module
 
-public import Mathlib
+public import Formalism.SharpRestriction.LevelLetterCocycles.FiltrationSaturationKiller
+public import Formalism.SharpRestriction.LevelLetterCocycles.KillerLevCoreOf
+public import Formalism.SharpRestriction.LevelLetterCocycles.AnnihilatorGeneralOfRingCondition
 public import Formalism.SharpRestriction.LevelLetterCocycles.ArcCoordinatesOfFrame
 public import Formalism.SharpRestriction.LevelLetterCocycles.PsCoprimeOf
-public import Formalism.SharpRestriction.LevelLetterCocycles.AnnihilatorGeneralOfRingCondition
-public import Formalism.SharpRestriction.LevelLetterCocycles.SecondComparisonInCoordinates
+import Formalism.SharpRestriction.LevelLetterCocycles.SecondComparisonInCoordinates
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -136,8 +180,8 @@ theorem uniformizer_mem_delta_invariants : W.π₀ ∈ W.AΔ := by
     obtain ⟨a, ha, hxa⟩ := (W.DelF_def δ).1 hδ
     exact (W.DelF_def _).2 ⟨a, ha, by rw [inv_pow, hxa, inv_one]⟩
   unfold LocWach.π₀₁
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_add (f := _), map_sub, map_one, map_natCast, map_sum]
+
+  rw [map_add (f := _), map_sub, map_one, map_natCast, map_sum]
   congr 1
   have key : ∀ y : W.Gam, W.γ₀ δ (W.γ₀ y (1 + PowerSeries.X)) = W.γ₀ (δ * y) (1 + PowerSeries.X) := by
     intro y; rw [map_mul, AlgHom.mul_apply]
@@ -214,8 +258,8 @@ theorem dvO_split (T : LocLat G Qp LL O) (e s : ℕ) (hs : s ≤ e) {d : ℕ} (b
       (∑ m, algebraMap O LL (c₀ m) • ((φVB PD (LL := LL) (V := T.V)) ^ (e - s))
         (Formalism.MainNotions.ArcLiftingSetup.cmpD W T (b m))) := by
   unfold Formalism.MainNotions.ArcLiftingSetup.dvO Formalism.MainNotions.ArcLiftingSetup.dv
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
   rw [map_smul, ← Module.End.mul_apply, ← pow_add, Nat.add_sub_cancel' hs]
 
@@ -425,8 +469,8 @@ theorem secIn_map (φ : W.EE →+ W.EE)
   obtain ⟨I, g, c₀, α, h, ef⟩ := hf
   refine ⟨I, fun i => φ (g i), c₀, α, fun i => ⟨hI _ _ (h i).1, (h i).2⟩, fun k => ?_⟩
   show φ (f k) = ∑ i, φ (g i) * algebraMap O W.EE (c₀ i k)
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [ef k, map_sum]
+
+  rw [ef k, map_sum]
   exact Finset.sum_congr rfl fun i _ => hφ _ _
 
 theorem secIn_mulι {c : LetA O n} (hc : c ∈ W.AΔ) {f : Fin d → W.EE} (hf : SecIn W a e cond f) :

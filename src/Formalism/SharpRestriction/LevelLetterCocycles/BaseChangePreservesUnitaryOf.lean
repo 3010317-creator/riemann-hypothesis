@@ -1,9 +1,63 @@
 module
 
-public import Mathlib
-public import Formalism.WachLatticeTwists.LagrangeExtensionCocycles.DualWByLettersExtended
 public import Formalism.SharpRestriction.LevelLetterCocycles.FrobeniusPowUniformizerFactorisation
-public import Formalism.SharpRestriction.LevelLetterCocycles.CrystallineLiftingBounds
+import Formalism.CoboundaryTransfers.GammaStableTransfers.MemCoboundariesOfIsOneCoboundary
+import Formalism.CoboundaryTransfers.GammaStableTransfers.TorsionKilledCriterionHolds
+import Formalism.CoboundaryTransfers.GammaStableTransfers.Transfer
+import Formalism.CoboundaryTransfers.WachBridges
+import Formalism.ResultantValuation.ResultantAdjugateProofs.Window
+import Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.EtaleClosedPointLiftsSimpleRootsMonic
+import Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.GrothendieckTopDegree
+import Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.LiftExistsSecondCase
+import Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.MemSpanOfFrobeniusMemSpan
+import Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.PhiOnto
+import Formalism.WachLatticeTwists.LagrangeExtensionCocycles.ExtensionCocycleProofs.UnitLemmaCaseALevelZero
+import Formalism.WindowSums.PowerSeriesRelationList
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -301,8 +355,8 @@ theorem liftb_good_of [NeZero n] (W : LocWach PD LL O v n) (T : LocLat G Qp LL O
     exact ⟨x', hx', h.symm⟩
   refine ⟨?_, hγN, ?_, hc⟩
   · intro x hx
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [liftb_split W T x, map_sum, Finset.smul_sum]
+
+    rw [liftb_split W T x, map_sum, Finset.smul_sum]
     refine Submodule.sum_mem _ (fun j _ => ?_)
     have h := h5.1 (j + 1) ((letE j : LetA O n) • x)
       (by rw [add_sub_cancel_right]; exact liftb_letE_mem W T j hx)
@@ -357,8 +411,8 @@ theorem liftb_kills_all [NeZero n] (W : LocWach PD LL O v n) {T₁ T₂ : LocLat
     exact ⟨x, liftb_Nl_le W T₁ i hx, hxe⟩
   choose x hx hxe using this
   refine ⟨∑ i, x i, Submodule.sum_mem _ (fun i _ => hx i), ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Finset.sum_congr rfl (fun i _ => hxe i), ← Finset.smul_sum, ← liftb_split W T₂ y]
+
+  rw [map_sum, Finset.sum_congr rfl (fun i _ => hxe i), ← Finset.smul_sum, ← liftb_split W T₂ y]
 
 theorem liftb_aeval_mem {R D : Type} [CommRing R] [AddCommGroup D] [Module R D] (N : Submodule R D)
     (f : D →ₗ[R] D) (h : ∀ x ∈ N, f x ∈ N) (P : Polynomial R) :
@@ -569,8 +623,8 @@ theorem lifta_Del_inv (W : LocWach PD LL O v n) {a : W.Gam} (ha : a ∈ W.DelF) 
 theorem lifta_avg_inv (W : LocWach PD LL O v n) (T : LocLat G Qp LL O) (d : O) (x : W.DD T) :
     ∀ δ ∈ W.DelF, W.γD T δ (lifta_avg W T d x) = lifta_avg W T d x := by
   intro δ hδ
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [lifta_avg_apply, map_smul, map_sum]
+
+  rw [lifta_avg_apply, map_smul, map_sum]
   congr 1
   refine Finset.sum_bij' (fun a _ => δ * a) (fun a _ => δ⁻¹ * a) ?_ ?_ ?_ ?_ ?_
   · intro a ha; exact lifta_Del_mul W hδ ha
@@ -593,24 +647,24 @@ theorem lifta_avg_N (W : LocWach PD LL O v n) (T : LocLat G Qp LL O) (d : O) (x 
 
 theorem lifta_avg_φ (W : LocWach PD LL O v n) (T : LocLat G Qp LL O) (d : O) (x : W.DD T) :
     lifta_avg W T d (W.φD T x) = W.φD T (lifta_avg W T d x) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [lifta_avg_apply, lifta_avg_apply, map_smul, map_sum]
+
+  rw [lifta_avg_apply, lifta_avg_apply, map_smul, map_sum]
   congr 1
   exact Finset.sum_congr rfl (fun δ _ => (W.φγ_comm T δ x).symm)
 
 theorem lifta_avg_γ (W : LocWach PD LL O v n) (T : LocLat G Qp LL O) (d : O) (g : W.Gam)
     (x : W.DD T) : lifta_avg W T d (W.γD T g x) = W.γD T g (lifta_avg W T d x) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [lifta_avg_apply, lifta_avg_apply, map_smul, map_sum]
+
+  rw [lifta_avg_apply, lifta_avg_apply, map_smul, map_sum]
   congr 1
   refine Finset.sum_congr rfl (fun δ _ => ?_)
   rw [← W.γD_mul, ← W.γD_mul, mul_comm]
 
 theorem lifta_avg_map (W : LocWach PD LL O v n) {T T' : LocLat G Qp LL O} (F : LatHom T.L T'.L)
     (d : O) (x : W.DD T) : W.map F (lifta_avg W T d x) = lifta_avg W T' d (W.map F x) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [lifta_avg_apply, lifta_avg_apply, ← algebraMap_smul W.EE d (∑ δ ∈ W.DelF, W.γD T δ x), map_smul,
-    algebraMap_smul, map_sum]
+
+  rw [lifta_avg_apply, lifta_avg_apply, ← algebraMap_smul W.EE d (∑ δ ∈ W.DelF, W.γD T δ x), map_smul,
+  algebraMap_smul, map_sum]
   congr 1
   exact Finset.sum_congr rfl (fun δ _ => W.map_γ F δ x)
 
@@ -1360,8 +1414,8 @@ theorem lone_Dcris_eq [FiniteDimensional Qp V] :
       rw [← lone_coord_actB PD ρ hρ, hinv]
     choose c hc using hc
     refine ⟨∑ i, b i ⊗ₜ[Qp] c i, ?_⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     conv_rhs => rw [lone_decomp b x]
     refine Finset.sum_congr rfl fun i _ => ?_
     simp only [lone_map, AlgebraTensorModule.lTensor_tmul]
@@ -1972,8 +2026,8 @@ theorem lext_crys [FiniteDimensional Qp LL] [FiniteDimensional LL V] [FiniteDime
       Submodule.sum_mem _ (fun i _ => hz i)⟩, Subtype.ext ?_⟩
     change pB (∑ i, (((0 : V), b i) ⊗ₜ[Qp] (algebraMap K₀ B (κ i)) -
       iB (mulVB (K₀ := K₀) (B := B) (V := V) (LL := LL) (κ i) (lam (b i) • x₀)))) = w
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     conv_rhs => rw [lext_decomp b w]
     refine Finset.sum_congr rfl (fun i _ => ?_)
     rw [map_sub, hpi, sub_zero, hpB, lext_mapB_tmul, hκ]

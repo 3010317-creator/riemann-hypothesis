@@ -1,13 +1,49 @@
 module
 
-public import Mathlib
-public import Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation
-public import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
-public import GroundTheory.PAdicHodge.BCrisRegularFinal
-public import GroundTheory.PAdicHodge.FundamentalSeqBCris
-public import Development.WeilBound.CoreStatements.CrystallinePeriodRings.NonemptyThetaLOfTied
-public import Development.WeilBound.CoreStatements.CrystallinePeriodRings.FilQuot
 public import Development.WeilBound.CoreStatements.CrystallinePeriodRings.InvRestrictScalarsMem
+public import Development.WeilBound.CoreStatements.CrystallinePeriodRings.FrobAinfMapFrobenius
+public import GroundTheory.PAdicHodge.FundamentalSeqBCris
+public import GroundTheory.PAdicHodge.FundamentalSeqSurj
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
 
 @[expose] public section
 
@@ -69,15 +105,19 @@ variable {l : ℕ} [Fact l.Prime]
 theorem onto_plus {y : ACris.BCrisPlus ℂ_[l] l} {n : ℕ}
     (hy : ACris.phiPlus ℂ_[l] l y = (l : ACris.BCrisPlus ℂ_[l] l) ^ n * y) :
     ∃ x : Per6.Bcris l, Per6.φB l x = x ∧ cD l (Per6.tA l) ^ n * ιCD l x = invPlusD l y := by
-  obtain ⟨m, a, ha⟩ := away_exists_self y
-  have h1 := onto_eigen (onto_injective invPlusD_algebraMap (cD_injective l))
-    ACris.phiPlus_algebraMap ha hy
-  obtain ⟨x, hx, e⟩ := onto_fixed φB_cB (cB_isFrac l) (map_natCast _ l) frob_phi_tA m h1
-  exact ⟨x, hx, onto_cancel invPlusD_algebraMap (cD_l_ne_zero l) ha (inv_map_frac (ιCD_fac l) e)⟩
+  obtain ⟨m, a, ha⟩ := away_exists_self (a := (l : ACris.ACris ℂ_[l] l)) y
+  have hmap := invPlusD_algebraMap (l := l)
+  have hinj := onto_injective (I := invPlusD l) (c := cD l) hmap (cD_injective l)
+  have h1 := onto_eigen (G := ACris.phiPlus ℂ_[l] l) (p := l) hinj
+    (ACris.phiPlus_algebraMap (K := ℂ_[l]) (p := l)) ha hy
+  obtain ⟨x, hx, e⟩ := onto_fixed (φB_cB (l := l)) (cB_isFrac l)
+    (ACris.phi_natCast_p ℂ_[l] l) frob_phi_tA m h1
+  exact ⟨x, hx, onto_cancel (I := invPlusD l) (c := cD l) hmap
+    (cD_l_ne_zero l) ha (inv_map_frac (ιCD_fac l) e)⟩
 
 theorem cD_tA_eq : cD l (Per6.tA l) =
     algebraMap (Per6.BdRp l) (Per6.BdR l) (fontaineT (epsilon l) untilt_epsilon) :=
-  congrArg (algebraMap (Per6.BdRp l) (Per6.BdR l)) (ACris.iota_periodT (untilt_epsilon (p := l)))
+  cD_tA l
 
 theorem fund_onto (z : Per6.BdR l) : ∃ x : Per6.Bcris l, Per6.φB l x = x ∧
     ∃ c : Per6.BdRp l, ιCD l x - z = algebraMap (Per6.BdRp l) (Per6.BdR l) c := by
@@ -87,9 +127,10 @@ theorem fund_onto (z : Per6.BdR l) : ∃ x : Per6.Bcris l, Per6.φB l x = x ∧
     untilt_frobeniusEquiv_symm_epsilon_ne_one (m := n) (n := n) le_rfl w
   obtain ⟨c, hc⟩ := Ideal.mem_span_singleton'.1 hyw
   obtain ⟨x, hx, e⟩ := onto_plus hy
-  rw [cD_tA_eq] at e
+  have he := (congrArg (fun t : Per6.BdR l => t ^ n * ιCD l x) (cD_tA_eq (l := l))).symm.trans e
   exact ⟨x, hx, c, ACris.sub_eq_map_of_pow_mul (algebraMap (Per6.BdRp l) (Per6.BdR l))
-    (cD_tA_eq (l := l) ▸ cD_tA_ne_zero l) e hs hc⟩
+    (T := fontaineT (epsilon l) untilt_epsilon) (a := ACris.iotaPlus ℂ_[l] l y)
+    (algebraMap_tBdR_ne_zero (p := l)) he hs hc⟩
 
 section Eps
 

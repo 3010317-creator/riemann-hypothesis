@@ -1,25 +1,62 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicSpectrum.PublishedTheorems.Geometry₂.NefRR
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ModelSmall
-public import Development.AutomorphicSpectrum.Statements.TowerExistence.GoodTowerExistsX
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MultihomogeneousIdeals.ExistsUniqueStatement
-public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsEmbeddingPieces
-public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.HasMultiplier
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.OverLaUnique
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RealTowerGeometricAgreement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NefPolarizationStatement
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RealTowerNefGeneralStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithmeticDegreePositiveHermStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericFrameComponentBoundStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SectionsGenericIndicators
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TowerComponentsCompatibleLawsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericFrameComponentBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithmeticDegreePositiveHermStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformNormSectionCountStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TowerWeightOfZeroStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformNormSectionCountStatement
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereIntegralMultilinearExpansionStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NefPolarizationStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import ReciprocityTheory.AnalyticForms.PotentialTheory.IntegrableOnTargetOfTsupport
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterBridge
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRed
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRedA
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRedB
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRedF
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.DefiniteFormStabilizerFiniteAwayFromP
 
 @[expose] public section
 
@@ -68,8 +105,8 @@ theorem count_le {K R Om Ω : Type} [Field K] [NumberField K] [AddCommGroup R] [
       have hs : ∀ i, s i ∈ V := fun i => Submodule.sum_mem _ fun a _ => V.smul_mem _ (v a).2
       have hphi : ∀ i, φ (ev (s i)) = ∑ a, (∑ b, (g (a, b, i) : Ω) * ψ (bK b)) * φ (ev (v a)) := by
         intro i
-        set_option synthInstance.maxHeartbeats 100000 in
-          simp only [s, c, map_sum, map_smul, Algebra.smul_def, map_mul, Finset.sum_mul]
+
+        simp only [s, c, map_sum, map_smul, Algebra.smul_def, map_mul, Finset.sum_mul]
         refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
         simp [ψ, map_ratCast]
       have hterm : ∀ a b i, (g (a, b, i) : Ω) * (w * φ (ev (bK b • (v a : R))) * f i) =
@@ -219,9 +256,9 @@ theorem geomDeg_combLine_top (hI : PB.Inputs) (M : Top.RootModel Ψ N) (n : Opti
   have hδ : (M.δ : ℝ) ≠ 0 := Nat.cast_ne_zero.2 M.δ_pos.ne'
   have e1 : Top.toA ((∑ r, MvPolynomial.C (n (some r) : ℝ) * MvPolynomial.X r) ^ Top.dimFl Ψ N) =
       (∑ o, MvPolynomial.C (n o : ℝ) * MvPolynomial.X o : Top.RPA Ψ N) ^ Top.dimFl Ψ N := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [Top.toA, map_pow, map_sum, map_mul, MvPolynomial.rename_C, MvPolynomial.rename_X, Fintype.sum_option, hn,
-      Int.cast_zero, map_zero, zero_mul, zero_add]
+
+    simp only [Top.toA, map_pow, map_sum, map_mul, MvPolynomial.rename_C, MvPolynomial.rename_X, Fintype.sum_option, hn,
+    Int.cast_zero, map_zero, zero_mul, zero_add]
   rw [e1, Top.RealGeo.geoFun_pow, Finset.mul_sum]
   have h := ptsIntegral_combLine (e := Top.dimFl Ψ N) hI.resExists M.arith (M.line 1) (Top.RealGeo.line_smooth M)
     fun _ => n

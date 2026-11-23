@@ -1,16 +1,53 @@
 module
 
 public import Formalism.LocalToGlobal.InertKernelTheory.DefsFrONB
-public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.KappaSelfDualFourthPowerLattice
+public import Formalism.LocalToGlobal.GlobalTheory.GL3.PHfTrace
 public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.CurveIdealPrimeReduction
 public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.IntBasis
-public import Mathlib
-public import Formalism.LocalToGlobal.InertKernelTheory.StatementAlg
-public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.ReBase
-public import Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.FinalFree
+public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.KappaSelfDualFourthPowerLattice
+import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.QuasiPeriodConstUniqueOf
 public import Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.OrthogonalGaussModels.HermitianBlockFrames.MemLatticeFourfoldOfMemDualLattice
-public import Formalism.LocalToGlobal.GlobalTheory.GL3.PHfTrace
-public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.QuasiPeriodConstUniqueOf
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -193,8 +230,8 @@ theorem rational_coordinates : RatCoord := by
   have hc1 : ∀ w i' τ, g₁.symm (Pi.single w 1) (i', τ) =
       ∑ m, D.host.φ₀ ((c w i' m : D.host.K) : D.host.E) * TaylorLogMetric.embT D τ (b m 0 0) := by
     intro w i' τ
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hau w i' τ, ← hX w i', map_sum]
+
+    rw [hau w i' τ, ← hX w i', map_sum]
     refine Finset.sum_congr rfl fun m _ => ?_
     rw [map_mul, IntegralOrthonormalChange.embT_K D τ _ (SetLike.coe_mem _)]
   refine ⟨c, hc1, ?_, ?_⟩
@@ -223,8 +260,8 @@ theorem rational_coordinates : RatCoord := by
     have hemb : ∀ w i' τ, TaylorLogMetric.embT D τ (∑ m, ((c w i' m : D.host.K) : D.host.E) * b m 0 0) =
         g₁.symm (Pi.single w 1) (i', τ) := by
       intro w i' τ
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hc1, map_sum]
+
+      rw [hc1, map_sum]
       refine Finset.sum_congr rfl fun m _ => ?_
       rw [map_mul, IntegralOrthonormalChange.embT_K D τ _ (SetLike.coe_mem _)]
     have hG : ∀ i', D.host.φ₀ (∑ m, ∑ n, ((c w i' m : D.host.K) : D.host.E) *
@@ -249,8 +286,8 @@ theorem rational_coordinates : RatCoord := by
     have e4 := hH
     rw [Fintype.sum_prod_type] at e4
     apply D.host.φ₀.injective
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.sum_congr rfl (fun i' _ => hG i'), e4]
+
+    rw [map_sum, Finset.sum_congr rfl (fun i' _ => hG i'), e4]
     split_ifs <;> simp
 
 end Formalism.L2.KerInert

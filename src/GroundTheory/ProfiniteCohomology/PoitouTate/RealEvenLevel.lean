@@ -1,9 +1,51 @@
 module
 
-public import Mathlib
+public import GroundTheory.ProfiniteCohomology.RestrictedRamification.BaseLevel
+public import GroundTheory.ProfiniteCohomology.PoincareDuality.TensorHomZmodDualIsoZmodMulPairing
+public import GroundTheory.ProfiniteCohomology.PoitouTate.ZmodToQZCompactCohomologyResMapOfLocalInv
+import GroundTheory.ProfiniteCohomology.PoincarePairs
 public import GroundTheory.ProfiniteCohomology.PoitouTate.PoitouTateNineTermGs
 public import GroundTheory.ProfiniteCohomology.PoitouTate.RealAbstract
-public import GroundTheory.ProfiniteCohomology.RestrictedRamification.BaseLevel
+import GroundTheory.ProfiniteCohomology.RestrictedRamification.BaseInv
+import GroundTheory.ProfiniteCohomology.RestrictedRamification.BijectiveGsLocalInvRootsOfPlaces
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
 
 @[expose] public section
 
@@ -86,6 +128,36 @@ theorem bijective_compactZmodDualityMap_of_compactDualityMap {m r s : ℕ}
     (γ := (compactCohomologyResMap φ (zmodDualIso n D hD).inv s).hom.toAddMonoidHom)
     fun x y => compactZmodDualityMap_eq_compactDualityMap φ hD T h x y
 
+omit [IsDiscreteRep (dualRep D (zmodRep.{0} G n))] in
+private theorem bijective_compactZmodDualityMap_of_transport
+    {G' : Type} [Group G'] [TopologicalSpace G'] [IsTopologicalGroup G']
+    {ι' : Type} {Hv' : ι' → Type} [∀ v, Group (Hv' v)] [∀ v, TopologicalSpace (Hv' v)]
+    [∀ v, IsTopologicalGroup (Hv' v)] (ψ : ∀ v, Hv' v →ₜ* G')
+    {D' : Rep (ULift.{0} ℤ) G'} [IsDiscreteRep D'] (hD' : ∀ d : D', n • d = 0)
+    {m r s : ℕ} (h : r + s = m)
+    (T : compactCohomologyRes φ D m →+ ZMod n) (T' : compactCohomologyRes ψ D' m →+ ZMod n)
+    (eX : cohomology (zmodRep.{0} G n) r ≅ cohomology (zmodRep.{0} G' n) r)
+    (eY : compactCohomologyRes φ D s ≅ compactCohomologyRes ψ D' s)
+    (eW : compactCohomologyRes φ D m ≅ compactCohomologyRes ψ D' m)
+    (hcup : ∀ y x,
+      eW.hom.hom (compactCupRes φ (zmodMulPairingRight n D hD) ((Nat.add_comm s r).trans h) y x) =
+        compactCupRes ψ (zmodMulPairingRight n D' hD') ((Nat.add_comm s r).trans h)
+          (eY.hom.hom y) (eX.hom.hom x))
+    (hT' : Function.Surjective T') (hT : Function.Bijective T)
+    (hb : Function.Bijective (compactZmodDualityMap φ D hD T h)) :
+    Function.Bijective (compactZmodDualityMap ψ D' hD' T' h) := by
+  let aX := eX.toLinearEquiv.toAddEquiv
+  let aY := eY.toLinearEquiv.toAddEquiv
+  let aW := eW.toLinearEquiv.toAddEquiv
+  obtain ⟨c, hc, hmul⟩ := exists_isUnit_mul_of_surjective_of_bijective T'
+    (T.comp aW.symm.toAddMonoidHom) hT' (hT.comp aW.symm.bijective)
+  have hsr := (Nat.add_comm s r).trans h
+  exact bijective_of_transport
+    (bilinAddHom (compactCupRes φ (zmodMulPairingRight n D hD) hsr))
+    (bilinAddHom (compactCupRes ψ (zmodMulPairingRight n D' hD') hsr))
+    T T' aX aY aW (fun y x => (hcup y x).symm) c hc
+    (fun w => (hmul (aW w)).trans (congrArg (fun z => c * T z) (aW.symm_apply_apply w))) hb
+
 end Generic
 
 section Level
@@ -96,7 +168,7 @@ variable {K : FiniteSubfield} (S : Set (HeightOneSpectrum (𝓞 K.1))) [Fintype 
   (hK : Odd N ∨ IsTotallyComplex K.1)
 
 
-set_option synthInstance.maxHeartbeats 400000 in
+
 include hS in
 theorem bijective_gs_compactZmodDualityMap_of_duality {r s : ℕ} (h : r + s = 3) :
     Function.Bijective (compactZmodDualityMap (gsFinFamily S ιs) (gsRoots S N) (nsmul_gsRoots S N)
@@ -125,8 +197,13 @@ theorem bijective_gsCompactInv_of_duality [Nonempty S] :
 
 include hS in
 theorem gsLevelBijective_gsCompactInv [Nonempty S] :
-    GsLevelBijective (gsCompactInv S ιs N hK (subsingleton_cohomology_three_gsRoots S hS hK)) :=
-  ⟨bijective_gsCompactInv_of_duality S ιs hS hK, fun h => bijective_gs_compactZmodDualityMap_of_duality S ιs hS hK h⟩
+    GsLevelBijective (gsCompactInv S ιs N hK (subsingleton_cohomology_three_gsRoots S hS hK)) := by
+  have hInv := bijective_gsCompactInv_of_duality S ιs hS hK
+  have hPairing {r s : ℕ} (h : r + s = 3) :=
+    bijective_gs_compactZmodDualityMap_of_duality S ιs hS hK h
+  have hBoth := And.intro hInv @hPairing
+  unfold GsLevelBijective
+  with_reducible exact hBoth
 
 end Level
 
@@ -137,7 +214,7 @@ variable {K L : FiniteSubfield} [Fact (K ≤ L)] (S : Set (HeightOneSpectrum (�
   (hL : ∀ x : L.1, algebraMap L.1 ℚ̄ x ∈ maxUnramifiedOutside K.1 ℚ̄ S) (n : ℕ) [NeZero n]
 
 
-set_option maxHeartbeats 3200000 in
+
 theorem bijective_compactZmodDualityMap_gsOpenSubgroup_of_surjective
     (τ : compactCohomologyRes (mackeyFamily (gsOpenSubgroup S hL) (gsFinFamily S ιs))
       (Rep.res (gsOpenSubgroup S hL : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)).subtype (gsRoots S n)) 3 →+ ZMod n)
@@ -147,24 +224,26 @@ theorem bijective_compactZmodDualityMap_gsOpenSubgroup_of_surjective
     Function.Bijective (compactZmodDualityMap (mackeyFamily (gsOpenSubgroup S hL) (gsFinFamily S ιs))
       (Rep.res (gsOpenSubgroup S hL : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)).subtype (gsRoots S n))
       (nsmul_gsRoots S n) τ h) := by
-  have hTL := hLev.1
+  let D := Rep.res (gsOpenSubgroup S hL : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)).subtype (gsRoots S n)
+  let DL := gsRoots (K := L) (placesOver S) n
+  have hD : ∀ d : D, n • d = 0 := nsmul_gsRoots S n
+  have hDL : ∀ d : DL, n • d = 0 := nsmul_gsRoots (K := L) (placesOver S) n
   let f := (gsRootsOfUnityIso S hL n).symm
-  let eW := (gsMackeyCompactIso hL ιs f 3).toLinearEquiv.toAddEquiv
-  let eY := (gsMackeyCompactIso hL ιs f s).toLinearEquiv.toAddEquiv
-  let eX := (cohomologyIsoOfContinuousMulEquiv (gsBaseChange S hL) (zmodRepResIso (gsBaseChange S hL) n) r).toLinearEquiv.toAddEquiv
-  have hex := exists_isUnit_mul_of_surjective_of_bijective τ (TL.comp eW.symm.toAddMonoidHom) hτ
-    (hTL.comp eW.symm.bijective)
-  exact hex.elim fun c hcf => hcf.elim fun hc hfc => bijective_of_transport
-    (bilinAddHom (compactCupRes (gsFinFamily (placesOver S) (gsMackeyEmbeddings hL ιs))
-      (zmodMulPairingRight n (gsRoots (K := L) (placesOver S) n) (nsmul_gsRoots (K := L) (placesOver S) n))
-      ((Nat.add_comm s r).trans h)))
-    (bilinAddHom (compactCupRes (mackeyFamily (gsOpenSubgroup S hL) (gsFinFamily S ιs))
-      (zmodMulPairingRight n (Rep.res (gsOpenSubgroup S hL : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)).subtype
-        (gsRoots S n)) (nsmul_gsRoots S n)) ((Nat.add_comm s r).trans h)))
-    TL _ eX eY eW
-    (fun y x => (gsMackeyCompactIso_compactCupRes_zmod hL ιs n (nsmul_gsRoots (K := L) (placesOver S) n)
-      (nsmul_gsRoots S n) f ((Nat.add_comm s r).trans h) y x).symm)
-    c hc (fun w => (hfc _).trans (congrArg (c * TL ·) (eW.symm_apply_apply w))) (hLev.2 h)
+  let θ := gsBaseChange S hL
+  let eX := cohomologyIsoOfContinuousMulEquiv θ (zmodRepResIso θ n) r
+  let eC := gsMackeyCompactIso (A' := DL) (A := D) hL ιs f
+  have hcup := gsMackeyCompactIso_compactCupRes_zmod (D' := DL) (D := D) hL ιs n
+    hDL hD f ((Nat.add_comm s r).trans h)
+  have hTransport := bijective_compactZmodDualityMap_of_transport
+    (D := DL) (D' := D) (gsFinFamily (placesOver S) (gsMackeyEmbeddings hL ιs)) hDL
+    (mackeyFamily (gsOpenSubgroup S hL) (gsFinFamily S ιs)) hD h TL τ eX (eC s) (eC 3)
+  with_reducible refine hTransport ?_ hτ ?_ ?_
+  · simp only [eC, eX, cohomologyIsoOfContinuousMulEquiv_hom]
+    with_reducible exact hcup
+  · have hInv := hLev.1
+    with_reducible exact hInv
+  · have hPairing := hLev.2 h
+    with_reducible exact hPairing
 
 end OpenSubgroup
 

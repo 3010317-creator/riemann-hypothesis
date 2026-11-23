@@ -1,13 +1,53 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsThetaL2NormSquared
-public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.MajPos
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainExtension.UnipotentMoves.HermLinApply
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RiemannFormFramePeriodsEqMajorantStatement
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsLineBasis
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RiemannFormFramePeriodsEqMajorantStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainExtension.UnipotentMoves.HermLinApply
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.MajPos
 
 @[expose] public section
 
@@ -38,9 +78,9 @@ theorem polar {g : ℕ} {Hm : Matrix (Fin g) (Fin g) ℂ} (hH : Hm.IsHermitian) 
     2 * (hermForm Hm z w).re =
       (hermForm Hm (z + w) (z + w)).re - (hermForm Hm z z).re - (hermForm Hm w w).re := by
   have hs : hermForm Hm w z = (starRingEnd ℂ) (hermForm Hm z w) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hermForm, dotProduct, Matrix.mulVec, map_sum, map_mul, Finset.mul_sum, Pi.star_apply,
-      RCLike.star_def, Complex.conj_conj]
+
+    simp only [hermForm, dotProduct, Matrix.mulVec, map_sum, map_mul, Finset.mul_sum, Pi.star_apply,
+    RCLike.star_def, Complex.conj_conj]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
     rw [← hH.apply j i, RCLike.star_def]
@@ -82,8 +122,8 @@ theorem card_le (h1 : Module.finrank (𝓞 E) a.D₀.X = 1) :
   rw [Fintype.linearIndependent_iff]
   intro u hu k
   have : Ha.y (Θ.bas (∑ k : {k // k ∈ Θ.S}, u k • Pi.single (.inr k.1) 1)) = 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simpa only [map_sum, map_zsmul] using hu
+
+    simpa only [map_sum, map_zsmul] using hu
   have := (Θ.ker _).1 this k.1 k.2
   simpa [Pi.single_apply, Subtype.coe_inj] using this
 
@@ -92,8 +132,8 @@ theorem mem_span (v : (Fu.Di Ha.i).La) (hv : ∀ v', Ha.y v' = 0 → (Fu.Di Ha.i
   obtain ⟨u, rfl⟩ := Θ.bas.surjective v
   obtain ⟨h1, h2⟩ := (Θ.orth u).1 hv
   refine (Submodule.mem_span_range_iff_exists_fun ℤ).2 ⟨fun k => u (.inl k.1), ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [← map_zsmul, ← map_sum]
+
+  simp only [← map_zsmul, ← map_sum]
   congr 1
   ext (i | i)
   · by_cases hi : i ∈ Θ.S
@@ -148,8 +188,8 @@ theorem key (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityT
   let p : Fin Uw.g → Fin Uw.g → ℂ := fun j => Uw.Pm k x (γ (Θ.bas (Pi.single (.inl j) 1)))
   let q : Fin Uw.g → Fin Uw.g → ℂ := fun j => Uw.Pm k x (γ (Θ.bas (Pi.single (.inr j) 1)))
   have hq : ∀ j, q j = ∑ i, Θ.τ w i j • p i := fun j => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [p, q, hL, ← map_smul, ← map_sum]
+
+    simp only [p, q, hL, ← map_smul, ← map_sum]
     congr 1
     exact cols Θ.h (Θ.τ w) _ _ (fun i => (Θ.per w i).1) (fun i => (Θ.per w i).2) j
   have hM := riem_inv Hm (Θ.τ w) p q hq

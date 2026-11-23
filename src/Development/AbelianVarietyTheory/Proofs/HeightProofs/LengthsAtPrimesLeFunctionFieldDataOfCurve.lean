@@ -1,29 +1,60 @@
 module
 
-public import Mathlib
-public import Formalism.LocalToGlobal.ProjectiveLattices.RegXInst
-public import Formalism.LocalToGlobal.ProjectiveLattices.CurveLocInst
-public import Formalism.LocalToGlobal.ProjectiveLattices.LocRingPf
-public import Formalism.LocalToGlobal.ProjectiveLattices.TieInst
-public import Formalism.LocalToGlobal.ProjectiveLattices.RealPtPf
 public import Formalism.LocalToGlobal.ProjectiveLattices.HtXfer
 public import Formalism.LocalToGlobal.ProjectiveLattices.CompTie
-public import Formalism.LocalToGlobal.ProjectiveLattices.AxHInst
-public import Formalism.LocalToGlobal.ProjectiveLattices.SupNDataOfNonneg
-public import Formalism.LocalToGlobal.ProjectiveLattices.CombAlgOfCombBound
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.KTFiniteDimensional
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.HDiscAD
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.AlgebraMapOLInjective
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.OpIsDVR
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.ValuationResidueLemmas
-public import Development.AbelianVarietyTheory.Proofs.AlgebraicCurves.PlacesRestrictInjective
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.RangeMulStep
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.RealisationValuesEqValuedPointOrdersStatement
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.LengthQuotientLeOfOrderBound
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ValuationEqOrdAndEqZero
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.GaussRingCompletionRename
+public import Formalism.LocalToGlobal.ProjectiveLattices.CurveAsm
+public import Formalism.LocalToGlobal.ProjectiveLattices.CurveOpen
+public import Development.AbelianVarietyTheory.Proofs.AlgebraicCurves.PlacesRestrictInjective
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsRingHomTensorOmSOfPoint
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsSectionMaps
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.GaussRingCompletionRename
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.LengthQuotientLeOfOrderBound
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.RealisationValuesEqValuedPointOrdersStatement
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ValuationEqOrdAndEqZero
+import Formalism.LocalToGlobal.ProjectiveLattices.CurveLocInst
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.HDiscAD
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.KTFiniteDimensional
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.OpIsDVR
 
 @[expose] public section
 
@@ -49,9 +80,9 @@ theorem sum_sImg (y : Fin (N + 1) → Ω) (hy : ∀ k, y (j₀.succAbove k) = x 
       algebraMap (MvPolynomial (SVar D N) Ω) (OmS Ω D N) (MvPolynomial.C a) := fun a =>
     IsScalarTower.algebraMap_apply Ω (MvPolynomial (SVar D N) Ω) (OmS Ω D N) a
   rw [Fin.sum_univ_succAbove _ j₀]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [sImg, Fin.succAbove_cases_eq_insertNth, Fin.insertNth_apply_same,
-    Fin.insertNth_apply_succAbove, hy, hC, ← map_mul, ← map_sum, ← map_add]
+
+  simp only [sImg, Fin.succAbove_cases_eq_insertNth, Fin.insertNth_apply_same,
+  Fin.insertNth_apply_succAbove, hy, hC, ← map_mul, ← map_sum, ← map_add]
   congr 1
   split_ifs
   · simp only [map_mul, add_mul, Finset.sum_mul, mul_assoc]
@@ -274,8 +305,8 @@ theorem plOver_iff (d : Data B.KO ι Ω WT A) (hs : d.S1) (la : HeightOneSpectru
   exact ⟨fun hw => ⟨hw.1, h.2 hw.2⟩, fun hw => ⟨hw.1, h.1 hw.2⟩⟩
 
 
-set_option maxHeartbeats 1600000 in
-set_option synthInstance.maxHeartbeats 200000 in
+
+
 theorem ila_le (G : GlobalFamilyData X ka wL wF) (la : HeightOneSpectrum (𝓞 B.KO)) (Q : LocalPointData G la)
     (gF : ∀ Z, X.Forms →ₐ[B.KO] Ω Z) (d : Data B.KO ι Ω WT A) (hd : d.AxH 𝒜) (hs : d.S1)
     (eN : Fin (d.N + 1) ≃ Fin G.N) (eD : Fin d.del ≃ Fin G.del) (hD : d.D = WeightFamilies.dimY D j)
@@ -521,8 +552,8 @@ theorem ratio_single_mul {Ω W : Type} [Field Ω] (G : W) (a : Ω) {b : Ω} (hb 
 
 
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor in
-set_option maxHeartbeats 4000000 in
-set_option synthInstance.maxHeartbeats 400000 in
+
+
 theorem ilaTie_of_curveHyp : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : InR D j) (hG : GenFrEx (T.Q.Xo j) T.Q.c) [Fintype (Comp (T.Q.Xo j) T.Q.c)] (ka wL wF : WeightFamilies.Wt D j) (G : GlobalFamilyData (recPlus h j hj) ka wL wF) (S : Scal (recB h.toLawsCore)) (g0 : (recB h.toLawsCore).Cusp j wF), CurveHyp h j hj hG ka wL wF G S g0 → GenValInjSt h j hG → CompSplitSt h j hG → BIRSt h j hj hG G → ∀ (y : ∀ la, PtsG G la → (extAll h j hj).Pt' la) (hw : ∀ la ζ, FromW (E := extAll h j hj) (hM := intAtExt_extAll h j hj) ζ (y la ζ)), (∀ la, (secQ (E := extAll h j hj) (hM := intAtExt_extAll h j hj) (y la) (fun ζ => (hw la ζ).toSecPt) g0).InCurve) → (∀ la, (secQ (E := extAll h j hj) (hM := intAtExt_extAll h j hj) (y la) (fun ζ => (hw la ζ).toSecPt) g0).InTie S) → ∀ (δ : ∀ Z : Comp (T.Q.Xo j) T.Q.c, AddValuation (Om Z) (WithTop ℤ) → Ix (T.Q.Dw j) → ℤ), OrdTie hG δ (trivialClassCondition (T.Q.Xo j) T.Q.c) (fun _ => Unit) (fun _ _ _ _ _ => True) → ∀ (d : ReciprocityTheory.ChartRestriction.G.T0.Data T.Q.c.F (Comp (T.Q.Xo j) T.Q.c) (fun Z => Om Z) (WTZ D.host.E) (fun Z => AC Z)) (hd : d.AxH (fun Z => AG Z)) (hs : d.S1) (eN : Fin (d.N + 1) ≃ Fin G.N), d.D = WeightFamilies.dimY D j → (∀ Z v, d.ord Z v = ordC (δ Z v) v) → d.wL = wtZ (wtA wL) wL.n → d.wF = wtZ (wtA wF) wF.n → (∀ k, d.w k = valC hG (wtA wL) wL.n (G.w (eN k)).1) → ∀ (eD : Fin d.del ≃ Fin G.del), (∀ k, d.thp (hd.sel k) = valC hG (wtA wF) wF.n (G.th' (eD k)).1) → ∀ (Gc PH Prw Pet : ℝ), IlaTie (B := (recB h.toLawsCore)) d hd hs G (fun la => (secQ (E := extAll h j hj) (hM := intAtExt_extAll h j hj) (y la) (fun ζ => (hw la ζ).toSecPt) g0)) Gc PH Prw Pet := by
   intro D T h j hj hG _ ka wL wF G S g0 hH hInj hSplit hBIR y hw hCurve hTie δ hOrd d hd hs eN hD hdo hwL hwF hdw
     eD hth Gc PH Prw Pet la

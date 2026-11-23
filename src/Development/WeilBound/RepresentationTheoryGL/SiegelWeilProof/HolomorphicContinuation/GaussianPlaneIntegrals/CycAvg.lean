@@ -1,8 +1,52 @@
 module
 
-public import Mathlib
-public import Formalism.RealPlaceAnalysis.SmoothOnGVIff
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.GaussianPlaneIntegrals.CycAvgA
+public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.GaussianPlaneIntegrals.AssemblyAlt
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Algebra.Group.Units
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -41,8 +85,8 @@ theorem totalDegree_var (u : Matrix (Fin m) (Fin m) ℂ) (k : Fin m × Fin n × 
 
 theorem totalDegree_subR (u : Matrix (Fin m) (Fin m) ℂ) (P : PX m n) : (subR u P).totalDegree ≤ P.totalDegree := by
   conv_lhs => rw [P.as_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   refine (totalDegree_finsetSum _ _).trans (Finset.sup_le fun s hs => ?_)
   rw [subR, aeval_monomial, algebraMap_eq]
   refine (totalDegree_mul _ _).trans ?_
@@ -124,9 +168,9 @@ theorem unitary_of_mem {w : Matrix (Fin m) (Fin m) ℂ} (h : w ∈ Formalism.REA
 
 theorem evX_Qp (i j : Fin n) (x : Fin m → Fin n → ℂ) :
     evX (Qp ε i j) x = star (fun b => x b i) ⬝ᵥ (Matrix.diagonal (sgn ε) *ᵥ fun b => x b j) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Qp, Qb, evX_eq, map_sub, map_sum, map_mul, eval_X, pt, if_true, Bool.false_eq_true, if_false,
-    Finset.sum_filter, dotProduct, Matrix.mulVec_diagonal, Pi.star_apply]
+
+  simp only [Qp, Qb, evX_eq, map_sub, map_sum, map_mul, eval_X, pt, if_true, Bool.false_eq_true, if_false,
+  Finset.sum_filter, dotProduct, Matrix.mulVec_diagonal, Pi.star_apply]
   rw [← Finset.sum_sub_distrib]
   refine Finset.sum_congr rfl fun a _ => ?_
   cases h : ε a <;> simp [sgn, h, pt]
@@ -190,8 +234,8 @@ theorem subR_mono (v : Matrix (Fin m) (Fin m) ℂ) (s : (Fin m × Fin n × Bool)
 theorem coeff_subR_sum (v : Matrix (Fin m) (Fin m) ℂ) (S : Finset ((Fin m × Fin n × Bool) →₀ ℕ))
     (a : ((Fin m × Fin n × Bool) →₀ ℕ) → ℂ) (t : (Fin m × Fin n × Bool) →₀ ℕ) :
     AddMonoidAlgebra.coeff (subR v (∑ s ∈ S, monomial s (a s) : PX m n)) t = ∑ s ∈ S, a s * AddMonoidAlgebra.coeff (subR v (monomial s 1 : PX m n)) t := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, coeff_sum]
+
+  rw [map_sum, coeff_sum]
   refine Finset.sum_congr rfl fun s _ => ?_
   rw [subR_mono, coeff_C_mul]
 
@@ -222,8 +266,8 @@ theorem mom_sum_smul {c : ℝ} (hc : 0 < c) (S : Finset ((Fin m × Fin n × Bool
   unfold mom
   have e : ∀ x, evX (∑ s ∈ S, a s • M s) x * gs c x = ∑ s ∈ S, a s * (evX (M s) x * gs c x) := by
     intro x
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [evX_eq, map_sum, smul_eq_C_mul, map_mul, eval_C, Finset.sum_mul, mul_assoc]
+
+    simp only [evX_eq, map_sum, smul_eq_C_mul, map_mul, eval_C, Finset.sum_mul, mul_assoc]
   simp_rw [e]
   rw [integral_finsetSum _ fun s _ => (integrable_evX_gs hc (M s)).const_mul (a s)]
   simp_rw [integral_const_mul]

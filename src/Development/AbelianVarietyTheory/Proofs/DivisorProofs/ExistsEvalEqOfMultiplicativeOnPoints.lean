@@ -1,7 +1,62 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TensorEqZeroOfForallGeometricPoint
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.FieldTheory.IsSepClosed
+public import Mathlib.RingTheory.Artinian.Ring
+public import Mathlib.RingTheory.TensorProduct.Free
 
 @[expose] public section
 
@@ -100,8 +155,8 @@ theorem _root_.GlobalTheory.exists_eval_eq_of_multiplicative_on_points : ∀ (O 
   have hevC : ∀ (z : C ⊗[O] A →ₐ[C] C) (a : Module.Free.ChooseBasisIndex O A → C),
       z (∑ i, a i • eC i) = ∑ i, a i * res z (e i) := by
     intro z a
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [eC, res, map_sum, Algebra.TensorProduct.basis_apply]
+
+    simp [eC, res, map_sum, Algebra.TensorProduct.basis_apply]
   have hcoord : ∀ a : Module.Free.ChooseBasisIndex O A → C,
       (∀ x : A →ₐ[O] C, ∑ i, a i * x (e i) = 0) → a = 0 := by
     intro a ha
@@ -120,8 +175,8 @@ theorem _root_.GlobalTheory.exists_eval_eq_of_multiplicative_on_points : ∀ (O 
   have hval : ∀ x, κ x = ∑ i, c i * x (e i) := by
     intro x
     have h1 : ext x b' = κ x := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [b', map_sum, map_smul, smul_eq_mul]
+
+      simp only [b', map_sum, map_smul, smul_eq_mul]
       rw [Finset.sum_eq_single (ext x)]
       · rw [hw1, mul_one, hres]
       · intro z _ hz
@@ -137,10 +192,10 @@ theorem _root_.GlobalTheory.exists_eval_eq_of_multiplicative_on_points : ∀ (O 
         ∑ i, ∑ j, algebraMap O C (m k i j) * (x (e i) * y (e j)) := by
     intro x y k
     conv_lhs => rw [← (e.tensorProduct e).sum_repr (Δ (e k))]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, Module.Basis.tensorProduct_apply,
-      Algebra.smul_def, Fintype.sum_prod_type, map_mul, AlgHom.commutes,
-      Algebra.TensorProduct.lift_tmul, m]
+
+    simp only [map_sum, map_smul, Module.Basis.tensorProduct_apply,
+    Algebra.smul_def, Fintype.sum_prod_type, map_mul, AlgHom.commutes,
+    Algebra.TensorProduct.lift_tmul, m]
   have key : ∀ x y : A →ₐ[O] C, ∑ j, (∑ i, (∑ k, c k * algebraMap O C (m k i j) - c i * c j) *
       x (e i)) * y (e j) = 0 := by
     intro x y
@@ -181,8 +236,8 @@ theorem _root_.GlobalTheory.exists_eval_eq_of_multiplicative_on_points : ∀ (O 
     IsIntegrallyClosed.isIntegral_iff.mp (IsIntegral.of_mem_of_fg S hfg _ (hcM i))
   choose o ho using hint
   refine ⟨∑ i, o i • e i, fun x => ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hval, map_sum]
+
+  rw [hval, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [map_smul, Algebra.smul_def, ho]
 

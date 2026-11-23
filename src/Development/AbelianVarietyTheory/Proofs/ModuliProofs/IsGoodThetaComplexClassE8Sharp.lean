@@ -1,18 +1,61 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.FiniteHomogeneousInf
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HeckeKer
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.GoodThetaClassOfLatticeFamiliesStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.E8SharpClassPrimitiveIsoClosedStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPeriodsEighthPowerEvenUnimodularBundleStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EighthPowerThetaObjectOfUniformisationStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TransportThetaLevelUniformisationCoordinates
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.ExistsArBaseAway
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.BijectiveTensorOmegaStd
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.E8SharpClassPrimitiveIsoClosedStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EighthPowerThetaObjectOfUniformisationStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPeriodsEighthPowerEvenUnimodularBundleStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.GoodThetaClassOfLatticeFamiliesStatement
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsOpenPosDefOfContinuous
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TransportThetaLevelUniformisationCoordinates
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -46,8 +89,8 @@ theorem exists_hom_representatives {ν : Type} [Fintype ν] (k : ℕ) (hk : k �
     ext q; simp [Finset.sum_apply, Pi.single_apply]
   have key : ∀ q, ((m x q : ℤ) : ZMod k) = ((s i x q : ℤ) : ZMod k) := by
     intro q
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hx, map_sum, map_sum]
+
+    rw [hx, map_sum, map_sum]
     simp only [map_zsmul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Int.cast_sum, Int.cast_mul]
     refine Finset.sum_congr rfl fun p _ => ?_
     rw [congrFun (congrFun hi p) q]
@@ -109,9 +152,9 @@ theorem tensor_form_adjoint {h : ℕ} (G A A' : Matrix (Fin 8) (Fin 8) ℤ)
       = ∑ u, ∑ v, G u v * omegaStd (x u) (∑ s, A' v s • y s) := by
   have h1 : ∑ u, ∑ v, G u v * omegaStd (∑ s, A u s • x s) (y v)
       = ∑ s, ∑ v, (A.transpose * G) s v * omegaStd (x s) (y v) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [← omegaBil_apply, map_sum, LinearMap.sum_apply, map_zsmul, LinearMap.smul_apply,
-      smul_eq_mul, Matrix.mul_apply, Matrix.transpose_apply, Finset.mul_sum, Finset.sum_mul]
+
+    simp only [← omegaBil_apply, map_sum, LinearMap.sum_apply, map_zsmul, LinearMap.smul_apply,
+    smul_eq_mul, Matrix.mul_apply, Matrix.transpose_apply, Finset.mul_sum, Finset.sum_mul]
     rw [Finset.sum_comm]
     conv_rhs => rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun v _ => ?_
@@ -119,9 +162,9 @@ theorem tensor_form_adjoint {h : ℕ} (G A A' : Matrix (Fin 8) (Fin 8) ℤ)
     refine Finset.sum_congr rfl fun s _ => Finset.sum_congr rfl fun u _ => by ring
   have h2 : ∑ u, ∑ v, G u v * omegaStd (x u) (∑ s, A' v s • y s)
       = ∑ u, ∑ s, (G * A') u s * omegaStd (x u) (y s) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [← omegaBil_apply, map_sum, map_zsmul,
-      smul_eq_mul, Matrix.mul_apply, Finset.mul_sum, Finset.sum_mul]
+
+    simp only [← omegaBil_apply, map_sum, map_zsmul,
+    smul_eq_mul, Matrix.mul_apply, Finset.mul_sum, Finset.sum_mul]
     refine Finset.sum_congr rfl fun u _ => ?_
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun s _ => Finset.sum_congr rfl fun v _ => by ring
@@ -150,12 +193,12 @@ theorem action_on_basis {h g : ℕ}
       rw [hz, LinearEquiv.apply_symm_apply]
     rw [← this]
     conv_lhs => rw [hx]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_zsmul]
+
+    simp only [map_sum, map_zsmul]
   funext u
   have h2 := congrArg m (congrFun h1 u)
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Finset.sum_apply, Pi.smul_apply, map_sum, map_zsmul] at h2 ⊢
+
+  simp only [Finset.sum_apply, Pi.smul_apply, map_sum, map_zsmul] at h2 ⊢
   exact h2
 
 theorem goodClass_sharpClass : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P : Out.PolAV S) (M : LB P.A.left), M.IsLB → ∃ t : LB.Gen (Theta P.A M), t.IsGen) → ThetaUnifAV → ∀ (h g : ℕ) (W : Matrix (Fin 8) (Fin 8) ℤ) (J : Type) [Finite J] (a : J → Matrix (Fin 8) (Fin 8) ℤ) (w w' : J) (bas : (Fin (2 * g) → ℤ) ≃ₗ[ℤ] (Fin 8 → (Fin h ⊕ Fin h → ℤ))), IsE8 W → IsSharpBasis W bas → (W + W.transpose) * a w = W → (W + W.transpose) * a w' = W.transpose → (∀ u v, ∃ j, a j = Matrix.single u v 1) → ∃ (Mat : J → Matrix (Fin (2 * g)) (Fin (2 * g)) ℤ) (κ : ℕ), ∀ n : ℕ, n.Prime → Odd n → ∃ j₀ : ℕ, ∀ j ≥ j₀, ∀ N' : ℕ, N' = n ^ j → ∀ (o : Type) [CommRing o] (b : TBase o (N' ^ 2)) (em : o →+* ℂ), GoodClass em (SharpClass (b := b) W a bas em) Mat κ w w' (h * (h + 1) / 2) := by

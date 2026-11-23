@@ -1,11 +1,48 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EquivOfISupRange
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfIsOpen
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexProd
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EquivOfISupRange
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TrOnMapOfInjective
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleModule.Isotypic
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -130,19 +167,19 @@ theorem exists_factor (σ : Representation ℂ H W) [σ.IsIrreducible] (τ : Rep
   have hsum : ∀ x, x = ∑ i, (s i).toLinearMap ((p i).toLinearMap x) := fun x => by
     rw [← sub_eq_zero]
     refine hp _ fun i => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sub, map_sum, hps]
+
+    simp only [map_sub, map_sum, hps]
     simp
   choose b hb using fun i j => schur σ K h0 ((p j).comp (B.comp (s i)))
   have hb' : ∀ i j w, (p j).toLinearMap (B.toLinearMap ((s i).toLinearMap w)) = b i j • w := hb
   refine ⟨∑ i, b i i, fun A a ha hA => ?_⟩
   have hform : ∀ y, A (B.toLinearMap y) = ∑ i, ∑ j, b i j • (s j).toLinearMap (a ((p i).toLinearMap y)) := fun y => by
     conv_lhs => rw [hsum y]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, map_sum]
+
+    rw [map_sum, map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hsum (B.toLinearMap _), map_sum]
+
+    rw [hsum (B.toLinearMap _), map_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [hb', map_smul, map_smul, hA]
   have hY : ∀ y ∈ fixed τ K, (A ∘ₗ B.toLinearMap) y ∈ fixed τ K := fun y hy => by
@@ -166,11 +203,11 @@ theorem exists_factor (σ : Representation ℂ H W) [σ.IsIrreducible] (τ : Rep
     split_ifs
     · rfl
     · exact map_zero a
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [h1, map_sum, Finset.sum_mul]
+
+  rw [h1, map_sum, Finset.sum_mul]
   refine Finset.sum_congr rfl fun i _ => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Finset.sum_eq_single i]
+
+  rw [map_sum, Finset.sum_eq_single i]
   · rw [map_smul, LinearMap.trace_comp_comm', h2, if_pos rfl, smul_eq_mul]
   · intro j _ hj
     rw [map_smul, LinearMap.trace_comp_comm', h2, if_neg hj, map_zero, smul_zero]
@@ -198,8 +235,8 @@ theorem trOn_cross {V : Type} [AddCommGroup V] [Module ℂ V] (σ : Representati
   have hli : LinearIndependent ℂ fun i => (⟨(s i).toLinearMap u, map_fixed _ K hu⟩ : fixed τ K) := by
     refine LinearIndependent.of_comp (fixed τ K).subtype (linearIndependent_iff'.2 fun T g hg i hi => ?_)
     have := congrArg (p i).toLinearMap hg
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [Function.comp_apply, Submodule.subtype_apply, map_sum, map_smul, hps, map_zero] at this
+
+    simp only [Function.comp_apply, Submodule.subtype_apply, map_sum, map_smul, hps, map_zero] at this
     rw [Finset.sum_eq_single i (fun j _ hj => by rw [if_neg hj, smul_zero]) (fun h => absurd hi h), if_pos rfl] at this
     exact (smul_eq_zero.1 this).resolve_right hu0
   haveI : Finite ι := hli.finite
@@ -220,8 +257,8 @@ theorem levOp_nat {X : Type} [AddCommGroup X] [Module ℂ X] (σ : Representatio
     levOp τ K₀ K a LinearMap.id (s w) = s (levOp σ K₀ K a LinearMap.id w) := by
   rw [LevOpTmul.levOp_apply τ K₀ K a _ ha.toFinset (fun q hq => by simpa using hq),
     LevOpTmul.levOp_apply σ K₀ K a _ ha.toFinset (fun q hq => by simpa using hq)]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_smul, map_sum, hs, LinearMap.id_apply]
+
+  simp only [map_smul, map_sum, hs, LinearMap.id_apply]
 
 variable (ι : H →* G) (r : G →* H) (hr : ∀ h, r (ι h) = h) (hc : ∀ x ∈ r.ker, ∀ h, Commute x (ι h))
   {U : Subgroup G} {K : Subgroup H} (hK1 : ∀ k ∈ K, ι k ∈ U) (hK2 : ∀ k ∈ U, r k ∈ K)

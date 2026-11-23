@@ -1,12 +1,61 @@
 module
 
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.EpC
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.Ired
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.CoEvLow
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.CoSurj
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.CoMvps
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.CaMvpsCot
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DetLocus
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.SelmerSpannedByKappaLaurent
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosure
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.CaDetCore
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.CaMvpsCot
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.CoEvLow
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.CoMvps
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.CoSurj
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.Ired
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -73,8 +122,8 @@ private theorem cotangent_independent_of_residues (O : Type) [CommRing O] [IsDom
       funext a
       have h4 := h2 (some (Sum.inl a))
       rw [GlobalTheory.FormalIsogeny.mem_maximalIdeal_iff_constantCoeff, ← residue_eq_zero_iff] at h4
-      set_option synthInstance.maxHeartbeats 100000 in
-        simpa [Finset.sum_apply, map_sum, map_mul] using h4
+
+      simpa [Finset.sum_apply, map_sum, map_mul] using h4
     · exact h2 (some (Sum.inr j))
 
 theorem UpperTheory.V.Pa.presOut1 :
@@ -160,8 +209,8 @@ theorem UpperTheory.V.Pa.presOut1 :
     simp only [ζ, Matrix.of_apply, sub_smul, Finset.sum_sub_distrib, hwe, sub_self]
   have hzζ : ∀ i j, F (z i j) = algebraMap B A (ζ i j) := by
     intro i j
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [z, ζ, Matrix.of_apply, map_sub, map_sum, map_mul, hC', hF1, hFv]
+
+    simp only [z, ζ, Matrix.of_apply, map_sub, map_sum, map_mul, hC', hF1, hFv]
   have hann := det_mem_annihilator_of_relations ζ m hm hζ
   have hdetQ : ζ.det ∈ Q := by
     rcases hQr with h | h
@@ -190,8 +239,8 @@ theorem UpperTheory.V.Pa.presOut1 :
     rintro _ ⟨i, rfl⟩
     show F (∑ j, z i j * MvPowerSeries.X (Sum.inr j)) = 0
     have := congrArg Subtype.val (hζ i)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_mul, hzζ, hF2, ← Algebra.smul_def]
+
+    simp only [map_sum, map_mul, hzζ, hF2, ← Algebra.smul_def]
     simpa using this
   · rw [hdim]
     refine le_trans (le_of_eq ?_) (add_le_add_left hd _)

@@ -1,12 +1,53 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FlatSpaceComponents
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatSelfDualOfUnimod
+import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.AdelicUnitaryGroups
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralChangeBaseFrameOrthonormal
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSelfDualAdelicFrameLevelOne
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HalfPrincipalAndSplit
-public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.LevGapSplit
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FiniteAdeleStrongApproximationModNat
 public import Formalism.LocalToGlobal.Divisibility.DefGroupLemmas
+import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsDual
+public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.LevGapSplit
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -230,8 +271,8 @@ theorem mem_hat_of_idem (h : Λ.FG) {y : Fin n → EAf D} (hy : ∀ w : Pl D.hos
       rw [← hl] at hx
       obtain ⟨c, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun _).1 hx
       refine ⟨fun j => inc D (c j), fun j => (inc_mem_iff _).2 ⟨c j, rfl⟩, funext fun i => ?_⟩
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [Finset.sum_apply, Pi.smul_apply, map_sum, smul_eq_mul, ← RingHom.map_mul]
+
+      simp only [Finset.sum_apply, Pi.smul_apply, map_sum, smul_eq_mul, ← RingHom.map_mul]
       rfl
     · rintro _ _ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩
       exact ⟨c + d, fun j => add_mem (hc j) (hd j), by simp only [Pi.add_apply, add_smul, Finset.sum_add_distrib]⟩
@@ -243,9 +284,9 @@ theorem mem_hat_of_idem (h : Λ.FG) {y : Fin n → EAf D} (hy : ∀ w : Pl D.hos
     funext i
     refine cpt_ext fun Q => ?_
     have := congrArg (cpt Q) (congrFun (hy' Q) i)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [Finset.sum_apply, Pi.smul_apply, map_sum, smul_eq_mul, RingHom.map_mul, cpt_idem_self, one_mul,
-      hd'] at this ⊢
+
+    simp only [Finset.sum_apply, Pi.smul_apply, map_sum, smul_eq_mul, RingHom.map_mul, cpt_idem_self, one_mul,
+    hd'] at this ⊢
     exact this
   rw [this]
   exact (Formalism.L2.Herm.hatL (F := D.host.F) Λ).sum_mem fun j _ =>
@@ -428,8 +469,8 @@ theorem hA_sub_right (x y y' : Fin V.rank → EAf D) : hA V x (y - y') = hA V x 
   simp only [hA, Formalism.UG.hform, Pi.sub_apply, RingHom.map_sub, sub_mul, Finset.sum_sub_distrib]
 
 theorem cjA_hA (x y : Fin V.rank → EAf D) : cjA D (hA V x y) = hA V y x := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hA, Formalism.UG.hform, map_sum, RingHom.map_mul, cjA_cjA, Matrix.map_apply, cjA_inc]
+
+  simp only [hA, Formalism.UG.hform, map_sum, RingHom.map_mul, cjA_cjA, Matrix.map_apply, cjA_inc]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   rw [show star (V.gram j i) = V.gram i j from V.herm.eq _ _]

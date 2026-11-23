@@ -1,16 +1,64 @@
 module
 
-public import Mathlib
-public import Formalism.LocalToGlobal.CharacterGerms.NondegenerateCharts
-public import Formalism.LocalToGlobal.CharacterGerms.RowTieSelf
-public import Formalism.LocalToGlobal.CharacterGerms.BlockAdmissibleChart
-public import Formalism.LocalToGlobal.CharacterGerms.NegMem
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF
-public import Development.AbelianVarietyTheory.Definitions.TeichmullerDepth.HasTeich
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AddCurveStableOfIntegralGaugedFormalGroupLaw
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AdjointEndPairMemGaugedCurveLogarithms
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FrobeniusMemTypicalCurveSet
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IntSOfMulEqOne
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AddCurveStableOfIntegralGaugedFormalGroupLaw
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FrobeniusMemTypicalCurveSet
+import Formalism.LocalToGlobal.CharacterGerms.ConstMemTypeSetOfNonneg
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.CalcExp
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -332,8 +380,8 @@ theorem rescale_other_powerSeriesInOneOfTwoVariables {k j : Fin 2} (hj : j ≠ k
 theorem coeff_trace {l : ℕ} (hl : l.Prime) {ζ : C} (hζ : IsPrimitiveRoot ζ l) (k : Fin 2)
     (F : MvPowerSeries (Fin 2) C) (e : Fin 2 →₀ ℕ) :
     coeff e (∑ j ∈ Finset.range l, rescale (sc k (ζ ^ j)) F) = if l ∣ e k then (l : C) * coeff e F else 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, coeff_sc, ← Finset.sum_mul]
+
+  simp only [map_sum, coeff_sc, ← Finset.sum_mul]
   split_ifs with hn
   · obtain ⟨q, hq⟩ := hn
     have : ∀ j, (ζ ^ j) ^ (e k) = 1 := fun j => by
@@ -505,8 +553,8 @@ theorem hAt_lin (H : RLaw X V) {τ : Type} {w : τ → ℕ} {m : ℕ} {a b : κ 
       fin_cases g
       · simpa [wz] using ordGe_zero _
       · simpa [wz] using hw' x) (ordGe_scale (m := m) (taylor (h_ord H)))
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [subst_sub hP, ← coe_substAlgHom hP, map_sum] at this
+
+    rw [subst_sub hP, ← coe_substAlgHom hP, map_sum] at this
     convert this using 2
     · rw [coe_substAlgHom hP]; rfl
     · refine Finset.sum_congr rfl fun j _ => ?_
@@ -628,8 +676,8 @@ theorem core (H : RLaw X V) {γ γ' : κ → PowerSeries C} (hγ : IsCv V γ) (h
       ∑ j, ((V.l : C) * PowerSeries.coeff (V.l * V.l) (alongCv γ (X.lg j))) *
         PowerSeries.coeff V.l (alongCv γ' (dz j X.h)) := by
     have := hAt_lin H hb hS0 hSlo (ee (V.l * V.l) V.l) (by rw [weight_wv, ee_zero]; omega)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sub, sub_eq_zero, map_sum] at this
+
+    rw [map_sub, sub_eq_zero, map_sum] at this
     rw [this]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [hSl, hsa, hsb, coeff_mul_sep _ (fun e he => coeff_powerSeriesInOneOfTwoVariables_other_ne (by decide) _ e he), coeff_trace hl hζ,
@@ -642,8 +690,8 @@ theorem core (H : RLaw X V) {γ γ' : κ → PowerSeries C} (hγ : IsCv V γ) (h
     have := hAt_lin H (w := wv 1) (m := 1) ha hb
       (fun i => by rw [hsb]; exact powerSeriesInOneOfTwoVariables_mem_weightedOrderGe 1 (constantCoeff_subst_zero (τ := Unit) hγ0' (lg_const H i)))
       (ee V.l 1) (by rw [weight_wv, ee_one]; omega)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sub, sub_eq_zero, map_sum] at this
+
+    rw [map_sub, sub_eq_zero, map_sum] at this
     rw [this]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [hsa, hsb, mul_comm, coeff_mul_sep (fun e he => coeff_powerSeriesInOneOfTwoVariables_other_ne (by decide) _ e he)
@@ -662,8 +710,8 @@ theorem coeff_sg (X : RawChart C d I κ) {γ : κ → PowerSeries C} (hγ : ∀ 
   have : alongCv γ (X.sg v) = -∑ j, v j • alongCv γ (dz j X.h) := by
     unfold alongCv
     rw [CvEnd.sg_eq, ← CvEnd.subst_sum_smul hS, ← coe_substAlgHom hS, map_neg]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [this, map_neg, map_sum]
+
+  rw [this, map_neg, map_sum]
   simp only [PowerSeries.coeff_smul, smul_eq_mul]
 
 theorem good_curve [NeZero d] {g : Fin 2} (H : X.CartHyp V g) {a : ZMod d} {w : I g → C}
@@ -711,8 +759,8 @@ theorem good_curve [NeZero d] {g : Fin 2} (H : X.CartHyp V g) {a : ZMod d} {w : 
     rw [PowerSeries.coeff_smul, c2, smul_eq_mul, Cart.V2]
     ring
   · have e := congrArg (PowerSeries.coeff V.l) (h2 q)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [c1, map_add (f := _), map_sub, map_sum, Finset.sum_eq_zero, add_zero] at e
+
+    rw [c1, map_add (f := _), map_sub, map_sum, Finset.sum_eq_zero, add_zero] at e
     · rw [Cart.c0', e]; ring
     · intro c _
       split_ifs

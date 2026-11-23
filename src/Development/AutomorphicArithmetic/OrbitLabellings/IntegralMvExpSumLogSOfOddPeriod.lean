@@ -1,10 +1,63 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicArithmetic.OrbitLabellings.ColDefs
 public import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.StatementE
-public import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.SingleLetterBiextensionRelation
+public import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.EqZeroOfPowEqOne
 public import Formalism.GaussJetBounds.GaussJetProofs.Transfer
+public import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.BiextensionHypothesesOfLevelOne
+public import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.BiextensionRelation
+import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.BiextensionHypothesesOfConditions
+import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.ComplexMultiplicationFieldData
+import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.SubstFirstCoboundaryThree
+import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KurComplete
+import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FinalS
+import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FrobeniusLiftNorms.CoeffSubstLgFOfDegreeOne
+import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FrobeniusLiftNorms.LogarithmEquivalence
+import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FrobeniusLiftNorms.TopsChoicePartB
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -165,8 +218,8 @@ private theorem map_logS {K K' Lt β : Type} [Field K] [Field K'] [DecidableEq L
   ext n
   rw [MvPowerSeries.coeff_map, MvPowerSeries.coeff_apply, MvPowerSeries.coeff_apply]
   simp only [logS, Formalism.DworkPowerSeriesWeights.genLog]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [map_sum, apply_ite j]
+
+  simp [map_sum, apply_ite j]
 
 private theorem cc_logS {K Lt β : Type} [Field K] [DecidableEq Lt] [DecidableEq β] {l : ℕ} (hl : 2 ≤ l) (i : ℕ)
     (pos : Lt → ℕ → Lt) (v : Lt × β) : constantCoeff (logS (K := K) l i pos v) = 0 := by
@@ -230,8 +283,8 @@ private theorem diagJ (K0 K : Type) [NormedField K0] [IsUltrametricDist K0] [Cha
   · rw [← Formalism.InvariantFactorPaths.G7.FormalGroupLaws.map_lgF j l,
       ← PowerSeries.map_subst (PowerSeries.HasSubst.of_constantCoeff_zero (hx0 ρ)), hxL ρ]
     unfold linEL linS
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Pair.subst_sum hs]
+
+    rw [map_sum, Pair.subst_sum hs]
     refine Finset.sum_congr rfl fun s _ => ?_
     split_ifs
     · rw [map_mul, MvPowerSeries.map_C, MvPowerSeries.subst_mul hs, MvPowerSeries.subst_C,
@@ -241,8 +294,8 @@ private theorem diagJ (K0 K : Type) [NormedField K0] [IsUltrametricDist K0] [Cha
   · have hm := (Formalism.InvariantFactorPaths.G7.Top.mapSimeq K0 K (Lt × β) j hj).1 _ _ hsim
     have e1 : map j (∑ ρ, PowerSeries.subst (x ρ) ph)
         = ∑ ρ, PowerSeries.subst (map j (x ρ)) (PowerSeries.map j ph) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       exact Finset.sum_congr rfl fun ρ _ =>
         PowerSeries.map_subst (PowerSeries.HasSubst.of_constantCoeff_zero (hx0 ρ)) ph
     have e2 : map j (C ((2 : K0)⁻¹) * subst L0 (beMean (d := 2 * i) l σ be0 om (fun r => σ^[i] (om r)) ζ))
@@ -319,8 +372,8 @@ theorem UpperTheory.integral_mvExp_sum_logS_of_odd_period :
       linS j σ i pos (σ^[i] (om e.1.2)) e.1.1.1 e.2) := by
     refine MvPowerSeries.hasSubst_of_constantCoeff_zero (fun e => ?_)
     unfold linS
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_eq_zero fun s _ => ?_
     split_ifs
     · rw [map_mul, MvPowerSeries.constantCoeff_X, mul_zero]
@@ -343,8 +396,8 @@ theorem UpperTheory.integral_mvExp_sum_logS_of_odd_period :
       PowerSeries.coeff_zero_eq_constantCoeff_apply, hphdef, FAux.cc_phFF hl2, map_zero]
   have hP0 : constantCoeff (∑ e : ({r // r ∈ R} × Fin i) × β,
       (at1 e (PowerSeries.map j ph) : MvPowerSeries (({r // r ∈ R} × Fin i) × β) ℂ_[p])) = 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     exact Finset.sum_eq_zero fun e _ => Pair.constantCoeff_inVar_eq_zero e hph0
   have hW := Formalism.InvariantFactorPaths.G7.LogarithmEquivalence.integral_subst' hy0 hyI hI
   rw [MvPowerSeries.subst_mul hys, Formalism.InvariantFactorPaths.G7.LogarithmEquivalence.subst_mvExp' hys hP0, Pair.subst_sum hys] at hW
@@ -369,13 +422,13 @@ theorem UpperTheory.integral_mvExp_sum_logS_of_odd_period :
   have hbeS0 : constantCoeff (beS i pos R (fun _ => (-1 : ℂ_[p])) (fun _ => map j bM) :
       MvPowerSeries (Lt × β) ℂ_[p]) = 0 := by
     unfold beS
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_eq_zero fun r _ => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [MvPowerSeries.smul_eq_C_mul, map_mul, map_sum,
-      Finset.sum_eq_zero (fun b _ => MvPowerSeries.constantCoeff_subst_eq_zero (hXs r b)
-        (fun s => MvPowerSeries.constantCoeff_X _) hbe0c), mul_zero]
+
+    rw [MvPowerSeries.smul_eq_C_mul, map_mul, map_sum,
+    Finset.sum_eq_zero (fun b _ => MvPowerSeries.constantCoeff_subst_eq_zero (hXs r b)
+      (fun s => MvPowerSeries.constantCoeff_X _) hbe0c), mul_zero]
   have hsub : subst Λ (beS i pos R (fun _ => (-1 : ℂ_[p])) (fun _ => map j bM)) = -Q2 := by
     unfold beS
     rw [Pair.subst_sum hΛs, hQ2def, ← Finset.sum_coe_sort R, ← Finset.sum_neg_distrib]
@@ -387,8 +440,8 @@ theorem UpperTheory.integral_mvExp_sum_logS_of_odd_period :
     simp only [MvPowerSeries.subst_X hΛs]
     rw [show ((-1 : ℂ_[p]) / 2) = -(2⁻¹) by ring, map_neg, neg_mul]
   have hQc : constantCoeff Q = 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hQdef, map_sum]
+
+    rw [hQdef, map_sum]
     exact Finset.sum_eq_zero fun e _ => Pair.cc_ps (hy0 e) hph0
   have hQ2c : constantCoeff Q2 = 0 := by
     have := hQ.1

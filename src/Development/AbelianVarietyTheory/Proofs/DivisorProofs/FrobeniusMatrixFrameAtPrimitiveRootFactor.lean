@@ -1,11 +1,62 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankOfMulEqOne
+public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.GradedSeries
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeffEqOfApply
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstantCoeffExpSub
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EventuallyClosedOfDictClosed
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CompletionLinesOfLatticeAtLevels
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeExpansionAtLowLevelPoints
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConcretePeriodDeRhamModuleFinrankLe
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEqOfExhaustive
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankDcrisLetterDeRhamComponentEqDim
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankSpanImageEqCard
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ISupIndepDdRE
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsDeRhamOfIsCrystallineSpan
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeAtLevelsIffUpToLevel
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MapDcrisEqDdRCrystallineUnramified
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanIsLinesOfGraded
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeExpansionAtLowLevelPoints
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLevelExpansionAtRootOfUnity
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -71,8 +122,8 @@ theorem matrices_of_lines {A N : Type} [CommRing A] [AddCommGroup N] [Module A N
   let E : Mx F⟦X⟧ n n := Matrix.of fun j k => e (b k) j
   have hE : ∀ a : Fin n → A, e (∑ m, a m • b m) = E.mulVec fun m => lev (a m) := fun a => by
     apply hinj
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← he, map_sum]
+
+    rw [← he, map_sum]
     simp only [hL, he, serAct_lines]
     rw [← lines_sum]
     apply congrArg (lines U d)
@@ -234,8 +285,8 @@ theorem matrices_at [CharZero LL] {n : ℕ} (b : Module.Basis (Fin n) (LetA O f)
         (G : Mx LL⟦X⟧ n n) * Matrix.diagonal (fun a => (X : LL⟦X⟧) ^ (U a).toNat) := by
   have h1 : ∀ y : ↥(W.N T), W.φD T y = ∑ k, W.φA (b.repr y k) • W.φD T (b k : W.DD T) := fun y => by
     conv_lhs => rw [← b.sum_repr y]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [Submodule.coe_sum, Submodule.coe_smul, map_sum, φD_smulA]
+
+    simp only [Submodule.coe_sum, Submodule.coe_smul, map_sum, φD_smulA]
   have h2 : ∀ y : ↥(W.N T), W.φD T y ∈ W.N T := fun y => by
     rw [h1]
     refine Submodule.sum_mem _ fun k _ => Submodule.smul_mem _ _ ?_
@@ -282,7 +333,7 @@ section Local
 open GlobalTheory.AdmLoc
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem exists_lines {l : ℕ} [Fact l.Prime] {P : LocPrime l} {AI : LocAinf l P} {H : LocHW l P}
     {E : LocFon l P AI H} {C : LocCmpT l P AI H E} (hT : LocTied l P AI)
     (h4 : GlobalTheory.IndefiniteRowSideFullHecke.GradedSeries.LatticeAtLevels l P AI H E C) {K LL : FinExt l} (hA : CaseA K LL)
@@ -355,7 +406,7 @@ end Local
 open NumberField Formalism.CohomologicalDescent Formalism.CohomologicalDescent.HeightDescentMinors Formalism.CohomologicalDescent.FrobeniusPeriodChange IsLocalRing
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem frame_at_root : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (hA : CaseA K LL) (T : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL)) (n : ℕ) (U : ZMod (Module.finrank ℚ_[l] ↥(K0 K)) → Fin n → ℤ) (γ : ((HW l).W K 1 LL hA.2.2).Gam) (b : Module.Basis (Fin n) (LetA ↥(OL LL) (Module.finrank ℚ_[l] ↥(K0 K))) ↥(((HW l).W K 1 LL hA.2.2).N T)) (N : Lat (ZMod (Module.finrank ℚ_[l] ↥(K0 K))) n ↥(OL LL)) (u c : ℤ_[l]) (ζ : ↥(OL LL)) (jj : PowerSeries ↥(OL LL) →+* PowerSeries ↥LL.1), GlobalTheory.AdmLoc.CrysWith ((D.loc l).PD K) ((HW l).W K 1 LL hA.2.2).emb T.ρ (fun i => Finset.univ.val.map (U i)) → (∀ i a, 0 ≤ U i a) → IsFrame ((HW l).W K 1 LL hA.2.2) T γ b N → (((HW l).W K 1 LL hA.2.2).χΓ γ : ↥(OL LL)) = algebraMap ℤ_[l] ↥(OL LL) u → u = 1 + (l : ℤ_[l]) * c → IsPrimitiveRoot ζ l → IsExpAt (OL LL).val.toRingHom ζ jj → ∀ i, ∃ G H : (Mx (PowerSeries ↥LL.1) n n)ˣ, (N.P i).map (fun y => jj (inc l ↥(OL LL) y)) = (G : Mx (PowerSeries ↥LL.1) n n) * Matrix.diagonal (fun a => (X : PowerSeries ↥LL.1) ^ (U i a).toNat) * (H : Mx (PowerSeries ↥LL.1) n n) ∧ ((1 + (X : PowerSeries ↥(OL LL)) • N.D i).map (fun y => jj (inc l ↥(OL LL) y))) * ((G : Mx (PowerSeries ↥LL.1) n n) * Matrix.diagonal (fun a => (X : PowerSeries ↥LL.1) ^ (U i a).toNat)).map (rescale ((OL LL).val.toRingHom (algebraMap ℤ_[l] ↥(OL LL) u))) = (G : Mx (PowerSeries ↥LL.1) n n) * Matrix.diagonal (fun a => (X : PowerSeries ↥LL.1) ^ (U i a).toNat) := by
   intro D HW F Cm l _ K LL hA T n U γ b N u c ζ jj hc hU hfr hχ hu hζ hj i
   haveI : CharZero ↥LL.1 := algebraRat.charZero _
@@ -367,8 +418,19 @@ theorem frame_at_root : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA H
       (((HW l).W K 1 LL hA.2.2).χΓ γ : ↥(OL LL)) - ((1 : ℕ) : ↥LL.1)) := by
     have h0 : 0 ≤ (D.loc l).v LL (algebraMap ↥(OL LL) ↥LL.1 (algebraMap ℤ_[l] ↥(OL LL) c)) :=
       ((D.loc l).v_O LL _).2 (algebraMap ℤ_[l] ↥(OL LL) c).2
-    rw [hχ, hu, map_add (f := _), map_add (f := _), map_one, map_one, Nat.cast_one, Nat.cast_one, add_sub_cancel_left, map_mul, map_mul,
-      map_natCast, map_natCast, AddValuation.map_mul, (D.loc l).v_l]
+    have hsub : algebraMap ↥(OL LL) ↥LL.1 (algebraMap ℤ_[l] ↥(OL LL) u) - ((1 : ℕ) : ↥LL.1) =
+        (l : ↥LL.1) * algebraMap ↥(OL LL) ↥LL.1 (algebraMap ℤ_[l] ↥(OL LL) c) := by
+      first
+        | (rw [hu, map_add (algebraMap ℤ_[l] ↥(OL LL)), map_add (algebraMap ↥(OL LL) ↥LL.1),
+            map_one, map_one, Nat.cast_one, add_sub_cancel_left, map_mul, map_mul, map_natCast,
+            map_natCast])
+        | (rw [hu, ← RingHom.comp_apply, map_add, map_one, map_mul, map_natCast, Nat.cast_one,
+            add_sub_cancel_left, RingHom.comp_apply])
+        | (rw [hu, RingHom.map_add, RingHom.map_add, RingHom.map_one, RingHom.map_one,
+            Nat.cast_one, add_sub_cancel_left, RingHom.map_mul, RingHom.map_mul, map_natCast,
+            map_natCast])
+        | (rw [hu]; simp)
+    rw [hχ, hsub, Nat.cast_one, AddValuation.map_mul, (D.loc l).v_l]
     exact le_add_of_nonneg_right h0
   obtain ⟨G, H, h1, h2⟩ := matrices_at ((HW l).W K 1 LL hA.2.2) T i (ζ : ↥LL.1) b (U i) (hU i) d hd
     (by rwa [(D.loc l).PD_p, (HW l).W_s, pow_one]) hS hS' γ

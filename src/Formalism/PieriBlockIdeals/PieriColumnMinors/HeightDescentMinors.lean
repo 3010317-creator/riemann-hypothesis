@@ -1,6 +1,71 @@
 module
 
 public import Formalism.PieriBlockIdeals.CapelliCentralEnveloping
+public import Mathlib.GroupTheory.Nilpotent
+public import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
+public import Mathlib.RingTheory.Polynomial.Eisenstein.Distinguished
+public import Mathlib.RingTheory.PowerSeries.Derivative
+public import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+public import Mathlib.Data.Fin.Tuple.Sort
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+public import Mathlib.NumberTheory.Padics.Hensel
+import Mathlib.NumberTheory.SelbergSieve
+public import Mathlib.NumberTheory.Wilson
+import Mathlib.RingTheory.PiTensorProduct
+public import Mathlib.RingTheory.PowerSeries.Expand
+public import Mathlib.RingTheory.PowerSeries.WeierstrassPreparation
+import Mathlib.RingTheory.Radical.NatInt
+public import Mathlib.RingTheory.RootsOfUnity.Lemmas
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.RingTheory.MvPowerSeries.Expand
+public import Mathlib.RingTheory.Polynomial.Cyclotomic.Roots
+public import Mathlib.RingTheory.PowerSeries.Inverse
 
 @[expose] public section
 
@@ -139,10 +204,7 @@ theorem coeff_one_add_X_pow_alt (R : Type*) [CommRing R] (d n : ℕ) :
 variable (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [Algebra ℤ_[l] O]
 
 theorem constantCoeff_binomialSeriesSubOne (c : ℤ_[l]) : constantCoeff (br l O c) = 0 := by
-  first
-    | simp [br]
-    | (simp only [br, map_sub, map_one, sub_eq_zero, ← PowerSeries.coeff_zero_eq_constantCoeff_apply]
-       simp [PowerSeries.binomialSeries])
+  rw [br, (constantCoeff (R := O)).map_sub, binomialSeries_constantCoeff, map_one, sub_self]
 
 theorem hasSubst_br_padic (c : ℤ_[l]) : HasSubst (br l O c) := by
   apply PowerSeries.HasSubst.of_constantCoeff_zero
@@ -333,16 +395,12 @@ variable (O : Type) [CommRing O] [Algebra ℤ_[l] O]
 
 theorem br_eq_X_mul_shift (d : ℤ_[l]) :
     br l O d = X * PowerSeries.mk (fun n => coeff (n + 1) (br l O d)) := by
-  ext n
-  rcases n with _ | n
-  · simpa using constantCoeff_binomialSeriesSubOne l O d
-  · simp [PowerSeries.coeff_succ_X_mul]
+  have h := eq_X_mul_shift_add_const (br l O d)
+  rwa [constantCoeff_binomialSeriesSubOne l O d, map_zero, add_zero] at h
 
 theorem coeff_one_br (d : ℤ_[l]) : coeff 1 (br l O d) = algebraMap ℤ_[l] O d := by
-  first
-    | simp [br, PowerSeries.binomialSeries_coeff, Ring.choose_one_right, Algebra.smul_def]
-    | simp [br, PowerSeries.binomialSeries, Ring.choose_one_right, Algebra.smul_def]
-    | simp [br, PowerSeries.binomialSeries, Ring.choose_one_right]
+  simp only [br, (coeff (R := O) 1).map_sub, binomialSeries_coeff, Ring.choose_one_right,
+    coeff_one, Nat.one_ne_zero, ite_false, sub_zero, Algebra.smul_def, mul_one]
 
 theorem r1_holds : R1 := by
   intro l _ O _ _ hl
@@ -352,7 +410,7 @@ theorem r1_holds : R1 := by
     have : ∀ d ∈ mu l, constantCoeff (PowerSeries.mk (fun n => coeff (n + 1) (br l O d))) =
         algebraMap ℤ_[l] O d := by
       intro d _
-      rw [← coeff_zero_eq_constantCoeff_apply, coeff_mk, zero_add, coeff_one_br]
+      rw [constantCoeff_mk, zero_add, coeff_one_br]
     rw [Finset.prod_congr rfl this, ← map_prod, prod_roots_unity_eq_neg_one l hl, map_neg, map_one]
   have hu : IsUnit w := by
     rw [isUnit_iff_constantCoeff, hcc]
@@ -605,8 +663,8 @@ lemma q_dvd_prod_sub_l (hq : QMul) (hl2 : l ≠ 2) :
   simp only [map_sub, map_prod, map_pow, Polynomial.aeval_X, map_one, Polynomial.aeval_C,
     map_mul] at h
   have hc : Polynomial.aeval (1 + X : ℤ_[l]⟦X⟧) (Polynomial.cyclotomic l ℤ) = q l ℤ_[l] := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Polynomial.cyclotomic_prime, map_sum]
+
+    rw [Polynomial.cyclotomic_prime, map_sum]
     simp only [map_pow, Polynomial.aeval_X]
     apply mul_left_cancel₀ (X_ne_zero (R := ℤ_[l]))
     rw [(hq l ℤ_[l]).1]
@@ -783,8 +841,8 @@ theorem eq_sum_coeff_add_division (n : ℕ) (w : (R⟦X⟧)ˣ) (f : R⟦X⟧) :
       _ = X ^ n * PowerSeries.mk fun i => coeff (i + n) f := by rw [Units.mul_inv, one_mul]
   rw [e]
   ext m
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_add (f := _), map_sum, coeff_X_pow_mul']
+
+  rw [map_add (f := _), map_sum, coeff_X_pow_mul']
   simp only [coeff_C_mul_X_pow, coeff_mk]
   by_cases hm : m < n
   · rw [if_neg (by omega), add_zero, Finset.sum_eq_single (⟨m, hm⟩ : Fin n)]
@@ -831,9 +889,10 @@ theorem eq_sum_subst_unit_mul_X_pow (n : ℕ) (hn : 0 < n) (w : (R⟦X⟧)ˣ) (f
     rw [Finset.sum_congr rfl fun j _ => by rw [hh j]]
     simp only [add_mul, Finset.sum_add_distrib, Finset.sum_mul, Finset.mul_sum]
     rw [Finset.sum_comm]
-    congr 1
-    · exact Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun j _ => by ring
-    · exact Finset.sum_congr rfl fun j _ => by ring
+    refine congrArg₂ (· + ·) ?_ ?_
+    · exact Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun j _ =>
+        (mul_assoc _ _ _).trans (mul_left_comm _ _ _)
+    · exact Finset.sum_congr rfl fun j _ => mul_assoc _ _ _
   have e3 : f - ∑ j : Fin n, (PowerSeries.mk fun k => coeff (j : ℕ) ((divQuotient n w)^[k] f)).subst
           ((w : R⟦X⟧) * X ^ n) * X ^ (j : ℕ) =
       ((w : R⟦X⟧) * X ^ n) ^ (N + 1) *
@@ -856,12 +915,12 @@ theorem constantCoeff_eq_zero_of_sum_subst (n : ℕ) (hn : 0 < n) (w : (R⟦X⟧
         X ^ n * ((w : R⟦X⟧) * ∑ j : Fin n, h j * X ^ (j : ℕ)) := by
     rw [Finset.sum_congr rfl fun j _ => by rw [hh j]]
     simp only [add_mul, Finset.sum_add_distrib, Finset.mul_sum]
-    congr 1
-    exact Finset.sum_congr rfl fun j _ => by ring
+    refine congrArg₂ (· + ·) rfl (Finset.sum_congr rfl fun j _ => ?_)
+    simp only [mul_assoc, mul_left_comm (w : R⟦X⟧) (X ^ n)]
   rw [e] at h0
   have h1 := congrArg (coeff (i : ℕ)) h0
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_add (f := _), map_sum, coeff_X_pow_mul', if_neg (by have := i.2; omega), add_zero, map_zero] at h1
+
+  rw [map_add (f := _), map_sum, coeff_X_pow_mul', if_neg (by have := i.2; omega), add_zero, map_zero] at h1
   simp only [coeff_C_mul_X_pow] at h1
   rw [Finset.sum_eq_single i] at h1
   · simpa using h1
@@ -922,8 +981,8 @@ theorem coeff_subst_X_mul_of_low_zero (s f : R⟦X⟧) (j : ℕ) (hj : 0 < j)
     coeff j (f.subst (X * s)) = coeff j f * constantCoeff s ^ j := by
   have ha : HasSubst (X * s) := HasSubst.of_constantCoeff_zero' (by simp)
   obtain ⟨h, hh⟩ := subst_eq_sum_range_add_pow_mul ha (j + 1) f
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hh, map_add (f := _), map_sum]
+
+  rw [hh, map_add (f := _), map_sum]
   have e1 : coeff j ((X * s) ^ (j + 1) * h) = 0 := by
     rw [mul_pow, mul_assoc, coeff_X_pow_mul', if_neg (by omega)]
   rw [e1, add_zero, Finset.sum_eq_single j]
@@ -1046,7 +1105,7 @@ theorem inc_X_sub_l_eq_q0 : inc l O (X - C (l : O)) = q0 l O := by
 theorem br_eq_X_mul_const (c : ℤ_[l]) :
     ∃ s : O⟦X⟧, br l O c = X * s ∧ constantCoeff s = algebraMap ℤ_[l] O c := by
   refine ⟨_, br_eq_X_mul_shift l O c, ?_⟩
-  simp [coeff_one_br]
+  rw [constantCoeff_mk, zero_add, coeff_one_br]
 
 theorem exists_mu_generator_pow_sub_one_isUnit (hm : MuFacts) : ∃ d ∈ mu l, ∀ j, 0 < j → j < l - 1 → IsUnit (d ^ j - 1) := by
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := (ZMod l)ˣ)
@@ -1172,8 +1231,7 @@ lemma constantCoeff_br_zero (c : ℤ_[l]) : constantCoeff (br l O c) = 0 := cons
 
 lemma br_eq_X_mul_const_alt (e : ℤ_[l]) :
     ∃ β : O⟦X⟧, br l O e = X * β ∧ constantCoeff β = algebraMap ℤ_[l] O e := by
-  refine ⟨_, br_eq_X_mul_shift l O e, ?_⟩
-  simp [coeff_one_br]
+  exact br_eq_X_mul_const l O e
 
 lemma constantCoeff_pi0_eq_zero_alt (hm : MuFacts) : constantCoeff (pi0 l O) = 0 := constantCoeff_pi0_eq_zero l O
 
@@ -1675,8 +1733,8 @@ theorem height_descent_of_r3_r2 (h3 : UnitFactorQ) (hb : PowerSeriesFreeBasis) :
             refine Finset.sum_congr rfl fun c _ => ?_
             rw [← hG c b]; ring
         _ = ∑ j, inc l O (∑ c, P a c * G c b j) * X ^ (j : ℕ) := by
-            set_option synthInstance.maxHeartbeats 100000 in
-              simp only [hinc, map_sum, map_mul, Finset.mul_sum, Finset.sum_mul]
+
+            simp only [hinc, map_sum, map_mul, Finset.mul_sum, Finset.sum_mul]
             rw [Finset.sum_comm]
             exact Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun c _ => by ring
     · rw [Finset.sum_eq_single (⟨0, hl1⟩ : Fin (l - 1))]

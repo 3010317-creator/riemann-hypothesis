@@ -1,8 +1,49 @@
 module
 
-public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.ExplicitMapOntoTwoLetterSpace
-public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.MemInvariantSectionsIffIntegral
-public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.QaNuNextAdd
+public import Formalism.GradedWeylDivisibility.StatementD
+public import Formalism.SharpRestriction.GrowthBounds.ColumnSpanDensity.DeltaPsiH
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.ShapeCovering.CovDet
+public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.TieDefs
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Formalism.SharpRestriction.GrowthBounds.LatticeSystems
 
 @[expose] public section
 
@@ -52,8 +93,8 @@ theorem ta_Int_of_coeff {σ : Type} {F : MvPolynomial σ K} (h : ∀ u, AddMonoi
   classical
   choose c hc using h
   refine ⟨∑ u ∈ F.support, monomial u (c u), ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_monomial, hc]
+
+  simp only [map_sum, map_monomial, hc]
   exact F.support_sum_monomial_coeff
 
 theorem ta_Int_add {σ : Type} {F G : MvPolynomial σ K} (h1 : ta_Int O F) (h2 : ta_Int O G) : ta_Int O (F + G) := by
@@ -101,7 +142,7 @@ theorem ta_exists_pow (w : O) (hw : Irreducible w) {σ : Type} (b : MvPolynomial
   have hs0 : s ≠ 0 := nonZeroDivisors.ne_zero hs
   obtain ⟨n, v, hv⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hs0 hw
   refine ⟨n, ta_Int_of_coeff fun u => ?_⟩
-  rw [coeff_smul, smul_eq_mul]
+  change algebraMap O K w ^ n * AddMonoidAlgebra.coeff b u ∈ _
   by_cases hu : u ∈ b.support
   · obtain ⟨r, hr⟩ := hsI _ (Finset.mem_image_of_mem _ hu)
     refine ⟨(↑v⁻¹ : O) * r, ?_⟩
@@ -147,8 +188,9 @@ theorem ta_sat (w : O) (hw : Irreducible w) (m : ℕ) (hm : 1 ≤ m) (b : MvPoly
     obtain ⟨c, hc⟩ := Ideal.mem_span_singleton'.mp hu
     refine ⟨c, ?_⟩
     have e5 := congrArg (AddMonoidAlgebra.coeff · u) hβ
-    rw [coeff_map, ← hc, map_mul, coeff_smul, smul_eq_mul] at e5
-    rw [coeff_smul, smul_eq_mul]
+    rw [coeff_map, ← hc, map_mul] at e5
+    change _ = algebraMap O K w ^ (n + 1) * AddMonoidAlgebra.coeff b u at e5
+    change algebraMap O K c = algebraMap O K w ^ n * AddMonoidAlgebra.coeff b u
     apply mul_right_cancel₀ hW0
     rw [e5]
     ring
@@ -188,11 +230,11 @@ theorem ta_Psi_gl_y (g : Matrix (Fin (m + 1)) (Fin (m + 1)) K) (hg : IsUnit g.de
     rw [covY_eq] at h5
     have hgg : ((g'⁻¹ : GL (Fin (m + 1)) K) : Matrix (Fin (m + 1)) (Fin (m + 1)) K) = g := by
       rw [Matrix.coe_units_inv, hg', Matrix.nonsing_inv_nonsing_inv g hg]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [AlgHom.comp_apply, rename_X, aeval_X, Formalism.CountingSumsFrames.glAct, Sum.elim_inr, map_sum, map_mul, hgg]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [h5, ← map_mul, ← mul_assoc, ← C_mul, Matrix.nonsing_inv_nonsing_inv g hg, Matrix.det_nonsing_inv,
-      Ring.inverse_eq_inv', mul_inv_cancel₀ hd0, C_1, one_mul, map_sum]
+
+    simp only [AlgHom.comp_apply, rename_X, aeval_X, Formalism.CountingSumsFrames.glAct, Sum.elim_inr, map_sum, map_mul, hgg]
+
+    rw [h5, ← map_mul, ← mul_assoc, ← C_mul, Matrix.nonsing_inv_nonsing_inv g hg, Matrix.det_nonsing_inv,
+    Ring.inverse_eq_inv', mul_inv_cancel₀ hd0, C_1, one_mul, map_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [map_mul]
     unfold PsiXY blockEmb
@@ -204,8 +246,8 @@ theorem ta_aeval_scale {τ : Type} {k Q : ℕ} (d : K) (z : Fin k → MvPolynomi
   classical
   conv_lhs => rw [b.as_sum]
   conv_rhs => rw [b.as_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, Finset.smul_sum]
+
+  simp only [map_sum, Finset.smul_sum]
   refine Finset.sum_congr rfl fun u hu => ?_
   have hdeg := hb (mem_support_iff.mp hu)
   simp only [aeval_monomial, Finsupp.prod, mul_pow, Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum]

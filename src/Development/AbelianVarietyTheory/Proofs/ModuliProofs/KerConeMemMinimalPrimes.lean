@@ -1,10 +1,61 @@
 module
 
-public import Mathlib
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HeckeKer
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+public import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.LocalProperties.Reduced
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
+import Mathlib.CategoryTheory.Monoidal.Category
+import Mathlib.CategoryTheory.Monoidal.Mon
+import Mathlib.Topology.Sheaves.Presheaf
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst
 
 @[expose] public section
 
@@ -22,8 +73,8 @@ theorem eval_scale {o σ A : Type} [CommRing o] [CommRing A] (f : o →+* A) (g 
     {F : MvPolynomial σ o} {e : ℕ} (hF : F.IsHomogeneous e) :
     eval₂Hom f (fun a => g a * c) F = c ^ e * eval₂Hom f g F := by
   classical
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [F.as_sum, map_sum, map_sum, Finset.mul_sum]
+
+  rw [F.as_sum, map_sum, map_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun d hd => ?_
   have hdeg : d.degree = e := by
     by_contra h
@@ -53,8 +104,8 @@ theorem mem_ker_cone {o σ K : Type} [CommRing o] [Field K] (β : o →+* K) (u 
       (fun a => Polynomial.C (u a) * Polynomial.X) F =
       ∑ e ∈ Finset.range (F.totalDegree + 1),
         Polynomial.monomial e (eval₂Hom β u (homogeneousComponent e F)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      conv_lhs => rw [← sum_homogeneousComponent F, map_sum]
+
+    conv_lhs => rw [← sum_homogeneousComponent F, map_sum]
     exact Finset.sum_congr rfl fun e _ => eval_cone β u (homogeneousComponent_isHomogeneous e F)
   rw [h]
   constructor
@@ -82,8 +133,8 @@ theorem ker_cone_mem_minimalPrimes : ∀ (o σ K : Type) [CommRing o] [Field K] 
   have hQφ : ∀ F ∈ Q, MvPolynomial.eval₂Hom β u F = 0 := by
     intro F hF
     have := (mem_ker_cone β u F).1 (hQψ hF)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← MvPolynomial.sum_homogeneousComponent F, map_sum]
+
+    rw [← MvPolynomial.sum_homogeneousComponent F, map_sum]
     exact Finset.sum_eq_zero fun e _ => this e
   let L := FractionRing (MvPolynomial σ o ⧸ Q)
   let π : MvPolynomial σ o →+* L := (algebraMap (MvPolynomial σ o ⧸ Q) L).comp (Ideal.Quotient.mk Q)
@@ -121,10 +172,10 @@ theorem ker_cone_mem_minimalPrimes : ∀ (o σ K : Type) [CommRing o] [Field K] 
     rw [RingHom.mem_ker] at hF ⊢
     have hG : (∑ e ∈ Finset.range (F.totalDegree + 1),
         MvPolynomial.X i ^ (F.totalDegree - e) * MvPolynomial.homogeneousComponent e F) ∈ Q := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← hπ, map_sum]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← MvPolynomial.sum_homogeneousComponent F, map_sum] at hF
+
+      rw [← hπ, map_sum]
+
+      rw [← MvPolynomial.sum_homogeneousComponent F, map_sum] at hF
       have := congrArg (fun y => π (MvPolynomial.X i) ^ F.totalDegree * y) hF
       simp only [mul_zero, Finset.mul_sum] at this
       rw [← this]
@@ -132,10 +183,10 @@ theorem ker_cone_mem_minimalPrimes : ∀ (o σ K : Type) [CommRing o] [Field K] 
       have he' : e ≤ F.totalDegree := Nat.lt_succ_iff.mp (Finset.mem_range.mp he)
       rw [hχ, map_mul, map_pow, pow_sub₀ _ hx he', inv_pow, _root_.mul_assoc]
     have := hQφ _ hG
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum] at this
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← MvPolynomial.sum_homogeneousComponent F, map_sum, ← this]
+
+    rw [map_sum] at this
+
+    rw [← MvPolynomial.sum_homogeneousComponent F, map_sum, ← this]
     refine Finset.sum_congr rfl fun e _ => ?_
     rw [map_mul, map_pow, MvPolynomial.eval₂Hom_X', hu, one_pow, _root_.one_mul]
   have h3 := hmin.2 ⟨RingHom.ker_isPrime χ, h1⟩ h2

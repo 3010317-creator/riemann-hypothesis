@@ -1,10 +1,45 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MapCSmulMulVec
-public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OneAddXMulDerivativeBin
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoordApply
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OneAddXMulDerivativeBin
 
 @[expose] public section
 
@@ -24,8 +59,8 @@ theorem sum_mulVec_smul {ι E EE D O : Type} [CommRing O] [CommRing E] [CommRing
     intro m
     funext i
     simp [Matrix.mulVec, dotProduct, Finset.sum_apply, mul_comm]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [h, map_sum, map_mul, Finset.sum_smul, Finset.smul_sum, mul_smul]
+
+  simp only [h, map_sum, map_mul, Finset.sum_smul, Finset.smul_sum, mul_smul]
   exact Finset.sum_comm
 
 theorem isUnit_ι_E {l : ℕ} {O : Type} [CommRing O] (R : Fr l O) : IsUnit (R.ι R.E) := by
@@ -44,39 +79,39 @@ theorem coord_comm_φ_γ : ∀ {G : Type} [Group G] [TopologicalSpace G] {Qp K�
     _ hE _ S hγ hφ
   obtain ⟨hext, -, -, hφE, hγE⟩ := hE
   refine ⟨fun x => ?_, fun x => ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [coord_apply, coord_apply, map_sum]
-      refine (sum_mulVec_smul jE (fun k => (b k : W.DD T))
-        (fun i => Ring.inverse (R.ι R.E) ^ S.M • (S.Φ i).map R.ι)
-        (fun i k => R.φE (x (i - 1) k))).trans ?_
-      refine Finset.sum_congr rfl fun k _ => ?_
-      rw [W.φD_smul, ← hφE]
-      congr 1
-      have h1 : ∀ m, jE (fun i => (Ring.inverse (R.ι R.E) ^ S.M • (S.Φ i).map R.ι) m k) =
-          jE (fun _ => Ring.inverse (R.ι R.E)) ^ S.M *
-            algebraMap (LetA O n) W.EE (fun i => j (S.Φ i m k)) := by
-        intro m
-        rw [← hext, ← map_pow, ← map_mul]
-        rfl
-      have h2 : jE (fun _ => Ring.inverse (R.ι R.E)) *
-          algebraMap (LetA O n) W.EE (fun _ => j R.E) = 1 := by
-        rw [← hext (fun _ => R.E), ← map_mul, ← map_one jE]
-        congr 1
-        funext i
-        exact Ring.inverse_mul_cancel _ (isUnit_ι_E R)
-      simp only [h1, mul_smul, algebraMap_smul]
-      rw [← Finset.smul_sum, ← hφ, ← algebraMap_smul W.EE ((fun _ => j R.E : LetA O n) ^ S.M),
-        smul_smul, map_pow, ← mul_pow, h2, one_pow,
-        one_smul]
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [coord_apply, coord_apply, map_sum]
-      refine (sum_mulVec_smul jE (fun k => (b k : W.DD T))
-        (fun i => (S.G i).map R.ι) (fun i k => R.γE (x i k))).trans ?_
-      refine Finset.sum_congr rfl fun k _ => ?_
-      rw [W.γD_smul, ← hγE, hγ]
-      congr 1
-      refine Finset.sum_congr rfl fun m _ => ?_
-      rw [← algebraMap_smul W.EE (fun i => j (S.G i m k) : LetA O n), ← hext]
+
+  · rw [coord_apply, coord_apply, map_sum]
+    refine (sum_mulVec_smul jE (fun k => (b k : W.DD T))
+      (fun i => Ring.inverse (R.ι R.E) ^ S.M • (S.Φ i).map R.ι)
+      (fun i k => R.φE (x (i - 1) k))).trans ?_
+    refine Finset.sum_congr rfl fun k _ => ?_
+    rw [W.φD_smul, ← hφE]
+    congr 1
+    have h1 : ∀ m, jE (fun i => (Ring.inverse (R.ι R.E) ^ S.M • (S.Φ i).map R.ι) m k) =
+        jE (fun _ => Ring.inverse (R.ι R.E)) ^ S.M *
+          algebraMap (LetA O n) W.EE (fun i => j (S.Φ i m k)) := by
+      intro m
+      rw [← hext, ← map_pow, ← map_mul]
       rfl
+    have h2 : jE (fun _ => Ring.inverse (R.ι R.E)) *
+        algebraMap (LetA O n) W.EE (fun _ => j R.E) = 1 := by
+      rw [← hext (fun _ => R.E), ← map_mul, ← map_one jE]
+      congr 1
+      funext i
+      exact Ring.inverse_mul_cancel _ (isUnit_ι_E R)
+    simp only [h1, mul_smul, algebraMap_smul]
+    rw [← Finset.smul_sum, ← hφ, ← algebraMap_smul W.EE ((fun _ => j R.E : LetA O n) ^ S.M),
+      smul_smul, map_pow, ← mul_pow, h2, one_pow,
+      one_smul]
+
+  · rw [coord_apply, coord_apply, map_sum]
+    refine (sum_mulVec_smul jE (fun k => (b k : W.DD T))
+      (fun i => (S.G i).map R.ι) (fun i k => R.γE (x i k))).trans ?_
+    refine Finset.sum_congr rfl fun k _ => ?_
+    rw [W.γD_smul, ← hγE, hγ]
+    congr 1
+    refine Finset.sum_congr rfl fun m _ => ?_
+    rw [← algebraMap_smul W.EE (fun i => j (S.G i m k) : LetA O n), ← hext]
+    rfl
 
 end GlobalTheory.WachTie

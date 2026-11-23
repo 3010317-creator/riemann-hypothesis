@@ -1,14 +1,60 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DataCut
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.SupportProposition
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.DataInst
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.LocalModelsSplitCofinite
+public import Formalism.DoubleCosetMeasures.LatticeCoset
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.AddedBlockKernelSupport
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.FirstKernelPropertiesOfHypotheses
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ProductFormulaHaar.BasisEApply
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ProductFormulaHaar.DenEqOneOfForallPadicNormLeOne
 public import Formalism.SharpRestriction.CuspSpanNormBounds.LocalOrbitGerms
-public import Formalism.DoubleCosetMeasures.LatticeCoset
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.Valuation.Integral
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -485,8 +531,8 @@ theorem epsilonDual_almost_all : EpDualCof := by
   have hc : ∀ j, Matrix.vecMul (bE.repr z) M j ∈ 𝒪[(D.s.atP p).Fp] := by
     intro j
     have h := hz ((D.s.atP p).ιE (bF j)) (iotaE_mem_of_int D p (hbint j))
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← bE.sum_repr z, Finset.sum_mul, map_sum] at h
+
+    rw [← bE.sum_repr z, Finset.sum_mul, map_sum] at h
     convert h using 1
     simp only [Matrix.vecMul, dotProduct]
     refine Finset.sum_congr rfl fun i _ => ?_
@@ -529,8 +575,8 @@ theorem finrank_fp_le (D : Formalism.BasicNotions.D7) (p : PlF D) :
     Submodule.span ℚ_[Loc.resChar p] (Set.range fun i => (D.s.atP p).ιF (b i))
   have hsub : Set.range (D.s.atP p).ιF ⊆ (S : Set (D.s.atP p).Fp) := by
     rintro _ ⟨x, rfl⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← b.sum_repr x, map_sum]
+
+    rw [← b.sum_repr x, map_sum]
     refine Submodule.sum_mem _ fun i _ => ?_
     have : (D.s.atP p).ιF (b.repr x i • b i) =
         ((b.repr x i : ℚ) : ℚ_[Loc.resChar p]) • (D.s.atP p).ιF (b i) := by

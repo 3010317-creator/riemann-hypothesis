@@ -1,7 +1,56 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.UnitaryRationalPointsCountableDiscreteFundDomain
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+public import Mathlib.RingTheory.IsTensorProduct
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.MeasureTheory.Measure.Haar.Unique
 
 @[expose] public section
 
@@ -41,8 +90,8 @@ theorem ker_cocompact {F A V V' M M' : Type} [Field F] [CommRing A] [Algebra F A
       rw [h, hb'.lift_eq, LinearMap.comp_apply, ← map_sub]
       have hv : v - s (T v) ∈ LinearMap.ker T := by simp [hs]
       rw [show v - s (T v) = ((⟨_, hv⟩ : LinearMap.ker T) : V) from rfl, ← b.sum_repr ⟨_, hv⟩]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [Submodule.coe_sum, Submodule.coe_smul, map_sum, map_smul]
+
+      simp only [Submodule.coe_sum, Submodule.coe_smul, map_sum, map_smul]
       exact Submodule.sum_mem _ fun j _ => Submodule.smul_of_tower_mem _ _ (Submodule.subset_span ⟨j, rfl⟩)
     | smul a x hx =>
       rw [map_smul, map_smul, ← smul_sub]
@@ -53,15 +102,15 @@ theorem ker_cocompact {F A V V' M M' : Type} [Field F] [CommRing A] [Algebra F A
   refine ⟨(fun a : Fin _ → A => ∑ j, a j • w j) '' Set.univ.pi fun _ => K,
     (isCompact_univ_pi fun _ => hK).image (by fun_prop), ?_, fun x hx => ?_⟩
   · rintro _ ⟨a, -, rfl⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, w, h, show ∀ j, T (b j) = 0 from fun j => (b j).2, map_zero, smul_zero, Finset.sum_const_zero]
+
+    simp only [map_sum, map_smul, w, h, show ∀ j, T (b j) = 0 from fun j => (b j).2, map_zero, smul_zero, Finset.sum_const_zero]
   · have := key x
     rw [hx, map_zero, sub_zero] at this
     obtain ⟨a, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun A).1 this
     choose r hr using fun j => hc (a j)
     refine ⟨∑ j, r j • (b j : V), by simp [show ∀ j, T (b j) = 0 from fun j => (b j).2], _, fun j _ => hr j, ?_⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, sub_smul, algebraMap_smul, Finset.sum_sub_distrib, w]
+
+    simp only [map_sum, map_smul, sub_smul, algebraMap_smul, Finset.sum_sub_distrib, w]
 
 section Lat
 

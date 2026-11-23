@@ -1,12 +1,55 @@
 module
 
-public import Development.AutomorphicArithmetic.Foundations.Convolution.GeneralizedMeasures.HeckeFinAlt
-public import Development.AutomorphicArithmetic.Foundations.Convolution.GeneralizedMeasures.TermEx
+public import Development.AutomorphicArithmetic.Foundations.Convolution.GeneralizedMeasures.LocHeckeInert
+import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
+public import Development.AutomorphicArithmetic.Foundations.Convolution.GeneralizedMeasures.LocHeightDiagPowLe
 public import Development.AutomorphicArithmetic.Foundations.Convolution.GeneralizedMeasures.SideE
 public import Development.AutomorphicArithmetic.Foundations.Convolution.GeneralizedMeasures.SmoothStar
-public import Development.AutomorphicArithmetic.Foundations.Convolution.GeneralizedMeasures.LocHeightDiagPowLe
 public import Development.AutomorphicArithmetic.Foundations.Convolution.GeneralizedMeasures.SumSmulApply
-public import Development.AutomorphicArithmetic.Foundations.Convolution.LocalGroupAnalysis.G1St
+public import Development.AutomorphicArithmetic.Foundations.Convolution.GeneralizedMeasures.TermEx
+import Development.AutomorphicArithmetic.Foundations.Convolution.LocalGroupAnalysis.G1St
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.Finset.Finsupp
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Development.AutomorphicArithmetic.Foundations.Convolution.GeneralizedMeasures.HeckeFinAlt
 
 @[expose] public section
 
@@ -82,11 +125,11 @@ private theorem monomialDecomposition_eval {σ τ H : Type} [Ring H] [Algebra �
     ψ (g * R) = ∑ i ∈ R.support.sigma (fun β => (R.coeff β).support),
       (R.coeff i.1).coeff i.2 • ψ (g * monomial i.1 (monomial i.2 1)) := by
   rw [Finset.sum_sigma]
-  set_option synthInstance.maxHeartbeats 100000 in
-    conv_lhs => rw [R.as_sum, Finset.mul_sum, map_sum]
+
+  conv_lhs => rw [R.as_sum, Finset.mul_sum, map_sum]
   refine Finset.sum_congr rfl fun β _ => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    conv_lhs => rw [(R.coeff β).as_sum, map_sum, Finset.mul_sum, map_sum]
+
+  conv_lhs => rw [(R.coeff β).as_sum, map_sum, Finset.mul_sum, map_sum]
   refine Finset.sum_congr rfl fun α _ => ?_
   rw [← smul_one_mul, ← hψ, ← map_mul, mul_left_comm, C_mul_monomial, C_mul_monomial, mul_one]
 
@@ -94,8 +137,8 @@ private theorem linearMap_comp_eq_on_smul_of_eq {V : Type*} [NormedAddCommGroup 
     (A B G : V →L[ℂ] V) (P : ι → V →L[ℂ] V) :
     A ∘L ((∑ i ∈ s, c i • P i) ∘L B) ∘L G = ∑ i ∈ s, c i • (A ∘L (P i ∘L B) ∘L G) := by
   ext v
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [map_sum]
+
+  simp [map_sum]
 
 private theorem self_over (F : Type) [Field F] [NumberField F] (q : Pl F) : q.asIdeal.LiesOver q.asIdeal :=
   ⟨by ext x; simp [Ideal.under_def]⟩
@@ -124,7 +167,7 @@ private theorem degree_le_totalDegree_of_mem_support {τ R : Type} [CommSemiring
     d.degree ≤ p.totalDegree := by
   exact le_totalDegree h
 
-set_option maxHeartbeats 1600000 in
+
 theorem UpperTheory.ConvolutionTheory.GM.gm_of_unit :
     LocUnit → GM := by
   classical

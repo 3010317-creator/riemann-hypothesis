@@ -1,10 +1,59 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.OnePlusPowerAssembly
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicExistsIff
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ZpowSmulMem
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CompOneAddPowMul
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ZpowSmulMem
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -141,8 +190,8 @@ theorem psi_pow_mul {j : ℕ} (hj : j < l) (a : k⸨X⸩) :
     simp
 
 theorem psi_assemble (y : Fin l → k⸨X⸩) : psiPi k l (assemble k l y) = y 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [assemble, map_sum, Finset.sum_eq_single 0]
+
+  rw [assemble, map_sum, Finset.sum_eq_single 0]
   · rw [psi_pow_mul k l (0 : Fin l).2, if_pos (by simp)]
   · intro j _ hj
     rw [psi_pow_mul k l j.2, if_neg (by simpa using hj)]
@@ -196,8 +245,8 @@ theorem psi_comm (σ : k⸨X⸩ →+* k⸨X⸩) (hφ : ∀ x, σ (phiPi k l x) =
       σ ((1 + vv k) ^ j) = (1 + vv k) ^ i * phiPi k l w) (x : k⸨X⸩) :
     psiPi k l (σ x) = σ (psiPi k l x) := by
   obtain ⟨y, rfl⟩ := (assemble_bijective k l).2 x
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [psi_assemble, assemble, map_sum, map_sum, Finset.sum_eq_single 0]
+
+  rw [psi_assemble, assemble, map_sum, map_sum, Finset.sum_eq_single 0]
   · have := psi_pow_mul k l hl.out.pos (σ (y 0))
     simpa [hφ] using this
   · intro j _ hj0
@@ -225,8 +274,8 @@ theorem mem_of_assemble_mem {s : ℤ} {y : Fin l → k⸨X⸩} (h : assemble k l
     intro i hi
     rw [map_mul, phi_one_add, ← mul_assoc, ← mul_assoc, ← pow_add, ← pow_add]
     congr 2; omega
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [assemble, Finset.mul_sum, map_sum, Finset.sum_eq_single j]
+
+  rw [assemble, Finset.mul_sum, map_sum, Finset.sum_eq_single j]
   · rw [key j le_rfl, psi_pow_mul k l (by omega), if_pos (by omega)]
   · intro i _ hi
     have hi' : (i : ℕ) ≠ j := fun e => hi (Fin.ext e)
@@ -483,9 +532,9 @@ theorem twist_bij (h5 : 5 ≤ l) (H : Matrix (Fin n) (Fin n) k⸨X⸩) (hH : ∀
 theorem op_assemble (H : Matrix (Fin n) (Fin n) k⸨X⸩) (y : Fin l → Fin n → k⸨X⸩) (i : Fin n) :
     ∑ m, phiPi k l (H i m) * gamPi k l (assemble k l fun j => y j m) - assemble k l (fun j => y j i) =
       assemble k l fun j => ((1 + vv k) ^ (j : ℕ) • semiOp (gamPi k l) H (y j) - y j) i := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [assemble, map_sum, map_mul (gamPi k l), gam_pow, gam_phi, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
-    semiOp_apply, map_sub, map_mul (phiPi k l), mul_sub, Finset.sum_sub_distrib, Finset.mul_sum]
+
+  simp only [assemble, map_sum, map_mul (gamPi k l), gam_pow, gam_phi, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
+  semiOp_apply, map_sub, map_mul (phiPi k l), mul_sub, Finset.sum_sub_distrib, Finset.mul_sum]
   rw [Finset.sum_comm]
   congr 1
   exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring

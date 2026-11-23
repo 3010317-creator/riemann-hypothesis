@@ -1,14 +1,61 @@
 module
 
 public import Formalism.LocalToGlobal.GlobalTheory.GL6.CongruenceNoKernelOfLevelZeroIdentities
+public import Formalism.LocalToGlobal.GlobalTheory.GL6.DiagonalSlopes.ComplexSpanBlockActionStable
+public import Formalism.LocalToGlobal.GlobalTheory.EqGlobOfHat
+public import Formalism.LocalToGlobal.GlobalTheory.GL6.CongruenceNoKernelOfHeckeRamified
+public import Formalism.LocalToGlobal.GlobalTheory.GL6.FrameTranslate
+public import Formalism.LocalToGlobal.GlobalTheory.GL6.AdelicFunctionExtendsFromClasses
+public import Formalism.LocalToGlobal.GlobalTheory.GL6.DiagonalSlopes.AdmissibleStabilisersOfCompatibleForms
 public import Formalism.LocalToGlobal.GlobalTheory.GL6.DiagonalSlopes.DiamondCommDistinctPlaces
 public import Formalism.LocalToGlobal.GlobalTheory.GL6.DiagonalSlopes.PSplitT
-public import Formalism.LocalToGlobal.GlobalTheory.GL6.DiagonalSlopes.AdmissibleStabilisersOfCompatibleForms
-public import Formalism.LocalToGlobal.GlobalTheory.GL6.DiagonalSlopes.ComplexSpanBlockActionStable
-public import Formalism.LocalToGlobal.GlobalTheory.GL6.DiagonalSlopes.LocalUnitaryOfMatchingZero
-public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsEquiv
+public import Formalism.LocalToGlobal.GlobalTheory.GL6.DiagonalSlopes.StabiliserOfLocalTransport
+import Formalism.LocalToGlobal.GlobalTheory.GL6.DiamondPreservesRationalFormZero
+import Formalism.LocalToGlobal.GlobalTheory.GL6.PKerAtP
+public import Formalism.LocalToGlobal.GlobalTheory.GL6.RndLinkAdmTOf
 public import Formalism.LocalToGlobal.LatticeGeometry.GeometryDefinitions.PClassE
-public import Formalism.LocalToGlobal.GlobalTheory.EqGlobOfHat
+public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsEquiv
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Formalism.LocalToGlobal.GlobalTheory.GL6.DiagonalSlopes.AdelicFunctionRightTranslateDiamond
 
 @[expose] public section
 
@@ -42,7 +89,7 @@ theorem is_translate_inverse (T : Forms0 D u) (γ : UJ (sigD D : D.host.E →+* 
   rw [← Matrix.mul_assoc, at_infinity_mul_inv, Matrix.one_mul]
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem up_move_natural (T : Forms0 D u) (v : (D.mem u).A.vT) (c : (D.mem u).C.cls 0)
     (z : ↥(Ld D u 0 (Nat.zero_le _) c)) (hz : (D.fm u).fv 0 v c (T.lv0.pr v c z) = 1) :
     ∃ (γ : UJ (sigD D : D.host.E →+* D.host.E) (gramN D 0 (Nat.zero_le _)))
@@ -58,7 +105,7 @@ theorem up_move_natural (T : Forms0 D u) (v : (D.mem u).A.vT) (c : (D.mem u).C.c
   rfl
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem down_move_natural (T : Forms0 D u) (v : (D.mem u).A.vT) (c : (D.mem u).C.cls 0)
     (g : Module.Dual ((D.mem u).A.Fv v) ((D.fm u).lk 0 v c)) (hg0 : g ≠ 0) :
     ∃ (γ : UJ (sigD D : D.host.E →+* D.host.E) (gramN D 0 (Nat.zero_le _)))
@@ -109,7 +156,7 @@ theorem class_eq_of_rational_translate (T : Forms0 D u) (c c' : (D.mem u).C.cls 
   T.cls0.y_bij.1 (rnd_cls _ γ hγ _ _ κ h)
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem U_op_preserves_forms_zero (T : Forms0 D u) (v : (D.mem u).A.vT) (φ : (D.mem u).C.cls 0 → (D.mem u).C.Y 0 → ℂ)
     (hφ : φ ∈ (D.fm u).Fi 0) : Formalism.MainNotions.product_first_zeroth_parts.Uop D u 0 v φ ∈ (D.fm u).Fi 0 := by
   classical
@@ -151,7 +198,7 @@ theorem U_op_preserves_forms_zero (T : Forms0 D u) (v : (D.mem u).A.vT) (φ : (D
   simp
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem D_op_preserves_forms_zero (T : Forms0 D u) (v : (D.mem u).A.vT) (φ : (D.mem u).C.cls 0 → (D.mem u).C.Y 0 → ℂ)
     (hφ : φ ∈ (D.fm u).Fi 0) : Formalism.MainNotions.product_first_zeroth_parts.Dop D u 0 v φ ∈ (D.fm u).Fi 0 := by
   classical
@@ -206,7 +253,7 @@ def IsUpMvF (T : Forms0 D u) (v : (D.mem u).A.vT) (c : (D.mem u).C.cls 0) (x : (
     ∀ h, (D.fm u).upT 0 v c x h = natTr0 T γ κ h
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem U_op_eq_move_sum (T : Forms0 D u) (v : (D.mem u).A.vT) (ψ : Fn D u 0)
     {g : UPts (sigD D) (gramN D 0 (Nat.zero_le _)) (FiniteAdeleRing (𝓞 D.host.F) D.host.F) → Fr D 0 (Nat.zero_le _) → ℂ}
     (hg : g ∈ AdFun T.cls0.lev (embT D))
@@ -245,7 +292,7 @@ def UpDiaMatch0F (T : Forms0 D u) : Prop :=
       ∀ x, (Mv2 (σ x)).1⁻¹ * κd.1 * (Mv x).1 ∈ T.cls0.lev.U
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem diamond_commutes_U_distinct (T : Forms0 D u) (hM : UpDiaMatch0F T) (v v' : (D.mem u).A.vT) (hvv : v ≠ v')
     (a : ((D.mem u).A.Fv v')ˣ) (φ : Fn D u 0) (hφ : φ ∈ (D.fm u).Fi 0) :
     dia D u 0 v' a (Uop D u 0 v φ) = Uop D u 0 v (dia D u 0 v' a φ) := by
@@ -330,7 +377,7 @@ def IsDnMvF (T : Forms0 D u) (v : (D.mem u).A.vT) (c : (D.mem u).C.cls 0) (x : M
     ∀ h, (D.fm u).dnT 0 v c x h = natTr0 T γ κ h
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem D_op_eq_move_sum (T : Forms0 D u) (v : (D.mem u).A.vT) (ψ : Fn D u 0)
     {g : UPts (sigD D) (gramN D 0 (Nat.zero_le _)) (FiniteAdeleRing (𝓞 D.host.F) D.host.F) → Fr D 0 (Nat.zero_le _) → ℂ}
     (hg : g ∈ AdFun T.cls0.lev (embT D))
@@ -369,7 +416,7 @@ def DnDiaMatch0F (T : Forms0 D u) : Prop :=
       ∀ x, (Mv2 (σ x)).1⁻¹ * κd.1 * (Mv x).1 ∈ T.cls0.lev.U
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem diamond_commutes_D_distinct (T : Forms0 D u) (hM : DnDiaMatch0F T) (v v' : (D.mem u).A.vT) (hvv : v ≠ v')
     (a : ((D.mem u).A.Fv v')ˣ) (φ : Fn D u 0) (hφ : φ ∈ (D.fm u).Fi 0) :
     dia D u 0 v' a (Dop D u 0 v φ) = Dop D u 0 v (dia D u 0 v' a φ) := by
@@ -496,8 +543,8 @@ theorem hermitian_form_unitary_mul {A : Type} [CommRing A] {n : Type} [Fintype n
     simp only [Formalism.UG.hform, dotProduct, mulVec, Finset.mul_sum, mul_assoc]
   have hσ : (fun i => σ ((M *ᵥ x) i)) = (M.map σ) *ᵥ (fun i => σ (x i)) := by
     funext i
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [mulVec, dotProduct, map_sum, map_mul]
+
+    simp [mulVec, dotProduct, map_sum, map_mul]
   rw [hdot, hdot, hσ, ← vecMul_transpose, ← dotProduct_mulVec]
   simp only [mulVec_mulVec, ← Matrix.mul_assoc]
   rw [show (M.map σ)ᵀ * J * M = J from hM]
@@ -533,7 +580,7 @@ theorem mul_lattice_dual_comm {F E : Type} [Field F] [NumberField F] [Field E] [
     rwa [mulVec_mulVec, ← Units.val_mul, inv_mul_cancel, Units.val_one, one_mulVec] at this
 
 
-set_option synthInstance.maxHeartbeats 400000 in
+
 theorem level_stabilises_base_lattice (T : Forms0 D u) (κ : T.cls0.lev.U) :
     κ.1 ∈ stabGL (latS (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
       (tensInt (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F) (intOE D.host.E) (intAd D.host.F))
@@ -542,7 +589,7 @@ theorem level_stabilises_base_lattice (T : Forms0 D u) (κ : T.cls0.lev.U) :
     (fun w => (T.cls0.lev.Uloc_lev w (((T.cls0.lev.U_eq _).1 κ.2).2 w)).2)
 
 
-set_option synthInstance.maxHeartbeats 400000 in
+
 theorem diamond_stabilises_base_lattice (T : Forms0 D u) (v' : (D.mem u).A.vT) (k : ℤ)
     (δ : UPts (sigD D) (gramN D 0 (Nat.zero_le _)) (FiniteAdeleRing (𝓞 D.host.F) D.host.F))
     (hδ : IsDia T.cls0.lev (T.atT.eV v').1 (T.atT.eV v').2 k δ) :
@@ -555,8 +602,8 @@ theorem diamond_stabilises_base_lattice (T : Forms0 D u) (v' : (D.mem u).A.vT) (
   · rw [hδ.1 w hw]; exact one_mem _
 
 
-set_option maxHeartbeats 4000000 in
-set_option synthInstance.maxHeartbeats 400000 in
+
+
 theorem diamond_lattice_transport (T : Forms0 D u) (v' : (D.mem u).A.vT) (k : ℤ)
     (δ : UPts (sigD D) (gramN D 0 (Nat.zero_le _)) (FiniteAdeleRing (𝓞 D.host.F) D.host.F))
     (hδ : IsDia T.cls0.lev (T.atT.eV v').1 (T.atT.eV v').2 k δ) (c c2 : (D.mem u).C.cls 0)
@@ -587,6 +634,29 @@ end DiaLat
 
 section DiaFun
 
+private theorem map_inverse_mulVec {n A B C : Type} [Fintype n] [DecidableEq n]
+    [CommRing A] [CommRing B] [CommRing C]
+    (f : A →+* B) (g : B →+* C) (γ : GL n A) (x : n → A) :
+    (g.comp f) ∘ ((γ⁻¹).val *ᵥ x) =
+      ((bc g (bc f γ))⁻¹).val *ᵥ ((g.comp f) ∘ x) := by
+  rw [← map_inv (bc g), ← map_inv (bc f)]
+  exact funext (RingHom.map_mulVec (g.comp f) (γ⁻¹).val x)
+
+private theorem local_value_eq_of_stabiliser {n A R M : Type} [Fintype n] [DecidableEq n]
+    [CommRing A] [CommRing R] [Algebra R A] [AddCommGroup M] [Module R M]
+    {L : Submodule R (n → A)} (f : L →ₗ[R] M)
+    (Y Y' G K : GL n A) (h : Y = G * Y' * K)
+    (x x' : n → A) (hx' : x' = (G⁻¹).val *ᵥ x)
+    (h₁ : (Y⁻¹).val *ᵥ x ∈ L) (h₂ : (Y'⁻¹).val *ᵥ x' ∈ L)
+    (hK : K ∈ stabFun L f) : f ⟨_, h₂⟩ = f ⟨_, h₁⟩ := by
+  obtain ⟨_, hfix⟩ := hK
+  have hgroup : Y'⁻¹ * G⁻¹ = K * Y⁻¹ := by
+    rw [h, mul_inv_rev (G * Y') K, mul_inv_rev G Y', ← mul_assoc, mul_inv_cancel, one_mul]
+  have hvec : (Y'⁻¹).val *ᵥ x' = K.val *ᵥ ((Y⁻¹).val *ᵥ x) := by
+    rw [hx']
+    simpa only [mulVec_mulVec, ← Units.val_mul] using
+      congrArg (fun g : GL n A => g.val *ᵥ x) hgroup
+  exact (congrArg (fun a : L => f a) (Subtype.ext hvec)).trans (hfix ⟨_, h₁⟩)
 
 set_option maxHeartbeats 20000000 in
 set_option synthInstance.maxHeartbeats 400000 in
@@ -600,51 +670,29 @@ theorem diamond_class_function (T : Forms0 D u) (v v' : (D.mem u).A.vT) (hvv : v
     (hz2 : ((γd⁻¹ : GL (Fin (D.R.N 0)) D.host.E) : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) D.host.E) *ᵥ z ∈
       Ld D u 0 (Nat.zero_le _) c2) :
     (D.fm u).fv 0 v c2 (T.lv0.pr v c2 ⟨_, hz2⟩) = (D.fm u).fv 0 v c (T.lv0.pr v c ⟨z, hz⟩) := by
+  let w := (T.atT.eV v).1
+  let iAd := inclE (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
+  let iLoc := inclE (F := D.host.F) (E := D.host.E) (w.adicCompletion D.host.F)
+  let p := bc (n := Fin (D.R.N 0)) (prV (E := D.host.E) w)
+  let z2 := (γd⁻¹).val *ᵥ z
   have hne : (T.atT.eV v).1 ≠ (T.atT.eV v').1 := fun e => hvv (T.atT.eV.injective (Subtype.ext e))
-  have h1 := (mem_local_dual_lattice_iff' T.cls0 c (T.atT.eV v).1
-    (fun a => inclE (F := D.host.F) ((T.atT.eV v).1.adicCompletion D.host.F) (z a))).1
+  have h1 := (mem_local_dual_lattice_iff' T.cls0 c w (iLoc ∘ z)).1
     (Submodule.subset_span ⟨z, hz, rfl⟩)
-  have h2 := (mem_local_dual_lattice_iff' T.cls0 c2 (T.atT.eV v).1
-    (fun a => inclE (F := D.host.F) ((T.atT.eV v).1.adicCompletion D.host.F)
-      ((((γd⁻¹ : GL (Fin (D.R.N 0)) D.host.E) : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) D.host.E) *ᵥ z) a))).1
-    (Submodule.subset_span ⟨_, hz2, rfl⟩)
-  rw [T.fv0 v c2 ⟨_, hz2⟩ h2, T.fv0 v c ⟨z, hz⟩ h1]
-  refine congrArg _ ?_
-  have hκ : bc (prV (E := D.host.E) (T.atT.eV v).1) κd.1 ∈ T.cls0.lev.Uloc (T.atT.eV v).1 :=
-    ((T.cls0.lev.U_eq _).1 κd.2).2 _
-  rw [T.cls0.lev.UlocAlt _ (T.atT.eV v).2] at hκ
-  obtain ⟨hg, hfix⟩ := (Subgroup.mem_inf.1 hκ).2
-  have hδw : bc (prV (E := D.host.E) (T.atT.eV v).1) δ.1 = 1 := hδ.1 _ hne
-  have hw' : bc (prV (E := D.host.E) (T.atT.eV v).1) (T.cls0.y c).1 =
-      bc (prV (E := D.host.E) (T.atT.eV v).1) (bc (inclE (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) γd) *
-        bc (prV (E := D.host.E) (T.atT.eV v).1) (T.cls0.y c2).1 * bc (prV (E := D.host.E) (T.atT.eV v).1) κd.1 := by
-    have e0 := congrArg (bc (prV (E := D.host.E) (T.atT.eV v).1)) h
-    simp only [Subgroup.coe_mul, map_mul, hδw, mul_one] at e0
-    exact e0
-  have eg : (fun a => inclE (F := D.host.F) ((T.atT.eV v).1.adicCompletion D.host.F)
-      ((((γd⁻¹ : GL (Fin (D.R.N 0)) D.host.E) : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) D.host.E) *ᵥ z) a)) =
-      (((bc (prV (E := D.host.E) (T.atT.eV v).1)
-        (bc (inclE (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) γd))⁻¹ : GL _ _) : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) _) *ᵥ
-        (fun a => inclE (F := D.host.F) ((T.atT.eV v).1.adicCompletion D.host.F) (z a)) := by
-    rw [← map_inv, ← map_inv]
-    funext a
-    rw [RingHom.map_mulVec]
-    rfl
-  have key : (((bc (prV (E := D.host.E) (T.atT.eV v).1) (T.cls0.y c2).1)⁻¹ : GL _ _) : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) _) *ᵥ
-      (fun a => inclE (F := D.host.F) ((T.atT.eV v).1.adicCompletion D.host.F)
-        ((((γd⁻¹ : GL (Fin (D.R.N 0)) D.host.E) : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) D.host.E) *ᵥ z) a)) =
-      ((bc (prV (E := D.host.E) (T.atT.eV v).1) κd.1 : GL _ _) : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) _) *ᵥ
-        ((((bc (prV (E := D.host.E) (T.atT.eV v).1) (T.cls0.y c).1)⁻¹ : GL _ _) : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) _) *ᵥ
-          (fun a => inclE (F := D.host.F) ((T.atT.eV v).1.adicCompletion D.host.F) (z a))) := by
-    have gid : ∀ (Yc Y2 G K : GL (Fin (D.R.N 0)) (D.host.E ⊗[D.host.F] (T.atT.eV v).1.adicCompletion D.host.F)),
-        Yc = G * Y2 * K → Y2⁻¹ * G⁻¹ = K * Yc⁻¹ := by
-      intro Yc Y2 G K e0; rw [e0]; group
-    have gm := congrArg Units.val (gid _ _ _ _ hw')
-    rw [Units.val_mul, Units.val_mul] at gm
-    rw [eg, mulVec_mulVec, mulVec_mulVec, gm]
-  refine Eq.trans ?_ (hfix ⟨_, h1⟩)
-  congr 1
-  exact Subtype.ext key
+  have h2 := (mem_local_dual_lattice_iff' T.cls0 c2 w (iLoc ∘ z2)).1
+    (Submodule.subset_span ⟨z2, hz2, rfl⟩)
+  have hκ : p κd.1 ∈ T.cls0.lev.Uloc w := ((T.cls0.lev.U_eq κd.1).1 κd.2).2 w
+  rw [T.cls0.lev.UlocAlt w (T.atT.eV v).2] at hκ
+  have hfix := (Subgroup.mem_inf.1 hκ).2
+  have hδw : p δ.1 = 1 := hδ.1 w hne
+  have hw : p (T.cls0.y c).1 = p (bc iAd γd) * p (T.cls0.y c2).1 * p κd.1 := by
+    simpa only [Subgroup.coe_mul, map_mul, hδw, mul_one] using congrArg p h
+  have eg : iLoc ∘ z2 = ((p (bc iAd γd))⁻¹).val *ᵥ (iLoc ∘ z) :=
+    map_inverse_mulVec iAd (prV (E := D.host.E) w) γd z
+  have hf := local_value_eq_of_stabiliser (T.cls0.lev.fT w (T.atT.eV v).2)
+    (p (T.cls0.y c).1) (p (T.cls0.y c2).1) (p (bc iAd γd)) (p κd.1)
+    hw (iLoc ∘ z) (iLoc ∘ z2) eg h1 h2 hfix
+  exact (T.fv0 v c2 ⟨z2, hz2⟩ h2).trans
+    ((congrArg (T.fMe0 v) hf).trans (T.fv0 v c ⟨z, hz⟩ h1).symm)
 
 end DiaFun
 

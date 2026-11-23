@@ -1,7 +1,54 @@
 module
 
-public import Mathlib
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PSegreFlagCutChartSectionTools
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PGenericProjClosureDivisor
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsSegreFlagCutLiesOver
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PSegreFlagCutForms
+import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PSegreFlagCutTools
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PFlagBundleSectionFormsTools
+import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsFlagBundleForms
 
 @[expose] public section
 
@@ -68,15 +115,15 @@ theorem exists_flagCoord_eq (w e : Module.Basis (Fin N) Ω E) (k : ℕ) (c : Fin
   have hid : ∀ i' : Fin N, ∑ m, e.repr (w i') m * w.repr (e m) i = w.repr (w i') i := by
     intro i'
     conv_rhs => rw [← e.sum_repr (w i')]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finsupp.finsetSum_apply]
+
+    rw [map_sum, Finsupp.finsetSum_apply]
     simp [smul_eq_mul]
   unfold flagCoord
   split_ifs with h
   · calc ∑ m, (∑ i', c i' * algebraMap Ω Φ (e.repr (w i') m)) * algebraMap Ω Φ (w.repr (e m) i)
         = ∑ i', c i' * algebraMap Ω Φ (∑ m, e.repr (w i') m * w.repr (e m) i) := by
-          set_option synthInstance.maxHeartbeats 100000 in
-            simp only [Finset.sum_mul, map_sum, map_mul, Finset.mul_sum]
+
+          simp only [Finset.sum_mul, map_sum, map_mul, Finset.mul_sum]
           rw [Finset.sum_comm]
           exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
       _ = c i := by
@@ -107,8 +154,8 @@ theorem chartMonoZ_dvd (c : ∀ k, ι k) (δ : K → ℕ) :
 theorem repr_eq_sum (w w₁ : Module.Basis (Fin N) Ω E) (v : E) (i : Fin N) :
     w.repr v i = ∑ m, w₁.repr v m * w.repr (w₁ m) i := by
   conv_lhs => rw [← w₁.sum_repr v]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Finsupp.finsetSum_apply]
+
+  rw [map_sum, Finsupp.finsetSum_apply]
   simp [smul_eq_mul]
 
 end Generic
@@ -205,8 +252,8 @@ theorem chart_data (y : (Σ k, ι k) → Ω) (B₁ : ChartBundle O (segreVec y) 
     have hs : aeval (pairProjCoord y w φ φ' (flagCoord w e t (k + 1))) (∑ l, Xv l * G l) =
         ∑ l, aeval (pairProjCoord y w φ φ' (flagCoord w e t (k + 1))) (G l) *
           genVal w (flagCoord w e t (k + 1)) (ψ l) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       exact Finset.sum_congr rfl fun l _ => by rw [map_mul, hXval l, mul_comm]
     rw [hlam, show β = bH + ρ from rfl, chartMonoZ_add, map_mul, map_mul, hs, ← hval]
     ring
@@ -243,8 +290,8 @@ theorem chart_data (y : (Σ k, ι k) → Ω) (B₁ : ChartBundle O (segreVec y) 
       algebraMap Ω Φ (ψ l v₁) := by
     intro l
     conv_rhs => rw [← w.sum_repr v₁]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, smul_eq_mul, map_mul]
+
+    simp only [map_sum, map_smul, smul_eq_mul, map_mul]
   have hΩ : ∀ l, r l * segreVec y c ^ n₂ * (∏ j, y ⟨j, c j⟩ ^ ρ j) * (∏ j, y ⟨j, c j⟩ ^ β j) =
       A * (chartPow y c (x₁ ⟨k, hk⟩))⁻¹ * (r l * chartPow y c a₁) := by
     intro l

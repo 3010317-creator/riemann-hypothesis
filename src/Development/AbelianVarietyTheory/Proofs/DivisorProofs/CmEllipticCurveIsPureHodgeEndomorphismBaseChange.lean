@@ -1,11 +1,51 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPureBCId
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPolarizationCrystalFormPerfectSelfAnnihila
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolarizationCrystalFormAdjointConjAction
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.EllPullExistsOAct
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueCmHermitianLatticeForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPolarizationCrystalFormPerfectSelfAnnihila
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsChernExistsUniqueAndIso
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolarizationCrystalFormAdjointConjAction
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsIsLieBasisBaseChange
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AmplePt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
 
 @[expose] public section
 
@@ -56,8 +96,8 @@ theorem exists_isPolForm (P : GlobalTheory.Published.AbelianDeRham.Free) {R : Ty
     exact Submodule.mem_top
   refine ⟨_, n, fun k => ⟨a k, hmem _⟩, fun k => ⟨b k, hmem _⟩, ?_, rfl⟩
   have hz' : z = ∑ k, cup _ (a k) (b k) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← e.apply_symm_apply z, ← hab, map_sum]
+
+    rw [← e.apply_symm_apply z, ← hab, map_sum]
     exact Finset.sum_congr rfl fun k _ => he _ _
   rw [hz'] at hz
   exact hz
@@ -106,33 +146,13 @@ theorem isPureBC_ell : GlobalTheory.Published.AbelianDeRham → ∀ (E : Type) [
     (smoothOfRelativeDimension_isStableUnderBaseChange (n := 1)).of_isPullback hpb.1 hgG
   have hLie : LieExact A := (hP.2.1 R A 1 hA hgA).1
 
-  haveI := hgG
   obtain ⟨v', hv', hv'φ⟩ := GlobalTheory.exists_isLieBasis_baseChange S R f C.P.A A φ hpb
-    (SmoothOfRelativeDimension.smooth 1 C.P.A.hom) 1 ![C.v] C.basis
-  have hu : ∀ i, (v' i).left ≫ φ = spMap (Chart.dualMapR f) ≫ (![C.v] i).left := hv'φ
-  have hw : (v' 0 ≫ W').left ≫ φ = spMap (Chart.dualMapR f) ≫ (C.v ≫ C.act.act (GlobalTheory.CM.wK H)).left := by
-    rw [Over.comp_left, Category.assoc, hW', ← Category.assoc, hu 0, Over.comp_left, Category.assoc]
-    rfl
+    C.P.isAb.smooth 1 ![C.v] C.basis
   have e : IsLieComb (fun i => f (![ω] i)) v' (v' 0 ≫ W') := by
-    have he := eq_epsScale_of_isLieComb C.eig
-    have hs : spMap (epsScaleR (f ω)) ≫ spMap (Chart.dualMapR f) =
-        spMap (Chart.dualMapR f) ≫ spMap (epsScaleR ω) := by
-      rw [← Geo.Tor.spMap_comp, ← Geo.Tor.spMap_comp]
-      congr 1
-      ext r <;> simp [Chart.dualMapR, epsScaleR, TrivSqZeroExt.algebraMap_eq_inl]
-    have heq : v' 0 ≫ W' = epsScale (f ω) ≫ v' 0 := by
-      apply Over.OverMorphism.ext
-      apply hpb.1.hom_ext
-      · rw [hw, he, Over.comp_left, Over.comp_left, Category.assoc, hu 0]
-        change (spMap (Chart.dualMapR f) ≫ spMap (epsScaleR ω)) ≫ C.v.left =
-          spMap (epsScaleR (f ω)) ≫ (spMap (Chart.dualMapR f) ≫ C.v.left)
-        rw [← hs, Category.assoc]
-      · rw [Over.w, Over.w]
-    refine ⟨fun _ => epsScale (f ω) ≫ v' 0, ?_, ?_⟩
-    · intro i
-      fin_cases i
-      rfl
-    · simpa using heq
+    apply (GlobalTheory.lieComb_baseChange S R f C.P.A A φ hpb 1 ![C.v]
+      (C.v ≫ C.act.act (GlobalTheory.CM.wK H)) ![ω] v' (v' 0 ≫ W') hv'φ C.eig).1
+    have hv0 : (v' 0).left ≫ φ = spMap (Chart.dualMapR f) ≫ C.v.left := hv'φ 0
+    rw [Over.comp_left, Over.comp_left, Category.assoc, hW', ← Category.assoc, hv0, Category.assoc]
   have hquot : ∀ y : HdR A, push (dp0 R) (𝟙 _) W' y - f ω • y ∈ Fil A :=
     fun y => push_sub_smul_mem_Fil hLie hv' W' e y
 

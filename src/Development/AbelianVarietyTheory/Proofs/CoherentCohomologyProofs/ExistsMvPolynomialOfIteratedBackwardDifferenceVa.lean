@@ -1,6 +1,57 @@
 module
 
-public import Mathlib
+public import Mathlib.LinearAlgebra.Multilinear.Basic
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+public import Mathlib.Tactic.Continuity
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.Algebra.Polynomial.HasseDeriv
+public import Mathlib.Algebra.Polynomial.Taylor
+public import Mathlib.RingTheory.Ideal.Quotient.Defs
+public import Mathlib.RingTheory.Polynomial.Basic
 
 @[expose] public section
 
@@ -75,9 +126,9 @@ theorem multiDiff_eq_shiftAct {ι : Type*} [Fintype ι] (g : ι → G) (φ : G �
   classical
   ext x
   simp only [diffElt, sub_eq_add_neg]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [prod_one_add, powerset_univ, map_sum, LinearMap.sum_apply, Finset.sum_apply,
-    multiDiff_apply]
+
+  rw [prod_one_add, powerset_univ, map_sum, LinearMap.sum_apply, Finset.sum_apply,
+  multiDiff_apply]
   refine sum_congr rfl fun S _ ↦ ?_
   rw [prod_neg, ← of'_sum]
   have : (-1 : AddMonoidAlgebra ℤ G) ^ S.card * AddMonoidAlgebra.of' ℤ G (∑ i ∈ S, g i) =
@@ -308,8 +359,8 @@ theorem diffElt_sub_sum_mem {ι : Type*} (s : Finset ι) (g : ι → G) (x : G) 
       exact Ideal.mul_mem_mul (diffElt_mem a) (diffElt_mem b)
   have hf : ∀ g, Ideal.Quotient.mk _ (diffElt g) = f g := fun _ ↦ rfl
   rw [← Ideal.Quotient.eq]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sub, map_sum, hf]
+
+  simp only [map_sub, map_sum, hf]
 
 theorem DiffVanish.multiDiff_form_diag {d : ℕ} {φ : G → M} (h : DiffVanish (d + 1) φ)
     (g : Fin d → G) (x : G) :
@@ -324,10 +375,10 @@ theorem DiffVanish.multiDiff_form_diag {d : ℕ} {φ : G → M} (h : DiffVanish 
     simp
   have := multiDiff_pow (fun i ↦ diffElt (g i)) (diffElt x)
   rw [multiDiff_apply] at this
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [multiDiff_apply, h.form_apply _ 0, multiDiff_eq_shiftAct, ← Pi.smul_apply,
-    ← LinearMap.smul_apply, ← map_nsmul, nsmul_eq_mul, ← this, map_sum, LinearMap.sum_apply,
-    Finset.sum_apply]
+
+  rw [multiDiff_apply, h.form_apply _ 0, multiDiff_eq_shiftAct, ← Pi.smul_apply,
+  ← LinearMap.smul_apply, ← map_nsmul, nsmul_eq_mul, ← this, map_sum, LinearMap.sum_apply,
+  Finset.sum_apply]
   refine sum_congr rfl fun S _ ↦ ?_
   rw [e, map_zsmul, LinearMap.smul_apply, Pi.smul_apply]
 
@@ -364,8 +415,8 @@ theorem DiffVanish.eval_diffTopPoly {d : ℕ} {φ : G → K} (h : DiffVanish (d 
     [Fintype ι] [DecidableEq ι] (g : ι → G) (x : G) (n : ι → ℤ) :
     MvPolynomial.eval (fun i ↦ (n i : K)) (diffTopPoly d g φ x) =
       (d.factorial : K)⁻¹ * h.form fun _ ↦ ∑ i, n i • g i := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [MultilinearMap.map_sum, mul_sum, diffTopPoly, map_sum]
+
+  rw [MultilinearMap.map_sum, mul_sum, diffTopPoly, map_sum]
   refine sum_congr rfl fun a _ ↦ ?_
   rw [MultilinearMap.map_smul_univ, ← h.form_apply]
   simp [Function.comp_def]

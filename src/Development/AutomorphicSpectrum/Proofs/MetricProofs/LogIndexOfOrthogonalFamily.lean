@@ -1,11 +1,60 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsAdapted
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.RelatedPairsOrbitalTermEq
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.LatNormGrLatNeZeroOfSpan
+public import GroundTheory.HeightsAndTheta.Heights.StabilizerCovolume.EigenLatDifferent
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ProjSumSumEmbeddingsEqTrace
-public import GroundTheory.HeightsAndTheta.Heights.StabilizerCovolume.PDifferentLatIndex
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.RelatedPairsOrbitalTermEq
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.EigenLatticesDifferentStatementHoldsStatement
+public import GroundTheory.HeightsAndTheta.Heights.StabilizerCovolume.PDifferentLatIndex
+import GroundTheory.HeightsAndTheta.Heights.StabilizerCovolume.PTorusIndex
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -51,8 +100,8 @@ theorem psi_apply (ρ : 𝓞 E →+* Module.End L V) {r : ℕ} (v : Fin r → V)
 
 theorem psi_smul (ρ : 𝓞 E →+* Module.End L V) {r : ℕ} (v : Fin r → V) (o : 𝓞 E) (x : Fin r → E) :
     psi ρ v (o • x) = ρ o (psi ρ v x) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [psi_apply, map_sum, map_smul, rho_eigProj, Pi.smul_apply, smul_smul]
+
+  simp only [psi_apply, map_sum, map_smul, rho_eigProj, Pi.smul_apply, smul_smul]
   refine Finset.sum_congr rfl fun t _ => Finset.sum_congr rfl fun a _ => ?_
   congr 1
   rw [Algebra.smul_def, map_mul, mul_comm]
@@ -314,8 +363,8 @@ theorem theta_injective (hcard : Fintype.card (E →+* L) = Module.finrank ℚ E
       intro k
       refine hGI _ (hst _ _ (hv.1 a)) _ ?_
       rw [psi_smul, psi_single hcard]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [HT.eigProj, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, h1]
+
+    simp only [HT.eigProj, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, h1]
     funext u b
     simp only [Finset.sum_apply, Pi.smul_apply, emb_apply, smul_eq_mul]
     by_cases hb : b = a
@@ -336,8 +385,8 @@ theorem theta_injective (hcard : Fintype.card (E →+* L) = Module.finrank ℚ E
       · simp [Pi.single_eq_of_ne htu]
   have hleft : Function.LeftInverse G (theta ρ v) := by
     intro z
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [theta_apply, map_sum, map_smul, hGP]
+
+    simp only [theta_apply, map_sum, map_smul, hGP]
     funext u b
     simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
     rw [Finset.sum_eq_single u, Finset.sum_eq_single b]
@@ -423,14 +472,14 @@ theorem map_eigenLat [NumberField L] (hcard : Fintype.card (E →+* L) = Module.
     have h3 : thetaO ρ v z ∈ HT.eigSp ρ t := h2
     have h4 := HT.LatBasic.eigProj_of_mem h3
     have h5 : HT.eigProj ρ t (thetaO ρ v z) = phi ρ v t (z t) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [phi_apply, thetaO_apply, theta_apply, map_sum, Finset.sum_eq_single t]
+
+      rw [phi_apply, thetaO_apply, theta_apply, map_sum, Finset.sum_eq_single t]
       · simp only [map_sum, map_smul]
         refine Finset.sum_congr rfl fun a _ => ?_
         rw [eigProj_eigProj, if_pos rfl]
       · intro u _ hu
-        set_option synthInstance.maxHeartbeats 100000 in
-          simp only [map_sum, map_smul]
+
+        simp only [map_sum, map_smul]
         refine Finset.sum_eq_zero fun a _ => ?_
         rw [eigProj_eigProj, if_neg hu, smul_zero]
       · simp

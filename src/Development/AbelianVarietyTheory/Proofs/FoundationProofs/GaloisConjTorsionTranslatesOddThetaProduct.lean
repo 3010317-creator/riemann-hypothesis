@@ -1,17 +1,55 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm
-public import Formalism.PairingDivisors.StatementH
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LineDerivListCompForm
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdealPeriodLatticeOfCurveDatum
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OddThetaFunctionExistenceUniqueness
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WeilPairingGaloisEquivariantCmTorsionStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ConjugateCurveDatumLatticeIsCurveLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalStarComplexMultiplicationPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisConjTaylorThetaTranslateStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmQuadraticPhaseEquivariantEmbeddingsStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ConjugateCurveDatumLatticeIsCurveLatticeStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalStarComplexMultiplicationPointsStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisConjTaylorThetaTranslateStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdealPeriodLatticeOfCurveDatum
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutesStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OddThetaFunctionExistenceUniqueness
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WeilPairingGaloisEquivariantCmTorsionStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -235,9 +273,9 @@ theorem Hf_sum (z : VC D N N') (c : Fin r → ℂ) :
       ∑ j, coordB D T b j z * (starRingEnd ℂ) (c j) / (area T.abelian₂ : ℂ) := by
   rw [Hf, ← Finset.sum_div]
   congr 1
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [coordB, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, map_sum, map_mul, embV,
-    Finset.mul_sum, Finset.sum_mul]
+
+  simp only [coordB, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, map_sum, map_mul, embV,
+  Finset.mul_sum, Finset.sum_mul]
   symm
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun τ _ => ?_
@@ -253,8 +291,8 @@ include hT
 theorem coordB_sum (c : Fin r → ℂ) (j : Fin r) :
     coordB D T b j (∑ i, c i • embV D T (b i)) = c j := by
   change coordL T b j _ = _
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   simp only [map_smul]
   simp [coordL_apply, hT]
 
@@ -341,19 +379,19 @@ theorem torConj_emb (τ : D.what₂.Tau) (x : D.host.E) :
 theorem frameCoordinate_orthonormal_baseTorus (hb : OnB D b) (i j : Fin r) :
     coordB D (tor0 D cc δ) b j (embV D (tor0 D cc δ) (b i)) = if i = j then 1 else 0 := by
   rw [← sum_emb_pair hb]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [coordB, embV, tor0, map_sum, map_mul, emb_conj]
+
+  simp only [coordB, embV, tor0, map_sum, map_mul, emb_conj]
 
 theorem ortho_torConj (hb : OnB D b) (i j : Fin r) :
     coordB D (torConj D (tor0 D cc δ) ⊤ (topHom s)) b j
       (embV D (torConj D (tor0 D cc δ) ⊤ (topHom s)) (b i)) = if i = j then 1 else 0 := by
   have h := congrArg s (sum_emb_pair hb i j)
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [apply_ite s, map_one, map_zero, map_sum] at h
+
+  rw [apply_ite s, map_one, map_zero, map_sum] at h
   rw [← h]
   simp only [coordB, embV, torConj_emb, ← emb_conj]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_mul, RingHom.comp_apply]
+
+  simp only [map_sum, map_mul, RingHom.comp_apply]
 
 theorem conjPair_prod {g g' : Fin r → ℂ → ℂ} (hg : ∀ j, Differentiable ℂ (g j))
     (hg' : ∀ j, Differentiable ℂ (g' j)) (h : ∀ j n, s (coef1 (g j) n) = coef1 (g' j) n) :

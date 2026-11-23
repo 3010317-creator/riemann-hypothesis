@@ -1,8 +1,56 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BicechC
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ProdFam
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechAndTotalDifferentialAdditiveSquareZero
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -48,16 +96,16 @@ namespace Gr
 variable (G : Gr k V)
 
 theorem big {c : ℕ} (hc : G.N ≤ c) (a : V) : G.π c a = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← G.sum a, map_sum]
+
+  rw [← G.sum a, map_sum]
   refine Finset.sum_eq_zero fun c' hc' => G.orth _ _ _ ?_
   have := Finset.mem_range.1 hc'
   omega
 
 theorem ext' {U : Type} [AddCommGroup U] [Module k U] {X Y : V →ₗ[k] U}
     (h : ∀ c a, X (G.π c a) = Y (G.π c a)) (a : V) : X a = Y a := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← G.sum a, map_sum, map_sum]
+
+  rw [← G.sum a, map_sum, map_sum]
   exact Finset.sum_congr rfl fun c _ => h c a
 
 theorem σσ (a : V) : G.σ (G.σ a) = a := by
@@ -80,8 +128,8 @@ theorem exists_contraction : ∃ e h : V →ₗ[k] V,
     simp [h, LinearMap.sum_apply]
   have hπ : ∀ c a, h (G.π (c + 1) a) = G.π c (h a) := by
     intro c a
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [happ, happ, map_sum]
+
+    rw [happ, happ, map_sum]
     by_cases hc : c < G.N
     · rw [Finset.sum_eq_single c, Finset.sum_eq_single c]
       · rw [G.idem, G.idem]
@@ -102,10 +150,10 @@ theorem exists_contraction : ∃ e h : V →ₗ[k] V,
         simp
   have hdhd : ∀ a, G.d (h (G.d a)) = G.d a := by
     intro a
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [happ, map_sum]
-    set_option synthInstance.maxHeartbeats 100000 in
-      conv_rhs => rw [← G.sum a, map_sum]
+
+    rw [happ, map_sum]
+
+    conv_rhs => rw [← G.sum a, map_sum]
     refine Finset.sum_congr rfl fun c _ => ?_
     rw [← G.dπ, G.dπ c (g _), hg]
     rw [G.dπ c a, G.idem]
@@ -359,9 +407,9 @@ theorem phi_Dt [Fintype ι] [Fintype κ] (μ : E →ₗ[k] E' →ₗ[k] E'') (A 
     funext x
     simp only [LinearMap.comp_apply, Dt, LinearMap.add_apply, TensorProduct.map_tmul, LinearMap.id_apply, map_add (f := _),
       phi_tmul, Pi.add_apply]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [biD, boxC, grC, LinearMap.pi_apply, LinearMap.add_apply, LinearMap.sum_apply, LinearMap.smul_apply,
-      LinearMap.proj_apply, LinearMap.restrict_coe_apply, deltaL_apply, sgL_apply, map_sum, map_zsmul]
+
+    simp only [biD, boxC, grC, LinearMap.pi_apply, LinearMap.add_apply, LinearMap.sum_apply, LinearMap.smul_apply,
+    LinearMap.proj_apply, LinearMap.restrict_coe_apply, deltaL_apply, sgL_apply, map_sum, map_zsmul]
     congr 1
     rw [Finset.smul_sum]
     exact Finset.sum_congr rfl fun j _ => smul_comm _ _ _

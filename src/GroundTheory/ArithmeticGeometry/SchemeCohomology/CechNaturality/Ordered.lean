@@ -1,8 +1,48 @@
 module
 
-public import Mathlib
 public import GroundTheory.ArithmeticGeometry.SchemeCohomology.CechLeray
 public import GroundTheory.ArithmeticGeometry.SchemeCohomology.CechNaturality.Chains
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -81,17 +121,17 @@ lemma cev_d {m n : ℕ} (σ : Cochain P U m) (i : Fin (n + 1) → ι) {c : Chain
     (hc : c ∈ Finsupp.supported ℤ ℤ (leSet U i)) :
     cev P U (d P U m σ) i c = cev P U σ i (bd m c) := by
   refine eq_of_supported (cev P U (d P U m σ) i) ((cev P U σ i).comp (bd m)) (fun j hj z => ?_) hc
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [AddMonoidHom.comp_apply, cev_single, cval_of_le P U _ i j (mem_leSet.1 hj), d_apply, map_sum,
-    Finset.smul_sum, bd_single, map_sum]
+
+  rw [AddMonoidHom.comp_apply, cev_single, cval_of_le P U _ i j (mem_leSet.1 hj), d_apply, map_sum,
+  Finset.smul_sum, bd_single, map_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   simp only [map_zsmul, res_res, cev_single]
   rw [cval_of_le P U σ i _ ((mem_leSet.1 hj).trans (inter_le_comp U j k.succAbove)), smul_comm]
 
 lemma lin_bd_single {m n : ℕ} (f : (Fin (m + 1) → ι) → Chain ι n) (i : Fin (m + 2) → ι) :
     lin f (bd m (Finsupp.single i 1)) = ∑ k : Fin (m + 2), ((-1 : ℤ) ^ (k : ℕ)) • f (i ∘ k.succAbove) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [bd_single, map_sum]
+
+  rw [bd_single, map_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [map_zsmul, lin_single, one_smul]
 
@@ -191,9 +231,9 @@ lemma cevO_od {m n : ℕ} (τ : OCochain P U m) (i : Fin (n + 1) → ι) {c : Ch
   refine eq_of_supported (cevO P U (od P U m τ) i) ((cevO P U τ i).comp (bd m))
     (fun j hj z => ?_) hc
   obtain ⟨hjm, hjle⟩ := mem_oleSet.1 hj
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [AddMonoidHom.comp_apply, cevO_single, cvalO_of P U _ i j hjm hjle, od_apply, map_sum,
-    Finset.smul_sum, bd_single, map_sum]
+
+  rw [AddMonoidHom.comp_apply, cevO_single, cvalO_of P U _ i j hjm hjle, od_apply, map_sum,
+  Finset.smul_sum, bd_single, map_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   simp only [map_zsmul, res_res, cevO_single]
   rw [cvalO_of P U τ i _ (hjm.comp (Fin.strictMono_succAbove k))
@@ -264,9 +304,9 @@ theorem d_fromOrd (n : ℕ) (τ : OCochain P U n) :
       change bd (n + 1) (ocone (minIdx i) x) = x
       exact key
   funext i
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [d_apply, fromOrd_apply, cevO_od P U τ i (rho_mem_oleSet U (n + 1) i), bd_rho, lin_bd_single,
-    map_sum]
+
+  rw [d_apply, fromOrd_apply, cevO_od P U τ i (rho_mem_oleSet U (n + 1) i), bd_rho, lin_bd_single,
+  map_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [map_zsmul, fromOrd_apply, res_cevO P U τ (inter_le_comp U i k.succAbove)
     (rho_mem_oleSet U n _)]
@@ -349,8 +389,8 @@ theorem d_hstar_add (n : ℕ) (σ : Cochain P U (n + 1)) :
   have hm : hmt (n + 1) i ∈ Finsupp.supported ℤ ℤ (leSet U i) :=
     Finsupp.supported_mono (rangeIn_subset_leSet U i) (hmt_mem (n + 1) i)
   have hsum : d P U n (hstar P U n σ) i = cev P U σ i (lin (hmt n) (bd n (Finsupp.single i 1))) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [d_apply, lin_bd_single, map_sum]
+
+    rw [d_apply, lin_bd_single, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [map_zsmul, hstar_apply, res_cev P U σ (inter_le_comp U i k.succAbove)
       (Finsupp.supported_mono (rangeIn_subset_leSet U _) (hmt_mem n _))]

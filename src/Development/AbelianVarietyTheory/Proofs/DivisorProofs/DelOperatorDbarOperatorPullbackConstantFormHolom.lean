@@ -1,8 +1,46 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.LineSCShortExact
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsTypeIsRealConst
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedFormsMulClosed
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DbarPullbackHolomorphicZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -28,10 +66,10 @@ theorem delAt_sum_smul {ι : Type} [Fintype ι] {v : V n} {f : ι → V n → �
   have h : coefwise (fun g => del g v (coordVec a)) (fun x => ∑ i, f i x • e i) =
       ∑ i, del (f i) v (coordVec a) • e i := by
     refine (bas n).ext_elem fun S => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [repr_coefwise, repr_sum_smul,
-      del_sum (A := fun i x => f i x * (bas n).repr (e i) S) fun i _ => (hf i).mul (differentiableAt_const _),
-      ContinuousLinearMap.sum_apply, map_sum, Finsupp.finsetSum_apply]
+
+    rw [repr_coefwise, repr_sum_smul,
+    del_sum (A := fun i x => f i x * (bas n).repr (e i) S) fun i _ => (hf i).mul (differentiableAt_const _),
+    ContinuousLinearMap.sum_apply, map_sum, Finsupp.finsetSum_apply]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [del_mul (b := fun _ => (bas n).repr (e i) S) (hf i) (differentiableAt_const _), del_const]
     simp
@@ -54,8 +92,8 @@ theorem delAt_add {v : V n} {F G : V n → Alt n} (hF : ∀ S, DifferentiableAt 
 theorem sum_symm_dz {s : Fin n → Fin n → ℂ} (hs : ∀ a c, s a c = s c a) :
     ∑ a, ∑ c, s a c • (dz a * dz c : Alt n) = 0 := by
   have h := congrArg swap (sum_symm_dzb hs)
-  set_option synthInstance.maxHeartbeats 100000 in
-    simpa only [map_sum, map_smul, map_mul, map_zero, fun a : Fin n => (swap_dz a).2] using h
+
+  simpa only [map_sum, map_smul, map_mul, map_zero, fun a : Fin n => (swap_dz a).2] using h
 
 theorem delAt_pull_of_contDiffAt {φ : V n → V m} {v : V n} (hφ : ContDiffAt ℂ 2 φ v) (θ : Alt m) :
     delAt (fun x => pull (fderiv ℂ φ x) θ) v = 0 := by
@@ -102,8 +140,8 @@ theorem delAt_pull_of_contDiffAt {φ : V n → V m} {v : V n} (hφ : ContDiffAt 
   induction θ using ExteriorAlgebra.induction with
   | algebraMap r => exact hconst r
   | ι u =>
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [pi_eq_sum_univ' u, map_sum]
+
+    rw [pi_eq_sum_univ' u, map_sum]
     refine Finset.sum_induction _ P hadd (by simpa using hconst 0) fun i _ => ?_
     rw [map_smul, Algebra.smul_def]
     exact hmul _ _ (hconst _) (hgen i)

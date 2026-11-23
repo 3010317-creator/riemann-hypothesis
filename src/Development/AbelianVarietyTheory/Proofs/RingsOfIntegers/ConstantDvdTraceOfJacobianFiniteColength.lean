@@ -1,9 +1,55 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.IsUnitDetOfProductMapNeZero
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.MvPowerSeriesSubstConstTermsLocalAlgHomSpec
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.LocalRing.ResidueField.Defs
+public import Mathlib.RingTheory.MvPowerSeries.Derivative
+public import Mathlib.RingTheory.MvPowerSeries.Substitution
+public import Mathlib.RingTheory.Trace.Defs
+public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.MvPowerSeriesEvalOfPowMem
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsTraceEqFormMulDiagonal
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.MvPowerSeriesSubstConstTermsLocalAlgHomSpec
+import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.CoeffEqZeroOfMemSpanPow
+import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.IsUnitDetOfProductMapNeZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.AdicCompletion.Noetherian
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.MvPowerSeries.Equiv
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -24,17 +70,17 @@ theorem det_notMem_span (k : Type) [Field k] (σ : Type) [Fintype σ] [Decidable
       ρ s ∈ Ideal.span (Set.range fun i => ρ (f (e.symm i))) := by
     intro s hs
     obtain ⟨u, rfl⟩ := Ideal.mem_span_range_iff_exists_fun.1 hs
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Ideal.sum_mem _ fun j _ => ?_
     rw [map_mul]
     exact Ideal.mul_mem_left _ _ (Ideal.subset_span ⟨e j, by simp⟩)
   intro hdet
   refine SocleDet.det_notMem_span k _ N (fun i => ρ (f (e.symm i)))
     ((ρ.toAlgHom.mapMatrix a).submatrix e.symm e.symm) (fun i => ?_) (fun i => ?_) ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [hf, map_sum, ← e.symm.sum_comp]
-      simp [hX]
+
+  · rw [hf, map_sum, ← e.symm.sum_comp]
+    simp [hX]
   · have := hmap _ (hN (e.symm i))
     rwa [map_pow, hX, e.apply_symm_apply] at this
   · rw [Matrix.det_submatrix_equiv_self, ← AlgHom.map_det]
@@ -85,8 +131,8 @@ theorem exists_trace_eq {A B σ : Type} [CommRing A] [IsLocalRing A] [IsNoetheri
   have hmu : ∀ i j, mu A S B (a i j) = algebraMap S B (pderiv (R := A) j (f i)) := by
     intro i j
     have := congrArg (der (S := S) (B := B) (pderiv (R := A) j)) (ha i)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, der_mul, hmt, zero_mul, add_zero, der_tmul, mul_one] at this
+
+    simp only [map_sum, der_mul, hmt, zero_mul, add_zero, der_tmul, mul_one] at this
     rw [← this, Finset.sum_eq_single j]
     · simp [t, S]
     · intro l _ hl
@@ -98,8 +144,8 @@ theorem exists_trace_eq {A B σ : Type} [CommRing A] [IsLocalRing A] [IsNoetheri
   have hDt : ∀ z ∈ Ideal.span (Set.range t), π z * π P.det = 0 := by
     intro z hz
     obtain ⟨c, rfl⟩ := Ideal.mem_span_range_iff_exists_fun.1 hz
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.sum_mul]
+
+    rw [map_sum, Finset.sum_mul]
     refine Finset.sum_eq_zero fun j _ => ?_
     have := SocleDet.det_mul_mem (RingHom.ker π) P t j fun r => by
       have : (P.mulVec t) r = f r ⊗ₜ 1 := ha r
@@ -133,8 +179,8 @@ theorem exists_trace_eq {A B σ : Type} [CommRing A] [IsLocalRing A] [IsNoetheri
     obtain ⟨u, hu⟩ := exists_eq_C_add_sum s
     rw [hε, residue_eq_zero_iff] at hx
     change _ ∈ m.radical
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hu, map_add (f := _), map_sum]
+
+    rw [hu, map_add (f := _), map_sum]
     refine add_mem (Ideal.le_radical ?_) (Ideal.sum_mem _ fun j _ => ?_)
     · have : algebraMap S B (C (constantCoeff s)) = algebraMap A B (constantCoeff s) :=
         (IsScalarTower.algebraMap_apply A S B _).symm
@@ -165,20 +211,20 @@ theorem exists_trace_eq {A B σ : Type} [CommRing A] [IsLocalRing A] [IsNoetheri
       | tmul s w =>
         rw [hπ, hη, map_mul, ← hκ, ← hε]; rfl
     have h1 := e P.det
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hs, map_sum, AlgHom.map_det] at h1
+
+    rw [hs, map_sum, AlgHom.map_det] at h1
     refine hW (η.mapMatrix P) (fun i => ?_) ?_
     · have := congrArg η (ha i)
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_mul, hη, mul_one] at this
+
+      simp only [map_sum, map_mul, hη, mul_one] at this
       rw [← this]
       refine Finset.sum_congr rfl fun j _ => ?_
       simp [t, hη, P, S]
-    set_option synthInstance.maxHeartbeats 100000 in
-      · rw [← Ideal.Quotient.eq_zero_iff_mem, ← h1, ← Ideal.Quotient.eq_zero_iff_mem.2 hmem, map_sum]
-        refine Finset.sum_congr rfl fun p _ => ?_
-        rw [Algebra.smul_def, map_mul, ← hκ, hlift]
-        rfl
+
+    · rw [← Ideal.Quotient.eq_zero_iff_mem, ← h1, ← Ideal.Quotient.eq_zero_iff_mem.2 hmem, map_sum]
+      refine Finset.sum_congr rfl fun p _ => ?_
+      rw [Algebra.smul_def, map_mul, ← hκ, hlift]
+      rfl
 
 theorem dvd_trace_of_ringHom {A B σ : Type} [CommRing A] [IsLocalRing A] [IsNoetherianRing A]
     [CommRing B] [Fintype σ] [DecidableEq σ] (θ : MvPowerSeries σ A →+* B) (ι : A →+* B)
@@ -272,8 +318,8 @@ theorem C_dvd_trace_of_jacobian : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDi
       obtain ⟨u, hu⟩ := TraceJacobian.exists_eq_C_add_sum c
       rw [PlaceInt.mem_maximalIdeal_mvPowerSeries_iff, ← residue_eq_zero_iff] at hc
       rw [Ideal.mem_comap, Ideal.mem_comap, hu]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [RingHom.coe_coe, map_add (f := _), map_sum, map_mul, hιC, hιX]
+
+      simp only [RingHom.coe_coe, map_add (f := _), map_sum, map_mul, hιC, hιX]
       refine add_mem ?_ (Ideal.sum_mem _ fun j _ =>
         Ideal.mul_mem_right _ _ (Ideal.subset_span ⟨j, rfl⟩))
       simp [red, hc]

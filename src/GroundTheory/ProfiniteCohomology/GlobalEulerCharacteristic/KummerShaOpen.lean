@@ -1,10 +1,50 @@
 module
 
-public import Mathlib
-public import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.KummerSha
 public import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.KummerSeq
 public import GroundTheory.ProfiniteCohomology.RestrictedRamification.BaseTransportGS
+public import GroundTheory.ProfiniteCohomology.PoitouTate.PtCompactDualMapEqZeroOfPtCompactToGlobalEqZero
+public import GroundTheory.ProfiniteCohomology.RestrictedRamification.BaseKummerDefs
+import GroundTheory.ProfiniteCohomology.CupProducts.Projection
+public import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.KummerSha
 public import GroundTheory.ProfiniteCohomology.RestrictedRamification.FiniteOpen
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -29,7 +69,7 @@ variable {K L : FiniteSubfield} [Fact (K ≤ L)] {S : Set (HeightOneSpectrum (�
   (ιs : ∀ v : S, ℚ̄ →ₐ[K.1] AlgebraicClosure ((v : HeightOneSpectrum (𝓞 K.1)).adicCompletion K.1))
 
 
-set_option maxHeartbeats 800000 in
+
 theorem ptCompactToGlobal_gsMackeyCompactIso (ℓ : ℕ)
     (c : compactCohomologyRes (gsFinFamily (placesOver S) (gsMackeyEmbeddings hL ιs))
       (gsRoots (placesOver S : Set (HeightOneSpectrum (𝓞 L.1))) ℓ) 2) :
@@ -61,7 +101,7 @@ theorem ptCompactToGlobal_gsMackeyCompactIso (ℓ : ℕ)
   exact s1.trans (s2.trans s3.symm)
 
 
-set_option maxHeartbeats 800000 in
+
 theorem mem_ptSha_mackey_iff (ℓ : ℕ)
     (x : cohomology (gsRoots (placesOver S : Set (HeightOneSpectrum (𝓞 L.1))) ℓ) 2) :
     (gsRootsOfUnityCohomologyIso S hL ℓ 2).hom.hom x ∈
@@ -102,7 +142,7 @@ theorem gsRootsOfUnityIso_symm_comp_rootsOfUnityToSUnits (ℓ : ℕ) [NeZero ℓ
   Rep.hom_ext (Representation.IntertwiningMap.ext (LinearMap.ext fun _ => rfl))
 
 
-set_option maxHeartbeats 800000 in
+
 theorem cohomologyMap_rootsOfUnityToSUnits_gsRootsOfUnityCohomologyIso (ℓ : ℕ) [NeZero ℓ]
     (x : cohomology (gsRoots (placesOver S : Set (HeightOneSpectrum (𝓞 L.1))) ℓ) 2) :
     (cohomologyMap ((Rep.resFunctor (gsSubtype S hL)).map
@@ -142,7 +182,7 @@ theorem gsRootsOfUnityCohomologyIso_hom_inv_apply (ℓ : ℕ)
   congrArg (fun φ => φ.hom x) (gsRootsOfUnityCohomologyIso S hL ℓ 2).inv_hom_id
 
 
-set_option maxHeartbeats 800000 in
+
 theorem mem_ptSha_mackey_iff_of_eq (ℓ : ℕ)
     {x' : cohomology (gsRoots (placesOver S : Set (HeightOneSpectrum (𝓞 L.1))) ℓ) 2}
     {x : cohomology (Rep.res (gsSubtype S hL) (gsRoots S ℓ)) 2}
@@ -155,7 +195,7 @@ theorem mem_ptSha_mackey_iff_of_eq (ℓ : ℕ)
   exact mem_ptSha_mackey_iff hL ιs ℓ x'
 
 
-set_option maxHeartbeats 800000 in
+
 theorem cohomologyMap_rootsOfUnityToSUnits_eq_zero_iff_of_eq (ℓ : ℕ) [NeZero ℓ]
     {x' : cohomology (gsRoots (placesOver S : Set (HeightOneSpectrum (𝓞 L.1))) ℓ) 2}
     {x : cohomology (Rep.res (gsSubtype S hL) (gsRoots S ℓ)) 2}
@@ -173,7 +213,7 @@ theorem cohomologyMap_rootsOfUnityToSUnits_eq_zero_iff_of_eq (ℓ : ℕ) [NeZero
     exact (gsSUnitsCohomologyIso S hL 2).toLinearEquiv.injective (h0.trans (map_zero _).symm)
 
 
-set_option maxHeartbeats 1600000 in
+
 theorem mem_ptSha_mackey_iff_exists_kummerModN {ℓ : ℕ} [NeZero ℓ] (hℓ : ℓ.Prime)
     (hℓS : ∀ v ∉ S, ((ℓ : ℕ) : 𝓞 K.1) ∉ v.asIdeal) (hK : Odd ℓ ∨ IsTotallyComplex L.1)
     (x : cohomology (Rep.res (gsSubtype S hL) (gsRoots S ℓ)) 2) :

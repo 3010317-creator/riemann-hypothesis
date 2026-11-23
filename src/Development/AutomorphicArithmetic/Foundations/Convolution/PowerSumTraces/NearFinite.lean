@@ -1,12 +1,49 @@
 module
 
+public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.CuspidalMultiplicityOneTotallyComplex
 public import Development.AutomorphicArithmetic.TwistedTraces.CasimirEqOfOrthonormalBases
 public import Development.AutomorphicArithmetic.TwistedTraces.ExistsSignedBasisLieSubalgebraExpCompact
-public import Development.AutomorphicArithmetic.TwistedTraces.NormCuspVecLGkActionLeOfAevalEqZero
-public import Development.AutomorphicArithmetic.TwistedTraces.NormApplyLeOfLaplacianLowerBound
-public import Development.AutomorphicArithmetic.TwistedTraces.ReInnerGeOfSpanEigenvectors
 public import Development.AutomorphicArithmetic.TwistedTraces.FiniteDimensionalCuspFormsOfLevelAndDerivOpBound
-public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.CuspidalMultiplicityOneTotallyComplex
+public import Development.AutomorphicArithmetic.TwistedTraces.NormApplyLeOfLaplacianLowerBound
+public import Development.AutomorphicArithmetic.TwistedTraces.NormCuspVecLGkActionLeOfAevalEqZero
+public import Development.AutomorphicArithmetic.TwistedTraces.ReInnerGeOfSpanEigenvectors
+import GroundTheory.AutomorphicForms.AutomorphicFormSpaces.GKStableLaplacian
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -49,15 +86,15 @@ theorem UpperTheory.ConvolutionTheory.C.nearFinite :
   have hT : ∀ φ : cuspForms K n, uActionCusp K n (casimir b' ε') φ =
       ∑ i, (ε' i : ℂ) • (gkModuleCusp K n).ρ (b' i) ((gkModuleCusp K n).ρ (b' i) φ) := by
     intro φ
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [casimir, map_sum, map_smul, map_mul, LinearMap.sum_apply, LinearMap.smul_apply,
-      Module.End.mul_apply, gkModuleCusp_ρ_apply, Complex.coe_smul]
+
+    simp only [casimir, map_sum, map_smul, map_mul, LinearMap.sum_apply, LinearMap.smul_apply,
+    Module.End.mul_apply, gkModuleCusp_ρ_apply, Complex.coe_smul]
   have hsymT : ∀ x ∈ centralCuspForms K n, ∀ y ∈ centralCuspForms K n,
       inner ℂ (cuspVecL μ (uActionCusp K n (casimir b' ε') x)) (cuspVecL μ y) =
         inner ℂ (cuspVecL μ x) (cuspVecL μ (uActionCusp K n (casimir b' ε') y)) := by
     intro x hx y hy
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hT, hT, map_sum, map_sum, sum_inner, inner_sum]
+
+    rw [hT, hT, map_sum, map_sum, sum_inner, inner_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     have h1 := hskew (b' i) _ (ρ_mem_centralCuspForms (b' i) hx) y hy
     have h2 := hskew (b' i) x hx _ (ρ_mem_centralCuspForms (b' i) hy)

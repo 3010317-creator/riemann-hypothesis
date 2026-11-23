@@ -1,6 +1,49 @@
 module
 
 public import Formalism.SharpRestriction.GrowthBounds.RootWeights.EBeta
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -65,24 +108,24 @@ theorem frame_evaluation_comp_change {R : Type} [CommRing R] {ι : Type} {r : �
   · rintro ⟨i, c⟩
     by_cases hS : i ∈ S
     · by_cases hv : LL.vec i = true
-      set_option synthInstance.maxHeartbeats 100000 in
-        · simp only [RingHom.comp_apply, eBeta, frameCoordinateEvaluation, eval₂Hom_X', hS, hv, if_true, map_sum, map_mul,
-            eval₂Hom_C, RingHom.id_apply]
-          calc ∑ a, g0inv a c * ∑ b, ph (X (i, b)) * g0 b a
-              = ∑ b, ph (X (i, b)) * ∑ a, g0 b a * g0inv a c := by
-                simp only [Finset.mul_sum]
-                rw [Finset.sum_comm]
-                refine Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun a _ => by ring
-            _ = ph (X (i, c)) := by simp [hh]
-      set_option synthInstance.maxHeartbeats 100000 in
-        · simp only [RingHom.comp_apply, eBeta, frameCoordinateEvaluation, eval₂Hom_X', hS, hv, if_true, map_sum, map_mul,
-            eval₂Hom_C, RingHom.id_apply, if_false, Bool.false_eq_true]
-          calc ∑ a, g0 c a * ∑ b, g0inv a b * ph (X (i, b))
-              = ∑ b, (∑ a, g0 c a * g0inv a b) * ph (X (i, b)) := by
-                simp only [Finset.mul_sum, Finset.sum_mul]
-                rw [Finset.sum_comm]
-                refine Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun a _ => by ring
-            _ = ph (X (i, c)) := by simp [hh]
+
+      · simp only [RingHom.comp_apply, eBeta, frameCoordinateEvaluation, eval₂Hom_X', hS, hv, if_true, map_sum, map_mul,
+          eval₂Hom_C, RingHom.id_apply]
+        calc ∑ a, g0inv a c * ∑ b, ph (X (i, b)) * g0 b a
+            = ∑ b, ph (X (i, b)) * ∑ a, g0 b a * g0inv a c := by
+              simp only [Finset.mul_sum]
+              rw [Finset.sum_comm]
+              refine Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun a _ => by ring
+          _ = ph (X (i, c)) := by simp [hh]
+
+      · simp only [RingHom.comp_apply, eBeta, frameCoordinateEvaluation, eval₂Hom_X', hS, hv, if_true, map_sum, map_mul,
+          eval₂Hom_C, RingHom.id_apply, if_false, Bool.false_eq_true]
+        calc ∑ a, g0 c a * ∑ b, g0inv a b * ph (X (i, b))
+            = ∑ b, (∑ a, g0 c a * g0inv a b) * ph (X (i, b)) := by
+              simp only [Finset.mul_sum, Finset.sum_mul]
+              rw [Finset.sum_comm]
+              refine Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun a _ => by ring
+          _ = ph (X (i, c)) := by simp [hh]
     · simp [frameCoordinateEvaluation, eBeta, hS]
 
 
@@ -100,8 +143,8 @@ theorem frame_change_weighted_homogeneous {R : Type} [CommRing R] {ι : Type} [F
     (G : MvPolynomial (ι × Fin r) R) (hG : ∀ m ∈ G.support, multideg m i = n) :
     IsWeightedHomogeneous (letterDegreeWeight i) (eBeta LL S j g0 g0inv G) n := by
   classical
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [G.as_sum, map_sum]
+
+  rw [G.as_sum, map_sum]
   apply IsWeightedHomogeneous.sum
   intro m hm
   rw [eBeta, eval₂Hom_monomial, RingHom.comp_apply]
@@ -183,8 +226,8 @@ theorem frame_evaluation_monomial_sum {R : Type} [CommRing R] {ι : Type} [Finty
     frameCoordinateEvaluation LL S ph g0 g0inv P =
       ∑ m ∈ P.support, AddMonoidAlgebra.coeff P m * ∏ v, (frameCoordinateEvaluation LL S ph g0 g0inv (X v)) ^ (m v) := by
   conv_lhs => rw [P.as_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
   rw [monomial_eq, map_mul, Finsupp.prod_fintype _ _ (by simp), map_prod]
   simp [frameCoordinateEvaluation]
@@ -213,8 +256,8 @@ theorem height_bound_of_weights (hS : HSupp) (hC : HCop) : E1 := by
     have h2 := congrFun (congrFun (Matrix.mul_adjugate (matA R A)) l) (lastIdx r)
     rw [Matrix.mul_apply] at h2
     have h3 := congrArg ph h2
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum] at h3
+
+    rw [map_sum] at h3
     simp only [map_mul] at h3
     refine h3.trans ?_
     simp only [Matrix.smul_apply, Matrix.one_apply, smul_eq_mul]

@@ -1,6 +1,59 @@
 module
 
 public import Formalism.SharpRestriction.GrowthBounds.BinomialPolynomialIdentities.RestSplit
+public import Formalism.SharpRestriction.GrowthBounds.RootWeights.PropertySubmoduleWeightEntryComponent
+public import Formalism.SharpRestriction.GrowthBounds.StatementOfDegreeAndBound
+public import Formalism.SharpRestriction.GrowthBounds.BinomialPolynomialIdentities.ExtendByZeroRestrictOfVanish
+public import Formalism.SharpRestriction.GrowthBounds.BinomialPolynomialIdentities.IndexOffRange
+public import Formalism.SharpRestriction.GrowthBounds.BinomialPolynomialIdentities.KcolEqPathWord
+import Formalism.SharpRestriction.GrowthBounds.BinomialPolynomialIdentities.PeBnOfLt
+public import Formalism.SharpRestriction.GrowthBounds.RootWeights.GeneratedModuleWeightLemmaOfInterfaces
+public import Formalism.SharpRestriction.GrowthBounds.RootWeights.SpecialiseGenericMatrixInverse
+public import Formalism.SharpRestriction.GrowthBounds.RootWeights.SumFinsuppAntidiagEqSumPiFinset
+public import Formalism.SharpRestriction.GrowthBounds.RootWeights.WeightEntryRestrictionMem
+public import Formalism.ThetaLogCoordinates.JacobiPathWeights.JacobiMinorProofs.GenSpace
+public import Formalism.ThetaLogCoordinates.JacobiPathWeights.JacobiMinorProofs.LemmaA2indepOf
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.Interval.Finset.Box
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -51,8 +104,8 @@ theorem laurentCoeff_mem_dominatedWeightPolynomials (y : MvPolynomial (ι × Fin
           simp only [Matrix.mul_assoc]
       _ = 1 := by rw [this, Matrix.mul_one, hh1]
   refine hy (LaurentPolynomial k1) (ψ.comp φ) (h' * g0.map ψ) (g0inv.map ψ * h) hone m ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← matrixSubst_comp, hh2, map_sum]
+
+  rw [← matrixSubst_comp, hh2, map_sum]
   have h1 : ∀ k, matrixSubst LL S (RingHom.id _) (g0inv.map ψ) (g0.map ψ)
       (C (LaurentPolynomial.T k) * MvPolynomial.map (ψ.comp φ) (yk k)) =
       C (LaurentPolynomial.T k) * MvPolynomial.map ψ (matrixSubst LL S φ g0inv g0 (yk k)) := by
@@ -109,13 +162,13 @@ theorem torusComponent_mem_dominatedWeightPolynomials (hTo : TorusActsThroughWei
         · simp [hD]
         · intro c _ hc; simp [hD, hc]
         · intro h; exact absurd (Finset.mem_univ a) h
-      set_option synthInstance.maxHeartbeats 100000 in
-        conv_lhs => rw [y.as_sum, map_sum]
+
+      conv_lhs => rw [y.as_sum, map_sum]
       rw [← Finset.sum_fiberwise_of_maps_to (s := y.support) (t := y.support.image (fun m => wtS LL S m a))
         (g := fun m => wtS LL S m a) (fun m hm => Finset.mem_image_of_mem _ hm)]
       refine Finset.sum_congr rfl fun z _ => ?_
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [weightEntryComponent, map_sum, Finset.mul_sum]
+
+      rw [weightEntryComponent, map_sum, Finset.mul_sum]
       refine Finset.sum_congr rfl fun m hm => ?_
       rw [hTo R (LaurentPolynomial k1) ι LL n S (LaurentPolynomial.C.comp φ) D m (y.coeff m), hprod,
         (Finset.mem_filter.1 hm).2, MvPolynomial.map_monomial, MvPolynomial.C_mul_monomial, mul_comm]
@@ -131,8 +184,8 @@ theorem binomialPol_mem_dominatedWeightPolynomials (hTo : TorusActsThroughWeight
   classical
   have : binomPol R LL S a k y = ∑ z ∈ y.support.image (fun m => wtS LL S m a),
       (((Ring.choose z k : ℤ) : R)) • weightEntryComponent LL S a z y := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      conv_lhs => rw [y.as_sum, map_sum]
+
+    conv_lhs => rw [y.as_sum, map_sum]
     rw [← Finset.sum_fiberwise_of_maps_to (s := y.support) (t := y.support.image (fun m => wtS LL S m a))
         (g := fun m => wtS LL S m a) (fun m hm => Finset.mem_image_of_mem _ hm)]
     refine Finset.sum_congr rfl fun z _ => ?_
@@ -184,12 +237,12 @@ theorem restAct : RestAct := by
         aeval_X, iv, Set.mem_ofPred_eq, hv]
       by_cases hS : l.val < i
       · by_cases hvec : LL.vec l = true
-        set_option synthInstance.maxHeartbeats 100000 in
-          · simp only [if_pos hS, if_pos hvec, map_sum, map_mul, rename_C, rename_X, iv]
-            exact Finset.sum_congr rfl fun b _ => mul_comm _ _
-        set_option synthInstance.maxHeartbeats 100000 in
-          · simp only [if_pos hS, if_neg hvec, map_sum, map_mul, rename_C, rename_X, iv]
-            exact Finset.sum_congr rfl fun b _ => mul_comm _ _
+
+        · simp only [if_pos hS, if_pos hvec, map_sum, map_mul, rename_C, rename_X, iv]
+          exact Finset.sum_congr rfl fun b _ => mul_comm _ _
+
+        · simp only [if_pos hS, if_neg hvec, map_sum, map_mul, rename_C, rename_X, iv]
+          exact Finset.sum_congr rfl fun b _ => mul_comm _ _
       · simp only [if_neg hS, rename_X, iv]
   exact congrArg (fun f => f G) this
 

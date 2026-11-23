@@ -1,7 +1,56 @@
 module
 
-public import Mathlib
 public import GroundTheory.HeightsAndTheta.Heights.VerticalDivisors.StatementsChowNorm
+public import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.Algebra.MvPolynomial.Nilpotent
 
 @[expose] public section
 
@@ -78,13 +127,13 @@ theorem normForm_eq_det {R A : Type*} [CommRing R] [CommRing A] [Algebra R A] {n
           = ∑ j, ∑ i', (X j : MvPolynomial (Fin n) A) * C (M j i' k • b i') := by
             rw [Finset.sum_mul]
             refine Finset.sum_congr rfl fun j _ => ?_
-            set_option synthInstance.maxHeartbeats 100000 in
-              rw [mul_assoc, ← C_mul, hM j k, map_sum, Finset.mul_sum]
+
+            rw [mul_assoc, ← C_mul, hM j k, map_sum, Finset.mul_sum]
         _ = ∑ i', ∑ j, (X j : MvPolynomial (Fin n) A) * C (M j i' k • b i') := Finset.sum_comm
         _ = ∑ i', (∑ j, (X j : MvPolynomial (Fin n) R) * C (M j i' k)) • bP i' := by
             refine Finset.sum_congr rfl fun i' _ => ?_
-            set_option synthInstance.maxHeartbeats 100000 in
-              rw [polyBasis_apply, key, map_sum, Finset.sum_mul]
+
+            rw [polyBasis_apply, key, map_sum, Finset.sum_mul]
             refine Finset.sum_congr rfl fun j _ => ?_
             rw [map_mul, map_X, map_C, Algebra.smul_def, C_mul, mul_assoc]
     rw [hsum, bP.repr_sum_self, Matrix.sum_apply]
@@ -125,8 +174,8 @@ theorem normForm_map_eq_prod [FiniteDimensional E L] [Algebra.IsSeparable E L] [
       simp only [Algebra.leftMulMatrix_eq_repr_mul]
       exact (b.sum_repr (z * b k)).symm
     have h2 := congrArg (e j) h1
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_mul, map_sum] at h2
+
+    rw [map_mul, map_sum] at h2
     simp only [hPij, Algebra.smul_def, map_mul, AlgHom.commutes] at h2 ⊢
     rw [← h2, mul_comm]
   rw [normForm_eq_det b, RingHom.map_det]
@@ -137,13 +186,13 @@ theorem normForm_map_eq_prod [FiniteDimensional E L] [Algebra.IsSeparable E L] [
   have hconj : Λᵀ * P.map C = P.map C * diagonal D := by
     refine Matrix.ext fun k j => ?_
     rw [mul_diagonal, Matrix.mul_apply]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hΛ, transpose_apply, RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.sum_apply,
-      Matrix.smul_apply, smul_eq_mul, map_sum, map_mul, map_X, map_C, D, embForm]
+
+    simp only [hΛ, transpose_apply, RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.sum_apply,
+    Matrix.smul_apply, smul_eq_mul, map_sum, map_mul, map_X, map_C, D, embForm]
     calc ∑ i, (∑ l, X l * C (algebraMap E K (Algebra.leftMulMatrix b (x l) i k))) * C (P i j)
         = ∑ l, X l * C (∑ i, algebraMap E K (Algebra.leftMulMatrix b (x l) i k) * P i j) := by
-          set_option synthInstance.maxHeartbeats 100000 in
-            simp only [Finset.sum_mul, map_sum, Finset.mul_sum, map_mul, mul_assoc]
+
+          simp only [Finset.sum_mul, map_sum, Finset.mul_sum, map_mul, mul_assoc]
           exact Finset.sum_comm
       _ = C (P k j) * ∑ l, X l * C (e j (x l)) := by
           simp only [hkey, Finset.mul_sum, map_mul]
@@ -199,8 +248,8 @@ theorem totalDegree_embForm_le (σ : L →ₐ[E] K) (x : Fin n → L) : (embForm
 
 theorem eval_embForm_alt (σ : L →ₐ[E] K) (ht : ∑ j, algebraMap E L (t j) * x j = 1) :
     eval (fun j => algebraMap E K (t j)) (embForm σ x) = 1 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [eval_embForm, ← map_one σ, ← ht, map_sum]
+
+  rw [eval_embForm, ← map_one σ, ← ht, map_sum]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [map_mul, AlgHom.commutes]
 

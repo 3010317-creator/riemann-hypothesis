@@ -1,8 +1,50 @@
 module
 
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.CIndFrFix
-public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.FBIdJet
-public import ReciprocityTheory.ReductiveGroups.Models.FiniteGeneration.FiniteGenerationProofs.SolveV
+public import Formalism.FormalGroupWitt.FormalGroupWittProofs.SolveV
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -117,12 +159,12 @@ private lemma lin_subst_lemma_3 {σ τ : Type} [Fintype σ] {a : σ → MvPowerS
   have hS := low_subst' (fun s => (low_one_iff _).2 (ha0 s)) hR
   have hsplit : subst a f = subst a (f - ∑ s, coeff (Finsupp.single s 1) f • X s) +
       ∑ s, coeff (Finsupp.single s 1) f • a s := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← coe_substAlgHom ha, map_sub, map_sum]
+
+    rw [← coe_substAlgHom ha, map_sub, map_sum]
     simp only [map_smul]
     simp only [coe_substAlgHom, subst_X ha, sub_add_cancel]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hsplit, map_add (f := _), hS (Finsupp.single w 1) (by simp), zero_add, map_sum]
+
+  rw [hsplit, map_add (f := _), hS (Finsupp.single w 1) (by simp), zero_add, map_sum]
   simp only [map_smul, smul_eq_mul]
 
 theorem dLin_logOf (G : FGLaw S d) : ReciprocityTheory.ChartRestriction.G.TB.dLin (fun i => ReciprocityTheory.ChartRestriction.G.TB.LogPf.logOf G i) = 1 := by
@@ -265,11 +307,11 @@ theorem psTrunc_two_twist (G : FGLaw S d) (c : Fin d → Fin d → S) :
   have hcoe : ((1 + ∑ i, ∑ l, MvPolynomial.C (c i l) * (MvPolynomial.X ((0 : Fin 2), i) * MvPolynomial.X ((1 : Fin 2), l)) :
         MvPolynomial (Fin 2 × Fin d) S) : MvPowerSeries (Fin 2 × Fin d) S) =
       1 + ∑ i, ∑ l, c i l • (X ((0 : Fin 2), i) * X ((1 : Fin 2), l)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← MvPolynomial.coeToMvPowerSeries.ringHom_apply, map_add (f := _), map_one, map_sum]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_mul, MvPolynomial.coeToMvPowerSeries.ringHom_apply, MvPolynomial.coe_C,
-      MvPolynomial.coe_X, MvPowerSeries.smul_eq_C_mul]
+
+    rw [← MvPolynomial.coeToMvPowerSeries.ringHom_apply, map_add (f := _), map_one, map_sum]
+
+    simp only [map_sum, map_mul, MvPolynomial.coeToMvPowerSeries.ringHom_apply, MvPolynomial.coe_C,
+    MvPolynomial.coe_X, MvPowerSeries.smul_eq_C_mul]
   have hdiff : Low 3 (CIndFrFix.expP (CIndFrFix.bilL G c) - ((1 + ∑ i, ∑ l, MvPolynomial.C (c i l) * (MvPolynomial.X ((0 : Fin 2), i) * MvPolynomial.X ((1 : Fin 2), l)) :
         MvPolynomial (Fin 2 × Fin d) S) : MvPowerSeries (Fin 2 × Fin d) S)) := by
     rw [hcoe]
@@ -323,8 +365,8 @@ theorem psTrunc_two_twist (G : FGLaw S d) (c : Fin d → Fin d → S) :
     have h2 : 2 < e.degree := by omega
     have hz : ∀ a b : Fin 2 × Fin d, coeff e (X a * X b : MvPowerSeries (Fin 2 × Fin d) S) = 0 :=
       fun a b => hXX a b e h2
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, hz, smul_zero, Finset.sum_const_zero, add_zero]
+
+    simp only [map_sum, map_smul, hz, smul_zero, Finset.sum_const_zero, add_zero]
     rw [coeff_one, if_neg]
     rintro rfl
     simp at hd

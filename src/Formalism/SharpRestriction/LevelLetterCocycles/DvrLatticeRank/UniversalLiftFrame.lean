@@ -1,13 +1,59 @@
 module
 
-public import Formalism.SharpRestriction.LevelLetterCocycles.SecondPropositionHypothesis
-public import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.ModelQPfA
-public import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.ModelFPfB
-public import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.U3upPfFilCAnti
-public import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.SatDVR
 public import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.Imports
+public import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.LevConstOfEv
+public import Formalism.SharpRestriction.LevelLetterCocycles.ModelKStep
+public import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalEndApply
 public import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.AevalMemOfStable
 public import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.DecompCoord
+import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.ModelFPfA
+import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.ModelFPfB
+public import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.ModelQPfA
+public import Formalism.SharpRestriction.LevelLetterCocycles.DvrLatticeRank.U3upPfFilCAnti
+import Formalism.SharpRestriction.LevelLetterCocycles.FrobeniusPowUniformizerFactorisation
+import Formalism.SharpRestriction.LevelLetterCocycles.MapCompZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -102,7 +148,7 @@ theorem pt_fil {T : LocLat G Qp LL O} (Pt : ZMod n → LL → (K →ₐ[Qp] LL) 
     exact Finset.sum_congr rfl fun k _ => serMul_ev h0 h1 (g k) (valAt W T c ζ (rep k)) i
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem universal_lift_frame [IsDomain O] (hdvr : IsDiscreteValuationRing O) (hfr : IsFractionRing O LL)
     {T₁ T₂ : LocLat G Qp LL O} (F : LatHom T₁.L T₂.L) (Pt : ZMod n → LL → (K →ₐ[Qp] LL) → Prop)
     (π' Eπ : LetA O n) (h' M σ : ℕ) (c : ZMod n) (S η m : ℕ) (up : (K →ₐ[Qp] LL) → Bool)
@@ -292,8 +338,8 @@ theorem universal_lift_frame [IsDomain O] (hdvr : IsDiscreteValuationRing O) (hf
     have hfj : ∀ j, algebraMap (LetA O n) W.EE (Eπ ^ h') * fj j =
         algebraMap (LetA O n) W.EE ((letE c : LetA O n) * G j) := by
       intro j
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [hfj_def, hG, Finset.mul_sum, map_sum]
+
+      simp only [hfj_def, hG, Finset.mul_sum, map_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [IsScalarTower.algebraMap_apply O (LetA O n) W.EE, mul_left_comm, hgeq i, ← map_mul]
       congr 1
@@ -302,14 +348,14 @@ theorem universal_lift_frame [IsDomain O] (hdvr : IsDiscreteValuationRing O) (hf
         algebraMap (LetA O n) W.EE (π' * ((letE c : LetA O n) * H j)) := by
       intro j
       have hγfj : W.γE W.gam (fj j) = ∑ i, algebraMap O W.EE (P j i) * W.γE W.gam (X i) := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          simp only [hfj_def, map_sum, map_mul, AlgHom.commutes]
+
+        simp only [hfj_def, map_sum, map_mul, AlgHom.commutes]
       rw [hγfj, hfj_def]
       dsimp only
       rw [← Finset.sum_sub_distrib, Finset.mul_sum, hH]
       dsimp only
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [Finset.mul_sum, Finset.mul_sum, map_sum]
+
+      rw [Finset.mul_sum, Finset.mul_sum, map_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
       have hx := hXγ i
       rw [hgam] at hx
@@ -513,14 +559,14 @@ theorem universal_lift_frame [IsDomain O] (hdvr : IsDiscreteValuationRing O) (hf
     have hstar : Polynomial.aeval (γLA W T₂ π' c) PΩ b₀ =
         xr + ∑ j, f' j ⊗ₜ mkL W T₂ π' c (repE j) (hrepE_mem j) := by
       conv_lhs => rw [hb₀dec]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_add (f := _), map_sum, map_sum]
+
+      rw [map_add (f := _), map_sum, map_sum]
       simp only [aeval_γLA_tmul, hgam, hmkE]
       rfl
     have hxrL : xr ∈ LamLA W T₂ π' Eπ h' c Lr := by
       show smulLA W T₂ π' c (Eπ ^ h') xr ∈ LinearMap.range (toLA W T₂ π' c Lr)
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hxr, map_sum]
+
+      rw [hxr, map_sum]
       refine Submodule.sum_mem _ fun i _ => ?_
       rw [ModelFPf.smulLA_tmul, EE_aeval Eπ h' uE uE' huu hγE' PΩ (X i) _ (hgeq i), aeval_twA_letE]
       exact ⟨⟨Polynomial.aeval (twA W uE' h') PΩ (g i), aeval_twA_mem uE' h' huE'Δ PΩ (hg i)⟩ ⊗ₜ
@@ -545,8 +591,8 @@ theorem universal_lift_frame [IsDomain O] (hdvr : IsDiscreteValuationRing O) (hf
           (γLA W T₂ π' c (Polynomial.aeval (γLA W T₂ π' c) PΩ b₀) - Polynomial.aeval (γLA W T₂ π' c) PΩ b₀) -
             ∑ j, (γLA W T₂ π' c (f' j ⊗ₜ mkL W T₂ π' c (repE j) (hrepE_mem j)) -
               f' j ⊗ₜ mkL W T₂ π' c (repE j) (hrepE_mem j)) := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [map_sub, map_sum, Finset.sum_sub_distrib]
+
+        rw [map_sub, map_sum, Finset.sum_sub_distrib]
         abel
       rw [e3]
       refine Submodule.sub_mem _ hPb (Submodule.sum_mem _ fun j _ => ?_)

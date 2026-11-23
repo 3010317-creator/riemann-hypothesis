@@ -1,10 +1,57 @@
 module
 
-public import Mathlib
 public import Formalism.QuotientMetricDivisors.HeightBoundExactNorms
-public import Formalism.QuotientMetricDivisors.ProdFormula
-public import Formalism.QuotientMetricDivisors.StatementACE
+public import Mathlib.RingTheory.Coalgebra.IsFrobenius
+public import Mathlib.RingTheory.HopfAlgebra.Basic
 public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SlopeIneqMean
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -321,8 +368,8 @@ theorem dual_expand {K : Type} [Field K] {D : ℕ} (f : Module.Dual K (Fin D →
     ext k
     simp [Finset.sum_apply, Pi.single_apply]
   conv_lhs => rw [he]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [map_sum, map_smul]
+
+  simp [map_sum, map_smul]
 
 theorem map_expand {K : Type} [Field K] {a D : ℕ} (B : (Fin a → K) →ₗ[K] Module.Dual K (Fin D → K))
     (φ : Fin a → K) (e : Fin D → K) : B φ e = ∑ i, φ i * B (Pi.single i 1) e := by
@@ -330,8 +377,8 @@ theorem map_expand {K : Type} [Field K] {a D : ℕ} (B : (Fin a → K) →ₗ[K]
     ext k
     simp [Finset.sum_apply, Pi.single_apply]
   conv_lhs => rw [hφ]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [map_sum, map_smul, LinearMap.sum_apply]
+
+  simp [map_sum, map_smul, LinearMap.sum_apply]
 
 theorem pairC_transfer {K : Type} [Field K] [NumberField K] {a b n D : ℕ} (v : InfinitePlace K)
     (B : (Fin a → K) →ₗ[K] Module.Dual K (Fin D → K)) (A : (Fin b → K) →ₗ[K] Module.Dual K (Fin n → K))
@@ -348,8 +395,8 @@ theorem pairC_transfer {K : Type} [Field K] [NumberField K] {a b n D : ℕ} (v :
     ext l i
     simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, pmat, Matrix.of_apply]
     have := congrArg v.embedding (key i l)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_mul] at this
+
+    simp only [map_sum, map_mul] at this
     rw [this]
     exact Finset.sum_congr rfl fun j _ => mul_comm _ _
   rw [pairC_eq, pairC_eq, Matrix.mulVec_mulVec, ← hM, ← Matrix.mulVec_mulVec]
@@ -620,8 +667,8 @@ theorem place_bound {K : Type} [Field K] [NumberField K] [StarRing K] {n D a b :
       rw [Finset.sum_apply] at h1
       rw [Finset.sum_apply]
       try simp only []
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← map_sum v.embedding, h1]
+
+      rw [← map_sum v.embedding, h1]
       by_cases h : j = i
       · subst h
         simp

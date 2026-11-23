@@ -1,15 +1,52 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.OfFactorE
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsProjOverWeierstrass
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissibleBaseOfCompleteDvr
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.W8AddTransposeEqE8
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgIdemBinv
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RosVec
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStronglyTrivialCubicalThetaFinsuppTensor
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MumfordTensorDataMatrixActionRingHomProperties
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransportedGeneratorUniqueGlobalFunctionsBase
+public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsTorusAndQuotientHom
+import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.TauBalPow
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.RosVal
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBPull
+import Development.AbelianVarietyTheory.Definitions.Divisors.GalRigidOfSurjective
 
 @[expose] public section
 
@@ -47,8 +84,8 @@ theorem flat_single (u v : Vec r) : flat (Finsupp.single (u, v) 1) = lam u v := 
   simp [flat]
 
 theorem flat_sigP (W A A' : Matrix (Fin r) (Fin r) ℤ) : flat (sigP W A A') = sig W A A' := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [sigP, sig, map_sum, map_zsmul, flat_single]
+
+  simp only [sigP, sig, map_sum, map_zsmul, flat_single]
 
 end Formal
 
@@ -396,8 +433,8 @@ theorem formEq_sig (hpr : ∀ i, IsMonHom (pr i)) (W A A' : Matrix (Fin r) (Fin 
     rfl
   apply Additive.ofMul.injective
   rw [hR]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [ofMul_prod, ofMul_zpow, sig, map_sum, map_zsmul, hlam]
+
+  simp only [ofMul_prod, ofMul_zpow, sig, map_sum, map_zsmul, hlam]
   rw [Fintype.sum_prod_type]
   refine Finset.sum_congr rfl fun a _ => ?_
   rw [Fintype.sum_prod_type, Fintype.sum_prod_type]
@@ -473,8 +510,8 @@ theorem tv_sigP (Q : Data R) {X' : Type} [AddCommGroup X'] (xe : X' ≃+ (Fin r 
     fin_cases a <;> simp [rosVec, vecLat_add, vecLat_xv, vecLat_zv, vecLat_axv, vecLat_azv, hA, hA']
   apply Additive.ofMul.injective
   change T (sigP W A A') = _
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [sigP, map_sum, map_zsmul, ofMul_prod, ofMul_zpow]
+
+  simp only [sigP, map_sum, map_zsmul, ofMul_prod, ofMul_zpow]
   refine Finset.sum_congr rfl fun a _ => ?_
   rw [Finset.smul_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
@@ -542,8 +579,8 @@ theorem span_sigP {r : ℕ} (W A A' : Matrix (Fin r) (Fin r) ℤ)
     rw [hc]
     abel
   have hπ : N.mkQ (sigP W A A') = ∑ a : Fin 6, rosatiε a • X (rosVec A A' a) (rosVec A A' a) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [sigP, map_sum, map_zsmul, X, Finset.smul_sum, mul_smul]
+
+    simp only [sigP, map_sum, map_zsmul, X, Finset.smul_sum, mul_smul]
     rfl
   have e0 : rosVec A A' 0 = fun i => axv A i + zv i := rfl
   have e1 : rosVec A A' 1 = fun i => axv A i := rfl

@@ -1,9 +1,52 @@
 module
 
-public import Mathlib
 public import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.MatrixCoefficientDecay.InfinitesimalCharacterPaths.TensDecomp
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.MemUnitaryGroupIffMulConjTranspose
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ChainRuleSmooth.Curves
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.Algebra.Order.Chebyshev
 
 @[expose] public section
 
@@ -232,8 +275,8 @@ theorem incl_E (X : GMod n) (z : ℂ) (a b : Fin n) (u : (step X z).V) :
 
 theorem incl_actM (X : GMod n) (z : ℂ) (Y : Matrix (Fin n) (Fin n) ℂ) (u : (step X z).V) :
     incl X z (actM (step X z).E Y u) = actM (tensE X) Y (incl X z u) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [actM, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, incl_E]
+
+  simp only [actM, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, incl_E]
 
 theorem actM_tens_apply (X : GMod n) (Y : Matrix (Fin n) (Fin n) ℂ) (v : Fin n → X.V) (k : Fin n) :
     actM (tensE X) Y v k = actM X.E Y (v k) + ∑ b, Y k b • v b := by
@@ -254,10 +297,10 @@ theorem step_right (hc : IsCoefFam ε X c) (z : ℂ) (i : ι) (j : Fin n) (u : (
       (c i (actM X.E Y (incl X z u k)) g) 0 := fun k => hc.1 i _ Y hY g hg
   have hsum := HasDerivAt.fun_sum (u := (univ : Finset (Fin n))) fun k _ => (hg0 k).mul (hc0 k)
   refine hsum.congr_deriv ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [stepCoef_apply, incl_actM, actM_tens_apply, map_add (f := _), map_sum, map_smul, Pi.add_apply, Finset.sum_apply,
-    Pi.smul_apply, smul_eq_mul, Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, Matrix.mul_one, mul_add,
-    sum_add_distrib]
+
+  simp only [stepCoef_apply, incl_actM, actM_tens_apply, map_add (f := _), map_sum, map_smul, Pi.add_apply, Finset.sum_apply,
+  Pi.smul_apply, smul_eq_mul, Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, Matrix.mul_one, mul_add,
+  sum_add_distrib]
   rw [add_comm]
   congr 1
   simp only [Matrix.mul_apply, Finset.sum_mul, Finset.mul_sum]

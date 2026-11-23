@@ -2,20 +2,57 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.KatoUse
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.IsLocPres
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.RhoKApply
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ExistsLocallyConstantDOneEqCocycleOfTameInertia
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.KillLoc
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.LocalRingsCompletion.dvrFinite
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.BoxAbs
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.BoxCount
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.DatFacts
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.DatLoc
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.FinrankKerAdRepComplexConjSubOneEqBoxDef
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.NotPrimeDvdRelIndexKerInducedUnitaryRep
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.ExistsGaloisCyclotomicNegOneTrivialOnEtaPsi
+import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.ExistsDecompositionFieldFrobeniusData
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.ExistsFinitePlaceSetFactoringThroughGS
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.InertiaLeNormalIffKerLeAndInertiaLe
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.ExistsDecompositionFieldFrobeniusData
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.ExistsGaloisCyclotomicNegOneTrivialOnEtaPsi
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.FinrankKerAdRepComplexConjSubOneEqBoxDef
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.GaloisGroupPhiCondition
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.KillLoc
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ExistsLocallyConstantDOneEqCocycleOfTameInertia
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.LocalRingsCompletion.dvrFinite
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.InertiaLeNormalIffKerLeAndInertiaLe
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.NotPrimeDvdRelIndexKerInducedUnitaryRep
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Connected.Separation
 
 @[expose] public section
 
@@ -63,7 +100,7 @@ private theorem lc_desc {X Y Z : Type} [TopologicalSpace X] [TopologicalSpace Y]
     (hq : Topology.IsQuotientMap π) {f : Y → Z} (h : IsLocallyConstant fun x => f (π x)) : IsLocallyConstant f :=
   fun s => hq.isOpen_preimage.1 (h s)
 
-set_option maxHeartbeats 800000 in
+
 private theorem aux (hI : CohInp) (hP : LemmaP) {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ)
     [hl : Fact l.Prime] (hl2 : l ≠ 2) {O : Type} [CommRing O] [IsLocalRing O] [IsNoetherianRing O]
     [IsAdicComplete (maximalIdeal O) O] [Finite (ResidueField O)] [CharP (ResidueField O) l] (h2 : IsUnit (2 : O))

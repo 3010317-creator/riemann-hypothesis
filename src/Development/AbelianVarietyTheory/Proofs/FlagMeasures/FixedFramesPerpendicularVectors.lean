@@ -1,10 +1,53 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
+public import Formalism.FlagUnipotentLattices.CardSubmodulesAndLinearEquivBounds
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ImportsExtra
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLatticeStatement
 public import Formalism.FlagUnipotentLattices.CardSubgroupsOfIndexLe
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ImportsExtra
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -295,8 +338,8 @@ theorem main : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ : LatV D),
     have hE : ∀ a, (hS D).hT (F0.e a) om = 0 := fun a => by
       have h := congrFun (Formalism.HermitianLatticeCounting.Final.LatticeSumBounds.kernelRowSpace _ _
         ((Zhat F0 F'.fl).submatrix Fin.castSucc id)).1 a
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hom, map_sum]
+
+      rw [hom, map_sum]
       simp only [map_smul, smul_eq_mul]
       rw [← hκ] at h
       simpa [Matrix.mulVec, dotProduct, Zhat, brS, FlagG.fvec, mul_comm] using h
@@ -331,8 +374,8 @@ theorem main : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ : LatV D),
     have hyP : y ∈ perpE D P := by
       refine (mem_perpE D P y).2 fun p hp => ?_
       have h1 : (hS D).hT (D.sp.iXY 0 p + φ ⟨p, hp⟩) om = 0 := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [hom, map_sum]
+
+        rw [hom, map_sum]
         refine Finset.sum_eq_zero fun b _ => ?_
         rw [map_smul, horth ⟨p, hp⟩ b, smul_zero]
       rwa [map_add, LinearMap.add_apply, hXom _ (hφ ⟨p, hp⟩).2, add_zero, hσom] at h1
@@ -341,8 +384,8 @@ theorem main : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ : LatV D),
         sub_mem hyP (Submodule.sum_mem _ fun b _ => Submodule.smul_mem _ _ (hw b).1)
       refine sub_eq_zero.1 (han _ ?_)
       have h1 : ∀ σ ∈ perpE D P, (D.sp.X 0).hT σ (y - ∑ b, κ b • w b) = 0 := fun σ hσ => by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [map_sub, ← hσom, hom, map_sum, map_sum, sub_eq_zero]
+
+        rw [map_sub, ← hσom, hom, map_sum, map_sum, sub_eq_zero]
         refine Finset.sum_congr rfl fun b _ => ?_
         rw [map_smul, map_smul, ← (hw b).2 σ hσ]
       exact h1 _ hd

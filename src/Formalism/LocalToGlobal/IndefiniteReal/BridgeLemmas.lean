@@ -1,6 +1,48 @@
 module
 
 public import Formalism.LocalToGlobal.IndefiniteReal.Bridge
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -20,8 +62,8 @@ def clsAvg (S : CSD K) (c : S.Cl) (x : S.V) : S.V := ((S.wt c : K))⁻¹ • ∑
 
 theorem clsAvg_fixed (S : CSD K) (c : S.Cl) (x : S.V) (g : S.Gam c) : S.ρ c g (clsAvg S c x) = clsAvg S c x := by
   unfold clsAvg
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_smul, map_sum]
+
+  rw [map_smul, map_sum]
   congr 1
   have hm : ∀ g' : S.Gam c, S.ρ c g (S.ρ c g' x) = S.ρ c (g * g') x := by
     intro g'
@@ -124,8 +166,8 @@ theorem ext_rep (f : S.Forms) (c : S.Cl) : P.ext f (P.y c) = P.coef ((f : S.Cl �
 theorem sigma_csum (f f' : S.Forms) :
     σ (S.csum f f') = ∑ c, ((S.wt c : ℂ))⁻¹ *
       inner ℂ (P.coef ((f : S.Cl → S.V) c)) (P.coef ((f' : S.Cl → S.V) c)) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [CSD.csum, map_sum, map_mul, map_inv₀, map_natCast, P.coef_pair]
+
+  simp only [CSD.csum, map_sum, map_mul, map_inv₀, map_natCast, P.coef_pair]
 
 theorem isom_holds (P : ClassPres ι S σ ρ J χ) : P.Isom := by
   unfold ClassPres.Isom
@@ -139,8 +181,8 @@ theorem coef_inj {x : S.V} (hx : P.coef x = 0) : x = 0 := by
   have h1 : ∑ i, σ (S.bV.repr x i) • P.coef (S.bV i) = 0 := by
     rw [← hx]
     conv_rhs => rw [← S.bV.sum_repr x]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     simp only [map_smulₛₗ]
   have h2 := Fintype.linearIndependent_iff.1 P.coef_li _ h1
   apply S.bV.repr.injective
@@ -197,8 +239,8 @@ theorem det_ne (P : ClassPres ι S σ ρ J χ) : (S.H.map σ).det ≠ 0 := by
       funext j
       have h3 : σ ((S.H.mulVec v) j) = ((S.H.map σ).mulVec (fun i => σ (v i))) j := by
         show σ (∑ i, S.H j i * v i) = ∑ i, σ (S.H j i) * σ (v i)
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [map_sum]
+
+        rw [map_sum]
         simp only [map_mul]
       rw [← h3, congrFun hmul j]
       simp
@@ -208,8 +250,8 @@ theorem det_ne (P : ClassPres ι S σ ρ J χ) : (S.H.map σ).det ≠ 0 := by
       funext c
       show ((∑ i, v i • S.basis i : S.Forms) : S.Cl → S.V) c = 0
       apply P.coef_inj
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [Submodule.coe_sum, Submodule.coe_smul, Finset.sum_apply, Pi.smul_apply, map_sum, map_smulₛₗ]
+
+      simp only [Submodule.coe_sum, Submodule.coe_smul, Finset.sum_apply, Pi.smul_apply, map_sum, map_smulₛₗ]
       exact hc c
     funext i
     exact Fintype.linearIndependent_iff.1 S.basis.linearIndependent v hzero i
@@ -236,8 +278,8 @@ theorem linInd (P : ClassPres ι S σ ρ J χ) : LinearIndependent ℂ (fun i =>
 theorem coef_avg (c : S.Cl) (x : S.V) :
     P.coef (clsAvg S c x) = ((S.wt c : ℂ))⁻¹ •
       ∑ g : S.Gam c, (χ (stabK ι (P.stabI c g)) : ℂ) • ρ (P.stabI c g : Γ) (P.coef x) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [clsAvg, map_smulₛₗ, map_inv₀, map_natCast, map_sum, P.coef_act]
+
+  simp only [clsAvg, map_smulₛₗ, map_inv₀, map_natCast, map_sum, P.coef_act]
 
 theorem adForms_fixed {F : G → W} (hF : F ∈ AdForms ι ρ J χ) (c : S.Cl) (g : S.Gam c) :
     (χ (stabK ι (P.stabI c g)) : ℂ) • ρ (P.stabI c g : Γ) (F (P.y c)) = F (P.y c) := by
@@ -313,8 +355,8 @@ theorem span_eq (P : ClassPres ι S σ ρ J χ) : Submodule.span ℂ (Set.range 
       rw [← Nat.cast_smul_eq_nsmul ℂ, smul_smul, inv_mul_cancel₀ hwt, one_smul]
     have hB : ∑ l, β c l • P.coef (clsAvg S c (S.bV l)) = ((S.wt c : ℂ))⁻¹ •
         ∑ g : S.Gam c, (χ (stabK ι (P.stabI c g)) : ℂ) • ρ (P.stabI c g : Γ) (∑ l, β c l • P.coef (S.bV l)) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [P.coef_avg, map_sum, map_smul, Finset.smul_sum, smul_smul]
+
+      simp only [P.coef_avg, map_sum, map_smul, Finset.smul_sum, smul_smul]
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl fun g _ => Finset.sum_congr rfl fun l _ => ?_
       congr 1
@@ -464,8 +506,8 @@ theorem adInner_smul_left (s : ℂ) (F F' : G → W) :
 
 theorem adInner_conj (F F' : G → W) :
     starRingEnd ℂ (adInner ι J y F F') = adInner ι J y F' F := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [adInner, map_sum, map_mul, map_inv₀, map_natCast, inner_conj_symm]
+
+  simp only [adInner, map_sum, map_mul, map_inv₀, map_natCast, inner_conj_symm]
 
 theorem re_natCast_inv_mul (n : ℕ) (z : ℂ) : (((n : ℂ))⁻¹ * z).re = ((n : ℝ))⁻¹ * z.re := by
   rw [← Complex.ofReal_natCast, ← Complex.ofReal_inv, Complex.re_ofReal_mul]

@@ -1,22 +1,47 @@
 module
 
-public import Formalism.LocalToGlobal.IndefiniteReal.ConcretePkgSpec
-public import Mathlib
-public import Formalism.LocalToGlobal.IndefiniteReal.CxToPkgFamIn
-public import Formalism.LocalToGlobal.IndefiniteReal.MemRangeAdjointOfKerStable
-public import Formalism.LocalToGlobal.IndefiniteReal.EqZeroOfMemRangeAdjoint
-public import Formalism.LocalToGlobal.IndefiniteReal.EqZeroOfRangeAdjoint
-public import Formalism.LocalToGlobal.IndefiniteReal.FinrankISupLeSum
-public import Formalism.LocalToGlobal.IndefiniteReal.CutPassage
-public import Formalism.LocalToGlobal.IndefiniteReal.CxCutEP
-public import Formalism.LocalToGlobal.IndefiniteReal.CxCutPO
 public import Formalism.LocalToGlobal.IndefiniteReal.LiftCoordinatesInGoodPartOfDefinite
-public import Formalism.LocalToGlobal.IndefiniteReal.EigSumLeComapSemi
-public import Formalism.LocalToGlobal.IndefiniteReal.LiftGoodPartComplexEqRange
-public import Formalism.LocalToGlobal.IndefiniteReal.BridgeLemmas
-public import Formalism.LocalToGlobal.IndefiniteReal.GramCEqTranspose
-public import Formalism.LocalToGlobal.LatticeGeometry.FormsK
 public import Formalism.LocalRingCardinality.HeightBoundGeFourthPowerRank
+public import Formalism.LocalToGlobal.IndefiniteReal.LinksChar
+public import Formalism.LocalToGlobal.IndefiniteReal.BridgeLemmas
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Formalism.LocalToGlobal.LatticeGeometry.DegFlLApply
+public import Formalism.LocalToGlobal.LatticeGeometry.FormsK
 
 @[expose] public section
 
@@ -135,7 +160,7 @@ namespace RealDat
 
 variable {R : RealDat D A Ks} {F : Face D A}
 
-set_option maxHeartbeats 1000000 in
+
 theorem kFormR_of (hM : R.IsModels) : (R.toCx F).KFormR := by
   intro t
   have hB := Formalism.IndefR.Bridge.ClassPres.extBij_holds (R.B.R t).pres
@@ -144,7 +169,7 @@ theorem kFormR_of (hM : R.IsModels) : (R.toCx F).KFormR := by
     (Formalism.L2.DIV.CSD.basis _) (Module.Basis.ofVectorSpace _ _) hB.1
   exact ⟨Tw.linInd' (E := (R.HX t).H) _ h.1, Tw.span_top' (E := (R.HX t).H) _ h.2⟩
 
-set_option maxHeartbeats 1000000 in
+
 theorem kFormL_of (hM : R.IsModels) : (R.toCx F).KFormL := by
   intro i t
   have hB := Formalism.IndefR.Bridge.ClassPres.extBij_holds (R.B.L i t).pres
@@ -154,7 +179,7 @@ theorem kFormL_of (hM : R.IsModels) : (R.toCx F).KFormL := by
   exact ⟨Tw.linInd' (E := (R.HV i t).H) _ h.1, Tw.span_top' (E := (R.HV i t).H) _ h.2⟩
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem jIsoR_gen (hM : R.IsModels) (cv : CrdV A.fam.amb)
     (hcv : ∀ t x y, cv.hR t x y = (A.fam.R t).S.csum ((x : (A.fam.R t).S.Forms) : (A.fam.R t).S.Cl → (A.fam.R t).S.V) ((y : (A.fam.R t).S.Forms) : (A.fam.R t).S.Cl → (A.fam.R t).S.V)) :
     (R.toCx F).JIsoR cv := by
@@ -171,7 +196,7 @@ theorem jIsoR_of (hM : R.IsModels) : (R.toCx F).JIsoR (cvOf A F.P0 F.ψ0 F.P1 F.
   jIsoR_gen hM _ fun _ _ _ => rfl
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem jIsoL_gen (hM : R.IsModels) (cv : CrdV A.fam.amb)
     (hcv : ∀ i t x y, cv.hL i t x y = (A.fam.L i t).S.csum ((x : (A.fam.L i t).S.Forms) : (A.fam.L i t).S.Cl → (A.fam.L i t).S.V) ((y : (A.fam.L i t).S.Forms) : (A.fam.L i t).S.Cl → (A.fam.L i t).S.V)) :
     (R.toCx F).JIsoL cv := by

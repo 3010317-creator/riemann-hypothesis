@@ -1,17 +1,59 @@
 module
 
-public import Mathlib
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AmplePt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabPull
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.DivCalc
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.CubePullbacks.CubePull
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissiblePadicIntMaximalIdeal
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ThetaGrpActsLinearly
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SecMInvariantEqBotOrUnivAtGeometricPoint
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsSectionsSpanAffine
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemNonzeroLocusIffPowFn
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SecMInvariantEqBotOrUnivAtGeometricPoint
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RangeAlgebraMapEqIInfDiscreteValuationSubring
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsOpenConnectedComponentOfNoetherianSpace
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.EqClosedPointOfNotMemRange
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsOpenConnectedComponentOfNoetherianSpace
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.AlgebraicGeometry.QuasiAffine
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+public import Mathlib.RingTheory.PowerSeries.Inverse
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AmplePt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.CubePullbacks.CubePull
 
 @[expose] public section
 
@@ -145,8 +187,8 @@ theorem isBas_of_local [IsProper A.hom] [IsAffine T.left] (hL : L.IsLB) {n : ℕ
   · refine (Submodule.mem_bot Γ(T.left, ⊤)).1 (Submodule.mem_of_span_eq_top_of_smul_pow_mem ⊥ _ hspan (c i) ?_)
     rintro ⟨_, x, rfl⟩
     have e := congrArg (pull A L a (overResι (T.left.basicOpen (r x)))) hc
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, map_zero] at e
+
+    rw [map_sum, map_zero] at e
     simp only [map_smulₛₗ] at e
     obtain ⟨N, hN⟩ := fun_kill (overResι (T.left.basicOpen (r x))).left (r x) (overResι_range _)
       (W := ⊤) isCompact_univ (W' := ⊤) (le_pre_top _) le_top (c i) (Fintype.linearIndependent_iff.1 (hb x).1 _ e i)
@@ -179,8 +221,8 @@ theorem stableBas_of_traits [IsProper A.hom] (hL : L.IsLB) {n : ℕ} (b : Fin n 
   choose P hP using fun i => (((isBas_iff_existsUnique _).1 (he _ k)) (pull A L a (overResι V) (b i))).exists
   have hP' : ∀ {T'' : Over S} (u : T'' ⟶ overRes V) i, pull A L a (u ≫ overResι V) (b i) =
       ∑ j, pa u.left (V := ⊤) (le_pre_top _) (P i j) • pull A L a (u ≫ k) (e j) := fun u i => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← pull_pull, hP, map_sum]
+
+    rw [← pull_pull, hP, map_sum]
     simp only [map_smulₛₗ, pull_pull]
   obtain ⟨W, _, _, χ, hχ, hW⟩ := tr (h.left x)
   obtain ⟨u₀, hu₀⟩ := exists_lift (Over.homMk χ rfl : Over.mk (χ ≫ T.hom) ⟶ T) V (fun y =>
@@ -297,8 +339,8 @@ theorem exists_stableBas_polAV (H : SecBaseChangeAnySt) {S : Scheme.{0}} (P : Po
   refine ⟨Fintype.linearIndependent_iff.2 fun c hc i => ?_,
     h₃ ▸ span_of_retract P.A P.L n e e' h₁ (homAt t) _ hb'.2⟩
   have q := congrArg (pull P.A P.L n e) hc
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, map_zero] at q
+
+  rw [map_sum, map_zero] at q
   simp only [map_smulₛₗ, pull_pull, h₂] at q
   have q' := congrArg (pa e'.left (V := ⊤) (le_pre_top _)) (Fintype.linearIndependent_iff.1 hb'.1 _ q i)
   rw [map_zero, pa_pa _ _ _ _ (𝟙 _) (congrArg (fun u => u.left) h₁) (le_pre_top _), pa_id] at q'

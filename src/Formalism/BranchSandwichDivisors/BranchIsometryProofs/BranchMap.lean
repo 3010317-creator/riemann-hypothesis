@@ -1,9 +1,65 @@
 module
 
-public import Mathlib
-public import Formalism.GradedWeylDivisibility.FinalC
 public import Formalism.BranchSandwichDivisors.StatementW
+public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylNonDom
+public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LBidetMinor
+public import Formalism.GradedWeylDivisibility.StatementC
+public import Mathlib.RingTheory.Derivation.Lie
 public import Formalism.BranchSandwichDivisors.BranchIsometryProofs.MemBranchRangeOfDefectEq
+public import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
+public import Formalism.GradedWeylDivisibility.FinalC
+import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LBidetLemmas
+import Formalism.GradedWeylDivisibility.FockSpaceTableaux.SumIcoTsubTelescope
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -95,7 +151,7 @@ theorem isWeightedHomogeneous_smul {R σ B : Type*} [CommRing R] [AddCommMonoid 
   apply hF
   intro h0
   apply hd
-  rw [coeff_smul, h0, smul_zero]
+  rw [MvPolynomial.coeff_smul, h0, smul_zero]
 
 private theorem bm_whcSame_lemma {R σ B : Type*} [CommRing R] [AddCommMonoid B] {w : σ → B} {m : B}
     {φ : MvPolynomial σ R} (h : IsWeightedHomogeneous w φ m) : weightedHomogeneousComponent w m φ = φ := by
@@ -363,8 +419,8 @@ theorem rowAction_X_sum (R : Type*) [CommRing R] {r n : ℕ} (g : Matrix (Fin r)
 theorem rowAction_ext_elemDeriv_X (R : Type*) [CommRing R] (n : ℕ) (g : Matrix (Fin n) (Fin n) R) (s t : Fin n)
     (v : Fin (n + 1) × Fin n) :
     rowAct R (extM R g) (bmE R n s t (X v)) = bmE R n s t (rowAct R (extM R g) (X v)) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [elemDeriv_X, rowAction_X_sum, map_sum]
+
+  rw [elemDeriv_X, rowAction_X_sum, map_sum]
   obtain ⟨a, c⟩ := v
   by_cases hc : c = t
   · subst hc
@@ -434,7 +490,7 @@ theorem lastRowDiagDeriv_coeff (R : Type*) [CommRing R] (n : ℕ) (s : Fin n) (F
 theorem bmZ_euler (R : Type*) [CommRing R] (n : ℕ) (β : Fin n → ℤ) (s : Fin n) (F : BP R n)
     (hF : IsWeightedHomogeneous (zW n) F β) : bmZ R n s s F = ((β s : ℤ) : R) • F := by
   ext m
-  rw [lastRowDiagDeriv_coeff, coeff_smul, smul_eq_mul]
+  rw [lastRowDiagDeriv_coeff, MvPolynomial.coeff_smul, smul_eq_mul]
   by_cases hc : AddMonoidAlgebra.coeff F m = 0
   · rw [hc, mul_zero, mul_zero]
   · have h1 := hF hc
@@ -990,7 +1046,7 @@ theorem bm_mem_dualWeyl_iff {R : Type} [CommRing R] [IsDomain R] [CharZero R] {r
     · intro m hm
       funext s
       have h1 := congrArg (AddMonoidAlgebra.coeff · m) (heul s)
-      rw [ndEul_coeff, coeff_smul, smul_eq_mul] at h1
+      rw [ndEul_coeff, MvPolynomial.coeff_smul, smul_eq_mul] at h1
       have h2 := mul_right_cancel₀ hm h1
       rw [← nd_weight_apply]
       exact_mod_cast h2
@@ -1966,8 +2022,8 @@ theorem bmF_rowAct_WH (R : Type*) [CommRing R] {n : ℕ} {B : Type*} [AddCommMon
     (w : Fin (n + 1) × Fin n → B) (hw : ∀ a b s : Fin n, w (a.castSucc, s) = w (b.castSucc, s))
     (g : Matrix (Fin n) (Fin n) R) (F : BP R n) (β : B) (hF : IsWeightedHomogeneous w F β) :
     IsWeightedHomogeneous w (rowAct R (extM R g) F) β := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [F.as_sum, map_sum]
+
+  rw [F.as_sum, map_sum]
   refine IsWeightedHomogeneous.sum _ _ _ fun d hd => ?_
   have := bmF_rowAct_monomial_WH R w hw g d (AddMonoidAlgebra.coeff F d)
   rwa [hF (mem_support_iff.mp hd)] at this
@@ -1976,8 +2032,8 @@ theorem bmF_rowAct_low (R : Type*) [CommRing R] {n : ℕ} (g : Matrix (Fin n) (F
     (hL : IsLow D L) : IsLow D (rowAct R (extM R g) L) := by
   classical
   intro m' hm'
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [L.as_sum, map_sum] at hm'
+
+  rw [L.as_sum, map_sum] at hm'
   obtain ⟨d, hd, hmd⟩ := Finset.mem_biUnion.mp (MvPolynomial.support_sum hm')
   have hW := bmF_rowAct_monomial_WH R (zW n)
     (fun a b s => by rw [bmF_zW_castSucc, bmF_zW_castSucc]) g d (AddMonoidAlgebra.coeff L d)

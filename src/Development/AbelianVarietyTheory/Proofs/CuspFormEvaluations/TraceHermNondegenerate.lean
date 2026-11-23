@@ -1,10 +1,60 @@
 module
 
-public import Mathlib
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainPointBound
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.Transference
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.EmbeddingHermSelf
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IsLocalizedModuleSubtype
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+public import Mathlib.Analysis.InnerProductSpace.Dual
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.Transference
 
 @[expose] public section
 
@@ -38,9 +88,9 @@ theorem exists_euclidean {M : ℕ} [FiniteDimensional ℚ V] (hM : finrank ℚ V
   refine ⟨φ, fun x y => ?_⟩
   have hB : B x y = ∑ j, v.repr x j * v.repr y j * B (v j) (v j) := by
     conv_lhs => rw [← v.sum_repr x, ← v.sum_repr y]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul,
-      Finset.mul_sum]
+
+    simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul,
+    Finset.mul_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [Finset.sum_eq_single j]
     · ring
@@ -126,8 +176,8 @@ theorem transference_rat {M : ℕ} (b : Basis (Fin M) ℚ V)
   have hyv : ∀ i, φ (∑ j, (m i j : ℚ) • b j) = y i := by
     intro i
     refine InnerProductSpace.ext_inner_right_basis b' fun k => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hm, hb', map_sum, sum_inner]
+
+    rw [hm, hb', map_sum, sum_inner]
     simp only [map_smul, ← Rat.cast_smul_eq_qsmul ℝ, real_inner_smul_left, hd3, mul_ite, mul_one,
       mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, Rat.cast_intCast]
   refine ⟨fun i => ∑ j, (m i j : ℚ) • b j, fun i => ?_, ?_, fun i => ?_⟩
@@ -137,8 +187,8 @@ theorem transference_rat {M : ℕ} (b : Basis (Fin M) ℚ V)
   · rw [Fintype.linearIndependent_iff]
     intro g hg i
     have h := congrArg φ hg
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, map_zero] at h
+
+    rw [map_sum, map_zero] at h
     simp only [map_smul, hyv, ← Rat.cast_smul_eq_qsmul ℝ] at h
     have := (Fintype.linearIndependent_iff.mp hyli) (fun i => (g i : ℝ)) h i
     exact_mod_cast this

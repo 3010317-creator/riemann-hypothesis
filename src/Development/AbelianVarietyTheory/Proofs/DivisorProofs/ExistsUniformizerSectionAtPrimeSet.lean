@@ -1,13 +1,61 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NabBaseChange
+public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.InfPartOfSplitIdem
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatSelfDualOfUnimod
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ComplexEmbeddingHermitianQuadrupleSum
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeIsometrySignFirst
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemCompletedPairLatticeIffAdjointFrameMatrixInte
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemCompletedPairLatticeIffFrameMatrixIntegralOnH
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDualHalfLatticeDetectingCharacter
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHatIffOfSelfDual
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinPartMulIncAMem
-public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.InfPartOfSplitIdem
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNsmulIntMemLatO
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GramMapMulInv
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DefiniteThetaLiftLocalVector
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDualHalfLatticeDetectingCharacter
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEqMulOfResSNeOne
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHatIffOfSelfDual
+import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.FinPartDetAtInvInt
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.ModelLatA
 
 @[expose] public section
 
@@ -51,8 +99,8 @@ theorem psi_sympl {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (βS :
     (βT : GL (Fin T.rank) (EAf D)) (t y : WO S T) (hy : ∀ i j, infPart D (y i j) = 0) :
     ψ (symplO S T t y) = psiE ψ (Matrix.trace (frMapAdj S T βS βT t * frMapO S T βS βT y)) := by
   have hinf : infPart D (hO S T y t) = 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hO, map_sum, map_mul, hy, mul_zero, Finset.sum_const_zero]
+
+    simp only [hO, map_sum, map_mul, hy, mul_zero, Finset.sum_const_zero]
   rw [GlobalTheory.OrientedHeis.symplO_skew y t, ← GlobalTheory.HalfDuality.trace_id]
   change _ = ψ (-Algebra.trace (AF D.host.F) (AE D) (incA D D.host.xi0 * liftE (toEAf D (hO S T y t))))
   rw [liftE_toEAf hinf]
@@ -255,8 +303,8 @@ theorem trace_redM {D : D7} (PP : Pl D.host.E) {a b : ℕ} {A : Matrix (Fin a) (
   refine ⟨e ▸ Subtype.prop _, ?_⟩
   rw [show (⟨Matrix.trace (A * B), e ▸ Subtype.prop _⟩ : Formalism.L2.Herm.intAf D.host.F D.host.E) =
     ∑ i, ∑ j, (⟨A i j, hA i j⟩ * ⟨B j i, hB j i⟩) from Subtype.ext e]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Matrix.trace, Matrix.diag_apply, Matrix.mul_apply, map_sum, map_mul]
+
+  simp only [Matrix.trace, Matrix.diag_apply, Matrix.mul_apply, map_sum, map_mul]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   rw [GlobalTheory.HalfDuality.redM_apply_of_mem PP A i j (hA i j), GlobalTheory.HalfDuality.redM_apply_of_mem PP B j i (hB j i)]
 
@@ -289,8 +337,8 @@ theorem assemble {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (βS : 
       Matrix.ext fun k l => (toEAf D).map_mul _ _
     simp only [frMapO, h, Matrix.mul_smul, Matrix.smul_mul]
   have hhalf : (∑ PP ∈ Q, toEAf D (es PP)) • frMapAdj S T βS βT t = frMapAdj S T βS βT t := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← map_sum]
+
+    rw [← map_sum]
     exact Matrix.ext fun k l => GlobalTheory.AdjVecLocal.frMapAdj_half _ _ _ _ ht k l
   rw [psi_sympl ψ S T βS βT t y hy, sum_divisible_eq_sum_mul Q _ hinv _ _ hhalf, addChar_sum, ← hdil]
   refine Finset.prod_congr rfl fun PP hPP => ?_

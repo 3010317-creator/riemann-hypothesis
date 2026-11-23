@@ -1,19 +1,72 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FiniteDimensionalWdSpace
 public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
-public import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFinExt
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisGaloisActionFontaineTEqCyclotomic
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRGaloisInvariantsEqFinExt
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CoeffEqMkRootT
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EigenAdd
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EventuallyIntegral
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSumFactorial
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsCrisP
 public import Development.AbelianVarietyTheory.CrystallinePeriods.AdicMaps
 public import Development.AbelianVarietyTheory.CrystallinePeriods.CrisIncl
 public import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
+public import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFinExt
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Acris0TorsionFree
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisGaloisActionFontaineTEqCyclotomic
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisLogTeichmullerUniqueGaloisFrobeniusBdR
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisToBdRPlusInjective
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CanonicalAcrisToBdRPlusUniqueEquivariantApprox
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CoeffEqMkRootT
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EigenAdd
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EventuallyIntegral
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCompatibleRootsOfUnityAndTiltPadic
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLogTeichmullerAcrisEqMuMulUnit
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSumFactorial
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OneAddMulDerivativeTrunc
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodRingsGaloisActionLawsFrobeniusComm
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaBdRPlusSurjectiveKerUnitsEquivariant
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Topology.Sheaves.Init
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AcrisTorsionFreeComplete
 
 @[expose] public section
 
@@ -48,8 +101,8 @@ theorem exists_full (P : LocPrime l) (K : FinExt l) (b : P.R.B)
   have h4 : ∑ q : GQ l ⧸ GK K, F (s * q.out) = ∑ q : GQ l ⧸ GK K, F q.out :=
     Fintype.sum_equiv (MulAction.toPerm s) _ _ fun q => by
       rw [MulAction.toPerm_apply, ← MulAction.Quotient.mk_smul_out, h3, smul_eq_mul]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_smul, map_sum, ← smul_sub]
+
+  rw [map_smul, map_sum, ← smul_sub]
   simp only [h1]
   rw [Finset.sum_add_distrib, h4, add_sub_cancel_left, Finset.sum_const, Finset.card_univ,
     ← Nat.cast_smul_eq_nsmul ℚ_[l], smul_smul, inv_mul_cancel₀ hn, one_smul]
@@ -134,8 +187,8 @@ theorem IsLogP.add {a b : Per.AinfP l} {y y' z : Per.BdRp l} (ha : a ∈ Per.ker
     exact Ideal.map_quotient_self _
   have key := LogAdd.trunc_add hR n _ hI _ _ (Ideal.mem_map_of_mem q ha) (Ideal.mem_map_of_mem q hb)
   change q _ = q _ + q _
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_mul, map_pow, map_neg, map_one, map_natCast, map_add (f := _)]
+
+  simp only [map_sum, map_mul, map_pow, map_neg, map_one, map_natCast, map_add (f := _)]
   exact key
 
 theorem IsLogP.gal {a : Per.AinfP l} {y : Per.BdRp l} (hy : IsLogP a y) (g : GQ l) :
@@ -146,9 +199,9 @@ theorem IsLogP.gal {a : Per.AinfP l} {y : Per.BdRp l} (hy : IsLogP a y) (g : GQ 
   have h2 := CrisUnique.ev_σDp g n _ _ h
   rw [map_mul, map_natCast, map_mul, map_natCast] at h2
   rw [h2]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum (Per.extP (Per.σA g)), map_mul (Per.extP (Per.σA g)), map_pow (Per.extP (Per.σA g)),
-    map_neg (Per.extP (Per.σA g)), map_one (Per.extP (Per.σA g)), map_natCast (Per.extP (Per.σA g))]
+
+  simp only [map_sum (Per.extP (Per.σA g)), map_mul (Per.extP (Per.σA g)), map_pow (Per.extP (Per.σA g)),
+  map_neg (Per.extP (Per.σA g)), map_one (Per.extP (Per.σA g)), map_natCast (Per.extP (Per.σA g))]
 
 theorem exists_tilt (ν : ℕ → Om l) (hs : ∀ m, ν (m + 1) ^ l = ν m) (u : ℕ) (h0 : ν 0 = u) :
     ∃ e : Per.Fl l, ∀ m, (rootT e m : ℂ_[l]) = algebraMap (Om l) ℂ_[l] (ν m) := by

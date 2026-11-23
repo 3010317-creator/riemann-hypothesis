@@ -1,9 +1,58 @@
 module
 
 public import Formalism.HermitianCurvature.StatementNF
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.QuasiDeterminantFromEntries
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.InterlaceSignTwo
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IsPFSum
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.InterlaceSignTwo
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.QuasiDeterminantFromEntries
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -32,13 +81,13 @@ theorem pj_orth {ρ σ : M.Ty P} (h : ρ ≠ σ) : proj κ ρ * proj κ σ = 0 :
 
 theorem sum_pj : ∑ ρ, proj κ ρ = 1 := by
   unfold proj
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← map_sum, ← map_one κ]; congr 1; funext x; simp
+
+  rw [← map_sum, ← map_one κ]; congr 1; funext x; simp
 
 theorem kap_eq (f : M.Ty P → ℂ) : κ f = ∑ ρ, f ρ • proj κ ρ := by
   unfold proj
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp_rw [← map_smul, ← map_sum]; congr 1; funext x; simp
+
+  simp_rw [← map_smul, ← map_sum]; congr 1; funext x; simp
 
 theorem kap_mul_pj (f : M.Ty P → ℂ) (ρ : M.Ty P) : κ f * proj κ ρ = f ρ • proj κ ρ := by
   unfold proj
@@ -127,8 +176,8 @@ theorem isPF_zero {f : ℂ → A} (hf : IsPF f) {S : Set ℂ} (hS : S.Infinite) 
   let q : ℂ[X] := p.sum fun n a => monomial n (φ a)
   have hq : ∀ Z, q.eval Z = φ (ev p Z) := by
     intro Z
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [q, ev, eval₂_eq_sum, Polynomial.sum, eval_finsetSum, eval_monomial, map_sum, RingHom.id_apply]
+
+    simp only [q, ev, eval₂_eq_sum, Polynomial.sum, eval_finsetSum, eval_monomial, map_sum, RingHom.id_apply]
     refine Finset.sum_congr rfl fun n _ => ?_
     rw [← map_pow, ← Algebra.commutes, ← Algebra.smul_def, map_smul, smul_eq_mul, mul_comm]
   have : q = 0 := by

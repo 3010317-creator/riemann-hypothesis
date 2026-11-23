@@ -1,15 +1,66 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.Divisibility.GoodPartHermitianSpec
-public import Formalism.LocalToGlobal.Divisibility.ProjLemmas
-public import Formalism.SharpRestriction.Divisibility.PrimeDegreeVariant
-public import Development.AbelianVarietyTheory.Definitions.Divisors.SplitDoublingNBlock
-public import Development.AbelianVarietyTheory.Definitions.CommutativeAlgebra.AbByPOfComm
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharTraceMulIdempotent
 public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.AsAlgebraHomSurjectiveOfFinrankIntertwiningMapEq
 public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.FiniteGroupFunctionPairingCharacterEqFinrankInte
 public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.FiniteGroupFunctionPairingSelfIrreducibleAlgClos
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharTraceMulIdempotent
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Development.AbelianVarietyTheory.Definitions.CommutativeAlgebra.AbByPOfComm
+import Development.AbelianVarietyTheory.Definitions.Divisors.SplitDoublingNBlock
 
 @[expose] public section
 
@@ -63,15 +114,15 @@ private lemma natCast_mul_sum_trace_conj_eq_mul_trace {L G : Type} [Field L] [Gr
     have hx : ∀ x : G, LinearMap.trace L _ (ρ x * ρ b * ρ x⁻¹) = LinearMap.trace L _ (ρ b) := by
       intro x
       rw [LinearMap.trace_mul_comm, ← mul_assoc, ← map_mul, ← map_mul, inv_mul_cancel, one_mul]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hTdef, map_sum]
+
+    rw [hTdef, map_sum]
     simp [hx]
   have := congrArg (fun S => LinearMap.trace L _ (ρ a * S)) key
   simp only [mul_smul_comm, map_smul, mul_one, smul_eq_mul] at this
   rw [htr] at this
   rw [← this, hTdef]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Finset.mul_sum, map_sum, map_mul, mul_assoc]
+
+  simp only [Finset.mul_sum, map_sum, map_mul, mul_assoc]
 
 open Module in
 variable {K : Type} [Field K] [CharZero K] {G : Type} [Group G] [Fintype G] in
@@ -100,13 +151,13 @@ private lemma natCast_mul_sum_trace_inv_mul_trace_mul_eq {L G : Type} [Field L] 
     rw [← mul_assoc g, trace_rep_conj_eq, inv_mul_cancel_right]
   have key := natCast_smul_eq_trace_smul_one_of_commute ρ h1 Z hZ
   have htr : LinearMap.trace L _ Z = Fintype.card G := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hZdef, map_sum, ← hpair]
+
+    rw [hZdef, map_sum, ← hpair]
     simp
   have := congrArg (fun S => LinearMap.trace L _ (S * ρ b)) key
   simp only [smul_mul_assoc, map_smul, one_mul, smul_eq_mul, htr] at this
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← this, hZdef, Finset.sum_mul, map_sum]
+
+  rw [← this, hZdef, Finset.sum_mul, map_sum]
   simp [map_mul, smul_mul_assoc]
 
 open Module in
@@ -187,8 +238,8 @@ theorem _root_.GlobalTheory.MultOneRealised.exists_rep_of_mult_one : ∀ (K : Ty
   set ι := algebraMap K (AlgebraicClosure K) with hι
   have hsum' : ∑ h : P, ι (χ h) * ι (((ψ h)⁻¹ : Kˣ) : K) = Fintype.card P := by
     have := congrArg ι hsum
-    set_option synthInstance.maxHeartbeats 100000 in
-      simpa only [map_sum, map_mul, map_natCast] using this
+
+    simpa only [map_sum, map_mul, map_natCast] using this
   have hψ : ∀ a b : P, ι (((ψ (a * b))⁻¹ : Kˣ) : K) =
       ι (((ψ a)⁻¹ : Kˣ) : K) * ι (((ψ b)⁻¹ : Kˣ) : K) := by
     intro a b; rw [map_mul, mul_inv, Units.val_mul, map_mul]
@@ -208,8 +259,8 @@ theorem _root_.GlobalTheory.MultOneRealised.exists_rep_of_mult_one : ∀ (K : Ty
       simp only [Equiv.coe_mulRight]
       rw [show k * (y⁻¹ * g)⁻¹ = k * g⁻¹ * y by group, hcyc (k * g⁻¹) y,
         show (y * h⁻¹)⁻¹ = h * y⁻¹ by group, show y * h⁻¹ * (h * k * g⁻¹) = y * (k * g⁻¹) by group]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [c, map_sum, map_mul, map_div₀, map_natCast, hn]
+
+    simp only [c, map_sum, map_mul, map_div₀, map_natCast, hn]
     set A : AlgebraicClosure K := (n₀ : AlgebraicClosure K) / (Fintype.card G * Fintype.card P) with hA
     calc ∑ y : G, (A * ∑ h : P, ι (((ψ h)⁻¹ : Kˣ) : K) * ι (χ (h * y⁻¹))) *
           (A * ∑ k : P, ι (((ψ k)⁻¹ : Kˣ) : K) * ι (χ (k * (y⁻¹ * g)⁻¹)))
@@ -246,8 +297,8 @@ theorem _root_.GlobalTheory.MultOneRealised.exists_rep_of_mult_one : ∀ (K : Ty
       rw [eq_div_iff hn0, ← hAv h t, mul_comm]
       congr 1
       exact Fintype.sum_equiv (Equiv.inv G) _ _ fun x => by simp [mul_assoc]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [c, map_sum, map_mul, map_div₀, map_natCast, hn]
+
+    simp only [c, map_sum, map_mul, map_div₀, map_natCast, hn]
     rw [← Finset.mul_sum, Finset.sum_comm]
     simp_rw [← Finset.mul_sum, hx]
     calc (n₀ : AlgebraicClosure K) / (Fintype.card G * Fintype.card P) *

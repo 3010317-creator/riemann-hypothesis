@@ -1,11 +1,43 @@
 module
 
-public import Mathlib
-public import Development.WeilBound.CoreStatements.PadicHodgeComparison.HodgeSurjectivity.FormUniq
-public import Development.WeilBound.CoreStatements.PadicHodgeComparison.HodgeSurjectivity.NLeA
-public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.Imports
-public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ChartGrConst
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeXD
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -66,16 +98,16 @@ theorem res_lof {S T : Finset ι} (h : S ⊆ T) (i : I) (x : (P i).M S) :
 
 theorem pr_d (i : I) (m : ℕ) (z : (sumPM P).cech.X m) :
     pr P i (m + 1) ((sumPM P).cech.d m z) = (P i).cech.d m (pr P i m z) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Cos.d_apply, Cos.d_apply, map_sum]
+
+  rw [Cos.d_apply, Cos.d_apply, map_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [map_zsmul]
   congr 1
 
 theorem inc_d (i : I) (m : ℕ) (y : (P i).cech.X m) :
     inc P i (m + 1) ((P i).cech.d m y) = (sumPM P).cech.d m (inc P i m y) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Cos.d_apply, Cos.d_apply, map_sum]
+
+  rw [Cos.d_apply, Cos.d_apply, map_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [map_zsmul]
   congr 1
@@ -110,8 +142,8 @@ open Classical in
 theorem decomp [Fintype ι] {m : ℕ} (z : (sumPM P).cech.X m) :
     ∃ F : Finset I, z = ∑ i ∈ F, inc P i m (pr P i m z) := by
   refine ⟨Finset.univ.biUnion fun t => DFinsupp.support (z t), sub_eq_zero.1 (cochain_ext P fun i => ?_)⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sub, map_sum]
+
+  rw [map_sub, map_sum]
   by_cases hi : i ∈ Finset.univ.biUnion fun t => DFinsupp.support (z t)
   · rw [Finset.sum_eq_single_of_mem i hi (fun j _ e => pr_inc_ne P e _ _), pr_inc_self, sub_self]
   · have hz : pr P i m z = 0 := by
@@ -139,8 +171,8 @@ theorem sum_ex [Fintype ι] (h : ∀ i, (P i).Ex) : (sumPM P).Ex := by
       exact (congrArg (pr P i 1) hy).trans (map_zero _)
     choose c hc' using fun i => (h i).2.2.1 _ (hc i)
     refine ⟨∑ i ∈ F, DirectSum.lof K I (fun j => (P j).M ∅) i (c i), ?_⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [one_smul, map_sum]
+
+    rw [one_smul, map_sum]
     refine Eq.trans (Finset.sum_congr rfl fun i _ => ?_) hF.symm
     rw [aug_lof, hc', one_smul]
   · obtain ⟨F, hF⟩ := decomp P y
@@ -151,8 +183,8 @@ theorem sum_ex [Fintype ι] (h : ∀ i, (P i).Ex) : (sumPM P).Ex := by
     refine ⟨∑ i ∈ F, inc P i m (c i), ?_⟩
     rw [one_smul]
     change (sumPM P).cech.d m _ = y
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Eq.trans (Finset.sum_congr rfl fun i _ => ?_) hF.symm
     rw [← inc_d]
     have h2 := hc' i

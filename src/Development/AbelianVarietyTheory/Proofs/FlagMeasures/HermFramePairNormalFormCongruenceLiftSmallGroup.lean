@@ -1,13 +1,55 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.FlagPairDefinitePartLattice
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
-public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormGeometrySummaryStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairCommonUnipotentStabiliserSummary
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIntegerAddStarEqOneOfIsCMUnram
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairCommonUnipotentStabiliserSummary
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormGeometrySummaryStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -257,9 +299,9 @@ theorem qI_apply (y : V) : qI N y = ∑ b ∈ Finset.univ.filter (fun b : Fin r 
   simp only [GlobalTheory.DegCnt.LiftS.qI, LinearMap.sum_apply, LinearMap.smulRight_apply, LinearMap.flip_apply]
 
 theorem adj (x y : V) : H.B (pI N x) y = H.B x (qI N y) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [GlobalTheory.DegCnt.LiftS.pI_apply, GlobalTheory.DegCnt.LiftS.qI_apply, map_sum, LinearMap.sum_apply, map_smul,
-    LinearMap.smul_apply, LinearMap.map_smulₛₗ, starRingEnd_apply, H.herm, smul_eq_mul]
+
+  simp only [GlobalTheory.DegCnt.LiftS.pI_apply, GlobalTheory.DegCnt.LiftS.qI_apply, map_sum, LinearMap.sum_apply, map_smul,
+  LinearMap.smul_apply, LinearMap.map_smulₛₗ, starRingEnd_apply, H.herm, smul_eq_mul]
   exact Finset.sum_congr rfl (fun b _ => mul_comm _ _)
 
 theorem p_zero {y : V} (h : ∀ b : Fin r, N.j ≤ b.val → H.B y (N.ist b) = 0) : pI N y = 0 := by
@@ -379,20 +421,20 @@ theorem p_II (h0 : II N.F N.F' ⊓ N.F.Xa N.j = ⊥) {y : V} (hy : y ∈ II N.F 
   exact (sub_eq_zero.1 hm).symm
 
 theorem qq (y : V) : qI N (qI N y) = qI N y := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [qI_apply N y, map_sum]
+
+  rw [qI_apply N y, map_sum]
   refine Finset.sum_congr rfl (fun b hb => ?_)
   rw [map_smul, q_i N b (Finset.mem_filter.1 hb).2]
 
 theorem pq (y : V) : pI N (qI N y) = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [qI_apply N y, map_sum]
+
+  rw [qI_apply N y, map_sum]
   refine Finset.sum_eq_zero (fun b hb => ?_)
   rw [map_smul, p_i N b (Finset.mem_filter.1 hb).2, smul_zero]
 
 theorem projectionOntoDualIsotropicSpan_orthogonal_anisotropic (y : V) : H.B (qI N y) N.F.z = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [qI_apply, map_sum, LinearMap.sum_apply]
+
+  rw [qI_apply, map_sum, LinearMap.sum_apply]
   refine Finset.sum_eq_zero (fun b hb => ?_)
   rw [map_smul, LinearMap.smul_apply, symm0 H (N.normalForm_dual_orthogonal_last b (Finset.mem_filter.1 hb).2), smul_zero]
 

@@ -1,9 +1,61 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicArithmetic.OrbitLabellings.RowDefs
+public import Formalism.LocalToGlobal.CharacterGerms.SelfConjugateRowData
+public import Formalism.LocalToGlobal.CharacterGerms.ValBlocksCChart
+public import Formalism.LocalToGlobal.CharacterGerms.FinTwoNeOneSub
+public import Formalism.LocalToGlobal.CharacterGerms.IsWHLetterMinorK
+import Formalism.LocalToGlobal.CharacterGerms.NormOneRowDegrees
+public import Formalism.LocalToGlobal.CharacterGerms.PderivSubGOff
+import Formalism.LocalToGlobal.CharacterGerms.RowTieAdm
 public import Formalism.LocalToGlobal.CharacterGerms.RowTieMemCHarm
-public import Formalism.LocalToGlobal.CharacterGerms.RowTieFlagS
+import Formalism.LocalToGlobal.CharacterGerms.RowTieMemCInv
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Formalism.LocalToGlobal.CharacterGerms.BlockMembershipNormOne
+public import Formalism.LocalToGlobal.CharacterGerms.NormOneIntegral
+public import Formalism.LocalToGlobal.CharacterGerms.NormOneRowInvariant
 
 @[expose] public section
 
@@ -245,8 +297,8 @@ private theorem back_subG (inj : Function.Injective fun x : Orb × ZMod d => tau
       (subG r tau gm plc (MvPolynomial.X y)) = MvPolynomial.X y := by
     intro y
     obtain ⟨⟨α, g⟩, rfl⟩ := (eW r tau N).symm.surjective y
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [subG_X, Equiv.apply_symm_apply, map_sum]
+
+    rw [subG_X, Equiv.apply_symm_apply, map_sum]
     simp only [map_mul, MvPolynomial.aeval_C, MvPolynomial.aeval_X, MvPolynomial.algebraMap_eq]
     have hs : ∀ col, ∑ x, MvPolynomial.C (coS hd r tau gm plc (lam r tau plc (α, col)) x) * MvPolynomial.X x
         = ∑ g', MvPolynomial.C (Mm hd r tau gm α col g') * MvPolynomial.X ((eW r tau N).symm (α, g')) :=
@@ -258,8 +310,8 @@ private theorem back_subG (inj : Function.Injective fun x : Orb × ZMod d => tau
         MvPolynomial.X ((eW r tau N).symm (α, g')) =
         MvPolynomial.C (if g' = g then (1:C) else 0) * MvPolynomial.X ((eW r tau N).symm (α, g')) := by
       intro g'
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← Finset.sum_mul, ← map_sum, ← gram_matrix_mul_right gm_hyp α g g']
+
+      rw [← Finset.sum_mul, ← map_sum, ← gram_matrix_mul_right gm_hyp α g g']
       simp only [mul_comm]
     simp only [hg]
     simp
@@ -669,8 +721,8 @@ private theorem pderiv_subG_lam (inj : Function.Injective fun x : Orb × ZMod d 
   have hX : ∀ y, MvPolynomial.pderiv (lam r tau plc (α0, col0)) (subG r tau gm plc (MvPolynomial.X y)) =
       if (eW r tau N y).1 = α0 then MvPolynomial.C (Gm r tau gm α0 col0 (eW r tau N y).2) else 0 := by
     intro y
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [subG_X, map_sum]
+
+    rw [subG_X, map_sum]
     simp only [MvPolynomial.pderiv_C_mul, MvPolynomial.pderiv_X, Pi.single_apply, (lam_inj plc inj).eq_iff,
       Prod.mk.injEq, mul_ite, mul_one, mul_zero]
     by_cases hy : (eW r tau N y).1 = α0
@@ -750,8 +802,8 @@ private theorem lap_plane (inj : Function.Injective fun x : Orb × ZMod d => tau
     have e1 : (⟨tau o t, a1, plc (ρ, col)⟩ : Letter T r n) = lam r tau plc ((ρ, ⟨o, ⟨t, a1⟩⟩), col) := rfl
     have e2 : (⟨tau o (t + hd), a2, plc (ρ, col)⟩ : Letter T r n) =
         lam r tau plc ((ρ, ⟨o, ⟨t + hd, a2⟩⟩), col) := rfl
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [e1, e2, pderiv_subG_lam plc inj, map_sum]
+
+    rw [e1, e2, pderiv_subG_lam plc inj, map_sum]
     apply Finset.sum_congr rfl
     intro g _
     rw [MvPolynomial.pderiv_C_mul, pderiv_subG_lam plc inj, Finset.mul_sum]
@@ -768,8 +820,8 @@ private theorem lap_plane (inj : Function.Injective fun x : Orb × ZMod d => tau
   rw [Finset.sum_comm]
   apply Finset.sum_eq_zero
   intro g' _
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← Finset.sum_mul, ← map_sum, gm_hyp]
+
+  rw [← Finset.sum_mul, ← map_sum, gm_hyp]
   by_cases hgg : g = g'
   · simp [hgg]
   · rw [hD ρ g g' hgg, map_zero, mul_zero]

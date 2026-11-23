@@ -1,9 +1,57 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.GhostFrobenius
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteAlgebraResiduePointIdempotentsOverOCStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivGroupResidueFieldTateLevelSectionStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EpsilonPairingZeta
+import Development.AbelianVarietyTheory.Definitions.Divisors.GhostFrobenius
+import Development.AbelianVarietyTheory.Definitions.Divisors.XiMulNu
 
 @[expose] public section
 
@@ -152,8 +200,8 @@ theorem push_e (H : HasIdem O) {A A' : Type} [CommRing A] [Algebra O A] [CommRin
     (c : A →ₐ[O] IsLocalRing.ResidueField O) :
     φ (e c) = ∑ c', if c'.comp φ = c then e' c' else 0 := by
   refine idem_eq H ((he.1 c).map φ) (isIdempotentElem_sum_ite e' he'.mul_eq _) fun d => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← AlgHom.comp_apply, he.pt, map_sum]
+
+  rw [← AlgHom.comp_apply, he.pt, map_sum]
   simp_rw [apply_ite d, map_zero, he'.pt]
   rw [Finset.sum_eq_single d (fun b _ hb => by simp [hb]) (by simp)]
   simp [eq_comm]
@@ -185,8 +233,8 @@ theorem comul_e (H : HasIdem O) {A : Type} [CommRing A] [Bialgebra O A] [Module.
     rw [← hd, Algebra.TensorProduct.lift_tmul]
   have hl : d (comulAlgHom O A (e c)) = ofConv (toConv d₁ * toConv d₂) (e c) := by
     rw [AlgHom.convMul_apply, hd]; rfl
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hl, he.pt, map_sum]
+
+  rw [hl, he.pt, map_sum]
   simp_rw [apply_ite d, map_zero, hdt, he.pt]
   rw [Finset.sum_eq_single (d₁, d₂) (fun b _ hb => by
     by_cases h1 : b.1 = d₁ <;> by_cases h2 : b.2 = d₂ <;> simp_all [Prod.ext_iff]) (by simp)]
@@ -280,8 +328,8 @@ include hs hw in
 theorem sig_sumE (n : ℕ) (c : G.A n →ₐ[O] IsLocalRing.ResidueField O)
     (f : (G.A n →ₐ[O] IsLocalRing.ResidueField O) → O) :
     sig G s hpt n c (sumE (he n) f) = f c := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [sumE_apply, map_sum]
+
+  rw [sumE_apply, map_sum]
   simp_rw [map_smul, (he n).ptO, ofId_comp_sig hs hw]
   simp
 
@@ -301,8 +349,8 @@ include hs hw in
 theorem counit_endo (n : ℕ) :
     (counitAlgHom O (G.A n)).comp (endo s hpt he n) = counitAlgHom O (G.A n) := by
   ext a
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [AlgHom.comp_apply, endo_apply, map_sum]
+
+  rw [AlgHom.comp_apply, endo_apply, map_sum]
   simp_rw [map_smul, (he n).ptO]
   simp only [smul_eq_mul, mul_ite, mul_one, mul_zero]
   rw [Finset.sum_ite_eq']
@@ -345,8 +393,8 @@ theorem comul_endo (H : HasIdem O) (n : ℕ) :
     (Algebra.TensorProduct.map (endo s hpt he n) (endo s hpt he n)).comp
       (comulAlgHom O (G.A n)) = (comulAlgHom O (G.A n)).comp (endo s hpt he n) := by
   refine AlgHom.ext fun a => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [AlgHom.comp_apply, AlgHom.comp_apply, map_endo_endo, endo_apply, map_sum]
+
+  rw [AlgHom.comp_apply, AlgHom.comp_apply, map_endo_endo, endo_apply, map_sum]
   simp_rw [map_smul, Bialgebra.comulAlgHom_apply, comul_e H (he n), Finset.smul_sum, smul_ite,
     smul_zero]
   rw [Finset.sum_comm]
@@ -363,8 +411,8 @@ theorem res_endo (H : HasIdem O) (n : ℕ) (a : G.A (n + 1)) :
   have hp : ∀ c, G.res n (e (n + 1) c) = ∑ c', if c'.comp (G.res n : G.A (n + 1) →ₐ[O] G.A n) = c
       then e n c' else 0 := fun c => by
     exact push_e H (he (n + 1)) (he n) (G.res n : G.A (n + 1) →ₐ[O] G.A n) c
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [endo_apply, endo_apply, map_sum]
+
+  rw [endo_apply, endo_apply, map_sum]
   simp_rw [map_smul, hp, Finset.smul_sum, smul_ite, smul_zero]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun c' _ => ?_
@@ -399,8 +447,8 @@ theorem exists_endo (H : HasIdem O) : ∃ u : G ⟶ G, u ≫ u = u ∧
   refine ⟨uEnd s hpt hs hw he H, PDivGroup.Hom.ext (funext fun n => BialgHom.ext fun a => endo_endo hs hw he n a),
     fun n c a => ?_, fun n => ⟨Fintype.card (G.A n →ₐ[O] IsLocalRing.ResidueField O), ⟨?_⟩⟩⟩
   · change c (endo s hpt he n a) = c a
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [endo_apply, map_sum]
+
+    rw [endo_apply, map_sum]
     simp_rw [map_smul, (he n).pt, smul_ite, smul_zero]
     rw [Finset.sum_ite_eq']
     simp only [Finset.mem_univ, if_true, Algebra.smul_def, mul_one]

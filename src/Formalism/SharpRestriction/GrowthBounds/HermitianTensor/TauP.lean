@@ -1,10 +1,58 @@
 module
 
-public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.PdAevalScale
-public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.DetFactsP
-public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.DPsiMonomialIwh
-public import Mathlib.LinearAlgebra.Matrix.Transvection
+public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.DetFactsPAlt
+import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
+import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LBidetLemmas
+public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LRowstLemmas
+public import Formalism.SharpRestriction.GrowthBounds.ColumnSpanDensity.OneMemDualWeyl
+public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.DerivativeRepresentation
 public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.DetYNeZero
+import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.NuOfLoZero
+public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.PdAevalScale
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -17,8 +65,8 @@ open Formalism.MainNotions.G Formalism.MainNotions.flipOneThree Formalism.Counti
 private theorem isWeightedHomogeneous_comp_addMonoidHom {R σ M M' : Type*} [CommSemiring R] [AddCommMonoid M] [AddCommMonoid M'] (ψ : M →+ M') (w : σ → M) {f : MvPolynomial σ R} {m : M} (h : IsWeightedHomogeneous w f m) : IsWeightedHomogeneous (fun v => ψ (w v)) f (ψ m) := by
   intro d hd
   rw [← h hd, Finsupp.weight_apply, Finsupp.weight_apply]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [Finsupp.sum, map_sum, map_nsmul]
+
+  simp [Finsupp.sum, map_sum, map_nsmul]
 
 private theorem isWeightedHomogeneous_colW_adjugate_genY {R : Type} [CommRing R] (r : ℕ) (a i : Fin r) :
     IsWeightedHomogeneous (colW r r) ((genY R r).adjugate a i) (fun k => if k = a then 0 else 1) := by
@@ -178,8 +226,8 @@ private theorem pow_mul_aeval_eq_of_homogeneous_of_mul_eq {R σ S : Type} [CommR
     u ^ D * aeval Z f = w ^ D * aeval Z' f := by
   conv_lhs => rw [f.as_sum]
   conv_rhs => rw [f.as_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, Finset.mul_sum]
+
+  simp only [map_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun d hd => ?_
   rw [aeval_monomial, aeval_monomial]
   have hD := hf d hd
@@ -230,8 +278,8 @@ private theorem transpose_act_comp_adjugate_subst_comp_act_eq_det {R : Type} [Co
   apply MvPolynomial.algHom_ext
   intro v
   have hx : rowAct R A (X v) = ∑ b, C (A v.1 b) * X (b, v.2) := by simp [rowAct, aeval_X]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [AlgHom.comp_apply, AlgHom.comp_apply, hx, map_sum, map_sum, aeval_X]
+
+  rw [AlgHom.comp_apply, AlgHom.comp_apply, hx, map_sum, map_sum, aeval_X]
   have hC : ∀ c : R, rowAct R (n := r) A.transpose (C c) = C c := fun c => (rowAct R (n := r) A.transpose).commutes c
   simp only [map_mul, aeval_C, aeval_X, algebraMap_eq, hC, hr]
   have hsum : (∑ b, C (A v.1 b) * ((genY R r).adjugate * Am.adjugate) v.2.rev b) = ((genY R r).adjugate * Am.adjugate * Am) v.2.rev v.1 := by

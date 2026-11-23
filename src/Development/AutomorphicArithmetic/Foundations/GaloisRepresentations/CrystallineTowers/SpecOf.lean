@@ -1,7 +1,54 @@
 module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.HodgeTateResidues.HodgeTateSpectral.HTSpecGood
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.DifferentialFormsCech.HodgeC
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.HodgeSurjectivity.HtBijOfParts
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.CrystallineTowers.SigCEq
+import GroundTheory.PAdicHodge.NormalizedTraceTower
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Proper
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
 
 @[expose] public section
 
@@ -169,15 +216,15 @@ theorem sum_e (e : IsoFam K) {M : CrystallineSemistableComparison.Model l K.1} (
 theorem h_dual (P : CrystallineSemistableComparison.HT.HTPre l K.1) (M : CrystallineSemistableComparison.Model l K.1) (a n : ℕ) (v : M.V n) {ι : Type} (s : Finset ι)
     (c : ι → K.1) (φ : ι → Module.Dual K.1 (CrystallineSemistableComparison.HT.Hdg M.q a n)) :
     P.h M a n v (∑ i ∈ s, c i • φ i) = ∑ i ∈ s, CrystallineSemistableComparison.HT.kC K.1 (c i) * P.h M a n v (φ i) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   exact Finset.sum_congr rfl fun i _ => P.lin' M a n (c i) v (φ i)
 
 theorem h_vec (P : CrystallineSemistableComparison.HT.HTPre l K.1) (M : CrystallineSemistableComparison.Model l K.1) (a n : ℕ) {ι : Type} (s : Finset ι) (r : ι → ℚ_[l])
     (v : ι → M.V n) (φ : Module.Dual K.1 (CrystallineSemistableComparison.HT.Hdg M.q a n)) :
     P.h M a n (∑ i ∈ s, r i • v i) φ = ∑ i ∈ s, CrystallineSemistableComparison.HT.qC l (r i) * P.h M a n (v i) φ := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, AddMonoidHom.finsetSum_apply]
+
+  rw [map_sum, AddMonoidHom.finsetSum_apply]
   exact Finset.sum_congr rfl fun i _ => P.lin M a n (r i) (v i) φ
 
 theorem hm_inj (P : CrystallineSemistableComparison.HT.HTPre l K.1) (e : IsoFam K) {M : CrystallineSemistableComparison.Model l K.1} (hM : M.Sm) {n : ℕ}

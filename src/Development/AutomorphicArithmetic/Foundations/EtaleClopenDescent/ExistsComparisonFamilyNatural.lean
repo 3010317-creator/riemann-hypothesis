@@ -1,15 +1,53 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GermCompatId
 public import Development.AutomorphicArithmetic.GenericGermInjectivity.CoverGeneric
-public import Development.AutomorphicArithmetic.CommutativeAlgebra.FunctionFieldOfFiniteEtaleCover
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.SortSign
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.OmegaPullOmegaTraceOfSecTraceOne
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CechHomologyEquivFamStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GenericGermDifferentialFormRestrictAffineOpenStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RiemannFormHermitianLattice
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Std.Tactic.BVDecide.Normalize.Prop
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FlatHermRootLineDegree
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GenericGermDifferentialFormPullbackDominantStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RiemannFormHermitianLattice
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CechHomologyEquivFamStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GenericGermDifferentialFormRestrictAffineOpenStatement
 
 @[expose] public section
 
@@ -371,7 +409,7 @@ theorem cechOpen_le (f : Z' ⟶ Z) (τ : κ → ι) (hτ : ∀ i, U' i ≤ f ⁻
   exact (Finset.inf_le hj).trans (hτ j)
 
 
-set_option maxHeartbeats 800000 in
+
 theorem gm_pull (hinst : inst = ffAlg p) (hinst' : inst' = ffAlg p') (hU : IsAffCover p U B)
     (hU' : IsAffCover p' U' B') (f : Z' ⟶ Z) (hf : f ≫ p = p')
     (ψ : Z.functionField →ₐ[ℂ] Z'.functionField)
@@ -742,7 +780,7 @@ private theorem mapDR_eq_semiHom_mDR (K L : Type) [Field K] [Field L] [Algebra �
   | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
 
 
-set_option maxHeartbeats 800000 in
+
 theorem gm_trace (hc : c ≫ p = p') (hinst : inst = ffAlg p) (hinst' : inst' = ffAlg p')
     (hU : IsAffCover p U B) (hU' : IsAffCover p' (fun i => c ⁻¹ᵁ U i) B')
     (hg : GermCompat c (algebraMap Z.functionField Y.functionField))
@@ -835,9 +873,9 @@ theorem trL_isMap (hc : c ≫ p = p') (hinst : inst = ffAlg p) (hinst' : inst' =
     · show trDR ℂ Z.functionField Y.functionField (x s) = 0
       rw [(hx s).2 hs, map_zero]
   · funext s
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [trL, LinearMap.pi_apply, LinearMap.comp_apply, LinearMap.proj_apply, deltaL.eq_1,
-      LinearMap.coe_mk, AddHom.coe_mk, DI.delta.eq_1, map_sum]
+
+    simp only [trL, LinearMap.pi_apply, LinearMap.comp_apply, LinearMap.proj_apply, deltaL.eq_1,
+    LinearMap.coe_mk, AddHom.coe_mk, DI.delta.eq_1, map_sum]
     exact Finset.sum_congr rfl fun i _ => map_zsmul _ _ _
 
 end TraceCmp

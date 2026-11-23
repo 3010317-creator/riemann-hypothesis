@@ -1,9 +1,66 @@
 module
 
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRing
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeFrameSpecializes
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SegreChartBundle
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.InnerProductSpace.Defs
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsAtSmul
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeFrameSpecializes
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelBaseChangeMapStatement
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteBaseChangeStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SegreChartBundle
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Dimension.OrzechProperty
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocRatio
 
 @[expose] public section
 
@@ -121,8 +178,8 @@ theorem frame_basis [IsCommMonObj G] [Smooth G.hom] (hξ : IsCptGen ξ) (M : Lie
       apply Subtype.ext
       rw [Submodule.coe_sum]
       exact (B.sum_repr e).symm
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [e1, map_sum]
+
+    rw [e1, map_sum]
     exact Finset.sum_congr rfl fun i _ => hsm _ _ _ (hc i)
   have hspan : ⊤ ≤ Submodule.span ℂ (Set.range b) := by
     rw [← hsp, Submodule.span_le]
@@ -168,8 +225,8 @@ theorem co_iff (M : LieModel G ξ Li) (B : Fin r → Li) (z : Sp ℂ ⟶ X) {V :
     have h1 : ∀ i, ψ (b i) = β i := fun i => (hβ i _).1 (by rw [hψ]; exact hb i)
     have h2 : u = ∑ i, c i • β i := by
       apply Mz.inj
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hv, ← hψ, map_sum]
+
+      rw [hv, ← hψ, map_sum]
       simp only [map_smul, h1]
     rw [h2]
     exact (β.repr_sum_self c).symm
@@ -251,8 +308,8 @@ theorem co_map [IsCommMonObj G] (τ : ℂ →+* ℂ) (M : LieModel G ξ Li) (B :
   refine ⟨V', inferInstance, inferInstance, M', fun i => j (b i),
     fun i => valAt_map τ M hz _ _ _ (hj _) (hb i), Over.OverMorphism.ext ?_⟩
   have : ∑ i, τ (c i) • j (b i) = j (∑ i, c i • b i) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     simp only [hjs]
   rw [this, hj, hv', hv]
 
@@ -333,8 +390,8 @@ theorem exists_core {V : Type} [AddCommGroup V] [Module ℂ V] {Λ : Type} [Fint
             add_left := fun a b c => ?_
             smul_left := fun a b c => ?_
             definite := fun a ha => ?_ }, fun _ _ => rfl⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    · simp only [map_sum, map_mul, Complex.conj_ofReal, Complex.conj_conj, mul_comm]
+
+  · simp only [map_sum, map_mul, Complex.conj_ofReal, Complex.conj_conj, mul_comm]
   · show 0 ≤ (∑ l, (ρ l : ℂ) * ∑ i, starRingEnd ℂ (f l a i) * f l a i).re
     rw [hre, Complex.ofReal_re]
     exact Finset.sum_nonneg fun l _ => hnn a l

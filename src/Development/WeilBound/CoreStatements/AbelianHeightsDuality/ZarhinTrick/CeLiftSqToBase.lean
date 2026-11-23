@@ -1,12 +1,54 @@
 module
 
-public import Mathlib
-public import Development.AutomorphicSpectrum.Statements.AlgebraStatements.IsPolarisationOfRelAmple
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsCrystalPairing
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PolarisationFormIntPolynomialBundles
 public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.ZarhinTrick.FibAmpleD
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSabExtension
+public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.ZarhinTrick.FibLamA
+public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.ZarhinTrick.FibLamB
+public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.ZarhinTrick.FibLamC
+public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.ZarhinTrick.FibLamD
 public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.ZarhinTrick.FourfoldProductExt
-public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.ZarhinTrick.FibLam
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.TypeStar
 
 @[expose] public section
 
@@ -87,7 +129,7 @@ private theorem lam_eq_evc_toBase_of_LBIso [IsCommMonObj A] {P : LB (A ⊗ B).le
   rw [h2, Over.comp_left, h1, Category.assoc, pull_comp, pull_comp, h3, h4, pull_lam, lift_fst, lift_snd]
 
 
-set_option maxHeartbeats 800000 in
+
 theorem ceLam_zb_pt (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) {P : LB (A ⊗ B).left} (hD : IsDual A B P)
     (hD' : IsDual B A (swap P)) (l : A ⟶ B) [IsMonHom l] (mu : B ⟶ A) [IsMonHom mu] (α : Matrix (Fin 4) (Fin 4) ℤ)
     [IsAlgClosed Ω] (s : Sp Ω ⟶ S) (L : LB ((Over.pullback s).obj A).left) (hL : L.IsLB)
@@ -181,8 +223,8 @@ theorem ceLam_zb_pt (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) {P : LB (A
   have hφ1 : ∀ i, phiL mu s (1, i) = ((pA (B := B) s i)⁻¹).left := fun _ => rfl
   have hφ2 : ∀ i, phiL mu s (2, i) = (pM mu s i).left := fun _ => rfl
   have hφ3 : ∀ i, phiL mu s (3, i) = ((pM mu s i)⁻¹).left := fun _ => rfl
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hΛ, hcls, map_add (f := _), map_sum, map_sum]
+
+  rw [hΛ, hcls, map_add (f := _), map_sum, map_sum]
   simp only [map_zsmul, one_smul]
   simp only [hΛ']
   rw [Fintype.sum_prod_type, Fintype.sum_prod_type, Fin.sum_univ_four]
@@ -303,9 +345,9 @@ private theorem ceZc_alg_lemma {GA GB Q : Type*} [AddCommGroup GA] [AddCommGroup
   have ho : ∀ j k, j ≠ k → α 0 j * α 0 k + α 1 j * α 1 k + α 2 j * α 2 k + α 3 j * α 3 k = 0 := by
     intro j k hne
     simpa [Matrix.one_apply, hne] using hjk j k
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sub, map_sum, map_zsmul, map_nsmul, AddMonoidHom.sub_apply, Finset.sum_apply,
-    AddMonoidHom.smul_apply, hml, hs, Fin.sum_univ_four, map_add, AddMonoidHom.add_apply]
+
+  simp only [map_sub, map_sum, map_zsmul, map_nsmul, AddMonoidHom.sub_apply, Finset.sum_apply,
+  AddMonoidHom.smul_apply, hml, hs, Fin.sum_univ_four, map_add, AddMonoidHom.add_apply]
   linear_combination (norm := module)
       ((-2 : ℤ) * (m : ℤ)) • ((hd 0) • E (mu (z' 0)) (z 0)) +
       ((-2 : ℤ) * (m : ℤ)) • ((ho 0 1 (by decide)) • E (mu (z' 0)) (z 1)) +
@@ -408,7 +450,7 @@ theorem ceZcPair_eMap (hD : IsDual A B P) (hD' : IsDual B A (swap P)) (l : A ⟶
 end Alg
 
 
-set_option maxHeartbeats 800000 in
+
 theorem two_cls_eMap {Ω : Type} [Field Ω] [IsAlgClosed Ω] (hA : IsAbelianScheme A) (hB : IsAbelianScheme B)
     {P : LB (A ⊗ B).left} (hD : IsDual A B P)
     (hD' : IsDual B A (swap P)) (l : A ⟶ B) [IsMonHom l] (mu : B ⟶ A) [IsMonHom mu] (α : Matrix (Fin 4) (Fin 4) ℤ)
@@ -459,23 +501,23 @@ theorem two_cls_eMap {Ω : Type} [Field Ω] [IsAlgClosed Ω] (hA : IsAbelianSche
   have e3 : ∀ i, ((𝟙 ((Over.pullback s).obj (G4 (A ⊗ B))))⁻¹).left ≫ phiL mu s (3, i) = phiL mu s (2, i) := fun i => by
     rw [hφ2, hφ3, ← Over.comp_left, GrpObj.comp_inv, GrpObj.inv_comp, Category.id_comp, inv_inv]
   have symL : pull ((𝟙 ((Over.pullback s).obj (G4 (A ⊗ B))))⁻¹).left (∑ k : Fin 4 × Fin 4, (1 : ℤ) • pull (phiL mu s k) (cls L hL)) = (∑ k : Fin 4 × Fin 4, (1 : ℤ) • pull (phiL mu s k) (cls L hL)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_zsmul, ← pull_comp]
+
+    simp only [map_sum, map_zsmul, ← pull_comp]
     rw [Fintype.sum_prod_type, Fintype.sum_prod_type]
     simp only [Fin.sum_univ_four, e0, e1, e2, e3]
     abel
   have symP : pull ((𝟙 ((Over.pullback s).obj (G4 (A ⊗ B))))⁻¹).left (∑ ij : Fin 4 × Fin 4, α ij.1 ij.2 • pull (phiP s ij) (cls P hD.isLB)) = (∑ ij : Fin 4 × Fin 4, α ij.1 ij.2 • pull (phiP s ij) (cls P hD.isLB)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_zsmul]
+
+    simp only [map_sum, map_zsmul]
     refine Finset.sum_congr rfl fun ij _ => ?_
     congr 1
     have h1 := pull_phiP s hD.isLB (𝟙 ((Over.pullback s).obj (G4 (A ⊗ B)))) ij
     rw [Over.id_left, pull_id] at h1
     rw [pull_phiP, h1, toBase_inv, GrpObj.inv_comp, GrpObj.inv_comp, evc_inv_inv hD hD']
   have oneP : pull (1 : (Over.pullback s).obj (G4 (A ⊗ B)) ⟶ (Over.pullback s).obj (G4 (A ⊗ B))).left (∑ ij : Fin 4 × Fin 4, α ij.1 ij.2 • pull (phiP s ij) (cls P hD.isLB)) = 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_zsmul, pull_phiP, toBase_one, MonObj.one_comp, evc_one_l hD, smul_zero,
-      Finset.sum_const_zero]
+
+    simp only [map_sum, map_zsmul, pull_phiP, toBase_one, MonObj.one_comp, evc_one_l hD, smul_zero,
+    Finset.sum_const_zero]
   have hvM : (𝟙 ((Over.pullback s).obj (G4 (A ⊗ B))))⁻¹ ≫ (Over.pullback s).map (eMap mu α m) = (Over.pullback s).map (eMap mu α m) ≫ (𝟙 ((Over.pullback s).obj (G4 (A ⊗ B))))⁻¹ := by
     have L1 : toBase _ s ((𝟙 ((Over.pullback s).obj (G4 (A ⊗ B))))⁻¹ ≫ (Over.pullback s).map (eMap mu α m)) = (toBase _ s (𝟙 ((Over.pullback s).obj (G4 (A ⊗ B)))) ≫ eMap mu α m)⁻¹ := by
       rw [toBase_map, toBase_inv, ceEMap_inv]
@@ -490,8 +532,8 @@ theorem two_cls_eMap {Ω : Type} [Field Ω] [IsAlgClosed Ω] (hA : IsAbelianSche
     rw [hc1, lam_pull_eq_lam_comp_of_hom _ hMmul hMone, ceLam_zb_pt hA hB hD hD' l mu α s L hL e, toBase_map, toBase_map,
       ceZcPair_eMap hD hD' l mu α m hm h₂ hα (fun x y => ceEvc_sym hA hD.isLB l s L hL e x y), hLsum,
       lam_eq_lamHom]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_zsmul, one_smul, ← lam_eq_lamHom]
+
+    simp only [map_sum, map_zsmul, one_smul, ← lam_eq_lamHom]
     rw [Fintype.sum_prod_type]
     simp only [Fin.sum_univ_four, line_bundle_pairing_zeroth hD l mu s L hL e, line_bundle_pairing_first hD hD' l mu s L hL e,
       line_bundle_pairing_second hD l mu s L hL e, line_bundle_pairing_third hD hD' l mu s L hL e, two_nsmul]

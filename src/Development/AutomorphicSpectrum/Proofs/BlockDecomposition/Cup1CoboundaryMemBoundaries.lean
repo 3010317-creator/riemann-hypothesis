@@ -1,7 +1,49 @@
 module
 
-public import Mathlib
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.HodgeWedgeFields.H1CommutesBaseChange
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -111,8 +153,8 @@ theorem coboundary_cup1 (n : ℕ) {x : Cn F 1} (hx : dn F 1 x = 0) (z : Cn F n) 
       fin_cases i <;> rfl) x
     rw [e0, e1, e2] at h0
     simpa [sub_eq_add_neg] using h0
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [dn_eq (n + 1), dn_eq n, map_sum]
+
+  rw [dn_eq (n + 1), dn_eq n, map_sum]
   simp only [map_smul, map_mul, cup1_apply, pr_pr]
   have e1 : pr F ((dl (1 : Fin (n + 3))).comp (dl 0)) z = pr F ((dl (0 : Fin (n + 3))).comp (dl 0)) z :=
     pr_congr (fun i ↦ by
@@ -277,8 +319,8 @@ theorem pulln_mul (m : CoefMap (RingHom.id R) F G) (n : ℕ) (f f' : Cn F n) :
 
 theorem pulln_dn (m : CoefMap (RingHom.id R) F G) (n : ℕ) (f : Cn F n) :
     pulln m (n + 1) (dn F n f) = dn G n (pulln m n f) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [dn_eq, dn_eq, map_sum]
+
+  rw [dn_eq, dn_eq, map_sum]
   refine Finset.sum_congr rfl fun i _ ↦ ?_
   rw [map_smul, pulln_pr]
 

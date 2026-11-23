@@ -1,11 +1,56 @@
 module
 
-public import Mathlib
-public import Formalism.FlagUnipotentLattices.MinkowskiFactorialBounds.ExistsHasLeadingCoeffOfMemSpanBelow
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.FlagPairDefinitePartLattice
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
-public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
+public import Formalism.FlagUnipotentLattices.MinkowskiFactorialBounds.ExistsHasLeadingCoeffOfMemSpanBelow
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -180,19 +225,19 @@ theorem exists_ist [FiniteDimensional K V] [CharZero K] (G G' : FlagD H r) {j : 
   have hsX : ∀ b, s b ∈ G.X := fun b => by
     rw [hsd]; exact Submodule.sum_mem _ fun a _ => Submodule.smul_mem _ _ (e_mem_X G a)
   have hsy : ∀ a b : Fin r, j ≤ b.val → H.B (s a) (y b) = H.B (y a) (y b) / 2 := fun a b hb => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hsd, map_sum, LinearMap.sum_apply]
+
+    rw [hsd, map_sum, LinearMap.sum_apply]
     simp [hy1, hb]
   refine ⟨fun b => y b - s b, fun a b => ?_, fun b u hu => ?_, fun b => ?_, fun a b ha hb => ?_⟩
   · rw [map_sub, hy1, e_X G _ (hsX b), sub_zero]
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [map_sub, hy2 b u hu, hsd, map_sum]
-      have hz : (∑ a ∈ Finset.univ.filter (fun a : Fin r => j ≤ a.val),
-          H.B u ((H.B (y b) (y a) / 2) • G.e a.castSucc)) = 0 := by
-        apply Finset.sum_eq_zero
-        intro a ha
-        rw [map_smulₛₗ, hp a.castSucc (Finset.mem_filter.mp ha).2 u hu, smul_zero]
-      rw [hz, sub_zero]
+
+  · rw [map_sub, hy2 b u hu, hsd, map_sum]
+    have hz : (∑ a ∈ Finset.univ.filter (fun a : Fin r => j ≤ a.val),
+        H.B u ((H.B (y b) (y a) / 2) • G.e a.castSucc)) = 0 := by
+      apply Finset.sum_eq_zero
+      intro a ha
+      rw [map_smulₛₗ, hp a.castSucc (Finset.mem_filter.mp ha).2 u hu, smul_zero]
+    rw [hz, sub_zero]
   · rw [map_sub, hy3, z_X G (hsX b), sub_zero]
   · have h2 : H.B (y a) (s b) = H.B (y a) (y b) / 2 := by
       rw [← H.herm (s b), hsy b a ha, star_div₀, H.herm]; simp
@@ -242,9 +287,9 @@ theorem exists_nf : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [Add
       (G'.e (Fin.castLE (hj.trans (Nat.le_succ r)) b)) = w.mat a b * ((sgn b : ℤ) : K) := fun a b => by
     have h := congrFun (congrFun hW a) b
     rw [Matrix.of_apply] at h
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← h, hG, hG', hf, hf', dite_eq_left (show (Fin.castLE (hj.trans (Nat.le_succ r)) a).val < j from a.isLt),
-      dite_eq_left (show (Fin.castLE (hj.trans (Nat.le_succ r)) b).val < j from b.isLt), map_sum, Matrix.mul_apply]
+
+    rw [← h, hG, hG', hf, hf', dite_eq_left (show (Fin.castLE (hj.trans (Nat.le_succ r)) a).val < j from a.isLt),
+    dite_eq_left (show (Fin.castLE (hj.trans (Nat.le_succ r)) b).val < j from b.isLt), map_sum, Matrix.mul_apply]
     refine Finset.sum_congr rfl fun d _ => ?_
     rw [map_smulₛₗ, B_sum_left, Matrix.mul_apply]
     rw [starRingEnd_apply, Matrix.map_apply, star_star, smul_eq_mul, mul_comm]

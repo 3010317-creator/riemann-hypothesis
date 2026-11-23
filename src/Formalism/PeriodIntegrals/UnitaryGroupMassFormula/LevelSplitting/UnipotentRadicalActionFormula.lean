@@ -1,7 +1,50 @@
 module
 
-public import Mathlib
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SemidirectVolume.ModVec
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SemidirectVolume.HermitianIsotropicProjComplement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -70,8 +113,8 @@ private theorem hRsum_lemma_5 (x : n → A) (g : Fin r → n → A) :
   exact map_sum _ _ _
 
 private theorem hswap_lemma_6 (H : D.Hyp) (x y : n → A) : D.h y x = D.σA (D.h x y) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Dat.h, Formalism.UG.hform, map_sum, map_mul, H.σσ, H.herm]
+
+  simp only [Dat.h, Formalism.UG.hform, map_sum, map_mul, H.σσ, H.herm]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   ring
@@ -85,8 +128,8 @@ private theorem hfe_lemma_7 (H : D.Hyp) (a b : Fin r) :
 
 private theorem hLsum_lemma_8 (H : D.Hyp) (g : Fin r → n → A) (y : n → A) :
     D.h (∑ i, g i) y = ∑ i, D.h (g i) y := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hswap_lemma_6 H, hRsum_lemma_5, map_sum]
+
+  rw [hswap_lemma_6 H, hRsum_lemma_5, map_sum]
   exact Finset.sum_congr rfl fun i _ => (hswap_lemma_6 H _ _).symm
 
 private theorem hLsub_lemma_9 (H : D.Hyp) (x x' y : n → A) :
@@ -173,8 +216,8 @@ theorem ext_Xp_f (H : D.Hyp) {Φ Ψ : (n → A) →ₗ[A] (n → A)} (h1 : ∀ v
   have e1 : v = (v - D.pXv v) + D.pXv v := (sub_add_cancel v _).symm
   rw [e1, map_add (f := _), map_add (f := _), h1 _ (xp_sub_pXv H v)]
   congr 1
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [pXvap_lemma_11, map_sum, map_smul, h2]
+
+  simp only [pXvap_lemma_11, map_sum, map_smul, h2]
 
 section Sec
 
@@ -207,8 +250,8 @@ theorem sL_span {x : n → A} (hx : x ∈ Submodule.span A (Set.range D.e)) : sL
   simp [hz]
 
 theorem pWp_sL_f (c : Fin r) : pWp D (sL D half y (D.f c)) = y c := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [sL_f H hy, map_add (f := _), pWp_f H, zero_add, uv, map_add (f := _), pWp_of_isWp (hy c), map_sum]
+
+  rw [sL_f H hy, map_add (f := _), pWp_f H, zero_add, uv, map_add (f := _), pWp_of_isWp (hy c), map_sum]
   simp [pWp_e H]
 
 theorem h_tV_right (x x' : n → A) :

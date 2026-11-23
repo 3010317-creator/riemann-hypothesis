@@ -1,12 +1,62 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.FormalDegreeUpperC
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqTopOfTranslates
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockVectorsKilledHeisenbergAverageIsotropic
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelFiniteThetaDatumNeZeroFrameAdjointSpec
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSmoothVector
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.RealLowestKTypeCoeffSquareIntegrable
+public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.BesselDatum
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulEqZeroOfInf
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpecialisedUniversalSeriesEqTwistedThetaSeries
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNonvanishingFiniteDatumDefiniteLift
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNsmulIntMemLatO
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockVectorsKilledHeisenbergAverageIsotropic
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GramMapMulInv
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEqMulOfResSNeOne
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelFiniteThetaDatumNeZeroFrameAdjointSpec
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
+import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Development.AbelianVarietyTheory.Definitions.Divisors.FormalDegreeUpperC
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConstMemBddAut
 
 @[expose] public section
 
@@ -45,7 +95,7 @@ theorem exists_val_ge {K Γ : Type} [Field K] [LinearOrderedCommGroupWithZero Γ
   exact lt_irrefl _ (h3.trans_lt (max_lt h2 h1))
 
 
-set_option maxHeartbeats 2000000 in
+
 open Classical in
 theorem exists_sum_zero {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (S T : HSp D)
     (βS : GL (Fin S.rank) (Datum.EAf D)) (βT : GL (Fin T.rank) (Datum.EAf D)) {e : AE D} {PP : Pl D.host.E}
@@ -190,17 +240,17 @@ theorem exists_sum_zero {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.
     have hσ : resS D.host.F PP σ = 0 := by
       have h1 := congrFun (congrFun hAB i) k
       rw [Matrix.mul_apply, Matrix.one_apply] at h1
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [σ, map_sub, map_sum, map_mul, Formalism.L2.DIV.resS_oToS, hrep]
+
+      simp only [σ, map_sub, map_sum, map_mul, Formalism.L2.DIV.resS_oToS, hrep]
       rw [sub_eq_zero, apply_ite (resS D.host.F PP), map_one, map_zero, ← h1]
       refine Finset.sum_congr rfl fun m _ => ?_
       rw [hAb, topL, dite_eq_left ⟨(Fin.castLE hr m).2, k.2⟩, redM, dite_eq_left (ht _ _)]
       rfl
     have h2 := hres σ hσ
     convert h2 using 2
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [σ, AddSubgroupClass.coe_sub, AddSubmonoidClass.coe_finsetSum, Subring.coe_mul, RingHom.map_sub,
-      map_sum, RingHom.map_mul]
+
+    simp only [σ, AddSubgroupClass.coe_sub, AddSubmonoidClass.coe_finsetSum, Subring.coe_mul, RingHom.map_sub,
+    map_sum, RingHom.map_mul]
     rw [Matrix.mul_apply]
     congr 1
     split_ifs <;> simp
@@ -231,7 +281,7 @@ theorem exists_sum_zero {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.
   exact Finset.sum_congr rfl fun k _ => hpair _
 
 
-set_option maxHeartbeats 1000000 in
+
 open Classical in
 theorem exists_sum_heisO_eq_zero {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D}
     {sT : D.what₂.Tau → Matrix (Fin T.rank) (Fin T.rank) ℂ}
@@ -269,8 +319,8 @@ theorem exists_sum_heisO_eq_zero {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D
       Tm (fun t => ψ (symplO S T t (vecMulVec c (l k))) * GlobalTheory.FinZeta.levDatum S T βS βT LT Q m e t) := fun k => by
     rw [hall Tm hTm, ← hTm.modul _ hSB _ (by rw [GlobalTheory.LatVac.cA_cA]; exact hhalf k)]
     rfl
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Finset.sum_congr rfl fun k _ => hk k, ← map_sum]
+
+  rw [Finset.sum_congr rfl fun k _ => hk k, ← map_sum]
   have hz : (∑ k, fun t => ψ (symplO S T t (vecMulVec c (l k))) * GlobalTheory.FinZeta.levDatum S T βS βT LT Q m e t) = 0 := by
     funext t
     rw [Finset.sum_apply, ← Finset.sum_mul, Pi.zero_apply]
@@ -316,8 +366,8 @@ theorem sum_heisO_along_eq_zero_level : ∀ {D : D7} {G : Type} [Group G] [Finty
     rw [h1, ← hω.om_heis h g _ _ (hpt Q)]
     refine congrArg _ ?_
     rw [GlobalTheory.IndefiniteRowSideFullHecke.TwistedLevelValues.ptAt, GlobalTheory.IndefiniteRowSideFullHecke.TwistedLevelValues.ptAt, ((htr.2 _ (hl0 k)).2)]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Finset.sum_congr rfl fun k _ => key k, ← map_sum]
+
+  rw [Finset.sum_congr rfl fun k _ => key k, ← map_sum]
   have hs := GlobalTheory.SpecFac.pureTensorO_sum hω.std hθ (fun _ => 1) (R.BV i) (cart (R.MW i σ)) BW Finset.univ
     (fun _ => (1 : ℂ)) (fun k => heisO R.ψ (Vc D i) (Wc D i) (vecMulVec c' (l k)) f) (fun k _ => (htr.2 _ (hl0 k)).1) Q
   simp only [one_smul] at hs

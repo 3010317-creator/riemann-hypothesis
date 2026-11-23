@@ -1,8 +1,54 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.ImageStableDegreeBounds
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilRingModHighDegreePropertyStatement
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PowerSeries.NoZeroDivisors
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Presheaf
 
 @[expose] public section
 
@@ -366,8 +412,8 @@ theorem isoProj_mem {P : PhiMod O K l e a ι} (Δ : Descent P) (c : ZMod e) (v :
   intro ξ τ
   have h1 : Δ.act (TameGal.inertia ξ) (isoProj Δ c v) =
       ∑ ζ, isoCoef l a c (ξ⁻¹ * ζ) • Δ.act (TameGal.inertia ζ) v := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [isoProj_def, map_sum]
+
+    rw [isoProj_def, map_sum]
     refine Fintype.sum_equiv (Equiv.mulLeft ξ) _ _ fun ζ => ?_
     rw [Δ.act_smul_tot, ringAct_isoCoef, Equiv.coe_mulLeft, inv_mul_cancel_left]
     simp only [map_mul, Module.End.mul_apply]
@@ -482,8 +528,8 @@ theorem isoProj_mem_uL {P : PhiMod O K l e a ι} (Δ : Descent P) (c : ZMod e) (
 theorem isoProj_app {P : PhiMod O K l e a ι} {Q : PhiMod O K l e a κ} {Δ₁ : Descent P}
     {Δ₂ : Descent Q} (F : Descent.Hom Δ₁ Δ₂) (c : ZMod e) (y : Vec K a ι) :
     isoProj Δ₂ c (F.app y) = F.app (isoProj Δ₁ c y) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [isoProj_def, map_sum, BK.Hom.app_smul_tot, F.app_act]
+
+  simp only [isoProj_def, map_sum, BK.Hom.app_smul_tot, F.app_act]
 
 theorem conn_mem_isotypic {P : PhiMod O K l e a ι} (Δ : Descent P) (c : ZMod e) {v : Vec K a ι}
     (hv : v ∈ Δ.isotypic c) : P.conn v ∈ Δ.isotypic c := by

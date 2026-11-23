@@ -1,6 +1,61 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LinkedUnramifiedChains.CmpPrime
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.LocalProperties.Reduced
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.Algebra.CharP.Algebra
+public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+public import Mathlib.FieldTheory.PrimitiveElement
+public import Mathlib.RingTheory.Localization.Finiteness
 
 @[expose] public section
 
@@ -231,8 +286,8 @@ private theorem finite_setOf_nat_not_primitive_element {Λ R : Type} [CommRing �
   set t : R := ∑ i : Fin r, (s : R) ^ (i : ℕ) * b i with ht
   have hsum : ∀ χ : A →ₐ[L] Ω, χ (ι t) = ∑ i, χ (ι (b i)) * (s : Ω) ^ (i : ℕ) := by
     intro χ
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [ht, map_sum, map_mul, map_pow, map_natCast]
+
+    simp only [ht, map_sum, map_mul, map_pow, map_natCast]
     exact Finset.sum_congr rfl fun i _ => mul_comm _ _
   have hsep : ∀ φ ψ : A →ₐ[L] Ω, φ (ι t) = ψ (ι t) → φ = ψ := by
     intro φ ψ hφψ
@@ -242,8 +297,8 @@ private theorem finite_setOf_nat_not_primitive_element {Λ R : Type} [CommRing �
     have hB : ∀ y : R, φ (ι y) = ψ (ι y) := by
       intro y
       obtain ⟨c, rfl⟩ := hgen y
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_mul, hχl]
+
+      simp only [map_sum, map_mul, hχl]
       exact Finset.sum_congr rfl fun i _ => by rw [congr_fun htup i]
     apply AlgHom.coe_ringHom_injective
     apply IsLocalization.ringHom_ext (Algebra.algebraMapSubmonoid R (nonZeroDivisors Λ))
@@ -288,8 +343,8 @@ theorem UpperTheory.V.J.primEx :
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective y
     obtain ⟨c, hc⟩ := hgen a
     refine ⟨c, ?_⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Ideal.Quotient.eq.mpr hc, map_sum]
+
+    rw [Ideal.Quotient.eq.mpr hc, map_sum]
     simp only [map_mul, hmk]
   haveI : Module.Finite Λ (B ⧸ J) := by
     refine ⟨⟨Finset.univ.image (fun i => Ideal.Quotient.mk J (b i)), ?_⟩⟩
@@ -324,8 +379,8 @@ theorem UpperTheory.V.J.primEx :
     refine ⟨c, hc, P, ?_⟩
     rw [← Ideal.Quotient.eq_zero_iff_mem, map_sub, map_mul, ← hmk, hP, Polynomial.aeval_def,
       Polynomial.hom_eval₂]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_mul, map_pow, map_natCast]
+
+    simp only [map_sum, map_mul, map_pow, map_natCast]
     rw [sub_eq_zero]
     rfl
   · intro x' hx' hcomp hxt
@@ -341,8 +396,8 @@ theorem UpperTheory.V.J.primEx :
     have hsum : ∀ χ : B →ₐ[O] K,
         χ (∑ i : Fin r, (s : B) ^ (i : ℕ) * b i) = ∑ i, χ (b i) * (s : K) ^ (i : ℕ) := by
       intro χ
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_mul, map_pow, map_natCast]
+
+      simp only [map_sum, map_mul, map_pow, map_natCast]
       exact Finset.sum_congr rfl fun i _ => mul_comm _ _
     have htup : (fun i => x' (b i)) = (fun i => x (b i)) := by
       by_contra hne
@@ -354,8 +409,8 @@ theorem UpperTheory.V.J.primEx :
       intro χ hχ
       have := RingHom.mem_ker.mp (hχ hc)
       rw [map_sub, sub_eq_zero] at this
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [this, map_sum]
+
+      rw [this, map_sum]
       simp only [map_mul]
     rw [e1 x' hx', e1 x hx]
     refine Finset.sum_congr rfl fun i _ => ?_

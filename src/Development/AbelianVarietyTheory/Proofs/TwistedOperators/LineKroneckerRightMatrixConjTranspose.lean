@@ -1,7 +1,51 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ISupEigenspaceEqTop
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsFockIPOfFockData
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CommuteRowOpRightMixedOp
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+public import Mathlib.RingTheory.MvPolynomial.EulerIdentity
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -70,8 +114,8 @@ theorem inner_polar (h : IsFockIP ι) (u v : σ) (P Q : MvPolynomial σ ℂ) :
 theorem inner_colOp (h : IsFockIP ι) {I J : Type*} [Fintype I] (z : I × J → σ) (k l : J)
     (P Q : MvPolynomial σ ℂ) :
     inner ℂ (ι (colOp ℂ z k l P)) (ι Q) = inner ℂ (ι P) (ι (colOp ℂ z l k Q)) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [colOp, LinearMap.sum_apply, map_sum, sum_inner, inner_sum, inner_polar h]
+
+  simp only [colOp, LinearMap.sum_apply, map_sum, sum_inner, inner_sum, inner_polar h]
 
 theorem inner_mixedOp (h : IsFockIP ι) {I I' J : Type*} [Fintype I] [Fintype I'] (z : I × J → σ)
     (y : I' × J → σ) (k l : J) (P Q : MvPolynomial σ ℂ) :
@@ -105,9 +149,9 @@ theorem parts_of_add (U D : Module.End ℂ (MvPolynomial σ ℂ))
   have key : ∀ (T : Module.End ℂ (MvPolynomial σ ℂ)),
       ∑ᶠ d, T (homogeneousComponent d P) = T P := by
     intro T
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [finsum_eq_sum_of_support_subset (s := Finset.range (P.totalDegree + 1)), ← map_sum,
-      sum_homogeneousComponent]
+
+    rw [finsum_eq_sum_of_support_subset (s := Finset.range (P.totalDegree + 1)), ← map_sum,
+    sum_homogeneousComponent]
     intro d hd
     by_contra h
     exact hd (by simp only; rw [homogeneousComponent_eq_zero _ _ (by simpa using h), map_zero])
@@ -214,8 +258,8 @@ theorem inner_upOp {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (h : Odd' M) (Q P : Pol p q r s) :
     inner ℂ (ι (upOp M Q)) (ι P) = -inner ℂ (ι Q) (ι (dnOp M.conjTranspose P)) := by
   rw [upOp_apply, dnOp_apply, Finset.sum_comm]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, sum_inner, inner_sum, ← Finset.sum_neg_distrib]
+
+  simp only [map_sum, sum_inner, inner_sum, ← Finset.sum_neg_distrib]
   refine Finset.sum_congr rfl fun l _ => Finset.sum_congr rfl fun l' _ => ?_
   by_cases e : linePos l' = linePos l
   · simp [h l' l e]

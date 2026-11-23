@@ -1,12 +1,45 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.ParametersTermRelations
-public import Formalism.SharpRestriction.CuspSpanNormBounds.BridgeWeylDS
 public import Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.NumericSettingWithGapSatisfiable
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.InHHCut
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.CdHaarScale
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.LevelSubgroupProperties
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+public import Mathlib.Analysis.InnerProductSpace.Trace
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.WeylBridge
 
 @[expose] public section
 
@@ -71,8 +104,8 @@ theorem hsNormSq_of_semi (A : Wq →L[ℂ] Wp) (A' : Wq' →L[ℂ] Wp') (f : Wq 
     obtain ⟨x, rfl⟩ := hsurj y
     have hx : f x = ∑ i, conj (⟪b i, x⟫_ℂ) • f (b i) := by
       conv_lhs => rw [← b.sum_repr' x]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       exact Finset.sum_congr rfl fun i _ => hfs _ _
     rw [hx]
     exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
@@ -94,8 +127,8 @@ theorem opNorm_le_hs (A : Wq →L[ℂ] Wp) :
     exact (sq_le_sq₀ (norm_nonneg _) (norm_nonneg _)).1 h1
   calc ‖A x‖ = ‖∑ i, ⟪b i, x⟫_ℂ • A (b i)‖ := by
         conv_lhs => rw [← b.sum_repr' x]
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [map_sum]
+
+        rw [map_sum]
         simp only [map_smul]
     _ ≤ ∑ i, ‖⟪b i, x⟫_ℂ • A (b i)‖ := norm_sum_le _ _
     _ ≤ ∑ _i : Fin (Module.finrank ℂ Wq), ‖x‖ * ‖Formalism.L2.SG.PackageTie.hsEmb A‖ := by
@@ -311,8 +344,8 @@ theorem tens_mem_span (u : D.what₂.Word) (x : ∀ v, X.Vloc u v) :
   have hsy : ⟪s, y⟫_ℂ = ∑ i, conj (c i) * c i := by
     simp only [s, sum_inner, inner_smul_left, c]
   have hnorm_s : ‖s‖ ^ 2 = ∑ i, ‖c i‖ ^ 2 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← inner_self_eq_norm_sq (𝕜 := ℂ), hss, map_sum]
+
+    rw [← inner_self_eq_norm_sq (𝕜 := ℂ), hss, map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [RCLike.conj_mul, ← RCLike.ofReal_pow, RCLike.ofReal_re]
   have hnorm_y : ‖y‖ ^ 2 = ∑ i, ‖c i‖ ^ 2 := by

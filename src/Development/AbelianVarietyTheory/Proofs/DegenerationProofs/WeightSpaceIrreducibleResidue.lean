@@ -1,14 +1,61 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Degenerations.BaseFacts
-public import Development.AbelianVarietyTheory.Definitions.Degenerations.IsAffineSplitTorusLeft
-public import Development.AbelianVarietyTheory.Definitions.Degenerations.CompanionTheory
-public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.UTorsSt
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsOperators
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AddHomExtSingle
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGlobalGenerators
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.RigGen
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.Ser
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LinearIndependentOfCommSmul
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ThetaGrpActsLinearly
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AddHomExtSingle
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsOperators
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniqueOfBasis
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.OrthogonalFreeOfPerfectAltZmod
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -33,12 +80,12 @@ theorem matrix_mul_of_comp {A M J : Type} [CommRing A] [AddCommGroup M] [Module 
   ext l i
   have key := h i
   refine congrFun (uniq (fun l => (m₁ * m₂) l i) (fun l => (x • m₃) l i) ?_) l
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [h₂, h₃, map_sum, Finset.smul_sum] at key
+
+  rw [h₂, h₃, map_sum, Finset.smul_sum] at key
   simp only [map_smul, h₁, Finset.smul_sum, smul_smul] at key
   rw [Finset.sum_comm] at key
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Matrix.mul_apply, map_sum, map_mul, Finset.sum_smul, Matrix.smul_apply, smul_eq_mul]
+
+  simp only [Matrix.mul_apply, map_sum, map_mul, Finset.sum_smul, Matrix.smul_apply, smul_eq_mul]
   refine Eq.trans ?_ key
   exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by rw [mul_comm]
 
@@ -229,8 +276,8 @@ theorem irred_of_comm [IsDomain o] (hc : Fintype.card S.J = S.N ^ S.g)
   have hP : ∀ a, Λ (S.proj T c) (Λ (S.ρ a) u) ∈ W := fun a => by
     have e : Λ (S.proj T c) (Λ (S.ρ a) u) = y (Ring.inverse (Nat.card T : o)) •
         (∑ t : T, ψ (S.r • eStd S.g _ t a)) • Λ (S.ρ a) u := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [proj_eq, hΛs, map_sum, LinearMap.smul_apply, LinearMap.sum_apply, Finset.sum_smul]
+
+      rw [proj_eq, hΛs, map_sum, LinearMap.smul_apply, LinearMap.sum_apply, Finset.sum_smul]
       congr 1
       refine Finset.sum_congr rfl fun t _ => ?_
       rw [hΛs, LinearMap.smul_apply, comm, smul_comm, ← map_smul, hu]
@@ -255,8 +302,8 @@ theorem irred_of_comm [IsDomain o] (hc : Fintype.card S.J = S.N ^ S.g)
     exact ⟨φ.smulRight v, by simp [hφ]⟩
   obtain ⟨d, hd⟩ := (Submodule.mem_span_range_iff_exists_fun F).mp
     (hspan ▸ Submodule.mem_top : f ∈ Submodule.span F (Set.range fun a => Λ (S.ρ (σ a))))
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← hv, ← hf, ← hd, LinearMap.sum_apply, map_sum]
+
+  rw [← hv, ← hf, ← hd, LinearMap.sum_apply, map_sum]
   refine W.sum_mem fun a _ => ?_
   rw [LinearMap.smul_apply, map_smul]
   exact W.smul_mem _ (hP _)

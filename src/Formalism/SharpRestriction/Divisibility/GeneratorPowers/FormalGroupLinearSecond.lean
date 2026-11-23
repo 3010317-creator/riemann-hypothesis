@@ -1,9 +1,52 @@
 module
 
+public import Formalism.LocalToGlobal.ProjectiveLattices.ThGerm
+public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.PairEvaluation
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.ChartChg
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.AevalDiagMonomial
-public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.CIndFrFix
-public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThetaSwapFirstTwo
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.GaugeBilinearTermEqNegDoubleSum
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.GermDJet
 
 @[expose] public section
 
@@ -294,7 +337,7 @@ theorem psTrunc_law_sub_mem (G : FGLaw S d) {m : ℕ} (hm : 1 ≤ m) (j : Fin d)
     psTrunc m (G.F j) - (X ((0 : Fin 2), j) + X ((1 : Fin 2), j)) ∈ Io S (Fin 2 × Fin d) ^ 2 := by
   apply mem_pow_Io_lemma_3
   intro x hx
-  rw [mem_support_iff, coeff_sub, coeff_psTrunc_lemma_2] at hx
+  rw [mem_support_iff, MvPolynomial.coeff_sub, coeff_psTrunc_lemma_2] at hx
   by_contra hlt
   have h1 : x.degree ≤ 1 := by omega
   rw [if_pos (h1.trans hm)] at hx
@@ -390,7 +433,7 @@ theorem psTrunc_sub_mem {κ : Type} [Fintype κ] [DecidableEq κ] (f : MvPowerSe
     psTrunc m f - psTrunc k f ∈ Io S κ ^ (k + 1) := by
   apply mem_pow_Io_lemma_3
   intro x hx
-  rw [mem_support_iff, coeff_sub, coeff_psTrunc_lemma_2, coeff_psTrunc_lemma_2] at hx
+  rw [mem_support_iff, MvPolynomial.coeff_sub, coeff_psTrunc_lemma_2, coeff_psTrunc_lemma_2] at hx
   by_contra hlt
   have h1 : x.degree ≤ k := by omega
   rw [if_pos (h1.trans hkm), if_pos h1, sub_self] at hx
@@ -404,8 +447,8 @@ open Formalism.MainNotions.ModuliIntegralCharts.H1.CIndFrExp1
 
 theorem eval_pair_bilinear {τ : Type} (M : Fin d → Fin d → S) (u v : Fin d → MvPolynomial τ S) :
     ev2 (bil M) u v = ∑ i, ∑ l, C (M i l) * (u i * v l) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [ev2, bil, map_sum, map_mul, aeval_C, aeval_X, algebraMap_eq]
+
+  simp [ev2, bil, map_sum, map_mul, aeval_C, aeval_X, algebraMap_eq]
 
 theorem lead_bil {P : MvPolynomial (Fin 2 × Fin d) S} {m : ℕ} (hm : 2 ≤ m)
     (fF : Fin d → MvPolynomial (Fin 3 × Fin d) S)
@@ -479,7 +522,7 @@ theorem psTrunc_act_sub_mem (φ : Fin d → PS S 1 d) (hφ : ∀ i, MvPowerSerie
     psTrunc m (φ i) - ∑ j, C (dLin φ i j) * X ((0 : Fin 1), j) ∈ Io S (Fin 1 × Fin d) ^ 2 := by
   apply mem_pow_Io_lemma_3
   intro x hx
-  rw [mem_support_iff, coeff_sub, coeff_psTrunc_lemma_2] at hx
+  rw [mem_support_iff, MvPolynomial.coeff_sub, coeff_psTrunc_lemma_2] at hx
   by_contra hlt
   have h1 : x.degree ≤ 1 := by omega
   rw [if_pos (h1.trans hm)] at hx

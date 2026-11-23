@@ -1,11 +1,52 @@
 module
 
-public import Mathlib
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IsAdaptedEmpty
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.LeviNormalizesUnipotentVariant
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousAdelicUnitaryEmbedding
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IteratedDerivOneP
-public import GroundTheory.GlobalFields.IdeleGroups.GaloisOnAdeles.Action
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMulRightInvariantHaarAdelicUnitaryGroupHermiti
+import Development.AutomorphicSpectrum.Proofs.GlobalProofs.DerivativeSkewAdjointCuspFormsStatement
+import Development.AutomorphicSpectrum.Proofs.GlobalProofs.LieAlgebraSpannedByCompactAndFrameStatement
+import Development.AutomorphicSpectrum.Proofs.GlobalProofs.SkewOperatorBoundedByPolynomialRootsStatement
+import Development.WeilBound.CoreStatements.MeasureExistence.ExistsMeas
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OfIsSmoothModerate
+import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsConstAlongSingleton
+import Development.AutomorphicSpectrum.Proofs.GlobalProofs.FiniteDimensionalOfSlices
+import Development.AutomorphicSpectrum.Proofs.GlobalProofs.MemFormsOnOfMemSpan
 
 @[expose] public section
 
@@ -45,9 +86,9 @@ theorem symm_of_skew {M H : Type} [AddCommGroup M] [Module ℂ M] [NormedAddComm
     rw [hP, hP, neg_neg]
   have h2 : ∀ b x y, ⟪ι (Q b (Q b x)), ι y⟫_ℂ = ⟪ι x, ι (Q b (Q b y))⟫_ℂ := fun b x y => by
     rw [hQ, hQ, neg_neg]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [LinearMap.sub_apply, LinearMap.sum_apply, Module.End.mul_apply, map_sub, map_sum, inner_sub_left,
-    inner_sub_right, sum_inner, inner_sum, h1, h2]
+
+  simp only [LinearMap.sub_apply, LinearMap.sum_apply, Module.End.mul_apply, map_sub, map_sum, inner_sub_left,
+  inner_sub_right, sum_inner, inner_sum, h1, h2]
 
 theorem quad_symm (μ : Measure (GA D V)) [μ.IsHaarMeasure] (hθ : IsInfFam θ) {τ : D.what₂.Tau} {n₁ n₂ : ℕ}
     {X : Fin n₁ → Matrix (Fin V.rank) (Fin V.rank) ℂ} {Y : Fin n₂ → Matrix (Fin V.rank) (Fin V.rank) ℂ}
@@ -67,8 +108,8 @@ theorem bd_of_quad (μ : Measure (GA D V)) [μ.IsHaarMeasure] (hθ : IsInfFam θ
   have hB0 : 0 ≤ B := add_nonneg hΛ0 (Finset.sum_nonneg fun b _ => sq_nonneg _)
   refine ⟨Real.sqrt B, Real.sqrt_nonneg _, fun φ hφ => ?_⟩
   have h2 := congrArg (fun w => ⟪io μ hθ φ, io μ hθ w⟫_ℂ) (quad_apply hθ hX hY φ)
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sub, map_sum, inner_sub_right, inner_sum, inner_der_der] at h2
+
+  simp only [map_sub, map_sum, inner_sub_right, inner_sum, inner_der_der] at h2
   have h3 := congrArg Complex.re h2
   simp only [Complex.sub_re, Complex.re_sum, Complex.neg_re, Complex.ofReal_re,
     Finset.sum_neg_distrib, sub_neg_eq_add, Complex.add_re] at h3

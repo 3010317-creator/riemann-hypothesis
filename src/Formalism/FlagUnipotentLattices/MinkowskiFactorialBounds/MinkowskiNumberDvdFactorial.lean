@@ -1,8 +1,62 @@
 module
 
 public import Formalism.FlagUnipotentLattices.MemOfOrthogonalAnisotropic
+public import Formalism.HyperbolicPlaceProducts.Statement
 public import Formalism.FlagUnipotentLattices.MinkowskiFactorialBounds.ExistsHasLeadingCoeffOfMemSpanBelow
+public import Formalism.GelfandTransference.HadamardGelfand.Hadamard
 public import Formalism.HyperbolicPlaceProducts.SecondLevelArithmeticNorm
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.NumberTheory.Padics.PadicVal.Basic
 
 @[expose] public section
 
@@ -394,9 +448,9 @@ lemma gsK (h : U →ₗ[K] U →ₗ⋆[K] K) (herm : ∀ x y : U, star (h x y) =
     have hLll : L (Fin.last s) (Fin.last s) = 1 := by simp [L]
     have hglo : ∀ b, h gl (g₀ b) = 0 := by
       intro b
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [gl, map_sub, map_sum, map_smul, LinearMap.sub_apply, LinearMap.sum_apply,
-        LinearMap.smul_apply, smul_eq_mul]
+
+      simp only [gl, map_sub, map_sum, map_smul, LinearMap.sub_apply, LinearMap.sum_apply,
+      LinearMap.smul_apply, smul_eq_mul]
       rw [Finset.sum_eq_single b]
       · by_cases h0 : h (g₀ b) (g₀ b) = 0
         · have := haniso _ h0
@@ -432,10 +486,10 @@ lemma bmatK (h' : U →ₗ[K] U →ₗ⋆[K] K) {m : ℕ} (e f : Fin m → U) (A
     (u w : Fin m → U) (hu : ∀ i, u i = ∑ k, A i k • e k) (hw : ∀ j, w j = ∑ l, C j l • f l) :
     (Matrix.of fun i j => h' (u i) (w j)) = A * (Matrix.of fun k l => h' (e k) (f l)) * Cᴴ := by
   ext i j
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Matrix.of_apply, hu, hw, map_sum, map_smul, LinearMap.sum_apply,
-    LinearMap.smul_apply, map_smulₛₗ, smul_eq_mul, Matrix.mul_apply,
-    Matrix.conjTranspose_apply, Finset.sum_mul, Finset.mul_sum, starRingEnd_apply]
+
+  simp only [Matrix.of_apply, hu, hw, map_sum, map_smul, LinearMap.sum_apply,
+  LinearMap.smul_apply, map_smulₛₗ, smul_eq_mul, Matrix.mul_apply,
+  Matrix.conjTranspose_apply, Finset.sum_mul, Finset.mul_sum, starRingEnd_apply]
   exact Finset.sum_congr rfl fun l _ => Finset.sum_congr rfl fun k _ => by ring
 
 lemma herm_real (σ : K →+* ℂ) (h : U →ₗ[K] U →ₗ⋆[K] K) (hσ : ∀ x : K, σ (star x) = star (σ x))
@@ -452,21 +506,21 @@ lemma besselK (σ : K →+* ℂ) (h : U →ₗ[K] U →ₗ⋆[K] K) (hσ : ∀ x
   set y' : U := y - ∑ a, c a • g a with hy'
   have h1 : ∀ b, h y' (g b) = 0 := by
     intro b
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hy', map_sub, map_sum, map_smul, LinearMap.sub_apply, LinearMap.sum_apply,
-      LinearMap.smul_apply, smul_eq_mul]
+
+    simp only [hy', map_sub, map_sum, map_smul, LinearMap.sub_apply, LinearMap.sum_apply,
+    LinearMap.smul_apply, smul_eq_mul]
     rw [Finset.sum_eq_single b]
     · simp only [c]; rw [div_mul_cancel₀ _ (hd b), sub_self]
     · intro a _ ha; rw [horth a b ha, mul_zero]
     · intro hb; exact absurd (Finset.mem_univ b) hb
   have h2 : h y' y' = h y' y := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      conv_lhs => rw [hy', (h y').map_sub, map_sum]
+
+    conv_lhs => rw [hy', (h y').map_sub, map_sum]
     simp [h1]
   have h3 : h y' y = h y y - ∑ a, c a * h (g a) y := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hy', map_sub, map_sum, map_smul, LinearMap.sub_apply, LinearMap.sum_apply,
-      LinearMap.smul_apply, smul_eq_mul]
+
+    simp only [hy', map_sub, map_sum, map_smul, LinearMap.sub_apply, LinearMap.sum_apply,
+    LinearMap.smul_apply, smul_eq_mul]
   have h4 : ∀ a, (σ (c a * h (g a) y)).re = ‖σ (h (g a) y)‖ ^ 2 / (σ (h (g a) (g a))).re := by
     intro a
     simp only [c]
@@ -480,8 +534,8 @@ lemma besselK (σ : K →+* ℂ) (h : U →ₗ[K] U →ₗ⋆[K] K) (hσ : ∀ x
     rw [e2, Complex.ofReal_re]
     simp
   have h5 := hnn y'
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [h2, h3, map_sub, map_sum, Complex.sub_re, Complex.re_sum] at h5
+
+  rw [h2, h3, map_sub, map_sum, Complex.sub_re, Complex.re_sum] at h5
   simp only [h4] at h5
   linarith
 

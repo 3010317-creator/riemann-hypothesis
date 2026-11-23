@@ -1,8 +1,51 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.PlaceAdaptation.AdaptStd
+public import Mathlib.RingTheory.LocalRing.ResidueField.Defs
+public import Mathlib.RingTheory.Trace.Defs
+public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.DiscrMulDetEqNormOfAnnihilator
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.IsUnitDetOfProductMapNeZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -91,8 +134,8 @@ theorem exists_trace_eq_form_mul_diagonal : ∀ (A R : Type) [CommRing A] [IsLoc
     have e : w - algebraMap A R (∑ i, b.repr w i * lift (ε (b i)))
         = ∑ i, algebraMap A R (b.repr w i) * (b i - algebraMap A R (lift (ε (b i)))) := by
       conv_lhs => lhs; rw [← b.sum_repr w]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_mul, mul_sub, Finset.sum_sub_distrib, Algebra.smul_def]
+
+      simp only [map_sum, map_mul, mul_sub, Finset.sum_sub_distrib, Algebra.smul_def]
     rw [e]
     exact n.sum_mem fun j _ => n.mul_mem_left _ (Ideal.subset_span ⟨j, rfl⟩)
   · rw [hM, Finset.sum_comm]
@@ -104,8 +147,8 @@ theorem exists_trace_eq_form_mul_diagonal : ∀ (A R : Type) [CommRing A] [IsLoc
     linear_combination -this
   · intro h0
     refine hne s hs lift hlift (Ideal.Quotient.eq_zero_iff_mem.1 ?_)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← h0, hs, map_sum, map_sum, map_sum]
+
+    rw [← h0, hs, map_sum, map_sum, map_sum]
     refine Finset.sum_congr rfl fun p _ => ?_
     have e : algebraMap k (R ⧸ I) (ε p.1) = Ideal.Quotient.mk I (algebraMap A R (lift (ε p.1))) := by
       conv_lhs => rw [← hlift (ε p.1)]

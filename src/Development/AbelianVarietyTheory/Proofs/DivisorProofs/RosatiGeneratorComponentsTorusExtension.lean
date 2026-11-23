@@ -1,13 +1,46 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsProjOverWeierstrass
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissibleBaseOfCompleteDvr
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensFacts
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.WithISelf
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GtRelVIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RosatiAdjTensorPowerIntMatrixEndomorphism
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsMatrixRingAct
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.RosVal
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBPull
 
 @[expose] public section
 
@@ -98,8 +131,8 @@ theorem quad_mul {r : ℕ} (W : Matrix (Fin r) (Fin r) ℤ) (a y : Fin r → Γ)
     ∑ i, ∑ j, W i j • ℓ (a i * y i) (a j * y j) = ∑ i, ∑ j, W i j • ℓ (a i) (a j) + ∑ i, ∑ j, W i j • ℓ (y i) (y j) +
       ∑ i, ∑ j, W i j • ((ℓ (a i) (y j) - κ (Additive.ofMul ((g j).s (χ i)))) +
         (ℓ (a j) (y i) - κ (Additive.ofMul ((g i).s (χ j))))) + κ (Additive.ofMul (PVu W χ g)) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [PVu, ofMul_prod, map_sum, ofMul_zpow, map_zsmul, ← Finset.sum_add_distrib, ← smul_add]
+
+  simp only [PVu, ofMul_prod, map_sum, ofMul_zpow, map_zsmul, ← Finset.sum_add_distrib, ← smul_add]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   congr 1
   rw [hc _ _ _ (by rw [map_mul, a₀, y₀, _root_.mul_one]), hs (a i), hs (y i), hc _ _ _ (a₀ i), hc _ _ _ (y₀ i), map_mul,
@@ -191,9 +224,9 @@ section Gens
 variable {X Y Z S₀ : Scheme.{0}}
 
 def normGens (L : LB X) (e : S₀ ⟶ Y) (r : Z ⟶ Y) {z : Z} {J : (Z ⟶ X) → L.ι} (hJ : Good L z J) :
-    AddSubgroup (FreeAbelianGroup (Y ⟶ X) × Additive (Z.presheaf.stalk z)ˣ) where
+    AddSubgroup (FreeAddCommGroup (Y ⟶ X) × Additive (Z.presheaf.stalk z)ˣ) where
   carrier := {s | ∃ (K : Type) (_ : Fintype K) (φ : K → (Y ⟶ X)) (ε : K → ℤ) (t : LB.Gen (LB.LinComb L φ ε)),
-    t.IsGen ∧ s.1 = ∑ k, ε k • FreeAbelianGroup.of (φ k) ∧ (∀ y I, Good L y I → val t e y I = 1) ∧
+    t.IsGen ∧ s.1 = ∑ k, ε k • FreeAddCommGroup.of (φ k) ∧ (∀ y I, Good L y I → val t e y I = 1) ∧
       val t r z J = s.2.toMul}
   zero_mem' := ⟨PEmpty, inferInstance, PEmpty.elim, PEmpty.elim, LB.oneGen L, fun _ _ =>
     (map_one _).trans ((congrArg₂ (· * ·) (Fintype.prod_empty _) (map_one _)).trans (_root_.mul_one _)).symm,
@@ -222,8 +255,8 @@ theorem cube_mem_norm (L : RigLB G) (c : CubicalStr G L) {T T₀ T' : Over S} (e
       normGens L.L e.left r.left hJ := by
   refine ⟨thK, inferInstance, _, _, LB.pullGen L.L (thφ G (x3 G)) thε c.t (lift a (lift a' b)).left,
     DVR.pullGen_isGen _ _ _ _ c.isGen _, ?_, fun y I hI => ?_, val_cub c r hJ a a' b⟩
-  · have := prod_cub a a' b (U := Multiplicative (FreeAbelianGroup (T.left ⟶ G.left)))
-      (fun m => Multiplicative.ofAdd (FreeAbelianGroup.of m))
+  · have := prod_cub a a' b (U := Multiplicative (FreeAddCommGroup (T.left ⟶ G.left)))
+      (fun m => Multiplicative.ofAdd (FreeAddCommGroup.of m))
     have e := congrArg Multiplicative.toAdd this
     simp only [toAdd_prod, toAdd_zpow, toAdd_mul, toAdd_inv, toAdd_ofAdd] at e
     rw [e, lam, lam, lam]
@@ -241,7 +274,7 @@ variable {S : Scheme.{0}} {A A' : Over S} [GrpObj A] [IsCommMonObj A] [GrpObj A'
 
 theorem ros_flat (W : Matrix (Fin r) (Fin r) ℤ) (f g : A' ⟶ A') :
     ∑ p : Fin 6 × ((Fin r × Fin r) × Fin 4), (rosatiε p.1 * tensε W p.2) •
-      FreeAbelianGroup.of (rosatiφ A' f g p.1 ≫ tensφ pr p.2) =
+      FreeAddCommGroup.of (rosatiφ A' f g p.1 ≫ tensφ pr p.2) =
       qf pr W ((fst A' A' ≫ f) * snd A' A') - qf pr W (fst A' A' ≫ f) - qf pr W (snd A' A') -
         qf pr W (fst A' A' * (snd A' A' ≫ g)) + qf pr W (fst A' A') + qf pr W (snd A' A' ≫ g) := by
   rw [Fintype.sum_prod_type]
@@ -322,10 +355,10 @@ theorem ros_value (T : Tens D D' W) (ν : NumOf D F N) (ν' : NumOf D' F N') (A 
       exact MonObj.mul_comp x y (T.pr i)
   have mq : ∀ x : D'.P.A ⊗ D'.P.A ⟶ D'.P.A, (QuotientAddGroup.mk' H).comp (AddMonoidHom.inl _ _) (qf T.pr W x) =
       ∑ i, ∑ j, W i j • ℓ (x ≫ T.pr i) (x ≫ T.pr j) := fun x => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [qf, map_sum, map_zsmul, ℓ]
+
+    simp only [qf, map_sum, map_zsmul, ℓ]
   have mem : (∑ q : Fin 6 × ((Fin r × Fin r) × Fin 4), (rosatiε q.1 * tensε W q.2) •
-      FreeAbelianGroup.of (rosatiφ D'.P.A f g q.1 ≫ tensφ T.pr q.2),
+      FreeAddCommGroup.of (rosatiφ D'.P.A f g q.1 ≫ tensφ T.pr q.2),
       Additive.ofMul (τ (PVu W χ (fun i => ∏ k, gs k ^ A' i k) / PVu W χ₁ gs))) ∈ H := by
     refine (QuotientAddGroup.eq_zero_iff _).1 ?_
     have s : ∀ (x) (v : Fˣ), (QuotientAddGroup.mk (x, Additive.ofMul (τ v)) : _ ⧸ H) =
@@ -368,7 +401,7 @@ theorem GlobalTheory.Mum.TensRos.rosVT_components : ∀ (R : Type) [CommRing R] 
   · simp only [TensTor.cmp, TensTor.chi]
     rw [ν.eA.symm_apply_eq, ν.c_eq, ν'.c_eq, ν.eX.apply_symm_apply]
     simp only [DegPre.cF, Category.assoc, T.c_pr]
-  set_option synthInstance.maxHeartbeats 100000 in
-    · simp only [TensTor.chi, AddEquiv.apply_symm_apply, hact.1, map_sum, map_zsmul]
+
+  · simp only [TensTor.chi, AddEquiv.apply_symm_apply, hact.1, map_sum, map_zsmul]
 
 end

@@ -1,17 +1,55 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.SlopeBoundSt
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ArchBetween
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.BdryChart
-public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.ClopenCondOnto
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HeckeKer
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
-public import Development.AbelianVarietyTheory.PublishedTheorems.SemiabelianTori.GeometricallyConnectedSplitTorusAff
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieMetricStatement
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueAct
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFunctorialMap
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -96,8 +134,8 @@ theorem exists_coeff (E : Type) [Field E] [NumberField E] :
     have h1 := congrArg (starRingEnd ℂ) (hAB' (cj σ) (cj τ))
     have h2 : (1 : Matrix T T ℂ) (cj σ) (cj τ) = (1 : Matrix T T ℂ) σ τ := by
       simp [Matrix.one_apply, cj.injective.eq_iff]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [h2, map_sum] at h1
+
+    rw [h2, map_sum] at h1
     rw [Matrix.mul_apply]
     have h3 : starRingEnd ℂ ((1 : Matrix T T ℂ) σ τ) = (1 : Matrix T T ℂ) σ τ := by
       by_cases h : σ = τ <;> simp [Matrix.one_apply, h]
@@ -149,12 +187,12 @@ theorem core_sum {V : Type} [AddCommGroup V] [Module ℂ V] {T : Type} [Fintype 
             smul_left := ?_
             definite := ?_ }, fun _ _ => rfl⟩
   · intro x y
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum]
+
+    simp only [map_sum]
     exact Finset.sum_congr rfl fun τ _ => core.conj_inner_symm _ _
   · intro x
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum]
+
+    simp only [map_sum]
     exact Finset.sum_nonneg fun τ _ => core.re_inner_nonneg _
   · intro x y z
     simp only [map_add (f := _), core.add_left, Finset.sum_add_distrib]
@@ -163,8 +201,8 @@ theorem core_sum {V : Type} [AddCommGroup V] [Module ℂ V] {T : Type} [Fintype 
   · intro x hx
     have h1 : ∑ τ, RCLike.re (core.inner (P τ x) (P τ x)) = 0 := by
       have := congrArg RCLike.re hx
-      set_option synthInstance.maxHeartbeats 100000 in
-        simpa only [map_sum, map_zero] using this
+
+      simpa only [map_sum, map_zero] using this
     have h2 := (Finset.sum_eq_zero_iff_of_nonneg fun τ _ => core.re_inner_nonneg (P τ x)).1 h1
     have h3 : ∀ τ, P τ x = 0 := by
       intro τ
@@ -206,8 +244,8 @@ theorem core_expand {V : Type} [AddCommGroup V] [Module ℂ V] {Ix : Type} [Fint
       ∑ a, ∑ b, starRingEnd ℂ (f a) * g b * core.inner (u a) (w b) := by
   rw [core_sum_left]
   refine Finset.sum_congr rfl fun a _ => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← core.conj_inner_symm, core_sum_left, map_sum, Finset.mul_sum]
+
+  rw [← core.conj_inner_symm, core_sum_left, map_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun b _ => ?_
   rw [map_mul, Complex.conj_conj, core.conj_inner_symm]
   ring
@@ -248,8 +286,8 @@ theorem exists_orth (E : Type) [Field E] [NumberField E] [IsCommMonObj G] {K : T
   let cj : (𝓞 E →+* ℂ) ≃ (𝓞 E →+* ℂ) := ⟨fun τ => (starRingEnd ℂ).comp τ, fun τ => (starRingEnd ℂ).comp τ, hcc, hcc⟩
   have hc : ∀ a b, starRingEnd ℂ (c a b) = c a b := by
     intro a b
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [c, map_sum, map_mul, Complex.conj_conj]
+
+    simp only [c, map_sum, map_mul, Complex.conj_conj]
     refine Fintype.sum_equiv cj _ _ fun τ => ?_
     show d τ a * starRingEnd ℂ (d τ b) = starRingEnd ℂ (d (cj τ) a) * d (cj τ) b
     have h1 : d (cj τ) a = starRingEnd ℂ (d τ a) := (hdc τ a).symm
@@ -262,8 +300,8 @@ theorem exists_orth (E : Type) [Field E] [NumberField E] [IsCommMonObj G] {K : T
     intro V _ _ ρz
     rw [Finset.sum_comm]
     simp only [← Finset.sum_smul, hm2, Int.cast_smul_eq_zsmul]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← map_one ρz, ← hm1, map_sum]
+
+    rw [← map_one ρz, ← hm1, map_sum]
     simp only [map_zsmul]
   have key : ∀ (z : Sp ℂ ⟶ X) (V : Type) [AddCommGroup V] [Module ℂ V] (Mz : LieModel G z V)
       (ρz : 𝓞 E →+* Module.End ℂ V), Mz.IsActOf act.act ρz → ∀ core : InnerProductSpace.Core ℂ V,
@@ -290,8 +328,8 @@ theorem exists_orth (E : Type) [Field E] [NumberField E] [IsCommMonObj G] {K : T
     exact ⟨core', fun a b => (h' a b).trans (key z V Mz ρz hρz core hcore a b).symm⟩
   · intro z v w v' w' hv hw
     show ip' _ v' w' = starRingEnd ℂ (ip' z v w)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [ip', map_sum, map_mul, hc]
+
+    simp only [ip', map_sum, map_mul, hc]
     refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
     congr 1
     exact h₀.conj z _ _ _ _ (by rw [Over.comp_left, hv, Over.comp_left, Category.assoc])

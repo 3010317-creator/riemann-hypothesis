@@ -1,18 +1,61 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsRealFam
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.CuspAlongSmoothRows
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PlaceAtIff
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExOneEqSelf
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsRowFlagTiltUnique
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemFinitePointsOfHasLocalLatticeMatrices
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SmulMtCutPartCompl
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridBasePointTrivialOffTensorPlaces
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacua
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IdemAtUniqueOrth
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OneSubIdemQMulSelf
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryAdelicInfFinSplitPeriodsUnimodular
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AtPlaceIffEqAtTau
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridBasePointTrivialOffTensorPlaces
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsRowFlagTiltUnique
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemFinitePointsOfHasLocalLatticeMatrices
+import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.InclusionInjective
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PairPtsClasses
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealLineOfPeriodsOnLine
 
 @[expose] public section
 
@@ -195,9 +238,9 @@ theorem idem_sum (he : IsIdemSum e P) (h : ∀ w, Formalism.L2.NTheta.IsIdemAt (
   · rw [Finset.sum_mul_sum]
     refine Finset.sum_congr rfl fun u hu => ?_
     rw [Finset.sum_eq_single u (fun v _ hv => orth he h (Ne.symm hv)) (fun hu' => absurd hu hu'), (hi u).1]
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [map_sum]
-      exact Finset.sum_congr rfl fun u _ => (hi u).2
+
+  · rw [map_sum]
+    exact Finset.sum_congr rfl fun u _ => (hi u).2
 
 theorem sum_orth (he : IsIdemSum e P) (h : ∀ w, Formalism.L2.NTheta.IsIdemAt (eL w) w.1) {S : Finset P} {w : P} (hw : w ∉ S) :
     (∑ w ∈ S, (eL w + cA D (eL w))) * (eL w + cA D (eL w)) = 0 := by
@@ -221,8 +264,8 @@ theorem cutS_one (he : IsIdemSum e P) (h : ∀ w, Formalism.L2.NTheta.IsIdemAt (
 theorem cutS_univ (he : IsIdemSum e P) (h : ∀ w, Formalism.L2.NTheta.IsIdemAt (eL w) w.1) {V : HSp D} {g : GA D V}
     (hg : SuppAt e V g) : cutS eL Finset.univ g = g := by
   have hs : ∑ w ∈ (Finset.univ : Finset P), (eL w + cA D (eL w)) = e + cA D e := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Finset.sum_add_distrib, ← map_sum, ← eq_sum he h]
+
+    rw [Finset.sum_add_distrib, ← map_sum, ← eq_sum he h]
   have hi := idem_sum he h Finset.univ
   unfold cutS
   rw [hs] at hi ⊢
@@ -271,7 +314,7 @@ private lemma zero_not_mem_idx' {D : D7} : 0 ∉ idx D := by
   simp [idx]
 
 
-set_option maxHeartbeats 800000 in
+
 theorem points : Big fun {D} _ _ _ _ {T} _ _ _ _ _ _ ch => ∀ (s : ℤˣ) (t : T) (β : CosFam ch.G t) (b b₀ : Pts ch.G), IsRep t ch.S.B s β b → IsBase t ch.S.B b₀ → ∀ (eL : locPl ch.G t → AE D), (∀ w, IsIdemSum (eL w) {w.1}) → ∀ p : Pts ch.G, IsRealPt p → ∃ q : Finset (locPl ch.G t) → Pts ch.G, q ∅ = p * b₀ ∧ q Finset.univ = p * b ∧ ∀ (S : Finset (locPl ch.G t)) (w : locPl ch.G t), w ∉ S → ∃ r r₀ h : Pts ch.G, OneLoc t w.1 (eL w) r (fun j => if j ∈ idx D then sgnAt ch.G t s w.1 j * (repsAt ch.G t w.1).elt (β w) (D.R.m, j) else 1) ∧ OneLoc t w.1 (eL w) r₀ (fun j => if j = 0 then (stair (locGrid ch.G t w.1) (unifAt w.1) (cosExp ch.G w.1) j)⁻¹ else 1) ∧ (∀ j, j ≤ D.R.m → ∃ δ, IsTilt ch.G j δ ∧ δ⁻¹ * h j ∈ GlobalTheory.FinPl.grpOff _ (· = w.1.under (𝓞 D.host.F))) ∧ h * r = q (insert w S) ∧ h * r₀ = q S := by
   refine Exists.intro 0 (fun ε CF _ => Exists.intro 0 ?_)
   intro D large₂ _ _ Γ _ _ Pl0 T A Ks _ _ _ R F _ ch _ _ s t β b b₀ hrep hbase eL heL p hp

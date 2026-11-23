@@ -1,19 +1,59 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.StdBases
-public import Formalism.LocalRingCardinality.DataForced
-public import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.SingleLetterBiextensionRelation
-public import Formalism.LocalRingCardinality.FactDelDualNabla
-public import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.TransportFirstLevel
-public import Formalism.LocalToGlobal.GlobalTheory.GL3.PHfTrace
-public import Formalism.LocalToGlobal.GlobalTheory.GL3.PLinkThU
-public import Formalism.GaussJetBounds.GaussJetProofs.NormNatCastEqPowPadicValNat
+public import Formalism.LocalToGlobal.TorsionIntegrality.CMGoodModels.Statement
+public import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.IsLawOfLog
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormLeOneOfValuationLeOne
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TauPlBijective
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PrimeOfLiesOver
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormPadicEmbeddingLeOneOfMemInverseHalfDifferent
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsKurFrobTauEmbPosPl
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormPadicEmbeddingLeOneOfMemInverseHalfDifferent
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PrimeOfLiesOver
+import Formalism.GaussJetBounds.GaussJetProofs.NormNatCastEqPowPadicValNat
+public import Formalism.LocalRingCardinality.FactDelDualNabla
+public import Formalism.LocalToGlobal.GlobalTheory.GL3.PHfTrace
+import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.TransportFirstLevel
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -181,8 +221,8 @@ private theorem cols_of_trace (D : D7) {p : ℕ} [Fact p.Prime] (lam : Qbar →+
       = ∑ τ : D.what₂.Tau, lam (embQ τ Y) := by
         rw [Fintype.sum_prod_type]
         refine Finset.sum_congr rfl fun τ _ => ?_
-        set_option synthInstance.maxHeartbeats 100000 in
-          simp only [lamB, lamBc, hl, hY, map_sum, map_mul]
+
+        simp only [lamB, lamBc, hl, hY, map_sum, map_mul]
         exact Finset.sum_congr rfl fun _ _ => mul_comm _ _
     _ = lam (∑ τ : D.what₂.Tau, embQ τ Y) := (map_sum lam _ _).symm
     _ = if i = i' then 1 else 0 := by
@@ -333,20 +373,20 @@ private theorem frob_moves_coords : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lam :
   have hPc := hP.2.1 hcl
   have hP'c := hP'.2.1 hcl
   refine ⟨fun z a b₀ i => ?_, fun w a b₀ i => ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    · simp only [gK, hK, hfun, map_sum, map_mul]
-      refine Finset.sum_congr rfl fun b₁ _ => Finset.sum_congr rfl fun a₁ _ => ?_
-      rw [hs, hs, conj_conj, hinv, K1 P hPc z]
-      have e2 := congrFun (congrFun (K2 P' hP'c z) b₁) b₀
-      simp only [Matrix.map_apply, Matrix.transpose_apply] at e2 ⊢
-      rw [e2]; ring
-  set_option synthInstance.maxHeartbeats 100000 in
-    · simp only [gK, hK, hfun, map_sum, map_mul]
-      refine Finset.sum_congr rfl fun b₁ _ => Finset.sum_congr rfl fun a₁ _ => ?_
-      rw [hs, hs, hinv, K1 P' hP'c w]
-      have e2 := congrFun (congrFun (K2 P hPc w) a₁) a
-      simp only [Matrix.map_apply, Matrix.transpose_apply] at e2 ⊢
-      rw [e2]; ring
+
+  · simp only [gK, hK, hfun, map_sum, map_mul]
+    refine Finset.sum_congr rfl fun b₁ _ => Finset.sum_congr rfl fun a₁ _ => ?_
+    rw [hs, hs, conj_conj, hinv, K1 P hPc z]
+    have e2 := congrFun (congrFun (K2 P' hP'c z) b₁) b₀
+    simp only [Matrix.map_apply, Matrix.transpose_apply] at e2 ⊢
+    rw [e2]; ring
+
+  · simp only [gK, hK, hfun, map_sum, map_mul]
+    refine Finset.sum_congr rfl fun b₁ _ => Finset.sum_congr rfl fun a₁ _ => ?_
+    rw [hs, hs, hinv, K1 P' hP'c w]
+    have e2 := congrFun (congrFun (K2 P hPc w) a₁) a
+    simp only [Matrix.map_apply, Matrix.transpose_apply] at e2 ⊢
+    rw [e2]; ring
 
 private theorem sum_bilin {R : Type*} [CommRing R] {ι κ μ : Type*} [Fintype ι] [Fintype κ] [Fintype μ]
     (F : κ → R) (G : μ → R) (X : ι → κ → R) (Y : ι → μ → R) :
@@ -573,8 +613,8 @@ private theorem norm_hK_le_one : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lam : Qb
   have e : hK D lam P P' b w a b₀ i = ρ (((P' τ)⁻¹ * b i * P τ) b₀ a) := by
     unfold hK
     rw [← hτ, hρK, hinv]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [Matrix.mul_apply, Matrix.map_apply, map_sum, map_mul, Finset.sum_mul]
+
+    simp only [Matrix.mul_apply, Matrix.map_apply, map_sum, map_mul, Finset.sum_mul]
     rw [Finset.sum_comm]
   show ‖((hK D lam P P' b w a b₀ i : MaximalUnramifiedExtension p) : ℂ_[p])‖ ≤ 1
   rw [e, hρC]

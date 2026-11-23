@@ -1,7 +1,52 @@
 module
 
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.LaplaceOperators.KTypeLemma.TensorActionApplyDual
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.LaplaceOperators.KTypeLemma.InnerCompactWordActionAdjoint
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Set.Finite.List
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.KUnitB
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.LaplaceOperators.KTypeLemma.DerivEntries
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -55,8 +100,8 @@ theorem contraction_compactWordAction (ε : Fin n → Bool) (E : Fin n → Fin n
     obtain ⟨w, c⟩ := p
     have key := lc_adLW E hE a b (v : M) w
     rw [Finsupp.linearCombination_apply, Finsupp.sum] at key
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Cone.compactWordAction_single, dite_eq_left hab, map_add (f := _), map_sum, sT_single, Pi.add_apply, Finset.sum_apply]
+
+    rw [Cone.compactWordAction_single, dite_eq_left hab, map_add (f := _), map_sum, sT_single, Pi.add_apply, Finset.sum_apply]
     simp only [map_smul, sT_single, Pi.smul_apply]
     by_cases hd : d = c
     · subst hd
@@ -132,8 +177,8 @@ theorem lift_highestWeightVector {M : Type*} [NormedAddCommGroup M] [InnerProduc
     Module.Finite.equiv (Finsupp.supportedEquivFinsupp (M := V) (R := ℂ) S).symm
   have hS : IsKStableSub ε (sA ε E V hV) (Finsupp.supported V ℂ S) := by
     intro a b hab y hy
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← Finsupp.sum_single y, Finsupp.sum, map_sum]
+
+    rw [← Finsupp.sum_single y, Finsupp.sum, map_sum]
     refine Submodule.sum_mem _ fun p hp => ?_
     have hpS : p.1.length ≤ R := hy hp
     rw [sA_single']
@@ -150,15 +195,15 @@ theorem lift_highestWeightVector {M : Type*} [NormedAddCommGroup M] [InnerProduc
     { inner := fun x y => Cone.ipK V x y
       conj_inner_symm := fun x y => Cone.ipK_symm x y
       re_inner_nonneg := fun x => by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [Cone.ipK_apply, map_sum]; exact sum_nonneg fun p _ => inner_self_nonneg
+
+        rw [Cone.ipK_apply, map_sum]; exact sum_nonneg fun p _ => inner_self_nonneg
       add_left := fun x y z => by rw [map_add (f := _), LinearMap.add_apply]
       smul_left := fun x y r => by rw [map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul]
       definite := fun x hx => by
         have h1 := congrArg RCLike.re hx
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [Cone.ipK_apply, map_sum, map_zero,
-          sum_eq_zero_iff_of_nonneg fun p _ => inner_self_nonneg] at h1
+
+        rw [Cone.ipK_apply, map_sum, map_zero,
+        sum_eq_zero_iff_of_nonneg fun p _ => inner_self_nonneg] at h1
         ext1 p
         by_cases hp : p ∈ x.support
         · have h2 := h1 p hp

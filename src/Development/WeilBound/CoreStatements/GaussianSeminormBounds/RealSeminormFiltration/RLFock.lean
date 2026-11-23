@@ -1,9 +1,55 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
-public import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.RLActs
+public import Mathlib.RingTheory.PiTensorProduct
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExistsBoundPolyMulExp
+public import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.RLActs
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.Bounds
+public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -287,9 +333,9 @@ theorem iota_hop [Fintype N] (P : W → MvPolynomial N ℂ) (c : W × N → ℂ)
   have h : ∀ w, iota W N (PiTensorProduct.tprod ℂ P) =
       rename (Prod.mk w) (P w) * ∏ w' ∈ Finset.univ.erase w, rename (Prod.mk w') (P w') := fun w => by
     rw [← iota_update, Function.update_eq_self]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [iota_update, hop, LinearMap.smul_apply, LinearMap.sum_apply, Fintype.sum_prod_type, map_smul, map_sum,
-    smul_mul_assoc, Finset.sum_mul, ← Finset.smul_sum]
+
+  simp only [iota_update, hop, LinearMap.smul_apply, LinearMap.sum_apply, Fintype.sum_prod_type, map_smul, map_sum,
+  smul_mul_assoc, Finset.sum_mul, ← Finset.smul_sum]
   congr 1
   refine Finset.sum_congr rfl fun w _ => Finset.sum_congr rfl fun l _ => ?_
   rw [h w]
@@ -600,13 +646,13 @@ theorem exists_fockMap : ∃ φ : MvPolynomial L ℂ →ₗ[ℂ] 𝓢(V, ℂ), F
     simp [Finset.sum_apply, Pi.single_apply, Finset.sum_add_distrib]
   have e2 : H.Dl c = ∑ l, (((c l).re : ℂ) • a l + ((c l).im : ℂ) • b l) := by
     conv_lhs => rw [e]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_add (f := _), map_smul, coe_smul, a, b]
+
+    simp only [map_sum, map_add (f := _), map_smul, coe_smul, a, b]
   change H.Dl c (φ P) = _
   rw [e2]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hop, ← hr, LinearMap.smul_apply, LinearMap.sum_apply, LinearMap.sub_apply, LinearMap.add_apply, map_smul, map_sum,
-    map_sub, LinearMap.mulLeft_apply, Derivation.coeFn_coe, h2, h3, Finset.smul_sum, LinearMap.neg_apply]
+
+  simp only [hop, ← hr, LinearMap.smul_apply, LinearMap.sum_apply, LinearMap.sub_apply, LinearMap.add_apply, map_smul, map_sum,
+  map_sub, LinearMap.mulLeft_apply, Derivation.coeFn_coe, h2, h3, Finset.smul_sum, LinearMap.neg_apply]
   refine Finset.sum_congr rfl fun l _ => ?_
   have e3 : c l = (c l).re + (c l).im * I := (re_add_im _).symm
   have e4 : star (c l) = (c l).re - (c l).im * I := by apply Complex.ext <;> simp
@@ -1053,8 +1099,8 @@ theorem exists_heis (hD : DerEx) {ψ : AddChar (AF F) ℂ} {τ : ∀ w : Infinit
     have e1 : trB F κ (y c') (v c) - trB F κ (y c) (v c') =
         Algebra.trace ℝ (mixedEmbedding.mixedSpace F) (evI F (symp (R := AF F) (cA σ) (-1) JA JB (U c) (U c'))) := by
       rw [d.form, ← evIh_apply, trB_apply, trB_apply, ← map_sub]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [dotProduct, map_sub, map_sum, map_mul, evIh_apply]
+
+      simp only [dotProduct, map_sub, map_sum, map_mul, evIh_apply]
       rfl
     rw [e1, symp, trace_trace h τ, Fintype.sum_prod_type, im_sum, Finset.mul_sum]
     refine Finset.sum_congr rfl fun w _ => ?_
@@ -1064,8 +1110,8 @@ theorem exists_heis (hD : DerEx) {ψ : AddChar (AF F) ℂ} {τ : ∀ w : Infinit
       congrFun (tw_untw z) (w, l)
     simp only [e3, ← h2, Matrix.map_apply] at e2
     rw [← e2, hTens, neg_one_mul, map_neg, neg_re]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_mul, piInf_cA h]
+
+    simp only [map_sum, map_mul, piInf_cA h]
     ring
   have hdim : Module.finrank ℝ (κ → mixedEmbedding.mixedSpace F) ≤ Module.finrank ℝ (LinearMap.ker v) := by
     refine LinearMap.finrank_le_finrank_of_surjective (f := y.comp (LinearMap.ker v).subtype) fun y0 => ?_
@@ -1102,8 +1148,8 @@ theorem iota_sumPl (c : InfinitePlace F → Matrix (Ix P Q) (Ix R S) ℂ) (T : T
       hop (tw c) (iota (InfinitePlace F) (Ln P Q R S) T) := by
   induction T using PiTensorProduct.induction_on with
   | smul_tprod r p =>
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_smul, map_smul, map_smul, map_smul, ← iota_hop, sumPl, LinearMap.sum_apply, map_sum]
+
+    rw [map_smul, map_smul, map_smul, map_smul, ← iota_hop, sumPl, LinearMap.sum_apply, map_sum]
     congr 1
     refine Finset.sum_congr rfl fun w _ => ?_
     rw [atPl, PiTensorProduct.map_tprod, heisOp_eq]

@@ -1,7 +1,51 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SubsetSpanBy
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -138,16 +182,16 @@ theorem comp_div {c₀ : O →+* F} {θ : F →+* F₁} (hc : θ.comp c₀ = (al
     simp only [cc, Finset.mul_sum]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun i _ => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      conv_rhs => rw [← b.sum_repr (residue T (r i)), map_sum, Finset.sum_mul]
+
+    conv_rhs => rw [← b.sum_repr (residue T (r i)), map_sum, Finset.sum_mul]
     refine Finset.sum_congr rfl fun t' _ => ?_
     rw [map_smul, ← ho, Algebra.smul_def]
     ring
   have he : (⟨_, hsum⟩ : Subalgebra.toSubmodule W) = ∑ i, algebraMap O T (o t i) • ⟨θ (w i), hw i⟩ := by
     ext
     simp [Algebra.smul_def]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [he, map_sum]
+
+  rw [he, map_sum]
   have hct : cc t = 0 := by rw [hcc]; rfl
   rw [← hct]
   simp only [cc, map_smul, Algebra.smul_def, hcompat]
@@ -172,8 +216,8 @@ theorem div_span (hinj : Function.Injective (algebraMap T F₁)) {c₀ : O →+*
   have hdiff : ∀ i, ∃ r' : T, r i = ∑ t, algebraMap O T (o t i) * β t + algebraMap O T π * r' := by
     intro i
     have hm : r i - ∑ t, algebraMap O T (o t i) * β t ∈ maximalIdeal T := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← IsLocalRing.residue_eq_zero_iff, map_sub, map_sum]
+
+      rw [← IsLocalRing.residue_eq_zero_iff, map_sub, map_sum]
       simp only [map_mul, ← IsLocalRing.ResidueField.algebraMap_residue, ho, hβ]
       conv_lhs => enter [1]; rw [← b.sum_repr (residue T (r i))]
       simp [Algebra.smul_def]
@@ -186,16 +230,16 @@ theorem div_span (hinj : Function.Injective (algebraMap T F₁)) {c₀ : O →+*
     intro t
     have hne : θ (c₀ π) ≠ 0 := by rw [hco]; exact hϖ
     have hval : θ ((∑ i, c₀ (o t i) * w i) * (c₀ π)⁻¹) = y' t := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_mul, map_inv₀, map_sum]
+
+      rw [map_mul, map_inv₀, map_sum]
       simp only [map_mul, hco]
       rw [hyeq t, mul_comm, ← mul_assoc, inv_mul_cancel₀ hϖ, one_mul]
     exact ⟨_, by rw [Set.mem_preimage, hval]; exact hy' t, hval⟩
   have hyeq' : y = ∑ t, algebraMap T F₁ (β t) * y' t + ∑ i, algebraMap T F₁ (r' i) * θ (w i) := by
     apply mul_left_cancel₀ hϖ
     rw [← hr]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hr', map_add (f := _), map_sum, map_mul, add_mul, Finset.sum_add_distrib, Finset.sum_mul, mul_add, Finset.mul_sum]
+
+    simp only [hr', map_add (f := _), map_sum, map_mul, add_mul, Finset.sum_add_distrib, Finset.sum_mul, mul_add, Finset.mul_sum]
     congr 1
     · rw [Finset.sum_comm]
       refine Finset.sum_congr rfl fun t _ => ?_

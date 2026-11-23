@@ -1,12 +1,58 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.FullExists
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.HermitianETransportInvariant
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicClassFiniteness.DictAll
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SplitRow
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.LatDictZ
+import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
+import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.GenericRatioOfBoundHolds
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicClassFiniteness.DictAll
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicClassFiniteness.DictGen
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicClassFiniteness.DictTop
+import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Bridge
+public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.RationalPointsLeHolds
 public import Lemmata.GeneralBFactThirdTerForm.Imports
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -150,12 +196,12 @@ theorem hT_herm (x y : (VS D).V) : (VS D).hT y x = star ((VS D).hT x y) := by
   rfl
 
 theorem hT_f_prV (a : Fin D.R.rS) (v : (VS D).V) : (VS D).hT (X.fY a) (prV X v) = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [prV_apply, map_sub, map_sum, hT_f_e, X.ff]
+
+  simp [prV_apply, map_sub, map_sum, hT_f_e, X.ff]
 
 theorem hT_e_prV (a : Fin D.R.rS) (v : (VS D).V) : (VS D).hT (X.eX a) (prV X v) = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [prV_apply, map_sub, map_sum, X.ee, X.ef]
+
+  simp [prV_apply, map_sub, map_sum, X.ee, X.ef]
 
 theorem prV_prV (v : (VS D).V) : prV X (prV X v) = prV X v := by
   rw [prV_apply X (prV X v)]
@@ -209,8 +255,8 @@ theorem sub_prV_mem_Xs {v : (VS D).V} (hv : ∀ a, (VS D).hT (X.eX a) v = 0) : v
   exact Submodule.sum_mem _ fun a _ => Submodule.smul_mem _ _ (eX_mem_Xs X a)
 
 theorem hT_sub_prV_prV (x y : (VS D).V) : (VS D).hT (x - prV X x) (prV X y) = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [sub_prV_eq, map_add (f := _), LinearMap.add_apply, map_sum, map_sum, LinearMap.sum_apply, LinearMap.sum_apply]
+
+  rw [sub_prV_eq, map_add (f := _), LinearMap.add_apply, map_sum, map_sum, LinearMap.sum_apply, LinearMap.sum_apply]
   simp [LinearMap.map_smulₛₗ, hT_e_prV, hT_f_prV]
 
 theorem hT_prV_sub_prV (x y : (VS D).V) : (VS D).hT (prV X x) (y - prV X y) = 0 := by
@@ -335,8 +381,8 @@ theorem ratMat_crd (g : (VS D).V →ₗ[D.host.E] (VS D).V) (y : (VS D).V) :
   funext i
   have h2 := congrFun (LinearMap.toMatrix_mulVec_repr X.bas X.bas g y) i
   rw [show X.crd (g y) i = X.ιE.symm (X.bas.repr (g y) i) from rfl, ← h2]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Matrix.mulVec, dotProduct, map_sum, map_mul, ratMat, RingHom.mapMatrix_apply, Matrix.map_apply]
+
+  simp only [Matrix.mulVec, dotProduct, map_sum, map_mul, ratMat, RingHom.mapMatrix_apply, Matrix.map_apply]
   rfl
 
 theorem ratMat_comp (f g : (VS D).V →ₗ[D.host.E] (VS D).V) : ratMat X (f ∘ₗ g) = ratMat X f * ratMat X g := by
@@ -901,12 +947,12 @@ theorem hT_g_e (a b : Fin D.R.rS) : (VS D).hT (g a) (e b) = if b = a then 1 else
   rw [hT_herm, heg]; split_ifs <;> simp
 
 theorem hT_g_prH (a : Fin D.R.rS) (v : (VS D).V) : (VS D).hT (g a) (prH e g v) = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [prH, map_sub, map_sum, hT_g_e hee hgg heg, hgg]
+
+  simp [prH, map_sub, map_sum, hT_g_e hee hgg heg, hgg]
 
 theorem hT_e_prH (a : Fin D.R.rS) (v : (VS D).V) : (VS D).hT (e a) (prH e g v) = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [prH, map_sub, map_sum, hee, heg]
+
+  simp [prH, map_sub, map_sum, hee, heg]
 
 theorem hT_hyp (α β α' β' : Fin D.R.rS → D.host.E) (p p' : (VS D).V)
     (hp : ∀ a, (VS D).hT (e a) p = 0 ∧ (VS D).hT (g a) p = 0)
@@ -915,11 +961,11 @@ theorem hT_hyp (α β α' β' : Fin D.R.rS → D.host.E) (p p' : (VS D).V)
       ∑ a, (star (α a) * β' a + star (β a) * α' a) + (VS D).hT p p' := by
   have hpe : ∀ a, (VS D).hT p (e a) = 0 := fun a => by rw [hT_herm, (hp a).1, star_zero]
   have hpg : ∀ a, (VS D).hT p (g a) = 0 := fun a => by rw [hT_herm, (hp a).2, star_zero]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_add (f := _), map_sum, LinearMap.add_apply, LinearMap.sum_apply, LinearMap.map_smulₛₗ,
-    LinearMap.smul_apply, smul_eq_mul, hee, heg, hgg, hT_g_e hee hgg heg, (hp' _).1, (hp' _).2, hpe, hpg,
-    mul_zero, Finset.sum_const_zero, add_zero, zero_add, mul_ite, mul_one,
-    Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, starRingEnd_apply]
+
+  simp only [map_add (f := _), map_sum, LinearMap.add_apply, LinearMap.sum_apply, LinearMap.map_smulₛₗ,
+  LinearMap.smul_apply, smul_eq_mul, hee, heg, hgg, hT_g_e hee hgg heg, (hp' _).1, (hp' _).2, hpe, hpg,
+  mul_zero, Finset.sum_const_zero, add_zero, zero_add, mul_ite, mul_one,
+  Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, starRingEnd_apply]
   rw [Finset.sum_add_distrib]
   simp only [RingHom.id_apply]
   rw [add_comm (∑ x, α' x * star (β x))]

@@ -2,6 +2,50 @@ module
 
 public import Development.WeilBound.ThetaLifts.LocalTheory.ToralCohomology.ShiftLow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
+public import Aesop.BuiltinRules
+public import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.CoreDefs
+public import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.CoreCasGl
+public import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.CoreCyc
+public import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.CoreMain
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -124,8 +168,8 @@ theorem side_one {La : Ix r s → ℚ} {T : Type} [AddCommGroup T] [Module ℂ T
   set u := ∑ i, φ i (x i) with hu0
   have hcu : casK (units act') u = (c0 : ℂ) • u := by rw [hcc]; exact cas_hw (glK_of_lie hL') hu
   have e1 : (∏ j, p j).eval (c0 : ℂ) • u = ∑ i, φ i (aeval (casK (units act)) (∏ j, p j) (x i)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← Module.End.aeval_apply_of_mem_apply_eq_smul hcu, hu0, map_sum]
+
+    rw [← Module.End.aeval_apply_of_mem_apply_eq_smul hcu, hu0, map_sum]
     exact Finset.sum_congr rfl fun i _ =>
       (aeval_int (φ i) (casK_intertw (φ i) fun a b _ v => hφ i _ v) _ _).symm
   have hL1 : Lie (one act) := fun X Y => hL (X ()) (Y ())
@@ -237,8 +281,8 @@ theorem tens_hw {ι P M : Type} [Fintype ι] [DecidableEq ι] [AddCommGroup P] [
   have hL : Lie act := by
     intro X Y
     rw [← Finset.univ_sum_single X, ← Finset.univ_sum_single Y]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, Finset.sum_mul_sum, map_sub]
+
+    simp only [map_sum, Finset.sum_mul_sum, map_sub]
     rw [Finset.sum_comm (f := fun i j => act (Pi.single i (Y i)) * act (Pi.single j (X j))),
       Finset.sum_comm (f := fun i j => act ((Pi.single i (Y i) : ι → Mat r s) * (Pi.single j (X j) : ι → Mat r s))), ← Finset.sum_sub_distrib,
       ← Finset.sum_sub_distrib]

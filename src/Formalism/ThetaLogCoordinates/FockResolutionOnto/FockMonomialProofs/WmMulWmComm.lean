@@ -1,8 +1,58 @@
 module
 
 public import Formalism.ThetaLogCoordinates.FockResolutionOnto.StatementG
+public import Formalism.MahlerMeasure.MahlerMeasureProofs.RemoveS
+public import Formalism.PolynomialDimension.MultinomialDepth.PartnerM
+public import Formalism.ThetaLogCoordinates.FockResolutionOnto.FockMonomialProofs.MulEarlyLettersHolds
 public import Formalism.ThetaLogCoordinates.FockResolutionOnto.FockMonomialProofs.RaisingKeepsEarlyLetters
-public import Formalism.ThetaLogCoordinates.FockResolutionOnto.FockMonomialProofs.DerivativeKeepsSpaceHolds
+import Formalism.ThetaLogCoordinates.FockResolutionOnto.FockMonomialProofs.ResInto
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Formalism.MahlerMeasure.MahlerMeasureProofs.FockBlocks
 
 @[expose] public section
 
@@ -75,12 +125,12 @@ theorem isW_E (E : Fin n → Fin n → MvPolynomial σ ℚ_[p] →ₗ[ℚ_[p]] M
   funext c
   have h1 : E c c x = ((μ c : ℤ) : ℚ_[p]) • x := by
     ext m'
-    rw [hdiag, coeff_smul, smul_eq_mul]
+    rw [hdiag, MvPolynomial.coeff_smul, smul_eq_mul]
     by_cases h0 : AddMonoidAlgebra.coeff x m' = 0
     · rw [h0, mul_zero, mul_zero]
     · rw [hx m' h0]
   have h2 := congrArg (AddMonoidAlgebra.coeff · m) (hcomm c c a b x)
-  rw [h1, map_smul, coeff_sub, hdiag, coeff_smul, smul_eq_mul, coeff_sub] at h2
+  rw [h1, map_smul, MvPolynomial.coeff_sub, hdiag, MvPolynomial.coeff_smul, smul_eq_mul, MvPolynomial.coeff_sub] at h2
   have h3 : AddMonoidAlgebra.coeff (if c = a then E c b x else 0) m = (if c = a then 1 else 0) * AddMonoidAlgebra.coeff (E a b x) m := by
     split_ifs with h
     · subst h; rw [one_mul]
@@ -116,14 +166,14 @@ noncomputable def mkGlW (E : Fin n → Fin n → MvPolynomial σ ℚ_[p] →ₗ[
     · rw [if_neg h, if_neg (Ne.symm h)]
   diag := fun c μ x => by
     ext m
-    rw [hdiag, coeff_smul, smul_eq_mul, coeff_compW]
+    rw [hdiag, MvPolynomial.coeff_smul, smul_eq_mul, coeff_compW]
     split_ifs with h
     · rw [h]
     · simp
   shift := fun a b μ x => by
     conv_lhs => rw [← sum_compW w x _ (compW_dec w x)]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, map_sum]
+
+    rw [map_sum, map_sum]
     have e' : ∀ ν, compW p w μ (E a b (compW p w ν x)) =
         if ν = μ - dl a b then E a b (compW p w ν x) else 0 := by
       intro ν
@@ -181,8 +231,8 @@ theorem eul_X_mul (b : Fin r) (G : MvPolynomial (Fin (K + 1) × Fin r) ℚ_[p]) 
 theorem pderiv_eul (j : Fin r) (G : MvPolynomial (Fin (K + 1) × Fin r) ℚ_[p]) :
     pderiv (Fin.last K, j) (ProjS.eulL (fun c : Fin r => (Fin.last K, c)) G) =
       pderiv (Fin.last K, j) G + ProjS.eulL (fun c : Fin r => (Fin.last K, c)) (pderiv (Fin.last K, j) G) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [ProjS.eulL_apply, ProjS.eulL_apply, map_sum]
+
+  rw [ProjS.eulL_apply, ProjS.eulL_apply, map_sum]
   simp only [pderiv_X_mul, Finset.sum_add_distrib]
   rw [Finset.sum_ite_eq, if_pos (Finset.mem_univ j)]
   congr 1
@@ -192,8 +242,8 @@ theorem eul_Uop (LL : Letters (K + 1)) (c : ℤ) (Cs : Finset (Fin r)) (i : Fin 
     (F : MvPolynomial (Fin (K + 1) × Fin r) ℚ_[p]) :
     ProjS.eulL (fun c : Fin r => (Fin.last K, c)) (Uop p LL c Cs i F) =
       Uop p LL c Cs i F + Uop p LL c Cs i (ProjS.eulL (fun c : Fin r => (Fin.last K, c)) F) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Uop_apply, Uop_apply, map_sub, map_sum]
+
+  rw [Uop_apply, Uop_apply, map_sub, map_sum]
   simp only [eul_X_mul, eul_glAct, map_sub, map_smul, Finset.sum_add_distrib]
   abel
 
@@ -217,8 +267,8 @@ theorem d_U (LL : Letters (K + 1)) (hv : LL.vec (Fin.last K) = true) (c : ℤ) (
     (hj : j ∈ Cs) (F : MvPolynomial (Fin (K + 1) × Fin r) ℚ_[p]) :
     dW p K j (Uop p LL c Cs i F) - Uop p LL c Cs i (dW p K j F) =
       (if j = i then Aop p K r c F else 0) - glAct p LL (K + 1) i j F := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [dW_apply, dW_apply, Uop_apply, Uop_apply, map_sub, map_sum, Aop_apply, glAct_succ LL hv]
+
+  rw [dW_apply, dW_apply, Uop_apply, Uop_apply, map_sub, map_sum, Aop_apply, glAct_succ LL hv]
   simp only [pderiv_X_mul, pderiv_glJ, map_sub, Derivation.map_smul, pderiv_eul, Finset.sum_add_distrib]
   rw [Finset.sum_ite_eq, if_pos hj]
   simp only [mul_sub, mul_add]
@@ -255,8 +305,8 @@ theorem S_S (LL : Letters (K + 1)) (Cs : Finset (Fin r)) (i k : Fin r) (hi : i �
     Sop p LL Cs i * Sop p LL Cs k - Sop p LL Cs k * Sop p LL Cs i =
       (Wm p K k : Module.End ℚ_[p] _) * Sop p LL Cs i - (Wm p K i : Module.End ℚ_[p] _) * Sop p LL Cs k := by
   refine LinearMap.ext fun F => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [LinearMap.sub_apply, Module.End.mul_apply, Sop_apply, Wm, LinearMap.mulLeft_apply, map_sum, glJ_X_mul]
+
+  simp only [LinearMap.sub_apply, Module.End.mul_apply, Sop_apply, Wm, LinearMap.mulLeft_apply, map_sum, glJ_X_mul]
   rw [Finset.sum_comm (s := Cs) (t := Cs)
     (f := fun b' b => X (Fin.last K, b) * (X (Fin.last K, b') * glAct p LL K i b (glAct p LL K k b' F))),
     ← Finset.sum_sub_distrib]
@@ -299,9 +349,9 @@ theorem aop_weightMul_comm (c : ℤ) (i : Fin r) :
 theorem A_S (LL : Letters (K + 1)) (c : ℤ) (Cs : Finset (Fin r)) (i : Fin r) :
     (Aop p K r c : Module.End ℚ_[p] _) * Sop p LL Cs i = Sop p LL Cs i * Aop p K r c - Sop p LL Cs i := by
   refine LinearMap.ext fun F => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [LinearMap.sub_apply, Module.End.mul_apply, Aop_apply, Sop_apply, map_sum, eul_X_mul, eul_glAct, map_sub,
-    map_smul, Finset.sum_add_distrib, Finset.sum_sub_distrib, Finset.smul_sum]
+
+  simp only [LinearMap.sub_apply, Module.End.mul_apply, Aop_apply, Sop_apply, map_sum, eul_X_mul, eul_glAct, map_sub,
+  map_smul, Finset.sum_add_distrib, Finset.sum_sub_distrib, Finset.smul_sum]
   abel
 
 theorem sop_comm_weightMul (LL : Letters (K + 1)) (Cs : Finset (Fin r)) (i k : Fin r) :
@@ -409,7 +459,7 @@ theorem coeff_EX_diag (LL : Letters (K + 1)) (c : ℤ) (a : Fin (s + 1))
     AddMonoidAlgebra.coeff (EX p LL c a a x) m = ((wtX LL c m a : ℤ) : ℚ_[p]) * AddMonoidAlgebra.coeff x m := by
   refine Fin.cases ?_ (fun i => ?_) a
   · show AddMonoidAlgebra.coeff (Aop p K (s + 1) c x) m = ((c - ∑ a : Fin (s + 1), (m (Fin.last K, a) : ℤ) : ℤ) : ℚ_[p]) * AddMonoidAlgebra.coeff x m
-    rw [Aop_apply, coeff_sub, coeff_smul, ProjS.coeff_eulL, smul_eq_mul]
+    rw [Aop_apply, MvPolynomial.coeff_sub, MvPolynomial.coeff_smul, ProjS.coeff_eulL, smul_eq_mul]
     push_cast; ring
   · exact coeff_cartan LL (K + 1) _ x m
 

@@ -1,11 +1,48 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOfMEqOne
-public import Development.AbelianVarietyTheory.Definitions.Divisors.InfUniv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GroupObjectLiftDividedPowers
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorModOfTmul
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEquivariantLiftFunctionalQuotientProjectivStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Definitions.Divisors.InfUniv
 
 @[expose] public section
 
@@ -19,7 +56,7 @@ universe u
 namespace GlobalTheory.HTSummand
 
 
-set_option maxHeartbeats 800000 in
+
 theorem summand_of_liftedCoords : ∀ {C : Type} [CommRing C] (I : Ideal C), I ^ 2 = ⊥ →
   ∀ {A : Type} [CommRing A] {H : Type u} [AddCommGroup H] [Module C H]
   (σ : A →+* Module.End C H), (letI := GlobalTheory.HTSummand.tensorModOf σ; Module.Projective (C ⊗[ℤ] A) H) →
@@ -63,8 +100,8 @@ theorem summand_of_liftedCoords : ∀ {C : Type} [CommRing C] (I : Ideal C), I ^
       have h0 := hII _ _ (he m k) (he j m)
       rw [show l j (y m) = e j m + (if j = m then 1 else 0) by simp [e], mul_add, h0]
       split_ifs <;> simp
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [x, map_sub, map_sum, map_smul, smul_eq_mul]
+
+    simp only [x, map_sub, map_sum, map_smul, smul_eq_mul]
     rw [Finset.sum_congr rfl (fun m _ => h1 m), Finset.sum_ite_eq]
     simp [e]
   let G₀ : Submodule C H := LinearMap.range π ⊓ ⨅ k, LinearMap.ker (l k)
@@ -75,8 +112,8 @@ theorem summand_of_liftedCoords : ∀ {C : Type} [CommRing C] (I : Ideal C), I ^
     intro q hq
     refine (hG _).2 ⟨Submodule.sub_mem _ hq (Submodule.sum_mem _ fun k _ =>
       Submodule.smul_mem _ _ (hxQ k)), fun j => ?_⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_sum, hlx]
+
+    simp [map_sum, hlx]
   refine ⟨G₀, Submodule.span C (Set.range x), ?_, ?_, ?_, ?_, ?_⟩
   · rw [eq_bot_iff]
     rintro z ⟨hzG, hzM⟩
@@ -84,8 +121,8 @@ theorem summand_of_liftedCoords : ∀ {C : Type} [CommRing C] (I : Ideal C), I ^
     obtain ⟨c, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun C).1 hzM
     have hc : ∀ j, c j = 0 := fun j => by
       have h := ((hG _).1 hzG).2 j
-      set_option synthInstance.maxHeartbeats 100000 in
-        simpa [map_sum, hlx] using h
+
+      simpa [map_sum, hlx] using h
     simp [hc]
   · refine le_antisymm (sup_le inf_le_left
       (Submodule.span_le.2 (by rintro _ ⟨k, rfl⟩; exact hxQ k))) ?_
@@ -120,8 +157,8 @@ theorem summand_of_liftedCoords : ∀ {C : Type} [CommRing C] (I : Ideal C), I ^
       · simp
     refine ⟨fun i => ∑ k ∈ Finset.univ.filter (fun k => κ k = i), l k d • x k, ?_, ?_⟩
     · intro i c
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_smul, Finset.smul_sum, ← Finset.sum_sub_distrib]
+
+      simp only [map_sum, map_smul, Finset.smul_sum, ← Finset.sum_sub_distrib]
       apply Submodule.sum_mem
       intro k hk
       rw [Finset.mem_filter] at hk

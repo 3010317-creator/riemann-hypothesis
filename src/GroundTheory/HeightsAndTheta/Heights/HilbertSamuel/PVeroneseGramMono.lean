@@ -1,9 +1,50 @@
 module
 
-public import Mathlib
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsVeroneseChiParts
 public import GroundTheory.HeightsAndTheta.Heights.HomogeneousLocalization.IntegralMonoInnerEqZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.CSandwichStD
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -89,7 +130,8 @@ theorem aeval_alt (f : MvPolynomial (Ix (Veronese.Idx D)) ℚ) :
       (Subsingleton.elim _ ((algebraMap (MvPolynomial (Fin (D + 1)) ℚ) (Veronese.Fld D)).comp C))
   | add p q hp hq => rw [map_add (f := _), map_add (f := _), map_add (f := _), hp, hq]
   | mul_X p q hp =>
-    rw [map_mul, map_mul, map_mul, hp, aeval_X]
+    have hq : phi D (X q) = X q.2.1.1 * X q.2.1.2 := bind₁_X_right ..
+    rw [map_mul, map_mul, map_mul, hp, aeval_X, hq]
     simp [phi, Veronese.x, Veronese.t]
 
 theorem phi_eq {N : ℕ} (b : MvPolynomial (Ix (Veronese.Idx D)) ℚ)
@@ -98,8 +140,8 @@ theorem phi_eq {N : ℕ} (b : MvPolynomial (Ix (Veronese.Idx D)) ℚ)
     phi D b = ∑ l, (c l : MvPolynomial (Fin (D + 1)) ℚ) * ∏ i, X i ^ adtEnum D N l i := by
   apply IsFractionRing.injective (MvPolynomial (Fin (D + 1)) ℚ) (Veronese.Fld D)
   rw [← aeval_alt, h]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [map_sum, map_mul, map_prod, map_pow, Veronese.t]
+
+  simp [map_sum, map_mul, map_prod, map_pow, Veronese.t]
 
 theorem eval_map_phi (w : Fin (D + 1) → ℂ) (f : MvPolynomial (Ix (Veronese.Idx D)) ℚ) :
     eval (Veronese.map D w) (MvPolynomial.map (algebraMap ℚ ℂ) f) = aeval w (phi D f) := by
@@ -114,8 +156,8 @@ theorem eval_b {N : ℕ} (w : Fin (D + 1) → ℂ) (b : MvPolynomial (Ix (Verone
     eval (Veronese.map D w) (MvPolynomial.map (algebraMap ℚ ℂ) b) =
       ∑ l, (c l : ℂ) * ∏ i, w i ^ adtEnum D N l i := by
   rw [eval_map_phi, phi_eq b c h]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [map_sum, map_mul, map_prod, map_pow]
+
+  simp [map_sum, map_mul, map_prod, map_pow]
 
 theorem eval_conj_b {N : ℕ} (w : Fin (D + 1) → ℂ) (b : MvPolynomial (Ix (Veronese.Idx D)) ℚ)
     (c : Fin (Finset.Nat.antidiagonalTuple (D + 1) N).card → ℤ)
@@ -123,8 +165,8 @@ theorem eval_conj_b {N : ℕ} (w : Fin (D + 1) → ℂ) (b : MvPolynomial (Ix (V
     eval (conjPt (Veronese.map D w)) (MvPolynomial.map (algebraMap ℚ ℂ) b) =
       starRingEnd ℂ (∑ l, (c l : ℂ) * ∏ i, w i ^ adtEnum D N l i) := by
   rw [conjPt_map, eval_b _ b c h]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [map_sum, map_mul, map_prod, map_pow]
+
+  simp [map_sum, map_mul, map_prod, map_pow]
 
 def ex (D N : ℕ) (l : Fin (Finset.Nat.antidiagonalTuple (D + 1) N).card) : Fin (D + 1) →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm (adtEnum D N l)
@@ -158,8 +200,8 @@ theorem pairVal_map (k l : Fin r) (w : Fin (D + 1) → ℂ) :
   unfold pairVal
   rw [veroneseMetric_pow_eq, eval_b w (b k) _ (hA k), eval_b w (b l) _ (hA l)]
   simp only [monoInner, eval_ex]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Finset.sum_mul_sum, Finset.sum_div]
+
+  rw [map_sum, Finset.sum_mul_sum, Finset.sum_div]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [Finset.sum_div]
   refine Finset.sum_congr rfl fun j _ => ?_
@@ -172,8 +214,8 @@ theorem pairVal_conj_map (k l : Fin r) (w : Fin (D + 1) → ℂ) :
   unfold pairVal
   rw [veroneseMetric_conj_pow_eq, eval_conj_b w (b k) _ (hA k), eval_conj_b w (b l) _ (hA l), Complex.conj_conj]
   simp only [monoInner, eval_ex]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Finset.sum_mul_sum, Finset.sum_div]
+
+  rw [map_sum, Finset.sum_mul_sum, Finset.sum_div]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [Finset.sum_div]
   refine Finset.sum_congr rfl fun j _ => ?_

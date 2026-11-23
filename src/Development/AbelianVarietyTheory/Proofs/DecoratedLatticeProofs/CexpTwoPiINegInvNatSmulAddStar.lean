@@ -1,17 +1,51 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ThetaIdentityOfMapsAll
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChainParSucc
-public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.DiscreteSeriesClassificationIff
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.KerJoinS
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.I0M
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.StdCharFinitePartRationalEqExpTrace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceCharacterConductorIntegers
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FiniteAdeleStrongApproximationModNat
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TransportedFiniteCharacterInverseExpTrace
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FiniteAdeleStrongApproximationModNat
 public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.InfFam
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LevelSubgroupCharacterUnitary
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -56,9 +90,9 @@ theorem theta_form (v : InfinitePlace I.F) (M : Matrix (Fin I.n) (Fin I.n) (AF I
     thetaV I v (∑ i, ∑ j, inclR (AF I.F) (star (p i) * I.J i j) * (M *ᵥ fun k => inclR (AF I.F) (q k)) j) =
       hJ (I.ε v) (rv I v p) (((I.P v)⁻¹ * M.map (thetaV I v) * I.P v) *ᵥ rv I v q) := by
   rw [rv, rv, hJ_frame]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_mul, thetaV_inclR, phi_star, Matrix.mulVec, dotProduct, Matrix.map_apply, Pi.star_apply,
-    Finset.mul_sum, mul_assoc]
+
+  simp only [map_sum, map_mul, thetaV_inclR, phi_star, Matrix.mulVec, dotProduct, Matrix.map_apply, Pi.star_apply,
+  Finset.mul_sum, mul_assoc]
 
 theorem sig_inclE (x : I.E) : Formalism.UG.sigR I.cm.sig (Formalism.MainNotions.S.Af I.F) (Formalism.UG.inclE (F := I.F) (Formalism.MainNotions.S.Af I.F) x) =
     Formalism.UG.inclE (F := I.F) (Formalism.MainNotions.S.Af I.F) (star x) := by
@@ -69,8 +103,8 @@ theorem sig_inclE (x : I.E) : Formalism.UG.sigR I.cm.sig (Formalism.MainNotions.
 theorem tau_form (M : Matrix (Fin I.n) (Fin I.n) (AF I.F ⊗[I.F] I.E)) (p q : Fin I.n → I.E) :
     tauF I (∑ i, ∑ j, inclR (AF I.F) (star (p i) * I.J i j) * (M *ᵥ fun k => inclR (AF I.F) (q k)) j) =
       hA I (incl I p) (M.map (tauF I) *ᵥ incl I q) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_mul, tauF_inclR, Matrix.mulVec, dotProduct, Matrix.map_apply, hA, Formalism.UG.hform, incl, sig_inclE]
+
+  simp only [map_sum, map_mul, tauF_inclR, Matrix.mulVec, dotProduct, Matrix.map_apply, hA, Formalism.UG.hform, incl, sig_inclE]
 
 theorem trace_tmul' (a : AF I.F) (x : I.E) :
     Algebra.trace (AF I.F) (AF I.F ⊗[I.F] I.E) (a ⊗ₜ[I.F] x) = a * algebraMap I.F (AF I.F) (Algebra.trace I.F I.E x) := by
@@ -171,8 +205,8 @@ theorem pX_mulVec {D : D7} {V₀ : HSp D} {ρ : ℕ} (d : HypDec (D.sp.Y 0) V₀
     (d.pX *ᵥ (mt (D.sp.Y 0) n *ᵥ ratV q)) a = hN n (fun k => d.e' k a) q := by
   rw [hN, Finset.sum_comm, Matrix.mulVec, dotProduct]
   refine Finset.sum_congr rfl fun j _ => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← Finset.sum_mul, ← map_sum (incA D)]
+
+  rw [← Finset.sum_mul, ← map_sum (incA D)]
   rfl
 
 theorem blockX_eq {D : D7} {V₀ : HSp D} {ρ : ℕ} (d : HypDec (D.sp.Y 0) V₀ ρ) (n : GA D (D.sp.Y 0)) (a b : Fin ρ) :

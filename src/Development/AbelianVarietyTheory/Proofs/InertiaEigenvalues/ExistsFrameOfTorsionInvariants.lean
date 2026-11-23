@@ -1,8 +1,46 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardLeOfSpan
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StableLeSpanInvariantsOfSemilinearFamily
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -66,8 +104,8 @@ theorem exists_invariant_basis {F₀ F R M D : Type} [Field F₀] [Field F] [Com
   have h4 : ∀ j d, σ d (c j) = c j := by
     intro j d
     have h5 := hinv d
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum] at h5
+
+    rw [map_sum] at h5
     simp only [hsl, fun j => (hb (e j).2).2 d] at h5
     have h6 := hind (fun j => σ d (c j) - c j) (by
       simp only [map_sub, sub_smul, Finset.sum_sub_distrib, h5, sub_self])
@@ -94,8 +132,8 @@ theorem exists_frame_of_invariants : ∀ {G : Type} [Group G] [TopologicalSpace 
   have hsum : ∀ x, ∑ δ, t δ (f x) = f (∑ δ ∈ W.DelF, W.γD T δ x) := by
     intro x
     simp only [ht]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.sum_coe_sort W.DelF (fun δ => f (W.γD T δ x))]
+
+    rw [map_sum, Finset.sum_coe_sort W.DelF (fun δ => f (W.γD T δ x))]
   have hinv : ∀ x ∈ DΔ W T, ∀ δ, t δ (f x) = f x := by
     intro x hx δ
     rw [ht, hx δ.1 δ.2]
@@ -165,8 +203,8 @@ theorem exists_frame_of_invariants : ∀ {G : Type} [Group G] [TopologicalSpace 
       obtain ⟨x, hx⟩ := hβV c
       have hi : ∀ δ, t δ (β c) = β c := by
         intro δ
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [hβ, map_sum]
+
+        rw [hβ, map_sum]
         refine Finset.sum_congr rfl fun j _ => ?_
         rw [hsl, hwi, (hD.σ_fix _).2 ⟨_, rfl⟩]
       obtain ⟨r, hr⟩ := hR.res_surj ((W.DelF.card : k)⁻¹)

@@ -1,8 +1,54 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.GaloisSideTwistedSelmerAuxiliaryPrimes
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ToNatAddValMul
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+public import Mathlib.Combinatorics.Nullstellensatz
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.Interval.Finset.Box
+import Mathlib.RingTheory.LocalProperties.Reduced
+public import Mathlib.RingTheory.MvPolynomial.Groebner
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -312,8 +358,8 @@ theorem exists_lift {N0 : X.Tw → ℕ} (h9 : adm9 X N0) {i : X.Tw} (hi : X.Nonz
   choose g hg using X.art_surj i Q
   refine ⟨∑ δ, MvPolynomial.C (y δ) * ∏ q, (1 + MvPolynomial.X q) ^ (Multiplicative.toAdd (d q (g δ))).val,
     fun k u ψ' h => ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [thEval, Finset.mul_sum, map_sum, map_sum]
+
+  rw [thEval, Finset.mul_sum, map_sum, map_sum]
   refine Finset.sum_congr rfl fun δ _ => ?_
   have e := congrArg (kMap X i k) (hy δ)
   rw [kMap_algebraMap, map_mul, map_pow, map_natCast] at e
@@ -432,8 +478,8 @@ theorem propE (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (
   choose y hy using h9 i hi ∅ hQe lam s hs
   have hY : algebraMap (X.O i) (FractionRing (X.O i)) (∑ δ, y δ) =
       ((X.l i : ℕ) : FractionRing (X.O i)) ^ N0 i * ∑ δ, X.th i ∅ lam δ := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.mul_sum]
+
+    rw [map_sum, Finset.mul_sum]
     exact Finset.sum_congr rfl fun δ _ => hy δ
   have hY0 : (∑ δ, y δ) ≠ 0 := by
     intro h

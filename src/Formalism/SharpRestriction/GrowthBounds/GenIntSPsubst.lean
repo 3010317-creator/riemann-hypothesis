@@ -1,7 +1,52 @@
 module
 
 public import Formalism.SharpRestriction.GrowthBounds.PowerSeriesFrobeniusCongruence
+public import Formalism.LocalToGlobal.CharacterGerms.RowTieAxes
+public import Formalism.LocalToGlobal.CharacterGerms.ConstMemTypeSetOfNonneg
+public import Formalism.LocalToGlobal.CharacterGerms.GeOfPowEqOne
+public import Formalism.LocalToGlobal.CharacterGerms.MaximalOfValuationGeOne
+public import Formalism.LocalToGlobal.CharacterGerms.RowTieCartAdd
 public import Formalism.LocalToGlobal.CharacterGerms.SubstSubst
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -145,8 +190,8 @@ theorem genL_alongCv {γ : κ → PowerSeries C} (hγ : ∀ i, PowerSeries.const
 theorem genL_sum {ι : Type} (s : Finset ι) (f : ι → PowerSeries C) :
     genL κ (∑ k ∈ s, f k) = ∑ k ∈ s, genL κ (f k) := by
   unfold genL
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← PowerSeries.coe_substAlgHom (PowerSeries.HasSubst.of_constantCoeff_zero genS_cc), map_sum]
+
+  rw [← PowerSeries.coe_substAlgHom (PowerSeries.HasSubst.of_constantCoeff_zero genS_cc), map_sum]
 
 theorem hAt_subst (X : RawChart C d I κ) {τ ρ : Type} [Finite τ] {c b : κ → MvPowerSeries τ C}
     (hc : ∀ i, MvPowerSeries.constantCoeff (c i) = 0) (hb : ∀ i, MvPowerSeries.constantCoeff (b i) = 0)
@@ -236,10 +281,10 @@ theorem generic_point_unit_congruence : GenericPointUnitCongruence := by
       hAt X (fun i => MvPowerSeries.X (Sum.inl i)) (fun i => genL κ (pw n ε i)) with hEdef
   have hEV : Van (Set.range (Sum.inl : κ → κ ⊕ Unit)) E := by
     intro ν hν
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hEdef, map_sub, map_sum,
-      Finset.sum_eq_zero fun k _ => gen_van_hAt X hB.axis0 (fun i => (hpt _ (hzk k i)).1) ν hν,
-      gen_van_hAt X hB.axis0 (fun i => (hpt _ (hεn i)).1) ν hν, sub_zero]
+
+    rw [hEdef, map_sub, map_sum,
+    Finset.sum_eq_zero fun k _ => gen_van_hAt X hB.axis0 (fun i => (hpt _ (hzk k i)).1) ν hν,
+    gen_van_hAt X hB.axis0 (fun i => (hpt _ (hεn i)).1) ν hν, sub_zero]
   have hΦ0 : ∀ s, MvPowerSeries.constantCoeff (genPhi N δ s) = 0 := by
     intro s
     cases s with
@@ -254,8 +299,8 @@ theorem generic_point_unit_congruence : GenericPointUnitCongruence := by
     fun i => by simp
   have hsE : MvPowerSeries.subst (genPhi N δ) E =
       ∑ k ∈ Finset.range V.l, HH X (pw N δ) (rc (ζ ^ k) z) - HH X (pw N δ) (pw n ε) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hEdef, ← MvPowerSeries.substAlgHom_apply (VP.hs hΦ0), map_sub, map_sum]
+
+    rw [hEdef, ← MvPowerSeries.substAlgHom_apply (VP.hs hΦ0), map_sub, map_sum]
     simp only [MvPowerSeries.substAlgHom_apply]
     rw [hAt_subst X hXc (fun i => (hpt _ (hεn i)).1) hΦ0]
     refine congrArg₂ _ (Finset.sum_congr rfl fun k _ => ?_) ?_

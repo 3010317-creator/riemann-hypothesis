@@ -1,10 +1,48 @@
 module
 
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeAutomorphismApprox.LocDefs
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeAutomorphismApprox.ValNatCastLtOne
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeAutomorphismApprox.GlueHoldsVar
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicIndexEquality.CompactLocalGlobal
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicIndexEquality.LocSplitChiOf
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FiniteAdelicComparison.AdelicLatticeToLocalLattices
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FiniteAdelicComparison.AdelicLatticeToLocalLattices
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -61,8 +99,8 @@ theorem hl_swap (I : AutInst) (v : HeightOneSpectrum (𝓞 I.F)) (X Y : Fin I.n 
     intro i j
     have := congrFun (congrFun hJ i) j
     simpa [Formalism.UG.cT] using this
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hl, Formalism.UG.hform, map_sum, map_mul, sig2]
+
+  simp only [hl, Formalism.UG.hform, map_sum, map_mul, sig2]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   rw [hJij j i]
@@ -71,9 +109,9 @@ theorem hl_swap (I : AutInst) (v : HeightOneSpectrum (𝓞 I.F)) (X Y : Fin I.n 
 theorem pr_vec (I : AutInst) (v : HeightOneSpectrum (𝓞 I.F)) (p1 : RV I v →+* KV I v)
     (X Y : Fin I.n → RV I v) :
     pr (Pm I v p1) (vec2 p1 X) (vec1 p1 Y) = p1 (hl I v X Y) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [pr, Pm, vec1, vec2, hl, Formalism.UG.hform, dotProduct, mulVec, map_sum, map_mul,
-    Matrix.map_apply, RingHom.comp_apply, Finset.mul_sum]
+
+  simp only [pr, Pm, vec1, vec2, hl, Formalism.UG.hform, dotProduct, mulVec, map_sum, map_mul,
+  Matrix.map_apply, RingHom.comp_apply, Finset.mul_sum]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   ring
 
@@ -84,14 +122,14 @@ theorem hl_ratV (I : AutInst) (v : HeightOneSpectrum (𝓞 I.F)) (l l' : Fin I.n
   have h1 : Formalism.L2.SG.Sub.ratV (F := I.F) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv I.F v) l = fun i => inclV I v (l i) := rfl
   have h2 : Formalism.L2.SG.Sub.ratV (F := I.F) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv I.F v) l' = fun i => inclV I v (l' i) := rfl
   rw [h1, h2]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hl, Formalism.UG.hform, spl_sigV_inclV, Matrix.map_apply, map_sum, map_mul]
+
+  simp only [hl, Formalism.UG.hform, spl_sigV_inclV, Matrix.map_apply, map_sum, map_mul]
 
 theorem psiV_hA (I : AutInst) (v : HeightOneSpectrum (𝓞 I.F)) (x y : VA I) :
     PI.FinKW.psiV I v (hA I x y) = hl I v (PI.FinKW.vecV I v x) (PI.FinKW.vecV I v y) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hA, hl, Formalism.UG.hform, map_sum, map_mul, Matrix.map_apply, psiV_sigR, psiV_inclE,
-    PI.FinKW.vecV]
+
+  simp only [hA, hl, Formalism.UG.hform, map_sum, map_mul, Matrix.map_apply, psiV_sigR, psiV_inclE,
+  PI.FinKW.vecV]
 
 theorem vecV_incl' (I : AutInst) (v : HeightOneSpectrum (𝓞 I.F)) (l : Fin I.n → I.E) :
     PI.FinKW.vecV I v (incl I l) = Formalism.L2.SG.Sub.ratV (F := I.F) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv I.F v) l := by
@@ -110,8 +148,8 @@ theorem hformE_swap (I : AutInst) (x y : Fin I.n → I.E) :
     intro i j
     have := congrFun (congrFun I.J_herm i) j
     simpa [Formalism.UG.cT] using this
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Formalism.UG.hform, map_sum, map_mul, RingHomCompTriple.comp_apply, RingHom.id_apply]
+
+  simp only [Formalism.UG.hform, map_sum, map_mul, RingHomCompTriple.comp_apply, RingHom.id_apply]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   rw [hJij j i]

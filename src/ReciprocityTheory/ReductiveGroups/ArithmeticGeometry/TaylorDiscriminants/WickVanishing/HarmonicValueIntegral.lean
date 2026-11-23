@@ -1,7 +1,55 @@
 module
 
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.ConnectionSecondOfCommute
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.ConnectionKillsSeries
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.ConnectionKillsSeries
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.GaugeBilinearTermEqNegDoubleSum
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -98,15 +146,15 @@ theorem E_nabla (B : FB R d O) (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d 0] 
   have hb : HasSubst (bE k h) := hasSubst_of_constantCoeff_zero hc
   have hfm : subst (bE k h) (fm k h u) = 0 := by
     unfold fm
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← coe_substAlgHom hb, map_sum]
+
+    rw [← coe_substAlgHom hb, map_sum]
     refine Finset.sum_eq_zero fun i _ => ?_
     rw [map_mul, map_sub, coe_substAlgHom hb, subst_X hb, E_liftX k h hax]
     simp [bE]
   change subst (bE k h) (Dx k B u G + ∑ i, liftX k (Dof (B.FK k) u (sgOf k h i)) * pderiv (R := k) (Sum.inr i) G +
     ∑ i, C ((0 : Fin d → k) i) * pderiv (R := k) (Sum.inr i) G - (C (m : k) * fm k h u) * G) = _
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← coe_substAlgHom hb, map_sub, map_add, map_add, map_mul, map_mul, coe_substAlgHom hb, hfm]
+
+  rw [← coe_substAlgHom hb, map_sub, map_add, map_add, map_mul, map_mul, coe_substAlgHom hb, hfm]
   simp only [mul_zero, zero_mul, sub_zero]
   unfold Dx
   simp only [← coe_substAlgHom hb]
@@ -207,8 +255,8 @@ theorem E_nabla (B : FB R d O) (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d 0] 
   have Low_finset_sum {τ : Type} {N : ℕ} {ι : Type} (S : Finset ι) (F : ι → MvPowerSeries τ k)
       (h : ∀ i ∈ S, Low N (F i)) : Low N (∑ i ∈ S, F i) := by
     intro d hd
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     exact Finset.sum_eq_zero fun i hi => h i hi d hd
   have pderiv_subst {σ τ : Type} [Fintype σ] {a : σ → MvPowerSeries τ k} (ha : ∀ s, constantCoeff (a s) = 0)
       (f : MvPowerSeries σ k) (t : τ) :
@@ -282,8 +330,8 @@ theorem E_nablaPoly (B : FB R d O) (h : PS k 2 d) (hax : ev (n := 1) ![0, pt k d
     subst (bE k h) (nablaPoly k B h m u P G) = DpolyOf (B.FK k) u P (subst (bE k h) G) := by
   have hb : HasSubst (bE k h) := hasSubst_lemma (bE_const k h hax)
   unfold nablaPoly DpolyOf DmonOf
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← coe_substAlgHom hb, map_sum]
+
+  rw [← coe_substAlgHom hb, map_sum]
   refine Finset.sum_congr rfl (fun n _ => ?_)
   rw [map_mul, coe_substAlgHom hb, mvPowerSeries_subst_C hb, E_foldr B h hax m u n]
 

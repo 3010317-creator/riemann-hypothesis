@@ -1,9 +1,56 @@
 module
 
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HeckeLEntireAndNonzeroAtOne
+public import Development.WeilBound.ThetaLifts.LatticeBasics.PairsStable
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryMatrixEqProdQuasiReflectionsStatement
 public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.UnitaryDensity.Cayley
+public import Development.WeilBound.ThetaLifts.LatticeBasics.ConstIdele
 public import Development.WeilBound.ThetaLifts.LatticeBasics.ConstOfGood
 public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.UniqPlugPl
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryMatrixEqProdQuasiReflectionsStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.IsHermForm
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ContinuousInfiniteAdeleMap
 
 @[expose] public section
 
@@ -122,11 +169,11 @@ theorem cut_rat (hc : IsCMExt F E σ) (hJ : IsHermND σ Jᵀ) {L : Subgroup (UA 
     let w : Fin n → E := J *ᵥ fun b => c (p.1 b)
     have hw : w ⬝ᵥ p.1 = h := by rw [hh0, hform, dotProduct_comm]; simp only [w, hcσ]
     have hw' : ∀ b, σ (w b) = (p.1 ᵥ* J) b := fun b => by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [w, Matrix.mulVec, Matrix.vecMul, dotProduct, map_sum, map_mul, hcσ, hh, show ∀ x, σ (σ x) = x from hσ, mul_comm]
+
+      simp only [w, Matrix.mulVec, Matrix.vecMul, dotProduct, map_sum, map_mul, hcσ, hh, show ∀ x, σ (σ x) = x from hσ, mul_comm]
     have hσh : σ h = h := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← hw, dotProduct, map_sum]
+
+      rw [← hw, dotProduct, map_sum]
       simp only [map_mul, hw']
       rw [show ∑ x, (p.1 ᵥ* J) x * σ (p.1 x) = (p.1 ᵥ* J) ⬝ᵥ fun b => σ (p.1 b) from rfl, ← Matrix.dotProduct_mulVec,
         ← hform, ← hh0, ← hw, dotProduct]
@@ -194,8 +241,8 @@ theorem cut_place (hc : IsCMExt F E σ) (hJ : IsHermND σ Jᵀ) {L : Subgroup (U
     simp only [b', Algebra.TensorProduct.basis_apply, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
   have cq : Continuous q := by
     have : ⇑q = fun x => ∑ i, j (b'.repr x i) • ((1 : AF F) ⊗ₜ[F] b i) := funext fun x => by
-      set_option synthInstance.maxHeartbeats 100000 in
-        conv_lhs => rw [← b'.sum_repr x, map_sum]
+
+      conv_lhs => rw [← b'.sum_repr x, map_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [hb, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
       rfl

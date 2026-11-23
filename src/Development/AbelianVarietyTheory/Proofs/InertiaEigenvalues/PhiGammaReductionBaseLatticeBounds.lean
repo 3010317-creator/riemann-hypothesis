@@ -1,10 +1,51 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.JSmul
-public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Saturated
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GammaActionReductionStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachDeltaInvariantsReductionIsLatticeStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -88,16 +129,16 @@ def trA (a : LetA O n₀) : LetA O n₀ := fun t => tr₀ W (a t)
 
 def trD (T : LocLat G Qp LL O) : W.DD T →+ ↥(DΔ W T) :=
   AddMonoidHom.codRestrict (∑ δ ∈ W.DelF, W.γD T δ).toAddMonoidHom (DΔ W T) (fun z δ hδ => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [LinearMap.toAddMonoidHom_coe, LinearMap.sum_apply, map_sum, ← W.γD_mul]
+
+    simp only [LinearMap.toAddMonoidHom_coe, LinearMap.sum_apply, map_sum, ← W.γD_mul]
     exact sum_shift W (fun g => W.γD T g z) hδ)
 
 theorem trD_coe (T : LocLat G Qp LL O) (z : W.DD T) : (trD W T z : W.DD T) = ∑ δ ∈ W.DelF, W.γD T δ z := by
   exact LinearMap.sum_apply _ _ _
 
 theorem tr₀_inv (b : O⟦X⟧) {δ : W.Gam} (hδ : δ ∈ W.DelF) : W.γ₀ δ (tr₀ W b) = tr₀ W b := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [tr₀, map_sum, ← AlgHom.mul_apply, ← map_mul]
+
+  simp only [tr₀, map_sum, ← AlgHom.mul_apply, ← map_mul]
   exact sum_shift W (fun g => W.γ₀ g b) hδ
 
 theorem γD_smulA (T : LocLat G Qp LL O) (g : W.Gam) (a : LetA O n₀) (x : W.DD T) :
@@ -165,8 +206,8 @@ theorem tr_of (hι : GlobalTheory.IndefiniteRowSideFullHecke.OnePlusPowerCharact
   have h1 := (hι.2.2.1 _).2 ⟨c, h⟩
   have h2 : PowerSeries.map (algebraMap O k) (tr₀ W b) =
       (W.DelF.card : k⟦X⟧) * PowerSeries.map (algebraMap O k) b := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [tr₀, map_sum, ← nsmul_eq_mul, ← Finset.sum_const]
+
+    rw [tr₀, map_sum, ← nsmul_eq_mul, ← Finset.sum_const]
     refine Finset.sum_congr rfl fun δ hδ => ?_
     rw [he ⟨δ, hδ⟩, h1 _ (e ⟨δ, hδ⟩).2]
   rw [h2, map_mul, map_mul, map_mul, h, map_natCast, map_natCast]
@@ -285,8 +326,8 @@ theorem condC (hι : GlobalTheory.IndefiniteRowSideFullHecke.OnePlusPowerCharact
   have := j_tr p hq i _ ⟨s, hs.2⟩ c hc
   obtain ⟨c', rfl⟩ := X_dvd_of hι c _ hc (by
     have h0 : PowerSeries.constantCoeff (tr₀ W ((letπ * a : LetA O n₀) (τ i))) = 0 := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [tr₀, map_sum]
+
+      rw [tr₀, map_sum]
       refine Finset.sum_eq_zero fun δ _ => ?_
       rw [Pi.mul_apply, map_mul, map_mul, letπ, (W.γ₀_X δ).1, zero_mul]
     rw [← PowerSeries.coeff_zero_eq_constantCoeff_apply, PowerSeries.coeff_map,

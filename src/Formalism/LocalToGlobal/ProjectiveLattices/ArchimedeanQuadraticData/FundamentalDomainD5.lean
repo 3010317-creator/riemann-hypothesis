@@ -1,12 +1,63 @@
 module
 
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.CoveringRadiusStatement
 public import Formalism.LocalToGlobal.ProjectiveLattices.ArchimedeanQuadraticData.DiscrMulIntegral
 public import Formalism.LocalToGlobal.ProjectiveLattices.ArchimedeanQuadraticData.DotSelfEqSqNorm
 public import Formalism.LocalToGlobal.ProjectiveLattices.ArchimedeanQuadraticData.ExistsBasisIn
+public import Formalism.LocalToGlobal.ProjectiveLattices.ArchimedeanQuadraticData.FinrankCmType
 public import Formalism.LocalToGlobal.ProjectiveLattices.ArchimedeanQuadraticData.LatticeZbasis
 public import Formalism.LocalToGlobal.ProjectiveLattices.ArchimedeanQuadraticData.ThetaDotSelf
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.CoveringRadiusStatement
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.PhiCMinF
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+public import Formalism.LocalToGlobal.ProjectiveLattices.ArchimedeanQuadraticData.HQsmulRight
+public import Formalism.LocalToGlobal.ProjectiveLattices.ArchimedeanQuadraticData.RhoDotSelf
 
 @[expose] public section
 
@@ -72,15 +123,15 @@ theorem d5_translation : ReciprocityTheory.ChartRestriction.G.FD.CoveringRadiusS
       intro k
       have h1 := congrFun hs k
       simp only [Matrix.mulVec, dotProduct, Matrix.of_apply, Pi.zero_apply, T] at h1
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hx, h_sum_right, map_sum]
+
+      rw [hx, h_sum_right, map_sum]
       simp only [h_qsmul_right, htrq]
       rw [← h1]
       exact Finset.sum_congr rfl fun j _ => mul_comm _ _
     have hall : ∀ v : Fin r → K, Algebra.trace ℚ K (S.h v x) = 0 := by
       intro v
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← eB.sum_repr v, h_sum_left, map_sum]
+
+      rw [← eB.sum_repr v, h_sum_left, map_sum]
       refine Finset.sum_eq_zero fun k _ => ?_
       rw [heB, h_qsmul_left, htrq, hTx k, mul_zero]
     exact hx0 (nondeg σ Q hQ p S hform x hall)
@@ -130,8 +181,8 @@ theorem d5_translation : ReciprocityTheory.ChartRestriction.G.FD.CoveringRadiusS
       have h1 := congrFun hTs k
       simp only [Matrix.mulVec, dotProduct, Matrix.transpose_apply, Matrix.of_apply, Pi.smul_apply,
         smul_eq_mul, htq, T] at h1
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hy, h_sum_left, map_sum]
+
+      rw [hy, h_sum_left, map_sum]
       simp only [h_qsmul_left, htrq]
       rw [← h1]
       exact Finset.sum_congr rfl fun j _ => mul_comm _ _
@@ -153,8 +204,8 @@ theorem d5_translation : ReciprocityTheory.ChartRestriction.G.FD.CoveringRadiusS
       intro v hv
       obtain ⟨n, hn⟩ := hecoord v hv
       refine ⟨∑ k, n k * (2 * t k), ?_⟩
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hn, h_sum_right, map_sum]
+
+      rw [hn, h_sum_right, map_sum]
       push_cast
       refine Finset.sum_congr rfl fun k _ => ?_
       rw [h_qsmul_right, htrq, hyk k]

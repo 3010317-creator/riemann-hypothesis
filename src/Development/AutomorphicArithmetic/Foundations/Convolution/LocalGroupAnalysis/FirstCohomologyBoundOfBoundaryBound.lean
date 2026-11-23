@@ -1,10 +1,50 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.TwistedFactors.SelmerRankBounds.EllipticityFromProductFormula
-public import Development.AutomorphicArithmetic.Foundations.Convolution.HermitianDescent.PowComp
-public import Development.AutomorphicArithmetic.Foundations.Convolution.HermitianDescent.NmCent
-public import Development.AutomorphicArithmetic.Foundations.Convolution.HermitianDescent.GalField
 public import Development.AutomorphicArithmetic.Foundations.Convolution.HermitianDescent.GalExt
+public import Development.AutomorphicArithmetic.Foundations.Convolution.HermitianDescent.GalField
+public import Development.AutomorphicArithmetic.Foundations.Convolution.HermitianDescent.NmCent
+public import Development.AutomorphicArithmetic.Foundations.Convolution.HermitianDescent.PowComp
+import GroundTheory.GlobalFields.CompletionAtPlace.Integers
+public import GroundTheory.GlobalFields.SemilocalAlgebras.Galois
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -56,9 +96,9 @@ private theorem isGal_equiv {R' : Type} [CommRing R'] [Algebra k R'] (e : R ≃�
   · obtain ⟨z, rfl⟩ := e.surjective z
     obtain ⟨c, rfl⟩ := h.fix z (e.injective (by simpa using hz))
     exact ⟨c, (e.commutes c).symm⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    · simp only [hp, ← map_mul, ← map_sum, hxy j hj]
-      split_ifs <;> simp
+
+  · simp only [hp, ← map_mul, ← map_sum, hxy j hj]
+    split_ifs <;> simp
 
 private theorem abstract_hilbert90 (σ : R ≃ₐ[k] R) (q : ℕ) (hσ : IsGal σ q) (O : Subring k) [IsLocalRing O] (S : Subring R)
     (hOS : ∀ x, algebraMap k R x ∈ S ↔ x ∈ O) (hS : ∀ r ∈ S, σ r ∈ S)
@@ -103,10 +143,10 @@ private theorem abstract_hilbert90 (σ : R ≃ₐ[k] R) (q : ℕ) (hσ : IsGal �
       m, fun i => ⟨x i, (hm i).1⟩, fun i => ⟨y i, (hm i).2⟩, fun j hj' => hj ?_⟩
     · obtain ⟨c, hc⟩ := hσ.fix r (congrArg S.subtype hr)
       exact ⟨⟨c, (hOS c).1 (hc ▸ r.2)⟩, Subtype.ext hc⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      · simp only [map_sum, map_mul, hjp]
-        refine (hxy j hj').trans ?_
-        split_ifs <;> simp
+
+    · simp only [map_sum, map_mul, hjp]
+      refine (hxy j hj').trans ?_
+      split_ifs <;> simp
   obtain ⟨a, rfl⟩ := (intGL_iff S a).1 ha
   obtain ⟨γ, rfl⟩ := (intGL_iff O γ).1 hγ
   have hcp : cp (Matrix.GeneralLinearGroup.map O.subtype γ) = (cp γ).map O.subtype := by
@@ -338,8 +378,8 @@ theorem UpperTheory.ConvolutionTheory.G.firstCohomologyBound_of_boundaryBound :
     exact congrArg (mapGL n) (RingHom.ext fun _ => rfl)
   have key := abstract_hilbert90 (sigLoc σ v) _ hσ 𝒪[v.adicCompletion F] (intOver E v) (alg_mem hσ.inj) (sigLoc_mem σ v)
     ⟨s, fun i => algebraMap E _ (x i), fun i => algebraMap E _ (y i), fun i => ⟨hx i, hy i⟩, fun j hj => by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [sigLoc_pow, ← map_mul, ← map_sum, hxy j hj]
+
+      simp only [sigLoc_pow, ← map_mul, ← map_sum, hxy j hj]
       split_ifs <;> simp⟩ _ _
     (intGL_map _ _ δ hδ hδ') (intGL_map _ _ γ hγ hγ') ⟨_, _, hu, hw, by
       rw [cp_map, derivative_map, ← Polynomial.map_mul, ← Polynomial.map_mul, ← Polynomial.map_add (f := _), huw,
