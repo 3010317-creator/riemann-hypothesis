@@ -496,7 +496,7 @@ theorem UpperTheory.Gal.ClosedPhiFromClosedTrace.linkQ_holds :
     rw [map_pow, map_natCast]
   have h1 : A₁.map (f0 bk) * A₁'.map (f0 bk) =
       ((l : Per.Acris l) * w₀) ^ (2 * N) • (1 : Matrix (Fin d') (Fin d') (Per.Acris l)) := by
-    rw [← hw₀, ← Matrix.map_mul, hA, map_smul_ringHom, map_pow, Matrix.map_one _ (map_zero _) (map_one _)]
+    rw [← hw₀, ← Matrix.map_mul, hA, GlobalTheory.BKLim.map_smul_ringHom, map_pow, Matrix.map_one _ (map_zero _) (map_one _)]
   have h2 : ((l : Per.Acris l) * v) ^ N • (Q * A.map (f0 bk)) =
       ((l : Per.Acris l) * w₀) ^ N • (A.map (fA bk) * Q.map (phiA l)) := by
     rw [← hv', ← hw₀]; exact hS.frob
@@ -1323,7 +1323,7 @@ open GlobalTheory.AboveL
 namespace GlobalTheory.AboveL
 
 theorem eig_pow_of_rep {K Ω : Type} [Field Ω] [Field K] [NumberField K] [Algebra K Ω] [IsAlgClosure K Ω]
-    {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 K)} {h : IsPlaceOver A v} (x : WD h) (σ : Weil h) (k : ℕ) :
+    {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 K)} {h : Formalism.ConjugateSelfDual.IsPlaceOver A v} (x : WD h) (σ : Weil h) (k : ℕ) :
     x.eig (σ ^ k) = (x.eig σ).map (· ^ k) := by
   obtain ⟨n, a, rfl⟩ := WD.exists_rep x
   rw [WD.eig_mk, WD.eig_mk, map_pow]
