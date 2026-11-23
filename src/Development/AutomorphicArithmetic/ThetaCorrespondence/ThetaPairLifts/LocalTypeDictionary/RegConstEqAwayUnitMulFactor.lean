@@ -371,6 +371,7 @@ section Local
 
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
+attribute [-instance] Formalism.DoubleCosetMeasures.instMeasMat in
 theorem vol_mul_relIndex [MeasurableSpace k] [BorelSpace k] {n : Type} [Fintype n] [DecidableEq n] (J : Subgroup (GL n k))
     (ho : IsOpen (J : Set (GL n k))) (hle : J ≤ KO k n) :
     (haarVol (KO k n)).real (J.map invT : Subgroup _) * (J.relIndex (KO k n) : ℝ) = 1 := by
