@@ -1087,13 +1087,12 @@ theorem map_injective_of_injective {K : Type} [Field K] {n d : ℕ} (E : Matrix 
     (hE : Function.Injective E.mulVec) (σ : K →+* ℂ) : Function.Injective (E.map σ).mulVec := by
   have hE' : Function.Injective E.mulVecLin := hE
   have hrk : E.rank = d := by
-    unfold Matrix.rank
-    rw [LinearMap.finrank_range_of_inj hE', Module.finrank_fin_fun]
+    rw [← Matrix.finrank_range_mulVecLin, LinearMap.finrank_range_of_inj hE', Module.finrank_fin_fun]
   have hrkT : Eᵀ.rank = d := by rw [Matrix.rank_transpose, hrk]
   have htop : LinearMap.range Eᵀ.mulVecLin = ⊤ := by
     apply Submodule.eq_top_of_finrank_eq
     rw [Module.finrank_fin_fun]
-    exact hrkT
+    simpa only [Matrix.finrank_range_mulVecLin] using hrkT
   obtain ⟨C, hC⟩ := exists_mul_lemma (A := Eᵀ) (B := (1 : Matrix (Fin d) (Fin d) K))
     (by rw [htop]; exact le_top)
   have hL : Cᵀ * E = 1 := by

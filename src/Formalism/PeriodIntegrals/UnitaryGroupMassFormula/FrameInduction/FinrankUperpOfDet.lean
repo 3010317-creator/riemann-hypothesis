@@ -120,7 +120,7 @@ theorem finrank_Uperp_of_det (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) (g
     have := Matrix.rank_le_card_height R
     simp at this; omega
   have hrn := LinearMap.finrank_range_add_finrank_ker (Matrix.mulVecLin R)
-  have hrank : R.rank = Module.finrank ℂ (LinearMap.range (Matrix.mulVecLin R)) := rfl
+  have hrank : R.rank = Module.finrank ℂ (LinearMap.range (Matrix.mulVecLin R)) := (Matrix.finrank_range_mulVecLin R).symm
   rw [Uperp_mat, ← hR]
   simp only [Module.finrank_fin_fun] at hrn
   omega
