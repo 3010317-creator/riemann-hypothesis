@@ -30,7 +30,7 @@ def resource_tests(ci):
     assert ci.normalized_exit_code(-15) == 143
     assert ci.normalized_exit_code(1) == 1
     with tempfile.TemporaryDirectory(prefix="rh-ci-work-location-") as temporary:
-        root = Path(temporary)
+        root = Path(temporary).resolve()
         workspace, small_tmp = root / "workspace", root / "small-tmp"
         workspace.mkdir()
         small_tmp.mkdir()
@@ -101,7 +101,7 @@ def resource_tests(ci):
         (proc / "99/task/100/status").write_text("State:\tT (stopped)\n")
         assert ci.verify_quiesced_controller(99, proc) == [99]
     with tempfile.TemporaryDirectory(prefix="rh-ci-root-link-") as directory:
-        directory = Path(directory)
+        directory = Path(directory).resolve()
         (directory / "outside/lib").mkdir(parents=True)
         (directory / "outside/lib/Proof.trace").write_text("host file must not be followed")
         (directory / "build").symlink_to(directory / "outside", target_is_directory=True)
@@ -112,7 +112,7 @@ def resource_tests(ci):
         else:
             raise AssertionError("host controller followed a symlink above its file root")
     with tempfile.TemporaryDirectory(prefix="rh-ci-tool-cache-") as directory:
-        directory = Path(directory)
+        directory = Path(directory).resolve()
         project, packages = directory / "project", directory / "packages"
         project.mkdir()
         (packages / "tool").mkdir(parents=True)
@@ -162,7 +162,8 @@ def resource_tests(ci):
 
 def snapshot_tests(ci):
     with tempfile.TemporaryDirectory(prefix="rh-ci-snapshot-") as temporary:
-        candidate, destination = (Path(temporary) / name for name in ("candidate", "snapshot"))
+        root = Path(temporary).resolve()
+        candidate, destination = root / "candidate", root / "snapshot"
         (candidate / "src/Nested").mkdir(parents=True)
         destination.mkdir()
         (candidate / "src/Nested/Proof.lean").write_text("theorem proof : True := .intro\n")
@@ -204,7 +205,7 @@ def recovery_tests(ci):
     environment = {**ci.trusted_env(), "ELAN_TOOLCHAIN": ci.TOOLCHAIN}
     toolchain = Path(subprocess.check_output(["elan", "which", "lean"], env=environment, text=True).strip()).parent.parent
     with tempfile.TemporaryDirectory(prefix="rh-ci-recovery-") as temporary:
-        work = Path(temporary)
+        work = Path(temporary).resolve()
         project, cache = work / "project", work / "cache"
         library, ir = project / ".lake/build/lib/lean", project / ".lake/build/ir"
         for directory in (project / "src", library, ir, cache / "artifacts"):
@@ -250,12 +251,12 @@ def main():
     ci = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(ci)
     resource_tests(ci)
-    snapshot_tests(ci)
     if args.resource_tests_only:
         return
+    snapshot_tests(ci)
     recovery_tests(ci)
     with (nullcontext(str(args.keep.resolve())) if args.keep else tempfile.TemporaryDirectory(prefix="rh-ci-fixture-")) as temporary:
-        temporary = Path(temporary)
+        temporary = Path(temporary).resolve()
         root, packages, cache = temporary / "candidate", temporary / "packages", temporary / "cache"
         for directory in (root / "src", packages, cache):
             directory.mkdir(parents=True)

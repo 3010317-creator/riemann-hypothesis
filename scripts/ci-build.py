@@ -6,6 +6,7 @@ Candidate code/configuration runs only inside Bubblewrap. Dependencies and the
 stock toolchain must already be prepared by the trusted runner.
 """
 import argparse
+import errno
 import gzip
 import hashlib
 import importlib.util
@@ -371,8 +372,17 @@ def verify_snapshot(candidate, head, destination):
         if "\\" in relative or not stat.S_ISREG(metadata.st_mode):
             raise ValueError(f"unsafe or non-regular archived input: {path}")
         mode, blob = identity
-        digest = hashlib.sha1(f"blob {metadata.st_size}\0".encode())
-        with open(path, "rb") as stream:
+        try:
+            fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        except OSError as error:
+            if error.errno != errno.ELOOP:
+                raise
+            raise ValueError(f"unsafe or non-regular archived input: {path}") from error
+        with os.fdopen(fd, "rb") as stream:
+            metadata = os.fstat(stream.fileno())
+            if not stat.S_ISREG(metadata.st_mode):
+                raise ValueError(f"unsafe or non-regular archived input: {path}")
+            digest = hashlib.sha1(f"blob {metadata.st_size}\0".encode())
             while block := stream.read(1024 * 1024):
                 digest.update(block)
         executable = bool(metadata.st_mode & 0o111)
