@@ -29,8 +29,10 @@ Each job runs these steps:
    `rh-buildq/maps` entry and the stock revision maps), runs `lake cache add`, and prefetches
    missing artifacts (`fetch-artifacts.py`). Lake 4.37 compiles a mapped module whose artifact
    is not local; it does not download it.
-2. `fragment.py build` runs `lake build -o outputs-<run>.jsonl <targets>` with
-   `LAKE_RESTORE_ARTIFACTS=true`. `publish.py` runs alongside it and uploads settled modules
+2. `fragment.py build` runs `lake build -v -o outputs-<run>.jsonl <targets>` with
+   `LAKE_RESTORE_ARTIFACTS=true`. With `-v`, Lake logs every module as Built or Replayed,
+   not only those with messages. The job log shows compiled modules, failures and one
+   progress line a minute; the full log is in the result artifact. `publish.py` runs alongside it and uploads settled modules
    every minute, as content-addressed `artifacts/...` objects. It records them in the
    `rh-buildq/maps/<sha>.jsonl` and `rh-buildq/pool/<toolchain>.jsonl` maps, which it updates
    by compare-and-swap.
