@@ -55,7 +55,6 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 namespace UpperTheory.Et
 
 structure SlopeTestRemainingChoices : Prop where
-  sheaf : type_of% @GlobalTheory.T.etaleSheafSections_ext_and_glue
   resol : type_of% @GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_sections_exactness
   freeS : type_of% @GlobalTheory.T.free_sections_ext_res_map
   evs : type_of% @GlobalTheory.T.etaleCochainEvalOnSimplex_basic_properties
