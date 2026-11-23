@@ -2,50 +2,7 @@ module
 
 public import Formalism.SizeWindowBrackets.WindowSettingSatisfiable
 public import Formalism.SizeWindowBrackets.ChainSlopeWindows.AdmissibleSchurLemma
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 public import Mathlib.Analysis.SpecialFunctions.Log.Monotone
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -129,805 +86,366 @@ structure Facts (P : Par) (e K z u E X S sb v w8 : ℝ) : Prop where
 
 theorem facts {P : Par} {e K : ℝ} (hW : Windows P e K) (hL : LargeX P.x P.ε e K) :
     ∃ z u E X S sb v w8 : ℝ, Facts P e K z u E X S sb v w8 := by
-  obtain ⟨hε, hε1, he, hK, ⟨n2x, n2n⟩, nE, kx, kE, N0, NE, t0, tE, px, pE, La0, Laz, r0, rE, Sc0, ScS, η0, ηS,
-    ρ0, ρx, th0, thx, x_sq_le_threshold, dx, C0, CK, β0, βK, Co0, CoK, Y1, YX, s0, sx, bo0, bosb⟩ := hW
-  have nx := n2x.trans n2n
+  obtain ⟨hε, _, he, hK, ⟨n2x, n2n⟩, nE, kx, kE, N0, NE, t0, tE, px, pE, La0, Laz, r0, rE,
+    Sc0, ScS, η0, ηS, ρ0, ρx, th0, thx, x_sq_le_threshold, dx, C0, CK, β0, βK, Co0, CoK,
+    Y1, YX, s0, sx, bo0, bosb⟩ := hW
   obtain ⟨x1, hC, hB, hA⟩ := hL
   have xpos : 0 < P.x := by linarith
-  have e4 : P.x ^ (4 * P.ε) = (P.x ^ P.ε) ^ 4 := by
-    rw [mul_comm, Real.rpow_mul xpos.le, Real.rpow_ofNat]
-  have e2 : P.x ^ (2 * P.ε) = (P.x ^ P.ε) ^ 2 := by
-    rw [mul_comm, Real.rpow_mul xpos.le, Real.rpow_ofNat]
+  rw [mul_comm 4, Real.rpow_mul xpos.le, Real.rpow_ofNat] at hC; rw [mul_comm 2, Real.rpow_mul xpos.le, Real.rpow_ofNat] at Laz
   have eM : P.x ^ (4 * e + 4) = (P.x ^ e) ^ 4 * P.x ^ 4 := by
     rw [Real.rpow_add xpos, mul_comm 4 e, Real.rpow_mul xpos.le, Real.rpow_ofNat, Real.rpow_ofNat]
-  rw [e4] at hC
-  rw [e2] at Laz
-  rw [eM] at hB hA
-  rw [Real.exp_add] at hA
+  rw [eM] at hB hA; rw [Real.exp_add] at hA
   have z1 : 1 ≤ P.x ^ P.ε := Real.one_le_rpow x1 hε.le
-  have u1 : 1 ≤ P.x ^ (P.ε / 3) := Real.one_le_rpow x1 (by positivity)
-  have E1 : 1 ≤ P.x ^ e := Real.one_le_rpow x1 he
-  have z41 : 1 ≤ (P.x ^ P.ε) ^ 4 := one_le_pow₀ z1
-  have hx : 100 ≤ P.x := by
-    have h1 : 1 ≤ K * (P.x ^ P.ε) ^ 4 := one_le_mul_of_one_le_of_one_le hK z41
-    linarith only [h1, hC]
-  have hM1 : 1 ≤ (P.x ^ e) ^ 4 * P.x ^ 4 := one_le_mul_of_one_le_of_one_le (one_le_pow₀ E1) (one_le_pow₀ x1)
+  have hx : 100 ≤ P.x := by linarith [one_le_mul_of_one_le_of_one_le hK (one_le_pow₀ (n := 4) z1)]
   have lx0 : 0 ≤ Real.log P.x := Real.log_nonneg x1
-  have hlog : Real.log P.x * (4 * e + 4) ≤ P.x ^ (P.ε / 3) := by
-    have h1 : P.x ^ (4 * e + 4) ≤ Real.exp (P.x ^ (P.ε / 3)) := by
-      rw [eM]
-      have h2 : (1 : ℝ) ≤ 100 * K := by linarith only [hK]
-      exact (le_mul_of_one_le_left (by linarith only [hM1]) h2).trans hB
-    rwa [Real.rpow_def_of_pos xpos, Real.exp_le_exp] at h1
-  have uz : P.x ^ (P.ε / 3) ≤ P.x ^ P.ε := Real.rpow_le_rpow_of_exponent_le x1 (by linarith)
   have helx : 0 ≤ e * Real.log P.x := mul_nonneg he lx0
-  have hlog' : 4 * (e * Real.log P.x) + 4 * Real.log P.x ≤ P.x ^ (P.ε / 3) := by
-    have : Real.log P.x * (4 * e + 4) = 4 * (e * Real.log P.x) + 4 * Real.log P.x := by ring
-    linarith only [this, hlog]
-  have Xpos : 0 < Real.exp (P.x ^ (P.ε / 3)) := Real.exp_pos _
-  have bpos : 0 < Real.exp (P.x ^ P.ε) := Real.exp_pos _
+  have uz : P.x ^ (P.ε / 3) ≤ P.x ^ P.ε := Real.rpow_le_rpow_of_exponent_le x1 (by linarith)
+  have hlog : 4 * (e * Real.log P.x) + 4 * Real.log P.x ≤ P.x ^ (P.ε / 3) := by
+    have h1 : Real.log P.x * (4 * e + 4) ≤ P.x ^ (P.ε / 3) := by
+      rw [← Real.exp_le_exp, ← Real.rpow_def_of_pos xpos, eM]
+      exact (le_mul_of_one_le_left (by positivity) (by linarith : (1 : ℝ) ≤ 100 * K)).trans hB
+    linarith [show Real.log P.x * (4 * e + 4) = 4 * (e * Real.log P.x) + 4 * Real.log P.x by ring]
   have npos : 0 < P.n := lt_of_lt_of_le (by positivity) n2n
-  refine ⟨P.x ^ P.ε, P.x ^ (P.ε / 3), P.x ^ e, Real.exp (P.x ^ (P.ε / 3)), Real.exp (P.x ^ (P.ε / 4)),
-    Real.exp (P.x ^ P.ε / 2), Real.exp (P.x ^ P.ε) / Real.exp (P.x ^ (P.ε / 3)), P.x ^ (P.ε / 8), ?_⟩
-  exact
-  { hx := hx, he := he, hK := hK, z1 := z1, hz4 := hC, u1 := u1, uz := uz, E1 := E1, hXB := hB
-    S1 := Real.one_le_exp (Real.rpow_nonneg xpos.le _)
-    hsb := hA
-    hb := by
-      unfold Par.b bTx
-      rw [← Real.exp_add, add_halves]
-    ha := by simp only [Par.a, Par.b, aTx]
-    hXp := by simp only [Par.Xp, XpTx]
-    hvX := by unfold Par.b bTx; field_simp
-    v0 := by positivity
-    hbp := by unfold Par.bp bpTx aTx bTx XpTx; ring
-    hwpp := by
-      unfold Par.wpp wppTx bpTx aTx bTx XpTx
-      field_simp
-    hXpp := by
-      unfold Par.Xpp XppTx wppTx bpTx aTx bTx XpTx
-      field_simp
-    lx0 := lx0
-    lxz := by unfold Par.lx; linarith only [hlog', helx, lx0, uz]
-    elx := by unfold Par.lx; linarith only [hlog', helx, lx0, uz]
-    logX := Real.log_exp _
-    loga := by
-      unfold Par.a aTx bTx Par.lx
-      rw [Real.log_mul xpos.ne' bpos.ne', Real.log_exp]
-    nx := nx, n2x := n2x, n2n := n2n, nE := nE, kx := kx, kE := kE, N0 := N0, NE := NE, t0 := t0, tE := tE, px := px, pE := pE
-    La0 := La0, Laz := Laz, r0 := r0, rE := rE, Sc0 := Sc0, ScS := ScS, η0 := η0, ηS := ηS, ρ0 := ρ0
-    ρx := ρx, th0 := th0, thx := thx, x_sq_le_threshold := x_sq_le_threshold, dx := dx, C0 := C0, CK := CK, β0 := β0, βK := βK
-    Co0 := Co0, CoK := CoK, Y1 := Y1, YX := YX, s0 := s0, sx := sx, bo0 := bo0, bosb := bosb
-    hδ := by unfold Par.δ₁; rw [Real.rpow_neg xpos.le]
-    w81 := Real.one_le_rpow x1 (by positivity)
-    w8z := Real.rpow_le_rpow_of_exponent_le x1 (by linarith)
-    hθ := by unfold Par.θ; rw [Real.rpow_neg xpos.le]
-    Joz := (Nat.floor_le (Real.rpow_nonneg xpos.le _)).trans
-      (Real.rpow_le_rpow_of_exponent_le x1 (by linarith))
-    Ibu := Nat.floor_le (Real.rpow_nonneg xpos.le _)
-    hE := rfl
-    hu := rfl
-    hz := rfl }
+  exact ⟨P.x ^ P.ε, P.x ^ (P.ε / 3), P.x ^ e, Real.exp (P.x ^ (P.ε / 3)), Real.exp (P.x ^ (P.ε / 4)),
+    Real.exp (P.x ^ P.ε / 2), Real.exp (P.x ^ P.ε) / Real.exp (P.x ^ (P.ε / 3)), P.x ^ (P.ε / 8),
+    { hx, he, hK, z1, hz4 := hC, u1 := Real.one_le_rpow x1 (by positivity), uz
+      E1 := Real.one_le_rpow x1 he, hXB := hB, S1 := Real.one_le_exp (by positivity), hsb := hA
+      hb := by unfold Par.b bTx; rw [← Real.exp_add, add_halves], ha := rfl, hXp := rfl
+      hvX := by unfold Par.b bTx; field_simp, v0 := by positivity, hbp := by unfold Par.bp bpTx aTx bTx XpTx; ring
+      hwpp := by unfold Par.wpp wppTx bpTx aTx bTx XpTx; field_simp
+      hXpp := by unfold Par.Xpp XppTx wppTx bpTx aTx bTx XpTx; field_simp
+      lx0, lxz := by unfold Par.lx; linarith, elx := by unfold Par.lx; linarith, logX := Real.log_exp _
+      loga := by unfold Par.a aTx bTx Par.lx; rw [Real.log_mul xpos.ne' (Real.exp_pos _).ne', Real.log_exp]
+      nx := n2x.trans n2n, n2x, n2n, nE, kx, kE, N0, NE, t0, tE, px, pE, La0, Laz, r0, rE
+      Sc0, ScS, η0, ηS, ρ0, ρx, th0, thx, x_sq_le_threshold, dx, C0, CK, β0, βK, Co0, CoK, Y1, YX, s0, sx, bo0, bosb
+      hδ := by unfold Par.δ₁; rw [Real.rpow_neg xpos.le], hθ := by unfold Par.θ; rw [Real.rpow_neg xpos.le]
+      w81 := Real.one_le_rpow x1 (by positivity), w8z := Real.rpow_le_rpow_of_exponent_le x1 (by linarith)
+      Joz := (Nat.floor_le (by positivity)).trans (Real.rpow_le_rpow_of_exponent_le x1 (by linarith))
+      Ibu := Nat.floor_le (by positivity), hE := rfl, hu := rfl, hz := rfl }⟩
 
 lemma scale1' {m T q c b : ℝ} (hm : 0 ≤ m) (hT : 1 ≤ T) (hcb : 0 ≤ c * b) (h : q ≤ c * b) :
     m * q ≤ c * (T * m * b) := by
-  have h1 : m * q ≤ m * (c * b) := mul_le_mul_of_nonneg_left h hm
-  have h2 : 0 ≤ (T - 1) * (m * (c * b)) := mul_nonneg (by linarith) (mul_nonneg hm hcb)
-  linarith
-
+  linarith [mul_le_mul_of_nonneg_left h hm, mul_nonneg (show 0 ≤ T - 1 by linarith) (mul_nonneg hm hcb)]
 lemma scale2 {m T q c b : ℝ} (hm : 0 ≤ m) (hT : 1 ≤ T) (h : q ≤ c * b) :
     m * T * q ≤ c * (T * m * b) := by
-  have h1 : (m * T) * q ≤ (m * T) * (c * b) :=
-    mul_le_mul_of_nonneg_left h (mul_nonneg hm (by linarith))
-  linarith
-
+  linarith [mul_le_mul_of_nonneg_left h (mul_nonneg hm (show 0 ≤ T by linarith))]
 lemma log_four_le_three_halves : Real.log 4 ≤ 3 / 2 := by
-  have h : Real.log 4 = 2 * Real.log 2 := by
-    rw [show (4 : ℝ) = 2 ^ 2 by norm_num, Real.log_pow]; norm_num
-  have := Real.log_two_lt_d9
-  linarith
-
+  have : Real.log 4 = 2 * Real.log 2 := by rw [show (4 : ℝ) = 2 ^ 2 by norm_num, Real.log_pow]; norm_num
+  linarith [Real.log_two_lt_d9]
 lemma log_four_nonneg : 0 ≤ Real.log 4 := Real.log_nonneg (by norm_num)
-
-lemma log_two_le_one_alt : Real.log 2 ≤ 1 := by
-  have := Real.log_two_lt_d9
-  linarith
-
+lemma log_two_le_one_alt : Real.log 2 ≤ 1 := by linarith [Real.log_two_lt_d9]
 lemma log_two_nonneg : 0 ≤ Real.log 2 := Real.log_nonneg (by norm_num)
 
 namespace Facts
-
 variable {P : Par} {e K z u E X S sb v w8 : ℝ} (F : Facts P e K z u E X S sb v w8)
 include F
-
 lemma xpos : 0 < P.x := by linarith [F.hx]
 lemma x1 : 1 ≤ P.x := by linarith [F.hx]
 lemma Kpos : 0 < K := by linarith [F.hK]
 lemma zpos : 0 < z := by linarith [F.z1]
 lemma Epos : 0 < E := by linarith [F.E1]
 lemma Spos : 0 < S := by linarith [F.S1]
-
-lemma M1 : 1 ≤ E ^ 4 * P.x ^ 4 :=
-  one_le_mul_of_one_le_of_one_le (one_le_pow₀ F.E1) (one_le_pow₀ F.x1)
-
+lemma M1 : 1 ≤ E ^ 4 * P.x ^ 4 := one_le_mul_of_one_le_of_one_le (one_le_pow₀ F.E1) (one_le_pow₀ F.x1)
 lemma one_le_threshold_mul_powers : 1 ≤ K * (E ^ 4 * P.x ^ 4) := one_le_mul_of_one_le_of_one_le F.hK F.M1
-
-lemma X1 : 1 ≤ X := by
-  have := F.one_le_threshold_mul_powers
-  have := F.hXB
-  linarith
-
+lemma X1 : 1 ≤ X := by linarith [F.one_le_threshold_mul_powers, F.hXB]
 lemma Xpos : 0 < X := by linarith [F.X1]
-
 lemma one_le_x_mul_s : 1 ≤ X * S := one_le_mul_of_one_le_of_one_le F.X1 F.S1
-
-lemma sb1 : 1 ≤ sb := by
-  have h1 : 1 ≤ K * (E ^ 4 * P.x ^ 4) * (X * S) := one_le_mul_of_one_le_of_one_le F.one_le_threshold_mul_powers F.one_le_x_mul_s
-  have := F.hsb
-  linarith
-
-lemma bpos : 0 < P.b := by
-  rw [F.hb]
-  have := F.sb1
-  positivity
-
+lemma sb1 : 1 ≤ sb := by linarith [one_le_mul_of_one_le_of_one_le F.one_le_threshold_mul_powers F.one_le_x_mul_s, F.hsb]
+lemma bpos : 0 < P.b := by rw [F.hb]; have := F.sb1; positivity
 lemma b0 : 0 ≤ P.b := F.bpos.le
-
-lemma sb_le_b : sb ≤ P.b := by
-  rw [F.hb]
-  have := F.sb1
-  exact le_mul_of_one_le_left (by linarith) this
-
+lemma sb_le_b : sb ≤ P.b := by rw [F.hb]; exact le_mul_of_one_le_left (by linarith [F.sb1]) F.sb1
 lemma hbXS : 100 * K * (E ^ 4 * P.x ^ 4) * (X * S) ≤ P.b := F.hsb.trans F.sb_le_b
-
-lemma hbsb : 100 * K * (E ^ 4 * P.x ^ 4) * (X * S) * sb ≤ P.b := by
-  rw [F.hb]
-  have := F.sb1
-  exact mul_le_mul_of_nonneg_right F.hsb (by linarith)
-
-lemma zpow_le {i : ℕ} (hi : i ≤ 4) : 100 * K * z ^ i ≤ P.x := by
-  refine le_trans ?_ F.hz4
-  have := F.Kpos
-  have := pow_le_pow_right₀ F.z1 hi
-  gcongr
-
+lemma hbsb : 100 * K * (E ^ 4 * P.x ^ 4) * (X * S) * sb ≤ P.b := F.hb ▸ mul_le_mul_of_nonneg_right F.hsb (by linarith [F.sb1])
+lemma zpow_le {i : ℕ} (hi : i ≤ 4) : 100 * K * z ^ i ≤ P.x :=
+  (mul_le_mul_of_nonneg_left (pow_le_pow_right₀ F.z1 hi) (by linarith [F.hK])).trans F.hz4
 lemma hundred_z_le_x : 100 * z ≤ P.x := by
-  have h := F.zpow_le (i := 1) (by norm_num)
-  rw [pow_one] at h
-  have h2 : 100 * 1 * z ≤ 100 * K * z := by
-    have := F.hK
-    have := F.zpos
-    gcongr
-  linarith
-
+  linarith [pow_one z ▸ F.zpow_le (i := 1) (by norm_num), mul_le_mul_of_nonneg_right F.hK F.zpos.le]
 lemma rpos : 0 < P.x⁻¹ := inv_pos.2 F.xpos
 lemma xr : P.x * P.x⁻¹ = 1 := mul_inv_cancel₀ F.xpos.ne'
-lemma r2 : (P.x ^ 2)⁻¹ = P.x⁻¹ ^ 2 := (inv_pow _ _).symm
-
-lemma Kzr {i : ℕ} (hi : i ≤ 4) : 100 * K * z ^ i * P.x⁻¹ ≤ 1 := by
-  have h := mul_le_mul_of_nonneg_right (F.zpow_le hi) F.rpos.le
-  rwa [F.xr] at h
-
-lemma Kzr0 (i : ℕ) : 0 ≤ 100 * K * z ^ i * P.x⁻¹ := by
-  have := F.Kpos
-  have := F.zpos
-  have := F.rpos
-  positivity
-
-lemma zr0 (i : ℕ) : 0 ≤ 100 * z ^ i * P.x⁻¹ := by
-  have := F.zpos
-  have := F.rpos
-  positivity
-
-lemma div_le_div_sq_of_le {A B y : ℝ} (hAB : A ≤ B) (hB : 0 ≤ B) (hy : P.x ^ 2 ≤ y) : A / y ≤ B * P.x⁻¹ ^ 2 := by
-  have hx2 : 0 < P.x ^ 2 := pow_pos F.xpos 2
-  rw [← F.r2, ← div_eq_mul_inv]
-  exact div_le_div₀ hB hAB hx2 hy
-
-lemma npos : 0 < P.n := lt_of_lt_of_le (pow_pos F.xpos 2) F.nx
-lemma n1 : 1 ≤ P.n := le_trans (one_le_pow₀ F.x1) F.nx
-lemma apos : 0 < P.a := by rw [F.ha]; exact mul_pos F.xpos F.bpos
-
+lemma r2 : (P.x ^ 2)⁻¹ = P.x⁻¹ ^ 2 := let _ := F; (inv_pow _ _).symm
+lemma Kzr {i : ℕ} (hi : i ≤ 4) : 100 * K * z ^ i * P.x⁻¹ ≤ 1 := F.xr ▸ mul_le_mul_of_nonneg_right (F.zpow_le hi) F.rpos.le
+lemma Kzr0 (i : ℕ) : 0 ≤ 100 * K * z ^ i * P.x⁻¹ := by have := F.Kpos; have := F.zpos; have := F.rpos; positivity
+lemma zr0 (i : ℕ) : 0 ≤ 100 * z ^ i * P.x⁻¹ := by have := F.zpos; have := F.rpos; positivity
+lemma div_le_div_sq_of_le {A B y : ℝ} (hAB : A ≤ B) (hB : 0 ≤ B) (hy : P.x ^ 2 ≤ y) :
+    A / y ≤ B * P.x⁻¹ ^ 2 := by rw [← F.r2, ← div_eq_mul_inv]; exact div_le_div₀ hB hAB (pow_pos F.xpos 2) hy
+lemma npos : 0 < P.n := (pow_pos F.xpos 2).trans_le F.nx
+lemma n1 : 1 ≤ P.n := (one_le_pow₀ F.x1).trans F.nx
+lemma apos : 0 < P.a := F.ha ▸ mul_pos F.xpos F.bpos
 lemma la0 : 0 ≤ P.lx + z := add_nonneg F.lx0 F.zpos.le
 lemma la2z : P.lx + z ≤ 2 * z := by linarith [F.lxz]
 lemma lax : P.lx + z ≤ P.x := by linarith [F.lxz, F.hundred_z_le_x, F.zpos]
-
-lemma logE : Real.log E = e * P.lx := by
-  rw [F.hE, Real.log_rpow F.xpos]; rfl
-
-lemma log_le_alt {y : ℝ} (hy0 : 0 < y) (hy : y ≤ E) : Real.log y ≤ z :=
-  (Real.log_le_log hy0 hy).trans (by rw [F.logE]; exact F.elx)
-
-lemma v_le_b : v ≤ P.b := by
-  rw [← F.hvX]; exact le_mul_of_one_le_right F.v0 F.X1
-
+lemma logE : Real.log E = e * P.lx := by rw [F.hE, Real.log_rpow F.xpos]; rfl
+lemma log_le_alt {y : ℝ} (hy0 : 0 < y) (hy : y ≤ E) : Real.log y ≤ z := (Real.log_le_log hy0 hy).trans (F.logE ▸ F.elx)
+lemma v_le_b : v ≤ P.b := F.hvX ▸ le_mul_of_one_le_right F.v0 F.X1
 lemma hsg : sg P K = 100 * K * z ^ 4 * P.x⁻¹ := by
-  unfold sg
-  rw [F.hz, div_eq_mul_inv, mul_comm 4 P.ε, Real.rpow_mul F.xpos.le, Real.rpow_ofNat]
-
-lemma sg0 : 0 ≤ sg P K := by rw [F.hsg]; exact F.Kzr0 4
-lemma sg1 : sg P K ≤ 1 := by rw [F.hsg]; exact F.Kzr (le_refl _)
-
-lemma Kzr_sg {i : ℕ} (hi : i ≤ 4) : 100 * K * z ^ i * P.x⁻¹ ≤ sg P K := by
-  rw [F.hsg]
-  have := pow_le_pow_right₀ F.z1 hi
-  have := F.Kpos
-  have := F.rpos
-  gcongr
-
-lemma zr_sg {i : ℕ} (hi : i ≤ 4) : 100 * z ^ i * P.x⁻¹ ≤ sg P K := by
-  refine le_trans ?_ (F.Kzr_sg hi)
-  have := F.hK
-  have := F.zpos
-  have := F.rpos
-  have h : 100 * 1 * z ^ i * P.x⁻¹ ≤ 100 * K * z ^ i * P.x⁻¹ := by gcongr
-  linarith
-
-lemma r_sg : P.x⁻¹ ≤ sg P K := by
-  rw [F.hsg]
-  have h1 : 1 ≤ K * z ^ 4 := one_le_mul_of_one_le_of_one_le F.hK (one_le_pow₀ F.z1)
-  exact le_mul_of_one_le_left F.rpos.le (by linarith)
-
+  unfold sg; rw [F.hz, div_eq_mul_inv, mul_comm 4 P.ε, Real.rpow_mul F.xpos.le, Real.rpow_ofNat]
+lemma sg0 : 0 ≤ sg P K := F.hsg ▸ F.Kzr0 4
+lemma sg1 : sg P K ≤ 1 := F.hsg ▸ F.Kzr le_rfl
+lemma Kzr_sg {i : ℕ} (hi : i ≤ 4) : 100 * K * z ^ i * P.x⁻¹ ≤ sg P K :=
+  F.hsg ▸ mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left (pow_le_pow_right₀ F.z1 hi) (by linarith [F.hK])) F.rpos.le
+lemma zr_sg {i : ℕ} (hi : i ≤ 4) : 100 * z ^ i * P.x⁻¹ ≤ sg P K :=
+  (mul_le_mul_of_nonneg_right (by linarith [mul_le_mul_of_nonneg_right F.hK (pow_nonneg F.zpos.le i)]) F.rpos.le).trans (F.Kzr_sg hi)
+lemma r_sg : P.x⁻¹ ≤ sg P K := F.hsg ▸ le_mul_of_one_le_left F.rpos.le
+  (by linarith [one_le_mul_of_one_le_of_one_le F.hK (one_le_pow₀ (n := 4) F.z1)])
 lemma close_sg {c w : ℝ} (_hc0 : 0 ≤ c) (hc : c ≤ 1) (hw0 : 0 ≤ w) (hw : w ≤ sg P K) :
-    P.b * c * w ≤ sg P K * P.b := by
-  have h1 : c * w ≤ 1 * sg P K := mul_le_mul hc hw hw0 zero_le_one
-  have h2 := mul_le_mul_of_nonneg_left h1 F.b0
-  linarith
-
-lemma br_sg : P.b * P.x⁻¹ ≤ sg P K * P.b := by
-  have := mul_le_mul_of_nonneg_left F.r_sg F.b0
-  linarith
-
+    P.b * c * w ≤ sg P K * P.b := by linarith [mul_le_mul_of_nonneg_left (mul_le_mul hc hw hw0 zero_le_one) F.b0]
+lemma br_sg : P.b * P.x⁻¹ ≤ sg P K * P.b := by linarith [mul_le_mul_of_nonneg_left F.r_sg F.b0]
 lemma monoG {i j i' j' : ℕ} (hi : i ≤ i') (hj : j ≤ j') : E ^ i * P.x ^ j ≤ E ^ i' * P.x ^ j' :=
-  mul_le_mul (pow_le_pow_right₀ F.E1 hi) (pow_le_pow_right₀ F.x1 hj)
-    (pow_nonneg F.xpos.le _) (pow_nonneg F.Epos.le _)
-
+  mul_le_mul (pow_le_pow_right₀ F.E1 hi) (pow_le_pow_right₀ F.x1 hj) (pow_nonneg F.xpos.le _) (pow_nonneg F.Epos.le _)
 lemma mono3 {i j : ℕ} (hi : i ≤ 4) (hj : j ≤ 3) : E ^ i * P.x ^ j ≤ E ^ 4 * P.x ^ 4 * P.x⁻¹ := by
-  have h : E ^ 4 * P.x ^ 4 * P.x⁻¹ = E ^ 4 * P.x ^ 3 := by
-    rw [show P.x ^ 4 = P.x ^ 3 * P.x by ring, mul_assoc, mul_assoc, F.xr, mul_one]
-  rw [h]
-  exact F.monoG hi hj
-
+  simpa [show E ^ 4 * P.x ^ 4 * P.x⁻¹ = E ^ 4 * P.x ^ 3 * (P.x * P.x⁻¹) by ring, F.xr] using F.monoG hi hj
+private lemma poly_step {i j : ℕ} (hi : i ≤ 4) (hj : j ≤ 3) {c : ℝ} (hc : c ≤ 100) :
+    c * K * (E ^ i * P.x ^ j) ≤ 100 * K * (E ^ 4 * P.x ^ 4 * P.x⁻¹) :=
+  mul_le_mul (mul_le_mul_of_nonneg_right hc F.Kpos.le) (F.mono3 hi hj)
+    (mul_nonneg (pow_nonneg F.Epos.le _) (pow_nonneg F.xpos.le _)) (by linarith [F.Kpos])
 lemma polyXS' {i j : ℕ} (hi : i ≤ 4) (hj : j ≤ 3) {c : ℝ} (hc : c ≤ 100) :
-    c * K * (E ^ i * P.x ^ j) * (X * S) ≤ sg P K * P.b := by
-  refine le_trans ?_ F.br_sg
-  have h1 := F.mono3 hi hj
-  have h2 := F.Kpos
-  have h3 := F.one_le_x_mul_s
-  have h4 : 0 ≤ E ^ i * P.x ^ j := mul_nonneg (pow_nonneg F.Epos.le _) (pow_nonneg F.xpos.le _)
-  calc c * K * (E ^ i * P.x ^ j) * (X * S) ≤ 100 * K * (E ^ 4 * P.x ^ 4 * P.x⁻¹) * (X * S) := by gcongr
-    _ = (100 * K * (E ^ 4 * P.x ^ 4) * (X * S)) * P.x⁻¹ := by ring
-    _ ≤ P.b * P.x⁻¹ := mul_le_mul_of_nonneg_right F.hbXS F.rpos.le
-
+    c * K * (E ^ i * P.x ^ j) * (X * S) ≤ sg P K * P.b :=
+  (mul_le_mul_of_nonneg_right (F.poly_step hi hj hc) (by linarith [F.one_le_x_mul_s])).trans
+    ((le_of_eq_of_le (by ring) (mul_le_mul_of_nonneg_right F.hbXS F.rpos.le)).trans F.br_sg)
 lemma polyX' {i j : ℕ} (hi : i ≤ 4) (hj : j ≤ 3) {c : ℝ} (hc0 : 0 ≤ c) (hc : c ≤ 100) :
-    c * K * (E ^ i * P.x ^ j) * X ≤ sg P K * P.b := by
-  refine le_trans ?_ (F.polyXS' hi hj hc)
-  have h2 := F.Kpos
-  have h4 : 0 ≤ E ^ i * P.x ^ j := mul_nonneg (pow_nonneg F.Epos.le _) (pow_nonneg F.xpos.le _)
-  have h5 : X ≤ X * S := le_mul_of_one_le_right F.Xpos.le F.S1
-  gcongr
-
+    c * K * (E ^ i * P.x ^ j) * X ≤ sg P K * P.b :=
+  (mul_le_mul_of_nonneg_left (le_mul_of_one_le_right F.Xpos.le F.S1)
+    (mul_nonneg (mul_nonneg hc0 F.Kpos.le) (mul_nonneg (pow_nonneg F.Epos.le _) (pow_nonneg F.xpos.le _)))).trans
+    (F.polyXS' hi hj hc)
 lemma polyv' {i j : ℕ} (hi : i ≤ 4) (hj : j ≤ 3) {c : ℝ} (hc : c ≤ 100) :
-    c * K * (E ^ i * P.x ^ j) * v ≤ sg P K * P.b := by
-  refine le_trans ?_ F.br_sg
-  have h1 := F.mono3 hi hj
-  have h2 := F.Kpos
-  have h4 : 0 ≤ E ^ i * P.x ^ j := mul_nonneg (pow_nonneg F.Epos.le _) (pow_nonneg F.xpos.le _)
-  have h5 := F.v0
-  calc c * K * (E ^ i * P.x ^ j) * v ≤ 100 * K * (E ^ 4 * P.x ^ 4 * P.x⁻¹) * v := by gcongr
-    _ = (100 * K * (E ^ 4 * P.x ^ 4)) * v * P.x⁻¹ := by ring
-    _ ≤ X * v * P.x⁻¹ := by
-        have := F.hXB
-        have := F.rpos
-        gcongr
-    _ = P.b * P.x⁻¹ := by rw [mul_comm X v, F.hvX]
-
+    c * K * (E ^ i * P.x ^ j) * v ≤ sg P K * P.b :=
+  (mul_le_mul_of_nonneg_right (F.poly_step hi hj hc) F.v0).trans
+    ((le_of_eq_of_le (by ring : _ = 100 * K * (E ^ 4 * P.x ^ 4) * v * P.x⁻¹)
+      (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right F.hXB F.v0) F.rpos.le)).trans
+      (by rw [mul_comm X v, F.hvX]; exact F.br_sg))
+private lemma x_le_sq : P.x ≤ P.x ^ 2 := by simpa using pow_le_pow_right₀ F.x1 (by norm_num : 1 ≤ 2)
+private lemma x2_le_p0 : P.x ^ 2 ≤ (P.p₀ : ℝ) - 1 := (pow_le_pow_right₀ F.x1 (by norm_num : 2 ≤ 4)).trans (by linarith [F.px])
+private lemma log_two_Xp_le : Real.log (2 * P.Xp) ≤ 2 * z := by
+  rw [F.hXp, Real.log_mul (by norm_num) F.Xpos.ne', F.logX]; linarith [log_two_le_one_alt, F.uz, F.z1]
+private lemma log_Xpp_le : Real.log P.Xpp ≤ 3 * z := by
+  rw [F.hXpp, Real.log_mul (mul_pos F.xpos F.npos).ne' F.Xpos.ne', Real.log_mul F.xpos.ne' F.npos.ne', F.logX]
+  linarith [F.log_le_alt F.npos F.nE, show Real.log P.x ≤ z from F.lxz, F.uz]
+private lemma bKzr_sg (c : ℝ) (i : ℕ) (hi : i ≤ 4) (hc : c ≤ 100) : c * K * z ^ i * P.x⁻¹ * P.b ≤ sg P K * P.b := by
+  have := F.Kpos; have := F.zpos; have := F.rpos
+  exact mul_le_mul_of_nonneg_right ((by gcongr : _ ≤ 100 * K * z ^ i * P.x⁻¹).trans (F.Kzr_sg hi)) F.b0
+private lemma bzr_sg (c : ℝ) (i : ℕ) (hi : i ≤ 4) (hc : c ≤ 100) : c * z ^ i * P.x⁻¹ * P.b ≤ sg P K * P.b := by
+  have := F.zpos; have := F.rpos
+  exact mul_le_mul_of_nonneg_right ((by gcongr : _ ≤ 100 * z ^ i * P.x⁻¹).trans (F.zr_sg hi)) F.b0
+private lemma aKzr_sg (c : ℝ) (i : ℕ) (hi : i ≤ 4) (hc : c ≤ 100) : c * K * z ^ i * P.x⁻¹ ^ 2 * P.a ≤ sg P K * P.b := by
+  rw [F.ha, show c * K * z ^ i * P.x⁻¹ ^ 2 * (P.x * P.b) = c * K * z ^ i * P.x⁻¹ * P.b * (P.x * P.x⁻¹) by ring,
+    F.xr, mul_one]; exact F.bKzr_sg c i hi hc
+private lemma azr_sg (c : ℝ) (i : ℕ) (hi : i ≤ 4) (hc : c ≤ 100) : c * z ^ i * P.x⁻¹ ^ 2 * P.a ≤ sg P K * P.b := by
+  rw [F.ha, show c * z ^ i * P.x⁻¹ ^ 2 * (P.x * P.b) = c * z ^ i * P.x⁻¹ * P.b * (P.x * P.x⁻¹) by ring,
+    F.xr, mul_one]; exact F.bzr_sg c i hi hc
 end Facts
 
-theorem size_floors_bound : SizeFloors := by
-  intro P e K m T hW hL hm hT
+theorem size_floors_bound : SizeFloors := fun P e K m T hW hL hm hT => by
   obtain ⟨z, u, E, X, S, sb, v, w8, F⟩ := facts hW hL
-  unfold tFloors unitU
-  apply scale1' hm hT (mul_nonneg F.sg0 F.b0)
-  rw [F.hXpp, F.loga]
-  unfold Par.f
-  have h1 := F.C0; have h2 := F.CK; have h3 := F.npos; have h4 := F.nE; have h5 := F.N0
-  have h6 := F.NE; have h7 := F.la0; have h8 := F.lax; have h9 := F.xpos; have h10 := F.Xpos
-  have h11 := F.Kpos; have h12 := F.Epos
-  calc 2 * P.C * (2 * P.n) * (P.x * P.n * X) * (P.N ^ 2 * (P.lx + z) + 2 * (P.lx + z) ^ 2)
-      ≤ 2 * K * (2 * E) * (P.x * E * X) * (E ^ 2 * P.x + 2 * P.x ^ 2) := by gcongr
-    _ = 4 * K * (E ^ 4 * P.x ^ 2) * X + 8 * K * (E ^ 2 * P.x ^ 3) * X := by ring
-    _ ≤ 4 * K * (E ^ 4 * P.x ^ 3) * X + 8 * K * (E ^ 4 * P.x ^ 3) * X := by
-        have a1 := F.monoG (i := 4) (j := 2) (i' := 4) (j' := 3) (by norm_num) (by norm_num)
-        have a2 := F.monoG (i := 2) (j := 3) (i' := 4) (j' := 3) (by norm_num) (by norm_num)
-        gcongr
+  refine scale1' hm hT (mul_nonneg F.sg0 F.b0) ?_
+  rw [F.hXpp, F.loga]; unfold Par.f
+  have := F.C0; have := F.CK; have := F.npos; have := F.nE; have := F.N0; have := F.NE; have := F.la0
+  have := F.xpos; have := F.Xpos; have := F.Kpos; have := F.Epos; have : P.lx + z ≤ P.x ^ 2 := F.lax.trans F.x_le_sq
+  have : (P.lx + z) ^ 2 ≤ E ^ 2 * P.x ^ 2 :=
+    (pow_le_pow_left₀ F.la0 F.lax 2).trans (le_mul_of_one_le_left (by positivity) (one_le_pow₀ F.E1))
+  calc _ ≤ 2 * K * (2 * E) * (P.x * E * X) * (E ^ 2 * P.x ^ 2 + 2 * (E ^ 2 * P.x ^ 2)) := by gcongr
     _ = 12 * K * (E ^ 4 * P.x ^ 3) * X := by ring
-    _ ≤ sg P K * P.b := F.polyX' (le_refl _) (le_refl _) (by norm_num) (by norm_num)
+    _ ≤ sg P K * P.b := F.polyX' le_rfl le_rfl (by norm_num) (by norm_num)
 
-theorem size_cp_bucket_bound : SizeCp := by
-  intro P e K m T hW hL hm hT
+theorem size_cp_bucket_bound : SizeCp := fun P e K m T hW hL hm hT => by
   obtain ⟨z, u, E, X, S, sb, v, w8, F⟩ := facts hW hL
-  unfold tCp unitU
-  have hl : Real.log (2 * P.a) = Real.log 2 + (P.lx + z) := by
-    rw [Real.log_mul (by norm_num) F.apos.ne', F.loga]
-  have hl0 : 0 ≤ Real.log (2 * P.a) := by rw [hl]; exact add_nonneg log_two_nonneg F.la0
-  have hlx : Real.log (2 * P.a) ≤ P.x := by
-    rw [hl]; linarith [log_two_le_one_alt, F.la2z, F.hundred_z_le_x, F.z1]
+  have hl : Real.log (2 * P.a) = Real.log 2 + (P.lx + z) := by rw [Real.log_mul (by norm_num) F.apos.ne', F.loga]
+  have hl0 : 0 ≤ Real.log (2 * P.a) := hl ▸ add_nonneg log_two_nonneg F.la0
+  have hlx : Real.log (2 * P.a) ≤ P.x := by rw [hl]; linarith [log_two_le_one_alt, F.la2z, F.hundred_z_le_x, F.z1]
   have hSk0 : 0 ≤ P.Sk := by unfold Par.Sk; linarith [F.Sc0, F.η0, F.kx, pow_pos F.xpos 2]
   have hSk : P.Sk ≤ 3 * (E * S) := by
-    unfold Par.Sk
-    have a1 : S ≤ E * S := le_mul_of_one_le_left F.Spos.le F.E1
-    have a2 : E ≤ E * S := le_mul_of_one_le_right F.Epos.le F.S1
-    linarith [F.ScS, F.ηS, F.kE]
-  have key : 2 * P.C * P.Sk * Real.log (2 * P.a) * P.Xpp ≤ sg P K * P.b := by
-    rw [F.hXpp]
-    have h1 := F.C0; have h2 := F.CK; have h3 := F.npos; have h4 := F.nE
-    have h9 := F.xpos; have h10 := F.Xpos; have h11 := F.Kpos; have h12 := F.Epos; have h13 := F.Spos
-    calc 2 * P.C * P.Sk * Real.log (2 * P.a) * (P.x * P.n * X)
-        ≤ 2 * K * (3 * (E * S)) * P.x * (P.x * E * X) := by gcongr
-      _ = 6 * K * (E ^ 2 * P.x ^ 2) * (X * S) := by ring
-      _ ≤ sg P K * P.b := F.polyXS' (by norm_num) (by norm_num) (by norm_num)
-  have := scale2 hm hT key
-  linarith
+    unfold Par.Sk; linarith [F.ScS, F.ηS, F.kE, le_mul_of_one_le_left F.Spos.le F.E1, le_mul_of_one_le_right F.Epos.le F.S1]
+  have := F.C0; have := F.CK; have := F.npos; have := F.nE; have := F.xpos; have := F.Xpos; have := F.Kpos; have := F.Epos; have := F.Spos
+  unfold tCp unitU; linarith [scale2 hm hT (F.hXpp ▸ le_trans
+    (by gcongr : 2 * P.C * P.Sk * Real.log (2 * P.a) * (P.x * P.n * X) ≤ 2 * K * (3 * (E * S)) * P.x * (P.x * E * X))
+    (le_of_eq_of_le (by ring : _ = 6 * K * (E ^ 2 * P.x ^ 2) * (X * S)) (F.polyXS' (by norm_num) (by norm_num) (by norm_num))))]
 
-theorem size_prime_low_bound : SizePrLow := by
-  intro P e K m T hW hL hm hT
+theorem size_prime_low_bound : SizePrLow := fun P e K m T hW hL hm hT => by
   obtain ⟨z, u, E, X, S, sb, v, w8, F⟩ := facts hW hL
-  unfold tPrLow unitU
-  have key : 2 * Real.log 4 * (P.p₀ * P.Q₁) ≤ sg P K * P.b := by
-    unfold Par.Q₁
-    rw [F.hbp]
-    have h1 := F.C0; have h2 := F.CK; have h3 := F.r0; have h4 := F.rE; have h5 := F.pE
-    have h6 := F.lx0; have h7 : P.lx ≤ P.x := by linarith [F.lxz, F.hundred_z_le_x, F.zpos]
-    have h8 := F.v0; have h9 := F.xpos; have h11 := F.Kpos; have h12 := F.Epos
-    have h13 := log_four_le_three_halves; have h14 := log_four_nonneg
-    have h15 : (0 : ℝ) ≤ P.p₀ := Nat.cast_nonneg _
-    calc 2 * Real.log 4 * (P.p₀ * (P.C * P.rG * (P.x * v) * P.lx))
-        ≤ 2 * (3 / 2) * (E * (K * E * (P.x * v) * P.x)) := by gcongr
-      _ = 3 * K * (E ^ 2 * P.x ^ 2) * v := by ring
-      _ ≤ sg P K * P.b := F.polyv' (by norm_num) (by norm_num) (by norm_num)
-  have := scale2 hm hT key
-  linarith
+  have := F.C0; have := F.CK; have := F.r0; have := F.rE; have := F.pE; have := F.lx0; have := F.v0; have := F.xpos
+  have := F.Kpos; have := F.Epos; have := log_four_le_three_halves; have := log_four_nonneg; have : (0 : ℝ) ≤ P.p₀ := Nat.cast_nonneg _
+  have : P.lx ≤ P.x := by linarith [F.lxz, F.hundred_z_le_x, F.zpos]
+  exact scale2 hm hT (by unfold Par.Q₁; rw [F.hbp]; calc _ ≤ 2 * (3 / 2) * (E * (K * E * (P.x * v) * P.x)) := by gcongr
+    _ = 3 * K * (E ^ 2 * P.x ^ 2) * v := by ring
+    _ ≤ sg P K * P.b := F.polyv' (by norm_num) (by norm_num) (by norm_num))
 
 lemma xprime_q_two_expand {P : Par} {e K z u E X S sb v w8 : ℝ} (F : Facts P e K z u E X S sb v w8) :
     P.Xp * P.Q₂ = P.C * P.b + P.C * X * (P.η + P.Sc) + P.C * (P.b / P.n) * P.lx * w8
       + P.C * X * P.t * P.lx * w8 + X * P.bo := by
-  unfold Par.Q₂
-  rw [F.hXp, F.hbp, F.hwpp, F.hδ, ← F.hvX, div_inv_eq_mul]
-  have h1 := F.xpos.ne'
-  have h2 := F.npos.ne'
-  field_simp
-  ring
+  unfold Par.Q₂; rw [F.hXp, F.hbp, F.hwpp, F.hδ, ← F.hvX, div_inv_eq_mul]
+  have := F.xpos.ne'; have := F.npos.ne'; field_simp; ring
 
-theorem size_prime_high_bound : SizePrHigh := by
-  intro P e K m T hW hL hm hT
+theorem size_prime_high_bound : SizePrHigh := fun P e K m T hW hL hm hT => by
   obtain ⟨z, u, E, X, S, sb, v, w8, F⟩ := facts hW hL
-  unfold tPrHigh unitU
-  have h1 := F.C0; have h2 := F.CK; have h9 := F.xpos; have h10 := F.Xpos; have h11 := F.Kpos
-  have h12 := F.Epos; have h13 := F.Spos; have hb := F.b0; have hz := F.zpos
-  have hlx0 := F.lx0; have hlx := F.lxz; have hw0 : 0 ≤ w8 := by linarith [F.w81]
-  have hw := F.w8z
+  have := F.C0; have := F.CK; have := F.xpos; have := F.Xpos; have := F.Kpos; have := F.Epos; have := F.Spos; have hb := F.b0
+  have := F.zpos; have := F.lx0; have := F.lxz; have := F.w8z; have := F.η0; have := F.ηS; have := F.Sc0; have := F.ScS
+  have hw0 : 0 ≤ w8 := by linarith [F.w81]
   have hr0 := F.rpos
-  have p2 : 4 * (P.C * X * (P.η + P.Sc)) ≤ sg P K * P.b := by
-    have a1 := F.η0; have a2 := F.ηS; have a3 := F.Sc0; have a4 := F.ScS
-    have a5 : 8 * K * (E ^ 0 * P.x ^ 0) * (X * S) ≤ sg P K * P.b :=
-      F.polyXS' (by norm_num) (by norm_num) (by norm_num)
-    have a6 : P.C * X * (P.η + P.Sc) ≤ K * X * (S + S) := by gcongr
-    have a7 : 4 * (K * X * (S + S)) = 8 * K * (E ^ 0 * P.x ^ 0) * (X * S) := by ring
-    linarith
+  have p2 : 4 * (P.C * X * (P.η + P.Sc)) ≤ sg P K * P.b := le_trans (by gcongr : _ ≤ 4 * (K * X * (S + S)))
+    (le_of_eq_of_le (by ring : _ = 8 * K * (E ^ 0 * P.x ^ 0) * (X * S)) (F.polyXS' (by norm_num) (by norm_num) (by norm_num)))
   have p3 : 4 * (P.C * (P.b / P.n) * P.lx * w8) ≤ sg P K * P.b := by
-    have a1 : P.b / P.n ≤ P.b * P.x⁻¹ ^ 2 := F.div_le_div_sq_of_le (le_refl _) hb F.nx
-    have a0 : 0 ≤ P.b / P.n := div_nonneg hb F.npos.le
-    have a2 : P.C * (P.b / P.n) * P.lx * w8 ≤ K * (P.b * P.x⁻¹ ^ 2) * z * z := by gcongr
-    have a3 : 4 * (K * (P.b * P.x⁻¹ ^ 2) * z * z)
-        = P.b * (4 / 100 * (100 * K * z ^ 2 * P.x⁻¹)) * P.x⁻¹ := by ring
-    have b1 := F.Kzr (i := 2) (by norm_num)
-    have b0 := F.Kzr0 2
-    have a4 : P.b * (4 / 100 * (100 * K * z ^ 2 * P.x⁻¹)) * P.x⁻¹ ≤ sg P K * P.b :=
-      F.close_sg (by linarith) (by linarith) hr0.le F.r_sg
-    linarith
+    have : P.b / P.n ≤ P.b * P.x⁻¹ := div_eq_mul_inv P.b P.x ▸ div_le_div_of_nonneg_left hb F.xpos (F.x_le_sq.trans F.nx)
+    have : 0 ≤ P.b / P.n := div_nonneg hb F.npos.le
+    exact le_trans (by gcongr : _ ≤ 4 * (K * (P.b * P.x⁻¹) * z * z)) (le_of_eq_of_le (by ring) (F.bKzr_sg 4 2 (by norm_num) (by norm_num)))
   have p4 : 4 * (P.C * X * P.t * P.lx * w8) ≤ sg P K * P.b := by
-    have a1 := F.t0; have a2 := F.tE
-    have a3 : z * z ≤ P.x := by
-      have := F.zpow_le (i := 2) (by norm_num)
-      have b1 : 1 * z ^ 2 ≤ 100 * K * z ^ 2 := by
-        have : (1 : ℝ) ≤ 100 * K := by linarith [F.hK]
-        gcongr
-      nlinarith
-    have a4 : P.C * X * P.t * P.lx * w8 ≤ K * X * E * z * z := by gcongr
-    have a5 : K * X * E * z * z ≤ K * X * E * P.x := by
-      have : K * X * E * z * z = K * X * E * (z * z) := by ring
-      rw [this]; gcongr
-    have a6 : 4 * K * (E ^ 1 * P.x ^ 1) * X ≤ sg P K * P.b :=
-      F.polyX' (by norm_num) (by norm_num) (by norm_num) (by norm_num)
-    have a7 : 4 * (K * X * E * P.x) = 4 * K * (E ^ 1 * P.x ^ 1) * X := by ring
-    linarith
+    have := F.t0; have := F.tE; have : 0 ≤ P.lx * w8 := by positivity
+    have : P.lx * w8 ≤ P.x := le_trans (by gcongr : P.lx * w8 ≤ z * z)
+      (by simpa [sq] using (le_mul_of_one_le_left (sq_nonneg z) (by linarith [F.hK] : (1 : ℝ) ≤ 100 * K)).trans (F.zpow_le (i := 2) (by norm_num)))
+    rw [show P.C * X * P.t * P.lx * w8 = P.C * X * P.t * (P.lx * w8) by ring]
+    exact le_trans (by gcongr : _ ≤ 4 * (K * X * E * P.x))
+      (le_of_eq_of_le (by ring : _ = 4 * K * (E ^ 1 * P.x ^ 1) * X) (F.polyX' (by norm_num) (by norm_num) (by norm_num) (by norm_num)))
   have p5 : 4 * (X * P.bo) ≤ sg P K * P.b := by
-    have a1 := F.bo0; have a2 := F.bosb; have a3 := F.hbsb; have a4 := F.sb1
-    have a5 : X * P.bo ≤ X * sb := by gcongr
-    have a6 : 4 * 1 * (1 * P.x) * (X * 1) * sb ≤ 100 * K * (E ^ 4 * P.x ^ 4) * (X * S) * sb := by
-      have c1 := F.hK; have c2 := F.S1
-      have c3 : 1 ≤ E ^ 4 := one_le_pow₀ F.E1
-      have c4 : P.x ≤ P.x ^ 4 := by
-        calc P.x = P.x ^ 1 := (pow_one _).symm
-          _ ≤ P.x ^ 4 := pow_le_pow_right₀ F.x1 (by norm_num)
-      gcongr
-      norm_num
-    have a7 : 4 * (X * sb) = (4 * 1 * (1 * P.x) * (X * 1) * sb) * P.x⁻¹ := by
-      have : (4 * 1 * (1 * P.x) * (X * 1) * sb) * P.x⁻¹ = 4 * (X * sb) * (P.x * P.x⁻¹) := by ring
-      rw [this, F.xr, mul_one]
-    have a8 : (4 * 1 * (1 * P.x) * (X * 1) * sb) * P.x⁻¹ ≤ P.b * P.x⁻¹ :=
-      mul_le_mul_of_nonneg_right (a6.trans a3) hr0.le
-    have a9 := F.br_sg
-    linarith
-  have hXQ : P.Xp * P.Q₂ ≤ (P.C + sg P K) * P.b := by
-    rw [xprime_q_two_expand F]; linarith
-  have hsb0 : 0 ≤ sg P K * P.b := mul_nonneg F.sg0 hb
-  have key : 2 * Real.log 4 * (P.Xp * P.Q₂) ≤ (2 * Real.log 4 * P.C + 3 * sg P K) * P.b := by
-    have a1 : 2 * Real.log 4 * (P.Xp * P.Q₂) ≤ 2 * Real.log 4 * ((P.C + sg P K) * P.b) :=
-      mul_le_mul_of_nonneg_left hXQ (by linarith [log_four_nonneg])
-    have a2 : 2 * Real.log 4 * (sg P K * P.b) ≤ 3 * (sg P K * P.b) :=
-      mul_le_mul_of_nonneg_right (by linarith [log_four_le_three_halves]) hsb0
-    linarith
-  exact scale2 hm hT key
+    have : P.x ≤ E ^ 4 * P.x ^ 4 := by simpa using F.monoG (i := 0) (j := 1) (by norm_num) (by norm_num)
+    have hxsb : 4 * 1 * P.x * (X * 1) ≤ sb :=
+      le_trans (by have := F.hK; have := F.S1; gcongr; norm_num : _ ≤ 100 * K * (E ^ 4 * P.x ^ 4) * (X * S)) F.hsb
+    have hbo : 4 * (X * P.bo) * P.x ≤ P.b := F.hb ▸ le_of_eq_of_le (by ring) (mul_le_mul hxsb F.bosb F.bo0 (by linarith [F.sb1]))
+    calc 4 * (X * P.bo) = 4 * (X * P.bo) * P.x * P.x⁻¹ := by rw [mul_assoc, F.xr, mul_one]
+      _ ≤ sg P K * P.b := (mul_le_mul_of_nonneg_right hbo hr0.le).trans F.br_sg
+  have hXQ : P.Xp * P.Q₂ ≤ (P.C + sg P K) * P.b := by rw [xprime_q_two_expand F]; linarith
+  exact scale2 hm hT (by linarith [mul_le_mul_of_nonneg_left hXQ (show 0 ≤ 2 * Real.log 4 by linarith [log_four_nonneg]),
+    mul_le_mul_of_nonneg_right (show 2 * Real.log 4 ≤ 3 by linarith [log_four_le_three_halves]) (mul_nonneg F.sg0 hb)])
 
-theorem size_or_bucket_bound : SizeOr := by
-  intro P e K m T hW hL hm hT
+theorem size_or_bucket_bound : SizeOr := fun P e K m T hW hL hm hT => by
   obtain ⟨z, u, E, X, S, sb, v, w8, F⟩ := facts hW hL
-  unfold tOr unitU
-  have h1 := F.C0; have h2 := F.CK; have h9 := F.xpos; have h11 := F.Kpos
-  have hb := F.b0; have hz := F.zpos; have hz1 := F.z1; have hlx0 := F.lx0; have hlx := F.lxz
-  have hr0 := F.rpos
-  have hx2 : 1 ≤ P.x ^ 2 := one_le_pow₀ F.x1
-  have hp1 : P.x ^ 4 ≤ (P.p₀ : ℝ) - 1 := by linarith [F.px]
-  have hx24 : P.x ^ 2 ≤ P.x ^ 4 := pow_le_pow_right₀ F.x1 (by norm_num)
-  have hp0 : 0 < (P.p₀ : ℝ) - 1 := by linarith
-  have c1 : P.La / P.k ≤ z ^ 2 * P.x⁻¹ ^ 2 := F.div_le_div_sq_of_le F.Laz (by positivity) F.kx
-  have c2 : 1 / P.K₀ ≤ 1 * P.x⁻¹ ^ 2 := F.div_le_div_sq_of_le (le_refl _) (by norm_num) F.x_sq_le_threshold
-  have c3 : Real.log P.Xp + Real.log 4 ≤ 3 * z := by
-    rw [F.hXp, F.logX]; linarith [F.uz, log_four_le_three_halves]
-  have c30 : 0 ≤ Real.log P.Xp + Real.log 4 := by
-    rw [F.hXp, F.logX]; linarith [F.u1, log_four_nonneg]
-  have c4 : Real.log ((P.p₀ : ℝ) - 1) ≤ z := F.log_le_alt hp0 (by linarith [F.pE])
-  have c5 : 2 * (Real.log ((P.p₀ : ℝ) - 1) + 1) / ((P.p₀ : ℝ) - 1) ≤ 4 * z * P.x⁻¹ ^ 2 :=
-    F.div_le_div_sq_of_le (by linarith) (by positivity) (by linarith)
-  have c12 : 0 ≤ P.La / P.k + 1 / P.K₀ := by
-    have := F.La0
-    have : 0 < P.k := by linarith [F.kx]
-    have : 0 < P.K₀ := by linarith [F.x_sq_le_threshold]
-    positivity
-  have z3 : z ≤ z ^ 3 := by
-    calc z = z ^ 1 := (pow_one z).symm
-      _ ≤ z ^ 3 := pow_le_pow_right₀ hz1 (by norm_num)
+  have := F.C0; have := F.CK; have := F.xpos; have := F.Kpos; have := F.zpos; have := F.lx0; have := F.lxz; have := F.rpos; have := F.apos
+  have hz3 : z ≤ z ^ 3 := by simpa using pow_le_pow_right₀ F.z1 (by norm_num : 1 ≤ 3)
+  have c12 : P.La / P.k + 1 / P.K₀ ≤ 2 * z ^ 2 * P.x⁻¹ ^ 2 := by
+    linarith [F.div_le_div_sq_of_le F.Laz (by positivity) F.kx, F.div_le_div_sq_of_le le_rfl zero_le_one F.x_sq_le_threshold,
+      mul_le_mul_of_nonneg_right (one_le_pow₀ (n := 2) F.z1) (sq_nonneg P.x⁻¹)]
+  have c3 : Real.log P.Xp + Real.log 4 ≤ 3 * z := by rw [F.hXp, F.logX]; linarith [F.uz, log_four_le_three_halves, F.z1]
+  have c30 : 0 ≤ Real.log P.Xp + Real.log 4 := by rw [F.hXp, F.logX]; linarith [F.u1, log_four_nonneg]
+  have c4 : Real.log ((P.p₀ : ℝ) - 1) ≤ z := F.log_le_alt (by linarith [F.x2_le_p0, pow_pos F.xpos 2]) (by linarith [F.pE])
+  have c5 : 2 * (Real.log ((P.p₀ : ℝ) - 1) + 1) / ((P.p₀ : ℝ) - 1) ≤ 4 * z ^ 3 * P.x⁻¹ ^ 2 :=
+    F.div_le_div_sq_of_le (by linarith [F.z1]) (by positivity) F.x2_le_p0
   have br : (P.La / P.k + 1 / P.K₀) * (Real.log P.Xp + Real.log 4) +
       2 * (Real.log ((P.p₀ : ℝ) - 1) + 1) / ((P.p₀ : ℝ) - 1) ≤ 10 * z ^ 3 * P.x⁻¹ ^ 2 := by
-    have d1 : (P.La / P.k + 1 / P.K₀) * (Real.log P.Xp + Real.log 4)
-        ≤ (z ^ 2 * P.x⁻¹ ^ 2 + 1 * P.x⁻¹ ^ 2) * (3 * z) := by gcongr
-    have d2 : (z ^ 2 * P.x⁻¹ ^ 2 + 1 * P.x⁻¹ ^ 2) * (3 * z) + 4 * z * P.x⁻¹ ^ 2
-        = (3 * z ^ 3 + 7 * z) * P.x⁻¹ ^ 2 := by ring
-    have d3 : (3 * z ^ 3 + 7 * z) * P.x⁻¹ ^ 2 ≤ (10 * z ^ 3) * P.x⁻¹ ^ 2 := by
-      gcongr
-      linarith
-    linarith
-  have key : 2 * P.C * P.lx * P.a * ((P.La / P.k + 1 / P.K₀) * (Real.log P.Xp + Real.log 4) +
-      2 * (Real.log ((P.p₀ : ℝ) - 1) + 1) / ((P.p₀ : ℝ) - 1)) ≤ sg P K * P.b := by
-    rw [F.ha]
-    calc 2 * P.C * P.lx * (P.x * P.b) * ((P.La / P.k + 1 / P.K₀) * (Real.log P.Xp + Real.log 4) +
-          2 * (Real.log ((P.p₀ : ℝ) - 1) + 1) / ((P.p₀ : ℝ) - 1))
-        ≤ 2 * P.C * P.lx * (P.x * P.b) * (10 * z ^ 3 * P.x⁻¹ ^ 2) :=
-          mul_le_mul_of_nonneg_left br (by positivity)
-      _ ≤ 2 * K * z * (P.x * P.b) * (10 * z ^ 3 * P.x⁻¹ ^ 2) := by gcongr
-      _ = P.b * (1 / 5 * (P.x * P.x⁻¹)) * (100 * K * z ^ 4 * P.x⁻¹) := by ring
-      _ ≤ sg P K * P.b := by
-          rw [F.xr]
-          exact F.close_sg (by norm_num) (by norm_num) (F.Kzr0 4) (F.Kzr_sg (le_refl _))
-  have := scale2 hm hT key
-  linarith
+    linarith [mul_le_mul c12 c3 c30 (by positivity),
+      show 2 * z ^ 2 * P.x⁻¹ ^ 2 * (3 * z) + 4 * z ^ 3 * P.x⁻¹ ^ 2 = 10 * z ^ 3 * P.x⁻¹ ^ 2 by ring]
+  exact scale2 hm hT ((mul_le_mul_of_nonneg_left br (by positivity)).trans
+    (le_trans (by gcongr : _ ≤ 2 * K * z * P.a * (10 * z ^ 3 * P.x⁻¹ ^ 2)) (le_of_eq_of_le (by ring) (F.aKzr_sg 20 4 le_rfl (by norm_num)))))
 
-theorem size_orders_bucket_bound : SizeOrders := by
-  intro P e K m T hW hL hm hT
+theorem size_orders_bucket_bound : SizeOrders := fun P e K m T hW hL hm hT => by
   obtain ⟨z, u, E, X, S, sb, v, w8, F⟩ := facts hW hL
   unfold tOrders unitU
-  have h9 := F.xpos; have h11 := F.Kpos; have hb := F.b0; have hz := F.zpos; have hr0 := F.rpos
+  have := F.Kpos; have := F.zpos; have := F.rpos; have := F.apos; have := F.Joz; have := F.Co0; have := F.CoK
   have hM1 : 1 ≤ max P.Y P.Xpp := F.Y1.trans (le_max_left _ _)
-  have hlM : Real.log (max P.Y P.Xpp) ≤ 3 * z := by
-    rcases max_choice P.Y P.Xpp with h | h <;> rw [h]
-    · have hY0 : 0 < P.Y := by linarith [F.Y1]
-      have a2 : Real.log P.Y ≤ Real.log (2 * X) := Real.log_le_log hY0 F.YX
-      rw [Real.log_mul (by norm_num) F.Xpos.ne', F.logX] at a2
-      linarith [log_two_le_one_alt, F.uz, F.z1]
-    · rw [F.hXpp, Real.log_mul (mul_pos h9 F.npos).ne' F.Xpos.ne', Real.log_mul h9.ne' F.npos.ne', F.logX]
-      have a1 : Real.log P.n ≤ z := F.log_le_alt F.npos F.nE
-      have a2 : Real.log P.x ≤ z := F.lxz
-      linarith [F.uz]
-  generalize max P.Y P.Xpp = M at hM1 hlM ⊢
-  have q1 := F.n2x; have q2 := F.n2n
-  have q0 : (1 : ℝ) ≤ 2 ^ P.e₂ := one_le_pow₀ (by norm_num)
-  generalize (2 : ℝ) ^ P.e₂ = n at q0 q1 q2 ⊢
-  have qp : 0 < n := by linarith
-  have hnY1 : 1 ≤ n * M := one_le_mul_of_one_le_of_one_le q0 hM1
-  have hL0 : 0 ≤ Real.log (n * M) := Real.log_nonneg hnY1
-  have hL3 : Real.log (n * M) ≤ 4 * z := by
-    rw [Real.log_mul qp.ne' (by linarith)]
-    have a1 : Real.log n ≤ z := F.log_le_alt qp (q2.trans F.nE)
-    linarith
-  have hJ0 : (0 : ℝ) ≤ P.Jo := Nat.cast_nonneg _
-  have hJ := F.Joz
-  have hC0 := F.Co0; have hCK := F.CoK
-  have c1 : P.Cord * P.Jo * Real.log (n * M) ^ 2 / n ≤ K * z * (4 * z) ^ 2 * P.x⁻¹ ^ 2 := by
-    refine F.div_le_div_sq_of_le ?_ (by positivity) q1
-    gcongr
-  have key : 4 * P.a * (P.Cord * P.Jo * Real.log (n * M) ^ 2 / n) ≤ sg P K * P.b := by
-    rw [F.ha]
-    calc 4 * (P.x * P.b) * (P.Cord * P.Jo * Real.log (n * M) ^ 2 / n)
-        ≤ 4 * (P.x * P.b) * (K * z * (4 * z) ^ 2 * P.x⁻¹ ^ 2) := by gcongr
-      _ = P.b * (64 / 100 * (P.x * P.x⁻¹)) * (100 * K * z ^ 3 * P.x⁻¹) := by ring
-      _ ≤ sg P K * P.b := by
-          rw [F.xr]
-          exact F.close_sg (by norm_num) (by norm_num) (F.Kzr0 3) (F.Kzr_sg (by norm_num))
-  have := scale2 hm hT key
-  linarith
+  have hlM : Real.log (max P.Y P.Xpp) ≤ 3 * z := (max_choice P.Y P.Xpp).elim
+    (fun h => h.symm ▸ (Real.log_le_log (by linarith [F.Y1]) (F.hXp ▸ F.YX)).trans (by linarith [F.log_two_Xp_le]))
+    (fun h => h.symm ▸ F.log_Xpp_le)
+  set M := max P.Y P.Xpp; set n := (2 : ℝ) ^ P.e₂
+  have qp : 0 < n := by positivity
+  have hL0 : 0 ≤ Real.log (n * M) := Real.log_nonneg (one_le_mul_of_one_le_of_one_le (one_le_pow₀ (by norm_num)) hM1)
+  have hL3 : Real.log (n * M) ≤ 4 * z := by rw [Real.log_mul qp.ne' (by linarith)]; linarith [F.log_le_alt qp (F.n2n.trans F.nE)]
+  have : (0 : ℝ) ≤ P.Jo := Nat.cast_nonneg _
+  linarith [scale2 hm hT ((mul_le_mul_of_nonneg_left
+    (F.div_le_div_sq_of_le (by gcongr : P.Cord * P.Jo * Real.log (n * M) ^ 2 ≤ K * z * (4 * z) ^ 2) (by positivity) F.n2x)
+    (by positivity : 0 ≤ 4 * P.a)).trans (le_of_eq_of_le (by ring) (F.aKzr_sg 64 3 (by norm_num) (by norm_num))))]
 
-theorem size_band_bound : SizeBand := by
-  intro P e K m T hW hL hm hT
+theorem size_band_bound : SizeBand := fun P e K m T hW hL hm hT => by
   obtain ⟨z, u, E, X, S, sb, v, w8, F⟩ := facts hW hL
-  unfold tBand unitU
-  have h9 := F.xpos; have hb := F.b0; have hz := F.zpos; have hr0 := F.rpos
-  have hI0 : (0 : ℝ) ≤ P.Ib := Nat.cast_nonneg _
-  have hI : (P.Ib : ℝ) ≤ z := F.Ibu.trans F.uz
-  have hx24 : P.x ^ 2 ≤ P.x ^ 4 := pow_le_pow_right₀ F.x1 (by norm_num)
-  have c1 : 1 / (P.p₀ : ℝ) ≤ 1 * P.x⁻¹ ^ 2 :=
-    F.div_le_div_sq_of_le (le_refl _) (by norm_num) (by linarith [F.px])
-  have c10 : 0 ≤ 1 / (P.p₀ : ℝ) := by positivity
-  have c2 : P.ρ ≤ P.x⁻¹ ^ 2 := by rw [← F.r2]; exact F.ρx
-  have c20 := F.ρ0
-  have c3 : Real.log (2 * P.Xp) ≤ 2 * z := by
-    rw [F.hXp, Real.log_mul (by norm_num) F.Xpos.ne', F.logX]; linarith [log_two_le_one_alt, F.uz, F.z1]
-  have c30 : 0 ≤ Real.log (2 * P.Xp) := by
-    rw [F.hXp]; exact Real.log_nonneg (by linarith [F.X1])
-  have key : 4 * P.a * (P.Ib * ((4 * P.ρ + 1 / (P.p₀ : ℝ)) * Real.log (2 * P.Xp))) ≤ sg P K * P.b := by
-    rw [F.ha]
-    calc 4 * (P.x * P.b) * (P.Ib * ((4 * P.ρ + 1 / (P.p₀ : ℝ)) * Real.log (2 * P.Xp)))
-        ≤ 4 * (P.x * P.b) * (z * ((4 * P.x⁻¹ ^ 2 + 1 * P.x⁻¹ ^ 2) * (2 * z))) := by gcongr
-      _ = P.b * (40 / 100 * (P.x * P.x⁻¹)) * (100 * z ^ 2 * P.x⁻¹) := by ring
-      _ ≤ sg P K * P.b := by
-          rw [F.xr]
-          exact F.close_sg (by norm_num) (by norm_num) (F.zr0 2) (F.zr_sg (by norm_num))
-  have := scale2 hm hT key
-  linarith
+  have := F.xpos; have := F.zpos; have := F.rpos; have := F.apos; have := F.ρ0; have := F.log_two_Xp_le
+  have : (0 : ℝ) ≤ P.Ib := Nat.cast_nonneg _; have := F.Ibu.trans F.uz; have : P.ρ ≤ P.x⁻¹ ^ 2 := F.r2 ▸ F.ρx
+  have : 1 / (P.p₀ : ℝ) ≤ 1 * P.x⁻¹ ^ 2 := F.div_le_div_sq_of_le le_rfl zero_le_one (by linarith [F.x2_le_p0])
+  have : 0 ≤ Real.log (2 * P.Xp) := F.hXp ▸ Real.log_nonneg (by linarith [F.X1])
+  unfold tBand unitU; linarith [scale2 hm hT (le_trans
+    (by gcongr : 4 * P.a * (P.Ib * ((4 * P.ρ + 1 / (P.p₀ : ℝ)) * Real.log (2 * P.Xp))) ≤
+      4 * P.a * (z * ((4 * P.x⁻¹ ^ 2 + 1 * P.x⁻¹ ^ 2) * (2 * z))))
+    (le_of_eq_of_le (by ring) (F.azr_sg 40 2 (by norm_num) (by norm_num))))]
 
-theorem size_high_bucket_bound : SizeHigh := by
-  intro P e K m T hW hL hm hT
+theorem size_high_bucket_bound : SizeHigh := fun P e K m T hW hL hm hT => by
   obtain ⟨z, u, E, X, S, sb, v, w8, F⟩ := facts hW hL
-  unfold tHigh unitU
-  have h9 := F.xpos; have hb := F.b0; have hz := F.zpos; have hr0 := F.rpos
-  have hXpp1 : 1 ≤ P.x * P.n * X :=
-    one_le_mul_of_one_le_of_one_le (one_le_mul_of_one_le_of_one_le F.x1 F.n1) F.X1
+  have := F.xpos; have := F.b0; have := F.zpos; have := F.rpos; have := F.th0; have := F.thx
+  have hXpp1 : 1 ≤ P.Xpp := F.hXpp ▸ one_le_mul_of_one_le_of_one_le (one_le_mul_of_one_le_of_one_le F.x1 F.n1) F.X1
   have c3 : Real.log (2 * P.Xpp) ≤ 4 * z := by
-    rw [F.hXpp, Real.log_mul (by norm_num) (by positivity),
-      Real.log_mul (mul_pos h9 F.npos).ne' F.Xpos.ne', Real.log_mul h9.ne' F.npos.ne', F.logX]
-    have a1 : Real.log P.n ≤ z := F.log_le_alt F.npos F.nE
-    have a2 : Real.log P.x ≤ z := F.lxz
-    linarith [log_two_le_one_alt, F.uz, F.z1]
-  have c30 : 0 ≤ Real.log (2 * P.Xpp) := by
-    rw [F.hXpp]; exact Real.log_nonneg (by linarith)
-  have ht0 := F.th0; have ht := F.thx
-  have c4 : P.a * P.th ^ 2 ≤ P.b * P.x⁻¹ := by
-    rw [F.ha]
-    calc P.x * P.b * P.th ^ 2 ≤ P.x * P.b * P.x⁻¹ ^ 2 := by gcongr
-      _ = P.b * P.x⁻¹ * (P.x * P.x⁻¹) := by ring
-      _ = P.b * P.x⁻¹ := by rw [F.xr, mul_one]
-  have c5 : P.wpp * P.th ≤ P.b * P.x⁻¹ := by
-    rw [F.hwpp]
-    have a1 : v / P.n ≤ P.b := (div_le_self F.v0 F.n1).trans F.v_le_b
-    have a0 : 0 ≤ v / P.n := div_nonneg F.v0 F.npos.le
-    gcongr
-  have c6 : 0 ≤ P.a * P.th ^ 2 + P.wpp * P.th := by
-    have := F.apos
-    have : 0 ≤ P.wpp := by rw [F.hwpp]; exact div_nonneg F.v0 F.npos.le
-    positivity
-  have key : 2 * Real.log (2 * P.Xpp) * (P.a * P.th ^ 2 + P.wpp * P.th) ≤ sg P K * P.b := by
-    calc 2 * Real.log (2 * P.Xpp) * (P.a * P.th ^ 2 + P.wpp * P.th)
-        ≤ 2 * (4 * z) * (P.b * P.x⁻¹ + P.b * P.x⁻¹) := by gcongr
-      _ = P.b * (16 / 100) * (100 * z ^ 1 * P.x⁻¹) := by ring
-      _ ≤ sg P K * P.b := F.close_sg (by norm_num) (by norm_num) (F.zr0 1) (F.zr_sg (by norm_num))
-  have := scale2 hm hT key
-  linarith
+    rw [Real.log_mul (by norm_num) (by linarith)]; linarith [F.log_Xpp_le, log_two_le_one_alt, F.z1]
+  have c4 : P.a * P.th ^ 2 ≤ P.b * P.x⁻¹ := F.ha ▸ le_trans (by gcongr : P.x * P.b * P.th ^ 2 ≤ P.x * P.b * P.x⁻¹ ^ 2)
+    (le_of_eq_of_le (by ring : _ = P.b * P.x⁻¹ * (P.x * P.x⁻¹)) (by rw [F.xr, mul_one]))
+  have c5 : P.wpp * P.th ≤ P.b * P.x⁻¹ := F.hwpp ▸ mul_le_mul ((div_le_self F.v0 F.n1).trans F.v_le_b) F.thx F.th0 F.b0
+  have c6 : 0 ≤ P.a * P.th ^ 2 + P.wpp * P.th :=
+    add_nonneg (by have := F.apos; positivity) (by rw [F.hwpp]; have := F.v0; have := F.npos; positivity)
+  exact scale2 hm hT ((mul_le_mul (by linarith : 2 * Real.log (2 * P.Xpp) ≤ 2 * (4 * z))
+    (add_le_add c4 c5) c6 (by positivity)).trans (le_of_eq_of_le (by ring) (F.bzr_sg 16 1 (by norm_num) (by norm_num))))
 
-theorem size_discriminant_bound : SizeD := by
-  intro P e K m T hW hL hm hT
+theorem size_discriminant_bound : SizeD := fun P e K m T hW hL hm hT => by
   obtain ⟨z, u, E, X, S, sb, v, w8, F⟩ := facts hW hL
-  unfold tD unitU
-  have h9 := F.xpos; have hb := F.b0; have hz := F.zpos; have hr0 := F.rpos
-  have hx2 : Real.exp 1 ≤ P.x ^ 2 := by
-    have a1 := Real.exp_one_lt_d9
-    have a2 : (100 : ℝ) ^ 2 ≤ P.x ^ 2 := by
-      have := F.hx
-      gcongr
-    linarith
-  have c1 : Real.log P.d / P.d ≤ Real.log (P.x ^ 2) / P.x ^ 2 :=
-    Real.log_div_self_antitoneOn (by exact hx2) (by exact hx2.trans F.dx) F.dx
-  have c2 : Real.log (P.x ^ 2) / P.x ^ 2 = 2 * P.lx * P.x⁻¹ ^ 2 := by
-    rw [Real.log_pow, div_eq_mul_inv, F.r2]; push_cast; rfl
-  have hlx := F.lxz
-  have key : 2 * P.a * Real.log P.d / P.d ≤ sg P K * P.b := by
-    rw [F.ha, mul_div_assoc]
-    calc 2 * (P.x * P.b) * (Real.log P.d / P.d)
-        ≤ 2 * (P.x * P.b) * (2 * z * P.x⁻¹ ^ 2) := by
-          rw [c2] at c1
-          have : 2 * P.lx * P.x⁻¹ ^ 2 ≤ 2 * z * P.x⁻¹ ^ 2 := by gcongr
-          gcongr
-          linarith
-      _ = P.b * (4 / 100 * (P.x * P.x⁻¹)) * (100 * z ^ 1 * P.x⁻¹) := by ring
-      _ ≤ sg P K * P.b := by
-          rw [F.xr]
-          exact F.close_sg (by norm_num) (by norm_num) (F.zr0 1) (F.zr_sg (by norm_num))
-  have := scale2 hm hT key
-  linarith
+  have := F.xpos; have := F.zpos; have := F.rpos; have := F.apos
+  have hx2 : Real.exp 1 ≤ P.x ^ 2 := Real.exp_one_lt_d9.le.trans ((by norm_num : _ ≤ (100 : ℝ) ^ 2).trans (by have := F.hx; gcongr))
+  have c1 : Real.log P.d / P.d ≤ 2 * z * P.x⁻¹ ^ 2 := by
+    refine (Real.log_div_self_antitoneOn hx2 (hx2.trans F.dx) F.dx).trans ?_
+    dsimp only; rw [Real.log_pow, div_eq_mul_inv, F.r2]; push_cast; have : Real.log P.x ≤ z := F.lxz; gcongr
+  rw [tD, mul_div_assoc]; exact scale2 hm hT ((mul_le_mul_of_nonneg_left c1 (by positivity)).trans
+    (le_of_eq_of_le (by ring) (F.azr_sg 4 1 (by norm_num) (by norm_num))))
 
-lemma unitU_nonneg {P : Par} {m T : ℝ} (hm : 0 ≤ m) (hT : 1 ≤ T) : 0 ≤ unitU P m T := by
-  have hb : 0 < P.b := Real.exp_pos _
-  have : 0 ≤ T := by linarith
-  unfold unitU
-  positivity
+lemma unitU_nonneg {P : Par} {m T : ℝ} (hm : 0 ≤ m) (hT : 1 ≤ T) : 0 ≤ unitU P m T :=
+  mul_nonneg (mul_nonneg (by linarith) hm) (Real.exp_pos _).le
 
-theorem side_condition_of_windows : SideConditionsOfWindows := by
-  intro P e K hW hL
+theorem side_condition_of_windows : SideConditionsOfWindows := fun P _ _ hW hL => by
   obtain ⟨z, u, E, X, S, sb, v, w8, F⟩ := facts hW hL
-  have hx := F.hx
-  have hvpos : 0 < v := by
-    have h : 0 < v * X := by rw [F.hvX]; exact F.bpos
-    exact (pos_iff_pos_of_mul_pos h).2 F.Xpos
-  have hx2 : P.x ≤ P.x ^ 2 := by
-    calc P.x = P.x ^ 1 := (pow_one _).symm
-      _ ≤ P.x ^ 2 := pow_le_pow_right₀ F.x1 (by norm_num)
-  have hx4 : P.x ≤ P.x ^ 4 := by
-    calc P.x = P.x ^ 1 := (pow_one _).symm
-      _ ≤ P.x ^ 4 := pow_le_pow_right₀ F.x1 (by norm_num)
-  have hw0 : 0 < P.wpp := by rw [F.hwpp]; exact div_pos hvpos F.npos
-  have hb1 : 1 ≤ P.b := F.sb1.trans F.sb_le_b
+  have hx := F.hx; have := F.xpos; have := F.rpos; have := F.npos; have := F.x_le_sq; have := F.x2_le_p0
+  have hw0 : 0 < P.wpp := F.hwpp ▸ div_pos ((pos_iff_pos_of_mul_pos (F.hvX ▸ F.bpos)).2 F.Xpos) F.npos
   have hw8 : 0 < w8 := by linarith [F.w81]
-  have hbp0 : 0 ≤ P.bp := by rw [F.hbp]; exact mul_nonneg F.xpos.le F.v0
-  refine ⟨hw0, F.th0, ?_, ?_, ?_, ?_, ?_, ?_, ?_, F.C0, ?_, ?_, ?_, ?_, F.lx0, F.La0, ?_, ?_, by rw [F.hXp]; exact F.hXpp⟩
-  · have h1 : P.x⁻¹ ≤ (100 : ℝ)⁻¹ := inv_anti₀ (by norm_num) hx
-    have := F.thx
-    norm_num at h1
-    linarith
-  · rw [F.hXpp]
-    have h1 : 1 ≤ P.n * X := one_le_mul_of_one_le_of_one_le F.n1 F.X1
-    have h2 : P.x * 1 ≤ P.x * (P.n * X) := mul_le_mul_of_nonneg_left h1 F.xpos.le
-    have h3 : P.x * P.n * X = P.x * (P.n * X) := by ring
-    linarith
-  · rw [F.hXpp, F.hwpp, F.ha, ← F.hvX]
-    have := F.npos.ne'
-    field_simp
-  · rw [F.ha]; exact one_le_mul_of_one_le_of_one_le F.x1 hb1
-  · rw [F.hXp]; exact F.X1
-  · have h1 : (3 : ℝ) ≤ (P.p₀ : ℝ) := by linarith [F.px]
-    exact_mod_cast h1
-  · have h1 : (4 : ℝ) ≤ (P.d : ℝ) := by linarith [F.dx]
-    exact_mod_cast h1
-  · unfold Par.f; linarith [F.npos]
-  · unfold Par.Sk; linarith [F.Sc0, F.η0, F.kx]
-  · unfold Par.Q₁
-    have := F.C0; have := F.r0; have := F.lx0
-    positivity
-  · unfold Par.Q₂
-    rw [F.hδ, div_inv_eq_mul]
-    have := F.C0; have := F.lx0; have := F.η0; have := F.Sc0; have := F.t0; have := F.bo0
-    have := F.xpos
-    positivity
-  · linarith [F.kx]
-  · linarith [F.x_sq_le_threshold]
+  have hbp0 : 0 ≤ P.bp := F.hbp ▸ mul_nonneg F.xpos.le F.v0
+  refine ⟨hw0, F.th0, F.thx.trans ((inv_anti₀ (by norm_num) hx).trans (by norm_num)),
+    ?_, ?_, F.ha ▸ one_le_mul_of_one_le_of_one_le F.x1 (F.sb1.trans F.sb_le_b),
+    F.hXp ▸ F.X1, by exact_mod_cast (show (3 : ℝ) ≤ P.p₀ by linarith),
+    by exact_mod_cast (show (4 : ℝ) ≤ P.d by linarith [F.dx]),
+    F.C0, by unfold Par.f; linarith, by unfold Par.Sk; linarith [F.Sc0, F.η0, F.kx],
+    by unfold Par.Q₁; have := F.C0; have := F.r0; have := F.lx0; positivity,
+    by unfold Par.Q₂; rw [F.hδ, div_inv_eq_mul]
+       have := F.C0; have := F.lx0; have := F.η0; have := F.Sc0; have := F.t0; have := F.bo0; positivity,
+    F.lx0, F.La0, by linarith [F.kx], by linarith [F.x_sq_le_threshold], F.hXp ▸ F.hXpp⟩
+  · rw [F.hXpp]; linarith [le_mul_of_one_le_right F.xpos.le (one_le_mul_of_one_le_of_one_le F.n1 F.X1),
+      show P.x * (P.n * X) = P.x * P.n * X by ring]
+  · rw [F.hXpp, F.hwpp, F.ha, ← F.hvX]; have := F.npos.ne'; field_simp
 
-theorem large_x_eventually : LargeXEv := by
-  intro ε e K hε hε4
+theorem large_x_eventually : LargeXEv := fun ε e K hε hε4 => by
   have hε3 : 0 < ε / 3 := by positivity
   have hC : ∀ᶠ x : ℝ in Filter.atTop, 100 * K * x ^ (4 * ε) ≤ x := by
-    have h := (tendsto_rpow_atTop (show 0 < 1 - 4 * ε by linarith)).eventually_ge_atTop (100 * K)
-    filter_upwards [h, Filter.eventually_ge_atTop (1 : ℝ)] with x hx hx1
+    filter_upwards [(tendsto_rpow_atTop (show 0 < 1 - 4 * ε by linarith)).eventually_ge_atTop (100 * K),
+      Filter.eventually_ge_atTop (1 : ℝ)] with x hx hx1
     have xpos : 0 < x := by linarith
-    calc 100 * K * x ^ (4 * ε) ≤ x ^ (1 - 4 * ε) * x ^ (4 * ε) :=
-          mul_le_mul_of_nonneg_right hx (Real.rpow_nonneg xpos.le _)
-      _ = x := by
-          rw [← Real.rpow_add xpos]
-          have : 1 - 4 * ε + 4 * ε = 1 := by ring
-          rw [this, Real.rpow_one]
+    exact (mul_le_mul_of_nonneg_right hx (Real.rpow_nonneg xpos.le _)).trans_eq
+      (by rw [← Real.rpow_add xpos, sub_add_cancel, Real.rpow_one])
   have hB : ∀ᶠ x : ℝ in Filter.atTop, 100 * K * x ^ (4 * e + 4) ≤ Real.exp (x ^ (ε / 3)) := by
-    have hc : 0 < (2 * (|4 * e + 4| + 1))⁻¹ := by positivity
-    have hb := (isLittleO_log_rpow_atTop hε3).bound hc
-    have hA := (tendsto_rpow_atTop hε3).eventually_ge_atTop (2 * Real.log (100 * (|K| + 1)))
-    filter_upwards [hb, hA, Filter.eventually_ge_atTop (1 : ℝ)] with x hx hxA hx1
+    filter_upwards [((isLittleO_log_rpow_atTop hε3).const_mul_left (4 * e + 4)).bound (by norm_num : (0 : ℝ) < 1 / 2),
+      (tendsto_rpow_atTop hε3).eventually_ge_atTop (2 * Real.log (100 * (|K| + 1))),
+      Filter.eventually_ge_atTop (1 : ℝ)] with x hx hxA hx1
     have xpos : 0 < x := by linarith
-    rw [Real.norm_of_nonneg (Real.rpow_nonneg xpos.le _),
-      Real.norm_of_nonneg (Real.log_nonneg hx1)] at hx
-    have hlog0 := Real.log_nonneg hx1
-    have h1 : (|4 * e + 4| + 1) * Real.log x ≤ x ^ (ε / 3) / 2 := by
-      have h2 : (|4 * e + 4| + 1) * Real.log x
-          ≤ (|4 * e + 4| + 1) * ((2 * (|4 * e + 4| + 1))⁻¹ * x ^ (ε / 3)) := by gcongr
-      have h3 : (|4 * e + 4| + 1) * ((2 * (|4 * e + 4| + 1))⁻¹ * x ^ (ε / 3)) = x ^ (ε / 3) / 2 := by
-        have : |4 * e + 4| + 1 ≠ 0 := by positivity
-        field_simp
-      linarith
-    have h4 : Real.log x * (4 * e + 4) ≤ x ^ (ε / 3) / 2 := by
-      have h5 : Real.log x * (4 * e + 4) ≤ Real.log x * (|4 * e + 4| + 1) := by
-        have := le_abs_self (4 * e + 4)
-        exact mul_le_mul_of_nonneg_left (by linarith) hlog0
-      linarith
-    have hKpos : 0 < 100 * (|K| + 1) := by positivity
-    calc 100 * K * x ^ (4 * e + 4) ≤ 100 * (|K| + 1) * x ^ (4 * e + 4) := by
-          have := le_abs_self K
-          have := Real.rpow_nonneg xpos.le (4 * e + 4)
-          gcongr
-          linarith
-      _ = Real.exp (Real.log (100 * (|K| + 1)) + Real.log x * (4 * e + 4)) := by
-          rw [Real.exp_add, Real.exp_log hKpos, Real.rpow_def_of_pos xpos]
-      _ ≤ Real.exp (x ^ (ε / 3)) := Real.exp_le_exp.2 (by linarith)
-  have h6 : ∀ᶠ x : ℝ in Filter.atTop, (6 : ℝ) ≤ x ^ (2 * ε / 3) :=
-    (tendsto_rpow_atTop (by positivity)).eventually_ge_atTop _
-  obtain ⟨x0, hx0⟩ :=
-    Filter.eventually_atTop.1 (((hC.and hB).and h6).and (Filter.eventually_ge_atTop (1 : ℝ)))
+    have h1 := (le_abs_self ((4 * e + 4) * Real.log x)).trans (Real.norm_eq_abs _ ▸ hx)
+    rw [Real.norm_of_nonneg (Real.rpow_nonneg xpos.le _), mul_comm] at h1
+    refine (mul_le_mul_of_nonneg_right (by linarith [le_abs_self K] : 100 * K ≤ 100 * (|K| + 1)) (Real.rpow_nonneg xpos.le _)).trans ?_
+    rw [← Real.exp_log (show 0 < 100 * (|K| + 1) by positivity), Real.rpow_def_of_pos xpos, ← Real.exp_add]
+    exact Real.exp_le_exp.2 (by linarith)
+  obtain ⟨x0, hx0⟩ := Filter.eventually_atTop.1
+    (((hC.and hB).and ((tendsto_rpow_atTop (show 0 < 2 * ε / 3 by positivity)).eventually_ge_atTop 6)).and (Filter.eventually_ge_atTop 1))
   refine ⟨x0, fun x hx => ?_⟩
   obtain ⟨⟨⟨c1, c2⟩, c3⟩, c4⟩ := hx0 x hx
   have xpos : 0 < x := by linarith
-  refine ⟨c4, c1, c2, ?_⟩
-  have hw0 : 0 ≤ x ^ (ε / 3) := Real.rpow_nonneg xpos.le _
-  have h43 : x ^ (ε / 4) ≤ x ^ (ε / 3) := Real.rpow_le_rpow_of_exponent_le c4 (by linarith)
-  have hz : x ^ ε = x ^ (2 * ε / 3) * x ^ (ε / 3) := by
-    rw [← Real.rpow_add xpos]; congr 1; ring
-  have hz6 : 6 * x ^ (ε / 3) ≤ x ^ ε := by rw [hz]; gcongr
-  calc 100 * K * x ^ (4 * e + 4) * Real.exp (x ^ (ε / 3) + x ^ (ε / 4))
-      ≤ Real.exp (x ^ (ε / 3)) * Real.exp (x ^ (ε / 3) + x ^ (ε / 4)) :=
-        mul_le_mul_of_nonneg_right c2 (Real.exp_pos _).le
-    _ = Real.exp (x ^ (ε / 3) + (x ^ (ε / 3) + x ^ (ε / 4))) := (Real.exp_add _ _).symm
-    _ ≤ Real.exp (x ^ ε / 2) := Real.exp_le_exp.2 (by linarith)
+  have hz6 : 6 * x ^ (ε / 3) ≤ x ^ ε := (mul_le_mul_of_nonneg_right c3 (Real.rpow_nonneg xpos.le _)).trans_eq
+    (by rw [← Real.rpow_add xpos]; congr 1; ring)
+  refine ⟨c4, c1, c2, (mul_le_mul_of_nonneg_right c2 (Real.exp_pos _).le).trans ?_⟩
+  rw [← Real.exp_add]; exact Real.exp_le_exp.2 (by linarith [Real.rpow_le_rpow_of_exponent_le c4 (show ε / 4 ≤ ε / 3 by linarith)])
 
-theorem second_term_le : SecondLe := by
-  intro Ps s cl Sg θ m T a hm hT ha hcl
+theorem second_term_le : SecondLe := fun Ps s cl Sg θ m T a hm hT ha hcl => by
   rw [← Finset.sum_filter, Finset.mul_sum]
-  have hsub : Ps.filter (fun p => cl p = PClass.second) ⊆ s.filter (fun p => θ < Sg p) := by
-    intro p hp
-    rw [Finset.mem_filter] at hp ⊢
-    exact hcl p hp.1 hp.2
-  calc ∑ p ∈ Ps.filter (fun p => cl p = PClass.second), 4 * m * T * a * (Real.log p / p)
-      ≤ ∑ p ∈ s.filter (fun p => θ < Sg p), 4 * m * T * a * (Real.log p / p) := by
-        refine Finset.sum_le_sum_of_subset_of_nonneg hsub (fun p _ _ => ?_)
-        have : 0 ≤ Real.log p / p := div_nonneg (Real.log_natCast_nonneg p) (Nat.cast_nonneg p)
-        positivity
-    _ = _ := Finset.sum_congr rfl (fun p _ => by ring)
+  refine (Finset.sum_le_sum_of_subset_of_nonneg (fun p hp => ?_) fun p _ _ => ?_).trans
+    (Finset.sum_congr rfl fun _ _ => by ring).le
+  · rw [Finset.mem_filter] at hp ⊢; exact hcl p hp.1 hp.2
+  · have := div_nonneg (Real.log_natCast_nonneg p) (Nat.cast_nonneg p); positivity
 
 theorem first_kind_bound : FirstKind := by
   obtain ⟨C, hC⟩ := first_kind_bucket_bound
-  refine ⟨C, ?_⟩
-  intro e J Y X' ρ p₀ s h1 h2 h3 h4 h5 h6 h7 h8
-  refine hC e J ⌊Real.log X'⌋₊ Y X' ρ p₀ (fun i => X' ^ ((1 : ℝ) / ((i + 1 : ℕ) : ℝ))) s h1 h2 h3 h4 h5
-    (by linarith) ?_ ?_
-  · intro i _
-    have hx : (1 : ℝ) ≤ X' := by linarith
-    have hpos : (0 : ℝ) < ((i + 1 : ℕ) : ℝ) := by positivity
-    have h0 : (0 : ℝ) ≤ (1 : ℝ) / ((i + 1 : ℕ) : ℝ) := by positivity
-    have h1' : (1 : ℝ) / ((i + 1 : ℕ) : ℝ) ≤ 1 := by
-      rw [div_le_one hpos]; push_cast; linarith [(Nat.cast_nonneg i : (0 : ℝ) ≤ i)]
-    refine ⟨Real.one_le_rpow hx h0, ?_⟩
-    calc X' ^ ((1 : ℝ) / ((i + 1 : ℕ) : ℝ)) ≤ X' ^ (1 : ℝ) := Real.rpow_le_rpow_of_exponent_le hx h1'
-      _ = X' := Real.rpow_one X'
-  · intro p hp
-    obtain ⟨a1, a2, a3⟩ := h8 p hp
-    refine ⟨a1, a2, ?_⟩
-    rcases a3 with a3 | ⟨b1, i, b2, b3, b4⟩
-    · exact Or.inl a3
-    · right
-      have hp8 : 8 ≤ p := by
-        have : (8 : ℝ) ≤ p := le_trans h6 b1
-        exact_mod_cast this
-      have hi := band_exponent_bound X' ρ p i h7 (by linarith) hp8 b4
-      have hi' : i ≤ ⌊Real.log X'⌋₊ := Nat.le_floor hi
+  refine ⟨C, fun e J Y X' ρ p₀ s h1 h2 h3 h4 h5 h6 h7 h8 =>
+    hC e J ⌊Real.log X'⌋₊ Y X' ρ p₀ (fun i => X' ^ ((1 : ℝ) / ((i + 1 : ℕ) : ℝ))) s h1 h2 h3 h4 h5
+      (by linarith) (fun i _ => ?_) (fun p hp => ?_)⟩
+  · have hx : (1 : ℝ) ≤ X' := by linarith
+    refine ⟨Real.one_le_rpow hx (by positivity), (Real.rpow_le_rpow_of_exponent_le hx ?_).trans (Real.rpow_one X').le⟩
+    rw [div_le_one (by positivity)]; push_cast; linarith [(Nat.cast_nonneg i : (0 : ℝ) ≤ i)]
+  · obtain ⟨a1, a2, a3 | ⟨b1, i, b2, b3, b4⟩⟩ := h8 p hp
+    · exact ⟨a1, a2, Or.inl a3⟩
+    · have hi := Nat.le_floor (band_exponent_bound X' ρ p i h7 (by linarith) (by exact_mod_cast h6.trans b1) b4)
       obtain ⟨c1, c2⟩ := band_root_bound X' ρ p i (by linarith) h4 (by linarith) (Nat.cast_nonneg p) b2 b3 b4
-      refine ⟨i - 1, by omega, b1, ?_, ?_⟩
-      · have : i - 1 + 1 = i := Nat.sub_add_cancel b2
-        simp only [this]; exact c1
-      · have : i - 1 + 1 = i := Nat.sub_add_cancel b2
-        simp only [this]; exact c2
+      exact ⟨a1, a2, Or.inr ⟨i - 1, by omega, b1, by simpa [Nat.sub_add_cancel b2] using c1,
+        by simpa [Nat.sub_add_cancel b2] using c2⟩⟩
 
 lemma first_le {C₁ : ℝ}
     (hC₁ : ∀ (e J : ℕ) (Y X' ρ p₀ : ℝ) (s : Finset ℕ), 1 ≤ e → 1 ≤ J → 1 ≤ Y →
@@ -944,56 +462,24 @@ lemma first_le {C₁ : ℝ}
     4 * m * T * P.a * (∑ p ∈ Ps.filter (fun p => cl p = PClass.first), Real.log p / p) ≤
       tOrders P m T + tBand P m T := by
   obtain ⟨z, u, E, X, S, sb, v, w8, F⟩ := facts hW hL
-  have hx := F.hx
-  have hx2 : P.x ≤ P.x ^ 2 := by
-    calc P.x = P.x ^ 1 := (pow_one _).symm
-      _ ≤ P.x ^ 2 := pow_le_pow_right₀ F.x1 (by norm_num)
-  have hx4 : P.x ≤ P.x ^ 4 := by
-    calc P.x = P.x ^ 1 := (pow_one _).symm
-      _ ≤ P.x ^ 4 := pow_le_pow_right₀ F.x1 (by norm_num)
-  have he2 : 1 ≤ P.e₂ := by
-    rw [Nat.one_le_iff_ne_zero]
-    intro h0
-    have h1 := F.n2x
-    rw [h0, pow_zero] at h1
-    linarith
-  have hJo : 1 ≤ P.Jo := by
-    unfold Par.Jo
-    apply Nat.le_floor
-    rw [Nat.cast_one]
-    exact Real.one_le_rpow F.x1 (by have := hW.1; positivity)
-  have hρ : P.ρ ≤ 1 / 2 := by
-    have h1 : (P.x ^ 2)⁻¹ ≤ (100 : ℝ)⁻¹ := inv_anti₀ (by norm_num) (by linarith)
-    have := F.ρx
-    norm_num at h1
-    linarith
-  have hp8 : (8 : ℝ) ≤ (P.p₀ : ℝ) := by linarith [F.px]
-  have hX2 : 2 ≤ P.Xp := by
-    rw [F.hXp]
-    have := F.one_le_threshold_mul_powers; have := F.hXB
-    linarith
-  have hIb : ⌊Real.log P.Xp⌋₊ = P.Ib := by
-    rw [F.hXp, F.logX, F.hu]; rfl
-  have h := hC₁ P.e₂ P.Jo (max P.Y P.Xpp) P.Xp P.ρ (P.p₀ : ℝ) (Ps.filter (fun p => cl p = PClass.first)) he2 hJo
-    (F.Y1.trans (le_max_left _ _))
-    F.ρ0 hρ hp8 hX2 (by
-      intro p hp
+  have he2 : 1 ≤ P.e₂ := Nat.one_le_iff_ne_zero.2 fun h0 => by
+    have h1 := F.n2x; rw [h0, pow_zero] at h1; linarith [F.hx, F.x_le_sq]
+  have h := hC₁ P.e₂ P.Jo (max P.Y P.Xpp) P.Xp P.ρ P.p₀ (Ps.filter fun p => cl p = PClass.first) he2
+    (Nat.le_floor (by simpa using Real.one_le_rpow F.x1 (by have := hW.1; positivity)))
+    (F.Y1.trans (le_max_left _ _)) F.ρ0
+    (F.ρx.trans ((inv_anti₀ (by norm_num) (F.hx.trans F.x_le_sq)).trans (by norm_num)))
+    (by linarith [F.x2_le_p0, F.x_le_sq, F.hx])
+    (F.hXp ▸ by linarith [F.one_le_threshold_mul_powers, F.hXB]) fun p hp => by
       rw [Finset.mem_filter] at hp
       refine ⟨(hPs p hp.1).1, (hPs p hp.1).2, ?_⟩
       rcases hF p hp.1 hp.2 with ⟨a1, hl, a2⟩ | ⟨b1, b2⟩
       · exact Or.inl ⟨a1, hl, Nat.le_floor a2.le⟩
-      · exact Or.inr ⟨by exact_mod_cast b1, b2⟩)
-  rw [hIb] at h
-  have hn0 : (0 : ℝ) < 2 ^ P.e₂ := by positivity
+      · exact Or.inr ⟨by exact_mod_cast b1, b2⟩
+  rw [show ⌊Real.log P.Xp⌋₊ = P.Ib by rw [F.hXp, F.logX, F.hu]; rfl] at h
   have hJ0 : (0 : ℝ) ≤ P.Jo := Nat.cast_nonneg _
   have h2 : C₁ * P.Jo * Real.log (2 ^ P.e₂ * max P.Y P.Xpp) ^ 2 / (2 : ℝ) ^ P.e₂ ≤
       P.Cord * P.Jo * Real.log (2 ^ P.e₂ * max P.Y P.Xpp) ^ 2 / (2 : ℝ) ^ P.e₂ := by gcongr
-  have hco : 0 ≤ 4 * m * T * P.a := by
-    have := F.apos
-    positivity
-  have h3 := mul_le_mul_of_nonneg_left (h.trans (add_le_add_left h2 _)) hco
-  unfold tOrders tBand
-  linarith
-
+  have := F.apos; unfold tOrders tBand
+  linarith [mul_le_mul_of_nonneg_left (h.trans (add_le_add_left h2 _)) (show 0 ≤ 4 * m * T * P.a by positivity)]
 
 end Formalism.LFunctionChainParameters.PrimeWindowSizeBounds
