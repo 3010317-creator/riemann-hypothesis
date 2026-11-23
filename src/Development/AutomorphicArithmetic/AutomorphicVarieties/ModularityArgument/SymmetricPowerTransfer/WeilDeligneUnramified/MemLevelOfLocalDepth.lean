@@ -157,8 +157,10 @@ private theorem torusChar_injective {k : Type} [Field k] [ValuativeRel k] [Topol
   ext x
   have e := DFunLike.congr_fun h (Pi.mulSingle i x)
   simp only [torusChar_apply] at e
-  rw [Finset.prod_eq_single i (fun j _ hj => by simp [Pi.mulSingle_eq_of_ne hj]) (by simp),
-    Finset.prod_eq_single i (fun j _ hj => by simp [Pi.mulSingle_eq_of_ne hj]) (by simp)] at e
+  rw [Finset.prod_eq_single i (fun j _ hj => by simp [Pi.mulSingle_eq_of_ne hj])
+      (fun h => absurd (Finset.mem_univ i) h),
+    Finset.prod_eq_single i (fun j _ hj => by simp [Pi.mulSingle_eq_of_ne hj])
+      (fun h => absurd (Finset.mem_univ i) h)] at e
   simpa using congrArg Units.val e
 
 private theorem sdom_of_step {k : Type} [Field k] [ValuativeRel k] {n : ℕ} (s : Fin n → kˣ) (c : kˣ)
@@ -169,7 +171,9 @@ private theorem sdom_of_step {k : Type} [Field k] [ValuativeRel k] {n : ℕ} (s 
   have hj := j.2
   have hij' : (i : ℕ) < j := hij
   have e : n - (i : ℕ) = 1 + ((n - j) + (j - i - 1)) := by omega
-  have hc0 : 0 < valuation k (c : k) := zero_lt_iff.2 ((valuation k).ne_zero_iff.2 c.ne_zero)
+  have : Nontrivial (ValueGroupWithZero k) := GroupWithZero.toNontrivial
+  have hc0 : 0 < valuation k (c : k) :=
+    pos_iff_ne_zero.2 ((Valuation.zero_iff (valuation k)).not.2 c.ne_zero)
   beta_reduce
   rw [e]
   simp only [Units.val_mul, Units.val_pow_eq_pow_val, map_mul, map_pow, pow_add, pow_one]
@@ -209,7 +213,9 @@ private theorem exists_sdom {k : Type} [Field k] [ValuativeRel k] [TopologicalSp
       rw [← map_mul, ← Units.val_mul]
       congr 2
       simp
-    have hj0 : 0 < valuation k (t j : k) := zero_lt_iff.2 ((valuation k).ne_zero_iff.2 (t j).ne_zero)
+    have : Nontrivial (ValueGroupWithZero k) := GroupWithZero.toNontrivial
+    have hj0 : 0 < valuation k (t j : k) :=
+      pos_iff_ne_zero.2 ((Valuation.zero_iff (valuation k)).not.2 (t j).ne_zero)
     rw [Units.val_mul, map_mul, ← mul_assoc]
     calc valuation k (t i : k) * valuation k (c₀ : k) * valuation k (x : k)
         ≤ valuation k (t j : k) * valuation k (x : k) := mul_le_mul_left hle _
@@ -276,7 +282,7 @@ open UpperTheory.V.Z.Sym.Al
 theorem UpperTheory.V.Z.Sym.Al.compOfEig :
     GlobalTheory.Mem.LiteralAutomorphy.LitN → ∀ (L : Type) [Field L] [NumberField L] [IsCMField L], Unr L → ∀ n : ℕ, 1 ≤ n → ∀ (V : Type) [AddCommGroup V] [Module ℂ V] (π : Submodule ℂ (UA L n → ℂ)), IsAutRepU π → ∀ w, IsSplitAt w →
                  ∀ φ : UA L n → V, φ ≠ 0 → CoefIn φ π → (∀ x ∈ locU n w, cLoc w x ∈ (iw w).J n → ∀ g, φ (g * x) = φ g) →
-                 ∀ ψ, (∀ i, IsSmoothChar (ψ i)) → EigT φ w (iw w) ψ → CompSub π w ψ := by
+                 ∀ ψ : Fin n → (Kw w)ˣ →* ℂˣ, (∀ i, IsSmoothChar (ψ i)) → EigT φ w (iw w) ψ → CompSub π w ψ := by
   intro H L _ _ _ unr n hn V _ _ π hπ w hw φ h0 hc hJ ψ hψ he
   obtain ⟨s1, s2, -⟩ := secSpec L n w hw
   obtain ⟨τ, hτ⟩ := compEx H L unr n hn π hπ w hw
