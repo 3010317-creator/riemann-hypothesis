@@ -229,7 +229,7 @@ theorem idelesToClasses_surjective_of (K : FiniteSubfield) (ι : LocalEmbeddings
   have : IsGalois K.1 p.1.1 := isGalois_of_normal
   obtain ⟨ιF⟩ := nonempty_localEmbeddings p.1
   set N := Module.finrank K.1 p.1.1 with hN
-  have hN0 : N ≠ 0 := Module.finrank_pos.ne'
+  have hN0 : N ≠ 0 := ((Module.finrank_pos_iff_of_free K.1 p.1.1).mpr inferInstance).ne'
   have hM : Nat.card (LinearMap.ker (classResField K p.1 2).hom) ∣ N := natCard_ker_classResField_dvd K p.1
   obtain ⟨D, hD⟩ := sumPlaceInv_surjective K (QZ.mk (1 / N))
   set Y := (idelesLimitCohomologyEquiv ι (by norm_num : 1 ≤ 2)).symm D with hYdef
