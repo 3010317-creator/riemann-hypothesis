@@ -183,7 +183,7 @@ def weightRegRef : WeightReg (PBlk 2) where
       (div_pos (A.pos _ fun _ => ⟨0, one_ne_zero⟩)
         ((HermLine.ofMetrics (fun k => fsMetric (ι := PBlk 2 k)) A.a).pos _ fun _ => ⟨0, one_ne_zero⟩)))
   deg _ A := by simp [HermLine.tensor, constLine, HermLine.ofMetrics]
-  smooth _ A _ := isSmoothHerm_tensor (Inter.isSmoothHerm_ofMetrics_fs _) (isSmoothHerm_constLine _ _)
+  smooth _ A _ := ReciprocityTheory.ChartRestriction.G.Geo.isSmoothHerm_tensor (Inter.isSmoothHerm_ofMetrics_fs _) (isSmoothHerm_constLine _ _)
   shift _ A A' k hk ha hh z _ := by
     have h1 := hh (fun _ => 1) fun _ => ⟨0, one_ne_zero⟩
     simp only [HermLine.tensor, constLine, ha, h1]
