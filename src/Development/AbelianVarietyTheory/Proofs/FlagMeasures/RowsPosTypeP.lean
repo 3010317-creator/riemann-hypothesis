@@ -722,13 +722,13 @@ theorem pairsPar : ∀ (Ca Cg cb Cw cT CT C0 C' Cl : ℝ) (D : D7) (large₂ : S
       _ = large₂.sc.b := by rw [← hlb, Real.exp_log (by linarith)]
   · have hg1 : 1 ≤ D.host.g 1 := by
       rcases Nat.eq_zero_or_pos (D.host.g 1) with h | h
-      · have : gS D = 0 := by simp [gS, h]
+      · have : Lat.gS D = 0 := by simp [Lat.gS, h]
         omega
       · exact h
     calc ((D.R.k : ℝ) * large₂.sc.b) ^ 8 ≤ (D.host.g 0 : ℝ) := h12
       _ = (D.host.g 0 : ℝ) * 1 := (mul_one _).symm
       _ ≤ (D.host.g 0 : ℝ) * (D.host.g 1 : ℝ) := by gcongr; exact_mod_cast hg1
-      _ = (gS D : ℝ) := by simp [gS]
+      _ = (gS D : ℝ) := by simp [Lat.gS]
   · intro u
     refine ⟨(hT u).1.one_lt.le, ?_⟩
     have h := (h23 u).2
