@@ -34,7 +34,8 @@ name: batch queue
 # only.
 #
 # Queuing also compares the pull request with the others labelled `building` or `batch queue`
-# and comments if git cannot merge it with one of them. That job only reports.
+# and comments if git cannot merge it with one of them, or if one deletes a Lean file the other
+# starts to import. That job only reports.
 #
 # The workflow can be started by hand to assemble the queue again, with a pull request number
 # to repeat the comparison for that pull request.
@@ -282,7 +283,7 @@ jobs:
           sparse-checkout: scripts
       # Pull request commits are fetched as git objects and compared with `git merge-tree`.
       # No pull request file is checked out or run.
-      - name: Report text conflicts with the rest of the queue
+      - name: Report conflicts with the rest of the queue
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
@@ -296,6 +297,7 @@ jobs:
     if: ${{ github.event_name == 'pull_request_target' && github.event.action == 'reopened' }}
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       issues: write
       pull-requests: write
     outputs:
