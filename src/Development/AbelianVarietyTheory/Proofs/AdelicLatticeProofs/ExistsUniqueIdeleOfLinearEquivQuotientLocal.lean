@@ -392,7 +392,7 @@ theorem exists_limit (v : HeightOneSpectrum R) (u : ℕ → v.adicCompletion K)
     rw [(Valued.hasBasis_uniformity (v.adicCompletion K) ℤᵐ⁰).cauchySeq_iff']
     intro γ _
     obtain ⟨n, hn⟩ := WithZero.exists_exp_neg_natCast_lt
-      (γ := MonoidWithZeroHom.ValueGroup₀.embedding γ.1) (by simp)
+      (x := MonoidWithZeroHom.ValueGroup₀.embedding γ.1) (by simp)
     refine ⟨n, fun m hm => ?_⟩
     simp only [Set.mem_setOf_eq, Valuation.restrict_lt_iff_lt_embedding]
     rw [Valuation.map_sub_swap]
