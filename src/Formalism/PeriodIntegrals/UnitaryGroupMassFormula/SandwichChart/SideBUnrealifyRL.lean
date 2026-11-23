@@ -67,10 +67,12 @@ private theorem SideB_unrealify_RL (X : Mat k r) : unrealify (RL X) = X := by
   apply Complex.ext <;> simp [realifyFun]
 
 private theorem SideB_le_of_sq {a b : ℝ} (hb : 0 ≤ b) (h : a ^ 2 ≤ b ^ 2) : a ≤ b := by
-  nlinarith [sq_nonneg (a - b), sq_nonneg (a + b)]
+  by_contra! hc
+  exact absurd h (not_le.mpr (pow_lt_pow_left₀ hc hb two_ne_zero))
 
 private theorem SideB_lt_of_sq {a b : ℝ} (hb : 0 ≤ b) (h : a ^ 2 < b ^ 2) : a < b := by
-  nlinarith [sq_nonneg (a - b), sq_nonneg (a + b)]
+  by_contra! hc
+  exact absurd h (not_lt.mpr (pow_le_pow_left₀ hb hc 2))
 
 private theorem SideB_below (S : Set (Mat k r)) (x : Mt k r) (t : ℝ) (ht : 0 < t)
     (hlt : rhoS k r S x < ENNReal.ofReal t) :
@@ -140,19 +142,19 @@ private theorem SideB_vnorm (X Z X' : Mat k r) (x : Fin r → ℂ) (N : ℝ) (hN
   have h3 := sq_nonneg ‖RL X'‖
   have hX : ‖X‖ ≤ N := by
     rw [← hNR]
-    exact SideB_le_of_sq hN0 (by nlinarith)
+    exact SideB_le_of_sq hN0 (by linarith)
   have hZ : ‖Z‖ ≤ N := by
     rw [← hNR]
-    exact SideB_le_of_sq hN0 (by nlinarith)
+    exact SideB_le_of_sq hN0 (by linarith)
   have hX' : ‖X'‖ ≤ N := by
     rw [← hNR]
-    exact SideB_le_of_sq hN0 (by nlinarith)
+    exact SideB_le_of_sq hN0 (by linarith)
   have hx : ‖x‖ ≤ N := by
     refine (pi_norm_le_iff_of_nonneg hN0).2 fun a => SideB_le_of_sq hN0 ?_
     have hxa : ‖x a‖ ^ 2 ≤ ∑ a, ‖x a‖ ^ 2 :=
       Finset.single_le_sum (f := fun a => ‖x a‖ ^ 2) (fun a _ => sq_nonneg ‖x a‖)
         (Finset.mem_univ a)
-    nlinarith
+    linarith [sq_nonneg ‖x a‖]
   first
   | exact norm_prod_le_iff.2 ⟨hX, norm_prod_le_iff.2 ⟨hx, norm_prod_le_iff.2 ⟨hZ, hX'⟩⟩⟩
   | (simp only [Prod.norm_def]; exact max_le hX (max_le hx (max_le hZ hX')))
@@ -162,14 +164,14 @@ private theorem SideB_arith (ε ρ N Y : ℝ) (hε0 : 0 < ε) (hε1 : ε < 1) (h
   have e2 : 0 < ε * ε := mul_pos hε0 hε0
   have e3 : 0 < ε * ε * (1 - ε) := mul_pos e2 (sub_pos.2 hε1)
   have e4 : 0 < ε * ε * ε * (1 - ε) := mul_pos (mul_pos e2 hε0) (sub_pos.2 hε1)
-  have hf : (1 - ε) ^ 2 + ε ^ 2 / 8 < 1 := by nlinarith
-  have hg : (1 + ε) ^ 2 * ((1 - ε) ^ 2 + ε ^ 2 / 8) < 1 := by nlinarith
+  have hf : (1 - ε) ^ 2 + ε ^ 2 / 8 < 1 := by linarith [mul_pos hε0 (sub_pos.2 hε1)]
+  have hg : (1 + ε) ^ 2 * ((1 - ε) ^ 2 + ε ^ 2 / 8) < 1 := by linarith
   have hρ2 : 0 < ρ ^ 2 := by positivity
   have hN2 : N ^ 2 < ρ ^ 2 := by
-    nlinarith [mul_lt_mul_of_pos_left hf hρ2]
+    linarith [mul_lt_mul_of_pos_left hf hρ2]
   have hY2 : Y ^ 2 < ρ ^ 2 := by
     have hq : 0 < (1 + ε) ^ 2 := by positivity
-    nlinarith [mul_le_mul hY hY hY0 (by positivity : (0:ℝ) ≤ (1 + ε) * N),
+    linarith [mul_le_mul hY hY hY0 (by positivity : (0:ℝ) ≤ (1 + ε) * N),
       mul_lt_mul_of_pos_left hN hq, mul_lt_mul_of_pos_left hg hρ2]
   exact ⟨SideB_lt_of_sq hρ.le hN2, SideB_lt_of_sq hρ.le hY2⟩
 

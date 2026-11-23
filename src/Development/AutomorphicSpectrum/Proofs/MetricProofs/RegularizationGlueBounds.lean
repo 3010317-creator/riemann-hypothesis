@@ -86,10 +86,10 @@ theorem isRegFamily_of_glue : ∀ {e : ℕ} {X : Type} [TopologicalSpace X] (A B
   obtain ⟨C, hCdef⟩ : ∃ C : ℝ, C = Cl * (1 + K) + |C₅| + 1 := ⟨_, rfl⟩
   have hC5 := abs_nonneg C₅
   have hClK : 0 ≤ Cl * K := by positivity
-  have hC1 : 1 ≤ C := by nlinarith
+  have hC1 : 1 ≤ C := by linarith
   have hCK : Cl * (1 + K) ≤ C := by linarith
-  have hCl' : Cl ≤ C := by nlinarith
-  have hKCl : K * Cl ≤ C := by nlinarith
+  have hCl' : Cl ≤ C := by linarith
+  have hKCl : K * Cl ≤ C := by linarith
   have hr : ∀ y, Real.exp 1 ≤ rW L s y := rW_ge L s hs
   have he1 : (1 : ℝ) ≤ Real.exp 1 := by linarith [Real.add_one_le_exp (1 : ℝ)]
   have hpt : ∀ y, ∃ j, y ∈ chartBall B j (5 / 4) := fun y => by
@@ -110,14 +110,14 @@ theorem isRegFamily_of_glue : ∀ {e : ℕ} {X : Type} [TopologicalSpace X] (A B
   obtain ⟨hsm, hpsh, hFf⟩ := hF t ht htt
   have hKg : K * (Cl * g) ≤ K * Cl := by
     have := mul_le_mul_of_nonneg_left hg1 (by linarith : (0 : ℝ) ≤ Cl)
-    nlinarith
+    linarith [mul_le_mul_of_nonneg_left this hK.le]
   have hKg0 : 0 ≤ K * (Cl * g) := by positivity
   have hFC : ∀ y, F t y ≤ Cl * (1 + K) := fun y => by
     obtain ⟨j, hj⟩ := hpt y
     have h1 := (hFf j y hj).2
     have h2 := (hf t ht htt j y hj).1
     rw [hεl] at h1
-    nlinarith
+    linarith
   refine ⟨hsm, fun y => (hFC y).trans hCK, fun y hy => ?_, fun y => ?_, ?_,
     fun y hy hyr => ?_, fun y hy => ?_, fun t' htt' ht' y => ?_⟩
   · obtain ⟨j, hj⟩ := hpt y
@@ -131,14 +131,14 @@ theorem isRegFamily_of_glue : ∀ {e : ℕ} {X : Type} [TopologicalSpace X] (A B
   · refine GlobalTheory.CompanionTheory.Ar.Giv.isPsh_rsmul_mono A Θ th (F t) hΘ hΘpsh hth hsm ?_ hpsh
     rw [hεl, hεC]
     have := mul_le_mul_of_nonneg_right hKCl hg0
-    nlinarith
+    linarith
   · obtain ⟨j, hj⟩ := hpt y
     have h1 := (hFf j y hj).2
     have h2 := ((hf t ht htt j y hj).2.2 hy).2 hyr
     rw [hεl] at h1
     rw [hεC]
     have := mul_le_mul_of_nonneg_right hKCl hg0
-    nlinarith
+    linarith
   · obtain ⟨j, hj⟩ := hpt y
     have h1 := (hFf j y hj).2
     have hfj := hf t ht htt j y hj
@@ -152,7 +152,7 @@ theorem isRegFamily_of_glue : ∀ {e : ℕ} {X : Type} [TopologicalSpace X] (A B
     · have h2 := (hfj.2.2 hy).2 hyr
       have h3 : C * g ≤ C * g * rW L s y := le_mul_of_one_le_right hCg0 (by linarith)
       have := mul_le_mul_of_nonneg_right hKCl hg0
-      nlinarith
+      linarith
     · push_neg at hyr
       have hlog : Real.log (rW L s y) / rW L s y ≤ g := by
         rw [hgdef]
@@ -167,7 +167,7 @@ theorem isRegFamily_of_glue : ∀ {e : ℕ} {X : Type} [TopologicalSpace X] (A B
         have e2 : 1 ≤ rW L s y / Real.log (1 / t) := by
           rw [le_div_iff₀ hlpos]; linarith
         rw [e1]
-        nlinarith
+        exact one_le_mul_of_one_le_of_one_le hll e2
       have hlr0 : 0 ≤ Real.log (rW L s y) := Real.log_nonneg (by linarith)
       have hph1 := hph y hy
       have hph2 : -|C₅| * Real.log (rW L s y) ≤ -C₅ * Real.log (rW L s y) :=
@@ -179,7 +179,7 @@ theorem isRegFamily_of_glue : ∀ {e : ℕ} {X : Type} [TopologicalSpace X] (A B
       have hCg : C * g * rW L s y = (Cl * (1 + K) + |C₅| + 1) * (g * rW L s y) := by
         rw [hCdef]; ring
       have := hFC y
-      nlinarith
+      linarith [hgr]
   · have ht'0 : 0 < t' := ht.trans_le htt'
     have hte' := ht'.trans ht₀e
     obtain ⟨hg0', hg1'⟩ := quot_mem_unit ht'0 hte'

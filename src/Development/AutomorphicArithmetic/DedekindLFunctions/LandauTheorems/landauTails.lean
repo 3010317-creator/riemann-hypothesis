@@ -91,10 +91,10 @@ lemma landau_tails_chernoff (k : ℕ) {s l U V : ℝ} (hl : 0 ≤ l) (hs : l < s
       rw [mem_Icc, not_and_or, not_le, not_le] at hn
       rcases hn with h | h
       · have : Real.exp (-s * u) ≤ Real.exp (-s * u + l * (U - u)) :=
-          Real.exp_le_exp.2 (by nlinarith [mul_nonneg hl (sub_nonneg.2 h.le)])
+          Real.exp_le_exp.2 (by linarith [mul_nonneg hl (sub_nonneg.2 h.le)])
         linarith [Real.exp_pos (-s * u + l * (u - V))]
       · have : Real.exp (-s * u) ≤ Real.exp (-s * u + l * (u - V)) :=
-          Real.exp_le_exp.2 (by nlinarith [mul_nonneg hl (sub_nonneg.2 h.le)])
+          Real.exp_le_exp.2 (by linarith [mul_nonneg hl (sub_nonneg.2 h.le)])
         linarith [Real.exp_pos (-s * u + l * (U - u))]
     rw [← e1, ← e2] at key
     have := mul_le_mul_of_nonneg_left key hp
@@ -132,10 +132,10 @@ theorem landau_tails {δ : ℝ} (hδ : 0 < δ) :
     refine ⟨2 + 6 / δ, by have : 0 < 6 / δ := by positivity
                           linarith, by field_simp; ring⟩
   obtain ⟨M, hM⟩ : ∃ M : ℝ, M = l * (1 + δ) := ⟨_, rfl⟩
-  have hMl : l < M := by nlinarith
+  have hMl : l < M := by rw [hM]; exact lt_mul_of_one_lt_right (by linarith) (by linarith)
   obtain ⟨σ, hσ⟩ : ∃ σ : ℝ, σ = M * (2 + l) := ⟨_, rfl⟩
   have hσ1 : l * (2 + l) < σ := by rw [hσ]; gcongr
-  have hs : l < σ - 2 := by nlinarith
+  have hs : l < σ - 2 := by linarith [mul_le_mul_of_nonneg_left (show (4 : ℝ) ≤ 2 + l by linarith) (show (0 : ℝ) ≤ l by linarith)]
   have ha : 0 < σ - 2 - l := by linarith
   have hb : 0 < σ - 2 + l := by linarith
   have hσ0 : 0 < σ := by linarith
@@ -146,7 +146,7 @@ theorem landau_tails {δ : ℝ} (hδ : 0 < δ) :
   set k := ⌈(1 + δ / 2) * σ * U⌉₊
   have hσU : 0 ≤ σ * U := by positivity
   refine ⟨k, ?_, ?_⟩
-  · nlinarith [mul_nonneg hδ.le hσU]
+  · linarith [mul_nonneg hδ.le hσU, mul_le_mul_of_nonneg_right (show (2 : ℝ) ≤ σ by linarith) (show (0 : ℝ) ≤ U by linarith)]
   · have e : (2 - σ) = -(σ - 2) := by ring
     rw [e, add_div]
     refine (landau_tails_chernoff k (by linarith : 0 ≤ l) hs).trans (add_le_add ?_ ?_)
@@ -155,27 +155,27 @@ theorem landau_tails {δ : ℝ} (hδ : 0 < δ) :
         have : 0 < M - 1 := by linarith
         rw [div_eq_div_iff ha.ne' this.ne', hσ]; ring
       have e2 : (1 + δ / 2) * σ = M * (M - 1) := by
-        have : (1 + δ / 2) * (2 + l) = M - 1 := by rw [hM]; nlinarith
+        have : (1 + δ / 2) * (2 + l) = M - 1 := by rw [hM]; linarith
         rw [hσ, ← this]; ring
       have hM1 : 1 ≤ M - 1 := by linarith
       have e3 : (k : ℝ) * (1 / (M - 1)) ≤ M * U + 1 := by
         rw [mul_one_div, div_le_iff₀ (by linarith)]
         rw [e2] at hk2
-        nlinarith
+        linarith
       have e4 : l * ((1 + δ) * U) = M * U := by rw [hM]; ring
       rw [e1, e4]; linarith
     · apply landau_tails_pow k hσ0 hb
       have e1 : (k : ℝ) * ((σ - (σ - 2 + l)) / (σ - 2 + l)) = -((k : ℝ) * (l - 2) / (σ - 2 + l)) := by
         ring
-      have e2 : (1 + δ / 2) * (l - 2) = l + 1 := by nlinarith
+      have e2 : (1 + δ / 2) * (l - 2) = l + 1 := by linarith
       have e3 : l * U ≤ (k : ℝ) * (l - 2) / (σ - 2 + l) := by
         rw [le_div_iff₀ hb]
         have h1 : (1 + δ / 2) * σ * U * (l - 2) ≤ k * (l - 2) :=
           mul_le_mul_of_nonneg_right hk1 (by linarith)
         have h2 : (1 + δ / 2) * σ * U * (l - 2) = (l + 1) * σ * U := by rw [← e2]; ring
-        have h3 : l * (σ - 2 + l) ≤ (l + 1) * σ := by nlinarith
+        have h3 : l * (σ - 2 + l) ≤ (l + 1) * σ := by linarith
         have h4 := mul_le_mul_of_nonneg_right h3 (by linarith : 0 ≤ U)
-        nlinarith
+        linarith
       rw [e1]; linarith
 
 end Deduction
