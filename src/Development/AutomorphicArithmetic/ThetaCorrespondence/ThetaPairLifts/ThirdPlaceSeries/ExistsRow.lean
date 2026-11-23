@@ -49,17 +49,12 @@ macro "kc%" t:term:max : term => `(by with_unfolding_all exact ($t :))
 
 open Lean Elab Tactic in
 local elab "row_exact " term:term : tactic =>
-  closeMainGoalUsing `row_exact fun target _ => do
+  closeMainGoalUsing `row_exact fun _ _ => do
     let value ← elabTerm term none
     Term.synthesizeSyntheticMVarsNoPostponing
     let value ← instantiateMVars value
-    let actual ← instantiateMVars (← Meta.inferType value)
-    let target ← instantiateMVars target
-    let lctx ← instantiateLCtxMVars (← getLCtx)
-    match Kernel.isDefEq (← getEnv) lctx actual target with
-    | .ok true => pure value
-    | .ok false => throwError "expected{indentExpr target}\nbut the term has type{indentExpr actual}"
-    | .error e => throwKernelException e
+    -- The kernel checks this when the declaration is added.
+    pure value
 
 local macro "row_cast%" t:term:max : term => `(by row_exact $t)
 

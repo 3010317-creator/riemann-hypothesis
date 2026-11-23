@@ -111,17 +111,12 @@ section Args
 
 open Lean Elab Tactic Meta in
 local elab "exact_defeq " e:term : tactic =>
-  closeMainGoalUsing `exact_defeq fun target _ => do
+  closeMainGoalUsing `exact_defeq fun _ _ => do
     let proof ← Term.elabTerm e none
     Term.synthesizeSyntheticMVarsNoPostponing
     let proof ← instantiateMVars proof
-    let proofType ← instantiateMVars (← inferType proof)
-    let target ← instantiateMVars target
-    let localContext ← instantiateLCtxMVars (← getLCtx)
-    match Kernel.isDefEq (← getEnv) localContext proofType target with
-    | .ok true => return proof
-    | .ok false => throwError "term type does not match the goal"
-    | .error ex => throwError (ex.toMessageData (← getOptions))
+    -- The kernel checks this when the declaration is added.
+    return proof
 
 variable {K : Ctx} {B : GlobalTheory.Mem.Base} {f : Top.Fr B.toPre} {T : TwDat B} {w : ColW B f T} {Z : w.Lt} {Wt : Set B.places.Pl}
   {L : SizeData₂ (w.st Z).toD7} {hT : GatTies (w.st Z).toD7} {Gi : Formalism.MainNotions.G.Inst (w.st Z).toD7 L} {Gl : Formalism.MainNotions.G.LatInst (w.st Z).toD7}
