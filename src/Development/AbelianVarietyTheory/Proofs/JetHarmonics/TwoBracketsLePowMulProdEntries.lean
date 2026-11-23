@@ -76,13 +76,13 @@ open Finset in
 private lemma two_mul_sub_one_mul_le_two_mul_add_one_mul (m c D a p : ℝ) (hm : 1 ≤ m) (hc : 1 ≤ c)
     (hD : 7 / 2 + 2 * c * m ≤ D) (ha : a ≤ (D + c) ^ 2) (hp : D ^ 2 ≤ p) :
     (2 * m - 1) * a ≤ (2 * m + 1) * p := by
-  have hD0 : 0 ≤ D := by nlinarith
-  have h1 : 2 * m * (D + c) ≤ (2 * m + 1) * D := by nlinarith
+  have hD0 : 0 ≤ D := by linarith [one_le_mul_of_one_le_of_one_le hc hm]
+  have h1 : 2 * m * (D + c) ≤ (2 * m + 1) * D := by linarith
   have h2 : (2 * m * (D + c)) ^ 2 ≤ ((2 * m + 1) * D) ^ 2 :=
-    pow_le_pow_left₀ (by nlinarith) h1 2
+    pow_le_pow_left₀ (by positivity) h1 2
   have h2m : 0 ≤ 2 * m - 1 := by linarith
   have h3 : 4 * m ^ 2 * ((2 * m - 1) * (D + c) ^ 2) ≤ 4 * m ^ 2 * ((2 * m + 1) * D ^ 2) := by
-    nlinarith [mul_le_mul_of_nonneg_left h2 h2m,
+    linarith [mul_le_mul_of_nonneg_left h2 h2m,
       mul_nonneg (by linarith : (0:ℝ) ≤ 2 * m + 1) (sq_nonneg D)]
   have h4 : (2 * m - 1) * (D + c) ^ 2 ≤ (2 * m + 1) * D ^ 2 :=
     le_of_mul_le_mul_left h3 (by positivity)
@@ -95,7 +95,7 @@ private lemma prod_le_mul_odd_mul_prod_of_bracket_chain (c : ℝ) (hc : 1 ≤ c)
     (h : ∀ j < n, 0 ≤ a j ∧ a j ≤ (d j + 1 + c) ^ 2 ∧ 5 / 2 + 2 * c * (j : ℝ) ≤ d j ∧
       (d j + 1) ^ 2 ≤ p j) :
     ∏ j ∈ range n, a j ≤ (1 + 2 * c / 7) ^ 2 * (2 * (n : ℝ) + 1) * ∏ j ∈ range n, p j := by
-  have hK : 1 ≤ (1 + 2 * c / 7) ^ 2 := by nlinarith
+  have hK : 1 ≤ (1 + 2 * c / 7) ^ 2 := one_le_pow₀ (by linarith)
   have hK0 : 0 ≤ (1 + 2 * c / 7) ^ 2 := by positivity
   have hp0 : ∀ m ≤ n, 0 ≤ ∏ j ∈ range m, p j := fun m hm =>
     prod_nonneg fun j hj => le_trans (sq_nonneg _) (h j (by simp at hj; omega)).2.2.2
@@ -108,7 +108,7 @@ private lemma prod_le_mul_odd_mul_prod_of_bracket_chain (c : ℝ) (hc : 1 ≤ c)
       obtain ⟨_, ha, hd, hp⟩ := h 0 (by omega)
       simp only [prod_range_one, Nat.cast_zero, mul_zero, zero_add, mul_one]
       simp only [Nat.cast_zero, mul_zero, add_zero] at hd
-      have h1 : d 0 + 1 + c ≤ (1 + 2 * c / 7) * (d 0 + 1) := by nlinarith
+      have h1 : d 0 + 1 + c ≤ (1 + 2 * c / 7) * (d 0 + 1) := by linarith [mul_nonneg (show 0 ≤ c by linarith) (show 0 ≤ d 0 - 5 / 2 by linarith)]
       have h2 : (d 0 + 1 + c) ^ 2 ≤ ((1 + 2 * c / 7) * (d 0 + 1)) ^ 2 :=
         pow_le_pow_left₀ (by linarith) h1 2
       calc a 0 ≤ (d 0 + 1 + c) ^ 2 := ha
@@ -156,7 +156,7 @@ private lemma prod_le_cube_mul_prod_of_bracket_chain (b c : ℝ) (n : ℕ) (hn :
   have h2 : (1 + 2 * c / 7) ^ 2 ≤ (b / 2) ^ 2 := pow_le_pow_left₀ (by linarith) h1 2
   have hn0 : (0:ℝ) ≤ n := n.cast_nonneg
   have hK : (1 + 2 * c / 7) ^ 2 * (2 * (n : ℝ) + 1) ≤ b ^ 3 := by
-    nlinarith [mul_le_mul h2 (by linarith : 2 * (n:ℝ) + 1 ≤ 2 * b + 1) (by positivity)
+    linarith [hn0, mul_le_mul h2 (by linarith : 2 * (n:ℝ) + 1 ≤ 2 * b + 1) (by positivity)
       (by positivity), mul_nonneg (sq_nonneg b) (by linarith : (0:ℝ) ≤ 2 * b - 1)]
   calc _ ≤ _ := prod_le_mul_odd_mul_prod_of_bracket_chain c hc a d p n h
     _ ≤ b ^ 3 * ∏ j ∈ range n, p j := mul_le_mul_of_nonneg_right hK hP
@@ -205,8 +205,8 @@ private lemma bracket_product_le_of_neg_between_lemma (k r l : ℕ) (b c Y : ℝ
     have e3 : (|Y + lam s| + c) * (|Y + 1 + lam s| + c) ≤ (3 * b) * (3 * b) :=
       mul_le_mul (by linarith) (by linarith) (by linarith [abs_nonneg (Y + 1 + lam s)])
         (by linarith)
-    have hb9 : 9 ≤ b ^ 2 := by nlinarith
-    nlinarith [mul_le_mul_of_nonneg_left hb9 (sq_nonneg b)]
+    have hb9 : 9 ≤ b ^ 2 := by linarith [pow_le_pow_left₀ (by norm_num) (show (3 : ℝ) ≤ b by linarith) 2]
+    linarith [mul_le_mul_of_nonneg_left hb9 (sq_nonneg b)]
   have hT : ∏ s ∈ Icc 1 (k + 2 * r + 1) \ (Ico 1 (l - 1) ∪ Ico (l + 1) k),
       (|Y + lam s| + c) * (|Y + 1 + lam s| + c) ≤ b ^ (4 * (2 * r + 4)) := by
     have hcard : (Icc 1 (k + 2 * r + 1) \ (Ico 1 (l - 1) ∪ Ico (l + 1) k)).card ≤ 2 * r + 4 := by
@@ -250,7 +250,7 @@ private lemma bracket_product_le_of_neg_between_lemma (k r l : ℕ) (b c Y : ℝ
     have f2 := (hint' s hs1 (by omega)).1 (by omega)
     have hc0 : (0:ℝ) ≤ 2 * c * j := mul_nonneg (by linarith) (Nat.cast_nonneg j)
     refine ⟨hA0 s, ?_, by linarith, ?_⟩
-    · rw [abs_of_nonneg (by linarith), abs_of_nonneg (by linarith)]; nlinarith
+    · rw [abs_of_nonneg (by linarith), abs_of_nonneg (by linarith)]; linarith
     · exact sq_le_abs_mul_of_le_abs _ _ _ (by linarith) (le_abs.mpr (Or.inl (by linarith)))
         (le_abs.mpr (Or.inl (by linarith)))
   have hR : ∏ s ∈ Ico (l + 1) k, (|Y + lam s| + c) * (|Y + 1 + lam s| + c) ≤
@@ -271,7 +271,7 @@ private lemma bracket_product_le_of_neg_between_lemma (k r l : ℕ) (b c Y : ℝ
     rw [show l + 1 + j + 1 = l + 2 + j by ring] at f1 f2
     have hc0 : (0:ℝ) ≤ 2 * c * j := mul_nonneg (by linarith) (Nat.cast_nonneg j)
     refine ⟨hA0 _, ?_, by linarith, ?_⟩
-    · rw [abs_of_nonpos (by linarith), abs_of_nonpos (by linarith)]; nlinarith
+    · rw [abs_of_nonpos (by linarith), abs_of_nonpos (by linarith)]; linarith
     · exact sq_le_abs_mul_of_le_abs _ _ _ (by linarith) (le_abs.mpr (Or.inr (by linarith)))
         (le_abs.mpr (Or.inr (by linarith)))
   have hLn : 0 ≤ ∏ i ∈ Ico 1 (l - 1), |(Y + 1 / 2 + u i) * (Y + 1 / 2 + u' i)| :=
