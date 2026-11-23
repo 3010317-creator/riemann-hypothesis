@@ -358,9 +358,8 @@ theorem tieB_of (hB4 : ∀ (l : ℕ) [Fact l.Prime] (d : ℕ) [NeZero d] (be : M
     TieB := by
   intro l _ d _ h5 h2 he be h1 hb2 h3 h4
   obtain ⟨K0, hK0, hU⟩ := wfrac_unram (l := l) (by omega)
-  obtain ⟨ζ, hζ⟩ := exists_prim l (l ^ d - 1) (by
-    have : 1 < l ^ d := Nat.one_lt_pow (by omega) (by omega)
-    omega)
+  obtain ⟨ζ, hζ⟩ := exists_prim l (l ^ d - 1)
+    (Nat.sub_pos_of_lt (Nat.one_lt_pow (by omega) (by omega)))
   refine ⟨K0, ζ, hU, hζ, ?_⟩
   unfold BHyp
   exact ⟨fun n => hK0 _ (h1 n), torus_invariant_of_teichmuller l d be ζ hζ hb2, no_low_bidegree_of_vanishing l d be h3, hB4 l d be h3 h4⟩
@@ -437,11 +436,10 @@ theorem local_bound_eleven_comparison (L : product_zeroth_first_parts.Loc) (k : 
 
 theorem corollary_split_eleven_one (hB : TieB) (hB0 : KernelFromExponentialTwist) (hF : TieFrame) (L : product_zeroth_first_parts.Loc) (hL : L.AdmB) : L.Cor2 11 1 := by
   intro a ha k w E hk hw hE hD1 hD2
-  have hlp := local_bound_eleven_comparison L k w E hk hw hE hD1 hD2
   refine kval_mono (thmA_of hB hB0 hF L hL a ha) ?_
-  have hg := Finset.sum_le_sum (s := L.TT) fun s _ => base_term_le_top_term L s
   rw [Finset.sum_sub_distrib, ← Finset.mul_sum]
-  linarith
+  linarith [local_bound_eleven_comparison L k w E hk hw hE hD1 hD2,
+    Finset.sum_le_sum (s := L.TT) fun s _ => base_term_le_top_term L s]
 
 theorem split_bound_eleven_one : product_zeroth_first_parts.SplitConstantsUniformBound 11 1 := by
   unfold product_zeroth_first_parts.SplitConstantsUniformBound

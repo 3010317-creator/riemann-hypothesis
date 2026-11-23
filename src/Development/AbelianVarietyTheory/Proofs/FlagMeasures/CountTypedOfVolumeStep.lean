@@ -1800,9 +1800,6 @@ theorem fdegOf_eq_of_isFdeg {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAd
   rw [h4, hw]
   simp
 
-theorem le_exp_of_log_le {x y : ℝ} (h : Real.log x ≤ y) : x ≤ Real.exp y :=
-  (Real.le_exp_log x).trans (Real.exp_le_exp.mpr h)
-
 theorem one_le_rd (I : AutInst) : 1 ≤ I.rd := by
   unfold AutInst.rd
   apply Real.one_le_rpow
@@ -1833,8 +1830,8 @@ theorem count_unbundled : GlobalTheory.IndefiniteRowSideFullHecke.LatticeCountin
     nlinarith
   have hC' : 8 * 10 ^ 14 * (A + 4) ≤ C := (le_max_right _ _).trans hC
   have hH : GlobalTheory.Count.CountHyp B A n₀ (fun v => fdegOf (Formalism.REAL.muG (I.ε v)) (σ v) (w v)) p q b := by
-    refine ⟨fun v => ⟨hHC v, hDS v, hlow v, hfd v⟩, hpq, le_trans hn₁ hn, hq, le_exp_of_log_le hrd, hf, hb,
-      le_exp_of_log_le hbb, hlam, hg, hgb, hpr, hg₀, _root_.GlobalTheory.ncard_primesOver_eq_finrank_of_absNorm_eq_of_not_mem_sq I.E g₀ hpr hsplit, ?_⟩
+    refine ⟨fun v => ⟨hHC v, hDS v, hlow v, hfd v⟩, hpq, le_trans hn₁ hn, hq, Real.le_exp_of_log_le hrd, hf, hb,
+      Real.le_exp_of_log_le hbb, hlam, hg, hgb, hpr, hg₀, _root_.GlobalTheory.ncard_primesOver_eq_finrank_of_absNorm_eq_of_not_mem_sq I.E g₀ hpr hsplit, ?_⟩
     intro v a a' haa
     refine le_trans ?_ (hgap v a a' haa)
     refine le_trans ?_ hh
