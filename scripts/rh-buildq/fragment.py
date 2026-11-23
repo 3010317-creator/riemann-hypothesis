@@ -11,7 +11,7 @@ git, curl, python3 and elan. See README.md in this directory.
   fragment.py flush --queue Q --creds FILE
   fragment.py result --queue Q --targets FILE --log LOG --out FILE [--timings FILE]
 
-The queue directory Q (one per target commit) persists across jobs: it holds project/ (the
+The queue directory Q (one per workflow run) persists across reruns: it holds project/ (the
 Lake workspace), job.env, phase, publish-state.json and known-maps/. A rerun restores the pool
 again (other fragments may have published since) and lets Lake continue where it stopped.
 """

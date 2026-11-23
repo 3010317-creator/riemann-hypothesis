@@ -500,6 +500,9 @@ jobs:
           root="${RH_FRAGMENT_ROOT:-$HOME/rh-fragments}"
           mkdir -p "$root"
           echo "RH_FRAGMENT_ROOT=$root" >> "$GITHUB_ENV"
+          # Trees of failed runs are kept for reruns; drop those untouched for a week.
+          find "$root" -mindepth 1 -maxdepth 1 -type d -regextype posix-extended \
+            -regex '.*/[0-9a-f]{40}-[0-9]+' -mtime +7 -print -exec rm -rf -- {} + || true
           echo "runner $RUNNER_NAME, $(nproc) cpus, $(awk '/MemTotal/ {printf "%d GiB", $2/1048576}' /proc/meminfo)"
           sed -n 's/^PRETTY_NAME=//p' /etc/os-release; uname -r
           df -h "$root" | tail -n 1
@@ -524,17 +527,20 @@ jobs:
           python3 -I trusted/scripts/rh-buildq/fragment.py targets "$SPEC" --out "$FRAGMENT_TMP/targets.txt"
           target="${COMMIT%% *}"
           [[ "$target" =~ ^[0-9a-f]{40}$ ]] || { echo "fragment_commit must start with a 40-hex SHA"; exit 1; }
-          echo "FRAGMENT_QUEUE=$RH_FRAGMENT_ROOT/$target" >> "$GITHUB_ENV"
-      - name: Prepare publisher credentials
-        env:
-          R2_ACCOUNT_TOKEN: ${{ secrets.R2_ACCOUNT_TOKEN }}
-        run: python3 -I trusted/scripts/rh-buildq/fragment.py credentials --out "$FRAGMENT_SECRET/r2.json"
+          # One tree per run: concurrent fragments of a commit never share one; reruns resume it.
+          echo "FRAGMENT_QUEUE=$RH_FRAGMENT_ROOT/$target-$GITHUB_RUN_ID" >> "$GITHUB_ENV"
       - name: Restore Mathlib, the nearest CI cache and the rh-buildq pool
         env:
           COMMIT: ${{ inputs.fragment_commit }}
         run: |
           python3 -I trusted/scripts/rh-buildq/fragment.py restore --queue "$FRAGMENT_QUEUE" --commit "$COMMIT" \
             --timings "$FRAGMENT_TMP/timings.json"
+      # Only after the restore: it runs the target commit's lakefile (`lake cache add`) outside
+      # the sandbox, so the derived keys must not exist yet.
+      - name: Prepare publisher credentials
+        env:
+          R2_ACCOUNT_TOKEN: ${{ secrets.R2_ACCOUNT_TOKEN }}
+        run: python3 -I trusted/scripts/rh-buildq/fragment.py credentials --out "$FRAGMENT_SECRET/r2.json"
       - name: Build the targets and publish while building
         env:
           JOBS: ${{ inputs.fragment_jobs }}
@@ -571,3 +577,6 @@ jobs:
       - name: Remove credentials and scratch files
         if: ${{ always() }}
         run: rm -rf -- "$FRAGMENT_SECRET" "$FRAGMENT_TMP"
+      - name: Remove the tree of a successful run
+        if: ${{ success() }}
+        run: rm -rf -- "$FRAGMENT_QUEUE"
