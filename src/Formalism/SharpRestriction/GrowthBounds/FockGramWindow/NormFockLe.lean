@@ -98,7 +98,7 @@ theorem bnd_pow_iff (k : ℕ) (u : MvPolynomial σ ℚ_[p]) :
   have hp0 : (0 : ℝ) < p := lt_of_lt_of_le zero_lt_one one_le_p
   have hk : (0 : ℝ) < (p : ℝ) ^ k := pow_pos hp0 k
   refine forall_congr' fun m => ?_
-  rw [coeff_smul, smul_eq_mul, norm_mul, norm_pow, Padic.norm_p, inv_pow, inv_mul_le_iff₀ hk, mul_one]
+  rw [MvPolynomial.coeff_smul, smul_eq_mul, norm_mul, norm_pow, Padic.norm_p, inv_pow, inv_mul_le_iff₀ hk, mul_one]
 
 theorem bnd_phi (w e : Fin r → σ) (hw : Function.Injective w) (he : Function.Injective e) (hwe : ∀ c d, w c ≠ e d)
     (hr : 1 ≤ r) (o n z Λ : ℕ) (hΛ : Nat.log p (o + n + r + z) + 1 ≤ Λ) (k : ℕ) (u : MvPolynomial σ ℚ_[p])

@@ -140,7 +140,7 @@ theorem coeff_Ecc {p q r s : ℕ} (c : Ix p q) (P : Pol p q r s) (β : Ln p q r 
     by_cases hl : linePos l = true
     · simp only [omE, raiB, lowB, hl, if_true, LinearMap.add_apply, Module.End.mul_apply,
         LinearMap.mulLeft_apply, Derivation.coeFn_coe, LinearMap.smul_apply,
-        Module.End.one_apply, MvPolynomial.coeff_add, coeff_smul, smul_eq_mul, coeff_X_mul_pderiv_self, sgnL]
+        Module.End.one_apply, MvPolynomial.coeff_add, MvPolynomial.coeff_smul, smul_eq_mul, coeff_X_mul_pderiv_self, sgnL]
       push_cast
       ring
     · have hl' : linePos l = false := by simpa using hl
@@ -148,7 +148,7 @@ theorem coeff_Ecc {p q r s : ℕ} (c : Ix p q) (P : Pol p q r s) (β : Ln p q r 
         rw [coeff_pderiv, add_comm β, coeff_X_mul, mul_comm]
       simp only [omE, raiB, lowB, hl', Bool.false_eq_true, if_false, if_true, LinearMap.add_apply,
         Module.End.mul_apply, LinearMap.mulLeft_apply, LinearMap.neg_apply, Derivation.coeFn_coe,
-        LinearMap.smul_apply, Module.End.one_apply, MvPolynomial.coeff_add, coeff_neg, coeff_smul, smul_eq_mul, e, sgnL]
+        LinearMap.smul_apply, Module.End.one_apply, MvPolynomial.coeff_add, MvPolynomial.coeff_neg, MvPolynomial.coeff_smul, smul_eq_mul, e, sgnL]
       push_cast
       ring
   rw [fockAct1_Eab_apply, coeff_sum]
@@ -189,7 +189,7 @@ theorem wt_Eab {p q r s : ℕ} (a b : Ix p q) (hab : sameBlock a b) (hne : a ≠
       rw [Derivation.leibniz, pderiv_X, Pi.single_apply, if_neg hne'.symm]
       simp [mul_comm]
     simp only [raiB, lowB, hl1, hl2, Bool.false_eq_true, if_false, LinearMap.mulLeft_apply,
-      LinearMap.neg_apply, Derivation.coeFn_coe, e, coeff_neg, ne_eq, neg_eq_zero] at hd
+      LinearMap.neg_apply, Derivation.coeFn_coe, e, MvPolynomial.coeff_neg, ne_eq, neg_eq_zero] at hd
     obtain ⟨β, hβ, hsum⟩ := coeff_X_mul_pderiv_ne _ _ P γ hd
     refine ⟨β, hβ, fun c => ?_⟩
     rw [wtv_shift _ _ β γ hsum c]
@@ -202,7 +202,7 @@ def IsWt {p q r s : ℕ} (ν : Ix p q → ℚ) (P : Pol p q r s) : Prop :=
 theorem Ecc_of_wt {p q r s : ℕ} {ν : Ix p q → ℚ} {P : Pol p q r s} (hP : IsWt ν P) (c : Ix p q) :
     fockAct1 p q r s (Eab c c) P = ((ν c : ℚ) : ℂ) • P := by
   ext β
-  rw [coeff_Ecc, coeff_smul, smul_eq_mul]
+  rw [coeff_Ecc, MvPolynomial.coeff_smul, smul_eq_mul]
   by_cases hβ : β ∈ P.support
   · rw [hP β hβ c]
   · have h0 : AddMonoidAlgebra.coeff P β = 0 := by simpa [mem_support_iff] using hβ

@@ -138,7 +138,7 @@ lemma coeff_kappa (A : Module.End K ↥(homogeneousSubmodule (Fin k) K d)) (m g 
       invFact K g * AddMonoidAlgebra.coeff (A (mono K k d g) : MvPolynomial (Fin k) K) m := by
   classical
   rw [kappa_apply, coeff_sum]
-  simp only [coeff_smul, coeff_term, smul_eq_mul, mul_ite, mul_zero, Finset.sum_ite_eq']
+  simp only [MvPolynomial.coeff_smul, coeff_term, smul_eq_mul, mul_ite, mul_zero, Finset.sum_ite_eq']
   split_ifs with h
   · rfl
   · rw [mem_antidiag_iff] at h

@@ -86,7 +86,7 @@ def lcoef {K B σ : Type} [Field K] [CommRing B] [Algebra K B] (L : B →ₗ[K] 
     simp only [AddMonoidAlgebra.coeff_add, Finsupp.add_apply, map_add]
   map_smul' c f := by
     ext u
-    rw [RingHom.id_apply, coeff_smul, coeff_sum_monomial_linear, coeff_sum_monomial_linear, coeff_smul, map_smul]
+    rw [RingHom.id_apply, MvPolynomial.coeff_smul, coeff_sum_monomial_linear, coeff_sum_monomial_linear, MvPolynomial.coeff_smul, map_smul]
 
 theorem coeff_lcoef {K B σ : Type} [Field K] [CommRing B] [Algebra K B] (L : B →ₗ[K] K) (f : MvPolynomial σ B)
     (u : σ →₀ ℕ) : AddMonoidAlgebra.coeff (lcoef L f) u = L (AddMonoidAlgebra.coeff f u) :=

@@ -100,7 +100,7 @@ theorem coeff_X_mul_pderiv (v : XY k) (f : PolXY K k) (m : XY k →₀ ℕ) :
   induction f using MvPolynomial.induction_on' with
   | add p q hp hq => simp [mul_add, hp, hq]
   | monomial n a =>
-    rw [X_mul_pderiv_monomial, coeff_smul, coeff_monomial]
+    rw [X_mul_pderiv_monomial, MvPolynomial.coeff_smul, coeff_monomial]
     by_cases h : n = m
     · subst h; simp
     · simp [h]
@@ -116,7 +116,7 @@ theorem coeff_eulY (f : PolXY K k) (m : XY k →₀ ℕ) :
 theorem eulX_of_mem {A B : ℕ} {f : PolXY K k} (hf : f ∈ PolAB K k A B) :
     eulX_har K k f = (A : K) • f := by
   ext m
-  rw [coeff_eulX, coeff_smul, smul_eq_mul]
+  rw [coeff_eulX, MvPolynomial.coeff_smul, smul_eq_mul]
   by_cases hm : m ∈ f.support
   · rw [(hf m hm).1]
   · rw [notMem_support_iff.1 hm]; simp
@@ -124,7 +124,7 @@ theorem eulX_of_mem {A B : ℕ} {f : PolXY K k} (hf : f ∈ PolAB K k A B) :
 theorem eulY_of_mem {A B : ℕ} {f : PolXY K k} (hf : f ∈ PolAB K k A B) :
     eulY K k f = (B : K) • f := by
   ext m
-  rw [coeff_eulY, coeff_smul, smul_eq_mul]
+  rw [coeff_eulY, MvPolynomial.coeff_smul, smul_eq_mul]
   by_cases hm : m ∈ f.support
   · rw [(hf m hm).2]
   · rw [notMem_support_iff.1 hm]; simp

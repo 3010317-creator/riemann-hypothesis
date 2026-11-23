@@ -385,7 +385,7 @@ theorem sDegs_det [IsDomain R] {ι : Type} {n : ℕ} (LL : Letters ι) (S : Set 
       intro h
       have := LaurentPolynomial.support_coeff_C_mul_T_of_ne_zero (hne m0 hm0) 1
       rw [h] at this
-      simp at this
+      exact Nat.zero_ne_one (by simpa only [AddMonoidAlgebra.coeff_zero, Finsupp.support_zero, Finset.card_empty, Finset.card_singleton] using congrArg Finset.card this)
     · rw [hc, LaurentPolynomial.support_coeff_C_mul_T_of_ne_zero (hne m0 hm0) 1]
       simp
   · intro k hk
@@ -1325,9 +1325,9 @@ theorem li_graded {R : Type} [CommRing R] {σ ι κ : Type} (f : ι → MvPolyno
       refine Finset.sum_congr rfl fun x _ => ?_
       split_ifs with hx
       · rfl
-      · rw [coeff_smul, li_coeff_zero (hmem x) (fun h => hx (hT _ _ m h hm)), smul_zero]
+      · rw [MvPolynomial.coeff_smul, li_coeff_zero (hmem x) (fun h => hx (hT _ _ m h hm)), smul_zero]
     · refine Finset.sum_eq_zero fun x hx => ?_
-      rw [coeff_smul, li_coeff_zero (hmem x) (by rw [(Finset.mem_filter.mp hx).2]; exact hm), smul_zero]
+      rw [MvPolynomial.coeff_smul, li_coeff_zero (hmem x) (by rw [(Finset.mem_filter.mp hx).2]; exact hm), smul_zero]
   have hk : ∑ x ∈ s.subtype (fun x => d x = d x0), g x • f x = 0 := by
     rw [Finset.sum_subtype_eq_sum_filter (f := fun x => g x • f x)]; exact hfil
   exact (linearIndependent_iff'.mp (hli (d x0))) _ (fun x => g x) hk ⟨x0, rfl⟩ (Finset.mem_subtype.mpr hx0)
@@ -1424,7 +1424,7 @@ theorem li_ext {R : Type} [CommRing R] {σ τ α β : Type} (u : α → MvPolyno
     intro m
     have h1 := congrArg (fun P => AddMonoidAlgebra.coeff (sumAlgEquiv R σ τ P) m) hs'
 
-    simp only [map_sum, map_smul, coeff_sum, coeff_smul, li_key, map_zero, AddMonoidAlgebra.coeff_zero] at h1
+    simp only [map_sum, map_smul, coeff_sum, MvPolynomial.coeff_smul, li_key, map_zero, AddMonoidAlgebra.coeff_zero] at h1
     change _ = 0 at h1
     rw [Finset.sum_comm] at h1
     rw [← h1]
@@ -1439,7 +1439,7 @@ theorem li_ext {R : Type} [CommRing R] {σ τ α β : Type} (u : α → MvPolyno
     rw [coeff_sum, AddMonoidAlgebra.coeff_zero]
     change (∑ a ∈ s.image Prod.fst, AddMonoidAlgebra.coeff (g' a b • u a) m) = 0
     rw [← hb b hb' m]
-    exact Finset.sum_congr rfl fun a _ => by rw [coeff_smul, smul_eq_mul]
+    exact Finset.sum_congr rfl fun a _ => by rw [MvPolynomial.coeff_smul, smul_eq_mul]
   have h2 := linearIndependent_iff'.mp hu _ (fun a => g' a x0.2) (ha x0.2 (Finset.mem_image_of_mem _ hx0)) x0.1
     (Finset.mem_image_of_mem _ hx0)
   have hx0' : (x0.1, x0.2) ∈ s := hx0
@@ -2176,7 +2176,7 @@ theorem jone_coeff_XD (i : Fin N × Fin k) (p : MvPolynomial (Fin N × Fin k) Fd
   classical
   induction p using MvPolynomial.induction_on' with
   | monomial u a =>
-    rw [X_mul_pderiv_monomial, coeff_smul, coeff_monomial]
+    rw [X_mul_pderiv_monomial, MvPolynomial.coeff_smul, coeff_monomial]
     by_cases h : u = mm
     · subst h; simp
     · simp [h]
@@ -2208,7 +2208,7 @@ theorem jone_wt [CharZero Fd] (LL : Letters (Fin N)) (S : Set (Fin N)) (e : Fin 
       rw [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply, sub_eq_zero] at this
       exact this
     have hc := congrArg (AddMonoidAlgebra.coeff · mm) ha
-    rw [jone_coeff_Eaa, coeff_smul, smul_eq_mul] at hc
+    rw [jone_coeff_Eaa, MvPolynomial.coeff_smul, smul_eq_mul] at hc
     exact Int.cast_injective (mul_right_cancel₀ hmm hc)
   rw [jone_weight LL S e he]
   simp_rw [← h]

@@ -66,7 +66,7 @@ theorem FlagIntegralPermute.proof (h1 : FlagCoeffBlockPermute.Statement) :
   have hD : ∀ α, AddMonoidAlgebra.coeff (blockVandermonde f N) (Finsupp.equivMapDomain e.symm α) =
       blockSign f N w * AddMonoidAlgebra.coeff (blockVandermonde f N) α := by
     intro α
-    rw [← hcomp, ← h1, Flag.blockPermute_blockVandermonde, coeff_smul, smul_eq_mul]
+    rw [← hcomp, ← h1, Flag.blockPermute_blockVandermonde, MvPolynomial.coeff_smul, smul_eq_mul]
   have hs2 : blockSign f N w * blockSign f N w = 1 := Flag.blockSign_mul_self f N w
   have hs0 : blockSign f N w ≠ 0 := by
     intro h0; rw [h0, zero_mul] at hs2; exact zero_ne_one hs2

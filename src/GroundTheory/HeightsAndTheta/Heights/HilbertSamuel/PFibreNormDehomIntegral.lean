@@ -118,7 +118,7 @@ theorem FibreNormDehomIntegral.proof (hF : FibreNormBadPrimesFinite.Statement)
     intro a ha
     obtain ⟨m, -, rfl⟩ := mem_coeffs_iff.mp ha
     refine ⟨(((M₀ : ℚ) ^ τ) * (c (Module.finrank (pullField y L) Ω)).coeff m).num, ?_⟩
-    rw [coeff_smul, smul_eq_mul, eq_intCast]
+    rw [MvPolynomial.coeff_smul, smul_eq_mul, eq_intCast]
     exact Rat.coe_int_num_of_den_eq_one (hcoef m)
   obtain ⟨F, hF'⟩ := hmem
   exact ⟨F, hF'⟩

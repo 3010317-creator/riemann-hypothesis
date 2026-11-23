@@ -86,7 +86,7 @@ theorem op_add_sym (s₁ s₂ : Sym m n) (f : PX m n) : op (s₁ + s₂) f = op 
 theorem op_smul_sym (s : Sym m n) (r : ℂ) (f : PX m n) : op (r • s) f = r • op s f := by
   classical
   rw [op_eq (r • s) s.support support_smul, op, Finset.smul_sum]
-  exact Finset.sum_congr rfl fun t _ => by rw [coeff_smul, smul_eq_mul, mul_smul]
+  exact Finset.sum_congr rfl fun t _ => by rw [MvPolynomial.coeff_smul, smul_eq_mul, mul_smul]
 
 theorem op_sum_sym {ι : Type*} (F : Finset ι) (g : ι → Sym m n) (f : PX m n) :
     op (∑ i ∈ F, g i) f = ∑ i ∈ F, op (g i) f := by

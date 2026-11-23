@@ -84,7 +84,7 @@ theorem contr_smul (c : ℝ) (r : ℂ) (p : PX m n) : contr c (r • p) = r * co
   classical
   rw [contr_eq_sum c (r • p) p.support (support_smul), contr_eq_sum c p p.support le_rfl, Finset.mul_sum]
   refine Finset.sum_congr rfl fun s _ => ?_
-  rw [coeff_smul, smul_eq_mul, mul_assoc]
+  rw [MvPolynomial.coeff_smul, smul_eq_mul, mul_assoc]
 
 def contrL (c : ℝ) : PX m n →ₗ[ℂ] ℂ where
   toFun := contr c
@@ -116,6 +116,6 @@ theorem fform_smul_right (c : ℝ) (p q : PX m n) (r : ℂ) : fform c p (r • q
       (support_smul.trans Finset.subset_union_right)),
     fform_eq_sum c p q (p.support ∪ q.support) le_rfl, Finset.mul_sum]
   refine Finset.sum_congr rfl fun s _ => ?_
-  rw [coeff_smul, smul_eq_mul]; ring
+  rw [MvPolynomial.coeff_smul, smul_eq_mul]; ring
 
 end PositivityTheory.Rg.Sw.LC.Core
