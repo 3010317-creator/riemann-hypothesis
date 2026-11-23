@@ -138,12 +138,12 @@ theorem Sc_facts (P : ParameterChoice' D L) : 100 ≤ L.Sc ∧ 5 * L.Sc ≤ L.sc
   have hSc := L.Sc_eq
   have hSc0 : 0 ≤ L.Sc := by
     rw [hSc]
-    nlinarith
+    linarith [hkD]
   constructor
   · rw [hSc]
-    nlinarith
+    linarith [hkD]
   · have h1 := P.kS_le
-    nlinarith [mul_le_mul_of_nonneg_right hk hSc0]
+    linarith [mul_le_mul_of_nonneg_right hk hSc0]
 
 theorem fillG_ge (P : ParameterChoice' D L) (X : Inst D L) (b : HH D → ℤ) (hb : ∀ t ∈ D.host.TT, L.sc.b' ≤ (b t : ℝ)) (j : ℕ)
     (hj : j ∈ SizeData₂.lifts D) (z : Bool × HH D) : L.sc.w'' D.R.n - L.Sc ≤ fillG X b j z := by
@@ -166,13 +166,13 @@ theorem fillG_ge (P : ParameterChoice' D L) (X : Inst D L) (b : HH D → ℤ) (h
   have hm10 : (1 : ℝ) ≤ (D.R.m : ℝ) ^ 10 := one_le_pow₀ (by linarith)
   have hN0 : (0 : ℝ) ≤ (D.R.N D.R.m : ℝ) := Nat.cast_nonneg _
   have hNle : (D.R.N D.R.m : ℝ) ≤ D.s.Del := by
-    nlinarith [mul_le_mul_of_nonneg_left hm10 hN0]
+    linarith [hj1, ht0, hm, mul_le_mul_of_nonneg_left hm10 hN0]
   have hDel0 : (0 : ℝ) ≤ D.s.Del := by linarith
   have hSc := L.Sc_eq
   have hka : kaJ D j ≤ L.Sc := by
     unfold kaJ
     rw [hSc]
-    nlinarith [mul_le_mul_of_nonneg_right hjm (by linarith : (0 : ℝ) ≤ D.R.t + 1),
+    linarith [mul_le_mul_of_nonneg_right hjm (by linarith : (0 : ℝ) ≤ D.R.t + 1),
       mul_le_mul_of_nonneg_right hk hDel0]
   unfold fillG
   linarith
@@ -210,7 +210,7 @@ theorem summable_and_tsum_le_two_mul_div_of_le_div_pow (p y : ℝ) (hp : 2 ≤ p
     _ ≤ 2 * y / p := by
         have hp1' : (0 : ℝ) < p - 1 := by linarith
         rw [div_le_iff₀ hp1', div_mul_eq_mul_div, le_div_iff₀ hp0]
-        nlinarith
+        linarith [mul_nonneg hy (show 0 ≤ p - 2 by linarith)]
 
 def thW (D : D7) (s : Scale) : ℝ := 1 / ((D.R.k : ℝ) * s.x ^ (Scale.A / 2))
 
@@ -224,7 +224,7 @@ theorem thW_bounds (D : D7) (s : Scale) : 0 < thW D s ∧ thW D s ≤ 1 / 5 := b
   have hk := k_ge D
   have hx : 1 ≤ s.x ^ (Scale.A / 2) :=
     Real.one_le_rpow s.one_lt_alt.le (by norm_num [Scale.A])
-  have h5 : (5 : ℝ) ≤ (D.R.k : ℝ) * s.x ^ (Scale.A / 2) := by nlinarith
+  have h5 : (5 : ℝ) ≤ (D.R.k : ℝ) * s.x ^ (Scale.A / 2) := hk.trans (le_mul_of_one_le_right (by linarith) hx)
   have hpos : 0 < (D.R.k : ℝ) * s.x ^ (Scale.A / 2) := by linarith
   unfold thW
   exact ⟨one_div_pos.mpr hpos, one_div_le_one_div_of_le (by norm_num) h5⟩
@@ -269,7 +269,7 @@ theorem ask_bounds (P : ParameterChoice' D L) (X : Inst D L) {a b : HH D → ℤ
   have haw := inWin_le h hs
   refine ⟨tsum_nonneg h0, ?_⟩
   have h6 : 2 * (a s : ℝ) ≤ 3 * L.sc.a := by
-    nlinarith [mul_le_mul_of_nonneg_left hθ.2 hapos.le]
+    linarith [hS100, hS5, mul_le_mul_of_nonneg_left hθ.2 hapos.le]
   calc askG X a b p j s ≤ 2 * (a s : ℝ) / p := hle
     _ ≤ 3 * L.sc.a / p := by
       apply div_le_div_of_nonneg_right h6
@@ -304,13 +304,13 @@ theorem thS_key (P : ParameterChoice' D L) :
     rw [div_le_iff₀ hW]
     linarith
   unfold thS
-  nlinarith [mul_le_mul_of_nonneg_left hθ.2 hSc, mul_le_mul_of_nonneg_left hq1 hSc]
+  linarith [h100, h5, mul_le_mul_of_nonneg_left hθ.2 hSc, mul_le_mul_of_nonneg_left hq1 hSc]
 
 private lemma scale_b_le_a (s : Scale) : s.b ≤ s.a := by
   have hb := scale_b_pos s
   have h := mul_pos (sub_pos.mpr s.one_lt_alt) hb
   unfold Scale.a
-  nlinarith
+  linarith
 
 theorem ask_high (P : ParameterChoice' D L) (X : Inst D L) {a b : HH D → ℤ} (h : InWin L a b) (p : ℕ)
     (hpX : L.sc.X'' D.R.n < (p : ℝ)) (j : ℕ) (hj : j ∈ SizeData₂.lifts D) (s : HH D) (hs : s ∈ D.host.TT) :
@@ -360,12 +360,12 @@ theorem ask_high (P : ParameterChoice' D L) (X : Inst D L) {a b : HH D → ℤ} 
         omega
       have hpe : (p : ℝ) ^ 3 ≤ (p : ℝ) ^ e := pow_le_pow_right₀ (by linarith) he3
       have hp3 : 4 * (p : ℝ) ≤ (p : ℝ) ^ 3 := by
-        nlinarith [mul_nonneg (mul_nonneg hp.le (by linarith : (0 : ℝ) ≤ p - 2))
+        linarith [hp2, mul_nonneg (mul_nonneg hp.le (by linarith : (0 : ℝ) ≤ p - 2))
           (by linarith : (0 : ℝ) ≤ p + 2)]
       have hwp := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hθ.2 hW.le) hp.le
       have hle : (a s : ℝ) ≤ (L.sc.w'' D.R.n - L.Sc) * (p : ℝ) ^ e := by
         calc (a s : ℝ) ≤ L.sc.w'' D.R.n * (1 + thW D L.sc) * p := hap0
-          _ ≤ (4 / 5 * L.sc.w'' D.R.n) * (4 * p) := by nlinarith [mul_pos hW hp]
+          _ ≤ (4 / 5 * L.sc.w'' D.R.n) * (4 * p) := by linarith [hS100, hS5, has0, hwp, mul_pos hW hp]
           _ ≤ (L.sc.w'' D.R.n - L.Sc) * (p : ℝ) ^ e :=
             mul_le_mul (by linarith) (by linarith) (by positivity) (by linarith)
       have h2 : (a s : ℝ) / (p : ℝ) ^ e ≤ L.sc.w'' D.R.n - L.Sc := by
