@@ -1,12 +1,12 @@
 module
 
+import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.DenomBound
 public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.FactPrincipalDatum
 public import Formalism.LocalToGlobal.ProjectiveLattices.HostInt
 public import Mathlib.NumberTheory.NumberField.Completion.FinitePlace
 public import Mathlib.Analysis.Normed.Ring.Ultra
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsNatMulMemRingOfIntegers
-import Mathlib
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

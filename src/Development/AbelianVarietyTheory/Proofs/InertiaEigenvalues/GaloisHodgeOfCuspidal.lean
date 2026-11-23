@@ -63,6 +63,7 @@ import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.NStageTrivialCharacterCoeffEqAlt
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsAttachedHodge
 import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasExponentZeroIff
+import Mathlib.RingTheory.PicardGroup
 
 @[expose] public section
 

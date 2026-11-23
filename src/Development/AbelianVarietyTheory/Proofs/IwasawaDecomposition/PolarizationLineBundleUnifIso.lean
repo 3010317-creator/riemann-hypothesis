@@ -1,6 +1,5 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHeckeQuotientTriple
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomExtNormalSt
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ForallGeometricallyIntegralOfSmoothOfGeometrical
@@ -8,6 +7,7 @@ public import Mathlib.AlgebraicGeometry.Geometrically.Integral
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThickTransComp
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LineBundleIsoOfGenericIsoNormalLocalBase
+import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

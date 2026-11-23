@@ -4,7 +4,6 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTe
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualMeasureExistsUniqueFourierInversion
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedStandardAddCharConductorProperties
-public import Mathlib
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -57,6 +56,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
+import Mathlib.Tactic
 
 @[expose] public section
 

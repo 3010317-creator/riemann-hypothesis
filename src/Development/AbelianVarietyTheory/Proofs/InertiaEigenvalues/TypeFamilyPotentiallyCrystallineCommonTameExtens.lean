@@ -6,7 +6,9 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Cent
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
 public import Mathlib.RingTheory.RootsOfUnity.Basic
-public import Mathlib
+public import Mathlib.Tactic.Polynomial.Basic
+public import Mathlib.Tactic.ReduceModChar
+public import Mathlib.Algebra.Order.Star.Int
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.StepJumpDirect
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InerDecomp
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotentialPhiSub
@@ -69,8 +71,6 @@ import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Tactic.Linter.Style
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.FieldTheory.Galois.Profinite
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
@@ -407,7 +407,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsExtendCharacterTrivialOnNormal =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AevalEqOfMemDpcris =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AevalEqOfMemDpcris", "h": "module\n\npublic import Mathlib\npublic import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.StepJumpDirect\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InertiaThroughOfPolyPow\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InerDecomp\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsRootsOfUnityCharacterHom\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsExtendCharacterTrivialOnNormal\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InertiaThroughOfPoly\npublic import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotentialPhiSub\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AevalEqOfMemDpcris", "h": "module\n\npublic import Mathlib.Algebra.Order.Star.Int\npublic import Mathlib.Tactic.Polynomial.Basic\npublic import Mathlib.Tactic.ReduceModChar\npublic import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.StepJumpDirect\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InertiaThroughOfPolyPow\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InerDecomp\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsRootsOfUnityCharacterHom\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsExtendCharacterTrivialOnNormal\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InertiaThroughOfPoly\npublic import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotentialPhiSub\n\n"}
 section -- clump:auto
 @[expose] public section
 
