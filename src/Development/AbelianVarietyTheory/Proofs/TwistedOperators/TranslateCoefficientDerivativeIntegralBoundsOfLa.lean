@@ -95,7 +95,7 @@ theorem taylor_der (f f1 f2 : ℝ → ℂ) (τ M : ℝ) (hf : ∀ t, HasDerivAt 
     calc _ ≤ ‖f τ - f 0‖ + ‖(f τ - (τ : ℂ) * f1 0) - (f 0 - ((0 : ℝ) : ℂ) * f1 0)‖ := norm_sub_le _ _
       _ ≤ (‖f τ‖ + ‖f 0‖) + M * τ * (τ - 0) := by gcongr; exact norm_sub_le _ _
       _ ≤ _ := by linarith
-  have : τ * ‖f1 0‖ ≤ τ * ((2 + M) * τ) := by nlinarith
+  have : τ * ‖f1 0‖ ≤ τ * ((2 + M) * τ) := by linarith
   exact le_of_mul_le_mul_left this hτ0
 
 theorem coef_hasDerivAt {m : ℕ} {ε : Fin m → Bool} {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
@@ -208,11 +208,11 @@ theorem const_le (C₀ : ℝ) (hC₀ : 0 < C₀) (m L R : ℝ) (hm : 4 ≤ m) (h
     rw [e]
     have h1 : 1 ≤ R ^ 4 := one_le_pow₀ hR1
     have h2 : 7 ^ 4 ≤ L ^ 4 := pow_le_pow_left₀ (by norm_num) hL7 4
-    have h3 : 1 ≤ L ^ 4 * R ^ 4 := by nlinarith
+    have h3 : 1 ≤ L ^ 4 * R ^ 4 := one_le_mul_of_one_le_of_one_le (by linarith) h1
     have h4 : L ^ 5 * R ^ 4 = L * (L ^ 4 * R ^ 4) := by ring
     have h5 : (L ^ 2 * R ^ 2) ^ 2 = L ^ 4 * R ^ 4 := by ring
     rw [h4, h5]
-    nlinarith
+    linarith [mul_le_mul_of_nonneg_right hL7 (show 0 ≤ L ^ 4 * R ^ 4 by linarith)]
 
   have hb0 : 0 < (Real.sqrt m + 3) * R ^ 2 := by positivity
   have hF2 : ((Real.sqrt m + 3) * R ^ 2) ^ (20 * m ^ 2) ≤ Real.exp ((l + 2 * r) * (20 * m ^ 2)) := by
@@ -223,17 +223,19 @@ theorem const_le (C₀ : ℝ) (hC₀ : 0 < C₀) (m L R : ℝ) (hm : 4 ≤ m) (h
     have hs : Real.sqrt m + 3 ≤ L := by
       have : Real.sqrt m ≤ m := by
         rw [Real.sqrt_le_left (by linarith)]
-        nlinarith
+        exact le_self_pow₀ (by linarith) two_ne_zero
       linarith
     have := Real.log_le_log (by positivity) hs
     push_cast
     linarith
-  have hm2 : 10 * (m - 1) ^ 2 ≤ 10 * m ^ 2 * l := by nlinarith
+  have hm2 : 10 * (m - 1) ^ 2 ≤ 10 * m ^ 2 * l := by linarith [le_mul_of_one_le_right (sq_nonneg m) hl1]
   have hm3 : 50 * m ^ 3 ≤ 50 * m ^ 3 * l := by
     have : 0 ≤ m ^ 3 := by positivity
-    nlinarith
-  have hp1 : 5 + 30 * m ^ 2 + 50 * m ^ 3 ≤ 100 * m ^ 4 := by nlinarith
-  have hp2 : 4 * m + 40 * m ^ 3 ≤ 50 * m ^ 4 := by nlinarith
+    linarith [le_mul_of_one_le_right this hl1]
+  have hp1 : 5 + 30 * m ^ 2 + 50 * m ^ 3 ≤ 100 * m ^ 4 := by
+    linarith [one_le_pow₀ (n := 4) (show 1 ≤ m by linarith), pow_le_pow_right₀ (show 1 ≤ m by linarith) (by norm_num : 2 ≤ 4), pow_le_pow_right₀ (show 1 ≤ m by linarith) (by norm_num : 3 ≤ 4)]
+  have hp2 : 4 * m + 40 * m ^ 3 ≤ 50 * m ^ 4 := by
+    linarith [one_le_pow₀ (n := 4) (show 1 ≤ m by linarith), le_self_pow₀ (show 1 ≤ m by linarith) (by norm_num : 4 ≠ 0), pow_le_pow_right₀ (show 1 ≤ m by linarith) (by norm_num : 3 ≤ 4)]
   have hq1 := mul_le_mul_of_nonneg_right hp1 (by linarith : (0 : ℝ) ≤ l)
   have hq2 := mul_le_mul_of_nonneg_left hp2 (by positivity : (0 : ℝ) ≤ C₀ * l)
   have hr4 : 4 * r ≤ 4 * (C₀ * m * l) := by linarith
@@ -314,7 +316,7 @@ theorem derBounds_of : EmbLaws → PowInt → DecPow → LieBound → DerBounds 
   have hB1 : 1 ≤ B := by
     have : (4 : ℝ) ^ 3 ≤ m ^ 3 := pow_le_pow_left₀ (by norm_num) hm4 3
     linarith
-  have hLm : m + 3 ≤ 8 * m * B := by nlinarith
+  have hLm : m + 3 ≤ 8 * m * B := by linarith [le_mul_of_one_le_right (show 0 ≤ m by linarith) hB1]
   have hM2 : ‖d2‖ ≤ ((8 * m * B) ^ 2 * R ^ 2) ^ 2 := by
     set X'' := g₀⁻¹ * X' * g₀ with hX''def
     have hX'' : X'' ∈ lieOf (Jm ε) := GlobalTheory.SmLinSub.conj_mem_lie hJ hg₀ hX'
@@ -356,7 +358,7 @@ theorem derBounds_of : EmbLaws → PowInt → DecPow → LieBound → DerBounds 
     have hbn : hsn (umat h) ≤ hsn b := by
       have := hsnH (umat h)
       have h0 : 0 ≤ hsn b := Real.sqrt_nonneg _
-      nlinarith
+      exact (sq_le_sq₀ hhpos.le h0).mp (by linarith)
     have hbpos : 0 < hsn b := hhpos.trans_le hbn
     set E := Real.exp (50 * m ^ 3) * (hsn b / K0) ^ (-A) with hEdef
     have hE0 : 0 < E := by positivity
@@ -448,7 +450,7 @@ theorem derBounds_of : EmbLaws → PowInt → DecPow → LieBound → DerBounds 
     have h1 : Continuous (fun h : UJ ε' => π (embH e (umat h)) v) :=
       (hU.2.2 v).comp_continuous (hcont.comp hum) (fun h => hmapH _ h.2)
     exact continuous_const.inner h1
-  have hAn : 4 * (n : ℝ) ^ 2 + 1 ≤ A := by rw [hAdef, hm]; nlinarith
+  have hAn : 4 * (n : ℝ) ^ 2 + 1 ≤ A := by rw [hAdef, hm]; linarith [sq_nonneg (n : ℝ), Nat.cast_nonneg (α := ℝ) n]
   obtain ⟨hInt, hIle⟩ := hP n ε' A (by omega) hAn
   have hIntK : Integrable (fun h : UJ ε' => K1 * hsn (umat h) ^ (-A)) (muG ε') := hInt.const_mul K1
   refine ⟨hIntK.mono' hcontF.aestronglyMeasurable (ae_of_all _ hpt), ?_⟩

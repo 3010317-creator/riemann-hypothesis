@@ -69,7 +69,7 @@ theorem bounds_of_mem {e : ℕ} [NeZero e] {Sig : Finset (ZMod e)} {c : ZMod e} 
     (h : i ∈ degrees Sig c m m') : m * e ≤ i ∧ i < m' * e := by
   obtain ⟨c', -, n, ⟨h1, h2⟩, rfl⟩ := mem_degrees.1 h
   have := ZMod.val_lt (c - c')
-  constructor <;> nlinarith
+  exact ⟨(Nat.mul_le_mul_right e h1).trans (Nat.le_add_left _ _), by linarith [Nat.mul_le_mul_right e (show n + 1 ≤ m' from h2)]⟩
 
 theorem rootPoly_monic (T : Finset ℕ) : (rootPoly T).Monic :=
   Polynomial.monic_prod_of_monic _ _ fun _ _ => Polynomial.monic_X_sub_C _
@@ -96,10 +96,10 @@ theorem degreeBounds {e : ℕ} [NeZero e] (Sig : Finset (ZMod e)) (c : ZMod e) (
       card₂ := ?_ }
   · intro i hi
     have := bounds_of_mem hi
-    nlinarith
+    linarith
   · intro j hj
     have := bounds_of_mem hj
-    constructor <;> nlinarith
+    constructor <;> linarith
   ·
     rw [Multiset.disjoint_left]
     intro x h1 h2
@@ -255,18 +255,19 @@ theorem raisesDegree (hR : Reduction O K l e a) (Sig : Finset (ZMod e)) (c : ZMo
   · have hx0 : x ∈ V 0 := Submodule.mem_sup_left (Submodule.mem_inf.2
       ⟨mem_mulL.2 ⟨x, (Submodule.mem_inf.1 hx).1, by simp⟩, (Submodule.mem_inf.1 hx).2⟩)
     have h := climb D.toPhiMod.conn V 0 (e * A') (D₁ Sig c A')
-      (fun i hi y hy => step hM i (by have := bounds_of_mem hi; nlinarith) y hy)
+      (fun i hi y hy => step hM i (by have := bounds_of_mem hi; linarith [Nat.mul_le_mul_right e hA]) y hy)
       (fun i _ h2 h3 => hskip i fun ⟨c', hc', n, hn⟩ => h3 (mem_degrees.2 ⟨c', hc', n,
-        ⟨Nat.zero_le _, by have := ZMod.val_lt (c - c'); nlinarith⟩, hn.symm⟩))
-      (fun i hi => by have := bounds_of_mem hi; exact Finset.mem_Ico.2 ⟨Nat.zero_le _, by nlinarith⟩) x hx0
+        ⟨Nat.zero_le _, by have := ZMod.val_lt (c - c'); exact lt_of_mul_lt_mul_right (a := e) (by linarith) (Nat.zero_le e)⟩, hn.symm⟩))
+      (fun i hi => by have := bounds_of_mem hi; exact Finset.mem_Ico.2 ⟨Nat.zero_le _, by linarith⟩) x hx0
     rw [zero_add] at h
     refine (sup_le_sup (inf_le_left.trans (le_of_eq (vL_eq _ _).symm)) inf_le_left) h
   · have hx0 : x ∈ V (e * A') := Submodule.mem_sup_left (by rwa [← vL_eq])
     have h := climb D.toPhiMod.conn V (e * A') (e * A') (D₂ Sig c A')
-      (fun i hi y hy => step hM i (by have := bounds_of_mem hi; nlinarith) y hy)
+      (fun i hi y hy => step hM i (by have := bounds_of_mem hi; linarith [Nat.mul_le_mul_right e hA]) y hy)
       (fun i h1 h2 h3 => hskip i fun ⟨c', hc', n, hn⟩ => h3 (mem_degrees.2 ⟨c', hc', n,
-        ⟨by have := ZMod.val_lt (c - c'); nlinarith, by nlinarith⟩, hn.symm⟩))
-      (fun i hi => by have := bounds_of_mem hi; exact Finset.mem_Ico.2 ⟨by nlinarith, by nlinarith⟩) x hx0
+        ⟨by have := ZMod.val_lt (c - c'); exact Nat.lt_succ_iff.mp (lt_of_mul_lt_mul_right (a := e) (show A' * e < (n + 1) * e by linarith) (Nat.zero_le e)),
+         lt_of_mul_lt_mul_right (a := e) (show n * e < (2 * A') * e by linarith) (Nat.zero_le e)⟩, hn.symm⟩))
+      (fun i hi => by have := bounds_of_mem hi; exact Finset.mem_Ico.2 ⟨by linarith, by linarith⟩) x hx0
     rw [show e * A' + e * A' = e * (2 * A') by ring] at h
     refine (sup_le_sup (inf_le_left.trans (le_of_eq (vL_eq _ _).symm)) inf_le_left) h
 

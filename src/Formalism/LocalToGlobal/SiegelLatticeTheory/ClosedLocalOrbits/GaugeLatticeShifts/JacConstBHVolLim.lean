@@ -69,7 +69,7 @@ theorem sq_cond {R1 R2 s : ℝ} (hs : 0 < s) (h1 : 0 ≤ R1) (h2 : 0 ≤ R2) (x 
       ENNReal.ofReal_lt_ofReal_iff (by positivity), ← ENNReal.ofReal_coe_nnreal, ENNReal.ofReal_lt_ofReal_iff']
     constructor
     · intro h
-      have hpos : 0 < s ^ 2 - R1 - R2 := by nlinarith [sq_nonneg (x : ℝ)]
+      have hpos : 0 < s ^ 2 - R1 - R2 := by linarith [sq_nonneg (x : ℝ)]
       exact ⟨Real.lt_sqrt (NNReal.coe_nonneg x) |>.2 (by linarith), Real.sqrt_pos.2 hpos⟩
     · rintro ⟨h, -⟩
       have := (Real.lt_sqrt (NNReal.coe_nonneg x)).1 h
@@ -183,7 +183,7 @@ theorem cw_bound {ε : ℝ} (hε : 0 < ε) : ∃ δ > 0, ∀ c : Fin r → ℂ, 
     rw [dist_eq_norm, Pi.one_apply]
     have h1 : ‖c a - 1‖ ^ 2 ≤ ∑ b, ‖c b - 1‖ ^ 2 :=
       Finset.single_le_sum (f := fun b => ‖c b - 1‖ ^ 2) (fun b _ => sq_nonneg _) (Finset.mem_univ a)
-    nlinarith [norm_nonneg (c a - 1)]
+    exact (sq_lt_sq₀ (norm_nonneg _) hη.le).mp (by linarith [sq_nonneg ‖c a - 1‖])
   have := h hd
   rwa [cWeight_one, Real.dist_eq] at this
 
@@ -337,7 +337,7 @@ theorem pt_bound {μb : Measure (Mt k r)} {ε δg δc s : ℝ} (hε : 0 < ε) (h
     have h2 : expBall (k := k) (r := r) (Formalism.FourierDecayAlt.B2.UWb k r) 0 = ∅ := by unfold expBall; rw [h1, Set.image_empty]
     simp [h1, h2]
   have hpos : 0 < s ^ 2 - (u + B) - v := Real.sqrt_pos.1 ht
-  have hBs : B < δc ^ 2 := by nlinarith
+  have hBs : B < δc ^ 2 := by linarith [pow_lt_pow_left₀ hsc hs.le (by norm_num : 2 ≠ 0)]
   have hcw := hc c hBs
   have hts : t ≤ s := by
     have := sqrt_sq_sub_le_self (s := s) (R := u + B + v) hs (by positivity)
@@ -435,19 +435,19 @@ theorem volLim : VolLim := by
     have hε1 : ε < 1 := lt_of_le_of_lt (min_le_left _ _) (by norm_num)
     have hεa : ε ≤ (L - a) / (4 * L) := min_le_right _ _
     have hgt : a < (1 - ε) ^ 2 * L := by
-      have h1 : 1 - 2 * ε ≤ (1 - ε) ^ 2 := by nlinarith
+      have h1 : 1 - 2 * ε ≤ (1 - ε) ^ 2 := by linarith [sq_nonneg ε]
       have h2 : 2 * ε * L ≤ (L - a) / 2 := by
         have := mul_le_mul_of_nonneg_right hεa (by positivity : (0 : ℝ) ≤ 2 * L)
         rw [div_mul_eq_mul_div] at this
         have e : (L - a) * (2 * L) / (4 * L) = (L - a) / 2 := by field_simp; ring
-        nlinarith
-      nlinarith
+        linarith
+      linarith [mul_le_mul_of_nonneg_right h1 hL.le]
     filter_upwards [key ε hε0 hε1, self_mem_nhdsWithin] with s ⟨hlo, hup⟩ hs
     have hVt : Vol k r μb s ≠ ⊤ := ne_top_of_le_ne_top (by simp [ENNReal.mul_eq_top, hWt]) hup
     rw [hgV s, lt_div_iff₀ (hWpos s hs)]
     have := ENNReal.toReal_mono hVt hlo
     rw [toR _ (sq_nonneg _) s] at this
-    nlinarith [hWpos s hs]
+    exact (mul_lt_mul_of_pos_right hgt (hWpos s hs)).trans_le this
   · intro b hb
     set ε := min (1 / 2) ((b - L) / (4 * L)) with hε
     have hε0 : 0 < ε := lt_min (by norm_num) (div_pos (by linarith) (by positivity))
@@ -455,16 +455,16 @@ theorem volLim : VolLim := by
     have hεb : ε ≤ (b - L) / (4 * L) := min_le_right _ _
     have hεh : ε ≤ 1 / 2 := min_le_left _ _
     have hlt : (1 + ε) ^ 2 * L < b := by
-      have h1 : (1 + ε) ^ 2 ≤ 1 + 3 * ε := by nlinarith
+      have h1 : (1 + ε) ^ 2 ≤ 1 + 3 * ε := by linarith [mul_nonneg hε0.le (show 0 ≤ 1 - ε by linarith)]
       have h2 : 3 * ε * L ≤ 3 * (b - L) / 4 := by
         have := mul_le_mul_of_nonneg_right hεb (by positivity : (0 : ℝ) ≤ 3 * L)
         have e : (b - L) / (4 * L) * (3 * L) = 3 * (b - L) / 4 := by field_simp
-        nlinarith
-      nlinarith
+        linarith
+      linarith [mul_le_mul_of_nonneg_right h1 hL.le]
     filter_upwards [key ε hε0 hε1, self_mem_nhdsWithin] with s ⟨hlo, hup⟩ hs
     rw [hgV s, div_lt_iff₀ (hWpos s hs)]
     have := ENNReal.toReal_mono (by simp [ENNReal.mul_eq_top, hWt]) hup
     rw [toR _ (sq_nonneg _) s] at this
-    nlinarith [hWpos s hs]
+    exact this.trans_lt (mul_lt_mul_of_pos_right hlt (hWpos s hs))
 
 end Formalism.L2.SG.Pf.BH.VL

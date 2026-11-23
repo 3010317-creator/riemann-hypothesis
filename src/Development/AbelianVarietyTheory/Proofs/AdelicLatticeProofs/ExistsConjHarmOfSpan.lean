@@ -242,23 +242,22 @@ private lemma re_trace_isLog_sq_le_second_order {ι : Type} [Fintype ι] [Decida
   have ht1 : |t| ≤ 1 := (lt_of_lt_of_le ht (min_le_left _ _)).le
   have htδ : |t| < δ / (B + 1) := lt_of_lt_of_le ht (min_le_right _ _)
   set Y := (t : ℂ) • Y1 + (t : ℂ) ^ 2 • Y2 + (t : ℂ) ^ 3 • Y3 + (t : ℂ) ^ 4 • Y4 with hY
-  have ht2 : t ^ 2 ≤ |t| := by nlinarith [sq_abs t, abs_nonneg t]
-  have ht3 : |t| ^ 3 ≤ |t| := by nlinarith [abs_nonneg t, pow_le_one₀ (abs_nonneg t) ht1 (n := 2)]
-  have ht4 : |t| ^ 4 ≤ |t| := by nlinarith [abs_nonneg t, pow_le_one₀ (abs_nonneg t) ht1 (n := 3)]
+  have ht2 : t ^ 2 ≤ |t| := by linarith [sq_abs t, mul_le_of_le_one_right (abs_nonneg t) ht1]
+  have ht3 : |t| ^ 3 ≤ |t| := by linarith [mul_le_of_le_one_right (abs_nonneg t) (pow_le_one₀ (abs_nonneg t) ht1 (n := 2))]
+  have ht4 : |t| ^ 4 ≤ |t| := by linarith [mul_le_of_le_one_right (abs_nonneg t) (pow_le_one₀ (abs_nonneg t) ht1 (n := 3))]
   have hentry : ∀ i j, ‖Y i j‖ ≤ |t| * b i j := by
     intro i j
     simp only [hY, Matrix.add_apply, Matrix.smul_apply, smul_eq_mul]
     refine (norm_add_add_add_le _ _ _ _).trans ?_
     simp only [norm_mul, norm_pow, Complex.norm_real, Real.norm_eq_abs, hb_def]
-    have := sq_abs t
-    nlinarith [norm_nonneg (Y1 i j), norm_nonneg (Y2 i j), norm_nonneg (Y3 i j), norm_nonneg (Y4 i j),
-      mul_le_mul_of_nonneg_right ht2 (norm_nonneg (Y2 i j)), mul_le_mul_of_nonneg_right ht3 (norm_nonneg (Y3 i j)),
+    rw [sq_abs t]
+    linarith [mul_le_mul_of_nonneg_right ht2 (norm_nonneg (Y2 i j)), mul_le_mul_of_nonneg_right ht3 (norm_nonneg (Y3 i j)),
       mul_le_mul_of_nonneg_right ht4 (norm_nonneg (Y4 i j))]
   have hsmall : ∀ i j, ‖Y i j‖ ≤ δ := by
     intro i j
     refine (hentry i j).trans ?_
     have h1 : |t| * (B + 1) < δ := by rwa [lt_div_iff₀ (by linarith)] at htδ
-    nlinarith [hbB i j, abs_nonneg t]
+    linarith [abs_nonneg t, mul_le_mul_of_nonneg_left (hbB i j) (abs_nonneg t)]
   have key := hb Y H' hsmall hH'
   have htr : Complex.re (Matrix.trace (H * A⁻¹ * Y)) =
       t * Complex.re (Matrix.trace (H * A⁻¹ * Y1)) + t ^ 2 * l2 + t ^ 3 * l3 + t ^ 4 * l4 := by
@@ -281,15 +280,16 @@ private lemma re_trace_isLog_sq_le_second_order {ι : Type} [Fintype ι] [Decida
       _ ≤ _ := mul_le_mul_of_nonneg_left hsq (abs_nonneg C)
   have hl : t ^ 2 * l2 + t ^ 3 * l3 + t ^ 4 * l4 ≤ t ^ 2 * (|l2| + |l3| + |l4|) := by
     have ha : |t| ^ 3 = t ^ 2 * |t| := by rw [pow_succ, sq_abs]
-    have hb4 : t ^ 4 ≤ t ^ 2 := by nlinarith [sq_nonneg t, sq_abs t]
+    have hb4 : t ^ 4 ≤ t ^ 2 := by
+      linarith [mul_le_of_le_one_right (sq_nonneg t) (show t ^ 2 ≤ 1 by rw [← sq_abs]; exact pow_le_one₀ (abs_nonneg t) ht1 (n := 2))]
     have e3 : t ^ 3 * l3 ≤ t ^ 2 * |l3| := by
       calc t ^ 3 * l3 ≤ |t ^ 3 * l3| := le_abs_self _
         _ = |t| ^ 3 * |l3| := by rw [abs_mul, abs_pow]
-        _ ≤ t ^ 2 * |l3| := by rw [ha]; nlinarith [mul_le_mul_of_nonneg_left ht1 (mul_nonneg (sq_nonneg t) (abs_nonneg l3))]
+        _ ≤ t ^ 2 * |l3| := by rw [ha]; linarith [mul_le_mul_of_nonneg_left ht1 (mul_nonneg (sq_nonneg t) (abs_nonneg l3))]
     have e4 : t ^ 4 * l4 ≤ t ^ 2 * |l4| := by
       calc t ^ 4 * l4 ≤ t ^ 4 * |l4| := mul_le_mul_of_nonneg_left (le_abs_self _) (by positivity)
         _ ≤ t ^ 2 * |l4| := mul_le_mul_of_nonneg_right hb4 (abs_nonneg _)
-    nlinarith [le_abs_self l2, sq_nonneg t, mul_le_mul_of_nonneg_left (le_abs_self l2) (sq_nonneg t)]
+    linarith [mul_le_mul_of_nonneg_left (le_abs_self l2) (sq_nonneg t)]
   rw [htr] at key
   linarith [key, hC, hl]
 
@@ -324,10 +324,10 @@ private lemma eq_zero_of_nonneg_linear_add_quadratic {a K ε : ℝ} (hε : 0 < �
   rcases lt_or_gt_of_ne ha with hneg | hpos
   · have h1 := h s (by rw [abs_of_pos hs0]; exact hsε)
     rw [abs_of_neg hneg] at hsa
-    nlinarith
+    linarith [pow_pos hs0 2, mul_le_mul_of_nonneg_left hsa hs0.le, mul_le_mul_of_nonneg_left hK (sq_nonneg s)]
   · have h1 := h (-s) (by rw [abs_neg, abs_of_pos hs0]; exact hsε)
     rw [abs_of_pos hpos] at hsa
-    nlinarith
+    linarith [pow_pos hs0 2, mul_le_mul_of_nonneg_left hsa hs0.le, mul_le_mul_of_nonneg_left hK (sq_nonneg s)]
 
 open Matrix Polynomial in
 open scoped Kronecker ComplexOrder TensorProduct in
@@ -402,7 +402,7 @@ theorem _root_.GlobalTheory.ClassFin.exists_conj_harm_of_span : ∀ (ι : Type) 
       rw [hε0_def, div_le_iff₀ (by positivity)]
       have := hε s
       rw [div_le_iff₀ this] at h1
-      nlinarith
+      linarith
     have hlin : ∀ t : ℝ, |t| < ε0 → 0 ≤ t * (2 * ∑ s, ℓ s) + t ^ 2 * ∑ s, K s := by
       intro t ht
       have hQQ : (1 + (t : ℂ) • N) * (1 - (t : ℂ) • N) = 1 := by
