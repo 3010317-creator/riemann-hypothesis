@@ -881,7 +881,7 @@ theorem UpperTheory.V.Z.Win.Gu.spehT_alt :
   intro H _ E Ω _ _ _ _ _ _ a d P w ρ σ _ _ hP hu hS A h rc hrc
   have L := H.litN.loc
   have hd : ∑ _ : Fin d, a = d * a := by simp
-  exact rec_spehQuotT hrc (_root_.PositivityTheory.Gud.generic_unitary_dual_GL trivial L.sq L.gen L.multi L.cos) L.cos a d _ hd ρ σ hu
+  exact rec_spehQuotT hrc _root_.PositivityTheory.Gud.Fin.genericUnitaryDualGL_holds L.cos a d _ hd ρ σ hu
     (GlobalTheory.CuspRep.Generic.isGeneric_of_isLocComp E a P w ρ hP)
     (GlobalTheory.DiscreteSpectrumCM.isSpehQuot_of_isSpeh hd ρ σ hS)
 end

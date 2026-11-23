@@ -1554,7 +1554,7 @@ theorem localLanglandsGL_and_purity_at_member_alt : _root_.GlobalTheory.Mem.Lite
       rayF := A.ray
       rayA := GlobalTheory.Published.GlobalArtinReciprocity.rayCharacterArtin A.art
       bc := _root_.UpperTheory.BaseChangeIdentities.bridge A.bc L.bern
-      gen := _root_.PositivityTheory.Gud.generic_unitary_dual_GL trivial L.sq L.gen L.multi L.cos
+      gen := _root_.PositivityTheory.Gud.Fin.genericUnitaryDualGL_holds
       std := L.cos
       cheb := GlobalTheory.Published.cheb_holds
       howe := GlobalTheory.Hk3.howeUnram_holds }
