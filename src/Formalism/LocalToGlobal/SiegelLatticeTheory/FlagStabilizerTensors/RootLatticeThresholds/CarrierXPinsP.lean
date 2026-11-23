@@ -320,7 +320,7 @@ theorem hSsgs_holds : HSsgs := by
   calc ‖hsVec (JF D F (sgs p g))‖
         = ‖hsVec ((D.π (Matrix.of p.1.1)).comp ((JF D F (sgs p g)).comp (D.π' (Matrix.of p.2.1)⁻¹)))‖ := by
           rw [hs_left _ (D.π_unitary _ hh), hs_right _ (D.π'_unitary _ hh')]
-    _ = ‖hsVec ((xiTau D (1, 1) p)⁻¹ • JF D F g)‖ := by rw [hj]
+    _ = ‖hsVec ((xiTau D (1, 1) p)⁻¹ • JF D F g)‖ := by rw [← hj]; rfl
     _ = ‖hsVec (JF D F g)‖ := hs_smul _ (by rw [norm_inv, norm_xiTau, inv_one]) _
 
 theorem orbDirac_holds : OrbDirac := by
