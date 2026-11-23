@@ -130,14 +130,17 @@ lemma pair_pos (Wa Wb K : Submodule ℝ H) [Wa.HasOrthogonalProjection] [Wb.HasO
   have hs0 : 0 ≤ s := by positivity
   have h1 : 2 * ⟪a, b⟫_ℝ ≤ 1 / 5 * s := by
     have := le_abs_self ⟪a, b⟫_ℝ
-    nlinarith [sq_nonneg (‖a‖ - ‖b‖)]
+    linarith [sq_nonneg (‖a‖ - ‖b‖)]
   have h2 : s * s ≤ ‖x‖ ^ 2 * (6 / 5 * s) := by
     have e1 : s * s ≤ (‖x‖ * ‖a + b‖) * (‖x‖ * ‖a + b‖) := mul_self_le_mul_self hs0 hcs
     have e2 : ‖a + b‖ ^ 2 ≤ 6 / 5 * s := by rw [hn]; linarith
     calc s * s ≤ (‖x‖ * ‖a + b‖) * (‖x‖ * ‖a + b‖) := e1
       _ = ‖x‖ ^ 2 * ‖a + b‖ ^ 2 := by ring
       _ ≤ ‖x‖ ^ 2 * (6 / 5 * s) := mul_le_mul_of_nonneg_left e2 (by positivity)
-  have h3 : s ≤ 6 / 5 * ‖x‖ ^ 2 := by nlinarith [sq_nonneg ‖x‖]
+  have h3 : s ≤ 6 / 5 * ‖x‖ ^ 2 := by
+    rcases hs0.eq_or_lt with h0 | hpos
+    · linarith [sq_nonneg ‖x‖]
+    · exact le_of_mul_le_mul_right (by linarith) hpos
   linarith
 
 lemma pair_all (Wa Wb K : Submodule ℝ H) [Wa.HasOrthogonalProjection] [Wb.HasOrthogonalProjection]
@@ -161,7 +164,7 @@ lemma pair_all (Wa Wb K : Submodule ℝ H) [Wa.HasOrthogonalProjection] [Wb.HasO
   have h0 : 0 ≤ ‖(q Wa y + q Wb y) - (4 / 5 : ℝ) • y‖ ^ 2 := by positivity
   rw [norm_sub_sq_real, real_inner_smul_right, norm_smul, hT, Real.norm_eq_abs,
     abs_of_pos (by norm_num : (0 : ℝ) < 4 / 5)] at h0
-  nlinarith [sq_nonneg ‖y‖]
+  linarith
 
 lemma three (u₁ u₂ u₃ : H) : ‖u₁ + u₂ + u₃‖ ^ 2 =
     ‖u₁ + u₂‖ ^ 2 + ‖u₃ + u₁‖ ^ 2 + ‖u₃ + u₂‖ ^ 2 - (‖u₁‖ ^ 2 + ‖u₂‖ ^ 2 + ‖u₃‖ ^ 2) := by
@@ -178,10 +181,10 @@ lemma form_cs (D : H →L[ℝ] H) (hsym : ∀ x y, ⟪D x, y⟫_ℝ = ⟪x, D y�
     simp only [map_add (f := _), map_smul, inner_add_left, inner_add_right, real_inner_smul_left,
       real_inner_smul_right] at this
     rw [e] at this
-    nlinarith [this]
+    linarith
   have := discrim_le_zero h
   unfold discrim at this
-  nlinarith [this]
+  linarith
 
 lemma range_bound (D : H →L[ℝ] H) (hsym : ∀ x y, ⟪D x, y⟫_ℝ = ⟪x, D y⟫_ℝ) (hpos : ∀ x, 0 ≤ ⟪D x, x⟫_ℝ)
     (hsum : ∀ x, 3 / 5 * ⟪D x, x⟫_ℝ ≤ ‖D x‖ ^ 2) (x : H) :
@@ -198,7 +201,7 @@ lemma range_bound (D : H →L[ℝ] H) (hsym : ∀ x y, ⟪D x, y⟫_ℝ = ⟪x, 
     mul_le_mul_of_nonneg_right (by linarith) h3
   have h5 : ‖D x‖ ^ 2 * ⟪D (D x), D x⟫_ℝ < ‖D x‖ ^ 2 * (3 / 5 * ‖D x‖ ^ 2) :=
     mul_lt_mul_of_pos_left hne hY
-  nlinarith
+  linarith
 
 lemma closure_bound [CompleteSpace H] (D : H →L[ℝ] H) (W : Submodule ℝ H)
     (hker : ∀ u, ⟪D u, u⟫_ℝ = 0 → u ∈ W) (hr : ∀ x, 3 / 5 * ‖D x‖ ^ 2 ≤ ⟪D (D x), D x⟫_ℝ)
@@ -266,10 +269,12 @@ lemma upper (W₁ W₂ W₃ : Submodule ℝ H) [W₁.HasOrthogonalProjection] [W
     rw [n3]; ring
   have key : 3 / 5 * (2 * (‖v‖ * ‖w‖) ^ 2 + 2 * (‖v‖ * ‖w‖) * ⟪v, w⟫_ℝ) ≤
       2 * (‖v‖ * ‖w‖) ^ 2 - 2 * ⟪v, w⟫_ℝ ^ 2 := by
-    nlinarith [h, s2, s3, m2, m3]
+    linarith
   have hcs : -(‖v‖ * ‖w‖) ≤ ⟪v, w⟫_ℝ := (abs_le.1 (abs_real_inner_le_norm v w)).1
   have hA : 0 ≤ ‖v‖ * ‖w‖ := by positivity
-  nlinarith [key, hcs, hA]
+  by_contra hlt
+  replace hlt := not_le.mp hlt
+  linarith [mul_pos (show 0 < ⟪v, w⟫_ℝ + ‖v‖ * ‖w‖ by linarith) (show 0 < ⟪v, w⟫_ℝ - 2 / 5 * (‖v‖ * ‖w‖) by linarith)]
 
 end PositivityTheory.KB.SpectralGap.HilbertPairing
 
@@ -308,9 +313,9 @@ theorem hilb_holds : Hilb := by
   have hker : ∀ u, ⟪D u, u⟫_ℝ = 0 → u ∈ W₁ ⊓ W₂ ⊓ W₃ := by
     intro u hu
     rw [hself] at hu
-    have z1 : ‖q W₁ u‖ ^ 2 = 0 := by nlinarith [sq_nonneg ‖q W₁ u‖, sq_nonneg ‖q W₂ u‖, sq_nonneg ‖q W₃ u‖]
-    have z2 : ‖q W₂ u‖ ^ 2 = 0 := by nlinarith [sq_nonneg ‖q W₁ u‖, sq_nonneg ‖q W₂ u‖, sq_nonneg ‖q W₃ u‖]
-    have z3 : ‖q W₃ u‖ ^ 2 = 0 := by nlinarith [sq_nonneg ‖q W₁ u‖, sq_nonneg ‖q W₂ u‖, sq_nonneg ‖q W₃ u‖]
+    have z1 : ‖q W₁ u‖ ^ 2 = 0 := by linarith [sq_nonneg ‖q W₁ u‖, sq_nonneg ‖q W₂ u‖, sq_nonneg ‖q W₃ u‖]
+    have z2 : ‖q W₂ u‖ ^ 2 = 0 := by linarith [sq_nonneg ‖q W₁ u‖, sq_nonneg ‖q W₂ u‖, sq_nonneg ‖q W₃ u‖]
+    have z3 : ‖q W₃ u‖ ^ 2 = 0 := by linarith [sq_nonneg ‖q W₁ u‖, sq_nonneg ‖q W₂ u‖, sq_nonneg ‖q W₃ u‖]
     simp only [ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, pow_eq_zero_iff, norm_eq_zero] at z1 z2 z3
     exact Submodule.mem_inf.2 ⟨Submodule.mem_inf.2 ⟨mem_of_q W₁ z1, mem_of_q W₂ z2⟩, mem_of_q W₃ z3⟩
   have hcl : ∀ z ∈ (W₁ ⊓ W₂ ⊓ W₃)ᗮ, 3 / 5 * ‖z‖ ^ 2 ≤ ‖q W₁ z‖ ^ 2 + ‖q W₂ z‖ ^ 2 + ‖q W₃ z‖ ^ 2 := by
@@ -326,14 +331,13 @@ theorem hilb_holds : Hilb := by
     simp only [q, inner_sub_right, h0, sub_zero]
   have hnw : ‖q (W₁ ⊓ W₂ ⊓ W₃) w‖ ≤ ‖w‖ := by
     have := norm_split (W₁ ⊓ W₂ ⊓ W₃) w
-    nlinarith [norm_nonneg (q (W₁ ⊓ W₂ ⊓ W₃) w), norm_nonneg w,
-      sq_nonneg ‖(W₁ ⊓ W₂ ⊓ W₃).starProjection w‖]
+    exact (sq_le_sq₀ (norm_nonneg _) (norm_nonneg _)).mp (by linarith [sq_nonneg ‖(W₁ ⊓ W₂ ⊓ W₃).starProjection w‖])
   have u1 := upper W₁ W₂ W₃ hcl v _ hv hvp hw' hw'p
   have u2 := upper W₁ W₂ W₃ hcl v _ hv hvp (Submodule.neg_mem _ hw') (Submodule.neg_mem _ hw'p)
   rw [inner_neg_right, norm_neg] at u2
   have hm := mul_le_mul_of_nonneg_left hnw (norm_nonneg v)
   rw [hvw, abs_le]
-  constructor <;> nlinarith [hm]
+  constructor <;> linarith
 
 end PositivityTheory.KB.SpectralGap
 

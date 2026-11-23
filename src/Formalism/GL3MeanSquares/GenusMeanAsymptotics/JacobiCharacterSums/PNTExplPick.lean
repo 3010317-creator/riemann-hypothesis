@@ -68,8 +68,8 @@ theorem ex_pick (S : Finset ℝ) (a b : ℝ) (hab : a < b) :
       exact_mod_cast Nat.lt_succ_iff.mp this
     have hi0 : (0 : ℝ) ≤ i := Nat.cast_nonneg i
     apply hcon
-    · nlinarith
-    · nlinarith
+    · linarith [mul_nonneg hi0 hpos.le]
+    · linarith [mul_le_mul_of_nonneg_right hi' hpos.le]
   choose! f hfS hf using key
   have hcard : S.card < (Finset.range (S.card + 1)).card := by simp
   obtain ⟨i, hi, j, hj, hij, hfij⟩ :=
@@ -80,9 +80,9 @@ theorem ex_pick (S : Finset ℝ) (a b : ℝ) (hab : a < b) :
   rw [abs_lt] at h1 h2
   rcases lt_or_gt_of_ne hij with hlt | hlt
   · have : (i : ℝ) + 1 ≤ j := by exact_mod_cast hlt
-    nlinarith
+    linarith [mul_le_mul_of_nonneg_right this hpos.le]
   · have : (j : ℝ) + 1 ≤ i := by exact_mod_cast hlt
-    nlinarith
+    linarith [mul_le_mul_of_nonneg_right this hpos.le]
 
 theorem ex_choose : ∃ C : ℝ, 0 < C ∧ ∀ κ : ℝ, 0 < κ → κ ≤ 1 / 20 →
     ∀ (M : ℕ) [NeZero M] (χ : DirichletCharacter ℂ M) (T : ℝ), 3 ≤ M → 2 ≤ T →
@@ -98,24 +98,26 @@ theorem ex_choose : ∃ C : ℝ, 0 < C ∧ ∀ κ : ℝ, 0 < κ → κ ≤ 1 / 2
   set N : ℝ := (Z.card : ℝ) with hN
   have hN0 : 0 ≤ N := Nat.cast_nonneg _
   set lg : ℝ := Real.log ((M : ℝ) * (T + 2)) with hlg
-  have hx12 : (12 : ℝ) ≤ (M : ℝ) * (T + 2) := by nlinarith
+  have hx12 : (12 : ℝ) ≤ (M : ℝ) * (T + 2) := by linarith [mul_le_mul hMr (show (4 : ℝ) ≤ T + 2 by linarith) (by norm_num) (by linarith)]
   have hlg1 : 1 ≤ lg := by
     rw [hlg, Real.le_log_iff_exp_le (by linarith)]
     have := Real.exp_one_lt_d9
     linarith
   have hlg2 : Real.log ((M : ℝ) * (T + 3 + 2)) ≤ 2 * lg := by
-    have h1 : (M : ℝ) * (T + 3 + 2) ≤ ((M : ℝ) * (T + 2)) ^ 2 := by nlinarith
+    have h1 : (M : ℝ) * (T + 3 + 2) ≤ ((M : ℝ) * (T + 2)) ^ 2 := by
+      linarith [mul_le_mul_of_nonneg_right hx12 (show 0 ≤ (M : ℝ) * (T + 2) by linarith),
+        mul_nonneg (show 0 ≤ (M : ℝ) by linarith) (show 0 ≤ T - 1 by linarith)]
     have h2 : Real.log (((M : ℝ) * (T + 2)) ^ 2) = 2 * lg := by
       rw [Real.log_pow]; push_cast; ring
     rw [← h2]
-    exact Real.log_le_log (by nlinarith) h1
+    exact Real.log_le_log (by positivity) h1
   have hNb : 8 * (N + 1) ≤ 8 * (4 * C0 + 1) * (T + 1) * lg := by
     have h1 : C0 * (T + 3 + 1) * Real.log ((M : ℝ) * (T + 3 + 2)) ≤ C0 * (2 * (T + 1)) * (2 * lg) := by
       apply mul_le_mul _ hlg2 _ (by positivity)
       · apply mul_le_mul_of_nonneg_left (by linarith) hC0.le
-      · apply Real.log_nonneg; nlinarith
-    have h2 : 1 ≤ (T + 1) * lg := by nlinarith
-    nlinarith
+      · exact Real.log_nonneg (one_le_mul_of_one_le_of_one_le (by linarith) (by linarith))
+    have h2 : 1 ≤ (T + 1) * lg := one_le_mul_of_one_le_of_one_le (by linarith) hlg1
+    linarith
 
   obtain ⟨σ₁, hσa, hσb, hσ⟩ := ex_pick (Z.image Complex.re) (1 - κ) (1 - 3 * κ / 4) (by linarith)
   obtain ⟨T', hTa, hTb, hT'⟩ := ex_pick (Z.image (fun ρ => |ρ.im|)) T (T + 1) (by linarith)
@@ -128,15 +130,15 @@ theorem ex_choose : ∃ C : ℝ, 0 < C ∧ ∀ κ : ℝ, 0 < κ → κ ≤ 1 / 2
       (1 - 3 * κ / 4 - (1 - κ)) / (2 * (((Z.image Complex.re).card : ℝ) + 1)) := by
     have e : (1 - 3 * κ / 4 - (1 - κ)) = κ / 4 := by ring
     rw [e, div_le_div_iff₀ (by positivity) (by positivity)]
-    nlinarith
+    linarith [mul_le_mul_of_nonneg_left hc1 hκ.le]
   have hg2 : κ / (8 * (N + 1)) ≤
       (T + 1 - T) / (2 * (((Z.image (fun ρ : ℂ => |ρ.im|)).card : ℝ) + 1)) := by
     have e : (T + 1 - T) = 1 := by ring
     rw [e, div_le_div_iff₀ (by positivity) (by positivity)]
-    nlinarith
+    linarith [mul_le_mul hc2 hκ' (by positivity) (by positivity)]
   have hδle : κ / (8 * (N + 1)) ≤ 1 / 20 := by
     rw [div_le_div_iff₀ (by positivity) (by norm_num)]
-    nlinarith
+    linarith
   refine ⟨σ₁, T', κ / (8 * (N + 1)), hσa, hσb, hTa, hTb, hδpos, hδle, ?_, ?_, ?_⟩
   · exact div_le_div_of_nonneg_left hκ.le (by positivity) hNb
   · intro ρ h0 hre him

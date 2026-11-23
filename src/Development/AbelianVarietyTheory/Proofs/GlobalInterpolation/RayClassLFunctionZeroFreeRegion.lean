@@ -132,7 +132,7 @@ theorem re_LSeries_le : ∃ C : ℝ, 0 < C ∧ ∀ (𝓕 : LFam) (χ : AddChar �
             linarith
           have hm : (1 : ℝ) ≤ analyticOrderNatAt (𝓕.F χ) w := by
             exact_mod_cast one_le_order hre hw2
-          nlinarith [hfpos w hw2]
+          exact le_mul_of_one_le_left (hfpos w hw2) hm
       _ ≤ _ := by
           apply Finset.sum_le_sum_of_subset_of_nonneg
           · intro w hw
@@ -174,8 +174,8 @@ theorem ell_two_le (𝓕 : LFam) (t : ℝ) : 𝓕.ell (2 * t) ≤ 2 * 𝓕.ell t
   rw [e, abs_mul, abs_two]
   apply Real.log_le_log
   · positivity
-  · have h1 : 2 * |t| + 2 ≤ 4 * (|t| + 2) ^ 2 := by nlinarith
-    have h2 : 4 * (|t| + 2) ^ 2 ≤ 𝓕.B * (|t| + 2) ^ 2 := by nlinarith [sq_nonneg (|t| + 2)]
+  · have h1 : 2 * |t| + 2 ≤ 4 * (|t| + 2) ^ 2 := by linarith [sq_nonneg |t|]
+    have h2 : 4 * (|t| + 2) ^ 2 ≤ 𝓕.B * (|t| + 2) ^ 2 := mul_le_mul_of_nonneg_right hB (sq_nonneg _)
     calc 𝓕.B * (2 * |t| + 2) ≤ 𝓕.B * (𝓕.B * (|t| + 2) ^ 2) :=
           mul_le_mul_of_nonneg_left (by linarith) (by linarith)
       _ = (𝓕.B * (|t| + 2)) ^ 2 := by ring
@@ -185,7 +185,7 @@ theorem pole_le {ε y : ℝ} (hε : 0 < ε) (hy : (30 * ε) ^ 2 ≤ y ^ 2) :
   have hD : 0 < (6 * ε) ^ 2 + y ^ 2 := by positivity
   have e : 1 / 156 * (1 / ε) = 1 / (156 * ε) := by ring
   rw [e, div_le_div_iff₀ hD (by positivity)]
-  nlinarith
+  linarith
 
 private lemma norm_ofReal_add_mul_I_le_abs_add_abs (x y : ℝ) : ‖(x : ℂ) + y * I‖ ≤ |x| + |y| := by
   simpa using norm_le_abs_re_add_abs_im ((x : ℂ) + y * I)
@@ -201,7 +201,7 @@ theorem inv_le_ell : ∃ K : ℝ, 0 < K ∧ ∀ (𝓕 : LFam) (χ : AddChar 𝓕
   have hℓ2 := ell_two_le 𝓕 γ
   have hℓ1 := one_le_ell 𝓕 γ
   have hCℓ0 : C * 𝓕.ell 0 ≤ C * 𝓕.ell γ := mul_le_mul_of_nonneg_left hℓ0 hC.le
-  have hCℓ2 : C * 𝓕.ell (2 * γ) ≤ 2 * (C * 𝓕.ell γ) := by nlinarith
+  have hCℓ2 : C * 𝓕.ell (2 * γ) ≤ 2 * (C * 𝓕.ell γ) := by linarith [mul_le_mul_of_nonneg_left hℓ2 hC.le]
   have hCℓ : 0 ≤ C * 𝓕.ell γ := mul_nonneg hC.le (by linarith)
   obtain ⟨v, hv⟩ : ∃ v : ℝ, v = 1 / ε := ⟨_, rfl⟩
   have hv0 : 0 < v := by rw [hv]; positivity
@@ -275,11 +275,10 @@ theorem inv_le_ell : ∃ K : ℝ, 0 < K ∧ ∀ (𝓕 : LFam) (χ : AddChar 𝓕
         linarith
     have hlow : 60 / (4621 * ε) ≤ (60 * ε + δ) / ((60 * ε + δ) ^ 2 + γ ^ 2) := by
       rw [div_le_div_iff₀ (by positivity) (by positivity)]
-      nlinarith [mul_nonneg (show (0 : ℝ) ≤ 60 * ε + δ - 60 * ε by linarith)
-        (show (0 : ℝ) ≤ 61 * ε - (60 * ε + δ) by linarith), mul_pos hε hε]
+      linarith [mul_nonneg hδ (sub_nonneg.mpr hδε), mul_le_mul_of_nonneg_left hδε hε.le, mul_nonneg hε.le hδ, sq_nonneg ε]
     have i1 : 1 / (60 * ε) = v / 60 := by rw [hv]; ring
     have i2 : 60 / (4621 * ε) = 60 / 4621 * v := by rw [hv]; ring
-    nlinarith
+    linarith
   · have hcase1 : χ = 1 → (30 * ε) ^ 2 ≤ γ ^ 2 := by
       intro h
       by_contra hc
@@ -291,7 +290,7 @@ theorem inv_le_ell : ∃ K : ℝ, 0 < K ∧ ∀ (𝓕 : LFam) (χ : AddChar 𝓕
         by_contra hc
         push_neg at hc
         exact hB ⟨h, hc⟩
-      nlinarith [sq_nonneg γ]
+      linarith [sq_nonneg γ]
     have ha0 : 0 < 6 * ε := by positivity
     have ha2 : 6 * ε ≤ 1 / 2 := by linarith
     have hP0 : 0 ≤ 1 / 156 * (1 / ε) := by positivity
@@ -326,12 +325,12 @@ theorem inv_le_ell : ∃ K : ℝ, 0 < K ∧ ∀ (𝓕 : LFam) (χ : AddChar 𝓕
     rw [Finset.sum_singleton, e1, re_one_div] at hb2
     have hlow : 1 / (7 * ε) ≤ (6 * ε + δ) / ((6 * ε + δ) ^ 2 + (0 : ℝ) ^ 2) := by
       rw [div_le_div_iff₀ (by positivity) (by positivity)]
-      nlinarith [mul_le_mul_of_nonneg_left (show 6 * ε + δ ≤ 7 * ε by linarith)
+      linarith [mul_le_mul_of_nonneg_left (show 6 * ε + δ ≤ 7 * ε by linarith)
         (show (0 : ℝ) ≤ 6 * ε + δ by linarith)]
     have i1 : 1 / (6 * ε) = v / 6 := by rw [hv]; ring
     have i2 : 1 / (7 * ε) = v / 7 := by rw [hv]; ring
     have i3 : 1 / 156 * (1 / ε) = v / 156 := by rw [hv]; ring
-    nlinarith
+    linarith
 
 theorem zero_free_region : ∃ c : ℝ, 0 < c ∧ ∀ (𝓕 : LFam) (χ : AddChar 𝓕.G ℂ) (s : ℂ), 3 / 4 ≤ s.re → 𝓕.F χ s = 0 → (χ * χ ≠ 1 ∨ s.im ≠ 0) → s.re < 1 - c / 𝓕.ell s.im := by
   obtain ⟨K, hK, hKb⟩ := inv_le_ell
@@ -345,19 +344,19 @@ theorem zero_free_region : ∃ c : ℝ, 0 < c ∧ ∀ (𝓕 : LFam) (χ : AddCha
   have hε : 0 < 1 / ((2 * K + 200) * 𝓕.ell s.im) := by positivity
   have hε1 : 1 / ((2 * K + 200) * 𝓕.ell s.im) ≤ 1 / 400 := by
     apply one_div_le_one_div_of_le (by norm_num)
-    nlinarith [mul_pos hK hℓpos]
+    linarith [mul_pos hK hℓpos]
   have hδ : 0 ≤ 1 - s.re := by linarith [re_le_one hs]
   have hδε : 1 - s.re ≤ 1 / ((2 * K + 200) * 𝓕.ell s.im) := by
     have h1 : 1 - s.re ≤ 1 / (4 * K + 400) / 𝓕.ell s.im := by linarith
     refine h1.trans ?_
     rw [div_div]
     apply one_div_le_one_div_of_le hpos
-    nlinarith [mul_pos hK hℓpos]
+    linarith [mul_pos hK hℓpos]
   have hz : 𝓕.F χ (((1 - (1 - s.re) : ℝ) : ℂ) + s.im * I) = 0 := by
     rw [show (1 - (1 - s.re) : ℝ) = s.re by ring, re_add_im]
     exact hs
   have h := hKb 𝓕 χ _ (1 - s.re) s.im hz hχ hε hε1 hδ hδε
   rw [one_div_one_div] at h
-  nlinarith [mul_pos hK hℓpos]
+  linarith [mul_pos hK hℓpos]
 
 end GlobalTheory.Hk.ZeroFree
