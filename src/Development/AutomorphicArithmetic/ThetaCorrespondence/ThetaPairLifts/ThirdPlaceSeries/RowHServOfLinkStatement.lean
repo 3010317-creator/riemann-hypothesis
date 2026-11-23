@@ -195,7 +195,7 @@ theorem inertia_fixes (hW : ∀ (E Ω : Type) [Field E] [NumberField E] [Field �
     σ x = x := by
   obtain ⟨art, hop, hin, hfrob⟩ := hW (KQ d) (Om d)
   have hxi : IsIntegral ℤ x := by
-    obtain ⟨y, hy, hyi⟩ := exists_Om d (cm1 d L hsf hd hL)
+    obtain ⟨y, hy, hyi⟩ := exists_Om d (ReciprocityTheory.ChartRestriction.L1.cm1 d L hsf hd hL)
     have : y = x := Subtype.ext (hy.trans hx.symm)
     rwa [this] at hyi
   obtain ⟨P, hP, hPx⟩ := hxi
@@ -246,7 +246,7 @@ theorem inertia_fixes (hW : ∀ (E Ω : Type) [Field E] [NumberField E] [Field �
 theorem good_model (hW : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω], ∃ art : (Ω ≃ₐ[E] Ω) →* ClassGroup (𝓞 E), IsOpen (art.ker : Set (Ω ≃ₐ[E] Ω)) ∧ (∀ (A : ValuationSubring Ω) (g : Ω ≃ₐ[E] Ω), ReciprocityTheory.ChartRestriction.L1.InertiaEl A g → art g = 1) ∧ ∀ (v : HeightOneSpectrum (𝓞 E)) (A : ValuationSubring Ω) (φ : Ω ≃ₐ[E] Ω), LiesAbove A v → IsArithFrobenius A v φ → art φ = ClassGroup.mk0 ⟨v.asIdeal, mem_nonZeroDivisors_of_ne_zero v.ne_bot⟩) (hC : ChebOmSt) : CM2 := by
   refine goodReduction_of_integral_unramified jInt ?_
   intro d L hsf hd hL l _ hl hld ι
-  obtain ⟨x, hx, -⟩ := exists_Om d (cm1 d L hsf hd hL)
+  obtain ⟨x, hx, -⟩ := exists_Om d (ReciprocityTheory.ChartRestriction.L1.cm1 d L hsf hd hL)
   rw [← hx]
   exact inertKur (by omega) hld ι x fun σ hσ => inertia_fixes hW hC hsf hd hL x hx _ σ hσ
 
@@ -287,7 +287,7 @@ theorem exists_artinSymbol : GlobalTheory.Published.GlobalArtinReciprocity → �
     ext x
     rw [Set.mem_preimage, SetLike.mem_coe, SetLike.mem_coe, MonoidHom.mem_ker, hρ, MonoidHom.mem_ker]
   let ψ : (Ω ≃ₐ[E] Ω) →* ClassGroup (𝓞 E) := ρ.comp (toAb E Ω)
-  have hlies : ∀ (v : HeightOneSpectrum (𝓞 E)) (A : ValuationSubring Ω), LiesAbove A v → IsPlaceOver A v :=
+  have hlies : ∀ (v : HeightOneSpectrum (𝓞 E)) (A : ValuationSubring Ω), LiesAbove A v → Neutral.B1.IsPlaceOver A v :=
     fun v A h x => by rw [← h x, A.mem_nonunits_iff]
   refine ⟨ψ⁻¹, ?_, ?_, ?_⟩
   · have e : ((ψ⁻¹).ker : Set (Ω ≃ₐ[E] Ω)) = toAb E Ω ⁻¹' (ρ.ker : Set (Gab E Ω)) := by
