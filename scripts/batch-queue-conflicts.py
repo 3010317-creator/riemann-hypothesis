@@ -19,6 +19,8 @@ import tempfile
 
 # Compared against, in this order: what is being built now, then what is waiting.
 LABELS = ("building", "batch queue")
+# Branches of this repository that hold a batch. Their pull requests are not compared.
+BATCHES = "batch/"
 # Hidden in the comment so that a later run edits it instead of adding another.
 MARKER = "<!-- batch-queue-conflicts -->"
 BOT = "github-actions[bot]"
@@ -126,26 +128,38 @@ def head_of(repo, number):
     return gh(f"repos/{repo}/pulls/{number}", "--jq", ".head.sha").strip()
 
 
-def labelled(repo, exclude):
-    """Open pull requests carrying one of LABELS, as {number: label}. The first label wins."""
+def open_pulls(repo):
+    """Every open pull request as {number: (head commit, labels, whether it is a batch)}.
+
+    One listing answers for all of them. The workflow's token is allowed 1,000 requests an hour,
+    shared with every other workflow, so nothing here asks GitHub about pull requests one by one.
+    """
+    rows = gh("--paginate", f"repos/{repo}/pulls?state=open&per_page=100", "--jq",
+              '.[] | [.number, .head.sha, .head.ref, (.head.repo.full_name // ""), ([.labels[].name] | join("|"))] | @tsv')
+    found = {}
+    for row in rows.splitlines():
+        number, sha, ref, home, labels = (row.split("\t") + [""] * 5)[:5]
+        found[int(number)] = (sha, set(labels.split("|")), home == repo and ref.startswith(BATCHES))
+    return found
+
+
+def labelled(pulls, exclude):
+    """Pull requests carrying one of LABELS, as {number: label}. The first label wins.
+
+    A batch pull request is left out: what it contains is compared one pull request at a time.
+    """
     found = {}
     for label in LABELS:
-        query = f"repos/{repo}/issues?state=open&per_page=100&labels={label.replace(' ', '%20')}"
-        numbers = gh("--paginate", query, "--jq", ".[] | select(.pull_request) | .number")
-        for number in map(int, numbers.split()):
-            if number != exclude:
+        for number, (_, labels, batch) in sorted(pulls.items()):
+            if label in labels and number != exclude and not batch:
                 found.setdefault(number, label)
     return found
 
 
-def merge_base(repo, ours, theirs):
-    """The common ancestor GitHub reports for two commits, or None if it reports none."""
-    try:
-        query = f"repos/{repo}/compare/{ours}...{theirs}?per_page=1"
-        sha = gh(query, "--jq", ".merge_base_commit.sha").strip()
-    except RuntimeError:
-        return None
-    return sha if len(sha) == 40 else None
+def merge_base(work, ours, theirs):
+    """The common ancestor of two commits that have been fetched, or None if they have none."""
+    code, out = git(work, "merge-base", ours, theirs, ok=(0, 1))
+    return out.decode().strip() if code == 0 else None
 
 
 def survey(repo, number, work):
@@ -154,24 +168,26 @@ def survey(repo, number, work):
     Returns its head commit, the others as {number: label}, and {number: Comparison}.
     """
     main = gh(f"repos/{repo}", "--jq", ".default_branch").strip()
-    head = head_of(repo, number)
-    fork = merge_base(repo, main, head)
-    others = labelled(repo, number)
-    results, pairs = {}, {}
+    pulls = open_pulls(repo)
+    head = pulls[number][0] if number in pulls else head_of(repo, number)
+    others = labelled(pulls, number)
+    results = {}
+    if not others:
+        return head, others, results
+    # One fetch of commits and trees, without file contents, for every pull request involved.
+    # The history comes with it, so common ancestors are worked out here and not asked for.
+    git(work, "init", "--quiet")
+    git(work, "remote", "add", "origin", f"https://github.com/{repo}.git")
+    git(work, "fetch", "--quiet", "--filter=blob:none", "--no-tags", "origin",
+        f"+refs/heads/{main}:refs/remotes/origin/{main}", head, *sorted({pulls[other][0] for other in others}))
+    trunk = f"refs/remotes/origin/{main}"
+    fork = merge_base(work, trunk, head)
     for other in others:
-        theirs = head_of(repo, other)
-        commits = (merge_base(repo, head, theirs), theirs, merge_base(repo, main, theirs))
-        if fork is None or None in commits:
-            results[other] = Comparison("unknown", note="GitHub reports no common ancestor")
-        else:
-            pairs[other] = commits
-    if pairs:
-        # One shallow fetch without file contents: each commit brings only its trees.
-        wanted = {head, fork} | {sha for commits in pairs.values() for sha in commits}
-        git(work, "init", "--quiet")
-        git(work, "remote", "add", "origin", f"https://github.com/{repo}.git")
-        git(work, "fetch", "--quiet", "--depth=1", "--filter=blob:none", "--no-tags", "origin", *sorted(wanted))
-    for other, (base, theirs, theirs_fork) in pairs.items():
+        theirs = pulls[other][0]
+        base, theirs_fork = merge_base(work, head, theirs), merge_base(work, trunk, theirs)
+        if None in (fork, base, theirs_fork):
+            results[other] = Comparison("unknown", note="no common ancestor")
+            continue
         try:
             results[other] = compare(work, base, head, theirs, ours_fork=fork, theirs_fork=theirs_fork,
                                      partial=True)

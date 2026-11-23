@@ -2,6 +2,7 @@
 """Batch assembly checks against an in-memory stand-in for GitHub; no network calls."""
 import contextlib
 import datetime
+import hashlib
 import importlib.util
 import io
 from pathlib import Path
@@ -14,35 +15,84 @@ batch = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(batch)
 
 REPO = "o/r"
-NOW = datetime.datetime(2026, 11, 23, 4, 12, tzinfo=datetime.timezone.utc)
-QUEUED, BUILDING = batch.QUEUED, batch.BUILDING
+NOW = datetime.datetime(2026, 11, 23, 4, 12, 30, tzinfo=datetime.timezone.utc)
+FIRST = "batch/2026-11-23-041230"
+QUEUED, BUILDING, BOT = batch.QUEUED, batch.BUILDING, batch.BOT
+
+
+def sha(name):
+    """A commit id for a made-up commit."""
+    return hashlib.sha1(name.encode()).hexdigest()
+
+
+def short(name):
+    return sha(name)[:10]
+
+
+MAIN = sha("main")
 
 
 class Fake(batch.GitHub):
-    """Just enough of the REST API. Commits are names; `inside` says what each one contains."""
+    """Just enough of the REST API. `inside` says which commits each commit contains."""
 
     def __init__(self, dry_run=False):
         super().__init__(REPO, dry_run)
-        self.pulls, self.refs, self.comments = {}, {}, {}
-        self.inside = {"main0": set()}
-        self.commits = {"main0": {"message": "main", "parents": []}}
+        self.pulls, self.refs, self.comments, self.runs = {}, {}, {}, []
+        self.inside = {MAIN: set()}
+        self.commits = {MAIN: {"message": "main", "parents": []}}
         self.conflicting, self.allow_pulls, self.writes, self.after_merge = set(), True, [], None
+        self.clock, self.left = 0, None
 
     # Setting the scene.
-    def add_pull(self, number, sha, labels=(), ref=None, own=False, base="main", state="open", merged=False):
-        self.inside.setdefault(sha, set())
-        self.commits.setdefault(sha, {"message": f"Work for {number}", "parents": [{"sha": "main0"}]})
-        self.pulls[number] = {
-            "number": number, "state": state, "merged": merged, "labels": [{"name": name} for name in labels],
-            "body": "", "title": "",
-            "head": {"sha": sha, "ref": ref or f"topic-{number}", "repo": {"full_name": REPO if own else "fork/r"}},
-            "base": {"ref": base}}
+    def add_pull(self, number, name, labels=(), ref=None, own=False, base="main"):
+        head = sha(name)
+        self.inside.setdefault(head, set())
+        self.commits.setdefault(head, {"message": f"Work for {number}", "parents": [{"sha": MAIN}]})
+        self.pulls[number] = {"number": number, "state": "open", "merged_at": None, "labels": set(labels),
+                              "sha": head, "ref": ref or f"topic-{number}", "own": own, "base": base,
+                              "body": "", "title": "", "updated": 0}
+        self.touch(number)
 
-    def labels(self, number):
-        return {label["name"] for label in self.pulls[number]["labels"]}
+    def touch(self, number):
+        self.clock += 1
+        self.pulls[number]["updated"] = self.clock
+
+    def push(self, number, name):
+        """The author pushes a new head."""
+        head = sha(name)
+        self.inside.setdefault(head, set())
+        self.commits.setdefault(head, {"message": f"More work for {number}", "parents": [{"sha": MAIN}]})
+        self.pulls[number]["sha"] = head
+        self.touch(number)
+
+    def label(self, number, add=None, remove=None):
+        self.pulls[number]["labels"] = (self.pulls[number]["labels"] | ({add} if add else set())) - {remove}
+        self.touch(number)
+
+    def say(self, number, body, login=BOT):
+        self.comments.setdefault(number, []).append({"user": {"login": login}, "body": body})
+        self.touch(number)
+
+    def said(self, number):
+        """What this script has said on a pull request, leaving out the label job's records."""
+        return [item["body"] for item in self.comments.get(number, [])
+                if not item["body"].startswith(("<!-- batch-queue-approved", "<!-- batch-queue-withdrawn"))]
+
+    def close(self, number, merged=False):
+        self.pulls[number].update(state="closed", merged_at="2026-11-23T05:00:00Z" if merged else None)
+        if merged:
+            self.inside[MAIN] |= self.inside[self.pulls[number]["sha"]] | {self.pulls[number]["sha"]}
+
+    def view(self, pr):
+        return {"number": pr["number"], "state": pr["state"], "merged_at": pr["merged_at"],
+                "labels": [{"name": name} for name in sorted(pr["labels"])],
+                "head": {"sha": pr["sha"], "ref": pr["ref"], "repo": {"full_name": REPO if pr["own"] else "fork/r"}},
+                "base": {"ref": pr["base"]}, "body": pr["body"], "title": pr["title"], "updated_at": f"t{pr['updated']}"}
 
     # Answering requests.
     def call(self, method, path, payload=None):
+        self.calls += 1
+        self.remaining = self.left
         if method != "GET":
             self.writes.append((method, path, payload))
         for pattern, handler in self.routes:
@@ -54,34 +104,38 @@ class Fake(batch.GitHub):
     def _repo(self, _):
         return 200, {"default_branch": "main"}
 
+    def _open(self, _):
+        return 200, [self.view(pr) for pr in self.pulls.values() if pr["state"] == "open"]
+
     def _refs(self, _):
-        return 200, [{"ref": f"refs/heads/{name}", "object": {"sha": sha}} for name, sha in sorted(self.refs.items())]
+        return 200, [{"ref": f"refs/heads/{name}", "object": {"sha": head}} for name, head in sorted(self.refs.items())]
 
     def _main(self, _):
-        return 200, {"object": {"sha": "main0"}}
+        return 200, {"object": {"sha": MAIN}}
 
     def _pulls_for(self, _, name):
-        return 200, [pr for pr in self.pulls.values() if pr["head"]["ref"] == name and pr["head"]["repo"]["full_name"] == REPO]
+        return 200, [self.view(pr) for pr in self.pulls.values() if pr["ref"] == name and pr["own"]]
 
-    def _pull(self, _, number):
-        return 200, self.pulls[int(number)]
-
-    def _issues(self, _, label, state):
-        label = label.replace("%20", " ")
-        return 200, [{"number": number, "pull_request": {}} for number, pr in self.pulls.items()
-                     if label in self.labels(number) and state in ("all", pr["state"])]
+    def _commit(self, _, commit):
+        return 200, self.commits[commit]
 
     def _compare(self, _, base, head):
         return 200, {"ahead_by": 0 if head == base or head in self.inside[base] else 1}
 
-    def _commit(self, _, sha):
-        return 200, self.commits[sha]
-
     def _comments(self, _, number):
-        return 200, self.comments.get(int(number), [])
+        return 200, list(self.comments.get(int(number), []))
+
+    def _labels(self, _, number):
+        return 200, [{"name": name} for name in sorted(self.pulls[int(number)]["labels"])]
+
+    def _runs(self, _):
+        return 200, {"workflow_runs": [{"display_title": title} for title in self.runs]}
 
     def _new_ref(self, payload):
-        self.refs[payload["ref"][len("refs/heads/"):]] = payload["sha"]
+        name = payload["ref"][len("refs/heads/"):]
+        if name in self.refs:
+            return 422, {"message": "Reference already exists"}
+        self.refs[name] = payload["sha"]
         return 201, {}
 
     def _merge(self, payload):
@@ -90,13 +144,14 @@ class Fake(batch.GitHub):
             return 409, {"message": "Merge conflict"}
         if head == base or head in self.inside[base]:
             return 204, None
-        merged = f"merge-of-{head}-into-{base}"
+        merged = sha(f"merge of {head} into {base}")
         self.inside[merged] = self.inside[base] | self.inside[head] | {base, head}
         self.commits[merged] = {"message": payload["commit_message"], "parents": [{"sha": base}, {"sha": head}]}
         self.refs[payload["base"]] = merged
         for pr in self.pulls.values():
-            if pr["head"]["ref"] == payload["base"]:
-                pr["head"]["sha"] = merged
+            if pr["own"] and pr["ref"] == payload["base"]:
+                pr["sha"] = merged
+                self.touch(pr["number"])
         if self.after_merge:
             self.after_merge()
         return 201, {"sha": merged}
@@ -105,27 +160,31 @@ class Fake(batch.GitHub):
         if not self.allow_pulls:
             return 403, {"message": "GitHub Actions is not permitted to create or approve pull requests."}
         number = max(self.pulls, default=0) + 100
-        self.add_pull(number, self.refs[payload["head"]], ref=payload["head"], own=True)
-        self.pulls[number].update(body=payload["body"], title=payload["title"])
+        self.pulls[number] = {"number": number, "state": "open", "merged_at": None, "labels": set(),
+                              "sha": self.refs[payload["head"]], "ref": payload["head"], "own": True, "base": "main",
+                              "body": payload["body"], "title": payload["title"], "updated": 0}
+        self.touch(number)
         return 201, {"number": number}
 
     def _edit_pull(self, payload, number):
         self.pulls[int(number)].update(payload)
+        self.touch(int(number))
         return 200, {}
 
     def _add_label(self, payload, number):
-        self.pulls[int(number)]["labels"] += [{"name": name} for name in payload["labels"] if name not in self.labels(int(number))]
+        for name in payload["labels"]:
+            self.label(int(number), add=name)
         return 200, []
 
-    def _drop_label(self, _, number, label):
-        pr, label = self.pulls[int(number)], label.replace("%20", " ")
-        if label not in self.labels(int(number)):
+    def _drop_label(self, _, number, name):
+        name = name.replace("%20", " ")
+        if name not in self.pulls[int(number)]["labels"]:
             return 404, {"message": "Label does not exist"}
-        pr["labels"] = [item for item in pr["labels"] if item["name"] != label]
+        self.label(int(number), remove=name)
         return 200, []
 
     def _comment(self, payload, number):
-        self.comments.setdefault(int(number), []).append({"body": payload["body"], "user": {"login": batch.BOT}})
+        self.say(int(number), payload["body"])
         return 201, {}
 
     def _drop_ref(self, _, name):
@@ -133,14 +192,15 @@ class Fake(batch.GitHub):
 
     routes = [
         (r"GET ", _repo),
+        (r"GET pulls\?state=open&per_page=100&page=1", _open),
         (r"GET git/matching-refs/heads/batch/", _refs),
         (r"GET git/ref/heads/main", _main),
         (r"GET git/commits/(.+)", _commit),
         (r"GET pulls\?state=all&head=o:(.+)", _pulls_for),
-        (r"GET pulls/(\d+)", _pull),
-        (r"GET issues\?labels=([^&]+)&state=(\w+)&per_page=100&page=1", _issues),
         (r"GET compare/([^.]+)\.\.\.([^?]+)\?per_page=1", _compare),
         (r"GET issues/(\d+)/comments\?per_page=100&page=1", _comments),
+        (r"GET issues/(\d+)/labels", _labels),
+        (r"GET actions/workflows/build-pr.yml/runs\?event=workflow_dispatch&per_page=30", _runs),
         (r"POST git/refs", _new_ref),
         (r"POST merges", _merge),
         (r"POST pulls", _new_pull),
@@ -153,223 +213,470 @@ class Fake(batch.GitHub):
 
 
 def queue(gh, *numbers):
+    """A maintainer comments `batch`: the label job adds the label and records the head commit."""
     for number in numbers:
-        gh.add_pull(number, f"head{number}", labels=[QUEUED])
+        if number not in gh.pulls:
+            gh.add_pull(number, f"head{number}")
+        gh.label(number, add=QUEUED)
+        gh.say(number, f"<!-- batch-queue-approved {gh.pulls[number]['sha']} -->\nQueued at this commit.")
+
+
+def unqueue(gh, number):
+    """A maintainer comments `-batch`: the label job removes the label and withdraws the commit."""
+    gh.label(number, remove=QUEUED)
+    gh.say(number, "<!-- batch-queue-withdrawn -->\nTaken out of the batch queue.")
+
+
+def freeze(gh, number):
+    gh.label(number, add=BUILDING)
+
+
+def batch_pull(gh, ref=FIRST):
+    return next(pr for pr in gh.pulls.values() if pr["ref"] == ref)
+
+
+def sync(gh, hours=0):
+    return batch.sync(gh, NOW + datetime.timedelta(hours=hours))
+
+
+def merges(gh):
+    return [payload["head"] for method, path, payload in gh.writes if path == "merges"]
+
+
+class QueuedCommits(unittest.TestCase):
+    """A batch takes the commit a maintainer queued, and nothing else."""
+
+    def test_a_push_after_queuing_is_not_merged(self):
+        gh = Fake()
+        queue(gh, 11)
+        gh.push(11, "head11-later")
+        log = sync(gh)
+        self.assertEqual(merges(gh), [sha("head11")])
+        self.assertNotIn(sha("head11-later"), gh.inside[gh.refs[FIRST]])
+        self.assertIn(f"- #11 at `{short('head11')}`", batch_pull(gh)["body"])
+        self.assertEqual(len(gh.said(11)), 1)
+        self.assertIn(f"was queued at `{short('head11')}` and its head is now `{short('head11-later')}`", gh.said(11)[0])
+        self.assertIn("told #11 that its head has moved since it was queued", log)
+        # Later runs neither merge the new commit nor repeat the comment.
+        gh.writes = []
+        sync(gh)
+        sync(gh)
+        self.assertEqual((merges(gh), len(gh.said(11))), ([], 1))
+
+    def test_a_push_after_being_merged_is_not_merged_either(self):
+        gh = Fake()
+        queue(gh, 11, 12)
+        sync(gh)
+        gh.push(12, "head12-later")
+        gh.writes = []
+        sync(gh)
+        self.assertEqual(merges(gh), [])
+        self.assertIn(f"- #12 at `{short('head12')}`", batch_pull(gh)["body"])
+        self.assertIn("Comment `batch` again to queue the new one.", gh.said(12)[0])
+
+    def test_queuing_again_merges_the_new_commit(self):
+        gh = Fake()
+        queue(gh, 11)
+        sync(gh)
+        gh.push(11, "head11-later")
+        queue(gh, 11)
+        sync(gh)
+        self.assertIn(sha("head11-later"), gh.inside[gh.refs[FIRST]])
+        self.assertIn(f"- #11 at `{short('head11-later')}`", batch_pull(gh)["body"])
+
+    def test_the_label_alone_queues_nothing(self):
+        gh = Fake()
+        queue(gh, 11)
+        gh.add_pull(12, "head12", labels=[QUEUED])  # labelled by hand, for instance with the triage role
+        log = sync(gh)
+        self.assertEqual(merges(gh), [sha("head11")])
+        self.assertIn("Labelled `batch queue` but not queued, because no maintainer has commented `batch` on them: #12.",
+                      batch_pull(gh)["body"])
+        self.assertEqual(gh.said(12), [])
+        self.assertEqual(gh.pulls[12]["labels"], {QUEUED})
+        self.assertNotIn("left #12 out", " ".join(log))
+
+    def test_with_nothing_queued_no_batch_is_started(self):
+        gh = Fake()
+        gh.add_pull(12, "head12", labels=[QUEUED])
+        self.assertEqual(sync(gh), ["labelled `batch queue` but not queued by a `batch` comment: #12"])
+        self.assertEqual((gh.refs, gh.writes), ({}, []))
+
+    def test_only_the_workflows_own_record_counts(self):
+        gh = Fake()
+        gh.add_pull(11, "head11", labels=[QUEUED])
+        gh.add_pull(12, "head12", labels=[QUEUED])
+        gh.add_pull(13, "head13", labels=[QUEUED])
+        # Written by the author, not by the workflow.
+        gh.say(11, f"<!-- batch-queue-approved {sha('head11')} -->", login="author")
+        # Written by the workflow, but not at the start: a file name in a report, say.
+        gh.say(12, f"Files in conflict: `<!-- batch-queue-approved {sha('head12')} -->`")
+        # Not a full commit id.
+        gh.say(13, "<!-- batch-queue-approved abc123 -->")
+        sync(gh)
+        self.assertEqual((merges(gh), gh.refs), ([], {}))
+
+    def test_taking_it_out_withdraws_the_commit_even_if_the_label_comes_back(self):
+        gh = Fake()
+        queue(gh, 11, 12)
+        unqueue(gh, 12)
+        gh.label(12, add=QUEUED)  # put back by hand
+        sync(gh)
+        self.assertEqual(merges(gh), [sha("head11")])
+        self.assertIn("no maintainer has commented `batch` on them: #12.", batch_pull(gh)["body"])
 
 
 class Assembling(unittest.TestCase):
     def test_first_batch_is_started_opened_and_lists_what_went_in(self):
         gh = Fake()
         queue(gh, 12, 11)
-        log = batch.sync(gh, NOW)
-        self.assertEqual(list(gh.refs), ["batch/2026-11-23-0412"])
-        opened = gh.pulls[112]
-        self.assertEqual((opened["title"], opened["head"]["ref"]), ("Batch 2026-11-23-0412", "batch/2026-11-23-0412"))
-        self.assertIn("- #11 at `head11`\n- #12 at `head12`", opened["body"])
+        log = sync(gh)
+        self.assertEqual(list(gh.refs), [FIRST])
+        opened = batch_pull(gh)
+        self.assertEqual((opened["title"], opened["number"]), ("Batch 2026-11-23-041230", 112))
+        self.assertIn(f"- #11 at `{short('head11')}`\n- #12 at `{short('head12')}`", opened["body"])
         self.assertTrue(opened["body"].startswith(batch.BODY))
-        self.assertEqual(gh.inside[gh.refs["batch/2026-11-23-0412"]] & {"head11", "head12"}, {"head11", "head12"})
+        self.assertTrue({sha("head11"), sha("head12")} <= gh.inside[gh.refs[FIRST]])
         # Being in a batch that is still open to additions does not change a label.
-        self.assertEqual((gh.labels(11), gh.labels(12)), ({QUEUED}, {QUEUED}))
-        self.assertIn("added #11 to `batch/2026-11-23-0412`", log)
+        self.assertEqual((gh.pulls[11]["labels"], gh.pulls[12]["labels"]), ({QUEUED}, {QUEUED}))
+        self.assertIn(f"added #11 at `{short('head11')}` to `{FIRST}`", log)
 
     def test_running_again_changes_nothing_more(self):
         gh = Fake()
         queue(gh, 11, 12)
-        batch.sync(gh, NOW)
-        head, gh.writes = gh.refs["batch/2026-11-23-0412"], []
-        batch.sync(gh, NOW)
-        self.assertEqual(gh.refs, {"batch/2026-11-23-0412": head})
-        self.assertEqual(gh.writes, [])
+        sync(gh)
+        head, gh.writes = gh.refs[FIRST], []
+        self.assertEqual(sync(gh), ["nothing to do"])
+        self.assertEqual((gh.refs, gh.writes), ({FIRST: head}, []))
 
     def test_new_arrival_joins_the_batch_being_assembled(self):
         gh = Fake()
         queue(gh, 11)
-        batch.sync(gh, NOW)
+        sync(gh)
         queue(gh, 13)
-        batch.sync(gh, NOW + datetime.timedelta(hours=1))
-        self.assertEqual(list(gh.refs), ["batch/2026-11-23-0412"])
-        self.assertIn("- #11 at `head11`\n- #13 at `head13`", gh.pulls[111]["body"])
+        sync(gh, hours=1)
+        self.assertEqual(list(gh.refs), [FIRST])
+        self.assertIn(f"- #11 at `{short('head11')}`\n- #13 at `{short('head13')}`", batch_pull(gh)["body"])
 
-    def test_pull_request_that_cannot_be_merged_is_left_out_and_told_once(self):
+    def test_commit_that_cannot_be_merged_is_left_out_and_told_once(self):
         gh = Fake()
         queue(gh, 11, 12)
-        gh.conflicting.add("head12")
-        log = batch.sync(gh, NOW)
-        self.assertIn("- #11 at `head11`", gh.pulls[112]["body"])
-        self.assertIn("Left out, because GitHub could not merge them into this branch: #12.", gh.pulls[112]["body"])
-        self.assertEqual(len(gh.comments[12]), 1)
-        self.assertIn("was not added to the batch `batch/2026-11-23-0412`", gh.comments[12][0]["body"])
-        self.assertIn("could not merge it with what is already there", gh.comments[12][0]["body"])
-        self.assertEqual(gh.labels(12), {QUEUED})
+        gh.conflicting.add(sha("head12"))
+        log = sync(gh)
+        body = batch_pull(gh)["body"]
+        self.assertIn(f"- #11 at `{short('head11')}`", body)
+        self.assertIn("Left out, because GitHub could not merge them into this branch: #12.", body)
+        self.assertEqual(len(gh.said(12)), 1)
+        self.assertIn(f"The commit `{short('head12')}` of this pull request was not added to the batch `{FIRST}`", gh.said(12)[0])
+        self.assertIn("could not merge it with what is already there", gh.said(12)[0])
+        self.assertEqual(gh.pulls[12]["labels"], {QUEUED})
         self.assertTrue(any(line.startswith("left #12 out") for line in log))
         # The same commit is not tried, or commented on, a second time.
         gh.writes = []
-        batch.sync(gh, NOW)
-        self.assertEqual(len(gh.comments[12]), 1)
-        self.assertNotIn("merges", [path for _, path, _ in gh.writes])
-        self.assertIn("#12", gh.pulls[112]["body"])
+        sync(gh)
+        sync(gh)
+        self.assertEqual((len(gh.said(12)), merges(gh)), (1, []))
+        self.assertIn("#12", batch_pull(gh)["body"])
 
-    def test_new_commit_on_a_refused_pull_request_is_tried_again(self):
+    def test_refused_commit_is_not_announced_twice_when_the_note_is_lost(self):
         gh = Fake()
         queue(gh, 11, 12)
-        gh.conflicting.add("head12")
-        batch.sync(gh, NOW)
-        gh.add_pull(12, "head12b", labels=[QUEUED])
-        batch.sync(gh, NOW)
-        self.assertIn("- #12 at `head12b`", gh.pulls[112]["body"])
+        gh.conflicting.add(sha("head12"))
+        sync(gh)
+        batch_pull(gh)["body"] = "A maintainer rewrote this description."
+        sync(gh)
+        self.assertEqual(len(gh.said(12)), 1)
+        self.assertIn(f"- #11 at `{short('head11')}`", batch_pull(gh)["body"])
 
-    def test_merged_in_by_hand_counts_without_another_merge(self):
+    def test_new_commit_queued_on_a_refused_pull_request_is_tried(self):
         gh = Fake()
-        queue(gh, 11)
-        batch.sync(gh, NOW)
-        queue(gh, 13)
-        gh.inside[gh.refs["batch/2026-11-23-0412"]].add("head13")
-        gh.writes = []
-        batch.sync(gh, NOW)
-        self.assertNotIn("merges", [path for _, path, _ in gh.writes])
-        self.assertIn("- #13 at `head13`", gh.pulls[111]["body"])
+        queue(gh, 11, 12)
+        gh.conflicting.add(sha("head12"))
+        sync(gh)
+        gh.push(12, "head12-fixed")
+        queue(gh, 12)
+        sync(gh)
+        self.assertIn(f"- #12 at `{short('head12-fixed')}`", batch_pull(gh)["body"])
 
     def test_other_bases_and_batch_pull_requests_are_not_queued(self):
         gh = Fake()
-        gh.add_pull(11, "head11", labels=[QUEUED], base="release")
-        gh.add_pull(12, "head12", labels=[QUEUED], ref="batch/old", own=True)
-        gh.refs["batch/old"] = "head12"
-        self.assertEqual(batch.sync(gh, NOW), ["nothing to do"])
-        self.assertEqual(list(gh.refs), ["batch/old"])
+        gh.add_pull(11, "head11", base="release")
+        queue(gh, 11)
+        self.assertEqual(sync(gh), ["nothing to do"])
+        self.assertEqual(gh.refs, {})
 
     def test_refused_merge_reports_what_github_said(self):
         gh = Fake()
         queue(gh, 11)
-        gh._merge = lambda payload: (403, {"message": "Resource not accessible by integration"})
-        gh.routes = [(pattern, handler if pattern != "POST merges" else (lambda self, payload: self._merge(payload)))
+        gh.routes = [(pattern, handler if pattern != "POST merges" else
+                      (lambda self, payload: (403, {"message": "Resource not accessible by integration"})))
                      for pattern, handler in Fake.routes]
-        batch.sync(gh, NOW)
-        self.assertIn("GitHub refused the merge (403: `Resource not accessible by integration`)", gh.comments[11][0]["body"])
-        self.assertNotIn(111, gh.pulls)
+        sync(gh)
+        self.assertIn("GitHub refused the merge (403: `Resource not accessible by integration`)", gh.said(11)[0])
+        self.assertFalse([pr for pr in gh.pulls.values() if pr["own"]])
 
-
-class LeavingTheQueue(unittest.TestCase):
-    """`-batch` only removes the label. Here that is done directly, as the workflow step would."""
-
-    def unqueue(self, gh, number):
-        gh.pulls[number]["labels"] = [item for item in gh.pulls[number]["labels"] if item["name"] != QUEUED]
-
-    def test_commits_already_in_the_batch_stay_and_the_batch_says_so(self):
+    def test_a_commit_merged_in_by_hand_under_the_same_message_counts(self):
         gh = Fake()
-        queue(gh, 11, 12)
-        batch.sync(gh, NOW)
-        head = gh.refs["batch/2026-11-23-0412"]
-        self.unqueue(gh, 12)
+        queue(gh, 11)
+        sync(gh)
+        queue(gh, 13)
+        before = gh.refs[FIRST]
+        by_hand = sha("by hand")
+        gh.commits[by_hand] = {"message": f"Add #13 to the batch\n\nMerged at {sha('head13')}.",
+                               "parents": [{"sha": before}, {"sha": sha("head13")}]}
+        gh.inside[by_hand] = gh.inside[before] | {before, sha("head13")}
+        gh.refs[FIRST] = batch_pull(gh)["sha"] = by_hand
         gh.writes = []
-        log = batch.sync(gh, NOW)
-        self.assertEqual(gh.refs, {"batch/2026-11-23-0412": head})
-        self.assertFalse([path for method, path, _ in gh.writes if path in ("merges", "git/refs") or method == "DELETE"])
-        body = gh.pulls[112]["body"]
-        self.assertIn("In this batch:\n\n- #11 at `head11`\n\nAlso in this branch:\n\n- #12, no longer queued", body)
-        self.assertEqual(len(gh.comments[12]), 1)
-        self.assertIn("its commits were already merged into the batch #112 and are still there", gh.comments[12][0]["body"])
-        self.assertIn("To build without them, close #112.", gh.comments[12][0]["body"])
-        self.assertIn("told #12 that its commits stay in batch #112", log)
-        # Told once, and nothing more happens on later runs.
-        gh.writes = []
-        batch.sync(gh, NOW)
-        self.assertEqual((len(gh.comments[12]), gh.writes), (1, []))
+        sync(gh)
+        self.assertEqual(merges(gh), [])
+        self.assertIn(f"- #11 at `{short('head11')}`\n- #13 at `{short('head13')}`", batch_pull(gh)["body"])
 
-    def test_left_before_being_merged_is_simply_gone(self):
-        gh = Fake()
-        queue(gh, 11, 12)
-        gh.conflicting.add("head12")
-        batch.sync(gh, NOW)
-        self.unqueue(gh, 12)
-        batch.sync(gh, NOW)
-        self.assertNotIn("#12", gh.pulls[112]["body"])
-        self.assertEqual(len(gh.comments[12]), 1)  # only the earlier note that it could not be merged
 
-    def test_commits_a_maintainer_pushed_on_top_do_not_hide_what_was_merged(self):
+class BranchNames(unittest.TestCase):
+    def test_a_name_already_taken_is_not_reused(self):
         gh = Fake()
-        queue(gh, 11, 12)
-        batch.sync(gh, NOW)
-        before = gh.refs["batch/2026-11-23-0412"]
-        gh.commits["fix"] = {"message": "Repair the build after the merges", "parents": [{"sha": before}]}
-        gh.inside["fix"] = gh.inside[before] | {before}
-        gh.refs["batch/2026-11-23-0412"] = gh.pulls[112]["head"]["sha"] = "fix"
-        self.unqueue(gh, 12)
-        batch.sync(gh, NOW)
-        self.assertEqual(gh.refs, {"batch/2026-11-23-0412": "fix"})
-        self.assertIn("- #11 at `head11`\n\nAlso in this branch:\n\n- #12, no longer queued", gh.pulls[112]["body"])
+        queue(gh, 11)
+        sync(gh)
+        freeze(gh, 111)
+        sync(gh)
+        frozen_head = gh.refs[FIRST]
+        queue(gh, 12)
+        sync(gh)  # the same second as the first batch
+        self.assertEqual(sorted(gh.refs), [FIRST, FIRST + "-2"])
+        self.assertEqual(gh.refs[FIRST], frozen_head)
+        self.assertNotIn(sha("head12"), gh.inside[frozen_head])
+        self.assertIn(sha("head12"), gh.inside[gh.refs[FIRST + "-2"]])
 
-    def test_closing_the_batch_lets_the_next_run_assemble_one_without_it(self):
+    def test_a_branch_that_cannot_be_created_stops_the_run(self):
         gh = Fake()
-        queue(gh, 11, 12)
-        batch.sync(gh, NOW)
-        self.unqueue(gh, 12)
-        gh.pulls[112]["state"] = "closed"
-        batch.sync(gh, NOW + datetime.timedelta(hours=1))
-        newest = gh.pulls[max(gh.pulls)]
-        self.assertEqual(newest["head"]["ref"], "batch/2026-11-23-0512")
-        self.assertIn("- #11 at `head11`", newest["body"])
-        self.assertNotIn("#12", newest["body"])
-        self.assertNotIn("head12", gh.inside[gh.refs["batch/2026-11-23-0512"]])
+        queue(gh, 11)
+        gh.routes = [(pattern, handler if pattern != "POST git/refs" else
+                      (lambda self, payload: (403, {"message": "Resource not accessible by integration"})))
+                     for pattern, handler in Fake.routes]
+        with self.assertRaises(batch.Refused) as caught:
+            sync(gh)
+        self.assertIn("would not create a batch branch (403", str(caught.exception))
+        self.assertEqual(merges(gh), [])
 
 
 class Freezing(unittest.TestCase):
     def frozen(self):
         gh = Fake()
         queue(gh, 11, 12)
-        batch.sync(gh, NOW)
-        gh.pulls[112]["labels"].append({"name": BUILDING})
+        sync(gh)
+        freeze(gh, 112)
         return gh
 
     def test_frozen_batch_hands_its_label_to_what_it_contains(self):
         gh = self.frozen()
-        log = batch.sync(gh, NOW)
-        self.assertEqual((gh.labels(11), gh.labels(12)), ({BUILDING}, {BUILDING}))
-        self.assertIn("This batch is frozen at", gh.pulls[112]["body"])
-        self.assertIn("- #11 at `head11`\n- #12 at `head12`", gh.pulls[112]["body"])
+        log = sync(gh)
+        self.assertEqual((gh.pulls[11]["labels"], gh.pulls[12]["labels"]), ({BUILDING}, {BUILDING}))
+        body = gh.pulls[112]["body"]
+        self.assertIn("This batch is frozen at", body)
+        self.assertIn(f"- #11 at `{short('head11')}`\n- #12 at `{short('head12')}`", body)
         self.assertIn("#11 is in the frozen batch #112: now `building`", log)
         # And it stays that way on later runs.
-        batch.sync(gh, NOW)
-        self.assertEqual((gh.labels(11), gh.labels(12)), ({BUILDING}, {BUILDING}))
-        self.assertIn("- #11 at `head11`\n- #12 at `head12`", gh.pulls[112]["body"])
-
-    def test_frozen_batch_notes_what_changed_after_it_was_merged_in(self):
-        gh = self.frozen()
-        batch.sync(gh, NOW)
-        gh.add_pull(12, "head12b", labels=[BUILDING])  # the author pushed again
-        gh.pulls[11]["labels"] = []  # someone took the label off by hand
-        batch.sync(gh, NOW)
-        body = gh.pulls[112]["body"]
-        self.assertIn("- nothing yet\n\nAlso in this branch:\n\n", body)
-        self.assertIn("- #12, which has new commits since it was merged", body)
-        self.assertIn("- #11, no longer queued", body)
-        # A frozen batch is being built: nobody is told to close it.
-        self.assertNotIn(11, gh.comments)
-        self.assertNotIn(12, gh.comments)
+        gh.writes = []
+        self.assertEqual(sync(gh), ["nothing to do"])
+        self.assertEqual(gh.writes, [])
 
     def test_arrival_after_the_freeze_starts_a_new_batch(self):
         gh = self.frozen()
-        batch.sync(gh, NOW)
-        frozen_head = gh.refs["batch/2026-11-23-0412"]
+        sync(gh)
+        frozen_head = gh.refs[FIRST]
         queue(gh, 13)
-        batch.sync(gh, NOW + datetime.timedelta(hours=2))
-        self.assertEqual(gh.refs["batch/2026-11-23-0412"], frozen_head)
-        self.assertIn("batch/2026-11-23-0612", gh.refs)
-        newest = gh.pulls[max(gh.pulls)]
-        self.assertEqual(newest["head"]["ref"], "batch/2026-11-23-0612")
-        self.assertIn("- #13 at `head13`", newest["body"])
+        sync(gh, hours=2)
+        self.assertEqual(gh.refs[FIRST], frozen_head)
+        newest = batch_pull(gh, "batch/2026-11-23-061230")
+        self.assertIn(f"- #13 at `{short('head13')}`", newest["body"])
         self.assertNotIn("#11", newest["body"])
-        self.assertEqual(gh.labels(13), {QUEUED})
+        self.assertEqual(gh.pulls[13]["labels"], {QUEUED})
 
     def test_freeze_during_a_run_stops_further_merges(self):
         gh = Fake()
         queue(gh, 11)
-        batch.sync(gh, NOW)
+        sync(gh)
         queue(gh, 12, 13)
-        gh.after_merge = lambda: gh.pulls[111]["labels"].append({"name": BUILDING})
-        log = batch.sync(gh, NOW)
-        self.assertIn("head12", gh.inside[gh.refs["batch/2026-11-23-0412"]])
-        self.assertNotIn("head13", gh.inside[gh.refs["batch/2026-11-23-0412"]])
+        gh.after_merge = lambda: freeze(gh, 111)
+        log = sync(gh)
+        self.assertIn(sha("head12"), gh.inside[gh.refs[FIRST]])
+        self.assertNotIn(sha("head13"), gh.inside[gh.refs[FIRST]])
         self.assertIn("batch #111 was frozen during this run: stopped adding to it", log)
+
+    def test_a_dispatched_build_freezes_before_its_label_arrives(self):
+        gh = Fake()
+        queue(gh, 11)
+        sync(gh)
+        queue(gh, 12)
+        gh.runs = ["Quick check #111 manual", "Proof shard #111 manual"]  # the freeze job has not run yet
+        log = sync(gh)
+        self.assertNotIn(sha("head12"), gh.inside[gh.refs[FIRST]])
+        self.assertIn(BUILDING, gh.pulls[111]["labels"])
+        self.assertIn("batch #111 was frozen during this run: stopped adding to it", log)
+
+    def test_a_quick_check_or_a_build_of_something_else_does_not_freeze(self):
+        gh = Fake()
+        queue(gh, 11)
+        sync(gh)
+        queue(gh, 12)
+        gh.runs = ["Quick check #111 manual", "Proof shard #1110 manual", "Build PR #11 manual"]
+        sync(gh)
+        self.assertIn(sha("head12"), gh.inside[gh.refs[FIRST]])
+        self.assertNotIn(BUILDING, gh.pulls[111]["labels"])
+
+    def test_frozen_batch_notes_what_left_it(self):
+        gh = self.frozen()
+        sync(gh)
+        gh.label(11, remove=BUILDING)  # taken off by hand
+        gh.pulls[12]["state"] = "closed"
+        sync(gh)
+        body = gh.pulls[112]["body"]
+        self.assertIn("- nothing yet\n\nAlso in this branch:\n\n- #11, no longer queued\n- #12, closed since it was merged in", body)
+        # A frozen batch is being built: nobody is told to close it.
+        self.assertEqual((gh.said(11), gh.said(12)), ([], []))
+
+
+class FinishedBatches(unittest.TestCase):
+    def frozen(self):
+        gh = Fake()
+        queue(gh, 11, 12)
+        sync(gh)
+        freeze(gh, 112)
+        sync(gh)
+        return gh
+
+    def test_merged_batch_clears_building_and_removes_its_branch(self):
+        gh = self.frozen()
+        gh.add_pull(14, "head14", labels=[BUILDING])  # building in some other batch
+        gh.close(11, merged=True)  # GitHub marks it merged along with the batch
+        gh.close(112, merged=True)
+        log = sync(gh)
+        self.assertEqual((gh.pulls[11]["labels"], gh.pulls[12]["labels"]), (set(), set()))
+        self.assertEqual(gh.pulls[14]["labels"], {BUILDING})
+        self.assertEqual(gh.refs, {})
+        self.assertIn("#12 landed with batch #112: `building` removed", log)
+        self.assertEqual(sync(gh), ["nothing to do"])
+
+    def test_a_push_after_the_freeze_does_not_leave_building_behind(self):
+        gh = self.frozen()
+        gh.push(12, "head12-later")
+        gh.close(112, merged=True)
+        sync(gh)
+        self.assertEqual(gh.pulls[12]["labels"], set())
+        self.assertEqual(gh.pulls[12]["state"], "open")
+
+    def test_frozen_batch_closed_without_merging_puts_its_pull_requests_back(self):
+        gh = self.frozen()
+        gh.close(112)
+        log = sync(gh)
+        self.assertEqual((gh.pulls[11]["labels"], gh.pulls[12]["labels"]), ({QUEUED}, {QUEUED}))
+        self.assertEqual(gh.refs, {})
+        self.assertIn("batch #112 was closed without merging: #11 is `batch queue` again", log)
+        self.assertIn("not starting a new batch in this run: the next `batch` or `-batch` comment does", log)
+        # The pull request that broke the build is taken out, and the next run assembles the rest.
+        unqueue(gh, 12)
+        sync(gh, hours=1)
+        newest = batch_pull(gh, "batch/2026-11-23-051230")
+        self.assertIn(f"- #11 at `{short('head11')}`", newest["body"])
+        self.assertNotIn("#12", newest["body"])
+
+    def test_closing_a_batch_still_being_assembled_lets_the_next_run_start_again(self):
+        gh = Fake()
+        queue(gh, 11, 12)
+        sync(gh)
+        unqueue(gh, 12)
+        gh.close(112)
+        sync(gh, hours=1)
+        self.assertEqual(list(gh.refs), ["batch/2026-11-23-051230"])
+        newest = batch_pull(gh, "batch/2026-11-23-051230")
+        self.assertIn(f"- #11 at `{short('head11')}`", newest["body"])
+        self.assertNotIn("#12", newest["body"])
+        self.assertNotIn(sha("head12"), gh.inside[gh.refs["batch/2026-11-23-051230"]])
+
+
+class LeavingTheQueue(unittest.TestCase):
+    def test_commits_already_in_the_batch_stay_and_the_batch_says_so(self):
+        gh = Fake()
+        queue(gh, 11, 12)
+        sync(gh)
+        head = gh.refs[FIRST]
+        unqueue(gh, 12)
+        gh.writes = []
+        log = sync(gh)
+        self.assertEqual(gh.refs, {FIRST: head})
+        self.assertFalse([path for method, path, _ in gh.writes if path in ("merges", "git/refs") or method == "DELETE"])
+        self.assertIn(f"In this batch:\n\n- #11 at `{short('head11')}`\n\nAlso in this branch:\n\n- #12, no longer queued",
+                      gh.pulls[112]["body"])
+        self.assertEqual(len(gh.said(12)), 1)
+        self.assertIn("its commits were already merged into the batch #112 and are still there", gh.said(12)[0])
+        self.assertIn("To build without them, close #112.", gh.said(12)[0])
+        self.assertIn("told #12 that its commits stay in batch #112", log)
+        # Told once, and nothing more happens on later runs.
+        sync(gh)
+        gh.writes = []
+        sync(gh)
+        self.assertEqual((len(gh.said(12)), gh.writes), (1, []))
+
+    def test_left_before_being_merged_is_simply_gone(self):
+        gh = Fake()
+        queue(gh, 11, 12)
+        gh.conflicting.add(sha("head12"))
+        sync(gh)
+        unqueue(gh, 12)
+        sync(gh)
+        self.assertNotIn("#12", gh.pulls[112]["body"])
+        self.assertEqual(len(gh.said(12)), 1)  # only the earlier note that it could not be merged
+
+    def test_commits_a_maintainer_pushed_on_top_do_not_hide_what_was_merged(self):
+        gh = Fake()
+        queue(gh, 11, 12)
+        sync(gh)
+        before, fix = gh.refs[FIRST], sha("fix")
+        gh.commits[fix] = {"message": "Repair the build after the merges", "parents": [{"sha": before}]}
+        gh.inside[fix] = gh.inside[before] | {before}
+        gh.refs[FIRST] = gh.pulls[112]["sha"] = fix
+        unqueue(gh, 12)
+        sync(gh)
+        self.assertEqual(gh.refs, {FIRST: fix})
+        self.assertIn(f"- #11 at `{short('head11')}`\n\nAlso in this branch:\n\n- #12, no longer queued", gh.pulls[112]["body"])
+
+
+class Requests(unittest.TestCase):
+    """The workflow's token is allowed 1,000 requests an hour, shared with every other workflow."""
+
+    def big(self, count=33):
+        gh = Fake()
+        queue(gh, *range(1, count + 1))
+        return gh
+
+    def spent(self, gh, **options):
+        before = gh.calls
+        sync(gh, **options)
+        return gh.calls - before
+
+    def test_a_run_with_nothing_new_asks_little_however_long_the_queue(self):
+        gh = self.big()
+        first = self.spent(gh)
+        self.assertLess(first, 33 * 5 + 15)
+        self.assertEqual(self.spent(gh), 4)  # repository, main, open pull requests, batch branches: no more
+        self.assertEqual(self.spent(gh), 4)
+
+    def test_one_more_pull_request_costs_a_handful(self):
+        gh = self.big()
+        sync(gh)
+        sync(gh)
+        queue(gh, 50)
+        self.assertLessEqual(self.spent(gh), 12)
+
+    def test_merging_stops_when_the_hours_allowance_is_nearly_gone(self):
+        gh = self.big(3)
+        gh.left = batch.RESERVE - 1
+        log = sync(gh)
+        self.assertEqual(merges(gh), [])
+        self.assertIn(f"only {batch.RESERVE - 1} requests left this hour: stopped merging, and the next run carries on", log)
+        gh.left = 900
+        sync(gh)
+        self.assertEqual(len(merges(gh)), 3)
 
 
 class OpeningThePullRequest(unittest.TestCase):
@@ -378,42 +685,17 @@ class OpeningThePullRequest(unittest.TestCase):
         gh.allow_pulls = False
         queue(gh, 11)
         with self.assertRaises(batch.Refused) as caught:
-            batch.sync(gh, NOW)
-        self.assertIn("https://github.com/o/r/compare/main...batch/2026-11-23-0412?expand=1", str(caught.exception))
+            sync(gh)
+        self.assertIn(f"https://github.com/o/r/compare/main...{FIRST}?expand=1", str(caught.exception))
         self.assertIn("not permitted to create", str(caught.exception))
-        self.assertIn("head11", gh.inside[gh.refs["batch/2026-11-23-0412"]])
+        self.assertIn(sha("head11"), gh.inside[gh.refs[FIRST]])
         # A maintainer opens it by hand; the next run adopts it instead of starting another branch.
-        gh.add_pull(50, gh.refs["batch/2026-11-23-0412"], ref="batch/2026-11-23-0412", own=True)
+        gh.pulls[50] = {"number": 50, "state": "open", "merged_at": None, "labels": set(), "sha": gh.refs[FIRST],
+                        "ref": FIRST, "own": True, "base": "main", "body": "", "title": "", "updated": 0}
         queue(gh, 12)
-        batch.sync(gh, NOW + datetime.timedelta(hours=1))
-        self.assertEqual(list(gh.refs), ["batch/2026-11-23-0412"])
-        self.assertIn("- #11 at `head11`\n- #12 at `head12`", gh.pulls[50]["body"])
-
-
-class Landing(unittest.TestCase):
-    def test_merged_batch_clears_building_and_removes_its_branch(self):
-        gh = Fake()
-        queue(gh, 11, 12)
-        batch.sync(gh, NOW)
-        gh.pulls[112]["labels"].append({"name": BUILDING})
-        batch.sync(gh, NOW)
-        gh.add_pull(14, "head14", labels=[BUILDING])  # building in some other batch
-        gh.pulls[11].update(state="closed", merged=True)
-        gh.pulls[112].update(state="closed", merged=True)
-        log = batch.landed(gh, 112)
-        self.assertEqual((gh.labels(11), gh.labels(12), gh.labels(112)), (set(), set(), set()))
-        self.assertEqual(gh.labels(14), {BUILDING})
-        self.assertEqual(gh.refs, {})
-        self.assertIn("#11 landed with batch #112: `building` removed", log)
-
-    def test_only_a_merged_batch_counts(self):
-        gh = Fake()
-        gh.add_pull(11, "head11", labels=[BUILDING], state="closed", merged=True)
-        gh.add_pull(12, "head12", ref="batch/x", own=True, state="closed", merged=False)
-        for number in (11, 12):
-            gh.writes = []
-            self.assertEqual(batch.landed(gh, number), [f"#{number} is not a merged batch: nothing to do"])
-            self.assertEqual(gh.writes, [])
+        sync(gh, hours=1)
+        self.assertEqual(list(gh.refs), [FIRST])
+        self.assertIn(f"- #11 at `{short('head11')}`\n- #12 at `{short('head12')}`", gh.pulls[50]["body"])
 
 
 class DryRun(unittest.TestCase):
@@ -422,10 +704,11 @@ class DryRun(unittest.TestCase):
         queue(gh, 11, 12)
         printed = io.StringIO()
         with contextlib.redirect_stdout(printed):
-            log = batch.sync(gh, NOW)
-        self.assertEqual((gh.writes, gh.refs, gh.comments), ([], {}, {}))
-        self.assertIn("would add #11 to `batch/2026-11-23-0412`", log)
-        self.assertIn('would POST merges {"base": "batch/2026-11-23-0412", "head": "head11"', printed.getvalue())
+            log = sync(gh)
+        self.assertEqual((gh.writes, gh.refs), ([], {}))
+        self.assertEqual((gh.said(11), gh.said(12)), ([], []))
+        self.assertIn(f"would add #11 at `{short('head11')}` to `{FIRST}`", log)
+        self.assertIn(f'would POST merges {{"base": "{FIRST}", "head": "{sha("head11")}"', printed.getvalue())
 
 
 if __name__ == "__main__":
