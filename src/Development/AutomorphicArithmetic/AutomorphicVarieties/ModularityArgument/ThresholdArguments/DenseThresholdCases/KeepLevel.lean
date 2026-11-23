@@ -175,6 +175,7 @@ theorem UpperTheory.V.Z.Win.T2.local_fixed_vectors_statement :
       rw [← map_natCast (algebraMap F (w.adicCompletion F)), map_ne_zero]
       exact Nat.cast_ne_zero.2 (by omega)
     have hu0 : uniformizer (w.adicCompletion F) ≠ 0 := by simp
+    have : Nontrivial (ValueGroupWithZero (w.adicCompletion F)) := GroupWithZero.toNontrivial
     have hv0 : valuation (w.adicCompletion F) (M : w.adicCompletion F) ≠ 0 := by simpa using hM0
     let γ : (ValueGroupWithZero (w.adicCompletion F))ˣ :=
       Units.mk0 (valuation _ (M : w.adicCompletion F) / uniformizer (w.adicCompletion F)) (div_ne_zero hv0 hu0)
@@ -254,7 +255,8 @@ theorem UpperTheory.V.Af.globFixed_alt :
       obtain ⟨σ, ⟨-, hσ⟩, hfix⟩ := h w
       let W : Submodule ℂ V := ⨅ k : KAway n M (insert w S), LinearMap.ker (ρ k - 1)
       have hWm : ∀ x, x ∈ W ↔ ∀ k ∈ KAway n M (insert w S), ρ k x = x := fun x => by
-        simp [W, Submodule.mem_iInf, sub_eq_zero]
+        simp only [W, Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply, Module.End.one_apply,
+          sub_eq_zero, Subtype.forall]
       obtain ⟨x, hxW, hx0, hx⟩ := sub_fixed σ.ρ σ.irred (ρ.comp (locGL F n w)) hσ W (fun g x hx => (hWm _).2 fun k hk => by
         have e : k * locGL F n w g = locGL F n w g * k := gl_ext fun u => by
           by_cases hu : u = w
@@ -353,8 +355,8 @@ private theorem flag_mult (K L : FinExt l) (n : ℕ) : ∀ (ρ : Representation 
     let M' : ↥(GK K) → Matrix (Fin n) (Fin n) ↥L.1 := fun g => (M g).submatrix Fin.succ Fin.succ
     have hπ : ∀ g x, π (ρ g x) = (M' g).mulVec (π x) := fun g x => by
       funext i
-      simp [π, M', hρ, LinearMap.funLeft_apply, Matrix.mulVec, dotProduct, Fin.sum_univ_succ,
-        hM g i.succ 0 (Fin.succ_pos i)]
+      simp only [π, M', hρ, LinearMap.funLeft_apply, Matrix.mulVec, dotProduct, Fin.sum_univ_succ,
+        Matrix.submatrix_apply, Function.comp_apply, hM g i.succ 0 (Fin.succ_pos i), zero_mul, zero_add]
     have hs : Function.Surjective π := LinearMap.funLeft_surjective_of_injective _ _ _ (Fin.succ_injective n)
     let ρ' : Representation ↥L.1 ↥(GK K) (Fin n → ↥L.1) :=
       { toFun := fun g => Matrix.toLin' (M' g)
@@ -444,7 +446,7 @@ theorem UpperTheory.V.Af.jumps_above_of_printed_results :
   rw [LocBridge.multE, hm] at h
   simp only [key] at h
   rw [Multiset.count_map, ← Nat.cast_inj (R := ℤ), h]
-  simp [Finset.card_def]
+  rw [Finset.sum_boole]; rfl
 end
 end -- clump:auto
 end -- clump:auto
