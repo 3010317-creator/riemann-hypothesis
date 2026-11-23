@@ -1414,7 +1414,7 @@ theorem functional_frame {P : HeightOneSpectrum (𝓞 E)} {N : Submodule (𝓞 E
   choose c hc using fun i : Fin n => Ideal.Quotient.mk_surjective (φ (f (Pi.single i 1)))
   refine ⟨c, fun z hz => ?_⟩
   obtain ⟨s, hs, hsz⟩ := (mem_locP P _ _).1 hz
-  choose r hr using (mem_stdLat _).1 hsz
+  choose r hr using (Formalism.L2.Col.mem_stdLat _).1 hsz
   have h1 : s • f z = ∑ i, r i • f (Pi.single i 1) := by
     rw [← algebraMap_smul E s, ← map_smul]
 
