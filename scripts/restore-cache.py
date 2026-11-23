@@ -161,9 +161,8 @@ def main():
     cache = (args.cache_dir or Path(os.environ.get("LAKE_CACHE_DIR", str(root / ".lake/cache")))).resolve()
     print(f"Checking {len(rows)} completed cached archives...", flush=True)
     jobs = restore_jobs(root, cache, rows)
-    for job in jobs:
-        for base in job["base"]:
-            Path(base).mkdir(parents=True, exist_ok=True)
+    for base in dict.fromkeys(base for job in jobs for base in job["base"]):
+        Path(base).mkdir(parents=True, exist_ok=True)
     env = os.environ.copy()
     for key in list(env):
         if key.startswith(("AWS_", "CLOUDFLARE_", "CF_")) or key == "LAKE_CACHE_KEY":
