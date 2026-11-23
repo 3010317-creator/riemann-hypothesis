@@ -555,7 +555,7 @@ theorem core_roomR {b' g A P Q k c de be eps N Y N1 ka : ℝ} (hb : 0 < b') (hAP
 
 variable {C0 Cde CE1 CE2 : ℝ} {X : Loc}
 
-theorem core_room (St : Std C0 Cde CE1 CE2 1 X) (hc : 1 ≤ X.c) (j : Fin (numSeg X.TT))
+theorem core_room (St : Formalism.MainNotions.ColumnSystems.Pf.Std C0 Cde CE1 CE2 1 X) (hc : 1 ≤ X.c) (j : Fin (numSeg X.TT))
     (b : SegBlock (segS X.TT j) X.m) (hdig : DigitsOK X.p (X.seg C0 CE1 CE2 j) (segATop X.TT X.aT j) b)
     (i : Fin (segS X.TT j)) :
     (X.c : ℝ) * (ka1 X + 2 * X.Q + 3 * X.k) + 4 ≤
@@ -605,7 +605,7 @@ theorem core_termS {A A' w w' g g' K q : ℕ} (hA : A ≤ A' + K) (hw : w' ≤ w
 
 
 theorem numCore_std {C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ}
-    (hstd : ∀ X : Loc, D1num X → HIext C0 CYb Cde Ck CD Cb X → CBound Cc X → Std C0 Cde CE1 CE2 1 X) :
+    (hstd : ∀ X : Loc, D1num X → HIext C0 CYb Cde Ck CD Cb X → CBound Cc X → Formalism.MainNotions.ColumnSystems.Pf.Std C0 Cde CE1 CE2 1 X) :
     NumCoreAt C0 CYb Cde Ck CD Cb CE1 CE2 Cc := by
   intro X hD hH hcB mm _ n hn1 hnc e he1 hen j b hb
   have St := hstd X hD hH hcB
@@ -760,7 +760,7 @@ theorem numCore_thr : RestNumCore :=
 
 
 theorem keptPair_bounds {C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ}
-    (hstd : ∀ X : Loc, D1num X → HIext C0 CYb Cde Ck CD Cb X → CBound Cc X → Std C0 Cde CE1 CE2 1 X) :
+    (hstd : ∀ X : Loc, D1num X → HIext C0 CYb Cde Ck CD Cb X → CBound Cc X → Formalism.MainNotions.ColumnSystems.Pf.Std C0 Cde CE1 CE2 1 X) :
     PairSAt C0 CYb Cde Ck CD Cb CE1 CE2 Cc := by
   intro X _ hD hI hc j rz ry hd A hA1 hA2 mu lam hP hK i hi
   have hs := hstd X hD hI hc
@@ -1828,9 +1828,9 @@ theorem UpperTheory.Top.hostQ :
       rw [Nat.Coprime, h1.gcd_eq]
       simp
     exact Nat.Coprime.coprime_dvd_right ((dvd_mul_right _ _).mul_right _) h5
-  have hv' : HostVal s ((3 + 2 * C8) * A) (relevel H hc (q0H H) h0) := (hv.mono hC :)
+  have hv' : HostVal s ((3 + 2 * C8) * A) (PolynomialHostPrimeBound.relevel H hc (q0H H) h0) := (hv.mono hC :)
   have hq := smallest_prime_polynomial_bound hA hS H hc hv.2.2.2.1.1 hv.2.2.2.1.2
-  have har' : HostArith (relevel H hc (q0H H) h0) := by
+  have har' : HostArith (PolynomialHostPrimeBound.relevel H hc (q0H H) h0) := by
     refine ⟨har.1, har.2.1, har.2.2.1, fun l hl => ?_⟩
     have hl' : l ∈ ({H.g 0, H.g 1, H.pde, H.pde', q0H H} : Finset ℕ) := hl
     show H.cls l = .splitK
@@ -1841,7 +1841,7 @@ theorem UpperTheory.Top.hostQ :
     · exact har.2.2.2 _ H.pde_level.1
     · exact har.2.2.2 _ H.pde_level.2
     · exact (GlobalTheory.HostSplit.split_of_one_mod R H _ (globalTwisting_spec_fact H).1 (mod_cond H)).2
-  exact ⟨R, relevel H hc (q0H H) h0, q0H H, hR, hT, ⟨hv', har', g1, g2, g3, g4, g5, g6, g7, g8, g9, g10,
+  exact ⟨R, PolynomialHostPrimeBound.relevel H hc (q0H H) h0, q0H H, hR, hT, ⟨hv', har', g1, g2, g3, g4, g5, g6, g7, g8, g9, g10,
     ⟨(globalTwisting_spec_fact H).1, mod_cond H, hq, q0H_ne_pde_and_ne_pde' H⟩, rfl⟩, globalTwisting_congr_fact _ rfl rfl rfl rfl rfl rfl, hG⟩
 end -- clump:auto
 end -- clump:auto
