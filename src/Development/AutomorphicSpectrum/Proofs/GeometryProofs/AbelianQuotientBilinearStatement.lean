@@ -580,7 +580,7 @@ theorem fibPt_pre {A B : Type} [CommRing A] [Algebra k A] [CommRing B] [Algebra 
 theorem cubeF_pre {A B : Type} [CommRing A] [Algebra k A] [CommRing B] [Algebra k B] (σ : A →ₐ[k] B)
     (xs : Fin 2 → (overAt x A ⟶ t.G)) (I : ULift (Finset (Fin 2))) :
     (homAt x σ).left ≫ cubeF t x xs I = cubeF t x (fun i => homAt x σ ≫ xs i) I := by
-  have e := psum_hom (preHom (homAt x σ)) xs I.down
+  have e := psum_hom (Formalism.L2.Pj.preHom (homAt x σ)) xs I.down
   have e' : homAt x σ ≫ psum t.G xs I.down = psum t.G (fun i => homAt x σ ≫ xs i) I.down := e
   show (homAt x σ).left ≫ (fibPt t x (psum t.G xs I.down)).left = (fibPt t x (psum t.G _ I.down)).left
   rw [← e', fibPt_pre]
@@ -596,7 +596,7 @@ theorem cube_q (Q : AbQuot t x) {A B : Type} [CommRing A] [Algebra k A] [CommRin
   let ρ : (overAt (𝟙 (Sp k)) A ⟶ GF t x) →* (overAt (𝟙 (Sp k)) A ⟶ Q.tB.G) :=
     MonoidHom.mk' (· ≫ Q.q) fun a b => MonObj.mul_comp a b Q.q
   have e1 := psum_hom ρ (fun i => fibPt t x (xs i)) I.down
-  have e2 := psum_hom (preHom (homAt (𝟙 (Sp k)) σ)) ys I.down
+  have e2 := psum_hom (Formalism.L2.Pj.preHom (homAt (𝟙 (Sp k)) σ)) ys I.down
   show (fibPt t x (psum t.G xs I.down)).left ≫ Q.q.left = _
   rw [← psum_fib]
   exact congrArg (fun z => z.left) (e1.trans ((congrArg (fun f => psum _ f _) (funext h)).trans e2.symm))
@@ -683,7 +683,7 @@ variable {g gB Qs}
 
 theorem jpt_q (hq : ∀ m, fibPt t x (g.x m) ≫ Q.q = homAt (𝟙 (Sp k)) (sub1 Qs m) ≫ gB.x m) (m : ℕ) (i : Fin 2) :
     fibPt t x (jptG t x d g.x m i) ≫ Q.q = homAt (𝟙 (Sp k)) (sub2 Qs m) ≫ jptG Q.tB (𝟙 (Sp k)) d' gB.x m i := by
-  rw [jptG, jptG, fibPt_pre, Category.assoc, hq, ← Category.assoc, ← Category.assoc, homAt_comp, homAt_comp, double_substitution_jet_inclusion]
+  rw [jptG, jptG, fibPt_pre, Category.assoc, hq, ← Category.assoc, ← Category.assoc, Formalism.L2.Pj.homAt_comp, Formalism.L2.Pj.homAt_comp, double_substitution_jet_inclusion]
 
 theorem cube_eq (hq : ∀ m, fibPt t x (g.x m) ≫ Q.q = homAt (𝟙 (Sp k)) (sub1 Qs m) ≫ gB.x m) (m : ℕ)
     (I : ULift (Finset (Fin 2))) :
@@ -719,7 +719,7 @@ theorem U_trunc (m : ℕ) (U : (Jet k (Fin 2 × Fin d) m)ˣ) (U' : (Jet k (Fin 2
     · have hs : (homAt x σ).left ≫ (homAt (𝟙 (Sp k)) (sub2 Qs (m + 1))).left =
           (homAt (𝟙 (Sp k)) (sub2 Qs m)).left ≫ (homAt (𝟙 (Sp k)) (jetTrunc : Jet k (Fin 2 × Fin d') (m + 1) →ₐ[k] _)).left := by
         show (homAt (𝟙 (Sp k)) σ).left ≫ _ = _
-        simp only [← Over.comp_left, homAt_comp]
+        simp only [← Over.comp_left, Formalism.L2.Pj.homAt_comp]
         rw [show σ = jetTrunc from rfl, double_substitution_truncation]
       have e1 : val (bG gB Qs (m + 1)) (homAt x σ).left y JM =
           val (gB.e (m + 1)) ((homAt x σ).left ≫ (homAt (𝟙 (Sp k)) (sub2 Qs (m + 1))).left) y JM := val_pull hJM _ _ _
@@ -732,10 +732,10 @@ theorem U_trunc (m : ℕ) (U : (Jet k (Fin 2 × Fin d) m)ˣ) (U' : (Jet k (Fin 2
   exact congrArg Units.val (inv_injective h2)
 
 theorem ax_zero0 (m : ℕ) : homAt x (jAx0 k d m) ≫ jptG t x d g.x m (0 : Fin 2) = 1 := by
-  rw [jptG, ← Category.assoc, homAt_comp, first_axis_comp_jet_inclusion, ← homAt_comp, Category.assoc, g.chart.zero m, MonObj.comp_one]
+  rw [jptG, ← Category.assoc, Formalism.L2.Pj.homAt_comp, first_axis_comp_jet_inclusion, ← Formalism.L2.Pj.homAt_comp, Category.assoc, g.chart.zero m, MonObj.comp_one]
 
 theorem ax_zero1 (m : ℕ) : homAt x (jAx1 k d m) ≫ jptG t x d g.x m (1 : Fin 2) = 1 := by
-  rw [jptG, ← Category.assoc, homAt_comp, second_axis_comp_jet_inclusion, ← homAt_comp, Category.assoc, g.chart.zero m, MonObj.comp_one]
+  rw [jptG, ← Category.assoc, Formalism.L2.Pj.homAt_comp, second_axis_comp_jet_inclusion, ← Formalism.L2.Pj.homAt_comp, Category.assoc, g.chart.zero m, MonObj.comp_one]
 
 theorem unit_first_axis_eq_one (hQ : ∀ i, MvPowerSeries.constantCoeff (Qs i) = 0) (m : ℕ) (U : (Jet k (Fin 2 × Fin d) m)ˣ)
     (h : TrG g gB w Qs m (unitΓ U⁻¹)) : jAx0 k d m (U : Jet k (Fin 2 × Fin d) m) = 1 := by
@@ -756,7 +756,7 @@ theorem unit_first_axis_eq_one (hQ : ∀ i, MvPowerSeries.constantCoeff (Qs i) =
     · have hs : (homAt x σ).left ≫ (homAt (𝟙 (Sp k)) (sub2 Qs m)).left =
           (homAt (𝟙 (Sp k)) (sub1 Qs m)).left ≫ (homAt (𝟙 (Sp k)) (jAx0 k d' m)).left := by
         show (homAt (𝟙 (Sp k)) σ).left ≫ _ = _
-        simp only [← Over.comp_left, homAt_comp]
+        simp only [← Over.comp_left, Formalism.L2.Pj.homAt_comp]
         rw [show σ = jAx0 k d m from rfl, double_substitution_first_axis Qs hQ]
       have e1 : val (bG gB Qs m) (homAt x σ).left y JM =
           val (gB.e m) ((homAt x σ).left ≫ (homAt (𝟙 (Sp k)) (sub2 Qs m)).left) y JM := val_pull hJM _ _ _
@@ -789,7 +789,7 @@ theorem unit_second_axis_eq_one (hQ : ∀ i, MvPowerSeries.constantCoeff (Qs i) 
     · have hs : (homAt x σ).left ≫ (homAt (𝟙 (Sp k)) (sub2 Qs m)).left =
           (homAt (𝟙 (Sp k)) (sub1 Qs m)).left ≫ (homAt (𝟙 (Sp k)) (jAx1 k d' m)).left := by
         show (homAt (𝟙 (Sp k)) σ).left ≫ _ = _
-        simp only [← Over.comp_left, homAt_comp]
+        simp only [← Over.comp_left, Formalism.L2.Pj.homAt_comp]
         rw [show σ = jAx1 k d m from rfl, double_substitution_second_axis Qs hQ]
       have e1 : val (bG gB Qs m) (homAt x σ).left y JM =
           val (gB.e m) ((homAt x σ).left ≫ (homAt (𝟙 (Sp k)) (sub2 Qs m)).left) y JM := val_pull hJM _ _ _
