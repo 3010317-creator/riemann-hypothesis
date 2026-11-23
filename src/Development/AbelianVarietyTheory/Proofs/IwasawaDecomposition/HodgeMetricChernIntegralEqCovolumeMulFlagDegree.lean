@@ -1170,7 +1170,8 @@ theorem image_null : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
     have h2 : Fintype.card (GlobalTheory.AllWt.Psi H) = Module.finrank ℚ E / 2 := by
       rw [← Nat.card_eq_fintype_card]; exact GlobalTheory.PeriodCoord.card_cmType H
     have h3 : Fintype.card (GlobalTheory.AllWt.Psi H) = Fintype.card (U.X k).Ψ := by omega
-    simp only [Fintype.card_prod, Fintype.card_fin, h3, Nat.add_sub_cancel_left]
+    simp only [Fintype.card_prod, Fintype.card_fin, Nat.add_sub_cancel_left]
+    convert congrArg (· * (Dw.p * Dw.q)) h3 using 3
   unfold chernTopPart
   exact glueNull X.str (σ.comp e.toRingHom) X.dim _ _ fun ch =>
     chart_image_null ch ψ hdim hv fun a => (hH ch.U (ch.x a)).mono fun w hw => ⟨hN hw.1, hw.2⟩
