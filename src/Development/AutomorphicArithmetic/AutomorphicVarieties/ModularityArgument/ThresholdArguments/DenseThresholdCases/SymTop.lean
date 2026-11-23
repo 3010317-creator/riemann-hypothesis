@@ -230,6 +230,7 @@ theorem UpperTheory.V.Pr.finPtDown :
   intro l _ c c₁ f _ _ Φ n H A _ _ hA _ _ ρ hρ hψ g
   haveI : IsDiscreteValuationRing A := hA.toIsDiscreteValuationRing
   haveI := UpperTheory.V.UnitaryThreeInertia.Coef.finite_residue c₁
+  haveI : IsLocalHom (algebraMap c.O A) := UpperTheory.V.Pr.IsCD.isLocalHom
   obtain ⟨B, _, _, hB, φ, j₁, hc, hfin, hinj, hloc, hj⟩ :=
     fpd_ext (A := A) f (algebraMap (ResidueField c.O) A)
   letI : Algebra (ResidueField c₁.O) B := j₁.toAlgebra
@@ -457,6 +458,7 @@ private theorem diag_eq {l : ℕ} [Fact l.Prime] {k : Type} [Field k] [CharP k l
 theorem finPtOf : FinPtOf := by
   intro l _ O _ _ _ _ F C₀ hF S hoff A _ _ _ _ _ ρ hρ hψ g
   haveI : IsLocalHom (algebraMap O A) := UpperTheory.V.Pr.IsCD.isLocalHom
+  haveI : IsLocalRing S.R := UpperTheory.V.Alg.IsCO.toIsLocalRing (O := O)
   haveI : Finite (IsLocalRing.ResidueField A) := UpperTheory.V.Pr.IsCD.fin (O := O)
   haveI : IsNoetherianRing A := PrincipalIdealRing.isNoetherianRing
   have hCL : UpperTheory.V.CA.IsCL O A :=
@@ -677,6 +679,7 @@ theorem modularity_linked_ends (hMod : _root_.UpperTheory.V.W.ModUAlt) (hLam : W
     n4Of Ω l ι c N e ψ η σ g₁ B M H L Φ k c₁ f n ka R, hJ.p1, hJ.p3, hs J hJ.pt⟩, hJ.end2⟩
   intro Z hZ
   haveI : IsDiscreteValuationRing c₁.O := c₁.dvr
+  haveI : IsNoetherianRing R.B₀.B := UpperTheory.V.Alg.IsCO.toIsNoetherian (O := c₁.O)
   have := dimOf c₁.O Λ.Λ R.B₀.B (Λ.toPair R.B₀.u : Λ.Λ →+* R.B₀.B) J _ hΛ hJ.ring.fin hJ.ring.tf Z hZ
   rw [← hd] at this
   exact this
