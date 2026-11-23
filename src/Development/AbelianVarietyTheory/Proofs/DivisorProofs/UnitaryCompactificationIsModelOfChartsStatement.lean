@@ -293,6 +293,7 @@ theorem completedStalk_chart (X : Scheme.{0}) (x : X) [IsNoetherianRing (X.presh
   · rw [hψ, ← RingHom.comp_assoc]
     exact hres.comp he.2
 
+set_option synthInstance.maxHeartbeats 80000 in
 theorem nonempty_chart : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H}
     {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) {S : Scheme.{0}} (j : Xo.XF c ⟶ S) [IsOpenImmersion j]
     (A : Over (Xo.XF c)) [GrpObj A], IsSemiAbelian A → ∀ x ∈ Set.range j, Nonempty (GlobalTheory.Desc.Chart j A x) := by
@@ -1511,10 +1512,10 @@ theorem exists_const_mul_eq_gen : ∀ (R K : Type) [CommRing R] [IsDomain R] [Is
     rw [Units.val_mul, map_mul, DvrModel.coe_pull_g, ← ffMap_germ φ hφ] at e
     rw [map_mul, hr, hr]
     exact (germToFunctionField_res _ _).symm.trans (e.trans (congrArg _ (germToFunctionField_res _ _)))
-  have htr : ∀ i j x t, x ∈ M.U i → x ∈ M.U j → UnitAt x (t * r j) → UnitAt x (t * r i) := by
+  have htr : ∀ i j x t, x ∈ M.U i → x ∈ M.U j → VerticalUnit.UnitAt x (t * r j) → VerticalUnit.UnitAt x (t * r i) := by
     intro i j x t hi hj h
     rw [hg i j x hi hj, mul_left_comm]
-    exact UnitAt.mul ⟨Units.map (X.left.presheaf.germ (M.U i ⊓ M.U j) x ⟨hi, hj⟩).hom (M.g i j),
+    exact VerticalUnit.UnitAt.mul ⟨Units.map (X.left.presheaf.germ (M.U i ⊓ M.U j) x ⟨hi, hj⟩).hom (M.g i j),
       X.left.presheaf.germ_stalkSpecializes_apply _ _ _⟩ h
   have hκR : ∀ b : R, κ (algebraMap R K b) = X.left.presheaf.germ ⊤ (genericPoint X.left) trivial (constFn X.hom ⊤ b) := fun b => hb.1 (by
     rw [hκ, ← app_constFn H.w, ← φ.appLE_eq_app]
