@@ -89,7 +89,8 @@ theorem lev_good (M : Model l K) (m s : ℕ) : (homLev S hS m M s (qb_le (hS.lev
 
 theorem rho_lev_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m x f,
     rhoK S hS hC a j (m + 1) x f → rhoK S hS hC a j m x ((S.dB m).toAddMonoidHom.comp f) := by
-  intro M a hM j m x f ⟨hM', s₀, hs₀⟩
+  intro M a hM j m x f hρ₁
+  obtain ⟨hM', s₀, hs₀⟩ := hρ₁
   refine ⟨hM', ?_⟩
   obtain ⟨s₁, hs₁⟩ := chK_good S hS hC M hM (m + 1)
   obtain ⟨s₂, hs₂⟩ := chK_good S hS hC M hM m
@@ -103,7 +104,8 @@ theorem rho_lev_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m 
 
 theorem rho_act_of (hG : ∀ (M : Model l K) m s g, (homGal (hS.lev m) g M s (qb_le (hS.lev m) M s) (rHof (dOf S hS hC m) (hcOf S hS hC m) M s)).Good) : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m (g : K.fixingSubgroup) x f,
     rhoK S hS hC a j m x f → rhoK S hS hC a j m (((dat Amp).H a).act j g x) (((S.L m).σB g).toAddMonoidHom.comp f) := by
-  intro M a hM j m g x f ⟨hM', s₀, hs₀⟩
+  intro M a hM j m g x f hρ₁
+  obtain ⟨hM', s₀, hs₀⟩ := hρ₁
   obtain ⟨s₁, hs₁⟩ := chK_good S hS hC M hM m
   refine ⟨hM', max s₀ s₁, fun s hs => ?_⟩
   exact GlobalTheory.T.realization_functorial (chK S hS hC M m s) (chK S hS hC M m s) (homGal (hS.lev m) g M s (qb_le (hS.lev m) M s) (rHof (dOf S hS hC m) (hcOf S hS hC m) M s))
@@ -113,7 +115,9 @@ theorem rho_nat_of (hP : ∀ (M N : Model l K) (u : M.X ⟶ N.X) (hu : u ≫ N.p
     (homPull (hS.lev m) u hu s (qb_le (hS.lev m) N s) (qb_le (hS.lev m) M s) (rHof (dOf S hS hC m) (hcOf S hS hC m) N s) (rHof (dOf S hS hC m) (hcOf S hS hC m) M s)).Good) : ∀ {M N : Model l K} {u : M.X ⟶ N.X} {hu : u ≫ N.p = M.p} {a : (dat Amp).Ch M} {b : (dat Amp).Ch N}
     (μ : (dat Amp).Mo u hu a b), M.Sm → N.Sm → ∀ j m x f f', rhoK S hS hC b j m x f → rhoK S hS hC a j m ((dat Amp).pullH μ j x) f' →
       ∀ φ, f' φ = f (φ ∘ₗ pullR j (Model.genMap u hu) (Model.genMap_q u hu)) := by
-  intro M N u hu a b μ hM hN j m x f f' ⟨_, s₀, h₀⟩ ⟨_, s₀', h₀'⟩ φ
+  intro M N u hu a b μ hM hN j m x f f' hρ₁ hρ₂ φ
+  obtain ⟨_, s₀, h₀⟩ := hρ₁
+  obtain ⟨_, s₀', h₀'⟩ := hρ₂
   obtain ⟨s₁, hs₁⟩ := chK_good S hS hC M hM m
   obtain ⟨s₂, hs₂⟩ := chK_good S hS hC N hN m
   obtain ⟨s, e0, e1, e2, e3⟩ : ∃ s, s₀ ≤ s ∧ s₀' ≤ s ∧ s₁ ≤ s ∧ s₂ ≤ s := ⟨s₀ + s₀' + s₁ + s₂, by omega⟩
@@ -125,7 +129,8 @@ theorem rho_nat_of (hP : ∀ (M N : Model l K) (u : M.X ⟶ N.X) (hu : u ≫ N.p
 
 theorem rho_one_of (hU : ∀ (M : Model l K) m s, (cupOf (hS.lev m) M s (qb_le (hS.lev m) M s) (rHof (dOf S hS hC m) (hcOf S hS hC m) M s)).Good) : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ m x f, rhoK S hS hC a 0 m x f → ((dat Amp).H a).one x →
     ∀ φ, f φ = algebraMap K (S.L m).B (φ (oneK M.q)) := by
-  intro M a hM m x f ⟨_, s₀, h₀⟩ hx φ
+  intro M a hM m x f hρ₁ hx φ
+  obtain ⟨_, s₀, h₀⟩ := hρ₁
   obtain ⟨s₁, hs₁⟩ := chK_good S hS hC M hM m
   obtain ⟨s, e0, e1⟩ : ∃ s, s₀ ≤ s ∧ s₁ ≤ s := ⟨s₀ + s₁, by omega⟩
   have h := h₀ s e0
