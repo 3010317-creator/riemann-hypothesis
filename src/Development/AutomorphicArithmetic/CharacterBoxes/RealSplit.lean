@@ -62,11 +62,9 @@ private theorem UpperTheory.Top.realSplit_step (f q i : ℕ) [NeZero f] (ξ : Di
     exact ⟨f * q, ψ, by simp, h1, fun n => by simpa using h3 n⟩
 
 private theorem UpperTheory.Top.realSplit_J (q n i : ℕ) (h : n.Coprime q) : (QH.J q n ^ i) ^ 2 = 1 := by
-  have h1 : jacobiSym (n : ℤ) q = 1 ∨ jacobiSym (n : ℤ) q = -1 :=
-    jacobiSym.eq_one_or_neg_one (by rw [Int.gcd_natCast_natCast]; exact h)
-  rw [← pow_mul, mul_comm, pow_mul]
-  unfold QH.J
-  rcases h1 with h1 | h1 <;> simp [h1]
+  have hsq : jacobiSym (n : ℤ) q ^ 2 = 1 :=
+    jacobiSym.sq_one (by rwa [Int.gcd_natCast_natCast])
+  rw [← pow_mul, Nat.mul_comm i 2, pow_mul, QH.J, ← Int.cast_pow, hsq, Int.cast_one, one_pow]
 
 private theorem im_dirichletCharacter_eq_zero_of_coprime (c N₀ : ℕ) [NeZero c] [NeZero N₀] (ρ : DirichletCharacter ℂ c)
     (hc : c ∣ N₀) (h : ∀ n : ℕ, n.Coprime N₀ → (ρ n).im = 0) : ∀ x : ZMod c, (ρ x).im = 0 := by
@@ -177,16 +175,9 @@ private theorem exists_real_pchar_twist_decomposition (N : ℕ) [NeZero N] (χ :
       have hξn : ξ n = χ n * QH.J q n ^ a * QH.J d n ^ b := by
         rw [hξ n hn]
         linear_combination (-(ξ n) * (QH.J d n ^ b) ^ 2) * hJq + (-(ξ n)) * hJd
-      have e1 : QH.J q n ^ a = ((jacobiSym n q ^ a : ℤ) : ℂ) := by
-        unfold QH.J
-        push_cast
-        rfl
-      have e2 : QH.J d n ^ b = ((jacobiSym n d ^ b : ℤ) : ℂ) := by
-        unfold QH.J
-        push_cast
-        rfl
-      rw [hξn, e1, e2]
-      exact im_mul_intCast_eq_zero_of_im_eq_zero _ (hreal' n) _ _)
+      rw [hξn]
+      simpa only [QH.J, Int.cast_pow] using
+        im_mul_intCast_eq_zero_of_im_eq_zero _ (hreal' n) (jacobiSym n q ^ a) (jacobiSym n d ^ b))
   refine ⟨⟨ξ.conductor, ξ.primitiveCharacter, ξ.primitiveCharacter_isPrimitive⟩, ⟨a, by omega⟩,
     ⟨b, by omega⟩, hρreal, hcN₀, rfl, fun n => ?_⟩
   simp only [PChar.val, tw]
