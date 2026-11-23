@@ -2,16 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchActionReadingsCompatibleStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchHeisenbergDerivativesExistStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenIntertwinerGoodModelsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHeckeCharacterRestrictionStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasCompactSupportFinprodSchwartzBruhatFiniteAdel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCharactersRestrictionEta
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocallyConstantFinprodSchwartzBruhatFiniteAdel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatFiniteAdelesMemSpanRestrictedProduStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaModelChangeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -154,110 +151,6 @@ theorem exists_chr (B : Base F E) (hB : B.IsGood σ) (m : ℕ) :
   · rw [MonoidHom.pow_apply, hχ.2 x, one_pow]
   · rw [MonoidHom.pow_apply, Circle.coe_pow, hr a]
     split_ifs <;> simp
-
-theorem exists_modelChange_pol : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E)
-    (n d r s r' s' : ℕ) (X : Spc F E n) (W : Spc F E d) (M M' : Model σ X W), B.IsGood σ → X.IsHerm σ B r s → W.IsSkew σ B r' s' →
-    M.IsGood B.ψ → M'.IsGood B.ψ →
-    ∃ e : Fn F n d →ₗ[ℂ] Fn F n d, IsEv B M M' 1 1 ∅ e ∧
-      ∃ (ei : SInf F (Fin n × Fin d) →L[ℂ] SInf F (Fin n × Fin d))
-        (ev : ∀ v : Pl F, ((Fin n × Fin d → Fv F v) → ℂ) →ₗ[ℂ] (Fin n × Fin d → Fv F v) → ℂ),
-        Function.Surjective ei ∧ (M.Pol B.ψ B.emb).map (ei : SInf F (Fin n × Fin d) →ₗ[ℂ] SInf F (Fin n × Fin d)) = M'.Pol B.ψ B.emb ∧
-        (∀ v, ev v (M.vac v) = M'.vac v ∧ (SB _).map (ev v) = SB _) ∧
-        ∀ f φ, (∀ v, φ v ∈ SB _) → (∀ᶠ v in cofinite, φ v = M.vac v) → e (pure f φ) = pure (ei f) fun v => ev v (φ v) := by
-  intro hK F E _ _ _ _ _ σ B n d r s r' s' X W M M' hB hX hW hM hM'
-  classical
-  obtain ⟨χX, hcX, rX⟩ := exists_chr B hB n
-  obtain ⟨χW, hcW, rW⟩ := exists_chr B hB d
-  obtain ⟨om, hom⟩ := GlobalTheory.WeilExGen.exists_isWeil hK F E σ B hB n d X W r s r' s' hX hW M hM χX χW hcX hcW rX rW
-  obtain ⟨om', hom'⟩ := GlobalTheory.WeilExGen.exists_isWeil hK F E σ B hB n d X W r s r' s' hX hW M' hM' χX χW hcX hcW rX rW
-  obtain ⟨e, -, -, hE, hbij, -⟩ := GlobalTheory.T.theta_model_change hK F E σ B n d X W M χX χW om r s r' s'
-    ⟨hB, hX, hW, hM, hcX, hcW, rX, rW, hom⟩ M' om' ⟨hB, hX, hW, hM', hcX, hcW, rX, rW, hom'⟩
-  obtain ⟨ei, ev, -, hv, hl⟩ := hE.loc
-  have hg : finPr M.vac ∈ SB _ := finPr_mem _ (fun v => (hM.vac v).1) hM.std
-  have hg' : finPr M'.vac ∈ SB _ := finPr_mem _ (fun v => (hM'.vac v).1) hM'.std
-  obtain ⟨y, hy⟩ := exists_finPr_ne M.vac (fun v => (hM.vac v).2.1) hM.std
-  obtain ⟨y', hy'⟩ := exists_finPr_ne M'.vac (fun v => (hM'.vac v).2.1) hM'.std
-  have mem : ∀ (f : SInf F (Fin n × Fin d)) g, g ∈ SB (Fin n × Fin d → Af F) → pureA F f g ∈ schA F (Fin n × Fin d) :=
-    fun f g h => Submodule.subset_span ⟨f, g, h, rfl⟩
-  have hvac : ∀ f : SInf F (Fin n × Fin d), e (pureA F f (finPr M.vac)) = pureA F (ei f) (finPr M'.vac) := fun f => by
-    have := hl f M.vac (fun v => (hM.vac v).1) (Eventually.of_forall fun _ => rfl)
-    simp only [fun v => (hv v).1] at this
-    exact this
-  have hinj : Function.Injective ei := (injective_iff_map_eq_zero ei).2 fun f hf => by
-    have h1 : e (pureA F f (finPr M.vac)) = e 0 := by
-      rw [hvac, hf, map_zero]; funext x; simp [pureA]
-    have h2 := hbij.injOn (mem f _ hg) (zero_mem _) h1
-    refine SchwartzMap.ext fun x => ?_
-    have h3 := congrFun h2 (pt x y)
-    rw [pureA_pt] at h3
-    exact (mul_eq_zero.1 h3).resolve_right hy
-  have hsl : ∀ Φ ∈ schA F (Fin n × Fin d), ∃ f, ∀ x, e Φ (pt x y') = ei f x := by
-    intro Φ hΦ
-    induction hΦ using Submodule.span_induction with
-    | zero => exact ⟨0, fun x => by simp⟩
-    | add a b _ _ ha hb =>
-      obtain ⟨f, hf⟩ := ha
-      obtain ⟨g, hg⟩ := hb
-      exact ⟨f + g, fun x => by simp [hf, hg]⟩
-    | smul c a _ ha =>
-      obtain ⟨f, hf⟩ := ha
-      exact ⟨c • f, fun x => by simp [hf]⟩
-    | mem Φ hΦ =>
-      obtain ⟨f, g, hg, rfl⟩ := hΦ
-      replace hg := GlobalTheory.T.schwartzBruhat_finiteAdeles_mem_span_restrictedProducts F _ g hg
-      induction hg using Submodule.span_induction with
-      | zero => exact ⟨0, fun x => by
-          rw [show pureA F f 0 = 0 from funext fun _ => mul_zero _]; simp⟩
-      | add a b _ _ ha hb =>
-        obtain ⟨f₁, hf⟩ := ha
-        obtain ⟨f₂, hg⟩ := hb
-        exact ⟨f₁ + f₂, fun x => by
-          rw [show pureA F f (a + b) = pureA F f a + pureA F f b from funext fun _ => mul_add _ _ _]; simp [hf, hg]⟩
-      | smul c a _ ha =>
-        obtain ⟨f₁, hf⟩ := ha
-        exact ⟨c • f₁, fun x => by
-          rw [show pureA F f (c • a) = c • pureA F f a from funext fun _ => mul_left_comm _ _ _]; simp [hf]⟩
-      | mem p hp =>
-        obtain ⟨φ, hφ, hs, rfl⟩ := hp
-        have h1 := hl f φ hφ (by filter_upwards [hs, hM.std] with v h1 h2 using h1.trans h2.symm)
-        refine ⟨finPr (fun v => ev v (φ v)) y' • f, fun x => ?_⟩
-        rw [pure_eq, pure_eq] at h1
-        refine (congrFun h1 _).trans ?_
-        rw [pureA_pt]
-        simp [mul_comm]
-  have hsurj : Function.Surjective ei := fun g => by
-    obtain ⟨Φ, hΦ, h1⟩ := hbij.surjOn (mem g _ hg')
-    obtain ⟨f, hf⟩ := hsl Φ hΦ
-    refine ⟨(finPr M'.vac y')⁻¹ • f, ?_⟩
-    refine SchwartzMap.ext fun x => ?_
-    have h2 := hf x
-    rw [h1, pureA_pt] at h2
-    rw [map_smul, smul_apply, ← h2, smul_eq_mul]
-    field_simp
-  obtain ⟨D, hD⟩ := GlobalTheory.T.archHeisenbergDerivatives_exist F E σ _ _ _ B.ψ _ _ M.co hB.std
-  obtain ⟨D', hD'⟩ := GlobalTheory.T.archHeisenbergDerivatives_exist F E σ _ _ _ B.ψ _ _ M'.co hB.std
-  have Heisenberg₂ : ∀ u, ∀ Φ ∈ schA F (Fin n × Fin d), e (M.co.rho B.ψ u Φ) = M'.co.rho B.ψ u (e Φ) := by
-    intro u Φ hΦ
-    have h1 : ∀ m : ℕ, incM F (1 : Matrix (Fin m) (Fin m) E) = 1 := fun m => Matrix.map_one _ (map_zero _) (map_one _)
-    have := hE.Heisenberg₂ u Φ hΦ
-    rwa [h1, h1, Matrix.transpose_one, Matrix.one_mul, Matrix.mul_one] at this
-  refine ⟨e, hE, ei, ev, hsurj, ?_, hv, hl⟩
-  refine pol_map M M' B.ψ B.emb (fun u f => D u f) (fun u f => D' u f)
-    (fun u hu f => actsD_iff GlobalTheory.T.archActionReadings_compatible M B.ψ u f _ (hD u hu f).1) (fun u hu f => actsD_iff GlobalTheory.T.archActionReadings_compatible M' B.ψ u f _ (hD' u hu f).1)
-    _ ⟨hinj, hsurj⟩ fun u hu f => ?_
-  refine SchwartzMap.ext fun x => ?_
-  have h1 := (hD u hu f).1 _ hg _ (GlobalTheory.T.eigen_intertwiner_good_models F E σ B n d n d X W X W M M' 1 1 ∅ e hM hM' hE _ (proj_adm x y'))
-  have h2 := (hD' u hu (ei f)).1 _ hg' _ (proj_adm x y')
-  simp only [LinearMap.comp_apply, hvac] at h1
-  have heq : (fun (t : ℝ) => (LinearMap.proj (pt x y') : Fn F n d →ₗ[ℂ] ℂ) (e (M.co.rho B.ψ (realAd F t • u) (pureA F f (finPr M.vac))))) =
-      (fun t => (LinearMap.proj (pt x y') : Fn F n d →ₗ[ℂ] ℂ) (M'.co.rho B.ψ (realAd F t • u) (pureA F (ei f) (finPr M'.vac)))) := by
-    funext t
-    rw [Heisenberg₂ _ _ (mem f _ hg), hvac]
-  set_option backward.isDefEq.respectTransparency false in
-    rw [heq] at h1
-  have h3 := h1.unique h2
-  rw [LinearMap.proj_apply, LinearMap.proj_apply, pureA_pt, pureA_pt] at h3
-  exact mul_right_cancel₀ hy' h3
 
 end GlobalTheory.ThK.ModelPol
 

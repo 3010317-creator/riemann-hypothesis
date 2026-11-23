@@ -55,7 +55,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.FinitePartTypes
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsMatchOver
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSumOfMemMultSpan
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RangeSndRel
@@ -197,13 +196,6 @@ theorem exists_quotient_near (hθ : IsInfFam θ) {τ : D.what₂.Tau} {X : Matri
   rw [e, norm_mul, norm_neg, norm_inv, Complex.norm_real, Real.norm_of_nonneg hp.le, inv_mul_lt_iff₀ hp]
   refine key.trans_lt ?_
   nlinarith
-
-section Sig
-
-variable (hPr : GlobalTheory.FunPr.Hypotheses₂) (hθ : IsInfFam θ) {τ τ' : D.what₂.Tau} {S : SPar} {φ ψ : GA D V → ℂ}
-include hPr hθ
-
-end Sig
 
 variable {S : D.what₂.Tau → SPar}
 
