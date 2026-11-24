@@ -4,8 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSmoothVect
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompactTypeInCompactStableSubmodule
 public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VoganNormSqHolomorphicLowestKTypeSubRootLt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexifiedDerivedActionIsLieActionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVectorsSubspaceStableSobolevFormDerivStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexifiedDerivedActionIsLieAction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVectorsSubspaceStableSobolevFormDeriv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -437,8 +437,8 @@ theorem lowK_killed : ∀ (n p : ℕ) (ε : Fin n → Bool) (lam : Fin n → ℝ
   have hH : (Formalism.REAL.Jm ε).IsHermitian := Jm_conjTranspose ε
   have hdet : (Formalism.REAL.Jm ε).det ≠ 0 := (Matrix.isUnit_det_of_left_inverse (Jm_mul_self ε)).ne_zero
   have hU : IsURepOn (Formalism.QuantumDeterminants.UH (Formalism.REAL.Jm ε)) σ := hσ
-  obtain ⟨hspan, hsmv⟩ := GlobalTheory.T.smoothVectors_subspace_stable_sobolevForm_deriv n _ H σ hH hdet hU
-  have hlie := GlobalTheory.T.complexifiedDerivedAction_isLieAction n _ H σ hH hdet hU
+  obtain ⟨hspan, hsmv⟩ := _root_.GlobalTheory.UnitarySmVec.smoothVec_basic n _ H σ hH hdet hU
+  have hlie := _root_.GlobalTheory.HolDict.LieAct.main n _ H σ hH hdet hU
   obtain ⟨W, hWf, hWK, hWle, hvW⟩ := exists_fin_stable lam hv
   set J := Formalism.REAL.Jm ε with hJ
   let V : Submodule ℂ H := W ⊓ Submodule.span ℂ {w | SmoothVec (lieH J) σ w}

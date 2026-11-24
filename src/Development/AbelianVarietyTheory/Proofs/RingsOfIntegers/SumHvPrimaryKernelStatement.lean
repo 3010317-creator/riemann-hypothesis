@@ -13,18 +13,18 @@ public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.FormalModu
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.FormalGroupTranslateAutomorphismAndMatrixKernel
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ConstantCoeffDmonNCongr
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsTranslateUnitSymmetricFormalGroupPointStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.FormalGroupPointsOfIntegralChartSpecStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.FormalGroupPointsOfIntegralChartSpec
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.HarmonicValueIntegralPointEqValueOnBiextensionCoStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IntegralChartFormalBiextensionGaugeBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IntegralChartFormalBiextensionGaugeBound
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.JacobianNonzeroSplittingOfProductStatement
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.KillsFormalPointsIffMemCoordinateKernelStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.RegularSectionIntegralGermUniqueScaleStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.RegularSectionIntegralGermUniqueScale
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.SplitKernelFormalGroupOfRationalTorsionStatement
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IsLocallyNoetherian
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.EqOfSqEqOfOdd
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsUniqueSymmetricTranslateOddLevel
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.InZhIffKillsAdapted
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ReachedSectionRegularOnIntegralModelStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ReachedSectionRegularOnIntegralModel
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.SumSupportCMul
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.ShortPlaceB
 import Mathlib.Algebra.Order.Floor.Extended
@@ -67,7 +67,7 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
-import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.MvPowerSeriesSubstConstTermsLocalAlgHomSpecStatement
+import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.MvPowerSeriesSubstConstTermsLocalAlgHomSpec
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.ConstantCoeffEv
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.GaugeTrans
 import Mathlib.RingTheory.MvPolynomial
@@ -371,7 +371,7 @@ theorem kappa_mul_pullM_mul_expS {V : Type} [CommRing V] [IsDomain V] [IsDiscret
     MvPowerSeries.hasSubst_of_constantCoeff_zero fun p => h0 p.1 p.2
   have hpull : FB.toK K (pullM B mu g) =
       ev (n := n) (fun b i => FB.toK K (matV B mu (fun j => pt V (n := n) d j) b i)) (FB.toK K g) := by
-    have hC := (GlobalTheory.T.mvPowerSeriesSubstConstTerms_local_algHom_spec V (Fin n × Fin d) (Fin n × Fin d) (Fin n × Fin d)
+    have hC := (_root_.GlobalTheory.PlaceInt.evC_spec V (Fin n × Fin d) (Fin n × Fin d) (Fin n × Fin d)
       (fun p : Fin n × Fin d => matV B mu (fun j => pt V (n := n) d j) p.1 p.2)
       (fun p => by rw [h0]; exact Ideal.zero_mem _)).2.2.1 (fun p => h0 p.1 p.2)
     unfold pullM evV
@@ -1268,7 +1268,7 @@ theorem sum_hv_formal_kernel : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   choose f hf using fun b => (h51 (N ^ 2) (F b)).1 (hF b)
   have hkpq : ∀ i, Kills Xo (p * q) (a i) := fun i => ((hiff (a i)).mp ⟨i, rfl⟩).1
   choose α hα using fun i b => ((hiff (a i)).mp ⟨i, rfl⟩).2 b
-  have h66 := GlobalTheory.T.formal_group_points_of_integral_chart_spec E H Dw l Xo c hstar T io y C B hB
+  have h66 := _root_.GlobalTheory.PlaceFormPt.formPt_spec E H Dw l Xo c hstar T io y C B hB
   have h67 := fun (mu : Matrix (Fin n) (Fin n) (𝓞 E)) => GlobalTheory.T.kills_formalPoints_iff_mem_coordinateKernel E H Dw l Xo c hstar T io y C B hB n mu
   have hker : ∀ i, α i ∈ kerM B (p * q) := fun i => (h67 (p * q) (a i) (α i) (hα i)).mp (hkpq i)
   have hsm : ∀ i b, Small (α i b) := fun i => by
@@ -1644,8 +1644,8 @@ theorem sum_hv_primary_kernel : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   classical
   letI := io.toAlgebra
   have hodd : Odd (N ^ 2) := hN.pow
-  obtain ⟨B, hBT, -⟩ := GlobalTheory.T.integralChart_formalBiextension_gauge_bound E H Dw l Xo c hbar T io y C
-  obtain ⟨f1, -, fmul, -, -⟩ := GlobalTheory.T.formal_group_points_of_integral_chart_spec E H Dw l Xo c hbar T io y C B hBT
+  obtain ⟨B, hBT, -⟩ := _root_.GlobalTheory.PlaceInt.integralBiext_gauge_eig_bound E H Dw l Xo c hbar T io y C
+  obtain ⟨f1, -, fmul, -, -⟩ := _root_.GlobalTheory.PlaceFormPt.formPt_spec E H Dw l Xo c hbar T io y C B hBT
   have hadj := adj_mul hsim
   have hM0 : 0 < M := Nat.pos_of_ne_zero fun h0 => hodd.pos.ne' (by rw [hkM, h0, Nat.mul_zero])
   have hprim := (GlobalTheory.T.splitKernel_formalGroup_of_rational_torsion E H Dw l Xo c hbar T io y C hC B hBT ℓ hℓ hℓu n (p * q) _ k M hk hM0
@@ -1707,7 +1707,7 @@ theorem sum_hv_primary_kernel : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
           exact ⟨⟨⟨u, h1, hprim α ((GlobalTheory.T.kills_formalPoints_iff_mem_coordinateKernel E H Dw l Xo c hbar T io y C B hBT n _ u α hα).1 h1) u hα⟩,
             fun b => ⟨α b, hα b⟩⟩, rfl⟩⟩)
         (G (eq.symm x)) G'
-        (fun b => GlobalTheory.T.reachedSection_regular_on_integralModel E H Dw l Xo c hbar T io y C hC _ _ (Reach.move _ _ _ _ (hF b) (hG' x b))) hG''
+        (fun b => _root_.GlobalTheory.ReachRegular.regular_of_reach E H Dw l Xo c hbar T io y C hC _ _ (Reach.move _ _ _ _ (hF b) (hG' x b))) hG''
         (fun α hα => by
           have h1 := hW₀ α hα x
           rw [_root_.mul_comm] at h1

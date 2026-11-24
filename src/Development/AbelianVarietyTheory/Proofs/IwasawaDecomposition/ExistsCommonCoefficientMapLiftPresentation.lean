@@ -6,9 +6,9 @@ public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.TotallyP
 public import Formalism.LocalToGlobal.Columns.RowFormsAdelic
 public import Formalism.LocalToGlobal.IndefiniteReal.BridgeTie
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseWeightEqForcedLiftWeightStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnitaryGroupsEquivUnitFormGramOneStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnitaryGroupsEquivUnitFormGramOne
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftAdelicFormLevelTypeEqColumnLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowFormLevelPrimesIsSplitSetStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowFormLevelPrimesIsSplitSet
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TranslatedStdLatticeEqDecoratedLatticeReindexedStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TransportedClassSetPresentationReadsEquivariantStatement
 public import Formalism.LocalToGlobal.Columns.InputsGenus
@@ -182,7 +182,7 @@ theorem exists_oneCoef_presStd_heq : ∀ (X : Stages) (px : PreX X.B.toPre) (I :
     intro γ γE h v
     exact (congrArg c0L (he_rho γE v)).trans (hmap.1 γ γE h (e0 v))
   refine ⟨c, fun v v' h => congrArg c0L (eq_of_heq ((he0 v).trans h.symm)), hint, fun t => ?_⟩
-  obtain ⟨eG, eΓ, hchar, hι, hrat⟩ := GlobalTheory.T.exists_unitaryGroups_equiv_unitForm_gram_one X i hgram
+  obtain ⟨eG, eΓ, hchar, hι, hrat⟩ := _root_.GlobalTheory.Mem.R3.LiftBrg.StdGroups.stdGroups_equiv X i hgram
   obtain ⟨hJ, hχ⟩ := GlobalTheory.T.liftAdelicForm_level_type_eq_columnLevel X px I U L hI hV hL i t eG hchar
   letI : Algebra X.toD7.host.F X.B.fields.E := inferInstanceAs (Algebra X.toD7.host.F X.toD7.host.E)
   have hneg : X.toD7.sp.Vneg ((i : ℕ) + 1) = false := X.B.V_pos _ (by omega) i.2
@@ -193,7 +193,7 @@ theorem exists_oneCoef_presStd_heq : ∀ (X : Stages) (px : PreX X.B.toPre) (I :
     simp [Matrix.one_apply]
   have hSG : Formalism.L2.Col.DecoPtSurj X.toD7.sp.cm X.B.R.nV ∅ (LiftBrg.sgL X I U t) :=
     Formalism.L2.Col.decoPtSurj_of _ _ _ _ (Formalism.L2.Col.unimodGenus_holds _ _) Formalism.L2.DIV.reduction_surjective_bis
-      (by classical convert GlobalTheory.T.rowFormLevelPrimes_isSplitSet X px I U L hI hL t using 1; exact Finset.empty_union _) (Finset.disjoint_empty_left _)
+      (by classical convert _root_.GlobalTheory.Mem.R3.LiftBrg.isSplitSet_sgL X px I U L hI hL t using 1; exact Finset.empty_union _) (Finset.disjoint_empty_left _)
   let o := Formalism.L2.Col.rf_onDeco (X := X.B.fields) (n := X.B.R.nV) (ST := ∅) (SG := LiftBrg.sgL X I U t)
     (Formalism.L2.Col.mtVal (Pr := X.B.primes px) X.B.wts ((i : ℕ) + 1) _) (Formalism.L2.Col.mtTyKK I.Ch I.sel t.1 ((i : ℕ) + 1)).inv
   have hmem : ∀ k : Bridge.colJ X.toD7.sp.cm X.B.R.nV ∅ (LiftBrg.sgL X I U t) (Formalism.L2.Col.mtTyKK I.Ch I.sel t.1 ((i : ℕ) + 1)).inv.grp,

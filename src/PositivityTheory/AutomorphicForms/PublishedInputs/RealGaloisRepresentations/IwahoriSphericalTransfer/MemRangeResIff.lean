@@ -5,7 +5,8 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.Automorphic
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.NormVUnderPow
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.AdTransfer
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.SemisimpleRestrictionToNormalSubgroup
-public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.AttachedGaloisRepUnique
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.ExistsNormVEqPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -120,7 +121,7 @@ theorem GlobalTheory.RealGalCompat.trace_eq : ∀ (F Ω : Type) [Field F] [Numbe
   have hS' := UpperTheory.semisimple_restriction_to_normal_subgroup _ _ _ a r' (res Q'.K Ω M) (range_res_normal (F := F)) hs'
   have hC := hr.comp (UpperTheory.V.Af.continuous_restrictScalarsHom Q.K M Ω)
   have hC' := hr'.comp (UpperTheory.V.Af.continuous_restrictScalarsHom Q'.K M Ω)
-  obtain ⟨g, hg⟩ := GlobalTheory.T.attached_galois_rep_unique F Ω M l ι a π _ _ hC hC' hS hS' hA hA'
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.AttUniq.attRes_repIso F Ω M l ι a π _ _ hC hC' hS hS' hA hA'
 
   set σ : G F Ω := res F Ω Q.K s with hσ
   have hfix : σ ∈ M.fixingSubgroup := by

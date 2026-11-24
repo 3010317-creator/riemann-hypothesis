@@ -18,7 +18,8 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitPlac
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CharacterChoiceData
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DimPartsAtIffBadAndOff
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TypeSpacesOrthogonalOfClassSumInner
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ConjugateSplitPlaceEqConjugatePlaceAndEmbeddingStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ConjugateSplitPlaceEqConjugatePlaceAndEmbedding
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BesselShellMomentBounds
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitPlaceCompletionIsoTame
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.BlockSplitAll
@@ -237,7 +238,7 @@ theorem main_alt_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7
   have hj : j.1 + 1 = D.nd.j i := by simp only [j]; omega
   have hconj : IsConjPl D.host (D.naut.plGw k v) s.w := by
     rw [hs]; exact GlobalTheory.DimPartsCompare.isConjPl_cPl _
-  obtain ⟨hw₀, hi₀⟩ := GlobalTheory.T.conjugateSplitPlace_eq_conjugatePlace_and_embedding D s _ hconj
+  obtain ⟨hw₀, hi₀⟩ := _root_.GlobalTheory.TypeTame.conjSP_w_of_isConjPl D s _ hconj
   obtain ⟨ψ₀, ξ, hψ, hξ, hU⟩ := P.H.level.uni i j hj k v (GlobalTheory.TypeTame.conjSP s) hw₀
   have hcc : ∀ x : D.host.E, D.host.conj (D.host.conj x) = x := fun x => by
     letI := Formalism.BasicNotions.Host.cmStar D.host

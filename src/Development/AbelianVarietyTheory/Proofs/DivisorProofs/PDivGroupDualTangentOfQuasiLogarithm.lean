@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstantCoeffNmul
 public import Development.AbelianVarietyTheory.Definitions.Divisors.KerIdealCompOfSurjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivGroupFormalChartEvNatMultipleEqConvPowerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsHomNmulOfIsLaw
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OmegaBaseChangeFiniteProjectiveReflexive
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivGroupFormalChartEvNatMultipleEqConvPower
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsHomNmulOfIsLaw
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsHausdorffOfProjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -413,7 +413,7 @@ theorem ev₂_at_nmul_pow_self : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field 
   haveI : IsHausdorff (Ideal.span {(p : G.A n ⊗[O] G.A n)}) (G.A n ⊗[O] G.A n) :=
     isHausdorff_of_projective (O := O) (A := G.A n ⊗[O] G.A n) p
   have hz : ∀ i, c.ev n (nmul c.μ (p ^ n) i) = 0 := fun i => by
-    rw [GlobalTheory.T.pDivGroupFormalChart_ev_natMultiple_eq_convPower p C v O hv G d c n (p ^ n) i, G.mulBy_pow_self n (c.x n i), c.aug n i,
+    rw [_root_.GlobalTheory.NMul.ev_nmul p C v O hv G d c n (p ^ n) i, G.mulBy_pow_self n (c.x n i), c.aug n i,
       map_zero]
   have hcont : ∀ (φ : G.A n →ₐ[O] G.A n ⊗[O] G.A n) (m : ℕ), ∃ N : ℕ, ∀ f : MvPowerSeries (Fin d) O,
       (∀ α : Fin d →₀ ℕ, α.degree < N → coeff α f = 0) →
@@ -700,7 +700,7 @@ theorem ev_subst_nmul_p : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsA
     constructor
     · intro j
       show G.mulP n (c.ev n (X j)) = c.ev (n + 1) (nmul c.μ p j)
-      rw [(c.isEval n).1 j, GlobalTheory.T.pDivGroupFormalChart_ev_natMultiple_eq_convPower p C v O hv G d c (n + 1) p j, ← c.res n j, mulP_res]
+      rw [(c.isEval n).1 j, _root_.GlobalTheory.NMul.ev_nmul p C v O hv G d c (n + 1) p j, ← c.res n j, mulP_res]
     · intro m
       obtain ⟨N, hN⟩ := (c.isEval n).2 m
       refine ⟨N, fun f hf => ?_⟩

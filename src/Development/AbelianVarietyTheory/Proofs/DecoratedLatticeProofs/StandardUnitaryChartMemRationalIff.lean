@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HalfData
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubledBasisSkewColumnMatrixGramInverseStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubledBasisSkewColumnMatrixGramInverse
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,7 +77,7 @@ namespace GlobalTheory.StdUnn
 theorem chart_mem_GF_iff : ∀ (D : D7) (A : HSp D) (μ : D.host.E), IsSkew μ → ∀ κ : GA D (dblSp A) ≃* G D A.rank,
     IsChart A μ κ → ∀ g, g ∈ GQ (dblSp A) ↔ κ g ∈ GF D A.rank := by
   intro D A μ hμ κ hκ g
-  obtain ⟨-, hdet, -⟩ := GlobalTheory.T.doubledBasisSkewColumnMatrix_gram_inverse D A μ hμ
+  obtain ⟨-, hdet, -⟩ := _root_.GlobalTheory.StdUnn.Tm_gram_inv D A μ hμ
   have hTi : rat (Tm A μ)⁻¹ * rat (Tm A μ) = 1 := by
     rw [← rat_mul, Matrix.nonsing_inv_mul _ hdet, rat_one]
   have hTi' : rat (Tm A μ) * rat (Tm A μ)⁻¹ = 1 := by

@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NeZeroTop
 public import Formalism.LocalToGlobal.Columns.RecLevel
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPtOfMulJ0DecorationStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ReferenceCharactersFactorTame
+public import Formalism.LocalToGlobal.Columns.Adelic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPtOfMulJ0Decoration
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,7 +88,7 @@ theorem mem_topU_iff : ∀ (F E K : Type) [Field F] [NumberField F] [Field E] [N
   set z := (k * t)⁻¹ * x * (k * t) with hz
   have hgz : y * x * (k * t) = g * z := by rw [hg, hz]; group
   rw [hgz] at hp'
-  have step := fun h : GLG (E := E) (n := n) (SG := SG) => ((GlobalTheory.T.isPtOf_mul_J0_decoration F E hc n ST SG Q g z p p' h).1 hp hp')
+  have step := fun h : GLG (E := E) (n := n) (SG := SG) => ((_root_.GlobalTheory.Mem.Col2.TopCh.isPtOf_mul_J0 F E hc n ST SG Q g z p p' h).1 hp hp')
   have htU : t ∈ UAd hc n := principal_le_adelic_unitary hc n ST SG ht
   have hktU : k * t ∈ UAd hc n := mul_mem hk htU
   have hgU : g ∈ UAd hc n := hp.uni

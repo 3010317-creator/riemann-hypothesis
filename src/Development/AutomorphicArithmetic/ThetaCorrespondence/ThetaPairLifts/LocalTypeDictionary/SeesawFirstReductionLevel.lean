@@ -31,7 +31,7 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Finra
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSignatureFromBlocks
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnitCharTriangle
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsThetaFunctionStandardPairSecondStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsThetaFunctionStandardPairSecond
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FirstStandardPairMemberHasThetaFunctionStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatInOfDefinite
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegIdxOfIsStd
@@ -1258,7 +1258,7 @@ theorem exists_small_triple : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀
   have hν : ∀ t, IsHeckeChar D (α t / β t) := fun t => (hX.weil' t).hecT
   choose f hf _ using fun t => GlobalTheory.T.first_standard_pair_member_has_theta_function D ψ θ A WW₁ X.rA rW _ _ _ _ _ hA hW (hν t) (hX.idem t)
     (GlobalTheory.ConstRatio.ideal_ne_bot X S t) hv
-  choose f' hf' _ using fun t => GlobalTheory.T.exists_thetaFunction_standardPairSecond D ψ θ B' WW₁ rB rW _ _ _ _ A.rank _ hB hW (hν t) (hX.idem t)
+  choose f' hf' _ using fun t => _root_.GlobalTheory.CompanionTheory.StdSndTheta.exists_theta D ψ θ B' WW₁ rB rW _ _ _ _ A.rank _ hB hW (hν t) (hX.idem t)
     (GlobalTheory.ConstRatio.ideal_ne_bot X S t) hv'
   obtain ⟨m', fd', hm'⟩ := GlobalTheory.ConstRatio.exists_meas B'
   have hr := hX.rank

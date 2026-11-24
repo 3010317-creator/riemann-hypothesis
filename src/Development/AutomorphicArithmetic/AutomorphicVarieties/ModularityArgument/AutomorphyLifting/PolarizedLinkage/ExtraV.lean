@@ -11,9 +11,13 @@ public import Mathlib.RingTheory.SimpleModule.Rank
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.AbsCentral
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CentralCharacterRecCompatible
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EpsilonFactorRecCompatible
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLanglandsClassificationAddOfIrreducibleProductStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.LanglandsMultisegments
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.StandardCosocleGL
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLanglandsClassificationAddOfIrreducibleProduct
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistRecCompatible
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedWeilDeligneEqDiagonalInvStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MonodromyZeroOfWeilDeligneRepClassIff
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedWeilDeligneEqDiagonalInv
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIrreducibleFixed
 public import Development.AutomorphicArithmetic.Foundations.LocalLanglands.Multi
 import Mathlib.Algebra.Order.Floor.Extended
@@ -70,11 +74,13 @@ import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLanglandsClassificationDetCharacterStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LanglandsClassificationSupercuspidalSupportMultiStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SphericalSatakeEqLanglandsQuotientUnramifiedStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportOfPrincipalSeriesSubquotientStatement
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LanglandsClassificationSupercuspidalSupportMulti
+import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.LanglandsExhaustionGL
+import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SphericalSatakeEqLanglandsQuotientUnramified
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportOfPrincipalSeriesSubquotient
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportUniqueGL
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportUniqueGLStatement
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeilDeligneCharpolyTwistSpecialStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Mono0OfLpDimEqOne
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalRepGLExistsSatakeParameters
@@ -354,7 +360,7 @@ private theorem prod_law (H : LawsT a ha rc) (r t : ℕ) (σ : IrrRep (GL (Fin r
   haveI := cz (E := E) (w := w)
   obtain ⟨𝔪, h𝔪⟩ := Pr.exh _ (cls σ)
   obtain ⟨𝔫, h𝔫⟩ := Pr.exh _ (cls τ)
-  have hp := GlobalTheory.T.isLanglandsClassification_add_of_irreducible_product Pr.multi Pr.cos _ r t σ τ π 𝔪 𝔫 (h𝔪.of_equiv (equivRep σ).symm)
+  have hp := _root_.GlobalTheory.LocGL.SumProd.isL_add_of_equiv_prod₂ Pr.multi Pr.cos _ r t σ τ π 𝔪 𝔫 (h𝔪.of_equiv (equivRep σ).symm)
     (h𝔫.of_equiv (equivRep τ).symm) hπ
   rw [H.langlands 𝔪.toList (cls σ) (by rwa [Multiset.coe_toList]),
     H.langlands 𝔫.toList (cls τ) (by rwa [Multiset.coe_toList]),
@@ -378,8 +384,8 @@ private theorem supp_law (H : LawsT a ha rc) (x : IrrGL (k := w.adicCompletion E
     (hs : HasSupport x.rep s) (σ : Weil h) : (rc x).charPol σ = (s.map fun y => (rc y).charPol σ).prod := by
   haveI := cz (E := E) (w := w)
   obtain ⟨𝔪, hm⟩ := Pr.exh (w.adicCompletion E) x
-  have h1 := GlobalTheory.T.langlandsClassification_supercuspidalSupport_multisegment Pr.zel _ 𝔪 x hm
-  obtain rfl : s = msupp 𝔪 := GlobalTheory.T.supercuspidalSupport_unique_GL geo Pr.bz Pr.zel _ x s _ hs h1
+  have h1 := _root_.GlobalTheory.LocGL.hasSupport_msupp_of_isL Pr.zel _ 𝔪 x hm
+  obtain rfl : s = msupp 𝔪 := _root_.GlobalTheory.LocGL.SupportUnique.hasSupport_unique geo Pr.bz Pr.zel _ x s _ hs h1
   rw [H.langlands 𝔪.toList x (by rw [Multiset.coe_toList]; exact hm), segSum, SuppLaw.charPol_sumList, List.map_map,
     msupp, Multiset.map_bind, Multiset.prod_bind]
   have hl : ∀ (l : List (Segment (w.adicCompletion E))) (F : Segment (w.adicCompletion E) → ℂ[X]),
@@ -390,7 +396,7 @@ private theorem supp_law (H : LawsT a ha rc) (x : IrrGL (k := w.adicCompletion E
 private theorem sat_law (H : LawsT a ha rc) (x : IrrGL (k := w.adicCompletion E)) (α : Fin x.1 → ℂˣ)
     (hα : HasSatake x.rep α) : rc x = WD.mk (WDRep.diag h fun i => (α i)⁻¹) := by
   haveI := cz (E := E) (w := w)
-  have hL := GlobalTheory.T.spherical_satake_eq_langlandsQuotient_unramified Pr.exh Pr.multi Pr.cos Pr.zel geo Pr.bz (w.adicCompletion E) x α hα
+  have hL := _root_.GlobalTheory.LocLanglands.SatakeL.isL_single_unrChar Pr.exh Pr.multi Pr.cos Pr.zel geo Pr.bz (w.adicCompletion E) x α hα
   rw [Fin.univ_val_map] at hL
   rw [H.langlands _ x hL, segSum, List.map_ofFn, ← SatakeLaw.sumList_ofFn_diag]
   congr 1
@@ -402,7 +408,7 @@ private theorem sat_law (H : LawsT a ha rc) (x : IrrGL (k := w.adicCompletion E)
 private theorem good_of_hasSatake (x : IrrGL (k := w.adicCompletion E)) (α : Fin x.1 → ℂˣ) (hα : HasSatake x.rep α) :
     Good x := by
   haveI := cz (E := E) (w := w)
-  refine ⟨_, GlobalTheory.T.supercuspidalSupport_of_principalSeries_subquotient (w.adicCompletion E) x.1 (fun i => GlobalTheory.SmGL.unrChar _ (α i))
+  refine ⟨_, _root_.GlobalTheory.LocLanglands.hasSupport_of_isSubquotient_prinSeries (w.adicCompletion E) x.1 (fun i => GlobalTheory.SmGL.unrChar _ (α i))
     (fun i => isSmoothChar_of_isUnram (isUnram_unrChar _ (α i))) x.2.rep hα.2.2, fun y hy => ?_⟩
   obtain ⟨i, -, rfl⟩ := Multiset.mem_map.1 hy
   exact Or.inl rfl
@@ -415,7 +421,7 @@ private theorem sph_law (H : LawsT a ha rc) (x : IrrGL (k := w.adicCompletion E)
     rw [sat_law H x α hα]
     exact (WD.unr_mk _).2 (WDRep.unr_diag _)
   · intro hu
-    obtain ⟨α, hα⟩ := GlobalTheory.T.unramified_weilDeligne_eq_diagonal_inv E Ω A w h (rc x) hu
+    obtain ⟨α, hα⟩ := _root_.GlobalTheory.LocLanglands.unr_eq_diag_inv E Ω A w h (rc x) hu
     obtain ⟨π, hπ⟩ := GlobalTheory.CuspRep.ParLaws.exists_hasSatake (k := w.adicCompletion E) α
     have φ := equivRep π
     have hπ' : HasSatake (cls π).rep α := ⟨IrrRep.irr _, fixed_ne_bot_of_equiv φ hπ.2.1,

@@ -31,7 +31,7 @@ public import Mathlib.NumberTheory.Padics.RingHoms
 public import Mathlib.RingTheory.Nakayama
 public import Mathlib.LinearAlgebra.Dimension.Constructions
 public import Mathlib.LinearAlgebra.Dimension.Finite
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateModuleFreeFinrankTwoMulDimStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateModuleFreeFinrankTwoMulDim
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -1209,8 +1209,8 @@ theorem hom_finite_free_rank_le_of_prime (K : Type) [Field K] (l : ℕ) [Fact l.
     (hl : (l : K) ≠ 0) (A B : AbVar K) :
     Module.Finite ℤ (A ⟶ B) ∧ Module.Free ℤ (A ⟶ B) ∧
       Module.finrank ℤ (A ⟶ B) ≤ 4 * A.dim * B.dim := by
-  obtain ⟨hFA, hfA, hrA, -, -⟩ := GlobalTheory.T.tateModule_free_finrank_two_mul_dim K l hl A
-  obtain ⟨hFB, hfB, hrB, -, -⟩ := GlobalTheory.T.tateModule_free_finrank_two_mul_dim K l hl B
+  obtain ⟨hFA, hfA, hrA, -, -⟩ := _root_.GlobalTheory.AV.AbVar.tl_free_finrank K l hl A
+  obtain ⟨hFB, hfB, hrB, -, -⟩ := _root_.GlobalTheory.AV.AbVar.tl_free_finrank K l hl B
   obtain ⟨Q, hpar, hpos, hdef⟩ := GlobalTheory.T.exists_posDef_quadraticForm_hom K A B
   have hrT : Module.finrank ℤ_[l] (Tl l A →ₗ[ℤ_[l]] Tl l B) = 4 * A.dim * B.dim := by
     rw [Module.finrank_linearMap, hrA, hrB]; ring

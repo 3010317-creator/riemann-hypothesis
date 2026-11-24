@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CuspidalModerateGrowthRapidDecayStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.UnifModGrowthOfIsUnifModerate
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CuspidalModerateGrowthRapidDecay
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,4 +45,4 @@ open scoped TensorProduct Topology
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem GlobalTheory.RapidDecay.cuspRapidDecay : GlobalTheory.Published.CuspRapidDecay :=
-  GlobalTheory.Grow.cuspRapidDecay_of_bound GlobalTheory.T.cuspidal_moderateGrowth_rapidDecay
+  GlobalTheory.Grow.cuspRapidDecay_of_bound _root_.GlobalTheory.CuspGeo.cuspDecayBound

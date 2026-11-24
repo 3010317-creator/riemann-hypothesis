@@ -3,8 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.PointEqOfSubsingleton
 public import Development.AbelianVarietyTheory.PublishedTheorems.RelativeAmpleness.RelAmpleAndKTrivIff
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProjBySmoothIsProperGeometricallyIntegral
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsClosedSubschemeTranslationKernelStatement
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FlatKernelPolarisationCosetsOverDVRStatement
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsClosedSubschemeTranslationKernel
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FlatKernelPolarisationCosetsOverDVR
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.InKIffTrivialTwist
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsAffineOfQuasiAffine
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLiftOfSchemeTheoreticallyDominant
@@ -46,7 +48,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
 import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
 
 @[expose] public section
@@ -101,10 +102,10 @@ theorem kTriv_of_generic_fibre : Laws → ∀ (V K : Type) [CommRing V] [IsDomai
     (AmpleBaseChange.isProjBy_smooth_isProper_geometricallyIntegral _ B M.L.L hB hM ha V (𝟙 _) B.left (𝟙 _) B.hom
       (IsPullback.of_horiz_isIso ⟨by simp⟩)).1
   obtain ⟨hO, hu, hK⟩ := UU.TrivTwist.inK_iff_trivial_twist _ B M.L.L hM
-  obtain ⟨H, j, hj, hH⟩ := GlobalTheory.T.exists_closed_subscheme_translation_kernel hL.globalFns V B hB hP M.L.L _ hM hO
+  obtain ⟨H, j, hj, hH⟩ := _root_.GlobalTheory.UU.TwistKer.exists_closed_twist_kernel hL.globalFns V B hB hP M.L.L _ hM hO
   have hfin : IsFinite H.hom :=
     AmpleStabFinite.isFinite_of_relAmple hL.globalFns V B hB M.L.L _ hM hO ha H j hj hH
-  have hflat : Flat H.hom := GlobalTheory.T.flat_kernelPolarisation_cosets_over_DVR hL.globalFns V B hB hP M.L M.c _ hO hu H j hj hH hfin
+  have hflat : Flat H.hom := _root_.GlobalTheory.StabFlat.flat_of_isFinite hL.globalFns V B hB hP M.L M.c _ hO hu H j hj hH hfin
   exact kTriv_of_finite_flat hB hM j (fun T x => (hK _ rfl T x).trans (hH T x)) h P.isLB hw P.ktriv
 
 end GlobalTheory.KTrivSpread

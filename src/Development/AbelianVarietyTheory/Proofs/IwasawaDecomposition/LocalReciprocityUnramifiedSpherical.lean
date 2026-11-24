@@ -9,7 +9,7 @@ public import Mathlib.Order.CompletePartialOrder
 public import Mathlib.RepresentationTheory.Irreducible
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FixedVectorsNeBotOfMemSumIntertwiningRanges
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteCosetsHeckeSetAtSplitPlaceOutsideLevel
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsotypicPartSpannedBySplitPlaceLocalComponentStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsotypicPartSpannedBySplitPlaceLocalComponent
 import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -167,7 +167,7 @@ theorem isSpherical_of_sphAt (π : NG.AutRep L n) (s : SplitPlace L)
     unfold NG.isoTyp
     exact Submodule.mem_sSup_of_mem (show π.S ∈ {S' | NG.IsIrrRep π.ρ S' ∧ NG.IsoRep π.S S'} from
       ⟨π.irrS, LinearEquiv.refl ℂ _, fun _ _ _ e => e⟩) hf
-  have h1 := GlobalTheory.T.isotypicPart_spanned_by_splitPlace_localComponent L n π.toAlgWt π.S π.irrS s σ hσ i hi hic hiso
+  have h1 := _root_.GlobalTheory.SpanLoc.main L n π.toAlgWt π.S π.irrS s σ hσ i hi hic hiso
   rw [iSup_subtype', Submodule.mem_iSup_iff_exists_finset] at h1
   obtain ⟨t, ht⟩ := h1
   rw [iSup_subtype'] at ht

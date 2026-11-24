@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftsInvOne
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicMatrixCongruenceBadPrimeIffCompletionStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicMatrixCongruenceBadPrimeIffCompletion
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PointDeterminantEqNormOneClassOfLevel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -87,8 +87,8 @@ theorem main : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → ∀ (l :
       rw [h1]
       exact one_mem _
   · intro fb dep g hx
-    have hseam := (GlobalTheory.T.adelicMatrixCongruenceBadPrime_iff_completion I hOk l Z a 0 0 P 1).1
-    have hdict := fun z => (GlobalTheory.T.adelicMatrixCongruenceBadPrime_iff_completion I hOk l Z a ((I.rec7 l Z).R.N i) (dep P) P z).2.2
+    have hseam := (_root_.GlobalTheory.Mem.Col2.AdT.AdelicValuationDictionary.main I hOk l Z a 0 0 P 1).1
+    have hdict := fun z => (_root_.GlobalTheory.Mem.Col2.AdT.AdelicValuationDictionary.main I hOk l Z a ((I.rec7 l Z).R.N i) (dep P) P z).2.2
     have hvP : P.1.under (𝓞 B.host.F) = v := by
       apply HeightOneSpectrum.ext
       rw [hseam] at hv

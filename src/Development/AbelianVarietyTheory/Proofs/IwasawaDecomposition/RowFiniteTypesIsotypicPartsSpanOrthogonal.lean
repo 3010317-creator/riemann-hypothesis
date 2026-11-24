@@ -17,7 +17,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealisationP
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PostOnMemGoodPart
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffSetIntegralNat
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RePosOfIsMultIP
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryCongruenceConjContainsCongruenceStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.PrincipalLevelFrame
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryCongruenceConjContainsCongruence
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -472,7 +473,7 @@ namespace GlobalTheory.FinTypesRows
 
 theorem isotL_span_orth : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (θ : InfFam D) (M : DSModel V S) (P : principalLevelFrame.RowPsi V D.R.r) (hF : D.host.F = maximalRealSubfield D.host.E) (β : GL (Fin V.rank) (Formalism.IndefR.Lev.EAf D)) (L : LevDat D.host.E ℂ V.rank) (e : (GA D V → ℂ) →ₗ[ℂ] (GA D V → ℂ)) (μ : Measure (GA D V)) (𝓕 : Set (GA D V)), Inputs D → V.SigOK → IsInfFam θ → StdFrame hF P → μ.IsHaarMeasure → IsFundamentalDomain (GQ V) 𝓕 μ → (∃ (s : Finset (GA D V)) (c : GA D V → ℂ), (∀ g ∈ s, g ∈ GfC V) ∧ e = ∑ g ∈ s, c g • principalLevelFrame.rtA g) → (⨆ π, principalLevelFrame.isotL θ P M (levS V β L) (levChi V β L) e π) = goodPart θ M (levS V β L) (levChi V β L) e ∧ ∀ π π', ¬ π.Iso π' → ∀ x ∈ principalLevelFrame.isotL θ P M (levS V β L) (levChi V β L) e π, ∀ y ∈ principalLevelFrame.isotL θ P M (levS V β L) (levChi V β L) e π', ipM M μ 𝓕 x y = 0 := by
   intro D V S θ M P hF β L e μ 𝓕 hI hV hθ hStd hμ h𝓕 he
-  have hc : principalLevelFrame.CongConj D.host.E D.R.r := GlobalTheory.T.unitary_congruence_conj_contains_congruence D.host.E D.R.r
+  have hc : principalLevelFrame.CongConj D.host.E D.R.r := _root_.GlobalTheory.CongConjugate.congConj D.host.E D.R.r
   obtain ⟨hsesq, hherm, hpos⟩ := minf_sesq (θ := θ) (M := M) μ 𝓕 P hI.schur hV hθ hμ h𝓕
   have hstab : ∀ h, ∀ x ∈ principalLevelFrame.Minf θ P M, principalLevelFrame.actM P M h x ∈ principalLevelFrame.Minf θ P M :=
     fun h x hx => minf_stable P hc h hx

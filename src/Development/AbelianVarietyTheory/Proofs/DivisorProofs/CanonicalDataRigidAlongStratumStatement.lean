@@ -8,7 +8,8 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSc
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfPullbackQuotientEq
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.UniformBaseChange.PullGt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSabMapOfGrpPullbackRespectingActionBundleStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSabMapOfGrpPullbackRespectingActionBundle
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RigidForFan
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
 public import Mathlib.LinearAlgebra.LinearIndependent.Defs
@@ -501,7 +502,7 @@ theorem exists_objMaps : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
     have e₂ : LBIso (o.t.PP.L.pull (io.hom ≫ π₁)) (o.t.PP.L.pull (io.hom ≫ π₂)) :=
       GlobalTheory.GenSpread.lbIso_pull_comp io.hom rfl rfl hL
     exact LBIso.trans o'.t.PP.isLB (pull_isLB o.t.PP.isLB _) (pull_isLB o.t.PP.isLB _) e₁ e₂
-  obtain ⟨m, hm⟩ := GlobalTheory.T.exists_sabMap_of_grpPullback_respecting_action_bundle o'.t o.t (spMap (GlobalTheory.RigChart.constHom f)) (io.hom ≫ π₂) o.proper hψc hact hLB
+  obtain ⟨m, hm⟩ := _root_.GlobalTheory.UCanon.TriplePull.exists_sabMap_of_isProper o'.t o.t (spMap (GlobalTheory.RigChart.constHom f)) (io.hom ≫ π₂) o.proper hψc hact hLB
   have hg : spMap (TrivSqZeroExt.fstHom k k k).toRingHom ≫ spMap f =
       spMap (TrivSqZeroExt.fstHom k k k).toRingHom ≫ spMap (GlobalTheory.RigChart.constHom f) := by
     rw [← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, ← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]

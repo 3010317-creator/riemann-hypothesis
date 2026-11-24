@@ -64,16 +64,19 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.RingTheory.SimpleModule.Isotypic
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsQuadOfPlane
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ComplexConjugationMapsMultiplicitySpaceStatement
+import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ComplexConjugationMapsMultiplicitySpace
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdemOfCoeffReal
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteAdelicIsometryMatchingFrames
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankKilledEqOfEqualMultiplicitiesStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankWEigenpartEqRowsFullHecke
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodFormsEqKilledByGroupAlgebraStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdemOfCoeffRealStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsometryMatchesParahoricLevelsStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodFormsEqKilledByGroupAlgebra
+import Formalism.LocalToGlobal.Divisibility.LiftLat
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsometryMatchesParahoricLevels
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelTypeHeckeKilledCorrespondMatchingIsoStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TypePlacesNotPairwiseConjugateStatement
+import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+import Formalism.LocalToGlobal.UnitaryNorms.CharHost
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TypePlacesNotPairwiseConjugate
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 import Mathlib.RingTheory.TotallySplit
@@ -833,7 +836,7 @@ theorem rank_le (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E �
     (P : principalLevelFrame.RowPsi V n) (π : Formalism.L2.NG.FinTyp D.host.E n)
     (hχ : ∀ k ∈ J, χ' k = star (χ k)) (he : ∀ φ : GA D V → ℂ, e' (star φ) = star (e φ)) :
     Module.rank ℂ (principalLevelFrame.isotL θ P M J χ e (principalLevelFrame.FinTyp.conjT π)) ≤ Module.rank ℂ (principalLevelFrame.isotL θ P M' J χ' e' π) := by
-  obtain ⟨h, hM⟩ := GlobalTheory.T.complexConjugation_maps_multiplicitySpace θ M M' c hc
+  obtain ⟨h, hM⟩ := _root_.GlobalTheory.ConjMult.conj_mult θ M M' c hc
   have key : ∀ T ∈ principalLevelFrame.isotL θ P M J χ e (principalLevelFrame.FinTyp.conjT π), conjMap M M' c h T ∈ principalLevelFrame.isotL θ P M' J χ' e' π := by
     rintro T ⟨⟨h1, h2⟩, h3⟩
     refine ⟨⟨?_, ?_⟩, conjMap_isot θ P M M' c h hM π T h3⟩
@@ -937,7 +940,7 @@ theorem finrank_isot_killed_eq : ∀ (H : Type) [Group H] [TopologicalSpace H] (
     rintro _ ⟨s, rfl⟩
     exact GlobalTheory.RepCount.apply_mem_irrSum hirr hadm0
       ⟨fun t => (le_iSup₂_of_le g hg le_rfl : LinearMap.range g ≤ _) ⟨t, rfl⟩, hg.2⟩ s
-  refine GlobalTheory.T.finrank_killed_eq_of_equal_multiplicities H X Y ρ ρ' _ _ I (hdec ρ C) (hdec ρ' C') ?_ ho ho' f f'
+  refine _root_.GlobalTheory.RepCount.finrank_inf_killed_eq H X Y ρ ρ' _ _ I (hdec ρ C) (hdec ρ' C') ?_ ho ho' f f'
   intro W _ _ σ hσ _ _
   by_cases hz : homInto σ ρ (⨆ g ∈ homInto σ0 ρ C, LinearMap.range g) = ⊥ ∧
       homInto σ ρ' (⨆ g ∈ homInto σ0 ρ' C', LinearMap.range g) = ⊥
@@ -962,7 +965,7 @@ theorem isotL_eq {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (θ : D.what�
     principalLevelFrame.isotL θ P M (levS V β (withP L P')) (levChi V β (withP L P')) (gaL V β L eG c) π =
       (⨆ f ∈ homInto ((GlobalTheory.OccRowVec.finRep π).comp (GlobalTheory.KapIsot.eqv P).symm.toMonoidHom) (finRep M) (allMaps θ M), LinearMap.range f) ⊓
         killed (finRep M) (eqSet V β L eG c P' (∅ : Set Empty) Empty.elim Empty.elim Empty.elim) := by
-  have e1 := GlobalTheory.T.goodForms_eq_killed_by_groupAlgebra θ M β L eG c P' (∅ : Set Empty) Empty.elim Empty.elim Empty.elim hs hQ hl
+  have e1 := _root_.GlobalTheory.CuspMult.EqCut.good_hecke_eq_killed θ M β L eG c P' (∅ : Set Empty) Empty.elim Empty.elim Empty.elim hs hQ hl
   have htop : hPart M (levG V β (flag1L L)) (∅ : Set Empty) Empty.elim Empty.elim Empty.elim = ⊤ :=
     eq_top_iff.2 fun x _ => GlobalTheory.PartDims.mem_hPart.2 fun P hP => hP.elim
   rw [htop, inf_top_eq] at e1
@@ -996,7 +999,7 @@ theorem finrank_isotL_transfer (hHC : GlobalTheory.Published.HarishChandraFinite
   obtain ⟨c', hc'⟩ := hC.lev.βW i
   have hrk : (Yc D 0).rank = (Wc D i).rank := GlobalTheory.PartDims.rank_zeroth_component_eq.trans (GlobalTheory.PartDims.rank_weight_component_eq i).symm
   obtain ⟨j, Φ, hΦ⟩ := GlobalTheory.FinIsoExists.exists_isFinIso (Yc D 0) (Wc D i) (R.βY 0) (R.ΛY 0) _ (R.βW i) (R.ΛW i) _ R.Pg hrk
-    hc hc' (GlobalTheory.T.typePlaces_not_pairwise_conjugate R.C.P R.Pg hC.lev.Pg)
+    hc hc' (_root_.GlobalTheory.TypePlaces.not_isConjPl R.C.P R.Pg hC.lev.Pg)
   obtain ⟨h, hh⟩ := GlobalTheory.KapIsot.frames_inner (Yc D 0) (Wc D i) hF PY PW hPY hPW
     (by rw [GlobalTheory.PartDims.rank_zeroth_component_eq]; exact GlobalTheory.KapIsot.odd_r D.R) _ _ _ j Φ hΦ
   have eY := isotL_eq R.θ M₀ (R.βY 0) (R.dat0 R.triv) R.eG (RealDat.eC (A := A) D.what₂.embLL) P PY π rfl rfl
@@ -1004,7 +1007,7 @@ theorem finrank_isotL_transfer (hHC : GlobalTheory.Published.HarishChandraFinite
   have eW := isotL_eq R.θ (R.MW i (sg0 D A)) (R.βW i) (R.datWp i R.triv) R.eG (RealDat.eC (A := A) (sg0 D A)) P PW π rfl rfl
     (GlobalTheory.DimFull.liftsW' hC i)
   have e3 : RealDat.eC (A := A) (sg0 D A) = RealDat.eC (A := A) D.what₂.embLL := by rw [GlobalTheory.PartDims.sign_at_base_place_eq_embedding R]
-  have hl := GlobalTheory.T.isometry_matches_parahoric_levels (Yc D 0) (Wc D i) (R.βY 0) (R.βW i) D.R.r D.R.t (r_le_Y 0) (r_le_rank_Wc i) R.Pg R.chi
+  have hl := _root_.GlobalTheory.LevTrans.levtrans (Yc D 0) (Wc D i) (R.βY 0) (R.βW i) D.R.r D.R.t (r_le_Y 0) (r_le_rank_Wc i) R.Pg R.chi
     (fun _ _ => 1) j Φ hΦ
   have e4 : killed ((finRep (R.MW i (sg0 D A))).comp Φ.toMulEquiv.toMonoidHom : Representation ℂ (GfC (Yc D 0)) _)
         (eqSet (Yc D 0) (R.βY 0) (R.dat0 R.triv) R.eG (RealDat.eC (A := A) D.what₂.embLL) P (∅ : Set Empty) Empty.elim
@@ -1059,7 +1062,7 @@ theorem finrank_isotE_eq_isotL : GlobalTheory.Published.WeilRepresentationUnitar
     R.toRealDat.e0 R.toRealDat.e0 Y.PY (principalLevelFrame.rowRepR R.toRealDat.θ (Y.eFT π))
     (fun k hk => GlobalTheory.PartDims.star_levChi false hk)
     (GlobalTheory.PartDims.gaL_star (L := R.toRealDat.dat0 R.toRealDat.triv) R.toRealDat.eG _ rfl rfl
-      (GlobalTheory.T.star_idemOf_coeff_eq_self D.what₂.embLL A3.A.X hH.ok.ok2.irr hX))
+      (_root_.GlobalTheory.CuspMult.idemOf_coeff_real D.what₂.embLL A3.A.X hH.ok.ok2.irr hX))
   have hE : R.toRealDat.EEat (R.toRealDat.levR F.lv2 false) ≤ R.toRealDat.EEat R.toRealDat.triv :=
     GlobalTheory.PartDims.goodPart_le_flag (L := R.toRealDat.dat0 R.toRealDat.triv) R.toRealDat.θ _ rfl rfl _ _
   have fE : FiniteDimensional ℂ (principalLevelFrame.isotL R.toRealDat.θ Y.PY (R.toRealDat.MY 0)

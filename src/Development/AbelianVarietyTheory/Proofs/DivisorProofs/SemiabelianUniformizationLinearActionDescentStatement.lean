@@ -19,8 +19,9 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KernelTrivia
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelAmpleRigidTranslateLineBundleRationalPoint
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TateProductRigidificationTrivial
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOrderTwoSectionTranslateRefinementStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMumfordBundlePullbackGrpPullbackStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisationCompleteLocalEvenOnTorusStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.Clauses
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMumfordBundlePullbackGrpPullback
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisationCompleteLocalEvenOnTorus
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationTransferIsPullDegIdStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdempotentFactorUniformisedGroupsBaseChange
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SamePolarisedDataOfIdempotentFactorUniformisatio
@@ -1409,7 +1410,7 @@ theorem samePol_unif_finExt : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
   intro R _ _ _ hR D₀ D A G _ _ hG U hS
   have := hR.2
   obtain ⟨a, P, A₂, gen₂, -, hPa, hEv, hgen, hgenL, hcmp⟩ := GlobalTheory.T.exists_orderTwo_section_evenTranslate_samePolarisedData R hR D₀ D A G hG U hS
-  obtain ⟨D₂, U₂, hLG, -⟩ := GlobalTheory.T.exists_uniformisation_completeLocal_evenOnTorus R hR G P hG hEv A₂ gen₂ hgen hgenL
+  obtain ⟨D₂, U₂, hLG, -⟩ := _root_.GlobalTheory.Mum.exists_unif_even R hR G P hG hEv A₂ gen₂ hgen hgenL
   obtain ⟨R', _, _, _, ρ, D₁, hfin, hloc, ⟨hD₀⟩, hmove⟩ := hcmp D₂ U₂ hLG
   obtain ⟨hL, -, -, h4, h5⟩ := GlobalTheory.firstFiveLaws
   obtain ⟨D', hD', A', U', hP⟩ := GlobalTheory.UT.EndBaseChange.exists_pull hL.polBaseChange h4.unifBaseChange h5.psiOnExists
@@ -1423,7 +1424,7 @@ theorem samePol_unif_finExt : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
       ((Iso.refl ((Over.pullback (specOf ρ)).obj G)).hom.left ≫ pullback.fst G.hom (specOf ρ)) := by
     refine (isGrpPullback_pullback G (spMap ρ)).congr ?_ hb.symm
     rfl
-  obtain ⟨β₂, hsq, hlam⟩ := GlobalTheory.T.exists_mumfordBundle_pullback_grpPullback (Sp R) (Sp R') (spMap ρ) G _ _ hpb
+  obtain ⟨β₂, hsq, hlam⟩ := _root_.GlobalTheory.Mum.lbIso_lam_pull_of_isGrpPullback (Sp R) (Sp R') (spMap ρ) G _ _ hpb
   have hLU : (abelian₂ G U.LG.L).IsLB := DVR.linComb_isLB _ U.LG.isLB _ _
   have h2 : LBIso (abelian₂ G U₂.LG.L) (abelian₂ G U.LG.L) := by
     rw [hLG]
@@ -1694,7 +1695,7 @@ theorem exists_bundle_data_at_traits : ∀ (R : Type) [CommRing R] [IsDomain R] 
   have hR₉ : Base R₉ := ⟨hfin₉.1, by
     haveI := hR.2
     exact charZero_of_injective_ringHom hfin₉.2.1⟩
-  obtain ⟨D₉', U₉, hL₉, -⟩ := GlobalTheory.T.exists_uniformisation_completeLocal_evenOnTorus R₉ hR₉ G₉ P₉ hG₉ hev₉ A₉ gen₉ hgen₉ hgl₉
+  obtain ⟨D₉', U₉, hL₉, -⟩ := _root_.GlobalTheory.Mum.exists_unif_even R₉ hR₉ G₉ P₉ hG₉ hev₉ A₉ gen₉ hgen₉ hgl₉
   obtain ⟨D₉, hD₉, hsame⟩ := GlobalTheory.T.uniformisation_pulledBackFactor_samePolarisation R hR D D' F A' G' hG' U' oA oG hlin G hG inc pr hinc hpr hip hpi R₉ ρ₉ G₉ β₉ β₉₂ P₉ hfin₉ hpb₉ hsq₉ hG₉ hlam₉ A₉ D₉' U₉ hL₉
   obtain ⟨R₀, _, _, _, ρ, D₀, G₀, _, _, β, β₂, A₀, U₀, hfin, hD₀, hpb, hsq, hlam⟩ :=
     GlobalTheory.T.samePolarisedData_uniformise_finite_extension R₉ hR₉ D₉ D₉' A₉ G₉ hG₉ U₉ hsame

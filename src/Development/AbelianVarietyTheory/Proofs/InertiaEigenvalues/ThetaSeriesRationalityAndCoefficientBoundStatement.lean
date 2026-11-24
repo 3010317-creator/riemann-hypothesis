@@ -36,12 +36,14 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.Normal
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.LFunctionPositiveConductorFourEight
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FiniteDimensionalSpan
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicCuspSectionsLeSpanAlgebraicCuspForms
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterEmbeddingCompatStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.FWExist
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterEmbeddingCompat
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHalfOfBasePins
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChosenPlacesAdmissibleGoodSetup
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjPlNeOfSplit
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsComplexLinearExtensionCoefficientMap
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunctionStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TranslateMemCoefLatFn
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunction
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntFormDescentBelow
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InvPlaceNormProductMemCoefficientRing
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CharacterQuotientValuesInEmbeddingField
@@ -127,7 +129,8 @@ import Formalism.LocalToGlobal.Divisibility.CoefMod
 import Formalism.LocalToGlobal.IndefiniteReal.IndefiniteWeightData
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DualTypePlacesIsSplitNonconjugateOfAdmissible
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsScaleOfChar
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodBaseDataWeightEqLiftCoeffModuleWeightStatement
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdmissibleEmptyOfGood
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodBaseDataWeightEqLiftCoeffModuleWeight
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LiftDatumThetaSeriesRightInvariantCoreLevel
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UpperLeftBlockEqOneIffOfMemBlockTri
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
@@ -1215,9 +1218,9 @@ theorem xi_int_of_ties (hRF : GlobalTheory.NT.RayField) (hSI : GlobalTheory.Inde
     have h2 := Formalism.BasicNotions.sig_sum _ hB.sigOK (tauE D τ)
     rw [← h1] at h2
     exact h2.le
-  have hinj := GlobalTheory.T.harmonic_polynomial_eq_zero_of_function D _ _ _ (ρ.B i j b).F.BS hB.wt hm
+  have hinj := _root_.GlobalTheory.ExportSeries.HarmInj.harm_inj D _ _ _ (ρ.B i j b).F.BS hB.wt hm
   have hlam : (ρ.B i j b).w.lam = lamV D j :=
-    GlobalTheory.T.good_baseData_weight_eq_lift_coeff_module_weight D T0 Rl.toLevCh A3.A.μ0 j _ hcore.lev hB (hpin.mu0 i j b) (hpin.ap i j b) (hpin.am i j b)
+    _root_.GlobalTheory.BaseLiftWeight.lam_eq D T0 Rl.toLevCh A3.A.μ0 j _ hcore.lev hB (hpin.mu0 i j b) (hpin.ap i j b) (hpin.am i j b)
   obtain ⟨v, hvc, hv⟩ := exists_vec_of_small j hlam F'
   have hio' : Rl.ioP j (PiTensorProduct.tprod ℂ u) (c0L j v) = c₀ • P' := by
     obtain ⟨u', w₀, hu', -, hw⟩ := IsChosenExtremalVector.io _ (hti.hv₀ j _) hio
@@ -1396,7 +1399,7 @@ theorem xi_int_of_ties (hRF : GlobalTheory.NT.RayField) (hSI : GlobalTheory.Inde
     · exact Formalism.L2.Pj.rdU_mem_offZero _ _
   have hinv : ∀ k ∈ T.Kf ((j : ℕ) + 1) T.σ₀, ∀ g, φ (g * k) = φ g := fun k hk g => by
     rw [LevelInv.apply_eq_castDict hV φ (g * k), LevelInv.apply_eq_castDict hV φ g, LevelInv.cast_mul hV g k, hφe]
-    have hlift := (GlobalTheory.T.level_character_embedding_compat T Rl.toRealDat κ v₀ hcore.lev hti hpb j T.σ₀ T.toCore.good_σ₀ hV
+    have hlift := (_root_.GlobalTheory.LiftLevel.isLift_one_iff_mem_level T Rl.toRealDat κ v₀ hcore.lev hti hpb j T.σ₀ T.toCore.good_σ₀ hV
       (cast (congrArg (GA D) hV) k)).2 (by rw [cast_cast, cast_eq]; exact hk)
     rw [Pi.smul_apply, Pi.smul_apply]
     refine congrArg _ (DualType.xiCoef_mul_right_of_red hB (D.sp.V_sig _) hgood hadm (Base.isAdmFam_univFam _ _ _) hω
@@ -1588,7 +1591,7 @@ theorem GlobalTheory.XiIntComb.xi_int_comb : GlobalTheory.Published.GlobalArtinR
     have h2 := Formalism.BasicNotions.sig_sum _ hB.sigOK (tauE D τ)
     rw [← h1] at h2
     exact h2.le
-  have hinj := GlobalTheory.T.harmonic_polynomial_eq_zero_of_function D _ _ _ (Y.Z.ρ.B i j b).F.BS hB.wt hm
+  have hinj := _root_.GlobalTheory.ExportSeries.HarmInj.harm_inj D _ _ _ (Y.Z.ρ.B i j b).F.BS hB.wt hm
   have key : ∀ φ ∈ coefLatFn (Formalism.L2.Host.embLL0 D) (labLL0 D) (Y.Z.ρ.eO i b).range (Y.Z.ρ.B i j b).w.lam
       ((Y.Z.ρ.B i j b).latAt (finPt _ h)), ∃ P' ∈ (Y.Z.ρ.B i j b).valSpace,
         harmFn (Wc D j).rank (Y.Z.ρ.B i j b).w (Y.Z.ρ.B i j b).F.BS P' = φ ∧ Good Y i j b s h u P' := by

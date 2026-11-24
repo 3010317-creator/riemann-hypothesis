@@ -11,7 +11,8 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.MapDegreeEqEx
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AbelianSchemeCubicalBundleExistsAndMapsStatement
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.IsCPPullback
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AbelianSchemeCubicalBundleExistsAndMaps
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CardTorsionPointsAbelianVariety
 public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDimEqOne
@@ -70,7 +71,7 @@ import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.MulAFinite
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsGenThetaAbelianVariety
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsSymmetricVeryAmpleBy
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FiniteMonotoneGrowth
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsProjectiveOverRingByChartsAbelianVarietyStatement
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsProjectiveOverRingByChartsAbelianVariety
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LbIsoPwPullPowLocalStatement
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LeOfPowLePolyMulPow
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBLocalC
@@ -271,7 +272,7 @@ theorem finrank_mul_eq : ∀ (k : Type) [Field k] [IsAlgClosed k] (B : Over (Sp 
   have hrank : ∀ y : B.left, (𝟙 B ^ n : B ⟶ B).left.finrank y = D :=
     fun y => GlobalTheory.SemiAbelianTower.finrank_eq_of_mapDeg _ hD y
   rw [hrank x]
-  have hproj := GlobalTheory.T.isProjectiveOverRingByCharts_abelian_variety k B hB
+  have hproj := _root_.GlobalTheory.AbelianProjective.isProjBy_of_isAbelianScheme k B hB
   obtain ⟨H, m, s, hH, hs, hsym⟩ := GlobalTheory.SymVeryAmple.exists_symmetric_veryAmpleBy k B hB hproj
   obtain ⟨r, hr⟩ : ∃ r : LB.Gen (H.pull (eSec B)), r.IsGen :=
     DVR.exists_gen_of_isLB_local (V := k) _ (pull_isLB hH _)

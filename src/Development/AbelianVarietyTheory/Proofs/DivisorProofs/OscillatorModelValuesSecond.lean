@@ -20,10 +20,12 @@ public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CastFrMemDom
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsLetterRowWeightDictionary
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianFormAtFrameLaws
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UniformisationComponentLatticesMarkingsStatement
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsBaseClassLevelAdapted
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UniformisationComponentLatticesMarkings
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolomorphicHomDetermined
 import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TopLePreimageOfValAtNeZero
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicativeStatement
+import Formalism.LocalToGlobal.ProjectiveLattices.EquivariantFiniteGroup
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicative
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsTangentModuleUniversalGroup
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameUniformEmbeddingSecond
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedModuliAlgebraicLawsChartWeightIntegrality
@@ -329,7 +331,7 @@ theorem const_move {H : Geo.Tor.Host D.host.E} {Dw : Datum H} {W : HSp D} {l : G
   have hmt := hc.mt
   have hr1 : 1 ≤ W.rank := hU.1 ▸ hpq
   obtain ⟨Wt⟩ := nonempty_uw (U := Formalism.L2.PjFree.Unf.ofPj U) hU
-  have hSD := fun k => (GlobalTheory.T.uniformisation_component_lattices_markings _ H Dw l Xo c σ _ (Formalism.L2.PjFree.Unf.ofPj U) hσ hU hr1 Wt k).2.1
+  have hSD := fun k => (_root_.GlobalTheory.Dict.uw_lattice _ H Dw l Xo c σ _ (Formalism.L2.PjFree.Unf.ofPj U) hσ hU hr1 Wt k).2.1
   have hS : SameSp (U.X k) (U.X k') := ⟨hmt.psi, hc.gm.symm, hmt.p0, hmt.xi, (hM k).kap.trans (hM k').kap.symm⟩
   obtain ⟨Dc, hDc, -⟩ := GlobalTheory.Dict.exists_dic _ H Dw l c σ _ Wt.g 0 (U.X k) 0 Wt.e hσ hU.1 (hU.2.1 k).1 (hU.2.1 k).2
     (hSD k) ⟨fun _ => antitone_const, Even.zero⟩
@@ -421,7 +423,7 @@ theorem value_move {H : Geo.Tor.Host D.host.E} {Dw : Datum H} {W₀ W : HSp D} (
   have hG : ∀ k, (U.X k).Gm = -W₀.gramᵀ := fun k => (hM k).model.1
   have hxi : ∀ k k', (U.X k).ξ0 = (U.X k').ξ0 := fun k k' => (hM k).model.2.trans (hM k').model.2.symm
   obtain ⟨θ', hθ'⟩ := (GlobalTheory.Member.infiniteAdele_bijective D).1
-  obtain ⟨hAr, -, -⟩ := GlobalTheory.T.archimedeanMatrix_unitary_continuous_multiplicative D W₀ θ' hθ'
+  obtain ⟨hAr, -, -⟩ := _root_.GlobalTheory.Member.Arch.archM_spec D W₀ θ' hθ'
   obtain ⟨γ₁, hγ₁, hΛ₁, hm₁, hf₁⟩ := hL.2 h
   obtain ⟨γ₂, hγ₂, hΛ₂, hm₂, hf₂⟩ := hL.2 (h * κ)
   have hat : ∀ h γ, γ ∈ GQ W₀ → ((U.X (dict h).1).Λ : Set (Fin W₀.rank → D.host.E)) =

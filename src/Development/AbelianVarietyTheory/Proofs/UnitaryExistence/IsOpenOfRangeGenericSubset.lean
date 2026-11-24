@@ -1,20 +1,24 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.IsCPPullback
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditionalStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CardTorsionPointsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsDegenerationDataUniformisationOfTorsionCouStatement
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.VRatioGtStatement
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.PeriodicValuation
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTripleLinearTorsionIso
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsCubicalBundleOfSymmetricSemiAbelianStatement
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.PointEqOfSubsingleton
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsCubicalBundleOfSymmetricSemiAbelian
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsEvenCubicalTrivialisationSpecialFibreStatement
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsMemCommonChart
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsSemiAbelianAndTqOfIsGt
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.WCompat
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHoldStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.OLinBaseChangeSt
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHold
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TwistBaseChangeAndValuationStatements
 public import Formalism.LocalToGlobal.ProjectiveLattices.OneLtAbsNormReal
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissiblePadicIntMaximalIdeal
@@ -89,7 +93,7 @@ namespace GlobalTheory.UU
 
 theorem exists_degData_unif_unconditional :
     AllSet fun {V} _ _ _ {A} {G} _ _ s => ∃ (D : DegData V (IsLocalRing.maximalIdeal V)) (U : Unif (IsLocalRing.maximalIdeal V) D A G), U.LG = s.P.L ∧ U.gen = s.gen ∧ HEq U.cubG s.P.c :=
-  GlobalTheory.T.exists_degenerationData_uniformisation_of_torsionCount GlobalTheory.UU.TorsionCount.card_torsion_points_unconditional GlobalTheory.T.abelianScheme_laws_unconditional.1 GlobalTheory.T.abelianScheme_laws_unconditional.2
+  GlobalTheory.T.exists_degenerationData_uniformisation_of_torsionCount GlobalTheory.UU.TorsionCount.card_torsion_points_unconditional _root_.GlobalTheory.abelianSchemeLaws_all.1 _root_.GlobalTheory.abelianSchemeLaws_all.2
 
 end GlobalTheory.UU
 end -- clump:auto
@@ -148,7 +152,7 @@ theorem exists_pelUnif_of_cdvr : (AllSet fun {V} _ _ _ {A} {G} _ _ s => ∃ (D :
   obtain ⟨hdvr, hcomp, hchar⟩ := id hV
   have hnoeth : IsNoetherianRing V := inferInstance
   have hic : IsIntegrallyClosed V := inferInstance
-  obtain ⟨P, hPL, -⟩ := GlobalTheory.T.exists_cubical_bundle_of_symmetric_semiAbelian h1 V A t.G t.semi gen hgen t.PP t.cub t.sym
+  obtain ⟨P, hPL, -⟩ := _root_.GlobalTheory.UU.exists_cp_of_isSymmetric h1 V A t.G t.semi gen hgen t.PP t.cub t.sym
   obtain ⟨r, hr⟩ := thick_zero_factor V
   obtain ⟨Q₀⟩ : Nonempty (TQ (thickObj V (maximalIdeal V) 0 t.G) S.X) :=
     nonempty_tq_pullback_comp r _ hr t.G (TQ.ofGtDatum d)
@@ -207,8 +211,8 @@ namespace GlobalTheory.UU
 
 theorem exists_pelUnif_of_cdvr_unconditional :
     ∀ (E : Type) [Field E] [NumberField E] [NumberField.IsCMField E] (H : Host E) (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], CDVR V → ∀ (t : SAB H (Sp V)) (A : PolAV (Sp (FractionRing V))) (gen : (Over.pullback (jK V)).obj t.G ≅ A.A), IsMonHom gen.hom → (∃ w : LB.Iso (A.L.pull gen.hom.left) (t.PP.L.pull (pullback.fst t.G.hom (jK V))), w.IsGen) → (∃ S : SplitExt (Sp (IsLocalRing.ResidueField V)), S.IsGt ((Over.pullback (spMap (IsLocalRing.residue V))).obj t.G)) → ∃ P : PELUnif (maximalIdeal V) t, P.A = A ∧ HEq P.U.gen gen ∧ P.TorsionIso :=
-  GlobalTheory.T.exists_linearUniformisation_of_complete_dvr GlobalTheory.T.exists_degenerationData_uniformisation_unconditional GlobalTheory.T.all_six_abelian_scheme_laws_hold.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.2.1
-    GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.2.2.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.2.2.2.1
+  GlobalTheory.T.exists_linearUniformisation_of_complete_dvr GlobalTheory.T.exists_degenerationData_uniformisation_unconditional _root_.GlobalTheory.allSixLaws.1 _root_.GlobalTheory.allSixLaws.2.1 _root_.GlobalTheory.allSixLaws.2.2.1
+    _root_.GlobalTheory.allSixLaws.2.2.2.1 _root_.GlobalTheory.allSixLaws.2.2.2.2.1
     GlobalTheory.twistBaseChange_and_valuation_statements.2.1
     GlobalTheory.twistBaseChange_and_valuation_statements.2.2.1
     GlobalTheory.twistBaseChange_and_valuation_statements.2.2.2.1

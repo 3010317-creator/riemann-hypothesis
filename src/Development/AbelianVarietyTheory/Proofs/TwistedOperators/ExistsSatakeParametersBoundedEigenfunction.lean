@@ -16,7 +16,8 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSpli
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSatakeGLOfIsSatVecGL
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SphericalEigenvectorGeneratesIrreducibleSubrepreStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSplitPlOfTwoMem
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BoundedAutomorphicRightTranslationUnitarisableBoStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InnerProductFormula
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BoundedAutomorphicRightTranslationUnitarisableBo
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSatakeParamTrivialBoundUnitaryGLStatement
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenIsCompactLevelOffFinEmpty
 import Formalism.HermitianLattices.HermitianLatticesProofs.DualBasic
@@ -63,7 +64,6 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.EqOfHasValueAtInfinite
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.RealLowestKTypeCoeffSquareIntegrable
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InnerProductFormula
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnramifiedDoublingIntegralInertPlace
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.RingTheory.PiTensorProduct
@@ -468,7 +468,7 @@ theorem exists_param_at (D : D7) (V : HSp D) (J : Set (GA D V)) (χ : GA D V →
     refine ⟨a, Subtype.val_injective ?_⟩
     have := heckeVec_map_of_injective (K := Kv V v) (bddAut V).subtype Subtype.val_injective hint hh x
     exact this.trans ha
-  have hρU : IsUnitarisable ρ := isUnitarisable_comp (GlobalTheory.T.boundedAutomorphicRightTranslation_unitarisable_bounded D V).1 _
+  have hρU : IsUnitarisable ρ := isUnitarisable_comp (_root_.GlobalTheory.FinZeta.bddRep_unitarisable_and_bounded D V).1 _
   have hH := (GlobalTheory.Mem.Vol.cmData_isCMExt_and_gram_isHermND _ _ D.sp.cm).2 V
   have hL := GlobalTheory.HeckeDual.isLattice_frameLat V
   have hspan : Submodule.span D.host.E (frameLat V : Set (Fin V.rank → D.host.E)) = ⊤ := by

@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.ThetaValues.GamAt
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
 public import Formalism.LocalToGlobal.ProjectiveLattices.RecPJThAllNeBot
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CuspFormsVanishingOffFramesLeSpanShortThetaStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CuspFormsVanishingOffFramesLeSpanShortTheta
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UnitCOfFiniteCharacter
 public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
 public import Formalism.LocalToGlobal.ProjectiveLattices.HostSize
@@ -103,7 +103,7 @@ theorem holSub0_le_span_short_rec : Formalism.MainNotions.ModuliIntegralCharts.H
     intro k γ hγ
     erw [Formalism.L2.PjFree.laU_ofPj]
     exact hM.chiTriv j hj T.σ₀ hgood _ _ hDom k γ hγ
-  have key := GlobalTheory.T.cuspForms_vanishing_off_frames_le_span_shortTheta hC _ _ _ _ (T.Q.Xo j) T.Q.c ka.n (T.dδ j ka.n) T.σ₀ D.R.r
+  have key := _root_.GlobalTheory.Dict.holSub0_le_span_shortGen hC _ _ _ _ (T.Q.Xo j) T.Q.c ka.n (T.dδ j ka.n) T.σ₀ D.R.r
     (Formalism.L2.PjFree.Unf.ofPj (T.U j T.σ₀)) ((Formalism.L2.PjFree.goodEmb_iff _).2 hgood)
     ((Formalism.L2.PjFree.isUnf_ofPj _).2 (hM.unf j hj _ hgood)) hr1 hl (hX j hj) hPr (dLev j hj ka.n)
     (dNab j hj ka.n) hUnit hP3 hPhi (T.nab j) (badN D) D.R.nV (wtA ka) hb hDom hn' hChi (shTot j hj _ _ hDom)

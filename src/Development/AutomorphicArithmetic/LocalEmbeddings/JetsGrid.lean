@@ -79,7 +79,7 @@ import Mathlib.Topology.Sheaves.Init
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.T2SpaceTensorProductFiniteExtension
 import Mathlib.Algebra.Order.Star.Int
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridFiniteDatumVectorThetaFockVacuumStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.KernelNormConstantSpec
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasInfExpOfOrder
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TendstoInfMulProd
 import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
@@ -741,7 +741,7 @@ theorem ker_fock_moved_fin : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Const
   have hn := DefPair.nodes hp
   have hom := W.om_is (.chi i D.R.m) (by
     simp only [DefPair, DefNode] at hp hn; simp only [Pair.InRange, Node.InRange]; omega)
-  obtain ⟨h1, -⟩ := GlobalTheory.T.gridFiniteDatumVector_theta_fockVacuum W S.Z hp d hd
+  obtain ⟨h1, -⟩ := _root_.GlobalTheory.FockRealVec.vec_theta_fock W S.Z hp d hd
   have m1 : (G.toPair (.chi i D.R.m) (S.N.u (.grid i D.R.m)).1 (S.N.u (.grid (i + 1) D.R.m)).1).1 ∈
       GfC (G.pS (.chi i D.R.m : Pair T)) := negGA_mem_GfC _ (S.N.u _).2
   have m2 : (G.toPair (.chi i D.R.m) (S.N.u (.grid i D.R.m)).1 (S.N.u (.grid (i + 1) D.R.m)).1).2 ∈

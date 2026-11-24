@@ -8,7 +8,8 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemLat
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaTensorRuleTargetOrthogonalSum
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsEtaTildeUnramified
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumOfSplittingCharacters
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurLemmaThetaFunctionsOrientedPairStatement
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurLemmaThetaFunctionsOrientedPair
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctions
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasChr
 import Mathlib.Algebra.Order.Floor.Extended
@@ -68,7 +69,7 @@ theorem exists_scalar {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {χS χT χ
     {om om' : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)}
     (H : IsWeilDatumO ψ S T χS χT om) (H' : IsWeilDatumO ψ S T χS' χT' om') (p : GA D S × GA D T) :
     ∃ c : Circle, ∀ f, IsThetaFunO ψ S T f → om p f = (c : ℂ) • om' p f := by
-  obtain ⟨c, hc, h⟩ := GlobalTheory.T.schurLemma_thetaFunctions_orientedPair D ψ H.std S T (om' p⁻¹ * om p)
+  obtain ⟨c, hc, h⟩ := _root_.GlobalTheory.ThetaSchur.schur D ψ H.std S T (om' p⁻¹ * om p)
     (fun f hf => H'.om_pres _ _ (H.om_pres _ _ hf))
     (fun w f hf => by
       obtain ⟨g, h⟩ := p

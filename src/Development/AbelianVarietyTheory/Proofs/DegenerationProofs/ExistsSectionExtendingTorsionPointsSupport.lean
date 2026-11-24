@@ -1,11 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.BaseFacts
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFactorClosedImmersionDensePointsStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.PullChartIsLB
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFactorClosedImmersionDensePoints
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsNeZeroOfLe
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniqueIsRatio
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnitCharts
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionValuesCoordsOperatorPermuteStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.IsBasisB
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionValuesCoordsOperatorPermute
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -229,7 +231,7 @@ theorem exists_section : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [
     rw [he', ← Category.assoc]
     refine Q.crd Ω _ _ ?_
     rw [Category.assoc, torsSec, pullback.lift_fst, ← Category.assoc, Q.u₀_pt e₀ he₀]
-    exact (GlobalTheory.T.torsionValues_coords_operator_permute hL o Ω S ρ).1 Ω S.R.val.toRingHom a
+    exact (_root_.GlobalTheory.ZH.EvCrd.ev_crd_act hL o Ω S ρ).1 Ω S.R.val.toRingHom a
   have hval : ∀ {K : Type} [Field K] (y : Sp K ⟶ W.toScheme), ∃ ψ : o →+* K, (y ≫ W.ι) ≫ M.s = spMap ψ ∧
       ∑ j, ψ (S.proj (S.TT M z') 0 j i) *
         ((Q.c l).map (valR (y ≫ W.ι) (Q.W l))).mulVec (fun k => valR (y ≫ W.ι) W (f k)) j ≠ 0 := fun y =>
@@ -248,7 +250,7 @@ theorem exists_section : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [
       ((CrdCalc.crd_isUnit_iff k (crd_trivSec f y)).1 (isUnit_iff_ne_zero.2 hk))⟩
   have : IsDominant (e ≫ W.ι) := he ▸ M.isDominant_pt
   have hdom : IsDominant e := IsDominant.of_comp_of_isOpenImmersion e W.ι
-  obtain ⟨g, hg, hge, hgc⟩ := GlobalTheory.T.exists_factor_closedImmersion_dense_points Γ(M.Z, Q.W l) _ W.toScheme
+  obtain ⟨g, hg, hge, hgc⟩ := _root_.GlobalTheory.ZH.ToImm.exists_factor Γ(M.Z, Q.W l) _ W.toScheme
     ((Q.P.hom ∣_ Q.W l) ≫ (Q.aff l).isoSpec.hom) (M.Z.homOfLE hle ≫ (Q.aff l).isoSpec.hom) _ _ S.J (Q.σ l)
     (fun j => trivSec (f j)) (LB.isLB_pull Q.isLB _) (Inh.trivLB_isLB _) (Q.imm l) hcov Ω Unit (fun _ => e)
     (fun _ => e') (by rw [Set.iUnion_const]; exact hdom.denseRange) (fun _ => ⟨by

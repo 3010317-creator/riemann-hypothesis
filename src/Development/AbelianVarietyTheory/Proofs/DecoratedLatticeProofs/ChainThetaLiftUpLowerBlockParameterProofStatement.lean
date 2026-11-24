@@ -4,7 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsLevMe
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.SqNormIntegralFundamentalDomainEqL2NormSq
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearModelSplitPlaceTwistSchwartzBruhatStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsChartsAtTwistPlacesChain
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LiftsCharOfResidueCharAtSplitPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnrOffOne
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.HalfLinearCocycle
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LiftsCharOfResidueCharAtSplitPlace
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.VolumeFlatSection
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCoType
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LowerBlockParameterTransferInvariantPairing
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SetIntegralFundamentalDomainRightTranslateInvari
@@ -204,9 +207,9 @@ theorem GlobalTheory.ChainTw.upQ_holds : GlobalTheory.Published.CuspRapidDecay �
   have hQ := hres PP (hw.union ▸ Finset.mem_union_right _ hPP)
   rw [hw.chiQ (k + 1) PP hPP, inv_inv] at hQ
   have hunS : GlobalTheory.SplitWeil.IsUnram (μS * ξl⁻¹) :=
-    isUnram_of_lifts φv PP hφv (w.ξ PP) μS ξl (GlobalTheory.T.liftsChar_of_residueChar_at_splitPlace D _ PP _ hQ.1 v φv hφv μS hμS) hξl
+    isUnram_of_lifts φv PP hφv (w.ξ PP) μS ξl (_root_.GlobalTheory.ResLift.liftsChar_of_resAt D _ PP _ hQ.1 v φv hφv μS hμS) hξl
   have hunT : GlobalTheory.SplitWeil.IsUnram (μT * ξl⁻¹) :=
-    isUnram_of_lifts φv PP hφv (w.ξ PP) μT ξl (GlobalTheory.T.liftsChar_of_residueChar_at_splitPlace D _ PP _ hQ.2 v φv hφv μT hμT) hξl
+    isUnram_of_lifts φv PP hφv (w.ξ PP) μT ξl (_root_.GlobalTheory.ResLift.liftsChar_of_resAt D _ PP _ hQ.2 v φv hφv μT hμT) hξl
   have hcard : Fintype.card (Blocks (k + 1) D.R.t) = Fintype.card (Blocks k D.R.t) + D.R.t := by
     simp [Blocks, Fintype.card_sigma]
     ring

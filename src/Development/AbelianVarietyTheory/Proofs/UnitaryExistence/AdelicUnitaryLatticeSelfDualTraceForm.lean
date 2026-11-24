@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.CoeSelfDualLatticeInFrameCoordinatesEq
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletionStatement
+public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletion
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicHermitianFormGaloisMemOfMemCompletion
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CompletedLatticeEqAdelicCompletionAndGramStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FinitePartPreservesFormDetNormOneStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CompletedLatticeEqAdelicCompletionAndGram
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FinitePartPreservesFormDetNormOne
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.FactPrincipalDatum
 import Formalism.LocalToGlobal.ProjectiveLattices.HostInt
 import Mathlib.Algebra.Order.Floor.Extended
@@ -134,8 +135,8 @@ theorem selfDual_one (V : HSp D) (v : Fin V.rank → D.host.E) :
   have hAb := AAbar_ne_zero D
   have hC : ∀ v : Fin V.rank → D.host.E, (∀ y ∈ latC V, frameForm V v y ∈
       (1 : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E)) ↔ v ∈ latC V :=
-    (GlobalTheory.T.completedLattice_eq_adelicCompletion_and_gram D V).2.2.2.2.2.2.2.2.2.2
-  rw [(GlobalTheory.T.adelicElementLattice_full_and_completion D V 1).2.2.2.2.2]
+    (_root_.GlobalTheory.Member.latHat_eq_hat_and_gram D V).2.2.2.2.2.2.2.2.2.2
+  rw [(_root_.GlobalTheory.Member.latG_lattice_and_completion D V 1).2.2.2.2.2]
   constructor
   · intro h
     have h5 : ∀ y0 ∈ latC V, frameForm V v y0 ∈ D.host.AA := by
@@ -192,13 +193,13 @@ theorem selfDual_one (V : HSp D) (v : Fin V.rank → D.host.E) :
 
 theorem selfDual (V : HSp D) (g : GA D V) (v : Fin V.rank → D.host.E) :
     (∀ y ∈ latG V g, frameForm V v y ∈ D.host.AA * D.host.AAbar) ↔ v ∈ latG V g := by
-  obtain ⟨-, -, -, -, hcc, -, -, hG, hdet, -, -⟩ := GlobalTheory.T.completedLattice_eq_adelicCompletion_and_gram D V
-  obtain ⟨hfg, hspan, -⟩ := GlobalTheory.T.adelicElementLattice_full_and_completion D V 1
-  have hlat := (GlobalTheory.T.adelicElementLattice_full_and_completion D V g).2.2.1
+  obtain ⟨-, -, -, -, hcc, -, -, hG, hdet, -, -⟩ := _root_.GlobalTheory.Member.latHat_eq_hat_and_gram D V
+  obtain ⟨hfg, hspan, -⟩ := _root_.GlobalTheory.Member.latG_lattice_and_completion D V 1
+  have hlat := (_root_.GlobalTheory.Member.latG_lattice_and_completion D V g).2.2.1
   have key := GlobalTheory.AdLat.latOf_selfDual D.host.F D.host.E V.rank (latG V 1) (cF D) V.gramᵀ
     (D.host.AA * D.host.AAbar) (finHom V g) hfg hspan hcc hG hdet
     (mul_ne_zero (AA_ne_zero Formalism.IndefR.Fin.factPrincipalDatum D) (AAbar_ne_zero D))
-    (selfDual_one V) (GlobalTheory.T.finitePart_preserves_form_det_norm_one D V g).1 v
+    (selfDual_one V) (_root_.GlobalTheory.Member.finHom_herm_det D V g).1 v
   rw [← hlat] at key
   exact key
 
@@ -212,7 +213,7 @@ theorem latG_selfDual : ∀ (D : D7) (V : HSp D), ∀ (g : GA D V) (J : Fraction
   intro D V g J hJ
   subst hJ
   refine ⟨mem_iff_trace D, selfDual V g, fun v => ?_⟩
-  have hcc := (GlobalTheory.T.completedLattice_eq_adelicCompletion_and_gram D V).2.2.2.2.2.1
+  have hcc := (_root_.GlobalTheory.Member.latHat_eq_hat_and_gram D V).2.2.2.2.2.1
   have hh : ∀ y, herm (-V.gramᵀ) v y = - frameForm V v y := by
     intro y
     simp only [herm, frameForm, hcc, Matrix.neg_apply, mul_neg, neg_mul, Finset.sum_neg_distrib]

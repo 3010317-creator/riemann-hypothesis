@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.BaseFacts
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFactorClassicalPointOfLargeTest
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFactorClosedImmersionDensePointsStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.PullChartIsLB
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFactorClosedImmersionDensePoints
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ImmByOfSpans
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ImmByWeightZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.KbIsAlgClosedAndConj
@@ -507,7 +508,7 @@ theorem nonempty_tMap : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [F
       exact (RatModel.gPt_specializes (y := y) rfl _).mem_open (Q.W l).isOpen hl),
       IsOpenImmersion.lift_fac _ _ _⟩
   choose x hx using hx
-  obtain ⟨f, hf, hfx, hfc⟩ := GlobalTheory.T.exists_factor_closedImmersion_dense_points Γ(M.Z, Q.W l) _ t.u.G.left ((Q.P.hom ∣_ Q.W l) ≫ (Q.aff l).isoSpec.hom)
+  obtain ⟨f, hf, hfx, hfc⟩ := _root_.GlobalTheory.ZH.ToImm.exists_factor Γ(M.Z, Q.W l) _ t.u.G.left ((Q.P.hom ∣_ Q.W l) ≫ (Q.aff l).isoSpec.hom)
     ((t.u.G.hom ≫ yW) ≫ (Q.aff l).isoSpec.hom) _ (t.u.H S.N) S.J (Q.σ l) (fun i => comb t.u.G.hom t.σ (m i))
     (pull_isLB Q.isLB _) t.mod.isLB (Q.imm l) (iSup_comb_eq_top t hL hS hb hm) (PadicAlgCl p) t.u.PtC t.u.toG x
     dense_toG (fun a => ⟨by

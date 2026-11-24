@@ -29,12 +29,14 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemiAbe
 public import Mathlib.RingTheory.FiniteType
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.InfiniteTorsionOrCocharacterOfArcAtInfinity
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsProperOfPowerSeriesArcsOverAlgClosed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAbelianSchemeOfSmConnOfIsProperStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAbelianSchemeOfSmConnOfIsProper
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsProperSmoothConnGroupOfManyTorsionCharPStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MorphismOpenAffineLineAbelianSchemeConstStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.EqOneOfPowOfClosedPoint
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyIsProjectiveOverRingByChartsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardAbelianVarietyTorsionSepClosedStatement
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyIsProjectiveOverRingByCharts
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.FlagBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardAbelianVarietyTorsionSepClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -1475,7 +1477,7 @@ theorem isProper_of_many_torsion_charZero : ∀ (k : Type) [Field k] [IsAlgClose
     GlobalTheory.T.exists_charP_specialization_smooth_commGroup_curve k G hG g hg m hm s hs P hP u a b hu hab
   have hpr : IsProper G'.hom :=
     GlobalTheory.T.isProper_smoothConnGroup_of_many_torsion_charP k' p G' hG' g hg' m hm' s' hs' (by rw [hc']; exact hcard)
-  exact hab' (GlobalTheory.T.morphism_open_affine_line_abelianScheme_const k' G' (GlobalTheory.T.isAbelianScheme_of_smConn_of_isProper' _ G' hG' hpr) P' hP' u' a' b' hu')
+  exact hab' (GlobalTheory.T.morphism_open_affine_line_abelianScheme_const k' G' (_root_.GlobalTheory.SmConnProper.isAbelianScheme_of_smConn_of_isProper _ G' hG' hpr) P' hP' u' a' b' hu')
 
 end GlobalTheory.ManyTorsionProper
 end -- clump:auto
@@ -1601,7 +1603,7 @@ theorem torsion_finite_ncard_le (K : Type) [Field K] (A : Over (Sp K)) [GrpObj A
     (hA : IsAbelianScheme A) (g : ℕ) (hg : SmoothOfRelativeDimension g A.hom) (d : ℕ) (hd : (d : K) ≠ 0) :
     {x : 𝟙_ (Over (Sp K)) ⟶ A | x ^ d = 1}.Finite ∧
       {x : 𝟙_ (Over (Sp K)) ⟶ A | x ^ d = 1}.ncard ≤ d ^ (2 * g) := by
-  have hc := GlobalTheory.T.card_abelianVariety_torsion_sepClosed K (AlgebraicClosure K) A hA g hg d hd
+  have hc := _root_.GlobalTheory.SepClosedTorsion.card_torsion_sepClosed K (AlgebraicClosure K) A hA g hg d hd
   let u : ptOver K (AlgebraicClosure K) ⟶ 𝟙_ (Over (Sp K)) := toUnit _
   have hu : u.left = spMap (algebraMap K (AlgebraicClosure K)) := by simpa using Over.w u
   have hdom : IsDominant (spMap (algebraMap K (AlgebraicClosure K))) :=
@@ -1633,7 +1635,7 @@ namespace GlobalTheory.GoodRedTorsion
 theorem hasGoodReduction_of_torsion : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [Field K] [Algebra R K], GlobalTheory.SS.SH R K → ∀ (A : Over (Sp K)) [GrpObj A] [IsCommMonObj A], IsAbelianScheme A → ∀ g : ℕ, SmoothOfRelativeDimension g A.hom → {m : ℕ | (m : ResidueField R) ≠ 0 ∧ Nat.card {x : 𝟙_ (Over (Sp K)) ⟶ A // x ^ m = 1} = m ^ (2 * g)}.Infinite → HasGoodReduction R K A := by
   intro R K _ _ _ _ _ hS A _ _ hA g hg hinf
   obtain ⟨G, inst, hG, he, c, hc, hs⟩ :=
-    GlobalTheory.SS.exists_neutral_group_model R K hS A hA (GlobalTheory.T.abelianVariety_isProjectiveOverRingByCharts K A hA)
+    GlobalTheory.SS.exists_neutral_group_model R K hS A hA (_root_.GlobalTheory.ProjField.isProjBy_of_isAbelianScheme K A hA)
   obtain ⟨hDVR, hHen, hAC, hFR⟩ := hS
   have := hG.1
   have := hG.2.1
@@ -1713,7 +1715,7 @@ theorem hasGoodReduction_of_torsion : ∀ (R K : Type) [CommRing R] [IsDomain R]
       have h1 := hred _ m (hunit m hm) ht (by rw [map_mul, map_inv, hab, mul_inv_cancel])
       rw [← hsA a, ← hsA b, mul_inv_eq_one.1 h1]
   have hprop : IsProper G.Y.hom := GlobalTheory.T.isProper_smoothConnGroupScheme_dvr_of_proper_fibres R K G.Y hG hgenP hsp
-  exact ⟨G.Y, inst, GlobalTheory.T.isAbelianScheme_of_smConn_of_isProper' _ G.Y hG hprop, G.e, he⟩
+  exact ⟨G.Y, inst, _root_.GlobalTheory.SmConnProper.isAbelianScheme_of_smConn_of_isProper _ G.Y hG hprop, G.e, he⟩
 
 end GlobalTheory.GoodRedTorsion
 end -- clump:auto

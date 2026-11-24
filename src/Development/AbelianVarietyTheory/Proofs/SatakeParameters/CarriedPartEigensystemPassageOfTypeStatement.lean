@@ -8,7 +8,7 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsGoo
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LiftSplitHeckePolysEqTransferResidualPolys
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EveryRowOperatorIsLabelOperatorWithPartnerStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UpwardThetaLiftInjectiveOnCarriedPartStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UpwardThetaLiftInjectiveOnCarriedPart
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,9 +45,10 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FamilySplitOperatorsEqLabelOperatorsModels
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharacterisationPlacesPartsOfWeakStatement
+import Formalism.LocalToGlobal.IndefiniteReal.ZeroPartEigenvalueConvention
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharacterisationPlacesPartsOfWeak
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MatchedSphericalPairsCommuteCompositeLiftStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperatorsStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperators
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SpanImageMaxGenEigenspace
 import Formalism.LocalToGlobal.IndefiniteReal.BridgeLemmas
 
@@ -129,11 +130,11 @@ theorem GlobalTheory.Hk3.passage_of_carried : HoweUnram → ∀ {D : D7} {G : Ty
   intro hHowe D G _ _ Pl0 I0 T A3 Ks _ _ _ R F hInt hC hEx hSch hJ s hOk hGen hU hGU hGE hLW hA hPos hB hTr j pl cV cW hLD p c hCar hW
   obtain ⟨sy, x, hxg, hxe, hxW, hx0, hlab⟩ :=
     GlobalTheory.T.exists_good_rational_eigenform_hitting_carried_part hHowe R F hInt hC hEx hSch hJ s hOk hGen hU hGU hGE hLW hA hPos j pl cV cW hLD p c hCar hW
-  obtain ⟨hCore, hSF, -, -, hEE, hWW, -⟩ := GlobalTheory.T.heckeCharacterisation_places_of_weakCharacterisation R F hC
+  obtain ⟨hCore, hSF, -, -, hEE, hWW, -⟩ := _root_.GlobalTheory.CoreThree.heckeCharacterisation_places_parts_of_weak R F hC
   have core := hCore hEx
   obtain ⟨w, hw, hw0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hCar.1
-  have hu0 := GlobalTheory.T.upward_theta_lift_injective_on_carried_part R F hB hPos p c hCar w hw hw0
-  obtain ⟨hOpsX, hOpsV⟩ := GlobalTheory.T.realization_family_normal_operators R.toRealDat F.lv2 core.lev core.fam core.models
+  have hu0 := _root_.GlobalTheory.thetaUp_injective_on_carried R F hB hPos p c hCar w hw hw0
+  obtain ⟨hOpsX, hOpsV⟩ := _root_.GlobalTheory.DefiniteOps.definite_ops R.toRealDat F.lv2 core.lev core.fam core.models
   obtain ⟨hX, hXo, hXn⟩ := hOpsX A3.A.μ0
   obtain ⟨hV, hVo, -⟩ := hOpsV j A3.A.μ0
   obtain ⟨plX, cX, c0, hRD⟩ := GlobalTheory.T.every_rowOperator_is_labelOperator_with_partner hHowe R F hInt hC hEx hSch hJ A3.A.μ0

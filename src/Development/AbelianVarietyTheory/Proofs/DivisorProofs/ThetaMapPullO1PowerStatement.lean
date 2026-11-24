@@ -14,7 +14,7 @@ public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PullCub
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemNonzeroLocusIffPowFn
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipallyPolarisedFibreExistsGeneratorStableStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipallyPolarisedFibreExistsGeneratorStable
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaConstantsListedFiniteGaloisExtensionStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKeyFormulaNormalCoverRationalThetaConstantsStatement
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsChartOfIsLocalRing
@@ -71,7 +71,7 @@ import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsAd
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.IsQuasicoherentOfForallExistsAffine
 import Mathlib.Tactic.Linter.Style
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramesExist
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniversalTripleFibrePrincipallyPolarisedDimensioStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniversalTripleFibrePrincipallyPolarisedDimensio
 import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.LbIsoLinComb
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
 
@@ -745,8 +745,8 @@ theorem GlobalTheory.UMin.KeyOne.lbIso_pull_O1_hodge : ∀ (E : Type) [Field E] 
   haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap c.F Ω).injective
   have hMn : Geo.Tor.IsNormalScheme M.Z := _root_.GlobalTheory.AbelianLocusNormalisation.isNormalScheme_of_open io Y.normal
   obtain ⟨y, hy⟩ := GlobalTheory.UMin.KeyOne.exists_pt_eq Y M io
-  have hpol := GlobalTheory.T.universalTriple_fibre_principallyPolarised_dimension E H Dw l Xo c Ω (y ≫ pullback.fst _ _)
-  obtain ⟨⟨θ, hθ⟩, hθup⟩ := GlobalTheory.T.principallyPolarisedFibre_exists_generator_stable Xo.X Xo.univ.t.G Xo.univ.t.PP.L Xo.univ.t.PP.isLB _ Ω _ hpol
+  have hpol := _root_.GlobalTheory.UMin.polFib_univ E H Dw l Xo c Ω (y ≫ pullback.fst _ _)
+  obtain ⟨⟨θ, hθ⟩, hθup⟩ := _root_.GlobalTheory.UMin.gen_of_polFib Xo.X Xo.univ.t.G Xo.univ.t.PP.L Xo.univ.t.PP.isLB _ Ω _ hpol
   obtain ⟨Ω', _, _, pt, cc, hfd, -, hdeg, hlist, -⟩ := GlobalTheory.T.theta_constants_listed_finite_galois_extension Xo.X Xo.univ.t.G Xo.univ.t.PP.L
     Xo.univ.t.PP.rig Xo.univ.t.PP.isLB Xo.univ.t.PP.rigGen _ m (n + 1) Ω _ θ hm hn hpol
   letI : Algebra c.F Ω' := ((algebraMap Ω Ω').comp (algebraMap c.F Ω)).toAlgebra

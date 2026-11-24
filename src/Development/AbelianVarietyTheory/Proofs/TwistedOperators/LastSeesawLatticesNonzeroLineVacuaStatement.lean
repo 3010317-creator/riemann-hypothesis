@@ -11,7 +11,8 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsFinCo
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExtendByZeroTrivialDecomposition
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaHeisenbergConjugationNegHermitianSpace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.VacuumRestrictionRankZero
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsNeZeroLatticeVacuumSelfDualStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.TowerEx
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridLatticesCompactSelfDualSplittingStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -48,7 +49,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.JointSmooth
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilRepRankZeroWittEmbeddingValueAtZero
 import Mathlib.Tactic.Linter.Style
@@ -470,7 +470,7 @@ theorem lastLat_std : OnStd fun {D} _ _ _ {G} W F => (∀ ρ, 2 * ρ + 2 ≤ D.R
   · rcases ρ with _ | σ
     · exact hline0
     · obtain ⟨-, -, h3⟩ := GlobalTheory.T.grid_lattices_compact_selfDual_splitting D q T L μ0 hL sc G W M hM F hF
-      exact GlobalTheory.T.exists_ne_zero_latticeVacuum_selfDual D W.ψ hψ _ _ _ _ (G.sp.P_is (2 * (σ + 1) + 1) (by omega)).sd (h3 (σ + 1)) _ le_rfl
+      exact _root_.GlobalTheory.AscFin.VacSub.exists_vacG_ne_zero D W.ψ hψ _ _ _ _ (G.sp.P_is (2 * (σ + 1) + 1) (by omega)).sd (h3 (σ + 1)) _ le_rfl
   · have hm : 0 < D.R.m := by omega
     have hdep := dep_vac W 0 hm
     refine lastLat_rankZero hψ (F.jac v 0 h) F.oz _ _ _ (latCore_zero_split D q T L μ0 hL sc G W M hM F hF h) ?_ hline0

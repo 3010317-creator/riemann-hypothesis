@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicMatrixQuotientPeriodicIntegralContinuousPaStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumThetaJointlyContinuousStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicMatrixQuotientPeriodicIntegralContinuousPa
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumThetaJointlyContinuous
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisOApplyZero
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsTopologicalRingAE
 import Mathlib.Algebra.Order.Floor.Extended
@@ -94,7 +95,7 @@ theorem pairKer_law : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (
   have hP : ∀ h₀ h₁, pairKer s vL Y Ξ h₀ h₁ = ∫ w in vL.𝓕, K w (h₀, h₁) ∂vL.μ := fun h₀ h₁ => by
     simp only [pairKer, contractT, thPair, OrthDec.resT_symm_apply, Matrix.mul_zero, zero_add, hK]
   have hc : Continuous (Function.uncurry K) := by
-    have h1 := GlobalTheory.T.weilDatum_theta_jointlyContinuous D ψ _ _ _ _ _ s.weil₀ Ξ hΞ
+    have h1 := _root_.GlobalTheory.Unf.jointCont_all D ψ _ _ _ _ _ s.weil₀ Ξ hΞ
     have h2 : Continuous fun q : Mx D B.L.rank J.W₀.rank × GA D J.W₀ × GA D B.A =>
         (((q.2.1, B.o.emb (q.2.2, 1)), B.o.jB * q.1) : (GA D J.W₀ × GA D B.V₀) × WO J.W₀ B.V₀) :=
       ((continuous_fst.comp continuous_snd).prodMk (B.o.continuous_emb.comp
@@ -119,7 +120,7 @@ theorem pairKer_law : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (
     refine (congrArg (· * _) e1).trans ?_
     change ψ (-symplOH J.W₀ B.V₀ (B.o.jB * rat γ) (B.o.jB * x)) * _ * _ = _
     rw [e3, star_mul', mul_mul_mul_comm, hn, one_mul]
-  obtain ⟨-, hcont, -, hinv⟩ := GlobalTheory.T.adelicMatrixQuotient_periodicIntegral_continuous_param D _ _ vL _ K hc hper
+  obtain ⟨-, hcont, -, hinv⟩ := _root_.GlobalTheory.Unf.ParCont.parCont D _ _ vL _ K hc hper
   refine ⟨?_, fun γ hγ h₀ h₁ => ?_, fun γ hγ h₀ h₁ => ?_⟩
   · have : Function.uncurry (pairKer s vL Y Ξ) = fun p => ∫ w in vL.𝓕, K w p ∂vL.μ := funext fun p => hP p.1 p.2
     rw [this]; exact hcont

@@ -12,11 +12,12 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.Isotropic
 public import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.StarPurelyImaginaryEqNeg
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsEtaTildeUnramified
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumOfSplittingCharactersStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumOfSplittingCharacters
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InfPartOneSubEInfSmul
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaRestrictIsotropicQuotientWittTowerPropertieStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaRestrictIsotropicQuotientWittTowerPropertie
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilCompatibleOfSameSplittingCharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WittTowerRestrictionUnipotentRadicalInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WittTowerRestrictionUnipotentRadicalInvariant
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsHeightLeTwoMulQuotHeight
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteVolumeAdelicUnitaryQuotient
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RankFacGen
@@ -91,7 +92,7 @@ import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Development.AbelianVarietyTheory.Definitions.Foundations.OfInfProjInfMulOfFinProjFin
 import Formalism.LocalToGlobal.IndefiniteReal.IndefiniteWeightData
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsotropicDualFrameOfSplitEmbeddingStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsotropicDualFrameOfSplitEmbedding
 import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.TopoAF
 import Mathlib.Tactic.Linter.Style
@@ -762,14 +763,14 @@ theorem term_eq_aux (V V' W : HSp D) (r : ℕ) (C C' : Matrix (Fin V.rank) (Fin 
         (Lm * (K * (mt V (n : GA D V) - 1) * (B.map (incA D) : Matrix (Fin V.rank) (Fin V'.rank) (AE D)))) := by
   have hstd := hω.std
   have hLiso : adj D L * W.gram * L = 0 := hL.2.2
-  have hres := (GlobalTheory.T.thetaRestrictIsotropicQuotient_wittTower_properties D V V' W r C B hs ψ hstd μ 𝓨 hY).1
+  have hres := (_root_.GlobalTheory.TowerRestrict.res_theta D V V' W r C B hs ψ hstd μ 𝓨 hY).1
   have hact : actO V W (n : GA D V) 1 (Lm * K * mt V (n : GA D V)) = Lm * K := by
     simp only [actO, _root_.GlobalTheory.BesselCompare.mt_one, Matrix.one_mul, Matrix.mul_assoc, _root_.GlobalTheory.MixModel.mt_mul_inv, Matrix.mul_one]
   have hFu := GlobalTheory.ThetaClosed.isThetaFunO_heisO_all hstd hF (Lm * K * mt V (n : GA D V))
   have step1 : heisO ψ V W (Lm * K) (ω ((n : GA D V), 1) F) =
       ω ((n : GA D V), 1) (heisO ψ V W (Lm * K * mt V (n : GA D V)) F) := by
     rw [hω.om_heis (n : GA D V) 1 _ F hF, hact]
-  have step2 := GlobalTheory.T.wittTower_restriction_unipotentRadical_invariant D V V' W r C B hs ψ χS χT ω hω μ 𝓨 hY n _ hFu
+  have step2 := _root_.GlobalTheory.UnipRes.res_unip D V V' W r C B hs ψ χS χT ω hω μ 𝓨 hY n _ hFu
   have hM : (mt V (n : GA D V) - 1) * (C.map (incA D) : Matrix (Fin V.rank) (Fin r) (AE D)) = 0 := by
     rw [Matrix.sub_mul, mt_mul_frame V C n.2, Matrix.one_mul, sub_self]
   have hdec := decomp V V' W C C' B (map_frame_decomp V V' C C' B hs h1 h2 h3) Lm K (mt V (n : GA D V)) hM
@@ -827,11 +828,11 @@ theorem heis_comm_radical (V W : HSp D) (ψ : AddChar (AF D.host.F) ℂ) (χS χ
 theorem mean_isoTerm_invariant : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C C' : Matrix (Fin V.rank) (Fin r) D.host.E) (B : Matrix (Fin V.rank) (Fin V'.rank) D.host.E), IsIsoSplit V V' C B → adj D C * V.gram * C' = 1 → adj D C' * V.gram * C' = 0 → adj D C' * V.gram * B = 0 → ∀ (ψ : AddChar (AF D.host.F) ℂ) (χS χT : (AE D)ˣ →* Circle) (ω : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)), IsWeilDatumO ψ V W χS χT ω → ∀ (μ : Measure (Mx D W.rank r)) (𝓨 : Set (Mx D W.rank r)), IsCovolOne (ratMx D W.rank r) μ 𝓨 → ∀ (κ : Measure (NI V C)) (𝓝 : Set (NI V C)), κ.IsHaarMeasure → IsFundamentalDomain (NIQ V C) 𝓝 κ → ∀ (s : ℕ) (L : Matrix (Fin W.rank) (Fin s) D.host.E) (m : Matrix (Fin s) (Fin r) D.host.E), IsIsoFrame W L → m.rank = s → ∀ (n' : NI W L) f, IsThetaFunO ψ V W f → ∫ n in 𝓝, res V V' W C B μ 𝓨 (heisO ψ V W (isoPart V W C' (Matrix.map (L * m) (incA D))) (ω ((n : GA D V), (n' : GA D W)) f)) 0 ∂κ = ∫ n in 𝓝, res V V' W C B μ 𝓨 (heisO ψ V W (isoPart V W C' (Matrix.map (L * m) (incA D))) (ω ((n : GA D V), 1) f)) 0 ∂κ := by
   intro D V V' W r C C' B hs h1 h2 h3 ψ χS χT ω hω μ 𝓨 hY κ 𝓝 hκ h𝓝 s L m hL hm n' f hf
   have hstd := hω.std
-  obtain ⟨ω', hω'⟩ := GlobalTheory.T.exists_weilDatum_of_splittingCharacters D ψ hstd V' W χS χT (GlobalTheory.WeilParts.exists_isEtaTilde_unramified D) hω.hecS
+  obtain ⟨ω', hω'⟩ := _root_.GlobalTheory.WeilExist.exists_isWeilDatumO D ψ hstd V' W χS χT (GlobalTheory.WeilParts.exists_isEtaTilde_unramified D) hω.hecS
     hω.hecT (Formalism.L2.Theta.resEta_parity hω.resS (by rw [hs.rank]; omega)) hω.resT
   have hcomp := GlobalTheory.T.weilCompatible_of_sameSplittingCharacter D V V' W r C B hs ψ χS χT χT ω ω' hω hω' μ 𝓨 hY
   obtain ⟨μ', 𝓐, hA, hmean⟩ := GlobalTheory.T.unipotentRadicalMean_eq_volume_mul_rationalMean D V V' r C C' B hs h1 h2 h3 κ 𝓝 hκ h𝓝 s m hm
-  have hres := (GlobalTheory.T.thetaRestrictIsotropicQuotient_wittTower_properties D V V' W r C B hs ψ hstd μ 𝓨 hY).1
+  have hres := (_root_.GlobalTheory.TowerRestrict.res_theta D V V' W r C B hs ψ hstd μ 𝓨 hY).1
   have hw₀ : isoPart V W C' (Matrix.map (L * m) (incA D)) =
       (L.map (incA D) : Matrix (Fin W.rank) (Fin s) (AE D)) *
         ((m * adj D C' * V.gram).map (incA D) : Matrix (Fin s) (Fin V.rank) (AE D)) := by
@@ -1083,7 +1084,7 @@ theorem res_heisO_unip : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C C' : Matrix 
     have := GlobalTheory.AdelicLatMove.actO_actO_inv V W n 1 (X₀.map (incA D))
     rw [inv_one] at this
     exact this.symm
-  have hK := GlobalTheory.T.wittTower_restriction_unipotentRadical_invariant D V V' W r C B hs ψ χS χT ω hω μ 𝓨 hcov ⟨n, hnN⟩ _
+  have hK := _root_.GlobalTheory.UnipRes.res_unip D V V' W r C B hs ψ χS χT ω hω μ 𝓨 hcov ⟨n, hnN⟩ _
     (GlobalTheory.ThetaClosed.isThetaFunO_heisO_all hω.std hf (actO V W n⁻¹ 1 (X₀.map (incA D))))
   rw [hx, hA, show res V V' W C B μ 𝓨 (ω (n, 1) (heisO ψ V W (actO V W n⁻¹ 1 (X₀.map (incA D))) f)) =
     res V V' W C B μ 𝓨 (heisO ψ V W (actO V W n⁻¹ 1 (X₀.map (incA D))) f) from hK, hx']
@@ -1239,7 +1240,7 @@ theorem GlobalTheory.TowerCT.towerConstTermOfCompatible_holds : ∀ D : D7, Glob
   obtain ⟨hWlc, hWsc, hWt2, hWb, hWtg, -, hWcount⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D W
   have hMc : ∀ a b : ℕ, Countable (Matrix (Fin a) (Fin b) D.host.E) := fun a b =>
     inferInstanceAs (Countable (Fin a → Fin b → D.host.E))
-  obtain ⟨C', h1, h2, h3⟩ := GlobalTheory.T.exists_isotropicDualFrame_of_splitEmbedding D V V' r C B hS
+  obtain ⟨C', h1, h2, h3⟩ := _root_.GlobalTheory.TwistDual.exists_isotropic_dual D V V' r C B hS
   have hstd : IsStdChar D ψ (-1) := hω.std
   obtain ⟨θ, hθ⟩ := (GlobalTheory.Ker.exists_infFam_and_stdChar D).1
   have hG := _root_.GlobalTheory.KernelSeminorm.thetaGrowth D
@@ -1260,7 +1261,7 @@ theorem GlobalTheory.TowerCT.towerConstTermOfCompatible_holds : ∀ D : D7, Glob
     rfl
   have hf₁ : IsThetaFunO ψ V W (ω (g, 1) f) := hω.om_pres _ f hf
   have hfp : ∀ p : GA D V × GA D W, IsThetaFunO ψ V W (ω p f) := fun p => hω.om_pres p f hf
-  obtain ⟨hI1, hI2, -, -⟩ := (GlobalTheory.T.thetaRestrictIsotropicQuotient_wittTower_properties D V V' W r C B hS ψ hstd μ 𝓨 hY).1 _ hf₁
+  obtain ⟨hI1, hI2, -, -⟩ := (_root_.GlobalTheory.TowerRestrict.res_theta D V V' W r C B hS ψ hstd μ 𝓨 hY).1 _ hf₁
   have hvol : κ 𝓝 ≠ ⊤ := vol D V r C hS.frame κ 𝓝 hκ h𝓝
   have : IsFiniteMeasure (κ.restrict 𝓝) := isFiniteMeasure_restrict.mpr hvol
 
@@ -1342,7 +1343,7 @@ theorem GlobalTheory.TowerCT.towerConstTermOfCompatible_holds : ∀ D : D7, Glob
     rw [htm]
     have hiso0 : isoPart V W C' ((0 : Matrix (Fin W.rank) (Fin r) D.host.E).map (incA D)) = 0 := by
       simp [isoPart]
-    rw [hiso0, heis0, hL, GlobalTheory.T.wittTower_restriction_unipotentRadical_invariant D V V' W r C B hS ψ χS χT ω hω μ 𝓨 hY n _ (hfp _)]
+    rw [hiso0, heis0, hL, _root_.GlobalTheory.UnipRes.res_unip D V V' W r C B hS ψ χS χT ω hω μ 𝓨 hY n _ (hfp _)]
     have e2 : ((g, h) : GA D V × GA D W) = (1, h) * (g, 1) := by rw [Prod.mk_mul_mk, one_mul, mul_one]
     rw [e2, hωm, hc μ 𝓨 hY h _ hf₁]
     rfl

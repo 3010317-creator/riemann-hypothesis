@@ -9,7 +9,7 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TestDataH
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteSeriesMultiplicity
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.FlatHermitianReps.IrredSt
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InfinitePartActDiscreteSeriesHomFactorwise
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdmissibleRepHasTraceFiniteAdelicPureTensorFunctStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HasTypeVec
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonFieldTypeVanishingX
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PseudoCoefficientSeparation
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CuspidalOperatorsVanishingRadicalIntegralsUnitarStatement
@@ -911,7 +911,7 @@ theorem copyFinDS (h1 : IrredSt) (h2 : CompSt) (h4 : AdmSt) : GlobalTheory.Publi
   have hirr := GlobalTheory.FinPartIrrAdm.irreducible hπ hcomp hU hadm
   haveI : ν.IsHaarMeasure := hν.1
   have hfam : IsFinFamily D.sp.cm.sig V.gram (frameLat V) ff := hTD.2.2.2.2.2.2.isFinFamily
-  obtain ⟨⟨c', hc'⟩, -⟩ := GlobalTheory.T.admissibleRep_hasTrace_finiteAdelicPureTensorFunction D V ν ff hfam _ (finPartDSSm M hU) hadm
+  obtain ⟨⟨c', hc'⟩, -⟩ := _root_.GlobalTheory.FinTrace.hasTrace_finFn D V ν ff hfam _ (finPartDSSm M hU) hadm
   have hπc' := GlobalTheory.PsCo.Plug.copyTraceT D V lam S M T U μa μf μ fa ff hTD ν hν H π hπ _ (finPartDSSm M hU) hirr hadm hcopy c' hc'
   have hcc : c' = c := hπc'.2.symm.trans hc.2
   subst hcc

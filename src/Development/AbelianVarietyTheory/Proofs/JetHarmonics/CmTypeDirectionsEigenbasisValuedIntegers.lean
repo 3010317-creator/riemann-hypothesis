@@ -7,7 +7,7 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscrim
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralChartDirectionsAreEigenvectors
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.SaturationChartsHolds
 public import Development.AbelianVarietyTheory.Definitions.Jets.TwoPlaces
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCmTypeEmbeddingsIntoValuationRingStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCmTypeEmbeddingsIntoValuationRing
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.BiextCoeffSecondLinear
 public import Mathlib.RingTheory.Flat.TorsionFree
 import Mathlib.Algebra.Order.Floor.Extended
@@ -451,7 +451,7 @@ theorem GlobalTheory.CharDepth.isEigBasis_valExt : ∀ (E : Type) [Field E] [Num
   letI := H.starRing
   intro T io y Ch p _ X τO hτ τ
   constructor
-  · obtain ⟨τT, hT, hT', -⟩ := GlobalTheory.T.exists_cmType_embeddings_into_valuation_ring E H l c T io p X
+  · obtain ⟨τT, hT, hT', -⟩ := _root_.GlobalTheory.CharDepth.exists_types_valuationRing E H l c T io p X
     have he : τO τ = X.ι.comp (τT τ) := by
       ext a
       apply X.ints.hom_inj

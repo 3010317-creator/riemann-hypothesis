@@ -6,9 +6,12 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsPositiveDefiniteQuadraticFormEndomorphisms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AmpleCubicalLineBundleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardAbelianVarietyTorsionSepClosedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardAbelianVarietyTorsionSepClosed
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DivisibleAlgClosureOfKillsTorsionSepClosedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfActsTriviallyAbelianVarietyAlgClosureStatement
+public import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
+public import Mathlib.NumberTheory.NumberField.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SABBaseChangeSt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfActsTriviallyAbelianVarietyAlgClosure
 public import Mathlib.LinearAlgebra.LinearIndependent.Defs
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDvdCoordsOfDefiniteParallelogramForm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTateModuleLevelComponentEqOfCardTorsion
@@ -16,7 +19,6 @@ public import Mathlib.NumberTheory.Padics.RingHoms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicIntExistsLevelNotDvdMulLift
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdEndomorphismPowLevelComponentEqOneOfRelationStatement
 import Mathlib
-import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,7 +100,7 @@ theorem linearIndependent_actTate : ∀ (K Ω : Type) [Field K] [Field Ω] [Alge
         infer_instance }
   have hu : ∀ i, ψ (a i) ∈ H := fun i => β.hom (a i)
   have hinj : Function.Injective ψ := (injective_iff_map_eq_zero ψ).2 fun x hx =>
-    GlobalTheory.T.eq_zero_of_acts_trivially_abelianVariety_algClosure K Ω A hA ⟨d, hd0, hdim⟩ l hl F O α x (by
+    _root_.GlobalTheory.ActTrivialInj.eq_zero_of_act_pullback_eq_one K Ω A hA ⟨d, hd0, hdim⟩ l hl F O α x (by
       have : Additive.toMul (ψ x) = Additive.toMul 0 := congrArg _ hx
       exact this)
   have hindep : LinearIndependent ℤ (fun i => ψ (a i)) := by
@@ -137,7 +139,7 @@ theorem linearIndependent_actTate : ∀ (K Ω : Type) [Field K] [Field Ω] [Alge
     simp only [toMul_zsmul] at e2
     exact e2
   have hcard : ∀ k : ℕ, Nat.card {y : ptOver K Ω ⟶ A // y ^ (l ^ k) = 1} = l ^ (2 * d * k) := fun k => by
-    rw [GlobalTheory.T.card_abelianVariety_torsion_sepClosed K Ω A hA d hdim (l ^ k) (by rw [Nat.cast_pow]; exact pow_ne_zero _ hl), ← pow_mul, mul_comm k]
+    rw [_root_.GlobalTheory.SepClosedTorsion.card_torsion_sepClosed K Ω A hA d hdim (l ^ k) (by rw [Nat.cast_pow]; exact pow_ne_zero _ hl), ← pow_mul, mul_comm k]
   have hx : ∀ y : ptOver K Ω ⟶ A, y ^ (l ^ N) = 1 → y ≫ α.act x = 1 := by
     intro y hy
     obtain ⟨tt, rfl⟩ := _root_.GlobalTheory.exists_tate_lev_eq_of_card_torsion (ptOver K Ω ⟶ A) l (2 * d) hcard N y hy

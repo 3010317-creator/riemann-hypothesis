@@ -33,8 +33,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralNor
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasDerivAtAndIsTheta
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousHermPart
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PoissonSummationHermitianLatticeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TemperateMultiplierPreservesSchwartzStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaIntegralContinuousStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TemperateMultiplierPreservesSchwartz
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaIntegralContinuous
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaIntegralLocallySummableBoundStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaSumInvariantUnipotentTranslate
 import Mathlib.Algebra.Order.Floor.Extended
@@ -1130,7 +1130,7 @@ theorem W_mult {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) {θ
   have hμ' : ∃ 𝓕, IsCovolOne (ratMx D V.rank r) μ 𝓕 := ⟨𝓕, hF⟩
   have hMφ := hmem φ hφ
   have cont : ∀ φ ∈ schwartzA θ V.rank r, Continuous (Jt ψ V μ φ) :=
-    fun φ h => GlobalTheory.T.theta_integral_continuous D r V ψ θ μ φ hψ hθ hμ' h
+    fun φ h => _root_.GlobalTheory.CompanionTheory.BigCellJ.jt_continuous D r V ψ θ μ φ hψ hθ hμ' h
   have intg : ∀ φ ∈ schwartzA θ V.rank r, Integrable (Jt ψ V μ φ) lam' := fun φ h =>
     (GlobalTheory.T.poisson_summation_hermitian_lattice D r ψ hψ lam' 𝓖 hlam _ (cont φ h) (GlobalTheory.T.theta_integral_locally_summable_bound D r V ψ θ μ φ hm hψ hθ hμ' h)).1
   have hc : ∀ (s : ℝ) y, ψ (halfTr (tq V (path hσ a s).1 y)) =
@@ -1229,7 +1229,7 @@ theorem GlobalTheory.CompanionTheory.WSum.summable_W_of_two_mul_lt_rank : ∀ (D
   have hmem : ∀ k, ∀ φ ∈ schwartzA θ V.rank r,
       (fun y => (GlobalTheory.CompanionTheory.WSum.multM θ α V (a k) y : ℂ) * φ y) ∈ schwartzA θ V.rank r := fun k φ h => by
     simp only [hqe k]
-    exact GlobalTheory.T.temperate_multiplier_preserves_schwartz D θ _ _ (q k) (hqt k) φ h
+    exact _root_.GlobalTheory.CompanionTheory.WSum.mul_mem_schwartzA D θ _ _ (q k) (hqt k) φ h
   have hdec := GlobalTheory.CompanionTheory.WSum.decay_abs (schwartzA θ V.rank r : Set (Mx D V.rank r → ℂ))
     (fun φ β => W ψ V μ lam φ β) (fun k φ y => (GlobalTheory.CompanionTheory.WSum.multM θ α V (a k) y : ℂ) * φ y)
     (fun k β => GlobalTheory.CompanionTheory.WSum.pairF θ α (a k) β)
@@ -1286,7 +1286,7 @@ namespace GlobalTheory.CompanionTheory.HermPoisson
 theorem poissonHerm_main : PositivityTheory.GramSchwartzFunctions.BC.PoissonHerm := by
   intro D r V ψ θ μ lam ν φ hH hJ
   obtain ⟨hm, hψ, hθ, hμ, ⟨𝓖, hlam⟩, -, hφ, -⟩ := hH
-  have hc := GlobalTheory.T.theta_integral_continuous D r V ψ θ μ φ hψ hθ hμ hφ
+  have hc := _root_.GlobalTheory.CompanionTheory.BigCellJ.jt_continuous D r V ψ θ μ φ hψ hθ hμ hφ
   have hu := GlobalTheory.T.theta_integral_locally_summable_bound D r V ψ θ μ φ hm hψ hθ hμ hφ
   have hW := GlobalTheory.T.siegel_eisenstein_coefficients_summable D r V ψ θ μ lam 𝓖 φ hm hψ hθ hμ hlam hφ
   obtain ⟨-, hP⟩ := GlobalTheory.T.poisson_summation_hermitian_lattice D r ψ hψ lam 𝓖 hlam _ hc hu

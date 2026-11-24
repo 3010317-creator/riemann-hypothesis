@@ -3,7 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.IsCPPullback
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCompareUniformisationDataPullbackStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsDegDataPsiOfSectionNonzeroFibresStatement
+import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissiblePadicIntMaximalIdeal
+import Development.AbelianVarietyTheory.Definitions.Degenerations.ExistsUniquePartner
+import Development.AbelianVarietyTheory.Definitions.Degenerations.MorAlgSt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsDegDataPsiOfSectionNonzeroFibres
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGenericSquare
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsPreUOfFibres
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnifOfCmp
@@ -140,7 +144,7 @@ theorem GlobalTheory.Mum.exists_unif_even : ∀ (R : Type) [CommRing R] [IsDomai
   obtain ⟨w', hw'⟩ := GlobalTheory.PrimeUnif.isCPMap_of_eq hL.globalFns s.gen s.P U'.P (hU'.2.1.trans hLG) hw
   obtain ⟨C, -⟩ := GlobalTheory.T.exists_compare_uniformisationData_pullback hL hL2 hE R V (maximalIdeal R) _ hR.1 hB' (maximalIdeal.isMaximal V).ne_top φ hle D _
     A A' G _ U U' _ (isGrpPullback_pullback G _) w' hw'
-  obtain ⟨psi, h, Dd, hD, e, h₁, h₂, h₃⟩ := GlobalTheory.T.exists_degData_psi_of_section_nonzero_fibres hL hL2 hE R (maximalIdeal R) hR V hV φ hφ hc D D' A A' G _
+  obtain ⟨psi, h, Dd, hD, e, h₁, h₂, h₃⟩ := _root_.GlobalTheory.PsiRing.exists_degData_of_thetaNZ hL hL2 hE R (maximalIdeal R) hR V hV φ hφ hc D D' A A' G _
     U U' U₀ _ C hU' hθ
   obtain ⟨U₂, C₂, hD₂, eP, eg, k₁, k₂, k₃⟩ := GlobalTheory.PrimeUnif.exists_move psi h C hD Dd.toPre e h₁ h₂ h₃
   obtain ⟨U₁, -, hU₁, -⟩ := GlobalTheory.UnifDescent.exists_unif_of_cmp hL hL2 hE R V (maximalIdeal R) _ hR.1 hB' hI.ne_top φ hφ

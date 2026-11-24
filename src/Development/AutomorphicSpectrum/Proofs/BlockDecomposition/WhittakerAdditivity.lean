@@ -1,8 +1,11 @@
 module
 
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.UnitarySchrodingerModel.DictKAOfParts
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ArchimedeanParametersAddCharUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsWeilDatumDoubledOfSchrodingerFormulasStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.SiegelWeil₂.SiegelWeilUnitarySchrodinger
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ArchimedeanParametersAddCharUnique
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalVolumeLift
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HalfData
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsWeilDatumDoubledOfSchrodingerFormulas
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GaussianIsSchwartzFunction
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ShiftedAdditiveCharacterArchimedeanParameters
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilSchrodingerRealParameter
@@ -82,12 +85,12 @@ theorem par_ne_zero {V : HSp D} {ψ : AddChar (AF D.host.F) ℂ} {χ : (AE D)ˣ 
   obtain ⟨𝓕, hμ⟩ := hS.hμ
   let A : HSp D := Formalism.BasicNotions.Examples₂.posSpace (E := D.host.E) Formalism.BasicNotions.Examples₂.star_isIntegral n
   obtain ⟨ψ₀, μ', lam, κ, omh, hstd, hsk, hlam, hψeq, hchart, hdat, htr⟩ :=
-    GlobalTheory.T.exists_weilDatum_doubled_of_schrodingerFormulas D A V ψ hS.hψ χ hS.hχ hS.hη θ hS.hθ μ 𝓕 hμ ω hS.hω
+    _root_.GlobalTheory.StdUnn.SchDatum.exists_datum D A V ψ hS.hψ χ hS.hχ hS.hη θ hS.hθ μ 𝓕 hμ ω hS.hω
   obtain ⟨lam', hlam', -, l', hl', habs⟩ := GlobalTheory.StdUnn.shift_char_realPar D ψ₀ hstd θ hS.hθ μ' hsk
   have hll : lam' = lam := (algebraMap D.host.F D.host.E).injective (hlam'.trans hlam.symm)
   subst hll
   have hl'' : HasRealPar ψ θ l' := hψeq ▸ hl'
-  have hleq : l = l' := GlobalTheory.T.archimedean_parameters_addChar_unique D ψ θ hS.hθ l l' hS.hl hl''
+  have hleq : l = l' := _root_.GlobalTheory.StdUnn.RealPar.realPar_unique D ψ θ hS.hθ l l' hS.hl hl''
   subst hleq
   intro τ h0
   have h := habs τ

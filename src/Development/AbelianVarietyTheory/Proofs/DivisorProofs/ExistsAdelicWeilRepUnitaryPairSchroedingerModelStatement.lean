@@ -6,13 +6,14 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Imp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousTransportedWeilDatumAdelicSchwartzStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledSchroedingerModelSiegelRuleStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDoubledSchrodingerModelTransposedSiegelRulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianSelfDualLatticeSpaceFormHermitianNondegStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddCharStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictsToQuadraticSignPowIdelicRestrictionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewHermitianNegTraceZeroInvHermitianUnimodularStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramHspOf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianSelfDualLatticeSpaceFormHermitianNondeg
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictsToQuadraticSignPowIdelicRestrictionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewHermitianNegTraceZeroInvHermitianUnimodular
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledUnitaryPartnerDiagStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTransportAdelicSchwartzThetaTransStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingInl
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTransportAdelicSchwartzThetaTrans
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransportedWeilDatumIsUnitaryAdelicSchwartzStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransportedWeilDatumKeepsAdmissibleFormsStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -87,7 +88,7 @@ theorem exists_isUWeilPair_hsp : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), 
             (incM D.host.F JA) (incM D.host.F JB) co χT χS om := by
   intro D ψ hψ S T χS χT hS hT rS rT JA JB ξ hA hB κ _ co hrat
   obtain ⟨ω, hω⟩ := GlobalTheory.weilRepresentationUnitaryPair D ψ S T χS χT hψ hS hT rS rT
-  obtain ⟨om, hom⟩ := GlobalTheory.T.exists_weilDatum_transport_adelicSchwartz_thetaTransform D ψ hψ S T χS χT hS hT rS rT JA JB ξ hA hB κ co hrat ω hω
+  obtain ⟨om, hom⟩ := _root_.GlobalTheory.ThetaTransform.exists_isTransport D ψ hψ S T χS χT hS hT rS rT JA JB ξ hA hB κ co hrat ω hω
   have h2 := GlobalTheory.T.transportedWeil_preserves_schwartz_heisenberg_equivariant D ψ hψ S T χS χT hS hT rS rT JA JB ξ hA hB κ co hrat ω hω om hom
   have h3 := GlobalTheory.T.transportedWeilDatum_keeps_admissible_forms D ψ hψ S T χS χT hS hT rS rT JA JB ξ hA hB κ co hrat ω hω om hom
   have h4 := GlobalTheory.T.transportedWeilDatum_isUnitary_adelicSchwartz D ψ hψ S T χS χT hS hT rS rT JA JB ξ hA hB κ co hrat ω hω om hom
@@ -160,8 +161,8 @@ theorem exists_isWeil : ∀ (D : D7) (B : Base D.host.F D.host.E), B.IsGood D.sp
         GlobalTheory.WeilM.ResEtaPow (Units.map (algebraMap D.host.F (AF D.host.F)).toMonoidHom).range χW d →
         ∃ om, Mo.IsWeil B.ψ χX χW om := by
   intro D B hB n d X Y r s r' s' hX hY Mo hMo χX χW hcX hcW rX rW
-  obtain ⟨h1, h2, h3⟩ := GlobalTheory.T.hermitianSelfDualLatticeSpace_form_hermitian_nondeg_unimodular D B hB n X r s hX
-  obtain ⟨hJ, L, hL, h4, h5, h6⟩ := GlobalTheory.T.skewHermitian_neg_traceZero_inv_hermitian_unimodular D B hB d Y r' s' hY
+  obtain ⟨h1, h2, h3⟩ := _root_.GlobalTheory.WeilSchrodingerHerm.main D B hB n X r s hX
+  obtain ⟨hJ, L, hL, h4, h5, h6⟩ := _root_.GlobalTheory.WeilSchrodingerSkew.main D B hB d Y r' s' hY
   have hξ : D.host.xi0 ≠ 0 := GlobalTheory.DualPairCompare.embedding_xi_zero_ne_zero D
   let T := hspOf D X.Jᵀ h1 h2 X.L (by letI := hX.lat; infer_instance) h3 (fun _ => (r, s))
   let S := hspOf D (-D.host.xi0 • Y.J⁻¹) h4 h5 L hL h6 (fun _ => (s', r'))
@@ -177,7 +178,7 @@ theorem exists_isWeil : ∀ (D : D7) (B : Base D.host.F D.host.E), B.IsGood D.sp
     rw [e1, e2]
     funext i j
     simp [incM]
-  exact GlobalTheory.T.exists_weilRep_hermitianPair_rationalSchrodinger D B.ψ (GlobalTheory.T.isStdChar_neg_one_of_standardTraceAdelicAddChar D B.ψ hB.std) S T χW χX hcW hcX (GlobalTheory.T.restrictsToQuadraticSignPow_idelic_restriction D χW d rW) (GlobalTheory.T.restrictsToQuadraticSignPow_idelic_restriction D χX n rX) X.J Y.J (-1) eA eB
+  exact GlobalTheory.T.exists_weilRep_hermitianPair_rationalSchrodinger D B.ψ (_root_.GlobalTheory.StdCharFromIsStd.isStdChar_of_isStd D B.ψ hB.std) S T χW χX hcW hcX (GlobalTheory.T.restrictsToQuadraticSignPow_idelic_restriction D χW d rW) (GlobalTheory.T.restrictsToQuadraticSignPow_idelic_restriction D χX n rX) X.J Y.J (-1) eA eB
     (Fin n × Fin d) Mo.co hMo.rat
 
 end GlobalTheory.WeilSchrodinger

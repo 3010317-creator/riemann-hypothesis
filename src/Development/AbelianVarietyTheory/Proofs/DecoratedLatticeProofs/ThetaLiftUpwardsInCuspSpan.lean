@@ -5,8 +5,11 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFor
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasDRepIffHasDerivAt
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemMultiplicitySpaceLevelOfKFiniteTensorsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStepRealThetaRuleOfNodesFarApartStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStepWeilDatumNonzeroFockVacuumStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ThetaSourceAction
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStepRealThetaRuleOfNodesFarApart
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CartFrSgn
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStepWeilDatumNonzeroFockVacuum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaLiftUpwardMultiplicityCuspidalRealTypeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -45,7 +48,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
 
 @[expose] public section
 
@@ -77,8 +79,8 @@ theorem upSpan_of : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.
   intro h1 h2 h3 h4 D hLF hLL hgap c hc k hk s s' hs hs' p hp u φ v _hv
   have hLF' := hLF c hc (k + 1) (Nat.succ_le_of_lt hk) s' hs'
   beta_reduce at hLF'
-  obtain ⟨hwe, hvac⟩ := GlobalTheory.T.thetaChainStep_weilDatum_nonzero_fockVacuum D hgap c hc k hk s s' hs hs' p hp hk
-  have hpar := GlobalTheory.T.chainPar_of_nodeGap' D hgap ⟨k, hk⟩
+  obtain ⟨hwe, hvac⟩ := _root_.GlobalTheory.ChainOnto.StepExp.stepExpVac D hgap c hc k hk s s' hs hs' p hp hk
+  have hpar := _root_.GlobalTheory.Corev.ChainParOfGap.chainPar_of_nodeGap D hgap ⟨k, hk⟩
   obtain ⟨T, hTK, hKT, hL⟩ := GlobalTheory.T.thetaLift_upward_multiplicity_cuspidal_realType h1 h2 h3 h4 D ⟨k, hk⟩ s.V s'.V s.par s'.par s.M s'.M c.θ c.ψ p.ω p.f
     hs.par hs'.par hc.inf hpar hwe hvac s.ν s.fd hs.haar hs.fund
   obtain ⟨F', hF', hint⟩ := hL _ (multT_le_noLevel c.θ s.M _ _ u.2)

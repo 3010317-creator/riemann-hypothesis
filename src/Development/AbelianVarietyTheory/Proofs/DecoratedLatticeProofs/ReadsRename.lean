@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.LevChiEqOne
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteChart
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ChartLevelCharacterRepsOnAdelicUnitaryPointsStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.MidChart
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ChartLevelCharacterRepsOnAdelicUnitaryPoints
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsAdelicUnitaryLiftOfChartBasePointStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsStepPointOfChartBasePoint
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsPointOfDecoratedLatticeUnique
@@ -255,7 +257,7 @@ theorem exists_step {I : TC B X} (hI : I.Ok) (hP : TC.Pins B X) {l : I.Laws} {Z 
   choose kA hkA using fun β => GlobalTheory.T.exists_adelicUnitaryLift_of_chartBasePoint I hI hP l Z i hi _ (hR.k_std β)
   choose xr hxr using fun β => GlobalTheory.RecDict.exists_isDetRoot (I.rec7 l Z) _ (kA β)
   choose b0 p0 hp1 hp2 hp3 using fun β => GlobalTheory.KxPoint.pointOf_base I hI hP u a i hi _ _ _ _ _ _ _ hR β ⟨q β, hq β⟩ (hone β)
-  choose U chi h hU hchi hh using fun β => GlobalTheory.T.chartLevelCharacterReps_on_adelicUnitaryPoints I l Z i hi (K β)
+  choose U chi h hU hchi hh using fun β => _root_.GlobalTheory.ChartLevRead.levData I l Z i hi (K β)
   refine ⟨bad, fun _ => K, kA, xr, p0, U, chi, h, fun _ => ⟨hR, fun β => ⟨(hkA β).1, (hkA β).2, hxr β⟩, fun β => ⟨hp1 β, hp2 β⟩,
     fun c => (hp3 _ c rfl).2, hU, hchi, hh, hfin, hbad⟩, fun β => ?_⟩
   exact GlobalTheory.Mem.Col2.PtUniq.isPtOf_unique _ _ _ _ (IsPtOf.of_extTo (I.Q_subset_SQ a) hd (hp1 β)) (hq β)

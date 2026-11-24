@@ -33,7 +33,7 @@ public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.RulePow
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.LieMultComp
 public import GroundTheory.HeightsAndTheta.Heights.ArithDegree
 public import GroundTheory.HeightsAndTheta.Heights.HeightsOfSets.LinearIndependentSumElimOfExact
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExactKeyFormulaProofStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExactKeyFormulaProof
 public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.GramMatrixPosDefConjugate
 public import Mathlib.MeasureTheory.Group.FundamentalDomain
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
@@ -1361,7 +1361,7 @@ end KeyDeg
 open scoped ComplexOrder in
 theorem keyDeg_of_keyBad : KeyBadSt → KeyDegSt := by
   intro hb
-  have hKF := GlobalTheory.T.exactKeyFormula_proof
+  have hKF := _root_.GlobalTheory.KeyFam.keyFormula_holds
   unfold ReciprocityTheory.ChartRestriction.G.Geo.Tor.KeyFormula at hKF
   obtain ⟨κ, h1, h2, h3, h4, h5⟩ := hKF
   have hHom : GlobalTheory.KeyCl.Homog (fun _ => 1) κ := by

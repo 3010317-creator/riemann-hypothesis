@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsRigidificationPullbackCompatibleIso
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGeneratorThetaPointNormalisedThetaConstantStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGeneratorThetaPointNormalisedThetaConstant
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullback
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TorsionPointsFieldExtension
 import Mathlib.Algebra.Order.Floor.Extended
@@ -109,7 +109,7 @@ theorem exists_gen_thG_generic : Laws → Laws2 → ∀ (S : Scheme.{0}) (G : Ov
   have := P.isAb.comm
   obtain ⟨ρ', hρ', hr⟩ := exists_rigidificationPullbackCompatibleIso hp hw hL hL₁ hρ
   have hx' : ∀ i, x i ^ (m ^ 2) = 1 := fun i => (hx _).2 ⟨i, rfl⟩
-  obtain ⟨thP, hg, hth⟩ := GlobalTheory.T.exists_generator_thetaPoint_normalised_thetaConstants K P ρ' hρ' m Ix x v hx' hv
+  obtain ⟨thP, hg, hth⟩ := _root_.GlobalTheory.Ex.OneGen.exists_gen_thG_of_isThetaPt K P ρ' hρ' m Ix x v hx' hv
   let τ : (baseOver (Sp K)).left ⟶ (Over.mk x₀).left := 𝟙 (Sp K)
   haveI : IsIso τ := inferInstanceAs (IsIso (𝟙 (Sp K)))
   have hτ : τ ≫ (Over.mk x₀).hom = (baseOver (Sp K)).hom ≫ x₀ := rfl

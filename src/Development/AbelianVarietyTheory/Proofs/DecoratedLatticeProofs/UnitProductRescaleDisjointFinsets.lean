@@ -5,10 +5,13 @@ public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApp
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemLatOIffExistsActO
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsInvariantForm
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotentsStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrameMatrixMovedHomIntegralReductionsStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHomLatticeIffFrameStabilizerActMemStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerIntertwinerSchwartzBruhatIsThetaStatement
+import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrameMatrixMovedHomIntegralReductions
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHomLatticeIffFrameStabilizerActMem
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerIntertwinerSchwartzBruhatIsTheta
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.StepVectorLiftPairFlagLevelRealizedChain
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TwistPlaceDatumParabolicMoveStatement
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TypePlacesLocalDatumBlockTriangularLaw
@@ -225,7 +228,7 @@ theorem idemSum_eq (V : HSp D) {e e' : AE D} {P : Finset (Pl D.host.E)} (h : IsI
   obtain ⟨⟨es, hes, rfl⟩, -⟩ := h
   obtain ⟨⟨es', hes', rfl⟩, -⟩ := h'
   exact Finset.sum_congr rfl fun PP hP =>
-    (((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 PP _ _ (Or.inl ⟨hes PP hP, rfl⟩)).2.2.2.1 _ _ (Or.inl ⟨hes' PP hP, rfl⟩)).1
+    (((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 PP _ _ (Or.inl ⟨hes PP hP, rfl⟩)).2.2.2.1 _ _ (Or.inl ⟨hes' PP hP, rfl⟩)).1
 
 end Move
 
@@ -250,7 +253,7 @@ theorem stepVec_eq_sum : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : Inf
   have he' : IsIdemSum e (Pg ∪ Q) := he
   obtain rfl : e' = e := idemSum_eq S he' he2
   obtain ⟨Tm, hTm⟩ := hΘ.1
-  have hth := GlobalTheory.T.schrodingerIntertwiner_schwartzBruhat_isTheta D ψ hW.std S T ΛS ΛT dS dT e' (GlobalTheory.PlaceDatum.idemSum_mul_self he) (GlobalTheory.PlaceDatum.infPart_idemSum he) f₀
+  have hth := _root_.GlobalTheory.SchrTheta.isTheta_placeModel D ψ hW.std S T ΛS ΛT dS dT e' (GlobalTheory.PlaceDatum.idemSum_mul_self he) (GlobalTheory.PlaceDatum.infPart_idemSum he) f₀
       hf.2.theta Tm hTm
   have one1 : finE T (1 : GA D T) = 1 := map_one (finE T)
   have sh : finE T (1 : GA D T) ∈ St βT := one1 ▸ one_mem _
@@ -263,7 +266,7 @@ theorem stepVec_eq_sum : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : Inf
     · rw [a1 PP hP]; exact hG PP hP
     · rw [a2 PP hP]; exact hQ PP hP
   have sg := fun p => parLev_St (hκ p).2.1
-  have h2 := fun p => om_theta hW hTm hth hΘ (GlobalTheory.T.mem_homLattice_iff_frameStabilizer_act_mem D S T ΛS ΛT βS βT dS dT fS fT (κ p) 1 (sg p) sh)
+  have h2 := fun p => om_theta hW hTm hth hΘ (_root_.GlobalTheory.StabLatInv.mem_latO_iff_actO_mem D S T ΛS ΛT βS βT dS dT fS fT (κ p) 1 (sg p) sh)
     (GlobalTheory.StepVecLaw.om_vac hW kS kT cS cT dS dT fS fT hf he' (fun PP hP => (hres PP hP).1) (fun PP hP => (hres PP hP).2) uS uT
       (hκ p).1 (one_mem _) (sg p) sh)
 
@@ -275,7 +278,7 @@ theorem stepVec_eq_sum : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : Inf
   have i0 : ∀ p, IsHalf e' (actO S T (κ p)⁻¹ 1⁻¹ x) ↔ IsHalf e' x := fun p =>
     ⟨fun H => GlobalTheory.AdelicLatMove.actO_actO_inv S T (κ p) 1 x ▸ GlobalTheory.SplitHecke.isHalf_actO (κ p) 1 H,
       fun H => GlobalTheory.SplitHecke.isHalf_actO _ _ H⟩
-  have i12 := fun p => GlobalTheory.T.frameMatrix_movedHom_integral_reductions D S T βS βT (κ p) 1 (sg p) sh x
+  have i12 := fun p => _root_.GlobalTheory.FrameRed.frMapO_actO_int_red D S T βS βT (κ p) 1 (sg p) sh x
   by_cases hx : IsHalf e' x ∧ IsIntM (frMapO S T βS βT x)
   · rw [if_pos hx, omegaG_sum (t := t) (j := k) ha Pg Q P χ ξ (χ (k + 1)) _ (fun p PP => redFn βS PP (finE S (κ p)))
       (fun p PP hP => parLev_g (hκ p).2.1 hP) (fun p PP => congrFun (hκ p).2.2 PP), Finset.sum_mul]

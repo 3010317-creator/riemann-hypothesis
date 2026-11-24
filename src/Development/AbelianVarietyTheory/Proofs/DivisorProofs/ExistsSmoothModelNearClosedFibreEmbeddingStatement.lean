@@ -12,14 +12,14 @@ public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Mathlib.AlgebraicGeometry.Restrict
 public import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedPointRangeEqFixedGroupImageStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedPointRangeEqFixedGroupImage
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCoordinatesDescendAlongProperMapStatement
 public import Mathlib.Order.CompletePartialOrder
 public import Mathlib.AlgebraicGeometry.Morphisms.Basic
 public import Mathlib.AlgebraicGeometry.Fiber
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Development.AbelianVarietyTheory.Definitions.Divisors.QuasiCompact
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AppTopBijectiveAndSurjectiveNormalDomainStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AppTopBijectiveAndSurjectiveNormalDomain
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedFibreProjectiveEmbeddingFactorsProperStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -778,7 +778,7 @@ theorem etale_chart_at_closed_point : ∀ (R : Type) [CommRing R] [IsDomain R] [
     simp only [Scheme.Hom.comp_apply] at h1
     rw [← h1, hz]
     simpa [Scheme.Hom.comp_apply] using hx0
-  obtain ⟨y, hy⟩ := (GlobalTheory.T.closedPoint_range_eq_fixedGroup_image R M.S M.π G' E).1 (X.ι z) hz0
+  obtain ⟨y, hy⟩ := (_root_.GlobalTheory.Mum.Emb.range_closed R M.S M.π G' E).1 (X.ι z) hz0
   have hyb : E.j y = b x := by
     rw [← hy, ← hz]
     have h1 := congrArg (fun f : X.toScheme ⟶ PSpace R E.N => f z) hab
@@ -1156,7 +1156,7 @@ theorem exists_near : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], 
   intro R _ _ _ hR M G' _ _ hG E
   have hRn : IsNoetherianRing R := hR.1
   have hRi : IsIntegrallyClosed R := hR.2.2.1
-  obtain ⟨hΓ, hsurj⟩ := GlobalTheory.T.appTop_bijective_and_surjective_normalDomain R M
+  obtain ⟨hΓ, hsurj⟩ := _root_.GlobalTheory.Mum.Modif.appTop_bijective_surjective R M
   obtain ⟨P', b, X, a, hPn, hbs, hbl, hap, -, hab, hcomm, hX, hlift⟩ := GlobalTheory.T.closedFibre_projectiveEmbedding_factors_proper R hR M G' hG E
   have hsq : a ≫ b ≫ PSpace.str R E.N = (X.ι ≫ E.H.ι ≫ G'.hom) ≫ M.π := by
     rw [← Category.assoc, hcomm, Category.assoc, E.f_over]; simp only [Category.assoc]

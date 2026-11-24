@@ -6,7 +6,7 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.Exists
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLocalHomLatticeOfKeepsCompletedLattices
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfFinite
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumFixesVacuumNonSplitPlaceUnramifiedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumFixesVacuumNonSplitPlaceUnramified
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQua
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilOperatorLatticeStabiliserFixesVacuumNonsplit
 import Mathlib.Algebra.Order.Floor.Extended
@@ -92,7 +92,7 @@ theorem inertVacuumFixed : ∀ D : D7, InertVacuumFixed D := by
   have hε : IsPlaceIdem D v (pairA D.host.F 0 (singleV D.host.F v 1)) :=
     ⟨_, rfl, GlobalTheory.SplitIdem.evalV_singleV_same _ _ _, fun _ hw => GlobalTheory.SplitIdem.evalV_singleV_ne _ _ _ hw⟩
   have hns : GlobalTheory.WeilParts.NonSplitAt D v (pairA D.host.F 0 (singleV D.host.F v 1)) := ⟨hε, hv⟩
-  refine GlobalTheory.T.weilDatum_fixes_vacuum_nonSplitPlace_unramified D ψ hW.std S T ΛS ΛT hS hT χS χT om ((GlobalTheory.Mem.EtaTilde.exists_etaTilde D).imp fun _ h => ⟨h.1, h.2.2.2, h.2.2.1, h.2.1⟩)
+  refine _root_.GlobalTheory.VacInert.fixesVacAt_of_unram D ψ hW.std S T ΛS ΛT hS hT χS χT om ((GlobalTheory.Mem.EtaTilde.exists_etaTilde D).imp fun _ h => ⟨h.1, h.2.2.2, h.2.2.1, h.2.1⟩)
      hW v _ hns uS uT _ _
     (suppPl_emb S v k) (suppPl_emb T v k')
     (GlobalTheory.LocalLatStab.mem_latO_place_iff_actO D S T ΛS ΛT hS hT v _ hε _ _

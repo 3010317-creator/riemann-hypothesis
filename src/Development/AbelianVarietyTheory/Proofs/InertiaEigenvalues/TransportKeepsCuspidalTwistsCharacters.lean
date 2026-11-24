@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Langlands
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousRingEquivLocalFieldPreservesValuationStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousRingEquivLocalFieldPreservesValuation
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSupercuspidalCompGeneralLinearGroupMapOfFieldE
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -95,7 +97,7 @@ end GlobalTheory.LocLanglands.TransportGL
 open GlobalTheory.LocLanglands.TransportGL in
 theorem GlobalTheory.LocLanglands.repRel_isCusp_nu_ofChar : ∀ (k k' : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [CharZero k] [Field k'] [ValuativeRel k'] [TopologicalSpace k'] [IsNonarchimedeanLocalField k'] [CharZero k'] (i : k ≃+* k'), Continuous i → (∀ (x : IrrGL (k := k)) (x' : IrrGL (k := k')), RepRel i x x' → (x.IsCusp ↔ x'.IsCusp) ∧ ∀ s : ℂ, RepRel i (x.nu s) (x'.nu s)) ∧ ∀ (χ : kˣ →* ℂˣ) (hχ : IsSmoothChar χ) (χ' : k'ˣ →* ℂˣ) (hχ' : IsSmoothChar χ'), (∀ x, χ' (Units.map i.toRingHom.toMonoidHom x) = χ x) → RepRel i (IrrGL.ofChar χ hχ) (IrrGL.ofChar χ' hχ') := by
   intro k k' _ _ _ _ _ _ _ _ _ _ i hi
-  have hs := GlobalTheory.T.continuous_ringEquiv_localField_preserves_valuation k k' i hi
+  have hs := _root_.GlobalTheory.LocalFieldIso.continuous_iso_keeps_valuation k k' i hi
   refine ⟨fun x x' ⟨n, π, π', e, hx, hx', he⟩ => ?_, fun χ hχ χ' hχ' hc => ?_⟩
   · subst hx hx'
     refine ⟨?_, fun s => repRel_tw i π π' e he _ _ _ _ (hs.2.2.2.2 s)⟩

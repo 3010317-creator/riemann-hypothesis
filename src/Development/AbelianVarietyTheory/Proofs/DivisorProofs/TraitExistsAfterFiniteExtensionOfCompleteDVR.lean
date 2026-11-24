@@ -11,8 +11,10 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRelati
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.AbelianSchemeIdPowFiniteEtaleSurjective
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelPrePullbackPrincipalRingChange
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsDescentSymmetricLinearisedBundleStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsFiniteEtaleCoverConstantTorsionStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsPrincipalPolarizationSymmetricSquareRootStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsFiniteEtaleCoverConstantTorsion
+public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsPrincipalPolarizationSymmetricSquareRoot
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsSymmetricLinearisationSquareDiagonalBundleStatement
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsSymmetricSqrtPrincipalSiegelFiniteEtale
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHold
@@ -26,7 +28,7 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsS
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleGenericFibreExtendsOverDvrStatement
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsSeparatedOfIsQProjOver
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.PolBaseChangeOfRelAmpleLocal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisationFiniteExtSameMumfordBundleStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisationFiniteExtSameMumfordBundle
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.FiniteLocalLifts.IsLocalHomAlgebraMap
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotOrdGeOfNotMem
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.PsiCoordExistsUniqueUpToUnitLocal
@@ -75,7 +77,8 @@ import Mathlib.RingTheory.Henselian
 import Mathlib.Tactic.Linter.Style
 import ReciprocityTheory.AnalyticForms.RegularLocalRings.JacChartA
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelPullbackIdCompCancel
-import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.LamIsoOfDoublingPullbackEqDiagonalSqStatement
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
+import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.LamIsoOfDoublingPullbackEqDiagonalSq
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.BCTools
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.PrecompleteBases.PsbLb
@@ -323,7 +326,7 @@ theorem exists_sqOf_of_dim (hL : Out.Laws) (h k : ℕ) (o : Type) [CommRing o] (
   have h2 : IsUnit ((2 : ℕ) : R) := by
     have := (IsUnit.mk0 ((2 : ℕ) : ℚ) (by norm_num)).map (algebraMap ℚ R)
     rwa [map_natCast] at this
-  obtain ⟨R', _, _, ⟨f₁, e₁, l₁⟩, H₁⟩ := GlobalTheory.T.exists_finiteEtale_cover_constant_torsion R c₀.A h 2 c₀.ab hd h2
+  obtain ⟨R', _, _, ⟨f₁, e₁, l₁⟩, H₁⟩ := _root_.GlobalTheory.TorsionCover.exists_torsion_basis_cover R c₀.A h 2 c₀.ab hd h2
   obtain ⟨c', m', hc'⟩ := pull_sieg (spMap ((algebraMap R R').comp β)) (spMap (algebraMap R R'))
     (SiegelRingChange.spMap_comp' _ _).symm c₀ hc₀
   have m'' := m'
@@ -357,8 +360,8 @@ theorem exists_sqOf_of_dim (hL : Out.Laws) (h k : ℕ) (o : Type) [CommRing o] (
     (pull_isLB hM _) iM
   have hd₁ : SmoothOfRelativeDimension h c₁.A.hom :=
     (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback (g₁.comp g').1 hd
-  obtain ⟨P, φ, hP⟩ := GlobalTheory.T.exists_principalPolarization_symmetric_squareRoot hL h k o ζ R₁ _ c₁ M hc₁ hd₁ hM
-    (GlobalTheory.T.lam_iso_of_doubling_pullback_eq_diagonal_sq hL h k o ζ R₁ _ c₁ M hc₁ hM iM') sM
+  obtain ⟨P, φ, hP⟩ := _root_.GlobalTheory.SymRoot.exists_polAV_sqOf hL h k o ζ R₁ _ c₁ M hc₁ hd₁ hM
+    (_root_.GlobalTheory.LamOfDouble.lam_iso_of_pull_two hL h k o ζ R₁ _ c₁ M hc₁ hM iM') sM
   obtain ⟨ψ, hψ'⟩ := sqOf_of_pb hP (pb_comp m' m₁)
   letI : Algebra R R₁ := ((algebraMap R' R₁).comp (algebraMap R R')).toAlgebra
   haveI : IsScalarTower R R' R₁ := IsScalarTower.of_algebraMap_eq fun _ => rfl
@@ -613,7 +616,7 @@ theorem exists_unif_finExt : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F
   have hLgen : (A.L.pull gen.hom.left).IsLB := pull_isLB A.isLB _
   obtain ⟨PP, hPP⟩ := GlobalTheory.MumExt.exists_extLam V₁ G hG _ hLgen
   obtain ⟨R', _, _, _, ρ, D₁, G₁, _, _, β, β₂, A₁, U₁, hR', hρ, hβ, hβ₂, hPβ⟩ :=
-    GlobalTheory.T.exists_uniformisation_finiteExt_sameMumfordBundle V₁ hV G hG A gen hgen PP hPP
+    _root_.GlobalTheory.Mum.exists_unif_finExt_lam V₁ hV G hG A gen hgen PP hPP
   obtain ⟨-, hinj, hfin⟩ := hρ
   have hloc : IsLocalHom ρ := by
     letI := ρ.toAlgebra

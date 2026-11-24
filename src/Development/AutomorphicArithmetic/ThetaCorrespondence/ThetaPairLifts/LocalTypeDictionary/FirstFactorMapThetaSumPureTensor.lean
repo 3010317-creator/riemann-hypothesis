@@ -3,10 +3,13 @@ module
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRtensOp
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BlkGLMem
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DarbouxModelAlgebraicVectorsLeAdelicSchwartzStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DarbouxModelAlgebraicVectorsLeAdelicSchwartz
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SeesawWeilZetaFactor
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaTransformDarbouxModelLinearInjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilModelProjectionFactorisationStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsReading
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaTransformDarbouxModelLinearInjective
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NotForallNonemptyLocP
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilModelProjectionFactorisation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,14 +85,14 @@ theorem firstFactorMap_thetaSum_pure_tensor : GlobalTheory.Published.HoweDuality
     rw [h.JW, one_smul] at dV
     rw [e1, Matrix.det_neg]
     exact mul_ne_zero (pow_ne_zero _ (neg_ne_zero.2 one_ne_zero)) dV
-  obtain ⟨T, hT, hinj⟩ := GlobalTheory.T.thetaTransform_darbouxModel_linear_injective D Γ.M ψ (sgn true W).gram e (hψ' ▸ hg.hM) hstd dV dW gA
-  have hS := GlobalTheory.T.darbouxModelAlgebraicVectors_le_adelicSchwartz _ _ _ Γ.M Bs.ψ Bs.emb hg.hM
+  obtain ⟨T, hT, hinj⟩ := _root_.GlobalTheory.ThetaTransformInj.linear_injective D Γ.M ψ (sgn true W).gram e (hψ' ▸ hg.hM) hstd dV dW gA
+  have hS := _root_.GlobalTheory.TripleAssembly.darbAlg_le_schA _ _ _ Γ.M Bs.ψ Bs.emb hg.hM
   have Hq : ∃ q : (Matrix (Fin X.rank) (Fin W.rank) (AE D) → ℂ) →ₗ[ℂ] PiT R Γ Rf,
       ∀ Ψ ∈ darbAlg Γ.M Bs.ψ Bs.emb, q (GlobalTheory.TripleRead.thO Γ.M ψ (sgn true W).gram e Ψ) =
         liftPure Γ.M R.p Rf.p (vacIm Γ Rf) Ψ := by
     obtain ⟨q, hq⟩ := exists_factor_inj T _ (fun x hx => hinj x (hS hx)) (liftPure Γ.M R.p Rf.p (vacIm Γ Rf))
     exact ⟨q, fun Ψ hΨ => by rw [← hT Ψ (hS hΨ)]; exact hq Ψ hΨ⟩
-  have HL := GlobalTheory.T.weil_model_projection_factorisation D.sp.cm.sig Γ.V Γ.W Γ.M Bs.ψ hg.hM _ R.p _ Rf.p (vacIm Γ Rf)
+  have HL := _root_.GlobalTheory.PureLift.exists_pureLift D.sp.cm.sig Γ.V Γ.W Γ.M Bs.ψ hg.hM _ R.p _ Rf.p (vacIm Γ Rf)
     (Filter.Eventually.of_forall fun _ => rfl)
   have hL : ∀ i, liftPure Γ.M R.p Rf.p (vacIm Γ Rf) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (f i) (φ i)) =
       R.p (f i) ⊗ₜ[ℂ] GlobalTheory.SmallThetaModules.pureT (vacIm Γ Rf) (fun v => Rf.p v (φ i v)) := by

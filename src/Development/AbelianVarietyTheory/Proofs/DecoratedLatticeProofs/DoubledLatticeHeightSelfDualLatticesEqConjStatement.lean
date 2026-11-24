@@ -10,7 +10,7 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FinCongMe
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHatIffOfSelfDual
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FlatSpaceComponents
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HermitianSpaceBaseLatticeEqFrameLattice
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicIwasawaDoubledGroupSelfDualLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicIwasawaDoubledGroupSelfDualLattice
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsLatticeHomOntoModuloDepthIdeal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -463,7 +463,7 @@ theorem hgtL_eq_conj_of_selfDual : ∀ (D : D7) (A : HSp D) (L L' : Lat A), IsSe
   refine ⟨k, hk, fun a ha g => ?_⟩
   letI := GlobalTheory.OntoModPf.selfDual_isFullLattice A L hL
   letI := GlobalTheory.OntoModPf.selfDual_isFullLattice A L' hL'
-  have hI := GlobalTheory.T.adelicIwasawa_doubledGroup_selfDualLattice D A L' a hL' ha
+  have hI := _root_.GlobalTheory.Core.Rk.IP.hasIwasawa_KAd_selfDual D A L' a hL' ha
   have hj : io A (k, k) ∈ siegel A := (io_mem_siegel A).2 rfl
   obtain ⟨p, κ, hκ, hx⟩ := hI (io A (g, 1))
   have hκ' : (io A (k, k))⁻¹ * κ * io A (k, k) ∈ KAd D.sp.cm.sig (dblSp A).gram L a := (hK a κ).1 hκ

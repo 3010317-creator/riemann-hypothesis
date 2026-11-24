@@ -5,7 +5,7 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Formalism.LocalToGlobal.IndefiniteReal.ThetaFireRow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThetaPToLiftReal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ResInjLToLiftReal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaAdjointAtLiftEqLowestKTypeRestrictionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaAdjointAtLiftEqLowestKTypeRestriction
 public import Formalism.LocalToGlobal.IndefiniteReal.ZeroPartEigenvalueConvention
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.IndefRRealRec
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
@@ -115,7 +115,7 @@ theorem thetaFireRow_toLiftReal : ∀ {D : D7} {G : Type} [Group G] [Fintype G] 
   intro D G _ _ Pl0 T A Ks _ _ _ R F tupT hm hTop hinj h e hv IL
   have hP : R.IsThP := RealDat.thP_of_weak h.thP e
   refine ⟨fun μ _ i => GlobalTheory.ThetaPRead.isThetaP_toLiftReal R F tupT hm hTop hinj hP.thF μ i, ?_, ?_⟩
-  · exact GlobalTheory.T.thetaAdjoint_at_lift_eq_lowestKType_restriction R F tupT hm hTop hinj h.lev h.grp h.models hP hv IL
+  · exact _root_.GlobalTheory.ThetaFireLift.thetaFireL R F tupT hm hTop hinj h.lev h.grp h.models hP hv IL
   · exact GlobalTheory.LiftResInj.resInjL_toLiftReal R F tupT hm hTop hinj h.models.inf
 
 end GlobalTheory.ThetaFireAssembly

@@ -8,7 +8,10 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OscillatorMo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaVectorTorusAction
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BaseOfOfPin
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FlatVecExistsUnique
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FlatVectorEqUnitMulCentralTranslateLiftVectorStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ConjTupRefl
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.TupPrimeEmpty
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FlatVectorEqUnitMulCentralTranslateLiftVector
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompAtMtOfMemGfC
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
 import Mathlib.Algebra.Order.Floor.Extended
@@ -174,7 +177,7 @@ theorem thF_eq_classSum_princ : ∀ (D : D7) (X : RealSide D) (E : IntegralHecke
     ⟨by rw [hxi, hone, mul_one], by rw [hQ, he, Finset.union_empty]⟩
   obtain ⟨⟨f, hf⟩, -⟩ := GlobalTheory.FlatVecExist.flatVec_existsUnique D X.Γ X.Pl0 X.T X.A3.A _ X.R.toRealDat X.F.lv2 hC X.guard j t
   obtain ⟨z', c0, hz', hc0, hfz⟩ :=
-    GlobalTheory.T.flatVector_eq_unit_mul_centralTranslate_liftVector D X.Γ X.Pl0 X.T X.A3.A _ X.R.toRealDat X.F.lv2 hC X.guard j t (X.std j) f hf
+    _root_.GlobalTheory.FlatLift.flat_eq_unit_smul_om D X.Γ X.Pl0 X.T X.A3.A _ X.R.toRealDat X.F.lv2 hC X.guard j t (X.std j) f hf
   have hflat : f = (princ (Y.Z.ρ.B i j b)).vecFlat (Y.Z.ρ.tw i b 0 ∅ 1) :=
     eq_vecFlat_princ hB htup hC.lev hG hψ hadm hf
 

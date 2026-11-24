@@ -11,7 +11,7 @@ public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.Abeli
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ConnectedSpaceThickening
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsGeneratorOfCompatibleThickeningGeneratorsStatement
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.GtCoordEndRatioDescendsStatement
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationEndomorphismCharacterMapConstantStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationEndomorphismCharacterMapConstant
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationPolarisedAbelianSchemesIso
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -222,7 +222,7 @@ theorem exists_endU : LL → AllU fun {R} _ _ {I} {D} {A} {G} _ _ U => ∀ (aG :
   have hC := hR.2.2.2
   have hB := D.toPre.P.isLB
   obtain ⟨aB, haB, hq⟩ := exists_abelian hL hR U.toUnifPre aG
-  obtain ⟨h, hh⟩ := T.uniformisation_endomorphism_character_map_constant hL R I hR D A G U.toUnifPre aG hG
+  obtain ⟨h, hh⟩ := _root_.GlobalTheory.unifPre_end_character_const hL R I hR D A G U.toUnifPre aG hG
   choose t ht hi using hh
   choose v hv vv using fun χ e => _root_.GlobalTheory.gtCoord_end_ratio_descends R I D.toPre e G (U.gt e) ((Over.pullback (thick R I e)).map aG) aB h (t e)
     inferInstance (ht e) (hi e) (hq e) χ

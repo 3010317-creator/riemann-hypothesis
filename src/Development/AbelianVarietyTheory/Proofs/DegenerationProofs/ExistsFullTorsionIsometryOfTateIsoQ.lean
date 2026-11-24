@@ -5,7 +5,10 @@ public import Development.AbelianVarietyTheory.Definitions.Degenerations.Admissi
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsNormPull
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPushEquiv
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsGrpPullbackOfCommute
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TorsionIsoOfLinearUniformisationTripleStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.VRatioGtStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.PeriodicValuation
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TorsionIsoOfLinearUniformisationTriple
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTorsionMapsCompatibleInLevelStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -73,7 +76,7 @@ theorem exists_fullI_of_tateIsoQ : GlobalTheory.UT.LL → AllD fun {E} _ _ _ {H}
   obtain ⟨hadm, hcz⟩ := M.admissible_base_of_complete_dvr
   have : CharZero M.W := hcz
   have hall := GlobalTheory.TestFibre.laws_all hLL.1 hLL.2.1
-  have hT : M.P.TorsionIso := GlobalTheory.T.torsionIso_of_linear_uniformisation_triple hLL hall.2.1 hall.2.2.1 hall.2.2.2.1 hall.2.2.2.2 E H M.W
+  have hT : M.P.TorsionIso := _root_.GlobalTheory.UT.torsionIso_of_pelUnif hLL hall.2.1 hall.2.2.1 hall.2.2.2.1 hall.2.2.2.2 E H M.W
     (IsLocalRing.maximalIdeal M.W) hadm M.t M.P
   have hTw := GlobalTheory.T.uniformisation_torsion_maps_compatible_in_level hLL M.W (IsLocalRing.maximalIdeal M.W) hadm M.P.D M.P.A M.t.G M.t.semi M.P.U C
   have hT' := fun (k : ℕ) (hk : 1 ≤ k) => hT C k hk

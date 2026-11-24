@@ -41,7 +41,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaLiftDatumIsNonzeroFockVacuumStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaLiftDatumIsNonzeroFockVacuum
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCharFamIsVacVec
 
@@ -103,7 +103,7 @@ namespace GlobalTheory.FockCoeffImage
 theorem fockCoefficientC : GlobalTheory.IndefiniteRowSideFullHecke.MatrixMinorProducts.HarmonicModule → ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A), GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting.PlaceModels D → FockCoefficientC R F := by
   intro hHM D G _ _ Pl0 T A Ks _ _ _ R F hPM
   intro i t σ s P cμ cη m ω BW f₀ f c io h μ 𝓧 hμ x hx g hg e e' w w'
-  obtain ⟨hne, hth, hcart1, hvac⟩ := GlobalTheory.T.thetaLiftDatum_isNonzeroFockVacuum R F i t σ s P cμ cη m ω BW f₀ f c io h μ 𝓧 hμ
+  obtain ⟨hne, hth, hcart1, hvac⟩ := _root_.GlobalTheory.LiftFockVac.levVec_fockVac R F i t σ s P cμ cη m ω BW f₀ f c io h μ 𝓧 hμ
   have hreal := GlobalTheory.T.jointHarmonics_lowest_KType_coefficient_real hHM R F hPM i t σ s P cμ cη m ω BW f₀ f c io h μ 𝓧 hμ g hg e e' w w'
   obtain ⟨hC, -, -, -, -, hW, hON, -, hPt, -, -⟩ := h
   have hinf : IsInfFam R.θ := hC.models.inf

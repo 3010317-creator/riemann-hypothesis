@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnifAlong
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KeyDatumFibreOfComposableBaseChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KeyDatumFibreOfComposableBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -300,7 +300,7 @@ theorem keyValue_homog_of_fibres : ∀ κ : Rule, Homog (fun _ => 1) κ → Func
     (KeyOnPol.scale x.P.A.hom a x.th) hth (fun _ => rfl) hσ hx1
   have hx'' : KeyOn ((RingHom.id K).comp (RingHom.id K)) x' G L σ' (fun i => y' (i.cast hg')) := by
     rwa [RingHom.id_comp]
-  have hpb := GlobalTheory.T.keyDatum_fibre_of_composable_baseChange K K K (RingHom.id K) (RingHom.id K) G L σ' x.P.g y'
+  have hpb := _root_.GlobalTheory.KeyEven.keyPB_of_keyOn_comp K K K (RingHom.id K) (RingHom.id K) G L σ' x.P.g y'
     ⟨x.P, x.g_pos, x.rig, x.rig_gen, KeyOnPol.scale x.P.A.hom a x.th, hth, v, hv⟩ x' rfl hg' hx2 hx''
   have e1 := hF K K (RingHom.id K) _ _ hpb
   have e2 := hH K x.P x.g_pos x.rig x.rig_gen x.th x.th_ne x.v x.basis (KeyOnPol.scale x.P.A.hom a x.th) hth v hv a M

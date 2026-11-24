@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramAtPosDef
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrT
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ApplyAddInfRat
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDualStatement
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusHermitianFormScaledCoordinateEq
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualImageOrthonormalFrameLattice
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitVacuumEntireFactorIsThetaMovedLattices
@@ -65,7 +66,7 @@ theorem theta_of_unit_vacuum : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ
   have hψ := hf.1
   have hθ := hf.2.inf
   obtain ⟨σ, hch⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
-  obtain ⟨-, -, h3⟩ := GlobalTheory.T.self_dual_lattice_pairing_dual D ψ S T ΛS ΛT hψ hSd hTd
+  obtain ⟨-, -, h3⟩ := _root_.GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T ΛS ΛT hψ hSd hTd
   refine ⟨hΦd.comp ((differentiable_id).const_smul δ⁻¹), ?_⟩
   intro x hx Y
   obtain ⟨v, hv, rfl⟩ := mem_La_frame_sd S T frS frT hS hT Ls Lt hLs δ x hx

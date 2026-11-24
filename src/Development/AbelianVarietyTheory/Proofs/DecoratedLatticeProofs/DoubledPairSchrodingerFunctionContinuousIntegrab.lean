@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HeckeFormNSOfHeckeForm
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorThetaFunctionalMixedSourceMode
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergSupSobolevSeminormThetaLawsStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.RealSizeNonneg
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergSupSobolevSeminormThetaLaws
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegrableMajorantCoordinateCosetMeasure
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinateThetaFunLeSchwartzMajorantLevel
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.EmbeddingXiZeroNeZero
@@ -79,7 +80,7 @@ theorem mixS_continuous_integrable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (h�
   have hfL : f ∈ GlobalTheory.Size.thetaLevel ψ S T U := ⟨hf, hfU⟩
   obtain ⟨K, hK, hKN⟩ := GlobalTheory.Unf.mixS_le_maj D ψ hψ θ hθ S S₀ T ρ d v U hU
   obtain ⟨C, hC⟩ := hKN N
-  have hfin := (GlobalTheory.T.heisenberg_sup_sobolev_seminorm_theta_laws D ψ hψ θ hθ S T).1 N f hf
+  have hfin := (_root_.GlobalTheory.Unf.SupFin.supSob_laws D ψ hψ θ hθ S T).1 N f hf
   refine ⟨hc.aestronglyMeasurable, ?_⟩
   have hI := (hN K hK).2
   refine lt_of_le_of_lt (lintegral_mono fun x => (hC f hfL x w).trans

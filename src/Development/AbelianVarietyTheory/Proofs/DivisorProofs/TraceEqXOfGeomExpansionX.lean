@@ -20,7 +20,7 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.Measurabl
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.GreenCuspidalIff
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.IsClosedEmbeddingOfLocallyCompact
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdmissibleRepHasTraceFiniteAdelicPureTensorFunctStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdmissibleRepHasTraceFiniteAdelicPureTensorFunct
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentralizerTorusEllipticElementRealPlaceStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactRealPlaceTorusClassesSignVectorsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalSpectrumFinitenessOfDecayHarishChandraStatement
@@ -28,7 +28,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalI
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTypeVectorOfGoodLevelRepresentationStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumDiscreteSeriesCharacterEqWeylCharacterStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IrreducibleAdmissibleDecomposableCompEquiv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMulRightInvariantHaarAdelicUnitaryGroupHermitiStatement
+public import Formalism.LocalToGlobal.BesselHermitianTheta.IsAutFunDef
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMulRightInvariantHaarAdelicUnitaryGroupHermiti
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TestFunctionsTransportLocalLatticeIsometriesStatement
 import Formalism.LocalRingCardinality.DataHost
 import Mathlib.Algebra.Order.Floor.Extended
@@ -1794,7 +1795,7 @@ theorem trCusp'_of_steps (hL : LocalPC) (hF : SpecFin) (hT : GlobalTheory.TrMult
         mCuspDS μ ρ M ≠ 0 → ¬ GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.IsIntegralOp ν ρ (finFn V ff) 0 → ∃ i, Nonempty (ρ.Equiv (τ i)) := by
     intro ff hffin hKinv X _ _ ρ hi ha hm hz
     haveI := hν.1
-    obtain ⟨x, hx0, hx⟩ := (GlobalTheory.T.admissibleRep_hasTrace_finiteAdelicPureTensorFunction D V ν ff hffin X ρ ha).2 K hKo hKc hKinv hz
+    obtain ⟨x, hx0, hx⟩ := (_root_.GlobalTheory.FinTrace.hasTrace_finFn D V ν ff hffin X ρ ha).2 K hKo hKc hKinv hz
     obtain ⟨i, ⟨e⟩⟩ := hcov₁ X ρ hi ha hm ⟨x, hx0, hx⟩
     obtain ⟨k, ⟨e'⟩⟩ := hA i
     exact ⟨k, ⟨e.trans e'⟩⟩
@@ -1811,7 +1812,7 @@ theorem trCusp'_of_steps (hL : LocalPC) (hF : SpecFin) (hT : GlobalTheory.TrMult
       obtain ⟨g₀, rfl⟩ := Φ.surjective g
       change finFn V' (transfer j ff) (Φ k₀ * Φ g₀) = _
       rw [← map_mul, hfinFn, hfinFn, hKinv k₀ hk₀]
-    obtain ⟨x, hx0, hx⟩ := (GlobalTheory.T.admissibleRep_hasTrace_finiteAdelicPureTensorFunction D V' (ν.map Φ) (transfer j ff) hffin X ρ ha).2 K' hK'o hK'c hKinv' hz
+    obtain ⟨x, hx0, hx⟩ := (_root_.GlobalTheory.FinTrace.hasTrace_finFn D V' (ν.map Φ) (transfer j ff) hffin X ρ ha).2 K' hK'o hK'c hKinv' hz
     obtain ⟨i, ⟨e⟩⟩ := hcov₂ X ρ hi ha hm ⟨x, hx0, hx⟩
     obtain ⟨k, ⟨e'⟩⟩ := hB i
     exact ⟨k, ⟨e.trans ((equivCompSymm' (σ₂ i) Φ).trans (equivComp e' Φ.symm.toMulEquiv.toMonoidHom))⟩⟩
@@ -1914,8 +1915,8 @@ theorem multEq_of_trCusp' : GlobalTheory.Published.CuspRapidDecay → GlobalTheo
   have hinf : IsInfFam R.θ := hG.core.models.inf
   let μ : Measure (GA D (Yc D 0)) := Measure.haar
   let μ' : Measure (GA D (Wc D i)) := Measure.haar
-  haveI : μ.IsMulRightInvariant := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D _ μ inferInstance
-  haveI : μ'.IsMulRightInvariant := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D _ μ' inferInstance
+  haveI : μ.IsMulRightInvariant := _root_.GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D _ μ inferInstance
+  haveI : μ'.IsMulRightInvariant := _root_.GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D _ μ' inferInstance
   have hadm' : IsAdmissible (σ.comp Φ.symm.toMulEquiv.toMonoidHom) :=
     GlobalTheory.CuspMult.isAdmissible_comp_equiv σ Φ.symm hadm
   rw [GlobalTheory.T.cuspidalMultiplicity_eq_discreteSeriesModel_maps hRD hHC hDM D R.θ hinf (Yc D 0) _ M₀ μ W σ hadm.1,

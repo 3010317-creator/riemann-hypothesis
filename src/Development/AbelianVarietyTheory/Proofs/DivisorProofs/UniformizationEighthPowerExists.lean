@@ -27,8 +27,11 @@ public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IsPowGrpBa
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.PowExt
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomExtNormalSt
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsAbelianSchemeThick
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisationCompleteDvrOfLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHoldStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisationCompleteDvrOfLaws
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.OLinBaseChangeSt
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHold
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SurjectiveCubeOfGeneric
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsNormalisedGen
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsPowPolAVPowPolOf
@@ -783,8 +786,8 @@ open GlobalTheory.LN
 namespace GlobalTheory
 
 theorem uniformisation_total_closed : USt :=
-  GlobalTheory.T.uniformisation_complete_dvr_of_laws GlobalTheory.T.all_six_abelian_scheme_laws_hold.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.2.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.2.2.1
-    GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.2.2.2.1
+  _root_.GlobalTheory.LN.uniformisation_dvr _root_.GlobalTheory.allSixLaws.1 _root_.GlobalTheory.allSixLaws.2.1 _root_.GlobalTheory.allSixLaws.2.2.1 _root_.GlobalTheory.allSixLaws.2.2.2.1
+    _root_.GlobalTheory.allSixLaws.2.2.2.2.1
 
 end GlobalTheory
 end -- clump:auto

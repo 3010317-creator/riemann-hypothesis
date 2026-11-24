@@ -17,7 +17,10 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Lang
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChevalleyUnits
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInverseLocalArtinWeilGroupHom
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GlobalArtinCompatLocalDegreeOneStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GlobalArtinLocalIdeleInjectiveStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.ChevalleyUnits
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GlobalArtinLocalIdeleInjective
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InverseLocalArtinContinuousOnInertia
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PlaceOverTransportRingIso
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FiniteDimensionalWdSpace
@@ -76,7 +79,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsNotCongPow
-import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
 import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasExponentZeroIff
 import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.TrivialOnInertiaOfUnr
 import Development.AutomorphicArithmetic.AutomorphicVarieties.WeilGroupCharacters.RepAlg
@@ -581,7 +583,7 @@ private theorem artin_step (hG : GlobalArtinReciprocity) (c : Weil h' →* Weil 
   obtain ⟨art, hart⟩ := hG M Ω
   obtain ⟨b, hs, ho, hg⟩ := GlobalTheory.InvLocalArtin.exists_invLocalArtin M Ω A w h' art hart
   have hb : (Units.map i.toRingHom.toMonoidHom).comp (a.comp c) = b := MonoidHom.ext fun σ =>
-    GlobalTheory.T.globalArtin_localIdele_injective GlobalTheory.Published.chevalleyUnits' M Ω art hart w ((hglob art hart σ).trans (hg σ).symm)
+    _root_.GlobalTheory.ArtinLocalInj.artin_localIdele_injective GlobalTheory.Published.chevalleyUnits' M Ω art hart w ((hglob art hart σ).trans (hg σ).symm)
   refine ⟨hb ▸ hs, hb ▸ GlobalTheory.ArtinInvCont.continuous_inv_on_ine M Ω A w h' art b hart ho hg, hb ▸ ho, fun ξ hξ => ?_, hglob⟩
   obtain ⟨χ, hχ, e⟩ := ha.factor _ (hsm ξ hξ)
   refine ⟨χ.comp (Units.map i.symm.toRingHom.toMonoidHom), IsOpen.preimage (Continuous.units_map _ hi') hχ, ?_⟩
@@ -605,7 +607,7 @@ theorem UpperTheory.isLocallyAlgebraic_transfer_of_placeIso :
       (AddMonoidHom.isOpenMap_of_sigmaCompact i.toAddEquiv.toAddMonoidHom i.surjective hP.cont)
   have hr : ∀ σ, WeilRel (RingEquiv.refl Ω) σ (c σ) := fun σ => (hc σ _).2 rfl
   have hr' : ∀ σ', WeilRel (RingEquiv.refl Ω) (c.symm σ') σ' := fun σ => (hc _ σ).2 (c.apply_symm_apply σ)
-  have inj := GlobalTheory.T.globalArtin_localIdele_injective GlobalTheory.Published.chevalleyUnits'
+  have inj := _root_.GlobalTheory.ArtinLocalInj.artin_localIdele_injective GlobalTheory.Published.chevalleyUnits'
   constructor
   · refine locAlg_step c.symm.toMonoidHom (fun σ z => (hr' σ z).symm)
       (fun σ => by rw [← hdeg]; simp) i.symm hi' hP.cont (fun a' ha' => ⟨_, artin_step hG c.toMonoidHom c.surjective

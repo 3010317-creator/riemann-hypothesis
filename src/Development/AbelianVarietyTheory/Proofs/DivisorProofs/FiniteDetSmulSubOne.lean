@@ -12,7 +12,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.CmHostImagin
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryMatrixEqProdQuasiReflections
 public import Mathlib.NumberTheory.NumberField.Basic
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexMapNsmulComapEqAbsNormDet
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurLemmaThetaFunctionsOrientedPairStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurLemmaThetaFunctionsOrientedPair
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsInfFamFamily
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryEqRealMulFiniteSplit
 import Mathlib.Algebra.Order.Floor.Extended
@@ -74,7 +74,7 @@ import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinTensMemLat
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasDerivAtZeroAndIsTheta
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryQuasiReflectionLaws
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfFinite
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormUnitaryPairActionStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormUnitaryPairAction
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
 import Mathlib.RingTheory.TotallySplit
@@ -1010,7 +1010,7 @@ theorem exists_isScalar (hψ : IsStdChar D ψ (-1)) (hf : IsFinWeil ψ S T ΛS �
       rw [e, heisO_add_of_orth ψ S T (symplO_real_fin S T (real_smul_real u) (fin_smul_fin u))]
       exact GlobalTheory.WeilVacMove.isTheta_heisO_real hψ (real_smul_real u)
         (GlobalTheory.FinTranslate.isTheta_heisO_fin hψ.1 (fin_smul_fin u) h)
-  obtain ⟨c, hc, h⟩ := GlobalTheory.T.schurLemma_thetaFunctions_orientedPair D ψ hψ S T (of p * oi p * subst p⁻¹)
+  obtain ⟨c, hc, h⟩ := _root_.GlobalTheory.ThetaSchur.schur D ψ hψ S T (of p * oi p * subst p⁻¹)
     (fun f h => hf.pres _ _ (hi.pres _ _ (R f h).1))
     (fun w f h => by
       have t1 : IsThetaFunO ψ S T (subst p⁻¹ f) := (R f h).1
@@ -1142,7 +1142,7 @@ theorem finite_data (hψ : IsStdChar D ψ (-1)) (hS : IsSelfDualC S ΛS) (hT : I
   obtain ⟨g1, g2⟩ := gauss_isometry (isHeis_gamQ hψ.1 S T hw) hlam sd ((sandw b a).restrictScalars (𝓞 D.host.E))
     (fun x y => by
       show ψ (symplO S T (finRat S T (b * x * a)) (finRat S T (b * y * a))) = _
-      rw [finRat_sandw ha hb, finRat_sandw ha hb, GlobalTheory.T.symplecticForm_unitaryPairAction]
+      rw [finRat_sandw ha hb, finRat_sandw ha hb, _root_.GlobalTheory.SymplOInv.symplO_actO]
       rfl) hbij.2 _ t t1 t2
   exact ⟨_, t, _, N, _, right_ne_zero_of_mul h0, left_ne_zero_of_mul h0, hN, t1, t2, g1, g2, m1 ▸ i1, m2 ▸ i2⟩
 

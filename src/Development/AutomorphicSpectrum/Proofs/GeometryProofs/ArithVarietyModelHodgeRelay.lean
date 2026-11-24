@@ -30,7 +30,8 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsP
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisationCompleteLocalNormalPrime
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModuliModelUltrametricPoints
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroSectionOfPolarisedGenericFibreStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiabelianGenericFibrePolarizationIsoStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.ToATotal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiabelianGenericFibrePolarizationIso
 public import Mathlib.RingTheory.AdicCompletion.Algebra
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNoetherianRingAdicCompletionOfNoetherian
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsGrpObjOfFlatClosed
@@ -1286,7 +1287,7 @@ theorem exists_unif {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host
   obtain ⟨P, hPL, -⟩ := GlobalTheory.UU.exists_cp_of_isSymmetric h1 R A t'.G t'.semi gen hgen t'.PP t'.cub t'.sym
   have hσ : ∃ (σ : LB.Sec P.L.L) (k : P.L.L.ι), σ.f k ≠ 0 := by
     rw [hPL]; exact GlobalTheory.T.exists_nonzero_section_of_polarised_generic_fibre E H R t' hpol'
-  obtain ⟨Dd, U, -, -⟩ := GlobalTheory.T.semiabelian_generic_fibre_polarization_iso R hA t'.G P t'.semi (hPL ▸ GlobalTheory.LN.UnifPrime.hypW_of_triple t') hs' A gen hgen
+  obtain ⟨Dd, U, -, -⟩ := _root_.GlobalTheory.SectionUnif.exists_unif_of_ne_zero R hA t'.G P t'.semi (hPL ▸ GlobalTheory.LN.UnifPrime.hypW_of_triple t') hs' A gen hgen
     (hPL ▸ hL) hσ
   exact ⟨R, _, _, _, g₁.comp g₀, h, t', m.φ, Dd, A, hN, hic, hc, hi, e, m.cart, ⟨U.toUnifPre⟩⟩
 

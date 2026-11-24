@@ -2,17 +2,19 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOfMEqOne
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrystallinePull2SumCup
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeDeRhamFreeHodgeSequenceBaseChangeStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeDeRhamFreeHodgeSequenceBaseChange
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeDeRhamLocallyFreeHodgeDegenerates
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechLineBundlePullTrivialOfPointwiseGeneratorStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CohomologousNegTorsorCocycleOfOrthogonalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDualNumberGeneratorOfTorsorCoboundaryStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PtAlgSpOver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDualNumberGeneratorOfTorsorCoboundary
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsChartChoiceForPointsOfNontrivialStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPointwiseGeneratorOfDualNumberLineBundleGeStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPointwiseLineBundleGeneratorOfTrivialPullbStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankEqOfRankAtStalk
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HodgeFiltrationsOrthogonalLineBundlePairingProdu
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HodgeFiltrationsOrthogonalLineBundlePairingProduStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,10 +79,10 @@ theorem mem_fil_of_orth_of_ker (R : Type) [CommRing R] [Nontrivial R] (A B : Ove
     (φ : HdR A →ₗ[R] HdR B →ₗ[R] R) (hφ : AbDual.IsCorrForm (dp0 R) (𝟙 _) A B P φ) (y : HdR B)
     (hy : ∀ x ∈ Fil A, φ x y = 0) : y ∈ Fil B := by
   have hHDR := GlobalTheory.AbCoh.abelianHodgeDeRham
-  obtain ⟨-, hHodge, -⟩ := GlobalTheory.T.abelianSchemeDeRham_free_hodgeSequence_baseChange hHDR
+  obtain ⟨-, hHodge, -⟩ := _root_.GlobalTheory.abelianDeRham_free_hodge_baseChange hHDR
   obtain ⟨v, hv⟩ := ((hHodge R B g hB hgB).1.1 y).exists
   obtain ⟨j, hj⟩ := GlobalTheory.T.exists_isChartChoiceForPoints_of_nontrivial R A B P hLB
-  have horth := GlobalTheory.T.hodgeFiltrations_orthogonal_lineBundlePairing_product hHDR R A B g hA hB hgA hgB P hLB φ hφ
+  have horth := _root_.GlobalTheory.PtExt.HodgeOrth.fil_orthogonal hHDR R A B g hA hB hgA hgB P hLB φ hφ
   obtain ⟨k, hk⟩ := GlobalTheory.T.cohomologous_neg_torsor_cocycle_of_orthogonal hHDR R A B g hA hB hgA hgB P hLB φ hφ horth y v hv 0
     (fun h hh ↦ by rw [hy h hh, map_zero]) 0 (by simp) j hj
   have hk' : IsCob (chartsA P) (tanCoc P j v) k := by
@@ -90,7 +92,7 @@ theorem mem_fil_of_orth_of_ker (R : Type) [CommRing R] [Nontrivial R] (A B : Ove
     rw [show ev (0 : Z1 (O (dp0 R) (A.hom ≫ 𝟙 _))) (trivMap ψ x) = 0 from rfl, zero_add] at e
     exact e
   obtain ⟨s, hs⟩ := GlobalTheory.T.exists_pointwiseLineBundleGenerator_of_trivial_pullback R (A ⊗ B) A P hLB (AbDual.inl A B) hz
-  obtain ⟨T, hT⟩ := GlobalTheory.T.exists_dualNumberGenerator_of_torsorCoboundary R A B P hLB v hv.1 j hj s hs k hk'
+  obtain ⟨T, hT⟩ := _root_.GlobalTheory.PtExt.exists_isEpsGen_of_isCob R A B P hLB v hv.1 j hj s hs k hk'
   obtain ⟨t, ht⟩ := GlobalTheory.T.exists_pointwiseGenerator_of_dualNumberLineBundleGenerator R A B P hLB v hv.1 T hT
   have htriv := GlobalTheory.T.cechLineBundle_pull_trivial_of_pointwiseGenerator R (A ⊗ B) (A ⊗ epsR R) P hLB _ t ht
   have hv1 : v ^ e = 1 := hker v htriv

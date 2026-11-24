@@ -15,7 +15,7 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Exist
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOneP
 public import Formalism.RealPlaceAnalysis.StatementA
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntegrationByPartsRightDerivativeAdelicQuotient
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemSmoothFunctionsOfClosedRightDerivativesStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemSmoothFunctionsOfClosedRightDerivatives
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaKernelLiftConvergesContinuousGrowthDerivStatement
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsQuotHeightMulExpInfLe
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaKernelLieActionThroughWeylAlgebra
@@ -73,7 +73,8 @@ import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.PolarConjTranspose
 import Mathlib.Tactic.Linter.Style
 import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.UnitaryAdelicHeightCosetLeNormInfPowStatement
+import Formalism.LocalToGlobal.BesselHermitianTheta.TiedSmooth
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.UnitaryAdelicHeightCosetLeNormInfPow
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicHeightGrowthOfCosetGrowthUnitaryPairStatement, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdjoinGelfandInvariantsDualPairEq, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsOpenLevelFixingThetaFunctionStatement, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsOrientedWeilDatumOfAdelicWeilRepThetaStatement, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GelfandInvariantsActKernelFamilyShifted, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GelfandInvariantsActKernelFamilyShiftedStatement, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GlRelOfCanonicalCommutationRelations, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntegrationByPartsRightDerivativeAdelicQuotientStatement, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GelfandOperatorAdjointDecaying, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GelfandOperatorAdjointDecayingStatement, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.KernelLiftGelfandInvariantFiniteOfFinite, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.KernelLiftGelfandInvariantFiniteOfFiniteStatement, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmoothCuspFormMemUnitaryRapidDecayForms, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmoothCuspFormMemUnitaryRapidDecayFormsStatement, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaKernelLieActionThroughWeylAlgebraStatement, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilRepThetaFunctionPolynomialGrowthRealPointsStatement, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ToTWsmallZero
@@ -791,7 +792,7 @@ theorem word_ker (hκ : IsKerSys θ V W κ) (l : List (D.what₂.Tau × Matrix (
 
 theorem isMod_ker (hθ : IsInfFam θ) (hκ : IsKerSys θ V W κ) (f : M) (h : GA D W) : IsMod θ V fun g => κ f g h := by
   have hc : ∀ f, Continuous fun g => κ f g h := fun f => (hκ.cont f).comp (Continuous.prodMk_left h)
-  refine ⟨GlobalTheory.T.mem_smoothFunctions_of_closed_rightDerivatives D θ hθ V (Set.range fun f g => κ f g h) ?_ ?_ _ ⟨f, rfl⟩, fun γ hγ g => ?_, fun l hl => ?_⟩
+  refine ⟨_root_.GlobalTheory.Mem.DerClosed.mem_smFun_of_closed D θ hθ V (Set.range fun f g => κ f g h) ?_ ?_ _ ⟨f, rfl⟩, fun γ hγ g => ?_, fun l hl => ?_⟩
   · rintro _ ⟨f, rfl⟩
     exact hc f
   · rintro _ ⟨f, rfl⟩ τ X hX
@@ -1105,13 +1106,13 @@ theorem IsKerSys.lift (hP : GlobalTheory.Published.CuspRapidDecay) (hθ : IsInfF
     have := fun g => e 1 (one_mem _) (one_mem _) k a b g h
     simp only [mul_one] at this
     simp only [this]
-  · refine GlobalTheory.T.mem_smoothFunctions_of_closed_rightDerivatives D θ hθ W (Set.range L) ?_ ?_ _ ⟨f, rfl⟩
+  · refine _root_.GlobalTheory.Mem.DerClosed.mem_smFun_of_closed D θ hθ W (Set.range L) ?_ ?_ _ ⟨f, rfl⟩
     · rintro _ ⟨f, rfl⟩
       exact h2 f
     · rintro _ ⟨f, rfl⟩ τ X hX
       obtain ⟨f', e⟩ := hd f τ X hX
       exact ⟨_, ⟨f', rfl⟩, e⟩
-  · obtain ⟨K, hK⟩ := GlobalTheory.T.unitaryAdelicHeight_coset_le_normInf_pow D θ W
+  · obtain ⟨K, hK⟩ := _root_.GlobalTheory.SmoothForms.HeightCoset.height_le_normInf_pow D θ W
     refine ⟨K * N, fun l hl x => ?_⟩
     have hw : ∃ f', l.foldr (fun p φ => Rder θ W p.1 p.2 φ) (L f) = L f' := by
       induction l with
@@ -1171,14 +1172,14 @@ theorem isKerSys_thKer (hθ : IsInfFam θ) {ψ : AddChar (AF D.host.F) ℂ} (hψ
     exact ⟨N', fun f => hN' _ (left f) (level f) fun x y =>
       (hN f.1 f.2 x y).imp fun C e a ha b hb => e a ha b hb 0⟩
   · have sT : ∀ f g, thKer ψ S T om f g ∈ SmFun θ T := fun f g => by
-      refine GlobalTheory.T.mem_smoothFunctions_of_closed_rightDerivatives D θ hθ T (Set.range fun f => thKer ψ S T om f g) ?_ ?_ _ ⟨f, rfl⟩
+      refine _root_.GlobalTheory.Mem.DerClosed.mem_smFun_of_closed D θ hθ T (Set.range fun f => thKer ψ S T om f g) ?_ ?_ _ ⟨f, rfl⟩
       · rintro _ ⟨f, rfl⟩
         exact (cont f).comp (Continuous.prodMk_right g)
       · rintro _ ⟨f, rfl⟩ τ X hX
         obtain ⟨f', e⟩ := derW τ X hX f
         exact ⟨_, ⟨f', rfl⟩, e g⟩
     have sS : ∀ f h, swapKer (thKer ψ S T om) f h ∈ SmFun θ S := fun f h => by
-      refine GlobalTheory.T.mem_smoothFunctions_of_closed_rightDerivatives D θ hθ S (Set.range fun f => swapKer (thKer ψ S T om) f h) ?_ ?_ _ ⟨f, rfl⟩
+      refine _root_.GlobalTheory.Mem.DerClosed.mem_smFun_of_closed D θ hθ S (Set.range fun f => swapKer (thKer ψ S T om) f h) ?_ ?_ _ ⟨f, rfl⟩
       · rintro _ ⟨f, rfl⟩
         exact (cont f).comp (Continuous.prodMk_left h)
       · rintro _ ⟨f, rfl⟩ τ X hX

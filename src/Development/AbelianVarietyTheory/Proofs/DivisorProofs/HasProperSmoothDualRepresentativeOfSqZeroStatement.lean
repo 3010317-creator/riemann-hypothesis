@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThickId
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PrimitiveStructureSheafDegTwoVanish
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechPairRestrictBaseChangeBijectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechTripleRestrictCompositeInjectiveSecond
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechPairRestrictBaseChangeBijective
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsAdditiveOfUniversal
 public import Mathlib.Tactic.ENatToNat
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SurjectiveOfIsPullbackSqZero
@@ -14,7 +15,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HodgeCohomol
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardSmoothLiftOverSqZeroThickening
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ComparisonMemCechHodgeFiltration
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SameIdIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianStructureCohomologyStatementStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.AxesVanishingStructureSheafDegOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianStructureCohomologyStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveClassDegreeTwoStructureSheafVanishStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdditiveLineBundleFamilyOfGeometricFibresStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrimitiveDegreeTwoExtensionStatement
@@ -162,7 +164,7 @@ theorem GlobalTheory.Obs.additiveClassDegreeTwo_vanish_affineBases : PrimitiveEx
   have hG := (GlobalTheory.Obs.BasisExt.restrict_ext_bijective R R₁ A.left A.hom D G hGb.cover hGb.dir).2
   have hH := (GlobalTheory.Obs.BasisExt.restrict_ext_bijective R R₁ (A ⊗ A).left (A ⊗ A).hom T H hHb.cover hHb.dir).2
   have hr : ∀ φ : (A ⊗ A).left ⟶ A.left, Function.Bijective (extMap R₁ (pairRes φ (A ⊗ A).hom)).pull2 :=
-    fun φ ↦ (GlobalTheory.T.cechPairRestrict_baseChange_bijective R R₁ A.left (A ⊗ A).left (A ⊗ A).hom φ).1.2
+    fun φ ↦ (_root_.GlobalTheory.Obs.PairExt.pairRes_ext_bijective R R₁ A.left (A ⊗ A).left (A ⊗ A).hom φ).1.2
   obtain ⟨c', rfl⟩ := hG.2 c
   obtain ⟨c₁, hc₁⟩ := (hr (fst A A).left).2 ((extMap R₁ (pairPull (overW (fst A A)))).pull2 c')
   obtain ⟨c₂, hc₂⟩ := (hr (snd A A).left).2 ((extMap R₁ (pairPull (overW (snd A A)))).pull2 c')
@@ -1530,7 +1532,7 @@ theorem abLift_of_prim (hP : PrimitiveExtendedDegTwoVanish) : AbLift := by
 
 theorem abLift : AbLift :=
   abLift_of_prim (GlobalTheory.T.primitive_degree_two_extension (GlobalTheory.T.additiveClassDegreeTwo_structureSheaf_vanish fun R _ A _ g hA hg ↦
-    ⟨(GlobalTheory.T.abelian_structure_cohomology_statement R A g hA hg).1, (GlobalTheory.T.abelian_structure_cohomology_statement R A g hA hg).2.1⟩))
+    ⟨(_root_.GlobalTheory.AbCoh.oStr R A g hA hg).1, (_root_.GlobalTheory.AbCoh.oStr R A g hA hg).2.1⟩))
 
 end
 

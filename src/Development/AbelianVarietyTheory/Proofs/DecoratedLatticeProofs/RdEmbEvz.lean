@@ -13,7 +13,8 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemCu
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MoveDownLevelPrimeAdelicFactorisation
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ChiPowOfLevG
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ScalarFormsOnChartsOfTrueColumnTuple
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoordsStatement
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -248,7 +249,7 @@ theorem GlobalTheory.AdForm.TwDat.Is.evz_decomp : ∀ {B : GlobalTheory.Mem.Base
     finM _ (rankN (I.rec7 l Z) B.R.m le_rfl) (emb h)⁻¹, hinvM _, hinvM' _⟩
   obtain ⟨κ0, hκ0, hχ0⟩ := top_lev_chi I hOk hPins l Z u a Ch₀ A hA bad K hRP c gU hExt
   have hG : ((I.rec7 l Z).sp.X B.R.m).gram.reindex (finCongr (rankN (I.rec7 l Z) B.R.m le_rfl))
-      (finCongr (rankN (I.rec7 l Z) B.R.m le_rfl)) = 1 := ((GlobalTheory.T.trueColumn_spaces_standard_in_frameCoords I hOk hPins l Z).2.2.2 B.R.m le_rfl).1
+      (finCongr (rankN (I.rec7 l Z) B.R.m le_rfl)) = 1 := ((_root_.GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hOk hPins l Z).2.2.2 B.R.m le_rfl).1
   obtain ⟨γ, hγQ, hγf, hγi⟩ := ratPt θ hθ _ (rankN (I.rec7 l Z) B.R.m le_rfl) hG
     (Formalism.L2.Col.ufGL _ _ ((I.stp u a B.R.m).mv (I.perIn u a).b0 ((I.perIn u a).tilPt c)).1)
     (GlobalTheory.Mem.Col2.DnAdel.ufGL_UJ B.sp.cm _ ((I.stp u a B.R.m).mv (I.perIn u a).b0 ((I.perIn u a).tilPt c)).1)

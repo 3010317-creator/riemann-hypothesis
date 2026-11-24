@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyLocalIntegralPointsMemOpenSubgroupDefiStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyLocalIntegralPointsMemOpenSubgroupDefi
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueAdmissibleLocalComponentDefiniteUnit
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnramifiedVectorGivesLocalComponentSphericalVectStatement
@@ -122,7 +123,7 @@ theorem finrank_fixed_KL_eq_one : ∀ (E : Type) [Field E] [NumberField E] [IsCM
         rw [← Module.End.mul_apply, ← map_mul, Subgroup.coe_inv, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hLo : IsOpen (L : Set (finU (E := E) (n := n))) := (hπ.aut φ hφ).level
   have hunr : ∀ᶠ w in cofinite, IsUnramU π w := by
-    filter_upwards [GlobalTheory.T.eventually_localIntegralPoints_mem_openSubgroup_definiteUnitary E n L hLo] with w hw
+    filter_upwards [_root_.GlobalTheory.BCT.GlobLev.eventually_locU_mem E n L hLo] with w hw
     exact ⟨φ, hφ, hφ0, fun x hx hxK => hw x hx hxK hx.1⟩
   have hadm : ∀ w, IsAdmissible (σ w).ρ := by
     intro w

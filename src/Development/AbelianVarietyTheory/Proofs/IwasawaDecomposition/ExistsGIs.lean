@@ -35,7 +35,7 @@ public import Formalism.LocalToGlobal.GlobalTheory.NormSqLatticeFunctionEq
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ColumnLayerConditionsTrueColumnsLaterStages
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsOkPins
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsColInJetsIn
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsStandardColumnComparisonsTrueColumnsStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsStandardColumnComparisonsTrueColumns
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.VolumesAgreeAdelicOfTrueVolumeStatement
 public import Formalism.LocalToGlobal.BesselHermitianTheta.Joints
 import Formalism.LocalToGlobal.GroupLattices.TiedFamilies.TieExC
@@ -1122,7 +1122,7 @@ theorem nonempty_columnLocalData_of_standardConcreteFamily (w : ColW B f T) (Z :
 theorem exists_trueVolume_stage_of_any_column_choice (p : WP) : StepW p fun K B f T w => ∃ G : GJStage B w.C, GIs2 K w G := by
   refine StepW.of_all fun K B f T w hO _ _ => ?_
   obtain ⟨Z₀⟩ := TrueColsTest.later w.l (JetEx.hasLetters_of_over hO)
-  obtain ⟨C, hC, hL⟩ := GlobalTheory.T.exists_standardColumnComparisons_trueColumns w.I w.ok w.pins w.l Z₀
+  obtain ⟨C, hC, hL⟩ := _root_.GlobalTheory.Mem.Col2.TC.colsTiedSym_std w.I w.ok w.pins w.l Z₀
   obtain ⟨g, hd, h⟩ := exists_isLocalFamily K.s (D := w.D Z₀) (fun u => (C.forms u).to0) C.herm.std (companion_of_colsHermS C.herm)
     C.joint0 fun u => GlobalTheory.T.exists_psi0_eq_embLL w.I w.ok w.pins w.l Z₀ (C.forms u).gl (hC u).gl
   refine ⟨{ Z₀.G.withTrue with gat := g, gat_d := hd }, (LayerTwoModel.gIs2_iff w _).2 fun W V S N => ?_⟩

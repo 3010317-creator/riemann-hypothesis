@@ -3,13 +3,15 @@ module
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.HalfLinearCocycle
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinTensMemLatO
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDualStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisThetaLaws
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CmAdeleIdempotentOfPlacePropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEqSumWeilComponentsAddTwoSmulLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVacuaLocalFactorsStableHeisenbergAwayStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaInnerProductHermitianStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilMatrixComponentAtPlaceMemCompletedLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CmAdeleIdempotentOfPlaceProperties
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEqSumWeilComponentsAddTwoSmulLattice
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RestrictedTensorBasePointNormSq
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVacuaLocalFactorsStableHeisenbergAway
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaInnerProductHermitian
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilMatrixComponentAtPlaceMemCompletedLattice
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,7 +68,7 @@ open GlobalTheory.SplitScalar GlobalTheory.LatVac
 variable {D : D7} {S T : HSp D}
 
 theorem wAt_wAt (p : Place D) (w : WO S T) : wAt p (wAt p w) = wAt p w := by
-  rw [wAt_eq_smul, wAt_eq_smul, smul_smul, (GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D).1 p]
+  rw [wAt_eq_smul, wAt_eq_smul, smul_smul, (_root_.GlobalTheory.PlaceTensor.idem_spec D).1 p]
 
 theorem wAt_off {P : Finset (Place D)} {w r : WO S T} (h : w = ∑ q ∈ P, wAt q w + r) {p : Place D} (hp : p ∉ P) :
     wAt p w = wAt p r := by
@@ -74,18 +76,18 @@ theorem wAt_off {P : Finset (Place D)} {w r : WO S T} (h : w = ∑ q ∈ P, wAt 
   simp only [wAt_eq_smul, smul_add, Finset.smul_sum, smul_smul] at e ⊢
   rw [e, Finset.sum_eq_zero, zero_add]
   intro q hq
-  rw [(GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D).2.1 p q (fun hpq => hp (hpq ▸ hq)), zero_smul]
+  rw [(_root_.GlobalTheory.PlaceTensor.idem_spec D).2.1 p q (fun hpq => hp (hpq ▸ hq)), zero_smul]
 
 theorem wAt_on {P : Finset (Place D)} {w r : WO S T} (h : w = ∑ q ∈ P, wAt q w + r) {p : Place D} (hp : p ∈ P) :
     wAt p r = 0 := by
   have e : wAt p w = wAt p (∑ q ∈ P, wAt q w + r) := by rw [← h]
   simp only [wAt_eq_smul, smul_add, Finset.smul_sum, smul_smul] at e ⊢
-  rw [Finset.sum_eq_single p (fun q _ hqp => by rw [(GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D).2.1 p q (Ne.symm hqp), zero_smul])
-    (fun hn => absurd hp hn), (GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D).1 p] at e
+  rw [Finset.sum_eq_single p (fun q _ hqp => by rw [(_root_.GlobalTheory.PlaceTensor.idem_spec D).2.1 p q (Ne.symm hqp), zero_smul])
+    (fun hn => absurd hp hn), (_root_.GlobalTheory.PlaceTensor.idem_spec D).1 p] at e
   exact add_left_cancel (e.symm.trans (add_zero _).symm)
 
 theorem symplO_wAt (p : Place D) (x y : WO S T) : symplO S T (wAt p x) y = symplO S T x (wAt p y) := by
-  rw [wAt_eq_smul, wAt_eq_smul, GlobalTheory.SplitScalar.symplO_smul, (GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D).2.2.1 p]
+  rw [wAt_eq_smul, wAt_eq_smul, GlobalTheory.SplitScalar.symplO_smul, (_root_.GlobalTheory.PlaceTensor.idem_spec D).2.2.1 p]
 
 private theorem symplO_sum_wAt_left (P : Finset (Place D)) (x y : WO S T) :
     symplO S T (∑ q ∈ P, wAt q x) y = ∑ q ∈ P, symplO S T (wAt q x) (wAt q y) := by
@@ -126,13 +128,13 @@ theorem cocycle_two (hψ : IsStdChar D ψ (-1)) (hS : IsSelfDualC S ΛS) (hT : I
     (hu : u ∈ latO S T ΛS ΛT fun _ => True) (hu' : u' ∈ latO S T ΛS ΛT fun _ => True) :
     ψ (symplOH S T (2 • u) (2 • u')) = 1 := by
   have hd : ψ (symplO S T u u') = 1 :=
-    ((GlobalTheory.T.self_dual_lattice_pairing_dual D ψ S T ΛS ΛT hψ hS hT).1 u (GlobalTheory.SplitScalar.latO_fin hu)).mp hu u' hu'
+    ((_root_.GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T ΛS ΛT hψ hS hT).1 u (GlobalTheory.SplitScalar.latO_fin hu)).mp hu u' hu'
   rw [two_nsmul, two_nsmul, GlobalTheory.SplitScalar.symplOH_add_left, GlobalTheory.SplitScalar.symplOH_add_right,
     GlobalTheory.SplitScalar.symplOH_add_self, AddChar.map_add_eq_mul, hd, one_mul]
 
 theorem wAt_mem {u : WO S T} (hu : u ∈ latO S T ΛS ΛT fun _ => True) (p : Place D) :
     wAt p u ∈ latO S T ΛS ΛT fun _ => True :=
-  latO_mono (fun _ _ => trivial) (GlobalTheory.T.weilMatrixComponentAtPlace_mem_completedLattice D S T ΛS ΛT _ u hu p).1
+  latO_mono (fun _ _ => trivial) (_root_.GlobalTheory.LatticeLocal.wAt_mem_latO D S T ΛS ΛT _ u hu p).1
 
 theorem wAt_two (p : Place D) (u : WO S T) : wAt p (2 • u) = 2 • wAt p u := by
   rw [two_nsmul, two_nsmul, wAt_eq_smul, wAt_eq_smul, smul_add]
@@ -163,8 +165,8 @@ theorem cocycle_prod (hψ : IsStdChar D ψ (-1)) (hS : IsSelfDualC S ΛS) (hT : 
     ∃ P : Finset (Place D), (∀ p ∉ P, ψ (symplOH S T (wAt p w) (wAt p w')) = 1) ∧
       ψ (symplOH S T w w') = ∏ p ∈ P, ψ (symplOH S T (wAt p w) (wAt p w')) := by
   classical
-  obtain ⟨P₀, hP₀⟩ := GlobalTheory.T.exists_eq_sum_weilComponents_add_two_smul_lattice D S T ΛS ΛT hS hT w
-  obtain ⟨P₁, hP₁⟩ := GlobalTheory.T.exists_eq_sum_weilComponents_add_two_smul_lattice D S T ΛS ΛT hS hT w'
+  obtain ⟨P₀, hP₀⟩ := _root_.GlobalTheory.PlaceTensor.CompDecomp.exists_eq_sum_wAt_add_two_smul D S T ΛS ΛT hS hT w
+  obtain ⟨P₁, hP₁⟩ := _root_.GlobalTheory.PlaceTensor.CompDecomp.exists_eq_sum_wAt_add_two_smul D S T ΛS ΛT hS hT w'
   obtain ⟨u, hu, hw⟩ := hP₀ (P₀ ∪ P₁) (fun _ hx => Finset.mem_union_left _ hx)
   obtain ⟨u', hu', hw'⟩ := hP₁ (P₀ ∪ P₁) (fun _ hx => Finset.mem_union_right _ hx)
   refine ⟨P₀ ∪ P₁, fun p hp => ?_, ?_⟩
@@ -195,14 +197,14 @@ theorem isPure_heisO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFa
   have hadd : ∀ (p : Place D) (a b : WO S T), wAt p (a + b) = wAt p a + wAt p b := fun p a b => by
     rw [wAt_eq_smul, wAt_eq_smul, wAt_eq_smul, smul_add]
 
-  obtain ⟨P₀, hP₀⟩ := GlobalTheory.T.exists_eq_sum_weilComponents_add_two_smul_lattice D S T ΛS ΛT hS hT w
+  obtain ⟨P₀, hP₀⟩ := _root_.GlobalTheory.PlaceTensor.CompDecomp.exists_eq_sum_wAt_add_two_smul D S T ΛS ΛT hS hT w
   obtain ⟨u, hu, hwu⟩ := hP₀ P₀ (Finset.Subset.refl _)
   have hvac : ∀ p, p ∉ P₀ → (∀ τ, p ≠ .inr τ) → heisO ψ S T (wAt p w) f₀ = f₀ := by
     intro p hp hτ
     rcases p with v | τ
     · have hv : IsLatVac (heisO ψ S T) (latO S T ΛS ΛT fun u => u = v) f₀ := base_vacAt hB (.inl v)
       rw [wAt_off hwu hp, wAt_two]
-      refine hv.1 _ (latO_mono ?_ (GlobalTheory.T.weilMatrixComponentAtPlace_mem_completedLattice D S T ΛS ΛT _ u hu (.inl v)).1)
+      refine hv.1 _ (latO_mono ?_ (_root_.GlobalTheory.LatticeLocal.wAt_mem_latO D S T ΛS ΛT _ u hu (.inl v)).1)
       rintro v' ⟨-, hv'⟩
       exact Sum.inl_injective hv'
     · exact absurd rfl (hτ τ)
@@ -212,7 +214,7 @@ theorem isPure_heisO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFa
     by_contra hc
     simp only [Set.mem_union, Finset.mem_coe, Set.mem_range, not_or, not_exists] at hc
     exact hp (hvac p hc.1 fun τ h => hc.2 τ h.symm)
-  refine ⟨⟨fun p => ((GlobalTheory.T.fockVacua_localFactors_stable_heisenberg_away D ψ θ S T sS sT ΛS ΛT hψ hθ (x p) (hxθ p)).2 p (hloc p)).1 w, ?_⟩,
+  refine ⟨⟨fun p => ((_root_.GlobalTheory.PlaceStable.heis_stable D ψ θ S T sS sT ΛS ΛT hψ hθ (x p) (hxθ p)).2 p (hloc p)).1 w, ?_⟩,
     laws.1 w f hf, fun w' => ?_⟩
   · refine (hfin.union hfinV).subset ?_
     intro p hp
@@ -226,8 +228,8 @@ theorem isPure_heisO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFa
       (starRingEnd ℂ) (ψ (symplOH S T (wAt p (-w)) (wAt p w'))) *
         ipO μ 𝓕 (x p) (heisO ψ S T (wAt p (-w + w')) f₀) := by
     intro p
-    have I := GlobalTheory.T.theta_inner_product_hermitian D ψ S T μ 𝓕 hψ hμ (x p) (heisO ψ S T (wAt p (-w + w')) f₀) (hxθ p) (laws.1 _ f₀ hf₀)
-    have J := GlobalTheory.T.theta_inner_product_hermitian D ψ S T μ 𝓕 hψ hμ (x p) (heisO ψ S T (wAt p w') f₀) (hxθ p) (laws.1 _ f₀ hf₀)
+    have I := _root_.GlobalTheory.ThetaPairingLaws.ipO_laws D ψ S T μ 𝓕 hψ hμ (x p) (heisO ψ S T (wAt p (-w + w')) f₀) (hxθ p) (laws.1 _ f₀ hf₀)
+    have J := _root_.GlobalTheory.ThetaPairingLaws.ipO_laws D ψ S T μ 𝓕 hψ hμ (x p) (heisO ψ S T (wAt p w') f₀) (hxθ p) (laws.1 _ f₀ hf₀)
     rw [(J.2.2.2.2.2.2.1 (wAt p w)).2, laws.2.1, ← hneg, ← hadd, (I.2.2.1 _).2]
   obtain ⟨P, hP1, hP2⟩ := cocycle_prod hψ hS hT (-w) w'
   have hcfin : (Function.mulSupport fun p => (starRingEnd ℂ) (ψ (symplOH S T (wAt p (-w)) (wAt p w')))) ⊆ ↑P := by
@@ -239,8 +241,8 @@ theorem isPure_heisO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFa
   beta_reduce
   simp only [hfac]
   refine ⟨((P.finite_toSet.subset hcfin).union hgfin).subset (Function.mulSupport_mul _ _), ?_⟩
-  have K0 := GlobalTheory.T.theta_inner_product_hermitian D ψ S T μ 𝓕 hψ hμ f (heisO ψ S T w' f₀) hf (laws.1 _ _ hf₀)
-  have K1 := GlobalTheory.T.theta_inner_product_hermitian D ψ S T μ 𝓕 hψ hμ f (heisO ψ S T (-w + w') f₀) hf (laws.1 _ _ hf₀)
+  have K0 := _root_.GlobalTheory.ThetaPairingLaws.ipO_laws D ψ S T μ 𝓕 hψ hμ f (heisO ψ S T w' f₀) hf (laws.1 _ _ hf₀)
+  have K1 := _root_.GlobalTheory.ThetaPairingLaws.ipO_laws D ψ S T μ 𝓕 hψ hμ f (heisO ψ S T (-w + w') f₀) hf (laws.1 _ _ hf₀)
   rw [(K0.2.2.2.2.2.2.1 w).2, laws.2.1, (K1.2.2.1 _).2, (hprod (-w + w')).2, hP2, map_prod,
     finprod_mul_distrib (P.finite_toSet.subset hcfin) hgfin, finprod_eq_prod_of_mulSupport_subset _ hcfin]
 

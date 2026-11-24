@@ -20,7 +20,7 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Bes
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LevOfMem
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OmZeroRat
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PeriodSumHolds
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawWeilBiActionCommutesStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawWeilBiActionCommutes
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumDescendsToWittCore
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.FamAllQ
 public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.DiscreteSeriesClassificationIff
@@ -625,7 +625,7 @@ theorem mainX_of_lawsX (hR : GlobalTheory.Published.CuspRapidDecay) (hH : Global
     ∀ (D : D7) (c : Comm D) (𝒯 : Type) (t : 𝒯 → Tup c), LawsX t → MainX t := by
   intro D c 𝒯 t L
   have hTwo : TwoX t :=
-    GlobalTheory.T.seeSawDoubleLiftCombination_of_laws D c 𝒯 t (GlobalTheory.T.seeSawWeilBiAction_commutes D) (GlobalTheory.T.centralEigenTheta_isFockVector_bounded_degree D) (GlobalTheory.SeeSaw.LiftSumProof.liftSum D)
+    GlobalTheory.T.seeSawDoubleLiftCombination_of_laws D c 𝒯 t (_root_.GlobalTheory.SeeSaw.biAct_all D) (GlobalTheory.T.centralEigenTheta_isFockVector_bounded_degree D) (GlobalTheory.SeeSaw.LiftSumProof.liftSum D)
       L.com L.tup L.real L.ker L.rd
   have hRap : RapidVal D := GlobalTheory.SeeSaw.rapidVal_of_cuspRapidDecay hR D
   have hStep : StepX t :=

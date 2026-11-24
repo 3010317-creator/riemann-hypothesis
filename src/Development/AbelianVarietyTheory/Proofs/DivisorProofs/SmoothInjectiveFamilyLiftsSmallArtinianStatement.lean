@@ -5,7 +5,9 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.SameIdIff
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotIsIsoSpMapDnFst
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsRelAmpleOfIsProjBy
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyIsProjectiveOverRingByChartsStatement
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyIsProjectiveOverRingByCharts
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasDualRepresentativeOfRelAmpleNoetherianStatement
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
@@ -17,10 +19,8 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Glo
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.TrivBasicOpenOfTrivFibre
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveFamilyOfTrivialModEpsilon
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCechCocycleOneOnThickening
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionsFlatBaseChangeAffineMilnorSquareOpenStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionsFlatBaseChangeAffineMilnorSquareOpen
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PicardClassEqZeroAffineMilnorSquare
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveLineBundleFamilyCalculusRulesStatement
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualNumberFieldHomFlatSurjective
 public import Mathlib.AlgebraicGeometry.Morphisms.Flat
 public import Mathlib.CategoryTheory.MorphismProperty.Descent
@@ -348,7 +348,7 @@ theorem hasRep_field : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A], IsAbelianSc
   have hA' : IsAbelianScheme ((Over.pullback s).obj A) := GlobalTheory.isAbelianScheme_pullback_obj s A hA
   have hg' : SmoothOfRelativeDimension g ((Over.pullback s).obj A).hom :=
     (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback (IsPullback.of_hasPullback _ _) hg
-  obtain ⟨L, hL, hamp⟩ := GlobalTheory.ProjFinite.exists_relAmple_of_isProjBy (GlobalTheory.T.abelianVariety_isProjectiveOverRingByCharts K _ hA')
+  obtain ⟨L, hL, hamp⟩ := GlobalTheory.ProjFinite.exists_relAmple_of_isProjBy (_root_.GlobalTheory.ProjField.isProjBy_of_isAbelianScheme K _ hA')
   have hAF : HasRepAF ((Over.pullback s).obj A) g (𝟙_ _) := GlobalTheory.T.hasDualRepresentative_of_relAmple_noetherian K _ g hA' hg' L hL hamp
   have h := (GlobalTheory.DualCon.hasRep_baseChange_iff S (Sp K) s A ((Over.pullback s).obj A) (pullback.fst A.hom s)
     (isGrpPullback_pullback A s) g (𝟙_ _)).1.1
@@ -802,7 +802,7 @@ theorem exists_pic_extend_of_milnor : ∀ (S : Scheme.{0}) (A T T₁ T₂ T₀ :
     rw [← Over.comp_left, ← Over.comp_left, ← MonoidalCategory.whiskerLeft_comp,
       ← MonoidalCategory.whiskerLeft_comp, w₀]
   obtain ⟨D, hD, rfl, h1⟩ := GlobalTheory.T.exists_cechCocycle_one_on_thickening _ _ (A ◁ k₂).left c₂ hc
-  have H := GlobalTheory.T.sections_flat_baseChange_affineMilnorSquare_open S A T T₁ T₂ T₀ j₁ j₂ k₁ k₂ hM
+  have H := _root_.GlobalTheory.DualOpen.sections_milnor S A T T₁ T₂ T₀ j₁ j₂ k₁ k₂ hM
   generalize (A ◁ j₁).left = p₁ at *
   generalize (A ◁ j₂).left = p₂ at *
   generalize (A ◁ k₁).left = q₁ at *
@@ -1188,7 +1188,7 @@ theorem GlobalTheory.DualOpen.exists_same_of_smallExt : ∀ (S : Scheme.{0}) [Is
   intro S _ A _ hA U M hMf hMi hMt C _ _ e he hme hne s N hNf u' hsame
   haveI : Smooth A.hom := hA.smooth
   obtain ⟨P, _, i, p, σ, q, hpi, hσi, hqi, hσc, hσs, hM1, hM2⟩ := GlobalTheory.T.smallExtension_dualNumber_fibreProduct_affineMilnorSquare C e he hme hne
-  have calc3 := (GlobalTheory.T.additiveLineBundleFamily_calculus_rules S A).2.2.1
+  have calc3 := (_root_.GlobalTheory.FamCalc.famCalc S A).2.2.1
   set k := IsLocalRing.ResidueField C
   set π : C →+* C ⧸ Ideal.span {e} := Ideal.Quotient.mk (Ideal.span {e})
   set ρ : C →+* k := IsLocalRing.residue C
@@ -1248,7 +1248,7 @@ theorem GlobalTheory.DualOpen.exists_same_of_smallExt : ∀ (S : Scheme.{0}) [Is
   obtain ⟨D, hD, hDc⟩ := cls_surj (CechPic.pull (A ◁ jq).left d')
   have hDf : Fam A D := GlobalTheory.T.additiveFamily_of_trivial_mod_epsilon S A hA k (spMap (dnInl k) ≫ spMap ρ ≫ s) D hD (by rw [hDc]; exact h3)
   obtain ⟨D₂, hD₂, hD₂c⟩ := cls_surj (CechPic.pull (A ◁ jq).left d' + CechPic.pull (A ◁ (jq ≫ r ≫ u')).left m)
-  have hD₂f : Fam A D₂ := (GlobalTheory.T.additiveLineBundleFamily_calculus_rules S A).2.1 Tε U Tε D M hDf hMf (𝟙 _) (jq ≫ r ≫ u') D₂ hD₂
+  have hD₂f : Fam A D₂ := (_root_.GlobalTheory.FamCalc.famCalc S A).2.1 Tε U Tε D M hDf hMf (𝟙 _) (jq ≫ r ≫ u') D₂ hD₂
     (Or.inl (by rw [hD₂c, pull_wl_id, hDc]))
   obtain ⟨v, hv⟩ := hMt k (spMap ρ ≫ s) D₂ hD₂f (kε ≫ jq ≫ r ≫ u') ((calc3 _ _ _ D₂ M hD₂ hMf.isLB _ _).2 (by
     rw [hD₂c, map_add (f := _), h3, zero_add, pull_wl_comp kε]))
@@ -1432,7 +1432,7 @@ theorem smallLift_of_tanLift : ∀ (S : Scheme.{0}) [IsAffine S] (A : Over S) [G
       inferInstanceAs (IsIso (Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk (Ideal.span {e})))))
     have : IsIso ((Over.forget S).map (ptMap s (Ideal.Quotient.mk (Ideal.span {e})))) := this
     have : IsIso (ptMap s (Ideal.Quotient.mk (Ideal.span {e}))) := isIso_of_reflects_iso _ (Over.forget S)
-    have h' := (GlobalTheory.T.additiveLineBundleFamily_calculus_rules S A).2.2.2.1 _ _ _ _ N M _ _ (inv (ptMap s (Ideal.Quotient.mk (Ideal.span {e}))))
+    have h' := (_root_.GlobalTheory.FamCalc.famCalc S A).2.2.2.1 _ _ _ _ N M _ _ (inv (ptMap s (Ideal.Quotient.mk (Ideal.span {e}))))
       hN.isLB hM.isLB h
     rw [IsIso.inv_hom_id] at h'
     exact ⟨_, h'⟩
@@ -1673,7 +1673,7 @@ theorem tanLift_of_fieldChart : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A], Is
     ∀ (U : Over S) [LocallyOfFiniteType U.hom] (M : LB (A ⊗ U).left), Fam A M → Inj A M → FieldChart A M →
       TanLift A M := by
   intro S A _ hA U _ M hM hInj hFC k _ s N hN u₀ h₀
-  obtain ⟨hpull, -, -, hcomp, hev⟩ := GlobalTheory.T.additiveLineBundleFamily_calculus_rules S A
+  obtain ⟨hpull, -, -, hcomp, hev⟩ := _root_.GlobalTheory.FamCalc.famCalc S A
   obtain ⟨ψ, hψ₁, hψ₂, hflat, hsurj⟩ :=
     GlobalTheory.T.dualNumber_fieldHom_flat_surjective k (AlgebraicClosure k) (algebraMap k (AlgebraicClosure k))
 

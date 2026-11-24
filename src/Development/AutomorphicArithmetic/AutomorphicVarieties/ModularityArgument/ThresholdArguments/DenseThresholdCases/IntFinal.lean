@@ -20,7 +20,9 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsDvr
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.IntegralDeterminants.PlaceHom
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SatakeParametersOfTwist
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIrreducibleFixed
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsGoodConjSelfDualTwistSplitUnramifiedStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsWeight
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsSpanFormsNeBot
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsGoodConjSelfDualTwistSplitUnramified
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.CrystallineBaseChange.CqStmt
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.IntegralDeterminants.SlopeAllOf
 public import Development.AutomorphicArithmetic.Foundations.Convolution.SphericalIdeles.QuadLift
@@ -836,7 +838,7 @@ end UpperTheory.V.Z.Int
 theorem UpperTheory.V.Z.Int.slopeGood :
     UpperTheory.V.Z.Int.SlopeOn .csd → UpperTheory.V.Z.Int.SlopeOn .good := by
   intro hC l _ ι E _ _ _ l' n hl' hn π χ hS w hw B hB lo hi hW b hb
-  obtain ⟨κ, m, hκ, hu, hS'⟩ := GlobalTheory.T.exists_good_conjSelfDual_twist_split_unramified GlobalTheory.automorphicFormsFiniteGL E l' n hn π χ hS w hw
+  obtain ⟨κ, m, hκ, hu, hS'⟩ := _root_.GlobalTheory.GoodCsdTwist.exists_goodCsd_twist GlobalTheory.automorphicFormsFiniteGL E l' n hn π χ hS w hw
   have hB' : (CG.mk (π.twist κ)).HasSat w (B.map (· * κ.val w)) := by
     rw [CG.hasSat_mk] at hB ⊢
     exact GlobalTheory.SphGal.hasSatGL_twist E n π κ w B hu hB

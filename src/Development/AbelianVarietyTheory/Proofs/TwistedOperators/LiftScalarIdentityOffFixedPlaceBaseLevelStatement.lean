@@ -14,8 +14,10 @@ public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilGramS
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DcOpCommOfCommute
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelOperatorsAtPrimeOffLevelDatum
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeisenbergOperatorFixThetaDatumAwaySplitPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeisenbergOrientedFiniteFixesFockPolynomialVectoStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeisenbergOperatorFixThetaDatumAwaySplitPlaces
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeisenbergOrientedFiniteFixesFockPolynomialVecto
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsLocalVacuumOfIsLatticeVacuumCoprimeLevelStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBoundUnitary
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsThetaPForms
@@ -25,7 +27,7 @@ public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaFormEigenMemSinglePart
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CardKerSubspacesAndHeckePolyOfConvolution
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalThetaCorrespondenceInertPlaceOfHoweStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalThetaCorrespondenceInertPlaceOfHowe
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaVacuumHeckeIdentitySplitPlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjugateTransposeMajorant
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InnerConjFormsEqCsumAt
@@ -90,8 +92,9 @@ import Formalism.LocalToGlobal.IndefiniteReal.ExistsChosenExtremalVector
 import Formalism.LocalToGlobal.IndefiniteReal.PartsOrth
 import Formalism.QuotientMetricDivisors.Statement
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlacesStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotentsStatement
+import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
+import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.Polynomial.Basic
@@ -321,9 +324,9 @@ theorem adForms_spherical (β : GL (Fin V.rank) (Lev.EAf D)) (Λ : Submodule (�
     {F : Bridge.Gf V → W} (hF : F ∈ Bridge.AdForms (Bridge.ratF V) ρ (levEnv V β L).J χ') (c : List ℤ →₀ ℂ) :
     (∀ k ∈ hyp V P, ∀ h, F (h * (finHom V).rangeRestrict k) = F h) ∧
       hkF V P c F ∈ Bridge.AdForms (Bridge.ratF V) ρ (levEnv V β L).J χ' := by
-  obtain ⟨e, f, hP⟩ := (GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.1 P
-  have hPf := (GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 P e f hP
-  obtain ⟨hJf, hχf, hsplit⟩ := (GlobalTheory.T.level_hyperspecial_trivialCharacter_splits_off_places V β Λ N (flag1L L) hB).2 P e f hP hN hPP
+  obtain ⟨e, f, hP⟩ := (_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.1 P
+  have hPf := (_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 P e f hP
+  obtain ⟨hJf, hχf, hsplit⟩ := (_root_.GlobalTheory.LevSplit.lev_split V β Λ N (flag1L L) hB).2 P e f hP hN hPP
   have hFl := (adForms_iff (Bridge.ratF V) ρ (levEnv V β L).J χ' F).1 hF
   have hinv : ∀ k ∈ hyp V P, ∀ h, F (h * (finHom V).rangeRestrict k) = F h := by
     rintro k ⟨hkK, e', f', hP', hk⟩ h
@@ -457,8 +460,8 @@ theorem isVacAt_ptAt : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T0 : T
       (by rw [mul_one, Nat.cast_one]; exact fun h => P.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 h)) f₀ hvac.theta hvac.lat
   refine ⟨hV.theta φ, fun e' f' h' u hu hh => ?_⟩
   obtain ⟨h1, h2⟩ := half_orth h' hh
-  refine GlobalTheory.T.heisenbergOriented_finite_fixes_fockPolynomialVectors R.ψ R.θ _ _ hθ _ _ _ _ f hV.theta u h1 ?_ φ
-  refine GlobalTheory.T.heisenbergOperator_fix_thetaDatum_away_splitPlaces R.ψ _ _ _ _ _ f₀ _ f hth u (fun a b => ?_) (h0.2 e' f' h' u hu hh)
+  refine _root_.GlobalTheory.Hk3.FiniteHeis.heisO_pureTensorO_of_finite R.ψ R.θ _ _ hθ _ _ _ _ f hV.theta u h1 ?_ φ
+  refine _root_.GlobalTheory.Hk3.heisO_fix_thetaAt_off R.ψ _ _ _ _ _ f₀ _ f hth u (fun a b => ?_) (h0.2 e' f' h' u hu hh)
   have := h2 _ e he (fun PP hPP => hP PP (Or.inl (by simpa using hPP))) a b
   rw [cA_cA]
   exact this.symm
@@ -761,7 +764,7 @@ theorem loc_inert (hHowe : HoweUnram) (hW : IsWeilDatumO R.ψ (Vc D i) (Wc D i) 
       (R.HW i σ).e (th y') = postOn (R.MW i σ) (hk (Wc D i) P cW) ((R.HW i σ).e (th y))) (d : List ℤ) :
     ∃ z : ℂ, ∀ u : H.H, EigF R i a (H.e u) →
       postOn (R.MW i σ) (hk (Wc D i) P (Finsupp.single d 1)) ((R.HW i σ).e (th u)) = z • (R.HW i σ).e (th u) := by
-  have hsc := GlobalTheory.T.sphericalThetaCorrespondence_inertPlace_of_howe hHowe R.ψ (Vc D i) (Wc D i) μ' (μ' * η'⁻¹) ω P hW hc hvac
+  have hsc := _root_.GlobalTheory.Hk3.CorrInert.sphCorr_of_inert hHowe R.ψ (Vc D i) (Wc D i) μ' (μ' * η'⁻¹) ω P hW hc hvac
   have hcorr := hsc.2.1
   obtain ⟨cS, hM⟩ := hcorr (Finsupp.single d 1)
   refine ⟨evC (Vc D i) P (a P) (dualC cS), fun u hu => ?_⟩

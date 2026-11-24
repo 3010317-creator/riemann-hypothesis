@@ -5,10 +5,10 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.SemistableReduc
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisedModel
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsNormTorsionSumShortestVectorEqStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTestMatch
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsWeightZeroSectionUnitIntegralTorsionPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantBoundedByShortestVectorStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisedModelTorsionLabelsExistStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UnitThetaConstantsGenerateIntegralTorsionStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsWeightZeroSectionUnitIntegralTorsionPoint
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantBoundedByShortestVector
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisedModelTorsionLabelsExist
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UnitThetaConstantsGenerateIntegralTorsion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +46,7 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.WeightSpaceValuesIntegralTorsionBoundShortestVecStatement
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.WeightSpaceValuesIntegralTorsionBoundShortestVec
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisedModelStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaSystemHasTestsOfRealPoint
@@ -91,13 +91,13 @@ theorem hasTests_of_real : GlobalTheory.Published.SemistableReductionSt → ThmU
         ∀ x ∈ Fs, x ∈ Set.range (algebraMap (FractionRing u.V) (PadicAlgCl p)) := by
     intro p _ y₀ Fs hy
     obtain ⟨u, hu⟩ := GlobalTheory.T.exists_uniformised_model' hS hU hL.polBaseChange o Ω S ρ p y₀ Fs
-    obtain ⟨l⟩ := GlobalTheory.T.uniformisedModel_torsionLabels_exist hL hL2 hT o Ω S ρ p y₀ u hy
+    obtain ⟨l⟩ := _root_.GlobalTheory.ZH.labels_exist hL hL2 hT o Ω S ρ p y₀ u hy
     obtain ⟨τ, hτ⟩ := exists_test_match o Ω S ρ p y₀ u l
-      (GlobalTheory.T.thetaConstant_bounded_by_shortestVector hL hL2 hT o Ω S ρ p y₀ u l hy)
-      (GlobalTheory.T.unitThetaConstants_generate_integralTorsion hL hL2 hT o Ω S ρ p y₀ u l hy)
-      (GlobalTheory.T.weightSpace_values_integralTorsion_bound_shortestVector hL hL2 hT o Ω S ρ p y₀ u l hy)
+      (_root_.GlobalTheory.ZH.TestVal.main hL hL2 hT o Ω S ρ p y₀ u l hy)
+      (_root_.GlobalTheory.UnitTheta.closure_unit_theta hL hL2 hT o Ω S ρ p y₀ u l hy)
+      (_root_.GlobalTheory.ZH.WeightBound.main hL hL2 hT o Ω S ρ p y₀ u l hy)
       (GlobalTheory.T.exists_norm_torsionSum_shortestVector_eq hL hL2 hT o Ω S ρ p y₀ u l hy)
-      (GlobalTheory.T.exists_weightZeroSection_unit_integralTorsionPoint hL hL2 hT o Ω S ρ p y₀ u l hy)
+      (_root_.GlobalTheory.ZH.WeightZeroUnit.main hL hL2 hT o Ω S ρ p y₀ u l hy)
     exact ⟨u, l, τ, hτ, hu⟩
   refine ⟨?_, key⟩
   intro p _ y hy

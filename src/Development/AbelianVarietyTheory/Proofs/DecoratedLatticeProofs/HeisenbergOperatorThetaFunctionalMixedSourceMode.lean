@@ -2,9 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedModelTargetHeisenbergAnisotropicPart
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicMatrixQuotientPeriodicIntegralContinuousPaStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittDecompositionMixedCoordsRankZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittSourceMixedCoordHeisenbergRestrictionStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicMatrixQuotientPeriodicIntegralContinuousPa
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittDecompSymplInclIsotropicInclAnisotropic
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittDecompositionMixedCoordsRankZero
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.AdjointIsotropicDecomposition
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittSourceMixedCoordHeisenbergRestriction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisThetaLaws
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaSeriesSummableOnCovolumeDomain
 import Mathlib.Algebra.Order.Floor.Extended
@@ -44,8 +47,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.AdjointIsotropicDecomposition
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
 
 @[expose] public section
 
@@ -69,7 +70,7 @@ theorem heis_mixS : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D �
   · have hX : Continuous (d.extX T) := continuous_id.matrix_mul continuous_const
     have hY : Continuous (d.extY T) := continuous_id.matrix_mul continuous_const
     have h0 : Continuous (d.ext0 T) := continuous_id.matrix_mul continuous_const
-    have K := GlobalTheory.T.adelicMatrixQuotient_periodicIntegral_continuous_param D T.rank ρ v (Mx D T.rank ρ × WO S₀ T)
+    have K := _root_.GlobalTheory.Unf.ParCont.parCont D T.rank ρ v (Mx D T.rank ρ × WO S₀ T)
       (fun a p => heisO ψ S T (d.extY T a) (heisO ψ S T (d.extX T p.1) (heisO ψ S T (d.ext0 T p.2) f)) 0) ?_
       (fun γ hγ x p => d.integrandS_periodic hf p.1 p.2 γ hγ x)
     · exact K.2.1
@@ -86,7 +87,7 @@ theorem heis_mixS : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D �
   · have hg0 : heisO ψ S T (d.ext0 T w) f 0 = f (d.ext0 T w) := by
       simp only [heisO, symplOH_zero_left, AddChar.map_zero_eq_one, one_mul, zero_add]
     rcases Nat.eq_zero_or_pos ρ with rfl | hρ
-    · have hz := (GlobalTheory.T.wittDecomposition_mixedCoords_rank_zero D ψ).1 S S₀ T d v.μ v.𝓕 v.covol f
+    · have hz := (_root_.GlobalTheory.Unf.mixRankZero D ψ).1 S S₀ T d v.μ v.𝓕 v.covol f
       haveI : Subsingleton (Matrix (Fin T.rank) (Fin 0) D.host.E) := ⟨fun a b => Matrix.ext fun _ j => j.elim0⟩
       have h1 : ∀ x : Matrix (Fin T.rank) (Fin 0) D.host.E, (_root_.I195MixedCoordinates.source d) T ψ v.μ v.𝓕 f (rat x) w = f (d.ext0 T w) :=
         fun x => congrFun (hz (rat x)) w
@@ -94,7 +95,7 @@ theorem heis_mixS : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D �
         fun _ => f (d.ext0 T w) from funext h1]
       exact hasSum_single (f := fun _ : Matrix (Fin T.rank) (Fin 0) D.host.E => f (d.ext0 T w))
         (0 : Matrix (Fin T.rank) (Fin 0) D.host.E) fun b hb => absurd (Subsingleton.elim b 0) hb
-    · obtain ⟨hsplit, hrat, hYe, hXe, -, hres, -, -, -⟩ := GlobalTheory.T.wittSourceMixedCoord_heisenbergRestriction D ψ S S₀ T ρ d
+    · obtain ⟨hsplit, hrat, hYe, hXe, -, hres, -, -, -⟩ := _root_.GlobalTheory.Bridge.heis_bridge D ψ S S₀ T ρ d
       have hg : IsThetaFunO ψ S T (heisO ψ S T (d.ext0 T w) f) :=
         (GlobalTheory.HeisThetaLaws.heis_theta_laws D ψ hψ S T).1 _ _ hf
       have hcov : IsCovolOne (GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.ratMx D T.rank ρ) v.μ v.𝓕 := hrat ▸ v.covol

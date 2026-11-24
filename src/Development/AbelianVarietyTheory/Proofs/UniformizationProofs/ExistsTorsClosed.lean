@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHoldStatement
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTorsionIdentificationWithPairingStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTorsionIdentificationWithPairing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,6 +53,6 @@ namespace GlobalTheory.TorsionIso
 
 theorem exists_tors_closed :
     AllUF fun {R} _ _ {I} {D} {A} {G} _ _ U F _ _ => ∀ (k : ℕ), 1 ≤ k → ∃ f, Tors U.toUnifPre F k f :=
-  GlobalTheory.T.uniformisation_torsion_identification_with_pairing GlobalTheory.T.all_uniformization_laws_hold
+  _root_.GlobalTheory.TorsionIso.torsion_eq _root_.GlobalTheory.firstFiveLaws
 
 end GlobalTheory.TorsionIso

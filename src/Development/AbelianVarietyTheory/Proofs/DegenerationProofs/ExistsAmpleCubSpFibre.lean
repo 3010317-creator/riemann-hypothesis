@@ -5,7 +5,9 @@ public import Development.AbelianVarietyTheory.Definitions.Degenerations.PlOrdSo
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.SemistableFin
 public import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.EqOfAgreeOnTorsion
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSabExtension
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.CubeTheoremAndSectionsFiniteGrowthAbelianVarietyStatement
+public import Mathlib.Tactic.ENatToNat
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThetaVV
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.CubeTheoremAndSectionsFiniteGrowthAbelianVariety
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsHasProjectiveDimensionLEOfResidueField
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsSecValueIsUnit
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsUniqueGeneratorExtendDiscreteValuationRing
@@ -278,7 +280,7 @@ theorem cube_model {R K : Type} [CommRing R] [IsDomain R] [IsDiscreteValuationRi
   refine (pull_cubeCls_push h (fun i => y (x3 G i)) (x3 G) u (fun i => hy _) c).trans (cube_pts ?_ _)
   obtain ⟨M, hM, eM⟩ := cls_surj (CechPic.pull φ c)
   rw [← eM, ← cls_cube _ hM]
-  exact (cls_eq_zero_iff _).2 (GlobalTheory.T.cube_theorem_and_sections_finite_growth_abelianVariety.1 _ P M hM)
+  exact (cls_eq_zero_iff _).2 (_root_.GlobalTheory.AbLaw.CubeAssembly.cube_and_sections.1 _ P M hM)
 
 end GlobalTheory.SS.AmpCub
 

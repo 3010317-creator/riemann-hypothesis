@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteUnitaryClassSetFinite
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenProductOfLocalLevelsUnitaryStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenProductOfLocalLevelsUnitary
 import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.ClassCountStab
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -114,4 +114,4 @@ end GlobalTheory.BCT.ClassFinLev
 open GlobalTheory.BCT.ClassFinLev in
 theorem GlobalTheory.BCT.finite_doubleCoset_globLev : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ n : ℕ, 1 ≤ n → ∀ (S : Set (Pl E)), IsSection S → ∀ (K' : ∀ w : Pl E, Subgroup (UL n w)), IsLevelFam (fun w : Pl E => MonoidHom.id (UL n w)) (KL n) K' → Finite (DoubleCoset.Quotient (ratFinU E n : Set (finU (E := E) (n := n))) (globLev S K' : Set (finU (E := E) (n := n)))) := by
   intro E _ _ _ hE n _ S _ K' hK
-  exact finite_doubleCoset_of_isOpen _ (GlobalTheory.T.isOpen_productOfLocalLevelsUnitary E hE n S K' hK)
+  exact finite_doubleCoset_of_isOpen _ (_root_.GlobalTheory.BCT.isOpen_globLev E hE n S K' hK)

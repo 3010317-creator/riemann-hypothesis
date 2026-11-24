@@ -5,7 +5,7 @@ public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharacterPadicBasicProperties
 public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.CrystallineSubrepresentation
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AcrisTorsionFreeComplete
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AlgClosureTensorBcrisToBdRInjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AlgClosureTensorBcrisToBdRInjective
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BcrisRegularOfTensorInj
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineFormalismOfRegular
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ResBound
@@ -141,7 +141,7 @@ theorem quot_tensor_dual_crys : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (A
       GlobalTheory.IndefiniteRowSideFullHecke.CrystallineSubrepresentation.LocDualCrys l P := by
   intro l _ P AI hs
   have h := fontaineFormalism_of_regular l P AI
-    (fun C => ⟨GlobalTheory.T.algClosure_tensor_bcris_to_bdR_injective l C, _root_.GlobalTheory.MemLoc.regular_of_tensorInj l C (GlobalTheory.T.algClosure_tensor_bcris_to_bdR_injective l C)⟩) hs
+    (fun C => ⟨_root_.GlobalTheory.MemLoc.TensorInj.tensorInj l C, _root_.GlobalTheory.MemLoc.regular_of_tensorInj l C (_root_.GlobalTheory.MemLoc.TensorInj.tensorInj l C)⟩) hs
   exact ⟨h.2.2.2.2.1, h.2.2.2.2.2.2.1, h.2.2.2.2.2.2.2.1⟩
 
 end GlobalTheory.RegularRing

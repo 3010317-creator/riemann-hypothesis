@@ -5,7 +5,9 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForm
 public import Mathlib.FieldTheory.Galois.Abelian
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChevalleyUnits
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLocalExtensionOfFiniteIndexWeilSubgroupStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GlobalArtinLocalIdeleInjectiveStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.ChevalleyUnits
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GlobalArtinLocalIdeleInjective
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeilGroupRestriction
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompletionEmbeddingCompatibleClosuresStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DecompositionGroupLocalGaloisIso
@@ -13,7 +15,6 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Exist
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsWeilOfFixesStatement
 public import CompanionTheory.AutomorphicTheory.PlaceSeparation.IsOpenQuotientMapArt0
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalArtinHasNormGroups
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalEmbeddingWeilActionFiniteExtension
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalEmbeddingsTowerCompatibleStatement
 import GroundTheory.LocalFields.LocalArtinMap
@@ -108,7 +109,7 @@ variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAl
 
 theorem art_inj {art : Ideles E →* Gab E Ω} (ha : IsGlobalArtin art) :
     Function.Injective fun x : (w.adicCompletion E)ˣ => art (localIdele E w x) :=
-  GlobalTheory.T.globalArtin_localIdele_injective GlobalTheory.Published.chevalleyUnits' E Ω art ha w
+  _root_.GlobalTheory.ArtinLocalInj.artin_localIdele_injective GlobalTheory.Published.chevalleyUnits' E Ω art ha w
 
 theorem exists_inverse (h : IsPlaceOver A w) {art : Ideles E →* Gab E Ω} (ha : IsGlobalArtin art) :
     ∃ a : Weil h →* (w.adicCompletion E)ˣ, Function.Surjective a ∧

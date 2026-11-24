@@ -51,7 +51,8 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.AbelianProjectiveBaseChange
-import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.NonemptyPerfectSectionsComplexOfNoetherianStatement
+import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.NonemptyPerfectSectionsComplexOfNoetherian
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.GtActIffEqGtSmul
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AdicSumSectionsOfFiniteSumsOnThickenings
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CubNMul
@@ -240,7 +241,7 @@ theorem sumF_field : LL → FieldD fun {R} _ _ {I} D F _ _ => ∀ (K : Type) [Fi
   have := hR.1
   have := D.toPre.P.isAb.smooth
   have hL := D.toPre.P.isLB
-  obtain ⟨P⟩ := GlobalTheory.T.nonempty_perfectSectionsComplex_of_noetherian R _ D.toPre.P.A.hom inferInstance
+  obtain ⟨P⟩ := _root_.GlobalTheory.AbLaw.nonempty_perf_of_noetherian R _ D.toPre.P.A.hom inferInstance
     (GlobalTheory.AbProj.isProjBy_of_isPullback D.toPre.P (IsPullback.id_horiz _)) _ (LB.isLB_linComb hL φ ε)
   choose v hv hv' using fun i => exists_vec P (n i)
   obtain ⟨v₀, hv₀, hv₀'⟩ := exists_vec P n₀

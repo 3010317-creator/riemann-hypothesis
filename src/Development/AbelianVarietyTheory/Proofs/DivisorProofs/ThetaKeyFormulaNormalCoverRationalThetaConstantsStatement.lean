@@ -21,12 +21,12 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.UnifAlong
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HvHolds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanExistenceOfComplexIsomorphicFieldStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegenerationValuesNormsEqUniformizerZpowStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAbelianKeyValueNormOneStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAbelianKeyValueNormOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdaptedLieBasisTorusExtensionModelStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDegenerationDataValuesUltrametricStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralFormParameterOfDiscreteNormsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsoCancelPulledBundlesGermsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKeyDatumBaseChangeThetaJetsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKeyDatumBaseChangeThetaJets
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRescaledIsoPreservingRigidificationStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionTransportAlongGeneratingIsoStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSymplecticLevelAlgClosedCharZeroStatement
@@ -45,7 +45,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionValue
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymmetricThetaTranslatesExpandSeriesFamiliesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentVectorSectionValueEqExpansionSumStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKeyRuleLieBasisChangeUnitFactorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKeyRuleScaleSectionPowEightStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKeyRuleScaleSectionPowEight
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTranslateTermsJetsBoundedStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionSymplecticLabelsOfLevelStructureStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusExtDualNumberTermValueSmulStatement
@@ -66,8 +66,6 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalPol
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionNonzeroOnEveryFibreLocalFormBaseChangeStatement
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.CubePullbacks.CubePull
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompleteDvrSplitExt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKeyDatumAbelianLocusPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KeyDatumFibreOfComposableBaseChangeStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KeyDatumPullbackBaseChangeLieBasisStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KeyFormulaUnitOverNormalBaseOfFamilyUnitOfTraits
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleIsoOfCompatibleRationalLocalUnits
@@ -79,12 +77,12 @@ public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ValRPull
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsClosedImmersionIffPullRatio
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsProjectiveSpaceMapOfModelHasDivStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasThetaConstantsTwoLevelsMoveCartesianStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasThetaConstantsTwoLevelsMoveCartesian
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelHasDivOfGenericPointProjectiveCoordsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelSemiAbelianRelDimCotangentVectorBundleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipallyPolarisedFibreIffOfGrpPullbackStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipallyPolarisedFibreIffOfGrpPullback
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaCoordinatesSectionExistsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniversalTripleFibrePrincipallyPolarisedDimensioStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniversalTripleFibrePrincipallyPolarisedDimensio
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -150,10 +148,12 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.T
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.CanonGenIsGen
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SymplecticGenerators.StTransl
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationValuesIntOfAdmissibleBaseStatement
+import Development.AbelianVarietyTheory.Definitions.Degenerations.CharZeroOfIsPrimitiveRoot
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationValuesIntOfAdmissibleBase
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespond
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionPairingValuesOfFamiliesValues
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisationGenericFibreCartesianToModelBundleStatement
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsRigidificationPullbackCompatibleIso
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisationGenericFibreCartesianToModelBundle
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsAbsoluteValueOfIsDiscreteValuationRing
 import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Algebra.Ring.IsFormallyReal
@@ -550,11 +550,11 @@ theorem norm_key_eq_one : ∀ κ : Rule, Rule4 κ → ∀ (V : Type) [CommRing V
   choose v' hv'o _ using fun j => (hvec j).2.1
   have hyAs : ∀ j, yA j ≫ (snd (TFK (R := V) C) x.P.A).left =
       spMap (dualMap (algebraMap (FractionRing V) C)) ≫ (v' j).left := fun j => (hvec j).2.2 (v' j) (yA j) (hv'o j) (hyA j)
-  obtain ⟨-, -, -, hgp, -⟩ := GlobalTheory.T.uniformisation_generic_fibre_cartesian_to_model_bundleIso V _ D x.P G U.toUnifPre
+  obtain ⟨-, -, -, hgp, -⟩ := _root_.GlobalTheory.Ex.GenericFibre.exists_isoData V _ D x.P G U.toUnifPre
   obtain ⟨hv', u, hu⟩ := GlobalTheory.T.thetaKeyRule_lieBasisChange_unit_factor κ hHom V (FractionRing V) (algebraMap V (FractionRing V)) x G _ hgp y y' v' hy hy' hyv hv'o
   set x' : KeyIn (FractionRing V) := ⟨x.P, x.g_pos, x.rig, x.rig_gen, x.th, x.th_ne, v', hv'⟩ with hx'
 
-  obtain ⟨xC, hgC, io, hPB, hW, hJ⟩ := GlobalTheory.T.exists_keyDatumBaseChange_thetaJets (FractionRing V) C (algebraMap (FractionRing V) C) x'
+  obtain ⟨xC, hgC, io, hPB, hW, hJ⟩ := _root_.GlobalTheory.MBLow.exists_keyPB_thJet (FractionRing V) C (algebraMap (FractionRing V) C) x'
   have hκC : (κ C xC : C) = algebraMap (FractionRing V) C (κ (FractionRing V) x') := hFun _ _ _ x' xC hPB
   obtain ⟨ζ, ⟨lev⟩⟩ := GlobalTheory.T.exists_symplecticLevel_algClosed_charZero C xC.P (m ^ 2) (by omega)
   obtain ⟨hprim, hadd, hinj, hsurj, hweil⟩ :=
@@ -600,12 +600,12 @@ theorem norm_key_eq_one : ∀ κ : Rule, Rule4 κ → ∀ (V : Type) [CommRing V
   have hJC := hJ m th _ pt yA (fun a => Sf a j₁) Ss hOn (fun j => ⟨(hyA j).1, hyAs j⟩) hTJ
   have hio : (fun a => io (pt a)) = levelPoint lev hgC := funext fun a => io.apply_symm_apply _
   rw [hio] at hJC
-  obtain ⟨th'', hth'', hsc, hJsc⟩ := GlobalTheory.T.thetaKeyRule_scale_section_pow_eight κ hHom C xC c⁻¹ (inv_ne_zero hc)
+  obtain ⟨th'', hth'', hsc, hJsc⟩ := _root_.GlobalTheory.MBLow.ScaleJet.scale_key κ hHom C xC c⁻¹ (inv_ne_zero hc)
   have hJ'' := hJsc x.P.g hgC m _ (levelPoint lev hgC) _ _ hJC
   set x'' : KeyIn C := ⟨xC.P, xC.g_pos, xC.rig, xC.rig_gen, th'', hth'', xC.v, xC.basis⟩ with hx''
 
   have hadm : AdmBase V (IsLocalRing.maximalIdeal V) := ⟨inferInstance, inferInstance, inferInstance, hcomp⟩
-  obtain ⟨q, hq⟩ := GlobalTheory.T.degenerationValues_int_of_admissibleBase V _ hadm D C hCE N ν hInt
+  obtain ⟨q, hq⟩ := _root_.GlobalTheory.Ex.IntVal.main V _ hadm D C hCE N ν hInt
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible V
   obtain ⟨hrg, hdisc⟩ := GlobalTheory.T.degenerationValues_norms_eq_uniformizer_zpow V ϖ hϖ D C hCE N ν hInt
   have hϖm : ϖ ∈ IsLocalRing.maximalIdeal V := (IsLocalRing.mem_maximalIdeal _).2 hϖ.not_isUnit
@@ -624,7 +624,7 @@ theorem norm_key_eq_one : ∀ κ : Rule, Rule4 κ → ∀ (V : Type) [CommRing V
     (le_abs_self _).trans ((Finset.single_le_sum (f := fun j => |bd a j|) (fun _ _ => abs_nonneg _)
       (Finset.mem_univ j)).trans (Finset.single_le_sum (f := fun a => ∑ j, |bd a j|)
         (fun _ _ => Finset.sum_nonneg fun _ _ => abs_nonneg _) (Finset.mem_univ a)))
-  obtain ⟨k₀, hBK, hk₀⟩ := GlobalTheory.T.exists_abelianKeyValue_norm_one κ hR4 V D.toPre C hCE N ν hInt vB hAd.1
+  obtain ⟨k₀, hBK, hk₀⟩ := _root_.GlobalTheory.MBLow.AbKey.exists_bKey κ hR4 V D.toPre C hCE N ν hInt vB hAd.1
   have hAF := GlobalTheory.T.archimedeanExistence_of_complex_isomorphic_field κ hFun (GlobalTheory.T.keyRule_complex_existence_jets_key_value κ hR4)
   obtain ⟨ε, hε, hAε⟩ := hAF V D.toPre D.psi_even D.tau_bimult C e N ν x.P.g r m (m ^ 2) x.g_pos hmOdd dvd_rfl β ζ Q hQL
     s' (fun a => ⟨ff a, hs'V a, (hfam a).2.2.2.1⟩) vB bX σ gm hAd k₀ hBK
@@ -1304,14 +1304,14 @@ theorem key_unit_normal (κ : Rule) (hR : Rule4 κ) (A : Type) [CommRing A] [IsD
     isIntegrallyClosed_of_isLocalization (Localization.Away f) (Submonoid.powers f) hle
   have hinj : Function.Injective (algebraMap A (Localization.Away f)) := IsLocalization.injective _ hle
   haveI : CharZero (Localization.Away f) := charZero_of_injective_algebraMap hinj
-  obtain ⟨xB, hgB, hkB⟩ := GlobalTheory.T.exists_keyDatum_abelianLocus_point A (Localization.Away f) (algebraMap A _) t.G L σ x.P.g y x.g_pos t.semi hsm hopen
+  obtain ⟨xB, hgB, hkB⟩ := _root_.GlobalTheory.KeyDatumAb.exists_keyOn A (Localization.Away f) (algebraMap A _) t.G L σ x.P.g y x.g_pos t.semi hsm hopen
     hsym hpol hy hσ hfab
   obtain ⟨u, hu⟩ := hR.2.2.2 (Localization.Away f) xB
   have hfu : IsUnit ((algebraMap A (FractionRing A)) f) :=
     isUnit_iff_ne_zero.2 ((map_ne_zero_iff _ (IsFractionRing.injective A (FractionRing A))).2 hf0)
   have hc := IsLocalization.Away.lift_comp (S := Localization.Away f) f hfu
   have hpbx : KeyPB x xB (IsLocalization.Away.lift (S := Localization.Away f) f hfu) :=
-    GlobalTheory.T.keyDatum_fibre_of_composable_baseChange A (Localization.Away f) (FractionRing A) (algebraMap A _) _ t.G L σ x.P.g y xB x hgB rfl hkB
+    _root_.GlobalTheory.KeyEven.keyPB_of_keyOn_comp A (Localization.Away f) (FractionRing A) (algebraMap A _) _ t.G L σ x.P.g y xB x hgB rfl hkB
       (by rw [hc]; exact hkey0)
   have hval := hu _ _ x hpbx
   have trait : ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.LN.CDvr V → #V ≤ 𝔠 →
@@ -1335,10 +1335,10 @@ theorem key_unit_normal (κ : Rule) (hR : Rule4 κ) (A : Type) [CommRing A] [IsD
       rw [← hh]
       rintro _ ⟨p, rfl⟩
       exact hfab ⟨spMap h p, rfl⟩
-    obtain ⟨xV, hgV, hkV⟩ := GlobalTheory.T.exists_keyDatum_abelianLocus_point A (FractionRing W) ((algebraMap W _).comp (g.comp a)) t.G L σ x.P.g y x.g_pos
+    obtain ⟨xV, hgV, hkV⟩ := _root_.GlobalTheory.KeyDatumAb.exists_keyOn A (FractionRing W) ((algebraMap W _).comp (g.comp a)) t.G L σ x.P.g y x.g_pos
       t.semi hsm hopen hsym hpol hy hσ hrange
     have hpbV : KeyPB xV xB h :=
-      GlobalTheory.T.keyDatum_fibre_of_composable_baseChange A (Localization.Away f) (FractionRing W) (algebraMap A _) h t.G L σ x.P.g y xB xV hgB hgV hkB
+      _root_.GlobalTheory.KeyEven.keyPB_of_keyOn_comp A (Localization.Away f) (FractionRing W) (algebraMap A _) h t.G L σ x.P.g y xB xV hgB hgV hkB
         (by rw [hh]; exact hkV)
     have hvalV := hu _ h xV hpbV
     haveI : IsCommMonObj ((Over.pullback (spMap a)).obj t.G) := (pullT (spMap a) t).comm
@@ -1724,12 +1724,12 @@ theorem hasTh_of_sabMap (mm : SABMap t' t f) (m : ℕ) {K : Type} [Field K] (x :
     (c : Fin N → K) :
     HasTh t'.G t'.PP.L t'.PP.rig m x c ↔ HasTh t.G t.PP.L t.PP.rig m (x ≫ f) c := by
   rw [hasTh_iff, hasTh_iff]
-  exact GlobalTheory.T.hasThetaConstantsTwoLevels_move_cartesian S t.G t.PP.L t.PP.rig t.PP.isLB t.PP.rigGen S' t'.G t'.PP.L t'.PP.rig f mm.φ t'.PP.isLB
+  exact _root_.GlobalTheory.UMin.ThMove.hasTh₂_move S t.G t.PP.L t.PP.rig t.PP.isLB t.PP.rigGen S' t'.G t'.PP.L t'.PP.rig f mm.φ t'.PP.isLB
     t'.PP.rigGen mm.cart (GlobalTheory.ModelSum.lbIso_of_map mm) m m N N K x c c
 
 theorem polFib_of_sabMap (mm : SABMap t' t f) (g : ℕ) {R : Type} [CommRing R] (x : Sp R ⟶ S') :
     PolFib t'.G t'.PP.L g x ↔ PolFib t.G t.PP.L g (x ≫ f) :=
-  (GlobalTheory.T.principallyPolarisedFibre_iff_of_grpPullback S S' t.G t.PP.L t'.G t'.PP.L f mm.φ t.PP.isLB t'.PP.isLB mm.cart
+  (_root_.GlobalTheory.UMin.FibMove.polFib_move S S' t.G t.PP.L t'.G t'.PP.L f mm.φ t.PP.isLB t'.PP.isLB mm.cart
     (GlobalTheory.ModelSum.lbIso_of_map mm) g R x).1
 
 end Moves
@@ -1755,7 +1755,7 @@ theorem key_on_cover : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     rw [hpt]; exact (hasTh_of_sabMap Y.m m y d).1 hThO
   have hTh : HasTh t.G t.PP.L t.PP.rig m M.pt d := (hasTh_of_sabMap mt m M.pt d).2 hThY
   have hPolO : PolFib Y.oF.t.G Y.oF.t.PP.L (Module.finrank ℚ E / 2 * (Dw.p + Dw.q)) y :=
-    (polFib_of_sabMap Y.m0.toSABMap _ y).2 (GlobalTheory.T.universalTriple_fibre_principallyPolarised_dimension E H Dw l Xo c Ω _)
+    (polFib_of_sabMap Y.m0.toSABMap _ y).2 (_root_.GlobalTheory.UMin.polFib_univ E H Dw l Xo c Ω _)
   have hPolY : PolFib Y.t.G Y.t.PP.L (Module.finrank ℚ E / 2 * (Dw.p + Dw.q)) (M.pt ≫ π) := by
     rw [hpt]; exact (polFib_of_sabMap Y.m _ y).1 hPolO
   have hPol : PolFib t.G t.PP.L (Module.finrank ℚ E / 2 * (Dw.p + Dw.q)) M.pt := (polFib_of_sabMap mt _ M.pt).2 hPolY

@@ -5,7 +5,9 @@ public import Development.AbelianVarietyTheory.Definitions.KeyFormula.KeyRuleOne
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsIsGrpPullbackPow
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsIsKeyPow
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKeyPBRing
-public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.KeyDataDescendCountableSubringsStatement
+public import Development.AbelianVarietyTheory.Definitions.KeyFormula.KaRuleK
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.KeyDataDescendCountableSubrings
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ThetaKeyRuleExistsOfAlgebraicInvariants
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ThetaKeyRulePowComplex
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
@@ -66,7 +68,7 @@ theorem rule_pow : ∀ κ : Rule, Homog (fun _ => 1) κ → Funct κ → ThetaOn
     rcases Nat.eq_zero_or_pos j with rfl | h
     · omega
     · exact h
-  obtain ⟨K₀, x₀, hK₀, hx₀⟩ := (GlobalTheory.T.keyData_descend_countable_subrings GlobalTheory.firstFiveLaws.1).2 K x
+  obtain ⟨K₀, x₀, hK₀, hx₀⟩ := (_root_.GlobalTheory.KeyCountableDescent.keyIn_descends_countable GlobalTheory.firstFiveLaws.1).2 K x
   obtain ⟨σ⟩ := GlobalTheory.KeyHouse.nonempty_ringHom_complex K₀
   obtain ⟨y₀, hy₀⟩ := GlobalTheory.KeyPow.exists_isKeyPow _ x₀ j hj
   obtain ⟨x₁, hx₁⟩ := GlobalTheory.KeyPow.exists_keyPB_ring x₀ σ

@@ -7,8 +7,8 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.Multiplic
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MultiplicityVanishingAndSameParamsSubspaceStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MultiplicitySpaceSpanFullSphericalHeckeEigenpart
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsParamFunVIffIsSysParamDOfLevel
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSatakeParametersBoundedEigenfunctionStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConstMemBddAut
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSatakeParametersBoundedEigenfunction
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearIndependentOfIsParamFunV
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IdemOfIsPrimeIdem
 import Mathlib.Algebra.Order.Floor.Extended
@@ -361,7 +361,7 @@ theorem partPar : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, ForStage
     refine ⟨(Complex.continuous_conj.comp (hval u v).1), fun γ hγ g => ?_, C, fun g => ?_⟩
     · simp only [(hval u v).2.2.1 γ hγ g]
     · simpa using hC g
-  obtain ⟨B, hB, -⟩ := GlobalTheory.T.exists_satake_parameters_bounded_eigenfunction D s.V (s.J : Set (GA D s.V)) 1 c.S hsph
+  obtain ⟨B, hB, -⟩ := _root_.GlobalTheory.FinZeta.ParamBound.exists_param_bounded D s.V (s.J : Set (GA D s.V)) 1 c.S hsph
     _ hbdd (hne v hv) (hlev v) (fun P d => conj (e P d)) (hhk v)
   have hpf : ParFun c s (PiLocalization₂.val u v) B := hB
   exact ⟨B, second v B hv hpf⟩

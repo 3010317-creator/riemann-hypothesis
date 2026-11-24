@@ -8,8 +8,10 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRea
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ItEqSumKMean
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.KMeanMemKFinOfCoefFam
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SignBlockDeterminantNeZeroOfMemMaxCompact
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandraStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaVacuumCharactersRealPlacesStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.BarMatrix
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandra
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RaisingLoweringOperators
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaVacuumCharactersRealPlaces
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.VacuumFockFromSquareIntegrability
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InclTprodUpdate
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsMatchOver
@@ -160,7 +162,7 @@ theorem itW_onto_kFin : ∀ (hD : GlobalTheory.Published.DiscreteSeriesCover) (h
   intro hD hH D k a b hab hb V W M M' θ ψ hθ hC ω f hω hf It hIt
   subst hab hb
   obtain ⟨X, hX, -, -, -, -, h3, -⟩ := _root_.GlobalTheory.RealPlaceTheta.exists_record_theta hD hH
-  have hB := GlobalTheory.T.thetaModels_are_coverDiscreteSeries_of_harishChandra hD hH D
+  have hB := _root_.GlobalTheory.CoverModel.modelsAreCoverSeries_all hD hH D
 
   have hloc : ∀ τ, (kFin M τ ≤ M.sm τ ∧ kFin M' τ ≤ M'.sm τ) ∧ ∃ a a', IsKAct M τ a ∧ IsKAct M' τ a' ∧
       AbsIrr (fun X : lieAt V τ => a X) ∧ LocKer M M' τ (expS D k τ) (expT D k τ) a' := by
@@ -177,7 +179,7 @@ theorem itW_onto_kFin : ∀ (hD : GlobalTheory.Published.DiscreteSeriesCover) (h
   refine ⟨h, h', ?_⟩
 
   obtain ⟨χS, χT, hW, hexp⟩ := hω
-  have hvc : ∀ τ, _ := fun τ => GlobalTheory.T.thetaVacuumCharacters_realPlaces D V W _ _ M M' θ ψ χS χT ω f τ (expS D k τ) (expT D k τ) hθ hW
+  have hvc : ∀ τ, _ := fun τ => _root_.GlobalTheory.VacuumCharacter.vacChar D V W _ _ M M' θ ψ χS χT ω f τ (expS D k τ) (expT D k τ) hθ hW
     (hexp τ).1 (hexp τ).2 hf
   have hinj : Function.Injective (ptOf ψ θ M M' f) :=
     (GlobalTheory.VacuumFockLaws.vacuumFock_onObjects D V W _ _ M M' ψ θ hW.std hθ f hf).2.2.2.2

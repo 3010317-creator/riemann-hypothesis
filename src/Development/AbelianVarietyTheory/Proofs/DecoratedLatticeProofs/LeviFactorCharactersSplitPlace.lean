@@ -9,17 +9,16 @@ public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.GinfCS
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittSmallGroupEmbeddingMemPointwiseStabilizerIso
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorThetaFunctionalMixedSourceModeStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorThetaFunctionalMixedSourceMode
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinatesOfThetaFunctionAreThetaFunctions
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HalfSymplZeroRight
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorThetaFunctionalMixedSourceMode
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumTransportSourceRationalIsometry
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsOpenSubgroupHalfCharactersSeparate
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FourierUniquenessOfOpenSubgroup
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaRestrictionDownWittTowerSurjective
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjWeilDatumViaAdjointExchangedPair
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SkewGramHalfModule
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinatesOfThetaFunctionAreThetaFunctionsStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilOperatorsWittParabolicOriginToPointStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaEqZeroOfReal
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsTopologicalRingAE
@@ -70,12 +69,12 @@ import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittDecomp
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittSourceMixedCoordHeisenbergRestriction
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
 import Mathlib.Data.Matrix.ColumnRowPartitioned
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittSourceMixedCoordHeisenbergRestrictionStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitPlaceHalfHeisenbergInvariantFormStatement
+import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.AdjointIsotropicDecomposition
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitPlaceHalfHeisenbergInvariantForm
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Polynomial.Basic
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HalfAvgLinear, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralCompAddEquivEqSmul, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralTranslate, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymplOExtXExtY, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSplitPlaceInvariantFormOfWittCore, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSplitPlaceInvariantFormOfWittCoreStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceDeterminantsWittLeviFactor, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceDeterminantsWittLeviFactorStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LeviFactorCharactersSplitPlace
@@ -357,9 +356,9 @@ theorem half_avg_heis_inv : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStd
     have hx : IsHalf (cA D e) x.1 := (hH x.1).1 x.2
     have hxa : IsHalf (cA D e) (x.1 + a) := fun i j => by
       simp only [Matrix.add_apply, mul_add, hx i j, ha i j]
-    obtain ⟨c1, -, -, -, -⟩ := GlobalTheory.T.heisenbergOperator_thetaFunctional_mixedSourceModel D ψ hψ S S₀ T ρ d v g₁ hg₁t
-    obtain ⟨-, -, c3, -, -⟩ := GlobalTheory.T.heisenbergOperator_thetaFunctional_mixedSourceModel D ψ hψ S S₀ T ρ d v g₂ hg₂t
-    obtain ⟨-, c2, -, -, -⟩ := GlobalTheory.T.heisenbergOperator_thetaFunctional_mixedSourceModel D ψ hψ S S₀ T ρ d v f hf
+    obtain ⟨c1, -, -, -, -⟩ := _root_.GlobalTheory.HeisMixSource.heis_mixS D ψ hψ S S₀ T ρ d v g₁ hg₁t
+    obtain ⟨-, -, c3, -, -⟩ := _root_.GlobalTheory.HeisMixSource.heis_mixS D ψ hψ S S₀ T ρ d v g₂ hg₂t
+    obtain ⟨-, c2, -, -, -⟩ := _root_.GlobalTheory.HeisMixSource.heis_mixS D ψ hψ S S₀ T ρ d v f hf
     have e1 : (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 (heisO ψ S T u f) x.1 = (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 g₁ (x.1 + a) := by
       rw [hsplit]; exact c1 x.1 a
     have e2 : (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 g₁ (x.1 + a) = heisO ψ S₀ T w ((_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 g₂ (x.1 + a)) := c3 (x.1 + a) w
@@ -749,13 +748,13 @@ theorem exists_form (ψ : AddChar (AF D.host.F) ℂ) (S S₀ T : HSp D) (ρ : �
       (∃ f, IsThetaFunO ψ S T f ∧ ℓ f ≠ 0) ∧
       ∀ a g, SuppAt e S₀ g → ∀ x₀, IsDetAt e S₀ g x₀ → ∃ R : ℝ, 0 < R ∧ ∀ f, IsThetaFunO ψ S T f →
         ℓ (om (d.levi a * d.emb0 g, 1) f) = (R : ℂ) * ((α a : ℂ) * (ξ g : ℂ) * (splitFacO χS χT x₀ 1 : ℂ)) * ℓ f := by
-  obtain ⟨ℓ₀, hinv₀, f₀, hf₀, hne₀⟩ := GlobalTheory.T.exists_split_place_half_heisenberg_invariant_form D ψ hω.std S₀ T e he
+  obtain ⟨ℓ₀, hinv₀, f₀, hf₀, hne₀⟩ := _root_.GlobalTheory.HalfCoinv.exists_invariant_form D ψ hω.std S₀ T e he
   obtain ⟨ℓ, hinv, hne, hcmp⟩ := GlobalTheory.T.exists_splitPlace_invariantForm_of_wittCore D ψ hω.std S S₀ T ρ d μ 𝓕 hμ e he ℓ₀ hinv₀ ⟨f₀, hf₀, hne₀⟩
   refine ⟨ℓ, hinv, hne, fun a g hg x₀ hx₀ => ?_⟩
   obtain ⟨r₀, hr₀, hsp₀⟩ := hω₀.om_split e he g 1 hg (suppAt_one e T) x₀ 1 hx₀ (isDetAt_one e T)
   obtain ⟨r, hr, hc⟩ := hcmp 1 a
-  have hmv := (GlobalTheory.T.mixedCoordinates_of_thetaFunction_are_thetaFunctions D ψ hω.std).1 S S₀ T ρ d μ 𝓕 hμ
-  have hbr := (GlobalTheory.T.wittSourceMixedCoord_heisenbergRestriction D ψ S S₀ T ρ d).2.2.2.2.2.2.1
+  have hmv := (_root_.GlobalTheory.MixValues.mixed_values D ψ hω.std).1 S S₀ T ρ d μ 𝓕 hμ
+  have hbr := (_root_.GlobalTheory.Bridge.heis_bridge D ψ S S₀ T ρ d).2.2.2.2.2.2.1
   have hm := GlobalTheory.IndefiniteRowSideFullHecke.SkewGramHalfModule.halfMod_pos T.rank a
   refine ⟨r * r₀ * GlobalTheory.IndefiniteRowSideFullHecke.SkewGramHalfModule.halfMod T.rank a, by positivity, fun f hf => ?_⟩
   have key := hc f (om (d.levi a * d.emb0 g, 1) f)

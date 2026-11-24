@@ -20,7 +20,7 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsP
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TransportCorrectionCarriesColumnLatticeRowTrace
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridLatticesCompactSelfDualSplittingStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHomLatticeCompletionIffSupportedMaps
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemSelfDualLatticeOfMemAllLatticeCompletionsStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemSelfDualLatticeOfMemAllLatticeCompletions
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BesselSecondBasePointCharacterTrivialDepthLattic
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompletedHomLatticeModulusDepthMemShiftStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RationalMatrixSandwichMemCompletedHomLatticeSelfStatement
@@ -1331,7 +1331,7 @@ theorem GlobalTheory.AscFin.srcSplit_pcBF : OnStd fun {D} _ _ {sc} {G} W F => �
   have hin : Node.InRange D.R.m (.grid (2 * ρ + 2) 0) := ⟨h, Nat.zero_le _⟩
   have hsd : IsSelfDualC (G.V (.grid (2 * ρ + 2) 0)) (G.Λ (.grid (2 * ρ + 2) 0)) :=
     (G.isV hin (fun j hj => by injection hj with h1; omega)).sd
-  have hP := proj_mem (F.dB ρ h) (GlobalTheory.T.mem_selfDualLattice_of_mem_all_latticeCompletions hsd) hmono
+  have hP := proj_mem (F.dB ρ h) (_root_.GlobalTheory.FinPl.LocGlob.mem_of_mem_latV_all hsd) hmono
   have memR : ∀ w : Mx D (G.V (.grid (2 * ρ + 1) 0)).rank (G.V (.grid (2 * ρ + 2) 0)).rank, w ∈ latRow G (2 * ρ + 1) → ∀ π π' : Matrix (Fin (G.V (.grid (2 * ρ + 2) 0)).rank) (Fin (G.V (.grid (2 * ρ + 2) 0)).rank) D.host.E,
       (negSp (G.V (.grid (2 * ρ + 2) 0))).gram * π = π'ᴴ * (negSp (G.V (.grid (2 * ρ + 2) 0))).gram →
       (∀ s ∈ G.Λ (.grid (2 * ρ + 2) 0), π' *ᵥ s ∈ G.Λ (.grid (2 * ρ + 2) 0)) →

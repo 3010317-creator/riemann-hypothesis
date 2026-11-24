@@ -10,7 +10,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistCharact
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FinPartIdemMulMemIff
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeCharUnramifiedAbovePlaceOfTrivialUnits
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnramifiedAtPlaceIdempotentOfHeckeCharUnramifiStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnramifiedAtPlaceIdempotentOfHeckeCharUnramifi
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersUnramifiedOffLevelPlaces
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPrimeAdditiveCharacterUnramified
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SquareNuHeckeCharacterNotUnramifiedAtChosenPlace
@@ -213,7 +214,7 @@ theorem _root_.GlobalTheory.T.towerStage_finitePlaces_unramified_or_split : GBig
     push_neg at hS
     obtain ⟨hS0, hQ⟩ := hS
     have hS1 : v ∉ S1 D := fun h => hS0 (G.pl.mem_S0_of_sum_eq.2 (Or.inr h))
-    refine ⟨GlobalTheory.T.isUnramifiedAtPlaceIdempotent_of_heckeChar_unramified_above D _ _ hα v e he fun P hP => ?_, GlobalTheory.T.isUnramifiedAtPlaceIdempotent_of_heckeChar_unramified_above D _ _ hβ v e he fun P hP => ?_⟩
+    refine ⟨_root_.GlobalTheory.UnramOver.unramAt_of_unrAt D _ _ hα v e he fun P hP => ?_, _root_.GlobalTheory.UnramOver.unramAt_of_unrAt D _ _ hβ v e he fun P hP => ?_⟩
     · exact ((hmu P (by rw [hP]; exact hS1)).mul (hxi P fun PP hPP h => hQ PP hPP (h.trans hP))).mul (heta P)
     · exact (hchi P (by rw [hP]; exact hS0)).mul (heta P)
 

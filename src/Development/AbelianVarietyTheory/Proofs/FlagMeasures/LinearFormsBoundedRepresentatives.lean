@@ -3,7 +3,7 @@ module
 public import Formalism.SharpRestriction.CuspSpanNormBounds.IsPrimitiveSub
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSq
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLattice
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -239,7 +239,7 @@ theorem exists_reps (S : HSpace E) (M0 L : Submodule (𝓞 E) S.V) (hL : Submodu
 
 theorem funIdx : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ : LatV D), Stand D u u' → IsBase D u F0 → IsRowLat D F0 Λ → ∀ M0 : LatW D, IsPrimitiveSub M0 (L0X D Λ (lf D F0)) → ∃ reps : Finset (M0 →ₗ[𝓞 D.host.E] 𝓞 D.host.E), (reps.card : ℝ) ≤ NT D u ^ 2 ∧ ∀ ψ : M0 →ₗ[𝓞 D.host.E] 𝓞 D.host.E, ∃ ψ₀ ∈ reps, ∃ v ∈ L0X D Λ (lf D F0), ∀ x : M0, ((ψ x - ψ₀ x : 𝓞 D.host.E) : D.host.E) = (D.sp.X 0).hT v x := by
   intro D u u' F0 Λ hStand hB hR M0 hM
-  obtain ⟨hWH, -, hpd, hlat, hint, hdet, -⟩ := GlobalTheory.T.standardBaseFlag_complement_integralLattice D u u' F0 Λ hStand hB hR
+  obtain ⟨hWH, -, hpd, hlat, hint, hdet, -⟩ := _root_.GlobalTheory.LoopC.Base.main D u u' F0 Λ hStand hB hR
   have hfull : Submodule.IsFullLattice D.host.E (L0X D Λ (lf D F0)) := by
     refine { toIsLattice := hlat, span_eq_top := ?_ }
     apply eq_top_iff.mpr

@@ -31,15 +31,14 @@ public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.
 public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompAtMtMul
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacterStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacter
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsFundamentalDomainOfHaar
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsConjugateModelSameThetaFunctionsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIdeleAt
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SqNormIntegralFundamentalDomainEqL2NormSq
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFinUnitIsDetRoot
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OrthonormalNegFirstFamilyFrameCartanMove
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SymplecticBasesMatched
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilVacuumFiniteSelfDualLatticeSplittingStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilVacuumFiniteSelfDualLatticeSplitting
 public import Formalism.LocalToGlobal.ProjectiveLattices.FamilyUniformisationBasePointOrthogonal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -115,7 +114,6 @@ import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.DatEqZero
 import Mathlib.MeasureTheory.Measure.HasOuterApproxClosedProd
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionSpaceHeisenbergLaws
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUniqueStatement
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DblZMemHn
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionFundamentalDomainInnerProductBasic
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelTestFunctionMapLinearInjectiveEquivar
@@ -943,7 +941,7 @@ theorem scalar_eq {om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)} (
   have hmv : ∀ A, C.IsB A → C.IsB (C.mvB u A) := fun A hA =>
     (((GlobalTheory.Ker.onBasis_frame_period D S T C).2 A hA).2.2.2.2.2 u).1
   have hth : ∀ A, C.IsB A → C.IsTh (C.Th (C.xB A) φ) := fun A hA =>
-    (GlobalTheory.T.adelicZakTheta_exists_unique D S T C _ (xB_mem_dom C hA) φ hφ).1.1
+    (_root_.GlobalTheory.Ker.ZakEx.isZak_Th D S T C _ (xB_mem_dom C hA) φ hφ).1.1
   have hd : dbl C.X C.bas C.idx φ φ 0 ≠ 0 := by
     intro hc
     have h1 := GlobalTheory.AdTh.Overlap.ipO_Th C hμ (xB_mem_dom C hB) (xB_mem_dom C hB) hφ hφ
@@ -1080,7 +1078,7 @@ theorem om_compact (C : GlobalTheory.Ker.Ctx S T) {χS χT η : (AE D)ˣ →* Ci
     rw [e]
     exact ⟨one_mul _, by simp, by rw [one_mul]; exact Matrix.PosDef.one⟩
   have h1 : IsDetRoot S 1 1 := by simp [IsDetRoot]
-  rw [GlobalTheory.T.weilDatum_realPlaces_fockVacuum_character D C.ψ hW.std S T C.θ C.inf χS χT om η hη hW (fun _ => 1) s hS hs 1 (one_mem _) k hk
+  rw [_root_.GlobalTheory.WeilVacChar.vacuum_character D C.ψ hW.std S T C.θ C.inf χS χT om η hη hW (fun _ => 1) s hS hs 1 (one_mem _) k hk
     (fun τ => by rw [one_mul, mul_one]) hc 1 y₀ h1 hy₀ f hf hv, root_eq hW.resS C.even hy₀ hy]
   congr 1
   obtain ⟨m, hm⟩ := C.even
@@ -1178,7 +1176,7 @@ theorem om_real (C : GlobalTheory.Ker.Ctx S T) {χS χT η : (AE D)ˣ →* Circl
 
 theorem zak_om_real : ∀ (D : D7) (S T : HSp D) (r g : ℕ) (hr : T.rank = r) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (X : Data D.host.E r) (eT : D.what₂.Tau ≃ X.Ψ) (bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] X.Λ) (idx : Fin g ≃ X.Ψ × Fin r) (_hS : IsSet ψ θ S T hr X eT bas), ∀ (χS χT : (AE D)ˣ →* Circle) (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)), IsWeilDatumO ψ S T χS χT om → (∃ η, IsEtaTilde D η) → ∀ Z : Fam T, IsONeg T X.p0 Z → ∀ a ∈ GinfC T, ∀ y : (AE D)ˣ, IsDetRoot T a y → ∀ φ : TF S.rank g, GlobalTheory.SW.IsSB φ → ∀ f, Zak ψ θ hr eT bas idx (frOf hr eT Z) φ f → Zak ψ θ hr eT bas idx (frOf hr eT (mvZ θ a Z)) (((χS y : Circle) : ℂ) • φ) (om (1, a) f) := by
   intro D S T r g hr ψ θ X eT bas idx hS χS χT om hW ⟨η, hη⟩ Z hZ a ha y hy φ hφ f hf
-  obtain ⟨X', m, hq', bas', idx', hs, π, -, -, -, H⟩ := GlobalTheory.T.exists_conjugateModel_same_thetaFunctions D S T r g hr ψ θ X eT bas idx hS (r - X.p0)
+  obtain ⟨X', m, hq', bas', idx', hs, π, -, -, -, H⟩ := _root_.GlobalTheory.OneMapRef.Flip.exists_flip_model D S T r g hr ψ θ X eT bas idx hS (r - X.p0)
     (Nat.add_sub_cancel' X.p0_le)
   set C := ctxOf hS.1 hS.2.1 hS.2.2.2.1 X' m hq' bas' idx' hs with hC
   have hB := (H Z).1.1 hZ
@@ -1387,7 +1385,7 @@ theorem om_vac_move {g : ℕ} {hr : T.rank = r} {ψ : AddChar (AF D.host.F) ℂ}
   rw [← hke] at hk hmov
   have e1 : g₁ = a * g₀ * k := by rw [hke, mul_inv_cancel_left]
   obtain ⟨y, hy, hyk⟩ := GlobalTheory.LatticeUnitRoot.exists_finUnit_isDetRoot D T ΛT dT k hk hmov
-  have h1 := GlobalTheory.T.weil_vacuum_finite_selfDualLattice_splitting D S T ψ θ hS.2.1 sS sT χS χT om hW hη hun (fun _ => 1) _ (isCartanInv_one hS.2.2.1) hc
+  have h1 := _root_.GlobalTheory.FinVac.om_vacuum_finite D S T ψ θ hS.2.1 sS sT χS χT om hW hη hun (fun _ => 1) _ (isCartanInv_one hS.2.2.1) hc
     ΛS ΛT dS dT f₀ hf 1 (one_mem _) k hk (isMov_one _) hmov 1 y finUnit_one hy isDetRoot_one hyk
   obtain ⟨ya, hya⟩ := hmu.1 a
   obtain ⟨y₀, hy₀⟩ := hmu.1 g₀

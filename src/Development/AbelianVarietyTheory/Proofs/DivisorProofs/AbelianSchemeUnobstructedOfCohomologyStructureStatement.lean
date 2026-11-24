@@ -10,8 +10,8 @@ public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGrpObjIsAbelianSchemeSmoothLiftNilpotentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionLiftSmoothNilpotentThickeningStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGrpObjIsAbelianSchemeSmoothLiftNilpotent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionLiftSmoothNilpotentThickening
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdempotentsAbelianSchemeConstantDimension
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianUnobstructed
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
@@ -702,7 +702,7 @@ theorem exists_lift_of_split : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] 
   have hnil : IsNilpotent (RingHom.ker π) := ⟨2, by rw [hk, hI]⟩
   have hsm' : Smooth X.hom := hsm
   have hpb' : IsPullback i A₀.hom X.hom (spMap π) := hpb
-  obtain ⟨e₁, he₁, he₁'⟩ := GlobalTheory.T.exists_section_lift_smooth_nilpotent_thickening R R₀ π hπ hnil X A₀ i hpb' hsm' (1 : Over.mk (𝟙 (Sp R₀)) ⟶ A₀).left (Over.w _)
+  obtain ⟨e₁, he₁, he₁'⟩ := _root_.GlobalTheory.SecLift.exists_section_lift R R₀ π hπ hnil X A₀ i hpb' hsm' (1 : Over.mk (𝟙 (Sp R₀)) ⟶ A₀).left (Over.w _)
   have hw : ∀ g : A₀ ⊗ A₀ ⟶ A₀, (g.left ≫ i) ≫ X.hom = (Over.mk ((A₀ ⊗ A₀).hom ≫ spMap π)).hom := fun g ↦ by
     simp only [Over.mk_hom, Category.assoc, hpb'.w]; rw [← Category.assoc, Over.w]
   let l : Over.mk ((A₀ ⊗ A₀).hom ≫ spMap π) ⟶ X ⊗ X := lift (Over.homMk _ (hw (fst A₀ A₀))) (Over.homMk _ (hw (snd A₀ A₀)))
@@ -710,7 +710,7 @@ theorem exists_lift_of_split : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] 
     rw [← Over.comp_left, lift_fst]; rfl
   have hl₂ : l.left ≫ (snd X X).left = (snd A₀ A₀).left ≫ i := by
     rw [← Over.comp_left, lift_snd]; rfl
-  obtain ⟨g, hg, hab⟩ := GlobalTheory.T.exists_grpObj_isAbelianScheme_smoothLift_nilpotent R R₀ π hπ hnil A₀ hA₀ X i hpb' hsm' e₁ he₁ he₁' l.left hl₁ hl₂ m (hm l.left hl₁ hl₂)
+  obtain ⟨g, hg, hab⟩ := _root_.GlobalTheory.LiftGroupLaw.exists_grpObj_isAbelianScheme R R₀ π hπ hnil A₀ hA₀ X i hpb' hsm' e₁ he₁ he₁' l.left hl₁ hl₂ m (hm l.left hl₁ hl₂)
   exact ⟨X, g, i, hg, hab⟩
 
 end GlobalTheory.AbLiftGlue

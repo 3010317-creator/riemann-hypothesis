@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.LocalDualIndex
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DualLatticeDifferentIndex
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsEqStandardAdeleCharRationalDilate
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsUniqueIsStandardAdeleCharUnramifiedCMBaseStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsUniqueIsStandardAdeleCharUnramifiedCMBase
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.FinprodLocalDifferentIdealNormEqDiscr
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HasProdQuadExtLocalEulerFactorInvInv
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ProductLocalDensitiesAdeleCharacter
@@ -43,7 +43,7 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.Hermitian
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EventuallyLocalLatticeCompletionEqCoordinateLatt
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSelfDualLatticeCompletionMaxOrder
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IndicatorCompletedLatticeEqFinprodLocal
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsSchwartzBruhatIndicatorLocalLatticeCompletionStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsSchwartzBruhatIndicatorLocalLatticeCompletion
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCompactAdele
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DisjointSpanPerpLat
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLocalComponentAdelicAddChar
@@ -133,7 +133,7 @@ namespace GlobalTheory.Proof.cm_localDensities_productFormula
 
 theorem densityProduct : GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.DensityProduct :=
   fun F E _ _ _ _ _ _ σ h₁ h₂ h₃ =>
-    ⟨GlobalTheory.T.existsUnique_isStandardAdeleChar_unramifiedCM_base F E σ h₁ h₂ h₃, _root_.GlobalTheory.StdDual.dualV_eq_inv_different_cm F E σ h₁ h₂ h₃, _root_.GlobalTheory.LocalDifferentProduct.prod_normDifferentV F E σ h₁ h₂ h₃,
+    ⟨_root_.GlobalTheory.StdCharUnique.existsUnique_isStdChar_cm F E σ h₁ h₂ h₃, _root_.GlobalTheory.StdDual.dualV_eq_inv_different_cm F E σ h₁ h₂ h₃, _root_.GlobalTheory.LocalDifferentProduct.prod_normDifferentV F E σ h₁ h₂ h₃,
       _root_.GlobalTheory.AdelicCharDilate.exists_eq_std_dilate F E σ h₁ h₂ h₃, _root_.GlobalTheory.EtaEulerProduct.hasProd_eulerInv_inv F E σ h₁ h₂ h₃, _root_.GlobalTheory.LocalDensityProduct.density_product F E σ h₁ h₂ h₃⟩
 
 end GlobalTheory.Proof.cm_localDensities_productFormula
@@ -1818,7 +1818,7 @@ theorem ratio_of_setting (hL5 : PlaceSplittingTypes.SelfDualLatticeDensity) (hR3
   let Φf : (Fin 1 → Fin W.rank → Af D.host.F ⊗[D.host.F] D.host.E) → ℂ :=
     {X | X 0 ∈ latHat D.host.F D.host.E (GlobalTheory.AdelicU.frameLat W : Set (Fin W.rank → D.host.E))}.indicator 1
   have hpure : IsPureFin b Φf Φv :=
-    ⟨GlobalTheory.T.isSchwartzBruhat_indicator_localLatticeCompletion _ _ _ _ hlat, (_root_.GlobalTheory.AdelicU.Cofinite.eventually_latLoc_eq_latV _ _ _ _ b _ hlat).mono fun v hv => by simp only [Φv, hv],
+    ⟨_root_.GlobalTheory.LatticeIndicator.isSB_indicator_latLoc _ _ _ _ hlat, (_root_.GlobalTheory.AdelicU.Cofinite.eventually_latLoc_eq_latV _ _ _ _ b _ hlat).mono fun v hv => by simp only [Φv, hv],
       _root_.GlobalTheory.AdelicU.indicator_latHat_eq_finprod _ _ _ _ hlat⟩
   have hsw := hSW _ _ _ hσ _ _ hJ hr β hβ0 _ b (LatticeTensorUnfolding.latTensor (L0c D W) Φi) Φi Φf Φv hΦi hpure
     (fun v Y => by by_cases h : Y 0 ∈ GlobalTheory.AdelicU.latLoc D.host.F (GlobalTheory.AdelicU.frameLat W) v <;> simp [Φv, h])

@@ -2,7 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HermitianSpaceBaseLatticeEqFrameLattice
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.GlobalGaussLaws.FourierZeroN
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExtensionAdeleRealComponentsCmTypeStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.EventuallyNormFinLeOne
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExtensionAdeleRealComponentsCmType
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalVolumeLift
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +50,6 @@ import Development.AbelianVarietyTheory.Definitions.Foundations.IsIwasawaOfIsCom
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.SphericalEisensteinSeriesOnGroup
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOneIntegralAdd
 import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.RegularisedSiegelWeilFirstTerm
-import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -177,7 +181,7 @@ theorem reidx_one : reidx (1 : M2 n) = 1 := by
 theorem compAt_cT_mul {θ : InfFam D} (hθ : IsInfFam θ) {m : ℕ} (M : Matrix (Fin m) (Fin m) (AE D)) (τ' : D.what₂.Tau) :
     compAt θ τ' (Formalism.UG.cT (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR (AF D.host.F) D.sp.cm.sig) M * M) =
       (compAt θ τ' M)ᴴ * compAt θ τ' M := by
-  obtain ⟨-, hcA, -, -⟩ := GlobalTheory.T.extensionAdele_realComponents_cmType D θ hθ
+  obtain ⟨-, hcA, -, -⟩ := _root_.GlobalTheory.StdUnn.RealComp.real_components D θ hθ
   ext i j
   simp only [compAt, Matrix.map_apply, Matrix.mul_apply, Formalism.UG.cT, Matrix.transpose_apply,
     Matrix.conjTranspose_apply]
@@ -196,7 +200,7 @@ theorem cT_one {m : ℕ} : Formalism.UG.cT (Formalism.MainNotions.GlobalTheoryTh
 
 theorem iota_mem_K {θ : InfFam D} {τ : D.what₂.Tau} {ι : GR n →* G D n} (hθ : IsInfFam θ) (hι : IsPlaceEmb θ τ ι)
     (k : GR n) (hk : InK (mR k)) : ι k ∈ K D n := by
-  obtain ⟨hinf0, hcA, -, -⟩ := GlobalTheory.T.extensionAdele_realComponents_cmType D θ hθ
+  obtain ⟨hinf0, hcA, -, -⟩ := _root_.GlobalTheory.StdUnn.RealComp.real_components D θ hθ
   obtain ⟨-, hcomp⟩ := hι
   obtain ⟨hτ, hτ', hfin⟩ := hcomp k
   rw [K, GlobalTheory.RegSch.EmbLevel.mem_levelAll_iff]

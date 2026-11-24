@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.AxesVanishin
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyH1AxesPrimitiveRankStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyWedgeNoPrimitiveH2Statement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechCohomologyStructureSheafIsoStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechCohomologyTrivialBundleAbelianStatement
+import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.IsScalarTowerOfAlgebraMapEq
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechCohomologyTrivialBundleAbelian
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,7 +89,7 @@ theorem structureSheafCoh_abelianVariety_algClosed :
   haveI : CompactSpace A.left := QuasiCompact.compactSpace_of_compactSpace A.hom
   obtain ⟨n, D, hD, hcov⟩ := exists_fin_affineOpen_cover_of_compactSpace A.left
   obtain ⟨⟨e⟩, -⟩ := GlobalTheory.T.cech_cohomology_structure_sheaf_iso K A.left A.hom (Fin n) D inferInstance hD hcov
-  obtain ⟨hfin, -, -⟩ := GlobalTheory.T.cech_cohomology_trivial_bundle_abelian K A g hA hg (Fin n) D hD hcov
+  obtain ⟨hfin, -, -⟩ := _root_.GlobalTheory.AbCoh.FDim.cechLB_triv_finrank_one_two K A g hA hg (Fin n) D hD hcov
   exact Module.Finite.equiv e.symm
 
 end GlobalTheory.AbCoh

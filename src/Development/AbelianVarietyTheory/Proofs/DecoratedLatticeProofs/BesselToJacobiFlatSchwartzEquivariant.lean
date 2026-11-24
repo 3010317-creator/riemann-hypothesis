@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselToJacobiFlatWeilRepresentationCores
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleMixedModelBaseValueEquivariantStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleMixedModelBaseValueEquivariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -97,7 +97,7 @@ theorem flatBF_levi (ψ : AddChar (AF D.host.F) ℂ) (ρ : ℕ) (B : BesLev D ρ
   have : BorelSpace (UX D ρ) := ⟨rfl⟩
   have := s.vU.unit.1
   funext w
-  have he := (GlobalTheory.T.doubleMixedModel_baseValue_equivariant D ψ ρ B J s om' hom Ψ hΨ).2
+  have he := (_root_.GlobalTheory.Unf.evalAt_xZero_yZero D ψ ρ B J s om' hom Ψ hΨ).2
   simp only [flatBF, flat, flatAt, flatFun, Pi.smul_apply, smul_eq_mul, he]
   rw [← integral_const_mul, ← integral_mul_left_eq_self _ γ]
   refine integral_congr_ae (Filter.Eventually.of_forall fun u => ?_)

@@ -6,9 +6,10 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasDer
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.ContinuousOfHeisenbergLevelAndSmooth
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqZeroOfPderivStable
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CmAdeleIdempotentOfPlacePropertiesStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.HalfLinearCocycle
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CmAdeleIdempotentOfPlaceProperties
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InfPartOneSubEInfSmul
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilMatrixComponentAtPlaceMemCompletedLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilMatrixComponentAtPlaceMemCompletedLattice
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,14 +60,14 @@ namespace GlobalTheory.PlaceStable
 variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D}
 
 theorem symplO_of_place {p : Place D} {x y : WO S T} (hx : wAt p x = x) (hy : wAt p y = 0) : symplO S T x y = 0 := by
-  rw [← hx, wAt_eq_smul, GlobalTheory.SplitScalar.symplO_smul, (GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D).2.2.1 p, ← wAt_eq_smul, hy,
+  rw [← hx, wAt_eq_smul, GlobalTheory.SplitScalar.symplO_smul, (_root_.GlobalTheory.PlaceTensor.idem_spec D).2.2.1 p, ← wAt_eq_smul, hy,
     GlobalTheory.SplitScalar.symplO_zero_right]
 
 theorem wAt_wAt (p : Place D) (w : WO S T) : wAt p (wAt p w) = wAt p w := by
-  rw [wAt_eq_smul, wAt_eq_smul, smul_smul, (GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D).1 p]
+  rw [wAt_eq_smul, wAt_eq_smul, smul_smul, (_root_.GlobalTheory.PlaceTensor.idem_spec D).1 p]
 
 theorem wAt_wAt_ne {p q : Place D} (h : q ≠ p) (w : WO S T) : wAt q (wAt p w) = 0 := by
-  rw [wAt_eq_smul, wAt_eq_smul, smul_smul, (GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D).2.1 q p h, zero_smul]
+  rw [wAt_eq_smul, wAt_eq_smul, smul_smul, (_root_.GlobalTheory.PlaceTensor.idem_spec D).2.1 q p h, zero_smul]
 
 theorem heisO_swap {u w : WO S T} (h : symplO S T u w = 0) (f : WO S T → ℂ) :
     heisO ψ S T u (heisO ψ S T w f) = heisO ψ S T w (heisO ψ S T u f) := by
@@ -92,7 +93,7 @@ theorem wAt_lineAt (hθ : IsInfFam θ) (τ : D.what₂.Tau) (z : Matrix (Fin T.r
     wAt (.inr τ) (lineAt θ τ z t : WO S T) = lineAt θ τ z t := by
   obtain ⟨σ, hσ⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
   obtain ⟨-, h1, h2⟩ := GlobalTheory.WeilVacMove.isLineAt_lineAt hθ τ z
-  obtain ⟨-, -, -, -, h3, -, h4⟩ := GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D
+  obtain ⟨-, -, -, -, h3, -, h4⟩ := _root_.GlobalTheory.PlaceTensor.idem_spec D
   refine funext fun i => funext fun j => ?_
   show idem D (.inr τ) * lineAt θ τ z t i j = lineAt θ τ z t i j
   refine GlobalTheory.SplitScalar.adele_ext ?_ ?_
@@ -139,11 +140,11 @@ theorem heis_stable : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam
   · cases q with
     | inl v =>
       refine isLatVac_map (fun u hu => heisO_swap (symplO_of_place ?_ hw) f) hv
-      have h := (GlobalTheory.T.weilMatrixComponentAtPlace_mem_completedLattice D S T ΛS ΛT _ u hu (.inl v)).2.1
+      have h := (_root_.GlobalTheory.LatticeLocal.wAt_mem_latO D S T ΛS ΛT _ u hu (.inl v)).2.1
       exact (sub_eq_zero.1 (latO_empty (fun v' h' => h'.2 (by rw [h'.1])) h)).symm
     | inr τ => exact isFockVacAt_heisO hθ hw hv
   · refine isLatVac_map (fun u hu => (heisO_swap (symplO_of_place (wAt_wAt p w) ?_) f).symm) hp.2.1
-    exact (GlobalTheory.T.weilMatrixComponentAtPlace_mem_completedLattice D S T ΛS ΛT _ u hu p).2.2 fun _ h => h
+    exact (_root_.GlobalTheory.LatticeLocal.wAt_mem_latO D S T ΛS ΛT _ u hu p).2.2 fun _ h => h
   · exact isFockVacAt_heisO hθ (wAt_wAt_ne hτ w) (hp.2.2 τ hτ)
   · have key : ∀ u, heisO ψ S T u f = f → heisO ψ S T u g = g → heisO ψ S T u (c • f + g) = c • f + g := fun u h1 h2 => by
       rw [← GlobalTheory.SplitScalar.heisL_apply, map_add (f := _), map_smul, GlobalTheory.SplitScalar.heisL_apply, GlobalTheory.SplitScalar.heisL_apply, h1, h2]
@@ -157,7 +158,7 @@ theorem heis_stable : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam
       GlobalTheory.FockIndep.dRho_smul hψ hθ _ _ c hf, GlobalTheory.FockIndep.dRho_smul hψ hθ _ _ c hf, smul_add, smul_comm,
       add_add_add_comm, ← smul_add, h1, h2, smul_zero, add_zero]
   · refine isLatVac_map (fun u hu => (dRho_heisO hθ ?_ z f).symm) hp.2.1
-    exact (GlobalTheory.T.weilMatrixComponentAtPlace_mem_completedLattice D S T ΛS ΛT _ u hu (.inr τ)).2.2 fun _ _ => Sum.inl_ne_inr
+    exact (_root_.GlobalTheory.LatticeLocal.wAt_mem_latO D S T ΛS ΛT _ u hu (.inr τ)).2.2 fun _ _ => Sum.inl_ne_inr
   · have hne : τ' ≠ τ := fun h => hτ' (by rw [h, hτ])
     have hc : ∀ y, Formalism.IndefR.Datum.dRho (heisO ψ S T) θ τ' y (Formalism.IndefR.Datum.dRho (heisO ψ S T) θ τ z f) =
         Formalism.IndefR.Datum.dRho (heisO ψ S T) θ τ z (Formalism.IndefR.Datum.dRho (heisO ψ S T) θ τ' y f) := fun y => by

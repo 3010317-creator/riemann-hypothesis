@@ -80,7 +80,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaIoExten
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AtDatLIntegral
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsBare
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LUnifAtDat
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LargeCoefficientFieldContainsTwistValuesStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LargeCoefficientFieldContainsTwistValues
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StandardLatticesDiagonal
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.WeakCharInertPartRealAdelicDataTransport
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.MultiplicityCoverHypotheses
@@ -176,19 +176,21 @@ import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.RingTheory.PicardGroup
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.Wp3ApplyEqSqMulSubSqMul
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoreClausesOfWeakCharacterisation
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalMultiplicityCarriersStatement
+import Formalism.LocalToGlobal.IndefiniteReal.ZeroPartEigenvalueConvention
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalMultiplicityCarriers
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIxOfMemEigAt
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPartnerCombinationGoodInertLift
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OperatorFamilyAdjointLiftSingleEigensystemStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalOfRowTestOfScalar
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RangeAdjointLeSpanGoodBlockStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RangeGoodProjectorBaseLevelTwistedModelStatement
+import Formalism.LocalToGlobal.IndefiniteReal.ConcretePkgSpec
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RangeGoodProjectorBaseLevelTwistedModel
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RowEigensystemCarriedByFiniteType
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurConstantsExistOnChainOfCuspRapidDecay
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WFormsPartsOfDistinctTypesOrthogonalStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ClassPresExtMemExtBijIsom
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSphericalOperatorsRowsNormalEigenspaces
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalOperatorsFormsOnRankSpaceNormalStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalOperatorsFormsOnRankSpaceNormal
 import Development.AbelianVarietyTheory.Definitions.Divisors.TwistedPlacesOfCondition
 import Development.WeilBound.RepresentationTheoryGL.EisensteinResidues.AnisotropicGlobalForms.SecOfDm
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ConcreteLevelAdelicSubset
@@ -1102,10 +1104,10 @@ theorem levW_of_span (hCusp : GlobalTheory.Published.CuspRapidDecay) (R : RealDa
     (hScal : 0 < R.kap ∧ ∀ i t p, 0 < R.lam3 i t p A3.A.v0) (hA : R.PThmA) (hLT : Formalism.IndefR.Rat.LiftTest (R.toCx3 F))
     (hU : R.toRealDat.LUnif) : R.PLevW F := by
   have hSchur := GlobalTheory.Hk3.schurAll_of_cuspRapidDecay hCusp R.toRealDat
-  have hSpan := GlobalTheory.T.cuspidal_multiplicity_carriers R F hOk hC hEx hSchur hGS hCD hME hCar
+  have hSpan := _root_.GlobalTheory.SpanW.iSup_wp3_eq_range_eH R F hOk hC hEx hSchur hGS hCD hME hCar
   have hW := GlobalTheory.T.principalFormsSubspace_eq_good_forms R F hOk hC hEx hSpan hScal hA hLT hBlock
   intro j
-  exact (GlobalTheory.T.range_goodProjector_baseLevel_twistedModel R F hOk hC hEx hU j).trans (congrArg (· ⊓ _) (hW j).symm)
+  exact (_root_.GlobalTheory.WType.range_w0C_type R F hOk hC hEx hU j).trans (congrArg (· ⊓ _) (hW j).symm)
 
 theorem partsW_of_carried (hCRD : GlobalTheory.Published.CuspRapidDecay) (R : RealDat3 D A3 Ks) (F : Face3 D A3) {s : ℕ}
     (hOk : A3.fam3.Ok3 s) (hW : R.WeakCharacterisation F) (hEx : R.toRealDat.ExAt) (hGS : GoodStable A3.A.X) (hCD : GlobalTheory.CuspMult.CuspDecomp D)
@@ -1115,14 +1117,14 @@ theorem partsW_of_carried (hCRD : GlobalTheory.Published.CuspRapidDecay) (R : Re
   have hS : SchurAll R.toRealDat := GlobalTheory.Hk3.schurAll_of_cuspRapidDecay hCRD R.toRealDat
   obtain ⟨hCore, hSF, -, hWc⟩ := GlobalTheory.CoreOfWeak.core_of_weak R F hW hEx
   have hirr : ∀ χ ∈ A3.A.X, IsAbsIrrChar χ := hOk.ok2.irr
-  have hspan := GlobalTheory.T.cuspidal_multiplicity_carriers R F hOk hW hEx hS hGS hCD hME hcar
+  have hspan := _root_.GlobalTheory.SpanW.iSup_wp3_eq_range_eH R F hOk hW hEx hS hGS hCD hME hcar
   have horth := GlobalTheory.T.W_forms_parts_of_distinct_types_orthogonal R F hOk hW hEx hS hOkH hkap hB
   intro j
-  have htype := GlobalTheory.T.range_goodProjector_baseLevel_twistedModel R F hOk hW hEx hU j
+  have htype := _root_.GlobalTheory.WType.range_w0C_type R F hOk hW hEx hU j
   refine ⟨fun p q hpq w hw w' hw' => ?_, ?_⟩
   · exact GlobalTheory.SumW.inner_tw_eq_zero (E := (R.HW j (sg0 D A3.A)).H) (twAt D.what₂.embLL A3.A.v0) w w'
       (horth j p q hpq _ hw.1 _ hw'.1)
-  · obtain ⟨-, -, -, -, -, hst, -⟩ := GlobalTheory.T.sphericalOperators_forms_on_rank_space_normal R.toRealDat F.lv2 hCore hS hirr R.SF hSF j
+  · obtain ⟨-, -, -, -, -, hst, -⟩ := _root_.GlobalTheory.SphOpsModel.sphericalOperators_forms_on_rank_space_normal_alt R.toRealDat F.lv2 hCore hS hirr R.SF hSF j
     have hstab : ∀ p g, (R.Wp3 j p).map (R.gW j (sg0 D A3.A) g) ≤ R.Wp3 j p := by
       intro p g
       unfold RealDat3.Wp3
@@ -1248,7 +1250,7 @@ theorem lu_of_multEq_at_data : _root_.GlobalTheory.PrimIn.PublishedThetaConditio
       (evG_of_ev GlobalTheory.Mem.HostFrames.hostHyp_frames_ev)).imp fun K _ _ _ _ H B f T hO _ _ _ X e => by
         subst e
         exact ⟨H.1.1 X, H.1.2 X hO, (H.2 X hO).1, (H.2 X hO).2.2.2.2.2.2.1⟩)
-  refine ((((hE.and (Step.of_evLgG (evLgG_of_evLg GlobalTheory.T.valsIn_and_fam3_ok_of_coefficientField))).and
+  refine ((((hE.and (Step.of_evLgG (evLgG_of_evLg _root_.GlobalTheory.Mem.R3.OkVals.large_coefficientField_contains_twist_values))).and
     (Step.of_evLgG (q := fun _ => CoverAt.WeberLev) (evG_all CoverAt.lg_weberLev))).and hM).and
     (Step.and (lUnif_atDat P.q3 P.q2 P.q1) (atDat_lIntegral P.q3 P.q2 P.q1))).trans
     (Step.of_all fun K B f T _ _ _ H w hw Z hX Wt z g1 g2 hEx g4 => ?_)
@@ -1394,7 +1396,7 @@ theorem twisted_local_multiplicity_eq : GlobalTheory.Published.HarishChandraAnal
     AtDat fun _ _ _ _ _ _ _ _ z => GlobalTheory.CuspMult.MultEq z.R.toRealDat := by
   intro h1 h2 h3 h4 h5 h6 h7 h12 h13 hG
   have e1 := (evG_of_ev LedRec.ev_exists_sizeData).inter (evG_of_ev GlobalTheory.Mem.HostFrames.hostHyp_frames_ev)
-  have s1 : Step KPx (fun _ _ _ _ => True) _ := Step.of_evLgG (evLgG_of_evLg GlobalTheory.T.valsIn_and_fam3_ok_of_coefficientField)
+  have s1 : Step KPx (fun _ _ _ _ => True) _ := Step.of_evLgG (evLgG_of_evLg _root_.GlobalTheory.Mem.R3.OkVals.large_coefficientField_contains_twist_values)
   refine s1.trans (Step.of_evG (e1.imp ?_))
   rintro K - - - - ⟨hLed, hHost⟩ B f T hO - - hOk w hw Z hX Wt z g1 g2 hEx g4
   obtain ⟨Z', g1', hη, hA⟩ := LedRec.exists_bare hG (B := B) (C := w.C) Z f (6 * K.s.x ^ (-K.C.P.CF))

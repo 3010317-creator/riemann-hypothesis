@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsSphericalDoubleCosetLabelIffDecreasingStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsSphericalDoubleCosetLabelIffDecreasing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,7 +66,7 @@ theorem isLab_W_iff : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Typ
   have hY : (Yc D 0).rank = D.R.r := by
     rw [D.sp.Y_rank _ (min_le_right _ _)]
     simp [Ranks.rankY]
-  rw [GlobalTheory.T.isSphericalDoubleCosetLabel_iff_decreasing, GlobalTheory.T.isSphericalDoubleCosetLabel_iff_decreasing, GlobalTheory.T.isSphericalDoubleCosetLabel_iff_decreasing, hW, hY, dualLab_length', dualLab_pairwise', dualLab_dualLab']
+  rw [_root_.GlobalTheory.LabChar.labels_char, _root_.GlobalTheory.LabChar.labels_char, _root_.GlobalTheory.LabChar.labels_char, hW, hY, dualLab_length', dualLab_pairwise', dualLab_dualLab']
   refine ⟨?_, Iff.rfl⟩
   constructor
   · rintro ⟨h1, h2, h3⟩

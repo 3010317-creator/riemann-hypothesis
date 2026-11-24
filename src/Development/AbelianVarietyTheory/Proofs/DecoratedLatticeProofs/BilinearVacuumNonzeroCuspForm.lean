@@ -10,11 +10,13 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsBiSmo
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EqZeroOfAeFundamentalDomain
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BiThetaOfVac
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsJointlySmoothBiThetaHeisenbergDerivStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilOperatorIntegralCommOfBoundedFiniteMeasureStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilOperatorIntegralCommOfBoundedFiniteMeasure
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CmHostImaginaryGeneratorNeZero
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientParaStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SetIntegralFundamentalDomainRightTranslateInvariStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientPara
+public import Formalism.LocalToGlobal.BesselHermitianTheta.IsAutFunDef
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SetIntegralFundamentalDomainRightTranslateInvari
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CompactAverageSmoothFamilyClosedUnderDerivatives
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicUnitaryTopCong
 import Mathlib.Algebra.Order.Floor.Extended
@@ -52,7 +54,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.JointSmooth
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOneIntegralAdd
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsHeightLeTwoMulQuotHeight
@@ -212,7 +213,7 @@ theorem om_dLine_right : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A S A' :
       rw [e]
       exact GlobalTheory.WeilVacMove.isTheta_sub (GlobalTheory.WeilVacMove.isTheta_smul _ (GlobalTheory.FrComb.slice_left hG _))
         (GlobalTheory.FrComb.slice_left hG v)
-    have hcomm := GlobalTheory.T.weilOperator_integral_comm_of_bounded_finiteMeasure D ψ A S χA χS oma hA ℝ (volume.restrict (Set.Ioc (0 : ℝ) t)) F p hFth hFc hFb hoFc hoFb hth u
+    have hcomm := _root_.GlobalTheory.CommIntBdd.om_integral_comm_bdd D ψ A S χA χS oma hA ℝ (volume.restrict (Set.Ioc (0 : ℝ) t)) F p hFth hFc hFb hoFc hoFb hth u
     have e1 : (fun y => ∫ a, F a y ∂(volume.restrict (Set.Ioc (0 : ℝ) t))) =
         c t • (fun u' => G u' (v + M' t)) - (fun u' => G u' v) := by
       funext x
@@ -440,7 +441,7 @@ theorem om_integral [IsFiniteMeasure μ] {S T : HSp D} {χS χT : (AE D)ˣ →* 
   have h2' : Continuous fun q : K × WO S T => om p (c q.1 • F q.1) q.2 := by
     simp only [map_smul]
     exact (hc.comp continuous_fst).mul h2
-  have := GlobalTheory.T.weilOperator_integral_comm_of_bounded_finiteMeasure D ψ S T χS χT om hom K μ (fun k => c k • F k) p hF' h1' (exists_bound_fam hom.std hF' h1') h2'
+  have := _root_.GlobalTheory.CommIntBdd.om_integral_comm_bdd D ψ S T χS χT om hom K μ (fun k => c k • F k) p hF' h1' (exists_bound_fam hom.std hF' h1') h2'
     (exists_bound_fam hom.std (fun k => hom.om_pres p _ (hF' k)) h2') hI x
   simpa only [map_smul, Pi.smul_apply, smul_eq_mul] using this
 
@@ -449,16 +450,16 @@ omit [CompactSpace K] in
 theorem integral_mean [IsProbabilityMeasure μ] {A : HSp D} (hA : CoCpt A) (vA : Vol A) {j : K → GA D A} (hj : Continuous j)
     {F : GA D A → ℂ} (hF : IsContAut A F) : ∫ h in vA.𝓕, ∫ k, F (h * j k) ∂μ ∂vA.μ = ∫ h in vA.𝓕, F h ∂vA.μ := by
   obtain ⟨i1, -, i3, -, i5, -⟩ := GlobalTheory.Ker.CongTop.adelicUnitary_top_cong D A
-  have hfin := (GlobalTheory.T.continuous_integral_compactAutomorphicQuotient_param D A hA vA Unit (fun _ _ => 1) continuous_const (fun _ _ _ _ => rfl)).1 ()
+  have hfin := (_root_.GlobalTheory.CocompactParam.continuous_integral_param D A hA vA Unit (fun _ _ => 1) continuous_const (fun _ _ _ _ => rfl)).1 ()
   haveI : IsFiniteMeasure (vA.μ.restrict vA.𝓕) := by
     rcases (integrable_const_iff (c := (1 : ℂ))).1 hfin with h | h
     · exact absurd h one_ne_zero
     · exact h
-  obtain ⟨C, hC⟩ := (GlobalTheory.T.continuous_integral_compactAutomorphicQuotient_param D A hA vA Unit (fun g _ => F g) (hF.2.comp continuous_fst)
+  obtain ⟨C, hC⟩ := (_root_.GlobalTheory.CocompactParam.continuous_integral_param D A hA vA Unit (fun g _ => F g) (hF.2.comp continuous_fst)
     (fun γ hγ g _ => hF.1 γ hγ g)).2.2 ()
   have hC' := hC.self_of_nhds
   rw [integral_integral_swap]
-  · simp_rw [GlobalTheory.T.setIntegral_fundamentalDomain_right_translate_invariant D A vA.μ vA.𝓕 vA.haar vA.fund F hF.1]
+  · simp_rw [_root_.GlobalTheory.ChainOnto.setIntegral_fd_mul_right D A vA.μ vA.𝓕 vA.haar vA.fund F hF.1]
     simp
   · refine Integrable.mono' (integrable_const C) ?_ (ae_of_all _ fun q => hC' _)
     exact (hF.2.comp (continuous_fst.mul (hj.comp continuous_snd))).aestronglyMeasurable

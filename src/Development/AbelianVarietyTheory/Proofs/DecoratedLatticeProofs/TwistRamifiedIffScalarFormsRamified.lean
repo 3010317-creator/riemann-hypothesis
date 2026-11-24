@@ -23,12 +23,11 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Coupl
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteOrbitsOfFiniteFibres
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ReferenceCharactersFactorTame
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPointOfRationalUnitaryAdelicMul
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoordsStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevOkTwists
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsFiniteAdeleProjectionIntegralReduction
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsVTOver
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryClassRepresentativesBijective
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NeConjOfIdemSum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitFrameGLFiniteMatrixOffPlaceEqOneStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOverBoth
@@ -43,7 +42,6 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealId
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.SOnCols
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousPf
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RealCentreActsByCharacterOnIsotypicSlices
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ScalarFormsOnChartsOfTrueColumnTupleStatement
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryAdelicPointEqProdSplitComponentsMulOff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -383,7 +381,7 @@ theorem GlobalTheory.AdForm.rd_trTo : ∀ {B : Base} {X : PreX B.toPre} (I : TC 
   have hd : Disjoint (B.primes X).vGs (I.Q a) := (LevTwist.levOk_twists B X I hI).2.1.mono_right (I.Q_subset_SQ a)
   have hw : TC.PtOf (z * A.kb j (A.chOf j ((I.stp u a j).cl c.1 d))) d.1.1 := IsPtOf.of_extTo (I.Q_subset_SQ a) hd hpt
   obtain ⟨x₀, hz, hchi⟩ := GlobalTheory.AdForm.RdTrans.exists_level I l u a j (hA.reads j hj) c.1 d hco z hw
-  have hg1 := ((GlobalTheory.T.trueColumn_spaces_standard_in_frameCoords I hI hP l Z).2.2.2 j hj).1
+  have hg1 := ((_root_.GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hI hP l Z).2.2.2 j hj).1
   unfold Formalism.L2.Forms.gramN at hg1
   have hγ : (I.stp u a j).gam c.1 ((I.stp u a j).mv c.1 d) ∈ UJ (Formalism.L2.Forms.sigD (I.rec7 l Z) : (I.rec7 l Z).host.E →+* (I.rec7 l Z).host.E)
       (Matrix.reindex (finCongr (rankN (I.rec7 l Z) j hj)) (finCongr (rankN (I.rec7 l Z) j hj)) (HSpace.gram ((I.rec7 l Z).sp.X j))) := by
@@ -1310,7 +1308,7 @@ theorem rd_continuous : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok →
   intro B X I hI hPins l Z u a Ch A hA θ hθ j hj φ hφ b y
   obtain ⟨hreps, -, -⟩ := GlobalTheory.T.chartLevels_reps_represent_unitaryDoubleCosets I hI hPins l Z u a Ch A hA j hj b
   have hchi := GlobalTheory.T.continuous_chartLevelCharacters_adelic_tuple I hI hPins l Z u a Ch A hA j hj b
-  obtain ⟨hval, hrd⟩ := GlobalTheory.T.scalarForms_on_charts_of_trueColumnTuple I hI hPins l Z u a Ch A hA θ hθ j hj φ hφ
+  obtain ⟨hval, hrd⟩ := _root_.GlobalTheory.AdForm.rd_charts I hI hPins l Z u a Ch A hA θ hθ j hj φ hφ
   have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA (I.rec7 l Z).sp.cm.sig ((I.rec7 l Z).sp.X j).gram
   rw [continuous_iff_continuousAt]
   intro g0
@@ -1441,7 +1439,7 @@ theorem rd_mul_level {B : Base} {X : PreX B.toPre} (I : TC B X) (hOk : I.Ok) (hP
     (hγ : γ ∈ GQ ((I.rec7 l Z).sp.X j)) (κ : A.U j b) :
     A.rd θ j hj b φ y (γ * x * κ.1) = (A.chi j b κ : ℂ) * A.rd θ j hj b φ y x := by
   obtain ⟨γ0, hγ0, c, k0, hk0, κ0, hκ0, rfl⟩ := (GlobalTheory.T.chartLevels_reps_represent_unitaryDoubleCosets I hOk hP l Z u a Ch A hA j hj b).1.dec x
-  have hrd := (GlobalTheory.T.scalarForms_on_charts_of_trueColumnTuple I hOk hP l Z u a Ch A hA θ hθ j hj φ hφ).2 b y
+  have hrd := (_root_.GlobalTheory.AdForm.rd_charts I hOk hP l Z u a Ch A hA θ hθ j hj φ hφ).2 b y
   let y' : (I.chain l u a).Y j := ⟨fun τ => (show Matrix (Fin (B.R.N j)) (Fin (B.R.N j)) ℂ from infM θ _ (rankN (I.rec7 l Z) j hj) k0 τ) * y.1 τ, fun τ => by
     rw [Matrix.det_mul]; exact (GlobalTheory.AdForm.RdVal.infM_unit θ _ (rankN (I.rec7 l Z) j hj) k0 τ).mul (y.2 τ)⟩
   have hy' : IsTr (G := fun _ => 1) (infM θ _ (rankN (I.rec7 l Z) j hj) k0) ⟨y.1, y.2⟩ ⟨y'.1, y'.2⟩ := fun _ => rfl

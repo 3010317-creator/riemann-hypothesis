@@ -21,9 +21,10 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCompatF
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousCoeffBlockAct
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeffPolynomialEqZeroOfVanishingOnGLFamily
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGaloisConjDefiniteFormsSemilinearEquiv
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockHarmonicValueSpaceMapEqDualWeylModuleFunctioStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TranslateMemCoefLatFn
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockHarmonicValueSpaceMapEqDualWeylModuleFunctio
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrameKeepsMatricesMatchesRationalPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunctionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunction
 public import Formalism.LocalToGlobal.Columns.CoefModAt
 public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsAut
 public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsLevel
@@ -817,7 +818,7 @@ theorem exists_psi {m n : ℕ} (w : Weight D n) (B : GLR D n) (hw : w.Good) (hm 
   let hf : H →ₗ[ℂ] (GLR D n → ℂ) := harmFn m w B ∘ₗ H.subtype
   have hinj : Function.Injective hf := by
     refine (injective_iff_map_eq_zero _).2 fun P hP => Subtype.ext ?_
-    exact GlobalTheory.T.harmonic_polynomial_eq_zero_of_function D m n w B hw hm P P.2 hP
+    exact _root_.GlobalTheory.ExportSeries.HarmInj.harm_inj D m n w B hw hm P P.2 hP
   have hr : LinearMap.range hf = LinearMap.range (cfn w.lam) := by
     rw [LinearMap.range_comp, Submodule.range_subtype, _root_.GlobalTheory.ExportSeries.Onto.map_harm_eq D m n w B hw hm]
     have : {φ | ∃ F : VV ℂ w.lam, φ = coefFn (RingHom.id ℂ) w.lam (F : Pol ℂ D.what₂.Tau n)} =
@@ -848,7 +849,7 @@ theorem psi_rhoVr {m n : ℕ} {w : Weight D n} {B : GLR D n} (hw : w.Good) (hm :
     {Ψ : VV ℂ w.lam →ₗ[ℂ] PolF D m n} (h1 : ∀ F, Ψ F ∈ harm m w B) (h2 : ∀ F, harmFn m w B (Ψ F) = cfn w.lam F)
     (γ : GL (Fin n) D.host.E) (F : VV ℂ w.lam) :
     Ψ (rhoVr (tauE D) w.lam γ F) = fockGL m w B (embGL (tauE D) γ) (Ψ F) := by
-  refine sub_eq_zero.1 (GlobalTheory.T.harmonic_polynomial_eq_zero_of_function D m n w B hw hm _ (sub_mem (h1 _) (fockGL_mem_harm w B _ (h1 _))) ?_)
+  refine sub_eq_zero.1 (_root_.GlobalTheory.ExportSeries.HarmInj.harm_inj D m n w B hw hm _ (sub_mem (h1 _) (fockGL_mem_harm w B _ (h1 _))) ?_)
   funext x
   rw [map_sub, Pi.sub_apply, h2, harmFn_fockGL, h2, Pi.zero_apply, sub_eq_zero, cfn_apply, cfn_apply,
     coefFn_rhoVr (RingHom.id ℂ) (fun τ => RingHom.id_comp _)]

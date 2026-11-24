@@ -71,7 +71,6 @@ import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniquePlace
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLattice
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLatticeStatement
 import Formalism.HermitianLattices.FinalMass
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -1685,7 +1684,7 @@ theorem main : ∀ Cg cb Cu cT CT C0 A Ad C₁ : ℝ, 0 ≤ C₁ → ∃ C₀ : 
   have hf' : (1 : ℝ) ≤ D.R.f := by exact_mod_cast hf
   have lf0 : 0 ≤ Real.log D.R.f := Real.log_nonneg hf'
   have l0 : 0 ≤ lg2f D.R.f := Real.logb_nonneg (by norm_num) (by linarith)
-  obtain ⟨hWH, -, hpos, hlat₀, -⟩ := GlobalTheory.T.standardBaseFlag_complement_integralLattice D u u' F0 Λ₀ hst hbase (hrows.1 Λ₀ hΛ₀)
+  obtain ⟨hWH, -, hpos, hlat₀, -⟩ := _root_.GlobalTheory.LoopC.Base.main D u u' F0 Λ₀ hst hbase (hrows.1 Λ₀ hΛ₀)
   have hfull : Submodule.IsFullLattice D.host.E (L0X D Λ₀ (lf D F0)) := by
     refine { toIsLattice := hlat₀, span_eq_top := ?_ }
     apply eq_top_iff.mpr
@@ -1728,7 +1727,7 @@ theorem main : ∀ Cg cb Cu cT CT C0 A Ad C₁ : ℝ, 0 ≤ C₁ → ∃ C₀ : 
     (fun d => ((d : ℝ) / NT D u) ^ D.R.k * ((d : ℝ) * NT D u) ^ (C₁ * s + C₁ * Real.log D.R.f) * XiS D u HH C₁ s)
     K _ k0.le (fun d _ => by positivity) (fun d _ => by positivity) (fun Λ hΛ => ?_) (fun d hd => ?_) ?_
   · have hR := hrows.1 Λ hΛ
-    obtain ⟨hW, -, -, hlat, hint, -⟩ := GlobalTheory.T.standardBaseFlag_complement_integralLattice D u u' F0 Λ hst hbase hR
+    obtain ⟨hW, -, -, hlat, hint, -⟩ := _root_.GlobalTheory.LoopC.Base.main D u u' F0 Λ hst hbase hR
     refine (cnt_triples (FrEqv.TEqv_equivalence D Λ (lf D F0)) _ _
       (pEqv_iff D (by omega) hg _ Λ hR.2.1 Z' Z'' s De) _ _ _
       (pair_sub D _ Λ hR.2.1 hW hpos hlat.fg hint Z' Z'' s (by omega) De) (ENNReal.ofReal K)

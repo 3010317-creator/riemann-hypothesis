@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EigenvectorAdjointIntertwinerNormalOperatorsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSphericalOperatorsRowsNormalEigenspacesStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperatorsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSphericalOperatorsRowsNormalEigenspaces
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperators
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -73,9 +73,9 @@ theorem matched_commute : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T :
     exact (hM y (hX P cX y) (hXo P hg cX y)).trans (hh P hg0 c0 (R.Th t y)).symm
   refine ⟨part1, ?_⟩
   intro c w hw
-  have h01 := GlobalTheory.T.exists_sphericalOperators_rows_normal_eigenspaces R F hC hS SF hSF
+  have h01 := _root_.GlobalTheory.Hk3.OpsRows.exists_opsE R F hC hS SF hSF
   rcases h01 with ⟨h0, h0o, h0n, -, h0e, -⟩
-  have hX01 := (GlobalTheory.T.realization_family_normal_operators R F hC.lev hC.fam hC.models).1 t
+  have hX01 := (_root_.GlobalTheory.DefiniteOps.definite_ops R F hC.lev hC.fam hC.models).1 t
   rcases hX01 with ⟨hX0, hX0o, hX0n⟩
   have eqX : hX P cX = hX0 P cX := by
     ext x

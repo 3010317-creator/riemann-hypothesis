@@ -16,7 +16,7 @@ public import Formalism.DoubleCosetMeasures.StatementZ
 public import Development.AbelianVarietyTheory.Definitions.Divisors.OmAUnipFourierInv
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTranslatesEqPrimFrameLat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumOKEx
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitThetaGridIsAdmissibleFlipTensorStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitThetaGridIsAdmissibleFlipTensor
 public import Development.AutomorphicArithmetic.DivisorFrames.IntegralMemAddSubgroupOfRamifiedTwistedInvariant
 public import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsPowLocKMulInf
@@ -1233,7 +1233,7 @@ theorem flips_mem {G : Grid k} {ψ : AddChar k Circle} {ϖ : kˣ} {e : ℕ} (hϖ
     obtain _ | ⟨hp, hc'⟩ := hc
     obtain ⟨x1, x2, x3, x4, x5⟩ := hν x List.mem_cons_self
     have := ih (S.flip .one ψ ϖ e x) _ (fun y hy => hν y (List.mem_cons_of_mem _ hy)) hc' (fun X => ?_)
-      (GlobalTheory.T.splitThetaGrid_isAdmissible_flipTensor ψ ϖ e hϖ hψc he S x x1 hp hJ hT)
+      (_root_.GlobalTheory.FlipAdm.isAdmissible_flip ψ ϖ e hϖ hψc he S x x1 hp hJ hT)
       (flip_mem hϖ hψc hq hψ x1 x2 x3 x4 x5 S hp (hJ _).1 (hJ _).2 hT hF) z
     · rw [List.length_cons, Nat.succ_mul, add_comm (l.length * _), ← add_assoc]
       exact this

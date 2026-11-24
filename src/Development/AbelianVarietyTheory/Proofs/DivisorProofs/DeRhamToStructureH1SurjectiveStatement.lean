@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AxesVanishingStructureSheafDegOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalOneFormFrameCoordinatesConstantStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalTwoFormEqSumWedgeGlobalOneFormsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalTwoFormEqSumWedgeGlobalOneForms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeOneFormFrameAndSquareStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivativeCurvatureClosednessRelationsAddStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GrpObjPullbackAxesCohomologyProjectionsStatement
@@ -555,7 +555,7 @@ theorem exists_obRel_of_dRel : ∀ (R : Type) [CommRing R] (C : Type) [Category.
       dOne R (F.obj T') (ω' T') = pOm F 2 φ (dOne R (F.obj T) (ω' T)) := by
     intro T T' φ
     rw [hconn φ, map_add (f := _), dOne_D, add_zero, pOm_dOne]
-  obtain ⟨m, u, v, hζ⟩ := GlobalTheory.T.globalTwoForm_eq_sumWedgeGlobalOneForms R C F ⟨N, ⟨Φ⟩⟩ h0 (fun T ↦ dOne R (F.obj T) (ω' T)) hglob
+  obtain ⟨m, u, v, hζ⟩ := _root_.GlobalTheory.AbCoh.twoForm_eq_wsum R C F ⟨N, ⟨Φ⟩⟩ h0 (fun T ↦ dOne R (F.obj T) (ω' T)) hglob
   exact ⟨m, u, v, f, ω', hf, hconn, fun T ↦ congrFun hζ T⟩
 
 end GlobalTheory.AbCoh

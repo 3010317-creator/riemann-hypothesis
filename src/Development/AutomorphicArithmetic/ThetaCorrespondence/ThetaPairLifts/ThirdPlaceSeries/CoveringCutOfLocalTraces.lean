@@ -10,7 +10,7 @@ public import Formalism.LocalToGlobal.IndefiniteReal.LinksChar
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormGoodRowsFiniteGroupAction
 public import Formalism.LocalToGlobal.IndefiniteReal.ConcretePkgSpec
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteGroupActsUnitarily
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormLiftFormsFiniteGroupActionStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormLiftFormsFiniteGroupAction
 public import Formalism.LocalToGlobal.Divisibility.GoodPartHermitianSpec
 public import Formalism.LocalToGlobal.Divisibility.ProjLemmas
 public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
@@ -405,7 +405,7 @@ theorem actsUnitarily_of_clauses (R : RealDat D A Ks) (hE : R.models_HE) (gE : R
     ActsUnitarily R :=
   have h := GlobalTheory.FiniteGroupUnitary.definiteUnitary R ht hX hV
   ⟨GlobalTheory.FiniteGroupUnitary.isUnitaryRep_of_norm _ (GlobalTheory.T.norm_goodRows_finiteGroup_action R hE gE h0),
-    fun i σ => GlobalTheory.FiniteGroupUnitary.isUnitaryRep_of_norm _ (GlobalTheory.T.norm_liftForms_finiteGroup_action R hW gW hν i σ),
+    fun i σ => GlobalTheory.FiniteGroupUnitary.isUnitaryRep_of_norm _ (_root_.GlobalTheory.gW_norm_eq R hW gW hν i σ),
     fun t σ => h.1 t σ, fun i t σ => h.2 i t σ⟩
 
 theorem geometric_unitary (R : RealDat D A Ks) (hU : R.LUnif) (hW : R.models_HW) (gW : R.models_gW) (h : ActsUnitarily R)

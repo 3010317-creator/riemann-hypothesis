@@ -74,7 +74,8 @@ import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLinearEquivOfP
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletion
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeRationalTranslateInvariance
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeSelfDualTraceForm
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicativeStatement
+import Formalism.LocalToGlobal.ProjectiveLattices.EquivariantFiniteGroup
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicative
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CongruenceLatticeFractionalMultipleAgree
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsTangentModuleUniversalGroup
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExponentialDerivativeAtZeroIsTangent
@@ -768,7 +769,7 @@ theorem exists_frBor_of_dictLat {D : D7} {H : ReciprocityTheory.ChartRestriction
     rw [hL.1.1, hG, hξ]
   have hty := (GlobalTheory.Relab.relab_good _ H l c σ hσ).2.2.2 Dw g e
   obtain ⟨θa, hθa⟩ := (GlobalTheory.Member.infiniteAdele_bijective D).1
-  obtain ⟨hAr, -, -⟩ := GlobalTheory.T.archimedeanMatrix_unitary_continuous_multiplicative D V θa hθa
+  obtain ⟨hAr, -, -⟩ := _root_.GlobalTheory.Member.Arch.archM_spec D V θa hθa
   have hp0 : p ≠ 0 := hp.2.2.2.1.ne_zero
   have hM0 : l.M ≠ 0 := by have := l.three_le; omega
   obtain ⟨p', hp'⟩ : ∃ p', p * p' ≡ 1 [MOD l.M'] := by

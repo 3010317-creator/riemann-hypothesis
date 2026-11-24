@@ -5,8 +5,8 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOpensPreimageEqOfSqZeroAugmentation
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PrimitiveStructureSheafDegTwoVanish
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ComparisonMemCechHodgeFiltration
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommaDescentInjectiveStatement
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CommAlgFunctorCoboundaryZeroMemCocyclesOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommaDescentInjective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommaDescentRestrictionEquiv
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlueCommaOfBasis
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasLocOAff
@@ -236,7 +236,7 @@ theorem restrict_pull2_bijective_of_basis (R : Type) [CommRing R] (X : Scheme.{0
   have hg := _root_.GlobalTheory.CatCoh.Desc.glue_comma_of_basis (OAff s) G H hcov hdir
   have hv := _root_.GlobalTheory.CatCoh.Desc.Basis.oneCocycle_vanishing_comma_of_basis (OAff s) G H hcov hdir
   have hv2 := _root_.GlobalTheory.CatCoh.Desc.VandermondeTwoBasis.twoCocycle_coboundary_of_basisFunctor_alt (OAff s) G H hcov hdir
-  exact ⟨GlobalTheory.T.comma_descent_injective _ _ hs hg hv, _root_.GlobalTheory.CatCoh.Desc.pull2_surjective_of_comma _ _ hs hg hv hv2⟩
+  exact ⟨_root_.GlobalTheory.CatCoh.pull2_restrict_injective_of_comma _ _ hs hg hv, _root_.GlobalTheory.CatCoh.Desc.pull2_surjective_of_comma _ _ hs hg hv hv2⟩
 
 end GlobalTheory.AbCoh
 end -- clump:auto

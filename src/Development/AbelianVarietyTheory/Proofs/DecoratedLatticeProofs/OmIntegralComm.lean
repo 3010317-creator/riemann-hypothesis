@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittSmallGroupEmbeddingMemPointwiseStabilizerIso
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.SqNormIntegralFundamentalDomainEqL2NormSq
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.EqZeroOfOrthogonalAllThetaFunctionsStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.EqZeroOfOrthogonalAllThetaFunctions
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaFunctionScalarProductPreservedIsometry
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContinuousIsotropicSandwichMeanTranslation
 import Mathlib.Algebra.Order.Floor.Extended
@@ -76,7 +77,7 @@ theorem om_integral_comm : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : 
   have hOG := hom.om_pres p _ hG
   set q : WO S T → ℂ := fun x => om p G x - H x with hqdef
   have hq : q = 0 := by
-    refine GlobalTheory.T.eq_zero_of_orthogonal_all_thetaFunctions D ψ hψ S T μ 𝓕 hμ h𝓕 q (hOG.cont.sub hHc) ?_ ?_
+    refine _root_.GlobalTheory.ThetaOrthTotal.eq_zero_of_orthogonal_theta D ψ hψ S T μ 𝓕 hμ h𝓕 q (hOG.cont.sub hHc) ?_ ?_
     · intro γ x
       have e1 := hOG.quasi γ x
       have e2 : H (ratW T S γ + x) = ψ (-(symplOH S T (ratW T S γ) x)) * H x := by

@@ -2,16 +2,18 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.CoeSelfDualLatticeInFrameCoordinatesEq
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsPrincipalLevelSubgroupOpenStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsPrincipalLevelSubgroupOpen
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.MarkingRuleTranslateStableStatement
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.MemberDictionaryFramesOrthonormalUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.MemberDictionaryInvariantRationalLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletionStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicativeStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CongruenceLatticeFractionalMultipleAgreeStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.PrincipalLevelEqHalfMarkingStabilizerStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryEqRealMulFiniteSplitStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFiniteAdelicElementMarkingComponentStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.MemberDictionaryInvariantRationalLevel
+public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletion
+public import Formalism.LocalToGlobal.ProjectiveLattices.EquivariantFiniteGroup
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicative
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CongruenceLatticeFractionalMultipleAgree
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.PrincipalLevelEqHalfMarkingStabilizer
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryEqRealMulFiniteSplit
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFiniteAdelicElementMarkingComponent
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameMulTriangularOrthonormal
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.MarkingComponentUniqueFrameUniqueArithmeticGroupStatement
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
@@ -47,12 +49,11 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHeckeQu
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.NormConst
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLatticeDatumOfSelfDualLattice
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUnitaryMatrixOfLatticeIsometry
-public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasseNormTheoremQuadraticExtension
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicCompletionFractionalIdealProperties
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicCompletionSelfDualOfSelfDualLattice
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeRationalTranslateInvarianceStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeSelfDualTraceFormStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeRationalTranslateInvariance
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeSelfDualTraceForm
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLinearApproxTower
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IntegralTmulOneMulMemAdelicCompletion
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RelabelEmbeddingsGoodBijectiveConjCompat
@@ -120,10 +121,10 @@ import Mathlib.Algebra.Order.Star.Real
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PullCub
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabComp
 import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.UnivFrame
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CompletedLatticeEqAdelicCompletionAndGramStatement
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FinitePartPreservesFormDetNormOneStatement
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RationalPointsAdelicUnitaryEqUnitaryStatement
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMemberDictionaryContextGoodEmbeddingStatement
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CompletedLatticeEqAdelicCompletionAndGram
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FinitePartPreservesFormDetNormOne
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RationalPointsAdelicUnitaryEqUnitary
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMemberDictionaryContextGoodEmbedding
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointReducedFromTestRing
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -150,8 +151,8 @@ theorem adel_leftInv_and_continuous : ∀ (D : D7) (H : ReciprocityTheory.ChartR
   have : IsTopologicalGroup (GA D V) :=
     inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
   have hM : 0 < l.M := lt_of_lt_of_le (by norm_num) l.three_le
-  obtain ⟨⟨Kf, hKf⟩, hnb⟩ := GlobalTheory.T.exists_principalLevel_subgroup_open D V l.M
-  obtain ⟨h1, -, h3, -, h5⟩ := GlobalTheory.T.memberDictionary_invariant_rational_level D H Dw l Xo c σ V r C hC dict hd Kf hKf
+  obtain ⟨⟨Kf, hKf⟩, hnb⟩ := _root_.GlobalTheory.Member.PrincLevel.exists_levelK_and_nhds D V l.M
+  obtain ⟨h1, -, h3, -, h5⟩ := _root_.GlobalTheory.Member.dict_invariant D H Dw l Xo c σ V r C hC dict hd Kf hKf
   have hχ := hC.base.chi
   have hsec : ∀ k, (C.M.X k).IsSec (la k) (P k) := fun k => (hP k).1.1
   constructor
@@ -247,7 +248,7 @@ theorem mem_level_of_mark_of_frame_eq : ∀ (D : D7) (H : ReciprocityTheory.Char
   obtain ⟨-, hL', hM'⟩ := hm'
   generalize γ * h = g at *
   generalize γ' * h' = g' at *
-  obtain ⟨hA, hG, -⟩ := GlobalTheory.T.archimedeanMatrix_unitary_continuous_multiplicative D V C.θ hC.inf
+  obtain ⟨hA, hG, -⟩ := _root_.GlobalTheory.Member.Arch.archM_spec D V C.θ hC.inf
   rw [hK]
   refine ⟨hG _ fun τ hτ => ?_, ?_⟩
   · have hΨ : τ ∈ (C.M.X k).Ψ := by
@@ -269,10 +270,10 @@ theorem mem_level_of_mark_of_frame_eq : ∀ (D : D7) (H : ReciprocityTheory.Char
       have e1 : (fun v : Fin V.rank → D.host.E => v ∘ Fin.cast C.hr.symm) = id := rfl
       rwa [e1, Set.image_id, Set.image_id] at e
     have hhat : latGHat V g' = latGHat V g := by
-      rw [(GlobalTheory.T.adelicElementLattice_full_and_completion D V g).2.2.2.2.1, (GlobalTheory.T.adelicElementLattice_full_and_completion D V g').2.2.2.2.1, hlat]
-    have himg := (GlobalTheory.T.adelicElementLattice_full_and_completion D V g).2.2.2.1
-    rw [← (GlobalTheory.T.adelicElementLattice_full_and_completion D V 1).2.2.2.2.1] at himg
-    refine ((GlobalTheory.T.principalLevel_eq_halfMarking_stabilizer D H l V).1 _).2 ((((GlobalTheory.T.congruence_lattice_fractionalMultiple_agree D V) _).2 _ _).2 ?_)
+      rw [(_root_.GlobalTheory.Member.latG_lattice_and_completion D V g).2.2.2.2.1, (_root_.GlobalTheory.Member.latG_lattice_and_completion D V g').2.2.2.2.1, hlat]
+    have himg := (_root_.GlobalTheory.Member.latG_lattice_and_completion D V g).2.2.2.1
+    rw [← (_root_.GlobalTheory.Member.latG_lattice_and_completion D V 1).2.2.2.2.1] at himg
+    refine ((_root_.GlobalTheory.Member.finCong_iff_half_and_kfHalf D H l V).1 _).2 ((((_root_.GlobalTheory.Member.AALev.congruences_agree D V) _).2 _ _).2 ?_)
     intro a ha
     rw [← hC.iota.emb.2, LinearMap.range_eq_map, ← Submodule.map_smul''] at ha
     obtain ⟨b, hb, rfl⟩ := ha
@@ -346,11 +347,11 @@ theorem dict_real_equivariant_onto : ∀ (D : D7) (H : ReciprocityTheory.ChartRe
   · obtain ⟨x₀, b, hb, ho, hx₀⟩ := (GlobalTheory.UnitFrames.frame_mul_triangular_orthonormal D.host.E r
       (C.M.X k).p0 (C.M.X k).Ψ (C.M.X k).Gm (C.M.X k).Gm_herm).1 x hx
     obtain ⟨u, hu, hux⟩ := (GlobalTheory.T.memberDictionary_frames_orthonormal_unit D H Dw l Xo c σ V r C hC 1 k).2.2.2.2.2.2 x₀ ho
-    obtain ⟨f, hf, hm⟩ := GlobalTheory.T.exists_finiteAdelic_element_marking_component D H Dw l Xo c σ V r C hC k
+    obtain ⟨f, hf, hm⟩ := _root_.GlobalTheory.Member.exists_finite_mark D H Dw l Xo c σ V r C hC k
     have hm2 := (GlobalTheory.T.markingRule_translate_stable D H Dw l Xo c σ V r C hC f k 1 hm).2.2.1 u hu
     obtain ⟨δ, hδ, e⟩ := dict_eq_of_mark D H Dw l Xo c σ V r C hC dict hd (f * u) k 1 hm2
     refine ⟨f * u, δ, hδ, b, hb, ?_⟩
-    rw [e, one_mul, ← (GlobalTheory.T.adelicUnitary_eq_real_mul_finite_split D V).2.1 u hu f hf,
+    rw [e, one_mul, ← (_root_.GlobalTheory.UnitarySplit.real_finite_split D V).2.1 u hu f hf,
       (GlobalTheory.T.memberDictionary_frames_orthonormal_unit D H Dw l Xo c σ V r C hC u k).2.2.2.2.1 f hf, hux, hx₀, frame_rmul_lact]
 
 end GlobalTheory.Member
@@ -388,7 +389,7 @@ namespace GlobalTheory.Member
 
 theorem dictIsUnif_of_isDict : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (σ : c.F →+* ℂ) (V : HSp D) (r : ℕ) (C : Ctx Xo c σ V r), C.OK → ∀ dict, C.IsDict dict → ∀ Kf : Subgroup (GA D V), IsLevelK V l.M Kf → DictIsUnif V dict Kf C.th C.hr := by
   intro D H Dw l Xo c σ V r C hC dict hd Kf hK
-  obtain ⟨h1, h2, h3, -, -⟩ := GlobalTheory.T.memberDictionary_invariant_rational_level D H Dw l Xo c σ V r C hC dict hd Kf hK
+  obtain ⟨h1, h2, h3, -, -⟩ := _root_.GlobalTheory.Member.dict_invariant D H Dw l Xo c σ V r C hC dict hd Kf hK
   obtain ⟨h4, h5⟩ := GlobalTheory.T.memberDictionary_real_equivariant_onto_triangular D H Dw l Xo c σ V r C hC dict hd
   refine ⟨h1, h2, ⟨fun k => C.fr 1 k, fun k => ⟨(GlobalTheory.T.memberDictionary_frames_orthonormal_unit D H Dw l Xo c σ V r C hC 1 k).2.1, hd.2 k⟩, h4⟩,
     h3, h5, ?_⟩
@@ -1192,11 +1193,11 @@ theorem GlobalTheory.Member.exists_mark : ∀ (D : D7) (H : ReciprocityTheory.Ch
   subst hr
   obtain ⟨⟨-, -, ⟨hinj, hrange⟩, hisom⟩, -, hA, hgood, hbase, hW, -, -⟩ := hC
   dsimp only at hinj hrange hisom hbase hW
-  obtain ⟨-, hfv, -, -, -, hcc, -, hGc, hGdet, hT, -⟩ := GlobalTheory.T.completedLattice_eq_adelicCompletion_and_gram D V
-  obtain ⟨hfg1, hsp1, -⟩ := GlobalTheory.T.adelicElementLattice_full_and_completion D V 1
-  obtain ⟨hfg, hsp, hlat, -⟩ := GlobalTheory.T.adelicElementLattice_full_and_completion D V h
-  obtain ⟨hJ, hsd1, -⟩ := GlobalTheory.T.adelicUnitaryLattice_selfDual_traceForm D V 1 _ rfl
-  obtain ⟨-, -, hsd⟩ := GlobalTheory.T.adelicUnitaryLattice_selfDual_traceForm D V h _ rfl
+  obtain ⟨-, hfv, -, -, -, hcc, -, hGc, hGdet, hT, -⟩ := _root_.GlobalTheory.Member.latHat_eq_hat_and_gram D V
+  obtain ⟨hfg1, hsp1, -⟩ := _root_.GlobalTheory.Member.latG_lattice_and_completion D V 1
+  obtain ⟨hfg, hsp, hlat, -⟩ := _root_.GlobalTheory.Member.latG_lattice_and_completion D V h
+  obtain ⟨hJ, hsd1, -⟩ := _root_.GlobalTheory.Member.latG_selfDual D V 1 _ rfl
+  obtain ⟨-, -, hsd⟩ := _root_.GlobalTheory.Member.latG_selfDual D V h _ rfl
   obtain ⟨f, hf1, hf2, hf3⟩ := GlobalTheory.AdLat.exists_linear_approx_tower D.host.F D.host.E V.rank (latG V 1)
     (finHom V h) (latG V h) hfg1 hsp1 hlat
   let ε : Dw.La ≃ₗ[𝓞 D.host.E] latG V 1 :=
@@ -1231,7 +1232,7 @@ theorem GlobalTheory.Member.exists_mark : ∀ (D : D7) (H : ReciprocityTheory.Ch
       obtain ⟨w, hw, ew⟩ := hf1 n hn (ε a)
       obtain ⟨w', hw', ew'⟩ := hf1 n hn (ε a')
       obtain ⟨z, hz, ez⟩ := form_congr (latG V 1) (cF D) V.gramᵀ _ _
-        (fun x hx => (hsd1 x).2 hx) (GlobalTheory.T.finitePart_preserves_form_det_norm_one D V h).1 hn (ε a).2 (ε a').2 hw hw' ew ew'
+        (fun x hx => (hsd1 x).2 hx) (_root_.GlobalTheory.Member.finHom_herm_det D V h).1 hn (ε a).2 (ε a').2 hw hw' ew ew'
       obtain ⟨t, ht⟩ := (hJ z).1 hz 1
       refine ⟨-t, ?_⟩
       simp only [hcc, hε] at ez
@@ -1242,10 +1243,10 @@ theorem GlobalTheory.Member.exists_mark : ∀ (D : D7) (H : ReciprocityTheory.Ch
         simp [Algebra.smul_def]; ring
       rw [this, map_smul, ht]
       simp)
-  obtain ⟨hQ, -, hex, -, hfin⟩ := GlobalTheory.T.rational_points_adelicUnitary_eq_unitary D V
+  obtain ⟨hQ, -, hex, -, hfin⟩ := _root_.GlobalTheory.Member.RatElt.rational_elements D V
   obtain ⟨γ, hγ⟩ := hex γ' hu
-  obtain ⟨hmv, -⟩ := (GlobalTheory.T.adelicUnitaryLattice_rationalTranslate_invariance D V).1 γ γ' h hγ
-  obtain ⟨-, -, -, hhat1, hhat2, -⟩ := GlobalTheory.T.adelicElementLattice_full_and_completion D V (γ * h)
+  obtain ⟨hmv, -⟩ := (_root_.GlobalTheory.Member.latG_move D V).1 γ γ' h hγ
+  obtain ⟨-, -, -, hhat1, hhat2, -⟩ := _root_.GlobalTheory.Member.latG_lattice_and_completion D V (γ * h)
   have hΛ : ∀ v, v ∈ (M.X k).Λ ↔ v ∈ latG V (γ * h) := fun v => by
     have e : v = γ'.val *ᵥ ((γ'⁻¹).val *ᵥ v) := by
       rw [Matrix.mulVec_mulVec, Units.mul_inv, Matrix.one_mulVec]
@@ -1320,7 +1321,7 @@ theorem GlobalTheory.Member.Ctx.exists_isDict : ∀ (D : D7) (H : ReciprocityThe
       rw [dite_eq_right hk]
       exact ⟨h₀ h, rfl⟩
   · intro k
-    obtain ⟨h, hf, hm⟩ := GlobalTheory.T.exists_finiteAdelic_element_marking_component D H Dw l Xo c σ V r C hC k
+    obtain ⟨h, hf, hm⟩ := _root_.GlobalTheory.Member.exists_finite_mark D H Dw l Xo c σ V r C hC k
     have hk : ∃ k, C.Mark h k 1 := ⟨k, hm⟩
     refine ⟨h, ?_⟩
     beta_reduce
@@ -1386,7 +1387,7 @@ theorem exists_pkgLaws : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.
   have hS := GlobalTheory.firstFiveLaws.1.secBaseChange
   have hT := GlobalTheory.firstFiveLaws.2.1.secTwist
   have hneg : GlobalTheory.FrameUnif.NegXi C.M :=
-    (GlobalTheory.T.exists_memberDictionaryContext_goodEmbedding D H Dw l Xo c σ V r C.hr C.ι hC.iota hC.pos hC.lA hC.good).2.1 C hC
+    (_root_.GlobalTheory.Member.exists_ctx D H Dw l Xo c σ V r C.hr C.ι hC.iota hC.pos hC.lA hC.good).2.1 C hC
   obtain ⟨un, hun⟩ := GlobalTheory.FrameUnif.exists_framesOK hS hT _ H Dw l Xo c σ C.g C.e C.F r C.M hC.good hC.base hneg
   obtain ⟨dict, hd⟩ := GlobalTheory.T.exists_dictionary_by_marking_rule D H Dw l Xo c σ V r C hC
   obtain ⟨mu, hval, hmul, hnorm, hrat, hcont⟩ := GlobalTheory.T.exists_unitaryAdelicChar_of_heckeChar D V χ hχ hχF
@@ -1399,7 +1400,7 @@ theorem exists_pkgLaws : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.
       chi1 := hC.base.chi
       modelW := hC.modelW
       familyUniformisationBasePointOrthogonal := hC.orth
-      muUnit := ⟨hmul, hnorm, hrat, (GlobalTheory.T.memberDictionary_invariant_rational_level D H Dw l Xo c σ V r C hC dict hd Kf hK).2.2.2.1⟩
+      muUnit := ⟨hmul, hnorm, hrat, (_root_.GlobalTheory.Member.dict_invariant D H Dw l Xo c σ V r C hC dict hd Kf hK).2.2.2.1⟩
       muCont := hcont
       muVal := hval
       adelAut := GlobalTheory.T.cuspSection_adelic_leftInvariant_continuous D H Dw l Xo c σ V r C hC dict hd mu hmul hrat hcont

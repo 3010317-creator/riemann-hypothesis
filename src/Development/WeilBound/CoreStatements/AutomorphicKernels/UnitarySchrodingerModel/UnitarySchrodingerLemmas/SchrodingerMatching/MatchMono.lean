@@ -27,7 +27,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBoundU
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmTypeFromConjugateComplement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacOfMemSchwartzA
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FrameIntegralEqThetaPartNondegenerate
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnfoldingHoldsStatement
+public import Development.WeilBound.CoreStatements.AutomorphicKernels.UnitarySchrodingerModel.CoefDataExists
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnfoldingHolds
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.UnitarySchrodingerModel.UnitarySchrodingerLemmas.FockLatticeHeights.HWFinal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -1498,7 +1499,7 @@ namespace PositivityTheory.PfSWUS.SwMatch
 
 theorem matchMono : PositivityTheory.PfSWUS.MatchMono :=
   matchMono_of' psiPlaces PositivityTheory.PfSWUS.SwSpanR.realMatch PositivityTheory.PfSWUS.SwSpan.realConj PositivityTheory.PfSWUS.SwFockk.heightWN
-    PositivityTheory.PfSWUS.KFinMatch.finite_places_match GlobalTheory.CompanionTheory.IwaRedHand.mod_of_cg valueSide GlobalTheory.T.unfolding_holds GlobalTheory.T.height_K_invariance haarFam
+    PositivityTheory.PfSWUS.KFinMatch.finite_places_match GlobalTheory.CompanionTheory.IwaRedHand.mod_of_cg valueSide _root_.GlobalTheory.CompanionTheory.SwUnf.unfold GlobalTheory.T.height_K_invariance haarFam
 
 end PositivityTheory.PfSWUS.SwMatch
 end -- clump:auto

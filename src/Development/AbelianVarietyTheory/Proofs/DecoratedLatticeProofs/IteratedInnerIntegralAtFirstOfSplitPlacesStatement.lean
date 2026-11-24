@@ -17,9 +17,10 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Sym
 public import Mathlib.Analysis.Matrix.MeasurableSpace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricDoubleIntegralsPositionOneEqCellSum
 public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AddCharConductorIntegersContinuousNeOneStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AddCharConductorIntegersContinuousNeOne
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleStepLocalWeilActionLineCharactersCancelStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalModelWeilOperatorTrivialAtPlaceIsModelStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalModelWeilOperatorTrivialAtPlaceIsModel
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceDoubleStepTrilinearFormPropertiesStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricPositionsDoubleIntegralExistsUnique
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasDerivAtZeroAndIsTheta
@@ -80,7 +81,7 @@ import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMa
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
 import Development.AbelianVarietyTheory.Definitions.Foundations.SimpleSum
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ValuationDetOfMemKO
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupClosedEmbeddingIntegralStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupClosedEmbeddingIntegral
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsSelfDualOfHasConductor
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.T2SpaceTensorProductFiniteExtension
@@ -580,13 +581,13 @@ theorem valOne_all : ∀ D : D7, ValOne D := by
   intro D ψ hψ σ S Q G₁ G₂ hG₁ hG₂ hK₁ hK₂ c₁ c₂ hc₁ hc₂ f₁ f₂ hvac φ f hφ hf hTy g hg h₁ hh₁ h₂ hh₂
   obtain ⟨⟨T₁, O₁, hT₁, hO₁, rfl⟩, ⟨T₂, O₂, hT₂, hO₂, rfl⟩⟩ := hvac
   have hcQ : Q.c + 1 + 1 = 2 * (σ + 1) := by have := Q.F.bes.1; omega
-  obtain ⟨hψc, hψ1⟩ := GlobalTheory.T.addChar_conductor_integers_continuous_ne_one Q.k Q.ψk Q.cond
+  obtain ⟨hψc, hψ1⟩ := _root_.GlobalTheory.hasConductor_one_continuous_ne_one Q.k Q.ψk Q.cond
   have hsd : IsSelfDual Q.ψk Q.ν := ((GlobalTheory.SplitWeil.selfDual_measure Q.k Q.ψk hψc hψ1).2.1 Q.cond Q.ν).1 Q.unitVol
-  obtain ⟨-, -, -, cm₀, -⟩ := GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D Q.k Q.q S.B.V _ Q.F.G₀ Q.gl₀ Q.loc₀
-  obtain ⟨-, -, -, cm₁, -⟩ := GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D Q.k Q.q S.J.W _ Q.F.G₁ Q.gl₁ Q.loc₁
-  obtain ⟨-, -, -, cm₂, -⟩ := GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D Q.k Q.q S.B'.V _ Q.F.G₂ Q.gl₂ Q.loc₂
-  have hT₁' := GlobalTheory.T.local_model_weil_operator_trivialAtPlace_isModel D Q.k Q.q ψ hψ S.B.V S.J.W S.s₁.χV S.s₁.χW S.s₁.om S.s₁.weil _ _ Q.F.G₀ Q.F.G₁ T₁ hT₁ g hg h₁ hh₁
-  have hT₂' := GlobalTheory.T.local_model_weil_operator_trivialAtPlace_isModel D Q.k Q.q ψ hψ S.J.W S.B'.V S.s₂.χV S.s₂.χW S.s₂.om S.s₂.weil _ _ Q.F.G₁ Q.F.G₂ T₂ hT₂ h₁ hh₁ h₂ hh₂
+  obtain ⟨-, -, -, cm₀, -⟩ := _root_.GlobalTheory.LocGl.local_group D Q.k Q.q S.B.V _ Q.F.G₀ Q.gl₀ Q.loc₀
+  obtain ⟨-, -, -, cm₁, -⟩ := _root_.GlobalTheory.LocGl.local_group D Q.k Q.q S.J.W _ Q.F.G₁ Q.gl₁ Q.loc₁
+  obtain ⟨-, -, -, cm₂, -⟩ := _root_.GlobalTheory.LocGl.local_group D Q.k Q.q S.B'.V _ Q.F.G₂ Q.gl₂ Q.loc₂
+  have hT₁' := _root_.GlobalTheory.LocModMove.isModel_weil_off D Q.k Q.q ψ hψ S.B.V S.J.W S.s₁.χV S.s₁.χW S.s₁.om S.s₁.weil _ _ Q.F.G₀ Q.F.G₁ T₁ hT₁ g hg h₁ hh₁
+  have hT₂' := _root_.GlobalTheory.LocModMove.isModel_weil_off D Q.k Q.q ψ hψ S.J.W S.B'.V S.s₂.χV S.s₂.χW S.s₂.om S.s₂.weil _ _ Q.F.G₁ Q.F.G₂ T₂ hT₂ h₁ hh₁ h₂ hh₂
   have hf' : IsContAut S.B'.V (rTrans h₂ f) :=
     ⟨fun γ hγ x => by simp only [rTrans, mul_assoc]; exact hf.1 γ hγ _, hf.2.comp (continuous_mul_const h₂)⟩
   have hTy' : Q.Typed (rTrans h₂ f) := fun j => by
@@ -827,7 +828,7 @@ theorem rest_grp : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (S :
   intro e he g hg
   obtain ⟨i, rfl⟩ := List.mem_ofFn.1 he
   obtain ⟨a, -, rfl⟩ := Finset.mem_image.1 (Finsupp.mapDomain_support hg)
-  have hr := (GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D (Q i.succ).k (Q i.succ).q S.B.V _ (Q i.succ).F.G₀ (Q i.succ).gl₀ (Q i.succ).loc₀).2.1
+  have hr := (_root_.GlobalTheory.LocGl.local_group D (Q i.succ).k (Q i.succ).q S.B.V _ (Q i.succ).F.G₀ (Q i.succ).gl₀ (Q i.succ).loc₀).2.1
   have ha : (Q i.succ).gl₀ a ∈ grpAt S.B.V (· = (Q i.succ).q.v) := hr ▸ ⟨a, rfl⟩
   refine grpAt_le_grpOff' _ ?_ ha
   rintro p rfl h
@@ -854,7 +855,7 @@ theorem innerVal_iter2 : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdCha
   have hh₁0 : h₁ ∈ grpOff S.J.W (· = (Q 0).q.v) := grpOff_le_at' _ hP0 hh₁
   have hh₂0 : h₂ ∈ grpOff S.B'.V (· = (Q 0).q.v) := grpOff_le_at' _ hP0 hh₂
   have hE := rest_grp D ψ σ S r Q hinj
-  have hcomm := (GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D (Q 0).k (Q 0).q S.B.V _ (Q 0).F.G₀ (Q 0).gl₀ (Q 0).loc₀).2.2.2.1
+  have hcomm := (_root_.GlobalTheory.LocGl.local_group D (Q 0).k (Q 0).q S.B.V _ (Q 0).F.G₀ (Q 0).gl₀ (Q 0).loc₀).2.2.2.1
   set E := conv (List.ofFn fun i : Fin r => (Q i.succ).e₀.mapDomain (Q i.succ).gl₀) with hEdef
   set f₁' := comb ψ _ _ (aconv (List.ofFn fun i : Fin r => (Q i.succ).D₁)) f₁ with hf₁'
   set f₂' := comb ψ _ _ (aconv (List.ofFn fun i : Fin r => (Q i.succ).D₂)) f₂ with hf₂'

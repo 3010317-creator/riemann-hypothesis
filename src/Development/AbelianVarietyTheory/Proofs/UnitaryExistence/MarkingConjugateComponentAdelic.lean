@@ -6,8 +6,8 @@ public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.H
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsEqSmulOfFinrankOne
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicCompletionFractionalIdealProperties
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletionStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeRationalTranslateInvarianceStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletion
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeRationalTranslateInvariance
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsDatumRankOne
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsIsSplitPeriod
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUnitaryMatrixOfLatticeIsometry
@@ -19,7 +19,7 @@ import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CramerMemAdelicC
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsSmulMemOfMemSpanFraction
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IntegralTmulOneMulMemAdelicCompletion
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.MemAdelicCompletionPseudoBasisIff
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RationalPointsAdelicUnitaryEqUnitaryStatement
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RationalPointsAdelicUnitaryEqUnitary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -290,8 +290,8 @@ theorem exists_of_matched {D : D7} (V : HSp D) (g g' δ : GA D V) (δ' : GL (Fin
     ∃ u : GA D V, gLat V u = latHat V ∧ finHom V g' * finHom V u = finHom V δ * finHom V g ∧
       (finHom V u).1.det * ((1 : Af D.host.F) ⊗ₜ[D.host.F] S.det) - 1 ∈
         GlobalTheory.AdLat.hat1 D.host.F ((algebraMap (𝓞 D.host.E) D.host.E) '' (I : Set (𝓞 D.host.E))) := by
-  obtain ⟨m1, -, -, m4⟩ := GlobalTheory.T.adelicUnitaryLattice_rationalTranslate_invariance D V
-  obtain ⟨-, -, -, -, r5⟩ := GlobalTheory.T.rational_points_adelicUnitary_eq_unitary D V
+  obtain ⟨m1, -, -, m4⟩ := _root_.GlobalTheory.Member.latG_move D V
+  obtain ⟨-, -, -, -, r5⟩ := _root_.GlobalTheory.Member.RatElt.rational_elements D V
   obtain ⟨m1, m2⟩ := m1 δ δ' g hδ
   have hL : latG V g' = latG V (δ * g) := by
     ext v
@@ -304,10 +304,10 @@ theorem exists_of_matched {D : D7} (V : HSp D) (g g' δ : GA D V) (δ' : GL (Fin
   refine ⟨g'⁻¹ * (δ * g), gLat_eq_of_finCong V _ (m4 _ _ hL) ?_, hu, ?_⟩
   · rw [mul_inv_rev, inv_inv]
     exact m4 _ _ hL.symm
-  obtain ⟨f1, f2, -⟩ := GlobalTheory.T.adelicElementLattice_full_and_completion D V 1
-  obtain ⟨-, -, -, -, a5, -⟩ := GlobalTheory.T.adelicElementLattice_full_and_completion D V g
-  obtain ⟨-, -, -, b4, b5, -⟩ := GlobalTheory.T.adelicElementLattice_full_and_completion D V g'
-  obtain ⟨-, -, -, -, c5, -⟩ := GlobalTheory.T.adelicElementLattice_full_and_completion D V (δ * g)
+  obtain ⟨f1, f2, -⟩ := _root_.GlobalTheory.Member.latG_lattice_and_completion D V 1
+  obtain ⟨-, -, -, -, a5, -⟩ := _root_.GlobalTheory.Member.latG_lattice_and_completion D V g
+  obtain ⟨-, -, -, b4, b5, -⟩ := _root_.GlobalTheory.Member.latG_lattice_and_completion D V g'
+  obtain ⟨-, -, -, -, c5, -⟩ := _root_.GlobalTheory.Member.latG_lattice_and_completion D V (δ * g)
   let SA := S.map (inclR (F := D.host.F) (Af D.host.F))
   have hd := det_sub_one_mem_of_half D.host.F (latG V 1) f1 f2
     ((finHom V g'⁻¹).1 * (finHom V δ).1 * SA * (finHom V g).1) M hM I I' hI (fun b hb x hx => by
@@ -371,7 +371,7 @@ theorem marking_of_conjugate : ∀ (D : D7) (H : ReciprocityTheory.ChartRestrict
       rw [(hC.modelW k).2] at this
       simp only [cc, map_neg] at this ⊢
       rw [this]) (hmod k) (hmod (π k)) hiso
-  obtain ⟨r1, -, r3, -⟩ := GlobalTheory.T.rational_points_adelicUnitary_eq_unitary D V
+  obtain ⟨r1, -, r3, -⟩ := _root_.GlobalTheory.Member.RatElt.rational_elements D V
   obtain ⟨δ, hδ⟩ := r3 δ' hδ1
   have := (C.F.Di k).fin
   obtain ⟨hp, hq⟩ := GlobalTheory.CM.LatData.finrank_lat hP (by rw [(C.F.sig k).1, (C.F.sig k).2]; exact hty) one_pos

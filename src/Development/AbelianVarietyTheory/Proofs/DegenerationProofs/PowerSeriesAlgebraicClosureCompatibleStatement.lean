@@ -20,20 +20,20 @@ public import Development.AbelianVarietyTheory.Definitions.Degenerations.HomExtS
 public import Development.AbelianVarietyTheory.Statements.TorsionEndomorphisms.EndDeterminedOnTorsion
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FullTorsionObjectExistsUniqueModuliPointStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FullTorsionObjectExistsUniqueModuliPoint
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModuliModelUltrametricPoints
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LineBundleIsoValuesConstantOfSameCubeTheta
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NormalisedRosatiGeneratorValuesMoveAlongIso
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaPointsCoordsRelabelledTwistedDataSeries
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusExtensionActionInValues
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DenseTorsionAndEqOne
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesOfExpansionLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesTorsionPairingSeparationIntegraStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCompleteIsAlgClosedCExtStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespondStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FullTorsionPolarizedCMObjectExtendsAlgClosedStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesOfExpansionLaws
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesTorsionPairingSeparationIntegra
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCompleteIsAlgClosedCExt
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespond
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FullTorsionPolarizedCMObjectExtendsAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LiftValuationIntegralNormStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionCoordinatesEqDegenerationSeriesStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionCoordinatesEqDegenerationSeries
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RelationsAreFunctions
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -82,10 +82,12 @@ import Mathlib.Tactic.ReduceModChar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
 import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.IsIntegralOfIsAbelianSchemeField
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.ExistsRosatiGen
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantsEqDegenerationSeriesStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionPairingValuesOfFamiliesValuesStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValuesStatement
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TorsionIsoOfLinearUniformisationTripleStatement
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantsEqDegenerationSeries
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionPairingValuesOfFamiliesValues
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.VRatioGtStatement
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.PeriodicValuation
+import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TorsionIsoOfLinearUniformisationTriple
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ArcTorsionLabelsActionCompat, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ArcTorsionLabelsActionCompatStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCompleteDVROverPowerSeriesUniformiser, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCompleteDVROverPowerSeriesUniformiserStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsDescendedTorsionIsometryThetaCoordinates, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsDescendedTorsionIsometryThetaCoordinatesStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFullTorsionIsometryOfTateIsoQStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TwistIsoTorsionRepresentativeMulEquivStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTorsionIsometryTwistByRootsOfDataIso, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTorsionIsometryTwistByRootsOfDataIsoStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisedModelValuedExtension, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisedModelValuedExtensionStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LineBundleIsoValuesConstantOfSameCubeThetaStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NormalisedRosatiGeneratorValuesMoveAlongIsoStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaPointsCoordsRelabelledTwistedDataSeriesStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionQuotientActionCompatOfRosatiValues, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionQuotientActionCompatOfRosatiValuesStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusExtensionActionInValuesStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ValuesIsoRespectsEndomorphismOfTorsionCompat, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ValuesIsoRespectsEndomorphismOfTorsionCompatStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PowerSeriesAlgebraicClosureCompatible, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PowerSeriesAlgebraicClosureCompatibleStatement
@@ -646,7 +648,7 @@ theorem exists_mdl_ext : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheor
     refine ⟨p₁, fun n hn => ?_, ψ, p₃, p₄, p₅, fun n v hn => p₆ n (g.f n v) hn⟩
     change ((o'.I.ζ n ^ g.ν n : Cˣ) : C) = gam.comp e ((o.I.ζ n ^ g.ν n : Kˣ) : K)
     rw [Units.val_zpow_eq_zpow_val, Units.val_zpow_eq_zpow_val, map_zpow₀, p₂ n hn]
-  obtain ⟨q₁, -, q₃⟩ := GlobalTheory.T.fullTorsionObject_existsUnique_moduliPoint h1 h2 h3 h4 h5 h6 h7 E H D l Xo c W₀ Y K bF
+  obtain ⟨q₁, -, q₃⟩ := _root_.GlobalTheory.FullPoint.fullAt_existsUnique_exists_ext h1 h2 h3 h4 h5 h6 h7 E H D l Xo c W₀ Y K bF
   obtain ⟨y, ⟨hy, hyo⟩, -⟩ := q₁ o₁ (fun r hr => by
       have hm : r ∈ c.V W₀ := mem_of_pow_mem _ two_pos (by
         have : r ^ 2 = -(H.d : c.F) := Subtype.ext (by simpa [hr] using H.sqrt_neg_disc_sq)
@@ -980,7 +982,7 @@ theorem actCompat_of_match (hL : Laws) (hL2 : Laws2) {E : Type} [Field E] [Numbe
   have hG := hL.globalFns
   have hnC : (n : C) ≠ 0 := fun h => by rw [h, norm_zero] at h1; exact zero_ne_one h1
   obtain ⟨hp, hw, -, hact, -⟩ := hm
-  have hT := GlobalTheory.T.abelianPartValues_torsion_pairing_separation_integral hL hL2 (GlobalTheory.T.abelianPartValues_of_expansionLaws hL) O' a.D₀ a.even a.bimult C hO A.N A.ν hint n hn ho h1
+  have hT := _root_.GlobalTheory.ValuesTorsion.tors_of_integral hL hL2 (_root_.GlobalTheory.ThetaInValues.brUth_of_laws hL) O' a.D₀ a.even a.bimult C hO A.N A.ν hint n hn ho h1
   have eW : ∀ x (y : A.N.A), actV (N := A.N.twist A.be u) νW oW.onB x y = actV A.ν a.oa.onB x y := fun x y => by
     refine νW.eA.injective (Over.OverMorphism.ext (hp.1.hom_ext ?_ (by rw [Over.w, Over.w])))
     refine Eq.trans ?_ (hA _).symm
@@ -993,9 +995,9 @@ theorem actCompat_of_match (hL : Laws) (hL2 : Laws2) {E : Type} [Field E] [Numbe
     rw [← eW]
     refine GlobalTheory.T.valuesIso_respects_endomorphism_of_torsion_compat hL _ _ _ C _ _ νW ν' J.toIso hg _ oW.onB M.P.oD.onB n hn hnC x (fun j y hy => ?_) y
     refine (congrArg J.φ (eW x y)).trans ?_
-    exact GlobalTheory.T.arcTorsionLabels_action_compat hL GlobalTheory.T.torus_torsion_points_correspond_values E H D O' C A.arc o M hTI N' ν' _ A.be u (r (n ^ j)) J (n ^ j) (pow_pos hn.pos j)
+    exact GlobalTheory.T.arcTorsionLabels_action_compat hL _root_.GlobalTheory.Ex.GtValues.points_correspond E H D O' C A.arc o M hTI N' ν' _ A.be u (r (n ^ j)) J (n ^ j) (pow_pos hn.pos j)
       (hr.pow (pow_pos hn.pos j)) (hlab j) x y hy
-  refine GlobalTheory.T.torsionQuotientAction_compat_of_rosatiValues hG GlobalTheory.T.torus_torsion_points_correspond_values E H D O' M.W C A.arc M.P.D.toPre M.P.oD M.P.D.psi_even M.P.D.tau_bimult N' ν' _ A.be u r J hr
+  refine GlobalTheory.T.torsionQuotientAction_compat_of_rosatiValues hG _root_.GlobalTheory.Ex.GtValues.points_correspond E H D O' M.W C A.arc M.P.D.toPre M.P.oD M.P.D.psi_even M.P.D.tau_bimult N' ν' _ A.be u r J hr
     (fun x y z => ?_) hX hB fun x => ?_
   · refine (A.be_eq _ _).trans (Eq.trans ?_ (A.be_eq _ _).symm)
     simp only [ArcF.act]
@@ -1060,12 +1062,12 @@ theorem exists_has : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.LN
   letI := H.starRing
   have hL := hV.1.1
   have hL2 := hV.1.2.1
-  have hGt := GlobalTheory.T.torus_torsion_points_correspond_values
-  have hFam := GlobalTheory.T.families_values_correspond hL hL2
+  have hGt := _root_.GlobalTheory.Ex.GtValues.points_correspond
+  have hFam := _root_.GlobalTheory.Ex.brFam hL hL2
   haveI := o₀.charZero
   obtain ⟨W, _, _, _, φ, K₁, _, _, _, e, hW, hX, he⟩ := GlobalTheory.T.exists_completeDVR_over_powerSeries_uniformiser O' K
   haveI := hW.1
-  obtain ⟨C, _, _, _, _, _, g₁, hg₁, hC⟩ := GlobalTheory.T.exists_complete_isAlgClosed_cExt' W K₁
+  obtain ⟨C, _, _, _, _, _, g₁, hg₁, hC⟩ := _root_.GlobalTheory.Ex.exists_complete_isAlgClosed_cExt W K₁
   let gam : K →+* C := g₁.comp e
   haveI : CharZero C := (RingHom.charZero_iff gam.injective).1 inferInstance
   letI : Algebra (FractionRing O') C := (gam.comp (algebraMap (FractionRing O') K)).toAlgebra
@@ -1081,7 +1083,7 @@ theorem exists_has : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.LN
     (fun x => by rw [hgam]; exact hC.1 _) huv hu1
   have hr : Roots u r := ⟨Units.ext (hr' 1), fun n m hn hm => Units.ext (by
     rw [Units.val_pow_eq_pow_val, hr', hr', ← map_pow, ← Units.val_pow_eq_pow_val, S.roots.2 n m hn hm])⟩
-  obtain ⟨o, hext, hθ, -⟩ := GlobalTheory.T.fullTorsionPolarizedCMObject_extends_algClosed hV h6 hU hH hT hE hA E H D K C gam o₀
+  obtain ⟨o, hext, hθ, -⟩ := _root_.GlobalTheory.FullExtend.main hV h6 hU hH hT hE hA E H D K C gam o₀
   obtain ⟨M, f, hf⟩ := GlobalTheory.T.exists_uniformisedModel_valued_extension hV h6 hU hH hT hE hA E H D l Xo c W₀ Y O' b ϖ a hb K S.A o₀ hρ C W hW hC K₁ g₁ e
     (φ.comp PowerSeries.C) hg₁ (fun x => (congrArg e (hK x)).trans (he _)) o hext
   have hO : CExt O' ⊥ C := ⟨fun x => by rw [hOC]; exact hC.1 _, fun x hx => by
@@ -1116,12 +1118,12 @@ theorem exists_has : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.LN
   haveI := hloc.1
   haveI := hloc.2
   have hTI : M.P.TorsionIso := haveI := M.admissible_base_of_complete_dvr.2
-    GlobalTheory.T.torsionIso_of_linear_uniformisation_triple hV.1 hV.2.1 hV.2.2.1 hV.2.2.2.1 hV.2.2.2.2 E H M.W _ M.admissible_base_of_complete_dvr.1 M.t M.P
+    _root_.GlobalTheory.UT.torsionIso_of_pelUnif hV.1 hV.2.1 hV.2.2.1 hV.2.2.2.1 hV.2.2.2.2 E H M.W _ M.admissible_base_of_complete_dvr.1 M.t M.P
   have hac := actCompat_of_match hL hL2 a hO A M hTI hint hr hn ho h1 ν' J hJX hlab oW ψ he' w e' νW hm hA' hgeo
-  obtain ⟨I', hI'ζ, hI'⟩ := GlobalTheory.T.exists_torsionIsometry_twistByRoots_of_dataIso hGt (GlobalTheory.T.torsionPairing_values_of_familiesValues hGt hFam) E H D O' M.W C A.arc M.P.D.toPre M.P.oD M.P.D.psi_even
+  obtain ⟨I', hI'ζ, hI'⟩ := GlobalTheory.T.exists_torsionIsometry_twistByRoots_of_dataIso hGt (_root_.GlobalTheory.WeilValues.weil_eq_values hGt hFam) E H D O' M.W C A.arc M.P.D.toPre M.P.oD M.P.D.psi_even
     M.P.D.tau_bimult N' ν' _ A.be u r J hr hac
   obtain ⟨I, hIζ, hI⟩ := GlobalTheory.T.exists_full_torsion_isometry_of_tateIsoQ hV.1 E H D C o M I'
-  have hco := GlobalTheory.T.thetaPoints_coords_relabelled_twistedData_series hV.1 hGt (GlobalTheory.T.theta_constants_eq_degeneration_series hV hGt hFam) (GlobalTheory.T.torsionCoordinates_eq_degenerationSeries hV hGt hFam) E H D C o M I A.N N' ν' _ A.be u r J A.q
+  have hco := GlobalTheory.T.thetaPoints_coords_relabelled_twistedData_series hV.1 hGt (_root_.GlobalTheory.Ex.ThetaSeries.theta_const_eq_series hV hGt hFam) (_root_.GlobalTheory.Ex.CoordSeries.coord_eq_series hV hGt hFam) E H D C o M I A.N N' ν' _ A.be u r J A.q
     fun j hj x => by
       obtain ⟨q', a₁, a₂⟩ := hI' j hj x
       obtain ⟨z, a₃, a₄⟩ := hI j hj x

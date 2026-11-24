@@ -19,11 +19,11 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PointOverXHasAdelicPointBlockExtendMul
 public import Formalism.LocalToGlobal.Columns.RecLevel
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PointLatticeIffBaseLatticeDecorated
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPtOfMulJ0DecorationStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPtOfMulJ0Decoration
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LastStepTupleGroupClassesCoordinatesStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwistPrimesAwayLevelAndTypePrimes
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicPointDecoratedLatticeAllTwistsStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicPointDecoratedLatticeAllTwists
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +62,7 @@ import Formalism.LocalToGlobal.Columns.AdelicLemmas
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.Polynomial.Basic
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemFramedLevelIffTwoAdelicPointsStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemFramedLevelIffTwoAdelicPoints
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PlaceProjectionZeroIntegralIffComponentsAbove
 import Std.Tactic.BVDecide.Normalize.Prop
 
@@ -319,9 +319,9 @@ theorem kread_member : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → 
     refine ⟨by rw [h1]; exact map_one _, by rw [h3]; rfl, h4, by rw [h2, map_one, mul_one]⟩
   refine ⟨fun x hxu => ?_, fun x z h hz hred => ?_, fun x => ?_⟩
   · have hgu : y₀ * x * k () ∈ UAd B.sp.cm (B.R.N B.R.m) := mul_mem (mul_mem hyu hxu) hku
-    obtain ⟨q, hq⟩ := (GlobalTheory.T.isPtOf_mul_J0_decoration B.host.F B.host.E B.sp.cm (B.R.N B.R.m) ((B.primes X).vT u) (B.primes X).vGs (I.Q I.mu0)
+    obtain ⟨q, hq⟩ := (_root_.GlobalTheory.Mem.Col2.TopCh.isPtOf_mul_J0 B.host.F B.host.E B.sp.cm (B.R.N B.R.m) ((B.primes X).vT u) (B.primes X).vGs (I.Q I.mu0)
       (y₀ * x * k ()) 1 ((I.stp u I.mu0 B.R.m).rep c₀).1.1 ((I.stp u I.mu0 B.R.m).rep c₀).1.1 1).2.2 hQ0 hgu
-    have H2 := fun h => (GlobalTheory.T.isPtOf_mul_J0_decoration B.host.F B.host.E B.sp.cm (B.R.N B.R.m) ((B.primes X).vT u) (B.primes X).vGs (I.Q I.mu0)
+    have H2 := fun h => (_root_.GlobalTheory.Mem.Col2.TopCh.isPtOf_mul_J0 B.host.F B.host.E B.sp.cm (B.R.N B.R.m) ((B.primes X).vT u) (B.primes X).vGs (I.Q I.mu0)
       (y₀ * k ()) ((k ())⁻¹ * x * k ()) ((I.stp u I.mu0 B.R.m).rep c₀).1.1 q h).1 hp (by rw [hmul]; exact hq)
     have hq' := hq
     rw [hy₀] at hq'
@@ -348,7 +348,7 @@ theorem kread_member : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → 
   · have hz' : (k ())⁻¹ * x.1 * k () ∈ J0 B.sp.cm (B.R.N B.R.m) ((B.primes X).vT u) := hz ▸ z.2
     have hred' : redG B.sp.cm (B.R.N B.R.m) ((B.primes X).vT u) (B.primes X).vGs ⟨_, hz'⟩ = h.1⁻¹ := by
       rw [← hred]; congr 1; exact Subtype.ext hz.symm
-    have hpt := (GlobalTheory.T.isPtOf_mul_J0_decoration B.host.F B.host.E B.sp.cm (B.R.N B.R.m) ((B.primes X).vT u) (B.primes X).vGs (I.Q I.mu0)
+    have hpt := (_root_.GlobalTheory.Mem.Col2.TopCh.isPtOf_mul_J0 B.host.F B.host.E B.sp.cm (B.R.N B.R.m) ((B.primes X).vT u) (B.primes X).vGs (I.Q I.mu0)
       (y₀ * k ()) ((k ())⁻¹ * x.1 * k ()) ((I.stp u I.mu0 B.R.m).rep c₀).1.1 ((I.stp u I.mu0 B.R.m).rep c₀).1.1 h.1).2.1 hQ0 hp hz' hred'
     rw [hmul] at hpt
     obtain ⟨g1, g2, -, g4⟩ := hact h
@@ -512,7 +512,7 @@ theorem lev_top (c : (I.stp u a B.R.m).Cl) (y x : GA B (B.R.N B.R.m)) (q : ChPt 
     (h1 : PtOf (y * (k * t)) ((I.stp u a B.R.m).rep c).1.1) (h2 : PtOf (y * x * (k * t)) q) :
     x ∈ topU U0 t ((I.Tp a).levQ B.R.m) (I.dTop a) ↔ ∃ κ : (I.stp u a B.R.m).G c.1, (I.stp u a B.R.m).gam c.1 κ = 1 ∧ ((I.stp u a B.R.m).act c.1 κ ((I.stp u a B.R.m).rep c)).1.1 = q ∧
       cosetIn ((I.stp u a B.R.m).act c.1 κ ((I.stp u a B.R.m).rep c)) = cosetIn ((I.stp u a B.R.m).rep c) := by
-  have core := GlobalTheory.T.mem_framedLevel_iff_two_adelic_points B.host.F B.host.E B.LL B.sp.cm (B.R.N B.R.m) ((B.primes X).vT u) (B.primes X).vGs (I.Q a) ((I.Tp a).levG B.R.m) ((I.Tp a).levQ B.R.m)
+  have core := _root_.GlobalTheory.Mem.Col2.TopCh.mem_topU_iff B.host.F B.host.E B.LL B.sp.cm (B.R.N B.R.m) ((B.primes X).vT u) (B.primes X).vGs (I.Q a) ((I.Tp a).levG B.R.m) ((I.Tp a).levQ B.R.m)
     (I.dTop a) (I.dTop_ne a) N hdN hΘ U0 k t y x _ q hkU hkQ ht hU h1 h2
   obtain ⟨e, he⟩ := (GlobalTheory.T.lastStep_tuple_group_classes_coordinates I u a).1 c
   refine core.trans ⟨?_, ?_⟩
@@ -602,7 +602,7 @@ include hdN hΘ hkU hkQ ht hU in
 theorem top_base (p : DecoF B.host.E (B.R.N B.R.m) ((B.primes X).vT u) (B.primes X).vGs (I.Q a)) (y g : GA B (B.R.N B.R.m))
     (h1 : PtOf (g * (k * t)) p) (h2 : PtOf (y * (k * t)) p) : g⁻¹ * y ∈ topU U0 t ((I.Tp a).levQ B.R.m) (I.dTop a) := by
   have h3 : PtOf (g * (g⁻¹ * y) * (k * t)) p := by rwa [mul_inv_cancel_left]
-  refine (GlobalTheory.T.mem_framedLevel_iff_two_adelic_points B.host.F B.host.E B.LL B.sp.cm (B.R.N B.R.m) ((B.primes X).vT u) (B.primes X).vGs (I.Q a) ((I.Tp a).levG B.R.m) ((I.Tp a).levQ B.R.m)
+  refine (_root_.GlobalTheory.Mem.Col2.TopCh.mem_topU_iff B.host.F B.host.E B.LL B.sp.cm (B.R.N B.R.m) ((B.primes X).vT u) (B.primes X).vGs (I.Q a) ((I.Tp a).levG B.R.m) ((I.Tp a).levQ B.R.m)
     (I.dTop a) (I.dTop_ne a) N hdN hΘ U0 k t g _ p p hkU hkQ ht hU h1 h3).2 ⟨1, 1, ?_⟩
   exact one_smul _ _
 
@@ -647,7 +647,7 @@ theorem chart_twm : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.
     have := TwTop.localComponent_congr (F := B.host.F) P.1 (v := P.1.under (𝓞 B.host.F)) rfl (x := k ()) (x' := 1) (by
       rw [hoff _ (hf P.1 P.2).2.2, map_one])
     rw [this, map_one]
-  choose g hg using fun c : (I.stp u a B.R.m).Cl => GlobalTheory.T.exists_adelicPoint_decoratedLattice_allTwists I hOk u (B.R.N B.R.m) (extTo I.SQ ((I.stp u a B.R.m).rep c).1.1)
+  choose g hg using fun c : (I.stp u a B.R.m).Cl => _root_.GlobalTheory.Mem.Col2.PtTwist.exists_ptOf_twists I hOk u (B.R.N B.R.m) (extTo I.SQ ((I.stp u a B.R.m).rep c).1.1)
   have hdisj : Disjoint (B.primes X).vGs (I.Q a) := Finset.disjoint_right.2 fun P hP => (hf P hP).1.2.1
   let y : (I.stp u a B.R.m).Cl → GA B (B.R.N B.R.m) := fun c => g c * (k () * t)⁻¹
   have hy : ∀ c, y c * (k () * t) = g c := fun c => inv_mul_cancel_right _ _

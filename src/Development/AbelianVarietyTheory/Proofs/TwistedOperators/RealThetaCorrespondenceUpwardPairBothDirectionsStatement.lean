@@ -6,7 +6,9 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CartFrSgn
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsRealDiscreteSeriesDataThetaProperties
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FirstOccurrenceRuleThetaChainStepBothDirections
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandraStatement
+import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.BarMatrix
+import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandra
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,7 +100,7 @@ theorem upPair_arch : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheor
   refine ⟨fun τ V W => ?_, fun X h3 h4 h5 => ?_⟩
   · obtain ⟨X, hX, h1, -, h3, -, -⟩ := GlobalTheory.RealPlaceTheta.exists_record_theta_all hDS hHC
     have h : GlobalTheory.ArchRec.Good D X :=
-      ⟨hX, GlobalTheory.CoverDS.admissibleDiscreteSeries_of_hasParam hDS X hX, hHC.admQ5_of_harishChandraModules X, GlobalTheory.T.thetaModels_are_coverDiscreteSeries_of_harishChandra hDS hHC D⟩
+      ⟨hX, GlobalTheory.CoverDS.admissibleDiscreteSeries_of_hasParam hDS X hX, hHC.admQ5_of_harishChandraModules X, _root_.GlobalTheory.CoverModel.modelsAreCoverSeries_all hDS hHC D⟩
     have down := upPair_down h h1 h3 hp τ V W
     exact ⟨fun ψ θ χS χT ω hω hS hT PS PT MS MT p1 p2 BS BT f hf =>
         (down ψ θ χS χT ω hω hS hT PS PT MS MT p1 p2 BS BT f hf).1,

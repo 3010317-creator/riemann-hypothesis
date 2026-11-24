@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NaturalPointwiseCochainConstOfGlobalSectionsBaseStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NaturalPointwiseCochainConstOfGlobalSectionsBase
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,7 +71,7 @@ theorem isSymCoc_of_isAdd : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpOb
       rw [mul_comm (w ≫ snd A A) (w ≫ fst A A)] at h2
       simp only [k, Fn1.zero, Category.assoc, map_sub]
       linear_combination h2 - h1
-    obtain ⟨r, hr⟩ := GlobalTheory.T.natural_pointwiseCochain_const_of_globalSections_base R (A ⊗ A) Unit (whole (A ⊗ A)) (by simp [whole])
+    obtain ⟨r, hr⟩ := _root_.GlobalTheory.PtExt.NatConst.const_of_natural R (A ⊗ A) Unit (whole (A ⊗ A)) (by simp [whole])
       (GlobalTheory.globalFns_holds (Sp R) (A ⊗ A)
         (ReciprocityTheory.ChartRestriction.G.Geo.Tor.AbelianSchemeGerms.isAbelianScheme_tensor A A hA hA)).2 k hk
     intro x y
@@ -95,7 +95,7 @@ theorem isSymCoc_of_isAdd : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpOb
       simp only [MonObj.comp_mul] at h2 h3
       simp only [k, Fn1.zero, Category.assoc, map_sub, map_add (f := _)]
       linear_combination h2 - h1 - h3 + h4
-    obtain ⟨r, hr⟩ := GlobalTheory.T.natural_pointwiseCochain_const_of_globalSections_base R (A ⊗ (A ⊗ A)) Unit (whole _) (by simp [whole])
+    obtain ⟨r, hr⟩ := _root_.GlobalTheory.PtExt.NatConst.const_of_natural R (A ⊗ (A ⊗ A)) Unit (whole _) (by simp [whole])
       (GlobalTheory.globalFns_holds (Sp R) (A ⊗ (A ⊗ A))
         (ReciprocityTheory.ChartRestriction.G.Geo.Tor.AbelianSchemeGerms.isAbelianScheme_tensor A (A ⊗ A) hA
           (ReciprocityTheory.ChartRestriction.G.Geo.Tor.AbelianSchemeGerms.isAbelianScheme_tensor A A hA hA))).2 k hk

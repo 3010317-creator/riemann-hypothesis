@@ -8,7 +8,7 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PelTriv
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.MorAlgSt
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.ToATotal
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.PelSt
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisationCompleteLocalNormalPrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisationCompleteLocalNormalPrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -129,7 +129,7 @@ theorem model_uniformisation_of_clauses : Laws → Laws2 → Laws3 → Laws4 →
   let _ : Field (R ⧸ IsLocalRing.maximalIdeal R) := Ideal.Quotient.field _
   have hpid : IsPrincipalIdealRing (R ⧸ IsLocalRing.maximalIdeal R) := inferInstance
   have hsplit : SplitOver t.G (IsLocalRing.maximalIdeal R) := hsp
-  obtain ⟨P, hP'⟩ := T.exists_uniformisation_complete_local_normal_prime hL hL2 hL3 hL4 hL5 hE hU hP E H R _ hadm hpid t hpol hsplit hθ
+  obtain ⟨P, hP'⟩ := _root_.GlobalTheory.LN.UnifPrime.exists_pelUnif hL hL2 hL3 hL4 hL5 hE hU hP E H R _ hadm hpid t hpol hsplit hθ
   have hopen : IsOpen (abLocus t.G) := by
     obtain ⟨U, hU', -⟩ := hN.2.2.2.1
     rw [← hloc, ← hU']

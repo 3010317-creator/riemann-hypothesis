@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Lang
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.LanglandsExhaustionGL
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.LanglandsMultisegments
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.StandardCosocleGL
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLanglandsClassificationAddOfIrreducibleProductStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLanglandsClassificationAddOfIrreducibleProduct
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Mono0OfLpDimEqOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -73,7 +74,7 @@ theorem lawsLit_prod : LanglandsExhaustionGL → LanglandsMultisegments → Stan
   have : CharZero (w.adicCompletion E) := algebraRat.charZero _
   obtain ⟨𝔪, h𝔪⟩ := hX _ (cls σ)
   obtain ⟨𝔫, h𝔫⟩ := hX _ (cls τ)
-  have hp := GlobalTheory.T.isLanglandsClassification_add_of_irreducible_product hM hS _ r t σ τ π 𝔪 𝔫 (h𝔪.of_equiv (equivRep σ).symm) (h𝔫.of_equiv (equivRep τ).symm) hπ
+  have hp := _root_.GlobalTheory.LocGL.SumProd.isL_add_of_equiv_prod₂ hM hS _ r t σ τ π 𝔪 𝔫 (h𝔪.of_equiv (equivRep σ).symm) (h𝔫.of_equiv (equivRep τ).symm) hπ
   rw [H.langlands 𝔪.toList (cls σ) (by rwa [Multiset.coe_toList]),
     H.langlands 𝔫.toList (cls τ) (by rwa [Multiset.coe_toList]),
     H.langlands (𝔪.toList ++ 𝔫.toList) (cls π) (by

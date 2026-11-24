@@ -47,7 +47,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermAtBasePointOfFramesStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermAtBasePointOfFrames
 import Mathlib.Tactic.Linter.Style
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -250,8 +250,8 @@ theorem setQ_locClosed {D : D7} {X : HidaSetting D} (Y : Full X) (u u' : D.what�
   have hGt : ∀ s : TauC Y u u', s.G ≠ 0 → (Y.tO u u').G s ≠ 0 := fun s hs => by
     show Formalism.L2.SG.TermOp.Gt s ≠ 0
     simp [Formalism.L2.SG.TermOp.Gt, hs]
-  have h1 := hGt t (GlobalTheory.T.term_at_base_point_of_frames D X Y u u' F F' w hw hG t Λ hΛ).1
-  have h2 := hGt t' (GlobalTheory.T.term_at_base_point_of_frames D X Y u u' F F' w hw hG t' Λ' hΛ').1
+  have h1 := hGt t (_root_.GlobalTheory.Unfold.BasePt.term_at_base_point D X Y u u' F F' w hw hG t Λ hΛ).1
+  have h2 := hGt t' (_root_.GlobalTheory.Unfold.BasePt.term_at_base_point D X Y u u' F F' w hw hG t' Λ' hΛ').1
   have hiff : (Y.tO u u').gener t ↔ (Y.tO u u').gener t' := by
     constructor
     · intro hg

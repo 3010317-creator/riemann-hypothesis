@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Langlands
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousRingEquivLocalFieldPreservesValuationStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousRingEquivLocalFieldPreservesValuation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -293,9 +295,9 @@ theorem isCosocle_prodIrr_transport : ∀ (k k' : Type) [Field k] [ValuativeRel 
     (y' : IrrRep (GL (Fin N) k')), (∀ a, RepRel i (x a) (x' a)) → RepRel i (cls y) (cls y') →
     IsCosocle y.ρ (prodIrr x hd) → IsCosocle y'.ρ (prodIrr x' hd') := by
   intro k k' _ _ _ _ _ _ _ _ _ _ i hi r N x x' hd hd' y y' hx hy hc
-  have T1 := GlobalTheory.T.continuous_ringEquiv_localField_preserves_valuation k k' i hi
+  have T1 := _root_.GlobalTheory.LocalFieldIso.continuous_iso_keeps_valuation k k' i hi
   have hi' : Continuous i.symm := T1.1
-  have T2 := GlobalTheory.T.continuous_ringEquiv_localField_preserves_valuation k' k i.symm hi'
+  have T2 := _root_.GlobalTheory.LocalFieldIso.continuous_iso_keeps_valuation k' k i.symm hi'
   have hs : ∀ a, IsSmooth (pull (x a).rep (GeneralLinearGroup.map (i.symm : k' →+* k))) := fun a =>
     isSmooth_comp (x a).2.rep.smooth (continuous_glMap (i.symm : k' →+* k) hi')
   have hirr : ∀ a, (pull (x a).rep (GeneralLinearGroup.map (i.symm : k' →+* k))).IsIrreducible := fun a =>

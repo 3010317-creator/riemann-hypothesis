@@ -25,7 +25,7 @@ public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsNorma
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FirstCohomology.GenMove
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.PolBaseChangeOfRelAmpleLocal
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelStructurePullback
-public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsTwoTorsionTranslateSameLambdaBundleStatement
+public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsTwoTorsionTranslateSameLambdaBundle
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.LbIsoDescendsToSubfieldContainingFinset
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.SqOfCalculus
 import Mathlib.Algebra.Order.Floor.Extended
@@ -1479,7 +1479,7 @@ theorem exists_point (hL : Out.Laws) {K Ω : Type} [Field K] [Field Ω] [IsAlgCl
     rw [isSquare_unique (isSquare_comp (isSquare_tensor e'.hom) s₂) s₂' he'] at k₁
     exact LBIso.trans (DVR.linComb_isLB _ P'.isLB _ _) (LB.isLB_pull lQ _)
       (LB.isLB_pull (DVR.linComb_isLB _ Q'.isLB _ _) _) i₂' k₁.symm
-  obtain ⟨t, ht, hi⟩ := GlobalTheory.T.exists_twoTorsion_translate_same_lambdaBundle hL Ω Q' P' e' hm hl'
+  obtain ⟨t, ht, hi⟩ := _root_.GlobalTheory.SameLam.exists_two_torsion_translate hL Ω Q' P' e' hm hl'
   refine ⟨t.left ≫ χ, P'.A, ψ, (e'.hom ≫ ((toUnit Q'.A ≫ t) * 𝟙 Q'.A)).left ≫ χ, ?_, ?_, hψ.1.1, ?_, ?_⟩
   · rw [Category.assoc, hχ.1.1.w, ← Category.assoc, Over.w t]
     exact Category.id_comp _

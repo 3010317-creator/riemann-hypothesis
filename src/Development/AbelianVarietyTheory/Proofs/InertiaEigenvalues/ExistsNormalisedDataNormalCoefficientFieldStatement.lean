@@ -4,19 +4,22 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Conj
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Formalism.LocalToGlobal.IndefiniteReal.FWTie
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseTuplePinsOrientationStandardFrameLevelMapStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdelicSideOfModelsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoefficientMapExtensionRationalValuesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelPlaceDatumOverNumberFieldStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.ThPinsR
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdelicSideOfModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoefficientMapExtensionRationalValues
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelPlaceDatumOverNumberField
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalisedTupleDataGivenLevelCoeffMaps
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoefficientMapUniqueBijectiveComplexExtensionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoefficientMapUniqueBijectiveComplexExtension
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCoversRep
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsCoeffCurveOver
 public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.PeriodLatticeFinitelyGenerated
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelActionFramedPointsIsActionStatement
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCoversOfHalves
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRepsOfFiniteIndex
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHarmonicCoefficientMapAtWeightsStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNumberFieldHeckeCharacterSqrtNormValuesStatement
+import Formalism.LocalToGlobal.IndefiniteReal.FWExist
+import Formalism.LocalToGlobal.ProjectiveLattices.ThClassPinsRec
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHarmonicCoefficientMapAtWeights
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNumberFieldHeckeCharacterSqrtNormValues
 import Formalism.LocalToGlobal.ProjectiveLattices.ThClass
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LawOfSquaresSelfDualSplitLattice
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFirstOfSecond
@@ -147,9 +150,9 @@ theorem exists_pins_normal : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
   choose pd l₂ h1 h2 using fun t => GlobalTheory.CoverHalf.exists_half_of_laws T.toCore R hT.toLawsM hL hpb hG t
   obtain ⟨c₁, hc1a, hc1b, hc1xi, hc⟩ := GlobalTheory.OneCover.exists_covers_rep T R hT hL i (Vc D i).rank pd
     (fun t => GlobalTheory.CoverHalf.coverHalf D (R.Q t)) l₂ h1 h2 rep hrepQ
-  choose Mφ hMφ hφ using fun t => GlobalTheory.T.exists_level_place_datum_over_number_field D G Pl0 T0 A _ R hL hvP i hV t _ (iotaW T i)
+  choose Mφ hMφ hφ using fun t => _root_.GlobalTheory.LevelDatum.exists_phi D G Pl0 T0 A _ R hL hvP i hV t _ (iotaW T i)
     (GlobalTheory.PinnedDataGiven.latEmb_iotaW T hT i)
-  choose MB hMB hB using fun t => GlobalTheory.T.exists_numberField_heckeCharacter_sqrtNorm_values D G Pl0 T0 A _ R hL i t
+  choose MB hMB hB using fun t => _root_.GlobalTheory.Mem.BVal.exists_field_BIs D G Pl0 T0 A _ R hL i t
   have := c₁.fin
   obtain ⟨c₂, hc₂⟩ := GlobalTheory.TupleCover.exists_coeff_ge T.Q.l (c₁.F ⊔ ⨆ t, (Mφ t ⊔ MB t))
   obtain ⟨c₃, hc₃, hcurve⟩ := GlobalTheory.CurveField.exists_coeff_curveOver _ T.Q.H T.Q.l c₂ 1 one_pos
@@ -164,7 +167,7 @@ theorem exists_pins_normal : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
   let dδ : T0 → DeltaDat (T.Q.Xo ((i : ℕ) + 1)) c' (Vc D i).rank := fun t => { d (rep t) with cδ := f t }
   let jL : D.what₂.LL →+* c'.F := D.what₂.embLL.codRestrict c'.F fun x => hLL ⟨x, rfl⟩
   have hjL : (inC c').comp jL = D.what₂.embLL := RingHom.ext fun _ => rfl
-  obtain ⟨c0', hc0, hplace⟩ := GlobalTheory.T.exists_coefficientMap_extension_rational_values D G Pl0 T0 A _ R hL hchi hfam hmodels gramR c0R c0L htie i c'.F jL (inC c') hjL
+  obtain ⟨c0', hc0, hplace⟩ := _root_.GlobalTheory.Div.CoefExtension.exists_ext_placeEx D G Pl0 T0 A _ R hL hchi hfam hmodels gramR c0R c0L htie i c'.F jL (inC c') hjL
   obtain ⟨Cl, fCl, h, J', bad, Lh, gam, vol, La, Nc, hrep, hbad, hcl⟩ :=
     GlobalTheory.SplitReps.exists_repsR_repsCov R i (hL.βV i) hV c'.F (T.Q.Xo ((i : ℕ) + 1)) c' id d
   have hrepR : ∀ t, RepsR R i t (h (rep t)) (bad (rep t)) (J' (rep t)) (Lh (rep t)) (gam (rep t)) (vol (rep t)) :=
@@ -182,7 +185,7 @@ theorem exists_pins_normal : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
     omega
   choose epF hepF using fun t => (GlobalTheory.ClassTieCompare.exists_epIs_iff (n := (Vc D i).rank) (Dw := T.Q.Dw ((i : ℕ) + 1))
     (bad (rep t)) (B t)).2 fun L cc g d => _root_.GlobalTheory.LawOfSquares.law_of_squares _ _ _ _ hodd L cc g.1 g.2.2 d.1 d.2
-  obtain ⟨io, hw, hio⟩ := GlobalTheory.T.exists_harmonicCoefficientMap_at_weights D T.Q hT.pins κ fw.kap i c'
+  obtain ⟨io, hw, hio⟩ := _root_.GlobalTheory.CoefMapRecord.exists_io_record D T.Q hT.pins κ fw.kap i c'
   choose φ hφis using fun t => hφ t c'.F (le_sup_left.trans (h4 t)) (hhalf t).2.2 (Mfr (dδ t).l₂) fun PP hPP c hc => by
     have hM : (dδ t).l₂.Mb ≤ PP.asIdeal := by
       rw [(hcov t).1.2.2.2.1]
@@ -195,7 +198,7 @@ theorem exists_pins_normal : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
     change _ = star ((T.Q.H.bar b : 𝓞 D.host.E) : D.host.E)
     rw [T.Q.H.bar_eq]
     exact (star_star _).symm
-  choose thAd hth using fun t => GlobalTheory.T.exists_adelicSide_of_models D G Pl0 T0 A _ R hmodels i t _ _ c0' _ (h (rep t)) _ (hrepR t).2.2.1
+  choose thAd hth using fun t => _root_.GlobalTheory.AdelicSide.exists_thAd_of_models D G Pl0 T0 A _ R hmodels i t _ _ c0' _ (h (rep t)) _ (hrepR t).2.2.1
     (hrepR t).2.2.2.2.2.1 (v₀ i (sg0 D A))
   have hact := fun c => _root_.GlobalTheory.LevelActFromLevel.actLev_of_levIs D G Pl0 T0 A T R hL hT hpb i c (O i).lev hlev
   let M : OMDat T.toCore R i T0 id :=
@@ -213,8 +216,8 @@ theorem exists_pins_normal : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
       ⟨hact _, hact _⟩, fun t => hbad (rep t), fun t => hcl (rep t), fun t => ⟨fun _ => rfl, hepF t⟩, hio,
       fun t k q => AlgEquiv.apply_symm_apply _ _, hcov, hcxi, hmod⟩
   refine ⟨M, hMP, rfl, ?_, hnorm, hcurve c' hc', fun t x => h3 (hc1xi t x), fun t t' e => ?_⟩
-  · obtain ⟨cM, hcM, -, huM⟩ := GlobalTheory.T.coefficientMap_unique_bijective_complex_extension D G Pl0 T0 A T R F κ v₀ hC ⟨fw⟩ i T0 id M hMP
-    obtain ⟨cO, -, -, huO⟩ := GlobalTheory.T.coefficientMap_unique_bijective_complex_extension D G Pl0 T0 A T R F κ v₀ hC ⟨fw⟩ i Unit (fun _ => A.μ0) (O i) hO.2
+  · obtain ⟨cM, hcM, -, huM⟩ := _root_.GlobalTheory.CoefExtC.exists_extC_bijective_unique D G Pl0 T0 A T R F κ v₀ hC ⟨fw⟩ i T0 id M hMP
+    obtain ⟨cO, -, -, huO⟩ := _root_.GlobalTheory.CoefExtC.exists_extC_bijective_unique D G Pl0 T0 A T R F κ v₀ hC ⟨fw⟩ i Unit (fun _ => A.μ0) (O i) hO.2
     have hsurj : Function.Surjective (O i).jL := by
       intro x
       have hx : (x : ℂ) ∈ D.what₂.embLL.toRatAlgHom.fieldRange := hO.1 ▸ x.2

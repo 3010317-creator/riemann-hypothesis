@@ -7,9 +7,9 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsIrreduc
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductOfLocalLevelsUnitaryIsOpenIsCompactIsLeve
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniqueWeightDefiniteUnitaryAt
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeightEqOfFinitePartNeBot
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsAlgebraicWeightDefiniteUnitaryAutRepStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqBotOrTopOfTensor
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsAlgebraicWeightDefiniteUnitaryAutRep
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqBotOrTopOfTensor
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ArchimedeanUnitaryPointsEquivUnitaryGroup
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocEqOneOfMemGam
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousExtensionAdicCompletion
@@ -844,7 +844,7 @@ theorem psum_succ {a : ℕ} (κ : DomWeight a) (i : Fin a) : psum κ (i + 1) = p
 
 theorem famWt_of : FamOff → FamSum → FamWt := by
   intro hOff hSum E _ _ _ a τ W K ν d B hB U hU hBU hne
-  obtain ⟨mu, hmu⟩ := GlobalTheory.T.exists_algebraicWeight_definiteUnitaryAutRep E a U hU
+  obtain ⟨mu, hmu⟩ := _root_.GlobalTheory.Cong.exists_weight_of_isAutRepU E a U hU
   refine ⟨mu, ⟨hU, hmu, ?_⟩, fun τ' h => hasWeightAt_unique ⟨U, hU⟩ τ' (hmu τ') (hOff E a τ W K ν d B hB U hU hBU hne τ' h),
     fun i => ?_⟩
   · obtain ⟨y₁, y₂, v, hv⟩ := hne

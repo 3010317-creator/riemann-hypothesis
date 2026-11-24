@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.KerBF
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HomSymplecticHalfFormAlgebraicLawsContinuous
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselToJacobiFlatSchwartzEquivariantStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousFlatMapWeilRepresentationJointStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientParaStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldingBasePointFourierJacobiGroupStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselToJacobiFlatSchwartzEquivariant
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousFlatMapWeilRepresentationJoint
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientPara
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctions
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldingBasePointFourierJacobiGroup
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlagUnipotentBesselCharacterLaws
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlagUnipotentFourierJacobiGroupStructure
 import Mathlib.Algebra.Order.Floor.Extended
@@ -90,8 +92,8 @@ theorem flatBF_eq (Ψ : WO B.V J.W → ℂ) : flatBF s Ψ =
     flatAt ψ B.d J.d s.vS.μ s.vS.𝓕 s.vT.μ s.vT.𝓕 s.vU.ν (rat J.d.e) (yZero B.V₀ ρ (vecB B.o B.ζ)) Ψ := rfl
 
 theorem flatBF_theta {Ψ : WO B.V J.W → ℂ} (hΨ : IsThetaFunO ψ B.V J.W Ψ) : IsThetaFunO ψ B.V₀ J.W₀ (flatBF s Ψ) :=
-  (GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D ψ s.weil.std B.V B.V₀ J.W J.W₀ ρ ρ B.d J.d s.vS s.vT s.vU J.d.e
-    (GlobalTheory.T.unfolding_base_point_fourierJacobi_group D J.W J.W₀ ρ J.d).1.1 _ Ψ hΨ).2
+  (_root_.GlobalTheory.Unf.Flat.flatLaw D ψ s.weil.std B.V B.V₀ J.W J.W₀ ρ ρ B.d J.d s.vS s.vT s.vU J.d.e
+    (_root_.GlobalTheory.Unf.base_point D J.W J.W₀ ρ J.d).1.1 _ Ψ hΨ).2
 
 variable {om' : Om B.V₀ J.W} (hom : IsWeilDatumO ψ B.V₀ J.W s.χV s.χW om')
 include hom
@@ -99,19 +101,19 @@ include hom
 theorem flat_rat {Ψ : WO B.V J.W → ℂ} (hΨ : IsThetaFunO ψ B.V J.W Ψ) {γ₀ : GA D B.A} (h₀ : γ₀ ∈ GQ B.A) {γ : GA D J.W}
     (hγ : γ ∈ GQ J.W ⊓ jacGrp J.d) : flatBF s (s.om (embA B.d B.o γ₀, γ) Ψ) 0 = flatBF s Ψ 0 := by
   obtain ⟨n, hn, h', rfl⟩ := (GlobalTheory.MixPer.Decomp.mem_jacGrp_iff J.d).1 hγ.2
-  obtain ⟨hnQ, hh'⟩ := ((GlobalTheory.T.unfolding_base_point_fourierJacobi_group D J.W J.W₀ ρ J.d).2.2.2.2.2 n hn h').1 hγ.1
+  obtain ⟨hnQ, hh'⟩ := ((_root_.GlobalTheory.Unf.base_point D J.W J.W₀ ρ J.d).2.2.2.2.2 n hn h').1 hγ.1
   have hψ := s.weil.std.1
   have hΞ := flatBF_theta s hΨ
   have hy : yZero B.V₀ ρ (vecB B.o B.ζ) ∈ ratMx D B.V₀.rank ρ := neg_mem (zEll_rat _ _ _)
   have e1 : flatBF s (s.om (embA B.d B.o 1, n * J.d.emb0 h') Ψ) 0 = flatBF s Ψ 0 := by
-    rw [GlobalTheory.T.besselToJacobiFlatSchwartz_equivariant D ψ ρ B J s om' hom Ψ hΨ 1 n hn h', psiFlag_eq, GlobalTheory.CharLaws.psiBes_rat ψ J.d hψ.2.2.1 1 0 hnQ,
+    rw [_root_.GlobalTheory.FlatEqui.flatBF_equivariant D ψ ρ B J s om' hom Ψ hΨ 1 n hn h', psiFlag_eq, GlobalTheory.CharLaws.psiBes_rat ψ J.d hψ.2.2.1 1 0 hnQ,
       star_one, one_smul, Prod.mk_one_one, map_one, Prod.mk_one_one, map_one, Module.End.one_apply, opA,
       jacT_rat hψ J.d B.V₀ hy hnQ (s.weil₀.om_pres _ _ hΞ), s.weil₀.om_aut 1 (one_mem _) h' hh' _ hΞ]
   have hΨ' := s.weil.om_pres (embA B.d B.o 1, n * J.d.emb0 h') Ψ hΨ
   have e2 : s.om (embA B.d B.o γ₀, n * J.d.emb0 h') Ψ =
       s.om (embA B.d B.o γ₀, 1 * J.d.emb0 1) (s.om (embA B.d B.o 1, n * J.d.emb0 h') Ψ) := by
     rw [← Module.End.mul_apply, ← map_mul s.om, Prod.mk_mul_mk, map_one, map_one, mul_one, mul_one, one_mul]
-  rw [e2, GlobalTheory.T.besselToJacobiFlatSchwartz_equivariant D ψ ρ B J s om' hom _ hΨ' γ₀ 1 (one_mem _) 1, psiFlag_eq,
+  rw [e2, _root_.GlobalTheory.FlatEqui.flatBF_equivariant D ψ ρ B J s om' hom _ hΨ' γ₀ 1 (one_mem _) 1, psiFlag_eq,
     GlobalTheory.CharLaws.psiBes_rat ψ J.d hψ.2.2.1 1 0 (one_mem _), star_one, one_smul, opA, jacT_one, Prod.mk_one_one, map_one,
     Module.End.one_apply, id, s.weil₀.om_aut _ (B.o.emb_mem_GQ h₀ (one_mem _)) 1 (one_mem _) _ (flatBF_theta s hΨ'), e1]
 
@@ -132,8 +134,8 @@ theorem kerBF_laws : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (ρ : ℕ) (B
     have := GlobalTheory.UnfKer.flat_left s hom hΦ hγ (one_mem _) h₀ h
     rwa [one_mul] at this
   refine ⟨?_, fun γ hγ h => ?_, h3, fun h h' n => ?_⟩
-  · have hc := GlobalTheory.T.continuous_flatMap_weilRepresentation_joint D ψ B.V B.V₀ J.W J.W₀ ρ ρ B.d J.d s.vS s.vT s.χV s.χW s.om s.weil s.vU J.d.e
-      (GlobalTheory.T.unfolding_base_point_fourierJacobi_group D J.W J.W₀ ρ J.d).1.1 Φ hΦ
+  · have hc := _root_.GlobalTheory.FlatCont.flatAt_om_continuous D ψ B.V B.V₀ J.W J.W₀ ρ ρ B.d J.d s.vS s.vT s.χV s.χW s.om s.weil s.vU J.d.e
+      (_root_.GlobalTheory.Unf.base_point D J.W J.W₀ ρ J.d).1.1 Φ hΦ
     have he : Continuous (embA B.d B.o) :=
       B.d.continuous_embed.comp (B.o.continuous_emb.comp (continuous_id.prodMk continuous_const))
     have hq : Continuous fun p : GA D B.A × GA D J.W =>
@@ -147,7 +149,7 @@ theorem kerBF_laws : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (ρ : ℕ) (B
         φ h₀ * flatBF s (s.om (embA B.d B.o h₀, h) Φ) 0) := by
       refine ((hφ.2.comp continuous_fst).mul hF).congr fun p => ?_
       rw [Function.uncurry, Pi.mul_apply, Function.comp_apply]
-    exact hG.2.1.mul (GlobalTheory.T.continuous_integral_compactAutomorphicQuotient_param D B.A B.cpt B.vA (GA D J.W) _ hK
+    exact hG.2.1.mul (_root_.GlobalTheory.CocompactParam.continuous_integral_param D B.A B.cpt B.vA (GA D J.W) _ hK
       (fun γ hγ g p => by rw [hφ.1 γ hγ, h3 γ hγ])).2.1
   · rw [kerBF, kerBF, hG.1 γ hγ.1]
     congr 2
@@ -161,7 +163,7 @@ theorem kerBF_laws : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (ρ : ℕ) (B
     have e : s.om (embA B.d B.o h₀, n.1 * J.d.emb0 h' * h) Φ =
         s.om (embA B.d B.o h₀, n.1 * J.d.emb0 h') (s.om (1, h) Φ) := by
       rw [← Module.End.mul_apply, ← map_mul s.om, Prod.mk_mul_mk, mul_one]
-    rw [e, GlobalTheory.T.besselToJacobiFlatSchwartz_equivariant D ψ ρ B J s om' hom _ (s.weil.om_pres _ _ hΦ) h₀ n.1 n.2 h', Pi.smul_apply, smul_eq_mul, fjKer]
+    rw [e, _root_.GlobalTheory.FlatEqui.flatBF_equivariant D ψ ρ B J s om' hom _ (s.weil.om_pres _ _ hΦ) h₀ n.1 n.2 h', Pi.smul_apply, smul_eq_mul, fjKer]
     ring
 
 end GlobalTheory.Unf

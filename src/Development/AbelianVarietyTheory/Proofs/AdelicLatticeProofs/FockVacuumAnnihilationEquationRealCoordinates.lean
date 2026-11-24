@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.OmAtSmulRight
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.StdCharacterHalfSymplecticFormRealPointStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.StdCharacterHalfSymplecticFormRealPoint
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.SmoothIffRealCoordinatesAndRealLines
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -111,7 +111,7 @@ theorem dRho_eq (h : Chart θ σ) {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdC
   funext t
   rw [lineAt_eq h S T τ z t]
   unfold heisO
-  rw [GlobalTheory.T.stdCharacter_halfSymplecticForm_realPoint D θ ψ h.inf hψ S T _ _ (Or.inl (h.real_iota T S w)), h.pi_iota, h.pi_iota,
+  rw [_root_.GlobalTheory.OrientedChar.char_symplOH D θ ψ h.inf hψ S T _ _ (Or.inl (h.real_iota T S w)), h.pi_iota, h.pi_iota,
     (iotaW σ T S).map_add]
 
 open Classical in

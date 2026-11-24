@@ -27,7 +27,7 @@ public import Mathlib.LinearAlgebra.Trace
 public import Mathlib.Topology.Algebra.Group.Defs
 public import Mathlib.Topology.Algebra.Support
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.SphStarU
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedTraceIndicatorLevelLocalUnitaryStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedTraceIndicatorLevelLocalUnitary
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalAlgebraHolds
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.ExistsEigv
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DiagonalAlgebraHolds
@@ -928,7 +928,7 @@ theorem sphStar : LocAlg → SphStarU := by
     have heq := finsum_inv_eq τ hmulτ hinvτ hdcτ hKτ F hF
     rw [← eqμ', ← eqc] at heq
     exact mul_right_cancel₀ hBne heq
-  · have h := (GlobalTheory.T.twistedTrace_indicator_level_localUnitary E n w (KL n w) hlev σ).2.2.1
+  · have h := (_root_.GlobalTheory.TwTrUnit.twTr_unit E n w (KL n w) hlev σ).2.2.1
     rw [h, Subgroup.relIndex_self, hrank]
     simp
 

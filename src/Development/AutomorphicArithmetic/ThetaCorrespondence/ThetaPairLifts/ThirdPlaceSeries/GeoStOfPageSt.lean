@@ -27,7 +27,9 @@ public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LogNor
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.RamifiedPrimePowersSizeBounds
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsIsUUOver
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsFramedPointBaseChangeAlgHom
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.HarmonicValuesInvariantUniversalEndomorphismStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.IsLevMove
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.HarmonicValuesInvariantUniversalEndomorphism
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueUnderLevelMove
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ActLevFullLevelGroupFramedPoints
 public import Formalism.LocalToGlobal.ProjectiveLattices.FullExists
@@ -1137,7 +1139,7 @@ theorem nab_move (hLaw : Laws) (hCI : ChartIndepSt2) {E : Type} [Field E] [Numbe
       ∑ m ∈ P.support, algebraMap c.F S (P.coeff m) * ∏ b, nab y ((N : ℤ) ^ 2) (F b) (colOf m b) := by
   have hL := Xo.univ.t.PP.isLB
   have e : (N : ℤ) ^ 2 = (N ^ 2 : ℕ) := (Nat.cast_pow N 2).symm
-  refine GlobalTheory.T.harmonic_values_invariant_universal_endomorphism hLaw hCI E H Dw l Xo c nab hnab S ρ ν y y' pm w hx h₁ h₂ hw hu n a P hP N F F' fun b => ?_
+  refine _root_.GlobalTheory.ChartPush.nab_harmonic_invariant hLaw hCI E H Dw l Xo c nab hnab S ρ ν y y' pm w hx h₁ h₂ hw hu n a P hP N F F' fun b => ?_
   have hc := @secRel_iff _ _ _ _ _ _ ν.cm.F (ptO Xo y.x) (ptO Xo y'.x) _ _ w pm hL hL h₂ ((N : ℤ) ^ 2) (N ^ 2) e
   exact (hc _ _).1 (hF b)
 

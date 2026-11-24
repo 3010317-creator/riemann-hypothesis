@@ -6,7 +6,9 @@ public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsUniq
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsUniqueSymmetricTranslateOddLevel
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.HarmonicValueTranslatedProductValuationBoundStatement
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IsotropicGroupPrimaryDecompositionStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.LatticeTrivialAtPrimeIndicesAndUnitsStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.PlaceBelow
+public import Formalism.LocalToGlobal.ProjectiveLattices.ThShort
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.LatticeTrivialAtPrimeIndicesAndUnits
 import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.NormalisedPullbackCommutesSymmetricTranslations
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.SymmetricTranslateMulOfCoprimeOrders
 import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.SymmetricTranslatesMultiplicationPullbackDescrip
@@ -218,7 +220,7 @@ theorem short_bound_of_trivAt : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have hNodd : Odd N := hL.1
   obtain ⟨J, J', iJ, iJ', a, a', σ, hinj, ha, ⟨m, hm, ha'⟩, hz', hcard⟩ :=
     GlobalTheory.T.isotropic_group_primary_decomposition E H Dw l Xo T.Fr (xOf y) n Λ N M ℓ hU hL hℓ z hz hgi
-  obtain ⟨hfac, hmne, hrest⟩ := GlobalTheory.T.lattice_trivial_at_prime_indices_and_units E H Dw l c n Λ N M ℓ hU hL hℓ hΛ
+  obtain ⟨hfac, hmne, hrest⟩ := _root_.GlobalTheory.TrivLattice.trivAt_units E H Dw l c n Λ N M ℓ hU hL hℓ hΛ
   obtain ⟨hβv, hFFV⟩ := hrest T io hl
   obtain ⟨j₀⟩ : Nonempty J := Fintype.card_pos_iff.1 (by rw [hcard]; exact pow_pos hℓ.pos _)
   have hell : ∀ i b, ∃ k : ℕ, a i b ^ (ℓ ^ k) = 1 := fun i => ((ha (a i)).1 ⟨i, rfl⟩).2

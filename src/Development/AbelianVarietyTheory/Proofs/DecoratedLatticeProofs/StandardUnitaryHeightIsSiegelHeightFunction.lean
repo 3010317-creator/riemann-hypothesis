@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HalfData
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemDoublingSiegelParabolicIffChartMemSiegelUnnStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StandardUnitaryChartSiegelLeviDetEqStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemDoublingSiegelParabolicIffChartMemSiegelUnn
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StandardUnitaryChartSiegelLeviDetEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +57,7 @@ namespace GlobalTheory.StdUnn
 theorem isHeight_hgtStd : ∀ (D : D7) (A : HSp D) (μ : D.host.E), IsSkew μ → ∀ κ : GA D (dblSp A) ≃* G D A.rank,
     IsChart A μ κ → ∀ (a : GL (Fin A.rank) (AE D)) (p : siegel A), IsConj A a κ p → IsHeight (hgtStd A a κ p) := by
   intro D A μ hμ κ hκ a p hc p₁ hp₁ α hα k hk
-  have hq : κ.symm p₁ ∈ siegel A := (GlobalTheory.T.mem_doublingSiegelParabolic_iff_chart_mem_siegelUnn D A μ hμ κ hκ (κ.symm p₁)).2 (by simpa using hp₁)
+  have hq : κ.symm p₁ ∈ siegel A := (_root_.GlobalTheory.StdUnn.mem_siegel_iff_chart_mem_P D A μ hμ κ hκ (κ.symm p₁)).2 (by simpa using hp₁)
   set q : siegel A := ⟨κ.symm p₁, hq⟩ with hqdef
   have hk' : (p : GA D (dblSp A)) * κ.symm k * (p : GA D (dblSp A))⁻¹ ∈ Khat A a := by
     rw [hc]; simpa [mul_assoc] using hk
@@ -65,7 +65,7 @@ theorem isHeight_hgtStd : ∀ (D : D7) (A : HSp D) (μ : D.host.E), IsSkew μ �
       ((q * p⁻¹ : siegel A) : GA D (dblSp A)) * ((p : GA D (dblSp A)) * κ.symm k * (p : GA D (dblSp A))⁻¹) := by
     simp [hqdef, map_mul, mul_assoc]
   have hdet : aP A q = Matrix.GeneralLinearGroup.det α :=
-    GlobalTheory.T.standardUnitaryChart_siegelLeviDet_eq D A μ hμ κ hκ q α (by simpa [hqdef] using hα)
+    _root_.GlobalTheory.StdUnn.chart_aP_eq_det D A μ hμ κ hκ q α (by simpa [hqdef] using hα)
   show hgt A a (κ.symm (p₁ * k) * (p : GA D (dblSp A))⁻¹) * absA D (aP A p) = absA D (Matrix.GeneralLinearGroup.det α)
   rw [e, hgt_mul A a (q * p⁻¹) hk', ← map_mul, ← map_mul, inv_mul_cancel_right, hdet]
 

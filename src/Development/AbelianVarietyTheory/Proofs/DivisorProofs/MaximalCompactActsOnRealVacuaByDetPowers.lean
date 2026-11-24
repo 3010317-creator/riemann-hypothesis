@@ -10,8 +10,8 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.Exists
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MapFinNeg
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SqNormIntegralFundamentalDomainEqL2NormSq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeFinitelyGeneratedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeMultipleMemOpenLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeFinitelyGenerated
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeMultipleMemOpenLevel
 public import Mathlib.Analysis.CStarAlgebra.CStarMatrix
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasisAdaptedToCartanInvolution
 public import Mathlib.Basic.Complex.Basic
@@ -24,7 +24,7 @@ public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AtPlaceIffEqA
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SymplecticAdelicFormBiadditiveAlternatingRationaStatement
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SymplecticAdelicFormBiadditiveAlternatingRationa
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.CocompactTensor
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -264,7 +264,7 @@ theorem mem_span (kS : S.SigOK) (kT : T.SigOK) (hS : ∀ τ, IsCartanInv (gramAt
   have hθ := h₀.2.inf
   obtain ⟨h1, -, h3⟩ := GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T ΛS ΛT hψ dS dT
   have hfin := GlobalTheory.LatFinMod.latO_finite_mod D S T ΛS ΛT dS.1.fg dT.1.fg fun _ => True
-  have hlev := (GlobalTheory.T.completedHomLattice_multiple_mem_open_level D S T ΛS ΛT dS dT (GlobalTheory.T.completedHomLattice_finitelyGenerated D S T ΛS ΛT dS dT)).1
+  have hlev := (_root_.GlobalTheory.LatLevel.level_of_generators D S T ΛS ΛT dS dT (_root_.GlobalTheory.LatFinGen.latO_finitely_generated D S T ΛS ΛT dS dT)).1
   have hinf := fun u => GlobalTheory.SplitScalar.latO_fin (u := u) (S := S) (T := T) (LS := (ΛS : Set (Fin S.rank → D.host.E)))
     (LT := (ΛT : Set (Fin T.rank → D.host.E)))
   let M := realVac hψ hθ fun τ => cplxO (sS τ) (sT τ)
@@ -289,7 +289,7 @@ theorem mem_span (kS : S.SigOK) (kT : T.SigOK) (hS : ∀ τ, IsCartanInv (gramAt
     (fun x y z => by
       rw [← AddChar.map_add_eq_mul, ← GlobalTheory.SplitScalar.symplOH_add_right]; rfl)
     (fun x => by
-      have : symplO S T x x = 0 := (GlobalTheory.T.symplecticAdelicForm_biadditive_alternating_rational D S T).2.2.2.1 x
+      have : symplO S T x x = 0 := (_root_.GlobalTheory.SymplecticOrthogonalSesquilinear.symplO_alt D S T).2.2.2.1 x
       simp only [symplOH, this, mul_zero, AddChar.map_zero_eq_one])
     (fun v => Subtype.ext (GlobalTheory.SplitScalar.heisO_zero ψ S T v))
     (fun x y v => Subtype.ext (GlobalTheory.SplitScalar.heisO_heisO ψ S T x y v))

@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IntegrandSZero
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CuspFormsArchimedeanKFiniteRightTranslateFiniteAStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubledLatticeHeightSelfDualLatticesEqConjStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilRepPreservesFockDegreeOfCommuteCartanStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilRepPreservesFockDegreeOfCommuteCartan
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaFunctionScalarProductPreservedIsometry
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompAtMtOfMemGfC
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
@@ -208,7 +208,7 @@ theorem globalFormAt_move : ∀ (D : D7) (A : HSp D) (L L' : Lat A), IsSelfDualC
   have fock : ∀ Φ, IsFockVec ψ θ A B sA sB Φ → IsFockVec ψ θ A B sA sB (om (k⁻¹, 1) Φ) := by
     rintro Φ ⟨hΦ, N, hN⟩
     refine ⟨hW.om_pres _ _ hΦ, N, fun l hl => ?_⟩
-    refine GlobalTheory.T.weilRep_preserves_fockDegree_of_commute_cartan D ψ θ A B χA χB om sA sB hW hθ k⁻¹ (fun τ => ?_) N Φ hΦ hN l hl
+    refine _root_.GlobalTheory.CartanFockDeg.om_keeps_fockDeg D ψ θ A B χA χB om sA sB hW hθ k⁻¹ (fun τ => ?_) N Φ hΦ hN l hl
     rw [GlobalTheory.OrientedHeis.compAt_mt_of_mem_GfC θ A hki τ, Matrix.one_mul, Matrix.mul_one]
   have lu₁ := cuspFormsArchimedeanKFinite_left_invariant hu₁
   have lu₂ := cuspFormsArchimedeanKFinite_left_invariant hu₂

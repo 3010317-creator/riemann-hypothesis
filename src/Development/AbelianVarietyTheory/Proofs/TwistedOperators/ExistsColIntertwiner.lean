@@ -53,17 +53,21 @@ import Mathlib.Topology.Sheaves.Init
 import Mathlib.Algebra.Order.Star.Rat
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PureTensorLIntertwine
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacuumCharacterPositiveDefiniteSourceStatement
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacuumCharacterPositiveDefiniteSource
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntValuationEqOfMem
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AllPositiveModelFiniteDimensionalCompactTypeStatement
+import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AllPositiveModelFiniteDimensionalCompactType
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffSetIntegralNat
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
 import Mathlib.LinearAlgebra.PiTensorProduct.Basic
 import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivariantPiTensorPolynomialBilinear
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRealIntertwinerOfCompactGroupIntertwiner
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorBasisChangeEqSubstitutionStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockVectorsOfThetaDatumInjectiveStatement
+import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorBasisChangeEqSubstitution
+import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockVectorsOfThetaDatumInjective
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasInfExpMulZero
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TendstoInfMulProd
@@ -643,7 +647,7 @@ theorem om_ptOf_exp {D : D7} {V W : HSp D} {S S' : D.what₂.Tau → SPar} {ψ :
       (polAct M M' x₁ x₃ (fun τ => compAt θ τ (Formalism.L2.Theta.mt V g)) (fun τ => compAt θ τ (Formalism.L2.Theta.mt W h)) φ) := by
   unfold GlobalTheory.Chain.ptOf
   rw [cart_eq_one M hε, cart_eq_one M' hε'] at hv ⊢
-  have e1 := GlobalTheory.T.vacuum_character_positive_definite_source D ψ θ V W χS χT ω hω hθ hV hW (fun _ => 1) (isCartan_one M hε) (isCartan_one M' hε')
+  have e1 := _root_.GlobalTheory.VacuumCharacter.vacuum_character D ψ θ V W χS χT ω hω hθ hV hW (fun _ => 1) (isCartan_one M hε) (isCartan_one M' hε')
     _ _ ha hb x₁ (fun τ => x₁ τ - V.rank) x₃ h1
     (fun τ => by push_cast; rw [h1]; ring)
     (fun τ => by
@@ -660,7 +664,7 @@ theorem om_ptOf_exp {D : D7} {V W : HSp D} {S S' : D.what₂.Tau → SPar} {ψ :
       rw [onb, inFr, Matrix.mul_assoc, Matrix.nonsing_inv_mul_cancel_left _ _ (fr_det M τ)])
     (fun τ => by
       rw [onb, inFr, Matrix.mul_assoc, Matrix.nonsing_inv_mul_cancel_left _ _ (fr_det M' τ)]) f hf φ).2
-  rw [e2, e1, GlobalTheory.FiniteFock.pureTensorO_smul, GlobalTheory.T.fockPolynomialVector_basisChange_eq_substitution D ψ θ V W hω.std hθ _ _ _ _ f hf, polAct, map_smul]
+  rw [e2, e1, GlobalTheory.FiniteFock.pureTensorO_smul, _root_.GlobalTheory.FockBaseChange.pureTensorO_subst D ψ θ V W hω.std hθ _ _ _ _ f hf, polAct, map_smul]
   congr 1
   refine Finset.prod_congr rfl fun τ _ => ?_
   have a1 : (1 / 2 : ℂ) • ((1 : Matrix (Fin W.rank) (Fin W.rank) ℂ) + 1) = 1 := by module
@@ -705,8 +709,8 @@ theorem exists_col_intertwiner : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ
   have hε := fun τ => (hp τ).1
   have hε' := fun τ => (hp τ).2.1
   choose x₁ x₃ h1 h3 hn ν n1 n2 n3 n4 using fun τ => (hp τ).2.2
-  have m := fun τ => GlobalTheory.T.allPositive_model_finiteDimensional_compactType D (G.Xp j).V _ (G.Xp j).M τ (hε τ)
-  have m' := fun τ => GlobalTheory.T.allPositive_model_finiteDimensional_compactType D (G.nX j).V _ (G.nX j).M τ (hε' τ)
+  have m := fun τ => _root_.GlobalTheory.CompactModel.model_allPos D (G.Xp j).V _ (G.Xp j).M τ (hε τ)
+  have m' := fun τ => _root_.GlobalTheory.CompactModel.model_allPos D (G.nX j).V _ (G.nX j).M τ (hε' τ)
   have hl := fun τ =>
     haveI := (m τ).1
     haveI := (m' τ).1
@@ -733,7 +737,7 @@ theorem exists_col_intertwiner : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ
       rwa [map_update, GlobalTheory.CompactHowe.LastStep.map_one'] at this)
   have hvv := isVacVec_of_isVac hf
   have hstd : IsStdChar D R.ψ (-1) := hf.1
-  have hinj := GlobalTheory.T.fockVectorsOfThetaDatum_injective D (G.Xp j).V (G.nX j).V _ _ R.ψ R.θ (G.Xp j).M (G.nX j).M f hstd hθ hvv
+  have hinj := _root_.GlobalTheory.FockInj.ptOf_injective D (G.Xp j).V (G.nX j).V _ _ R.ψ R.θ (G.Xp j).M (G.nX j).M f hstd hθ hvv
   have hmu := fun t τ => hasInfExp_mu R.toLevCh hC.lev t ⟨j, hj⟩ τ
   refine ⟨It, fun t => hIt ((ω t).swap) (GlobalTheory.Grid.fock R.ψ R.θ false (G.Xp j) (G.nX j) f) hinj (fun τ g hg φ => ?_) fun τ h hh φ => ?_⟩
   · rw [WRep.swap_apply]

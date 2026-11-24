@@ -1,11 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeisenbergOperatorFixThetaDatumAwaySplitPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeisenbergOrientedFiniteFixesFockPolynomialVectoStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeisenbergOperatorFixThetaDatumAwaySplitPlaces
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeisenbergOrientedFiniteFixesFockPolynomialVecto
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsLocalVacuumOfIsLatticeVacuumCoprimeLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotentsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesPropertiesStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
+public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -74,14 +78,14 @@ theorem infPart_latO {S T : HSp D} {LS : Set (Fin S.rank → D.host.E)} {LT : Se
 
 theorem prime_idem_absorb (S : HSp D) {P : HeightOneSpectrum (𝓞 D.host.E)} {e f : AE D} (h : IsPrimeIdem P e f) :
     f * e = e := by
-  have hff := ((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents S).2.2.1 P e f h).1
+  have hff := ((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents S).2.2.1 P e f h).1
   rcases h with ⟨he, hf⟩ | ⟨hf, -, -⟩
   · rw [hf, add_mul, he.1.1, mul_comm (cA D e) e, he.1.2.1, add_zero]
   · subst hf; exact hff
 
 theorem prime_idem_absorb_conj (S : HSp D) {P : HeightOneSpectrum (𝓞 D.host.E)} {e f : AE D} (h : IsPrimeIdem P e f) :
     f * cA D e = cA D e := by
-  have hcf := ((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents S).2.2.1 P e f h).2.1
+  have hcf := ((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents S).2.2.1 P e f h).2.1
   have := congrArg (cA D) (prime_idem_absorb S h)
   rwa [map_mul, hcf] at this
 
@@ -95,7 +99,7 @@ theorem idemSum_mul_zero (S : HSp D) {E0 : AE D} {Q : Finset (Pl D.host.E)} (hE 
     {P : HeightOneSpectrum (𝓞 D.host.E)} (hQ : ∀ PP ∈ Q, PP ≠ P ∧ ¬ IsConjPl PP P)
     {e f : AE D} (hP : IsPrimeIdem P e f) (x : AE D) (hx : f * x = x) : E0 * x = 0 ∧ cA D E0 * x = 0 := by
   obtain ⟨⟨es, hes, rfl⟩, -⟩ := hE
-  have hI := GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents S
+  have hI := _root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents S
   have key : ∀ PP ∈ Q, es PP * x = 0 ∧ cA D (es PP) * x = 0 := by
     intro PP hPP
     have hPPi : IsPrimeIdem PP (es PP) (es PP + cA D (es PP)) := Or.inl ⟨hes PP hPP, rfl⟩
@@ -145,8 +149,8 @@ theorem vac_pt {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} (hθ : IsInfFam 
     ∀ φ, IsVacAt ψ S T P (pureTensorO ψ θ S T sS sT BS BT f φ) := by
   intro φ
   refine ⟨hth φ, fun e' f' hP u hu hh => ?_⟩
-  refine GlobalTheory.T.heisenbergOriented_finite_fixes_fockPolynomialVectors ψ θ S T hθ sS sT BS BT f hth u (infPart_latO hu) ?_ φ
-  exact GlobalTheory.T.heisenbergOperator_fix_thetaDatum_away_splitPlaces ψ S T E1 Λ 1 f₀ Φ f ht u (fun i j => hE e' f' hP _ (half_absorb S hP hh i j))
+  refine _root_.GlobalTheory.Hk3.FiniteHeis.heisO_pureTensorO_of_finite ψ θ S T hθ sS sT BS BT f hth u (infPart_latO hu) ?_ φ
+  exact _root_.GlobalTheory.Hk3.heisO_fix_thetaAt_off ψ S T E1 Λ 1 f₀ Φ f ht u (fun i j => hE e' f' hP _ (half_absorb S hP hh i j))
     (hv.2 e' f' hP u hu hh)
 
 theorem fock_vacua_good : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m}
@@ -155,7 +159,7 @@ theorem fock_vacua_good : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T :
       ∀ i φ, IsVacAt R.ψ _ _ P (R.ptP i t φ) := by
   intro D G _ _ Pl0 T A Ks _ _ _ R F hC t P hG
   classical
-  have hN := ((GlobalTheory.T.theta_lift_levels_good_primes_properties R F hC.lev).2.1 t P hG).1
+  have hN := ((_root_.GlobalTheory.GoodPrimes.good_primes R F hC.lev).2.1 t P hG).1
   have hθ : IsInfFam R.θ := hC.models.inf
   have h1 : ((1 : ℕ) : 𝓞 D.host.E) ∉ P.asIdeal := by
     rw [Nat.cast_one]; exact fun h => P.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 h)

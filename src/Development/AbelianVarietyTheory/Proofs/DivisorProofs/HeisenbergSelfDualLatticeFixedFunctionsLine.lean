@@ -1,12 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroComplementaryAdelicSchwartzFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergEigenLatticePointAtPlaceLocalIdentityStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergEigenProportionalLocalFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLocalImageLatticeSupportedAtPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLocalSubgroupFirstProjEqAnnihilatorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorLatticeLocalDarbouxCoordsBoundedStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroComplementaryAdelicSchwartzFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergEigenLatticePointAtPlaceLocalIdentity
+public import Mathlib.Algebra.Group.AddChar
+public import Mathlib.Algebra.Group.Subgroup.Defs
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.Data.Matrix.Mul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergEigenProportionalLocalField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLocalImageLatticeSupportedAtPlace
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLocalSubgroupFirstProjEqAnnihilator
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorLatticeLocalDarbouxCoordsBounded
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,18 +86,18 @@ theorem vacuum_line : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
         GlobalTheory.LatVac.psiAt B.ψ v (ξ ⬝ᵥ l.2 + (2 : Fv F v)⁻¹ * (l.1 ⬝ᵥ l.2)) * f (ξ + l.1) = χ l * f ξ := by
     intro f hf hA l hl ξ
     have h : ∃ γ ∈ Λ, GlobalTheory.LatVac.locCo co v γ = l := AddSubgroup.mem_map.mp hl
-    obtain ⟨r, hr, x₀, hx₀⟩ := GlobalTheory.T.exists_nonzero_complementary_adelicSchwartz_function v f hf
-    have key := GlobalTheory.T.heisenbergEigen_latticePointAtPlace_localIdentity v co B.ψ h.choose f _ (hAt _ h.choose_spec.1) (hA _ h.choose_spec.1) r hr x₀ hx₀ ξ
+    obtain ⟨r, hr, x₀, hx₀⟩ := _root_.GlobalTheory.RestComplement.exists_rest_ne_zero v f hf
+    have key := _root_.GlobalTheory.LatVac.heis_at_local_identity v co B.ψ h.choose f _ (hAt _ h.choose_spec.1) (hA _ h.choose_spec.1) r hr x₀ hx₀ ξ
     simp only [χ, dif_pos h]
     rw [h.choose_spec.2] at key
     exact key
-  obtain ⟨c, hc0, hcb⟩ := GlobalTheory.T.tensorLattice_localDarbouxCoords_bounded G.V G.W v co hT.geo.hV.lat.toIsLattice hT.geo.hW.lat.toIsLattice
-  have hsd' := GlobalTheory.T.selfDual_localImage_latticeSupportedAtPlace v co B.ψ Λ hAt hsd
-  have hfill := GlobalTheory.T.selfDualLocalSubgroup_firstProj_eq_annihilator v (GlobalTheory.LatVac.psiAt B.ψ v) (Λ.map (GlobalTheory.LatVac.locCo co v)) c hc0 (fun x => hψ x) hsd'
+  obtain ⟨c, hc0, hcb⟩ := _root_.GlobalTheory.LatBound.locCo_latAtV_bounded G.V G.W v co hT.geo.hV.lat.toIsLattice hT.geo.hW.lat.toIsLattice
+  have hsd' := _root_.GlobalTheory.LatVac.DualLoc.map_selfDual v co B.ψ Λ hAt hsd
+  have hfill := _root_.GlobalTheory.SelfDualFirstProj.exists_pair_of_annihilator v (GlobalTheory.LatVac.psiAt B.ψ v) (Λ.map (GlobalTheory.LatVac.locCo co v)) c hc0 (fun x => hψ x) hsd'
     (fun l hl i => by
       obtain ⟨γ, hγ, rfl⟩ := AddSubgroup.mem_map.mp hl
       exact hcb γ hγ i)
-  exact GlobalTheory.T.heisenbergEigen_proportional_localField (GlobalTheory.LatVac.psiAt B.ψ v) (Λ.map (GlobalTheory.LatVac.locCo co v)) χ φ₀ φ (loc φ₀ hφSB hφ) (loc φ hψSB hψ')
+  exact _root_.GlobalTheory.heisenbergEigen_proportional (GlobalTheory.LatVac.psiAt B.ψ v) (Λ.map (GlobalTheory.LatVac.locCo co v)) χ φ₀ φ (loc φ₀ hφSB hφ) (loc φ hψSB hψ')
     hφ0 hfill
 
 end GlobalTheory.LatVacLine

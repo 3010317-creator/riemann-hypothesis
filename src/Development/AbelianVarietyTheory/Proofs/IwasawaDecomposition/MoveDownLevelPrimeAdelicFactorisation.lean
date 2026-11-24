@@ -54,7 +54,7 @@ import Mathlib.Tactic.Linter.Style
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Foundations.ValuedAlgebraMapEqOne
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoordsStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
@@ -431,7 +431,7 @@ theorem move_down_adelic : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok 
   obtain ⟨c0, hc0⟩ := c
   subst hc0
 
-  have hgram : gramN (I.rec7 l Z) i hi = 1 := ((GlobalTheory.T.trueColumn_spaces_standard_in_frameCoords I hOk hPins l Z).2.2.2 i hi).1
+  have hgram : gramN (I.rec7 l Z) i hi = 1 := ((_root_.GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hOk hPins l Z).2.2.2 i hi).1
   haveI : NeZero (B.R.N i) := inferInstance
   have hP := _root_.GlobalTheory.Mem.PrimesAtLevel.primes_atT I hOk l u a v
   have hv0 : (eV v).1 = v.1.under (𝓞 B.host.F) := hV v

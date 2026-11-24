@@ -7,14 +7,17 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NodeAgree
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.KFiniteVectorsDiscreteSeriesSmoothAbsolutelyIrre
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteSeriesPureInnerProductsTensorProduct
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRealIntertwinerContractionOnePlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqMulProdOfPartial
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRealIntertwinerContractionOnePlace
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRealPlaceThetaObjectsTheoremARParts
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GluingLawHoldsStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ChosenSeries
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GluingLawHolds
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocLineOfMatches
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandraStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaVacuumCharactersRealPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqMulProdOfPartial
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.BarMatrix
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandra
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RaisingLoweringOperators
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaVacuumCharactersRealPlaces
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ConjugateAdjointDagger
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.HermitianOrthogonalExtensionData
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjFockPureTensorMapNegFormSpaceEq
@@ -82,9 +85,7 @@ import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieAlgebrasAtPla
 import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.VacuumFockVectors
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVectorsOverVacuumIsometryOfSkeletonDatum
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsItWOfGlobIt
-import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.BarMatrix
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsEqCoverDiscreteSeries
-import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RaisingLoweringOperators
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaVacuumCharactersAtRealPlaces
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TprodNeZeroOfNe
 
@@ -910,9 +911,9 @@ theorem exists_adj_glue {V W : HSp D} {S S' : D.what₂.Tau → SPar} (M : DSMod
         conj (ellT M' (fun τ => (v τ : M'.H τ)) (inclT M' u)) := by
   classical
   obtain ⟨X, hX, -, -, -, -, h3, -⟩ := _root_.GlobalTheory.RealPlaceTheta.exists_record_theta hC hH
-  have hB := GlobalTheory.T.thetaModels_are_coverDiscreteSeries_of_harishChandra hC hH D
+  have hB := _root_.GlobalTheory.CoverModel.modelsAreCoverSeries_all hC hH D
   obtain ⟨χS, χT, hωd, he⟩ := hω
-  have hv := fun τ => GlobalTheory.T.thetaVacuumCharacters_realPlaces D V W _ _ M M' θ ψ χS χT ω f τ _ _ hθ hωd (he τ).1 (he τ).2 hf
+  have hv := fun τ => _root_.GlobalTheory.VacuumCharacter.vacChar D V W _ _ M M' θ ψ χS χT ω f τ _ _ hθ hωd (he τ).1 (he τ).2 hf
   have key : ∀ τ, ∃ A₀ : LPol W.rank V.rank →ₗ[ℂ] M'.sm τ →ₗ[ℂ] M.H τ,
       ∀ A, LocW M M' τ (aS τ) (aT τ) A → ∃ c : ℂ, A = c • A₀ := fun τ => by
     obtain ⟨t, al, be, ga, de, hd, e1, e2⟩ := hP τ
@@ -923,7 +924,7 @@ theorem exists_adj_glue {V W : HSp D} {S S' : D.what₂.Tau → SPar} (M : DSMod
   have part : ∀ τ a, ∃ B : LPol W.rank V.rank →ₗ[ℂ] M'.sm τ →ₗ[ℂ] M.H τ, LocW M M' τ (aS τ) (aT τ) B ∧
       ∀ x, Fn (Function.update a τ x) = ⟪x.2.2, B x.1 x.2.1⟫_ℂ := by
     intro τ a
-    obtain ⟨A, hA, hA'⟩ := GlobalTheory.T.exists_realIntertwiner_contraction_one_place D V W _ _ M M' θ ψ ω f τ _ _ It hθ (hv τ).2.1 (hv τ).2.2 hI
+    obtain ⟨A, hA, hA'⟩ := _root_.GlobalTheory.Chain.RealLine.Semi.exists_semiW D V W _ _ M M' θ ψ ω f τ _ _ It hθ (hv τ).2.1 (hv τ).2.2 hI
       (fun ρ => (a ρ).2.1) (fun ρ => (a ρ).2.2)
     obtain ⟨j, hj⟩ := exists_ins (fun ρ => (a ρ).1) τ
     refine ⟨A ∘ₗ j, locW_of_semiW hA hj, fun x => ?_⟩
@@ -1052,7 +1053,7 @@ theorem adjoint_smooth : ∀ {D : D7} {V W : HSp D} {S S' : D.what₂.Tau → SP
     intro P w
     have hP' : P ∈ Submodule.span ℂ
         (Set.range (glue : (D.what₂.Tau → LPol W.rank V.rank) → PolF D W.rank V.rank)) := by
-      rw [(GlobalTheory.T.gluing_law_holds D V.rank W.rank).1]
+      rw [(_root_.GlobalTheory.Chain.RealIt.GlueProof.glueLaw D V.rank W.rank).1]
       trivial
     induction hP' using Submodule.span_induction with
     | mem P hP' =>
@@ -1454,7 +1455,7 @@ theorem itPair_gen (hD : GlobalTheory.Published.DiscreteSeriesCover) (hH : Globa
     obtain ⟨t, al, be, ga, de, hd, e1, e2⟩ := hP τ
     exact exists_locIt hX h1 h2 (_root_.GlobalTheory.modelsAreCoverSeries_of_hypotheses hD hH D) M M' τ hd e1 e2
   choose hr A hA using key
-  obtain ⟨It, I, hI⟩ := GlobalTheory.T.exists_globalFockIntertwiner_tensor_realPlaces D V W _ _ M M' aS aT A GlobalTheory.Contr.contraction.2 (GlobalTheory.T.gluing_law_holds D _ _) hA
+  obtain ⟨It, I, hI⟩ := GlobalTheory.T.exists_globalFockIntertwiner_tensor_realPlaces D V W _ _ M M' aS aT A GlobalTheory.Contr.contraction.2 (_root_.GlobalTheory.Chain.RealIt.GlueProof.glueLaw D _ _) hA
   refine ⟨It, hI.ne, fun ω f ⟨χS, χT, hω, he⟩ hf => ?_⟩
   have hv := fun τ => _root_.GlobalTheory.vacChar_of_record D V W _ _ M M' θ ψ χS χT ω f τ _ _ hθ hω (he τ).1 (he τ).2 hf
   exact isItW_of_globIt hθ hI hr (_root_.GlobalTheory.vacuumFock_all_records D V W _ _ M M' ψ θ hω.std hθ f hf).2.2.2.2 (fun τ => (hv τ).2.1)

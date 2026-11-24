@@ -2,9 +2,10 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.TwistedFactors.LocalBaseChange.ElementaryCosets.CosetMap
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalConjugationInvolutiveValuationPreservingStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalConjugationInvolutiveValuationPreserving
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsNormalisedThetaSub
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwahoriAndMaximalCompactCriteriaStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwahoriAndMaximalCompactCriteria
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.OneCoset
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedIwahoriFirstIdentity
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.HilbertNinetyNorms.IwFacts
@@ -165,9 +166,9 @@ theorem thL_eq_thetaGL (w : Pl E) (hw : ¬ IsSplitAt w) (n : ℕ) : thL n w = Gl
   unfold thL
   rw [if_neg hw]
 
-theorem cj_cj' (w : Pl E) (x : w.adicCompletion E) : cj w (cj w x) = x := (GlobalTheory.T.localConjugation_involutive_valuation_preserving E w).1 x
+theorem cj_cj' (w : Pl E) (x : w.adicCompletion E) : cj w (cj w x) = x := (_root_.GlobalTheory.BCT.cj_involutive_valuation E w).1 x
 
-theorem v_cj' (w : Pl E) (x : w.adicCompletion E) : Valued.v (cj w x) = Valued.v x := (GlobalTheory.T.localConjugation_involutive_valuation_preserving E w).2 x
+theorem v_cj' (w : Pl E) (x : w.adicCompletion E) : Valued.v (cj w x) = Valued.v x := (_root_.GlobalTheory.BCT.cj_involutive_valuation E w).2 x
 
 theorem continuous_cj' (w : Pl E) : Continuous (cj w) := by
   unfold cj
@@ -260,7 +261,7 @@ theorem v_sign_cj (w : Pl E) (m : ℕ) (x : w.adicCompletion E) :
 
 theorem thL_mem_iwGL (w : Pl E) (hw : ¬ IsSplitAt w) (n : ℕ) {g : GLw n w} (hg : g ∈ iwGL n w) :
     thL n w g ∈ iwGL n w := by
-  have hE := fun x : GLw n w => (GlobalTheory.T.iwahori_and_maximal_compact_criteria E w n x).1
+  have hE := fun x : GLw n w => (_root_.GlobalTheory.CompanionTheory.IwEntries.iwGL_KGL_entries E w n x).1
   obtain ⟨g1, g2, -⟩ := (hE g).1 hg
   obtain ⟨-, -, h3⟩ := (hE g⁻¹).1 (inv_mem hg)
   refine (hE _).2 ⟨fun i j => ?_, fun i j => ?_, fun i j hij => ?_⟩

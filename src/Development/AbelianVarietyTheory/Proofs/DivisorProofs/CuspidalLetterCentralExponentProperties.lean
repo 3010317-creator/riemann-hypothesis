@@ -9,7 +9,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSquareInte
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.IsNormalisedOfIsDiscrete
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitCentreDerivativeCommuteCentralEigen
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdelicAbsValueCpowCharacterStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdelicAbsValueCpowCharacter
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CapCommuteRtInfGL
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasInfCharInfCharOfCommute
 import Mathlib.Algebra.Order.Floor.Extended
@@ -216,7 +216,7 @@ theorem cex_unique (x : Letter E) (c : ℂ) (h : ∃ φ ∈ x.2.V, φ ≠ 0 ∧ 
   exact (smul_left_injective ℂ hne h1).symm
 
 theorem cex_tw (x : Letter E) (t : ℝ) : cex (tw x t) = cex x + x.1 * (Module.finrank ℚ E : ℂ) * t := by
-  obtain ⟨χ, h1, -, -, h4⟩ := GlobalTheory.T.exists_idelic_absValue_cpow_character E (t : ℂ)
+  obtain ⟨χ, h1, -, -, h4⟩ := _root_.GlobalTheory.ResW.exists_abs_cpow E (t : ℂ)
   have hχ : χ = nu E t := by have := h4 (Complex.ofReal_im t); rwa [Complex.ofReal_re] at this
   subst hχ
   obtain ⟨φ, hφ, hne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot x.2.ne_bot

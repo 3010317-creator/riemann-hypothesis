@@ -67,8 +67,9 @@ import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformiz
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.GtOntoDivisibleKernel
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.MemOfNonempty
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTorsionIdentificationWithPairing
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformizationEndomorphismCalculusStatement
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.WeilQkPairingExistsUniqueTorusStatement
+import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformizationEndomorphismCalculus
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.WeilQkPairingExistsUniqueTorus
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.RegularLocalRing.Defs
 
@@ -753,8 +754,8 @@ theorem periods_of_key : ∀ (R : Type) [CommRing R] [IsDomain R] [CharZero R] (
   refine GlobalTheory.KeyIota.eq_of_torsion_chars (F := F) fun k hk t ht => ?_
   obtain ⟨f₁, hf₁⟩ := GlobalTheory.TorsionIso.torsion_eq hL R I hA D₁ A₁ G₁ hG₁ U₁ F k hk
   obtain ⟨f₂, hf₂⟩ := GlobalTheory.TorsionIso.torsion_eq hL R I hA D₂ A₂ G₂ hG₂ U₂ F k hk
-  have wp₁ := GlobalTheory.T.weilQk_pairing_existsUnique_torus hL R I hA D₁ F k hk
-  have wp₂ := GlobalTheory.T.weilQk_pairing_existsUnique_torus hL R I hA D₂ F k hk
+  have wp₁ := _root_.GlobalTheory.weilQk_existsUnique hL R I hA D₁ F k hk
+  have wp₂ := _root_.GlobalTheory.weilQk_existsUnique hL R I hA D₂ F k hk
   have torp : ∀ p : QkPt D₁.toPre F k, f₁ p ^ k = 1 := fun p => by
     obtain ⟨w, hw⟩ := U₁.toUnifPre.ext
     exact ((hf₁.1 p _).2 rfl w hw).1
@@ -774,7 +775,7 @@ theorem periods_of_key : ∀ (R : Type) [CommRing R] [IsDomain R] [CharZero R] (
     simp only [map_zero]))
   have hq'tor : IsTor (t.comp (AddMonoidHom.toMultiplicative h)) q'.g := tor t q.g q'.g hq ((hm _ _).2 hqg)
 
-  have ec := GlobalTheory.T.uniformizationEndomorphism_calculus hL R I hA D₁ A₁ G₁ hG₁ U₁ F E E E
+  have ec := _root_.GlobalTheory.EndCalc.end_calculus hL R I hA D₁ A₁ G₁ hG₁ U₁ F E E E
   have adE := ec.2.1
   choose aEf haE huE using ec.1
   let aE : GtPtF D₁.toPre F →+ GtPtF D₁.toPre F := AddMonoidHom.mk' aEf fun x x' => (isAdd_iff_eq _ _ _).1

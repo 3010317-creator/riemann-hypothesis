@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Formalism.LocalToGlobal.IndefiniteReal.ZeroPartEigenvalueConvention
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoreClausesOfWeakCharacterisation
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSphericalOperatorsRowsNormalEigenspacesStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSphericalOperatorsRowsNormalEigenspaces
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,7 +60,7 @@ namespace GlobalTheory.SpanParts
 theorem iSup_rows_eigenparts_principal_level_eq_top : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type} {A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3), R.WeakCharacterisation F → R.toRealDat.ExAt → SchurAll R.toRealDat → (∀ c, R.EEc c ≠ ⊥ → ∃ p, R.Carries p c) → (⨆ p, R.EEp3 p) = ⊤ := by
   intro D G _ _ Pl0 I0 T A3 Ks _ _ _ R F hW hEx hS hC
   obtain ⟨hCore, hSF, hE, -⟩ := GlobalTheory.CoreOfWeak.core_of_weak R F hW hEx
-  obtain ⟨h, -, -, hTop, -⟩ := GlobalTheory.T.exists_sphericalOperators_rows_normal_eigenspaces R.toRealDat F.lv2 hCore hS R.SF hSF
+  obtain ⟨h, -, -, hTop, -⟩ := _root_.GlobalTheory.Hk3.OpsRows.exists_opsE R.toRealDat F.lv2 hCore hS R.SF hSF
   rw [eq_top_iff, ← hTop]
   refine iSup_le fun c => ?_
   by_cases h0 : R.EEc c = ⊥

@@ -30,7 +30,7 @@ public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.UTor
 public import Development.AbelianVarietyTheory.PublishedTheorems.SemistableReduction₂.SemistableReductionSt
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ClassicalPointsAndLocalRegularity
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.MemSupIIffAndHHEqKer
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaSystemHasTestsOfRealPointStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaSystemHasTestsOfRealPoint
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.LocTheta
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.ImmersedBy
 import Mathlib.Algebra.Order.Floor.Extended
@@ -1657,7 +1657,7 @@ theorem exists_good_label (h0 : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsD
   haveI : CharZero Ω := ArithBase.char (o := o)
   obtain ⟨⟨p, hp, y, hy⟩, -⟩ := (classical_points_and_local_regularity o Ω M U₀ ov.normal).1 U₀ le_rfl ov.ne z hz
   obtain ⟨y₀, Fs, hAt, hint, hfac⟩ := GlobalTheory.T.exists_classical_point_factor_large_model o Ω S ρ M U₀ Q ov z p y hy
-  obtain ⟨u, l, τ, hmatch, hFs⟩ := (GlobalTheory.T.thetaSystem_hasTests_of_real_point hs hU h1 h2 hT o Ω S ρ).2 p y₀ Fs hint
+  obtain ⟨u, l, τ, hmatch, hFs⟩ := (_root_.GlobalTheory.ZH.hasTests_of_real hs hU h1 h2 hT o Ω S ρ).2 p y₀ Fs hint
   obtain ⟨jV, yV, yK, hTF⟩ := hfac u hFs
   obtain ⟨F, ψ, hTM⟩ := GlobalTheory.T.exists_testMap_of_testFac h0 o Ω S ρ M U₀ Q p y y₀ u jV yV yK hTF
   have hLB := GlobalTheory.T.lineBundleIso_pullback_uniformisedThetaModel o Ω S ρ M U₀ Q p y y₀ u jV yV yK hTF F ψ hTM

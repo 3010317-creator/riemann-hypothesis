@@ -33,8 +33,8 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.IsS
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
 public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdeleHaarMapEqScaledVolume
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanCharacterInCoordinatesStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ComplexCoordinatesExistAtInfinityStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanCharacterInCoordinates
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ComplexCoordinatesExistAtInfinity
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
 public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdelicCharacterArchimedeanForm
@@ -1890,7 +1890,7 @@ theorem integrable_starLoc_inf : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   intro F E _ _ _ _ _ σ hcm M J hJ n hn ψ hψ μ hμ ν hν P hP
   obtain ⟨ρ, e, hρ, he, heρ, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.real_iso F hcm.1
   obtain ⟨a, ha, hinf, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Glob.CharAF.exists_char_data F hcm.1 ρ e hρ he heρ ψ hψ
-  obtain ⟨τ, Θ, hΘ⟩ := GlobalTheory.T.complex_coordinates_exist_at_infinity F E σ hcm ρ e hρ he heρ
+  obtain ⟨τ, Θ, hΘ⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.exists_isCoord F E σ hcm ρ e hρ he heρ
   obtain ⟨Ψ, hΨ, hΨν⟩ := GlobalTheory.T.hermitian_archimedean_complex_coordinates F E σ hcm e τ Θ hΘ n
   obtain ⟨Φ, hΦ, hΦc, hΦs, hΦμ⟩ := GlobalTheory.T.tuple_archimedean_complex_coordinates F E σ hcm e τ Θ hΘ n M
   obtain ⟨N, e₀, he₀, he₀s, f, hP⟩ := hP
@@ -1926,7 +1926,7 @@ theorem integrable_starLoc_inf : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   unfold starLoc
   refine integral_congr_ae (Filter.Eventually.of_forall fun X => ?_)
   show f (e₂ (Φ X)) * _ = P X * _
-  have hph := GlobalTheory.T.archimedean_character_in_coordinates F E σ ρ e τ Θ hΘ heρ a ψ hinf M n J (b : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) X
+  have hph := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.PhaseCoord.psiInf_phase F E σ ρ e τ Θ hΘ heρ a ψ hinf M n J (b : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) X
   rw [hph, hP X]
   have h1 : e₂ (Φ X) = e₀ X := by simp [e₂]
   have h2 : (fun w => ((Ψ b w : hermC n) : Matrix (Fin n) (Fin n) ℂ)) = fun w => matC Θ (b : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) w := funext (hΨ b)

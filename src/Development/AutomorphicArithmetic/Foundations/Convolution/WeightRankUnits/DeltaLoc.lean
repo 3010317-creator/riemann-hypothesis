@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbsHalfConju
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbsHalfMulAndAbsHalfNegOneStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjResultantOfEllPolysStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOrEqOfUnderMaximalRealSubfieldEqCMFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryHeckeCharCMLocKNonsplitEqNegOnePowStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryHeckeCharCMLocKNonsplitEqNegOnePow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryHeckeCharCMSplitPlaceMulConjPlaceEqOneStatement
 import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
 import Mathlib.Algebra.Order.Floor.Extended
@@ -148,7 +149,7 @@ theorem UpperTheory.ConvolutionTheory.G2.deltaLoc :
         exact hsp ⟨x, hxw, hx⟩
       · rintro rfl
         rfl
-    rw [hfib, finprod_mem_singleton, hmu w, GlobalTheory.T.unitaryHeckeCharCM_locK_nonsplit_eq_neg_one_pow E μ e hμ w hsp k]
+    rw [hfib, finprod_mem_singleton, hmu w, _root_.GlobalTheory.BCT.inertChar_muLocK E μ e hμ w hsp k]
     unfold delta
     simp only [hres]
     rw [if_neg hsp]

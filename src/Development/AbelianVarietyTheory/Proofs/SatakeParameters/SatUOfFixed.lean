@@ -12,7 +12,9 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteAde
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertDatumLocalInjectiveOnTrivOutsideStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertDatumLocalMemUnitaryGroupAntidiagonalStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertDatumLocalStdLatticeStabilizerMemMaxCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertDoubleCosetOperatorEqInertHeckeOperatorStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CommuteOfTrivOutside
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalLabelOperatorsOnHyperspecialFixedVector
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertDoubleCosetOperatorEqInertHeckeOperator
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertHeckeOperatorLevelIndependentStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -52,7 +54,6 @@ import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.NStage
 import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsReadingLaws
 import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.RankOneUnitary
 import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ThetaMod
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CommuteOfTrivOutside
 import Formalism.LocalToGlobal.NormalizedHeckeFactors.TypesDefs
 
 @[expose] public section
@@ -98,7 +99,7 @@ theorem satU_of_fixed : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (
     show φ (y * x * b) = φ (y * (x * b))
     rw [mul_assoc]
 
-  have hloc := fun x (hx : TrivOutside {v} x) => GlobalTheory.T.inertDoubleCosetOperator_eq_inertHeckeOperator L n v w Dv (GlobalTheory.T.inertDatum_local_mem_unitaryGroup_antidiagonal L n v w Dv) (GlobalTheory.T.inertDatum_local_stdLatticeStabilizer_mem_maxCompact L n v w Dv)
+  have hloc := fun x (hx : TrivOutside {v} x) => _root_.GlobalTheory.InertDCOp.dcOp_eq_heckeFunI L n v w Dv (GlobalTheory.T.inertDatum_local_mem_unitaryGroup_antidiagonal L n v w Dv) (GlobalTheory.T.inertDatum_local_stdLatticeStabilizer_mem_maxCompact L n v w Dv)
     (GlobalTheory.T.exists_trivOutside_inertDatum_local_eq L n v w Dv) (GlobalTheory.T.inertDatum_local_injective_on_trivOutside L n v w Dv) x hx
   choose! R ha hR hha hA using hloc
   have hχ : ∀ x, TrivOutside {v} x → ∑ γ ∈ R x, NG.rt L n γ f₀ =

@@ -41,7 +41,6 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoxGraphGrap
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsINeZeroKind
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTensorLatticePointOfIntegralSplitPlaceCoor
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergStableRelationOfVacuaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddCharStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorLatticeAtFinitePlaceEqSumSplitPlaceParts
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceSymplecticSelfZeroSplitSupported
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesSchwartz
@@ -134,7 +133,9 @@ import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitIdempotentB
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistCharacterOfArtin
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeCharUnramifiedAbovePlaceOfTrivialUnits
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnramifiedAtPlaceIdempotentOfHeckeCharUnramifiStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
+import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnramifiedAtPlaceIdempotentOfHeckeCharUnramifi
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersUnramifiedOffLevelPlaces
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SquareNuHeckeCharacterNotUnramifiedAtChosenPlace
 import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaTripleMapsEquivariantOnFiniteVectors
@@ -1272,7 +1273,7 @@ theorem UpperTheory.isSBHalf_thetaFun_of_halfIdempotent_places :
   obtain ⟨hB, rfl, -, -, ⟨r, s, hV⟩, ⟨r', s', hW⟩, hM⟩ := hP
   have hcm := hB.cm
   have hstd := hB.std
-  have hψ := GlobalTheory.T.isStdChar_neg_one_of_standardTraceAdelicAddChar D _ hstd
+  have hψ := _root_.GlobalTheory.StdCharFromIsStd.isStdChar_of_isStd D _ hstd
   have ht' : ∀ v, t₀ v = (t₁ v).comp D.sp.cm.sig := fun v => AlgHom.ext (ht v)
   choose z hz0 hz using fun v : P => UpperTheory.exists_ne_zero_linearModel_vacuum_eq_smul _ _ _ Bs _ _ Vs Ws M r s r' s' hB hV hW hM v.1 (t₁ v) (t₀ v) (ht v)
     (b v) (c v) (ι v) (hι v)
@@ -1793,7 +1794,7 @@ private theorem grid_ramification_characterised {D : D7} {T : Type} {Lc : LevCh 
       h _ (Finset.mem_union_left _ (Finset.mem_image_of_mem _ h0)) (G.pl.under_w h0)
     have hQ : ∀ PP ∈ Lc.Q t, (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) ≠ v := fun w hw => h w (Finset.mem_union_right _ hw)
     have hS1 : v ∉ S1 D := fun h => hS0 (G.pl.mem_S0_of_sum_eq.2 (Or.inr h))
-    refine ⟨GlobalTheory.T.isUnramifiedAtPlaceIdempotent_of_heckeChar_unramified_above D _ _ hα v e he fun P hP => ?_, GlobalTheory.T.isUnramifiedAtPlaceIdempotent_of_heckeChar_unramified_above D _ _ hβ v e he fun P hP => ?_⟩
+    refine ⟨_root_.GlobalTheory.UnramOver.unramAt_of_unrAt D _ _ hα v e he fun P hP => ?_, _root_.GlobalTheory.UnramOver.unramAt_of_unrAt D _ _ hβ v e he fun P hP => ?_⟩
     · exact ((hmu P (by rw [hP]; exact hS1)).mul (hxi P fun PP hPP h => hQ PP hPP (h.trans hP))).mul (heta P)
     · exact (hchi P (by rw [hP]; exact hS0)).mul (heta P)
 end GlobalTheory.FinMatch

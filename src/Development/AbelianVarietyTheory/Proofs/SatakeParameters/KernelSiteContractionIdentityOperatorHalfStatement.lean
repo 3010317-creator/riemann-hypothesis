@@ -11,19 +11,22 @@ public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CharDeterminantIdealUnitarySmulSelfDual
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.UnderTie
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelLatticeTranslateEqImageClassLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RationalIsometryOrthonormalMatrixUnitaryStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RationalIsometryOrthonormalMatrixUnitary
 public import Mathlib.Basic.Complex.Basic
 public import Formalism.LocalRingCardinality.DataHost
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicCharactersAtDetRationalIsometryRepLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SiteSystemRanksEqDatumRanksStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.JointCmpEmbeddingY
+public import Formalism.LocalToGlobal.InertKernelTheory.DelPolOfTies
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SiteSystemRanksEqDatumRanks
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SiteFramesAndChangedFramesInvertible
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsMidLevIff
 public import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.IsSemiChar
 public import Formalism.LocalToGlobal.KernelLattices.XiIndCClass
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelThetaAdmissibleLattices
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteDatumLevelPosBadPrimesNoConjugatePairStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteDatumLevelPosBadPrimesNoConjugatePair
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteDatumPairClassesHasReaderLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelEntryPeriodNeZeroAndLatticeLawsStatement
+public import Formalism.LocalToGlobal.KernelLattices.FirstKernelLawReading
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelEntryPeriodNeZeroAndLatticeLaws
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TransportedLatticesTwoClassesAdmissibleStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicDatumRationalTranslatesVsClassesStatement
 public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.IsDiscriminantTwelfthRootOfIdealLattice
@@ -73,7 +76,6 @@ import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.LocSpBot
-import Formalism.LocalToGlobal.InertKernelTheory.DelPolOfTies
 import Formalism.LocalToGlobal.InertKernelTheory.SecondKernelEntrywiseLastLevel
 import Formalism.LocalToGlobal.InertKernelTheory.StatementInt
 import Formalism.LocalToGlobal.InertKernelTheory.TieSerPin
@@ -296,7 +298,7 @@ theorem chi_detId_kerN : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I 
   have hlat := GlobalTheory.T.kernelLattice_translate_eq_image_classLattice J.A J.dtU J.a J.pins J.tie j hj (clsAt X H j La.1 La.2) (J.pt std j hj La)
     (d.gam j hj La) (d.mem j hj La) (d.kap j hj La) (d.eq j hj La hLa)
   have hU : gMat J j hj (d.gam j hj La) * star (gMat J j hj (d.gam j hj La)) = 1 :=
-    GlobalTheory.T.rationalIsometry_orthonormal_matrix_unitary J.A J.dtU J.a J.pins J.tie j hj (d.gam j hj La) (d.mem j hj La)
+    _root_.GlobalTheory.TwV.ratIsometry_unitary J.A J.dtU J.a J.pins J.tie j hj (d.gam j hj La) (d.mem j hj La)
   have hcl := GlobalTheory.T.determinantIdealCharacter_classLattice_eq J.A J.dtU J.a J.pins J.tie J.rel J.base j hj (clsAt X H j La.1 La.2)
   have hmv := GlobalTheory.T.char_determinantIdeal_unitary_smul_selfDual D t.χ t.χ_ok ((t.O u μ).lat j (clsAt X H j La.1 La.2)) (gMat J j hj (d.gam j hj La)) hU
   rw [t.O_lat] at hmv
@@ -380,7 +382,7 @@ namespace GlobalTheory.TwV.DelB
 
 theorem scalAt_all : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fact (D.what₂.places.resChar w).Prime] {std t J} S => J.Dict std → ∀ (d : Dec J std), ∀ j < D.R.m, d.ScalAt S j) := by
   intro D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X _ std t J S hD d j hj La La' hLa hLa'
-  obtain ⟨hmm, ht, hN, -⟩ := GlobalTheory.T.siteSystem_ranks_eq_datum_ranks S
+  obtain ⟨hmm, ht, hN, -⟩ := _root_.GlobalTheory.TwV.DelB.sysS_ranks S
   have hj0 : j ≤ D.R.m := hj.le
   have hj1 : j + 1 ≤ D.R.m := hj
   have hdt0 := (hD j hj0 La hLa).2.2.2
@@ -1281,8 +1283,8 @@ namespace GlobalTheory.TwV
 
 theorem th_eq_kerTh : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => ∀ Xi muT, AdLawAt A dtU a Xi muT → ∀ i (hi : i + 1 ≤ D.R.m) c c', (t.rd u μ).Th t.seam t.amb i c c' = kerTh t.B t.χ (ssRec t u μ) (t.rd u μ).lev (t.seam.lat ((t.rd u μ).N i c)) (t.seam.lat ((t.rd u μ).N (i + 1) c')) (fun x => (t.rd u μ).Xi i c c' (seamHom t.seam x))) := by
   intro D L hT Gi Gl Kc Y cX ex t u μ St A dtU a hP hTie Xi muT hL i hi c c'
-  obtain ⟨hδ, -, hV, -⟩ := GlobalTheory.T.kernelEntry_period_ne_zero_and_lattice_laws t
-  obtain ⟨hl, hS⟩ := GlobalTheory.T.finiteDatum_level_pos_badPrimes_no_conjugate_pair A dtU a hP hTie
+  obtain ⟨hδ, -, hV, -⟩ := _root_.GlobalTheory.TieBase.base_data t
+  obtain ⟨hl, hS⟩ := _root_.GlobalTheory.BadPrimes.lev_pos_and_noConj A dtU a hP hTie
   exact GlobalTheory.T.columnFieldKernel_pushforward_eq_hostKernelFunction t.seam t.seam_ok t.B t.χ _ (t.rd u μ).SS (t.rd u μ).lev ((t.rd u μ).N i c) ((t.rd u μ).N (i + 1) c')
     ((t.rd u μ).Xi i c c') t.cc_ok t.δ_ok hδ hV hl hS (GlobalTheory.T.transportedLattices_two_classes_admissible t u μ i (i + 1) c c')
     (GlobalTheory.T.finiteDatum_pair_classes_has_level A dtU a hP hTie Xi muT hL i hi c c')
@@ -1365,10 +1367,10 @@ theorem kerTh_prop {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (B : Base D 
 
 theorem kerTh_eq_pull : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => ∀ Xi muT, AdLawAt A dtU a Xi muT → ∀ i (hi : i + 1 ≤ D.R.m) c c' (x : UA D i (Nat.le_of_succ_le hi)) (x' : UA D (i + 1) hi), ∀ γ ∈ UJ (sigD D : D.host.E →+* D.host.E) (gramN D i (Nat.le_of_succ_le hi)), ∀ γ' ∈ UJ (sigD D : D.host.E →+* D.host.E) (gramN D (i + 1) hi), ∀ (κ : ((St i (Nat.le_of_succ_le hi)).K ((St i (Nat.le_of_succ_le hi)).chOf c)).lev.U) (κ' : ((St (i + 1) hi).K ((St (i + 1) hi).chOf c')).lev.U), x.1 = ratA D.host.F γ * ((St i (Nat.le_of_succ_le hi)).y c).1 * κ.1 → x'.1 = ratA D.host.F γ' * ((St (i + 1) hi).y c').1 * κ'.1 → ∀ z, muT (i + 1) (Matrix.GeneralLinearGroup.det κ'.1) * ((((St i (Nat.le_of_succ_le hi)).K ((St i (Nat.le_of_succ_le hi)).chOf c)).lev.chi κ : ℂˣ) : ℂ) * kerTh t.B t.χ (ssRec t u μ) (t.rd u μ).lev (latK D.sp (gramN D i (Nat.le_of_succ_le hi)) a x.1 ((St i (Nat.le_of_succ_le hi)).K ((St i (Nat.le_of_succ_le hi)).chOf c)).lev.Lb) (latK D.sp (gramN D (i + 1) hi) a x'.1 ((St (i + 1) hi).K ((St (i + 1) hi).chOf c')).lev.Lb) (Xi i hi ((St i (Nat.le_of_succ_le hi)).chOf c) ((St (i + 1) hi).chOf c') x x') z = muT (i + 1) (Matrix.GeneralLinearGroup.det κ.1) * ((((St (i + 1) hi).K ((St (i + 1) hi).chOf c')).lev.chi κ' : ℂˣ) : ℂ) * TaylorLogMetric.pull D t.B.tor (LinearMap.toMatrix' ((toStdCo (D.sp.cm.sig : D.host.E →+* D.host.E) (gramN D i (Nat.le_of_succ_le hi)) (A.crd i (Nat.le_of_succ_le hi))).trans (stdG (D.sp.cm.sig : D.host.E →+* D.host.E) (gramN D i (Nat.le_of_succ_le hi)) γ)).toLinearMap) (LinearMap.toMatrix' ((toStdCo (D.sp.cm.sig : D.host.E →+* D.host.E) (gramN D (i + 1) hi) (A.crd (i + 1) hi)).trans (stdG (D.sp.cm.sig : D.host.E →+* D.host.E) (gramN D (i + 1) hi) γ')).toLinearMap) ((t.rd u μ).Th t.seam t.amb i c c') z) := by
   intro D L hT Gi Gl Kc Y cX ex t u μ St A dtU a hP hA Xi muT law i hi c c' x x' γ hγ γ' hγ' κ κ' hx hx' z
-  obtain ⟨hδ, hLat, hVec, hEq⟩ := GlobalTheory.T.kernelEntry_period_ne_zero_and_lattice_laws t
-  obtain ⟨hl, hSS⟩ := GlobalTheory.T.finiteDatum_level_pos_badPrimes_no_conjugate_pair A dtU a hP hA
-  have hu := GlobalTheory.T.rationalIsometry_orthonormal_matrix_unitary A dtU a hP hA i (Nat.le_of_succ_le hi) γ hγ
-  have hu' := GlobalTheory.T.rationalIsometry_orthonormal_matrix_unitary A dtU a hP hA (i + 1) hi γ' hγ'
+  obtain ⟨hδ, hLat, hVec, hEq⟩ := _root_.GlobalTheory.TieBase.base_data t
+  obtain ⟨hl, hSS⟩ := _root_.GlobalTheory.BadPrimes.lev_pos_and_noConj A dtU a hP hA
+  have hu := _root_.GlobalTheory.TwV.ratIsometry_unitary A dtU a hP hA i (Nat.le_of_succ_le hi) γ hγ
+  have hu' := _root_.GlobalTheory.TwV.ratIsometry_unitary A dtU a hP hA (i + 1) hi γ' hγ'
   have hN := GlobalTheory.T.kernelLattice_translate_eq_image_classLattice A dtU a hP hA i (Nat.le_of_succ_le hi) c x γ hγ κ hx
   have hN' := GlobalTheory.T.kernelLattice_translate_eq_image_classLattice A dtU a hP hA (i + 1) hi c' x' γ' hγ' κ' hx'
   have hd := GlobalTheory.T.adelicDatum_rational_translates_vs_classes A dtU a hP hA Xi muT law i hi c c' x x' γ hγ γ' hγ' κ κ' hx hx' hu'
@@ -1424,7 +1426,7 @@ theorem pullAt_of_dict : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I 
   intro D _ _ _ _ _ _ _ _ u μ w hg Lv I H X _ std t J S hD d j hj La La' hLa hLa' z
   have hj1 : j + 1 ≤ D.R.m := hj
   have hj0 : j ≤ D.R.m := Nat.le_of_succ_le hj1
-  obtain ⟨-, -, hr, -⟩ := GlobalTheory.T.siteSystem_ranks_eq_datum_ranks S
+  obtain ⟨-, -, hr, -⟩ := _root_.GlobalTheory.TwV.DelB.sysS_ranks S
   rw [GlobalTheory.T.kernelFunction_latticeTuple_pair_eq_adelic S hD j hj1 (hr j) (hr (j + 1)) La La' hLa hLa']
   have hV := GlobalTheory.T.thetaKernelFunction_adelicPoints_eq_pullback_classKernel J.A J.dtU J.a J.pins J.tie S.Xi S.muT S.law j hj1 (clsAt X H j La.1 La.2)
     (clsAt X H (j + 1) La'.1 La'.2) (J.pt std j _ La) (J.pt std (j + 1) hj1 La') (d.gam j _ La) (d.mem j _ La)
@@ -1843,7 +1845,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem GlobalTheory.TwV.DelB.serAt_all : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fact (D.what₂.places.resChar w).Prime] {std t J} S => J.Dict std → S.Pair → S.Pos → ∀ (d : Dec J std), ∀ ι : ℂ →+* ℂ_[D.what₂.places.resChar w], (∀ z : TaylorLogMetric.Qbar, ι z = S.lam z) → ∀ j < D.R.m, d.SerAt S ι j) := by
   intro D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X _ std t J S hDict hPair hPos d ι hι j hj La La' hLa hLa'
-  have hr := GlobalTheory.T.siteSystem_ranks_eq_datum_ranks S
+  have hr := _root_.GlobalTheory.TwV.DelB.sysS_ranks S
   have hu := GlobalTheory.T.decomposition_unitary_mul_star_eq_one S d
   have hp := GlobalTheory.T.latticeTupleKernel_eq_smul_pullback_classKernel S hDict d j hj La La' hLa hLa'
   have hs := GlobalTheory.T.pullback_scalar_ne_zero_latticeTuple_pair S d j hj La La' hLa hLa'
@@ -1883,7 +1885,7 @@ theorem delPolAt_site : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H
   intro Φ₀ τ sc sO Gm j hj cK hN hMove hOp hDeg hDel hSc
   letI := wittFractionAlgebraCp (D.what₂.places.resChar w)
   letI := algKfC S.E.toCEmb
-  have hR := GlobalTheory.T.siteSystem_ranks_eq_datum_ranks S
+  have hR := _root_.GlobalTheory.TwV.DelB.sysS_ranks S
   have hFr := (GlobalTheory.T.siteFrames_and_changedFrames_invertible S).2 d
   have hSer := GlobalTheory.T.thetaSeries_site_eq_changedFrame_classSeries S hDict hPair hPos d ι hι j hj
   have hSerH := GlobalTheory.T.seriesCoefficients_at_kernelSite_of_classSeries S d ι j hN

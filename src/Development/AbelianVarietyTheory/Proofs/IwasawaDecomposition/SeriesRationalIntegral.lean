@@ -5,7 +5,9 @@ public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Valuation
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IntFormsSubset
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BddGoodOfBddAll
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspidalSectionBoundedNonzeroMultiple
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCuspFormsAllEmbeddingsOfInclusionReadingStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.CuspFormsFiniteDimensionalOf
+public import Formalism.LocalToGlobal.ProjectiveLattices.FamilyUniformisationBasePointOrthogonalBis
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCuspFormsAllEmbeddingsOfInclusionReading
 public import Formalism.LocalToGlobal.IndefiniteReal.FWExist
 public import Formalism.LocalToGlobal.ProjectiveLattices.ModelAt
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BddGood
@@ -17,7 +19,10 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntValuation
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BddAllOfThetaSumOnCover
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverSectionsLinearIndependentAdelicReadings
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPullbackSectionToLevelCover
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralValuesAlgebraicPointsIffValueNonnegStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.NonnegIffOfLiesTotal
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralValuesAlgebraicPointsIffValueNonneg
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 public import Formalism.LocalToGlobal.ProjectiveLattices.ThClassPins
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormIntegralLatticeUnramifiedDescent
@@ -45,8 +50,6 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsRatCo
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ReferenceTupleSecondSplittingCharacterStatement
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MarkAd
 public import Development.AbelianVarietyTheory.Definitions.Divisors.OfCore
-public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
-public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.BaseIntSet
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemConnectedComponentOfOneOfPos
@@ -266,7 +269,7 @@ theorem smul_mem_baseInt : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ (i : Fin 
   intro D T hT i κ hκ q hq P hP ψ hψ
   obtain ⟨f, ⟨hfs, hfh, hfv⟩, rfl⟩ := hψ
   have hj : InR D ((i : ℕ) + 1) := inR i
-  have hcusp : f ∈ cusp (T.Q.Xo ((i : ℕ) + 1)) T.Q.c (T.U ((i : ℕ) + 1)) (wtA κ) κ.n := GlobalTheory.T.mem_cuspForms_allEmbeddings_of_inclusion_reading D T hT _ hj κ hκ f hfs hfh
+  have hcusp : f ∈ cusp (T.Q.Xo ((i : ℕ) + 1)) T.Q.c (T.U ((i : ℕ) + 1)) (wtA κ) κ.n := _root_.GlobalTheory.CuspAllEmb.mem_cuspA_of_rdU_mem_holSub0 D T hT _ hj κ hκ f hfs hfh
   have hbd : ∀ p : HeightOneSpectrum (𝓞 T.Q.c.F), ∃ κ' : T.Q.c.F, κ' ≠ 0 ∧
       GlobalTheory.GoodPts.BddAll (T.Q.Xo ((i : ℕ) + 1)) T.Q.c p κ' f := by
     intro p
@@ -511,7 +514,7 @@ theorem bddAll_of_mem_intForms : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, 
     rw [h1, hext.2.1, ho.2, h2]
     push_cast
     ring
-  have hB := (GlobalTheory.T.integral_values_algebraic_points_iff_value_nonneg _ _ _ _ C.d.Xo₂ C.d.c₂ la g₂).2 (hint la (Set.mem_singleton la)) T' io₂ (e' * e) ho₂
+  have hB := (_root_.GlobalTheory.TowVal.bddAll_one_iff_valSet_nonneg _ _ _ _ C.d.Xo₂ C.d.c₂ la g₂).2 (hint la (Set.mem_singleton la)) T' io₂ (e' * e) ho₂
     y₂ hfin'
   rw [map_one, one_mul] at hB
   have laws := GlobalTheory.firstFiveLaws.1
@@ -839,7 +842,7 @@ theorem desc_loc : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Type)
   have hU := hC.1
   choose f hf hfψ using hψ
   have hfc : ∀ b, f b ∈ T.cuspA ((i : ℕ) + 1) (wtA (κ i)) (κ i).n := fun b =>
-    GlobalTheory.T.mem_cuspForms_allEmbeddings_of_inclusion_reading D T hL _ hj (κ i) (GlobalTheory.AdTh.lastPos_of_kapIs hTie.kap i) (f b) (hf b).1 (hf b).2
+    _root_.GlobalTheory.CuspAllEmb.mem_cuspA_of_rdU_mem_holSub0 D T hL _ hj (κ i) (GlobalTheory.AdTh.lastPos_of_kapIs hTie.kap i) (f b) (hf b).1 (hf b).2
   obtain ⟨p, hbelow, hlp, hval⟩ := _root_.GlobalTheory.InertiaEigenvalues.UnramPlace.exists_place_below _ _ C.inc l hl la hla hUn
   obtain ⟨la', hla'⟩ := _root_.GlobalTheory.PlaceTransport.exists_place_valuation_comp_equiv _ _ C.d.eF.toRingEquiv la
   let x' : Fin m → C.c'.F := fun b => C.d.eF.symm (x b)
@@ -874,7 +877,7 @@ theorem desc_loc : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Type)
     refine ⟨fs k, ⟨(cusp_le_sec _ _ _ _ _ (hfs k).1), holSub0_of_cusp D T _ _ _ (fs k) (hfs k).1, ?_⟩, rfl⟩
     intro q hq v hv
     obtain rfl := Set.mem_singleton_iff.1 hq
-    exact (GlobalTheory.T.integral_values_algebraic_points_iff_value_nonneg _ _ _ _ _ _ _ (fs k)).1 (hfs k).2 v hv
+    exact (_root_.GlobalTheory.TowVal.bddAll_one_iff_valSet_nonneg _ _ _ _ _ _ _ (fs k)).1 (hfs k).2 v hv
   · rw [hsum]
     have e := GlobalTheory.T.sum_adelicReading_eq_of_two_baseChange_decomps_on_cover D T _ T.σ₀ C hU.2.2.1 (wtA (κ i)) (κ i).n m m' x' f as fs (fun b => (hf b).1) hBC
     simp only [hx', hfψ] at e

@@ -6,7 +6,8 @@ public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsN
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsFieldCmCurvesUnitDiscriminant
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.MeanLogCovolumeEqMeanClassGroup
 public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditionalStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsCmCurvesOfWeierstrassCurves
 public import Development.AbelianVarietyTheory.Statements.PrincipalLattices.LogHermFormOfUnitDiscriminant
 public import Mathlib.AlgebraicGeometry.EllipticCurve.Weierstrass
@@ -17,7 +18,8 @@ public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.MeanLog
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdealPeriodLatticeOfCurveDatum
 public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LatticeInvariantsPeriodPairDictionary
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVarietyStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVariety
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.Rationality.QCoreGlobPf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -108,8 +110,8 @@ theorem integral_and_conj {k N : IntermediateField ℚ ℂ} [NumberField k] [Num
     IsIntegral ℤ a ∧ ∀ s : N →+* ℂ,
       ∀ z ∈ (L (s.comp ((IntermediateField.inclusion hk).toRingHom.comp (algebraMap (𝓞 k) k)))).lattice,
         s a * z ∈ (L' (s.comp ((IntermediateField.inclusion hk).toRingHom.comp (algebraMap (𝓞 k) k)))).lattice := by
-  have hU := GlobalTheory.T.thetaUniformisation_complexAbelianVariety
-  have hB := GlobalTheory.T.abelianScheme_laws_unconditional.1.polBaseChange
+  have hU := _root_.GlobalTheory.thetaUnifAV_all
+  have hB := _root_.GlobalTheory.abelianSchemeLaws_all.1.polBaseChange
   obtain ⟨_, b, hb, h⟩ := h
   obtain rfl : b = a := Subtype.ext hb
   refine ⟨?_, fun s => (EllipticHom.multiplier_iff_exists_hom hU hB _ P Q v t _ _ _ _ hP.1 hQ.1 hP.isTangent
@@ -135,8 +137,8 @@ theorem exists_family (h2 : Module.finrank ℚ K = 2) (σ : K →+* ℂ) (hσ : 
       (∀ z, z ∈ (L (algebraMap N ℂ)).lattice ↔ ∃ x ∈ I.1, z = c * σ x) ∧
       (∑ s, Real.log (latticeArea (L s))) / Module.finrank ℚ N =
         (∑ C, Real.log (latticeNormDisc (Lc C))) / (6 * Fintype.card (ClassGroup (𝓞 K))) := by
-  have hU := GlobalTheory.T.thetaUniformisation_complexAbelianVariety
-  have hB := GlobalTheory.T.abelianScheme_laws_unconditional.1.polBaseChange
+  have hU := _root_.GlobalTheory.thetaUnifAV_all
+  have hB := _root_.GlobalTheory.abelianSchemeLaws_all.1.polBaseChange
   obtain ⟨k, hk, hσk, HI⟩ := CMData.exists_field h2 σ hσ
   have hNF : NumberField k := ⟨⟩
   choose W hW hc using HI

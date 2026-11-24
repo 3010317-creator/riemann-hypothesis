@@ -22,10 +22,10 @@ public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.ColDict
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsEquivariantUnitaryCoefficientMapOntoStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ColsSharpDictionary
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameActionMulEquivFiniteAdelicUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TransportRationalPointsStabiliserFrameStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TransportRepresentsClassesWeightOneStatement
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LevelMatchIff
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameActionMulEquivFiniteAdelicUnitary
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TransportRationalPointsStabiliserFrame
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TransportRepresentsClassesWeightOneStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdFormsOfEquivariant
 public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
 public import Mathlib.RepresentationTheory.Basic
@@ -735,8 +735,8 @@ theorem colDict_bij_of_levelMatch : ∀ (D : D7) (X : HidaSetting D) (u : D.what
   · intro φ hφ
     rw [Formalism.L2.Forms.Mu0_iff F.val0] at hφ
     obtain ⟨g, hg, hres⟩ := Submodule.mem_map.1 hφ
-    obtain ⟨Φ, hΦ⟩ := GlobalTheory.T.frameAction_mulEquiv_finiteAdelic_unitary D X u Tr.wt Tr.ιA hW hA hσ
-    obtain ⟨hΓ, -, hs⟩ := GlobalTheory.T.transport_rational_points_stabiliser_frame D X u Tr.wt Tr.ιA hW hA Φ hΦ
+    obtain ⟨Φ, hΦ⟩ := _root_.GlobalTheory.frame_action_mulEquiv D X u Tr.wt Tr.ιA hW hA hσ
+    obtain ⟨hΓ, -, hs⟩ := _root_.GlobalTheory.transport_rational_points D X u Tr.wt Tr.ιA hW hA Φ hΦ
     have hKm : ∀ h : Hfin X u, h ∈ Ku X u hK ↔ ((Tr.h0⁻¹ * Φ h * Tr.h0 : Formalism.UG.UPts (Formalism.L2.Forms.sigD D)
         (Formalism.L2.Forms.gramN D 0 (Nat.zero_le _)) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) : GL _ _) ∈
         F.cls0.lev.U :=
@@ -804,8 +804,8 @@ theorem colDictInto_of_levelMatch : ∀ (D : D7) (X : HidaSetting D) (u : D.what
   intro D X u F Tr hK hσ hL T
   have hW : WittX X u Tr.wt := ⟨Tr.wt_isom, Tr.wt_e, Tr.wt_f, Tr.weight_z⟩
   have hA : IsAdeleIso X Tr.ιA := ⟨Tr.ιA_rat, Tr.ιA_int⟩
-  obtain ⟨Φ, hΦ⟩ := GlobalTheory.T.frameAction_mulEquiv_finiteAdelic_unitary D X u Tr.wt Tr.ιA hW hA hσ
-  obtain ⟨-, hΓ, hsT⟩ := GlobalTheory.T.transport_rational_points_stabiliser_frame D X u Tr.wt Tr.ιA hW hA Φ hΦ
+  obtain ⟨Φ, hΦ⟩ := _root_.GlobalTheory.frame_action_mulEquiv D X u Tr.wt Tr.ιA hW hA hσ
+  obtain ⟨-, hΓ, hsT⟩ := _root_.GlobalTheory.transport_rational_points D X u Tr.wt Tr.ιA hW hA Φ hΦ
   obtain ⟨hψ, -, hφ, -, -⟩ := cols_sharp_dictionary D X u hK
   have key := GlobalTheory.adForms_of_equivariant D.host.F D.host.E (Formalism.L2.Forms.sigD D) (D.R.N 0)
     (Formalism.L2.Forms.gramN D 0 (Nat.zero_le _)) _ _ _ F.cls0.lev (Gam X u) (Hinf X u) (Hfin X u)

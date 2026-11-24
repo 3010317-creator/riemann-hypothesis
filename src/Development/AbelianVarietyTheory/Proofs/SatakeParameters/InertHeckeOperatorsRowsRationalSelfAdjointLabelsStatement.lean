@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ClassPresBasic
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DoubleCosetOperatorEqLabelOperatorLocalRepsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsSphericalDoubleCosetLabelIffDecreasingStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperatorsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsSphericalDoubleCosetLabelIffDecreasing
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperators
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ReprMemOfBasisRational
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CoefActionReprMemSubfield
 import Mathlib.Algebra.Order.Floor.Extended
@@ -42,7 +42,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperators
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertHeckeOperatorsRowsRationalSelfAdjointLabels, Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertHeckeOperatorsRowsRationalSelfAdjointLabelsStatement
@@ -117,8 +116,8 @@ theorem inert_rows : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type
     refine (hM.jX t _).trans (Eq.trans ?_ (hh (pl i) hgood _ _).symm)
     exact (hd.2 f).trans (congrArg (hkF D.sp.X' (pl i) (Finsupp.single (ty i) 1)) (hM.jX t f).symm)
   refine ⟨fun a b => GlobalTheory.HeckeRational.rows_dcOp_mem_cmMax R hF.tie t _ _ (HT.op_eq i hi) a b, fun f g => ?_, hd.1, hint⟩
-  refine ((GlobalTheory.T.realization_family_normal_operators R F hL hF hM).1 t).elim fun h hh => ?_
-  have hdual : dualLab (ty i) = ty i := ((GlobalTheory.T.isSphericalDoubleCosetLabel_iff_decreasing D.sp.X' (pl i) (ty i)).1 hd.1).2.2 hconj
+  refine ((_root_.GlobalTheory.DefiniteOps.definite_ops R F hL hF hM).1 t).elim fun h hh => ?_
+  have hdual : dualLab (ty i) = ty i := ((_root_.GlobalTheory.LabChar.labels_char D.sp.X' (pl i) (ty i)).1 hd.1).2.2 hconj
   have hadj := (hh.2.2 (pl i) hgood (Finsupp.single (ty i) 1)).trans (congrArg (h (pl i)) (dualC_single hdual))
   exact csum_selfAdj (Bridge.ratF D.sp.X') (A.MtildeCSD t) D.what₂.embLL R.cX.coef.ρ _ _ (R.B.R t).pres (R.HX t) (hM.HX t)
     (R.jX t) (hM.jX t) (op i) _ hadj (hint h hh.1) f g
@@ -164,7 +163,7 @@ theorem _root_.GlobalTheory.T.inertHeckeOperators_rows_rational_selfAdjoint_labe
       (R.B.R t).pres.y (R.B.R t).pres.reps
       (fun c => Finite.of_equiv _ ((R.B.R t).pres.stabI c).toEquiv) (R.HX t) (hM.HX t)
     have hdual : dualLab (ty i) = ty i :=
-      ((GlobalTheory.T.isSphericalDoubleCosetLabel_iff_decreasing D.sp.X' (pl i) (ty i)).1 hd.1).2.2 hconj
+      ((_root_.GlobalTheory.LabChar.labels_char D.sp.X' (pl i) (ty i)).1 hd.1).2.2 hconj
     have hadj := (hnormal.2 (pl i) hgood (Finsupp.single (ty i) 1)).trans
       (congrArg (h (pl i)) (GlobalTheory.InertRows.dualC_single hdual))
     exact GlobalTheory.InertRows.csum_selfAdj (Bridge.ratF D.sp.X') (A.MtildeCSD t)

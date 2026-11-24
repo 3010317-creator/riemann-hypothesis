@@ -5,10 +5,12 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBoundU
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableOnThetaDefinite
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMulRightInvariantHaarAdelicUnitaryGroupHermiti
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaIntegrandIntegrable
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FockVectorsChainIsVacuumOffThetaLevelsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FockVectorsChainIsVacuumOffThetaLevels
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntegrableOnFundamentalDomainMulRight
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelOperatorsAtPrimeOffLevelDatum
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotentsStatement
+import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
+import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaIntegralVacuumIntertwinesSphericalHecke
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MultValueLeftContLevel
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MultiplicitySpaceEqZeroOfApplyNonzeroTensorZero
@@ -140,7 +142,7 @@ theorem integral_comb {G H X M ι κ : Type} [Group G] [Group H] [TopologicalSpa
 variable {D : D7}
 
 theorem one_mem_hyp (S : HSp D) (P : Pl D.host.E) : (1 : GA D S) ∈ hyp S P := by
-  obtain ⟨e, f', hef⟩ := (GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents S).2.1 P
+  obtain ⟨e, f', hef⟩ := (_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents S).2.1 P
   refine ⟨⟨one_mem _, fun y => ?_, by simp⟩, e, f', hef, fun i j => ?_⟩
   · have : finMat D.sp.cm.sig S.gram (1 : GA D S) = 1 := by
       unfold finMat
@@ -307,7 +309,7 @@ theorem thF_low (hC : Core R F) (i : Fin D.R.m) (t : T) {P : Pl D.host.E} (hP : 
   theta_form (hC.thP.ωP i t) (D.sp.V_sig _) (hC.models.vpos i) (hC.models.νV i t) hfix hM (R.cV i) (hC.models.cV i)
     (hC.lev.βV i) (L := R.datVt i t) hP ((hC.models.HV i t).2.1.le (LinearMap.mem_range_self _ y)) hy
     (pureTensorO R.ψ R.θ (Vc D i) (Wc D i) (fun _ => 1) (cart (R.MW i (sg0 D A))) (R.BV i) (onb (R.MW i (sg0 D A)))
-      (R.vP i t)) ((GlobalTheory.T.fockVectors_chain_isVacuum_off_thetaLevels R F hC t P hP).2.2 i) (R.ioP i (PiTensorProduct.tprod ℂ v))
+      (R.vP i t)) ((_root_.GlobalTheory.VacGood.fock_vacua_good R F hC t P hP).2.2 i) (R.ioP i (PiTensorProduct.tprod ℂ v))
     (thF_eq_integral hC.thP i t y v) (thF_eq_integral hC.thP i t y' v)
 
 theorem wall_laws (hC : Core R F) (i : Fin D.R.m) (t : T) {P : Pl D.host.E} (hP : Good R t P) (c : List ℤ →₀ ℂ)

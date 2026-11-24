@@ -8,7 +8,9 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsP
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsFractionRingOfForallDiv
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.BaseOver
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsProjectiveModel
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsLevelStructureOfGenericOfFibrewiseIndepStatement
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsLevelStructureOfGenericOfFibrewiseIndep
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -228,7 +230,7 @@ theorem level_spreads : ∀ {o₁ Ω₁ : Type} [CommRing o₁] [Field Ω₁] [A
   have := GenSpread.isFractionRing_of_forall_div hfr₃
   have := GenSpread.isNoetherianRing_of_fg hR₃
   have hgg : 2 * P₃.g = 2 * Q.g := congrArg (2 * ·) hg.symm
-  obtain ⟨lev', -⟩ := GlobalTheory.T.isLevelStructure_of_generic_of_fibrewise_indep abelianSchemeLaws_all.1 R₃ Ω₂ P₃ Q φ₃ hQ₃ eQ₃ hg.symm K
+  obtain ⟨lev', -⟩ := _root_.GlobalTheory.level_of_generic_of_indep abelianSchemeLaws_all.1 R₃ Ω₂ P₃ Q φ₃ hQ₃ eQ₃ hg.symm K
     (Units.map (algebraMap o₂ R₃ : o₂ →* R₃) ze) (Units.map (algebraMap o₂ Ω₂ : o₂ →* Ω₂) ze)
     (by simpa using hK.map (algebraMap o₂ R₃)) rfl lev (fun i => y' (Fin.cast hgg i))
     (fun i₀ i hi => by obtain rfl : i₀ = Fin.cast hgg i := Fin.ext hi; exact hy₃ _)

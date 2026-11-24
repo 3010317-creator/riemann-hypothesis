@@ -65,7 +65,8 @@ public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.Workin
 public import Formalism.LocalToGlobal.IndefiniteReal.SpOfRwRange
 public import Formalism.LocalToGlobal.IndefiniteReal.EvalTieTOne
 public import Formalism.LocalToGlobal.IndefiniteReal.ZeroPartEigenvalueConvention
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GoodRowsLevelSubPrincipalLevelHilbertModelStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LinksChar
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GoodRowsLevelSubPrincipalLevelHilbertModel
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.IndefRRealPins
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SummandFunctionalBound
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.PassIn3AtRealTStatement
@@ -1526,7 +1527,7 @@ theorem seeIso_row : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : T
   subst hDc
   have hSp' := eq_of_heq hSp
   have hHE := hM.HE
-  have hle := (GlobalTheory.T.goodRows_level_sub_principalLevel_hilbertModel R.toRealDat hM).1 (R.toRealDat.levR F.lv2 true)
+  have hle := (_root_.GlobalTheory.GoodRowsLevel.eeat_sub_principal R.toRealDat hM).1 (R.toRealDat.levR F.lv2 true)
   have key : ∀ (x : Tw (twAt D.what₂.embLL A3.A.v0) R.HE.H)
       (hx : R.HE.e (Tw.out x) ∈ R.toRealDat.EEat (R.toRealDat.levR F.lv2 true)),
       ‖sEEofTT (R.MY 0) R.ν0 R.fd0 (R.toRealDat.EEat (R.toRealDat.levR F.lv2 true)) X Gd ι tS cS ⟨R.HE.e (Tw.out x), hx⟩‖ ^ 2 = cS * ‖x‖ ^ 2 := by

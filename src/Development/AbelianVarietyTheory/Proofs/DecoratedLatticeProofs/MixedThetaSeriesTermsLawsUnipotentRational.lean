@@ -2,11 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.KerBF
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ComplexEmbeddingHermitianQuadrupleSum
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorThetaFunctionalMixedSourceModeStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinatesOfThetaFunctionAreThetaFunctionsStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorThetaFunctionalMixedSourceMode
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SkewGramHalfModule
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinatesOfThetaFunctionAreThetaFunctions
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelCentralTermsViaGramMatricesStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittSourceProofStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumThetaJointlyContinuousStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittSourceProof
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumThetaJointlyContinuous
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlagUnipotentFourierJacobiGroupStructure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -47,7 +51,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
 
 @[expose] public section
 
@@ -217,8 +220,8 @@ namespace GlobalTheory.Unf.TermLaw
 theorem term_laws : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V V₀ W : HSp D) (ρ : ℕ) (d : HypDec V V₀ ρ) (χV χW : (AE D)ˣ →* Circle) (om : Om V W) (om' : Om V₀ W), IsWeilDatumO ψ V W χV χW om → IsWeilDatumO ψ V₀ W χV χW om' → ∀ (vS : VolM D W.rank ρ) (Ψ : WO V W → ℂ), IsThetaFunO ψ V W Ψ → (∀ (x : Matrix (Fin W.rank) (Fin ρ) D.host.E) b (u : UX D ρ) c, term ψ d W vS (om (d.nC c * (d.nB b * d.levi u.1), 1) Ψ) x = ψ (d.qS W c (rat x)) * (_root_.I195MixedCoordinates.source d) W ψ vS.μ vS.𝓕 Ψ (rat x ⬝ u.1.1) (rat x ⬝ b)) ∧ (∀ γ ∈ GQ V, γ ∈ flagN d → ∀ x x' : Matrix (Fin W.rank) (Fin ρ) D.host.E, (rat x' : Mx D W.rank ρ) = rat x ⬝ blockX d γ → term ψ d W vS (om (γ, 1) Ψ) x = term ψ d W vS Ψ x') ∧ (∀ δ ∈ GQ W, ∀ x x' : Matrix (Fin W.rank) (Fin ρ) D.host.E, mt W δ ⬝ (rat x' : Mx D W.rank ρ) = rat x → term ψ d W vS (om (1, δ) Ψ) x = term ψ d W vS Ψ x') ∧ (∀ x, Continuous fun p : GA D V × GA D W => term ψ d W vS (om p Ψ) x) ∧ HasSum (term ψ d W vS Ψ) (Ψ 0) := by
   intro D ψ V V₀ W ρ d χV χW om om' hW hW' vS Ψ hΨ
   have hstd : IsStdChar D ψ (-1) := hW.std
-  have hMS := GlobalTheory.T.mixedModelFormulasWittSource_proof D ψ V V₀ W ρ d χV χW om om' hW hW' vS.μ vS.𝓕 vS.covol
-  have hMV := (GlobalTheory.T.mixedCoordinates_of_thetaFunction_are_thetaFunctions D ψ hstd).1 V V₀ W ρ d vS.μ vS.𝓕 vS.covol
+  have hMS := _root_.GlobalTheory.MixSourceFormulas.mixed_source D ψ V V₀ W ρ d χV χW om om' hW hW' vS.μ vS.𝓕 vS.covol
+  have hMV := (_root_.GlobalTheory.MixValues.mixed_values D ψ hstd).1 V V₀ W ρ d vS.μ vS.𝓕 vS.covol
   have thP : ∀ p f, IsThetaFunO ψ V W f → IsThetaFunO ψ V W (om p f) := hW.om_pres
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · intro x b u c
@@ -255,7 +258,7 @@ theorem term_laws : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V V₀ W : HS
     exact hW'.om_aut 1 (one_mem _) δ hδ _ (hMV Ψ hΨ _)
   · intro x
     have hψc : Continuous ψ := hstd.1.1
-    have hJ := GlobalTheory.T.weilDatum_theta_jointlyContinuous D ψ V W χV χW om hW Ψ hΨ
+    have hJ := _root_.GlobalTheory.Unf.jointCont_all D ψ V W χV χW om hW Ψ hΨ
     have hY : Continuous (d.extY W) := continuous_id.matrix_mul continuous_const
     have hterm : (fun p => term ψ d W vS (om p Ψ) x) = fun p => ∫ a in vS.𝓕,
         ψ (symplOH V W (d.extY W a) (d.extX W (rat x))) * om p Ψ (d.extY W a + d.extX W (rat x) + d.ext0 W 0) ∂vS.μ := by
@@ -271,7 +274,7 @@ theorem term_laws : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V V₀ W : HS
     · intro p γ hγ a
       have h := d.integrandS_periodic (thP p Ψ hΨ) (rat x) 0 γ hγ a
       rwa [d.integrandS_eq, d.integrandS_eq] at h
-  · have h := (GlobalTheory.T.heisenbergOperator_thetaFunctional_mixedSourceModel D ψ hstd V V₀ W ρ d vS Ψ hΨ).2.2.2.2 0
+  · have h := (_root_.GlobalTheory.HeisMixSource.heis_mixS D ψ hstd V V₀ W ρ d vS Ψ hΨ).2.2.2.2 0
     rw [map_zero] at h
     exact h
 

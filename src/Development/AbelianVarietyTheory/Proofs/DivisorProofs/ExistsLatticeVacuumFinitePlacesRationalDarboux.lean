@@ -11,7 +11,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacFn
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocallyConstantHeisenbergLatticeVacuumFunction
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicHeisenbergActsByLocalSchrodingerStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicHeisenbergActsByLocalSchrodinger
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegerAddConjEqOneUnramifiedCm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianTensorSkewHermitianLatticeOpenCompact
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAddCharSymplecticLocalLatticeEqOne
@@ -814,7 +814,7 @@ theorem exists_vac_of_lattice : ∀ {F : Type} [Field F] [NumberField F] {W : Ty
       rw [e]
       exact hc2 γ hγ)
   refine ⟨φ, hSB, hne, fun γ hγ => ?_⟩
-  have hb := GlobalTheory.T.adelicHeisenberg_acts_by_local_schrodinger co ψ v γ (hAt γ hγ) φ
+  have hb := _root_.GlobalTheory.VacBridge.rho_acts_locCo co ψ v γ (hAt γ hγ) φ
   rwa [heig _ (AddSubgroup.mem_map_of_mem _ hγ), hχ γ hγ] at hb
 
 end GlobalTheory.HeisLatVac

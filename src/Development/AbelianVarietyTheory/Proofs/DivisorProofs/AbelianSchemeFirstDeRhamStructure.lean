@@ -8,7 +8,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchem
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.CubeTheorem.CubeTheoremHolds
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeDeRhamLocallyFreeHodgeDegeneratesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualAbelianSchemeExistsBidualityStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualAbelianSchemeExistsBiduality
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PoincareDeRhamDualityOfHodgeDeRhamDual
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -75,8 +75,8 @@ section -- clump:auto
 namespace GlobalTheory
 
 theorem abelianDeRham : GlobalTheory.Published.AbelianDeRham :=
-  GlobalTheory.abelianDeRham_of_hodge_dual_poincare GlobalTheory.T.abelianScheme_deRham_locallyFree_hodgeDegenerates GlobalTheory.T.dualAbelianScheme_exists_biduality
-    (GlobalTheory.PoincareDeRhamDualityProof.poincareDeRhamDuality_of_hodge GlobalTheory.T.abelianScheme_deRham_locallyFree_hodgeDegenerates GlobalTheory.T.dualAbelianScheme_exists_biduality)
+  GlobalTheory.abelianDeRham_of_hodge_dual_poincare GlobalTheory.T.abelianScheme_deRham_locallyFree_hodgeDegenerates _root_.GlobalTheory.dualAbelianScheme
+    (GlobalTheory.PoincareDeRhamDualityProof.poincareDeRhamDuality_of_hodge GlobalTheory.T.abelianScheme_deRham_locallyFree_hodgeDegenerates _root_.GlobalTheory.dualAbelianScheme)
 
 end GlobalTheory
 end -- clump:auto

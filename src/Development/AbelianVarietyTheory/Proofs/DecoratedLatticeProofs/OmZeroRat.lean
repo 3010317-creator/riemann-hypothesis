@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.RapidVal
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EventuallyFinEqOne
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientParaStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientPara
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorsOfSmoothThetaStable
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -83,7 +84,7 @@ theorem liftSum : ∀ D : D7, LiftSum D := by
       have e := om_zero_rat hω hpt hγ (one_mem (GQ T)) g h
       rw [one_mul] at e
       rw [e, hφ.1 γ hγ g]
-    obtain ⟨h1, h2, -⟩ := GlobalTheory.T.continuous_integral_compactAutomorphicQuotient_param D S hx.cpt x.vol (GA D T) _ hc hinv
+    obtain ⟨h1, h2, -⟩ := _root_.GlobalTheory.CocompactParam.continuous_integral_param D S hx.cpt x.vol (GA D T) _ hc hinv
     exact ⟨h1, h2⟩
   refine ⟨hpt, fun φ hφ => ⟨fun γ' hγ' h => ?_, ?_⟩, fun I s a φ hφ => ?_⟩
   · show ∫ g in x.vol.𝓕, k.om (g, γ' * h) (k.pt ψ θ x y P) 0 * φ g ∂x.vol.μ =

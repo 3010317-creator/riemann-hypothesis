@@ -19,7 +19,8 @@ public import Formalism.SharpRestriction.LevelLetterCocycles.AdmissibleParameter
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.OneSubPhiOntoOfFilZero
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DecompositionLocalAbove
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankLeOfSubsetClosureRange
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HostCompletionLeMaxUnramifiedPadicStatement
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HostCompletionLeMaxUnramifiedPadic
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TorsionExponentLeOfJumpsAtEmbeddingsUnramified
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ChiCrysOfConstituent
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.MainAltAltBisStatement
@@ -493,7 +494,7 @@ theorem jointCond_H0Wall_of_canon_alt : GlobalTheory.Published.FontaineBcris →
   have hsm : D.nd.l i ∉ D.host.small := fun h => by
     have h' : primeClass D.host.toHostRaw (D.nd.l i) = PrimeClass.splitK := hsplit
     simp [primeClass, h] at h'
-  have hKur := GlobalTheory.T.hostCompletion_le_maxUnramified_padic D i hsm hq hd u hu'
+  have hKur := _root_.GlobalTheory.HubLoc.kw_le_Kur_all D i hsm hq hd u hu'
   have hgood : Good (D.nbr i u hu').Kw 1 (D.nbr i u hu').LL :=
     (D.self_good i u hu').good_one (D.nbr i u hu').LL_split hl2 (GlobalTheory.HubLoc.le_Ks_one_of_Kur _ hKur)
   have hZ : π ∈ D.nd.Z i := Formalism.MainNotions.LargeLevelLemmas.zgoodSubsetZ i hπ

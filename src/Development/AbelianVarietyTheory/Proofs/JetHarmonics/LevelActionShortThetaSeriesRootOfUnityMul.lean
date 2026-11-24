@@ -27,10 +27,13 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliSchemeL
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ComponentEqOfMatchedLatticesMarkings
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsComplexFrobeniusPoints
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LevelAutomorphismPeriodFamily
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LiftDatumAlternatingFormSignEqOneStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.PartitionExtendByZeroAntitone
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LiftDatumAlternatingFormSignEqOne
 public import Formalism.LocalToGlobal.ProjectiveLattices.SpMapAlgHomId
 import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsQuotEquiv
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueUnderLevelMoveStatement
+import Formalism.LocalToGlobal.ProjectiveLattices.IsLevMove
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueUnderLevelMove
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ComponentAttainedAtBaseFrame
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueFramedPointMoveUniversalTriple
@@ -201,7 +204,7 @@ theorem formPlus_of {D : D7} {Q : Par D} (hQ : Q.Pins) {j : ℕ} (hj : InR D j) 
       rw [← hL.2, LinearMap.coe_range, ← Set.range_comp]
       rfl
     rw [h1, Submodule.span_image, (GlobalTheory.RecDict.comp_latG D _).2.1, Submodule.map_top, LinearEquiv.range]
-  have h1 := GlobalTheory.T.liftDatum_alternatingForm_sign_eq_one D Q.H (Q.Dw j) j hj hQ.1.2.1 hQ.1.2.2.1 (hQ.2.2.2 j hj).1 (hQ.2.2.2 j hj).2.1 ψ ε
+  have h1 := _root_.GlobalTheory.Member.sign_eq_one D Q.H (Q.Dw j) j hj hQ.1.2.1 hQ.1.2.2.1 (hQ.2.2.2 j hj).1 (hQ.2.2.2 j hj).2.1 ψ ε
     ((D.sp.W j).frame.equivFun.symm.injective.comp hL.1) hsp hε
   intro x y
   rw [hε, h1]
@@ -350,7 +353,7 @@ theorem actLev_short : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepS
   have e₁ := GlobalTheory.ShortLiftInvariance.cover_product_indep_of_lift hL hC _ _ _ _ _ _ _ d
     (_root_.GlobalTheory.moduliScheme_levelMaps_heckePoints.2 _ _ _ hpq).1 hLev (hA₂.trans hA.symm) hnab ⟨ph, ψ, x₀, hpin, htie⟩ Λ N hU hb₂ hO _ _ hP₂ x0 _
     r' m' hE' k hk y' z₂ y₂' hz₂ ho' v v' hv hv'
-  have e₂ := GlobalTheory.T.shortThetaValue_under_levelMove hL hC _ _ _ _ d.Xo₂ d.c₂ d.nab₂ hnab k ρ₂.hom ν₂ _ _ y₂ y₂' hmv₂ hfr₂ σq hσ
+  have e₂ := _root_.GlobalTheory.ShortValMove.shortValAt_move hL hC _ _ _ _ d.Xo₂ d.c₂ d.nab₂ hnab k ρ₂.hom ν₂ _ _ y₂ y₂' hmv₂ hfr₂ σq hσ
     _ _ _ hP₂ (d.w x0) Λ _ N v' hv'
   rw [funext hw'] at e₂
   refine ⟨v', e₂, (evalAt_smul _ _ _ _ y).trans ?_⟩

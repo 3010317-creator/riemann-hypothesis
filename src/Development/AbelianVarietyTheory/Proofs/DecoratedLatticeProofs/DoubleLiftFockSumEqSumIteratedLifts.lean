@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsBiSmooth
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.RapidVal
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientParaStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientPara
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationCommFockPolynomialVectorsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -83,7 +84,7 @@ theorem integrableOn_kernel {S T : HSp D} (hS : CoCpt S) (v : Vol S) {ψ : AddCh
     IntegrableOn (fun g => om (g, h) f 0 * φ g) v.𝓕 v.μ := by
   have hc : Continuous fun g : GA D S => om (g, h) f 0 :=
     (hw.om_cont f hf 0).comp (by fun_prop : Continuous fun g : GA D S => (g, h))
-  refine (GlobalTheory.T.continuous_integral_compactAutomorphicQuotient_param D S hS v Unit (fun g _ => om (g, h) f 0 * φ g) ((hc.mul hφ.2).comp continuous_fst) ?_).1 ()
+  refine (_root_.GlobalTheory.CocompactParam.continuous_integral_param D S hS v Unit (fun g _ => om (g, h) f 0 * φ g) ((hc.mul hφ.2).comp continuous_fst) ?_).1 ()
   intro γ hγ g _
   have e : ((γ * g, h) : GA D S × GA D T) = (γ, 1) * (g, h) := by simp
   rw [e, map_mul, Module.End.mul_apply, hw.om_aut γ hγ 1 (one_mem _) _ (hw.om_pres _ _ hf), hφ.1 γ hγ g]

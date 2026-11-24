@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ValuationDetOfMemKO
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdelicUnitaryTrivialOutsideSplitPlaceLocEq
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FixedVectorsNeBotOfMemSumIntertwiningRanges
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteTypeSpannedBySplitPlaceLocalComponentStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ThetaMod
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteTypeSpannedBySplitPlaceLocalComponent
 import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -139,7 +140,7 @@ theorem fixed_ne_bot_of_fixed_vector : ∀ (L : Type) [Field L] [NumberField L] 
   intro L _ _ _ n π s τ hloc f hf hf0 hfix
   classical
   obtain ⟨c, _, hc, hci, _⟩ := id hloc
-  have hspan := GlobalTheory.T.finiteType_spanned_by_splitPlace_localComponent L n π s τ hloc c hc hci hf
+  have hspan := _root_.GlobalTheory.FinTypSpanLoc.main L n π s τ hloc c hc hci hf
   let H : Subgroup (GAf L n) :=
     { carrier := {x | TrivOutside {s.v} x}
       mul_mem' := fun {x y} hx hy v hv => by

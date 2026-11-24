@@ -6,16 +6,16 @@ public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsDomain
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.NonemptyEquivOfCardHom
 public import Mathlib.Tactic.ENatToNat
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HopfOrderContainsCharacters
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderIsHopfOrderNoetherianStatement
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TranslateMemIndOrder
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderIsHopfOrderNoetherian
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderValueEval
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsUniqueBtOrderEmbedding
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsUniqueTangentDualNumber
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RelOfTorsion
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.MiTors
 public import Mathlib.AlgebraicGeometry.Morphisms.Proper
-public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TranslateMemIndOrder
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HopfOrderScalarExtension
-public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderBaseChangeGeneric
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderComapHomStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderEmbeddingIsoFinite
@@ -240,7 +240,7 @@ theorem omega_isDerAtOne : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrall
   refine ⟨θ, ⟨hsurj, pin⟩, hker, ?_⟩
   rintro χ w ⟨s, hs, hv⟩
   have hχ : (fun t => ((χ t : Rˣ) : R)) ∈ Γ.btOrder ⊤ :=
-    char_mem_hopfOrder R T _ (GlobalTheory.T.btOrder_isHopfOrder_noetherian R T Γ) χ
+    char_mem_hopfOrder R T _ (_root_.GlobalTheory.CompanionTheory.Relay.btOrder_isHopfOrder_noetherian R T Γ) χ
   rw [OrderApi.dlogChar_of_mem _ χ hχ]
   refine (pin _ w).2 ⟨s - 1, fun t => ?_, fun e => ?_⟩
   · rw [valAt_sub_one, hs t]
@@ -323,7 +323,7 @@ open CategoryTheory Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalC
 theorem lemmaBT_holds : LemmaBT := by
   unfold GlobalTheory.CompanionTheory.Ar.BT.LemmaBT
   intro R _ _ _ _ T _ _ Γ S G _ _ x N i hi hG
-  refine ⟨GlobalTheory.T.btOrder_isHopfOrder_noetherian R T Γ, ?_,
+  refine ⟨_root_.GlobalTheory.CompanionTheory.Relay.btOrder_isHopfOrder_noetherian R T Γ, ?_,
     fun hN => _root_.GlobalTheory.CompanionTheory.Ar.BT.EtaleTop.btOrder_top_eq_top_of_etale R T Γ
       (_root_.GlobalTheory.CompanionTheory.Ar.BT.torsion_etale_of_isUnit R T Γ S G x N i hi hG hN), ?_, ?_,
     fun L _ _ M => _root_.GlobalTheory.CompanionTheory.Ar.BT.omega_isDerAtOne R T Γ S G x N i hi hG L M⟩
@@ -342,7 +342,7 @@ theorem lemmaBT_holds : LemmaBT := by
     obtain ⟨hd, hΓ'⟩ :=
       _root_.GlobalTheory.CompanionTheory.Ar.BT.btOrder_baseChange R T Γ R' Γ' F hF
     obtain ⟨-, e, he⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.ext_tensor_base_change R T R' _
-      (GlobalTheory.T.btOrder_isHopfOrder_noetherian R T Γ) hd
+      (_root_.GlobalTheory.CompanionTheory.Relay.btOrder_isHopfOrder_noetherian R T Γ) hd
     rw [hΓ']
     exact ⟨e, he⟩
 

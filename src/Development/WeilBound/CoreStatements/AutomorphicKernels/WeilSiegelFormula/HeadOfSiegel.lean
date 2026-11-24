@@ -38,7 +38,7 @@ public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.GinfCS
 public import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.IsSchwartzBruhatOfProd
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchwartzFunctionSchwartzBruhat
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PoissonSummationHermitianLatticeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaIntegralContinuousStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaIntegralContinuous
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaIntegralLocallySummableBoundStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsUnitHermOfDet
 public import GroundTheory.HeightsAndTheta.Theta.AdelicFourier
@@ -65,8 +65,7 @@ public import Mathlib.Topology.Algebra.InfiniteSum.Defs
 public import Mathlib.Topology.MetricSpace.Pseudo.Defs
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.EulerFactorStandardMeasureIdentity
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBoundUnitary
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsSelfDualSiegelWeilMeasuresStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchwartzFunctionSchwartzBruhatStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsSelfDualSiegelWeilMeasures
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousHermPart
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeftInvSubtypeSum
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PoissonHermMain
@@ -128,7 +127,8 @@ import Formalism.LocalToGlobal.IndefiniteReal.PHeisFCA
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.TensTop
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.TopoAF
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanGramFibreMeasureFormula
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedSchwartzFunctionIntegrableStatement
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedSchwartzFunctionIntegrable
+import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
 import Mathlib.Tactic.ENatToNat
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SummableOfTsumEnormLtTop
 
@@ -1213,7 +1213,7 @@ theorem hermitian_unfolding_integral (r : ℕ) (V : HSp D) (ψ : AddChar (AF D.h
   have hφ := mem_schwartzA_of_sb θ hθ Φ hΦ
   obtain ⟨𝓖, h𝓖⟩ := hlam
   have hJ : Integrable (Jt ψ V μ fun y => Φ (untup y)) lam :=
-    (GlobalTheory.T.poisson_summation_hermitian_lattice D r ψ hψ lam 𝓖 h𝓖 _ (GlobalTheory.T.theta_integral_continuous D r V ψ θ μ _ hψ hθ hμ hφ)
+    (GlobalTheory.T.poisson_summation_hermitian_lattice D r ψ hψ lam 𝓖 h𝓖 _ (_root_.GlobalTheory.CompanionTheory.BigCellJ.jt_continuous D r V ψ θ μ _ hψ hθ hμ hφ)
       (GlobalTheory.T.theta_integral_locally_summable_bound D r V ψ θ μ _ hr hψ hθ hμ hφ)).1
   obtain ⟨c, hc⟩ := starN_hermE V (r := r) ψ μ hμ.choose_spec.1 dx hdx
   refine integrable_of_hermE lam h𝓖.1 db hdb _ ?_
@@ -1505,7 +1505,7 @@ theorem coefN_sum (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Mat
     intro y
     unfold GlobalTheory.CompanionTheory.SiegelND.starN
     simp only [Finset.sum_mul]
-    exact integral_finsetSum _ fun i _ => GlobalTheory.T.twisted_schwartz_function_integrable F E σ hCM M J n ψ hψ dx hdx.1 (Φ i) (hΦ i) y
+    exact integral_finsetSum _ fun i _ => _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Phase.integrable_mul_phase F E σ hCM M J n ψ hψ dx hdx.1 (Φ i) (hΦ i) y
   have hχ : Continuous (chiT σ ψ T) := _root_.GlobalTheory.CompanionTheory.SiegelND.Coef.continuous_chiT F E σ hCM M J hJ n h2n ψ hψ T
   have hi : ∀ i, Integrable (fun y => GlobalTheory.CompanionTheory.SiegelND.starN σ J ψ dx (Φ i) y * chiT σ ψ T y) db := fun i =>
     (hInt _ (hΦ i)).mul_bdd (c := 1) hχ.aestronglyMeasurable
@@ -1592,13 +1592,13 @@ theorem siegelND : PositivityTheory.GramSchwartzFunctions.BC.SiegelND := by
   have hCM := _root_.Formalism.MainNotions.UnusedSlot34.isCMExt_D D
   have hJ := GlobalTheory.DefiniteQuotient.gram_hermND V
   obtain ⟨μH, 𝓕, hμH, h𝓕, -⟩ := GlobalTheory.Published.SiegelOneVector.exists_normalised D.sp.cm.sig V.gram hCM hJ
-  obtain ⟨dx, db, hdx, hdb, hW⟩ := GlobalTheory.T.exists_self_dual_siegel_weil_measures D r V ψ hψ μ hμ lam hlam
+  obtain ⟨dx, db, hdx, hdb, hW⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.whit_eq_coefN D r V ψ hψ μ hμ lam hlam
   have hT : ∀ a b, D.sp.cm.sig (β.1 b a) = β.1 a b := fun a b => by
     have := congrFun (congrFun β.2 a) b
     simpa [Matrix.transpose_apply, Matrix.map_apply] using this
   have hInt := fun Φ hΦ => PositivityTheory.PfWsf.Hand.TupleUntupling.hermitian_unfolding_integral r V ψ hψ θ hθ μ hμ lam hlam hr dx hdx.1 db hdb.1 Φ hΦ
   have hc := PositivityTheory.PfWsf.Hand.CoreH.coreH D.host.F D.host.E D.sp.cm.sig hCM V.rank V.gram hJ r hr ψ hψ dx hdx db hdb
-    hInt μH 𝓕 hμH h𝓕 _ (GlobalTheory.T.schwartz_function_schwartz_bruhat D θ hθ V.rank r φ hφ) β.1 hT hβ
+    hInt μH 𝓕 hμH h𝓕 _ (_root_.GlobalTheory.CompanionTheory.SiegelND.isSchwartzBruhat_tupOf_of_mem_schwartzA D θ hθ V.rank r φ hφ) β.1 hT hβ
   rw [GlobalTheory.T.frame_integral_eq_theta_part_nondegenerate D r V θ hθ ν hν φ hφ habs μH 𝓕 hμH h𝓕 β hβ, hW φ β, hc]
   rfl
 

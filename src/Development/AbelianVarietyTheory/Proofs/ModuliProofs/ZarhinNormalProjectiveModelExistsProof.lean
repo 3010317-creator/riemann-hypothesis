@@ -9,7 +9,7 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsA
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsAtTestOfCen
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsBundleOnAdmissibleModel
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGlobalGenerators
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaSystemHasTestsOfRealPointStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaSystemHasTestsOfRealPoint
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.WeightSumDivThetaConstDotProductMem
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.UniformisationExistenceAndTorsionStatements
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ZarhinGeometricOfSemistableReduction
@@ -57,7 +57,11 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHoldStatement
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.OLinBaseChangeSt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHold
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSemiAbelianModelOfGeometricHalf, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSemiAbelianModelOfGeometricHalfStatement, Development.AbelianVarietyTheory.Proofs.ModuliProofs.ZarhinProjectiveModelOfSemistableReduction, Development.AbelianVarietyTheory.Proofs.ModuliProofs.ZarhinNormalProjectiveModelExistsProof
@@ -79,7 +83,7 @@ namespace GlobalTheory.ZH
 theorem exists_model_semiAbelian_of_geo :
     GlobalTheory.Published.SemistableReductionSt → ThmUSt → Laws → Laws2 → UTorsSt → ZHGeoSt → ZHSt := by
   intro hN hU hL hL2 hTors hGeo o Ω _ _ _ hb S ρ hBig J₀ _ t₀ ht hfin
-  have hT : S.HasTests := (GlobalTheory.T.thetaSystem_hasTests_of_real_point hN hU hL hL2 hTors o Ω S ρ).1
+  have hT : S.HasTests := (_root_.GlobalTheory.ZH.hasTests_of_real hN hU hL hL2 hTors o Ω S ρ).1
   obtain ⟨M, U₀, hA, -, hD⟩ := @GlobalTheory.ZH.exists_admissible_affine_model_dividing_tuple o Ω _ _ _ _ S J₀ _ t₀ ht hfin
   obtain ⟨EE, hEE, hE⟩ := @GlobalTheory.ZH.exists_isEE_of_adm o Ω _ _ _ _ S M U₀ hT hA
   have hO : S.Over₀ M U₀ := hA.1
@@ -132,7 +136,7 @@ open scoped CategoryTheory.Obj
 namespace GlobalTheory
 
 theorem zh_of_semistableReduction : GlobalTheory.Published.SemistableReductionSt → GlobalTheory.ZH.ZHSt :=
-  fun S => GlobalTheory.T.exists_semiAbelianModel_of_geometricHalf S _root_.GlobalTheory.ZH.thmU_and_uTors.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.1 _root_.GlobalTheory.ZH.thmU_and_uTors.2 (_root_.GlobalTheory.zhGeo_of_semistableReduction S)
+  fun S => GlobalTheory.T.exists_semiAbelianModel_of_geometricHalf S _root_.GlobalTheory.ZH.thmU_and_uTors.1 _root_.GlobalTheory.allSixLaws.1 _root_.GlobalTheory.allSixLaws.2.1 _root_.GlobalTheory.ZH.thmU_and_uTors.2 (_root_.GlobalTheory.zhGeo_of_semistableReduction S)
 
 end GlobalTheory
 end -- clump:auto

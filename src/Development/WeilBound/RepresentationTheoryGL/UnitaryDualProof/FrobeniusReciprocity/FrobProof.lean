@@ -2,9 +2,13 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.TrivSymmApply
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.BernsteinUnitaryProducts.BernsteinTheoremA.FrobeniusReciprocity.SupportedInIffOfFrob
-public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.ExistsContinuousSectionQuotientStatement
-public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.ExistsSchwartzBruhatCharacterIntegralOneStatement
-public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.UnimodularHaarRightInvariantStatement
+public import Mathlib.Topology.Algebra.Group.Quotient
+public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.ExistsContinuousSectionQuotient
+public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.ExistsSchwartzBruhatCharacterIntegralOne
+public import Development.WeilBound.CoreStatements.AutomorphicKernels.BernsteinUnitaryProducts.BernsteinTheoremA.FrobeniusReciprocity.PullHomeoApply
+public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.UnimodularHaarRightInvariant
 import GroundTheory.AutomorphicForms.LocallyProfinite
 import GroundTheory.AutomorphicForms.LocallyConstantCompact
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
@@ -166,12 +170,12 @@ public theorem frobeniusReciprocity : FrobeniusReciprocity := by
   have : IsClosed (H : Set G) := hH
   have : LocallyCompactSpace (Fib p) := ((isClosed_singleton (x := ((1 : G) : G ⧸ H))).preimage hpc).locallyCompactSpace
   have : SecondCountableTopology H := inferInstanceAs (SecondCountableTopology (H : Set G))
-  have := GlobalTheory.T.unimodular_haar_right_invariant G uG μG
-  have := GlobalTheory.T.unimodular_haar_right_invariant H uH μH
-  obtain ⟨s, hs, hsec⟩ := GlobalTheory.T.exists_continuous_section_quotient G H hH
+  have := _root_.GlobalTheory.CompanionTheory.HaarUnimod.isMulRightInvariant_of_isUnimod G uG μG
+  have := _root_.GlobalTheory.CompanionTheory.HaarUnimod.isMulRightInvariant_of_isUnimod H uH μH
+  obtain ⟨s, hs, hsec⟩ := _root_.GlobalTheory.CompanionTheory.LGroupSection.exists_continuous_section G H hH
   let σ : Sec H := ⟨s, hs, hsec⟩
-  obtain ⟨α0, hα0⟩ := GlobalTheory.T.exists_schwartzBruhat_character_integral_one G μG χ hχ
-  obtain ⟨b0, hb0'⟩ := GlobalTheory.T.exists_schwartzBruhat_character_integral_one H μH 1
+  obtain ⟨α0, hα0⟩ := _root_.GlobalTheory.CompanionTheory.FrobNz.exists_SB_integral_mul_char_eq_one G μG χ hχ
+  obtain ⟨b0, hb0'⟩ := _root_.GlobalTheory.CompanionTheory.FrobNz.exists_SB_integral_mul_char_eq_one H μH 1
     (by simp only [MonoidHom.one_apply, Units.val_one]; exact continuous_const)
   have hb0 : ∫ y, (b0 : H → ℂ) y ∂μH = 1 := by simpa using hb0'
   let Ψ := triv hp σ hpc

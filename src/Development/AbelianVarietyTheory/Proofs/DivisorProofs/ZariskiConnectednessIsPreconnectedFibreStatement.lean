@@ -11,7 +11,8 @@ public import Mathlib.RingTheory.AdicCompletion.Basic
 public import Mathlib.AlgebraicGeometry.Noetherian
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Mathlib.RingTheory.RingHom.Flat
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AppBijectiveOfFlatBaseChangeGlobalFunctionsStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Flat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AppBijectiveOfFlatBaseChangeGlobalFunctions
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -354,7 +355,7 @@ theorem isPreconnected_fibre : ∀ (X Y : Scheme.{0}) (a : X ⟶ Y), IsLocallyNo
     rw [Scheme.Hom.comp_appTop, CommRingCat.hom_comp, RingHom.coe_comp]
     haveI : IsIso e.hom.appTop := inferInstanceAs (IsIso (e.hom.app ⊤))
     exact hres.comp (ConcreteCategory.bijective_of_isIso _)
-  have hp := GlobalTheory.T.app_bijective_of_flat_baseChange_globalFunctions Γ(Y, U) _ _ _ π g (pullback.snd π g) (pullback.fst π g) inferInstance inferInstance hπ
+  have hp := _root_.GlobalTheory.Mum.app_bijective_of_flat_baseChange Γ(Y, U) _ _ _ π g (pullback.snd π g) (pullback.fst π g) inferInstance inferInstance hπ
     inferInstance (IsPullback.of_hasPullback π g).flip
   let Z : Scheme.{0} := pullback π g
   let ψ : A →+* Γ(Z, ⊤) :=

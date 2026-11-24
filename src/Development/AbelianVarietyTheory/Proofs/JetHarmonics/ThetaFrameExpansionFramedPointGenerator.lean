@@ -4,7 +4,9 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValua
 public import Development.AbelianVarietyTheory.Definitions.Jets.ExistsSecTieFOfTies
 public import Development.AbelianVarietyTheory.Definitions.Jets.JetsOnCopiesCompatibleFrames
 public import Development.AbelianVarietyTheory.Counterexamples.JetSurvey.NotIsThetaOfNonunit
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExpansionOfIntegralSectionIsIntegralStatement
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.DegExp
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExpansionOfIntegralSectionIsIntegral
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IntegralDegenerationFamilyBaseChangeExtensionFie
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExpansionBijectiveOverFields
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
@@ -217,7 +219,7 @@ theorem thFrame_of_spanning (hL : Laws) {V : Type} [CommRing V] [IsDomain V] [Is
     (φ' := fun _ : Fin 1 => pullback.fst G.hom (jK V)) (ε' := fun _ => ((1 : ℕ) : ℤ))
     (fun U _ h => by simp only [Category.comp_id])
   obtain ⟨E, hE, -⟩ := (U.expand 1 le_rfl).1 sK
-  obtain ⟨g, hgE, hg⟩ := GlobalTheory.T.expansion_of_integral_section_is_integral V ϖ hϖ D A G U.toUnifPre 1 ϑ sK
+  obtain ⟨g, hgE, hg⟩ := _root_.GlobalTheory.ExpInt.main V ϖ hϖ D A G U.toUnifPre 1 ϑ sK
     (SectionScalarValuation.secScal_of_sval U.LG.isLB fun y J hJ => (hsK _ _ y J hJ).symm) E hE
   obtain ⟨θ', hθ'⟩ := FamBaseChange.main hL.globalFns V (maximalIdeal V) D 1 E g hg F
   have hx : U.toUnifPre.ExpandsG F 1 σ θ' := ⟨1, fun _ => 1, fun _ => ϑ, fun _ => g, fun _ e => hgE e,

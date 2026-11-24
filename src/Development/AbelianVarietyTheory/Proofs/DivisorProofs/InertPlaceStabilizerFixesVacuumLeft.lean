@@ -16,16 +16,16 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTransfo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLagrAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicHeisenbergActsByLocalSchrodinger
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqAdeleSupportedAtFinitePlaceOfSupportedAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunctionStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLagrangianInertPlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianTensorSkewHermitianLatticeOpenCompact
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLocalImageLatticeSupportedAtPlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormEqZeroOfLagrangianAtPlace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergInvariantFormVanishesLagrangianTest
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceTransformingCharacterEqOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplementaryAdelicSchwartzOfNonzeroLocalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplementaryAdelicSchwartzOfNonzeroLocal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceSchwartzBruhatVacuumConditionEqSmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -81,7 +81,7 @@ import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAddCharSymp
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Mathlib.Topology.MetricSpace.Ultra.Pi
 import Mathlib.RingTheory.PiTensorProduct
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationLocalityUnitaryGroupVStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationLocalityUnitaryGroupV
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasisWithDualBasisInHermitianLatticeAwayPl, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimeToPlaceDenominatorUnramifiedTrace, Development.AbelianVarietyTheory.Proofs.FlagMeasures.ImportsBisSide, Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixAdelicDecompositionAtFinitePlace, Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewSelfDualLatticeLocalisedAtPlace, Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceHermitianTensorIntegralOfCharTrivial, Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceTensorLatticeSelfDualSupportedAt, Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatMatrixCoefficientCompactSupportFin, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LagrangianInvariantLinearFormLocalExistence, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLagrangianInvariantFormInertVacuum, Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergInvariantFormCompLocalWeilOperator, Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvOfHeisInv, Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilVacuumNotMemAugmentationInertPlace, Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceLatticeStabilizerVacuumScalarEqOne, Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceStabilizerFixesVacuumLeft
@@ -1122,7 +1122,7 @@ def lagSub {n d m : ℕ} (v : Pl (F := F)) (C : Matrix (Fin d) (Fin m) (_root_.G
 theorem acts_unique {κ : Type} [Fintype κ] (v : Pl (F := F)) (T : ((κ → AF F) → ℂ) → (κ → AF F) → ℂ)
     (φ φ₁ φ₂ : (κ → Fv F v) → ℂ) (hφ : φ ∈ SB (κ → Fv F v)) (h1 : Acts (evFin F v) T φ φ₁)
     (h2 : Acts (evFin F v) T φ φ₂) : φ₁ = φ₂ := by
-  obtain ⟨R, hR0, hR⟩ := GlobalTheory.T.exists_complementary_adelicSchwartz_restFunction κ v
+  obtain ⟨R, hR0, hR⟩ := _root_.GlobalTheory.RestWitness.exists_rest κ v
   have e := (h1 R (hR φ hφ)).symm.trans (h2 R (hR φ hφ))
   funext y
   have hy := congrFun e (fun i => GlobalTheory.LatVac.liftV v (y i))
@@ -1326,7 +1326,7 @@ theorem inv_of_heisInv : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     ∀ g ∈ UAt σ G.V' (evFin F v), ∀ φ ∈ SB (Fin a' × Fin (a + a') → Fv F v), ∀ φ₁ ∈ SB (Fin a' × Fin (a + a') → Fv F v),
       Acts (evFin F v) (om' (g, 1)) φ φ₁ → l φ₁ = l φ := by
   intro F E _ _ _ _ _ σ B a a' G X om om' hT v w hin hv m C hC l hl g hg φ hφ φ₁ hφ₁ hA
-  obtain ⟨R, hR0, hR⟩ := GlobalTheory.T.exists_complementary_adelicSchwartz_restFunction (F := F) (Fin a' × Fin (a + a')) v
+  obtain ⟨R, hR0, hR⟩ := _root_.GlobalTheory.RestWitness.exists_rest (F := F) (Fin a' × Fin (a + a')) v
   have htadd : ∀ f f' : (Fin a' × Fin (a + a') → Fv F v) → ℂ,
       tens (evFin F v) (f + f') R = tens (evFin F v) f R + tens (evFin F v) f' R := fun f f' => by
     funext x; simp [tens, add_mul]
@@ -1356,7 +1356,7 @@ theorem inv_of_heisInv : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   have hS : ∀ g ∈ UAt σ G.V' (evFin F v), ∀ f ∈ SB (Fin a' × Fin (a + a') → Fv F v),
       Sop g f ∈ SB (Fin a' × Fin (a + a') → Fv F v) ∧ Acts (evFin F v) (om' (g, 1)) f (Sop g f) := by
     intro g hg f hf
-    obtain ⟨S₀, hS₀⟩ := GlobalTheory.T.weilRepresentationLocality_unitaryGroupV' B G X om om' hT v g hg
+    obtain ⟨S₀, hS₀⟩ := _root_.GlobalTheory.WeilLocality.locality B G X om om' hT v g hg
     have e : S₀ f = Sop g f := funext fun t => (huniq _ f _ hf (hS₀ f hf).2 t).trans (hSop g f t).symm
     rw [← e]; exact hS₀ f hf
   obtain ⟨φ₀, hφ₀, hline⟩ := _root_.GlobalTheory.InertLagUniq.exists_test F E σ a' (a + a') G.V' G.W G.M' B.ψ v (hT.base.inert v w hin).2.2 m C hC
@@ -1563,7 +1563,7 @@ theorem acts_vacCond_of_mem_KAt_left : ∀ (F E : Type) [Field F] [NumberField F
     rw [smul_zero, e0]
     funext x
     simp [Darboux.rho, schr]
-  have hrφ : Rest (evFin F v) φ r := GlobalTheory.T.complementaryAdelicSchwartz_of_nonzero_local v φ₁ φ r h0 hφ hr
+  have hrφ : Rest (evFin F v) φ r := _root_.GlobalTheory.RestCofactor.rest_of_rest v φ₁ φ r h0 hφ hr
   set γ' := actAB (cA σ) (k⁻¹, (1 : UA σ G.W.J)) γ
   have eγ' : γ' = mat k⁻¹ * γ := by
     simp [γ', actAB, mat]
@@ -1590,7 +1590,7 @@ theorem vac_fixed_left : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     ∀ k ∈ GlobalTheory.InertSph.KAt σ G.V' v, Acts (evFin F v) (om' (k, 1)) (G.M'.vac v) (G.M'.vac v) := by
   intro F E _ _ _ _ _ σ B a a' G X om om' hTr v w hw hv k hk
   obtain ⟨hSB, -, θ, hθ, hvac⟩ := hTr.geo.hM'.vac v
-  obtain ⟨S, hS⟩ := GlobalTheory.T.weilRepresentationLocality_unitaryGroupV' B G X om om' hTr v k hk.1
+  obtain ⟨S, hS⟩ := _root_.GlobalTheory.WeilLocality.locality B G X om om' hTr v k hk.1
   obtain ⟨hφ₁, hact⟩ := hS _ hSB
   have h1 := acts_vacCond_of_mem_KAt_left F E σ B a a' G X om om' hTr v θ hθ k hk _ hSB _ hφ₁ hact hvac
   obtain ⟨c, hc'⟩ := _root_.GlobalTheory.VacUniqInert.vac_unique F E σ B a a' G X om om' hTr v w hw θ hθ hvac _ hφ₁ h1

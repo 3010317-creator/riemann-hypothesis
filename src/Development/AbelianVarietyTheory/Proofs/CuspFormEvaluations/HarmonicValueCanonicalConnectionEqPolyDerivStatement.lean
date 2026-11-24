@@ -11,17 +11,14 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EpsPtScaleZer
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CubicalReadingOneAnalyticFrame
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.AppLESpMapJetPt
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CmFrameJetPointsAreExponentialJets
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CorrOfJetsOfAnalyticFrameProductsStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CorrOfJetsOfAnalyticFrameProducts
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.JetRdMulInvPow
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.JetReadingLinearSubstitutionPoints
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CorrOfJetsOfAnalyticFrameProducts
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsNormalisedIsoReadingOneAnalyticFrame
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CmFrameJetPointsAreExponentialJetsStatement
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsGeneratorJetReadingStatement
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IsValueAtJetPointCmFrameSection
 public import Mathlib.RingTheory.MvPowerSeries.Rename
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.AnalyticFrameAdjointnessSeriesTrivialStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsNormalisedIsoReadingOneAnalyticFrameStatement
 public import Formalism.LocalToGlobal.ProjectiveLattices.RowDeg
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.GCauchyStatement
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn
@@ -611,7 +608,7 @@ theorem first_partial_law : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   have i3 := (alg _ _ _ _ _ _ _ _ _ _ h3 h3).2.1
   have m23 := (alg _ _ _ _ _ _ _ _ _ _ i2 i3).1
   have m123 := (alg _ _ _ _ _ _ _ _ _ _ h1 m23).1
-  refine GlobalTheory.T.corr_of_jets_of_analytic_frame_products _ _ _ _ g Φ.toAnFr hI 3 m _ _ _ _ _ _ _ _ _ _ h0 m123 ?_
+  refine _root_.GlobalTheory.AnVal.JetCorr.corr_of_jetRd _ _ _ _ g Φ.toAnFr hI 3 m _ _ _ _ _ _ _ _ _ _ h0 m123 ?_
   refine sameSum_of_jetMap Φ.toAnFr m _ _ _ _ (fun I : Finset (Fin 3) => psumL 3 g ⟨I⟩) (fun I => I.down)
     (Sum.elim (fun K => K.down.biUnion ![{0, 1}, {2}])
       (Sum.elim (fun K => K.down.biUnion ![{0}, {2}]) (fun K => K.down.biUnion ![{1}, {2}]))) h0.1 (fun k => ?_) ?_
@@ -951,7 +948,7 @@ theorem sy_trivial : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
       refine Eq.trans ?_ (jetN_coord m (Equiv.swap (0 : Fin 2) 1 i) j).symm
       show Ideal.Quotient.mk _ (MvPolynomial.aeval _ _) = _
       fin_cases i <;> simp) _ _ _ _ _ hR
-  have hC := GlobalTheory.T.corr_of_jets_of_analytic_frame_products _ Xo.univ.t.G Xo.univ.t.PP y.x g Φ.toAnFr hI 2 m _ _ _ _ _ _ _ _ _ _ hR hS (by
+  have hC := _root_.GlobalTheory.AnVal.JetCorr.corr_of_jetRd _ Xo.univ.t.G Xo.univ.t.PP y.x g Φ.toAnFr hI 2 m _ _ _ _ _ _ _ _ _ _ hR hS (by
     intro ψ
     refine (Fintype.sum_equiv swapI _ _ fun I => ?_).symm
     have h1 := hS.1 I
@@ -1363,7 +1360,7 @@ theorem isGerm_tay_of_rd (e : ∀ m, FrTy y g Φ.jx m) (he : Φ.IsAnE e) (wP : P
   simp only [IsGerm]
   intro m
   have hJ : Φ.toAnFr.JetMap (n := 1) m (Φ.jx m).left (LinearMap.proj 0) :=
-    (GlobalTheory.T.cmFrame_jetPoints_are_exponential_jets E H Dw l Xo c y g ty el Φ 1 m).2.2.2.2
+    (_root_.GlobalTheory.AnVal.jetPts_jetMap E H Dw l Xo c y g ty el Φ 1 m).2.2.2.2
   obtain ⟨τ, -, hτ⟩ := GlobalTheory.T.exists_generator_jet_reading _ _ _ _ _ Φ.toAnFr 1 m (Fin 1) (fun _ => (Φ.jx m).left) (fun _ => (k : ℤ))
     (fun _ => LinearMap.proj 0) (fun _ => hJ)
   obtain ⟨F', hpull, hval⟩ := GlobalTheory.T.isValueAt_jetPoint_cmFrame_section E H Dw l Xo c y g ty el Φ m k F θ τ hF hτ
@@ -1396,7 +1393,7 @@ theorem rename_cast_refl {g : ℕ} (f : MvPowerSeries (Fin 1 × Fin g) ℂ) :
 theorem exists_analytic_chart : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [Algebra c.F ℂ] [StarRing (𝓞 E)] (y : FrPt Xo c ℂ) (g : ℕ) (ty : Fin g → (E →+* ℂ)) (el : Fin g ≃ Lt1 Dw) (Φ : AnPt y g ty el), (∀ a : 𝓞 E, star a = H.bar a) → ∃ (C : ChartAt Xo c y) (hd : C.d = g), C.h = 0 ∧ (∀ i, C.B.G.F i = (MvPowerSeries.X (R := ℂ) ((0 : Fin 2), i) + MvPowerSeries.X (R := ℂ) ((1 : Fin 2), i))) ∧ (∀ (ℓ : Lt1 Dw) (i' : Fin C.d), C.uvec ℓ i' = if Fin.cast hd i' = el.symm ℓ then 1 else 0) ∧ ∀ (k : ℕ) (F : LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L k (ptO Xo y.x))) (θ : (Fin g → ℂ) → ℂ), Φ.toAnFr.Rd k F θ → IsGerm y C.d C.x C.B.A.act C.e C.wP k F (MvPowerSeries.rename (fun p : Fin 1 × Fin g => (p.1, Fin.cast hd.symm p.2)) (tay θ 0)) := by
   intro E _ _ _ H Dw l Xo c _ _ y g ty el Φ hst
   obtain ⟨e, he⟩ := GlobalTheory.T.exists_analyticFrame_jetPair_isAnE E H Dw l Xo c y g ty el Φ
-  obtain ⟨wP, hw⟩ := (GlobalTheory.T.exists_normalisedIso_reading_one_analyticFrame E H Dw l Xo c y g ty el Φ).1
+  obtain ⟨wP, hw⟩ := (_root_.GlobalTheory.AnVal.PrimRd.prim_reading E H Dw l Xo c y g ty el Φ).1
   refine ⟨AnPt.chartOf Φ hst e he wP hw, rfl, rfl, ?_, ?_, ?_⟩
   · intro i
     first

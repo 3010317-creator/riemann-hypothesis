@@ -106,7 +106,7 @@ import Formalism.SharpRestriction.LevelLetterCocycles.EndomorphismIndexBound
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BoundAtTwoThreeFamily
 import Mathlib.Tactic.Linter.HaveILetI
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RestrictionCorestrictionH1fStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RestrictionCorestrictionH1f
 import Formalism.LocalRingCardinality.SpanPowerMembership.NDLocE
 import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Algebra.Order.Star.Real
@@ -318,7 +318,7 @@ theorem all_admitted : GlobalTheory.Published.BlochKatoLocal → Formalism.Galoi
   have hU := (_root_.GlobalTheory.NL.usedLocalConclusion_and_prvE D HW F Cm).1
   have h54 := _root_.GlobalTheory.localConstants_from_admitted_local_Galois_statements_alt hBK hTD hEC D HW F Cm
   have hA := (_root_.GlobalTheory.LiftAdmitted.all_admitted D HW F Cm).1
-  refine ⟨hU.1, hU.2.2.1, GlobalTheory.T.restriction_corestriction_H1f D HW F, hA.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+  refine ⟨hU.1, hU.2.2.1, _root_.GlobalTheory.res_cor_H1f D HW F, hA.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
     GlobalTheory.AdmHerrLocal.main D HW F, hU.2.2.2, archimedean_signature_matching_of_liftingTheory D HW F 23 32 32 10 h54,
     lifting_input_five_of_lifting D HW F 10 23 32 32 h54, lifting_input_six_of_lifting D HW F 10 23 32 32 h54,
     _root_.GlobalTheory.elementDenominator_adm7 D, GlobalTheory.Per.FontaineAdm.fontaine_bounds D, GlobalTheory.Per.StrictAdm.strict_adm D, _root_.GlobalTheory.Per.ResFinite.adm12_elementDenominator D⟩

@@ -5,7 +5,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUnifOf
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RefiningDegenerationDataTauCoordinateUnit
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EvenDefect
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PsiEvenCoordinatesNegDifferByUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TauCoordinateEqUnitMulPsiQuotientStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TauCoordinateEqUnitMulPsiQuotient
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AssociatedPsiCoordinatesOfTauUnits
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -123,7 +123,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] (R' : Type) [CommRing R'
   obtain ⟨k, hk, hkc⟩ := hQ (e y) (e (-y))
   obtain ⟨u₁, hu₁⟩ := _root_.GlobalTheory.RefTauCoord.main R R' Q ρ D e hρ hH.refines y (-y) k hkc x hx
   have h0 : IsPsiCoord D (y + -y) (psiCoord D 0) := by rw [add_neg_cancel]; exact psiCoord_spec D 0
-  obtain ⟨u₂, hu₂⟩ := GlobalTheory.T.tauCoordinate_eq_unit_mul_psi_quotient R' D y (-y) x _ _ _ hx h0 (psiCoord_spec D y) (psiCoord_spec D (-y))
+  obtain ⟨u₂, hu₂⟩ := _root_.GlobalTheory.TauCoordQuot.main R' D y (-y) x _ _ _ hx h0 (psiCoord_spec D y) (psiCoord_spec D (-y))
   obtain ⟨u₃, hu₃⟩ := GlobalTheory.T.psiEven_coordinates_neg_differ_by_unit R' D hE y _ _ (psiCoord_spec D y) (psiCoord_spec D (-y))
   obtain ⟨u₄, hu₄⟩ := psiCoord_zero D hB _ (psiCoord_spec D 0)
   set X : FractionRing R' := (psiCoord D y : FractionRing R') with hX

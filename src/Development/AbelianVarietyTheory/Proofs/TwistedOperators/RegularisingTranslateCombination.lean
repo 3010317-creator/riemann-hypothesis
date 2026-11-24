@@ -5,20 +5,24 @@ public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryCo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareStanding
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicHeisenbergActsByLocalSchrodinger
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGoodPlaceTranslateCombinationLatticeIndicaStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsNotRelZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGoodPlaceTranslateCombinationLatticeIndica
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHomSuppSplit
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNatMulIntegralOfIsCompact
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRouteDatumFinitePureTensorsVacuumStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitCompletelyAuxiliaryPlaceOutsideFinsetStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitCompletelyAuxiliaryPlaceOutsideFinset
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodSplitPlaceTranslationActsThroughWeil
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalWeilOperatorIsometrySchwartzBruhatStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerOperatorHeisenbergLawApplyStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmallRouteKernelEqUnitNormMulThetaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareThetaTripleHypothesesOfStandingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareTriple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareThetaTripleHypothesesOfStanding
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TestPlacesPrimeToLevel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TranslatedKernelLeThetaFunctionRouteBigVertex
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationLocalityUnitaryGroupVStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationLocalityUnitaryGroupV
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesSchwartz
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
 import Mathlib.Algebra.Order.Floor.Extended
@@ -129,7 +133,7 @@ theorem act_omB_at : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : 
       map_one' := by simp only [map_one]; exact conjU_one' _ _ _
       map_mul' := fun g g' => by simp only [map_mul]; exact conjU_mul' _ _ _ _ _ }
   have hK' : ∀ g, K' g = GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU _ (-1) h.JW₁ (K g) := fun _ => rfl
-  have hB := fun g => GlobalTheory.T.weilRepresentationLocality_unitaryGroupV' Bs Γ X om om' hTr Bs.v₁ (K' g) (hK g).1
+  have hB := fun g => _root_.GlobalTheory.WeilLocality.locality Bs Γ X om om' hTr Bs.v₁ (K' g) (hK g).1
   choose S hS using hB
   have hSplit := GlobalTheory.WeilM.IsUWeilPair.isUSplitting hTr.weil'
   have pres : ∀ p Φ, Φ ∈ GlobalTheory.WeilM.schA D.host.F _ → om' p Φ ∈ GlobalTheory.WeilM.schA D.host.F _ :=
@@ -197,7 +201,7 @@ theorem exists_datum_comb_mem_So_at : ∀ {D : D7} {T : Type} {L : LevCh D T} {s
     GlobalTheory.T.exists_routeDatum_finite_pureTensors_vacuum hL W B ρ t i j M hM Θ Θ' hΘ g₁ e Bs Γ X om om' h hTr hv
   classical
   obtain ⟨ν, α, hν, hact⟩ := act_omB_at W t i j M e Bs Γ X om om' h hTr
-  obtain ⟨zS, hz, hS⟩ := GlobalTheory.T.exists_goodPlace_translateCombination_latticeIndicator Bs Γ hTr.geo.hM' hTr.geo.lt om'
+  obtain ⟨zS, hz, hS⟩ := _root_.GlobalTheory.CombAtGood.exists_comb_translates_mem_So Bs Γ hTr.geo.hM' hTr.geo.lt om'
     (H := {k : GA D (G.V (.grid i j)) // k ∈ Set.range (emb D.sp.cm.sig (G.V (.grid i j)).gram Bs.v₁)})
     (fun k => GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU _ (-1) h.JW₁ k.1) ν α hν ι hι
     (fun g => by obtain ⟨k, hk1, hk2⟩ := hact ι hι g; exact ⟨⟨k, hk1⟩, hk2⟩) f φ φ₀ hSB hvac h₀ P Λ c hφ₀
@@ -260,8 +264,8 @@ theorem squareTriple_avoid {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G 
       GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.IsTripleOf W M t i j e Bs Γ X ∧ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsTriple Bs Γ X om om' ∧
       (∀ w ∈ locPl G t, w.under (𝓞 D.host.F) ≠ Bs.v₁) ∧ Bs.v₁ ∉ P := by
   classical
-  obtain ⟨e, Bs, Γ, X, om, om', h, hTr, -⟩ := GlobalTheory.T.squareThetaTripleHypotheses_of_standing hL W t i j hst M hM
-  obtain ⟨v, hvP, hvs, hvl, ⟨τ⟩⟩ := GlobalTheory.T.exists_splitCompletely_auxiliary_place_outside_finset (G := G) hL t (X.T ∪ P)
+  obtain ⟨e, Bs, Γ, X, om, om', h, hTr, -⟩ := _root_.GlobalTheory.FunObj.squareTriple_of_standing hL W t i j hst M hM
+  obtain ⟨v, hvP, hvs, hvl, ⟨τ⟩⟩ := _root_.GlobalTheory.GoodPlace.exists_good_place (G := G) hL t (X.T ∪ P)
   let Bs' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E := { Bs with v₁ := v, τ₁ := τ }
   refine ⟨e, Bs', Γ, X, om, om', ?_, ?_, hvl, fun h' => hvP (Finset.mem_union_right _ h')⟩
   · exact ⟨h.ψ, h.JW, h.JW₁, h.JWW, h.cart, h.α, h.β, h.μW, h.μW₁⟩

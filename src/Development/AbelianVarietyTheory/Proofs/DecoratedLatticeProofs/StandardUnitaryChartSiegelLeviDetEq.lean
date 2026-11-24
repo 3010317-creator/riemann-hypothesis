@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HalfData
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemDoublingSiegelParabolicIffChartMemSiegelUnnStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemDoublingSiegelParabolicIffChartMemSiegelUnn
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -102,7 +102,7 @@ theorem chart_aP_eq_det : ∀ (D : D7) (A : HSp D) (μ : D.host.E), IsSkew μ �
     IsChart A μ κ → ∀ (p : siegel A) (a : GL (Fin A.rank) (AE D)), blkA (mat (κ p)) = a.1 →
       aP A p = Matrix.GeneralLinearGroup.det a := by
   intro D A μ hμ κ hκ p a ha
-  have hP : κ p ∈ P D A.rank := (GlobalTheory.T.mem_doublingSiegelParabolic_iff_chart_mem_siegelUnn D A μ hμ κ hκ p).1 p.2
+  have hP : κ p ∈ P D A.rank := (_root_.GlobalTheory.StdUnn.mem_siegel_iff_chart_mem_P D A μ hμ κ hκ p).1 p.2
   have h1 := congrArg Matrix.det (chart_levi_mul hκ p hP)
   rw [ha, Matrix.det_mul, Matrix.det_mul] at h1
   have hu : IsUnit (rat (D := D) A.gram⁻¹).det := by

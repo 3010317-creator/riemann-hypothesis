@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HalfData
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchrodingerFunctionLinearThetaFunctionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchrodingerThetaEqSchwartzBruhatStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HeckeFormNSOfHeckeForm
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchrodingerFunctionLinearThetaFunctions
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchrodingerThetaEqSchwartzBruhat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -103,8 +104,8 @@ end Model
 
 theorem exists_transport_std : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A B : HSp D) (χB : (AE D)ˣ →* Circle) (omh : GA D (dblSp A) × GA D B →* Module.End ℂ (WO (dblSp A) B → ℂ)), IsWeilDatumO ψ (dblSp A) B 1 χB omh → ∀ (ν : Measure (WO A B)) (𝓨 : Set (WO A B)), IsCovolOne (ratL B A) ν 𝓨 → ∀ θ : InfFam D, IsInfFam θ → ∀ κ : GA D (dblSp A) ≃* G D A.rank, ∃ omS : G D A.rank →* Module.End ℂ (schwartzA θ B.rank A.rank), IsTransport ψ θ A B ν 𝓨 omh κ omS := by
   intro D ψ A B χB omh hW ν 𝓨 hν θ hθ κ
-  have hS := GlobalTheory.T.schrodingerTheta_eq_schwartzBruhat D ψ hW.std θ hθ A B ν 𝓨 hν
-  have hL := GlobalTheory.T.schrodingerFunction_linear_thetaFunctions D ψ hW.std A B ν 𝓨 hν
+  have hS := _root_.GlobalTheory.SchSchwartzAll.schSchwartz D ψ hW.std θ hθ A B ν 𝓨 hν
+  have hL := _root_.GlobalTheory.StdUnn.sch_linear D ψ hW.std A B ν 𝓨 hν
   obtain ⟨ρ, hρ⟩ := exists_hom_of_model (IsThetaFunO ψ (dblSp A) B) (sch ψ A B ν 𝓨) (schwartzA θ B.rank A.rank)
     (fun f f' hf hf' => ⟨(hL f f' hf hf' 0).1, (hL f f' hf hf' 0).2.2.1⟩)
     (fun c f hf => ⟨(hL f f hf hf c).2.1, (hL f f hf hf c).2.2.2⟩)

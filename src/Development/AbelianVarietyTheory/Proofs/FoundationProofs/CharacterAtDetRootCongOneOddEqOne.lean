@@ -1,7 +1,8 @@
 module
 
 public import Formalism.LocalToGlobal.ProjectiveLattices.FamilyUniformisationBasePointOrthogonalBis
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNormOneRootCongruentOddHostFieldStatement
+public import Formalism.LocalToGlobal.BesselHermitianTheta.DefsReal
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNormOneRootCongruentOddHostField
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsAdeleRingTensorEquivInfiniteProdFinite
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsAlgebraMapOfSigRFixed
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLevelSubgroup
@@ -100,7 +101,7 @@ theorem char_root_eq_one : ∀ (D : D7) (V : HSp D) (c : (AE D)ˣ →* Circle) (
     rw [map_add (f := _), hσ, add_comm]
   rw [Matrix.GeneralLinearGroup.val_det_apply] at hwe
   have hn := GlobalTheory.RecDict.det_finHom_norm V g
-  obtain ⟨y, y', hy, hy', hyy, hroot, p, hp, hpe⟩ := GlobalTheory.T.exists_normOne_root_congruent_odd_hostField D N hN _ w hw hwe hn
+  obtain ⟨y, y', hy, hy', hyy, hroot, p, hp, hpe⟩ := _root_.GlobalTheory.OddRoot.exists_root_odd D N hN _ w hw hwe hn
   obtain ⟨Y, hY1, hY2, hY3⟩ := exists_idele D y y' hyy
   have hcY : c Y = 1 := hcong Y ⟨hY1, hY2 ▸ hy, hY3 ▸ hy'⟩ ⟨p, hp, hY2 ▸ hpe⟩
   have hdet : (finHom V g).1.det = finPart D (matHom V g).1.det := ((finPart D).map_det _).symm

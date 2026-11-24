@@ -6,14 +6,19 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Exist
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdjointHalfDatumStabilizerPairMove
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugatedThetaCharactersRestrictionRamification
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCharFamIsVacVec
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdeleCharRestrictLocalUnitsResidueCharStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnrOffOne
+import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdeleCharRestrictLocalUnitsResidueChar
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnramifiedAtPlaceIdempotentOfHeckeCharUnramifiStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersUnramifiedOffLevelPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHomLatticeIffFrameStabilizerActMemStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerIntertwinerSchwartzBruhatIsThetaStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnramifiedAtPlaceIdempotentOfHeckeCharUnramifi
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersUnramifiedOffLevelPlaces
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHomLatticeIffFrameStabilizerActMem
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerIntertwinerSchwartzBruhatIsTheta
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.StepVectorLiftPairFlagLevelRealizedChain
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilRepThetaDatumHalfEqSmulStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilRepThetaDatumHalfEqSmul
 import Formalism.LocalToGlobal.UnitaryNorms.CharUniq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -240,11 +245,11 @@ theorem zeta_law : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} 
         GlobalTheory.StepLaw.UnrOff (cμ * cη⁻¹) (R.Pg ∪ R.Q t)) := by
     obtain ⟨μ', η', hμ, hη, ecμ, ecη, hres⟩ := hch
     obtain ⟨-, p1, p2, p3⟩ :=
-      GlobalTheory.T.levelCharacters_unramified_off_levelPlaces D T R.toLevCh A.μ0 hL t
+      _root_.GlobalTheory.levCh_unramified_places D T R.toLevCh A.μ0 hL t
     have uη : ∀ PP, η'.UnrAt PP :=
       fun PP => GlobalTheory.ConjSplitChars.unrAt_conj hη (R.C.isEta.unr PP)
     have uoη : GlobalTheory.StepLaw.UnrOff cη (R.Pg ∪ R.Q t) := fun v ε hε _ =>
-      GlobalTheory.T.isUnramifiedAtPlaceIdempotent_of_heckeChar_unramified_above D cη η' ecη v ε hε
+      _root_.GlobalTheory.UnramOver.unramAt_of_unrAt D cη η' ecη v ε hε
         (fun PP _ => uη PP)
     constructor
     · intro PP hPP
@@ -254,13 +259,13 @@ theorem zeta_law : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} 
         rcases hP with hP | hP
         · exact ((R.C.isMu0 i).tame PP).mul ((p1 PP hP).levelLe 1)
         · exact ((p2 PP hP i).levelLe 1).mul (hL.xi_tame t PP)
-      have rμ := (GlobalTheory.T.ideleChar_restrict_localUnits_residueChar D cμ μ' ecμ PP).1
+      have rμ := (_root_.GlobalTheory.ResLoc.resAt_of_chrEq D cμ μ' ecμ PP).1
         (m PP) tμ (hres PP hP)
-      have rη := ((GlobalTheory.T.ideleChar_restrict_localUnits_residueChar D cη η' ecη PP).2 (uη PP)).inv
+      have rη := ((_root_.GlobalTheory.ResLoc.resAt_of_chrEq D cη η' ecη PP).2 (uη PP)).inv
       exact ⟨rμ, by simpa only [inv_one, mul_one] using rμ.mul rη⟩
     · have uoμ : GlobalTheory.StepLaw.UnrOff cμ (R.Pg ∪ R.Q t) := by
         intro v ε hε hv
-        apply GlobalTheory.T.isUnramifiedAtPlaceIdempotent_of_heckeChar_unramified_above D cμ μ' ecμ v ε hε
+        apply _root_.GlobalTheory.UnramOver.unramAt_of_unrAt D cμ μ' ecμ v ε hε
         intro PP hPP
         have haway := p3 PP (fun P' hP => hPP ▸ hv P' (Finset.mem_union.2 hP))
         exact GlobalTheory.ConjSplitChars.unrAt_conj hμ ((haway.2 i).mul haway.1)
@@ -277,13 +282,13 @@ theorem zeta_law : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} 
   have hee := GlobalTheory.PlaceVec.idemSum_mul_self he
   have hcc : cA D e * cA D e = cA D e := by rw [← RingHom.map_mul, hee]
   have hinf := GlobalTheory.PlaceVec.infPart_cA (GlobalTheory.PlaceVec.idemSum_infPart he)
-  have hfin := GlobalTheory.T.weilRep_theta_datum_half_eq_smul D R.ψ (Vc D i) (Wc D i) cμ (cμ * cη⁻¹) ω hW (cA D e) _ f₀ _ f
-    (GlobalTheory.T.schrodingerIntertwiner_schwartzBruhat_isTheta D R.ψ hW.std (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) dV dW (cA D e) hcc hinf f₀ hvac.2.theta) hth 1 k
-    (GlobalTheory.T.mem_homLattice_iff_frameStabilizer_act_mem D (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (R.βV i) (R.βW i) dV dW fV fW 1 k sV sW) _ _ (Units.ne_zero _)
+  have hfin := _root_.GlobalTheory.ThetaMove.om_theta_eq_smul D R.ψ (Vc D i) (Wc D i) cμ (cμ * cη⁻¹) ω hW (cA D e) _ f₀ _ f
+    (_root_.GlobalTheory.SchrTheta.isTheta_placeModel D R.ψ hW.std (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) dV dW (cA D e) hcc hinf f₀ hvac.2.theta) hth 1 k
+    (_root_.GlobalTheory.StabLatInv.mem_latO_iff_actO_mem D (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (R.βV i) (R.βW i) dV dW fV fW 1 k sV sW) _ _ (Units.ne_zero _)
     hvac1 hlaw
   rw [hfin]
   congr 1
-  have hd : Disjoint (R.datWp i P).Pg (R.Q t) := (GlobalTheory.T.levelCharacters_unramified_off_levelPlaces D T R.toLevCh A.μ0 hL t).1
+  have hd : Disjoint (R.datWp i P).Pg (R.Q t) := (_root_.GlobalTheory.levCh_unramified_places D T R.toLevCh A.μ0 hL t).1
   have hone : ∀ PP, redFn (R.βV i) PP (finE (Vc D i) 1) = 1 := fun PP => by rw [map_one, redFn_one]
   unfold levChi levFn
   rw [extendOne_of_mem _ hkL.2]

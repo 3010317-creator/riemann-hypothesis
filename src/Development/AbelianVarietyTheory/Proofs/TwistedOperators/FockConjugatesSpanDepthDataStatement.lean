@@ -17,12 +17,12 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRe
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugateHalfCommutantActsOnCosetVectorByScalar
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemRangeOfOneTmulMem
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDualStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergIsotropicFixesVacuum
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsTameFinitePlaceHermitianAllStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsTameFinitePlaceHermitianAll
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitProductRescaleDisjointFinsets
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
-public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergVacuumCommutantPreservesLatticeVacua
 public import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.StarPurelyImaginaryEqNeg
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InfPartAlgebraMapLiftV
@@ -455,7 +455,7 @@ theorem heisO_offPart_vac : All fun {D} _ _ _ {G} W _ => ∀ i, i < D.R.m → �
   intro D _ T L μ0 hL sc G W M _ i hi e he w hw hinf
   classical
   obtain ⟨hsdS, hsdT⟩ := GlobalTheory.CosetRow.selfDual_chi hL G i hi
-  obtain ⟨h1, -, h3⟩ := GlobalTheory.T.self_dual_lattice_pairing_dual D W.ψ _ _ (G.latS (.chi i 0)) (G.latT (.chi i 0)) W.ψ_std hsdS hsdT
+  obtain ⟨h1, -, h3⟩ := _root_.GlobalTheory.LatVac.latO_selfDual_approx_sign D W.ψ _ _ (G.latS (.chi i 0)) (G.latT (.chi i 0)) W.ψ_std hsdS hsdT
   have hlat := (W.vac_is i hi).2.lat
   have hee : e * e = e := GlobalTheory.PlaceDatum.idemSum_mul_self he
   have hec : e * cA D e = 0 := he.2
@@ -494,7 +494,7 @@ theorem heisO_offPart_vac : All fun {D} _ _ _ {G} W _ => ∀ i, i < D.R.m → �
     have hch : ∀ x, x ∈ hQ.toFinset → ∃ e₁ ε, IsSplitIdem D e₁ ∧ IsPlaceIdem D x ε ∧
         e₁ + cA D e₁ = algebraMap (AF D.host.F) (AE D) ε := by
       intro x hx
-      rcases (GlobalTheory.T.isTameFinitePlaceHermitian_all D x).2 with h | h
+      rcases (_root_.GlobalTheory.FinPl.TamePlaces.tame D x).2 with h | h
       · exact absurd ((hmemQ x).1 hx).2 h
       · exact h
     choose! es εs hes hεs hsum using hch

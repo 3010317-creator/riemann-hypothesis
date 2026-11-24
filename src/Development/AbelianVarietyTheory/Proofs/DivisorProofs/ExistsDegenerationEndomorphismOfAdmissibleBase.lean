@@ -16,7 +16,7 @@ import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsGenera
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.GtCoordEndRatioDescendsStatement
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LocGenOfThickenings
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.RosatiAdjointAbelianPartAndClassifyingMapLinear
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationEndomorphismCharacterMapConstantStatement
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationEndomorphismCharacterMapConstant
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationPolarisedAbelianSchemesIso
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -80,7 +80,7 @@ theorem exists_degenerationEndomorphism_of_admissibleBase : ∀ (R : Type) [Comm
   have hC := hR.2.2.2
   have hB := D.toPre.P.isLB
   obtain ⟨aB, haB, hq⟩ := exists_abelian hL hR U.toUnifPre aG
-  obtain ⟨h, hh⟩ := T.uniformisation_endomorphism_character_map_constant hL R I hR D A G U.toUnifPre aG hG
+  obtain ⟨h, hh⟩ := _root_.GlobalTheory.unifPre_end_character_const hL R I hR D A G U.toUnifPre aG hG
   choose t ht hi using hh
   choose v hv vv using fun χ e => _root_.GlobalTheory.gtCoord_end_ratio_descends R I D.toPre e G (U.gt e) ((Over.pullback (thick R I e)).map aG) aB h (t e)
     inferInstance (ht e) (hi e) (hq e) χ

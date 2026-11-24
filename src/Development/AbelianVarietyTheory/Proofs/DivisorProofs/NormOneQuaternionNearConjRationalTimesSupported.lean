@@ -9,7 +9,7 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFor
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FiniteResidueFieldAdicCompletionIntegers
 public import Mathlib.NumberTheory.NumberField.Completion.InfinitePlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceOpen
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquaringOpenAtOneOfCompleteTwoNeZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquaringOpenAtOneOfCompleteTwoNeZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveStrongApproximationAvoidingFinset
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -976,7 +976,7 @@ theorem sqOpen_and_nhdsNE_zero_neBot_adicCompletion :
     have h' : algebraMap F (v.adicCompletion F) 2 = algebraMap F (v.adicCompletion F) 0 := by
       rw [map_ofNat, map_zero]; exact h
     exact two_ne_zero ((algebraMap F (v.adicCompletion F)).injective h')
-  refine ⟨GlobalTheory.T.squaringOpenAtOne_of_complete_two_ne_zero (v.adicCompletion F) h2, ?_⟩
+  refine ⟨_root_.GlobalTheory.sqOpen_of_two_ne_zero (v.adicCompletion F) h2, ?_⟩
   infer_instance
 
 end GlobalTheory.QSA
@@ -1011,7 +1011,7 @@ theorem traceOpen_inf (F : Type) [Field F] [NumberField F] (a b : F) (ha : a ≠
   have h2 : (2 : w.Completion) ≠ 0 := by
     have := (map_ne_zero (algebraMap F w.Completion)).2 (two_ne_zero : (2 : F) ≠ 0)
     rwa [map_ofNat] at this
-  exact traceOpen_field _ h2 (_root_.GlobalTheory.QSA.infinitePlace_completion_nhdsNE_neBot F w) (GlobalTheory.T.squaringOpenAtOne_of_complete_two_ne_zero _ h2) _ _ ((map_ne_zero (algebraMap F w.Completion)).2 ha)
+  exact traceOpen_field _ h2 (_root_.GlobalTheory.QSA.infinitePlace_completion_nhdsNE_neBot F w) (_root_.GlobalTheory.sqOpen_of_two_ne_zero _ h2) _ _ ((map_ne_zero (algebraMap F w.Completion)).2 ha)
 
 theorem traceOpen_fin (F : Type) [Field F] [NumberField F] (a b : F) (ha : a ≠ 0) (hb : b ≠ 0) :
     TraceOpen (FiniteAdeleRing (𝓞 F) F) (algebraMap F (FiniteAdeleRing (𝓞 F) F) a)

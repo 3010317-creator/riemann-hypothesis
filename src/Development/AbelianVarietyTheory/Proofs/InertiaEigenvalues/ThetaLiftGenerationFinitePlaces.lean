@@ -20,7 +20,7 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHype
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsCompactParahoricLevelAndContainsLifts
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegrableOnDownwardThetaLiftIntegrandStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegrableOnDownwardThetaLiftIntegrand
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaFunctionLevelTypeMemSpanTranslatesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -831,7 +831,7 @@ theorem genFin : GlobalTheory.Hk3.HoweUnram → ∀ (D : D7) (G : Type) [Group G
     fun p φ hφ => (hP i t).datum.om_pres p φ hφ
   let Pr : (WO (Vc D i) (Wc D i) → ℂ) → Prop := fun φ =>
     IsThetaFunO R.ψ (Vc D i) (Wc D i) φ ∧ ∀ (l : (R.cV i).W →ₗ[ℂ] ℂ) (g : GA D (Wc D i)), downInt R i t y φ l g = 0
-  have hint := GlobalTheory.T.integrableOn_downwardThetaLift_integrand D G Pl0 T A Ks R F hG hP i t y
+  have hint := _root_.GlobalTheory.DownLift.GenFinite.integrableOn_downIntegrand D G Pl0 T A Ks R F hG hP i t y
   have hadd : ∀ φ φ', Pr φ → Pr φ' → Pr (φ + φ') := by
     intro φ φ' h1 h2
     refine ⟨theta_add h1.1 h2.1, fun l g => ?_⟩

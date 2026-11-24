@@ -17,7 +17,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtensionOfL
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinPartConjMem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicCuspSectionsLeSpanAlgebraicCuspForms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KapTopLastPosRun
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterEmbeddingCompatStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.FWExist
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterEmbeddingCompat
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrimeDvdAbsNormHalfDifferent
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TensorMapDescent
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChosenPlacesAdmissibleGoodSetup
@@ -92,14 +93,17 @@ import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.CocycleRightZeroThd
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.OnbPerp
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNormOneRootCongruentOddHostFieldStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNormOneRootCongruentOddHostField
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLevelSubgroup
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PredMemGamRanks
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CuspSubsetBaseForms
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsOpenCongruenceIdelesAndRealFiniteParts
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TameHeckeCharTrivialOnFiniteUnitsCongOne
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodBaseDataWeightEqLiftCoeffModuleWeightStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunctionStatement
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdmissibleEmptyOfGood
+import Formalism.LocalToGlobal.IndefiniteReal.ThPinsR
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodBaseDataWeightEqLiftCoeffModuleWeight
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TranslateMemCoefLatFn
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunction
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompletelySplitPrimeHostPlaceProperties
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryEqRealMulFiniteSplit
@@ -339,7 +343,7 @@ theorem char_root_eq_one' (V : HSp D) {A : Type} [CommGroup A] (c : (AE D)ˣ →
     rw [map_add (f := _), hσ, add_comm]
   rw [Matrix.GeneralLinearGroup.val_det_apply] at hwe
   have hn := GlobalTheory.RecDict.det_finHom_norm V g
-  obtain ⟨y, y', hy, hy', hyy, hroot, p, hp, hpe⟩ := GlobalTheory.T.exists_normOne_root_congruent_odd_hostField D N hN _ w hw hwe hn
+  obtain ⟨y, y', hy, hy', hyy, hroot, p, hp, hpe⟩ := _root_.GlobalTheory.OddRoot.exists_root_odd D N hN _ w hw hwe hn
   obtain ⟨Y, hY1, hY2, hY3⟩ := GlobalTheory.DetRootCong.exists_idele D y y' hyy
   have hcY : c Y = 1 := hcong Y ⟨hY1, hY2 ▸ hy, hY3 ▸ hy'⟩ ⟨p, hp, hY2 ▸ hpe⟩
   have hdet : (finHom V g).1.det = finPart D (matHom V g).1.det := ((finPart D).map_det _).symm
@@ -965,9 +969,9 @@ theorem ratUniv_of_reading (hRF : GlobalTheory.NT.RayField) (hV : T.V ((j : ℕ)
     have h2 := Formalism.BasicNotions.sig_sum _ hB.sigOK (tauE D τ)
     rw [← h1] at h2
     exact h2.le
-  have hinj := GlobalTheory.T.harmonic_polynomial_eq_zero_of_function D _ _ _ (ρ.B i j b).F.BS hB.wt hm
+  have hinj := _root_.GlobalTheory.ExportSeries.HarmInj.harm_inj D _ _ _ (ρ.B i j b).F.BS hB.wt hm
   have hlam : (ρ.B i j b).w.lam = lamV D j :=
-    GlobalTheory.T.good_baseData_weight_eq_lift_coeff_module_weight D T0 Rl.toLevCh A3.A.μ0 j _ hcore.lev hB (hpin.mu0 i j b) (hpin.ap i j b) (hpin.am i j b)
+    _root_.GlobalTheory.BaseLiftWeight.lam_eq D T0 Rl.toLevCh A3.A.μ0 j _ hcore.lev hB (hpin.mu0 i j b) (hpin.ap i j b) (hpin.am i j b)
   refine mem_range_of_small _ (xiLin ρ D.nexp i j b Q M h a) hinj (fun F => ?_) (fun P' hP' F hF => ?_) hd.mem
   · obtain ⟨v, -, hv⟩ := exists_vec_of_small j hlam F
     obtain ⟨u', w₀, hu', -, hw⟩ := IsChosenExtremalVector.io _ (hti.hv₀ j _) hio
@@ -1057,7 +1061,7 @@ theorem ratUniv_of_reading (hRF : GlobalTheory.NT.RayField) (hV : T.V ((j : ℕ)
     exact hnV
   obtain ⟨m, xs, f, he⟩ := exists_sum_of_isRat hT hlast hn hG.1 (hG.2.1 _ (dom_wtA _)) (mu_mul_level hcore.lev hti j) hsum
     fun k hk g => by
-      have hlift := (GlobalTheory.T.level_character_embedding_compat T Rl.toRealDat κ v₀ hcore.lev hti hpb j T.σ₀ T.toCore.good_σ₀ hV
+      have hlift := (_root_.GlobalTheory.LiftLevel.isLift_one_iff_mem_level T Rl.toRealDat κ v₀ hcore.lev hti hpb j T.σ₀ T.toCore.good_σ₀ hV
         (cast (congrArg (GA D) hV) k)).2 (by rw [cast_cast, cast_eq]; exact hk)
       rw [Pi.smul_apply, Pi.smul_apply]
       refine congrArg _ (DualType.xiCoef_mul_right_of_red hB (D.sp.V_sig _) hgood hadm (Base.isAdmFam_univFam _ _ _) hω

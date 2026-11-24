@@ -17,7 +17,8 @@ public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Development.AbelianVarietyTheory.PublishedTheorems.RelativeAmpleness.RelAmpleAndKTrivIff
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.NonemptyPerfectSectionsComplexOfSmoothProjStatement
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.NonemptyPerfectSectionsComplexOfSmoothProj
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CyclicIdeal
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FlatKernelPolarisationCosetsOverDVR
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.InKIffTrivialTwist
@@ -50,7 +51,7 @@ public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.P
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.IsRegularOfFnOfRingKrullDimQuotientAddLe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmpleKernelFiniteSubgroupSchemeStatement
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExactDualMapOfExactFibresOfIsRegularLocalRing
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.StalkOfSmoothLocalStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.VeryAmpleCompactQuasiSeparatedAffineCharts
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsProjByBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
@@ -102,7 +103,6 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.CommAlgFunctorCobou
 import Development.AbelianVarietyTheory.Definitions.Divisors.OneFormMapEqKaehlerDifferentialMap
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsIsoOfFlatOfClosedPoint
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
 import Mathlib.Topology.Sheaves.Presheaf
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.QuadTie
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
@@ -353,7 +353,7 @@ theorem exists_ideal_complex_cech (hG : GlobalFnsSt) {V : Type} [CommRing V] (B 
       refine ⟨Over.homMk y ?_, Over.OverMorphism.ext hy⟩
       rw [← Over.w j, ← Category.assoc, hy]
       exact Category.assoc _ _ _
-  obtain ⟨P⟩ := GlobalTheory.T.nonempty_perfectSectionsComplex_of_smooth_proj A _ B'.hom hB'.smooth hp' F hF
+  obtain ⟨P⟩ := _root_.GlobalTheory.AbLaw.nonempty_perf_of_smooth_isProjBy A _ B'.hom hB'.smooth hp' F hF
   have := hB'.proper
   have := hB'.geomConnected
   have q₀ := IsPullback.of_hasPullback B'.hom (Spec.map (CommRingCat.ofHom g₀))
@@ -1365,7 +1365,7 @@ theorem cechLB_triv_finrank_one_two : ∀ (K : Type) [Field K] [IsAlgClosed K] (
     rcases eq_or_ne a 0 with rfl | h
     · simp at ha
     · exact h.isUnit⟩
-  obtain ⟨-, -, hreg, hdim⟩ := GlobalTheory.T.stalk_regular_flat_of_smooth K A.left A.hom g hsm _ (isClosed_origin K A p) σ hσ hloc
+  obtain ⟨-, -, hreg, hdim⟩ := _root_.GlobalTheory.StabFlat.stalk_of_smooth_local K A.left A.hom g hsm _ (isClosed_origin K A p) σ hσ hloc
   have hbot : (IsLocalRing.maximalIdeal K).map σ = ⊥ := by
     rw [IsLocalRing.maximalIdeal_eq_bot, Ideal.map_bot]
   let e := (Ideal.quotEquivOfEq hbot).trans (RingEquiv.quotientBot (A.left.presheaf.stalk ((η[A]).left.base p)))

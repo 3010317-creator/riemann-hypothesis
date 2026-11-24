@@ -9,7 +9,7 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.Transpose
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsThetaSubSelf
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ArchimedeanSupportedSmulTransposeGramFiniteSubOn
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsAdelicUnitaryProdLocalPointsMulLatticeStabStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsAdelicUnitaryProdLocalPointsMulLatticeStab
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SphericalFixesPureVacuumVectors
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsOneParameterSubgroupTransposeGramRealPlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
@@ -253,7 +253,7 @@ theorem kappa_stabilized_of_isStabilizedW : _root_.GlobalTheory.FunPr.ThetaLocal
       obtain ⟨T, hT'⟩ := hx
       exact ⟨T, fun S hTS hS₀S k hk1 hk2 hk3 hk4 => by rw [map_smul, hT' S hTS hS₀S k hk1 hk2 hk3 hk4]⟩
   obtain ⟨T, hTfix⟩ := hfix Φ (hN.1 hΦ)
-  obtain ⟨S, l, k, hTS, hl, hprod, hkinf, hkS, hkV, hkV'⟩ := GlobalTheory.T.exists_adelicUnitary_prod_localPoints_mul_latticeStabilizer _ _ _ Bs _ _ Γ hT.geo _ hinf (T ∪ S₀)
+  obtain ⟨S, l, k, hTS, hl, hprod, hkinf, hkS, hkV, hkV'⟩ := _root_.GlobalTheory.FinDecomp.exists_prod_local_mul_latStab _ _ _ Bs _ _ Γ hT.geo _ hinf (T ∪ S₀)
   have hk : om (1, k) Φ = Φ :=
     hTfix S (Finset.union_subset_left hTS) (Finset.union_subset_right hTS) k hkinf hkS hkV hkV'
   have split' : ∀ (x y : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.UA D.sp.cm.sig Γ.W.J) Ψ, om (1, x * y) Ψ = om (1, x) (om (1, y) Ψ) := by

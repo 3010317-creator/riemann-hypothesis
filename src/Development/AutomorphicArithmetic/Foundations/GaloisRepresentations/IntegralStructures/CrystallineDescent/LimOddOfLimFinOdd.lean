@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.CrystallineDescent.PatchOneAlt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyLocalIntegralPointsMemOpenSubgroupDefiStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyLocalIntegralPointsMemOpenSubgroupDefi
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AutomorphicFormsFiniteGL
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalGLLocalComponentsEventuallySatake
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InfiniteQuadraticCMGoodBaseChangeSplit
@@ -20,8 +21,8 @@ public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepres
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsPlaceNormVEq
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.InducedEmbeddingExtends
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GamGalEqOfPlaceIso
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PlaceOverTransportRingIsoStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PlaceOverTransportRingIsoSymmStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Langlands
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PlaceOverTransportRingIsoSymm
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FrobeniusAllOfGood
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.WdRelOfFrobSS
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AbsNormPrimeIffInertiaDegEqOneAndFiniteRamified
@@ -100,7 +101,9 @@ import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.PolyApproxZer
 import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.RestrictsSelf
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivOfRangeEq
 import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasExponentZeroIff
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PolarizedPairSatakeParameterConjugatePlaceStatement
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsSpanFormsNeBot
+import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.BcDefs
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PolarizedPairSatakeParameterConjugatePlace
 import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.PolOfSatOfThetaSat
 import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.ThetaSatakeParametersInverse
 import Mathlib.Tactic.Polynomial.Basic
@@ -153,7 +156,7 @@ theorem UpperTheory.Gal.Int.Core.autT_holds : UpperTheory.Gal.Int.Core.AutT := b
         rw [← Module.End.mul_apply, ← map_mul, Subgroup.coe_inv, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hLo : IsOpen (L : Set (finU (E := E) (n := a))) := (hU.aut φ hφ).level
   have hunr : ∀ᶠ w in Filter.cofinite, IsUnramU U w := by
-    filter_upwards [GlobalTheory.T.eventually_localIntegralPoints_mem_openSubgroup_definiteUnitary E a L hLo] with w hw
+    filter_upwards [_root_.GlobalTheory.BCT.GlobLev.eventually_locU_mem E a L hLo] with w hw
     exact ⟨φ, hφ, hφ0, fun x hx hxK => hw x hx hxK hx.1⟩
   have hfin : {w | ¬ IsUnramU U w}.Finite := hunr
   refine ⟨hfin.toFinset.filter (fun w => ¬ IsSplitAt w), fun w hw => (Finset.mem_filter.1 hw).2, hU, fun w hs hT => ?_⟩
@@ -318,7 +321,7 @@ theorem UpperTheory.Gal.Int.Core.csdLift_holds :
   refine ⟨hreg', ⟨fun v => by rw [locInf_pow, quadChar_locInf], ?_⟩, trivial⟩
   rw [GlobalTheory.CsdLift.compNorm_quadChar_pow]
   refine UpperTheory.polOfSat_of_thetaSat UpperTheory.theta_satake_parameters_inverse hJ hG M a ha P 1 ?_
-  have hsd := GlobalTheory.T.polarizedPair_satakeParameter_conjugatePlace hF E a π _ hpol
+  have hsd := _root_.GlobalTheory.PolarizedSat.hasSat_conjPlace hF E a π _ hpol
   have hun := GlobalTheory.CuspRep.UnrSat.eventually_hasSatGL_locRep hF E a π
   filter_upwards [(GlobalTheory.LiftPolar.tendsto_under (K := E) (L := M)).eventually (hsd.and hun)] with w ⟨hs, B, hB⟩
   rw [GlobalTheory.CsdLift.compNorm_quadChar_pow] at hs
@@ -444,9 +447,9 @@ theorem UpperTheory.Gal.Int.Core.downPhi_holds : SphDown .phi := by
     ext1
     exact this.over.symm
   obtain ⟨c, hc, hdegc, hq, -⟩ :=
-    GlobalTheory.T.place_over_transport_ring_iso E Ω A w h Q.K Ω A w' h' (RingEquiv.refl Ω) (algebraMap E Q.K) i hi
+    _root_.GlobalTheory.WeilTransport.weil_equiv E Ω A w h Q.K Ω A w' h' (RingEquiv.refl Ω) (algebraMap E Q.K) i hi
   obtain ⟨S, hS, -, -, -, -, hTw, -⟩ :=
-    GlobalTheory.T.place_over_transport_ring_iso_symm E Ω A w h Q.K Ω A w' h' (RingEquiv.refl Ω) (algebraMap E Q.K) i hi
+    _root_.GlobalTheory.WDTransport.exists_equiv_wd E Ω A w h Q.K Ω A w' h' (RingEquiv.refl Ω) (algebraMap E Q.K) i hi
   have hB' : (CG.mk P).HasSat w' B := by
     have := hP.sat w' 1 B (by rw [pow_one, hunder, hq]) (by rw [hunder]; exact hB)
     simpa using this
@@ -1369,7 +1372,7 @@ theorem UpperTheory.Gal.TP.Sub.satAE_holds :
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul, Subgroup.coe_inv, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hLo : IsOpen (L : Set (finU (E := E) (n := a))) := (hU.aut φ hφ).level
-  filter_upwards [GlobalTheory.T.eventually_localIntegralPoints_mem_openSubgroup_definiteUnitary E a L hLo] with w hw hs
+  filter_upwards [_root_.GlobalTheory.BCT.GlobLev.eventually_locU_mem E a L hLo] with w hw hs
   obtain ⟨hJo, hJc⟩ := GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL w a
   obtain ⟨σ, hσ, v, hv0, hv⟩ := _root_.GlobalTheory.SplitEigen.exists_locComp_eigen E a U hU w hs (GlobalTheory.LFun.KGL w (n := a)) hJo hJc 1 φ hφ hφ0
     (fun x hx hxK => by

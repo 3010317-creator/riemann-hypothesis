@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatioCover
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfValEqZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRegularFderivConstantVectorUniformisedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationPreimageValueRulesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationPreimageValueRules
 public import ReciprocityTheory.AnalyticForms.AnalyticCharts.Osgood
 public import Mathlib.RingTheory.Spectrum.Prime.FreeLocus
 public import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
@@ -140,7 +140,7 @@ theorem exists_commuting_derivations_of_values {R : Type} [CommRing R] [Algebra 
 
 theorem exists_commuting_coordinate_derivations : ∀ (A : Over (Sp ℂ)) [GrpObj A] (g : ℕ) (L : LB A.left) (u : HolUnif A L g), IsAbelianScheme A → ∀ (U : A.left.Opens), ∃ d : Fin g → Derivation ℂ (Sec (str A) U) (Sec (str A) U), (∀ a b x, d a (d b x) = d b (d a x)) ∧ ∀ a x, ∀ z ∈ pre u.ex U, val u.ex U (d a x) z = fderiv ℂ (val u.ex U x) z (Pi.single a 1) := by
   intro A _ g L u hA U
-  obtain ⟨h1, h2, -, -, -, -, -, -, -, h10, -⟩ := GlobalTheory.T.uniformisation_preimage_value_rules A g L u
+  obtain ⟨h1, h2, -, -, -, -, -, -, -, h10, -⟩ := _root_.GlobalTheory.CechPer.pre_val_rules A g L u
   exact exists_commuting_derivations_of_values (R := Sec (str A) U) (pre u.ex U) (val u.ex U) (h1 U) (h2 U) (h10 U)
     (GlobalTheory.T.eq_zero_of_val_eq_zero_abelian A g L u hA U) (GlobalTheory.T.isRegular_fderiv_constant_vector_uniformised A g L u hA U)
 
@@ -397,7 +397,7 @@ theorem surjective_pi_liftKaehler_coord : ∀ (A : Over (Sp ℂ)) [GrpObj A] (g 
   intro A _ g L u hA U d hd
   refine surjective_pi_liftKaehler_of_pointwise d fun m hm => ?_
   obtain ⟨z, hz, hm'⟩ := GlobalTheory.T.maximalIdeal_affineOpen_eq_vanishing_uniformisationPoint A g L u hA U.1 U.2 m hm
-  obtain ⟨e, he⟩ := (GlobalTheory.T.uniformisation_preimage_value_rules A g L u).2.2.2.2.2.2.2.2.2.1 U.1 z hz
+  obtain ⟨e, he⟩ := (_root_.GlobalTheory.CechPer.pre_val_rules A g L u).2.2.2.2.2.2.2.2.2.1 U.1 z hz
   refine ⟨e, fun b hb => (hm' b).2 ((he b).trans hb), fun w hw => ?_⟩
   refine GlobalTheory.T.eq_zero_of_fderiv_regular_functions_affineOpen A g L u hA U.1 U.2 z hz w fun b => ?_
   rw [← hw b]
@@ -467,7 +467,7 @@ theorem kaehler_frame : ∀ (A : Over (Sp ℂ)) [GrpObj A] (g : ℕ) (L : LB A.l
       (fun h => absurd (Finset.mem_univ c) h), Pi.single_eq_same, hΦa]
     exact (_root_.mul_one _).symm
   · intro a ξ z hz
-    obtain ⟨ev, hev⟩ := (GlobalTheory.T.uniformisation_preimage_value_rules A g L u).2.2.2.2.2.2.2.2.2.1 U.1 z hz
+    obtain ⟨ev, hev⟩ := (_root_.GlobalTheory.CechPer.pre_val_rules A g L u).2.2.2.2.2.2.2.2.2.1 U.1 z hz
     obtain ⟨_, hsm', hD⟩ := GlobalTheory.T.uniformisedOneFormEvaluation_rules A g L u U.1 z hz
     have hmem : ξ ∈ Submodule.span (Sec (str A) U.1) (Set.range (KaehlerDifferential.D ℂ (Sec (str A) U.1))) := by
       rw [KaehlerDifferential.span_range_derivation]; trivial

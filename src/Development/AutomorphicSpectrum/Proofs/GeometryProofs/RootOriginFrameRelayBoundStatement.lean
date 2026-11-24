@@ -2,7 +2,7 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SpecFracExt
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ConjEmbRtOfNe
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianMapLieModelFieldPointStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianMapLieModelFieldPoint
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsFrameVec
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabPull
@@ -198,7 +198,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Rec.FinRd.Roots.LieBasis.indep_of_frame 
   subst hr
   rw [Fintype.linearIndependent_iff]
   intro a ha
-  have comb := GlobalTheory.T.abelian_map_lie_model_field_point E H Dw l Xo c O β Y X tX f m F g EC MC y hy (Dw.mult τ) (y.u τ) (y.tan τ) u hu
+  have comb := _root_.GlobalTheory.CompanionTheory.Ar.Rec.FinRd.Roots.LieBasis.comb_val E H Dw l Xo c O β Y X tX f m F g EC MC y hy (Dw.mult τ) (y.u τ) (y.tan τ) u hu
   obtain ⟨w, hc⟩ := FinRd.Roots.LieBasis.exists_comb y.x (y.u τ) (y.tan τ) a
   obtain ⟨w₁, h1⟩ := FinRd.Roots.LieBasis.exists_comb y.x (y.u τ) (y.tan τ) (0 : Fin (Dw.mult τ) → F)
   obtain ⟨hw, ew⟩ := comb a w hc

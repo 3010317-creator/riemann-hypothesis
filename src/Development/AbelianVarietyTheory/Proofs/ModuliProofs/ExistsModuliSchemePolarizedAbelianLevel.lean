@@ -57,7 +57,10 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.NonemptyModul
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TheoremOfCubePolAbelianScheme
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaUniformisationComplexAbelianVarieties
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHoldStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.OLinBaseChangeSt
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHold
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -1588,7 +1591,7 @@ open scoped CategoryTheory.Obj
 namespace GlobalTheory.Moduli
 
 theorem moduli_scheme_exists : N1ab :=
-  _root_.GlobalTheory.ZM.moduli_nonempty_all_levels GlobalTheory.T.all_six_abelian_scheme_laws_hold.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.1 _root_.GlobalTheory.Moduli.cube_of_isLB _root_.GlobalTheory.thetaUnifAV_closed
+  _root_.GlobalTheory.ZM.moduli_nonempty_all_levels _root_.GlobalTheory.allSixLaws.1 _root_.GlobalTheory.allSixLaws.2.1 _root_.GlobalTheory.Moduli.cube_of_isLB _root_.GlobalTheory.thetaUnifAV_closed
 
 end GlobalTheory.Moduli
 end -- clump:auto

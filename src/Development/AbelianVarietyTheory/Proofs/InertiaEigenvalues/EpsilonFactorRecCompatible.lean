@@ -6,7 +6,8 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomolog
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.StandardCosocleGL
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SphericalSatakeEqLanglandsQuotientUnramifiedStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SphericalSatakeEqLanglandsQuotientUnramified
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Mono0OfLpDimEqOne
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsSteinberg
 import Mathlib.Algebra.Order.Floor.Extended
@@ -105,7 +106,7 @@ theorem sat_of_lawsLit : LanglandsExhaustionGL → LanglandsMultisegments → St
     HasSatake x.rep α → rc x = WD.mk (WDRep.diag h fun i => (α i)⁻¹) := by
   intro h1 h2 h3 h4 h5 h6 E Ω _ _ _ _ _ A w h a ha e rc H x α hα
   haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
-  have hL := GlobalTheory.T.spherical_satake_eq_langlandsQuotient_unramified h1 h2 h3 h4 h5 h6 (w.adicCompletion E) x α hα
+  have hL := _root_.GlobalTheory.LocLanglands.SatakeL.isL_single_unrChar h1 h2 h3 h4 h5 h6 (w.adicCompletion E) x α hα
   rw [Fin.univ_val_map] at hL
   rw [H.langlands _ x hL, segSum, List.map_ofFn, ← sumList_ofFn_diag]
   congr 1

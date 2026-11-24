@@ -3,11 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.QuasiOfFam
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergIntegralFourierBesselBasePointEqPairin
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.KerBF
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsRationalOrbitPointEqBesselBasePointStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaIntegrandLocallyUniformMajorantStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierBesselThetaCharIntegrandLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinatesOfThetaFunctionAreThetaFunctionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilMixedCoordinatesContinuousBoundedSupNormStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsRationalOrbitPointEqBesselBasePoint
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaIntegrandLocallyUniformMajorant
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierBesselThetaCharIntegrandLaws
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SkewGramHalfModule
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinatesOfThetaFunctionAreThetaFunctions
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilMixedCoordinatesContinuousBoundedSupNorm
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
 public import Mathlib.MeasureTheory.Function.StronglyMeasurable.Lp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -50,7 +53,6 @@ import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Monotonicity.Lemmas
 import Mathlib.Topology.Sheaves.Presheaf
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergIntegralFourierBesselBasePointEqPairinStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldedTermBasePointEqFlatMapPairing
@@ -133,7 +135,7 @@ theorem fl_base_eq_tFlat : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : �
   intro D ψ σ J B s vb vL y Ψ hy hΨ
   have hstd : IsStdChar D ψ (-1) := s.weil.std
   have hchar := hstd.1
-  obtain ⟨-, ⟨My, hMy, -⟩, -, -, -, hlaw⟩ := GlobalTheory.T.fourierBesselThetaCharIntegrand_laws D ψ hstd σ J B y hy
+  obtain ⟨-, ⟨My, hMy, -⟩, -, -, -, hlaw⟩ := _root_.GlobalTheory.Unf.FB.ThLaws.th_laws D ψ hstd σ J B y hy
   have hnorm : ∀ u : UX D (σ + 1), ‖psiUni ψ u.1‖ = 1 := fun u => hchar.2.1 _
 
   have hfl : ∀ u : UX D (σ + 1), (∫ b in vb.𝓕, flFun ψ J.d B.V s.vS (th J ψ B y) (x0 B) Ψ u b ∂vb.μ) =
@@ -141,7 +143,7 @@ theorem fl_base_eq_tFlat : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : �
         ((B.o.resT J.W₀).symm (0, v)) * star (y v) ∂vL.μ := by
     intro u
     have hf : Quasi ψ J.W₀ B.V (J.d.mixS B.V ψ s.vS.μ s.vS.𝓕 Ψ (x0 B ⬝ u.1.1)) := by
-      have h := (GlobalTheory.T.mixedCoordinates_of_thetaFunction_are_thetaFunctions D ψ hstd).1 J.W J.W₀ B.V (σ + 1) J.d s.vS.μ s.vS.𝓕 s.vS.covol Ψ hΨ (x0 B ⬝ u.1.1)
+      have h := (_root_.GlobalTheory.MixValues.mixed_values D ψ hstd).1 J.W J.W₀ B.V (σ + 1) J.d s.vS.μ s.vS.𝓕 s.vS.covol Ψ hΨ (x0 B ⬝ u.1.1)
       exact ⟨h.quasi, h.cont⟩
     have hh := (GlobalTheory.T.heisenbergIntegral_fourierBesselBasePoint_eq_pairing D ψ hstd σ J.W₀ B vb s.vT vL _ y hf hy).1
     calc (∫ b in vb.𝓕, flFun ψ J.d B.V s.vS (th J ψ B y) (x0 B) Ψ u b ∂vb.μ)
@@ -162,8 +164,8 @@ theorem fl_base_eq_tFlat : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : �
     unfold fl
     exact integral_congr_ae (Filter.Eventually.of_forall hfl)
 
-  obtain ⟨x, hxo, hx⟩ := GlobalTheory.T.exists_mem_orb_rat_eq_x0 D σ B
-  obtain ⟨M, hMi, hMb⟩ := GlobalTheory.T.flatThetaIntegrand_locallyUniform_majorant D ψ J.W J.W₀ B.V B.V₀ (σ + 1) σ J.d B.d s.vS s.vT s.χV s.χW s.om s.weil s.vU x
+  obtain ⟨x, hxo, hx⟩ := _root_.GlobalTheory.Unf.FB.exists_rationalOrbit_point_eq_besselBasePoint D σ B
+  obtain ⟨M, hMi, hMb⟩ := _root_.GlobalTheory.Unf.flatFun_majorant D ψ J.W J.W₀ B.V B.V₀ (σ + 1) σ J.d B.d s.vS s.vT s.χV s.χW s.om s.weil s.vU x
     hxo.1 Ψ hΨ {1} isCompact_singleton
   have hom1 : s.om 1 Ψ = Ψ := by rw [map_one]; rfl
   have hbound : ∀ (u : UX D (σ + 1)) (v : WO J.W₀ B.L),
@@ -180,7 +182,7 @@ theorem fl_base_eq_tFlat : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : �
   have : SecondCountableTopology (WO J.W₀ B.L) := (lattice_Mx D B.L.rank J.W₀.rank).2.2.1
   have hE : Continuous fun p : UX D (σ + 1) × WO J.W₀ B.L =>
       evalAt ψ J.d B.d s.vS.μ s.vS.𝓕 s.vT.μ s.vT.𝓕 Ψ (x0 B ⬝ p.1.1.1) 0 ((B.o.resT J.W₀).symm (0, p.2)) := by
-    have hmc := (GlobalTheory.T.weilMixedCoordinates_continuous_bounded_supNorm D ψ J.W J.W₀ B.V B.V₀ (σ + 1) σ J.d B.d s.vS s.vT s.χV s.χW s.om s.weil Ψ hΨ).2
+    have hmc := (_root_.GlobalTheory.MixCont.mixed_coords_continuous D ψ J.W J.W₀ B.V B.V₀ (σ + 1) σ J.d B.d s.vS s.vT s.χV s.χW s.om s.weil Ψ hΨ).2
     have hc : Continuous fun p : UX D (σ + 1) × WO J.W₀ B.L => (p.1.1.1 : Mx D (σ + 1) (σ + 1)) :=
       (Units.continuous_val.comp continuous_subtype_val).comp continuous_fst
     have hin : Continuous fun p : UX D (σ + 1) × WO J.W₀ B.L =>

@@ -3,7 +3,8 @@ module
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.GlobalGaussLaws.AwayFact
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.GlobalGaussLaws.GaussLaw
 public import Development.AbelianVarietyTheory.PublishedTheorems.SiegelWeil₂.SiegelWeilUnitarySchrodinger
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsWeilDatumDoubledOfSchrodingerFormulasStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HalfData
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsWeilDatumDoubledOfSchrodingerFormulas
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HeckeFormNSOfHeckeForm
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.GlobalGaussLaws.DerivOne
 public import Formalism.LocalToGlobal.IndefiniteReal.FockTheta.QuadraticOperatorPureTensor
@@ -16,8 +17,8 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.Wei
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.SiegelWeilAnisotropicUnitary
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EqZeroOfAeFundamentalDomain
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousStandardUnitaryChartAndSymm
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StandardUnitaryChartMemRationalIffStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaKernelEqTsumSchrodingerFunctionStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StandardUnitaryChartMemRationalIff
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaKernelEqTsumSchrodingerFunction
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaKernelMulConjCuspFormIntegrableOn
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableThetaKernelWeilRange
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.IwasawaUnipotent.IwaU
@@ -92,7 +93,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchrodingerFunctionUnitaryLeviRadicalActionsStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchrodingerFunctionUnitaryLeviRadicalActions
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchrodingerThetaEqSchwartzBruhat
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 import Mathlib.Tactic.Linter.Style
@@ -176,9 +177,9 @@ theorem gComm {V : HSp D} {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.hos
     (Φ Φh : schwartzA θ V.rank n) (h : GA D V) (hΦh : ∀ x, Φh.1 x = Φ.1 (mt V h ⬝ x)) (g : G D n) (x : Mx D V.rank n) :
     (ω g Φh).1 x = (ω g Φ).1 (mt V h ⬝ x) := by
   let A : HSp D := Formalism.BasicNotions.Examples₂.posSpace (E := D.host.E) Formalism.BasicNotions.Examples₂.star_isIntegral n
-  obtain ⟨ψ₀, μ', lam, κ, omh, hs0, hsk, _, _, hκ, hW, hT⟩ := GlobalTheory.T.exists_weilDatum_doubled_of_schrodingerFormulas D A V ψ hψ χ hχ hη θ hθ μ 𝓕 hμ ω hω
+  obtain ⟨ψ₀, μ', lam, κ, omh, hs0, hsk, _, _, hκ, hW, hT⟩ := _root_.GlobalTheory.StdUnn.SchDatum.exists_datum D A V ψ hψ χ hχ hη θ hθ μ 𝓕 hμ ω hω
   obtain ⟨f, hf, hfΦ⟩ := (GlobalTheory.SchSchwartzAll.schSchwartz D ψ₀ hs0 θ hθ A V μ 𝓕 hμ).2.1 Φ.1 Φ.2
-  have hlaw := fun F (hF : IsThetaFunO ψ₀ (dblSp A) V F) => (GlobalTheory.T.schrodingerFunction_unitary_levi_radical_actions D ψ₀ A V χ⁻¹ omh hW μ 𝓕 hμ F hF).1
+  have hlaw := fun F (hF : IsThetaFunO ψ₀ (dblSp A) V F) => (_root_.GlobalTheory.Core.Rk.SchLaws.sch_laws D ψ₀ A V χ⁻¹ omh hW μ 𝓕 hμ F hF).1
   have hf1 : IsThetaFunO ψ₀ (dblSp A) V (omh (1, h⁻¹) f) := hW.om_pres _ f hf
   have hΦh' : Φh.1 = sch ψ₀ A V μ 𝓕 (omh (1, h⁻¹) f) := by
     funext y
@@ -740,11 +741,11 @@ theorem thetaInt_auto (hP : GlobalTheory.Published.WeilThetaConvergence) (D : D7
     {ω : G D A.rank →* Module.End ℂ (GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz.schwartzA θ V.rank A.rank)} (hω : IsWeilSch ψ χ θ V μ ω)
     {ν : Measure (GA D V)} (hν : ν.IsHaarMeasure) (Φ : GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz.schwartzA θ V.rank A.rank) :
     Continuous (thetaInt ω ν Φ) ∧ LeftInv (GF D A.rank) (thetaInt ω ν Φ) := by
-  obtain ⟨ψ₀, μ', lam, κ, omh, hs0, hsk, _, _, hκ, hW, hT⟩ := GlobalTheory.T.exists_weilDatum_doubled_of_schrodingerFormulas D A V ψ hψ χ hχ hη θ hθ μ 𝓕 hμ ω hω
+  obtain ⟨ψ₀, μ', lam, κ, omh, hs0, hsk, _, _, hκ, hW, hT⟩ := _root_.GlobalTheory.StdUnn.SchDatum.exists_datum D A V ψ hψ χ hχ hη θ hθ μ 𝓕 hμ ω hω
   obtain ⟨f, hf, hfΦ⟩ := (GlobalTheory.SchSchwartzAll.schSchwartz D ψ₀ hs0 θ hθ A V μ 𝓕 hμ).2.1 Φ.1 Φ.2
   have hth : ∀ g : GA D (dblSp A), GlobalTheory.StdUnn.theta ω Φ (κ g) = fun h => thetaKO omh g h f := fun g => by
     funext h
-    rw [GlobalTheory.T.thetaKernel_eq_tsum_schrodingerFunction D ψ₀ A V χ⁻¹ omh hW μ 𝓕 hμ f hf g h, GlobalTheory.StdUnn.theta, hT g f hf Φ hfΦ.symm]
+    rw [_root_.GlobalTheory.StdUnn.thetaKO_eq_tsum_sch D ψ₀ A V χ⁻¹ omh hW μ 𝓕 hμ f hf g h, GlobalTheory.StdUnn.theta, hT g f hf Φ hfΦ.symm]
   have hmean : thetaInt ω ν Φ = fun g => GlobalTheory.ThetaMean.thetaMean omh ν f (κ.symm g) := by
     funext g
     have e := hth (κ.symm g)
@@ -755,7 +756,7 @@ theorem thetaInt_auto (hP : GlobalTheory.Published.WeilThetaConvergence) (D : D7
   · rw [hmean]
     exact (continuous_thetaMean hP hW hA (Or.inr hr) hν hf).comp (GlobalTheory.StdUnn.chart_continuous D A μ' hsk κ hκ).2
   · have hq : κ.symm γ ∈ GQ (dblSp A) :=
-      (GlobalTheory.T.standardUnitaryChart_mem_rational_iff D A μ' hsk κ hκ _).2 (by rwa [κ.apply_symm_apply])
+      (_root_.GlobalTheory.StdUnn.chart_mem_GF_iff D A μ' hsk κ hκ _).2 (by rwa [κ.apply_symm_apply])
     rw [hmean]
     simp only [map_mul, GlobalTheory.ThetaMean.thetaMean,
       GlobalTheory.ChainOnto.ThetaFirstVar.thetaKO_left_fst hW hf _ _ hq]

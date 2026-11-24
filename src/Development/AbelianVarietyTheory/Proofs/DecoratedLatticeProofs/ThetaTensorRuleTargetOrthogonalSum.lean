@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ConjugateAdjointDagger
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjWeilDatumViaAdjointExchangedPairStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HermitianAdjointSymplecticActionThetaHeisenbergStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaTensorRuleOrthogonalSumSourceStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittSmallGroupEmbeddingMemPointwiseStabilizerIso
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjWeilDatumViaAdjointExchangedPair
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HermitianAdjointSymplecticActionThetaHeisenberg
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaTensorRuleOrthogonalSumSource
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -111,8 +112,8 @@ theorem tensorTarget : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar 
     ∀ (T A B : HSp D) (d : OrthDec T A B) (S : HSp D), GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.TensorTarget ψ d S := by
   intro D ψ hψ T A B d S
   have thd : ∀ (S T : HSp D) (f : WO S T → ℂ), IsThetaFunO ψ T S (GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj (dagger T S) f) ↔ IsThetaFunO ψ S T f :=
-    fun S T => (GlobalTheory.T.hermitianAdjoint_symplectic_action_theta_heisenberg D ψ hψ S T).2.2.1
-  have src := GlobalTheory.T.thetaTensorRule_orthogonalSum_source D ψ hψ T A B d S
+    fun S T => (_root_.GlobalTheory.AdjointPair.adjoint_clauses D ψ hψ S T).2.2.1
+  have src := _root_.GlobalTheory.TensorSrc.tensorSource D ψ hψ T A B d S
   have cc : ∀ f : WO S T → ℂ, GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj (dagger S T) (GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj (dagger T S) f) = f := fun f => cj_cj _ _ (dagger_dagger S T) f
   refine
     { box_theta := fun fA fB hA hB => d.isThetaFunO_boxT hA hB
@@ -147,16 +148,16 @@ theorem tensorTarget : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar 
       exact h
   · intro χS χA χB omT omA omB hT hA hB g a b fA fB hfA hfB
     have key := src.om_box χA χB χS (conjAdjoint omT) (conjAdjoint omA) (conjAdjoint omB)
-      (GlobalTheory.T.conj_weil_datum_via_adjoint_exchanged_pair D ψ S T χS (χA * χB) omT hT) (GlobalTheory.T.conj_weil_datum_via_adjoint_exchanged_pair D ψ S A χS χA omA hA)
-      (GlobalTheory.T.conj_weil_datum_via_adjoint_exchanged_pair D ψ S B χS χB omB hB) a b g (GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj (dagger A S) fA) (GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj (dagger B S) fB)
+      (_root_.GlobalTheory.ConjAdjWeil.isWeilDatumO_conjAdjoint D ψ S T χS (χA * χB) omT hT) (_root_.GlobalTheory.ConjAdjWeil.isWeilDatumO_conjAdjoint D ψ S A χS χA omA hA)
+      (_root_.GlobalTheory.ConjAdjWeil.isWeilDatumO_conjAdjoint D ψ S B χS χB omB hB) a b g (GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj (dagger A S) fA) (GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj (dagger B S) fB)
       ((thd S A fA).2 hfA) ((thd S B fB).2 hfB)
     rw [conjAdjoint_cj, conjAdjoint_cj, ← cj_boxT, ← cj_boxT, conjAdjoint_cj] at key
     have := congrArg (GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj (dagger S T)) key
     rwa [cc, cc] at this
   · intro χS χA χB omT omA omB hT hA hB g a b f hf v
     have key := src.om_slice χA χB χS (conjAdjoint omT) (conjAdjoint omA) (conjAdjoint omB)
-      (GlobalTheory.T.conj_weil_datum_via_adjoint_exchanged_pair D ψ S T χS (χA * χB) omT hT) (GlobalTheory.T.conj_weil_datum_via_adjoint_exchanged_pair D ψ S A χS χA omA hA)
-      (GlobalTheory.T.conj_weil_datum_via_adjoint_exchanged_pair D ψ S B χS χB omB hB) a b g (GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj (dagger T S) f) ((thd S T f).2 hf) (dagger S B v)
+      (_root_.GlobalTheory.ConjAdjWeil.isWeilDatumO_conjAdjoint D ψ S T χS (χA * χB) omT hT) (_root_.GlobalTheory.ConjAdjWeil.isWeilDatumO_conjAdjoint D ψ S A χS χA omA hA)
+      (_root_.GlobalTheory.ConjAdjWeil.isWeilDatumO_conjAdjoint D ψ S B χS χB omB hB) a b g (GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj (dagger T S) f) ((thd S T f).2 hf) (dagger S B v)
     have e1 : (fun u'' => conjAdjoint omB (b, g) (fun v'' => GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj (dagger T S) f ((d.resS S).symm (u'', v''))) (dagger S B v)) =
         GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj (dagger A S) (fun u' => omB (g, b) (fun v' => f ((d.resT S).symm (u', v'))) v) := by
       funext u''

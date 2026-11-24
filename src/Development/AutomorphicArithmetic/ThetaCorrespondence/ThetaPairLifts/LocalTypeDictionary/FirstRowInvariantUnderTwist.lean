@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.InvVolConjLevelOne
 public import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.FormulaAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GridRowLevelZeroInfUnitaryEqDatumLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GridRowLevelZeroInfUnitaryEqDatumLevel
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RowShiftTheta
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsMultilinearColumnRowKernelPairing
 public import Mathlib.Algebra.BigOperators.Finsupp.Basic
@@ -28,7 +28,6 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalBloc
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetIdlVal
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqOfHasValueAtInfinite
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GridRowLevelZeroInfUnitaryEqDatumLevel
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetUnitaryConjAtPlaceEqDetLatticeBasisComponent
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridStandardVacuumScalarEqProdLocalPlaces
@@ -177,7 +176,7 @@ theorem toXf_mem_of_is {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : Gr
   have hU : finG (G.V (.grid 0 D.R.m)) k ∈ S.levRow t 0 (Nat.zero_le _) ⊓ UA D.sp.cm (G.V (.grid 0 D.R.m)).gram :=
     ⟨hk, GlobalTheory.LevSplit.finE_mem_UA _ _⟩
   have hX := finE_cast_mem (columnBlock L D.R.m) ⟨D.sp.X', L.ΛX⟩ (colY_m L) _ _
-    (GlobalTheory.T.gridRowLevel_zero_inf_unitary_eq_datumLevel W S hL t (Nat.zero_le _)) k.1 hU
+    (_root_.GlobalTheory.FunObj.levRow_zero_eq_lev W S hL t (Nat.zero_le _)) k.1 hU
   exact hX
 
 theorem levRow_zero_le : Big fun {D} {_Γ} _ _ {_Pl0} {T} {_A} {_Ks} _ _ _ {R} ch =>

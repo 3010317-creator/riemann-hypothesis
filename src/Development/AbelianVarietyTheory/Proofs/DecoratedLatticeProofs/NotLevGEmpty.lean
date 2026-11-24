@@ -47,7 +47,8 @@ import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChainParSucc
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LastStepVectorLiftPairFlagLevelCharacters
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LiftSchurMultiplierCompatibility
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParahoricLevelLiftsExistStatement
+import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParahoricLevelLiftsExist
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.StepVectorLiftPairFlagLevelRealizedChain
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasChr
 import Mathlib.Tactic.Linter.Style
@@ -187,7 +188,7 @@ theorem pred_lt : D.R.m - 1 < D.R.m := by have := D.R.two_le_m; omega
 
 theorem lifts_top (hl : R.toLevCh.Is A.μ0) (t : T) : LiftsExist D.sp.X' R.βX (R.datXt t) := by
   obtain ⟨c, hβ⟩ := hl.βX
-  exact GlobalTheory.T.parahoricLevel_liftsExist _ _ _ _ _ hβ (GlobalTheory.ChainEquiv.places_sep R.toLevCh _ hl t).1 (GlobalTheory.ChainEquiv.places_sep R.toLevCh _ hl t).2
+  exact _root_.GlobalTheory.ParahoricLift.liftsExist _ _ _ _ _ hβ (GlobalTheory.ChainEquiv.places_sep R.toLevCh _ hl t).1 (GlobalTheory.ChainEquiv.places_sep R.toLevCh _ hl t).2
 
 theorem ioX_mem (hCR : GlobalTheory.Published.CuspRapidDecay) (hl : R.toLevCh.Is A.μ0) (hm : R.IsModels) (hc : R.IsChain) (t : T)
     (F : LinearMap.range (R.cX.toMap R.prX ∘ₗ (R.HX t).e)) (hF : F.1 ∈ CXP R P t) : (R.ioX t F).1 ∈ CP R P t (D.R.m - 1) := by

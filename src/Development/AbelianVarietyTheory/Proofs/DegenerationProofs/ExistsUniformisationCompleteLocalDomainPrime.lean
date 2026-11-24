@@ -6,7 +6,7 @@ public import Development.AbelianVarietyTheory.Definitions.Degenerations.MorAlgS
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.ToATotal
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCompareUniformisationDataPullbackStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsDegDataPsiOfSectionNonzeroFibresStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsDegDataPsiOfSectionNonzeroFibres
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnifOfCmp
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformizationDataCompleteLocalPrimeStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LineBundleSymmetryHypothesisBaseChange
@@ -258,7 +258,7 @@ theorem exists_unif : Laws → Laws2 → Laws3 → Ega → USt → ∀ (R : Type
   obtain ⟨w', hw'⟩ := isCPMap_of_eq hL.globalFns s.gen s.P U'.P (hU'.2.1.trans hLG) hw
   obtain ⟨C, -⟩ := GlobalTheory.T.exists_compare_uniformisationData_pullback hL hL2 hE R V I _ hR.1 hB (IsLocalRing.maximalIdeal.isMaximal V).ne_top φ hle D _ A A'
     G _ U U' _ (isGrpPullback_pullback G _) w' hw'
-  obtain ⟨psi, h, Dd, hD, e, h₁, h₂, h₃⟩ := GlobalTheory.T.exists_degData_psi_of_section_nonzero_fibres hL hL2 hE R I hR V hV φ hφ hc D D' A A' G _ U U' U₀ _ C hU' hθ
+  obtain ⟨psi, h, Dd, hD, e, h₁, h₂, h₃⟩ := _root_.GlobalTheory.PsiRing.exists_degData_of_thetaNZ hL hL2 hE R I hR V hV φ hφ hc D D' A A' G _ U U' U₀ _ C hU' hθ
   obtain ⟨U₂, C₂, hD₂, eP, eg, k₁, k₂, k₃⟩ := exists_move psi h C hD Dd.toPre e h₁ h₂ h₃
   obtain ⟨U₁, -, hU₁, -⟩ := GlobalTheory.UnifDescent.exists_unif_of_cmp hL hL2 hE R V I _ hR.1 hB hI.ne_top φ hφ hle Dd D' A A' G _ U₂ U' U₀ _ C₂ hD₂
     hU' k₁ k₂ k₃

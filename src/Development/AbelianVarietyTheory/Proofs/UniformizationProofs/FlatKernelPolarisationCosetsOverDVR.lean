@@ -4,12 +4,13 @@ public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.Fir
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHeckeQuotientTriple
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.NonemptyPerfectSectionsComplexOfSmoothProjStatement
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.NonemptyPerfectSectionsComplexOfSmoothProj
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.PolBaseChangeOfRelAmpleLocal
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.TrivBasicOpenOfTrivFibre
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ConnectedSpaceSpecOfIsLocalRing
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CyclicIdeal
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsPerfectFreeFiniteComplexStatement
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsFiniteProjectiveComplexQuasiIso
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsPerfectFreeFiniteComplex
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsSMulRegularCokerDualMapOfExactFibres
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LocalizationOfIsStandardSmooth
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SectionPull
@@ -248,13 +249,13 @@ theorem exists_ideal (hG : GlobalFnsSt) {V : Type} [CommRing V] (B : Over (Spec 
       refine ⟨Over.homMk y ?_, Over.OverMorphism.ext hy⟩
       rw [← Over.w j, ← Category.assoc, hy]
       exact Category.assoc _ _ _
-  obtain ⟨P⟩ := GlobalTheory.T.nonempty_perfectSectionsComplex_of_smooth_proj A _ B'.hom hB'.smooth hp' F hF
+  obtain ⟨P⟩ := _root_.GlobalTheory.AbLaw.nonempty_perf_of_smooth_isProjBy A _ B'.hom hB'.smooth hp' F hF
   have := hB'.proper
   have := hB'.geomConnected
   have q₀ := IsPullback.of_hasPullback B'.hom (Spec.map (CommRingCat.ofHom g₀))
   obtain ⟨I, ⟨eI⟩, hI⟩ := GlobalTheory.UU.SecCyclic.cyclic_ideal A _ B'.hom F hF P inferInstance inferInstance K₀ g₀ hg₀ _ _ _
     q₀ (CubeOpen.bijective_appTop hG B' hB' q₀) ((test K₀ g₀ _ _ _ q₀).2 h₀)
-  obtain ⟨C, c₁, c₂, ⟨eC⟩, c₃⟩ := GlobalTheory.T.exists_perfect_free_finite_complex A B' hB' hp' g hg' F hF hΛ P
+  obtain ⟨C, c₁, c₂, ⟨eC⟩, c₃⟩ := _root_.GlobalTheory.AbLaw.exists_free_complex_of_primitive A B' hB' hp' g hg' F hF hΛ P
   refine ⟨I, ?_, fun R _ _ φ => (test R φ _ _ _ (IsPullback.of_hasPullback _ _)).symm.trans
     (hI R φ _ _ _ (IsPullback.of_hasPullback _ _))⟩
   refine ((eC.trans eI).isSMulRegular_congr ϖ).1

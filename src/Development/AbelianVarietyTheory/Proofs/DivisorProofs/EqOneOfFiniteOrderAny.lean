@@ -6,7 +6,8 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Exi
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsIsGenOfInvariant
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsOddNeZero
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.AbelianProjectiveBaseChange
-import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.NonemptyPerfectSectionsComplexOfNoetherianStatement
+import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.NonemptyPerfectSectionsComplexOfNoetherian
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsReducedAlgebraOfSmoothOfIsNoetherianRing
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsGenMul
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsGenOfSection
@@ -269,7 +270,7 @@ theorem sumF_any : LL → AnyD fun {R} _ _ {I} D F _ _ => ∀ (K : Type) [Fintyp
   have := hR.1
   have := D.toPre.P.isAb.smooth
   have hL := D.toPre.P.isLB
-  obtain ⟨P⟩ := GlobalTheory.T.nonempty_perfectSectionsComplex_of_noetherian R _ D.toPre.P.A.hom inferInstance
+  obtain ⟨P⟩ := _root_.GlobalTheory.AbLaw.nonempty_perf_of_noetherian R _ D.toPre.P.A.hom inferInstance
     (GlobalTheory.AbProj.isProjBy_of_isPullback D.toPre.P (IsPullback.id_horiz _)) _ (LB.isLB_linComb hL φ ε)
   choose v hv hv' using fun i => exists_vec P (n i)
   obtain ⟨v₀, hv₀, hv₀'⟩ := exists_vec P n₀

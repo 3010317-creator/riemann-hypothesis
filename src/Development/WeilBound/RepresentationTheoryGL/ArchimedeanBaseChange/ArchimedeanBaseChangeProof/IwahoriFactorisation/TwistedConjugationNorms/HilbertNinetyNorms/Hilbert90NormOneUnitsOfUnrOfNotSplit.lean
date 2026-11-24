@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormOneUnitHilbertNinetyStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormOneUnitHilbertNinety
 import GroundTheory.GlobalFields.CompletionAtPlace.Integers
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -89,7 +89,7 @@ theorem hilbert90_norm_one_units_of_unr_of_not_split (hU : Unr E) (w : Pl E) (hw
     (∀ u : w.adicCompletion E, Valued.v u = 1 → cj w u = u → ∃ z, Valued.v z = 1 ∧ z * cj w z = u) ∧
     (∀ u : w.adicCompletion E, u * cj w u = 1 → ∃ z, Valued.v z = 1 ∧ u * cj w z = z) := by
   refine ⟨fun u hu hcu => ?_, norm_one_eq_unit_div_conj hU w hw⟩
-  obtain ⟨s, hs, hs'⟩ := GlobalTheory.T.norm_one_unit_hilbert_ninety E hU w hw u hcu hu
+  obtain ⟨s, hs, hs'⟩ := _root_.GlobalTheory.CompanionTheory.UnitNormLocal.exists_unit_norm_eq E hU w hw u hcu hu
   exact ⟨s, hs, by rw [mul_comm]; exact hs'⟩
 
 end PositivityTheory.Rg.Bc.ArchbcB.B.M4

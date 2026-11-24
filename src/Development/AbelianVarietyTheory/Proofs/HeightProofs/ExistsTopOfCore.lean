@@ -2,8 +2,11 @@ module
 
 public import Formalism.LocalToGlobal.ProjectiveLattices.DatIndep
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.DegenerationDataAtModelPointOfUniformisation
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.DegenerationDataCoordsNeZeroLatticesIsomorphicStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsEmbeddingCompleteAlgClosedFixedCarrierStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.DataAtPointN3
+public import Formalism.LocalToGlobal.ProjectiveLattices.OneLtAbsNormReal
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.DegenerationDataCoordsNeZeroLatticesIsomorphic
+public import Formalism.SharpRestriction.Divisibility.AbelianOpenPart.IsOpenPart
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsEmbeddingCompleteAlgClosedFixedCarrier
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SemiAbelianDvrExtensionsIsoCompatible
 public import Formalism.LocalToGlobal.ProjectiveLattices.ResChPrime
 public import Formalism.LocalToGlobal.ProjectiveLattices.LiesOverBaseChange
@@ -31,18 +34,17 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLocalMo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsTransitionMapRaisedModels
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliSchemeLevelMapsHeckePoints
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHoldStatement
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SemiAbelianHomExtendsUniquelyOverDvr
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.TypeFnPeriodExistModuliNonempty
-public import Formalism.LocalToGlobal.ProjectiveLattices.DataAtPointN3
-public import Formalism.LocalToGlobal.ProjectiveLattices.OneLtAbsNormReal
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.PeriodFormAdditiveBalancedPosDefBoundedRank
 public import Formalism.LocalToGlobal.ProjectiveLattices.HasDataCondition
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsDegenerationDataAlgebraicPointModelStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsDegenerationDataAlgebraicPointModel
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LevelGoodAndHalfEqPrimeProductStatement
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaValueExistsUniqueOfChartIndependence
@@ -111,7 +113,6 @@ import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HomExtensionSemiAbel
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PrimeToPartLevelExistsUniqueMono
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsModuliSchemePolarizedAbelianLevel
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.NsmulMemSmulTop
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointReducedFromTestRing
 import Development.AbelianVarietyTheory.Definitions.HeightFunctions.XiValIffXiAt
 
@@ -255,7 +256,7 @@ theorem exists_equiv_of_uniformisation {O : Type} [CommRing O] {β : O →+* c.F
     have h' : ‖(p : ↥C.S)‖ = 1 := by simpa using h
     rw [C.norm_p] at h'
     exact hp.ne_one (by exact_mod_cast inv_eq_one.1 h')
-  obtain ⟨f, hf, -, hfl⟩ := (GlobalTheory.T.exists_embedding_completeAlgClosed_fixedCarrier T p hp hT hpm).2 C g T' φ hg hlt hφ hφf
+  obtain ⟨f, hf, -, hfl⟩ := (_root_.GlobalTheory.SmallClosedField.exists_embedding_and_extension T p hp hT hpm).2 C g T' φ hg hlt hφ hφf
   obtain ⟨n2, -⟩ := sabComp pullCubComp E H _ _ _ Y.t G G' yt (spMap φ) n mG
   have hab : (spMap φ ≫ yt) ⁻¹' abLocus Y.t.G = abLocus G'.G :=
     Set.ext fun q => abLocus_pullback abLocusOne Y.t.semi n2.cart.1 q
@@ -273,7 +274,7 @@ theorem exists_equiv_of_uniformisation {O : Type} [CommRing O] {β : O →+* c.F
       U := U
       unitOn := fun χ => by rw [hab]; exact hU χ
       tors := hTo }
-  obtain ⟨-, q, hq⟩ := GlobalTheory.T.degenerationData_coords_ne_zero_lattices_isomorphic E H Dw l Xo c O β Y p C Pc hp T g yt hT hg hlt hyt A₀ A
+  obtain ⟨-, q, hq⟩ := _root_.GlobalTheory.DatUniq.coord_ne_zero_and_exists_equiv E H Dw l Xo c O β Y p C Pc hp T g yt hT hg hlt hyt A₀ A
   exact ⟨f, q, hq⟩
 
 theorem exists_equiv_two_models {O O' : Type} [CommRing O] [CommRing O'] {β : O →+* c.F} {β' : O' →+* c.F}
@@ -845,7 +846,7 @@ theorem exists_transition {Xo : ∀ l : Level H, Moduli D l} (S : System Xo) (hN
     (i i' : Idx H p) (hl : i.l.Dvd i'.l) (hc : i.c.F ≤ i'.c.F) (he : i.c.V W = i.c.V W') :
     ∃ (b : i.c.V W →+* i'.c.V W') (π : (S.Y p W' hp hW' i').X ⟶ (S.Y p W hp hW i).X),
       IsTransition (S.Y p W hp hW i) (S.Y p W' hp hW' i') b π := by
-  obtain ⟨L1, L2, L3, -⟩ := GlobalTheory.T.all_uniformization_laws_hold
+  obtain ⟨L1, L2, L3, -⟩ := _root_.GlobalTheory.firstFiveLaws
   obtain ⟨l₀, h₀, r₀⟩ := S.raises p W hp hW i
   obtain ⟨l₀', h₀', r₀'⟩ := S.raises p W' hp hW' i'
   obtain ⟨-, hsp, hmono⟩ := GlobalTheory.Models.primeToPart_spec E H p hp
@@ -905,7 +906,7 @@ theorem exists_tower : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   classical
   obtain ⟨Xf, rfl⟩ : ∃ Xf : ∀ l : Level H, Moduli D l, Xf l = Xo :=
     ⟨Function.update (fun l => (_root_.GlobalTheory.moduliScheme_levelMaps_heckePoints.1 E H D l hD).some) l Xo, Function.update_self ..⟩
-  obtain ⟨L1, L2, L3, -⟩ := GlobalTheory.T.all_uniformization_laws_hold
+  obtain ⟨L1, L2, L3, -⟩ := _root_.GlobalTheory.firstFiveLaws
   obtain ⟨S, -⟩ := _root_.GlobalTheory.SystemAmple.exists_system_ampFrames _root_.GlobalTheory.homExtension_semiAbelian_dvr L1 L2 L3 (_root_.GlobalTheory.topAmpExists_of_semistableReduction _root_.GlobalTheory.SS.semistableReductionSt) E H D Xf hD (_root_.GlobalTheory.moduliScheme_levelMaps_heckePoints.2 E H D hD).1
   by_cases hp : p.Prime
   · obtain ⟨Tw, h⟩ := exists_towerAt S hD l c hp (hg p hp)
@@ -988,7 +989,7 @@ theorem uniq_of_factorsFin {E : Type} [Field E] [NumberField E] [IsCMField E] {H
     {Y : Model Xo c β} {p : ℕ} (hp : p.Prime) {C : SCF p} {P : PointsOfFlagModel.PtC Y C} (hf : FactorsFin Y P)
     (A A' : DatAt Y P) : ∃ e : A.toLatB.Y ≃ₗ[𝓞 E] A'.Ylat, ∀ a b, A'.beta (e a) (e b) = A.toLatB.beta a b := by
   obtain ⟨T, g, ιT, h1, h2, h3, h4⟩ := hf
-  exact (GlobalTheory.T.degenerationData_coords_ne_zero_lattices_isomorphic E H Dw l Xo c O β Y p C P hp T g ιT h1 h2 h3 h4 A A').2
+  exact (_root_.GlobalTheory.DatUniq.coord_ne_zero_and_exists_equiv E H Dw l Xo c O β Y p C P hp T g ιT h1 h2 h3 h4 A A').2
 
 theorem localData_exists :
     ∀ (D : D7) (Q : Par D), Q.Pins → (∀ j, 1 ≤ (Q.Dw j).p + (Q.Dw j).q) → Packet66Rest Q := by
@@ -998,7 +999,7 @@ theorem localData_exists :
   have hdat : ∀ j p (z : PointsOfFlagModel.Pt (Tw j p) .yy), p.Prime → FactorsFin ((Tw j p).Y z.1) z.2.2.1 →
       Nonempty (DatAt ((Tw j p).Y z.1) z.2.2.1) := by
     rintro j p z hp ⟨T, g, ιT, h1, h2, h3, h4⟩
-    obtain ⟨A, -⟩ := GlobalTheory.T.exists_degeneration_data_algebraic_point_model D.host.E Q.H (Q.Dw j) Q.l (Q.Xo j) Q.c _ _ _ p _ z.2.2.1 hp T g ιT h1 h2 h3 h4
+    obtain ⟨A, -⟩ := _root_.GlobalTheory.DatAtPoint.exists_datAt D.host.E Q.H (Q.Dw j) Q.l (Q.Xo j) Q.c _ _ _ p _ z.2.2.1 hp T g ιT h1 h2 h3 h4
     exact ⟨A⟩
   let Pt : ℕ → ℕ → Type := fun j p => {z : PointsOfFlagModel.Pt (Tw j p) .yy //
     (1 ≤ j ∧ j < D.R.m) ∧ p.Prime ∧ FactorsFin ((Tw j p).Y z.1) z.2.2.1}

@@ -7,7 +7,7 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompleteNormalLocalCoverOfFiniteHomStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompleteNormalLocalCoverOfFiniteHom
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianMulNatSurjective
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsFiniteAndFlatMulAbelianScheme
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
@@ -21,7 +21,11 @@ public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsPro
 public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSectionPrimitiveBundleTranslateLocalRing
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHoldStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.OLinBaseChangeSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHold
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.ExistsInKNeOne
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelStructurePullback
 import Mathlib.Algebra.Order.Floor.Extended
@@ -71,13 +75,15 @@ import Mathlib.AlgebraicGeometry.Modules.Sheaf
 import Mathlib.AlgebraicGeometry.Morphisms.SchemeTheoreticallyDominant
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LineBundleProductAcyclicOfAffineBaseAcyclicStatement
+import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.IsScalarTowerOfAlgebraMapEq
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LineBundleProductAcyclicOfAffineBaseAcyclic
 import Mathlib.AlgebraicGeometry.QuasiAffine
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.Henselian
 import Mathlib.Algebra.Azumaya.Basic
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.MemSmulTopOfForallMem
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsClosedSubschemeTranslationKernelStatement
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsClosedSubschemeTranslationKernel
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsAffineOfQuasiAffine
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsIsoOfFlatOfClosedPoint
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.RelAmpleIffVeryAmpleBy
@@ -206,7 +212,7 @@ theorem exists_half_point : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRin
   haveI : IsFinite (pullback.snd m s) := inferInstance
   haveI : Surjective (pullback.snd m s) := inferInstance
   obtain ⟨C, _, φ, g, hinj, hφf, hg⟩ := exists_spec_of_finite_surjective (pullback.snd m s)
-  obtain ⟨R', _, _, _, ρ, σ, hCN', hρi, hρf, hρl, hσ⟩ := GlobalTheory.T.exists_complete_normal_local_cover_of_finite_hom R C φ hCN hinj hφf
+  obtain ⟨R', _, _, _, ρ, σ, hCN', hρi, hρf, hρl, hσ⟩ := _root_.GlobalTheory.LocExt.exists_isCN_cover_of_finite R C φ hCN hinj hφf
   have hsB : s ≫ B.hom = 𝟙 (Sp R) := Over.w a
   have hmB : m ≫ B.hom = B.hom := Over.w ((𝟙 B) ^ 2 : B ⟶ B)
   have hfst : pullback.fst m s ≫ B.hom = pullback.snd m s := by
@@ -363,7 +369,7 @@ theorem exists_point_translate_of_ample : ∀ (A : Type) [Field A] [IsAlgClosed 
     rw [cls_pull hF, eF, map_sub, pull_lam, ← pull_comp, ← Over.comp_left, lift_fst, lift_snd, pull_const, sub_zero,
       lam_comm]
   have total : Ac ((fst B B).left ≫ B.hom) F := by
-    refine (GlobalTheory.T.lineBundle_product_acyclic_of_affine_base_acyclic K _ _ _ _ _ _ _ hpq inferInstance inferInstance inferInstance inferInstance F hF).1
+    refine (_root_.GlobalTheory.ProductAcyclic.acyclic_of_over_affine_and_converse K _ _ _ _ _ _ _ hpq inferInstance inferInstance inferInstance inferInstance F hF).1
       fun R _ t Y π f h ht => ac_of_slices hproj hpq h hF fun x hx _ => ?_
     let x' : 𝟙_ _ ⟶ B := Over.homMk x hx
     refine ⟨(lift (toUnit B ≫ x') (𝟙 B)).left, ?_, ?_, ac_of_primitive hB hpr (pull_isLB hF _) ?_ ?_⟩
@@ -385,7 +391,7 @@ theorem exists_point_translate_of_ample : ∀ (A : Type) [Field A] [IsAlgClosed 
       (by rw [show ({IsLocalRing.closedPoint K} : Set (Spec (CommRingCat.of K))) = Set.univ from
         Set.eq_univ_of_forall fun z => Subsingleton.elim (α := PrimeSpectrum K) _ _]; exact isClosed_univ)
     exact (congrArg IsClosed Set.image_singleton).mp h
-  have all := (GlobalTheory.T.lineBundle_product_acyclic_of_affine_base_acyclic K _ _ _ _ _ _ _ hpq.flip inferInstance inferInstance inferInstance inferInstance F hF).2
+  have all := (_root_.GlobalTheory.ProductAcyclic.acyclic_of_over_affine_and_converse K _ _ _ _ _ _ _ hpq.flip inferInstance inferInstance inferInstance inferInstance F hF).2
     _ hcl (fun R _ t Y π f h ht hne => ac_of_slices hproj hpq.flip h hF fun x hx hr => by
       let x' : 𝟙_ _ ⟶ B := Over.homMk x hx
       refine ⟨(lift (𝟙 B) (toUnit B ≫ x')).left, ?_, ?_, ac_of_primitive hB hpr (pull_isLB hF _) ?_ ?_⟩
@@ -521,11 +527,11 @@ theorem exists_geometric_point {A : Type} [CommRing A] {B : Over (Sp A)} [GrpObj
 
 theorem exists_section_translate : ∀ (A : Type) [CommRing A] [IsLocalRing A] [IsNoetherianRing A] (B : Over (Sp A)) [GrpObj B] [IsCommMonObj B] (g : ℕ) (L O : LB B.left), IsAbelianScheme B → SmoothOfRelativeDimension g B.hom → L.IsLB → RelAmple B L → KTriv B L → (∃ t : LB.Gen (Theta B L), t.IsGen) → O.IsLB → (∃ u : LB.Gen (abelian₂ B O), u.IsGen) → ∃ x : 𝟙_ _ ⟶ B, LBIso O (LB.LinComb L (K := Fin 2) ![((toUnit B ≫ x) * 𝟙 B).left, 𝟙 B.left] ![1, -1]) := by
   intro V _ _ _ B _ _ d L O hB hd hL ha hk hΘ hO hu
-  have hG : GlobalFnsSt := GlobalTheory.T.all_six_abelian_scheme_laws_hold.1.globalFns
+  have hG : GlobalFnsSt := _root_.GlobalTheory.allSixLaws.1.globalFns
   have proj : IsProjBy B.hom := by
     obtain ⟨d, -, n, s, hs⟩ := (GlobalTheory.Unif.relAmple_iff_veryAmpleBy V B L hL).1 ha
     exact ⟨_, isLB_pw hL _, n, s, hs⟩
-  obtain ⟨H, j, hj, hH⟩ := GlobalTheory.T.exists_closed_subscheme_translation_kernel hG V B hB proj L O hL hO
+  obtain ⟨H, j, hj, hH⟩ := _root_.GlobalTheory.UU.TwistKer.exists_closed_twist_kernel hG V B hB proj L O hL hO
   have fin : IsFinite H.hom := GlobalTheory.AmpleStabFinite.isFinite_of_relAmple hG V B hB L O hL hO
     ha H j hj hH
   have mono : Mono H.hom := ⟨fun {Z} a b e => by

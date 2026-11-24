@@ -4,10 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWe
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.ExistsIsFundamentalDomainAndQuotMeasureEq
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CocompactTensor
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsTopologicalRingAE
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CompletedTensorLatticeStrongApproxOpenCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPointsClassicalModelRealVectorSpaceStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CompletedTensorLatticeStrongApproxOpenCompact
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPointsClassicalModelRealVectorSpace
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TensorLatticeSelfDualSemicharacterIndex
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionSpaceHeisenbergLawsStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionSpaceHeisenbergLaws
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -421,13 +421,13 @@ theorem ipO_eq_mean : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ (μ : Measur
   intro D S T C μ 𝓕 hcov f f' hf hf'
   unfold IsCovolOne at hcov
   obtain ⟨hμ, h𝓕, h1⟩ := hcov
-  obtain ⟨R, hRc, hpc, hpadd, hRv, hRreal, hfp, hfin0, -, -⟩ := GlobalTheory.T.realPoints_classicalModel_realVectorSpace D S T C
+  obtain ⟨R, hRc, hpc, hpadd, hRv, hRreal, hfp, hfin0, -, -⟩ := _root_.GlobalTheory.KerReal.real_points D S T C
   have hstdfg : (stdL D.host.E S.rank).FG := by
     unfold stdL
     exact Submodule.fg_span (Set.finite_range _)
-  obtain ⟨hA1, hA2, hA3, -, hA5, hA6⟩ := GlobalTheory.T.completedTensorLattice_strongApprox_open_compact D S T C (stdL D.host.E S.rank) C.X.Λ
+  obtain ⟨hA1, hA2, hA3, -, hA5, hA6⟩ := _root_.GlobalTheory.Ker.HatLat.hatA_tens D S T C (stdL D.host.E S.rank) C.X.Λ
     ⟨hstdfg, span_stdL⟩ ⟨C.X.Λ_fg, C.X.Λ_span⟩
-  obtain ⟨-, -, hTh⟩ := GlobalTheory.T.thetaFunction_space_heisenberg_laws D S T C
+  obtain ⟨-, -, hTh⟩ := _root_.GlobalTheory.ThetaSpace.theta_space_laws D S T C
   obtain ⟨-, -, -, -, -, Nf, hNf, hfN⟩ := hTh f hf
   obtain ⟨-, -, -, -, -, Nf', hNf', hfN'⟩ := hTh f' hf'
   have hψ : ∀ x, ‖C.ψ x‖ = 1 := C.std.1.2.1

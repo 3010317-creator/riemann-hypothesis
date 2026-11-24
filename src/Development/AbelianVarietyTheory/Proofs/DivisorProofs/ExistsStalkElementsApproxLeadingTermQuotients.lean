@@ -8,7 +8,8 @@ public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsPel
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsThetaCompact
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealSheafAlongLocalSpecNormalisedBlowupPrincipa
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvdOfForallCompleteDvrDominating
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RefinePolarisedMonomialPeriodsMonomialDataStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUnifOfIsMumfordOf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RefinePolarisedMonomialPeriodsMonomialData
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PolarizationTransferModels
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import Mathlib.AlgebraicGeometry.Morphisms.Finite
@@ -23,7 +24,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsApprox
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsIvDOfDefinite
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCorrectionApproximateIdealSections
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SqLeOfForallNonneg
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraitExistsAfterFiniteExtensionOfCompleteDVRStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NotOrdGeOfNotMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraitExistsAfterFiniteExtensionOfCompleteDVR
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ResidueFieldMapFiniteOfQuasiFinite
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsWithoutCohomology
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFiniteCubeInduction
@@ -67,7 +69,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.CocycleIdentityIso
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.GeneratorPullback.PullAlong
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUnifOfIsMumfordOf
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomExtNormalSt
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisationCompleteLocalDomainPrime
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdlAlongComapEq
@@ -86,7 +87,6 @@ import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCartie
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSectionOfIsIsoRestrict
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NonemptyClosureExtensionAbelianScheme
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RefinePolarisedMonomialPeriodsMonomialData
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StalkIdComapOfAffine
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -485,7 +485,7 @@ theorem idlAlong_eq_span_monomial : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ 
   refine ⟨b, hb, ?_⟩
   have hCN : IsCN V := hU.1
   obtain ⟨R', _, _, _, ρ, r, D, e, hCN', hρi, hρf, hρl, hr, hrefn, hmon⟩ :=
-    GlobalTheory.T.refine_polarised_monomial_periods_monomial_data V Q m t δ hCN hmono (fun k => (ht k).1) (fun k => (ht k).2) hsym hnn hdef
+    _root_.GlobalTheory.PolDeg.refine_monomial_of_polarised V Q m t δ hCN hmono (fun k => (ht k).1) (fun k => (ht k).2) hsym hnn hdef
   obtain ⟨g₀, hg₀⟩ := GlobalTheory.T.idealSheafAlongLocalSpec_normalisedBlowup_principal π J hbl V ξ
   rw [hg₀]
   have key : ∀ (Wr : Type) [CommRing Wr] [IsDomain Wr] [IsDiscreteValuationRing Wr], IsAdicComplete (maximalIdeal Wr) Wr →
@@ -1097,7 +1097,7 @@ theorem exists_mem_of_ordGe {g n : ℕ} {F : SFam g n (zetaAway n)} {Z : Scheme.
   have hr' : Set.range (jK V ≫ ξ ≫ p₁ ≫ X₁.π) ⊆ Set.range i := by
     rintro _ ⟨w, rfl⟩
     exact (hr ⟨w, rfl⟩).2
-  obtain ⟨T, f₁, fK, hf₁, hl₁, -, hfK, hy⟩ := GlobalTheory.T.traitExistsAfterFiniteExtension_of_completeDVR g n _ _ F V
+  obtain ⟨T, f₁, fK, hf₁, hl₁, -, hfK, hy⟩ := _root_.GlobalTheory.Poinc.traitExtSt g n _ _ F V
     ⟨⟨inferInstance, inferInstance, inferInstance, hc⟩, inferInstance⟩ inferInstance (IsOpenImmersion.lift i _ hr')
   have hsq : jK T.V ≫ spMap f₁ = spMap fK ≫ jK V := by
     rw [← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, ← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]

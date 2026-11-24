@@ -38,7 +38,9 @@ import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsAbelianSecti
 import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsExpansionNonnegStatement
 import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsFibIntThStatement
 import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsHeisenbergLiftsSpanLatticeClassesStatement
-import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsValuationClosureStatement
+import Formalism.LocalToGlobal.ProjectiveLattices.OneLtAbsNormReal
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.ValuationMultiplicationInvariance
+import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsValuationClosure
 import Development.AbelianVarietyTheory.Proofs.TorusSplitting.FibPointsMulEquivStatement
 import Development.AbelianVarietyTheory.Proofs.TorusSplitting.LeValuationOddLevelThetaConstantIntegralExpansioStatement
 import Development.AbelianVarietyTheory.Proofs.TorusSplitting.NormalisedThetaConstantOfUniversalOriginValueStatement
@@ -126,7 +128,7 @@ theorem phiC_le_valuation (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
   have hL : Laws := hLL.1
   have hA : AdmBase V (maximalIdeal V) := ⟨inferInstance, inferInstance, inferInstance, hcpl⟩
   have htors := GlobalTheory.UT.torsionIso_of_pelUnif hLL h2 h3 h4 h5 E H V _ hA G P
-  obtain ⟨v, hv, hvv⟩ := GlobalTheory.T.exists_valuation_algebraicClosure_extending_vV V ϖ hϖ
+  obtain ⟨v, hv, hvv⟩ := _root_.GlobalTheory.ValClosure.exists_valuation_closure V ϖ hϖ
   let F := AlgebraicClosure (FractionRing V)
   letI : Algebra c.F F := ((algebraMap (FractionRing V) F).comp (algebraMap c.F (FractionRing V))).toAlgebra
   let ψ : FractionRing V →ₐ[c.F] F := { algebraMap (FractionRing V) F with commutes' := fun _ => rfl }

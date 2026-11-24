@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.KernelNormCo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrPt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramAtPosDef
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.OmAtSmulRight
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FockVacuumAnnihilationEquationRealCoordinatesStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FockVacuumAnnihilationEquationRealCoordinates
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealSymplecticFormAlternatingInvariantDefinite
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasSign
 import Mathlib.Algebra.Order.Floor.Extended
@@ -208,7 +208,7 @@ theorem differentiable_gZ_of_frames {θ : InfFam D} {σ : (D.what₂.Tau → ℂ
     Differentiable ℂ (gZ σ S T (fun τ => (frS.1).map (tauE D τ)) (fun τ => (frT.1).map (tauE D τ)) f) := by
   obtain rfl := GlobalTheory.FockPos.cart_one frS hS hcS
   obtain rfl := GlobalTheory.FockPos.cart_one frT hT hcT
-  obtain ⟨hd, hann⟩ := GlobalTheory.T.fockVacuum_annihilation_equation_real_coordinates D θ σ h ψ hψ S T _ _ f hf hfock
+  obtain ⟨hd, hann⟩ := _root_.GlobalTheory.VacUnique.Ann.vacuum_annihilation D θ σ h ψ hψ S T _ _ f hf hfock
   have hJ : ∀ z : RW T S, jO S T (fun _ => (1 : Matrix (Fin S.rank) (Fin S.rank) ℂ))
       (fun _ => (1 : Matrix (Fin T.rank) (Fin T.rank) ℂ)) z = Complex.I • z := fun z => by
     funext τ i k

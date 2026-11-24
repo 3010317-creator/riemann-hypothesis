@@ -45,7 +45,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Formalism.LocalToGlobal.ProjectiveLattices.SubConstMemOrig
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.UniversalSymLiftExistsUniqueGlobalStatement
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.UniversalSymLiftExistsUniqueGlobal
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.UniversalSymLiftMulOddStatement, Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaGroupShiftHalfTorsionRoot
@@ -127,7 +127,7 @@ theorem isUUOver_shift : Laws → ∀ (E : Type) [Field E] [NumberField E] [IsCM
       SymLift Xo.univ.t.G Xo.univ.t.PP.L ((N : ℤ) ^ 2) (N ^ 2) (t * u) Utu := by
     obtain ⟨-, -, -, -, Uz, Utu, -, -, -, -, h₁, -, h₂, -⟩ := hF
     exact ⟨Uz, Utu, h₁, h₂⟩
-  obtain ⟨⟨Uu, hUu⟩, -⟩ := GlobalTheory.T.universal_symLift_exists_unique_global hLaw E H Dw l Xo N hN _ u hu
+  obtain ⟨⟨Uu, hUu⟩, -⟩ := _root_.GlobalTheory.moduli_univ_symLift_global hLaw E H Dw l Xo N hN _ u hu
   obtain ⟨p, hp⟩ := exists_isActOf hL Uz s₁
   obtain ⟨q, hq⟩ := exists_isActOf hL Uu p
   obtain ⟨w, hw⟩ := exists_isActOf hL Ut q

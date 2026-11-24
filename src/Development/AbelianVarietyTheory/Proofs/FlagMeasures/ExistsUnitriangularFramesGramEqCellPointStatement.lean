@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
 public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.RowsTrm
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitriangularChangeRationalFlagIffRationalUnipotStatement
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.NGData
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitriangularChangeRationalFlagIffRationalUnipot
 import Formalism.FlagUnipotentLattices.MinkowskiFactorialBounds.DetMulEqSumProdMulDetSubmatrix
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -160,8 +161,8 @@ theorem base_frames_at_point : ∀ (D : D7) {T T' : D.host.E} (F : LFlag (D.sp.Y
         fun a => by simp [Matrix.conjTranspose_apply, (hLi a a).2 rfl]⟩
     have hA'u := tw_upUni hUi
     have hA' : Uni (Formalism.MainNotions.BridgeLemma₂.rows_tw U⁻¹) := ⟨fun a b hba => (hA'u a b).1 hba, fun a => (hA'u a a).2 rfl⟩
-    obtain ⟨F00, h00⟩ := (GlobalTheory.T.unitriangularChange_rationalFlag_iff_rationalUnipotent D F hT).1 _ hA
-    obtain ⟨F'0, h'0⟩ := (GlobalTheory.T.unitriangularChange_rationalFlag_iff_rationalUnipotent D F₁ hT').1 _ hA'
+    obtain ⟨F00, h00⟩ := (_root_.GlobalTheory.FlagChange.flag_change D F hT).1 _ hA
+    obtain ⟨F'0, h'0⟩ := (_root_.GlobalTheory.FlagChange.flag_change D F₁ hT').1 _ hA'
     refine ⟨F00, F'0, ⟨_, hA, h00⟩, ⟨_, hA', h'0⟩, ?_⟩
     rw [zhatL_chg h00 h'0, Formalism.MainNotions.BridgeLemma₂.rows_ZhatOM_mul, hZ, tw_tw, Matrix.conjTranspose_conjTranspose]
     calc L⁻¹ * (L * ptMat w * U) * U⁻¹ = (L⁻¹ * L) * ptMat w * (U * U⁻¹) := by simp only [Matrix.mul_assoc]

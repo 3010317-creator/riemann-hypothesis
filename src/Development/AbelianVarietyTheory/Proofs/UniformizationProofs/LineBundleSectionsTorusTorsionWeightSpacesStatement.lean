@@ -15,9 +15,9 @@ public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.Chain
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsProjectiveRep
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CardTorsionOverZero
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.DimEqAddFinrankOfKernel
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFourierJacobiExpansionOverFieldStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFourierJacobiExpansionOverField
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExpFLinear
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FourierJacobiExpansionOverFieldInjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FourierJacobiExpansionOverFieldInjective
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TorusTorsionToAbelianTorsionThetaActionStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -564,8 +564,8 @@ theorem exists_expansion (hL : Laws) (hL₂ : Laws2) : AllPre fun {V} _ _ _ {D} 
         (∀ (v : SecA A F k) (s : Raw D F k), U.ExpF F k v.sec s ↔ s = fun α => (S α v).sec) ∧
         ∀ v, (∀ α, S α v = 0) → v = 0 := by
   intro V _ _ _ hV D A G _ _ U F _ _ k hk
-  choose x hx using GlobalTheory.T.exists_fourierJacobi_expansion_over_field hL hL₂ V hV D A G U F k hk
-  have uq := GlobalTheory.T.fourierJacobiExpansion_overField_injective V hV D A G U F k
+  choose x hx using _root_.GlobalTheory.UU.ExpTotal.expF_total hL hL₂ V hV D A G U F k hk
+  have uq := _root_.GlobalTheory.UU.ExpFUniq.main V hV D A G U F k
   have lin := ExpLin.expF_linear V hV D A G U F k
   let S₀ : ∀ α, SecA A F k → CompMod D F k α := fun α v => SecMod.mk _ (x v.sec α)
   have comb : ∀ (c : F) (v v' : SecA A F k) α, S₀ α (c • v + v') = c • S₀ α v + S₀ α v' := fun c v v' =>

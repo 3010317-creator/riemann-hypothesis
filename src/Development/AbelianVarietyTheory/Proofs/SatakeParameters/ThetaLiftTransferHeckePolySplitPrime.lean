@@ -2,10 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CardKerSubspacesAndHeckePolyOfConvolution
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplittingCharactersUnramifiedOffLevelsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftGoodProjectorIntertwinesMatchedHeckeStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaVacuumHeckeIdentitySplitPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplittingCharactersUnramifiedOffLevels
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftGoodProjectorIntertwinesMatchedHecke
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaVacuumHeckeIdentitySplitPlace
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParahoricLevelLiftsExist
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -137,9 +137,9 @@ theorem consts (μ η ηa q s : ℂ) (hμ : μ ≠ 0) (hη : η ≠ 0) (hs : s �
 
 theorem transfer_and_heckePoly : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A), Core R F → SchurAll R → ∀ i t (P : A.ok t), ∃ z : ℕ → ℕ → ℂ, (∀ k, k ≤ (Vc D i).rank → MatchW R i t (R.pl P) (Finsupp.single (splitLab (Vc D i).rank k) 1) (splitC (Wc D i).rank (z k))) ∧ ∀ a : ℕ → ℂ, Formalism.L2.Col.heckePolyOf (Vc D i).rank (A.q P) (fun k => ∑ j ∈ Finset.range ((Wc D i).rank + 1), z k j * a j) = (Formalism.L2.Col.heckePolyOf (Wc D i).rank (A.q P) a).comp (C (D.what₂.embLL (A.etaVal P : D.what₂.LL) * (A.q P : ℂ) ^ ((D.R.t + 1) / 2)) * X) * ((A.fam.L i t).blockProd P).map D.what₂.embLL := by
   intro D G _ _ Pl0 T A Ks _ _ _ R F hc hS i t P
-  obtain ⟨hQ0, hG, -, hF⟩ := GlobalTheory.T.theta_lift_levels_good_primes_properties R F hc.lev
+  obtain ⟨hQ0, hG, -, hF⟩ := _root_.GlobalTheory.GoodPrimes.good_primes R F hc.lev
   obtain ⟨hgood, hsplit, hq⟩ := hF hc.fam t P P.2
-  obtain ⟨hunη, hunμ⟩ := GlobalTheory.T.splittingCharacters_unramified_offLevels R F hc.lev t _ hgood
+  obtain ⟨hunη, hunμ⟩ := _root_.GlobalTheory.UnrOffLevels.unrPl_of_good R F hc.lev t _ hgood
   obtain ⟨gramR, c0R, c0L, tie⟩ := hc.fam.tie
   obtain ⟨-, hAr, hAt⟩ := tie.ranks
   have hP0 : (P : Pl0) ∈ A.ok A.μ0 := by
@@ -161,13 +161,13 @@ theorem transfer_and_heckePoly : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {
     rw [hx, Formalism.L2.JoinChr.locE, Units.val_mk0]
     ring
   have hun1 := hunμ ((i : ℕ) + 1) (Nat.le_add_left _ _) i.2
-  obtain ⟨hfix, hM⟩ := GlobalTheory.T.thetaVacuum_heckeIdentity_splitPlace R.ψ _ _ _ _ _ (R.pl P) (hc.thP.ωP i t) hsplit hun1 (unrPl_mul_inv hun1 hunη)
+  obtain ⟨hfix, hM⟩ := _root_.GlobalTheory.Hk3.SplitMatch.match_split R.ψ _ _ _ _ _ (R.pl P) (hc.thP.ωP i t) hsplit hun1 (unrPl_mul_inv hun1 hunη)
   have hW : (Wc D i).rank = D.R.r := D.sp.W_rank _ (Nat.le_add_left _ _) i.2
   have hV : (Vc D i).rank = (Wc D i).rank + D.R.t := by
     rw [hW]
     exact D.sp.V_rank _ (Nat.le_add_left _ _) i.2
   have hM' := (hM e ϖ x D.R.t he hϖ1 hϖ2 hx').2 hV
-  refine ⟨_, fun k hk => GlobalTheory.T.thetaLiftGoodProjector_intertwines_matchedHecke R F hc hS i t _ hgood hfix _ _ (hM' k hk), fun a => ?_⟩
+  refine ⟨_, fun k hk => _root_.GlobalTheory.DefLiftHecke.matchW_of_match R F hc hS i t _ hgood hfix _ _ (hM' k hk), fun a => ?_⟩
 
   have hu0 : (R.C.mu0 i).UnrAt (R.pl P) := by
     refine (R.C.isMu0 i).unr _ fun k hk => (hG t _ hgood).1 ?_

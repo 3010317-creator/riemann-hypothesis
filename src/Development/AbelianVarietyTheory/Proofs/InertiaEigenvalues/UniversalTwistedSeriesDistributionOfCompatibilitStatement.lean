@@ -86,7 +86,9 @@ import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOn
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ComplexEmbeddingHermitianQuadrupleSum
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PureTensorLIntertwine
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPureTensorO
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModulusUnramifiedCharDetHeckeDoubleCosetSplitStatement
+import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SplitLinearModelNorm
+import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModulusUnramifiedCharDetHeckeDoubleCosetSplit
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ElementaryDivisorsInvHeckeElementSplitPlace
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdempotentMulCutSubOneEntry
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
@@ -728,7 +730,7 @@ theorem xi_rel (B : Base S T) (hB : B.Good) (hbT : Lev.IsBaseFrame T B.F.βT B.F
 
   have hsupp := (hα k hk).2.1 γ hγ
   obtain ⟨-, k₁, hk₁, k₂, hk₂, hγe⟩ := (hα k hk).2.2.1 γ hγ
-  have hH := (GlobalTheory.T.modulus_unramifiedChar_det_heckeDoubleCoset_split D T P (idemAt P) he ϖ hϖ1 hϖ2 x hx k (α k) (hα k hk).1 k₁ hk₁ k₂ hk₂
+  have hH := (_root_.GlobalTheory.SplitDetValue.det_modulus_chi D T P (idemAt P) he ϖ hϖ1 hϖ2 x hx k (α k) (hα k hk).1 k₁ hk₁ k₂ hk₂
     (GlobalTheory.VecInv.detAt (idemAt P) he.1.1 T γ) (by rw [← hγe]; exact GlobalTheory.VecInv.isDetAt_detAt _ he.1.1 T γ)).2
     (Multiplicative (↥Q' → C)) (u'.delQ Q') (fun y h1 h2 h3 => by
       ext v
@@ -1005,7 +1007,7 @@ theorem thURel_of_tie {ρ : Setup X} (hρ : ρ.Good) {Y : NExp D.R D.host D.what
     have hk : Formalism.MainNotions.IntegralHeckeForms.HkIdx i n P :=
       ⟨(Finset.mem_Icc.1 hn).1, (Finset.mem_Icc.1 hn).2, hsplitP, fun h => Finset.disjoint_left.1 hS0 hP h⟩
     obtain ⟨hdc, h1⟩ := isDC_of_rep hρ J b hk he (hα n hn').1.2.1 (hα n hn').2.1 (hα n hn').2.2
-    have hmu := (GlobalTheory.T.modulus_unramifiedChar_det_heckeDoubleCoset_split D (Links.Wc D J) P (idemAt P) he ϖ hϖ1 hϖ2 x hx n (α n) (hα n hn').1 1 h1 1 h1
+    have hmu := (_root_.GlobalTheory.SplitDetValue.det_modulus_chi D (Links.Wc D J) P (idemAt P) he ϖ hϖ1 hϖ2 x hx n (α n) (hα n hn').1 1 h1 1 h1
       (GlobalTheory.VecInv.detAt (idemAt P) hee (Links.Wc D J) (α n)) (by
         rw [one_mul, mul_one]; exact GlobalTheory.VecInv.isDetAt_detAt _ hee _ _)).2 Circle ((ρ.B i J b).mu)
       (fun y h1 h2 h3 => mu_unram (ρ.B i J b) (hρ.base i J b) hadm hPH y h1 h2 h3)

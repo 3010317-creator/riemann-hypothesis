@@ -14,7 +14,7 @@ import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatti
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLocalHomLatticeOfKeepsCompletedLattices
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfFinite
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumFixesVacuumNonSplitPlaceUnramifiedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumFixesVacuumNonSplitPlaceUnramified
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.CocompactTensor
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.MemAdelicLatticeIffLocalSelfDualCompletion
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsDetAtUnram
@@ -258,7 +258,7 @@ theorem vacFixedAt (D : D7) (v : HeightOneSpectrum (𝓞 D.host.F)) : VacFixedAt
       Circle.coe_one, one_smul] at key
   · have hv : NonSplitAt D v ε := ⟨hε, hsp⟩
     obtain ⟨η, e1, e2, e3, e4⟩ := GlobalTheory.Mem.EtaTilde.exists_etaTilde D
-    refine GlobalTheory.T.weilDatum_fixes_vacuum_nonSplitPlace_unramified D ψ hW.std S T LS LT hS hT χS χT om ⟨η, e1, e4, e3, e2⟩ hW v ε hv uS' uT' k k' sk sk'
+    refine _root_.GlobalTheory.VacInert.fixesVacAt_of_unram D ψ hW.std S T LS LT hS hT χS χT om ⟨η, e1, e4, e3, e2⟩ hW v ε hv uS' uT' k k' sk sk'
       (GlobalTheory.LocalLatStab.mem_latO_place_iff_actO D S T LS LT hS hT v ε hε k k' hk.2.2 hk'.2.2) f hf fun u hu => ?_
     obtain ⟨a, ha, ha2⟩ := GlobalTheory.FinWeilO.exists_half_of_nonSplit hv
     have h1 : 2 • (a • u) = u := by

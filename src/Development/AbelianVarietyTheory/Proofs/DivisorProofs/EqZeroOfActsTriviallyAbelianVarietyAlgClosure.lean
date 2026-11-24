@@ -3,7 +3,7 @@ module
 public import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.TateUnramifiedOfTorsionUnramified
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardAbelianVarietyTorsionSepClosedStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.FlagBasis
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardAbelianVarietyTorsionSepClosed
 
 @[expose] public section

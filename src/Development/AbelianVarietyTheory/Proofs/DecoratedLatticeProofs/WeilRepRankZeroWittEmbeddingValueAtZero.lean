@@ -2,10 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegrand
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinatesOfThetaFunctionAreThetaFunctionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittSourceProofStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittTargetStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumDescendsToWittCoreStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SkewGramHalfModule
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinatesOfThetaFunctionAreThetaFunctions
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittSourceProof
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittTarget
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumDescendsToWittCore
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittDecompositionMixedCoordsRankZero
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsTopologicalRingAE
 import Mathlib.Algebra.Order.Floor.Extended
@@ -106,7 +108,7 @@ end RankZero
 theorem weilRep_rankZeroWittEmbedding_valueAtZero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S S₀ T : HSp D) (d : HypDec S S₀ 0) (χS χT : (AE D)ˣ →* Circle) (om : Om S T) (om₀ : Om S₀ T), IsWeilDatumO ψ S T χS χT om → IsWeilDatumO ψ S₀ T χS χT om₀ → ∀ f, IsThetaFunO ψ S T f → ∀ (g₀ : GA D S₀) (h : GA D T), om (d.emb0 g₀, h) f 0 = om₀ (g₀, h) (fun w => f (d.ext0 T w)) 0 := by
   intro D ψ S S₀ T d χS χT om om₀ hom hom₀ f hf g₀ h
   obtain ⟨μ, 𝓕, hμ⟩ := exists_isCovolOne (D := D) (m := T.rank) (n := 0)
-  have hF := GlobalTheory.T.mixedModelFormulasWittSource_proof D ψ S S₀ T 0 d χS χT om om₀ hom hom₀ μ 𝓕 hμ
+  have hF := _root_.GlobalTheory.MixSourceFormulas.mixed_source D ψ S S₀ T 0 d χS χT om om₀ hom hom₀ μ 𝓕 hμ
   have H1 := (hF (om (1, h) f) (hom.om_pres _ _ hf)).core g₀ 0
   have H2 := (hF f hf).target h 0
   have hS : ∀ F x, _root_.I195MixedCoordinates.source d T ψ μ 𝓕 F x =
@@ -138,9 +140,9 @@ theorem om_flatBF_rankZero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (B : 
       rw [Subsingleton.elim (xZero J.d ⬝ u.1.1) (xZero J.d)]
       simp [psiUni, upSum, psiE]
     simp only [flatBF, flat, flatAt, hc, integral_const, probReal_univ, one_smul]
-  have hd := GlobalTheory.T.weilDatum_descends_to_wittCore D
-  have hm : GlobalTheory.IndefiniteRowSideFullHecke.SkewGramHalfModule.MixedModelFormulas D := ⟨GlobalTheory.T.mixedModelFormulasWittSource_proof D, GlobalTheory.T.mixedModelFormulas_wittTarget D⟩
-  have hv := GlobalTheory.T.mixedCoordinates_of_thetaFunction_are_thetaFunctions D
+  have hd := _root_.GlobalTheory.Desc.weil_data_descend D
+  have hm : GlobalTheory.IndefiniteRowSideFullHecke.SkewGramHalfModule.MixedModelFormulas D := ⟨_root_.GlobalTheory.MixSourceFormulas.mixed_source D, _root_.GlobalTheory.MixTargetProof.mixedTarget D⟩
+  have hv := _root_.GlobalTheory.MixValues.mixed_values D
   rw [hflat, GlobalTheory.Unf.EvalCont.om_evalBF s hd hm hv hΨ h₀ g₀]
   unfold evalBF evalZero evalAt
   have hT : ∀ F y, _root_.I195MixedCoordinates.target J.d B.V₀ ψ s.vT.μ s.vT.𝓕 F y =

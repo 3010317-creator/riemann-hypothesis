@@ -9,8 +9,8 @@ public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPeriodMapHomeomorphRiemannFormDensity
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.DifferentiableOnDetHMat
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AnnihilationCreationPeriodCoordinatesStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUnique
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AnnihilationCreationPeriodCoordinates
 import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.NormLeTsumOfCubeFourierCoeffLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -58,10 +58,10 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.GaussRMulFactor
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPointsClassicalModelRealVectorSpaceStatement
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPointsClassicalModelRealVectorSpace
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TensorLatticeSelfDualSemicharacterIndex
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionSpaceHeisenbergLawsStatement
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinearStatement
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionSpaceHeisenbergLaws
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinear
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsFourierEntire, Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsThetaEqOfTranslationInvariantMultiple, Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsTestFunctionOfFockVacuumThetaFunction
@@ -478,8 +478,8 @@ end GlobalTheory.Ker.FockOnto
 open GlobalTheory.Ker.FockOnto in
 theorem GlobalTheory.Ker.exists_test_of_fock : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ B, C.IsB B → ∀ f, C.IsTh f → C.IsFock B f → ∃ φ : TF S.rank C.g, SW.IsSB φ ∧ f = C.Th (C.xB B) φ := by
   intro D S T C B hB f hf hF
-  obtain ⟨R, hRc, -, hadd, hR, hR', -⟩ := GlobalTheory.T.realPoints_classicalModel_realVectorSpace D S T C
-  have hx : C.xB B ∈ C.X.dom := ((GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2 B hB).2.1
+  obtain ⟨R, hRc, -, hadd, hR, hR', -⟩ := _root_.GlobalTheory.KerReal.real_points D S T C
+  have hx : C.xB B ∈ C.X.dom := ((_root_.GlobalTheory.Ker.onBasis_frame_period D S T C).2 B hB).2.1
   obtain ⟨⟨L, hL⟩, -⟩ := GlobalTheory.Ker.zR_laws D.host.E T.rank C.X C.g C.q0 C.hr C.bas C.idx S.rank C.sympl C.even _ hx
   have hg0 : ∀ z : Fin S.rank → Fin C.g → ℂ, gaussR C.X C.bas C.idx (C.xB B) z ≠ 0 := fun z => Complex.exp_ne_zero _
   set Φ : (Fin S.rank → Fin C.g → ℂ) → ℂ := fun z => (gaussR C.X C.bas C.idx (C.xB B) z)⁻¹ * f (R (L.symm z))
@@ -498,7 +498,7 @@ theorem GlobalTheory.Ker.exists_test_of_fock : ∀ (D : D7) (S T : HSp D) (C : C
   have hone : ∀ ζ (σ : C.X.Ψ) (c : Fin S.rank → Fin T.rank → ℂ),
       fderiv ℝ Φ ζ (I • L (Pi.single σ c)) = I * fderiv ℝ Φ ζ (L (Pi.single σ c)) := by
     intro ζ σ c
-    have h1 := (GlobalTheory.T.annihilation_creation_periodCoordinates D S T C B hB f Φ hd hw (C.m.e.symm σ) (Matrix.of fun a k => conj (c k a))
+    have h1 := (_root_.GlobalTheory.Ker.annih_crea_coord D S T C B hB f Φ hd hw (C.m.e.symm σ) (Matrix.of fun a k => conj (c k a))
       (L (Pi.single σ c)) (by simp [hL]) (R (L.symm ζ)) (hR _).1).1
     have h2 : C.zOf (C.xB B) (R (L.symm ζ)) = ζ := by rw [Ctx.zOf, (hR _).2, ← hL, L.apply_symm_apply]
     rw [hF, h2, Pi.zero_apply] at h1
@@ -510,7 +510,7 @@ theorem GlobalTheory.Ker.exists_test_of_fock : ∀ (D : D7) (S T : HSp D) (C : C
 
     rw [← Finset.univ_sum_single v, map_sum, Finset.smul_sum, map_sum, map_sum, Finset.mul_sum]
     exact Finset.sum_congr rfl fun σ _ => hone ζ σ _
-  obtain ⟨-, hext, hth⟩ := GlobalTheory.T.thetaFunction_space_heisenberg_laws D S T C
+  obtain ⟨-, hext, hth⟩ := _root_.GlobalTheory.ThetaSpace.theta_space_laws D S T C
   obtain ⟨-, -, -, hfin, -, N, hN, hlev⟩ := hth f hf
   obtain ⟨φ, hφ, hθ⟩ := _root_.GlobalTheory.Ker.Onto.exists_thA_eq D.host.E T.rank C.X C.g C.q0 C.hr C.bas C.idx S.rank C.sympl C.even _ hx N hN
     Φ hC (by
@@ -529,7 +529,7 @@ theorem GlobalTheory.Ker.exists_test_of_fock : ∀ (D : D7) (S T : HSp D) (C : C
         ← map_sub, sub_neg_eq_add, h4, hv, hv] at h1
       rw [h1]
       simp)
-  refine ⟨φ, hφ, (GlobalTheory.T.adelicZakTheta_exists_unique D S T C _ hx φ hφ).2 f ⟨hf, fun w hw' => ?_⟩⟩
+  refine ⟨φ, hφ, (_root_.GlobalTheory.Ker.ZakEx.isZak_Th D S T C _ hx φ hφ).2 f ⟨hf, fun w hw' => ?_⟩⟩
   rw [hw w hw', thR, hθ, Ctx.zOf]
 end -- clump:auto
 end -- clump:auto

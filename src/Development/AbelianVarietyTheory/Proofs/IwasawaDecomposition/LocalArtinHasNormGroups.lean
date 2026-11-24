@@ -9,7 +9,8 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ArtinTr
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAbelianizedGaloisHomOfClosureIso
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLocalExtensionOfFiniteIndexWeilSubgroupStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTotallyPositiveApproxAtFinitePlaces
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GlobalArtinLocalIdeleInjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GlobalArtinLocalIdeleInjective
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormTotallyPositiveOfTotallyPositiveNeZero
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ProdIdeleCharacterEqOneOfTotallyPositive
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitsAdicCompletionHomExtOfIsOpenKer
@@ -26,7 +27,6 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormC
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocUnitApply
 public import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ProdLocalValuesGlobalOverPlacesAbove
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -432,7 +432,7 @@ theorem hasNormGroups_of_isLocalArtin : GlobalTheory.Published.GlobalArtinRecipr
     (Continuous.units_map _ hNc) fun z => Units.ext (hNg z)
   have key' : ∀ (y : (W.adicCompletion K)ˣ) (τ : Weil h') (s : Weil h), (∀ z, (s : G E Ω) z = (τ : G K Ω) z) →
       artK (Neutral.B1.localIdele K W y) = GlobalTheory.HeckeGal.toAb K Ω τ → N y = a s := fun y τ s hs hy =>
-    GlobalTheory.T.globalArtin_localIdele_injective hC E Ω art hart w ((key y τ s hs hy).trans (ha.glob art hart s).symm)
+    _root_.GlobalTheory.ArtinLocalInj.artin_localIdele_injective hC E Ω art hart w ((key y τ s hs hy).trans (ha.glob art hart s).symm)
   obtain ⟨h1, h2⟩ := art_range_weil K Ω A W h' artK hartK
   rw [← hH σ g hg, hN]
   constructor

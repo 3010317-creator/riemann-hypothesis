@@ -41,7 +41,8 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSuper
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormalizedAbsValueLocalFieldUnitMapHomeomorph
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ParabolicInductionCompGeneralLinearGroupMapOfFie
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameParameterCoupled
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsCuspidalSupportIrreducibleSmoothGLStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsCellOfIsSubquotient
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsCuspidalSupportIrreducibleSmoothGL
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RecUnit
 public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LabLPIsLabelActK
@@ -71,7 +72,6 @@ public import Development.AutomorphicArithmetic.Foundations.LocalLanglands.IsRec
 public import Development.WeilBound.CoreStatements.StandardPublishedResults.StandardTheoremStatements.GlobalArtinReciprocity
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.NormalIntegrality
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.TauOneCharacter
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsCellOfIsSubquotient
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.RestrictMem
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyTypePlaceCompletionIdent
 public import Development.AutomorphicArithmetic.Foundations.UnitarySphericalFixing.SatakeParameters.AbsCentralAlt
@@ -594,7 +594,7 @@ theorem inePol_eq_liftPoly_of_has (hBZ : GlobalTheory.Published.BernsteinZelevin
     (hf : Has (sysOf L h5 hA) (π.π.comp (Matrix.GeneralLinearGroup.map i.toRingHom)) f) :
     (rc (cls π.toIrrRep)).inePol t = TameGen.liftPoly L.teich f := by
   have hi' := GlobalTheory.TameRecord.continuous_symm w i hi
-  obtain ⟨s, d, σ, hs⟩ := GlobalTheory.T.exists_cuspidalSupport_irreducibleSmoothGL hBZ hGL _ n π
+  obtain ⟨s, d, σ, hs⟩ := _root_.GlobalTheory.CuspSupportExist.main hBZ hGL _ n π
   have h1 := hrc.recSupp n s π d σ hs (ineIncl h ⟨t, ht⟩)
   obtain ⟨-, hc, e, U, T, hT⟩ := hs
   obtain ⟨φ⟩ := GlobalTheory.IndField.multiProd_comp_glMap i.symm hi' hi

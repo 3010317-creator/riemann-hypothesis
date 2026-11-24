@@ -7,20 +7,24 @@ import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GlobalFormOfSiegelWeil
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LevelPlacesDatumMulRightSourceLevelStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OmegaQEmpty
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumPowersUnramifiedEtaTildeStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTwistHeckeCharactersStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumPowersUnramifiedEtaTilde
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTwistHeckeCharacters
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfFinite
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumFixesVacuumNonSplitPlaceUnramified
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctionsStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctions
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsInvariantForm
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrameMatrixMovedHomIntegralReductionsStatement
+import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrameMatrixMovedHomIntegralReductions
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemClosedSubgroupOfLocalStabilizerPairsStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHomLatticeIffFrameStabilizerActMemStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerIntertwinerSchwartzBruhatIsThetaStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPlaceWeilRepLatticeVacuumCharacterStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHomLatticeIffFrameStabilizerActMem
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerIntertwinerSchwartzBruhatIsTheta
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPlaceWeilRepLatticeVacuumCharacter
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilOperatorLatticeStabiliserFixesVacuumNonsplit
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilRepThetaDatumHalfEqSmulStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilRepThetaDatumHalfEqSmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,8 +102,8 @@ theorem inert_one {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {ΛS : Submodul
   obtain ⟨η, hη⟩ := hη
   have hψ := hW.std
   obtain ⟨θ, hθ⟩ := hψ.2.1
-  obtain ⟨om₀, h0, hv, -⟩ := GlobalTheory.T.exists_weilDatum_powers_unramifiedEtaTilde D ψ hψ S T θ hθ ΛS ΛT hS hT η hη
-  obtain ⟨om₁, h1, htw⟩ := GlobalTheory.T.exists_weilDatum_twist_heckeCharacters D ψ hψ S T _ _ ((η ^ S.rank)⁻¹ * χS) ((η ^ T.rank)⁻¹ * 1) om₀ h0
+  obtain ⟨om₀, h0, hv, -⟩ := _root_.GlobalTheory.WeilProduct.exists_weilDatum_etaTilde D ψ hψ S T θ hθ ΛS ΛT hS hT η hη
+  obtain ⟨om₁, h1, htw⟩ := _root_.GlobalTheory.WeilChange.exists_weilDatum_twist D ψ hψ S T _ _ ((η ^ S.rank)⁻¹ * χS) ((η ^ T.rank)⁻¹ * 1) om₀ h0
     (GlobalTheory.VacInert.hecke_quot hW.hecS h0.hecS) (GlobalTheory.VacInert.hecke_quot hW.hecT h0.hecT)
     (GlobalTheory.VacInert.resEta_quot hW.resS h0.resS) (GlobalTheory.VacInert.resEta_quot hW.resT h0.resT)
   rw [mul_inv_cancel_left, mul_inv_cancel_left] at h1
@@ -116,7 +120,7 @@ theorem inert_one {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {ΛS : Submodul
     have e2 := hvac.1 (a • u)
       (GlobalTheory.LatticeStable.smul_mem_latO D S T _ _ _ a ha u (GlobalTheory.PlaceModel.latO_le_top _ hu))
     rwa [e1] at e2
-  rw [GlobalTheory.T.weilDatum_unique_on_thetaFunctions D ψ hψ S T χS 1 om om₁ hW h1 _ f hf, htw g 1 x 1 hx (isDetRoot_one T), LinearMap.smul_apply,
+  rw [_root_.GlobalTheory.WeilUniq.weilDatum_unique D ψ hψ S T χS 1 om om₁ hW h1 _ f hf, htw g 1 x 1 hx (isDetRoot_one T), LinearMap.smul_apply,
     hv v ε hε g 1 hg (suppPl_one ε T) hlat f hf hfix]
   simp [hη.2.1 x xi x1 x2]
 
@@ -132,7 +136,7 @@ theorem local_one {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {ΛS : Submodul
   have hlat := mem_latO_iff frS frT (h := (1 : GA D T)) hg.2 (Stab.one T βT).2
   by_cases hsp : ∃ e', IsSplitIdem D e' ∧ e' + cA D e' = algebraMap (AF D.host.F) (AE D) ε
   · obtain ⟨e', he', hb⟩ := hsp
-    have := GlobalTheory.T.splitPlace_weilRep_latticeVacuum_character D ψ S T ΛS ΛT χS 1 om hW hS hT e' he' g 1 (fun i j => by rw [hb]; exact sg i j)
+    have := _root_.GlobalTheory.VecInv.om_latVac_split D ψ S T ΛS ΛT χS 1 om hW hS hT e' he' g 1 (fun i j => by rw [hb]; exact sg i j)
       (suppAt_one e' T) hlat _ _ (isDetAt_detAt e' he'.1 S g) (isDetAt_detAt e' he'.1 T 1) f hf hvac
     rw [this, splitFacO, map_one, map_one, MonoidHom.one_apply, inv_one, one_mul, Circle.coe_one, one_smul]
   · exact inert_one hW hS hT hη ⟨hε, hsp⟩ g sg hlat f hf hvac
@@ -208,11 +212,11 @@ theorem prin_fixes_stepVec : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ :
     exact GlobalTheory.SmallFix.vac_one hW dA dH hη hPl.frame hfrH f₀ hf.2.theta hf.2.lat κ ⟨hκ.1, sg⟩
   have hoG := GlobalTheory.T.levelPlacesDatum_mul_right_source_level D A.rank H.rank (prinDat A Z) (fun _ => 1)
     (fun PP => Formalism.L2.DIV.redFn β PP (Formalism.IndefR.Lev.finE A κ)) (fun PP hP => Formalism.L2.DIV.parLev_g hlev.1 hP) hlev.2
-  have h2 := GlobalTheory.T.weilRep_theta_datum_half_eq_smul D ψ A H χA 1 om hW e _ f₀ _ f
-    (GlobalTheory.T.schrodingerIntertwiner_schwartzBruhat_isTheta D ψ hW.std A H (frameLat A) (frameLat H) dA dH e (GlobalTheory.PlaceDatum.idemSum_mul_self he)
+  have h2 := _root_.GlobalTheory.ThetaMove.om_theta_eq_smul D ψ A H χA 1 om hW e _ f₀ _ f
+    (_root_.GlobalTheory.SchrTheta.isTheta_placeModel D ψ hW.std A H (frameLat A) (frameLat H) dA dH e (GlobalTheory.PlaceDatum.idemSum_mul_self he)
       (GlobalTheory.PlaceDatum.infPart_idemSum he) f₀ hf.2.theta) hΘ κ 1
-    (GlobalTheory.T.mem_homLattice_iff_frameStabilizer_act_mem D A H (frameLat A) (frameLat H) β βH dA dH hPl.frame hfrH κ 1 sg sh) 1 1 one_ne_zero h1 (fun x => by
-      obtain ⟨i1, i2⟩ := GlobalTheory.T.frameMatrix_movedHom_integral_reductions D A H β βH κ 1 sg sh x
+    (_root_.GlobalTheory.StabLatInv.mem_latO_iff_actO_mem D A H (frameLat A) (frameLat H) β βH dA dH hPl.frame hfrH κ 1 sg sh) 1 1 one_ne_zero h1 (fun x => by
+      obtain ⟨i1, i2⟩ := _root_.GlobalTheory.FrameRed.frMapO_actO_int_red D A H β βH κ 1 sg sh x
       have i0 : Formalism.IndefR.Datum.IsHalf e (actO A H κ⁻¹ 1⁻¹ x) ↔ Formalism.IndefR.Datum.IsHalf e x :=
         ⟨fun H' => GlobalTheory.AdelicLatMove.actO_actO_inv A H κ 1 x ▸ GlobalTheory.SplitHecke.isHalf_actO κ 1 H',
           fun H' => GlobalTheory.SplitHecke.isHalf_actO _ _ H'⟩

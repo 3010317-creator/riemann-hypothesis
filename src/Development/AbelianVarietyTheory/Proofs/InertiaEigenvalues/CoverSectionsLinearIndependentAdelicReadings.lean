@@ -10,8 +10,9 @@ public import Development.AbelianVarietyTheory.Proofs.HeightProofs.MarkedIsometr
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCoverDictionaryAdelicElementComponent
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsAdelicElementOfMarkedComponentLattice
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryEqRealMulFiniteSplit
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeRationalTranslateInvarianceStatement
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicativeStatement
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeRationalTranslateInvariance
+import Formalism.LocalToGlobal.ProjectiveLattices.EquivariantFiniteGroup
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicative
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLatticeEmbeddingLiftDatumHermitianSpace
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameMulTriangularOrthonormal
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameUniformEmbeddingSecond
@@ -115,7 +116,7 @@ theorem dict_onto {D : D7} (V : HSp D) {H : ReciprocityTheory.ChartRestriction.G
   have hx₁d : x₁ ∈ (U.X k).dom := ((GlobalTheory.UnitFrames.unit_frame_eq_orthonormal_mul_triangular D.host.E V.rank (U.X k).p0
     (U.X k).Ψ (U.X k).Gm (U.X k).Gm_herm).2.1 x₁ ho).1
   obtain ⟨θ, hθ⟩ := (GlobalTheory.Member.infiniteAdele_bijective D).1
-  obtain ⟨hAr, -, hL⟩ := GlobalTheory.T.archimedeanMatrix_unitary_continuous_multiplicative D V θ hθ
+  obtain ⟨hAr, -, hL⟩ := _root_.GlobalTheory.Member.Arch.archM_spec D V θ hθ
   have hG : ∀ k, (U.X k).Gm = -V.gramᵀ := fun k => (hW k).1
   have hmem : ∀ k (τ : D.host.E →+* ℂ), τ ∈ (U.X k).Ψ ↔ τ D.host.sqrtMinusD = D.host.φ₀ D.host.sqrtMinusD := by
     intro k τ
@@ -137,7 +138,7 @@ theorem dict_onto {D : D7} (V : HSp D) {H : ReciprocityTheory.ChartRestriction.G
   have hfin : finHom V (a₀ * f) = finHom V (a * f) := by
     rw [map_mul, map_mul, show finHom V a₀ = 1 from ha₀, show finHom V a = 1 from ha]
   have hh : Marked V rfl io l (U.X k).Λ (fun a => (φ k (F.t (ik k) a) : Fin V.rank → D.host.E)) (a * f) := by
-    obtain ⟨e₁, e₂⟩ := (GlobalTheory.T.adelicUnitaryLattice_rationalTranslate_invariance D V).2.1 _ _ hfin
+    obtain ⟨e₁, e₂⟩ := (_root_.GlobalTheory.Member.latG_move D V).2.1 _ _ hfin
     unfold Marked at hh₀ ⊢
     rwa [e₁, e₂, hfin] at hh₀
   refine ⟨a * f, ?_⟩

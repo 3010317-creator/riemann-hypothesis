@@ -6,7 +6,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGlobal
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AxesVanishingStructureSheafDegOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTangentRepresentationSmoothGroupSchemeStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasFrameOfIsBaseChange
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalFunctionsConstantAfterBaseChangeOfAbelianSStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalFunctionsConstantAfterBaseChangeOfAbelianS
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbelianSchemeGerms
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -132,7 +132,7 @@ theorem basic_of_isAbelianScheme : ∀ (R : Type) [CommRing R] (A : Over (Sp R))
   have hsq : IsPullback (𝟙 A.left) A.hom A.hom (spMap (algebraMap R R)) := by
     rw [Algebra.algebraMap_self, spMap_id]
     exact IsPullback.of_horiz_isIso ⟨by simp⟩
-  exact GlobalTheory.T.globalFunctionsConstantAfterBaseChange_of_abelianScheme R A hA R A.left A.hom (𝟙 _) hsq
+  exact _root_.GlobalTheory.AbCoh.uConst_of_isAbelianScheme R A hA R A.left A.hom (𝟙 _) hsq
 
 end GlobalTheory.AbCoh
 end -- clump:auto

@@ -50,10 +50,12 @@ public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ValueAtNorm
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ConstFamComponentsBasisExpansion
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsUniqueSpecializes
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsCmEllipticCurveWithPeriod
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCubicalSymmetricStructureOfGenericSymmetriStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCubicalSymmetricStructureOfGenericSymmetri
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleGenericFibreExtendsOverDvrStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymmetricOfLineBundleIsoPullGroupHomStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleIsoMumfordOfGenericExtensionStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymmetricOfLineBundleIsoPullGroupHom
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleIsoMumfordOfGenericExtension
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsRigidTranslatePrincipalPolarisationOrderTw
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsSquareUnique
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSiegDataFiniteUnramified
@@ -66,7 +68,7 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PushEquivSymm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFiniteAndFlatTorsion
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCompleteDvrIntegralClosureFinite
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinExtTqClosedFibre
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisationCompleteLocalEvenOnTorusStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisationCompleteLocalEvenOnTorus
 import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemNonzeroLocusIffPowFn
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.TraceFormTwistIsoOfPullback
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
@@ -1099,8 +1101,8 @@ theorem GlobalTheory.Mum.exists_transl_pkg : ∀ (R : Type) [CommRing R] [IsDoma
     have : IsIso gen.hom.left := inferInstanceAs (IsIso ((Over.forget _).map gen.hom))
     rw [e]; infer_instance
   have hsym : Out.Sym ((Over.pullback (jK R)).obj G) (L'.pull (pullback.fst G.hom (jK R))) :=
-    GlobalTheory.T.symmetric_of_lineBundleIso_pull_groupHom _ _ _ gen.hom hgen L₁ _ hL₁ (pull_isLB hL' _) A₁.sym hLL'
-  obtain ⟨P₁, hP₁⟩ := GlobalTheory.T.exists_cubicalSymmetricStructure_of_genericSymmetric R G hG hpr L' hL' hsym
+    _root_.GlobalTheory.sym_of_lbIso_pull_hom _ _ _ gen.hom hgen L₁ _ hL₁ (pull_isLB hL' _) A₁.sym hLL'
+  obtain ⟨P₁, hP₁⟩ := _root_.GlobalTheory.CubSymPkg.exists_cp_of_generic_sym R G hG hpr L' hL' hsym
   have hPL := P.L.isLB
 
   have htr : LBIso LG (P.L.L.pull (genPr G * genPt G a).left) := by
@@ -1145,7 +1147,7 @@ theorem GlobalTheory.Mum.exists_transl_pkg : ∀ (R : Type) [CommRing R] [IsDoma
           (LBIso.symm e2) e4))
   refine ⟨P₁, A₁, gen, hgen, ?_, ?_, ?_⟩
   · rw [hP₁]; exact hLL'
-  · rw [hP₁]; exact GlobalTheory.T.lineBundleIso_mumford_of_generic_extension R G hG L' LG (abelian₂ G P.L.L) hL' hLG hLL' hext
+  · rw [hP₁]; exact _root_.GlobalTheory.Mum.lbIso_lam_of_extLam R G hG L' LG (abelian₂ G P.L.L) hL' hLG hLL' hext
   · show LBIso _ _
     rw [hP₁]
     exact LBIso.trans (pull_isLB hL' _) hLG (pull_isLB hPL _) (LBIso.symm hLL') htr
@@ -1581,8 +1583,8 @@ theorem GlobalTheory.Mum.exists_unif_finExt_lam : ∀ (R : Type) [CommRing R] [I
     have : IsIso gen.hom.left := inferInstanceAs (IsIso ((Over.forget _).map gen.hom))
     rw [e]; infer_instance
   have hsym : Out.Sym ((Over.pullback (jK R)).obj G) (L'.pull (pullback.fst G.hom (jK R))) :=
-    GlobalTheory.T.symmetric_of_lineBundleIso_pull_groupHom _ _ _ gen.hom hgen A.L _ A.isLB (LB.isLB_pull hL' _) A.sym hLL'
-  obtain ⟨P, hP⟩ := GlobalTheory.T.exists_cubicalSymmetricStructure_of_genericSymmetric R G hG hpr L' hL' hsym
+    _root_.GlobalTheory.sym_of_lbIso_pull_hom _ _ _ gen.hom hgen A.L _ A.isLB (LB.isLB_pull hL' _) A.sym hLL'
+  obtain ⟨P, hP⟩ := _root_.GlobalTheory.CubSymPkg.exists_cp_of_generic_sym R G hG hpr L' hL' hsym
   subst hP
   obtain ⟨R', _, _, _, ρ, G₁, _, _, β, β₂, P₁, A₁, gen₁, hR', hρ, hβ, hsq, hgen₁, hL₁, hLam, hEven⟩ :=
     GlobalTheory.T.exists_even_translate_order_two_torus R ⟨hdvr, hcomp, hchar⟩ G hG P A gen hgen hLL'
@@ -1590,8 +1592,8 @@ theorem GlobalTheory.Mum.exists_unif_finExt_lam : ∀ (R : Type) [CommRing R] [I
   have hG₁ : IsSemiAbelian G₁ := by
     obtain ⟨bc, mbc, -⟩ := grpPullback_iso hβ (isGrpPullback_pullback G (spMap ρ))
     exact GlobalTheory.isSemiAbelian_of_grpIso bc (Geo.Tor.IsSemiAbelian.pullback (spMap ρ) G hG)
-  obtain ⟨D, U, hU, -⟩ := GlobalTheory.T.exists_uniformisation_completeLocal_evenOnTorus R' hB' G₁ P₁ hG₁ hEven A₁ gen₁ hgen₁ hL₁
-  have hE : LBIso (abelian₂ G P.L.L) PP := GlobalTheory.T.lineBundleIso_mumford_of_generic_extension R G hG P.L.L _ PP P.L.isLB hL hLL' hPP
+  obtain ⟨D, U, hU, -⟩ := _root_.GlobalTheory.Mum.exists_unif_even R' hB' G₁ P₁ hG₁ hEven A₁ gen₁ hgen₁ hL₁
+  have hE : LBIso (abelian₂ G P.L.L) PP := _root_.GlobalTheory.Mum.lbIso_lam_of_extLam R G hG P.L.L _ PP P.L.isLB hL hLL' hPP
   refine ⟨R', _, _, _, ρ, D, G₁, _, _, β, β₂, A₁, U, hR', hρ, hβ, hsq, ?_⟩
   rw [hU]
   exact LBIso.trans (lam_isLB G₁ P₁.L.isLB) (LB.isLB_pull (lam_isLB G P.L.isLB) _) (LB.isLB_pull hPP.1 _) hLam

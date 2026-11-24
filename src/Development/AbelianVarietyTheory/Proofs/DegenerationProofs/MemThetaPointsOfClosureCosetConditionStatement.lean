@@ -7,7 +7,7 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsTateIsoZetaEq
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTateIsoOfLevel
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FullTorsionObjectExistsUniqueModuliPointStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FullTorsionObjectExistsUniqueModuliPoint
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSpecialisationWithThetaPoint
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
@@ -42,7 +42,7 @@ public import Mathlib.Algebra.Ring.Hom.InjSurj
 public import Mathlib.RingTheory.Algebraic.Basic
 public import Mathlib.RingTheory.Algebraic.Integral
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCompleteIsAlgClosedCExt
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModuliModelUltrametricPointsStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModuliModelUltrametricPoints
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaCoordinatesExistUniqueSeparatePointsStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsProperOfThetaUnitInEveryCosetStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -136,7 +136,7 @@ theorem exists_full_of_theta_in_subfield : HV → Laws6 → GlobalTheory.LN.UDvr
       (Complex.isPrimitiveRoot_exp l.A l.A_pos.ne') Subtype.val_injective).map_of_injective
         b.injective).map_of_injective i.injective
   obtain ⟨I, hI⟩ := GlobalTheory.TateRoot.exists_tateIso_zeta_eq E H D l κ _ _ _ o'.I l.A _ l.A_pos hp
-  obtain ⟨y, ⟨hy, φ, h₁, h₂, h₃, -⟩, -⟩ := (GlobalTheory.T.fullTorsionObject_existsUnique_moduliPoint hv h6 hU hX hT hE hA E H D l Xo c W₀ Y κ (i.comp b)).1
+  obtain ⟨y, ⟨hy, φ, h₁, h₂, h₃, -⟩, -⟩ := (_root_.GlobalTheory.FullPoint.fullAt_existsUnique_exists_ext hv h6 hU hX hT hE hA E H D l Xo c W₀ Y κ (i.comp b)).1
     { o' with I := I } (fun r h => by
       obtain rfl : r = ⟨_, hr⟩ := Subtype.ext h
       exact hρ.trans (congrArg i hb.symm)) (fun r h => by
@@ -1006,7 +1006,7 @@ theorem exists_trait : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.
     refine hvan G ⟨hm, ⟨d, hG⟩, fun o hρ hz u hu => ?_⟩
     obtain ⟨I', hI'⟩ := GlobalTheory.TateRoot.exists_tateIso_zeta_eq E H D l ℂ _ _ _ o.I l.A (zeta l.A) l.A_pos
       (Complex.isPrimitiveRoot_exp _ l.A_pos.ne')
-    obtain ⟨y, ⟨hy, φ, h1, h2, h3, -⟩, -⟩ := (GlobalTheory.T.fullTorsionObject_existsUnique_moduliPoint hV h6 hU hX hT hE hA E H D l Xo c W₀ Y ℂ c.F.val.toRingHom).1
+    obtain ⟨y, ⟨hy, φ, h1, h2, h3, -⟩, -⟩ := (_root_.GlobalTheory.FullPoint.fullAt_existsUnique_exists_ext hV h6 hU hX hT hE hA E H D l Xo c W₀ Y ℂ c.F.val.toRingHom).1
       { o with I := I' } (fun r hr => hρ.trans hr.symm) (fun r hr => hI'.trans hr.symm)
     obtain ⟨i, f, hf, hth⟩ := hcov ℂ y o φ L.val.toRingHom ⟨h1, h2, h3⟩ hy hz
     obtain ⟨s, rfl⟩ := (theta_iff hL o hm hth).1 hu
@@ -1055,8 +1055,8 @@ theorem exists_trait : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.
   letI : Algebra ℚ W := ((algebraMap K W).comp (algebraMap ℚ K)).toAlgebra
   obtain ⟨b, hb⟩ := exists_lift_of_finite (f.comp ((gam i).comp (algebraMap c.F L)))
   let bF : c.F →+* C := (g.comp f).comp ((gam i).comp (algebraMap c.F L))
-  obtain ⟨o₁, ho₁⟩ := (GlobalTheory.T.fullTorsionObject_existsUnique_moduliPoint hV h6 hU hX hT hE hA E H D l Xo c W₀ Y C bF).2.1 (spMap g ≫ spMap f ≫ x i)
-  obtain ⟨M, -⟩ := GlobalTheory.T.moduli_model_ultrametric_points hV h6 hU hX hT hE hA E H D l Xo c W₀ Y C W hcdv hext (FractionRing W) g hg
+  obtain ⟨o₁, ho₁⟩ := (_root_.GlobalTheory.FullPoint.fullAt_existsUnique_exists_ext hV h6 hU hX hT hE hA E H D l Xo c W₀ Y C bF).2.1 (spMap g ≫ spMap f ≫ x i)
+  obtain ⟨M, -⟩ := _root_.GlobalTheory.Ex.UnifModel.exists_mdl hV h6 hU hX hT hE hA E H D l Xo c W₀ Y C W hcdv hext (FractionRing W) g hg
     (spMap f ≫ x i) (b.comp (c.V W₀).subtype) (by
       rw [Model.j, Category.assoc Y.jQ, pullback.condition, ← Category.assoc Y.jQ, Y.jQ_over, Category.assoc,
         ← Category.assoc (x i), hs, spMap_comp'', spMap_comp'', ← RingHom.comp_assoc, ← hb]

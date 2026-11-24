@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DatVtEq
 public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsLevel
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StdMaximalCompactReductionPropertiesStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.BesselShellMomentBounds
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StdMaximalCompactReductionProperties
 import Formalism.LocalToGlobal.Divisibility.DefGroupLemmas
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -222,7 +223,7 @@ end Adelic2
 theorem main : ∀ (D : D7) (n : ℕ) (hr : D.R.r ≤ n) (Pg Q : Finset (Pl D.host.E)) (ψ : ∀ PP : Pl D.host.E, AddChar (kP PP) ℂ)
     (chi xi : ∀ PP : Pl D.host.E, (kP PP)ˣ →* ℂˣ), NG.IsProdLevel (stdJ (datV D n hr Pg Q (P0 Pg D.R.r ψ) chi xi)) := by
   intro D n hr Pg Q ψ chi xi κ hκ v
-  obtain ⟨hUA, hSt, hred, -⟩ := GlobalTheory.T.stdMaximalCompact_reduction_properties D n
+  obtain ⟨hUA, hSt, hred, -⟩ := _root_.GlobalTheory.MtRed.km_reduction D n
   set κ1 := cutGA (eA_mul v) (conj_eA v) κ with hκ1
   set κ2 := cutGA (one_sub_eA_mul v) (conj_one_sub_eA v) κ with hκ2
   have hκ' := Subgroup.mem_comap.1 hκ

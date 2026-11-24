@@ -21,7 +21,6 @@ public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsOp
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsUniqueLbIsoPullEqOfCoheightLeOne
 public import Mathlib.AlgebraicGeometry.Noetherian
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemPreimageSupOfStalkKrullDimLeOneFlatStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonvanishingLocusPullbackAndVanishIntoLocusStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoSmulPicardClassExtendsAbelianSchemeStatement
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
 public import Mathlib.Order.CompletePartialOrder
@@ -31,7 +30,8 @@ public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsPro
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.GroupLawsOnCoverAgreeOnCommonPoints
 public import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TheoremOfSquareCechPicardTranslatesStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TheoremOfSquareCechPicardTranslates
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BlowupDivisorTrivialOnFibers
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsPowMulMemRangeOfLocalDenominators
@@ -77,7 +77,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.PublishedTheorems.AbelianLaws.PrincipalPolarisationOneSection
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsAdditiveOfUniversal
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.CocycleRightZeroThd
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SymplecticGenerators.StTransl
@@ -556,7 +555,7 @@ theorem isLocus_of_isAffineOpen_of_meets_fibres : ∀ (R : Type) [CommRing R] [I
   obtain ⟨U, c, hU, hc⟩ := GlobalTheory.T.exists_cartier_locus_over_dense_open_base R A hA V hV hfib
   have hVW : V ≤ A.hom ⁻¹ᵁ U ⊔ V := le_sup_right
   have h0 : GlobalTheory.CechPic.pull (A.left.homOfLE hVW) c = 0 := by
-    refine GlobalTheory.T.nonvanishingLocus_pullback_and_vanish_into_locus.2 _ _ _ c _ hc fun y => ?_
+    refine _root_.GlobalTheory.LocusPull.locus_pull.2 _ _ _ c _ hc fun y => ?_
     show (A.left.homOfLE hVW ≫ (A.hom ⁻¹ᵁ U ⊔ V).ι) y ∈ V
     rw [Scheme.homOfLE_ι]
     exact y.2
@@ -890,7 +889,7 @@ namespace GlobalTheory.SquareLocus
 
 theorem translate_mul_inv_isLocus : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (A : Over S) [GrpObj A], IsAbelianScheme A → ∀ (c : Pic A.left) (V : A.left.Opens), IsLocus c V → ∀ (T : Over S) (a : T ⟶ A), GlobalTheory.CechPic.pull (a).left c + GlobalTheory.CechPic.pull ((a)⁻¹).left c - 2 • GlobalTheory.CechPic.pull (1 : T ⟶ A).left c = 0 → IsLocus (2 • GlobalTheory.CechPic.pull (fst A T).left c) ((fst A T * (snd A T ≫ a)).left ⁻¹ᵁ V ⊓ (fst A T * (snd A T ≫ a)⁻¹).left ⁻¹ᵁ V) := by
   intro S _ A _ hA c V hV T a h
-  have hsq := GlobalTheory.T.theorem_of_square_cechPicard_translates S A hA c (A ⊗ T) (fst A T) (snd A T ≫ a)
+  have hsq := _root_.GlobalTheory.SquareSym.pull_mul_add_pull_mul_inv S A hA c (A ⊗ T) (fst A T) (snd A T ≫ a)
   have e1 : (snd A T ≫ a)⁻¹ = snd A T ≫ a⁻¹ := (GrpObj.comp_inv _ _).symm
   have e2 : (1 : A ⊗ T ⟶ A) = snd A T ≫ (1 : T ⟶ A) := (MonObj.comp_one _).symm
   have h0 : pull (snd A T ≫ a).left c + pull (snd A T ≫ a)⁻¹.left c
@@ -901,8 +900,8 @@ theorem translate_mul_inv_isLocus : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S]
       = 2 • pull (fst A T).left c := by
     rw [hsq, ← sub_eq_zero, ← h0]
     abel
-  have hl := (GlobalTheory.T.nonvanishingLocus_pullback_and_vanish_into_locus.1 A.left (A ⊗ T).left (fst A T * (snd A T ≫ a)).left c V hV).add
-    (GlobalTheory.T.nonvanishingLocus_pullback_and_vanish_into_locus.1 A.left (A ⊗ T).left (fst A T * (snd A T ≫ a)⁻¹).left c V hV)
+  have hl := (_root_.GlobalTheory.LocusPull.locus_pull.1 A.left (A ⊗ T).left (fst A T * (snd A T ≫ a)).left c V hV).add
+    (_root_.GlobalTheory.LocusPull.locus_pull.1 A.left (A ⊗ T).left (fst A T * (snd A T ≫ a)⁻¹).left c V hV)
   rw [h2] at hl
   exact hl
 

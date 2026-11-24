@@ -17,7 +17,6 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstAlongCo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviDecompositionGradedIsotropicFlag
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StdParEqFlag
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousAdelicUnitaryEmbedding
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ContinuousConjBlockEmbeddingStatement
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.LeviNormalizesUnipotentVariant
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.RationalUnipotentLeParabolic
 import Mathlib.Algebra.Order.Floor.Extended
@@ -1366,7 +1365,7 @@ theorem isCuspFun_slice : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F �
     have : (s : GA D V' → GA D V) = s₀ := funext es
     rw [this]; exact hs₀c
   have hsQ : ∀ γ ∈ GQ V', s γ ∈ GQ V := fun γ hγ => es γ ▸ hs₀Q γ hγ
-  obtain ⟨hup, hsurj, -⟩ := GlobalTheory.T.orthogonal_subspace_unitary_embedding D V m X Y hW T V' ι hι hr s hs
+  obtain ⟨hup, hsurj, -⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.LeviPart.UEmb.range_embHom D V m X Y hW T V' ι hι hr s hs
   have hψl : ∀ γ ∈ leftSub V X Y T, ∀ g, ψ (γ * g) = ψ g := hψ.1.1.left
   have hψc : Continuous ψ := hψ.1.1.cont
   have hfl : ∀ γ ∈ GQ V', ∀ g, (fun h => ψ (s h * y)) (γ * g) = (fun h => ψ (s h * y)) g := fun γ hγ g => by

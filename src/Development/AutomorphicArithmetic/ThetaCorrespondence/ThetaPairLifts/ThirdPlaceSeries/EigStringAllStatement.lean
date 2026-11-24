@@ -18,7 +18,8 @@ public import Formalism.LocalToGlobal.UnitaryNorms.CharTied
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PlaceOverTypePrimeDividesOrConjugate
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.GoodOffSQ
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GoodLabelsRankPartParameterCuspidalStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.WeightRegularOfExt
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GoodLabelsRankPartParameterCuspidal
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.DictStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsParamDefinite
 public import Formalism.SatakeDualWeyl.StatementG
@@ -447,7 +448,7 @@ theorem GlobalTheory.EigStrSplit.str_split_alt : GlobalTheory.Published.Automorp
   intro hAF hL D P X hA h41 h7 htl i hμ j hj x hx f hf y hy hy0 hh hops s B hs hB w hw hsp
   obtain ⟨Q, hQx, hu, hBQ⟩ := _root_.GlobalTheory.StrSplitDict.dict_alt hAF hL D P X hA h41 h7 htl i hμ j hj x hx f hf y hy hy0 hh hops s B hs hB w hw hsp
   obtain ⟨-, Sig, ⟨P0, hP0, hbc⟩, hgood⟩ := hx
-  have hcusp := GlobalTheory.T.goodLabels_rank_part_parameter_cuspidal D htl i x Sig ⟨P0, hP0, hbc⟩ hgood
+  have hcusp := _root_.GlobalTheory.GoodCuspPoint.main D htl i x Sig ⟨P0, hP0, hbc⟩ hgood
   obtain ⟨hS, hQ⟩ := _root_.GlobalTheory.T.good_place_not_mem_S_and_Q_of_tieLab hL D P X hA h41 htl i w hw
   have hz := _root_.GlobalTheory.TieFrob.frobEig_tw_eq_inv_valV_alt hAF hL D P X hA htl i hμ j hj w hw hsp
   obtain ⟨B', e, hB'⟩ := _root_.GlobalTheory.EigStrCalc.is_split_of_cusp_iso_bcv hAF hL D P h41 h7 htl i x Q P0 Sig hQx hP0 hcusp hbc w hsp hS hQ hu _ hz
@@ -1691,7 +1692,7 @@ end GlobalTheory.UbcString
 theorem GlobalTheory.UbcString.ubc_string_o_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D), ∀ (X : GlobalTheory.NJoin.RealAt D P.cf P.C P.tp) (_ : GlobalTheory.NJoin.Agree X P.M P.rep), _root_.Formalism.MainNotions.SumRepresentations.provisionFortyOne D → _root_.Formalism.MainNotions.SumRepresentations.adm7_alt D → Formalism.MainNotions.SumRepresentations.tieLab D → ∀ (i : D.nd.Loc), ∀ x ∈ ZgoodN D.nd D.naut i, ∃ P', D.naut.ptV i P' = some x ∧ ∀ w : HeightOneSpectrum (𝓞 D.host.E), Formalism.UG.IsInertAt D.host.F D.host.E (w.under (𝓞 D.host.F)) w → ∃ (B'' : Multiset ℂ) (c : ℂ), D.naut.frobEig (D.naut.locG (D.naut.tw (D.naut.muC i) D.naut.etaTinv) w) = {c} ∧ ubc D.R.nV (D.naut.satV i P' w) = B'' + GlobalTheory.DownLift.str (Ideal.absNorm w.asIdeal) c D.R.t ∧ ∀ a ∈ B'', ‖a‖ ≤ (Ideal.absNorm w.asIdeal : ℝ) ^ (((D.R.r : ℝ) - 1) / 2) := by
   intro hAF hL D P X _ _ h7 htie i x hx
   obtain ⟨-, Sig, ⟨P', hP', hB⟩, hgood⟩ := hx
-  obtain ⟨π, rfl⟩ := GlobalTheory.T.goodLabels_rank_part_parameter_cuspidal D htie i x Sig ⟨P', hP', hB⟩ hgood
+  obtain ⟨π, rfl⟩ := _root_.GlobalTheory.GoodCuspPoint.main D htie i x Sig ⟨P', hP', hB⟩ hgood
   refine ⟨P', hP', fun w hw => ?_⟩
   have hq : normV w = Ideal.absNorm w.asIdeal := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]

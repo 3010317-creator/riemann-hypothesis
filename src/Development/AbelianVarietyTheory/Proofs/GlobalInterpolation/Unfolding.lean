@@ -10,7 +10,7 @@ public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LocalU
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.InvariantRadonFibre
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WeilCriterionInvariantMeasureHomogeneousSpace
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsUniqueHaarOfInvariantRadonOnCosets
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.QuotientInvariantMeasureExistsUniqueUnimodularStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.QuotientInvariantMeasureExistsUniqueUnimodular
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.QuotientIntegrationFormulaDiscreteSubgroupLeft
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.StabilizerCompletions
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.StabilizerLattices
@@ -467,7 +467,7 @@ namespace GlobalTheory.Proof.quotientMeasure_normalised_by_haar_unique
 
 theorem normaliseQuotientClause : NormaliseQuotientClause := by
   intro G _ _ _ _ _ _ _ _ H _ _ hH hG hH' dg _ ν _
-  obtain ⟨⟨μ₀, hμ₀⟩, huniq⟩ := GlobalTheory.T.quotientInvariantMeasure_exists_unique_unimodular G H hH hG hH'
+  obtain ⟨⟨μ₀, hμ₀⟩, huniq⟩ := _root_.GlobalTheory.Proof.quotientInvariantMeasure_exists_unique_unimodular.invariantMeasureClause G H hH hG hH'
   obtain ⟨dg₀, ⟨hdg₀, hF₀⟩, -⟩ := _root_.GlobalTheory.QuotientHaar.existsUnique_haar_of_invariantRadon G H hH ν μ₀ hμ₀
   set c : ℝ≥0 := haarScalarFactor dg dg₀ with hc
   have hcpos : 0 < c := haarScalarFactor_pos_of_isHaarMeasure dg dg₀
@@ -519,7 +519,7 @@ section -- clump:auto
 namespace GlobalTheory.Proof.quotientMeasure_integration_formulas_unimodular
 
 theorem quotientMeasures : GlobalTheory.IndefiniteRowSideFullHecke.InvariantRadonFibre.QuotientMeasures :=
-  ⟨GlobalTheory.T.quotientInvariantMeasure_exists_unique_unimodular, _root_.GlobalTheory.Proof.quotientMeasure_normalised_by_haar_unique.normaliseQuotientClause, _root_.GlobalTheory.Proof.existsUnique_haar_subgroup_quotient_integral_formula.normaliseSubgroupClause, _root_.GlobalTheory.normaliseGroupClause_holds, _root_.GlobalTheory.QuotDiscrete.discreteClause, _root_.GlobalTheory.WeilCriterion.modulusClause,
+  ⟨_root_.GlobalTheory.Proof.quotientInvariantMeasure_exists_unique_unimodular.invariantMeasureClause, _root_.GlobalTheory.Proof.quotientMeasure_normalised_by_haar_unique.normaliseQuotientClause, _root_.GlobalTheory.Proof.existsUnique_haar_subgroup_quotient_integral_formula.normaliseSubgroupClause, _root_.GlobalTheory.normaliseGroupClause_holds, _root_.GlobalTheory.QuotDiscrete.discreteClause, _root_.GlobalTheory.WeilCriterion.modulusClause,
     _root_.GlobalTheory.QuotientMeasureCompact.compactClause⟩
 
 end GlobalTheory.Proof.quotientMeasure_integration_formulas_unimodular

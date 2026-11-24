@@ -27,7 +27,7 @@ public import Mathlib.Basic.NNReal.Defs
 public import Mathlib.RingTheory.Valuation.Integers
 public import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 public import Formalism.LocalToGlobal.ProjectiveLattices.ConjNeSelfOfCM
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmTypeDirectionsEigenbasisValuedIntegersStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmTypeDirectionsEigenbasisValuedIntegers
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsLeadingMinorsGeOfLeRank
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsFlagCharactersLeadingMinorsColength
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NonemptyUniformisedFormalChartAlgebraicPoint
@@ -96,7 +96,7 @@ import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.GroupTheory.Nilpotent
 import Mathlib.Tactic.ENatToNat
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCmTypeEmbeddingsIntoValuationRingStatement
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCmTypeEmbeddingsIntoValuationRing
 import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.VVAlgebraMapNonnegDvr
 import Formalism.LocalToGlobal.ProjectiveLattices.CrudeVal
 
@@ -1735,7 +1735,7 @@ theorem nuLocC_le_over_two : ∀ (p : ℕ) [Fact p.Prime], AvFSt p → HTFSt p �
   intro T io y Ch hy h2 hsp f vd hvd htp e k n a he hdom hn Ap hAp haA
   classical
   obtain ⟨X⟩ := GlobalTheory.T.nonempty_closedValuedExtensionOfCDVR T p h2
-  obtain ⟨τT, -, hty, -⟩ := GlobalTheory.T.exists_cmType_embeddings_into_valuation_ring E H l c T io p X
+  obtain ⟨τT, -, hty, -⟩ := _root_.GlobalTheory.CharDepth.exists_types_valuationRing E H l c T io p X
   obtain ⟨hw0, happ⟩ := UpperTheory.cmDatum_splitPlaces_conj_stable p Fact.out E H hsp X.C X.v X.O X.ints X.nonunit.out
   obtain ⟨xs, hxs, hprod⟩ := _root_.GlobalTheory.CharDepth.colength_bound_at_two p hAv E H Dw l Xo c T io y Ch X hy f vd htp
   obtain ⟨N, u, hu, hspan⟩ := _root_.GlobalTheory.CharDepth.hodgeTate_inclusion_intChart p hHT E H Dw l Xo c T io y Ch X hy
@@ -1780,7 +1780,7 @@ theorem nuLocC_le_over_two : ∀ (p : ℕ) [Fact p.Prime], AvFSt p → HTFSt p �
         rw [← hr, this]
         exact_mod_cast hχ' i
       · obtain ⟨χ, hχ, hχ'⟩ := GlobalTheory.T.exists_characters_leading_minors_valuation_ge X.C X.v X.O X.ints _ _ N _ _
-          (GlobalTheory.T.cmTypeDirections_eigenbasis_valuedIntegers E H Dw l Xo c T io y Ch p X _ hty τ).2 u hu ((p : ℕ) : X.O) h2O0
+          (_root_.GlobalTheory.CharDepth.isEigBasis_valExt E H Dw l Xo c T io y Ch p X _ hty τ).2 u hu ((p : ℕ) : X.O) h2O0
           (hspan _ (by
             rw [h2C]
             have hle : X.v ((p : ℕ) : X.C) ≤ 1 := by exact_mod_cast hr1.le

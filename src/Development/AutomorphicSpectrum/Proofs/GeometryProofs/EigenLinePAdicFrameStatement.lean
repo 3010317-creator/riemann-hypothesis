@@ -23,7 +23,8 @@ public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahle
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AdaptedBasesChangeByBlockMatricesStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CmTypeValuationEmbedding
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DvrSpecializationEigenFrameStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenFrameIffEigenspaceBasisStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeGram
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenFrameIffEigenspaceBasis
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FractionFieldEigenBasisDescendsStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeLatticeEigenDecompositionLocalStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeLatticeExtendScalarsStatement
@@ -1737,7 +1738,7 @@ theorem value_at_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
       LinearIndependent K bK → Submodule.span K (Set.range bK) = HT.eigSp ρK σ₀ →
       IsEigFrame Xo.univ.t.act (under y) σi (fun i => MU.pt (bK i)) := by
     intro n σ₀ σi bK hi h1 h2
-    rw [GlobalTheory.T.eigen_frame_iff_eigenspace_basis _ _ _ _ _ MU _ _ ρK σi n bK hAU, eig_eq E K _ ρK σi σ₀ hi]
+    rw [_root_.GlobalTheory.CompanionTheory.Ar.Flat.LieEigFrame.isEigFrame_pt_iff _ _ _ _ _ MU _ _ ρK σi n bK hAU, eig_eq E K _ ρK σi σ₀ hi]
     exact (GlobalTheory.T.basis_of_submodule_iff_unique_coords K _ _ n bK).1 ⟨h1, h2⟩
   have hFy : IsFramed U τ βK y (fun i => MU.pt (fun k => ψ (x₁ i k))) (fun i => MU.pt (fun k => ψ (x₂ i k))) :=
     ⟨hF.1, hF.2.1, hfrK (βK.comp (inE c τ)) _ _ (fun a => rfl) hK₁ hK₁s,
@@ -1750,7 +1751,7 @@ theorem value_at_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
       IsEigFrame Xo.univ.t.act (under y) σi (fun i => MU.pt (bK i)) →
       LinearIndependent K bK ∧ Submodule.span K (Set.range bK) = HT.eigSp ρK σ₀ := by
     intro n σ₀ σi bK hi h
-    rw [GlobalTheory.T.eigen_frame_iff_eigenspace_basis _ _ _ _ _ MU _ _ ρK σi n bK hAU, eig_eq E K _ ρK σi σ₀ hi] at h
+    rw [_root_.GlobalTheory.CompanionTheory.Ar.Flat.LieEigFrame.isEigFrame_pt_iff _ _ _ _ _ MU _ _ ρK σi n bK hAU, eig_eq E K _ ρK σi σ₀ hi] at h
     exact (GlobalTheory.T.basis_of_submodule_iff_unique_coords K _ _ n bK).2 h
   obtain ⟨hvLI, hvsp⟩ := hbasK (βK.comp (inE c τ)) _ vK (fun a => rfl) hF.2.2.1
   obtain ⟨hwLI, hwsp⟩ := hbasK (βK.comp (inE c (ComplexEmbedding.conjugate τ))) _ wK (fun a => rfl) hF.2.2.2

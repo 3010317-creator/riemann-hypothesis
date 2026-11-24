@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PrinInf
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.StabiliserEqCentraliserCartan
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsOpenPrincipalCongruenceFinitelyManyPrimesStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FinitePartMemFrameStabilizerIffLocalStabilizerStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.HermitianSpaceBaseLatticeEqFrameLattice
+public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FinitePartMemFrameStabilizerIffLocalStabilizer
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsCompactFiniteAdelicSubgroupIntegralOpenStatement
 public import Mathlib.MeasureTheory.Group.Measure
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MapRestrictIsHaarOfOpenProductCompact
@@ -94,7 +96,7 @@ theorem proj_mem_stabLoc_of_mem_prinInf (A : HSp D) (β : GL (Fin A.rank) (Forma
     (Z : Finset (Formalism.L2.DIV.Pl D.host.E)) (hfr : Formalism.L2.DIV.IsFrame β (frameLat A)) {g : GA D A}
     (hg : g ∈ prinInf A β Z) (v : HeightOneSpectrum (𝓞 D.host.F)) :
     proj D.sp.cm.sig A.gram v g ∈ stabLoc D.sp.cm.sig A.gram (frameLat A) v :=
-  (GlobalTheory.T.finitePart_mem_frameStabilizer_iff_local_stabilizer D A β (frameLat A) hfr g).1 (Formalism.L2.DIV.parLev_St (Formalism.L2.DIV.lev_le_parLev hg)) v
+  (_root_.GlobalTheory.ChainOnto.LStab.finE_mem_St_iff_stabLoc D A β (frameLat A) hfr g).1 (Formalism.L2.DIV.parLev_St (Formalism.L2.DIV.lev_le_parLev hg)) v
 
 theorem frameInv_eq_one {θ : InfFam D} {A : HSp D} {cA : CptF A} {a : GL (Fin A.rank) (AE D)} (h : Defin θ A cA a)
     (τ : D.what₂.Tau) : frameInv θ A a τ = 1 := by

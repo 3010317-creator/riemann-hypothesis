@@ -82,7 +82,9 @@ import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.CardSt
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinPartConjMem
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvolutionSphericalHeckeAnti
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotentsStatement
+import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
+import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CorrectionOfTransport
 import Formalism.LocalToGlobal.Columns.TiedUpDnA
 import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.SecondStepGluing
@@ -577,7 +579,7 @@ theorem lev_split (β : GL (Fin V.rank) (Formalism.IndefR.Lev.EAf D)) (Λ : Subm
     rw [Formalism.DivisionValues.GluingInclusion.conjIdeal_eq, GlobalTheory.SplitHeckeAdj.eq_conj_of_isConjPl hc, Formalism.DivisionValues.ValuationRepresentative.conjPl_conjPl]
   obtain ⟨e, he⟩ := GlobalTheory.MovedIdem.exists_isIdemAt (pl x.1) hPc
   have hpi : IsPrimeIdem (pl x.1) e (e + cA D e) := Or.inl ⟨he, rfl⟩
-  have h01 := (GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 (pl x.1) e _ hpi
+  have h01 := (_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 (pl x.1) e _ hpi
   have hff := h01.1
   have hcf := h01.2.1
   have h1 : ((1 : ℕ) : 𝓞 D.host.E) ∉ (pl x.1).asIdeal := by

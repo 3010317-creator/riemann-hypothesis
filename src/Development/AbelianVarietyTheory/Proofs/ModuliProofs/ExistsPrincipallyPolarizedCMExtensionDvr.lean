@@ -23,7 +23,7 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSche
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAffineOpenNonzeroLocusOfFibrewiseAmple
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsClosedSubschemeTranslationKernel
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsSecPullNeZero
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FlatKernelPolarisationCosetsOverDVRStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FlatKernelPolarisationCosetsOverDVR
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.InKIffTrivialTwist
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsAffineOfQuasiAffine
 public import Development.AbelianVarietyTheory.PublishedTheorems.SemiabelianTori.GeometricallyConnectedSplitTorusAff
@@ -259,7 +259,7 @@ theorem kTriv_of_generic (hG : Out.GlobalFnsSt) (hA : IsAbelianScheme A) (c : Cu
   obtain ⟨hO, hu, hK⟩ := TrivTwist.inK_iff_trivial_twist _ A L.L hL
   obtain ⟨Z, i, hi, hZ⟩ := TwistKer.exists_closed_twist_kernel hG V A hA hP L.L (pw L.L 0) hL hO
   have hfin : IsFinite Z.hom := AmpleStabFinite.isFinite_of_relAmple hG V A hA L.L (pw L.L 0) hL hO ha Z i hi hZ
-  have hflat : Flat Z.hom := GlobalTheory.T.flat_kernelPolarisation_cosets_over_DVR hG V A hA hP L c (pw L.L 0) hO hu Z i hi hZ hfin
+  have hflat : Flat Z.hom := _root_.GlobalTheory.StabFlat.flat_of_isFinite hG V A hA hP L c (pw L.L 0) hO hu Z i hi hZ hfin
   have hrep : ∀ (T : Over (Sp V)) (x : T ⟶ A), InK A L.L x ↔ ∃ y : T ⟶ Z, y ≫ i = x :=
     fun T x => (hK _ rfl T x).trans (hZ T x)
   have := hA.proper

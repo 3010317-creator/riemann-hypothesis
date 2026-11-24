@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.AdelicDataRowMeasureScaleTrivialTuple
 public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.WordDerivatives
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.DenomBound
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.EnvelopingMapSurjectiveStatement
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsEnvelopingAlgHomUnitaryLieAlgebra
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsSigmaList
@@ -163,7 +164,7 @@ theorem foldr_Rder_star (l : List (D.what₂.Tau × Matrix (Fin V.rank) (Fin V.r
 theorem isAutFunSm_star : ∀ (D : D7) (θ : InfF D), IsInfFam θ → ∀ (V : HSp D) (φ : GA D V → ℂ),
     IsAutFunSm θ V φ → IsAutFunSm θ V (fun g => star (φ g)) := by
   intro D θ hθ V φ h
-  have R := (GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ V
+  have R := (_root_.GlobalTheory.SmoothForms.RealPts.realPoints D).2 θ hθ V
   have hsm : ∀ (k : ℕ) (τs : Fin k → D.what₂.Tau) (Xs : Fin k → Matrix (Fin V.rank) (Fin V.rank) ℂ),
       (∀ i, Xs i ∈ lieAt V (τs i)) → ∀ g, ContDiff ℝ ∞ fun t : Fin k → ℝ =>
         (star φ) (g * (List.ofFn fun i => oneP θ V (τs i) (Xs i) (t i)).prod) :=

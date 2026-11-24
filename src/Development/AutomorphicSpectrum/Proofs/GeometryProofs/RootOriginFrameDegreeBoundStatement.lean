@@ -26,7 +26,7 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.TowerOr
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginRootIndexBound
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.HasMultiplier
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TriangularSpanCoeffRatio
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteResidueAbsoluteValueStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteResidueAbsoluteValue
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagEqualChangeLowerTriangularStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginFrameArchimedeanStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginFrameRelayBoundStatement
@@ -1367,7 +1367,7 @@ theorem compare : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     hSS EC _ _ _ _ MC ρC hact s σ hσ
   have hpla : (p : 𝓞 c.F) ∈ la.asIdeal := hI.1
   have he : 0 < e := hI.2.1.1
-  obtain ⟨hmul, hone, hpos, hle⟩ := GlobalTheory.T.finite_residue_absolute_value E H l c p la T e he (ram_pos hpla)
+  obtain ⟨hmul, hone, hpos, hle⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Rec.FinRd.absT_facts E H l c p la T e he (ram_pos hpla)
   have hp1 : (1 : ℝ) ≤ p := by exact_mod_cast (Fact.out : p.Prime).one_lt.le
   have hp0 : (0 : ℝ) < p := by linarith
   have hθ := Small.latExp_nonneg E SS (Fact.out : p.Prime)
@@ -1410,7 +1410,7 @@ theorem diag_bound : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsC
     hSS s b Tm hT hfl hfr hb hd i
   have hpla : (p : 𝓞 c.F) ∈ la.asIdeal := hI.1
   have he : 0 < e := hI.2.1.1
-  obtain ⟨hmul, hone, hpos, hle⟩ := GlobalTheory.T.finite_residue_absolute_value E H l c p la T e he (ram_pos hpla)
+  obtain ⟨hmul, hone, hpos, hle⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Rec.FinRd.absT_facts E H l c p la T e he (ram_pos hpla)
   obtain ⟨EC, _, _, MC, ρC, hact⟩ := GlobalTheory.T.root_origin_complete_dvr_bound E H Dw l Xo c O β Y SS RM Sys Fx Or T zV
   letI : Module T.V EC := Module.compHom EC (algebraMap T.V T.Fr)
   haveI : IsScalarTower T.V T.Fr EC := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
@@ -1487,7 +1487,7 @@ theorem reads_roots : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [Is
   intro hG E _ _ _ _ H Dw l Xo c O _ β Y SS RM Sys Fx Or Fr hOm hSS A p _ z ev hz hval hA hrat la T io e y evT zT t hI
   have hpla : (p : 𝓞 c.F) ∈ la.asIdeal := hI.1
   have he : 0 < e := hI.2.1.1
-  obtain ⟨hmul, hone, hpos, hle⟩ := GlobalTheory.T.finite_residue_absolute_value E H l c p la T e he (ram_pos hpla)
+  obtain ⟨hmul, hone, hpos, hle⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Rec.FinRd.absT_facts E H l c p la T e he (ram_pos hpla)
   have habs : ∀ x : A, ‖ev x‖ = absT p la T e (evT x) := hI.2.2.2.2.2.1
   have hzp := hz.1
   have hmax : ∀ k, ∃ ck : RM.ι k, z ⟨k, ck⟩ ≠ 0 ∧ ∀ i, ‖z ⟨k, i⟩‖ ≤ ‖z ⟨k, ck⟩‖ := by

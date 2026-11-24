@@ -8,7 +8,8 @@ public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.DualNumberR
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKeyPBRing
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.StalkOfAppLEEq
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.FamUnit
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExactKeyFormulaProofStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsLieBasis
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExactKeyFormulaProof
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -211,7 +212,7 @@ open GlobalTheory.KeyCl
 namespace GlobalTheory.KeyFamClosing
 
 theorem keyFam_one : KeyFam fun _ => 1 :=
-  GlobalTheory.KeyFamOfExact.keyFam_of_keyFormula GlobalTheory.T.exactKeyFormula_proof
+  GlobalTheory.KeyFamOfExact.keyFam_of_keyFormula _root_.GlobalTheory.KeyFam.keyFormula_holds
 
 end GlobalTheory.KeyFamClosing
 end -- clump:auto

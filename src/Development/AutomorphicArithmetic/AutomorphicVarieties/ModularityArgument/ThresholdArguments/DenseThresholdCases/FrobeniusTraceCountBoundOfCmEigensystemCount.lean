@@ -17,7 +17,10 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityA
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ConjOpInvolutive
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.ConjSep
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.SatK
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsAlgebraicHeckeCharOfRegularAlgebraicPolarizedPStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.DualIsConjByOne
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsAlgebraicHeckeCharOfRegularAlgebraicPolarizedP
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.IdeleNormLocalCompatibility
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.IdeleNormValuationOfLocalCompatibility
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.PolOfSatOfThetaSat
@@ -783,7 +786,7 @@ theorem UpperTheory.GalN.V.conjP_alt :
   refine ⟨π', ⟨fun φ => ?_, ?_, hs.hasFixed hfix⟩, hsat⟩
   · have e : σ.toRingHom.comp (σ.symm.toRingHom.comp φ) = φ := RingHom.ext fun x => σ.apply_symm_apply _
     exact e ▸ h4 _ _ (hinf _)
-  obtain ⟨a, ha⟩ := GlobalTheory.T.isAlgebraicHeckeChar_of_regularAlgebraic_polarizedPair K n (by omega) π χ hreg hpol
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.RegAlgCharAlg.isAlgPos_of_polarizedPair K n (by omega) π χ hreg hpol
   have hF : Module.finrank ℚ (maximalRealSubfield K) = 1 := by
     have h1 := (letI : Module.Free (maximalRealSubfield K) K := Module.Free.of_divisionRing _ _; Module.finrank_mul_finrank ℚ (maximalRealSubfield K) K)
     rw [Algebra.IsQuadraticExtension.finrank_eq_two (maximalRealSubfield K) K] at h1

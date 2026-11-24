@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Formalism.LocalToGlobal.IndefiniteReal.ZeroPartEigenvalueConvention
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplittingCharactersUnramifiedOffLevelsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplittingCharactersUnramifiedOffLevels
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugateSplittingUnramifiedHyperspecialFix
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -74,7 +74,7 @@ theorem unrPl_chrTh {D : D7} {P : Pl D.host.E} {μ : ℕ → (AE D)ˣ →* Circl
 
 theorem fixAll_of_good : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type} {A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3), R.WeakCharacterisation F → R.toRealDat.ExAt → ∀ t P, Good R.toRealDat t P → Formalism.DivisionValues.conjPl P = P → FixAll R.toRealDat t P := by
   intro D G _ _ Pl0 I0 T A3 Ks _ _ _ R F h _ t P hP _
-  have hu := GlobalTheory.T.splittingCharacters_unramified_offLevels R.toRealDat F.lv2 h.base.lev t P hP
+  have hu := _root_.GlobalTheory.UnrOffLevels.unrPl_of_good R.toRealDat F.lv2 h.base.lev t P hP
   have hm := D.R.two_le_m
   refine ⟨fun k hk => ?_, ?_, fun i => ?_⟩
   · have hc := unrPl_chrStep (hu.2 (k + 1) (Nat.le_add_left _ _) hk.le) hu.1

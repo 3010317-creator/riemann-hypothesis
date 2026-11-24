@@ -2,16 +2,17 @@ module
 
 public import Development.AutomorphicArithmetic.Foundations.Convolution.SplitEigenfunctions.Entire
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormSqIntegrableAndIsDiscreteSplitCentreStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalLetterCentralExponentPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalLetterRealExponentEqZeroIffIsUnitaryStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSquareIntegrableAutomorphicSpace
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.IsNormalisedOfIsDiscrete
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalLetterCentralExponentProperties
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsUnitaryOfCharIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalLetterRealExponentEqZeroIffIsUnitary
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeTjCosetsFiniteCardLe
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatVecUOfIsSphericalU
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormHeckeEigenvalueLeCardCosets
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsUnitaryTwistAbsPow
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SatakeParameterGLStarEqInvOfUnitarisable
 public import Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.PSatHerm
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsUnitaryOfCharIff
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSquareIntegrableAutomorphicSpace
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.HeckeCharacterEqOfCofinite
 public import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ContinuousIdeleCharLocalFactorization
@@ -49,7 +50,7 @@ public import Development.AutomorphicArithmetic.Foundations.Convolution.SplitEig
 public import Development.AutomorphicArithmetic.Foundations.Convolution.SplitEigenfunctions.InfinitePlaceGluing.UnfOf
 public import Development.AutomorphicArithmetic.Foundations.Convolution.SplitEigenfunctions.UnitsCpt
 import Development.AbelianVarietyTheory.Definitions.Foundations.NormEulerPolySubOneLe
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdelicAbsValueCpowCharacterStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdelicAbsValueCpowCharacter
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHasCentChar
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Tjcosets
 import Mathlib.Algebra.Order.Floor.Extended
@@ -267,8 +268,8 @@ private theorem isUnitary_of_cenN {P : CuspSub E 2} {ω : HChar ℚ} (hc : CenN 
 
 private theorem exists_norm {P : CuspSub E 2} (hu : P.IsUnitary) :
     ∃ χ : HChar E, GlobalTheory.DiscSpec.IsNormalised (P.twist χ) ∧ ∀ v, χ.UnrAt v ∧ ‖((χ.val v : ℂˣ) : ℂ)‖ = 1 := by
-  have hcex := (GlobalTheory.T.cuspidalLetter_centralExponent_properties E ⟨2, P⟩).1
-  have hr : rexp (⟨2, P⟩ : Letter E) = 0 := ((GlobalTheory.T.cuspidalLetterRealExponent_eq_zero_iff_isUnitary E ⟨2, P⟩ (by norm_num)).1).2 hu
+  have hcex := (_root_.GlobalTheory.ResW.letter_centralExponent E ⟨2, P⟩).1
+  have hr : rexp (⟨2, P⟩ : Letter E) = 0 := ((_root_.GlobalTheory.ResW.rexp_eq_zero_iff_isUnitary E ⟨2, P⟩ (by norm_num)).1).2 hu
   have hd : (0 : ℝ) < ((2 : ℕ) : ℝ) * Module.finrank ℚ E := by
     have := Module.finrank_pos (R := ℚ) (M := E)
     positivity
@@ -281,12 +282,12 @@ private theorem exists_norm {P : CuspSub E 2} (hu : P.IsUnitary) :
   have hdc : (((2 : ℕ) : ℂ) * (Module.finrank ℚ E : ℂ)) = ((((2 : ℕ) : ℝ) * Module.finrank ℚ E : ℝ) : ℂ) := by
     push_cast
     ring
-  obtain ⟨χ, hz, hv, -, -⟩ := GlobalTheory.T.exists_idelic_absValue_cpow_character E (-(cex (⟨2, P⟩ : Letter E)) / (((2 : ℕ) : ℂ) * (Module.finrank ℚ E : ℂ)))
+  obtain ⟨χ, hz, hv, -, -⟩ := _root_.GlobalTheory.ResW.exists_abs_cpow E (-(cex (⟨2, P⟩ : Letter E)) / (((2 : ℕ) : ℂ) * (Module.finrank ℚ E : ℂ)))
   have hzre : (-(cex (⟨2, P⟩ : Letter E)) / (((2 : ℕ) : ℂ) * (Module.finrank ℚ E : ℂ))).re = 0 := by
     rw [hdc, Complex.div_ofReal_re, Complex.neg_re, hre]
     simp
   refine ⟨χ, ?_, fun v => ⟨(hv v).1, ?_⟩⟩
-  · have h4 := GlobalTheory.T.cuspidalLetter_centralExponent_properties E ⟨2, P.twist χ⟩
+  · have h4 := _root_.GlobalTheory.ResW.letter_centralExponent E ⟨2, P.twist χ⟩
     refine h4.2.2.2.1.1 (h4.2.2.2.2 0 ?_)
     obtain ⟨φ, hφ, h0⟩ := (Submodule.ne_bot_iff _).1 P.ne_bot
     refine ⟨mulChi 2 χ φ, ⟨φ, hφ, rfl⟩, fun h => h0 ((mulChi 2 χ).map_eq_zero_iff.1 h), ?_⟩

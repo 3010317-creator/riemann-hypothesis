@@ -29,13 +29,15 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FormVan
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ImmByWeightZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsFormDegreeLeHilbertDegreeEvalNeZero
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnitWeightZeroIntegralCoordsStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SpecialFibreTorsionEqReductionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionValuesCoordsOperatorPermuteStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SpecialFibreTorsionEqReductions
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionValuesCoordsOperatorPermute
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.EqOfValHomEq
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HomGenericPoint
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.KbIsAlgClosedAndConj
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LePreimageOpenPartIffTestCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisedTestDimensionsAndSplitFibreStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LePreimageOpenPartIffTestCoordinates
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.RigGen
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisedTestDimensionsAndSplitFibre
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGeometricTestMapClassicalPointStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisationTestOfGeometricTestStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsHomOpenPart
@@ -640,7 +642,7 @@ theorem crd_red (hL : GlobalTheory.UT.LL) [ArithBase o Ω] (hB : BaseFacts S M U
     ∃ w, Crd (t.mod.Φ.H 1) t.mod.F x.left w ∧
       (tm.m.map fun a => IsLocalRing.residue (OO p) (t.u.j a)).mulVec w =
         fun i => M.val (rPt p ≫ y) ((Q.B tm.l i ⬝ᵥ S.ev a) / S.th x₀) := by
-  have hv := (GlobalTheory.T.torsionValues_coords_operator_permute hL o Ω S ρ).1 _ y₀ a
+  have hv := (_root_.GlobalTheory.ZH.EvCrd.ev_crd_act hL o Ω S ρ).1 _ y₀ a
   rw [← h₃] at hv
   have hb := t.link a' _ hv
   obtain ⟨wc, hwc⟩ := CrdCalc.crd_exists t.mod.isLB t.σ cc
@@ -684,7 +686,7 @@ theorem tors_crd : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [Field 
     rw [c.at_]
     exact RatModel.norm_val_le_one rfl ((M.O _).algebraMap_mem a)
   have hH : S.HH M (y (cPt p)) = t.l.yy.ker := (hB.atTest _ p y y₀ t.τ (cen c) c.at_).trans (ker_eq t)
-  obtain ⟨-, g₁, g₂⟩ := GlobalTheory.T.specialFibre_torsion_eq_reductions hL o Ω S ρ p y₀ t.u t.l t.σ t.cls t.mod hint
+  obtain ⟨-, g₁, g₂⟩ := _root_.GlobalTheory.ZH.special_torsion_eq_reduction hL o Ω S ρ p y₀ t.u t.l t.σ t.cls t.mod hint
   have hr : Set.range (rPt p ≫ y) = {y (cPt p)} := by
     rw [RatModel.range_eq_singleton (K := kb p) _ (IsLocalRing.closedPoint (kb p))]
     exact congrArg (fun s => ({y s} : Set M.Z)) (IsLocalRing.comap_closedPoint (IsLocalRing.residue (OO p)))
@@ -783,7 +785,7 @@ theorem mem_cone_iff [ArithBase o Ω] (hL : GlobalTheory.UT.LL) (hB : BaseFacts 
   haveI : IsAlgClosed (kb p) := (GlobalTheory.ZJ.kb_isAlgClosed_and_conj p).1
   have hsm : SmoothOfRelativeDimension S.g t.mod.Φ.G.hom :=
     (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback t.mod.cart.1 t.mod.smooth
-  have hbig : Big S.g S.N (S.r * S.N) := ⟨(GlobalTheory.T.uniformisedTest_dimensions_and_split_fibre hL o Ω S ρ p y₀ t.u).2.2.2.1, hS.1, hS.2.1⟩
+  have hbig : Big S.g S.N (S.r * S.N) := ⟨(_root_.GlobalTheory.ZH.utest_dim_and_split hL o Ω S ρ p y₀ t.u).2.2.2.1, hS.1, hS.2.1⟩
   have key := GlobalTheory.T.mem_torusExtensionCone_iff_smallDegreeForms hL.1 hL.2.1 (kb p) t.mod.Φ S.g S.N (S.r * S.N) _ S.J _ t.mod.F t.mod.pol hbig
     t.mod.good t.mod.dim (level_ne_zero S y) hsm
     (fun d hd => (Mod.hilb_special_le_generic p _ _ _ _ _ 0 _ _ _ _ _ _ t.mod d).trans
@@ -819,7 +821,7 @@ theorem image_special_fibre_iff : GlobalTheory.UT.LL → ∀ (o Ω : Type) [Comm
     have hov := image_over tm c' hc'
     obtain ⟨k₁, k₂⟩ := (mem_cone_iff hL hB tm hS v).1 ⟨x₀, h₂, hv⟩
     rw [← Category.assoc]
-    refine ⟨(GlobalTheory.T.le_preimage_openPart_iff_testCoordinates o Ω S ρ M U₀ EE hB Q p y y₀ t c tm hS _ v hov hcr).2 k₁,
+    refine ⟨(_root_.GlobalTheory.ZH.TestCrit.le_preimage_G_iff_test o Ω S ρ M U₀ EE hB Q p y y₀ t c tm hS _ v hov hcr).2 k₁,
       InFibChart.inFib_of_chart o Ω S ρ M U₀ EE hB Q _ tm.l _ _ hcr ?_⟩
     rw [hov]
     exact k₂
@@ -842,7 +844,7 @@ theorem image_special_fibre_iff : GlobalTheory.UT.LL → ∀ (o Ω : Type) [Comm
     have k₂ := hF tm.l x' _ rfl hw
     rw [hx] at k₂
     obtain ⟨x₀, h₂, hv⟩ := (mem_cone_iff hL hB tm hS v).2
-      ⟨(GlobalTheory.T.le_preimage_openPart_iff_testCoordinates o Ω S ρ M U₀ EE hB Q p y y₀ t c tm hS x' v hx' hw).1 hG, k₂⟩
+      ⟨(_root_.GlobalTheory.ZH.TestCrit.le_preimage_G_iff_test o Ω S ρ M U₀ EE hB Q p y y₀ t c tm hS x' v hx' hw).1 hG, k₂⟩
     obtain ⟨h₁, hcr⟩ := crd_image tm x₀ h₂ v hv
     refine ⟨x₀ ≫ t.mod.r, h₁, ?_⟩
     have e : ((x₀ ≫ t.mod.r) ≫ tm.f) ≫ (Q.P.hom ∣_ Q.W tm.l) = x' ≫ (Q.P.hom ∣_ Q.W tm.l) := by

@@ -38,7 +38,8 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Exi
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasDerivAtZeroAndIsTheta
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawCombinationsOperatorDatum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemIdAtOfSupp
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemSupportedSubgroupOfSuppAtSplitPlaceMemStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemSupportedSubgroupOfSuppAtSplitPlaceMem
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaKernelExistsForContinuous
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistPlaceNormalisedCombinationsPreserveThetaFun
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawWeilBiActionCommutes
@@ -88,7 +89,8 @@ import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Polynomial.Basic
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapsPreserveSchwartzBruhatAndSurjective
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctionsStatement
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctions
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceDoubleStepKernelLocalModels
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.T2SpaceMatrixOfIsNonarchimedeanLocalField
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
@@ -99,7 +101,6 @@ import Mathlib.Tactic.TypeStar
 import Mathlib.Tactic.Basify
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlaceIdempotentActsOnSupportedAndOff
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
 import Mathlib.RingTheory.PiTensorProduct
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
@@ -427,7 +428,7 @@ theorem kernel_eq_sum : ∀ (D : D7) (c : Comm D) (v : VCom c) χ (Q : QAt v χ)
   obtain ⟨F₀, hF₀⟩ := ((GlobalTheory.LocMod.normalFrames_exist D Q.k (ofSplit Q.q) _ 0 (Q.sc Q.s) hsc).1 (c.B Q.s 0 h)
     (Q.FX Q.s (by omega))).1
   have hjac := Q.jac Q.s 0 h 0 (by omega)
-  obtain ⟨U₁, hU₁, hfl⟩ := _root_.GlobalTheory.FlatBFLoc.flatBF_of_laws D (GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D) (GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D) (_root_.GlobalTheory.LocOm.omLoc D) Q.k (ofSplit Q.q) Q.ν Q.unitVol.1
+  obtain ⟨U₁, hU₁, hfl⟩ := _root_.GlobalTheory.FlatBFLoc.flatBF_of_laws D (_root_.GlobalTheory.Unf.Flat.flatLaw D) (GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D) (_root_.GlobalTheory.LocOm.omLoc D) Q.k (ofSplit Q.q) Q.ν Q.unitVol.1
     c.ψ Q.ψk Q.char 0 (c.B Q.s 0 h) (c.J Q.s 0 h) s₁ (Q.sc Q.s) hsc _ _ 0 (Q.FX Q.s (by omega)) F₀
     (Q.FY Q.s (0 + 1) (by omega)) (Q.FX (Q.s + 1) le_rfl) (Q.FY (Q.s + 1) 0 rfl) hF₀ (Q.bes Q.s 0 h (0 + 1) (by omega)) hjac T₁ hT₁
   obtain ⟨U₂, hU₂, hres, hext⟩ := GlobalTheory.LevelLast.splitLocalPlace_isModel_wittExtendByZero_rankZero (ofSplit Q.q) c.ψ (c.jac Q.s 0 h).d (Q.FX (Q.s + 1) le_rfl)
@@ -1073,7 +1074,7 @@ theorem εL_grp (α : Q.Ch j) : ∀ g ∈ (Q.εL j α).support, ∀ P : GlobalTh
   rw [he] at hg
   classical
   obtain ⟨x, -, rfl⟩ := Finset.mem_image.1 (Finsupp.mapDomain_support hg)
-  exact GlobalTheory.T.mem_supportedSubgroup_of_suppAt_splitPlace_mem D Q.k Q.q _ _ (Q.gl_loc Q.s (0 + 1) _ x).1 P hP
+  exact _root_.GlobalTheory.SuppGrp.mem_grpAt_of_suppAt D Q.k Q.q _ _ (Q.gl_loc Q.s (0 + 1) _ x).1 P hP
 
 end Facts
 

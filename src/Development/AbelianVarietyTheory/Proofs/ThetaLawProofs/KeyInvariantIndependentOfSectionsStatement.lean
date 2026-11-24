@@ -26,7 +26,6 @@ public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.DualNumberR
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKeyInvariantAlgClosedTransversal
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.GenericSectionsMeetTransversally
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsAlgHomOfIsTranscendenceBasis
-public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKeyInvariantAlgClosedTransversalStatement
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.GenericSectionsMeetTransversallyStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -1733,7 +1732,7 @@ theorem exists_valAt [CharZero K] (hL : Out.Laws) (hA : admitted x.P.g n l l' al
     fun p q hpq => Prod.ext (Fin.ext (congrArg (fun r => (r.1 : ℕ)) hpq)) (congrArg (fun r => r.2) hpq)
   obtain ⟨d, z, ch, hz⟩ := GlobalTheory.T.generic_sections_meet_transversally hL K Ω x x' φ w n b b' (fun p => T (p.1.cast hg, p.2)) s hA.1 H hb hb'
     (hT.comp _ hinj) hs
-  obtain ⟨κ, hκ⟩ := GlobalTheory.T.exists_keyInvariant_algClosed_transversal hL Ω x' n l l' al d s z ch hA'
+  obtain ⟨κ, hκ⟩ := _root_.GlobalTheory.KeyKa.exists_kaVal_of_isAlgClosed hL Ω x' n l l' al d s z ch hA'
     (Nat.cast_ne_zero.mpr (degProd_ne_zero hA')) hz
   exact ⟨κ, x', s, κ, hf, hκ, rfl⟩
 

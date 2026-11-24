@@ -6,14 +6,16 @@ public import Development.WeilBound.CoreStatements.AutomorphicKernels.LanglandsE
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.LanglandsExhaustion.Outright
 public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.GenericUnitaryDualGLOfTwo
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLanglandsClassificationDetCharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSphericalFactorOfSphericalSubquotientStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyEquivOfSameSatakeParametersStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSphericalFactorOfSphericalSubquotient
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NontrivialOfIrreducible
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyEquivOfSameSatakeParameters
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SphericalSegmentRepLengthOneUnramified
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIrreducibleFixed
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GeometricLemma
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.HasSupportOfIsSubquotientProdIrr
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EmbeddingOfExponent
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatVecUOfIsSphericalU
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasSatakeGLOfHasSatakeParametersPrincipalSeries
@@ -66,7 +68,7 @@ import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchim
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.RingTheory.Henselian
 import Mathlib.Tactic.Polynomial.Basic
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportOfPrincipalSeriesSubquotientStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportOfPrincipalSeriesSubquotient
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalRepGLExistsSatakeParameters
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -247,7 +249,7 @@ theorem isUnramChar_of_isCusp_of_isSpherical [CharZero k] (x : IrrGL (k := k)) (
     exact hv ⟨h.1, iwahori_le_KO k _ h.2⟩
   obtain ⟨α, hα⟩ := GlobalTheory.SatakeExists.exists_isSubquotient_prinSeries hadm x.2.rep.irr hI
   have hχ : ∀ i, IsSmoothChar (unrChar k (α i)) := fun i => isSmoothChar_of_isUnram (isUnram_unrChar k (α i))
-  have h1 := GlobalTheory.T.supercuspidalSupport_of_principalSeries_subquotient k x.1 (fun i => unrChar k (α i)) hχ x.2.rep hα
+  have h1 := _root_.GlobalTheory.LocLanglands.hasSupport_of_isSubquotient_prinSeries k x.1 (fun i => unrChar k (α i)) hχ x.2.rep hα
   have h2 : HasSupport x.rep {x} := hasSupport_self hx
   have he := GlobalTheory.CompanionTheory.Hypotheses₂.TD.hasSupport_unique GlobalTheory.CompanionTheory.GeoLink.geometricLemma hBZ h1 h2
   have hmem : x ∈ (Finset.univ.val.map fun i => IrrGL.ofChar (unrChar k (α i)) (hχ i)) := by
@@ -263,7 +265,7 @@ theorem len_eq_one [CharZero k] (Δ : Segment k) (y : IrrGL (k := k)) (hL : IsLS
   obtain ⟨N, c⟩ := y
   obtain ⟨hd, hc⟩ := id hL
   have hsub : IsSubquotient c.rep.ρ (prodIrr Δ.term hd) := hc.isSubquotient
-  have hsph := GlobalTheory.T.isSpherical_factor_of_spherical_subquotient k Δ.len N Δ.term hd _ c.rep.ρ hsub hS
+  have hsph := _root_.GlobalTheory.LocLanglands.SphFac.isSpherical_factor k Δ.len N Δ.term hd _ c.rep.ρ hsub hS
   have h0 : Δ.term ⟨0, Δ.len_pos⟩ = Δ.first := by simp [Segment.term]
   have key : ∀ x z : IrrGL (k := k), x = z → IsSpherical x.rep → IsSpherical z.rep := by
     rintro _ _ rfl h; exact h
@@ -302,7 +304,7 @@ theorem len_eq_one [CharZero k] (Δ : Segment k) (y : IrrGL (k := k)) (hL : IsLS
   have hB : HasSatake (IrrRep.det (Fin Δ.len) χ' hχs).ρ α :=
     ⟨(IrrRep.det (Fin Δ.len) χ' hχs).irr, isSpherical_detRep hu',
       by rw [heq]; exact (IsSubquotient.of_injective f hf).trans hP'⟩
-  obtain ⟨E⟩ := GlobalTheory.T.nonempty_equiv_of_same_satakeParameters hBZ k Δ.len α c.rep (IrrRep.det (Fin Δ.len) χ' hχs) hA hB
+  obtain ⟨E⟩ := _root_.GlobalTheory.SmGL.SphUniq.equiv_of_hasSatake hBZ k Δ.len α c.rep (IrrRep.det (Fin Δ.len) χ' hχs) hA hB
   have hL2 := (GlobalTheory.T.isLanglandsClassification_detCharacter hSC k Δ.len χ' hχs).of_equiv E.symm
   have hL1 := hL.isL
   have hm := (hLM k).1 _ _ ⟨Δ.len, c⟩ hL1 hL2
@@ -315,7 +317,7 @@ theorem isL_single_unrChar [CharZero k] (x : IrrGL (k := k)) (α : Fin x.1 → �
   obtain ⟨𝔪, hL⟩ := PositivityTheory.Exh.langlandsExhaustionGL_holds k x
   obtain ⟨h, y, hd, ⟨Δ, hord, hseg⟩, hcos⟩ := id hL
   have hsphy : ∀ a, IsSpherical (y a).rep :=
-    GlobalTheory.T.isSpherical_factor_of_spherical_subquotient k h x.1 y hd x.2.rep.V x.rep hcos.isSubquotient hsat.2.1
+    _root_.GlobalTheory.LocLanglands.SphFac.isSpherical_factor k h x.1 y hd x.2.rep.V x.rep hcos.isSubquotient hsat.2.1
   have hlen : ∀ i, (Δ i).len = 1 := fun i => len_eq_one (Δ i) (y i) (hseg i) (hsphy i)
   have hsingle : ∀ i, Δ i = Segment.single (Δ i).first (Δ i).isCusp_first := fun i =>
     Segment.ext_first rfl (by rw [hlen i]; rfl)
@@ -324,7 +326,7 @@ theorem isL_single_unrChar [CharZero k] (x : IrrGL (k := k)) (α : Fin x.1 → �
   have h1 : HasSupport x.rep (∑ a, (Δ a).ms) :=
     GlobalTheory.CompanionTheory.Hypotheses₂.TD.hasSupport_of_isSubquotient_prodIrr (fun a => (hseg a).hasSupport) x.2.rep.irr
       hcos.isSubquotient
-  have h2 := GlobalTheory.T.supercuspidalSupport_of_principalSeries_subquotient k x.1 (fun i => unrChar k (α i))
+  have h2 := _root_.GlobalTheory.LocLanglands.hasSupport_of_isSubquotient_prinSeries k x.1 (fun i => unrChar k (α i))
     (fun i => isSmoothChar_of_isUnram (isUnram_unrChar k (α i))) x.2.rep hsat.2.2
   have heq := GlobalTheory.CompanionTheory.Hypotheses₂.TD.hasSupport_unique GlobalTheory.CompanionTheory.GeoLink.geometricLemma
     GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness h1 h2

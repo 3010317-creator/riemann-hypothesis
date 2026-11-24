@@ -36,9 +36,13 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Class
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelMapExtension
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ConstantUniqueOfEqProduct
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdelicLiftEqGeometricClassSumAllTuplesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.GenReads
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MarkAd
+public import Formalism.LocalToGlobal.IndefiniteReal.FWExist
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdelicLiftEqGeometricClassSumAllTuples
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCuspFormClassSumNormalisedData
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFrameConstantsOfCharacterisationCoreStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.OneMapT
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFrameConstantsOfCharacterisationCore
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeEmbeddingIdealLevel
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsOmegaField
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelPlaceDatumOverNumberField
@@ -52,10 +56,12 @@ import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.Heisenb
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.PolyDerivLetterPushforwardEqColumnActionStatement
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ProdLevelOneThetaEqVacuumTheta
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.PushforwardPreservesHarmonicPolynomialsAndLattic
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.PushforwardPreservesHarmonicPolynomialsAndLatticStatement
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.FirstCoordinateAdmissible
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ReadsExistsUniqueTheta
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RootsLevelPointsSameVacuumTranslatesStatement
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ShortThetaValueComplexPointEqClassicalThetaStatement
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsBaseClassLevelAdapted
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ShortThetaValueComplexPointEqClassicalTheta
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaHeisenbergUnitaryColumnChange
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaSeriesTestFunctionHolomorphicWeight
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaVacuumUnitaryColumnChangeUnitFactor
@@ -106,14 +112,15 @@ import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Linter.Style
 import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.EmbeddingsDifferOnInteger
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DictionaryComponentFrameMarkingUniformisation
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockCoefficientMapExtremalEqPhaseSmulLettersStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockCoefficientMapExtremalEqPhaseSmulLetters
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenReadsOfUnfBC
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LettersEqFockVarsCore
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelsAtRecordCore
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKernelOneClassEqClassicalShortSeriesStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.PerCEmb
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKernelOneClassEqClassicalShortSeries
 import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsIsNabUncond
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InverseSelfDualFrameStandardSpaceIntegral
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ShortThetaValueComplexPointEqClassicalTheta
 import Formalism.LocalToGlobal.Columns.AdelicLemmas
 import Formalism.LocalToGlobal.ProjectiveLattices.DepthTie
 import Mathlib.Tactic.Linter.HaveILetI
@@ -162,11 +169,11 @@ theorem move_at_point : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndep
     (Complex.isPrimitiveRoot_exp _ l.odd.pos.ne')).2.2.2.2 n
   obtain ⟨Y, hY⟩ := hroots N hN.1.pos
   obtain ⟨Y', hY'⟩ := hroots N' hN'.1.pos
-  have e1 := GlobalTheory.T.shortThetaValue_complexPoint_eq_classicalTheta hci E H Dw l Xo c r g X bas idx e x L y A hs hx hL q0 n hr eL hrr hn hdir nab hnab
+  have e1 := _root_.GlobalTheory.Dict.shortValAt_eq_thP hci E H Dw l Xo c r g X bas idx e x L y A hs hx hL q0 n hr eL hrr hn hdir nab hnab
     θ v₀ κ hθ hv₀ hκ mk hmk hA Λ.La hΛ N hN Y hY a P hP wq b v hv
-  have e2 := GlobalTheory.T.shortThetaValue_complexPoint_eq_classicalTheta hci E H Dw l Xo c r g X bas idx e x L y A hs hx hL q0 n hr eL hrr hn hdir nab hnab
+  have e2 := _root_.GlobalTheory.Dict.shortValAt_eq_thP hci E H Dw l Xo c r g X bas idx e x L y A hs hx hL q0 n hr eL hrr hn hdir nab hnab
     θ v₀ κ hθ hv₀ hκ mk hmk hA (actLat h Λ).La hΛ' N' hN' Y' hY' a _
-    ((GlobalTheory.T.pushforward_preserves_harmonic_polynomials_and_lattices E H Dw l c n a h hh).1 P hP) wq' b' v' hv'
+    ((_root_.GlobalTheory.PushKeeps.push_keeps E H Dw l c n a h hh).1 P hP) wq' b' v' hv'
   obtain ⟨_, -, hproj⟩ := GlobalTheory.T.heisenbergVacuum_projection_rootOfUnity_phases E r X g bas idx n hs hn _ hwi hw L hL v₀ hv₀
   obtain ⟨hu1, -, hp1⟩ := hproj _ hΛ1
   obtain ⟨hu2, -, hp2⟩ := hproj _ hΛ1'
@@ -1200,8 +1207,8 @@ theorem classSumsSpan_of_pins_core (hR : GlobalTheory.Hk3.Core R F) (ht : TieIn 
   have hrk : (Vc D i).rank = D.R.nV := D.sp.V_rank _ (Nat.le_add_left _ _) i.2
   have hn : (κ i).n = (Vc D i).rank := (ht.kap i (D.eTau.symm 1)).2.2.trans hrk.symm
   have hV := hP.lift.std
-  obtain ⟨cc, hcc⟩ := GlobalTheory.T.exists_frameConstants_of_characterisationCore hCI D G Pl0 T0 A T R F κ v₀ hR ht i _ _ O hP
-  obtain ⟨u, hu, -, -, hser⟩ := GlobalTheory.T.exists_adelicLift_eq_geometric_classSum_all_tuples hCI D G Pl0 T0 A T R F κ v₀ hR ht hio i _ _ O hP cc hcc
+  obtain ⟨cc, hcc⟩ := _root_.GlobalTheory.AdTh.CcExCore.exists_ccIs_core hCI D G Pl0 T0 A T R F κ v₀ hR ht i _ _ O hP
+  obtain ⟨u, hu, -, -, hser⟩ := _root_.GlobalTheory.AdTh.SerCore.exists_serOf_core hCI D G Pl0 T0 A T R F κ v₀ hR ht hio i _ _ O hP cc hcc
   have hpair (W : HSp D) (hV : T.V ((i : ℕ) + 1) O.s0 = W) (hr : W.rank = D.R.r) :
       LatEmb W (LinearMap.funLeft (𝓞 D.host.E) D.host.E (Fin.cast hr) ∘ₗ T.iota ((i : ℕ) + 1)) ∧
       LatIsom W (T.Q.Dw ((i : ℕ) + 1)).EF (LinearMap.funLeft (𝓞 D.host.E) D.host.E (Fin.cast hr) ∘ₗ T.iota ((i : ℕ) + 1)) := by
@@ -1209,8 +1216,8 @@ theorem classSumsSpan_of_pins_core (hR : GlobalTheory.Hk3.Core R F) (ht : TieIn 
     obtain ⟨_, _, _, _, _, _, _, h1, h2, _, _⟩ := hT.adPin _ (inR i) O.s0 (goodEmbedding_baseEmbedding_coreData O)
     exact ⟨h1, h2⟩
   obtain ⟨h1', h2'⟩ := hpair (Wc D i) O.hV (rank_Wc i)
-  obtain ⟨δ, hδ⟩ := GlobalTheory.T.thetaKernel_oneClass_eq_classicalShortSeries D G Pl0 T0 A _ R F hR i hV _ _ (iotaW T i) h1' h2'
-  obtain ⟨ka, hka, hio'⟩ := GlobalTheory.T.fockCoefficientMap_extremal_eq_phase_smul_letters D G Pl0 T0 A T R F κ v₀ hR ht hio i _ _ O hP
+  obtain ⟨δ, hδ⟩ := _root_.GlobalTheory.AdTh.ShortSeriesCore.thetaKO_eq_short_series_core D G Pl0 T0 A _ R F hR i hV _ _ (iotaW T i) h1' h2'
+  obtain ⟨ka, hka, hio'⟩ := _root_.GlobalTheory.AdTh.PhaseMapCore.io_eq_phase_smul_core D G Pl0 T0 A T R F κ v₀ hR ht hio i _ _ O hP
   have hex := GlobalTheory.ClassSumRule.exists_cusp_isThClsD_core hCI D G Pl0 T0 A T R F κ v₀ hR ht i _ _ O hP ()
   obtain ⟨w₀, -, hw₀, -⟩ := (ht.hv₀ i (sg0 D A)).2 rfl (hio i)
   have hw₁ : (fun ρ => (w₀ ρ : (R.MW i (sg0 D A)).sm ρ)) = v₀ i (sg0 D A) := funext hw₀

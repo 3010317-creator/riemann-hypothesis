@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDimEqOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFiniteIffFiniteKerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFiniteOfSurjectiveOfDimEqStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFiniteIffFiniteKer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFiniteOfSurjectiveOfDimEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsogenyCompAndDegreeMulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjectiveOfIsFiniteOfDimEqAbelianVarietyHomStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjectiveOfIsFiniteOfDimEqAbelianVarietyHom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,8 +64,8 @@ theorem GlobalTheory.AV.AbVar.isIsogeny_comp_iff_and_deg_comp : ∀ (K : Type) [
     · rintro ⟨hfin, hsurj⟩
       have hs2 : Surjective (f.hom.left ≫ g.hom.left) := by rw [← hleft]; exact hsurj
       have hgs : Surjective g.hom.left := Surjective.of_comp f.hom.left g.hom.left
-      have hgf : IsFinite g.hom.left := GlobalTheory.T.isFinite_of_surjective_of_dim_eq' K B C g hBC hgs
-      have hker : Finite (ptMap (f ≫ g)).ker := (GlobalTheory.T.isFinite_iff_finite_ker' K A C (f ≫ g)).1 hfin
+      have hgf : IsFinite g.hom.left := _root_.GlobalTheory.AV.AbVar.isFinite_of_surjective_of_dim_eq K B C g hBC hgs
+      have hker : Finite (ptMap (f ≫ g)).ker := (_root_.GlobalTheory.AV.AbVar.isFinite_iff_finite_ker K A C (f ≫ g)).1 hfin
       have hle : (ptMap f).ker ≤ (ptMap (f ≫ g)).ker := by
         intro x hx
         rw [MonoidHom.mem_ker] at hx ⊢
@@ -74,8 +74,8 @@ theorem GlobalTheory.AV.AbVar.isIsogeny_comp_iff_and_deg_comp : ∀ (K : Type) [
         rw [comp_hom, ← Category.assoc, hx', MonObj.one_comp]
       have hfk : Finite (ptMap f).ker :=
         Finite.of_injective (Subgroup.inclusion hle) (Subgroup.inclusion_injective hle)
-      have hff : IsFinite f.hom.left := (GlobalTheory.T.isFinite_iff_finite_ker' K A B f).2 hfk
-      exact ⟨⟨hff, GlobalTheory.T.surjective_of_isFinite_of_dim_eq_abelianVarietyHom K A B f hAB hff⟩, ⟨hgf, hgs⟩⟩
+      have hff : IsFinite f.hom.left := (_root_.GlobalTheory.AV.AbVar.isFinite_iff_finite_ker K A B f).2 hfk
+      exact ⟨⟨hff, _root_.GlobalTheory.AV.AbVar.surjective_of_isFinite_of_dim_eq K A B f hAB hff⟩, ⟨hgf, hgs⟩⟩
     · rintro ⟨hf, hg⟩
       exact (GlobalTheory.T.isogeny_comp_and_degree_mul K A B C f g hf hg).1
   refine ⟨key, ?_⟩

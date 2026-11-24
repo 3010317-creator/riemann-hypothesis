@@ -3,8 +3,9 @@ module
 public import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCoordLattice
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.PolarisedDualSystem
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvolutionSphericalHeckeAntiStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotentsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvolutionSphericalHeckeAnti
+public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
 public import Formalism.LocalToGlobal.IndefiniteReal.BridgeTie
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -173,7 +174,7 @@ theorem primeIdem (he : IsIdemAt e P) : IsPrimeIdem P e (e + cA D e) := Or.inl �
 theorem exists_loc (V : HSp D) (he : IsIdemAt e P) :
     ∃ L : Subgroup (GA D V), (∀ g, g ∈ L ↔ SuppF V (e + cA D e) g) ∧ L ≤ GfC V ∧
       ∀ g ∈ L, ∀ g', SuppF V (1 - (e + cA D e)) g' → Commute g g' := by
-  obtain ⟨h1, -, h3, -⟩ := GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V
+  obtain ⟨h1, -, h3, -⟩ := _root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V
   obtain ⟨a, b, c, -⟩ := h3 P e _ (primeIdem he)
   obtain ⟨⟨L, hL⟩, -, hc⟩ := h1 _ a b
   refine ⟨L, hL, fun g hg => c g ((hL g).1 hg), fun g hg g' hg' => hc _ g g' ?_ ((hL g).1 hg) hg'⟩
@@ -218,7 +219,7 @@ theorem heckeOn_of_partFull {J J₀ : Subgroup (GA D V)} {χ χ₀ : GA D V → 
     (hinv : ∀ v, ∀ k ∈ J₀, ∀ g, T v (g * k) = T v g) {k : ℕ} (hk : k ≤ V.rank) {α : GA D V} (hα : IsHeckeAt V P k α)
     {R : Finset (GA D V)} (hR : IsDC J₀ α⁻¹ R) : heckeOn M R T = c P (splitLab V.rank k) • T := by
   obtain ⟨e, ϖ, he, h1, h2, hα⟩ := hα
-  obtain ⟨-, hrep, -⟩ := GlobalTheory.T.involution_spherical_hecke_anti V P e he
+  obtain ⟨-, hrep, -⟩ := _root_.GlobalTheory.SplitPlace.split_local V P e he
   have hi := suppAt_inv he hα.2.1
   obtain ⟨R', hR', hc⟩ := hrep α⁻¹ hi
   have hfull := h.full he hS h1 h2 (splitLab_pairwise _ k) hi (GlobalTheory.heckeElt_inv_divAt_splitLab V P e ϖ k α he h1 h2 hk hα) hR' hc

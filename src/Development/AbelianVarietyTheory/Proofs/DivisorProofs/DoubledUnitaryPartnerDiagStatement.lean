@@ -7,7 +7,7 @@ public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceSymplecticFormEqOrientedHomSymplecticForm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryPairOfTransposedGramInverseGram
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingInl
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThetaFunctionThetaTransformRationalDarbouxStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThetaFunctionThetaTransformRationalDarboux
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -237,7 +237,7 @@ theorem pres_impl : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D �
     fun w' φ' h' => GlobalTheory.T.schrodingerOperator_mem_adelicSchwartz_stdChar D ψ hψ κ _ φ' h'
   have h1 := htr a b g h hh hg _ (hrho w φ hφ)
   have h2 := htr a b g h hh hg _ hφ
-  have hF := GlobalTheory.T.isThetaFunction_thetaTransform_rationalDarboux D ψ hψ S T JA JB ξ hA hB κ co hco φ hφ
+  have hF := _root_.GlobalTheory.ThetaTransformTheta.isThetaFunO_thetaTr D ψ hψ S T JA JB ξ hA hB κ co hco φ hφ
   have E1 := hω.om_heis g h w _ hF
   have E2 := thetaTr_rho ψ S T hs co w φ
   have E3 := thetaTr_rho ψ S T hs co (GlobalTheory.WeilM.actAB (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA D.sp.cm.sig) (a, b) w) (om (a, b) φ)

@@ -3,9 +3,13 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.SiegelWeil₂.SiegelWeilUnitaryConvergent
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.WeilSiegelFormulaUnitary
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalFormAniso
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicIwasawaDoubledGroupSelfDualLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoublingSiegelWeilSectionMemDegeneratePrincipalSStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FockVectorFiniteUnderCompactCommutingCartanStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalVolumeLift
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicIwasawaDoubledGroupSelfDualLattice
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalZero
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IntegrandSZero
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.WeilRepresentationUnitaryPair
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoublingSiegelWeilSectionMemDegeneratePrincipalS
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FockVectorFiniteUnderCompactCommutingCartan
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ImportsBis
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SiegelWeilFockDoubledPairOfWeilAndIchino
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.WeilThetaConvergence
@@ -34,10 +38,10 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.The
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TransportedSchrodingerSiegelUnipotentAction
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TransportedSchrodingerStandardLeviAction
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeylFormulaStandardUnitaryGroupWeilDatum
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalZero
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsBlockNFZeroOne
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.WeilSiegelTheta.BigCellDefs
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PullbackSchwartzLinearIndependentStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.WeilSiegelTheta.PullSchLI
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PullbackSchwartzLinearIndependent
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaRestrictIsotropicQuotientWittTowerPropertie
 public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.GinfCSecondCountable
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FrameIntegralEqCoefficientNonrepresentedStatement
@@ -159,7 +163,7 @@ theorem fockAniso_of_ranges (D : D7) (h1 : FockAnisoLe D) (h2 : FockAnisoGt D) :
 theorem fockAniso_le (hSW : GlobalTheory.Published.SiegelWeilUnitaryConvergent) : ∀ D, FockAnisoLe D := by
   intro D ψ A B _hA hab hle hB χB omh homh a hmaj θ sS sB hθ hS hBc hKc ν 𝓕 hcov mH hmH φ hF
   have hI : HasIwasawa D.sp.cm.sig (dblSp A).gram (Khat A a) :=
-    GlobalTheory.T.adelicIwasawa_doubledGroup_selfDualLattice D A (frameLat A) a (GlobalTheory.WeilAtPlace.isSelfDualC_frameLat A) hmaj
+    _root_.GlobalTheory.Core.Rk.IP.hasIwasawa_KAd_selfDual D A (frameLat A) a (GlobalTheory.WeilAtPlace.isSelfDualC_frameLat A) hmaj
   have hw : Formalism.MainNotions.SchurIrreducible.wittIdx B = 0 := by rw [GlobalTheory.RallisIP.wittIdx_eq_wittIndex]; exact hB
   exact hSW D ψ A B hab hle (by omega) χB omh homh a hmaj hI θ sS sB hθ hS hBc hKc ν 𝓕 hcov mH hmH φ hF
 
@@ -173,9 +177,9 @@ theorem re_sZero_gt {D : D7} (A B : HSp D) (h : 2 * A.rank < B.rank) : (A.rank :
 theorem fockAniso_gt : GlobalTheory.Published.WeilSiegelFormulaUnitary → ∀ D, FockAnisoGt D := by
   intro hWeil D ψ A B ha hab hB χB omh homh a hmaj θ sS sB hθ hS hBc hKc ν 𝓕 hcov mH hmH φ hF
   have hφ := hF.1
-  have hK := GlobalTheory.T.fock_vector_finite_under_compact_commuting_cartan D ψ θ (dblSp A) B 1 χB omh sS sB homh hθ hS hBc (Khat A a) (isCompact_Khat A a) hKc φ hF
+  have hK := _root_.GlobalTheory.Core.Rk.IP.isKFinVec_of_isFockVec D ψ θ (dblSp A) B 1 χB omh sS sB homh hθ hS hBc (Khat A a) (isCompact_Khat A a) hKc φ hF
   have hI : HasIwasawa D.sp.cm.sig (dblSp A).gram (Khat A a) :=
-    GlobalTheory.T.adelicIwasawa_doubledGroup_selfDualLattice D A (frameLat A) a (GlobalTheory.WeilAtPlace.isSelfDualC_frameLat A) hmaj
+    _root_.GlobalTheory.Core.Rk.IP.hasIwasawa_KAd_selfDual D A (frameLat A) a (GlobalTheory.WeilAtPlace.isSelfDualC_frameLat A) hmaj
   have hwitt : Formalism.MainNotions.SchurIrreducible.wittIdx B = 0 ∨ A.rank + Formalism.MainNotions.SchurIrreducible.wittIdx B < B.rank := by
     rw [GlobalTheory.RallisIP.wittIdx_eq_wittIndex]; exact Or.inl hB
   obtain ⟨-, hW2⟩ := hWeil D A B mH hmH ha hwitt
@@ -184,7 +188,7 @@ theorem fockAniso_gt : GlobalTheory.Published.WeilSiegelFormulaUnitary → ∀ D
   have hsum : ∀ g, GlobalTheory.Eis.eis A (GlobalTheory.SiegelFormula.swSection A B ν 𝓕 omh φ) g =
       ⨍ q, descend (GQ B) (fun h => thetaKO omh g h φ) q ∂autMeasure B mH := fun g =>
     ((hser hab ν 𝓕 hcov).2 g).2
-  have hmem := GlobalTheory.T.doublingSiegelWeilSection_mem_degeneratePrincipalSeries GlobalTheory.weilRepresentationUnitaryPair D ψ A B χB omh homh ν 𝓕 hcov φ hφ a hK
+  have hmem := _root_.GlobalTheory.SwSecMem.swSec_mem_degPS GlobalTheory.weilRepresentationUnitaryPair D ψ A B χB omh homh ν 𝓕 hcov φ hφ a hK
   have hv := GlobalTheory.Eis.SphConv.eisValueAt_flat hI hmem (GlobalTheory.Eis.sphConv D A a hI) (isHeckeCharacter_inv_of_isHeckeCharacter homh.hecT)
     (re_sZero_gt A B hab)
   have he : GlobalTheory.Eis.eis A (swSec A B omh ν 𝓕 φ) = GlobalTheory.ThetaMean.thetaMean omh mH φ := by
@@ -588,7 +592,7 @@ theorem hyp_pull : ∀ (D : D7) (r : ℕ) (V : HSp D) (ψ : AddChar (AF D.host.F
   intro D r V ψ θ μ lam ν φ a ha ⟨h1, h2, h3, h4, h5, h6, h7, h8⟩
   have hli : LinearIndependent D.host.E a :=
     Matrix.linearIndependent_rows_of_isUnit ((Matrix.isUnit_iff_isUnit_det a).mpr (isUnit_iff_ne_zero.mpr ha))
-  refine ⟨h1, h2, h3, h4, h5, h6, GlobalTheory.T.pullback_schwartz_linear_independent D θ h3 _ _ _ a hli φ h7, ?_⟩
+  refine ⟨h1, h2, h3, h4, h5, h6, _root_.GlobalTheory.CompanionTheory.PullSch.pullSchLI D θ h3 _ _ _ a hli φ h7, ?_⟩
   rw [absThetaInt_pull V ν φ a ha]
   exact h8
 

@@ -11,7 +11,6 @@ public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.Exist
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsProjectiveAlgebraisationFormalCompleteLoca
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.FirstCohomologyVanishesOfIsoOfIsGen
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsProjByOfIsPullback
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SerreVanishingVeryAmpleStatement
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverMorphismRestrictOfRelAmple
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsVeryAmpleH1Zero
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsRegularFnIffOfIsAffineOpen
@@ -26,7 +25,7 @@ public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.DegUnif
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsIsoOfIsClosedImmersionOfThickeningsOfIsProper
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.MorAlgSt
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSectionPrimitiveBundleTranslateLocalRingStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSectionPrimitiveBundleTranslateLocalRing
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsUniqueSec
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -276,7 +275,7 @@ theorem exists_veryAmple_h1Zero_pull : ∀ (A : Type) [CommRing A] (X : Over (Sp
         exact congrArg (fun q => MvPolynomial.eval₂Hom q _ p)
           (RingHom.ext fun c => (VeryAmplePull.appLE_cst hπ.w _ _ _ c).symm)
       · exact ⟨MvPolynomial.C c, MvPolynomial.eval₂Hom_C _ _ _⟩
-  obtain ⟨t₀, ht₀⟩ := GlobalTheory.T.serre_vanishing_very_ample.1 K X₀ f₀ _ n₀ s' hH₀ hva _ hH₀
+  obtain ⟨t₀, ht₀⟩ := _root_.GlobalTheory.AbLaw.serre_h1Zero_and_sections_polynomial.1 K X₀ f₀ _ n₀ s' hH₀ hva _ hH₀
   have h1 := ht₀ (t₀.toNat : ℤ) (Int.self_le_toNat t₀)
   obtain ⟨w, hw⟩ := lbIso_tw hH₀ (t₀.toNat : ℤ)
   have h2 := H1Iso.firstCohomologyVanishes_of_iso_of_isGen (isLB_tw hH₀ hH₀ _).cover (isLB_pw hH₀ _) w hw h1
@@ -1065,7 +1064,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.LN
 
 theorem GlobalTheory.LN.ega_of_laws : Laws → Laws2 → Ega := fun h₁ h₂ =>
-  ⟨GlobalTheory.T.compatible_line_bundles_formal_thickening h₁ h₂, GlobalTheory.T.existsUnique_hom_of_thickenings' h₁ h₂, GlobalTheory.SecAlg.existsUnique_sec, GlobalTheory.T.exists_section_primitiveBundle_translate_localRing h₁ h₂⟩
+  ⟨GlobalTheory.T.compatible_line_bundles_formal_thickening h₁ h₂, GlobalTheory.T.existsUnique_hom_of_thickenings' h₁ h₂, GlobalTheory.SecAlg.existsUnique_sec, _root_.GlobalTheory.PrimitiveOverLocalRing.exists_section_translate h₁ h₂⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.EgaBundleFromLaws =====

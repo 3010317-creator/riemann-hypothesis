@@ -54,7 +54,7 @@ public import Formalism.SharpRestriction.CuspSpanNormBounds.StandingHypothesesHo
 public import Formalism.SharpRestriction.CuspSpanNormBounds.TheoremBConstants
 public import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsThresholdCriticalLevelLowerBound
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalizedFormalDegreeEqVandermondeOfSizesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalizedFormalDegreeEqVandermondeOfSizes
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RootMeasureEqNormalFormRootMeasure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -830,7 +830,7 @@ theorem ampOn_singleton : ∀ c : ℝ, AmpOn {c} := by
   obtain ⟨Ca, hCa, hAbs⟩ := GlobalTheory.AbsRecGap.abs_all_at_record_gap Cg cb Cu cT CT c
   obtain ⟨CS, tS, hS⟩ := GlobalTheory.Amp.schur_at_record_gap Cg cb Cu cT CT c
   obtain ⟨tL, hL⟩ := _root_.GlobalTheory.CritLevelSize.tcritLow_sizes cb Cu hcb
-  obtain ⟨tV, hV⟩ := GlobalTheory.T.normalizedFormalDegree_eq_vandermonde_of_sizes
+  obtain ⟨tV, hV⟩ := _root_.GlobalTheory.Core.Deg.CritVand.vv_eq_vand_of_sizes
   obtain ⟨C, C2, Ch, hC, hCh, H⟩ := _root_.GlobalTheory.ampAt_record_of_inputs Cg CPT CDl 1 Ca CS zero_le_one hCa
   refine ⟨C, C2, Ch, hC, hCh, fun Cpr δ hδ => ?_⟩
   obtain ⟨t0, H0⟩ := H Cpr δ hδ

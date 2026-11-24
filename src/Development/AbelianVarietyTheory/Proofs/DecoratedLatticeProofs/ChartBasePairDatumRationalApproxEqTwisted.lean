@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CongAt
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PsiAtTransport
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistPrimeCongruentMapsFrameReadingsBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistPrimeCongruentMapsFrameReadingsBound
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsTupleUnitaryFormsEquivPeriodRowForms
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SourceLatticeInvariance
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ReferenceCharactersFactorTame
@@ -10,7 +10,6 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Chart
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CongruentOneMemStepLevelLevelCharEqOne
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsMoveRight
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalCharDetEqOneOfCongrOneModPow
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistPrimeCongruentMapsFrameReadingsBound
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IntegralPowerExpansion
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.LevelGroupNeTopNeBot
@@ -133,7 +132,7 @@ theorem GlobalTheory.Transport.TwistCpl.psiAt_transport_tw : ∀ {B : Base} {X :
     have hq0 : ((Formalism.L2.Col.qOf P.1 : ℕ) : B.fields.E) ≠ 0 := Nat.cast_ne_zero.2 hq0n
     refine ⟨Formalism.L2.Col.qOf P.1 ^ (I.cst a).B, pow_pos (Nat.pos_of_ne_zero hq0n) _, ?_⟩
     rintro _ ⟨c, rfl⟩ x x₀ hx
-    have hr := GlobalTheory.T.twist_prime_congruent_maps_frame_readings_bound I u a i P hPQ (GlobalTheory.Mem.Df.disjoint_vGs_Q I hI l a) p q p' q' k y k' y' hp hN hp' hN' hq hq' _ x x₀ hx
+    have hr := _root_.GlobalTheory.Transport.TwistRead.qread I u a i P hPQ (GlobalTheory.Mem.Df.disjoint_vGs_Q I hI l a) p q p' q' k y k' y' hp hN hp' hN' hq hq' _ x x₀ hx
     have hm' : i + 1 + 1 = B.R.m := by omega
     set x₁ := Formalism.L2.Col.inFr (Formalism.L2.Col.frsF I.sel (I.tup a) p.1.1 P) (Formalism.L2.Col.frsF I.sel (I.tup a) p'.1.1 P) x₀ with hx₁
     set x₂ := Formalism.L2.Col.inFr (Formalism.L2.Col.frsF I.sel (I.tup a) q.1.1 P) (Formalism.L2.Col.frsF I.sel (I.tup a) q'.1.1 P) x with hx₂
@@ -1210,7 +1209,7 @@ theorem locTop_transport_tw : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X) (l 
     have hq0 := GlobalTheory.TopStep.qOf_ne_zero (P := P.1)
     refine ⟨Formalism.L2.Col.qOf P.1 ^ ((I.cst a).M + 1), pow_pos hqpos _, ?_⟩
     rintro _ ⟨c, rfl⟩ x x₀ hx
-    have H := GlobalTheory.T.twist_prime_congruent_maps_frame_readings_bound I u a (n + 1) P hQ (GlobalTheory.Mem.Df.disjoint_vGs_Q I ok l a) p q p' q' k y k' y' hp hN hp' hN' hq hq' _ x x₀ hx
+    have H := _root_.GlobalTheory.Transport.TwistRead.qread I u a (n + 1) P hQ (GlobalTheory.Mem.Df.disjoint_vGs_Q I ok l a) p q p' q' k y k' y' hp hN hp' hN' hq hq' _ x x₀ hx
     have hqv := GlobalTheory.TopStep.Model.repY_intQ q.1.1 (q.mem_ybSet h) hP
     rw [locTop_shiftQ hc hP hD _ hqv (rep_sub_intQ h p q e hP)]
     have key : ∀ s r, Formalism.L2.Col.IntAt P.1 (((Formalism.L2.Col.qOf P.1 : B.fields.E) ^ ((I.cst a).M + 1))⁻¹ *

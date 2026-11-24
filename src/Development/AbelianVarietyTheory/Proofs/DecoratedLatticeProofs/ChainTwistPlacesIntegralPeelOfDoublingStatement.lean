@@ -21,7 +21,6 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConstMemB
 public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
 public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemSum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubledLatticeHeightFunProperties
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsChartsAtTwistPlacesChainStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PeterssonCoefficientBoundedSphericalUnramified
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageRealDataConjValueMemCuspForms
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCoType
@@ -29,7 +28,8 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Unr
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.HalfLinearCocycle
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.VolumeFlatSection
 public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LatticeReductionEqOneOfLocalComponentOneStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.OfInfProjInfMulOfFinProjFin
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LatticeReductionEqOneOfLocalComponentOne
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainLevelProperties
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PrincipalPlaceComponentStabilisesLatticeTwisted
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationCommFockPolynomialVectorsStatement
@@ -38,7 +38,7 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Not
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilMatrixCoefficientEqZeroOfHeisenbergRelationsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsThetaFunOOfThetaAt
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjPlEqCP
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageFiniteLevelEqProductLocalLevelsStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageFiniteLevelEqProductLocalLevels
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -844,7 +844,7 @@ theorem hgt_one {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNo
 
 theorem local_factor : GlobalTheory.Published.UnramifiedDoublingGL → GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, ForStepQ D fun c w k s s' p => ∀ m X, IsCovolOne (ratL s'.V s.V) m X → ∀ a, IsMajOf c s a → ∀ (u₁ u₂ : s.CC c) φ, IsQ w k u₁ → ∀ v₁ ∈ s.KF, ∀ v₂ ∈ s.KF, ∀ z : ℝ, (D.R.t : ℝ) / 2 - 1 < z → ∀ PP ∈ w.Q, ∃ (J : Subgroup (GlobalTheory.FinZeta.Gv s.V ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)))) (μ : Measure (GlobalTheory.FinZeta.Gv s.V ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)))) (ζ : GlobalTheory.FinZeta.Gv s.V ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)) → ℂ), IsOpen (J : Set (GlobalTheory.FinZeta.Gv s.V ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)))) ∧ μ.IsHaarMeasure ∧ μ J = 1 ∧ Integrable ζ μ ∧ (∀ y ∈ J, ζ y = 1) ∧ (∀ g, gAt s.V (.inl ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP))) g ∈ Lev.levG s.V s.β s.L ↔ GlobalTheory.AdelicU.proj D.sp.cm.sig s.V.gram ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)) g ∈ J) ∧ (z = (D.R.t : ℝ) / 2 → ∫ y, ζ y ∂μ = blockL c k PP * (zinv PP D.R.t ((k + 1) * D.R.t) : ℂ)) ∧ ∀ x ∈ intOff c s, GlobalTheory.AdelicU.proj D.sp.cm.sig s.V.gram ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)) x = 1 → ∀ y, flatInt p m X a φ (PiLocalization₂.val u₁ v₁) (PiLocalization₂.val u₂ v₂) z (x * GlobalTheory.AdelicU.emb D.sp.cm.sig s.V.gram ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)) y) = ζ y * flatInt p m X a φ (PiLocalization₂.val u₁ v₁) (PiLocalization₂.val u₂ v₂) z x := by
   intro hU hC D hgap c w hw k hk s s' hs hs' p hp m X hX a ha u₁ u₂ φ hQ v₁ hv₁ v₂ hv₂ z hz PP hPP
-  obtain ⟨⟨v, pr, hpr⟩, hch⟩ := GlobalTheory.T.exists_charts_at_twist_places_chain D c w hw k hk.le s hs PP hPP
+  obtain ⟨⟨v, pr, hpr⟩, hch⟩ := _root_.GlobalTheory.TwistChart.charts_at_twist D c w hw k hk.le s hs PP hPP
   obtain ⟨-, ⟨x₀, ϖ, hxϖ⟩, ⟨ι, hι⟩, hchi⟩ := hch v pr hpr
   obtain ⟨μT, hμu, hμT⟩ := hchi (c.chT (k + 1))
   obtain ⟨hv, hres, htame, hlift, hdict⟩ := GlobalTheory.T.splitPlaceChart_parahoric_level_stabiliser_height D c w hw k hk.le s hs PP hPP v pr hpr
@@ -1165,7 +1165,7 @@ theorem gAt_mem_levG_of_red : ∀ (D : D7) (S : HSp D) (βS : GL (Fin S.rank) (L
   have hone : ∀ PP' : Pl D.host.E, (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP') ≠ (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) →
       Formalism.L2.DIV.redFn βS PP' (Lev.finE S (gAt S (.inl ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP))) g)) = 1 := by
     intro PP' hne
-    exact GlobalTheory.T.latticeReduction_eq_one_of_local_component_one D S βS _ PP' hSt (GlobalTheory.AdelicU.proj_emb_ne _ _ hne _)
+    exact _root_.GlobalTheory.ChainOnto.RedOne.redFn_eq_one D S βS _ PP' hSt (GlobalTheory.AdelicU.proj_emb_ne _ _ hne _)
   refine ⟨GlobalTheory.ChainOnto.LevelFacts.emb_mem_GfC S _ _, ?_⟩
   show Lev.finE S (gAt S (.inl ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP))) g) ∈ Formalism.L2.DIV.lev D.sp.cm S.gram βS L
   refine ⟨⟨⟨⟨GlobalTheory.LevSplit.finE_mem_UA S _, hSt⟩, ?_⟩, ?_⟩, ?_⟩
@@ -1373,8 +1373,8 @@ theorem qPeel_holds : GlobalTheory.Published.UnramifiedDoublingGL → GlobalTheo
     obtain ⟨hr, -, hfl⟩ := hs
     exact hfl.haar
   have : BorelSpace (GA D s.V) := ⟨rfl⟩
-  obtain ⟨-, hmO, hlevIff, -, -, -⟩ := GlobalTheory.T.thetaChainStage_finiteLevel_eq_product_localLevels D c w hw k hk.le s hs
-  have hmL : MeasurableSet (levSet s) := (GlobalTheory.T.thetaChainStage_finiteLevel_eq_product_localLevels D c w hw k hk.le s hs).1
+  obtain ⟨-, hmO, hlevIff, -, -, -⟩ := _root_.GlobalTheory.ChainTw.LevLoc.levLoc D c w hw k hk.le s hs
+  have hmL : MeasurableSet (levSet s) := (_root_.GlobalTheory.ChainTw.LevLoc.levLoc D c w hw k hk.le s hs).1
   set F := flatInt p m X a φ (PiLocalization₂.val u₁ v₁) (PiLocalization₂.val u₂ v₂) z with hF
   have hloc := GlobalTheory.T.flatIntegrand_localFactor_splits_twistPlace hU hC D hgap c w hw k hk s s' hs hs' p hp m X hX a ha u₁ u₂ φ hq v₁ hv₁ v₂ hv₂ z hz
   choose J μ ζ hJo hμ hμJ hζi hζ1 hJiff hζv hFx using hloc

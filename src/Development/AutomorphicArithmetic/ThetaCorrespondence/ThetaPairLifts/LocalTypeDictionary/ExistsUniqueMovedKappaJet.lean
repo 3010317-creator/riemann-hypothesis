@@ -17,8 +17,10 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUni
 public import Formalism.LocalToGlobal.InertKernelTheory.DefsInt
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MoveRationalInvariant
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockJetsUnitVacuumEqScaledThetaJets
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVectorNegHermitianSpaceConjMonomialStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsVacuumConjOfNegHermitianSpaceStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CmHostImaginaryGeneratorNeZero
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVectorNegHermitianSpaceConjMonomial
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsVacuumConjOfNegHermitianSpace
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterInfinityExponentGroupLaws
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NatCastMemPrimeOf
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EntireEqOfMonomialDerivationsAtZeroEq
@@ -93,7 +95,6 @@ import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.TwistPl
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrT
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Definitions.Divisors.CmHostImaginaryGeneratorNeZero
 import Development.AbelianVarietyTheory.Definitions.Divisors.FlatTensorVacuum
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsMatchOver
 import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.FormulaAt
@@ -105,12 +106,16 @@ import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GapAtLeast
 import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdeleAt
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockMonomialAtOriginGaussianEntireOrthonormalStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramAtPosDef
+import Formalism.SharpRestriction.GlobalSchurBounds.GL3Theta
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockMonomialAtOriginGaussianEntireOrthonormal
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockPureTensorAtOriginEqThetaSeries
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVacuumRealRestrictionGaussianEntireStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacterStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVacuumRealRestrictionGaussianEntire
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacter
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.EmbeddingXiZeroNeZero
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQuaStatement
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.AdelicDataRowMeasureScaleTrivialTuple
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQua
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InfPartOneSubEInfSmul
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
@@ -557,7 +562,7 @@ private theorem vac_scalar {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} (hθ
     ∃ c : ℂ, om (g, h) f = c • f ∧ ∀ (F : Type) [NormedField F] (lam : Qbar →+* F),
       (∀ τ, NormOne lam (compAt θ τ (Formalism.L2.Theta.mt S g)).det) → (∀ τ, NormOne lam (compAt θ τ (Formalism.L2.Theta.mt T h)).det) →
         NormOne lam c := by
-  obtain ⟨η, e1, e2, e3, e4⟩ := GlobalTheory.T.exists_unramifiedHeckeChar_halfExponent_restrict_quadratic D
+  obtain ⟨η, e1, e2, e3, e4⟩ := _root_.GlobalTheory.Mem.EtaTilde.exists_etaTilde D
   have hdet : ∀ {k : ℕ} {G s : Matrix (Fin k) (Fin k) ℂ}, IsCartanInv G s → G.det ≠ 0 := fun {k G s} hG => by
     have := hG.2.2.det_pos.ne'
     rw [Matrix.det_mul] at this
@@ -567,7 +572,7 @@ private theorem vac_scalar {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} (hθ
   obtain ⟨e, he⟩ := detPlus_def (m := T.rank) hs
   obtain ⟨a, ha⟩ := sq_exp hθ hW.hecT hW.resT e2 T.rank
   obtain ⟨b, hb⟩ := sq_exp hθ hW.hecS hW.resS e2 S.rank
-  refine ⟨_, GlobalTheory.T.weilDatum_realPlaces_fockVacuum_character D ψ hW.std S T θ hθ χS χT om η ⟨e1, e4, e3, e2⟩ hW (fun _ => s) (fun _ => 1) hS hT g hg h hh
+  refine ⟨_, _root_.GlobalTheory.WeilVacChar.vacuum_character D ψ hW.std S T θ hθ χS χT om η ⟨e1, e4, e3, e2⟩ hW (fun _ => s) (fun _ => 1) hS hT g hg h hh
     (fun τ => by rcases hs with rfl | rfl <;> simp) (fun τ => by rw [one_mul, mul_one]) x y hx hy f hf hv,
     fun F _ lam h1 h2 => ?_⟩
   have inv : ∀ τ, (compAt θ τ (Formalism.L2.Theta.mt S g⁻¹)).det = ((compAt θ τ (Formalism.L2.Theta.mt S g)).det)⁻¹ := fun τ => by
@@ -681,15 +686,15 @@ private theorem jets_subst {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T
       a * ((k.prod fun v n => period δ v.1 ^ n) * Formalism.MainNotions.GL3Theta.applyAt0 D (MvPolynomial.monomial k 1)
         fun z => c⁻¹ * Θ (Formalism.L2.KerInert.tPull D (tor0 D cc δ) U.1 U'.1 z)) := by
   have hθ := hf.2.inf
-  obtain ⟨Φ, hΦ, hr⟩ := GlobalTheory.T.fockVacuum_real_restriction_gaussian_entire ψ θ S T frS frT _ _ hS hT f hf
-  obtain ⟨Φ', hΦ', hr'⟩ := GlobalTheory.T.fockVacuum_real_restriction_gaussian_entire ψ θ S T frS frT _ _ hS hT f' hf'
+  obtain ⟨Φ, hΦ, hr⟩ := _root_.GlobalTheory.FockPos.vacuum_real_entire ψ θ S T frS frT _ _ hS hT f hf
+  obtain ⟨Φ', hΦ', hr'⟩ := _root_.GlobalTheory.FockPos.vacuum_real_entire ψ θ S T frS frT _ _ hS hT f' hf'
   have hs : (((Real.sqrt (2 * Real.pi * Formalism.L2.Pj.xiR D) : ℝ) : ℂ)⁻¹) ≠ 0 := by
     have hx : 0 < Formalism.L2.Pj.xiR D := norm_pos_iff.2 ((_root_.map_ne_zero _).2 (GlobalTheory.DualPairCompare.embedding_xi_zero_ne_zero D))
     exact inv_ne_zero (Complex.ofReal_ne_zero.2 (Real.sqrt_pos.2 (mul_pos Real.two_pi_pos hx)).ne')
   have e1 : Φ = fun z => a * Θ (δ • z) := by
     refine GlobalTheory.EntireJetUniq.eq_of_applyAt0_monomial_eq _ _ hΦ
       ((hΘ.comp (differentiable_id.const_smul δ)).const_mul a) fun k => ?_
-    have h1 := GlobalTheory.T.fockMonomial_at_origin_gaussian_entire_orthonormal ψ θ S T frS frT hf.1 hθ hS hT f Φ hΦ hr k
+    have h1 := _root_.GlobalTheory.FockPos.fock_monomial_zero_of_on ψ θ S T frS frT hf.1 hθ hS hT f Φ hΦ hr k
     rw [hj, jets_scale δ a hΘ] at h1
     exact (mul_left_cancel₀ (pow_ne_zero _ hs) h1).symm
   have hd : Differentiable ℂ (Formalism.L2.KerInert.tPull D (tor0 D cc δ) U.1 U'.1) :=
@@ -747,7 +752,7 @@ private theorem jets_subst {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T
     rw [mul_assoc, h0]
     field_simp
   have hd2 : Differentiable ℂ fun z => c⁻¹ * Θ (Formalism.L2.KerInert.tPull D (tor0 D cc δ) U.1 U'.1 z) := (hΘ.comp hd).const_mul _
-  rw [jets_scale δ a hd2, GlobalTheory.T.fockMonomial_at_origin_gaussian_entire_orthonormal ψ θ S T frS frT hf.1 hθ hS hT f' Φ' hΦ' hr' k, e2]
+  rw [jets_scale δ a hd2, _root_.GlobalTheory.FockPos.fock_monomial_zero_of_on ψ θ S T frS frT hf.1 hθ hS hT f' Φ' hΦ' hr' k, e2]
 private theorem coord_data {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {fr : GL (Fin V.rank) D.host.E} {r : GfC V}
     {U : Matrix.unitaryGroup (Fin V.rank) D.host.E} (h : RatCoord V fr r U) :
     ∃ γ ∈ GQ V, finHom V γ = finHom V (r : Formalism.L2.Theta.GA D V) ∧
@@ -837,7 +842,7 @@ theorem fock_jetTheta_rational : _root_.GlobalTheory.FunPr.ThetaLocalInputs → 
     have eS := GlobalTheory.FockPos.cart_one _ hS cS
     have eT := GlobalTheory.FockPos.cart_one _ hT cT
     have hW := ch.W.om_is (.chi i D.R.m) ⟨hi, le_rfl⟩
-    have hj := fun f => GlobalTheory.T.fockVector_negHermitianSpace_conj_monomial ch.W.ψ ch.W.θ (ch.G.V (.grid (i + 1) D.R.m)) (ch.G.V (.grid i D.R.m))
+    have hj := fun f => _root_.GlobalTheory.FockConj.pureTensorO_negSp_monomial ch.W.ψ ch.W.θ (ch.G.V (.grid (i + 1) D.R.m)) (ch.G.V (.grid i D.R.m))
       (ch.W.cart (.grid (i + 1) D.R.m)) (ch.W.cart (.grid i D.R.m)) (ch.S.N.frC (.grid (i + 1) D.R.m))
       (ch.S.N.frC (.grid i D.R.m)) f ch.W.ψ_std hθ
     change IsVacO _ _ (negSp (ch.G.V (.grid (i + 1) D.R.m))) (ch.G.V (.grid i D.R.m)) (fun τ => -ch.W.cart (.grid (i + 1) D.R.m) τ) (ch.W.cart (.grid i D.R.m)) _ _ _ at hv hv'
@@ -865,7 +870,7 @@ theorem fock_jetTheta_rational : _root_.GlobalTheory.FunPr.ThetaLocalInputs → 
       refine inv_eq_of_mul_eq_one_left ?_
       rw [Complex.mul_conj', m2]; simp
     refine ⟨c, m1, fun q _ => m3 _ _ q, fun k => ?_⟩
-    have key := jets_subst _ _ hS hT (GlobalTheory.T.isVacuum_conj_of_negHermitianSpace _ _ _ _ (fun _ => 1) _ _ _ _ hv) (GlobalTheory.T.isVacuum_conj_of_negHermitianSpace _ _ _ _ (fun _ => 1) _ _ _ _ hv') U' U
+    have key := jets_subst _ _ hS hT (_root_.GlobalTheory.VacConj.isVacO_conj_negSp _ _ _ _ (fun _ => 1) _ _ _ _ hv) (_root_.GlobalTheory.VacConj.isVacO_conj_negSp _ _ _ _ (fun _ => 1) _ _ _ _ hv') U' U
       ((_root_.map_ne_zero (starRingEnd ℂ)).2 hc0) g4 h3 (fun w => by rw [← map_mul]; exact congrArg _ (hc w)) D.host.ccK ch.S.Z.δ
       (starRingEnd ℂ (ch.S.Z.c0 (.chi i D.R.m) : ℂ)) hΘ (fun k => by
         have e := congrArg (starRingEnd ℂ) ((hj _ k 0).symm.trans (hJ k))

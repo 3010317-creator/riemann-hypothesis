@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CharacterChoiceData
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharEqOfSplitOfTied
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharLocalComponentExistsUniqueUnitaryStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ThetaMod
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharLocalComponentExistsUniqueUnitary
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFixedIff
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsSteinberg
 public import Development.AutomorphicArithmetic.Foundations.UnitarySphericalFixing.SatakeParameters.AbsCentralAlt
@@ -126,7 +127,7 @@ theorem e_locG_eq_rcAt_ofDet_of_isComp : GlobalTheory.Published.AutomorphicForms
       rw [hf', Multiset.singleton_inj, Units.val_inj, inv_inj] at hf
       rw [HChar.val_mul, HChar.val_inv, hf, mul_inv_cancel]
   have hcomp : IsComp χ w (χ.loc w) := ⟨ParLaws.isSmoothChar_loc χ w, fun x => rfl⟩
-  obtain ⟨ξ₀, -, huniq, -⟩ := GlobalTheory.T.heckeChar_localComponent_exists_unique_unitary D.host.E χ w
+  obtain ⟨ξ₀, -, huniq, -⟩ := _root_.GlobalTheory.HeckeComp.main D.host.E χ w
   have hξ : ξ = χ.loc w := (huniq _ h).trans (huniq _ hcomp).symm
   subst hξ
   rw [hloc, _root_.GlobalTheory.CuspRep.ParLaws.local_parameter_of_hecke_character_eq_reciprocity, _root_.GlobalTheory.NPin.weilDeligneOfLocalIrrep]

@@ -15,14 +15,14 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FinTy
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StandardLatticesDiagonal
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CharacterChoiceData
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharEqOfSplitOfTied
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharLocalComponentExistsUniqueUnitaryStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ThetaMod
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharLocalComponentExistsUniqueUnitary
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.EventuallyUnr
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LocParOfCharUnrIff
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasThetaAtOfThetaMod
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdelicUnitaryTrivialOutsideSplitPlaceLocEq
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteTypeSpannedBySplitPlaceLocalComponent
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharLocalComponentExistsUniqueUnitary
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsotypicPartSpannedBySplitPlaceLocalComponent
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaPairingOfInvariantTrilinearForm
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharacteristicFunctionIntegralApply
@@ -37,7 +37,9 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsCan
 public import Formalism.LocalToGlobal.IndefiniteReal.CompZeroOfOrth
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRepsOfOpenCompact
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonemptyAgreeRealOfReadGalois
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ContinuousDefiniteThetaIntegralVectorFormStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ContinuousDefiniteThetaIntegralVectorForm
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ModerateGrowthDefiniteThetaIntegralVectorFormStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MultiplicitySpaceAllLevelsValuesSmoothCuspidalStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaFunctionContinuousInvariant
@@ -107,7 +109,8 @@ import Formalism.SharpRestriction.CuspSpanNormBounds.BlockEstimateWords
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThetaPToLiftReal
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ResInjLToLiftReal
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaAdjointAtLiftEqLowestKTypeRestriction
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryCongruenceConjContainsCongruenceStatement
+import Formalism.LocalToGlobal.IndefiniteReal.PrincipalLevelFrame
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryCongruenceConjContainsCongruence
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBoundUnitary
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaIntegrandIntegrable
 import Mathlib.Tactic.Linter.HaveILetI
@@ -244,7 +247,7 @@ theorem locG_rankOne_alt {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {D : D7} 
       rw [hf', Multiset.singleton_inj, Units.val_inj, inv_inj] at hf
       rw [HChar.val_mul, HChar.val_inv, hf, mul_inv_cancel]
   have hcomp : IsComp χ w (χ.loc w) := ⟨ParLaws.isSmoothChar_loc χ w, fun _ => rfl⟩
-  obtain ⟨ξ₀, -, huniq, -⟩ := GlobalTheory.T.heckeChar_localComponent_exists_unique_unitary D.host.E χ w
+  obtain ⟨ξ₀, -, huniq, -⟩ := _root_.GlobalTheory.HeckeComp.main D.host.E χ w
   have hξ : ξ = χ.loc w := (huniq _ h).trans (huniq _ hcomp).symm
   subst hξ
   rw [hloc, _root_.GlobalTheory.CuspRep.ParLaws.local_parameter_of_hecke_character_eq_reciprocity, _root_.GlobalTheory.NPin.weilDeligneOfLocalIrrep]
@@ -598,7 +601,7 @@ theorem main : GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Publi
   have hSA : SchurAll D := fun V _ S θ M J χ μ 𝓕 => (GlobalTheory.MultFinite.hcFinite_and_schurMult hH hC D θ V S M J χ μ 𝓕).2
   have hHA : HCAll D := fun V _ S θ M J χ => (GlobalTheory.MultFinite.hcFinite_and_schurMult hH hC D θ V S M J χ 0 ∅).1
   have hStd : GlobalTheory.Mem.R3.StdFrame Y.hF (Y.PW j) := Y.stdPsi.2 j
-  have hcc := GlobalTheory.T.unitary_congruence_conj_contains_congruence D.host.E D.R.r
+  have hcc := _root_.GlobalTheory.CongConjugate.congConj D.host.E D.R.r
   obtain ⟨hlin, hherm, hpos⟩ := GlobalTheory.FinTypesRows.minf_sesq (M := R.MW j (sg0 D A3.A)) (θ := R.θ) (R.νW j) (R.fdW j)
     (Y.PW j) hSA hSig hθ hHaar hFD
   have hT := Y.tied.lift
@@ -858,7 +861,7 @@ theorem mem_Om_of_theta : GlobalTheory.Published.HarishChandraFinite → GlobalT
     have hR := (GlobalTheory.Grow.rapidDec_of_cuspForm hP hθ haut hcu).conj
     have hgr := GlobalTheory.T.moderateGrowth_definiteThetaIntegral_vectorForm R.ψ (Vc D i) (Wc D i) _ _ _ hω hpd _ _ hHV hfdV _
       (valAct1 (omStd Ad i (t0 Y)) p φ) hφ' _ hc1 hc2
-    have hct := GlobalTheory.T.continuous_definiteThetaIntegral_vectorForm R.ψ (Vc D i) (Wc D i) _ _ _ hω hpd _ _ hHV hfdV _
+    have hct := _root_.GlobalTheory.ThetaIntegralCont.continuous_theta_integral_vector R.ψ (Vc D i) (Wc D i) _ _ _ hω hpd _ _ hHV hfdV _
       (valAct1 (omStd Ad i (t0 Y)) p φ) hφ' _ hc1 hc2
     have hinv : ∀ γ ∈ GQ (Wc D i), ∀ g, (∫ h in R.fdV i (t0 Y),
         thetaKO (R.ωP i (t0 Y)) h (γ * g)
@@ -1284,7 +1287,7 @@ theorem localComponent_matches_of_howeDuality_alt (hBZ : GlobalTheory.Published.
   have L : _root_.UpperTheory.One.M.RecLawsH (_root_.GlobalTheory.NPin.weilDeligneOfLocalIrrep hL D s.w) := (_root_.GlobalTheory.CuspRep.ParLawsT.isRecT_locRecT hL (D.nd.plOm.2 s.w)).recLaws
   set χ := cf.mu0 ⟨j - 1, by omega⟩ with hχ
   have hμc : IsComp χ s.w (χ.loc s.w) := ⟨GlobalTheory.CuspRep.ParLaws.isSmoothChar_loc χ s.w, fun _ => rfl⟩
-  obtain ⟨ξ₀, -, huniq, hunit⟩ := GlobalTheory.T.heckeChar_localComponent_exists_unique_unitary D.host.E χ s.w
+  obtain ⟨ξ₀, -, huniq, hunit⟩ := _root_.GlobalTheory.HeckeComp.main D.host.E χ s.w
   have hχu : χ.IsUnitary := hμ ▸ (a.chr.e1 μ).2
   have hμU : IsUnitaryChar (χ.loc s.w) := fun x => by
     rw [huniq _ hμc]; exact hunit hχu x

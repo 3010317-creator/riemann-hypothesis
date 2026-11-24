@@ -9,7 +9,8 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomolog
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.IsNormalisedOfIsDiscrete
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.ClozelCohomologicalModel
 public import Mathlib.Data.Multiset.Functor
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmGaloisRepresentationCrystallineStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmGaloisRepresentationCrystalline
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmGaloisRepresentationOfHyp
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCommonModel
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSatGLOfIsCompAlongSplit
@@ -137,7 +138,7 @@ theorem galoisRep_definiteUnitary : type_of% @GlobalTheory.GalAut.galoisRep_defi
       ∀ σ' : SmIrr (GL (Fin (a i)) (w.adicCompletion E)), (P i).IsLocComp w σ' →
         GlobalTheory.LGrp.IsSpherical σ'.ρ (GlobalTheory.LFun.KGL w (n := (a i))) := fun i w hw σ' h' =>
     GlobalTheory.SphBC.isSpherical_of_isUnramU E hE n π hπ c a d h P ρ m σ hP hloc hsplit w (hunr w hw) i σ' h'
-  have hpc := fun x : (Σ i : Fin c, Fin (d i)) => GlobalTheory.T.cm_galois_representation_crystalline H3 H6 H7 H8 H9 H10 E Ω hE l ι (a x.1) (hP.pos x.1).1 (P x.1)
+  have hpc := fun x : (Σ i : Fin c, Fin (d i)) => _root_.GlobalTheory.CsdTwistGal.exists_galRep_csd_twist H3 H6 H7 H8 H9 H10 E Ω hE l ι (a x.1) (hP.pos x.1).1 (P x.1)
     (hP.csd x.1) (m x.1) (hP.inf x.1) (hnd x.1) (GlobalTheory.GalAut.shiftF n (d x.1) x.2) (J x) (hJ x)
   choose r hrc hrcrys hrfrob using hpc
   have hsize : ∑ x : (Σ i : Fin c, Fin (d i)), a x.1 = n := by

@@ -24,7 +24,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OscillatorMo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaVectorTorusAction
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClassSumPrincipalLevelEqConstMulClassSum
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FlatVecExistsUnique
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FlatVectorEqUnitMulCentralTranslateLiftVectorStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FlatVectorEqUnitMulCentralTranslateLiftVector
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SeriesVecFlatEqSum
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaLiftEqMultiplePrincipalLevelClassSum
 public import Formalism.LocalToGlobal.IndefiniteReal.RecTie
@@ -50,7 +51,9 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsEmptyOfNotAll
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SameGaloisLevelExists
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.OfFirstStepLoc
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsRationalHeckeOperatorsAdelicReadingStatement
+public import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.HkSupSizedOfHkSup
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SplitOffDetection
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsRationalHeckeOperatorsAdelicReading
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaSeriesRationalityAndCoefficientBoundStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistOfCuspParams
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EventuallyDefiniteSpacesStandardAndLarge
@@ -126,7 +129,7 @@ import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.Hos
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RowsRestWordColumnUnitBaseTupleAlt
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StandardLatticesDiagonal
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChosenTwistViaEmbeddingGoodConjugateStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChosenTwistViaEmbeddingGoodConjugate
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DefiniteComplexFormsEqTwistComplexFormsFockModel
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsScaleTwistedPlaceCoefficientMapStatement
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsUnitPrimeProductOfTwistedPlaceTupleStatement
@@ -1029,7 +1032,7 @@ theorem thF_eq_classSum : ∀ (D : D7) (X : RealSide D) (j : Fin D.R.m) (B : Bas
     ⟨X.char.lev, X.char.grp, X.char.fam, X.char.models, X.char.chain, X.char.thP⟩
   refine (GlobalTheory.FlatVecExist.flatVec_existsUnique D X.Γ X.Pl0 X.T X.A3.A _ X.R.toRealDat X.F.lv2 hC X.guard j t).1.elim
     fun f hf => ?_
-  refine (GlobalTheory.T.flatVector_eq_unit_mul_centralTranslate_liftVector D X.Γ X.Pl0 X.T X.A3.A _ X.R.toRealDat X.F.lv2 hC X.guard j t (X.std j) f hf).elim fun z' hz =>
+  refine (_root_.GlobalTheory.FlatLift.flat_eq_unit_smul_om D X.Γ X.Pl0 X.T X.A3.A _ X.R.toRealDat X.F.lv2 hC X.guard j t (X.std j) f hf).elim fun z' hz =>
     hz.elim fun c0 hc => ?_
   have hflat : f = (princ B).vecFlat ψ := eq_vecFlat_princ hB htup hC.lev hG hψ hadm hf
   refine (exists_isClassSystem (princ B) (princ_good hG).frame ψ).elim fun m hm => hm.elim fun h₀ hcs => ?_
@@ -1505,7 +1508,7 @@ theorem rational_series_coeff_at_state_alt : _root_.GlobalTheory.HeightCounting.
   have hX : GlobalTheory.TwInputs.FieldOk X := h3 x.o.Z X x.m.z.lev.C
   obtain ⟨xd, hxd⟩ := h4 P x ⟨l.toLI, l.b.toSeriesState⟩
   obtain ⟨hU, hψ⟩ := h5 P x l
-  obtain ⟨f', s1, s2, s3⟩ := GlobalTheory.T.exists_rationalHeckeOperators_adelicReading hP.decay hS.hkTr hS.hkRead (Dof x) X _ l.b.YS
+  obtain ⟨f', s1, s2, s3⟩ := _root_.GlobalTheory.HeckeFamRead.exists_family_reads hP.decay hS.hkTr hS.hkRead (Dof x) X _ l.b.YS
   obtain ⟨H, r1, r2⟩ := GlobalTheory.TwInputs.AtLayer.exists_hecke X _ l.b.YS l.b.ser.ex f' s1 s2 s3 l.b.Bs.cHk l.b.Bs.cHk_del
     (GlobalTheory.TwInputs.AtLayer.hkF_zero_of_sideB l.b.Bs l.rat.In.hL_zero)
   let Y : GlobalTheory.TwInputs.SerSide X (twEOf xd) :=
@@ -1591,8 +1594,8 @@ theorem exists_local_component_at_place_alt (hCo : GlobalTheory.Published.Discre
   have hB := Z.good.base (c.twI w) j (c.sd w)
   have hBo : BaseOf X.R.toRealDat j (baseOf Z c w j) :=
     GlobalTheory.BigOn.Exp.TwConj.baseOf_of_realPin X.char.lev Z.good Z.pin (c.twI w) j (c.sd w)
-  obtain ⟨hg, ha, hcc⟩ := GlobalTheory.T.chosen_twist_via_embedding_good_conjugate D c w Z.ρ Z.good H.ok j ι
-  obtain ⟨hg', ha', -⟩ := GlobalTheory.T.chosen_twist_via_embedding_good_conjugate D c w Z.ρ Z.good H.ok j ε
+  obtain ⟨hg, ha, hcc⟩ := _root_.GlobalTheory.PlaceRead.twVia_good D c w Z.ρ Z.good H.ok j ι
+  obtain ⟨hg', ha', -⟩ := _root_.GlobalTheory.PlaceRead.twVia_good D c w Z.ρ Z.good H.ok j ε
   have hcj : ConjChar τ (twVia Z.ρ ι) (twVia Z.ρ ε) := hιε ▸ hcc τ
   obtain ⟨u, cc, κ, hu, hc, hκ, hval, hfn, hs, hν⟩ := _root_.GlobalTheory.PlaceScale.exists_scale D X X0 Y S YS Z c w j H
   obtain ⟨hfb, hfd⟩ := _root_.GlobalTheory.T.local_fixed_point_of_third_layer hP D X X0 Y S YS Z c w j H τ hfix

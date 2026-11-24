@@ -7,7 +7,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.BasePlaceNot
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FractionalIdealCompletionMulModulusOffExceptiona
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsAuxiliaryVectorWittDec
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.NotLineLatAtZero
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealCompletionPropertiesAtPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealCompletionPropertiesAtPlace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PrimAtOfMonoId
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsLatticeDualZIdealMul
 import Mathlib.Algebra.Order.Floor.Extended
@@ -117,7 +117,7 @@ theorem GlobalTheory.AscFin.primAt_std_bessel : OnStd fun {D} _ _ {sc} {G} W F =
     PrimAt W.ψ (F.dB ρ h) (G.Λ (.grid (2 * ρ + 2) 0)) v := by
   intro D _ T L μ0 _ sc G W M _ F hF ρ h v hv
   have hψ := W.ψ_std
-  obtain ⟨-, f2, f3, -, f5, -, -⟩ := GlobalTheory.T.fractionalIdealCompletion_properties_at_place D W.ψ hψ v
+  obtain ⟨-, f2, f3, -, f5, -, -⟩ := _root_.GlobalTheory.SeeSaw.idV_props D W.ψ hψ v
   obtain ⟨h2, he, -⟩ := hF.hB ρ h
   have hlat := G.sp.colLat (2 * ρ + 2) (by omega) h
   have hm : ((G.pl.modul sc : Ideal (𝓞 D.host.E)) : FI D) ≠ 0 :=

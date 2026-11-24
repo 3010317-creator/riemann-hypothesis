@@ -22,9 +22,10 @@ public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ConvergenceSta
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeOfIsIntersectionSystem
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GlobalRegularizationStatementHolds
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MetricLocal
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ProjectionFormulaOfArithSystemStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ProjectionFormulaOfArithSystem
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PullbackStatementHolds
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RationalityOfResolutionStatementStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.RationalSections.ThmISt
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RationalityOfResolutionStatement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SignedConvergenceStatementHolds
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.UniformIntegrabilityStatementHolds
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.HsLinksOfUse
@@ -153,8 +154,8 @@ theorem inputs_of_use :
   intro hII hU hBig hRes
   exact ⟨⟨GlobalTheory.T.convergence_statement_holds, _root_.GlobalTheory.CompanionTheory.Ar.Giv.SignedConv.convergenceSigned, _root_.GlobalTheory.CompanionTheory.Ar.Giv.convergenceRate_holds, _root_.GlobalTheory.CompanionTheory.Ar.Giv.unifInt_holds, _root_.GlobalTheory.CompanionTheory.Ar.Giv.pullbackStatement, _root_.GlobalTheory.CompanionTheory.Ar.Giv.regGlobalStatement_holds⟩,
     ⟨GlobalTheory.T.resolution_exists_of_resolution_statement hRes, degree_of_system hII, (hsLinks_of_use hU hBig).1⟩,
-    ⟨GlobalTheory.T.rationality_of_resolution_statement hRes, metricLocal⟩,
-    ⟨GlobalTheory.T.projection_formula_of_arith_system hII, lineFibre_holds, fibreDim⟩,
+    ⟨_root_.GlobalTheory.CompanionTheory.Ar.Giv.ratR_of_resK hRes, metricLocal⟩,
+    ⟨_root_.GlobalTheory.CompanionTheory.Ar.Giv.ProjF.projFormula hII, lineFibre_holds, fibreDim⟩,
     ⟨GlobalTheory.T.kleiman_nef_criteria_hold.1, GlobalTheory.T.kleiman_nef_criteria_hold.2, _root_.GlobalTheory.CompanionTheory.Ar.Giv.siuZ⟩⟩
 
 end GlobalTheory.CompanionTheory.Ar.Giv

@@ -4,8 +4,11 @@ public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryCo
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsVacFOfIsVacVec
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsSigmaList
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasArchimedeanCharExponentsConjOfHasInfExp
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryActionAtRealPlaceStatement
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
+import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.FockOrthogonalDecomposition
+import Formalism.LocalToGlobal.BesselHermitianTheta.TiedKfin
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryActionAtRealPlace
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.DenomBound
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffOfContinuousOneParameter
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemSmoothFunctionsOfClosedRightDerivatives
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieActionFockOperatorsScalarsTrace
@@ -121,7 +124,7 @@ variable {D : D7}
 theorem exists_expInf {θ : InfFam D} (hθ : IsInfFam θ) (V : HSp D) (g : ℝ → GA D V) (hc : Continuous g)
     (hadd : ∀ s t, g (s + t) = g s * g t) (hinf : ∀ t, g t ∈ GinfC V) :
     ∃ Z : GlobalTheory.SmoothForms.LieN V, ∀ t : ℝ, g t = GlobalTheory.SmoothForms.expInf θ V (t • Z) := by
-  have R := (GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ V
+  have R := (_root_.GlobalTheory.SmoothForms.RealPts.realPoints D).2 θ hθ V
   have h0 : g 0 = 1 := by
     have := hadd 0 0
     rw [add_zero] at this
@@ -131,7 +134,7 @@ theorem exists_expInf {θ : InfFam D} (hθ : IsInfFam θ) (V : HSp D) (g : ℝ �
     exists_gen _ _ ((GlobalTheory.RealWeil.continuous_compAt hθ τ _ _).comp
         ((Units.continuous_val.comp continuous_subtype_val).comp hc))
       (by rw [h0]; exact R.2.2.2.2.1 1 (one_mem _) τ) (fun s t => by rw [hadd, R.2.2.2.1])
-      fun t => (GlobalTheory.T.adelicUnitary_action_at_real_place D θ hθ).1 V (g t) τ
+      fun t => (_root_.GlobalTheory.FockCompare.RealAction.real_action D θ hθ).1 V (g t) τ
   choose Z hZ hg using key
   refine ⟨fun τ => ⟨Z τ, hZ τ⟩, fun t => ?_⟩
   have h1 := GlobalTheory.SmoothForms.isExpFam_expInf R (t • fun τ => ⟨Z τ, hZ τ⟩)
@@ -142,7 +145,7 @@ theorem der_sum {θ : InfFam D} (hθ : IsInfFam θ) {U : HSp D} (𝒮 : Set (GA 
     {φ : GA D U → ℂ} (hφ : φ ∈ 𝒮) (Z : GlobalTheory.SmoothForms.LieN U) (a : D.what₂.Tau → ℂ)
     (ha : ∀ τ, HasDerivAt (fun t : ℝ => φ (oneP θ U τ (Z τ).1 t)) (a τ) 0) :
     HasDerivAt (fun t : ℝ => φ (GlobalTheory.SmoothForms.expInf θ U (t • Z))) (∑ τ, a τ) 0 := by
-  have R := (GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ U
+  have R := (_root_.GlobalTheory.SmoothForms.RealPts.realPoints D).2 θ hθ U
   have h1 := GlobalTheory.Mem.DerClosed.mem_smFun_of_closed D θ hθ U 𝒮 hc hd φ hφ
   have h2 : GlobalTheory.SmoothForms.Sm (GlobalTheory.SmoothForms.expInf θ U) φ :=
     (GlobalTheory.SmoothForms.isSmoothInf_iff φ).1 ((GlobalTheory.SmoothForms.smooth_iff R φ).1 h1)

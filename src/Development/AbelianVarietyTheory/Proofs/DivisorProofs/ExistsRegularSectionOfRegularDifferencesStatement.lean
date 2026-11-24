@@ -7,7 +7,7 @@ public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.Fir
 public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.IsScalarTowerOfAlgebraMapEq
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatioCover
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfValEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationPreimageValueRulesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationPreimageValueRules
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -129,7 +129,7 @@ theorem exists_section_of_isReg_sub : ∀ (A : Over (Sp ℂ)) [GrpObj A] (g : �
     (∀ i j, IsReg u.ex (W i ⊓ W j) (h i - h j)) → ∀ U : A.left.affineOpens, ∃ k : (Fin g → ℂ) → ℂ,
     ∀ i, IsReg u.ex (U.1 ⊓ W i) (k - h i) := by
   intro A _ g L u hA K W h hcov hreg U
-  obtain ⟨-, -, -, -, hinf, -, -, -, hres, he, -, -⟩ := GlobalTheory.T.uniformisation_preimage_value_rules A g L u
+  obtain ⟨-, -, -, -, hinf, -, -, -, hres, he, -, -⟩ := _root_.GlobalTheory.CechPer.pre_val_rules A g L u
   have hres' : ∀ (V V' : A.left.Opens) (hle : V' ≤ V) (b : Γ(A.left, V)), ∀ z ∈ pre u.ex V',
       val u.ex V' ((A.left.presheaf.map (homOfLE hle).op).hom b) z = val u.ex V b z :=
     fun V V' hle b z hz ↦ hres V V' hle b z hz

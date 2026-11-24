@@ -4,11 +4,13 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.Supported
 public import Formalism.LocalToGlobal.IndefiniteReal.ThPinsR
 public import Formalism.LocalToGlobal.ProjectiveLattices.ThClass
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNumeratorIdealOfAntiInvariantDivisor
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdelicCharacterEqProdUnramifiedValueZpowStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdelicCharacterEqProdUnramifiedValueZpow
 public import Formalism.LocalToGlobal.ProjectiveLattices.ThShort
 public import Mathlib.RingTheory.DedekindDomain.FiniteAdeleRing
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSpanDetSetIffAdelicLatticeValuation
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceIdempotentComponentsConjValuationStatement
+public import Formalism.LocalToGlobal.JointCharacters.LocEMulLocE
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceIdempotentComponentsConjValuation
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsBaseChangeFiniteAdeleRingEquiv
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsFinitePlaceIdempotentBaseChangeAdeles
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdentityClassLatticeEqSelfDualFrameLattice
@@ -256,7 +258,7 @@ theorem exists_ideal (V : HSp D) (hg : V.gram = 1) (hL : Bridge.hLat V 1 = stdLa
   classical
   obtain ⟨ι, h1, h2, h3⟩ := GlobalTheory.HostAdeleIso.exists_finiteAdele_equiv D
   have h4 := GlobalTheory.PlaceIdem.exists_isPlIdem D ι h1 h2 h3
-  obtain ⟨hid, hcj⟩ := GlobalTheory.T.placeIdempotent_components_conj_valuation D ι h1 h2 h4
+  obtain ⟨hid, hcj⟩ := _root_.GlobalTheory.ConjVal.components_and_conj_valuation D ι h1 h2 h4
   obtain ⟨ev, hev⟩ : ∃ ev : ∀ Q : HeightOneSpectrum (𝓞 D.host.E), AE D →+* Q.adicCompletion D.host.E,
       ∀ Q z, ev Q z = ι (finPart D z) Q :=
     ⟨fun Q => ((GlobalTheory.CharLocProd.evalAt Q).comp ι.toRingHom).comp (finPart D), fun _ _ => rfl⟩
@@ -328,7 +330,7 @@ theorem exists_ideal (V : HSp D) (hg : V.gram = 1) (hL : Bridge.hLat V 1 = stdLa
     have hy' : (y : AE D) = e * d + (1 - e) := hd ▸ hy
     rw [onId_eq χ _ δ c2 P hP δ0 δ1 fun Q hQ => val_mul_val hv χ (fun a => hP Q hQ (a.symm ▸ hQ))
       (hr Q fun a => hP Q hQ (a.symm ▸ hQ)) (hu Q (hb Q hQ)) (hu _ fun a => hb Q hQ ((hbc Q).1 a))]
-    refine GlobalTheory.T.idelicCharacter_eq_prod_unramifiedValue_zpow D ι h1 h2 h4 c χ hc y ?_ P δ (fun Q hQ => ⟨hu Q (hb Q hQ), ?_⟩) fun Q hQ => ?_
+    refine _root_.GlobalTheory.CharUnramVal.char_eq_prod_val_zpow D ι h1 h2 h4 c χ hc y ?_ P δ (fun Q hQ => ⟨hu Q (hb Q hQ), ?_⟩) fun Q hQ => ?_
     · rw [hy', RingHom.map_add (f := _), RingHom.map_mul, RingHom.map_sub, e0, RingHom.map_one, zero_mul, zero_add, sub_zero]
     · rw [← hev, ← hδ, hy', RingHom.map_add (f := _), RingHom.map_mul, RingHom.map_sub, e1 Q hQ, RingHom.map_one, one_mul, sub_self,
         add_zero]

@@ -24,10 +24,10 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ContractionTensorModels
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.VacuumFockVectors
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestKTypesJointShapeBlockUnitary
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFockPolynomialIsoUnitaryPairStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFockPolynomialIsoUnitaryPair
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsGlobalFockIntertwinerTensorRealPlacesStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsLocalFockIntertwinerRealPlaceOfCoverContraStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GluingLawHoldsStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GluingLawHolds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -1229,7 +1229,7 @@ theorem exists_locIt {X : ProvA} (hX : ChosenSeries X) (h1 : Formalism.MainNotio
   obtain ⟨Φ, hΦ⟩ := (h1.1 t al be ga de hd).1
   obtain ⟨Tm, hi, hq, -⟩ := h2.1 t al be ga de hd Φ hΦ
   obtain ⟨B, hB⟩ := GlobalTheory.T.exists_contraction_isometric_discreteSeries_fock _ _ _ _ _ _ _ _ _ _ Tm hi hq
-  obtain ⟨κ, hκ⟩ := GlobalTheory.T.exists_fockPolynomialIso_unitaryPair _ _ _ _ _ _ _ _ e e' he he'
+  obtain ⟨κ, hκ⟩ := _root_.GlobalTheory.Chain.RealIt.PolyIso.exists_isPolyIso _ _ _ _ _ _ _ _ e e' he he'
   obtain ⟨v, hv, -⟩ := (hX _ _ _ p2).1
   have c1 := Fintype.card_congr e
   have c2 := Fintype.card_congr e'
@@ -1245,7 +1245,7 @@ theorem itPair (D : D7) (X : ProvA) (hX : ChosenSeries X) (h1 : Formalism.MainNo
     obtain ⟨al, be, ga, de, hd, -, e1, e2⟩ := hP τ
     exact exists_locIt hX h1 h2 hB M M' τ hd (congrArg dualPar e1) (congrArg dualPar e2)
   choose hr A hA using key
-  obtain ⟨It, I, hI⟩ := GlobalTheory.T.exists_globalFockIntertwiner_tensor_realPlaces D V W _ _ M M' (expS D k) (expT D k) A hC.2 (GlobalTheory.T.gluing_law_holds D _ _) hA
+  obtain ⟨It, I, hI⟩ := GlobalTheory.T.exists_globalFockIntertwiner_tensor_realPlaces D V W _ _ M M' (expS D k) (expT D k) A hC.2 (_root_.GlobalTheory.Chain.RealIt.GlueProof.glueLaw D _ _) hA
   refine ⟨It, hI.ne, fun ω f ⟨χS, χT, hω, he⟩ hf => ?_⟩
   have hv := fun τ => hV V W _ _ M M' θ ψ χS χT ω f τ _ _ hθ hω (he τ).1 (he τ).2 hf
   exact isItW_of_globIt hθ hI hr (hF V W _ _ M M' ψ θ hω.std hθ f hf).2.2.2.2 (fun τ => (hv τ).2.1)

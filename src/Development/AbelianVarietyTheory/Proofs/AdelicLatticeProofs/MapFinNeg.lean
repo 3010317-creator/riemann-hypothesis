@@ -13,8 +13,8 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.Contin
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
 public import Mathlib.MeasureTheory.Group.FundamentalDomain
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsNormaliseMeanSquareOfCocompact
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FiniteRationalPointsCompletedLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsOpenNsmulCompletedHomLatticeFiniteAdelicStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FiniteRationalPointsCompletedLattice
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsOpenNsmulCompletedHomLatticeFiniteAdelic
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CocompactTensor
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -51,7 +51,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HomSymplecticHalfFormAlgebraicLawsContinuousStatement
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HomSymplecticHalfFormAlgebraicLawsContinuous
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.SmoothIffRealCoordinatesAndRealLines
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.ReduceModChar
@@ -172,7 +172,7 @@ theorem exists_ne_zero (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (hψ : I
   classical
   obtain ⟨σ, hσ⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
   obtain ⟨om, J, hom, hJ, halt, hJJ, hsym, hpos⟩ := GlobalTheory.T.exists_realPlace_symplecticForm_positiveComplexStructure D ψ θ S T sS sT hψ hθ hS hT
-  obtain ⟨aL, aR, a0, -, acont, arat, -, -, -⟩ := GlobalTheory.T.homSymplecticHalfForm_algebraic_laws_continuous D S T
+  obtain ⟨aL, aR, a0, -, acont, arat, -, -, -⟩ := _root_.GlobalTheory.OrientedFormLaws.symplOH_laws D S T
   obtain ⟨hinf, χ, c0, c1, c2, c3, c4, c5⟩ := GlobalTheory.T.exists_semicharacter_completedSelfDualLattice D S T ΛS ΛT ψ hψ dS dT
   have htop : IsTopologicalAddGroup (WO S T) := (GlobalTheory.AdelicMatrixLattice.lattice D T S).1
   set Λ : AddSubgroup (WO S T) := latO S T ΛS ΛT fun _ => True with hΛ
@@ -212,7 +212,7 @@ theorem exists_ne_zero (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (hψ : I
       rw [this, map_zero])
     (fun v => ⟨0, Λ.zero_mem, by rw [nsmul_zero, sub_zero]; exact hσ.real_iota T S v⟩)
     (fun R => by
-      refine ((GlobalTheory.T.finite_rational_points_completed_lattice D S T ΛS ΛT dS dT R).image (ratW T S)).subset ?_
+      refine ((_root_.GlobalTheory.CompletedLatticeFinite.finite_rational_points D S T ΛS ΛT dS dT R).image (ratW T S)).subset ?_
       rintro _ ⟨⟨g, rfl⟩, ⟨l, hl, h1⟩, h2⟩
       refine ⟨g, ⟨⟨l, hl, ?_⟩, fun τ i j => ?_⟩, rfl⟩
       · rw [one_nsmul] at h1
@@ -222,7 +222,7 @@ theorem exists_ne_zero (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (hψ : I
         exact ((norm_le_pi_norm (y τ i) j).trans ((norm_le_pi_norm (y τ) i).trans (norm_le_pi_norm y τ))).trans h2)
     (fun x hx => c0 x fun ⟨l, hl, h⟩ => hx ⟨l, hl, by rw [one_nsmul]; exact h⟩)
     c1 c2 (fun x v => c3 x _ (hσ.real_iota T S v))
-    (GlobalTheory.T.isOpen_nsmul_completedHomLattice_finiteAdelic D S T ΛS ΛT dS dT 2 two_pos)
+    (_root_.GlobalTheory.LatOpen.isOpen_nsmul_latO D S T ΛS ΛT dS dT 2 two_pos)
     (fun u hu x => by
       obtain ⟨l, hl, e⟩ := hlev u hu
       rw [e]
@@ -232,7 +232,7 @@ theorem exists_ne_zero (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (hψ : I
     funext w
     show ψ (symplOH S T w u) * (c * f (w + u)) = c * f w
     rw [mul_left_comm, ← fl u h1 h2 w]
-  refine ⟨f, f0, fun c => ⟨⟨fun g w => ?_, ⟨thick Λ 2, GlobalTheory.T.isOpen_nsmul_completedHomLattice_finiteAdelic D S T ΛS ΛT dS dT 2 two_pos, fun u hu h => ?_⟩,
+  refine ⟨f, f0, fun c => ⟨⟨fun g w => ?_, ⟨thick Λ 2, _root_.GlobalTheory.LatOpen.isOpen_nsmul_latO D S T ΛS ΛT dS dT 2 two_pos, fun u hu h => ?_⟩,
     continuous_const.mul fc, fun k L hL hL0 w => ?_⟩, ⟨fun u hu => hh c _ (hp2 u hu) (c4 u hu),
       fun e he u hu h => hh c u (piW_eq_zero θ S T (hinf u hu)) (c5 e he u hu h)⟩, fun τ z => ?_⟩⟩
   · have e : ψ (symplOH S T (ratW T S g) w) * f (ratW T S g + w) = f w := fq (ratW T S g) ⟨g, rfl⟩ w

@@ -75,7 +75,7 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Mathlib.Tactic.TypeStar
 import Mathlib.RingTheory.PiTensorProduct
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctionsStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctions
 import Mathlib.Tactic.Linter.Style
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -801,8 +801,8 @@ theorem one_place : ∀ (D : D7) (c : Comm D) (v : VCom c) (G : GLoc v), c.Is �
   intro D c v G hc hv j σ h
   have hs := G.hs
   have H : j + 1 + 1 + 2 * σ = G.s := by omega
-  obtain ⟨C, hC, key⟩ := GlobalTheory.LocMod.GValProof.gval_of_laws D (_root_.GlobalTheory.FlatBFLoc.flatBF_of_laws D (GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D) (GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D) (_root_.GlobalTheory.LocOm.omLoc D))
-    (_root_.GlobalTheory.LocMod.flatFB_holds D (GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D) (GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D) (_root_.GlobalTheory.LocOm.omLoc D)) (_root_.GlobalTheory.ContrLocProof.contrLoc D GlobalTheory.LocFlat.contrFactor)
+  obtain ⟨C, hC, key⟩ := GlobalTheory.LocMod.GValProof.gval_of_laws D (_root_.GlobalTheory.FlatBFLoc.flatBF_of_laws D (_root_.GlobalTheory.Unf.Flat.flatLaw D) (GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D) (_root_.GlobalTheory.LocOm.omLoc D))
+    (_root_.GlobalTheory.LocMod.flatFB_holds D (_root_.GlobalTheory.Unf.Flat.flatLaw D) (GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D) (_root_.GlobalTheory.LocOm.omLoc D)) (_root_.GlobalTheory.ContrLocProof.contrLoc D GlobalTheory.LocFlat.contrFactor)
     (GlobalTheory.LocFlat.symCollapse_of_allPositions GlobalTheory.SymChain.allPositions_holds) G.k G.ν G.unitVol (GlobalTheory.LocMod.ofSplit G.q) G.s D.R.k
     G.S (Fin D.R.t) c.ψ G.char j (2 * σ) H
   refine ⟨C, hC, fun s₁ s₂ f₁ f₂ h₁ h₂ => ?_⟩
@@ -1080,7 +1080,7 @@ namespace GlobalTheory.SeeSawLaws
 open GlobalTheory.LocMod
 
 theorem gsupp2_all (D : D7) : GlobalTheory.LocMod.GSupp2 D := by
-  have hFL : FlatLaw D := GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D
+  have hFL : FlatLaw D := _root_.GlobalTheory.Unf.Flat.flatLaw D
   have hFLs : GlobalTheory.FinPl.FlatLaws D := GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D
   have hOm : OmLoc D := _root_.GlobalTheory.LocOm.omLoc D
   have hBF : FlatBF D := _root_.GlobalTheory.FlatBFLoc.flatBF_of_laws D hFL hFLs hOm
@@ -1092,7 +1092,7 @@ theorem gsupp2_all (D : D7) : GlobalTheory.LocMod.GSupp2 D := by
 
 theorem gsupp1_all (D : D7) : GlobalTheory.LocMod.GSupp1 D :=
   _root_.GlobalTheory.LocMod.SuppFirst.gsupp1 D (_root_.GlobalTheory.LocOm.omLoc D)
-    (_root_.GlobalTheory.FlatBFLoc.flatBF_of_laws D (GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D) (GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D) (_root_.GlobalTheory.LocOm.omLoc D))
+    (_root_.GlobalTheory.FlatBFLoc.flatBF_of_laws D (_root_.GlobalTheory.Unf.Flat.flatLaw D) (GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D) (_root_.GlobalTheory.LocOm.omLoc D))
     (GlobalTheory.LocFlat.symCollapse_of_allPositions GlobalTheory.SymChain.allPositions_holds)
 
 theorem gLaws : ∀ (D : D7) (c : Comm D) (v : VCom c) (n : ℕ) (G : Fin n → GLoc v), c.Is → v.Is → GPin G → ∃ a : ℕ → ℂ, (∀ j, a j ≠ 0) ∧ ∀ t : Tup c, t.Is → WeilOK (t := t) v → (∀ i, (G i).Chars t) → GSupp (t := t) (v.withCG a) ∧ GValue (t := t) (v.withCG a) := by
@@ -1100,7 +1100,7 @@ theorem gLaws : ∀ (D : D7) (c : Comm D) (v : VCom c) (n : ℕ) (G : Fin n → 
   obtain ⟨a, ha, hval⟩ := _root_.GlobalTheory.SeeSaw.GValAll.gValue_common D c v n G hc hv hG
   refine ⟨a, ha, fun t ht hW hch => ⟨?_, hval t ht hW⟩⟩
   have hs : GSupp (t := t) v :=
-    GlobalTheory.T.seeSaw_unfoldedSupport_fixedLevelPlaces D c v n G hc hv hG (gsupp1_all D) (gsupp2_all D) (GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D) t ht hch
+    GlobalTheory.T.seeSaw_unfoldedSupport_fixedLevelPlaces D c v n G hc hv hG (gsupp1_all D) (gsupp2_all D) (_root_.GlobalTheory.Unf.Flat.flatLaw D) t ht hch
   exact hs
 
 end GlobalTheory.SeeSawLaws

@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissibleBaseOfCompleteDvr
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralDegenerationValuesStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsArcLiftExtensionLargerClosedField
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.CharZeroOfIsPrimitiveRoot
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralDegenerationValues
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsArcLiftExtensionLargerClosedField
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.GtActIffEqGtSmul
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGtExtOfTorsion
 public import Mathlib.LinearAlgebra.DFinsupp
@@ -31,14 +31,14 @@ public import Development.AbelianVarietyTheory.Definitions.Degenerations.HomExtS
 public import Development.AbelianVarietyTheory.Statements.TorsionEndomorphisms.EndDeterminedOnTorsion
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesOfExpansionLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesTorsionPairingSeparationIntegraStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ArcTorsionValuesNormsIntegralPositiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesOfExpansionLaws
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesTorsionPairingSeparationIntegra
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ArcTorsionValuesNormsIntegralPositive
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissiblePadicIntMaximalIdeal
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsValuationSubringIntegralClosureCompleteDVR
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespondStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionPairingValuesOfFamiliesValuesStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValuesStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespond
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionPairingValuesOfFamiliesValues
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValues
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -135,7 +135,7 @@ theorem local_noeth {O' : Type} [CommRing O'] [IsDomain O'] {ϖ : O'} (h : Globa
 theorem exists_lift : Laws → BrGtSt → AllA fun {_} _ _ _ {_} {_} {_} {_} {_} {_} _ {O'} _ _ {_} a => ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing O') F] (S : ValuationSubring F), (∀ r : O', algebraMap (FractionRing O') F (algebraMap O' _ r) ∈ S) → ∃ A : Lift a F, A.ν.Integral S := by
   intro hL hG E _ _ _ H D l Xo c W₀ Y O' _ _ _ b ϖ a hb F _ _ _ S hS
   obtain ⟨_, _⟩ := local_noeth hb
-  obtain ⟨N, ν, hν⟩ := GlobalTheory.T.exists_integral_degeneration_values hL O' a.D₀ a.even a.bimult F S hS
+  obtain ⟨N, ν, hν⟩ := _root_.GlobalTheory.ValuesExist.exists_integral_values hL O' a.D₀ a.even a.bimult F S hS
   have hr : H.rt0 ∈ c.F := c.le (IntermediateField.subset_adjoin _ _ (by simp))
   have hz : zeta l.A ∈ c.F := c.le (IntermediateField.subset_adjoin _ _ (by simp))
   have hrW : H.rt0 ∈ W₀ := mem_of_pow_mem W₀ two_ne_zero (by
@@ -1771,8 +1771,8 @@ theorem exists_series : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory
   intro hHV _ _ _ _ _ _ E _ _ _ H D l Xo c W₀ Y O' _ _ _ b ϖ a hB K _ _ _ _ _ _ hK
   have hL : Laws := hHV.1.1
   have hL2 : Laws2 := hHV.1.2.1
-  have gt := GlobalTheory.T.torus_torsion_points_correspond_values
-  have wp := GlobalTheory.T.torsionPairing_values_of_familiesValues gt (GlobalTheory.T.families_values_correspond hL hL2)
+  have gt := _root_.GlobalTheory.Ex.GtValues.points_correspond
+  have wp := _root_.GlobalTheory.WeilValues.weil_eq_values gt (_root_.GlobalTheory.Ex.brFam hL hL2)
   obtain ⟨_, _⟩ := base_local hB
   let F := AlgebraicClosure (FractionRing O')
   obtain ⟨S₀, hS₀⟩ := _root_.GlobalTheory.LN.exists_valuationSubring_isIntegral O' ϖ hB F
@@ -1877,11 +1877,11 @@ theorem exists_series : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory
         have a3 := congrArg (fun x => ‖algebraMap (FractionRing O') C (algebraMap O' _ x)‖) hy
         simp only [map_mul, map_natCast, map_one, norm_mul, norm_one] at a1 a3
         nlinarith [norm_nonneg (n : C)]
-      obtain ⟨qf, hq1, hq2⟩ := (GlobalTheory.T.arcTorsionValues_norms_integral_positive E H D l Xo c W₀ Y O' b ϖ a hB C hce A' hN).2.2 (r' 1) hu1
+      obtain ⟨qf, hq1, hq2⟩ := (_root_.GlobalTheory.Ex.UnitNorm.norms_of_arc_input E H D l Xo c W₀ Y O' b ϖ a hB C hce A' hN).2.2 (r' 1) hu1
       choose p hp' using fun x => (existsUnique_twRel A'.be (r' 1) _ hpow (A'.q _ x)).exists
       obtain ⟨t1, t2, t3⟩ := GlobalTheory.T.labelledTorsionValues_additive_kernel_surjective gt E H D O' C A'.arc _ (pow_pos hm.pos 2)
       obtain ⟨c1, c2⟩ := _root_.GlobalTheory.twist_tx_coset_norm_ge C A'.N _ A'.be (r' 1) _ qf n _ j hp ho hn hj hu1 hpow hq1 hq2
-        (GlobalTheory.T.abelianPartValues_torsion_pairing_separation_integral hL hL2 (GlobalTheory.T.abelianPartValues_of_expansionLaws hL) O' a.D₀ a.even a.bimult C hce A'.N A'.ν hN n hp ho hn)
+        (_root_.GlobalTheory.ValuesTorsion.tors_of_integral hL hL2 (_root_.GlobalTheory.ThetaInValues.brUth_of_laws hL) O' a.D₀ a.even a.bimult C hce A'.N A'.ν hN n hp ho hn)
         D.La (A'.q _) (eq_zero_of_nsmul D hp.ne_zero) t1 t2 t3 p hp'
       have hv := (hsum C gam g1 g2 A'.N I _ A'.be hI hβ (r' 1) (r' ((n ^ j) ^ 2)) (r' 1) hu'
         (by rw [← (hrm _ 1 hm one_pos).1]; rfl) (by rw [← (hrm _ 1 hm one_pos).2]; rfl) (A'.q _) p (hq _) hp').1

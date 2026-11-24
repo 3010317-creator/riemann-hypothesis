@@ -110,7 +110,8 @@ import Mathlib.Tactic.ENatToNat
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DatumLevelHyperspecialOffFinitePlaces
 import Mathlib.Tactic.TypeStar
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubleCosetSumFundamentalDomain
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMulRightInvariantHaarAdelicUnitaryGroupHermitiStatement
+import Formalism.LocalToGlobal.BesselHermitianTheta.IsAutFunDef
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMulRightInvariantHaarAdelicUnitaryGroupHermiti
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdjointPairingUnfoldingDownwardLift, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdjointPairingUnfoldingDownwardLiftStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InnerProductIntegralFormula, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InnerProductIntegralFormulaStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PeterssonIntegralFormula, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PeterssonIntegralFormulaStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UpwardVectorLiftMemRangeCoefficientExtension, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UpwardVectorLiftMemRangeCoefficientExtensionStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DownwardLiftAdjointEqUpwardThetaIntegral, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DownwardLiftAdjointEqUpwardThetaIntegralStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsFinIdem, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockVacuumPairingPolynomialTranslatesScalarStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockVacOmFin, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalCoeffVanishesOffLevelBadPlaces, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalCoeffVanishesOffLevelBadPlacesStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DoubleCosetHeckeSumPreservesPrincipalForms, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DoubleCosetHeckeSumPreservesPrincipalFormsStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteLocalDoubleCosetRepresentatives, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteLocalDoubleCosetRepresentativesStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LevelSubgroupRestrictedProductOfLawsStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalHeckeSumPreservesPrincipalLevelFormsStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormIntegralStarMulSqLe, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RatSpanOfLaws, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RawLiftOntoOfUpInj, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockCoefficientExtremalEqDiscreteSeriesStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RealLowestKTypeOfExtremalVectorCaseStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RealLow, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InnerPosOfInnerNe
@@ -1377,7 +1378,7 @@ theorem shift {F : Face D A} (hL : Laws R F) (u : GA D (Wc D i) → ℂ)
   haveI : BorelSpace (GA D (Wc D i)) := ⟨rfl⟩
   haveI : Countable (GQ (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma _ _
   haveI := (hL.models.νW i).1.1
-  haveI := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D (Wc D i) (R.νW i) (hL.models.νW i).1.1
+  haveI := _root_.GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D (Wc D i) (R.νW i) (hL.models.νW i).1.1
   exact GlobalTheory.DoubleCosetAdjoint.setIntegral_mul_right (R.νW i) (GQ (Wc D i)) (R.fdW i) (hL.models.νW i).2 u hu y
 
 theorem sq_int {F : Face D A} (hL : Laws R F) {T : MMap (R.MW i (sg0 D A))} (hT : T ∈ R.Wall i (sg0 D A))
@@ -1394,7 +1395,7 @@ theorem sq_int_tr {F : Face D A} (hL : Laws R F) {T : MMap (R.MW i (sg0 D A))} (
   haveI : BorelSpace (GA D (Wc D i)) := ⟨rfl⟩
   haveI : Countable (GQ (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma _ _
   haveI := (hL.models.νW i).1.1
-  haveI := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D (Wc D i) (R.νW i) (hL.models.νW i).1.1
+  haveI := _root_.GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D (Wc D i) (R.νW i) (hL.models.νW i).1.1
   exact GlobalTheory.DoubleCosetAdjoint.integrableOn_mul_right (R.νW i) (GQ (Wc D i)) (R.fdW i) (hL.models.νW i).2
     (fun g => star (T v g) * T v g) (fun δ' hδ' g => by simp only [linv hT v hδ' g]) δ (sq_int hL hT v)
 

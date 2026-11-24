@@ -1,10 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.KernelNormConstantSpec
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinitePartZeroNeOfIsVacuumOrientedModelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockMonomialAtOriginGaussianEntireOrthonormalStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinitePartZeroNeOfIsVacuumOrientedModel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramAtPosDef
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+public import Formalism.SharpRestriction.GlobalSchurBounds.GL3Theta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockMonomialAtOriginGaussianEntireOrthonormal
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockPureTensorAtOriginEqThetaSeries
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVacuumRealRestrictionGaussianEntireStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVacuumRealRestrictionGaussianEntire
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitVacuumEntireFactorIsThetaFunctionStandardStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -73,7 +77,7 @@ theorem fock_jets_eq_theta : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ :
   have hsS := cart_one frS hS hcS
   have hsT := cart_one frT hT hcT
   subst hsS hsT
-  obtain ⟨Φ, hΦd, hreal⟩ := GlobalTheory.T.fockVacuum_real_restriction_gaussian_entire ψ θ S T frS frT _ _ hS hT f hf
+  obtain ⟨Φ, hΦd, hreal⟩ := _root_.GlobalTheory.FockPos.vacuum_real_entire ψ θ S T frS frT _ _ hS hT f hf
   have hTh := GlobalTheory.T.unit_vacuum_entire_factor_isThetaFunction_standard ψ θ S T frS frT hS hT δ hC hδ f hf Φ hΦd hreal
   obtain ⟨Θ, hΘ⟩ : ∃ Θ : Formalism.MainNotions.TaylorLogMetric.VC D S.rank T.rank → ℂ, Θ = fun Y => Φ (δ⁻¹ • Y) := ⟨_, rfl⟩
   rw [← hΘ] at hTh
@@ -82,14 +86,14 @@ theorem fock_jets_eq_theta : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ :
     simp only [hΘ, smul_smul, inv_mul_cancel₀ hδ, one_smul]
   refine ⟨Θ, hTh, ?_, fun k => ?_⟩
   · intro h0
-    obtain ⟨w, hw, hfw⟩ := GlobalTheory.T.exists_finitePartZero_ne_of_isVacuum_orientedModel ψ θ S T _ _ _ _ f hf
+    obtain ⟨w, hw, hfw⟩ := _root_.GlobalTheory.VacNonzeroReal.exists_finPart_zero_ne ψ θ S T _ _ _ _ f hf
     apply hfw
     have h1 : Φ (zCo θ frS frT w) = 0 := by
       rw [hΦeq]
       exact congrFun h0 _
     rw [hreal w hw, h1, mul_zero]
   · have hdiff : Differentiable ℂ Θ := hTh.1
-    have hj := GlobalTheory.T.fockMonomial_at_origin_gaussian_entire_orthonormal ψ θ S T frS frT hf.1 hf.2.inf hS hT f Φ hΦd hreal k
+    have hj := _root_.GlobalTheory.FockPos.fock_monomial_zero_of_on ψ θ S T frS frT hf.1 hf.2.inf hS hT f Φ hΦd hreal k
     change pureTensorO ψ θ S T (fun _ => 1) (fun _ => 1) (GlobalTheory.FockPos.frAt frS) (GlobalTheory.FockPos.frAt frT) f (MvPolynomial.monomial k 1) 0 = _
     rw [hj, hΦeq, applyAt0_monomial', applyAt0_monomial', taylor_comp_smul' D _ hdiff]
     have hper : ∀ τ : D.what₂.Tau, GlobalTheory.FunObj.period δ τ = δ * (((Real.sqrt (2 * Real.pi * Formalism.L2.Pj.xiR D) : ℝ) : ℂ)⁻¹) := by

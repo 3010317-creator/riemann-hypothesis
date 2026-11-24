@@ -8,7 +8,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianH
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionPairImageLatticePartEqOfMatchStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionPointOfPairExistsTorsionInjectiveUpToEquiStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraitTorsionPointMapCommutesCharInjectiveHom
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisedGroupIsoAbelianPartCharacterIsosStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusHomOfIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisedGroupIsoAbelianPartCharacterIsos
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PolOfSecondQuotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -172,7 +173,7 @@ theorem two_unif_match : ∀ {X : Scheme.{0}} {g n : ℕ} {B : Type} [CommRing B
   have hA : AdmBase V (maximalIdeal V) := ⟨inferInstance, inferInstance, inferInstance, hc⟩
   obtain ⟨a, cA, ha, hcA, gen, hα, hlbA⟩ := GlobalTheory.T.exists_iso_uniformisedGroups_same_siegelFibre c V (maximalIdeal V) hA D₁ A₁ G₁ U₁.toUnifPre D₂ A₂ G₂
     U₂.toUnifPre hG₁ hG₂ y α₁ α₂ hO₁ hO₂
-  obtain ⟨b, h, hbi, lin, coord⟩ := GlobalTheory.T.uniformisedGroupIso_abelianPart_character_isos V (maximalIdeal V) hA D₁ A₁ G₁ U₁.toUnifPre D₂ A₂ G₂ U₂.toUnifPre a ha
+  obtain ⟨b, h, hbi, lin, coord⟩ := _root_.GlobalTheory.TInj.iso_lin_coord V (maximalIdeal V) hA D₁ A₁ G₁ U₁.toUnifPre D₂ A₂ G₂ U₂.toUnifPre a ha
   have hb : IsMonHom b := lin.2.1
   have hov : Over₀ U₁.toUnifPre U₂.toUnifPre a.hom b := lin.2.2.1
   have hlbG := GlobalTheory.T.mumfordBundleIso_genericFibre_extends_uniformisedGroups V (maximalIdeal V) hA D₁ A₁ G₁ U₁.toUnifPre D₂ A₂ G₂ U₂.toUnifPre hG₁ a.hom cA.hom ha hcA

@@ -12,7 +12,8 @@ public import Formalism.LocalToGlobal.Divisibility.Tuples
 public import Formalism.LocalToGlobal.HermitianForms.IsLocBasis
 public import Formalism.LocalToGlobal.Columns.RecLevelTop
 public import Formalism.LocalToGlobal.Columns.TiedCls
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemFramedLevelIffTwoAdelicPointsStatement
+public import Formalism.LocalToGlobal.Columns.RecLevel
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemFramedLevelIffTwoAdelicPoints
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PlaceProjectionZeroIntegralIffComponentsAbove
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PointLatticeIffBaseLatticeDecorated
 import Mathlib.Algebra.Order.Floor.Extended
@@ -721,7 +722,7 @@ theorem exists_clsG_top : ∀ (F E K : Type) [Field F] [NumberField F] [Field E]
     rwa [mul_inv_cancel_right] at h1
   have hlev : ∀ (g x : GL (Fin n) (AfE F E)) (p p' : DecoF E n ST SG Q), IsPtOf hc (g * (k * t)) p → IsPtOf hc (g * x * (k * t)) p' →
       (x ∈ topU S.U t Θ d ↔ ∃ (h : Λ.grp) (θ : Θ.grp), ((1, h.1, θ.1) : UF E n × GLG (E := E) (n := n) (SG := SG) × GLQ E n Q) • p = p') :=
-    fun g x p p' h h' => GlobalTheory.T.mem_framedLevel_iff_two_adelic_points F E K hc n ST SG Q Λ Θ d hd N hdN hΘ S.U k t g x p p' hk hrk ht hU h h'
+    fun g x p p' h h' => _root_.GlobalTheory.Mem.Col2.TopCh.mem_topU_iff F E K hc n ST SG Q Λ Θ d hd N hdN hΘ S.U k t g x p p' hk hrk ht hU h h'
   have hle : topU S.U t Θ d ≤ UAd hc n := fun x hx => ((S.U_eq x).1 (topU_le _ _ _ _ hx)).1
   let sI : ∀ c, stab c →* UJ (hc.sig : E →+* E) (1 : Matrix (Fin n) (Fin n) E) := fun c =>
     ((ufGL E n).comp (gm c)).codRestrict _ fun a => by

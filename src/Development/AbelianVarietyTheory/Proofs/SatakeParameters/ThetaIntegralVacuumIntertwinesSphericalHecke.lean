@@ -8,7 +8,7 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenIsC
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmDataIsCMExtAndGramIsHermND
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DivisorsAtInvDualLabelAndStabilizerMul
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntegrableOnFundamentalDomainMulRight
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalLabelOperatorsOnHyperspecialFixedVectorStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalLabelOperatorsOnHyperspecialFixedVector
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaKORatLeftAndEigenRight
 import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp
 import Mathlib.Algebra.Order.Floor.Extended
@@ -178,9 +178,9 @@ theorem exists_dual_rep (V : HSp D) (P : Pl D.host.E) (d : List ℤ) :
       exact h.choose_spec
     obtain ⟨α, hα, R', h1, h2, h3, h4⟩ := exists_dual V P d _ hs
     refine ⟨α, hα, R', h2, h3, h4, fun M _ _ π u hu => ?_⟩
-    rw [((GlobalTheory.T.spherical_label_operators_on_hyperspecial_fixed_vectors V P).1 _ _ h1).2 M π u hu, opOf_single, LinearMap.sum_apply]
+    rw [((_root_.GlobalTheory.SphLabelOps.label_operators V P).1 _ _ h1).2 M π u hu, opOf_single, LinearMap.sum_apply]
   · have h0 : Hk3.rep V P d = ∅ := dite_eq_right h
-    have h1 : Hk3.rep V P (dualLab d) = ∅ := dite_eq_right fun h' => h (((GlobalTheory.T.spherical_label_operators_on_hyperspecial_fixed_vectors V P).2.2.2.1 d).1.2 h')
+    have h1 : Hk3.rep V P (dualLab d) = ∅ := dite_eq_right fun h' => h (((_root_.GlobalTheory.SphLabelOps.label_operators V P).2.2.2.1 d).1.2 h')
     exact ⟨1, one_mem _, ∅, by rw [h0], by simp [h0], by simp, fun M _ _ π u _ => by rw [h1]⟩
 
 theorem hk_apply (V : HSp D) (P : Pl D.host.E) (c : List ℤ →₀ ℂ) (F : GA D V → ℂ) (g : GA D V) :

@@ -24,7 +24,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentBasis
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabCancel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCechKodairaSpencerClassAbelianTriple
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LePreimageOfIsTranslate
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentTranslateLiftsSemiAbelianTripleMapStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentTranslateLiftsSemiAbelianTripleMap
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ToroidalCompactificationBis
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RigidForFan
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericPointLogKodairaSpencerFrameChange
@@ -588,7 +588,7 @@ theorem isKS_transport : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
       rw [← cancel_mono j, Category.assoc, ← sq, ← Category.assoc, hg₀'φ, hg₀, Category.assoc, hx,
         ← Category.assoc, spc, hφS]
     have hw' : ∀ a, ∃ w', w' ≫ m.φ = w a ∧ IsTranslate t' φS' g₀' (v' a) w' := fun a =>
-      GlobalTheory.T.tangentTranslate_lifts_semiAbelianTripleMap E H X X' t t' j m _ _ ψ.hom (chart W) (chart W') hx (v a) (v' a) (hv a) (hv't a) (hvv a) S φS'
+      _root_.GlobalTheory.TransLift.lift_isTranslate E H X X' t t' j m _ _ ψ.hom (chart W) (chart W') hx (v a) (v' a) (hv a) (hv't a) (hvv a) S φS'
         g₀' hg₀' (w a) (by rw [hφS, hg₀'φ]; exact hw a)
     choose w' hw'φ hw'T using hw'
     have hOi : m.φ ⁻¹ᵁ O ≤ Wc i ⊓ Wc i' :=

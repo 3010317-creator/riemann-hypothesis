@@ -12,8 +12,12 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTransl
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeRhamPairingPullback
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBaseFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFrameTangentVectorsOfIsGrpPullbackStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPolarizationCrystalFormPerfectSelfAnnihilaStatement
+public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.FormallyUnramifiedOfTangentMapInjective
+public import Formalism.LocalToGlobal.ProjectiveLattices.IsCombAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFrameTangentVectorsOfIsGrpPullback
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPolarizationCrystalFormPerfectSelfAnnihila
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRingActionOfIsGrpPullbackStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameLiftsBasisDeRhamHomologyModHodgeFiltrationStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsKodairaSpencerValueEndomorphismLiftStatement
@@ -84,9 +88,10 @@ import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsVariet
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmoothOfAlgClosedUnif
 import Development.AbelianVarietyTheory.Definitions.Divisors.CommGroupMulMulEqMulInvMulMulMul
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerRowDualEigenvectorMemSpanFieldStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerUniqueValueAbelianSchemeFieldStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolarizationCrystalFormAdjointConjActionStatement
+import Mathlib.LinearAlgebra.PerfectPairing.Basic
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerRowDualEigenvectorMemSpanField
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerUniqueValueAbelianSchemeField
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolarizationCrystalFormAdjointConjAction
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WedgeOrdVpBaseChangeOfNeBot
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ObjIsAbelianSchemeDimRigidifiedSym
@@ -99,7 +104,6 @@ import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DenseOpenEqTopOfSmoothOfRelativeDimensionZero
 import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyKodairaSpencerIdentificationOffBoundary
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -319,10 +323,10 @@ theorem kodaira_spencer_map_properties : _root_.GlobalTheory.CovTop.Hypotheses''
     apply hπ'.1.hom_ext
     · rw [Category.assoc, Category.assoc, ha' z, ← Category.assoc j π', ← ha z]
     · rw [Category.assoc, Category.assoc, Over.w, hj.1.w, ← Category.assoc, Over.w]
-  obtain ⟨ψ, hpol, hiso, hperf, hlag⟩ := GlobalTheory.T.exists_polarizationCrystalForm_perfect_selfAnnihilating P5 Xo hπ
-  have hadj := GlobalTheory.T.polarizationCrystalForm_adjoint_conj_action P5 Xo hπ a ha hpol
-  have hK := GlobalTheory.T.kodairaSpencerUniqueValue_abelianScheme_field P5 hj hA' gA'
-  obtain ⟨ub, hu, ht, he, hbasis⟩ := GlobalTheory.T.exists_frame_tangentVectors_of_isGrpPullback P hπ a ha
+  obtain ⟨ψ, hpol, hiso, hperf, hlag⟩ := _root_.GlobalTheory.PolExists.polForm_exists P5 Xo hπ
+  have hadj := _root_.GlobalTheory.PolAdjoint.polForm_adjoint P5 Xo hπ a ha hpol
+  have hK := _root_.GlobalTheory.DeRham.ksRegular_of_isAbelianScheme P5 hj hA' gA'
+  obtain ⟨ub, hu, ht, he, hbasis⟩ := _root_.GlobalTheory.KSExist.exists_frame_of_isGrpPullback P hπ a ha
   have hL := (P5.2.1 K A _ hA gA).1
   choose hb hbl using fun k : (Σ σ : E →+* ℂ, Fin (Dw.mult σ)) => hL.2 (ub k.1 k.2) (ht k.1 k.2)
   obtain ⟨hspan, hind⟩ := GlobalTheory.T.frameLifts_basis_deRhamHomology_mod_hodgeFiltration P5 P hπ ub hu hb hbl
@@ -335,7 +339,7 @@ theorem kodaira_spencer_map_properties : _root_.GlobalTheory.CovTop.Hypotheses''
     exact h1.sub_mem ((hbl k).smul _)
   have hrow : ∀ (τ : GlobalTheory.FlagTan.psiSet H) (a₀ : Fin (Dw.mult (conjEmb τ.1))),
       ∃ w, GlobalTheory.FlagTan.IsKSRow hj ψ hb ⟨conjEmb τ.1, a₀⟩ w := fun τ a₀ => by
-    obtain ⟨_, w, -, hw⟩ := GlobalTheory.T.kodairaSpencerRow_dual_eigenvector_mem_span_field hj a (fun z => H.bar z) ψ hiso hlag hperf hadj hK
+    obtain ⟨_, w, -, hw⟩ := _root_.GlobalTheory.KSExist.ksRow_exists_lieComb hj a (fun z => H.bar z) ψ hiso hlag hperf hadj hK
       (fun z f w hw => GlobalTheory.T.isKodairaSpencerValue_endomorphism_lift hj a a' hc z hw)
       χ ub hb hspan hind heig hbasis τ.1 (conjEmb τ.1)
       (fun z => by simp only [χ, RingHom.comp_apply, GlobalTheory.KSExist.conj_embK]) a₀

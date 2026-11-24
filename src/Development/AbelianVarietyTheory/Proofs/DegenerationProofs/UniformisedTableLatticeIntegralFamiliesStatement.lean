@@ -21,7 +21,8 @@ public import Mathlib.RingTheory.RootsOfUnity.EnoughRootsOfUnity
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.GtOntoDivisibleKernel
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SectionValueAtTorsionPointEqSumTerms
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SectionValueAtTorsionPointEqSumTermsStatement
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTorsionIdentificationWithPairingStatement
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTorsionIdentificationWithPairing
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ValueAtFormalTorsion
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RelationsAreFunctions
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaConstantValuationsUnitsEveryCosetStatement
@@ -710,7 +711,7 @@ theorem exists_unit_value : LL → TwistBCSpanStatement → TWM.VRatioGtStatemen
     have e₂ : τ ^ n ^ (i + m + 2) = 1 := by
       rw [show i + m + 2 = m + (i + 2) by ring, pow_add, pow_mul, hm, one_pow]
     rw [smul_add, e₁, ← map_nsmul, ← ofMul_pow, e₂, ofMul_one, map_zero, add_zero])
-  obtain ⟨f, hf, -⟩ := GlobalTheory.T.uniformisation_torsion_identification_with_pairing hL V (maximalIdeal V) hA D A G hG U F _ hj
+  obtain ⟨f, hf, -⟩ := _root_.GlobalTheory.TorsionIso.torsion_eq hL V (maximalIdeal V) hA D A G hG U F _ hj
   have hx : QkToAkU U.toUnifPre F _ p (f p) := (hf p _).2 rfl
   have hex : ∃ e c, IsTorsFrame A ρ (n ^ (i + m + 2)) (f p) e ∧ ValAt t (f p) e c ∧ v c ≠ 0 := by
     by_contra h
@@ -782,8 +783,8 @@ theorem fromGt_of_mem_unitGrp : LL → TwistBCSpanStatement → TWM.VRatioGtStat
   intro hL h₁ h₂ h₃ h₄ V _ _ _ _ hc ϖ hϖ D Q hQ F _ _ _ v hv A G _ _ hG U w₀ ρ hN th ϑ hE hP k hk hu x hx
   have hA : AdmBase V (maximalIdeal V) := ⟨inferInstance, inferInstance, inferInstance, hc⟩
   have hB := D.tau_bimult
-  obtain ⟨f, f₁, -, f₃, f₄, -⟩ := GlobalTheory.T.uniformisation_torsion_identification_with_pairing hL V _ hA D A G hG U F k hk.pos
-  obtain ⟨f', f₁', f₂', -⟩ := GlobalTheory.T.uniformisation_torsion_identification_with_pairing hL V _ hA D A G hG U F (k ^ 2) (pow_pos hk.pos 2)
+  obtain ⟨f, f₁, -, f₃, f₄, -⟩ := _root_.GlobalTheory.TorsionIso.torsion_eq hL V _ hA D A G hG U F k hk.pos
+  obtain ⟨f', f₁', f₂', -⟩ := _root_.GlobalTheory.TorsionIso.torsion_eq hL V _ hA D A G hG U F (k ^ 2) (pow_pos hk.pos 2)
   have ua := (GlobalTheory.T.theta_constant_valuations_units_every_coset hL h₁ h₂ h₃ h₄ V hc ϖ hϖ D Q hQ F v hv A G hG U w₀ ρ hN th ϑ hE hP k hk hu).1
   have add : ∀ p p', f (qkAdd hB p p') = f p * f p' := fun p p' => f₄ _ _ _ (qkAdd_qkAdd hB p p')
   have f0 : f (qkZero hB F k) = 1 := by
@@ -959,8 +960,8 @@ theorem fromGt_mem_unitGrp : LL → TwistBCSpanStatement → TWM.VRatioGtStateme
   have m1 : 1 ≤ m := hm.pos
   have div := (gt_onto_divisible_kernel hL V _ hA D F).2.1
   have lev := fun p q x => (GlobalTheory.T.uniformisation_torsion_maps_compatible_in_level hL V _ hA D A G hG U F m m (m ^ 2) m1 m1 (pow_two m) p q x).2
-  obtain ⟨f, f₁, -, f₃, f₄, -⟩ := GlobalTheory.T.uniformisation_torsion_identification_with_pairing hL V _ hA D A G hG U F m m1
-  obtain ⟨f', f₁', -, -, f₄', -⟩ := GlobalTheory.T.uniformisation_torsion_identification_with_pairing hL V _ hA D A G hG U F (m ^ 2) (pow_pos hm.pos 2)
+  obtain ⟨f, f₁, -, f₃, f₄, -⟩ := _root_.GlobalTheory.TorsionIso.torsion_eq hL V _ hA D A G hG U F m m1
+  obtain ⟨f', f₁', -, -, f₄', -⟩ := _root_.GlobalTheory.TorsionIso.torsion_eq hL V _ hA D A G hG U F (m ^ 2) (pow_pos hm.pos 2)
   obtain ⟨φ, hφ⟩ := exists_hom hB f f₄
   obtain ⟨φ', hφ'⟩ := exists_hom hB f' f₄'
   have hiota0 : ∀ (h : GtPtF D.toPre F), h.IsZero → h.IsIota 0 := by
@@ -1244,7 +1245,7 @@ theorem main : LL → TwistBCSpanStatement → TWM.VRatioGtStatement → TWState
   have hnj : ∀ j, IsUnit ((n ^ j : ℕ) : V) := fun j => by rw [Nat.cast_pow]; exact hnu.pow j
   refine ⟨hdet, ?_, ?_, ?_, ?_⟩
   · rintro j x c ⟨hx, t, ht⟩
-    obtain ⟨f, f₁, f₂, -⟩ := GlobalTheory.T.uniformisation_torsion_identification_with_pairing hL V _ hA D A G hG U F ((n ^ j) ^ 2) (pow_pos (pow_pos hn.pos j) 2)
+    obtain ⟨f, f₁, f₂, -⟩ := _root_.GlobalTheory.TorsionIso.torsion_eq hL V _ hA D A G hG U F ((n ^ j) ^ 2) (pow_pos (pow_pos hn.pos j) 2)
     obtain ⟨p, rfl⟩ := f₂ x hx
     have ua := (GlobalTheory.T.theta_constant_valuations_units_every_coset hL h₁ h₂ h₃ h₄ V hc ϖ hϖ D Q hQ F v hv A G hG U w₀ ρ hN th ϑ hE hP (n ^ j) hno.pow
       (hnj j)).1 p _ t c ((f₁ p _).2 rfl) ht

@@ -7,14 +7,22 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlphaDivBeta
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlphaUnramifiedOutsideStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BetaUnramifiedOutsideStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BigThetaKernelIntegrable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChiGridVertexRankAddLtTwoExponentAddCentreStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjTauEOverRealPlaceStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LeastSplitAuxiliaryPrimeThetaChainSpec
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChiGridVertexRankAddLtTwoExponentAddCentre
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
+public import Formalism.LocalRingCardinality.DataTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjTauEOverRealPlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EpsMulOfCondExp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEmbeddingSplitPrimeGridLocalTensorPlaces
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitCompletelyAuxiliaryPlaceOutsideFinsetStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasArchimedeanCharExponentsConjOfHasInfExpStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdmissibleCMBaseDataOfSquareTupleStandingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictsToQuadraticSignPowOfRestrictsToQuadratiStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitCompletelyAuxiliaryPlaceOutsideFinset
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasArchimedeanCharExponentsConjOfHasInfExp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareStanding
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdmissibleCMBaseDataOfSquareTupleStanding
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictsToQuadraticSignPowOfRestrictsToQuadrati
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaGridAlphaBetaRestrictQuadraticPowRankStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaGridCharacterQuotientNotUnramifiedOverBasePStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaGridCharactersArchExponentsGapGtRank
@@ -58,7 +66,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
 
 @[expose] public section
 
@@ -145,15 +152,15 @@ private theorem exps (hL : Lc.Is μ₀) (i j : Fin D.R.m) (τf : InfinitePlace D
       (∀ t, HasExp (fun w => ⟨(starRingEnd ℂ).comp (tauE D (τf w)), hτf w⟩) (alpha G t i j) mα) ∧
       HasExp (fun w => ⟨(starRingEnd ℂ).comp (tauE D (τf w)), hτf w⟩) (beta G i j) mβ ∧
       ∀ w, ((rankV D (i + 1) (j + 1) + rankV D i j : ℕ) : ℤ) < mα w - mβ w := by
-  choose mα hα eα using fun t => GlobalTheory.T.hasArchimedeanCharExponents_conj_of_hasInfExp _ _ (fun τ => GlobalTheory.SquareExps.alpha_exp (G := G) hL t i j j.2 τ) τf hτf
-  obtain ⟨mβ, hβ, eβ⟩ := GlobalTheory.T.hasArchimedeanCharExponents_conj_of_hasInfExp _ _ (fun τ => GlobalTheory.SquareExps.beta_exp (G := G) hL i j i.2 τ) τf hτf
+  choose mα hα eα using fun t => _root_.GlobalTheory.ConjInfExp.hasExp_conj_of_hasInfExp _ _ (fun τ => GlobalTheory.SquareExps.alpha_exp (G := G) hL t i j j.2 τ) τf hτf
+  obtain ⟨mβ, hβ, eβ⟩ := _root_.GlobalTheory.ConjInfExp.hasExp_conj_of_hasInfExp _ _ (fun τ => GlobalTheory.SquareExps.beta_exp (G := G) hL i j i.2 τ) τf hτf
   refine ⟨mα μ₀, mβ, fun t => ?_, hβ, fun w => ?_⟩
   · have e : mα μ₀ = mα t := funext fun w => by
       have := (eα μ₀ w).trans (eα t w).symm
       exact_mod_cast this
     rw [e]
     exact hα t
-  · have key := GlobalTheory.T.chiGridVertexRank_add_lt_two_exponent_add_centre sc.cGap (τf w) i j i.2 j.2
+  · have key := _root_.GlobalTheory.ChiGrid.rankV_add_lt_two_e_add_two_cen sc.cGap (τf w) i j i.2 j.2
     have h1 := eα μ₀ w
     have h2 := eβ w
     have : (((rankV D (i + 1) (j + 1) + rankV D i j : ℕ) : ℤ) : ℚ) < ((mα μ₀ w - mβ w : ℤ) : ℚ) := by
@@ -187,7 +194,7 @@ private theorem chars_good (hL : Lc.Is μ₀) (t : T) (i j : Fin D.R.m) (B : Bas
   have eν : (GlobalTheory.SqStep.chs G i j t).ν = alpha G t i j / beta G i j := by
     unfold Chars.ν
     rw [eα, eβ]
-  refine ⟨?_, ?_, eα ▸ GlobalTheory.T.restrictsToQuadraticSignPow_of_restrictsToQuadraticCharPow _ _ h2 _ _ rα, eβ ▸ GlobalTheory.T.restrictsToQuadraticSignPow_of_restrictsToQuadraticCharPow _ _ h2 _ _ rβ, eα ▸ hα, eβ ▸ hβ, ?_, hsub, ?_, ?_, ?_,
+  refine ⟨?_, ?_, eα ▸ _root_.GlobalTheory.LFun.resEtaPow_of_resEta _ _ h2 _ _ rα, eβ ▸ _root_.GlobalTheory.LFun.resEtaPow_of_resEta _ _ h2 _ _ rβ, eα ▸ hα, eβ ▸ hβ, ?_, hsub, ?_, ?_, ?_,
     ⟨hv₁, hsp⟩⟩
   · have hm := (hL.mu0 j).1
     have hx := (hL.xi t).1
@@ -255,7 +262,7 @@ theorem _root_.GlobalTheory.T.exists_realEmbeddings_sharedBase_towerStage : GBig
   classical
   refine ⟨0, fun ε CF _ => ⟨0, 0, fun C _ D large₂ he hx hR T Lc μ₀ hL G => ?_⟩⟩
   intro W _ i j p q A A' WW X hX
-  choose τf hτf using (GlobalTheory.T.exists_conj_tauE_comp_algebraMap_eq_embedding (D := D))
+  choose τf hτf using (_root_.GlobalTheory.ConjTypeOverReal.conj_tauE_over_realPlace (D := D))
   refine ⟨fun w => ⟨_, hτf w⟩, fun t => ?_⟩
   have hst := standing_of_rec hR hL G t
   obtain ⟨mα, mβ, hα, hβ, hκ⟩ := exps (G := G) hL i j τf hτf
@@ -268,9 +275,9 @@ theorem _root_.GlobalTheory.T.exists_realEmbeddings_sharedBase_towerStage : GBig
   have hτ := fun v : ((GlobalTheory.SqStep.chs G i j t).T : Finset (HeightOneSpectrum (𝓞 D.host.F))) =>
     GlobalTheory.LocPlTau.exists_splitPrime_locPl hL t v.1 (hloc v.1 v.2)
   choose τP hτP using hτ
-  obtain ⟨v₁, hv₁P, hv₁s, -, ⟨τ₁⟩⟩ := GlobalTheory.T.exists_splitCompletely_auxiliary_place_outside_finset (G := G) hL t (GlobalTheory.SqStep.chs G i j t).T
+  obtain ⟨v₁, hv₁P, hv₁s, -, ⟨τ₁⟩⟩ := _root_.GlobalTheory.GoodPlace.exists_good_place (G := G) hL t (GlobalTheory.SqStep.chs G i j t).T
   let B : Base D.host.F D.host.E := ⟨W.ψ, fun w => ⟨_, hτf w⟩, mα, mβ, (GlobalTheory.SqStep.chs G i j t).T, τP, v₁, τ₁⟩
-  have hB : B.IsGood D.sp.cm.sig := GlobalTheory.T.isAdmissibleCMBaseData_of_squareTupleStanding hL W t hst B rfl hloc
+  have hB : B.IsGood D.sp.cm.sig := _root_.GlobalTheory.FunObj.base_isGood_of_standing hL W t hst B rfl hloc
   have hsub₀ : (GlobalTheory.SqStep.chs G i j μ₀).T ⊆ (GlobalTheory.SqStep.chs G i j t).T := by
     rw [GlobalTheory.SqStepArith.chs_T_base G hL i j]
     exact Finset.subset_union_left

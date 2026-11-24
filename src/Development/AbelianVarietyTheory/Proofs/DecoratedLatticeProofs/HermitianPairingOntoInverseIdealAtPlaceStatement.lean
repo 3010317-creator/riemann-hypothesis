@@ -6,7 +6,7 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.LineLat
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittCoreEmbeddingPreservesSupportedUnitarySubgro
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.NotLineLatAtZero
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealCompletionLocallyPrincipal
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealCompletionPropertiesAtPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealCompletionPropertiesAtPlace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsSelfDualLatticeAtPlaceLatticeCompletion
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualLatticeAtPlaceSmulIntegralMem
 import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
@@ -273,7 +273,7 @@ theorem hz_onto : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ 
     (ζ : Fin L.rank → D.host.E) (M : Lat S) (𝔠 : FI D) (v : Pl D), IsSelfDualC S M → LineId o ζ M 𝔠 v → 𝔠 ≠ 0 →
       ∀ g ∈ idV 𝔠⁻¹ v, ∃ y ∈ latV S M (· = v), cA D (∑ l, (∑ m, cA D (ratV (vecB o ζ) m) * gA S m l) * y l) = g := by
   intro D ψ hψ S A L o ζ M 𝔠 v hM hL h𝔠 g hg
-  obtain ⟨h1, h2, -⟩ := GlobalTheory.T.fractionalIdealCompletion_properties_at_place D ψ hψ v
+  obtain ⟨h1, h2, -⟩ := _root_.GlobalTheory.SeeSaw.idV_props D ψ hψ v
   have hSD := GlobalTheory.IwaPlace.LocSD.isSDAt_latV D S M v hM
   set z := vecB o ζ with hzdef
   set 𝔦 : FI D := valIdl S M hM z with h𝔦def

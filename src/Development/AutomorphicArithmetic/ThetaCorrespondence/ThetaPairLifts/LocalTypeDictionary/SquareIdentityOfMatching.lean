@@ -12,7 +12,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BigRouteKern
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BigThetaKernelIntegrable
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrientedHermitianFormQuadSumEqTrace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareThetaTripleHypothesesOfStandingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareTriple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareThetaTripleHypothesesOfStanding
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsAddEquivSymplecticCoordsOrientedModel
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockAlgebraicThetaVectorsStableFiniteAdelesLieStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVectorProductMulPolynomials
@@ -250,7 +251,7 @@ theorem square_identity_of_matching : GlobalTheory.Published.HoweDualityReal →
   obtain ⟨κ, hκ⟩ := (hD t).2 ωA ωB hm.weilA hm.weilB
   refine ⟨lam * c₀, fun M hM Θ Θ' hΘ g g₁ => ?_⟩
   obtain ⟨aA, aB, kA, kB, iA, iB⟩ := hκ B ρ' Θ Θ' hΘ
-  have hconv := GlobalTheory.T.bigRoute_kernel_integrableOn_unitary_quotient hWC hL W B ρ' t i j (GlobalTheory.T.squareThetaTripleHypotheses_of_standing hL W t i j (hst t)) M hM Θ Θ' hΘ g₁ g
+  have hconv := GlobalTheory.T.bigRoute_kernel_integrableOn_unitary_quotient hWC hL W B ρ' t i j (_root_.GlobalTheory.FunObj.squareTriple_of_standing hL W t i j (hst t)) M hM Θ Θ' hΘ g₁ g
   have hpp : p (GlobalTheory.SquareDict.datumA W Θ) = lam • p' (GlobalTheory.SquareDict.datumB W Θ') := by
     obtain ⟨a', b', τ, τ', n, Φ, hab, hn, hF, rfl, rfl⟩ := hΘ
     obtain ⟨f1, f2, f3⟩ := hP₀ n Φ τ τ' hn hF

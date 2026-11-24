@@ -20,7 +20,8 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RedMU
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsAdelicUnitaryOfLatticeIsometries
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCompletedIsometryInducingHalfLevelAutomorp
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DatEqOfPhiHat
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletionStatement
+import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletion
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryEqRealMulFiniteSplit
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeRationalTranslateInvariance
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.DetOneAddSubOne
@@ -303,7 +304,7 @@ theorem exists_finite_of_isometry {V : HSp D} {ι : Dw.La →ₗ[𝓞 D.host.E] 
 
 theorem latGHat_one_eq {V : HSp D} {ι : Dw.La →ₗ[𝓞 D.host.E] (Fin V.rank → D.host.E)} (hι : LatEmb V ι) :
     latGHat V 1 = GlobalTheory.AdLat.hat D.host.F (Set.range ι) := by
-  rw [(GlobalTheory.T.adelicElementLattice_full_and_completion D V 1).2.2.2.2.1, ← hι.2, LinearMap.coe_range]
+  rw [(_root_.GlobalTheory.Member.latG_lattice_and_completion D V 1).2.2.2.2.1, ← hι.2, LinearMap.coe_range]
 
 
 
@@ -323,7 +324,7 @@ theorem factor_det_eq {V : HSp D} {ι : Dw.La →ₗ[𝓞 D.host.E] (Fin V.rank 
   obtain ⟨v, hv₁, hv₂, hv₃⟩ := GlobalTheory.TwistTie.exists_basis_lift I J hIJ e
   have hrange : (latG V 1 : Set (Fin V.rank → D.host.E)) = Set.range ι := by
     rw [← hι.2, LinearMap.coe_range]
-  obtain ⟨a, ha₁, ha₂⟩ := GlobalTheory.TwistTie.det_sub_mem_hat D.host.F ι (hrange ▸ (GlobalTheory.T.adelicElementLattice_full_and_completion D V 1).2.1) I
+  obtain ⟨a, ha₁, ha₂⟩ := GlobalTheory.TwistTie.det_sub_mem_hat D.host.F ι (hrange ▸ (_root_.GlobalTheory.Member.latG_lattice_and_completion D V 1).2.1) I
     (fun e => P.isPrime.ne_top (top_le_iff.1 (e ▸ hP))) v hv₃ f M hM (finHom V u).1
     (by rw [← GlobalTheory.IdeleParts.integralFiniteAdeles_eq_adelicCompletion_integers, ← hU]; exact unswap_int U)
     (fun j => by

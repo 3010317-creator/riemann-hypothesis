@@ -46,13 +46,12 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ClassPairingIntegralFormRowIsIntegral
 public import Formalism.SharpRestriction.Divisibility.WeightDegreeSizes
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdmissiblePeriodZeroOfClassPeriodDecompositionAl
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsStandardColumnComparisonsTrueColumnsStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StdLvPr
 public import Formalism.LocalToGlobal.GroupLattices.AdmissibleAtGeneratorPlaces
 public import Formalism.SharpRestriction.Divisibility.HookProducts.AdmPerTw
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FixedVectorEqOfStandardData
 public import Formalism.LocalRingCardinality.PosOfIsomEmb
 public import Formalism.LocalToGlobal.HermitianForms.TiedBrRep
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StdLvPr
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnChoiceExistsStandardChainDataStatement
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.AllRows
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ColumnChoiceWithTies
@@ -1097,7 +1096,7 @@ attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Ho
 
 theorem GlobalTheory.PerAdm0.periodAdmissible_of_integralPeriodRows : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), GlobalTheory.PerQ.RowInt I l Z → Formalism.MainNotions.WeightDegreeSizes.PeriodClassSumWeyl (I.rec7 l Z) := by
   intro B X I hI hP l Z hR
-  obtain ⟨C, hC, _⟩ := GlobalTheory.T.exists_standardColumnComparisons_trueColumns I hI hP l Z
+  obtain ⟨C, hC, _⟩ := _root_.GlobalTheory.Mem.Col2.TC.colsTiedSym_std I hI hP l Z
   exact _root_.GlobalTheory.PerRed.periodClassSumWeyl_of_forall_perDec0 _ (Formalism.MainNotions.RT.PeriodPointConditions.perDec0_of_cols C
     (fun u => GlobalTheory.PerDecAtRef.perDec0At_std I hI l Z hR u _ _ (C.forms u) (hC u)))
 end -- clump:auto
@@ -1445,7 +1444,7 @@ namespace GlobalTheory.PerTwClose
 
 theorem twistedPeriodAdmissible_of_rowInt : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)) (l0 : I.Law0 l), GlobalTheory.PerQ.RowInt I l Z → ∀ (nch : NChoice (I.rec7 l Z)) (tp : Formalism.L2.Host.TupTied (I.rec7 l Z) (I.cf l Z) nch), tp.xi = I.xi → ∀ Y : DivX (I.rec7 l Z), Formalism.L2.G.Adm2InU.TwistedPeriodAdmissible (I.rec7 l Z) Y (I.tw l l0 Z) := by
   intro B X I hOk hPins l Z l0 hRow nch tp hxi Y
-  obtain ⟨C, hC, hLv⟩ := GlobalTheory.T.exists_standardColumnComparisons_trueColumns I hOk hPins l Z
+  obtain ⟨C, hC, hLv⟩ := _root_.GlobalTheory.Mem.Col2.TC.colsTiedSym_std I hOk hPins l Z
   obtain ⟨t, ht⟩ := GlobalTheory.T.trueColumnChoice_exists_standardChainData I hOk hPins l Z l0 nch tp C hxi hC hLv
   have hT := GlobalTheory.PerTwClose.perDecTwT_of_std I hOk l Z l0 hRow (I.cf l Z) nch tp C t Y ht
   refine _root_.GlobalTheory.PerRedU.main (I.rec7 l Z) Y (I.tw l l0 Z) ?_

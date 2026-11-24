@@ -5,7 +5,7 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Exi
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalVolumeLift
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FiniteDimensionalThetaFunctionsLevelFockDegree
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalZero
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilRepPreservesFockDegreeOfCommuteCartanStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilRepPreservesFockDegreeOfCommuteCartan
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -112,7 +112,7 @@ theorem isKFinVec_of_isFockVec : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (
   refine @Submodule.finiteDimensional_of_le _ _ _ _ _ _ _ hfd (Submodule.span_mono ?_)
   rintro g ⟨k, hk, rfl⟩
   exact ⟨hW.om_pres _ f hth, hUK k hk,
-    GlobalTheory.T.weilRep_preserves_fockDegree_of_commute_cartan D ψ θ S T χS χT om sS sT hW hθ k (hc k hk) N f hth hN⟩
+    _root_.GlobalTheory.CartanFockDeg.om_keeps_fockDeg D ψ θ S T χS χT om sS sT hW hθ k (hc k hk) N f hth hN⟩
 
 end GlobalTheory.Core.Rk.IP
 end -- clump:auto

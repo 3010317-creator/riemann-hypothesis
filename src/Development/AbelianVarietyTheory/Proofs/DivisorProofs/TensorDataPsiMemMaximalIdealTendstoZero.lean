@@ -5,7 +5,7 @@ public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvenCubicalTensorPosDefFormPositive
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsProjOverWeierstrass
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.PsiScalarsRelationsUpToBaseUnits
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteEvenCubicalValuesNotMemMaximalIdealPowStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteEvenCubicalValuesNotMemMaximalIdealPow
 public import Mathlib.LinearAlgebra.QuadraticForm.Basis
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -207,7 +207,7 @@ theorem scalars (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [IsInt
     refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => congrArg _ ?_
     abel
   have κ'p := GlobalTheory.T.even_cubical_tensor_posDef_form_positive R X κ κn κc κp W hW
-  have κ't := GlobalTheory.T.finite_even_cubical_values_not_mem_maximalIdeal_pow R (Fin r → X) κ' κ'n κ'c κ'p
+  have κ't := _root_.GlobalTheory.QuadTend.finite_not_mem_pow R (Fin r → X) κ' κ'n κ'c κ'p
   have ea : ∀ z, ∃ v ∈ unitsK R, a' z = v * κ' z := fun z => by
     obtain ⟨v, hv, e⟩ := h' z
     refine ⟨v * ∏ i, ∏ j, (u (z i + z j) * (u (z i))⁻¹ * (u (z j))⁻¹) ^ W i j, mul_mem hv (prod_mem fun i _ => prod_mem fun j _ =>

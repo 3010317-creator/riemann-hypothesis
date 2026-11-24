@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumPowersUnramifiedEtaTildeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTwistHeckeCharactersStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctionsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumPowersUnramifiedEtaTilde
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTwistHeckeCharacters
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctions
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,13 +75,13 @@ theorem mul_mul_inv_cancel (χ χ' : (AE D)ˣ →* Circle) : χ' * (χ * χ'⁻�
 
 theorem vacuum_character : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S T : HSp D) (θ : InfFam D), IsInfFam θ → ∀ (χS χT : (AE D)ˣ →* Circle) (om : (GA D S × GA D T →* Module.End ℂ (WO S T → ℂ))) (η : (AE D)ˣ →* Circle), IsEtaTilde D η → IsWeilDatumO ψ S T χS χT om → ∀ (sS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ) (sT : D.what₂.Tau → Matrix (Fin T.rank) (Fin T.rank) ℂ), (∀ τ, IsCartanInv (gramAt D S τ) (sS τ)) → (∀ τ, IsCartanInv (gramAt D T τ) (sT τ)) → ∀ g ∈ GinfC S, ∀ h ∈ GinfC T, (∀ τ, sS τ * compAt θ τ (Formalism.L2.Theta.mt S g) = compAt θ τ (Formalism.L2.Theta.mt S g) * sS τ) → (∀ τ, sT τ * compAt θ τ (Formalism.L2.Theta.mt T h) = compAt θ τ (Formalism.L2.Theta.mt T h) * sT τ) → ∀ x y, IsDetRoot S g x → IsDetRoot T h y → ∀ f, IsThetaFunO ψ S T f → (∀ τ, IsFockVacAt (heisO ψ S T) θ τ (cplxO (sS τ) (sT τ)) f) → om (g, h) f = (((((χT * (η ^ T.rank)⁻¹) x)⁻¹ * (χS * (η ^ S.rank)⁻¹) y : Circle) : ℂ) * ∏ τ, detPlus (sS τ) (sT τ) (compAt θ τ (Formalism.L2.Theta.mt S g⁻¹)) (compAt θ τ (Formalism.L2.Theta.mt T h))) • f := by
   intro D ψ hψ S T θ hθ χS χT om η hη hom sS sT hS hT g hg h hh cS cT x y hx hy f hf hv
-  obtain ⟨om₀, h₀, -, hvac⟩ := GlobalTheory.T.exists_weilDatum_powers_unramifiedEtaTilde D ψ hψ S T θ hθ _ _ (GlobalTheory.PlaceModel.isSelfDualC_latFrame S)
+  obtain ⟨om₀, h₀, -, hvac⟩ := _root_.GlobalTheory.WeilProduct.exists_weilDatum_etaTilde D ψ hψ S T θ hθ _ _ (GlobalTheory.PlaceModel.isSelfDualC_latFrame S)
     (GlobalTheory.PlaceModel.isSelfDualC_latFrame T) η hη
-  obtain ⟨om', h', htw⟩ := GlobalTheory.T.exists_weilDatum_twist_heckeCharacters D ψ hψ S T _ _ (χS * (η ^ S.rank)⁻¹) (χT * (η ^ T.rank)⁻¹) om₀ h₀
+  obtain ⟨om', h', htw⟩ := _root_.GlobalTheory.WeilChange.exists_weilDatum_twist D ψ hψ S T _ _ (χS * (η ^ S.rank)⁻¹) (χT * (η ^ T.rank)⁻¹) om₀ h₀
     (hecke_mul_inv hom.hecS h₀.hecS) (hecke_mul_inv hom.hecT h₀.hecT)
     (resEta_mul_inv hom.resS h₀.resS) (resEta_mul_inv hom.resT h₀.resT)
   rw [mul_mul_inv_cancel, mul_mul_inv_cancel] at h'
-  rw [GlobalTheory.T.weilDatum_unique_on_thetaFunctions D ψ hψ S T χS χT om om' hom h' (g, h) f hf, htw g h x y hx hy, LinearMap.smul_apply,
+  rw [_root_.GlobalTheory.WeilUniq.weilDatum_unique D ψ hψ S T χS χT om om' hom h' (g, h) f hf, htw g h x y hx hy, LinearMap.smul_apply,
     hvac sS sT hS hT g hg h hh cS cT f hf hv, smul_smul]
 
 end GlobalTheory.WeilVacChar

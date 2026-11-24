@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOneOfRetraction
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeFirstDeRhamStructure
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeUnobstructedSquareZeroAffineStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianUnobstructed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeUnobstructedSquareZeroAffine
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ConnectedSpaceSpecOfIsLocalRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -97,7 +98,7 @@ theorem crys_free_and_red : ∀ (F : Type) [Field F] [NumberField F] (Λ : Type)
   intro F _ _ Λ _ k _ π hπ hI A₀ _ _ hA₀ a
   haveI := isLocalRing_of_sq π hπ hI
   letI : Algebra Λ k := π.toAlgebra
-  obtain ⟨A, _, i, h, hA⟩ := GlobalTheory.T.abelianScheme_unobstructed_squareZero_affine Λ (RingHom.ker π) hI k π hπ rfl A₀ hA₀
+  obtain ⟨A, _, i, h, hA⟩ := _root_.GlobalTheory.UnobTop.abelianUnobstructed Λ (RingHom.ker π) hI k π hπ rfl A₀ hA₀
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim Λ A hA
   obtain ⟨HFree, -, HBC, HRigid, -⟩ := _root_.GlobalTheory.abelianDeRham
   have hrig := HRigid Λ A g hA hg (RingHom.ker π) (divided₂ hI) (isDPNilpotent_squareZero hI) k π hπ rfl A₀ i h

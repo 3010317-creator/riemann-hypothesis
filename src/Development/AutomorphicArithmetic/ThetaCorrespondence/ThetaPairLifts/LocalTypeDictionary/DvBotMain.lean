@@ -19,7 +19,9 @@ public import Formalism.DoubleCosetMeasures.StatementZ
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardPairMembersMemSchwartzBruhat
 public import Mathlib.Analysis.Matrix.MeasurableSpace
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ZetaIdentityPersistsRowColumnChangesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ZetaIdentityPersistsRowColumnChanges
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
 public import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnramifiedCharacterAtUniformizer
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
@@ -36,12 +38,12 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemRan
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ThetaAtEqSumHeisOfFourierSum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzEqPureTensorOfFiniteSlicesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzEqPureTensorOfFiniteSlices
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoxGraphGraphHeis
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGaussianDatumFlippedFiniteTensorBigRoute
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergStableRelationOfVacuaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerFixedFunctionsProportionalOfSelfDualStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousAtPlace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerFixedFunctionsProportionalOfSelfDual
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemPairLat
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BlkGLMem
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FrameCoordsMemSelfDualLatticeCoordsIff
@@ -54,7 +56,6 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsGoo
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieAlgebrasAtPlaceActFockVectorsByFockOperators
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TripleFrameBaseExists
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BottomExistsIntegrable
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsMixedLagrangianChartIntegralRowChange
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockAlgebraicThetaVectorsStableFiniteAdelesLieStatement
@@ -935,7 +936,7 @@ theorem UpperTheory.exists_scaled_standardPairSections_of_maxCompact_translate :
     rw [hν]
     ext x
     simp
-  obtain ⟨lam, hl, H⟩ := GlobalTheory.T.zetaIdentity_persists_row_column_changes k a a rfl (Fin a') (Fin a') (Fin (a + a')) (Fin (a + a')) (Equiv.refl _)
+  obtain ⟨lam, hl, H⟩ := _root_.GlobalTheory.FlipMatch.ZMat.bigZeta_eq_smallZeta_change k a a rfl (Fin a') (Fin a') (Fin (a + a')) (Fin (a + a')) (Equiv.refl _)
     (Equiv.refl _) finSumFinEquiv finSumFinEquiv (GlobalTheory.SplitFlip.haarVol (GlobalTheory.SplitWeil.KO k (Fin a')))
     (GlobalTheory.SplitFlip.haarVol (GlobalTheory.SplitWeil.KO k (Fin a'))) ϖ ν β gA gB cc hgA
   rw [hab] at H
@@ -1227,9 +1228,9 @@ theorem exists_vac (hS : IsSelfDualC S ΛS) (hT : IsSelfDualC T ΛT) {Bs : Base 
     (hv : IsLatVac (heisO Bs.ψ S T) (latA ΛS ΛT) (thM m Mo Bs.ψ Φ)) :
     ∃ f, Φ = GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f Mo.vac := by
   have hstd := hBs.std
-  refine GlobalTheory.T.adelicSchwartz_eq_pureTensor_of_finite_slices Mo.vac (fun v => (hM.vac v).2.1) hM.std Φ hΦ fun v y hy => ?_
+  refine _root_.GlobalTheory.PureGlue.eq_pure_of_slices Mo.vac (fun v => (hM.vac v).2.1) hM.std Φ hΦ fun v y hy => ?_
   obtain ⟨c, hc0, hc⟩ := GlobalTheory.LatBound.locCo_latAtV_bounded Xs Ws v Mo.co hX.lat.toIsLattice hW.lat.toIsLattice
-  obtain ⟨a, ha⟩ := GlobalTheory.T.schroedinger_fixed_functions_proportional_of_selfDual v (GlobalTheory.LatVac.psiAt Bs.ψ v) (GlobalTheory.VacAny.continuous_psiV hstd.1 v)
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.SchrFixUniq.proportional_of_fixed v (GlobalTheory.LatVac.psiAt Bs.ψ v) (GlobalTheory.VacAny.continuous_psiV hstd.1 v)
     (GlobalTheory.PsiNontriv.psiAt_ne_one Bs.ψ hstd v) (GlobalTheory.LatVac.locCo Mo.co v '' genP m (latA ΛS ΛT) v)
     ((lattice₂ m (latA ΛS ΛT) v).map (GlobalTheory.LatVac.locCo Mo.co v)) c
     (by rw [← AddMonoidHom.map_closure]; exact AddSubgroup.map_mono (localLattice_le_closure_generators m v)) hc0

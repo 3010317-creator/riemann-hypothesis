@@ -4,15 +4,18 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Admi
 public import Formalism.LocalToGlobal.IndefiniteReal.LinksChar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdeleAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaVectorFockVacuum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacterStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacter
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasInfExpMulOfIsOpenKer
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsIsScalar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtensionOfLowSmoothLines
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaVectorNeZero
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeffPolynomialEqZeroOfVanishingOnGLFamilyStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockHarmonicValueSpaceMapEqDualWeylModuleFunctioStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodBaseDataWeightEqLiftCoeffModuleWeightStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunctionStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TranslateMemCoefLatFn
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockHarmonicValueSpaceMapEqDualWeylModuleFunctio
+public import Formalism.LocalToGlobal.IndefiniteReal.ThPinsR
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodBaseDataWeightEqLiftCoeffModuleWeight
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunction
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SchurEquivariantMapsProportional
@@ -119,7 +122,7 @@ theorem om_vac_of {B : Base S T} {χ : (AE D)ˣ →* Circle} {ω : PairRep S T} 
     rw [hp] at h2
     have h3 : (p τ : ℂ) = B.w.p τ := by linear_combination h2 / 2
     exact_mod_cast h3
-  rw [GlobalTheory.T.weilDatum_realPlaces_fockVacuum_character D B.F.ψ hω.std S T B.F.θ hθ _ _ ω B.eta hB.eta hω (fun _ => 1) B.F.sT hS hT u hu 1 (one_mem _)
+  rw [_root_.GlobalTheory.WeilVacChar.vacuum_character D B.F.ψ hω.std S T B.F.θ hθ _ _ ω B.eta hB.eta hω (fun _ => 1) B.F.sT hS hT u hu 1 (one_mem _)
     (fun τ => by rw [one_mul, mul_one]) (fun τ => by rw [one, one_mul, mul_one]) x 1 hx hy f hf hv]
   congr 1
   have hexp : ∀ τ, HasInfExp D (χ * B.eta⁻¹ * (B.eta ^ T.rank)⁻¹) τ ((B.w.c τ - p τ : ℤ) : ℚ) := fun τ => by
@@ -308,7 +311,7 @@ theorem exists_scale (hlev : R.toLevCh.Is A.μ0) (hth : R.IsThP) (hc : (R.cV j).
       c • coefFn D.what₂.embLL (FWT.lamV D j) (F : Formalism.L2.DIV.Pol D.what₂.LL D.what₂.Tau (Vc D j).rank) := by
   have hinf : IsInfFam R.θ := hθ ▸ hB.frame.vac.2.inf
   have hT := io_act hlev hth hB hψ hθ hsT hBS hBT hmu heta x
-  have hlam : B.w.lam = FWT.lamV D j := GlobalTheory.T.good_baseData_weight_eq_lift_coeff_module_weight D T0 R.toLevCh A.μ0 j B hlev hB hmu hap ham
+  have hlam : B.w.lam = FWT.lamV D j := _root_.GlobalTheory.BaseLiftWeight.lam_eq D T0 R.toLevCh A.μ0 j B hlev hB hmu hap ham
   have hpq : ∀ τ, B.w.p τ + B.w.q τ ≤ (Wc D j).rank := fun τ => by
     obtain ⟨e, -⟩ := hB.sigOK (tauE D τ)
     rw [← hB.sig τ] at e
@@ -364,7 +367,7 @@ theorem exists_scale (hlev : R.toLevCh.Is A.μ0) (hth : R.IsThP) (hc : (R.cV j).
   refine ⟨c, fun h0 => hΔ0 ?_, fun F => ?_⟩
   · have h1 := LinearMap.congr_fun hcc w₀
     rw [h0, zero_smul, LinearMap.comp_apply, hw] at h1
-    exact GlobalTheory.T.harmonic_polynomial_eq_zero_of_function D _ _ B.w B.F.BS hB.wt hpq _ (hw ▸ hharm w₀) h1
+    exact _root_.GlobalTheory.ExportSeries.HarmInj.harm_inj D _ _ B.w B.F.BS hB.wt hpq _ (hw ▸ hharm w₀) h1
   · refine (LinearMap.congr_fun hcc (c0 F)).trans ?_
     change c • coefLin _ (e.symm (c0 F)) = _
     rw [show e.symm (c0 F) = _ from e.symm_apply_eq.2 (he0 F).symm, ← coefFn_map]

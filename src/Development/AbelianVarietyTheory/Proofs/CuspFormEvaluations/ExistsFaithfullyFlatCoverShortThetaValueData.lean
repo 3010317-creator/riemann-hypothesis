@@ -7,7 +7,7 @@ public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.Exists
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsFramedPointBaseChangeAlgHom
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsPowMulCoprimeLe
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsTranslationSectionsUniversalObject
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.InZhGeoInjStableStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.InZhGeoInjStable
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ModuliUnivEtaKilled
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -132,7 +132,7 @@ theorem exists_cover_shortVal_data :
   let hA : ptO Xo y'.x ⟶ ptO Xo (spMap φ1 ≫ y.x) := Over.homMk (spMap φ2) hyx.symm
   let hB : ptO Xo y'.x ⟶ ptO Xo (spMap φ2 ≫ spMap φ1 ≫ y.x) :=
     Over.homMk (𝟙 _) (by rw [Category.id_comp]; exact hyx.symm)
-  have hI := GlobalTheory.T.inZh_geoInj_stable_alt E H Dw l Xo n Λ N
+  have hI := _root_.GlobalTheory.inZh_geoInj_stable E H Dw l Xo n Λ N
   have hz' : ∀ i, InZh Xo Λ N (fun b => hB ≫ z i b) := fun i => hI.1 _ _ hB (z i) (hz i)
   have htpN : ∀ q b, (hA ≫ tp1 (q, b)) ^ N = levPt Xo y'.x (levRep (q b)) := by
     intro q b

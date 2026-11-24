@@ -5,28 +5,29 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContragredientThetaParamsAddBlockArrow
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContragredientThetaParamsColumnArrows
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LeastSplitAuxiliaryPrimeThetaChainSpec
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsRealThetaParameterPairThetaPartnerSignedParameStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsRealThetaParameterPairThetaPartnerSignedParame
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContragredientThetaParamsRemoveBlockArrow
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteSeriesModelOfDualParameter
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ComplexConjugationMapsMultiplicitySpace
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsNegatedSpaceDiscreteSeriesModelTransport
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsVacFOfIsVacVec
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVectorFrameChangeSameCartan
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscreteSeriesModelUnitaryIrreducibleOrthonormalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVectorsSubspaceStableSobolevFormDerivStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSmoothVector
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscreteSeriesModelUnitaryIrreducibleOrthonormal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVectorsSubspaceStableSobolevFormDeriv
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteSeriesPureInnerProductsTensorProduct
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRealIntertwinerContractionOnePlace
 public import Formalism.LocalToGlobal.IndefiniteReal.GvPairOfOrbitDerivCont
 public import Formalism.LocalRingCardinality.DataTheta
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestKTypesJointShapeBlockInUnitaryS
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsConjWeilDatumExchangedPairStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVectorsConjAdjointPullbackBijectionStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsConjWeilDatumExchangedPair
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVectorsConjAdjointPullbackBijection
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasInfExpOfOrder
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LowerTowerLiftsVanishOfVanishOnFockStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LowerTowerLiftsVanishOnFockStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PairThetaLiftFactorsThroughIntertwinerStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LowerTowerLiftsVanishOfVanishOnFock
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LowerTowerLiftsVanishOnFock
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PairThetaLiftFactorsThroughIntertwiner
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealThetaRuleExchangePairMembersStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaLiftsCuspidalOfLowerTowerLiftsVanishStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaLiftsCuspidalOfLowerTowerLiftsVanish
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,8 +77,8 @@ import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestKTypesJointShapeBlockUnitary
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HermitianAdjointLawsStandardCharacterStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SignedUnitaryGroupCompatStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HermitianAdjointLawsStandardCharacter
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SignedUnitaryGroupCompat
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TendstoInfMulProd
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -238,7 +239,7 @@ theorem LiftsM.transport (hθ : IsInfFam θ) (hσ : IdOrConj σ) (hA : ModelTr �
     (H : ∀ ν₁ 𝓕₁, ν₁.IsHaarMeasure → IsFundamentalDomain (GQ (sgn εA A)) 𝓕₁ ν₁ → LiftsM θ MA₁ MB₁ ν₁ 𝓕₁ K₁ It₁) :
     LiftsM θ MA MB ν 𝓕 K It := by
   intro F hF
-  obtain ⟨ν₁, a, b, c⟩ := (GlobalTheory.T.signedUnitaryGroup_compat D θ hθ εA A).meas ν 𝓕 hν h𝓕
+  obtain ⟨ν₁, a, b, c⟩ := (_root_.GlobalTheory.SgnIdent.sgnLaw_holds D θ hθ εA A).meas ν 𝓕 hν h𝓕
   obtain ⟨F₁, hF₁, e₁⟩ := hA.mult F hF
   obtain ⟨F₂, hF₂, e₂⟩ := H ν₁ _ a b F₁ hF₁
   obtain ⟨F', hF', e'⟩ := hB.mult' F₂ hF₂
@@ -262,8 +263,8 @@ theorem IsIntwF.transport (hθ : IsInfFam θ) (hσ : IdOrConj σ) (hA : ModelTr 
     (hpt : ∀ p, pt₁ (j p) = fun y => ρ (pt p (α y)))
     {It₁ : PolF D (sgn εA A).rank (sgn εB B).rank →ₗ[ℂ] SmT MA₁ →ₗ[ℂ] SmT MB₁}
     (hI : ∀ p v, κB (It₁ (j p) v) = It p (κA v)) : IsItW θ MB₁ MA₁ ω₁ pt₁ It₁ := by
-  have lA := GlobalTheory.T.signedUnitaryGroup_compat D θ hθ εA A
-  have lB := GlobalTheory.T.signedUnitaryGroup_compat D θ hθ εB B
+  have lA := _root_.GlobalTheory.SgnIdent.sgnLaw_holds D θ hθ εA A
+  have lB := _root_.GlobalTheory.SgnIdent.sgnLaw_holds D θ hθ εB B
   have inj : ∀ {f f' : Z → ℂ}, ((fun y => ρ (f (α y))) = fun y => ρ (f' (α y))) → f = f' := fun {f f'} h => by
     funext z
     obtain ⟨y, rfl⟩ := hα z
@@ -510,7 +511,7 @@ theorem liftsCuspidal (X : ProvA) (hX : GlobalTheory.Chain.RealIt.ChosenSeries X
   intro D hS G₀ _ _ Pl0 T A Ks _ _ _ R G hR hG
   have I : Inputs D X := ⟨hX, hH, hC, hB D, hV D, hL D, hK D, hD D, hP D, hT D, hE D⟩
   exact cuspAlong_of_pairLifts h3 h4 h5
-    (GlobalTheory.T.pairThetaLift_factors_through_intertwiner D X I (GlobalTheory.T.thetaLifts_cuspidal_of_lower_tower_lifts_vanish D X I (GlobalTheory.T.lowerTowerLiftsVanish_of_vanish_on_fock D X I (GlobalTheory.T.lowerTowerLifts_vanish_on_fock D X I)))) hS hR hG
+    (_root_.GlobalTheory.PairLift.RuleLift.pairLifts D X I (_root_.GlobalTheory.PairLift.cuspAll_of_lowAll D X I (_root_.GlobalTheory.PairLift.lowAll_of_lowFock D X I (_root_.GlobalTheory.LowerMembersRule.lowFock D X I)))) hS hR hG
 
 end GlobalTheory.PairLift
 

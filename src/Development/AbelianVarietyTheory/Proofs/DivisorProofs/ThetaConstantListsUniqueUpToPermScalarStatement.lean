@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SymTupOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaConstantUniqueAndLinearInSectionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaConstantUniqueAndLinearInSection
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -89,7 +89,7 @@ theorem theta_lists_unique : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCom
       SecM.ofSec G θ' = @id Γ((Over.mk x).left, ⊤) (GlobalTheory.ZH.fn a) • SecM.ofSec G θ →
       ThG G L ρ k θ p (GlobalTheory.ZH.fn c) → ThG G L ρ k θ' p (GlobalTheory.ZH.fn c') → c' = a * c :=
     fun k hk hkK θ θ' p a c c' hs hc hc' =>
-      (GlobalTheory.T.thetaConstant_unique_and_linear_in_section S G L ρ hL hρ g k K x θ θ' p a c c' hk hkK hpol hs hc).1 hc'
+      (_root_.GlobalTheory.UMin.thG_smul_iff S G L ρ hL hρ g k K x θ θ' p a c c' hk hkK hpol hs hc).1 hc'
   have gen : ∀ θ θ' : SecAt G L x, IsGenSec G L _ θ →
       ∃ a : K, SecM.ofSec G θ' = @id Γ((Over.mk x).left, ⊤) (GlobalTheory.ZH.fn a) • SecM.ofSec G θ := by
     intro θ θ' h

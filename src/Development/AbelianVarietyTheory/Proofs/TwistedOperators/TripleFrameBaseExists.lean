@@ -16,7 +16,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDouble
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinitePlaceVacuumAnyDarbouxCoordinatesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNegConjMemberHermitianLatticeSpaceData
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalDarbouxCoordinatesTensorHermitian
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTransportAdelicSchwartzThetaTransStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTransportAdelicSchwartzThetaTrans
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GridSquareSkewSumSpaceIsSkewHermitianSelfDual
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianSelfDualLatticeSpaceFormHermitianNondeg
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledBlockSumSelfDualTraceSkewForm
@@ -24,16 +24,18 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewHermitia
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransportedWeilDatumIsUnitaryAdelicSchwartzStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransportedWeilDatumKeepsAdmissibleFormsStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharacterUnramifiedOffBad
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsTransposeGramCoordinateHomeomorphSymplectiStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUnitaryEquivConjOfGramTransposeEqNegStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUnitaryEquivInvTransposeOfGramInvStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsTransposeGramCoordinateHomeomorphSymplecti
+public import Formalism.LocalToGlobal.BesselHermitianTheta.TiedWeil
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUnitaryEquivConjOfGramTransposeEqNeg
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUnitaryEquivInvTransposeOfGramInv
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeCharUnramifiedAtCofinitelyManyPlacesStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeCharUnramifiedPlaceOfUnramifiedOnePrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsWeilDatumCompGroupSwappingSymplecticEquivStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsWeilDatumCompGroupSwappingSymplecticEquiv
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemClosedSubgroupOfLocalStabilizerPairs
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NonemptyAlgHomCompletionOfSplitPlaceStatement
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NsmulProjectionXColumnsMemSelfDualLattice
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SymplecticHomTransposeGramDarbouxStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SymplecticHomTransposeGramDarboux
 public import Development.AbelianVarietyTheory.Statements.HaarFundamentalDomain.ExistsHaarFundDom
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleWeightMiddleEntries
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasChr
@@ -108,9 +110,9 @@ theorem exists_swap {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (S T S' T' : HSp D
           ω' (g', h') f (((HMul.hMul x ((S.gram⁻¹).map (incA D)) : Matrix (Fin T.rank) (Fin S.rank) (AE D))ᵀ).submatrix e₁ e₂) =
           ω (g, h) (fun y : Matrix (Fin T.rank) (Fin S.rank) (AE D) =>
             f (((HMul.hMul y ((S.gram⁻¹).map (incA D)) : Matrix (Fin T.rank) (Fin S.rank) (AE D))ᵀ).submatrix e₁ e₂)) x := by
-  obtain ⟨φ', c1, q1, m1, s1, d1⟩ := GlobalTheory.T.exists_unitary_equiv_conj_of_gram_transpose_eq_neg D S T' e₁ hT'
-  obtain ⟨φ, c2, q2, m2, s2, d2⟩ := GlobalTheory.T.exists_unitary_equiv_inv_transpose_of_gram_inv D T S' e₂ hS'
-  obtain ⟨L, hL, hLs, cL, cL', rL, iL, fL⟩ := GlobalTheory.T.exists_transposeGram_coordinate_homeomorph_symplectic D S T S' T' e₁ e₂
+  obtain ⟨φ', c1, q1, m1, s1, d1⟩ := _root_.GlobalTheory.GrpConj.exists_conj_equiv D S T' e₁ hT'
+  obtain ⟨φ, c2, q2, m2, s2, d2⟩ := _root_.GlobalTheory.InvTransposeIso.grp_contra D T S' e₂ hS'
+  obtain ⟨L, hL, hLs, cL, cL', rL, iL, fL⟩ := _root_.GlobalTheory.Twist.exists_transposeGram_coordinate_homeomorph_symplectic.coordsLin_spec D S T S' T' e₁ e₂
   have m1' : ∀ h, Formalism.L2.Theta.mt T' h = ((Formalism.L2.Theta.mt S (φ' h)).map (cA D)).submatrix e₁ e₁ := fun h => by
     ext i j
     have t3 := congrArg (cA D) (congrFun (congrFun (m1 h) i) j)
@@ -135,9 +137,9 @@ theorem exists_swap {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (S T S' T' : HSp D
     rw [hL, u2, Matrix.transpose_mul, Matrix.transpose_mul, ← Matrix.submatrix_mul_equiv _ _ _ e₂.symm,
       ← Matrix.submatrix_mul_equiv _ _ _ e₁.symm, u3]
     simp only [Matrix.mul_assoc, u1]
-  obtain ⟨ω', hw, hω'⟩ := GlobalTheory.T.isWeilDatum_comp_group_swapping_symplectic_equiv D ψ S T S' T' (by simpa using Fintype.card_congr e₂)
+  obtain ⟨ω', hw, hω'⟩ := _root_.GlobalTheory.SwapWeil.isWeilDatumO_swap D ψ S T S' T' (by simpa using Fintype.card_congr e₂)
     (by simpa using Fintype.card_congr e₁) L φ.toMonoidHom
-    φ'.toMonoidHom cL cL' rL (fun x y => by rw [hL, hL]; exact GlobalTheory.T.symplectic_hom_transpose_gram_darboux D S T S' T' e₁ e₂ hT' hS' x y) iL fL c2 c1 q2 q1
+    φ'.toMonoidHom cL cL' rL (fun x y => by rw [hL, hL]; exact _root_.GlobalTheory.DarbouxSymp.symplO_darboux D S T S' T' e₁ e₂ hT' hS' x y) iL fL c2 c1 q2 q1
     hact s2 s1 d2 d1 χS χT ω hω
   refine ⟨ω', hw, fun g h => ⟨φ.symm h, φ'.symm g, ?_, ?_, fun f x => ?_⟩⟩
   · rw [m1', MulEquiv.apply_symm_apply]
@@ -162,7 +164,7 @@ theorem exists_transport_isWeil {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (S T :
   have hT := hw.hecT
   have rS := hw.resS
   have rT := hw.resT
-  obtain ⟨om, hom⟩ := GlobalTheory.T.exists_weilDatum_transport_adelicSchwartz_thetaTransform D ψ hψ S T χ' χ hS hT rS rT Y.J Z.J (-1) eA eB _ Mo.co hMo.rat ω' hw
+  obtain ⟨om, hom⟩ := _root_.GlobalTheory.ThetaTransform.exists_isTransport D ψ hψ S T χ' χ hS hT rS rT Y.J Z.J (-1) eA eB _ Mo.co hMo.rat ω' hw
   have k2 := GlobalTheory.T.transportedWeil_preserves_schwartz_heisenberg_equivariant D ψ hψ S T χ' χ hS hT rS rT Y.J Z.J (-1) eA eB _ Mo.co hMo.rat ω' hw om hom
   have k3 := GlobalTheory.T.transportedWeilDatum_keeps_admissible_forms D ψ hψ S T χ' χ hS hT rS rT Y.J Z.J (-1) eA eB _ Mo.co hMo.rat ω' hw om hom
   have k4 := GlobalTheory.T.transportedWeilDatum_isUnitary_adelicSchwartz D ψ hψ S T χ' χ hS hT rS rT Y.J Z.J (-1) eA eB _ Mo.co hMo.rat ω' hw om hom

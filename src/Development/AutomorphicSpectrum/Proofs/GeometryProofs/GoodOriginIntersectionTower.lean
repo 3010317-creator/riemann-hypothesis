@@ -76,7 +76,8 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsU
 public import Development.AutomorphicSpectrum.Statements.MetricStatements.AgreementIffGuarded
 public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.PullCst
 public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.PullDegSum
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ProjectionFormulaOfArithSystemStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.ContractMixedFieldStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ProjectionFormulaOfArithSystem
 public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.GenericFibreIntersectionPullback
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FlagIndices
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PMuHomDensityNonneg
@@ -176,7 +177,6 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.I
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.LineIsomorphismDefectFunction
 import Mathlib.Tactic.Monotonicity.Lemmas
 import GroundTheory.HeightsAndTheta.Heights.Intersections.TableDegreeThreeBase
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.ProjectionFormulaOfArithSystem
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedHodgeMetricSmooth
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
@@ -1702,7 +1702,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.ptsIntegral_fibre_append_eq_mu
       exact GroundTheory.Heights₂.Heights.Inter.IsPullHerm.isSmoothHerm hv (hLL' j) (hL j)
     · rw [Fin.append_right]
       exact hN j
-  have h := GlobalTheory.T.projection_formula_of_arith_system ⟨II, hII⟩ II hII.1 K ρ K' ρ' κ v P' (d + 1) r G Jf
+  have h := _root_.GlobalTheory.CompanionTheory.Ar.Giv.ProjF.projFormula ⟨II, hII⟩ II hII.1 K ρ K' ρ' κ v P' (d + 1) r G Jf
     (Fin.snoc (α := fun _ => HermLine ρ) L (cst ρ)) (Fin.snoc (α := fun _ => HermLine ρ') L' (cst ρ')) N hv hP' hP hJ
     (LevelTowerAlt.snoc_cst_smooth L hL)
     (fun j => by

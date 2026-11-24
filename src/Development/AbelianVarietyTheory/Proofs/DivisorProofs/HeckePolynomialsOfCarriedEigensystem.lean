@@ -4,9 +4,9 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.Normal
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FamilySplitOperatorsEqLabelOperatorsModels
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
 public import Formalism.LocalToGlobal.IndefiniteReal.ZeroPartEigenvalueConvention
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoreClausesOfWeakCharacterisationStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoreClausesOfWeakCharacterisation
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DualPolyTwistedHeckePolyEqContragredientStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSphericalOperatorsRowsNormalEigenspacesStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSphericalOperatorsRowsNormalEigenspaces
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSplitPrimeHeckeTransferCompositeLiftStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LiftSplitHeckePolysEqTransferResidualPolys
 public import Formalism.LocalToGlobal.IndefiniteReal.ConjSubConjSub
@@ -46,10 +46,10 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelOperatorsAtPrimeOffLevelDatumStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelOperatorsAtPrimeOffLevelDatum
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MatchedSphericalPairsCommuteCompositeLiftStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperatorsStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesPropertiesStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperators
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
@@ -135,8 +135,8 @@ theorem exists_sys_of_mem_span {K V H I J : Type} [Field K] [AddCommGroup V] [Mo
 
 theorem hecke_polys_of_carries : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type} {A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3) {s : ℕ}, GlobalTheory.Chain.LiftInteg D → A3.fam3.Ok3 s → R.WeakCharacterisation F → R.toRealDat.ExAt → SchurAll R.toRealDat → (∀ p, ∀ w ∈ R.EEp3 p, LinearMap.adjoint (R.Th A3.A.μ0) w = 0 → w = 0) → ∀ p c, R.Carries p c → ∀ P ∈ A3.A.ok A3.A.μ0, RealDat.polE (A := A3.A) p.1.1 P = Formalism.L2.Col.heckePolyOf D.R.r (A3.A.q P) (fun k => c (R.pl P) (dualLab (splitLab D.R.r k))) ∧ RealDat.polW (A := A3.A) p.1.1 P = Formalism.L2.Col.heckePolyOf D.R.r (A3.A.q P) (fun k => c (R.pl P) (splitLab D.R.r k)) := by
   intro D G _ _ Pl0 I0 T A3 Ks _ _ _ R F s hI hok hW hEx hS hinj p c hcar P hP
-  obtain ⟨hC, hSF, hEE, -⟩ := GlobalTheory.T.core_clauses_of_weak_characterisation R F hW hEx
-  obtain ⟨hG, hcj, hq⟩ := (GlobalTheory.T.theta_lift_levels_good_primes_properties R.toRealDat F.lv2 hC.lev).2.2.2 hC.fam A3.A.μ0 P hP
+  obtain ⟨hC, hSF, hEE, -⟩ := _root_.GlobalTheory.CoreOfWeak.core_of_weak R F hW hEx
+  obtain ⟨hG, hcj, hq⟩ := (_root_.GlobalTheory.GoodPrimes.good_primes R.toRealDat F.lv2 hC.lev).2.2.2 hC.fam A3.A.μ0 P hP
   have hq0 : (A3.A.q P : ℂ) ≠ 0 := by
     rw [hq, Nat.cast_ne_zero, Ne, Ideal.absNorm_eq_zero_iff]
     exact (R.pl P).ne_bot
@@ -155,7 +155,7 @@ theorem hecke_polys_of_carries : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {
     (le_iSup₂ (f := fun c (_ : R.Carries p c) => R.EEc c) c hcar) hw
   have hv0 : LinearMap.adjoint (R.Th A3.A.μ0) w ≠ 0 := fun h0 => hw0 (hinj p w hwp h0)
   have hwE : w ∈ EEc R.toRealDat R.SF c := (hEE c) ▸ hw
-  obtain ⟨hX, hXo, hXn⟩ := (GlobalTheory.T.realization_family_normal_operators R.toRealDat F.lv2 hC.lev hC.fam hC.models).1 A3.A.μ0
+  obtain ⟨hX, hXo, hXn⟩ := (_root_.GlobalTheory.DefiniteOps.definite_ops R.toRealDat F.lv2 hC.lev hC.fam hC.models).1 A3.A.μ0
   obtain ⟨zE, hmE, hpE⟩ := GlobalTheory.T.exists_splitPrime_heckeTransfer_compositeLift R.toRealDat F.lv2 hI hC hS A3.A.μ0 ⟨P, hP⟩
   have heig : ∀ k : Fin (D.sp.X'.rank + 1), hX (R.pl P) (Finsupp.single (splitLab D.sp.X'.rank k) 1)
       (LinearMap.adjoint (R.Th A3.A.μ0) w) = GlobalTheory.Hk3.evC (Yc D 0) (R.pl P) (fun d => c (R.pl P) (dualLab d))
@@ -187,15 +187,15 @@ theorem hecke_polys_of_carries : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {
       have h5 := hxe ⟨k, Nat.lt_succ_iff.2 hk⟩
       exact (h5.trans (GlobalTheory.Hk3.Link.evC_splitC (Yc D 0) (R.pl P) hcj _ _)).symm
 
-  obtain ⟨h, hEo, -, -, hev, -⟩ := GlobalTheory.T.exists_sphericalOperators_rows_normal_eigenspaces R.toRealDat F.lv2 hC hS R.SF hSF
+  obtain ⟨h, hEo, -, -, hev, -⟩ := _root_.GlobalTheory.Hk3.OpsRows.exists_opsE R.toRealDat F.lv2 hC hS R.SF hSF
   have hne : R.HE.e w ≠ 0 := fun h0 => hw0 ((hC.models.HE).1 (h0.trans (map_zero _).symm))
   obtain ⟨v, hv⟩ : ∃ v, R.HE.e w v ≠ 0 := by
     by_contra hcon
     exact hne (MultilinearMap.ext fun v => not_not.1 fun hv => hcon ⟨v, hv⟩)
   obtain ⟨cc, hβ⟩ := hC.lev.βY 0 hm0
-  have hlev := (GlobalTheory.T.level_operators_at_prime_off_level_datum (Yc D 0) (R.βY 0) (R.ΛY 0) _ (R.dat0 R.triv) hβ (R.pl P)
+  have hlev := (_root_.GlobalTheory.LevOp.level_operators (Yc D 0) (R.βY 0) (R.ΛY 0) _ (R.dat0 R.triv) hβ (R.pl P)
     (by
-      have hN := ((GlobalTheory.T.theta_lift_levels_good_primes_properties R.toRealDat F.lv2 hC.lev).2.1 A3.A.μ0 (R.pl P) hG).1
+      have hN := ((_root_.GlobalTheory.GoodPrimes.good_primes R.toRealDat F.lv2 hC.lev).2.1 A3.A.μ0 (R.pl P) hG).1
       rw [Nat.cast_pow]
       intro hmem
       rcases Nat.eq_zero_or_pos cc with h0 | h0

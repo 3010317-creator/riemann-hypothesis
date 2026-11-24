@@ -1,11 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrT
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinitePartZeroNeOfIsVacuumOrientedModelStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinitePartZeroNeOfIsVacuumOrientedModel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockJetsUnitVacuumEqScaledThetaJets
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockMonomialAtOriginGaussianEntireOrthonormalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramAtPosDef
+import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+import Formalism.SharpRestriction.GlobalSchurBounds.GL3Theta
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockMonomialAtOriginGaussianEntireOrthonormal
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockPureTensorAtOriginEqThetaSeries
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVacuumRealRestrictionGaussianEntireStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVacuumRealRestrictionGaussianEntire
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KernelLatticesFormSelfDualTriples
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LineDerivListCompForm
@@ -13,7 +17,7 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.Spherical
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaSpaceSelfDualPairAtMostLine
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.VacuumTranslateConjugateJetBound
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.VacuumUnderAdelicPairModulusOne
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitVacuumEntireFactorIsThetaMovedLatticesStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitVacuumEntireFactorIsThetaMovedLattices
 import Formalism.LocalToGlobal.GlobalTheory.GL3.PIopIso
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -93,8 +97,8 @@ theorem fock_jets_moved : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : In
   have hsS := GlobalTheory.FockPos.cart_one frS hS hcS
   have hsT := GlobalTheory.FockPos.cart_one frT hT hcT
   subst hsS hsT
-  obtain ⟨Φ, hΦd, hreal⟩ := GlobalTheory.T.fockVacuum_real_restriction_gaussian_entire ψ θ S T frS frT _ _ hS hT f hf
-  have hTh := GlobalTheory.T.unitVacuumEntireFactor_isTheta_movedLattices ψ θ S T frS frT hS hT δ hC hδ Ls Lt hLs hLt f hf Φ hΦd hreal
+  obtain ⟨Φ, hΦd, hreal⟩ := _root_.GlobalTheory.FockPos.vacuum_real_entire ψ θ S T frS frT _ _ hS hT f hf
+  have hTh := _root_.GlobalTheory.ThetaLawMoved.theta_of_vacuum_moved ψ θ S T frS frT hS hT δ hC hδ Ls Lt hLs hLt f hf Φ hΦd hreal
   obtain ⟨Θ, hΘ⟩ : ∃ Θ : Formalism.MainNotions.TaylorLogMetric.VC D S.rank T.rank → ℂ, Θ = fun Y => Φ (δ⁻¹ • Y) := ⟨_, rfl⟩
   rw [← hΘ] at hTh
   have hΦeq : Φ = fun z => Θ (δ • z) := by
@@ -102,14 +106,14 @@ theorem fock_jets_moved : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : In
     simp only [hΘ, smul_smul, inv_mul_cancel₀ hδ, one_smul]
   refine ⟨Θ, hTh, ?_, fun k => ?_⟩
   · intro h0
-    obtain ⟨w, hw, hfw⟩ := GlobalTheory.T.exists_finitePartZero_ne_of_isVacuum_orientedModel ψ θ S T _ _ _ _ f hf
+    obtain ⟨w, hw, hfw⟩ := _root_.GlobalTheory.VacNonzeroReal.exists_finPart_zero_ne ψ θ S T _ _ _ _ f hf
     apply hfw
     have h1 : Φ (GlobalTheory.FockPos.zCo θ frS frT w) = 0 := by
       rw [hΦeq]
       exact congrFun h0 _
     rw [hreal w hw, h1, mul_zero]
   · have hdiff : Differentiable ℂ Θ := hTh.1
-    have hj := GlobalTheory.T.fockMonomial_at_origin_gaussian_entire_orthonormal ψ θ S T frS frT hf.1 hf.2.inf hS hT f Φ hΦd hreal k
+    have hj := _root_.GlobalTheory.FockPos.fock_monomial_zero_of_on ψ θ S T frS frT hf.1 hf.2.inf hS hT f Φ hΦd hreal k
     change pureTensorO ψ θ S T (fun _ => 1) (fun _ => 1) (GlobalTheory.FockPos.frAt frS) (GlobalTheory.FockPos.frAt frT) f
       (MvPolynomial.monomial k 1) 0 = _
     rw [hj, hΦeq, GlobalTheory.FockPos.applyAt0_monomial', GlobalTheory.FockPos.applyAt0_monomial',

@@ -5,9 +5,10 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdelicIsometries
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatSelfDualOfUnimod
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeLowerBlockVectorMultipleKernelTranslate
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentralUniformiserActsByDilationTameKernelStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NabBaseChange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentralUniformiserActsByDilationTameKernel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatThetaQuotientAtPrincipalLevelProof
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TameKernelVectorUnitMulDilatedFlatStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TameKernelVectorUnitMulDilatedFlat
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsCentAtScalar
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompAtMtOfMemGfC
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolShapeOfOverK
@@ -32,7 +33,6 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsKsFor
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LinearIndependentRowsMap
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LatticeHasSmallGenerators
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ReadInj
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NabBaseChange
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTraceLevelCompatibleProof
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SeriesRatSOf
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
@@ -414,9 +414,9 @@ theorem flatKer_holds : FlatKer := by
   obtain ⟨ϖ, hϖ0, hϖ⟩ := exists_unif' D.host.E B.de.Q
   have hϖE : (ϖ : D.host.E) ≠ 0 := by exact_mod_cast hϖ0
   obtain ⟨z, hz, hzm⟩ := GlobalTheory.CentScal.exists_isCentAt_scalar D i B.de.Q eQ heQ (ϖ : D.host.E) hϖE
-  obtain ⟨κ, hκ, hact⟩ := GlobalTheory.T.central_uniformiser_acts_by_dilation_tame_kernel D G Pl0 T0 A Ks R F hC hQG i hV ξ B.de.chi ξR B.de.Q ω φ hK hQt N hN hNQ
+  obtain ⟨κ, hκ, hact⟩ := _root_.GlobalTheory.BaseCmp.dilKer_of_ne_zero D G Pl0 T0 A Ks R F hC hQG i hV ξ B.de.chi ξR B.de.Q ω φ hK hQt N hN hNQ
     eg eQ fg heg heQ hfg ϖ hϖE hϖ z hzm
-  obtain ⟨Gc, hG, hSB, hφ⟩ := GlobalTheory.T.tameKernel_vector_unit_mul_dilated_flat D G Pl0 T0 A Ks R F hC hQG i hV ξ B.de.chi ξR B.de.Q ω φ hK hQt N hN hNQ
+  obtain ⟨Gc, hG, hSB, hφ⟩ := _root_.GlobalTheory.BaseCmp.liftKer_of_ne D G Pl0 T0 A Ks R F hC hQG i hV ξ B.de.chi ξR B.de.Q ω φ hK hQt N hN hNQ
     eg eQ fg heg heQ hfg ϖ hϖ0 hϖ
   obtain ⟨Tm, hTm⟩ := hflat.1
   have hvT := hflat.2 Tm hTm

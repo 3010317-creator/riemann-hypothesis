@@ -2,7 +2,8 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.SingularNullSets.WeakApproximationFinitePlace
 public import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.SingularNullSets.LToSA
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchwartzBoundFiniteInfiniteStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchwartzBoundFiniteInfinite
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemClosureUnitary
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FourierZeroHolds
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MeanTransport
@@ -29,7 +30,8 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeCha
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductMeasureStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductThetaOfSchwartzTensor
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchwartzTensorDensity
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryUnnSubgroupEqTopOfLeviUnipotentWeylStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.SiegelWeil₂.SiegelWeilUnitarySchrodinger
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryUnnSubgroupEqTopOfLeviUnipotentWeyl
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CharacterQuadraticFormIdentity
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CongrOverOfFrame
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsEqSmulOfInvariant
@@ -514,7 +516,7 @@ theorem PositivityTheory.Rg.Rsw.L.muId : IdemEx → GoodEv → BumpEx → ThProd
       obtain ⟨κ, hκ⟩ := hU D W.rank t B b₀ hdet S e he ν _ hν hOrb (map_ne_zero ν₂ _ e (hS₅ S h5))
       refine ⟨((κ : ℝ) : ℂ), fun Φ Ω hΩ hcs hΦg hΩg => ?_⟩
       rw [hint Φ hΦg Ω hΩ hΩg hcs, hκ, integral_smul_nnreal_measure,
-        transfer hn ν₂ hyv Φ.1 (Ω 1) (GlobalTheory.T.schwartz_bound_finite_infinite D θ hθ _ _ Φ.1 Φ.2).1 (hΩc Ω hΩ) hΦg hΩg,
+        transfer hn ν₂ hyv Φ.1 (Ω 1) (_root_.GlobalTheory.CompanionTheory.WeilTheta.schwartzA_continuous_and_dominated D θ hθ _ _ Φ.1 Φ.2).1 (hΩc Ω hΩ) hΦg hΩg,
         NNReal.smul_def, Complex.real_smul]
     by_cases hex : ∃ (Φ₀ : schwartzA θ B.rank n) (Ω₀ : G D t → Mx D W.rank t → ℂ), IsTh ψ χ θ b₀ m.μ Ω₀ ∧
         HasCompactSupport (Ω₀ 1) ∧ ∫ z, Φ₀.1 (jn hn z.1 z.2) * conj (Ω₀ 1 (yv B b₀ z)) ∂ν₂ ≠ 0
@@ -1879,7 +1881,7 @@ theorem geng : GenG := by
       one_mem' := ⟨fun x hx => by rwa [one_mul], fun x hx => by rwa [inv_one, one_mul]⟩
       inv_mem' := fun {g} hg => ⟨hg.2, fun x hx => by rw [inv_inv]; exact hg.1 x hx⟩ }
   have hS : S = ⊤ := by
-    refine GlobalTheory.T.unitaryUnn_subgroup_eq_top_of_leviUnipotentWeyl D n S ?_ ?_ ?_
+    refine _root_.GlobalTheory.StdUnn.eq_top_of_levi_unip_weyl D n S ?_ ?_ ?_
     · intro g a hg
       refine ⟨hA g (Or.inr (Or.inl ⟨a, hg⟩)), hA g⁻¹ (Or.inr (Or.inl ⟨a⁻¹, ?_⟩))⟩
       rw [inv_inv]

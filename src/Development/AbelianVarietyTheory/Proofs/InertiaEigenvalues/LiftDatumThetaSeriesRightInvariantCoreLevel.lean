@@ -6,7 +6,8 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.Normal
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ConjTupRefl
 public import Formalism.LocalToGlobal.IndefiniteReal.DoubleCosetOperators.RatDatOfReal
 public import Formalism.SharpRestriction.Divisibility.LiftErrorLocal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterEmbeddingCompatStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.FWExist
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterEmbeddingCompat
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHalfOfBasePins
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeffSpaceLevelFixesFockVectors
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
@@ -85,7 +86,7 @@ theorem ser_right_inv_levelK : ∀ (D : D7) (Γ : Type) [Group Γ] [Fintype Γ] 
   set k' : GA D (Wc D j) := cast (congrArg (GA D) hV) k with hk'def
   have hkk : cast (congrArg (GA D) hV.symm) k' = k := by rw [hk'def]; simp
   have hlift : Formalism.IndefR.Lev.IsLevelLift (Wc D j) (Rl.toRealDat.βW j) (Rl.toRealDat.datWp j Rl.toRealDat.triv) 1 k' :=
-    (GlobalTheory.T.level_character_embedding_compat T Rl.toRealDat κ v₀ hcore.lev hti hpb j T.σ₀ T.toCore.good_σ₀ hV k').2 (by rw [hkk]; exact hk)
+    (_root_.GlobalTheory.LiftLevel.isLift_one_iff_mem_level T Rl.toRealDat κ v₀ hcore.lev hti hpb j T.σ₀ T.toCore.good_σ₀ hV k').2 (by rw [hkk]; exact hk)
   have hv : Rl.toRealDat.ωP j A3.A.μ0 (1, k') (Rl.toRealDat.vP j A3.A.μ0) = (1 : ℂ) • Rl.toRealDat.vP j A3.A.μ0 := by
     have e := GlobalTheory.T.weilAction_liftPair_stepVector_invLevelChar Rl.toRealDat hcore.lev hcore.models.inf hcore.thP.ωP hcore.thP.vP j A3.A.μ0 1 1 k'
       (GlobalTheory.RawLift.LevelFix.realDatum_identity_lifts_identity Rl.toRealDat j A3.A.μ0) hlift

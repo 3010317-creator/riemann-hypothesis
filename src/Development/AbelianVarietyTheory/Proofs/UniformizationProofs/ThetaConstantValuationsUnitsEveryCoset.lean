@@ -7,7 +7,7 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValua
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.PeriodicValuation
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsNsmulIffEq
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RelationsAreFunctions
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExactTermAfterTorsionStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExactTermAfterTorsion
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsLeOnFinset
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.GtOntoDivisibleKernel
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTorsionIdentificationWithPairing
@@ -217,7 +217,7 @@ theorem main : LL → TwistBCSpanStatement → TWM.VRatioGtStatement → TWState
     exact absurd (by exact_mod_cast this) q0.not_ge
   · have hB := D.tau_bimult
     obtain ⟨d, rfl⟩ := hnm
-    obtain ⟨h, o, g₂, ho, hh, hg₂, hv₂⟩ := GlobalTheory.T.exists_nsmul_add_decomp_with_coef_valuation hL h₁ h₂ h₃ h₄ V hc ϖ hϖ D Q hQ F v hv ϑ hP n hn
+    obtain ⟨h, o, g₂, ho, hh, hg₂, hv₂⟩ := _root_.GlobalTheory.UT.ExactTerm.exact_term_after_torsion hL h₁ h₂ h₃ h₄ V hc ϖ hϖ D Q hQ F v hv ϑ hP n hn
       (isUnit_of_mul_isUnit_left (by rwa [Nat.cast_mul] at hu)) ((n * d) • p.g) 0
     obtain ⟨h', hh'⟩ := (gt_onto_divisible_kernel hL V _ hA D F).2.1 (n * d) hm.pos h
     rw [isZero_iff_eq] at ho

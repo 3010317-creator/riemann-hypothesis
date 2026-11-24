@@ -15,11 +15,12 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Frame
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HolomorphicFamilyLowLieActionStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LowestKTypeCoefficientWeightEqMinorWeightsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LowestWeightVectorTransferStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaLiftInfinityTypesAtRealPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilMaximalCompactFockSubstitutionCharacterStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.InfinityTypes
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaLiftInfinityTypesAtRealPlace
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilMaximalCompactFockSubstitutionCharacter
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompAtMtEqInfMat
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsFockVacAtOfIsThetaAt
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.InfinityTypes
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ComplexEmbeddingHermitianQuadrupleSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -56,7 +57,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialActionOneMulAdjointStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaWeightArithmeticAtPlaceProofStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaWeightArithmeticAtPlaceProof
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InfPartOneSubEInfSmul
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.Polynomial.Basic
@@ -356,15 +357,15 @@ theorem exists_ioP : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type
   obtain ⟨x₁, x₂, x₃, hx⟩ := _root_.GlobalTheory.JointHarm.weights_of_minors D i (sg0 D A) (sgAt_mk _ R.hv0) (R.MW i (sg0 D A)) (hM.order i)
   have hrk : (Wc D i).rank = D.R.r := D.sp.W_rank _ (Nat.le_add_left _ _) i.2
   have hpq : ∀ τ, ((Wc D i).sig (tauE D τ)).1 + ((Wc D i).sig (tauE D τ)).2 = (Wc D i).rank := fun τ =>
-    (GlobalTheory.T.thetaWeightArithmeticAtPlace_proof D i τ).rank.1.trans hrk.symm
+    (_root_.GlobalTheory.PairWeightArith.arithAt D i τ).rank.1.trans hrk.symm
   obtain ⟨io, h1, h2, h3⟩ := exists_io_poly D (Vc D i) (Wc D i) R.θ _ (R.MW i (sg0 D A)) (R.cV i) _ (c0L i) hθ
     (hM.cV i) (hT.mapL i) (R.BV i) hBu _ _ _ _ x₁ x₂ x₃ (hrk.le.trans (r_le_V i)) hpq (hM.order i)
-    (fun τ => (GlobalTheory.T.thetaWeightArithmeticAtPlace_proof D i τ).aPlus_antitone) (fun τ => (GlobalTheory.T.thetaWeightArithmeticAtPlace_proof D i τ).aM_anti) (fun τ => (hx τ).2.2.2.1)
+    (fun τ => (_root_.GlobalTheory.PairWeightArith.arithAt D i τ).aPlus_antitone) (fun τ => (_root_.GlobalTheory.PairWeightArith.arithAt D i τ).aM_anti) (fun τ => (hx τ).2.2.2.1)
     (fun τ => (hx τ).2.2.2.2)
   refine ⟨io, fun t => ?_⟩
-  have hact := GlobalTheory.T.weil_maximalCompact_fock_substitution_character D R.ψ R.θ (Vc D i) (Wc D i) _ _ (R.ωP i t) _ (R.MW i (sg0 D A)) (R.BV i) (hω i t) hθ
-    (D.sp.V_sig _) (D.sp.W_sig _) hBS _ _ hpq (hM.order i) _ _ (fun τ => (GlobalTheory.T.thetaLiftInfinityTypes_atRealPlace D T R.toLevCh A.μ0 hL i t τ).chiV)
-    (fun τ => (GlobalTheory.T.thetaLiftInfinityTypes_atRealPlace D T R.toLevCh A.μ0 hL i t τ).chiW) x₁ x₂ x₃ (fun τ => (hx τ).1) (fun τ => (hx τ).2.1)
+  have hact := _root_.GlobalTheory.FockCompactAction.om_pureTensorO_eq_fact D R.ψ R.θ (Vc D i) (Wc D i) _ _ (R.ωP i t) _ (R.MW i (sg0 D A)) (R.BV i) (hω i t) hθ
+    (D.sp.V_sig _) (D.sp.W_sig _) hBS _ _ hpq (hM.order i) _ _ (fun τ => (_root_.GlobalTheory.PairInfTypes.infTypesAt D T R.toLevCh A.μ0 hL i t τ).chiV)
+    (fun τ => (_root_.GlobalTheory.PairInfTypes.infTypesAt D T R.toLevCh A.μ0 hL i t τ).chiW) x₁ x₂ x₃ (fun τ => (hx τ).1) (fun τ => (hx τ).2.1)
     (fun τ => (hx τ).2.2.1) _ (hth i t)
     (GlobalTheory.DatumFock.isFockVacAt_thPVec _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ (hv i t) (hth i t))
   have hfr : ∀ τ, (R.MW i (sg0 D A)).fr τ * ((R.MW i (sg0 D A)).fr τ)⁻¹ = 1 := fun τ =>

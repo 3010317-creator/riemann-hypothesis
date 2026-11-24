@@ -1,7 +1,8 @@
 module
 
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.IsDSOfIsDG
-public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.FrechetContinuousContinuousOnOrbitHasDerivAtStatement
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.FrechetContinuousContinuousOnOrbitHasDerivAt
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DstInvContinuousOn
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.UhMeasurableSet
 import Mathlib.Algebra.Order.Floor.Extended

@@ -2,7 +2,9 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameReading.ExpToSat
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.PairwiseDisjointCell
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResidueCardEqAbsNormStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResidueCardEqAbsNorm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -131,7 +133,7 @@ theorem dlBridge' : DlBridge := by
   refine ⟨hu, fun N x => ?_⟩
   set q : ℝ := ((qV E w : ℕ) : ℝ) with hq
   have hn : nabs (w.adicCompletion E) ϖ = q⁻¹ := by
-    rw [GlobalTheory.GLDoubling.nabs_unif hu, GlobalTheory.T.residue_card_eq_abs_norm]
+    rw [GlobalTheory.GLDoubling.nabs_unif hu, _root_.GlobalTheory.CompanionTheory.ResCardAbsNorm.resCard_completion_eq_absNorm]
     rfl
   have hqpos : 0 < q := by
     have := nabs_pos' (w.adicCompletion E) ϖ

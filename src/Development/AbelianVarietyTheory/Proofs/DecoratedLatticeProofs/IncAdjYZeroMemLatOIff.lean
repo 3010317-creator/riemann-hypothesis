@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.LineLatAt
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.SingleMemIdAt
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealCompletionPropertiesAtPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealCompletionPropertiesAtPlace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorDisjointSupportSmulAdd
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHomLatticeCompletionIffSupportedMaps
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PeriodIdealZpowCompletionAdeleConjIff
@@ -92,7 +92,7 @@ theorem colMul_jY_mem_latA_iff : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), 
       (∀ t ∈ idAt D (· = v), colMul d.jY i t ∈ latV S L (· = v) ↔ cA D t ∈ idV 𝔟⁻¹ v) →
       ∀ t ∈ idAt D (· = v), colMul d.jY i t ∈ latA S L (· = v) ↔ cA D t ∈ idV ((D.host.AAbar : FI D) * 𝔟⁻¹) v := by
   intro D ψ hψ S S₀ ρ d L 𝔟 v i h𝔟 hL t ht
-  obtain ⟨-, h2, -, h4, -, -, h7⟩ := GlobalTheory.T.fractionalIdealCompletion_properties_at_place D ψ hψ v
+  obtain ⟨-, h2, -, h4, -, -, h7⟩ := _root_.GlobalTheory.SeeSaw.idV_props D ψ hψ v
   have hAAb : (D.host.AAbar : FI D) ≠ 0 := GlobalTheory.Member.LatSelfDual.AAbar_ne_zero D
   have hct := cA_mem_idAt'' ht
   have hconj : ∀ s, s ∈ idV (D.host.AA : FI D)⁻¹ v ↔ cA D s ∈ idV (D.host.AAbar : FI D)⁻¹ v := by

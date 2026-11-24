@@ -4,8 +4,9 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemHomLat
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsDeltaPsi
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ActOMemFinSub
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeFinitelyGeneratedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeMultipleMemOpenLevelStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeFinitelyGenerated
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeMultipleMemOpenLevel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfFinite
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsHeisTrivial
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanHeisenbergTranslatesOfLatticeVacuaEqTop
@@ -431,7 +432,7 @@ theorem span_vacua (hψ : IsStdChar D ψ (-1)) (he : e * e = e) (hce : cA D e = 
   obtain ⟨w, hw⟩ := exists_w D
   have hA := selfDual_latF (GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T _ _ hψ hS hT).1
   have hspan := _root_.GlobalTheory.FinWeil.span_translates_vacua (isHeis_opF hψ.1 S T hw) _ hA
-    (smooth_theta hψ.1 hS hT hw hA (GlobalTheory.T.completedHomLattice_multiple_mem_open_level D S T _ _ hS hT (GlobalTheory.T.completedHomLattice_finitelyGenerated D S T _ _ hS hT)).1)
+    (smooth_theta hψ.1 hS hT hw hA (_root_.GlobalTheory.LatLevel.level_of_generators D S T _ _ hS hT (_root_.GlobalTheory.LatFinGen.latO_finitely_generated D S T _ _ hS hT)).1)
   rw [GlobalTheory.PlaceModel.coe_latFrame, GlobalTheory.PlaceModel.coe_latFrame] at hspan
   rw [eq_top_iff, ← hspan, Submodule.span_le]
   rintro _ ⟨x, s, hs, rfl⟩

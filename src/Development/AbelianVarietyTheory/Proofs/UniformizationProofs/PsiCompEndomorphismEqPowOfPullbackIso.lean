@@ -11,8 +11,8 @@ public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.Exist
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExpBijFAndExpandsFLin
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExpansionPullbackSectionEndomorphismStatement
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.GtOntoDivisibleKernel
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.RosatiAdjointAbelianPartAndClassifyingMapLinearStatement
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformizationEndomorphismCalculusStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.RosatiAdjointAbelianPartAndClassifyingMapLinear
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformizationEndomorphismCalculus
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ValueAtOrigin
 import Development.AbelianVarietyTheory.Statements.TorsionEndomorphisms.ExistsGeneratorOfIsField
 import Mathlib.Algebra.Order.Floor.Extended
@@ -383,7 +383,7 @@ theorem exists_pull_val : LL → AllUF fun {R} _ _ {I} {D} {A} {G} _ _ U F _ _ =
     rfl α hα hαn t t' s s' ht ht' htt κ hκ
   refine ⟨s', fun χ b z J hJ => ?_⟩
   obtain ⟨g, rfl⟩ := (gt_onto_divisible_kernel hL R I hI D F).1 b
-  obtain ⟨g', hg', -⟩ := (T.uniformizationEndomorphism_calculus hL R I hI D A G hG U F E E E).1 g
+  obtain ⟨g', hg', -⟩ := (_root_.GlobalTheory.EndCalc.end_calculus hL R I hI D A G hG U F E E E).1 g
   obtain ⟨w', hw'⟩ := (coef_basic R D.toPre F ν g).1
   obtain ⟨w, hw, hv⟩ := exists_gen D.toPre.P.isLB (φ' := DegPre.lineφ D.toPre F g'.b) (ε' := DegPre.lineε 1)
     (fun V _ h => by
@@ -426,7 +426,7 @@ theorem psi_pull : LL → TwistBCSpanStatement → TWM.VRatioGtStatement → TWS
   have := E.homB
   have : CharZero (FractionRing R) := charZero_of_injective_algebraMap (IsFractionRing.injective R _)
   have : CharZero F := charZero_of_injective_algebraMap (algebraMap (FractionRing R) F).injective
-  have hc := (T.rosatiAdjoint_abelianPart_and_classifying_map_linear hL R I hI D A G hG U E E' hR).2.2.2 y
+  have hc := (_root_.GlobalTheory.UT.rosatiAdj_and_c_linear_of_endU hL R I hI D A G hG U E E' hR).2.2.2 y
   have hc' : cP D.toPre (TF (R := R) F) (E'.h y) = cP D.toPre _ y ≫ E.aB := by rw [cP, hc, ← Category.assoc]; rfl
   obtain ⟨s, hs⟩ := FamFree.exists_fam_support (D := D.toPre) (F := F) hGF hL.2.1.secTwist D.tau_bimult le_rfl 0
   obtain ⟨x, j, hx, hu⟩ := exists_torsion_ne_zero hL.1 (s.s 0) ((hs 0).2 ⟨0, by simp⟩) (l := ν + 1) (by omega)

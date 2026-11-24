@@ -12,7 +12,7 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.NotMem
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsInvariantForm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTwistHeckeCharacters
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumFixesVacuumNonSplitPlaceUnramifiedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumFixesVacuumNonSplitPlaceUnramified
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsFundamentalDomainOfHaar
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousCoordSymm
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EvalVCutIdemOfNotMem
@@ -35,9 +35,10 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ToTWs
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GelfConstSmul
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicUnitaryTopology
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BesselCharacterGenericCharacterLawsStatement
+public import Formalism.LocalToGlobal.BesselHermitianTheta.TiedBessel
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BesselCharacterGenericCharacterLaws
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousAdelicUnitaryEmbedding
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsotropicUnipotentRadicalsRationalCocompactStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsotropicUnipotentRadicalsRationalCocompact
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PetIntOfCuspRapidDecay
 public import Formalism.LocalToGlobal.BesselHermitianTheta.Lemmas
 public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.AdelicUnitaryGroups
@@ -102,12 +103,13 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctionsStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctions
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQua
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsIsDetRoot
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasChr
 import Mathlib.Tactic.Basify
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.DenomBound
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsSigmaList
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsCuspFunIffConstTerm
 import Std.Tactic.BVDecide.Normalize.Prop
@@ -392,7 +394,7 @@ theorem twist_small (hψ : IsStdChar D ψ (-1)) {V W : HSp D} {χ χ' ν ν' : I
   obtain ⟨u, rfl⟩ := c.surjective w
   have hf : IsThetaFunO ψ V W fun x => Φ.1 (toTWsmall V W x) := by
     simpa only [hc] using (hth ψ Φ.1).2 (mem_ThS.1 Φ.2)
-  have k := congrFun (GlobalTheory.T.weilDatum_unique_on_thetaFunctions D ψ hψ V W _ _ o' o'' ho' ho'' (g, h) _ hf) u
+  have k := congrFun (_root_.GlobalTheory.WeilUniq.weilDatum_unique D ψ hψ V W _ _ o' o'' ho' ho'' (g, h) _ hf) u
   rw [e', e'' g h x y hx hy, LinearMap.smul_apply, e] at k
   rw [hc]
   exact k
@@ -467,7 +469,7 @@ theorem fixes_local {S T : HSp D} {χS χT : IdC D} {om : GA D S × GA D T →* 
     · have := (GlobalTheory.PlaceModel.idem_smul_mem hε he' heε' hu).1
       rwa [show cA D e • u = u from Matrix.ext hh] at this
   · obtain ⟨η, e1, e2, e3, e4⟩ := GlobalTheory.Mem.EtaTilde.exists_etaTilde D
-    have k := GlobalTheory.T.weilDatum_fixes_vacuum_nonSplitPlace_unramified D ψ H.std S T _ _ (GlobalTheory.PlaceModel.isSelfDualC_latFrame S) (GlobalTheory.PlaceModel.isSelfDualC_latFrame T)
+    have k := _root_.GlobalTheory.VacInert.fixesVacAt_of_unram D ψ H.std S T _ _ (GlobalTheory.PlaceModel.isSelfDualC_latFrame S) (GlobalTheory.PlaceModel.isSelfDualC_latFrame T)
       χS χT om ⟨η, e1, e4, e3, e2⟩ H v ε ⟨hε, hs⟩ uS uT g h sg sh
     rw [GlobalTheory.PlaceModel.coe_latFrame, GlobalTheory.PlaceModel.coe_latFrame] at k
     refine k (fun u => ⟨GlobalTheory.LatStabAct.actO_mem_latO_of_stab D S T _ hg _ hh _ u, fun hu => ?_⟩) f hf hv
@@ -808,14 +810,14 @@ theorem besInt : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, BesInt D 
     Function.Injective.countable (f := fun x : NFlagQ B d.e => (⟨x.1.1, x.2⟩ : GQ B))
       fun x y h => Subtype.ext (Subtype.ext (congrArg (fun z : GQ B => z.1) h))
   have : SecondCountableTopology (NFlag B d.e) := TopologicalSpace.Subtype.secondCountableTopology _
-  obtain ⟨⟨K, hK, hcov⟩, -⟩ := GlobalTheory.T.isotropic_unipotentRadicals_rational_cocompact D B d.ρ d.e d.e_iso
+  obtain ⟨⟨K, hK, hcov⟩, -⟩ := _root_.GlobalTheory.Mem.UnipCocompact.radicals_cocompact D B d.ρ d.e d.e_iso
   have hfin : μN 𝓕N < ⊤ := (measure_le_of_cover _ μN h𝓕N hcov).trans_lt hK.measure_lt_top
   obtain ⟨C, hC⟩ := GlobalTheory.CuspDecay.bounded_of_cuspForm hP hθ hF.1 hF.2
   obtain ⟨s', hs', hs'', -⟩ := GlobalTheory.Mem.UnitaryEmb.exists_embHom D B A ι hι
   have hsc : Continuous s := by
     rw [show s = s' from funext fun h => (hs'' h _).1 (hs h)]
     exact hs'
-  have hχ := (GlobalTheory.T.besselCharacter_generic_character_laws D ψ hψ A B ι hι d).2.2.1
+  have hχ := (_root_.GlobalTheory.BesselChar.besChar_laws D ψ hψ A B ι hι d).2.2.1
   have hb : ∀ (h : GA D A) (n : NFlag B d.e), ‖star (φ h) * F ((n : GA D B) * s h * (d.y : GA D B)) *
       star (besChar ψ d (n : GA D B))‖ ≤ ‖φ h‖ * C := fun h n => by
     rw [norm_mul, norm_mul, norm_star, norm_star, norm_besChar hψ.1.2.1, mul_one]
@@ -938,7 +940,7 @@ theorem emb_moderate {θ : InfF D} (hθ : IsInfFam θ) (hc : Continuous (emb hι
     {φ : GA D A → ℂ} (hφ : IsAutFunSm θ A φ) :
     ∃ (N : ℕ) (C : ℝ), ∀ g, ‖φ (emb hι g)‖ ≤ C * (GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.height θ B g : ℝ) ^ N := by
   obtain ⟨U, hU, hUφ⟩ := hφ.level
-  obtain ⟨S, C₀, M, hS⟩ := GlobalTheory.SmoothForms.reduction hθ ((GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ B) (U.comap (emb hι)) (hU.preimage hc)
+  obtain ⟨S, C₀, M, hS⟩ := GlobalTheory.SmoothForms.reduction hθ ((_root_.GlobalTheory.SmoothForms.RealPts.realPoints D).2 θ hθ B) (U.comap (emb hι)) (hU.preimage hc)
   obtain ⟨N, hN⟩ := hφ.growth
   choose C hC using hN [] (by simp)
   obtain ⟨c, hc0, hc⟩ := normInf_emb hι θ

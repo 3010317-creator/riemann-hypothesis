@@ -8,7 +8,7 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HESmulRig
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RationalFinitePartMemHomLatticeCompletionIff
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaLatticeImageRationalHomLattice
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCharOfTrace
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualImageOrthonormalFrameLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualImageOrthonormalFrameLattice
 public import Formalism.SharpRestriction.GlobalSchurBounds.GL3Theta
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EntireEqOfMonomialDerivationsAtZeroEq
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnitCharTriangle
@@ -68,9 +68,10 @@ import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Polynomial.Basic
 import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockMonomialAtOriginGaussianEntireOrthonormalStatement
+import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockMonomialAtOriginGaussianEntireOrthonormal
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockPureTensorAtOriginEqThetaSeries
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVacuumRealRestrictionGaussianEntireStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVacuumRealRestrictionGaussianEntire
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusHermitianFormScaledCoordinateEq
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.L2NormFundamentalDomain
@@ -164,8 +165,8 @@ theorem coord_mem_RL {S T : HSp D} (frS : GL (Fin S.rank) D.host.E) (frT : GL (F
 
 theorem mem_La_of_finRat : ∀ {D : D7} (S T : HSp D) (frS : GL (Fin S.rank) D.host.E) (frT : GL (Fin T.rank) D.host.E), Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) frS.1 * S.gram * frS.1 = 1 → Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) frT.1 * T.gram * frT.1 = 1 → ∀ (Ls : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)) (Lt : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)), SD D Ls → SD D Lt → ∀ (δ : ℂ) (v : Matrix (Fin T.rank) (Fin S.rank) D.host.E), GlobalTheory.VacUnique.finRat S T v ∈ latO S T (GlobalTheory.MovedDict.inV frS Ls) (GlobalTheory.MovedDict.inV frT Lt) (fun _ => True) → δ • (fun τ a b => ((GlobalTheory.FockPos.frAt frT τ)⁻¹ * Matrix.of (GlobalTheory.VacUnique.infRat S T v τ) * GlobalTheory.FockPos.frAt frS τ) a b) ∈ Formalism.MainNotions.TaylorLogMetric.La D (Formalism.MainNotions.TaylorLogMetric.tor0 D D.host.ccK δ) Ls Lt := by
   intro D S T frS frT hS hT Ls Lt hLs hLt δ v hv
-  obtain ⟨ΛS, hΛS, hSD⟩ := GlobalTheory.T.isSelfDual_image_orthonormalFrame_lattice S frS hS Ls hLs
-  obtain ⟨ΛT, hΛT, hTD⟩ := GlobalTheory.T.isSelfDual_image_orthonormalFrame_lattice T frT hT Lt hLt
+  obtain ⟨ΛS, hΛS, hSD⟩ := _root_.GlobalTheory.MovedDict.isSelfDualC_inV S frS hS Ls hLs
+  obtain ⟨ΛT, hΛT, hTD⟩ := _root_.GlobalTheory.MovedDict.isSelfDualC_inV T frT hT Lt hLt
   obtain ⟨ψ, hψ⟩ := GlobalTheory.StdAdelicChar.exists_isStdChar D
   rw [← hΛS, ← hΛT] at hv
   have hrat := (GlobalTheory.AdForm.RatLat.finTens_mem_iff hψ hSD hTD v).1 hv
@@ -449,12 +450,12 @@ theorem core (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T : HSp D)
   obtain rfl := cart_one frT hT hcT
   have hψ : IsStdChar D ψ (-1) := hF.1
   have hθ : IsInfFam θ := hF.2.inf
-  obtain ⟨ΛS, hΛSe, hΛS⟩ := GlobalTheory.T.isSelfDual_image_orthonormalFrame_lattice S frS hS Ls hLs
-  obtain ⟨ΛT, hΛTe, hΛT⟩ := GlobalTheory.T.isSelfDual_image_orthonormalFrame_lattice T frT hT Lt hLt
+  obtain ⟨ΛS, hΛSe, hΛS⟩ := _root_.GlobalTheory.MovedDict.isSelfDualC_inV S frS hS Ls hLs
+  obtain ⟨ΛT, hΛTe, hΛT⟩ := _root_.GlobalTheory.MovedDict.isSelfDualC_inV T frT hT Lt hLt
   rw [← hΛSe, ← hΛTe] at hF hw
   obtain ⟨M, ζ, hζ, hnM, heq⟩ := GlobalTheory.T.heisenberg_root_smul_finiteRational_latticeDecomp ψ S T ΛS ΛT hψ hΛS hΛT F hF.2.lat n hn w hw
   rw [hΛSe, hΛTe] at hnM
-  obtain ⟨Φ, hΦd, hΦ⟩ := GlobalTheory.T.fockVacuum_real_restriction_gaussian_entire ψ θ S T frS frT _ _ hS hT F hF
+  obtain ⟨Φ, hΦd, hΦ⟩ := _root_.GlobalTheory.FockPos.vacuum_real_entire ψ θ S T frS frT _ _ hS hT F hF
   set sc : ℂ := (((Real.sqrt (2 * Real.pi * Formalism.L2.Pj.xiR D) : ℝ) : ℂ)⁻¹) with hsc
   have hper : ∀ τ : D.what₂.Tau, GlobalTheory.FunObj.period δ τ = δ * sc := fun τ => by
     rw [GlobalTheory.FunObj.period, GlobalTheory.AdTh.Fock.norm_embedding_hostFormConstant_eq, div_eq_mul_inv]
@@ -469,7 +470,7 @@ theorem core (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T : HSp D)
     exact_mod_cast (Real.sqrt_pos.2 (by positivity)).ne'
   have hΦeq : Φ = fun z => c * Θ₀ (δ • z) := by
     refine GlobalTheory.T.entire_eq_of_monomial_derivations_at_zero_eq Φ _ hΦd ((hΘ.comp (differentiable_id.const_smul δ)).const_mul c) fun k => ?_
-    have h1 := GlobalTheory.T.fockMonomial_at_origin_gaussian_entire_orthonormal ψ θ S T frS frT hψ hθ hS hT F Φ hΦd hΦ k
+    have h1 := _root_.GlobalTheory.FockPos.fock_monomial_zero_of_on ψ θ S T frS frT hψ hθ hS hT F Φ hΦd hΦ k
     have h2 := hj k
     rw [applyAt0_scale Θ₀ hΘ c δ k]
     refine mul_left_cancel₀ (pow_ne_zero (k.sum fun _ n => n) hsc0) ?_
@@ -518,7 +519,7 @@ theorem core (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T : HSp D)
     simp only [e, Matrix.mul_neg, Matrix.neg_mul, Matrix.mul_smul, Matrix.smul_mul, Matrix.neg_apply, Matrix.smul_apply,
       smul_eq_mul, Pi.smul_apply, hX, nsmul_eq_mul]
     ring
-  · rw [GlobalTheory.T.fockMonomial_at_origin_gaussian_entire_orthonormal ψ θ S T frS frT hψ hθ hS hT _ Φ₁ hΦ₁d hR' k, hΦ₁eq, applyAt0_scale G hGd c δ k, hprod, mul_pow]
+  · rw [_root_.GlobalTheory.FockPos.fock_monomial_zero_of_on ψ θ S T frS frT hψ hθ hS hT _ Φ₁ hΦ₁d hR' k, hΦ₁eq, applyAt0_scale G hGd c δ k, hprod, mul_pow]
     ring
 
 end GlobalTheory.HeisTrans

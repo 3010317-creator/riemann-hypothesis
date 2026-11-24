@@ -26,7 +26,16 @@ public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.E
 public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.TateTwistFinitary
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IndEtOfForallFinset
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralSurjectionCechDescentTateTwist
-public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.EtaleCohomologyIndEtaleBaseChange
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HZeroPullbackTwistBijectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubsingletonEtaleCohomologyGenericFibreHenselianStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCohomologyGenericFibreHenselLineSubsingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleEquivalenceSchemeOfStrictlyHenselianStalks
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIndEtaleAlgebraOfStrictlyHenselianEtaleStalkAf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistFinitaryStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PositiveDegreeClassesDieOnEtaleCover
+public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.BijectiveRestrictPointsOfEtaleOfHenselian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyIndEtaleBaseChange
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelwiseEquivalenceIsEquivalenceStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistLocalToGlobalStrictlyHenselianStatement
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.KunnethLefschetz.ProjectiveBaseChange.AdicTopOf
@@ -121,7 +130,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PositiveDegreeClassesDieOnEtaleCover
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuasiIsoHypercohomologyBijectiveStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothAffineCurveEtaleCohomologicalDimensionLeOn
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothSurjectiveCechDescentCohomology
@@ -188,7 +196,7 @@ theorem upTo {P : Prop} (h : A1 → A2 → A3 → A4 → A5 → A7 → A8 → A9
     C5 → D1 → P) : P :=
   h _root_.GlobalTheory.EtC.quasiIso_hypercohomology_bijective' _root_.GlobalTheory.EtC.smooth_surjective_cech_descent_cohomology _root_.GlobalTheory.EtC.levelwise_eqv _root_.GlobalTheory.MayerVietorisEqv.a4 _root_.GlobalTheory.EtC.classes_die_on_etale_cover _root_.GlobalTheory.EtC.coefSeq_exact _root_.GlobalTheory.EtC.a8 _root_.GlobalTheory.EtC.etale_cohomology_vanishing_negative_degree_zero
     _root_.GlobalTheory.EtC.a10 RedCoef.a11 _root_.GlobalTheory.EtC.pairingProperties _root_.GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf _root_.GlobalTheory.EtC.tateTwist_local_to_global_strictlyHenselian _root_.GlobalTheory.EtC.b4 _root_.GlobalTheory.EtC.b5 _root_.GlobalTheory.EtC.FieldTw.field_tw_coh_eq_galois
-    GlobalTheory.EtC.gaugeSplitting_holds GlobalTheory.EtC.etC_c2 UpperTheory.Cb.etale_cohomology_ind_etale_base_change HomotopyInv.homotopy_invariance_etale GlobalTheory.EtC.laurentPolynomial_cohomology_strictlyHenselian_vanishing projectiveBundleFormula_vectorBundle_any_space
+    GlobalTheory.EtC.gaugeSplitting_holds GlobalTheory.EtC.etC_c2 _root_.GlobalTheory.EtC.LineAcyc.c3 HomotopyInv.homotopy_invariance_etale GlobalTheory.EtC.laurentPolynomial_cohomology_strictlyHenselian_vanishing projectiveBundleFormula_vectorBundle_any_space
 
 theorem duality_diagonalClass_of_affineProperBaseChange (e1 : E1) : E2 :=
   UpperTheory.Et.E2.main ⟨GlobalTheory.T.quasiIso_hypercohomology_bijective, _root_.GlobalTheory.EtC.smooth_surjective_cech_descent_cohomology, GlobalTheory.T.levelwiseEquivalence_isEquivalence, GlobalTheory.T.mayerVietoris_equivalence_of_cover, _root_.GlobalTheory.EtC.classes_die_on_etale_cover, GlobalTheory.T.etaleCohomology_coefficient_longExactSequence, _root_.GlobalTheory.EtC.a8,

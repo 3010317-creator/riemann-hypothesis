@@ -34,7 +34,8 @@ public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OscillatorModelValuesThird
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdmissibleEmptyOfGood
 public import Formalism.LocalToGlobal.BesselHermitianTheta.DefsReal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceIdempotentComponentsConjValuationStatement
+public import Formalism.LocalToGlobal.JointCharacters.LocEMulLocE
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceIdempotentComponentsConjValuation
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsBaseChangeFiniteAdeleRingEquiv
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdentityClassLatticeEqSelfDualFrameLattice
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PtYAndItYOfPair
@@ -1128,7 +1129,7 @@ theorem denomAt_of_move : ∀ (D : D7) (V : HSp D), Bridge.hLat V 1 = Formalism.
     have := bnd_inv_of_hLat_std D ι h1 h2 V hstd l k⁻¹ hk'
     rwa [Subgroup.coe_inv, map_inv, inv_inv] at this
   have h4 := GlobalTheory.PlaceIdem.exists_isPlIdem D ι h1 h2 h3
-  obtain ⟨hid, hcj⟩ := GlobalTheory.T.placeIdempotent_components_conj_valuation D ι h1 h2 h4
+  obtain ⟨hid, hcj⟩ := _root_.GlobalTheory.ConjVal.components_and_conj_valuation D ι h1 h2 h4
   obtain ⟨-, e', P', he', hb', hs'⟩ := hsob
   have hp' : ∀ PP ∈ P', (l : 𝓞 D.host.E) ∉ PP.asIdeal := by
     intro PP hPP hpP

@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.AddNsm
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EventuallyFinEqOne
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemRangeOfOneTmulMem
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDualStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ThetaAtEqSumHeisOfFourierSum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlacewiseToAdelicDecompositionForall
@@ -151,7 +152,7 @@ theorem om_placeModel : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp
   have hψ : IsCharAF D.host.F ψ := by
     unfold IsStdChar at hstd
     exact hstd.1
-  have hdual := (GlobalTheory.T.self_dual_lattice_pairing_dual D ψ S T ΛS ΛT hstd hS hT).1
+  have hdual := (_root_.GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T ΛS ΛT hstd hS hT).1
   have hsm : ∀ w : AE D, w * w = w → ∀ u ∈ (latO S T ΛS ΛT fun _ => True),
       w • u ∈ (latO S T ΛS ΛT fun _ => True) := by
     intro w hw u hu

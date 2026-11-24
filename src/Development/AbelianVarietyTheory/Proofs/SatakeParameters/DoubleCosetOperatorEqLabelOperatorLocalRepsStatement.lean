@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DcOpCommOfCommute
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalLabelOperatorsOnHyperspecialFixedVectorStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalLabelOperatorsOnHyperspecialFixedVector
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
 import Mathlib.Algebra.Order.Floor.Extended
@@ -189,7 +189,7 @@ theorem dcOp_eq_label : ∀ {D : D7} (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf 
     have hkf := h01.2.2.1 k hs
     funext h
     exact hΦ h ⟨fin V k, (mem_J V β L hkf).2 ((hK k hs).2 hk)⟩ ⟨e, f, k, hP, hkf, rfl, hs⟩
-  have h := ((GlobalTheory.T.spherical_label_operators_on_hyperspecial_fixed_vectors V P).1 d R hR).2 _ (rightTr (fin V) W) Φ hfix
+  have h := ((_root_.GlobalTheory.SphLabelOps.label_operators V P).1 d R hR).2 _ (rightTr (fin V) W) Φ hfix
   funext g
   have h1 := congrFun h g
   have h2 : Bridge.dcOp B Φ g = ∑ γ ∈ R, Φ (g * fin V γ) := r4 W fun a => Φ (g * a)

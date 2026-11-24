@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplementaryAdelicSchwartzOfNonzeroLocalStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplementaryAdelicSchwartzOfNonzeroLocal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -146,7 +147,7 @@ theorem acts_vacCond_of_mem_KAt : ∀ (F E : Type) [Field F] [NumberField F] [Fi
     rw [smul_zero, e0]
     funext x
     simp [Darboux.rho, schr]
-  have hrφ : Rest (evFin F v) φ r := GlobalTheory.T.complementaryAdelicSchwartz_of_nonzero_local v φ₁ φ r h0 hφ hr
+  have hrφ : Rest (evFin F v) φ r := _root_.GlobalTheory.RestCofactor.rest_of_rest v φ₁ φ r h0 hφ hr
   set γ' := actAB (cA σ) ((1 : UA σ G.V'.J), k⁻¹) γ
   have eγ' : γ' = γ * (mat k⁻¹)ᵀ := by
     simp [γ', actAB, mat]

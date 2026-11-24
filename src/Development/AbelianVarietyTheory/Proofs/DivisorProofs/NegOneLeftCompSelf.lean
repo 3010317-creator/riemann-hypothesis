@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDimEqOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyExistsAmpleClass
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyAmpleClassCechPicardClassIffAmpleStatement
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyAmpleClassCechPicardClassIffAmple
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,15 +82,15 @@ theorem isAmpleCls_add : ∀ (K : Type) [Field K] (A : AbVar K) (c d : Pic A.X.l
   intro K _ A c d hc hd
   obtain ⟨L, hL, rfl⟩ := cls_surj c
   obtain ⟨M, hM, rfl⟩ := cls_surj d
-  have hA : IsAmpleLB L := (GlobalTheory.T.abelianVarietyAmpleClass_cechPicardClass_iff_ample K A L hL).1 hc
-  have hB : IsAmpleLB M := (GlobalTheory.T.abelianVarietyAmpleClass_cechPicardClass_iff_ample K A M hM).1 hd
+  have hA : IsAmpleLB L := (_root_.GlobalTheory.AmpleClsIff.isAmpleCls_cls_iff K A L hL).1 hc
+  have hB : IsAmpleLB M := (_root_.GlobalTheory.AmpleClsIff.isAmpleCls_cls_iff K A M hM).1 hd
   have hN : (tens L M).IsLB := isLB_tens hL hM
   have hT : IsAmpleLB (tens L M) := by
     refine hA.tensor hB hN ((cls_eq_zero_iff (LB.isLB_div (LB.isLB_div hN hL) hM)).1 ?_)
     rw [cls_div (LB.isLB_div hN hL) hM, cls_div hN hL, cls_tens hL hM]
     abel
   rw [← cls_tens hL hM hN]
-  exact (GlobalTheory.T.abelianVarietyAmpleClass_cechPicardClass_iff_ample K A (tens L M) hN).2 hT
+  exact (_root_.GlobalTheory.AmpleClsIff.isAmpleCls_cls_iff K A (tens L M) hN).2 hT
 
 end GlobalTheory.AV
 end -- clump:auto
@@ -131,9 +131,9 @@ theorem isAmpleCls_pull_of_isFinite : ∀ (K : Type) [Field K] (A B : AbVar K) (
     IsFinite f.hom.left → IsAmpleCls d → IsAmpleCls (CechPic.pull f.hom.left d) := by
   intro K _ A B f d hf hd
   obtain ⟨L, hL, hrel, rfl⟩ := hd
-  have hB : IsAmpleLB L := (GlobalTheory.T.abelianVarietyAmpleClass_cechPicardClass_iff_ample K B L hL).1 ⟨L, hL, hrel, rfl⟩
+  have hB : IsAmpleLB L := (_root_.GlobalTheory.AmpleClsIff.isAmpleCls_cls_iff K B L hL).1 ⟨L, hL, hrel, rfl⟩
   have hA : IsAmpleLB (L.pull f.hom.left) := hB.pull_of_isAffineHom f.hom.left
-  have h := (GlobalTheory.T.abelianVarietyAmpleClass_cechPicardClass_iff_ample K A (L.pull f.hom.left) hA.isLB).2 hA
+  have h := (_root_.GlobalTheory.AmpleClsIff.isAmpleCls_cls_iff K A (L.pull f.hom.left) hA.isLB).2 hA
   rwa [cls_pull hL f.hom.left hA.isLB] at h
 
 end GlobalTheory.AV.AbVar

@@ -9,7 +9,8 @@ public import Mathlib.RingTheory.Frobenius
 public import Mathlib.RingTheory.Invariant.Galois
 public import Mathlib.RingTheory.IntegralClosure.IntegralRestrict
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFieldOfValues
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardAbelianVarietyTorsionSepClosedStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.FlagBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardAbelianVarietyTorsionSepClosed
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRelativeDimensionAbelianVarietyField
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MapSmulOfIsHausdorff
 public import Mathlib.Data.Matrix.Mul
@@ -20,10 +21,8 @@ public import Mathlib.Algebra.Polynomial.Module.AEval
 public import Mathlib.NumberTheory.NumberField.Basic
 public import Mathlib.NumberTheory.Padics.PadicIntegers
 public import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.FlagBasis
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearIndependentNumberFieldEndomorphismsTateMod
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardAbelianVarietyTorsionSepClosed
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeFiniteFinrank
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PotentialGoodReductionOfNeronOggShafarevich
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionUnramifiedImpTateModuleAndInfinite
@@ -667,7 +666,7 @@ theorem GlobalTheory.InertiaTate.exists_exponent_inertia_galTate : ∀ (R K Ω :
     rw [← map_natCast (residue R), this, map_zero]
   have hfin : ∀ n : ℕ, {x : ptOver K Ω ⟶ A | x ^ (l ^ n) = 1}.Finite := by
     intro n
-    have h := GlobalTheory.T.card_abelianVariety_torsion_sepClosed K Ω A hA g hg (l ^ n) (by rw [Nat.cast_pow]; exact pow_ne_zero _ hlK)
+    have h := _root_.GlobalTheory.SepClosedTorsion.card_torsion_sepClosed K Ω A hA g hg (l ^ n) (by rw [Nat.cast_pow]; exact pow_ne_zero _ hlK)
     have : Finite {x : ptOver K Ω ⟶ A // x ^ (l ^ n) = 1} :=
       Nat.finite_of_card_ne_zero (by
         rw [h]; exact pow_ne_zero _ (pow_ne_zero _ (Fact.out : l.Prime).ne_zero))
@@ -1477,7 +1476,7 @@ theorem cmPotentialGoodReduction_of_nos (hN : GlobalTheory.Published.NeronOggSha
   have hc := GlobalTheory.T.tateModule_galoisImages_commute_of_complexMultiplication K (SeparableClosure K) A hA F hF l hlK
   have he := GlobalTheory.T.exists_exponent_inertia_tateModule_finite_residue R K (SeparableClosure K) V hV A hA l hlk hc
   obtain ⟨⟨d, hd, -⟩, -⟩ := hF
-  have hcard := GlobalTheory.T.card_abelianVariety_torsion_sepClosed K (SeparableClosure K) A hA d hd (l ^ 2)
+  have hcard := _root_.GlobalTheory.SepClosedTorsion.card_torsion_sepClosed K (SeparableClosure K) A hA d hd (l ^ 2)
     (by rw [Nat.cast_pow]; exact pow_ne_zero _ hlK)
   have hfin : Finite {x : ptOver K (SeparableClosure K) ⟶ A // x ^ (l ^ 2) = 1} :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; exact pow_ne_zero _ (pow_ne_zero _ hl.out.ne_zero))

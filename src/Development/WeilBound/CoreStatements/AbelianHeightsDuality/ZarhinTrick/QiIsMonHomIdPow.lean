@@ -26,7 +26,8 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FlatAnd
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TopologicalKrullDimLeZeroOfSubset
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIsogenousRetractPolarisedFiniteExt
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFiniteClosedSubschemeRepresentsKernelAmpleStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFiniteClosedSubschemeRepresentsKernelAmple
 public import Mathlib.LinearAlgebra.Dual.Lemmas
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
@@ -992,7 +993,7 @@ theorem polFibreIsogAny : PositivityTheory.PrwZar.PolFibreIsogAny := by
   have hgA' := GlobalTheory.FiniteData.relDim_pullback s A hgA
   have hgB' := GlobalTheory.FiniteData.relDim_pullback s B hgB
   haveI := hA'.comm
-  obtain ⟨H, j, -, hH, hK⟩ := GlobalTheory.T.exists_finite_closed_subscheme_represents_kernel_ample GlobalTheory.globalFns_holds Ω ((Over.pullback s).obj A) hA' L hL ha
+  obtain ⟨H, j, -, hH, hK⟩ := _root_.GlobalTheory.KernelRep.exists_finite_closed_kernel GlobalTheory.globalFns_holds Ω ((Over.pullback s).obj A) hA' L hL ha
   have hfin : IsFinite ((Over.pullback s).map l).left :=
     isFinite_of_ker hA' hB' _ H j hH fun T x hx => (hK T x).1 (ker_memKL hD l s L hL e x hx)
   obtain ⟨hfl, hsu⟩ := flat_surj_of_finite hA' hB' g hgA' hgB' _ hfin

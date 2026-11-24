@@ -11,15 +11,21 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertSpheric
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallySelfDualLatticeIndicatorIsVacuum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzRestrictFinitePlaceMemSchwartzBruhStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzSpaceTranslateMemOfMemStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzRestrictFinitePlaceMemSchwartzBruh
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzSpaceTranslateMemOfMem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMemAdelicSchwartzSpaceNumberFieldOfMem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergEigenProportionalLocalFieldStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunction
+public import Mathlib.Algebra.Group.AddChar
+public import Mathlib.Algebra.Group.Subgroup.Defs
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.Data.Matrix.Mul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergEigenProportionalLocalField
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsometryCommutingHeisenbergActsFibrewiseStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAdelicAddCharNontrivialFinitePlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAdelicAddCharNontrivialFinitePlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceSymplecticFormUnitaryGroupActionInvariant
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationLocalityUnitaryGroupV
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
@@ -77,7 +83,6 @@ import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Polynomial.Basic
 import Development.AbelianVarietyTheory.Definitions.Foundations.EventuallyNormFinLeOne
 import Development.AbelianVarietyTheory.Definitions.Foundations.NormEulerPolySubOneLe
-import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Topology.Connected.Separation
@@ -470,7 +475,7 @@ theorem locality_op {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ
     (hcomm : ∀ u : AF F, evFin F v u = 0 → ∀ p q : κ → AF F, ∀ Φ ∈ schA F κ,
       T (schr ψ (u • p, u • q) Φ) = schr ψ (u • p, u • q) (T Φ)) :
     ∃ S : ((κ → Fv F v) → ℂ) → (κ → Fv F v) → ℂ, ∀ φ ∈ SB (κ → Fv F v), S φ ∈ SB _ ∧ Acts (evFin F v) T φ (S φ) := by
-  have hfib := GlobalTheory.T.isometry_commuting_heisenberg_acts_fibrewise v ψ T hψ (GlobalTheory.T.standardAdelicAddChar_nontrivial_finitePlace ψ hψ) hkeep hunit hcomm
+  have hfib := GlobalTheory.T.isometry_commuting_heisenberg_acts_fibrewise v ψ T hψ (_root_.GlobalTheory.PsiNontrivAt.exists_psiAt_ne_one ψ hψ) hkeep hunit hcomm
   have htr : ∀ u : AF F, evFin F v u = 0 → ∀ p : κ → AF F,
       ∀ Φ ∈ schA F κ, T (fun y => Φ (y + u • p)) = fun y => T Φ (y + u • p) := by
     intro u hu p Φ hΦ
@@ -479,10 +484,10 @@ theorem locality_op {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ
       funext y; simp [schr]
     rw [e1, e1] at h
     exact h
-  obtain ⟨R, hR0, hR⟩ := GlobalTheory.T.exists_complementary_adelicSchwartz_restFunction κ v
+  obtain ⟨R, hR0, hR⟩ := _root_.GlobalTheory.RestWitness.exists_rest κ v
   refine ⟨fun φ t => (R 0)⁻¹ * T (tens (evFin F v) φ R) (fun i => GlobalTheory.LatVac.liftV v (t i)),
     fun φ hφ => ⟨?_, ?_⟩⟩
-  · have h4 := GlobalTheory.T.adelicSchwartz_restrict_finitePlace_mem_schwartzBruhat v _ (hkeep _ (hR φ hφ).2)
+  · have h4 := _root_.GlobalTheory.LatVac.restrict_liftV_mem_SB v _ (hkeep _ (hR φ hφ).2)
     exact (SB _).smul_mem (R 0)⁻¹ h4
   · intro r hr
     funext y
@@ -502,7 +507,7 @@ theorem locality_op {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ
     set Φ₁ := tens (evFin F v) φ r with hΦ₁
     set Φ₂ : (κ → AF F) → ℂ := (r y / R 0) • (fun w => Φ₀ (w + u • (-y))) with hΦ₂
     have hm₀ : Φ₀ ∈ schA F _ := (hR φ hφ).2
-    have hm₂ : Φ₂ ∈ schA F _ := Submodule.smul_mem _ _ (GlobalTheory.T.adelicSchwartzSpace_translate_mem_of_mem _ _ hm₀)
+    have hm₂ : Φ₂ ∈ schA F _ := Submodule.smul_mem _ _ (_root_.GlobalTheory.SchwartzTranslation.schA_add_const _ _ hm₀)
     have hfz : ∀ z, At (evFin F v) z → (Φ₁ - Φ₂) (y + z) = 0 := by
       intro z hz
       have e1 : r (y + z) = r y := hr.1 y z hz
@@ -656,7 +661,7 @@ theorem eigen_box : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     exact key
   have hloc1 := loc vd (fun γ hγ => hSt ▸ hSeig γ hγ)
   have hloc2 := loc (Tl vd) (fun γ hγ => hgS ▸ hgSeig γ hγ)
-  obtain ⟨c, hc⟩ := GlobalTheory.T.heisenbergEigen_proportional_localField (GlobalTheory.LatVac.psiAt B.ψ v) Λd χ vd (Tl vd) hloc1 hloc2 hvd0
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.heisenbergEigen_proportional (GlobalTheory.LatVac.psiAt B.ψ v) Λd χ vd (Tl vd) hloc1 hloc2 hvd0
     (_root_.GlobalTheory.DblFill.latDbl_fill F E σ B a a' G X om om' hT v w hw dd hdc)
   refine ⟨c, ?_⟩
   rw [hgS, hc, hSt]

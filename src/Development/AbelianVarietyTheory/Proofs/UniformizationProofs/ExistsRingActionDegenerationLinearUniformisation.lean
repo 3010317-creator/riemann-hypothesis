@@ -6,11 +6,11 @@ public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFram
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.RosVal
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.CorrOfGenericOfIsSeparated
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.InvariantFunctionsDescend
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsEndomorphismActionUniformizationDataStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsEndomorphismActionUniformizationData
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsNsmulAndNeg
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.RosatiAdjointAbelianPartAndClassifyingMapLinearStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.RosatiAdjointAbelianPartAndClassifyingMapLinear
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationAdjointEndomorphismsCommuteStatement
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformizationEndomorphismCalculusStatement
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformizationEndomorphismCalculus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -149,12 +149,12 @@ theorem tauBal_of_act (hG : GlobalFnsSt) {U : UnifPre I D A G} (E E' : EndU U) (
 
 theorem exists_oAct : LL → TwistBCSpanStatement → TWM.VRatioGtStatement → TWStatement → UUStatement → AllU fun {R} _ _ {I} {D} {A} {G} _ _ U => ∀ (O : Type) [CommRing O] [StarRing O] (ιA : A.OAct O) (ιG : RingAct G O), (∀ a, (Over.pullback (jK R)).map (ιG.act a) ≫ U.gen.hom = U.gen.hom ≫ ιA.act a) → (∀ a, LBIso (cubeLB G ![fst G G ≫ ιG.act a, snd G G] U.LG.L) (cubeLB G ![fst G G, snd G G ≫ ιG.act (star a)] U.LG.L)) → ∃ (_ : Module O D.toPre.X) (ιD : D.toPre.OAct O), U.toUnifPre.OLinear O ιD ιA ιG := by
   intro hL h₁ h₂ h₃ h₄ R _ _ _ I hI D A G _ _ hS U O _ _ ιA ιG hext hros
-  choose E EG EA using fun a => GlobalTheory.T.exists_endomorphism_action_uniformization_data hL R I hI D A G hS U (ιG.act a) (ιA.act a) (ιG.hom a) (ιA.hom a) (hext a)
-  have hcalc := GlobalTheory.T.uniformizationEndomorphism_calculus hL R I hI D A G hS U (AlgebraicClosure (FractionRing R))
+  choose E EG EA using fun a => _root_.GlobalTheory.EndData.exists_endU hL R I hI D A G hS U (ιG.act a) (ιA.act a) (ιG.hom a) (ιA.hom a) (hext a)
+  have hcalc := _root_.GlobalTheory.EndCalc.end_calculus hL R I hI D A G hS U (AlgebraicClosure (FractionRing R))
   have hadj : ∀ a, LBIso (cubeLB G ![fst G G ≫ (E a).aG, snd G G] U.LG.L)
       (cubeLB G ![fst G G, snd G G ≫ (E (star a)).aG] U.LG.L) := fun a => by
     rw [EG, EG]; exact hros a
-  have ros := fun a => GlobalTheory.T.rosatiAdjoint_abelianPart_and_classifying_map_linear hL R I hI D A G hS U _ _ (hadj a)
+  have ros := fun a => _root_.GlobalTheory.UT.rosatiAdj_and_c_linear_of_endU hL R I hI D A G hS U _ _ (hadj a)
   have bal := fun a => (GlobalTheory.T.uniformisation_adjoint_endomorphisms_commute hL h₁ h₂ h₃ h₄ R I hI D A G hS U (AlgebraicClosure (FractionRing R)) _ _ (hadj a)).1
   obtain ⟨E₁, g₁, -, b₁, x₁, -⟩ := (GlobalTheory.IntEnd.exists_nsmul_and_neg hL R I hI D A G hS U).1 1
   have one := (hcalc (E 1) E₁ E₁).2.2.2.1 (by rw [EG, ιG.map_one, g₁, pow_one])

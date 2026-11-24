@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlaceLaws
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacuaStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CombAtSingleZero
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacua
 public import Formalism.LocalToGlobal.IndefiniteReal.FockTheta.RealPlaceImaginaryGeneratorReEqZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -153,7 +154,7 @@ theorem unfolded_eq_kernel_data : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tu
     rintro p (hp | hp)
     · exact Finset.disjoint_left.mp hF.disjT hp
     · exact Finset.disjoint_left.mp hv.disj hp
-  have prod := fun (S T : HSp D) => (GlobalTheory.T.heisenbergCombination_disjoint_places_commute_vacua D c.ψ hc.std S T (· ∈ w.Q) (· ∈ v.gP) hQG).2.2.2.1
+  have prod := fun (S T : HSp D) => (_root_.GlobalTheory.DisjComb.main D c.ψ hc.std S T (· ∈ w.Q) (· ∈ v.gP) hQG).2.2.2.1
   unfold Tup.two
   rw [Finset.smul_sum]
   refine Finset.sum_congr rfl fun α _ => ?_

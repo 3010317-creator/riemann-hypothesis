@@ -6,7 +6,8 @@ public import Formalism.SharpRestriction.CuspSpanNormBounds.BesselShellMomentBou
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeckeCharTameAtOfFactorsThroughResidue
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LevelCharactersTypePlacesEqLocalComponentsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSplitPlaceComponentHeckeCharResidueStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StdMaximalCompactReductionPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DatVtEq
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StdMaximalCompactReductionProperties
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsReadsAtOfCover
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ReadsHecke
 public import Formalism.LocalToGlobal.IndefiniteReal.DoubleCosetOperators.XiNeZeroOfIsStdGeneric
@@ -182,7 +183,7 @@ theorem compAt_baseCharacter_mul_unramified_eq_typeCharacter_alt : GlobalTheory.
           ((ξ uu : ℂˣ) : ℂ) = embLL0 D ((τ (j.1 + 1) kv hy.unit : (↥D.LL0)ˣ) : ↥D.LL0) := by
   intro hGAR D cf Rw low Pq S hL eig θ Bs hV τ hτ j kv s hsw χ hχ red
   haveI : Fact (D.host.g kv.1).Prime := ⟨D.host.g_prime kv.1⟩
-  obtain ⟨-, -, -, h4⟩ := GlobalTheory.T.stdMaximalCompact_reduction_properties D 0
+  obtain ⟨-, -, -, h4⟩ := _root_.GlobalTheory.MtRed.km_reduction D 0
   obtain ⟨φ, hφs, hφ0, hφa, -⟩ := h4 s
   have hker : RingHom.ker φ ≤ RingHom.ker red := fun x hx =>
     (RingHom.mem_ker).2 (red_eq_zero_of_val_lt_one s.v red x ((hφ0 x).1 ((RingHom.mem_ker).1 hx)))

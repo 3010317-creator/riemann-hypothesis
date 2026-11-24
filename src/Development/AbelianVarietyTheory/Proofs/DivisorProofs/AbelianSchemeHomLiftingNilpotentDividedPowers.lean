@@ -14,7 +14,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchem
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.CubeTheorem.CubeTheoremHolds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeDeRhamLocallyFreeHodgeDegeneratesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeUnobstructedSquareZeroAffine
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualAbelianSchemeExistsBidualityStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualAbelianSchemeExistsBiduality
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PoincareDeRhamDualityOfHodgeDeRhamDual
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -130,8 +130,8 @@ section -- clump:auto
 namespace GlobalTheory
 
 theorem abelianScheme_hom_lifting_nilpotent_dividedPowers : GlobalTheory.Published.AbelianLifting :=
-  GlobalTheory.LiftFour.abelianLifting_of_four GlobalTheory.T.abelianScheme_deRham_locallyFree_hodgeDegenerates GlobalTheory.T.dualAbelianScheme_exists_biduality
-    (GlobalTheory.PoincareDeRhamDualityProof.poincareDeRhamDuality_of_hodge GlobalTheory.T.abelianScheme_deRham_locallyFree_hodgeDegenerates GlobalTheory.T.dualAbelianScheme_exists_biduality)
+  GlobalTheory.LiftFour.abelianLifting_of_four GlobalTheory.T.abelianScheme_deRham_locallyFree_hodgeDegenerates _root_.GlobalTheory.dualAbelianScheme
+    (GlobalTheory.PoincareDeRhamDualityProof.poincareDeRhamDuality_of_hodge GlobalTheory.T.abelianScheme_deRham_locallyFree_hodgeDegenerates _root_.GlobalTheory.dualAbelianScheme)
     GlobalTheory.UnobTop.abelianUnobstructed
 
 end GlobalTheory

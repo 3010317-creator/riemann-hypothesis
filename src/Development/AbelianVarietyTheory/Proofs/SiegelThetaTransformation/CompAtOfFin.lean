@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FiniteAdelicLatticeTransportLawsStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FiniteAdelicLatticeTransportLaws
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.WeakWeilRepCarriesDerivativesVacuaFockVectorsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -101,7 +101,7 @@ theorem levK_one (C : Ctx S T) (Lv : SW.Level C.X) (k : GA D T) (hk : k ∈ GfC 
     (hc : ∀ u ∈ hatV C.X.Λ, fmt T k *ᵥ u - u ∈ hatV (Lv.𝔪 • C.X.Λ)) : C.LevK Lv k 1 := by
   refine ⟨hk, hm, 1, by simp, fun i => ?_⟩
   have hβ : toAf (Lv.β i) ∈ hatV C.X.Λ :=
-    ((GlobalTheory.T.finiteAdelicLatticeTransport_laws D T.rank C.X.Λ ⟨C.X.Λ_fg, C.X.Λ_span⟩).1 (Lv.β i)).2 (Lv.β_mem i)
+    ((_root_.GlobalTheory.Ker.isMov_laws D T.rank C.X.Λ ⟨C.X.Λ_fg, C.X.Λ_span⟩).1 (Lv.β i)).2 (Lv.β_mem i)
   have hsum : (∑ j, (1 : Matrix (Fin T.rank) (Fin T.rank) (𝓞 D.host.E)) j i • Lv.β j) = Lv.β i := by
     simp [Matrix.one_apply]
   rw [hsum]

@@ -7,8 +7,9 @@ public import Development.AbelianVarietyTheory.Definitions.Degenerations.MorAlgS
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.ToATotal
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.PelSt
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsCoprimeTwoSubRtTwoAddRt
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisationCompleteLocalDomainPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsCubicalBundleOfSymmetricSemiAbelianStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisationCompleteLocalDomainPrime
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.PointEqOfSubsingleton
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsCubicalBundleOfSymmetricSemiAbelian
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,8 +89,8 @@ theorem exists_pelUnif : Laws → Laws2 → Laws3 → Laws4 → Laws5 → Ega �
   obtain ⟨A, -, gen, hgen, hL, -⟩ := _root_.GlobalTheory.LN.exists_polAV_of_polAt h1 h2 E H R t hpol
   have := hA.1.1
   have := hA.2.2.1
-  obtain ⟨P, hPL, -⟩ := GlobalTheory.T.exists_cubical_bundle_of_symmetric_semiAbelian h1 R A t.G t.semi gen hgen t.PP t.cub t.sym
-  obtain ⟨D, U, hUL, -⟩ := GlobalTheory.T.exists_uniformisation_completeLocalDomain_prime h1 h2 h3 hE hU R I hA hpi t.G P t.semi (hPL ▸ hypW_of_triple t) hs
+  obtain ⟨P, hPL, -⟩ := _root_.GlobalTheory.UU.exists_cp_of_isSymmetric h1 R A t.G t.semi gen hgen t.PP t.cub t.sym
+  obtain ⟨D, U, hUL, -⟩ := _root_.GlobalTheory.PrimeUnif.exists_unif h1 h2 h3 hE hU R I hA hpi t.G P t.semi (hPL ▸ hypW_of_triple t) hs
     (hPL ▸ hth) A gen hgen (hPL ▸ hL)
   obtain ⟨Q, -, -, -, hQ⟩ := hP E H R I hA.1 t D A U (hUL.trans hPL)
   exact ⟨Q, hQ⟩

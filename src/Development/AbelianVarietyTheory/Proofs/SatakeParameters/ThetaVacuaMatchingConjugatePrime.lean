@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DcOpCommOfCommute
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalHeckeConjPlaceEqDualLabelStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalHeckeConjPlaceEqDualLabel
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
 import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp
 import Mathlib.Algebra.Order.Floor.Extended
@@ -100,8 +100,8 @@ theorem match_conj : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D)
   have hv : ∀ f, IsVacAt ψ S T (conjPl P) f ↔ IsVacAt ψ S T P f := fun f =>
     ⟨fun h => by have := isVacAt_conj ψ S T _ f h; rwa [conj_conj] at this, isVacAt_conj ψ S T P f⟩
   refine ⟨hv, fun hF => ?_⟩
-  have hS := GlobalTheory.T.sphericalHecke_conjPlace_eq_dualLabel S P
-  have hT := GlobalTheory.T.sphericalHecke_conjPlace_eq_dualLabel T P
+  have hS := _root_.GlobalTheory.SphConj.sph_conj S P
+  have hT := _root_.GlobalTheory.SphConj.sph_conj T P
   refine ⟨fun f hf k hk k' hk' => hF f ((hv f).1 hf) k (hS.1 ▸ hk) k' (hT.1 ▸ hk'), fun cS cT => ?_⟩
   have eS : ∀ f, IsVacAt ψ S T P f → ∀ c, opOf (om.comp (MonoidHom.inl _ _)) (conjPl P) c f =
       opOf (om.comp (MonoidHom.inl _ _)) P (dualC c) f := fun f hf c =>

@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.IsScalarTowerOfAlgebraMapEq
-public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.CechLBHomologyEquivOfAffineCoversStatement
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.CechLBHomologyEquivOfAffineCovers
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.FiniteCechLineBundleHomologyStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -56,7 +56,7 @@ theorem cechLB_homology_finite_of_affine_cover : ∀ (R : Type) [CommRing R] (Y 
   intro R _ Y f _ M κ _ _ D hM hsep hproj hD hcov n
   obtain ⟨H, hH, m, s, hs⟩ := hproj
   have hfin := GlobalTheory.T.finite_cechLineBundle_homology R Y f H m s M hH hM hs n
-  obtain ⟨e⟩ := GlobalTheory.T.nonempty_cechLB_homology_equiv_of_affine_covers R Y f M (Fin (m + 1)) (fun i => nonzeroLocus (s i)) κ D hM hsep
+  obtain ⟨e⟩ := _root_.GlobalTheory.AbLaw.cechLB_homology_equiv_of_affine_covers R Y f M (Fin (m + 1)) (fun i => nonzeroLocus (s i)) κ D hM hsep
     (fun i => (hs.2 i).1) hs.1 hD hcov n
   letI := hfin
   exact Module.Finite.equiv e

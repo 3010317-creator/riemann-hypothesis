@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissiblePadicIntMaximalIdeal
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PsiUnitOnAbelianLocusUniformisationStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PsiUnitOnAbelianLocusUniformisation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,6 +53,6 @@ namespace GlobalTheory
 
 theorem psiUnitOn_abLocus_pel : Laws → Laws2 → Laws3 → Laws4 → Laws5 → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (I : Ideal R), admitted R I → ∀ (t : SAB H (Sp R)) (P : PELUnif I t), P.TorsionIso → IsOpen (abLocus t.G) → ∀ y, PsiUnitOn P.D.toPre y (abLocus t.G) :=
   fun h1 h2 h3 h4 h5 _ _ _ _ _ R _ _ _ I hA t P _ ho y =>
-    GlobalTheory.T.psiUnitOn_abelian_locus_uniformisation h1 h2 h3 h4 h5 R I hA P.D P.A t.G t.semi P.U ho y
+    _root_.GlobalTheory.PsiAbelian.psiUnitOn_abLocus h1 h2 h3 h4 h5 R I hA P.D P.A t.G t.semi P.U ho y
 
 end GlobalTheory

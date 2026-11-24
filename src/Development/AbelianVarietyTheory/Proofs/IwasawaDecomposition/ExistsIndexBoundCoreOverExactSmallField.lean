@@ -36,10 +36,10 @@ public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUni
 public import Formalism.LocalToGlobal.ProjectiveLattices.PartitionExtendByZeroAntitone
 public import Formalism.LocalToGlobal.ProjectiveLattices.PetersonNormSubspace
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniformisationDataNonemptyComponent
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLatticeEmbeddingLiftDatumHermitianSpaceStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMemberDictionaryContextGoodEmbeddingStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLatticeEmbeddingLiftDatumHermitianSpace
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMemberDictionaryContextGoodEmbedding
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasseNormTheoremQuadraticExtension
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsPrincipalLevelSubgroupOpenStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsPrincipalLevelSubgroupOpen
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LevelGoodAndHalfEqPrimeProductStatement
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LinearIndependentSingleAdd
 public import Formalism.LocalToGlobal.ProjectiveLattices.ParCanon
@@ -101,7 +101,7 @@ import Mathlib.Data.Nat.Choose.Multinomial
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedModuliAlgebraicLawsChartWeightIntegrality
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointReducedFromTestRing
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.NonemptyFrPtComplex
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.PrincipalLevelEqHalfMarkingStabilizerStatement
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.PrincipalLevelEqHalfMarkingStabilizer
 import Formalism.LocalToGlobal.ProjectiveLattices.HostRank
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.Polynomial.Basic
@@ -328,7 +328,7 @@ theorem exists_iotaAll (Q : Par D) (hQ : Q.Pins) (j : ℕ) :
     ∃ ι₀ : (Q.Dw j).La →ₗ[𝓞 D.host.E] (Fin D.R.r → D.host.E), InR D j → ∀ hr : (D.sp.W j).rank = D.R.r,
       IotaOK (Q.Dw j) (D.sp.W j) (LinearMap.funLeft (𝓞 D.host.E) D.host.E (Fin.cast hr) ∘ₗ ι₀) := by
   by_cases hj : InR D j
-  · obtain ⟨⟨ι, hι⟩, -⟩ := GlobalTheory.T.exists_latticeEmbedding_liftDatum_hermitianSpace D Q hQ j hj
+  · obtain ⟨⟨ι, hι⟩, -⟩ := _root_.GlobalTheory.Member.exists_iotaOK D Q hQ j hj
     refine ⟨LinearMap.funLeft (𝓞 D.host.E) D.host.E (Fin.cast (D.sp.W_rank j hj.1 hj.2).symm) ∘ₗ ι,
       fun _ hr => ?_⟩
     have e : LinearMap.funLeft (𝓞 D.host.E) D.host.E (Fin.cast hr) ∘ₗ
@@ -352,7 +352,7 @@ theorem exists_pkgAll (Q : Par D) (hQ : Q.Pins) (hpq : ∀ j, 1 ≤ (Q.Dw j).p +
           (LinearMap.funLeft (𝓞 D.host.E) D.host.E (Fin.cast (D.sp.W_rank j hj.1 hj.2)) ∘ₗ ι₀) Kf χ U dict mu x₀ := by
   by_cases h : InR D j ∧ GoodEmb Q.c σ
   · obtain ⟨hj, hσ⟩ := h
-    obtain ⟨⟨C, hC, hCι⟩, -⟩ := GlobalTheory.T.exists_memberDictionaryContext_goodEmbedding D Q.H (Q.Dw j) Q.l (Q.Xo j) Q.c σ (D.sp.W j) D.R.r
+    obtain ⟨⟨C, hC, hCι⟩, -⟩ := _root_.GlobalTheory.Member.exists_ctx D Q.H (Q.Dw j) Q.l (Q.Xo j) Q.c σ (D.sp.W j) D.R.r
       (D.sp.W_rank j hj.1 hj.2) _ (hι hj (D.sp.W_rank j hj.1 hj.2)) (hpq j) hQ.2.1.2 hσ
     obtain ⟨un, dict, mu, -, -, hP⟩ := GlobalTheory.T.exists_uniformisation_dictionary_character_laws D Q.H (Q.Dw j) Q.l (Q.Xo j) Q.c σ (D.sp.W j) D.R.r C hC Kf hK χ
       (hχ hj hσ).1 (hχ hj hσ).2
@@ -384,7 +384,7 @@ theorem exists_coreJ_noVol : ∀ (D : D7) (Q : Par D), Q.Pins → (∀ j, 1 ≤ 
   intro D Q hQ hpq pb hpb hMb chiW hchi
   have hM : Q.l.M = D.host.g 0 * D.host.g 1 := hQ.2.1.1
   choose iota hiota using exists_iotaAll Q hQ
-  choose Kf hKf using fun j => (GlobalTheory.T.exists_principalLevel_subgroup_open D (D.sp.W j) Q.l.M).1
+  choose Kf hKf using fun j => (_root_.GlobalTheory.Member.PrincLevel.exists_levelK_and_nhds D (D.sp.W j) Q.l.M).1
   choose U dict mu x₀ hS using fun j σ => exists_pkgAll Q hQ hpq j σ (iota j) (hiota j) (Kf j) (hKf j) (chiW j σ)
     (fun hj hσ => ⟨(hchi j hj σ hσ).1, (hchi j hj σ hσ).2.1⟩)
   have hgood := (GlobalTheory.T.level_good_and_half_eq_prime_product D Q.H Q.l hQ.1.2.1 hM).1
@@ -428,7 +428,7 @@ theorem exists_coreJ_noVol : ∀ (D : D7) (Q : Par D), Q.Pins → (∀ j, 1 ≤ 
         intAll := fun j _ => (hB j).2.2.2.1
         modelW := fun j hj σ hσ => ⟨_, (hS j σ hj hσ).2.modelW⟩
         familyUniformisationBasePointOrthogonal := fun j hj σ hσ => (hS j σ hj hσ).2.familyUniformisationBasePointOrthogonal
-        kfHalf := fun j _ _ _ => (GlobalTheory.T.principalLevel_eq_halfMarking_stabilizer D Q.H Q.l (D.sp.W j)).2 (Kf j) (hKf j)
+        kfHalf := fun j _ _ _ => (_root_.GlobalTheory.Member.finCong_iff_half_and_kfHalf D Q.H Q.l (D.sp.W j)).2 (Kf j) (hKf j)
         adPin := fun j hj σ hσ => by
           obtain ⟨g, e, F, ik, φ, th, h1, -, h3⟩ := (hS j σ hj hσ).2.dictLaws
           have hi := hiota j hj (D.sp.W_rank j hj.1 hj.2)
@@ -440,7 +440,7 @@ theorem exists_coreJ_noVol : ∀ (D : D7) (Q : Par D), Q.Pins → (∀ j, 1 ≤ 
         cuspMul := fun j _ => ((hB j).2.2.2.2.2 D.R.r (U j)).2.1
         latZ := fun j hj => ((hS j _ hj h0).2.expo _).1
         cuNe := fun j hj k => by
-          obtain ⟨-, h1, h2, h3⟩ := GlobalTheory.T.exists_latticeEmbedding_liftDatum_hermitianSpace D Q hQ j hj
+          obtain ⟨-, h1, h2, h3⟩ := _root_.GlobalTheory.Member.exists_iotaOK D Q hQ j hj
           have hp : (T.toCore.X₀ j k).p0 = (Q.Dw j).q := (hS j _ hj h0).1 k
           exact GlobalTheory.CuspExist.nonempty_cuspFD GlobalTheory.QNorm.hasseNormSt _ _ _ _ (by omega) (by omega) (by omega)
         expo := fun j hj => hM ▸ ((hS j _ hj h0).2.expo _).2 }

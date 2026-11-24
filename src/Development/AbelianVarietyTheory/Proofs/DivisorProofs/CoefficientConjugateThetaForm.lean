@@ -16,7 +16,8 @@ import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FrameFunctio
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HolomorphicFamilyLowLieActionStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LowestWeightVectorTransferStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaWeightArithmeticAtPlaceProof
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilMaximalCompactFockSubstitutionCharacterStatement
+import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilMaximalCompactFockSubstitutionCharacter
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompAtMtEqInfMat
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemClosureUnitary
 import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HolomorphicDiscreteSeries
@@ -555,7 +556,7 @@ theorem exists_isIoW (D : D7) (V W : HSp D) (ψ : AddChar (AF D.host.F) ℂ) (θ
   have hkk : k * (fun τ => star (k τ)) = 1 := funext fun τ => Unitary.mul_star_self_of_mem (hk τ).1
   have hkk' : (fun τ => star (k τ)) * k = 1 := funext fun τ => Unitary.star_mul_self_of_mem (hk τ).1
   obtain ⟨io, h1, h2, h3⟩ := exists_io_poly D V W θ _ M c lam l BS j hj1 hj2 _ _ _ _ x₁ x₂ x₃ hr hpq hε hap ham hK hU k hk
-  have hact := GlobalTheory.T.weil_maximalCompact_fock_substitution_character D ψ θ V W _ _ ω _ M BS hω hθ hV hW hBS _ _ hpq hε _ _ ha hb x₁ x₂ x₃ hx₁ hx₂ hx₃ f hth hvac
+  have hact := _root_.GlobalTheory.FockCompactAction.om_pureTensorO_eq_fact D ψ θ V W _ _ ω _ M BS hω hθ hV hW hBS _ _ hpq hε _ _ ha hb x₁ x₂ x₃ hx₁ hx₂ hx₃ f hth hvac
   have hio := isIoW_of_fact hθ hBu hact h1 h2 h3
   refine ⟨_, isIoW_comp hio (fact M.ε x₁ x₂ x₃ (fun τ => star (k τ)) 1)
     (fchar (n := V.rank) M.ε x₁ x₂ x₃ (fun τ => star (k τ)) 1) (fun P => ?_)

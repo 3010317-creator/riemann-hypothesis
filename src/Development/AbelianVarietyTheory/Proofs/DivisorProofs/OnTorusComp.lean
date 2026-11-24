@@ -58,7 +58,7 @@ import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsQkPullEq
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusExtensionMapWelldefinedAdditiveCharacters
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisedGroupHomInducedMapsUnique
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisedGroupIsoAbelianPartCharacterIsos
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisedGroupIsoAbelianPartCharacterIsosStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusHomOfIff
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsSquareUnique
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AdicBaseEmbedsValuationAlgebraicClosure
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHold
@@ -279,7 +279,7 @@ theorem two_match {X : Scheme.{0}} (u : SAB H X) (V : Type) [CommRing V] [IsDoma
         ← Category.assoc, l₁.ext, ← Category.assoc, gen, Category.assoc, hactA, Category.assoc]
     exact (GlobalTheory.SemiAbExtDomain.existsUnique_hom_extension_generic (FractionRing V) t₁.G t₂.G hG₁ hG₂
       ((Over.pullback (jK V)).map (a.hom ≫ t₂.act.toRingAct.act x))).unique ⟨inferInstance, h₀⟩ ⟨inferInstance, rfl⟩
-  obtain ⟨b, h, hbi, lin, coord⟩ := GlobalTheory.T.uniformisedGroupIso_abelianPart_character_isos V (maximalIdeal V) hA D₁ A₁ t₁.G U₁.toUnifPre D₂ A₂ t₂.G U₂.toUnifPre a ha
+  obtain ⟨b, h, hbi, lin, coord⟩ := _root_.GlobalTheory.TInj.iso_lin_coord V (maximalIdeal V) hA D₁ A₁ t₁.G U₁.toUnifPre D₂ A₂ t₂.G U₂.toUnifPre a ha
   have hb : IsMonHom b := lin.2.1
   have hov : Over₀ U₁.toUnifPre U₂.toUnifPre a.hom b := lin.2.2.1
   have uq := fun x => over₀_onTorus_unique V (maximalIdeal V) hA D₁ D₂ A₁ A₂ t₁.G t₂.G U₁.toUnifPre U₂.toUnifPre

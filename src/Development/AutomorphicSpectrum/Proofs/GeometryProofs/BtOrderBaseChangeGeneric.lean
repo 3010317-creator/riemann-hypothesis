@@ -6,7 +6,7 @@ public import Development.WeilBound.CoreStatements.HodgeTatePoints.ExistsDenOfOp
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HopfOrderScalarExtension
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderEmbeddingOpenImmersion
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderIsHopfOrderNoetherianStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderIsHopfOrderNoetherian
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -289,7 +289,7 @@ end GlobalTheory.CompanionTheory.Ar.BT.BaseChangeOrder
 
 theorem GlobalTheory.CompanionTheory.Ar.BT.btOrder_baseChange : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed R] [IsNoetherianRing R] (T : Type) [CommGroup T] [Finite T] (Γ : QFGroup R T) (R' : Type) [CommRing R'] [IsDomain R'] [Algebra R R'] (Γ' : QFGroup R' T) (F : Γ'.G.left ⟶ Γ.G.left), Γ'.IsBaseChange Γ (algebraMap R R') F → (∃ d : R, algebraMap R R' d ≠ 0 ∧ ∀ f : T → R, d • f ∈ Γ.btOrder ⊤) ∧ Γ'.btOrder ⊤ = extOrder (algebraMap R R') (Γ.btOrder ⊤) := by
   intro R _ _ _ _ T _ _ Γ R' _ _ _ Γ' F hbc
-  have hH := GlobalTheory.T.btOrder_isHopfOrder_noetherian R T Γ
+  have hH := _root_.GlobalTheory.CompanionTheory.Relay.btOrder_isHopfOrder_noetherian R T Γ
   obtain ⟨j, hj, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.exists_unique_emb_btOrder_top R T Γ
   obtain ⟨hopen, hcov⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.isOpenImmersion_emb_and_translatesCover R T Γ j hj
   have hd : ∃ d : R, algebraMap R R' d ≠ 0 ∧ ∀ f : T → R, d • f ∈ Γ.btOrder ⊤ :=

@@ -10,7 +10,7 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Secti
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmoothRayQuotient
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaynaudFourierTermChartFunctionsIsWeight
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusInvariantHeatOperatorPreservesWeight
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRaynaudTorusWeightFunctionInvariantFieldStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRaynaudTorusWeightFunctionInvariantField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -428,7 +428,7 @@ theorem heat_acts_on_terms : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRi
   obtain ⟨τ, hτ⟩ := GlobalTheory.RayEv.exists_sec_fourierTerm R Dd.toPre O oa Y k α σ
   obtain ⟨τ', hτ'⟩ := GlobalTheory.T.exists_heatOperator_glued_pullbackBundlePower Y.H Y.q.left Dd.toPre.P.L Dd.toPre.P.isLB dd (fun a => (hv a).1) (⇑D) h k τ
   have hE : ∀ a (β : Dd.toPre.X) (V : Y.H.left.Opens) f, IsWt Y β V f → IsWt Y β V (dd a V f) :=
-    fun a => GlobalTheory.T.isRaynaudTorusWeightFunction_invariantField Y (v a) (dd a) (hv a)
+    fun a => _root_.GlobalTheory.Heat.IsInv.isWt Y (v a) (dd a) (hv a)
   choose V hV using fun i => (hb i).1
   have hle : ∀ i, h.W i ≤ LB.wchart Dd.toPre.P.L (fun _ : Fin 1 => Y.q.left) (fun _ => h.j i) :=
     fun i x hx => Set.mem_iInter.2 fun _ => h.le i hx

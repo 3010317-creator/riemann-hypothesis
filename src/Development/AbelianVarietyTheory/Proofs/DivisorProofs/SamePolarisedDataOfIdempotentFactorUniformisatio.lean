@@ -55,7 +55,7 @@ import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 import Mathlib.Tactic.Linter.Style
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.EndoLbIsoSymmetryHypothesisExtendNormalModel
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniquePoint
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusCoordinatesCompareNormalisedGeneratorsStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusCoordinatesCompareNormalisedGenerators
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FunctorialOfUnif
 
@@ -452,7 +452,7 @@ theorem samePol_of_unif_factor : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLoc
   have hk : ∀ χ, h (k χ) = star F.e • χ := congrFun ((un' _).2 _ _ (pi ▸ onTorus_comp th tk) (il _))
   have hinj : Function.Injective h := Function.LeftInverse.injective kh
   have L : Lin U'.toUnifPre U.toUnifPre pr prB h := ⟨hpr, hprB, qpr, th⟩
-  have C := GlobalTheory.T.torusCoordinates_compare_normalisedGenerators R _ hA D' D₀ A' A G' G U'.toUnifPre U.toUnifPre pr prB h L
+  have C := _root_.GlobalTheory.Mum.Two.coord_of_lin R _ hA D' D₀ A' A G' G U'.toUnifPre U.toUnifPre pr prB h L
   obtain ⟨c, hc, gc⟩ : ∃ c : A'.A ⟶ A.A, IsMonHom c ∧ Gen₀ U'.toUnifPre U.toUnifPre pr c :=
     ⟨U'.gen.inv ≫ (Over.pullback (jK R)).map pr ≫ U.gen.hom, inferInstance, by simp [Gen₀]⟩
   have adj := lbIso_star R hA D' A' G' hG' U' F.O F.o oA oG lin

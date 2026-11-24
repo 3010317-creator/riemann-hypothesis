@@ -5,9 +5,8 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Equiv
 public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
 public import Formalism.LocalRingCardinality.DataHost
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GelfandInvariantActionSmoothVectorsScalar
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SobolevContinuousFormGardingVectorStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SchurInnerEqPairClosableNormInvariantStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SobolevContinuousFormGardingVector
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SchurInnerEqPairClosableNormInvariantStatement
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FundamentalDomainIntegralMulRight
@@ -367,7 +366,7 @@ theorem continuous_toL2_gard : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [N
   let L : H →ₗ[ℂ] Lp ℂ 2 ν := A.comp (g : H →ₗ[ℂ] H)
   have hL : ∀ w, L w = A (gard ε σ φ w) := fun w => rfl
   have hc : ∀ x, Continuous fun w => a (gard ε σ φ w) x := fun x => by
-    obtain ⟨C, hC⟩ := (GlobalTheory.T.sobolevContinuous_form_gardingVector n ε H σ P G hP hG hσ _ (hs x)).1 φ hφ
+    obtain ⟨C, hC⟩ := (_root_.GlobalTheory.SobGarding.sobCont_gard n ε H σ P G hP hG hσ _ (hs x)).1 φ hφ
     exact (LinearMap.mkContinuous (((LinearMap.proj x).comp a).comp (g : H →ₗ[ℂ] H)) C hC).continuous
   have key : Continuous L := by
     refine L.continuous_of_seq_closed_graph fun u w f hu hf => ?_
@@ -431,7 +430,7 @@ theorem inner_l2_gard : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAd
     filter_upwards [hA v hv] with x hx
     rw [hx]
   have h1 : ∀ x, a (gard ε σ φ w) x = ∫ g : Formalism.REAL.UJ ε, φ (umat g) • a w (act g x) ∂(Formalism.REAL.muG ε) := fun x => by
-    have := ((GlobalTheory.T.sobolevContinuous_form_gardingVector n ε H σ P G hP hG hσ _ (hsob x)).2 w hw).2 φ hφ
+    have := ((_root_.GlobalTheory.SobGarding.sobCont_gard n ε H σ P G hP hG hσ _ (hsob x)).2 w hw).2 φ hφ
     simp only [LinearMap.comp_apply, LinearMap.proj_apply, hact'] at this
     exact this
   have hφi : Integrable (fun g : Formalism.REAL.UJ ε => φ (umat g)) (Formalism.REAL.muG ε) := by

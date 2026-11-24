@@ -108,11 +108,12 @@ import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsNumberFiel
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NsmulEqZeroOfCast
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsNormTorsionSumShortestVectorEqStatement
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTestMatch
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsWeightZeroSectionUnitIntegralTorsionPointStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantBoundedByShortestVectorStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisedModelTorsionLabelsExistStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UnitThetaConstantsGenerateIntegralTorsionStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.WeightSpaceValuesIntegralTorsionBoundShortestVecStatement
+import Development.AbelianVarietyTheory.Statements.SemistableTorsion.UTorsSt
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsWeightZeroSectionUnitIntegralTorsionPoint
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantBoundedByShortestVector
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisedModelTorsionLabelsExist
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UnitThetaConstantsGenerateIntegralTorsion
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.WeightSpaceValuesIntegralTorsionBoundShortestVec
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassicalPointNormPsiCoordinateExpNegQuadratic, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassicalPointNormPsiCoordinateExpNegQuadraticStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvrFractionLiftPadicAlgClosureNormLeOneIff, Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvrFractionLiftPadicAlgClosureNormLeOneIffStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleIsoOfPullbackChainThroughSection, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleIsoOfPullbackChainThroughSectionStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelValueAtPointOfOpenViaSpecSubalgebra, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelValueAtPointOfOpenViaSpecSubalgebraStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianExtensionAbelianOverOpenPart, Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianExtensionAbelianOverOpenPartStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationBaseChangeOfKernelInGeneratingOpenStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisedTestModelBaseChangeCompletedLoc, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisedTestModelBaseChangeCompletedLocStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTorsionToG, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ImportsLastTail, Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDominantOfGeneric, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValGPtOfStalk, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsToricTorsionLabelClosedPoint, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsToricTorsionLabelClosedPointStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionLabelEqWeilPairingToricTorsionPoint, Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionLabelEqWeilPairingToricTorsionPointStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionLabelsConstantCompletedLocalRingClosedPoi, Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionLabelsConstantCompletedLocalRingClosedPoiStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompleteLocalBaseAtClosedPointGroup, Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompleteLocalBaseAtClosedPointGroupStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaConstantFourierPartsBoundedClassMinima, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaConstantFourierPartsBoundedClassMinimaStatement
@@ -1492,11 +1493,11 @@ theorem main : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o' Ω] [Arit
   have hL := GlobalTheory.firstFiveLaws.1
   have hL2 := GlobalTheory.firstFiveLaws.2.1
   have hT := GlobalTheory.ZH.uTors_closed
-  obtain ⟨l⟩ := GlobalTheory.T.uniformisedModel_torsionLabels_exist hL hL2 hT o' Ω S ρ p y₀ u hint
+  obtain ⟨l⟩ := _root_.GlobalTheory.ZH.labels_exist hL hL2 hT o' Ω S ρ p y₀ u hint
   obtain ⟨τ, e, hq, hy⟩ := exists_test_match o' Ω S ρ p y₀ u l
-    (GlobalTheory.T.thetaConstant_bounded_by_shortestVector hL hL2 hT o' Ω S ρ p y₀ u l hint) (GlobalTheory.T.unitThetaConstants_generate_integralTorsion hL hL2 hT o' Ω S ρ p y₀ u l hint)
-    (GlobalTheory.T.weightSpace_values_integralTorsion_bound_shortestVector hL hL2 hT o' Ω S ρ p y₀ u l hint) (GlobalTheory.T.exists_norm_torsionSum_shortestVector_eq hL hL2 hT o' Ω S ρ p y₀ u l hint)
-    (GlobalTheory.T.exists_weightZeroSection_unit_integralTorsionPoint hL hL2 hT o' Ω S ρ p y₀ u l hint)
+    (_root_.GlobalTheory.ZH.TestVal.main hL hL2 hT o' Ω S ρ p y₀ u l hint) (_root_.GlobalTheory.UnitTheta.closure_unit_theta hL hL2 hT o' Ω S ρ p y₀ u l hint)
+    (_root_.GlobalTheory.ZH.WeightBound.main hL hL2 hT o' Ω S ρ p y₀ u l hint) (GlobalTheory.T.exists_norm_torsionSum_shortestVector_eq hL hL2 hT o' Ω S ρ p y₀ u l hint)
+    (_root_.GlobalTheory.ZH.WeightZeroUnit.main hL hL2 hT o' Ω S ρ p y₀ u l hint)
   refine ⟨τ, ε₀.trans e.symm, ?_, ?_⟩
   · intro α s hs
     rw [GlobalTheory.T.classicalPoint_norm_psi_coordinate_exp_neg_quadratic o' Ω S ρ M U₀ EE FinalForm R G gm D A U p y₀ ev u ε₀ hbc l α s hs, AddEquiv.trans_apply, hq,

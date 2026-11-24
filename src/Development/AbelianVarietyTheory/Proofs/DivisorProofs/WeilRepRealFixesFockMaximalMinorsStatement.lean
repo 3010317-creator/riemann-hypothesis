@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacTheta
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdeleAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQuaStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacter
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.AdelicDataRowMeasureScaleTrivialTuple
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQua
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TotalDegreeSubstFLe
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EqZeroOfAeFundamentalDomain
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PureTensorLIntertwine
@@ -75,7 +77,7 @@ theorem vacuum_smul_realA : ∀ {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ t0 : �
   intro D cc δ t0 Q P X hX hb g hg
   have hW := hX.2.weil
   have hθ := hX.2.inf
-  obtain ⟨η, e1, e2, e3, e4⟩ := GlobalTheory.T.exists_unramifiedHeckeChar_halfExponent_restrict_quadratic D
+  obtain ⟨η, e1, e2, e3, e4⟩ := _root_.GlobalTheory.Mem.EtaTilde.exists_etaTilde D
   have cart : ∀ (V : HSp D), V.gram = 1 → ∀ τ, IsCartanInv (gramAt D V τ) 1 := fun V hV τ => by
     have : gramAt D V τ = 1 := by rw [gramAt, hV, Matrix.map_one _ (map_zero _) (map_one _)]
     rw [this]
@@ -87,7 +89,7 @@ theorem vacuum_smul_realA : ∀ {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ t0 : �
     rw [gramAt, hX.1.gramA, Matrix.map_one _ (map_zero _) (map_one _), Matrix.det_one]; exact one_ne_zero
   obtain ⟨x, hx, hxv⟩ := GlobalTheory.VacuumCharacter.exists_root hθ X.A hA0 g hg
   have hy : IsDetRoot X.B 1 1 := by simp [IsDetRoot]
-  rw [GlobalTheory.T.weilDatum_realPlaces_fockVacuum_character D X.ψ hW.std X.A X.B X.θ hθ X.χA X.χB X.om η ⟨e1, e4, e3, e2⟩ hW (fun _ => 1) (fun _ => 1)
+  rw [_root_.GlobalTheory.WeilVacChar.vacuum_character D X.ψ hW.std X.A X.B X.θ hθ X.χA X.χB X.om η ⟨e1, e4, e3, e2⟩ hW (fun _ => 1) (fun _ => 1)
     (cart X.A hX.1.gramA) (cart X.B hX.1.gramB) g hg 1 (one_mem _) (fun τ => by rw [one_mul, mul_one])
     (fun τ => by rw [one_mul, mul_one]) x 1 hx hy X.vac hX.2.vac_theta hX.2.vac_fock]
   congr 1

@@ -6,7 +6,7 @@ import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinTensMemLat
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ConjMemCompletedLatticeIffDualSplitPlace
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjPartMemCompletedSelfDualLatticeIffSplitPlaceStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPlaceColumnMemCompletedLatticeIffFrameIntegStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPlaceColumnMemCompletedLatticeIffFrameInteg
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitProjAdeleComponentChartProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -196,7 +196,7 @@ theorem conj_half_onto : ∀ (D : D7) (S T : HSp D) (ΛS : Submodule (𝓞 D.hos
     ⟨_, fun _ _ => rfl⟩
   have hs : ∀ l, (fun k => finPart D (e * s' l k)) ∈ latHat D.host.F D.host.E (ΛS : Set _) := by
     intro l
-    refine (GlobalTheory.T.splitPlace_column_mem_completedLattice_iff_frame_integral D S ΛS βS hS hfS v φ e he (s' l)).2 fun i => ?_
+    refine (_root_.GlobalTheory.SplitFrameColumn.frame_column D S ΛS βS hS hfS v φ e he (s' l)).2 fun i => ?_
     have h1 : (fun k => rdA φ (s' l k)) = BS.1 *ᵥ Pi.single l 1 := by
       funext k
       rw [hs', hσ, Matrix.mulVec_single_one]

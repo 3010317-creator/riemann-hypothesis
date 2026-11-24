@@ -3,7 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.MorAlgSt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.EgaBundleFromLaws
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHoldStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.OLinBaseChangeSt
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHold
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,7 +77,7 @@ open scoped CategoryTheory.Obj
 namespace GlobalTheory
 
 theorem LN.ega_holds : GlobalTheory.LN.Ega :=
-  GlobalTheory.T.extension_of_abelian_schemes GlobalTheory.T.all_six_abelian_scheme_laws_hold.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.1
+  GlobalTheory.T.extension_of_abelian_schemes _root_.GlobalTheory.allSixLaws.1 _root_.GlobalTheory.allSixLaws.2.1
 
 end GlobalTheory
 end -- clump:auto

@@ -12,7 +12,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinet
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSmulOfCommuteHeisenbergLinearModelSchwartzBruh
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearModelUnitaryConjugate
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatchedFiniteMapsRestriction
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOperatorIsotropicTranslationCharSplitStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOperatorIsotropicTranslationCharSplit
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ZetaIdentityPersistsRowColumnChanges
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchActionReadingsCompatible
 import Mathlib.Algebra.Order.Floor.Extended
@@ -253,7 +253,7 @@ theorem linW_change (hB : B.IsGood σ) (hX : X.IsHerm σ B r s) (hW : W.IsSkew �
   have hψ1 : GlobalTheory.LatVac.psiAt B.ψ v ≠ 1 := GlobalTheory.PsiNontriv.psiAt_ne_one _ hB.std v
   have hsb := fun (u : Matrix (Fin n) (Fin d) (AE F E)) φ hφ =>
     GlobalTheory.SchrSB.schr_mem_SB B.ψ hB.std.1 v (GlobalTheory.LatVac.locCo M.co v u) φ hφ
-  have act := fun b c u hu hp φ hφ => (GlobalTheory.T.heisenbergOperator_isotropic_translation_char_split hB.cm X W hX.herm hW.skew (GlobalTheory.FinUniq.det_ne_zero_herm hX)
+  have act := fun b c u hu hp φ hφ => (_root_.GlobalTheory.HeisFlip.heis_trans_char hB.cm X W hX.herm hW.skew (GlobalTheory.FinUniq.det_ne_zero_herm hX)
     (GlobalTheory.FinUniq.det_ne_zero_skew hW) M B.ψ hB.std t b c u hu hp φ hφ _ (hsb u φ hφ)
     (GlobalTheory.VacBridge.rho_acts_locCo M.co B.ψ v u hu φ)).1
   choose zX hzX using fun Z => (_root_.GlobalTheory.FlipOnto.coX_coY_onto F E σ B hB n d _ _ _ _ X W hX hW v t (b * g) (c * k) Z).1
@@ -293,7 +293,7 @@ theorem linBar_change (hB : B.IsGood σ) (hX : X.IsHerm σ B r s) (hW : W.IsSkew
   have hψ1 : GlobalTheory.LatVac.psiAt B.ψ v ≠ 1 := GlobalTheory.PsiNontriv.psiAt_ne_one _ hB.std v
   have hsb := fun (u : Matrix (Fin n) (Fin d) (AE F E)) φ hφ =>
     GlobalTheory.SchrSB.schr_mem_SB B.ψ hB.std.1 v (GlobalTheory.LatVac.locCo M.co v u) φ hφ
-  have act := fun b c u hu hp φ hφ => (GlobalTheory.T.heisenbergOperator_isotropic_translation_char_split hB.cm X W hX.herm hW.skew (GlobalTheory.FinUniq.det_ne_zero_herm hX)
+  have act := fun b c u hu hp φ hφ => (_root_.GlobalTheory.HeisFlip.heis_trans_char hB.cm X W hX.herm hW.skew (GlobalTheory.FinUniq.det_ne_zero_herm hX)
     (GlobalTheory.FinUniq.det_ne_zero_skew hW) M B.ψ hB.std t b c u hu hp φ hφ _ (hsb u φ hφ)
     (GlobalTheory.VacBridge.rho_acts_locCo M.co B.ψ v u hu φ)).2
   choose zX hzX using fun Z => (_root_.GlobalTheory.FlipOnto.coX_coY_onto F E σ B hB n d _ _ _ _ X W hX hW v t (b * g) (c * k) Z).1

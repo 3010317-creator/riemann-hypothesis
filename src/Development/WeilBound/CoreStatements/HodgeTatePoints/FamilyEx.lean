@@ -12,7 +12,7 @@ public import Development.WeilBound.CoreStatements.HodgeTatePoints.CocpMain
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LocalComponentsSurjective
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.LbIsoPullPull
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FormalGermBaseChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FormalGermDimensionUniqueStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FormalGermDimensionUnique
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -289,7 +289,7 @@ theorem finite_nonint {K : Type} [Field K] (C : ACurve K) (x : K) : {i | ¬ C.v 
   · exact (C.fin x h).subset fun i hi e => hi e.le
 
 theorem family_ex_of' (hfib : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (X0 : Scheme.{0}) (t : SAB H X0), PowFns t → ∀ (k : Type) [Field k] (p : ℕ) [Fact p.Prime] [CharP k p] (x : Sp k ⟶ X0) (d : ℕ) (g : GermAt t x d), FibPF t (x (IsLocalRing.closedPoint k)) → ConjInj g.B p)
-    (hbc : type_of% @GlobalTheory.T.formal_germ_base_change) (huniv : type_of% @GlobalTheory.T.formal_germ_dimension_unique) (hiso : type_of% @GlobalTheory.T.formal_germs_isomorphic)
+    (hbc : type_of% @GlobalTheory.T.formal_germ_base_change) (huniv : type_of% @_root_.GlobalTheory.CompanionTheory.Ar.GermUniv.germ_chart_universal) (hiso : type_of% @GlobalTheory.T.formal_germs_isomorphic)
     (haff : type_of% @GlobalTheory.T.exists_formal_germ_open_affine) : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (X0 : Scheme.{0}) (t : SAB H X0), PowFns t → ∀ (K : Type) [Field K] (p : ℕ) [Fact p.Prime] [CharP K p] (C : ACurve K) (z : Sp K ⟶ X0) (Y : CurveIn C z), (∀ i, FibPF t (GlobalTheory.CompanionTheory.Ar.centre (Y.x i))) → ∃ (d : ℕ) (F : Family C p d (𝓞 E)) (g : GermAt t z d), g.B = F.B ∧ ∀ i, ∃ gi : GermAt t (Y.x i) d, ∀ l, IsCombAtG t z g.tg (fun j => lin (F.φ i) 1 j l) (spMap (GlobalTheory.CompanionTheory.Ar.dualMap (C.v i).valuationSubring.subtype) ≫ gi.tg l) := by
   intro E _ _ _ H _ hs X0 t hP K _ p _ _ C z Y hY
   have bc : ∀ {S S₂ : Type} [CommRing S] [CommRing S₂] (f : S →+* S₂) {x : Sp S ⟶ X0} {x₂ : Sp S₂ ⟶ X0}

@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HeisenbergDerivativeThetaFunctionLaws
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPeriodMapHomeomorphRiemannFormDensity
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionSpaceHeisenbergLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinearStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionSpaceHeisenbergLaws
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinear
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -173,10 +173,10 @@ end Generic
 variable {D : D7} {S T : HSp D} (C : Ctx S T)
 
 theorem th_add {f f' : WO S T → ℂ} (hf : C.IsTh f) (hf' : C.IsTh f') : C.IsTh (f + f') := by
-  exact ((GlobalTheory.T.thetaFunction_space_heisenberg_laws D S T C).2.1 f f' hf hf').1
+  exact ((_root_.GlobalTheory.ThetaSpace.theta_space_laws D S T C).2.1 f f' hf hf').1
 
 theorem th_smul (a : ℂ) {f : WO S T → ℂ} (hf : C.IsTh f) : C.IsTh (a • f) := by
-  exact ((GlobalTheory.T.thetaFunction_space_heisenberg_laws D S T C).2.2 f hf).1 a
+  exact ((_root_.GlobalTheory.ThetaSpace.theta_space_laws D S T C).2.2 f hf).1 a
 
 theorem rho_add (u : WO S T) (f f' : WO S T → ℂ) : C.rho u (f + f') = C.rho u f + C.rho u f' := by
   unfold Ctx.rho heisO
@@ -240,7 +240,7 @@ noncomputable abbrev eDir (τ : D.what₂.Tau) (z : Matrix (Fin T.rank) (Fin S.r
 theorem eDir_cplx {B : C.Bas} (hB : C.IsB B) (τ' : D.what₂.Tau) (z' : Matrix (Fin T.rank) (Fin S.rank) ℂ) :
     eDir C τ (cplxO 1 (C.sB B τ) z) τ' (cplxO 1 (C.sB B τ') z') = eDir C τ z τ' z' ∧
     eDir C τ (cplxO 1 (C.sB B τ) z) τ' z' = -eDir C τ z τ' (cplxO 1 (C.sB B τ') z') := by
-  obtain ⟨-, hmem, -, hz, -⟩ := (GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2 B hB
+  obtain ⟨-, hmem, -, hz, -⟩ := (_root_.GlobalTheory.Ker.onBasis_frame_period D S T C).2 B hB
   have hE := (zR_laws D.host.E T.rank C.X C.g C.q0 C.hr C.bas C.idx S.rank C.sympl C.even (C.xB B) hmem).2.1
   simp only [eDir]
   rw [← hE, ← hE, ← hE, ← hE, hz, hz]

@@ -3,15 +3,20 @@ module
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ChainParSucc
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CartFrSgn
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsRealDiscreteSeriesDataThetaPropertiesStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ChosenSeries
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsRealDiscreteSeriesDataThetaProperties
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalFockIntertwinerAdjointExchangedPairStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsGlobalFockIntertwinerTensorRealPlacesStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUniqueIsContr
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GluingLawHoldsStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GluingLawHolds
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsItWOfGlobIt
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandraStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaVacuumCharactersRealPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.VacuumFockFromSquareIntegrabilityStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.BarMatrix
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandra
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RaisingLoweringOperators
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaVacuumCharactersRealPlaces
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.VacuumFockVectors
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.VacuumFockFromSquareIntegrability
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,26 +79,26 @@ theorem upPair_itW : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory
     ∃ It : PolF D V.rank W.rank →ₗ[ℂ] SmT M →ₗ[ℂ] SmT M', ∀ ω f, GlobalTheory.PairLift.IsWeilExp ψ W V aT aS ω →
       GlobalTheory.Chain.IsVacVec ψ θ M' M f → IsItW θ M' M ω (GlobalTheory.Chain.ptOf ψ θ M' M f) It := by
   intro hDS hHC D t V W S S' M M' aS aT θ ψ hθ hP
-  obtain ⟨X, hX, h1, h2, -⟩ := GlobalTheory.T.exists_real_discreteSeries_data_theta_properties hDS hHC
-  have hB := GlobalTheory.T.thetaModels_are_coverDiscreteSeries_of_harishChandra hDS hHC D
+  obtain ⟨X, hX, h1, h2, -⟩ := _root_.GlobalTheory.RealPlaceTheta.exists_record_theta_all hDS hHC
+  have hB := _root_.GlobalTheory.CoverModel.modelsAreCoverSeries_all hDS hHC D
   have key : ∀ τ, (0 < V.rank ∧ 0 < W.rank) ∧ ∃ A, LocIt M M' τ (aS τ) (aT τ) A := fun τ => by
     obtain ⟨al, be, ga, de, hd, -, e1, e2⟩ := hP τ
     exact exists_locIt hX h1 h2 hB M M' τ hd e1 e2
   choose hr A hA using key
   refine ⟨?_, ?_⟩
-  · obtain ⟨It, I, hI⟩ := GlobalTheory.T.exists_globalFockIntertwiner_tensor_realPlaces D V W _ _ M M' aS aT A GlobalTheory.ContrObj.contraction.2 (GlobalTheory.T.gluing_law_holds D _ _) hA
+  · obtain ⟨It, I, hI⟩ := GlobalTheory.T.exists_globalFockIntertwiner_tensor_realPlaces D V W _ _ M M' aS aT A GlobalTheory.ContrObj.contraction.2 (_root_.GlobalTheory.Chain.RealIt.GlueProof.glueLaw D _ _) hA
     refine ⟨It, fun ω f ⟨χS, χT, hω, he⟩ hf => ?_⟩
-    have hv := fun τ => GlobalTheory.T.thetaVacuumCharacters_realPlaces D V W _ _ M M' θ ψ χS χT ω f τ _ _ hθ hω (he τ).1 (he τ).2 hf
-    exact isItW_of_globIt hθ hI hr (GlobalTheory.T.fockVectors_overVacuum_isometry D V W _ _ M M' ψ θ hω.std hθ f hf).2.2.2.2 (fun τ => (hv τ).2.1)
+    have hv := fun τ => _root_.GlobalTheory.VacuumCharacter.vacChar D V W _ _ M M' θ ψ χS χT ω f τ _ _ hθ hω (he τ).1 (he τ).2 hf
+    exact isItW_of_globIt hθ hI hr (_root_.GlobalTheory.VacuumFockLaws.vacuumFock_onObjects D V W _ _ M M' ψ θ hω.std hθ f hf).2.2.2.2 (fun τ => (hv τ).2.1)
       fun τ => (hv τ).2.2
   · have hA' : ∀ τ, ∃ A', LocIt M' M τ (aT τ) (aS τ) A' := fun τ =>
       GlobalTheory.T.localFockIntertwiner_adjoint_exchangedPair D V W _ _ M M' τ _ _ (A τ) (hA τ)
     choose A' hA' using hA'
-    obtain ⟨It, I, hI⟩ := GlobalTheory.T.exists_globalFockIntertwiner_tensor_realPlaces D W V _ _ M' M aT aS A' GlobalTheory.ContrObj.contraction.2 (GlobalTheory.T.gluing_law_holds D _ _) hA'
+    obtain ⟨It, I, hI⟩ := GlobalTheory.T.exists_globalFockIntertwiner_tensor_realPlaces D W V _ _ M' M aT aS A' GlobalTheory.ContrObj.contraction.2 (_root_.GlobalTheory.Chain.RealIt.GlueProof.glueLaw D _ _) hA'
     refine ⟨It, fun ω f ⟨χS, χT, hω, he⟩ hf => ?_⟩
-    have hv := fun τ => GlobalTheory.T.thetaVacuumCharacters_realPlaces D W V _ _ M' M θ ψ χS χT ω f τ _ _ hθ hω (he τ).1 (he τ).2 hf
+    have hv := fun τ => _root_.GlobalTheory.VacuumCharacter.vacChar D W V _ _ M' M θ ψ χS χT ω f τ _ _ hθ hω (he τ).1 (he τ).2 hf
     exact isItW_of_globIt hθ hI (fun τ => ⟨(hr τ).2, (hr τ).1⟩)
-      (GlobalTheory.T.fockVectors_overVacuum_isometry D W V _ _ M' M ψ θ hω.std hθ f hf).2.2.2.2 (fun τ => (hv τ).2.1) fun τ => (hv τ).2.2
+      (_root_.GlobalTheory.VacuumFockLaws.vacuumFock_onObjects D W V _ _ M' M ψ θ hω.std hθ f hf).2.2.2.2 (fun τ => (hv τ).2.1) fun τ => (hv τ).2.2
 
 end GlobalTheory.EvenOnto
 

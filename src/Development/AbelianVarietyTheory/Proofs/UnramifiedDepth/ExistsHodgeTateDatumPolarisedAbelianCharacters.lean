@@ -4,13 +4,15 @@ public import Development.AbelianVarietyTheory.Definitions.TeichmullerDepth.IsEi
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AbelianFunctorNilChartOfNilpotentChartStatement
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CardTorsionOfPolarisedAbelianSchemeLiftStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CubeTrivialAndFiniteFlatSurjectiveMulAbelianScheStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CubeTrivialAndFiniteFlatSurjectiveMulAbelianSche
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsCharacterPairSerStatement
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsGeneratorOfRosatiAdjointLambdaBundleStatement
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsLiftPrincipallyPolarisedAbelianSquareZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsPeriodTowerDatumOfAbelianSchemeSymmetricBuStatement
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsTangentChartMatrixOfBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HodgeTateDatumHypothesesPeriodTowerStatement
+public import ReciprocityTheory.DualLattices.SubMemOfCompat
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HodgeTateDatumHypothesesPeriodTower
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.JacobianMulTangentChartMatrixIntertwinesStatement
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LinearPartPairingSeriesEqHeightStatement
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.PeriodDatumSignCharactersMemEvalImage
@@ -19,7 +21,7 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDesc
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.UniversalCharts.LePreimageOfNil
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.NEvalSqZero
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FormalGroupLawJacobianExtensionChangeCoeffStatement
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FormalGroupLawJacobianExtensionChangeCoeff
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HopfPointMem
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -66,7 +68,6 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.T
 import ReciprocityTheory.DualLattices.FormalChartAtZero
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.CocycleRightZeroThd
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF
-import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HodgeTateDatumHypothesesPeriodTower
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsHodgeTateDatumFormalGroupCharacters, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsHodgeTateDatumFormalGroupCharactersStatement, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsPolarisedAbelianSchemeBaseChangeRingAction, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsPolarisedAbelianSchemeBaseChangeRingActionStatement, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.NilpotentChartBaseChangeFormalGroup, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.NilpotentChartBaseChangeFormalGroupStatement, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsHodgeTateDatumPolarisedAbelianCharacters
@@ -176,7 +177,7 @@ private theorem htd_of_tower (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAl
   have hsm : SmoothOfRelativeDimension P.g G.hom :=
     GlobalTheory.T.smoothOfRelativeDimension_of_grpPullback_localRing (Ainf.R0 p O ε) _ (algebraMap _ _) G P.A ψ P.g hGab hψ P.smoothDim
   have hM := LB.isLB_pull hQ (lift (𝟙 G) (𝟙 G)).left
-  obtain ⟨hθ, hmult⟩ := GlobalTheory.T.cube_trivial_and_finite_flat_surjective_mul_abelianScheme (Ainf.R0 p O ε) G _ Q hGab hM hQa hQ
+  obtain ⟨hθ, hmult⟩ := _root_.GlobalTheory.ChF.exists_gen_theta_tensor_and_finite_flat_surjective_pow (Ainf.R0 p O ε) G _ Q hGab hM hQa hQ
   have hfin := hmult p (Fact.out : p.Prime).one_le
   letI : Algebra (Ainf.R0 p O ε) C :=
     ((algebraMap ((Ainf.ainfTowerL p O hv ε hε).O : Type) C).comp
@@ -215,7 +216,7 @@ theorem exists_htd_chars : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [Is
   haveI : IsAdicComplete (Ideal.span {(p : ((Ainf.ainfTowerL p O hv ε hε).O : Type))})
       ((Ainf.ainfTowerL p O hv ε hε).O : Type) := ‹IsAdicComplete (Ideal.span {(p : O)}) O›
   letI : Algebra ℤ_[p] ((Ainf.ainfTowerL p O hv ε hε).O : Type) := ‹Algebra ℤ_[p] O›
-  refine ⟨(Ainf.ainfTowerL p O hv ε hε).c, GlobalTheory.T.hodgeTate_datum_hypotheses_period_tower p O hv ε hε OE, ?_⟩
+  refine ⟨(Ainf.ainfTowerL p O hv ε hε).c, _root_.GlobalTheory.ChF.hodgeTateSetting_ainfTower_of_isPrimitiveRoot p O hv ε hε OE, ?_⟩
   exact htd_of_tower p C v O hv ε hε (Ainf.ainfTowerL p O hv ε hε) rfl hv T P₀ io P φ h₁ h₂ h₃ h₄
     OE o F X hX α hα
 
@@ -432,7 +433,7 @@ theorem exists_htd_characters_base : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Fi
   · obtain ⟨P', φ, hφ, hL, hg', hact⟩ := GlobalTheory.T.exists_polarisedAbelianScheme_baseChange_ringAction T O io P
     obtain ⟨o', ho'⟩ := hact OE o
     obtain ⟨X', hX', hR⟩ := GlobalTheory.T.nilpotentChart_baseChange_formalGroup T O io P.A P'.A φ hφ g F.F X hX
-    obtain ⟨F', hF'⟩ := (GlobalTheory.T.formalGroupLaw_jacobian_extension_changeCoeff T O io).1 g F
+    obtain ⟨F', hF'⟩ := (_root_.GlobalTheory.ChF.changeCoeff_law_lin_extSer T O io).1 g F
     have hX'' : NilChart P'.A F'.F X' := by rw [hF']; exact hX'
     have h := GlobalTheory.T.exists_hodgeTateDatum_formalGroupCharacters p C v O hv T P io P' φ hφ hL hg' (by omega) g (hg'.trans hg) OE o' F' X'
       hX'' (fun a j => MvPowerSeries.map io (α a j))

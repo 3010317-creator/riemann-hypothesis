@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Langlands
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.ChevalleyUnits
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GlobalArtinCompatLocalDegreeOneStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GlobalArtinLocalIdeleInjectiveStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GlobalArtinLocalIdeleInjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +60,7 @@ theorem isLocalArtin_transport : GlobalArtinReciprocity → ChevalleyUnits → �
     simp [x]
   have h1 := GlobalTheory.T.globalArtin_compat_localDegreeOne E Ω A w h E' Ω' A' w' h' φ j i hP art art' hart hart' σ σ' x hσ
     (by rw [hx]; exact ha'.glob art' hart' σ')
-  have h2 : x = a σ := GlobalTheory.T.globalArtin_localIdele_injective hC E Ω art hart w (h1.trans (ha.glob art hart σ).symm)
+  have h2 : x = a σ := _root_.GlobalTheory.ArtinLocalInj.artin_localIdele_injective hC E Ω art hart w (h1.trans (ha.glob art hart σ).symm)
   rw [← hx, h2]
 
 end GlobalTheory.LocLanglands

@@ -13,7 +13,8 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasDerivAtFockVectorTargetLieOneParam
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.SqEqOneOfFixDat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdeleAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacterStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacter
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ActOfMemGfC
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnramifiedEtaTildeOfOddExponentSum
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdmissibleEmptyOfGood
@@ -39,7 +40,6 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaIntegra
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegrableOnDownwardThetaLiftIntegrand
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameOfHeisDer
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RapidDecayLift
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegrableOnDownwardThetaLiftIntegrandStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -331,7 +331,7 @@ theorem om_ptP_subst : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Ty
     rw [Units.val_one, RingHom.map_one, mul_one]
     exact (Matrix.det_one).symm
   obtain ⟨c, hc⟩ : ∃ c : ℂ, R.ωP i t (u, 1) (R.vP i t) = c • R.vP i t :=
-    ⟨_, GlobalTheory.T.weilDatum_realPlaces_fockVacuum_character D R.ψ hW.std (Vc D i) (Wc D i) R.θ hθ _ _ (R.ωP i t) _ hη hW (fun _ => 1)
+    ⟨_, _root_.GlobalTheory.WeilVacChar.vacuum_character D R.ψ hW.std (Vc D i) (Wc D i) R.θ hθ _ _ (R.ωP i t) _ hη hW (fun _ => 1)
       (cart (R.MW i (sg0 D A))) hS hT u hu 1 (one_mem _) (fun τ => by rw [one_mul, mul_one])
       (fun τ => by rw [one, one_mul, mul_one]) x 1 hx hy _ hf hv⟩
   refine ⟨c, U, fun P => ?_⟩
@@ -564,7 +564,7 @@ theorem om_vac_of {B : Base S T} {ψ : Twist D Circle} {ω : PairRep S T} (hF : 
     rw [hp] at h2
     have h3 : (p τ : ℂ) = B.w.p τ := by linear_combination h2 / 2
     exact_mod_cast h3
-  rw [GlobalTheory.T.weilDatum_realPlaces_fockVacuum_character D B.F.ψ hω.std S T B.F.θ hθ _ _ ω B.eta heta hω (fun _ => 1) B.F.sT hS hT u hu 1 (one_mem _)
+  rw [_root_.GlobalTheory.WeilVacChar.vacuum_character D B.F.ψ hω.std S T B.F.θ hθ _ _ ω B.eta heta hω (fun _ => 1) B.F.sT hS hT u hu 1 (one_mem _)
     (fun τ => by rw [one_mul, mul_one]) (fun τ => by rw [one, one_mul, mul_one]) x 1 hx hy f hf hv]
   congr 1
   have hexp : ∀ τ, HasInfExp D (B.mu * ψ.chi * B.eta⁻¹ * (B.eta ^ T.rank)⁻¹) τ ((B.w.c τ - p τ : ℤ) : ℚ) := fun τ => by
@@ -1188,7 +1188,7 @@ theorem om_ptP_inf : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type
     rw [Units.val_one, RingHom.map_one, mul_one]
     exact (Matrix.det_one).symm
   obtain ⟨c, hc⟩ : ∃ c : ℂ, R.ωP i t (u, 1) (R.vP i t) = c • R.vP i t :=
-    ⟨_, GlobalTheory.T.weilDatum_realPlaces_fockVacuum_character D R.ψ hW.std (Vc D i) (Wc D i) R.θ hθ _ _ (R.ωP i t) _ hη hW (fun _ => 1)
+    ⟨_, _root_.GlobalTheory.WeilVacChar.vacuum_character D R.ψ hW.std (Vc D i) (Wc D i) R.θ hθ _ _ (R.ωP i t) _ hη hW (fun _ => 1)
       (cart (R.MW i (sg0 D A))) hS hT u hu 1 (one_mem _) (fun τ => by rw [one_mul, mul_one])
       (fun τ => by rw [one, one_mul, mul_one]) x 1 hx hy _ hf hv⟩
   refine ⟨fun τ => ((Wc D i).sig (tauE D τ)).1, c, U, hU, fun P => ?_⟩
@@ -1776,7 +1776,7 @@ theorem exists_bilin (R : RealDat D A Ks) (F : Face D A) (hG : GlobalTheory.Lift
     ∃ B : GA D (Wc D i) → PolF D (Wc D i).rank (Vc D i).rank →ₗ[ℂ] Module.Dual ℂ (R.cV i).W →ₗ[ℂ] ℂ,
       ∀ g P l, B g P l = downInt R i t y (R.ptP i t P) l g := by
   have hth := hG.core.thP.pt_theta i t
-  have hint := fun f l g hf => GlobalTheory.T.integrableOn_downwardThetaLift_integrand D G Pl0 T A Ks R F hG hP i t y f l g hf
+  have hint := fun f l g hf => _root_.GlobalTheory.DownLift.GenFinite.integrableOn_downIntegrand D G Pl0 T A Ks R F hG hP i t y f l g hf
   refine ⟨fun g => LinearMap.mk₂ ℂ (fun P l => downInt R i t y (R.ptP i t P) l g) ?_ ?_ ?_ ?_, fun g P l => rfl⟩
   · intro P Q l
     rw [pureTensor_add, downInt_add_f _ _ _ _ _ _ _ _ (hint _ l g (hth P)) (hint _ l g (hth Q))]

@@ -11,8 +11,8 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.Exists
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelGroupCongruentOfTwoLatticeMoves
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RevPosRevPos
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CompAtOfFin
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalUnitaryGroupStructureStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SelfDualLatticesAtLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalUnitaryGroupStructure
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SelfDualLatticesAtLevel
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsOrthonormalisation
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinear
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.WeilActionTranslatesThetaByUnitScalar
@@ -23,15 +23,14 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.Exists
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryActionAtRealPlace
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsRealPointUnitaryWithComponents
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FiniteAdelicLatticeTransportLaws
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalUnitaryGroupStructure
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelDatumVectorEqThetaOfTestFunctionStatement
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelTestFunctionFiniteSumEquivariant
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaTestFunctionNormAndOverlapBound
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.WeilActionPreservesThetaAndInnerProduct
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorTestThetaZeroEqThetaSeriesStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUnique
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorLaws
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorTestThetaZeroEqThetaSeries
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsAdelicMatrix
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsVacuaAndMultipliers
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelThetaSpan
@@ -80,7 +79,6 @@ import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RationalPointsAd
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.InclusionInjective
 import Formalism.LocalToGlobal.IndefiniteReal.ExistsChosenExtremalVector
 import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FiniteAdelicLatticeTransportLawsStatement
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Lemma
@@ -88,8 +86,7 @@ import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OmegaFormSig
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelStructureProperties
 import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalSchwartzBruhatAlgebraIntegralLinear
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinearStatement
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelTestFunctionMapLinearInjectiveEquivarStatement
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelTestFunctionMapLinearInjectiveEquivar
 import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
@@ -563,14 +560,14 @@ theorem eq_of_invariant : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (Lv : SW.Leve
   have hΛ : C.X.Λ.FG ∧ Submodule.span D.host.E (C.X.Λ : Set (Fin T.rank → D.host.E)) = ⊤ :=
     ⟨C.X.Λ_fg, C.X.Λ_span⟩
   have hm1 : IsMov (fmt T 1) C.X.Λ C.X.Λ := by rw [Red.fmt_one]; exact Red.isMov_one _
-  obtain ⟨-, hL⟩ := GlobalTheory.T.self_dual_lattices_at_level D S T C
+  obtain ⟨-, hL⟩ := _root_.GlobalTheory.Ker.MovLev.mov_mem_lattices D S T C
   have hI : C.under Lv ≠ ⊥ := (hL Lv 1 _ hΛ.1 hm1).2.2.1
-  have hgrp := ((GlobalTheory.T.rational_unitary_group_structure D S T C).2.2.2 T).2.1
-  have hcomm := ((GlobalTheory.T.rational_unitary_group_structure D S T C).2.2.2 T).2.2.2.1
+  have hgrp := ((_root_.GlobalTheory.Ker.Grp.rational_points_and_parts D S T C).2.2.2 T).2.1
+  have hcomm := ((_root_.GlobalTheory.Ker.Grp.rational_points_and_parts D S T C).2.2.2 T).2.2.2.1
   funext g
   obtain ⟨γ, hγ, a, ha, g', hg', k, hk, hg, ht, -, hck, hcJ⟩ := GlobalTheory.T.exists_rational_real_trivialAt_congruent_factor D T C.X.Λ (C.under Lv) M hΛ hI hM g
   have hinv : fmt T g' * fmt T g'⁻¹ = 1 := by rw [← (hgrp g' g'⁻¹).2.1, mul_inv_cancel, Red.fmt_one]
-  obtain ⟨L, hLf, hLm⟩ := ((GlobalTheory.T.finiteAdelicLatticeTransport_laws D _ C.X.Λ hΛ).2.2.2 _ _ hinv).1
+  obtain ⟨L, hLf, hLm⟩ := ((_root_.GlobalTheory.Ker.isMov_laws D _ C.X.Λ hΛ).2.2.2 _ _ hinv).1
   have hLl : L ∈ Lv.lats := (hL Lv g' L hLf.1 hLm).2.1 ht
   obtain ⟨h1, h2, h3⟩ := hgL L hLl
   have hk1 : C.LevK Lv k 1 := Red.levK_one C Lv k hk hck.1 (hcJ _ hM𝔪)
@@ -1206,7 +1203,7 @@ theorem std_mem_Vset {D : D7} {S T : HSp D} (C : Ctx S T) (M : ℕ) (hM : 0 < M)
     stdL D.host.E S.rank ∈ Vset D.host.E S.rank M := by
   have hs1 : IsMov (fmtC S 1) (stdL D.host.E S.rank) (stdL D.host.E S.rank) := by
     rw [Red.fmtC_one]; exact Red.isMov_one _
-  exact (GlobalTheory.T.self_dual_lattices_at_level D S T C).1 M 1 _ hM (Red.trivAt_one _ _) (Red.stdL_fg _) hs1
+  exact (_root_.GlobalTheory.Ker.MovLev.mov_mem_lattices D S T C).1 M 1 _ hM (Red.trivAt_one _ _) (Red.stdL_fg _) hs1
 
 theorem wG_phi_std {D : D7} {S T : HSp D} (C : Ctx S T) (Lv : SW.Level C.X) (hn : T.rank ≤ S.rank) (M : ℕ)
     (hM : 0 < M) (hM𝔪 : (M : 𝓞 D.host.E) ∈ Lv.𝔪) (v₀ : Lt D.host.E T.rank → TF S.rank C.g)
@@ -1237,10 +1234,10 @@ theorem th_phi_ne {D : D7} {S T : HSp D} (C : Ctx S T) (Lv : SW.Level C.X) (hn :
     C.Th (C.xB B) (Lv.phi C.bas hn v₀ L (stdL D.host.E S.rank)) ≠ 0 := by
   intro h0
   have hstd := std_mem_Vset C M hM
-  have hx := ((GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2 B hB).2.1
+  have hx := ((_root_.GlobalTheory.Ker.onBasis_frame_period D S T C).2 B hB).2.1
   have hsb := (_root_.GlobalTheory.SW.RecSum.phi_sum_equivariant D.host.E T.rank C.X C.g C.bas C.idx S.rank C.sympl C.even Lv hn M hM hM𝔪 v₀ hv L hL _
     hstd).1
-  obtain ⟨h1, h2, -⟩ := GlobalTheory.T.thetaKernel_testFunction_map_linear_injective_equivariant D S T C _ hx _ hsb
+  obtain ⟨h1, h2, -⟩ := _root_.GlobalTheory.Ker.Ctx.th_laws D S T C _ hx _ hsb
   have hsb0 := (_root_.GlobalTheory.SW.isSB_algebra_haar_linear ℚ (Fin S.rank) (Fin C.g) _ _ hsb hsb).2.1 0
   have e : C.Th (C.xB B) ((0 : ℂ) • Lv.phi C.bas hn v₀ L (stdL D.host.E S.rank)) =
       C.Th (C.xB B) (Lv.phi C.bas hn v₀ L (stdL D.host.E S.rank)) := by
@@ -1268,12 +1265,12 @@ theorem read_off_automorphic : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (om : GA
   obtain ⟨hΛl, -, hgrp, hlat, -, -, -⟩ := _root_.GlobalTheory.SW.level_laws D.host.E T.rank C.X C.g C.bas C.idx S.rank C.sympl C.even Lv hn
   obtain ⟨hun, k0, hkJ, hred⟩ := (hgrp γ).1 hγ
   have hL' : mapL γ L ∈ Lv.lats := ((hlat L hL).2.2.2 γ hγ).1
-  have hJ := (GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2
+  have hJ := (_root_.GlobalTheory.Ker.onBasis_frame_period D S T C).2
   have hmv := (hJ B hB).2.2.2.2.2
-  obtain ⟨e, he⟩ := (GlobalTheory.T.rational_unitary_group_structure D S T C).1
+  obtain ⟨e, he⟩ := (_root_.GlobalTheory.Ker.Grp.rational_points_and_parts D S T C).1
   have hγA : IsRatOf T γ (e ⟨γ, hun⟩).1 := he ⟨γ, hun⟩
   have hγAQ : (e ⟨γ, hun⟩).1 ∈ GQ T := (e ⟨γ, hun⟩).2
-  have hgrpT := (GlobalTheory.T.rational_unitary_group_structure D S T C).2.2.2 T
+  have hgrpT := (_root_.GlobalTheory.Ker.Grp.rational_points_and_parts D S T C).2.2.2 T
   have hcomm := hgrpT.2.2.2.1
   obtain ⟨a₀, ha₀, f, hf, hγAe⟩ := hgrpT.2.2.1 (e ⟨γ, hun⟩).1
   set γA := (e ⟨γ, hun⟩).1 with hγAdef
@@ -1334,7 +1331,7 @@ theorem read_off_automorphic : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (om : GA
       rw [p, map_mul, map_mul, Module.End.mul_apply, Module.End.mul_apply, (hep1 L hL).2.2, map_smul,
         hz a ha _ (hsb L hL), map_smul, map_smul, ((GlobalTheory.T.weilRep_rationalPoints_thetaFunctions_fock D S T C om hW).2 γ γA hγA _ (hsb L hL)).1 _ hx,
         wG_phi_std C Lv hn M hM hM𝔪 v₀ hv μ hμ γ hγ L hL, hY,
-        (GlobalTheory.T.thetaKernel_testFunction_map_linear_injective_equivariant D S T C _ ((hJ _ (hmv _).1).2.1) _ (hsb _ hL')).2.1, smul_smul, smul_smul]
+        (_root_.GlobalTheory.Ker.Ctx.th_laws D S T C _ ((hJ _ (hmv _).1).2.1) _ (hsb _ hL')).2.1, smul_smul, smul_smul]
     have hX2 : om (1, γA * a * gL L) (C.Th (C.xB B) (Lv.phi C.bas hn v₀ C.X.Λ (stdL D.host.E S.rank))) =
         (ep 1 * cf (gL (mapL γ L)) * z (a₀ * a)) •
           C.Th (C.xB (C.mvB (a₀ * a) B)) (Lv.phi C.bas hn v₀ (mapL γ L) (stdL D.host.E S.rank)) := by
@@ -1436,7 +1433,7 @@ theorem theta_eval : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (om : GA D S × GA
   have hm1 : IsMov (fmt T 1) C.X.Λ C.X.Λ := by rw [_root_.GlobalTheory.Ker.LevEig.fmt_one]; exact GlobalTheory.Ker.Red.isMov_one _
   have hs1 : IsMov (fmtC S 1) (stdL D.host.E S.rank) (stdL D.host.E S.rank) := by
     rw [GlobalTheory.Ker.Red.fmtC_one]; exact GlobalTheory.Ker.Red.isMov_one _
-  obtain ⟨hV, hL⟩ := GlobalTheory.T.self_dual_lattices_at_level D S T C
+  obtain ⟨hV, hL⟩ := _root_.GlobalTheory.Ker.MovLev.mov_mem_lattices D S T C
   have hΛl : C.X.Λ ∈ Lv.lats := (hL Lv 1 _ hΛ0 hm1).2.1 (GlobalTheory.Ker.Red.trivAt_one _ _)
   have hLl : L ∈ Lv.lats := (hL Lv g L hLf hgm).2.1 hgt
   have hsb : ∀ L ∈ Lv.lats, ∀ Λ ∈ Vset D.host.E S.rank M, SW.IsSB (Lv.phi C.bas hn v₀ L Λ) :=
@@ -1446,23 +1443,23 @@ theorem theta_eval : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (om : GA D S × GA
     hV M 1 _ hM (GlobalTheory.Ker.Red.trivAt_one _ _) (GlobalTheory.Ker.Red.stdL_fg _) hs1
   have hφ0 := hsb _ hΛl _ hstd
   have hφ := hsb L hLl Λ (hV M h Λ hM hht hΛf hhm)
-  have hJ := (GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2
+  have hJ := (_root_.GlobalTheory.Ker.onBasis_frame_period D S T C).2
   have hth : ∀ B', C.IsB B' → ∀ φ : TF S.rank C.g, SW.IsSB φ → C.IsTh (C.Th (C.xB B') φ) :=
-    fun B' hB' φ hφ => (GlobalTheory.T.adelicZakTheta_exists_unique D S T C _ (hJ B' hB').2.1 φ hφ).1.1
+    fun B' hB' φ hφ => (_root_.GlobalTheory.Ker.ZakEx.isZak_Th D S T C _ (hJ B' hB').2.1 φ hφ).1.1
   have hmv := (hJ B hB).2.2.2.2.2
   have hBa : C.IsB (C.mvB a B) := (hmv a).1
   have hgB : C.mvB g B = B := (hmv g).2.2.1 hg
-  have hcomm : a * g = g * a := (((GlobalTheory.T.rational_unitary_group_structure D S T C).2.2.2 T).2.2.2.1 a ha).2.2 g hg
+  have hcomm : a * g = g * a := (((_root_.GlobalTheory.Ker.Grp.rational_points_and_parts D S T C).2.2.2 T).2.2.2.1 a ha).2.2 g hg
   have p1 : ((h, g * a) : GA D S × GA D T) = (1, a) * (h, g) := by
     rw [Prod.mk_mul_mk, one_mul, hcomm]
   obtain ⟨-, -, e3⟩ := hep h Λ g L hh hht hΛf hhm hg hgt hLf hgm
-  rw [(GlobalTheory.T.fockPolynomialVector_laws D S T C B hB (fun _ => 1) _ (hth B hB _ hφ0) Q).2.2.2.2.1, p1, map_mul, Module.End.mul_apply,
+  rw [(_root_.GlobalTheory.Ker.FockAlg.fock_vec_laws D S T C B hB (fun _ => 1) _ (hth B hB _ hφ0) Q).2.2.2.2.1, p1, map_mul, Module.End.mul_apply,
     map_smul, GlobalTheory.Ker.Red.om_fvec C om hW h hh g _ (hth B hB _ hφ0) B hB Q, hgB, e3,
-    (GlobalTheory.T.fockPolynomialVector_laws D S T C B hB (fun _ => 1) _ (hth B hB _ hφ) Q).2.2.2.2.1, map_smul, map_smul,
+    (_root_.GlobalTheory.Ker.FockAlg.fock_vec_laws D S T C B hB (fun _ => 1) _ (hth B hB _ hφ) Q).2.2.2.2.1, map_smul, map_smul,
     GlobalTheory.Ker.Red.om_fvec C om hW 1 (one_mem _) a _ (hth B hB _ hφ) B hB Q, hz a ha _ hφ,
-    (GlobalTheory.T.fockPolynomialVector_laws D S T C _ hBa (fun _ => 1) _ (hth _ hBa _ hφ) Q).2.2.2.2.1]
+    (_root_.GlobalTheory.Ker.FockAlg.fock_vec_laws D S T C _ hBa (fun _ => 1) _ (hth _ hBa _ hφ) Q).2.2.2.2.1]
   simp only [Pi.smul_apply, smul_eq_mul]
-  rw [((GlobalTheory.T.fockPolynomialVector_testTheta_zero_eq_thetaSeries D S T C).2 _ hBa _ hφ).2 Q]
+  rw [((_root_.GlobalTheory.Ker.fvec_Th_zero D S T C).2 _ hBa _ hφ).2 Q]
   ring
 
 end GlobalTheory.AdSpan.EvalAt
@@ -1504,7 +1501,7 @@ namespace GlobalTheory.Ker.ThInv
 
 theorem fvec_val_inv : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)), IsWeak C.ψ S T om → ∀ (Lv : SW.Level C.X) (h : GA D S) (B : C.Bas), C.IsB B → ∀ u : WO S T → ℂ, C.IsTh u → ∀ Q : MvPolynomial (FVar D T.rank S.rank) ℂ, (∀ γ ∈ GQ T, ∀ g, om (h, γ * g) (C.fvec B u Q) 0 = om (h, g) (C.fvec B u Q) 0) ∧ ((∀ k, C.LevK Lv k 1 → om (1, k) u = u) → ∀ k, C.LevK Lv k 1 → ∀ g, om (h, g * k) (C.fvec B u Q) 0 = om (h, g) (C.fvec B u Q) 0) := by
   intro D S T C om hW Lv h B hB u hu Q
-  have hth : C.IsTh (C.fvec B u Q) := (GlobalTheory.T.fockPolynomialVector_laws D S T C B hB (fun _ => 1) u hu Q).1
+  have hth : C.IsTh (C.fvec B u Q) := (_root_.GlobalTheory.Ker.FockAlg.fock_vec_laws D S T C B hB (fun _ => 1) u hu Q).1
   refine ⟨fun γ hγ g => ?_, fun hk k hkL g => ?_⟩
   · have p : ((h, γ * g) : GA D S × GA D T) = (1, γ) * (h, g) := by
       rw [Prod.mk_mul_mk, one_mul]
@@ -1512,7 +1509,7 @@ theorem fvec_val_inv : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (om : GA D S × 
     exact hW.om_aut 1 (one_mem _) γ hγ _ (hW.om_pres _ _ hth)
   · have p : ((h, g * k) : GA D S × GA D T) = (h, g) * (1, k) := by
       rw [Prod.mk_mul_mk, mul_one]
-    have hmv := ((GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2 B hB).2.2.2.2.2 k
+    have hmv := ((_root_.GlobalTheory.Ker.onBasis_frame_period D S T C).2 B hB).2.2.2.2.2 k
     rw [p, map_mul, Module.End.mul_apply, GlobalTheory.Ker.Red.om_fvec C om hW 1 (one_mem _) k u hu B hB Q,
       hmv.2.2.1 hkL.1, hk k hkL]
 
@@ -1559,7 +1556,7 @@ theorem GlobalTheory.AdSpan.mem_span_thetaSet_of_holUpTo : ∀ (D : D7) (S T : H
   have hm1 : IsMov (fmt T 1) C.X.Λ C.X.Λ := by rw [GlobalTheory.Ker.Red.fmt_one]; exact GlobalTheory.Ker.Red.isMov_one _
   have hs1 : IsMov (fmtC S 1) (stdL D.host.E S.rank) (stdL D.host.E S.rank) := by
     rw [GlobalTheory.Ker.Red.fmtC_one]; exact GlobalTheory.Ker.Red.isMov_one _
-  obtain ⟨hV, hL⟩ := GlobalTheory.T.self_dual_lattices_at_level D S T C
+  obtain ⟨hV, hL⟩ := _root_.GlobalTheory.Ker.MovLev.mov_mem_lattices D S T C
   have hΛl : C.X.Λ ∈ Lv.lats := (hL Lv 1 _ C.X.Λ_fg hm1).2.1 (GlobalTheory.Ker.Red.trivAt_one _ _)
   obtain ⟨t, ht0, hft⟩ := (GlobalTheory.T.levelDatumVector_eq_theta_of_testFunction D S T C Lv hn M hw hM hM𝔪 B hB).1 f' hbase (v₀ C.X.Λ) (hv _ hΛl)
   have hu : C.uVec Lv hn f' = t • C.Th (C.xB B) (Lv.phi C.bas hn v₀ C.X.Λ (stdL D.host.E S.rank)) := by
@@ -1602,7 +1599,7 @@ theorem GlobalTheory.AdSpan.mem_span_thetaSet_of_holUpTo : ∀ (D : D7) (S T : H
   obtain ⟨m, Λs, P, a, hΛP, hsp⟩ := GlobalTheory.SW.level_theta_span D.host.E T.rank C.X C.g C.q0 C.hr C.bas C.idx
     S.rank C.sympl C.even hsz Lv hn M hM hM𝔪 v₀ hv μ hμ c c' F hForm
   choose hs hsf hst hsm using fun i => GlobalTheory.T.exists_trivialAtLevel_unitary_transport_selfDual D S T C M hM (Λs i) (hΛP i).1
-  have hbij := (GlobalTheory.T.fockPolynomialVector_testTheta_zero_eq_thetaSeries D S T C).1
+  have hbij := (_root_.GlobalTheory.Ker.fvec_Th_zero D S T C).1
   let Qs : Fin m → MvPolynomial (FVar D T.rank S.rank) ℂ := fun i => Function.surjInv hbij.2 (P i)
   have hQs : ∀ i, C.toH (Qs i) = P i := fun i => Function.surjInv_eq hbij.2 (P i)
   have hepn : ∀ i, ep (hs i) ≠ 0 := by
@@ -1619,16 +1616,16 @@ theorem GlobalTheory.AdSpan.mem_span_thetaSet_of_holUpTo : ∀ (D : D7) (S T : H
       (Submodule.subset_span ⟨hs i, Qs i, by rw [hQs i]; exact (hΛP i).2, rfl⟩)
   suffices hφψ : φ = ψ by rw [hφψ]; exact hψmem
   set u0 := C.Th (C.xB B) (Lv.phi C.bas hn v₀ C.X.Λ (stdL D.host.E S.rank)) with hu0
-  have hJ := (GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2
+  have hJ := (_root_.GlobalTheory.Ker.onBasis_frame_period D S T C).2
   have hstd : stdL D.host.E S.rank ∈ Vset D.host.E S.rank M :=
     hV M 1 _ hM (GlobalTheory.Ker.Red.trivAt_one _ _) (GlobalTheory.Ker.Red.stdL_fg _) hs1
-  have hth0 : C.IsTh u0 := (GlobalTheory.T.adelicZakTheta_exists_unique D S T C _ (hJ B hB).2.1 _
+  have hth0 : C.IsTh u0 := (_root_.GlobalTheory.Ker.ZakEx.isZak_Th D S T C _ (hJ B hB).2.1 _
     (_root_.GlobalTheory.SW.RecSum.phi_sum_equivariant D.host.E T.rank C.X C.g C.bas C.idx S.rank C.sympl C.even Lv hn M hM hM𝔪 v₀ hv
       C.X.Λ hΛl _ hstd).1).1.1
   have hΘ : ∀ i g, Θ i g = t * om (hs i, g) (C.fvec B u0 (Qs i)) 0 := by
     intro i g
     show om (hs i, g) (C.fvec B (C.uVec Lv hn f') (Qs i)) 0 = _
-    rw [hu, (GlobalTheory.T.fockPolynomialVector_laws D S T C B hB (fun _ => 1) u0 hth0 (Qs i)).2.2.2.2.1 t, map_smul, Pi.smul_apply,
+    rw [hu, (_root_.GlobalTheory.Ker.FockAlg.fock_vec_laws D S T C B hB (fun _ => 1) u0 hth0 (Qs i)).2.2.2.2.1 t, map_smul, Pi.smul_apply,
       smul_eq_mul]
   have hk0 : ∀ k, C.LevK Lv k 1 → om (1, k) u0 = u0 := by
     intro k hk'

@@ -19,12 +19,12 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Exi
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSelfDualLineLatticeSplittingSumStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FrameCoordsMemSelfDualLatticeCoordsIff
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LineHomAdjointTwistMemCompletedHomLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLineSimilitudeMapsSelfDualLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLineSimilitudeMapsSelfDualLattice
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TuplePlaceUnderNotMemTP
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsMoveSelfDualLatticeSplitFramesStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalComponentMeasureIdentity
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LiftSchurMultiplierCompatibility
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsBasePointCarryingLatticeAndFramesStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsBasePointCarryingLatticeAndFrames
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LatticeCompletionEqOfLocalAgreementStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MoveMain
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SdYFramesStatement
@@ -523,7 +523,7 @@ theorem splitAt_places_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {
     intro w hw
     rw [← hq] at hw ⊢
     rw [hvτ]
-    have hmap := GlobalTheory.T.splitPlace_line_similitude_maps_selfDual_lattice D (l PP hP).k (l PP hP).q (y.bes _ 0 h).L a.Lz (y.τ _ h) LL LZ _ _ (-(ofSplit (l PP hP).q).xi)
+    have hmap := _root_.GlobalTheory.SplitLineSim.line_sim_maps D (l PP hP).k (l PP hP).q (y.bes _ 0 h).L a.Lz (y.τ _ h) LL LZ _ _ (-(ofSplit (l PP hP).q).xi)
       (l PP hP).unit hLL hLZsd (y.bes _ 0 h).line.1 hpre.line.1 hLLw hLZw (by rw [Valuation.map_neg]; exact hξ)
       (by rw [hτ h]; funext i; simp only [Pi.smul_apply, smul_eq_mul]; ring) (hTau _ h).1
     exact GlobalTheory.T.lineHomAdjointTwist_mem_completedHomLattice D (l PP hP).k (l PP hP).q (D.sp.X ((l PP hP).s + 1)) (y.bes _ 0 h).L a.Lz (y.τ _ h)
@@ -800,7 +800,7 @@ theorem move_main_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : 
     let M : ∀ i : {PP // PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg ∨ _root_.GlobalTheory.Fam.QAllAlt W PP}, GL (Fin (Yc D j).rank) (l i.1 i.2).k :=
       fun i => frameGL (FY i.1 i.2 j _ (hsj i.1 i.2)) (bas i.1 i.2 j _ (hsj i.1 i.2)) (σ i.1 i.2)
     have hsd := _root_.GlobalTheory.T.selfDual_and_frame_of_pkHyp W hW j hj
-    obtain ⟨t, ht, Lt, hLt, hMv, hAgree, hMT⟩ := GlobalTheory.T.exists_base_point_carrying_lattice_and_frames D (Yc D j) ((_root_.GlobalTheory.Fam.pk_z W).ΛY j) (N j) ((_root_.GlobalTheory.Fam.pk_z W).βY j)
+    obtain ⟨t, ht, Lt, hLt, hMv, hAgree, hMT⟩ := _root_.GlobalTheory.FinPl.BasePoint.exists_move D (Yc D j) ((_root_.GlobalTheory.Fam.pk_z W).ΛY j) (N j) ((_root_.GlobalTheory.Fam.pk_z W).βY j)
       hsd.1 (hN j hj) {PP // PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg ∨ _root_.GlobalTheory.Fam.QAllAlt W PP} (fun i => (l i.1 i.2).k)
       (fun i => (l i.1 i.2).q) hinj M
     refine ⟨t, ht, ?_, ?_⟩

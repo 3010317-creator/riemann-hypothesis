@@ -29,7 +29,7 @@ public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdaptedBasisCo
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ArchimedeanIwasawaMinimalParabolic
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AutomorphicFunctionRestrictBlockStatement
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ConjugatedMatrixUnitEntriesStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ContinuousConjBlockEmbeddingStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ContinuousConjBlockEmbedding
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GelfandEigenvalueCasimirScalarStatement
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.LeviEmbMemNormalizerLower
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GlRelationsDerivativePreserved
@@ -99,7 +99,7 @@ import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatSelfDualOfUni
 import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ConjAtFixedIff
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GodementSectionSmoothBounded
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.DenomBound
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.CommuteGelfandInvariantMatrixUnitsOfGlRel
 import Formalism.RealPlaceAnalysis.ThirdArithmeticHolds
 import Mathlib.RingTheory.PiTensorProduct
@@ -877,8 +877,8 @@ theorem s_oneP (hθ : IsInfFam θ) {V V' : HSp D} {ι : V'.V →ₗ[D.host.E] V.
     s (oneP θ V' τ A t) = oneP θ V τ ((frameMat V V' ι).map (tauE D τ) * A *
       ((gramAt D V' τ)⁻¹ * ((frameMat V V' ι).map (tauE D τ))ᴴ * gramAt D V τ)) t := by
   obtain ⟨-, -, f3, f4, f5⟩ := _root_.GlobalTheory.CompanionTheory.IsometricMatrix.main (gramAt D V τ) (gramAt D V' τ) ((frameMat V V' ι).map (tauE D τ)) (GlobalTheory.SmoothForms.RealPts.gramAt_herm V τ) (GlobalTheory.SmoothForms.RealPts.gramAt_herm V' τ) (GlobalTheory.SmoothForms.RealPts.gramAt_unit V τ) (GlobalTheory.SmoothForms.RealPts.gramAt_unit V' τ) (frame_isom hι τ)
-  have R := (GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ V
-  have R' := (GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ V'
+  have R := (_root_.GlobalTheory.SmoothForms.RealPts.realPoints D).2 θ hθ V
+  have R' := (_root_.GlobalTheory.SmoothForms.RealPts.realPoints D).2 θ hθ V'
   obtain ⟨s₀, -, hs₀, -⟩ := GlobalTheory.Mem.UnitaryEmb.exists_embHom D V V' ι hι
   have hg := GlobalTheory.SmoothAutCheck.exp_mem_UH (R.1 τ).2 (X := (frameMat V V' ι).map (tauE D τ) * A *
       ((gramAt D V' τ)⁻¹ * ((frameMat V V' ι).map (tauE D τ))ᴴ * gramAt D V τ)) (f3 A hA) t
@@ -1277,7 +1277,7 @@ theorem gelf_slices_monic : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F 
     exact hq F h1 h2 g hg
   choose q hqm hq using key
   refine ⟨fun τ k => (q τ k).roots.toList, fun ψ hψ y hy hcomm τ k => ?_⟩
-  have hsu := (GlobalTheory.T.orthogonal_subspace_unitary_embedding D V m X Y hW T V' ι hι hr s hs).1
+  have hsu := (_root_.GlobalTheory.CompanionTheory.Hypotheses₂.LeviPart.UEmb.range_embHom D V m X Y hW T V' ι hι hr s hs).1
   have hy' : ∀ h, s h * y = y * s h := fun h => hcomm _ (hsu h)
   let G : GlobalTheory.Mem.AutSpace.SmFun θ V := ⟨ψ, GlobalTheory.SphSmooth.mem_smFun_of_isSm hθ hψ.1.smooth⟩
   have e := foldr_slice τ k _ (fun G' => gelf_slice hθ hι hs τ hy' k G') (q τ k).roots.toList G

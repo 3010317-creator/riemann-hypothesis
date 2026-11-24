@@ -4,7 +4,7 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.NGDat
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.VolPin
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.Vanish
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.InfCut
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagTermInvariantsConstOnRationalDoubleCosetStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagTermInvariantsConstOnRationalDoubleCoset
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RatLinkPoints
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.FormAll
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.RealDecompL
@@ -271,7 +271,7 @@ theorem coset_orbital_form : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u'
   refine ⟨hpt, c0 • ((A.toContinuousLinearEquiv : X.Vpi u →L[ℂ] X.Vpi u).comp
     (O.comp (B.symm.toContinuousLinearEquiv : X.Vpi u' →L[ℂ] X.Vpi u'))), norm_hsEmb_unitary c0 hc0n A B O, ?_⟩
   rintro t n m xn xm ⟨hn, hm, hlin⟩ hxn hxm
-  obtain ⟨hrel, -, hptt, -⟩ := GlobalTheory.T.flagTerm_invariants_const_on_rationalDoubleCoset D X Y u u' hSt t₀ t n m hrel₀ hG₀ ⟨hn, hm, hlin⟩
+  obtain ⟨hrel, -, hptt, -⟩ := _root_.GlobalTheory.HL.CosetConst.coset_const D X Y u u' hSt t₀ t n m hrel₀ hG₀ ⟨hn, hm, hlin⟩
   have hL := GlobalTheory.RatIsomPoint.ratLink_points D X
   have hxnN : xn.1 ∈ X.NinfU u := ((hL.2.2 u xn n hxn).1).1 hn
   have hxmN : xm.1 ∈ X.NinfU u' := ((hL.2.2 u' xm m hxm).1).1 hm

@@ -5,7 +5,6 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.NotCoboun
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SmallTracesSubgroupGaloisTowerTop
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CompletedLaurentIsDVRStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsIntPrimeDivRootOfUnitySubOnePow
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsIntPrimeDivRootOfUnitySubOnePowStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DerivativeCyclotomicMul
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TowerLevelEmbeddingInjectiveRangeAdjoinRoots
 public import Mathlib.FieldTheory.Galois.Infinite
@@ -569,7 +568,7 @@ theorem GlobalTheory.KumDlog.almostGal_coord : ∀ (p : ℕ) [Fact p.Prime], p �
       _ ≤ p ^ n * (p - 1) := Nat.le_mul_of_pos_right _ (by have := hp.two_le; omega)
   set c : Ω := (p : Ω) / τ ^ s with hc
   have hcC : c ∈ FixI (Hfix T r) := by
-    refine ⟨GlobalTheory.T.isInt_prime_div_rootOfUnity_sub_one_pow p Ω T (n + 1) s (by omega) hsle, fun g hg => ?_⟩
+    refine ⟨_root_.GlobalTheory.K5.PDiv.pdiv p Ω T (n + 1) s (by omega) hsle, fun g hg => ?_⟩
     have hz : g (T.ζ (n + 1)) = T.ζ (n + 1) := (mem_Hinf.1 (mem_Hfix.1 hg).1 (n + 1)).1
     rw [hc, map_div₀, map_pow, hτ, map_sub, map_one, hz, map_natCast]
   have hrep : Rep (FixI (Hfix T r)) (Hinf T) (fun h => c * ∏ w ∈ W, F w h) :=
@@ -1015,7 +1014,7 @@ theorem exists_levDer : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Alg
       rw [hlift, e, Derivation.map_algebraMap]
 
   obtain ⟨k, rfl⟩ : ∃ k, m = k + 1 := ⟨m - 1, by omega⟩
-  have hpd := GlobalTheory.T.isInt_prime_div_rootOfUnity_sub_one_pow p Ω T 1 1 le_rfl (Nat.totient_pos.2 (ppow_pos (p := p) 1))
+  have hpd := _root_.GlobalTheory.K5.PDiv.pdiv p Ω T 1 1 le_rfl (Nat.totient_pos.2 (ppow_pos (p := p) 1))
   let u : integralClosure (O0 p) Ω := ⟨(p : Ω) / (T.ζ 1 - 1) ^ 1, hpd⟩
   have hz1 : T.ζ 1 - 1 ≠ 0 :=
     sub_ne_zero.2 ((T.prim 1).ne_one (by simpa using (Fact.out : p.Prime).one_lt))
@@ -1721,7 +1720,7 @@ theorem kummer_eq_dlog : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∃ c : ℕ, 
   obtain ⟨x2, i2, e2⟩ := core hp2 hΩ T n hn ι hι (xn p n - 1) 0 (xn p n) (by
     simp [mul_comm]) hs' hb hz hq
   have hpπ : IsInt (p := p) ((p : Ω) / (T.ζ n - 1)) := by
-    simpa using GlobalTheory.T.isInt_prime_div_rootOfUnity_sub_one_pow p Ω T n 1 hn (Nat.totient_pos.2 (ppow_pos n))
+    simpa using _root_.GlobalTheory.K5.PDiv.pdiv p Ω T n 1 hn (Nat.totient_pos.2 (ppow_pos n))
   have j1 := int_mul (int_nat (Ω := Ω) (p := p) p) (hI (↑w⁻¹ : On p n))
   have j2 := int_mul (_root_.GlobalTheory.K5.Basic.isInt_intCast (Ω := Ω) (p := p) k) hpπ
   refine ⟨_, int_add (int_mul j1 i1) (int_mul j2 i2), fun g hg => ?_⟩

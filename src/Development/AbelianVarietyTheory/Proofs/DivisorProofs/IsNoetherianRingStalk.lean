@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotOrdGeOfNotMem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDvrLiftOfGeometricPoint
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraitExistsAfterFiniteExtensionOfCompleteDVRStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraitExistsAfterFiniteExtensionOfCompleteDVR
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -176,7 +176,7 @@ theorem exists_trait_cen : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F :
   let ξ₀' : Sp (FractionRing W) ⟶ U₀.toScheme := IsOpenImmersion.lift U₀.ι (jK W ≫ a) hr
   have hξ₀' : ξ₀' ≫ U₀.ι = jK W ≫ a := IsOpenImmersion.lift_fac _ _ _
   have hB : GlobalTheory.Mum.Base W := ⟨⟨inferInstance, inferInstance, inferInstance, hc⟩, inferInstance⟩
-  obtain ⟨T, f, fK, -, hloc, -, hcomp, hy⟩ := GlobalTheory.T.traitExistsAfterFiniteExtension_of_completeDVR g n o ζ F W hB inferInstance (ξ₀' ≫ u₀ ≫ u)
+  obtain ⟨T, f, fK, -, hloc, -, hcomp, hy⟩ := _root_.GlobalTheory.Poinc.traitExtSt g n o ζ F W hB inferInstance (ξ₀' ≫ u₀ ≫ u)
   refine ⟨T, spMap f ≫ a, ⟨spMap fK ≫ ξ₀', ?_, ?_⟩, ?_⟩
   · rw [Category.assoc, hξ₀', ← Category.assoc, ← Category.assoc]
     congr 1

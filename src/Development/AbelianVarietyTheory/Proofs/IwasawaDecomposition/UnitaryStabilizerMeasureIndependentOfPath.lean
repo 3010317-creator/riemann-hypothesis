@@ -12,7 +12,7 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNic
 public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MeasurableSetOrbitExistsMeasurableSection
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RestrictedProductMeasureBasicProperties
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwoStepPairMeasureFiniteOnCompactsStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwoStepPairMeasureFiniteOnCompacts
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WittTheoremAdelicOneVector
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniqueUnitaryTwoStepPairMeasure
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FibreMeasureInvariantSupportedOrbitNeZero
@@ -887,8 +887,8 @@ theorem twoStep_isProd : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     (fun v hv => mass_mul b (hov v) (hNv v) (hg v hv))
   have hnice := nice_ainf_fv F
   refine isProd_of_large b σ N Ni Nv hfin.toFinset
-    ⟨GlobalTheory.T.twoStep_pair_measure_finite_on_compacts F E σ hCM (Ainf F) hnice.1 M J x a B J' mi mi' Ni hS hoi hν.1.1 hν'.1.1 hii hNi,
-     fun v => GlobalTheory.T.twoStep_pair_measure_finite_on_compacts F E σ hCM (Fv F v) (hnice.2 v) M J x a B J' (mv v) (mv' v) (Nv v) hS (hov v)
+    ⟨_root_.GlobalTheory.GaugeEx.twoStep_finite_on_compacts F E σ hCM (Ainf F) hnice.1 M J x a B J' mi mi' Ni hS hoi hν.1.1 hν'.1.1 hii hNi,
+     fun v => _root_.GlobalTheory.GaugeEx.twoStep_finite_on_compacts F E σ hCM (Fv F v) (hnice.2 v) M J x a B J' (mv v) (mv' v) (Nv v) hS (hov v)
       (hν.1.2.1 v) (hν'.1.2.1 v) (hiv v) (hNv v), hsum⟩ fun S hSS fi fv hfi hfv => ?_
   obtain ⟨-, s, hs, -⟩ := exists_sec (σ := σ) (J := J) (B := B) (AF F) x
   obtain ⟨-, si, hsi, hsi'⟩ := exists_sec (σ := σ) (J := J) (B := B) (Ainf F) x

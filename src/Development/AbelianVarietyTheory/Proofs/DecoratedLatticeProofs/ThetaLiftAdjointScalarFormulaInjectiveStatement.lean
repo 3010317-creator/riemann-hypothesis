@@ -6,8 +6,8 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdjointIn
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelGroupActionOnAdelicFunctionsEqZeroOfNoLift
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsAdjoinSplitHeckeGeneratorsDualsSpherical
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelOperatorsAtPrimeOffLevelDatumStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelOperatorsAtPrimeOffLevelDatum
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.WeightCocharacterEqOfGoodPlaces
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EigenvectorAdjointIntertwinerNormalOperatorsStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperators
@@ -66,7 +66,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalHeckeConjPlaceEqDualLabelStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalHeckeConjPlaceEqDualLabel
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 import Mathlib.RingTheory.TotallySplit
@@ -78,9 +78,8 @@ import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Polynomial.Basic
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PeterssonFormProportionalClassSumAllLevelsStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplittingCharactersUnramifiedOffLevelsStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaVacuumHeckeIdentitySplitPlaceStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplittingCharactersUnramifiedOffLevels
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaVacuumHeckeIdentitySplitPlace
 import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.SecondStepGluing
 import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ValBasic
 
@@ -241,11 +240,11 @@ theorem evC_single_lab {D : D7} (V : HSp D) (P : Pl D.host.E) (a : List ℤ → 
 
 theorem eq_of_split_vec : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A), GlobalTheory.Hk3.Core R F → ∀ (t : T) (h : Pl D.host.E → (List ℤ →₀ ℂ) → Module.End ℂ R.HE.H), (∀ P, GlobalTheory.Hk3.Good R t P → ∀ c x, R.HE.e (h P c x) = postOn (R.MY 0) (GlobalTheory.Hk3.hk (Yc D 0) P c) (R.HE.e x)) → ∀ P, GlobalTheory.Hk3.Good R t P → Formalism.DivisionValues.conjPl P ≠ P → ∀ (c : Pl D.host.E → List ℤ → ℂ) (x w : R.HE.H), x ≠ 0 → (∀ P', GlobalTheory.Hk3.Good R t P' → ∀ cc, h P' cc x = GlobalTheory.Hk3.evC (Yc D 0) P' (fun d => c P' (dualLab d)) cc • x) → (∀ k ≤ (Yc D 0).rank, h P (Finsupp.single (splitLab (Yc D 0).rank k) 1) w = GlobalTheory.Hk3.evC (Yc D 0) P (fun d => c P (dualLab d)) (Finsupp.single (splitLab (Yc D 0).rank k) 1) • w ∧ h (Formalism.DivisionValues.conjPl P) (Finsupp.single (splitLab (Yc D 0).rank k) 1) w = GlobalTheory.Hk3.evC (Yc D 0) (Formalism.DivisionValues.conjPl P) (fun d => c (Formalism.DivisionValues.conjPl P) (dualLab d)) (Finsupp.single (splitLab (Yc D 0).rank k) 1) • w) → ∀ d, GlobalTheory.Hk3.IsLab (Yc D 0) P d → h P (Finsupp.single d 1) w = c P (dualLab d) • w := by
   intro D G _ _ Pl0 T A Ks _ _ _ R F hC t h hh P hP hcP c x w hx0 hxe hw d hd
-  obtain ⟨-, hgood, -, -⟩ := GlobalTheory.T.theta_lift_levels_good_primes_properties R F hC.lev
+  obtain ⟨-, hgood, -, -⟩ := _root_.GlobalTheory.GoodPrimes.good_primes R F hC.lev
   have hPA : Good R A.μ0 P := (hgood t P hP).2.2
   have hPc : Good R t (Formalism.DivisionValues.conjPl P) := (hgood t P hP).2.1
   obtain ⟨n, hβ⟩ := hC.lev.βY 0 (lt_of_lt_of_le two_pos D.R.two_le_m)
-  have hlev := GlobalTheory.T.level_operators_at_prime_off_level_datum (Yc D 0) (R.βY 0) (R.ΛY 0) _ (R.dat0 R.triv) hβ P
+  have hlev := _root_.GlobalTheory.LevOp.level_operators (Yc D 0) (R.βY 0) (R.ΛY 0) _ (R.dat0 R.triv) hβ P
     (by rw [Nat.cast_pow]; exact fun hm => (hgood _ P hPA).1 (P.isPrime.mem_of_pow_mem n hm))
     (fun PP hPP => hPA PP (hPP.imp id fun h => absurd h (Finset.notMem_empty _)))
   have inj : Function.Injective R.HE.e := hC.models.HE.1
@@ -265,7 +264,7 @@ theorem eq_of_split_vec : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T :
     · refine ⟨evC (Yc D 0) P (fun d => c P (dualLab d)) (Finsupp.single (splitLab (Yc D 0).rank k) 1), ?_, ?_⟩
       · rw [hop P hP, hxe P hP, map_smul]
       · rw [hop P hP, (hw k hk).1, map_smul]
-    · have hc := (GlobalTheory.T.sphericalHecke_conjPlace_eq_dualLabel (Yc D 0) P).2.2 (Finsupp.single (splitLab (Yc D 0).rank k) 1) _ (rRep (R.MY 0))
+    · have hc := (_root_.GlobalTheory.SphConj.sph_conj (Yc D 0) P).2.2 (Finsupp.single (splitLab (Yc D 0).rank k) 1) _ (rRep (R.MY 0))
       have hdc : dualC (Finsupp.single (splitLab (Yc D 0).rank k) 1) =
           Finsupp.single (dualLab (splitLab (Yc D 0).rank k)) 1 := by
         unfold dualC
@@ -506,10 +505,10 @@ theorem transfer_good {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type}
   have hq0 : q ≠ 0 := by
     rw [hq]
     exact fun h => P.ne_bot (Ideal.absNorm_eq_zero_iff.1 h)
-  obtain ⟨-, g2, -, -⟩ := GlobalTheory.T.theta_lift_levels_good_primes_properties R F hC.lev
+  obtain ⟨-, g2, -, -⟩ := _root_.GlobalTheory.GoodPrimes.good_primes R F hC.lev
   have hG' := (g2 t _ hG).2.1
-  obtain ⟨u1, u2⟩ := GlobalTheory.T.splittingCharacters_unramified_offLevels R F hC.lev t _ hG
-  obtain ⟨v1, v2⟩ := GlobalTheory.T.splittingCharacters_unramified_offLevels R F hC.lev t _ hG'
+  obtain ⟨u1, u2⟩ := _root_.GlobalTheory.UnrOffLevels.unrPl_of_good R F hC.lev t _ hG
+  obtain ⟨v1, v2⟩ := _root_.GlobalTheory.UnrOffLevels.unrPl_of_good R F hC.lev t _ hG'
   have hm := D.R.two_le_m
   have hP' : Formalism.DivisionValues.conjPl (Formalism.DivisionValues.conjPl P) ≠ Formalism.DivisionValues.conjPl P := by
     rw [Formalism.DivisionValues.ValuationRepresentative.conjPl_conjPl]; exact hP.symm
@@ -536,11 +535,11 @@ theorem transfer_good {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type}
   have hfix : FixAll R t P := by
     refine ⟨fun k hk => ?_, ?_, fun i => ?_⟩
     · have := unrPl_step (u2 (k + 1) (by omega) hk.le) u1
-      exact (GlobalTheory.T.thetaVacuum_heckeIdentity_splitPlace _ _ _ _ _ _ _ (hC.chain.ωY t k hk) hP this.1 this.2).1
+      exact (_root_.GlobalTheory.Hk3.SplitMatch.match_split _ _ _ _ _ _ _ (hC.chain.ωY t k hk) hP this.1 this.2).1
     · have := unrPl_step (u2 D.R.m (by omega) le_rfl) u1
-      exact (GlobalTheory.T.thetaVacuum_heckeIdentity_splitPlace _ _ _ _ _ _ _ (hC.chain.ωX t) hP this.1 this.2).1
+      exact (_root_.GlobalTheory.Hk3.SplitMatch.match_split _ _ _ _ _ _ _ (hC.chain.ωX t) hP this.1 this.2).1
     · have := u2 ((i : ℕ) + 1) (by omega) i.2
-      exact (GlobalTheory.T.thetaVacuum_heckeIdentity_splitPlace _ _ _ _ _ _ _ (hC.thP.ωP i t) hP this (unrPl_mul_inv this u1)).1
+      exact (_root_.GlobalTheory.Hk3.SplitMatch.match_split _ _ _ _ _ _ _ (hC.thP.ωP i t) hP this (unrPl_mul_inv this u1)).1
   have hσ : ((Real.sqrt q : ℝ) : ℂ) ≠ 0 :=
     Complex.ofReal_ne_zero.2 (Real.sqrt_ne_zero'.2 (Nat.cast_pos.2 (Nat.pos_of_ne_zero hq0)))
   have hs0 : ∀ i, s i ≠ 0 := fun i =>

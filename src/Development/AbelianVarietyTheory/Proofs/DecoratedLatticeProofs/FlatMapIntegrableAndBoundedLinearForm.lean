@@ -3,10 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.RealSizeNonneg
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ComplexEmbeddingHermitianQuadrupleSum
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorThetaFunctionalMixedSourceModeStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergSupSobolevSeminormThetaLawsStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorThetaFunctionalMixedSourceMode
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergSupSobolevSeminormThetaLaws
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegrableSchwartzMajorantPullbackUnitriangularStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinateThetaFunLeSchwartzMajorantLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinateThetaFunLeSchwartzMajorantLevel
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.EmbeddingXiZeroNeZero
 import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.GinfCSecondCountable
 import Mathlib.Algebra.Order.Floor.Extended
@@ -46,7 +47,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
 
 @[expose] public section
 
@@ -211,9 +211,9 @@ theorem mixS_bounded (hψ : IsStdChar D ψ (-1)) {θ : InfFam D} (hθ : IsInfFam
     (dV : HypDec V V₀ ρ) (vS : VolM D W.rank ρ) {f : WO V W → ℂ} (hf : IsThetaFunO ψ V W f) :
     ∃ B : ℝ, ∀ x w', ‖dV.mixS W ψ vS.μ vS.𝓕 f x w'‖ ≤ B := by
   obtain ⟨U, hU, hfix⟩ := hf.level
-  obtain ⟨K, -, hK⟩ := GlobalTheory.T.mixedCoordinate_thetaFun_le_schwartz_majorant_level D ψ hψ θ hθ V V₀ W ρ dV vS U hU
+  obtain ⟨K, -, hK⟩ := _root_.GlobalTheory.Unf.mixS_le_maj D ψ hψ θ hθ V V₀ W ρ dV vS U hU
   obtain ⟨C, hC⟩ := hK 0
-  have hfin := (GlobalTheory.T.heisenberg_sup_sobolev_seminorm_theta_laws D ψ hψ θ hθ V W).1 0 f hf
+  have hfin := (_root_.GlobalTheory.Unf.SupFin.supSob_laws D ψ hψ θ hθ V W).1 0 f hf
   have hmem : f ∈ GlobalTheory.Size.thetaLevel ψ V W U := ⟨hf, hfix⟩
   refine ⟨(C * supSob ψ θ 0 f).toReal, fun x w' => ?_⟩
   have hm : ENNReal.ofReal (maj θ K 0 x) ≤ 1 := by
@@ -237,7 +237,7 @@ theorem lintegral_flatFun_le (hψ : IsStdChar D ψ (-1)) {θ : InfFam D} (hθ : 
     (U : AddSubgroup (WO V W)) (hU : IsOpen (U : Set (WO V W))) :
     ∃ (N : ℕ) (C : ℝ≥0), ∀ f ∈ GlobalTheory.Size.thetaLevel ψ V W U, ∀ w,
       ∫⁻ u, ‖flatFun ψ dV dW vS.μ vS.𝓕 vT.μ vT.𝓕 (rat x) y f w u‖ₑ ∂vU.ν ≤ C * supSob ψ θ N f := by
-  obtain ⟨K, hK, hKC⟩ := GlobalTheory.T.mixedCoordinate_thetaFun_le_schwartz_majorant_level D ψ hψ θ hθ V V₀ W ρ dV vS U hU
+  obtain ⟨K, hK, hKC⟩ := _root_.GlobalTheory.Unf.mixS_le_maj D ψ hψ θ hθ V V₀ W ρ dV vS U hU
   obtain ⟨N, hN⟩ := GlobalTheory.T.integrable_schwartzMajorant_pullback_unitriangular D θ hθ W.rank ρ vU x hx
   obtain ⟨C, hC⟩ := hKC N
   have hI := hN K hK
@@ -263,7 +263,7 @@ theorem flatAt_isSobForm : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdC
     fun Ψ hΨ => mixS_bounded hψ hθ dV vS hΨ
   have hc : ∀ Ψ, IsThetaFunO ψ V W Ψ →
       Continuous fun p : Mx D W.rank ρ × WO V₀ W => (_root_.I195MixedCoordinates.source dV) W ψ vS.μ vS.𝓕 Ψ p.1 p.2 :=
-    fun Ψ hΨ => (GlobalTheory.T.heisenbergOperator_thetaFunctional_mixedSourceModel D ψ hψ V V₀ W ρ dV vS Ψ hΨ).2.2.2.1
+    fun Ψ hΨ => (_root_.GlobalTheory.HeisMixSource.heis_mixS D ψ hψ V V₀ W ρ dV vS Ψ hΨ).2.2.2.1
   have hmeas : ∀ Ψ, IsThetaFunO ψ V W Ψ → ∀ w,
       AEStronglyMeasurable (flatFun ψ dV dW vS.μ vS.𝓕 vT.μ vT.𝓕 (rat x) y Ψ w) vU.ν := by
     intro Ψ hΨ w
@@ -276,7 +276,7 @@ theorem flatAt_isSobForm : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdC
     obtain ⟨U, hU, hfix⟩ := hΨ.level
     obtain ⟨N, C, hb⟩ := lintegral_flatFun_le hψ hθ dV dW vS vT vU x hx y U hU
     exact ⟨hmeas Ψ hΨ w, (hb Ψ ⟨hΨ, hfix⟩ w).trans_lt
-      (ENNReal.mul_lt_top ENNReal.coe_lt_top ((GlobalTheory.T.heisenberg_sup_sobolev_seminorm_theta_laws D ψ hψ θ hθ V W).1 N Ψ hΨ).lt_top)⟩
+      (ENNReal.mul_lt_top ENNReal.coe_lt_top ((_root_.GlobalTheory.Unf.SupFin.supSob_laws D ψ hψ θ hθ V W).1 N Ψ hΨ).lt_top)⟩
 
   have hTint : ∀ Ψ, IsThetaFunO ψ V W Ψ → ∀ x' w,
       Integrable (fun ξ => ψ (symplOH V₀ W (dW.incX V₀ ξ) (dW.incAdj V₀ y)) *

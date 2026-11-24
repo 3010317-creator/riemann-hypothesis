@@ -6,7 +6,6 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.NGDat
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalIsometryExtendsLocalIsometry
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitriangularChangeRationalFlagIffRationalUnipot
 public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalIsometryExtendsLocalIsometryStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

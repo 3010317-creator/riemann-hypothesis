@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.CoeSelfDualLatticeInFrameCoordinatesEq
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletionStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeRationalTranslateInvarianceStatement
+public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletion
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeRationalTranslateInvariance
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUnitaryOfTraceEq
 public import Formalism.LocalToGlobal.ProjectiveLattices.CuspFormsFiniteDimensionalOf
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.SiegelSpaceAlgebraHolds
@@ -19,7 +20,7 @@ public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.XiVal
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.GeometricallyIrreducibleComponentsWeberValues
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IntFormsSubset
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCoversOfHalves
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RationalPointsAdelicUnitaryEqUnitaryStatement
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RationalPointsAdelicUnitaryEqUnitary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -100,11 +101,11 @@ theorem exists_rat_finCong_of_marks (l : Level H) (V : HSp D) (io : Dw.La →ₗ
         (l.M : ℕ) • w) :
     ∃ γ ∈ GQ V, ∃ u : GA D V, gLat V u = latHat V ∧ FinCong V l.M u ∧ g' = γ * g * u := by
   subst hΛ hΛ'
-  obtain ⟨r1, -, r3, -, r5⟩ := GlobalTheory.T.rational_points_adelicUnitary_eq_unitary D V
-  obtain ⟨δ, hδ1, hδ2, hδ3⟩ := exists_unitary_of_trace_eq _ _ (GlobalTheory.T.adelicElementLattice_full_and_completion D V g).2.1 (GlobalTheory.T.adelicElementLattice_full_and_completion D V g').2.1
+  obtain ⟨r1, -, r3, -, r5⟩ := _root_.GlobalTheory.Member.RatElt.rational_elements D V
+  obtain ⟨δ, hδ1, hδ2, hδ3⟩ := exists_unitary_of_trace_eq _ _ (_root_.GlobalTheory.Member.latG_lattice_and_completion D V g).2.1 (_root_.GlobalTheory.Member.latG_lattice_and_completion D V g').2.1
     φ φ' _ ξ hξ htr
   obtain ⟨γ, hγ⟩ := r3 δ hδ3
-  obtain ⟨m1, m2⟩ := (GlobalTheory.T.adelicUnitaryLattice_rationalTranslate_invariance D V).1 γ δ g hγ
+  obtain ⟨m1, m2⟩ := (_root_.GlobalTheory.Member.latG_move D V).1 γ δ g hγ
   have hlat : latG V (γ * g) = latG V g' := by
     ext v
     have hv : (δ : Matrix (Fin V.rank) (Fin V.rank) D.host.E) *ᵥ
@@ -124,10 +125,10 @@ theorem exists_rat_finCong_of_marks (l : Level H) (V : HSp D) (io : Dw.La →ₗ
     rw [(r5 _ δ hγ).1, Matrix.mulVec_mulVec, ← Units.val_mul, ← map_mul, hδ1] at e2
     exact e2
   have hu : gLat V ((γ * g)⁻¹ * g') = latHat V := by
-    refine gLat_eq_of_finCong V _ ((GlobalTheory.T.adelicUnitaryLattice_rationalTranslate_invariance D V).2.2.2 _ _ hlat) ?_
+    refine gLat_eq_of_finCong V _ ((_root_.GlobalTheory.Member.latG_move D V).2.2.2 _ _ hlat) ?_
     have e0 : ((γ * g)⁻¹ * g')⁻¹ = g'⁻¹ * (γ * g) := by group
     rw [e0]
-    exact (GlobalTheory.T.adelicUnitaryLattice_rationalTranslate_invariance D V).2.2.2 _ _ hlat.symm
+    exact (_root_.GlobalTheory.Member.latG_move D V).2.2.2 _ _ hlat.symm
   exact ⟨γ, (r1 γ).2 ⟨δ, hγ⟩, _, hu, hc, (mul_inv_cancel_left _ _).symm⟩
 
 theorem exists_rat_finCong_of_index {l : Level H} {Xo : Moduli Dw l} {s : KA l →+* ℂ} {n : ℕ}

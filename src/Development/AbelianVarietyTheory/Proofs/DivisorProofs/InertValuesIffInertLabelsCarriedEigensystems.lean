@@ -4,11 +4,11 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.Normal
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
 public import Formalism.LocalToGlobal.IndefiniteReal.ZeroPartEigenvalueConvention
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoreClausesOfWeakCharacterisation
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLabelThetaLiftSpaceIffDualStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLabelThetaLiftSpaceIffDual
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertHeckeOperatorsRowsRationalSelfAdjointLabelsStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsSphericalDoubleCosetLabelIffDecreasingStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsSphericalDoubleCosetLabelIffDecreasing
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MatchedSphericalPairsCommuteCompositeLiftStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperatorsStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperators
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SelfDualAntitoneListIffInertPrimeHeckeExponents
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -126,7 +126,7 @@ theorem labIn_pw {n : ℕ} {y : List ℕ} (hy : Formalism.L2.Col.InertTypeOk n y
 
 theorem labs {D : D7} (V : HSp D) (P : Pl D.host.E) (d : List ℤ) (hd : IsLab V P d) (hc : conjPl P = P) :
     ∃ y, Formalism.L2.Col.InertTypeOk V.rank y ∧ d = labIn V.rank y := by
-  obtain ⟨hl, hpw, hdu⟩ := (GlobalTheory.T.isSphericalDoubleCosetLabel_iff_decreasing V P d).1 hd
+  obtain ⟨hl, hpw, hdu⟩ := (_root_.GlobalTheory.LabChar.labels_char V P d).1 hd
   obtain ⟨y, h1, h2, h3, h4⟩ := (GlobalTheory.Hk3.labIn_selfDual_iff _ d).1 ⟨hl, hpw, hdu hc⟩
   exact ⟨y, ⟨h2, h3, h1⟩, h4⟩
 
@@ -313,8 +313,8 @@ theorem dir1 (R : RealDat3 D A3 Ks) (F : Face3 D A3) {s : ℕ} (hCore : Core R.t
     c P d = c' P d := by
   obtain ⟨Q, hQ⟩ := tie1 R hIn hAll P hP hconj
   subst hQ
-  have hdY : IsLab (Yc D 0) (R.plI Q.1) d := ((GlobalTheory.T.isLabel_thetaLiftSpace_iff_dual R.toRealDat F.lv2 (s := s) hCore i _ d hP).2).1 hd
-  have hdd : dualLab d = d := ((GlobalTheory.T.isSphericalDoubleCosetLabel_iff_decreasing (Yc D 0) _ d).1 hdY).2.2 hconj
+  have hdY : IsLab (Yc D 0) (R.plI Q.1) d := ((_root_.GlobalTheory.LabEq.isLab_W_iff R.toRealDat F.lv2 (s := s) hCore i _ d hP).2).1 hd
+  have hdd : dualLab d = d := ((_root_.GlobalTheory.LabChar.labels_char (Yc D 0) _ d).1 hdY).2.2 hconj
   obtain ⟨cX, hM⟩ := (hTS _ hP hconj).1.2 (Finsupp.single d 1)
   have hev : ∀ a : Pl D.host.E → List ℤ → ℂ,
       GlobalTheory.Hk3.evC (Yc D 0) (R.plI Q.1) (fun e => a (R.plI Q.1) (dualLab e)) (Finsupp.single d 1) = a (R.plI Q.1) d := by
@@ -370,9 +370,9 @@ theorem dir2 (R : RealDat3 D A3 Ks) (F : Face3 D A3) {s : ℕ} (hCore : Core R.t
     unfold GlobalTheory.Hk3.evC
     refine Finsupp.sum_congr fun d _ => ?_
     split_ifs with hd
-    · have hdd : dualLab d = d := ((GlobalTheory.T.isSphericalDoubleCosetLabel_iff_decreasing (Yc D 0) _ d).1 hd).2.2 hPc
+    · have hdd : dualLab d = d := ((_root_.GlobalTheory.LabChar.labels_char (Yc D 0) _ d).1 hd).2.2 hPc
       show c0 d * c (R.plI Q.1) (dualLab d) = c0 d * c' (R.plI Q.1) (dualLab d)
-      rw [hdd, hcc _ d hPg hPc (((GlobalTheory.T.isLabel_thetaLiftSpace_iff_dual R.toRealDat F.lv2 (s := s) hCore i _ d hPg).2).2 hd)]
+      rw [hdd, hcc _ d hPg hPc (((_root_.GlobalTheory.LabEq.isLab_W_iff R.toRealDat F.lv2 (s := s) hCore i _ d hPg).2).2 hd)]
     · rfl
   have valid : ∀ y', Formalism.L2.Col.InertTypeOk D.sp.X'.rank y' → p.1.2 (Q.1, y') = p'.1.2 (Q.1, y') := by
     intro y' hy'
@@ -406,7 +406,7 @@ end Ctx3
 theorem inert_vals_iff_labels : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type} {A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3) {s : ℕ}, GlobalTheory.Chain.LiftInteg D → A3.fam3.Ok3 s → R.WeakCharacterisation F → R.toRealDat.ExAt → SchurAll R.toRealDat → (∀ P, Good R.toRealDat A3.A.μ0 P → conjPl P = P → TwoSided R.toRealDat A3.A.μ0 P) → ((∀ t (k : A3.okI t × List ℕ), A3.heckeRI t k = 0 ∨ ∃ y, Formalism.L2.Col.InertTypeOk (A3.A.fam.R t).n y ∧ A3.heckeRI t k = A3.heckeRI t (k.1, y)) ∧ ∀ j t (k : A3.okI t × List ℕ), A3.heckeLI j t k = 0 ∨ ∃ y, Formalism.L2.Col.InertTypeOk (A3.A.fam.L j t).n y ∧ A3.heckeLI j t k = A3.heckeLI j t (k.1, y)) → (∀ p, ∀ w ∈ R.EEp3 p, LinearMap.adjoint (R.Th A3.A.μ0) w = 0 → w = 0) → ∀ (i : Fin D.R.m) (p p' : A3.fam3.base3.Ix) c c', R.Carries p c → R.Carries p' c' → ((∀ k : A3.okI A3.A.μ0 × List ℕ, p.1.2 (k.1.1, k.2) = p'.1.2 (k.1.1, k.2)) ↔ (∀ P d, Good R.toRealDat A3.A.μ0 P → conjPl P = P → IsLab (Wc D i) P d → c P d = c' P d)) := by
   intro D G _ _ Pl0 I0 T A3 Ks _ _ _ R F s hLI hOk hCW hEx hSchur hTS hJunk hInj i p p' c c' hc hc'
   obtain ⟨hCore, hSF, hEEc, -⟩ := GlobalTheory.CoreOfWeak.core_of_weak R F hCW hEx
-  obtain ⟨hX, hXops, -⟩ := (GlobalTheory.T.realization_family_normal_operators R.toRealDat F.lv2 hCore.lev hCore.fam hCore.models).1 A3.A.μ0
+  obtain ⟨hX, hXops, -⟩ := (_root_.GlobalTheory.DefiniteOps.definite_ops R.toRealDat F.lv2 hCore.lev hCore.fam hCore.models).1 A3.A.μ0
   have heInj : Function.Injective (R.HX A3.A.μ0).e := (hCore.models.HX A3.A.μ0).1
   exact ⟨fun hp P d hP hconj hd => dir1 R F (s := s) hCore hSchur hSF hEEc hInj hCW.inert hCW.allPl hX hXops heInj hTS i
       p p' c c' hc hc' hp P d hP hconj hd,

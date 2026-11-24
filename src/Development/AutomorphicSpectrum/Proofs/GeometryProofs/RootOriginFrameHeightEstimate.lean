@@ -10,7 +10,7 @@ public import Mathlib.Basic.Real.Basic
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsFrameVec
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LabelSigBijective
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteResidueAbsoluteValueStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteResidueAbsoluteValue
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
@@ -485,7 +485,7 @@ theorem fib_V_htDual : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [I
       by_contra hne
       exact Lat.not_inFibre_of_coprime _
         ((Nat.coprime_primes (Or.𝔐.S_prime _ hp) (Or.𝔐.S_prime _ hp')).2 (Ne.symm hne)) hF h'
-  obtain ⟨hf1, hf2, -, hf4⟩ := GlobalTheory.T.finite_residue_absolute_value E H l c p la T e ho.1 hr
+  obtain ⟨hf1, hf2, -, hf4⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Rec.FinRd.absT_facts E H l c p la T e ho.1 hr
   have hreg : ∀ (hh : genPt Or.𝔐.ξ ⤳ centre zV) (a : 𝓞 E), Or.𝔐.emb s a ∈ regAt Or.𝔐.ξ ⟨centre zV, hh⟩ := fun hh a => by
     obtain ⟨_, g, hg, _⟩ := hσ a
     exact ⟨g, hg⟩

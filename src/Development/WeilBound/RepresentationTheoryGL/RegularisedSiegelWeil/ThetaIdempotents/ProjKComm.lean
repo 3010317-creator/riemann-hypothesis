@@ -14,10 +14,10 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Wei
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOneIntegralAdd
 public import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.SingularNullSets.WeakApproximationFinitePlace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsWeilDatumDoubledOfSchrodingerFormulas
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittTargetStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SkewGramHalfModule
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittTarget
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilOperatorIntegralCommOfBoundedFiniteMeasure
 public import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.SingularNullSets.LIkSch
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SkewGramHalfModule
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HalfData
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -55,7 +55,8 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ComplexEmbeddingHermitianQuadrupleSum
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorThetaFunctionalMixedSourceMode
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergSupSobolevSeminormThetaLawsStatement
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.RealSizeNonneg
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergSupSobolevSeminormThetaLaws
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegrableMajorantCoordinateCosetMeasure
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinateThetaFunLeSchwartzMajorantLevel
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisThetaLaws
@@ -77,7 +78,7 @@ import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsUniqueIsPr
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsWeilDatumTransportSchwartzBruhatStandard
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ImportsBis
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsHeckeCharRestrictionEtaInv
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchrodingerThetaEqSchwartzBruhatStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchrodingerThetaEqSchwartzBruhat
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SecondOnCommonRangeOfSecond
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TransportedSchrodingerSiegelUnipotentAction
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TransportedSchrodingerStandardLeviAction
@@ -320,7 +321,7 @@ theorem integrable_slice (hψ : IsStdChar D ψ (-1)) (v : GlobalTheory.Unf.VolM 
   obtain ⟨U, hU, hfU⟩ := hf.level
   obtain ⟨K, hK, hKN⟩ := GlobalTheory.Unf.mixS_le_maj D ψ hψ θ hθ S (zeroSp D) T ρ e v U hU
   obtain ⟨C, hC⟩ := hKN N
-  have hfin := ENNReal.mul_ne_top (ENNReal.coe_ne_top (r := C)) ((GlobalTheory.T.heisenberg_sup_sobolev_seminorm_theta_laws D ψ hψ θ hθ S T).1 N f hf)
+  have hfin := ENNReal.mul_ne_top (ENNReal.coe_ne_top (r := C)) ((_root_.GlobalTheory.Unf.SupFin.supSob_laws D ψ hψ θ hθ S T).1 N f hf)
   have hli : LinearIndependent D.host.E d.e.transpose := by
     have h1 : d.qX * d.e = 1 := d.e'e
     refine Matrix.mulVec_injective_iff.1 fun a b hab => ?_
@@ -626,7 +627,7 @@ theorem main (D : D7) (A : HSp D) (t : ℕ) (B W : HSp D) (d : HypDec B W t) (ψ
       exact GlobalTheory.StdUnn.WeylStd.main D ψ₀ A W χ⁻¹ omW homW μW 𝓕W hμW θ hθ μ' hsk κ hκ omS hS lam hl g hg Φ x
   obtain rfl := GlobalTheory.SiegelWeilLitCompare.isWeilSch_unique hW hWS
   obtain ⟨g, rfl⟩ := κ.surjective g
-  obtain ⟨f, hf, hfΦ⟩ := (GlobalTheory.T.schrodingerTheta_eq_schwartzBruhat D ψ₀ h₀ θ hθ A B μB 𝓕B hμB).2.1 Φ.1 Φ.2
+  obtain ⟨f, hf, hfΦ⟩ := (_root_.GlobalTheory.SchSchwartzAll.schSchwartz D ψ₀ h₀ θ hθ A B μB 𝓕B hμB).2.1 Φ.1 Φ.2
   obtain ⟨μ₁, 𝓕₁, hμ₁⟩ := GlobalTheory.MixModel.exists_isCovolOne D t (dblSp A).rank
   obtain ⟨𝓕₂, hμ₂⟩ := I.cov₁
   have hK := LIkSch.isCompact_K d I.good
@@ -637,7 +638,7 @@ theorem main (D : D7) (A : HSp D) (t : ℕ) (B W : HSp D) (d : HypDec B W t) (ψ
   have e1 : ∀ φ, IsThetaFunO ψ₀ (dblSp A) B φ →
       ikp I (GlobalTheory.Core.Rk.SW.sch ψ₀ A B μB 𝓕B φ) = GlobalTheory.Core.Rk.SW.sch ψ₀ A W μW 𝓕W (ikeda ψ₀ d μ₁ 𝓕₁ (projK omB I.νK φ)) := fun φ hφ => by
     rw [(hI _ (hP φ hφ).1).2, (hP φ hφ).2]; rfl
-  have hmix := (GlobalTheory.T.mixedModelFormulas_wittTarget D ψ₀ (dblSp A) B W t d 1 χ⁻¹ omB omW homB homW μ₁ 𝓕₁ hμ₁ _ (hP f hf).1).source g 0
+  have hmix := (_root_.GlobalTheory.MixTargetProof.mixedTarget D ψ₀ (dblSp A) B W t d 1 χ⁻¹ omB omW homB homW μ₁ 𝓕₁ hμ₁ _ (hP f hf).1).source g 0
   rw [Matrix.mul_zero] at hmix
   rw [hTB g f hf Φ hfΦ.symm, e1 _ hgf, projK_comm homB _ hK I.νK f hf (hP f hf).1 g,
     hS g _ (hI _ (hP f hf).1).1 Ψ (by rw [hΨ, ← hfΦ, e1 f hf])]

@@ -5,11 +5,11 @@ public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.Harmon
 public import Development.AbelianVarietyTheory.Definitions.Jets.JetsOnCopiesCompatibleFrames
 public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsFormalBiextMap
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.GermDJet
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsRawChartFramesBaseChangeStatement
+public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.CIndBC
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsRawChartFramesBaseChange
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IsFrameRawChartBaseChangeStatement
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IsRawChartBaseChangeJetPoints
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.RawChartBaseChangeRigGerm
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.RawChartBaseChangeRigGermStatement
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.RawChartFormalBiextensionBaseChange
 public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.HarmonicValueCopiesGaugeIndependent
 public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.HarmonicValueGermsIndependentOfChart
@@ -265,9 +265,9 @@ theorem exists_chart_baseChange {S S' : Type} [CommRing S] [Algebra c.F S] [Alge
   obtain rfl : u' = fun τ i => spMap (dualMap φ.toRingHom) ≫ y.u τ i := funext fun τ => funext fun i => hu τ i
   subst hx
   let R := ChartAt.toRaw C
-  obtain ⟨e', hg, hc, -⟩ := GlobalTheory.T.exists_rawChart_frames_baseChange E H Dw l Xo S S' φ.toRingHom y.x R.d R.B.G.F R.B.A.act R.x
+  obtain ⟨e', hg, hc, -⟩ := _root_.GlobalTheory.RawFrameBC.exists_frames E H Dw l Xo S S' φ.toRingHom y.x R.d R.B.G.F R.B.A.act R.x
     (fun m => rjBC φ.toRingHom y.x R.d m 1 ≫ R.x m) (fun _ => rfl) R.e R.frame.gen
-  have hG := GlobalTheory.T.rawChart_baseChange_rig_germ_alt E H Dw l Xo S S' φ.toRingHom y.x R.d R.B.G.F R.B.A.act R.x
+  have hG := _root_.GlobalTheory.rawChart_baseChange_rig_germ E H Dw l Xo S S' φ.toRingHom y.x R.d R.B.G.F R.B.A.act R.x
     (fun m => rjBC φ.toRingHom y.x R.d m 1 ≫ R.x m) (fun _ => rfl) R.e e' R.frame.gen hg hc
     R.wP R.prim.1
   have h₁ := GlobalTheory.RawChartBC.rIsChart_baseChange E H Dw l Xo S S' φ.toRingHom y.x R.d R.B.G.F R.B.A.act R.x

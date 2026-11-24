@@ -26,7 +26,7 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ScaleRootOfPrintStatement
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsRatScalarMulIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SeriesRationalityBackFromMovedReadings
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalScalarNormalisedStandardFrameStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalScalarNormalisedStandardFrame
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaleRootOfPrint
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeltaPrimeIsAuxiliarySplitSquarefreeLevel
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeCharacterFiniteOrderValuesInField
@@ -96,8 +96,9 @@ import Formalism.SharpRestriction.Divisibility.AbelianOpenPart.AbelianAt
 import Mathlib.Tactic.Linter.Style
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHalfOfBasePins
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsScaleOfChar
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockHarmonicValueSpaceMapEqDualWeylModuleFunctioStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunctionStatement
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TranslateMemCoefLatFn
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockHarmonicValueSpaceMapEqDualWeylModuleFunctio
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunction
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousCoeffBlockAct
 import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
 import Formalism.LocalToGlobal.IndefiniteReal.FWCentral
@@ -550,7 +551,7 @@ theorem smallComb_of_ratScalar (hRF : GlobalTheory.NT.RayField) {F : Face D A3.A
     have h2 := Formalism.BasicNotions.sig_sum _ hB.sigOK (tauE D τ)
     rw [← hB.sig τ] at h2
     exact h2.le
-  have hinj := GlobalTheory.T.harmonic_polynomial_eq_zero_of_function D _ _ (ρ.B i j b).w (ρ.B i j b).F.BS hB.wt hm
+  have hinj := _root_.GlobalTheory.ExportSeries.HarmInj.harm_inj D _ _ (ρ.B i j b).w (ρ.B i j b).F.BS hB.wt hm
   refine smallComb_of_small ((ph * c) • (ρ.B i j b).theta (ρ.om i j b 1) h) hinj (fun G => ?_) (fun P hP G hPG => ?_) hPl
   · have h3 : coefFn (embLL0 D) (ρ.B i j b).w.lam (G : Pol ↥D.LL0 D.what₂.Tau (Vc D j).rank) ∈
         (harm (Wc D j).rank (ρ.B i j b).w (ρ.B i j b).F.BS).map (harmFn (Wc D j).rank (ρ.B i j b).w (ρ.B i j b).F.BS) := by
@@ -642,7 +643,7 @@ theorem core_cases (hA : GlobalTheory.Published.GlobalArtinReciprocity) (hRF : G
     have h0 : f = 0 := Subtype.ext ((Submodule.eq_bot_iff _).1 hc f.1 f.2)
     rw [h0, map_zero] at hf
     exact (congrArg Subtype.val hf).symm
-  · obtain ⟨ν, hN, hν⟩ := GlobalTheory.T.exists_rationalScalar_normalised_standardFrame hA hRF hS D Γ Pl0 I0 T0 A3 T Rl cG S YS F κ v₀ O ρ hρ i j b hV hpin H hc
+  · obtain ⟨ν, hN, hν⟩ := _root_.GlobalTheory.SeriesTie.NormRatStd.exists_isNorm_isRatScalar_std hA hRF hS D Γ Pl0 I0 T0 A3 T Rl cG S YS F κ v₀ O ρ hρ i j b hV hpin H hc
     exact Or.inr ⟨ν, hN, smallComb_of_ratScalar YS hRF fw (fw.evaluates_of_lUnif H.unif) H.core H.io
       (GlobalTheory.CoverHalf.primes_eq_of_halfIs T.toCore Rl.toRealDat H.laws.toLawsM H.core.lev (H.pins.2.tuple ()).half)
       H.size H.galois H.small.val H.small.ray H.small.roots hsp hρ hpin i j b hχ hV hν⟩

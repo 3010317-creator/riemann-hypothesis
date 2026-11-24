@@ -12,7 +12,7 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HasSumO
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValues
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UnivIdentity
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.MulPullOfCubeOfSymm
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationValuesIntOfAdmissibleBaseStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationValuesIntOfAdmissibleBase
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralDegenerationValues
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespond
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.SepticCharacterInjective
@@ -615,7 +615,7 @@ theorem summable_vt [IsLocalRing R] (hL : LL) (hgt : BrGtSt) (hfam : BrFamSt) (h
     exact Iff.rfl
   obtain ⟨N', ν', hν'⟩ := GlobalTheory.ValuesExist.exists_integral_values hL.1 R D.toPre D.psi_even D.tau_bimult C _
     (fun r => (mem _).2 (hC.1 r))
-  obtain ⟨Q, hQ⟩ := GlobalTheory.T.degenerationValues_int_of_admissibleBase R I hB D C hC N' ν' ⟨_, mem, hν'⟩
+  obtain ⟨Q, hQ⟩ := _root_.GlobalTheory.Ex.IntVal.main R I hB D C hC N' ν' ⟨_, mem, hν'⟩
   obtain ⟨p, hp⟩ := ((hgt R D.toPre D.psi_even D.tau_bimult C N ν).2.2.2.2 k).2.1 q
   obtain ⟨q', hq', -⟩ := ((hgt R D.toPre D.psi_even D.tau_bimult C N' ν').2.2.2.2 k).1 p
   obtain ⟨h₁, -, -, -, h₂, -⟩ := hfam R D.toPre D.psi_even D.tau_bimult C N' ν' 1 le_rfl

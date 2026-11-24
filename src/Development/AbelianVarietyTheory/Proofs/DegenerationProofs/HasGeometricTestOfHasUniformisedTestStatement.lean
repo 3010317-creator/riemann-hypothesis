@@ -9,9 +9,11 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.CoeffSy
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnitCharts
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnitWeightZeroIntegralCoordsStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FormVanishesOfTorsionTorusExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SpecialFibreTorsionEqReductionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionValuesCoordsOperatorPermuteStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisedTestDimensionsAndSplitFibreStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SpecialFibreTorsionEqReductions
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionValuesCoordsOperatorPermute
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.RigGen
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisedTestDimensionsAndSplitFibre
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsReducedAlgebraOfSmoothOfIsNoetherianRing
 public import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ValUnitNeZero
@@ -29,8 +31,6 @@ public import Development.AbelianVarietyTheory.Definitions.Degenerations.Ser
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AddHomExtSingle
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsAdaptedBasisTestLattice
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGlobalGenerators
-public import Development.AbelianVarietyTheory.Definitions.Degenerations.RigGen
-public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LinearIndependentOfCommSmul
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ThetaGrpActsLinearly
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsOperators
@@ -92,7 +92,6 @@ import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.OrthogonalFree
 import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.Tactic.Polynomial.Basic
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionValuesCoordsOperatorPermute
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AdaptedBasisRowsHaveClassWeightStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsAdaptedBasisSectionsModKStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsInvertibleAdaptedBasisLinkMatrixStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.EqZeroOfPoints, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsZpowMulIsUnitOfMem, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NormConstSec, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsPosIsGreatestNormMulVecOnKer, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NormMulLeOfIrreducible, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.WeightSpaceIrreducibleResidue, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TestLatticeEqSpanModelSections, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TestLatticeEqSpanModelSectionsStatement, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HasGeometricTestOfHasUniformisedTest, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HasGeometricTestOfHasUniformisedTestStatement
@@ -239,8 +238,8 @@ theorem mem_span_iff {p : ℕ} [Fact p.Prime] {J A : Type} [Fintype J] [Nonempty
 theorem mem_lattice_iff : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (l : u.Lab) (σ : S.J → (u.H S.N).Sec) (cls : S.J → u.D.toPre.X) (md : Mod p u.j u.G S.g S.N l.q (u.H S.N) σ cls) (b : Matrix S.J S.J (FractionRing u.V)) (κ : ℝ), S.Big → (∀ a : o, ‖y₀ (algebraMap o S.R a)‖ ≤ 1) → u.Link σ b → b.det ≠ 0 → 0 < κ → (∀ a ∈ l.yy.ker, IsGreatest (Set.range fun i => ‖(b.map (algebraMap _ (PadicAlgCl p))).mulVec (fun i => y₀ ⟨S.ev a i, S.ev_mem a i⟩) i‖) κ) → ∀ e : S.J → PadicAlgCl p, e ∈ Submodule.span (OO p) (Set.range (b.map (algebraMap _ (PadicAlgCl p)))) ↔ ∀ a ∈ l.yy.ker, ‖e ⬝ᵥ (fun i => y₀ ⟨S.ev a i, S.ev_mem a i⟩)‖ ≤ κ := by
   intro L o Ω _ _ _ _ S ρ p _ y₀ u l σ cls md b κ hBig hy hL hb hκ hmax e
   haveI : IsAlgClosed (kb p) := (GlobalTheory.ZJ.kb_isAlgClosed_and_conj p).1
-  have hB : Big S.g S.N (S.r * S.N) := ⟨(GlobalTheory.T.uniformisedTest_dimensions_and_split_fibre L o Ω S ρ p y₀ u).2.2.2.1, hBig.1, hBig.2.1⟩
-  obtain ⟨hN, htor, -⟩ := GlobalTheory.T.specialFibre_torsion_eq_reductions L o Ω S ρ p y₀ u l σ cls md hy
+  have hB : Big S.g S.N (S.r * S.N) := ⟨(_root_.GlobalTheory.ZH.utest_dim_and_split L o Ω S ρ p y₀ u).2.2.2.1, hBig.1, hBig.2.1⟩
+  obtain ⟨hN, htor, -⟩ := _root_.GlobalTheory.ZH.special_torsion_eq_reduction L o Ω S ρ p y₀ u l σ cls md hy
   have pb : IsPullback md.r md.Φ.G.hom u.G.hom (rPt p ≫ spMap u.j) := md.cart.1
   have hs : Smooth u.G.hom := md.smooth.smooth
   have : Smooth md.Φ.G.hom := MorphismProperty.of_isPullback pb hs
@@ -265,7 +264,7 @@ theorem mem_lattice_iff : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] 
     md hB z w hz hw
   have hxx : x'.left = x.left := pb.hom_ext (hx'.trans hr) ((Over.w x').trans (Over.w x).symm)
   refine ⟨_, hxx ▸ hc', ?_⟩
-  have h1 := hL a' _ (hA ▸ (GlobalTheory.T.torsionValues_coords_operator_permute L o Ω S ρ).1 _ y₀ a)
+  have h1 := hL a' _ (hA ▸ (_root_.GlobalTheory.ZH.EvCrd.ev_crd_act L o Ω S ρ).1 _ y₀ a)
   have h2 := CrdCalc.crd_map (OO p).subtype hw
   rw [show spMap (OO p).subtype ≫ z = u.toG a' from hg] at h2
   obtain ⟨t, ht⟩ := CrdCalc.crd_unique h2 h1

@@ -4,20 +4,23 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsR
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissibleBaseOfCompleteDvr
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RelationsAreFunctions
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaConstantValuationsUnitsEveryCosetStatement
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTorsionIdentificationWithPairingStatement
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTorsionIdentificationWithPairing
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.ValuationMultiplicationInvariance
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsLieBasis
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.ThetaGen
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralFamilyOfStrictMin
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExpansionOfIntegralSectionIsIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IntegralDegenerationFamilyBaseChangeExtensionFieStatement
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.DegExp
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExpansionOfIntegralSectionIsIntegral
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IntegralDegenerationFamilyBaseChangeExtensionFie
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IntegralFamilyLevelOne
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.VanishOfTermsVanish
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.AllDV
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsGeneratorOfBasis
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsExpandsAtOfIntegral
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisationGenericFibreCartesianToModelBundleStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisationGenericFibreCartesianToModelBundle
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -85,7 +88,7 @@ open GlobalTheory.Ex.OneGen GlobalTheory.UT
 theorem GlobalTheory.Ex.OneGen.thG_val_of_prim : HV → AllUV fun {V} _ _ _ {ϖ} hϖ {D} Q {F} _ _ {v} hv {A} {G} _ _ U => ∀ w₀ ρ, NormW U.toUnifPre w₀ ρ → ∀ (th : SecA A F 1) (ϑ : Fam D.toPre F 1), U.ExpandsF F 1 w₀ th ϑ → Prim D Q v ϑ → ∀ m : ℕ, Odd m → IsUnit (m : V) → 3 ≤ m → (∀ x (c : F), ThG A.A A.L ρ m th x (fnOf c) → 0 ≤ v c) ∧ ∃ x, ∃ c : F, ThG A.A A.L ρ m th x (fnOf c) ∧ v c = 0 := by
   rintro ⟨hLL, h₁, h₂, h₃, h₄⟩ V _ _ _ _ hV ϖ hϖ D Q hQ F _ _ _ v hv A G _ _ hG U w₀ ρ hw th ϑ hex hprim m hmo hmu hm
   have hAdm : AdmBase V (IsLocalRing.maximalIdeal V) := ⟨inferInstance, inferInstance, inferInstance, hV⟩
-  obtain ⟨f, hf, hfs, -⟩ := GlobalTheory.T.uniformisation_torsion_identification_with_pairing hLL V _ hAdm D A G hG U F (m ^ 2) (pow_pos hmo.pos 2)
+  obtain ⟨f, hf, hfs, -⟩ := _root_.GlobalTheory.TorsionIso.torsion_eq hLL V _ hAdm D A G hG U F (m ^ 2) (pow_pos hmo.pos 2)
   obtain ⟨ua, ub⟩ := GlobalTheory.T.theta_constant_valuations_units_every_coset hLL h₁ h₂ h₃ h₄ V hV ϖ hϖ D Q hQ F v hv A G hG U w₀ ρ hw th ϑ hex hprim m hmo hmu
   refine ⟨fun x c H => ?_, ?_⟩
   · obtain ⟨hx, t, ht⟩ := (thG_iff A ρ m th x c).1 H
@@ -175,13 +178,13 @@ theorem main : GlobalFnsSt → ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscr
   intro hG V _ _ _ ϖ hϖ D Q hQ A G _ _ U ϑ hϑ
   obtain ⟨s, hs⟩ := exists_restrict U.LG.isLB (pullback.fst G.hom (jK V)) ((1 : ℕ) : ℤ) ϑ
   obtain ⟨E, hE, -⟩ := (U.expand 1 le_rfl).1 s
-  obtain ⟨g, hexp, hgE⟩ := GlobalTheory.T.expansion_of_integral_section_is_integral V ϖ hϖ D A G U.toUnifPre 1 ϑ s hs E hE
+  obtain ⟨g, hexp, hgE⟩ := _root_.GlobalTheory.ExpInt.main V ϖ hϖ D A G U.toUnifPre 1 ϑ s hs E hE
   have hdiv := (GlobalTheory.integralFamily_levelOne V ϖ hϖ D Q hQ (FractionRing V) (GlobalTheory.FamInt.ordVal hϖ)
     (GlobalTheory.FamInt.valOver_ordVal hϖ) E g hgE).2
   have hind : ¬ ∃ g' : D.toPre.SecB 1 0, SecIsMul D.toPre.P.A.hom ϖ (g 0) g' :=
     (GlobalTheory.ClosedFibreTerm.main V ϖ hϖ D A G U.toUnifPre ϑ g (hexp 0) hdiv).1 hϑ
   refine ⟨g, hexp, hind, fun F _ _ v hv => ?_⟩
-  obtain ⟨θ, hθ⟩ := GlobalTheory.T.integralDegenerationFamily_baseChange_extensionField hG V (maximalIdeal V) D 1 E g hgE F
+  obtain ⟨θ, hθ⟩ := _root_.GlobalTheory.FamBaseChange.main hG V (maximalIdeal V) D 1 E g hgE F
   refine ⟨θ, hθ, (GlobalTheory.integralFamily_levelOne V ϖ hϖ D Q hQ F v hv θ g hθ).1, ?_⟩
   rintro ⟨r, hr, hν⟩
   refine hind (secIsMul_of_vge hϖ D F v hv (hθ 0) ?_ (hν 0))

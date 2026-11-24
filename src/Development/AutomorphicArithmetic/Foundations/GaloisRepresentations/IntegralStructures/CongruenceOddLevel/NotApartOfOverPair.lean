@@ -27,7 +27,8 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.LimWU4
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormLeOneOfIsIntegralInt
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniqueWeightDefiniteUnitaryAt
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsAlgebraicFormWeightLevelSmoothAtPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsAlgebraicWeightDefiniteUnitaryAutRepStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsAlgebraicWeightDefiniteUnitaryAutRep
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.CongruenceOddLevel.LacunaryBaseWeightAntitone
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -1418,7 +1419,7 @@ theorem congUWG_of (H : StepSt) (hFin : FinU) (D : ∀ a : ℕ, MvPolynomial (Fi
   classical
   intro E _ _ _ l _ ι a ha T _ U hU w₀ v' hw₀ hs₀ hv' hsv hap
   obtain ⟨K, Kw, Kv, hK, hKvo, hfix, hKwv, hoc, hsph, hns, hKs⟩ := exists_level hU hs₀ hsv hap
-  obtain ⟨lam, hlam⟩ := GlobalTheory.T.exists_algebraicWeight_definiteUnitaryAutRep E a U hU.1
+  obtain ⟨lam, hlam⟩ := _root_.GlobalTheory.Cong.exists_weight_of_isAutRepU E a U hU.1
   set K' := K ⊓ Kv.comap (cLoc v') with hK'def
   have hK' : IsLevelAway w₀ K' := isLevelAway_inf hK v' hKvo
   have hOf : OfType lam K' U := ⟨hU.1, hlam, hfix⟩

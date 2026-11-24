@@ -49,7 +49,7 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Conti
 public import Development.AbelianVarietyTheory.PublishedTheorems.SiegelWeil₂.SiegelWeilUnitaryConvergent
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CoreChainCompositesExistLiftCombinationsStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DependenceFixedStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DependenceFixed
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SeparatingFamilyHasModels
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistEvenSurjectiveOfRepresentatives
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.RealBands.BranchDefs
@@ -103,7 +103,8 @@ import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsItWOfGlobIt
 import Development.AbelianVarietyTheory.Definitions.Divisors.NatCastSmulMemHatL
 import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.VacuumFockVectors
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVectorsOverVacuumIsometryOfSkeletonDatum
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GluingLawHoldsStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ChosenSeries
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GluingLawHolds
 import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.BarMatrix
 import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
 import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
@@ -589,7 +590,7 @@ theorem exists_seesaw_pair : _root_.GlobalTheory.FunPr.ThetaLocalInputs → Pair
   have key : ∀ τ, (0 < V.rank ∧ 0 < W.rank) ∧ ∃ A, LocIt M M' τ (aS τ) (aT τ) A := fun τ =>
     exists_locIt_pair hX h1 h2 hB M M' τ (hP τ)
   choose hr A hA using key
-  obtain ⟨It, I, hI⟩ := GlobalTheory.T.exists_globalFockIntertwiner_tensor_realPlaces D V W _ _ M M' aS aT A GlobalTheory.Contr.contraction.2 (GlobalTheory.T.gluing_law_holds D _ _) hA
+  obtain ⟨It, I, hI⟩ := GlobalTheory.T.exists_globalFockIntertwiner_tensor_realPlaces D V W _ _ M M' aS aT A GlobalTheory.Contr.contraction.2 (_root_.GlobalTheory.Chain.RealIt.GlueProof.glueLaw D _ _) hA
   refine ⟨It, fun ω ⟨χS, χT, hω, he⟩ f hf => ?_⟩
   have hc := fun τ => _root_.GlobalTheory.vacChar_of_record D V W _ _ M M' θ ψ χS χT ω f τ _ _ hθ hω (he τ).1 (he τ).2 hf
   exact isItW_of_globIt hθ hI hr (_root_.GlobalTheory.vacuumFock_all_records D V W _ _ M M' ψ θ hω.std hθ f hf).2.2.2.2
@@ -1393,7 +1394,7 @@ theorem twist_core_surjective_of_local_components : _root_.GlobalTheory.FunPr.Th
   exact _root_.GlobalTheory.CoreOnto.coreOnto_of_chain
     (_root_.GlobalTheory.T.twist_even_surjective_of_representatives hHCF hCRD hDSC hHCM hCW hHowe hWeil hWSF hSWC hDbl hUDG)
     GlobalTheory.T.testGridCommonData_properties_hold GlobalTheory.T.testGridStageLatticesProperties_proof
-    (GlobalTheory.T.core_chain_composites_exist_lift_combinations hDSC hHCM hCRD hCW GlobalTheory.T.dependence_fixed (_root_.GlobalTheory.T.exists_separating_models hP))
+    (GlobalTheory.T.core_chain_composites_exist_lift_combinations hDSC hHCM hCRD hCW _root_.GlobalTheory.DepthFix.depFixed (_root_.GlobalTheory.T.exists_separating_models hP))
     GlobalTheory.T.definiteTopSpace_columnValues
 end GlobalTheory.Twist.CoreOntoAssembly
 end
@@ -1423,7 +1424,7 @@ theorem real_functionals_separate_of_hypothesis
     P.harishChandraModules P.casselmanWallach hHowe P.weilRepresentationUnitaryPair
     P.weilSiegelFormulaUnitary hSW P.doublingMethod P.unramifiedDoublingGL
   have weak := GlobalTheory.T.rowSeparation_by_realFunctionals_of_chain_steps GlobalTheory.T.largeScaleSizes_imply_gapConditions (_root_.GlobalTheory.T.exists_separating_models P) (_root_.GlobalTheory.T.rapid_decay_of_separating_family P rowTower) per onto
-    (GlobalTheory.T.bessel_period_nonvanishing_ascent_of_depth_data GlobalTheory.T.dependence_fixed)
+    (GlobalTheory.T.bessel_period_nonvanishing_ascent_of_depth_data _root_.GlobalTheory.DepthFix.depFixed)
   exact _root_.UpperTheory.Lit.bessel_separate_of_step_gap P rowTower GlobalTheory.T.largeScaleSizes_imply_gapConditions GlobalTheory.T.goodRows_principalLevel_are_rows conv weak
 end UpperTheory.Lit
 end

@@ -12,12 +12,12 @@ public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.PowO
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SplitTorusHomEqOneOfNilpotent
 public import Development.AbelianVarietyTheory.Definitions.Divisors.QuasiCompact
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvenOnTorusDescendsAlongLocalHomStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisInvariantFunctionsFlatBaseChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisInvariantFunctionsFlatBaseChange
 public import Development.AbelianVarietyTheory.Counterexamples.UniformisationSurvey.MapPowLeOfIsPullUnif
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisedGroupGaloisMapMul
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LiftThreeOverMapComp
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.TraceFormTwistIsoOfPullback
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisationCompleteLocalEvenOnTorusStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisationCompleteLocalEvenOnTorus
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSemiAbelianUniformisationPullbackInjectiveLocStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolarisedGenericFibreDescendsGaloisStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationBundleDescendsAlongGaloisExtensionStatement
@@ -99,7 +99,6 @@ import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.Uniformisati
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AdmissibleBasePowerSeries
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.CocycleIdentityIso
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIsPullDegOfVal
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisInvariantFunctionsFlatBaseChange
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IsAdicColimitOfFactor
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsIsoOfIsClosedImmersionOfThickeningsOfIsProper
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.NonemptyCubicalPull
@@ -876,14 +875,14 @@ theorem uniq : ∀ (R : Type) [CommRing R] [IsDomain R] (R' : Type) [CommRing R'
     simpa only [Scheme.Hom.comp_apply] using this
   refine Scheme.Hom.ext hbase fun U => ?_
   have : Mono (β.app (g₂ ⁻¹ᵁ U)) := ConcreteCategory.mono_of_injective _
-    (GlobalTheory.T.galois_invariant_functions_flat_baseChange R R' ρ hfin hgal Y Y' y y' β hflat hpb act hβ hy' _).1
+    (_root_.GlobalTheory.Mum.InvFun.invariant_functions R R' ρ hfin hgal Y Y' y y' β hflat hpb act hβ hy' _).1
   rw [← cancel_mono (β.app (g₂ ⁻¹ᵁ U)), ← Scheme.Hom.comp_app, Scheme.Hom.congr_app he.symm,
     Category.assoc, Scheme.Hom.naturality, ← Category.assoc, ← Scheme.Hom.comp_app]
   rfl
 
 theorem exAff : ∀ (R : Type) [CommRing R] [IsDomain R] (R' : Type) [CommRing R'] [IsDomain R'] [IsLocalRing R'] (ρ : R →+* R'), FinExt ρ → IsGal ρ → ∀ (Y Y' : Scheme.{0}) (y : Y ⟶ Sp R) (y' : Y' ⟶ Sp R') (β : Y' ⟶ Y), Flat y → IsPullback β y' y (spMap ρ) → ∀ (act : Gal ρ → (Y' ⟶ Y')), (∀ σ, act σ ≫ β = β) → (∀ σ, act σ ≫ y' = y' ≫ spMap (Gal.hom σ)) → ∀ (W : Scheme.{0}) [IsAffine W] (h : Y' ⟶ W), (∀ σ, act σ ≫ h = h) → ∃ h₀ : Y ⟶ W, β ≫ h₀ = h := by
   intro R _ _ R' _ _ _ ρ hfin hgal Y Y' y y' β hflat hpb act hβ hy' W _ h hh
-  obtain ⟨hinj, hdesc⟩ := GlobalTheory.T.galois_invariant_functions_flat_baseChange R R' ρ hfin hgal Y Y' y y' β hflat hpb act hβ hy' ⊤
+  obtain ⟨hinj, hdesc⟩ := _root_.GlobalTheory.Mum.InvFun.invariant_functions R R' ρ hfin hgal Y Y' y y' β hflat hpb act hβ hy' ⊤
   have hmem : ∀ x : Γ(W, ⊤), h.appTop x ∈ Set.range (β.app ⊤).hom := by
     intro x
     refine hdesc (h.appTop x) fun σ hle => ?_
@@ -941,7 +940,7 @@ theorem descend : ∀ (R : Type) [CommRing R] [IsDomain R] (R' : Type) [CommRing
   have hinv : ∀ V : Y.Opens, IsAffineOpen V → ∀ s : Γ(Y', β ⁻¹ᵁ V),
       GlobalTheory.IsInvariantSection ρ' _ s → s ∈ Set.range (β.app V) := by
     intro V _ s hs
-    refine (GlobalTheory.T.galois_invariant_functions_flat_baseChange R R' ρ hfin hgal Y Y' y y' β hflat hpb act hβ hy' V).2 s fun σ hle => ?_
+    refine (_root_.GlobalTheory.Mum.InvFun.invariant_functions R R' ρ hfin hgal Y Y' y y' β hflat hpb act hβ hy' V).2 s fun σ hle => ?_
     obtain ⟨h1, h2⟩ := hs σ⁻¹
     have key : ∀ (k : Y' ⟶ Y') (_ : k = act σ) (e : β ⁻¹ᵁ V ≤ k ⁻¹ᵁ (β ⁻¹ᵁ V)),
         (k.appLE _ _ e).hom s = s → ((act σ).appLE _ _ hle).hom s = s := by
@@ -1519,7 +1518,7 @@ theorem has_of_galAct : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
   obtain ⟨P, hP⟩ := GlobalTheory.T.uniformisationBundle_descends_along_galoisExtension R hR R' ρ hfin hgal D D' hD A' G' hS' U' a G β hS pb hinv
   have hAP := GlobalTheory.T.lineBundleIso_genericFibre_descend_finite_ext R hR R' ρ hfin G' G β hS' hS pb A gen κ hgen hκ U'.LG.L U'.LG.isLB hLA P hP
   have hev := GlobalTheory.T.evenCubicalTrivialisation_descended_closedTorus R hR R' ρ hfin hgal D D' hD A' G' hS' U' a G β hS pb hinv P hP
-  obtain ⟨D₁, U₁, hLG, -⟩ := GlobalTheory.T.exists_uniformisation_completeLocal_evenOnTorus R hR G P hS hev A gen hgen hAP
+  obtain ⟨D₁, U₁, hLG, -⟩ := _root_.GlobalTheory.Mum.exists_unif_even R hR G P hS hev A gen hgen hAP
   have hP₁ : LBIso U'.LG.L (U₁.LG.L.pull β) := by rw [hLG]; exact hP
   have h₁ := GlobalTheory.T.nonempty_degData_iso_of_galoisDescendedGroup R hR R' ρ hfin hgal D D' hD A' G' hS' U' a G β hS pb hinv A D₁ U₁ hP₁
   exact GlobalTheory.T.hasSemiAbelianUniformisation_pullback_injective_local R R (RingHom.id R) hR.1 hR.1 Function.injective_id inferInstance D₁ D h₁

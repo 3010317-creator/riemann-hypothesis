@@ -16,17 +16,22 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PtYAn
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FockVectorsChainIsVacuumOffThetaLevels
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HTensMixHalfS
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatPtSLeClosureAndSelfDual
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SmallModelThetaTransformInjectiveProductsStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SmallModelThetaTransformInjectiveProducts
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SmulOfMapsInlMemS
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousAtPlace
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroComplementaryAdelicSchwartzFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergEigenLatticePointAtPlaceLocalIdentityStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergEigenProportionalLocalFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLocalImageLatticeSupportedAtPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLocalSubgroupFirstProjEqAnnihilatorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorLatticeLocalDarbouxCoordsBoundedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroComplementaryAdelicSchwartzFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergEigenLatticePointAtPlaceLocalIdentity
+public import Mathlib.Algebra.Group.AddChar
+public import Mathlib.Algebra.Group.Subgroup.Defs
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.Data.Matrix.Mul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergEigenProportionalLocalField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLocalImageLatticeSupportedAtPlace
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLocalSubgroupFirstProjEqAnnihilator
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorLatticeLocalDarbouxCoordsBounded
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BasePlaceNotMemChiGridBadPlaces
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalAddCharUnramifiedOfSplitsCompletelyAbovePla
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeVacuumEqSmulIndicatorSplitPlaceStatement
@@ -70,12 +75,10 @@ import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFactorPureTen
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNatMulIntegralOfIsCompact
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GridLocalTensorPlacesSplitIdempotentSum
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerFixedFunctionsProportionalOfSelfDual
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLocalImageLatticeSupportedAtPlace
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewGramInrInl
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmulMemScLatOfMem
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAddCharSymplecticLocalLatticeEqOne
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAdelicCharacterNontrivialAtPlaces
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorLatticeLocalDarbouxCoordsBounded
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesSchwartz
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeisenbergOperatorFixThetaDatumAwaySplitPlaces
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeisenbergOrientedFiniteFixesFockPolynomialVecto
@@ -484,7 +487,7 @@ theorem exists_datum (hL : L.Is μ₀) (h : IsTripleOf W M t i j e Bs Γ X) (hT 
     ∃ Φ ∈ schA D.host.F (IxS G i j),
       HasTheta Γ.M'.co W.ψ Φ (boxS t e (W.fock (.mu t i j) f₁ P₁) (W.fock (.chi i j) f₂ P₂)) ∧
       ∀ γ ∈ genPtS t e v, Γ.M'.co.rho W.ψ γ Φ = Φ := by
-  obtain ⟨-, hinj, hon⟩ := GlobalTheory.T.smallModel_thetaTransform_injective_products W M t i j e Bs Γ X om om' h hT
+  obtain ⟨-, hinj, hon⟩ := _root_.GlobalTheory.SmallDat.ThBox.thetaS_box W M t i j e Bs Γ X om om' h hT
   obtain ⟨a₁, b₁⟩ := fock_locVec W v₁ h₁ P₁
   obtain ⟨a₂, b₂⟩ := fock_locVec W v₂ h₂ P₂
   have hstd : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsStd W.ψ := h.ψ ▸ hT.base.std
@@ -687,18 +690,18 @@ theorem vacuum_unique : ∀ {D : D7} {a a' : ℕ} (Bs : GlobalTheory.IndefiniteR
         GlobalTheory.LatVac.psiAt Bs.ψ v (ξ ⬝ᵥ l.2 + (2 : Fv D.host.F v)⁻¹ * (l.1 ⬝ᵥ l.2)) * f (ξ + l.1) = χ l * f ξ := by
     intro f hf hA l hl ξ
     have h : ∃ γ ∈ Λ, GlobalTheory.LatVac.locCo co v γ = l := AddSubgroup.mem_map.mp hl
-    obtain ⟨r, hr, x₀, hx₀⟩ := GlobalTheory.T.exists_nonzero_complementary_adelicSchwartz_function v f hf
-    have key := GlobalTheory.T.heisenbergEigen_latticePointAtPlace_localIdentity v co Bs.ψ h.choose f _ (hAt _ h.choose_spec.1) (hA _ h.choose_spec.1) r hr x₀ hx₀ ξ
+    obtain ⟨r, hr, x₀, hx₀⟩ := _root_.GlobalTheory.RestComplement.exists_rest_ne_zero v f hf
+    have key := _root_.GlobalTheory.LatVac.heis_at_local_identity v co Bs.ψ h.choose f _ (hAt _ h.choose_spec.1) (hA _ h.choose_spec.1) r hr x₀ hx₀ ξ
     simp only [χ, dif_pos h]
     rw [h.choose_spec.2] at key
     exact key
-  obtain ⟨c, hc0, hcb⟩ := GlobalTheory.T.tensorLattice_localDarbouxCoords_bounded {Γ.V' with L := L₁} {Γ.W with L := L₂} v co hL₁ hL₂
-  have hsd' := GlobalTheory.T.selfDual_localImage_latticeSupportedAtPlace v co Bs.ψ Λ hAt hsd
-  have hfill := GlobalTheory.T.selfDualLocalSubgroup_firstProj_eq_annihilator v (GlobalTheory.LatVac.psiAt Bs.ψ v) (Λ.map (GlobalTheory.LatVac.locCo co v)) c hc0 (fun x => hψ x) hsd'
+  obtain ⟨c, hc0, hcb⟩ := _root_.GlobalTheory.LatBound.locCo_latAtV_bounded {Γ.V' with L := L₁} {Γ.W with L := L₂} v co hL₁ hL₂
+  have hsd' := _root_.GlobalTheory.LatVac.DualLoc.map_selfDual v co Bs.ψ Λ hAt hsd
+  have hfill := _root_.GlobalTheory.SelfDualFirstProj.exists_pair_of_annihilator v (GlobalTheory.LatVac.psiAt Bs.ψ v) (Λ.map (GlobalTheory.LatVac.locCo co v)) c hc0 (fun x => hψ x) hsd'
     (fun l hl i => by
       obtain ⟨γ, hγ, rfl⟩ := AddSubgroup.mem_map.mp hl
       exact hcb γ hγ i)
-  exact GlobalTheory.T.heisenbergEigen_proportional_localField (GlobalTheory.LatVac.psiAt Bs.ψ v) (Λ.map (GlobalTheory.LatVac.locCo co v)) χ φ₀ ψ₀ (loc φ₀ hφSB hφ) (loc ψ₀ hψSB hψ')
+  exact _root_.GlobalTheory.heisenbergEigen_proportional (GlobalTheory.LatVac.psiAt Bs.ψ v) (Λ.map (GlobalTheory.LatVac.locCo co v)) χ φ₀ ψ₀ (loc φ₀ hφSB hφ) (loc ψ₀ hψSB hψ')
     hφ0 hfill
 
 end GlobalTheory.LatVacUniq

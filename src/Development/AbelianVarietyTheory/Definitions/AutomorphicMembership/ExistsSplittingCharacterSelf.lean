@@ -15,7 +15,7 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeChar
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdelicCharacterTrivialBaseFiniteIdeles
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsFundamentalDomainOfHaar
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompletelySplitPrimeHostPlaceProperties
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCmAdeleUnitCharacterReadingHeckeCharStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCmAdeleUnitCharacterReadingHeckeChar
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHeckeCharTrivOnRealSubfieldInfinityType
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HostCmEmbeddingProperties
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalIdeleSndSelf
@@ -95,7 +95,6 @@ import Mathlib.RingTheory.PicardGroup
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.TypeStar
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsCuspFunIffConstTerm
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCmAdeleUnitCharacterReadingHeckeChar
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQua
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemNormGroupIffEverywhereNorm
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TendstoInfMulProd
@@ -476,7 +475,7 @@ theorem exists_char : ∀ (D : D7) (j : Fin D.R.m),
   letI : Fintype D.what₂.Tau := Fintype.ofEquiv _ D.eTau.symm
   choose z hz using fun τ => (D.hc τ).e_int j
   obtain ⟨χ, hu, ht, hi, T, hT⟩ := exists_hchar D.R D.host D.what₂.Tau D.eTau z
-  obtain ⟨c, hc⟩ := GlobalTheory.T.exists_cmAdeleUnitCharacter_reading_heckeChar D χ hu
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.CharTransport.exists_chrEq D χ hu
   have hv := val_inf D c χ hc T hT _ hi
   obtain ⟨θ₀, hθ₀⟩ := GlobalTheory.Member.exists_isInfFam_family D
   refine ⟨c, hc.1, fun τ => ⟨-2 * z τ, by rw [hz]; push_cast; ring, ⟨θ₀, hθ₀⟩, fun θ hθ x h1 h2 => ?_⟩,

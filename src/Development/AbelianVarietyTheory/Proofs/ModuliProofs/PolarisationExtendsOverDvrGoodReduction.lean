@@ -10,7 +10,9 @@ public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.EqOne
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsIntermediateFieldOfPowEqOne
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.OverPointsExtOfInjective
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CardTorsionPointsAbelianVarietyStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CardTorsionPointsAbelianVariety
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsNeZeroClosedFibre
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsSecPullNeZero
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.CubicalBundleRelAmpleOfAmpleFibresStatement
@@ -427,7 +429,7 @@ theorem relAmple_special_fibre : Laws → Laws2 → ∀ (V K : Type) [CommRing V
   obtain ⟨hL', hr, ⟨c', -⟩, -⟩ := CubePf.cubePull _ _ B B' (cubeMapOf h) M.L M.c
   let Ω := AlgebraicClosure k
   obtain ⟨n, hn, hnΩ, hnd⟩ := exists_prime Ω (2 * d) (by omega)
-  refine AmpleCrit.relAmple_of_effective (GlobalTheory.T.card_torsion_points_abelianVariety hL.globalFns hL.rigidity) k (Field.toIsField k) B' hB'
+  refine AmpleCrit.relAmple_of_effective (_root_.GlobalTheory.UU.TorsionCount.card_torsion_points hL.globalFns hL.rigidity) k (Field.toIsField k) B' hB'
     ((cubeMapOf h).rigLB M.L hL' hr) c' d s hd hs Ω (spMap (algebraMap k Ω)) n hn hnΩ hnd fun x hxn htr => ?_
   let f : V →+* Ω := (algebraMap k Ω).comp (IsLocalRing.residue V)
   have hf : IsLocalHom f := RingHom.isLocalHom_comp _ _

@@ -41,7 +41,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdelic
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockFormMinorProductEqProdHookProducts
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralDefiniteUnitaryQuotientEqClassSumStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCongLevelOfIsBlockLevel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardLatticeSelfDualAndIntegralIffStabilizesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFinPt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardLatticeSelfDualAndIntegralIffStabilizes
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsNeZeroOfIsVacO
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockPolynomialVectorInjectiveNonzeroVacuum
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsThetaIsLatticeVacuumFockPureTensor
@@ -95,9 +96,9 @@ import Formalism.LocalToGlobal.IndefiniteReal.IndefiniteWeightData
 import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsDualFamilySelfDualHermitianSpaceStatement
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsDualFamilySelfDualHermitianSpace
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MapFinNeg
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RationalHermitianRankOneLatticeSelfDualStatement
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RationalHermitianRankOneLatticeSelfDual
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVacuumRealRestrictionGaussianEntire
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaEqZeroOfReal
@@ -643,7 +644,7 @@ theorem finRat_mem_iff {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-
     (hS : IsSelfDualC S LS) (hT : IsSelfDualC T LT) (M : Matrix (Fin T.rank) (Fin S.rank) D.host.E) :
     GlobalTheory.VacUnique.finRat S T M ∈ latO S T LS LT (fun _ => True) ↔ M ∈ GlobalTheory.LatVac.latRat S T LS LT := by
   refine ⟨fun h => ?_, fun h => GlobalTheory.LatVac.finTens_mem_latO (GlobalTheory.LatVac.one_mem_intAf _) h⟩
-  refine (GlobalTheory.T.rationalHermitianRankOneLattice_selfDual D S T LS LT hS hT (GlobalTheory.T.exists_dual_family_selfDual_hermitianSpace D S LS hS) _).2 fun ℓ hℓ => ?_
+  refine (_root_.GlobalTheory.LatVac.latRat_selfDual D S T LS LT hS hT (_root_.GlobalTheory.LatVacDual.dualFamily D S LS hS) _).2 fun ℓ hℓ => ?_
   have h1 := GlobalTheory.LatVac.char_sympl_eq_one hψ hS hT (u := GlobalTheory.LatVac.finTens 1 M) h
     (GlobalTheory.LatVac.finTens_mem_latO (GlobalTheory.LatVac.one_mem_intAf _) hℓ)
   rw [GlobalTheory.LatVac.symplO_finTens, one_mul, one_mul] at h1
@@ -1640,7 +1641,7 @@ theorem exists_reads_vacuum (h : IsExact P X r) : ∃ f₀, Reads X.ψ X.θ X.rk
 
 theorem mem_openOff (h : IsExact P X r) {x : Formalism.MainNotions.StandardLatticesGL3.GA D P.a} (hx : x ∈ intG D P.a) (Sf : Finset (FinPl D)) :
     X.ιA x ∈ openOff X.A (stdLat X.A) Sf := fun v _ =>
-  (GlobalTheory.T.standardLattice_selfDual_and_integral_iff_stabilizes X.A P.a (X.ιA x) x h.std.frame.gramA X.rkA (h.std.ptA x)).2.1 hx v (Finset.notMem_empty v)
+  (_root_.GlobalTheory.NormRatio.selfDual_and_mem_intG_iff X.A P.a (X.ιA x) x h.std.frame.gramA X.rkA (h.std.ptA x)).2.1 hx v (Finset.notMem_empty v)
 
 theorem norm_transl (h : IsExact P X r) {𝔪 : Ideal (𝓞 D.host.E)} {Sf : Finset (FinPl D)}
     {R : Finset (Formalism.MainNotions.StandardLatticesGL3.GA D P.a)} (hR : ∀ y ∈ R, y ∈ intG D P.a)
@@ -1677,7 +1678,7 @@ theorem finite_data (hI : GlobalTheory.NormSum.Inp D) (h : IsExact P X r) {𝔪 
   refine (exists_reads_vacuum h).elim fun f₀ hf₀ => ?_
   refine (GlobalTheory.T.exists_selfDualLattice_vacuumReading X.ψ X.θ X.A X.B X.rkA X.rkB δ r h.setup).elim fun LB ⟨hLB, hz, hsph⟩ => ?_
   have hs₀ := hsph P.e0 P.vac.1 f₀ hf₀
-  have hsd := (GlobalTheory.T.standardLattice_selfDual_and_integral_iff_stabilizes X.A P.a (X.ιA 1) 1 h.std.frame.gramA X.rkA (h.std.ptA 1)).1
+  have hsd := (_root_.GlobalTheory.NormRatio.selfDual_and_mem_intG_iff X.A P.a (X.ιA 1) 1 h.std.frame.gramA X.rkA (h.std.ptA 1)).1
   have hv := vac_eq_sum hI h hm.1 hF hφ
   have hsφ := GlobalTheory.T.thetaCosetIndicatorReading_spherical_off_modulus P X r h 𝔪 Sf o hm LB hLB hz f₀ φ hf₀ hs₀ hφ
   have hs := isSphOff_sum R (fun y => X.om (X.ιA y, 1) φ) fun y hy =>

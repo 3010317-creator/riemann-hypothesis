@@ -7,7 +7,8 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EasyI
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HcFiniteAndSchurMult
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowFiniteTypesIsotypicPartsSpanOrthogonal
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SchurPairingInvariantUnderStandardGroupStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryCongruenceConjContainsCongruenceStatement
+import Formalism.LocalToGlobal.IndefiniteReal.PrincipalLevelFrame
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryCongruenceConjContainsCongruence
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsCanonicalModuleSuccessor
 public import Formalism.LocalToGlobal.IndefiniteReal.CompZeroOfOrth
 public import Formalism.LocalToGlobal.IndefiniteReal.IsotInLeOfIntw
@@ -77,7 +78,7 @@ theorem main_alt_alt : GlobalTheory.Published.HarishChandraFinite → GlobalTheo
   have hSA : SchurAll D := fun V _ S θ M J χ μ 𝓕 => (GlobalTheory.MultFinite.hcFinite_and_schurMult hH hC D θ V S M J χ μ 𝓕).2
   have hHA : HCAll D := fun V _ S θ M J χ => (GlobalTheory.MultFinite.hcFinite_and_schurMult hH hC D θ V S M J χ 0 ∅).1
   have hStd : GlobalTheory.Mem.R3.StdFrame hA.hF (X.PW j) := hA.stdW j
-  have hcc := GlobalTheory.T.unitary_congruence_conj_contains_congruence D.host.E D.R.r
+  have hcc := _root_.GlobalTheory.CongConjugate.congConj D.host.E D.R.r
   obtain ⟨hlin, hherm, hpos⟩ := GlobalTheory.FinTypesRows.minf_sesq (M := X.R.MW j (sg0 D X.A)) (θ := X.R.θ) (X.R.νW j) (X.R.fdW j)
     (X.PW j) hSA hSig hθ hHaar hFD
   have hT := X.recR.tied.lift

@@ -24,7 +24,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenMapTransp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSelfDualCHLat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeIsometrySignThird
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolyDerivCompNeg
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationSplitSupportProjectsVacuumStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationSplitSupportProjectsVacuum
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FinCongMemLevEnv
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNsmulIntMemLatO
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GramMapMulInv
@@ -228,7 +228,7 @@ theorem thetaKO_eq_short_series_core : ∀ (D : D7) (G : Type) [Group G] [Fintyp
       L₀ = Submodule.span (𝓞 D.host.E)
         {w | ∃ a : D.host.E, a ∈ D.host.AA ∧ ∃ v ∈ Bridge.hLat (Wc D i) (fin (Wc D i) k), w = a • v} →
       latR (rank_Wc i) (latG (Wc D i) k) = latR (rank_Wc i) L₀ := fun L₀ h₀ => by rw [h₀, hlat]
-  have hcl := GlobalTheory.T.weilRepresentation_split_support_projects_vacuum D _ _ _ _ _ _ _ hP _ g (rank_Wc i) X bas idx hM hS H hrt _ _ Λ.La _ hV0 hVs hks hVstd hL _ _ hx'
+  have hcl := _root_.GlobalTheory.AdTh.SplitClass.om_reads_projA D _ _ _ _ _ _ _ hP _ g (rank_Wc i) X bas idx hM hS H hrt _ _ Λ.La _ hV0 hVs hks hVstd hL _ _ hx'
     (isInvOf_move (rank_Wc i) X hinv k) _ hvac' _ hR e Ps h y he hsupp hdet hΛ
   rw [← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, mul_one, one_mul, projA_smul, smul_smul] at hcl
   obtain ⟨-, hsd, huni, hfg⟩ := LatOf.isLatOf_tens D _ _ _ _ _ g (rank_Wc i) X bas idx hψ hP.inf hP.std hP.even hM hS

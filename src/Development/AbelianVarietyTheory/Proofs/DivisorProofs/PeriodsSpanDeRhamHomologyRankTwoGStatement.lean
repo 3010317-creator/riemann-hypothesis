@@ -5,13 +5,12 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.FstTszeSec
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatioCover
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TopLePreimageOfValAtNeZero
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationPreimageValueRulesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationPreimageValueRules
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisedOneFormEvaluationRulesStatement
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.Algebra.Module.ZLattice.Basic
 public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationPreimageValueRules
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOneOfRetraction
 public import Mathlib.Analysis.Calculus.MeanValue
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechDeRhamPeriodsLinearStatement
@@ -135,7 +134,7 @@ def valHom (U : A.left.Opens) : Sec (str A) U →ₐ[ℂ] Hol (W u U) where
   map_zero' := Subtype.ext (funext fun p => valAt'_zero _ _)
   map_add' a b := Subtype.ext (funext fun p => valAt'_add _ _ a b)
   commutes' c := Subtype.ext (funext fun p => by
-    obtain ⟨e, he⟩ := (GlobalTheory.T.uniformisation_preimage_value_rules A g L u).2.2.2.2.2.2.2.2.2.1 U p.1.2 p.2
+    obtain ⟨e, he⟩ := (_root_.GlobalTheory.CechPer.pre_val_rules A g L u).2.2.2.2.2.2.2.2.2.1 U p.1.2 p.2
     exact (he _).trans (e.commutes c))
 
 theorem fn_valHom (U : A.left.Opens) (b : Sec (str A) U) {p : Tot Empty g} (hp : p ∈ W u U) :
@@ -148,14 +147,14 @@ theorem fn_valHom (U : A.left.Opens) (b : Sec (str A) U) {p : Tot Empty g} (hp :
   le _ U' U := U' ≤ U
   le_refl _ := le_rfl
   le_trans h h' := h'.trans h
-  maps {l U U'} h p hp := ((GlobalTheory.T.uniformisation_preimage_value_rules A g L u).2.2.1 U.1 l p.2).2 ((GlobalTheory.T.uniformisation_preimage_value_rules A g L u).2.2.2.2.2.1 U.1 U'.1 h hp)
+  maps {l U U'} h p hp := ((_root_.GlobalTheory.CechPer.pre_val_rules A g L u).2.2.1 U.1 l p.2).2 ((_root_.GlobalTheory.CechPer.pre_val_rules A g L u).2.2.2.2.2.1 U.1 U'.1 h hp)
 
 theorem sh_valHom {l : u.Λ} {U V : A.left.affineOpens} (h : (ch u).le l V U) (b : Sec (str A) U.1) :
     Charts.sh h (valHom u U.1 b) = valHom u V.1 (Sec.res (str A) h b) :=
   Hol.ext_fn fun p hp => by
     rw [Charts.fn_sh h _ hp, fn_valHom u _ _ ((ch u).maps h p hp), fn_valHom u _ _ hp,
-      (GlobalTheory.T.uniformisation_preimage_value_rules A g L u).2.2.2.2.2.2.2.2.1 U.1 V.1 h b p.2 hp]
-    exact (GlobalTheory.T.uniformisation_preimage_value_rules A g L u).2.2.2.1 U.1 b l p.2
+      (_root_.GlobalTheory.CechPer.pre_val_rules A g L u).2.2.2.2.2.2.2.2.1 U.1 V.1 h b p.2 hp]
+    exact (_root_.GlobalTheory.CechPer.pre_val_rules A g L u).2.2.2.1 U.1 b l p.2
 
 def rl : Real (ch u) (str A) (algebraMap ℂ (Hol (fibFam u).V)) where
   x U := spMap (valHom u U.1 : Sec (str A) U.1 →+* Hol (W u U.1)) ≫ affPt (str A) U
@@ -548,7 +547,7 @@ namespace GlobalTheory.CechPer
 
 theorem zero_periods_eq_zero : ∀ (A : Over (Sp ℂ)) [GrpObj A] (g : ℕ) (L : LB A.left) (u : HolUnif A L g), ∀ q, IsPer u.ex u.Λ 0 q → q = 0 := by
   intro A _ g L u q hq
-  obtain ⟨hopen, -, hadd, -, hinf, -, -, hbasis, -, -, -, htop⟩ := GlobalTheory.T.uniformisation_preimage_value_rules A g L u
+  obtain ⟨hopen, -, hadd, -, hinf, -, -, hbasis, -, -, -, htop⟩ := _root_.GlobalTheory.CechPer.pre_val_rules A g L u
   obtain ⟨h, ⟨hdiff, hres0, hder0⟩, hper⟩ := GlobalTheory.T.exists_holomorphic_primitive_of_cechDeRham_periods A g L u 0 q hq 0 (map_zero _)
   have hres : ∀ (U V : A.left.affineOpens), V.1 ≤ U.1 → ∀ z ∈ pre u.ex V.1, h V z = h U z := by
     intro U V hVU z hz
@@ -875,7 +874,7 @@ theorem hasFDerivAt_factor {g : ℕ} (a b c : ℂ) (m z : Fin g → ℂ) :
 
 theorem main : ∀ (A : Over (Sp ℂ)) [GrpObj A] (g : ℕ) (L : LB A.left) (u : HolUnif A L g), IsAbelianScheme A → L.IsLB → ∀ (H : Matrix (Fin g) (Fin g) ℂ) (χ : u.Λ → ℂ), u.IsAH H χ → ∀ v : Fin g → ℂ, (∀ i, DifferentiableOn ℂ (fun z => fderiv ℂ (u.fr i) z v / u.fr i z) (pre u.ex (L.U i))) ∧ (∀ i j, IsReg u.ex (L.U i ⊓ L.U j) ((fun z => fderiv ℂ (u.fr i) z v / u.fr i z) - fun z => fderiv ℂ (u.fr j) z v / u.fr j z)) ∧ ∀ i (l : u.Λ), ∀ z ∈ pre u.ex (L.U i), fderiv ℂ (u.fr i) (z + l) v / u.fr i (z + l) = fderiv ℂ (u.fr i) z v / u.fr i z - Real.pi * (v ⬝ᵥ H.mulVec (star (l : Fin g → ℂ))) := by
   intro A _ g L u hA _ H χ hAH v
-  obtain ⟨hopen, hdval, hshift, -, hinf, -, -, -, -, hev, -, -⟩ := GlobalTheory.T.uniformisation_preimage_value_rules A g L u
+  obtain ⟨hopen, hdval, hshift, -, hinf, -, -, -, -, hev, -, -⟩ := _root_.GlobalTheory.CechPer.pre_val_rules A g L u
 
   have hfrd : ∀ i, DifferentiableOn ℂ (u.fr i) (pre u.ex (L.U i)) := u.10
   have hfr0 : ∀ i, ∀ z ∈ pre u.ex (L.U i), u.fr i z ≠ 0 := fun i z hz => u.11 i z hz
@@ -1116,7 +1115,7 @@ theorem exists_closed_form_fderiv_eq (A : Over (Sp ℂ)) [GrpObj A] (g : ℕ) (L
     (hA : IsAbelianScheme A) (U : A.left.affineOpens) (h : (Fin g → ℂ) → ℂ) (hh : DifferentiableOn ℂ h (pre u.ex U.1))
     (hr : ∀ a, IsReg u.ex U.1 fun z => fderiv ℂ h z (Pi.single a 1)) :
     ∃ ξ : Ω[Sec (str A) U.1⁄ℂ], dOne ℂ _ ξ = 0 ∧ ∀ z ∈ pre u.ex U.1, fderiv ℂ h z = evForm u.ex U.1 z ξ := by
-  obtain ⟨hop, hdiff, -, -, -, -, -, -, -, halg, -, -⟩ := GlobalTheory.T.uniformisation_preimage_value_rules A g L u
+  obtain ⟨hop, hdiff, -, -, -, -, -, -, -, halg, -, -⟩ := _root_.GlobalTheory.CechPer.pre_val_rules A g L u
   obtain ⟨d, ω, hcomm, hd, hdual, hspan, hev⟩ := GlobalTheory.T.kaehler_differentials_free_coordinate_forms_abelian A g L u hA U
   choose k₀ hk₀ using hr
   let k : Fin g → Sec (str A) U.1 := k₀
@@ -1272,7 +1271,7 @@ theorem fderiv_congr_on {g : ℕ} {S : Set (Fin g → ℂ)} (hS : IsOpen S) {f f
 
 theorem exists_isPer : ∀ (A : Over (Sp ℂ)) [GrpObj A] (g : ℕ) (L : LB A.left) (u : HolUnif A L g), IsAbelianScheme A → ∀ (K : Type) (W : K → A.left.Opens) (h : K → (Fin g → ℂ) → ℂ) (q : u.Λ → ℂ), ⨆ i, W i = ⊤ → (∀ i, DifferentiableOn ℂ (h i) (pre u.ex (W i))) → (∀ i j, IsReg u.ex (W i ⊓ W j) (h i - h j)) → (∀ i (l : u.Λ), ∀ z ∈ pre u.ex (W i), h i (z + l) = h i z + q l) → ∃ x, IsPer u.ex u.Λ x q := by
   intro A _ g L u hA K W h q hW hd hr hq
-  obtain ⟨bo, bd, bp, bv, bi, bm, bs, -, -, -, -, bt⟩ := GlobalTheory.T.uniformisation_preimage_value_rules A g L u
+  obtain ⟨bo, bd, bp, bv, bi, bm, bs, -, -, -, -, bt⟩ := _root_.GlobalTheory.CechPer.pre_val_rules A g L u
   have ra := GlobalTheory.T.isRegularOnOpenUniformised_subalgebra_restrict A g L u
   have der := GlobalTheory.T.isRegular_fderiv_constant_vector_uniformised A g L u hA
   have glue := GlobalTheory.T.isRegularOnOpenUniformised_of_locally A g L u hA

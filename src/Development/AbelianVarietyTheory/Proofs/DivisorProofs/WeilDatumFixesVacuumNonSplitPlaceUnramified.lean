@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumPowersUnramifiedEtaTildeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTwistHeckeCharactersStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctionsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumPowersUnramifiedEtaTilde
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTwistHeckeCharacters
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctions
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsBaseChangeFiniteAdeleRingEquiv
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNormOneRootCongruentOddHostField
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsAdeleRingTensorEquivInfiniteProdFinite
@@ -303,14 +304,14 @@ theorem resEta_quot {χ η : (AE D)ˣ →* Circle} {n : ℕ} (hχ : ResEta D χ 
 theorem fixesVacAt_of_unram : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S T : HSp D) (ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)) (ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)), IsSelfDualC S ΛS → IsSelfDualC T ΛT → ∀ (χS χT : (AE D)ˣ →* Circle) (om : (GA D S × GA D T →* Module.End ℂ (WO S T → ℂ))), (∃ η, IsEtaTilde D η) → IsWeilDatumO ψ S T χS χT om → ∀ v ε, NonSplitAt D v ε → UnramAt ε χS → UnramAt ε χT → FixesVacAt ψ S T ΛS ΛT om v ε := by
   intro D ψ hψ S T ΛS ΛT hS hT χS χT om ⟨η, hη⟩ hom v ε hε uS uT g h hg hh hlat f hf hfix
   obtain ⟨θ, hθ⟩ := hψ.2.1
-  obtain ⟨om₀, h0, hv, -⟩ := GlobalTheory.T.exists_weilDatum_powers_unramifiedEtaTilde D ψ hψ S T θ hθ ΛS ΛT hS hT η hη
-  obtain ⟨om₁, h1, htw⟩ := GlobalTheory.T.exists_weilDatum_twist_heckeCharacters D ψ hψ S T _ _ ((η ^ S.rank)⁻¹ * χS) ((η ^ T.rank)⁻¹ * χT) om₀ h0
+  obtain ⟨om₀, h0, hv, -⟩ := _root_.GlobalTheory.WeilProduct.exists_weilDatum_etaTilde D ψ hψ S T θ hθ ΛS ΛT hS hT η hη
+  obtain ⟨om₁, h1, htw⟩ := _root_.GlobalTheory.WeilChange.exists_weilDatum_twist D ψ hψ S T _ _ ((η ^ S.rank)⁻¹ * χS) ((η ^ T.rank)⁻¹ * χT) om₀ h0
     (hecke_quot hom.hecS h0.hecS) (hecke_quot hom.hecT h0.hecT)
     (resEta_quot hom.resS h0.resS) (resEta_quot hom.resT h0.resT)
   rw [mul_inv_cancel_left, mul_inv_cancel_left] at h1
   obtain ⟨x, hx, xi, xs, x1, x2⟩ := exists_unit_root hε S g hg
   obtain ⟨y, hy, yi, ys, y1, y2⟩ := exists_unit_root hε T h hh
-  rw [GlobalTheory.T.weilDatum_unique_on_thetaFunctions D ψ hψ S T χS χT om om₁ hom h1 _ f hf, htw g h x y hx hy, LinearMap.smul_apply,
+  rw [_root_.GlobalTheory.WeilUniq.weilDatum_unique D ψ hψ S T χS χT om om₁ hom h1 _ f hf, htw g h x y hx hy, LinearMap.smul_apply,
     hv v ε hε g h hg hh hlat f hf hfix]
   simp [hη.2.1 x xi x1 x2, hη.2.1 y yi y1 y2, uT x xs x1 x2, uS y ys y1 y2]
 

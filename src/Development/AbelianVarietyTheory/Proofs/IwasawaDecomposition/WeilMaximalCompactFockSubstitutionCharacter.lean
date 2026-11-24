@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsHol
 public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorChangeOrthonormalBasesSubst
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PureTensorLIntertwine
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacuumCharacterPositiveDefiniteSourceStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacuumCharacterPositiveDefiniteSource
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -145,7 +146,7 @@ theorem om_pureTensorO_eq_fact : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (
   have htr : ∀ τ, (cart M τ).trace = (p τ : ℂ) - q τ := fun τ => by
     unfold cart
     rw [Matrix.trace_mul_cycle, f1, Matrix.one_mul, trace_Jm (hpq τ) _ (hε τ)]
-  have hvac := GlobalTheory.T.vacuum_character_positive_definite_source D ψ θ S T χS χT om hom hθ hS hT (cart M) (fun τ => isCartanInv_one (hBS τ))
+  have hvac := _root_.GlobalTheory.VacuumCharacter.vacuum_character D ψ θ S T χS χT om hom hθ hS hT (cart M) (fun τ => isCartanInv_one (hBS τ))
     (GlobalTheory.Chain.VacVec.cart_isCartanInv M) a b ha hb x₁ x₂ x₃ h₁ h₂ (fun τ => by
       rw [htr]
       have := congrArg (fun x : ℚ => (x : ℂ)) (h₃ τ)

@@ -6,7 +6,7 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDesc
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsProjectiveRep
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExpFLinear
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExpFOfPull
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FourierJacobiExpansionOverFieldInjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FourierJacobiExpansionOverFieldInjective
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SecEqZeroOfSvalWhiskerRightEqZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -162,7 +162,7 @@ theorem expF_one_dim : Laws → Laws2 → (AllPre fun {V} _ _ _ {D} {A} {G} _ _ 
     GlobalTheory.UU.ExpLin.expF_linear V hV D A G U (Kbar V) 1 th (zeroSec _) t s₀ (fun _ => zeroSec _) s' c hE
       (expF_zero U _ 1) (fun j => ((congrFun (congrArg Subtype.val hc) j).symm).trans (add_zero _).symm)
       (fun α j => (add_zero _).symm)
-  have e : s = s' := (GlobalTheory.T.fourierJacobiExpansion_overField_injective V hV D A G U (Kbar V) 1 t t s s' hts hs').1 rfl
+  have e : s = s' := (_root_.GlobalTheory.UU.ExpFUniq.main V hV D A G U (Kbar V) 1 t t s s' hts hs').1 rfl
   exact ⟨c, fun α j => by rw [e]⟩
 
 end GlobalTheory.UU.OneDim

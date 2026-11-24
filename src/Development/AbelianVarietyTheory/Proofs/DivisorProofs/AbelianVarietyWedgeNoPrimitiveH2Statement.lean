@@ -9,7 +9,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.ComparisonMe
 public import Mathlib.AlgebraicGeometry.Morphisms.Flat
 public import Mathlib.LinearAlgebra.Basis.VectorSpace
 public import Mathlib.LinearAlgebra.TensorProduct.Basis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechPullOneBijectiveLatticeCoverStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechPullOneBijectiveLatticeCover
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteAffineCoverInfClosed
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyH1AxesPrimitiveRankStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -69,8 +69,9 @@ import Mathlib.Tactic.Linter.Style
 import Development.AbelianVarietyTheory.PublishedTheorems.AbelianLaws.PrincipalPolarisationOneSection
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.CanonGenIsGen
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechCohomologyStructureSheafIsoStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechCohomologyTrivialBundleAbelianStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureSheafCohomologyPullbackCompCupIdStatement
+import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.IsScalarTowerOfAlgebraMapEq
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechCohomologyTrivialBundleAbelian
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureSheafCohomologyPullbackCompCupId
 import Mathlib.AlgebraicGeometry.QuasiAffine
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -667,8 +668,8 @@ theorem cup_tmul_injective : ∀ (K : Type) [Field K] (X Y : Over (Sp K)), IsSep
       (CoefMap.pullCohomologyOne_comp rV n₂ a)
     refine (congrArg ((rV.comp n₂).α T) (mp_id (OAff Y.hom) _ b)).trans ?_
     exact hi2 (T.1.unop, T.2.unop) b
-  have hbU : Function.Bijective rU.pull1 := GlobalTheory.T.cech_pull_one_bijective_lattice_cover K X.left X.hom J U hU hUi hUc
-  have hbV : Function.Bijective rV.pull1 := GlobalTheory.T.cech_pull_one_bijective_lattice_cover K Y.left Y.hom J' V hV hVi hVc
+  have hbU : Function.Bijective rU.pull1 := _root_.GlobalTheory.CoverO.restrict_bijective K X.left X.hom J U hU hUi hUc
+  have hbV : Function.Bijective rV.pull1 := _root_.GlobalTheory.CoverO.restrict_bijective K Y.left Y.hom J' V hV hVi hVc
   choose x' hx' using fun i ↦ H1.mk_surjective F (rU.pull1 (x i))
   choose y' hy' using fun i ↦ H1.mk_surjective G (rV.pull1 (y i))
   have hz : H2.mk E (∑ i, cupZ E (n₁.pullbackOneCocycle (x' i)) (n₂.pullbackOneCocycle (y' i))) = 0 := by
@@ -761,7 +762,7 @@ variable {K : Type} [Field K]
 
 theorem overPullbackStructureSheaf_cohomology_cup {Y A : Over (Sp K)} (f : Y ⟶ A) (a b : HO1 A.hom) :
     structureSheafH2Pullback f (cup (OAff A.hom) a b) = cup (OAff Y.hom) (pO1 f a) (pO1 f b) :=
-  ((GlobalTheory.T.structureSheafCohomology_pullback_comp_cup_id).2.1 K K A.left Y.left A.hom Y.hom (RingHom.id K) f.left (ovw f)).1 a b
+  ((_root_.GlobalTheory.AbCoh.pull_comp_cup_id).2.1 K K A.left Y.left A.hom Y.hom (RingHom.id K) f.left (ovw f)).1 a b
 
 variable (A : Over (Sp K)) [GrpObj A]
 
@@ -817,7 +818,7 @@ theorem GlobalTheory.AbCoh.wedgeO_noPrimO2 : ∀ (K : Type) [Field K] [IsAlgClos
   obtain ⟨-, hprim, -⟩ := GlobalTheory.T.abelian_variety_h1_axes_primitive_rank K A g hab hsm
   obtain ⟨n, D, hD, hcov⟩ := GlobalTheory.AbCoh.WedgeSq.exists_fin_affine_cover A.hom
   obtain ⟨⟨e1⟩, ⟨e2⟩⟩ := GlobalTheory.T.cech_cohomology_structure_sheaf_iso K A.left A.hom (Fin n) D hsep hD hcov
-  obtain ⟨hfin, h1, h2⟩ := GlobalTheory.T.cech_cohomology_trivial_bundle_abelian K A g hab hsm (Fin n) D hD hcov
+  obtain ⟨hfin, h1, h2⟩ := _root_.GlobalTheory.AbCoh.FDim.cechLB_triv_finrank_one_two K A g hab hsm (Fin n) D hD hcov
   haveI := hfin 1
   haveI := hfin 2
   haveI : Module.Finite K (HO1 A.hom) := Module.Finite.equiv e1.symm

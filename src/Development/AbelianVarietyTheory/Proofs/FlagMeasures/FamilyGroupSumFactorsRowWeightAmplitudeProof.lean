@@ -19,20 +19,20 @@ public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianAmpl
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesStabilizerActsOnTerms
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeDatumEquivariantFlagIsometries
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalIsometryExtendsLocalIsometry
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalIsometryExtendsLocalIsometryStatement
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.NGData
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SpanToZero
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermsOrbitsHeightsAmplitudesInCoordinates
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.TermDefPf
 public import Formalism.SharpRestriction.CuspSpanNormBounds.AutLzFiniteOfLoop
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MovedTermLatticeIsGlobalTermPhaseStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TsumOrbitNormaliser
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalFramePairsDifferIsometryUnitriangularStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalFramePairsDifferIsometryUnitriangular
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.GenericRatioOfBoundHolds
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.FamilyGroupSumFactorsWeightAmplitude
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DoubleCosetEqIffIsometryUnipotentTranslateStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagTermInvariantsConstOnRationalDoubleCosetStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagTermInvariantsConstOnRationalDoubleCoset
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalisedBaseFramesRelevantPairStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NonGenericFamilyClassesDetermineRowsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NonGenericFamilyClassesDetermineRows
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitalIntegralsTermsOneDoubleCosetStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowDoubleCosetSumNormSqBoundStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermsAtPointOfRelevantTermRelevantFiniteStatement
@@ -80,7 +80,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.NGData
 import Development.AbelianVarietyTheory.Definitions.Foundations.IsHermND
 import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.TermLoc
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -1481,7 +1480,7 @@ theorem term_moves_to_base : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u'
   have hTu : ∀ v : D.what₂.Word, ((Tu D v : ℕ) : D.host.E) ≠ 0 := fun v =>
     Nat.cast_ne_zero.mpr (Formalism.L2.SG.GramJoint.Tu_pos D v).ne'
   obtain ⟨-, γ, hγ, ⟨A, hA, hAc⟩, ⟨A', hA', hAc'⟩⟩ :=
-    GlobalTheory.T.rationalFramePairs_differ_isometry_unitriangular D (lf D (X.Fu u)) F00 t₀.frame F'0 w (hTu u) (hTu u') hGt hCt hZ
+    _root_.GlobalTheory.LocOver.witt_frames_at_point D (lf D (X.Fu u)) F00 t₀.frame F'0 w (hTu u) (hTu u') hGt hCt hZ
   refine ⟨γ, A, A', hγ, ?_, ?_, fun b => hAc b, fun b => hAc' b⟩
   · exact fun i j => ⟨fun h => hA.1 i j h, fun h => h ▸ hA.2 i⟩
   · exact fun i j => ⟨fun h => hA'.1 i j h, fun h => h ▸ hA'.2 i⟩
@@ -1579,7 +1578,7 @@ theorem squaredGroupSum_classDoubleCoset_eq_rowWeight : ∀ (D : D7) (X : HidaSe
       rw [if_pos h0]
     have hG1 := hGTS t1 ht1
     have hG0 := hGTS t0 ht0
-    have hrel1 : t1.relevant := (GlobalTheory.T.nonGeneric_family_classes_determine_rows D X Y u u' hCT).2.2 t1 hv1
+    have hrel1 : t1.relevant := (_root_.GlobalTheory.NGClass.ngClass_rows D X Y u u' hCT).2.2 t1 hv1
     obtain ⟨w1, hw1, hat1, -⟩ := GlobalTheory.T.terms_at_point_of_relevant_term_relevant_finite D X Y u u' t1 hG1 hrel1
     have hw1w : w1 = w := toPts_inj' _ _ (hw1.trans (hp1.trans hw.symm))
     subst hw1w
@@ -1624,7 +1623,7 @@ theorem squaredGroupSum_classDoubleCoset_eq_rowWeight : ∀ (D : D7) (X : HidaSe
         exact h2.2
       · rintro ⟨hr, hnm, hS⟩
         obtain ⟨nn, mm, hnn, hmm, hlin⟩ := (GlobalTheory.T.doubleCoset_eq_iff_isometry_unipotent_translate D X Y u u' hSt t0 t).1 hnm
-        obtain ⟨-, hGeq, hpteq, -, -⟩ := GlobalTheory.T.flagTerm_invariants_const_on_rationalDoubleCoset D X Y u u' hSt t0 t nn mm hrel0 hG0 ⟨hnn, hmm, hlin⟩
+        obtain ⟨-, hGeq, hpteq, -, -⟩ := _root_.GlobalTheory.HL.CosetConst.coset_const D X Y u u' hSt t0 t nn mm hrel0 hG0 ⟨hnn, hmm, hlin⟩
         have htS : t ∈ TS := by
           rw [hTS]
           refine ⟨?_, hS⟩

@@ -5,14 +5,13 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ProdDat
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CombAtSingleZero
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsDblClosed
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsLatInd
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsIntegralMatrixUpImageCompletedHomLatticeStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsIntegralMatrixUpImageCompletedHomLattice
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsIsModelChg
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSplitPointWeilCharConductorOneOfUnits
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacuaStatement
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacua
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralIndicatorGivesLocalVacuumSplitPlace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawFixedLevelCombinationEqSinglePlaceOnVacuum
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacua
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MatrixSupportedSplitPlaceOfIsHalfConjSum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsGAtAllPlacesMul
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TrueW
@@ -33,7 +32,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsEtaC
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsFiniteAdeleProjectionIntegralReduction
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsThetaAtMoveLat
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsThetaFunOOfThetaAt
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaAtSeesawProductDatumEqVacuumCombinationsStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HzUnit
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaAtSeesawProductDatumEqVacuumCombinations
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -81,7 +81,7 @@ import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsGLEm
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsUnitarySupportedAtPlaceOfMulEqIdem
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalSchrodingerModelUniqTransportExists
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualSplitComponentIsLatticeStabilizerEq
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UpImageIntegralMatrixMemCompletedHomLatticeStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UpImageIntegralMatrixMemCompletedHomLattice
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilCompatibleOfSameSplittingCharacterStatement
@@ -233,12 +233,12 @@ theorem exists_model_vac : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [T
   · rw [Set.indicator_of_mem (show x ∈ {x : Matrix Y Y' k | ∀ r s, x r s ∈ 𝒪[k]} from hx), Set.indicator_of_mem]
     show (ofSplit q).up FS FT (FT.γ * GT.β * x * (GS.γ * FS.β)) ∈ latO S T (M : Set (Fin S.rank → D.host.E)) (M' : Set (Fin T.rank → D.host.E)) (· = q.v)
     rw [hup]
-    exact GlobalTheory.T.up_image_integral_matrix_mem_completed_hom_lattice D k q hU Y Y' S T GS GT M M' hM hM' hGS hGT x hx
+    exact _root_.GlobalTheory.UpMem.up_mem_latO D k q hU Y Y' S T GS GT M M' hM hM' hGS hGT x hx
   · rw [Set.indicator_of_notMem (show x ∉ {x : Matrix Y Y' k | ∀ r s, x r s ∈ 𝒪[k]} from hx), Set.indicator_of_notMem]
     intro hmem
     change (ofSplit q).up FS FT (FT.γ * GT.β * x * (GS.γ * FS.β)) ∈ latO S T (M : Set (Fin S.rank → D.host.E)) (M' : Set (Fin T.rank → D.host.E)) (· = q.v) at hmem
     rw [hup] at hmem
-    obtain ⟨x', hx', he⟩ := GlobalTheory.T.exists_integral_matrix_up_image_completed_hom_lattice D k q hU Y Y' S T GS GT M M' hM hM' hGS hGT _ hmem
+    obtain ⟨x', hx', he⟩ := _root_.GlobalTheory.HalfIntUp.exists_int_up D k q hU Y Y' S T GS GT M M' hM hM' hGS hGT _ hmem
       (GlobalTheory.LocMod.Witness.up_half (ofSplit q) GS GT x)
     have : x = x' := by rw [← down_up (ofSplit q) GS GT x, he, down_up]
     exact hx (this ▸ hx')
@@ -266,7 +266,7 @@ theorem combAt_o {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {M : GlobalTheor
 
 theorem foldr_comb_ne_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S T : HSp D) (M : GlobalTheory.FinPl.Lat S) (M' : GlobalTheory.FinPl.Lat T), IsSelfDualC S M → IsSelfDualC T M' → ∀ (n : ℕ) (L : Fin n → GlobalTheory.SeeSaw.LocPl ψ S T M M'), (Function.Injective fun i => (L i).q.v) → ∀ F, GlobalTheory.FinPl.Vac ψ S T M M' (fun _ => True) F → F ≠ 0 → (List.finRange n).foldr (fun i g => comb ψ S T (L i).o g) F ≠ 0 := by
   intro D ψ hψ S T M M' hM hM' n L hL F hF hF0
-  have hI := fun P P' hd => GlobalTheory.T.heisenbergCombination_disjoint_places_commute_vacua D ψ hψ S T P P' hd
+  have hI := fun P P' hd => _root_.GlobalTheory.DisjComb.main D ψ hψ S T P P' hd
   let g : Fin n → (WO S T → ℂ) → (WO S T → ℂ) := fun i f => comb ψ S T (L i).o f
   have key : ∀ l : List (Fin n), l.Nodup → l.foldr g F ≠ 0 ∧
       ∀ j, j ∉ l → GlobalTheory.FinPl.Vac ψ S T M M' (· = (L j).q.v) (l.foldr g F) := by
@@ -1281,7 +1281,7 @@ theorem moved_datum_eq_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (
   have hN' : IsSelfDualC (Yc D (j + 1)) (v.N (j + 1)) := hv.sd (j + 1) hj
   have hoff := _root_.GlobalTheory.Fam.latV_N_eq_off_level_alt D L hT Gi Gl Kc Yd cX ex W u f hPk hRow v hv hVT n G pl hPin hRead j hj M M' hmv hmv'
   obtain ⟨F₀, hF₀t, hF₀at, -⟩ := hdat d₀ hd₀
-  have hV := (GlobalTheory.T.thetaAt_seesawProductDatum_eq_vacuumCombinations D f.c.ψ hstd _ _ M M' hM hM' n Lp hinj _ F₀ hvac hF₀at hF₀t).2 (v.N j) (v.N (j + 1)) hN hN' hint
+  have hV := (_root_.GlobalTheory.VecProd.thetaAt_prodDat D f.c.ψ hstd _ _ M M' hM hM' n Lp hinj _ F₀ hvac hF₀at hF₀t).2 (v.N j) (v.N (j + 1)) hN hN' hint
     (fun p hp => hoff p (by
       rw [hPin.places]
       rintro ⟨i, rfl⟩
@@ -1295,7 +1295,7 @@ theorem moved_datum_eq_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (
     obtain ⟨F, hFt, hFat, hFeq⟩ := hdat d hd
     rw [hFeq]
     congr 1
-    rw [(GlobalTheory.T.thetaAt_seesawProductDatum_eq_vacuumCombinations D f.c.ψ hstd _ _ M M' hM hM' n Lp hinj _ F hvac hFat hFt).1, GlobalTheory.T.heisenbergCombinations_distinct_split_places_collect D f.c.ψ hstd _ _ M M' hM hM' n Lp hinj, ← hcomb,
+    rw [(_root_.GlobalTheory.VecProd.thetaAt_prodDat D f.c.ψ hstd _ _ M M' hM hM' n Lp hinj _ F hvac hFat hFt).1, GlobalTheory.T.heisenbergCombinations_distinct_split_places_collect D f.c.ψ hstd _ _ M M' hM hM' n Lp hinj, ← hcomb,
       hPin.eG j hj _ hth]
     simp only [he]
 end GlobalTheory.MidDatum

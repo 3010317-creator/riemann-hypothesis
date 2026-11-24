@@ -9,7 +9,10 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.LinEndOfOLin
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FunctorialOfUnif
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHeckeQuotientTriple
 public import CompanionTheory.AutomorphicTheory.ProductFormulaTheory.DualAbelianSchemes.TrivLocusFlat
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleIsoOfGenericNormalLocalBaseStatement
+public import Mathlib.AlgebraicGeometry.Geometrically.Integral
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThickTransComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleIsoOfGenericNormalLocalBase
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianHomExtensionHolds
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.DegExp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianEndomorphismUniqueOverDegenerationDat
@@ -430,7 +433,7 @@ theorem exists_adjoint_on_group : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLo
   have := GlobalTheory.geometricallyIntegral_tensorObj_hom G G
   have h₁ : (cubeLB G ![fst G G ≫ g, snd G G] U.LG.L).IsLB := LB.isLB_linComb hL _ _
   have h₂ : (cubeLB G ![fst G G, snd G G ≫ g'] U.LG.L).IsLB := LB.isLB_linComb hL _ _
-  refine GlobalTheory.T.lineBundleIso_of_generic_normal_local_base R (G ⊗ G) (1 : 𝟙_ _ ⟶ G ⊗ G).left (Over.w _) _ _ h₁ h₂ ?_
+  refine _root_.GlobalTheory.Mum.lbIso_of_generic_local R (G ⊗ G) (1 : 𝟙_ _ ⟶ G ⊗ G).left (Over.w _) _ _ h₁ h₂ ?_
   refine (cls_eq_iff (pull_isLB h₁ _) (pull_isLB h₂ _)).1 ?_
 
   have ec : pull U.gen.hom.left (cls A.L A.isLB) = pull (pullback.fst G.hom (jK R)) (cls U.LG.L hL) := by

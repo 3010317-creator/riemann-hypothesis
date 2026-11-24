@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChainParSucc
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageLevelSphericalOffSetStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageLevelSphericalOffSet
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffDerivSnoc
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HcFiniteAndSchurMult
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RePosOfIsMultIP
@@ -115,7 +115,7 @@ theorem multT_span_partFull : GlobalTheory.Published.CuspRapidDecay → ∀ D : 
         partFull c.θ s.M (levS s.V s.β s.L) (Lev.levChi s.V s.β s.L) c.S e} = ⊤ := by
   classical
   intro hP D hfd hlev c hc j hj s hs
-  obtain ⟨-, -, hsplit, -, hunif⟩ := GlobalTheory.T.thetaChainStage_level_spherical_off_set D c hc j hj s hs
+  obtain ⟨-, -, hsplit, -, hunif⟩ := _root_.GlobalTheory.ChainOntoSph.level_spherical_off_S D c hc j hj s hs
   have hmul := (hlev c hc j hj s hs).2.2.2.2.1
   have hops := GlobalTheory.SphericalOps.spherical_ops s.V c.θ s.M (Lev.levG s.V s.β s.L) (Lev.levChi s.V s.β s.L) c.S
     hunif hc.inf hmul hsplit

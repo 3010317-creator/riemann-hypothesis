@@ -11,21 +11,24 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.PublishedTheorems.SiegelWeil₂.SiegelWeilUnitarySchrodinger
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StandardUnitaryHeightIsSiegelHeightFunction
 public import Development.AbelianVarietyTheory.PublishedTheorems.SiegelWeil₂.SiegelWeilUnitaryConvergent
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CosetSumAlongMulEquivSubgroupsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubledFlatSectionEqTranslateStandardSectionStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSiegelParabolicConjDoubledCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsStandardUnitaryChartDoubledSpaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsWeilDatumTransportSchwartzBruhatStandardStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsHeckeCharRestrictionEtaInvStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsPolynomialFockThetaVectorWeilOperatorCartanStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemDoublingSiegelParabolicIffChartMemSiegelUnnStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchroedingerFunctionFockVectorPolynomialGaussianStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ShiftedAdditiveCharacterArchimedeanParametersStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StandardUnitaryChartMemRationalIffStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaKernelEqTsumSchrodingerFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TransportedSchrodingerSiegelUnipotentActionStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TransportedSchrodingerStandardLeviActionStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeylFormulaStandardUnitaryGroupWeilDatumStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.AnalyticOnNhdTsumNpow
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CosetSumAlongMulEquivSubgroups
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubledFlatSectionEqTranslateStandardSection
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSiegelParabolicConjDoubledCompact
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsStandardUnitaryChartDoubledSpace
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsWeilDatumTransportSchwartzBruhatStandard
+public import Formalism.LocalToGlobal.BesselHermitianTheta.DefsReal
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsHeckeCharRestrictionEtaInv
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsPolynomialFockThetaVectorWeilOperatorCartan
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemDoublingSiegelParabolicIffChartMemSiegelUnn
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchroedingerFunctionFockVectorPolynomialGaussian
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ShiftedAdditiveCharacterArchimedeanParameters
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StandardUnitaryChartMemRationalIff
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HeckeFormNSOfHeckeForm
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaKernelEqTsumSchrodingerFunction
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TransportedSchrodingerSiegelUnipotentAction
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TransportedSchrodingerStandardLeviAction
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeylFormulaStandardUnitaryGroupWeilDatum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,10 +67,9 @@ import Mathlib.Topology.Sheaves.Init
 import Formalism.LocalRingCardinality.DataHost
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Data.Nat.Choose.Multinomial
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HeckeFormNSOfHeckeForm
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOneIntegralAdd
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixSDblDecZero
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchrodingerThetaEqSchwartzBruhatStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchrodingerThetaEqSchwartzBruhat
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CompactCommutingCartanInvolutionMovedStandardStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HolomorphicContinuationValueNnrealPowFactorStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StandardUnitaryHeightIsSiegelHeightFunctionStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SiegelWeilDoubledSpaceOfStandardUnitary
@@ -149,38 +151,38 @@ namespace GlobalTheory.StdUnn
 
 theorem sw_doubled_of_std : GlobalTheory.Published.SiegelWeilUnitarySchrodinger → GlobalTheory.Published.SiegelWeilUnitaryConvergent := by
   intro hP D ψ A B hAB hB2 hW χB omh hWe a hMaj _ θ sS sB hθ hsS hsB hK mW 𝓨 hcov ν hν f hf
-  obtain ⟨m0, hm0, hp0⟩ := GlobalTheory.T.exists_siegel_parabolic_conj_doubled_compact D
-  obtain ⟨κ, hκ⟩ := GlobalTheory.T.exists_standardUnitaryChart_doubledSpace D A m0 hm0
+  obtain ⟨m0, hm0, hp0⟩ := _root_.GlobalTheory.StdUnn.ConjElt.exists_isConj D
+  obtain ⟨κ, hκ⟩ := _root_.GlobalTheory.StdUnn.chart_exists D A m0 hm0
   obtain ⟨p, hp⟩ := hp0 A a hMaj κ hκ
-  obtain ⟨lam, hlam, hψ', l, hl, hlabs⟩ := GlobalTheory.T.shiftedAdditiveCharacter_archimedeanParameters D ψ hWe.std θ hθ m0 hm0
-  obtain ⟨omS, hT⟩ := GlobalTheory.T.exists_weilDatum_transport_schwartzBruhat_standard D ψ A B χB omh hWe mW 𝓨 hcov θ hθ κ
+  obtain ⟨lam, hlam, hψ', l, hl, hlabs⟩ := _root_.GlobalTheory.StdUnn.shift_char_realPar D ψ hWe.std θ hθ m0 hm0
+  obtain ⟨omS, hT⟩ := _root_.GlobalTheory.StdUnn.exists_transport_std D ψ A B χB omh hWe mW 𝓨 hcov θ hθ κ
   obtain ⟨s', hs'std, hs'⟩ := GlobalTheory.T.compactCommuting_cartanInvolution_moved_standard D A m0 hm0 κ hκ a p hp θ hθ sS hsS hK
   have hf' : IsFockVec ψ θ (dblSp A) B s' sB (omh ((p : GA D (dblSp A))⁻¹, 1) f) :=
-    GlobalTheory.T.isPolynomialFockThetaVector_weilOperator_cartan D ψ (dblSp A) B 1 χB omh hWe θ hθ sS s' sB _ hs' f hf
-  have hschw := GlobalTheory.T.schrodingerTheta_eq_schwartzBruhat D
+    _root_.GlobalTheory.FockMove.isFockVec_om D ψ (dblSp A) B 1 χB omh hWe θ hθ sS s' sB _ hs' f hf
+  have hschw := _root_.GlobalTheory.SchSchwartzAll.schSchwartz D
   let Φ : schwartzA θ B.rank A.rank :=
     ⟨sch ψ A B mW 𝓨 (omh ((p : GA D (dblSp A))⁻¹, 1) f),
       ((hschw ψ hWe.std θ hθ A B mW 𝓨 hcov).1 _ hf'.1)⟩
   have hΦ : Φ.1 ∈ fockA θ B A.rank l sB :=
-    GlobalTheory.T.schroedingerFunction_fockVector_polynomial_gaussian D ψ hWe.std θ hθ A B mW 𝓨 hcov m0 hm0 s' sB hs'std hsB l hlabs _ hf'
-  have hχ := GlobalTheory.T.isHeckeChar_restrictionEta_inv D χB B.rank hWe.hecT hWe.resT
+    _root_.GlobalTheory.StdUnn.sch_mem_fockA D ψ hWe.std θ hθ A B mW 𝓨 hcov m0 hm0 s' sB hs'std hsB l hlabs _ hf'
+  have hχ := _root_.GlobalTheory.StdUnn.isHeckeChar_resEta_inv D χB B.rank hWe.hecT hWe.resT
   have hWS : IsWeilSch (shift ψ lam) χB⁻¹ θ B mW omS :=
-    ⟨GlobalTheory.T.transportedSchrodinger_standardLeviAction D ψ A B χB omh hWe mW 𝓨 hcov θ hθ m0 hm0 κ hκ omS hT lam hlam,
-     GlobalTheory.T.transportedSchrodinger_siegelUnipotentAction D ψ A B χB omh hWe mW 𝓨 hcov θ hθ m0 hm0 κ hκ omS hT lam hlam,
-     GlobalTheory.T.weyl_formula_standardUnitaryGroup_weilDatum D ψ A B χB omh hWe mW 𝓨 hcov θ hθ m0 hm0 κ hκ omS hT lam hlam⟩
+    ⟨_root_.GlobalTheory.StdUnn.transport_levi D ψ A B χB omh hWe mW 𝓨 hcov θ hθ m0 hm0 κ hκ omS hT lam hlam,
+     _root_.GlobalTheory.StdUnn.Unip.transport_unip D ψ A B χB omh hWe mW 𝓨 hcov θ hθ m0 hm0 κ hκ omS hT lam hlam,
+     _root_.GlobalTheory.StdUnn.WeylStd.main D ψ A B χB omh hWe mW 𝓨 hcov θ hθ m0 hm0 κ hκ omS hT lam hlam⟩
   have hH := GlobalTheory.T.standardUnitaryHeight_isSiegelHeightFunction D A m0 hm0 κ hκ a p hp
   obtain ⟨hInt, hEis, hHol⟩ := hP D A.rank B hAB hB2 hW (shift ψ lam) hψ' χB⁻¹ hχ.1 hχ.2 θ hθ mW 𝓨 hcov omS hWS
     (hgtStd A a κ p) hH l hl sB hsB ν hν Φ hΦ
-  obtain ⟨h0, hflat, hact⟩ := GlobalTheory.T.doubledFlatSection_eq_translate_standardSection D ψ A B χB omh hWe mW 𝓨 hcov θ hθ m0 hm0 κ hκ omS hT lam hlam a p f hf.1 Φ rfl
+  obtain ⟨h0, hflat, hact⟩ := _root_.GlobalTheory.StdUnn.flat_swSec_eq_sect D ψ A B χB omh hWe mW 𝓨 hcov θ hθ m0 hm0 κ hκ omS hT lam hlam a p f hf.1 Φ rfl
   have hth : ∀ g : GA D (dblSp A), theta omS Φ (κ (g * p)) = fun h => thetaKO omh g h f := fun g => by
     funext h
-    rw [GlobalTheory.T.thetaKernel_eq_tsum_schrodingerFunction D ψ A B χB omh hWe mW 𝓨 hcov f hf.1 g h, theta, hact g]
+    rw [_root_.GlobalTheory.StdUnn.thetaKO_eq_tsum_sch D ψ A B χB omh hWe mW 𝓨 hcov f hf.1 g h, theta, hact g]
   have hmean : ∀ g : GA D (dblSp A), GlobalTheory.ThetaMean.thetaMean omh ν f g = thetaInt omS ν Φ (κ (g * p)) := fun g => by
     rw [thetaInt, hth g]; rfl
-  have hP' := GlobalTheory.T.mem_doublingSiegelParabolic_iff_chart_mem_siegelUnn D A m0 hm0 κ hκ
-  have hG' := GlobalTheory.T.standardUnitaryChart_mem_rational_iff D A m0 hm0 κ hκ
+  have hP' := _root_.GlobalTheory.StdUnn.mem_siegel_iff_chart_mem_P D A m0 hm0 κ hκ
+  have hG' := _root_.GlobalTheory.StdUnn.chart_mem_GF_iff D A m0 hm0 κ hκ
   have Heisenberg₂ := fun (z : ℂ) (hz : (A.rank : ℝ) / 2 < z.re) =>
-    GlobalTheory.T.cosetSum_along_mulEquiv_subgroups _ _ κ (siegel A) (GQ (dblSp A)) (P D A.rank) (GF D A.rank) hP' hG'
+    _root_.GlobalTheory.StdUnn.cosetSum_along_mulEquiv _ _ κ (siegel A) (GQ (dblSp A)) (P D A.rank) (GF D A.rank) hP' hG'
       (sect omS (hgtStd A a κ p) Φ z) (p : GA D (dblSp A)) (npow (absA D (aP A p)) (sZero A B - z))
       (flat A a (swSec A B omh mW 𝓨 f) (sZero A B) z) (fun g => hflat z g) (hEis z hz).1
   refine ⟨fun g => ?_, ⟨fun z hz => ⟨(Heisenberg₂ z hz).1, fun g => ((Heisenberg₂ z hz).2 g).1 ((hEis z hz).2 _)⟩, fun g => ?_⟩⟩

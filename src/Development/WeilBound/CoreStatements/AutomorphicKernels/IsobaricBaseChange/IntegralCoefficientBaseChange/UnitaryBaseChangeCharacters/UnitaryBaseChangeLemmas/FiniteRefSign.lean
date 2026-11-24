@@ -6,14 +6,13 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsConjSelfRe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonsplitCentraliserNormElement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CTUnitsLeft
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLemmas.ToComplBijective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramKernelSignNonsplitBaseChangeEqStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramKernelSignNonsplitBaseChangeEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianFormSignatureRealisation
 public import Formalism.SatakeDualWeyl.Statement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteTwistedClassesCharpoly
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LeftMulMatrixTransfer
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinprodNonsplitSignTotallyPositiveEqOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramKernelSignNonsplitBaseChangeEq
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetGramRatOneNeZero
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCyclicVectorOfSeparable
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.QuadraticClassFieldTheory
@@ -580,7 +579,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E →
       (gramOn (IsCMField.complexConj E).toRingEquiv.toRingHom H₀
         (LinearMap.ker (Matrix.toLin' (aeval γ₀.val P₁)))).det) = 1 :=
     (w.valuedAdicCompletion_eq_valuation' _).trans h1
-  rw [aeval_map_mat, GlobalTheory.T.gramKernelSign_nonsplit_baseChange_eq E hU w hw n H₀ (aeval γ₀.val P₁), ordL_eq_zero_of_v_eq_one hv]
+  rw [aeval_map_mat, _root_.GlobalTheory.UnitaryClasses.BaseChangeSign.main E hU w hw n H₀ (aeval γ₀.val P₁), ordL_eq_zero_of_v_eq_one hv]
   simp
 
 end GlobalTheory.CompanionTheory.FinSign

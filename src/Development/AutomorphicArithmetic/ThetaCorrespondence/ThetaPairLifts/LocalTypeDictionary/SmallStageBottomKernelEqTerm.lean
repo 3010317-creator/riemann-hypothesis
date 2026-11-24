@@ -43,9 +43,11 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Wei
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ApplyAt0Smul
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CosetVecMemThetaSpace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdelicThetaReadsCurveThetaFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinitePartZeroNeOfIsVacuumOrientedModelStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinitePartZeroNeOfIsVacuumOrientedModel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMaximalLevelMovesStandardPairSupportToUnit
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVacuumRealRestrictionGaussianEntireStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramAtPosDef
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVacuumRealRestrictionGaussianEntire
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVectorMinorProductOriginEqPeriodsJetStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelIndicatorReadsNormPowerUnitVectorStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MovedThetaFunctionsReadOfMovedVacuumReadsStatement
@@ -1422,7 +1424,7 @@ theorem vac_read (hc : D.host.ccK = ⊤) (hset : Setup ψ θ S T ⊤ δ 1)
     rw [h, Units.val_one, mul_one, mul_one]
     unfold Formalism.UG.cT
     rw [Matrix.map_one _ (map_zero _) (map_one _), Matrix.transpose_one]
-  obtain ⟨Φ, hΦd, hreal⟩ := GlobalTheory.T.fockVacuum_real_restriction_gaussian_entire ψ θ S T 1 1 _ _ (o S hset.gS) (o T hset.gT) vac hv
+  obtain ⟨Φ, hΦd, hreal⟩ := _root_.GlobalTheory.FockPos.vacuum_real_entire ψ θ S T 1 1 _ _ (o S hset.gS) (o T hset.gT) vac hv
   have hTh := GlobalTheory.T.unit_vacuum_entire_factor_isThetaFunction_standard ψ θ S T 1 1 (o S hset.gS) (o T hset.gT) δ (hc ▸ hset.crv) hδ vac hv Φ hΦd hreal
   rw [hc] at hTh
   have hG := (GlobalTheory.InducedType.induced_type D).1
@@ -1437,7 +1439,7 @@ theorem vac_read (hc : D.host.ccK = ⊤) (hset : Setup ψ θ S T ⊤ δ 1)
     rw [inv_mul_cancel_left₀ hδ]
   refine ⟨κ, ?_, (reads_iff hset.crv hset.scale _ _).2 ⟨hv.2.theta, fun w hw => by rw [hreal w hw, hΦ]⟩⟩
   rintro rfl
-  obtain ⟨w, hw, hfw⟩ := GlobalTheory.T.exists_finitePartZero_ne_of_isVacuum_orientedModel ψ θ S T _ _ _ _ vac hv
+  obtain ⟨w, hw, hfw⟩ := _root_.GlobalTheory.VacNonzeroReal.exists_finPart_zero_ne ψ θ S T _ _ _ _ vac hv
   apply hfw
   rw [hreal w hw, hΦ, zero_smul, Pi.zero_apply, mul_zero]
 

@@ -6,13 +6,17 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KernelSpa
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDetInt
 import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.GoodIdempotentBadPlaces
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnderEqOrSmulUnderEq
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetTwoDiagBlocksPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeCharTrivialOnIdempotentIntegralUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrameStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnramifiedEtaTildeOfOddExponentSumStatement
+public import Formalism.LocalToGlobal.Divisibility.DefGroup
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetTwoDiagBlocksProperties
+public import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeCharTrivialOnIdempotentIntegralUnits
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnramifiedEtaTildeOfOddExponentSum
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersRamificationLevelPlaces
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameAtOfUnrAt
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameHeckeCharSplitSupportedEqProdResidueStatement
+import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameHeckeCharSplitSupportedEqProdResidue
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilActionLiftPairStepVectorInvLevelChar
 import Formalism.LocalToGlobal.Columns.AdelicLemmas
 import Mathlib.Algebra.Order.Floor.Extended
@@ -110,9 +114,9 @@ theorem unrOff_ker {T0 : Type} {L : LevCh D T0} {μ0 : T0} (hL : L.Is μ0) {ξ :
     {P : Finset (Pl D.host.E)} {e : AE D} (hP : ∀ PP, PP ∈ P ↔ PP ∈ L.Pg ∨ PP ∈ Q) (he : IsIdemSum e P) :
     GlobalTheory.VecInv.UnrOff (e + cA D e) (L.mu0 ((j : ℕ) + 1) * χ) ∧ GlobalTheory.VecInv.UnrOff (e + cA D e) L.eta := by
   obtain ⟨-, -, -, h4⟩ := ramif_ker hL hpl hram j
-  refine ⟨GlobalTheory.VecInv.UnrOff.mul (GlobalTheory.T.heckeChar_trivial_on_idempotentIntegralUnits D _ _ P e (hL.mu0 j) he fun PP' h1 h2 =>
+  refine ⟨GlobalTheory.VecInv.UnrOff.mul (_root_.GlobalTheory.ChrOff.unrOff_of_unrAt D _ _ P e (hL.mu0 j) he fun PP' h1 h2 =>
       h4 PP' (fun h => h1 ((hP _).2 (Or.inl h))) fun PP h => h2 PP ((hP _).2 (Or.inl h)))
-    (GlobalTheory.T.heckeChar_trivial_on_idempotentIntegralUnits D _ _ P e hchr he fun PP' h1 h2 => ?_), GlobalTheory.T.heckeChar_trivial_on_idempotentIntegralUnits D _ _ P e hL.eta he fun PP' _ _ => L.C.isEta.unr PP'⟩
+    (_root_.GlobalTheory.ChrOff.unrOff_of_unrAt D _ _ P e hchr he fun PP' h1 h2 => ?_), _root_.GlobalTheory.ChrOff.unrOff_of_unrAt D _ _ P e hL.eta he fun PP' _ _ => L.C.isEta.unr PP'⟩
   by_contra hn
   rcases (hram PP').1 hn with h | ⟨PP, h, h'⟩
   · exact h1 ((hP _).2 (Or.inr h))
@@ -130,17 +134,17 @@ theorem val_ker {T0 : Type} {L : LevCh D T0} {μ0 : T0} (hL : L.Is μ0) {ξ : Fo
       ((χ x : Circle) : ℂ) = ((∏ PP ∈ Q, ξR PP (u PP) : ℂˣ) : ℂ) ∧ L.eta x = 1 := by
   classical
   obtain ⟨-, h2, h3, -⟩ := ramif_ker hL hpl hram j
-  have e1 := GlobalTheory.T.tameHeckeChar_splitSupported_eq_prod_residue D _ _ P e (fun PP => if PP ∈ L.Pg then (L.chi ((j : ℕ) + 1) PP)⁻¹ else 1) (hL.mu0 j) he
+  have e1 := _root_.GlobalTheory.TameSplitChar.char_eq_prod_res D _ _ P e (fun PP => if PP ∈ L.Pg then (L.chi ((j : ℕ) + 1) PP)⁻¹ else 1) (hL.mu0 j) he
     (fun PP h => ⟨(L.C.isMu0 j).tame PP, by
       by_cases hg : PP ∈ L.Pg
       · rw [if_pos hg]; exact hL.chi j PP hg
       · rw [if_neg hg]; exact GlobalTheory.VecInv.isRes_one (h2 PP (((hP _).1 h).resolve_left hg))⟩) x a a' u hx ha hu
-  have e2 := GlobalTheory.T.tameHeckeChar_splitSupported_eq_prod_residue D _ _ P e (fun PP => if PP ∈ Q then ξR PP else 1) hchr he
+  have e2 := _root_.GlobalTheory.TameSplitChar.char_eq_prod_res D _ _ P e (fun PP => if PP ∈ Q then ξR PP else 1) hchr he
     (fun PP h => ⟨htame PP, by
       by_cases hg : PP ∈ Q
       · rw [if_pos hg]; exact hres PP hg
       · rw [if_neg hg]; exact GlobalTheory.VecInv.isRes_one (h3 PP (((hP _).1 h).resolve_right hg))⟩) x a a' u hx ha hu
-  have e3 := GlobalTheory.T.tameHeckeChar_splitSupported_eq_prod_residue D _ _ P e (fun _ => 1) hL.eta he
+  have e3 := _root_.GlobalTheory.TameSplitChar.char_eq_prod_res D _ _ P e (fun _ => 1) hL.eta he
     (fun PP _ => ⟨GlobalTheory.VecInv.tameAt_of_unrAt (L.C.isEta.unr PP), GlobalTheory.VecInv.isRes_one (L.C.isEta.unr PP)⟩) x a a' u hx ha hu
   refine ⟨?_, ?_, Subtype.ext (e3.trans (Finset.prod_eq_one fun _ _ => rfl))⟩
   · rw [e1, Units.coe_prod]
@@ -273,12 +277,12 @@ theorem kerDat_move : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Ty
   have rV : (Vc D i).rank = D.R.r + D.R.t := D.sp.V_rank _ (Nat.le_add_left _ _) i.2
   have rW : (Wc D i).rank = D.R.r := D.sp.W_rank _ (Nat.le_add_left _ _) i.2
   have hW := hK.weil
-  have hη := GlobalTheory.T.isUnramifiedEtaTilde_of_odd_exponentSum D _ _ hL.eta R.C.isEta _ _ _ hW.resS hW.resT (by
+  have hη := _root_.GlobalTheory.EtaTildeOddParity.isEtaTilde_of_odd D _ _ hL.eta R.C.isEta _ _ _ hW.resS hW.resT (by
     rw [rV, rW]
     obtain ⟨c, hc⟩ := D.R.t_odd
     exact ⟨D.R.r + c, by omega⟩)
-  obtain ⟨P, e, hee, hP, he, hom⟩ := GlobalTheory.VecInv.om_vec hW ⟨_, hη⟩ (GlobalTheory.T.isSelfDualCoordLattice_of_selfDualFrame D _ _ _ _ (hL.βV i))
-    (GlobalTheory.T.isSelfDualCoordLattice_of_selfDualFrame D _ _ _ _ (hL.βW i)) (hL.βV i).choose_spec.1 (hL.βW i).choose_spec.1 hK.vec
+  obtain ⟨P, e, hee, hP, he, hom⟩ := GlobalTheory.VecInv.om_vec hW ⟨_, hη⟩ (_root_.GlobalTheory.SDFrameLattice.isSelfDualC_of_isSDFrame D _ _ _ _ (hL.βV i))
+    (_root_.GlobalTheory.SDFrameLattice.isSelfDualC_of_isSDFrame D _ _ _ _ (hL.βW i)) (hL.βV i).choose_spec.1 (hL.βW i).choose_spec.1 hK.vec
   obtain ⟨u1, u2⟩ := unrOff_ker hL hK.chr hK.pl hK.ram i hP he
   have vals := fun x a a' u hx ha hu => val_ker hL hK.chr hK.tame hK.res hK.pl hK.ram i hP he x a a' u hx ha hu
   refine ⟨fun k hk hfin => ?_, fun k' hk' => ?_⟩
@@ -334,7 +338,7 @@ theorem kerDat_move : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Ty
     have pg1 : ∏ PP ∈ R.Pg, (R.chi ((i : ℕ) + 1) PP (Matrix.GeneralLinearGroup.det (redFn (R.βW i) PP (finE (Wc D i) k'))))⁻¹ = 1 :=
       by
         refine Finset.prod_eq_one fun PP h => ?_
-        rw [← (GlobalTheory.T.det_twoDiagBlocks_properties (kP PP) _ D.R.r 0 (r_le_rank_Wc i) (redFn (R.βW i) PP (finE (Wc D i) k'))).2.2 rW, rt PP h, map_one,
+        rw [← (_root_.GlobalTheory.VecInv.TwoBlockDet.det_blocks (kP PP) _ D.R.r 0 (r_le_rank_Wc i) (redFn (R.βW i) PP (finE (Wc D i) k'))).2.2 rW, rt PP h, map_one,
           map_one, inv_one]
     rw [← Units.coe_prod] at h2
     refine smul_fix h2 ?_

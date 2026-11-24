@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsSmoothAutomorphicFunctionTranslateAtRealPlace
 import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ConjAtFixedIff
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.DenomBound
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsSigmaList
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.UnitaryLieGeneratorsRepStatement
+import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.WordDerivatives
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.UnitaryLieGeneratorsRep
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -107,8 +109,8 @@ theorem hasDerivAt_Rder {φ : GA D V → ℂ} (hφ : φ ∈ SmFun θ V) (hX : X 
 attribute [local instance 100] LieRing.ofAssociativeRing in
 theorem glRel_derEnd (hθ : IsInfFam θ) (V : HSp D) (τ : D.what₂.Tau) : Formalism.REAL.GlRel fun a b : Fin V.rank =>
     GlobalTheory.Mem.RealTranslate.derEnd (V := V) hθ τ (Matrix.single a b 1) := by
-  have R := (GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ V
-  obtain ⟨P, Q, hPQ, h⟩ := GlobalTheory.T.unitary_lie_generators_rep _ _ (R.1 τ).1 (R.1 τ).2
+  have R := (_root_.GlobalTheory.SmoothForms.RealPts.realPoints D).2 θ hθ V
+  obtain ⟨P, Q, hPQ, h⟩ := _root_.GlobalTheory.UnitaryLieComplexification.glRel_and_span _ _ (R.1 τ).1 (R.1 τ).2
   have hG := (h _ (fun X => GlobalTheory.SmoothForms.opInf R (atPlace V τ X)) (GlobalTheory.SmoothForms.opAt_add R τ)
     (GlobalTheory.SmoothForms.opAt_smul R τ) (GlobalTheory.SmoothForms.opAt_bracket R τ)).1
   have e : SmFun θ V = GlobalTheory.SmoothForms.SmF θ V := Submodule.ext fun φ => GlobalTheory.SmoothForms.smooth_iff R φ

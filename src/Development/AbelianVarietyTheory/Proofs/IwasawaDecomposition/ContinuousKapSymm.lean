@@ -4,7 +4,8 @@ public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DifferentiableOneP
 import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ConjAtFixedIff
 import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.EmbRelExistsUnique
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.DenomBound
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsSmoothAutomorphicFunctionTranslateAtRealPlace
 import Mathlib.Algebra.Order.Floor.Extended
@@ -310,8 +311,8 @@ theorem conjAt_adP (τ : D.what₂.Tau) (Z : Matrix (Fin V.rank) (Fin V.rank) �
 
 theorem kap_oneP (hθ : IsInfFam θ) {τ : D.what₂.Tau} {X : Matrix (Fin V.rank) (Fin V.rank) ℂ} (hX : X ∈ lieAt V τ) (t : ℝ) :
     I.kap (oneP θ V τ X t) = oneP θ V' τ (I.adP τ X) t := by
-  have R := (GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ V
-  have R' := (GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ V'
+  have R := (_root_.GlobalTheory.SmoothForms.RealPts.realPoints D).2 θ hθ V
+  have R' := (_root_.GlobalTheory.SmoothForms.RealPts.realPoints D).2 θ hθ V'
   have h1 := GlobalTheory.PointAtPlaceHom.atTau_spec hθ V τ (GlobalTheory.SmoothAutCheck.exp_mem_UH (R.1 τ).2 hX t)
   have h2 := GlobalTheory.PointAtPlaceHom.atTau_spec hθ V' τ (GlobalTheory.SmoothAutCheck.exp_mem_UH (R'.1 τ).2 (I.adP_mem hX) t)
   refine R'.2.2.1 _ (I.kap_mem_GinfC h1.1) _ h2.1 fun τ' => ?_

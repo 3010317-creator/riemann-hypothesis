@@ -38,8 +38,8 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsA
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsAlgHomOfFiniteTypeOfIsAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsIsAffineOpenLeOfIsQProjOver
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsPointOfPerLev
-public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsSymmetricSqrtPrincipalSiegelFiniteEtaleStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsTwoTorsionTranslateSameLambdaBundleStatement
+public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsSymmetricSqrtPrincipalSiegelFiniteEtale
+public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsTwoTorsionTranslateSameLambdaBundle
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -747,7 +747,7 @@ theorem exists_translate (hL : Out.Laws) {h k : ℕ} {o : Type} [CommRing o] {ζ
   obtain ⟨P₁, π, hπ⟩ := exists_polPB hL.polBaseChange x Q
   have h₁ := (sqOf_calculus h k o ζ S (Sp R) (Sp ℂ) s c f).1 x Q P₁ φ π hQ hπ
   obtain ⟨e, he, -, hl⟩ := (sqOf_calculus h k o ζ S (Sp ℂ) (Sp ℂ) s c (x ≫ f)).2.1 P₁ P _ _ h₁ hP
-  obtain ⟨t₁, ht₁, hi⟩ := GlobalTheory.T.exists_twoTorsion_translate_same_lambdaBundle hL ℂ P₁ P e he hl
+  obtain ⟨t₁, ht₁, hi⟩ := _root_.GlobalTheory.SameLam.exists_two_torsion_translate hL ℂ P₁ P e he hl
   obtain ⟨t, ht, hy⟩ := hT ℂ _ (pushHom hπ.1 _ t₁) (by rw [← map_pow, ht₁, map_one])
   obtain ⟨Q', e', he', hg', hl', hi'⟩ := _root_.GlobalTheory.RigidTranslate.exists_rigid_translate hL R Q t ht
   have hy' : t₁.left ≫ π = x ≫ t.left := by
@@ -850,7 +850,7 @@ theorem GlobalTheory.KeyFam.polFam : Out.Laws → Out.Laws2 → ThetaUnifAV → 
     refine isUnit_iff_ne_zero.2 fun h0 => ?_
     rw [h0, map_zero] at hζ
     exact Complex.exp_ne_zero _ hζ.symm
-  obtain ⟨R₁, _, _, Q, φ, ⟨c₁, c₂, c₃⟩, hQ, hT⟩ := GlobalTheory.T.exists_symmetric_sqrt_principal_siegel_finite_etale hL P.g k K ζ R F.X F.s F.univ i (by omega) hu F.princ
+  obtain ⟨R₁, _, _, Q, φ, ⟨c₁, c₂, c₃⟩, hQ, hT⟩ := _root_.GlobalTheory.SiegelSqrt.exists_sqrt hL P.g k K ζ R F.X F.s F.univ i (by omega) hu F.princ
   obtain ⟨p₁, hp₁⟩ := exists_lift_point (R₁ := R₁) p'
   obtain ⟨Q', φ', ψ, hQ', hψ⟩ := exists_translate hL F.univ _ Q φ hQ hT (spMap p₁) P χ (by
     rw [← Category.assoc, ← spMap_comp, hp₁]; exact hP)

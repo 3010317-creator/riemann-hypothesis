@@ -116,7 +116,11 @@ import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.UnitFrameEqOrtho
 import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.AdmissibleColumnsLeAndHarmonicMapCover
 import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CoverMulShortThetaSeriesIndepOfFramedLift
 import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsQuotEquiv
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueUnderLevelMoveStatement
+import Formalism.LocalToGlobal.ProjectiveLattices.ThShort
+import Formalism.LocalToGlobal.ProjectiveLattices.IsLevMove
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueUnderLevelMove
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMapAllComparison
 import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ChartIndependenceUnconditional
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MulVecMemOfFrame
@@ -142,8 +146,13 @@ import Mathlib.Tactic.ENatToNat
 import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.IndefiniteTreeX
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoverValueCore
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdelicLiftEqGeometricClassSumAllTuples
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockCoefficientMapExtremalEqPhaseSmulLettersStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKernelOneClassEqClassicalShortSeriesStatement
+import Formalism.LocalToGlobal.IndefiniteReal.OneMapT
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockCoefficientMapExtremalEqPhaseSmulLetters
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
+import Development.AbelianVarietyTheory.Definitions.Divisors.PerCEmb
+import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKernelOneClassEqClassicalShortSeries
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.EmbeddingXiZeroNeZero
 import Std.Tactic.BVDecide.Normalize.Prop
 
@@ -759,7 +768,7 @@ theorem exists_const_int {D : D7} (T : Full D) (hT : LawsFull T) {j : ℕ} (hj :
   have e₁ := GlobalTheory.ShortLiftInvariance.cover_product_indep_of_lift hL hC _ _ _ _ _ _ _ d
     (_root_.GlobalTheory.moduliScheme_levelMaps_heckePoints.2 _ _ _ hpq).1 hLev (hA₂.trans hA.symm) hnab ⟨ph, ψ, x₀, hpin, htie⟩ Λ N hU hb₂ hO _ _ hP₂ x0 _
     r' m' hE' k hk y' z₂ y₂' hz₂ ho' v v' hv hv'
-  have e₂ := GlobalTheory.T.shortThetaValue_under_levelMove hL hC _ _ _ _ d.Xo₂ d.c₂ d.nab₂ hnab k ρ₂.hom ν₂ _ _ y₂ y₂' hmv₂ hfr₂ σq hσ
+  have e₂ := _root_.GlobalTheory.ShortValMove.shortValAt_move hL hC _ _ _ _ d.Xo₂ d.c₂ d.nab₂ hnab k ρ₂.hom ν₂ _ _ y₂ y₂' hmv₂ hfr₂ σq hσ
     _ _ _ hP₂ (d.w x0) Λ _ N v' hv'
   rw [funext hw'] at e₂
   refine ⟨v', e₂, (evalAt_smul _ _ _ _ y).trans ?_⟩
@@ -1180,8 +1189,8 @@ theorem consts_core {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type} {A
   obtain ⟨cc, hcc⟩ := GlobalTheory.AdTh.CcExCore.exists_ccIs_core GlobalTheory.ChartFree.chartIndep D G Pl0 T0 A T.J R F κ v₀ hC hTi i Unit (fun _ => A.μ0) (O i) hP
   have hs : (O i).s0 = T.J.toCore.σ₀ := sOv_eq _ _ _
   obtain ⟨h1, h2, -⟩ := GlobalTheory.PtId.dict_cast T.J hTi.laws _ (inR i) (O i).s0 (hs ▸ T.J.toCore.good_σ₀) (Wc D i) (O i).hV (rank_Wc i)
-  obtain ⟨δ, hδ⟩ := GlobalTheory.T.thetaKernel_oneClass_eq_classicalShortSeries D G Pl0 T0 A _ R F hC i hP.lift.std _ _ (iotaW T.J i) h1 h2
-  obtain ⟨ka, hka, hio⟩ := GlobalTheory.T.fockCoefficientMap_extremal_eq_phase_smul_letters D G Pl0 T0 A T.J R F κ v₀ hC hTi hI i Unit (fun _ => A.μ0) (O i) hP
+  obtain ⟨δ, hδ⟩ := _root_.GlobalTheory.AdTh.ShortSeriesCore.thetaKO_eq_short_series_core D G Pl0 T0 A _ R F hC i hP.lift.std _ _ (iotaW T.J i) h1 h2
+  obtain ⟨ka, hka, hio⟩ := _root_.GlobalTheory.AdTh.PhaseMapCore.io_eq_phase_smul_core D G Pl0 T0 A T.J R F κ v₀ hC hTi hI i Unit (fun _ => A.μ0) (O i) hP
   obtain ⟨c0, hc0, hcov⟩ := GlobalTheory.AdTh.CoverVal.cover_value_core D G Pl0 T0 A T.J R F κ v₀ hC hTi i Unit (fun _ => A.μ0) (O i) hP
   have hd : ‖((δ : ℤ) : ℂ)‖ = 1 := by
     rcases Int.units_eq_one_or δ with rfl | rfl <;> simp

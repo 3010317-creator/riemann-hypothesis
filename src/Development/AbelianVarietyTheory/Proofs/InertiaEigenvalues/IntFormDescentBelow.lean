@@ -36,7 +36,9 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BddG
 public import Formalism.LocalToGlobal.ProjectiveLattices.MulCMemSec
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspidalSectionBoundedNonzeroMultiple
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HolomorphicSectionsSpanRestriction
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCuspFormsAllEmbeddingsOfInclusionReadingStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.CuspFormsFiniteDimensionalOf
+public import Formalism.LocalToGlobal.ProjectiveLattices.FamilyUniformisationBasePointOrthogonalBis
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCuspFormsAllEmbeddingsOfInclusionReading
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValuationMulLeOneOfTraceApproxIdempotentIntegral
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralValuesAlgebraicPointsIffValueNonneg
 public import Formalism.LocalToGlobal.ProjectiveLattices.ModelAt
@@ -1421,7 +1423,7 @@ theorem intForm_descent_below (l e : ℕ) (hl : l.Prime) : ∃ c₀ : ℕ, ∀ (
     (C.intForms_subset _ _ _ hφ) hφK
   have hcc' : ∀ i, ∃ cc : Fin m → T.Q.c.F, ψ i = ∑ k, T.σ₀ (cc k) • T.phiJ j T.σ₀ (wtA w) (β k) := fun i => by
     obtain ⟨f, hf, hfe⟩ := hψ i
-    obtain ⟨cc, hcc⟩ := hspanβ f (GlobalTheory.T.mem_cuspForms_allEmbeddings_of_inclusion_reading D T hL j hj w hlast f hf.1 hf.2)
+    obtain ⟨cc, hcc⟩ := hspanβ f (_root_.GlobalTheory.CuspAllEmb.mem_cuspA_of_rdU_mem_holSub0 D T hL j hj w hlast f hf.1 hf.2)
     refine ⟨cc, ?_⟩
     rw [← hfe, hcc]
     set_option synthInstance.maxHeartbeats 100000 in

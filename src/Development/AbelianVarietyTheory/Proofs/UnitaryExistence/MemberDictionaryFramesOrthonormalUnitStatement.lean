@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.CoeSelfDualLatticeInFrameCoordinatesEq
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicativeStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.EquivariantFiniteGroup
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicative
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameMulTriangularOrthonormal
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.UnitFrameEqOrthonormalMulTriangular
 import Mathlib.Algebra.Order.Floor.Extended
@@ -65,7 +66,7 @@ theorem fr_orthonormal_unit : ∀ (D : D7) (H : ReciprocityTheory.ChartRestricti
   intro D H Dw l Xo c σ V r C hC h k
   have hr := C.hr
   subst hr
-  obtain ⟨hA, -, hL⟩ := GlobalTheory.T.archimedeanMatrix_unitary_continuous_multiplicative D V C.θ hC.inf
+  obtain ⟨hA, -, hL⟩ := _root_.GlobalTheory.Member.Arch.archM_spec D V C.θ hC.inf
   have hG : (C.M.X k).Gm = -V.gramᵀ := by
     rw [(hC.modelW k).1, reindex_finCongr_self]
   have hfr : ∀ u (τ : (C.M.X k).Ψ), mat (C.fr u k) τ = archM V (C.θ τ.1) u * C.x₀ τ.1 := fun u τ => rfl

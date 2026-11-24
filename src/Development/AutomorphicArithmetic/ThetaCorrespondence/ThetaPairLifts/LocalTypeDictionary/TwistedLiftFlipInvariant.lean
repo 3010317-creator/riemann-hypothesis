@@ -29,7 +29,7 @@ public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdelicHeightBlockDiagonalEmbeddingLeMul
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareTriple
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.UnifModGrowthOfIsUnifModerate
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TranslatedKernelLeThetaFunctionRouteBigVertexStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TranslatedKernelLeThetaFunctionRouteBigVertex
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LiftPRouteSmall
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmallRouteCombinationMulLiftByDegree
 public import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.ThetaIntegralsAgree
@@ -687,7 +687,7 @@ theorem zconv : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridD
       (((M.ν (.grid i (j + 1))).restrict (M.fd (.grid i (j + 1)))).prod ((M.ν (.grid i j)).restrict (M.fd (.grid i j)))) := by
   intro D T L sc G hK hP μ₀ hL W B ρ t i j hT M hM Θ Θ' hΘ F hF hFc hFl hB g₁
   obtain ⟨e, Bs, Γ, X, om, om', h, hTr, hv⟩ := hT M hM
-  obtain ⟨z, Φ, a, C₀, hz, hΦ, hid⟩ := GlobalTheory.T.translatedKernel_le_thetaFunction_routeBigVertex hL W B ρ t i j M hM Θ Θ' hΘ g₁ e Bs Γ X om om' h hTr hv
+  obtain ⟨z, Φ, a, C₀, hz, hΦ, hid⟩ := _root_.GlobalTheory.ZConvIdent.translates_kerSmall_le_theta hL W B ρ t i j M hM Θ Θ' hΘ g₁ e Bs Γ X om om' h hTr hv
   have dec := (hK.1 D.host.F D.host.E D.sp.cm.sig Bs _ _ Γ X om om' hTr).1
   obtain ⟨C, k, hC⟩ := (dec.2 Φ hΦ).1 0
   have hbd : ∀ g u, ‖translates z (kerSmall W Θ' g g₁) u‖ ≤

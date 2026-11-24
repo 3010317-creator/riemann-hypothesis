@@ -9,7 +9,6 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ActOMemFinSu
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsDeltaPsi
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HoweUnramifiedAllVacua
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalLabelOperatorsOnHyperspecialFixedVectorStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsHeckeOpFullDualLab
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -433,7 +432,7 @@ theorem half {S T : HSp D} {P : Pl D.host.E} {e f : AE D} (he : IsPrimeIdem P e 
   obtain ⟨bT, hb⟩ := exists_pullback he πT ιT hT cT
   obtain ⟨bS, hbS⟩ := howe bT fun u hu k hk => by
     rw [hb]
-    exact (GlobalTheory.T.spherical_label_operators_on_hyperspecial_fixed_vectors T P).2.1 cT W πT u (fixT u hu) k hk
+    exact (_root_.GlobalTheory.SphLabelOps.label_operators T P).2.1 cT W πT u (fixT u hu) k hk
   obtain ⟨cS, hc⟩ := GlobalTheory.T.exists_sphericalCombination_of_fixed_localTranslates S P e f he (Finsupp.mapDomain ιS bS) fun g hg => by
     obtain ⟨g', -, rfl⟩ := Finset.mem_image.1 (Finsupp.mapDomain_support hg)
     exact hS g'

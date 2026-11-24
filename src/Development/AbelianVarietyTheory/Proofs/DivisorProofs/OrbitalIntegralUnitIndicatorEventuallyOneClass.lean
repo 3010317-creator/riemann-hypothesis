@@ -8,7 +8,7 @@ public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyIntegralLiftCoprimeDerivativeStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralConjSetLocalUnitaryEqDoubleCosetStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalConjugationInvolutiveValuationPreservingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalConjugationInvolutiveValuationPreserving
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -1009,7 +1009,7 @@ theorem orbUnit_ae : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr
   intro E _ _ _ _ n _ S _ P hP
   filter_upwards [GlobalTheory.T.eventually_integral_lift_coprime_derivative E P hP.2.2.1] with w hw
   obtain ⟨P₀, hmap, hcop⟩ := hw
-  obtain ⟨hσσ, hv⟩ := GlobalTheory.T.localConjugation_involutive_valuation_preserving E w
+  obtain ⟨hσσ, hv⟩ := _root_.GlobalTheory.BCT.cj_involutive_valuation E w
   intro γ hγ
   have hγ' : γ.1.val.charpoly = P₀.map (algebraMap (w.adicCompletionIntegers E) (w.adicCompletion E)) := by
     rw [hγ, hmap]

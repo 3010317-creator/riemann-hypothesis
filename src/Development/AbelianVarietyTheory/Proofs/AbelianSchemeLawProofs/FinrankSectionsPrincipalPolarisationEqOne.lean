@@ -8,14 +8,14 @@ public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.A
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.CechLBHomologyFiniteOfAffineCover
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.CechLBHomologyZeroEquivSections
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.CechLBPullIsoOfIsOpenImmersion
-public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.FinrankCechLBHomologyExtProdStatement
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.FinrankCechLBHomologyExtProd
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThetaVV
 public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
 public import Mathlib.Tactic.Monotonicity.Lemmas
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.PrecompleteBases.PsbLb
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsOfCubeBundleGenerator
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.CubeTheoremAndSectionsFiniteGrowthAbelianVariety
-public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsHighTwistSectionNeZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsHighTwistSectionNeZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -178,7 +178,7 @@ theorem finrank_secOnR_le_one (K : Type) [Field K] [IsAlgClosed K]
   rw [← e.finrank_eq]
   refine le_one_of_convolution (fun i => Module.finrank K ((cechLB P.A.hom P.L U).homology i))
     (fun i => Module.finrank K ((cechLB P.A.hom (pw P.L (-1)) U).homology i)) P.g fun k => ?_
-  rw [← GlobalTheory.T.finrank_cechLB_homology_extProd_alt K _ _ _ _ _ _ _ P.L (pw P.L (-1)) hpb P.isLB hL' hsep hsep _ U _ U _ D hU hUc hU hUc
+  rw [← _root_.GlobalTheory.AbLaw.finrank_cechLB_homology_extProd K _ _ _ _ _ _ _ P.L (pw P.L (-1)) hpb P.isLB hL' hsep hsep _ U _ U _ D hU hUc hU hUc
     hD hDc (cechLB_homology_finite_of_affine_cover K _ _ _ _ U P.isLB hsep hproj hU hUc)
     (cechLB_homology_finite_of_affine_cover K _ _ _ _ U hL' hsep hproj hU hUc) k, ← GlobalTheory.T.mumford_bundle_cech_cohomology_finrank K P _ D hD hDc k, Over.w]
   have hF : (translDiff P.A P.L (𝟙 P.A)).IsLB := DVR.linComb_isLB _ P.isLB _ _
@@ -336,7 +336,7 @@ theorem one_le_finrank_secM :
   have hgi := GlobalTheory.forall_geometricallyIntegral_of_smooth_of_geometricallyConnected _ _ P.A.hom
     P.isAb.smooth P.isAb.geomConnected
   haveI : IsIntegral (T ⊗ P.A).left := GeometricallyIntegral.geometrically_isIntegral _ _ _ hpb
-  obtain ⟨t₀, ht₀⟩ := GlobalTheory.T.exists_high_twist_section_ne_zero K _ f _ m s (P.L.pull π) hH (LB.isLB_pull P.isLB π) hs
+  obtain ⟨t₀, ht₀⟩ := _root_.GlobalTheory.AbLaw.exists_sec_tw_ne_zero K _ f _ m s (P.L.pull π) hH (LB.isLB_pull P.isLB π) hs
   obtain ⟨n, t, hn, ht, hnt⟩ := exists_sq_eq K N hN t₀
   obtain ⟨σ, i, hi⟩ := ht₀ t ht
   obtain ⟨τ, hτ⟩ := exists_sec_ne_zero P.L π P.isLB N t σ i hi

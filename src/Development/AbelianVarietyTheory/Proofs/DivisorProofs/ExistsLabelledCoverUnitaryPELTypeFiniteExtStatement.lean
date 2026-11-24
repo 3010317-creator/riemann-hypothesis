@@ -31,7 +31,8 @@ public import Development.AbelianVarietyTheory.BlockTheory.CMModuli.ThetaTowerRe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGoodLabRankOne
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RelationsAreFunctions
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LocallyOfFiniteTypeKer
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesOfExpansionLawsStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissibleBaseOfCompleteDvr
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesOfExpansionLaws
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartsIsoLabelsOfThetaPointAndValuesStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationRecognitionOfAbelianPartsIsoLabelsStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespond
@@ -44,7 +45,6 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degeneration
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDegenerationDataPullbackInjectiveLocalHom
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThetaPointOfAlgebraicSeriesOneTrait
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.CharZeroOfIsPrimitiveRoot
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThetaPointOfAlgebraicSeriesOneTraitStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFactorFieldPointThroughGenericPoint
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSemiAbelianUniformisationOfLabelledCover
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralImageOfField
@@ -120,12 +120,10 @@ import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationSe
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaPointDeterminesAndEndDeterminedTorsion
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesTorsionPairingSeparationIntegra
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationDataTorsionStructureAlgClosed
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCompleteIsAlgClosedCExtStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralDegenerationValuesStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespondStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantsEqDegenerationSeriesStatement
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCompleteIsAlgClosedCExt
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralDegenerationValues
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantsEqDegenerationSeries
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaPointsCoordsRelabelledTwistedDataSeries
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValuesStatement
 import Mathlib.Topology.MetricSpace.Ultra.Basic
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TxCosetCriterion
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.UniformizationLawsAndExpansionStatements
@@ -1218,7 +1216,7 @@ attribute [local instance] gtGroup
 
 theorem recognitionSt : RecognitionSt :=
   recognition_iff.2 (uRecDvr_of_uRec (GlobalTheory.T.degenerationRecognition_of_abelianPartsIsoLabels (GlobalTheory.T.abelianPartsIsoLabels_of_thetaPoint_and_values GlobalTheory.firstFiveLaws.1
-    GlobalTheory.thetaPtDetermines_and_endDeterminedOnTorsion.1 (GlobalTheory.T.abelianPartValues_of_expansionLaws GlobalTheory.firstFiveLaws.1))))
+    GlobalTheory.thetaPtDetermines_and_endDeterminedOnTorsion.1 (_root_.GlobalTheory.ThetaInValues.brUth_of_laws GlobalTheory.firstFiveLaws.1))))
 
 def upQ {R : Type} [CommRing R] [IsDomain R] {D : DegPre R} {F : Type} [Field F] [Algebra (FractionRing R) F]
     (hb : D.TauBimult) {k : ℕ} (p : QkPt D F k) : QkPt D F (k ^ 2) :=
@@ -1337,7 +1335,7 @@ theorem recognition_core : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
   haveI := lφ
   obtain ⟨DW, ⟨hWp⟩⟩ := GlobalTheory.MumPull.exists_pull R W φ iφ lφ D
   have hBW := DW.tau_bimult
-  obtain ⟨C, _, _, _, _, _, gam, hgam, hC⟩ := GlobalTheory.T.exists_complete_isAlgClosed_cExt' W (Kb W)
+  obtain ⟨C, _, _, _, _, _, gam, hgam, hC⟩ := _root_.GlobalTheory.Ex.exists_complete_isAlgClosed_cExt W (Kb W)
   have : CharZero C := (RingHom.charZero_iff (algebraMap (FractionRing W) C).injective).1 inferInstance
   letI : Algebra (FractionRing R) C := ((algebraMap (FractionRing W) C).comp (fracMap iφ)).toAlgebra
   have cC : Compat φ C := fun r => congrArg (algebraMap (FractionRing W) C) (fracMap_algebraMap iφ r)
@@ -1356,9 +1354,9 @@ theorem recognition_core : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
   have huW : IsUnit (n : W) := by simpa using hu.map φ
   have h1 : ‖(n : C)‖ = 1 := (isUnit_iff_norm hC n).1 huW
   have hnC : (n : C) ≠ 0 := fun h => by rw [h, norm_zero] at h1; exact zero_ne_one h1
-  obtain ⟨N₁, ν₁, -⟩ := GlobalTheory.T.exists_integral_degeneration_values hL W DW.toPre DW.psi_even hBW C ⊤ fun _ => trivial
+  obtain ⟨N₁, ν₁, -⟩ := _root_.GlobalTheory.ValuesExist.exists_integral_values hL W DW.toPre DW.psi_even hBW C ⊤ fun _ => trivial
   obtain ⟨N, ν, q₀, -, hIν, hq₀, -⟩ := exists_integral hW DW hC ν₁
-  have hT := GlobalTheory.ValuesTorsion.tors_of_integral hL hL₂ (GlobalTheory.T.abelianPartValues_of_expansionLaws hL) W DW.toPre DW.psi_even hBW C hO N ν hIν n hn
+  have hT := GlobalTheory.ValuesTorsion.tors_of_integral hL hL₂ (_root_.GlobalTheory.ThetaInValues.brUth_of_laws hL) W DW.toPre DW.psi_even hBW C hO N ν hIν n hn
     ho h1
   have hd : ∀ g : N.Gt, ∃ g', g' ^ n = g := fun g => by
     obtain ⟨g', hg'⟩ := (GlobalTheory.Ex.QStr.qStructure C N n _ hnC hT 1).2.1 g
@@ -1366,7 +1364,7 @@ theorem recognition_core : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
   have h0 : ∃ q : N.QT ((n ^ 1) ^ 2), N.tx (n ^ 1) q ≠ 0 := by
     obtain ⟨h, -, -, hh⟩ := (_root_.GlobalTheory.tx_coset_criterion C N q₀ hq₀ n _ hn ho h1 hT 1 le_rfl).2.2 1
     exact ⟨_, hh⟩
-  obtain ⟨N', ν', -⟩ := GlobalTheory.T.exists_integral_degeneration_values hL W D'.toPre D'.psi_even D'.tau_bimult C ⊤ fun _ => trivial
+  obtain ⟨N', ν', -⟩ := _root_.GlobalTheory.ValuesExist.exists_integral_values hL W D'.toPre D'.psi_even D'.tau_bimult C ⊤ fun _ => trivial
 
   have galW : ∀ k, (∃ j, k = n ^ j) → ∀ (σ : C ≃ₐ[FractionRing W] C) (p pσ : QkPt DW.toPre C k),
       QkExt (σ : C →+* C) p pσ → (fW k pσ).left = spMap (σ : C →+* C) ≫ (fW k p).left := by
@@ -1420,7 +1418,7 @@ theorem recognition_core : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
     have Θ := htheta j v hv
     have hCR : CExt R (maximalIdeal R) C :=
       ⟨fun r => (cC r).symm ▸ hC.1 _, fun r hr => (cC r).symm ▸ hC.2 _ (map_nonunit φ r hr)⟩
-    obtain ⟨N₀, ν₀, -⟩ := GlobalTheory.T.exists_integral_degeneration_values hL R D.toPre D.psi_even hB C ⊤ fun _ => trivial
+    obtain ⟨N₀, ν₀, -⟩ := _root_.GlobalTheory.ValuesExist.exists_integral_values hL R D.toPre D.psi_even hB C ⊤ fun _ => trivial
     obtain ⟨J, hJX, hJ⟩ := GlobalTheory.Mum.OneTraitTheta.exists_values_iso hL hWp cC ν₀ ν
     choose q₀ hq₀ using fun i : QkPt D.toPre (Kb R) ((n ^ j) ^ 2) =>
       exists_val D.psi_even hB ν₀ (qkExt hB em.toRingHom em.comp_algebraMap i)
@@ -1428,7 +1426,7 @@ theorem recognition_core : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
       (fun i => (qkExt_iff hB _ em.comp_algebraMap _ _).2 rfl) hq₀
     choose pp hpp using fun i => G''.onto _ hk (fW _ (tr hWp cC em hBW i)) (GW.pow _ hk _)
     choose qq hqq using fun i => exists_val D'.psi_even D'.tau_bimult ν' (pp i)
-    have Q := GlobalTheory.T.theta_constants_eq_degeneration_series hV GlobalTheory.T.torus_torsion_points_correspond_values (GlobalTheory.T.families_values_correspond hL hL₂) W _ hW rfl D' A' G' hG' U' C hC N' ν' (n ^ j) hm _ pp qq
+    have Q := _root_.GlobalTheory.Ex.ThetaSeries.theta_const_eq_series hV _root_.GlobalTheory.Ex.GtValues.points_correspond (_root_.GlobalTheory.Ex.brFam hL hL₂) W _ hW rfl D' A' G' hG' U' C hC N' ν' (n ^ j) hm _ pp qq
       (fun i => fW _ (tr hWp cC em hBW i)) (fun i => (hf' _ hk _ _).2 (hpp i).symm) hqq
     obtain ⟨c₃, hc₃⟩ := theta_prop hfib cC em hm (x := lab _) (x' := fun i => fW _ (tr hWp cC em hBW i))
       (fun i => by rw [hfW _ hk]; exact (hε _ _).1 rfl) (fun i => GW.pow _ hk _) Θ Q
@@ -1627,7 +1625,7 @@ namespace GlobalTheory.Mum.Recognition
 theorem pullDeg_induces : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (lab : Labels D.toPre A), ∀ n : ℕ, n.Prime → Odd n → IsUnit (n : R) → OneTrait D.toPre A lab → GalEqN n lab → ∀ (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W], GlobalTheory.LN.CDvr W → ∀ (φ : R →+* W), Function.Injective φ → IsLocalHom φ → ∀ (G' : Over (Sp W)) [GrpObj G'] [IsCommMonObj G'] (D' : DegData W (maximalIdeal W)) (A' : PolAV (Sp (FractionRing W))) (U' : Unif (maximalIdeal W) D' A' G') (a : A'.A.left ⟶ A.A.left), IsSemiAbelian G' → IsFib φ A A' a → ∃ hD : IsPullDeg φ D.toPre D'.toPre, ∀ j : ℕ, Induces lab φ U' hD a (n ^ j) := by
   intro R _ _ _ hR D A lab n hn ho hu hOT hGal W _ _ _ hW φ hφ hloc G' _ _ D' A' U' a hG hF
   obtain ⟨hD, C, i1, i2, i3, i4, em, hc, hP⟩ := GlobalTheory.T.galois_equivariant_torsion_values_ultrametric R hR D A lab n hn ho hu hOT hGal
-    (GlobalTheory.T.isThetaPoint_of_algebraic_series_one_trait R hR D A lab n hn ho hu hOT) W hW φ hφ hloc G' D' A' U' a hG hF
+    (_root_.GlobalTheory.Mum.OneTraitTheta.isThetaPt_of_series R hR D A lab n hn ho hu hOT) W hW φ hφ hloc G' D' A' U' a hG hF
   exact ⟨hD, fun j => GlobalTheory.T.labels_induced_all_embeddings_of_galois R hR D A lab n hn ho hu hGal W hW φ hφ hloc G' D' A' U' a hG hF hD j
     ⟨C, i1, i2, i3, i4, em, hc, hP j⟩⟩
 

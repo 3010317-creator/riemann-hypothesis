@@ -76,7 +76,8 @@ import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmDataIsCMEx
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GodementSectionSmoothBounded
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.DenomBound
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 import Std.Tactic.BVDecide.Normalize.Prop
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -846,7 +847,7 @@ theorem van (hθ : IsInfFam θ) (hW : IsWittFrame D.sp.cm.sig V.gram X Y) (T : F
     (derEnd hθ τ (C.1.map (tauE D τ) * Matrix.single p q 1 * (C.1.map (tauE D τ))⁻¹) H).1 (ι x) = 0 := by
   have hcm := (GlobalTheory.Mem.Vol.cmData_isCMExt_and_gram_isHermND D.host.F D.host.E D.sp.cm).1
   have hJ := (GlobalTheory.Mem.Vol.cmData_isCMExt_and_gram_isHermND D.host.F D.host.E D.sp.cm).2 V
-  have R := (GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ V
+  have R := (_root_.GlobalTheory.SmoothForms.RealPts.realPoints D).2 θ hθ V
   obtain ⟨hHer, hUn⟩ := R.1 τ
   set P := C.1.map (tauE D τ) with hP
   have hPu := isUnit_det_map C (tauE D τ)

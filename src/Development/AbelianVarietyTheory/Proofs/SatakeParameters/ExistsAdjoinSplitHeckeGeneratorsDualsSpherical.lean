@@ -12,7 +12,7 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DivisorsA
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CardInversePrimeRepsIntegralRightMulHecke
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CartanExponentsNonnegMinusculeTopProduct
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DualSplitLabelOperatorMulScalarOperator
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsSphericalDoubleCosetLabelIffDecreasingStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsSphericalDoubleCosetLabelIffDecreasing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -755,7 +755,7 @@ theorem good_nonneg (hP : conjPl P ≠ P) : ∀ s q : ℕ, ∀ d : List ℤ, (�
     obtain ⟨ac, hac, ec⟩ := gc
     set k := (d.filter fun x => 0 < x).length
     have hk : k ≤ V.rank := by
-      have := ((GlobalTheory.T.isSphericalDoubleCosetLabel_iff_decreasing V P d).1 hl).1
+      have := ((_root_.GlobalTheory.LabChar.labels_char V P d).1 hl).1
       rw [← this]
       exact List.length_filter_le _ _
     refine ⟨(m : ℂ)⁻¹ • (a1 * opOf π P (Finsupp.single (dualLab (splitLab V.rank k)) 1) - ac),
@@ -766,7 +766,7 @@ theorem good_nonneg (hP : conjPl P ≠ P) : ∀ s q : ℕ, ∀ d : List ℤ, (�
       ec u hu, add_sub_cancel_right, smul_smul, inv_mul_cancel₀ hm', one_smul]
   · push_neg at hpos
     have h0 : d = splitLab V.rank 0 := by
-      have hlen := ((GlobalTheory.T.isSphericalDoubleCosetLabel_iff_decreasing V P d).1 hl).1
+      have hlen := ((_root_.GlobalTheory.LabChar.labels_char V P d).1 hl).1
       rw [splitLab, Nat.sub_zero, List.replicate_zero, List.append_nil, ← hlen]
       exact List.eq_replicate_iff.2 ⟨rfl, fun x hx => le_antisymm (hpos x hx) (hd x hx)⟩
     refine ⟨_, good_gen ⟨0, Nat.zero_le _, Or.inl rfl⟩, fun u _ => by rw [h0]⟩

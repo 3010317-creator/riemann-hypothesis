@@ -6,7 +6,9 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForm
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompactSubgroupsActOnFockVectorsAllSignatures
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConstantTermLiftIsotropicSubspaceStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVectorsOverVacuaDenseThetaFunctions
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GkMapCuspFormsExtendsToSmoothVectorsStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.KTypeExtension
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GkMapCuspFormsExtendsToSmoothVectors
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieActionFockOperatorsScalarsTrace
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaLiftCuspFormAutomorphicSmoothModerateGrowth
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandra
@@ -70,6 +72,6 @@ theorem inputs_of_chosenSeries :
       dense := GlobalTheory.FockDensity.fockDense D
       laws := GlobalTheory.Chain.LiftReg.liftProps_obj hDec D
       const := GlobalTheory.T.constantTermLift_isotropicSubspace D
-      ext := GlobalTheory.T.gkMapCuspForms_extends_to_smoothVectors hHC hCW D }
+      ext := _root_.GlobalTheory.GKExtensionToSmoothVectors.gkExtension hHC hCW D }
 
 end GlobalTheory.PairLift

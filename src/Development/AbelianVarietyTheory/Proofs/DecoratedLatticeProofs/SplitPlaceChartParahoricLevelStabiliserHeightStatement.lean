@@ -25,8 +25,10 @@ public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemSum
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.HalfLinearCocycle
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.VolumeFlatSection
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TameLiftResidueCharacterIsTameNotUnramified
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LiftsCharOfResidueCharAtSplitPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaLiftChainSplittingCharactersResidueUnramifiStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnrOffOne
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LiftsCharOfResidueCharAtSplitPlace
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChainParSucc
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaLiftChainSplittingCharactersResidueUnramifi
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUniqueIsConjAt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -79,9 +81,7 @@ import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsVacFO
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CartFrSgn
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DegreeOnePrimeReductionSplitPlaceDictionary
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitProjAdeleComponentChartProperties
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChainParSucc
 import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ParahoricChartIntegralGLEqLatticeStabilizerStatement
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.FoundationProofs.DoublingNormDetInertPlaceLatticeLength, Development.AbelianVarietyTheory.Proofs.FoundationProofs.GraphElementIwasawaInertPlace, Development.AbelianVarietyTheory.Proofs.FoundationProofs.GraphElementIwasawaSplitPlace, Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryLocalPointLatticeGraphNormIdentity, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoublingHeightSplitPlaceChartBiInvariantTorusVal, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoublingHeightSplitPlaceChartBiInvariantTorusValStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsTopologicalIsoParahoricChartSplitPlaceStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LevelCharacterOnParahoricChartImage, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LevelCharacterOnParahoricChartImageStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitProjectionUnderEqResidueCardEqAbsNormStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TameLiftResidueCharacterIsTameNotUnramifiedStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistedChainChartParahoricEqLevelStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceChartParahoricLevelStabiliserHeight, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceChartParahoricLevelStabiliserHeightStatement
@@ -1022,18 +1022,18 @@ theorem chart_dict : ∀ D : D7, ForStageQ D fun c w j s => ∀ PP ∈ w.Q, ∀ 
   have hpl := GlobalTheory.T.split_projection_under_eq_residue_card_eq_absNorm D v φ PP hφ
   refine ⟨hpl.1, hpl.2, fun ξl h => GlobalTheory.T.tame_lift_residue_character_isTame_not_unramified D v φ PP (w.ξ PP) hφ (hw.ne PP hPP) ξl h, ?_, ?_⟩
   · intro k hk μ hμ
-    have hres := GlobalTheory.T.thetaLiftChain_splittingCharacters_residue_unramified D c hw.com k hk
+    have hres := _root_.GlobalTheory.ChainOnto.levRes_step D c hw.com k hk
     have hPg : PP ∈ c.Pg := by
       classical
       rw [hw.union]; exact Finset.mem_union.2 (Or.inr hPP)
     have hq : (c.chi (k + 1) PP)⁻¹ = w.ξ PP := by rw [hw.chiQ (k + 1) PP hPP, inv_inv]
     rcases hμ with hμ | hμ
-    · exact GlobalTheory.T.liftsChar_of_residueChar_at_splitPlace D _ PP _ (hq ▸ (hres.1 PP hPg).1) v φ hφ μ hμ
-    · exact GlobalTheory.T.liftsChar_of_residueChar_at_splitPlace D _ PP _ (hq ▸ (hres.1 PP hPg).2) v φ hφ μ hμ
+    · exact _root_.GlobalTheory.ResLift.liftsChar_of_resAt D _ PP _ (hq ▸ (hres.1 PP hPg).1) v φ hφ μ hμ
+    · exact _root_.GlobalTheory.ResLift.liftsChar_of_resAt D _ PP _ (hq ▸ (hres.1 PP hPg).2) v φ hφ μ hμ
   · intro ι hι
     have hfl := hs.choose_spec.2
     obtain ⟨e, he⟩ := GlobalTheory.T.exists_topological_iso_parahoric_chart_split_place D s j v φ ι hfl.selfDual hfl.frame hι
-    refine ⟨⟨e, he, GlobalTheory.T.parahoric_chart_integral_GL_eq_lattice_stabilizer D s j v φ ι hfl.selfDual hfl.frame hι e he, GlobalTheory.T.doublingHeight_splitPlaceChart_biInvariant_torus_value D s j v φ ι hfl.selfDual hfl.frame hι e he⟩,
+    refine ⟨⟨e, he, _root_.GlobalTheory.ChartStab.chart_stab D s j v φ ι hfl.selfDual hfl.frame hι e he, GlobalTheory.T.doublingHeight_splitPlaceChart_biInvariant_torus_value D s j v φ ι hfl.selfDual hfl.frame hι e he⟩,
       GlobalTheory.T.twisted_chain_chart_parahoric_eq_level D c w hw j hj s hs PP hPP v φ hφ ι hι, ?_⟩
     intro ξl hξ y hy d hd
     exact GlobalTheory.T.level_character_on_parahoric_chart_image D c w hw j hj s hs PP hPP v φ hφ ι hι ξl hξ y hy d hd

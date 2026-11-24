@@ -5,12 +5,12 @@ public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionFundamentalDomainInnerProductBasic
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsTestFunctionOfFockVacuumThetaFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorTestThetaZeroEqThetaSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.InnerProductTranslatedVacuaEqGaussianKernelStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUnique
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsTestFunctionOfFockVacuumThetaFunction
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorTestThetaZeroEqThetaSeries
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.InnerProductTranslatedVacuaEqGaussianKernel
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.KZeroOnFrConstEntire
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelTestFunctionMapLinearInjectiveEquivarStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelTestFunctionMapLinearInjectiveEquivar
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.WeakWeilRepCarriesDerivativesVacuaFockVectorsStatement
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HeisenbergOperatorRationalPointLaws
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalSchwartzBruhatAlgebraIntegralLinear
@@ -53,7 +53,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.Fischer
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HMatMulVecPerCrd
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinearStatement
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinear
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.ReduceModChar
@@ -224,11 +224,11 @@ theorem exists_ipO_Th (C : Ctx S T) {μ : Measure (WO S T)} {𝓕 : Set (WO S T)
   obtain ⟨⟨κ, hκ, hk⟩, -⟩ := GlobalTheory.Ker.kZero_onFr_const_entire D.host.E T.rank C.X C.g C.q0 C.hr C.bas C.idx
     S.rank C.sympl C.even
   refine ⟨a * κ, mul_ne_zero ha (by exact_mod_cast hκ.ne'), fun B hB φ hφ => ?_⟩
-  obtain ⟨hon, hdom, -⟩ := (GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2 B hB
+  obtain ⟨hon, hdom, -⟩ := (_root_.GlobalTheory.Ker.onBasis_frame_period D S T C).2 B hB
   have h0 : IsRealPt (0 : WO S T) := by
     ext i j
     simp
-  have := GlobalTheory.T.innerProduct_translated_vacua_eq_gaussianKernel D S T C μ 𝓕 hμ _ hdom _ hdom φ φ hφ hφ 0 0 h0 h0
+  have := _root_.GlobalTheory.Ker.GaussKer.ipO_rho_Th D S T C μ 𝓕 hμ _ hdom _ hdom φ φ hφ hφ 0 0 h0 h0
   have e : (fun (k : Fin S.rank) (i : Fin C.g) => conj ((0 : Fin S.rank → Fin C.g → ℂ) k i)) = 0 := by
     funext k i
     simp
@@ -239,22 +239,22 @@ theorem exists_ipO_Th (C : Ctx S T) {μ : Measure (WO S T)} {𝓕 : Set (WO S T)
 
 theorem om_real_Th : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ), IsWeak C.ψ S T om → ∀ h ∈ GinfC S, ∀ g ∈ GinfC T, ∀ B, C.IsB B → ∃ c : ℂ, ‖c‖ = 1 ∧ ∀ φ : TF S.rank C.g, SW.IsSB φ → om (h, g) (C.Th (C.xB B) φ) = c • (C.Th (C.xB (C.mvB g B)) φ) := by
   intro D S T C om hom h hh g hg B hB
-  obtain ⟨-, hdom, -, -, -, hmv⟩ := (GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2 B hB
+  obtain ⟨-, hdom, -, -, -, hmv⟩ := (_root_.GlobalTheory.Ker.onBasis_frame_period D S T C).2 B hB
   have hB' : C.IsB (C.mvB g B) := (hmv g).1
-  obtain ⟨-, hdom', -⟩ := (GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2 _ hB'
+  obtain ⟨-, hdom', -⟩ := (_root_.GlobalTheory.Ker.onBasis_frame_period D S T C).2 _ hB'
   have hth : ∀ x ∈ C.X.dom, ∀ φ : TF S.rank C.g, SW.IsSB φ → C.IsTh (C.Th x φ) :=
-    fun x hx φ hφ => (GlobalTheory.T.adelicZakTheta_exists_unique D S T C x hx φ hφ).1.1
+    fun x hx φ hφ => (_root_.GlobalTheory.Ker.ZakEx.isZak_Th D S T C x hx φ hφ).1.1
   have hex : ∀ φ : TF S.rank C.g, ∃ φ' : TF S.rank C.g, SW.IsSB φ →
       SW.IsSB φ' ∧ om (h, g) (C.Th (C.xB B) φ) = C.Th (C.xB (C.mvB g B)) φ' := by
     intro φ
     by_cases hφ : SW.IsSB φ
-    · obtain ⟨φ', h'⟩ := GlobalTheory.T.exists_testFunction_of_fockVacuum_thetaFunction D S T C _ hB' _ (hom.om_pres (h, g) _ (hth _ hdom φ hφ))
+    · obtain ⟨φ', h'⟩ := _root_.GlobalTheory.Ker.exists_test_of_fock D S T C _ hB' _ (hom.om_pres (h, g) _ (hth _ hdom φ hφ))
         (((GlobalTheory.T.weakWeilRep_carries_derivatives_vacua_fockVectors D S T C om hom h g _ (hth _ hdom φ hφ)).2 B hB).1
-          ((GlobalTheory.T.fockPolynomialVector_testTheta_zero_eq_thetaSeries D S T C).2 B hB φ hφ).1)
+          ((_root_.GlobalTheory.Ker.fvec_Th_zero D S T C).2 B hB φ hφ).1)
       exact ⟨φ', fun _ => h'⟩
     · exact ⟨φ, fun h' => absurd h' hφ⟩
   choose A hA using hex
-  have L := GlobalTheory.T.thetaKernel_testFunction_map_linear_injective_equivariant D S T C
+  have L := _root_.GlobalTheory.Ker.Ctx.th_laws D S T C
   have hadd : ∀ φ ψ : TF S.rank C.g, SW.IsSB φ → SW.IsSB ψ → SW.IsSB (φ + ψ) :=
     fun φ ψ h h' => (isSB_algebra_haar_linear _ _ _ _ _ h h').1
   have hsm : ∀ (a : ℂ) (φ : TF S.rank C.g), SW.IsSB φ → SW.IsSB (a • φ) :=

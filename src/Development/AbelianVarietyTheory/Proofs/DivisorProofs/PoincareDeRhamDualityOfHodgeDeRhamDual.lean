@@ -10,11 +10,12 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOne
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsLieBasis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeDeRhamFreeHodgeSequenceBaseChangeStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeDeRhamFreeHodgeSequenceBaseChange
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubsingletonOfFibres
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LiftLeftFst
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HodgeFiltrationsOrthogonalLineBundlePairingProduStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HodgeFiltrationsOrthogonalLineBundlePairingProdu
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsCrystalPairing
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.PoincareDeRhamDuality
 import Mathlib.Algebra.Order.Floor.Extended
@@ -265,7 +266,7 @@ theorem finrank_of_rankAtStalk {k : Type} [Field k] {M : Type*} [AddCommGroup M]
 
 theorem isPerfPair : GlobalTheory.Published.AbelianHodgeDeRham → ∀ (k : Type) [Field k] (A B : Over (Sp k)) [GrpObj A] [GrpObj B] (g : ℕ), IsAbelianScheme A → IsAbelianScheme B → SmoothOfRelativeDimension g A.hom → SmoothOfRelativeDimension g B.hom → ∀ P : LB (A ⊗ B).left, AbDual.IsPerfect A B P → ∀ φ : HdR A →ₗ[k] HdR B →ₗ[k] k, AbDual.IsCorrForm (dp0 k) (𝟙 _) A B P φ → φ.IsPerfPair := by
   intro H k _ A B _ _ g hA hB gA gB P hP φ hφ
-  obtain ⟨HF, HH, -⟩ := GlobalTheory.T.abelianSchemeDeRham_free_hodgeSequence_baseChange H
+  obtain ⟨HF, HH, -⟩ := _root_.GlobalTheory.abelianDeRham_free_hodge_baseChange H
   obtain ⟨fA, -, rA⟩ := GlobalTheory.Published.AbelianDeRham.Free.prim HF hA gA
   obtain ⟨fB, -, rB⟩ := GlobalTheory.Published.AbelianDeRham.Free.prim HF hB gB
   obtain ⟨-, -, fFA, -, rFA⟩ := HH k A g hA gA
@@ -428,7 +429,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem GlobalTheory.AbDual.isPerfPair_of_abelianHodgeDeRham : GlobalTheory.Published.AbelianHodgeDeRham → ∀ (R : Type) [CommRing R] (A B : Over (Sp R)) [GrpObj A] [GrpObj B] (g : ℕ), IsAbelianScheme A → IsAbelianScheme B → SmoothOfRelativeDimension g A.hom → SmoothOfRelativeDimension g B.hom → ∀ P : LB (A ⊗ B).left, AbDual.IsPerfect A B P → ∀ φ : HdR A →ₗ[R] HdR B →ₗ[R] R, AbDual.IsCorrForm (dp0 R) (𝟙 _) A B P φ → φ.IsPerfPair := by
   intro H R _ A B _ _ g hA hB hgA hgB P hP φ hφ
-  obtain ⟨Fr, -, BC⟩ := GlobalTheory.T.abelianSchemeDeRham_free_hodgeSequence_baseChange H
+  obtain ⟨Fr, -, BC⟩ := _root_.GlobalTheory.abelianDeRham_free_hodge_baseChange H
   obtain ⟨fA, pA, -⟩ := Published.AbelianDeRham.Free.prim Fr hA hgA
   obtain ⟨fB, pB, -⟩ := Published.AbelianDeRham.Free.prim Fr hB hgB
   refine GlobalTheory.T.isPerfectPair_of_geometric_fibres R (primDR A) (primDR B) φ ?_
@@ -485,7 +486,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 theorem GlobalTheory.PtExt.perfect_and_orthogonal : GlobalTheory.Published.AbelianHodgeDeRham → ∀ (R : Type) [CommRing R] (A B : Over (Sp R)) [GrpObj A] [GrpObj B] (g : ℕ), IsAbelianScheme A → IsAbelianScheme B → SmoothOfRelativeDimension g A.hom → SmoothOfRelativeDimension g B.hom → ∀ P : LB (A ⊗ B).left, AbDual.IsPerfect A B P → ∀ φ : HdR A →ₗ[R] HdR B →ₗ[R] R, AbDual.IsCorrForm (dp0 R) (𝟙 _) A B P φ → φ.IsPerfPair ∧ ∀ x ∈ Fil A, ∀ y ∈ Fil B, φ x y = 0 := by
   intro hHdR R _ A B _ _ g hA hB hgA hgB P hP φ hφ
   exact ⟨GlobalTheory.T.pairing_isPerfect_abelianSchemes_both_kernels_zero hHdR R A B g hA hB hgA hgB P hP φ hφ,
-    GlobalTheory.T.hodgeFiltrations_orthogonal_lineBundlePairing_product hHdR R A B g hA hB hgA hgB P hP.isLB φ hφ⟩
+    _root_.GlobalTheory.PtExt.HodgeOrth.fil_orthogonal hHdR R A B g hA hB hgA hgB P hP.isLB φ hφ⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeRhamPairingPerfectOrthogonalOfKernelsZero =====

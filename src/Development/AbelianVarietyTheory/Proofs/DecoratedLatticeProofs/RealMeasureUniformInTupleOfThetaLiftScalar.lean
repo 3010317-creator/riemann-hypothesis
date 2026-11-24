@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.StepExactNS
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.RealLowestKTypeCoeffSquareIntegrable
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PushforwardHaarRealPointsTimesLevel
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageFiniteLevelEqProductLocalLevelsStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsLevMeas
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageFiniteLevelEqProductLocalLevels
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicTransportMeasureSecond
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCompactAdele
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
@@ -213,7 +214,7 @@ theorem one_real_measure : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T 
   · exact ⟨0, fun t => (hT ⟨t⟩).elim⟩
   obtain ⟨t₀⟩ := hT
   have hlev : ∀ t, ∃ mR, IsLevMeas (stY R t j) mR := fun t =>
-    (GlobalTheory.T.thetaChainStage_finiteLevel_eq_product_localLevels D (comR R t) (twR R t) (hC hR t).1 j hj.le (stY R t j) ((hC hR t).2.1 j hj)).2.2.2.2.2
+    (_root_.GlobalTheory.ChainTw.LevLoc.levLoc D (comR R t) (twR R t) (hC hR t).1 j hj.le (stY R t j) ((hC hR t).2.1 j hj)).2.2.2.2.2
   choose mR hmR using hlev
   obtain ⟨good, hgood, hW⟩ := models_good R hG.core.models j hj
   have hmap : ∀ t, mR t = Measure.map (GlobalTheory.AutMult.toInf (Yc D j))

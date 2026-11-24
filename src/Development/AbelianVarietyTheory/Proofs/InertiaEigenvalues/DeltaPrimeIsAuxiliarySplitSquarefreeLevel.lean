@@ -15,7 +15,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DictionaryCh
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtensionOfLowSmoothLines
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicCuspSectionsLeSpanAlgebraicCuspForms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KapTopLastPosRun
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterEmbeddingCompatStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.FWExist
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterEmbeddingCompat
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsHalfOfAuxiliarySplitLevel
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsScaleOfChar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPrimitiveRootInRayClassFieldNatModulus
@@ -67,9 +68,10 @@ import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.DatEqZero
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHalfOfBasePins
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TameHeckeCharTrivialOnFiniteUnitsCongOne
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGoodCoverGalois
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockHarmonicValueSpaceMapEqDualWeylModuleFunctioStatement
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TranslateMemCoefLatFn
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockHarmonicValueSpaceMapEqDualWeylModuleFunctio
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodBaseDataWeightEqLiftCoeffModuleWeight
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunctionStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunction
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousCoeffBlockAct
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdjointHalfDatumStabilizerPairMove
@@ -452,7 +454,7 @@ theorem exists_sum_evW (hti : TieIn T Rl.toRealDat κ v₀) (hnV : 8 * D.R.f * D
           ψ (a * c) = ψ a := by
       rintro V _ rfl ψ a c h
       exact h
-    exact key hV φ' g k (hinv _ ((GlobalTheory.T.level_character_embedding_compat T Rl.toRealDat κ v₀ hlev hti hpb j T.σ₀ T.toCore.good_σ₀ hV _).2
+    exact key hV φ' g k (hinv _ ((_root_.GlobalTheory.LiftLevel.isLift_one_iff_mem_level T Rl.toRealDat κ v₀ hlev hti hpb j T.σ₀ T.toCore.good_σ₀ hV _).2
       (by rw [hkk]; exact hk)) _)
   obtain ⟨m, xs, ψ, hψ, hφeq⟩ := GlobalTheory.CoverFormDesc.cover_form_desc D T hT _ hInR T.σ₀ T.toCore.good_σ₀ C hC.1 (wtA (κ j)) (κ j).n
     (dom_wtA _) (hC.2.1 _ (dom_wtA _)) hspan (mu_level hlev hti j) φ' hφ'm hinv'
@@ -618,7 +620,7 @@ theorem ratBase_of_readsAs (hRF : GlobalTheory.NT.RayField) {F : Face D A3.A} (h
     have h2 := Formalism.BasicNotions.sig_sum _ hB.sigOK (tauE D τ)
     rw [← hB.sig τ] at h2
     exact h2.le
-  have hinj := GlobalTheory.T.harmonic_polynomial_eq_zero_of_function D _ _ (ρ.B i j b).w (ρ.B i j b).F.BS hB.wt hm
+  have hinj := _root_.GlobalTheory.ExportSeries.HarmInj.harm_inj D _ _ (ρ.B i j b).w (ρ.B i j b).F.BS hB.wt hm
   intro s h P hd
   refine mem_range_of_small _ ((ρ.B i j b).theta (ρ.om i j b 1) h) hinj (fun G => ?_) (fun P hP G hPG => ?_) hd.mem
   · have h3 : coefFn (embLL0 D) (ρ.B i j b).w.lam (G : Pol ↥D.LL0 D.what₂.Tau (Vc D j).rank) ∈

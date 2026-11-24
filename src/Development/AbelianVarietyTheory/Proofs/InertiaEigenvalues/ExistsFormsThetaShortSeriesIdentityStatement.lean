@@ -22,7 +22,10 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SqNorm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenMapTranspose
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSelfDualCHLat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolyDerivCompNeg
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationSplitSupportProjectsVacuumStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PerCEmb
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MarkAd
+public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationSplitSupportProjectsVacuum
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValRingLocRing
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BddGood
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
@@ -77,7 +80,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Definitions.Divisors.PerCEmb
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnivOfNotLinearIndependent
 import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.DatEqZero
 import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
@@ -512,7 +514,7 @@ theorem thetaKO_transSum_eq_short_series : ∀ (D : D7) (H : Geo.Tor.Host D.host
       L₀ = Submodule.span (𝓞 D.host.E)
         {w | ∃ a : D.host.E, a ∈ D.host.AA ∧ ∃ v ∈ Bridge.hLat W (fin W k), w = a • v} →
       latR hr (latG W k) = latR hr L₀ := fun L₀ h₀ => by rw [h₀, hlat]
-  have hcl := GlobalTheory.T.weilRepresentation_split_support_projects_vacuum D _ _ _ _ _ _ _ hP _ g hr X bas idx hM hS H hrt _ _ Λ.La _ hV0 hVs hks hVstd hL _ _ hx'
+  have hcl := _root_.GlobalTheory.AdTh.SplitClass.om_reads_projA D _ _ _ _ _ _ _ hP _ g hr X bas idx hM hS H hrt _ _ Λ.La _ hV0 hVs hks hVstd hL _ _ hx'
     (isInvOf_move hr X hinv k) _ hvac' _ hR e' Ps h y he' hsupp hdet hΛ
   rw [← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, mul_one, one_mul, projA_smul, smul_smul] at hcl
   obtain ⟨-, hsd, huni, hfg⟩ := LatOf.isLatOf_tens D _ _ _ _ _ g hr X bas idx hψ hP.inf hP.std hP.even hM hS

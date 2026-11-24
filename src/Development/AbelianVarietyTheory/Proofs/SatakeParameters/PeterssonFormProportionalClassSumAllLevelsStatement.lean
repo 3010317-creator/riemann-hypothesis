@@ -4,9 +4,9 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.Normal
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaIntegralVacuumIntertwinesSphericalHecke
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffDerivSnoc
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FockVectorsChainIsVacuumOffThetaLevelsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FockVectorsChainIsVacuumOffThetaLevels
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IdemOfIsPrimeIdem
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelOperatorsAtPrimeOffLevelDatumStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelOperatorsAtPrimeOffLevelDatum
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MultiplicitySpaceEqZeroOfApplyNonzeroTensorZero
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaChainLastStepIntertwinesMatchedHecke
 import Mathlib.Algebra.Order.Floor.Extended
@@ -44,7 +44,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesPropertiesStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
 import Mathlib.RingTheory.PiTensorProduct
 import Mathlib.Tactic.ReduceModChar
 
@@ -98,7 +98,7 @@ theorem step_hk : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {
   intro D G _ _ Pl0 T A Ks _ _ _ R F hI hC hS t P k hG hkk hF cS cT hM U U' hU v
   classical
   have hθ : IsInfFam R.θ := hC.models.inf
-  have hN := ((GlobalTheory.T.theta_lift_levels_good_primes_properties R F hC.lev).2.1 t P hG).1
+  have hN := ((_root_.GlobalTheory.GoodPrimes.good_primes R F hC.lev).2.1 t P hG).1
   have hio := hC.chain.ioY t k (by omega)
   obtain ⟨hνH, hνF⟩ := haar_fd R hC.models t (k + 1) hkk
   obtain ⟨hμH, hμF⟩ := haar_fd R hC.models t k (by omega)
@@ -108,7 +108,7 @@ theorem step_hk : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {
         postOn (R.MY j) (hk _ P c) U ∈ Mult R.θ (R.MY j) (levS _ (R.βY j) (R.datYt t j R.triv)) (levChi _ (R.βY j) (R.datYt t j R.triv)) := by
     intro j hj
     obtain ⟨c, hb⟩ := hC.lev.βY j hj
-    have h := GlobalTheory.T.level_operators_at_prime_off_level_datum (Yc D j) (R.βY j) (R.ΛY j) _ (R.datYt t j R.triv) hb P (by
+    have h := _root_.GlobalTheory.LevOp.level_operators (Yc D j) (R.βY j) (R.ΛY j) _ (R.datYt t j R.triv) hb P (by
       rw [Nat.cast_pow]
       exact fun h => hN (P.isPrime.mem_of_pow_mem _ h)) hG
     exact ⟨h.1, fun c U hU => h.2.2.2.2 _ R.θ (R.MY j) c hθ U hU⟩
@@ -124,7 +124,7 @@ theorem step_hk : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {
   have hmap := (GlobalTheory.MultMem.mem_mult_iff _ _ _ _ _ _ _ _).1 ((mem_multT R.θ _ _ _ _).1 U.2)
   have key : ∀ φ x, (R.ioY t k U').1 (R.ItY k φ (PiTensorProduct.tprod ℂ x)) = w.1 (R.ItY k φ (PiTensorProduct.tprod ℂ x)) := by
     intro φ x
-    have hvac := (GlobalTheory.T.fockVectors_chain_isVacuum_off_thetaLevels R F hC t P hG).1 k hkk φ
+    have hvac := (_root_.GlobalTheory.VacGood.fock_vacua_good R F hC t P hG).1 k hkk φ
     have e' : (R.ioY t k U').1 (R.ItY k φ (PiTensorProduct.tprod ℂ x)) =
         Lift.liftInt (R.νY t (k + 1)) (R.fdY t (k + 1)) (thetaKO (R.ωY t k)) (R.ptY t k φ) (U'.1 (PiTensorProduct.tprod ℂ x)) :=
       funext fun g => (hio.eq U' φ _ g).symm
@@ -266,9 +266,9 @@ theorem compositeLift_relation_passes_to_rows (F : Face D A) (hl : R.toLevCh.Is 
     (v : (R.MY 0).Vec) :
     R.e0 (hk _ P c (U.1 (PiTensorProduct.tprod ℂ v))) = hk _ P c (R.e0 (U.1 (PiTensorProduct.tprod ℂ v))) := by
   obtain ⟨n, hn⟩ := hl.βY 0 (by have := D.R.two_le_m; omega)
-  have hN := natCast_pow_notMem P ((GlobalTheory.T.theta_lift_levels_good_primes_properties R F hl).2.1 t P hP).1 n
-  have h1 := (GlobalTheory.T.level_operators_at_prime_off_level_datum _ _ _ _ (R.datYt t 0 R.triv) hn P hN hP).1
-  have h2 := (GlobalTheory.T.level_operators_at_prime_off_level_datum _ _ _ _ (R.dat0 R.triv) hn P hN fun PP h =>
+  have hN := natCast_pow_notMem P ((_root_.GlobalTheory.GoodPrimes.good_primes R F hl).2.1 t P hP).1 n
+  have h1 := (_root_.GlobalTheory.LevOp.level_operators _ _ _ _ (R.datYt t 0 R.triv) hn P hN hP).1
+  have h2 := (_root_.GlobalTheory.LevOp.level_operators _ _ _ _ (R.dat0 R.triv) hn P hN fun PP h =>
     hP PP (Or.inl (h.resolve_right (Finset.notMem_empty PP)))).2.2.2.1
   have h3 := mult_level _ _ _ _ _ ((mem_multT R.θ (R.MY 0) _ _ _).1 U.2) v
   refine gaL_comm _ _ _ _ _ _ _ fun g0 => h2 c g0 _ fun k hk h => ?_

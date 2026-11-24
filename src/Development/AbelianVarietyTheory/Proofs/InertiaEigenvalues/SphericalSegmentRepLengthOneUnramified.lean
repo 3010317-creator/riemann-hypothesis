@@ -7,9 +7,10 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsUnram
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.LanglandsMultisegments
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.StandardCosocleGL
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLanglandsClassificationDetCharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSphericalFactorOfSphericalSubquotientStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSphericalFactorOfSphericalSubquotient
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSubquotientUnramPrinSeriesOfHasSupport
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyEquivOfSameSatakeParametersStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NontrivialOfIrreducible
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyEquivOfSameSatakeParameters
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -100,7 +101,7 @@ theorem len_eq_one_and_isUnramChar : LanglandsMultisegments → StandardCosocleG
   obtain ⟨N, c⟩ := y
   obtain ⟨hd, hc⟩ := id hL
   have hsub : IsSubquotient c.rep.ρ (prodIrr Δ.term hd) := hc.isSubquotient
-  have hsph := GlobalTheory.T.isSpherical_factor_of_spherical_subquotient k Δ.len N Δ.term hd _ c.rep.ρ hsub hS
+  have hsph := _root_.GlobalTheory.LocLanglands.SphFac.isSpherical_factor k Δ.len N Δ.term hd _ c.rep.ρ hsub hS
   have h0 : Δ.term ⟨0, Δ.len_pos⟩ = Δ.first := by simp [Segment.term]
   have key : ∀ x z : IrrGL (k := k), x = z → IsSpherical x.rep → IsSpherical z.rep := by
     rintro _ _ rfl h; exact h
@@ -142,7 +143,7 @@ theorem len_eq_one_and_isUnramChar : LanglandsMultisegments → StandardCosocleG
   have hB : HasSatake (IrrRep.det (Fin Δ.len) χ' hχs).ρ α :=
     ⟨(IrrRep.det (Fin Δ.len) χ' hχs).irr, isSpherical_detRep hu',
       by rw [heq]; exact (IsSubquotient.of_injective f hf).trans hP'⟩
-  obtain ⟨E⟩ := GlobalTheory.T.nonempty_equiv_of_same_satakeParameters hBZ k Δ.len α c.rep (IrrRep.det (Fin Δ.len) χ' hχs) hA hB
+  obtain ⟨E⟩ := _root_.GlobalTheory.SmGL.SphUniq.equiv_of_hasSatake hBZ k Δ.len α c.rep (IrrRep.det (Fin Δ.len) χ' hχs) hA hB
   have hL2 := (GlobalTheory.T.isLanglandsClassification_detCharacter hSC k Δ.len χ' hχs).of_equiv E.symm
   have hL1 := hL.isL
   have hm := (hLM k).1 _ _ ⟨Δ.len, c⟩ hL1 hL2

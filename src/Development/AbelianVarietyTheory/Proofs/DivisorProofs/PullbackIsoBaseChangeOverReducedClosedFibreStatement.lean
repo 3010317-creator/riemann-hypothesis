@@ -12,7 +12,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpMapFieldEx
 public import Mathlib.AlgebraicGeometry.Morphisms.Immersion
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsLiftClosedImmersionOfDense
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TateProductRigidificationTrivial
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedPointRangeEqFixedGroupImageStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedPointRangeEqFixedGroupImage
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -358,7 +358,7 @@ theorem Emb.pullback_iso_of_closed (R : Type) [CommRing R] [IsLocalRing R] (S : 
   haveI : IsReduced (pullback G'.hom t) := GlobalTheory.isReduced_of_smooth_of_isReduced (pullback.snd G'.hom t)
   have hrj : Set.range (l ≫ E.f) ⊆ Set.range E.j := by
     rintro _ ⟨w, rfl⟩
-    obtain ⟨y, hy⟩ := (GlobalTheory.T.closedPoint_range_eq_fixedGroup_image R S π G' E).1 (l w) (by
+    obtain ⟨y, hy⟩ := (_root_.GlobalTheory.Mum.Emb.range_closed R S π G' E).1 (l w) (by
       have e1 : E.H.ι (l w) = pullback.fst G'.hom t w := by rw [← Scheme.Hom.comp_apply, hl]
       rw [e1]; exact hclosed w)
     exact ⟨y, by rw [Scheme.Hom.comp_apply, hy]⟩

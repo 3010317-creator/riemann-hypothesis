@@ -13,7 +13,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraitTorsion
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.GmMulEqOfResMulEq
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ValEqOfAppInjective
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationAdjointEndomorphismsCommute
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusCoordinatesCompareNormalisedGeneratorsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusCoordinatesCompareNormalisedGenerators
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.NonemptyCubicalPull
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -59,8 +59,8 @@ import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IsAdicColimitOfFactor
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AdicBaseEmbedsValuationAlgebraicClosure
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationEndomorphismsToCompleteDvrStatement
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTorsionIdentificationWithPairingStatement
+import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTorsionIdentificationWithPairing
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.RegularLocalRing.Defs
 
@@ -526,8 +526,8 @@ theorem exists_key : ∀ (R : Type) [CommRing R] [IsDomain R] [CharZero R] (I : 
   have hR' : AdmBase V (maximalIdeal V) := ⟨inferInstance, inferInstance, inferInstance, hV⟩
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible V
   obtain ⟨v, hv⟩ := GlobalTheory.adic_base_embeds_valuation_algebraic_closure.2 V ϖ hϖ
-  obtain ⟨D₁', hD₁, A₁', U₁', hG₁', hU₁, hpt₁, -⟩ := GlobalTheory.T.uniformisation_endomorphisms_to_complete_dvr hL R I hR D₁ A₁ G₁ hG₁ U₁ V φ hV hφ hI
-  obtain ⟨D₂', hD₂, A₂', U₂', hG₂', hU₂, hpt₂, -⟩ := GlobalTheory.T.uniformisation_endomorphisms_to_complete_dvr hL R I hR D₂ A₂ G₂ hG₂ U₂ V φ hV hφ hI
+  obtain ⟨D₁', hD₁, A₁', U₁', hG₁', hU₁, hpt₁, -⟩ := _root_.GlobalTheory.UT.EndBaseChange.main hL R I hR D₁ A₁ G₁ hG₁ U₁ V φ hV hφ hI
+  obtain ⟨D₂', hD₂, A₂', U₂', hG₂', hU₂, hpt₂, -⟩ := _root_.GlobalTheory.UT.EndBaseChange.main hL R I hR D₂ A₂ G₂ hG₂ U₂ V φ hV hφ hI
   let Ω := AlgebraicClosure (FractionRing V)
   let ψ : R →+* Ω := ((algebraMap (FractionRing V) Ω).comp (algebraMap V (FractionRing V))).comp φ
   have hψ : Function.Injective ψ :=
@@ -539,7 +539,7 @@ theorem exists_key : ∀ (R : Type) [CommRing R] [IsDomain R] [CharZero R] (I : 
   obtain ⟨ex₂, sur₂, io₂, ns₂⟩ := hpt₂ Ω hF
   obtain ⟨b', h', hlin', hb', hh'⟩ := GlobalTheory.T.uniformisedGroupHom_pullback_maps R V I (maximalIdeal V) φ D₁ D₂ A₁ A₂ G₁ G₂ U₁ U₂ D₁' D₂' A₁' A₂'
     hD₁ hD₂ U₁' U₂' hU₁ hU₂ a b h hlin
-  have hcoord' := GlobalTheory.T.torusCoordinates_compare_normalisedGenerators V (maximalIdeal V) hR' D₁' D₂' A₁' A₂' _ _ U₁'.toUnifPre U₂'.toUnifPre
+  have hcoord' := _root_.GlobalTheory.Mum.Two.coord_of_lin V (maximalIdeal V) hR' D₁' D₂' A₁' A₂' _ _ U₁'.toUnifPre U₂'.toUnifPre
     ((Over.pullback (specOf φ)).map a) b' h' hlin'
   let c' : A₁'.A ⟶ A₂'.A := U₁'.gen.inv ≫ (Over.pullback (jK V)).map ((Over.pullback (specOf φ)).map a) ≫ U₂'.gen.hom
   have hgen' : Gen₀ U₁'.toUnifPre U₂'.toUnifPre ((Over.pullback (specOf φ)).map a) c' := by
@@ -573,8 +573,8 @@ theorem exists_key : ∀ (R : Type) [CommRing R] [IsDomain R] [CharZero R] (I : 
     obtain ⟨s, hs, -⟩ := sur₂ s'
     exact ⟨s, (ns₂ k _ _ _ _ (hπ₂ g') hs).2 (rg ▸ h1), (io₂ _ _ _ hs).2 h2⟩⟩
   refine ⟨p', rfl, ?_⟩
-  obtain ⟨f₂, hf₂, -⟩ := GlobalTheory.T.uniformisation_torsion_identification_with_pairing hL R I hR D₂ A₂ G₂ hG₂ U₂ Ω k hk
-  obtain ⟨f₂', hf₂', -⟩ := GlobalTheory.T.uniformisation_torsion_identification_with_pairing hL V _ hR' D₂' A₂' _ hG₂' U₂' Ω k hk
+  obtain ⟨f₂, hf₂, -⟩ := _root_.GlobalTheory.TorsionIso.torsion_eq hL R I hR D₂ A₂ G₂ hG₂ U₂ Ω k hk
+  obtain ⟨f₂', hf₂', -⟩ := _root_.GlobalTheory.TorsionIso.torsion_eq hL V _ hR' D₂' A₂' _ hG₂' U₂' Ω k hk
   obtain ⟨z', hz'e⟩ := exists_toG_pull φ U₂.toUnifPre U₂'.toUnifPre hF (f₂ p')
   have hz' : QkToAkU U₂'.toUnifPre Ω k r z' :=
     hL.2.2.2.2.qkBaseChange R V I _ hR hR' φ D₂ A₂ G₂ U₂ _ (Iso.refl _) (inferInstanceAs (IsMonHom (𝟙 _))) A₂' D₂'

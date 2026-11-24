@@ -3,12 +3,13 @@ module
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDescentOfEqualisedProperCoverNormalStatement
-public import Mathlib.AlgebraicGeometry.Geometrically.Connected
+public import Mathlib.AlgebraicGeometry.Morphisms.Flat
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDescentOfEqualisedProperCoverNormal
+public import Mathlib.AlgebraicGeometry.Geometrically.Connected
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ProdSurjectiveGeometricPoints
 public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
-public import Mathlib.AlgebraicGeometry.Morphisms.Proper
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabPull
 public import Mathlib.AlgebraicGeometry.Morphisms.UniversallyClosed
 public import Mathlib.CategoryTheory.MorphismProperty.Descent
@@ -97,7 +98,7 @@ theorem ext_of_pts (hP : IsProper π) (hS : Surjective π) (hI : IsIntegral S) {
   have key : pullback.fst Y.hom π ≫ f₁.left = pullback.fst Y.hom π ≫ f₂.left := by
     have := h (Over.mk (pullback.snd Y.hom π)) (Over.homMk (pullback.fst Y.hom π) pullback.condition)
     simpa using congrArg CommaMorphism.left this
-  obtain ⟨h₀, _, hu⟩ := GlobalTheory.T.exists_descent_of_equalised_proper_cover_normal R S Y.left (pullback Y.hom π) W.left π Y.hom (pullback.fst Y.hom π)
+  obtain ⟨h₀, _, hu⟩ := _root_.GlobalTheory.MorDescent.descend R S Y.left (pullback Y.hom π) W.left π Y.hom (pullback.fst Y.hom π)
     (pullback.snd Y.hom π) hP hS hI hY hpb (pullback.fst Y.hom π ≫ f₁.left)
     (by rw [← Category.assoc, ← Category.assoc, pullback.condition])
   ext
@@ -333,7 +334,7 @@ theorem inv_pullback_left_fst {X Y : Scheme.{0}} (f : X ⟶ Y) (G' : Over Y) [Gr
 theorem exists_inv_descent : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [IsIntegrallyClosed R] (S : Scheme.{0}) (π : S ⟶ Sp R), IsProper π → Surjective π → IsIntegral S → ∀ (G' : Over S) [GrpObj G'] (G : Over (Sp R)) (β : G'.left ⟶ G.left), Smooth G.hom → IsPullback β G'.hom G.hom π → ∀ φ : (Over.pullback (pullback.fst π π)).obj G' ≅ (Over.pullback (pullback.snd π π)).obj G', IsMonHom φ.hom → pullback.fst G'.hom (pullback.fst π π) ≫ β = φ.hom.left ≫ pullback.fst G'.hom (pullback.snd π π) ≫ β → ∃ i : G ⟶ G, ∀ (T : Over S) (x : T ⟶ G') (x₀ : Over.mk (T.hom ≫ π) ⟶ G), x₀.left = x.left ≫ β → (x₀ ≫ i).left = x⁻¹.left ≫ β := by
   intro R _ _ _ _ S π hP hS hI G' _ G β hsm hpb φ hφ hc
   have hfl : Flat G.hom := inferInstance
-  have D := fun (W : Scheme.{0}) => GlobalTheory.T.exists_descent_of_equalised_proper_cover_normal R S G.left G'.left W π G.hom β G'.hom hP hS hI hfl hpb
+  have D := fun (W : Scheme.{0}) => _root_.GlobalTheory.MorDescent.descend R S G.left G'.left W π G.hom β G'.hom hP hS hI hfl hpb
   have epi : ∀ {W : Scheme.{0}} (a b : G.left ⟶ W), β ≫ a = β ≫ b → a = b := by
     intro W a b hab
     obtain ⟨h₀, -, hu⟩ := D W (β ≫ a) (by rw [pullback.condition_assoc])
@@ -465,7 +466,7 @@ theorem mul_descends : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRin
 
   have hepi : ∀ {W : Scheme.{0}} (a b : (G ⊗ G).left ⟶ W), p ≫ a = p ≫ b → a = b := by
     intro W a b hab
-    obtain ⟨c, -, hc⟩ := GlobalTheory.T.exists_descent_of_equalised_proper_cover_normal R S _ _ W π _ p _ hprop hsurj hint hflat hpb (p ≫ a)
+    obtain ⟨c, -, hc⟩ := _root_.GlobalTheory.MorDescent.descend R S _ _ W π _ p _ hprop hsurj hint hflat hpb (p ≫ a)
       (by rw [← Category.assoc, pullback.condition, Category.assoc])
     exact (hc a rfl).trans (hc b hab.symm).symm
 
@@ -509,7 +510,7 @@ theorem mul_descends : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRin
     rw [← Category.assoc f₁, ← e₁, ← Category.assoc f₂, ← e₂, ← hAB, Over.comp_left]
     simp only [Category.assoc]
     rw [hdat]
-  obtain ⟨h₀, hh₀, -⟩ := GlobalTheory.T.exists_descent_of_equalised_proper_cover_normal R S _ _ _ π _ p _ hprop hsurj hint hflat hpb (μ[G'].left ≫ β) heq
+  obtain ⟨h₀, hh₀, -⟩ := _root_.GlobalTheory.MorDescent.descend R S _ _ _ π _ p _ hprop hsurj hint hflat hpb (μ[G'].left ≫ β) heq
   have hover : h₀ ≫ G.hom = (G ⊗ G).hom := by
     apply hepi
     rw [← Category.assoc, hh₀, Category.assoc, hβ.w, ← Category.assoc, Over.w μ[G'], hpb.w]
@@ -587,11 +588,11 @@ theorem descend_one : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing
       _ = (η : _ ⟶ (Over.pullback (pullback.fst π π)).obj G').left ≫ φ.hom.left ≫
             pullback.fst G'.hom (pullback.snd π π) ≫ β := by rw [hc]
       _ = pullback.snd π π ≫ (η[G'].left ≫ β) := by rw [reassoc_of% hu, reassoc_of% h2]
-  obtain ⟨h₀, hh₀, -⟩ := GlobalTheory.T.exists_descent_of_equalised_proper_cover_normal R S (Sp R) S G.left π (𝟙 _) π (𝟙 S) hP hS hI hfl sq _ heq
+  obtain ⟨h₀, hh₀, -⟩ := _root_.GlobalTheory.MorDescent.descend R S (Sp R) S G.left π (𝟙 _) π (𝟙 S) hP hS hI hfl sq _ heq
 
   have hepi : ∀ {W : Scheme.{0}} (a b : Sp R ⟶ W), π ≫ a = π ≫ b → a = b := by
     intro W a b hab
-    obtain ⟨c, -, hc'⟩ := GlobalTheory.T.exists_descent_of_equalised_proper_cover_normal R S (Sp R) S W π (𝟙 _) π (𝟙 S) hP hS hI hfl sq (π ≫ a)
+    obtain ⟨c, -, hc'⟩ := _root_.GlobalTheory.MorDescent.descend R S (Sp R) S W π (𝟙 _) π (𝟙 S) hP hS hI hfl sq (π ≫ a)
       (by rw [pullback.condition_assoc])
     exact (hc' a rfl).trans (hc' b hab.symm).symm
   have hsec : h₀ ≫ G.hom = 𝟙 (Sp R) := by

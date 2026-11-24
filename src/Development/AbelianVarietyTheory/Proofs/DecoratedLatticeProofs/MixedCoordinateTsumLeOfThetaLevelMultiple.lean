@@ -7,9 +7,11 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.RealSiz
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOneIntegralAdd
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TsumAdelicMatrixSchwartzMajorantRationalNeTop
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FiniteAnnihilatorOpenSubgroupInBoxStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorThetaFunctionalMixedSourceModeStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinateDecayRealEntriesStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittDecompSymplInclIsotropicInclAnisotropic
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FiniteAnnihilatorOpenSubgroupInBox
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorThetaFunctionalMixedSourceMode
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinateDecayRealEntries
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EventuallyWeilMatrixCoeffFinitePointInvariant
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsAdeleRingTensorEquivInfiniteProdFinite
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsOpenNsmulAdelicCompletionOfVectorSet
@@ -52,7 +54,6 @@ import Mathlib.Topology.Sheaves.Init
 import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittSmallGroupEmbeddingMemPointwiseStabilizerIso
 import Mathlib.Tactic.Linter.Style
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsOpenAddSubgroupFinitePoints, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsOpenAddSubgroupFinitePointsStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TsumAdelicMatrixSchwartzMajorantRationalNeTopStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinateTsumLeOfThetaLevelMultiple
@@ -233,8 +234,8 @@ theorem mixS_tsum_le : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar 
   obtain ⟨k, hk⟩ := GlobalTheory.T.tsum_adelicMatrixSchwartzMajorant_rational_ne_top D θ hθ T.rank ρ
   refine ⟨k, fun K₀ hK₀ => ?_⟩
   obtain ⟨U, hUo, hU⟩ := finite_points_in_nhds D T.rank S.rank K₀ hK₀
-  obtain ⟨K, hKc, hK⟩ := GlobalTheory.T.finiteAnnihilator_open_subgroup_in_box D ψ hψ S S₀ T ρ d U hUo
-  obtain ⟨C₁, hC₁⟩ := GlobalTheory.T.mixedCoordinate_decay_realEntries D ψ hψ θ hθ S S₀ T ρ d v k
+  obtain ⟨K, hKc, hK⟩ := _root_.GlobalTheory.AnnihBox.annihilator_inBox D ψ hψ S S₀ T ρ d U hUo
+  obtain ⟨C₁, hC₁⟩ := _root_.GlobalTheory.Unf.mixS_decay D ψ hψ θ hθ S S₀ T ρ d v k
   have hM := hk K hKc
   refine ⟨C₁ * (∑' y : ratMx D T.rank ρ, ENNReal.ofReal (maj θ K k y)).toNNReal, fun n hn f hf hfix w => ?_⟩
   have hpt : ∀ x : Mx D T.rank ρ, ‖d.mixS T ψ v.μ v.𝓕 f x w‖ₑ ≤
@@ -249,7 +250,7 @@ theorem mixS_tsum_le : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar 
       have hfin : (d.extY T a).map (infPart D) = 0 := by
         rw [HypDec.extY_apply, Matrix.map_mul, ha, Matrix.zero_mul]
       have hfix' := hfix _ (hU _ haU hfin) hfin
-      have h2 := congrFun ((GlobalTheory.T.heisenbergOperator_thetaFunctional_mixedSourceModel D ψ hψ S S₀ T ρ d v f hf).2.1 x (n • a)) w
+      have h2 := congrFun ((_root_.GlobalTheory.HeisMixSource.heis_mixS D ψ hψ S S₀ T ρ d v f hf).2.1 x (n • a)) w
       rw [map_nsmul, hfix', Pi.smul_apply, smul_eq_mul] at h2
       have h3 : ψ (symplO S T (d.extX T x) (n • d.extY T a)) = 1 :=
         mul_right_cancel₀ h0 (h2.symm.trans (one_mul _).symm)

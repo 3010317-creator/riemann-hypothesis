@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaInnerProductEqRealTorusMean
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUniqueStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUnique
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.Fischer
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.MeanRealTorusNormalisedThetaMulConj
 import Mathlib.Algebra.Order.Floor.Extended
@@ -39,9 +39,9 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPointsClassicalModelRealVectorSpaceStatement
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPointsClassicalModelRealVectorSpace
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SymplecticCharacterRealFinitePointsMatchStatement
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionSpaceHeisenbergLawsStatement
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionSpaceHeisenbergLaws
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaInnerProductEqRealTorusMeanStatement, Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.InnerProductTranslatedVacuaEqGaussianKernel
@@ -91,11 +91,11 @@ theorem isRealPt_add {D : D7} {S T : HSp D} {w w' : WO S T} (h : IsRealPt w) (h'
 
 theorem ipO_rho_Th : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ (μ : Measure (WO S T)) (𝓕 : Set (WO S T)), IsCovolOne (ratL T S) μ 𝓕 → ∀ x₁ ∈ C.X.dom, ∀ x₂ ∈ C.X.dom, ∀ φ₁ φ₂ : TF S.rank C.g, SW.IsSB φ₁ → SW.IsSB φ₂ → ∀ w₁ w₂, IsRealPt w₁ → IsRealPt w₂ → ipO μ 𝓕 (C.rho w₁ (C.Th x₁ φ₁)) (C.rho w₂ (C.Th x₂ φ₂)) = dbl C.X C.bas C.idx φ₁ φ₂ 0 * (gaussR C.X C.bas C.idx x₁ (C.zOf x₁ w₁) * conj (gaussR C.X C.bas C.idx x₂ (C.zOf x₂ w₂)) * kZero C.X C.idx x₁ x₂ (C.zOf x₁ w₁) (fun k i => conj (C.zOf x₂ w₂ k i))) := by
   intro D S T C μ 𝓕 hF x₁ hx₁ x₂ hx₂ φ₁ φ₂ hφ₁ hφ₂ w₁ w₂ hw₁ hw₂
-  obtain ⟨R, -, -, hadd, -⟩ := GlobalTheory.T.realPoints_classicalModel_realVectorSpace D S T C
+  obtain ⟨R, -, -, hadd, -⟩ := _root_.GlobalTheory.KerReal.real_points D S T C
   have hψ := (GlobalTheory.T.symplecticCharacter_real_finite_points_match D S T C).2.1
-  have hZ₁ := (GlobalTheory.T.adelicZakTheta_exists_unique D S T C x₁ hx₁ φ₁ hφ₁).1
-  have hZ₂ := (GlobalTheory.T.adelicZakTheta_exists_unique D S T C x₂ hx₂ φ₂ hφ₂).1
-  have hth := GlobalTheory.T.thetaFunction_space_heisenberg_laws D S T C
+  have hZ₁ := (_root_.GlobalTheory.Ker.ZakEx.isZak_Th D S T C x₁ hx₁ φ₁ hφ₁).1
+  have hZ₂ := (_root_.GlobalTheory.Ker.ZakEx.isZak_Th D S T C x₂ hx₂ φ₂ hφ₂).1
+  have hth := _root_.GlobalTheory.ThetaSpace.theta_space_laws D S T C
   have hT₁ : C.IsTh (C.rho w₁ (C.Th x₁ φ₁)) := (hth.2.2 _ hZ₁.1).2.1 w₁
   have hT₂ : C.IsTh (C.rho w₂ (C.Th x₂ φ₂)) := (hth.2.2 _ hZ₂.1).2.1 w₂
 

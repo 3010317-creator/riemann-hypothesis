@@ -14,7 +14,8 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocallyCo
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MultValueLeftContLevel
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MultiplicitySpaceEqZeroOfApplyNonzeroTensorZero
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParahoricLevelLiftsExistStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParahoricLevelLiftsExist
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.StepVectorLiftPairFlagLevelRealizedChainStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaKORatLeftAndEigenRight
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaLiftTranslateOfKernelFixed
@@ -126,7 +127,7 @@ theorem places_sep {T : Type} (L : LevCh D T) (μ0 : T) (h : L.Is μ0) (t : T) :
 theorem lifts_chain {T : Type} (L : LevCh D T) (μ0 : T) (h : L.Is μ0) (t : T) (j : ℕ) (hj : j < D.R.m) :
     LiftsExist (Yc D j) (L.βY j) (L.datYt t j L.triv) := by
   obtain ⟨c, hc⟩ := h.βY j hj
-  exact GlobalTheory.T.parahoricLevel_liftsExist _ _ _ _ _ hc (places_sep L μ0 h t).1 (places_sep L μ0 h t).2
+  exact _root_.GlobalTheory.ParahoricLift.liftsExist _ _ _ _ _ hc (places_sep L μ0 h t).1 (places_sep L μ0 h t).2
 
 theorem multT_value {V : HSp D} {S : D.what₂.Tau → SPar} (θ : InfFam D) (M : DSModel V S) (J : Set (GA D V)) (χ : GA D V → ℂ)
     (u : SmT M →ₗ[ℂ] (GA D V → ℂ)) (hu : u ∈ MultT θ M J χ) (v : SmT M) :

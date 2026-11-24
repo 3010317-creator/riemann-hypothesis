@@ -18,10 +18,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitP
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteWeilRepEqLatticeIntertwinerMulCharacter
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLsB
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitCharacter
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinitePartRationalTensorZeroAtPrimeIffPlaceIdemStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinitePartRationalTensorZeroAtPrimeIffPlaceIdem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergFinitePointReadsClassicalTranslation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergTranslateFixesThetaDeepLevel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPrimeIffNonSplitPlaceIdempotentStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPrimeIffNonSplitPlaceIdempotent
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvDifferentLatticeProductHermitianIsSelfDual
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsVacuumMovedThetaVacuum
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLatticeOIffScaleMulFinitePartMemIdealLatticeStatement
@@ -98,8 +99,9 @@ import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 import Mathlib.RingTheory.TotallySplit
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EventuallyFinEqOne
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeFinitelyGeneratedStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeMultipleMemOpenLevelStatement
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeFinitelyGenerated
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeMultipleMemOpenLevel
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsHeisTrivial
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRepresentationOfLatticeVacua
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanHeisenbergTranslatesOfLatticeVacuaEqTop
@@ -733,7 +735,7 @@ theorem exists_isLatRep_of {ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.ho
     ∃ Om, IsLatRep hψ.1 ΛS ΛT w lam Om := by
   have H := isHeis_opF hψ.1 S T hw
   have hA := selfDual_latF (GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T ΛS ΛT hψ hS hT).1
-  obtain ⟨hlev, hmov⟩ := GlobalTheory.T.completedHomLattice_multiple_mem_open_level D S T ΛS ΛT hS hT (GlobalTheory.T.completedHomLattice_finitelyGenerated D S T ΛS ΛT hS hT)
+  obtain ⟨hlev, hmov⟩ := _root_.GlobalTheory.LatLevel.level_of_generators D S T ΛS ΛT hS hT (_root_.GlobalTheory.LatFinGen.latO_finitely_generated D S T ΛS ΛT hS hT)
   have hspan := _root_.GlobalTheory.FinWeil.span_translates_vacua H _ hA (smooth_theta hψ.1 hS hT hw hA hlev)
   have hidx : ∀ p, idx (latF S T ΛS ΛT) ((latF S T ΛS ΛT).map (rhoF S T p)) ≠ 0 := fun p => by
     obtain ⟨N, hN, h⟩ := hmov p.1 p.2
@@ -821,7 +823,7 @@ theorem exists_deep {ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)}
     (x : XF S T) (f : thetaSub ψ S T) :
     ∃ m : ℕ, 0 < m ∧ ∀ l ∈ latF S T ΛS ΛT, opF hψ S T w (x + m • l) f = opF hψ S T w x f := by
   have H := isHeis_opF hψ S T hw
-  obtain ⟨hlev, -⟩ := GlobalTheory.T.completedHomLattice_multiple_mem_open_level D S T ΛS ΛT hS hT (GlobalTheory.T.completedHomLattice_finitelyGenerated D S T ΛS ΛT hS hT)
+  obtain ⟨hlev, -⟩ := _root_.GlobalTheory.LatLevel.level_of_generators D S T ΛS ΛT hS hT (_root_.GlobalTheory.LatFinGen.latO_finitely_generated D S T ΛS ΛT hS hT)
   obtain ⟨V, hV, hf⟩ := f.2.level
   obtain ⟨N, hN, hNU⟩ := hlev V hV
   obtain ⟨M, hM, hMU⟩ := hlev _ (GlobalTheory.FinTranslate.isOpen_annSub hψ (XF.fin (w • x)))
@@ -940,8 +942,8 @@ theorem exists_prime_mem {R : Type} [CommRing R] {P : Ideal R} (hP : P.IsPrime) 
 
 theorem zeroAt_half {ε : AE D} (hε : GlobalTheory.RatAut.IsHalfIdem D ε) {q : ℕ} (hq : q.Prime) (hi : Formalism.MainNotions.StandardLatticesGL3.InertQ D q)
     (b : AE D) : Formalism.MainNotions.StandardLatticesGL3.ZeroAt D q (finQ D (ε * b)) :=
-  (GlobalTheory.T.finitePartRationalTensor_zeroAtPrime_iff_placeIdem D q hq _).2 fun v η hv hqv => by
-    rw [← mul_assoc, hε.2.2.2.2 v η ((GlobalTheory.T.inertPrime_iff_nonSplitPlaceIdempotent D q hq v η hv hqv).1 hi), zero_mul]
+  (_root_.GlobalTheory.ZeroAtPlaces.zeroAt_finQ_iff D q hq _).2 fun v η hv hqv => by
+    rw [← mul_assoc, hε.2.2.2.2 v η ((_root_.GlobalTheory.InertPlace.inertQ_iff_nonSplitAt D q hq v η hv hqv).1 hi), zero_mul]
 
 theorem half_supp {ε : AE D} (hε : GlobalTheory.RatAut.IsHalfIdem D ε) {a : AE D} (h0 : infPart D a = 0)
     (ha : ∀ q : ℕ, q.Prime → Formalism.MainNotions.StandardLatticesGL3.InertQ D q → Formalism.MainNotions.StandardLatticesGL3.ZeroAt D q (finQ D a)) : (ε + cA D ε) * a = a := by
@@ -952,7 +954,7 @@ theorem half_supp {ε : AE D} (hε : GlobalTheory.RatAut.IsHalfIdem D ε) {a : A
     by_cases hn : GlobalTheory.WeilParts.NonSplitAt D (Q.under (𝓞 D.host.F)) η
     · obtain ⟨q, hq, hqv⟩ := exists_prime_mem (Q.under (𝓞 D.host.F)).isPrime _
         (Ideal.absNorm_eq_zero_iff.not.2 (Q.under (𝓞 D.host.F)).ne_bot) (Ideal.absNorm_mem _)
-      have := (GlobalTheory.T.finitePartRationalTensor_zeroAtPrime_iff_placeIdem D q hq a).1 (ha q hq ((GlobalTheory.T.inertPrime_iff_nonSplitPlaceIdempotent D q hq _ η hη hqv).2 hn)) _ η hη hqv
+      have := (_root_.GlobalTheory.ZeroAtPlaces.zeroAt_finQ_iff D q hq a).1 (ha q hq ((_root_.GlobalTheory.InertPlace.inertQ_iff_nonSplitAt D q hq _ η hη hqv).2 hn)) _ η hη hqv
       rw [mul_left_comm, this, mul_zero]
     · obtain ⟨e, he, hs⟩ : ∃ e : AE D, IsSplitIdem D e ∧ e + cA D e = algebraMap (AF D.host.F) (AE D) η := by
         by_contra h
@@ -1260,11 +1262,11 @@ theorem unramAt_of_hasFinPart {χ : (AE D)ˣ →* Circle} {N : ℕ} {c : HeckeU 
     refine c.unr _ ⟨(finQ_mem_iff _).2 h1, (finQ_mem_iff _).2 h2⟩ fun q hq hn => ?_
     have e1 : ((Units.map (finQ D).toMonoidHom x : (Formalism.MainNotions.StandardLatticesGL3.AE D)ˣ) : Formalism.MainNotions.StandardLatticesGL3.AE D) - 1 = finQ D ((x : AE D) - 1) := by
       rw [RingHom.map_sub, RingHom.map_one]; rfl
-    rw [e1, GlobalTheory.T.finitePartRationalTensor_zeroAtPrime_iff_placeIdem D q hq]
+    rw [e1, _root_.GlobalTheory.ZeroAtPlaces.zeroAt_finQ_iff D q hq]
     intro w η hη hw
     have hne : w ≠ v := by
       rintro rfl
-      exact hn ((GlobalTheory.T.inertPrime_iff_nonSplitPlaceIdempotent D q hq w ε hv.1 hw).2 hv)
+      exact hn ((_root_.GlobalTheory.InertPlace.inertQ_iff_nonSplitAt D q hq w ε hv.1 hw).2 hv)
     rw [← hx, ← mul_assoc, place_orth hΦ hη hv.1 hne, zero_mul]
   have := h x (Units.map (finQ D).toMonoidHom x) ⟨hi, by
     rw [← GlobalTheory.BotClassDict.finAdEquiv_toAfE]
@@ -1339,8 +1341,8 @@ theorem mem_congrGroup {V : HSp D} (hV : V.gram = 1) {g : GA D V} {x : Formalism
   have sp : ∀ v ε, IsPlaceIdem D v ε → ¬ NonSplitAt D v ε →
       g ∈ suppGroup V (1 - algebraMap (AF D.host.F) (AE D) ε) := fun v ε hε hn i j => by
     obtain ⟨q, hq, hqv⟩ := exists_prime_mem v
-    have h1 := hs q hq (fun h => hn ((GlobalTheory.T.inertPrime_iff_nonSplitPlaceIdempotent D q hq v ε hε hqv).1 h)) i j
-    rw [← e1, Matrix.map_apply, ← one, ← RingHom.map_sub, GlobalTheory.T.finitePartRationalTensor_zeroAtPrime_iff_placeIdem D q hq] at h1
+    have h1 := hs q hq (fun h => hn ((_root_.GlobalTheory.InertPlace.inertQ_iff_nonSplitAt D q hq v ε hε hqv).1 h)) i j
+    rw [← e1, Matrix.map_apply, ← one, ← RingHom.map_sub, _root_.GlobalTheory.ZeroAtPlaces.zeroAt_finQ_iff D q hq] at h1
     rw [sub_mul, one_mul, Matrix.sub_apply, h1 v ε hε hqv, sub_zero]
   have sp' : ∀ (k : GA D V) (a : AE D), k ∈ suppGroup V (1 - a) → ∀ i j, a * (mt V k - 1) i j = 0 := fun k a hk i j => by
     have := hk i j

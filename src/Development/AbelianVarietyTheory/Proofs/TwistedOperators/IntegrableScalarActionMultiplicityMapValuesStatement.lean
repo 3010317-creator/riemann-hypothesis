@@ -12,7 +12,10 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForm
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MultTApplyRapidDec
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RealMeasureUniformInTupleOfThetaLiftScalar
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TopStepVectorProperty
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchurMultMultiplicitySpacesOfRapidDecayStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchurMultMultiplicitySpacesOfRapidDecay
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.LevelPlusSubgroup
 public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.GinfCSecondCountable
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.EvalTEquiv
 public import Formalism.LocalToGlobal.IndefiniteReal.EqZeroOfVec
@@ -244,7 +247,7 @@ theorem integral_mul_multT_eq : GlobalTheory.Published.CuspRapidDecay → ∀ (D
   obtain ⟨𝓕, -, h𝓕⟩ := Formalism.IndefR.Eqv.fundDomExists_holds D V
   have hfd := h𝓕 μ
   have hfin : μ 𝓕 < ⊤ := GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol V μ 𝓕 inferInstance hfd
-  obtain ⟨κ, hκ⟩ := GlobalTheory.T.schurMult_multiplicitySpaces_of_rapidDecay hP D _ hθ V S M J χ μ 𝓕 inferInstance hfd hθ inferInstance hfd _ hT _ hT
+  obtain ⟨κ, hκ⟩ := _root_.GlobalTheory.SchurConst.schurMult_all hP D _ hθ V S M J χ μ 𝓕 inferInstance hfd hθ inferInstance hfd _ hT _ hT
   have hS : ∀ v v' : M.Vec, ∫ g in 𝓕, star (t (PiTensorProduct.tprod ℂ v) g) * t (PiTensorProduct.tprod ℂ v') g ∂μ =
       κ * ∏ τ, ⟪(v τ : M.H τ), (v' τ : M.H τ)⟫_ℂ := fun v v' => by
     have := (hκ v v').2

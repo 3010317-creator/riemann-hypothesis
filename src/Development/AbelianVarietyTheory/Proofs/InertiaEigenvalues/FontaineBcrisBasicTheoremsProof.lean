@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.OneSubPhiOntoOfFilZero
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AlgClosureTensorBcrisToBdRInjectiveStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AcrisTorsionFreeComplete
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AlgClosureTensorBcrisToBdRInjective
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BcrisRegularOfTensorInj
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FundamentalMapSurjective
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BcrisFrobeniusFixedFilZeroEqQp
@@ -60,6 +61,6 @@ theorem fontaineBcris_of_tensorInj
       GlobalTheory.MemLoc.FundOnto.fundOnto l C, GlobalTheory.MemLoc.regular_of_tensorInj l C (h l C)⟩
 
 theorem fontaineBcris : GlobalTheory.Published.FontaineBcris :=
-  fontaineBcris_of_tensorInj GlobalTheory.T.algClosure_tensor_bcris_to_bdR_injective
+  fontaineBcris_of_tensorInj _root_.GlobalTheory.MemLoc.TensorInj.tensorInj
 
 end GlobalTheory.MemLoc

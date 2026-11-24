@@ -2,17 +2,20 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.WordDerivatives
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.AdelicDataRowMeasureScaleTrivialTuple
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.DenomBound
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsLieDataCircle
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AnisotropicFiniteLengthsOfShortLatticeVector
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsFiniteCosetsAdelicUnitaryBoundedDenominatoStatement
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsFiniteCosetsAdelicUnitaryBoundedDenominato
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsSigmaList
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.NormInfSubmultiplicativeLeAdelicHeightStatement
+import Formalism.LocalToGlobal.BesselHermitianTheta.TiedSmooth
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.NormInfSubmultiplicativeLeAdelicHeight
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.OrthogonalAnisotropicFrameBoundedCM
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.OrthogonalFrameOfAnisotropicFiniteLengths
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.ShortLatticeVectorBoundedSizeOfOrthogonalFrame
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.UnitaryLatticeDenominatorHeightBoundProofStatement
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.UnitaryReductionPolynomialHeightBoundStatement
+import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.UnitaryReductionPolynomialHeightBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,12 +71,12 @@ theorem reduction_unif {D : D7} {θ : InfF D} (hθ : IsInfFam θ) (V : HSp D) :
     ∃ M : ℕ, ∀ U : Subgroup (GA D V), IsOpen (U : Set (GA D V)) →
       ∃ (S : Finset (GA D V)) (C : ℝ), 0 ≤ C ∧ ∀ g, ∃ γ ∈ GQ V, ∃ x ∈ S, ∃ a ∈ GinfC V, ∃ k ∈ U, k ∈ GfC V ∧
         γ * g = x * a * k ∧ 1 + normInf θ V a ≤ C * (height θ V g : ℝ) ^ M := by
-  obtain ⟨d, C, M, hd, h⟩ := GlobalTheory.T.unitary_reduction_polynomial_height_bound D θ V hθ
+  obtain ⟨d, C, M, hd, h⟩ := _root_.GlobalTheory.SmoothForms.Reduce.reduction D θ V hθ
     (_root_.GlobalTheory.SmoothForms.orthoSmall_of_anisoSmall _ (_root_.GlobalTheory.AnisoSize.anisoSmall_of_shortSmall _ (_root_.GlobalTheory.SmoothForms.Short.shortSmall _ (_root_.GlobalTheory.SmoothForms.frameSmall _)))) (GlobalTheory.T.unitaryLatticeDenominatorHeightBound_proof D θ V)
   refine ⟨M + 1, fun U hU => ?_⟩
-  obtain ⟨S, hS⟩ := GlobalTheory.T.exists_finite_cosets_adelicUnitary_bounded_denominator D V U hU d hd
-  obtain ⟨hm, C', hC'⟩ := GlobalTheory.T.normInf_submultiplicative_le_adelicHeight D θ V
-  obtain ⟨-, -, -, r4, r5, r6, r7, r8⟩ := (GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ V
+  obtain ⟨S, hS⟩ := _root_.GlobalTheory.SmoothForms.Cover.exists_finset_cover D V U hU d hd
+  obtain ⟨hm, C', hC'⟩ := _root_.GlobalTheory.SmoothForms.normInf_mul_le_and_le_height D θ V
+  obtain ⟨-, -, -, r4, r5, r6, r7, r8⟩ := (_root_.GlobalTheory.SmoothForms.RealPts.realPoints D).2 θ hθ V
   refine ⟨S, 1 + |C * C'|, by positivity, fun g => ?_⟩
   obtain ⟨γ, hγ, h1, h2⟩ := h g
   obtain ⟨k, hk, a, ha, e⟩ := r7 (γ * g)

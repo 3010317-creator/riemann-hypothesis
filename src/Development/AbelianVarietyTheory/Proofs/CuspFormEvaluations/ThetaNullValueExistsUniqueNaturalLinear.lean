@@ -14,7 +14,8 @@ public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IsVtOv
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaValueWeightTriangularFrame
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.LBPull
 import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.UniversalNormalisedMulByNatPullbackIsoStatement
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.UniversalSymLiftExistsUniqueGlobalStatement
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.UniversalSymLiftExistsUniqueGlobal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -103,7 +104,7 @@ theorem isNullVal_unique (hL : Laws) {N : ℕ} (hN : Odd N) {S : Type} [CommRing
     (val_corr hJ cβ _).trans ((val_pull hJ _ _ _).trans ((val_corr hJ (u₀ β₀ gβ nβ) _).trans
       ((val_corr hJ cα _).trans ((val_pull hJ _ _ _).trans (val_corr hJ (u₀ α₀ g₀ n₀) _))).symm))) tw' tw
   obtain rfl : F = F' := act_congr hB (hU.pt_eq.trans hV.pt_eq.symm)
-    ((GlobalTheory.T.universal_symLift_exists_unique_global hL E H Dw l Xo N hN _ _ hp).2 _ _ hU hV) a₁ b₁
+    ((_root_.GlobalTheory.moduli_univ_symLift_global hL E H Dw l Xo N hN _ _ hp).2 _ _ hU hV) a₁ b₁
   exact Formalism.MainNotions.ModuliIntegralCharts.H1.GermFun.toΓ_injective _ (Formalism.MainNotions.ModuliIntegralCharts.H1.GermFun.value_unique _ _ hB _ _ _ _ _ _ hv hv')
 
 end GlobalTheory.EtaForm.Model

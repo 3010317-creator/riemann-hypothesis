@@ -34,8 +34,9 @@ public import Development.AbelianVarietyTheory.Proofs.HeightProofs.SmoothIffReal
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.SpanRealProjectionRationalPointsEqTop
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.SymplecticRealPartVanish
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.SymplecticValTauCompat
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryActionAtRealPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CmTypeRestrictRealSubfieldInfinitePlaceBijectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryActionAtRealPlace
+public import Formalism.LocalRingCardinality.DataTheta
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CmTypeRestrictRealSubfieldInfinitePlaceBijective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,7 +81,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-import Formalism.LocalRingCardinality.DataTheta
 import Formalism.LocalToGlobal.BesselHermitianTheta.NoncompactGapAtLeastRange
 import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GapAtLeast
 import Mathlib.Analysis.CStarAlgebra.Classes
@@ -141,7 +141,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 variable {D : D7} {θ : InfFam D} {σ : (D.what₂.Tau → ℂ) →+ AE D}
 
 theorem exists_chart (hθ : IsInfFam θ) : ∃ σ, Chart θ σ := by
-  obtain ⟨ρ, h1, h2, h3⟩ := GlobalTheory.T.exists_real_chart_infiniteAdeles_cmType D θ hθ (GlobalTheory.T.cmType_restrict_realSubfield_infinitePlace_bijective D)
+  obtain ⟨ρ, h1, h2, h3⟩ := GlobalTheory.T.exists_real_chart_infiniteAdeles_cmType D θ hθ (_root_.GlobalTheory.CMTypePlaces.places_bijective D)
   exact GlobalTheory.T.exists_isArchimedeanAdeleChart_of_real_chart D θ hθ ρ h1 h2 h3
 
 

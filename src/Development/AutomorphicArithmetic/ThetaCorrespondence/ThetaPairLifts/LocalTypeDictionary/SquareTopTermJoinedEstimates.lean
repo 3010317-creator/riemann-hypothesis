@@ -54,7 +54,8 @@ public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSy
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BottomConstantOfTheta
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteAdelicPointUnitaryGroupGramOneStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFinPt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteAdelicPointUnitaryGroupGramOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareBottomHalfRankSumLeHalfRank
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.AuxiliaryPrimeNeTypePrime
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ExistsBottomBasisChange
@@ -1520,7 +1521,7 @@ theorem bottomTheta_ne_zero_of_innerProduct_formula : _root_.GlobalTheory.FunPr.
   have hd : P'.d = P.d := hbot.rank.2.2.2
   have ed' : P'.d = WW.rank := hd.trans ed
   obtain ⟨M, -, -, HC⟩ := HC μ₀ Q δ t0 P P' hbot ea ea' ed ed'
-  obtain ⟨g, hg⟩ := GlobalTheory.T.exists_finiteAdelicPoint_unitaryGroup_gramOne WW hX.stdW.1 h ed.symm
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.BotFormula.exists_isFinPt_of_gram_one WW hX.stdW.1 h ed.symm
   have hg' := hg.cast hd
   by_contra hz
   push Not at hz

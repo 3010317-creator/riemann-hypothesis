@@ -12,7 +12,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianSel
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsTransposeGramCoordinateHomeomorphSymplecti
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUnitaryEquivConjOfGramTransposeEqNeg
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUnitaryEquivInvTransposeOfGramInv
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsWeilDatumCompGroupSwappingSymplecticEquivStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsWeilDatumCompGroupSwappingSymplecticEquiv
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SymplecticHomTransposeGramDarboux
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjTauEOverRealPlace
@@ -30,9 +31,9 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasInfExp
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SignedUnitaryGroupCompat
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilModelHermitianScaling
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieActionFockOperatorsScalarsTrace
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaTransformDarbouxModelLinearInjectiveStatement
-public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.HasDerivAtThetaSumAlongLineYDirection
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsReading
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaTransformDarbouxModelLinearInjective
+public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.HasDerivAtThetaSumAlongLineYDirection
 public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.AtTauExUniqueHolds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasArchimedeanCharExponentsConjOfHasInfExp
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsArchEquivEq
@@ -47,7 +48,8 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledUnitaryPartnerDiagStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDualGOfGQ
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTransportAdelicSchwartzThetaTransStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingInl
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTransportAdelicSchwartzThetaTrans
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransportedWeilDatumIsUnitaryAdelicSchwartzStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransportedWeilDatumKeepsAdmissibleFormsStatement
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
@@ -346,7 +348,7 @@ theorem exists_weil_transp {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (ε : Bool)
       have hu := unit_aux (cA D) _ _ _ _ hPP hTinc (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.mt_gram Th h)
       exact (hLx _).trans (actE_eq_of_conj_related e _ x _ _ _ _ _ _ (hLx x) hg hh hu)
 
-    obtain ⟨ω', hω'', hrel⟩ := GlobalTheory.T.isWeilDatum_comp_group_swapping_symplectic_equiv D ψ (sgn ε S) X Sh Th rfl rfl L φ.toMonoidHom φ'.toMonoidHom hLc hLc' hLQ
+    obtain ⟨ω', hω'', hrel⟩ := _root_.GlobalTheory.SwapWeil.isWeilDatumO_swap D ψ (sgn ε S) X Sh Th rfl rfl L φ.toMonoidHom φ'.toMonoidHom hLc hLc' hLQ
       (fun x y => by rw [hL1, hL1]; exact hsy x y) hLi hLf hφc hφ'c hφQ hφ'Q hact hφS hφ'S hφd hφ'd χ χ' (ω.toSgn ε) hω'
     have hA : Vs.J = Th.gramᵀ := (gram_neg_sgn ε S hJ).trans hT'.symm
     have hB : (-1 : AF D.host.F ⊗[D.host.F] D.host.E) • GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM D.host.F Ws.J =
@@ -354,7 +356,7 @@ theorem exists_weil_transp {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (ε : Bool)
       rw [hS', hJW]
       funext i j
       simp [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM, e]
-    obtain ⟨om, hom⟩ := GlobalTheory.T.exists_weilDatum_transport_adelicSchwartz_thetaTransform D ψ hω'.std Sh Th χ' χ hω''.hecS hω''.hecT hω''.resS hω''.resT Vs.J Ws.J (-1) hA hB
+    obtain ⟨om, hom⟩ := _root_.GlobalTheory.ThetaTransform.exists_isTransport D ψ hω'.std Sh Th χ' χ hω''.hecS hω''.hecT hω''.resS hω''.resT Vs.J Ws.J (-1) hA hB
       (Fin S.rank × Fin X.rank) M.co hrat ω' hω''
     have h2 := GlobalTheory.T.transportedWeil_preserves_schwartz_heisenberg_equivariant D ψ hω'.std Sh Th χ' χ hω''.hecS hω''.hecT hω''.resS hω''.resT Vs.J Ws.J (-1) hA hB
       (Fin S.rank × Fin X.rank) M.co hrat ω' hω'' om hom
@@ -782,7 +784,7 @@ theorem lie_derivative_mem_coinvariants : _root_.GlobalTheory.FunPr.ThetaLocalIn
     · change (-M.gram).det ≠ 0
       rw [Matrix.det_neg]
       exact mul_ne_zero (pow_ne_zero _ (by norm_num)) hGM
-  obtain ⟨T, hT, hTinj⟩ := GlobalTheory.T.thetaTransform_darbouxModel_linear_injective D Mo ψ' (sgn ε M).gram (Equiv.refl _) hR.good hstd hdetX hdetW hG
+  obtain ⟨T, hT, hTinj⟩ := _root_.GlobalTheory.ThetaTransformInj.linear_injective D Mo ψ' (sgn ε M).gram (Equiv.refl _) hR.good hstd hdetX hdetW hG
   have hΦ1 : Φ 1 ≠ 0 := fun h => one_ne_zero (hinj (h.trans (map_zero Φ).symm))
   have hRf₁ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rest (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI D.host.F) f₁ r := GlobalTheory.T.complementaryAdelicSchwartz_archimedean_replace _ f₁ r (hFr 1).1 hΦ1
   have hRQ := (hFr Q).1
@@ -1231,7 +1233,7 @@ theorem maximal_compact_stable_theta_subspace : _root_.GlobalTheory.FunPr.ThetaL
   obtain ⟨f₀, r, hv, hv0, hP⟩ := hF
   obtain rfl := hR.psi
   obtain rfl := Eqv.eq_thetaC D hθ
-  obtain ⟨T, hT, hTi⟩ := GlobalTheory.T.thetaTransform_darbouxModel_linear_injective D Mo ψ' (sgn ε M).gram (Equiv.refl (Fin X.rank)) hR.good hstd hdX hdW
+  obtain ⟨T, hT, hTi⟩ := _root_.GlobalTheory.ThetaTransformInj.linear_injective D Mo ψ' (sgn ε M).gram (Equiv.refl (Fin X.rank)) hR.good hstd hdX hdW
     (gram_det_ne (sgn ε M))
   have hinj : ∀ a ∈ schA D.host.F (Fin M.rank × Fin X.rank), ∀ b ∈ schA D.host.F (Fin M.rank × Fin X.rank),
       GlobalTheory.TripleRead.thO Mo ψ' (sgn ε M).gram (Equiv.refl (Fin X.rank)) a =

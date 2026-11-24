@@ -1,12 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChainParSucc
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SphericalOperatorEigenvaluesDeterminedByParamsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageConjugateValuesHeckeOperatorsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageLatticeStabilizerParamsOffSetStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageLevelSphericalOffSetStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSatakeParametersBoundedEigenfunctionStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
+public import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SphericalOperatorEigenvaluesDeterminedByParams
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageConjugateValuesHeckeOperators
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageLatticeStabilizerParamsOffSet
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageLevelSphericalOffSet
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConstMemBddAut
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSatakeParametersBoundedEigenfunction
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.BcParamEqOfSatUEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -72,10 +74,10 @@ theorem GlobalTheory.ChainOnto.parBound_of_rapidDecay : GlobalTheory.Published.C
   obtain ⟨v, hv⟩ := hex
   set f : GA D s.V → ℂ := fun g => conj (PiLocalization₂.val u v g) with hfdef
   have hPF : ParFun c s (PiLocalization₂.val u v) B := hpar v hv
-  have h3 : GlobalTheory.LFun.IsParamFunV s.V c.S f B := ((GlobalTheory.T.thetaChainStage_lattice_stabilizer_params_off_set D c hc j hj s hs).2 f B).1 hPF
-  obtain ⟨h4a, _, _⟩ := GlobalTheory.T.thetaChainStage_conjugate_values_hecke_operators hCRD D c hc j hj s hs
+  have h3 : GlobalTheory.LFun.IsParamFunV s.V c.S f B := ((_root_.GlobalTheory.ChainOnto.stabLoc_isParamFun_frameLat D c hc j hj s hs).2 f B).1 hPF
+  obtain ⟨h4a, _, _⟩ := _root_.GlobalTheory.ConjVal.conj_values_hecke hCRD D c hc j hj s hs
   obtain ⟨hcont, ⟨C, hC⟩, hinv, hlev⟩ := h4a u v
-  obtain ⟨_, hsph, _⟩ := GlobalTheory.T.thetaChainStage_level_spherical_off_set D c hc j hj s hs
+  obtain ⟨_, hsph, _⟩ := _root_.GlobalTheory.ChainOntoSph.level_spherical_off_S D c hc j hj s hs
   have hfmem : f ∈ GlobalTheory.FinZeta.bddAut s.V := by
     refine ⟨(Complex.continuous_conj).comp hcont, fun γ hγ g => ?_, C, fun g => ?_⟩
     · simp only [hfdef, hinv γ hγ g]
@@ -89,8 +91,8 @@ theorem GlobalTheory.ChainOnto.parBound_of_rapidDecay : GlobalTheory.Published.C
   have hlev' : ∀ k ∈ levS s.V s.β s.L, ∀ g, f (g * k) = conj (Lev.levChi s.V s.β s.L k) * f g := by
     intro k hk g
     simp only [hfdef, hlev k hk g, map_mul]
-  obtain ⟨a, ha⟩ := GlobalTheory.T.sphericalOperator_eigenvalues_determined_by_params D s.V (levS s.V s.β s.L) (fun k => conj (Lev.levChi s.V s.β s.L k)) c.S hsph B
-  obtain ⟨B', hB', hbd⟩ := GlobalTheory.T.exists_satake_parameters_bounded_eigenfunction D s.V _ _ c.S hsph f hfmem hf0 hlev' a (fun P d R hR => ha f h3 P d R hR)
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.ParamEigen.eig_of_param D s.V (levS s.V s.β s.L) (fun k => conj (Lev.levChi s.V s.β s.L k)) c.S hsph B
+  obtain ⟨B', hB', hbd⟩ := _root_.GlobalTheory.FinZeta.ParamBound.exists_param_bounded D s.V _ _ c.S hsph f hfmem hf0 hlev' a (fun P d R hR => ha f h3 P d R hR)
   intro w hw
   rw [GlobalTheory.LFun.IsParamVecOff.unique h3 hB' hw]
   exact hbd w hw

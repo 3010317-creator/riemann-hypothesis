@@ -24,7 +24,7 @@ public import Development.AutomorphicArithmetic.CyclotomicBounds.DeRhamLattices.
 public import Development.AutomorphicArithmetic.CyclotomicBounds.DeRhamLattices.ScaledFockFormCoefficientsIntegral
 public import Development.AutomorphicArithmetic.CyclotomicBounds.DeRhamLattices.ScaledFockFormMemMtLatIff
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChosenTwistViaEmbeddingGoodConjugateStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChosenTwistViaEmbeddingGoodConjugate
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsUnitPrimeProductOfTwistedPlaceTupleStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LevelTwistCharacterMemCoefficientIntegersStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaSeriesIntegralFormsEqSpanDedekindCoefRingStatement
@@ -950,7 +950,7 @@ theorem span_translate (H : AtPlace Y Z c w j) {ι : KE c w →+* ℂ} (hι : �
       Submodule.span (ringOf ι) ((fun x h => (κ⁻¹ • fockOf Y (used_of_tw H.tw) j u (D.what₂.jMt (D.what₂.muTw w) (j.1 + 1) x))
         (h * finPt (Vc D j) z)) '' latS w (j.1 + 1)) := by
   have hB := Z.good.base (c.twI w) j (c.sd w)
-  obtain ⟨hg, ha, -⟩ := GlobalTheory.T.chosen_twist_via_embedding_good_conjugate D c w Z.ρ Z.good H.ok j ι
+  obtain ⟨hg, ha, -⟩ := _root_.GlobalTheory.PlaceRead.twVia_good D c w Z.ρ Z.good H.ok j ι
   have hle := intLL_le hι
   obtain ⟨hN0, hNP, o, ho⟩ := _root_.GlobalTheory.PlaceUnit.tupPrime_isUnit D X X0 Y S YS Z c w j H ι hι
   have hNi : ((GlobalTheory.TwistField.tupPrime X.R.toRealDat (Y.tupT (D.what₂.muTw w)) : ℕ) : ℂ)⁻¹ ∈ ringOf ι := by

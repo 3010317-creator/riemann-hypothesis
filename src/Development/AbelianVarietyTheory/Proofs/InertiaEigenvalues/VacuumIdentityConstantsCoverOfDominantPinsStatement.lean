@@ -93,7 +93,8 @@ import Development.AbelianVarietyTheory.Proofs.GenericRegularity.NumericalConseq
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AnalyticFibreUnitFrameUniformisation
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CastFrMemDom
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsLetterRowWeightDictionary
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UniformisationComponentLatticesMarkingsStatement
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsBaseClassLevelAdapted
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UniformisationComponentLatticesMarkings
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsNonzeroDominantSectionEachComponent, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverConstantsUniqueOnDictionaryComponents, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverConstantsUniqueOnDictionaryComponentsStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsVacuumIdentityConstantsUniformisedCover, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsVacuumIdentityConstantsUniformisedCoverStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsScalarLevelCoverAnalyticFibre, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsScalarLevelCoverAnalyticFibreStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VacuumReadingConstantsLevelCoverRelateCore, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VacuumReadingConstantsLevelCoverRelateCoreStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UniformisedCoverInvPhaseConstantsNormalisedDomin, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UniformisedCoverInvPhaseConstantsNormalisedDominStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VacuumIdentityConstantsCoverOfDominantPins, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VacuumIdentityConstantsCoverOfDominantPinsStatement
@@ -529,7 +530,7 @@ theorem const_cover : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, InR D j →
   obtain ⟨-, -, -, -, -, -, hnum⟩ := GlobalTheory.PinNum.numerics_of_pins D T.Q hT.pins
   have hr1 : 1 ≤ D.R.r := (hnum _ hj).2.1
   obtain ⟨Wt⟩ := nonempty_uw (U := Formalism.L2.PjFree.Unf.ofPj (T.U j σ)) hU
-  have hSD : ∀ k, SelfD ((T.U j σ).X k) ((T.U j σ).X k).Λ := fun k => (GlobalTheory.T.uniformisation_component_lattices_markings _ _ _ _ _ _ σ _ (Formalism.L2.PjFree.Unf.ofPj (T.U j σ)) hσ hU hr1 Wt k).2.1
+  have hSD : ∀ k, SelfD ((T.U j σ).X k) ((T.U j σ).X k).Λ := fun k => (_root_.GlobalTheory.Dict.uw_lattice _ _ _ _ _ _ σ _ (Formalism.L2.PjFree.Unf.ofPj (T.U j σ)) hσ hU hr1 Wt k).2.1
   obtain ⟨Dc, hDc, -⟩ := GlobalTheory.Dict.exists_dic _ _ _ _ _ σ _ Wt.g 0 ((T.U j σ).X (T.dict j σ h).1) 0 Wt.e hσ hU.1
     (hU.2.1 _).1 (hU.2.1 _).2 (hSD _) ⟨fun _ => antitone_const, Even.zero⟩
   have hi : IdxIs T.Q.c σ ((T.U j σ).X (T.dict j σ h).1) Dc.idx Wt.e := hDc ▸ ⟨Dc.per_eq, Dc.ty_eq⟩

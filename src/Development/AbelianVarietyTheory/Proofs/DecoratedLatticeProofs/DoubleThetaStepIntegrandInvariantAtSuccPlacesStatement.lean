@@ -5,13 +5,17 @@ public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchwartzBruhatSelfAverageHeisenberg
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricPositionsDoubleIntegralExistsUnique
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsOneComb
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AddCharConductorIntegersContinuousNeOneStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AddCharConductorIntegersContinuousNeOne
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FourierJacobiAverage
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FramePositiveSum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleStepLocalWeilActionLineCharactersCancelStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalModelWeilOperatorTrivialAtPlaceIsModelStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalModelWeilOperatorTrivialAtPlaceIsModel
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceDoubleStepTrilinearFormPropertiesStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ValQOfValQr
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasDerivAtZeroAndIsTheta
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PeriodLocalGroupsNormalFramesSplitPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PeriodLocalGroupsNormalFramesSplitPlace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryFiniteAdelicGroupSplitFinitePlaceSet
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegrableOfMemSB
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralCompBlocks
@@ -63,7 +67,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupClosedEmbeddingIntegralStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupClosedEmbeddingIntegral
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsSelfDualOfHasConductor
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
@@ -390,13 +394,13 @@ theorem val_inv : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ 
   intro D ψ hψ σ S Q c₁ c₂ hc₁ hc₂ f₁ f₂ hvac φ f hφ hf hTy g h₁ h₂ hg hh₁ hh₂ a x y r hr j hj r' hr' j' hj'
   obtain ⟨⟨T₁, O₁, hT₁, hO₁, rfl⟩, ⟨T₂, O₂, hT₂, hO₂, rfl⟩⟩ := hvac
   have hcQ : Q.c + 1 + 1 = 2 * (σ + 1) := by have := Q.F.bes.1; omega
-  obtain ⟨hψc, hψ1⟩ := GlobalTheory.T.addChar_conductor_integers_continuous_ne_one Q.k Q.ψk Q.cond
+  obtain ⟨hψc, hψ1⟩ := _root_.GlobalTheory.hasConductor_one_continuous_ne_one Q.k Q.ψk Q.cond
   have hsd : IsSelfDual Q.ψk Q.ν := ((GlobalTheory.SplitWeil.selfDual_measure Q.k Q.ψk hψc hψ1).2.1 Q.cond Q.ν).1 Q.unitVol
-  obtain ⟨-, -, -, cm₀, -⟩ := GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D Q.k Q.q S.B.V _ Q.F.G₀ Q.gl₀ Q.loc₀
-  obtain ⟨-, -, -, cm₁, -⟩ := GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D Q.k Q.q S.J.W _ Q.F.G₁ Q.gl₁ Q.loc₁
-  obtain ⟨-, -, -, cm₂, -⟩ := GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D Q.k Q.q S.B'.V _ Q.F.G₂ Q.gl₂ Q.loc₂
-  have hT₁' := GlobalTheory.T.local_model_weil_operator_trivialAtPlace_isModel D Q.k Q.q ψ hψ S.B.V S.J.W S.s₁.χV S.s₁.χW S.s₁.om S.s₁.weil _ _ Q.F.G₀ Q.F.G₁ T₁ hT₁ g hg h₁ hh₁
-  have hT₂' := GlobalTheory.T.local_model_weil_operator_trivialAtPlace_isModel D Q.k Q.q ψ hψ S.J.W S.B'.V S.s₂.χV S.s₂.χW S.s₂.om S.s₂.weil _ _ Q.F.G₁ Q.F.G₂ T₂ hT₂ h₁ hh₁ h₂ hh₂
+  obtain ⟨-, -, -, cm₀, -⟩ := _root_.GlobalTheory.LocGl.local_group D Q.k Q.q S.B.V _ Q.F.G₀ Q.gl₀ Q.loc₀
+  obtain ⟨-, -, -, cm₁, -⟩ := _root_.GlobalTheory.LocGl.local_group D Q.k Q.q S.J.W _ Q.F.G₁ Q.gl₁ Q.loc₁
+  obtain ⟨-, -, -, cm₂, -⟩ := _root_.GlobalTheory.LocGl.local_group D Q.k Q.q S.B'.V _ Q.F.G₂ Q.gl₂ Q.loc₂
+  have hT₁' := _root_.GlobalTheory.LocModMove.isModel_weil_off D Q.k Q.q ψ hψ S.B.V S.J.W S.s₁.χV S.s₁.χW S.s₁.om S.s₁.weil _ _ Q.F.G₀ Q.F.G₁ T₁ hT₁ g hg h₁ hh₁
+  have hT₂' := _root_.GlobalTheory.LocModMove.isModel_weil_off D Q.k Q.q ψ hψ S.J.W S.B'.V S.s₂.χV S.s₂.χW S.s₂.om S.s₂.weil _ _ Q.F.G₁ Q.F.G₂ T₂ hT₂ h₁ hh₁ h₂ hh₂
   have hf' : IsContAut S.B'.V (rTrans h₂ f) :=
     ⟨fun γ hγ x => by simp only [rTrans, mul_assoc]; exact hf.1 γ hγ _, hf.2.comp (continuous_mul_const h₂)⟩
   have hTy' : Q.Typed (rTrans h₂ f) := fun j => by
@@ -657,9 +661,9 @@ theorem val_inv (hψ : IsStdChar D ψ (-1)) (Q : QStep S) {c₁ c₂} (h₁ : Q.
     (hj' : j' ∈ Q.L₂.J) :
     S.val c₁ c₂ (comb ψ _ _ Q.D₁ f₁) (comb ψ _ _ Q.D₂ f₂) φ f g (Q.gl₁ a * x * Q.gl₁ j) (Q.gl₂ a' * y * Q.gl₂ j') =
       S.val c₁ c₂ (comb ψ _ _ Q.D₁ f₁) (comb ψ _ _ Q.D₂ f₂) φ f g x y := by
-  have G₀ := GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D Q.k Q.q S.B.V _ Q.F.G₀ Q.gl₀ Q.loc₀
-  have G₁ := GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D Q.k Q.q S.J.W _ Q.F.G₁ Q.gl₁ Q.loc₁
-  have G₂ := GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D Q.k Q.q S.B'.V _ Q.F.G₂ Q.gl₂ Q.loc₂
+  have G₀ := _root_.GlobalTheory.LocGl.local_group D Q.k Q.q S.B.V _ Q.F.G₀ Q.gl₀ Q.loc₀
+  have G₁ := _root_.GlobalTheory.LocGl.local_group D Q.k Q.q S.J.W _ Q.F.G₁ Q.gl₁ Q.loc₁
+  have G₂ := _root_.GlobalTheory.LocGl.local_group D Q.k Q.q S.B'.V _ Q.F.G₂ Q.gl₂ Q.loc₂
   obtain ⟨g₀, hg, -⟩ := G₀.2.2.1 g
   obtain ⟨x₀, hx, -⟩ := G₁.2.2.1 x
   obtain ⟨y₀, hy, -⟩ := G₂.2.2.1 y
@@ -688,9 +692,9 @@ theorem integrand_inv (hψ : IsStdChar D ψ (-1)) {n : ℕ} (Q : Fin n → QStep
   have hv' : (Q i).Vac (comb ψ _ _ d₁ f₁) (comb ψ _ _ d₂ f₂) := by
     obtain ⟨⟨T₁, O₁, m₁, o₁, rfl⟩, T₂, O₂, m₂, o₂, rfl⟩ := hv i
     exact ⟨⟨_, O₁, isModel_comb hψ _ _ _ d₁ hd₁ T₁ m₁, o₁, rfl⟩, _, O₂, isModel_comb hψ _ _ _ d₂ hd₂ T₂ m₂, o₂, rfl⟩
-  have c₁' := (GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D (Q i).k (Q i).q S.J.W _ (Q i).F.G₁ (Q i).gl₁ (Q i).loc₁).2.2.2.1 a h₁
+  have c₁' := (_root_.GlobalTheory.LocGl.local_group D (Q i).k (Q i).q S.J.W _ (Q i).F.G₁ (Q i).gl₁ (Q i).loc₁).2.2.2.1 a h₁
     (grpOff_of_places (P := places Q) ⟨i, rfl⟩ hh₁)
-  have c₂' := (GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D (Q i).k (Q i).q S.B'.V _ (Q i).F.G₂ (Q i).gl₂ (Q i).loc₂).2.2.2.1 a' h₂
+  have c₂' := (_root_.GlobalTheory.LocGl.local_group D (Q i).k (Q i).q S.B'.V _ (Q i).F.G₂ (Q i).gl₂ (Q i).loc₂).2.2.2.1 a' h₂
     (grpOff_of_places (P := places Q) ⟨i, rfl⟩ hh₂)
   have m₁ : h₁ * ((Q i).gl₁ a * x * (Q i).gl₁ j) = (Q i).gl₁ a * (h₁ * x) * (Q i).gl₁ j := by
     rw [← mul_assoc h₁, ← mul_assoc h₁, ← c₁', mul_assoc _ h₁]
@@ -734,8 +738,8 @@ theorem left_jac {m : ℕ} (τ : Fin m → Fin n) {ρ : GA D S.J.W} (hρ : ρ �
   refine induction_places (fun i => (Q (τ i)).q.v) (jacGrp S.J.d)
     (fun ρ => ∀ x, integrand Q c₁ c₂ f₁ f₂ φ f g h₁ h₂ (ρ * x) y = integrand Q c₁ c₂ f₁ f₂ φ f g h₁ h₂ x y)
     (fun x => by rw [one_mul]) (fun a b ha hb x => by rw [mul_assoc, ha, hb]) (fun i z hz => ?_) ρ hρ hP x
-  have G := GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D (Q (τ i)).k (Q (τ i)).q S.J.W _ (Q (τ i)).F.G₁ (Q (τ i)).gl₁ (Q (τ i)).loc₁
-  have H := (GlobalTheory.T.periodLocalGroups_normalFrames_splitPlace D (Q (τ i)).k (Q (τ i)).q (Q (τ i)).n₁ ((Q (τ i)).c + 1 + 1) (σ + 1)).1 S.J _ _ _ _ (Q (τ i)).gl₁
+  have G := _root_.GlobalTheory.LocGl.local_group D (Q (τ i)).k (Q (τ i)).q S.J.W _ (Q (τ i)).F.G₁ (Q (τ i)).gl₁ (Q (τ i)).loc₁
+  have H := (_root_.GlobalTheory.LocGrpIff.local_groups_iff D (Q (τ i)).k (Q (τ i)).q (Q (τ i)).n₁ ((Q (τ i)).c + 1 + 1) (σ + 1)).1 S.J _ _ _ _ (Q (τ i)).gl₁
     (Nat.le_add_left 1 σ) (Q (τ i)).F.s_ne (GlobalTheory.LocMod.Witness.hz_ne _ S.B) (Q (τ i)).F.jac (Q (τ i)).loc₁
   obtain ⟨a, ha, -⟩ := G.2.2.1 z
   have hm : (Q (τ i)).gl₁ a ∈ jacGrp S.J.d := H.2 a _ ha (by rw [G.2.2.2.1 a _ ha, inv_mul_cancel_right]; exact hz)
@@ -747,8 +751,8 @@ theorem left_bes {m : ℕ} (τ : Fin m → Fin n) {ρ : GA D S.B'.V} (hρ : ρ �
   refine induction_places (fun i => (Q (τ i)).q.v) (besGrp S.B'.d S.B'.o)
     (fun ρ => ∀ y, integrand Q c₁ c₂ f₁ f₂ φ f g h₁ h₂ x (ρ * y) = integrand Q c₁ c₂ f₁ f₂ φ f g h₁ h₂ x y)
     (fun x => by rw [one_mul]) (fun a b ha hb x => by rw [mul_assoc, ha, hb]) (fun i z hz => ?_) ρ hρ hP y
-  have G := GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D (Q (τ i)).k (Q (τ i)).q S.B'.V _ (Q (τ i)).F.G₂ (Q (τ i)).gl₂ (Q (τ i)).loc₂
-  have H := (GlobalTheory.T.periodLocalGroups_normalFrames_splitPlace D (Q (τ i)).k (Q (τ i)).q (Q (τ i)).n₂ ((Q (τ i)).c + 1) σ).2 S.B' _ _ _ (Q (τ i)).gl₂
+  have G := _root_.GlobalTheory.LocGl.local_group D (Q (τ i)).k (Q (τ i)).q S.B'.V _ (Q (τ i)).F.G₂ (Q (τ i)).gl₂ (Q (τ i)).loc₂
+  have H := (_root_.GlobalTheory.LocGrpIff.local_groups_iff D (Q (τ i)).k (Q (τ i)).q (Q (τ i)).n₂ ((Q (τ i)).c + 1) σ).2 S.B' _ _ _ (Q (τ i)).gl₂
     (mul_ne_zero (Q (τ i)).F.s_ne (GlobalTheory.LocMod.Witness.xi_ne _)) (Q (τ i)).F.bes' (Q (τ i)).loc₂
   obtain ⟨a, ha, -⟩ := G.2.2.1 z
   have hm : (Q (τ i)).gl₂ a ∈ besGrp S.B'.d S.B'.o := H.2 a _ ha (by rw [G.2.2.2.1 a _ ha, inv_mul_cancel_right]; exact hz)
@@ -778,10 +782,10 @@ theorem pint_invariant : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdCha
     rintro p ⟨i, rfl⟩ h
     exact Fin.succ_ne_zero i (hinj h)
   have k₁ : ∀ a (z : grpAt S.J.W (places fun i : Fin r => Q i.succ)), (Q 0).gl₁ a * z.1 = z.1 * (Q 0).gl₁ a := fun a z =>
-    (GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D (Q 0).k (Q 0).q S.J.W _ (Q 0).F.G₁ (Q 0).gl₁ (Q 0).loc₁).2.2.2.1 a _
+    (_root_.GlobalTheory.LocGl.local_group D (Q 0).k (Q 0).q S.J.W _ (Q 0).F.G₁ (Q 0).gl₁ (Q 0).loc₁).2.2.2.1 a _
       (SetCut.grpAt_le_grpOff _ _ _ hdis z.2)
   have k₂ : ∀ a (z : grpAt S.B'.V (places fun i : Fin r => Q i.succ)), (Q 0).gl₂ a * z.1 = z.1 * (Q 0).gl₂ a := fun a z =>
-    (GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D (Q 0).k (Q 0).q S.B'.V _ (Q 0).F.G₂ (Q 0).gl₂ (Q 0).loc₂).2.2.2.1 a _
+    (_root_.GlobalTheory.LocGl.local_group D (Q 0).k (Q 0).q S.B'.V _ (Q 0).F.G₂ (Q 0).gl₂ (Q 0).loc₂).2.2.2.1 a _
       (SetCut.grpAt_le_grpOff _ _ _ hdis z.2)
   refine ⟨fun x y ρ hρ κ hκ => ?_, fun x y κ hκ => ?_, fun x y ρ hρ => ?_⟩
   · have e : (ρ * y * κ).1.1 * (Q 0).gl₂ (ρ * y * κ).2 =

@@ -9,14 +9,14 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.Fibrewi
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.MorAlgSt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIsPullDegOfComparisonStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsThetaSectionNonzeroFibresLocalRingStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsThetaSectionNonzeroFibresLocalRing
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTwistedSectionThetaTranslateCoefStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniqueExpansionSectionAdmissibleBase
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExpansionCoefMemAdicPowStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ForallTermNeZeroOfPsiRelationStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PsiCmpOfSecCmpStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PsiEvenDescendBaseChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PsiRelOfExpTStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PsiEvenDescendBaseChange
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PsiRelOfExpT
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PsiScalarEqExpansionCoefRatioStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PsiScalarMemOfPsiMemIdealStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.RigidificationComparisonUniformisationStatement
@@ -226,7 +226,7 @@ theorem exists_degData_of_thetaNZ : Laws → Laws2 → Ega → ∀ (R : Type) [C
   obtain ⟨f, hf, -⟩ := CompleteBaseExpansion.main h₁ h₂ hE R I hR hP.ne_top D A G U 1 σ
   obtain ⟨σ', f', hf', hσσ, hff⟩ := ExpCmp.expT_cmp R V I _ φ hIm D D'.toPre A A' G G' U U' F C 1 σ f hf
   have hcmp : SecCmp D D'.toPre C.β C.v C.xe f f' := hff
-  have hrel' := GlobalTheory.T.psiRel_of_expT' h₁ h₂ V _ hV' D' A' G' U' U₀ hU σ' f' hf'
+  have hrel' := _root_.GlobalTheory.PsiExpansion.psiRel_of_expT h₁ h₂ V _ hV' D' A' G' U' U₀ hU σ' f' hf'
   have hne' : ∀ α, ∃ j, (f' α).f j ≠ 0 := by
     refine GlobalTheory.T.forall_term_ne_zero_of_psiRelation V D'.toPre f' hrel' ?_
     obtain ⟨T, y, z, J, α, hJ, -, -, hu⟩ := GlobalTheory.T.exists_expansionTerm_unit_closedFibre V _ hm D'.toPre A' G' U' 1 σ' f' hf' (hσ₂ 1 σ σ' hσσ hσ)
@@ -243,13 +243,13 @@ theorem exists_degData_of_thetaNZ : Laws → Laws2 → Ega → ∀ (R : Type) [C
   have hpsi : PsiCmp E D'.toPre C.β C.v C.xe gam :=
     GlobalTheory.T.psiCmp_of_secCmp' R V φ E D'.toPre C.β C.v C.xe C.pbB C.v_gen C.c_pr hrig f f' hcmp hrelE hrel' (hne' 0) gam hgam
   have hev : E.PsiEven :=
-    GlobalTheory.T.psiEven_descend_baseChange h₁.globalFns R V φ E D'.toPre C.β C.v C.xe C.pbB C.v_gen C.c_pr gam hgam hpsi D'.psi_even
+    _root_.GlobalTheory.PsiRing.psiEven_descend h₁.globalFns R V φ E D'.toPre C.β C.v C.xe C.pbB C.v_gen C.c_pr gam hgam hpsi D'.psi_even
   have hbi : E.TauBimult :=
     GlobalTheory.T.tauBimult_of_baseChange' h₁.globalFns R V φ E D'.toPre C.β C.v C.xe C.pbB C.v_gen C.c_pr hrig gam hgam hpsi D'.tau_bimult
   obtain ⟨hD, hD₁, hD₂, hD₃⟩ :=
     GlobalTheory.T.exists_isPullDeg_of_comparison R V φ E D'.toPre C.β C.v C.xe C.pbB C.v_gen C.c_pr hrig gam hgam hpsi hbi
   obtain ⟨ga, a, hS⟩ := exists_psiScal R E
-  obtain ⟨th, hth, hmul⟩ := GlobalTheory.T.exists_thetaSection_nonzeroFibres_localRing h₂.secTwist R D
+  obtain ⟨th, hth, hmul⟩ := _root_.GlobalTheory.PsiRing.exists_basis_fibNZ h₂.secTwist R D
   obtain ⟨q, hq⟩ := hmul (f 0)
   choose b hb using fun χ : D.X => _root_.GlobalTheory.PsiCoef.exists_coef R D th hmul χ (ga χ) (hS χ).1 (f χ)
   have hab : ∀ χ, algebraMap R (FractionRing R) q * (a χ).val = algebraMap R (FractionRing R) (b χ) := fun χ =>

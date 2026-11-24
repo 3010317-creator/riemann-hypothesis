@@ -15,7 +15,7 @@ public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsFini
 public import Development.AbelianVarietyTheory.Definitions.PlaceAdaptation.AdaptStd
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.ChartChg
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsPowSpanXLeSpanFormalModuleMatrixStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.FormalGroupTranslateAutomorphismAndMatrixKernelStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.FormalGroupTranslateAutomorphismAndMatrixKernel
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.FormalMatrixKernelFiniteNcardEqRankStatement
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.InvariantsAndTraceFiniteFreeDomainEndomorphisms
 public import Mathlib.Algebra.Algebra.Defs
@@ -83,7 +83,6 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.
 import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.FormalModuleMatrixApplyPointsActionLawsStatement
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Topology.Sheaves.Presheaf
-import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.MvPowerSeriesSubstConstTermsLocalAlgHomSpecStatement
 import Mathlib.RingTheory.TotallySplit
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -605,7 +604,7 @@ theorem descends_of_invariant : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDisc
   obtain ⟨r, b, hr, hb⟩ := GlobalTheory.FiniteColength.exists_basis_subst_finrank_quotient V (Fin n × Fin d) φ hφ0 (_root_.GlobalTheory.PlaceInt.exists_pow_span_X_le_span_matV V d O B hB n q q' N hN hq)
   obtain ⟨hfin, hcard⟩ := _root_.GlobalTheory.KerCard.finite_ncard_kerM V d O B hB n q q' N hN hq hj hs
   have : IsDomain (MvPowerSeries (Fin n × Fin d) V) := NoZeroDivisors.to_isDomain _
-  have hsh := (GlobalTheory.T.formalGroupTranslate_automorphism_and_matrixKernel V d O B n q).2.2
+  have hsh := (_root_.GlobalTheory.PlaceInt.shift_kerM V d O B n q).2.2
   obtain ⟨a, ha⟩ := mem_range_of_invariant (MvPowerSeries (Fin n × Fin d) V) (MvPowerSeries (Fin n × Fin d) V)
     (Ψ : MvPowerSeries (Fin n × Fin d) V →+* MvPowerSeries (Fin n × Fin d) V) r b
     (fun f => by simpa only [hs', RingHom.coe_coe] using hb f) (kerM B q) hfin (hcard.trans hr) (shift B.G.F)
@@ -830,7 +829,7 @@ theorem crd_const (p : Matrix (Fin n) (Fin n) O) (s : Fin n × Fin d) : MvPowerS
   (GlobalTheory.T.formalModuleMatrixApplyPoints_action_laws V d O B n n p p _ _ pt_small pt_small).2.2.2.2.2.1 s.1 s.2
 
 theorem pullM_eq (p : Matrix (Fin n) (Fin n) O) (f : PS V n d) : pullM B p f = MvPowerSeries.subst (crd B p) f :=
-  (GlobalTheory.T.mvPowerSeriesSubstConstTerms_local_algHom_spec V _ _ Unit (crd B p) fun j => by rw [crd_const]; exact zero_mem _).2.2.1 (crd_const B p) f
+  (_root_.GlobalTheory.PlaceInt.evC_spec V _ _ Unit (crd B p) fun j => by rw [crd_const]; exact zero_mem _).2.2.1 (crd_const B p) f
 
 theorem crd_mul (p q : Matrix (Fin n) (Fin n) O) (s : Fin n × Fin d) :
     crd B (p * q) s = MvPowerSeries.subst (crd B q) (crd B p s) := by
@@ -891,7 +890,7 @@ theorem sum_shift_kerM_mul : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscret
   refine ⟨g, ?_⟩
   haveI : IsDomain (PS V n d) := NoZeroDivisors.to_isDomain _
   have hsm : ∀ α ∈ hfin.toFinset, ∀ b, Small (α b) := fun α hα => (hfin.mem_toFinset.1 hα).1
-  have hsh := (GlobalTheory.T.formalGroupTranslate_automorphism_and_matrixKernel V d O B n (p * q)).2.2
+  have hsh := (_root_.GlobalTheory.PlaceInt.shift_kerM V d O B n (p * q)).2.2
   have key := sum_tower (pullHom B p : PS V n d →+* PS V n d) (pullHom B q : PS V n d →+* PS V n d) b b' b''
     (by simpa only [RingHom.coe_coe, pullHom_apply] using hb)
     (by simpa only [RingHom.coe_coe, pullHom_apply] using hb')

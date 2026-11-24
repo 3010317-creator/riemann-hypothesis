@@ -16,9 +16,10 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Lowes
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LowestKTypeValuesKilledByLoweringPart
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MixedLaplacianKillsProductOfMinors
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PtYAndItYOfPair
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilMaximalCompactFockSubstitutionCharacterStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilMaximalCompactFockSubstitutionCharacter
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompAtMtEqInfMat
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieActionFockOperatorsScalarsTraceStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieActionFockOperatorsScalarsTrace
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.HolomorphicLowestType
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasSign
@@ -414,7 +415,7 @@ theorem ioHarm_holds (D : D7) : IoHarm D := by
     rw [hlab, if_pos (hlabE ρ)]
     rfl
   obtain ⟨x₁, x₂, x₃, hx⟩ := wts i (funext fun τ => (hpar τ).symm) M' hord
-  have hact := GlobalTheory.T.weil_maximalCompact_fock_substitution_character D ψ θ (Vc D i) (Wc D i) _ _ ω _ M' BV hω hθ
+  have hact := _root_.GlobalTheory.FockCompactAction.om_pureTensorO_eq_fact D ψ θ (Vc D i) (Wc D i) _ _ ω _ M' BV hω hθ
     (D.sp.V_sig _) (D.sp.W_sig _) hBS _ _ hpq hord _ _ (fun τ => (hχ τ).1)
     (fun τ => (hχ τ).2) x₁ x₂ x₃ (fun τ => (hx τ).1) (fun τ => (hx τ).2.1)
     (fun τ => (hx τ).2.2) f hth (fun τ => (hf τ).vac)
@@ -438,7 +439,7 @@ theorem ioHarm_holds (D : D7) : IoHarm D := by
   have hbase : RealDat.Delta (D := D) i ∈ N := by
     intro τ
     refine ⟨hd, fun X hX hcX => ?_⟩
-    have hLF := GlobalTheory.T.lieAction_fockOperators_scalars_trace D (Vc D i) (Wc D i) A B θ ψ χS χT ω f τ (-(D.hc τ).e i) (-(D.hc τ).e i - 1 / 2) hθ hω
+    have hLF := _root_.GlobalTheory.LieScalar.lieFockAll D (Vc D i) (Wc D i) A B θ ψ χS χT ω f τ (-(D.hc τ).e i) (-(D.hc τ).e i - 1 / 2) hθ hω
       (hχ τ).1 (hχ τ).2 ⟨hth, fun ρ => by rw [congrFun hAc ρ]; exact (hf ρ).vac⟩
     have hss : cart M' τ * cart M' τ = 1 := by
       show (M'.fr τ)⁻¹ * Formalism.REAL.Jm (M'.ε τ) * M'.fr τ * ((M'.fr τ)⁻¹ * Formalism.REAL.Jm (M'.ε τ) * M'.fr τ) = 1

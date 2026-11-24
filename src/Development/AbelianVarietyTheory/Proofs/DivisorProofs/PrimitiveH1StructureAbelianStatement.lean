@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AxesVanishingStructureSheafDegOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeOneFormFrameAndSquareStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianStructureCohomologyStatementStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianStructureCohomologyStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BijectiveOfSplitInjectiveFgProjectiveConstantRanStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FgProjectiveConstantRankExtensionAndProdStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GrpObjPullbackAxesCohomologyProjectionsStatement
@@ -66,8 +66,8 @@ namespace GlobalTheory.AbCoh
 theorem axesO1_of_isAbelianScheme (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ)
     (hA : IsAbelianScheme A) (hg : SmoothOfRelativeDimension g A.hom) : AxesVanishingStructureSheafDegOne A := by
   obtain ⟨-, -, hAA, hgg⟩ := GlobalTheory.T.abelianScheme_oneFormFrame_and_square R A g hA hg
-  have h1 := (GlobalTheory.T.abelian_structure_cohomology_statement R A g hA hg).1
-  have h2 := (GlobalTheory.T.abelian_structure_cohomology_statement R (A ⊗ A) (g + g) hAA hgg).1
+  have h1 := (_root_.GlobalTheory.AbCoh.oStr R A g hA hg).1
+  have h2 := (_root_.GlobalTheory.AbCoh.oStr R (A ⊗ A) (g + g) hAA hgg).1
   have hax := (GlobalTheory.T.grpObj_pullback_axes_cohomology_projections R A).1
   let f : HO1 A.hom × HO1 A.hom →ₗ[R] HO1 (A ⊗ A).hom :=
     pO1 (fst A A) ∘ₗ LinearMap.fst R _ _ + pO1 (snd A A) ∘ₗ LinearMap.snd R _ _

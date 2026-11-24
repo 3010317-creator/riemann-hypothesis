@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnT
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDualGOfGQ
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinTensMemLatO
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaDistributionInvariantRationalTargetStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaDistributionInvariantRationalTarget
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.EmbeddingXiZeroNeZero
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
 import Mathlib.Algebra.Order.Floor.Extended
@@ -406,7 +406,7 @@ theorem swap_inf {θ : InfFam D} (hθ : IsInfFam θ) {om : GA D S × GA D T →*
 theorem automorphy_source : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S T : HSp D) (θ : InfFam D), IsInfFam θ → ∀ (ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)) (ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)), IsSelfDualC S ΛS → IsSelfDualC T ΛT → ∀ η, IsEtaTilde D η → ∀ (of oi : (GA D S × GA D T →* Module.End ℂ (WO S T → ℂ))), IsFinWeil ψ S T ΛS ΛT (η ^ S.rank) (η ^ T.rank) of → IsInfWeil ψ θ S T oi → ∀ γ ∈ GQ S, ∀ f, IsThetaFunO ψ S T f → of (γ, 1) (oi (γ, 1) f) 0 = f 0 := by
   intro D ψ hψ S T θ hθ ΛS ΛT hS hT η hη of oi hf hi γ hγ f hth
   obtain ⟨γ', hγ', rfl⟩ := exists_dualG_of_GQ S ΛS hS hγ
-  have := GlobalTheory.T.thetaDistribution_invariant_rationalTarget D ψ hψ (dualSp T ΛT hT) (dualSp S ΛS hS) θ hθ _ _ (dualSp_selfDual T ΛT hT)
+  have := _root_.GlobalTheory.RatAut.automorphy_target D ψ hψ (dualSp T ΛT hT) (dualSp S ΛS hS) θ hθ _ _ (dualSp_selfDual T ΛT hT)
     (dualSp_selfDual S ΛS hS) η hη _ _ (swap_fin ψ S T ΛS ΛT hS hT hf) (swap_inf ψ S T ΛS ΛT hS hT hθ hi) γ' hγ' _
     (theta_trF' ψ S T ΛS ΛT hS hT hth)
   rw [swapOm_apply, swapOm_apply, map_one] at this

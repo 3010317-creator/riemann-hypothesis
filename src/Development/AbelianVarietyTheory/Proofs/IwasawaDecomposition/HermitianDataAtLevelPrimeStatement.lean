@@ -9,13 +9,13 @@ public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemSta
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicRelationClassesCoordinatesStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ClassPairMovedOfMultipliesLocalFunctional
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelFunctionalEqOfClassesRelatedAtPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MiddleStepOneLevelProjectionEqChartProjectionStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MiddleStepOneLevelProjectionEqChartProjection
 public import Formalism.LocalToGlobal.GlobalTheory.BlockActions.FiniteAdeleRingNontrivial
 public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsEquiv
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsBasisAtOfIsLocBasis
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 public import Mathlib.Geometry.Euclidean.Projection
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicConjugateCharacterStandardFormsStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicConjugateCharacterStandardForms
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HostPrimesOverLevelPlaceStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HermitianSeenPrimeConditionHermitianSide
 import Mathlib.Algebra.Order.Floor.Extended
@@ -487,8 +487,8 @@ theorem diamond_on_hermitian_side : ∀ {B : Base} {X : PreX B.toPre} (I : TC B 
       obtain ⟨δ, hδ⟩ := hM h1 h2 (H.chOf u i c)
       obtain ⟨γ, g1, g2, g3⟩ := move_mid (F u) i h1 h2 v a c k hk δ hδ
       refine ⟨γ, g1, g2, fun z z' e => ?_⟩
-      have e1 := (GlobalTheory.T.middleStep_oneLevel_projection_eq_chart_projection I hOk hP l Z H F hF hC u i h1 h2 v _).1 z z rfl
-      have e2 := (GlobalTheory.T.middleStep_oneLevel_projection_eq_chart_projection I hOk hP l Z H F hF hC u i h1 h2 v c).1 z' z' rfl
+      have e1 := (_root_.GlobalTheory.Mem.Col2.HAt.pr_lvC_eq_lv I hOk hP l Z H F hF hC u i h1 h2 v _).1 z z rfl
+      have e2 := (_root_.GlobalTheory.Mem.Col2.HAt.pr_lvC_eq_lv I hOk hP l Z H F hF hC u i h1 h2 v c).1 z' z' rfl
       have e3 := g3 z z' e
       rw [e1, e2] at e3
       exact e3
@@ -682,7 +682,7 @@ theorem dnCl_of_tie {B : Base} {X : PreX B.toPre} (I : TC B X) (hOk : I.Ok) (hP 
       ⟨q, hq.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hq (RingOfIntegers.not_isField _)⟩
     have hu : Q.under (𝓞 (I.rec7 l Z).host.F) ≠ ((F u).atT.eV v).1 := fun h =>
       (GlobalTheory.T.host_primes_over_level_place I hOk hP l Z H F hS hC u v Q h).elim hq1 hq2
-    have h1 := GlobalTheory.T.adelic_conjugate_character_standard_forms I hOk hP l Z H F hS hC u i hi v c _ γ₀.1 hAd Q hu
+    have h1 := _root_.GlobalTheory.Mem.Col2.SameOff.use₆ I hOk hP l Z H F hS hC u i hi v c _ γ₀.1 hAd Q hu
     refine Submodule.map_injective_of_injective
       (f := ((crdN (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G) i hi : ((_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).sp.X i).V →ₗ[(_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.E] (Fin ((_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).R.N i) → (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.E)).restrictScalars (𝓞 (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.E)))
       (crdN (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G) i hi).injective ?_
@@ -727,8 +727,8 @@ theorem GlobalTheory.Mem.Col2.HAt.dn_move_exists : ∀ {B : Base} {X : PreX B.to
       refine ⟨gx i hi γ, fun _ _ => dnCl_of_tie I hOk hP l Z H F hS hC u i hi v c g γ
         ⟨fun h => absurd h hN, fun _ _ => ⟨hβ, κ.1, κ.2, η.1, η.2, hη, hy⟩⟩ hloc ?_⟩
       intro x hx
-      rw [← (GlobalTheory.T.middleStep_oneLevel_projection_eq_chart_projection I hOk hP l Z H F hS hC u i h1 h2 v (((I.rec7 l Z).fm u).dn i v c g)).1 x x rfl,
-        ← (GlobalTheory.T.middleStep_oneLevel_projection_eq_chart_projection I hOk hP l Z H F hS hC u i h1 h2 v c).2 ⟨_, hx⟩ ⟨_, hx⟩ rfl]
+      rw [← (_root_.GlobalTheory.Mem.Col2.HAt.pr_lvC_eq_lv I hOk hP l Z H F hS hC u i h1 h2 v (((I.rec7 l Z).fm u).dn i v c g)).1 x x rfl,
+        ← (_root_.GlobalTheory.Mem.Col2.HAt.pr_lvC_eq_lv I hOk hP l Z H F hS hC u i h1 h2 v c).2 ⟨_, hx⟩ ⟨_, hx⟩ rfl]
       exact hfv x hx
   · exact ⟨1, fun hi hg => absurd ⟨hi, hg⟩ hcase⟩
 end -- clump:auto
@@ -1155,11 +1155,11 @@ theorem GlobalTheory.Mem.Col2.HAt.UpMove.up_move : ∀ {B : Base} {X : PreX B.to
   swap
   · exact ⟨1, fun _ h => absurd h hf⟩
   obtain ⟨γ, hAd, h3, h4, h5⟩ := crd_up (F u) i hi v c y hf
-    (fun h1 h2 c' z z' e => (GlobalTheory.T.middleStep_oneLevel_projection_eq_chart_projection I hOk hPins l Z H F hStd hCar u i h1 h2 v c').1 z z' e)
+    (fun h1 h2 c' z z' e => (_root_.GlobalTheory.Mem.Col2.HAt.pr_lvC_eq_lv I hOk hPins l Z H F hStd hCar u i h1 h2 v c').1 z z' e)
   refine ⟨gx i hi γ, fun _ _ => ⟨upCl_of_crd (F u).atT (F u).lv i hi v c y γ ?_ h3 h4 h5 ?_,
     GlobalTheory.T.adelic_relation_classes_coordinates I hOk hPins l Z H F hStd hCar u i hi v c _ γ hAd⟩⟩
   · intro q hP hc
-    refine GlobalTheory.T.adelic_conjugate_character_standard_forms I hOk hPins l Z H F hStd hCar u i hi v c _ γ.1 hAd q fun hq => ?_
+    refine _root_.GlobalTheory.Mem.Col2.SameOff.use₆ I hOk hPins l Z H F hStd hCar u i hi v c _ γ.1 hAd q fun hq => ?_
     rcases GlobalTheory.T.host_primes_over_level_place I hOk hPins l Z H F hStd hCar u v q hq with h | h
     · exact hP h
     · exact hc h
@@ -1379,7 +1379,7 @@ theorem GlobalTheory.Mem.Col2.TC.hermitian_data_at_level_prime : ∀ {B : Base} 
   intro B X I hI hP l Z H F hS hC
   have hseen := GlobalTheory.T.hermitianSeenPrimeCondition_hermitianSide I hI hP l Z H F hS hC
   have hdisc := GlobalTheory.T.dual_mod_class_lattice_equiv_quotient I hI hP l Z H F hS hC
-  have hlvc := GlobalTheory.T.middleStep_oneLevel_projection_eq_chart_projection I hI hP l Z H F hS hC
+  have hlvc := _root_.GlobalTheory.Mem.Col2.HAt.pr_lvC_eq_lv I hI hP l Z H F hS hC
   have hstab := GlobalTheory.T.stabiliserMap_hyperplane_eq_conj_classMap I hI hP l Z H F hS hC
   choose upG hup using GlobalTheory.T.hermitianUpMove_at_levelPrime_place I hI hP l Z H F hS hC
   choose dnG hdn using GlobalTheory.T.exists_hermitianDownMove_at_levelPrime_place I hI hP l Z H F hS hC

@@ -2,7 +2,8 @@ module
 
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.FibAc
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsLocalizedModuleResBasicOpenOfQcqs
-public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.CechLBHomologyFiniteOfAffineCoverStatement
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.IsScalarTowerOfAlgebraMapEq
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.CechLBHomologyFiniteOfAffineCover
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.CechLBPullIsoOfIsOpenImmersion
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsSmulHomologyEqZeroOfAcyclicFibre
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.MumfordBundleCechFiniteVanishesOffOrigin
@@ -90,7 +91,7 @@ theorem fibAc_of_closed_fibres : ∀ {k : Type} [Field k] [IsAlgClosed k] {X T Z
   have hM := LB.isLB_pull hG π
   have hI := GlobalTheory.MumfordSupport.isAffineOpen_biInf_of_isSeparated f hD
   have hflat : ∀ p, Module.Flat R ((cechLB f (G.pull π) D).X p) := flat_cechLB_X f hM hI
-  have hfin := GlobalTheory.T.finite_cechLB_homology_of_affine_cover R Y f _ κ D hM inferInstance hproj hD hc
+  have hfin := _root_.GlobalTheory.AbLaw.cechLB_homology_finite_of_affine_cover R Y f _ κ D hM inferInstance hproj hD hc
   rw [HomologicalComplex.exactAt_iff_isZero_homology, ModuleCat.isZero_iff_subsingleton]
   refine GlobalTheory.MumfordAway.subsingleton_of_points k R (t ≫ b) _ fun χ hχ => ?_
   refine exists_smul_homology_eq_zero_of_acyclic_fibre R k χ _ (Fintype.card κ)

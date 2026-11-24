@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CongruenceSubgroupIndicatorWeight
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitPlaceTwistedConstantTermMatchesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitPlaceTwistedConstantTermMatches
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,7 +56,7 @@ def M1 : Prop :=
 
 def M2 : Prop := type_of% _root_.GlobalTheory.CongMatch.match_principal_congruence_inert
 
-def M3 : Prop := type_of% GlobalTheory.T.splitPlace_twistedConstantTerm_matches
+def M3 : Prop := type_of% _root_.GlobalTheory.BCT.SplitCtMatch.match_ctMu_of_isSplitAt
 
 def lOf {n : ℕ} (x : Fin n → ℤ) (i : Fin (n / 2)) : ℤ :=
   x ⟨i.val, by omega⟩ - x ⟨n - 1 - i.val, by omega⟩

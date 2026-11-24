@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittDecompSymplInclIsotropicInclAnisotropic
 public import Mathlib.LinearAlgebra.Matrix.Rank
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorThetaFunctionalMixedSourceModeStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorThetaFunctionalMixedSourceMode
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsTopologicalRingAE
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FinitePartMemCompactOfIsotropicAnnihilator
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsAdeleRingTensorEquivInfiniteProdFinite
@@ -45,7 +47,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CoefIntegralEq
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
 
 @[expose] public section
 
@@ -85,7 +86,7 @@ theorem rank_qX {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) : d.qX.rank =
 
 theorem mixS_half : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S S₀ T : HSp D) (ρ : ℕ) (d : HypDec S S₀ ρ) (μ : Measure (Mx D T.rank ρ)) (𝓕 : Set (Mx D T.rank ρ)), IsCovolOne (ratMx D T.rank ρ) μ 𝓕 → ∀ e, IsSplitIdem D e → ∀ f, IsThetaFunO ψ S T f → (∃ U : AddSubgroup (Mx D T.rank ρ), IsOpen (U : Set (Mx D T.rank ρ)) ∧ ∀ u ∈ U, (∀ i j, cA D e * u i j = u i j) → ∀ x, (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 f (x + u) = (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 f x) ∧ ∃ K : Set (Mx D T.rank ρ), IsCompact K ∧ ∀ x : Mx D T.rank ρ, (∀ i j, cA D e * x i j = x i j) → (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 f x ≠ 0 → x ∈ K := by
   intro D ψ hψ S S₀ T ρ d μ 𝓕 hμ e he f hf
-  obtain ⟨hX, hY, -⟩ := GlobalTheory.T.heisenbergOperator_thetaFunctional_mixedSourceModel D ψ hψ S S₀ T ρ d ⟨μ, 𝓕, hμ⟩ f hf
+  obtain ⟨hX, hY, -⟩ := _root_.GlobalTheory.HeisMixSource.heis_mixS D ψ hψ S S₀ T ρ d ⟨μ, 𝓕, hμ⟩ f hf
   obtain ⟨U, hU, hl⟩ := hf.level
   have hhalf : ∀ x : Mx D T.rank ρ, (∀ i j, cA D e * x i j = x i j) → x.map (infPart D) = 0 := fun x hx => by
     ext i j; exact infPart_eq_zero he (hx i j)

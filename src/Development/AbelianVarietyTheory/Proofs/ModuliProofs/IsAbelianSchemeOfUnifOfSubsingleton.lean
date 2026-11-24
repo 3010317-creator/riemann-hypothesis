@@ -6,7 +6,8 @@ import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.HomBaseChangeBi
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.LocallyOfFinitePresentationDiagMap
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CubTransfer
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFiniteCubeInduction
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsIsoUniformisationsOfIsoDegenerationDataStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifBaseChangeSt
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsIsoUniformisationsOfIsoDegenerationData
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SelfTorusExtensionCoordValuesEqOne
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationDegenerationDataUnique
 import Mathlib.Algebra.AffineMonoid.Basic
@@ -160,7 +161,7 @@ theorem isAbelianScheme_of_unif_of_subsingleton : Laws → Laws2 → ∀ (V : Ty
       i := toUnit _ ≫ η
       i_hom := by have := hAb.comm; infer_instance
       isKernel := IsPullback.of_vert_isIso ⟨Category.comp_id _⟩ }⟩
-  obtain ⟨ψ, -⟩ := GlobalTheory.T.exists_iso_uniformisations_of_iso_degeneration_data hL hL₂ V _ hR rfl D D A A' G D.toPre.P.A hsa
+  obtain ⟨ψ, -⟩ := _root_.GlobalTheory.exists_iso_isPullUnif_of_isPullDeg hL hL₂ V _ hR rfl D D A A' G D.toPre.P.A hsa
     hsemi U
     ⟨SelfUnif.selfPre D A' eA hA hw, fun k _ =>
       SelfUnif.expBij D A' eA hA hw hL.globalFns (IsAdicComplete.le_jacobson_bot _) k⟩ hD

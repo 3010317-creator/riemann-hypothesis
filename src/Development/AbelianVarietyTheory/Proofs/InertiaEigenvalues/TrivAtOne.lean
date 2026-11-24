@@ -31,7 +31,9 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InnerProduct
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConstMemBddAut
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLocalPreimageOfSupportedAtPlaceStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PairFixedVectorLatticeVacuumOffLevelsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeilDatumCharactersUnramifiedOffLevelsStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
+public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemSum
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeilDatumCharactersUnramifiedOffLevels
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilMatrixCoefficientVacuaUnramifiedPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -1202,7 +1204,7 @@ theorem finmult_good : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Ty
   obtain ⟨a, rfl⟩ := GlobalTheory.T.exists_local_preimage_of_supportedAtPlace D (Wc D i) v f hf k hk
   have hW := hL.thP.ωP i t
   have hvac := GlobalTheory.T.pairFixedVector_latticeVacuum_offLevels D G Pl0 T A Ks R F hL i t v f hf hoff
-  have hunr := GlobalTheory.T.weilDatumCharacters_unramified_offLevels D G Pl0 T A Ks R F hL i t v f hf hoff
+  have hunr := _root_.GlobalTheory.GoodModUnr.chrTh_unrAt D G Pl0 T A Ks R F hL i t v f hf hoff
   obtain ⟨φ, -, hc⟩ := GlobalTheory.VacCoef.vac_coef D R.ψ (Vc D i) (Wc D i) _ _ (R.ωP i t) hW μ 𝓕 hμ v hunr
   refine ⟨star (φ a), fun γ _ hγ => ?_⟩
   have hcomm := comm_of_supp_triv hk hγ

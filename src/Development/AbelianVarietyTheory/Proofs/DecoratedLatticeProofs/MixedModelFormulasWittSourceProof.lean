@@ -1,15 +1,18 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittSmallGroupEmbeddingMemPointwiseStabilizerIso
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumTransportSourceRationalIsometryStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittDecompositionMixedCoordsRankZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittSourceMixedCoordHeisenbergRestrictionStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumTransportSourceRationalIsometry
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittDecompSymplInclIsotropicInclAnisotropic
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittDecompositionMixedCoordsRankZero
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.AdjointIsotropicDecomposition
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittSourceMixedCoordHeisenbergRestriction
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilCompatibleOfSameSplittingCharacterStatement
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SkewGramHalfModule
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilRepresentationValueAtOriginLeviFactor
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WittTowerRestrictionUnipotentRadicalInvariantStatement
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.AdjointIsotropicDecomposition
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorThetaFunctionalMixedSourceModeStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WittTowerRestrictionUnipotentRadicalInvariant
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorThetaFunctionalMixedSourceMode
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilOperatorsWittParabolicOriginToPointStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -47,13 +50,11 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ComplexEmbeddingHermitianQuadrupleSum
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisThetaLaws
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 import Mathlib.RingTheory.TotallySplit
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinateOriginWeilRepTargetEquivariant, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinateOriginWeilRepTargetEquivariantStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilRepresentationValueAtOriginLeviFactorStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinateOriginUnipotentRadicalInvariant, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinateOriginUnipotentRadicalInvariantStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittMixedModelUnipotentFormulas, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittMixedModelUnipotentFormulasStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittSourceProof
@@ -74,11 +75,11 @@ namespace GlobalTheory.ValueAtOrigin
 theorem mixS_zero_target : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S S₀ T : HSp D) (ρ : ℕ) (d : HypDec S S₀ ρ) (χS χT : (AE D)ˣ →* Circle) (om : Om S T) (om₀ : Om S₀ T), IsWeilDatumO ψ S T χS χT om → IsWeilDatumO ψ S₀ T χS χT om₀ → ∀ (μ : Measure (Mx D T.rank ρ)) (𝓕 : Set (Mx D T.rank ρ)), IsCovolOne (ratMx D T.rank ρ) μ 𝓕 → ∀ h f, IsThetaFunO ψ S T f → (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 (om (1, h) f) 0 = om₀ (1, h) ((_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 (f) 0) := by
   intro D ψ S S₀ T ρ d χS χT om om₀ hS hS₀ μ 𝓕 hμ h f hf
   rcases Nat.eq_zero_or_pos ρ with rfl | hρ
-  · have hz := (GlobalTheory.T.wittDecomposition_mixedCoords_rank_zero D ψ).1 S S₀ T d μ 𝓕 hμ
-    have hi := (GlobalTheory.T.weil_datum_transport_source_rational_isometry D ψ S S₀ T d hS.std).2.2.2 χS χT om om₀ hS hS₀ 1 h f hf
+  · have hz := (_root_.GlobalTheory.Unf.mixRankZero D ψ).1 S S₀ T d μ 𝓕 hμ
+    have hi := (_root_.GlobalTheory.WeilSrc.om0_ext0_eq_om_emb0_of_isWeilDatumO D ψ S S₀ T d hS.std).2.2.2 χS χT om om₀ hS hS₀ 1 h f hf
     change I195MixedCoordinates.source d T ψ μ 𝓕 (om (1, h) f) 0 = om₀ (1, h) (I195MixedCoordinates.source d T ψ μ 𝓕 f 0)
     rw [hz, hz, hi, map_one]
-  · obtain ⟨hsp, hrat, -, -, -, hmix, -⟩ := GlobalTheory.T.wittSourceMixedCoord_heisenbergRestriction D ψ S S₀ T ρ d
+  · obtain ⟨hsp, hrat, -, -, -, hmix, -⟩ := _root_.GlobalTheory.Bridge.heis_bridge D ψ S S₀ T ρ d
     have hc := GlobalTheory.T.weilCompatible_of_sameSplittingCharacter D S S₀ T ρ d.e d.i₀ (hsp hρ) ψ χS χT χT om om₀ hS hS₀ μ 𝓕 (hrat ▸ hμ) h f hf
     have h0 : ∀ g : WO S T → ℂ, heisO ψ S T (d.extX T 0) g = g := by
       intro g; funext w
@@ -146,18 +147,18 @@ theorem mixS_zero_unip : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S S₀ T
   intro D ψ S S₀ T ρ d χS χT om hW μ 𝓕 hμ f hf
   rcases Nat.eq_zero_or_pos ρ with hρ | hρ
   · subst hρ
-    obtain ⟨-, -, h0⟩ := GlobalTheory.T.wittDecomposition_mixedCoords_rank_zero D ψ
+    obtain ⟨-, -, h0⟩ := _root_.GlobalTheory.Unf.mixRankZero D ψ
     obtain ⟨-, hB, hC⟩ := h0 S S₀ d
     refine ⟨fun b => ?_, fun c => ?_⟩
     · rw [hB b, show ((1 : GA D S), (1 : GA D T)) = 1 from rfl, map_one]; rfl
     · rw [hC c, show ((1 : GA D S), (1 : GA D T)) = 1 from rfl, map_one]; rfl
-  · obtain ⟨hiso, hrat, -, -, -, hres, -, hnB, hnC⟩ := GlobalTheory.T.wittSourceMixedCoord_heisenbergRestriction D ψ S S₀ T ρ d
+  · obtain ⟨hiso, hrat, -, -, -, hres, -, hnB, hnC⟩ := _root_.GlobalTheory.Bridge.heis_bridge D ψ S S₀ T ρ d
     have hμ' : IsCovolOne (GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.ratMx D T.rank ρ) μ 𝓕 := by rw [hrat]; exact hμ
     have key : ∀ n : NI S d.e, (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 (om ((n : GA D S), 1) f) 0 = (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 f 0 := by
       intro n
       change I195MixedCoordinates.source d T ψ μ 𝓕 (om ((n : GA D S), 1) f) 0 = I195MixedCoordinates.source d T ψ μ 𝓕 f 0
       rw [hres, hres, map_zero, heisO_zero, heisO_zero]
-      exact GlobalTheory.T.wittTower_restriction_unipotentRadical_invariant D S S₀ T ρ d.e d.i₀ (hiso hρ) ψ χS χT om hW μ 𝓕 hμ' n f hf
+      exact _root_.GlobalTheory.UnipRes.res_unip D S S₀ T ρ d.e d.i₀ (hiso hρ) ψ χS χT om hW μ 𝓕 hμ' n f hf
     exact ⟨fun b => key ⟨_, hnB b⟩, fun c => key ⟨_, hnC c⟩⟩
 
 end GlobalTheory.UnipZero
@@ -243,14 +244,14 @@ theorem mixS_unip : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S S₀ T : HS
 
   have eX : ∀ (a : Mx D T.rank ρ) (g : WO S T → ℂ), IsThetaFunO ψ S T g →
       (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 (heisO ψ S T (d.extX T a) g) 0 = (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 g a := fun a g hg => by
-    have := (GlobalTheory.T.heisenbergOperator_thetaFunctional_mixedSourceModel D ψ hstd S S₀ T ρ d ⟨μ, 𝓕, hμ⟩ g hg).1 0 a
+    have := (_root_.GlobalTheory.HeisMixSource.heis_mixS D ψ hstd S S₀ T ρ d ⟨μ, 𝓕, hμ⟩ g hg).1 0 a
     simpa only [zero_add] using this
   have eY : ∀ (a : Mx D T.rank ρ) (g : WO S T → ℂ), IsThetaFunO ψ S T g →
       (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 (heisO ψ S T (d.extY T a) g) x = ψ (symplO S T (d.extX T x) (d.extY T a)) • (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 g x :=
-    fun a g hg => (GlobalTheory.T.heisenbergOperator_thetaFunctional_mixedSourceModel D ψ hstd S S₀ T ρ d ⟨μ, 𝓕, hμ⟩ g hg).2.1 x a
+    fun a g hg => (_root_.GlobalTheory.HeisMixSource.heis_mixS D ψ hstd S S₀ T ρ d ⟨μ, 𝓕, hμ⟩ g hg).2.1 x a
   have jointCmpEmbeddingY : ∀ (a : Mx D T.rank ρ) (g : WO S T → ℂ), IsThetaFunO ψ S T g →
       (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 (heisO ψ S T (d.extY T a) g) 0 = (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 g 0 := fun a g hg => by
-    have := (GlobalTheory.T.heisenbergOperator_thetaFunctional_mixedSourceModel D ψ hstd S S₀ T ρ d ⟨μ, 𝓕, hμ⟩ g hg).2.1 0 a
+    have := (_root_.GlobalTheory.HeisMixSource.heis_mixS D ψ hstd S S₀ T ρ d ⟨μ, 𝓕, hμ⟩ g hg).2.1 0 a
     rw [map_zero, GlobalTheory.MixUnip.symplO_zero_left', AddChar.map_zero_eq_one, one_smul] at this
     exact this
   refine ⟨fun b => ?_, fun c => ?_⟩
@@ -275,7 +276,7 @@ theorem mixS_unip : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S S₀ T : HS
       congr 1
       abel
     rw [hmove (d.nB b), hzB _ (hth _ _ hf), hkey, jointCmpEmbeddingY _ _ (hth _ _ (hth _ _ hf)), eX _ _ (hth _ _ hf)]
-    exact (GlobalTheory.T.heisenbergOperator_thetaFunctional_mixedSourceModel D ψ hstd S S₀ T ρ d ⟨μ, 𝓕, hμ⟩ f hf).2.2.1 x (x ⬝ b)
+    exact (_root_.GlobalTheory.HeisMixSource.heis_mixS D ψ hstd S S₀ T ρ d ⟨μ, 𝓕, hμ⟩ f hf).2.2.1 x (x ⬝ b)
   · have hq : d.qS T c x = symplOH S T (d.extX T x) (d.extY T (x ⬝ c.1)) := rfl
     have hL : (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 (heisO ψ S T (d.extX T x) (heisO ψ S T (d.extY T (x ⬝ c.1)) f)) 0 =
         ψ (d.qS T c x) • ψ (d.qS T c x) • (_root_.I195MixedCoordinates.source d) T ψ μ 𝓕 f x := by
@@ -335,7 +336,7 @@ theorem mixed_source : ∀ D : D7, GlobalTheory.IndefiniteRowSideFullHecke.SkewG
   have hth : ∀ w f, IsThetaFunO ψ S T f → IsThetaFunO ψ S T (heisO ψ S T w f) :=
     (GlobalTheory.HeisThetaLaws.heis_theta_laws D ψ ho.std S T).1
   have hbr : ∀ (f : WO S T → ℂ) x, d.mixS T ψ μ 𝓕 f x = d.mixS T ψ μ 𝓕 (heisO ψ S T (d.extX T x) f) 0 :=
-    fun f x => (GlobalTheory.T.wittSourceMixedCoord_heisenbergRestriction D ψ S S₀ T ρ d).2.2.2.2.2.2.1 μ 𝓕 f x
+    fun f x => (_root_.GlobalTheory.Bridge.heis_bridge D ψ S S₀ T ρ d).2.2.2.2.2.2.1 μ 𝓕 f x
   have hmv := GlobalTheory.T.weil_operators_witt_parabolic_origin_to_point D ψ S S₀ T ρ d χS χT om ho μ 𝓕 hμ f hf
   have hun := GlobalTheory.T.wittMixedModel_unipotent_formulas D ψ S S₀ T ρ d χS χT om ho μ 𝓕 hμ f hf
   have hlv := fun w => GlobalTheory.T.weilRepresentation_value_at_origin_leviFactor D ψ S S₀ T ρ d χS χT om om₀ ho ho₀ μ 𝓕 hμ (heisO ψ S T w f) (hth w f hf)

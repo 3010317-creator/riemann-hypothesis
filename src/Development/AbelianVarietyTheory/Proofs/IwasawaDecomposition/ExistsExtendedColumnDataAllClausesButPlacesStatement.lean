@@ -15,7 +15,8 @@ public import Formalism.LocalToGlobal.IndefiniteReal.LinksExistW
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAnalyticDataKeptClausesColumnChoicesStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFinsetOfKer
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIndexBoundCoreOverExactSmallField
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LargeCoefficientFieldContainsTwistValuesStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsAbsIrrCharCompIff
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LargeCoefficientFieldContainsTwistValues
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RecAtOfTwoPasses
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StandardLatticesDiagonal
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RSideA
@@ -80,6 +81,7 @@ import Formalism.LocalToGlobal.BesselHermitianTheta.NoncompactGapAtLeastRange
 import Formalism.LocalToGlobal.Columns.CoefficientsModP.WeTransposeWordTransposeWord
 import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 import Formalism.SharpRestriction.CuspSpanNormBounds.Point
+
 import all Mathlib.RingTheory.DedekindDomain.AdicValuation.Valuation -- unfold `HeightOneSpectrum.valuation` in `frames_enl`
 public import Formalism.LocalToGlobal.IndefiniteReal.FrameExistence.InitialDataUntwistedOfModelChoice
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseWeightEqForcedLiftWeightStatement
@@ -331,7 +333,7 @@ theorem seed_at_enl : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheor
         R₀.AllPlaces ∧ Keep R₀.toRealDat (face0 (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀).lv2 cG ∧ BrgStd (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀ R₀.toRealDat) := by
   intro h1 h2 h3 h4 h5 h6 h7
   refine Step.of_evLgG (GlobalTheory.Mem.Top.evLgG_of_evLg ?_)
-  refine GlobalTheory.Mem.Top.V4.TwoPass.ev_mono ?_ (GlobalTheory.Mem.Top.V4.TwoPass.ev_and GlobalTheory.Mem.HostFrames.hostHyp_frames_ev GlobalTheory.T.valsIn_and_fam3_ok_of_coefficientField)
+  refine GlobalTheory.Mem.Top.V4.TwoPass.ev_mono ?_ (GlobalTheory.Mem.Top.V4.TwoPass.ev_and GlobalTheory.Mem.HostFrames.hostHyp_frames_ev _root_.GlobalTheory.Mem.R3.OkVals.large_coefficientField_contains_twist_values)
   rintro K ⟨hK, hO⟩
   refine hO.imp ?_
   rintro B' f' T' hOv hOB w' ⟨pin⟩ B f T w _ _ _ _ Z hX Wt z _ _ _ _ Z' hX' _ hgrp _ core' alg' _ _ hKs _ _ _ _ _
@@ -1100,7 +1102,7 @@ theorem reset_stepW : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheor
         RSideW z {v | B'.places.resChar v ∈ T'.pl} R₁) := by
   intro h1 h2 h3 h4 h5 h6 h7
   refine Step.of_evLgG (GlobalTheory.Mem.Top.evLgG_of_evLg ?_)
-  refine GlobalTheory.Mem.Top.V4.TwoPass.ev_mono ?_ (GlobalTheory.Mem.Top.V4.TwoPass.ev_and GlobalTheory.Mem.HostFrames.hostHyp_frames_ev GlobalTheory.T.valsIn_and_fam3_ok_of_coefficientField)
+  refine GlobalTheory.Mem.Top.V4.TwoPass.ev_mono ?_ (GlobalTheory.Mem.Top.V4.TwoPass.ev_and GlobalTheory.Mem.HostFrames.hostHyp_frames_ev _root_.GlobalTheory.Mem.R3.OkVals.large_coefficientField_contains_twist_values)
   rintro K ⟨hK, hO⟩
   refine hO.imp ?_
   rintro B' f' T' hOv hOB w' ⟨pin⟩ B f T w hE hf _ hp Z hX Wt z _ _ hFine _ Z' hX' _ hgrp _ core' alg' ha _ hKs hc _ _ _ _

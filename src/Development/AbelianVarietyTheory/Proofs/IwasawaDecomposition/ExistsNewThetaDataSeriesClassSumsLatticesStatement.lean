@@ -37,7 +37,7 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CardP
 public import Formalism.LocalToGlobal.NormalizedHeckeFactors.WittCoreInclusionMulVecMemLatticeCompletionAtPla
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TranslateMemCoefLatFn
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockHarmonicLatticeFgAndSpansValueSpace
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistingCharacterAdmissibleGaloisTwistGoodStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistingCharacterAdmissibleGaloisTwistGood
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleTwistOfTwistingCharacter
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.YsOfFi
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeReadOfReadsExist
@@ -1521,7 +1521,7 @@ end Eval
 
 theorem latFG_of_good : ∀ (D : D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (ρ : Setup X), ρ.Good → ρ.LatFG := by
   intro D N X ρ hρ i j b k Q ψ hT
-  obtain ⟨hg, ha, -⟩ := GlobalTheory.T.twistingCharacter_admissibleGaloisTwist_good D N X ρ hρ i j b k Q ψ hT
+  obtain ⟨hg, ha, -⟩ := _root_.GlobalTheory.TwistGood.tw_good D N X ρ hρ i j b k Q ψ hT
   have hc := hρ.classes i j b _ hg ha
   haveI : IsNoetherianRing (ρ.eOk i b k).range :=
     isNoetherianRing_of_surjective (X.Ok i k) _ (ρ.eOk i b k).rangeRestrict (ρ.eOk i b k).rangeRestrict_surjective

@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AxesVanishingStructureSheafDegOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechTripleRestrictCompositeInjectiveSecond
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommaDescentInjectiveStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.CommAlgFunctorCoboundaryZeroMemCocyclesOne
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommaDescentInjective
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormPowSmulEqZeroOfResBasicOpen
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlueCommaOfBasis
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasLocOAff
@@ -119,7 +120,7 @@ theorem cechTripleRestrictComposite_injective_cohomology_forms (s'' : X'' ⟶ Sp
   have hs1 := _root_.GlobalTheory.CechDR.form_eq_zero_of_basis_cover s'' _ hcov
   have hg1 := _root_.GlobalTheory.CechDR.FormExt.glue_one_forms s'' _ hcov hdir
   have i1 := _root_.GlobalTheory.CatCoh.CoefMap.restrict_pull1_injective_of_sep_glue _ _ hs hg
-  have i2 := GlobalTheory.T.comma_descent_injective _ _ hs hg hv
+  have i2 := _root_.GlobalTheory.CatCoh.pull2_restrict_injective_of_comma _ _ hs hg hv
   have ig := (_root_.GlobalTheory.restrict_glob1_bijective _ _ hs1 hg1).1
   have k := cechTripleRestrictComposite_comp_pairRestrict ψ φ s''
   refine ⟨fun x y e ↦ ?_, fun x y e ↦ ?_, fun x y e ↦ ?_⟩

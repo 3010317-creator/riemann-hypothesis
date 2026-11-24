@@ -28,7 +28,7 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscret
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.IsLieBasisIffIsUnitDet
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.AwayToAwayRightEqOfComp
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.TransversalZerosOfJacobianNeZeroDomain
-public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKoszulTorsionTransversalSplitZerosStatement
+public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKoszulTorsionTransversalSplitZeros
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
 public import Mathlib.RingTheory.AdicCompletion.Functoriality
@@ -1007,7 +1007,7 @@ theorem kosD_exact_generic : Out.Laws → ∀ (O : Type) [CommRing O] [IsDomain 
   obtain ⟨z', ch', u, het, hval⟩ :=
     _root_.GlobalTheory.KeyKa.etZ_of_jac_ne_zero O K x x' f φ w n d hg s s' z ch hf hkv hsv hz0 hs0 hjac hzi hcov
   have hl' : x'.P.g * n < l := by rw [hg]; exact hl
-  obtain ⟨-, t, m'', hmul'', ht⟩ := GlobalTheory.T.exists_koszulTorsion_transversal_split_zeros hL K x' n l d s' b' z' ch' hn hl' hb' het
+  obtain ⟨-, t, m'', hmul'', ht⟩ := _root_.GlobalTheory.KeyKa.KoszulEx.exists_kosVal hL K x' n l d s' b' z' ch' hn hl' hb' het
   refine exact_kosD_map f hg (fun j => l - j * n) m
     (fun j => Matrix.of fun a k => valT (T := O) (z a).left (x.P.L.U (ch a)) ((b j k).f (ch a))) m''
     (fun j => Matrix.of fun a k => valT (T := K) (z' a).left (x'.P.L.U (ch' a)) ((b' j k).f (ch' a)))

@@ -2,7 +2,7 @@ module
 
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteEvenCubicalValuesNotMemMaximalIdealPowStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteEvenCubicalValuesNotMemMaximalIdealPow
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PtR
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.BetaAtAddLeftAndDiagEqTwoOrder
@@ -269,7 +269,7 @@ theorem lead_mem : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R]
     obtain ⟨s, hs, hsκ⟩ := hmax m hm
     have : r m = s := hinjK (by rw [← hr, hsκ])
     exact ⟨r m * c, by rw [this]; exact Ideal.mul_mem_right c _ hs, hc⟩
-  · refine (GlobalTheory.T.finite_even_cubical_values_not_mem_maximalIdeal_pow R X κ hneg hcub hmax n).subset ?_
+  · refine (_root_.GlobalTheory.QuadTend.finite_not_mem_pow R X κ hneg hcub hmax n).subset ?_
     intro m hm hm'
     apply hm
     obtain ⟨s, hs, hsκ⟩ := hm'

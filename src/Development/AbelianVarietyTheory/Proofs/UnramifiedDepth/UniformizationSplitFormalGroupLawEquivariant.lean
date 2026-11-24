@@ -10,8 +10,6 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FirstCohomolo
 public import Mathlib.CategoryTheory.MorphismProperty.Descent
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsSplitTorusPointsMulEquiv
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UnifPreCharacterGroupIso
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsPowerSeriesOfNaturalNilpotentPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.PowerSeriesEqOfEvalAtNilpotentPointsEqStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -1046,7 +1044,7 @@ theorem ptExt_q_series : ∀ (R : Type) [CommRing R] (I : Ideal R) [IsAdicComple
     refine hB.inj S' _ _ (fun j => ((hc S h a ha).1 j).map φ) (hc S' h' _ ha').1 ?_
     rw [← (hc S' h' _ ha').2, ← hB.nat S S' φ _ (hc S h a ha).1, ← (hc S h a ha).2, ← E.q_nat S S' φ h h',
       hx.nat S S' φ a ha]
-  choose Q hQ using fun j : Fin g => GlobalTheory.T.exists_powerSeries_of_natural_nilpotentPoints R I hI 1 d (fun _ _ _ => True) (fun _ _ => trivial)
+  choose Q hQ using fun j : Fin g => _root_.GlobalTheory.ChF.exists_series_of_natural R I hI 1 d (fun _ _ _ => True) (fun _ _ => trivial)
     (fun S _ _ a => c S (a 0) j)
     (fun S _ _ S' _ _ φ a _ _ _ h ha => congrFun (hnat S S' φ (a 0) h (ha 0)) j)
   have hQ' : ∀ (S : Type) [CommRing S] [Algebra R S] (h : ∃ k, Kills I k S) (a : Fin d → S),
@@ -1072,7 +1070,7 @@ theorem ptExt_q_series : ∀ (R : Type) [CommRing R] (I : Ideal R) [IsAdicComple
     rw [SModEq.zero, smul_eq_mul, Ideal.mul_top]
     exact Ideal.pow_le_pow_right (Nat.le_succ k) (Ideal.Quotient.eq_zero_iff_mem.1 h4)
   refine ⟨Q, ⟨hconst, fun j => ?_⟩, fun S _ _ h a ha => by rw [hQ' S h a ha]; exact (hc S h a ha).2⟩
-  refine GlobalTheory.T.powerSeries_eq_of_evalAtNilpotentPoints_eq R I inferInstance 2 d _ _ fun S _ _ k hk _ a ha => ?_
+  refine _root_.GlobalTheory.ChF.eq_of_nv_eq R I inferInstance 2 d _ _ fun S _ _ k hk _ a ha => ?_
   have h : ∃ k, Kills I k S := ⟨k, hk⟩
   obtain ⟨⟨ψ, hψ, -, hX⟩, hn, hs, -⟩ := nv_calculus R S (algebraMap R S) 2 d a ha
   have hpt : ∀ i : Fin 2, ∀ l, nv (algebraMap R S) (ev (n := 2) ![pt R d i] (Q l)) a = c S (a i) l := by

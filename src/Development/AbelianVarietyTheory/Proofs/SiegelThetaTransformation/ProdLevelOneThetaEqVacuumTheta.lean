@@ -42,7 +42,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaIdealLatticeEqSumLevelTranslates
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.PeriodCoordinateThetaOfSignedHeisenbergVacuumStatement
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.PeriodCoordinateThetaOfSignedHeisenbergVacuum
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TensorLatticeSelfDualSemicharacterIndex
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.PiTensorProduct
@@ -253,7 +253,7 @@ theorem prod_eq_mul_thA : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   intro E _ _ _ r X g bas idx n hs hn w hw hw1 L hL v hv x hxd θ hθ
   obtain ⟨b, hbL, hb⟩ := GlobalTheory.Dict.VacNorm.exists_sympl_of_selfD hs hL
   obtain ⟨c₁, c₂, C, hC, hc₁, hc₂, H⟩ :=
-    GlobalTheory.T.periodCoordinateTheta_of_signedHeisenbergVacuum E r X g bas idx n hs hn w hw hw1 L hL v hv b hbL hb
+    _root_.GlobalTheory.Dict.VacForm.thA_vacuum E r X g bas idx n hs hn w hw hw1 L hL v hv b hbL hb
   obtain ⟨hdet, hτ, hhx, heps, hthA⟩ := H x hxd _ _ rfl rfl
   clear H
   set M₁ : Matrix (Fin g) (Fin g) ℂ := Matrix.of fun i k => pv X idx x (b (Sum.inl k)) i with hM₁

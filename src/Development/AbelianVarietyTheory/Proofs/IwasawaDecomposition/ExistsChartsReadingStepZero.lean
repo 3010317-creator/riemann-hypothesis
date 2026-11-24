@@ -3,8 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsMemberStepCharts
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsDefiniteLaws
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EmbFColZeroMemMram
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicPointDecoratedLatticeAllTwistsStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoordsStatement
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicPointDecoratedLatticeAllTwists
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 import Formalism.LocalToGlobal.Columns.RecLevelLocP
 import Formalism.LocalToGlobal.Columns.RecLevelStep
 import Mathlib.Algebra.Order.Floor.Extended
@@ -66,7 +67,7 @@ def yT (u : B.Word) (a : I.ι) (c : (I.stp u a 0).Cl) : GA B (B.R.N 0) :=
 
 theorem yT_spec (hI : I.Ok) (u : B.Word) (a : I.ι) (c : (I.stp u a 0).Cl) :
     PtOf (yT I u a c * kStd X u (B.R.N 0)) (extTo I.SQ ((I.stp u a 0).rep c).1.1) := by
-  obtain ⟨g, hg⟩ := GlobalTheory.T.exists_adelicPoint_decoratedLattice_allTwists I hI u _ (extTo I.SQ ((I.stp u a 0).rep c).1.1)
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.Mem.Col2.PtTwist.exists_ptOf_twists I hI u _ (extTo I.SQ ((I.stp u a 0).rep c).1.1)
   exact Classical.epsilon_spec (p := fun g : GA B (B.R.N 0) => PtOf (g * kStd X u (B.R.N 0)) (extTo I.SQ ((I.stp u a 0).rep c).1.1))
     ⟨g * (kStd X u (B.R.N 0))⁻¹, by rwa [inv_mul_cancel_right]⟩
 
@@ -189,7 +190,7 @@ theorem charts_zero : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → T
   have hPr := l.pr
   have hX := GlobalTheory.Mem.FieldsLaws.fields_ok B
   have hi : 0 ≤ B.R.m := Nat.zero_le _
-  obtain ⟨hg, -, hl⟩ := (GlobalTheory.T.trueColumn_spaces_standard_in_frameCoords I hI hP l Z).2.2.2 0 hi
+  obtain ⟨hg, -, hl⟩ := (_root_.GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hI hP l Z).2.2.2 0 hi
   have hf : B.fields.f = B.R.f := (hPr.vT_card u).symm.trans (l.lev u I.mu0).card_ST
   have hL := hI.idx_ok a
   let chOf : (I.stp u a 0).Cl → Unit := fun _ => ()

@@ -7,7 +7,7 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Exi
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FinitePartMemFrameStabilizerIffLocalStabilizer
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IdempotentMulEntryEqZeroOfCutInverse
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LatticeReductionEqOneOfLocalComponentOne
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemIntegralGLSplitPlaceOfCarriesLatticeCompletioStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemIntegralGLSplitPlaceOfCarriesLatticeCompletio
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemSupportedSubgroupOfSuppAtSplitPlaceMem
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ProdLocalParts
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenLevelGroupFiniteAdelic
@@ -149,7 +149,7 @@ theorem red_iff_local {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
     (hJ : ∀ x ∈ KO k Y, ∀ c, (ofSplit q).IsLoc Fr c x → (b⁻¹ * c * b ∈ levG V β L ↔ x ∈ J))
     {g : GA D V} (hS : finE V (b⁻¹ * g * b) ∈ St β) {x : GL Y k} (hx : (mt V g).map q.pr = Fr.β * x.val * Fr.γ) :
     redFn β PP (finE V (b⁻¹ * g * b)) ∈ blockTri (blk2 L.r) ↔ x ∈ J := by
-  have hxK : x ∈ KO k Y := GlobalTheory.T.mem_integralGL_split_place_of_carries_latticeCompletion q V Fr N (· = q.v) rfl hN g
+  have hxK : x ∈ KO k Y := _root_.GlobalTheory.SplitInt.mem_KO_of_moves q V Fr N (· = q.v) rfl hN g
     ((GlobalTheory.StMoves.moves_conj_iff g hm).1 (moves_of_St hβ hΛ hS _)) x hx
   obtain ⟨c, c1, c2, c3⟩ := local_part q V g
   rw [← hJ x hxK c ⟨c1, c2.trans hx⟩]
@@ -313,7 +313,7 @@ theorem core {D : D7} (S : HSp D) (N : Lat S) (hN : IsSelfDualC S N) {r : ℕ} (
   have hidx : U'.relIndex U = ∏ i, (J i).relIndex (GlobalTheory.SplitWeil.KO (k i) (Y i)) := by
     refine _root_.GlobalTheory.relIndex_preimage_pi_eq_prod φ U U' (fun i => GlobalTheory.SplitWeil.KO (k i) (Y i)) J hJ ?_ ?_ hU''
     · intro g hg i
-      exact GlobalTheory.T.mem_integralGL_split_place_of_carries_latticeCompletion (q i) S (F i) N _ ⟨i, rfl⟩ (hlat i) g (hM g hg) _ ((eq_locHom_iff _ _ _ _ _).2 rfl)
+      exact _root_.GlobalTheory.SplitInt.mem_KO_of_moves (q i) S (F i) N _ ⟨i, rfl⟩ (hlat i) g (hM g hg) _ ((eq_locHom_iff _ _ _ _ _).2 rfl)
     · intro x hx
       obtain ⟨g, hg, hgx⟩ := GlobalTheory.T.exists_selfDual_stabilizer_with_prescribed_splitPlace_matrices S N hN k q Y F hinj hlat x hx
       refine ⟨g, hK g hg, funext fun i => ?_⟩

@@ -7,7 +7,7 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Uni
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HzUnit
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IdempotentMulEntryEqZeroOfCutInverse
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MatrixProjEqOneOfSuppAtDistinctFinitePlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemSupportedSubgroupOfSuppAtSplitPlaceMemStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemSupportedSubgroupOfSuppAtSplitPlaceMem
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EntriesWellDefined
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -181,7 +181,7 @@ theorem exists_section (V : HSp D) {n : ℕ} (k : Fin n → Type) [∀ i, Field 
   · exact continuous_list_prod _ fun i _ => (hgc i).comp (continuous_apply i)
   · refine Subgroup.list_prod_mem (K := grpAt V (fun p => ∃ i, p = (q i).v)) fun y hy => ?_
     obtain ⟨i, -, rfl⟩ := List.mem_map.1 hy
-    exact GlobalTheory.T.mem_supportedSubgroup_of_suppAt_splitPlace_mem D (k i) (q i) V _ (hgl i (x i)).1 _ ⟨i, rfl⟩
+    exact _root_.GlobalTheory.SuppGrp.mem_grpAt_of_suppAt D (k i) (q i) V _ (hgl i (x i)).1 _ ⟨i, rfl⟩
   · rw [hmat (fun i => gl i (x i)) (fun i => (hgl i (x i)).1) i]
     exact (hgl i (x i)).2
   · obtain ⟨h, hh, rfl⟩ := GlobalTheory.T.unitarySupported_splitPlaces_eq_prod_local_parts D V n k q hq g hg

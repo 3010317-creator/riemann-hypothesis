@@ -31,14 +31,14 @@ public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinTensMemLatO
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdelesLocalRingTotallyReal
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanSiegelWeilMeasureStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EulerProductAlmostAllStandardStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FactorizableSiegelWeilFiniteSetStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EulerProductAlmostAllStandard
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FactorizableSiegelWeilFiniteSet
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalSiegelWeilUnramifiedMeasureStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SiegelWeilConvergentRangeStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsBlockNFZeroOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBoundUnitary
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsSelfDualSiegelWeilMeasuresStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchwartzFunctionSchwartzBruhatStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsSelfDualSiegelWeilMeasures
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchwartzFunctionSchwartzBruhat
 public import Mathlib.Topology.Algebra.InfiniteSum.Defs
 public import Mathlib.Topology.MetricSpace.Pseudo.Defs
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.EulerFactorStandardMeasureIdentity
@@ -1326,7 +1326,7 @@ theorem coefS_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   intro F E _ _ _ _ _ σ hCM M J hJ n hn h2n ψ hψ dx hdx db hdb d b laminf lam hinf hlam minf hminf m hm T hT
   classical
   obtain ⟨hEu, hlat⟩ := GlobalTheory.T.siegel_weil_product_over_places F E σ hCM M J hJ n hn h2n ψ hψ dx hdx d b laminf lam hinf hlam
-  obtain ⟨S₀, hS₀⟩ := GlobalTheory.T.euler_product_almost_all_standard F E M n d b dx 1 _ _ hEu
+  obtain ⟨S₀, hS₀⟩ := _root_.GlobalTheory.CompanionTheory.WhitFree.Euler.integrable_integral_pureN F E M n d b dx 1 _ _ hEu
   obtain ⟨S₁, hS₁⟩ := GlobalTheory.T.hermitian_euler_product_standard F E σ hCM n hn ψ hψ db hdb d b laminf lam hinf hlam
   have hq := GlobalTheory.T.lattice_gram_integral_almost_all F E σ hCM M J hJ n d b T hT
   have hlc := GlobalTheory.T.hermitian_lattice_mem_iff_entries F E σ hCM n d b
@@ -1347,7 +1347,7 @@ theorem coefS_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     exact hv (hS (by simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq]; exact Or.inr hc))
   obtain ⟨ρ, U, hρ, hρs, hU, hUs, hUpos, hI, hc, hbd, hlim⟩ := hS₁ S hS1
   have hΦSB : GlobalTheory.Published.SiegelOneVector.IsSchwartzBruhat (pureN φ A) :=
-    GlobalTheory.T.factorizable_siegel_weil_finite_set F E σ hCM M J hJ n hn h2n d b S φ A hφ hA hAl
+    _root_.GlobalTheory.CompanionTheory.WhitFree.pureN_isSchwartzBruhat F E σ hCM M J hJ n hn h2n d b S φ A hφ hA hAl
   have hΦdx : Integrable (pureN φ A) dx := GlobalTheory.T.schwartz_bruhat_integrable_any_haar F E σ hCM M n dx hdx.1 _ hΦSB
   have hstar : Integrable (starN σ J ψ dx (pureN φ A)) db :=
     GlobalTheory.T.siegel_weil_convergent_range F E σ hCM M J hJ n h2n ψ hψ dx hdx db hdb _ hΦSB
@@ -1572,13 +1572,13 @@ theorem pure_identity {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
     (hA : ∀ v, IsCompact (A v) ∧ IsOpen (A v)) (hAl : ∀ v, v ∉ S₀ → A v = latV b v) :
     Integrable (pureN φ A) I ∧ coefN σ J ψ dx db (pureN φ A) T = ∫ X, pureN φ A X ∂I := by
   classical
-  obtain ⟨S₁, hS₁⟩ := GlobalTheory.T.euler_product_almost_all_standard F E M n d b I 1 _ _ hI
+  obtain ⟨S₁, hS₁⟩ := _root_.GlobalTheory.CompanionTheory.WhitFree.Euler.integrable_integral_pureN F E M n d b I 1 _ _ hI
   obtain ⟨S₂, hS₂⟩ := GlobalTheory.T.adelic_siegelWeil_coefficient_eq F E σ hCM M J hJ n hn hM ψ hψ dx hdx db hdb d b laminf lam hinf hlam minf hminf m hm T hT
   obtain ⟨hφm, hφi, -⟩ := GlobalTheory.T.archimedean_siegel_weil_measure F E σ hCM M J hJ n hn hM d b laminf hinf minf hminf (hermOf (Ainf F) σ T hT) φ hφ
   have hfin := fun v => GlobalTheory.T.local_siegel_weil_unramified_measure F E σ hCM M J hJ n hn hM d b v (lam v) (hlam v) (m v) (hm v)
     (hermOf (Fv F v) σ T hT) (A v) (hA v).1 (hA v).2
   have hΦSB : GlobalTheory.Published.SiegelOneVector.IsSchwartzBruhat (pureN φ A) :=
-    GlobalTheory.T.factorizable_siegel_weil_finite_set F E σ hCM M J hJ n hn hM d b S₀ φ A hφ hA hAl
+    _root_.GlobalTheory.CompanionTheory.WhitFree.pureN_isSchwartzBruhat F E σ hCM M J hJ n hn hM d b S₀ φ A hφ hA hAl
   have hstar : Integrable (starN σ J ψ dx (pureN φ A)) db :=
     GlobalTheory.T.siegel_weil_convergent_range F E σ hCM M J hJ n hM ψ hψ dx hdx db hdb _ hΦSB
   have hlimC := GlobalTheory.T.siegel_weil_stabilizer_integrable F E σ hCM M J hJ n hn hM ψ hψ dx db d b _ hstar T
@@ -1631,7 +1631,7 @@ theorem coefN_eq_integral {F E : Type} [Field F] [NumberField F] [Field E] [Numb
     coefN σ J ψ dx db Φ T = ∫ X, Φ X ∂I := by
   obtain ⟨k, φ, A, S, hφ, hA, hAl, hsum⟩ := GlobalTheory.T.schwartz_bruhat_factorizable_decomposition F E σ hCM M J hJ n hn hM d b Φ hΦ
   have hSB : ∀ i, GlobalTheory.Published.SiegelOneVector.IsSchwartzBruhat (pureN (φ i) (A i)) := fun i =>
-    GlobalTheory.T.factorizable_siegel_weil_finite_set F E σ hCM M J hJ n hn hM d b S (φ i) (A i) (hφ i) (hA i) (hAl i)
+    _root_.GlobalTheory.CompanionTheory.WhitFree.pureN_isSchwartzBruhat F E σ hCM M J hJ n hn hM d b S (φ i) (A i) (hφ i) (hA i) (hAl i)
   have hP := fun i => pure_identity σ hCM J hJ hn hM ψ hψ dx hdx db hdb d b laminf lam hinf hlam minf hminf m hm T hT I hI S
     (φ i) (hφ i) (A i) (hA i) (hAl i)
   have hΦe : Φ = fun X => ∑ i, pureN (φ i) (A i) X := funext hsum
@@ -1647,7 +1647,7 @@ theorem whit_eq_integral : ∀ (D : D7) (r : ℕ) (V : HSp D) (ψ : AddChar (AF 
   obtain ⟨hr, hψ, hθ, hμ, hlam, -, hφ, -⟩ := hyp
   have hCM := _root_.Formalism.MainNotions.UnusedSlot34.isCMExt_D D
   have hJ := GlobalTheory.DefiniteQuotient.gram_hermND V
-  obtain ⟨dx, db, hdx, hdb, hW⟩ := GlobalTheory.T.exists_self_dual_siegel_weil_measures D r V ψ hψ μ hμ lam hlam
+  obtain ⟨dx, db, hdx, hdb, hW⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.whit_eq_coefN D r V ψ hψ μ hμ lam hlam
   obtain ⟨ht, -⟩ := hβ
   rw [hW φ β]
   exact coefN_eq_integral D.sp.cm.sig hCM V.gram hJ (by omega) hr ψ hψ dx hdx db hdb d b laminf lamv hinf hlamv minf hminf

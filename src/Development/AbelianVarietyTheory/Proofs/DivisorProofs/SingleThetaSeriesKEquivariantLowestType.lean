@@ -11,9 +11,11 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Exist
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterInfinityExponentGroupLaws
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LowestKTypeCoefficientWeightEqMinorWeightsStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaLiftInfinityTypesAtRealPlace
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaLiftInfinityTypesAtRealPlaceStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaWeightArithmeticAtPlaceProofStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilMaximalCompactFockSubstitutionCharacterStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.InfinityTypes
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaWeightArithmeticAtPlaceProof
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsHolRepOfIsTau
+import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilMaximalCompactFockSubstitutionCharacter
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompAtMtEqInfMat
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasInfExpOfOrder
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsFockVacAtOfIsThetaAt
@@ -56,7 +58,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.InfinityTypes
 import Development.AbelianVarietyTheory.Definitions.Divisors.RealisedChainTorusEq
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KernelSpanOverClasses
 
@@ -103,11 +104,11 @@ theorem singleSeries_kEquiv : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0
   obtain ⟨x₁, x₂, x₃, hx⟩ := _root_.GlobalTheory.JointHarm.weights_of_minors D i (sg0 D A) (sgAt_mk _ R.hv0) (R.MW i (sg0 D A)) (hR.models.order i)
   have hrk : (Wc D i).rank = D.R.r := D.sp.W_rank _ (Nat.le_add_left _ _) i.2
   have hpq : ∀ ρ, ((Wc D i).sig (tauE D ρ)).1 + ((Wc D i).sig (tauE D ρ)).2 = (Wc D i).rank := fun ρ =>
-    (GlobalTheory.T.thetaWeightArithmeticAtPlace_proof D i ρ).rank.1.trans hrk.symm
+    (_root_.GlobalTheory.PairWeightArith.arithAt D i ρ).rank.1.trans hrk.symm
   have hfr : ∀ ρ, (R.MW i (sg0 D A)).fr ρ * ((R.MW i (sg0 D A)).fr ρ)⁻¹ = 1 := fun ρ =>
     Matrix.mul_nonsing_inv _ ((Matrix.isUnit_iff_isUnit_det _).1 ((R.MW i (sg0 D A)).fr_unit ρ))
 
-  have hIT := GlobalTheory.T.thetaLiftInfinityTypes_atRealPlace D T0 R.toLevCh A.μ0 hR.lev i A.μ0
+  have hIT := _root_.GlobalTheory.PairInfTypes.infTypesAt D T0 R.toLevCh A.μ0 hR.lev i A.μ0
   obtain ⟨n, hn, ho⟩ := hK.fin
   have hχ0 : ∀ ρ, HasInfExp D χ ρ 0 := fun ρ => GlobalTheory.Chain.StepVac.hasInfExp_of_order hθ hK.chr hn ho ρ
   have h1 : ∀ ρ, HasInfExp D (R.mu0 ((i : ℕ) + 1)) ρ (-GlobalTheory.IndefiniteRowSideFullHecke.InfinityTypes.eS D i ρ) := fun ρ => by
@@ -150,10 +151,10 @@ theorem singleSeries_kEquiv : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0
     · subst hρ; rwa [Pi.mulSingle_eq_same]
     · rw [Pi.mulSingle_eq_of_ne hρ]; exact GlobalTheory.JointHarm.one_mem_K
 
-  have aω := (GlobalTheory.T.weil_maximalCompact_fock_substitution_character D R.ψ R.θ (Vc D i) (Wc D i) _ _ ω _ (R.MW i (sg0 D A)) (R.BV i) hK.weil hθ
+  have aω := (_root_.GlobalTheory.FockCompactAction.om_pureTensorO_eq_fact D R.ψ R.θ (Vc D i) (Wc D i) _ _ ω _ (R.MW i (sg0 D A)) (R.BV i) hK.weil hθ
     (D.sp.V_sig _) (D.sp.W_sig _) hBS _ _ hpq (hR.models.order i) _ _ hcV hcW x₁ x₂ x₃
     (fun ρ => (hx ρ).1) (fun ρ => (hx ρ).2.1) (fun ρ => (hx ρ).2.2.1) φ' hthφ hvφ 1 (one_mem _) _ hs.1 hKk).2
-  have av := (GlobalTheory.T.weil_maximalCompact_fock_substitution_character D R.ψ R.θ (Vc D i) (Wc D i) _ _ (R.ωP i A.μ0) _ (R.MW i (sg0 D A)) (R.BV i) (hω i A.μ0) hθ
+  have av := (_root_.GlobalTheory.FockCompactAction.om_pureTensorO_eq_fact D R.ψ R.θ (Vc D i) (Wc D i) _ _ (R.ωP i A.μ0) _ (R.MW i (sg0 D A)) (R.BV i) (hω i A.μ0) hθ
     (D.sp.V_sig _) (D.sp.W_sig _) hBS _ _ hpq (hR.models.order i) _ _ (fun ρ => (hIT ρ).chiV) (fun ρ => (hIT ρ).chiW)
     x₁ x₂ x₃ (fun ρ => (hx ρ).1) (fun ρ => (hx ρ).2.1) (fun ρ => (hx ρ).2.2.1) _ hthv hvv 1 (one_mem _) _ hs.1 hKk).2
   rw [e, e'] at aω av

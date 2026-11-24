@@ -2,10 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.TowerEx
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinateAbsSumWeilTranslateModerateGrowthStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittSourceProofStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SkewGramHalfModule
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittSourceProof
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedThetaSeriesTermsLawsUnipotentRational
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumDescendsToWittCoreStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilMixedCoordinatesContinuousBoundedSupNormStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumDescendsToWittCore
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilMixedCoordinatesContinuousBoundedSupNorm
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsTopologicalRingAE
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsMulRightInvariantOfFundamentalDomain
 import Mathlib.Algebra.Order.Floor.Extended
@@ -43,7 +47,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
 
 @[expose] public section
 
@@ -86,9 +89,9 @@ theorem uni_bound (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V V₀ W W₀ : HSp
       ∫⁻ u : UX D ρ, ‖dV.mixS W ψ s.vS.μ s.vS.𝓕 (s.om (g, h) Φ) ((rat x : Mx D W.rank ρ) ⬝ u.1.1) w‖ₑ ∂s.vU.ν ≤
         ENNReal.ofReal (C * (height V g * height W h) ^ A) := by
   obtain ⟨C, A, hC⟩ := GlobalTheory.T.mixedCoordinate_absSum_weilTranslate_moderateGrowth D ψ V W s.χV s.χW s.om s.weil V₀ ρ dV s.vS Φ hΦ
-  obtain ⟨om', hW'⟩ := (GlobalTheory.T.weilDatum_descends_to_wittCore D ψ V W s.χV s.χW s.om s.weil).1 V₀ ρ dV
-  have hMS := GlobalTheory.T.mixedModelFormulasWittSource_proof D ψ V V₀ W ρ dV s.χV s.χW s.om om' s.weil hW' s.vS.μ s.vS.𝓕 s.vS.covol
-  have hmix := (GlobalTheory.T.weilMixedCoordinates_continuous_bounded_supNorm D ψ V V₀ W W₀ ρ σ dV dW s.vS s.vT s.χV s.χW s.om s.weil Φ hΦ).1
+  obtain ⟨om', hW'⟩ := (_root_.GlobalTheory.Desc.weil_data_descend D ψ V W s.χV s.χW s.om s.weil).1 V₀ ρ dV
+  have hMS := _root_.GlobalTheory.MixSourceFormulas.mixed_source D ψ V V₀ W ρ dV s.χV s.χW s.om om' s.weil hW' s.vS.μ s.vS.𝓕 s.vS.covol
+  have hmix := (_root_.GlobalTheory.MixCont.mixed_coords_continuous D ψ V V₀ W W₀ ρ σ dV dW s.vS s.vT s.χV s.χW s.om s.weil Φ hΦ).1
   obtain ⟨K, hK, hcov⟩ := GlobalTheory.UnitU.cocompact D ρ
   obtain ⟨c, hc⟩ := exists_height_le_of_isCompact V (hK.image (dV.continuous_levi.comp continuous_subtype_val))
   have hc'1 : 1 ≤ max c 1 := le_max_right _ _
@@ -149,7 +152,7 @@ theorem flat_sup_growth : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V V₀ 
   refine ⟨C, A, fun g h y w => ?_⟩
   have hn : ∀ a, ‖ψ a‖ = 1 := s.weil.std.1.2.1
   have hne : ∀ a, ‖ψ a‖ₑ = 1 := fun a => by rw [← ofReal_norm, hn, ENNReal.ofReal_one]
-  have hmix := (GlobalTheory.T.weilMixedCoordinates_continuous_bounded_supNorm D ψ V V₀ W W₀ ρ σ dV dW s.vS s.vT s.χV s.χW s.om s.weil Φ hΦ).1
+  have hmix := (_root_.GlobalTheory.MixCont.mixed_coords_continuous D ψ V V₀ W W₀ ρ σ dV dW s.vS s.vT s.χV s.χW s.om s.weil Φ hΦ).1
   have hT := s.vT.covol
   obtain ⟨i1, i2, i3⟩ := GlobalTheory.UnitU.topology D ρ
   obtain ⟨j1, j2, j3, j4, -⟩ := lattice_Mx D σ V₀.rank

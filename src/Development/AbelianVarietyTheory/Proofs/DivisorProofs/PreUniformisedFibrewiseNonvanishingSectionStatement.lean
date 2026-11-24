@@ -78,13 +78,13 @@ import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.TypeStar
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.EgaBundleFromLaws
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsDegDataPsiOfSectionNonzeroFibres
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsThetaSectionNonzeroFibresLocalRingStatement
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsThetaSectionNonzeroFibresLocalRing
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTwistedSectionThetaTranslateCoefStatement
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniqueExpansionSectionAdmissibleBase
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ForallTermNeZeroOfPsiRelationStatement
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PsiCmpOfSecCmpStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PsiEvenDescendBaseChangeStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PsiRelOfExpTStatement
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PsiEvenDescendBaseChange
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PsiScalarEqExpansionCoefRatioStatement
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PsiScalarMemOfPsiMemIdealStatement
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.RigidificationComparisonUniformisationStatement
@@ -645,7 +645,7 @@ theorem exists_coefData_of_ne_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [I
   obtain ⟨f, hf, -⟩ := GlobalTheory.CompleteBaseExpansion.main h₁ h₂ hE R _ hR hmR D A G U 1 σ
   obtain ⟨σ', f', hf', hσσ, hff⟩ := GlobalTheory.ExpCmp.expT_cmp R V _ _ φ hIm D D'.toPre A A' G G' U U' F C 1 σ f hf
   have hcmp : GlobalTheory.PsiRing.SecCmp D D'.toPre C.β C.v C.xe f f' := hff
-  have hrel' := GlobalTheory.T.psiRel_of_expT' h₁ h₂ V _ hV' D' A' G' U' U₀ hU σ' f' hf'
+  have hrel' := _root_.GlobalTheory.PsiExpansion.psiRel_of_expT h₁ h₂ V _ hV' D' A' G' U' U₀ hU σ' f' hf'
   have hσ'0 := GlobalTheory.T.pullback_nonzero_section_injective_domain_map R hB D A G U V φ D'.toPre A' G' U' F C hV hφ σ σ' hσσ hσ0
   have hne' : ∀ α, ∃ j, (f' α).f j ≠ 0 :=
     GlobalTheory.T.forall_term_ne_zero_of_psiRelation V D'.toPre f' hrel' (GlobalTheory.T.exists_nonzero_expansionTerm_completeDVR V hV D' A' G' U' U₀ hU σ' f' hf' hσ'0)
@@ -658,11 +658,11 @@ theorem exists_coefData_of_ne_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [I
   have hpsi : GlobalTheory.PsiRing.PsiCmp E D'.toPre C.β C.v C.xe gam :=
     GlobalTheory.T.psiCmp_of_secCmp' R V φ E D'.toPre C.β C.v C.xe C.pbB C.v_gen C.c_pr hrig f f' hcmp hrelE hrel' (hne' 0) gam hgam
   have hev : E.PsiEven :=
-    GlobalTheory.T.psiEven_descend_baseChange h₁.globalFns R V φ E D'.toPre C.β C.v C.xe C.pbB C.v_gen C.c_pr gam hgam hpsi D'.psi_even
+    _root_.GlobalTheory.PsiRing.psiEven_descend h₁.globalFns R V φ E D'.toPre C.β C.v C.xe C.pbB C.v_gen C.c_pr gam hgam hpsi D'.psi_even
   have hbi : E.TauBimult :=
     GlobalTheory.T.tauBimult_of_baseChange' h₁.globalFns R V φ E D'.toPre C.β C.v C.xe C.pbB C.v_gen C.c_pr hrig gam hgam hpsi D'.tau_bimult
   obtain ⟨ga, a, hS⟩ := GlobalTheory.exists_psiScal R E
-  obtain ⟨th, hth, hmul⟩ := GlobalTheory.T.exists_thetaSection_nonzeroFibres_localRing h₂.secTwist R D
+  obtain ⟨th, hth, hmul⟩ := _root_.GlobalTheory.PsiRing.exists_basis_fibNZ h₂.secTwist R D
   obtain ⟨q, hq⟩ := hmul (f 0)
   choose b hb using fun χ : D.X => _root_.GlobalTheory.PsiCoef.exists_coef R D th hmul χ (ga χ) (hS χ).1 (f χ)
   have hab : ∀ χ, algebraMap R (FractionRing R) q * (a χ).val = algebraMap R (FractionRing R) (b χ) := fun χ =>

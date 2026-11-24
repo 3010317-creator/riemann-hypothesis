@@ -12,7 +12,9 @@ public import Development.DiscreteGroups.PiInvariants.CasimirInfinity.CasInfOfIm
 public import Development.DiscreteGroups.PiInvariants.CompactSupportTwists.TraceUnique
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.MultiplicityOne.StableBlockGA
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.TraceAsymptotics.SplitLineAlt
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InfCharConjEmbeddingNegOfInvariantPairingStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.DualIsConjByOne
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InfCharConjEmbeddingNegOfInvariantPairing
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.AutomorphicRepresentations.Bridge
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HaarIntegralNormalizedOpenCompactEqFiniteLevelSuStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevOpMemFixed
@@ -1727,7 +1729,7 @@ theorem piTermA_of (h1 : GlobalTwistedTraceBound) (hθ : ThetaFixOf) (h2 : WtEx)
       HasInfCharGL π.V (ComplexEmbedding.conjugate w.embedding) (Multiset.map (infOf (l w).w false) Finset.univ.val) := fun w => ⟨by
     rw [map_infOf_true]
     exact hl w, by
-    rw [map_infOf_false, ← GlobalTheory.T.infChar_conjEmbedding_neg_of_invariant_pairing E n π π hd w.embedding _ _ (hl w) (hlam _)]
+    rw [map_infOf_false, ← _root_.GlobalTheory.CapPair.infChar_conj_of_paired E n π π hd w.embedding _ _ (hl w) (hlam _)]
     exact hlam _⟩
   have level : ∀ N : ∀ w : Pl E, Subgroup (GLw n w), Good Z N → (∃ ψ ∈ π.V, ψ ≠ 0 ∧ ∀ k ∈ Lev S N, finRep E n k ψ = ψ) →
       (∃ φ : ∀ w : Pl E, LF n 0 w, (∀ w ∈ Z, ∀ N' ≤ N w, ∀ b, IsHecke N' (two φ φ w b)) ∧

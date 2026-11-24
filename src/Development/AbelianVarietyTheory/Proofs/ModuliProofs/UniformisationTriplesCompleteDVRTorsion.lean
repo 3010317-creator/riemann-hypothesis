@@ -1,14 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissiblePadicIntMaximalIdeal
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisationCompleteLocalNormalPrimeStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.MorAlgSt
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.ToATotal
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.PelSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisationCompleteLocalNormalPrime
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EgaHolds
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSecUnitClosedFibre
-public import Development.AbelianVarietyTheory.Definitions.Degenerations.PelSt
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LinearUniformisationTriplesTorsion
-public import Development.AbelianVarietyTheory.Definitions.Degenerations.ToATotal
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.UniformisationCompleteDVR
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHoldStatement
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.OLinBaseChangeSt
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHold
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,10 +70,10 @@ theorem LN.isAdmissible_of_complete_DVR_charZero (V : Type) [CommRing V] [IsDoma
   infer_instance
 
 theorem LN.uDvrSt_holds : GlobalTheory.LN.UDvrSt := by
-  obtain ⟨L, L2, L3, L4, L5, -⟩ := GlobalTheory.T.all_six_abelian_scheme_laws_hold
+  obtain ⟨L, L2, L3, L4, L5, -⟩ := _root_.GlobalTheory.allSixLaws
   intro E _ _ _ H V _ _ _ hV t hp hs
   have := hV.1
-  exact GlobalTheory.T.exists_uniformisation_complete_local_normal_prime L L2 L3 L4 L5 LN.ega_holds _root_.GlobalTheory.uniformisation_dvr_unconditional _root_.GlobalTheory.LN.pelSt_holds E H V _ (LN.isAdmissible_of_complete_DVR_charZero V hV)
+  exact _root_.GlobalTheory.LN.UnifPrime.exists_pelUnif L L2 L3 L4 L5 LN.ega_holds _root_.GlobalTheory.uniformisation_dvr_unconditional _root_.GlobalTheory.LN.pelSt_holds E H V _ (LN.isAdmissible_of_complete_DVR_charZero V hV)
     (by letI := Ideal.Quotient.field (IsLocalRing.maximalIdeal V); infer_instance) t hp hs
     (GlobalTheory.ThetaDvr.thetaNZ_of_polAt L L2 E H V t hp)
 

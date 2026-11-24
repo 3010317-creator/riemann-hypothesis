@@ -77,7 +77,9 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InnerProductFormula
 import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ConjAtFixedIff
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealSymplecticFormAlternatingInvariantDefinite
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsWeilDatumGeneratorRealOneParamGroupStatement
+import Formalism.LocalToGlobal.BesselHermitianTheta.TiedSmooth
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsWeilDatumGeneratorRealOneParamGroup
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCharFamIsVacVec
 import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
 import Mathlib.Tactic.Polynomial.Basic
@@ -714,9 +716,9 @@ theorem rderC_theta_eq_zero_any : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) 
   unfold conjAt at lX lY ⊢
   rw [eY] at lY ⊢
   generalize (1 / 2 : ℂ) • (Z + -((gramAt D T τ)⁻¹ * Zᴴ * gramAt D T τ)) = X at ha lX lY
-  obtain ⟨GX, hX⟩ : ∃ G, IsGen ψ om θ τ X G := GlobalTheory.T.exists_weilDatum_generator_realOneParamGroup D ψ S T χS χT om hom θ hθ τ _ lX
+  obtain ⟨GX, hX⟩ : ∃ G, IsGen ψ om θ τ X G := _root_.GlobalTheory.DefLift.Gen.exists_generator D ψ S T χS χT om hom θ hθ τ _ lX
   obtain ⟨GY, hY⟩ : ∃ G, IsGen ψ om θ τ (Complex.I • (cart M τ * X)) G :=
-    GlobalTheory.T.exists_weilDatum_generator_realOneParamGroup D ψ S T χS χT om hom θ hθ τ _ lY
+    _root_.GlobalTheory.DefLift.Gen.exists_generator D ψ S T χS χT om hom θ hθ τ _ lY
   have hφ : IsThetaFunO ψ S T (pureTensorO ψ θ S T (fun _ => 1) (cart M) BS BT f P) :=
     pure_mem (P := IsThetaFunO ψ S T) (fun _ _ => theta_add) (fun a _ => theta_smul a)
       (fun _ _ h => aPlus_theta hψ hθ _ _ _ h) hf _

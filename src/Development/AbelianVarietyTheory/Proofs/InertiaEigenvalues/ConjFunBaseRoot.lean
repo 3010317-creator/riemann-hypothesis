@@ -15,12 +15,16 @@ public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IsThCl
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstRelIffTwistFactorAt
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCoversOfHalves
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.MarkedIsometryHalf
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjFourierCoefficientsConjugateTuplesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjFourierCoefficientsConjugateTuples
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisConjClassScalarsAndVolumeStatement
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CoefficientFieldAlgClosedInFunctionFieldsOfPerio
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SecEqZeroOfComplex
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCuspFormClassSumNormalisedData
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaOneMapBaseTupleOfCharacterisationExtremalStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.FWExist
+public import Formalism.LocalToGlobal.IndefiniteReal.OneMapT
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaOneMapBaseTupleOfCharacterisationExtremal
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoefficientMapCommutesFieldAutomorphismStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormReadingGaloisConjExpansionStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OneMapEveryNormalisedFamilyAtCoreConstantsStatement
@@ -314,7 +318,7 @@ theorem exists_root_galRul_isSum : Formalism.MainNotions.ModuliIntegralCharts.H1
   have hsame0 : SameCover M A.μ0 A.μ0 (Equiv.refl _) :=
     ⟨⟨_, rfl⟩, HEq.rfl, HEq.rfl, rfl, rfl, fun _ => ⟨rfl, rfl, rfl, rfl⟩⟩
   have hconj : ConjTup R τ (id A.μ0) (id A.μ0) := ⟨rfl, fun x => by simp [hRxi]⟩
-  obtain ⟨u, s, w', hu, hw'e, hw⟩ := GlobalTheory.T.conj_fourierCoefficients_conjugate_tuples D G Pl0 T0 A T R F κ v₀ hcore ⟨fw⟩ i T0 id M hM τ ta hta hfb A.μ0 A.μ0
+  obtain ⟨u, s, w', hu, hw'e, hw⟩ := _root_.GlobalTheory.ConjDatum.conj_coeff D G Pl0 T0 A T R F κ v₀ hcore ⟨fw⟩ i T0 id M hM τ ta hta hfb A.μ0 A.μ0
     (Equiv.refl _) hsame0 hconj
   obtain ⟨hvol, hep⟩ := GlobalTheory.T.galoisConj_classScalars_and_volume D G Pl0 T0 A T R F κ v₀ hcore ⟨fw⟩ i T0 id M hM τ ta hta hfb A.μ0 A.μ0
     (Equiv.refl _) hsame0 hconj
@@ -419,7 +423,7 @@ theorem conjFun_lifts_root : Formalism.MainNotions.ModuliIntegralCharts.H1.Chart
   intro hC D G _ _ Pl0 T0 A T _ R F κ v₀ O ph hnV hcore hfin hfw hio hQ i hpins hphase M hMp hMl hMe hMn hMc hMx hMs c₀ hc₀ hc₀P
   obtain ⟨fw⟩ := hfw
   have hT : TieIn T R κ v₀ := ⟨fw.laws, fw.alg_eq, fw.kap, fw.hv₀, fw.chiR, fw.x0⟩
-  have hrow0 := GlobalTheory.T.thetaOneMap_baseTuple_of_characterisation_extremal hC D G Pl0 T0 A T R F κ v₀ hcore hT hio O i hpins
+  have hrow0 := _root_.GlobalTheory.OneMapTies.oneMapRow0_of_ties_core hC D G Pl0 T0 A T R F κ v₀ hcore hT hio O i hpins
   have hEqO := (hphase hrow0).1
   have elev : M.lev2 = (O i).lev2 := by funext g; simp only [OMDat.lev2, hMl]
   have hEq : M.EquivAt (κ i) (T.cE ((i : ℕ) + 1) M.s0) := by

@@ -7,7 +7,7 @@ public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsPowFram
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FrameNStHolds
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.StarRingExtOfStar
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UniversalJetsPowerProductStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UniversalStatementStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UniversalStatement
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ValFinProdGen
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.RoundingSum
 import Mathlib.Algebra.Order.Floor.Extended
@@ -113,7 +113,7 @@ theorem jets_on_copies : Laws → Laws2 → Laws4 → TwistBaseChangeStatement �
   choose f₀ hf₀ using hf
   obtain ⟨τ, hτ, htrunc, hgerm⟩ := frameNSt_holds E H T.V C.I.G P (chD C.ch) C.FT C.actT C.ph1T C.ph2T C.syT C.adT C.tgT
     C.xT C.eT C.wPT C.chartT C.frameT C.primT n D' A' G' pD pA pG U' PU
-  have hu := GlobalTheory.T.universalJets_power_product T.V C.I.G.G G' n (chD C.ch) pG C.xT (GlobalTheory.T.universal_statement E H Dw l Xo c T io y C)
+  have hu := GlobalTheory.T.universalJets_power_product T.V C.I.G.G G' n (chD C.ch) pG C.xT (_root_.GlobalTheory.PowGerm.univSt_holds E H Dw l Xo c T io y C)
   obtain ⟨r', b', h1, h2⟩ := exists_basis_bounds pD.xe Q (Q_zero hϖ P.D hQ) (RoundingSumAlt.Q_nonneg hϖ hQ) Φ M0 b hΦ hM
   have hD' : (D : ℝ) * max M0 0 < q := by
     rcases le_total M0 0 with h | h

@@ -6,12 +6,12 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetAevalEqPr
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfNormProdAevalEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomDegreeIntegerCombinationIsHomogeneousStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFiniteIffTateModuleMapInjectiveAndIsogenyIffStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIsogenyCompIffAndDegreeMulStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIsogenyCompIffAndDegreeMul
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsogenyFlatFinrank
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MultiplicativePolynomialFunctionEqNormFormStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormDetEqInvCardCokerStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicNormDegreeEqPadicNormDetTateModule
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateModuleFreeFinrankTwoMulDimStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateModuleFreeFinrankTwoMulDim
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateModuleMapInjectiveCardCokerOfIsogenyStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -67,12 +67,12 @@ theorem _root_.GlobalTheory.T.abelianVariety_degreePolynomial_map_eq_charpoly_ra
             P.map (algebraMap ℚ ℚ_[l]) = (vmap l f.asHom).charpoly := by
   intro K _ l _ hl A _ f P hPm hPd hP
   have hCharpoly : P.map (algebraMap ℚ ℚ_[l]) = (vmap l f.asHom).charpoly := by
-    obtain ⟨hfree, hfin, -, -, hrkV⟩ := GlobalTheory.T.tateModule_free_finrank_two_mul_dim K l hl A
+    obtain ⟨hfree, hfin, -, -, hrkV⟩ := _root_.GlobalTheory.AV.AbVar.tl_free_finrank K l hl A
     let δ : Polynomial ℤ → ℚ := fun F => (deg (A := A) (B := A) (Polynomial.aeval f F).asHom : ℚ)
     have hmul : ∀ F G, δ (F * G) = δ F * δ G := by
       intro F G
       simp only [δ, map_mul]
-      rw [End.mul_asHom, (GlobalTheory.T.isIsogeny_comp_iff_and_degree_mul K A A A _ _ rfl rfl).2]
+      rw [End.mul_asHom, (_root_.GlobalTheory.AV.AbVar.isIsogeny_comp_iff_and_deg_comp K A A A _ _ rfl rfl).2]
       push_cast
       exact mul_comm _ _
     have hpoly : ∀ (n : ℕ) (u : Fin n → Polynomial ℤ), ∃ Φ : MvPolynomial (Fin n) ℚ, Φ.IsHomogeneous (2 * A.dim) ∧

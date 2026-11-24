@@ -13,17 +13,18 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDu
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdjointFrameMatrixIntegralOfConjugateHalf
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsConjugateHalfPrescribedAdjointFrameMatrixStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdempotentSumSelfDualFramesBound
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCompletedLatticeConjugateHalfIffDualStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCompletedLatticeHalfIffFrameMatrixIntegralStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCompletedLatticeConjugateHalfIffDual
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCompletedLatticeHalfIffFrameMatrixIntegral
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
 public import Mathlib.NumberTheory.LegendreSymbol.Complex
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.TupPrimeEmpty
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.UnderEqOfConj
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPairCharactersAtLevel
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdjointFrameMatrixIntegralOfConjugateHalfStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdempotentSumSelfDualFramesBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaLiftVectorIsThetaFunctionTwoStepModelStatement
+public import Formalism.LocalToGlobal.UnitaryNorms.CharTied
+public import Formalism.LocalToGlobal.IndefiniteReal.OneMapT
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaLiftVectorIsThetaFunctionTwoStepModel
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNsmulIntMemLatO
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -638,16 +639,16 @@ theorem int_iff_dual : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp 
     rw [← hint i₀ j₀, ← huZ]
     exact ⟨GlobalTheory.HalfAdjLattice.mem_latO_of_adj_int D S T ΛS ΛT βS βT hS hT hfS hfT Q e he hQ u hu,
       fun h => GlobalTheory.HalfAdjInt.frMapAdj_int_of_half D S T ΛS ΛT βS βT hS hT hfS hfT Q e he hQ u h hu⟩
-  rw [h1, GlobalTheory.T.mem_completedLattice_conjugateHalf_iff_dual D ψ S T ΛS ΛT hψ hS hT e hee he.2 hinf hfin u hu]
+  rw [h1, _root_.GlobalTheory.ConjHalfDual.mem_latO_iff_of_conjHalf D ψ S T ΛS ΛT hψ hS hT e hee he.2 hinf hfin u hu]
   constructor
   · intro h Z' hZ' hZi
     obtain ⟨l, hl, hlZ⟩ := exists_half_frMapO S T βS βT hee (Matrix.single j₀ i₀ (toEAf D Z')) (hsingle j₀ i₀ Z' hZ')
     rw [← hval l Z' hl hZ' (by rw [hlZ, Matrix.single_apply_same])]
-    refine h l ((GlobalTheory.T.mem_completedLattice_half_iff_frameMatrix_integral D S T ΛS ΛT βS βT hS hT hfS hfT Q e he hQ l hl).2 ?_) hl
+    refine h l ((_root_.GlobalTheory.HalfOInt.mem_latO_iff_frMapO_int D S T ΛS ΛT βS βT hS hT hfS hfT Q e he hQ l hl).2 ?_) hl
     rw [hlZ, hint]
     exact hZi
   · intro h l hlm hl
-    have hI := (GlobalTheory.T.mem_completedLattice_half_iff_frameMatrix_integral D S T ΛS ΛT βS βT hS hT hfS hfT Q e he hQ l hl).1 hlm
+    have hI := (_root_.GlobalTheory.HalfOInt.mem_latO_iff_frMapO_int D S T ΛS ΛT βS βT hS hT hfS hfT Q e he hQ l hl).1 hlm
     obtain ⟨Y, -, hY⟩ := GlobalTheory.HalfDuality.exists_lift (D := D) (frMapO S T βS βT l j₀ i₀)
     have hZ' : e * (e * Y) = e * Y := by rw [← mul_assoc, hee]
     have hE : toEAf D (e * Y) = frMapO S T βS βT l j₀ i₀ := by
@@ -969,7 +970,7 @@ theorem exists_reps_pairing : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0
     GlobalTheory.AdTh.RecPair.selfDual_of_coe (GlobalTheory.AdTh.RecPair.coe_eq_of_frame (hC.lev.βW i))
   have hψ : IsStdChar D R.ψ (-1) := (hC.thP.ωP i t).std
   have hP := hQG.2 t
-  have hfr := GlobalTheory.T.mem_completedLattice_half_iff_frameMatrix_integral D (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (R.βV i) (R.βW i) sV sW hcV.1 hcW.1 (R.Q t) eQ heQ hP
+  have hfr := _root_.GlobalTheory.HalfOInt.mem_latO_iff_frMapO_int D (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (R.βV i) (R.βW i) sV sW hcV.1 hcW.1 (R.Q t) eQ heQ hP
   have hker := GlobalTheory.T.frameMatrix_integral_iff_uniformiser_multiple_on_half D (Vc D i) (Wc D i) (R.βV i) (R.βW i) (R.Q t) eQ heQ ϖ hϖ0 hϖ
   obtain ⟨k, hk0, hk⟩ := GlobalTheory.T.exists_nat_integral_frame_of_uniformizer_mul D (Vc D i) (Wc D i) (R.βV i) (R.βW i) ϖ hϖ0
   obtain ⟨ψP, hprim, hpair⟩ := GlobalTheory.T.symplectic_pairing_half_lattices_eq_prod_primitive D R.ψ (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (R.βV i) (R.βW i) hψ sV sW hcV.1 hcW.1
@@ -1010,8 +1011,8 @@ theorem exists_reps_pairing : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0
     · rintro ⟨h1, h2⟩
       refine ⟨isIntM_add h1 (hmem u hu).2, fun PP hPP => ?_⟩
       rw [redM_add PP h1 (hmem u hu).2, h2 PP hPP, neg_add_cancel]
-  · exact GlobalTheory.T.adjointFrameMatrix_integral_of_conjugate_half D (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (R.βV i) (R.βW i) sV sW hcV.1 hcW.1 (R.Q t) eQ heQ hP x h hx
-  · exact GlobalTheory.T.idempotent_sum_self_dual_frames_bound D (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (R.βV i) (R.βW i) sV sW hcV.1 hcW.1 (R.Q t) eQ heQ hP x hx h
+  · exact _root_.GlobalTheory.HalfAdjInt.frMapAdj_int_of_half D (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (R.βV i) (R.βW i) sV sW hcV.1 hcW.1 (R.Q t) eQ heQ hP x h hx
+  · exact _root_.GlobalTheory.HalfAdjLattice.mem_latO_of_adj_int D (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (R.βV i) (R.βW i) sV sW hcV.1 hcW.1 (R.Q t) eQ heQ hP x hx h
 
 end GlobalTheory.LiftFlatModel
 
@@ -1142,7 +1143,7 @@ theorem lift_eq_model_flat : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
         zero_mul, if_neg]
       rintro ⟨hh, hint⟩
       exact hx ⟨(hiv x hh).2 hint, hh⟩
-  have hθ := GlobalTheory.T.thetaLiftVector_isThetaFunction_twoStepModel D G Pl0 T0 A Ks R F hC hQG i t eg eQ fg heg heQ hfg
+  have hθ := _root_.GlobalTheory.ConjTwist.isThetaAt_vP_twoStep D G Pl0 T0 A Ks R F hC hQG i t eg eQ fg heg heQ hfg
   have hvP := LiftFlatModel.thetaAt_sum hθ (fun u hu' => by rw [LiftFlatModel.cA_cA]; exact (hRs u hu').1) hB
   have hΨ : ∀ x : WO (Vc D i) (Wc D i), Gc * (if IsHalf eQ (x.map fun w => incA D (ϖ : D.host.E) * w) ∧
         IsIntM (frMapO (Vc D i) (Wc D i) (R.βV i) (R.βW i) (x.map fun w => incA D (ϖ : D.host.E) * w)) then

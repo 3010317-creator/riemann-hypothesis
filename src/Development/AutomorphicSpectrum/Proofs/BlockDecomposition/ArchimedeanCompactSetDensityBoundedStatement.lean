@@ -16,7 +16,8 @@ public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdeleHaarMapEqScaledVolume
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdelesLocalRingTotallyReal
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanCharacterInCoordinates
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanCharacterInCoordinatesStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatC
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanSiegelWeilIntegralIdentity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -70,7 +71,7 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Mathlib.Topology.UniformSpace.Uniformizable
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ComplexCoordinatesExistAtInfinityStatement
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ComplexCoordinatesExistAtInfinity
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianArchimedeanComplexCoordinates
 import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
 import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
@@ -512,7 +513,7 @@ theorem density_inf : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
   obtain ⟨ψ, hψ⟩ := GlobalTheory.CompanionTheory.SW.CharEx.exists_isCharAF F
   obtain ⟨ρ, e, hρ, he, heρ, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.real_iso F hCM.1
   obtain ⟨a, ha, hinf, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Glob.CharAF.exists_char_data F hCM.1 ρ e hρ he heρ ψ hψ
-  obtain ⟨τ, Θ, hΘ⟩ := GlobalTheory.T.complex_coordinates_exist_at_infinity F E σ hCM ρ e hρ he heρ
+  obtain ⟨τ, Θ, hΘ⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.exists_isCoord F E σ hCM ρ e hρ he heρ
   have c1 : Continuous Θ := hΘ.1.continuous
   have c2 : Continuous Θ.symm := HermCoord.continuous_symm Θ hΘ.1
   let Ψ0 := HermCoord.hermEquiv σ Θ hΘ.2.1 n
@@ -539,7 +540,7 @@ theorem density_inf : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
         (Matrix.trace ((b' : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) * gramR (Ainf F) σ J X))) =
       Complex.exp (2 * Real.pi * Complex.I * ((pairC n c (Ψ b') (Ψ (gramH hCM hJ (Ainf F) X)) : ℝ) : ℂ)) := by
     intro b' X
-    rw [GlobalTheory.T.archimedean_character_in_coordinates F E σ ρ e τ Θ hΘ heρ a ψ hinf M n J _ X]
+    rw [_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.PhaseCoord.psiInf_phase F E σ ρ e τ Θ hΘ heρ a ψ hinf M n J _ X]
     congr 3
     rw [phaseM, pairC_apply]
     refine Finset.sum_congr rfl fun w _ => ?_

@@ -5,10 +5,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdeli
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsHalfIdem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsFinWeil
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MapFinNeg
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicUnitaryCharacterTrivialAtNonsplitPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicUnitaryCharacterTrivialAtNonsplitPlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitCharacter
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitPlaceHalfHeisenbergInvariantForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLocalHomLatticeOfKeepsCompletedLatticesStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLocalHomLatticeOfKeepsCompletedLattices
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurLemmaThetaFunctionsOrientedPair
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsFinitePlaceIdempotentBaseChangeAdeles
 public import Mathlib.Topology.Algebra.Group.Matrix
@@ -301,12 +302,12 @@ theorem unique (hψ : IsStdChar D ψ (-1)) (hS : IsSelfDualC S ΛS) (hT : IsSelf
     rw [mt_one, sub_self, Matrix.zero_apply, mul_zero]
   have hl := GlobalTheory.T.unitaryAdelicCharacter_trivial_of_local D S (ν.comp (MonoidHom.inl _ _)) (hc.comp (Continuous.prodMk_left 1))
     (fun g hg => hreal g hg 1 (one_mem _)) (fun e he g hg => hsplit e he g 1 hg (s1 T _))
-    fun v η hv => GlobalTheory.T.adelic_unitary_character_trivial_at_nonsplit_place D S ΛS hS v η hv _ fun g hg hst => hin v η hv g 1 hg (s1 T _)
-      (GlobalTheory.T.mem_localHomLattice_of_keeps_completedLattices D S T ΛS ΛT hS hT v η hv.1 g 1 hst fun y => by rw [finMat_one, Matrix.one_mulVec])
+    fun v η hv => _root_.GlobalTheory.InertChar.char_eq_one_of_nonSplit D S ΛS hS v η hv _ fun g hg hst => hin v η hv g 1 hg (s1 T _)
+      (_root_.GlobalTheory.LocalLatStab.mem_latO_place_iff_actO D S T ΛS ΛT hS hT v η hv.1 g 1 hst fun y => by rw [finMat_one, Matrix.one_mulVec])
   have hr := GlobalTheory.T.unitaryAdelicCharacter_trivial_of_local D T (ν.comp (MonoidHom.inr _ _)) (hc.comp (Continuous.prodMk_right 1))
     (fun g hg => hreal 1 (one_mem _) g hg) (fun e he g hg => hsplit e he 1 g (s1 S _) hg)
-    fun v η hv => GlobalTheory.T.adelic_unitary_character_trivial_at_nonsplit_place D T ΛT hT v η hv _ fun g hg hst => hin v η hv 1 g (s1 S _) hg
-      (GlobalTheory.T.mem_localHomLattice_of_keeps_completedLattices D S T ΛS ΛT hS hT v η hv.1 1 g (fun y => by rw [finMat_one, Matrix.one_mulVec]) hst)
+    fun v η hv => _root_.GlobalTheory.InertChar.char_eq_one_of_nonSplit D T ΛT hT v η hv _ fun g hg hst => hin v η hv 1 g (s1 S _) hg
+      (_root_.GlobalTheory.LocalLatStab.mem_latO_place_iff_actO D S T ΛS ΛT hS hT v η hv.1 1 g (fun y => by rw [finMat_one, Matrix.one_mulVec]) hst)
   have h1 : ν p = 1 := by
     have : p = (p.1, 1) * (1, p.2) := Prod.ext (mul_one _).symm (one_mul _).symm
     rw [this, map_mul, show ν (p.1, 1) = 1 from hl p.1, show ν (1, p.2) = 1 from hr p.2, mul_one]

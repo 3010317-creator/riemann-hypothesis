@@ -6,22 +6,23 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.Integrabl
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.QuasiOfFam
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.KerBF
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierBesselThetaIntegrandIsUnfoldingTheta
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierBesselBasePointIsUnfoldingBasePointSpecStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldOverFlagUnipotentThetaLiftStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldedTermBasePointEqFlatMapPairingStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldingLevelsAndStepsHaarMeasuresExistStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicMatrixQuotientPeriodicIntegralContinuousPaStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierBesselBasePointIsUnfoldingBasePointSpec
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldOverFlagUnipotentThetaLift
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldedTermBasePointEqFlatMapPairing
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldingLevelsAndStepsHaarMeasuresExist
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicMatrixQuotientPeriodicIntegralContinuousPa
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FubiniCompactQuotient
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PairedFlatMapFamilyContinuousInvariantIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RationalUnitarySubgroupCountableDiscreteFundDomaStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldedBesselJacobiIntegralAbsLeStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientParaStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsPreserveThetaFunctionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiHandOffAutomorphicStatement
+public import Formalism.LocalToGlobal.BesselHermitianTheta.IsAutFunDef
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RationalUnitarySubgroupCountableDiscreteFundDoma
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldedBesselJacobiIntegralAbsLe
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientPara
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctions
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsPreserveThetaFunctions
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiHandOffAutomorphic
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldedFunctionEqBesselPeriodIntegrandStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlagUnipotentBesselCharacterLaws
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralQuotientEqMeanIntermediateSubgroup
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SemidirectHaarMeasureFundamentalDomain
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlagUnipotentAnisotropicProjectionEqOne
@@ -71,7 +72,6 @@ import Std.Tactic.BVDecide.Normalize.Prop
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.T2SpaceTensorProductFiniteExtension
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.TopoAF
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RationalUnitarySubgroupCountableDiscreteFundDoma
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AbsConvOfInvariant, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierBesselThetaIntegrandIsUnfoldingThetaStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiIntegralOverNUnfold, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiIntegralOverNUnfoldStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.JacobiToBesselUnfoldedIntegrandIntegrable, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.JacobiToBesselUnfoldedIntegrandIntegrableStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiPeriodLiftEqIntegralUnfolded, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiPeriodLiftEqIntegralUnfoldedStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselGroupSemidirectProductRationalStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldedBesselContinuousLeftInvariant, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldedBesselContinuousLeftInvariantStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiPeriodUnfoldingOfWittDescent, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiPeriodUnfoldingOfWittDescentStatement
@@ -187,8 +187,8 @@ theorem weilRepresentationOnFunctions_embed_mul {D : D7} {V W : HSp D} (om : Om 
 
 theorem fjN_unfold : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (J : JacLev D (σ + 1)) (B : BesLev D σ) (s : StepFB ψ J B), ∀ (vL : VolM D B.L.rank J.W₀.rank) (Y : GA D J.W₀ → WO J.W₀ B.L → ℂ) (G : GA D B.V → ℂ) (Φ : WO J.W B.V → ℂ), IsQuasiFam ψ J.W₀ B.L Y → RapidDec B.V G → IsThetaFunO ψ J.W B.V Φ → ∀ 𝓑 : Set (GA D B.V), IsFundamentalDomain (GQ B.V ⊓ besGrp B.d B.o : Subgroup (GA D B.V)) 𝓑 s.vW.μ → ∀ h₀, ∫ n in J.vN.𝓝, fjSrcKerFun ψ J.d (J.ker ψ B.ζ Y) (s.lift G Φ) h₀ n ∂J.vN.ν = ∫ h in 𝓑, G h * tFlat s vL (Y h₀) (s.om (J.d.emb0 h₀, h) Φ) ∂s.vW.μ := by
   intro D hD ψ σ J B s vL Y G Φ hY hG hΦ 𝓑 h𝓑 h₀
-  obtain ⟨x₀, hx₀, hbase, hR, -, -⟩ := GlobalTheory.T.fourierBesselBasePoint_isUnfoldingBasePoint_spec D σ B
-  obtain ⟨-, -, hvM, -⟩ := GlobalTheory.T.unfoldingLevelsAndSteps_haarMeasures_exist D
+  obtain ⟨x₀, hx₀, hbase, hR, -, -⟩ := _root_.GlobalTheory.Unf.FB.basePoint_spec D σ B
+  obtain ⟨-, -, hvM, -⟩ := _root_.GlobalTheory.Unf.VolExist.measures_exist D
   obtain ⟨vb⟩ := hvM (σ + 1) J.W₀.rank
   obtain ⟨om', hom'⟩ := (hD ψ J.W B.V s.χV s.χW s.om s.weil).1 J.W₀ (σ + 1) J.d
   have hq : Quasi ψ J.W₀ B.L (Y h₀) := quasi_of_fam hY h₀
@@ -196,7 +196,7 @@ theorem fjN_unfold : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF D.host.F)
   have hΦ' : IsThetaFunO ψ J.W B.V (s.om (J.d.emb0 h₀, 1) Φ) := s.weil.om_pres _ _ hΦ
   have h𝓑' : IsFundamentalDomain (GQ B.V ⊓ Rgrp B.V (rat x₀) : Subgroup (GA D B.V)) 𝓑 s.vW.μ := by
     rw [hR]; exact h𝓑
-  have key := (GlobalTheory.T.unfold_over_flagUnipotent_thetaLift D hD ψ J.W J.W₀ B.V (σ + 1) J.d s.χV s.χW s.om om' s.weil hom' s.vS J.vN vb s.vU s.vW x₀
+  have key := (_root_.GlobalTheory.Unf.unfold_over_N_lift D hD ψ J.W J.W₀ B.V (σ + 1) J.d s.χV s.χW s.om om' s.weil hom' s.vS J.vN vb s.vU s.vW x₀
     (th J ψ B (Y h₀)) hbase hTh G (s.om (J.d.emb0 h₀, 1) Φ) hG hΦ' 𝓑 h𝓑').2
   have hL : (fun n : flagN J.d => fjSrcKerFun ψ J.d (J.ker ψ B.ζ Y) (s.lift G Φ) h₀ n) =
       fun n => th J ψ B (Y h₀) n.1 * liftS s.om s.vW.μ s.vW.𝓕 G (s.om (J.d.emb0 h₀, 1) Φ) n.1 := by
@@ -206,7 +206,7 @@ theorem fjN_unfold : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF D.host.F)
   have hR' : (fun h => G h * fl ψ J.d B.V s.vS vb s.vU (th J ψ B (Y h₀)) (rat x₀) (s.om (1, h) (s.om (J.d.emb0 h₀, 1) Φ))) =
       fun h => G h * tFlat s vL (Y h₀) (s.om (J.d.emb0 h₀, h) Φ) := by
     funext h
-    rw [weilRepresentationOnFunctions_embed_mul, one_mul, hx₀, (GlobalTheory.T.unfoldedTerm_basePoint_eq_flatMap_pairing D ψ σ J B s vb vL (Y h₀) _ hq (s.weil.om_pres _ _ hΦ)).1]
+    rw [weilRepresentationOnFunctions_embed_mul, one_mul, hx₀, (_root_.GlobalTheory.Unf.FB.fl_base_eq_tFlat D ψ σ J B s vb vL (Y h₀) _ hq (s.weil.om_pres _ _ hΦ)).1]
   rw [hL, ← hR']
   exact key
 
@@ -258,7 +258,7 @@ theorem quasiFam_bdd_on_compact {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (hψ :
     have hq := hY.quasi p γ' x
     have h1 : (incA D).toAddMonoidHom.mapMatrix γ' = ratW L S γ' := rfl
     simp only [hKf, h1, hq, norm_mul, hψ.1.2.1, one_mul]
-  obtain ⟨-, -, hloc, -⟩ := GlobalTheory.T.adelicMatrixQuotient_periodicIntegral_continuous_param D L.rank S.rank v (GA D S) Kf hc hper
+  obtain ⟨-, -, hloc, -⟩ := _root_.GlobalTheory.Unf.ParCont.parCont D L.rank S.rank v (GA D S) Kf hc hper
   choose C hC using hloc
   obtain ⟨t, -, hcov⟩ := hK.elim_nhds_subcover (fun p => {q | ∀ x, ‖Kf x q‖ ≤ C p}) (fun p _ => hC p)
   refine ⟨∑ p ∈ t, |C p|, fun h hh w => ?_⟩
@@ -272,15 +272,15 @@ theorem unfolded_integrable : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF 
   haveI := J.v0.haar
   haveI := s.vW.haar
   obtain ⟨hcont, hinv, -⟩ := GlobalTheory.T.pairedFlatMap_family_continuous_invariant_integral D hD ψ σ J B s vL Y Φ hY hΦ
-  obtain ⟨x₀, hx₀, hbase, hR, -, -⟩ := GlobalTheory.T.fourierBesselBasePoint_isUnfoldingBasePoint_spec D σ B
+  obtain ⟨x₀, hx₀, hbase, hR, -, -⟩ := _root_.GlobalTheory.Unf.FB.basePoint_spec D σ B
   obtain ⟨om', hom'⟩ := (hD ψ J.W B.V s.χV s.χW s.om s.weil).1 J.W₀ (σ + 1) J.d
-  obtain ⟨-, -, hvb, -⟩ := GlobalTheory.T.unfoldingLevelsAndSteps_haarMeasures_exist D
+  obtain ⟨-, -, hvb, -⟩ := _root_.GlobalTheory.Unf.VolExist.measures_exist D
   obtain ⟨vb⟩ := hvb (σ + 1) J.W₀.rank
   have h𝓑' : IsFundamentalDomain (GQ B.V ⊓ Rgrp B.V (rat x₀ : Mx D B.V.rank (σ + 1)) : Subgroup (GA D B.V)) 𝓑 s.vW.μ := by
     rw [hR]; exact h𝓑
-  obtain ⟨C, A, hCA⟩ := GlobalTheory.T.unfolded_besselJacobi_integral_abs_le D ψ J.W J.W₀ B.V (σ + 1) J.d s.χV s.χW s.om om' s.weil hom' s.vS vb s.vU s.vW x₀
+  obtain ⟨C, A, hCA⟩ := _root_.GlobalTheory.Unf.UnfoldBound.unfolded_integral_le D ψ J.W J.W₀ B.V (σ + 1) J.d s.χV s.χW s.om om' s.weil hom' s.vS vb s.vU s.vW x₀
     hbase G Φ hG hΦ 𝓑 h𝓑'
-  obtain ⟨hΓc, hΓd, -⟩ := GlobalTheory.T.rational_unitary_subgroup_countable_discrete_fundDomain D J.W₀ (GQ J.W₀) le_rfl
+  obtain ⟨hΓc, hΓd, -⟩ := _root_.GlobalTheory.RationalSubgroupFund.countable_discrete_exists_fundamentalDomain D J.W₀ (GQ J.W₀) le_rfl
   refine GlobalTheory.fubini_compact_quotient (GA D J.W₀) J.v0.μ (GQ J.W₀) hΓc hΓd J.cpt J.v0.𝓕 J.v0.fund (GA D B.V)
     (s.vW.μ.restrict 𝓑) (fun h₀ h => G h * tFlat s vL (Y h₀) (s.om (J.d.emb0 h₀, h) Φ)) ?_ ?_ ?_
   · exact ((hG.2.1.comp continuous_snd).mul hcont).measurable
@@ -298,7 +298,7 @@ theorem unfolded_integrable : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF 
               ((rat x₀ : Mx D B.V.rank (σ + 1)) ⬝ b)‖ₑ ∂vb.μ ∂s.vU.ν) ∂s.vW.μ := by
           refine lintegral_mono fun h => ?_
           rw [enorm_mul, mul_left_comm]
-          have := (GlobalTheory.T.unfoldedTerm_basePoint_eq_flatMap_pairing D ψ σ J B s vb vL (Y h₀) (s.om (J.d.emb0 h₀, h) Φ) (quasi_of_fam hY h₀)
+          have := (_root_.GlobalTheory.Unf.FB.fl_base_eq_tFlat D ψ σ J B s vb vL (Y h₀) (s.om (J.d.emb0 h₀, h) Φ) (quasi_of_fam hY h₀)
             (s.weil.om_pres _ _ hΦ)).2 M (hM h₀ hh₀)
           rw [hx₀]
           gcongr
@@ -433,7 +433,7 @@ theorem unfF_continuous_invariant : ∀ (D : D7), Descent D → ∀ (ψ : AddCha
   intro D hD ψ σ J B s vL Y G Φ hY hG hΦ
   refine ⟨?_, ?_⟩
   · obtain ⟨hc, hi, he⟩ := GlobalTheory.T.pairedFlatMap_family_continuous_invariant_integral D hD ψ σ J B s vL Y Φ hY hΦ
-    have h1 := (GlobalTheory.T.continuous_integral_compactAutomorphicQuotient_param D J.W₀ J.cpt J.v0 (GA D B.V)
+    have h1 := (_root_.GlobalTheory.CocompactParam.continuous_integral_param D J.W₀ J.cpt J.v0 (GA D B.V)
       (fun h₀ h => tFlat s vL (Y h₀) (s.om (J.d.emb0 h₀, h) Φ)) hc hi).2.1
     have h2 : unfF s vL Y G Φ = fun h => G h *
         ∫ h₀ in J.v0.𝓕, tFlat s vL (Y h₀) (s.om (J.d.emb0 h₀, h) Φ) ∂J.v0.μ := by
@@ -448,8 +448,8 @@ theorem unfF_continuous_invariant : ∀ (D : D7), Descent D → ∀ (ψ : AddCha
     obtain ⟨n, hn, h₁, rfl⟩ := (hdec γ).1 hb
     obtain ⟨hnq, hhq⟩ := ((GlobalTheory.T.besselGroup_semidirectProduct_rational D σ B).2.2.2.2 n hn h₁).1 hq
     have hth : IsThetaFunO ψ J.W₀ B.V₀ (flatFB s (s.om (1, h) Φ)) :=
-      (GlobalTheory.T.flatThetaMaps_preserve_thetaFunctions D (GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D) ψ).2 σ J B s _ (s.weil.om_pres _ _ hΦ)
-    have hinv := (GlobalTheory.T.fourierJacobiHandOff_automorphic D ψ σ J B s vL Y _ hY hth).1 h₁ hhq 1
+      (_root_.GlobalTheory.Unf.FlatTheta.flat_isThetaFun D (_root_.GlobalTheory.Unf.Flat.flatLaw D) ψ).2 σ J B s _ (s.weil.om_pres _ _ hΦ)
+    have hinv := (_root_.GlobalTheory.handFBLaw D ψ σ J B s vL Y _ hY hth).1 h₁ hhq 1
     rw [mul_one] at hinv
     have e := GlobalTheory.T.unfoldedFunction_eq_besselPeriodIntegrand D hD ψ σ J B s vL Y G Φ hΦ h h₁ ⟨n, hn⟩
     refine e.trans ?_

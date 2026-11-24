@@ -7,10 +7,10 @@ public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniq
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsAnalyticDataUnitFrameFramedPointStatement
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsIntegralHarmonicNeZeroAndIsHomogeneous
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaRuleExistsAndEval
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DualHalfLevelMarkingExistsAndMatchStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaValueStandardLatticeEqClassicalThetaStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameMulTriangularOrthonormal
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsBaseClassLevelAdapted
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DualHalfLevelMarkingExistsAndMatch
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaValueStandardLatticeEqClassicalTheta
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameMulTriangularOrthonormal
 public import Formalism.LocalToGlobal.ProjectiveLattices.ThProps
 public import Formalism.LocalToGlobal.ProjectiveLattices.UnFree
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
@@ -167,7 +167,7 @@ theorem exists_thGen_rdU_ne_zero : Formalism.MainNotions.ModuliIntegralCharts.H1
     _root_.GlobalTheory.Dict.VSetup.exists_setup E H Dw l Xo c σ r U hσ hU hr a n hdom k ⟨rmul x b, hx₀⟩ (isUnitFr_of_isOrtho ho)
   have hM0 : l.M ≠ 0 := by have := l.three_le; omega
   have hME : (l.M : E) ≠ 0 := Nat.cast_ne_zero.2 hM0
-  obtain ⟨-, -, hconj, hmul, hroots⟩ := GlobalTheory.T.dual_half_level_marking_exists_and_match E H Dw l r (U.X k) (U.X k).Λ (W.mark k) _ hsd hmk
+  obtain ⟨-, -, hconj, hmul, hroots⟩ := _root_.GlobalTheory.Dict.DualMark.dual_marking E H Dw l r (U.X k) (U.X k).Λ (W.mark k) _ hsd hmk
     (Complex.isPrimitiveRoot_exp l.M hM0)
   obtain ⟨Y, hY⟩ := hroots n l.M (Nat.pos_of_ne_zero hM0)
   have hQ0 : MvPolynomial.rename Dc.eL (MvPolynomial.map (algebraMap c.F ℂ) P) ≠ 0 := by
@@ -183,7 +183,7 @@ theorem exists_thGen_rdU_ne_zero : Formalism.MainNotions.ModuliIntegralCharts.H1
     _ hQ0 (by omega)
   choose xs hxs u hu hyx using fun j => hmk.surj _ (hy j)
   obtain ⟨⟨f, hf, hfs⟩, hev⟩ := GlobalTheory.thetaRule_exists_and_eval hCI E H Dw l Xo c nab hnab a n xs P hP
-  have hval := GlobalTheory.T.thetaValue_standardLattice_eq_classicalTheta hCI E H Dw l Xo c r W.g (U.X k) Dc.bas Dc.idx W.e (rmul x b) (U.X k).Λ
+  have hval := _root_.GlobalTheory.Dict.thVal_eq_thP hCI E H Dw l Xo c r W.g (U.X k) Dc.bas Dc.idx W.e (rmul x b) (U.X k).Λ
     (unC U k ⟨rmul x b, hx₀⟩) A Dc.sympl hx₀ hsd Dw.p n Dc.hr Dc.eL hrpq hdom.2 (he ▸ Dc.dir_eq) nab hnab θ v κ
     hreads hvac hprod (W.mark k) hmk hmarked xs (Y fun j => Submodule.Quotient.mk (xs j))
     (fun j => by

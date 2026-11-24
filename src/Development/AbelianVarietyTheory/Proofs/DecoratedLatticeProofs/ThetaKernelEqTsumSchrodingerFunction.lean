@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HeckeFormNSOfHeckeForm
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergOperatorThetaFunctionalMixedSourceMode
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchrodingerFunctionUnitaryLeviRadicalActionsStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchrodingerFunctionUnitaryLeviRadicalActions
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,7 +60,7 @@ theorem thetaKO_eq_tsum_sch : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A B
     rw [← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, one_mul, mul_one]
   have hs := (GlobalTheory.HeisMixSource.heis_mixS D ψ hW.std (dblSp A) (zeroSp D) B A.rank (dblDec A) ⟨ν, 𝓨, hν⟩ _ hG).2.2.2.2 0
   rw [map_zero] at hs
-  have hl := (GlobalTheory.T.schrodingerFunction_unitary_levi_radical_actions D ψ A B χB omh hW ν 𝓨 hν _ hF).1 h
+  have hl := (_root_.GlobalTheory.Core.Rk.SchLaws.sch_laws D ψ A B χB omh hW ν 𝓨 hν _ hF).1 h
   unfold thetaKO
   rw [e, ← hs.tsum_eq]
   exact tsum_congr fun ξ => hl (rat ξ)

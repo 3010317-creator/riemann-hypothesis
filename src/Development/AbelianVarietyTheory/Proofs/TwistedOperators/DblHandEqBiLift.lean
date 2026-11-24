@@ -4,9 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasi
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.JointSmooth
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsWeilDatumAnisotropicKernelPair
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleStepEqTwoThetaColumnLifts
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctionsStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctions
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsPreserveThetaFunctions
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaGridLastRowColumnCharactersDifferStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.BasePlaceNotMemChiGridBadPlaces
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaGridLastRowColumnCharactersDiffer
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsWeilDatumHermitianPair
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -104,7 +105,7 @@ theorem dbl_hand_of_chars {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G :
     (G.chrT (.mu t D.R.m j)) Wl.ψ_std hz hoa.hecT hzr hoa.resT
   obtain ⟨omz', hoz'⟩ := GlobalTheory.WeilDatumExistence.weilDatumExists D (G.V (.top (j + 1))) (GlobalTheory.SeeSaw.Model.nLine D) Wl.ψ
     (G.chrS (.mu t D.R.m (j + 1))) χz Wl.ψ_std hob.hecS hz hob.resS hzr
-  have hth := GlobalTheory.Unf.FlatTheta.flat_isThetaFun D (GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D) Wl.ψ
+  have hth := GlobalTheory.Unf.FlatTheta.flat_isThetaFun D (_root_.GlobalTheory.Unf.Flat.flatLaw D) Wl.ψ
   let B := besAt G hM j (σ + 1) hj vN
   let J := jacAt G hM (j + 1) (σ + 1) (by omega)
   let B' := besAt G hM (j + 1 + 1) σ (by omega) (GlobalTheory.Unf.Inhab.nonempty_volN (besDecAt G (j + 1 + 1) σ (by omega))).some
@@ -165,7 +166,7 @@ theorem dbl_hand_eq_biLift : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Const
               (besDecAt G (j + 1 + 1) σ (by omega))).om (h₁, h₂) Φ₂))) := by
   intro D T L sc G Wl t M hM σ j hj vN
 
-  obtain ⟨χz, hz, hzr, -, hEven, hOdd⟩ := GlobalTheory.T.thetaGrid_lastRow_column_characters_differ G Wl t
+  obtain ⟨χz, hz, hzr, -, hEven, hOdd⟩ := _root_.GlobalTheory.RowChars.rowChars G Wl t
 
   have hjOdd : (D.R.m - 1 - j) % 2 = 1 := by omega
   have hjEven : (D.R.m - 1 - (j + 1)) % 2 = 0 := by omega

@@ -11,7 +11,7 @@ public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApp
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MultTApplyRapidDec
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchurMultMultiplicitySpacesOfRapidDecayStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchurMultMultiplicitySpacesOfRapidDecay
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.LevelPlusSubgroup
 public import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CmHostImaginaryGeneratorNeZero
@@ -586,7 +586,7 @@ theorem exists_bound_half_lt : GlobalTheory.Published.CuspRapidDecay → ∀ (D 
   intro hP D θ hθ V S M J vol t ht ht0 w hw
   have hw' : PiTensorProduct.tprod ℂ w ≠ 0 :=
     tprod_ne_zero' fun τ h => hw τ (by simp [h])
-  have hS := GlobalTheory.T.schurMult_multiplicitySpaces_of_rapidDecay hP D θ hθ V S M J 1 vol.μ vol.𝓕 vol.haar vol.fund
+  have hS := _root_.GlobalTheory.SchurConst.schurMult_all hP D θ hθ V S M J 1 vol.μ vol.𝓕 vol.haar vol.fund
   set φ := t (PiTensorProduct.tprod ℂ w) with hφ
   have hφ0 : φ ≠ 0 := fun h => ht0 (GlobalTheory.T.multiplicitySpace_eq_zero_of_apply_nonzero_tensor_zero θ M J 1 vol.μ vol.𝓕 hθ vol.haar vol.fund hS t ht _ hw' h)
   obtain ⟨x₀, hx₀⟩ : ∃ x₀, φ x₀ ≠ 0 := by

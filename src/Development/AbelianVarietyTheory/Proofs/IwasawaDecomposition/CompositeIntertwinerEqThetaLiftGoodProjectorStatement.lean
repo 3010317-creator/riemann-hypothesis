@@ -72,7 +72,8 @@ import Development.AbelianVarietyTheory.Proofs.TwistedOperators.StepVectorLiftPa
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LastStepVectorLiftPairFlagLevelCharactersStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParahoricLevelLiftsExistStatement
+import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParahoricLevelLiftsExist
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Data.Nat.Choose.Multinomial
@@ -435,7 +436,7 @@ variable {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.w
 theorem liftsExist_top (R : RealDat D A Ks) (hl : R.toLevCh.Is A.μ0) (t : T) (g0 : G0 R.Pg D.R.r) :
     ∃ κ, IsLevelLift D.sp.X' R.βX (R.datXt t) g0 κ := by
   obtain ⟨c, hc⟩ := hl.βX
-  exact GlobalTheory.T.parahoricLevel_liftsExist D.sp.X' R.βX (R.datXt t) _ _ hc (GlobalTheory.ChainEquiv.places_sep R.toLevCh _ hl t).1
+  exact _root_.GlobalTheory.ParahoricLift.liftsExist D.sp.X' R.βX (R.datXt t) _ _ hc (GlobalTheory.ChainEquiv.places_sep R.toLevCh _ hl t).1
     (GlobalTheory.ChainEquiv.places_sep R.toLevCh _ hl t).2 g0
 
 

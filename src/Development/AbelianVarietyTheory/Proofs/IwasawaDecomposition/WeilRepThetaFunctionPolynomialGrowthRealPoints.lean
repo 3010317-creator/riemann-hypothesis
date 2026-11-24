@@ -4,13 +4,16 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralNormSqEqToL2
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralEqOfNorms
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.DenomBound
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsSigmaList
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsQuadOfPlane
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsOscillatorActionUnitaryPolynomialBound
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeakWeilRepEqUnitSmulOscillatorRealPointsStatement
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.NormInfSubmultiplicativeLeAdelicHeightStatement
+import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.WordDerivatives
+import Formalism.LocalToGlobal.BesselHermitianTheta.TiedSmooth
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.NormInfSubmultiplicativeLeAdelicHeight
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -103,7 +106,7 @@ theorem sum_mM_le (θ : InfF D) (S T : HSp D) : ∃ K : ℝ, 0 ≤ K ∧ ∀ (a 
 
 theorem one_add_normInf_mul (θ : InfF D) (V : HSp D) (g h : GA D V) :
     1 + normInf θ V (g * h) ≤ (1 + normInf θ V g) * (1 + normInf θ V h) := by
-  have h1 := (GlobalTheory.T.normInf_submultiplicative_le_adelicHeight D θ V).1 g h
+  have h1 := (_root_.GlobalTheory.SmoothForms.normInf_mul_le_and_le_height D θ V).1 g h
   have ha := GlobalTheory.SmoothForms.normInf_nonneg (θ := θ) g
   have hb := GlobalTheory.SmoothForms.normInf_nonneg (θ := θ) h
   nlinarith
@@ -116,8 +119,8 @@ theorem om_growth : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D �
       (GlobalTheory.RealWeil.BB ψ S T) (GlobalTheory.RealWeil.rhoV hψ σ S T) (GlobalTheory.RealWeil.isHeis_rhoB h hψ) (GA D S × GA D T)
       (GlobalTheory.RealWeil.mM θ S T) (GlobalTheory.RealWeil.mM_unitary hθ)
   obtain ⟨K, hK0, hK⟩ := sum_mM_le θ S T
-  obtain ⟨-, -, -, -, -, s6, s7, -⟩ := (GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ S
-  obtain ⟨-, -, -, -, -, t6, t7, -⟩ := (GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ T
+  obtain ⟨-, -, -, -, -, s6, s7, -⟩ := (_root_.GlobalTheory.SmoothForms.RealPts.realPoints D).2 θ hθ S
+  obtain ⟨-, -, -, -, -, t6, t7, -⟩ := (_root_.GlobalTheory.SmoothForms.RealPts.realPoints D).2 θ hθ T
   refine ⟨N, fun f hf x y => ?_⟩
   obtain ⟨k, hk, a₀, ha₀, rfl⟩ := s7 x
   obtain ⟨k', hk', b₀, hb₀, rfl⟩ := t7 y

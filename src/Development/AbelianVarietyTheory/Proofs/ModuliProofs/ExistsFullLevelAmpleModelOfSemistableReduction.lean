@@ -72,7 +72,8 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValua
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.UniformizationLawsAndExpansionStatements
 public import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.IsVVGenOfIsThetaFamily
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AdicBaseEmbedsValuationAlgebraicClosure
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsIsoUniformisationsOfIsoDegenerationDataStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifBaseChangeSt
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsIsoUniformisationsOfIsoDegenerationData
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsPrimGenerator
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsUniqueThetaConst
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.GtOntoDivisibleKernel
@@ -157,7 +158,10 @@ import Mathlib.Algebra.Order.Star.Rat
 import Mathlib.AlgebraicGeometry.ValuativeCriterion
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.ExistsRosatiGen
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.GenCalc
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHoldStatement
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.OLinBaseChangeSt
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHold
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.ModuliProofs.Direct, Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabMapOfIsProperOfLbIsoLam, Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsLocalizationOfLeClosure, Development.AbelianVarietyTheory.Proofs.ModuliProofs.Rigidity, Development.AbelianVarietyTheory.Proofs.ModuliProofs.CmFamilyFiniteUnramifiedOverSiegelFamily, Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUniversalFullLevelOfPelThetaFamily, Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUniversalQuasiProjectiveSiegelFamilyLargeL, Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsFullLevelModelAmpleFrames, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemiAbelianHomExtensionOfLaws, Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemiAbelianHomExtensionOfLawsStatement, Development.AbelianVarietyTheory.Proofs.ModuliProofs.GoodReductionOfThetaPointUnits, Development.AbelianVarietyTheory.Proofs.ModuliProofs.SemistableReductionSplitOfPadic, Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsFullLevelAmpleModelOfSemistableReduction
@@ -1703,7 +1707,7 @@ theorem exists_pol_model (h₁ : Out.Laws) (h₂ : Out.Laws2) (W : Type) [CommRi
     GenSpread.lbIso_pull_of_lbIso (LBIso.symm ⟨c, hc'⟩) _ e₁.symm
   let U' : Out.Unif (IsLocalRing.maximalIdeal W) D' A' D'.toPre.P.A := ⟨SelfUnif.selfPre D' A' eA hA' hw, fun k _ =>
     SelfUnif.expBij D' A' eA hA' hw h₁.globalFns (IsAdicComplete.le_jacobson_bot _) k⟩
-  obtain ⟨ψ, bc, hψ', -, e₂, ⟨wL, hwL, -⟩⟩ := GlobalTheory.T.exists_iso_uniformisations_of_iso_degeneration_data h₁ h₂ W _ hA rfl D D' A A' G D'.toPre.P.A hG
+  obtain ⟨ψ, bc, hψ', -, e₂, ⟨wL, hwL, -⟩⟩ := _root_.GlobalTheory.exists_iso_isPullUnif_of_isPullDeg h₁ h₂ W _ hA rfl D D' A A' G D'.toPre.P.A hG
     (isSemiAbelian_of_isAbelianScheme _ D'.toPre.P.isAb) U U' hD
   have l₁ : LBIso D'.toPre.P.L (U.LG.L.pull ψ.hom.left) := e₂ ▸ ⟨wL, hwL⟩
   have := U.gen_hom
@@ -1892,9 +1896,9 @@ namespace GlobalTheory
 
 theorem topAmpExists_of_semistableReduction :
     GlobalTheory.Published.SemistableReductionSt → GlobalTheory.Models.TopAmpExists :=
-  fun S => _root_.GlobalTheory.Models.topAmpExists _root_.GlobalTheory.homExtension_semiAbelian_dvr GlobalTheory.T.all_six_abelian_scheme_laws_hold.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.1 S _root_.GlobalTheory.ZH.thmU_and_uTors.1 _root_.GlobalTheory.ZH.thmU_and_uTors.2
+  fun S => _root_.GlobalTheory.Models.topAmpExists _root_.GlobalTheory.homExtension_semiAbelian_dvr _root_.GlobalTheory.allSixLaws.1 _root_.GlobalTheory.allSixLaws.2.1 S _root_.GlobalTheory.ZH.thmU_and_uTors.1 _root_.GlobalTheory.ZH.thmU_and_uTors.2
     (_root_.GlobalTheory.zhGeo_of_semistableReduction S)
-    (_root_.GlobalTheory.ThetaCrit.good_reduction_of_theta_point GlobalTheory.T.all_six_abelian_scheme_laws_hold.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.1 (_root_.GlobalTheory.SS.semistablePol_of_padic S) _root_.GlobalTheory.ZH.thmU_and_uTors.1 _root_.GlobalTheory.ZH.thmU_and_uTors.2)
+    (_root_.GlobalTheory.ThetaCrit.good_reduction_of_theta_point _root_.GlobalTheory.allSixLaws.1 _root_.GlobalTheory.allSixLaws.2.1 (_root_.GlobalTheory.SS.semistablePol_of_padic S) _root_.GlobalTheory.ZH.thmU_and_uTors.1 _root_.GlobalTheory.ZH.thmU_and_uTors.2)
     _root_.GlobalTheory.Moduli.cube_of_isLB _root_.GlobalTheory.thetaUnifAV_closed
 
 end GlobalTheory

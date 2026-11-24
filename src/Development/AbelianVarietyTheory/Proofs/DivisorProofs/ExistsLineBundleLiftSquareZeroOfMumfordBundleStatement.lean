@@ -5,11 +5,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Augmentation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AugmentationSigmaMapInjectiveOfFlat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AugmentationSigmaMapNatural
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAugmentationTensorSigmaMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CohomologyRestrictBasisExtendedBijectiveStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PrimitiveStructureSheafDegTwoVanish
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CohomologyRestrictBasisExtendedBijective
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SurjectiveOfIsPullbackSqZero
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsChartsSquareZeroPresentedScheme
-public import Development.AbelianVarietyTheory.Definitions.Divisors.PrimitiveStructureSheafDegTwoVanish
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PullCub
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ResPullURes
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.PrecompleteBases.PsbLb
@@ -18,7 +18,8 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.CommAlgFunct
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleLiftObstructionRefineFinerBasisStatement
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsOb1NeZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianStructureCohomologyStatementStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.AxesVanishingStructureSheafDegOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianStructureCohomologyStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveClassDegreeTwoStructureSheafVanishStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrimitiveDegreeTwoExtensionStatement
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.Clauses
@@ -379,7 +380,7 @@ theorem exists_isObL : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ide
   have hc := GlobalTheory.T.isMultiplicativeOneCocycleOpens_of_isLineBundleFrameOnBasis X₀ C (opOf G) (opOf_le G) L u hL hF
   obtain ⟨d, hd⟩ := GlobalTheory.T.exists_unitCocycleLiftObstruction R R₀ I hI π hπ hk R₁ α C (G ⋙ OAff s₀) ((ofSys S).restrict G) u
     ((ofSys_isFun S).restrict G) (fun T T' T'' a b ↦ congrArg Units.val (hc a b))
-  obtain ⟨c, rfl⟩ := (GlobalTheory.T.cohomology_restrict_basis_extended_bijective R₀ R₁ X₀ s₀ C G hB.1 hB.2).2.2 d
+  obtain ⟨c, rfl⟩ := (_root_.GlobalTheory.Obs.BasisExt.restrict_ext_bijective R₀ R₁ X₀ s₀ C G hB.1 hB.2).2.2 d
   exact ⟨c, C, inferInstance, inferInstance, G, hB, u, hF, hd⟩
 
 end GlobalTheory.LBObs.ObEx
@@ -1436,8 +1437,8 @@ theorem primE2_any_ring : PrimitiveExtendedDegTwoVanish := by
   apply _root_.GlobalTheory.Obs.primE2_of_primO2
   apply _root_.GlobalTheory.Obs.primitiveStructureSheafDegTwoVanish_of_cup_iso
   intro R _ A _ g hA hs
-  exact ⟨(GlobalTheory.T.abelian_structure_cohomology_statement R A g hA hs).1,
-    (GlobalTheory.T.abelian_structure_cohomology_statement R A g hA hs).2.1⟩
+  exact ⟨(_root_.GlobalTheory.AbCoh.oStr R A g hA hs).1,
+    (_root_.GlobalTheory.AbCoh.oStr R A g hA hs).2.1⟩
 
 end GlobalTheory.Obs
 end -- clump:auto

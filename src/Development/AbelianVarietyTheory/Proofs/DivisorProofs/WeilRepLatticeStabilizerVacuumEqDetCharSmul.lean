@@ -5,7 +5,7 @@ public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsInte
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfFinite
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumFixesVacuumNonSplitPlaceUnramified
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumFixesVacuumNonSplitPlaceUnramifiedStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilOperatorFixesLatticeVacuumNonsplitUnramified
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
@@ -77,7 +77,7 @@ theorem nonSplit_fixes_latVac : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (�
   refine ⟨?_, fun _ => ?_⟩
   · have h1 : GlobalTheory.WeilParts.SuppPl ε V 1 := fun i j => by
       rw [GlobalTheory.FinWeilO.mt_one, sub_self, Matrix.zero_apply, mul_zero]
-    refine GlobalTheory.T.weilDatum_fixes_vacuum_nonSplitPlace_unramified D ψ hP.weil.std V W ΛV ΛW hV hW χV χW om hP.eta hP.weil v ε hv uV uW 1 k h1 hk
+    refine _root_.GlobalTheory.VacInert.fixesVacAt_of_unram D ψ hP.weil.std V W ΛV ΛW hV hW χV χW om hP.eta hP.weil v ε hv uV uW 1 k h1 hk
       (fun u => ?_) f hf fun u hu => ?_
     · rw [GlobalTheory.InertVac.mem_latO_place_iff hv.1, GlobalTheory.InertVac.mem_latO_place_iff hv.1, ← hst,
         ← GlobalTheory.FinWeilO.actO_smul, (GlobalTheory.InertVac.actO_injective 1 k).eq_iff]

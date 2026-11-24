@@ -3,7 +3,7 @@ module
 public import Formalism.LocalToGlobal.IndefiniteReal.FWExist
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseFrameOfRealizationModels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DictionaryCharacterTrivialOnPrincipalLevel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealisationPrincipalLevelEqCoreLevelOpenStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealisationPrincipalLevelEqCoreLevelOpen
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSmoothVector
 public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 public import Formalism.LocalToGlobal.ProjectiveLattices.FamilyUniformisationBasePointOrthogonalBis
@@ -111,7 +111,7 @@ theorem char_eq_one : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Ty
   intro D G _ _ Pl0 T0 A T _ R κ v₀ hL hM ht hpb i σ hσ hV k hk
   rw [castDict_apply]
   exact GlobalTheory.T.dictionary_character_trivial_on_principal_level T R κ v₀ hL ht hpb i (res T σ) hσ hV _
-    (((GlobalTheory.T.realisation_principalLevel_eq_coreLevel_open D G Pl0 T0 A T R κ v₀ hL hM ht hpb i σ hσ hV).1 k).1 hk)
+    (((_root_.GlobalTheory.HolDict.PrincLev.principal_level D G Pl0 T0 A T R κ v₀ hL hM ht hpb i σ hσ hV).1 k).1 hk)
 
 end GlobalTheory.HolDict.PrincLevChar
 end -- clump:auto
@@ -451,7 +451,7 @@ theorem castDict_laws {D : D7} {V W : HSp D} (hV : V = W) {r : ℕ} (hr : W.rank
 
 theorem goodDict_core : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Type) (A : FamIn D.what₂.LL G Pl0 T0 D.R.m) (T : CoreJ D) [Algebra T.Q.c.F D.what₂.LL] (R : RealDat D A T.Q.c.F) (κ : ∀ i : Fin D.R.m, WeightFamilies.Wt D ((i : ℕ) + 1)) (v₀ : ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), (R.MW i σ).Vec), R.toLevCh.Is A.μ0 → R.IsModels → TieIn T R κ v₀ → T.pb = R.C.P.pb → ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), GoodEmb T.Q.c (res T σ) → ∀ hV : T.V ((i : ℕ) + 1) (res T σ) = Wc D i, ∀ w, WtIs (R.MW i σ) w → GoodDict R.θ (R.MW i σ) w (rank_Wc i) (T.U ((i : ℕ) + 1) (res T σ)).X (laU (T.U ((i : ℕ) + 1) (res T σ)) (wtA (κ i)) (κ i).n) (castDict hV (T.dict ((i : ℕ) + 1) (res T σ))) (castDict hV (T.mu ((i : ℕ) + 1) (res T σ))) (T.cE ((i : ℕ) + 1) (res T σ)) (levG (Wc D i) (R.βW i) (R.datWp i R.triv)) := by
   intro D G _ _ Pl0 T0 A T _ R κ v₀ hL hM h hpb i σ hσ hV w hw
-  obtain ⟨hK, -, hfin, hopen⟩ := GlobalTheory.T.realisation_principalLevel_eq_coreLevel_open D G Pl0 T0 A T R κ v₀ hL hM h hpb i σ hσ hV
+  obtain ⟨hK, -, hfin, hopen⟩ := _root_.GlobalTheory.HolDict.PrincLev.principal_level D G Pl0 T0 A T R κ v₀ hL hM h hpb i σ hσ hV
   have hj : InR D ((i : ℕ) + 1) := inR i
   obtain ⟨h1, h2, h3, h4⟩ := castDict_laws hV (rank_Wc i) _ _ (T.mu ((i : ℕ) + 1) (res T σ)) _ _ hK
     (h.laws.dictU _ hj _ hσ) (h.laws.modelW _ hj _ hσ) (h.laws.muUnit _ hj _ hσ) (h.laws.muCont _ hj _ hσ)

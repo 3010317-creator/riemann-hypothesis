@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFrameRatio
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsKernelVector
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.AbelianProjectiveBaseChange
-public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.NonemptyPerfectSectionsComplexOfNoetherianStatement
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.NonemptyPerfectSectionsComplexOfNoetherian
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -161,7 +162,7 @@ theorem sumF_of_sum_on_thickenings : LL → AllD fun {R} _ _ {I} D F _ _ => ∀ 
   have := hR.1
   have := D.toPre.P.isAb.smooth
   have hL := D.toPre.P.isLB
-  obtain ⟨P⟩ := GlobalTheory.T.nonempty_perfectSectionsComplex_of_noetherian R _ D.toPre.P.A.hom inferInstance
+  obtain ⟨P⟩ := _root_.GlobalTheory.AbLaw.nonempty_perf_of_noetherian R _ D.toPre.P.A.hom inferInstance
     (GlobalTheory.AbProj.isProjBy_of_isPullback D.toPre.P (IsPullback.id_horiz _)) _ (LB.isLB_linComb hL φ ε)
   choose v hv hv' using fun i => exists_vec P (n i)
   obtain ⟨v₀, hv₀, hv₀'⟩ := exists_vec P n₀

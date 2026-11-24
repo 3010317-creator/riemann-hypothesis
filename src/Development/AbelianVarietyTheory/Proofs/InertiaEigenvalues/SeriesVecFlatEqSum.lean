@@ -3,7 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ToUnitsCompToCircle
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjugateThetaLiftsIsConjugateCuspExpansion
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PureTensorLIntertwine
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaOneMapBaseTupleOfCharacterisationExtremalStatement
+import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
+import Formalism.LocalToGlobal.IndefiniteReal.FWExist
+import Formalism.LocalToGlobal.IndefiniteReal.OneMapT
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaOneMapBaseTupleOfCharacterisationExtremal
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPureTensorO
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctions
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChangeOfSplittingPair
@@ -261,7 +267,7 @@ theorem conj_gen : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepSt2 �
   obtain ⟨fw⟩ := hFW
   have hTie : TieIn T R κ v₀ := ⟨fw.laws, fw.alg_eq, fw.kap, fw.hv₀, fw.chiR, fw.x0⟩
   have hE : (O i).EquivAt (κ i) (T.cE ((i : ℕ) + 1) (O i).s0) :=
-    (hPT (GlobalTheory.T.thetaOneMap_baseTuple_of_characterisation_extremal hCI D G Pl0 T0 A T R F κ v₀ hC hTie hio O i hOP)).1
+    (hPT (_root_.GlobalTheory.OneMapTies.oneMapRow0_of_ties_core hCI D G Pl0 T0 A T R F κ v₀ hC hTie hio O i hOP)).1
   obtain ⟨ζ0, hζ0, hgb⟩ := GlobalTheory.T.conjugate_thetaSeries_flatDatum_rootOfUnity hCI D G Pl0 T0 A T R F κ v₀ O ph hnV hC hT0 ⟨fw⟩ hio hQG i hOP hPT c hc u hu τ hτ
   refine ⟨ζ0, hζ0, fun ψ ψ' t t' hψ hψ' hQ hQ' ht ht' hcc => ?_⟩
   obtain ⟨f, hf⟩ := (GlobalTheory.FlatVecExist.flatVec_existsUnique D G Pl0 T0 A _ R F hC hQG i t).1

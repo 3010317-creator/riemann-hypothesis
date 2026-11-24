@@ -4,11 +4,11 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.Restricte
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasDerivAtZeroAndIsTheta
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisThetaLaws
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocalFactorMemSpanLocalHeisenbergTranslatesStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaInnerProductHermitianStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.HalfLinearCocycle
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaInnerProductHermitian
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousFourierGau
 public import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
 public import Mathlib.Analysis.Calculus.ParametricIntegral
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.HalfLinearCocycle
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RestrictedTensorVacuumEqSmulBasePoint
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralNormSqEqToL2
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsQuadOfPlane
@@ -18,7 +18,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOscill
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralEqOfNorms
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEuclideanCoordsHermitianCartanInvolution
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.VacuumProjectorRangeAnnihilated
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CmAdeleIdempotentOfPlacePropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CmAdeleIdempotentOfPlaceProperties
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOperatorPureTensorPlaceByPlaceStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -96,7 +96,7 @@ theorem isLocOp_of_mem_span {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp
     {x : WO S T → ℂ} (hx : x ∈ Submodule.span ℂ (Set.range fun w : WO S T => heisO ψ S T (wAt p w) f₀)) :
     IsThetaFunO ψ S T x ∧ IsLocOp ψ S T μ 𝓕 f₀ p x := by
   have hh := (GlobalTheory.HeisThetaLaws.heis_theta_laws D ψ hψ S T).1
-  have ip := GlobalTheory.T.theta_inner_product_hermitian D ψ S T μ 𝓕 hψ hμ
+  have ip := _root_.GlobalTheory.ThetaPairingLaws.ipO_laws D ψ S T μ 𝓕 hψ hμ
   induction hx using Submodule.span_induction with
   | mem y hy =>
     obtain ⟨w, rfl⟩ := hy
@@ -790,14 +790,14 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.PlaceTensorStep
 
 theorem wAt_wAt_ne {D : D7} {m n : ℕ} {p q : Place D} (h : p ≠ q) (w : Mx D m n) : wAt p (wAt q w) = 0 := by
-  have h0 : idem D p * idem D q = 0 := (GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D).2.1 p q h
+  have h0 : idem D p * idem D q = 0 := (_root_.GlobalTheory.PlaceTensor.idem_spec D).2.1 p q h
   funext i j
   show idem D p * (idem D q * w i j) = (0 : Mx D m n) i j
   rw [← mul_assoc, h0, zero_mul]
   rfl
 
 theorem wAt_wAt_self {D : D7} {m n : ℕ} (p : Place D) (w : Mx D m n) : wAt p (wAt p w) = wAt p w := by
-  have h1 : idem D p * idem D p = idem D p := (GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D).1 p
+  have h1 : idem D p * idem D p = idem D p := (_root_.GlobalTheory.PlaceTensor.idem_spec D).1 p
   funext i j
   show idem D p * (idem D p * w i j) = idem D p * w i j
   rw [← mul_assoc, h1]

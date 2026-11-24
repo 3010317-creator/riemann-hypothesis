@@ -8,7 +8,7 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameOnOne
 public import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.StepSplittingCharactersTameLevelResidue
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnramifiedEtaTildeHeckeCharOfLocalComponents
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumFixesVacuumNonSplitPlaceUnramifiedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumFixesVacuumNonSplitPlaceUnramified
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsLocalProductsTendstoFrameStabiliser
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemLatOIffExistsActO
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemRangeOfOneTmulMem
@@ -17,15 +17,15 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.OmVacu
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfFinite
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEqMulOfResSNeOne
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemCompletedHomLatticeIffFrameStabiliserActionStatement
 public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemCompletedHomLatticeIffFrameStabiliserAction
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilRepSchrodingerModelHalfSubstitution
 public import Formalism.LocalToGlobal.IndefiniteReal.LinksChar
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsInvariantForm
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCharFamIsVacVec
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrameStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NsmulProjectionXColumnsMemSelfDualLattice
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TypePlacesLocalDatumBlockTriangularLawStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TypePlacesLocalDatumBlockTriangularLaw
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -304,7 +304,7 @@ theorem fixesVacAt_nonsplit_of_charFrame : ∀ (D : D7) (C : Formalism.L2.Host.C
   intro D C η hη hres ψ S T χS χT om ΛS ΛT hW hS hT v ε hv hχS hχT
   have hStd : IsStdChar D ψ (-1) := hW.std
   have hTilde : IsEtaTilde D η := GlobalTheory.T.isUnramifiedEtaTildeHeckeChar_of_local_components D C η hη hres
-  exact GlobalTheory.T.weilDatum_fixes_vacuum_nonSplitPlace_unramified D ψ hStd S T ΛS ΛT hS hT χS χT om ⟨η, hTilde⟩ hW v ε hv hχS hχT
+  exact _root_.GlobalTheory.VacInert.fixesVacAt_of_unram D ψ hStd S T ΛS ΛT hS hT χS χT om ⟨η, hTilde⟩ hW v ε hv hχS hχT
 
 end GlobalTheory.StepLaw
 end -- clump:auto
@@ -571,7 +571,7 @@ theorem om_vacuum_eq_vacScal_smul : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ
   intro D ψ S T χS χT om θ sS sT ΛS ΛT βS βT e P cS cT f hW hθ hS hT hsS hsT hΛS hΛT hβS hβT he hχS hχT hfix hf
     g _ h _ hg hh v ε hε hgε hhε
   obtain ⟨⟨es, hes, rfl⟩, hc⟩ := he
-  have hstab := GlobalTheory.T.mem_completedHomLattice_iff_frameStabiliser_action D S T ΛS ΛT βS βT hΛS.1 hΛT.1 hβS hβT g h hg hh
+  have hstab := _root_.GlobalTheory.LatStab.mem_latO_iff_actO_mem D S T ΛS ΛT βS βT hΛS.1 hΛT.1 hβS hβT g h hg hh
   by_cases hsp : ∃ b : AE D, IsSplitIdem D b ∧ b + cA D b = algebraMap (AF D.host.F) (AE D) ε
   · obtain ⟨b, hb, hbε⟩ := hsp
     obtain ⟨a, ha, haε, hca, hP⟩ := exists_adapted hes hc hε hb hbε
@@ -953,8 +953,8 @@ theorem step_law {T0 : Type} (L : LevCh D T0) {μ0 : T0} (hL : L.Is μ0) (t : T0
   obtain ⟨hv, e, he', ⟨Tm, hTm⟩, hall⟩ := hf
   obtain ⟨P, he, hP⟩ : ∃ P, IsIdemSum e P ∧ ∀ PP, PP ∈ P ↔ PP ∈ L.Pg ∨ PP ∈ L.Q t :=
     ⟨_, he', fun PP => Finset.mem_union⟩
-  have dS := GlobalTheory.T.isSelfDualCoordLattice_of_selfDualFrame D S βS ΛS NS hβS
-  have dT := GlobalTheory.T.isSelfDualCoordLattice_of_selfDualFrame D T βT ΛT NT hβT
+  have dS := _root_.GlobalTheory.SDFrameLattice.isSelfDualC_of_isSDFrame D S βS ΛS NS hβS
+  have dT := _root_.GlobalTheory.SDFrameLattice.isSelfDualC_of_isSDFrame D T βT ΛT NT hβT
   obtain ⟨cS, fS, -⟩ := hβS
   obtain ⟨cT, fT, -⟩ := hβT
   obtain ⟨hd, htame⟩ := GlobalTheory.T.stepSplittingCharacters_tame_levelResidue D T0 L μ0 hL t ⟨j, hj⟩
@@ -986,7 +986,7 @@ theorem step_law {T0 : Type} (L : LevCh D T0) {μ0 : T0} (hL : L.Is μ0) (t : T0
         rw [GlobalTheory.PlaceDatum.omegaG_congr _ _ y y' fun PP hPP => h PP ((hP PP).2 (Or.inl hPP)),
           GlobalTheory.PlaceDatum.omegaQ_congr _ _ _ 1 y y' fun PP hPP => h PP ((hP PP).2 (Or.inr hPP))]
   have hsch := GlobalTheory.T.weilRep_schrodingerModel_half_substitution D ψ S T _ _ om ΛS ΛT e f₀ Tm hW dS dT (GlobalTheory.PlaceDatum.idemSum_mul_self he) hinf hv.2.theta hTm
-    κ κ' _ (GlobalTheory.T.mem_completedHomLattice_iff_frameStabiliser_action D S T ΛS ΛT βS βT dS.1 dT.1 fS fT κ κ' kS kT _) hvac _ hSB
+    κ κ' _ (_root_.GlobalTheory.LatStab.mem_latO_iff_actO_mem D S T ΛS ΛT βS βT dS.1 dT.1 fS fT κ κ' kS kT _) hvac _ hSB
   have hfe := hall Tm hTm
   have hne := levChi_ne_zero (β := βS)
     (flagL (datY S.rank D.R.r D.R.t j ha L.Pg (L.Q t) L.triv L.chi (L.xiR t) Frm.B)) κ
@@ -1003,7 +1003,7 @@ theorem step_law {T0 : Type} (L : LevCh D T0) {μ0 : T0} (hL : L.Is μ0) (t : T0
   simp only [Pi.smul_apply, smul_eq_mul]
   by_cases hx : IsHalf e x ∧ IsIntM (frMapO S T βS βT x)
   · rw [if_pos hx, if_pos ⟨i3.2 hx.1, i1.2 hx.2⟩]
-    have a1 := GlobalTheory.T.typePlaces_localDatum_blockTriangular_law D _ _ D.R.r D.R.t j ha hb ea eb L.Pg (L.Q t) L.chi (L.xiR t)
+    have a1 := _root_.GlobalTheory.StepLaw.TypeDatum.omegaG_law D _ _ D.R.r D.R.t j ha hb ea eb L.Pg (L.Q t) L.chi (L.xiR t)
       (fun PP => redFn βS PP (finE S κ)) (fun PP => redFn βT PP (finE T κ')) _ _
       (fun PP hP => parLev_g hκ.2.1 hP) (fun PP hP => parLev_g hκ'.2.1 hP)
       (fun PP hP => (congrFun hκ.2.2 ⟨PP, hP⟩).trans (congrFun hκ'.2.2 ⟨PP, hP⟩).symm) (fun PP _ => i2 hx.2 PP)

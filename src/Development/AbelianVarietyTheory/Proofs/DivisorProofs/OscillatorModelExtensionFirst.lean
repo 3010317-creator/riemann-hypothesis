@@ -5,7 +5,8 @@ public import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExi
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PureTensorLIntertwine
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScalarOfIntertwinesUpToScalar
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacuumCharacterPositiveDefiniteSourceStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacuumCharacterPositiveDefiniteSource
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryActionAtRealPlace
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
@@ -371,7 +372,7 @@ theorem om_real {χV χW : (AE D)ˣ →* Circle} {om : GA D V × GA D W →* Mod
   obtain ⟨k, hk⟩ := hP.even
   have h1 : ∀ τ, compAt θ τ (Formalism.L2.Theta.mt W 1) = 1 := fun τ =>
     Matrix.map_one (f := (θ τ).comp (infPart D)) (map_zero _) (map_one _)
-  have hvac := GlobalTheory.T.vacuum_character_positive_definite_source D ψ θ V W χV χW om hP.weil hP.inf hP.sigV hP.sigW s hV hs _ _ ha hb (fun τ => a τ + k)
+  have hvac := _root_.GlobalTheory.VacuumCharacter.vacuum_character D ψ θ V W χV χW om hP.weil hP.inf hP.sigV hP.sigW s hV hs _ _ ha hb (fun τ => a τ + k)
     (fun τ => a τ - k) (fun τ => -(x τ + b τ)) (fun τ => by rw [hk]; push_cast; ring) (fun τ => by rw [hk]; push_cast; ring)
     (fun τ => by push_cast; rw [← hx]; ring) f hf hv g hg 1 (one_mem _) (fun τ => by rw [h1, Matrix.mul_one, Matrix.one_mul])
   refine ⟨_, ?_, fun P => by

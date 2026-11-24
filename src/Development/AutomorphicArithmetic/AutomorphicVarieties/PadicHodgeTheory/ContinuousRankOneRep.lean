@@ -5,8 +5,10 @@ public import Mathlib.NumberTheory.NumberField.CMField
 public import Mathlib.NumberTheory.Padics.Hensel
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.LaWDDefs
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Langlands
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousRingEquivLocalFieldPreservesValuationStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PlaceOverTransportRingIsoStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousRingEquivLocalFieldPreservesValuation
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PlaceOverTransportRingIso
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.WeilDeligneParamAboveLIndependentLocalEmbedding
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.CharpolyEqOfIsNilpotentSub
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.DeRhamPotSemistable
@@ -832,14 +834,14 @@ private theorem cont_symm {F K : Type} [Field F] [NumberField F] [Field K] [Numb
     (hi : Continuous i) : Continuous i.symm := by
   haveI : CharZero (v.adicCompletion F) := charZero_of_injective_algebraMap (algebraMap F _).injective
   haveI : CharZero (w.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K _).injective
-  exact (GlobalTheory.T.continuous_ringEquiv_localField_preserves_valuation _ _ i hi).1
+  exact (_root_.GlobalTheory.LocalFieldIso.continuous_iso_keeps_valuation _ _ i hi).1
 
 end SlopeTestRemainingChoices
 
 theorem UpperTheory.hasLocalLanglands_iff_of_placeIso :
     ∀ {F K Ω : Type} [Field F] [NumberField F] [Field K] [NumberField K] [Field Ω] [Algebra F Ω] [Algebra K Ω] [IsAlgClosure F Ω] [IsAlgClosure K Ω] {l : ℕ} [Fact l.Prime] {A : ValuationSubring Ω} {v : Plc F} {w : Plc K} (h : IsPlaceOver A v) (h' : IsPlaceOver A w) {O : Type} [CommRing O] [Algebra ℤ_[l] O] [TopologicalSpace O] (Bw : LocBridge l F Ω (Dec (F := F) A) O) (Bw' : LocBridge l K Ω (Dec (F := K) A) O) (hj : GlobalTheory.Pst.Induces Bw) (hj' : GlobalTheory.Pst.Induces Bw'), Bw'.Kw = Bw.Kw → Bw'.j = Bw.j → Bw'.LL = Bw.LL → ∀ (jF : F →+* K) (i : v.adicCompletion F ≃+* w.adicCompletion K), PlaceIso A v A w (RingEquiv.refl Ω) jF i → ∀ (ι : Qbar l ≃+* ℂ) (wt : Emb l v → ℤ) (wt' : Emb l w → ℤ), (∀ (τ : Emb l v) (τ' : Emb l w), τ.1 = τ'.1.comp i.toRingHom → wt τ = wt' τ') → ∀ (a : Weil h →* (v.adicCompletion F)ˣ) (a' : Weil h' →* (w.adicCompletion K)ˣ), (∀ σ σ', WeilRel (RingEquiv.refl Ω) σ σ' → a' σ' = Units.map i.toRingHom.toMonoidHom (a σ)) → (UpperTheory.V.Loc.HasLT h Bw hj ι wt a ↔ UpperTheory.V.Loc.HasLT h' Bw' hj' ι wt' a') := by
   intro F K Ω _ _ _ _ _ _ _ _ _ l _ A v w h h' O _ _ _ Bw Bw' hj hj' hK hJ hL jF i hP ι wt wt' hwt a a' ha
-  obtain ⟨c, hc, hdeg, hq, hs⟩ := GlobalTheory.T.place_over_transport_ring_iso F Ω A v h K Ω A w h' _ _ i hP
+  obtain ⟨c, hc, hdeg, hq, hs⟩ := _root_.GlobalTheory.WeilTransport.weil_equiv F Ω A v h K Ω A w h' _ _ i hP
   have hi' : Continuous i.symm := cont_symm i hP.cont
   let E : Emb l w ≃ Emb l v :=
     { toFun := fun τ => ⟨τ.1.comp i.toRingHom, τ.2.comp hP.cont⟩
@@ -1093,7 +1095,7 @@ theorem UpperTheory.V.Loc.ltAll :
   obtain ⟨aK, haK⟩ := UpperTheory.V.Loc.laArtin hG ht
   obtain ⟨aM, haM⟩ := UpperTheory.V.Loc.laArtin hG hu
   let wK : Emb l t' → ℤ := fun τ => wt ⟨τ.1.comp i.toRingHom, τ.2.comp hi.cont⟩
-  have hs : Continuous i'.symm := (GlobalTheory.T.continuous_ringEquiv_localField_preserves_valuation _ _ i' hi'.cont).1
+  have hs : Continuous i'.symm := (_root_.GlobalTheory.LocalFieldIso.continuous_iso_keeps_valuation _ _ i' hi'.cont).1
   let wM : Emb l (t'.under (𝓞 M)) → ℤ := fun τ => wK ⟨τ.1.comp i'.symm.toRingHom, τ.2.comp hs⟩
   refine (UpperTheory.hasLocalLanglands_iff_of_placeIso h ht Bw BK hj hjK e1 e2 e3 _ i hi ι wt wK (fun τ τ' e => congrArg wt (Subtype.ext e)) a aK
     (isLocalArtin_transport hG chevalleyUnits' _ _ _ _ h _ _ _ _ ht _ _ i hi a aK ha haK)).2 ?_

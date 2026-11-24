@@ -7,7 +7,8 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasTy
 public import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.BlattnerShiftsSignedParameters
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormDwLeSobNorm
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsCompactFiniteApproxIdentity
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsSmoothAutomorphicFunctionCompactFamilyAverageStatement
+public import Formalism.LocalToGlobal.BesselHermitianTheta.TiedSmooth
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsSmoothAutomorphicFunctionCompactFamilyAverage
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.RankOneOperatorMemOfTranslationAverageClosed
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAndHasSumKAvg
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OneAddHsConjLe
@@ -266,7 +267,7 @@ theorem exists_rank_one (hθ : IsInfFam (D := D) θ) (hP : IsUnit P) (hJ : Pᴴ 
       fun x S v ℓ C hS _ h => h.translate hσ.1 hS hg fun y hy => by
         simp only [res, rTr, at_mul hθ hP hJ hy hg, mul_assoc x]⟩
   refine _root_.GlobalTheory.TypeSum.rank_one_mem_of_closed _ ε H σ hσ (Acts θ V τ ε σ P) htr (fun T T' hT hT' => ⟨fun φ hφ => ?_, fun φ hφ => ?_⟩) hsmul
-    (fun e he φ hφ => ⟨_, GlobalTheory.T.isSmoothAutomorphicFunction_compactFamily_average D θ hθ V τ (KG ε) (muK ε) _ continuous_conjK
+    (fun e he φ hφ => ⟨_, _root_.GlobalTheory.RealAverage.isAutFunSm_average D θ hθ V τ (KG ε) (muK ε) _ continuous_conjK
       (fun k => conj_inv_mem hP hJ (K_le_UJ (toMK_mem_K k))) e
       (by obtain ⟨F, -, h1, h2, -⟩ := he; exact h2 _ h1) φ hφ, moves_avg hθ hP hJ hσ he φ⟩) ?_ e he
   · obtain ⟨ψ, h1, h2⟩ := hT φ hφ

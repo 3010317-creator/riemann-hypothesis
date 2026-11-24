@@ -43,12 +43,12 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DefiniteU
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocallyCompactSecondCountableBorelCountable
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaKOContinuousAndRatInvariant
 public import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ConjAtFixedIff
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteThetaLiftContinuousInvariantHasDerivAtStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteThetaLiftContinuousInvariantHasDerivAt
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemSmoothFunctionsOfClosedRightDerivatives
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.QuotVolumeNeZeroNeTop
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LintegralCompactLe
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.VectorLevelCharacters
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundedHolomorphicFormEqMultiplicitySpaceValueStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundedHolomorphicFormEqMultiplicitySpaceValue
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBoundUnitary
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaIntegrandIntegrable
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicUnitaryUnimodularExistsFundamentalDomain
@@ -91,7 +91,8 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.DenomBound
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsSigmaList
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -334,7 +335,7 @@ namespace GlobalTheory.CuspDecay
 
 theorem bounded_of_smooth_unifModGrowth : GlobalTheory.Published.CuspRapidDecay → ∀ (D : D7) (θ : InfFam D) (V : HSp D), IsInfFam θ → ∀ φ : GA D V → ℂ, IsAutFun V φ → GlobalTheory.IndefiniteRowSideFullHecke.HolomorphicParabolicSmoothFunctions.IsSmoothFn V θ φ → GlobalTheory.IndefiniteRowSideFullHecke.HolomorphicParabolicSmoothFunctions.IsUnifModGrowth V θ φ → IsCuspFun V φ → ∃ C : ℝ, ∀ g, ‖φ g‖ ≤ C := by
   intro hP D θ V hθ φ ha hs hg hc
-  have R := (GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ V
+  have R := (_root_.GlobalTheory.SmoothForms.RealPts.realPoints D).2 θ hθ V
   have hs' := (GlobalTheory.SmoothForms.smooth_iff R φ).1 hs
   exact (hP D θ hθ V _ (GlobalTheory.SmoothForms.isExpFam_expInf R) φ ha hs'
     ((GlobalTheory.SmoothForms.growth_iff hθ R ha hs').1 hg) hc).bounded
@@ -1459,7 +1460,7 @@ theorem lift_growth (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (χS
 theorem lift_smooth_growth_killed : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (χS χT : (AE D)ˣ →* Circle) (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)), IsWeilDatumO ψ S T χS χT om → ∀ θ : InfFam D, IsInfFam θ → (∀ τ, (gramAt D S τ).PosDef) → ∀ (X : Type) [NormedAddCommGroup X] [NormedSpace ℂ X] [FiniteDimensional ℂ X] (L : X →ₗ[ℂ] (WO S T → ℂ)), (∀ x, IsThetaFunO ψ S T (L x)) → ∀ F : GA D S → X, Continuous F → (∀ γ ∈ GQ S, ∀ h, F (γ * h) = F h) → ∀ (ν : Measure (GA D S)) (𝓕 : Set (GA D S)), ν.IsHaarMeasure → IsFundamentalDomain (GQ S) 𝓕 ν → GlobalTheory.IndefiniteRowSideFullHecke.HolomorphicParabolicSmoothFunctions.IsSmoothFn T θ (lift om ν 𝓕 fun h => L (F h)) ∧ GlobalTheory.IndefiniteRowSideFullHecke.HolomorphicParabolicSmoothFunctions.IsUnifModGrowth T θ (lift om ν 𝓕 fun h => L (F h)) ∧ ∀ τ (Z : Mt T.rank), (∀ x h, RderC θ T τ Z (fun g => thetaKO om h g (L x)) = 0) → RderC θ T τ Z (lift om ν 𝓕 fun h => L (F h)) = 0 := by
   intro D ψ S T χS χT om hW θ hθ hS X _ _ _ L hL F hF hFi ν 𝓕 hν h𝓕
   have hder := fun (L : X →ₗ[ℂ] (WO S T → ℂ)) (hL : ∀ x, IsThetaFunO ψ S T (L x)) =>
-    GlobalTheory.T.definiteThetaLift_continuous_invariant_hasDerivAt D ψ S T χS χT om hW θ hθ hS X L hL F hF hFi ν 𝓕 hν h𝓕
+    _root_.GlobalTheory.DefLiftDer.lift_continuous_invariant_hasDerivAt D ψ S T χS χT om hW θ hθ hS X L hL F hF hFi ν 𝓕 hν h𝓕
   refine ⟨?_, ?_, ?_⟩
   · refine GlobalTheory.Mem.DerClosed.mem_smFun_of_closed D θ hθ T
       {φ | ∃ L' : X →ₗ[ℂ] (WO S T → ℂ), (∀ x, IsThetaFunO ψ S T (L' x)) ∧ φ = lift om ν 𝓕 fun h => L' (F h)}
@@ -1596,7 +1597,7 @@ theorem exists_extension (hP : GlobalTheory.Published.CuspRapidDecay) {θ : InfF
     have hμ : (Measure.haar : Measure (GA D V)).IsHaarMeasure := inferInstance
     obtain ⟨hr, 𝓕, h𝓕⟩ := GlobalTheory.Mem.AdelicGroupFund.rightInvariant_and_exists_fundamentalDomain D V _ hμ
     exact ⟨_, 𝓕, hμ, hr, h𝓕, (GlobalTheory.Mem.QuotVol.quot_volume_ne_zero_ne_top D V _ 𝓕 ⟨hμ, h𝓕⟩).2⟩
-  obtain ⟨T, hT, hTe⟩ := GlobalTheory.T.boundedHolomorphicForm_eq_multiplicitySpace_value D θ V S M w v hθ hM hw hv hfin J χ (U e) hJ
+  obtain ⟨T, hT, hTe⟩ := _root_.GlobalTheory.BackForm.exists_multMap D θ V S M w v hθ hM hw hv hfin J χ (U e) hJ
     ⟨ha e, GlobalTheory.T.bounded_of_smooth_cuspidal_uniform_moderate hP D θ V hθ _ (ha e) (hs e) (hg e) (GlobalTheory.T.isCuspFun_of_transvection_constantTerms_zero D θ V hθ _ (ha e) (hz e)), hl e,
       GlobalTheory.T.holomorphicType_at_extremal_of_kEquivariant_loweringKilled D θ V S M w hθ hM hw h1 h2 U hs hk hh e hv⟩ (hz e)
   exact ⟨T, hT, restrictsTo_of_eq h1 h2 hT hk e he hTe⟩
@@ -1641,7 +1642,7 @@ theorem exists_member (hP : GlobalTheory.Published.CuspRapidDecay) {ψ : AddChar
     rw [← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, mul_one]
   have hlev : ∀ v, ∀ k ∈ J, ∀ g, U v (g * k) = U v g := fun v k hk g => by
     simp only [hU, lift, hmul, LinearMap.comp_apply, hfix k hk]
-  have hd := fun v => GlobalTheory.T.definiteThetaLift_continuous_invariant_hasDerivAt D ψ S T χS χT om hom θ hθ hpos c.W (pt ∘ₗ io (PiTensorProduct.tprod ℂ v))
+  have hd := fun v => _root_.GlobalTheory.DefLiftDer.lift_continuous_invariant_hasDerivAt D ψ S T χS χT om hom θ hθ hpos c.W (pt ∘ₗ io (PiTensorProduct.tprod ℂ v))
     (fun _ => hpt _) F hF hFi ν 𝓕 hν h𝓕
   have hs := fun v => GlobalTheory.T.thetaLift_definite_smooth_moderate_growth_annihilated D ψ S T χS χT om hom θ hθ hpos c.W (pt ∘ₗ io (PiTensorProduct.tprod ℂ v))
     (fun _ => hpt _) F hF hFi ν 𝓕 hν h𝓕

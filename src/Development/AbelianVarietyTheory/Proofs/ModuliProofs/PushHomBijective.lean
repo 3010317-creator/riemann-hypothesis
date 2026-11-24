@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsClosedSubschemeTranslationKernelStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsClosedSubschemeTranslationKernel
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.InKIffTrivialTwist
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsAffineOfQuasiAffine
 public import Mathlib.AlgebraicGeometry.AlgClosed.Basic
@@ -11,7 +11,6 @@ public import Development.AbelianVarietyTheory.Definitions.Uniformization.Exists
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.AlWellDefSt
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.FormallyUnramifiedOfTangentMapInjective
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsIsGenTranslDiffComp
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsClosedSubschemeTranslationKernel
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabPull
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.PolBaseChangeOfRelAmpleLocal
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PowEqScaleAndExistsUniqueTorsion
@@ -111,7 +110,7 @@ theorem exists_pow_eq_one : Out.Laws → ∀ (k : Type) [Field k] [IsAlgClosed k
       simpa only [AbLaw.pw, mul_zpow, ← map_zpow] using h
   obtain ⟨d, -, n, s, hs⟩ := (GlobalTheory.Unif.relAmple_iff_veryAmpleBy k A M hM).1 hamp
   obtain ⟨h0, -, htw⟩ := GlobalTheory.UU.TrivTwist.inK_iff_trivial_twist _ A M hM
-  obtain ⟨H, j, hj, hH⟩ := GlobalTheory.T.exists_closed_subscheme_translation_kernel hL.globalFns k A hA ⟨_, isLB_pw hM d, n, s, hs⟩ M _ hM h0
+  obtain ⟨H, j, hj, hH⟩ := _root_.GlobalTheory.UU.TwistKer.exists_closed_twist_kernel hL.globalFns k A hA ⟨_, isLB_pw hM d, n, s, hs⟩ M _ hM h0
   have := GlobalTheory.AmpleStabFinite.isFinite_of_relAmple hL.globalFns k A hA M _ hM h0 hamp H j hj hH
   have := finite_sections H
   have hxK : x ∈ GlobalTheory.UU.kSubgroup A hM (Out.baseOver (Sp k)) := by

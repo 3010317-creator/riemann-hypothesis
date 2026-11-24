@@ -6,14 +6,17 @@ public import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemRangeOfOneTmulMem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubleCosetSumFundamentalDomain
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinPartConjMem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMulRightInvariantHaarAdelicUnitaryGroupHermitiStatement
+public import Formalism.LocalToGlobal.BesselHermitianTheta.IsAutFunDef
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMulRightInvariantHaarAdelicUnitaryGroupHermiti
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MultiplicativeInnerProductModel
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffDerivSnoc
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsAntiInvolutionOfChars
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeElementComponentMemStandardDoubleCoset
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvolutionSphericalHeckeAntiStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlacesStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvolutionSphericalHeckeAnti
+public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
 public import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,7 +56,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotentsStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Linter.HaveILetI
@@ -278,17 +281,17 @@ def LocRep (J : Subgroup (GA D V)) (P : Pl D.host.E) (x : GA D V) (A : Finset (G
 theorem levG_le_flag : levG V β L ≤ levG V β (flagL L) := fun _ h => ⟨h.1, h.2.1, Subgroup.mem_top _⟩
 
 theorem idem_unique (V : HSp D) {P : Pl D.host.E} {e e' : Formalism.L2.Theta.AE D} (he : IsIdemAt e P) (he' : IsIdemAt e' P) : e' = e :=
-  (((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 P e _ (Or.inl ⟨he, rfl⟩)).2.2.2.1 e' _ (Or.inl ⟨he', rfl⟩)).1
+  (((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 P e _ (Or.inl ⟨he, rfl⟩)).2.2.2.1 e' _ (Or.inl ⟨he', rfl⟩)).1
 
 theorem loc_package (hβ : IsBaseFrame V β Λ N) {P : Pl D.host.E} (hP : OffLevel L N P) {e : Formalism.L2.Theta.AE D}
     (he : IsIdemAt e P) : ∃ Lp : Subgroup (GA D V), (∀ g, g ∈ Lp ↔ SuppAt e V g) ∧ (∀ g ∈ Lp, g ∈ GfC V) ∧
       Splits (levG V β (flagL L)) (levG V β L) Lp ∧
       ∀ g, g ∈ locPart V (KsphC V ∅) e ↔ g ∈ levG V β L ∧ g ∈ Lp := by
   have hpi : IsPrimeIdem P e (e + cA D e) := Or.inl ⟨he, rfl⟩
-  obtain ⟨hf, hc, hfin, -⟩ := (GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 P e _ hpi
-  obtain ⟨⟨Lp, hLp⟩, -, hcomm⟩ := (GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).1 _ hf hc
-  obtain ⟨hJ, -, -⟩ := (GlobalTheory.T.level_hyperspecial_trivialCharacter_splits_off_places V β Λ N L hβ).2 P e _ hpi hP.2.1 hP.2.2
-  obtain ⟨hQ, -, hs⟩ := (GlobalTheory.T.level_hyperspecial_trivialCharacter_splits_off_places V β Λ N (flagL L) hβ).2 P e _ hpi hP.2.1 hP.2.2
+  obtain ⟨hf, hc, hfin, -⟩ := (_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 P e _ hpi
+  obtain ⟨⟨Lp, hLp⟩, -, hcomm⟩ := (_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).1 _ hf hc
+  obtain ⟨hJ, -, -⟩ := (_root_.GlobalTheory.LevSplit.lev_split V β Λ N L hβ).2 P e _ hpi hP.2.1 hP.2.2
+  obtain ⟨hQ, -, hs⟩ := (_root_.GlobalTheory.LevSplit.lev_split V β Λ N (flagL L) hβ).2 P e _ hpi hP.2.1 hP.2.2
   refine ⟨Lp, hLp, fun g hg => hfin g ((hLp g).1 hg), fun κ hκ => ?_, fun g => ?_⟩
   · obtain ⟨k₁, h₁, k₂, -, s₁, s₂, rfl⟩ := hs κ hκ
     exact ⟨k₁, (hJ _ s₁).2 ((hQ _ s₁).1 h₁), k₂, (hLp _).2 s₁, rfl, fun l hl =>
@@ -301,7 +304,7 @@ theorem exists_locRep (hβ : IsBaseFrame V β Λ N) {P : Pl D.host.E} (hP : OffL
   obtain ⟨Lp, hLp, -, hs, hK⟩ := loc_package hβ hP he
   have key : ∀ y, SuppAt e V y → ∃ A, LocRep (levG V β L) P y A := by
     intro y hy
-    obtain ⟨A, hA, h1, h2⟩ := (GlobalTheory.T.involution_spherical_hecke_anti V P e he).2.1 y hy
+    obtain ⟨A, hA, h1, h2⟩ := (_root_.GlobalTheory.SplitPlace.split_local V P e he).2.1 y hy
     exact ⟨A, ⟨e, he, hy, hA⟩, isDC_of_splits hs levG_le_flag ((hLp y).2 hy) (fun a ha => (hLp a).2 (hA a ha)) hK
       (fun γ hγ => (h1 γ hγ).2) h2⟩
   exact ⟨key x hx, key _ ((hLp _).1 (Lp.inv_mem ((hLp x).2 hx)))⟩
@@ -325,7 +328,7 @@ theorem comm_card (hβ : IsBaseFrame V β Λ N) {P : Pl D.host.E} (hP : OffLevel
     (dA' : IsDC (levG V β L) x⁻¹ A') {F : GA D V → ℂ} (hF : RInv (levG V β L) F) :
     dcOp A (dcOp B F) = dcOp B (dcOp A F) ∧ A.card = A'.card := by
   obtain ⟨Lp, hLp, -, hs, hK⟩ := loc_package hβ hP he
-  obtain ⟨θ, t1, t2, t3, t4, t5⟩ := (GlobalTheory.T.involution_spherical_hecke_anti V P e he).1
+  obtain ⟨θ, t1, t2, t3, t4, t5⟩ := (_root_.GlobalTheory.SplitPlace.split_local V P e he).1
   refine GlobalTheory.DoubleCosetComm.dcOp_comm_and_card (levG V β L) Lp 1 x y A B A' F (hs.self levG_le_flag) (fun _ _ => rfl)
     ⟨θ, fun g hg => (hLp _).2 (t1 g ((hLp g).1 hg)), fun a ha b hb => t2 a b ((hLp a).1 ha) ((hLp b).1 hb),
       fun a ha => t3 a ((hLp a).1 ha), fun k hk => ?_, fun g hg => ?_⟩
@@ -346,9 +349,9 @@ theorem LocRep.comm (hβ : IsBaseFrame V β Λ N) {P P' : Pl D.host.E} (hP : Off
     (hF : RInv (levG V β L) F) : heckeLin V A (heckeLin V B F) = heckeLin V B (heckeLin V A F) := by
   obtain ⟨⟨e, he, hx, hA⟩, hd⟩ := h
   obtain ⟨⟨e', he', -, hB⟩, hd'⟩ := h'
-  obtain ⟨hf, hc, -, -, hor⟩ := (GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 P e _ (Or.inl ⟨he, rfl⟩)
+  obtain ⟨hf, hc, -, -, hor⟩ := (_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 P e _ (Or.inl ⟨he, rfl⟩)
   rcases hor P' e' _ (Or.inl ⟨he', rfl⟩) with h0 | ⟨h1, -⟩
-  · exact dcOp_comm_of_commute (fun a ha b hb => ((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).1 _ hf hc).2.2 _ a b h0 (hA a ha) (hB b hb)) F
+  · exact dcOp_comm_of_commute (fun a ha b hb => ((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).1 _ hf hc).2.2 _ a b h0 (hA a ha) (hB b hb)) F
   · obtain ⟨A', ⟨e'', he'', -, hA'⟩, dA'⟩ := (exists_locRep hβ hP he hx).2
     obtain rfl := idem_unique V he he''
     refine (comm_card hβ hP he hA (fun b hb => ?_) hA' hd hd' dA' hF).1
@@ -360,7 +363,7 @@ theorem exists_hecke (hβ : IsBaseFrame V β Λ N) {P : Pl D.host.E} (hP : OffLe
     ∃ α A A', IsHeckeAt V P k α ∧ LocRep (levG V β L) P α⁻¹ A ∧ LocRep (levG V β L) P α A' := by
   obtain ⟨e, he⟩ := GlobalTheory.MovedIdem.exists_isIdemAt P hP.1
   obtain ⟨ϖ, h1, h2⟩ := SetLike.exists_of_lt (Ideal.pow_lt_self P.asIdeal P.ne_bot P.isPrime.ne_top 2 le_rfl)
-  obtain ⟨α, hα⟩ := ((GlobalTheory.T.involution_spherical_hecke_anti V P e he).2.2 ϖ h1 h2).1 k hk
+  obtain ⟨α, hα⟩ := ((_root_.GlobalTheory.SplitPlace.split_local V P e he).2.2 ϖ h1 h2).1 k hk
   obtain ⟨⟨A', hA'⟩, A, hA⟩ := exists_locRep hβ hP he hα.2.1
   exact ⟨α, A, A', ⟨e, ϖ, he, h1, h2, hα⟩, hA, hA'⟩
 
@@ -424,7 +427,7 @@ theorem inner_hecke (hχ : ∀ k ∈ levG V β L, levChi V β L k = 1) (hμ : μ
   haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   haveI : BorelSpace (GA D V) := ⟨rfl⟩
   haveI : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma _ _
-  haveI := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D V μ hμ
+  haveI := _root_.GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V μ hμ
   have hm : ∀ z, HM.e z ∈ Mult θ M (levS V β L) (levChi V β L) := fun z => hU (h.2.1 ▸ LinearMap.mem_range_self _ z)
   have ha : ∀ z v, IsAutFun V (HM.e z v) := fun z v =>
     (((GlobalTheory.MultMem.mem_mult_iff _ _ _ _ _ _ _ _).1 (hm z)).aut v).toIsAutFun

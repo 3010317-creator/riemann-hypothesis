@@ -20,13 +20,14 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunct
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalizedAbsDetMulIntegralCompMulVecFinitePlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharactersAgreeInertUnramified
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DistribHaarCharSupportedIdeleEqLocalAbsValueStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledUnitaryElementActsLocalOperatorAtPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEqStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledUnitaryElementActsLocalOperatorAtPlace
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdmittedDiagonalIntegralLinearFormStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryDoubledBlockDiagOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdempotentBlockUnipotentIdentityStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUnitDetGramOfHermitianSelfDualLatticeSpace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationLocalityUnitaryGroupVStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationLocalityUnitaryGroupV
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.AdeleLC
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -76,8 +77,7 @@ import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Mathlib.RingTheory.TotallySplit
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunctionStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAdelicAddCharNontrivialFinitePlaceStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAdelicAddCharNontrivialFinitePlace
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
 import GroundTheory.AutomorphicForms.GLnLocal
 import GroundTheory.GlobalFields.LocalAtPlace
@@ -1737,7 +1737,7 @@ theorem Scales.unique {κ : Type} [Fintype κ] {v : Pl (F := F)} {Λ : ((κ → 
     {Φ : (κ → Fv F v) → ℂ} (hΦ : Φ ∈ SB (κ → Fv F v)) (h0 : Λ Φ ≠ 0) : a = a' := by
   obtain ⟨Φ₁, -, hA₁, e₁⟩ := h Φ hΦ
   obtain ⟨Φ₂, -, hA₂, e₂⟩ := h' Φ hΦ
-  have e : Φ₁ = Φ₂ := GlobalTheory.T.eq_of_componentTensorAdelicFunction_eq v Φ Φ₁ Φ₂ hΦ fun r hr => (hA₁ r hr).symm.trans (hA₂ r hr)
+  have e : Φ₁ = Φ₂ := _root_.GlobalTheory.TensUniq.eq_of_tens_eq v Φ Φ₁ Φ₂ hΦ fun r hr => (hA₁ r hr).symm.trans (hA₂ r hr)
   rw [e, e₂] at e₁
   exact (mul_right_cancel₀ h0 e₁).symm
 
@@ -1796,7 +1796,7 @@ theorem char_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
   obtain ⟨h2, -, hunr⟩ := hT.base.inert v w hin
   have hψc : Continuous (psiAt B.ψ v) := GlobalTheory.SchrSB.continuous_psiAt B.ψ hT.base.std.1 v
   have hψ1 : psiAt B.ψ v ≠ 1 := by
-    obtain ⟨t, ht⟩ := GlobalTheory.T.standardAdelicAddChar_nontrivial_finitePlace B.ψ hT.base.std v
+    obtain ⟨t, ht⟩ := _root_.GlobalTheory.PsiNontrivAt.exists_psiAt_ne_one B.ψ hT.base.std v
     intro h; exact ht (by rw [h]; rfl)
   have hJ : IsUnit G.V'.J.det := GlobalTheory.isUnit_det_of_isHerm F E σ B a' G.V' _ _ hT.geo.hV'
   obtain ⟨-, ⟨d', hd', hBw⟩, -⟩ := hT.weil'
@@ -1832,7 +1832,7 @@ theorem char_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
       rw [smul_smul, ← smul_eq_mul, at_liftV v _ t ht, zero_smul])
     have hu' : u = ζ y * Cᵀ := by rw [hy, Matrix.smul_mul, ← hz, smul_of_at hu]
     have hA' := GlobalTheory.VacBridge.rho_acts_locCo G.M'.co B.ψ v u hu φ
-    have e : φ₁ = _ := GlobalTheory.T.eq_of_componentTensorAdelicFunction_eq v φ _ _ hφ fun r hr => (hA r hr).symm.trans (hA' r hr)
+    have e : φ₁ = _ := _root_.GlobalTheory.TensUniq.eq_of_tens_eq v φ _ _ hφ fun r hr => (hA r hr).symm.trans (hA' r hr)
     show Λ (boxFun φ₁ φ₂) = Λ (boxFun φ φ₂)
     rw [hΛ _ (box_mem_SB hφ₁ hφ₂), hΛ _ (box_mem_SB hφ hφ₂), e, hu', (hζ y).2]
     exact GlobalTheory.T.isotropicIntegral_invariant_heisenberg_first_vars F v _ _ μ hμ N ν hν j hiso y φ φ₂
@@ -1850,7 +1850,7 @@ theorem char_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
       show Λ (boxFun φt φ₂) - (Λ (boxFun φt φ₂) / l φt) * l φt = 0
       rw [div_mul_cancel₀ _ hlt, sub_self]
     exact sub_eq_zero.1 (hline _ hl' h0 φ hφ)
-  obtain ⟨R, hR0, hR⟩ := GlobalTheory.T.exists_complementary_adelicSchwartz_restFunction (F := F) ((Fin a' × Fin (a + a')) ⊕ (Fin a' × Fin (a + a'))) v
+  obtain ⟨R, hR0, hR⟩ := _root_.GlobalTheory.RestWitness.exists_rest (F := F) ((Fin a' × Fin (a + a')) ⊕ (Fin a' × Fin (a + a'))) v
 
   have hdiag : ∀ k ∈ UAt σ G.V' (evFin F v), ∀ kd : UG (cA σ) (dbl (incM F G.V'.J)),
       (kd.1.1 : Matrix (Fin a' ⊕ Fin a') (Fin a' ⊕ Fin a') (AE F E)) = Matrix.fromBlocks (mat k) 0 0 1 →
@@ -1865,9 +1865,9 @@ theorem char_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
         simp [sub_eq_add_neg]
       rw [hkd, e, Matrix.fromBlocks_smul]
       simp [hk1]
-    refine scales_of_box _ hψc hψ1 Λ (omd kd) (c k) (GlobalTheory.T.doubledUnitaryElement_acts_localOperatorAtPlace F E σ B a a' G hT.base dd omd hspl v kd hAt) R hR0 hR ?_
+    refine scales_of_box _ hψc hψ1 Λ (omd kd) (c k) (_root_.GlobalTheory.DblActs.dbl_acts F E σ B a a' G hT.base dd omd hspl v kd hAt) R hR0 hR ?_
     intro φ₁ h₁ φ₂ h₂ Φ₁ hA
-    obtain ⟨S, hS⟩ := GlobalTheory.T.weilRepresentationLocality_unitaryGroupV' B G X om om' hT v k hk
+    obtain ⟨S, hS⟩ := _root_.GlobalTheory.WeilLocality.locality B G X om om' hT v k hk
     rw [GlobalTheory.T.localProduct_acts_of_adelicProduct_acts_first F v _ _ (om' (k, 1)) (omd kd) (fun Φ₁ h₁ Φ₂ h₂ => hres k kd hkd Φ₁ h₁ Φ₂ h₂) φ₁ h₁ φ₂ h₂ _ Φ₁ (hS φ₁ h₁).2 hA,
       hprop φ₂ h₂ _ (hS φ₁ h₁).1, hprop φ₂ h₂ φ₁ h₁, hc k hk φ₁ h₁ _ (hS φ₁ h₁).1 (hS φ₁ h₁).2]
     ring
@@ -1877,7 +1877,7 @@ theorem char_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
       (p.1.1 : Matrix (Fin a' ⊕ Fin a') (Fin a' ⊕ Fin a') (AE F E)) * diagCols (Fin a') = diagCols (Fin a') * t.val →
       Scales v Λ (omd p) 1 := by
     intro p t hp hpt Φ hΦ
-    obtain ⟨Φ₁, hΦ₁, hA⟩ := GlobalTheory.T.doubledUnitaryElement_acts_localOperatorAtPlace F E σ B a a' G hT.base dd omd hspl v p hp Φ hΦ
+    obtain ⟨Φ₁, hΦ₁, hA⟩ := _root_.GlobalTheory.DblActs.dbl_acts F E σ B a a' G hT.base dd omd hspl v p hp Φ hΦ
     refine ⟨Φ₁, hΦ₁, hA, ?_⟩
     obtain ⟨hdt, hnt, s, hs, hns⟩ := GlobalTheory.T.siegelParabolic_leviInverse_quotient_det_norm F E σ hT.base.cm a' G.V'.J hJ.ne_zero v p t hp hpt
     obtain ⟨T, hTζ, hTd⟩ := hT' s

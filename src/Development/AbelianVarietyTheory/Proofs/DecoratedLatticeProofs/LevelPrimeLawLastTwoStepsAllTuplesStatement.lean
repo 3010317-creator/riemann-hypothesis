@@ -20,15 +20,15 @@ public import Formalism.LocalToGlobal.IndefiniteReal.ExistsGADet
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.VacOfShape
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.IndicatorFunctionIdentity
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientPara
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsBilinearEquivariantOrthogonalSummandLiftStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CaRepApply
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsBilinearEquivariantOrthogonalSummandLift
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValueDoubleUnif
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GluedPlaceSourceConstantProof
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsTameFinitePlaceHermitianAllStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsTameFinitePlaceHermitianAll
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlacesToAdeles
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RamifiedOperatorBijectiveFiniteTranslationCombin
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualLatticeStabilizersFixWeilVacuumOnPlaceSe
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SetIntegralFundamentalDomainRightTranslateInvari
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CaRepApply
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValueDoubleExact
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RamifiedOperatorsBijectiveAtPlaces
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BiVacuumOperatorZeroOrLeftInvertible
@@ -1063,7 +1063,7 @@ theorem smallOne : ∀ D : D7, SmallOne D := by
   rw [map_one, Module.End.one_apply] at hram1
 
   have hmove : liftA o om₁ vA (FFStar q χr φ P) Ξ'' = liftA o om₁ vA (sOp α P q χr s (φ P)) Ξ' := by
-    obtain ⟨lS, hlS, hθ⟩ := GlobalTheory.T.exists_bilinear_equivariant_orthogonalSummandLift D k p n n' ψ V₀ A L S o ζ hζ hA vA χV χW om₁ hW₁ α α₀ β hsum
+    obtain ⟨lS, hlS, hθ⟩ := _root_.GlobalTheory.FinPl.SrcTheta.exists_theta D k p n n' ψ V₀ A L S o ζ hζ hA vA χV χW om₁ hW₁ α α₀ β hsum
     obtain ⟨θ, hθv, hθe⟩ := hθ L₁ L₂ f₁ hΞ.1 hΞ.2.1 hΞ.2.2.1
     obtain ⟨g, hg⟩ := MulAction.exists_smul_eq (GL n' k) P (s • P)
     have hgs : g ∈ latStab P.lat := by
@@ -1094,7 +1094,7 @@ theorem smallOne : ∀ D : D7, SmallOne D := by
     have hk1 : InK S L₂' (· = p.v) (β.gl (gs Q')) := (hK _).2 (hΛQ ▸ hstab Q' hQ')
     have hk2 : InK T L₃ (· = p.v) 1 := ⟨one_mem _, fun y _ => by simp [Formalism.L2.Theta.mt]⟩
     exact _root_.GlobalTheory.StabSetFix.stab_fix_vac D ψ S T χS χT omT hWT L₂' L₃ hsd₂ hsd₃ (· = p.v)
-      (fun v hv => by subst hv; exact ⟨GlobalTheory.T.isTameFinitePlaceHermitian_all D _, hχS, hχT⟩) Φ₂ hvac _ _ hk1 hk2
+      (fun v hv => by subst hv; exact ⟨_root_.GlobalTheory.FinPl.TamePlaces.tame D _, hχS, hχT⟩) Φ₂ hvac _ _ hk1 hk2
   have hOver : ∀ Q' ∈ withLat Q.lat, Over ψ α₀ β L₁ L₂ f₁ (tensCol (phiOne P Q') (charInd χr Q'))
       (om₁ (1, β.gl (gs Q')) Ξ'') := by
     intro Q' hQ'

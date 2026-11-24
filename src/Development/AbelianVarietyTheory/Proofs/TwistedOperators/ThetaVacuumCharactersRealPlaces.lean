@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RaisingLoweringOperators
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.VacuumFockVectors
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompactSubgroupsActOnFockVectorsAllSignaturesStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieActionFockOperatorsScalarsTraceStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsVacFOfIsVacVec
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompactSubgroupsActOnFockVectorsAllSignatures
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieActionFockOperatorsScalarsTrace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -40,7 +41,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsVacFOfIsVacVec
 
 @[expose] public section
 
@@ -109,9 +109,9 @@ theorem torusVac_of_compactFock {D : D7} {V W : HSp D} {S S' : D.what₂.Tau →
 theorem vacChar : ∀ D : D7, GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.VacChar D := by
   intro D V W S S' M M' θ ψ χS χT ω f τ aS aT hθ hW hS hT hV
   have hF := GlobalTheory.ChainFr.isVacF_of_isVacVec hV
-  have hK := GlobalTheory.T.compact_subgroups_act_on_fock_vectors_all_signatures D V W (GlobalTheory.ChainFr.Fr.ofModel M) (GlobalTheory.ChainFr.Fr.ofModel M') θ ψ χS χT ω f τ aS aT
+  have hK := _root_.GlobalTheory.CompactFockAction.compactFockAll D V W (GlobalTheory.ChainFr.Fr.ofModel M) (GlobalTheory.ChainFr.Fr.ofModel M') θ ψ χS χT ω f τ aS aT
     hθ hW hS hT hF hV.ne
-  have hL := GlobalTheory.T.lieAction_fockOperators_scalars_trace D V W (GlobalTheory.ChainFr.Fr.ofModel M) (GlobalTheory.ChainFr.Fr.ofModel M') θ ψ χS χT ω f τ aS aT
+  have hL := _root_.GlobalTheory.LieScalar.lieFockAll D V W (GlobalTheory.ChainFr.Fr.ofModel M) (GlobalTheory.ChainFr.Fr.ofModel M') θ ψ χS χT ω f τ aS aT
     hθ hW hS hT hF
   have hC : CompactFock ψ θ M M' ω f τ aS aT := by
     obtain ⟨x, y, hx, hy, hk⟩ := hK

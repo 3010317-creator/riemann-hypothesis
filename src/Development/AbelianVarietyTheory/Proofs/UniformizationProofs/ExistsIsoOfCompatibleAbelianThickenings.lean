@@ -4,7 +4,9 @@ public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.Exist
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.ExistsSecNonzeroLocusEqOfLbIso
 public import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.AppLESurjective
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsIsoOfSectionRingEquivStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ValCalc
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.DegExp
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsIsoOfSectionRingEquiv
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsUniqueSecOfCompatible
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsUniqueSecPull
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.HomExtOfSecPullEq
@@ -392,7 +394,7 @@ theorem GlobalTheory.exists_iso_of_compatible_thickenings : SecBaseChangeSt → 
     refine ⟨(i, k), (l' _).ge ⟨hi, (Rel.mem_iff P.isLB P'.isLB (hθ 4 h4 _) 0 z).1 ?_⟩⟩
     rw [Equiv.apply_symm_apply]
     exact hk
-  obtain ⟨Ψ, hΨ⟩ := GlobalTheory.T.exists_iso_of_sectionRing_equiv_alt R P.A P'.A P.L P'.L P.isLB P'.isLB θ hlin hmul
+  obtain ⟨Ψ, hΨ⟩ := _root_.GlobalTheory.exists_iso_of_sectionRing_equiv R P.A P'.A P.L P'.L P.isLB P'.isLB θ hlin hmul
     ⟨4 + 4, h4.trans (Nat.le_add_right 4 4), κ' × κ, d,
       eq_top_of_thick I P'.A _ fun z => Opens.mem_iSup.2 (mem z),
       eq_top_of_thick I P.A _ fun z => by

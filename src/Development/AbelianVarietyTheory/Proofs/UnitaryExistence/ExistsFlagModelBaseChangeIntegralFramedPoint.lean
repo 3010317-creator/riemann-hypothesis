@@ -3,7 +3,9 @@ module
 public import Formalism.LocalToGlobal.ProjectiveLattices.LiesOverBaseChange
 public import Formalism.LocalToGlobal.ProjectiveLattices.NonnegIffOfLiesTotal
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.DegenerationDataAtModelPointOfUniformisation
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsEmbeddingCompleteAlgClosedFixedCarrierStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.OneLtAbsNormReal
+public import Formalism.SharpRestriction.Divisibility.AbelianOpenPart.IsOpenPart
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsEmbeddingCompleteAlgClosedFixedCarrier
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramedPointBaseChangeAlgebraMap
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointEigenbasisBaseChange
 import Formalism.LocalToGlobal.ProjectiveLattices.ExtPtUnique
@@ -292,7 +294,7 @@ theorem exists_lies_and_factor : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   letI := io.toAlgebra
   have hxs : y.1.x ≫ Xo.s = spMap (io.comp (IntermediateField.inclusion c.le).toRingHom) := y.1.x_over
   constructor
-  · obtain ⟨C, eF, hle, hlt⟩ := (GlobalTheory.T.exists_embedding_completeAlgClosed_fixedCarrier T _ (resCh_prime la) hy (resCh_mem_maximalIdeal la T io e ho)).1
+  · obtain ⟨C, eF, hle, hlt⟩ := (_root_.GlobalTheory.SmallClosedField.exists_embedding_and_extension T _ (resCh_prime la) hy (resCh_mem_maximalIdeal la T io e ho)).1
     obtain ⟨b, z, ιT, hb, hzf, hzs, hj, hs⟩ :=
       exists_extension (Tw.Y (lamOf la)) (hTw.1 (lamOf la)).1 T io e ho y.1.x hxs
     have hg : (intO ↥C.S).subtype.comp (intRestrict T eF hle) = eF.comp (algebraMap T.V T.Fr) := rfl

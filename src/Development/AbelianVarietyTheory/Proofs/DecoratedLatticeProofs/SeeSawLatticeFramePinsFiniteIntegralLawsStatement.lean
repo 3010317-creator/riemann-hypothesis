@@ -21,10 +21,10 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.Unipotent
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.DualLiftInvariance
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.VacuumFixedByLevelPairAtSelfDualPlaces
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselToJacobiFirstStepFlatMapSupportAll
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselUnfoldingOrbitMemParabolicMulStabiliserStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselUnfoldingOrbitMemParabolicMulStabiliser
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitNormVectorsOneOrbitSelfDualLatticeSplit
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryAdelicEqComponentAtPlaceMulOffPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryAdelicTrivialAtPlacesSubgroupAntitoneStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryAdelicTrivialAtPlacesSubgroupAntitone
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.VacOfShape
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HzUnit
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawUnfoldedSupportAndValueAtFixedLevelStatement
@@ -929,7 +929,7 @@ theorem suppSecond_holds : ∀ D : D7, SuppSecond D := by
     set f := s₂.om (h₁, h') Φ₂ with hfdef
     have hf : Vac ψ J.W B'.V Λ.L₁ Λ.L₂ (· = v) f :=
       (_root_.GlobalTheory.VacLoc.vac_loc D ψ J.W B'.V s₂.χV s₂.χW s₂.om s₂.weil Λ.L₁ Λ.L₂ sdL₁ sd₂ (· = v)
-        (fun w hw => hw ▸ gd.tame) Φ₂).2.1 hΦ₂v h₁ (GlobalTheory.T.unitaryAdelicTrivialAtPlacesSubgroup_antitone D J.W P (· = v) (fun w hw => hw ▸ hv) hh₁) h' hh'
+        (fun w hw => hw ▸ gd.tame) Φ₂).2.1 hΦ₂v h₁ (_root_.GlobalTheory.FinPl.grpOff_anti D J.W P (· = v) (fun w hw => hw ▸ hv) hh₁) h' hh'
 
     set Ξ₁ := flatBF s₁ (s₁.om (g, h₁) Φ₁) with hΞ₁def
     have hΞ₁P : Vac ψ B.V₀ J.W₀ Λ.M₀ Λ.M₁ P Ξ₁ :=
@@ -958,7 +958,7 @@ theorem suppSecond_holds : ∀ D : D7, SuppSecond D := by
       rcases _root_.GlobalTheory.FinPl.orbitGlued D k (p i) n'' q σ B' Λ.M₂ (a'.α i) (a'.α₀ i) (a'.P i) ad.sdW₀ (sh.gl' i) γ hγ hγp with
         ⟨a₀, ha₀, κ₀, hκ₀, rfl⟩ | ⟨Λ₀, hΛ₀, hmov⟩
       · obtain ⟨r, hr, hrv, κ', hκ', heq⟩ :=
-          GlobalTheory.T.besselUnfolding_orbit_mem_parabolic_mul_stabiliser D σ B' Λ.L₂ Λ.M₂ (p i).v ad.monoW nn hnF hnv a₀ ha₀ κ₀ hκ₀ κ hκ
+          _root_.GlobalTheory.FinPl.OrbitCoset.orbit_coset D σ B' Λ.L₂ Λ.M₂ (p i).v ad.monoW nn hnF hnv a₀ ha₀ κ₀ hκ₀ κ hκ
         exact ⟨r, hr, hrv, κ', hκ', hdec.trans heq⟩
       · exfalso
         apply hne
@@ -977,7 +977,7 @@ theorem suppSecond_holds : ∀ D : D7, SuppSecond D := by
           GlobalTheory.T.besselDoubleStep_linear_in_secondDatum, hz, smul_zero]
     · obtain ⟨a₀, ha₀, κ₀, hκ₀, rfl⟩ := _root_.GlobalTheory.FinPl.SplitOrbit.orbitSplit D σ B' Λ.M₂ v gd.tame ad.sdW₀
         (sh.split v hv fun i h => hgl ⟨i, h⟩) γ hγ hγp
-      obtain ⟨r, hr, hrv, κ', hκ', heq⟩ := GlobalTheory.T.besselUnfolding_orbit_mem_parabolic_mul_stabiliser D σ B' Λ.L₂ Λ.M₂ v ad.monoW nn hnF hnv a₀ ha₀ κ₀ hκ₀ κ hκ
+      obtain ⟨r, hr, hrv, κ', hκ', heq⟩ := _root_.GlobalTheory.FinPl.OrbitCoset.orbit_coset D σ B' Λ.L₂ Λ.M₂ v ad.monoW nn hnF hnv a₀ ha₀ κ₀ hκ₀ κ hκ
       exact ⟨r, hr, hrv, κ', hκ', hdec.trans heq⟩
 
 end GlobalTheory.FinPl

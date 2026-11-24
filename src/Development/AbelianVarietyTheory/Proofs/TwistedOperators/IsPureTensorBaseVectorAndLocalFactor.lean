@@ -5,16 +5,17 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemRangeOfOneTmulMem
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.OneEqSumPlaceIdempotentsOverTwoAddTwoMul
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDualStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisThetaLaws
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CmAdeleIdempotentOfPlacePropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CmAdeleIdempotentOfPlaceProperties
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RestrictedTensorBasePointNormSq
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaInnerProductHermitianStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilMatrixComponentAtPlaceMemCompletedLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaInnerProductHermitian
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilMatrixComponentAtPlaceMemCompletedLattice
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergCompressionRealPlaceFockVacuaScalar
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEqSumWeilComponentsAddTwoSmulLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVacuaLocalFactorsStableHeisenbergAwayStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEqSumWeilComponentsAddTwoSmulLattice
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVacuaLocalFactorsStableHeisenbergAway
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,7 +97,7 @@ theorem exists_char_act (v : FinPl D) {u : WO S T} (hu : u ∈ latO S T LS LT fu
     ∃ y : AF D.host.F, ∀ f, IsLatVac (heisO ψ S T) (latO S T LS LT fun w => w = v) f →
       heisO ψ S T u f = ψ y • f := by
   classical
-  have hidem := (GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D).2.2.2.1 v
+  have hidem := (_root_.GlobalTheory.PlaceTensor.idem_spec D).2.2.2.1 v
   by_cases h2 : (2 : 𝓞 D.host.F) ∈ v.asIdeal
   · obtain ⟨e, hee, hec, hsum, -⟩ := GlobalTheory.SplitIdem.exists_split_idempotent D v h2
     have hsum' : e + cA D e = idem D (.inl v) := by rw [hsum]; rfl
@@ -146,7 +147,7 @@ theorem compress_fin : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp 
     have h := hψ
     unfold IsStdChar IsCharAF at h
     exact h.1.2.1
-  obtain ⟨hI1, -, hI3, hI4, -⟩ := GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D
+  obtain ⟨hI1, -, hI3, hI4, -⟩ := _root_.GlobalTheory.PlaceTensor.idem_spec D
   obtain ⟨ι, hι⟩ : ∃ ι, ι = idem D (.inl v) := ⟨_, rfl⟩
   have hιι : ι * ι = ι := by rw [hι]; exact hI1 _
   have hcι : cA D ι = ι := by rw [hι]; exact hI3 _
@@ -156,12 +157,12 @@ theorem compress_fin : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp 
   have hιx : ι • x = x := by rw [hx, smul_smul, hιι]
   have hloc : ∀ u ∈ latO S T ΛS ΛT (fun _ => True), ι • u ∈ latO S T ΛS ΛT (fun u => u = v) := by
     intro u hu
-    have h := ((GlobalTheory.T.weilMatrixComponentAtPlace_mem_completedLattice D S T ΛS ΛT (fun _ => True) u hu) (.inl v)).1
+    have h := ((_root_.GlobalTheory.LatticeLocal.wAt_mem_latO D S T ΛS ΛT (fun _ => True) u hu) (.inl v)).1
     rw [wAt_eq_smul, ← hι] at h
     exact latO_mono (fun v' h' => Sum.inl.inj h'.2) h
   have hloc' : ∀ u ∈ latO S T ΛS ΛT (fun u => u = v), ι • u ∈ latO S T ΛS ΛT (fun u => u = v) := by
     intro u hu
-    have h := ((GlobalTheory.T.weilMatrixComponentAtPlace_mem_completedLattice D S T ΛS ΛT (fun u => u = v) u hu) (.inl v)).1
+    have h := ((_root_.GlobalTheory.LatticeLocal.wAt_mem_latO D S T ΛS ΛT (fun u => u = v) u hu) (.inl v)).1
     rw [wAt_eq_smul, ← hι] at h
     exact latO_mono (fun v' h' => h'.1) h
   have hpair : ∀ a, symplO S T (ι • a) x = symplO S T a x := by
@@ -169,7 +170,7 @@ theorem compress_fin : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp 
     rw [symplO_smul, hcι, hιx]
   by_cases hA : ∀ l ∈ latO S T ΛS ΛT (fun u => u = v), ψ (symplO S T l x) = 1
   · have hxg : x ∈ latO S T ΛS ΛT (fun _ => True) := by
-      refine ((GlobalTheory.T.self_dual_lattice_pairing_dual D ψ S T ΛS ΛT hψ hS hT).1 x ?_).2 ?_
+      refine ((_root_.GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T ΛS ΛT hψ hS hT).1 x ?_).2 ?_
       · rw [hx]
         ext i j
         simp [Matrix.map_apply, Matrix.smul_apply, map_mul, hinf]
@@ -181,7 +182,7 @@ theorem compress_fin : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp 
     obtain ⟨y, hy⟩ := exists_char_act (ψ := ψ) v hxv (by rw [← hι]; exact hιx)
     refine ⟨starRingEnd ℂ (ψ y), fun f g hf hg hvf hvg => ?_⟩
     rw [hy f hvf]
-    exact ((GlobalTheory.T.theta_inner_product_hermitian D ψ S T μ 𝓕 hψ hμ g f hg hf).2.2.1 (ψ y)).2
+    exact ((_root_.GlobalTheory.ThetaPairingLaws.ipO_laws D ψ S T μ 𝓕 hψ hμ g f hg hf).2.2.1 (ψ y)).2
   · push_neg at hA
     obtain ⟨l, hl, hl1⟩ := hA
     have hιl : ι • (ι • l) = ι • l := by rw [smul_smul, hιι]
@@ -190,7 +191,7 @@ theorem compress_fin : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp 
     rw [zero_mul]
     have hxf : IsThetaFunO ψ S T (heisO ψ S T x f) :=
       (GlobalTheory.HeisThetaLaws.heis_theta_laws D ψ hψ S T).1 x f hf
-    have hU := ((GlobalTheory.T.theta_inner_product_hermitian D ψ S T μ 𝓕 hψ hμ g (heisO ψ S T x f) hg hxf).2.2.2.2.2.2.1 (ι • l)).1
+    have hU := ((_root_.GlobalTheory.ThetaPairingLaws.ipO_laws D ψ S T μ 𝓕 hψ hμ g (heisO ψ S T x f) hg hxf).2.2.2.2.2.2.1 (ι • l)).1
     rw [hy g hvg, heisO_comm, hy f hvf, heisO_smul, smul_smul, ipO_smul_smul', map_mul] at hU
     have hc : ψ y * starRingEnd ℂ (ψ y) = 1 := by
       rw [Complex.mul_conj, Complex.normSq_eq_norm_sq, hn]
@@ -259,10 +260,10 @@ theorem wAt_two {m n : ℕ} (p : Place D) (x : Mx D m n) : wAt p (2 • x) = 2 �
   rw [wAt_eq_smul, wAt_eq_smul, smul_comm]
 
 theorem wAt_wAt_self {m n : ℕ} (p : Place D) (x : Mx D m n) : wAt p (wAt p x) = wAt p x := by
-  rw [wAt_eq_smul, wAt_eq_smul, smul_smul, ((GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D).1 p)]
+  rw [wAt_eq_smul, wAt_eq_smul, smul_smul, ((_root_.GlobalTheory.PlaceTensor.idem_spec D).1 p)]
 
 theorem wAt_wAt_ne {m n : ℕ} {p q : Place D} (h : p ≠ q) (x : Mx D m n) : wAt p (wAt q x) = 0 := by
-  rw [wAt_eq_smul, wAt_eq_smul, smul_smul, ((GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D).2.1 p q h), zero_smul]
+  rw [wAt_eq_smul, wAt_eq_smul, smul_smul, ((_root_.GlobalTheory.PlaceTensor.idem_spec D).2.1 p q h), zero_smul]
 
 theorem wAt_sum_of_notMem {m n : ℕ} {p : Place D} {P : Finset (Place D)} (h : p ∉ P) (x : Mx D m n) :
     wAt p (∑ r ∈ P, wAt r x) = 0 := by
@@ -283,7 +284,7 @@ theorem wAt_sum_of_mem {m n : ℕ} {p : Place D} {P : Finset (Place D)} (h : p �
 
 theorem symplO_wAt (S T : HSp D) {p : Place D} (w : WO S T) {z : WO S T} (hz : wAt p z = 0) :
     symplO S T (wAt p w) z = 0 := by
-  rw [wAt_eq_smul, GlobalTheory.SplitScalar.symplO_smul, (GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D).2.2.1 p, ← wAt_eq_smul, hz,
+  rw [wAt_eq_smul, GlobalTheory.SplitScalar.symplO_smul, (_root_.GlobalTheory.PlaceTensor.idem_spec D).2.2.1 p, ← wAt_eq_smul, hz,
     GlobalTheory.SplitScalar.symplO_zero_right]
 
 section
@@ -294,7 +295,7 @@ variable {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D}
   {f₀ : WO S T → ℂ} {μ : Measure (WO S T)} {𝓕 : Set (WO S T)}
 
 theorem ip_base (h : IsBase ψ θ S T sS sT ΛS ΛT f₀) (hμ : IsCovolOne (ratL T S) μ 𝓕) : ipO μ 𝓕 f₀ f₀ = 1 := by
-  obtain ⟨-, -, -, -, hff, -⟩ := GlobalTheory.T.theta_inner_product_hermitian D ψ S T μ 𝓕 (base_std h) hμ f₀ f₀ (base_theta h) (base_theta h)
+  obtain ⟨-, -, -, -, hff, -⟩ := _root_.GlobalTheory.ThetaPairingLaws.ipO_laws D ψ S T μ 𝓕 (base_std h) hμ f₀ f₀ (base_theta h) (base_theta h)
   rw [hff, restrictedTensorBasePoint_norm_sq h hμ]
   simp
 
@@ -333,7 +334,7 @@ theorem ip_heis_sum (h : IsBase ψ θ S T sS sT ΛS ΛT f₀) (hμ : IsCovolOne 
     have hZ : wAt a (∑ p ∈ P, wAt p w + z) = 0 := by
       rw [_root_.GlobalTheory.LatticeLocal.wAt_add, wAt_sum_of_notMem ha, hz a (Finset.mem_insert_self a P), add_zero]
     have hv : VacAt ψ θ S T sS sT ΛS ΛT a (heisO ψ S T (∑ p ∈ P, wAt p w + z) f₀) :=
-      (GlobalTheory.T.fockVacua_localFactors_stable_heisenberg_away D ψ θ S T sS sT ΛS ΛT hψ (base_inf h) f₀ hb).1 a _ hZ (base_vacAt h a)
+      (_root_.GlobalTheory.PlaceStable.heis_stable D ψ θ S T sS sT ΛS ΛT hψ (base_inf h) f₀ hb).1 a _ hZ (base_vacAt h a)
     rw [Finset.sum_insert ha, Finset.prod_insert ha, add_assoc,
       GlobalTheory.SplitScalar.heisO_add_of_orth ψ S T (symplO_wAt S T w hZ),
       ip_heis_wAt h hμ a w (hth _ _ hb) hy hv (vy a (Finset.mem_insert_self a P)), ih hzP vyP]
@@ -362,7 +363,7 @@ theorem isPure_local (h : IsBase ψ θ S T sS sT ΛS ΛT f₀) (hμ : IsCovolOne
   · refine (Set.finite_singleton q).subset fun p hp => ?_
     by_contra hpq
     exact hp (hq p hpq)
-  · obtain ⟨P₀, hP₀⟩ := GlobalTheory.T.exists_eq_sum_weilComponents_add_two_smul_lattice D S T ΛS ΛT h.2.2.1 h.2.2.2.1 w
+  · obtain ⟨P₀, hP₀⟩ := _root_.GlobalTheory.PlaceTensor.CompDecomp.exists_eq_sum_wAt_add_two_smul D S T ΛS ΛT h.2.2.1 h.2.2.2.1 w
     obtain ⟨u, hu, hw⟩ := hP₀ (insert q P₀) (Finset.subset_insert q P₀)
     have hqP : q ∈ insert q P₀ := Finset.mem_insert_self q P₀
     generalize insert q P₀ = P at hw hqP
@@ -396,8 +397,8 @@ theorem isPure_local (h : IsBase ψ θ S T sS sT ΛS ΛT f₀) (hμ : IsCovolOne
         rcases p with v | τ
         · have hv : IsLatVac (heisO ψ S T) (latO S T ΛS ΛT fun u => u = v) f₀ := base_vacAt h (.inl v)
           exact hv.1 _ (latO_mono (fun v' hv' => Sum.inl_injective hv'.2)
-            (GlobalTheory.T.weilMatrixComponentAtPlace_mem_completedLattice D S T ΛS ΛT (fun _ => True) u hu (.inl v)).1)
-        · rw [(GlobalTheory.T.weilMatrixComponentAtPlace_mem_completedLattice D S T ΛS ΛT (fun _ => True) u hu (.inr τ)).2.2 (fun v _ => Sum.inl_ne_inr),
+            (_root_.GlobalTheory.LatticeLocal.wAt_mem_latO D S T ΛS ΛT (fun _ => True) u hu (.inl v)).1)
+        · rw [(_root_.GlobalTheory.LatticeLocal.wAt_mem_latO D S T ΛS ΛT (fun _ => True) u hu (.inr τ)).2.2 (fun v _ => Sum.inl_ne_inr),
             smul_zero, GlobalTheory.SplitScalar.heisO_zero]
       rw [hh, ip_base h hμ]
     have e1 : heisO ψ S T w f₀ = heisO ψ S T (∑ p ∈ P, wAt p w) f₀ := by
@@ -424,7 +425,7 @@ theorem isPure_base_and_local : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (�
   · unfold IsPure IsRestricted
     refine ⟨⟨fun p => isEmptyElim p, Set.toFinite _⟩, base_theta h, fun w => ⟨Set.toFinite _, ?_⟩⟩
     rw [finprod_of_isEmpty]
-    obtain ⟨P₀, hP₀⟩ := GlobalTheory.T.exists_eq_sum_weilComponents_add_two_smul_lattice D S T ΛS ΛT h.2.2.1 h.2.2.2.1 w
+    obtain ⟨P₀, hP₀⟩ := _root_.GlobalTheory.PlaceTensor.CompDecomp.exists_eq_sum_wAt_add_two_smul D S T ΛS ΛT h.2.2.1 h.2.2.2.1 w
     obtain ⟨u, hu, hw⟩ := hP₀ P₀ subset_rfl
     rw [Finset.eq_empty_of_isEmpty P₀, Finset.sum_empty, zero_add] at hw
     rw [hw, (isLatVac_of_isBase h).1 u hu, ip_base h hμ]

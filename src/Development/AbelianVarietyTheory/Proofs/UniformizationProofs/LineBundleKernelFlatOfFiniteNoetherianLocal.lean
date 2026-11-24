@@ -14,11 +14,13 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Non
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.TrivBasicOpenOfTrivFibre
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ConnectedSpaceSpecOfIsLocalRing
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CyclicIdeal
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsPerfectFreeFiniteComplexStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsPerfectFreeFiniteComplex
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FlatClosedSubschemeFiniteOverLocalRingStatement
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FlatKernelPolarisationCosetsOverDVR
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.InKIffTrivialTwist
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.StalkOfSmoothLocalStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.StalkOfSmoothLocal
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -334,7 +336,7 @@ theorem exists_ideal (hG : GlobalFnsSt) {V : Type} [CommRing V] [IsNoetherianRin
   have q₀ := IsPullback.of_hasPullback B'.hom (Spec.map (CommRingCat.ofHom g₀))
   obtain ⟨I, ⟨eI⟩, hI⟩ := GlobalTheory.UU.SecCyclic.cyclic_ideal A _ B'.hom F hF P inferInstance inferInstance K₀ g₀ hg₀ _ _ _
     q₀ (CubeOpen.bijective_appTop hG B' hB' q₀) ((test K₀ g₀ _ _ _ q₀).2 h₀)
-  obtain ⟨C, c₁, c₂, ⟨eC⟩, c₃⟩ := GlobalTheory.T.exists_perfect_free_finite_complex A B' hB' hp' g hg' F hF hΛ P
+  obtain ⟨C, c₁, c₂, ⟨eC⟩, c₃⟩ := _root_.GlobalTheory.AbLaw.exists_free_complex_of_primitive A B' hB' hp' g hg' F hF hΛ P
   refine ⟨I, ?_, fun R _ _ φ => (test R φ _ _ _ (IsPullback.of_hasPullback _ _)).symm.trans
     (hI R φ _ _ _ (IsPullback.of_hasPullback _ _))⟩
   letI : Algebra V A := σ.toAlgebra
@@ -373,7 +375,7 @@ theorem flat_of_isFinite : GlobalFnsSt → ∀ (V : Type) [CommRing V] [IsNoethe
     rwa [Set.image_singleton] at this
   have hm : (IsLocalRing.maximalIdeal V).map σ ≤ IsLocalRing.maximalIdeal _ :=
     Ideal.map_le_iff_le_comap.2 fun v hv => map_nonunit σ v hv
-  obtain ⟨h₀, h₁, h₂, h₃⟩ := GlobalTheory.T.stalk_regular_flat_of_smooth V B.left B.hom g hg (j.left h)
+  obtain ⟨h₀, h₁, h₂, h₃⟩ := _root_.GlobalTheory.StabFlat.stalk_of_smooth_local V B.left B.hom g hg (j.left h)
     (cl h (IsLocalRing.closedPoint _) hm Scheme.fromSpecStalk_closedPoint.symm) σ hσ hn
   refine @exists_ideal hG V _ _ _ B _ _ hB hp g hg L (pw L 0) hL hO hΘ hu H j
     (fun T x => (hK _ rfl T x).symm.trans (hH T x))

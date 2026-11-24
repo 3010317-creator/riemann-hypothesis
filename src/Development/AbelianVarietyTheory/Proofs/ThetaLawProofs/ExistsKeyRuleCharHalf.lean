@@ -17,7 +17,7 @@ public import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.IsIntegr
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.DifferentiableOnCoordOfLinearIndependent
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsDifferentiableOnTorsSq
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsHolomorphicThetaOfLevelBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKoszulTorsionTransversalSplitZerosStatement
+public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKoszulTorsionTransversalSplitZeros
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.KaFormHomogeneous
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.KosBlockMulKosD
 public import Development.AbelianVarietyTheory.Statements.ThetaLevelCharacters.MemThetaLevelCharDimZero
@@ -28,7 +28,7 @@ public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsCompl
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKeyInNormalAt
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKeyInvariantAfterDvrExtension
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKeyInvariantAfterDvrExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKeyInvariantAlgClosedTransversalStatement
+public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKeyInvariantAlgClosedTransversal
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKeyPBPair
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.GenericSectionsMeetTransversallyStatement
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.KeyInvariantBaseChangeStatement
@@ -36,7 +36,7 @@ public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.KeyInvarian
 public import Mathlib.FieldTheory.IsAlgClosed.Classification
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ThetaKeyRuleExistsOfAlgebraicInvariants
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SymplecticGenerators.IsPluriharmonicSiegel
-public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.KeyDataDescendCountableSubringsStatement
+public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.KeyDataDescendCountableSubrings
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -824,7 +824,7 @@ theorem exists_degree (laws : Out.Laws) (hT : ThetaUnifAV) (hab : charHalf x.P.g
       exact ⟨la, fun _ => hla⟩
     · exact ⟨1, fun h => absurd h hj⟩
   choose la hla using h2
-  obtain ⟨-, t₀, m₀, hm₀, ht₀⟩ := GlobalTheory.T.exists_koszulTorsion_transversal_split_zeros laws ℂ x n l d s bs _ ch hn hl hb hE
+  obtain ⟨-, t₀, m₀, hm₀, ht₀⟩ := _root_.GlobalTheory.KeyKa.KoszulEx.exists_kosVal laws ℂ x n l d s bs _ ch hn hl hb hE
   have hcx := (KoszulCx.koszul_isCx ℂ x n l d s bs _ ch hl hb).2 m₀ hm₀ hE.1 hE.2.1
   have hfr : ∀ e, u.fr (ch e) (z e) ≠ 0 := fun e => u.fr_ne _ _ (hE.1 e)
   have hdet : (Matrix.diagonal fun e => u.fr (ch e) (z e) ^ l).det = (U : ℂ) ^ l := by
@@ -1275,7 +1275,7 @@ theorem exists_kaVal_complex (hL : Out.Laws) (hD : KeyDesc) (x : KeyIn ℂ) {n l
   obtain ⟨T, hT⟩ := exists_algebraicIndependent K (Fin x.P.g × Fin (n ^ x₀.P.g))
   choose s hs using fun i => exists_coords x (fun j => t (b j)) (fun j => T (i, j))
   obtain ⟨d, z, ch, hz⟩ := GlobalTheory.T.generic_sections_meet_transversally hL K ℂ x₀ x φ w n b _ T s hA.1 hv hb (fun j => ht _) hT hs
-  obtain ⟨κ, hκ⟩ := GlobalTheory.T.exists_keyInvariant_algClosed_transversal hL ℂ x n l l' al d s z ch hA (Nat.cast_ne_zero.2 (by omega)) hz
+  obtain ⟨κ, hκ⟩ := _root_.GlobalTheory.KeyKa.exists_kaVal_of_isAlgClosed hL ℂ x n l l' al d s z ch hA (Nat.cast_ne_zero.2 (by omega)) hz
   exact ⟨s, κ, hκ⟩
 
 theorem exists_kaVal_dvr (hL : Out.Laws) (R : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R]
@@ -1478,7 +1478,7 @@ theorem exists_keyRule_charHalf :
     Out.Laws → ThetaUnifAV → Key.Chi.InversionStatement → Key.PhHoloStatement → GlobalTheory.TorusAlgebraic →
       ∃ N : ℕ → ℕ, (∀ g, 1 ≤ N g) ∧ KeyRule N 1 charHalf := by
   intro hL hT hI hP hTor
-  have hD : KeyDesc := (GlobalTheory.T.keyData_descend_countable_subrings hL).2
+  have hD : KeyDesc := (_root_.GlobalTheory.KeyCountableDescent.keyIn_descends_countable hL).2
   exact GlobalTheory.T.thetaKeyRule_exists_of_algebraic_invariants hL hT hI hP hTor (GlobalTheory.T.exists_integralKeyInvariantRule_charZero hL hT hTor hD) hD
 
 end GlobalTheory.KeyTop

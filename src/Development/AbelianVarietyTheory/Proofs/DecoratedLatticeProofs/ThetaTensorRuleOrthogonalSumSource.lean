@@ -11,7 +11,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitP
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InfPartOneSubEInfSmul
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilOperatorOneVariablePreservesSqNormOrthogonal
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemLatOIffExistsActO
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaFunctionProductsSlicesOrthogonalDecompositiStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaFunctionProductsSlicesOrthogonalDecompositi
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilOperatorOneVariableKeepsThetaFunctionsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurLemmaThetaFunctionsOrientedPair
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdelicCharacterTrivialRatAndSplit
@@ -295,7 +295,7 @@ theorem opB_heisO {ψ : AddChar (AF D.host.F) ℂ} {χ χ' : (AE D)ˣ →* Circl
       heisO ψ S T ((o.resS T).symm ((o.resS T w).1, actO B T b h (o.resS T w).2)) (opB o (om (b, h)) f) := by
   funext x
   obtain ⟨⟨u, v⟩, rfl⟩ := (o.resS T).symm.surjective x
-  have hg := ((GlobalTheory.T.thetaFunction_products_slices_orthogonalDecomposition D ψ hom.std S A B T o).2.2.2 f hf).2 (u + (o.resS T w).1)
+  have hg := ((_root_.GlobalTheory.BoxSlice.main D ψ hom.std S A B T o).2.2.2 f hf).2 (u + (o.resS T w).1)
   have e : (fun v' => heisO ψ S T w f ((o.resS T).symm (u, v'))) =
       ψ (symplOH A T u (o.resS T w).1) •
         heisO ψ B T (o.resS T w).2 (fun v' => f ((o.resS T).symm (u + (o.resS T w).1, v'))) := by
@@ -315,7 +315,7 @@ theorem opA_heisO {ψ : AddChar (AF D.host.F) ℂ} {χ χ' : (AE D)ˣ →* Circl
       heisO ψ S T ((o.resS T).symm (actO A T a h (o.resS T w).1, (o.resS T w).2)) (opA o (om (a, h)) f) := by
   funext x
   obtain ⟨⟨u, v⟩, rfl⟩ := (o.resS T).symm.surjective x
-  have hg := ((GlobalTheory.T.thetaFunction_products_slices_orthogonalDecomposition D ψ hom.std S A B T o).2.2.2 f hf).1 (v + (o.resS T w).2)
+  have hg := ((_root_.GlobalTheory.BoxSlice.main D ψ hom.std S A B T o).2.2.2 f hf).1 (v + (o.resS T w).2)
   have e : (fun u' => heisO ψ S T w f ((o.resS T).symm (u', v))) =
       ψ (symplOH B T v (o.resS T w).2) •
         heisO ψ A T (o.resS T w).1 (fun u' => f ((o.resS T).symm (u', v + (o.resS T w).2))) := by
@@ -722,7 +722,7 @@ theorem op_prod {X Y : Type} (L : Module.End ℂ (X → ℂ)) (M : Module.End �
 theorem tensorSource : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) →
     ∀ (S A B : HSp D) (d : OrthDec S A B) (T : HSp D), GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.TensorSource ψ d T := by
   intro D ψ hψ S A B d T
-  obtain ⟨h1, h2, h3, h4⟩ := GlobalTheory.T.thetaFunction_products_slices_orthogonalDecomposition D ψ hψ S A B T d
+  obtain ⟨h1, h2, h3, h4⟩ := _root_.GlobalTheory.BoxSlice.main D ψ hψ S A B T d
   have hb : ∀ fA fB u v, d.boxS T fA fB ((d.resS T).symm (u, v)) = fA u * fB v := by
     intro fA fB u v
     simp [OrthDec.boxS]

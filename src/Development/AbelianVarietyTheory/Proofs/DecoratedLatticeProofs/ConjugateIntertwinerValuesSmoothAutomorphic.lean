@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ThetaIdentityOfMapsAll
 public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.DiscreteSeriesClassificationIff
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiCongrLeftUpdate
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjIntertwinerPointValueSobolevContinuousStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjIntertwinerPointValueSobolevContinuous
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjugateEvaluationMapIntertwinesRealPlacesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CuspidalFrame
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurePreservingReindex
@@ -157,7 +157,7 @@ theorem conjMap_isAutFunSm : GlobalTheory.Published.DiscreteSeriesClassification
   have he : GlobalTheory.RepSmooth.IsEquiv θ (GlobalTheory.ConjRowMult.conjMap X M c Φ h t) :=
     GlobalTheory.T.conjugate_evaluation_map_intertwines_real_places hP D X h θ S M J χ t c hS hθ hgap hid hm hc Φ hΦ hrep
   have hs : GlobalTheory.RepSmooth.IsSob (GlobalTheory.ConjRowMult.conjMap X M c Φ h t) :=
-    GlobalTheory.T.conjIntertwiner_pointValue_sobolevContinuous hP D X h θ S M J χ t c hS hθ hgap hid hm hc Φ hΦ hrep
+    _root_.GlobalTheory.ConjRowCont.conjMap_cont hP D X h θ S M J χ t c hS hθ hgap hid hm hc Φ hΦ hrep
   obtain ⟨hrat, hfst, hsnd, hone, hgr⟩ := iota_data θ hθ
     (fun τ Y hY s => GlobalTheory.SmVec.exp_mem_UH (GlobalTheory.SmVec.gram_unit (M.fr_unit τ) (M.fr_gram τ)) hY s) X.B.I h
   change ∀ k ∈ _, iotaX X h k ∈ _ at hrat

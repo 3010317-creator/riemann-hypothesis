@@ -7,8 +7,10 @@ public import Formalism.LocalToGlobal.IndefiniteReal.BridgeTie
 public import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 public import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.EmbRelExistsUnique
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsAntiInvolutionOfChars
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvolutionSphericalHeckeAntiStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlacesStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvolutionSphericalHeckeAnti
+public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
 public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.SecondStepGluing
 public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ValBasic
 import Mathlib.Algebra.Order.Floor.Extended
@@ -46,7 +48,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotentsStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
@@ -124,7 +126,7 @@ theorem fin_lift (V : HSp D) (x : Bridge.Gf V) : ∃ g ∈ GfC V, fin V g = x :=
   have hc : cA D f = f := by
     change pairA D.host.F 0 1 ⊗ₜ[D.host.F] (D.sp.cm.sig 1) = _
     rw [map_one]
-  obtain ⟨g₁, g₂, h₁, h₂, rfl⟩ := ((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).1 f hff hc).2.1 g
+  obtain ⟨g₁, g₂, h₁, h₂, rfl⟩ := ((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).1 f hff hc).2.1 g
   have a : infHom V g₁ = 1 := by
     apply Units.ext
     exact map_eq_one_of_supp (infPart D) f (TensorProduct.zero_tmul _ _) _ h₁
@@ -172,11 +174,11 @@ theorem off_of_splitOff {P : Formalism.L2.DIV.Pl D.host.E} {S : Set (Formalism.L
 
 theorem idem_unique (V : HSp D) {P : Formalism.L2.DIV.Pl D.host.E} {e e' : Formalism.L2.Theta.AE D} (h : IsIdemAt e P)
     (h' : IsIdemAt e' P) : e' = e :=
-  (((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 P e _ (Or.inl ⟨h, rfl⟩)).2.2.2.1 e' _ (Or.inl ⟨h', rfl⟩)).1
+  (((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 P e _ (Or.inl ⟨h, rfl⟩)).2.2.2.1 e' _ (Or.inl ⟨h', rfl⟩)).1
 
 theorem idem_conj (V : HSp D) {P : Formalism.L2.DIV.Pl D.host.E} {e : Formalism.L2.Theta.AE D} (h : IsIdemAt e P) :
     IsIdemAt (cA D e) (Formalism.DivisionValues.conjPl P) :=
-  (GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.2 P _ e h (isConjPl_conj P)
+  (_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.2 P _ e h (isConjPl_conj P)
 
 theorem suppAt_conj (V : HSp D) {P : Formalism.L2.DIV.Pl D.host.E} {e : Formalism.L2.Theta.AE D} (h : IsIdemAt e P) (g : GA D V) :
     SuppAt (cA D e) V g ↔ SuppAt e V g := by
@@ -187,14 +189,14 @@ theorem suppAt_conj (V : HSp D) {P : Formalism.L2.DIV.Pl D.host.E} {e : Formalis
 
 theorem supp_fin (V : HSp D) {P : Formalism.L2.DIV.Pl D.host.E} {e : Formalism.L2.Theta.AE D} (he : IsIdemAt e P) {g : GA D V}
     (hg : SuppAt e V g) : g ∈ GfC V :=
-  ((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 P e _ (Or.inl ⟨he, rfl⟩)).2.2.1 g hg
+  ((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 P e _ (Or.inl ⟨he, rfl⟩)).2.2.1 g hg
 
 theorem idem_mul_one_sub {R : Type} [CommRing R] (f : R) (h : f * f = f) : f * (1 - f) = 0 := by
   rw [mul_sub, h, mul_one, sub_self]
 
 theorem commute_compl (V : HSp D) (f : Formalism.L2.Theta.AE D) (hff : f * f = f) (hcf : cA D f = f) {g g' : GA D V}
     (h : SuppF V f g) (h' : SuppF V (1 - f) g') : Commute g g' :=
-  ((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).1 f hff hcf).2.2 (1 - f) g g' (idem_mul_one_sub f hff) h h'
+  ((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).1 f hff hcf).2.2 (1 - f) g g' (idem_mul_one_sub f hff) h h'
 
 theorem transport_local {H G : Type} [Group H] [Group G] (φ : H →* G) (N J₀ L₀ : Subgroup H) (J : Subgroup G)
     (p q : H → Prop) (K : Set H) (χ : J → ℂ) (χ₀ : H → ℂ)
@@ -258,7 +260,7 @@ include hβ
 theorem norm_chi (k : (levEnv V β L).J) : ‖((levEnv V β L).χ k : ℂ)‖ = 1 := by
   obtain ⟨k, hk⟩ := k
   obtain ⟨g, hg, rfl⟩ := fin_lift V k
-  have h0 := (GlobalTheory.T.level_hyperspecial_trivialCharacter_splits_off_places V β Λ 1 (flag1L L) hβ).1 g ((mem_J V β L hg).1 hk)
+  have h0 := (_root_.GlobalTheory.LevSplit.lev_split V β Λ 1 (flag1L L) hβ).1 g ((mem_J V β L hg).1 hk)
   obtain ⟨n, hn, h⟩ := h0
   rw [chi_eq]
   have := congrArg norm h
@@ -276,21 +278,21 @@ theorem local_group (P : Formalism.L2.DIV.Pl D.host.E) (e : Formalism.L2.Theta.A
         ∀ g ∈ Lc, ∃ a ∈ (levEnv V β L).J ⊓ Lc, ∃ b ∈ (levEnv V β L).J ⊓ Lc, θ g = a * g * b) ∧
       ∀ k ∈ locPart V (KsphC V ∅) e, fin V k ∈ (levEnv V β L).J := by
   have hP : IsPrimeIdem P e (e + cA D e) := Or.inl ⟨he, rfl⟩
-  have h01 := (GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 P e _ hP
+  have h01 := (_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 P e _ hP
   have hff := h01.1
   have hcf := h01.2.1
-  have h02 := ((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).1 _ hff hcf).1
+  have h02 := ((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).1 _ hff hcf).1
   refine h02.elim fun L₀ hL₀ => ?_
   have h1 : ((1 : ℕ) : 𝓞 D.host.E) ∉ P.asIdeal := by
     rw [Nat.cast_one]; exact (Ideal.ne_top_iff_one _).1 P.isPrime.ne_top
-  have h03 := (GlobalTheory.T.level_hyperspecial_trivialCharacter_splits_off_places V β Λ 1 (flag1L L) hβ).2 P e _ hP h1 hoff
+  have h03 := (_root_.GlobalTheory.LevSplit.lev_split V β Λ 1 (flag1L L) hβ).2 P e _ hP h1 hoff
   have hK := h03.1
   have hχ := h03.2.1
   have hsp := h03.2.2
   have hL : ∀ g, g ∈ L₀ ↔ SuppAt e V g := hL₀
   have hKJ : ∀ k ∈ locPart V (KsphC V ∅) e, fin V k ∈ (levEnv V β L).J := fun k hk =>
     (mem_J V β L (supp_fin V he hk.2)).2 ((hK k hk.2).2 hk.1)
-  have h04 := (GlobalTheory.T.involution_spherical_hecke_anti V P e he).1
+  have h04 := (_root_.GlobalTheory.SplitPlace.split_local V P e he).1
   have h05 := transport_local (fin V) (GfC V) (levG V β (flag1L L)) L₀ (levEnv V β L).J (SuppAt e V)
     (SuppF V (1 - (e + cA D e))) (KsphC V ∅) (fun k => ((levEnv V β L).χ k : ℂ)) (levChi V β (flag1L L))
     (fin_lift V) (fun g g' => fin_inj V) (fun g => mem_J V β L) (fun g hg => hg.1) hL (fun g => supp_fin V he)
@@ -324,7 +326,7 @@ theorem hecke_conj (V : HSp D) {P : Formalism.L2.DIV.Pl D.host.E} {k : ℕ} {α 
   obtain rfl := idem_unique V he h1
   have hc := idem_conj V he
   obtain rfl := idem_unique V hc h1'
-  have h5 := (((GlobalTheory.T.involution_spherical_hecke_anti V P e₁ he).2.2 ϖ h2 h3).2 k α h4).1
+  have h5 := (((_root_.GlobalTheory.SplitPlace.split_local V P e₁ he).2.2 ϖ h2 h3).2 k α h4).1
   have h6 : Formalism.DivisionValues.cO _ ϖ ∈ (Formalism.DivisionValues.conjPl P).asIdeal := Ideal.mem_map_of_mem _ h2
   have h7 : Formalism.DivisionValues.cO _ ϖ ∉ (Formalism.DivisionValues.conjPl P).asIdeal ^ 2 := by
     intro hh
@@ -332,7 +334,7 @@ theorem hecke_conj (V : HSp D) {P : Formalism.L2.DIV.Pl D.host.E} {k : ℕ} {α 
     rw [this, Ideal.mem_map_of_equiv] at hh
     obtain ⟨x, hx, hx'⟩ := hh
     exact h3 ((Formalism.DivisionValues.cO D.host.E).injective hx' ▸ hx)
-  obtain ⟨a, ha, b, hb, hab⟩ := (((GlobalTheory.T.involution_spherical_hecke_anti V _ _ hc).2.2 _ h6 h7).2 k α⁻¹ h5).2 ϖ' α' h2' h3' h4'
+  obtain ⟨a, ha, b, hb, hab⟩ := (((_root_.GlobalTheory.SplitPlace.split_local V _ _ hc).2.2 _ h6 h7).2 k α⁻¹ h5).2 ϖ' α' h2' h3' h4'
   exact ⟨a, ⟨ha.1, (suppAt_conj V he a).1 ha.2⟩, b, ⟨hb.1, (suppAt_conj V he b).1 hb.2⟩, hab⟩
 
 theorem loc_supp (V : HSp D) {Pl0 : Type} {pl : Pl0 → Formalism.L2.DIV.Pl D.host.E} {ok : Set Pl0} {i : ok × ℕ}
@@ -407,13 +409,13 @@ theorem side_adj_comm (V : HSp D) (β : GL (Fin V.rank) (EAf D)) (Λ : Submodule
     have hy := T.hx_ok j hj hj.2
     obtain ⟨-, ⟨e', -, he', -⟩, -⟩ := hy
     have hB : ∀ x ∈ T.hA j, ∃ g, SuppAt e' V g ∧ fin V g = x := fun x hx => loc_supp V (T.hA_loc j hj x hx) he'
-    have h01 := (GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 _ e _ (Or.inl ⟨he, rfl⟩)
+    have h01 := (_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 _ e _ (Or.inl ⟨he, rfl⟩)
     have h02 := h01.2.2.2.2 _ e' _ (Or.inl ⟨he', rfl⟩)
     rcases h02 with h02 | h02
     · refine dcOp_comm_of_commute (fun x hx y hy => ?_) F
       obtain ⟨g, hg, rfl⟩ := hA x hx
       obtain ⟨g', hg', rfl⟩ := hB y hy
-      exact (((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).1 _ h01.1 h01.2.1).2.2 _ g g' h02 hg hg').map (fin V)
+      exact (((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).1 _ h01.1 h01.2.1).2.2 _ g g' h02 hg hg').map (fin V)
     · have hBL : ∀ x ∈ T.hA j, x ∈ Lc := fun x hx => by
         obtain ⟨g, hg, rfl⟩ := hB x hx
         refine l1 g ?_

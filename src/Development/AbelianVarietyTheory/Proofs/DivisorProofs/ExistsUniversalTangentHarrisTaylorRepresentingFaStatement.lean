@@ -92,7 +92,8 @@ import Development.AbelianVarietyTheory.Definitions.Degenerations.ExistsGenPullT
 import Development.AbelianVarietyTheory.Definitions.Uniformization.ExistsUniqueTorusCompat
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.HenselianLocalRingOfIsAdicComplete
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualAbelianSchemeExistsBidualityStatement
+import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsCrystalPairing
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualAbelianSchemeExistsBiduality
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LiftLeftFst
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ConnectedSpaceSpecOfIsLocalRing
 import Mathlib.RingTheory.DualNumber
@@ -621,7 +622,7 @@ theorem pol_iso : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p
     exact (cls_eq_iff _ _).2 (LBIso.symm m₂.pol)
   have hL : (o₁.P.pull (lift (𝟙 o₁.A) (𝟙 o₁.A)).left).IsLB := pull_isLB o₁.isLB _
   exact GlobalTheory.BirigidLift.lift_unique (κ := epsDP k)
-    (grothendieckDeformation_of_lifting _root_.GlobalTheory.abelianDeRham _root_.GlobalTheory.abelianScheme_hom_lifting_nilpotent_dividedPowers) GlobalTheory.T.dualAbelianScheme_exists_biduality hκ hπ rfl
+    (grothendieckDeformation_of_lifting _root_.GlobalTheory.abelianDeRham _root_.GlobalTheory.abelianScheme_hom_lifting_nilpotent_dividedPowers) _root_.GlobalTheory.dualAbelianScheme hκ hπ rfl
     o₁.ab hg o₁.ab hg m₁.cart m₁.cart m₁.sq.1 m₁.sq.2 hL o₁.ample hL o₁.ample o₀.isLB o₁.isLB o₁.rig₁ o₁.rig₂
     (LBIso.symm m₁.pol) hP' t₁ t₂ e'
 

@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ThetaId
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselPeriodRightTranslateSobolevSepContinuous
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValLastX
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselPeriodLinearAndTranslationCombinationStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselPeriodLinearAndTranslationCombination
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TprodEqZeroOfKFinOff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -160,7 +160,7 @@ theorem GlobalTheory.SeeSaw.perF_rel_of_steps : GlobalTheory.Published.HarishCha
     congr 1
     unfold Tup.perF
     refine Finset.sum_congr rfl fun a _ => ?_
-    rw [((GlobalTheory.T.besselPeriod_linear_and_translationCombination D c.ψ hc.std ρ (c.B j ρ h) (φ i a) (hφ i a)).2 _ _ (hcont i x)).2]
+    rw [((_root_.GlobalTheory.SeeSaw.per_linear_trc D c.ψ hc.std ρ (c.B j ρ h) (φ i a) (hφ i a)).2 _ _ (hcont i x)).2]
   have hΛs : GlobalTheory.Core.Mi.SepCont (c.M j) Λ :=
     sepCont_sum _ _ _ fun i _ => sepCont_smul _ _ (sepCont_sum _ _ _ fun a _ =>
       sepCont_sum _ _ _ fun g _ => sepCont_smul _ _ (hLs i a g))

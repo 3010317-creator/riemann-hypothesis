@@ -22,7 +22,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMatEnd
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDvrOfDimOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalHomAdicCompletionExtend
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTraitModuliOfStalkCompleteDVRStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTraitModuliOfStalkCompleteDVR
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdlAlongEqTopOfNotMemSupport
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelTraitCharacterGroupFinrankLeGenusThree
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsTamePolyhedralFan
@@ -779,7 +779,7 @@ theorem orders_extend : ∀ (g n : ℕ), 3 ≤ n → ∀ (F : SFam g n (zetaAway
       (fun i => i.elim (j d) fun ii => p (e.symm (b ii.1 + b ii.2)))
       (fun i => i.elim a fun ii => k (e.symm (b ii.1 + b ii.2)))
       (by rintro (_ | ii); exacts [hda, hk' _])
-  obtain ⟨T', f, γ, finj, floc, -, hγ, hy⟩ := GlobalTheory.T.exists_trait_moduli_of_stalk_completeDVR g n _ _ F o' Ω M (spMap S.R.val.toRingHom ≫ u)
+  obtain ⟨T', f, γ, finj, floc, -, hγ, hy⟩ := _root_.GlobalTheory.Poinc.exists_trait_of_stalk_dvr g n _ _ F o' Ω M (spMap S.R.val.toRingHom ≫ u)
     (ξ (closedPoint T.V)) A hA (ψ'.comp j) (ψ'inj.comp jinj)
   have hrange : Set.range M.pt ⊆ Set.range V.ι := by
     rw [Scheme.Opens.range_ι]
@@ -918,7 +918,7 @@ theorem exists_trait [CharZero Ω] (y₀ : Sp Ω ⟶ F.X) (x : M.Z) (V : Type) [
     ∃ (T : Trait F) (f : V →+* T.V) (ξ : Sp T.V ⟶ M.Z) (γ : Ω →+* FractionRing T.V), Function.Injective f ∧ IsLocalHom f ∧
       ξ (closedPoint T.V) = x ∧ jK T.V ≫ ξ = spMap γ ≫ M.pt ∧ T.y = spMap γ ≫ y₀ ∧
       ∀ a, γ (M.stalkHom x a) = algebraMap T.V (FractionRing T.V) (f (θ a)) := by
-  obtain ⟨T, f, γ, hf, hl, h₁, h₂, h₃⟩ := GlobalTheory.T.exists_trait_moduli_of_stalk_completeDVR g n o ζ F o' Ω M y₀ x V hV θ hθ
+  obtain ⟨T, f, γ, hf, hl, h₁, h₂, h₃⟩ := _root_.GlobalTheory.Poinc.exists_trait_of_stalk_dvr g n o ζ F o' Ω M y₀ x V hV θ hθ
   exact ⟨T, f, _, γ, hf, hl, centre (f.comp θ), h₂, h₃, h₁⟩
 
 theorem exists_trait_centre [ArithBase o' Ω] (y₀ : Sp Ω ⟶ F.X) (x : M.Z) :

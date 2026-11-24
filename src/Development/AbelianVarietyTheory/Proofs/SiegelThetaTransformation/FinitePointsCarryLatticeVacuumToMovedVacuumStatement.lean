@@ -2,15 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CompletedTensorLatticeLatticeVacuumTransportStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUnique
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CompletedTensorLatticeLatticeVacuumTransport
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DoubledHermitianTestFunctionZeroAndNorm
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorTestThetaZeroEqThetaSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.InnerProductTranslatedVacuaEqGaussianKernelStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LatticeVacuaTensorCorrespondLineStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorTestThetaZeroEqThetaSeries
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.InnerProductTranslatedVacuaEqGaussianKernel
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LatticeVacuaTensorCorrespondLine
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionFundamentalDomainInnerProductBasic
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.WeakWeilRepCarriesDerivativesVacuaFockVectorsStatement
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinearStatement
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinear
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,32 +77,32 @@ theorem ipO_Th_self_eq (D : D7) (S T : HSp D) (C : Ctx S T) (μ : Measure (WO S 
       a * SW.ip φ φ * (gaussR C.X C.bas C.idx x (C.zOf x 0) * conj (gaussR C.X C.bas C.idx x (C.zOf x 0)) *
         kZero C.X C.idx x x (C.zOf x 0) (fun k i => conj (C.zOf x 0 k i))) := by
     intro φ hφ
-    have hT : C.IsTh (C.Th x φ) := (GlobalTheory.T.adelicZakTheta_exists_unique D S T C x hx φ hφ).1.1
+    have hT : C.IsTh (C.Th x φ) := (_root_.GlobalTheory.Ker.ZakEx.isZak_Th D S T C x hx φ hφ).1.1
     rw [← ((hip _ hT).2.2.2 _ hT).2.2.2.2.1 0,
-      GlobalTheory.T.innerProduct_translated_vacua_eq_gaussianKernel D S T C μ 𝓕 hμ x hx x hx φ φ hφ hφ 0 0 hR hR, (hab φ φ hφ hφ).1]
+      _root_.GlobalTheory.Ker.GaussKer.ipO_rho_Th D S T C μ 𝓕 hμ x hx x hx φ φ hφ hφ 0 0 hR hR, (hab φ φ hφ hφ).1]
   rw [key v hv, key v' hv', h]
 
 theorem om_Th_vac : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ), IsWeak C.ψ S T om → ∀ w : D.host.E, IsIntegral ℤ w → w + cc w = 1 → IdemTwo w → ∀ (M : ℕ), ∀ Λ ∈ Vset D.host.E S.rank M, ∀ Λ' ∈ Vset D.host.E S.rank M, ∀ L L' : Lt D.host.E T.rank, SelfD C.X L → SelfD C.X L' → ∀ h ∈ GfC S, ∀ g ∈ GfC T, IsMov (fmtC S h) Λ Λ' → IsMov (fmt T g) L L' → ∀ v v', IsVac C.X C.bas w (tens Λ L) v → IsVac C.X C.bas w (tens Λ' L') v' → ∀ B, C.IsB B → ∃ c : ℂ, ‖c‖ = 1 ∧ om (h, g) (C.Th (C.xB B) v) = c • (C.Th (C.xB B) v') := by
   intro D S T C om hom w hwi hw1 hw2 M Λ hΛ Λ' hΛ' L L' hL hL' h hh g hg hmS hmT v v' hv hv' B hB
-  have hBB := (GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2 B hB
+  have hBB := (_root_.GlobalTheory.Ker.onBasis_frame_period D S T C).2 B hB
   have hx : C.xB B ∈ C.X.dom := hBB.2.1
   have hfix : C.mvB g B = B := (hBB.2.2.2.2.2 g).2.2.1 hg
   set f := C.Th (C.xB B) v with hf
   set f' := C.Th (C.xB B) v' with hf'
-  have hfT : C.IsTh f := (GlobalTheory.T.adelicZakTheta_exists_unique D S T C _ hx v hv.1).1.1
-  have hfT' : C.IsTh f' := (GlobalTheory.T.adelicZakTheta_exists_unique D S T C _ hx v' hv'.1).1.1
+  have hfT : C.IsTh f := (_root_.GlobalTheory.Ker.ZakEx.isZak_Th D S T C _ hx v hv.1).1.1
+  have hfT' : C.IsTh f' := (_root_.GlobalTheory.Ker.ZakEx.isZak_Th D S T C _ hx v' hv'.1).1.1
 
   have hLat : IsLatVac (heisO C.ψ S T) (hatA S T (tens Λ L)) f :=
-    ((GlobalTheory.T.latticeVacua_tensor_correspond_line D S T C w hwi hw1 hw2 M Λ hΛ L hL).1 _ hx v hv.1).2 hv.2.2
+    ((_root_.GlobalTheory.Ker.latVac_th_line D S T C w hwi hw1 hw2 M Λ hΛ L hL).1 _ hx v hv.1).2 hv.2.2
   have hLat' : IsLatVac (heisO C.ψ S T) (hatA S T (tens Λ' L')) (om (h, g) f) :=
-    (GlobalTheory.T.completedTensorLattice_lattice_vacuum_transport D S T C h g Λ Λ' L L' hmS hmT).2 om hom f hfT hLat
+    (_root_.GlobalTheory.TensLatMove.hatA_move D S T C h g Λ Λ' L L' hmS hmT).2 om hom f hfT hLat
   have hTh : C.IsTh (om (h, g) f) := hom.om_pres (h, g) f hfT
   have hFock : C.IsFock B (om (h, g) f) := by
     have h1 := ((GlobalTheory.T.weakWeilRep_carries_derivatives_vacua_fockVectors D S T C om hom h g f hfT).2 B hB).1
-      ((GlobalTheory.T.fockPolynomialVector_testTheta_zero_eq_thetaSeries D S T C).2 B hB v hv.1).1
+      ((_root_.GlobalTheory.Ker.fvec_Th_zero D S T C).2 B hB v hv.1).1
     rwa [hfix] at h1
   obtain ⟨t, ht⟩ :=
-    (GlobalTheory.T.latticeVacua_tensor_correspond_line D S T C w hwi hw1 hw2 M Λ' hΛ' L' hL').2 B hB v' hv' _ hTh hFock hLat'
+    (_root_.GlobalTheory.Ker.latVac_th_line D S T C w hwi hw1 hw2 M Λ' hΛ' L' hL').2 B hB v' hv' _ hTh hFock hLat'
 
   obtain ⟨⟨μ, 𝓕, hμ⟩, hip⟩ := ScalarProduct.ip_basic D S T C
   have hsame : ipO μ 𝓕 f f = ipO μ 𝓕 f' f' :=

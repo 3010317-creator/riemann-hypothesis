@@ -79,17 +79,19 @@ import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmal
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LastStepVectorLiftPairFlagLevelCharacters
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FockVacuumAnnihilationEquationRealCoordinatesStatement
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.OmAtSmulRight
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FockVacuumAnnihilationEquationRealCoordinates
 import Mathlib.Analysis.CStarAlgebra.Classes
 import Mathlib.Analysis.Calculus.FDeriv.Defs
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.NotLinearIndependent
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RationalPointsFinitePartSelfDualLatticeIffStatement
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealSymplecticFormAlternatingInvariantDefiniteStatement
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ScaledFiniteMatrixMemLatticeStatement
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDualStatement
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RationalPointsFinitePartSelfDualLatticeIff
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealSymplecticFormAlternatingInvariantDefinite
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ScaledFiniteMatrixMemLattice
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.SpanRealProjectionRationalPointsEqTop
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Mathlib.RingTheory.PiTensorProduct
@@ -99,7 +101,6 @@ import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsPolynomi
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaHeisenbergConjugationNegHermitianSpace
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieAlgebrasAtPlaceActFockVectorsByFockOperators
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsFinCombSingleZero
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNsmulIntMemLatO
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PadOneMemSecondBlockTriangular
@@ -1318,8 +1319,8 @@ theorem eq_smul_of_vac {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D}
   have hψ := hf.1
   have hθ : IsInfFam θ := hf.2.inf
   obtain ⟨σ, h⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
-  obtain ⟨h1, h2, h3⟩ := GlobalTheory.T.self_dual_lattice_pairing_dual D ψ S T ΛS ΛT hψ hΛS hΛT
-  have hden := GlobalTheory.T.scaled_finite_matrix_mem_lattice D S T ΛS ΛT
+  obtain ⟨h1, h2, h3⟩ := _root_.GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T ΛS ΛT hψ hΛS hΛT
+  have hden := _root_.GlobalTheory.VacUnique.Den.exists_nsmul_finRat_mem D S T ΛS ΛT
     (selfDual_isFullLattice S ΛS hΛS) (selfDual_isFullLattice T ΛT hΛT)
   have hlat := hf.2.lat
   have hinf := fun u => latO_inf (u := u) S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E))
@@ -1343,12 +1344,12 @@ theorem eq_smul_of_vac {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D}
     have e := det f f 0 hf.2.theta hf.2.theta hlat hlat fun z => by rw [zero_mul]; exact congrFun h0 z
     rw [e] at n1
     simp [nrm2] at n1
-  obtain ⟨j1, j2, j3, j4⟩ := GlobalTheory.T.realSymplecticForm_alternating_invariant_definite D S T sS sT hS hT
+  obtain ⟨j1, j2, j3, j4⟩ := _root_.GlobalTheory.RealSymplForm.form_alt_inv_def D S T sS sT hS hT
   have hsp : Submodule.span ℝ (Set.range (infRat S T)) = ⊤ := by
     have := span_piW_ratW_eq_top D θ σ h T S
     simpa only [piW_ratW hθ] using this
-  have a1 := GlobalTheory.T.fockVacuum_annihilation_equation_real_coordinates D θ σ h ψ hψ S T sS sT f hf.2.theta hf.2.fock
-  have a2 := GlobalTheory.T.fockVacuum_annihilation_equation_real_coordinates D θ σ h ψ hψ S T sS sT f' hth hfock
+  have a1 := _root_.GlobalTheory.VacUnique.Ann.vacuum_annihilation D θ σ h ψ hψ S T sS sT f hf.2.theta hf.2.fock
+  have a2 := _root_.GlobalTheory.VacUnique.Ann.vacuum_annihilation D θ σ h ψ hψ S T sS sT f' hth hfock
   let c : Matrix (Fin T.rank) (Fin S.rank) D.host.E → ℂ := fun v =>
     if hv : finRat S T (-v) ∈ Λ then ψ (-symplOH S T (ratW T S v) (finRat S T (-v))) * ε _ hv else 1
   have hc : ∀ v, ‖c v‖ = 1 := fun v => by
@@ -1369,7 +1370,7 @@ theorem eq_smul_of_vac {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D}
     (fun x => by
       obtain ⟨N, hN, hx⟩ := hden x
       exact ⟨N, hN, by rwa [AddSubgroup.mem_comap, AddMonoidHom.map_nsmul]⟩)
-    (GlobalTheory.T.rationalPoints_finitePart_selfDual_lattice_iff D S T ψ Λ hψ hinf h1 h2 hden) c hc
+    (_root_.GlobalTheory.RatSelfDual.finRat_mem_iff D S T ψ Λ hψ hinf h1 h2 hden) c hc
     ![fun z => f (iotaW σ T S z), fun z => f' (iotaW σ T S z)]
     (fun k => by fin_cases k; exacts [a1.1, a2.1]) (fun k => by fin_cases k; exacts [a1.2, a2.2])
     (fun k => by fin_cases k; exacts [law f hf.2.theta hlat, law f' hth hlat'])

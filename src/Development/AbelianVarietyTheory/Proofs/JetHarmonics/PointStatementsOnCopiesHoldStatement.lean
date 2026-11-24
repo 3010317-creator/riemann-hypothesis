@@ -8,7 +8,7 @@ public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.GermFunPf
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FrameNStHolds
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.StarRingExtOfStar
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UniversalJetsPowerProductStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UniversalStatementStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UniversalStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ValCongr
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ValFinProdGen
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.ConstBFMul
@@ -30,7 +30,10 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDesc
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsPelUnifOfUnifPow
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsBasisOfCoord
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.TwistingStatementsOfLaws
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TorsionIsoOfLinearUniformisationTripleStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.VRatioGtStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.PeriodicValuation
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TorsionIsoOfLinearUniformisationTriple
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsGermLinearMap
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ImportsTer
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PowPELOfLaws
@@ -233,7 +236,7 @@ theorem germOfFam_holds : Laws → Laws2 → Laws4 → TwistBaseChangeStatement 
   obtain rfl := starSt E H inst hstar
   let := H.starRing
   intro T io y C htr P ϖ hϖ Q hQ n _ D' A' G' _ _ pD pA pG U' PU F _ _ _ _ v hv q hq
-  have hu := GlobalTheory.T.universalJets_power_product T.V C.I.G.G G' n _ pG C.xT (GlobalTheory.T.universal_statement E H Dw l Xo c T io y C)
+  have hu := GlobalTheory.T.universalJets_power_product T.V C.I.G.G G' n _ pG C.xT (_root_.GlobalTheory.PowGerm.univSt_holds E H Dw l Xo c T io y C)
   obtain ⟨τ, hτ, ht, hiff⟩ := frameNSt_holds E H T.V C.I.G P _ C.FT C.actT C.ph1T C.ph2T C.syT C.adT C.tgT C.xT C.eT C.wPT
     C.chartT C.frameT C.primT n D' A' G' pD pA pG U' PU
   refine ⟨fun σ' => ?_, fun s σ' hE hs g hg => ?_⟩
@@ -798,7 +801,7 @@ theorem descentIdF_of_laws :
     change (x ≫ oA''.act (star (star π))) ≫ pA.pr i = 1 ≫ pA.pr i
     rw [star_star, Category.assoc, hoA'', hxπ, MonObj.one_comp]
   have htors : P'.TorsionIso :=
-    GlobalTheory.T.torsionIso_of_linear_uniformisation_triple ⟨hL, hL2, hL3, hL4, hL5⟩ (twistBCSpan_of hT) GlobalTheory.RatioVal.main
+    _root_.GlobalTheory.UT.torsionIso_of_pelUnif ⟨hL, hL2, hL3, hL4, hL5⟩ (twistBCSpan_of hT) GlobalTheory.RatioVal.main
       (twisting_statements_of_laws hL hT).1 (GlobalTheory.UnitBallFree.main hL.globalFns hT) E H T.V (maximalIdeal T.V)
       ⟨inferInstance, inferInstance, inferInstance, inferInstance⟩ t' P'
   rw [hact] at hxba
@@ -925,7 +928,7 @@ theorem main : Laws → Laws2 → Laws3 → Laws4 → Laws5 → TwistBaseChangeS
   obtain ⟨Φ, hΦ⟩ := phiFun_of hL T.V _ D' F (g' * g) hq p w hw
   obtain ⟨τ, hτ, hτT, hiff⟩ := frameNSt_holds E H T.V C.I.G P _ C.FT C.actT C.ph1T C.ph2T C.syT C.adT C.tgT C.xT C.eT
     C.wPT C.chartT C.frameT C.primT n D' A' G' pD pA pG U' PU
-  have hz := GlobalTheory.T.universalJets_power_product T.V C.I.G.G G' n _ pG C.xT (GlobalTheory.T.universal_statement E H Dw l Xo c T io y C)
+  have hz := GlobalTheory.T.universalJets_power_product T.V C.I.G.G G' n _ pG C.xT (_root_.GlobalTheory.PowGerm.univSt_holds E H Dw l Xo c T io y C)
   obtain ⟨gm, hgm, hgmex⟩ := PairingLinear.exists_germ_linearMap hL hL2 hL4 hT T.V D' A' G' U' _ _ hz τ hτ (hτT hTr) F
     (g' * g) hq
   obtain ⟨θ, θα, hθν, hθF, hθα⟩ := PowThetaFrame.main hL hL2 hL4 hT E H Dw l Xo c n T io y hy C P hP g g' hg hg' hne hgo

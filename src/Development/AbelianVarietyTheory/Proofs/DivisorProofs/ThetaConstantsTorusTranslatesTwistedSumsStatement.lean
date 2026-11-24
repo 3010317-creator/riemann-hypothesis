@@ -14,7 +14,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTorusT
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsYy
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumIOfSumFMul
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisedMemberDividingThetaConstantNeZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMemberTermsIntegralUnitShiftStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMemberTermsIntegralUnitShift
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.RigGen
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealisedThetaSystemThetaConstantNegEvenUpToRoot
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ThetaSetupStructureMapComp
@@ -26,7 +26,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumFConstMul
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFrameRatio
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramedTorsionPointTorusExtensionEqOfLiesOverStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramedTorsionTorusExtensionRespectCubicalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaModelMemberTermMemMaximalIdealStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaModelMemberTermMemMaximalIdeal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividingThetaConstantsGenerateIntegralTorsionLabStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistWeightWellDefinedOnLatticeClassStatement
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsUniqueWeilIs
@@ -357,7 +357,7 @@ namespace GlobalTheory.Poinc.Sep
 theorem exists_terms_single : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (Fin 8) ℤ) (Z : Scheme.{0}) (i : F.X ⟶ Z) (X₁ : Setup F W i) (z₁ : X₁.M.Z) (act : Matrix (Fin 8) (Fin 8) ℤ → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)) (x₀ : X₁.S.Gam), X₁.M.Div X₁.S.th x₀ z₁ → ∀ (V1 : Type) [CommRing V1] [IsDomain V1] [IsLocalRing V1] (ev1 : X₁.M.Z.presheaf.stalk z₁ →+* V1) (Y1 : Type) [AddCommGroup Y1] (m1 : ℕ) (t1 : Fin m1 → V1) (δ1 : Fin m1 → LinearMap.BilinForm ℤ Y1) (𝔪1 : UMem X₁ z₁ act V1 ev1 Y1 t1 δ1) (a : X₁.S.Gam), a ∈ X₁.S.HH X₁.M z₁ → ∃ T : (Fin 8 → Y1) → Unit → V1, 𝔪1.Terms x₀ (fun _ : Unit => a) T := by
   intro g n F W Z i X₁ z₁ act x₀ hdiv V _ _ _ ev Y _ m t δ 𝔪 a ha
   obtain ⟨u, ⟨x, fr, th, w₀, s, g', w, hx, hfr, hth, hw₀, hs, hc, hT⟩, -, -⟩ :=
-    GlobalTheory.T.exists_member_terms_integral_unit_shift g n F W Z i X₁ z₁ act x₀ hdiv V ev Y m t δ 𝔪 (X₁.S.HH X₁.M z₁) Subtype.val Subtype.range_coe
+    _root_.GlobalTheory.Poinc.IntTerm.exists_terms g n F W Z i X₁ z₁ act x₀ hdiv V ev Y m t δ 𝔪 (X₁.S.HH X₁.M z₁) Subtype.val Subtype.range_coe
   exact ⟨fun mu _ => u mu ⟨a, ha⟩ * mono W t δ mu, x, fr, th, w₀, s, fun _ => g' ⟨a, ha⟩, fun _ => w ⟨a, ha⟩, hx, hfr, hth,
     hw₀, hs, fun _ => hc ⟨a, ha⟩, fun mu _ => hT mu ⟨a, ha⟩⟩
 
@@ -754,7 +754,7 @@ theorem one_member {κ : X₁.S.Gam → X₁.S.Gam → X₁.S.Gam → X₁.S.R} 
       𝔪.yK (κ a a' 0 * algebraMap X₁.o₁ X₁.S.R X₁.S.ζ ^ (e a + e a')) =
         𝔪.yK (κ a a' τ * algebraMap X₁.o₁ X₁.S.R X₁.S.ζ ^ (e (a + a') + e 0)) := by
   obtain ⟨T₁, hT₀, -, -⟩ :=
-    GlobalTheory.T.exists_member_terms_integral_unit_shift g n F W Z i X₁ z₁ act x₀ hdiv V ev X m t δ 𝔪 (X₁.S.HH X₁.M z₁) Subtype.val Subtype.range_coe
+    _root_.GlobalTheory.Poinc.IntTerm.exists_terms g n F W Z i X₁ z₁ act x₀ hdiv V ev X m t δ 𝔪 (X₁.S.HH X₁.M z₁) Subtype.val Subtype.range_coe
   generalize (fun mu c => T₁ mu c * mono W t δ mu) = T₀ at hT₀
   have hT₀' := hT₀
   obtain ⟨x, fr, th, w₀, s, g', w, hx, hfr, hth, hw₀, hs, hc, hTc⟩ := hT₀'
@@ -1089,7 +1089,7 @@ theorem UMem.const_term_sub_mem : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W
   rw [e'] at hS
   have hI := TwistSum₂.sumI_of_sumF_mul (fun χ => T (𝔪.e₈.symm χ) c) (ev r) _ hθ hS
   have := sub_mem_of_sumI hI 0 fun j hj =>
-    GlobalTheory.T.thetaModelMember_term_mem_maximalIdeal g n F W Z i X₁ z₁ act x₀ hd V ev X m t δ 𝔪 C lab hlab T hT c _ (𝔪.e₈.symm.map_ne_zero_iff.2 hj)
+    _root_.GlobalTheory.Poinc.Sep.HighTerms.term_mem_maximalIdeal g n F W Z i X₁ z₁ act x₀ hd V ev X m t δ 𝔪 C lab hlab T hT c _ (𝔪.e₈.symm.map_ne_zero_iff.2 hj)
   simpa only [map_zero] using this
 
 end GlobalTheory.Poinc.Sep
@@ -1170,7 +1170,7 @@ theorem twist_resid : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (F
   rw [← Finset.add_sum_erase _ _ (Finset.mem_insert_self 0 S)] at h2
   have h3 : ∑ mu ∈ (insert 0 S).erase 0, ev zt ^ (wt' mu).val * T mu c ∈ maximalIdeal V :=
     Ideal.sum_mem _ fun mu hmu => Ideal.mul_mem_left _ _
-      (GlobalTheory.T.thetaModelMember_term_mem_maximalIdeal g n F W Z i X₁ z₁ act x₀ hx₀ V ev Y m t δ 𝔪 C lab hlab T hT c mu (Finset.ne_of_mem_erase hmu))
+      (_root_.GlobalTheory.Poinc.Sep.HighTerms.term_mem_maximalIdeal g n F W Z i X₁ z₁ act x₀ hx₀ V ev Y m t δ 𝔪 C lab hlab T hT c mu (Finset.ne_of_mem_erase hmu))
   have h0 : ev zt ^ (wt' 0).val * T 0 c = T 0 c := by simp [wt']
   rw [h0] at h2
   have h4 : ev (s * u * r) - T 0 c ∈ maximalIdeal V := by

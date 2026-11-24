@@ -7,7 +7,7 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.GeneratorPullback.PullAlong
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.MapsAtLeA
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.CubePullbacks.CubePull
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.KTrivExternalTensorPowerLineBundleStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.KTrivExternalTensorPowerLineBundle
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SmoothIsMultiplicative
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -193,7 +193,7 @@ def powPolOf (P : PolAV S) {j : ℕ} (A' : Over S) [GrpObj A'] (p : IsPowGrp A' 
     rigid := (rigidified_sym_boxLB S A' P.A j p P.L P.isLB).1 P.rigid
     sym := (rigidified_sym_boxLB S A' P.A j p P.L P.isLB).2 P.sym
     ample := T.relAmple_externalTensorPower_groupPower S A' P.A j p P.L P.isLB P.ample
-    ktriv := T.kTriv_external_tensor_power_lineBundle S A' P.A j p P.L P.isLB P.ktriv }
+    ktriv := _root_.GlobalTheory.kTriv_boxLB S A' P.A j p P.L P.isLB P.ktriv }
 
 def isPowPolAV_powPolOf (P : PolAV S) {j : ℕ} (A' : Over S) [GrpObj A'] (p : IsPowGrp A' P.A j) :
     IsPowPolAV (powPolOf P A' p) P j where

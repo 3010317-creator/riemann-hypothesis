@@ -1,15 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaEqB
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilModelProjectionFactorisationStatement
-public import Mathlib.LinearAlgebra.PiTensorProduct.Dual
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NotForallNonemptyLocP
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NotForallNonemptyLocP
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilModelProjectionFactorisation
+public import Mathlib.LinearAlgebra.PiTensorProduct.Dual
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolynomialFockSpaceStableArchimedeanMaximalCompa
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsArchOperatorCompactUnitaryW
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictedFinprodPureTensorAdelicSchwartz
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsLieDerivativePolynomialFockSeesawStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsLieDerivativePolynomialFockSeesaw
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.PolarizationPairDerivation
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsThetaSubGAlgDOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolMatchFiniteSetVacuum
@@ -92,9 +92,9 @@ theorem exists_algD_not_polMatch_zero : ∀ {F E : Type} [Field F] [NumberField 
   have hs0 : ∀ v ∉ X.T, s v ≠ 0 := fun v hv => by
     rw [← hsph v hv]; exact (h.fin.sph v hv).2
   have hXT : (X.T : Set (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F))).Finite := X.T.finite_toSet
-  obtain ⟨q, hq⟩ := GlobalTheory.T.weil_model_projection_factorisation σ G.V G.W G.M B.ψ h.triple.geo.hM R.Pi R.p Rf.Pi Rf.p s
+  obtain ⟨q, hq⟩ := _root_.GlobalTheory.PureLift.exists_pureLift σ G.V G.W G.M B.ψ h.triple.geo.hM R.Pi R.p Rf.Pi Rf.p s
     (Filter.eventually_cofinite.2 (hXT.subset fun v hv => by by_contra hn; exact hv (hsph v hn)))
-  obtain ⟨q', hq'⟩ := GlobalTheory.T.weil_model_projection_factorisation σ G.V' G.W G.M' B.ψ h.triple.geo.hM' R.Pi R.p' Rf.Pi Rf.p' s
+  obtain ⟨q', hq'⟩ := _root_.GlobalTheory.PureLift.exists_pureLift σ G.V' G.W G.M' B.ψ h.triple.geo.hM' R.Pi R.p' Rf.Pi Rf.p' s
     (Filter.Eventually.of_forall fun v => rfl)
   haveI := h.real.nontriv
   obtain ⟨x, hx⟩ := exists_ne (0 : R.Pi)
@@ -371,7 +371,7 @@ theorem polarization_match_deriv : _root_.GlobalTheory.FunPr.ThetaLocalInputs �
     (∀ x, HasDerivAt (fun t : ℝ => om' (1, γ (Multiplicative.ofAdd t)) Φ' x) (Φ₁' x) 0) →
     GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.PolMatch B G X R Rf Φ₁ Φ₁' := by
   intro hP F E _ _ _ _ _ σ a a' B G X om om' R Rf hMt γ hγ Φ Φ' hPM Φ₁ Φ₁' hd hd'
-  obtain ⟨δ, hδ⟩ := GlobalTheory.T.exists_lieDerivative_polynomialFock_seesaw B G X om om' hMt.triple γ hγ
+  obtain ⟨δ, hδ⟩ := _root_.GlobalTheory.OscLie.exists_lie_deriv_pol B G X om om' hMt.triple γ hγ
   obtain ⟨δ', hδ'⟩ := _root_.GlobalTheory.T.twist_lie_derivative_model hP B G X om om' hMt.triple γ hγ
   obtain ⟨T, hT, m, m', f, φ, f', φ', hf, hf', rfl, rfl, heq⟩ := hPM
   have hcof : ∀ {κ : Type} (ψs vac : ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F), (κ → Fv F v) → ℂ), (∀ v ∉ T, ψs v = vac v) →

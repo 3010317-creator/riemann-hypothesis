@@ -8,11 +8,11 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PosTieAt
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LatticeTupleSuccLevelPointIsComponentPointInCharStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealAtSuccIffDecompositionValuesStatement
 public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.SecondKernelProjection
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitaryBlockMatricesReadInPlaceFieldStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitaryBlockMatricesReadInPlaceField
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.RkLe
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.OperatorMatricesAtComplexPointStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EvalStdFramesEqDetPowerMulBlockValue
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ModelPartitionSizeExtensionFirstLastRowsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ModelPartitionSizeExtensionFirstLastRows
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ModelPolynomialOddDegreeOfRealisesFramePolyStatement
 public import Formalism.LocalToGlobal.InertKernelTheory.KernelDifferenceOfFrame
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.OperatorPolynomialCoeffsWeightExtendedByZero
@@ -65,7 +65,7 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealPlaceBlockWeightLastEntryConsecutiveLevelsStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealPlaceBlockWeightLastEntryConsecutiveLevels
 import Formalism.LocalToGlobal.GroupLattices.ComparisonMaps.IsComplRatCompl
 import Formalism.LocalToGlobal.GroupLattices.PendingLemmas.WittFractionToCpAlgebraMap
 import Formalism.LocalToGlobal.InertKernelTheory.ProjRSurj
@@ -256,7 +256,7 @@ theorem blk_frame_eq {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos : (Σ v 
     (fun v s => Matrix.GeneralLinearGroup.map (algebraMap X.G.Kf Kc)
         (gPosGL (X.Pj j) v s ((SecondKernelHermitian.glInv X j (SecondKernelHermitian.BOf fd j La) v)⁻¹))) =
       (fun v s => Matrix.GeneralLinearGroup.map ι (hAt (X.Pj j) h (posJ X D pos j) (fun _ => 1) (atR D M) v s)) := by
-  have hblk := GlobalTheory.T.unitaryBlockMatrices_read_in_placeField X D pos Kc ι ρ hT M hU
+  have hblk := _root_.GlobalTheory.TwV.DelA.blkC_atR_read X D pos Kc ι ρ hT M hU
   cases j with
   | zero =>
     funext (v : X.Pl) (s : Fin (X.G.P.n' v))
@@ -723,8 +723,8 @@ theorem leftSide_at_point : ∀ {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (p
   have hodd := GlobalTheory.T.modelPolynomial_oddDegree_of_realisesFramePoly X D pos Kc ι j hN ν hν Q hQ Gc G hR hG
   have hsub := GlobalTheory.T.substituted_value_at_complex_point_oddBlocks X D pos Kc ι j hN Gc G hG hodd d f' hf' hdf
   have hnum := GlobalTheory.T.numerator_div_denominator_at_complex_point X D pos Kc ι j hN d f' hf' hdf
-  have hex := GlobalTheory.T.realPlaceBlockWeightLastEntry_consecutive_levels X D pos j
-  have hnn := (GlobalTheory.T.modelPartition_size_extension_firstLast_rows X D pos j hN ν hν).2.2.2.2
+  have hex := _root_.GlobalTheory.TwV.DelA.eT_last_pair X D pos j
+  have hnn := (_root_.GlobalTheory.TwV.DelA.size_first_last_rows X D pos j hN ν hν).2.2.2.2
   have hR' := hR ⟨dfr X D hN d f', fun τ => (hdf τ).isUnit⟩
   have hR2 := (ev1_eq_prod_det_pow_mul_valZ X D pos j (rkS X D hN) Gc ⟨dfr X D hN d f', fun τ => (hdf τ).isUnit⟩).symm.trans hR'
   clear hR'
@@ -1079,7 +1079,7 @@ theorem evD_trDY_polDY : ∀ {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos 
   intro p _ X D pos Kc _ _ ι j hN ν hν Q hQ s hs d f' hf
   classical
   have h' := rkT X D hN
-  obtain ⟨-, hsz, -, hle, -⟩ := GlobalTheory.T.modelPartition_size_extension_firstLast_rows X D pos j hN ν hν
+  obtain ⟨-, hsz, -, hle, -⟩ := _root_.GlobalTheory.TwV.DelA.size_first_last_rows X D pos j hN ν hν
   have hco := (GlobalTheory.T.operatorPolynomial_coeffs_weight_extended_by_zero D (rk_le X D hN) s ν Q hQ).1
   have hreal : ∀ α, Realises X D pos (j + 1) h' (wT X D pos j) (AddMonoidAlgebra.coeff (polDY D s Q (N' := D.R.N (j + 1))) α)
       (phiC X D pos (j + 1) h' (wT X D pos j) (AddMonoidAlgebra.coeff (polDY D s Q (N' := D.R.N (j + 1))) α)) := by
@@ -1312,7 +1312,7 @@ theorem polDY_goodDeg : ∀ {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos :
   intro p _ X D pos j hN ν hν Q hQ s α hα
   unfold GoodDeg
   intro v t
-  have hsz := (GlobalTheory.T.modelPartition_size_extension_firstLast_rows X D pos j hN ν hν).2.1 (pos ⟨v, t⟩)
+  have hsz := (_root_.GlobalTheory.TwV.DelA.size_first_last_rows X D pos j hN ν hν).2.1 (pos ⟨v, t⟩)
   unfold szT szMu at hsz
   rw [pos.symm_apply_apply] at hsz
   rw [hsz, Formalism.L2.KerInert.SecondKernelMoveDegree.blk_mapDomain X D pos j hN α v t, Finset.sum_comm,

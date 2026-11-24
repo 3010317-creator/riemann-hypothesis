@@ -5,7 +5,7 @@ public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniq
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Formalism.LocalToGlobal.IndefiniteReal.FWTie
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjugateThetaLiftsIsConjugateCuspExpansion
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsConjugateFormsThetaLiftEqThetaSeriesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsConjugateFormsThetaLiftEqThetaSeries
 public import Formalism.LocalToGlobal.Divisibility.DefGroup
 public import Formalism.LocalToGlobal.HeckeThetaElements.IsHeckeElt
 public import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.StarPurelyImaginaryEqNeg
@@ -25,8 +25,9 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FlatVec
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrameMatrixReductionEqOfHalfIdempotentSubset
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdempotentSumIntegralDivUniformisersIffReductionStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdempotentSumSelfDualFramesBound
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCompletedLatticeConjugateHalfIffDualStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCompletedLatticeHalfIffFrameMatrixIntegralStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCompletedLatticeConjugateHalfIffDual
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCompletedLatticeHalfIffFrameMatrixIntegral
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaussGLZero
 public import Mathlib.NumberTheory.LegendreSymbol.AddCharacter
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ComplexMatrixGaussSumNormIntegralGalois
@@ -105,7 +106,8 @@ import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Linter.Style
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LiftVectorEqUnitMulDilatedFlatDatum
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaLiftVectorIsThetaFunctionTwoStepModelStatement
+import Formalism.LocalToGlobal.IndefiniteReal.OneMapT
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaLiftVectorIsThetaFunctionTwoStepModel
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeilOperatorIdempotentSumVacuumNormalisedSum
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -148,7 +150,7 @@ theorem GlobalTheory.ConjTwist.conjFun_ser : Formalism.MainNotions.ModuliIntegra
   refine ⟨ζ0, hζ, fun t t' ht => ?_⟩
   obtain ⟨s, Hs⟩ := H t t' ht
   refine ⟨s, fun h hh x x' hx => ?_⟩
-  obtain ⟨y, y', hy, he⟩ := GlobalTheory.T.exists_conjugateForms_thetaLift_eq_thetaSeries D G Pl0 T0 A T R F κ v₀ hC hFW i Unit (fun _ => A.μ0) (O i) hP.2 c hc τ t t' hfix ht h hh x x' hx
+  obtain ⟨y, y', hy, he⟩ := _root_.GlobalTheory.ConjTwist.exists_conjForm_thF_eq_ser D G Pl0 T0 A T R F κ v₀ hC hFW i Unit (fun _ => A.μ0) (O i) hP.2 c hc τ t t' hfix ht h hh x x' hx
   have hv : (fun ρ => (u ρ : (R.MW i (sg0 D A)).sm ρ)) = v₀ i (sg0 D A) := funext hu
   have e1 : (fun g => ph i * ser R i t (R.vP i t) u h (c x) g) = fun g => ph i * R.thF i t y (v₀ i (sg0 D A)) g := by
     funext g
@@ -741,7 +743,7 @@ theorem GlobalTheory.ZRep.central_reps : ∀ (D : D7) (G : Type) [Group G] [Fint
   subst hΛ
   set Λ := latO (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (fun _ => True) with hΛ
   have H1e : ∀ w : WO (Vc D i) (Wc D i), IsHalf e w → (w ∈ Λ ↔ IsIntM (frMapO (Vc D i) (Wc D i) (R.βV i) (R.βW i) w)) :=
-    GlobalTheory.T.mem_completedLattice_half_iff_frameMatrix_integral D _ _ _ _ _ _ sV sW fV fW (R.Q t) e hq hP
+    _root_.GlobalTheory.HalfOInt.mem_latO_iff_frMapO_int D _ _ _ _ _ _ sV sW fV fW (R.Q t) e hq hP
   have H1c : ∀ w : WO (Vc D i) (Wc D i), IsHalf (cA D e) w → (w ∈ Λ ↔ IsIntM (frMapAdj (Vc D i) (Wc D i) (R.βV i) (R.βW i) w)) :=
     fun w hw => ⟨fun h => GlobalTheory.HalfAdjInt.frMapAdj_int_of_half D _ _ _ _ _ _ sV sW fV fW _ e hq hP w h hw,
       fun h => GlobalTheory.HalfAdjLattice.mem_latO_of_adj_int D _ _ _ _ _ _ sV sW fV fW _ e hq hP w hw h⟩
@@ -752,8 +754,8 @@ theorem GlobalTheory.ZRep.central_reps : ∀ (D : D7) (G : Type) [Group G] [Fint
     fun c hci w hw hh => (H1c _ (isHalf_smul c hh)).2 (by
       rw [GlobalTheory.RedHalfDrop.frMapAdj_smul_eq]; exact isIntM_smul hci ((H1c w hh).1 hw))
   have hπci : toEAf D (cA D (cA D π)) ∈ Formalism.L2.Herm.intAf D.host.F D.host.E := by rw [cA_cA]; exact hπi
-  have Dc := GlobalTheory.T.mem_completedLattice_conjugateHalf_iff_dual D R.ψ _ _ _ _ hψ sV sW e he_idem hc heInf heInt
-  have De := GlobalTheory.T.mem_completedLattice_conjugateHalf_iff_dual D R.ψ _ _ _ _ hψ sV sW (cA D e) hce_idem hcc hceInf hceInt
+  have Dc := _root_.GlobalTheory.ConjHalfDual.mem_latO_iff_of_conjHalf D R.ψ _ _ _ _ hψ sV sW e he_idem hc heInf heInt
+  have De := _root_.GlobalTheory.ConjHalfDual.mem_latO_iff_of_conjHalf D R.ψ _ _ _ _ hψ sV sW (cA D e) hce_idem hcc hceInf hceInt
 
   let Λe : AddSubgroup (WO (Vc D i) (Wc D i)) :=
     { carrier := {w | IsHalf e w ∧ actO (Vc D i) (Wc D i) z⁻¹ 1 w ∈ Λ}
@@ -1537,7 +1539,7 @@ theorem lift_eq_gauss_model_flat : ∀ (D : D7) (G : Type) [Group G] [Fintype G]
         zero_mul, if_neg]
       rintro ⟨hh, hint⟩
       exact hx ⟨(hiv x hh).2 hint, hh⟩
-  have hθ := GlobalTheory.T.thetaLiftVector_isThetaFunction_twoStepModel D G Pl0 T0 A Ks R F hC hQG i t eg eQ fg heg heQ hfg
+  have hθ := _root_.GlobalTheory.ConjTwist.isThetaAt_vP_twoStep D G Pl0 T0 A Ks R F hC hQG i t eg eQ fg heg heQ hfg
   have hvP := LiftFlatModel.thetaAt_sum hθ (fun u hu' => by rw [LiftFlatModel.cA_cA]; exact (hRs u hu').1) hB
   have hΨ : ∀ x : WO (Vc D i) (Wc D i), Gc * (if IsHalf eQ (x.map fun w => incA D (ϖ : D.host.E) * w) ∧
         IsIntM (frMapO (Vc D i) (Wc D i) (R.βV i) (R.βW i) (x.map fun w => incA D (ϖ : D.host.E) * w)) then

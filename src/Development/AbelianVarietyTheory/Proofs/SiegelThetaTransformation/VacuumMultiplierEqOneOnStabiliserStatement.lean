@@ -6,14 +6,14 @@ public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.EqZeroOfSem
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.DifferentiableOnDetHMat
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdmissibleIndicatorFunctions
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelTestFunctionFiniteSumEquivariant
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.PeriodCoordinateThetaOfSignedHeisenbergVacuumStatement
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.PeriodCoordinateThetaOfSignedHeisenbergVacuum
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ChangeOfNormalisation
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CmUnitPowFourIdempotentModEight
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLatticeDatumOfSelfDualLattice
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.HostGeneratorPowFourTraceNormModEight
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RatioSqEqDetJAut
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ThetaSqTransformLevelEight
-public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsBaseClassLevelAdapted
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DetFrameNeZero
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.PeriodsLactSymplectic
@@ -249,7 +249,7 @@ theorem wG_vac_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : 
     conv_lhs => rw [hm]
 
     simp only [map_sum, map_zsmul]
-  obtain ⟨c₁, c₂, C, hC, h₁, h₂, hth⟩ := GlobalTheory.T.periodCoordinateTheta_of_signedHeisenbergVacuum E r X g bas idx n hs hn _ hw hw' L hL v hv
+  obtain ⟨c₁, c₂, C, hC, h₁, h₂, hth⟩ := _root_.GlobalTheory.Dict.VacForm.thA_vacuum E r X g bas idx n hs hn _ hw hw' L hL v hv
     (fun j => ψ (bs (Pi.single j 1)))
     (fun u => by
       rw [hmem]

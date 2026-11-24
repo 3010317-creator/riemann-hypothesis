@@ -9,9 +9,9 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Ext
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CombAtSingleZero
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExtendByZeroSourceTensorColumnProductStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExtendByZeroSourceTensorColumnProduct
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeCompletionSelfAnnihilatorAtPlaces
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeIndicatorOnSplitHalfEqHalfIndicatorStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeIndicatorOnSplitHalfEqHalfIndicator
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IndicatorHomSelfDualComponentsSchwartzBruhat
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsThetaFunOSourceSliceStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsThetaFunOTargetSliceOrthogonalSumStatement
@@ -889,13 +889,13 @@ theorem ext_zero : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topologic
   have sdS' := _root_.GlobalTheory.SelfDualAt.latO_ann_at D ψ hψ T S LT LS hT hS (· = p.v)
   have facS : halfInd p.e (latO S T (LS : Set _) (LT : Set _) (· = p.v)) =
       o.boxS T (halfInd p.e (latO A T (LA : Set _) (LT : Set _) (· = p.v))) (colFun β ζ (vecInd ΛT)) := by
-    rw [← GlobalTheory.T.homLatticeIndicator_on_split_half_eq_half_indicator D k p n (n' ⊕ Fin 1) S T α₀ β LS LT hS hT hU _ _ hα₀ hβ,
-      ← GlobalTheory.T.homLatticeIndicator_on_split_half_eq_half_indicator D k p n n' A T α β LA LT hA hT hU _ _ hαA hβ, latInd_lastKer,
-      GlobalTheory.T.extendByZero_source_tensor_column_product D k p n n' S A L T o ζ α α₀ β hsum]
+    rw [← _root_.GlobalTheory.FinPl.LatIndHalf.extFun_latInd_eq_halfInd D k p n (n' ⊕ Fin 1) S T α₀ β LS LT hS hT hU _ _ hα₀ hβ,
+      ← _root_.GlobalTheory.FinPl.LatIndHalf.extFun_latInd_eq_halfInd D k p n n' A T α β LA LT hA hT hU _ _ hαA hβ, latInd_lastKer,
+      _root_.GlobalTheory.FinPl.ExtZero.extFun_tensCol_sum D k p n n' S A L T o ζ α α₀ β hsum]
   have facT : halfInd p.e (latO T S (LT : Set _) (LS : Set _) (· = p.v)) =
       o.boxT T (halfInd p.e (latO T A (LT : Set _) (LA : Set _) (· = p.v))) (rowFun β ζ (dualInd ΛT)) := by
-    rw [← GlobalTheory.T.homLatticeIndicator_on_split_half_eq_half_indicator D k p (n' ⊕ Fin 1) n T S β α₀ LT LS hT hS hU _ _ hβ hα₀,
-      ← GlobalTheory.T.homLatticeIndicator_on_split_half_eq_half_indicator D k p n' n T A β α LT LA hT hA hU _ _ hβ hαA, latInd_lastKer_row,
+    rw [← _root_.GlobalTheory.FinPl.LatIndHalf.extFun_latInd_eq_halfInd D k p (n' ⊕ Fin 1) n T S β α₀ LT LS hT hS hU _ _ hβ hα₀,
+      ← _root_.GlobalTheory.FinPl.LatIndHalf.extFun_latInd_eq_halfInd D k p n' n T A β α LT LA hT hA hU _ _ hβ hαA, latInd_lastKer_row,
       GlobalTheory.T.extendByZero_target_tensor_row_product D k p n n' S A L T o ζ hζ α α₀ β hsum]
   have latS := GlobalTheory.T.extendByZero_mem_completed_lattice_source D k p n ψ S A L T o ζ β LA LS LT ΛT sdA sdS facS
   have latT := GlobalTheory.T.extension_by_zero_maps_completed_hom_lattice D k p n ψ S A L T o ζ β LA LS LT ΛT sdA' sdS' facT
@@ -935,7 +935,7 @@ theorem ext_zero : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topologic
       (GlobalTheory.T.isSchwartzBruhatHalf_source_box_lattice D k p n S A L T o ζ β LA LS LT ΛT facS) facS y
     have key := congrFun ((hyp _ (vacS f₀ hf₀ y)).2.2.2.2.2 _ hmod) w
     rw [GlobalTheory.T.heisenbergCombination_extendByZero_source_slice] at key
-    rw [key, restrModel_apply, GlobalTheory.T.extendByZero_source_tensor_column_product D k p n n' S A L T o ζ α α₀ β hsum]
+    rw [key, restrModel_apply, _root_.GlobalTheory.FinPl.ExtZero.extFun_tensCol_sum D k p n n' S A L T o ζ α α₀ β hsum]
     rfl
   · have hΨ : Ψ ∈ SB (Matrix n' n k) := (hyp _ (vacT f₀ hf₀ 0)).2.2.2.1
     have hΨ' : tensRow Ψ (dualInd ΛT) ∈ SB (Matrix (n' ⊕ Fin 1) n k) :=

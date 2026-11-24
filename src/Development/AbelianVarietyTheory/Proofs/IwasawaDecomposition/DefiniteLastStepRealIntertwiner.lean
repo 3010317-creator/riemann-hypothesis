@@ -5,17 +5,20 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Exist
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TotalDegreeSubstFLe
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PureTensorLIntertwine
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacuumCharacterPositiveDefiniteSourceStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AllPositiveModelFiniteDimensionalCompactTypeStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacuumCharacterPositiveDefiniteSource
+public import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AllPositiveModelFiniteDimensionalCompactType
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
 public import Mathlib.LinearAlgebra.PiTensorProduct.Basic
 public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivariantPiTensorPolynomialBilinear
 public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLocalHoweContractionCompactUnitary
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorBasisChangeEqSubstitutionStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockVectorsOfThetaDatumInjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LastStepParametersPartitionExtendedByZerosStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorBasisChangeEqSubstitution
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockVectorsOfThetaDatumInjective
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LastStepParametersPartitionExtendedByZeros
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LastThetaChainStepExponentsAndNonzeroVacuumStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
 import Mathlib.Algebra.Order.Floor.Extended
@@ -149,7 +152,7 @@ theorem om_ptOf {k : Fin D.R.m} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D}
   have hv := hf.vac
   unfold ptOf
   rw [cart_eq_one M hε, cart_eq_one M' hε'] at hv ⊢
-  have e1 := GlobalTheory.T.vacuum_character_positive_definite_source D ψ θ V W χS χT ω hw hθ hV hW (fun _ => 1) (isCartan_one M hε) (isCartan_one M' hε')
+  have e1 := _root_.GlobalTheory.VacuumCharacter.vacuum_character D ψ θ V W χS χT ω hw hθ hV hW (fun _ => 1) (isCartan_one M hε) (isCartan_one M' hε')
     _ _ (fun τ => (he τ).1) (fun τ => (he τ).2) x₁ (fun τ => x₁ τ - V.rank) x₃ h1
     (fun τ => by push_cast; rw [h1]; ring)
     (fun τ => by
@@ -166,7 +169,7 @@ theorem om_ptOf {k : Fin D.R.m} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D}
       rw [onb, inFr, Matrix.mul_assoc, Matrix.nonsing_inv_mul_cancel_left _ _ (fr_det M τ)])
     (fun τ => by
       rw [onb, inFr, Matrix.mul_assoc, Matrix.nonsing_inv_mul_cancel_left _ _ (fr_det M' τ)]) f hf.theta φ).2
-  rw [e2, e1, GlobalTheory.FiniteFock.pureTensorO_smul, GlobalTheory.T.fockPolynomialVector_basisChange_eq_substitution D ψ θ V W hw.std hθ _ _ _ _ f hf.theta, polAct, map_smul]
+  rw [e2, e1, GlobalTheory.FiniteFock.pureTensorO_smul, _root_.GlobalTheory.FockBaseChange.pureTensorO_subst D ψ θ V W hw.std hθ _ _ _ _ f hf.theta, polAct, map_smul]
   congr 1
   refine Finset.prod_congr rfl fun τ _ => ?_
   have a1 : (1 / 2 : ℂ) • ((1 : Matrix (Fin W.rank) (Fin W.rank) ℂ) + 1) = 1 := by module
@@ -234,12 +237,12 @@ theorem exists_it (k : Fin D.R.m) (hk : (k : ℕ) + 1 = D.R.m) (a : ℕ) (ha : a
     ∃ It : PolF D W.rank V.rank →ₗ[ℂ] SmT M' →ₗ[ℂ] SmT M,
       ∀ ω f, IsStepWeil k ψ V W ω → IsVacVec ψ θ M M' f → IsItW θ M M' ω (ptOf ψ θ M M' f) It := by
   subst ha
-  have hp := fun τ => GlobalTheory.T.lastStep_parameters_partition_extended_by_zeros D k τ V.rank W.rank (M.lam τ) (M.ε τ) (M'.lam τ) (M'.ε τ) hk rV rW (M.enum τ) (M'.enum τ)
+  have hp := fun τ => _root_.GlobalTheory.LastStepParam.lastStep_param D k τ V.rank W.rank (M.lam τ) (M.ε τ) (M'.lam τ) (M'.ε τ) hk rV rW (M.enum τ) (M'.enum τ)
   have hε := fun τ => (hp τ).1
   have hε' := fun τ => (hp τ).2.1
   choose x₁ x₃ h1 h3 hn ν n1 n2 n3 n4 using fun τ => (hp τ).2.2
-  have m := fun τ => GlobalTheory.T.allPositive_model_finiteDimensional_compactType D V _ M τ (hε τ)
-  have m' := fun τ => GlobalTheory.T.allPositive_model_finiteDimensional_compactType D W _ M' τ (hε' τ)
+  have m := fun τ => _root_.GlobalTheory.CompactModel.model_allPos D V _ M τ (hε τ)
+  have m' := fun τ => _root_.GlobalTheory.CompactModel.model_allPos D W _ M' τ (hε' τ)
   have hl := fun τ =>
     haveI := (m τ).1
     haveI := (m' τ).1
@@ -264,7 +267,7 @@ theorem exists_it (k : Fin D.R.m) (hk : (k : ℕ) + 1 = D.R.m) (a : ℕ) (ha : a
       have := key (fun _ => 1) _ (fun _ => GlobalTheory.PointAtPlaceHom.one_mem_UH _) (update_mem τ hh) φ x
       rwa [map_update, map_one'] at this)
   refine ⟨It, fun ω f hω hf => hIt ω (pureTensorO ψ θ V W (cart M) (cart M') (onb M) (onb M') f)
-    (GlobalTheory.T.fockVectorsOfThetaDatum_injective D V W _ _ ψ θ M M' f hω.choose_spec.choose_spec.1.std hθ hf) (fun τ g hg φ => ?_) fun τ h hh φ => ?_⟩
+    (_root_.GlobalTheory.FockInj.ptOf_injective D V W _ _ ψ θ M M' f hω.choose_spec.choose_spec.1.std hθ hf) (fun τ g hg φ => ?_) fun τ h hh φ => ?_⟩
   · have := om_ptOf hθ hV hW M M' hε hε' x₁ x₃ h1 h3 hω hf (GlobalTheory.PointAtPlaceHom.atTau_mem (θ := θ) V τ g) (one_mem _) φ
     rwa [compAt_atTau hθ τ hg, compAt_one] at this
   · have := om_ptOf hθ hV hW M M' hε hε' x₁ x₃ h1 h3 hω hf (one_mem _) (GlobalTheory.PointAtPlaceHom.atTau_mem (θ := θ) W τ h) φ

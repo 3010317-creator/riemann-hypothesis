@@ -34,7 +34,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstRelIffT
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsThetaFunOOfThetaAt
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ComIs
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsCombAtReN
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaAtSeesawProductDatumEqVacuumCombinationsStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HzUnit
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaAtSeesawProductDatumEqVacuumCombinations
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.GVec
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.MovedDatumEqStatement
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeCompletionSelfAnnihilatorAtPlaces
@@ -1334,7 +1335,7 @@ theorem datum_top_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi : 
       exact hp i (hi.trans (hq i).symm)
     exact ⟨latV_eq_of_moves (hv.sd (j + 1) (by omega)).1 hM.1
       (hVT.moves (j + 1) (by omega) (· = p) fun p' (hp' : p' = p) => hp' ▸ hpg) (hMv _), by rw [hNT]⟩
-  have hNvac := (GlobalTheory.T.thetaAt_seesawProductDatum_eq_vacuumCombinations D f.c.ψ hψ _ _ M f.g.LT hM hLT n Lp hinj g₀ F₀ hg0 hF₀ hF₀t).2 (v.N (j + 1)) v.NT
+  have hNvac := (_root_.GlobalTheory.VecProd.thetaAt_prodDat D f.c.ψ hψ _ _ M f.g.LT hM hLT n Lp hinj g₀ F₀ hg0 hF₀ hF₀t).2 (v.N (j + 1)) v.NT
     (hv.sd (j + 1) (by omega)) hv.sdT hint hoff
   have hre := comm_list hψ (fun i => (Lp i).q.v) hinj (fun i => (Lp i).o) (fun i => (Lp i).e) (fun i => (hcomb i).1)
     (fun i => (hcomb i).2) (List.finRange n) (List.nodup_finRange n)
@@ -1344,7 +1345,7 @@ theorem datum_top_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi : 
       (latO (Yc D (j + 1)) D.sp.X' (M : Set _) (f.g.LT : Set _) fun _ => True) 1 g₀ (prodDat Lp) F →
       IsThetaFunO f.c.ψ (Yc D (j + 1)) D.sp.X' F → F = comb f.c.ψ _ _ (v.eGT j h) (comb f.c.ψ _ _ o' g₀) := by
     intro F hF hFt
-    rw [(GlobalTheory.T.thetaAt_seesawProductDatum_eq_vacuumCombinations D f.c.ψ hψ _ _ M f.g.LT hM hLT n Lp hinj g₀ F hg0 hF hFt).1, hre, heGT _ hth, ho'eq]
+    rw [(_root_.GlobalTheory.VecProd.thetaAt_prodDat D f.c.ψ hψ _ _ M f.g.LT hM hLT n Lp hinj g₀ F hg0 hF hFt).1, hre, heGT _ hth, ho'eq]
   refine ⟨M, f.g.LT, o', hM, hLT, ho', vac_mono' _ hg0, ?_, ?_, κ, hκ, ?_⟩
   · rw [ho'eq]; exact vac_mono' _ hNvac
   · intro hne

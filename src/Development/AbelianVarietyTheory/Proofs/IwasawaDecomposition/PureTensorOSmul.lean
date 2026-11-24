@@ -17,7 +17,7 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PureTe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MaximalCompactActsOnRealVacuaByDetPowersStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqZeroOrEqOfPlaceIdem
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsFockVacAtOfIsThetaAt
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrameStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -1253,7 +1253,7 @@ theorem ioExt : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (A 
       simp [opPow]
     rwa [e] at h
   have hv := GlobalTheory.DatumFock.isFockVacAt_thPVec _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ (hP.vP i A.μ0) hf
-  have hne : R.vP i A.μ0 ≠ 0 := thPVec_ne_zero (GlobalTheory.T.isSelfDualCoordLattice_of_selfDualFrame D _ _ _ _ (hL.βV i)) (GlobalTheory.T.isSelfDualCoordLattice_of_selfDualFrame D _ _ _ _ (hL.βW i))
+  have hne : R.vP i A.μ0 ≠ 0 := thPVec_ne_zero (_root_.GlobalTheory.SDFrameLattice.isSelfDualC_of_isSDFrame D _ _ _ _ (hL.βV i)) (_root_.GlobalTheory.SDFrameLattice.isSelfDualC_of_isSDFrame D _ _ _ _ (hL.βW i))
     ((rank_Wc i).trans_le (r_le_V i)) (hP.vP i A.μ0)
   have hS := fun τ => cartan_one (hM.BV i τ)
   have hinj := GlobalTheory.T.fockPolynomialVectors_injective_nonzero_vacuum D R.ψ R.θ _ _ _ (R.MW i (sg0 D A)) (R.BV i) _ (hP.ωP i A.μ0).std hM.inf hS (hM.BV i) hf hne hv

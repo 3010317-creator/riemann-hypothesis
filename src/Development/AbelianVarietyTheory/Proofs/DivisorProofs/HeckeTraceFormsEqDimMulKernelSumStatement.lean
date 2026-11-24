@@ -72,7 +72,7 @@ import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.Ba
 import Development.AutomorphicArithmetic.IntegralCasts.IsOpenStabOfMemNhds
 import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
 import Mathlib.Tactic.ENatToNat
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenProductOfLocalLevelsUnitaryStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenProductOfLocalLevelsUnitary
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalComponentDefiniteUnitaryFinitePartEqLocalPo
 import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
@@ -803,7 +803,7 @@ theorem GlobalTheory.BCT.TrKer.trOn_vecM_hopM : ∀ (E : Type) [Field E] [Number
   have hdc : Finite (DoubleCoset.Quotient ((finPtHom (E := E) (n := n)).range : Set (finU (E := E) (n := n)))
       (globLev S K' : Set (finU (E := E) (n := n)))) := by
     rw [finPtHom_range]
-    exact GlobalTheory.T.finite_doubleCoset_definiteUnitaryRational_of_isOpen E n _ (GlobalTheory.T.isOpen_productOfLocalLevelsUnitary E hU n S K' hK)
+    exact GlobalTheory.T.finite_doubleCoset_definiteUnitaryRational_of_isOpen E n _ (_root_.GlobalTheory.BCT.isOpen_globLev E hU n S K' hK)
   have hst : ∀ x : finU (E := E) (n := n), Finite ((finPtHom (E := E) (n := n)).range ⊓
       (globLev S K').map (MulAut.conj x).toMonoidHom : Subgroup (finU (E := E) (n := n))) := fun x => by
     rw [finPtHom_range]

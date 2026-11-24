@@ -22,13 +22,13 @@ public import ReciprocityTheory.DualLattices.FrobeniusOfGroupDivisorsRank
 public import ReciprocityTheory.DualLattices.LengthDegreeAbelianVariety
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF
 public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.MapPderiv
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsHodgeTateDatumPolarisedAbelianCharactersStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsLinearDataOfSplitFormalGroupExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsNilpotentGroupChartSmoothCommGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsPowerSeriesReadingGroupHomNilpotentChartsStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FormalGroupActionLinearPartRingHomStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.NilChartOfIsChartJStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.UniformizationSplitFormalGroupLawEquivariantStatement
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsHodgeTateDatumPolarisedAbelianCharacters
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsLinearDataOfSplitFormalGroupExtension
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsNilpotentGroupChartSmoothCommGroup
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsPowerSeriesReadingGroupHomNilpotentCharts
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FormalGroupActionLinearPartRingHom
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.NilChartOfIsChartJ
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.UniformizationSplitFormalGroupLawEquivariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,7 +82,7 @@ import Mathlib.Tactic.Linter.HaveILetI
 import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.PadicUnitQuotientPrincipalBasis
 import Mathlib.RingTheory.TotallySplit
 import ReciprocityTheory.DualLattices.LenEx
-import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FormalGroupLawJacobianExtensionChangeCoeffStatement
+import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FormalGroupLawJacobianExtensionChangeCoeff
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.DualNumberPointPreimageTopOfReduction, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.SplittingIdempotents, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsEigenIdem, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LinearDataUnramifiedLengthBound, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LinearDataUnramifiedLengthBoundStatement, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.UnramifiedCompanionChartCharacters
@@ -711,18 +711,18 @@ namespace GlobalTheory.ChF
 theorem unramified_companion_chart_characters : ∀ (p : ℕ) [Fact p.Prime], UpFSt p := by
   intro p hp T _ _ _ _ _ hT hpT G _ _ D A U d F x hx hp2 OE _ _ _ _ _ _ _ io oD oA hlin hdisc act hact
     C _ _ _ v O _ _ hv _ hO _ _ iota hio w _ t _ hfrob r W hW j
-  obtain ⟨X, hX, hXr⟩ := GlobalTheory.T.exists_nilChart_reads_of_isChartJ T G U.smooth d F x hx
+  obtain ⟨X, hX, hXr⟩ := _root_.GlobalTheory.ChF.nilChart_of_isChartJ T G U.smooth d F x hx
   have hreadG := hXr OE io act hact
-  obtain ⟨FB, XB, hXB⟩ := GlobalTheory.T.exists_nilpotentGroupChart_smooth_commGroup T D.toPre.P.A D.toPre.P.g D.toPre.P.smoothDim
+  obtain ⟨FB, XB, hXB⟩ := _root_.GlobalTheory.ChF.exists_nilChart T D.toPre.P.A D.toPre.P.g D.toPre.P.smoothDim
   have hB : ∀ a : OE, ∃ φ, Reads XB XB (oD.onB.act a) φ := fun a =>
-    GlobalTheory.T.exists_powerSeries_reading_groupHom_nilpotentCharts T _ _ _ _ _ _ XB XB hXB hXB _ (oD.onB.hom a)
+    _root_.GlobalTheory.ChF.exists_reads T _ _ _ _ _ _ XB XB hXB hXB _ (oD.onB.hom a)
   choose αB hαB using hB
-  obtain ⟨rk, J, Q, hext, heq⟩ := GlobalTheory.T.uniformization_split_formal_group_law_equivariant T _ D A G U d _ F FB X XB hX hXB
+  obtain ⟨rk, J, Q, hext, heq⟩ := _root_.GlobalTheory.unif_extSer_equivariant T _ D A G U d _ F FB X XB hX hXB
   obtain ⟨N, hN⟩ := heq OE io oD oA hlin act.act αB hreadG hαB
-  obtain ⟨hlaw, hlinmap, hextmap⟩ := GlobalTheory.T.formalGroupLaw_jacobian_extension_changeCoeff T O iota
+  obtain ⟨hlaw, hlinmap, hextmap⟩ := _root_.GlobalTheory.ChF.changeCoeff_law_lin_extSer T O iota
   obtain ⟨F', hF'⟩ := hlaw d F
   obtain ⟨FB', hFB'⟩ := hlaw _ FB
-  obtain ⟨ρ, hρ⟩ := GlobalTheory.T.formalGroupAction_linearPart_ringHom T d F OE act O iota
+  obtain ⟨ρ, hρ⟩ := _root_.GlobalTheory.ChF.linPart_act_ringHom T d F OE act O iota
   have hFH : FH p F'.F := by
     intro k
     rw [hF']
@@ -733,9 +733,9 @@ theorem unramified_companion_chart_characters : ∀ (p : ℕ) [Fact p.Prime], Up
       (fun j => MvPowerSeries.map iota (Q j)) := by
     rw [hF', hFB']
     exact hextmap _ _ _ F FB J Q hext
-  have hht := GlobalTheory.T.exists_hodgeTateDatum_polarisedAbelian_characters p C v O hv T iota D.toPre.P _ rfl OE oD.onB FB XB hXB αB hαB
+  have hht := _root_.GlobalTheory.ChF.exists_htd_characters_base p C v O hv T iota D.toPre.P _ rfl OE oD.onB FB XB hXB αB hαB
   rw [← hFB'] at hht
-  obtain ⟨cp, hset, H, B, m, u, hu, hdat⟩ := GlobalTheory.T.exists_linearData_of_split_formalGroup_extension p C v O hv OE d _ rk F' FB' _ _ hext' hFH ρ N
+  obtain ⟨cp, hset, H, B, m, u, hu, hdat⟩ := _root_.GlobalTheory.ChF.exists_linDat_of_extSer p C v O hv OE d _ rk F' FB' _ _ hext' hFH ρ N
     (fun a j => MvPowerSeries.map iota (αB a j))
     (fun a => by
       rw [hlinmap, hlinmap, (hρ a).2, ← Matrix.map_mul, ← Matrix.map_mul, (hN a).1])

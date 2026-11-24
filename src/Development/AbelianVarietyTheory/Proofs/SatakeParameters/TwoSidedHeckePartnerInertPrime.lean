@@ -3,8 +3,9 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PeterssonFormProportionalClassSumAllLevelsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalThetaCorrespondenceInertPlaceOfHoweStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftGoodProjectorIntertwinesMatchedHeckeStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalThetaCorrespondenceInertPlaceOfHowe
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftGoodProjectorIntertwinesMatchedHecke
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,11 +88,11 @@ theorem twoSided_of_inert : HoweUnram → ∀ {D : D7} {G : Type} [Group G] [Fin
   intro hHowe D G _ _ Pl0 T A Ks _ _ _ R F hLift hCore hSchur t P hGood hconj hFix
 
   have hY : ∀ k, k + 1 < D.R.m → SphCorr R.ψ (R.ωY t k) P := fun k hk =>
-    GlobalTheory.T.sphericalThetaCorrespondence_inertPlace_of_howe hHowe R.ψ _ _ _ _ (R.ωY t k) P (hCore.chain.ωY t k hk) hconj (hFix.1 k hk)
+    _root_.GlobalTheory.Hk3.CorrInert.sphCorr_of_inert hHowe R.ψ _ _ _ _ (R.ωY t k) P (hCore.chain.ωY t k hk) hconj (hFix.1 k hk)
   have hX : SphCorr R.ψ (R.ωX t) P :=
-    GlobalTheory.T.sphericalThetaCorrespondence_inertPlace_of_howe hHowe R.ψ _ _ _ _ (R.ωX t) P (hCore.chain.ωX t) hconj hFix.2.1
+    _root_.GlobalTheory.Hk3.CorrInert.sphCorr_of_inert hHowe R.ψ _ _ _ _ (R.ωX t) P (hCore.chain.ωX t) hconj hFix.2.1
   have hP : ∀ i, SphCorr R.ψ (R.ωP i t) P := fun i =>
-    GlobalTheory.T.sphericalThetaCorrespondence_inertPlace_of_howe hHowe R.ψ _ _ _ _ (R.ωP i t) P (hCore.thP.ωP i t) hconj (hFix.2.2 i)
+    _root_.GlobalTheory.Hk3.CorrInert.sphCorr_of_inert hHowe R.ψ _ _ _ _ (R.ωP i t) P (hCore.thP.ωP i t) hconj (hFix.2.2 i)
   refine ⟨⟨fun cX => ?_, fun c0 => ?_⟩, fun i => ⟨fun cV => ?_, fun cW => ?_⟩⟩
   ·
     obtain ⟨cm, hcm⟩ := hX.2.1 (dualC cX)
@@ -118,9 +119,9 @@ theorem twoSided_of_inert : HoweUnram → ∀ {D : D7} {G : Type} [Group G] [Fin
     refine GlobalTheory.T.matchE_of_chainStep_matches R F hLift hCore hSchur t P hGood hFix (dualC cT) cs ?_ fun k hk => hQ k hk
     rw [dualC_dualC]; exact hcT
   · obtain ⟨cW, hcW⟩ := (hP i).2.2 (dualC cV)
-    exact ⟨cW, GlobalTheory.T.thetaLiftGoodProjector_intertwines_matchedHecke R F hCore hSchur i t P hGood (hFix.2.2 i) cV cW hcW⟩
+    exact ⟨cW, _root_.GlobalTheory.DefLiftHecke.matchW_of_match R F hCore hSchur i t P hGood (hFix.2.2 i) cV cW hcW⟩
   · obtain ⟨cS, hcS⟩ := (hP i).2.1 cW
-    refine ⟨dualC cS, GlobalTheory.T.thetaLiftGoodProjector_intertwines_matchedHecke R F hCore hSchur i t P hGood (hFix.2.2 i) (dualC cS) cW ?_⟩
+    refine ⟨dualC cS, _root_.GlobalTheory.DefLiftHecke.matchW_of_match R F hCore hSchur i t P hGood (hFix.2.2 i) (dualC cS) cW ?_⟩
     rw [dualC_dualC]; exact hcS
 
 end GlobalTheory.Hk3.TwoSidedInert

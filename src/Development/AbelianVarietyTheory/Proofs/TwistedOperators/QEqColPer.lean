@@ -18,12 +18,12 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Fou
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselPeriodThetaLiftUnfoldingStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselPeriodDoubleStepUnfoldingOfDescentStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleLiftPeriodRankZeroFubiniCompactQuotientStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleStepEqTwoThetaColumnLiftsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawThetaIdentityStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumDescendsToWittCoreStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleLiftPeriodRankZeroFubiniCompactQuotient
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleStepEqTwoThetaColumnLifts
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawThetaIdentity
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumDescendsToWittCore
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TopOrthEmb
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctionsStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctions
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsPreserveThetaFunctions
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OverAllExists
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DblHandEqBiLift
@@ -92,7 +92,7 @@ import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOn
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittSmallGroupEmbeddingMemPointwiseStabilizerIso
 import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsTopologicalRingAE
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FourierJacobiBesselGroupsClosedHaarProductStatement
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsBesPosOfBesselTied
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiPeriodUnfoldingOfWittDescentStatement
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -1215,7 +1215,7 @@ theorem evalBF_of_descent : ∀ D : D7, Descent D → EvalBF D := by
   have : SFinite s.vU.ν := s_finite_of_sigma_finite s.vU.ν
   obtain ⟨hc0, hH0, hI0, hI, hF⟩ := GlobalTheory.T.fourierJacobi_measure_unitriangular_coordinates D ρ J s.vU ν₀ 𝓝₀ hν₀ h𝓝₀ h1
   obtain ⟨o⟩ := nonempty_orthDec_zero D J.W₀
-  obtain ⟨⟨hc, hH⟩, -⟩ := GlobalTheory.T.fourierJacobi_bessel_groups_closed_haar_product D J.W J.W₀ J.W₀ (diagSp D 0 ![] 0 0) ρ J.d o J.vN.ν J.vN.𝓝 J.vN.unit
+  obtain ⟨⟨hc, hH⟩, -⟩ := _root_.GlobalTheory.MixPer.jacGrp_besGrp_haar D J.W J.W₀ J.W₀ (diagSp D 0 ![] 0 0) ρ J.d o J.vN.ν J.vN.𝓝 J.vN.unit
   obtain ⟨hcont, hinv⟩ := GlobalTheory.T.besselUnfolding_evaluationIntegrand_continuous_invariant D ψ ρ B J s om' hom' φ G Φ hφ hG hΦ
   have hrel := GlobalTheory.T.flatPeriod_eq_integral_evaluationPeriods D ψ ρ B J s om' hom' φ G Φ hφ hG hΦ
   have habs := GlobalTheory.T.evaluationForm_absolute_convergence D ψ ρ B J s om' hom' φ G Φ hφ hG hΦ
@@ -1324,7 +1324,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.Unf
 
 theorem GlobalTheory.Unf.iteratedUnfolding_of_descent : ∀ D : D7, Descent D → IT D :=
-  fun D hD => GlobalTheory.T.iteratedThetaUnfolding_of_doubleStep_lastTwoSteps D (GlobalTheory.T.besselPeriod_double_step_unfolding_of_descent D hD) (GlobalTheory.T.doubleLiftPeriod_rankZero_fubini_compactQuotient D)
+  fun D hD => GlobalTheory.T.iteratedThetaUnfolding_of_doubleStep_lastTwoSteps D (GlobalTheory.T.besselPeriod_double_step_unfolding_of_descent D hD) (_root_.GlobalTheory.Unf.LastSteps.lastLaw D)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IteratedThetaUnfoldingOfWeilDatumDescent =====
@@ -1362,9 +1362,9 @@ namespace GlobalTheory.Unf
 theorem unfoldings_of_chain :
     ∀ D : D7, UnfBF D ∧ EvalBF D ∧ UnfFB D ∧ DoubleStep D ∧ LastLaw D ∧ IT D ∧ ContrLaw D ∧ SeeLast D := by
   intro D
-  have hD : Descent D := GlobalTheory.T.weilDatum_descends_to_wittCore D
+  have hD : Descent D := _root_.GlobalTheory.Desc.weil_data_descend D
   exact ⟨GlobalTheory.T.besselPeriod_thetaLift_unfolding D hD, GlobalTheory.T.bessel_period_evaluation_unfolding_of_witt_descent D hD, GlobalTheory.T.fourierJacobi_period_unfolding_of_witt_descent D hD, GlobalTheory.T.besselPeriod_double_step_unfolding_of_descent D hD,
-    GlobalTheory.T.doubleLiftPeriod_rankZero_fubini_compactQuotient D, GlobalTheory.T.iteratedThetaUnfolding_of_weilDatumDescent D hD, GlobalTheory.T.doubleStep_eq_two_thetaColumnLifts D, GlobalTheory.T.lastSeeSaw_thetaIdentity D⟩
+    _root_.GlobalTheory.Unf.LastSteps.lastLaw D, GlobalTheory.T.iteratedThetaUnfolding_of_weilDatumDescent D hD, _root_.GlobalTheory.Unf.Contr.contrLaw D, _root_.GlobalTheory.SeeLastPf.seeLast D⟩
 
 end GlobalTheory.Unf
 end -- clump:auto
@@ -1404,9 +1404,9 @@ theorem Q_eq_colPer (hM : M.Is t) : ∀ (σ j : ℕ) (hj : j + 2 * σ + 2 = D.R.
     let s₂ : StepFB Wl.ψ J B' :=
       stepAt G Wl t hM (j + 1) (by omega) (rowJac G (j + 1) (by omega) (σ + 1) (by omega)) (besDecAt G (j + 1 + 1) σ (by omega))
     have t₁ : IsThetaFunO Wl.ψ B.V₀ J.W₀ (flatBF s₁ (s₁.om (g, h.1) Φ.1)) :=
-      (GlobalTheory.Unf.FlatTheta.flat_isThetaFun D (GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D) Wl.ψ).1 _ B J s₁ _ (s₁.weil.om_pres (g, h.1) _ hΦ.1)
+      (GlobalTheory.Unf.FlatTheta.flat_isThetaFun D (_root_.GlobalTheory.Unf.Flat.flatLaw D) Wl.ψ).1 _ B J s₁ _ (s₁.weil.om_pres (g, h.1) _ hΦ.1)
     have t₂ : IsThetaFunO Wl.ψ J.W₀ B'.V₀ (flatFB s₂ (s₂.om (h.1, h.2.1) Φ.2.1)) :=
-      (GlobalTheory.Unf.FlatTheta.flat_isThetaFun D (GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D) Wl.ψ).2 _ J B' s₂ _ (s₂.weil.om_pres (h.1, h.2.1) _ hΦ.2.1)
+      (GlobalTheory.Unf.FlatTheta.flat_isThetaFun D (_root_.GlobalTheory.Unf.Flat.flatLaw D) Wl.ψ).2 _ J B' s₂ _ (s₂.weil.om_pres (h.1, h.2.1) _ hΦ.2.1)
     have hc := GlobalTheory.FinPl.ValDbl.contAut_hand0 s₁ s₂ (linkAt hM j σ hj vN (by omega) (GlobalTheory.Unf.Inhab.nonempty_volN _).some)
       ((GlobalTheory.Unf.Inhab.nonempty_volM D _ _).some) hφ t₁ t₂
     have e := ih _ hc h.2.1 h.2.2

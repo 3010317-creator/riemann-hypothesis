@@ -11,9 +11,9 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockHar
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.SqEqOneOfFixDat
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BaseOfOfPin
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlacesApart
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaProjectionIntertwinesLevelLiftsStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TranslateUnitaryLifts
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaProjectionIntertwinesLevelLifts
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TranslateUnitaryLifts
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodProjectorThetaLiftOfBaseLevelLaw
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LevelLiftIsLiftPrincipalLevelDatumRealisation
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClassSumPrincipalLevelEqConstMulClassSum
@@ -1221,7 +1221,7 @@ theorem avg_level : ∀ (D : D7) (X : RealSide D) (E : IntegralHeckeForms.XD D) 
 
       rw [map_sum]
       refine Finset.sum_congr rfl fun g _ => ?_
-      rw [map_smul, GlobalTheory.T.thetaProjection_intertwines_levelLifts X.R.toRealDat X.F.lv2 hC j t g (κ g) (hκ g) y0 (y' g) (hy' g).1]
+      rw [map_smul, _root_.GlobalTheory.ThetaProjEquiv.thG_intertwines_core X.R.toRealDat X.F.lv2 hC j t g (κ g) (hκ g) y0 (y' g) (hy' g).1]
     rw [e1]
     funext g'
 

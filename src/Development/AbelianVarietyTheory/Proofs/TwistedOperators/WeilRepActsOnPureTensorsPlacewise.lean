@@ -4,12 +4,12 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdelicUnitaryClosureLocalComponentsOpen
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisThetaLaws
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralMulConjSelf
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdelicUnitaryComponentAtPlaceLawsStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdelicUnitaryComponentAtPlaceLaws
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOperatorPureTensorPlaceByPlaceStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocalFactorStableUnitaryGroupsAtPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PureTensorInnerProductEqFinprodLocalInnerProductStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PureTensorInnerProductEqFinprodLocalInnerProduct
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsOpenLevelFixingThetaFunction
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsPureTensorBaseVectorAndLocalFactorStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsPureTensorBaseVectorAndLocalFactor
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -102,12 +102,12 @@ theorem isPure_om : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D
     simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
     exact hp (by simp only [hc.2, hc.1])
   · have hy := GlobalTheory.T.heisenberg_operator_pure_tensor_place_by_place D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ _ _ hinv (actO S T g⁻¹ h⁻¹ w)
-    have hp := GlobalTheory.T.pureTensor_innerProduct_eq_finprod_localInnerProducts D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ _ _ _ _ hx hy
+    have hp := _root_.GlobalTheory.PlaceTensor.PureScalar.ip_pure_eq_finprod D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ _ _ _ _ hx hy
     have e : (fun p => ipO μ 𝓕 (om (gAt S p g, gAt T p h) (x p)) (heisO ψ S T (wAt p w) f₀)) =
         fun p => ipO μ 𝓕 (x p) (heisO ψ S T (wAt p (actO S T g⁻¹ h⁻¹ w)) (om (gAt S p g⁻¹, gAt T p h⁻¹) f₀)) := by
       funext p
       rw [ipO_om_left hW hμ _ _ (hx.1.1 p).1 (hpres _ _ h0), ← gAt_inv, ← gAt_inv, hW.om_heis _ _ _ _ h0,
-        ((GlobalTheory.T.adelicUnitaryComponentAtPlace_laws D).2 S T p g⁻¹ h⁻¹ w).2]
+        ((_root_.GlobalTheory.PlaceComponent.gAt_laws D).2 S T p g⁻¹ h⁻¹ w).2]
     refine ⟨by rw [e]; exact hp.1, ?_⟩
     rw [e, ipO_om_left hW hμ _ _ hx.2.1 (hpres _ _ h0), hW.om_heis _ _ _ _ h0]
     exact hp.2
@@ -149,9 +149,9 @@ theorem isPure_om : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D
   obtain ⟨U, U', hU, hU', hfix⟩ := GlobalTheory.Mem.ThetaLevel.exists_level D ψ hW.std S T om (GlobalTheory.Ker.isWeak_of_datum hW)
     hW.om_cont f₀ (base_theta hB)
   have hgen := GlobalTheory.T.weilRepresentation_placeByPlace_on_pureTensors D ψ θ S T χS χT om sS sT ΛS ΛT f₀ μ 𝓕 hW hB hμ
-  obtain ⟨hp0, hploc⟩ := GlobalTheory.T.isPureTensor_base_vector_and_local_factor D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ
+  obtain ⟨hp0, hploc⟩ := _root_.GlobalTheory.LocalPure.isPure_base_and_local D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ
   have hstab := GlobalTheory.T.localFactor_stable_unitaryGroupsAtPlace D ψ θ S T χS χT om sS sT ΛS ΛT hW (base_inf hB)
-  have hgat := (GlobalTheory.T.adelicUnitaryComponentAtPlace_laws D).1
+  have hgat := (_root_.GlobalTheory.PlaceComponent.gAt_laws D).1
   let Good : GA D S → GA D T → Prop := fun g h => ∀ (x : Place D → WO S T → ℂ) (f : WO S T → ℂ),
     IsPure ψ θ S T sS sT ΛS ΛT μ 𝓕 f₀ x f →
       IsPure ψ θ S T sS sT ΛS ΛT μ 𝓕 f₀ (fun p => om (gAt S p g, gAt T p h) (x p)) (om (g, h) f)

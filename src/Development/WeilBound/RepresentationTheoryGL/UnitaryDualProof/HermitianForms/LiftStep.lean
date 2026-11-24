@@ -5,16 +5,27 @@ import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurable
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalizedAbsDetMulIntegralCompMulVecFinitePlace
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormalizedAbsCharacterization
-import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.AnnihilatorOpenCompactStatement
+import Mathlib.Analysis.Complex.Circle
+import Mathlib.NumberTheory.LocalField.Basic
+import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.AnnihilatorOpenCompact
 import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.EventuallyHaarDetEqOneNearOneStatement
-import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.ExistsFiniteCosetRepresentativesStatement
-import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.ExistsGLLastBasisVecMulEqStatement
-import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.ExistsOpenCompactLatticeContainingStatement
-import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.HaarMeasureSubgroupRelIndexMulStatement
-import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.LatticeAnnihilatorWithinNhdsStatement
-import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.LocalContinuousSectionVecMulOrbitStatement
-import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.RelIndexAnnihilatorsDualityStatement
-import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.SesquilinearEqZeroOfDiagZeroStatement
+import Mathlib.Algebra.Group.Subgroup.Defs
+import Mathlib.Topology.Algebra.Group.Defs
+import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.ExistsFiniteCosetRepresentatives
+import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsGLLastBasisVecMulEq
+import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.ExistsOpenCompactLatticeContaining
+import Mathlib.GroupTheory.Index
+import Mathlib.MeasureTheory.Group.Defs
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HaarMeasureSubgroupRelIndexMul
+import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.LatticeAnnihilatorWithinNhds
+import Mathlib.Topology.Instances.Matrix
+import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.LocalContinuousSectionVecMulOrbit
+import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.RelIndexAnnihilatorsDuality
+import Mathlib.Algebra.Algebra.Basic
+import Mathlib.Algebra.Module.LinearMap.Star
+import Mathlib.Basic.Complex.Basic
+import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Prelims.SesquilinearEqZeroOfDiagZero
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GaussianDualMeasure.SecondCountableTopologyAndT2Space
 import GroundTheory.LocalFields.PadicLogSeries
 
@@ -72,20 +83,20 @@ theorem avg_bessel (ψ : Ch k) (hψ : Continuous ψ) (hπ : IsSmooth π) (B : SF
   simp only [map_sub, LinearMap.sub_apply, hWW, hWv, hvW, sub_re, Complex.conj_re] at h0
   rw [← Complex.re_sum]; linarith
 theorem annLat (ψ : Ch k) (hψ : Continuous ψ) (hψ1 : ψ ≠ 1) {A : Sub1 k m} (hA : IsLat A) : IsLat (ann ψ A) :=
-  let ⟨h1, h2⟩ := GlobalTheory.T.annihilator_open_compact k ψ hψ hψ1 (m + 1) A hA.1 hA.2; ⟨h2, h1⟩
+  let ⟨h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.CharPerp.perp_isOpen_isCompact k ψ hψ hψ1 (m + 1) A hA.1 hA.2; ⟨h2, h1⟩
 theorem ann_relIndex (ψ : Ch k) (hψ : Continuous ψ) (hψ1 : ψ ≠ 1) {A₀ A : Sub1 k m} (h₀ : IsLat A₀) (h : IsLat A)
     (hle : A₀ ≤ A) : (ann ψ A).relIndex (ann ψ A₀) = A₀.relIndex A :=
-  GlobalTheory.T.relIndex_annihilators_duality k ψ hψ hψ1 (m + 1) A₀ A (ann ψ A₀) (ann ψ A) h₀.1 h₀.2 h.1 h.2 hle
+  _root_.GlobalTheory.CompanionTheory.IndexDuality.relIndex_annihilator_eq k ψ hψ hψ1 (m + 1) A₀ A (ann ψ A₀) (ann ψ A) h₀.1 h₀.2 h.1 h.2 hle
     (fun _ => Iff.rfl) (fun _ => Iff.rfl)
 theorem relIndex_ne_zero_of_lat {A₀ A : Sub1 k m} (h₀ : IsLat A₀) (h : IsLat A) : A₀.relIndex A ≠ 0 := by
   have : CompactSpace A := isCompact_iff_compactSpace.mp h.1
   have := AddSubgroup.quotient_finite_of_isOpen (A₀.addSubgroupOf A) (h₀.2.preimage continuous_subtypeVal)
   exact AddSubgroup.index_ne_zero_of_finite
 theorem lat_over {K : Set (V1 k m)} (hK : IsCompact K) : ∃ A : Sub1 k m, IsLat A ∧ K ⊆ A :=
-  let ⟨A, h1, h2, h3⟩ := GlobalTheory.T.exists_open_compact_lattice_containing k (m + 1) K hK; ⟨A, ⟨h1, h2⟩, h3⟩
+  let ⟨A, h1, h2, h3⟩ := _root_.GlobalTheory.CompanionTheory.LocalLattice.exists_compact_open_addSubgroup k (m + 1) K hK; ⟨A, ⟨h1, h2⟩, h3⟩
 theorem lat_shrink (ψ : Ch k) (hψ : Continuous ψ) (hψ1 : ψ ≠ 1) {U : Set (V1 k m)} (hU : U ∈ 𝓝 (0 : V1 k m)) :
     ∃ A : Sub1 k m, IsLat A ∧ (ann ψ A : Set _) ⊆ U :=
-  let ⟨A, h1, h2, h3⟩ := GlobalTheory.T.lattice_annihilator_within_nhds k ψ hψ hψ1 (m + 1) U hU; ⟨A, ⟨h1, h2⟩, h3⟩
+  let ⟨A, h1, h2, h3⟩ := _root_.GlobalTheory.CompanionTheory.AnnihShrink.exists_compact_open_annihilator_subset k ψ hψ hψ1 (m + 1) U hU; ⟨A, ⟨h1, h2⟩, h3⟩
 
 end AvgAndLat
 
@@ -98,10 +109,10 @@ theorem Ct_apply (g : G1 k m) (v w : V) :
     Ct π h' s C g v w = ((md g ^ (s + 1) : ℝ) : ℂ) * C (π (bG h' g⁻¹) v) (π (bG h' g⁻¹) w) := by simp [Ct, glAct]
 open Classical in
 def sect (ξ : V1 k m) : G1 k m :=
-  if h : ξ = 0 then 1 else (Classical.choose (GlobalTheory.T.exists_GL_last_basis_vecMul_eq k m ξ h))⁻¹
+  if h : ξ = 0 then 1 else (Classical.choose (_root_.GlobalTheory.CompanionTheory.RowSect.exists_GL_last_row k m ξ h))⁻¹
 theorem sect_spec {ξ : V1 k m} (hξ : ξ ≠ 0) : xi0 k m ᵥ* gmat (sect ξ)⁻¹ = ξ := by
   rw [sect, dite_eq_right hξ, inv_inv]
-  exact Classical.choose_spec (GlobalTheory.T.exists_GL_last_basis_vecMul_eq k m ξ hξ)
+  exact Classical.choose_spec (_root_.GlobalTheory.CompanionTheory.RowSect.exists_GL_last_row k m ξ hξ)
 open Classical in
 def Df (ξ : V1 k m) : SForm V := if ξ = 0 then 0 else Ct π h' s C (sect ξ)
 theorem Df_zero : Df π h' s C (0 : V1 k m) = 0 := by simp [Df]
@@ -162,7 +173,7 @@ theorem Df_gl (hC : MirEq π m h' (s + 1) C) {ξ : V1 k m} (hξ : ξ ≠ 0) (g :
     ← mul_assoc, mul_inv_cancel₀ (Real.rpow_pos_of_pos (md_pos g) _).ne', one_mul]
 theorem Df_loc (hπ : IsSmooth π) (hC : MirEq π m h' (s + 1) C) {ζ : V1 k m} (hζ : ζ ≠ 0) (v w : V) :
     ∀ᶠ ξ in 𝓝 ζ, Df π h' s C ξ v w = Df π h' s C ζ v w := by
-  obtain ⟨N₀, hNo, hζN, f, hf, hf1, hfN⟩ := GlobalTheory.T.local_continuous_section_vecMul_orbit k (m + 1) ζ hζ
+  obtain ⟨N₀, hNo, hζN, f, hf, hf1, hfN⟩ := _root_.GlobalTheory.CompanionTheory.OrbitSection.exists_local_section k (m + 1) ζ hζ
   have hsm : ∀ u : V, {g : G1 k m | π (bG h' g) u = u} ∈ 𝓝 (1 : G1 k m) := fun u =>
     ((hπ u).preimage (continuous_blkAt (m + 1) N h')).mem_nhds (by simp)
   have hH : {g : G1 k m | π (bG h' g) v = v} ∩ {g | π (bG h' g) w = w} ∩ {g | md g = 1} ∈ 𝓝 (1 : G1 k m) :=
@@ -207,7 +218,7 @@ section MeasLemmas
 variable {m : ℕ} (ψ : Ch k) (ν : Measure (V1 k m)) [ν.IsAddHaarMeasure]
 theorem meas_ann_index (hψ : Continuous ψ) (hψ1 : ψ ≠ 1) {A₀ A : Sub1 k m} (h₀ : IsLat A₀) (h : IsLat A)
     (hle : A₀ ≤ A) : ν (ann ψ A₀) = (A₀.relIndex A : ℝ≥0∞) * ν (ann ψ A) := by
-  have := GlobalTheory.T.haar_measure_subgroup_relIndex_mul (V1 k m) ν (ann ψ A) (ann ψ A₀)
+  have := _root_.GlobalTheory.CompanionTheory.HaarIndex.measure_eq_relIndex_mul (V1 k m) ν (ann ψ A) (ann ψ A₀)
     (ann_anti hle) (annLat ψ hψ hψ1 h).2.measurableSet
     (by rw [ann_relIndex ψ hψ hψ1 h₀ h hle]; exact relIndex_ne_zero_of_lat h₀ h)
   rw [this, ann_relIndex ψ hψ hψ1 h₀ h hle]
@@ -297,7 +308,7 @@ theorem locB (L : LC h ψ π s B B' C A₀ ν) {ζ : V1 k m} (hζ : ζ ≠ 0) (v
         (Df π (by omega) s C ζ v v).re * (ν (ann ψ M)).toReal ≤ (B (avg ψ h π ξ M v) v).re := by
   have h' : m + 1 ≤ N := (by omega)
   obtain ⟨A₁, hA₁, hA₀₁, hA₁s⟩ := L.hD (π (bG h' (sect ζ)⁻¹) v) (π (bG h' (sect ζ)⁻¹) v)
-  obtain ⟨N₀, hNo, hζN, f, hf, hf1, hfN⟩ := GlobalTheory.T.local_continuous_section_vecMul_orbit k (m + 1) ζ hζ
+  obtain ⟨N₀, hNo, hζN, f, hf, hf1, hfN⟩ := _root_.GlobalTheory.CompanionTheory.OrbitSection.exists_local_section k (m + 1) ζ hζ
   have hH : {g : G1 k m | π (bG h' g) v = v} ∩ {g | md g = 1} ∈ 𝓝 (1 : G1 k m) :=
     Filter.inter_mem (((L.hπ v).preimage (continuous_blkAt (m + 1) N h')).mem_nhds (by simp))
       (by filter_upwards [GlobalTheory.T.eventually_haar_det_eq_one_near_one k (m + 1)] with g hg; simp [md, nabs, hg])
@@ -665,10 +676,10 @@ theorem decomp (Ξ : Sub1 k m) (hΞ : IsLat Ξ) (y : V)
   have hL : ∀ t, t ∈ L ↔ ∀ ξ ∈ Ξ, ψ (ξ ⬝ᵥ t) = 1 := fun t => forall₂_congr fun ξ _ => by rw [dotProduct_comm]
   have hUo : IsOpen ((L ⊓ A : Sub1 k m) : Set (V1 k m)) := by
     rw [AddSubgroup.coe_inf]; exact (annLat ψ hψ hψ1 hΞ).2.inter hA.2
-  obtain ⟨T, hT, hTr⟩ := GlobalTheory.T.exists_finite_coset_representatives A (L ⊓ A) hA.1 hUo inf_le_right
+  obtain ⟨T, hT, hTr⟩ := _root_.GlobalTheory.CompanionTheory.OpenSubgroupTransversal.main A (L ⊓ A) hA.1 hUo inf_le_right
   have hΞ'o : IsOpen ((Ξ ⊓ ann ψ A : Sub1 k m) : Set (V1 k m)) := by
     rw [AddSubgroup.coe_inf]; exact hΞ.2.inter (annLat ψ hψ hψ1 hA).2
-  obtain ⟨R, hR, hRtr⟩ := GlobalTheory.T.exists_finite_coset_representatives Ξ (Ξ ⊓ ann ψ A) hΞ.1 hΞ'o inf_le_left
+  obtain ⟨R, hR, hRtr⟩ := _root_.GlobalTheory.CompanionTheory.OpenSubgroupTransversal.main Ξ (Ξ ⊓ ann ψ A) hΞ.1 hΞ'o inf_le_left
   have hdata : ∀ ξ ∈ R, AvgData ψ h π ξ A y (L ⊓ A, T) := fun ξ hξ =>
     ⟨inf_le_right, hUo, fun a ha => hy a ((hL a).1 (AddSubgroup.mem_inf.1 ha).1),
       fun a ha => (hL a).1 (AddSubgroup.mem_inf.1 ha).1 ξ (hR ξ hξ), hT, hTr⟩
@@ -809,7 +820,7 @@ public theorem uSplit {ψ : Ch k} (hψ : Continuous ψ) (hψ1 : ψ ≠ 1) {m N :
   refine ⟨fun hB'0 => ?_, fun c hc ⟨v, hv⟩ => ?_⟩
   · have hdiag : ∀ v, B₀ v v = B v v := fun v => tendsto_nhds_unique (hat v v)
       (tendsto_const_nhds.congr fun A => (diag_eq hψ hψ1 hπ hpsd hmir hA₀ hd hB'0 v A.2).symm)
-    exact sub_eq_zero.1 (GlobalTheory.T.sesquilinear_eq_zero_of_diag_zero (B₀ - B)
+    exact sub_eq_zero.1 (_root_.GlobalTheory.CompanionTheory.Sesquilinear.eq_zero_of_diag_eq_zero (B₀ - B)
       fun v => by rw [LinearMap.sub_apply, LinearMap.sub_apply, hdiag, sub_self])
   · obtain ⟨x₁, hx₁⟩ := exists_ne_one hψ1; obtain ⟨A₁, hA₁, -, hd1⟩ := hd v v
     obtain ⟨A₂, hx2⟩ := (eventually_mem_lat m (Pi.single (Fin.last m) x₁)).exists

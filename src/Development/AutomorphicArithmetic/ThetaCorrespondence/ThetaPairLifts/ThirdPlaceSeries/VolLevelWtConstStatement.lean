@@ -11,8 +11,8 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Car
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsGLEmbeddingUnitaryAdelicSplitPlaceBasis
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PinnedLocalGroupsHaveLevel
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StabilizesSelfDualIffFrameMatrixStabilizesStatement
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.BaseMatrixGlApply
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StabilizesSelfDualIffFrameMatrixStabilizes
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemLatOIffExistsActO
 public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemSum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsCompactOpenLatticeStabilizerAtPlaces
@@ -30,7 +30,8 @@ public import Formalism.LocalRingCardinality.PosOfIsomEmb
 public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.LevelADef
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ArchimedeanLevelVolumeMulRelIndexStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSelfDualStabilizerWithPrescribedSplitPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemIntegralGLSplitPlaceOfCarriesLatticeCompletioStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HzUnit
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemIntegralGLSplitPlaceOfCarriesLatticeCompletio
 public import Mathlib.GroupTheory.Index
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RelIndexPreimagePiEqProd
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.PlacesInjectiveStatement
@@ -452,7 +453,7 @@ theorem moves_of_mem_St : ∀ {D : D7} {k : Type} [Field k] [ValuativeRel k] [To
   obtain ⟨gl, h1, h2⟩ := GlobalTheory.GlEmbed.exists_gl D k q S Y F.β F.γ F.βγ F.γβ
   have hlat : (⟨F.β, F.γ, F.βγ, F.γβ, gl, h1, h2⟩ : GlobalTheory.FinPl.Frame q S Y).IsLat L (GlobalTheory.StepData.latOf 1) := fun x => by
     rw [GlobalTheory.StepData.mem_latOf_one]; exact hF x
-  refine (GlobalTheory.T.stabilizes_selfDual_iff_frame_matrix_stabilizes D k q S Y _ L _ hL hlat g).2 ?_
+  refine (_root_.GlobalTheory.FrameMoves.moves_iff_smul D k q S Y _ L _ hL hlat g).2 ?_
   have hA : ∀ i j, (GlobalTheory.SeeSaw.coordHom S q.pr F.β F.γ F.βγ F.γβ g).val i j ∈ 𝒪[k] :=
     int_of_mem_St q hq S F t β e hM g hg
   have hAi : ∀ i j, ((GlobalTheory.SeeSaw.coordHom S q.pr F.β F.γ F.βγ F.γβ g)⁻¹).val i j ∈ 𝒪[k] := by
@@ -910,7 +911,7 @@ theorem GlobalTheory.TopVol.main_alt_alt : ∀ {B : GlobalTheory.Mem.Base} {X : 
   have hidx : U'.relIndex U = ∏ i, (Jf i).relIndex (GlobalTheory.SplitWeil.KO (J.G i).k _) := by
     refine _root_.GlobalTheory.relIndex_preimage_pi_eq_prod φ U U' (fun i => GlobalTheory.SplitWeil.KO (J.G i).k _) Jf (fun i => (J.E i).leT) ?_ ?_ hU''
     · intro g hg i
-      exact GlobalTheory.T.mem_integralGL_split_place_of_carries_latticeCompletion (J.G i).q S (J.G i).FT a.v.NT _ ⟨i, rfl⟩ (J.G i).latT g (hM g hg) _
+      exact _root_.GlobalTheory.SplitInt.mem_KO_of_moves (J.G i).q S (J.G i).FT a.v.NT _ ⟨i, rfl⟩ (J.G i).latT g (hM g hg) _
         ((GlobalTheory.LevIdx.eq_locHom_iff _ _ _ _ _).2 rfl)
     · intro x hx
       obtain ⟨g, hg, hgx⟩ := GlobalTheory.T.exists_selfDual_stabilizer_with_prescribed_splitPlace_matrices S a.v.NT ha.vis.sdT (fun i => (J.G i).k) (fun i => (J.G i).q) _
@@ -1228,7 +1229,7 @@ theorem pen_bridge_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I :
     intro g hg i
     show _root_.GlobalTheory.PenBridge.reductionHomAtLevel J j i (_root_.GlobalTheory.PenBridge.eq_s_succ_of_succ_eq_m J hj i) g ∈ _
     rw [_root_.GlobalTheory.PenBridge.rd_at_apply, toSum0_mem_KO_iff]
-    exact GlobalTheory.T.mem_integralGL_split_place_of_carries_latticeCompletion (J.G i).q _ (_root_.GlobalTheory.PenBridge.frameAtLevel J j i (_root_.GlobalTheory.PenBridge.eq_s_succ_of_succ_eq_m J hj i)) (a.g.x j).L (_root_.GlobalTheory.PenBridge.finitePlaceCondition J) ⟨i, rfl⟩
+    exact _root_.GlobalTheory.SplitInt.mem_KO_of_moves (J.G i).q _ (_root_.GlobalTheory.PenBridge.frameAtLevel J j i (_root_.GlobalTheory.PenBridge.eq_s_succ_of_succ_eq_m J hj i)) (a.g.x j).L (_root_.GlobalTheory.PenBridge.finitePlaceCondition J) ⟨i, rfl⟩
       (_root_.GlobalTheory.PenBridge.int_in_frame_at_level J j i _) g (hMv g hg) _ ((GlobalTheory.LevIdx.eq_locHom_iff _ _ _ _ _).2 rfl)
   case onto =>
     intro x hx

@@ -14,11 +14,14 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteLev
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemLatOIffExistsActO
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersUnramifiedOffLevelPlacesStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHomLatticeIffFrameStabilizerActMemStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerIntertwinerSchwartzBruhatIsThetaStatement
+import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersUnramifiedOffLevelPlaces
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHomLatticeIffFrameStabilizerActMem
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerIntertwinerSchwartzBruhatIsTheta
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.StepVectorLiftPairFlagLevelRealizedChain
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilRepThetaDatumHalfEqSmulStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilRepThetaDatumHalfEqSmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -177,13 +180,13 @@ theorem om_src_law {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A :
   have hee := GlobalTheory.PlaceVec.idemSum_mul_self he
   have hcc : cA D e * cA D e = cA D e := by rw [← RingHom.map_mul, hee]
   have hinf := GlobalTheory.PlaceVec.infPart_cA (GlobalTheory.PlaceVec.idemSum_infPart he)
-  have hfin := GlobalTheory.T.weilRep_theta_datum_half_eq_smul D R.ψ (Vc D i) (Wc D i) cμ (cμ * cη⁻¹) ω hW (cA D e) _ f₀ _ f
-    (GlobalTheory.T.schrodingerIntertwiner_schwartzBruhat_isTheta D R.ψ hW.std (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) dV dW (cA D e) hcc hinf f₀ hvac.2.theta) hth κ 1
-    (GlobalTheory.T.mem_homLattice_iff_frameStabilizer_act_mem D (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (R.βV i) (R.βW i) dV dW fV fW κ 1 sV sW) _ _ (Units.ne_zero _)
+  have hfin := _root_.GlobalTheory.ThetaMove.om_theta_eq_smul D R.ψ (Vc D i) (Wc D i) cμ (cμ * cη⁻¹) ω hW (cA D e) _ f₀ _ f
+    (_root_.GlobalTheory.SchrTheta.isTheta_placeModel D R.ψ hW.std (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) dV dW (cA D e) hcc hinf f₀ hvac.2.theta) hth κ 1
+    (_root_.GlobalTheory.StabLatInv.mem_latO_iff_actO_mem D (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (R.βV i) (R.βW i) dV dW fV fW κ 1 sV sW) _ _ (Units.ne_zero _)
     hvac1 hlaw
   rw [hfin]
   congr 1
-  have hd : Disjoint (R.datWp i P).Pg (R.Q t) := (GlobalTheory.T.levelCharacters_unramified_off_levelPlaces D T R.toLevCh A.μ0 hL t).1
+  have hd : Disjoint (R.datWp i P).Pg (R.Q t) := (_root_.GlobalTheory.levCh_unramified_places D T R.toLevCh A.μ0 hL t).1
   have hQf : ∀ PP ∈ R.Q t, (m PP (Matrix.GeneralLinearGroup.det (redFn (R.βV i) PP (finE (Vc D i) κ))))⁻¹ *
       (m PP (Matrix.GeneralLinearGroup.det (upperLeftBlock hr (redFn (R.βV i) PP (finE (Vc D i) κ))⁻¹)))⁻¹ =
       (m PP (dBlk (blk2 D.R.r) 1 (redFn (R.βV i) PP (finE (Vc D i) κ))))⁻¹ := fun PP hP => by

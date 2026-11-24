@@ -50,7 +50,7 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.SemistableReduc
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsFullLevelAmpleModelOfSemistableReduction
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliSchemeLevelMapsHeckePoints
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HomExtensionSemiAbelianDiscreteValuationRing
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHoldStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHold
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGaloisCover
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.ExistsArBaseAway
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
@@ -122,7 +122,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
 import Mathlib.Data.Nat.Choose.Multinomial
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModelPointsEqOfSameDegenerationDataStatement
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModelPointsEqOfSameDegenerationData
 import Mathlib.RingTheory.AdicCompletion.Completeness
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.Henselian
@@ -479,7 +479,7 @@ theorem arc_clause : DVR.TwistBaseChangeStatement → Laws → Laws2 → Laws3 �
       have := not_mem_generic (RingHom.id (PowerSeries O')) (r := PowerSeries.C ϖ * PowerSeries.X)
         (mul_ne_zero (fun h => hϖ (PowerSeries.C_injective (h.trans (map_zero _).symm))) PowerSeries.X_ne_zero) q
       exact this)
-    exact GlobalTheory.T.model_points_eq_of_same_degeneration_data h1 h2 h3 h4 h5 E H D l Xo c W₀ Y O' b a (PowerSeries O') (Ideal.span {PowerSeries.X})
+    exact _root_.GlobalTheory.ArcUnique.eq_of_hasArcData h1 h2 h3 h4 h5 E H D l Xo c W₀ Y O' b a (PowerSeries O') (Ideal.span {PowerSeries.X})
       (PowerSeries.C (R := O')) PowerSeries.X ⟨inferInstance, inferInstance, inferInstance, inferInstance⟩
       (fun h => PowerSeries.X_prime.not_unit (Ideal.span_singleton_eq_top.1 h)) PowerSeries.C_injective
       χ' χ y' y hy' hχ.symm d1 c1 d4 c4
@@ -502,7 +502,7 @@ theorem arc_clause : DVR.TwistBaseChangeStatement → Laws → Laws2 → Laws3 �
       congr 1
       ext x
       exact hC x
-    refine GlobalTheory.T.model_points_eq_of_same_degeneration_data h1 h2 h3 h4 h5 E H D l Xo c W₀ Y O' b a O' (Ideal.span {ϖ}) (RingHom.id O') ϖ
+    refine _root_.GlobalTheory.ArcUnique.eq_of_hasArcData h1 h2 h3 h4 h5 E H D l Xo c W₀ Y O' b a O' (Ideal.span {ϖ}) (RingHom.id O') ϖ
       ⟨inferInstance, inferInstance, inferInstance, hc⟩
       (fun h => hirr.not_isUnit (Ideal.span_singleton_eq_top.1 h)) Function.injective_id
       _ y' z z' hz hz' ?_ ?_ c5 hd
@@ -1361,8 +1361,8 @@ open scoped CategoryTheory.Obj
 namespace GlobalTheory
 
 theorem modelsSt_of_semistableReduction : GlobalTheory.Published.SemistableReductionSt → GlobalTheory.LN.ModelsSt :=
-  fun S => _root_.GlobalTheory.Models.exists_localSystems_ample GlobalTheory.homExtension_semiAbelian_dvr GlobalTheory.T.all_six_abelian_scheme_laws_hold.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.1
-    GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.2.1 (_root_.GlobalTheory.topAmpExists_of_semistableReduction S) _root_.GlobalTheory.moduliScheme_levelMaps_heckePoints
+  fun S => _root_.GlobalTheory.Models.exists_localSystems_ample GlobalTheory.homExtension_semiAbelian_dvr _root_.GlobalTheory.allSixLaws.1 _root_.GlobalTheory.allSixLaws.2.1
+    _root_.GlobalTheory.allSixLaws.2.2.1 (_root_.GlobalTheory.topAmpExists_of_semistableReduction S) _root_.GlobalTheory.moduliScheme_levelMaps_heckePoints
 
 end GlobalTheory
 end -- clump:auto
@@ -1570,7 +1570,7 @@ open scoped CategoryTheory.Obj
 namespace GlobalTheory.Moduli
 
 theorem siegelFamilies_closed : N0 :=
-  _root_.GlobalTheory.SiegelFromSharp.exists_siegelFamily GlobalTheory.T.all_six_abelian_scheme_laws_hold.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.1 _root_.GlobalTheory.Moduli.cube_of_isLB _root_.GlobalTheory.thetaUnifAV_closed
+  _root_.GlobalTheory.SiegelFromSharp.exists_siegelFamily _root_.GlobalTheory.allSixLaws.1 _root_.GlobalTheory.allSixLaws.2.1 _root_.GlobalTheory.Moduli.cube_of_isLB _root_.GlobalTheory.thetaUnifAV_closed
 
 end GlobalTheory.Moduli
 end -- clump:auto
@@ -1607,7 +1607,7 @@ namespace GlobalTheory
 theorem partI_of_semistableReduction_of_arcFam :
     GlobalTheory.Published.SemistableReductionSt → GlobalTheory.LN.ArcFamSt → PartI :=
   fun S A => by
-    obtain ⟨L, L2, L3, L4, L5, L6⟩ := GlobalTheory.T.all_six_abelian_scheme_laws_hold
+    obtain ⟨L, L2, L3, L4, L5, L6⟩ := _root_.GlobalTheory.allSixLaws
     exact GlobalTheory.T.modelSystems_jointProperties_of_laws GlobalTheory.T.twistedPrincipalPolarisation_sections_baseChange L L2 L3 L4 L5 L6 GlobalTheory.LN.ega_holds
       GlobalTheory.uniformisation_dvr_unconditional _root_.GlobalTheory.LN.pelSt_holds _root_.GlobalTheory.homExtension_semiAbelian_dvr A
       (GlobalTheory.modelsSt_of_semistableReduction S) _root_.GlobalTheory.Moduli.siegelFamilies_closed

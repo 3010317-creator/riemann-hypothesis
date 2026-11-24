@@ -37,7 +37,7 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSca
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsNotRelZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoxGraphGraphHeis
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGaussianDatumFlippedFiniteTensorBigRoute
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GridLocalTensorPlacesSplitIdempotentSumStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergStableRelationOfVacuaStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRtensOp
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVectorProductMulPolynomials
@@ -65,7 +65,8 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AbelianVarietyTheory.Definitions.Divisors.Imports
 public import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.ThetaIntegralsAgree
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMatchedFlipThetaIntegral
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaKernelLeftInvariantRationalUnitaryBis
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BlkGLMem
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaKernelLeftInvariantRationalUnitary
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.RegularisedIntegralComparison
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SquareIdentityOfMatching
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaFiniteDataMatchEachStage
@@ -114,7 +115,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsVacFOfIsVacVec
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BlkGLMem
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsGridFr
 import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.GoodIdempotentBadPlaces
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistedLevelRelIndexEqProdParabolicIndices
@@ -1135,7 +1135,7 @@ theorem mixglobB : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : Gr
         (summable_of_mem_schA _ (GlobalTheory.HeisSchA.rho_mem_schA Γ.M' W.ψ hstd u _ hΦ')))
   have hf : thetaS Γ W.ψ (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f Γ.M'.vac) = boxS t e (ρ.vT i j) (ρ.vX i j) :=
     funext fun u => (hf₀.2 u).trans ((Finsupp.sum_single_index (zero_mul _)).trans (one_mul _))
-  obtain ⟨hid, hsumid⟩ := GlobalTheory.T.gridLocalTensorPlaces_splitIdempotent_sum hL (G := G) t
+  obtain ⟨hid, hsumid⟩ := _root_.GlobalTheory.IdemAtPl.main hL (G := G) t
   have hh := fun w hw => halves_split hL W t i j e Γ h.JW₁ h.JWW _ _ (hid w hw).1 (hid w hw).2
   have hco := mixCoS_spec B t i j e
   have hv := fun w hw => lagr_vac (hI w hw) (hG.vac _).1 (hG.vac _).2.1 (latPtS t e (w.under (𝓞 D.host.F)) : Set _)
@@ -1768,7 +1768,7 @@ theorem regularised_thetaInt_comparison_smul (hP : _root_.GlobalTheory.FunPr.The
       rw [thetaInt_smul] at h1
       rw [mul_comm c, mul_smul, ← h1, smul_smul, mul_left_comm, mul_inv_cancel₀ h0, mul_one]
   refine ⟨⟨z, hz0, intg_of_modInt hzM, hI⟩, fun hi => ?_⟩
-  rw [thetaInt_wop_intg hν₁ (GlobalTheory.T.thetaKernel_leftInvariant_rational_unitary D ψ θ hθ W₁ X A₁ B _ _ ωB hm.weilB Φ' hΦ') hi z, smul_comm] at hI
+  rw [thetaInt_wop_intg hν₁ (_root_.GlobalTheory.SquareComm.ThetaLeft.main D ψ θ hθ W₁ X A₁ B _ _ ωB hm.weilB Φ' hΦ') hi z, smul_comm] at hI
   exact smul_right_injective _ hz0 hI
 
 theorem regulator_constant_eq : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching →
@@ -1849,7 +1849,7 @@ theorem regulator_constant_eq : _root_.GlobalTheory.FunPr.ThetaLocalInputs → G
       fun γ hγ u => GlobalTheory.SquareIdent.thetaKO_left_neg W.θ_is _ _ wA mA γ hγ u h
     have cB := fun h => integral_change _ hIs.meas' hνB hs'
       (fun u => thetaKO (X.ω' t) u h (fockF W.ψ W.θ false A₁ (frSum AV AV₁) (X.f' t) (σ' P₀)))
-      fun γ hγ u => GlobalTheory.T.thetaKernel_leftInvariant_rational_unitary D W.ψ W.θ W.θ_is _ _ _ _ _ _ _ wB _ mB γ hγ u h
+      fun γ hγ u => _root_.GlobalTheory.SquareComm.ThetaLeft.main D W.ψ W.θ W.θ_is _ _ _ _ _ _ _ wB _ mB γ hγ u h
     have iB : GlobalTheory.RegCompare.Intg (X.ω' t) (M.ν _) (M.fd _) (fockF W.ψ W.θ false A₁ (frSum AV AV₁) (X.f' t) (σ' P₀)) :=
       fun h => (cB h).1 (by simpa only [← hk'] using hP₀i t h)
     have eA : thetaInt (X.ω t) (M.ν _) (M.fd _) (fockF W.ψ W.θ true A (frSum AV AV₁) (X.f t) P₁) =

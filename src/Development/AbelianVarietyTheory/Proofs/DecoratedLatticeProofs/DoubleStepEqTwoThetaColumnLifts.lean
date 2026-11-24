@@ -1,23 +1,26 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsThetaFunSuperpositionTargetOrthSummandStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsThetaFunctionSuperpositionOrthogonalSlicesStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ContinuousResTSymm
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsThetaFunSuperpositionTargetOrthSummand
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsThetaFunctionSuperpositionOrthogonalSlices
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilOperatorCommutesSuperpositionSlicesSourceStatement
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ConjugateAdjointDagger
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittSmallGroupEmbeddingMemPointwiseStabilizerIso
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjWeilDatumViaAdjointExchangedPairStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HermitianAdjointSymplecticActionThetaHeisenbergStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjWeilDatumViaAdjointExchangedPair
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HermitianAdjointSymplecticActionThetaHeisenberg
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilOperatorOneVariableKeepsThetaFunctionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilOperatorIntegralCommOfBoundedFiniteMeasureStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselLineLinkGramSimilitudeBijectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaTensorRuleOrthogonalSumSourceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaTensorRuleTargetOrthogonalSumStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilOperatorIntegralCommOfBoundedFiniteMeasure
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselLineLinkGramSimilitudeBijective
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaTensorRuleOrthogonalSumSource
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaTensorRuleTargetOrthogonalSum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumPreservesThetaFundamentalDomainPairingStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilRepConjSourceLineEqTargetLineStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SkewGramHalfModule
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilRepConjSourceLineEqTargetLine
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EqZeroOfLintegralEqZero
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumThetaJointlyContinuousStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilRepresentationRationalTranslateSubstitutionStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumThetaJointlyContinuous
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilRepresentationRationalTranslateSubstitution
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousMovPair
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MeasureFundamentalDomainLtTop
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsTopologicalRingAE
@@ -59,7 +62,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Mathlib.Tactic.Linter.Style
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
 import Mathlib.RingTheory.PiTensorProduct
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicUnitaryTopology
@@ -126,8 +128,8 @@ theorem contr_isTheta : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ)
       oma p (fun u => Ξ₁ ((B.o.resS J.W₀).symm (u, l.κ J.W₀ w))) 0 ∂vL.μ := fun p v =>
     (_root_.GlobalTheory.WeilSuperpos.weil_comm_superpos D ψ B.V₀ B.A B.L J.W₀ B.o χA s₁.χW oma hoa Ξ₁ hΞ₁ _ (vL.μ.restrict vL.𝓕) (l.κ J.W₀) _ hκm (ha v) p).2 0
   refine ⟨fun v => ?_, fun p => ⟨?_, hcom p⟩⟩
-  · exact GlobalTheory.T.isThetaFunction_superposition_orthogonalSlices D ψ hstd B.V₀ B.A B.L J.W₀ B.o Ξ₁ hΞ₁ _ (vL.μ.restrict vL.𝓕) (l.κ J.W₀) _ hκm (ha v)
-  · have h := GlobalTheory.T.isThetaFun_superposition_target_orthSummand D ψ hstd B'.V₀ B'.A B'.L J.W₀ B'.o Ξ₂ hΞ₂ _ (vL.μ.restrict vL.𝓕) id _ measurable_id (hb p)
+  · exact _root_.GlobalTheory.SuperposS.superpos_isTheta D ψ hstd B.V₀ B.A B.L J.W₀ B.o Ξ₁ hΞ₁ _ (vL.μ.restrict vL.𝓕) (l.κ J.W₀) _ hκm (ha v)
+  · have h := _root_.GlobalTheory.SuperposT.superpos_target D ψ hstd B'.V₀ B'.A B'.L J.W₀ B'.o Ξ₂ hΞ₂ _ (vL.μ.restrict vL.𝓕) id _ measurable_id (hb p)
     have heq : (fun v => oma p (fun u => contr l J.W₀ vL Ξ₁ Ξ₂ u v) 0) = fun v =>
         ∫ w, oma p (fun u => Ξ₁ ((B.o.resS J.W₀).symm (u, l.κ J.W₀ w))) 0 * Ξ₂ ((B'.o.resT J.W₀).symm (v, id w))
           ∂(vL.μ.restrict vL.𝓕) := by
@@ -190,9 +192,9 @@ theorem dagger_resS_symm (o : OrthDec T A B) (S : HSp D) (u : WO A S) (v : WO B 
 
 theorem main : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (T A B S : HSp D) (o : OrthDec T A B) (F : WO S T → ℂ), IsThetaFunO ψ S T F → ∀ (χ χ' : (AE D)ˣ →* Circle) (om : Om S A), IsWeilDatumO ψ S A χ χ' om → ∀ p, IsThetaFunO ψ S T fun x => om p (fun u => F ((o.resT S).symm (u, (o.resT S x).2))) (o.resT S x).1 := by
   intro D ψ T A B S o F hF χ χ' om hom p
-  have hd := (GlobalTheory.T.hermitianAdjoint_symplectic_action_theta_heisenberg D ψ hom.std S T).2.2.1
+  have hd := (_root_.GlobalTheory.AdjointPair.adjoint_clauses D ψ hom.std S T).2.2.1
   have h := (GlobalTheory.T.weilOperator_oneVariable_keeps_thetaFunctions D ψ T A B S o _ ((hd F).2 hF)).1 χ' χ (conjAdjoint om)
-    (GlobalTheory.T.conj_weil_datum_via_adjoint_exchanged_pair D ψ S A χ χ' om hom) p.swap
+    (_root_.GlobalTheory.ConjAdjWeil.isWeilDatumO_conjAdjoint D ψ S A χ χ' om hom) p.swap
   refine (hd _).1 ?_
   convert h using 1
   funext y
@@ -255,7 +257,7 @@ theorem decomp_re_im (z : ℂ) : ((max z.re 0 : ℝ) : ℂ) + -1 * ((max (-z.re)
 theorem isThetaFunO_sliceT {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {T A B S : HSp D}
     (o : OrthDec T A B) {F : WO S T → ℂ} (hF : IsThetaFunO ψ S T F) (y : WO S B) :
     IsThetaFunO ψ S A fun u => F ((o.resT S).symm (u, y)) := by
-  have h := GlobalTheory.T.isThetaFun_superposition_target_orthSummand D ψ hψ T A B S o F hF Unit (Measure.dirac ()) (fun _ => y) (fun _ => 1) measurable_const
+  have h := _root_.GlobalTheory.SuperposT.superpos_target D ψ hψ T A B S o F hF Unit (Measure.dirac ()) (fun _ => y) (fun _ => 1) measurable_const
     (integrable_const _)
   simpa only [integral_dirac, one_mul] using h
 
@@ -333,8 +335,8 @@ theorem weil_comm_sliceSum_target : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ
         funext u
         exact tr (fun y => Fs y u) (cFs.comp (continuous_id.prodMk continuous_const))
       rw [e]
-      exact GlobalTheory.T.isThetaFun_superposition_target_orthSummand D ψ hψ T A B S o F hF Ω μ k _ hk hbi.ofReal
-    have hc := GlobalTheory.T.weilOperator_integral_comm_of_bounded_finiteMeasure D ψ S A χ χ' om hW (WO S B) ν Fs p (isThetaFunO_sliceT hψ o hF) cFs ⟨CF, bFs⟩ cGs
+      exact _root_.GlobalTheory.SuperposT.superpos_target D ψ hψ T A B S o F hF Ω μ k _ hk hbi.ofReal
+    have hc := _root_.GlobalTheory.CommIntBdd.om_integral_comm_bdd D ψ S A χ χ' om hW (WO S B) ν Fs p (isThetaFunO_sliceT hψ o hF) cFs ⟨CF, bFs⟩ cGs
       ⟨CG, bGs⟩ hth u₀
     have e : (fun u => ∫ y, Fs y u ∂ν) = fun u => ∫ w, (b w : ℂ) * Fs (k w) u ∂μ := by
       funext u
@@ -440,8 +442,8 @@ theorem symm_resT_symm {T A B : HSp D} (o : OrthDec T A B) (S : HSp D) (u : WO S
 theorem kernel_doubleStep : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (B : BesLev D (σ + 1)) (J : JacLev D (σ + 1)) (B' : BesLev D σ) (s₁ : StepBF ψ B J) (s₂ : StepFB ψ J B') (l : Link B B'.L B'.ζ) (vL : VolM D B'.L.rank J.W₀.rank) (χA χA' χz : ((AE D)ˣ →* Circle)) (oma : Om B.A J.W₀) (omz : Om B.L J.W₀) (omb : Om J.W₀ B'.A) (omz' : Om J.W₀ B'.L), s₁.χV = χA * χz → s₂.χW = χA' * χz → IsWeilDatumO ψ B.A J.W₀ χA s₁.χW oma → IsWeilDatumO ψ B.L J.W₀ χz s₁.χW omz → IsWeilDatumO ψ J.W₀ B'.A s₂.χV χA' omb → IsWeilDatumO ψ J.W₀ B'.L s₂.χV χz omz' → ∀ (Ξ₁ : WO B.V₀ J.W₀ → ℂ) (Ξ₂ : WO J.W₀ B'.V₀ → ℂ), IsThetaFunO ψ B.V₀ J.W₀ Ξ₁ → IsThetaFunO ψ J.W₀ B'.V₀ Ξ₂ → ∀ h₀ h₁ h₂, ∫ w in vL.𝓕, s₂.om₀ (h₁, B'.o.emb (h₂, 1)) Ξ₂ ((B'.o.resT J.W₀).symm (0, w)) * s₁.om₀ (B.o.emb (h₀, 1), h₁) Ξ₁ ((B.o.resS J.W₀).symm (0, l.κ J.W₀ w)) ∂vL.μ = omb (h₁, h₂) (fun v => oma (h₀, h₁) (fun u => contr l J.W₀ vL Ξ₁ Ξ₂ u v) 0) 0 := by
   intro D ψ σ B J B' s₁ s₂ l vL χA χA' χz oma omz omb omz' hV hW hoa hoz hob hoz' Ξ₁ Ξ₂ hΞ₁ hΞ₂ h₀ h₁ h₂
   have hstd : IsStdChar D ψ (-1) := hoa.std
-  have TS := GlobalTheory.T.thetaTensorRule_orthogonalSum_source D ψ hstd B.V₀ B.A B.L B.o J.W₀
-  have TT := GlobalTheory.T.thetaTensorRule_targetOrthogonalSum D ψ hstd B'.V₀ B'.A B'.L B'.o J.W₀
+  have TS := _root_.GlobalTheory.TensorSrc.tensorSource D ψ hstd B.V₀ B.A B.L B.o J.W₀
+  have TT := _root_.GlobalTheory.TensorTargetRule.tensorTarget D ψ hstd B'.V₀ B'.A B'.L B'.o J.W₀
   have hw₁ : IsWeilDatumO ψ B.V₀ J.W₀ (χA * χz) s₁.χW s₁.om₀ := hV ▸ s₁.weil₀
   have hw₂ : IsWeilDatumO ψ J.W₀ B'.V₀ s₂.χV (χA' * χz) s₂.om₀ := hW ▸ s₂.weil₀
   haveI : IsFiniteMeasure (vL.μ.restrict vL.𝓕) :=
@@ -506,8 +508,8 @@ theorem kernel_doubleStep : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : 
   have hLine : ∀ u v, ∫ w, Gf v w * Hf u (l.κ J.W₀ w) ∂(vL.μ.restrict vL.𝓕) = contr l J.W₀ vL Ξ₁ Ξ₂ u v := by
     intro u v
     have hrank : B.L.rank = B'.L.rank := B.line.1.trans B'.line.1.symm
-    have hgram := (GlobalTheory.T.besselLineLink_gram_similitude_bijective D (σ + 1) B B'.L B'.ζ B'.line l).1
-    have CL := GlobalTheory.T.weilRep_conj_sourceLine_eq_targetLine D ψ B.L B'.L J.W₀ l.τ hrank hgram χz s₁.χW s₂.χV omz omz' hoz hoz'
+    have hgram := (_root_.GlobalTheory.Unf.LinkGram.link_gram D (σ + 1) B B'.L B'.ζ B'.line l).1
+    have CL := _root_.GlobalTheory.ConjLine.conj_line D ψ B.L B'.L J.W₀ l.τ hrank hgram χz s₁.χW s₂.χV omz omz' hoz hoz'
       (fun z => Ξ₁ ((B.o.resS J.W₀).symm (u, z))) (hS₁ u)
     have CU := GlobalTheory.T.weilDatum_preserves_thetaFundamentalDomainPairing D ψ J.W₀ B'.L s₂.χV χz omz' hoz' vL (h₁, 1) _ _ (hS₂ v) CL.1
     rw [CL.2 h₁] at CU
@@ -596,7 +598,7 @@ theorem bdd_om_core {ψ : AddChar (AF D.host.F) ℂ} {ρ : ℕ} {B : BesLev D ρ
   refine ⟨c, fun h₀ x => ?_⟩
   obtain ⟨γ, hγ, hk⟩ := hc h₀
   have hγ' : B.o.emb (γ, 1) ∈ GQ B.V₀ := B.o.emb_mem_GQ hγ (one_mem _)
-  have key := GlobalTheory.T.weilRepresentation_rational_translate_substitution D ψ B.V₀ J.W₀ s.χV s.χW s.om₀ s.weil₀ Ξ hΞ (B.o.emb (γ, 1)) hγ' 1 (one_mem _)
+  have key := _root_.GlobalTheory.Unf.om_rat_mul D ψ B.V₀ J.W₀ s.χV s.χW s.om₀ s.weil₀ Ξ hΞ (B.o.emb (γ, 1)) hγ' 1 (one_mem _)
     (B.o.emb (h₀, 1)) h₁ (x ⬝ mt B.V₀ ((B.o.emb (γ, 1))⁻¹))
   rw [← map_mul, Prod.mk_mul_mk, one_mul, one_mul, inv_one, mt_one, Matrix.one_mul, Matrix.mul_assoc, mt_inv_mul,
     Matrix.mul_one] at key
@@ -608,7 +610,7 @@ theorem continuous_core {ψ : AddChar (AF D.host.F) ℂ} {ρ : ℕ} {B : BesLev 
     (hΞ : IsThetaFunO ψ B.V₀ J.W₀ Ξ) (h₁ : GA D J.W₀) :
     Continuous fun p : WO J.W₀ L' × GA D B.A =>
       s.om₀ (B.o.emb (p.2, 1), h₁) Ξ ((B.o.resS J.W₀).symm (0, l.κ J.W₀ p.1)) := by
-  have hj := GlobalTheory.T.weilDatum_theta_jointlyContinuous D ψ B.V₀ J.W₀ s.χV s.χW s.om₀ s.weil₀ Ξ hΞ
+  have hj := _root_.GlobalTheory.Unf.jointCont_all D ψ B.V₀ J.W₀ s.χV s.χW s.om₀ s.weil₀ Ξ hΞ
   exact hj.comp (((B.o.continuous_emb.comp (continuous_snd.prodMk continuous_const)).prodMk continuous_const).prodMk
     ((B.o.continuous_resS_symm J.W₀).comp (continuous_const.prodMk ((_root_.GlobalTheory.ContrKernel.continuous_kappa l J.W₀).comp continuous_fst))))
 

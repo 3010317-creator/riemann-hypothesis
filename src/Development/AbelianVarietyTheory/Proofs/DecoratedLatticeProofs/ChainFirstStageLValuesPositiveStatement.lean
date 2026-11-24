@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.BcParamEq
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCompactAdele
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsDualFamilyOfIsLattice
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIsSplitChartOfBasis
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BoundedAutomorphicRightTranslationUnitarisableBoStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InnerProductFormula
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BoundedAutomorphicRightTranslationUnitarisableBo
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatVecUOfIsSphericalU
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SatakeParameterGLStarEqInvOfUnitarisable
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitarySatakeTransformStarParameterEqOfUnitarisa
@@ -20,7 +21,8 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TendstoOn
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnitarySphericalReps
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ChainStageFormsTwistedLevelLeFinerLevelStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainHeckeParamsTrivialBoundRapidDecayStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainLevelPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChainParSucc
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainLevelProperties
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EventuallyEqOfIsZetaCont
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -57,12 +59,11 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChainParSucc
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 import Formalism.LocalToGlobal.IndefiniteReal.IndefiniteWeightData
 import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageConjugateValuesHeckeOperatorsStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageLatticeStabilizerParamsOffSetStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageConjugateValuesHeckeOperators
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageLatticeStabilizerParamsOffSet
 import Mathlib.Tactic.ReduceModChar
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -106,7 +107,7 @@ theorem param_star (D : D7) (V : HSp D) (S : Finset (HeightOneSpectrum (𝓞 D.h
   have hJ := GlobalTheory.Mem.VolExists.isHermND D.sp.cm V
   have hv : w.under (𝓞 D.host.F) ∉ S := hw
   have hd := SelfDual.isSelfDualAt_frameLat D V (w.under (𝓞 D.host.F))
-  have hun := (GlobalTheory.T.boundedAutomorphicRightTranslation_unitarisable_bounded D V).1
+  have hun := (_root_.GlobalTheory.FinZeta.bddRep_unitarisable_and_bounded D V).1
   have hloc : GlobalTheory.LGrp.IsUnitarisable ((bddRep V).comp (embV V (w.under (𝓞 D.host.F)))) := by
     obtain ⟨b, b1, b2, b3⟩ := hun
     exact ⟨b, b1, b2, fun g => b3 _⟩
@@ -276,7 +277,7 @@ theorem bounded_first_member (hCRD : GlobalTheory.Published.CuspRapidDecay) {D :
     GlobalTheory.LFun.Bounded (GlobalTheory.LFun.above D.host.E (c.S : Set (HeightOneSpectrum (𝓞 D.host.F)))) B D.R.r (((D.R.r : ℝ) - 1) / 2) := by
   have hrank : s'.V.rank = D.R.r := by
     rw [hflat.rank]; simp [Formalism.BasicNotions.Ranks.rankY]
-  have hbd0 := GlobalTheory.T.thetaChain_heckeParams_trivialBound_rapidDecay hCRD D (GlobalTheory.T.thetaChain_level_properties D) c hc 0 hj s' hflat u' B hB'
+  have hbd0 := GlobalTheory.T.thetaChain_heckeParams_trivialBound_rapidDecay hCRD D (_root_.GlobalTheory.ChainOnto.LevelFacts.levFacts D) c hc 0 hj s' hflat u' B hB'
   rw [hrank] at hbd0
   exact hbd0
 
@@ -296,8 +297,8 @@ theorem conjStable_first_member (hCRD : GlobalTheory.Published.CuspRapidDecay) {
   obtain ⟨v, hv⟩ := hex
   set f : GA D s'.V → ℂ := fun g => conj (PiLocalization₂.val u' v g) with hfdef
   have hPF : ParFun c s' (PiLocalization₂.val u' v) B := hB'.2 v hv
-  have h3 : GlobalTheory.LFun.IsParamFunV s'.V c.S f B := ((GlobalTheory.T.thetaChainStage_lattice_stabilizer_params_off_set D c hc 0 hj s' hflat).2 f B).1 hPF
-  obtain ⟨h4a, _, _⟩ := GlobalTheory.T.thetaChainStage_conjugate_values_hecke_operators hCRD D c hc 0 hj s' hflat
+  have h3 : GlobalTheory.LFun.IsParamFunV s'.V c.S f B := ((_root_.GlobalTheory.ChainOnto.stabLoc_isParamFun_frameLat D c hc 0 hj s' hflat).2 f B).1 hPF
+  obtain ⟨h4a, _, _⟩ := _root_.GlobalTheory.ConjVal.conj_values_hecke hCRD D c hc 0 hj s' hflat
   obtain ⟨hcont, ⟨C, hC⟩, hinv, _⟩ := h4a u' v
   have hfmem : f ∈ GlobalTheory.FinZeta.bddAut s'.V := by
     refine ⟨(Complex.continuous_conj).comp hcont, fun γ hγ g => ?_, C, fun g => ?_⟩

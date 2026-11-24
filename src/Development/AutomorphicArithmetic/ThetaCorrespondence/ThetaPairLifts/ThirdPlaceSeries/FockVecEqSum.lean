@@ -6,7 +6,8 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Uni
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpecialisedUniversalSeriesEqTwistedThetaSeries
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCharFamIsVacVec
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersUnramifiedOffLevelPlacesStatement
+import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersUnramifiedOffLevelPlaces
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LiftSchurMultiplierCompatibility
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.StepVectorLiftPairFlagLevelRealizedChain
@@ -77,7 +78,7 @@ theorem fockVec_eq_sum_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {
     (GlobalTheory.SDFrameLattice.isSelfDualC_of_isSDFrame D _ _ _ _ (hL.βY (j + 1) hj)) hc.1 hc'.1 D.R.r D.R.t j (r_le_Y j)
     (by rw [D.sp.Y_rank _ (min_le_right _ _), min_eq_left hj'.le]; rfl)
     (by rw [D.sp.Y_rank _ (min_le_right _ _), min_eq_left hj.le]; rfl)
-    (_root_.GlobalTheory.Fam.pk_z W).Pg ((_root_.GlobalTheory.Fam.pk_z W).Q t) (GlobalTheory.T.levelCharacters_unramified_off_levelPlaces D _ _ _ hL t).1 (_root_.GlobalTheory.Fam.pk_z W).chi ((_root_.GlobalTheory.Fam.pk_z W).xiR t) (_root_.GlobalTheory.Fam.complexLevelStructure W) hvY hv
+    (_root_.GlobalTheory.Fam.pk_z W).Pg ((_root_.GlobalTheory.Fam.pk_z W).Q t) (_root_.GlobalTheory.levCh_unramified_places D _ _ _ hL t).1 (_root_.GlobalTheory.Fam.pk_z W).chi ((_root_.GlobalTheory.Fam.pk_z W).xiR t) (_root_.GlobalTheory.Fam.complexLevelStructure W) hvY hv
     (fun PP hP => ⟨a1 PP hP, b1 PP hP⟩) (fun PP hP => ⟨a2 PP hP, b2 PP hP⟩) a3 b3 κ hκ
   have hθ : IsInfFam (_root_.GlobalTheory.Fam.pk_z W).θ := hvY.1.2.inf
   have hf : IsThetaFunO (_root_.GlobalTheory.Fam.pk_z W).ψ (Yc D j) (Yc D (j + 1)) ((_root_.GlobalTheory.Fam.pk_z W).vY t j) := by

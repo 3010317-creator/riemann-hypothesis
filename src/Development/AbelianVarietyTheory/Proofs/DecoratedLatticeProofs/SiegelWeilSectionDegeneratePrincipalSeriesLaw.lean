@@ -5,7 +5,7 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Dou
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IntegrandSZero
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.WeilRepresentationUnitaryPair
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SkewGramHalfModule
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittSourceProofStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittSourceProof
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -194,7 +194,7 @@ theorem swSec_law : GlobalTheory.Published.WeilRepresentationUnitaryPair → ∀
   have hF := hW.om_pres (g, 1) φ hφ
   set F := omh (g, 1) φ with hFdef
   have hF' := hW.om_pres ((dblDec A).nC c, 1) F hF
-  have hM := GlobalTheory.T.mixedModelFormulasWittSource_proof D ψ (dblSp A) (zeroSp D) B A.rank (dblDec A) 1 χB omh om₀ hW h₀ ν 𝓕 hν'
+  have hM := _root_.GlobalTheory.MixSourceFormulas.mixed_source D ψ (dblSp A) (zeroSp D) B A.rank (dblDec A) 1 χB omh om₀ hW h₀ ν 𝓕 hν'
   have h1 := (hM _ hF').levi a 0
   have h2 := (hM F hF).centre c 0
   change (dblDec A).mixS B ψ ν 𝓕 (omh ((dblDec A).levi a, 1) (omh ((dblDec A).nC c, 1) F)) 0 =

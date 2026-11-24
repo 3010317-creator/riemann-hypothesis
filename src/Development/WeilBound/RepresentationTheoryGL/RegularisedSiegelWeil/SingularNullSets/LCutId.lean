@@ -7,7 +7,8 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Fou
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SiegelParabolicUnnMatrixBlockUpperTriangular
 public import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasChr
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.KerBF
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoefficientDataExistsStatement
+public import Development.WeilBound.CoreStatements.AutomorphicKernels.UnitarySchrodingerModel.CoefDataExists
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoefficientDataExists
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -374,7 +375,7 @@ namespace PositivityTheory.Rg.Rsw.L
 theorem cutId : Polar → CfFJ → CoefId → ThCoef → FourierPt → WeakApproximationFinitePlace → CfInv → ThBdd → CutLow → IkSch → IkEq → WMaj → CutId := by
   intro hPolar hCfFJ hCoefId hThCoef hFP hWA1 hCfInv hThBdd hCutLow _ hIkEq hWMaj
   intro D n t B W d hn ψ χ θ μB μW ωB ωW hS I H hH Φ U dd E σ hcont ε hrad nb hnb v C hK hKv 𝓕 h𝓕 Ψ Ψ' hΨ hΨ'
-  obtain ⟨nb₀, lam, 𝓖, hCD⟩ := GlobalTheory.T.coefficient_data_exists D n
+  obtain ⟨nb₀, lam, 𝓖, hCD⟩ := _root_.GlobalTheory.CompanionTheory.SWCoef.coefDataExists D n
   have hC : CoefData (D := D) (n := n) nb lam 𝓖 := ⟨hnb, hCD.2⟩
   obtain ⟨κ, hκ⟩ := hCoefId D n t B W d hn ψ χ θ μB μW ωB ωW hS I H hH Φ U dd E σ hcont ε hrad nb lam 𝓖 hC
   refine ⟨κ, ?_⟩

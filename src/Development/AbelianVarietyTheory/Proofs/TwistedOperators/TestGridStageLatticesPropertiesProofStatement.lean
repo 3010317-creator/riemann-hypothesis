@@ -10,7 +10,7 @@ public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FinitePartMemFrameStabilizerIffLocalStabilizer
 public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.WittIndexParallel
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WittIdxOfParallelSig
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PolarisationTwistLatticeSelfDualSameStabilisersStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PolarisationTwistLatticeSelfDualSameStabilisers
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SelfDualLatticeChangeOfLatticeLawsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -377,7 +377,7 @@ theorem stageOK : StageOK := by
   intro D hQ T L μ0 hL sc G W Mv hM i hi
   have hV := node_isV G hL (X := .core i) hi
   have hsd : IsSelfDualC (G.V (.core i)) (G.Λ (.core i)) := hV.sd
-  obtain ⟨hsd', hstab, hcong⟩ := GlobalTheory.T.polarisationTwist_lattice_selfDual_same_stabilisers D (G.V (.core i)) (G.Λ (.core i)) hsd i
+  obtain ⟨hsd', hstab, hcong⟩ := _root_.GlobalTheory.ScaleSelfDual.scaleLat_twist_selfDual D (G.V (.core i)) (G.Λ (.core i)) hsd i
   have hRL := GlobalTheory.T.selfDualLattice_changeOfLattice_laws D
   refine ⟨?_, ?_⟩
   · obtain ⟨r, hr⟩ := hRL.1 _ _ hsd'

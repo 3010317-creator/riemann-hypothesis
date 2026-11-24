@@ -25,7 +25,7 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteS
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RowLevelMatch
 public import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ConjAtFixedIff
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjugateIntertwinerValuesSmoothAutomorphic
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugateIntertwinerValuesSobolevContinuousStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugateIntertwinerValuesSobolevContinuous
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugatedIntertwinerEquivariantRealPlaceStatement
 public import Development.AbelianVarietyTheory.BlockTheory.SiegelWeilLocal.OrthonormalPlaceBasis
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ThetaIdentityOfMapsAll
@@ -37,7 +37,7 @@ public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TruncatedLeas
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdelicIdentificationRespectsRealFinite
 public import Formalism.LocalToGlobal.IndefiniteReal.AutomorphicEvaluation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodFiniteOfHcFinite
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugatedIntertwinerHasColumnLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugatedIntertwinerHasColumnLevel
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsContinuousLeftInvariantRepConjugateTensor
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.EvalTOnto
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContragredientModelEqConjTraceFormulaDiscreteSer
@@ -52,7 +52,7 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CrdLatEqL
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsRadicalSpanGMul
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PlaceCoverProd
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SubOneIffEntries
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugateMaximalCompactMemParahoricLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugateMaximalCompactMemParahoricLevel
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SurjectiveReductionOntoFiniteLevelGroup
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFiniteElementConjRowLevelCharacterStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.IndefRRealPins
@@ -117,7 +117,7 @@ import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.LevelS
 import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.RowDictPf
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TranslatedRowEvaluationSquareIntegrableNormStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TranslatedRowEvaluationSquareIntegrableNorm
 import Formalism.LocalToGlobal.IndefiniteReal.SquareIntegrableTransfer
 import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.AdelicIsomorphismStatement
 
@@ -708,7 +708,7 @@ theorem contRep_bound : GlobalTheory.Published.DiscreteSeriesClassification → 
     rw [hR] at hr
     exact congrFun (Formalism.L2.SG.EvalTOntoRep.contRep_unique X hr (hf u)) y
   have he := GlobalTheory.T.conjugatedIntertwiner_equivariant_realPlace hDS R F X h h1 h2 h3 hH hι t c ht hcl hc Φ hΦ hrep
-  have hs := GlobalTheory.T.conjugateIntertwinerValues_sobolevContinuous hDS R F X h h1 h2 h3 hH hι t c ht hcl hc Φ hΦ hrep
+  have hs := _root_.GlobalTheory.ConjRowCont.conjMap_sobCont hDS R F X h h1 h2 h3 hH hι t c ht hcl hc Φ hΦ hrep
   obtain ⟨m, hm⟩ := _root_.GlobalTheory.SobolevBound.derivative_closed_class_bound X.B hn hg
   have hW : ∀ g ∈ Set.range f, (∃ G, GlobalTheory.Dec.IsContRep X.B G g) ∧
       (∀ k ∈ X.B.I.Kg X.B.g, ∀ y, g (y * (1, k)) = g y) ∧
@@ -885,7 +885,7 @@ theorem conjMap_isAutFunSm : GlobalTheory.Published.DiscreteSeriesClassification
   have he : GlobalTheory.RepSmooth.IsEquiv R.θ Ψ := fun τ g hg v w hw =>
     GlobalTheory.T.conjugatedIntertwiner_equivariant_realPlace hDS R F X h hRI hGrp hMod hHost hιE t c ht hCL hcq Φ hΦ hrep τ g hg v w hw
   have hs : GlobalTheory.RepSmooth.IsSob Ψ := fun τ v x =>
-    GlobalTheory.T.conjugateIntertwinerValues_sobolevContinuous hDS R F X h hRI hGrp hMod hHost hιE t c ht hCL hcq Φ hΦ hrep τ v x
+    _root_.GlobalTheory.ConjRowCont.conjMap_sobCont hDS R F X h hRI hGrp hMod hHost hιE t c ht hCL hcq Φ hΦ hrep τ v x
   have hval : ∀ v (y : GA D (Yc D 0)), Ψ v y = star (GlobalTheory.ConjRowMult.contRepL X (Φ (X.B.tens (GlobalTheory.ConjRowMult.vecC X (MP R) c v)))
       (iotaX X h (y * t⁻¹))) := fun v y => GlobalTheory.ConjRowMult.conjMap_apply X (MP R) c Φ h t v y
   have hcont : ∀ v, Continuous (Ψ v) := by
@@ -907,7 +907,7 @@ theorem conjMap_isAutFunSm : GlobalTheory.Published.DiscreteSeriesClassification
   · obtain ⟨U, hU, hUk⟩ := GlobalTheory.GoodFiniteDim.exists_open_subgroup (Yc D 0) (R.βY 0) (R.dat0 (R.levR F true))
     refine ⟨U, hU, fun k hk hkf g => ?_⟩
     obtain ⟨h1, h2⟩ := hUk k hk hkf
-    rw [GlobalTheory.T.conjugatedIntertwiner_hasColumnLevel hDS R F X h hRI hGrp hMod hHost hιE t c ht hCL hcq Φ hΦ hrep u k h1 g, h2, one_mul]
+    rw [_root_.GlobalTheory.ConjRowLevel.conjMap_level hDS R F X h hRI hGrp hMod hHost hιE t c ht hCL hcq Φ hΦ hrep u k h1 g, h2, one_mul]
   · have key : ∃ N : ℕ, ∀ v (x : GA D (Yc D 0)), ∃ C : ℝ, ∀ g ∈ GinfC (Yc D 0),
         ‖Ψ v (x * g)‖ ≤ C * normInf R.θ (Yc D 0) g ^ N := by
       rcases Nat.eq_zero_or_pos (D.sp.Y 0).rank with hn | hn
@@ -1068,11 +1068,11 @@ theorem conj_row_eq_eval_mult : GlobalTheory.Published.DiscreteSeriesClassificat
   refine ⟨GlobalTheory.ConjRowMult.conjMap X (MP R) c Φ h t, Submodule.subset_span
     ⟨GlobalTheory.T.conjugatedIntertwiner_values_smoothAutomorphic hDS R F X h hLev hGrp hMod hH hιE t c ht hCL hc Φ hΦ hrep,
      GlobalTheory.T.conjIntertwinerMap_values_isCuspFun hDS R F X h hLev hGrp hMod hH hιE t c ht hCL hc Φ hΦ hrep,
-     GlobalTheory.T.conjugatedIntertwiner_hasColumnLevel hDS R F X h hLev hGrp hMod hH hιE t c ht hCL hc Φ hΦ hrep, ?_, ?_⟩, ?_⟩
+     _root_.GlobalTheory.ConjRowLevel.conjMap_level hDS R F X h hLev hGrp hMod hH hιE t c ht hCL hc Φ hΦ hrep, ?_, ?_⟩, ?_⟩
   · intro τ g hg v w hw
     exact GlobalTheory.T.conjugatedIntertwiner_equivariant_realPlace hDS R F X h hLev hGrp hMod hH hιE t c ht hCL hc Φ hΦ hrep τ g hg v w hw
   · intro τ v x
-    exact GlobalTheory.T.conjugateIntertwinerValues_sobolevContinuous hDS R F X h hLev hGrp hMod hH hιE t c ht hCL hc Φ hΦ hrep τ v x
+    exact _root_.GlobalTheory.ConjRowCont.conjMap_sobCont hDS R F X h hLev hGrp hMod hH hιE t c ht hCL hc Φ hΦ hrep τ v x
   · have hw : GlobalTheory.ConjRowMult.vecC X (MP R) c v₀ = X.B.w := GlobalTheory.ConjRowMult.vecC_eq X (MP R) c v₀ X.B.w hv₀
     obtain ⟨ψ, hψ⟩ := hrep v₀
     rw [hw, hΦw] at hψ
@@ -1362,7 +1362,7 @@ theorem evalTieT_of_levelMatch : GlobalTheory.Published.DiscreteSeriesClassifica
     rw [h0, norm_zero] at this
     exact zero_ne_one this
   obtain ⟨σ, red, hA, -, -⟩ := id hRow
-  obtain ⟨c0, hc0, hN⟩ := GlobalTheory.T.translatedRowEvaluation_squareIntegrable_norm R F X h hLev hGrp hMod t ht
+  obtain ⟨c0, hc0, hN⟩ := _root_.GlobalTheory.EvalNormTransfer.evalTranslate_norm R F X h hLev hGrp hMod t ht
   refine ⟨c0, Formalism.IndefR.AutomorphicEvaluation.evalTieT_of _ _ _ _ X Gd _ t c0 v₀ hnorm ?_ ?_ ?_⟩
   · intro S hS
     obtain ⟨hmem, hint, -⟩ := hN v₀ hnorm S hS
@@ -1704,7 +1704,7 @@ theorem hasType_flag1_of_mem (R : RealDat D A Ks) (P P' : LevelP R.Pg D.R.r ℂ)
 
 theorem act_kap : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A) (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h : X.B.I = Formalism.L2.SG.InstExistsPf.instOf D), R.toLevCh.Is A.μ0 → R.IsGrp F → R.IsModels → ∀ (cG : G0 R.Pg D.R.r ≃* G0g D.nd) (t : GA D (Yc D 0)), (∀ x : X.B.I.E, HEq (X.ιE x) x) → (∃ (plg : (Σ k : Fin 2, D.nd.PlG k) ≃ R.Pg) (iso : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), ZMod (D.host.g kv.1) ≃+* kP (plg kv).1), (∀ kv, ((plg kv : R.Pg) : Pl D.host.E) = D.naut.plGw kv.1 kv.2) ∧ (∀ g, D.what₂.embLL ((idemOf A.X).coeff g) = D.ntypes.e0.coeff ((R.eG.trans cG) g)) ∧ (∀ kv, R.C.P.Div kv.1 (plg kv).1) ∧ ∀ g kv, R.eG g (plg kv) = Formalism.UG.bc (iso kv : ZMod (D.host.g kv.1) →+* kP (plg kv).1) ((R.eG.trans cG) g kv)) → IdempotentRealFixed D → t ∈ GfC (Yc D 0) → ConjLevel (t)⁻¹ (levS (Yc D 0) (R.βY 0) (R.dat0 (R.levR F true))) (levChi (Yc D 0) (R.βY 0) (R.dat0 (R.levR F true))) ((iotaX X h).toMulEquiv ⁻¹' {x : X.B.I.GA | x.1 = 1 ∧ x.2 ∈ X.K2}) (fun k => star (X.chi2 ((iotaX X h).toMulEquiv k).2)) → IsFrame (finE (Yc D 0) t * R.βY 0) (Formalism.L2.Herm.crdLat (Yc D 0) (Yc D 0).L0) → ∀ k ∈ X.B.I.Kset, ∀ T ∈ Mult R.θ (R.MY 0) (levS (Yc D 0) (R.βY 0) (R.dat0 (R.levR F true))) (levChi (Yc D 0) (R.βY 0) (R.dat0 (R.levR F true))), ∀ (v : (MP R).Vec) (g : GA D (Yc D 0)), (T : MMap (MP R)) v (g * kap X h t k) = actL (Yc D 0) (R.βY 0) (R.dat0 R.triv) (rTup (R.βY 0) (R.dat0 R.triv) (finE (Yc D 0) (kap X h t k))) ((T : MMap (MP R)) v) g := by
   intro D G _ _ Pl0 T A Ks _ _ _ R F X h hLev hGrp hMod cG t hιE hpin hE0 ht hConj hFrame k hk T' hT v g
-  have hl := GlobalTheory.T.conjugate_maximalCompact_mem_parahoricLevel R F X h hLev hGrp hMod cG t hιE hpin hE0 ht hConj hFrame k hk
+  have hl := _root_.GlobalTheory.KapLevel.kap_mem_parLev R F X h hLev hGrp hMod cG t hιE hpin hE0 ht hConj hFrame k hk
   have hlift : IsLevelLift (Yc D 0) (R.βY 0) (R.dat0 R.triv)
       (rTup (R.βY 0) (R.dat0 R.triv) (finE (Yc D 0) (kap X h t k))) (kap X h t k) := ⟨hl.1, hl.2, rfl⟩
   have hType := hasType_flag1_of_mem R (R.levR F true) R.triv hT v
@@ -1784,7 +1784,7 @@ theorem rowLevelMatchAt_of_conjLevel : ∀ {D : D7} {G : Type} [Group G] [Fintyp
     refine ⟨hA.1, hA.2.trans ?_⟩
     show star (X.chi2 ((iotaX X h).toMulEquiv ((iotaX X h).symm (1, k))).2) = _
     rw [e2]
-  · obtain hl := GlobalTheory.T.conjugate_maximalCompact_mem_parahoricLevel R F X h hLev hGrp hMod cG t hιE ⟨plg, iso, hpl, hcoef, hdiv, hbc⟩ hE0 ht hConj hFrame
+  · obtain hl := _root_.GlobalTheory.KapLevel.kap_mem_parLev R F X h hLev hGrp hMod cG t hιE ⟨plg, iso, hpl, hcoef, hdiv, hbc⟩ hE0 ht hConj hFrame
     refine ⟨⟨GlobalTheory.T.goodAt_reduction_conjugated_unitary_element R F X h hLev hGrp hMod cG t hιE ⟨plg, iso, hpl, hcoef, hdiv, hbc⟩ hE0 ht hConj hFrame, ?_,
       GlobalTheory.T.surjective_reduction_onto_finiteLevelGroup R F X h hLev hGrp hMod cG t hιE ⟨plg, iso, hpl, hcoef, hdiv, hbc⟩ hE0 ht hConj hFrame,
       GlobalTheory.T.reduction_conjugated_unitary_element_eq_one_iff R F X h hLev hGrp hMod cG t hιE ⟨plg, iso, hpl, hcoef, hdiv, hbc⟩ hE0 ht hConj hFrame⟩, ?_⟩

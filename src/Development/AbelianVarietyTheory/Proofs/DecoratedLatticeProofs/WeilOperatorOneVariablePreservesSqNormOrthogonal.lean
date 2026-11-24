@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittSmallGroupEmbeddingMemPointwiseStabilizerIso
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaFunctionProductsSlicesOrthogonalDecompositiStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ContinuousResTSymm
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaFunctionProductsSlicesOrthogonalDecompositi
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilOperatorOneVariableKeepsThetaFunctionsStatement
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsTopologicalRingAE
 import Mathlib.Algebra.Order.Floor.Extended
@@ -181,7 +182,7 @@ theorem main : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S A B T : HSp D) (
   refine ⟨fun χ χ' om hW p => ?_, fun χ χ' om hW p => ?_⟩
   · have hψ := hW.std
     have hF := hslice.1 χ χ' om hW p
-    have hbox := (GlobalTheory.T.thetaFunction_products_slices_orthogonalDecomposition D ψ hψ S A B T o).2.2.2 f hf
+    have hbox := (_root_.GlobalTheory.BoxSlice.main D ψ hψ S A B T o).2.2.2 f hf
     have hfun : (fun y : WO A T × WO B T => ‖om p (fun u => f ((o.resS T).symm (u, y.2))) y.1‖ₑ ^ 2) =
         fun y => ‖(fun x => om p (fun u => f ((o.resS T).symm (u, (o.resS T x).2))) (o.resS T x).1)
           ((o.resS T).symm y)‖ₑ ^ 2 := by
@@ -200,7 +201,7 @@ theorem main : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S A B T : HSp D) (
     exact hW.om_unit μA FA hA.1 hFA p (fun u => f ((o.resS T).symm (u, v))) (hbox.1 v)
   · have hψ := hW.std
     have hF := hslice.2 χ χ' om hW p
-    have hbox := (GlobalTheory.T.thetaFunction_products_slices_orthogonalDecomposition D ψ hψ S A B T o).2.2.2 f hf
+    have hbox := (_root_.GlobalTheory.BoxSlice.main D ψ hψ S A B T o).2.2.2 f hf
     have hfun : (fun y : WO A T × WO B T => ‖om p (fun v => f ((o.resS T).symm (y.1, v))) y.2‖ₑ ^ 2) =
         fun y => ‖(fun x => om p (fun v => f ((o.resS T).symm ((o.resS T x).1, v))) (o.resS T x).2)
           ((o.resS T).symm y)‖ₑ ^ 2 := by

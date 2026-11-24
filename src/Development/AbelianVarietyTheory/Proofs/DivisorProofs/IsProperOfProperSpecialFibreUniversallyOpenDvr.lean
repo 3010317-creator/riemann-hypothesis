@@ -10,7 +10,7 @@ public import Mathlib.AlgebraicGeometry.Morphisms.Immersion
 public import Mathlib.AlgebraicGeometry.Morphisms.Proper
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalAlgebraisationMorphismsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalAlgebraisationMorphisms
 public import Mathlib.AlgebraicGeometry.Morphisms.UniversallyClosed
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineLeOrDisjoint
@@ -231,7 +231,7 @@ theorem isClosed_image_closure : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDis
       rw [← I.subschemeι.isEmbedding.isInducing.isPreconnected_image, Set.image_univ, hrange]
       exact hZirr.2.isPreconnected
     haveI : ConnectedSpace I.subscheme := { toPreconnectedSpace := ⟨hpc⟩, toNonempty := hne }
-    haveI hsp := GlobalTheory.AlgConn.connectedSpace_specialFibre_of_morphisms GlobalTheory.T.formalAlgebraisation_morphisms' O _
+    haveI hsp := GlobalTheory.AlgConn.connectedSpace_specialFibre_of_morphisms _root_.GlobalTheory.FormalAlgMorphisms.formalAlgebraisation_morphisms O _
       (I.subschemeι ≫ s) inferInstance inferInstance
     have hT : Set.range (GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits.specialι (I.subschemeι ≫ s)) =
         (I.subschemeι ≫ s) ⁻¹' {IsLocalRing.closedPoint O} := by

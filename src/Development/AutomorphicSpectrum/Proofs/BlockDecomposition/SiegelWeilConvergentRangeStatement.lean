@@ -19,7 +19,7 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteLo
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SummableDenominatorPowerOfLtStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdelicHaarSplitsAsArchTimesFiniteStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianHaarSplitsArchTimesFiniteStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedSchwartzFunctionIntegrableStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedSchwartzFunctionIntegrable
 import Formalism.LocalRingCardinality.DataHost
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -1317,7 +1317,7 @@ theorem integrable_starN : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   have hdec : starN σ J ψ dx Φ = fun b => ∑ i, starN σ J ψ dx (fun X => P i (projInf X) * Q i (projFin X)) b := by
     funext b
     unfold starN
-    rw [← integral_finsetSum _ fun i _ => GlobalTheory.T.twisted_schwartz_function_integrable F E σ hCM M J n ψ hψ dx hdx.1 _ (hpureSB i) b]
+    rw [← integral_finsetSum _ fun i _ => _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Phase.integrable_mul_phase F E σ hCM M J n ψ hψ dx hdx.1 _ (hpureSB i) b]
     refine integral_congr_ae (Filter.Eventually.of_forall fun X => ?_)
     show Φ X * _ = _
     rw [hsum, Finset.sum_mul]

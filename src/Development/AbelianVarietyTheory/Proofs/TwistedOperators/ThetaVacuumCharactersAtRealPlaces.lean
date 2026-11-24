@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RaisingLoweringOperators
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaVacuumCharactersRealPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaVacuumCharactersRealPlaces
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,6 +45,6 @@ open Formalism.BasicNotions
 namespace GlobalTheory
 
 theorem vacChar_of_record : ∀ D : D7, GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.VacChar D :=
-  GlobalTheory.T.thetaVacuumCharacters_realPlaces
+  _root_.GlobalTheory.VacuumCharacter.vacChar
 
 end GlobalTheory

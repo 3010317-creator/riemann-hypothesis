@@ -12,7 +12,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralMulC
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsInvariantForm
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqZeroOfIpEqZero
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSchwartzBruhatHalfIffPullbackMatrix
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerModelIsometryHalfLatticeVolumeOneStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerModelIsometryHalfLatticeVolumeOne
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitIdempotentBaseFunctionIdentityStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -148,7 +148,7 @@ theorem bijOn_and_om_linear : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ 
     exact ⟨this.1, this.2 Tm hTm⟩
   have hP := GlobalTheory.HalfCoordSB.isSBHalf_iff_pull D S T v m n a _ κ hκ
   obtain ⟨ν, hν⟩ := exists_haar (D := D) v
-  obtain ⟨hv0, hvT, hIso⟩ := GlobalTheory.T.schrodingerModel_halfLatticeVolume_mul_inner_eq_inner D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hC v a haS m n κ hκ Tm hTm ν hν
+  obtain ⟨hv0, hvT, hIso⟩ := _root_.GlobalTheory.PlaceIsometry.placeModel_isometry D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hC v a haS m n κ hκ Tm hTm ν hν
   have hvol : ((GlobalTheory.SplitWeil.volM ν (Fin m) (Fin n)
       (κ '' {t | t ∈ (latO S T ΛS ΛT fun _ => True) ∧ IsHalf a t})).toReal : ℂ) ≠ 0 := by
     exact_mod_cast ENNReal.toReal_ne_zero.mpr ⟨hv0, hvT⟩

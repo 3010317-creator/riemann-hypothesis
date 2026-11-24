@@ -48,7 +48,7 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDesc
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAbelianSchemeGeneric
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEvenCubicalStructureOfIdempotentFactorBiexStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiabelianUniformizationLinearActionDescentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteExtensionUniformisationOfTraitUnifStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteExtensionUniformisationOfTraitUnif
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMumfordBundlePullbackGrpPullback
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinExtCompIsPullDeg
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLabelledCoverUnitaryPELTypeFiniteExtStatement
@@ -115,7 +115,7 @@ import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PolarisedRingA
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.RosVal
 import Development.AbelianVarietyTheory.BlockTheory.UniformisationCharts.SeparatedSymmetricModel
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisationCompleteLocalDomainPrime
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisationCompleteLocalEvenOnTorusStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisationCompleteLocalEvenOnTorus
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationEndomorphismsToCompleteDvr
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSemiAbelianUniformisationOfFiniteExtTrans
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsSemiAbelianOfGenericAbelianOfClosedIsGt
@@ -1410,7 +1410,7 @@ theorem factor_unif_at_trait : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocal
     GlobalTheory.T.semiabelian_uniformization_linear_action_descent R hR D D' F A' G' hG' U' oA oG hO G hG inc pr hinc hpr h1 h2 R₉ ρ₉ G₉ β₉ β₉₂ P₉ A₉ gen₉ a1 a2 a3 a4 a5 a6 a7 a8
   haveI := hR.2
   have hR₀ : Base R₀ := ⟨c1.1, charZero_of_injective_ringHom c1.2.1⟩
-  obtain ⟨D'', U'', hLG, -⟩ := GlobalTheory.T.exists_uniformisation_completeLocal_evenOnTorus R₀ hR₀ G₀ P c5 c7 A₀ gen₀ c8 c9
+  obtain ⟨D'', U'', hLG, -⟩ := _root_.GlobalTheory.Mum.exists_unif_even R₀ hR₀ G₀ P c5 c7 A₀ gen₀ c8 c9
   obtain ⟨W, _, _, _, φ, GW, _, _, β, DW, AW, UW, w1, w2, w3, w4, w5, -⟩ := exists_trait_of_unif R₀ hR₀ D'' A₀ G₀ c5 U''
   rw [hLG] at w5
   exact ⟨R₀, _, _, _, ρ₀, D₀, G₀, _, _, β₀, β₀₂, P, W, _, _, _, φ, GW, _, _, β, DW, AW, UW, c1, c2, c3, c4, c5, w1, w2, w3,
@@ -1460,7 +1460,7 @@ theorem factor_unif : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], 
   haveI := hB.2
   have hB₀ : Base R₀ := ⟨hF₀.1, charZero_of_injective_ringHom hF₀.2.1⟩
   obtain ⟨R₁, _, _, _, ρ₁, D₁, G₁, _, _, β₁, A₁, U₁, hF₁, hD₁, hβ₁, hL₁⟩ :=
-    GlobalTheory.T.exists_finiteExtension_uniformisation_of_trait_unif R₀ hB₀ D₀ G₀ P hG₀ W hW φ hφi hφl GW β DW AW UW hβ hL hDW
+    _root_.GlobalTheory.Mum.Ident.exists_finExt_unif R₀ hB₀ D₀ G₀ P hG₀ W hW φ hφi hφl GW β DW AW UW hβ hL hDW
   obtain ⟨hF, hD⟩ := GlobalTheory.Mum.FinExtComp.finExt_comp_isPullDeg R R₀ R₁ ρ₀ ρ₁ D.toPre D₀.toPre D₁.toPre hF₀ hF₁ hD₀ hD₁
   obtain ⟨β₁₂, hsq₁, hlam⟩ := GlobalTheory.Mum.lbIso_lam_pull_of_isGrpPullback _ _ (spMap ρ₁) G₀ G₁ β₁ hβ₁
   have hQ : (abelian₂ G' U'.LG.L).IsLB := ReciprocityTheory.ChartRestriction.G.DVR.linComb_isLB _ U'.LG.isLB _ _

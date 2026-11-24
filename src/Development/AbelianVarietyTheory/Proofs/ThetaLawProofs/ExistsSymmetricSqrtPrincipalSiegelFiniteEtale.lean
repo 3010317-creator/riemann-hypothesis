@@ -9,10 +9,13 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.AbelianScheme
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelObjectPullbackExistsAndPrincipal
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelPullbackIdCompCancel
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsDescentSymmetricLinearisedBundleStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsFiniteEtaleCoverConstantTorsionStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsPrincipalPolarizationSymmetricSquareRootStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsFiniteEtaleCoverConstantTorsion
+public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsPrincipalPolarizationSymmetricSquareRoot
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsSymmetricLinearisationSquareDiagonalBundleStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.LamIsoOfDoublingPullbackEqDiagonalSqStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
+public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.LamIsoOfDoublingPullbackEqDiagonalSq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -236,7 +239,7 @@ theorem exists_sqrt : Out.Laws → ∀ (h k : ℕ) (o : Type) [CommRing o] (ζ :
   obtain ⟨c₁, hpb₁, hc₁⟩ := pull_sieg (spMap β) f hβ.symm c hc
   have sm₁ := GlobalTheory.T.siegel_smoothOfRelativeDimension_charZero hL h k o ζ R β c₁ hk hζ
 
-  obtain ⟨R₁, _, _, ⟨fin₁, et₁, ff₁⟩, lab₁⟩ := GlobalTheory.T.exists_finiteEtale_cover_constant_torsion R c₁.A h 2 c₁.ab sm₁ (two R)
+  obtain ⟨R₁, _, _, ⟨fin₁, et₁, ff₁⟩, lab₁⟩ := _root_.GlobalTheory.TorsionCover.exists_torsion_basis_cover R c₁.A h 2 c₁.ab sm₁ (two R)
   haveI : IsNoetherianRing R₁ := Algebra.FiniteType.isNoetherianRing R R₁
   letI : Algebra ℚ R₁ := ((algebraMap R R₁).comp (algebraMap ℚ R)).toAlgebra
   obtain ⟨c₂, hpb₂, hc₂⟩ := pull_sieg (spMap ((algebraMap R R₁).comp β)) (spMap (algebraMap R R₁))
@@ -260,9 +263,9 @@ theorem exists_sqrt : Out.Laws → ∀ (h k : ℕ) (o : Type) [CommRing o] (ζ :
   obtain ⟨M, hM, hLM, hMinv⟩ := _root_.GlobalTheory.LinDescent.exists_descent_symmetric (Sp R₂) c₃.A c₃.A ((𝟙 c₃.A) ^ 2) _ i₃ _ hLlb hmon hfin het hsurj
     (fun x => by rw [MonObj.comp_pow, Category.comp_id, ← map_pow, sq2, map_one])
     (fun k _ _ t => ⟨fun x => by rw [MonObj.comp_pow, Category.comp_id]; exact (hi₃ k t).1 x, (hi₃ k t).2⟩) u j hu
-  have hLam := GlobalTheory.T.lam_iso_of_doubling_pullback_eq_diagonal_sq hL h k o ζ R₂ _ c₃ M hc₃ hM
+  have hLam := _root_.GlobalTheory.LamOfDouble.lam_iso_of_pull_two hL h k o ζ R₂ _ c₃ M hc₃ hM
     (LBIso.trans (isLB_lbPow (diag_isLB c₃) 2) hLlb (pull_isLB hM _) (lbIso_lbPow (diag_iso hsq₃ hiso₃) 2) hLM)
-  obtain ⟨P, φP, hP⟩ := GlobalTheory.T.exists_principalPolarization_symmetric_squareRoot hL h k o ζ R₂ _ c₃ M hc₃ (GlobalTheory.T.siegel_smoothOfRelativeDimension_charZero hL h k o ζ R₂ _ c₃ hk hζ) hM hLam hMinv
+  obtain ⟨P, φP, hP⟩ := _root_.GlobalTheory.SymRoot.exists_polAV_sqOf hL h k o ζ R₂ _ c₃ M hc₃ (GlobalTheory.T.siegel_smoothOfRelativeDimension_charZero hL h k o ζ R₂ _ c₃ hk hζ) hM hLam hMinv
 
   obtain ⟨ψ₂, hψ₂⟩ := sqOf_of_pb hP ⟨φ₃, φ₃₂, hg₃, hsq₃, hiso₃, hlev₃⟩
   obtain ⟨ψ₁, hψ₁⟩ := sqOf_of_pb hψ₂ ⟨φ₂, φ₂₂, hg₂, hsq₂, hiso₂, hlev₂⟩

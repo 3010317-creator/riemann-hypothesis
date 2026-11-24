@@ -5,7 +5,9 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValua
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TestQuadraticFormEqPsiValuationMul
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralFamilyOfStrictMin
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.NonemptyLinearEquivOfRel
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisedTestDimensionsAndSplitFibreStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.RigGen
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisedTestDimensionsAndSplitFibre
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsDivOfExpandsAt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -254,7 +256,7 @@ end Family
 theorem main : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (l : u.Lab) (k : ℕ), 1 ≤ k → ∀ (J : Type) [Fintype J], Fintype.card J = k ^ S.g → ∃ (σ : J → (u.H k).Sec) (cls : J → u.D.toPre.X) (f : J → ∀ α, u.D.toPre.SecB k α), u.Basis l k σ cls f := by
   intro hL o Ω _ _ _ _ S ρ p _ y₀ u l k hk J _ hJ
   obtain ⟨ϖ, Q, hϖ, hQ, hlt, hq⟩ := GlobalTheory.T.testQuadraticForm_eq_psi_valuation_mul o Ω S ρ p y₀ u l
-  have hdim := (GlobalTheory.T.uniformisedTest_dimensions_and_split_fibre hL o Ω S ρ p y₀ u).2.1
+  have hdim := (_root_.GlobalTheory.ZH.utest_dim_and_split hL o Ω S ρ p y₀ u).2.1
   let C := u.D.toPre.X ⧸ FamFree.multiples u.D.toPre k
   have hc : Nat.card C = k ^ Module.finrank ℤ u.D.toPre.X := AddSubgroup.index_range_nsmul u.D.toPre.X k
   have : Finite C := Nat.finite_of_card_ne_zero (by rw [hc]; positivity)

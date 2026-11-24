@@ -5,20 +5,22 @@ public import Development.AbelianVarietyTheory.Definitions.Degenerations.HomExtS
 public import Development.AbelianVarietyTheory.Statements.TorsionEndomorphisms.EndDeterminedOnTorsion
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesOfExpansionLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesTorsionPairingSeparationIntegraStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesOfExpansionLaws
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesTorsionPairingSeparationIntegra
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.SepticCharacterInjective
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationDataTorsionStructureAlgClosed
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationValuesIntOfAdmissibleBaseStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.CharZeroOfIsPrimitiveRoot
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationValuesIntOfAdmissibleBase
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralDegenerationValues
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespondStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantsEqDegenerationSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValuesStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespond
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantsEqDegenerationSeries
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValues
 public import Mathlib.Topology.MetricSpace.Ultra.Basic
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TxCosetCriterion
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullback
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfUnifOfSubsingleton
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTorsionIdentificationWithPairingStatement
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTorsionIdentificationWithPairing
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMulEquivOfIsGrpPullback
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaCoordinatesExistUniqueSeparatePointsStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -155,13 +157,13 @@ theorem subsingleton_lattice (hV : HV) {E : Type} [Field E] [NumberField E] [IsC
   obtain ⟨N, ν, hν⟩ := GlobalTheory.ValuesExist.exists_integral_values hL M.W M.P.D.toPre hev hbi C S
     fun r => (hS _).2 (M.ext.1 r)
   have hI : ν.IntN := ⟨S, hS, hν⟩
-  obtain ⟨Q, hQ⟩ := GlobalTheory.T.degenerationValues_int_of_admissibleBase M.W _ hR M.P.D C M.ext N ν hI
-  have hT := GlobalTheory.T.abelianPartValues_torsion_pairing_separation_integral hL hL2 (GlobalTheory.T.abelianPartValues_of_expansionLaws hL) M.W M.P.D.toPre hev hbi C
+  obtain ⟨Q, hQ⟩ := _root_.GlobalTheory.Ex.IntVal.main M.W _ hR M.P.D C M.ext N ν hI
+  have hT := _root_.GlobalTheory.ValuesTorsion.tors_of_integral hL hL2 (_root_.GlobalTheory.ThetaInValues.brUth_of_laws hL) M.W M.P.D.toPre hev hbi C
     ⟨M.ext.1, fun r hr => M.ext.2 r (bot_le (a := IsLocalRing.maximalIdeal M.W) hr)⟩ N ν hI n hn ho h1
-  obtain ⟨g₁, g₂, g₃, -, g₅⟩ := GlobalTheory.T.torus_torsion_points_correspond_values M.W M.P.D.toPre hev hbi C N ν
+  obtain ⟨g₁, g₂, g₃, -, g₅⟩ := _root_.GlobalTheory.Ex.GtValues.points_correspond M.W M.P.D.toPre hev hbi C N ν
   have hk : 0 < (n ^ j) ^ 2 := pow_pos (pow_pos hn.pos _) _
   obtain ⟨g₆, g₇, g₈⟩ := g₅ ((n ^ j) ^ 2)
-  obtain ⟨f, f₁, f₂, f₃, f₄, -⟩ := GlobalTheory.T.uniformisation_torsion_identification_with_pairing hV.1 M.W _ hR M.P.D M.P.A M.t.G M.t.semi M.P.U C _ hk
+  obtain ⟨f, f₁, f₂, f₃, f₄, -⟩ := _root_.GlobalTheory.TorsionIso.torsion_eq hV.1 M.W _ hR M.P.D M.P.A M.t.G M.t.semi M.P.U C _ hk
   obtain ⟨e, he⟩ := exists_mulEquiv_of_isGrpPullback M.cart (𝟙 (Sp C)) (jFK (R := M.W) C) (Category.id_comp _).symm
   let x : D.La → (TFK (R := M.W) C ⟶ M.P.A.A) := fun a => e (o.I.ev ((n ^ j) ^ 2) a)
   have hp : ∀ a, o.I.ev ((n ^ j) ^ 2) a ^ (n ^ j) ^ 2 = 1 := fun a => (o.I.onto _ hk _).2 ⟨a, rfl⟩
@@ -195,7 +197,7 @@ theorem subsingleton_lattice (hV : HV) {E : Type} [Field E] [NumberField E] [IsC
   · rintro q q' a ⟨p, hp, e₁⟩ ⟨p', hp', e₂⟩
     exact (g₈ p p' q q' hp hp').1 ((f₃ p p').1 (e₁.trans e₂.symm))
   · choose p hp hp' using hq
-    have ht := GlobalTheory.T.theta_constants_eq_degeneration_series hV GlobalTheory.T.torus_torsion_points_correspond_values (GlobalTheory.T.families_values_correspond hL hL2) M.W _ M.cdv rfl M.P.D M.P.A M.t.G M.t.semi M.P.U C M.ext
+    have ht := _root_.GlobalTheory.Ex.ThetaSeries.theta_const_eq_series hV _root_.GlobalTheory.Ex.GtValues.points_correspond (_root_.GlobalTheory.Ex.brFam hL hL2) M.W _ M.cdv rfl M.P.D M.P.A M.t.G M.t.semi M.P.U C M.ext
       N ν (n ^ j) ho.pow D.La p q x (fun a => (f₁ _ _).2 (hp' a).symm) hp
     obtain ⟨c, hc⟩ := (c₂ 1 _ v ((c₃ _).1 ht)).1 ((c₃ _).1 hv')
     exact ⟨c, fun a => congrFun hc a⟩

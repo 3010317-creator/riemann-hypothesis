@@ -6,7 +6,7 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasDer
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.StdCharacterHalfSymplecticFormRealPoint
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.APlusComm
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorLaws
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HermitianAdjointLawsStandardCharacterStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HermitianAdjointLawsStandardCharacter
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieAlgebrasAtPlaceActFockVectorsByFockOperators
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
 import Mathlib.Algebra.Order.Floor.Extended
@@ -356,7 +356,7 @@ theorem GlobalTheory.FockAdjoint.fock_dag : ∀ (D : D7) (ψ : AddChar (AF D.hos
       (∀ (c : ℂ) P, j (c • P) = starRingEnd ℂ c • j P) ∧ ∀ f, IsVacF ψ θ A B f → IsVacF ψ θ B A (dag S T f) ∧
         ∀ P, ptF ψ θ B A (dag S T f) (j P) = dag S T (ptF ψ θ A B f P) := by
   intro D ψ θ hψ hθ S T A B
-  have L := GlobalTheory.T.hermitianAdjoint_laws_standardCharacter D ψ hψ S T
+  have L := _root_.GlobalTheory.AdjLawPf.adjLaw D ψ hψ S T
   have cA := GlobalTheory.ArchRec.LieAtPlace.cart_isCartanInv A
   have cB := GlobalTheory.ArchRec.LieAtPlace.cart_isCartanInv B
   refine ⟨(jEquiv A B).toAddEquiv, fun c P => ?_, fun f hf => ⟨⟨L.theta f hf.1, fun τ =>

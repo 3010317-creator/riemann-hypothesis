@@ -15,7 +15,6 @@ public import Mathlib.NumberTheory.LegendreSymbol.AddCharacter
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ComplexMatrixGaussSumNormIntegralGalois
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLatticeIffUniformiserReductionVanishes
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MatrixGaussSumSingularAndInvertible
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemCompletedPairLatticeIffFrameMatrixIntegralOnHStatement
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -1063,7 +1062,7 @@ theorem datum_conj_half_fourier : ∀ (D : D7) (G : Type) [Group G] [Fintype G] 
   choose yx hyh hyl hyr using GlobalTheory.T.exists_half_dilated_reduction_residueMatrices D G Pl0 T0 A Ks R F hC hG i hV Q hQ eQ heQ ϖ hϖ hϖQ
   have hker := GlobalTheory.T.mem_lattice_iff_uniformiser_reduction_vanishes D G Pl0 T0 A Ks R F hC hG i hV Q hQ eQ heQ ϖ hϖ hϖQ
   have h4a := GlobalTheory.T.mem_completedPairLattice_iff_adjointFrameMatrix_integral_conjHalf D G Pl0 T0 A Ks R F hC hG i hV Q hQ eQ heQ
-  have h4b := GlobalTheory.T.mem_completedPairLattice_iff_frameMatrix_integral_on_half D G Pl0 T0 A Ks R F hC hG i hV Q hQ eQ heQ
+  have h4b := _root_.GlobalTheory.HalfLatInt.isIntM_iff_mem_latP D G Pl0 T0 A Ks R F hC hG i hV Q hQ eQ heQ
   have hdm := GlobalTheory.T.completedPairLattice_dilation_mem_of_integer D G Pl0 T0 A Ks R i ϖ
   have key : ∀ g : WO (Vc D i) (Wc D i) → ℂ,
       ∑ y ∈ Finset.univ.image yx, (∑ x ∈ Finset.univ.filter (fun x => yx x = y), c x) * g y = ∑ x, c x * g (yx x) := by

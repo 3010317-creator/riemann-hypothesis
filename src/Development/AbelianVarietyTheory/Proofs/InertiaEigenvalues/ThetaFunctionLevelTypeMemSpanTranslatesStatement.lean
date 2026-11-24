@@ -19,7 +19,6 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaCo
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InfPartOneSubEInfSmul
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeisOAdd
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.OmVacuumEqSplitFacSmulSum
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsRepsLatticeQuotientConjugateHalfOrthogonalStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EquivariantOfWave
 public import Formalism.LocalToGlobal.IndefiniteReal.FockTheta.RealPlaceImaginaryGeneratorReEqZero
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GramMapMulInv
@@ -81,7 +80,6 @@ import Mathlib.RingTheory.PiTensorProduct
 import Mathlib.Tactic.ENatToNat
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ParamsEx
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameHeckeIntegralUnitsEqResidueCharProduct
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaCoefficientIsSchwartzBruhatUniformSplitStatement
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
 import Mathlib.Tactic.Linter.Style
@@ -871,7 +869,7 @@ theorem form_placeModel_eq_zero_of_vanish : ∀ (D : D7) (ψ : AddChar (AF D.hos
     map_nsmul (DistribSMul.toAddMonoidHom (WO S T) c) k x
   have haa : a * a = a := ha.1
   have hainf : infPart D a = 0 := GlobalTheory.SplitScalar.infPart_splitIdem ha
-  obtain ⟨Y, hYne, hY1, -, hY3⟩ := GlobalTheory.T.exists_reps_latticeQuotient_conjugateHalf_orthogonal D ψ S T hψ ΛS ΛT hS hT a haa hainf k hk
+  obtain ⟨Y, hYne, hY1, -, hY3⟩ := _root_.GlobalTheory.DownLift.GenQuot.reps_orth D ψ S T hψ ΛS ΛT hS hT a haa hainf k hk
   have hzero : (fun t => ∑ y ∈ Y, ψ (symplO S T t y) * Ψ t) = 0 := by
     funext t
     simp only [Pi.zero_apply]
@@ -1247,7 +1245,7 @@ theorem exists_decomp (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (a : AE D) 
 
 theorem mem_span_of_coef_mem_span : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D), IsStdChar D ψ (-1) → ∀ a : AE D, IsSplitIdem D a → ∀ f : WO S T → ℂ, IsThetaFunO ψ S T f → ∀ 𝒢 𝒯 : Set (WO S T → ℂ), (∀ φ ∈ 𝒯, IsThetaFunO ψ S T φ) → (∀ Ψ ∈ 𝒢, ∀ x₁, IsHalf a x₁ → ∃ φ ∈ Submodule.span ℂ 𝒯, ∀ ℓ, InvForm ψ S T a ℓ → ∀ x, IsHalf a x → ℓ (heisO ψ S T x φ) = Ψ x * ℓ (heisO ψ S T x₁ f)) → (∀ ℓ, InvForm ψ S T a ℓ → coef ψ S T a ℓ f ∈ Submodule.span ℂ 𝒢) → f ∈ Submodule.span ℂ 𝒯 := by
   intro D ψ S T hψ a ha f hf 𝒢 𝒯 h𝒯 h𝒢 hcoef
-  obtain ⟨-, -, X, hXh, hX⟩ := GlobalTheory.T.thetaCoefficient_isSchwartzBruhat_uniform_split D ψ S T hψ (GlobalTheory.PlaceModel.latFrame S) (GlobalTheory.PlaceModel.latFrame T)
+  obtain ⟨-, -, X, hXh, hX⟩ := _root_.GlobalTheory.DownLift.SplitCoef.coef_isSBHalf_uniform D ψ S T hψ (GlobalTheory.PlaceModel.latFrame S) (GlobalTheory.PlaceModel.latFrame T)
     (GlobalTheory.PlaceModel.isSelfDualC_latFrame S) (GlobalTheory.PlaceModel.isSelfDualC_latFrame T) a ha f hf
   obtain ⟨L, hLinv, hL⟩ := exists_decomp ψ S T a f X hX
   have hspan : ∀ Ψ ∈ Submodule.span ℂ 𝒢, ∀ x₁, IsHalf a x₁ → ∃ φ ∈ Submodule.span ℂ 𝒯, ∀ ℓ, InvForm ψ S T a ℓ →
@@ -1758,7 +1756,7 @@ theorem step_twist : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type
     (by first | exact GlobalTheory.ProjXCols.selfDual_isFullLattice _ _ dS)
     (by first | exact GlobalTheory.ProjXCols.selfDual_isFullLattice _ _ dT) (es PP) PP h0 (R.xiR t)
     (GlobalTheory.ChainTw.RModel.xiR_ne R hc.lev t PP hPP) _
-    ((GlobalTheory.T.thetaCoefficient_isSchwartzBruhat_uniform_split D R.ψ _ _ hψ _ _ dS dT _ ha f hT.1).2.1 ℓ hℓ) fun κ k1 k2 k3 k4 _ x x' hx hx' => ?_
+    ((_root_.GlobalTheory.DownLift.SplitCoef.coef_isSBHalf_uniform D R.ψ _ _ hψ _ _ dS dT _ ha f hT.1).2.1 ℓ hℓ) fun κ k1 k2 k3 k4 _ x x' hx hx' => ?_
   have k5 : ∀ P' ∈ P, P' ≠ PP → redFn (R.βV i) P' (finE (Vc D i) κ) = 1 := fun P' h h' =>
     GlobalTheory.DiagLiftFix.redFn_eq_one_of_ne he hPP' h0 k1 k3 h h'.symm
   have hκ : κ ∈ levG (Vc D i) (R.βV i) (R.datVt i t) := by

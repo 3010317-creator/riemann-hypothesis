@@ -5,7 +5,8 @@ public import Formalism.DoubleCosetMeasures.StatementZ
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RankEqCardIffExistsFrameMatrixFirstColumnBlock
 import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZetaIntegralLeftTranslatePrimitiveFramesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZetaIntegralLeftTranslatePrimitiveFrames
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,7 +42,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockV
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLagrModelOfIsLin
 
@@ -77,7 +77,7 @@ theorem GlobalTheory.OneSquareZeta.bigZeta_phiA_twist_eq_smallZeta : ∀ (k : Ty
       bigF (haarVol (KO k (Fin a))) ϖ ν (fun Z => phiA μ σ ν ϖ n (diagLat c) Ψ (g₀.val * Z))
       (X0 k σ * (invT h').val) := by
     rw [← hX]; simp only [bigF, Matrix.mul_assoc]
-  have hL := GlobalTheory.T.zetaIntegral_leftTranslate_primitiveFrames k a A' C μ σ ν ϖ n c Ψ g₀ h' hϖ
+  have hL := _root_.GlobalTheory.LeftTranslateZeta.bigF_phiA_left k a A' C μ σ ν ϖ n c Ψ g₀ h' hϖ
   rw [splitTheta_fFun_frameFirstBlock_mul] at hL
   have hS : smallF μ ν Ψ (Y0 k σ * h'.val) = smallF μ ν (fun Y => Ψ (Y * (invT N).val)) (Y0 k σ * h.val) := by
     simp only [smallF, hh', Units.val_mul, Matrix.mul_assoc]

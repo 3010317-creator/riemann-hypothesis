@@ -8,8 +8,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinPartConjMem
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CardKerSubspacesAndHeckePolyOfConvolution
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PeterssonFormProportionalClassSumAllLevelsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplittingCharactersUnramifiedOffLevelsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaVacuumHeckeIdentitySplitPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplittingCharactersUnramifiedOffLevels
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaVacuumHeckeIdentitySplitPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +45,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesPropertiesStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
 import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.SecondStepGluing
 import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ValBasic
 import Mathlib.Tactic.Basify
@@ -258,8 +258,8 @@ theorem step_match {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {χS χT : (AE
   subst hS hT
   rw [← absNorm_conjPl] at hq
   have hP' : conjPl (conjPl P) ≠ conjPl P := by rw [Formalism.DivisionValues.ValuationRepresentative.conjPl_conjPl]; exact hP.symm
-  have hv := (GlobalTheory.T.thetaVacuum_heckeIdentity_splitPlace ψ S T χS χT om P hW hP u.1 u.2).1
-  have hm := ((GlobalTheory.T.thetaVacuum_heckeIdentity_splitPlace ψ S T χS χT om (conjPl P) hW hP' u'.1 u'.2).2 e ϖ x t he h1 h2 hx).1 hr
+  have hv := (_root_.GlobalTheory.Hk3.SplitMatch.match_split ψ S T χS χT om P hW hP u.1 u.2).1
+  have hm := ((_root_.GlobalTheory.Hk3.SplitMatch.match_split ψ S T χS χT om (conjPl P) hW hP' u'.1 u'.2).2 e ϖ x t he h1 h2 hx).1 hr
   rw [splitC_sum, dualC_splitC]
   refine match_sum _ _ _ _ fun l hl => ?_
   have h3 := (((GlobalTheory.T.thetaVacua_matching_conjugatePrime ψ S T χS χT om P hW).2 hv).2 _ _).1 (hm l (Nat.lt_succ_iff.1 (Finset.mem_range.1 hl)))
@@ -368,11 +368,11 @@ theorem constants (q r t m : ℕ) (hq : q ≠ 0) (hr : Odd r) (ht : Odd t) (hm :
 
 theorem exists_transfer : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A), GlobalTheory.Chain.LiftInteg D → Core R F → SchurAll R → ∀ t (P : A.ok t), ∃ z : ℕ → ℕ → ℂ, (∀ k, k ≤ D.sp.X'.rank → MatchE R t (R.pl P) (Finsupp.single (splitLab D.sp.X'.rank k) 1) (splitC (Yc D 0).rank (z k))) ∧ ∀ a : ℕ → ℂ, Formalism.L2.Col.heckePolyOf D.sp.X'.rank (A.q P) (fun k => ∑ j ∈ Finset.range ((Yc D 0).rank + 1), z k j * a j) = (Formalism.L2.Col.heckePolyOf (Yc D 0).rank (A.q P) a).comp (C ((A.q P : ℂ) ^ (D.R.m / 2 * D.R.t)) * X) * ((A.fam.R t).blockProd P).map D.what₂.embLL := by
   intro D G _ _ Pl0 T A Ks _ _ _ R F hL hC hS t P
-  obtain ⟨-, g2, -, g4⟩ := GlobalTheory.T.theta_lift_levels_good_primes_properties R F hC.lev
+  obtain ⟨-, g2, -, g4⟩ := _root_.GlobalTheory.GoodPrimes.good_primes R F hC.lev
   obtain ⟨hG, hP, hq⟩ := g4 hC.fam t P P.2
   have hG' := (g2 t _ hG).2.1
-  obtain ⟨u1, u2⟩ := GlobalTheory.T.splittingCharacters_unramified_offLevels R F hC.lev t _ hG
-  obtain ⟨v1, v2⟩ := GlobalTheory.T.splittingCharacters_unramified_offLevels R F hC.lev t _ hG'
+  obtain ⟨u1, u2⟩ := _root_.GlobalTheory.UnrOffLevels.unrPl_of_good R F hC.lev t _ hG
+  obtain ⟨v1, v2⟩ := _root_.GlobalTheory.UnrOffLevels.unrPl_of_good R F hC.lev t _ hG'
   have hm := D.R.two_le_m
   have hP' : conjPl (conjPl (R.pl P)) ≠ conjPl (R.pl P) := by rw [Formalism.DivisionValues.ValuationRepresentative.conjPl_conjPl]; exact hP.symm
   obtain ⟨e, he⟩ := GlobalTheory.MovedIdem.exists_isIdemAt (conjPl (R.pl P)) (by
@@ -397,11 +397,11 @@ theorem exists_transfer : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T :
   have hfix : FixAll R t (R.pl P) := by
     refine ⟨fun k hk => ?_, ?_, fun i => ?_⟩
     · have := unrPl_step (u2 (k + 1) (by omega) hk.le) u1
-      exact (GlobalTheory.T.thetaVacuum_heckeIdentity_splitPlace _ _ _ _ _ _ _ (hC.chain.ωY t k hk) hP this.1 this.2).1
+      exact (_root_.GlobalTheory.Hk3.SplitMatch.match_split _ _ _ _ _ _ _ (hC.chain.ωY t k hk) hP this.1 this.2).1
     · have := unrPl_step (u2 D.R.m (by omega) le_rfl) u1
-      exact (GlobalTheory.T.thetaVacuum_heckeIdentity_splitPlace _ _ _ _ _ _ _ (hC.chain.ωX t) hP this.1 this.2).1
+      exact (_root_.GlobalTheory.Hk3.SplitMatch.match_split _ _ _ _ _ _ _ (hC.chain.ωX t) hP this.1 this.2).1
     · have := u2 ((i : ℕ) + 1) (by omega) i.2
-      exact (GlobalTheory.T.thetaVacuum_heckeIdentity_splitPlace _ _ _ _ _ _ _ (hC.thP.ωP i t) hP this (unrPl_mul_inv this u1)).1
+      exact (_root_.GlobalTheory.Hk3.SplitMatch.match_split _ _ _ _ _ _ _ (hC.thP.ωP i t) hP this (unrPl_mul_inv this u1)).1
   refine ⟨W 0, fun k hk => ?_, fun a => ?_⟩
   · rw [hY 0 (Nat.zero_le _)]
     refine GlobalTheory.T.matchE_of_chainStep_matches R F hL hC hS t _ hG hfix _ (fun j => splitC (D.R.r + j * D.R.t) (W j k)) ?_ fun j hj => ?_

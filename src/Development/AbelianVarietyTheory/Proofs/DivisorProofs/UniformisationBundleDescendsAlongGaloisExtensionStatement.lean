@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.QuasiCompact
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericPointsSubsetAbLocus
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolarisedGenericFibreDescendsGaloisStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisInvariantFunctionsFlatBaseChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisInvariantFunctionsFlatBaseChange
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsTorusAndQuotientHom
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SecCarried
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenFarSet
@@ -300,7 +300,7 @@ theorem isSymmetric_of_pull_iso_unif : ∀ (R : Type) [CommRing R] [IsDomain R] 
       (GlobalTheory.SemiRigid.globalFns _ _ A'.isAb).2
   have he : eSec G' ≫ G'.hom = 𝟙 _ := Over.w η[G']
   obtain ⟨t, ht⟩ := exists_gen_of_invariant hL β a.act hβ
-    (GlobalTheory.T.galois_invariant_functions_flat_baseChange R R' ρ hρ hg _ _ G.hom G'.hom β inferInstance gp.1 a.act hβ fun σ => (a.cart σ).1.w)
+    (_root_.GlobalTheory.Mum.InvFun.invariant_functions R R' ρ hρ hg _ _ G.hom G'.hom β inferInstance gp.1 a.act hβ fun σ => (a.cart σ).1.w)
     _ _ u hu fun σ z J hJ => by
       have key := GlobalTheory.ValueForm.gen_unique_of_injective hL (φ := fun k : Fin 2 => a.act σ ≫ β ≫ ![(ι[G]).left, 𝟙 G.left] k)
         (fun V _ q => Finset.prod_congr rfl fun k _ => by
@@ -1078,7 +1078,7 @@ theorem map_inv_eq {B : Type} [CommRing B] (t : B →+* B) (u : Bˣ) (h : t u.va
 theorem invariant_units : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (R' : Type) [CommRing R'] [IsDomain R'] [IsLocalRing R'] (ρ : R →+* R'), FinExt ρ → IsGal ρ → ∀ (G' : Over (Sp R')) [GrpObj G'] (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G] (β : G'.left ⟶ G.left) (act : Gal ρ → (G'.left ⟶ G'.left)), IsSemiAbelian G → IsGrpPullback G' G (spMap ρ) β → (∀ σ, IsGrpPullback G' G' (spMap (Gal.hom σ)) (act σ)) → (∀ σ, act σ ≫ β = β) → ∀ O : G.left.Opens, Function.Injective (β.app O).hom ∧ ∀ u : Γ(G'.left, β ⁻¹ᵁ O)ˣ, (∀ σ (h : β ⁻¹ᵁ O ≤ act σ ⁻¹ᵁ (β ⁻¹ᵁ O)), ((act σ).appLE _ _ h).hom u.val = u.val) → ∃ g : Γ(G.left, O)ˣ, pullU β O g = u := by
   intro R _ _ _ _ R' _ _ _ ρ hF hG G' _ G _ _ β act hS hβ hact hinv O
   have := hS.smooth
-  have H := GlobalTheory.T.galois_invariant_functions_flat_baseChange R R' ρ hF hG G.left G'.left G.hom G'.hom β inferInstance hβ.1 act hinv
+  have H := _root_.GlobalTheory.Mum.InvFun.invariant_functions R R' ρ hF hG G.left G'.left G.hom G'.hom β inferInstance hβ.1 act hinv
     (fun σ => (hact σ).1.w) O
   refine ⟨H.1, fun u hu => ?_⟩
   exact exists_unit_of_mem_range (β.app O).hom H.1 u (H.2 _ hu) (H.2 _ fun σ h => map_inv_eq _ u (hu σ h))

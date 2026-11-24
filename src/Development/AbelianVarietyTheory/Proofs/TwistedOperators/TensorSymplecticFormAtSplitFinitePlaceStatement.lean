@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsLocIsoR
 public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicTraceSupportedAtSplitPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicTraceSupportedAtSplitPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -181,7 +182,7 @@ theorem symp_at_split : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Nu
     unfold GlobalTheory.WeilM.hTens
     simp only [Finset.smul_sum, ← smul_mul_assoc, h, zero_mul, Finset.sum_const_zero, mul_zero]
   unfold GlobalTheory.WeilM.symp
-  rw [GlobalTheory.T.adelicTrace_supportedAtSplitPlace hcm v t _ hz]
+  rw [_root_.GlobalTheory.SplitAdeleTrace.trace_at_split hcm v t _ hz]
   change psiLoc ψ v _ = psiLoc ψ v _
   congr 1
   rw [pairM_comm (coY σ X Y t b c x), coX, coX, coY, coY, pairM_chart, pairM_chart]

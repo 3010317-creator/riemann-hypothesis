@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.KerBF
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedThetaSeriesTermsLawsUnipotentRationalStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedThetaSeriesTermsLawsUnipotentRational
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsClosedNFlag
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaTermSeriesSummableModerateGrowthUniformStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CuspRapidDecayOfSobolev
@@ -85,7 +86,7 @@ theorem base_term_norm_coords : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V
   haveI := vW.haar
   haveI : SFinite vN.ν := inferInstance
   haveI : SFinite vW.μ := inferInstance
-  have hTL := GlobalTheory.T.mixedThetaSeries_terms_laws_unipotent_rational D ψ V V₀ W ρ d χV χW om om' hω hω' vS
+  have hTL := _root_.GlobalTheory.Unf.TermLaw.term_laws D ψ V V₀ W ρ d χV χW om om' hω hω' vS
   have hsplit : ∀ (n : GA D V) (h : GA D W), om (n * g, h) Φ = om (n, 1) (om (g, h) Φ) := by
     intro n h
     rw [← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, one_mul]
@@ -283,7 +284,7 @@ theorem unfold_norm_base_term_translate : ∀ (D : D7) (ψ : AddChar (AF D.host.
   have hmeas : ∀ y : Orb W x₀, Measurable fun p : flagN d × GA D W =>
       G p.2 * term ψ d W vS (om (p.1.1 * g, p.2) Φ) y.1 := by
     intro y
-    have t4 := (GlobalTheory.T.mixedThetaSeries_terms_laws_unipotent_rational D ψ V V₀ W ρ d χV χW om om' hω hω' vS Φ hΦ).2.2.2.1 y.1
+    have t4 := (_root_.GlobalTheory.Unf.TermLaw.term_laws D ψ V V₀ W ρ d χV χW om om' hω hω' vS Φ hΦ).2.2.2.1 y.1
     refine Continuous.measurable ?_
     refine (hG.2.1.comp continuous_snd).mul ?_
     exact t4.comp (((continuous_subtype_val.comp continuous_fst).mul continuous_const).prodMk continuous_snd)
@@ -304,8 +305,8 @@ theorem unfold_norm_base_term_translate : ∀ (D : D7) (ψ : AddChar (AF D.host.
           (((γ.1.1 : GA D V), 1) * ((1 : GA D V), γ.1.2)) * (p.1.1 * g, p.2) := by
         ext <;> simp [mul_assoc]
       rw [hsplit, map_mul, map_mul, Module.End.mul_apply, Module.End.mul_apply]
-      have t2 := (GlobalTheory.T.mixedThetaSeries_terms_laws_unipotent_rational D ψ V V₀ W ρ d χV χW om om' hω hω' vS _ hΨ').2.1
-      have t3 := (GlobalTheory.T.mixedThetaSeries_terms_laws_unipotent_rational D ψ V V₀ W ρ d χV χW om om' hω hω' vS _ hΨ).2.2.1
+      have t2 := (_root_.GlobalTheory.Unf.TermLaw.term_laws D ψ V V₀ W ρ d χV χW om om' hω hω' vS _ hΨ').2.1
+      have t3 := (_root_.GlobalTheory.Unf.TermLaw.term_laws D ψ V V₀ W ρ d χV χW om om' hω hω' vS _ hΨ).2.2.1
       have e1 : (rat (M * y.1) : Mx D W.rank ρ) = rat (γ • y).1 ⬝ blockX d (γ.1.1 : GA D V) := by
         rw [hrel γ y, hM, rat_mul]
       rw [t2 _ hq1 γ.1.1.2 (γ • y).1 (M * y.1) e1, t3 _ hq2 (M * y.1) y.1 (by rw [hM, rat_mul])]

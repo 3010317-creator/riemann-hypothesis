@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSmoothVector
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagDomainFramesEqGramFramesUnitary
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscreteSeriesModelUnitaryIrreducibleOrthonormalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscreteSeriesModelUnitaryIrreducibleOrthonormal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsArchimedeanLiftUnitaryGroupProduct
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegativeFrameDomainProductOpenPreconnectedStable
 import Mathlib.Algebra.Order.Floor.Extended
@@ -130,7 +130,7 @@ theorem continuous_of_holAd {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {S :
   haveI := topGroup V
   obtain ⟨L, hL1, -, hLc, hUG, hLa, -, hdec, hcomm, -⟩ := GlobalTheory.RealLift.exists_real_lift D θ V hθ
   have horth : ∀ τ, OrthFr (gramAt D V τ) (nNeg (M.ε τ)) (x0Mat M τ) := fun τ =>
-    ((GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).2.2.2 hM).1
+    ((_root_.GlobalTheory.HolDict.ModelRep.model_rep D V S M τ).2.2.2 hM).1
   obtain ⟨-, -, hst, hx0⟩ := GlobalTheory.HolDict.frDoms_open_preconnected_stable V.rank D.what₂.Tau (gramAt D V) (fun τ => nNeg (M.ε τ)) (x0Mat M) horth
   rw [continuous_iff_continuousAt]
   intro h
@@ -264,7 +264,7 @@ theorem holForm_adel : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.T
   have hhol : HolAd θ M w (adel V dict (muPin V dict mu c) P) := by
     obtain ⟨L, -, -, -, hUG, -⟩ := GlobalTheory.RealLift.exists_real_lift D θ V G.inf
     have horth : ∀ τ, OrthFr (gramAt D V τ) (nNeg (M.ε τ)) (x0Mat M τ) := fun τ =>
-      ((GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).2.2.2 hM).1
+      ((_root_.GlobalTheory.HolDict.ModelRep.model_rep D V S M τ).2.2.2 hM).1
     obtain ⟨-, -, hst, hx0⟩ := GlobalTheory.HolDict.frDoms_open_preconnected_stable V.rank D.what₂.Tau (gramAt D V) (fun τ => nNeg (M.ε τ)) (x0Mat M) horth
     have hst' : ∀ u ∈ UG (gramAt D V), ∀ x ∈ frDoms (gramAt D V) (fun τ => nNeg (M.ε τ)),
         (fun τ => (u τ * Matrix.of (x τ) : Mt V.rank)) ∈ frDoms (gramAt D V) (fun τ => nNeg (M.ε τ)) := by

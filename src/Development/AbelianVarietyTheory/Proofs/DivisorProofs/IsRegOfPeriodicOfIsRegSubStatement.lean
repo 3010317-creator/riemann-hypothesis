@@ -11,7 +11,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.DetJacMatCoo
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NoCommonZeroCombVal
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SecondCountableTopologyOfIsProjOver
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfValEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationPreimageValueRulesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationPreimageValueRules
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRegularSectionOfRegularDifferencesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRegularOnOpenUniformisedOfLocallyStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRegularOnOpenUniformisedSubalgebraRestrictStatement
@@ -212,7 +212,7 @@ theorem isUnit_res_of_le_basicOpen {X : Scheme.{0}} {U V : X.Opens} (f : Γ(X, U
 
 theorem ratio_periodic_isReg : ∀ (A : Over (Sp ℂ)) [GrpObj A] (g : ℕ) (L : LB A.left) (u : HolUnif A L g), IsAbelianScheme A → ∀ (n : ℕ) (W : Fin n → A.left.Opens) (r : ∀ k, Fin n → Γ(A.left, W k)), IsRatioCover u.ex W r → ∀ (N : ℕ) (σ : Fin n → (Fin g → ℂ) → ℂ), (∀ k, DifferentiableOn ℂ (σ k) (pre u.ex (W k))) → (∀ k (l : u.Λ), ∀ z ∈ pre u.ex (W k), σ k (z + l) = σ k z) → (∀ k j, ∀ z ∈ pre u.ex (W k), z ∈ pre u.ex (W j) → σ k z = val u.ex _ (r k j) z ^ N * σ j z) → ∀ k, IsReg u.ex (W k) (σ k) := by
   intro A _ g L u hA n W r hR N σ hhol hper htr
-  obtain ⟨-, -, -, -, hinf, hmono, -, -, hres, hev, -, -⟩ := GlobalTheory.T.uniformisation_preimage_value_rules A g L u
+  obtain ⟨-, -, -, -, hinf, hmono, -, -, hres, hev, -, -⟩ := _root_.GlobalTheory.CechPer.pre_val_rules A g L u
   obtain ⟨-, hcov, hbasic, hself, hcoc⟩ := hR
   have hv : ∀ (U V : A.left.Opens) (h : V ≤ U) (b : Γ(A.left, U)), ∀ z ∈ pre u.ex V,
       val u.ex V ((A.left.presheaf.map (homOfLE h).op).hom b) z = val u.ex U b z :=
@@ -311,7 +311,7 @@ namespace GlobalTheory.CechPer
 
 theorem isReg_of_isReg_sub : ∀ (A : Over (Sp ℂ)) [GrpObj A] (g : ℕ) (L : LB A.left) (u : HolUnif A L g), IsAbelianScheme A → ∀ (n : ℕ) (W : Fin n → A.left.Opens) (r : ∀ k, Fin n → Γ(A.left, W k)), IsRatioCover u.ex W r → ∀ (h : Fin n → (Fin g → ℂ) → ℂ), (∀ k, DifferentiableOn ℂ (h k) (pre u.ex (W k))) → (∀ k (l : u.Λ), ∀ z ∈ pre u.ex (W k), h k (z + l) = h k z) → (∀ k j, IsReg u.ex (W k ⊓ W j) (h k - h j)) → ∀ k, IsReg u.ex (W k) (h k) := by
   intro A _ g L u hA n W r hr h hd hp hreg l
-  obtain ⟨-, hdiff, -, hper, hinf, -, -, -, -, -, hbas, -⟩ := GlobalTheory.T.uniformisation_preimage_value_rules A g L u
+  obtain ⟨-, hdiff, -, hper, hinf, -, -, -, -, -, hbas, -⟩ := _root_.GlobalTheory.CechPer.pre_val_rules A g L u
   have hr' := hr
   obtain ⟨haff, -, hbo, -, hco⟩ := hr'
   have h1 : ∀ k, ∃ N₀ : ℕ, ∀ N, N₀ ≤ N → ∃ b : Γ(A.left, W k), ∀ z ∈ pre u.ex (A.left.basicOpen (r k l)),
@@ -384,7 +384,7 @@ namespace GlobalTheory.CechPer
 
 theorem isReg_of_periodic_of_isReg_sub : ∀ (A : Over (Sp ℂ)) [GrpObj A] (g : ℕ) (L : LB A.left) (u : HolUnif A L g), IsAbelianScheme A → ∀ (K : Type) (W : K → A.left.Opens) (h : K → (Fin g → ℂ) → ℂ), ⨆ i, W i = ⊤ → (∀ i, DifferentiableOn ℂ (h i) (pre u.ex (W i))) → (∀ i (l : u.Λ), ∀ z ∈ pre u.ex (W i), h i (z + l) = h i z) → (∀ i j, IsReg u.ex (W i ⊓ W j) (h i - h j)) → ∀ i, IsReg u.ex (W i) (h i) := by
   intro A _ g L u hA K W h hW hd hp hr
-  obtain ⟨hopen, -, hpre, hval, hinf, -, hsup, -, -, -, -, htop⟩ := GlobalTheory.T.uniformisation_preimage_value_rules A g L u
+  obtain ⟨hopen, -, hpre, hval, hinf, -, hsup, -, -, -, -, htop⟩ := _root_.GlobalTheory.CechPer.pre_val_rules A g L u
   have glue := GlobalTheory.T.isRegularOnOpenUniformised_of_locally A g L u hA
   have alg := GlobalTheory.T.isRegularOnOpenUniformised_subalgebra_restrict A g L u
   obtain ⟨n, V, r, hV⟩ := GlobalTheory.T.exists_complexAbelianVariety_sectionRatio_affine_cover A g L u hA

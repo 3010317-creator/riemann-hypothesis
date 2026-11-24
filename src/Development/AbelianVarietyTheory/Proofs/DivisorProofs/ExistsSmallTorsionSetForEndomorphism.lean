@@ -16,10 +16,11 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.For
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CubeTheoremPicardGroup
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsEffectivePicClassPullbackVeryAmple
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AbelianSchemeCubicalBundleExistsAndMapsStatement
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.IsCPPullback
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AbelianSchemeCubicalBundleExistsAndMaps
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsGenThetaAbelianVariety
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsSymmetricVeryAmpleBy
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsProjectiveOverRingByChartsAbelianVarietyStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsProjectiveOverRingByChartsAbelianVariety
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LbIsoPwPullPowLocalStatement
 public import Mathlib.NumberTheory.NumberField.Basic
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.FlatAndSurjectiveOfIsFiniteAbelianEnd
@@ -436,7 +437,7 @@ theorem exists_effective_bound : ∀ (E : Type) [Field E] [NumberField E] (k : T
   haveI : GeometricallyIntegral A.hom :=
     GlobalTheory.forall_geometricallyIntegral_of_smooth_of_geometricallyConnected _ _ _ hB.smooth hB.geomConnected
   haveI : IsIntegral A.left := GeometricallyIntegral.isIntegral_of_subsingleton A.hom
-  have hproj := GlobalTheory.T.isProjectiveOverRingByCharts_abelian_variety k A hB
+  have hproj := _root_.GlobalTheory.AbelianProjective.isProjBy_of_isAbelianScheme k A hB
   obtain ⟨H, m, s, hH, hs, hsym⟩ := GlobalTheory.SymVeryAmple.exists_symmetric_veryAmpleBy k A hB hproj
   obtain ⟨r, hr⟩ : ∃ r : LB.Gen (H.pull (eSec A)), r.IsGen :=
     DVR.exists_gen_of_isLB_local (V := k) _ (pull_isLB hH _)

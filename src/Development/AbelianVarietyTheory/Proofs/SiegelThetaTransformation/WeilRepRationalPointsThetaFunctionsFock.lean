@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalUnitaryGroupStructureStatement
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionSpaceHeisenbergLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinearStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelTestFunctionMapLinearInjectiveEquivarStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUnique
+public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalUnitaryGroupStructure
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionSpaceHeisenbergLaws
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinear
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelTestFunctionMapLinearInjectiveEquivar
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.WeakWeilRepCarriesDerivativesVacuaFockVectorsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -87,7 +88,7 @@ theorem om_subst (C : Ctx S T) (om : GA D S × GA D T →* Module.End ℂ (WO S 
     (γ : GA D S) (hγ : γ ∈ GQ S) (γ' : GA D T) (hγ' : γ' ∈ GQ T) (f : WO S T → ℂ) (hf : C.IsTh f) (w : WO S T) :
     om (γ, γ') f w = f (actO S T γ⁻¹ γ'⁻¹ w) := by
   have h1 := H.om_heis γ γ' (actO S T γ⁻¹ γ'⁻¹ w) f hf
-  have h2 := H.om_aut γ hγ γ' hγ' _ (((GlobalTheory.T.thetaFunction_space_heisenberg_laws D S T C).2.2 f hf).2.1 (actO S T γ⁻¹ γ'⁻¹ w))
+  have h2 := H.om_aut γ hγ γ' hγ' _ (((_root_.GlobalTheory.ThetaSpace.theta_space_laws D S T C).2.2 f hf).2.1 (actO S T γ⁻¹ γ'⁻¹ w))
   rw [actO_inv_cancel] at h1
   rw [← heisO_at_zero C.ψ w (om (γ, γ') f), ← h1]
   exact h2.trans (heisO_at_zero _ _ _)
@@ -96,18 +97,18 @@ theorem om_rat : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ om : GA D S × GA
   intro D S T C om H
   refine ⟨fun γ hγ γ' hγ' f hf w => om_subst C om H γ hγ γ' hγ' f hf w, ?_⟩
   intro ga γ hr φ hφ
-  have hγ : γ ∈ GQ T := ((GlobalTheory.T.rational_unitary_group_structure D S T C).2.1 γ γ ga ga hr hr).2.2.1
+  have hγ : γ ∈ GQ T := ((_root_.GlobalTheory.Ker.Grp.rational_points_and_parts D S T C).2.1 γ γ ga ga hr hr).2.2.1
   have key : ∀ x ∈ C.X.dom, om (1, γ) (C.Th x φ) = C.Th (lact ga x) (wG C.X C.bas C.idx ga φ) := by
     intro x hx
     funext w
-    rw [om_subst C om H 1 (one_mem _) γ hγ _ (GlobalTheory.T.adelicZakTheta_exists_unique D S T C x hx φ hφ).1.1 w, inv_one]
-    exact ((GlobalTheory.T.thetaKernel_testFunction_map_linear_injective_equivariant D S T C x hx φ hφ).2.2.2 ga γ hr w).symm
+    rw [om_subst C om H 1 (one_mem _) γ hγ _ (_root_.GlobalTheory.Ker.ZakEx.isZak_Th D S T C x hx φ hφ).1.1 w, inv_one]
+    exact ((_root_.GlobalTheory.Ker.Ctx.th_laws D S T C x hx φ hφ).2.2.2 ga γ hr w).symm
   refine ⟨key, ?_⟩
   intro B hB Q
-  have hJ := (GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2 B hB
+  have hJ := (_root_.GlobalTheory.Ker.onBasis_frame_period D S T C).2 B hB
   have hx := hJ.2.1
   have hm : C.xB (C.mvB γ B) = lact ga (C.xB B) := (hJ.2.2.2.2.2 γ).2.2.2.2.2 ga hr
-  have h5 := ((GlobalTheory.T.weakWeilRep_carries_derivatives_vacua_fockVectors D S T C om H 1 γ _ (GlobalTheory.T.adelicZakTheta_exists_unique D S T C _ hx φ hφ).1.1).2 B hB).2 Q
+  have h5 := ((GlobalTheory.T.weakWeilRep_carries_derivatives_vacua_fockVectors D S T C om H 1 γ _ (_root_.GlobalTheory.Ker.ZakEx.isZak_Th D S T C _ hx φ hφ).1.1).2 B hB).2 Q
   rw [h5, key _ hx, hm]
   simp only [compAt_one']
   rfl

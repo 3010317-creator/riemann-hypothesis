@@ -1,7 +1,8 @@
 module
 
 public import Formalism.LocalToGlobal.IndefiniteReal.LinksW
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteLastStepRealIntertwinerStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LinksChar
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteLastStepRealIntertwiner
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

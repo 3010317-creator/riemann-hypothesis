@@ -2,13 +2,14 @@ module
 
 public import Formalism.LocalToGlobal.IndefiniteReal.FWExist
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicCuspFormTransvectionConstantTermsZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundedHolomorphicFormEqMultiplicitySpaceValueStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoreDictionaryGoodAtGoodEmbeddingStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSmoothVector
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundedHolomorphicFormEqMultiplicitySpaceValue
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoreDictionaryGoodAtGoodEmbedding
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinPair
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertModelConjugationAntilinearBijectionStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicAdelicFormOfBoundedSectionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicShapeIntegralWeightGoodEmbeddingStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealisationPrincipalLevelEqCoreLevelOpenStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicShapeIntegralWeightGoodEmbedding
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealisationPrincipalLevelEqCoreLevelOpen
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteVolumeAdelicUnitaryQuotient
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IpMSelfEqZero
 import Mathlib.Algebra.Order.Floor.Extended
@@ -45,7 +46,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSmoothVector
 
 @[expose] public section
 
@@ -85,9 +85,9 @@ theorem jEvExists (T : CoreJ D) [Algebra T.Q.c.F D.what₂.LL] (R : RealDat D A 
     (κ : ∀ i : Fin D.R.m, WeightFamilies.Wt D ((i : ℕ) + 1)) (v₀ : ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), (R.MW i σ).Vec)
     (hL : R.toLevCh.Is A.μ0) (hM : R.IsModels) (ht : TieIn T R κ v₀) (hp : T.pb = R.C.P.pb) : JEvExists T R κ v₀ := by
   intro i σ hσ hV
-  obtain ⟨hsh, -, w, hw⟩ := GlobalTheory.T.holomorphicShape_integralWeight_goodEmbedding D G Pl0 T0 A T R κ v₀ ht i σ hσ
-  have hg := GlobalTheory.T.coreDictionary_good_at_good_embedding D G Pl0 T0 A T R κ v₀ hL hM ht hp i σ hσ hV w hw
-  obtain ⟨-, hχ, hfin, -⟩ := GlobalTheory.T.realisation_principalLevel_eq_coreLevel_open D G Pl0 T0 A T R κ v₀ hL hM ht hp i σ hσ hV
+  obtain ⟨hsh, -, w, hw⟩ := _root_.GlobalTheory.HolDict.holShape_of_good D G Pl0 T0 A T R κ v₀ ht i σ hσ
+  have hg := _root_.GlobalTheory.HolDict.goodDict_core D G Pl0 T0 A T R κ v₀ hL hM ht hp i σ hσ hV w hw
+  obtain ⟨-, hχ, hfin, -⟩ := _root_.GlobalTheory.HolDict.PrincLev.principal_level D G Pl0 T0 A T R κ v₀ hL hM ht hp i σ hσ hV
   have hinj : Function.Injective (evLin R i σ (v₀ i σ)) :=
     GlobalTheory.EvalAtUnitVector.evInj T R v₀ hM.HW ht.hv₀ i σ hσ
   let ad := adel (Wc D i) (castDict hV (T.dict ((i : ℕ) + 1) (res T σ)))
@@ -101,7 +101,7 @@ theorem jEvExists (T : CoreJ D) [Algebra T.Q.c.F D.what₂.LL] (R : RealDat D A 
     have h3 : GlobalTheory.HolDict.HolForm R.θ (R.MW i σ) w (levS _ (R.βW i) (R.datWp i R.triv))
         (Lev.levChi _ (R.βW i) (R.datWp i R.triv)) (ad P) :=
       ⟨h1.aut, h1.bdd, fun k hk g => by rw [hχ k hk]; exact h1.lev k hk g, h1.hol⟩
-    obtain ⟨Tm, hT, hTv⟩ := GlobalTheory.T.boundedHolomorphicForm_eq_multiplicitySpace_value D R.θ _ _ (R.MW i σ) w (v₀ i σ) hM.inf hsh hw (ht.hv₀ i σ).1
+    obtain ⟨Tm, hT, hTv⟩ := _root_.GlobalTheory.BackForm.exists_multMap D R.θ _ _ (R.MW i σ) w (v₀ i σ) hM.inf hsh hw (ht.hv₀ i σ).1
       (GlobalTheory.HolDict.exists_finPair GlobalTheory.Mem.VolFin.finVol D _) _ _ _ hfin h3 h2
     have hmem : Tm ∈ R.Wall i σ := Submodule.subset_span hT
     rw [← (hM.HW i σ).2.1] at hmem

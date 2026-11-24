@@ -16,7 +16,7 @@ public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IntAtO
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.KmapOfOkOfVecP
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ValPowClassNumber
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NuRowSuccEqWt
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TrueColumnPeriodLatticeVacuumSmoothStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TrueColumnPeriodLatticeVacuumSmooth
 public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.RkThind
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.MtType
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DeterminantCharacterUnitaryApply
@@ -1002,7 +1002,7 @@ theorem jetC_th_mem_Qbar : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok 
       rfl
     exact_mod_cast key
   obtain ⟨hX, hPr, -⟩ := base_fields_primes_ok B X
-  obtain ⟨hLa, hE⟩ := GlobalTheory.T.trueColumn_periodLattice_vacuumSmooth I hOk hPins l Z μ u i hi
+  obtain ⟨hLa, hE⟩ := _root_.GlobalTheory.Mem.Col2.TC.laHyp_eSmooth_true I hOk hPins l Z μ u i hi
   set p := (I.stp u μ i).rep c
   set p' := (I.stp u μ (i + 1)).rep c'
   have hN : IsSdLat p.1.1.deco.1.N := ⟨p.1.1.deco.2.lat, p.1.1.deco.2.uni⟩

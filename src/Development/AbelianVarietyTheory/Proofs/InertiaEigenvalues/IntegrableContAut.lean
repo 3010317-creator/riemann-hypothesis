@@ -12,7 +12,8 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelf
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeckeCharValueInertPlaceAndSegment
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeckeOperatorMoveAcrossInvariantBilinear
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.InertUnitaryCosetSymmetryHeckeEvenStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SetIntegralFundamentalDomainRightTranslateInvariStatement
+public import Formalism.LocalToGlobal.BesselHermitianTheta.IsAutFunDef
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SetIntegralFundamentalDomainRightTranslateInvari
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaIntegralConjCuspFormParameterTransfer
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitarySatakeTransformEqOfBaseChangeSatakeParame
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnramifiedHeckeVacuumLargerEqSmallerStatement
@@ -41,12 +42,15 @@ import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsSatVecUOfDiag
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationOfMemNotMemSq
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmDataIsCMExtAndGramIsHermND
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FockVectorsChainIsVacuumOffThetaLevelsStatement
+import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FockVectorsChainIsVacuumOffThetaLevels
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HyperspecialFixesAllChainVacuaAtInertPrime
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelOperatorsAtPrimeOffLevelDatum
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalLabelOperatorsOnHyperspecialFixedVector
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplittingCharactersUnramifiedOffLevels
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotentsStatement
+import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
+import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftGoodProjectorIntertwinesMatchedHecke
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DatumLevelHyperspecialOffFinitePlaces
@@ -394,7 +398,7 @@ variable {D : D7}
 theorem vacFin_of_isVacAt {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : Formalism.DivisionValues.conjPl w = w) {ψ : AddChar (AF D.host.F) ℂ}
     {S T : HSp D} {f : WO S T → ℂ} (hf : GlobalTheory.Hk3.IsVacAt ψ S T w f) : VacFin ψ S T (w.under (𝓞 D.host.F)) f := by
   obtain ⟨ε, hε, hns, -, hpi⟩ := GlobalTheory.VacFixInert.inert_data hw
-  obtain ⟨e0, f0, h0⟩ := (GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents S).2.1 w
+  obtain ⟨e0, f0, h0⟩ := (_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents S).2.1 w
   have he0 := (hpi e0 f0 h0).1
   have hL : ∀ {u : WO S T}, (u ∈ latO S T (frameLat S : Set (Fin S.rank → D.host.E)) (frameLat T : Set (Fin T.rank → D.host.E))
       fun x => x = w.under (𝓞 D.host.F)) → u ∈ latO S T (L0c D S) (L0c D T) fun _ => True := fun hu => by
@@ -414,7 +418,7 @@ theorem vacFin_of_isVacAt {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : Formalis
 theorem unrAt_of_unrPl {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : Formalism.DivisionValues.conjPl w = w) {χ : (AE D)ˣ →* Circle}
     (h : GlobalTheory.Hk3.UnrPl w χ) : UnrAt χ w := by
   intro x hx
-  obtain ⟨e0, f0, h0⟩ := (GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents (D.sp.V 0)).2.1 w
+  obtain ⟨e0, f0, h0⟩ := (_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents (D.sp.V 0)).2.1 w
   obtain ⟨ε, -, -, -, hpi⟩ := GlobalTheory.VacFixInert.inert_data hw
   obtain ⟨he0, hf0⟩ := hpi e0 f0 h0
   have hΦ : GlobalTheory.IdemSupport.Comp D (GlobalTheory.LFun.EulerTie.finComp D.host.F D.host.E) := by
@@ -588,7 +592,7 @@ theorem unrCorr_inert : GlobalTheory.Hk3.HoweUnram → ∀ (D : D7) (G : Type) [
     (cart (R.MW i (sg0 D A))) (R.BV i) (onb (R.MW i (sg0 D A))) (R.vP i t)) ∘ₗ R.ioP i (PiTensorProduct.tprod ℂ v0)
   have hL0 : ∀ x, R.ptP i t (R.ioP i (PiTensorProduct.tprod ℂ v0) x) = L0 x := fun _ => rfl
   have hvac : ∀ x, GlobalTheory.Hk3.IsVacAt R.ψ (Vc D i) (Wc D i) w (L0 x) := fun x =>
-    (GlobalTheory.T.fockVectors_chain_isVacuum_off_thetaLevels R F hC t w hgood).2.2 i _
+    (_root_.GlobalTheory.VacGood.fock_vacua_good R F hC t w hgood).2.2 i _
   have hpos : ∀ τ, (gramAt D (Vc D i) τ).PosDef := fun τ => by
     have hs : (Vc D i).SigOK := D.sp.V_sig _
     have := hs (tauE D τ)
@@ -668,7 +672,7 @@ theorem unrCorr_inert : GlobalTheory.Hk3.HoweUnram → ∀ (D : D7) (G : Type) [
       ∫ g in R.fdV i t, thetaKO (R.ωP i t) g (x * embV _ _ a') (u : WO (Vc D i) (Wc D i) → ℂ) *
         (z : GA D (Vc D i) → ℂ) g ∂(R.νV i t)
     simp_rw [GlobalTheory.ChainOnto.thetaKO_om_apply]
-    exact GlobalTheory.T.setIntegral_fundamentalDomain_right_translate_invariant D (Vc D i) _ _ hν.1.1 hν.2
+    exact _root_.GlobalTheory.ChainOnto.setIntegral_fd_mul_right D (Vc D i) _ _ hν.1.1 hν.2
       (fun g => thetaKO (R.ωP i t) g (x * embV _ _ a') (u : WO (Vc D i) (Wc D i) → ℂ) * (z : GA D (Vc D i) → ℂ) g)
       (fun γ hγ g => by simp only [GlobalTheory.ChainOnto.thetaKO_left hW u.2 γ hγ, z.2.2 γ hγ]) _
 

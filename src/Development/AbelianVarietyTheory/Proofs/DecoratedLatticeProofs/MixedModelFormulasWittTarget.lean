@@ -4,10 +4,13 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ConjugateAdjointDagger
 import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.StarPurelyImaginaryEqNeg
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittHyperbolicAnisotropicCommuteLevi
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjWeilDatumViaAdjointExchangedPairStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HermitianAdjointSymplecticActionThetaHeisenbergStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittSourceProofStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittMixedCoordsConjHermitianAdjointStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittSmallGroupEmbeddingMemPointwiseStabilizerIso
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjWeilDatumViaAdjointExchangedPair
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HermitianAdjointSymplecticActionThetaHeisenberg
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittSourceProof
+import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittDecompSymplInclIsotropicInclAnisotropic
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittMixedCoordsConjHermitianAdjoint
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,7 +46,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MixedCoordinates
 
 @[expose] public section
 
@@ -87,7 +89,7 @@ theorem dagger_ofAdj (S T : HSp D) (z : Mx D S.rank T.rank) :
 
 theorem symplOH_dagger {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) (S T : HSp D) (x y : WO S T) :
     symplOH T S (dagger S T x) (dagger S T y) = -symplOH S T x y := by
-  rw [symplOH, symplOH, (GlobalTheory.T.hermitianAdjoint_symplectic_action_theta_heisenberg D ψ hψ S T).1 x y, mul_neg]
+  rw [symplOH, symplOH, (_root_.GlobalTheory.AdjointPair.adjoint_clauses D ψ hψ S T).1 x y, mul_neg]
 
 end GlobalTheory.MixTargetProof
 
@@ -114,7 +116,7 @@ theorem quadratic_form_xi_inverse {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdC
     (d : HypDec T T₀ ρ) (μ : Measure (Mx D ρ S.rank)) (𝓕 : Set (Mx D ρ S.rank))
     (hμ : IsCovolOne (ratMx D ρ S.rank) μ 𝓕) (c : skewA D ρ) (y : Mx D S.rank ρ) :
     d.qS S c (incA D D.host.xi0⁻¹ • y) = -d.qT S c y := by
-  obtain ⟨μ', 𝓕', -, hX, hY, -, -⟩ := GlobalTheory.T.wittMixedCoords_conj_hermitianAdjoint D ψ hψ S T T₀ ρ d μ 𝓕 hμ
+  obtain ⟨μ', 𝓕', -, hX, hY, -, -⟩ := _root_.GlobalTheory.MixSwap.mixS_cj_dagger D ψ hψ S T T₀ ρ d μ 𝓕 hμ
   rw [HypDec.qS, HypDec.qT, ← hX, ← giA_adj_central c y, ← hY, nC_inv_incAdj_sub, symplOH_dagger hψ]
 
 end GlobalTheory.MixTargetProof
@@ -175,7 +177,7 @@ theorem read_unip (hψ : IsStdChar D ψ (-1)) (b : Mx D ρ T₀.rank) (y : Mx D 
       heisO ψ T₀ S ((incA D D.host.xi0⁻¹ • y) ⬝ b)
         ((_root_.I195MixedCoordinates.source d) S ψ μ' 𝓕'
           (cj (dagger T S) f) (incA D D.host.xi0⁻¹ • y)) := FS.unip b _
-  rw [conjAdjoint_cj, hsw, Matrix.smul_mul, hsw, ← dagger_ofAdj, (GlobalTheory.T.hermitianAdjoint_symplectic_action_theta_heisenberg D ψ hψ S T₀).2.2.2] at h1
+  rw [conjAdjoint_cj, hsw, Matrix.smul_mul, hsw, ← dagger_ofAdj, (_root_.GlobalTheory.AdjointPair.adjoint_clauses D ψ hψ S T₀).2.2.2] at h1
   exact h1
 
 theorem read_centre (hψ : IsStdChar D ψ (-1)) (hμ : IsCovolOne (ratMx D ρ S.rank) μ 𝓕) (c : skewA D ρ)
@@ -194,10 +196,10 @@ end Read
 theorem mixedTarget : ∀ D : D7, GlobalTheory.IndefiniteRowSideFullHecke.SkewGramHalfModule.MixedTarget D := by
   intro D ψ S T T₀ ρ d χS χT om om₀ hom hom₀ μ 𝓕 hμ f hf
   have hψ := hom.std
-  obtain ⟨μ', 𝓕', hμ', -, -, -, hsw⟩ := GlobalTheory.T.wittMixedCoords_conj_hermitianAdjoint D ψ hψ S T T₀ ρ d μ 𝓕 hμ
-  have hF : IsThetaFunO ψ T S (cj (dagger T S) f) := ((GlobalTheory.T.hermitianAdjoint_symplectic_action_theta_heisenberg D ψ hψ S T).2.2.1 f).2 hf
-  have FS := GlobalTheory.T.mixedModelFormulasWittSource_proof D ψ T T₀ S ρ d χT χS (conjAdjoint om) (conjAdjoint om₀)
-    (GlobalTheory.T.conj_weil_datum_via_adjoint_exchanged_pair D ψ S T χS χT om hom) (GlobalTheory.T.conj_weil_datum_via_adjoint_exchanged_pair D ψ S T₀ χS χT om₀ hom₀) μ' 𝓕' hμ' _ hF
+  obtain ⟨μ', 𝓕', hμ', -, -, -, hsw⟩ := _root_.GlobalTheory.MixSwap.mixS_cj_dagger D ψ hψ S T T₀ ρ d μ 𝓕 hμ
+  have hF : IsThetaFunO ψ T S (cj (dagger T S) f) := ((_root_.GlobalTheory.AdjointPair.adjoint_clauses D ψ hψ S T).2.2.1 f).2 hf
+  have FS := _root_.GlobalTheory.MixSourceFormulas.mixed_source D ψ T T₀ S ρ d χT χS (conjAdjoint om) (conjAdjoint om₀)
+    (_root_.GlobalTheory.ConjAdjWeil.isWeilDatumO_conjAdjoint D ψ S T χS χT om hom) (_root_.GlobalTheory.ConjAdjWeil.isWeilDatumO_conjAdjoint D ψ S T₀ χS χT om₀ hom₀) μ' 𝓕' hμ' _ hF
   exact ⟨read_source hsw FS, read_core hsw FS, read_levi hsw FS, read_unip hsw FS hψ, read_centre hsw FS hψ hμ⟩
 
 end GlobalTheory.MixTargetProof

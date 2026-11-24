@@ -21,7 +21,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PureTensorOI
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmulMemLatGHat
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThAHeisEntireLinearInjective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnfoldingFrameDeltaChange
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepLatticeStabilizerVacuumEqDetCharSmulStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.MarkAd
+import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepLatticeStabilizerVacuumEqDetCharSmul
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCoversOfHalves
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FinCongMemLevEnv
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntValuationEqOfMem
@@ -183,7 +187,7 @@ theorem om_lift_vac_ofPre (hR : GlobalTheory.RealGeo.PreChar R) (i : Fin D.R.m) 
     fun hk => GlobalTheory.MovedLat.actO_mem (Vc D i) (Wc D i) 1 _ (R.ΛV i) (R.ΛV i) (R.ΛW i) (R.ΛW i)
       (fun z hz => by rw [map_one, Units.val_one, Matrix.one_mulVec]; exact hz)
       (fun z hz => by rw [← hl] at hz ⊢; exact GlobalTheory.DictMove.mulVec_mem_latHat (hR.lev.βW i) hk hz)
-  refine GlobalTheory.T.weilRep_lattice_stabilizer_vacuum_eq_det_char_smul D _ _ _ _ _ _ _ hP mu (hχ ▸ hmu) H _ _ hV0 sV sW _
+  refine _root_.GlobalTheory.VacStab.om_vacuum_eq_smul D _ _ _ _ _ _ _ hP mu (hχ ▸ hmu) H _ _ hV0 sV sW _
     (GlobalTheory.FrameEquiv.isCartanInv_cart_model (R.MW i (sg0 D A))) _ (hR.thP.vP i A.μ0).1 k hk.1 fun u => ⟨mv hk u, fun hu => ?_⟩
   have h := mv (GlobalTheory.ProjComm.isLift_inv hk) _ hu
   rw [actO_one_left, actO_one_left, ← Matrix.mul_assoc] at h

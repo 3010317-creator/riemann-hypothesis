@@ -5,8 +5,9 @@ public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniq
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsLevMoveOfFrOver
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsQuotEquiv
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueExistsUniqueNaturalOfLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueUnderLevelMoveStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueExistsUniqueNaturalOfLaws
+public import Formalism.LocalToGlobal.ProjectiveLattices.IsLevMove
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueUnderLevelMove
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -91,13 +92,13 @@ theorem cover_product_indep_of_lift : Laws → ChartIndepSt2 → ∀ (E : Type) 
     exact hg.2.2 a
   unfold DeltaDat.PsiTie at hpsi
   have hev := hpsi kI g ρ hg hmod hρ hk1 k y₂ y₂' hx
-  have h1 := GlobalTheory.T.shortThetaValue_under_levelMove hL hC E H Dw d.l₂ d.Xo₂ d.c₂ _ hNab k ρ.hom ν (g.f d.l₂.M) (g.f d.l₂.A)
+  have h1 := _root_.GlobalTheory.ShortValMove.shortValAt_move hL hC E H Dw d.l₂ d.Xo₂ d.c₂ _ hNab k ρ.hom ν (g.f d.l₂.M) (g.f d.l₂.A)
     y₂ y₂' hmv hfm σq hk2 n a P hP (d.w x0) Λ β N v' hv'
   have hw : ∀ q, d.w x0 q = d.eF ↑(ψ kI) * d.w x0 (fun b => σq.symm (q b)) := by
     intro q
     rw [hk3, ← _root_.mul_assoc, ← map_mul, Units.mul_inv, map_one, _root_.one_mul]
   have h2 := shortValAt_smul d.Xo₂ d.c₂ _ _ (d.w x0) (d.eF ↑(ψ kI)) hw Λ β N P y₂ v' h1
-  have hu := (GlobalTheory.T.shortThetaValue_existsUnique_natural_of_laws hL hC E H Dw d.l₂ d.Xo₂ d.c₂ _ hNab n Λ N hU hT hO a P hP (d.w x0) β).1 k y₂
+  have hu := (_root_.GlobalTheory.shortThetaValue_existsUnique_natural hL hC E H Dw d.l₂ d.Xo₂ d.c₂ _ hNab n Λ N hU hT hO a P hP (d.w x0) β).1 k y₂
   rw [hu.unique hv h2, hev]
   ring
 

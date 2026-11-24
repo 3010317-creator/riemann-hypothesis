@@ -8,7 +8,8 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Spl
 public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.ThetaFinsetSum
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealLineOfPeriodsOnLine
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousKappa
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsPreserveThetaFunctionsStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsPreserveThetaFunctions
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPureTensorO
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapsSatisfyFlatLawsFinitePlaces
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.JacobiToBesselFlatSchwartzAddSmul
@@ -240,8 +241,8 @@ private theorem contr_flatBF_smul_add (hψ : IsStdChar D ψ (-1)) {ρ σ : ℕ} 
     Unf.contr l J.W₀ vL (Unf.flatBF s (c • X + Y)) Z u v =
       c * Unf.contr l J.W₀ vL (Unf.flatBF s X) Z u v + Unf.contr l J.W₀ vL (Unf.flatBF s Y) Z u v := by
   have hF := GlobalTheory.Unf.Flat.flatLaw D
-  have fX := (GlobalTheory.T.flatThetaMaps_preserve_thetaFunctions D hF ψ).1 ρ B J s X hX
-  have fY := (GlobalTheory.T.flatThetaMaps_preserve_thetaFunctions D hF ψ).1 ρ B J s Y hY
+  have fX := (_root_.GlobalTheory.Unf.FlatTheta.flat_isThetaFun D hF ψ).1 ρ B J s X hX
+  have fY := (_root_.GlobalTheory.Unf.FlatTheta.flat_isThetaFun D hF ψ).1 ρ B J s Y hY
   have hcX := GlobalTheory.OrientedHeis.theta_smul c hX
   rw [(GlobalTheory.FlatLin.flatBF_linear D hF ψ ρ B J s (c • X) Y c hcX hY).1,
     (GlobalTheory.FlatLin.flatBF_linear D hF ψ ρ B J s X Y c hX hY).2]
@@ -290,7 +291,7 @@ theorem contrLin_left : Big fun ch => ContrLin ch 0 := by
       (J := jacAt ch.G hM (a + 1) ((D.R.m - 4 - a) / 2 + 1) (by omega)) _ _ _ c ?_ ?_ ?_ _ _
     · exact (ch.W.om_is _ hin).om_pres _ _ (fock_theta ch.W _ hφ _)
     · exact (ch.W.om_is _ hin).om_pres _ _ (fock_theta ch.W _ hφ' _)
-    · exact (GlobalTheory.T.flatThetaMaps_preserve_thetaFunctions D (GlobalTheory.Unf.Flat.flatLaw D) _).2 _ _ _ _ _
+    · exact (_root_.GlobalTheory.Unf.FlatTheta.flat_isThetaFun D (GlobalTheory.Unf.Flat.flatLaw D) _).2 _ _ _ _ _
         ((ch.W.om_is _ hin').om_pres _ _ (fock_theta ch.W _ (hΦ ⟨a + 1, by omega⟩) _))
 
 end GlobalTheory.ConnectionLinear

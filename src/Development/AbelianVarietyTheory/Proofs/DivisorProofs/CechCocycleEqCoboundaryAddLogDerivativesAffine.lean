@@ -17,7 +17,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedFibreC
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechCocycleConditionLogDerivativeTransition
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RhoIsCoc
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardNonempty
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechPullOneBijectiveLatticeCoverStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechPullOneBijectiveLatticeCover
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.CechModulesFunctorShortExactOfIsAffineOpen
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDeRhamSheaf
@@ -956,7 +956,7 @@ theorem GlobalTheory.CechFin.cocycle_of_finite_affine_subcover : ∀ (R : Type) 
     rw [sfCr_res]
     rw [add_comm]
     exact e.symm
-  obtain ⟨y, hy⟩ := (GlobalTheory.T.cech_pull_one_bijective_lattice_cover R Z s (NE κ) (cov D hD) (cov_mono D hD) hinf hsup).2
+  obtain ⟨y, hy⟩ := (_root_.GlobalTheory.CoverO.restrict_bijective R Z s (NE κ) (cov D hD) (cov_mono D hD) hinf hsup).2
     (H1.mk _ ⟨Fv, hF⟩)
   obtain ⟨f0, rfl⟩ := H1.mk_surjective _ y
   rw [CoefMap.pullCohomologyOne_class, H1.mk_eq_mk] at hy

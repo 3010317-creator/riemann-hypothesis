@@ -7,7 +7,8 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.Cry
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeFirstDeRhamStructure
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianLifting
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeHomLiftingNilpotentDividedPowers
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeUnobstructedSquareZeroAffineStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianUnobstructed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeUnobstructedSquareZeroAffine
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GrothendieckDeformationOfLifting
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GroupObjectLiftDividedPowers
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSmulTopOfForallMem
@@ -85,7 +86,8 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.SRelOneOneIff
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualAbelianSchemeExistsBidualityStatement
+import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsCrystalPairing
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualAbelianSchemeExistsBiduality
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdditiveLiftIff
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsChernExistsUniqueAndIso
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ConnectedSpaceSpecOfIsLocalRing
@@ -519,14 +521,14 @@ theorem exists_lift_lam : ∀ (R R₀ : Type) [CommRing R] [IsLocalRing R] [IsNo
   have hI0 : RingHom.ker π ^ 2 = 0 := hI2
   let κ := divided₂ hI0
   have hκ : IsNilDP κ := isDPNilpotent_squareZero hI0
-  have ADD : GlobalTheory.Published.DualAbelianScheme := GlobalTheory.T.dualAbelianScheme_exists_biduality
+  have ADD : GlobalTheory.Published.DualAbelianScheme := _root_.GlobalTheory.dualAbelianScheme
   have ADR : GlobalTheory.Published.AbelianDeRham := _root_.GlobalTheory.abelianDeRham
   have ADC : GlobalTheory.Published.AbelianDualCrystal := GlobalTheory.abelianDualCrystal_of_dualAbelianScheme ADD
   have GD : GlobalTheory.Published.GrothendieckDeformation :=
     GlobalTheory.Published.grothendieckDeformation_of_lifting ADR _root_.GlobalTheory.abelianScheme_hom_lifting_nilpotent_dividedPowers
   haveI := hY₀.comm
   obtain ⟨g₀, hg₀⟩ := GlobalTheory.AbelianDim.exists_relDim R₀ Y₀ hY₀
-  obtain ⟨A', _, i', h', hA'⟩ := GlobalTheory.T.abelianScheme_unobstructed_squareZero_affine R (RingHom.ker π) hI0 R₀ π hπ rfl Y₀ hY₀
+  obtain ⟨A', _, i', h', hA'⟩ := _root_.GlobalTheory.UnobTop.abelianUnobstructed R (RingHom.ker π) hI0 R₀ π hπ rfl Y₀ hY₀
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim R A' hA'
   have C := GlobalTheory.Published.AbelianDualCrystal.cupSquare_crys_prod ADR.1 ADC.2 hκ hπ rfl hA' hg hA' hg h' h'
   have C₁ := GlobalTheory.Published.AbelianDualCrystal.cupSquare_crys ADR.1 ADC.2 hκ hπ rfl hA' hg h'.1 (liftMor κ h')

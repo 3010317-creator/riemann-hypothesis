@@ -3,7 +3,8 @@ module
 public import Formalism.LocalToGlobal.ProjectiveLattices.ThShort
 public import Formalism.LocalToGlobal.ProjectiveLattices.ThGerm
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsIsNab
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FramedPointsLiftToLevelCoverStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FramedPointsLiftToLevelCover
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HeckeKer
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliSchemeLevelMapsHeckePoints
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
@@ -126,7 +127,7 @@ theorem exists_deltaDat_isLev : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   · intro k _ _ _ i₂ hk y
     obtain ⟨x₂, hx, hs⟩ := @exists_point_over E _ _ _ H Dw l l₂ Xo c Xo₂ c₂ hF.symm r rF hfin hsur h₁ h₂
       k _ _ _ i₂ hk y.x y.x_over
-    obtain ⟨y₂, -, hy⟩ := (GlobalTheory.T.framedPoints_lift_to_levelCover hL E H Dw l Xo c n d).1 k hk y x₂ hx hs
+    obtain ⟨y₂, -, hy⟩ := (_root_.GlobalTheory.frames_lift_to_cover hL E H Dw l Xo c n d).1 k hk y x₂ hx hs
     exact ⟨y₂, hy⟩
   · intro k _ _ _ y₂
     have h := GlobalTheory.Frames.allTest_of_secBaseChange hL.secBaseChange E H Dw l₂ Xo₂ c₂ k y₂

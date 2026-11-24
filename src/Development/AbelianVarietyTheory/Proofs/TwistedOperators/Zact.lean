@@ -13,11 +13,13 @@ public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryCo
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FinPartIdemMulMemIff
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeCharUnramifiedAbovePlaceOfTrivialUnits
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BlkGLMem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChiGridVertexRankAddLtTwoExponentAddCentreStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LeastSplitAuxiliaryPrimeThetaChainSpec
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChiGridVertexRankAddLtTwoExponentAddCentre
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRepresentationVacuumCosetVectorsGrid
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsHeckeCharMul
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareThetaTripleExistsSignatureRankSumLt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareThetaTripleHypothesesOfStandingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareTriple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareThetaTripleHypothesesOfStanding
 public import Formalism.SatakeDualWeyl.Statement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSignatureFstUniqueSylvester
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsGridFr
@@ -27,7 +29,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSquareP
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumAdjointNegSourceKernelsAgree
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLowestKTypeFockMapThetaVectors
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorsOfSmoothThetaStable
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaGridRouteKernelEqDetCharactersMulThetaKerneStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaGridRouteKernelEqDetCharactersMulThetaKerne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -451,7 +453,7 @@ theorem isTriple_of_standing : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Con
     exact s
   · intro τ
     refine ⟨_, _, GlobalTheory.SquareExps.alpha_exp (G := G) hL t ↑i ↑j j.2 τ, GlobalTheory.SquareExps.beta_exp (G := G) hL ↑i ↑j i.2 τ, ?_⟩
-    have key := GlobalTheory.T.chiGridVertexRank_add_lt_two_exponent_add_centre sc.cGap τ ↑i ↑j i.2 j.2
+    have key := _root_.GlobalTheory.ChiGrid.rankV_add_lt_two_e_add_two_cen sc.cGap τ ↑i ↑j i.2 j.2
     rw [hrank, rW, rW₁]
     push_cast at key ⊢
     linarith
@@ -662,7 +664,7 @@ theorem dict : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridDa
   intro D T L sc G μ₀ hL W t i j A A₁ AV AV₁ hA hA₁ hV hV₁
   refine ⟨GlobalTheory.T.isSeesawHermitianTriple_gridSquare_of_standing hL W t i j, fun ωA ωB hωA hωB => ⟨fun x => GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.xiV G i j x.1 * GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.xiV₁ G t i j x.2,
     fun B ρ Θ Θ' hΘ => ?_⟩⟩
-  have kA := GlobalTheory.T.thetaGridRouteKernel_eq_detCharacters_mul_thetaKernel hL W t i j ωA hωA B ρ Θ Θ' hΘ
+  have kA := _root_.GlobalTheory.SquareDict.ExactBig.kerBig_eq hL W t i j ωA hωA B ρ Θ Θ' hΘ
   have kB := GlobalTheory.T.smallRoute_kernel_eq_char_mul_thetaKernel hL W t i j ωB hωB B ρ Θ Θ' hΘ
   have tr : ∀ (z : GA D (G.V (.grid ↑i ↑j)) →₀ ℂ) g g₁ u, translates z (kerSmall W Θ' g g₁) u =
       (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.xiV G i j g * GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.xiV₁ G t i j g₁) * thetaKO ωB u (GlobalTheory.SquareComm.blk _ _ (g, g₁))

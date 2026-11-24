@@ -12,7 +12,7 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsU
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnitCharts
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.CompanionTheory
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIsoSpecialFibreTestGeometricTestStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSectionExtendingTorsionPointsSupportStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSectionExtendingTorsionPointsSupport
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SpecialFibreTorsionEqReductions
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.RigGen
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
@@ -81,9 +81,8 @@ import Mathlib.Tactic.Linter.Style
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabPull
 import Mathlib.AlgebraicGeometry.Modules.Sheaf
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSectionExtendingTorsionPointsSupport
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaSectionsIndependentOnClosedFibreStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaSystemHasTestsOfRealPointStatement
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaSystemHasTestsOfRealPoint
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHold
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -431,7 +430,7 @@ theorem integral_eq_section {Q : Clos ρ M U₀ EE} {t : ρ.GeoTest p y₀} {c :
 theorem torsSec : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (M : RatModel o Ω) (U₀ : M.Z.Opens) (EE : M.Lat S.J), BaseFacts S M U₀ EE → ∀ (Q : Clos ρ M U₀ EE) (ex : Q.Ext), S.Big → ρ.HasGeo → ex.core.Fib → ex.core.TorsSec (S.r * S.N) := by
   intro hL o Ω _ _ _ _ S ρ M U₀ EE hB Q ex hS hG hF z _
   have : NeZero (S.r * S.N) := ⟨Nat.mul_ne_zero (by have := S.r_pos; omega) (by have := S.N_ge; omega)⟩
-  choose W h hz hh hgen using fun a : S.HH M z => GlobalTheory.T.exists_section_extending_torsionPoints_support hL o Ω S ρ M U₀ EE hB Q z a.1 a.2
+  choose W h hz hh hgen using fun a : S.HH M z => _root_.GlobalTheory.ZH.TorsionSection.exists_section hL o Ω S ρ M U₀ EE hB Q z a.1 a.2
   let N : M.Z.Opens := ⟨⋂ a, (W a : Set M.Z), isOpen_iInter_of_finite fun a => (W a).isOpen⟩
   have hN : ∀ a, N ≤ W a := fun a w hw => Set.mem_iInter.1 hw a
   refine ⟨N, Set.mem_iInter.2 hz, ?_⟩
@@ -1012,7 +1011,7 @@ open GlobalTheory.ZH ReciprocityTheory.ChartRestriction.G.Out Classical
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem GlobalTheory.ZH.GeoHalf.zhGeo : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsDiscreteValuationRing T] [Field K] [Algebra T K] [IsFractionRing T K] (G G' : Over (Sp T)) [GrpObj G] [GrpObj G'], IsSemiAbelian G → IsSemiAbelian G' → ∀ f : (Over.pullback (spMap (algebraMap T K))).obj G ⟶ (Over.pullback (spMap (algebraMap T K))).obj G', IsMonHom f → ∃! F : G ⟶ G', IsMonHom F ∧ (Over.pullback (spMap (algebraMap T K))).map F = f) → GlobalTheory.Published.SemistableReductionSt → ThmUSt → Laws → Laws2 → Laws3 → Laws4 → Laws5 → UTorsSt → ZHGeoSt :=
-  GlobalTheory.ZH.GeoHalf.zhGeo_of @GlobalTheory.T.thetaSystem_hasTests_of_real_point @GlobalTheory.T.exists_semiAbelian_groupScheme_cubical_bundle_closure @GlobalTheory.T.abelianLocus_eq_trivial_torus_locus_proper @GlobalTheory.T.thetaModel_coordinates_local_basis @GlobalTheory.T.exists_uniformisation_completeLocalNormalDomain @GlobalTheory.ZH.baseFacts_hasGeo_exists_clos @GlobalTheory.ZH.ThetaData.exists_theta @GlobalTheory.ZH.TorsionValue.torsSec @GlobalTheory.ZH.TorsionSection.exists_section @GlobalTheory.T.thetaSections_independent_on_closed_fibre @GlobalTheory.ZH.AbelianLocus.abelian_locus @GlobalTheory.T.nonempty_of_fourProperties_groupScheme
+  GlobalTheory.ZH.GeoHalf.zhGeo_of @_root_.GlobalTheory.ZH.hasTests_of_real @GlobalTheory.T.exists_semiAbelian_groupScheme_cubical_bundle_closure @GlobalTheory.T.abelianLocus_eq_trivial_torus_locus_proper @GlobalTheory.T.thetaModel_coordinates_local_basis @GlobalTheory.T.exists_uniformisation_completeLocalNormalDomain @GlobalTheory.ZH.baseFacts_hasGeo_exists_clos @GlobalTheory.ZH.ThetaData.exists_theta @GlobalTheory.ZH.TorsionValue.torsSec @GlobalTheory.ZH.TorsionSection.exists_section @GlobalTheory.T.thetaSections_independent_on_closed_fibre @GlobalTheory.ZH.AbelianLocus.abelian_locus @GlobalTheory.T.nonempty_of_fourProperties_groupScheme
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemiAbelianSchemeUniformisationExistsGeometric =====

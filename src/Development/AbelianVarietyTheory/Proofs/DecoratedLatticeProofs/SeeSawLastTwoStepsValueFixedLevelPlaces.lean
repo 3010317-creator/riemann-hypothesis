@@ -8,7 +8,8 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsU
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlacesToAdeles
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapBesselToFourierJacobiLocalModel
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapsSatisfyFlatLawsFinitePlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacuaStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CombAtSingleZero
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacua
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntIndFromCols
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralIndicatorGivesLocalVacuumSplitPlace
@@ -20,7 +21,8 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.The
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumLocalModelFormula
 import Development.AbelianVarietyTheory.Definitions.Foundations.SecondCountableAndT2LocalField
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapsPreserveSchwartzBruhatAndSurjective
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctionsStatement
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctions
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.T2SpaceMatrixOfIsNonarchimedeanLocalField
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaFunctionProductsSlicesOrthogonalDecompositi
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumTransportSourceRationalIsometry
@@ -230,7 +232,7 @@ theorem one_place (hc : c.Is) (hv : v.Is) (G : GLoc v) (j : ℕ) (h : j + 2 * 0 
   obtain ⟨F₀, hF₀⟩ := ((GlobalTheory.LocMod.normalFrames_exist D G.k (ofSplit G.q) _ 0 (G.sc G.s) hsc).1 (c.B G.s 0 h)
     (G.FX G.s (by omega))).1
   have hjac := G.jac G.s 0 h 0 rfl
-  obtain ⟨U₁, hU₁, hfl⟩ := _root_.GlobalTheory.FlatBFLoc.flatBF_of_laws D (GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D) (GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D) (_root_.GlobalTheory.LocOm.omLoc D) G.k (ofSplit G.q) G.ν G.unitVol.1
+  obtain ⟨U₁, hU₁, hfl⟩ := _root_.GlobalTheory.FlatBFLoc.flatBF_of_laws D (_root_.GlobalTheory.Unf.Flat.flatLaw D) (GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D) (_root_.GlobalTheory.LocOm.omLoc D) G.k (ofSplit G.q) G.ν G.unitVol.1
     c.ψ G.S.ψ G.char 0 (c.B G.s 0 h) (c.J G.s 0 h) s₁ (G.sc G.s) hsc _ _ 0 (G.FX G.s (by omega)) F₀
     (G.FY G.s (0 + 1) (by omega)) (G.FX (G.s + 1) le_rfl) (G.FY (G.s + 1) 0 rfl) hF₀ (G.bes G.s 0 h (0 + 1) (by omega)) hjac T₁ hT₁
   obtain ⟨U₂, hU₂, hres, hext⟩ := splitLocalPlace_isModel_wittExtendByZero_rankZero (ofSplit G.q) c.ψ (c.jac G.s 0 h).d (G.FX (G.s + 1) le_rfl) (G.FY (G.s + 1) 0 rfl)
@@ -288,7 +290,7 @@ theorem vac_foldr {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {
   induction l with
   | nil => exact hf
   | cons b l ih =>
-    exact ((GlobalTheory.T.heisenbergCombination_disjoint_places_commute_vacua D ψ hψ S T (· = pl b) (· = pl a) fun p h1 h2 => hl b (by simp) (h1.symm.trans h2)).2.1 (e b)
+    exact ((_root_.GlobalTheory.DisjComb.main D ψ hψ S T (· = pl b) (· = pl a) fun p h1 h2 => hl b (by simp) (h1.symm.trans h2)).2.1 (e b)
       (he b)).2 _ _ _ (ih fun i hi => hl i (by simp [hi]))
 
 theorem vac_at {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {S T : HSp D} {LS LT} (hS : IsSelfDualC S LS)
@@ -296,7 +298,7 @@ theorem vac_at {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {S T
     Vac ψ S T LS LT (· = w) f := by
   have e : (fun p => p = w ∨ (P p ∧ p ≠ w)) = P := funext fun p => propext
     ⟨fun h => h.elim (fun h => h ▸ hw) And.left, fun h => (em (p = w)).imp id fun h' => ⟨h, h'⟩⟩
-  have := (GlobalTheory.T.heisenbergCombination_disjoint_places_commute_vacua D ψ hψ S T (· = w) (fun p => P p ∧ p ≠ w) fun p h1 h2 => h2.2 h1).2.2.2.2 LS LT f hS hT
+  have := (_root_.GlobalTheory.DisjComb.main D ψ hψ S T (· = w) (fun p => P p ∧ p ≠ w) fun p h1 h2 => h2.2 h1).2.2.2.2 LS LT f hS hT
   rw [e] at this
   exact (this.1 hf).1
 

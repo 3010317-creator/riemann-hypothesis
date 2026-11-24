@@ -9,7 +9,7 @@ public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMem
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
 public import Formalism.LocalToGlobal.IndefiniteReal.OneMapT
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCuspFormClassSumNormalisedDataStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCuspFormClassSumNormalisedData
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitModulusConstantsEquivariantDictionaryStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMapRow0OfRowsSmul
 import Mathlib.Algebra.Order.Floor.Extended
@@ -121,7 +121,7 @@ theorem oneMapRow0_of_ties_core : Formalism.MainNotions.ModuliIntegralCharts.H1.
   obtain ⟨cc, -, u, -, hequiv, hser, hid⟩ := h
   exact GlobalTheory.OneMapBase.oneMapRow0_of_rows T R κ v₀ O i (u • cc) 1 hpins hequiv hid
     (GlobalTheory.PhRatCommon.phRat_of_ser_core D G Pl0 T0 A T R F κ v₀ hR ht O i hpins (u • cc) hser
-      (GlobalTheory.T.exists_cuspForm_classSum_normalisedData hCI D G Pl0 T0 A T R F κ v₀ hR ht i _ _ (O i) hpins.2 ()) hequiv)
+      (_root_.GlobalTheory.ClassSumRule.exists_cusp_isThClsD_core hCI D G Pl0 T0 A T R F κ v₀ hR ht i _ _ (O i) hpins.2 ()) hequiv)
 
 end GlobalTheory.OneMapTies
 end -- clump:auto

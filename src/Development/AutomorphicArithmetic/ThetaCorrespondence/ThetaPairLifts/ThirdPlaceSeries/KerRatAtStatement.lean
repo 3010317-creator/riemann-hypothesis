@@ -7,7 +7,8 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForm
 public import Development.AbelianVarietyTheory.PublishedTheorems.PublishedFoundations.NonemptyAlgHomOfIsRayOfDvd
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseTupleThetaSpanHasType
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHalfOfBasePins
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdjointFrameMatrixIntegralOfConjugateHalfStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdjointFrameMatrixIntegralOfConjugateHalf
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeltaPrimeIsAuxiliarySplitSquarefreeLevel
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemOfOrderDvd
 public import Formalism.LocalToGlobal.IndefiniteReal.FWCentral
@@ -17,14 +18,14 @@ public import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.LFunctionPositiveConductorFourEight
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ConjTupRefl
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsComplexLinearExtensionCoefficientMapStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsComplexLinearExtensionCoefficientMap
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsThetaSeriesRationalVectorNeZeroOfCuspFormsStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixesUntwistedTupleDataOfFixesSmallFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RationalPhaseThetaSeriesExpandsCuspFormsSmallFieStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RationalPhaseThetaSeriesExpandsCuspFormsSmallFie
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.EmbeddingsDifferOnInteger
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemOfForallRingEquivFixed
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjointIntertwines
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteSideRealisationsCoefMapDifferRootOfUnityStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteSideRealisationsCoefMapDifferRootOfUnity
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjFunBaseRoot
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsConjugateFormsThetaLiftEqThetaSeries
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MovedFiniteDatumFourierExpansionChainless
@@ -35,20 +36,21 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToRatHyp0
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.Realised
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RatHyp0AtPoint
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ReadComparisonAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SeriesRationalityBackFromMovedReadingsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullHeckeRealDatMovedReadings
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SeriesRationalityBackFromMovedReadings
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationLawsCentralMovedReadingsStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.InGeoGeoHalfStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LowAtHolds
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TwAdm
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.JEvExists
 public import Development.AbelianVarietyTheory.Definitions.Divisors.OfCore
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullHeckeRealDatMovedReadings
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodFormsEqKilledByGroupAlgebra
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKernelVectorMovedByRootsOfUnity
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPairCharactersAtLevel
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGoodCoverGalois
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsHalfOfAuxiliarySplitLevel
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdempotentSumSelfDualFramesBoundStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdempotentSumSelfDualFramesBound
+import Formalism.LocalToGlobal.UnitaryNorms.CharTied
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLevelDatumReferenceTupleSmallField
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TypePlacesTwistPlacesGoodPosition
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChainStepVectorsAndAdjointVectorsAreTheta
@@ -93,7 +95,7 @@ import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Topology.Sheaves.Init
 import Formalism.LocalToGlobal.IndefiniteReal.ExistsChosenExtremalVector
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjugateTuplesConjugateResidueLevelsStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjugateTuplesConjugateResidueLevels
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousCoeffBlockAct
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterIdeleCharacterMatchUnique
 import Formalism.LocalToGlobal.ProjectiveLattices.SpMapAlgHomId
@@ -219,10 +221,10 @@ theorem isLevDatum_kerDat (hL : R.toLevCh.Is A.μ0) {ξ χ ξR Q ω φ} (hK : Ke
     exact hN P0 (Finset.mem_union.1 hP0)
   · intro t ht
     by_cases hc : IsHalf (cA D e) t ∧ IsIntM (frMapAdj (Vc D j) (Wc D j) (R.βV j) (R.βW j) t)
-    · exact ⟨GlobalTheory.T.idempotent_sum_self_dual_frames_bound D _ _ _ _ _ _ hsV hsW hfV hfW _ e he hP2 t hc.1 hc.2, hc.1⟩
+    · exact ⟨_root_.GlobalTheory.HalfAdjLattice.mem_latO_of_adj_int D _ _ _ _ _ _ hsV hsW hfV hfW _ e he hP2 t hc.1 hc.2, hc.1⟩
     · exact absurd (if_neg hc) ht
   · intro u hu hue t
-    have hN' := GlobalTheory.T.adjointFrameMatrix_integral_of_conjugate_half D _ _ _ _ _ _ hsV hsW hfV hfW _ e he hP2 u hu hue
+    have hN' := _root_.GlobalTheory.HalfAdjInt.frMapAdj_int_of_half D _ _ _ _ _ _ hsV hsW hfV hfW _ e he hP2 u hu hue
     have hfr : frMapAdj (Vc D j) (Wc D j) (R.βV j) (R.βW j) (t + N • u) =
         frMapAdj (Vc D j) (Wc D j) (R.βV j) (R.βW j) t + N • frMapAdj (Vc D j) (Wc D j) (R.βV j) (R.βW j) u := by
       rw [_root_.GlobalTheory.PlaceVec.frMapAdj_add, GlobalTheory.RefDatumLev.frMapAdj_nsmul']
@@ -514,7 +516,7 @@ theorem fixBase_of_fix (hRF : GlobalTheory.NT.RayField) {T : CoreJ D} [Algebra T
 theorem exists_extC {G : Type} [Group G] [Fintype G] {T1 : Type} {A : FamIn D.what₂.LL G Pl0 T1 D.R.m} {T : CoreJ D}
     [Algebra T.Q.c.F D.what₂.LL] {R : RealDat D A T.Q.c.F} {j : Fin D.R.m} {Tp : Type} {tup : Tp → T1}
     (O : OMDat T.toCore R j Tp tup) : ∃ c : VsV D j ℂ →ₗ[ℂ] (R.cV j).W, ExtC R j (inC O.c') O.c0' c :=
-  GlobalTheory.T.exists_complexLinear_extension_coefficientMap D G Pl0 T1 A T R j Tp tup O
+  _root_.GlobalTheory.ExtCoeff.exists_extC D G Pl0 T1 A T R j Tp tup O
 
 theorem exists_ser_ne_zero {T : CoreJ D} [Algebra T.Q.c.F D.what₂.LL] {Rl : RealDat3 D A3 T.Q.c.F} {F : Face D A3.A}
     {κ : ∀ j : Fin D.R.m, WeightFamilies.Wt D ((j : ℕ) + 1)} {v₀ : ∀ (j : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), (Rl.MW j σ).Vec}
@@ -556,7 +558,7 @@ theorem expands_of_isRatPhase (hRF : GlobalTheory.NT.RayField) {T : CoreJ D} [Al
     ∃ (n : ℕ) (e : Fin n → ℂ) (f : Fin n → T.toCore.cuspA ((j : ℕ) + 1) (wtA (κ j)) (κ j).n),
       Expands (O j) (κ j) (fun g => ph₀ * ser Rl.toRealDat j A3.A.μ0 (Rl.vP j A3.A.μ0) u h (c x) g) e f ∧
         ∀ k, e k ∈ (embLL0 D).fieldRange :=
-  GlobalTheory.T.rationalPhaseThetaSeries_expands_cuspForms_smallField D Γ Pl0 I0 T0 A3 hRF T Rl cG S YS F κ v₀ O hnV hT hcore hfw hti hio hQ hgal hval hray hroots j hV hpins hfp gramR c0R c0L hft hbc u hu ph₀ hph c hc v hv x hx h hh
+  _root_.GlobalTheory.SeriesTie.RatExpand.expands_of_isRatPhase D Γ Pl0 I0 T0 A3 hRF T Rl cG S YS F κ v₀ O hnV hT hcore hfw hti hio hQ hgal hval hray hroots j hV hpins hfp gramR c0R c0L hft hbc u hu ph₀ hph c hc v hv x hx h hh
 
 theorem fixed_of_expands {G : Type} [Group G] [Fintype G] {T1 : Type} {A : FamIn D.what₂.LL G Pl0 T1 D.R.m} {T : CoreJ D}
     [Algebra T.Q.c.F D.what₂.LL] {R : RealDat D A T.Q.c.F} {j : Fin D.R.m} {Tp : Type} {tup : Tp → T1}
@@ -751,7 +753,7 @@ theorem conjForm_jV {F : Face D A} (hR : GlobalTheory.Hk3.Core R F) {i : Fin D.R
     (hτ : ∀ z ∈ D.what₂.embLL.fieldRange, τ z = z) (y : A.fam.amb.FL i A.μ0) :
     ConjForm R i τ c A.μ0 A.μ0 (R.jV i A.μ0 y) (R.jV i A.μ0 y) := by
   intro h
-  have hZ := (GlobalTheory.T.conjugate_tuples_conjugate_residue_levels D G Pl0 T0 A T R F κ v₀ hR τ A.μ0 A.μ0 (conjTup_base hR τ)).2.2.2 i hfix
+  have hZ := (_root_.GlobalTheory.ConjRes.conj_res D G Pl0 T0 A T R F κ v₀ hR τ A.μ0 A.μ0 (conjTup_base hR τ)).2.2.2 i hfix
   have aux := hpins.2.lift.c0
   obtain ⟨gramR, c0R, c0L, hT, hB⟩ := aux
   have aux2 := GlobalTheory.PlaceValues.ext_val _ _ (R.B.L i A.μ0).pres (hT.mapL i) (hT.coefL i A.μ0) y.1 (Formalism.IndefR.FWT.fin _ h)
@@ -802,7 +804,7 @@ theorem GlobalTheory.PhaseOneOnto.phase_mem_coefField : GlobalTheory.Published.C
   have hs : sg0 D A3.A = D.what₂.embLL := sgAt_mk _ Rl.hv0
 
   obtain ⟨gramR', c0R', c0L', hft', hbc⟩ := hR.pins.2.lift.c0
-  obtain ⟨a, ⟨k, hk, hak⟩, hca⟩ := GlobalTheory.T.definiteSideRealisations_coefMap_differ_rootOfUnity Rl.B Rl.pl _ Rl.Q (labLL D) _ _ gramR gramR' c0R c0R' c0L c0L' hFT hft' j
+  obtain ⟨a, ⟨k, hk, hak⟩, hca⟩ := _root_.GlobalTheory.CoefRoot.coef_root Rl.B Rl.pl _ Rl.Q (labLL D) _ _ gramR gramR' c0R c0R' c0L c0L' hFT hft' j
   have ha0 : a ≠ 0 := fun e => by rw [e, zero_pow hk] at hak; exact zero_ne_one hak
   have hb0 : D.what₂.embLL a ≠ 0 := (map_ne_zero _).2 ha0
   obtain ⟨ph', hph'⟩ : ∃ ph', ph' = (D.what₂.embLL a)⁻¹ * ph := ⟨_, rfl⟩
@@ -1027,7 +1029,7 @@ theorem kerRatAt_alt : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Pu
   have h0 := _root_.GlobalTheory.BigOn.Exp.ratHyp0_at_point_alt Fm x hx i p hp hM _ l2.2.2 l1 j
   obtain ⟨c', w', hw', hfr, B', hv⟩ := exists_framed_half hP h0.size (GlobalTheory.Core5.of_core h0.core) (geoHalf p) h0.unif
     (_root_.GlobalTheory.T.inGeo_half_of_ratHyp0 hP Fm x hx i p hp hM _ j h0)
-  obtain ⟨S', YS', -⟩ := GlobalTheory.T.seriesRationality_back_from_movedReadings p.R p.cG p.Sx p.nexp w' hw'
+  obtain ⟨S', YS', -⟩ := _root_.GlobalTheory.UnframeForms.ratRow_back p.R p.cG p.Sx p.nexp w' hw'
   letI iA : Algebra (setCE p.T c').Q.c.F (Fm.D x i).what₂.LL := p.alg
   have hV' : (setCE p.T c').V ((j : ℕ) + 1) (setCE p.T c').σ₀ = Wc (Fm.D x i) j :=
     B'.fw.laws.spaceW _ ⟨Nat.le_add_left _ _, j.2⟩ _ (setCE p.T c').toCore.good_σ₀

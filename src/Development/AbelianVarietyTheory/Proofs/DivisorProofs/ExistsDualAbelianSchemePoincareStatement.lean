@@ -18,7 +18,7 @@ public import Mathlib.Order.CompletePartialOrder
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteIntegralClosureOfEssFiniteTypeIntDomain
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasDualRepresentativeOfRelAmpleNoetherianStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasProperSmoothDualRepresentativeGrpPullbackIffStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasProperSmoothDualRepresentativeGrpPullbackIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasRepresentingSchemePinchedBaseStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAbelianSchemeAndRelDimOfIsGrpPullback
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdditiveFamilyRepresentativeZariskiGlueStatement
@@ -1173,7 +1173,7 @@ theorem hasRepAF_factor (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g 
     exact ⟨z, by simpa [hz1] using hx, hz2⟩
   obtain ⟨L, hL, hLa⟩ := GlobalTheory.T.exists_relAmple_of_affineOpen_meets_fibres D _ hA' _ hV' hVs'
   have h1 := GlobalTheory.T.hasDualRepresentative_of_relAmple_noetherian D _ g hA' hg' L hL hLa
-  have h2 := ((GlobalTheory.T.hasProperSmoothDualRepresentative_grpPullback_iff _ _ (spMap f) A _ _ hP g (𝟙_ _)).2).1 h1
+  have h2 := ((_root_.GlobalTheory.DualCon.hasRep_baseChange_iff _ _ (spMap f) A _ _ hP g (𝟙_ _)).2).1 h1
   simpa using h2
 
 theorem step : ∀ (R : Type) [CommRing R] [Algebra.FiniteType ℤ R] [IsReduced R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ V : A.left.Opens, IsAffineOpen V → (∀ s : Sp R, ∃ x ∈ V, A.hom x = s) → (∀ J : Ideal R, J ≠ ⊥ → HasRep A g (Over.mk (spMap (Ideal.Quotient.mk J)))) → HasRep A g (𝟙_ _) := by
@@ -1368,7 +1368,7 @@ theorem hasRep_quot {R R' : Type} [CommRing R] [CommRing R'] (a : R →+* R')
   let m : Over.mk (spMap (Ideal.Quotient.mk J') ≫ spMap a) ⟶ Over.mk (spMap (Ideal.Quotient.mk J)) :=
     Over.homMk (spMap q) w
   have h1 := GlobalTheory.T.baseChangeBis _ A _ _ g m (hJ J (ha J' hJ'))
-  exact ((GlobalTheory.T.hasProperSmoothDualRepresentative_grpPullback_iff _ _ (spMap a) A A' φ hφ g (Over.mk (spMap (Ideal.Quotient.mk J')))).1).2 h1
+  exact ((_root_.GlobalTheory.DualCon.hasRep_baseChange_iff _ _ (spMap a) A A' φ hφ g (Over.mk (spMap (Ideal.Quotient.mk J')))).1).2 h1
 
 theorem local_rep (R : Type) [CommRing R] [Algebra.FiniteType ℤ R] [IsReduced R] (A : Over (Sp R)) [GrpObj A] (g : ℕ)
     (hA : IsAbelianScheme A) (hg : SmoothOfRelativeDimension g A.hom)
@@ -1388,7 +1388,7 @@ theorem local_rep (R : Type) [CommRing R] [Algebra.FiniteType ℤ R] [IsReduced 
   have h1 : HasRep A' g (𝟙_ _) :=
     GlobalTheory.T.hasProperSmoothDualRepresentative_noetherianInduction (Localization.Away f) A' g hA' hg' V hV hVs
       (hasRep_quot a (comap_ne_bot_away f) A A' _ hφ g hJ)
-  have h2 := ((GlobalTheory.T.hasProperSmoothDualRepresentative_grpPullback_iff _ _ (spMap a) A A' _ hφ g (𝟙_ _)).1).1 h1
+  have h2 := ((_root_.GlobalTheory.DualCon.hasRep_baseChange_iff _ _ (spMap a) A A' _ hφ g (𝟙_ _)).1).1 h1
   have h3 : HasRep A g (Over.mk (spMap a)) := by
     convert h2 using 2 <;> first | rfl
   have : IsOpenImmersion (spMap a) :=
@@ -1451,7 +1451,7 @@ theorem hasRep_quot_of_factor {S T : Type} [CommRing S] [CommRing T] (J : Ideal 
   have hB : IsGrpPullback B A f (pullback.fst A.hom f) := isGrpPullback_pullback A f
   obtain ⟨hAB, hgB⟩ :=
     GlobalTheory.AbBaseChange.isAbelianScheme_and_relDim_of_isGrpPullback φ A B _ g hB hA hg
-  have h2 := (GlobalTheory.T.hasProperSmoothDualRepresentative_grpPullback_iff _ _ f A B _ hB g (𝟙_ _)).1.mp (h B hAB hgB)
+  have h2 := (_root_.GlobalTheory.DualCon.hasRep_baseChange_iff _ _ f A B _ hB g (𝟙_ _)).1.mp (h B hAB hgB)
   refine GlobalTheory.T.baseChangeBis _ A (Over.mk ((𝟙_ (Over (Sp T))).hom ≫ f)) (Over.mk (spMap (Ideal.Quotient.mk J))) g
     (Over.homMk (spMap ψ) ?_) h2
   change spMap ψ ≫ 𝟙 _ ≫ spMap φ = spMap (Ideal.Quotient.mk J)
@@ -1540,7 +1540,7 @@ theorem hasRep_affine : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A]
   obtain ⟨S, B, _, φ, -, hS, hB, hgB, hφ⟩ :=
     GlobalTheory.AbelianLimit.abelianScheme_descends_to_fg_subring R g A ∅ hA hg
   have h₀ : HasRep B g (𝟙_ _) := GlobalTheory.T.hasProperSmoothDualRepresentative_finiteType S B g hB hgB
-  exact (GlobalTheory.T.hasProperSmoothDualRepresentative_grpPullback_iff _ _ _ B A φ hφ g (𝟙_ _)).1.2 (GlobalTheory.T.baseChangeBis _ B _ _ g (toUnit _) h₀)
+  exact (_root_.GlobalTheory.DualCon.hasRep_baseChange_iff _ _ _ B A φ hφ g (𝟙_ _)).1.2 (GlobalTheory.T.baseChangeBis _ B _ _ g (toUnit _) h₀)
 
 end GlobalTheory.DualCon
 end -- clump:auto
@@ -1929,7 +1929,7 @@ theorem hasRep_affineOpen {S : Scheme.{0}} (A : Over S) [GrpObj A] (hA : IsAbeli
         (pullback.lift_snd _ _ _) (IsPullback.of_hasPullback A.hom V.ι)
     haveI := smoothOfRelativeDimension_isStableUnderBaseChange g
     exact MorphismProperty.of_isPullback sq hg
-  have h1 := ((GlobalTheory.T.hasProperSmoothDualRepresentative_grpPullback_iff _ _ hV.fromSpec A A' _ hpb g (𝟙_ _)).1).1 (GlobalTheory.T.abelianScheme_dual_representable_affine_base _ A' g hA' hg')
+  have h1 := ((_root_.GlobalTheory.DualCon.hasRep_baseChange_iff _ _ hV.fromSpec A A' _ hpb g (𝟙_ _)).1).1 (GlobalTheory.T.abelianScheme_dual_representable_affine_base _ A' g hA' hg')
   refine hasRep_of_iso (Over.isoMk hV.isoSpec.symm ?_) h1
   show hV.isoSpec.inv ≫ V.ι = 𝟙 _ ≫ hV.fromSpec
   rw [Category.id_comp, IsAffineOpen.isoSpec_inv_ι]

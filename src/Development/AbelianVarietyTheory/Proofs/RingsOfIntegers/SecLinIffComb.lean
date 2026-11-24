@@ -15,8 +15,9 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValua
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.SectionScalarValuation
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsExtensionPullOver
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExpansionCommutesPullbackCmEndoFourLeStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExpansionOfIntegralSectionIsIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IntegralDegenerationFamilyBaseChangeExtensionFieStatement
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExpansionOfIntegralSectionIsIntegral
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IntegralDegenerationFamilyBaseChangeExtensionFie
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.PullAlLinearCombinationStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -432,14 +433,14 @@ theorem term (hL : Laws) (U : Unif (maximalIdeal V) D A G) {O : Type} [Ring O] [
       (pullMulSec s (endK φ) u hu)
     exact ⟨s', fun Z r z J hJ => (hs' Z r z J hJ).trans (sval_pullMulSec _ _ _ hu r z hJ)⟩
   obtain ⟨E, hE, -⟩ := (U.expand k hk).1 s
-  obtain ⟨g, hg, hEg⟩ := GlobalTheory.T.expansion_of_integral_section_is_integral V ϖ hϖ D A G U.toUnifPre k σ s
+  obtain ⟨g, hg, hEg⟩ := _root_.GlobalTheory.ExpInt.main V ϖ hϖ D A G U.toUnifPre k σ s
     (SectionScalarValuation.secScal_of_sval hLG fun y J hJ => (hs _ _ y J hJ).symm) E hE
   obtain rfl : f = g := GlobalTheory.T.integralExpansion_unique_of_uniformization hL.lemmaB V D A G U.toUnifPre k σ f g hf hg
   obtain ⟨E', ⟨t, ht, σ', f', h₁, h₂, h₃⟩, hP⟩ := hB s E hE s' ⟨u, hu, hc,
     (secRel_iff hLG _ _ _ _ _ _ _ _ _ _).2 fun y J hJ => hs' _ _ y J hJ⟩
   have h₂' : IsBC D.toPre (FractionRing V) (toF V (FractionRing V) t • E') f' := isBC_of_scal h₂
-  obtain ⟨θ, hθ⟩ := GlobalTheory.T.integralDegenerationFamily_baseChange_extensionField hL.globalFns V _ D k E f hEg F
-  obtain ⟨θ', hθ'⟩ := GlobalTheory.T.integralDegenerationFamily_baseChange_extensionField hL.globalFns V _ D (k * N) _ f' h₂' F
+  obtain ⟨θ, hθ⟩ := _root_.GlobalTheory.FamBaseChange.main hL.globalFns V _ D k E f hEg F
+  obtain ⟨θ', hθ'⟩ := _root_.GlobalTheory.FamBaseChange.main hL.globalFns V _ D (k * N) _ f' h₂' F
   have hP' := GlobalTheory.T.pullAl_linear_combination hL.globalFns V D (FractionRing V) O oa a k N 1 one_pos
     (fun _ => toF V (FractionRing V) t) (fun _ => E) (fun _ => E') (fun _ => hP)
   rw [Fin.sum_univ_one, Fin.sum_univ_one] at hP'

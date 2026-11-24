@@ -9,7 +9,7 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsMod
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GrowthSizeRWordNeTopOfLe
 public import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LieWordCommutesOneParameterDerivativeStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SobolevContinuousFormSumLieWordInnerStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SobolevContinuousFormSumLieWordInner
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,7 +86,7 @@ theorem rder_apply (hE : IsEquivMap θ M T) (hC : IsSobValued M T) (τ : D.what�
   have hG := gram_unit (M.fr_unit τ) (M.fr_gram τ)
   funext x
   obtain ⟨ℓ, hℓ, hℓT⟩ := hC τ v x
-  obtain ⟨m, ls, a, hls, ha⟩ := GlobalTheory.T.sobolevContinuousForm_sum_lieWord_inner _ _ _ (M.σ τ) (M.fr τ) _ (M.fr_unit τ) (M.fr_gram τ) (M.ds τ).2.2.1 ℓ hℓ
+  obtain ⟨m, ls, a, hls, ha⟩ := _root_.GlobalTheory.SmVec.sobCont_repr _ _ _ (M.σ τ) (M.fr τ) _ (M.fr_unit τ) (M.fr_gram τ) (M.ds τ).2.2.1 ℓ hℓ
   have hu := (mem_sm M τ).1 u.2
   have hmem : ∀ t : ℝ, trRep (M.σ τ) (M.fr τ) (NormedSpace.exp (t • X)) u ∈
       smSub (gramAt D V τ) (trRep (M.σ τ) (M.fr τ)) := fun t =>

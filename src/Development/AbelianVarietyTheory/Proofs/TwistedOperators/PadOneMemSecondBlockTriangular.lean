@@ -5,7 +5,8 @@ public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.AddNsmulResidueAssoc
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDualStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlacewiseToAdelicDecompositionForall
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqZeroOrEqOfPlaceIdem
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
@@ -415,7 +416,7 @@ theorem latO_bidual (hψ : IsStdChar D ψ (-1)) (hS : Submodule.IsFullLattice D.
   have hTf := GlobalTheory.PlaceModel.isSelfDualC_latFrame T
   have hSl := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S _ hSf
   have hTl := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T _ hTf
-  have hI := (GlobalTheory.T.self_dual_lattice_pairing_dual D ψ S T (GlobalTheory.PlaceModel.latFrame S) (GlobalTheory.PlaceModel.latFrame T) hψ hSf hTf).1
+  have hI := (_root_.GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T (GlobalTheory.PlaceModel.latFrame S) (GlobalTheory.PlaceModel.latFrame T) hψ hSf hTf).1
   have hmap : ∀ u : WO S T, IsHalf a u → u.map (infPart D) = 0 := by
     intro u hu
     rw [← smul_eq_of_half hu]
@@ -554,7 +555,7 @@ theorem isTheta_placeModel (hψ : IsStdChar D ψ (-1)) (hS : Submodule.IsFullLat
   have hTf := GlobalTheory.PlaceModel.isSelfDualC_latFrame T
   have hSl := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S _ hSf
   have hTl := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T _ hTf
-  have hI := (GlobalTheory.T.self_dual_lattice_pairing_dual D ψ S T (GlobalTheory.PlaceModel.latFrame S) (GlobalTheory.PlaceModel.latFrame T) hψ hSf hTf).1
+  have hI := (_root_.GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T (GlobalTheory.PlaceModel.latFrame S) (GlobalTheory.PlaceModel.latFrame T) hψ hSf hTf).1
   obtain ⟨M1, hM1, h1⟩ := exists_nsmul_latO (ΛS := ΛS) (ΛT := ΛT) (ΛS' := GlobalTheory.PlaceModel.latFrame S)
     (ΛT' := GlobalTheory.PlaceModel.latFrame T) hS.toIsLattice.fg hT.toIsLattice.fg hSl hTl
   have hTd := isPlaceModel_dualLat (ψ := ψ) hc hTm

@@ -25,7 +25,8 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.RelativeAmplene
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemKernelDiagonalRestrictionOfSymmetricTrivial
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdditiveSwapOfTrivAxes
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjRestrictSnd
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditionalStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsProductPrincipallyPolarisedAbelianScheme
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KernelOfLineBundleFiniteFlatSubgroupScheme
@@ -123,10 +124,11 @@ import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.TheoremOfCubeTwo
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProjBySmoothIsProperGeometricallyIntegral
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TheoremOfCubeProjectiveAbelianSchemeAffineBase
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsClosedSubschemeTranslationKernelStatement
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FlatOfIsFiniteOfFlatLocalizationMaximalStatement
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsClosedSubschemeTranslationKernel
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FlatOfIsFiniteOfFlatLocalizationMaximal
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.InKIffTrivialTwist
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LineBundleKernelFlatOfFiniteNoetherianLocalStatement
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LineBundleKernelFlatOfFiniteNoetherianLocal
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.MemKernelOfLineBundleBaseChangeRepresentableStatement
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
 
@@ -958,7 +960,7 @@ theorem flat_of_finite_rep : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (B
     (∀ (T : Over (Sp R)) (x : T ⟶ B), GlobalTheory.MemKL B M x ↔ ∃ z : T ⟶ H, z ≫ j = x) → Flat H.hom := by
   intro R _ _ B _ hB N hN hamp M hM H j hj hfin hrep
   have hG : Out.GlobalFnsSt := GlobalTheory.globalFns_holds
-  refine GlobalTheory.T.flat_of_isFinite_of_flat_at_maximal R H hfin (fun m _ => ?_)
+  refine _root_.GlobalTheory.flat_of_isFinite_of_flat_localization_maximal R H hfin (fun m _ => ?_)
   set f := spMap (algebraMap R (Localization.AtPrime m)) with hf
   have hB' : IsAbelianScheme ((Over.pullback f).obj B) := GlobalTheory.isAbelianScheme_pullback_obj f B hB
   haveI := hB'.comm
@@ -967,13 +969,13 @@ theorem flat_of_finite_rep : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (B
     (Localization.AtPrime m) f _ _ _ hpb
   have hML : (M.pull (pullback.fst B.hom f)).IsLB := pull_isLB hM _
   have hrep' := GlobalTheory.T.memKernelOfLineBundle_baseChange_representable _ _ f B M hM H j hrep
-  have hth := GlobalTheory.AbLaw.CubeAffine.triv_theta_of_isProjBy GlobalTheory.T.abelianScheme_laws_unconditional.1 _ ((Over.pullback f).obj B) hB' hP _ hML
+  have hth := GlobalTheory.AbLaw.CubeAffine.triv_theta_of_isProjBy _root_.GlobalTheory.abelianSchemeLaws_all.1 _ ((Over.pullback f).obj B) hB' hP _ hML
   have hcl : IsClosedImmersion ((Over.pullback f).map j).left := by
     exact MorphismProperty.overPullbackMap (P := @IsClosedImmersion) f j hj
   have hfin' : IsFinite ((Over.pullback f).obj H).hom := by
     first
     | (haveI := hfin; exact (inferInstance : IsFinite (pullback.snd H.hom f)))
-  exact GlobalTheory.T.lineBundleKernel_flat_of_finite_noetherian_local hG (Localization.AtPrime m) ((Over.pullback f).obj B) hB' hP _ hML hth _ _ hcl hrep' hfin'
+  exact _root_.GlobalTheory.StabFlatLocal.flat_of_isFinite hG (Localization.AtPrime m) ((Over.pullback f).obj B) hB' hP _ hML hth _ _ hcl hrep' hfin'
 
 theorem exists_closed_rep : ∀ (R : Type) [CommRing R] (B : Over (Sp R)) [GrpObj B], IsAbelianScheme B →
     ∀ N : LB B.left, N.IsLB → Out.RelAmple B N → ∀ M : LB B.left, M.IsLB →
@@ -983,7 +985,7 @@ theorem exists_closed_rep : ∀ (R : Type) [CommRing R] (B : Over (Sp R)) [GrpOb
   have hG : Out.GlobalFnsSt := GlobalTheory.globalFns_holds
   have hP : IsProjBy B.hom := GlobalTheory.WtTower.isProjBy_of_relAmple B hN hamp
   obtain ⟨h0, -, h2⟩ := GlobalTheory.UU.TrivTwist.inK_iff_trivial_twist _ B M hM
-  obtain ⟨H, j, hj, hrep⟩ := GlobalTheory.T.exists_closed_subscheme_translation_kernel hG R B hB hP M (AbLaw.pw M 0) hM h0
+  obtain ⟨H, j, hj, hrep⟩ := _root_.GlobalTheory.UU.TwistKer.exists_closed_twist_kernel hG R B hB hP M (AbLaw.pw M 0) hM h0
   refine ⟨H, j, hj, fun T x => ?_⟩
   rw [← GlobalTheory.UU.inK_iff_memKL, h2 _ rfl T x]
   exact hrep T x

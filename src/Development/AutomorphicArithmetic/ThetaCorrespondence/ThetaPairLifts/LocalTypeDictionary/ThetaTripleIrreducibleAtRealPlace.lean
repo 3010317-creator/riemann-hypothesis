@@ -29,9 +29,9 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PairsOfSquareTriple
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExists
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DarbouxModelAlgebraicVectorsLeAdelicSchwartzStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DarbouxModelAlgebraicVectorsLeAdelicSchwartz
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SeesawFramesWeilEquivalence
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaTransformDarbouxModelLinearInjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaTransformDarbouxModelLinearInjective
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ILiescalar
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaImageEqSpanDarboux
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaSumDifferentiableAlongLine
@@ -99,7 +99,7 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MaximalCompactOneParameterLinesOfLieLines
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFactorPureTensorComponentAtPlace
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilModelProjectionFactorisationStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilModelProjectionFactorisation
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
 import Mathlib.LinearAlgebra.PiTensorProduct.Basis
 import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.LieSecondOrderOfRealLift
@@ -985,8 +985,8 @@ theorem theta_triple_piT_irreducible : GlobalTheory.Published.HoweDualityReal �
       (∀ᶠ v in Filter.cofinite, φ v = Γ.M.vac v) →
       ∀ᶠ v in Filter.cofinite, φ v = Set.indicator {x | ∀ i, x i ∈ v.adicCompletionIntegers D.host.F} 1 := fun φ hφ => by
     filter_upwards [hφ, hM.std] with v a b using a.trans b
-  obtain ⟨T, hTh, hinj⟩ := GlobalTheory.T.thetaTransform_darbouxModel_linear_injective D Γ.M ψ (sgn true W).gram e (hψ' ▸ hM) hstd dV dW gA
-  have hS := GlobalTheory.T.darbouxModelAlgebraicVectors_le_adelicSchwartz _ _ _ Γ.M Bs.ψ Bs.emb hM
+  obtain ⟨T, hTh, hinj⟩ := _root_.GlobalTheory.ThetaTransformInj.linear_injective D Γ.M ψ (sgn true W).gram e (hψ' ▸ hM) hstd dV dW gA
+  have hS := _root_.GlobalTheory.TripleAssembly.darbAlg_le_schA _ _ _ Γ.M Bs.ψ Bs.emb hM
   have K : ∀ f ∈ Γ.M.Pol Bs.ψ Bs.emb, ∀ φ, (∀ v, φ v ∈ GlobalTheory.WeilM.SB _) → (∀ᶠ v in Filter.cofinite, φ v = Γ.M.vac v) →
       GlobalTheory.TripleRead.thO Γ.M ψ (sgn true W).gram e (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ) ∈ algF ψ θ true A B ∧
       mapA ψ e Bs Γ R Rf (GlobalTheory.TripleRead.thO Γ.M ψ (sgn true W).gram e (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ)) =
@@ -998,7 +998,7 @@ theorem theta_triple_piT_irreducible : GlobalTheory.Published.HoweDualityReal �
         q (GlobalTheory.TripleRead.thO Γ.M ψ (sgn true W).gram e Ψ) = liftPure Γ.M R.p Rf.p (vacIm Γ Rf) Ψ := by
       obtain ⟨q, hq⟩ := Onto.exists_factor T _ (fun x hx => hinj x (hS hx)) (liftPure Γ.M R.p Rf.p (vacIm Γ Rf))
       exact ⟨q, fun Ψ hΨ => by rw [← hTh Ψ (hS hΨ)]; exact hq Ψ hΨ⟩
-    have H' := GlobalTheory.T.weil_model_projection_factorisation _ _ _ Γ.M Bs.ψ hM _ R.p _ Rf.p (vacIm Γ Rf) (Filter.Eventually.of_forall fun _ => rfl)
+    have H' := _root_.GlobalTheory.PureLift.exists_pureLift _ _ _ Γ.M Bs.ψ hM _ R.p _ Rf.p (vacIm Γ Rf) (Filter.Eventually.of_forall fun _ => rfl)
     have e1 : mapA ψ e Bs Γ R Rf = H.choose := dif_pos H
     have e2 : liftPure Γ.M R.p Rf.p (vacIm Γ Rf) = H'.choose := dif_pos H'
     rw [e1]

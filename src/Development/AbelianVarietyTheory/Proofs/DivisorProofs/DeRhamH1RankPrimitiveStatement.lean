@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AxesVanishingStructureSheafDegOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeGlobalOneFormsClosedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianStructureCohomologyStatementStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianStructureCohomologyStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeRhamToStructureH1SurjectiveStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OfFormInjectiveOfH0Const
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeGlobalOneFormsProjectiveRankStatement
@@ -81,7 +81,7 @@ theorem fp_HH1 (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ) (h
     unfold clAll
     rw [LinearMap.range_comp, LinearEquiv.range, Submodule.map_top]
   have := (GlobalTheory.T.fgProjectiveConstantRank_extension_and_prod).1 R _ _ _ g g _ _ hinj (GlobalTheory.T.de_rham_to_structure_h1_surjective R A g hA hs) hex
-    (GlobalTheory.T.abelianScheme_global_oneForms_projective_rank R A g hA hs) (GlobalTheory.T.abelian_structure_cohomology_statement R A g hA hs).1
+    (GlobalTheory.T.abelianScheme_global_oneForms_projective_rank R A g hA hs) (_root_.GlobalTheory.AbCoh.oStr R A g hA hs).1
   rwa [two_mul]
 
 theorem rank_prim_HH1 : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A →

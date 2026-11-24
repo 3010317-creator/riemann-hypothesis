@@ -6,7 +6,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplitting
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EqZeroOfLintegralEqZero
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasDerivAtZeroAndIsTheta
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContDiffOfHeisenbergDerivativeClosedClassStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicLinearCoordinatesContinuousKeepPartsStatement
+public import Formalism.LocalToGlobal.BesselHermitianTheta.DefsReal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicLinearCoordinatesContinuousKeepParts
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.DecayZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicRapidDecayOfMemAdelicSchwartzSpace
@@ -183,7 +184,7 @@ theorem isThetaFunO_thV (hψ : IsStdChar D ψ (-1)) (he : ∀ w w', symplO S T w
     {Φ : (Fin N → AF D.host.F) → ℂ} (hΦ : Φ ∈ GlobalTheory.WeilM.schA D.host.F (Fin N)) :
     IsThetaFunO ψ S T (thV ψ Φ ∘ e) := by
   have hR : IsTotallyReal D.host.F := inferInstance
-  obtain ⟨hc, -, hfin, hinf⟩ := GlobalTheory.T.adelicLinearCoordinates_continuous_keep_parts D T.rank S.rank N e
+  obtain ⟨hc, -, hfin, hinf⟩ := _root_.GlobalTheory.AdelicCoord.coord D T.rank S.rank N e
   have hcont : ∀ Φ ∈ GlobalTheory.WeilM.schA D.host.F (Fin N), Continuous (thV ψ Φ ∘ e) := fun Φ hΦ =>
     (_root_.GlobalTheory.ThetaTransform.continuous_thV D.host.F N ψ hR hψ.1 Φ (_root_.GlobalTheory.SchwartzDecay.decay_of_mem_schA D.host.F N Φ hΦ)).comp hc
   refine ⟨fun γ w => ?_, ?_, hcont Φ hΦ, ?_⟩
@@ -218,7 +219,7 @@ theorem exists_thV_eq (hψ : IsStdChar D ψ (-1)) (he : ∀ w w', symplO S T w w
     {f : WO S T → ℂ} (hf : IsThetaFunO ψ S T f) :
     ∃ Φ ∈ GlobalTheory.WeilM.schA D.host.F (Fin N), thV ψ Φ ∘ e = f := by
   have hR : IsTotallyReal D.host.F := inferInstance
-  obtain ⟨-, hc, hfin, hinf⟩ := GlobalTheory.T.adelicLinearCoordinates_continuous_keep_parts D T.rank S.rank N e
+  obtain ⟨-, hc, hfin, hinf⟩ := _root_.GlobalTheory.AdelicCoord.coord D T.rank S.rank N e
   obtain ⟨lam, ν, hC⟩ := GlobalTheory.SWQ.ctx_exists D.host.F hR ψ hψ.1 N (half D.host.F N) half_ne_zero
   obtain ⟨-, -, -, -, 𝓓, -, hD, h1⟩ := GlobalTheory.SWQ.rat_lattice_fundamentalDomain D.host.F N ν hC.2.2.2.1
   let 𝒱 : Set (VA D.host.F N → ℂ) := {g | ∃ f, IsThetaFunO ψ S T f ∧ g = f ∘ e.symm}

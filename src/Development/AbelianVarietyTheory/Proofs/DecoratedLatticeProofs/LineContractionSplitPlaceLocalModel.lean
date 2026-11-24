@@ -10,7 +10,8 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Her
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalModelBoxProductOrthogonalSumTarget
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SkewAdjointSimilitudeExchangesHalves
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsThetaFunSuperpositionTargetOrthSummand
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselLineContractionHeisenbergInvariantStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselLineContractionHeisenbergInvariant
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContinuousIsotropicSandwichMeanTranslation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -765,7 +766,7 @@ namespace GlobalTheory.ContrLocProof
 open GlobalTheory.ContractionLocal
 
 theorem contrLoc : ∀ (D : D7), GlobalTheory.LocFlat.ContrFactor → ContrLoc D := by
-  have hH := GlobalTheory.T.besselLineContraction_heisenberg_invariant
+  have hH := _root_.GlobalTheory.Unf.ContrHeis.contr_heisO
   have hC := GlobalTheory.T.lineRow_translation_heisenberg_splitPlace
   have hD := GlobalTheory.T.splitPlace_lineColumn_translation_heisenberg
   have hL := GlobalTheory.T.besselLine_contraction_thetaFunction_isLocalModel

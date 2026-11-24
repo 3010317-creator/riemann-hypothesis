@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyIntegralLiftCoprimeDerivativeStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralConjSetLocalUnitaryEqDoubleCosetStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalConjugationInvolutiveValuationPreservingStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalConjugationInvolutiveValuationPreserving
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -97,7 +98,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E →
         exact (hw a b).2
     have hK : locPt w γ ∈ KL n w := by
       rw [KL, Subgroup.mem_subgroupOf, hloc]; exact hyK
-    obtain ⟨h1, h2⟩ := GlobalTheory.T.localConjugation_involutive_valuation_preserving E w
+    obtain ⟨h1, h2⟩ := _root_.GlobalTheory.BCT.cj_involutive_valuation E w
     have hcp : (locPt w γ).1.val.charpoly =
         P₀.map (algebraMap (w.adicCompletionIntegers E) (w.adicCompletion E)) := by
       rw [hloc, hP₀, hy]

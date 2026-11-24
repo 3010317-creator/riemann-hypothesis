@@ -5,7 +5,8 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSc
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLiftOfRangeSubset
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FiniteOfIsClosedTorusExtensionOfPowEqOne
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FinitePointsAbelianVarietyOfNoTorsionStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FinitePointsAbelianVarietyOfNoTorsion
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.GeometricallyReducedOfPerfectField
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsOpenConnectedComponentOfNoetherianSpace
 import Mathlib.Algebra.Order.Floor.Extended
@@ -237,7 +238,7 @@ theorem eq_one_of_torsion_comp_eq_one : ∀ (k : Type) [Field k] [IsAlgClosed k]
     inferInstance inferInstance inferInstance ⊤ Set.univ isClosed_univ (by simp)
   have hfin : Finite φ.range := by
     refine finite_of_isClosed_torusExtension_of_pow_eq_one
-      (finite_of_isClosed_abelian GlobalTheory.T.finite_points_abelianVariety_of_no_torsion) k G' l inferInstance inferInstance
+      (finite_of_isClosed_abelian _root_.GlobalTheory.AbelianNoTorsion.finite_points_of_no_torsion) k G' l inferInstance inferInstance
       (nonempty_torusExtension G' hG') hl hlk _ Z' hZ' (fun y => ?_) ?_
     · rw [← h']
       exact ⟨fun ⟨x, hx⟩ => ⟨x, trivial, hx⟩, fun ⟨x, _, hx⟩ => ⟨x, hx⟩⟩

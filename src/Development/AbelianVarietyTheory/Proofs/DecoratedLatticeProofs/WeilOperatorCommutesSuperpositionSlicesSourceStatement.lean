@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittSmallGroupEmbeddingMemPointwiseStabilizerIso
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EqZeroOfAeFundamentalDomain
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CmHostImaginaryGeneratorNeZero
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsThetaFunctionSuperpositionOrthogonalSlicesStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ContinuousResTSymm
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsThetaFunctionSuperpositionOrthogonalSlices
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumPreservesThetaFundamentalDomainPairingStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilOperatorOneVariableKeepsThetaFunctionsStatement
 public import Mathlib.MeasureTheory.Function.StronglyMeasurable.Lp
@@ -128,16 +129,16 @@ theorem comm_sfinite {S A B T : HSp D} (o : OrthDec S A B) {χ χ' : (AE D)ˣ �
     intro u b; simp only [hH, AddEquiv.apply_symm_apply]
   have hsl : ∀ b, IsThetaFunO ψ A T (fun u => F ((o.resS T).symm (u, b))) := by
     intro b
-    have := GlobalTheory.T.isThetaFunction_superposition_orthogonalSlices D ψ hψ S A B T o F hF Unit (Measure.dirac ()) (fun _ => b) (fun _ => 1)
+    have := _root_.GlobalTheory.SuperposS.superpos_isTheta D ψ hψ S A B T o F hF Unit (Measure.dirac ()) (fun _ => b) (fun _ => 1)
       measurable_const (integrable_const _)
     simpa using this
   set G : WO A T → ℂ := fun u => ∫ w, a w * F ((o.resS T).symm (u, k w)) ∂μ with hGdef
   set R : WO A T → ℂ := fun u => ∫ w, a w * om p (fun u' => F ((o.resS T).symm (u', k w))) u ∂μ with hRdef
-  have hG : IsThetaFunO ψ A T G := GlobalTheory.T.isThetaFunction_superposition_orthogonalSlices D ψ hψ S A B T o F hF Ω μ k a hk ha
+  have hG : IsThetaFunO ψ A T G := _root_.GlobalTheory.SuperposS.superpos_isTheta D ψ hψ S A B T o F hF Ω μ k a hk ha
   have hR' : R = fun u => ∫ w, a w * H ((o.resS T).symm (u, k w)) ∂μ := by
     funext u; simp only [hRdef, hHs]
   have hR : IsThetaFunO ψ A T R := by
-    rw [hR']; exact GlobalTheory.T.isThetaFunction_superposition_orthogonalSlices D ψ hψ S A B T o H hHt Ω μ k a hk ha
+    rw [hR']; exact _root_.GlobalTheory.SuperposS.superpos_isTheta D ψ hψ S A B T o H hHt Ω μ k a hk ha
   have hL : IsThetaFunO ψ A T (om p G) := hW.om_pres p G hG
   obtain ⟨v⟩ := GlobalTheory.Unf.Inhab.nonempty_volM D T.rank A.rank
   obtain ⟨hhaar, hfd, hvol⟩ := v.covol

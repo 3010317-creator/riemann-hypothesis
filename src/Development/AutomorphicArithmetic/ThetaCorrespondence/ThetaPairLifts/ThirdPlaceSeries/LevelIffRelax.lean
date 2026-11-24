@@ -10,8 +10,8 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdA
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceProjectionEqOfPrimeComponentEq
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistPrimeRationalCosetSameOrbitIffLevel
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CouplingCosetInFramesShapeAtBadPrime
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CouplingCosetInFramesShapeAtBadPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRationalFramesNearAdelicAtBadPrimesStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftsInvOne
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRationalFramesNearAdelicAtBadPrimes
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnKernelDataCompatibleStepCharts
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CxTiesOf
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsStdFr
@@ -438,14 +438,14 @@ theorem uloc_iff {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : TC B X} {l 
   have h1 : s + 1 + 1 = B.R.m := by omega
   have hm' : s + 1 < B.R.m := by omega
   obtain ⟨c, rfl⟩ := hA.chOf_onto _ hm β
-  obtain ⟨fb, hfb⟩ := GlobalTheory.T.exists_rational_frames_near_adelic_at_bad_primes I hOk l Z a _ (A.kb _ (A.chOf _ c))
+  obtain ⟨fb, hfb⟩ := _root_.GlobalTheory.Mem.Col2.AdT.frNear_exists I hOk l Z a _ (A.kb _ (A.chOf _ c))
   have hL : Formalism.L2.Col.ChIdx.Ok I.Ch I.sel (I.tup a) (I.cst a) (I.idx a) I.glob s :=
     (show B.R.m - 2 = s by omega) ▸ hOk.idx_ok a
   obtain ⟨hJ1, hJ2, hJ3⟩ := lev_facts hW hL (Idx.get c.1 hm') e he
   have hy0 : ∀ P', (Formalism.L2.Col.frsF I.sel (I.tup a) (A.p0 (s + 1) (A.chOf _ c)).1.1 P').symm
       (Formalism.L2.Col.repY (A.p0 (s + 1) (A.chOf _ c)).1.2) ∈ cosetIn ((I.stp u a (s + 1)).rep c) P' := fun P' => by
     rw [(hA.rep _ hm c).2]
-    exact ((GlobalTheory.T.couplingCosetInFrames_shape_at_bad_prime I hOk u a _ _ P').2 h1).2.1 _ (PtAt.repY_mem _ h1)
+    exact ((_root_.GlobalTheory.Mem.Col2.AdT.CosShape.cosShape I hOk u a _ _ P').2 h1).2.1 _ (PtAt.repY_mem _ h1)
   have hfin : AdT.ChiFin I l Z (A.K (s + 1) hm (A.chOf _ c)).lev := by
     obtain ⟨n, hn, h⟩ := hA.fin _ hm (A.chOf _ c)
     exact ⟨n, hn, fun κ _ => h κ⟩
@@ -474,7 +474,7 @@ theorem uloc_iff {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : TC B X} {l 
     exact (htr g hin).1 ((phi_stab_iff hW.compl e hJ2 _ _ g).2
       ⟨(hJ3 g).2 ((GlobalTheory.TwU.exists_midLev_iff _ _ _ _ _ _ _ _).1 ⟨z, hg.1⟩), (hsc _ _).1 (hg.2 h1)⟩)
   · intro h
-    obtain ⟨fb', hfb'⟩ := GlobalTheory.T.exists_rational_frames_near_adelic_at_bad_primes I hOk l Z a (B.R.N (s + 1))
+    obtain ⟨fb', hfb'⟩ := _root_.GlobalTheory.Mem.Col2.AdT.frNear_exists I hOk l Z a (B.R.N (s + 1))
       ((GlobalTheory.TwU.ratA (I.rec7 l Z).host.F (fb P))⁻¹ * κ * GlobalTheory.TwU.ratA (I.rec7 l Z).host.F (fb P))
     obtain ⟨g, hg⟩ := seamGL_surj (AdT.sm I l Z) (fb' P)
     have hin : GlobalTheory.TwU.InFrame (i := s + 1) (AdT.sm I l Z) fb (I.cst a).D P κ g := by

@@ -40,8 +40,8 @@ public import Mathlib.Topology.Algebra.InfiniteSum.Defs
 public import Mathlib.Topology.MetricSpace.Pseudo.Defs
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.EulerFactorStandardMeasureIdentity
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicUnitaryGroupLocallyCompact
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsSelfDualSiegelWeilMeasuresStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchwartzFunctionSchwartzBruhatStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.WeilSiegelTheta.BigCellDefs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchwartzFunctionSchwartzBruhat
 public import CompanionTheory.AutomorphicTheory.ThetaDilations.ThetaLint
 import GroundTheory.GlobalFields.LocalFieldAtPlace
 import GroundTheory.LocalFields.PadicLogSeries
@@ -84,7 +84,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.WeilBound.CoreStatements.AutomorphicKernels.UnitarySchrodingerModel.CoefDataExists
-import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.WeilSiegelTheta.BigCellDefs
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.TopoAF
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TensTop
@@ -779,7 +778,7 @@ theorem _root_.PositivityTheory.Rg.Rsw.L.fibEx : FibEx := by
   have hCM := _root_.Formalism.MainNotions.UnusedSlot34.isCMExt_D D
   have hJ := GlobalTheory.DefiniteQuotient.gram_hermND V
   obtain ⟨μH, 𝓕, hμH, h𝓕, -⟩ := GlobalTheory.Published.SiegelOneVector.exists_normalised D.sp.cm.sig V.gram hCM hJ
-  obtain ⟨dx, db, hdx, hdb, hW⟩ := GlobalTheory.T.exists_self_dual_siegel_weil_measures D r V ψ hψ μ hμ lam hlam
+  obtain ⟨dx, db, hdx, hdb, hW⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.whit_eq_coefN D r V ψ hψ μ hμ lam hlam
   have hT : ∀ a b, D.sp.cm.sig (b₀.1 b a) = b₀.1 a b := fun a b => by
     have := congrFun (congrFun b₀.2 a) b
     simpa [Matrix.transpose_apply, Matrix.map_apply] using this

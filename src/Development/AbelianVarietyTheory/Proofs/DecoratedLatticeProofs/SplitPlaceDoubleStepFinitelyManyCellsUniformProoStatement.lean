@@ -62,7 +62,8 @@ import Mathlib.Topology.Sheaves.Init
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Polynomial.Basic
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapsPreserveSchwartzBruhatAndSurjective
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctionsStatement
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctions
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupElementsJacobiBessel
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilCharacterSplitPlaceExistsContinuousNontrivia
 
@@ -261,7 +262,7 @@ namespace GlobalTheory.QPl.FinOneProof
 theorem finOne : ∀ D : D7, FinOne D := by
   intro D ψ hstd σ S Q a
   have hOm := _root_.GlobalTheory.LocOm.omLoc D
-  have hFL := GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D
+  have hFL := _root_.GlobalTheory.Unf.Flat.flatLaw D
   have hFLs := GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D
   have hBF := _root_.GlobalTheory.FlatBFLoc.flatBF_of_laws D hFL hFLs hOm
   have hFB := _root_.GlobalTheory.LocMod.flatFB_holds D hFL hFLs hOm

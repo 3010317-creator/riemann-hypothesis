@@ -26,13 +26,17 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TestPlacesPr
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareStanding
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousTranslatesKernelRouteSmallVertex
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmallRouteKernelLeftInvariantRationalUnitary
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareThetaTripleHypothesesOfStandingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TranslatedKernelLeThetaFunctionRouteBigVertexStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareTriple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareThetaTripleHypothesesOfStanding
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsNotRelZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TranslatedKernelLeThetaFunctionRouteBigVertex
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BigRouteKernelIntegrableOnUnitaryQuotientStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BigThetaKernelIntegrable
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.CuspAlongSmoothRows
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistedBaseChangeLiftExists
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BesselPeriodCorankConvergesColumnStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.LevelPlusSubgroup
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BesselPeriodCorankConvergesColumn
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HcFiniteAndSchurMult
@@ -999,7 +1003,7 @@ theorem small_convolution_exists_integrable_translates : _root_.GlobalTheory.Fun
   have hL : R.toLevCh.Is A.μ0 := hS.core.lev
   obtain ⟨e, Bs, Γ', X, om, om', h, hTr, hv⟩ := _root_.GlobalTheory.FunObj.squareTriple_of_standing hL ch.W t i j (hst t) M hM
   obtain ⟨z, Φ, a, C₀, hz, hΦ, hid⟩ :=
-    GlobalTheory.T.translatedKernel_le_thetaFunction_routeBigVertex hL ch.W ch.S.B ch.rm t i j M hM Θ Θ' hΘ g₁ e Bs Γ' X om om' h hTr hv
+    _root_.GlobalTheory.ZConvIdent.translates_kerSmall_le_theta hL ch.W ch.S.B ch.rm t i j M hM Θ Θ' hΘ g₁ e Bs Γ' X om om' h hTr hv
   have dec := (hK.1 D.host.F D.host.E D.sp.cm.sig Bs _ _ Γ' X om om' hTr).1
   obtain ⟨C, k, hC⟩ := (dec.2 Φ hΦ).1 0
   have hbd : ∀ u, ‖translates z (kerSmall ch.W Θ' g g₁) u‖ ≤
@@ -1057,7 +1061,7 @@ theorem square_convolution_large_bound : _root_.GlobalTheory.FunPr.ThetaLocalInp
   refine ⟨0, fun ε CF _ => ⟨(12:ℝ) ^ (5/ε), fun D large₂ he hx Γ _ _ Pl0 T A Ks _ _ _ R F hS ch hch hsc => ?_⟩⟩
   intro i j t M hM Θ Θ' hΘ g g₁
   have hst : SquareStanding ch.G t := standing hS (splitBound_ge he hx) ch.G t
-  exact GlobalTheory.T.bigRoute_kernel_integrableOn_unitary_quotient hWC hS.core.lev ch.W ch.S.B ch.rm t i j (GlobalTheory.T.squareThetaTripleHypotheses_of_standing hS.core.lev ch.W t i j hst) M hM Θ Θ' hΘ g₁ g
+  exact GlobalTheory.T.bigRoute_kernel_integrableOn_unitary_quotient hWC hS.core.lev ch.W ch.S.B ch.rm t i j (_root_.GlobalTheory.FunObj.squareTriple_of_standing hS.core.lev ch.W t i j hst) M hM Θ Θ' hΘ g₁ g
 end GlobalTheory.SquareConv
 end
 end
@@ -1155,7 +1159,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 theorem twist_linear_independence_test (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs) (hL : GlobalTheory.IndefiniteRowSideFullHecke.CuspAlongSmoothLifts.LiftsCuspidal) : GlobalTheory.RowClaim.LinK := by
   refine ⟨0, fun ε CF _ => ⟨0, fun D large₂ _ _ Γ _ _ Pl0 T A Ks _ _ _ R F hS ch hch hsc a u => ?_⟩⟩
   obtain ⟨h1, h2⟩ := _root_.GlobalTheory.T.twisted_theta_lift_automorphic hP hL large₂ hS ch hch CF hsc a u
-  exact ⟨h1, GlobalTheory.T.besselPeriodCorank_converges_column ch.W ch.M hch.vol ch.ξ _ (col_mem ch a) _ h2⟩
+  exact ⟨h1, _root_.GlobalTheory.RowBplus.bplusConv_col ch.W ch.M hch.vol ch.ξ _ (col_mem ch a) _ h2⟩
 end GlobalTheory.RowTest
 end
 end

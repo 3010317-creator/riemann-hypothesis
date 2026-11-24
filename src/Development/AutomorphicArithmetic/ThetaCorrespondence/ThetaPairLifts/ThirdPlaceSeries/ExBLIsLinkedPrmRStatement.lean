@@ -32,15 +32,17 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForm
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasEigEigOfType
 public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.LevelCuspCharacters
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoreClausesOfWeakCharacterisation
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RowTypePartLeEigensystemPartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurConstantsExistOnChainOfCuspRapidDecay
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Development.AbelianVarietyTheory.Definitions.Divisors.InstCMHostS
 public import Formalism.LocalToGlobal.IndefiniteReal.ConjSubConjSub
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RowTypePartLeEigensystemPart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurConstantsExistOnChainOfCuspRapidDecay
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RowTypeHasSphericalHeckeEigensystem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjointInjectiveOnPart
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullAlgebraPartLeSplitHeckePartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckePolynomialsOfCarriedEigensystemStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
+public import Formalism.LocalToGlobal.IndefiniteReal.ZeroPartEigenvalueConvention
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckePolynomialsOfCarriedEigensystem
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LiftIntegOfCuspRapidDecay
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TypePartLeEigensystemPartPrincipalLevelStatement
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StableIffCarrierEq
@@ -134,7 +136,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesPropertiesStatement
 import Formalism.SharpRestriction.LevelLetterCocycles.CommutingEndomorphismPreservesInvariants
 import Lean.Exception
 import Mathlib.Algebra.Ring.IsFormallyReal
@@ -468,7 +469,7 @@ theorem carries_of_hasEig : GlobalTheory.Published.WeilRepresentationUnitaryPair
   rw [hμ, ssetF_base hPins.char] at hc
   obtain ⟨b, hb⟩ := principalLevelFrame.rowRepR_occ R.θ (Y.eFT π)
   obtain ⟨U, hU, hU0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hb
-  obtain ⟨x, hx, hxU⟩ := GlobalTheory.T.rowTypePart_le_eigensystemPart (s := 1) R.toRealDat F.lv2 hCore
+  obtain ⟨x, hx, hxU⟩ := _root_.GlobalTheory.TypePart.isotE_sub_eigenpart (s := 1) R.toRealDat F.lv2 hCore
     (GlobalTheory.Hk3.schurAll_of_cuspRapidDecay hCusp R.toRealDat) R.SF hSF Y.hF Y.PY Y.PW Y.stdPsi.1 Y.stdPsi.2 _ _ c hc b U hU
   rw [← hEE] at hx
   refine carries_of_mem R c x hx (hxU ▸ hU0) (mem_iSup_eEp3 R F b (hHolds.prim.sumE b) x ?_)
@@ -578,7 +579,7 @@ theorem isSF_ssetF_base {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Ty
     (R : RealDat3 D A3 Ks) (F : Face3 D A3) (hW : R.WeakCharacterisation F) (hC : GlobalTheory.Hk3.Core R.toRealDat F.lv2) :
     GlobalTheory.Hk3.IsSF R.toRealDat (SsetF R.toRealDat A3.A.μ0) := by
   intro v
-  have hQ := (GlobalTheory.T.theta_lift_levels_good_primes_properties R.toRealDat F.lv2 hC.lev).1
+  have hQ := (_root_.GlobalTheory.GoodPrimes.good_primes R.toRealDat F.lv2 hC.lev).1
   have hS : R.Sb = R.Pg := hW.allPl
   unfold SsetF
   rw [hQ, hS]
@@ -597,12 +598,12 @@ theorem prt_le_hPart_of_carries : GlobalTheory.Published.WeilRepresentationUnita
     rw [hμ]; exact isSF_ssetF_base R F hP.char hC
   have hinj := GlobalTheory.AdjPart.adjoint_injective_on_part R
     ⟨hH.prim.posScal.1, fun i t p => hH.prim.posScal.2 i t p _⟩ hH.prim.thmB
-  have hlab := GlobalTheory.T.heckePolynomials_of_carried_eigensystem R F (GlobalTheory.Chain.LiftConv.liftInteg_of_cuspRapidDecay hR D) hH.ok hP.char hH.aux.ex hS hinj p c hc
+  have hlab := _root_.GlobalTheory.CarriedHecke.hecke_polys_of_carries R F (GlobalTheory.Chain.LiftConv.liftInteg_of_cuspRapidDecay hR D) hH.ok hP.char hH.aux.ex hS hinj p c hc
   have hpart := (GlobalTheory.T.full_algebra_part_le_split_hecke_part R.toRealDat F.lv2 (s := 1) hH.ok.ok2 hC _ hSF' c (RealDat.polE (A := A3.A) p.1.1)).1
     fun P hP => (hlab P hP).1
   rw [Y.prtE π]
   refine Submodule.map_mono fun U hU => ?_
-  obtain ⟨x, hx, rfl⟩ := GlobalTheory.T.rowTypePart_le_eigensystemPart R.toRealDat F.lv2 (s := 1) hC hS _ hSF' Y.hF Y.PY Y.PW Y.stdPsi.1 Y.stdPsi.2
+  obtain ⟨x, hx, rfl⟩ := _root_.GlobalTheory.TypePart.isotE_sub_eigenpart R.toRealDat F.lv2 (s := 1) hC hS _ hSF' Y.hF Y.PY Y.PW Y.stdPsi.1 Y.stdPsi.2
     _ _ c hE true U hU
   exact hpart x hx
 

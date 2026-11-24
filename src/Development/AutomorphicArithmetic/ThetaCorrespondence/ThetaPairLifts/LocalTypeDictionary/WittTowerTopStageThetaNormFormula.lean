@@ -18,7 +18,7 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RegConst
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsEtaTildeUnramified
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegIdxOfOrth
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsThetaFunctionStandardPairSecondStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsThetaFunctionStandardPairSecond
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FirstStandardPairMemberHasThetaFunctionStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OrthogonalSumSelfDualExists
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatInOfDefinite
@@ -31,14 +31,16 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLagrModelO
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareStanding
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BigRouteKernelEqConstMulThetaStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BigThetaKernelIntegrable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdmissibleFormConvergentThetaIntegralStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdmissibleFormConvergentThetaIntegral
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDetOneMulBlockUnitaryDecompositionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGaussianDatumFlippedFiniteTensorBigRouteStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsNotRelZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGaussianDatumFlippedFiniteTensorBigRoute
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsThetaTripleOfSquareGridLatticeCompatibleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVacuaTripleProportionalToNonzeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVacuaTripleProportionalToNonzero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsNatDatumSquareFlip
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealPolynomialVectorReachedByRealDatum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealPolynomialVectorReachedByRealDatumStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SetIntegralConjugateScaledUnitaryGroupEqStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareFlipReachesLocalQuotientClassesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StrongApproximationSplitPlaceSkewHermitianUnitarStatement
@@ -47,10 +49,12 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVecto
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemSBOfIsNatDatum
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PolynomialRouteSubmodule
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RegularisedComparison
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaGridRouteKernelEqDetCharactersMulThetaKerneStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BlkGLMem
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaGridRouteKernelEqDetCharactersMulThetaKerne
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TripleFrameBaseExists
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BigRouteKernelIntegrableOnUnitaryQuotientStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareThetaTripleHypothesesOfStandingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareTriple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareThetaTripleHypothesesOfStanding
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.Zact
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SquareIdentityOfMatching
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaIntegralKernelLieAlgebraStable
@@ -130,7 +134,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsMatchOver
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BlkGLMem
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MapFinNeg
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsINeZeroKind
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
@@ -445,7 +448,7 @@ theorem square_tower_grid_exists : _root_.GlobalTheory.FunPr.ThetaLocalInputs �
     Finset.prod_ne_zero_iff.2 fun w _ => pow_ne_zero _ w.ne_bot
   choose f hf _ using fun t => GlobalTheory.T.first_standard_pair_member_has_theta_function D W.ψ W.θ _ (hsum (G.V (.grid i (j + 1))) (G.V (.grid (i + 1) j))) rA rW _ _ _ _ _ hA hW (ch t).2.2.1 (he t) (hI t) hv
   choose f' hf' _ using fun t =>
-    GlobalTheory.T.exists_thetaFunction_standardPairSecond D W.ψ W.θ _ (hsum (G.V (.grid i (j + 1))) (G.V (.grid (i + 1) j))) rA' rW _ _ _ _ (G.V (.grid (i + 1) (j + 1))).rank _ hA' hW (ch t).2.2.1 (he t) (hI t) hv'
+    _root_.GlobalTheory.CompanionTheory.StdSndTheta.exists_theta D W.ψ W.θ _ (hsum (G.V (.grid i (j + 1))) (G.V (.grid (i + 1) j))) rA' rW _ _ _ _ (G.V (.grid (i + 1) (j + 1))).rank _ hA' hW (ch t).2.2.1 (he t) (hI t) hv'
   obtain ⟨m, fd, hm⟩ := GlobalTheory.ConstRatio.exists_meas (G.V (.grid (i + 1) (j + 1)))
   obtain ⟨m', fd', hm'⟩ := GlobalTheory.ConstRatio.exists_meas (G.V (.grid i j))
   refine ⟨⟨rA, rA', rW, ω, ω', vac, vac', e, c, f, f', m, fd, m', fd'⟩,
@@ -689,7 +692,7 @@ theorem thetaInt_eq_zero (hSA : GlobalTheory.Published.StrongApproxSU) (hK : Glo
   obtain ⟨R, Rf, hm⟩ := hLM _ _ _ Bs _ _ Γ X om om' hT
   obtain ⟨dec, hk⟩ := hK.1 _ _ _ Bs _ _ Γ X om om' hT
   obtain ⟨hc, hco⟩ := hk R Rf hm
-  obtain ⟨l, hla, hl⟩ := GlobalTheory.T.exists_adm_eq_thetaIntegral_of_conv Γ.M Bs.ψ _ _ om hT.weil dec.1
+  obtain ⟨l, hla, hl⟩ := _root_.GlobalTheory.ThetaIntAdm.exists_admissible_form_convergent_thetaIntegral Γ.M Bs.ψ _ _ om hT.weil dec.1
   obtain ⟨f₀, f₀', ⟨f1, f2⟩, -, f3⟩ := GlobalTheory.FlipMatch.finite_match hL W B ρ t i j M hst h hm htb
   obtain ⟨φ₀, -, p₀, -, d₀, -⟩ := f3 n₀ Φ₀ τ₀ τ₀' hn₀ hF₀
   obtain ⟨f, hf, hPf⟩ := hFock f₀ f2 P
@@ -730,9 +733,9 @@ theorem thetaInt_eq_zero (hSA : GlobalTheory.Published.StrongApproxSU) (hK : Glo
     have e : ((D.host.QS * D.host.q * D.host.d * Ideal.absNorm D.host.ccK : ℕ) : 𝓞 D.host.E) =
         (D.host.d : 𝓞 D.host.E) * ((D.host.QS * D.host.q * Ideal.absNorm D.host.ccK : ℕ) : 𝓞 D.host.E) := by push_cast; ring
     rw [e]; exact Ideal.mul_mem_left _ _ hmem)) n Φ hnat
-  obtain ⟨f', h1, h2, h3⟩ := GlobalTheory.T.exists_gaussianDatum_flippedFiniteTensor_bigRoute hL W B ρ t i j M hst e Bs Γ X om om' h hT hti n Φ τ τ' hnat hF φ hφ
+  obtain ⟨f', h1, h2, h3⟩ := _root_.GlobalTheory.BigDat.exists_gauss_datum hL W B ρ t i j M hst e Bs Γ X om om' h hT hti n Φ τ τ' hnat hF φ hφ
     fun w hw => (H w hw).2.2
-  obtain ⟨s, rfl⟩ := GlobalTheory.T.fockVacua_triple_proportional_to_nonzero Bs Γ X om om' hT f₀ f1 f2 f' h2
+  obtain ⟨s, rfl⟩ := _root_.GlobalTheory.GaussLine.gauss_eq_smul Bs Γ X om om' hT f₀ f1 f2 f' h2
   have hs : s ≠ 0 := by rintro rfl; exact h1 (zero_smul _ _)
   have k := hI _ _ (hPf s φ hs hφ _ (isDatum_of_isDatumA h3)) (blk _ _ g)
   rw [toUX_blk _ _ e h.JWW, GlobalTheory.RegCompare.thetaInt_smul, ← hP n Φ τ τ' hF] at k
@@ -740,7 +743,7 @@ theorem thetaInt_eq_zero (hSA : GlobalTheory.Published.StrongApproxSU) (hK : Glo
   obtain ⟨b, rfl⟩ := toTens_surjective b'
   have hΘ : IsMatched B t ρ i j (tensT W a τ) (tensT W b τ') := ⟨a, b, τ, τ', n, Φ, hb', hnat, hF, rfl, rfl⟩
   have z := h0 M hM a rfl n Φ τ τ' hnat hF g.1 g.2
-  simp only [GlobalTheory.T.thetaGridRouteKernel_eq_detCharacters_mul_thetaKernel hL W t i j ωA hωA B ρ _ _ hΘ] at z
+  simp only [_root_.GlobalTheory.SquareDict.ExactBig.kerBig_eq hL W t i j ωA hωA B ρ _ _ hΘ] at z
   rw [integral_const_mul, mul_eq_zero, mul_eq_zero] at z
   rcases z with (z | z) | z
   · exact Circle.coe_ne_zero _ z
@@ -944,7 +947,7 @@ theorem exists_scalar_of_realStandingData (hP : _root_.GlobalTheory.FunPr.ThetaL
       have hΘ : IsMatched B t ρ i j (tensT W a τ) (tensT W b τ') := ⟨a, b, τ, τ', n, Φ, hab, hn, hF, rfl, rfl⟩
       obtain ⟨z, z0, z1, z2⟩ := hc₀ M hM _ _ ⟨a₀, b, τ, τ', n, Φ, hab₀, hn, hasFlip_congr h1 h2 hF, rfl, rfl⟩ g g₁
       have z3 := hc M hM _ _ hΘ z g g₁ ⟨GlobalTheory.T.bigRoute_kernel_integrableOn_unitary_quotient (_root_.GlobalTheory.T.twisted_theta_integral_converges hP.siegelSetUnitary hP) hL W B ρ t i j
-        (GlobalTheory.T.squareThetaTripleHypotheses_of_standing hL W t i j (hst t)) M hM _ _ hΘ g₁ g, z1.2⟩
+        (_root_.GlobalTheory.FunObj.squareTriple_of_standing hL W t i j (hst t)) M hM _ _ hΘ g₁ g, z1.2⟩
       replace z2 := (congrArg (zdeg z * ·) (e a₀)).symm.trans z2
       replace z3 := (congrArg (zdeg z * ·) (e a)).symm.trans z3
       exact ⟨l, _ / zdeg z, e, by rw [← mul_div_assoc, ← z3, mul_div_cancel_left₀ _ z0],
@@ -1250,7 +1253,7 @@ theorem tied_pair_regularization_constant (hP : _root_.GlobalTheory.FunPr.ThetaL
   obtain ⟨κ, hκ⟩ := hD.2 ωA ωB hm.weilA hm.weilB
   refine ⟨lam * c₀, fun M hM Θ Θ' hΘ g g₁ => ?_⟩
   obtain ⟨aA, aB, kA, kB, iA, iB⟩ := hκ B ρ Θ Θ' hΘ
-  have hconv := GlobalTheory.T.bigRoute_kernel_integrableOn_unitary_quotient hWC hL W B ρ t i j (GlobalTheory.T.squareThetaTripleHypotheses_of_standing hL W t i j hst) M hM Θ Θ' hΘ g₁ g
+  have hconv := GlobalTheory.T.bigRoute_kernel_integrableOn_unitary_quotient hWC hL W B ρ t i j (_root_.GlobalTheory.FunObj.squareTriple_of_standing hL W t i j hst) M hM Θ Θ' hΘ g₁ g
   have hpp := hlam Θ Θ' hΘ
   obtain ⟨z, -, hz0, hzS, hzM, hz⟩ := hc₀ _ aB
   have ez : zact ωB z (datumB W Θ') = GlobalTheory.RegCompare.wop ωB z (datumB W Θ') := (GlobalTheory.RegCompare.wop_apply _ _ _).symm

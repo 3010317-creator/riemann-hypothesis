@@ -6,7 +6,9 @@ public import Formalism.LocalToGlobal.ProjectiveLattices.IsGenFrGenFr
 public import Formalism.LocalToGlobal.ProjectiveLattices.EquivariantFiniteGroup
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ModelSmall
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AllWeightSectionsCompatStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CInfGood
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AllWeightSectionsCompat
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentNormConstantModelsStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TowerWeightOfZero
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.IsHomogeneousGrL
@@ -303,7 +305,7 @@ theorem cusp_hodgeLe : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [I
   obtain ⟨a, ha⟩ : ∃ a, a = (GlobalTheory.AllWt.wtOf Dw u 0).1 := ⟨_, rfl⟩
   obtain ⟨hw1, hw2, -, hw4, -⟩ := GlobalTheory.CompanionTheory.Ar.Plug.integer_weights_vocab E H Dw l Xo c RM u
   rw [← ha] at hw1 hw2
-  obtain ⟨-, -, hco, -, -⟩ := GlobalTheory.T.all_weight_sections_compat E H Dw l Xo c r U h e hL a Z
+  obtain ⟨-, -, hco, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Rec.bridge_allWt E H Dw l Xo c r U h e hL a Z
   rw [hw2, ← hco] at hf
   have hcz : f ∈ GlobalTheory.CompanionTheory.Ar.Rec.cuspZ Xo c U a := hf.1
   have hsec : f ∈ GlobalTheory.CompanionTheory.Ar.Rec.secZ Xo c a := hcz.1

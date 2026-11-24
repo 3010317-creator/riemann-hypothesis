@@ -6,10 +6,10 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDimEqO
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.FormallyUnramifiedOfTangentMapInjective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyFiniteHomKernelKilledByNat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyIntCastSmulIsogenyDegree
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIsogenyCompIffAndDegreeMulStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIsogenyCompIffAndDegreeMul
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuotientOfGaloisStableFiniteSubgroupStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFiniteIffFiniteKerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjectiveIffPtMapSurjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFiniteIffFiniteKer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjectiveIffPtMapSurjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,7 +65,6 @@ import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatSurjectiveGeomF
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsogenyFlatFinrank
 import Mathlib.Tactic.Basify
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FrobeniusOnTorsion
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsogenyFlatFinrankStatement
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.ModuliProofs.GenericPartImagePullback, Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowEqOneOfPoints, Development.AbelianVarietyTheory.Proofs.DivisorProofs.NotDvdDegOfNoTorsionInKernel, Development.AbelianVarietyTheory.Proofs.DivisorProofs.NotDvdDegOfNoTorsionInKernelStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardLPowerTorsionKernelEqLPartIsogenyDegree, Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardLPowerTorsionKernelEqLPartIsogenyDegreeStatement
@@ -323,7 +322,7 @@ theorem GlobalTheory.AV.AbVar.not_dvd_deg_of_no_torsion_in_kernel : ∀ (K : Typ
     apply Subtype.ext
     change h.hom ≫ h' = (𝟙 A.X) ^ (m : ℤ)
     simpa using hhh'
-  obtain ⟨-, hdeg⟩ := GlobalTheory.T.isIsogeny_comp_iff_and_degree_mul K A B A h g hdim hdim.symm
+  obtain ⟨-, hdeg⟩ := _root_.GlobalTheory.AV.AbVar.isIsogeny_comp_iff_and_deg_comp K A B A h g hdim hdim.symm
   obtain ⟨-, hdm⟩ := GlobalTheory.MulIsogeny.mul_isogeny K A (m : ℤ) (by exact_mod_cast hm.ne')
   rw [e1, hdm, Int.natAbs_natCast] at hdeg
   intro hdvd
@@ -391,7 +390,7 @@ theorem card_kerLPart_eq (K : Type) [Field K] (l : ℕ) [Fact l.Prime] (hl : (l 
     Nat.card {x : A.Pt // x ≫ f.hom = 1 ∧ ∃ n : ℕ, x ^ l ^ n = 1} = l ^ padicValNat l (deg f) := by
   set G := kerLPart l f with hG
   change Nat.card G = _
-  have hker : Finite (ptMap f).ker := (GlobalTheory.T.isFinite_iff_finite_ker' K A B f).1 hf.1
+  have hker : Finite (ptMap f).ker := (_root_.GlobalTheory.AV.AbVar.isFinite_iff_finite_ker K A B f).1 hf.1
   haveI hGfin : Finite G := Finite.of_injective (Subgroup.inclusion (kerLPart_le l f))
     (Subgroup.inclusion_injective _)
   have hpG : IsPGroup l G := fun g => by
@@ -408,12 +407,12 @@ theorem card_kerLPart_eq (K : Type) [Field K] (l : ℕ) [Fact l.Prime] (hl : (l 
     · rw [← map_pow, hn, map_one]
   obtain ⟨B', q, hq, hdq, hkq, huniv⟩ := _root_.GlobalTheory.AV.AbVar.exists_quot_of_galois_stable K A G hGfin hcardK hgal
   obtain ⟨h, hqh⟩ := huniv B f (kerLPart_le l f)
-  have hdAB := (GlobalTheory.T.dim_eq_flat_finrank_eq_deg_of_isIsogeny K A B f hf).1
-  have hdAB' := (GlobalTheory.T.dim_eq_flat_finrank_eq_deg_of_isIsogeny K A B' q hq).1
-  have hcomp := GlobalTheory.T.isIsogeny_comp_iff_and_degree_mul K A B' B q h hdAB' (hdAB'.symm.trans hdAB)
+  have hdAB := (_root_.GlobalTheory.AV.AbVar.isogeny_flat_finrank K A B f hf).1
+  have hdAB' := (_root_.GlobalTheory.AV.AbVar.isogeny_flat_finrank K A B' q hq).1
+  have hcomp := _root_.GlobalTheory.AV.AbVar.isIsogeny_comp_iff_and_deg_comp K A B' B q h hdAB' (hdAB'.symm.trans hdAB)
   rw [hqh] at hcomp
   have hh : IsIsogeny h := (hcomp.1.mp hf).2
-  have hsurj := (GlobalTheory.T.abVar_surjective_iff_ptMap_surjective K A B' q).1 hq.2
+  have hsurj := (_root_.GlobalTheory.AV.AbVar.surjective_iff_ptMap_surjective K A B' q).1 hq.2
   have hnot : ¬ l ∣ deg h := by
     refine _root_.GlobalTheory.AV.AbVar.not_dvd_deg_of_no_torsion_in_kernel K l hl B' B h hh ?_
     intro y hyl hyh

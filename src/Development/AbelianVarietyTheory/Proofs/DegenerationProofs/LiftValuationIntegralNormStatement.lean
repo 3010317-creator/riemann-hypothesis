@@ -33,18 +33,18 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.Torsion
 public import Development.AbelianVarietyTheory.Statements.TorsionEndomorphisms.EndDeterminedOnTorsion
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesOfExpansionLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesTorsionPairingSeparationIntegraStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesOfExpansionLaws
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesTorsionPairingSeparationIntegra
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartsIsoLabelsOfThetaPointAndValuesStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ArcTorsionValuesNormsIntegralPositiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ArcTorsionValuesNormsIntegralPositive
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationDataTorsionStructureAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationRecognitionOfAbelianPartsIsoLabelsStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationValuesIntOfAdmissibleBaseStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationValuesIntOfAdmissibleBase
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralDegenerationValues
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespondStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantsEqDegenerationSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionPairingValuesOfFamiliesValuesStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValuesStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespond
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantsEqDegenerationSeries
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionPairingValuesOfFamiliesValues
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValues
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TauBimultOfIsPullDeg
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -1074,10 +1074,10 @@ theorem data_of_model : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory
   have hL : Laws := hV.1.1
   have hL2 : Laws2 := hV.1.2.1
   obtain ⟨_, _⟩ := local_of_arcBase hO
-  have hGt := GlobalTheory.T.torus_torsion_points_correspond_values
-  have hFam := GlobalTheory.T.families_values_correspond hL hL2
-  have hWp := GlobalTheory.T.torsionPairing_values_of_familiesValues hGt hFam
-  have hUth := GlobalTheory.T.abelianPartValues_of_expansionLaws hL
+  have hGt := _root_.GlobalTheory.Ex.GtValues.points_correspond
+  have hFam := _root_.GlobalTheory.Ex.brFam hL hL2
+  have hWp := _root_.GlobalTheory.WeilValues.weil_eq_values hGt hFam
+  have hUth := _root_.GlobalTheory.ThetaInValues.brUth_of_laws hL
   have hUrec := GlobalTheory.T.degenerationRecognition_of_abelianPartsIsoLabels (GlobalTheory.T.abelianPartsIsoLabels_of_thetaPoint_and_values hL hT hUth)
   have hDvr := M.cdv.1
   have hAdm : AdmBase M.W (IsLocalRing.maximalIdeal M.W) := ⟨inferInstance, inferInstance, inferInstance, M.cdv.2.1⟩
@@ -1092,11 +1092,11 @@ theorem data_of_model : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory
   obtain ⟨N', ν', hI'⟩ := ValuesExist.exists_integral_values hL M.W M.P.D.toPre M.P.D.psi_even M.P.D.tau_bimult C S
     fun x => (hS _).2 (M.ext.1 x)
   have hI'' : ν'.IntN := ⟨S, hS, hI'⟩
-  obtain ⟨Q', hQ'⟩ := GlobalTheory.T.degenerationValues_int_of_admissibleBase M.W _ hAdm M.P.D C M.ext N' ν' hI''
-  obtain ⟨Q, hQ, -⟩ := (GlobalTheory.T.arcTorsionValues_norms_integral_positive E H D l Xo c W₀ Y O' b ϖ a hO C xO A hI).2.2 u hu1
-  have tN : A.N.toNumB.Tors n a.D₀.P.g := GlobalTheory.T.abelianPartValues_torsion_pairing_separation_integral hL hL2 hUth O' a.D₀ a.even a.bimult C xO A.N A.ν hI n hn ho hn1
+  obtain ⟨Q', hQ'⟩ := _root_.GlobalTheory.Ex.IntVal.main M.W _ hAdm M.P.D C M.ext N' ν' hI''
+  obtain ⟨Q, hQ, -⟩ := (_root_.GlobalTheory.Ex.UnitNorm.norms_of_arc_input E H D l Xo c W₀ Y O' b ϖ a hO C xO A hI).2.2 u hu1
+  have tN : A.N.toNumB.Tors n a.D₀.P.g := _root_.GlobalTheory.ValuesTorsion.tors_of_integral hL hL2 hUth O' a.D₀ a.even a.bimult C xO A.N A.ν hI n hn ho hn1
   have tW : (A.N.twist A.be u).toNumB.Tors n DW.P.g := hg ▸ tN
-  have tN' := GlobalTheory.T.abelianPartValues_torsion_pairing_separation_integral hL hL2 hUth M.W M.P.D.toPre M.P.D.psi_even M.P.D.tau_bimult C xW N' ν' hI'' n hn ho hn1
+  have tN' := _root_.GlobalTheory.ValuesTorsion.tors_of_integral hL hL2 hUth M.W M.P.D.toPre M.P.D.psi_even M.P.D.tau_bimult C xW N' ν' hI'' n hn ho hn1
 
   obtain ⟨lA, linA⟩ := _root_.GlobalTheory.ModelData.labels_of_tateIsoQ hGt hWp E H D O' a.D₀ a.oa a.even a.bimult C A.I A.N A.ν A.q A.hq
   have ex : ∀ (k : ℕ) (x : D.La), ∃ p : (A.N.twist A.be u).QT k, 0 < k → TwRel A.be u (r k) (A.q k x) p := fun k x => by
@@ -1121,7 +1121,7 @@ theorem data_of_model : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory
       exact ⟨z + w, by rw [e, h, smul_add, add_assoc], by rw [e', h', N'.io_add, _root_.mul_assoc]⟩
   have refl' : ∀ k x, QkPt.Equiv _ C (I'.ev k x) (I'.ev k x) := fun k x =>
     ((G'.2.2.2.2 k).2.2 _ _ _ _ (hlab' k x) (hlab' k x)).2 ((qEqEquiv k).refl _)
-  have th := fun j => GlobalTheory.T.modelSeries_eq_unit_mul_thetaPoint hL (GlobalTheory.T.theta_constants_eq_degeneration_series hV hGt hFam) E H D C o M N' ν' (n ^ j) ho.pow (I'.ev _) (lab' _) _
+  have th := fun j => GlobalTheory.T.modelSeries_eq_unit_mul_thetaPoint hL (_root_.GlobalTheory.Ex.ThetaSeries.theta_const_eq_series hV hGt hFam) E H D C o M N' ν' (n ^ j) ho.pow (I'.ev _) (lab' _) _
     (fun x z hz => hTo _ (pow_pos (hp j) 2) x _ z (refl' _ x) hz) (hlab' _)
     ((hθ j).2 (lab _) fun x => hlab _ x (pow_pos (hp j) 2))
   have h3 : 3 ≤ n ^ 1 := by

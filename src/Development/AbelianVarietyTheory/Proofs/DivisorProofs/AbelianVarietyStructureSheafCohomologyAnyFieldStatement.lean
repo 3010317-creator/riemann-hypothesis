@@ -4,18 +4,17 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.AxesVanishin
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GrpPullbackProdSelfIsPullbackStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PullOverBaseChangeComm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureCohomologyFlatBaseChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureCohomologyFlatBaseChange
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ComparisonMemCechHodgeFiltration
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureCohomologyFlatBaseChange
 public import Mathlib.LinearAlgebra.ExteriorPower.Basic
 public import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 public import Mathlib.LinearAlgebra.ExteriorPower.Basis
 public import Mathlib.RingTheory.Flat.Basic
 public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 public import Mathlib.RingTheory.TensorProduct.Free
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureSheafCohomologyPullbackCompCupIdStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGrpObjIsGrpPullbackOfIsPullbackStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureSheafCohomologyPullbackCompCupId
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGrpObjIsGrpPullbackOfIsPullback
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureSheafCohomologyAbelianVarietyAlgClosedStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -98,7 +97,7 @@ theorem pullHO_injective_field (K L : Type) [Field K] [Field L] [Algebra K L] (X
     (s' : X' ⟶ Sp L) (φ : X' ⟶ X) (h : IsPullback φ s' s (spMap (algebraMap K L))) (hs : IsSeparated s)
     (hq : QuasiCompact s) :
     Function.Injective (pullHO1 h.w) ∧ Function.Injective (pullHO2 h.w) := by
-  obtain ⟨⟨e1, he1⟩, ⟨e2, he2⟩⟩ := GlobalTheory.T.structure_cohomology_flat_base_change K L X X' s s' φ h hs hq
+  obtain ⟨⟨e1, he1⟩, ⟨e2, he2⟩⟩ := _root_.GlobalTheory.AbCoh.flat_baseChange_HO K L X X' s s' φ h hs hq
   refine ⟨fun a b hab ↦ ?_, fun a b hab ↦ ?_⟩
   · apply one_tmul_injective_field K L
     apply e1.injective
@@ -325,10 +324,10 @@ theorem wedgeO_descends_field : ∀ (K L : Type) [Field K] [Field L] [Algebra K 
   intro K L _ _ _ A _ B _ φ h hA hB
   have hp : IsProper A.hom := hA.proper
   obtain ⟨⟨e₁, he₁⟩, e₂, he₂⟩ :=
-    GlobalTheory.T.structure_cohomology_flat_base_change K L A.left B.left A.hom B.hom φ h.1 inferInstance inferInstance
+    _root_.GlobalTheory.AbCoh.flat_baseChange_HO K L A.left B.left A.hom B.hom φ h.1 inferInstance inferInstance
   refine GlobalTheory.T.exteriorSquare_equiv_of_baseChange_field K L _ _ _ _ (cup (OAff A.hom)) (cup (OAff B.hom)) e₁ e₂ (fun a b ↦ ?_) hB
   rw [he₁, he₁, he₂]
-  exact (GlobalTheory.T.structureSheafCohomology_pullback_comp_cup_id.2.1 K L A.left B.left A.hom B.hom _ φ h.1.w).1 a b
+  exact (_root_.GlobalTheory.AbCoh.pull_comp_cup_id.2.1 K L A.left B.left A.hom B.hom _ φ h.1.w).1 a b
 
 end GlobalTheory.AbCoh
 end -- clump:auto
@@ -369,7 +368,7 @@ theorem abelian_HO_field_any : ∀ (K : Type) [Field K] (A : Over (Sp K)) [GrpOb
   let σ : K →+* L := algebraMap K L
   have hpb : IsPullback (pullback.fst A.hom (spMap σ)) (pullback.snd A.hom (spMap σ)) A.hom (spMap σ) :=
     IsPullback.of_hasPullback _ _
-  obtain ⟨inst, hgp, habB, hsmB⟩ := GlobalTheory.T.exists_grpObj_isGrpPullback_of_isPullback' K L σ A _ _ _ hpb
+  obtain ⟨inst, hgp, habB, hsmB⟩ := _root_.GlobalTheory.AbCoh.exists_grpObj_isGrpPullback_of_isPullback K L σ A _ _ _ hpb
   have hB := @GlobalTheory.T.structureSheafCohomology_abelianVariety_algClosed L _ _ (Over.mk (pullback.snd A.hom (spMap σ))) inst g (habB hab) (hsmB g hsm)
   obtain ⟨hfin, hrk, hw, hnp, hax⟩ := hB
   obtain ⟨hfinA, hrkA⟩ := @GlobalTheory.T.structure_h1_rank_descends_field K L _ _ _ A _ _ inst _ hgp hab g hfin hrk

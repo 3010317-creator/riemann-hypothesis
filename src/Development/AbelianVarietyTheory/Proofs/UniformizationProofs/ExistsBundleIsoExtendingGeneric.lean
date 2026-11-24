@@ -8,7 +8,7 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.Formall
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.EqClosedPointOfNotMemRange
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsCompletedPointOfThickenings
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.GenericIsoAgreesOnCompletePointsStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.GenericIsoAgreesOnCompletePoints
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -384,7 +384,7 @@ theorem GlobalTheory.exists_bundleIso_extending_generic : Laws → Laws2 → ∀
       rw [← range_thick R I 0] at hy
       exact (Scheme.Pullback.range_fst G'.hom (thick R I 0)).ge hy
   have pts := GlobalTheory.exists_completed_point_of_thickenings R I hI hIm D D' A A' G G' hG hG' U U' hD j hj
-  have fml := GlobalTheory.T.generic_iso_agrees_on_complete_points_alt h₁ h₂ R I hI hIm D D' A A' G G' hG hG' U U' hD j hj ΦK wK hw
+  have fml := _root_.GlobalTheory.generic_iso_agrees_on_complete_points h₁ h₂ R I hI hIm D D' A A' G G' hG hG' U U' hD j hj ΦK wK hw
   obtain ⟨wL, hwL, hv⟩ := exists_iso_of_flat (pullback.fst G'.hom (jK R)) U.LG.isLB U'.LG.isLB ψ.hom.left _ hF wK
     hw.1 fun y hy => by
       obtain ⟨x, rfl⟩ := hsp y (by

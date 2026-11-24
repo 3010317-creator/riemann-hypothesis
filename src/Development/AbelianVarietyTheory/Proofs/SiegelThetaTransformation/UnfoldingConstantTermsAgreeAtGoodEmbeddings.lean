@@ -7,8 +7,8 @@ public import Formalism.LocalToGlobal.ProjectiveLattices.PetersonNormSubspace
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsIsNab
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortValTotOfPinned
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelMapsClosed
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CuspFormsVanishingOffFramesLeSpanShortThetaStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ShortThetaSeriesDominantWeightIsCuspFormStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CuspFormsVanishingOffFramesLeSpanShortTheta
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ShortThetaSeriesDominantWeightIsCuspForm
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsDeltaDatumHigherLevel
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsEquivariantFunOnSpanningFamilies
@@ -106,9 +106,9 @@ theorem holSub0_le_span_cusp : Formalism.MainNotions.ModuliIntegralCharts.H1.Cha
       (GlobalTheory.Frames.algebraic_laws hB E H Dw l Xo c).2.2.1 (GlobalTheory.Frames.allTest_of_secBaseChange hB E H Dw l Xo c)
       (GlobalTheory.Frames.algebraic_laws hB E H Dw _ _ _).2.2.1 hT hlev hAe hnab (fun _ => ⟨ph, 1, x₀, hpin, htie⟩)
       nab 1 0 a
-  refine (GlobalTheory.T.cuspForms_vanishing_off_frames_le_span_shortTheta hC E H Dw l Xo c n d σ r (U σ) hσ (hU σ hσ) hr hA hG hP hlev hnab hunit h3
+  refine (_root_.GlobalTheory.Dict.holSub0_le_span_shortGen hC E H Dw l Xo c n d σ r (U σ) hσ (hU σ hσ) hr hA hG hP hlev hnab hunit h3
     (fun _ => ⟨ph, 1, x₀, hpin⟩) nab 1 0 a Nat.one_pos hdom hn hχ htot).trans
     (Submodule.span_mono (Set.image_mono ?_))
-  exact GlobalTheory.T.short_thetaSeries_dominant_weight_isCuspForm hC E H Dw l Xo c n d r U hr hU hlev hnab hunit (fun _ => ⟨ph, 1, x₀, hpin⟩) nab 1 0 a hdom hlast
+  exact _root_.GlobalTheory.Dict.shortInCusp_cusp hC E H Dw l Xo c n d r U hr hU hlev hnab hunit (fun _ => ⟨ph, 1, x₀, hpin⟩) nab 1 0 a hdom hlast
 
 end GlobalTheory.Dict

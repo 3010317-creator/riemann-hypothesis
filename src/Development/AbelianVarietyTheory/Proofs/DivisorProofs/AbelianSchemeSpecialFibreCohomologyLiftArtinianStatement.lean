@@ -2,24 +2,23 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AxesVanishingStructureSheafDegOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyStructureSheafCohomologyAnyFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CocyclePullbackIffPreimageAffineHomStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreimageCochainRestrictionBijectiveClosedImmersiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjectiveDeformationAffineSectionsStatement
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PreUMono
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CocyclePullbackIffPreimageAffineHom
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreimageCochainRestrictionBijectiveClosedImmersiStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjectiveDeformationAffineSections
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CohomologyClassPullbackReductionPairs
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PairFstPreimageRestrictionBijectiveClosedImmersi
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CocyclePullbackIffPreimageAffineHom
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjectiveDeformationAffineSections
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommAlgFunctorCohomologyTwoEqZeroOfIsInitial
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAbelianSchemeBaseChangeAndSquareStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalFunctionsConstantAfterBaseChangeOfAbelianSStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalFunctionsConstantAfterBaseChangeOfAbelianS
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PullOverBaseChangeComm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureSheafCohomologyPullbackCompCupIdStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureSheafCohomologyPullbackCompCupId
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueIsPullForm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PullH1SurjectiveBijectiveFibre
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GrpPullbackProdSelfIsPullbackStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGrpObjIsGrpPullbackOfIsPullbackStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGrpObjIsGrpPullbackOfIsPullback
 public import Mathlib.RingTheory.Length
 public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
 public import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
@@ -140,9 +139,9 @@ theorem tmul_of_pull_eq_zero : ∀ (R R' R₀ : Type) [CommRing R] [CommRing R']
     (IsClosedImmersion.spec_of_surjective (CommRingCat.ofHom σ) hse.1)
   have : IsClosedImmersion φ₀ := MorphismProperty.of_isPullback (P := @IsClosedImmersion) h₀.flip
     (IsClosedImmersion.spec_of_surjective (CommRingCat.ofHom σ₀) hse.2.2.1)
-  have hsec := GlobalTheory.T.surjective_deformation_affine_sections R R' R₀ t σ σ₀ X X' X₀ s s' s₀ φ φ₀ h h₀ hse hfl
-  have hred := GlobalTheory.T.cocyclePullback_iff_preimage_affineHom R R' X X' s s' σ φ h.w
-  have hred₀ := GlobalTheory.T.cocyclePullback_iff_preimage_affineHom R R₀ X X₀ s s₀ σ₀ φ₀ h₀.w
+  have hsec := _root_.GlobalTheory.AbCoh.preα_surjective_and_ker R R' R₀ t σ σ₀ X X' X₀ s s' s₀ φ φ₀ h h₀ hse hfl
+  have hred := _root_.GlobalTheory.AbCoh.red_iff_pre R R' X X' s s' σ φ h.w
+  have hred₀ := _root_.GlobalTheory.AbCoh.red_iff_pre R R₀ X X₀ s s₀ σ₀ φ₀ h₀.w
   have hb₀ := GlobalTheory.T.preimageCochainRestriction_bijective_closedImmersion R₀ X X₀ φ₀ s₀
   have nat : ∀ {U V : AffOp X} (a : U ⟶ V) (b : (OAff s).obj U),
       preα φ s s' V (mp (OAff s) a b) = mp (OPre φ s') a (preα φ s s' U b) :=
@@ -417,12 +416,12 @@ namespace GlobalTheory.AbCoh.StepPrim
 
 theorem pO1_comp {R : Type} [CommRing R] {X Y Z : Over (Sp R)} (f : X ⟶ Y) (g : Y ⟶ Z) (a : HO1 Z.hom) :
     pO1 (f ≫ g) a = pO1 f (pO1 g a) :=
-  ((GlobalTheory.T.structureSheafCohomology_pullback_comp_cup_id).1 R R Z.left Y.left Z.hom Y.hom (RingHom.id R) g.left (ovw g) R X.left X.hom
+  ((_root_.GlobalTheory.AbCoh.pull_comp_cup_id).1 R R Z.left Y.left Z.hom Y.hom (RingHom.id R) g.left (ovw g) R X.left X.hom
     (RingHom.id R) f.left (ovw f) (RingHom.id R) (f ≫ g).left (ovw (f ≫ g)) (Over.comp_left _ _ _ f g)
     (fun _ ↦ rfl)).1 a |>.symm
 
 theorem pO1_id {R : Type} [CommRing R] (A : Over (Sp R)) (a : HO1 A.hom) : pO1 (𝟙 A) a = a :=
-  ((GlobalTheory.T.structureSheafCohomology_pullback_comp_cup_id).2.2 R A).1 a
+  ((_root_.GlobalTheory.AbCoh.pull_comp_cup_id).2.2 R A).1 a
 
 theorem eq_zero_of_base {R : Type} [CommRing R] (a : HO1 (𝟙_ (Over (Sp R))).hom) : a = 0 := by
   haveI := ((GlobalTheory.AbCoh.Vanish.main).1 R (𝟙_ (Over (Sp R))).left (𝟙_ (Over (Sp R))).hom
@@ -471,7 +470,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsLocalRing R] (t : R) (R' : Type) [
     obtain ⟨u, hu⟩ := GlobalTheory.T.eq_smul_residueFibre_class_of_pullback_eq_zero R R' (R ⧸ IsLocalRing.maximalIdeal R) t (algebraMap R R')
       (algebraMap R (R ⧸ IsLocalRing.maximalIdeal R)) (A ⊗ A).left (B' ⊗ B').left (B₀ ⊗ B₀).left (A ⊗ A).hom
       (B' ⊗ B').hom (B₀ ⊗ B₀).hom pr' pr0' hpr' hpr0' hSE hfl2 y ya
-    have hH0 := (GlobalTheory.T.globalFunctionsConstantAfterBaseChange_of_abelianScheme R A hab) R' B'.left B'.hom pr hpr
+    have hH0 := (_root_.GlobalTheory.AbCoh.uConst_of_isAbelianScheme R A hab) R' B'.left B'.hom pr hpr
     have hax := axes_defect A x
     have hu1 : pO1 (lift (𝟙 B₀) (1 : B₀ ⟶ B₀)) u = 0 :=
       GlobalTheory.T.residueFibre_class_eq_zero_of_smul_pullback_eq_zero R R' (R ⧸ IsLocalRing.maximalIdeal R) t (algebraMap R R')
@@ -570,9 +569,9 @@ theorem exists_bock : ∀ (R R' R₀ : Type) [CommRing R] [CommRing R'] [CommRin
   have hc₀ : IsClosedImmersion (spMap σ₀) := IsClosedImmersion.spec_of_surjective _ hS.2.2.1
   haveI : IsClosedImmersion φ := MorphismProperty.of_isPullback h.flip hc
   haveI : IsClosedImmersion φ₀ := MorphismProperty.of_isPullback h₀.flip hc₀
-  have sec := fun U ↦ GlobalTheory.T.surjective_deformation_affine_sections R R' R₀ t σ σ₀ X X' X₀ s s' s₀ φ φ₀ h h₀ hS hF U
-  have red := GlobalTheory.T.cocyclePullback_iff_preimage_affineHom R R' X X' s s' σ φ h.w
-  have red₀ := GlobalTheory.T.cocyclePullback_iff_preimage_affineHom R R₀ X X₀ s s₀ σ₀ φ₀ h₀.w
+  have sec := fun U ↦ _root_.GlobalTheory.AbCoh.preα_surjective_and_ker R R' R₀ t σ σ₀ X X' X₀ s s' s₀ φ φ₀ h h₀ hS hF U
+  have red := _root_.GlobalTheory.AbCoh.red_iff_pre R R' X X' s s' σ φ h.w
+  have red₀ := _root_.GlobalTheory.AbCoh.red_iff_pre R R₀ X X₀ s s₀ σ₀ φ₀ h₀.w
   have bij₀ := (GlobalTheory.T.preimageCochainRestriction_bijective_closedImmersion R₀ X X₀ φ₀ s₀).2.1
   obtain ⟨c, hc⟩ := GlobalTheory.CatCoh.H1.mk_surjective _ ((preRes φ s').pull1 x)
   choose f hf using fun (U V : AffOp X) (a : U ⟶ V) ↦ (sec V).1 (c.1 U V a)
@@ -648,10 +647,10 @@ theorem exists_lift_of_bock_zero : ∀ (R R' R₀ : Type) [CommRing R] [CommRing
   haveI : IsClosedImmersion φ := MorphismProperty.of_isPullback (P := @IsClosedImmersion) h.flip hσc
   haveI : IsClosedImmersion φ₀ := MorphismProperty.of_isPullback (P := @IsClosedImmersion) h₀.flip hσ₀c
   obtain ⟨f, w, hfw, hf, hw⟩ := hB
-  have R1 := (GlobalTheory.T.cocyclePullback_iff_preimage_affineHom R R' X X' s s' σ φ h.w).1
-  have R2 := (GlobalTheory.T.cocyclePullback_iff_preimage_affineHom R R₀ X X₀ s s₀ σ₀ φ₀ h₀.w).2.1
-  have R3 := (GlobalTheory.T.cocyclePullback_iff_preimage_affineHom R R' X X' s s' σ φ h.w).2.2.1
-  have S := GlobalTheory.T.surjective_deformation_affine_sections R R' R₀ t σ σ₀ X X' X₀ s s' s₀ φ φ₀ h h₀ hse hfl
+  have R1 := (_root_.GlobalTheory.AbCoh.red_iff_pre R R' X X' s s' σ φ h.w).1
+  have R2 := (_root_.GlobalTheory.AbCoh.red_iff_pre R R₀ X X₀ s s₀ σ₀ φ₀ h₀.w).2.1
+  have R3 := (_root_.GlobalTheory.AbCoh.red_iff_pre R R' X X' s s' σ φ h.w).2.2.1
+  have S := _root_.GlobalTheory.AbCoh.preα_surjective_and_ker R R' R₀ t σ σ₀ X X' X₀ s s' s₀ φ φ₀ h h₀ hse hfl
   have B := (GlobalTheory.T.preimageCochainRestriction_bijective_closedImmersion R' X X' φ s').1.1
   obtain ⟨c, hc, hcx⟩ := (R1 f x).1 hf
   obtain ⟨c₀, hc₀, hc₀z⟩ := (R2 w 0).1 hw
@@ -997,8 +996,8 @@ theorem surj_of_smallExt : ∀ (R : Type) [CommRing R] [IsLocalRing R] (t : R) (
 
     have hP' := IsPullback.of_hasPullback A.hom (spMap σ')
     have hP₀ := IsPullback.of_hasPullback A.hom (spMap σ₀)
-    obtain ⟨i', hg', hab', hsm'⟩ := GlobalTheory.T.exists_grpObj_isGrpPullback_of_isPullback' R R' σ' A _ _ _ hP'
-    obtain ⟨i₀, hg₀, hab₀, hsm₀⟩ := GlobalTheory.T.exists_grpObj_isGrpPullback_of_isPullback' R R₀ σ₀ A _ _ _ hP₀
+    obtain ⟨i', hg', hab', hsm'⟩ := _root_.GlobalTheory.AbCoh.exists_grpObj_isGrpPullback_of_isPullback R R' σ' A _ _ _ hP'
+    obtain ⟨i₀, hg₀, hab₀, hsm₀⟩ := _root_.GlobalTheory.AbCoh.exists_grpObj_isGrpPullback_of_isPullback R R₀ σ₀ A _ _ _ hP₀
     have hstep := GlobalTheory.T.small_extension_primitive_lift R R' R₀ t σ' σ₀ g A _ _ _ _ hg' hg₀ hse hA hg
       (hR' _ g (hab' hA) (hsm' g hg)).2 (hfield R₀ hR₀ _ g (hab₀ hA) (hsm₀ g hg)).2.1
 
@@ -1021,7 +1020,7 @@ theorem surj_of_smallExt : ∀ (R : Type) [CommRing R] [IsLocalRing R] (t : R) (
     obtain ⟨x', rfl⟩ := hsurj y
     obtain ⟨a, rfl⟩ := hstep x'
     refine ⟨a, ?_⟩
-    exact ((GlobalTheory.T.structureSheafCohomology_pullback_comp_cup_id).1 R R' A.left (pullback A.hom (spMap σ')) A.hom (pullback.snd A.hom (spMap σ'))
+    exact ((_root_.GlobalTheory.AbCoh.pull_comp_cup_id).1 R R' A.left (pullback A.hom (spMap σ')) A.hom (pullback.snd A.hom (spMap σ'))
       σ' (pullback.fst A.hom (spMap σ')) hg'.1.w k X₀ s₀ τ ψ' w'.w σ ψ w.w hψ'.symm (fun r => (hτ r).symm)).1 a |>.symm
   ·
     have hu : IsUnit t := by
@@ -1162,7 +1161,7 @@ theorem wedgeO_of_iso {k : Type} [CommRing k] {X X' : Scheme.{0}} (s : X ⟶ Sp 
     rw [spMap_id, Category.comp_id, ← he, Iso.inv_hom_id_assoc]
   have hid : (𝟙 X) ≫ s = s ≫ spMap (RingHom.id k) := by rw [spMap_id, Category.comp_id, Category.id_comp]
   have hid' : (𝟙 X') ≫ s' = s' ≫ spMap (RingHom.id k) := by rw [spMap_id, Category.comp_id, Category.id_comp]
-  have P := GlobalTheory.T.structureSheafCohomology_pullback_comp_cup_id
+  have P := _root_.GlobalTheory.AbCoh.pull_comp_cup_id
   have c1 := (P.1 k k X X' s s' (RingHom.id k) e.hom h1 k X s (RingHom.id k) e.inv h2 (RingHom.id k) (𝟙 X) hid
     (by simp) (fun _ ↦ rfl))
   have c2 := (P.1 k k X' X s' s (RingHom.id k) e.inv h2 k X' s' (RingHom.id k) e.hom h1 (RingHom.id k) (𝟙 X') hid'
@@ -1245,12 +1244,12 @@ namespace GlobalTheory.AbCoh.PrimLift
 theorem pO1_comp {R : Type} [CommRing R] {Y A B : Over (Sp R)} (f : Y ⟶ A) (g : A ⟶ B) (a : HO1 B.hom) :
     pO1 (f ≫ g) a = pO1 f (pO1 g a) := by
   unfold pO1
-  exact ((GlobalTheory.T.structureSheafCohomology_pullback_comp_cup_id.1 R R B.left A.left B.hom A.hom (RingHom.id R) g.left (ovw g) R Y.left Y.hom
+  exact ((_root_.GlobalTheory.AbCoh.pull_comp_cup_id.1 R R B.left A.left B.hom A.hom (RingHom.id R) g.left (ovw g) R Y.left Y.hom
     (RingHom.id R) f.left (ovw f) (RingHom.id R) (f ≫ g).left (ovw (f ≫ g)) (by simp)
     (fun _ => rfl)).1 a).symm
 
 theorem pO1_id {R : Type} [CommRing R] {A : Over (Sp R)} (a : HO1 A.hom) : pO1 (𝟙 A) a = a :=
-  (GlobalTheory.T.structureSheafCohomology_pullback_comp_cup_id.2.2 R A).1 a
+  (_root_.GlobalTheory.AbCoh.pull_comp_cup_id.2.2 R A).1 a
 
 theorem pO1_unit_eq_zero {R : Type} [CommRing R] (a : HO1 (𝟙_ (Over (Sp R))).hom) : a = 0 := by
   haveI : IsAffine (𝟙_ (Over (Sp R))).left := by

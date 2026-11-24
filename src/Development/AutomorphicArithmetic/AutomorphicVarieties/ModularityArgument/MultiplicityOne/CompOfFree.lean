@@ -11,9 +11,10 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MuCharac
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.TraceAsymptotics.FinprodSplitAlt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteAdelicUnitaryPointEqOfSectionComponentsEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueAdmissibleLocalComponentDefiniteUnit
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueAdmissibleLocalComponentDefiniteUnitStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasLevelOfFixed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeOperatorTestFamilyPreservesLevelFormsStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeOperatorTestFamilyPreservesLevelForms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalComponentLevelFixedVectorsNeBotStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceHeckeLevelVectorsEqDimMulLocalTracesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceOnInvariantSubmoduleISupEqSumStatement
@@ -24,7 +25,6 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityA
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.TraceAsymptotics.TrLevel
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.TraceAsymptotics.UConj
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.TraceAsymptotics.UnitHecke
-public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalSeriesSatakeParameters
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeTraceWeightFormsEqDimMulRationalClassesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitalIntegralProductEqFinprodStatement
@@ -48,7 +48,6 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityA
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.TraceAsymptotics.MuConj
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.TraceAsymptotics.RFamMatch
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.TraceAsymptotics.RegCt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeOperatorTestFamilyPreservesLevelForms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfSubsetCpt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryHeckeOperatorLevelIndicatorEqInvIndex
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.MultiplicityOne.CmbPiA
@@ -640,7 +639,7 @@ private theorem tr_dec {E : Type} [Field E] [NumberField E] [IsCMField E] (hU : 
   have hM : ∀ i, FiniteDimensional ℂ ↥(σ i ⊓ fixed (RF E n) (globLev S K')) := fun i =>
     Submodule.finiteDimensional_of_le (hsup ▸ le_iSup (fun i => σ i ⊓ fixed (RF E n) (globLev S K')) i)
   have h1 := GlobalTheory.T.traceOnInvariantSubmodule_iSup_eq_sum _ ι (fun i => σ i ⊓ fixed (RF E n) (globLev S K')) (hop S K' F) hind hM
-    (fun i => GlobalTheory.T.heckeOperator_testFamily_preserves_level_forms E n S hS K' hLev F hF (σ i) (hσ i).1)
+    (fun i => _root_.GlobalTheory.BCT.hop_mem_inf_fixed E n S hS K' hLev F hF (σ i) (hσ i).1)
   rw [hsup] at h1
   rw [h1, Finset.mul_sum]
   exact Finset.sum_congr rfl fun i _ =>
@@ -653,7 +652,7 @@ theorem evalD : EvalD := by
     (hcc (cPl w)).2.2 (by rw [(hcc w).1]; exact ((hcc w).2.1 h).symm)
   have hnot : ∀ w ∈ S, IsSplitAt w → cPl w ∉ S := fun w hw h hc =>
     (hcc w).2.1 h ((hsec S hS w).2 hw hc)
-  choose σ₀ hc hfd using fun i w => (GlobalTheory.T.exists_unique_admissible_localComponent_definiteUnitary E hU n hn (σ i) (hdec.1 i).1 w).1
+  choose σ₀ hc hfd using fun i w => (_root_.GlobalTheory.BCT.LocCompU.exists_unique_locComp E hU n hn (σ i) (hdec.1 i).1 w).1
   have hne : ∀ i, ∀ w ∈ S, fixed (σ₀ i w).ρ (K' w) ≠ ⊥ := fun i w hw =>
     GlobalTheory.T.localComponent_levelFixedVectors_ne_bot E hU n hn S hS lam K' hLev (σ i) (hdec.1 i).1 (hdec.1 i).2.1 (hdec.1 i).2.2 w hw (σ₀ i w) (hc i w)
   have hline : ∀ i, ∀ w ∈ S, w ∉ Z → Module.finrank ℂ (fixed (σ₀ i w).ρ (KL n w)) = 1 ∧
@@ -867,7 +866,7 @@ end Split
 theorem UpperTheory.V.Z.Mult.cpUniq :
     UpperTheory.V.Z.Mult.CpUniq := by
   intro E _ _ _ hU n hn σ hσ w hw τ τ' h h'
-  obtain ⟨e⟩ := (GlobalTheory.T.exists_unique_admissible_localComponent_definiteUnitary E hU n hn σ hσ w).2 (toUL hw τ) (toUL hw τ') (isCompU_toUL hw h) (isCompU_toUL hw h')
+  obtain ⟨e⟩ := (_root_.GlobalTheory.BCT.LocCompU.exists_unique_locComp E hU n hn σ hσ w).2 (toUL hw τ) (toUL hw τ') (isCompU_toUL hw h) (isCompU_toUL hw h')
   have e' := equivOfUL hw e
   exact ⟨fun B hB => GlobalTheory.PrinSat.hasSatGL_of_equiv e'.symm hB, fun f => trc_of_equiv e' _ f⟩
 end -- clump:auto
@@ -1683,7 +1682,7 @@ private theorem hop_mem_forms (S : Set (Pl E)) (hS : IsSection S) (lam : Infinit
   have hmap : forms S lam K₂ ≤ (forms S lam K₁).comap (hop S K₂ f) := by
     refine iSup₂_le fun π hπ v hv => ?_
     have h1 : hop S K₂ f v ∈ π ⊓ fixed (RF E n) (globLev S K₂) :=
-      GlobalTheory.T.heckeOperator_testFamily_preserves_level_forms E n S hS K₂ hK₂ f hf₂ π hπ.1 v hv
+      _root_.GlobalTheory.BCT.hop_mem_inf_fixed E n S hS K₂ hK₂ f hf₂ π hπ.1 v hv
     have h2 : levOp (RF E n) (globLev S (KL n)) (globLev S K₂) (globFn S f) LinearMap.id v ∈
         fixed (RF E n) (globLev S K₁) :=
       levOp_mem_fixed (RF E n) (globLev S (KL n)) (globLev S K₂) (globLev S K₁) (globFn S f) hl hr

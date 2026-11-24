@@ -39,9 +39,12 @@ public import Mathlib.Basic.Complex.Basic
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PureTensorLIntertwine
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OmPureTensorOReal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdeleAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQuaStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorBasisChangeEqSubstitutionStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacter
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.AdelicDataRowMeasureScaleTrivialTuple
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQua
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorBasisChangeEqSubstitution
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TransposeMemUnitary
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder
@@ -1487,10 +1490,10 @@ theorem real_mix : ∀ {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ t0 : ℂ} {Q : 
     rw [gramAt, h, Matrix.map_one _ (map_zero _) (map_one _)]
   have cart : ∀ (V : HSp D), V.gram = 1 → ∀ τ, IsCartanInv (gramAt D V τ) 1 := fun V h τ => by
     rw [gr1 V h]; exact ⟨Matrix.mul_one _, by simp, by rw [Matrix.mul_one]; exact Matrix.PosDef.one⟩
-  obtain ⟨η, e1, e2, e3, e4⟩ := GlobalTheory.T.exists_unramifiedHeckeChar_halfExponent_restrict_quadratic D
+  obtain ⟨η, e1, e2, e3, e4⟩ := _root_.GlobalTheory.Mem.EtaTilde.exists_etaTilde D
   obtain ⟨x, hx, -⟩ := GlobalTheory.VacuumCharacter.exists_root hθ X.A (fun τ => by rw [gr1 _ hF.gramA]; simp) 1 (one_mem _)
   obtain ⟨y, hy, -⟩ := GlobalTheory.VacuumCharacter.exists_root hθ X.B (fun τ => by rw [gr1 _ hF.gramB]; simp) k hk
-  have hvac := GlobalTheory.T.weilDatum_realPlaces_fockVacuum_character D X.ψ hW.std X.A X.B X.θ hθ X.χA X.χB X.om η ⟨e1, e4, e3, e2⟩ hW (fun _ => 1) (fun _ => 1)
+  have hvac := _root_.GlobalTheory.WeilVacChar.vacuum_character D X.ψ hW.std X.A X.B X.θ hθ X.χA X.χB X.om η ⟨e1, e4, e3, e2⟩ hW (fun _ => 1) (fun _ => 1)
     (cart _ hF.gramA) (cart _ hF.gramB) 1 (one_mem _) k hk (fun τ => by rw [Matrix.one_mul, Matrix.mul_one])
     (fun τ => by rw [Matrix.one_mul, Matrix.mul_one]) x y hx hy X.vac hX.2.vac_theta hX.2.vac_fock
   obtain ⟨c, hc1, hcv⟩ : ∃ c : ℂ, ‖c‖ = 1 ∧ X.om (1, k) X.vac = c • X.vac := by
@@ -1510,7 +1513,7 @@ theorem real_mix : ∀ {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ t0 : ℂ} {Q : 
       (fun τ => by rw [c1, Matrix.one_mul]) (fun τ => by rw [Matrix.one_mul, Matrix.mul_one])
       (fun τ => by rw [c1, Matrix.one_mul]) (fun τ => by rw [Matrix.one_mul, Matrix.mul_one]) X.vac hX.2.vac_theta
       (MvPolynomial.rename X.var (minorPol D T))).2
-    have e3 := GlobalTheory.T.fockPolynomialVector_basisChange_eq_substitution D X.ψ X.θ X.A X.B hW.std hθ (fun _ => 1) (fun _ => 1) (fun _ => 1) K X.vac hX.2.vac_theta
+    have e3 := _root_.GlobalTheory.FockBaseChange.pureTensorO_subst D X.ψ X.θ X.A X.B hW.std hθ (fun _ => 1) (fun _ => 1) (fun _ => 1) K X.vac hX.2.vac_theta
       (MvPolynomial.rename X.var (minorPol D T))
     have e4 := hsub T
     simp only [inv_one, Matrix.transpose_one] at e3

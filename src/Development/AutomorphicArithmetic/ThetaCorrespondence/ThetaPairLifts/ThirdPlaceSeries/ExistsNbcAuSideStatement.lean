@@ -20,7 +20,7 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CmFieldAd
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIntegerUnitSplitPlaceConjugatePrime
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsParahoricTypeVectorAtConjugatePlace
 public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Completion
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ValuedLeOneIffOfContinuousStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ValuedLeOneIffOfContinuous
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatVecUOfIsSphericalU
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitPlaceHeckeOperatorScalarOnSpherical
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeDEqSumOfAgree
@@ -91,7 +91,6 @@ import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import ReciprocityTheory.Automorphisms.PlaceA
 import Mathlib.Tactic.Polynomial.Basic
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ValuedLeOneIffOfContinuous
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivOfMapEq
 import Formalism.LocalToGlobal.GaloisLevelStructure.Checks
@@ -774,7 +773,7 @@ theorem unif_to_unif : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     (w : HeightOneSpectrum (𝓞 E)) (i : v.adicCompletion F ≃+* w.adicCompletion E), Continuous i →
     ∀ ϖ : v.adicCompletion F, Valued.v ϖ = WithZero.exp (-1 : ℤ) → Valued.v (i ϖ) = WithZero.exp (-1 : ℤ) := by
   intro F E _ _ _ _ v w i hi ϖ hϖ
-  have hle := GlobalTheory.T.valued_le_one_iff_of_continuous_ringEquiv F E v w i hi
+  have hle := _root_.GlobalTheory.IsoInteg.valued_le_one_iff_of_continuous F E v w i hi
   have key : ∀ x : WithZero (Multiplicative ℤ), x ≠ 0 → x < 1 → x ≤ WithZero.exp (-1 : ℤ) := by
     intro x hx h1
     rw [← WithZero.exp_log hx] at h1 ⊢
@@ -935,7 +934,7 @@ theorem heckeVec_Tj_inv_conj_eq_sum : ∀ (L : Type) [Field L] [NumberField L] [
   have hO : ∀ a, i a ∈ Formalism.UG.Ov L (GlobalTheory.HeckeFrob.conjSplit s).w ↔
       a ∈ (s.v.adicCompletionIntegers (maximalRealSubfield L)).toSubring := by
     intro a
-    have h := GlobalTheory.T.valued_le_one_iff_of_continuous_ringEquiv _ _ s.v (GlobalTheory.HeckeFrob.conjSplit s).w i hi a
+    have h := _root_.GlobalTheory.IsoInteg.valued_le_one_iff_of_continuous _ _ s.v (GlobalTheory.HeckeFrob.conjSplit s).w i hi a
     exact h.trans (HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).symm
   have hϖ0 : ϖ ≠ 0 := by
     rintro rfl

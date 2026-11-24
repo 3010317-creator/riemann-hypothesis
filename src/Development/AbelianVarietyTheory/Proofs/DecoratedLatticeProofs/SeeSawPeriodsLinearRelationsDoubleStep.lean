@@ -2,13 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValLastX
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselPeriodLinearAndTranslationCombinationStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselPeriodLinearAndTranslationCombination
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LiftConvContGrowth
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsClosedOfLocallyCompactSpace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.QuotientIntegralFinitelyManyCellsWeightedSum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.QuotientIntegralVanishOfCommutingProductStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HandBFSmul
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryAdelicInfFinSplitPeriodsUnimodularStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittSmallGroupEmbeddingMemPointwiseStabilizerIso
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryAdelicInfFinSplitPeriodsUnimodular
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -149,7 +150,7 @@ theorem doubleStep_tuple : ∀ (D : D7) (c : Comm D) (t : Tup c), DoubleStep D �
         ∑ g ∈ (t.e j α).support, t.e j α g * (c.B j (σ + 1) h).per c.ψ (φ α) (rTrans g (liftS (t.om j) (c.vol (j + 1)).μ
           (c.vol (j + 1)).𝓕 (liftS (t.om (j + 1)) (c.vol (j + 1 + 1)).μ (c.vol (j + 1 + 1)).𝓕 f (t.pt (j + 1) P₂))
           (t.pt j P₁))) := fun α =>
-      ((GlobalTheory.T.besselPeriod_linear_and_translationCombination D c.ψ hc.std (σ + 1) (c.B j (σ + 1) h) (φ α) (hφ α)).2 (t.e j α) _ hcont).2
+      ((_root_.GlobalTheory.SeeSaw.per_linear_trc D c.ψ hc.std (σ + 1) (c.B j (σ + 1) h) (φ α) (hφ α)).2 (t.e j α) _ hcont).2
     unfold Tup.perF
     simp only [hper]
     exact quotient_integral_finset_sum_eq _ _ _ fun α _ =>
@@ -421,8 +422,8 @@ theorem vanMany : ∀ (D : D7) (c : Comm D) (𝒯 : Type) (t : 𝒯 → Tup c), 
   have hIS := fun i => invsupp D c (t (s i)) (ht (s i)) j σ h P₁ P₂ (φ i) (f i) (K₁ i) (T₁ i) (hlaw i) (hsupp i)
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D (c.V (j + 1))
   obtain ⟨k1, k2, k3, k4, k5, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D (c.V (j + 1 + 1))
-  obtain ⟨gA₁, gB₁, gc₁, ge₁, gμ₁, gR₁⟩ := GlobalTheory.T.unitaryAdelic_inf_fin_split_periods_unimodular D (c.V (j + 1))
-  obtain ⟨gA₂, gB₂, gc₂, ge₂, gμ₂, gR₂⟩ := GlobalTheory.T.unitaryAdelic_inf_fin_split_periods_unimodular D (c.V (j + 1 + 1))
+  obtain ⟨gA₁, gB₁, gc₁, ge₁, gμ₁, gR₁⟩ := _root_.GlobalTheory.AdelicSplit.adelic_split D (c.V (j + 1))
+  obtain ⟨gA₂, gB₂, gc₂, ge₂, gμ₂, gR₂⟩ := _root_.GlobalTheory.AdelicSplit.adelic_split D (c.V (j + 1 + 1))
   obtain ⟨⟨jsplit, -, jinvf⟩, -⟩ := gR₁ _ _ (c.jac j (σ + 1) h).d
   obtain ⟨-, bes⟩ := gR₂ _ _ (c.bes (j + 1 + 1) σ (idx_step h)).d
   obtain ⟨bsplit, -, binvf⟩ := bes _ _ (c.bes (j + 1 + 1) σ (idx_step h)).o

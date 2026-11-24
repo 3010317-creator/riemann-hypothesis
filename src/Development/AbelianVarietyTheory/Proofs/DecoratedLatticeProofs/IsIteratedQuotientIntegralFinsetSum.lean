@@ -7,9 +7,9 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasi
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselThetaContractionExtendByZeroVacuumSmooth
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BilinearVacuumCentralCharacter
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleThetaUnfoldingEquivariantUnitaryGroups
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctionsStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctions
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsPreserveThetaFunctions
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacuaStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacua
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MatrixSupportedAtPlaceOfIsHalfSplitPoint
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemSupportAconvPair
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PeriodSumHolds
@@ -164,7 +164,7 @@ variable {ψ : AddChar (AF D.host.F) ℂ}
 theorem vac_single (hψ : IsStdChar D ψ (-1)) {S T : HSp D} {LS : Lat S} {LT : Lat T} (hS : IsSelfDualC S LS)
     (hT : IsSelfDualC T LT) {P : Pl D → Prop} {v : Pl D} (hv : P v) {f : WO S T → ℂ} (hf : Vac ψ S T LS LT P f) :
     Vac ψ S T LS LT (· = v) f := by
-  have key := (GlobalTheory.T.heisenbergCombination_disjoint_places_commute_vacua D ψ hψ S T (· = v) (fun p => P p ∧ p ≠ v) (fun p hp hn => hn.2 hp)).2.2.2.2 LS LT f hS hT
+  have key := (_root_.GlobalTheory.DisjComb.main D ψ hψ S T (· = v) (fun p => P p ∧ p ≠ v) (fun p hp hn => hn.2 hp)).2.2.2.2 LS LT f hS hT
   have e : (fun p => p = v ∨ (P p ∧ p ≠ v)) = P := funext fun p => propext
     ⟨fun h => h.elim (fun h => h ▸ hv) (·.1), fun h => (em (p = v)).imp id fun h' => ⟨h, h'⟩⟩
   rw [e] at key
@@ -268,10 +268,10 @@ def HandIsLift : Prop :=
 variable {S}
 
 theorem theta_flatBF {f : WO S.B.V S.J.W → ℂ} (hf : IsThetaFunO ψ _ _ f) : IsThetaFunO ψ _ _ (flatBF S.s₁ f) :=
-  (GlobalTheory.Unf.FlatTheta.flat_isThetaFun D (GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D) ψ).1 _ _ _ S.s₁ f hf
+  (GlobalTheory.Unf.FlatTheta.flat_isThetaFun D (_root_.GlobalTheory.Unf.Flat.flatLaw D) ψ).1 _ _ _ S.s₁ f hf
 
 theorem theta_flatFB {f : WO S.J.W S.B'.V → ℂ} (hf : IsThetaFunO ψ _ _ f) : IsThetaFunO ψ _ _ (flatFB S.s₂ f) :=
-  (GlobalTheory.Unf.FlatTheta.flat_isThetaFun D (GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D) ψ).2 _ _ _ S.s₂ f hf
+  (GlobalTheory.Unf.FlatTheta.flat_isThetaFun D (_root_.GlobalTheory.Unf.Flat.flatLaw D) ψ).2 _ _ _ S.s₂ f hf
 
 theorem val_eq_hand (hS : HandIsLift S) {Φ₁ : WO S.B.V S.J.W → ℂ} {Φ₂ : WO S.J.W S.B'.V → ℂ} (h₁ : IsThetaFunO ψ _ _ Φ₁)
     (h₂ : IsThetaFunO ψ _ _ Φ₂) {φ : GA D S.B.A → ℂ} (hφ : IsContAut _ φ) (f : GA D S.B'.V → ℂ) (g x y) :

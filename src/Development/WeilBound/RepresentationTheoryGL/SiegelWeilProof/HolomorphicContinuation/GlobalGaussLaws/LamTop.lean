@@ -14,7 +14,7 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OfHermEB
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.GlobalGaussLaws.HermFourierZero
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MixedModelHeisenbergPhaseEqCexpRealPoints
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BlockWeilActionThetaUnfolding
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoefficientDataExistsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoefficientDataExists
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.GlobalGaussLaws.PlaceFacts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -905,7 +905,7 @@ end LamTopH
 open LamTopH
 
 theorem gLsing_of (hFZ : FourierZeroN) (hTS : TwoSided) (hD : DenseTau) : GLsing :=
-  gLsing_core hFZ hTS hD GlobalTheory.T.coefficient_data_exists nbFacts charFacts hermCocompact splitTauP nbTauP chiPer
+  gLsing_core hFZ hTS hD _root_.GlobalTheory.CompanionTheory.SWCoef.coefDataExists nbFacts charFacts hermCocompact splitTauP nbTauP chiPer
 
 theorem gLsing (hTS : TwoSided) (hD : DenseTau) : GLsing := gLsing_of fourierZeroN hTS hD
 

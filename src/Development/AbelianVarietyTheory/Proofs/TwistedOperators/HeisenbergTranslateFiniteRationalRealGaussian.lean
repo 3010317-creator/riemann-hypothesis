@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.OmAtSm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramAtPosDef
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulEqZeroOfInf
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.StdCharacterHalfSymplecticFormRealPointStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.StdCharacterHalfSymplecticFormRealPoint
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusHermitianFormScaledCoordinateEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -83,7 +83,7 @@ theorem heisO_finRat_real : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : 
     rw [GlobalTheory.VacUnique.ratW_eq hch, AddMonoidHom.map_sub]; abel
   show ψ (symplOH S T _ (GlobalTheory.VacUnique.finRat S T M)) * f (_ + GlobalTheory.VacUnique.finRat S T M) = _
   rw [GlobalTheory.FinTranslate.symplOH_real_fin (GlobalTheory.VacUnique.finRat_inf S T M) hw, AddChar.map_zero_eq_one, one_mul, e,
-    hf.quasi, AddChar.map_neg_eq_inv, GlobalTheory.T.stdCharacter_halfSymplecticForm_realPoint D θ ψ hθ hψ S T _ _ (Or.inr (hch.real_iota T S _)),
+    hf.quasi, AddChar.map_neg_eq_inv, _root_.GlobalTheory.OrientedChar.char_symplOH D θ ψ hθ hψ S T _ _ (Or.inr (hch.real_iota T S _)),
     GlobalTheory.VacUnique.piW_ratW hθ, hch.pi_iota, ← Complex.exp_neg,
     hΦ _ (hch.real_iota T S _), GlobalTheory.FockPos.gaussO, GlobalTheory.FockPos.gaussO]
   set Z : Formalism.MainNotions.TaylorLogMetric.VC D S.rank T.rank := GlobalTheory.FockPos.zCo θ frS frT (GlobalTheory.FockCompare.iotaW σ T S z) with hZ

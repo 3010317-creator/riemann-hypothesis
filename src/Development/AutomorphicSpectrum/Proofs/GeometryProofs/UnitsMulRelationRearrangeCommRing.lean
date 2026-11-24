@@ -6,13 +6,13 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.JetLeftMem
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.GermComp1ZeroPointLeft
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.GermDPf
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.VtUniq
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FormalGermDimensionUniqueStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ToFirst
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FormalGermDimensionUnique
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.FormalGroupLinearSecond
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.RegTieAsm
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.JetSubstPSEqJetMap
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.FBIdJet
 public import Formalism.LocalToGlobal.ProjectiveLattices.ThGerm
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ToFirst
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.FBIdAd
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.Comp1IdentityLeft
 public import Formalism.LocalToGlobal.ProjectiveLattices.SubConstMemOrig
@@ -392,7 +392,7 @@ theorem actp_at_point {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Ho
   have a1 : ∀ z, (jetAug : Jet k Unit p →ₐ[k] k) (σ (ψ z)) = (jetAug : Jet k (Fin 1 × Fin d) p →ₐ[k] k) z := by
     intro z
     rw [hσ, hψ, Actp.aug_subst]
-  obtain ⟨χ, -, huniq⟩ := (GlobalTheory.T.formal_germ_dimension_unique E H hst X0 t k x d g).2 Unit p 1 (MonObj.comp_one _)
+  obtain ⟨χ, -, huniq⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.GermUniv.germ_chart_universal E H hst X0 t k x d g).2 Unit p 1 (MonObj.comp_one _)
   have c1 := huniq (σ.comp ψ) ⟨fun q => by rw [AlgHom.comp_apply, a1, Actp.aug_X], h1.symm⟩
   have c0 := huniq χ₀ ⟨fun q => by
     simp only [hχ₀, AlgHom.comp_apply, Actp.aug_X, map_zero], h0.symm⟩

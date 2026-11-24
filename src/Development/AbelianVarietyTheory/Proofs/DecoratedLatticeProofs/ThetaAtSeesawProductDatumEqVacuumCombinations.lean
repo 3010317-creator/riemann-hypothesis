@@ -5,7 +5,7 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Exi
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ProdDat
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TensorOneApply
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CompletedHomLatticeStableSplitIdempotent
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IndicatorLocalHomLatticeMemSchwartzBruhatStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IndicatorLocalHomLatticeMemSchwartzBruhat
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsPlaceModelTensorIntegralIndicator
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchwartzBruhatHalfTensorSplitPlaceSelfDualStatement
 public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
@@ -245,7 +245,7 @@ theorem isPlaceModel_tensorLat : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (
     Set.indicator {x | p.up P.FS P.FT x ∈ latO S T (M : Set _) (M' : Set _) (· = P.q.v)} fun _ => 1 with hΨ
   have hpe : p.e = P.q.e := rfl
   have he' : e * p.e = 0 := he
-  have hΨsb : Ψ ∈ SB (Matrix P.Y P.Y' P.k) := GlobalTheory.T.indicator_localHomLattice_mem_schwartzBruhat D ψ S T M M' hM hM' P
+  have hΨsb : Ψ ∈ SB (Matrix P.Y P.Y' P.k) := _root_.GlobalTheory.LatIndSB.indicator_latO_mem_SB D ψ S T M M' hM hM' P
   have hsb : ∀ Φ, IsSBHalf e (latO S T (M : Set _) (M' : Set _) fun _ => True) Φ →
       IsSBHalf (e + P.q.e) (latO S T (M : Set _) (M' : Set _) fun _ => True) (p.tensorAt P.FS P.FT Φ Ψ) :=
     fun Φ hΦ => GlobalTheory.T.schwartzBruhatHalf_tensor_split_place_selfDual D ψ S T M M' hM hM' P e he Φ hΦ Ψ hΨsb
@@ -830,8 +830,8 @@ theorem core (hψ : IsStdChar D ψ (-1)) (hM : IsSelfDualC S M) (hM' : IsSelfDua
     intro L hinj T' hT
     obtain ⟨Tm, hTm, hTmΦ, T'', hT'', hT''eq⟩ := step hψ hM hM' L hinj f₀ hf₀ T' hT
     have h1 := (L 0).e_is.2 Tm hTm _ (L 0).Φ (isOne_intInd (L 0)) rfl
-    have h2 := (L 0).o_is Tm hTm ⟨_, GlobalTheory.T.indicator_localHomLattice_mem_schwartzBruhat D ψ S T M M' hM hM' (L 0)⟩ _ (isOne_intInd (L 0)) rfl
-    have h3 := hT''eq ⟨_, GlobalTheory.T.indicator_localHomLattice_mem_schwartzBruhat D ψ S T M M' hM hM' (L 0)⟩ rfl
+    have h2 := (L 0).o_is Tm hTm ⟨_, _root_.GlobalTheory.LatIndSB.indicator_latO_mem_SB D ψ S T M M' hM hM' (L 0)⟩ _ (isOne_intInd (L 0)) rfl
+    have h3 := hT''eq ⟨_, _root_.GlobalTheory.LatIndSB.indicator_latO_mem_SB D ψ S T M M' hM hM' (L 0)⟩ rfl
     rw [← hTmΦ, h1, h2, h3, ih _ (hinj.comp (Fin.succ_injective n)) T'' hT'', List.finRange_succ,
       List.foldr_cons, List.foldr_map]
 

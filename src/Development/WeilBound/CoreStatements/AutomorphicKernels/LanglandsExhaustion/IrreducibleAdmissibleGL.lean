@@ -10,7 +10,8 @@ public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelev
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.HasSupportOfIsSubquotientProdIrr
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsCellOfIsSubquotient
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.InducedCellSemisimplification
-import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IrreducibleSmoothAdmissibleGLStatement
+import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
+import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IrreducibleSmoothAdmissibleGL
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -140,7 +141,7 @@ theorem suppP : SuppP k := by
   exact List.get_mem l i
 
 theorem irreducibleAdmissibleGL : GlobalTheory.Published.IrreducibleAdmissibleGL :=
-  fun k _ _ _ _ n => GlobalTheory.T.irreducible_smooth_admissible_GL k (Fin n)
+  fun k _ _ _ _ n => _root_.GlobalTheory.CompanionTheory.SmGLBridge.irreducibleAdmissible k (Fin n)
 
 
 variable (k) in

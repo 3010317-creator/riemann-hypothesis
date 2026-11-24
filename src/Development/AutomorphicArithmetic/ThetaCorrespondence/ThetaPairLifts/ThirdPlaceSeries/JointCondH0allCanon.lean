@@ -6,7 +6,8 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Formalism.SharpRestriction.LevelLetterCocycles.AdmissibleParameterJ
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DecompositionLocalAbove
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankLeOfSubsetClosureRange
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HostCompletionLeMaxUnramifiedPadicStatement
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HostCompletionLeMaxUnramifiedPadic
 public import Formalism.SharpRestriction.LevelLetterCocycles.EmbeddingTypes
 public import Formalism.SharpRestriction.LevelLetterCocycles.JointConditionsZpowers.SemisimpleDecompositionOf
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsRhoPtOfSplitting
@@ -78,7 +79,7 @@ theorem jointCondH0all_canon_alt : GlobalTheory.Published.FontaineBcris → ∀ 
   have hrV : D.R.r ≤ D.R.nV := Nat.le_add_right _ _
   refine ⟨hOf L, hOf L, hl2, ?_⟩
   intro u _ w hw _
-  have hur : (D.nbr i w hw).Kw.1 ≤ MaximalUnramifiedExtension (D.nd.l i) := GlobalTheory.T.hostCompletion_le_maxUnramified_padic D i hls hlq hld w hw
+  have hur : (D.nbr i w hw).Kw.1 ≤ MaximalUnramifiedExtension (D.nd.l i) := _root_.GlobalTheory.HubLoc.kw_le_Kur_all D i hls hlq hld w hw
   refine ⟨GlobalTheory.HubLoc.le_Ks_one_of_Kur _ hur, ?_⟩
   intro C hs hc L2
   have hcrys := (_root_.GlobalTheory.T.decomposition_fontaine_at_places_over_l D i (X.r i) (X.ρ i) π h41 (hAdm i) hgood hcont hdec hg0 hg1 w hw C).2.2.2

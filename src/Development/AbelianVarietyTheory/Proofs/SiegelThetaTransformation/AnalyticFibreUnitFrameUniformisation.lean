@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsBaseClassLevelAdapted
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianFormAtFrameLaws
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UniformisationComponentLatticesMarkingsStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UniformisationComponentLatticesMarkings
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -94,7 +94,7 @@ theorem uw_anFib : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : H
     · rintro ⟨v, hv, rfl⟩
       obtain ⟨a, rfl⟩ := hφs v hv
       exact ⟨a, hPv a⟩
-  obtain ⟨-, -, -, -, -, hspan, hEF⟩ := GlobalTheory.T.uniformisation_component_lattices_markings E H Dw l Xo c σ r U hσ hU hr W k
+  obtain ⟨-, -, -, -, -, hspan, hEF⟩ := _root_.GlobalTheory.Dict.uw_lattice E H Dw l Xo c σ r U hσ hU hr W k
   have hrng : Set.range (W.emb k) = ((U.X k).Λ : Set (Fin r → E)) := by
     ext v
     constructor

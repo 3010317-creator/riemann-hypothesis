@@ -5,9 +5,11 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsBiSmo
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawDatumIsTwoVariableThetaFunction
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.SmallPair
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BiThetaOfVac
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientParaStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawThetaIdentityStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawWeilBiActionCommutesStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientPara
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawThetaIdentity
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawWeilBiActionCommutes
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -156,7 +158,7 @@ theorem inner (hB : BiAct D) (hwa : IsWeilDatumO ψ A S χA χS oma) (hwX : IsWe
     show Continuous fun q : GA D A × (GA D S × GA D X) => φ q.1 * ker oma omX C q.1 q.2.1 q.2.2
     exact (hφ.2.comp continuous_fst).mul ((ker_cont hB hwa hwX hC).comp
       (by fun_prop : Continuous fun q : GA D A × (GA D S × GA D X) => (q.1, q.2.1, q.2.2)))
-  have H := GlobalTheory.T.continuous_integral_compactAutomorphicQuotient_param D A hA vA (GA D S × GA D X) (fun g p => φ g * ker oma omX C g p.1 p.2) hc
+  have H := _root_.GlobalTheory.CocompactParam.continuous_integral_param D A hA vA (GA D S × GA D X) (fun g p => φ g * ker oma omX C g p.1 p.2) hc
     (fun γ hγ g p => by rw [hφ.1 γ hγ g, ker_left hwa hC hγ])
   exact ⟨fun h₁ h₂ => H.1 (h₁, h₂), H.2.1⟩
 
@@ -165,7 +167,7 @@ theorem mid (hB : BiAct D) (hwa : IsWeilDatumO ψ A S χA χS oma) (hwX : IsWeil
     {φ : GA D A → ℂ} (hφ : IsContAut A φ) :
     (∀ h₂, IntegrableOn (fun h₁ => ∫ h₀ in vA.𝓕, φ h₀ * ker oma omX C h₀ h₁ h₂ ∂vA.μ) vS.𝓕 vS.μ) ∧
       Continuous fun h₂ => biLift oma omX vA vS φ C h₂ := by
-  have H := GlobalTheory.T.continuous_integral_compactAutomorphicQuotient_param D S hS vS (GA D X) (fun h₁ h₂ => ∫ h₀ in vA.𝓕, φ h₀ * ker oma omX C h₀ h₁ h₂ ∂vA.μ)
+  have H := _root_.GlobalTheory.CocompactParam.continuous_integral_param D S hS vS (GA D X) (fun h₁ h₂ => ∫ h₀ in vA.𝓕, φ h₀ * ker oma omX C h₀ h₁ h₂ ∂vA.μ)
     (inner hB hwa hwX hC hA vA hφ).2 (fun γ hγ g p => by simp only [ker_mid hB hwa hwX hC hγ])
   exact ⟨H.1, H.2.1⟩
 
@@ -177,7 +179,7 @@ theorem outer (hB : BiAct D) (hwa : IsWeilDatumO ψ A S χA χS oma) (hwX : IsWe
   have hc := (mid hB hwa hwX hC hA hS vA vS hφ).2
   have hc' : Continuous fun h' : GA D T => biLift oma omX vA vS φ C (o''.emb (h', 1)) :=
     hc.comp (o''.continuous_emb.comp (by fun_prop : Continuous fun h' : GA D T => ((h', 1) : GA D T × GA D L'')))
-  refine (GlobalTheory.T.continuous_integral_compactAutomorphicQuotient_param D T hT vT Unit (fun h' _ => F h' * biLift oma omX vA vS φ C (o''.emb (h', 1)))
+  refine (_root_.GlobalTheory.CocompactParam.continuous_integral_param D T hT vT Unit (fun h' _ => F h' * biLift oma omX vA vS φ C (o''.emb (h', 1)))
     ((hF.2.mul hc').comp continuous_fst) (fun γ hγ g _ => ?_)).1 ()
   have e : ((γ * g, 1) : GA D T × GA D L'') = (γ, 1) * (g, 1) := by simp
   have hδ : o''.emb (γ, 1) ∈ GQ X := o''.emb_mem_GQ hγ (one_mem _)
@@ -203,8 +205,8 @@ end
 theorem seeSmall : ∀ D : D7, SeeSmall D := by
   intro D ψ V₀ A L S X T L'' o o'' τ hL hL'' hτ hA hS hT χA χz χS χS' χT om₁ oma omz omX omT omz'' h₁ ha hz hX hTw hz''
     vA vS vT N Ξ Φ₂ hΞΦ φ F hφ hF
-  have hB : BiAct D := GlobalTheory.T.seeSawWeilBiAction_commutes D
-  have hSL := GlobalTheory.T.lastSeeSaw_thetaIdentity D ψ V₀ A L S X T L'' o o'' τ hL hL'' hτ χA χz χS χS' χT om₁ oma omz omX omT omz'' h₁ ha hz hX
+  have hB : BiAct D := _root_.GlobalTheory.SeeSaw.biAct_all D
+  have hSL := _root_.GlobalTheory.SeeLastPf.seeLast D ψ V₀ A L S X T L'' o o'' τ hL hL'' hτ χA χz χS χS' χT om₁ oma omz omX omT omz'' h₁ ha hz hX
     hTw hz''
   have hC : ∀ i, IsBiTheta ψ A S X (lastBi o o'' τ (Ξ i) (Φ₂ i)) := fun i =>
     GlobalTheory.T.lastSeeSaw_datum_isTwoVariableThetaFunction D ψ h₁.std V₀ A L S X T L'' o o'' τ hτ (Ξ i) (Φ₂ i) (hΞΦ i).1 (hΞΦ i).2

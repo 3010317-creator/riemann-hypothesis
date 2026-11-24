@@ -2,7 +2,9 @@ module
 
 public import Formalism.LocalToGlobal.BesselHermitianTheta.DefsReal
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StableRangeOneAdelesCmField
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SpecialLinearGeneratedByTransvectionsStatement
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SpecialLinearGeneratedByTransvections
+public import Formalism.LocalRingCardinality.DataHost
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -121,7 +123,7 @@ theorem glChar_eq_one_of_det_eq_one : ∀ (D : D7) (n : ℕ) (α : GL (Fin n) (A
   have h2 : IsUnit (2 : AE D) := by
     have h := (IsUnit.mk0 (2 : D.host.F) two_ne_zero).map (algebraMap D.host.F (AE D))
     rwa [map_ofNat] at h
-  have := GlobalTheory.T.special_linear_generated_by_transvections (AE D) (GlobalTheory.T.stableRangeOne_adeles_cmField D) n α.ker
+  have := _root_.GlobalTheory.GLGen.mem_of_det_eq_one (AE D) (GlobalTheory.T.stableRangeOne_adeles_cmField D) n α.ker
     (fun i j hij t u hu => MonoidHom.mem_ker.mpr (glChar_transvection h2 α i j hij t u hu)) a ha
   exact MonoidHom.mem_ker.mp this
 

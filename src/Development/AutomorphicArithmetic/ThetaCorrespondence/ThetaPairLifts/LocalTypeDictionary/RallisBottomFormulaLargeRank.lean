@@ -33,7 +33,9 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.SplitPa
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BottomTripleThetaKernelMinorsEqConstConjJet
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCongLevelIntG
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaHeisenbergConjugationNegHermitianSpace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCharacterFiniteIdeleValueEqStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsOfBalanced
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCharacterFiniteIdeleValueEq
+public import Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergFinitePointReadsClassicalTranslation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MovedVacuumReads
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsWeilDatumConjNegHermitianSpaces
@@ -47,7 +49,7 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DefiniteT
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.StandardModuleBottomDatumExists
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ApplyAt0Smul
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasInfOfChars
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteAdelicPointUnitaryGroupGramOneStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteAdelicPointUnitaryGroupGramOne
 import Formalism.LocalRingCardinality.DataHost
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -91,7 +93,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.CmHostImaginaryGeneratorNeZero
-import Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder
 import Development.AbelianVarietyTheory.Definitions.Divisors.FlatTensorVacuum
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsMatchOver
 import Formalism.LocalRingCardinality.DataTheta
@@ -1028,8 +1029,8 @@ theorem bottom_finParts {T : Type} {L : LevCh D T} {sc : GlobalTheory.ChiGrid.Co
     HasFinPart ((G.ch.chi (D.R.m - i) * L.eta ^ (rankV D i j % 2)) /
       (L.mu s (j + 1) * L.eta ^ (rankV D i j % 2)))⁻¹ P.W.chV' (-P.W.ep') := by
   refine ⟨fun x y hxy => ?_, fun x y hxy => ?_⟩
-  · have h1 := GlobalTheory.T.heckeCharacter_finiteIdele_value_eq _ _ (G.ch.chi_eq (D.R.m - i) (by omega) (by omega)) x y hxy
-    have h2 := GlobalTheory.T.heckeCharacter_finiteIdele_value_eq _ _ hL.eta x y hxy
+  · have h1 := _root_.GlobalTheory.FinIdlRead.chr_finIdl _ _ (G.ch.chi_eq (D.R.m - i) (by omega) (by omega)) x y hxy
+    have h2 := _root_.GlobalTheory.FinIdlRead.chr_finIdl _ _ hL.eta x y hxy
     have e : (betaH G i j)⁻¹.1 (GlobalTheory.Mem.Col2.SplitChar.finIdl D y) =
         ((G.ch.chiH (D.R.m - i)).1 (GlobalTheory.Mem.Col2.SplitChar.finIdl D y) *
           L.C.eta.1 (GlobalTheory.Mem.Col2.SplitChar.finIdl D y) ^ (rankV D i j % 2))⁻¹ := rfl
@@ -1042,7 +1043,7 @@ theorem bottom_finParts {T : Type} {L : LevCh D T} {sc : GlobalTheory.ChiGrid.Co
     have e : (nuH G s i j)⁻¹.1 (GlobalTheory.Mem.Col2.SplitChar.finIdl D y) =
         ((nuH G s i j).1 (GlobalTheory.Mem.Col2.SplitChar.finIdl D y))⁻¹ := rfl
     rw [eν, zpow_neg, hB.chars.2 y, e, inv_inv]
-    exact GlobalTheory.T.heckeCharacter_finiteIdele_value_eq _ _ (chrEq_nu G s i j hL) x y hxy
+    exact _root_.GlobalTheory.FinIdlRead.chr_finIdl _ _ (chrEq_nu G s i j hL) x y hxy
 
 end GlobalTheory.BotIntertw
 
@@ -1269,7 +1270,7 @@ theorem GlobalTheory.BotFormula.rallis_bottom_formula_large_rank : _root_.Global
     rw [norm_mul, huU p hp lam, one_mul, norm_one] at h3
     exact h3.symm
   have pts : ∀ x : GA D P.a, ∃ y : GA D A, GlobalTheory.BotFormula.IsFinPt A y x := fun x =>
-    GlobalTheory.T.exists_finiteAdelicPoint_unitaryGroup_gramOne A hX.std.1 x ea.symm
+    _root_.GlobalTheory.BotFormula.exists_isFinPt_of_gram_one A hX.std.1 x ea.symm
   choose pt hpt using pts
   rw [HC s Q P P' hP ea ed g pt hpt T]
   simp_rw [HK ea ed h g _ (pt _) hg (hpt _) T]

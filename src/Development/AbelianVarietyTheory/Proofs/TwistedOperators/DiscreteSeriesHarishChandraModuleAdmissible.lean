@@ -41,10 +41,10 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteS
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteSeriesModelIsometryUnitHighestVectorIffStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteSeriesModelParamShiftedWeightOfCoverDiscStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRealPlaceThetaObjectsTheoremARParts
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUniformRealThetaIntertwinerChainStepStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUniformRealThetaIntertwinerChainStep
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockJointHarmonicVectorsIffPolynomialsStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVectorsAdaptedBasisUnitarySubstitutionStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVectorsAtOneRealPlaceOverVacuumStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVectorsAtOneRealPlaceOverVacuum
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LowestKTypeFockMapExistsOfDiscreteSeriesStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LowestKTypeFockMapHarmonicOfDiscreteSeriesStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaCorrespondenceModelsOfCoversRealPlaceStatement
@@ -100,7 +100,7 @@ import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HighestWeightTen
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LowestTypePositiveAndDecays
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PolarCoordinatesUnitaryPQDoubleCover
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SymmetrisationInjective
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandraStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandra
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFockPolynomialIsoGradedIsometryStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsKFiniteIsometryDiscreteSeriesModelDetCover, Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsKFiniteIsometryDiscreteSeriesModelDetCoverStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSignCompatibleNumberingDecreasingEnumerati, Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSignCompatibleNumberingDecreasingEnumeratiStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVectorsMatrixCoefficientsEqFockRepresentatioStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVectorsRealPlaceActAsFockPolynomialsStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieAlgebrasAtPlaceActFockVectorsByFockOperatorsStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.NoInvariantThetaPairingOfNoTensorIntertwiner, Development.AbelianVarietyTheory.Proofs.TwistedOperators.NoInvariantThetaPairingOfNoTensorIntertwinerStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.NoThetaMapModelsOfNoPairingCovers, Development.AbelianVarietyTheory.Proofs.TwistedOperators.NoThetaMapModelsOfNoPairingCoversStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.NoThetaTensorIntertwinerLowerTowerMembersStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormSumWordCombinationCoefficientsLe, Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormSumWordCombinationCoefficientsLeStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealPlaceGroupsActUnitarilyWeaklyOnThetaStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealThetaIntertwinersProportionalOfHarishChandra, Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealThetaIntertwinersProportionalOfHarishChandraStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.SignCompatibleNumberingOfWittTowerLowerStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplittingHeckeCharExistsArchimedeanExponentStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaChainStepCentredBlockParametersStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaCorrespondenceTensorLawBothOrdersOfCovers, Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaCorrespondenceTensorLawBothOrdersOfCoversStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteSeriesHarishChandraModuleAdmissible
@@ -1454,7 +1454,7 @@ theorem exists_real {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp 
   obtain ⟨ς, hςg, -, hςpt⟩ := GlobalTheory.T.fockVectors_adaptedBasis_unitary_substitution D ψ θ S T τ hψ hf.inf sS frS εS sT frT εT fS fT BS BT hf.onS hf.onT
   obtain ⟨κ₀, hκp, hκg, hκip⟩ := GlobalTheory.T.exists_fockPolynomialIso_graded_isometry p q r s S.rank T.rank εS εT e e' he he'
   have hL := GlobalTheory.T.lieAlgebrasAtPlace_act_fockVectors_by_fockOperators D ψ θ S T χS χT ω τ hf.inf hω aS aT hS hT sS frS εS sT frT εT fS fT f hf.theta hf.vac
-  obtain ⟨hth, hrest⟩ := GlobalTheory.T.fockVectors_at_one_realPlace_over_vacuum D ψ θ S T τ hψ hf.inf sS frS εS sT frT εT fS fT f hf.theta hf.vac
+  obtain ⟨hth, hrest⟩ := _root_.GlobalTheory.OnePlaceFock.fock_at_one_place D ψ θ S T τ hψ hf.inf sS frS εS sT frT εT fS fT f hf.theta hf.vac
   obtain ⟨hinj, hfis⟩ := hrest hf.ne
   let L : LPol T.rank S.rank →ₗ[ℂ] (WO S T → ℂ) :=
     pureTensorL (fun k : Fin T.rank × Fin S.rank => aPlus (heisO ψ S T) θ τ (cplxO sS sT) (unitMap frS⁻¹ frT⁻¹ k.1 k.2)) f
@@ -1739,9 +1739,9 @@ theorem archOnRecord_of_cover (hDS : GlobalTheory.Published.DiscreteSeriesCover)
     (X : ProvA) (hX : GlobalTheory.Chain.RealIt.ChosenSeries X) (h1 : Formalism.MainNotions.SchurIrreducible.ArchimedeanRallisFirst X) (h3 : Formalism.MainNotions.SchurIrreducible.ArchimedeanRallisUpDownLine X) :
     ArchOnRecord D := by
   obtain ⟨Y, hpar, hds, hq5, hy1, -, hy3, -⟩ := _root_.GlobalTheory.RealPlaceTheta.exists_record_theta hDS hHC
-  have hG : Good D Y := ⟨hpar, hds, hq5, GlobalTheory.T.thetaModels_are_coverDiscreteSeries_of_harishChandra hDS hHC D⟩
+  have hG : Good D Y := ⟨hpar, hds, hq5, _root_.GlobalTheory.CoverModel.modelsAreCoverSeries_all hDS hHC D⟩
   exact ⟨⟨chainLower hG, pairLower hG⟩, fun hg => ⟨chainTop hG hy1 hy3 hg, pairTop hG hy1 hy3 hg,
-    itLaw (GlobalTheory.T.exists_uniformRealThetaIntertwiner_chainStep hDS hHC D) (GlobalTheory.T.realThetaIntertwiners_proportional_of_harishChandra hDS hHC D) hg,
+    itLaw (_root_.GlobalTheory.Chain.ItPairObj.itPair_holds hDS hHC D) (GlobalTheory.T.realThetaIntertwiners_proportional_of_harishChandra hDS hHC D) hg,
     ioLaw (GlobalTheory.T.lowestKTypeFockMap_exists_of_discreteSeries hDS hHC D) (GlobalTheory.T.lowestKTypeFockMap_unique_of_discreteSeries hDS hHC D) (GlobalTheory.T.lowestKTypeFockMap_harmonic_of_discreteSeries hDS hHC D)⟩⟩
 
 theorem archOnRecord (hDS : GlobalTheory.Published.DiscreteSeriesCover) (hHC : GlobalTheory.Published.HarishChandraModules) (D : D7) :

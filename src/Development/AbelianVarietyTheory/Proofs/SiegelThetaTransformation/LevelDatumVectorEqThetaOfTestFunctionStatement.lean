@@ -2,15 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorTestThetaZeroEqThetaSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LatticeVacuaTensorCorrespondLineStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUnique
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorTestThetaZeroEqThetaSeries
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LatticeVacuaTensorCorrespondLine
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelStructureProperties
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelTestFunctionFiniteSumEquivariant
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TensorLatticeVacuaExistUnique
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinearStatement
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelTestFunctionMapLinearInjectiveEquivarStatement
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinear
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelTestFunctionMapLinearInjectiveEquivar
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,18 +78,18 @@ theorem th_sum (C : Ctx S T) {x : Frame C.X.Ψ T.rank} (hx : x ∈ C.X.dom) {ι 
     C.Th x (∑ i ∈ s, f i) = ∑ i ∈ s, C.Th x (f i) := by
   classical
   have h0 : C.Th x 0 = 0 := by
-    simpa using (GlobalTheory.T.thetaKernel_testFunction_map_linear_injective_equivariant D S T C x hx 0 SW.isSB_zero).2.1 0
+    simpa using (_root_.GlobalTheory.Ker.Ctx.th_laws D S T C x hx 0 SW.isSB_zero).2.1 0
   refine Finset.induction_on s (by simpa using h0) ?_
   intro i s hi ih
   rw [Finset.sum_insert hi, Finset.sum_insert hi, ← ih]
-  exact ((GlobalTheory.T.thetaKernel_testFunction_map_linear_injective_equivariant D S T C x hx (f i) (hf i)).1 _ (GlobalTheory.SW.RecSum.isSB_sum s f hf)).1
+  exact ((_root_.GlobalTheory.Ker.Ctx.th_laws D S T C x hx (f i) (hf i)).1 _ (GlobalTheory.SW.RecSum.isSB_sum s f hf)).1
 
 theorem th_finsum (C : Ctx S T) {x : Frame C.X.Ψ T.rank} (hx : x ∈ C.X.dom) {ι : Type}
     (f : ι → TF S.rank C.g) (hf : ∀ i, SW.IsSB (f i)) (hfin : (Function.support f).Finite) :
     C.Th x (∑ᶠ i, f i) = ∑ᶠ i, C.Th x (f i) := by
   classical
   have h0 : C.Th x 0 = 0 := by
-    simpa using (GlobalTheory.T.thetaKernel_testFunction_map_linear_injective_equivariant D S T C x hx 0 SW.isSB_zero).2.1 0
+    simpa using (_root_.GlobalTheory.Ker.Ctx.th_laws D S T C x hx 0 SW.isSB_zero).2.1 0
   have hsub : (Function.support fun i => C.Th x (f i)) ⊆ (hfin.toFinset : Set ι) := by
     intro i hi
     rw [hfin.coe_toFinset, Function.mem_support]
@@ -121,7 +121,7 @@ private theorem ctx_Th_finsum_of_isSB (C : Ctx S T) {x : Frame C.X.Ψ T.rank} (h
   by_cases hfin : (Function.support f).Finite
   · exact th_finsum C hx f hf hfin
   · have h0 : C.Th x 0 = 0 := by
-      simpa using (GlobalTheory.T.thetaKernel_testFunction_map_linear_injective_equivariant D S T C x hx 0 SW.isSB_zero).2.1 0
+      simpa using (_root_.GlobalTheory.Ker.Ctx.th_laws D S T C x hx 0 SW.isSB_zero).2.1 0
     have hsupp : (Function.support fun i => C.Th x (f i)) = Function.support f := by
       ext i
       simp only [Function.mem_support, ne_eq]
@@ -129,7 +129,7 @@ private theorem ctx_Th_finsum_of_isSB (C : Ctx S T) {x : Frame C.X.Ψ T.rank} (h
       · intro h hfi
         exact h (by rw [hfi, h0])
       · intro h hT
-        exact h (((GlobalTheory.T.thetaKernel_testFunction_map_linear_injective_equivariant D S T C x hx (f i) (hf i)).1 0 SW.isSB_zero).2 (by rw [hT, h0]))
+        exact h (((_root_.GlobalTheory.Ker.Ctx.th_laws D S T C x hx (f i) (hf i)).1 0 SW.isSB_zero).2 (by rw [hT, h0]))
     have hinf : (Function.support fun i => C.Th x (f i)).Infinite := by
       rw [hsupp]
       exact hfin
@@ -145,8 +145,8 @@ theorem uVec_eq : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ (Lv : SW.Level C
   have hΛself : SelfD C.X C.X.Λ := hΛlats.1
   have hSelf : SelfD C.X (Lv.sh C.X.Λ) := (h6833.2.2.2.1 _ hΛlats).1
   have hstd : stdL D.host.E S.rank ∈ Vset D.host.E S.rank M := GlobalTheory.SW.Base.stdL_mem_Vset _ _
-  have h26522 := GlobalTheory.T.latticeVacua_tensor_correspond_line D S T C Lv.w Lv.w_int Lv.w_tr hw2 M _ hstd _ hSelf
-  have hxdom : C.xB B ∈ C.X.dom := ((GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2 B hB).2.1
+  have h26522 := _root_.GlobalTheory.Ker.latVac_th_line D S T C Lv.w Lv.w_int Lv.w_tr hw2 M _ hstd _ hSelf
+  have hxdom : C.xB B ∈ C.X.dom := ((_root_.GlobalTheory.Ker.onBasis_frame_period D S T C).2 B hB).2.1
   refine ⟨?_, ?_⟩
   · intro f' hf' v hv
     obtain ⟨t, ht⟩ := h26522.2 B hB v hv f' hf'.th hf'.fock hf'.lat
@@ -157,11 +157,11 @@ theorem uVec_eq : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ (Lv : SW.Level C
     have hv := hv₀ _ hΛlats
     have hvSB : SW.IsSB (v₀ C.X.Λ) := hv.1
     have hvip : SW.ip (v₀ C.X.Λ) (v₀ C.X.Λ) = 1 := hv.2.1
-    have hTh := GlobalTheory.T.thetaKernel_testFunction_map_linear_injective_equivariant D S T C _ hxdom (v₀ C.X.Λ) hvSB
+    have hTh := _root_.GlobalTheory.Ker.Ctx.th_laws D S T C _ hxdom (v₀ C.X.Λ) hvSB
     have h0 : C.Th (C.xB B) 0 = 0 := by
-      simpa using (GlobalTheory.T.thetaKernel_testFunction_map_linear_injective_equivariant D S T C _ hxdom 0 SW.isSB_zero).2.1 0
-    refine ⟨⟨(GlobalTheory.T.adelicZakTheta_exists_unique D S T C _ hxdom _ hvSB).1.1, ?_,
-      ((GlobalTheory.T.fockPolynomialVector_testTheta_zero_eq_thetaSeries D S T C).2 B hB _ hvSB).1, (h26522.1 _ hxdom _ hvSB).2 hv.2.2⟩, ?_⟩
+      simpa using (_root_.GlobalTheory.Ker.Ctx.th_laws D S T C _ hxdom 0 SW.isSB_zero).2.1 0
+    refine ⟨⟨(_root_.GlobalTheory.Ker.ZakEx.isZak_Th D S T C _ hxdom _ hvSB).1.1, ?_,
+      ((_root_.GlobalTheory.Ker.fvec_Th_zero D S T C).2 B hB _ hvSB).1, (h26522.1 _ hxdom _ hvSB).2 hv.2.2⟩, ?_⟩
     · intro hz
       have h1 : C.Th (C.xB B) (v₀ C.X.Λ) = C.Th (C.xB B) 0 := by rw [hz, h0]
       have h2 := (hTh.1 0 SW.isSB_zero).2 h1
@@ -180,7 +180,7 @@ theorem uVec_eq : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ (Lv : SW.Level C
           Lv.dat hn y • C.Th (C.xB B) (heisG C.X C.bas y (t • v₀ C.X.Λ)) =
             t • C.Th (C.xB B) (Lv.dat hn y • heisG C.X C.bas y (v₀ C.X.Λ)) := by
         intro y
-        have e1 := (GlobalTheory.T.thetaKernel_testFunction_map_linear_injective_equivariant D S T C _ hxdom _ (hsbH y)).2.1
+        have e1 := (_root_.GlobalTheory.Ker.Ctx.th_laws D S T C _ hxdom _ (hsbH y)).2.1
         rw [GlobalTheory.SW.TensVac.heisG_smul, e1, e1, smul_comm]
       have hu : unitv (projA C.X C.bas Lv.w (tens (stdL D.host.E S.rank) (Lv.sh C.X.Λ)) (v₀ C.X.Λ)) =
           v₀ C.X.Λ := by
@@ -191,7 +191,7 @@ theorem uVec_eq : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ (Lv : SW.Level C
             C.Th (C.xB B) (heisG C.X C.bas (-y) (t • v₀ C.X.Λ)) := by
         intro y
         rw [← hTh.2.1 t]
-        exact (GlobalTheory.T.thetaKernel_testFunction_map_linear_injective_equivariant D S T C _ hxdom _ htv).2.2.1 y
+        exact (_root_.GlobalTheory.Ker.Ctx.th_laws D S T C _ hxdom _ htv).2.2.1 y
       simp only [GlobalTheory.Ker.Ctx.uVec, GlobalTheory.SW.Level.phi, hu, hrho]
       refine Eq.trans (finsum_out_neg
         (tens (stdL D.host.E S.rank) ((Ideal.span {2} * conjI Lv.𝔪) • C.X.Λ))

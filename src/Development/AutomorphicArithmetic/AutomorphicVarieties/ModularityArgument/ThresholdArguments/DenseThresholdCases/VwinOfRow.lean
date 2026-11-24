@@ -95,7 +95,8 @@ public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepres
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.LocIsotypic
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RankTwoPatching.GaloisRepExistsTotallyRealGL2
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousRingEquivLocalFieldPreservesValuation
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PlaceOverTransportRingIsoSymmStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Langlands
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PlaceOverTransportRingIsoSymm
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsCharacterSupportBaseChangeLiftDegreeOne
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PlainTorExistsChars
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.QuadraticTwists.ExBridge
@@ -107,15 +108,19 @@ public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentation
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RankTwoPatching.RatioT
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RankTwoPatching.UnrAtOfIsoTwist
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.AlgSatPow
-public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.AuxStatement23
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsIrreducibleIff
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.IwahoriSphericalTransfer
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.EqOfMultisetSymmetricReflections
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.EventuallyHasSatakeParameters
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.ExistsPlaceCompletionIso
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.GaloisRepPatchingInfiniteFamily
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.GaloisRepRestrictionLocalCompletion
-public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.InfiniteQuadraticFieldsSplitInertia
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.BcDefs
+public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.ExistsInfiniteQcmSplitRam
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.LocalEmbeddingAgree
-public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.LocalEmbeddingCompatibleExtension
+public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.DRSstCrysPstJumpsDescend
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.LocalEmbeddingRestrictExtension
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.LocalFieldEmbeddingMem
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSubquotientComp
@@ -210,8 +215,8 @@ import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EquivOfISupR
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsLocCompAndIsLocLoc
 import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.GammaLaurentFactors.LocalEmbeddingNorms.SuppFacts
 import Development.AutomorphicArithmetic.Foundations.LocalLanglands.LocalCentralUnits.RecTExists
-import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.LocalGlobalCompatibilityReal
-import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.SatakeParametersLocal
+import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.LocCompROfAdmissibleReal
+import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.ImportsAlt
 import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.WignerHighestWeights.MsetSep
 import Mathlib.LinearAlgebra.Matrix.CharP
 import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.HVCore
@@ -1230,7 +1235,7 @@ namespace UpperTheory.Gal.SV
 theorem attRes_alt : _root_.GlobalTheory.Mem.LiteralAutomorphy.LiteratureRankNHypothesis → ∀ (F Ω : Type) [Field F] [NumberField F] [IsTotallyReal F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (K : Type) [Field K] [NumberField K] [IsCMField K] [Algebra F K] [Algebra K Ω] [IsScalarTower F K Ω] [IsAlgClosure K Ω] (l : ℕ) [Fact l.Prime] (ι : Qbar l ≃+* ℂ) (a : ℕ), 1 ≤ a → ∀ (π : TR.CuspSub F a) (P : CuspSub K a), IsBC π P → ∀ (r : G K Ω →* GL (Fin a) (Qbar l)) (wt : ℤ) (HT : (K →+* Qbar l) → Multiset ℤ), UpperTheory.GalStar.PropsB (fun h rc => IsRecT h rc) P ι r wt HT → AttRes π ι K r := by
   intro L F Ω _ _ _ _ _ _ K _ _ _ _ _ _ _ l _ ι a ha π P hBC r wt HT H
   have hloc := _root_.GlobalTheory.T.local_global_compatibility_complex_alt L
-  have hsl := GlobalTheory.T.satakeParameters_local
+  have hsl := _root_.GlobalTheory.RealGal.SatLocProof.main
   refine (hBC.unr.and (eventually_not_mem K l)).mono ?_
   rintro w ⟨hu, hw⟩ f hf
   obtain ⟨B, hB, hBw⟩ := hu (w.under (𝓞 F)) rfl f hf
@@ -1261,7 +1266,7 @@ theorem local_condition_at_place_of_decomposition_le_range (L : _root_.GlobalThe
   have ST := splitTr F K a ha π P hBC v w i ⟨hi.cont, hi.loc⟩
   obtain ⟨⟨σ', hσ'⟩, -⟩ := _root_.GlobalTheory.LocCompCLit.main_alt L K a P w
   obtain ⟨rc', hrc'⟩ := recTExists K Ω A w h'
-  obtain ⟨S, hS, -⟩ := GlobalTheory.T.place_over_transport_ring_iso_symm F Ω A v h K Ω A w h' _ _ i hi
+  obtain ⟨S, hS, -⟩ := _root_.GlobalTheory.WDTransport.exists_equiv_wd F Ω A v h K Ω A w h' _ _ i hi
   have inj : ∀ {x y : WD h} {x' y' : WD h'}, WDRel (RingEquiv.refl Ω) x x' → WDRel (RingEquiv.refl Ω) y y' → x' = y' → x = y :=
     fun hx hy e => S.injective (by rw [(hS _ _).1 hx, (hS _ _).1 hy, e])
   have up : ∀ σ, π.IsLocComp v σ → GlobalTheory.RoadU.PlainTor (IrrGL.of σ.ρ σ.smooth σ.irred) → Gd (rc' (algNorm σ')) := fun σ hσ hp => by
@@ -1342,8 +1347,8 @@ theorem local_condition_at_place_of_decomposition_le_range (L : _root_.GlobalThe
     exact ratioT K Ω A w h' rc' hrc' a P t (ht w hp') σ' hσ'
   · obtain ⟨e, he⟩ := hBC.split v w i hi.cont hi.loc σ σ' hσ hσ'
     obtain ⟨Bw', hj', e1, e2, e3⟩ := br O Bw hj
-    exact (GlobalTheory.T.local_embedding_compatible_extension F Ω K l _ A O Bw Bw' e1 e2 e3 a r).2.2.1
-      ((hG.above _ _ (Loc.tiedP l) w A h' O Bw' hj').crys σ' hσ' ((GlobalTheory.T.aux_statement_23 F K v w i hi.cont a σ σ' e he).2 hs)).1
+    exact (_root_.GlobalTheory.RealGal.dRSstCrysPstJumps_descend F Ω K l _ A O Bw Bw' e1 e2 e3 a r).2.2.1
+      ((hG.above _ _ (Loc.tiedP l) w A h' O Bw' hj').crys σ' hσ' ((_root_.GlobalTheory.CompletionIso.iwahori_spherical_transfer F K v w i hi.cont a σ σ' e he).2 hs)).1
 end Descent
 theorem galois_rep_exists_totally_real_rank_two_of_base_change : _root_.GlobalTheory.Mem.LiteralAutomorphy.LiteratureRankNHypothesis → UpperTheory.V.Z.Bc.QuadBC2 → AdmissibleReal → GaloisRepExistsTotallyRealGL2 := by
   intro litN qbc adm F Ω _ _ _ _ _ _ l _ ι a ha2 ha π χ hreg hpol
@@ -1353,7 +1358,7 @@ theorem galois_rep_exists_totally_real_rank_two_of_base_change : _root_.GlobalTh
     intro v A hA
     obtain rfl := ha2.out
     have hT := GlobalTheory.T.eventually_has_satake_parameters adm F 2 π
-    refine (GlobalTheory.T.infinite_quadratic_fields_split_inertia F Ω (fun u => ∃ B, π.HasSat u B) hT v A hA).mono ?_
+    refine (_root_.GlobalTheory.RealGal.exists_infinite_qcm_split_ram F Ω (fun u => ∃ B, π.HasSat u B) hT v A hA).mono ?_
     rintro Q ⟨hdec, u, A', ⟨B, hB⟩, hA', hine⟩
     refine ⟨hdec, ?_⟩
     rcases qbc F Q.K Q.two π hreg with ⟨η, hq, htw⟩ | hP
@@ -1407,8 +1412,8 @@ theorem galois_rep_exists_totally_real_rank_two_of_base_change : _root_.GlobalTh
     exact (hD w A h).plain B hB
   refine ⟨ρ, wt Q0, HTF, hρc, hρs, hpl, fun w σ hσ hp => ⟨fun A h => (hD w A h).cmp σ hσ hp, fun A h => (hD w A h).ht σ hσ hp⟩,
     fun w hw B hB => ?_, fun w hw A h => (hD w A h).ratio hw, hwts, (hHT Q0).2, fun w A h => (hD w A h).crys⟩
-  obtain ⟨⟨σ, hσ⟩, hiso⟩ := GlobalTheory.T.local_global_compatibility_real adm F a π w
-  have hS := ((GlobalTheory.T.satakeParameters_local F a w σ).2 _ π.finPart (hiso σ hσ) B).1 hB
+  obtain ⟨⟨σ, hσ⟩, hiso⟩ := _root_.GlobalTheory.RealGal.locCompR_of_admissibleReal adm F a π w
+  have hS := ((_root_.GlobalTheory.RealGal.SatLocProof.main F a w σ).2 _ π.finPart (hiso σ hσ) B).1 hB
   exact frob_of hw σ hS fun A h rc hrc => (((hD w A h).cmp σ hσ (hpl w B hB σ hσ) rc hrc).1 hw).isWDOf
     (gdOf F Ω A w h rc hrc a σ (hpl w B hB σ hσ))
 end UpperTheory.Gal.SV

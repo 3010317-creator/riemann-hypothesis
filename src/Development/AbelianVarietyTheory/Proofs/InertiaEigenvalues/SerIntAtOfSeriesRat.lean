@@ -51,7 +51,8 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.Referen
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UniformisedCoverIsDictionaryFrameCompatibleStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VacuumIdentityConstantsCoverOfDominantPinsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsThetaFunOOfThetaAt
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralValuesAlgebraicPointsIffValueNonnegStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.NonnegIffOfLiesTotal
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralValuesAlgebraicPointsIffValueNonneg
 public import Formalism.LocalToGlobal.ProjectiveLattices.ModelAt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.IntegralValueOfChartValues
 public import Development.AbelianVarietyTheory.Definitions.Divisors.OfCore
@@ -127,7 +128,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IntFormsSubset
 import Formalism.LocalToGlobal.Divisibility.CoefMod
 import Formalism.LocalToGlobal.IndefiniteReal.IndefiniteWeightData
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CompletedLatticeEqAdelicCompletionAndGramStatement
+import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsAlgebraMapOfSigRFixed
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUnitaryOfTraceEq
 import Formalism.LocalRingCardinality.ConjSqrtMinusD
@@ -1218,7 +1219,7 @@ theorem mul_twist_mem_intForms : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, 
   have hright : ∀ u : GA D (T.V j T.σ₀), GlobalTheory.Member.FinCong (T.V j T.σ₀) C.d.l₂.M u →
       xi (Matrix.GeneralLinearGroup.det (finHom (T.V j T.σ₀) u)) = 1 := by
     intro u hu
-    obtain ⟨k1, -, k3, k4, -⟩ := GlobalTheory.T.completedLattice_eq_adelicCompletion_and_gram D (T.V j T.σ₀)
+    obtain ⟨k1, -, k3, k4, -⟩ := _root_.GlobalTheory.Member.latHat_eq_hat_and_gram D (T.V j T.σ₀)
     obtain ⟨w', hw', e⟩ := GlobalTheory.CharRead.det_cong_one D.host.F (GlobalTheory.Member.latC (T.V j T.σ₀)) k3 k4 C.d.l₂.M (by omega)
       (finHom (T.V j T.σ₀) u).1 (by rw [← k1]; exact hu)
     refine hxi.cond _ (hno u) ⟨T.Q.l.M • w', AddSubgroup.nsmul_mem _ (GlobalTheory.IdeleParts.integralFiniteAdeles_eq_adelicCompletion_integers D ▸ hw') _, ?_⟩
@@ -1930,7 +1931,7 @@ theorem serIntAt_record : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 
     refine sum_mem fun k _ => Submodule.smul_mem _ (⟨β k, (hfs k).1⟩ : O) (Submodule.subset_span ⟨fs k, ⟨?_, ?_⟩, rfl⟩)
     · rw [hn]; exact ⟨(hfs k).2.1, (hfs k).2.2.1⟩
     · rintro _ rfl
-      exact (GlobalTheory.T.integral_values_algebraic_points_iff_value_nonneg _ _ _ _ _ _ _ _).1 (hfs k).2.2.2
+      exact (_root_.GlobalTheory.TowVal.bddAll_one_iff_valSet_nonneg _ _ _ _ _ _ _ _).1 (hfs k).2.2.2
   have hint : Fn ∈ C.intForms (wtA (κ i)) (κ i).n S := by
     refine GlobalTheory.T.mem_integralForms_of_rational_and_local_spans D T hL _ hj T.σ₀ T.toCore.good_σ₀ C hU (hpin _ (dom_wtA (κ i))).1 _ _ (dom_wtA (κ i)) S Fn ?_ fun la hla => ?_
     · obtain ⟨la, hla⟩ := exists_place_over C.d.c₂.F hl

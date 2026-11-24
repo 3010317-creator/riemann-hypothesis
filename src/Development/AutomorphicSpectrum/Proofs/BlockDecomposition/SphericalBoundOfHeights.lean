@@ -21,12 +21,12 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Ade
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HalfData
 public import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.ThetaIdempotents.MapsExist
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousLeviBlock
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubledBasisSkewColumnMatrixGramInverseStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubledBasisSkewColumnMatrixGramInverse
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSiegelParabolicConjDoubledCompact
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsStandardUnitaryChartDoubledSpace
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemDoublingSiegelParabolicIffChartMemSiegelUnnStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemDoublingSiegelParabolicIffChartMemSiegelUnn
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StandardUnitaryChartMemRationalIff
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StandardUnitaryChartSiegelLeviDetEqStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StandardUnitaryChartSiegelLeviDetEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GodementSummableHeightRpowRepresentatives
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCompactLevelHeightScalesIsotropicFrame
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasureHeightShellLeIsotropicFrameQuotient
@@ -982,7 +982,7 @@ theorem frame_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
 theorem continuous_chart_symm (D : D7) (A : HSp D) (μ : D.host.E) (hμ : IsSkew μ) (κ : GA D (dblSp A) ≃* G D A.rank)
     (hκ : IsChart A μ κ) : Continuous κ.symm := by
   haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
-  obtain ⟨-, hdet, -⟩ := GlobalTheory.T.doubledBasisSkewColumnMatrix_gram_inverse D A μ hμ
+  obtain ⟨-, hdet, -⟩ := _root_.GlobalTheory.StdUnn.Tm_gram_inv D A μ hμ
   have hTi' : rat (Tm A μ) * rat (Tm A μ)⁻¹ = 1 := by
     rw [← rat_mul, Matrix.mul_nonsing_inv _ hdet, rat_one]
   have e : ∀ g : G D A.rank, mt (dblSp A) (κ.symm g) = rat (Tm A μ) * (mat g * rat (Tm A μ)⁻¹) := by
@@ -1017,7 +1017,7 @@ theorem height_bound : ∀ (D : D7) (r : ℕ), ∃ H' : G D (r + 1) → ℝ≥0,
     fun q => GlobalTheory.RegSW.mul_jX d q
   have hstab := (GlobalTheory.EisCont.parFlag_stab_leftInv D (dblSp A) _ (r + 1) d).2.2.1
   have hPs : ∀ x : GA D (dblSp A), x ∈ GlobalTheory.RegSW.stab d ↔ κ x ∈ P D (r + 1) := fun x => by
-    rw [← hstabS]; exact GlobalTheory.T.mem_doublingSiegelParabolic_iff_chart_mem_siegelUnn D A μ hμ κ hκ x
+    rw [← hstabS]; exact _root_.GlobalTheory.StdUnn.mem_siegel_iff_chart_mem_P D A μ hμ κ hκ x
   have hiff : ∀ x : GA D (dblSp A), (∃ β, GlobalTheory.ResidueEisenstein.ScalesBy D.sp.cm.sig (dblSp A).gram d.e x β) ↔ κ x ∈ P D (r + 1) := fun x =>
     ⟨fun ⟨β, e⟩ => (hPs x).1 (hstab x β e).1, fun hx => ⟨_, hsc ⟨x, (hPs x).2 hx⟩⟩⟩
   have hG : ∀ g, g ∈ GQ (dblSp A) ↔ κ g ∈ GF D (r + 1) := chart_mem_GF_iff D A μ hμ κ hκ
@@ -1063,12 +1063,12 @@ theorem height_bound : ∀ (D : D7) (r : ℕ), ∃ H' : G D (r + 1) → ℝ≥0,
   let H' : G D (r + 1) → ℝ≥0 := fun g => GlobalTheory.Doubling.iwAbs (GlobalTheory.RegSW.absDet d) l.K (κ.symm g)
   refine ⟨H', ⟨hNc.comp (continuous_chart_symm D A μ hμ κ hκ), fun g => ?_, fun q hq a ha g => ?_⟩, B, fun ε h0 h1 => ?_⟩
   · exact NNReal.coe_pos.1 (hht.pos _)
-  · have hq1 : κ.symm q ∈ siegel A := (GlobalTheory.T.mem_doublingSiegelParabolic_iff_chart_mem_siegelUnn D A μ hμ κ hκ _).2 (show κ (κ.symm q) ∈ P D (r + 1) by rw [κ.apply_symm_apply]; exact hq)
+  · have hq1 : κ.symm q ∈ siegel A := (_root_.GlobalTheory.StdUnn.mem_siegel_iff_chart_mem_P D A μ hμ κ hκ _).2 (show κ (κ.symm q) ∈ P D (r + 1) by rw [κ.apply_symm_apply]; exact hq)
     have hq2 : κ.symm q ∈ GlobalTheory.RegSW.stab d := hstabS ▸ hq1
     have h1 := hlaw _ _ (hsc ⟨_, hq2⟩) (κ.symm g)
     have h2 := (GlobalTheory.T.doubled_space_maximal_level_lattice D A).2.1 _ hq1 hq2
     have hk : blkA (mat (κ (κ.symm q))) = a.1 := by rw [κ.apply_symm_apply]; exact ha
-    have h3 := GlobalTheory.T.standardUnitaryChart_siegelLeviDet_eq D A μ hμ κ hκ ⟨_, hq1⟩ a hk
+    have h3 := _root_.GlobalTheory.StdUnn.chart_aP_eq_det D A μ hμ κ hκ ⟨_, hq1⟩ a hk
     apply NNReal.coe_injective
     show ((GlobalTheory.Doubling.iwAbs (GlobalTheory.RegSW.absDet d) l.K (κ.symm (q * g)) : ℝ≥0) : ℝ) = _
     rw [map_mul, h1]

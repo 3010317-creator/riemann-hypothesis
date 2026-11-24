@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormOneAtOne
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealCompletionLocallyPrincipal
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsSelfDualLatticeAtPlaceLatticeCompletion
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualLatticeRationalLineTraceFractionalIdealStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittCoreEmbeddingPreservesSupportedUnitarySubgro
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.LineLatAt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualLatticeRationalLineTraceFractionalIdeal
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittCoreEmbeddingPreservesSupportedUnitarySubgro
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.InverseDifferentPowCompletionTrivialAtSplitPlace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsCentralUnitaryScalarOfNormOneIdeleStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNormOneIdeleWithSplitPlaceComponentStatement
@@ -14,7 +14,7 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Mem
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualSplitComponentIsLatticeStabilizerEq
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ChainFractionalIdealRelations
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.InverseDifferentCompletionIffCharacterDual
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MulFractionalIdealCompletionSubsetIffMemQuotientStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MulFractionalIdealCompletionSubsetIffMemQuotient
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FrameCoordsMemSelfDualLatticeCoordsIff
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GramEqOfInst
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.HidaSetting
@@ -150,7 +150,7 @@ variable {D : D7}
 
 theorem lastLine_match : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S S₀ : HSp D) (ρ : ℕ) (d : HypDec S S₀ ρ) (z : Fin S₀.rank → D.host.E) (L L' : Lat S) (M M' : Lat S₀) (v : GlobalTheory.FinPl.Pl D) (c : AE D) (γ : GA D S₀), IsSelfDualC S₀ M → z ≠ 0 → LastAt ψ d z L M v → LastAt ψ d z L' M' v → NormOneAt v c → Formalism.L2.Theta.mt S₀ γ *ᵥ ratV z = ratV z → SMoves S₀ c γ M M' v → ∀ i : Fin ρ, i.1 + 1 = ρ → ∀ a ∈ idAt D (· = v), (colMul d.jX i a ∈ latV S L (· = v) ↔ colMul d.jX i (c * a) ∈ latV S L' (· = v)) := by
   intro D ψ S S₀ ρ d z L L' M M' v c γ hM hz hL hL' hc hγ hmv i hi a ha
-  obtain ⟨𝔞, h𝔞, -, hline⟩ := GlobalTheory.T.selfDualLattice_rationalLineTrace_fractionalIdeal D S₀ M z hM hz
+  obtain ⟨𝔞, h𝔞, -, hline⟩ := _root_.GlobalTheory.Core.Mi.LatLine.line_trace D S₀ M z hM hz
   obtain ⟨x, hx, hgen⟩ := GlobalTheory.IdVGen.idV_gen D v 𝔞 h𝔞
   have hA : ∀ b ∈ idAt D (· = v), b • ratV z ∈ latV S₀ M (· = v) ↔ incA D x⁻¹ * b ∈ intAt D (· = v) :=
     fun b hb => (hline v b hb).trans ((hgen b).trans ⟨fun h => h.1, fun h => ⟨h, hb⟩⟩)
@@ -367,7 +367,7 @@ theorem mem_idAt_of_colMul {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (j
 theorem line_gen {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (j : Fin ρ) (L : Lat S) (hL : IsSelfDualC S L)
     (v : GlobalTheory.FinPl.Pl D) : ∃ x : D.host.E, x ≠ 0 ∧ ∀ a ∈ idAt D (· = v),
       (colMul d.jX j a ∈ latV S L (· = v) ↔ incA D x⁻¹ * a ∈ intAt D (· = v)) := by
-  obtain ⟨𝔞, h𝔞, -, hv⟩ := GlobalTheory.T.selfDualLattice_rationalLineTrace_fractionalIdeal D S L _ hL (col_ne_zero d j)
+  obtain ⟨𝔞, h𝔞, -, hv⟩ := _root_.GlobalTheory.Core.Mi.LatLine.line_trace D S L _ hL (col_ne_zero d j)
   obtain ⟨x, hx, hx'⟩ := GlobalTheory.IdVGen.idV_gen D v 𝔞 h𝔞
   refine ⟨x, hx, fun a ha => ?_⟩
   rw [colMul_eq, hv v a ha, hx']
@@ -789,7 +789,7 @@ theorem primAt_lastAt_of_lines : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), 
       ((∀ a ∈ idAt D (· = v), incA D μ * a ∈ idV 𝔞 v → incA D μ * (s * a) ∈ idV 𝔟 v) ↔
         ∀ o ∈ intAt D (· = v), psiE ψ (s * o) = 1) := by
     intro 𝔞 𝔟 h𝔞 h𝔟 hq s hs
-    rw [← GlobalTheory.SeeSaw.DiffDual.idV_dI_iff D ψ hψ v s hs, ← hq, ← GlobalTheory.T.mul_fractionalIdealCompletion_subset_iff_mem_quotient D v 𝔞 𝔟 h𝔞 h𝔟 s hs]
+    rw [← GlobalTheory.SeeSaw.DiffDual.idV_dI_iff D ψ hψ v s hs, ← hq, ← _root_.GlobalTheory.IdealQuot.mul_subset_iff D v 𝔞 𝔟 h𝔞 h𝔟 s hs]
     constructor
     · intro h b hb
       have hbAt := idV_supp 𝔞 v hb
@@ -1447,7 +1447,7 @@ theorem j_zero_mul_mem_lattice_iff {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S�
 theorem line_loc {S : HSp D} {L : Lat S} {x : Fin S.rank → D.host.E} (hL : IsSelfDualC S L) (hx : x ≠ 0) {c : D.host.E}
     (hc : c ≠ 0) {𝔟 : FI D} (h : ∀ t : D.host.E, t • x ∈ L ↔ c * t ∈ 𝔟) (v : GlobalTheory.FinPl.Pl D) :
     ∀ a ∈ idAt D (· = v), a • ratV x ∈ latV S L (· = v) ↔ incA D c * a ∈ idV 𝔟 v := by
-  obtain ⟨𝔞, -, h1, h2⟩ := GlobalTheory.T.selfDualLattice_rationalLineTrace_fractionalIdeal D S L x hL hx
+  obtain ⟨𝔞, -, h1, h2⟩ := _root_.GlobalTheory.Core.Mi.LatLine.line_trace D S L x hL hx
   have e : 𝔞 = FractionalIdeal.spanSingleton _ c⁻¹ * 𝔟 := by
     ext t
     rw [← h1, h, FractionalIdeal.mem_singleton_mul]

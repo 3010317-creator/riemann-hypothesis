@@ -19,7 +19,9 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaPa
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousMovPair
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOneP
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsThetaLiftLinearMapCuspFormMultiplicity
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsWeilDatumGeneratorRealOneParamGroupStatement
+import Formalism.LocalToGlobal.BesselHermitianTheta.TiedSmooth
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsWeilDatumGeneratorRealOneParamGroup
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockVectorMixedLaplacianKilledLoweringKilled
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FormsModelHolomorphicIntegralExtremalWeight
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HolomorphicDiscreteSeriesLowestKTypeSmoothIrredu
@@ -155,7 +157,7 @@ theorem exists_gen (hom : IsWeilDatumO ψ S T χS χT om) (hθ : IsInfFam θ) (�
     {X : Matrix (Fin T.rank) (Fin T.rank) ℂ} (hX : X ∈ lieAt T τ) : ∃ L : Module.End ℂ (WO S T → ℂ),
       ∀ f, IsThetaFunO ψ S T f → IsThetaFunO ψ S T (L f) ∧
         ∀ h g w, HasDerivAt (fun t : ℝ => om (h, g * oneP θ T τ X t) f w) (om (h, g) (L f) w) 0 := by
-  obtain ⟨L, hL⟩ := GlobalTheory.T.exists_weilDatum_generator_realOneParamGroup D ψ S T χS χT om hom θ hθ τ X hX
+  obtain ⟨L, hL⟩ := _root_.GlobalTheory.DefLift.Gen.exists_generator D ψ S T χS χT om hom θ hθ τ X hX
   refine ⟨L, fun f hf => ⟨(hL f hf).1, fun h g w => ?_⟩⟩
   have := (hL f hf).2.2.2 (h, g) w
   simpa only [Prod.mk_mul_mk, mul_one] using this
@@ -235,9 +237,9 @@ theorem killed_of_harmonic (hom : IsWeilDatumO ψ S T χS χT om) (hθ : IsInfFa
   unfold conjAt at lX lY ⊢
   rw [eY] at lY ⊢
   generalize (1 / 2 : ℂ) • (Z + -((gramAt D T τ)⁻¹ * Zᴴ * gramAt D T τ)) = X at ha lX lY
-  obtain ⟨GX, hX⟩ : ∃ G, IsGen ψ om θ τ X G := GlobalTheory.T.exists_weilDatum_generator_realOneParamGroup D ψ S T χS χT om hom θ hθ τ _ lX
+  obtain ⟨GX, hX⟩ : ∃ G, IsGen ψ om θ τ X G := _root_.GlobalTheory.DefLift.Gen.exists_generator D ψ S T χS χT om hom θ hθ τ _ lX
   obtain ⟨GY, hY⟩ : ∃ G, IsGen ψ om θ τ (Complex.I • (cart M τ * X)) G :=
-    GlobalTheory.T.exists_weilDatum_generator_realOneParamGroup D ψ S T χS χT om hom θ hθ τ _ lY
+    _root_.GlobalTheory.DefLift.Gen.exists_generator D ψ S T χS χT om hom θ hθ τ _ lY
   have hφ : IsThetaFunO ψ S T (pureTensorO ψ θ S T (fun _ => 1) (cart M) BS (onb M) f P) :=
     pure_mem (P := IsThetaFunO ψ S T) (fun _ _ => theta_add) (fun a _ => theta_smul a)
       (fun _ _ h => aPlus_theta hψ hθ _ _ _ h) hf _

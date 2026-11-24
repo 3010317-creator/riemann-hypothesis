@@ -14,7 +14,7 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.Restricte
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCoType
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsLevMeas
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ComplexEmbeddingHermitianQuadrupleSum
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsChartsAtTwistPlacesChainStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsChartsAtTwistPlacesChain
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationCommFockPolynomialVectors
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TameLiftResidueCharacterIsTameNotUnramified
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumPowersUnramifiedEtaTilde
@@ -60,7 +60,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PureTensorLinearInFactorAndHeisenbergDerivRealStatement
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaInnerProductHermitian
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Mathlib.Tactic.Linter.HaveILetI
@@ -287,7 +286,7 @@ theorem fockPure_any {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {
       (pureTensorO ψ θ S T sS sT BS BT f (∏ τ, P τ)) := by
   classical
   have hl : GlobalTheory.FockPureTensor.IsMultiLin (IsPure ψ θ S T sS sT ΛS ΛT μ 𝓕 f₀) :=
-    (GlobalTheory.T.pureTensor_linear_in_factor_and_heisenbergDeriv_real D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hb hμ).1
+    (_root_.GlobalTheory.PureLinear.isPure_linear_and_dRho D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hb hμ).1
   have h1 : ∀ g, pureTensorO ψ θ S T sS sT BS BT g 1 = g := fun g => GlobalTheory.Ker.FockAlg.pure_one g
   have key := GlobalTheory.FockPureTensor.prod_step hl (pureTensorO ψ θ S T sS sT BS BT f)
     (pureTensorO ψ θ S T sS sT BS BT f₀)
@@ -932,7 +931,7 @@ theorem GlobalTheory.TwistLinModel.linearModel_at_twist : ∀ D : D7, ForStepQ D
     s.L (w.chi (k + 1)) w.Q w.ξ f₀ p.f m X D.R.t ht _ _ hLP hbase hX hsf.frame hsf'.frame hdisj hvec
   have hxpure := hxall x ⟨hxoff, hxloc⟩
 
-  obtain ⟨e, he⟩ := ((GlobalTheory.T.exists_charts_at_twist_places_chain D c w hw k hk.le s hs0 PP hPP).2 v φ hφ).1
+  obtain ⟨e, he⟩ := ((_root_.GlobalTheory.TwistChart.charts_at_twist D c w hw k hk.le s hs0 PP hPP).2 v φ hφ).1
 
   obtain ⟨ε, hε, hιy⟩ := hι
   obtain ⟨ε', hε', hιy'⟩ := hι'

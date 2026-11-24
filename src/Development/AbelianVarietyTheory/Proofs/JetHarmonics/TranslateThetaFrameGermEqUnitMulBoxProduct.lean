@@ -14,7 +14,7 @@ public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ProdPullZero
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.StalkMapInjectiveOfFlat
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ThetaFrameFamiliesDifferByValuationZeroUnitStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UniversalJetsPowerProductStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UniversalStatementStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UniversalStatement
 import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsBoxSec
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.PsiWeightZeroProduct
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
@@ -114,7 +114,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
   have hLB : P.U.LG.L.IsLB := (congrArg RigLB.L P.bundle).symm ▸ C.I.G.PP.isLB
   obtain rfl : τ = τ₀ := funext fun m => TorusExt.gen_ext_val hLB (hτ m) (hτ₀ m) fun y J hJ =>
     (hEL m y J hJ).trans (hEL₀ m y J hJ).symm
-  have hz₁ := GlobalTheory.T.universal_statement E H Dw l Xo c T io y C
+  have hz₁ := _root_.GlobalTheory.PowGerm.univSt_holds E H Dw l Xo c T io y C
   obtain ⟨gm₁, -, hgm₁⟩ := PairingLinear.exists_germ_linearMap hL hL2 hL4 hT T.V P.D P.A C.I.G.G P.U _ _ hz₁ τ hτ
     (hT₀ hTr) F (1 * N) hk
   choose σ₁ hσ₁ hf using fun i => hgm₁ (ζ₁ i • Φ₁ i θα₁)

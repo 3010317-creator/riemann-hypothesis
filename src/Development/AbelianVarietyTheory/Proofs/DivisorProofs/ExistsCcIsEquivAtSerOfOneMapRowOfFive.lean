@@ -20,7 +20,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ActLevMemCus
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoefMapNormEquivariantBasis
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstRelIffTwistFactorAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoordEqOfPerConj
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTwistHeckeCharactersStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTwistHeckeCharacters
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtensionOfLowSmoothLines
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenMapTranspose
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenReadsOfUnfBC
@@ -53,13 +54,15 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaVectorF
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaVectorNeZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaVectorTorusAction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnfoldingFrameDeltaChange
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationSplitSupportProjectsVacuumStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PerCEmb
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationSplitSupportProjectsVacuum
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLevelAtEachIndex
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LowestKTypeCoefficientWeightEqMinorWeightsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaLiftInfinityTypesAtRealPlace
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitCOfCXiAt
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilMaximalCompactFockSubstitutionCharacterStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilMaximalCompactFockSubstitutionCharacter
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WeightExponentsEmbeddingsDegree
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsCuspIsThClsDUnique
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsFockVacAtOfIsThetaAt
@@ -110,8 +113,10 @@ import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatti
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OscillatorModelsCompatible
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThAHeisEntireLinearInjective
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaReadingLinearInjectiveAtOrthonormalFrame
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctionsStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepLatticeStabilizerVacuumEqDetCharSmulStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctions
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepLatticeStabilizerVacuumEqDetCharSmul
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemUJsetOfKset
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCoversOfHalves
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsReframeVStdOfPosDef
@@ -334,7 +339,7 @@ theorem delta_extremal_weight_ofFive : ∀ (D : D7) (G : Type) [Group G] [Fintyp
       simp [θs, e]
   have e1 : ∀ ρ, (R.BV i ρ)⁻¹ * compAt R.θ ρ (Formalism.L2.Theta.mt (Vc D i) 1) * R.BV i ρ = 1 := fun ρ => by
     rw [show compAt R.θ ρ (Formalism.L2.Theta.mt (Vc D i) 1) = 1 from GlobalTheory.PointAtPlaceHom.infMat_one _ _, Matrix.mul_one, hBi]
-  have key := (GlobalTheory.T.weil_maximalCompact_fock_substitution_character D R.ψ R.θ _ _ _ _ _ _ M (R.BV i) (h.thP.ωP i t) hθ (D.sp.V_sig _) (D.sp.W_sig _) hB _ _ hpq hε
+  have key := (_root_.GlobalTheory.FockCompactAction.om_pureTensorO_eq_fact D R.ψ R.θ _ _ _ _ _ _ M (R.BV i) (h.thP.ωP i t) hθ (D.sp.V_sig _) (D.sp.W_sig _) hB _ _ hpq hε
     _ _ (fun ρ => (hI ρ).chiV) (fun ρ => (hI ρ).chiW) x₁ x₂ x₃ (fun ρ => (hx ρ).1) (fun ρ => (hx ρ).2.1)
     (fun ρ => (hx ρ).2.2.1) _ hth hv 1 (one_mem _) g a1 (fun ρ => hg ρ ▸ diag_mem _)).2 (RealDat.Delta i)
   simp only [hg, e1] at key
@@ -808,7 +813,7 @@ namespace GlobalTheory.AdTh
 
 theorem weil_twist_base_ofFive : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Type) (A : Formalism.L2.DIV.FamIn D.what₂.LL G Pl0 T0 D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A), GlobalTheory.Core5 R F → ∀ (i : Fin D.R.m) (t : T0) (k : GA D (Wc D i)) (x : (AE D)ˣ), IsDetRoot (Wc D i) k x → ∀ f, IsThetaFunO R.ψ (Vc D i) (Wc D i) f → R.ωP i t (1, k) f = ((R.xi t x : Circle) : ℂ) • R.ωP i A.μ0 (1, k) f := by
   intro D G _ _ Pl0 T0 A Ks _ _ _ R F hR i t k x hx f hf
-  have h := GlobalTheory.TwistFactorProof.frame_ratio R (GlobalTheory.T.weilDatum_unique_on_thetaFunctions D) (GlobalTheory.T.exists_weilDatum_twist_heckeCharacters D) hR.thP.ωP i A.μ0 t hx hf
+  have h := GlobalTheory.TwistFactorProof.frame_ratio R (_root_.GlobalTheory.WeilUniq.weilDatum_unique D) (_root_.GlobalTheory.WeilChange.exists_weilDatum_twist D) hR.thP.ωP i A.μ0 t hx hf
   rw [GlobalTheory.TwistFactorCompare.eq_one_of_chrEq_one (hR.lev.xi_base ▸ hR.lev.xi A.μ0) x, Circle.coe_one, one_smul] at h
   exact h
 
@@ -1004,7 +1009,7 @@ theorem thetaKO_eq_short_series_ofFive : ∀ (D : D7) (G : Type) [Group G] [Fint
       L₀ = Submodule.span (𝓞 D.host.E)
         {w | ∃ a : D.host.E, a ∈ D.host.AA ∧ ∃ v ∈ Bridge.hLat (Wc D i) (fin (Wc D i) k), w = a • v} →
       latR (rank_Wc i) (latG (Wc D i) k) = latR (rank_Wc i) L₀ := fun L₀ h₀ => by rw [h₀, hlat]
-  have hcl := GlobalTheory.T.weilRepresentation_split_support_projects_vacuum D _ _ _ _ _ _ _ hP _ g (rank_Wc i) X bas idx hM hS H hrt _ _ Λ.La _ hV0 hVs hks hVstd hL _ _ hx'
+  have hcl := _root_.GlobalTheory.AdTh.SplitClass.om_reads_projA D _ _ _ _ _ _ _ hP _ g (rank_Wc i) X bas idx hM hS H hrt _ _ Λ.La _ hV0 hVs hks hVstd hL _ _ hx'
     (isInvOf_move (rank_Wc i) X hinv k) _ hvac' _ hR e Ps h y he hsupp hdet hΛ
   rw [← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, mul_one, one_mul, projA_smul, smul_smul] at hcl
   obtain ⟨-, hsd, huni, hfg⟩ := LatOf.isLatOf_tens D _ _ _ _ _ g (rank_Wc i) X bas idx hψ hP.inf hP.std hP.even hM hS
@@ -1358,7 +1363,7 @@ theorem om_lift_vac_ofFive {F : Face D A} (hR : GlobalTheory.Core5 R F) (i : Fin
     fun hk => GlobalTheory.MovedLat.actO_mem (Vc D i) (Wc D i) 1 _ (R.ΛV i) (R.ΛV i) (R.ΛW i) (R.ΛW i)
       (fun z hz => by rw [map_one, Units.val_one, Matrix.one_mulVec]; exact hz)
       (fun z hz => by rw [← hl] at hz ⊢; exact GlobalTheory.DictMove.mulVec_mem_latHat (hR.lev.βW i) hk hz)
-  refine GlobalTheory.T.weilRep_lattice_stabilizer_vacuum_eq_det_char_smul D _ _ _ _ _ _ _ hP mu (hχ ▸ hmu) H _ _ hV0 sV sW _
+  refine _root_.GlobalTheory.VacStab.om_vacuum_eq_smul D _ _ _ _ _ _ _ hP mu (hχ ▸ hmu) H _ _ hV0 sV sW _
     (GlobalTheory.FrameEquiv.isCartanInv_cart_model (R.MW i (sg0 D A))) _ (hR.thP.vP i A.μ0).1 k hk.1 fun u => ⟨mv hk u, fun hu => ?_⟩
   have h := mv (GlobalTheory.ProjComm.isLift_inv hk) _ hu
   rw [actO_one_left, actO_one_left, ← Matrix.mul_assoc] at h

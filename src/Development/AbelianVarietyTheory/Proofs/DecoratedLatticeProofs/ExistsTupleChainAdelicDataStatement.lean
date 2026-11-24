@@ -15,7 +15,8 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.Parahoric
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.LevChiEqOne
 public import Formalism.LocalToGlobal.Columns.RecLevel
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ChartLevelCharacterRepsOnAdelicUnitaryPointsStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.MidChart
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ChartLevelCharacterRepsOnAdelicUnitaryPoints
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsAdelicUnitaryLiftOfChartBasePointStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceIdempotentVacuumHyperspecialDictionary
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AbsNormEqOfSplit
@@ -62,7 +63,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.EvalAtOneExtremalMul
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.FiniteDimensionalMram
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.JointSmooth
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.MidChart
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittSmallGroupEmbeddingMemPointwiseStabilizerIso
 import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsPrimesOk
@@ -71,7 +71,7 @@ import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsDe
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCmAdeleUnitCharacterReadingHeckeChar
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFiniteOrderChartsMiddleSteps
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLevelFamilyCharacterExponent
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoordsStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsIsDetRoot
 import Formalism.LocalToGlobal.Columns.RecLevelStep
@@ -311,7 +311,7 @@ theorem stepCh_zero {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (hP :
   have hPr := l.pr
   have hX := GlobalTheory.Mem.FieldsLaws.fields_ok B
   have hi : 0 ≤ B.R.m := Nat.zero_le _
-  obtain ⟨hg, -, hl⟩ := (GlobalTheory.T.trueColumn_spaces_standard_in_frameCoords I hI hP l Z).2.2.2 0 hi
+  obtain ⟨hg, -, hl⟩ := (_root_.GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hI hP l Z).2.2.2 0 hi
   have hf : B.fields.f = B.R.f := (hPr.vT_card u).symm.trans (l.lev u I.mu0).card_ST
   have hL := hI.idx_ok a
   let chOf : (I.stp u a 0).Cl → Unit := fun _ => ()
@@ -448,7 +448,7 @@ theorem levData {B : Base} {X : PreX B.toPre} (I : TC B X) (l : I.Laws) (Z : TC.
       (∀ g, g ∈ U ↔ g ∈ GfC _ ∧ ∃ κ : K.lev.U, κ.1.1 = finM _ (rankN (I.rec7 l Z) i hi) g) ∧
       (∀ (g : U) (κ : K.lev.U), κ.1.1 = finM _ (rankN (I.rec7 l Z) i hi) g.1 → chi g = K.lev.chi κ) ∧
       (∀ c, h c ∈ GfC _ ∧ finM _ (rankN (I.rec7 l Z) i hi) (h c) = (K.y c).1.1) :=
-  GlobalTheory.T.chartLevelCharacterReps_on_adelicUnitaryPoints I l Z i hi K
+  _root_.GlobalTheory.ChartLevRead.levData I l Z i hi K
 
 theorem pointOf {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (u : B.Word) (a : I.ι) (i : ℕ)
     (hi : i ≤ B.R.m) {C : Type} (chOf : (I.stp u a i).Cl → C) (Lb : C → Submodule (𝓞 B.host.E) (Fin (B.R.N i) → B.host.E))

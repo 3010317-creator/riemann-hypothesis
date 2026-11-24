@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockOfA
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsRatScalarMulIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAlgebraicOfRoot
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteAdelicPointLatticeIsLattice
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunctionStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TranslateMemCoefLatFn
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunction
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemLatAtIffHat
 public import Development.AutomorphicArithmetic.CyclotomicBounds.DeRhamLattices.IoPTprodInjectiveRangeEqValSpace
 import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
@@ -115,7 +116,7 @@ theorem _root_.UpperTheory.KN.scaled_fock_form_coefficients_integral :
       have h2 := Formalism.BasicNotions.sig_sum _ hB.sigOK (Formalism.BasicNotions.TH.tauE D τ)
       rw [← h1] at h2
       exact h2.le
-    have hinj := GlobalTheory.T.harmonic_polynomial_eq_zero_of_function _ _ _ _ (baseOf Z c w j).F.BS hB.wt hm
+    have hinj := _root_.GlobalTheory.ExportSeries.HarmInj.harm_inj _ _ _ _ (baseOf Z c w j).F.BS hB.wt hm
     exact (eq_inv_smul_iff₀ hκ).2
       (IsScaleAt.ioP_eq (Rl := X.R) (B := baseOf Z c w j) (c0 := c0L j) hF hinj hPh (hval _) hFe).symm
   · rintro ⟨F, hF0, rfl⟩

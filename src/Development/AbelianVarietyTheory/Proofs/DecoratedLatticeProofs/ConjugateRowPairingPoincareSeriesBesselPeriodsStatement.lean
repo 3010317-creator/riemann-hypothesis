@@ -19,7 +19,7 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.Unita
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.RightInvOfLattice
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WeilQuotientHaar.ConjugationInvariantMeasure
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.HidaSetting
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselGroupQuotientFundamentalDomainCocompactStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.DstarIdxPf
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.InnerProductSpace.Basic
@@ -70,7 +70,6 @@ import Mathlib.Dynamics.Ergodic.Action.Regular
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Topology.Algebra.Group.Units
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.FiniteDimensionalMram
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOneIntegralAdd
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittSmallGroupEmbeddingMemPointwiseStabilizerIso
 import Formalism.LocalRingCardinality.DataTheta
@@ -1045,7 +1044,7 @@ theorem fold_quot : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetting D)
   haveI : LocallyCompactSpace (GA D (D.sp.Y 0)) := (iotaX X h).toHomeomorph.isClosedEmbedding.locallyCompactSpace
   have hcl : IsClosed (besGrp B.d B.o : Set (GA D (D.sp.Y 0))) := GlobalTheory.BesClosed.besGrp_isClosed _ _ _ _ _ _ B.d B.o
   haveI : LocallyCompactSpace (besGrp B.d B.o) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : B.lev.μR.IsHaarMeasure := (GlobalTheory.T.besselGroup_quotient_fundamentalDomain_cocompact D D.R.rS B.lev).1
+  haveI : B.lev.μR.IsHaarMeasure := (_root_.GlobalTheory.BesselQuot.besGrp_quotient D D.R.rS B.lev).1
   haveI : SigmaFinite B.lev.μR := inferInstance
   have hK2m : MeasurableSet X.K2 := (Formalism.L2.SG.Pf.DstarIdxPf.isOpen_levelSubgroup' X).measurableSet
   have hι : Continuous (fun s : besGrp B.d B.o => iotaX X h s.1) :=
@@ -1265,7 +1264,7 @@ end GlobalTheory.Core.MiFold
 open GlobalTheory.Core.MiFold in
 theorem GlobalTheory.Core.Mi.unfoldedPer : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h : X.B.I = Formalism.L2.SG.InstExistsPf.instOf D) (u : D.what₂.Word) (ψ : AddChar (AF D.host.F) ℂ) (A : HSp D) (B : SBes X h u ψ A) (hK : X.LevelSubgroupCharacter), IsStdChar D ψ (-1) → ∀ Fs : Set X.B.I.GA, IsFundamentalDomain (Srat X u) Fs (X.B.I.muA X.B.μf) → ∃ c : ℂ, ∀ (T : Cu X u hK), IntegrableOn (Ph X u hK T) Fs (X.B.I.muA X.B.μf) ∧ ∀ f : X.B.I.GA → ℂ, RowFun X f → ∫ x in Fs, f x * Ph X u hK T x ∂(X.B.I.muA X.B.μf) = c * ∫ y, B.lev.per ψ (B.colForm T.1 (X.Wu u y)) (fun g => f (iotaX X h g * (y, X.xu u))) ∂(X.nuQ u) := by
   intro D X h u ψ A B hK hψ Fs hFs
-  obtain ⟨𝓢, h𝓢, h𝓢fin, hI⟩ := (GlobalTheory.T.besselGroup_quotient_fundamentalDomain_cocompact D D.R.rS B.lev).2.2.2
+  obtain ⟨𝓢, h𝓢, h𝓢fin, hI⟩ := (_root_.GlobalTheory.BesselQuot.besGrp_quotient D D.R.rS B.lev).2.2.2
   obtain ⟨c, hc, hQ⟩ := GlobalTheory.T.fold_integral_besselQuotient_supportedFunctions D X h u ψ A B 𝓢 h𝓢 Fs hFs
   refine ⟨(c : ℂ), fun T => ?_⟩
   have hPh := Formalism.L2.SG.PoincareInHH.Cut.phProps_closed X u hK (Formalism.L2.SG.Pf.ksetSplit_holds X u)

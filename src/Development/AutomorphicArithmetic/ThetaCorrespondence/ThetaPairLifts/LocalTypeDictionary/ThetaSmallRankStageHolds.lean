@@ -77,7 +77,8 @@ import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GapAtLeast
 import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsWeilDatumGeneratorRealOneParamGroupStatement
+import Formalism.LocalToGlobal.BesselHermitianTheta.TiedSmooth
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsWeilDatumGeneratorRealOneParamGroup
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 import Mathlib.RingTheory.TotallySplit
@@ -245,7 +246,7 @@ theorem definite_small_irreducible_lie_derivative : _root_.GlobalTheory.FunPr.Th
     | smul c x _ hx => exact GlobalTheory.OrientedHeis.theta_smul c hx
   have hth : IsThetaFunO ψ W₁ X Ψ := hthA Ψ hΨ
   have hpos : ∀ τ, (gramAt D W₁ τ).PosDef := fun τ => GlobalTheory.IndefiniteRowSideFullHecke.MassFormulaPositivity.posDef_of_hasSignature (hs₁ τ)
-  obtain ⟨Gn, hGn⟩ := GlobalTheory.T.exists_weilDatum_generator_realOneParamGroup D ψ W₁ X α (α / β) ωB hw θ hθ τ Y hY
+  obtain ⟨Gn, hGn⟩ := _root_.GlobalTheory.DefLift.Gen.exists_generator D ψ W₁ X α (α / β) ωB hw θ hθ τ Y hY
   have hGΨ : ∀ (g : GA D W₁) (k : GA D X),
       HasDerivAt (fun t : ℝ => thetaKO ωB g (k * oneP θ X τ Y t) Ψ) (thetaKO ωB g k Φ') 0 := by
     have hG : Gn Ψ = Φ' := by

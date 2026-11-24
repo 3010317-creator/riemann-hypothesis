@@ -46,8 +46,9 @@ public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsLat
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsRingHomLift
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsHolToCompClm
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.PointsFramesEq
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditionalStatement
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVarietyStatement
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVariety
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RelationsAreFunctions
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -1575,7 +1576,7 @@ section -- clump:auto
 namespace GlobalTheory
 
 theorem arcClause_closed : ReciprocityTheory.ChartRestriction.G.Geo.Tor.ToroidalArchimedeanCondition :=
-  _root_.GlobalTheory.HolomorphicArc.main GlobalTheory.T.abelianScheme_laws_unconditional.1 GlobalTheory.T.abelianScheme_laws_unconditional.2 GlobalTheory.T.thetaUniformisation_complexAbelianVariety
+  _root_.GlobalTheory.HolomorphicArc.main _root_.GlobalTheory.abelianSchemeLaws_all.1 _root_.GlobalTheory.abelianSchemeLaws_all.2 _root_.GlobalTheory.thetaUnifAV_all
 
 end GlobalTheory
 end -- clump:auto

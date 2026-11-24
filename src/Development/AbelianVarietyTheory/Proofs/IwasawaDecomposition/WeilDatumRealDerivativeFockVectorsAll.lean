@@ -16,7 +16,7 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Exist
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralEqOfNorms
 public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 public import Formalism.LocalToGlobal.IndefiniteReal.WeilFull
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieActionFockOperatorsScalarsTraceStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieActionFockOperatorsScalarsTrace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -1229,7 +1229,7 @@ theorem realAllO : ∀ D : D7, Formalism.IndefR.WeilFull.RealAllO D := by
   obtain ⟨f₀, hv0, hne⟩ := GlobalTheory.T.exists_nonzero_fockVacuum_of_nonzero_thetaFunction D S T A B θ ψ hp.std hp.inf f hf f0
   obtain ⟨κS, κT, hκ⟩ := GlobalTheory.T.realLieAlgebra_acts_by_fockOperators_upToScalars D S T A B θ ψ χS χT om τ hp.inf hd
   have k0 := hκ f₀ hv0.1 (hv0.2 τ)
-  have all := GlobalTheory.T.lieAction_fockOperators_scalars_trace D S T A B θ ψ χS χT om f₀ τ αS αT hp.inf hd hαS hαT hv0
+  have all := _root_.GlobalTheory.LieScalar.lieFockAll D S T A B θ ψ χS χT om f₀ τ αS αT hp.inf hd hαS hαT hv0
   obtain ⟨z, hz⟩ := Function.ne_iff.1 hne
   have hz' : f₀ z ≠ 0 := hz
   have one : ∀ c : ℂ, ptF ψ θ A B f₀ (c • (1 : MvPolynomial _ ℂ)) z = c * f₀ z := fun c => by

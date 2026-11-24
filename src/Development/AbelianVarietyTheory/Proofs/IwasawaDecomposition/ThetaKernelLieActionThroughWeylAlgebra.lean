@@ -6,8 +6,10 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsQua
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EqZeroOfAeFundamentalDomain
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOneP
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCcrOperatorsThetaFunctionsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasDerivAtWeilRepRealOneParamAdelicPointStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.AdelicDataRowMeasureScaleTrivialTuple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralEqOfNorms
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCcrOperatorsThetaFunctions
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasDerivAtWeilRepRealOneParamAdelicPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -148,13 +150,13 @@ theorem neg_mem_lieAt {V : HSp D} {τ : D.what₂.Tau} {X : Matrix (Fin V.rank) 
 theorem weyl_action : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S T : HSp D) (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)), GlobalTheory.Ker.IsWeak ψ S T om → OmCont ψ S T om → ∀ θ : InfF D, IsInfFam θ → ∃ x d : D.what₂.Tau → Fin T.rank × Fin S.rank → Module.End ℂ (GlobalTheory.RealWeil.thetaSub ψ S T), ∀ τ, IsCCR (x τ) (d τ) ∧ (∀ X ∈ lieAt T τ, ∃ lam : ℂ, ∀ f g h, HasDerivAt (fun t : ℝ => thKer ψ S T om f g (h * oneP θ T τ X t)) (thKer ψ S T om ((∑ i, ∑ j, X i j • ∑ a, x τ (i, a) * d τ (j, a)) f + lam • f) g h) 0) ∧ ∀ Y ∈ lieAt S τ, ∃ lam : ℂ, ∀ f g h, HasDerivAt (fun t : ℝ => thKer ψ S T om f (g * oneP θ S τ Y t) h) (thKer ψ S T om ((∑ a, ∑ b, Y a b • -∑ i, x τ (i, b) * d τ (i, a)) f + lam • f) g h) 0 := by
   intro D ψ hψ S T om hw hc θ hθ
   obtain ⟨σ, h⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
-  obtain ⟨x, d, ⟨c1, c2, c3⟩, hn⟩ := GlobalTheory.T.exists_ccr_operators_thetaFunctions D θ σ h ψ hψ S T
+  obtain ⟨x, d, ⟨c1, c2, c3⟩, hn⟩ := _root_.GlobalTheory.Mem.Lift.exists_isCCR_theta D θ σ h ψ hψ S T
   have key : ∀ γ : ℝ → GA D S × GA D T, Continuous γ → (∀ s t, γ (s + t) = γ s * γ t) →
       (∀ t, (γ t).1 ∈ GinfC S ∧ (γ t).2 ∈ GinfC T) → ∀ X : Matrix (Ix S T) (Ix S T) ℂ,
       (∀ k l, HasDerivAt (fun t => mM θ S T (γ t) k l) (X k l) 0) → ∃ lam : ℂ, ∀ (f : thetaSub ψ S T) p,
       HasDerivAt (fun t => om (p * γ t) f.1 0) (om p ((∑ k, ∑ l, X k l • (x k * d l)) f + lam • f).1 0) 0 := by
     intro γ h1 h2 h3 X h4
-    obtain ⟨lam, hl⟩ := GlobalTheory.T.hasDerivAt_weilRep_realOneParam_adelicPoint D θ σ h ψ hψ S T om hw hc γ h1 h2 h3 X h4
+    obtain ⟨lam, hl⟩ := _root_.GlobalTheory.Mem.LiftGen.hasDerivAt_om D θ σ h ψ hψ S T om hw hc γ h1 h2 h3 X h4
     refine ⟨lam, fun f p => ?_⟩
     have e := coe_toB hψ f.1 f.2
     have h5 := hl (toB hψ f.1 f.2) (e.symm ▸ f.2) p 0

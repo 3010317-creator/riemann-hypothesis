@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EigenvectorAdjointIntertwinerNormalOperatorsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperatorsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalOperatorsFormsOnRankSpaceNormalStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperators
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalOperatorsFormsOnRankSpaceNormal
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -65,9 +65,9 @@ theorem matched_operators_theta_intertwine : ∀ {D : D7} {G : Type} [Group G] [
     exact hWinj (h1.trans h2.symm)
   refine ⟨key, ?_⟩
   intro c w hw
-  have XW := GlobalTheory.T.sphericalOperators_forms_on_rank_space_normal R F hC hS hX SF hSF i
+  have XW := _root_.GlobalTheory.SphOpsModel.sphericalOperators_forms_on_rank_space_normal_alt R F hC hS hX SF hSF i
   obtain ⟨hW, hWo, hWn, -, -, -, hWe, -⟩ := XW
-  have XV := (GlobalTheory.T.realization_family_normal_operators R F hC.lev hC.fam hC.models).2 i t
+  have XV := (_root_.GlobalTheory.DefiniteOps.definite_ops R F hC.lev hC.fam hC.models).2 i t
   obtain ⟨hV', hV'o, hV'n⟩ := XV
   have hVinj : Function.Injective (R.HV i t).e := (hC.models.HV i t).1
   have heq : ∀ c, hV P c = hV' P c := fun c => LinearMap.ext fun x => hVinj (by rw [hhV P hP, hV'o P hP])

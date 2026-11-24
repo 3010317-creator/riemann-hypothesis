@@ -14,7 +14,9 @@ public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsAbeli
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsExpansionNonnegStatement
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsFibIntThStatement
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsHeisenbergLiftsSpanLatticeClassesStatement
-public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsValuationClosureStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.OneLtAbsNormReal
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.ValuationMultiplicationInvariance
+public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsValuationClosure
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.FibPointsMulEquivStatement
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.LeValuationOddLevelThetaConstantIntegralExpansioStatement
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.NormalisedThetaConstantOfUniversalOriginValueStatement
@@ -118,7 +120,7 @@ theorem card_mul_phiC_le_valuation : ∀ (E : Type) [Field E] [NumberField E] [I
   have hA : AdmBase V (maximalIdeal V) := ⟨inferInstance, inferInstance, inferInstance, hcpl⟩
   have htors := GlobalTheory.UT.torsionIso_of_pelUnif hLL h2 h3 h4 h5 E H V _ hA G P
   haveI hfin : Finite (LevGrp Dw (R ^ 4)) := (GlobalTheory.EtaCard.card_levGrp_and_span E H Dw R hR1).1
-  obtain ⟨v, hv, hvv⟩ := GlobalTheory.T.exists_valuation_algebraicClosure_extending_vV V ϖ hϖ
+  obtain ⟨v, hv, hvv⟩ := _root_.GlobalTheory.ValClosure.exists_valuation_closure V ϖ hϖ
   let F := AlgebraicClosure (FractionRing V)
   letI : Algebra c.F F := ((algebraMap (FractionRing V) F).comp (algebraMap c.F (FractionRing V))).toAlgebra
   let ψ : FractionRing V →ₐ[c.F] F := { algebraMap (FractionRing V) F with commutes' := fun _ => rfl }

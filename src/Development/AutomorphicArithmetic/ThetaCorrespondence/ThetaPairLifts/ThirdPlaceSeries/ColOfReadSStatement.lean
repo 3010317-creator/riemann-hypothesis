@@ -12,14 +12,13 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Hermi
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSmoothAutomorphicRightTranslateFinite
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.EventuallyCongOne
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ChartLevelsRepsRepresentUnitaryDoubleCosetsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ScalarFormsOnChartsOfTrueColumnTupleStatement
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.StabOrd
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ScalarFormsOnChartsOfTrueColumnTuple
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsTransportAdelicCorrection
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FiniteAdeleIdempotentOfFMulSelf
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ScalarFormsOnChartsOfTrueColumnTuple
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RamifiedOperatorBijectiveFiniteTranslationCombin
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RamifiedOperatorsBijectiveAtPlaces
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPointsLieOverDistinctPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPointsLieOverDistinctPlaces
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistRamifiedIffScalarFormsRamified
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PinColL
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlacesToAdeles
@@ -640,7 +639,7 @@ end Local
 
 theorem twS : TwS' := by
   intro B X I hOk hPins l Z u a Ch A hA θ hθ k _ _ _ _ ι p β Q L hStd J q χ hχ
-  have hinj : Function.Injective fun i => (p i).v := GlobalTheory.T.splitPoints_lie_over_distinct_places I hOk hPins l Z u p β Q L hStd
+  have hinj : Function.Injective fun i => (p i).v := _root_.GlobalTheory.AdForm.StdT.places_injective I hOk hPins l Z u p β Q L hStd
   have key : ∀ j (hj : j ≤ B.R.m) φ, RamT (I := I) (l := l) (u := u) (a := a) j φ → ∀ η : ι → 𝓀[k]ˣ,
       ∃ φ', RamT (I := I) (l := l) (u := u) (a := a) j φ' ∧ ∀ b y, A.rd θ j hj b φ' y =
         J.foldr (fun i f => sOp (β j i) (Q j i) q (resChar (χ i) (hχ i) q) (η i) f) (A.rd θ j hj b φ y) := by

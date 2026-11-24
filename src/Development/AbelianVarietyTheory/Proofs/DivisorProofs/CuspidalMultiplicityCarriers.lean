@@ -41,7 +41,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalOperatorsFormsOnRankSpaceNormalStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalOperatorsFormsOnRankSpaceNormal
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigensystemGoodFormsThetaTargetOccursOnRows, Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigensystemGoodFormsThetaTargetOccursOnRowsStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalMultiplicityCarriers
@@ -133,7 +133,7 @@ theorem iSup_wp3_eq_range_eH : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl
   obtain ⟨hCore, hSF, hE, hWc⟩ := GlobalTheory.CoreOfWeak.core_of_weak R F hW hEx
   have hOk2 : A3.A.fam.Ok s := hOk.ok2
   have hirr : ∀ χ ∈ A3.A.X, IsAbsIrrChar χ := hOk2.irr
-  obtain ⟨h, -, -, -, hsum, -⟩ := GlobalTheory.T.sphericalOperators_forms_on_rank_space_normal R.toRealDat F.lv2 hCore hS hirr R.SF hSF i
+  obtain ⟨h, -, -, -, hsum, -⟩ := _root_.GlobalTheory.SphOpsModel.sphericalOperators_forms_on_rank_space_normal_alt R.toRealDat F.lv2 hCore hS hirr R.SF hSF i
   rw [← hsum]
   apply le_antisymm
   · refine iSup_le fun p => iSup₂_le fun c _ => ?_

@@ -9,7 +9,8 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FinTy
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HcFiniteAndSchurMult
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowFiniteTypesIsotypicPartsSpanOrthogonal
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SchurPairingInvariantUnderStandardGroupStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryCongruenceConjContainsCongruenceStatement
+import Formalism.LocalToGlobal.IndefiniteReal.PrincipalLevelFrame
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryCongruenceConjContainsCongruence
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FinTypInvariantFormOfIsotIn
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -92,7 +93,7 @@ theorem exists_form_rowRepR (hH : GlobalTheory.Published.HarishChandraFinite) (h
   have hM := hP.char.base.models
   have hθ : IsInfFam R.θ := hM.inf
   have hSig : (Yc D 0).SigOK := D.sp.Y_sig 0
-  have hcc := GlobalTheory.T.unitary_congruence_conj_contains_congruence D.host.E D.R.r
+  have hcc := _root_.GlobalTheory.CongConjugate.congConj D.host.E D.R.r
   have hfd : ∀ j, j < D.R.m → (R.νY A3.A.μ0 j).IsHaarMeasure ∧
       IsFundamentalDomain (GQ (Yc D j)) (R.fdY A3.A.μ0 j) (R.νY A3.A.μ0 j) := by
     intro j hj

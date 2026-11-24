@@ -23,9 +23,9 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Exist
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MeasureFundamentalDomainLtTop
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsClosedNFlag
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsOpenKer
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterInfinityExponentGroupLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsCuspFunctionClosedUnderOperationsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmoothAutomorphicFormRightTranslateFiniteAdelicStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterInfinityExponentGroupLaws
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsCuspFunctionClosedUnderOperations
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmoothAutomorphicFormRightTranslateFiniteAdelic
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsSmoothAutomorphicFunctionStar
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsSplittingCharacterSelf
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniqueInfFam
@@ -955,10 +955,10 @@ def trE (hθ : IsInfFam θ) (V : HSp D) (k : GA D V) (hk : ∀ φ, IsAutFunSm θ
 
 theorem trE_cusp (hθ : IsInfFam θ) (V : HSp D) (k hk) (F : AFs θ V) (hF : F ∈ cuspIn θ V) : trE hθ V k hk F ∈ cuspIn θ V := by
   rw [mem_cuspIn hθ] at hF ⊢
-  exact (GlobalTheory.T.isCuspFunction_closed_under_operations D V _ _ (aut hθ F).toIsAutFun (aut hθ F).toIsAutFun hF hF).2.2.1 k
+  exact (_root_.GlobalTheory.Mem.Th.isCuspFun_closed D V _ _ (aut hθ F).toIsAutFun (aut hθ F).toIsAutFun hF hF).2.2.1 k
 
 def actFin (hθ : IsInfFam θ) (V : HSp D) : GfC V →* Module.End ℂ (AFs θ V) where
-  toFun k := trE hθ V k fun φ h => GlobalTheory.T.smoothAutomorphicForm_rightTranslate_finiteAdelic D θ hθ V φ h k k.2
+  toFun k := trE hθ V k fun φ h => _root_.GlobalTheory.Mem.FinTranslate.isAutFunSm_rTr_fin D θ hθ V φ h k k.2
   map_one' := LinearMap.ext fun φ => Subtype.ext (funext fun g => congrArg φ.1 (mul_one g))
   map_mul' a b := LinearMap.ext fun φ => Subtype.ext (funext fun g => congrArg φ.1 (mul_assoc g a b).symm)
 
@@ -974,16 +974,16 @@ theorem actReal_apply (hθ : IsInfFam θ) (V : HSp D) (τ) {g} (h : g ∈ Formal
 
 alias mul_mem_UH := _root_.GlobalTheory.PointAtPlaceHom.mul_mem_UH
 
-def chrGrp (D : D7) : Subgroup (IdC D) := (GlobalTheory.T.heckeCharacter_infinityExponent_group_laws D).1.choose
+def chrGrp (D : D7) : Subgroup (IdC D) := (_root_.GlobalTheory.Mem.HeckeExp.hecke_exp_laws D).1.choose
 
-theorem mem_chrGrp {χ : IdC D} : χ ∈ chrGrp D ↔ IsHC D χ := (GlobalTheory.T.heckeCharacter_infinityExponent_group_laws D).1.choose_spec χ
+theorem mem_chrGrp {χ : IdC D} : χ ∈ chrGrp D ↔ IsHC D χ := (_root_.GlobalTheory.Mem.HeckeExp.hecke_exp_laws D).1.choose_spec χ
 
 def expo (χ : chrGrp D) (τ : D.what₂.Tau) : ℚ := ((mem_chrGrp.1 χ.2).2 τ).choose
 
 theorem expo_spec (χ : chrGrp D) (τ : D.what₂.Tau) : HasInfExp D χ.1 τ (expo χ τ) := ((mem_chrGrp.1 χ.2).2 τ).choose_spec
 
 theorem expo_eq {χ : chrGrp D} {τ : D.what₂.Tau} {a : ℚ} (h : HasInfExp D χ.1 τ a) : expo χ τ = a :=
-  (GlobalTheory.T.heckeCharacter_infinityExponent_group_laws D).2.1 _ _ _ _ (expo_spec χ τ) h
+  (_root_.GlobalTheory.Mem.HeckeExp.hecke_exp_laws D).2.1 _ _ _ _ (expo_spec χ τ) h
 
 def ksph (V : HSp D) (S : Finset (HeightOneSpectrum (𝓞 D.host.F))) : Subgroup (GfC V) :=
   (GlobalTheory.T.exists_lattice_stabiliser_subgroup_outside_places D V S).choose.subgroupOf (GfC V)
@@ -1282,7 +1282,7 @@ abbrev recXE : ThetaX D where
     rw [actReal, dite_eq_left hg]; exact trE_cusp hθ V _ _ F hF
   Gf V := GfC V
   actF := actFin hθ
-  actF_cusp V g F hF := trE_cusp hθ V g (fun φ h => GlobalTheory.T.smoothAutomorphicForm_rightTranslate_finiteAdelic D θ hθ V φ h g g.2) F hF
+  actF_cusp V g F hF := trE_cusp hθ V g (fun φ h => _root_.GlobalTheory.Mem.FinTranslate.isAutFunSm_rTr_fin D θ hθ V φ h g g.2) F hF
   actF_actR V g τ h := by
     unfold actReal
     split_ifs with hh
@@ -1295,7 +1295,7 @@ abbrev recXE : ThetaX D where
   typ V P := (TypS θ V P).comap (AFs θ V).subtype
   Chr := chrGrp D
   infTy := expo
-  infTy_mul χ χ' τ := expo_eq ((GlobalTheory.T.heckeCharacter_infinityExponent_group_laws D).2.2 _ _ _ _ _ (expo_spec χ τ) (expo_spec χ' τ))
+  infTy_mul χ χ' τ := expo_eq ((_root_.GlobalTheory.Mem.HeckeExp.hecke_exp_laws D).2.2 _ _ _ _ _ (expo_spec χ τ) (expo_spec χ' τ))
   chrOf μ j := ⟨Rc.chr μ j, mem_chrGrp.2 (Rc.chr_hc μ j)⟩
   chrOf_inf μ j τ := expo_eq (Rc.chr_inf μ j τ)
   etaT := ⟨Rc.eta, mem_chrGrp.2 ⟨Rc.eta_hc, fun τ => ⟨_, Rc.eta_inf τ⟩⟩⟩
@@ -1325,7 +1325,7 @@ abbrev recXE : ThetaX D where
   conjAF_conjAF V F := Subtype.ext (funext fun g => star_star _)
   conjAF_cusp V F hF := by
     rw [mem_cuspIn hθ] at hF ⊢
-    exact (GlobalTheory.T.isCuspFunction_closed_under_operations D V _ _ (aut hθ F).toIsAutFun (aut hθ F).toIsAutFun hF hF).2.2.2
+    exact (_root_.GlobalTheory.Mem.Th.isCuspFun_closed D V _ _ (aut hθ F).toIsAutFun (aut hθ F).toIsAutFun hF hF).2.2.2
   Pos A B ι := PosT A B ι
   FJd _ _ _ := ℂ
   Bper A B ι p _ φ F := (Rc.petC A : ℂ) * perT hB hθ hψ Rc A B ι p φ (cuspEq θ B F)

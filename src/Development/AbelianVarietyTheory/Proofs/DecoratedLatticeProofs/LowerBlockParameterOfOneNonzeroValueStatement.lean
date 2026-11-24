@@ -1,8 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsLevMeas
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FinitePartMemFrameStabilizerIffLocalStabilizerStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LatticeReductionEqOneOfLocalComponentOneStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.HermitianSpaceBaseLatticeEqFrameLattice
+public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FinitePartMemFrameStabilizerIffLocalStabilizer
+public import Development.AbelianVarietyTheory.Definitions.Foundations.OfInfProjInfMulOfFinProjFin
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LatticeReductionEqOneOfLocalComponentOne
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceChartParahoricLevelStabiliserHeightStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageFiniteLevelEqProductLocalLevels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffHeckePolyOfComplex
@@ -188,14 +191,14 @@ theorem hecke_level : ∀ D : D7, ForStageQ D fun c w j s => ∀ PP ∈ w.Q, ∀
     have hfr : Formalism.L2.DIV.IsFrame s.β s.Λ := hfl.frame
     have hP : s.L.P.H = ⊥ := by rw [hL]; rfl
     obtain ⟨-, hS, hl⟩ := (LevLoc.mem_lev_iff s.V.gram s.β s.L hP _).1 hκ.2
-    have hkS := LevLoc.finE_gAt_mem_St hfr κ v ((GlobalTheory.T.finitePart_mem_frameStabilizer_iff_local_stabilizer D s.V s.β s.Λ hfr κ).1 hS v)
+    have hkS := LevLoc.finE_gAt_mem_St hfr κ v ((_root_.GlobalTheory.ChainOnto.LStab.finE_mem_St_iff_stabLoc D s.V s.β s.Λ hfr κ).1 hS v)
     refine ⟨GlobalTheory.ChainOnto.LevelFacts.emb_mem_GfC s.V v _, ?_⟩
     refine (LevLoc.mem_lev_iff s.V.gram s.β s.L hP _).2 ⟨GlobalTheory.LevSplit.finE_mem_UA s.V _, hkS, fun PP' => ?_⟩
     by_cases e' : (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP') = v
     · subst e'
       rw [← LevLoc.red_local hfr κ hS PP']
       exact hl PP'
-    · rw [GlobalTheory.T.latticeReduction_eq_one_of_local_component_one D s.V s.β _ PP' hkS (GlobalTheory.AdelicU.proj_emb_ne _ _ e' _)]
+    · rw [_root_.GlobalTheory.ChainOnto.RedOne.redFn_eq_one D s.V s.β _ PP' hkS (GlobalTheory.AdelicU.proj_emb_ne _ _ e' _)]
       exact LevLoc.locOK_one _ _
   set y₀ := eq.symm (GlobalTheory.AdelicU.proj D.sp.cm.sig s.V.gram v κ) with hy₀def
   have hy0 : ι y₀ = k0 := by

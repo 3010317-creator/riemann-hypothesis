@@ -10,7 +10,7 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GenPtSSub
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsINeZeroKind
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasArchimedeanCharExponentsConjOfHasInfExp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransposeMapConj
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SmallModelThetaTransformInjectiveProductsStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SmallModelThetaTransformInjectiveProducts
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsNotRelZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareStanding
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzEqPureTensorOfFiniteSlices
@@ -66,7 +66,6 @@ import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerFixedFu
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLocalImageLatticeSupportedAtPlace
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorLatticeLocalDarbouxCoordsBounded
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesSchwartz
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SmallModelThetaTransformInjectiveProducts
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVacuumThetaFunctionDerivativeComplexStructurStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasDerivAtThetaTransformHeisenbergRealLineStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.PureVacInj, Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitVacuaProductEqGaussianDatumSmallModel, Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitVacuaProductEqGaussianDatumSmallModelStatement
@@ -238,7 +237,7 @@ theorem isGauss : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : Gri
     ∀ (c : ℂ) (f₀ : SInf D.host.F (GlobalTheory.SmallDat.IxS G i j)),
       GlobalTheory.SmallDat.thetaS Γ W.ψ (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f₀ Γ.M'.vac) = c • GlobalTheory.SmallDat.boxS t e f₁ f₂ → Γ.M'.IsGauss Bs.ψ Bs.emb f₀ := by
   intro D T L sc G W M t i j e Bs Γ X om om' h hT f₁ f₂ h₁ h₂ c f₀ hb
-  obtain ⟨-, hinj, -⟩ := GlobalTheory.T.smallModel_thetaTransform_injective_products W M t i j e Bs Γ X om om' h hT
+  obtain ⟨-, hinj, -⟩ := _root_.GlobalTheory.SmallDat.ThBox.thetaS_box W M t i j e Bs Γ X om om' h hT
   have hG : Γ.M'.IsGood W.ψ := h.ψ ▸ hT.geo.hM'
   have hm := fun f => (isFinPart_vac hG ∅).fam.mem hG f
   rw [h.ψ]

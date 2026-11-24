@@ -8,8 +8,8 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteSeriesSpectralSide
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasTypeVec
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FinitePartIrreducibleAdmissible
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdmissibleRepHasTraceFiniteAdelicPureTensorFunctStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TestDataHaarFactorizationStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdmissibleRepHasTraceFiniteAdelicPureTensorFunct
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TestDataHaarFactorization
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.IsClosedEmbeddingOfLocallyCompact
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.CuspidalNoRadicalFixed
@@ -17,7 +17,7 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CuspMultiplicityCompletionEqDiscreteSeriesModelStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIrreducibleUnitaryCompletionFiniteTimesDSStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryEquivIffFinitePartEquivDiscreteSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteSeriesMultiplicityStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteSeriesMultiplicity
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSumEqSumOfMatchingFamily
 import Mathlib.Algebra.Order.Floor.Extended
@@ -126,7 +126,7 @@ theorem irrUnitary_trace_ne_zero_copyFinDS : GlobalTheory.Published.DiscreteSeri
   haveI : ν.IsHaarMeasure := hν.1
   have hfam : IsFinFamily D.sp.cm.sig V.gram (frameLat V) ff := hTD.2.2.2.2.2.2.isFinFamily
   obtain ⟨⟨c', hc'⟩, -⟩ := _root_.GlobalTheory.FinTrace.hasTrace_finFn D V ν ff hfam _ (finPartDSSm M hU) hadm
-  have hπc' := GlobalTheory.T.test_data_haar_factorization D V lam S M T U μa μf μ fa ff hTD ν hν H π hπ _ (finPartDSSm M hU) hirr hadm hcopy c' hc'
+  have hπc' := _root_.GlobalTheory.AutMult.hasTrace_repOp_of_isCopyFinDS D V lam S M T U μa μf μ fa ff hTD ν hν H π hπ _ (finPartDSSm M hU) hirr hadm hcopy c' hc'
   have hcc : c' = c := hπc'.2.symm.trans hc.2
   subst hcc
   exact ⟨_, _, _, finPartDSSm M hU, hirr, hadm, hcopy, hc'⟩
@@ -245,7 +245,7 @@ theorem not_isIntegralOp_zero {G W : Type} [Group G] [MeasurableSpace G] [AddCom
 theorem specTrace : GlobalTheory.Published.DiscreteSeriesClassification → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.DixmierMalliavinFactorisation → GlobalTheory.Published.FlathFactorisation → GlobalTheory.Published.HarishChandraCharacters → (∀ (D : D7) (V : HSp D) (μ : Measure (GA D V)) [μ.IsHaarMeasure] [μ.IsMulRightInvariant], GlobalTheory.IndefiniteRowSideFullHecke.CuspidalNoRadicalFixed.CuspidalOperators V μ) → GlobalTheory.IndefiniteRowSideFullHecke.ConstantTermVanishing.ParabolicAndConstTerm → GlobalTheory.IndefiniteRowSideFullHecke.PseudoCoefficientSeparation.PseudoCoeffSeparation → SpecTrace := by
   intro hDSC _ _ _ hFlath hChar hCO hPCT hPCS
   intro D V lam S M T U μa μf μ _ _ fa ff hTD ν hν n Ws _ _ σs hIrr hcover c hc
-  have hcusp := GlobalTheory.T.discrete_series_multiplicity hCO hPCT D V lam S M T U μa μf μ fa ff hTD
+  have hcusp := _root_.GlobalTheory.TestFnCusp.isCuspidalOp_tensor hCO hPCT D V lam S M T U μa μf μ fa ff hTD
   have hpone := GlobalTheory.T.discrete_series_model_trace_terms hDSC hFlath hChar hPCS D V lam S M T U μa μf μ fa ff hTD ν hν
   refine ⟨hcusp.traceClass, ?_⟩
   refine _root_.GlobalTheory.hasSum_eq_sum_of_matching_family (UDual (GA D V)) n (fun x => (mCusp V μ x.rep.π).toNat)
@@ -272,7 +272,7 @@ theorem specTrace : GlobalTheory.Published.DiscreteSeriesClassification → Glob
     intro x i hR
     refine ⟨?_, ?_⟩
     · rw [_root_.GlobalTheory.AutMult.mCusp_eq_mCuspDS D V S M μ x.rep.H x.rep.π x.rep.isIrr (Ws i) (σs i) (hIrr.1 i) (hIrr.2.1 i) hR]
-    · exact (GlobalTheory.T.test_data_haar_factorization D V lam S M T U μa μf μ fa ff hTD ν hν x.rep.H x.rep.π x.rep.isIrr (Ws i) (σs i)
+    · exact (_root_.GlobalTheory.AutMult.hasTrace_repOp_of_isCopyFinDS D V lam S M T U μa μf μ fa ff hTD ν hν x.rep.H x.rep.π x.rep.isIrr (Ws i) (σs i)
         (hIrr.1 i) (hIrr.2.1 i) hR (c i) (hc i)).2
   ·
     intro x i j hi hj

@@ -4,7 +4,7 @@ public import Formalism.LocalToGlobal.IndefiniteReal.FWExist
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSmoothVector
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtremalVectorMatrixCoeffHolomorphicType
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicTypeEqZeroOfTorusLawAtOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscreteSeriesModelUnitaryIrreducibleOrthonormalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscreteSeriesModelUnitaryIrreducibleOrthonormal
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIsometricIntertwinerOfMatrixCoeffEq
 public import Development.AbelianVarietyTheory.Counterexamples.TwistSurvey.ConjModelCast
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConjModelExt
@@ -421,8 +421,8 @@ theorem holModel_unique : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what�
     rw [hw τ c]; unfold extWt; rw [hl, he]
   obtain ⟨f1, t1⟩ := GlobalTheory.T.extremalVector_matrixCoeff_holomorphicType D θ V S M w v hθ hs hw hv
   obtain ⟨f2, t2⟩ := GlobalTheory.T.extremalVector_matrixCoeff_holomorphicType D θ V S M' w v' hθ hs' hw' hv'
-  have m1 := GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M
-  have m2 := GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M'
+  have m1 := _root_.GlobalTheory.HolDict.ModelRep.model_rep D V S M
+  have m2 := _root_.GlobalTheory.HolDict.ModelRep.model_rep D V S M'
   haveI := fun τ => (m1 τ).1
   haveI := fun τ => (m2 τ).1
   simp only [he] at f2

@@ -3,10 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
 public import Mathlib.Tactic.Monotonicity.Lemmas
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PullCub
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SerreVanishingVeryAmpleStatement
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SerreVanishingVeryAmple
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsSecOfLeChart
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ValCalc
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.NonemptyPerfectSectionsComplexOfSmoothProjStatement
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.NonemptyPerfectSectionsComplexOfSmoothProj
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniqueExpansionSectionAdmissibleBase
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsUniqueSec
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsGradedRingKernelLift
@@ -18,7 +18,7 @@ public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.HomEq
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsHomOfThickenings
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThickTransComp
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.OpenEqTopOfContainsSpecialPartUniversallyClosed
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsSectionLinearCombinationOfCompatibleThickeStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsSectionLinearCombinationOfCompatibleThicke
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -162,7 +162,7 @@ theorem twist_pair : ∀ (S : Type) [CommRing S] [IsNoetherianRing S] (W X : Sch
   intro S _ _ W X f H a b n s hH hs
   have hM : (LB.LinComb H (K := PUnit) (fun _ => b) (fun _ => -1)).IsLB := LB.isLB_linComb hH _ _
   have hA : (H.pull a).IsLB := LB.isLB_pull hH a
-  obtain ⟨t₁, h₁⟩ := GlobalTheory.T.serre_vanishing_very_ample.1 S W f _ n s hA hs _ hM
+  obtain ⟨t₁, h₁⟩ := _root_.GlobalTheory.AbLaw.serre_h1Zero_and_sections_polynomial.1 S W f _ n s hA hs _ hM
   obtain ⟨t₂, h₂⟩ := GlobalTheory.TwistGen.twist_generated S W f _ n s hA hs _ hM
   refine ⟨max t₁ t₂, fun t ht => ⟨?_, ?_⟩⟩
   · rintro W₁ σ a₁ b₁ rfl rfl
@@ -236,7 +236,7 @@ theorem exists_lift : ∀ (A A' S : Type) [CommRing A] [CommRing A'] [CommRing S
   intro A A' S _ _ _ g' g hlift X X' XS f f' fS β σ hs hp pb' pbS W L K _ φ φ' ε hL hφ hH s'
   obtain rfl : (fun k => β ≫ φ k) = φ' := funext hφ
   have hN := DVR.linComb_isLB L hL φ ε
-  obtain ⟨P⟩ := GlobalTheory.T.nonempty_perfectSectionsComplex_of_smooth_proj A X f hs hp _ hN
+  obtain ⟨P⟩ := _root_.GlobalTheory.AbLaw.nonempty_perf_of_smooth_isProjBy A X f hs hp _ hN
   have pb₀ : IsPullback (𝟙 X) f f (Spec.map (CommRingCat.ofHom (RingHom.id A))) := by
     rw [CommRingCat.ofHom_id, Spec.map_id]
     exact IsPullback.of_horiz_isIso ⟨by simp⟩
@@ -819,7 +819,7 @@ theorem exists_end_of_thickenings : ∀ (R : Type) [CommRing R] [IsDomain R] [Is
       ∀ (e : ℕ) (Z : Scheme.{0}) (r : Z ⟶ (thickObj R I e Y).left) (z : Z) (J), Good H z J →
         sval S (r ≫ pullback.fst Y.hom (thick R I e)) z J = sval (w e i j) r z J := by
     intro i j
-    refine GlobalTheory.T.exists_section_linearCombination_of_compatible_thickenings R I hI Y hsm hpr Y.left H PUnit (fun _ => 𝟙 Y.left) (fun _ => t)
+    refine _root_.GlobalTheory.SecAlgLinComb.exists_sec_linComb R I hI Y hsm hpr Y.left H PUnit (fun _ => 𝟙 Y.left) (fun _ => t)
       (fun e _ => pullback.fst Y.hom (thick R I e)) hH (fun e k => Category.comp_id _) (fun e => w e i j) ?_
     intro e z J hJ
     rw [hw (e + 1) i j _ _ z J hJ, hw e i j _ _ z J hJ, hfc e, Category.id_comp, hu e j z J hJ]

@@ -3,21 +3,23 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PrimitiveCrystalHodgeLiftClasses
 public import Mathlib.RingTheory.DividedPowers.SubDPIdeal
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsNoetherianRingDualNumber
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGrpObjIsAbelianSchemeSmoothLiftNilpotentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftShearMapSquareZeroAbelianSchemesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionLiftSmoothNilpotentThickeningStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGrpObjIsAbelianSchemeSmoothLiftNilpotent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftShearMapSquareZeroAbelianSchemes
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionLiftSmoothNilpotentThickening
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothOfRelativeDimensionOfNilpotentReductionStatement
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueIsMonHomLiftStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueIsMonHomLift
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianUnobstructed
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeRhamCrystalTwoReductionsAgreeFiltrationStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntermediateGrpPullbackAbelianSchemeStatement
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.UniformBaseChange.PullGt
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CanonicalOfAbelianDeRham
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeDescendsToFinitelyGeneratedSubringStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeDescendsToFinitelyGeneratedSubring
 public import Mathlib.RingTheory.Ideal.Quotient.Operations
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemistableExtensionMultiplesOfSemistable
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsFiniteTypeSubringAdjoin
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.MorphismDescendsToSubring
@@ -310,7 +312,7 @@ theorem liftObj_sq : AbelianDeRham → ∀ (R R₀ : Type) [CommRing R] [CommRin
   have hA₀ : IsAbelianScheme A₀ := PolPull.isAbelianScheme_of_isGrpPullback hA' h'
   have hg₀ : SmoothOfRelativeDimension g A₀.hom :=
     (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback h'.1 hg'
-  obtain ⟨e, he, he₀⟩ := GlobalTheory.T.exists_section_lift_smooth_nilpotent_thickening R R₀ π hπ hn X A₀ i h hX (1 : Over.mk (𝟙 (Sp R₀)) ⟶ A₀).left
+  obtain ⟨e, he, he₀⟩ := _root_.GlobalTheory.SecLift.exists_section_lift R R₀ π hπ hn X A₀ i h hX (1 : Over.mk (𝟙 (Sp R₀)) ⟶ A₀).left
     (Over.w (1 : Over.mk (𝟙 (Sp R₀)) ⟶ A₀))
   have w : ((fst A₀ A₀).left ≫ i) ≫ X.hom = ((snd A₀ A₀).left ≫ i) ≫ X.hom := by
     rw [Category.assoc, Category.assoc, h.w, Over.w_assoc, Over.w_assoc]
@@ -318,12 +320,12 @@ theorem liftObj_sq : AbelianDeRham → ∀ (R R₀ : Type) [CommRing R] [CommRin
       = (fst A₀ A₀).left ≫ i := Limits.pullback.lift_fst _ _ _
   have hl₂ : (Limits.pullback.lift _ _ w : (A₀ ⊗ A₀).left ⟶ (X ⊗ X).left) ≫ (snd X X).left
       = (snd A₀ A₀).left ≫ i := Limits.pullback.lift_snd _ _ _
-  obtain ⟨m, hm⟩ := GlobalTheory.T.exists_lift_shearMap_squareZero_abelianSchemes R R₀ I hI π hπ hk H g g A₀ A₀ A' A' i' i' h' h' hA' hA' hg' hg' X X i i h h hX hX
+  obtain ⟨m, hm⟩ := _root_.GlobalTheory.ShearLift.exists_lift_shear R R₀ I hI π hπ hk H g g A₀ A₀ A' A' i' i' h' h' hA' hA' hg' hg' X X i i h h hX hX
     e e he he he₀ he₀ _ hl₁ hl₂ (𝟙 A₀) (fun d hd ↦ by rw [push_id]; exact hd)
   have hμ : (fst A₀ A₀ ≫ 𝟙 A₀) * snd A₀ A₀ = μ[A₀] := by
     rw [Category.comp_id, Hom.mul_def, lift_fst_snd, Category.id_comp]
   rw [hμ] at hm
-  obtain ⟨_, hp, hab⟩ := GlobalTheory.T.exists_grpObj_isAbelianScheme_smoothLift_nilpotent R R₀ π hπ hn A₀ hA₀ X i h hX e he he₀ _ hl₁ hl₂ m hm
+  obtain ⟨_, hp, hab⟩ := _root_.GlobalTheory.LiftGroupLaw.exists_grpObj_isAbelianScheme R R₀ π hπ hn A₀ hA₀ X i h hX e he he₀ _ hl₁ hl₂ m hm
   have hg : SmoothOfRelativeDimension g X.hom := GlobalTheory.T.smoothOfRelativeDimension_of_nilpotent_reduction R R₀ π hπ hn g X A₀ i h hX hg₀
   exact ⟨X, _, i, hp, hab, hg, (schemeFil_eq_liftFil _ hp (P.1 R X g hab hg).1).symm.trans hFil⟩
 
@@ -392,11 +394,11 @@ theorem liftHom_sq : AbelianDeRham → ∀ (R R₀ : Type) [CommRing R] [CommRin
     ⟨Limits.pullback.lift ((fst A₀ B₀).left ≫ i) ((snd A₀ B₀).left ≫ j) (by
       rw [Category.assoc, Category.assoc, h.1.w, k.1.w, ← Category.assoc, ← Category.assoc, Over.w, Over.w]),
       Limits.pullback.lift_fst _ _ _, Limits.pullback.lift_snd _ _ _⟩
-  obtain ⟨φ, hφ⟩ := GlobalTheory.T.exists_lift_shearMap_squareZero_abelianSchemes R R₀ I hI π hπ hk H g g' A₀ B₀ A B i j h k hA hB hg hg' A B i j h.1 k.1
+  obtain ⟨φ, hφ⟩ := _root_.GlobalTheory.ShearLift.exists_lift_shear R R₀ I hI π hπ hk H g g' A₀ B₀ A B i j h k hA hB hg hg' A B i j h.1 k.1
     hA.smooth hB.smooth η[A].left η[B].left (Over.w η[A]) (Over.w η[B])
     ((one_left_comp h _).trans (Category.id_comp _)) ((one_left_comp k _).trans (Category.id_comp _)) l l₁ l₂ f₀
     (by rw [schemeFil_eq_liftFil _ h pA, schemeFil_eq_liftFil _ k pB]; exact hf)
-  refine GlobalTheory.T.existsUnique_isMonHom_lift_of_grpPullback_abelian R R₀ π hπ ⟨2, hk ▸ hI⟩ A₀ B₀ A B i j h k hA hB f₀ (lift (𝟙 A) 1 ≫ φ) ?_
+  refine _root_.GlobalTheory.HomLift.existsUnique_isMonHom_lift R R₀ π hπ ⟨2, hk ▸ hI⟩ A₀ B₀ A B i j h k hA hB f₀ (lift (𝟙 A) 1 ≫ φ) ?_
   have e : i ≫ (lift (𝟙 A) (1 : A ⟶ B)).left = (lift (𝟙 A₀) (1 : A₀ ⟶ B₀)).left ≫ l := by
     refine Limits.pullback.hom_ext ?_ ?_
     · change (i ≫ _) ≫ (fst A B).left = (_ ≫ l) ≫ (fst A B).left
@@ -1200,7 +1202,7 @@ theorem exists_noeth_model (P : AbelianDeRham) {R : Type} [CommRing R] {g : ℕ}
       Function.Injective σ ∧ IsAbelianScheme B ∧ SmoothOfRelativeDimension g B.hom ∧
       ∀ (x : HdR B) (x' : HdR A), (∀ c, x' ((redMor h).pull c) = σ (x c)) →
         ∀ c, e x' ((redMor h).pull c) = σ (e₁ x c) := by
-  obtain ⟨S, B, _, φ, -, hS, hB, hgB, h⟩ := GlobalTheory.T.abelianScheme_descends_to_finitelyGenerated_subring R g A ∅ hA hg
+  obtain ⟨S, B, _, φ, -, hS, hB, hgB, h⟩ := _root_.GlobalTheory.AbelianLimit.abelianScheme_descends_to_fg_subring R g A ∅ hA hg
   haveI : IsNoetherianRing S := Algebra.FiniteType.isNoetherianRing ℤ S
   obtain ⟨hf, hp, -⟩ := P.1.prim hB hgB
   obtain ⟨n, p, l, hpl⟩ := exists_frame (S := S) (P := primDR B)
@@ -1506,9 +1508,9 @@ theorem abelian_hom_reduction_descends : ∀ (R : Type) [CommRing R] (I : Ideal 
     i ≫ φA = ψA ≫ iS ∧ j ≫ φB = ψB ≫ jS ∧ f₀.left ≫ ψB = ψA ≫ fS₀.left := by
   intro R _ I R₀ _ π hπ hI g A₀ _ A _ i hA hAab hAsm g' B₀ _ B _ j hB hBab hBsm f₀ _
 
-  obtain ⟨S₀, AS₀, _, φA₀, -, hfg₀, hAS₀ab, hAS₀sm, hφA₀⟩ := GlobalTheory.T.abelianScheme_descends_to_finitelyGenerated_subring R g A ∅ hAab hAsm
+  obtain ⟨S₀, AS₀, _, φA₀, -, hfg₀, hAS₀ab, hAS₀sm, hφA₀⟩ := _root_.GlobalTheory.AbelianLimit.abelianScheme_descends_to_fg_subring R g A ∅ hAab hAsm
   obtain ⟨F₀, hF₀⟩ := exists_finset_le_of_finiteType R S₀ hfg₀
-  obtain ⟨S₁, BS₁, _, φB₁, hF₀S₁, hfg₁, hBS₁ab, hBS₁sm, hφB₁⟩ := GlobalTheory.T.abelianScheme_descends_to_finitelyGenerated_subring R g' B F₀ hBab hBsm
+  obtain ⟨S₁, BS₁, _, φB₁, hF₀S₁, hfg₁, hBS₁ab, hBS₁sm, hφB₁⟩ := _root_.GlobalTheory.AbelianLimit.abelianScheme_descends_to_fg_subring R g' B F₀ hBab hBsm
   obtain ⟨AS₁, _, φA₁, -, hAS₁ab, hAS₁sm, hφA₁, -, -⟩ :=
     exists_baseChange_subring R S₀ S₁ (hF₀ S₁ hF₀S₁) g A AS₀ φA₀ hAS₀ab hAS₀sm hφA₀
 
@@ -1839,7 +1841,7 @@ theorem sqLifting_of_noetherian : AbelianDeRham → (∀ (R : Type) [CommRing R]
   refine ⟨_root_.GlobalTheory.NoethLiftObj.liftObj_of_noetherian P H R I h R₀ π hπ hI, ?_⟩
   intro g A₀ _ A _ i hA hAa hg g' B₀ _ B _ j hB hBa hg' f₀ _ hf
   obtain ⟨φ, hφ⟩ := GlobalTheory.T.liftHom_exists_of_noetherian_alt P H R I h R₀ π hπ hI g A₀ A i hA hAa hg g' B₀ B j hB hBa hg' f₀ hf
-  exact GlobalTheory.T.existsUnique_isMonHom_lift_of_grpPullback_abelian R R₀ π hπ ⟨2, by rw [hI]; exact h⟩ A₀ B₀ A B i j hA hB hAa hBa f₀ φ hφ
+  exact _root_.GlobalTheory.HomLift.existsUnique_isMonHom_lift R R₀ π hπ ⟨2, by rw [hI]; exact h⟩ A₀ B₀ A B i j hA hB hAa hBa f₀ φ hφ
 
 end GlobalTheory.SqLift
 end -- clump:auto

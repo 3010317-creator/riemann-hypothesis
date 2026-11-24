@@ -6,7 +6,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsNotRel
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.HermitianOrthogonalExtensionData
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjWeilDatumViaAdjointExchangedPair
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsOrthDec
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HermitianAdjointSymplecticActionThetaHeisenbergStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HermitianAdjointSymplecticActionThetaHeisenberg
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsWeilDatumConjNegHermitianSpaces
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaHeisenbergConjugationNegHermitianSpace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaTensorRuleTargetOrthogonalSum
@@ -131,7 +131,7 @@ theorem seesaw_product {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdCha
   have TT := GlobalTheory.TensorTargetRule.tensorTarget D ψ hψ (X) V V₁ o (negSp Wo)
 
   have hF₂ : IsThetaFunO ψ (negSp Wo) V₁ (cj id (cj (dagger Wo V₁) f₂)) := by
-    have h1 : IsThetaFunO ψ Wo V₁ (cj (dagger Wo V₁) f₂) := ((GlobalTheory.T.hermitianAdjoint_symplectic_action_theta_heisenberg D ψ hψ V₁ Wo).2.2.1 f₂).2 hf₂
+    have h1 : IsThetaFunO ψ Wo V₁ (cj (dagger Wo V₁) f₂) := ((_root_.GlobalTheory.AdjointPair.adjoint_clauses D ψ hψ V₁ Wo).2.2.1 f₂).2 hf₂
     have I := GlobalTheory.CjNeg.theta_heis_neg D ψ hψ Wo V₁
     exact ((I.1 _).2).2 h1
   obtain ⟨y, hy⟩ := GlobalTheory.RecDict.exists_isDetRoot D V₁ g₁

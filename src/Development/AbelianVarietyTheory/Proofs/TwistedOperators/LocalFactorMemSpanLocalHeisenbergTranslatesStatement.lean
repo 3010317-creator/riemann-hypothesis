@@ -4,11 +4,13 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.AddNsmulResidueAssoc
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDualStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeFinitelyGeneratedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeMultipleMemOpenLevelStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeFinitelyGenerated
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeMultipleMemOpenLevel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSpanHeisenbergTranslatesOfVacuum
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVacuaLocalFactorsStableHeisenbergAwayStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RestrictedTensorBasePointNormSq
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVacuaLocalFactorsStableHeisenbergAway
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RestrictedTensorVacuumEqSmulBasePoint
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilMatrixComponentAtPlaceMemCompletedLattice
 import Mathlib.Algebra.Order.Floor.Extended
@@ -167,13 +169,13 @@ theorem mem_span_local : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : Inf
   have hsdT : IsSelfDualC T ΛT := hb.2.2.2.1
   have hloc0 : IsLocal ψ θ S T sS sT ΛS ΛT (.inl v) f₀ := base_isLocal hb (.inl v)
   have hvac0 : IsLatVac (heisO ψ S T) (latO S T ΛS ΛT fun u => u = v) f₀ := base_vacAt hb (.inl v)
-  have hglob := GlobalTheory.T.self_dual_lattice_pairing_dual D ψ S T ΛS ΛT hψ hsdS hsdT
+  have hglob := _root_.GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T ΛS ΛT hψ hsdS hsdT
   have hcl : ∀ f, IsLocal ψ θ S T sS sT ΛS ΛT (.inl v) f →
       (∀ w : WO S T, IsLocal ψ θ S T sS sT ΛS ΛT (.inl v) (heisO ψ S T (wAt (.inl v) w) f)) ∧
       (∀ (c : ℂ) g, IsLocal ψ θ S T sS sT ΛS ΛT (.inl v) g →
         IsLocal ψ θ S T sS sT ΛS ΛT (.inl v) (c • f + g)) := fun f hf =>
-    ⟨((GlobalTheory.T.fockVacua_localFactors_stable_heisenberg_away D ψ θ S T sS sT ΛS ΛT hψ hθ f hf.1).2 (.inl v) hf).1,
-      ((GlobalTheory.T.fockVacua_localFactors_stable_heisenberg_away D ψ θ S T sS sT ΛS ΛT hψ hθ f hf.1).2 (.inl v) hf).2.1⟩
+    ⟨((_root_.GlobalTheory.PlaceStable.heis_stable D ψ θ S T sS sT ΛS ΛT hψ hθ f hf.1).2 (.inl v) hf).1,
+      ((_root_.GlobalTheory.PlaceStable.heis_stable D ψ θ S T sS sT ΛS ΛT hψ hθ f hf.1).2 (.inl v) hf).2.1⟩
   have h0loc : IsLocal ψ θ S T sS sT ΛS ΛT (.inl v) 0 := by
     have h := (hcl f₀ hloc0).2 (-1) f₀ hloc0
     simpa using h
@@ -302,7 +304,7 @@ theorem mem_span_local : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : Inf
   have hv : ∃ N : ℕ, 0 < N ∧ ∀ u ∈ Λ, ρ (N • u) ⟨x, hx⟩ = ⟨x, hx⟩ := by
     obtain ⟨U, hUo, hU⟩ := hx.1.level
     obtain ⟨N, hN, hNU⟩ :=
-      (GlobalTheory.T.completedHomLattice_multiple_mem_open_level D S T ΛS ΛT hsdS hsdT (GlobalTheory.T.completedHomLattice_finitelyGenerated D S T ΛS ΛT hsdS hsdT)).1 U hUo
+      (_root_.GlobalTheory.LatLevel.level_of_generators D S T ΛS ΛT hsdS hsdT (_root_.GlobalTheory.LatFinGen.latO_finitely_generated D S T ΛS ΛT hsdS hsdT)).1 U hUo
     refine ⟨N, hN, fun u hu => Subtype.ext ?_⟩
     have hu' : (u : WO S T) ∈ latO S T ΛS ΛT (fun w => w = v) := hu
     have hall := GlobalTheory.PlaceModel.latO_le_top _ hu'

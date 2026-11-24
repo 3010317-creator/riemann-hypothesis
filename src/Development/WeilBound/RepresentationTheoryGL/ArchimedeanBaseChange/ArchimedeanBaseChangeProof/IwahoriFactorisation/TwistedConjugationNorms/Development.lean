@@ -11,10 +11,10 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThLInvolutiv
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.HilbertNinetyNorms.OrdLEqNegLog
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryLevelSubgroupProperties
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryIwahoriFactsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryIwahoriFacts
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.CharpolyConjDiagT
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwahoriAndMaximalCompactCriteriaStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WeightExponentStrictlyAntitoneStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwahoriAndMaximalCompactCriteria
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WeightExponentStrictlyAntitone
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.ContrId
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.HilbertNinetyNorms.BlockEmbeddingSecondVal
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.HilbertNinetyNorms.InertDeltaFirstCaseEqPower
@@ -674,7 +674,7 @@ theorem unitary_hecke_orbit_single_coset (hU : Unr E) (w : Pl E) (hw : ¬ IsSpli
       CentOK (MonoidHom.id (UL n w)) (KL n w) (iwU n w b) γ ∧ HasVals γ.1.val.charpoly (wexp n l) := by
   obtain ⟨p₀, u, h1, -, h3, h4, h5⟩ := s2raw hU w hw n b hb ϖ hϖ l hl γ hP
   obtain ⟨-, hKc, hI, -, -⟩ := GlobalTheory.T.unitary_level_subgroup_properties E hU w hw n b hb ϖ l hϖ hl
-  have hIc : IsCompact (iwU n w b : Set (UL n w)) := (GlobalTheory.T.unitary_iwahori_facts E hU w hw n b hb).2.2.1
+  have hIc : IsCompact (iwU n w b : Set (UL n w)) := (_root_.GlobalTheory.CompanionTheory.UnitaryWitt.unitary_hyperbolic_basis E hU w hw n b hb).2.2.1
   have hC : IsCompact (((iwU n w b).map (MulAut.conj p₀).toMonoidHom : Subgroup (UL n w)) : Set (UL n w)) := by
     rw [Subgroup.coe_map]
     exact hIc.image ((continuous_const.mul continuous_id).mul continuous_const)
@@ -840,7 +840,7 @@ theorem thL_diag (w : Pl E) (hw : ¬ IsSplitAt w) (a : ℕ) {g : GLw a w} (hg : 
 
 theorem TO_le_iw (w : Pl E) (a : ℕ) {s : GLw a w} (hs : s ∈ TO a w) : s ∈ iwGL a w := by
   have hd : IsDiag s := hs.1
-  rw [(GlobalTheory.T.iwahori_and_maximal_compact_criteria E w a s).1]
+  rw [(_root_.GlobalTheory.CompanionTheory.IwEntries.iwGL_KGL_entries E w a s).1]
   refine ⟨fun i j => ?_, fun i j => ?_, fun i j hij => ?_⟩
   · by_cases h : i = j
     · subst h; exact (hs.2 i).le
@@ -1047,7 +1047,7 @@ theorem k1 (hU : Unr E) (w : Pl E) (hw : ¬ IsSplitAt w) (n : ℕ) (b : GLw n w)
     (hQ : γ.1.val.charpoly = Q₁ * Q₂) (hm₁ : Q₁.Monic) (hm₂ : Q₂.Monic) (hc₁ : IsCsr w Q₁) (hc₂ : IsCsr w Q₂) :
     kapSign n w Q₁ γ.1 = 1 := by
   obtain ⟨-, -, hV⟩ := s2 hU w hw n b hb ϖ hϖ l hl γ hP
-  obtain ⟨hanti, hrev⟩ := GlobalTheory.T.weight_exponent_strictly_antitone n l hl
+  obtain ⟨hanti, hrev⟩ := _root_.GlobalTheory.CompanionTheory.Wexp.wexp_strictAnti_rev n l hl
   refine Kap.kapSign_eq_one_of_vals hU w n γ.1 γ.2 (wexp n l) hanti.injective ?_ hV Q₁
   intro i j h
   exact hanti.injective (h.trans (hrev i).symm)
@@ -1498,7 +1498,7 @@ theorem uniqR (hU : Unr E) (w : Pl E) (hw : ¬ IsSplitAt w) (n : ℕ) (b : GLw n
     (hQ : γ.1.val.charpoly = γ'.1.val.charpoly) : ∃ g : UL n w, γ' = g⁻¹ * γ * g := by
   obtain ⟨p₀, u, hu, hγ, -, -, hQγ⟩ := s2raw hU w hw n b hb ϖ hϖ l hl γ hP
   obtain ⟨p₁, u', hu', hγ', -, -, hQγ'⟩ := s2raw hU w hw n b hb ϖ hϖ l hl γ' hP'
-  have hinj : Function.Injective (wexp n l) := (GlobalTheory.T.weight_exponent_strictly_antitone n l hl).1.injective
+  have hinj : Function.Injective (wexp n l) := (_root_.GlobalTheory.CompanionTheory.Wexp.wexp_strictAnti_rev n l hl).1.injective
   have huu : (fun i => (u i : w.adicCompletion E)) = fun i => (u' i : w.adicCompletion E) :=
     GlobalTheory.T.roots_eq_of_distinct_valuations (w.adicCompletion E) n (wexp n l) hinj (fun i => (u i : w.adicCompletion E))
       (fun i => (u' i : w.adicCompletion E)) hu hu' (by rw [← hQγ, ← hQγ', hQ])

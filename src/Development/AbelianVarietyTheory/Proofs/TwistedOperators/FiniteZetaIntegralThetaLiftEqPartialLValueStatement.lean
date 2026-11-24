@@ -27,12 +27,12 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUni
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsSatVecUOfDiag
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSumQuotientTransport
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSumUnramifiedZetaSumUnitaryInertStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.TrivialParameterBound
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSumUnramifiedZetaSumUnitaryInert
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatVecUOfIsSphericalU
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SatakeParameterGLStarEqInvOfUnitarisable
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitarySatakeTransformStarParameterEqOfUnitarisa
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnramifiedZetaSumGLCosetsStatement
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.TrivialParameterBound
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnramifiedZetaSumGLCosets
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelFiniteDatumIsSchwartzBruhatHalf
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelVectorFiniteDatumIsThetaVacuumOff
 public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
@@ -48,12 +48,12 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFor
 public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemSum
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsEigenSysOfHeckeLin
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsParamFunVIffIsSysParamDOfLevel
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BoundedAutomorphicRightTranslationUnitarisableBoStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BoundedAutomorphicRightTranslationUnitarisableBo
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugatedThetaCharactersRestrictionRamificationStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSatakeParametersBoundedEigenfunctionStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSatakeParametersBoundedEigenfunction
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocalZetaSumsAbsolutelyConvergentUniformStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemLevelOfLevelDatumNeZeroTranslateStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilMatrixCoefficientVacuaUnramifiedPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilMatrixCoefficientVacuaUnramifiedPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -1073,7 +1073,7 @@ theorem hasSum_localZeta : GlobalTheory.Published.UnramifiedDoublingGL → ∀ (
         rw [hN', ← hN]; rfl
       rw [e2]
       exact this
-    have hsum := GlobalTheory.T.unramified_zeta_sum_GL_cosets hG D.host.E w V.rank D.R.t hrt (star (val χ w)) _ hnz hk X
+    have hsum := _root_.GlobalTheory.ZetaGL.zeta_sum_GL hG D.host.E w V.rank D.R.t hrt (star (val χ w)) _ hnz hk X
       (ρ.comp e.symm.toMonoidHom) x (B w) hsat hbd ℓ ⟨C, fun g => hC _⟩
     rw [_root_.GlobalTheory.LocZetaSplit.conj_LvTw_div_dLoc D B (val χ) v w w' hne hall hN hN' hB' hs hm (norm_val χ w) ((_root_.GlobalTheory.QuadSignLocal.quadSign_split_inert D v).1 w w' hne hall),
       ← hr]
@@ -1112,7 +1112,7 @@ theorem hasSum_localZeta : GlobalTheory.Published.UnramifiedDoublingGL → ∀ (
       rw [Real.rpow_neg hQ.le]
       rw [Units.val_inv_eq_inv_val, norm_inv] at h3
       exact inv_le_of_inv_le₀ (norm_pos_iff.2 (α i).ne_zero) h3
-    have hsum := GlobalTheory.T.hasSum_unramifiedZetaSum_unitary_inert _ ϖ c (qV D.host.F v) V.rank D.R.t hUI hrt (star (val χ w)) _ hnz hk X
+    have hsum := _root_.GlobalTheory.ZetaSumU.hasSum_zetaSum_inert _ ϖ c (qV D.host.F v) V.rank D.R.t hUI hrt (star (val χ w)) _ hnz hk X
       (ρ.comp e.symm.toMonoidHom) x α hsat htb ℓ ⟨C, fun g => hC _⟩
     rw [_root_.GlobalTheory.FinZeta.conj_LvTw_div_dLoc_inert D B (val χ) v w hall hNw hstarB (by rw [hval]; push_cast; rfl) ((_root_.GlobalTheory.QuadSignLocal.quadSign_split_inert D v).2 w hall), hBw, ← hr]
     refine hasSum_quot_of_equiv e he.2.2 (f := fun g => starRingEnd ℂ (φ g) * ℓ (ρ g x)) ?_ hsum
@@ -1478,12 +1478,12 @@ theorem zeta_sum (hG : GlobalTheory.Published.UnramifiedDoublingGL) {ψ : AddCha
     HasSum (fun y : FinCos T K => l2 μ 𝓧 (om (1, y.rep) f) f * starRingEnd ℂ (l2 ν 𝓕 (rTr T y.rep F₁) F₂))
       ((K.relIndex J : ℂ) * (nrm2 μ 𝓧 f : ℂ) * (LSD D Sb B χS ((1 + (D.R.t : ℂ)) / 2) / (dOff D Sb : ℂ)) *
         starRingEnd ℂ (l2 ν 𝓕 F₁ F₂)) := by
-  obtain ⟨hun, hℓ⟩ := GlobalTheory.T.boundedAutomorphicRightTranslation_unitarisable_bounded D T
+  obtain ⟨hun, hℓ⟩ := _root_.GlobalTheory.FinZeta.bddRep_unitarisable_and_bounded D T
   obtain ⟨ℓ, hℓ, hbd⟩ := hℓ ν 𝓕 hν h𝓕 F₂
   obtain ⟨C, hC⟩ := hbd F₁
   have hC0 : 0 ≤ C := (norm_nonneg _).trans (hC 1)
   choose φ hφ hφ' using fun v : {v : HeightOneSpectrum (𝓞 D.host.F) // v ∉ Sb} =>
-    GlobalTheory.T.weilMatrixCoefficient_vacua_unramifiedPlace D ψ S T χS χT om hW μ 𝓧 hμ v.1 fun w h => hu w (h ▸ v.2)
+    _root_.GlobalTheory.VacCoef.vac_coef D ψ S T χS χT om hW μ 𝓧 hμ v.1 fun w h => hu w (h ▸ v.2)
   rw [rS] at hφ
   obtain ⟨A, hA, hA'⟩ := GlobalTheory.T.localZetaSums_absolutely_convergent_uniform hG D T rT (val χS) (norm_val χS) Sb φ hφ
   let co : GA D T → ℂ := fun g => l2 μ 𝓧 (om (1, g) f) f
@@ -1582,7 +1582,7 @@ theorem finiteZetaL : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Pub
     push_neg at h
     exact hU0 (MultilinearMap.ext h)
   obtain ⟨m1, m2⟩ := mult_values hP hC.models.inf hx.1 v₀
-  obtain ⟨B, hB, hb⟩ := GlobalTheory.T.exists_satake_parameters_bounded_eigenfunction D (Wc D i) _ _ (finS R t) hs _ m1 hv₀ m2 ev (part_eigen hx v₀)
+  obtain ⟨B, hB, hb⟩ := _root_.GlobalTheory.FinZeta.ParamBound.exists_param_bounded D (Wc D i) _ _ (finS R t) hs _ m1 hv₀ m2 ev (part_eigen hx v₀)
   have hsys := (isParamFunV_iff_of_mem_partFull hs hx hv₀ B).1 hB
   rw [rW] at hb
   have hconv := hb.converges_twist_val cμ (s := (1 + (D.R.t : ℂ)) / 2) (by

@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.Normal
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ClassPresBasic
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CoefActionReprMemSubfield
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DoubleCosetOperatorEqLabelOperatorLocalRepsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsSphericalDoubleCosetLabelIffDecreasingStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsSphericalDoubleCosetLabelIffDecreasing
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperators
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ReprMemOfBasisRational
 import Mathlib.Algebra.Order.Floor.Extended
@@ -114,7 +114,7 @@ theorem inert_lifts : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Typ
       (fun _ h => h) (R.cV j).coef.ρ (fun γ => (hM.cV j).2.1 γ) (R.B.L j t).pres.y (R.B.L j t).pres.reps
       (fun c => Finite.of_equiv _ ((R.B.L j t).pres.stabI c).toEquiv) (R.HV j t) (hM.HV j t)
   obtain ⟨h, hh⟩ := hnormal
-  have hdual : dualLab (ty i) = ty i := ((GlobalTheory.T.isSphericalDoubleCosetLabel_iff_decreasing (Vc D j) (pl i) (ty i)).1 hd.1).2.2 (hin i hi).2.1
+  have hdual : dualLab (ty i) = ty i := ((_root_.GlobalTheory.LabChar.labels_char (Vc D j) (pl i) (ty i)).1 hd.1).2.2 (hin i hi).2.1
   have hadj := (hh.2.2 (pl i) hgood (Finsupp.single (ty i) 1)).trans (congrArg (h (pl i)) (dualC_single hdual))
   exact csum_adj (R.B.L j t).pres (R.HV j t) (hM.HV j t) (fun f => R.jV j t f) hj (op i) _ hadj (hint h hh.1)
 

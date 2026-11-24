@@ -10,13 +10,12 @@ public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsInvDer
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.DenseInterior
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeA
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTorFieldZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTorusInvariantFieldConstCoeffsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTorusInvariantFieldConstCoeffs
 public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.BijectiveSmulChartSec
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRaynaudFourierTermSubSmul
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemRangeCompIffOfIsClosedImmersion
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaynaudFourierTermChartFunctionsIsWeight
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaShiftFunctionalEqSubConstFnSmul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTorusInvariantFieldConstCoeffs
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.MulLeftCompOfPullbackPointEquivMul
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsChartOfMemRedKer
@@ -262,7 +261,7 @@ theorem exists_quad : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [
   have hℓ : ∀ s α, ℓ s α = ((b.repr α s : ℤ) : R) := fun s α => rfl
   have hex : ∀ s : Module.Free.ChooseBasisIndex ℤ Dd.toPre.X, ∃ c : Fin n → R,
       GlobalTheory.HeatMod.IsTorField Y (GlobalTheory.HeatMod.combF Y.H.hom dd c) (ℓ s) :=
-    fun s => GlobalTheory.T.exists_torus_invariantField_const_coeffs R Dd O oa Y n v dd hdd (ℓ s)
+    fun s => _root_.GlobalTheory.HeatMod.TorField.exists_isTorField R Dd O oa Y n v dd hdd (ℓ s)
   choose c hc using hex
   have hmul : ∀ s W r f, combF Y.H.hom dd (c s) W (twoPullConstantsRingHom Y.H.hom W r * f) =
       twoPullConstantsRingHom Y.H.hom W r * combF Y.H.hom dd (c s) W f := by
@@ -573,8 +572,8 @@ theorem exists_heat_defect_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLo
     simp only [hπ, hw1, map_add (f := _)]
     rw [hw2 b a]
     linear_combination (-(w a b)) * h2)
-  obtain ⟨c₁, hc₁⟩ := GlobalTheory.T.exists_torus_invariantField_const_coeffs R Dd O oa Y n v dd hv ℓ₁
-  obtain ⟨c₂, hc₂⟩ := GlobalTheory.T.exists_torus_invariantField_const_coeffs R Dd O oa Y n v dd hv ℓ₂
+  obtain ⟨c₁, hc₁⟩ := _root_.GlobalTheory.HeatMod.TorField.exists_isTorField R Dd O oa Y n v dd hv ℓ₁
+  obtain ⟨c₂, hc₂⟩ := _root_.GlobalTheory.HeatMod.TorField.exists_isTorField R Dd O oa Y n v dd hv ℓ₂
   obtain ⟨M, hMs, hMa, hMg⟩ := GlobalTheory.T.exists_symmetric_second_order_operator_of_character_form R Dd O oa Y n v dd hv w hw1 hw2
   obtain ⟨⟨a1, a2, a3⟩, kc, wt₂, pb₂⟩ := hc₂
   let h' : Heat Y.H Y.q.left Dd.toPre.P.L dd ⇑D :=

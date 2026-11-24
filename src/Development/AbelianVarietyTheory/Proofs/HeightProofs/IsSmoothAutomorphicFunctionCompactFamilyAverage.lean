@@ -4,7 +4,9 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsSmo
 import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ConjAtFixedIff
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RderMemAutFormsCuspForms
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CompactAverageSmoothFamilyClosedUnderDerivativesStatement
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.NormInfSubmultiplicativeLeAdelicHeightStatement
+import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.WordDerivatives
+import Formalism.LocalToGlobal.BesselHermitianTheta.TiedSmooth
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.NormInfSubmultiplicativeLeAdelicHeight
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GrowthSizeRWordNeTopOfLe
 import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp
@@ -238,7 +240,7 @@ theorem famSpan_growth [CompactSpace K] (hθ : IsInfFam θ) (hκ : Continuous κ
     simp only [List.foldr_nil] at h3
     have h4 : normInf θ V (g * atTau θ V τ (κ k)) ^ N ≤ (normInf θ V g * Mh) ^ N :=
       pow_le_pow_left₀ (normInf_nonneg _)
-        (((GlobalTheory.T.normInf_submultiplicative_le_adelicHeight D θ V).1 _ _).trans (mul_le_mul_of_nonneg_left h2 (normInf_nonneg _))) N
+        (((_root_.GlobalTheory.SmoothForms.normInf_mul_le_and_le_height D θ V).1 _ _).trans (mul_le_mul_of_nonneg_left h2 (normInf_nonneg _))) N
     have h5 : ‖ψ (x * g * atTau θ V τ (κ k))‖ ≤ |C'| * (Mh ^ N * normInf θ V g ^ N) := by
       rw [mul_assoc x]
       refine h3.trans (mul_le_mul (le_abs_self _) ?_ (pow_nonneg (normInf_nonneg _) _) (abs_nonneg _))

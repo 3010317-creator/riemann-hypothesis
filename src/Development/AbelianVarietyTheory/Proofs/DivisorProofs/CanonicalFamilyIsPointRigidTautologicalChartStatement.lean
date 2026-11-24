@@ -16,7 +16,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CanonicalFam
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCDvrTwoEmbeddings
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelPointPairsLowerBase
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MumfordBundleIsoComparisonNormalisedGeneratorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodPartMemTautologicalPointTorsionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodPartMemTautologicalPointTorsion
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothConeSumGeneratorsEqOfCommonInteriorPoint
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TautologicalCoordsEqOfMatchingData
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TautologicalPointTransportFieldMapStatement
@@ -87,14 +87,15 @@ import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.NonemptyFiniteRootsOfBimul
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComesFromBaseOfPullbackInjectiveDomains
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComesFromTautBaseOfRescaledPullbackMonomialStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegenerationDataNsmulRescaleKeepsLawsStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegenerationDataNsmulRescaleKeepsLaws
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQkZeroOver
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTautologicalBaseNsmulDegenerationDataStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsometryEqReflOfCongrModGeThree
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MonomialsDifferByUnitsPositiveBoundaryCombinatioStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OnTorusComp
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TautologicalBaseMatchingMonomialsRatioUnitStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionPointTorusPartEqOfEquivSameLatticeStatement
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtPtBridgeSt
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionPointTorusPartEqOfEquivSameLattice
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationBundleGenericFibreDescent
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PelObjectClassPrimAndIsoClosed
 import Mathlib.Tactic.Basify
@@ -468,7 +469,7 @@ theorem monomials_eq {o W : Type} [CommRing o] [CommRing W] [IsLocalRing W] (T :
   intro hn hD₁ hD₂ hF₁ hF₂ hM he hb H c a
   obtain ⟨hbm, -, -, hu, -⟩ := hM
   obtain ⟨p₁, p₂, hy₁, ht₁, hy₂, ht₂, p', hy', hA, hE⟩ := H a
-  have hg : p'.g = p₂.g := GlobalTheory.T.torsionPoint_torusPart_eq_of_equiv_same_lattice V D₂ hD₂ F n hn p' p₂ (by
+  have hg : p'.g = p₂.g := _root_.GlobalTheory.TInj.qkPt_g_eq_of_equiv V D₂ hD₂ F n hn p' p₂ (by
     rw [hy', hy₁, hy₂]; apply e₂.injective; rw [he, e₁.apply_symm_apply, e₂.apply_symm_apply]) hE
   rw [hg] at hA
   have hχ : e₁ (φ.symm (e₂.symm c)) = e₂ (e₂.symm c) := by rw [← he, φ.apply_symm_apply]
@@ -528,7 +529,7 @@ theorem torsion_fixed {W R V : Type} [CommRing W] [CommRing R] [IsDomain R] [Com
   have e₁ := tr_base hj₁ htr1 _ _ hg₀
   have e₂ := tr_base hj₂ htr2 _ _ hg₀
   rw [← Category.assoc (spMap _), ← hsp] at e₁ e₂
-  have hg : p'.g = p₂.g := GlobalTheory.T.torsionPoint_torusPart_eq_of_equiv_same_lattice V D₂ h₂ F n hn p' p₂ (by rw [hp'y, h1y, h2y, hp₀y, map_zero, map_zero, map_zero]) heqv
+  have hg : p'.g = p₂.g := _root_.GlobalTheory.TInj.qkPt_g_eq_of_equiv V D₂ h₂ F n hn p' p₂ (by rw [hp'y, h1y, h2y, hp₀y, map_zero, map_zero, map_zero]) heqv
   have hx₁ : x.left = p₁.g.b.left := by
     apply hβ₁.1.hom_ext
     · rw [hxσ', e₁, Category.assoc]
@@ -556,7 +557,7 @@ theorem coords_eq : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : 
     rintro (k | k)
     · exact (Cn.bd k).trans_ne (C.s_ne_zero k)
     · exact (Cn.tor k).ne_zero
-  obtain ⟨hev, hbi, hgen, -⟩ := GlobalTheory.T.degenerationDataNsmulRescale_keeps_laws Cn.L.W Cn.L.D (𝓞 E) Cn.L.oa H.w0 l.M' Cn.L.even Cn.L.bimult Cn.L.w0 Cn.L.gen
+  obtain ⟨hev, hbi, hgen, -⟩ := _root_.GlobalTheory.UCanon.MulDeg.mulDeg_laws Cn.L.W Cn.L.D (𝓞 E) Cn.L.oa H.w0 l.M' Cn.L.even Cn.L.bimult Cn.L.w0 Cn.L.gen
   obtain ⟨T, ib, β₀, ββ₀, w₀, hF₀⟩ := GlobalTheory.T.exists_tautologicalBase_nsmul_degenerationData Cn.L.b Cn.L.D Cn.L.bimult Cn.L.gen l.M'
   obtain ⟨g, hD, hg, hxe, -⟩ := Cn.data
   let ε : Fin C.m ⊕ Fin Cn.N → LinearMap.BilinForm ℤ (Fin T.r → ℤ) := fun k =>
@@ -592,7 +593,7 @@ theorem coords_eq : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : 
         ((hD₂.e.hom.left ≫ pullback.fst C.P.D.toPre.P.A.hom (specOf f₂)) ≫ β) ββ₂ w₂ (AlgebraicClosure (FractionRing V)) a p₂.g ∧
       QImg b ph p₁ p₂ := by
     intro a
-    obtain ⟨p₀, hp₀y, hp₀⟩ := GlobalTheory.T.periodPart_mem_tautologicalPoint_torsion T ε l.M' R C.P.D.toPre iw s e β ββ w C.P.D.tau_bimult hF hs0
+    obtain ⟨p₀, hp₀y, hp₀⟩ := _root_.GlobalTheory.TInj.exists_qkPt_tautPt T ε l.M' R C.P.D.toPre iw s e β ββ w C.P.D.tau_bimult hF hs0
       (AlgebraicClosure (FractionRing R)) a
     obtain ⟨p₁, p₂, hp₁y, hTr₁, hp₂y, hTr₂, hQ⟩ := hpairs p₀
     exact ⟨p₁, p₂, by rw [hp₁y, hp₀y]; rfl,

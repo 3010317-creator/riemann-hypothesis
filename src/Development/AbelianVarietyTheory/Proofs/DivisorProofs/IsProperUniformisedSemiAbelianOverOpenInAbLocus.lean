@@ -3,7 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.PointEqOfSubsingleton
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.PrecompleteBases.PsbLb
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsProperOfCompleteDVRLiftGenericPointStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsProperOfCompleteDVRLiftGenericPoint
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ProperOfAbelianEverywhere
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -220,7 +223,7 @@ theorem isProper_away (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] 
   haveI := hGf.smooth
   haveI : IsIntegral Gf.left := GlobalTheory.isIntegral_left_of_isSemiAbelian Gf
   change IsProper Gf.hom
-  refine GlobalTheory.T.isProper_of_completeDVR_lift_genericPoint (Localization.Away f) Gf.left Gf.hom ?_
+  refine _root_.GlobalTheory.TraitProper.isProper_of_lift_genericPoint (Localization.Away f) Gf.left Gf.hom ?_
   intro V K _ _ _ _ _ _ _ x y hx hxy
   obtain ⟨φ, hφ⟩ : ∃ φ : R →+* V, spMap φ = y ≫ j := ⟨(Spec.preimage (y ≫ j)).hom, by simp [spMap]⟩
   let p₀ : Sp K := (⊥ : PrimeSpectrum K)

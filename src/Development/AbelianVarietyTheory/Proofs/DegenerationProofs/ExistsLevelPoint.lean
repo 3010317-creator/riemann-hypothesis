@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.Degenerations.Induced
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnitCharts
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.GermEqZeroOfThickenings
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.IsBasisB
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TestFieldFiniteOverPadicStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TestFieldFiniteOverPadic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -307,7 +307,7 @@ theorem factor_wVal (e : ℕ) :
 theorem exists_omega [ArithBase o Ω] (hc : c ≫ u.G.hom = spMap u.j) : ∃ (ω : PadicAlgCl p) (ωe : ℕ → OO p), ω ≠ 0 ∧
     Tendsto (fun e => (ωe e : PadicAlgCl p)) atTop (𝓝 ω) ∧
     ∀ e, Ideal.Quotient.mk (u.lev e) (ωe e) = wVal u.U.toUnifPre e (ce e) jL jM := by
-  obtain ⟨-, -, -, K₀, hK₀, hK₀'⟩ := GlobalTheory.T.testField_finite_over_padic o Ω S ρ p y₀ u
+  obtain ⟨-, -, -, K₀, hK₀, hK₀'⟩ := _root_.GlobalTheory.ZH.FieldOfTest.fractionRing_finite_over_padic o Ω S ρ p y₀ u
   have := u.U.smooth
   obtain ⟨K, hK, hval⟩ := exists_finite_values u.j K₀ (fun x => by
     show _ ∈ (K₀ : Set (PadicAlgCl p))

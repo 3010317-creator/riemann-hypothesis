@@ -23,7 +23,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubstFormalG
 public import Mathlib.RingTheory.MvPowerSeries.Expand
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedInOfQuasiLogarithm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OmegaBaseChangeFiniteProjectiveReflexive
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivGroupFormalChartEvNatMultipleEqConvPowerStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivGroupFormalChartEvNatMultipleEqConvPower
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubstSubIn
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -1047,7 +1047,7 @@ theorem ev_one_subst_nmul (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgCl
   have hpt : ∀ j, c.ev 1 (nmul c.μ p j) = 0 := fun j => by
     have h1 := G.mulBy_pow_self 1 (c.x 1 j)
     rw [pow_one] at h1
-    rw [GlobalTheory.T.pDivGroupFormalChart_ev_natMultiple_eq_convPower p C v O hv G d c 1 p j, h1, c.aug 1 j, map_zero]
+    rw [_root_.GlobalTheory.NMul.ev_nmul p C v O hv G d c 1 p j, h1, c.aug 1 j, map_zero]
   have hE' : IsEval p (fun j => c.ev 1 (nmul c.μ p j)) E' := by
     constructor
     · intro j

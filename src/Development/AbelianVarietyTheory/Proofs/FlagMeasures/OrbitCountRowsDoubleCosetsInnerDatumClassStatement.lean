@@ -14,7 +14,6 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.Unitr
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermRowDoubleCosetEqIffIsometries
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermsSameRationalInnerClassAreTranslatesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowLatticeAutomorphismsEqAdaptedModUnipotentStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermRowDoubleCosetEqIffIsometriesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -1344,7 +1343,7 @@ theorem orbit_count : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.wh
     intro p hp q hq
     obtain ⟨hp1, hp2, n, hn, n', hn', hpl⟩ := hs p hp
     obtain ⟨hq1, hq2, m, hm, m', hm', hql⟩ := hs q hq
-    rw [GlobalTheory.T.term_row_double_coset_eq_iff_isometries D X Y u u' (s p) (s q), hp1, hq1, hp2, hq2]
+    rw [_root_.GlobalTheory.Unfold.KeyIff.key_eq_iff D X Y u u' (s p) (s q), hp1, hq1, hp2, hq2]
     simp only [true_and]
     have ep : (s p).lin = (n * p.1) * t₀.lin * (n'⁻¹ * p.2)⁻¹ := by rw [hpl]; group
     have eq : (s q).lin = (m * q.1) * t₀.lin * (m'⁻¹ * q.2)⁻¹ := by rw [hql]; group

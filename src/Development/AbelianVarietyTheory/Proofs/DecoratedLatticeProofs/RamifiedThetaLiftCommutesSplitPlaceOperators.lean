@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlacesToAdeles
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientParaStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientPara
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.IndicatorFunctionIdentity
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.KernelsCommuteTwisted
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceBaseVacuumDatumExistsUniqueStatement
@@ -135,7 +136,7 @@ theorem setIntegral_mul_right (hS : CoCpt S) (v : Vol S) (G : GA D S → ℂ) (h
 theorem lift_facts (hS : CoCpt S) (vS : Vol S) (hW : IsWeilDatumO ψ S T χS χT om) {f : WO S T → ℂ}
     (hf : IsThetaFunO ψ S T f) {φ : GA D S → ℂ} (hφ : IsContAut S φ) :
     (∀ h, IntegrableOn (fun g => om (g, h) f 0 * φ g) vS.𝓕 vS.μ) ∧ IsContAut T (liftT om vS.μ vS.𝓕 φ f) := by
-  have hK := GlobalTheory.T.continuous_integral_compactAutomorphicQuotient_param D S hS vS (GA D T) (fun g h => om (g, h) f 0 * φ g)
+  have hK := _root_.GlobalTheory.CocompactParam.continuous_integral_param D S hS vS (GA D T) (fun g h => om (g, h) f 0 * φ g)
     ((hW.om_cont f hf 0).mul (hφ.2.comp continuous_fst))
     (fun γ hγ g h => by rw [om_left hW hf hγ, hφ.1 γ hγ g])
   refine ⟨hK.1, fun γ hγ h => ?_, ?_⟩

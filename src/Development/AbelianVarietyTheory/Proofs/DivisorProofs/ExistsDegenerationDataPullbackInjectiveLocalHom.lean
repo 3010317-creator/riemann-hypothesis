@@ -1,7 +1,11 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifBaseChangeSt
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHoldStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.OLinBaseChangeSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHold
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsDegDataIsPullDeg
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFiniteCubeInduction
 import Mathlib.Algebra.Order.Floor.Extended
@@ -65,7 +69,7 @@ theorem specOf_genericPoint {R R' : Type} [CommRing R] [IsDomain R] [CommRing R'
 
 theorem exists_pull : ∀ (R R' : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [CommRing R'] [IsDomain R'] [IsLocalRing R'] (ρ : R →+* R'), Function.Injective ρ → IsLocalHom ρ → ∀ D : DegData R (maximalIdeal R), ∃ D' : DegData R' (maximalIdeal R'), Nonempty (IsPullDeg ρ D.toPre D'.toPre) := by
   intro R R' _ _ _ _ _ _ ρ hρ hloc D
-  obtain ⟨L, -⟩ := GlobalTheory.T.all_six_abelian_scheme_laws_hold
+  obtain ⟨L, -⟩ := _root_.GlobalTheory.allSixLaws
   obtain ⟨W, hW, hψ⟩ := GlobalTheory.PsiSpread.exists_psiOn D.toPre D.tau_bimult
   have hη : (specOf ρ).base (genericPoint (Spec (CommRingCat.of R'))) ∈ W := by
     rw [specOf_genericPoint ρ hρ]; exact hW

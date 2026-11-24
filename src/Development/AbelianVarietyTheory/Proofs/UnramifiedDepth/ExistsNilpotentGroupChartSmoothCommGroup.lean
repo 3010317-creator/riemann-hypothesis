@@ -6,7 +6,7 @@ public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsSeri
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.GroupLawPowerSeries
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.NEvalSqZero
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.NilpotentCoordinates
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.PowerSeriesEqOfEvalAtNilpotentPointsEqStatement
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.PowerSeriesEqOfEvalAtNilpotentPointsEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,7 +67,7 @@ private lemma nv_eq_nEval {R S : Type} [CommRing R] [CommRing S] [Algebra R S] {
 private lemma sep_nil {R : Type} [CommRing R] {n d : ℕ} (f f' : PS R n d)
     (h : ∀ (S : Type) [CommRing S] [Algebra R S] (a : Fin n → Fin d → S), (∀ i j, IsNilpotent (a i j)) →
       nv (algebraMap R S) f a = nv (algebraMap R S) f' a) : f = f' :=
-  GlobalTheory.T.powerSeries_eq_of_evalAtNilpotentPoints_eq R ⊥ inferInstance n d f f' (fun S _ _ _ _ _ a ha => h S a ha)
+  _root_.GlobalTheory.ChF.eq_of_nv_eq R ⊥ inferInstance n d f f' (fun S _ _ _ _ _ a ha => h S a ha)
 
 private lemma nv_ev {R S : Type} [CommRing R] [CommRing S] (s : R →+* S) {n m d : ℕ}
     (a : Fin n → Fin d → S) (ha : ∀ i j, IsNilpotent (a i j)) (b : Fin m → Fin d → PS R n d) (f : PS R m d)

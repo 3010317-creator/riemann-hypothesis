@@ -4,8 +4,10 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHeckeQu
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsGenThetaOfIsAbelianScheme
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsGenThetaAbelianVariety
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsPointPrimitiveBundleEqTranslatePpav
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsProjectiveOverRingByChartsAbelianVarietyStatement
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LineBundleProductAcyclicOfAffineBaseAcyclicStatement
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsProjectiveOverRingByChartsAbelianVariety
+import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.IsScalarTowerOfAlgebraMapEq
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LineBundleProductAcyclicOfAffineBaseAcyclic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +49,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
 import Development.AbelianVarietyTheory.Definitions.Divisors.DetJacMatCoordsEqTransitionJacobianDet
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsFrameOfForallExists
 
@@ -70,7 +71,7 @@ theorem exists_point_cls_eq_lam : ∀ (K : Type) [Field K] [IsAlgClosed K] (B : 
   have := hB.comm
   have := hB.smooth
   have := hB.proper
-  have hpr : IsProjBy B.hom := GlobalTheory.T.isProjectiveOverRingByCharts_abelian_variety K B hB
+  have hpr : IsProjBy B.hom := _root_.GlobalTheory.AbelianProjective.isProjBy_of_isAbelianScheme K B hB
   have hproj : ∀ (R : Type) [CommRing R] (u : Spec (CommRingCat.of R) ⟶ Spec (CommRingCat.of K)) (X : Scheme.{0})
       (π : X ⟶ B.left) (f : X ⟶ Spec (CommRingCat.of R)), IsPullback π f B.hom u → IsProjBy f :=
     fun R _ u X π f h => GlobalTheory.AbLaw.CubeProj.isProjBy_baseChange hpr h
@@ -88,7 +89,7 @@ theorem exists_point_cls_eq_lam : ∀ (K : Type) [Field K] [IsAlgClosed K] (B : 
     rw [cls_pull hF, eF, map_sub, pull_lam, ← pull_comp, ← Over.comp_left, lift_fst, lift_snd, pull_const, sub_zero,
       lam_comm]
   have total : Ac ((fst B B).left ≫ B.hom) F := by
-    refine (GlobalTheory.T.lineBundle_product_acyclic_of_affine_base_acyclic K _ _ _ _ _ _ _ hpq inferInstance inferInstance inferInstance inferInstance F hF).1
+    refine (_root_.GlobalTheory.ProductAcyclic.acyclic_of_over_affine_and_converse K _ _ _ _ _ _ _ hpq inferInstance inferInstance inferInstance inferInstance F hF).1
       fun R _ t Y π f h ht => ac_of_slices hproj hpq h hF fun x hx _ => ?_
     let x' : 𝟙_ _ ⟶ B := Over.homMk x hx
     refine ⟨(lift (toUnit B ≫ x') (𝟙 B)).left, ?_, ?_, ac_of_primitive hB hpr (pull_isLB hF _) ?_ ?_⟩
@@ -107,7 +108,7 @@ theorem exists_point_cls_eq_lam : ∀ (K : Type) [Field K] [IsAlgClosed K] (B : 
       (by rw [show ({IsLocalRing.closedPoint K} : Set (Spec (CommRingCat.of K))) = Set.univ from
         Set.eq_univ_of_forall fun z => Subsingleton.elim (α := PrimeSpectrum K) _ _]; exact isClosed_univ)
     exact (congrArg IsClosed Set.image_singleton).mp h
-  have all := (GlobalTheory.T.lineBundle_product_acyclic_of_affine_base_acyclic K _ _ _ _ _ _ _ hpq.flip inferInstance inferInstance inferInstance inferInstance F hF).2
+  have all := (_root_.GlobalTheory.ProductAcyclic.acyclic_of_over_affine_and_converse K _ _ _ _ _ _ _ hpq.flip inferInstance inferInstance inferInstance inferInstance F hF).2
     _ hcl (fun R _ t Y π f h ht hne => ac_of_slices hproj hpq.flip h hF fun x hx hr => by
       let x' : 𝟙_ _ ⟶ B := Over.homMk x hx
       refine ⟨(lift (𝟙 B) (toUnit B ≫ x')).left, ?_, ?_, ac_of_primitive hB hpr (pull_isLB hF _) ?_ ?_⟩

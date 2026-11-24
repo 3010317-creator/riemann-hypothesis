@@ -12,8 +12,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCommon
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HomPairDescendsToFinite
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMonHomOverAlgebraicClosureStatement
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.MorphismsSpreadOutToFgSubalgebra
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMonHomOverAlgebraicClosure
 public import Mathlib.RingTheory.SimpleRing.Principal
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.InvariantFunctionsDescend
@@ -45,7 +45,7 @@ public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.Polarisatio
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraitUniformisationPullbackFiniteExtension
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinExtTqClosedFibre
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisationCompleteLocalEvenOnTorusStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisationCompleteLocalEvenOnTorus
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPullDegUniqueAndComp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationTransferIsPullDegIdStatement
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsSemiAbelianOfGenericAbelianOfClosedIsGt
@@ -335,7 +335,7 @@ theorem exists_finite_hom : ∀ (K Ω : Type) [Field K] [CharZero K] [Field Ω] 
   have hcomp : spMap j ≫ spMap ga = spMap (algebraMap K Ωb) := by
     rw [← Spec.map_comp]; rfl
   obtain ⟨f₁, hf₁, e₁⟩ := exists_pull_hom (spMap j) (spMap ga) (spMap (algebraMap K Ωb)) hcomp f
-  obtain ⟨g, hg, eg⟩ := GlobalTheory.T.exists_mon_hom_over_algebraic_closure K Ωb A A' hA hA' f₁ hf₁
+  obtain ⟨g, hg, eg⟩ := _root_.GlobalTheory.ChowRigid.chow_rigidity K Ωb A A' hA hA' f₁ hf₁
   obtain ⟨s, hs⟩ := GlobalTheory.HomPairDescent.exists_descend (K := K) (Ω := Kb) A A' g
   let L : IntermediateField K Kb := IntermediateField.adjoin K (s : Set Kb)
   obtain ⟨g', hg'⟩ := hs L (IntermediateField.subset_adjoin _ _)
@@ -1562,7 +1562,7 @@ theorem exists_finExt_unif : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRi
     rw [hP₁L]; exact GlobalTheory.T.traitUniformisation_pullback_finiteExtension R R₁ ρ₁ hR hf₁ D D₁ hD₁ G G₁ β₁ hG hβ₁ P.L.L P.L.isLB hT
   have hE : EvenOn P₁ := GlobalTheory.T.evenCubicalTrivialisation_of_trait_uniformisation R₁ hR₁ D₁ G₁ P₁ hG₁ hT₁ X hQ
   obtain ⟨A, gen, hgen, hA⟩ := GlobalTheory.T.exists_polarisedAbelian_generic_fibre_trait_uniformised R₁ hR₁ D₁ G₁ P₁ hG₁ hT₁
-  obtain ⟨D₂, U₂, hU₂, -⟩ := GlobalTheory.T.exists_uniformisation_completeLocal_evenOnTorus R₁ hR₁ G₁ P₁ hG₁ hE A gen hgen hA
+  obtain ⟨D₂, U₂, hU₂, -⟩ := _root_.GlobalTheory.Mum.exists_unif_even R₁ hR₁ G₁ P₁ hG₁ hE A gen hgen hA
   obtain ⟨V, _, _, ψ, D', hψ, h1, h2⟩ := GlobalTheory.T.exists_common_pullDeg_trait_and_base_uniformisation R₁ hR₁ D₁ G₁ P₁.L.L P₁.L.isLB hG₁ hT₁ D₂ A U₂ (by rw [hU₂])
   obtain ⟨R', _, _, _, ρ₂, D₃, hf₂, h13, h23⟩ :=
     GlobalTheory.MumRig.exists_common_pull_finite R₁ hR₁ D₁ D₂ V ψ hψ D' h1 h2

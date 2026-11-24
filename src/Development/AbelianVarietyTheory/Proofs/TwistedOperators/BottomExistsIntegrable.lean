@@ -7,10 +7,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsEtaT
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRepresentationVacuumCosetVectorsGrid
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftsAtAndSeedFacts
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PtYAndItYOfPair
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsThetaFunctionStandardPairSecondStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnitCharTriangle
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsThetaFunctionStandardPairSecond
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FirstStandardPairMemberHasThetaFunctionStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatInOfDefinite
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SelfDualLatticeHasRigidificationStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SelfDualLatticeHasRigidification
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaIntegralDefiniteSourceConvergesContinuousInStatement
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasChr
 import Mathlib.Algebra.Order.Floor.Extended
@@ -108,7 +109,7 @@ theorem exists_stdRig (n : ℕ) : ∃ (V : HSp D) (r : GlobalTheory.IndefiniteRo
         · simp
       rw [e] at hb
       exact hb ▸ b.isIntegral_coe
-  obtain ⟨r, hr, hri⟩ := GlobalTheory.T.self_dual_lattice_has_rigidification D V Λ (Formalism.BasicNotions.Examples₂.posSpace_sigOK _ n) hsd
+  obtain ⟨r, hr, hri⟩ := _root_.GlobalTheory.RigExists.exists_rig D V Λ (Formalism.BasicNotions.Examples₂.posSpace_sigOK _ n) hsd
   have hgt : ∀ τ, gramAt D V τ = 1 := fun τ => by rw [gramAt, hg]; simp
   refine ⟨V, ⟨Λ, r.β, fun _ => 1, fun _ => 1⟩, rfl, Formalism.BasicNotions.Examples₂.posSpace_sigOK _ n,
     ⟨hg, fun y => (hmem y).trans (forall_congr' fun i => ⟨fun h => ⟨⟨y i, h⟩, rfl⟩, fun ⟨b, hb⟩ => hb ▸ b.isIntegral_coe⟩),
@@ -174,7 +175,7 @@ theorem exists_bottomTri {μ₀ : T} (hL : L.Is μ₀) (G : GridData L sc) (W : 
     Finset.prod_ne_zero_iff.2 fun w _ => pow_ne_zero _ w.ne_bot
   choose f hf _ using fun t => GlobalTheory.T.first_standard_pair_member_has_theta_function D W.ψ W.θ A WW rA rW _ _ _ _ _ hA4 hW4 (hd (hc t).1 (hc t).2.1) (he t) (hI t) hv
   choose f' hf' _ using fun t =>
-    GlobalTheory.T.exists_thetaFunction_standardPairSecond D W.ψ W.θ A' WW rA' rW _ _ _ _ A.rank _ hB4 hW4 (hd (hc t).1 (hc t).2.1) (he t) (hI t) hv'
+    _root_.GlobalTheory.CompanionTheory.StdSndTheta.exists_theta D W.ψ W.θ A' WW rA' rW _ _ _ _ A.rank _ hB4 hW4 (hd (hc t).1 (hc t).2.1) (he t) (hI t) hv'
   obtain ⟨m, fd, hm⟩ := GlobalTheory.ConstRatio.exists_meas A
   obtain ⟨m', fd', hm'⟩ := GlobalTheory.ConstRatio.exists_meas A'
   exact ⟨A, A', WW, ⟨rA, rA', rW, ω, ω', vac, vac', e, c, f, f', m, fd, m', fd'⟩, hA1, hB1, hA3, hB3, hW3,

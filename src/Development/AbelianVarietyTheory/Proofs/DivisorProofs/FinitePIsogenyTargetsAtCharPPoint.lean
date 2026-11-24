@@ -16,12 +16,13 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsTjCorr
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsAdditiveOfUniversal
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TorsionTowersOfDivisibleGroup
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsMonHomFactorOfFlatSurjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeMulNFiniteFlatSurjectiveStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeMulNFiniteFlatSurjective
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOneOfRetraction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdditiveLiftIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatSurjectiveQcPow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleProdIsoOfPowIsoBirigidified
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PicEqZeroOfFpqc
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
 public import Mathlib.Algebra.Algebra.Operations
 public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
 public import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
@@ -614,7 +615,7 @@ theorem star_ker_le {k : Type} [CommRing k] {s : Sp k ⟶ Sp R} {c : ℕ} {o o�
       (hker : ∀ (S : Type) [CommRing S] [Algebra k S] (z : GlobalTheory.PDiv.SpAlg k S ⟶ A),
         z ^ n = 1 → z ≫ F = 1) : ∃ f : A ⟶ B, IsMonHom f ∧ F = mulN A n ≫ f := by
     haveI := hA.comm
-    obtain ⟨hfin, hflat, hsurj⟩ := GlobalTheory.T.abelianScheme_mulN_finite_flat_surjective k A hA n hn
+    obtain ⟨hfin, hflat, hsurj⟩ := _root_.GlobalTheory.MulFlatSurj.finite_flat_surjective_mulN k A hA n hn
     haveI : IsMonHom (mulN A n) := GlobalTheory.MulEtaleDvr.isMonHom_mulN A n
     have hqc : QuasiCompact (mulN A n).left := inferInstance
     have h : ∀ (T : Over (Sp k)) (x : T ⟶ A), x ≫ mulN A n = 1 → x ≫ F = 1 := by

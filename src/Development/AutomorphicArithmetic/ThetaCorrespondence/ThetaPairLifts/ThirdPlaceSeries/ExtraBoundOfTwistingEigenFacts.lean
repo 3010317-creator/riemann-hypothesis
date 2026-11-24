@@ -35,7 +35,8 @@ public import Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BlochKatoLocalAllOfTateDualityEulerChar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineRestrictFiniteExtensionJumps
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineBounds
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RestrictionCorestrictionH1fStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.LiftingTheory
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RestrictionCorestrictionH1f
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StrictAdm
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BhattScholzeIntegral
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BhattScholzeCoefficientsOfPadicIntLattices
@@ -857,7 +858,7 @@ theorem localLifting_admittedHypotheses_all_alt : GlobalTheory.Published.BlochKa
     ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F),
       ElementDenominator.Adm2 D HW F := by
   intro hBK hTD hEC D HW F _
-  exact ⟨GlobalTheory.T.restriction_corestriction_H1f D HW F, _root_.GlobalTheory.BlochKatoLocalAllOfTateDualityEulerChar₂.aux_of_blochKato_tateDuality_eulerChar₂ hBK hTD hEC D, GlobalTheory.Per.FontaineAdm.fontaine_bounds D,
+  exact ⟨_root_.GlobalTheory.res_cor_H1f D HW F, _root_.GlobalTheory.BlochKatoLocalAllOfTateDualityEulerChar₂.aux_of_blochKato_tateDuality_eulerChar₂ hBK hTD hEC D, GlobalTheory.Per.FontaineAdm.fontaine_bounds D,
     GlobalTheory.Per.StrictAdm.strict_adm D, _root_.GlobalTheory.Per.ResFinite.adm12_elementDenominator D, GlobalTheory.T.frobenius_sub_one_surjective_witt_tilt⟩
 
 end GlobalTheory.AdmAllRecords

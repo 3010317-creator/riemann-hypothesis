@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ComparisonMemCechHodgeFiltration
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CocycleOneFormsCoboundaryOfRestrict
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommaDescentInjectiveStatement
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CommAlgFunctorCoboundaryZeroMemCocyclesOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommaDescentInjective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommaDescentRestrictionEquiv
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommaFirstOrderCocycleLiftStatement
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CechDeRhamCoefMapOneFormsRestrictAlongFunctor
@@ -153,10 +153,10 @@ theorem pairRes_bijective_two {R' : Type} [CommRing R'] {X X' : Scheme.{0}} (φ 
       _root_.GlobalTheory.CatCoh.pull1_restrict_surjective_of_comma _ _ hs hg hv⟩
   have bg := _root_.GlobalTheory.restrict_glob1_bijective _ _ hs1 hg1
   have hs2 := _root_.GlobalTheory.CechDR.twoForm_sep_of_basis s' (pairFst φ) hcov
-  refine ⟨GlobalTheory.T.comma_first_order_cocycle_lift _ _ (GlobalTheory.T.comma_descent_injective _ _ hs hg hv) b1.2
+  refine ⟨GlobalTheory.T.comma_first_order_cocycle_lift _ _ (_root_.GlobalTheory.CatCoh.pull2_restrict_injective_of_comma _ _ hs hg hv) b1.2
       (_root_.GlobalTheory.cocycle_one_forms_coboundary_of_restrict _ _ hs1 hg1) bg.2 hs2,
     _root_.GlobalTheory.CechDR.pullHyp2_restrict_surjective _ _ (_root_.GlobalTheory.CatCoh.Desc.pull2_surjective_of_comma _ _ hs hg hv hv2)
-      (_root_.GlobalTheory.CechDR.FormExt.coboundary_of_restrict_forms _ _ (GlobalTheory.T.comma_descent_injective _ _ hsE hgE hvE))
+      (_root_.GlobalTheory.CechDR.FormExt.coboundary_of_restrict_forms _ _ (_root_.GlobalTheory.CatCoh.pull2_restrict_injective_of_comma _ _ hsE hgE hvE))
       (_root_.GlobalTheory.CechDR.FormExt.exists_cocycle_restrict_sub_eq_coboundary _ _ (_root_.GlobalTheory.CatCoh.pull1_restrict_surjective_of_comma _ _ hsE hgE hvE))
       (GlobalTheory.T.higherForms_oneCocycle_coboundary_of_restrict _ _ 2 (_root_.GlobalTheory.CatCoh.CoefMap.restrict_pull1_injective_of_sep_glue _ _ (hsJ 2) (hgJ 2)))
       (_root_.GlobalTheory.compat_forms_extend _ _ 2 (hsJ 2) (hgJ 2)) hs3⟩

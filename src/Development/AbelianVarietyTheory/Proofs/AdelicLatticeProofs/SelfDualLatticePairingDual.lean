@@ -9,10 +9,11 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.OneEqS
 public import Mathlib.LinearAlgebra.DFinsupp
 public import Mathlib.LinearAlgebra.TensorProduct.Prod
 public import Mathlib.RingTheory.TensorProduct.Maps
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsDualFamilySelfDualHermitianSpaceStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RationalHermitianRankOneLatticeSelfDualStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsDualFamilySelfDualHermitianSpace
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RationalHermitianRankOneLatticeSelfDual
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ScaledMatrixMemRationalLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.StdCharFinitePartRationalEqExpTraceStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.StdCharFinitePartRationalEqExpTrace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +50,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Formalism.LocalToGlobal.BesselHermitianTheta.NoncompactGapAtLeastRange
-import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
@@ -227,7 +227,7 @@ theorem hRat_smul (c : D.host.E) (M N : Matrix (Fin T.rank) (Fin S.rank) D.host.
 theorem char_rat {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) (z : D.host.E) :
     ψ (pairA D.host.F 0 (algebraMap D.host.F (Af D.host.F) (Algebra.trace D.host.F D.host.E z))) = 1 ↔
       ∃ n : ℤ, Algebra.trace ℚ D.host.E z = n := by
-  rw [GlobalTheory.T.stdChar_finitePart_rational_eq_exp_trace D ψ hψ, Algebra.trace_trace, Complex.exp_eq_one_iff]
+  rw [_root_.GlobalTheory.StdRat.stdChar_fin_rat D ψ hψ, Algebra.trace_trace, Complex.exp_eq_one_iff]
   refine exists_congr fun n => ?_
   rw [mul_comm, mul_left_inj' Complex.two_pi_I_ne_zero]
   exact_mod_cast Iff.rfl
@@ -247,7 +247,7 @@ theorem char_sympl_eq_one {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ
       change ψ (symplO S T _ _) = 1
       rw [symplO_finTens]
       refine GlobalTheory.T.addChar_trivial_integralFiniteAdele_mul D.host.F ψ hψ.1.1 _ (fun a => ?_) _ (mul_mem_intAf hα hβ)
-      have h1 := (GlobalTheory.T.rationalHermitianRankOneLattice_selfDual D S T ΛS ΛT hS hT (GlobalTheory.T.exists_dual_family_selfDual_hermitianSpace D S ΛS hS) _).1
+      have h1 := (_root_.GlobalTheory.LatVac.latRat_selfDual D S T ΛS ΛT hS hT (_root_.GlobalTheory.LatVacDual.dualFamily D S ΛS hS) _).1
         (smul_mem_latRat (algebraMap (𝓞 D.host.F) (𝓞 D.host.E) a) hM) N hN
       rw [hRat_smul, ← char_rat hψ] at h1
       rw [← h1, ← smul_eq_mul, ← map_smul, Algebra.smul_def, mul_left_comm]
@@ -328,7 +328,7 @@ theorem mem_of_char {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1))
       rfl
   rw [e]
   refine add_mem (finTens_mem_latO (one_mem_intAf _) ?_) hu₀
-  refine (GlobalTheory.T.rationalHermitianRankOneLattice_selfDual D S T ΛS ΛT hS hT (GlobalTheory.T.exists_dual_family_selfDual_hermitianSpace D S ΛS hS) _).2 fun ℓ hℓ => ?_
+  refine (_root_.GlobalTheory.LatVac.latRat_selfDual D S T ΛS ΛT hS hT (_root_.GlobalTheory.LatVacDual.dualFamily D S ΛS hS) _).2 fun ℓ hℓ => ?_
   have hl := finTens_mem_latO (one_mem_intAf _) hℓ
   have h1 := h _ hl
   rw [e, symplO_add_left, ψ.map_add_eq_mul, char_sympl_eq_one hψ hS hT hu₀ hl, mul_one, symplO_finTens,

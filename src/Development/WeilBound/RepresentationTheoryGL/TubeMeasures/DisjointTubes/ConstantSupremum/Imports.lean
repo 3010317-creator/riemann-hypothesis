@@ -17,7 +17,10 @@ public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
 public import Formalism.LocalToGlobal.LatticeGeometry.CmTypeMeetsConjugatePair
 public import Development.WeilBound.RepresentationTheoryGL.TubeMeasures.DisjointTubes.CompSt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanMatrixUnitaryGroupPreservesGramStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithmeticGroupConjRationalPrincipalCongruenceStatement
+public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.CoeSelfDualLatticeInFrameCoordinatesEq
+public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
+public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithmeticGroupConjRationalPrincipalCongruence
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComponentRepresentativesInjectiveDoubleCosetStatement
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.FundSetMeasStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CovolumeEqOfRealUnitaryConj
@@ -29,7 +32,6 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlagDo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianMassUpperBound
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalCongruenceConjMemArithmeticGroupStatement
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.FinMuAllData
-public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLatticeRationalVectorsInAdelicTranslate
 public import Formalism.LocalToGlobal.LatticeGeometry.DegFlLApply
 public import Development.WeilBound.RepresentationTheoryGL.TubeMeasures.DisjointTubes.FrameCovolume.CovolFrame
@@ -848,7 +850,7 @@ theorem sum_muF_le (hT : TubeSt) (D : D7) (V : HSp D) (r : ℕ) (hr : V.rank = r
       rw [hG k]
       exact GlobalTheory.T.archimedeanMatrix_unitaryGroup_preserves_gram D V τ _ (hth k ⟨τ, hτ⟩) (gA k)
     · intro γ hγ
-      obtain ⟨γ', h1, h2⟩ := GlobalTheory.T.arithmeticGroup_conj_rational_principalCongruence D V Comp X dict Kf th M x1 hK hth hD (fun c => (hx1 c).1) hact hG k (gA k)
+      obtain ⟨γ', h1, h2⟩ := _root_.GlobalTheory.MsRepsFwd.conj_rat_congr D V Comp X dict Kf th M x1 hK hth hD (fun c => (hx1 c).1) hact hG k (gA k)
         (hgA k) (Λk k) (hΛk k).1 γ hγ
       refine ⟨γ', (hX'Γ k γ').2 (by rw [hG k]; exact h1), fun τ hτ => ?_⟩
       simp only [dif_pos hτ]

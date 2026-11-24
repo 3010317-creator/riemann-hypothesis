@@ -20,13 +20,13 @@ public import Formalism.LocalToGlobal.Columns.HeckeSp
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SatakeEsymmScaledMultisetAddSegment
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SatakeVectorIffInverseDoubleCosets
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUnitaryChartsAllFinitePlacesFrameLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeckeOperatorMoveAcrossInvariantBilinearStatement
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeckeCharValueInertPlaceAndSegmentStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalThetaInertPlace
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeckeCharValueInertPlaceAndSegment
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.InertUnitaryCosetSymmetryHeckeEvenStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnramifiedHeckeVacuumLargerEqSmallerStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumInertPlaceStandardCayleyPairStatement
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalThetaInertPlace
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BaseChangeThetaLiftSatakeParameterEqAddSegment
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SatakeTransformEqAtThetaLiftOfVacuumEq
@@ -698,7 +698,7 @@ theorem transferOn_isSplit : ∀ D : D7, TransferOn D fun v => IsSplit (E := D.h
   have hsubT : ∀ g (y : U), U.subtype (πU g y) = πF g (U.subtype y) := fun g y => rfl
   have hsubS : ∀ g (y : U), U.subtype (σU g y) = σF g (U.subtype y) := fun g y => rfl
   have hInvT : (fun g => Tj ℂ T.rank (Ov D.host.E w) ϖ k g⁻¹) ∈ Hecke ℂ (KGL w (n := T.rank)) :=
-    (GlobalTheory.T.hecke_operator_move_across_invariant_bilinear _ (KGL w (n := T.rank)) hcT hsT ℂ ℂ ℂ 1 1 0 (fun _ _ _ => by simp) 0 (zero_mem _) 0 (zero_mem _) _
+    (_root_.GlobalTheory.ChainOnto.heckeVec_move _ (KGL w (n := T.rank)) hcT hsT ℂ ℂ ℂ 1 1 0 (fun _ _ _ => by simp) 0 (zero_mem _) 0 (zero_mem _) _
       (Tj_mem_hecke hϖ k)).1
   let cf : ℕ → ℂ := fun j => if j ≤ k then (qV D.host.E w : ℂ) ^ ((S.rank - j) * (k - j)) *
     (Formalism.L2.Col.gaussBin (qV D.host.E w) t (k - j) : ℂ) *
@@ -723,7 +723,7 @@ theorem transferOn_isSplit : ∀ D : D7, TransferOn D fun v => IsSplit (E := D.h
   have hmove : ∀ j ∈ Finset.range (S.rank + 1), b (heckeVec σU (KGL w (n := S.rank)) (Tj ℂ S.rank (Ov D.host.E w) ϖ j) f) x =
       satEig (qV D.host.E w) S.rank (B.map (·⁻¹)) j • b f x := by
     intro j hj
-    rw [(GlobalTheory.T.hecke_operator_move_across_invariant_bilinear _ _ hcS hsS U X X' σU ρS b hinv f hfS x hxS.2.1 _ (Tj_mem_hecke hϖ j)).2,
+    rw [(_root_.GlobalTheory.ChainOnto.heckeVec_move _ _ hcS hsS U X X' σU ρS b hinv f hfS x hxS.2.1 _ (Tj_mem_hecke hϖ j)).2,
       (GlobalTheory.T.satake_vector_iff_inverse_doubleCosets D.host.E w S.rank X ρS x B hxS.1 hxS.2.1 hxS.2.2.1).1 hxS ϖ hϖ j
         (Nat.lt_succ_iff.1 (Finset.mem_range.1 hj)), map_smul]
   have hsym := GlobalTheory.T.satake_esymm_scaled_multiset_add_segment D.host.E w S.rank t k (B.map (·⁻¹)) (val (F := D.host.F) χS w)⁻¹
@@ -871,7 +871,7 @@ theorem transferOn_inert : GlobalTheory.Hk3.HoweUnram → ∀ D : D7, TransferOn
         have m4 := map_heckeVec hcom1.1 hh0 U.subtype (ρ' := RS) (fun g u => hπS g u) f
         simp only [Submodule.subtype_apply] at m1 m2 m3 m4
         rw [m1, m4, ← hsf, ← m2, ← m3, heq]
-      have sC := (GlobalTheory.T.hecke_operator_move_across_invariant_bilinear (GU c S.rank) (KU c S.rank) hcom1.1 hcom1.2.1 U X X' πS (ρ.comp eS.symm.toMonoidHom) b
+      have sC := (_root_.GlobalTheory.ChainOnto.heckeVec_move (GU c S.rank) (KU c S.rank) hcom1.1 hcom1.2.1 U X X' πS (ρ.comp eS.symm.toMonoidHom) b
         (fun g u y => hbS g u y) f (GlobalTheory.LGrp.mem_fixed.2 hfixS) x hxS.2.1 h0 hh0).2
       have hev : (fun g => h0 g⁻¹) = h0 := funext fun g => hcom1.2.2 h0 hh0 g
       rw [← sA, sB, sC, hev, hxS.2.2 h0 hh0, map_smul, hsat]

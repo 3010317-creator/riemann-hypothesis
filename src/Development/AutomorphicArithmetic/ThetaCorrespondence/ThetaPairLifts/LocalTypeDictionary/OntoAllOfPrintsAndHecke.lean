@@ -4,8 +4,11 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChainPa
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainUpwardLiftHeckeParamTransferred
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MultiplicitySpaceSpanFullSphericalHeckeEigenpart
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainEigenPartHasHeckeParametersStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FinitePartMemLevelOfThetaDatumNeZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainEigenPartHasHeckeParameters
+public import Development.AbelianVarietyTheory.Definitions.Foundations.HermitianSpaceBaseLatticeEqFrameLattice
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FinitePartMemLevelOfThetaDatumNeZero
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationCommFockPolynomialVectorsStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergFixAndKillThetaOffSupportMoveStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStepFiniteDatumIsSchwartzBruhatHalfStatement
@@ -15,7 +18,7 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForm
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainCuspSpaceFiniteDimOfHarishChandra
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearIndependentOfIsParamFunV
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageLatticeStabilizerParamsOffSetStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStageLatticeStabilizerParamsOffSet
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainInnerProductsExistOfRapidDecay
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ParBoundW
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainLValuesNonvanishing
@@ -27,13 +30,14 @@ public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoublingHeightAtRealPlaceContinuousPosLeOneStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSmoothKFiniteUnitHighestWeightVectorStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegrableMulHeightPowOfBoundedFactorStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralRealUnitaryHaarEqProdUpqHaarStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ThetaSourceAction
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralRealUnitaryHaarEqProdUpqHaar
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RealMatrixCoeffFockVectorsLeDoublingHeightPowStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStepWeilDatumNonzeroFockVacuumStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaInnerFockProductEqProdRealPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CartFrSgn
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStepWeilDatumNonzeroFockVacuum
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ChosenSeries
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaInnerFockProductEqProdRealPlaces
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaLiftChainAdjointNonvanishingStep
-public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
-public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LevelPlacesDatumInvLeftMulTargetLevel
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemLatOIffExistsActO
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OmegaQEmpty
@@ -50,10 +54,9 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForm
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaLiftUpwardsInCuspSpan
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IntegrandSZero
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaLiftUpwardsNeZeroOfLValue
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ThetaSourceAction
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ArchimedeanThetaCorrespondenceTowersRealData
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeckeParametersOfElementFromOneNonzeroValueStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainLevelPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainLevelProperties
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.DiscreteSpectrumResidualClassification
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.WeilRepresentationUnitaryPair
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.WeilSiegelFormulaUnitary
@@ -104,15 +107,17 @@ import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Polynomial.Basic
 import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaLiftChainSplittingCharactersResidueUnramifiStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnrOffOne
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaLiftChainSplittingCharactersResidueUnramifi
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsInvariantForm
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCharFamIsVacVec
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrameMatrixMovedHomIntegralReductionsStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHomLatticeIffFrameStabilizerActMemStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerIntertwinerSchwartzBruhatIsThetaStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrameMatrixMovedHomIntegralReductions
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHomLatticeIffFrameStabilizerActMem
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerIntertwinerSchwartzBruhatIsTheta
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.StepVectorLiftPairFlagLevelRealizedChain
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilRepThetaDatumHalfEqSmulStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilRepThetaDatumHalfEqSmul
 import Mathlib.Tactic.Linter.HaveILetI
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -172,7 +177,7 @@ namespace GlobalTheory.ChainOnto
 theorem eigSpan_of_parts : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, FinDim D → MetEx D → LevFacts D → EigSpan D := by
   intro hC D hF _ hL c hc j hj s hs
   have hspan := GlobalTheory.T.multiplicitySpace_span_fullSphericalHecke_eigenparts hC D hF hL c hc j hj s hs
-  have hpar := GlobalTheory.T.thetaChain_eigenPart_has_heckeParameters hC D c hc j hj s hs
+  have hpar := _root_.GlobalTheory.ChainOnto.partPar hC D c hc j hj s hs
   rw [eq_top_iff, ← hspan]
   refine Submodule.span_le.2 ?_
   rintro u ⟨e, he⟩
@@ -238,7 +243,7 @@ theorem coefSupp : ∀ D : D7, CoefSupp D := by
     obtain ⟨PP, hPP, hPPv⟩ := hmem
     exact hv PP (hPg ▸ hPP) hPPv
   have hsupp := fun x hx => by_contra fun h => hnot
-    (GlobalTheory.T.finitePart_mem_level_of_thetaDatum_ne_zero D s.V s'.V s.Λ s.β s'.β s.L (c.chi (k + 1)) ξ e hs.selfDual hs.frame hrank hQ he g hint x hx h)
+    (_root_.GlobalTheory.SuppLevO.finE_mem_lev D s.V s'.V s.Λ s.β s'.β s.L (c.chi (k + 1)) ξ e hs.selfDual hs.frame hrank hQ he g hint x hx h)
   have hsb := GlobalTheory.T.thetaChainStep_finiteDatum_isSchwartzBruhat_half D s.V s'.V s.Λ s'.Λ s.β s'.β s.L (c.chi (k + 1)) ξ (s.L.Pg ∪ ∅) e
     hs.selfDual hs'.selfDual hs.frame hs'.frame he
   obtain ⟨n, a, y, hy, h1, h2⟩ := GlobalTheory.T.heisenberg_fix_and_kill_theta_off_support_move D c.ψ s.V s'.V hc.std s.Λ s'.Λ hs.selfDual hs'.selfDual
@@ -329,7 +334,7 @@ namespace GlobalTheory.ChainOnto
 theorem parIndep : ∀ D : D7, ParIndep D := by
   intro D c hc j hj s hs ι x B hpar hB
   classical
-  have hlat := (GlobalTheory.T.thetaChainStage_lattice_stabilizer_params_off_set D c hc j hj s hs).2
+  have hlat := (_root_.GlobalTheory.ChainOnto.stabLoc_isParamFun_frameLat D c hc j hj s hs).2
   rw [linearIndependent_iff']
   intro t a hsum i₀ hi₀
   obtain ⟨hne0, _⟩ := hpar i₀
@@ -509,7 +514,7 @@ namespace GlobalTheory.RealZetaProof
 open GlobalTheory.IndefiniteRowSideFullHecke.ThetaSourceAction in
 theorem realZeta : GlobalTheory.Published.HarishChandraModules → ∀ D : D7, GlobalTheory.IndefiniteRowSideFullHecke.ThetaSourceAction.ArchOnRecord D → GlobalTheory.ChainOnto.RealZeta D := by
   intro hHC D hA hgap c hc k hk s s' hs hs' p hp m X hmX
-  obtain ⟨hWexp, hvac⟩ := GlobalTheory.T.thetaChainStep_weilDatum_nonzero_fockVacuum D hgap c hc k hk s s' hs hs' p hp hk
+  obtain ⟨hWexp, hvac⟩ := _root_.GlobalTheory.ChainOnto.StepExp.stepExpVac D hgap c hc k hk s s' hs hs' p hp hk
   obtain ⟨χS, χT, hW, hexp⟩ := hWexp
   have hCT := (hA.2 hgap).1
   have hfock : ∀ τ, IsFockAt c.ψ c.θ s.V s'.V τ (cart s.M τ) (cart s'.M τ) (onb s.M τ) (onb s'.M τ) p.f :=
@@ -540,8 +545,8 @@ theorem realZeta : GlobalTheory.Published.HarishChandraModules → ∀ D : D7, G
   choose w hwsm hwk hwhi using fun τ => GlobalTheory.T.exists_smooth_kFinite_unit_highestWeight_vector hHC D s.V s.par s.M τ
   refine ⟨glue Φ, fun τ => ⟨w τ, hwsm τ⟩, fun τ => hwk τ, ?_⟩
   intro mR hmR z
-  have hfac := GlobalTheory.T.thetaInner_fockProduct_eq_prod_realPlaces D s.V s'.V s.par s'.par s.M s'.M c.θ c.ψ χS χT p.ω hc.inf hW m X hmX p.f hvac
-  obtain ⟨cst, hcst, hhaar⟩ := GlobalTheory.T.integral_realUnitary_haar_eq_prod_Upq_haar D s.V s.par s.M c.θ hc.inf mR (fun τ => Formalism.REAL.muG (s.M.ε τ)) hmR
+  have hfac := _root_.GlobalTheory.FockProdCoef.ipTh_ptOf_glue D s.V s'.V s.par s'.par s.M s'.M c.θ c.ψ χS χT p.ω hc.inf hW m X hmX p.f hvac
+  obtain ⟨cst, hcst, hhaar⟩ := _root_.GlobalTheory.HaarReal.integral_prod_eq D s.V s.par s.M c.θ hc.inf mR (fun τ => Formalism.REAL.muG (s.M.ε τ)) hmR
     (fun τ => inferInstance)
   have hZ := fun τ => hZL τ (Φ τ) (hΦ τ) ⟨w τ, hwk τ⟩ (hwhi τ) (Formalism.REAL.muG (s.M.ε τ)) inferInstance
   set i0 := ipTh m X p.f p.f with hi0
@@ -794,7 +799,7 @@ theorem stepLevLawT (D : D7) (c : Com D) (hc : c.Is) (k : ℕ) (hk : k < D.R.m) 
   have eb : s'.V.rank = D.R.r + (k + 1) * D.R.t := hs'.rank
   obtain ⟨hf, e, he, hΘ⟩ := hv
   have he' : IsIdemSum e c.Pg := by rw [← Finset.union_empty c.Pg]; exact he
-  obtain ⟨hres, uS, uT⟩ := GlobalTheory.T.thetaLiftChain_splittingCharacters_residue_unramified D c hc k hk
+  obtain ⟨hres, uS, uT⟩ := _root_.GlobalTheory.ChainOnto.levRes_step D c hc k hk
   have hlev : Lev.finE s'.V κ ∈ lev D.sp.cm s'.V.gram s'.β
       (Lev.datY s'.V.rank D.R.r D.R.t (k + 1) hr' c.Pg ∅ c.P c.chi ξ2 Lev.Frm.B) := hκ.2
   have sg : Lev.finE s.V 1 ∈ St s.β := by rw [map_one]; exact Subgroup.one_mem _
@@ -816,14 +821,14 @@ theorem stepLevLawT (D : D7) (c : Com D) (hc : c.Is) (k : ℕ) (hk : k < D.R.m) 
     refine Finset.prod_congr rfl fun PP _ => ?_
     simp only [map_one, redFn_one, MonoidHom.inv_apply, inv_one, one_mul, hH]
   have hoT := GlobalTheory.T.levelPlacesDatum_inv_left_mul_target_level D s.V.rank s'.V.rank D.R.r D.R.t k hr hr' ea eb c.Pg c.P c.chi ξ1 H hBT hP
-  have h2 := GlobalTheory.T.weilRep_theta_datum_half_eq_smul D c.ψ s.V s'.V _ _ ω hW e _ f₀ _ f
-    (GlobalTheory.T.schrodingerIntertwiner_schwartzBruhat_isTheta D c.ψ hW.std s.V s'.V s.Λ s'.Λ hs.selfDual hs'.selfDual e (GlobalTheory.PlaceDatum.idemSum_mul_self he)
+  have h2 := _root_.GlobalTheory.ThetaMove.om_theta_eq_smul D c.ψ s.V s'.V _ _ ω hW e _ f₀ _ f
+    (_root_.GlobalTheory.SchrTheta.isTheta_placeModel D c.ψ hW.std s.V s'.V s.Λ s'.Λ hs.selfDual hs'.selfDual e (GlobalTheory.PlaceDatum.idemSum_mul_self he)
       (GlobalTheory.PlaceDatum.infPart_idemSum he) f₀ hf.2.theta) hΘ 1 κ
-    (GlobalTheory.T.mem_homLattice_iff_frameStabilizer_act_mem D s.V s'.V s.Λ s'.Λ s.β s'.β hs.selfDual hs'.selfDual hs.frame hs'.frame 1 κ sg sh) _
+    (_root_.GlobalTheory.StabLatInv.mem_latO_iff_actO_mem D s.V s'.V s.Λ s'.Λ s.β s'.β hs.selfDual hs'.selfDual hs.frame hs'.frame 1 κ sg sh) _
     ((((c.P.chi ⟨_, hP⟩ * ∏ PP ∈ c.Pg, ∏ i ∈ Finset.range (k + 1),
         c.chi (i + 1) PP (dBlk (blkOf D.R.r D.R.t) (i + 1) (H PP)))⁻¹ *
       ∏ PP ∈ c.Pg, c.chi (k + 1) PP (GeneralLinearGroup.det (H PP)) : ℂˣ) : ℂ)) (Units.ne_zero _) h1' (fun x => by
-      obtain ⟨i1, i2⟩ := GlobalTheory.T.frameMatrix_movedHom_integral_reductions D s.V s'.V s.β s'.β 1 κ sg sh x
+      obtain ⟨i1, i2⟩ := _root_.GlobalTheory.FrameRed.frMapO_actO_int_red D s.V s'.V s.β s'.β 1 κ sg sh x
       have i0 : IsHalf e (actO s.V s'.V 1⁻¹ κ⁻¹ x) ↔ IsHalf e x :=
         ⟨fun H' => GlobalTheory.AdelicLatMove.actO_actO_inv s.V s'.V 1 κ x ▸ GlobalTheory.SplitHecke.isHalf_actO 1 κ H',
           fun H' => GlobalTheory.SplitHecke.isHalf_actO _ _ H'⟩
@@ -1081,7 +1086,7 @@ namespace GlobalTheory.ChainOnto
 
 theorem ontoAll_of_classicalTheorems : GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CasselmanWallach → ∀ D : D7, GlobalTheory.Core.Rk.IP.HeckeForm D → UpPar D → OntoAll D := by
   intro hHCF hCRD hDSC hHCM hCW D hHF hUP
-  have hLF : LevFacts D := GlobalTheory.T.thetaChain_level_properties D
+  have hLF : LevFacts D := _root_.GlobalTheory.ChainOnto.LevelFacts.levFacts D
   have hFD : FinDim D := GlobalTheory.T.thetaChainCuspSpaceFiniteDim_of_harishChandra hHCF D hLF
   have hMet : MetEx D := GlobalTheory.T.thetaChainInnerProductsExist_of_rapidDecay hCRD D
   have hES : EigSpan D := GlobalTheory.T.multiplicity_space_spanned_by_satake_eigen_elements hCRD D hFD hMet hLF
@@ -1139,7 +1144,7 @@ theorem ontoAll_of_hecke_alt : GlobalTheory.Published.HarishChandraFinite → Gl
   fun hHC hCusp hDS hHCM hCW hHowe hWeil hSW hSWc hDoub hUnr D =>
     GlobalTheory.T.thetaLiftChain_onto_cuspForms_of_innerProduct hHC hCusp hDS hHCM hCW D
       (_root_.GlobalTheory.T.heckeForm_of_doubling hWeil hCusp hSW hSWc hDoub hUnr D)
-      (GlobalTheory.T.thetaChainUpwardLift_heckeParam_transferred hCusp hHowe D (GlobalTheory.T.thetaChain_level_properties D))
+      (GlobalTheory.T.thetaChainUpwardLift_heckeParam_transferred hCusp hHowe D (_root_.GlobalTheory.ChainOnto.LevelFacts.levFacts D))
 end GlobalTheory.ChainOnto
 end
 

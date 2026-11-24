@@ -10,7 +10,6 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Fibre
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FibreMeasureInvariantSupportedOrbitNeZero
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwoStepPairMeasureFiniteOnCompacts
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryStabilizerAnisotropicVectorEquivComplemen
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwoStepPairMeasureFiniteOnCompactsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -1336,13 +1335,13 @@ theorem twoStep_swap_local : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     rw [← mp, ← mp, ← mm (pow_ne_zero _ hd) hw₂, ← mm (pow_ne_zero _ hd) hw₁,
       ← mm hu (by positivity), hue]
   have fin₁ : IsFiniteMeasureOnCompacts N₁ :=
-    GlobalTheory.T.twoStep_pair_measure_finite_on_compacts F E σ hσ R hR M J x₁ a₁ B₁ J₁' m₁ m₁' N₁ hS₁
+    _root_.GlobalTheory.GaugeEx.twoStep_finite_on_compacts F E σ hσ R hR M J x₁ a₁ B₁ J₁' m₁ m₁' N₁ hS₁
       (_root_.GlobalTheory.GaugeEx.FibProp.fibre_invariant_orbit_ne_zero F E σ hσ R hR _ J x₁ a₁ lam ν m₁ hS₁.1 hS₁.2.1 hS₁.2.2.1 hlam hν f₁).2.1
       (_root_.GlobalTheory.GaugeEx.FibBasic.fibAt_basic F E σ R hR _ J _ ν _ m₁ hν (unF hS₁.2.1) f₁).2.1
       (_root_.GlobalTheory.GaugeEx.FibBasic.fibAt_basic F E σ R hR _ J₁' _ ν _ m₁' hν (unF hb₁) f₁').2.1
       (_root_.GlobalTheory.GaugeEx.FibProp.fibre_invariant_orbit_ne_zero F E σ hσ R hR _ J₁' y₁ b₁ lam ν m₁' hS₁.2.2.2.2.2 hb₁ hy₁ hlam hν f₁').1 t₁
   have fin₂ : IsFiniteMeasureOnCompacts N₂ :=
-    GlobalTheory.T.twoStep_pair_measure_finite_on_compacts F E σ hσ R hR M J x₂ a₂ B₂ J₂' m₂ m₂' N₂ hS₂
+    _root_.GlobalTheory.GaugeEx.twoStep_finite_on_compacts F E σ hσ R hR M J x₂ a₂ B₂ J₂' m₂ m₂' N₂ hS₂
       (_root_.GlobalTheory.GaugeEx.FibProp.fibre_invariant_orbit_ne_zero F E σ hσ R hR _ J x₂ a₂ lam ν m₂ hS₂.1 hS₂.2.1 hS₂.2.2.1 hlam hν f₂).2.1
       (_root_.GlobalTheory.GaugeEx.FibBasic.fibAt_basic F E σ R hR _ J _ ν _ m₂ hν (unF hS₂.2.1) f₂).2.1
       (_root_.GlobalTheory.GaugeEx.FibBasic.fibAt_basic F E σ R hR _ J₂' _ ν _ m₂' hν (unF hb₂) f₂').2.1

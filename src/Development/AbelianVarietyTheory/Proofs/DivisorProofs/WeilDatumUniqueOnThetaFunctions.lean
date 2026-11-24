@@ -4,8 +4,8 @@ public import Formalism.LocalToGlobal.BesselHermitianTheta.TiedWeil
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdelicCharacterTrivialRatAndSplit
 public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemLatOIffExistsActO
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitPlaceHalfHeisenbergInvariantFormStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurLemmaThetaFunctionsOrientedPairStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitPlaceHalfHeisenbergInvariantForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurLemmaThetaFunctionsOrientedPair
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -90,7 +90,7 @@ theorem om_inv_om (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)) (
 
 theorem exists_scalar (H : IsWeilDatumO ψ S T χS χT om) (H' : IsWeilDatumO ψ S T χS χT om') (p : GA D S × GA D T) :
     ∃ c : Circle, ∀ f, IsThetaFunO ψ S T f → om p f = (c : ℂ) • om' p f := by
-  obtain ⟨c, hc, h⟩ := GlobalTheory.T.schurLemma_thetaFunctions_orientedPair D ψ H.std S T (om' p⁻¹ * om p)
+  obtain ⟨c, hc, h⟩ := _root_.GlobalTheory.ThetaSchur.schur D ψ H.std S T (om' p⁻¹ * om p)
     (fun f hf => H'.om_pres _ _ (H.om_pres _ _ hf))
     (fun w f hf => by
       obtain ⟨g, h⟩ := p
@@ -129,7 +129,7 @@ theorem scalar_split (H : IsWeilDatumO ψ S T χS χT om) (H' : IsWeilDatumO ψ 
   obtain ⟨y, hy⟩ := exists_isDetAt he.1 T h
   obtain ⟨r, hr, h1⟩ := H.om_split e he g h hg hh x y hx hy
   obtain ⟨r', hr', h2⟩ := H'.om_split e he g h hg hh x y hx hy
-  obtain ⟨ℓ, hℓ, f, hf, hne⟩ := GlobalTheory.T.exists_split_place_half_heisenberg_invariant_form D ψ H.std S T e he
+  obtain ⟨ℓ, hℓ, f, hf, hne⟩ := _root_.GlobalTheory.HalfCoinv.exists_invariant_form D ψ H.std S T e he
   have e1 := h1 ℓ hℓ f hf
   rw [hc f hf, map_smul, h2 ℓ hℓ f hf, smul_eq_mul] at e1
   have e2 : (c : ℂ) * r' = r := by

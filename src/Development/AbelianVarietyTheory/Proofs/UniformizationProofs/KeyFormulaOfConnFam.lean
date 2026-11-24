@@ -73,7 +73,8 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsEquival
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsDomainAndIsIntegrallyClosedAtPrimeOfSmoothOfCo
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.GeometricallyIntegralOfIsIntegralOfIsAlgClosed
 public import Development.AbelianVarietyTheory.Statements.FundamentalDomains.AtOfNumberField
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditionalStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaUniformisationComplexAbelianVarieties
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKeyRuleCharHalf
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.FiniteAbsLeOneMulMemRange
@@ -158,7 +159,7 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.Cha
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.PrecompleteBases.PsbLb
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.RingTheory.Artinian.Instances
-import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.KeyDataDescendCountableSubringsStatement
+import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.KeyDataDescendCountableSubrings
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ChiGen, Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.KeyPBOfKeyViaField, Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsCommonCountable, Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsAlgHomNeZeroOfCountable, Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsDominantComponent, Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKeyPBScale, Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsPrimeDimensionLEOneAvoiding, Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsSmoothNormalisation, Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.MemNonzeroLocusPullOn, Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.MkTensorLe, Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsSmoothThrough, Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsUnitThetaKeyRuleSmoothBaseStatement, Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ThetaFrameValueEqUnitSmoothConnectedBaseStatement, Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ThetaFrameValueIndependentNormalFormStatement, Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.IsDomainTensorOfIsAlgClosed, Development.AbelianVarietyTheory.Proofs.UniformizationProofs.KeyFormulaOfConnFam
@@ -1719,9 +1720,9 @@ open GlobalTheory.KeyPow GlobalTheory.KeyKa
 namespace GlobalTheory
 
 theorem keyFormula_of_connFam : GlobalTheory.KeyKa.ConnFam → KeyFormula := fun hF =>
-  have hL := GlobalTheory.T.abelianScheme_laws_unconditional.1
+  have hL := _root_.GlobalTheory.abelianSchemeLaws_all.1
   have hR := GlobalTheory.KeyTop.exists_keyRule_charHalf hL _root_.GlobalTheory.thetaUnifAV_closed GlobalTheory.ThetaInversion.inversion (GlobalTheory.phHolo_of_phKoecher GlobalTheory.phKoecher) GlobalTheory.torusAlgebraic_holds
-  GlobalTheory.KeyRoot.keyFormula_of_families _root_.GlobalTheory.thetaUnifAV_closed hL.polBaseChange (GlobalTheory.T.keyData_descend_countable_subrings hL).1 hR
+  GlobalTheory.KeyRoot.keyFormula_of_families _root_.GlobalTheory.thetaUnifAV_closed hL.polBaseChange (_root_.GlobalTheory.KeyCountableDescent.keyIn_descends_countable hL).1 hR
     (GlobalTheory.ThetaFrameSpec.value_specialises hL _root_.GlobalTheory.thetaUnifAV_closed GlobalTheory.ThetaInversion.inversion hR (GlobalTheory.ThetaEquiv.val_equivariant hL _root_.GlobalTheory.thetaUnifAV_closed GlobalTheory.ThetaInversion.inversion hR hF))
 
 end GlobalTheory

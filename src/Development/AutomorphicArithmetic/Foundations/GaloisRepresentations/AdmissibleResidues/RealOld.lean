@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AdmissibleResidues.RealDefs
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.GalUnitary
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PlaceOverTransportRingIsoStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Langlands
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PlaceOverTransportRingIso
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Mono0OfLpDimEqOne
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RootsCharpolySmulMatrix
 import Mathlib.Algebra.Order.Floor.Extended
@@ -98,7 +99,7 @@ theorem pol_of_rel {y : WD h} {y' : WD h'} (hy : WDRel φ y y') {σ : ↥(Weil h
 
 theorem RatioW.descend (P : PlaceIso A w A' w' φ j i) {x : WD h} {x' : WD h'} (hx : WDRel φ x x') (k : RatioW x') :
     RatioW x := by
-  obtain ⟨c, hc, hdeg, hq, -⟩ := GlobalTheory.T.place_over_transport_ring_iso E Ω A w h E' Ω' A' w' h' φ j i P
+  obtain ⟨c, hc, hdeg, hq, -⟩ := _root_.GlobalTheory.WeilTransport.weil_equiv E Ω A w h E' Ω' A' w' h' φ j i P
   intro g hg α hα β hβ
   rw [WD.eig, pol_of_rel hx ((hc g (c g)).2 rfl)] at hα hβ
   rw [← hq]

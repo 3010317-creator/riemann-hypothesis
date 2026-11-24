@@ -6,7 +6,7 @@ public import Formalism.LocalToGlobal.IndefiniteReal.ZeroPartEigenvalueConventio
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AbsNormCoprimeOfSup
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplittingCharactersUnramifiedOffLevelsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplittingCharactersUnramifiedOffLevels
 public import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
 public import Formalism.SharpRestriction.Divisibility.KudlaSiegelWeil
@@ -232,7 +232,7 @@ theorem fixAll_inert : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T :
     (R : RealDat3 D A3 Ks) (F : Face3 D A3), R.WeakCharacterisation F → ∀ t P, Good R.toRealDat t P → Formalism.DivisionValues.conjPl P = P →
     FixAll R.toRealDat t P := by
   intro D G _ _ Pl0 I0 T A3 Ks _ _ _ R F hC t P hG hP
-  have hU := GlobalTheory.T.splittingCharacters_unramified_offLevels R.toRealDat F.lv2 hC.base.lev t P hG
+  have hU := _root_.GlobalTheory.UnrOffLevels.unrPl_of_good R.toRealDat F.lv2 hC.base.lev t P hG
   have hη := hU.1
   have hμ := hU.2
   have hr : Odd D.R.r := r_odd

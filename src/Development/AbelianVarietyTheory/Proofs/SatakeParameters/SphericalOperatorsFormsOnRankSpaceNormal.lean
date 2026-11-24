@@ -3,7 +3,7 @@ module
 public import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeterssonAdjointHeckeOperatorEqDualLabel
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GoodProjectorUnitaryFormsModelLawsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GoodProjectorUnitaryFormsModelLaws
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelOperatorsAtPrimeOffLevelDatum
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormalFamilyOrthogonalDecomposition
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
@@ -239,7 +239,7 @@ theorem sphericalOperators_forms_on_rank_space_normal_alt : ∀ {D : D7} {G : Ty
   have inj : Function.Injective (R.HW i (sg0 D A)).e := hM.1
   have hmem : ∀ x, (R.HW i (sg0 D A)).e x ∈ R.Wall i (sg0 D A) := fun x => hM.2.1 ▸ LinearMap.mem_range_self _ x
   have hlv := fun x v => ((GlobalTheory.MultMem.mem_mult_iff ..).1 (hmem x)).lev v
-  obtain ⟨e1, e2, e3, -⟩ := GlobalTheory.T.goodProjector_unitaryFormsModel_laws R F hC hX i
+  obtain ⟨e1, e2, e3, -⟩ := _root_.GlobalTheory.Hk3.eH_laws R F hC hX i
   obtain ⟨h, hh, hN⟩ := exists_ops R.θ (R.MW i (sg0 D A)) (levG _ (R.βW i) (R.datWp i R.triv))
     (levChi _ (R.βW i) (R.datWp i R.triv)) (R.νW i) (R.fdW i) (R.HW i (sg0 D A)) _ (Good R A.μ0) hM hC.models.inf
     (hC.models.νW i).1.1 (hC.models.νW i).2 (hS.2.2 i)

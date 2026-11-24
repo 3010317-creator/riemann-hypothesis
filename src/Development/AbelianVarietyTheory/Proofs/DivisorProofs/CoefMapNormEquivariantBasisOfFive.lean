@@ -35,7 +35,9 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EmbeddingCon
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfConjOnFinite
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHeckeCharacterOfUnitaryTensorIdeles
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPsiOfOverK
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtremalVectorsHolomorphicModelUniqueUpToPhaseStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSmoothVector
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtremalVectorsHolomorphicModelUniqueUpToPhase
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolShapeOfOverK
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicShapeIntegralWeightGoodEmbedding
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsEtaConjUnique
@@ -68,7 +70,9 @@ public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.Numerica
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.NoCommonZeroIffOfSec
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AnalyticFibreDescriptionLevelMoveMarkingComp
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AnalyticFibreDescriptionLevelMoveMarkingCompStatement
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
+public import Formalism.LocalToGlobal.ProjectiveLattices.IsLevMove
+public import Formalism.LocalRingCardinality.DataHost
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DictionaryRationalElementAnalyticPointStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFinUnitIsDetRoot
@@ -97,8 +101,12 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OneMa
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OrthonormalNegFirstFamilyFrameCartanMove
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitFinitePointMovesVacuumToProjectionStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaFockVacuumProperties
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilMaximalCompactFockSubstitutionCharacterStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilVacuumFiniteSelfDualLatticeSplittingStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsHolRepOfIsTau
+import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilMaximalCompactFockSubstitutionCharacter
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FibExtMarked
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilVacuumFiniteSelfDualLatticeSplitting
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WeightExponentsEmbeddingsDegree
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AnalyticFibreUnitFrameUniformisation
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ClassSumEvalComplexPointEqClassical
@@ -117,7 +125,7 @@ import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.Uniform
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCharFamIsVacVec
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsFockVacAtOfIsThetaAt
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrameStatement
+import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnramifiedAtPlaceIdempotentOfHeckeCharUnramifi
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnramifiedEtaTildeOfOddExponentSum
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersUnramifiedOffLevelPlaces
@@ -179,7 +187,6 @@ import Mathlib.Tactic.ReduceModChar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.CmHostUnitAddConjEqOne
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.ModelLatA
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.PolyDerivMonomialOne
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSmoothVector
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinTensMemLatO
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemLatOIffExistsActO
@@ -743,7 +750,7 @@ theorem deltaConj_extremal_weight_ofFive : ∀ {D : D7} {G : Type} [Group G] [Fi
       simp [θs, e]
   have e1 : ∀ ρ, (R.BV i ρ)⁻¹ * compAt R.θ ρ (Formalism.L2.Theta.mt (Vc D i) 1) * R.BV i ρ = 1 := fun ρ => by
     rw [show compAt R.θ ρ (Formalism.L2.Theta.mt (Vc D i) 1) = 1 from GlobalTheory.PointAtPlaceHom.infMat_one _ _, Matrix.mul_one, hBi]
-  have key := (GlobalTheory.T.weil_maximalCompact_fock_substitution_character D R.ψ R.θ _ _ _ _ _ _ M (R.BV i) hω hθ (D.sp.V_sig _) (D.sp.W_sig _) hB _ _ hpq hε
+  have key := (_root_.GlobalTheory.FockCompactAction.om_pureTensorO_eq_fact D R.ψ R.θ _ _ _ _ _ _ M (R.BV i) hω hθ (D.sp.V_sig _) (D.sp.W_sig _) hB _ _ hpq hε
     _ _ ha hb x₁ x₂ x₃ hx₁ hx₂ hx₃ _ hth hv 1 (one_mem _) g a1 (fun ρ => hg ρ ▸ diag_mem _)).2
     (delta (pW D i) (qW D i) (fun ρ => aPl D i (pW D i ρ) (lab σ ρ)) (fun ρ => aMi D i (pW D i ρ) (qW D i ρ) (lab σ ρ)))
   simp only [hg, e1] at key
@@ -789,7 +796,7 @@ theorem ioExt_conj_ofFive : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T
   have hvec := GlobalTheory.GalOne.VecConj.vec_conj_ofFive R F hR i σ μ' η' ω f₀ f hC
   have hinj := hvec.2.2.2.1 _ hvec.2.2.1
   let pt := pureTensorO R.ψ R.θ (Vc D i) (Wc D i) (fun _ => 1) (cart (R.MW i σ)) (R.BV i) (onb (R.MW i σ)) f
-  exact exists_unit_of_isIoW R.θ (R.MW i σ) (GlobalTheory.HolLowOnce.lowSm_and_lowIrr D _ _ _ hH).1 (GlobalTheory.T.extremal_vectors_holomorphic_model_unique_up_to_phase D _ _ _ hH) c ω pt
+  exact exists_unit_of_isIoW R.θ (R.MW i σ) (GlobalTheory.HolLowOnce.lowSm_and_lowIrr D _ _ _ hH).1 (_root_.GlobalTheory.HolLowOnce.extLine_of_holShape D _ _ _ hH) c ω pt
     (deltaConj i σ) (fun h => deltaConj_ne i σ (hinj (h.trans (map_zero pt).symm)))
     (GlobalTheory.GalOne.MinorWeight.deltaConj_extremal_weight_ofFive R F hR i σ μ' η' ω f₀ f hC) io hio v hv
 
@@ -1344,7 +1351,7 @@ theorem eqAt_of_frAtEmb_ofFive : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {
     simp
   have hi : (1 : Af D.host.F ⊗[D.host.F] D.host.E) ∈ intAE D :=
     AddSubgroup.subset_closure ⟨1, fun v => one_mem _, 1, rfl⟩
-  have hvac := GlobalTheory.T.weil_vacuum_finite_selfDualLattice_splitting D (Vc D i) (Wc D i) R.ψ R.θ p1.2.1 (D.sp.V_sig _) (D.sp.W_sig _) _ _ _ ho ⟨_, c1⟩ c4
+  have hvac := _root_.GlobalTheory.FinVac.om_vacuum_finite D (Vc D i) (Wc D i) R.ψ R.θ p1.2.1 (D.sp.V_sig _) (D.sp.W_sig _) _ _ _ ho ⟨_, c1⟩ c4
     (fun _ => 1) (cart (R.MW i σ))
     (fun τ => ⟨Matrix.mul_one _, by simp, by
       have : gramAt D (Vc D i) τ = 1 := by
@@ -1414,8 +1421,8 @@ theorem omega_level_conjVec_ofFive : ∀ {D : D7} {G : Type} [Group G] [Fintype 
   have hmu : ∀ x, R.toLevCh.mu A.μ0 ((i : ℕ) + 1) x = R.mu0 ((i : ℕ) + 1) x := fun x => by
     show R.mu0 ((i : ℕ) + 1) x * R.xi A.μ0 x = _
     rw [hxi, MonoidHom.one_apply, mul_one]
-  refine (om_vec hW ⟨_, hη⟩ (GlobalTheory.T.isSelfDualCoordLattice_of_selfDualFrame D _ _ _ _ (hL.βV i))
-    (GlobalTheory.T.isSelfDualCoordLattice_of_selfDualFrame D _ _ _ _ (hL.βW i)) (hL.βV i).choose_spec.1 (hL.βW i).choose_spec.1 hv).elim fun P h1 =>
+  refine (om_vec hW ⟨_, hη⟩ (_root_.GlobalTheory.SDFrameLattice.isSelfDualC_of_isSDFrame D _ _ _ _ (hL.βV i))
+    (_root_.GlobalTheory.SDFrameLattice.isSelfDualC_of_isSDFrame D _ _ _ _ (hL.βW i)) (hL.βV i).choose_spec.1 (hL.βW i).choose_spec.1 hv).elim fun P h1 =>
       h1.elim fun e h2 => h2.elim fun hee h3 => ?_
   have he := h3.2.1
   have hP : ∀ PP, PP ∈ P ↔ PP ∈ R.toLevCh.Pg ∨ PP ∈ R.toLevCh.Q A.μ0 := fun PP => by
@@ -2478,7 +2485,7 @@ theorem geometric_value_ofFive (hR : GlobalTheory.Core5 R F) (tie : FWTie T R κ
       evR _ O.c' (actLev O.c' O.lev2 z f) y = evR _ O.c' f y' :=
     ⟨_, mvPt_spec hP.act.2.total z _,
       evalAt_actL hP.act.2 (GlobalTheory.TransferCompare.evalWD_framed _ _) frMap_trans_id z hf.1 _⟩
-  obtain ⟨A', hrd', hmk''⟩ := GlobalTheory.T.analyticFibre_description_levelMove_marking_comp _ _ _ _ _ O.c' _ _ _ Dc.bas Dc.idx Dc.e _ _ Dc.sympl hdom hsd (O.lev z) _ y' hy' B
+  obtain ⟨A', hrd', hmk''⟩ := _root_.GlobalTheory.Dict.FibreMove.anFib_levR_id _ _ _ _ _ O.c' _ _ _ Dc.bas Dc.idx Dc.e _ _ Dc.sympl hdom hsd (O.lev z) _ y' hy' B
   have hA' : A'.Marked (n • mk) :=
     marked_of_congr A' (hmk'' mk hB) fun a ha => by
       obtain ⟨b, hb⟩ := hzl a ha

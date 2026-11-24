@@ -42,10 +42,10 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StepG
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StdLvPr
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ColNorm
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.BaseDataEmbeddingConj
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CouplingCosetInFramesShapeAtBadPrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CouplingCosetInFramesShapeAtBadPrime
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFullHermitianColumnsTrueColumns
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsMiddleStepLevelInverseLiftsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRationalFramesNearAdelicAtBadPrimesStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRationalFramesNearAdelicAtBadPrimes
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.KernelEntriesCompatibleTrueColumns
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StepNearLiftsComponentMemLocalChartGroupStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -1511,7 +1511,7 @@ theorem lev_mid (hm : i < B.R.m) (y0 : SBof I a → Sp B.fields.E (B.R.N i))
   · obtain ⟨g, z, hg, hl⟩ := GlobalTheory.T.exists_middleStep_level_inverse_lifts I hOk u a i hm c.1 κ P
     refine ⟨g, g, z, (hRel P g z).2 ⟨hg, fun h1 => ?_⟩, hl, congE_refl _ _ _⟩
     have h2 := (GlobalTheory.T.couplingCosetInFrames_preimage_under_lift I hOk u a i c.1 κ _ P g hκ.1 hl (y0 P)).1 (by rw [hκ.2]; exact hy0 h1 P)
-    exact ((((GlobalTheory.T.couplingCosetInFrames_shape_at_bad_prime I hOk u a i _ P).2 h1).2.2 _ (hy0 h1 P)).1 _).1 h2
+    exact ((((_root_.GlobalTheory.Mem.Col2.AdT.CosShape.cosShape I hOk u a i _ P).2 h1).2.2 _ (hy0 h1 P)).1 _).1 h2
   · rintro P v hv κ hκ ⟨g, z, hg, hin⟩
     obtain ⟨hg1, hg2⟩ := (hRel P g z).1 hg
     obtain ⟨hint, hc⟩ := GlobalTheory.T.congruent_automorphisms_lift_step_group_elements I hOk u a i hm c.1 P g z hg1
@@ -1522,8 +1522,8 @@ theorem lev_mid (hm : i < B.R.m) (y0 : SBof I a → Sp B.fields.E (B.R.N i))
     · subst hPP
       rw [GlobalTheory.T.couplingCosetInFrames_preimage_under_lift I hOk u a i c.1 κ' _ P' g' e1 e2 z']
       by_cases h1 : i + 1 = B.R.m
-      · exact (((GlobalTheory.T.couplingCosetInFrames_shape_at_bad_prime I hOk u a i _ P').2 h1).2.2 _ (hy0 h1 P')).2 g g' hg' hgg (hg2 h1) z'
-      · rw [(GlobalTheory.T.couplingCosetInFrames_shape_at_bad_prime I hOk u a i _ P').1 h1]
+      · exact (((_root_.GlobalTheory.Mem.Col2.AdT.CosShape.cosShape I hOk u a i _ P').2 h1).2.2 _ (hy0 h1 P')).2 g g' hg' hgg (hg2 h1) z'
+      · rw [(_root_.GlobalTheory.Mem.Col2.AdT.CosShape.cosShape I hOk u a i _ P').1 h1]
         exact Iff.rfl
     · exact GlobalTheory.T.couplingCosetInFrames_preimage_under_lift I hOk u a i c.1 κ' _ P' 1 e1 (e3 P' hPP) z'
   · obtain ⟨g, z, -, hl⟩ := GlobalTheory.T.exists_middleStep_level_inverse_lifts I hOk u a i hm c.1 κ P
@@ -1574,9 +1574,9 @@ theorem adTie_true : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC
   have hm : B.R.m = B.R.m - 2 + 2 := hOk.hm
   choose k hk using fun i hi => (hRK i hi).1
   choose sc hsc using fun i hi => (hk i hi).onto
-  choose fb hfb using fun i hi (β : Ch i hi) => GlobalTheory.T.exists_rational_frames_near_adelic_at_bad_primes I hOk l Z a (B.R.N i) (k i hi β)
+  choose fb hfb using fun i hi (β : Ch i hi) => _root_.GlobalTheory.Mem.Col2.AdT.frNear_exists I hOk l Z a (B.R.N i) (k i hi β)
   have hm1 : B.R.m - 2 + 1 ≤ B.R.m := by omega
-  choose y0 hy0 using fun (β : Ch _ hm1) (P : SBof I a) => ((GlobalTheory.T.couplingCosetInFrames_shape_at_bad_prime I hOk u a _ ((I.stp u a _).rep (sc _ hm1 β)) P).2 (by omega)).1
+  choose y0 hy0 using fun (β : Ch _ hm1) (P : SBof I a) => ((_root_.GlobalTheory.Mem.Col2.AdT.CosShape.cosShape I hOk u a _ ((I.stp u a _).rep (sc _ hm1 β)) P).2 (by omega)).1
   have hkey : ∀ i hi c, (sc i hi (chOf i hi c)).1 = c.1 ∧ cosetIn ((I.stp u a i).rep (sc i hi (chOf i hi c))) = cosetIn ((I.stp u a i).rep c) :=
     fun i hi c => ((hk i hi).key _ _).1 (hsc i hi _)
   have hm3 : B.R.m - 2 + 1 + 1 = B.R.m := by omega
@@ -1662,7 +1662,7 @@ theorem adTie_true : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC
       have h := hι c hc
       rw [← hmov ((Kc i hi (chOf i hi c)).y ⟨c, rfl⟩).1] at h
       exact h
-    · have h1 := (GlobalTheory.T.couplingCosetInFrames_shape_at_bad_prime I hOk u a _ ((I.stp u a _).rep c) P).2 (show B.R.m - 2 + 1 + 1 = B.R.m by omega)
+    · have h1 := (_root_.GlobalTheory.Mem.Col2.AdT.CosShape.cosShape I hOk u a _ ((I.stp u a _).rep c) P).2 (show B.R.m - 2 + 1 + 1 = B.R.m by omega)
       have h2 := hy0 (chOf _ hm1 c) P
       rw [(hkey _ hm1 c).2] at h2
       exact ((h1.2.2 _ h2).1 _).1 (h1.2.1 y hy)

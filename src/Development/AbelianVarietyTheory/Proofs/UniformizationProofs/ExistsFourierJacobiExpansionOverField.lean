@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.ExistsUniqueSamePt
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsTwistBasisOffPrime
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsGeneratorOfBasis
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsExpansionSectionLineBundlePowerStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsExpansionSectionLineBundlePower
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsUniquePullB
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -248,7 +249,7 @@ theorem exists_expF (hS : SecBaseChangeSt) (U : PreU I D A G) (F : Type) [Field 
 
 theorem expF_total : Laws → Laws2 → (AllPre fun {V} _ _ _ {_} {_} {_} _ _ U => ∀ (F : Type) [Field F] [Algebra (FractionRing V) F] (k : ℕ), 1 ≤ k → ∀ t, ∃ s, U.ExpF F k t s) :=
   fun h h₂ V _ _ _ hV D A G _ _ U F _ _ k hk t =>
-    exists_expF h.secBaseChange U F k hk (GlobalTheory.T.exists_expansion_section_lineBundle_power h h₂ V hV D A G U k hk) t
+    exists_expF h.secBaseChange U F k hk (_root_.GlobalTheory.BaseExpansionExists.main h h₂ V hV D A G U k hk) t
 
 end GlobalTheory.UU.ExpTotal
 end

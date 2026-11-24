@@ -35,7 +35,9 @@ public import Mathlib.AlgebraicGeometry.Morphisms.Finite
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsProjOverOfIsFiniteOverProjective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleSymmetryHypothesisOfPolAVPullback
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticLevelExtendsNoetherianNormalDomainStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.BaseOver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticLevelExtendsNoetherianNormalDomain
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaRealisationLabelsInjectiveOfGrpPullbackStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharacterGroupFinrankLeMinSignatureUnitaryTrait
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLinkedThetaSystemRegularMonomialFamilyStatement
@@ -106,7 +108,7 @@ import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsNsmulIffEq
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsThetaSystemOfPolarisedLevel
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalModelNormalisationDedekind
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelObjectPullbackExistsAndPrincipal
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelStalkNormalNoetherianFractionRingStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelStalkNormalNoetherianFractionRing
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaMemberExistsIntegralTermsUnitShiftStatement
 import Mathlib.Algebra.Order.Star.Int
 
@@ -925,7 +927,7 @@ theorem deep_of_uLink : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   have hQpb' : IsGrpPullback Q.A X₁.ρ.P.A (spMap ((algebraMap R Ω₂).comp h)) φQ := by
     have e : (algebraMap R Ω₂).comp h = (algebraMap X₁.Ω₁ Ω₂).comp X₁.S.R.val.toRingHom := RingHom.ext hh
     rw [e]; exact hQpb
-  obtain ⟨P, ψ, hPg, hpb, hlb, ⟨lev⟩⟩ := GlobalTheory.T.symplecticLevel_extends_noetherian_normalDomain X₁.ρ.P R Ω₂ h Q φQ K zeR hKpos hKunit hQg hQpb' hQlb
+  obtain ⟨P, ψ, hPg, hpb, hlb, ⟨lev⟩⟩ := _root_.GlobalTheory.SympLevelExt.level_extends X₁.ρ.P R Ω₂ h Q φQ K zeR hKpos hKunit hQg hQpb' hQlb
     ⟨by rw [hzeR]; exact levQ⟩
   have hS := GlobalTheory.Poinc.hypS_polAV_pullback X₁.ρ.P P (spMap h) ψ hpb hlb X₁.ρ.hypS
   obtain ⟨th, hth⟩ := GlobalTheory.T.exists_polarization_sectionBasis_pullback_affine X₁.ρ.P P h ψ hpb hlb X₁.ρ.th₁ X₁.ρ.th₁_basis
@@ -1173,7 +1175,7 @@ theorem GlobalTheory.GSep.exists_vPre_traitsOn_chart : ∀ (E : Type) [Field E] 
   obtain ⟨j, X₁, act, u, π, z₁, ζ, V₁, _, _, _, ρ₁, ev₁, r, hj, hN, hlink, hcov, hcn₁, hinj, hfin, hloc, hreg, hcomp, hr⟩ :=
     GlobalTheory.T.exists_linked_thetaSystem_regular_monomialFamily E H Dw hpq l Xo c C φ V Cm hB ξ hξ n hn hodd j₀
   obtain ⟨U, hUne, hU⟩ := GlobalTheory.T.exists_nonempty_open_thetaRing_regular X₁
-  have hdom := (GlobalTheory.T.modelStalk_normal_noetherian_fractionRing X₁ z₁).1
+  have hdom := (_root_.GlobalTheory.GSep.stalk_isNoetherian_normal_fractionRing X₁ z₁).1
   have hact : GlobalTheory.GSep.IsAct X₁ act := hlink.1
   have hdeep := GlobalTheory.T.thetaSystem_universalUnitary_deep_towers E H Dw hpq l Xo c C X₁ act u π hlink
   obtain ⟨x₀, hx₀⟩ := X₁.div z₁
@@ -1353,7 +1355,7 @@ theorem exists_system_with_traits_and_family : ∀ (E : Type) [Field E] [NumberF
   intro E _ _ _ H Dw hpq l Xo c C φ V _ _ _ Cm hV ξ hξ n hn hodd j₀
   obtain ⟨j, X₁, π, z₁, ζ, hdom, U, Φ, y, ρ, e, h, c₀, hj, hcov, hU, hT, hM, hunit, hm1, hE, hCS⟩ :=
     GlobalTheory.T.exists_unitary_fourier_system_traits_chart E H Dw hpq l Xo c C φ V Cm hV ξ hξ n hn hodd (max j₀ 1)
-  obtain ⟨-, -, hIC, -⟩ := GlobalTheory.T.modelStalk_normal_noetherian_fractionRing X₁ z₁
+  obtain ⟨-, -, hIC, -⟩ := _root_.GlobalTheory.GSep.stalk_isNoetherian_normal_fractionRing X₁ z₁
   have hj1 : 1 ≤ j := le_trans (le_max_right _ _) hj
   have hN : 3 ≤ (n ^ j) ^ 2 := by
     have h3 : 3 ≤ n := by

@@ -9,7 +9,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchHeisenbergDerivativesExist
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContDiffHeisenbergArchimedeanDiffOperatorFamily
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergArchimedeanDiffOperatorHasDerivAtFamil
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOrbitCoefficientSmoothStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DOpDef
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOrbitCoefficientSmooth
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilOperatorRightIntertwinesHeisenbergDerivativeStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PairInfApply
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OneParameterWeilOperatorDerivative
@@ -225,7 +226,7 @@ theorem orbit_heis_real : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
   have hrel : ∀ t y, T t f₁ y = dOp (archCo M.co (u * (mat (γ (Multiplicative.ofAdd t)))ᵀ)).1
       (archCo M.co (u * (mat (γ (Multiplicative.ofAdd t)))ᵀ)).2 (T t f) y := fun t =>
     GlobalTheory.T.weil_operator_right_intertwines_heisenberg_derivative M ψ χX χW om hψ hW (γ (Multiplicative.ofAdd t)) (T t) (hTa t) u hu f f₁ hf₁
-  obtain ⟨hφ, u', hu', hφd⟩ := GlobalTheory.T.heisenberg_orbit_coefficient_smooth M γ hγ u hu
+  obtain ⟨hφ, u', hu', hφd⟩ := _root_.GlobalTheory.HeisOrbitSmooth.archCo_orbit_smooth M γ hγ u hu
   have hfun : (fun p : ℝ × (Fin n × Fin d → mixedEmbedding.mixedSpace F) => T p.1 f₁ p.2) =
       fun p => dOp (archCo M.co (u * (mat (γ (Multiplicative.ofAdd p.1)))ᵀ)).1
         (archCo M.co (u * (mat (γ (Multiplicative.ofAdd p.1)))ᵀ)).2 (T p.1 f) p.2 :=

@@ -80,7 +80,7 @@ import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartVal
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationWeilPairingProperties
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.UniformizationLawsAndExpansionStatements
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsProjectiveRep
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralDegenerationValuesStatement
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralDegenerationValues
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespond
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionPairingValuesOfFamiliesValues
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValues
@@ -756,7 +756,7 @@ theorem GlobalTheory.SympQ.compatible_symplectic_bases : ∀ (R : Type) [CommRin
   have gt : GlobalTheory.Ex.BrGtSt := GlobalTheory.Ex.GtValues.points_correspond
   have wp : GlobalTheory.Ex.BrWpSt := GlobalTheory.WeilValues.weil_eq_values gt (GlobalTheory.Ex.brFam hL GlobalTheory.allSixLaws.2.1)
   haveI : IsNoetherianRing R := hR.1.1
-  obtain ⟨N, ν, -⟩ := GlobalTheory.T.exists_integral_degeneration_values hL R D.toPre D.psi_even D.tau_bimult F ⊤ (fun _ => trivial)
+  obtain ⟨N, ν, -⟩ := _root_.GlobalTheory.ValuesExist.exists_integral_values hL R D.toPre D.psi_even D.tau_bimult F ⊤ (fun _ => trivial)
   obtain ⟨-, -, gAdd, -, gQ⟩ := gt R D.toPre D.psi_even D.tau_bimult F N ν
   have hW := wp R D.toPre D.psi_even D.tau_bimult F N ν
   have hcl : ∀ n (p p' : QkPt D.toPre F n) v v', ν.QPt p v → ν.QPt p' v' →

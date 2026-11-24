@@ -54,7 +54,8 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Finit
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharLocalComponentExistsUniqueUnitary
 public import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CharacterChoiceData
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ConjugateSplitPlaceEqConjugatePlaceAndEmbeddingStatement
+public import ReciprocityTheory.Automorphisms.SplitCoeAlgebraMap
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ConjugateSplitPlaceEqConjugatePlaceAndEmbedding
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ThetaLocalInputs
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.PartsGive
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ExistsTrueReadingStatement
@@ -65,8 +66,8 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFor
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodToralTwistStable
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaLiftGeneralLinear
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaPairingOfInvariantTrilinearForm
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteTypeSpannedBySplitPlaceLocalComponentStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsotypicPartSpannedBySplitPlaceLocalComponentStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteTypeSpannedBySplitPlaceLocalComponent
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsotypicPartSpannedBySplitPlaceLocalComponent
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PairReadingOfJoin
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryFiniteAdelesSplitPlaceDecomposition
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSplitPlaceEq
@@ -1030,7 +1031,7 @@ theorem typeTame_of_ramified_alt (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (
     intro g hg d hd
     rw [← hmu_eq g hg d hd]
     exact hu g _
-  · obtain ⟨hw', hci'⟩ := GlobalTheory.T.conjugateSplitPlace_eq_conjugatePlace_and_embedding D s w hconj
+  · obtain ⟨hw', hci'⟩ := _root_.GlobalTheory.TypeTame.conjSP_w_of_isConjPl D s w hconj
     subst hw'
     obtain ⟨c, T, hc, hci, -⟩ := hT.rep i (GlobalTheory.TypeTame.conjSP s) hw Q
     obtain ⟨K', θ', hK'i, hθ'o, hK'iff, hθ'eq, hK'of⟩ := GlobalTheory.T.exists_level_character_at_conjugateSplitPlace _ _ s K θ hKi hθo
@@ -1314,7 +1315,7 @@ theorem GlobalTheory.NPin.pairRead_of_join_alt : GlobalTheory.Published.Bernstei
     have := hF
     rw [P.H.av.typeV] at this
     exact this
-  have hspan := GlobalTheory.T.isotypicPart_spanned_by_splitPlace_localComponent D.host.E D.R.nV (P.M.loc i).wt (P.H.av.S i Q) (P.H.av.irr i Q) s _
+  have hspan := _root_.GlobalTheory.SpanLoc.main D.host.E D.R.nV (P.M.loc i).wt (P.H.av.S i Q) (P.H.av.irr i Q) s _
     (hT.rep i s hw Q) c hc hci
   let ℓF : ↥(NG.AFall D.host.E D.R.nV (P.M.loc i).wt.ρ) →+ ℂ :=
     AddMonoidHom.mk' (fun F' => Θ.Λ (ι Φ0) F' yp) (by intro a b; simp)
@@ -1335,7 +1336,7 @@ theorem GlobalTheory.NPin.pairRead_of_join_alt : GlobalTheory.Published.Bernstei
   obtain ⟨hΦe, y2, ⟨f2, hf2⟩, hℓy2⟩ := exists_ne_of_mem_iSup_sub X.C _
     (fun h => h.2) ℓy y1 hy1 hℓy1
   have hΦC : ∀ g : ↥(P.rep σ).S, Φe g ∈ X.C := fun g => hΦe.2 (LinearMap.mem_range_self _ _)
-  have hspan2 := GlobalTheory.T.finiteType_spanned_by_splitPlace_localComponent D.host.E D.R.r (P.rep σ) s _ (hT.row i s hw σ hσne) c hc hci
+  have hspan2 := _root_.GlobalTheory.FinTypSpanLoc.main D.host.E D.R.r (P.rep σ) s _ (hT.row i s hw σ hσne) c hc hci
   let ℓ2 : ↥(P.rep σ).S →+ ℂ :=
     AddMonoidHom.mk' (fun g => Θ.Λ (ι Φ0) F2 ⟨Φe g, hΦC g⟩) (by
       intro a b

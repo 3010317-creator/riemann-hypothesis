@@ -39,10 +39,10 @@ public import Development.AbelianVarietyTheory.Definitions.Degenerations.CharZer
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.QvalAddTower
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationSeriesTermsNest
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFullAll
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValuesStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValues
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsArcSeriesIntegralAlgebraicOverPowerSeriesStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFieldOfValues
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FullTorsionPolarizedCMObjectExtendsAlgClosedStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FullTorsionPolarizedCMObjectExtendsAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PowerSeriesAlgebraicClosureCompatibleStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -110,10 +110,9 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.Non
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespond
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionPairingValuesOfFamiliesValues
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValues
 import Mathlib.Tactic.TypeStar
 import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FullTorsionObjectExistsUniqueModuliPointStatement
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FullTorsionObjectExistsUniqueModuliPoint
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SummableVtQT
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaCoordinatesExistUniqueSeparatePointsStatement
 import Mathlib.RingTheory.PowerSeries.Ideal
@@ -1408,7 +1407,7 @@ theorem ser_nested {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host 
   obtain ⟨A, ρ, -, -, hρ, hv⟩ := S.val C gam u h₁ h₂ h₃ h₄
   have hR : Roots u ρ := ⟨Units.ext ((hρ 1).trans ((congrArg gam S.r_one).trans h₃.symm)), fun n k hn hk => Units.ext (by
     rw [Units.val_pow_eq_pow_val, hρ, hρ, ← map_pow, ← Units.val_pow_eq_pow_val, S.roots.2 n k hn hk])⟩
-  obtain ⟨b₁, -, b₃, -, b₅⟩ := GlobalTheory.T.torus_torsion_points_correspond_values O' a.D₀ a.even a.bimult C A.N A.ν
+  obtain ⟨b₁, -, b₃, -, b₅⟩ := _root_.GlobalTheory.Ex.GtValues.points_correspond O' a.D₀ a.even a.bimult C A.N A.ν
   obtain ⟨q₁, q₂⟩ := GlobalTheory.T.qval_add_of_tower E H D O' a.D₀ a.oa a.even a.bimult C A.I A.N A.ν A.q b₁ b₃
     (fun k => ⟨(b₅ k).1, (b₅ k).2.2⟩) A.hq
   have hrm : Odd (r * m) := hr.mul hm
@@ -1601,7 +1600,7 @@ theorem realises_of_has : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheo
   obtain ⟨A, r, hint, ⟨-, hAρ, hAζ, -⟩, hr', hser⟩ := S.val C gam u h₁ h₂ h₃ h₄
   have hr : Roots u r := ⟨Units.ext ((hr' 1).trans ((congrArg gam S.r_one).trans h₃.symm)), fun n m hn hm => Units.ext (by
     rw [Units.val_pow_eq_pow_val, hr', hr', ← map_pow, ← Units.val_pow_eq_pow_val, S.roots.2 n m hn hm])⟩
-  obtain ⟨o', hext, hθ, hco⟩ := GlobalTheory.T.fullTorsionPolarizedCMObject_extends_algClosed hV h6 hU hH hT hE hA E H D K C gam o
+  obtain ⟨o', hext, hθ, hco⟩ := _root_.GlobalTheory.FullExtend.main hV h6 hU hH hT hE hA E H D K C gam o
   have hO : CExt O' ⊥ C := ⟨fun x => by rw [h₁]; exact h₂ _, fun x hx => by
     rw [Ideal.mem_bot.1 hx, map_zero, map_zero, norm_zero]; exact one_pos⟩
   obtain ⟨q, hq, -⟩ := (UnitNorm.norms_of_arc_input E H D l Xo c W₀ Y O' b ϖ a hb C hO A hint).2.2 u h₄
@@ -1655,7 +1654,7 @@ theorem exists_point : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.
     ((algebraMap (PowerSeries O') K₀).comp ((PowerSeries.C (R := O')).comp b))
   have hbK : ∀ x : c.V W₀, (algebraMap K₀ K).comp bF x = algebraMap (FractionRing O') K (algebraMap O' _ (b x)) :=
     fun x => by rw [hK, RingHom.comp_apply, hbF]; rfl
-  obtain ⟨hpt, -, hext⟩ := GlobalTheory.T.fullTorsionObject_existsUnique_moduliPoint hV h6 hU hH hT hE hA E H D l Xo c W₀ Y K ((algebraMap K₀ K).comp bF)
+  obtain ⟨hpt, -, hext⟩ := _root_.GlobalTheory.FullPoint.fullAt_existsUnique_exists_ext hV h6 hU hH hT hE hA E H D l Xo c W₀ Y K ((algebraMap K₀ K).comp bF)
   obtain ⟨y, ⟨hy, hfull⟩, -⟩ := hpt o (fun r hr => by
       have hm : r ∈ c.V W₀ := mem_of_pow_mem _ two_ne_zero (by
         have : r ^ 2 = -(H.d : c.F) := Subtype.ext (by simpa [hr] using H.sqrt_neg_disc_sq)
@@ -1698,7 +1697,7 @@ theorem exists_point : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.
       (fun x => (h₁ x).trans (hf' _).symm) (fun x => by rw [hf']; exact h₂ _) (h₃.trans (hf' _).symm) h₄
     exact ⟨A, r, o', p₁, p₂, hf ▸ hext C f y o o' hfull p₃, p₄⟩
   · obtain ⟨f, hf, hf'⟩ := hx (AlgebraicClosure (FractionRing R₁)) (algebraMap _ _)
-    obtain ⟨o', p₁, p₂, -⟩ := GlobalTheory.T.fullTorsionPolarizedCMObject_extends_algClosed hV h6 hU hH hT hE hA E H D K _ f o
+    obtain ⟨o', p₁, p₂, -⟩ := _root_.GlobalTheory.FullExtend.main hV h6 hU hH hT hE hA E H D K _ f o
     exact ⟨o', hf ▸ hext _ f y o o' hfull p₁, fun n j hn ho' hu hj =>
       ⟨_, p₂ _ _ (ho.2.2 _ ho'.pow).1, intFam_map (S.int n j hn ho' hu hj) g _ f hf'⟩⟩
 

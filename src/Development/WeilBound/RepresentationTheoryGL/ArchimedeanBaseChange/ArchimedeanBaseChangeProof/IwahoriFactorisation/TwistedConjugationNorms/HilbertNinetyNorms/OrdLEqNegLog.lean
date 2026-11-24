@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryIwahoriOrbitalSupport
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.OneCoset
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwahoriAndMaximalCompactCriteriaStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryIwahoriFactsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WeightExponentStrictlyAntitoneStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwahoriAndMaximalCompactCriteria
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryIwahoriFacts
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WeightExponentStrictlyAntitone
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.HilbertNinetyNorms.Hilbert90NormOneUnitsOfUnrOfNotSplit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -191,7 +191,7 @@ theorem nv_rev {a : ℕ} (y : Fin a → ℤ) (i : Fin a) : nv y i.rev = -nv y i 
 
 theorem diagT_mem_iwGL' (w : Pl E) (n : ℕ) (s : Fin n → (w.adicCompletion E)ˣ)
     (hs : ∀ i, Valued.v (s i : w.adicCompletion E) = 1) : GlobalTheory.SmGL.diagT (w.adicCompletion E) (Fin n) s ∈ iwGL n w := by
-  rw [(GlobalTheory.T.iwahori_and_maximal_compact_criteria E w n _).1]
+  rw [(_root_.GlobalTheory.CompanionTheory.IwEntries.iwGL_KGL_entries E w n _).1]
   have hinv : ((GlobalTheory.SmGL.diagT (w.adicCompletion E) (Fin n) s)⁻¹ : GLw n w) =
       GlobalTheory.SmGL.diagT (w.adicCompletion E) (Fin n) s⁻¹ := (map_inv _ _).symm
   refine ⟨fun i j => ?_, fun i j => ?_, fun i j hij => ?_⟩
@@ -315,10 +315,10 @@ theorem exu_pf (hU : Unr E) (w : Pl E) (hw : ¬ IsSplitAt w) (n : ℕ) (b : GLw 
   obtain ⟨u, hQu, hu⟩ := hv
   have hu0 : ∀ i, u i ≠ 0 := fun i => (hu i).1
   have huv : ∀ i, ordL (u i) = wexp n l i := fun i => (hu i).2
-  obtain ⟨hwa, hwr⟩ := GlobalTheory.T.weight_exponent_strictly_antitone n l hl
+  obtain ⟨hwa, hwr⟩ := _root_.GlobalTheory.CompanionTheory.Wexp.wexp_strictAnti_rev n l hl
   have hpair := root_pair hU w hw (wexp n l) hwa.injective hwr Q hQ u hQu hu0 huv
   set U : Fin n → (w.adicCompletion E)ˣ := fun i => Units.mk0 (u i) (hu0 i) with hUdef
-  obtain ⟨hw1, -, -, hw4⟩ := GlobalTheory.T.unitary_iwahori_facts E hU w hw n b hb
+  obtain ⟨hw1, -, -, hw4⟩ := _root_.GlobalTheory.CompanionTheory.UnitaryWitt.unitary_hyperbolic_basis E hU w hw n b hb
   have hD : GlobalTheory.SmGL.diagT (w.adicCompletion E) (Fin n) U ∈ UJ (cj w) (antiJ (w.adicCompletion E) n) := by
     rw [hw4]
     intro i

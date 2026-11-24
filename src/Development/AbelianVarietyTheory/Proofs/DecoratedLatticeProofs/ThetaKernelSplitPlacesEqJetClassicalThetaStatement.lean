@@ -31,16 +31,16 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Hal
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NotIsConjPlOfIdemSum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StdCharSymplecticHalfPeriodLatticeEqOne
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.EmbHInjective
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SemicharacterSqEqOneOnHalfAStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SemicharacterSqEqOneOnHalfA
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HalfAComponentsMemCompletedLatticeOffPrimesStatement
 public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.PeriodLatticeFinitelyGenerated
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ThetaAtEqSumHeisOfFourierSum
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.DifferentiableOfChar
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EventuallyFinEqOne
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FiniteFourierExpansionHalfSplitPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GaussianReadingFiniteRationalHeisenbergTranslateStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaSupportInDivLattice
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PerCEmb
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GaussianReadingFiniteRationalHeisenbergTranslate
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaSupportInDivLattice
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsRatDatum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FiniteCommCreation
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GaussianTwistedRealReadingEntireAndInjective
@@ -886,7 +886,7 @@ theorem alV_embH_eq_exp_trace (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : In
 
 theorem trace_int : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T : HSp D) (δ : ℂ) (sc : ℝ), StdPair θ S T δ sc ψ → ∀ (e : AE D) (SS : Finset (Formalism.L2.DIV.Pl D.host.E)), IsIdemSum e SS → (∀ Q ∈ SS, ((D.host.QS * D.host.q * D.host.d : ℕ) : 𝓞 D.host.E) ∉ Q.asIdeal) → ∀ (N : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)) (N' : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)), IsSelfDualC S N → IsSelfDualC T N' → ∀ (c : ℕ), 0 < c → Odd c → ∀ x' ∈ halfAO SS (perO (D.host.AA0 : Submodule (𝓞 D.host.E) D.host.E) N N') c, ∃ k : ℤ, (k : ℚ) = Algebra.trace ℚ D.host.E (D.host.xi0 * ((1 + D.host.sqrtMinusD) / 2) ^ 2 * GlobalTheory.LatVac.hRat S T (LinearMap.toMatrix' x') (LinearMap.toMatrix' x')) := by
   intro D ψ θ S T δ sc hP e SS hSS hSS2 N N' hN hN' c hc hcS x' hx'
-  have h2 := GlobalTheory.T.semicharacter_sq_eq_one_on_halfA D ψ θ S T δ sc hP e SS hSS hSS2 N N' hN hN' c hc hcS x' hx'
+  have h2 := _root_.GlobalTheory.AdForm.HalfASign.alV_mul_self_halfA D ψ θ S T δ sc hP e SS hSS hSS2 N N' hN hN' c hc hcS x' hx'
   rw [alV_embH_eq_exp_trace D ψ θ S T δ sc hP, ← Complex.exp_add] at h2
   obtain ⟨n, hn⟩ := Complex.exp_eq_one_iff.1 h2
   refine ⟨-n, ?_⟩
@@ -1151,7 +1151,7 @@ theorem GlobalTheory.AdForm.HalfHeis.heisO_halfA_eq : ∀ (D : D7) (ψ : AddChar
   have hact := GlobalTheory.T.heisenbergOperator_finitePartRest_acts_by_semicharacter D ψ θ S T δ sc hP e SS hE h2 ΛS ΛT dS dT c hc hcP f₀ hV x' hx
   have hcomm := GlobalTheory.T.addChar_symplectic_finitePartRest_eq_one D ψ θ S T δ sc hP e SS hE h2 ΛS ΛT dS dT c hc hcP x' hx y' hy
   have hcoc := GlobalTheory.T.halfA_idempotent_component_cocycle_trivial D ψ θ S T δ sc hP e SS hE h2 ΛS ΛT dS dT c hc hcP x' hx
-  have hsq := GlobalTheory.T.semicharacter_sq_eq_one_on_halfA D ψ θ S T δ sc hP e SS hE h2 ΛS ΛT dS dT c hc hcP x' hx
+  have hsq := _root_.GlobalTheory.AdForm.HalfASign.alV_mul_self_halfA D ψ θ S T δ sc hP e SS hE h2 ΛS ΛT dS dT c hc hcP x' hx
   have hZ : heisO ψ S T (FX - Xt) (heisO ψ S T FY f₀) = α • heisO ψ S T FY f₀ := by
     rw [GlobalTheory.SplitScalar.heisO_comm, hcomm, one_smul, hact, GlobalTheory.SplitScalar.heisO_smul]
   have hX := GlobalTheory.SplitScalar.heisO_heisO ψ S T Xt (FX - Xt) (heisO ψ S T FY f₀)
@@ -1501,7 +1501,7 @@ theorem reads_datum_eq_thC : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ :
         ⟨GlobalTheory.VacUnique.finRat_inf S T γ, GlobalTheory.VacUnique.finRat_fin S T γ⟩
       have ht1 : IsThetaFunO ψ S T (heisO ψ S T (GlobalTheory.VacUnique.finRat S T (mt (py p.2))) f₀) :=
         GlobalTheory.FinTranslate.isTheta_heisO_fin hψ (GlobalTheory.VacUnique.finRat_inf S T _) h0
-      rw [GlobalTheory.T.gaussianReading_finiteRationalHeisenbergTranslate D ψ θ S T a b hS hT δ sc hP _ ht1 _ _ (hfin _), GlobalTheory.T.gaussianReading_finiteRationalHeisenbergTranslate D ψ θ S T a b hS hT δ sc hP _ h0 _ _ (hfin _),
+      rw [_root_.GlobalTheory.AdForm.HeisRead.xiN_heisO_finOf D ψ θ S T a b hS hT δ sc hP _ ht1 _ _ (hfin _), _root_.GlobalTheory.AdForm.HeisRead.xiN_heisO_finOf D ψ θ S T a b hS hT δ sc hP _ h0 _ _ (hfin _),
         hmt, hmt, (hpx' _ h1).2, (hpy' _ h2').2]
     funext z
     have hlin : xiN θ S T hS hT δ sc f z = ∑ p ∈ SX ×ˢ SB, C p * xiN θ S T hS hT δ sc

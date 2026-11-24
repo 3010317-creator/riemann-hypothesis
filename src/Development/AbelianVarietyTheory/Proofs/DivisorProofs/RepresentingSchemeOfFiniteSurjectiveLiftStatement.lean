@@ -13,7 +13,7 @@ public import Mathlib.AlgebraicGeometry.Morphisms.Flat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjRestrictSnd
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleFamilyOpenChartAffineFiniteType
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.FormallyUnramifiedOfTangentMapInjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsClosedSubschemeAdditiveFamiliesAgreeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsClosedSubschemeAdditiveFamiliesAgree
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothInjectiveFamilyLiftsSmallArtinianStatement
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsProperAndGeometricallyConnectedOfIsNilpotent
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseChangeStatement
@@ -704,7 +704,7 @@ theorem inj_of_fibInj : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (A : Ov
     show LocallyOfFiniteType (pullback.fst U.hom U.hom ≫ U.hom)
     infer_instance
   have : IsLocallyNoetherian (U ⊗ U).left := LocallyOfFiniteType.isLocallyNoetherian (U ⊗ U).hom
-  obtain ⟨G, i, hi, hG⟩ := GlobalTheory.T.exists_closedSubscheme_additiveFamilies_agree (Sp R) A (U ⊗ U) hA
+  obtain ⟨G, i, hi, hG⟩ := _root_.GlobalTheory.DualLocus.exists_closed_same (Sp R) A (U ⊗ U) hA
     (ev M (fst A (U ⊗ U)) (snd A (U ⊗ U) ≫ fst U U)) (ev M (fst A (U ⊗ U)) (snd A (U ⊗ U) ≫ snd U U))
     (fam_ev hM _) (fam_ev hM _)
   have key : ∀ (Y : Over (Sp R)) (y : Y ⟶ U ⊗ U),

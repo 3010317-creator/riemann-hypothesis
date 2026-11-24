@@ -7,7 +7,7 @@ public import Mathlib.LinearAlgebra.Trace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDefiniteUnitaryRationalPointFiniteAndInfin
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanInfinitePlacesWeightRepresentationEqTop
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousMapPFin
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNeZeroWeightTensorIntertwiningAutRepStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNeZeroWeightTensorIntertwiningAutRep
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankWsp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousMatrixCoeffInfinitePlacesWeightRep
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalComponentDefiniteUnitaryFinitePartEqLocalPo
@@ -284,7 +284,7 @@ theorem mem_span_values (lam : InfinitePlace E → DomWeight n) (π : Submodule 
     | zero => simp
     | add a c _ _ ha hc => rw [map_add]; exact add_mem ha hc
     | smul c a _ ha => rw [map_smul]; exact Submodule.smul_mem _ c ha
-  obtain ⟨T, hT0, hTπ, hT⟩ := GlobalTheory.T.exists_ne_zero_weightTensor_intertwining_autRep E n lam π hπ hW
+  obtain ⟨T, hT0, hTπ, hT⟩ := _root_.GlobalTheory.BCT.TrKer.exists_ne_zero_wsp_intertwining E n lam π hπ hW
   obtain ⟨w, hw⟩ := DFunLike.ne_iff.1 hT0
   rcases hπ.irred Sv hle hst with h | h
   · have hm : T w ∈ Sv := Submodule.subset_span ⟨T, hT, hTπ, w, rfl⟩

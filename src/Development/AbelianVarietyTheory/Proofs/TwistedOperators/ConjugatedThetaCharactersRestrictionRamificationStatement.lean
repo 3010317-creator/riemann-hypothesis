@@ -5,9 +5,11 @@ public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TwistedLe
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugatedThetaCharactersRestrictionRamification
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdeleCharRestrictLocalUnitsResidueCharStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnramifiedAtPlaceIdempotentOfHeckeCharUnramifiStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersUnramifiedOffLevelPlacesStatement
+import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdeleCharRestrictLocalUnitsResidueChar
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnramifiedAtPlaceIdempotentOfHeckeCharUnramifi
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersUnramifiedOffLevelPlaces
 import Formalism.LocalToGlobal.UnitaryNorms.CharUniq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -64,7 +66,7 @@ theorem _root_.GlobalTheory.T.conjugatedThetaCharacters_restriction_ramification
   classical
   intro D G _ _ Pl0 T A Ks _ _ _ R hL i t s cμ cη m hc
   obtain ⟨μ', η', hμ, hη, ecμ, ecη, hres⟩ := hc
-  obtain ⟨-, p1, p2, p3⟩ := GlobalTheory.T.levelCharacters_unramified_off_levelPlaces D T R.toLevCh A.μ0 hL t
+  obtain ⟨-, p1, p2, p3⟩ := _root_.GlobalTheory.levCh_unramified_places D T R.toLevCh A.μ0 hL t
   have uη : ∀ P, η'.UnrAt P := fun P => GlobalTheory.ConjSplitChars.unrAt_conj hη (R.C.isEta.unr P)
   have uμ : ∀ P : Pl D.host.E, (∀ PP, PP ∈ R.Pg ∨ PP ∈ R.Q t → (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) ≠ P.under (𝓞 D.host.F)) →
       μ'.UnrAt P := fun P hP => GlobalTheory.ConjSplitChars.unrAt_conj hμ (((p3 P hP).2 i).mul (p3 P hP).1)
@@ -75,17 +77,17 @@ theorem _root_.GlobalTheory.T.conjugatedThetaCharacters_restriction_ramification
     · exact ((R.C.isMu0 i).tame PP).mul ((p1 PP hP).levelLe 1)
     · exact ((p2 PP hP i).levelLe 1).mul (hL.xi_tame t PP)
   have rη : ∀ PP, GlobalTheory.StepLaw.ResAt cη⁻¹ PP 1 := fun PP => by
-    have := ((GlobalTheory.T.ideleChar_restrict_localUnits_residueChar D cη η' ecη PP).2 (uη PP)).inv
+    have := ((_root_.GlobalTheory.ResLoc.resAt_of_chrEq D cη η' ecη PP).2 (uη PP)).inv
     rwa [inv_one] at this
   have uoη : ∀ Z, GlobalTheory.StepLaw.UnrOff cη Z := fun Z v ε hε _ =>
-    GlobalTheory.T.isUnramifiedAtPlaceIdempotent_of_heckeChar_unramified_above D cη η' ecη v ε hε fun P _ => uη P
+    _root_.GlobalTheory.UnramOver.unramAt_of_unrAt D cη η' ecη v ε hε fun P _ => uη P
   refine ⟨fun PP hPP => ?_, fun Z hZ => ?_, fun w hw => ?_⟩
-  · have h1 := (GlobalTheory.T.ideleChar_restrict_localUnits_residueChar D cμ μ' ecμ PP).1 (m PP) (tμ PP hPP) (hres PP hPP)
+  · have h1 := (_root_.GlobalTheory.ResLoc.resAt_of_chrEq D cμ μ' ecμ PP).1 (m PP) (tμ PP hPP) (hres PP hPP)
     refine ⟨h1, ?_⟩
     have := h1.mul (rη PP)
     rwa [mul_one] at this
   · have h1 : GlobalTheory.StepLaw.UnrOff cμ Z := fun v ε hε hv =>
-      GlobalTheory.T.isUnramifiedAtPlaceIdempotent_of_heckeChar_unramified_above D cμ μ' ecμ v ε hε fun P hP => uμ P fun PP hPP => hP ▸ hv PP (hZ PP hPP)
+      _root_.GlobalTheory.UnramOver.unramAt_of_unrAt D cμ μ' ecμ v ε hε fun P hP => uμ P fun PP hPP => hP ▸ hv PP (hZ PP hPP)
     exact ⟨h1, h1.mul (uoη Z).inv⟩
   · have hw' : ∀ PP, PP ∈ R.Pg ∨ PP ∈ R.Q t → (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) ≠ w.under (𝓞 D.host.F) := fun PP hPP he =>
       hw (Finset.mem_image.2 ⟨PP, Finset.mem_union.2 hPP, he⟩)

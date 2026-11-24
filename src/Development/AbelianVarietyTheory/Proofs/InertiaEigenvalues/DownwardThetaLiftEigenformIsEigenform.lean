@@ -7,13 +7,14 @@ public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HyperspecialFixesVacuaGoodInertPlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MultiplicitySpaceEqZeroOfLowestKTypes
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CardKerSubspacesAndHeckePolyOfConvolution
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsAdjoinSplitHeckeGeneratorsDualsSphericalStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsAdjoinSplitHeckeGeneratorsDualsSpherical
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HyperspecialFixesAllChainVacuaAtInertPrime
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelOperatorsAtPrimeOffLevelDatum
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalHeckeConjPlaceEqDualLabelStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalLabelOperatorsOnHyperspecialFixedVectorStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalHeckeConjPlaceEqDualLabel
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalLabelOperatorsOnHyperspecialFixedVector
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalThetaCorrespondenceInertPlaceOfHowe
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplittingCharactersUnramifiedOffLevelsStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplittingCharactersUnramifiedOffLevels
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftGoodProjectorIntertwinesMatchedHecke
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaVacuumHeckeIdentitySplitPlace
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OntoPartAtOfZeroOrInjAt
@@ -185,11 +186,11 @@ theorem scalar_of_split' {V : HSp D} {M : Type} [AddCommGroup M] [Module ℂ M] 
     (hb : ∀ k, k ≤ V.rank → ∃ l : ℂ, ∀ u, S u →
       opOf π (Formalism.DivisionValues.conjPl P) (Finsupp.single (splitLab V.rank k) 1) u = l • u) (d : List ℤ) :
     ∃ l : ℂ, ∀ u, S u → opOf π P (Finsupp.single d 1) u = l • u := by
-  obtain ⟨x, hx, hxe⟩ := GlobalTheory.T.exists_adjoin_splitHeckeGenerators_duals_spherical V P hP M π d
+  obtain ⟨x, hx, hxe⟩ := _root_.GlobalTheory.SplitGen.gen_split V P hP M π d
   obtain ⟨l, h1⟩ := GlobalTheory.ConjScalar.OnePart.adjoin_scalar _ S (by
     rintro y ⟨k, hk, rfl | rfl⟩
     · exact ha k hk
-    · have hc := (GlobalTheory.T.sphericalHecke_conjPlace_eq_dualLabel V P).2.2 (Finsupp.single (splitLab V.rank k) 1) M π
+    · have hc := (_root_.GlobalTheory.SphConj.sph_conj V P).2.2 (Finsupp.single (splitLab V.rank k) 1) M π
       have hd : dualC (Finsupp.single (splitLab V.rank k) 1) = Finsupp.single (dualLab (splitLab V.rank k)) 1 := by
         unfold dualC
         rw [Finsupp.mapDomain_single]
@@ -219,8 +220,8 @@ theorem downEig : GlobalTheory.Hk3.HoweUnram → ∀ (D : D7) (G : Type) [Group 
   have hWr : (Wc D i).rank = D.R.r := D.sp.W_rank _ (Nat.le_add_left _ _) i.2
   have unr : ∀ P, Good R t P → UnrPl P (Formalism.IndefR.Lift.chrTh (R.toLevCh.mu t) R.eta ((i : ℕ) + 1)).1 ∧
       UnrPl P (Formalism.IndefR.Lift.chrTh (R.toLevCh.mu t) R.eta ((i : ℕ) + 1)).2 := fun P hP =>
-    GlobalTheory.FixAllGood.unrPl_chrTh ((GlobalTheory.T.splittingCharacters_unramified_offLevels R F hC.lev t P hP).2 ((i : ℕ) + 1) (by omega) i.2)
-      (GlobalTheory.T.splittingCharacters_unramified_offLevels R F hC.lev t P hP).1
+    GlobalTheory.FixAllGood.unrPl_chrTh ((_root_.GlobalTheory.UnrOffLevels.unrPl_of_good R F hC.lev t P hP).2 ((i : ℕ) + 1) (by omega) i.2)
+      (_root_.GlobalTheory.UnrOffLevels.unrPl_of_good R F hC.lev t P hP).1
 
   have eigV : ∀ P, Good R t P → ∀ cV y, IsEigV R i t h s y →
       (R.HV i t).e (evC (Vc D i) P (s P) cV • y) = hkF (Vc D i) P cV ((R.HV i t).e y) := by
@@ -313,7 +314,7 @@ theorem downEig : GlobalTheory.Hk3.HoweUnram → ∀ (D : D7) (G : Type) [Group 
       have hs := (((hlev P hP).2.1 _ d B).1 hB).2
       have e1 : heckeOn (R.MW i (sg0 D A)) B u = ∑ γ ∈ B, GlobalTheory.Hk3.LabDet.rRep (R.MW i (sg0 D A)) γ u := by
         rw [← GlobalTheory.Hk3.LabDet.sum_rRep, LinearMap.sum_apply]
-      exact e1.trans ((((GlobalTheory.T.spherical_label_operators_on_hyperspecial_fixed_vectors (Wc D i) P).1 d B hs).2 _ _ u (hfix P hP u hu)).trans (hl u hu))
+      exact e1.trans ((((_root_.GlobalTheory.SphLabelOps.label_operators (Wc D i) P).1 d B hs).2 _ _ u (hfix P hP u hu)).trans (hl u hu))
     · refine ⟨0, fun u _ B hB => ?_⟩
       obtain ⟨_, _, _, _, ho, _⟩ := hB
       exact absurd ((GlobalTheory.LiftOntoCompare.offS_iff_good (R := R) t P).1 ho) hP

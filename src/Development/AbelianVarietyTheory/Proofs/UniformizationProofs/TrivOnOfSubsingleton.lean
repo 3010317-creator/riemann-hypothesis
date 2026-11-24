@@ -5,7 +5,7 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDesc
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsKerIffMinors
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsKernelVector
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ForallGeometricallyIntegralOfSmoothOfGeometrical
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.NonemptyPerfectSectionsComplexOfSmoothProjStatement
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.NonemptyPerfectSectionsComplexOfSmoothProj
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.TrivBasicOpenOfTrivFibre
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsIsGenTranslDiffComp
 import Mathlib.Algebra.Order.Floor.Extended
@@ -203,8 +203,8 @@ theorem exists_ideal_locTriv : GlobalFnsSt → ∀ (R : Type) [CommRing R] (B : 
   intro hG R _ B _ hB hproj F hF
   have := hB.proper
   have := hB.geomConnected
-  have hP := GlobalTheory.T.nonempty_perfectSectionsComplex_of_smooth_proj R _ B.hom hB.smooth hproj F hF
-  have hQ := GlobalTheory.T.nonempty_perfectSectionsComplex_of_smooth_proj R _ B.hom hB.smooth hproj _ (isLB_pw hF (-1))
+  have hP := _root_.GlobalTheory.AbLaw.nonempty_perf_of_smooth_isProjBy R _ B.hom hB.smooth hproj F hF
+  have hQ := _root_.GlobalTheory.AbLaw.nonempty_perf_of_smooth_isProjBy R _ B.hom hB.smooth hproj _ (isLB_pw hF (-1))
   have hC := GlobalTheory.TrivLocus.isClosed_trivLocus R _ B.hom F hF hP hQ hB.proper
     (GlobalTheory.forall_geometricallyIntegral_of_smooth_of_geometricallyConnected _ _ _ hB.smooth hB.geomConnected)
   obtain ⟨I, hI⟩ := exists_ideal (TrivOn B.hom F) (TrivOn.comp B.hom F) (fun p => by

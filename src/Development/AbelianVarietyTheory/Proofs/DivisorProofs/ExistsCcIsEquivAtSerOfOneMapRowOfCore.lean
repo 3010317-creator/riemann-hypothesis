@@ -14,7 +14,8 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SqNorm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoefMapNormEquivariantBasis
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstRelIffTwistFactorAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoordEqOfPerConj
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTwistHeckeCharactersStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTwistHeckeCharacters
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenMapTranspose
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenReadsOfUnfBC
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsHeckeCharMulInv
@@ -39,8 +40,11 @@ import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaReadingLinearI
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaVectorFockVacuum
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaVectorNeZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnfoldingFrameDeltaChange
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationSplitSupportProjectsVacuumStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctions
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PerCEmb
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MarkAd
+public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationSplitSupportProjectsVacuum
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsReframeVStdOfPosDef
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRepsOfFiniteIndex
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FinCongMemLevEnv
@@ -595,7 +599,7 @@ namespace GlobalTheory.AdTh
 
 theorem weil_twist_base_ofCore : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Type) (A : Formalism.L2.DIV.FamIn D.what₂.LL G Pl0 T0 D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A), GlobalTheory.Hk3.Core R F → ∀ (i : Fin D.R.m) (t : T0) (k : GA D (Wc D i)) (x : (AE D)ˣ), IsDetRoot (Wc D i) k x → ∀ f, IsThetaFunO R.ψ (Vc D i) (Wc D i) f → R.ωP i t (1, k) f = ((R.xi t x : Circle) : ℂ) • R.ωP i A.μ0 (1, k) f := by
   intro D G _ _ Pl0 T0 A Ks _ _ _ R F hR i t k x hx f hf
-  have h := GlobalTheory.TwistFactorProof.frame_ratio R (GlobalTheory.T.weilDatum_unique_on_thetaFunctions D) (GlobalTheory.T.exists_weilDatum_twist_heckeCharacters D) hR.thP.ωP i A.μ0 t hx hf
+  have h := GlobalTheory.TwistFactorProof.frame_ratio R (_root_.GlobalTheory.WeilUniq.weilDatum_unique D) (_root_.GlobalTheory.WeilChange.exists_weilDatum_twist D) hR.thP.ωP i A.μ0 t hx hf
   rw [GlobalTheory.TwistFactorCompare.eq_one_of_chrEq_one (hR.lev.xi_base ▸ hR.lev.xi A.μ0) x, Circle.coe_one, one_smul] at h
   exact h
 
@@ -791,7 +795,7 @@ theorem thetaKO_eq_short_series_ofCore : ∀ (D : D7) (G : Type) [Group G] [Fint
       L₀ = Submodule.span (𝓞 D.host.E)
         {w | ∃ a : D.host.E, a ∈ D.host.AA ∧ ∃ v ∈ Bridge.hLat (Wc D i) (fin (Wc D i) k), w = a • v} →
       latR (rank_Wc i) (latG (Wc D i) k) = latR (rank_Wc i) L₀ := fun L₀ h₀ => by rw [h₀, hlat]
-  have hcl := GlobalTheory.T.weilRepresentation_split_support_projects_vacuum D _ _ _ _ _ _ _ hP _ g (rank_Wc i) X bas idx hM hS H hrt _ _ Λ.La _ hV0 hVs hks hVstd hL _ _ hx'
+  have hcl := _root_.GlobalTheory.AdTh.SplitClass.om_reads_projA D _ _ _ _ _ _ _ hP _ g (rank_Wc i) X bas idx hM hS H hrt _ _ Λ.La _ hV0 hVs hks hVstd hL _ _ hx'
     (isInvOf_move (rank_Wc i) X hinv k) _ hvac' _ hR e Ps h y he hsupp hdet hΛ
   rw [← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, mul_one, one_mul, projA_smul, smul_smul] at hcl
   obtain ⟨-, hsd, huni, hfg⟩ := LatOf.isLatOf_tens D _ _ _ _ _ g (rank_Wc i) X bas idx hψ hP.inf hP.std hP.even hM hS

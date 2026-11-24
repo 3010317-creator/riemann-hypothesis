@@ -8,7 +8,7 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.Aestrongl
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteVolumeAdelicUnitaryQuotient
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
 public import Development.AbelianVarietyTheory.Definitions.Foundations.ForallEventuallyFinLocIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundedAutomorphicHasRepresentativeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundedAutomorphicHasRepresentative
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundedHolomorphicFormEqMultiplicitySpaceValue
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicTransportMeasureThird
 public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
@@ -61,10 +61,10 @@ import Development.AbelianVarietyTheory.Definitions.Foundations.InnerEqZeroOfNot
 import Development.AbelianVarietyTheory.Definitions.Foundations.MeasurePreservingRmulQuotMeas
 import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
 import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ConjAtFixedIff
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscreteSeriesModelUnitaryIrreducibleOrthonormalStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EquivariantMultilinearMapsSmoothVectorsIntertwinStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVectorAutomorphicDerivativesStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVectorsSubspaceStableSobolevFormDerivStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscreteSeriesModelUnitaryIrreducibleOrthonormal
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EquivariantMultilinearMapsSmoothVectorsIntertwin
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVectorAutomorphicDerivatives
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVectorsSubspaceStableSobolevFormDeriv
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SobolevBoundForSmoothVectorsStatement
 import Mathlib.Tactic.Linter.HaveILetI
 import Std.Tactic.BVDecide.Normalize.Prop
@@ -224,7 +224,7 @@ theorem exists_allMaps : ∀ (D : D7) (θ : D.what₂.Tau → (TensorProduct D.h
       Φ' (Function.update y τ (M.rep τ g (y τ))) = ρ (atTau θ V τ g) (Φ' y) := by
     intro τ g hg y
     rw [hΦ', hΦ', hequiv τ g hg y, he]
-  obtain ⟨r1, r2, -, r4, -, -⟩ := GlobalTheory.T.bounded_automorphic_has_representative D V μ 𝓕 ρ hp hρ
+  obtain ⟨r1, r2, -, r4, -, -⟩ := _root_.GlobalTheory.HolDict.RepresentativeL2.repr_properties D V μ 𝓕 ρ hp hρ
   let U : Subgroup (GA D V) := K.comap (GlobalTheory.AutMult.toFin V)
   have hU : IsOpen (U : Set (GA D V)) := hK.preimage (GlobalTheory.AutMult.continuous_toFin V)
   have hfix : ∀ y, ∀ k ∈ U, k ∈ GfC V → ρ k (Φ' y) = Φ' y := by
@@ -234,14 +234,14 @@ theorem exists_allMaps : ∀ (D : D7) (θ : D.what₂.Tau → (TensorProduct D.h
       rwa [show GlobalTheory.AutMult.toFin V k = ⟨k, hk'⟩ from GlobalTheory.AutMult.toFin_coe (⟨k, hk'⟩ : GfC V)] at h2
     rw [hΦ', ← he]
     exact congrArg e (hKfix _ h1 y)
-  have hsmM := GlobalTheory.T.equivariantMultilinear_maps_smoothVectors_intertwines D θ V hθ S M _ ρ Φ' e2
+  have hsmM := _root_.GlobalTheory.SmoothMultilinear.smooth_map D θ V hθ S M _ ρ Φ' e2
   choose ψ p1 p2 p3 p4 using fun y : M.Vec =>
-    GlobalTheory.T.smooth_vector_automorphic_derivatives D θ V hθ μ 𝓕 ρ hp hρ U hU (Φ' fun τ => (y τ : M.H τ)) (hsmM y).1 (hfix _)
+    _root_.GlobalTheory.SmoothRep.exists_smooth_repr D θ V hθ μ 𝓕 ρ hp hρ U hU (Φ' fun τ => (y τ : M.H τ)) (hsmM y).1 (hfix _)
   have p1' : ∀ y : M.Vec, Repr V μ 𝓕 (e (Φ fun τ => (y τ : M.H τ))) (ψ y) := fun y => hΦ' _ ▸ p1 y
-  haveI : ∀ τ, CompleteSpace (M.H τ) := fun τ => (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).1
+  haveI : ∀ τ, CompleteSpace (M.H τ) := fun τ => (_root_.GlobalTheory.HolDict.ModelRep.model_rep D V S M τ).1
   have hH : ∀ τ, (gramAt D V τ).IsHermitian := GlobalTheory.SmoothAutCheck.gramAt_herm V
   have hdet : ∀ τ, (gramAt D V τ).det ≠ 0 := fun τ => (GlobalTheory.SmoothAutCheck.gramAt_unit V τ).ne_zero
-  have hsv := fun τ => GlobalTheory.T.smoothVectors_subspace_stable_sobolevForm_deriv V.rank (gramAt D V τ) (M.H τ) (M.rep τ) (hH τ) (hdet τ) (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).2.1
+  have hsv := fun τ => _root_.GlobalTheory.UnitarySmVec.smoothVec_basic V.rank (gramAt D V τ) (M.H τ) (M.rep τ) (hH τ) (hdet τ) (_root_.GlobalTheory.HolDict.ModelRep.model_rep D V S M τ).2.1
   have hsm : ∀ τ, ∀ X ∈ lieAt V τ, ∀ w : M.sm τ, dRep (M.rep τ) X (w : M.H τ) ∈ M.sm τ := fun τ X hX w =>
     Submodule.subset_span (((hsv τ).2 w ((hsv τ).1 w w.2)).2.1 X hX).1
   have uniq : ∀ (y : M.Vec) f, Continuous f → Repr V μ 𝓕 (Φ' fun τ => (y τ : M.H τ)) f → ψ y = f :=

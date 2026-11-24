@@ -21,13 +21,16 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.MarkAd
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompAtMtMul
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdeleAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUnitDetOfIsONFr
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacuumCharacterPositiveDefiniteSourceStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacuumCharacterPositiveDefiniteSource
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralMulConjSelf
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.WeilActionTranslatesThetaByUnitScalar
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SqNormIntegralFundamentalDomainEqL2NormSq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicVacuumReadsMultipleClassicalVacuumStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSelfDualCHLat
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepLatticeStabilizerVacuumEqDetCharSmulStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepLatticeStabilizerVacuumEqDetCharSmul
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GenReads
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowGeneratorEqConstMulVacuumTheta
@@ -578,7 +581,7 @@ theorem om_compact_reads : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : I
   choose b hb using hP.expW
   obtain ⟨n, hn⟩ := hP.even
   choose p hp hd using fun τ => GlobalTheory.VacuumCharacter.detPlus_one (n := 0) (s τ) (cW τ).1
-  have hom := GlobalTheory.T.vacuum_character_positive_definite_source D ψ θ V W χV χW om hP.weil hP.inf hP.sigV hP.sigW s cV cW _ _ ha hb
+  have hom := _root_.GlobalTheory.VacuumCharacter.vacuum_character D ψ θ V W χV χW om hP.weil hP.inf hP.sigV hP.sigW s cV cW _ _ ha hb
     (fun τ => a τ + n) (fun τ => a τ - n) (fun τ => -(p τ + b τ))
     (fun τ => by rw [hn]; push_cast; ring) (fun τ => by rw [hn]; push_cast; ring)
     (fun τ => by rw [hp]; push_cast; ring) f hf hvac 1 (one_mem _) k hk hks
@@ -968,7 +971,7 @@ theorem exists_vacuum_multiplier : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
   have hlat := le_antisymm (latO_le V W ΛV htw.le) (latO_le V W ΛV htw.ge)
   rw [hlat] at hl
   have hk' : c * k₀⁻¹ ∈ GfC W := mul_mem hc (inv_mem hk₀)
-  have hfix := GlobalTheory.T.weilRep_lattice_stabilizer_vacuum_eq_det_char_smul D ψ θ V W χV χW om hP mu hmu H ΛV L₀ hV0 hsV hs₀ s hcart _ hf₀ _ hk' (fun w => by
+  have hfix := _root_.GlobalTheory.VacStab.om_vacuum_eq_smul D ψ θ V W χV χW om hP mu hmu H ΛV L₀ hV0 hsV hs₀ s hcart _ hf₀ _ hk' (fun w => by
     rw [hl₀ w, hl]
     constructor
     · rintro ⟨w₀, hw₀, rfl⟩

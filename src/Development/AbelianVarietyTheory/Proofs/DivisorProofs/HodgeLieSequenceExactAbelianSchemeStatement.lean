@@ -45,7 +45,8 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormValueOnTangentVectorEqZeroOfGlobalFormZeroStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOneOfRetraction
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormValueOnTangentVectorEqZeroOfGlobalFormZero
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PullOverOneEqZero
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -195,7 +196,7 @@ theorem lieExact_of_crystallineLift_hodgeDeRham : GlobalTheory.Published.Crystal
     refine ⟨v, ⟨hv, fun f hf ↦ (hvf f).symm⟩, fun w hw ↦ GlobalTheory.T.abelianScheme_tangent_eq_of_crystallineValues_eq hC hH R A g hab hdim w v hw.1 hv
       fun f ↦ ((hw.2 f (hmem f)).symm.trans (hvf f).symm)⟩
   · have hfac : ∀ f : Form (A.hom ≫ 𝟙 (Sp R)), Form.cl _ f = 0 → tanVal v f = 0 :=
-      fun f h0 ↦ GlobalTheory.T.formValueOnTangentVector_eq_zero_of_globalForm_zero R A v f ((hcf f).1 h0)
+      fun f h0 ↦ _root_.GlobalTheory.TanVanish.tanVal_eq_zero_of_cmpForm_eq_zero R A v f ((hcf f).1 h0)
     have hF1 : ∀ f : Form (A.hom ≫ 𝟙 (Sp R)), Form.cl _ f ∈ F1 (A.hom ≫ 𝟙 (Sp R)) := fun f ↦ by
       rw [hodgeFiltration_eq_range]; exact ⟨f, rfl⟩
     let c1 : Form (A.hom ≫ 𝟙 (Sp R)) →ₗ[R] F1 (A.hom ≫ 𝟙 (Sp R)) := (Form.cl _).codRestrict _ hF1

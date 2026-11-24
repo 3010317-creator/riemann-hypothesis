@@ -4,8 +4,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PairResBijectiveTwo
 public import Mathlib.Algebra.Homology.HomologicalComplex
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommaDescentInjectiveStatement
 import Development.AbelianVarietyTheory.Definitions.Divisors.CommAlgFunctorCoboundaryZeroMemCocyclesOne
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommaDescentInjective
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommaDescentRestrictionEquiv
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPairBelowTwo
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlueCommaOfBasis
@@ -123,7 +123,7 @@ theorem pairRes_pull2_bijective (φ : X' ⟶ X) (s' : X' ⟶ Sp R') : Function.B
   have hg := _root_.GlobalTheory.CatCoh.Desc.glue_comma_of_basis (OAff s') (pairFst φ) H hcov hdir
   have hv := _root_.GlobalTheory.CatCoh.Desc.Basis.oneCocycle_vanishing_comma_of_basis (OAff s') (pairFst φ) H hcov hdir
   have hv2 := _root_.GlobalTheory.CatCoh.Desc.VandermondeTwoBasis.twoCocycle_coboundary_of_basisFunctor_alt (OAff s') (pairFst φ) H hcov hdir
-  exact ⟨GlobalTheory.T.comma_descent_injective _ _ hs hg hv, _root_.GlobalTheory.CatCoh.Desc.pull2_surjective_of_comma _ _ hs hg hv hv2⟩
+  exact ⟨_root_.GlobalTheory.CatCoh.pull2_restrict_injective_of_comma _ _ hs hg hv, _root_.GlobalTheory.CatCoh.Desc.pull2_surjective_of_comma _ _ hs hg hv hv2⟩
 
 variable {s : X ⟶ Sp R} {s' : X' ⟶ Sp R'} {σ : R →+* R'} {φ : X' ⟶ X} (h : φ ≫ s = s' ≫ spMap σ)
 

@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Loc
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsDblClosed
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisOFinsetSum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacua
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacuaStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CombAtSingleZero
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralIndicatorGivesLocalVacuumSplitPlace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LambdaZeroEqProduct
@@ -125,7 +125,7 @@ theorem comb_aconv_map {D : D7} (ψ : AddChar (AF D.host.F) ℂ) {S T : HSp D} {
 
 theorem eQ_comb_at_place : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t) (F : QFam v t), c.Is → v.Is → F.Pins w → ∀ j, j + 1 < D.R.m → ∀ Ψ, GlobalTheory.FinPl.Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (· ∈ w.Q) Ψ → ∀ i, ∃ f, GlobalTheory.FinPl.Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (· = (F.Q i).q.v) f ∧ comb c.ψ _ _ (w.eQ j) Ψ = comb c.ψ _ _ ((F.Q i).eL j) f := by
   intro D c v t w F hc hv hP j hj Ψ hΨ i
-  have hI := fun P P' hd => GlobalTheory.T.heisenbergCombination_disjoint_places_commute_vacua D c.ψ hc.std (c.V j) (c.V (j + 1)) P P' hd
+  have hI := fun P P' hd => _root_.GlobalTheory.DisjComb.main D c.ψ hc.std (c.V j) (c.V (j + 1)) P P' hd
   have hca : ∀ a, GlobalTheory.FinPl.CombAt (· = (F.Q a).q.v) ((F.Q a).eL j) := by
     intro a u hu r q'
     have := (F.Q a).hs

@@ -21,7 +21,9 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSumIntegra
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsArchimedeanLiftUnitaryGroupProduct
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeMulSetIntegralImage2OfForallLe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalSobolevInequalityAdelicUnitary
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NcardRationalPointsTranslatedCompactLePowStatement
+public import Formalism.LocalToGlobal.BesselHermitianTheta.TiedSmooth
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NcardRationalPointsTranslatedCompactLePow
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothAlongCurveProductsStable
 import Mathlib.Algebra.Order.Floor.Extended
@@ -796,7 +798,7 @@ theorem exists_smooth_repr : ∀ (D : D7) (θ : InfFam D) (V : HSp D), IsInfFam 
     (H := U ⊓ GfC V) (U := U) (A := {p : D.what₂.Tau × Mt V.rank | p.2 ∈ lieAt V p.1})
     (e := fun p => oneP θ V p.1 p.2) (qs := fun i => (τs i, Xs i))
     (fun C hC => by
-      obtain ⟨m, hm⟩ := GlobalTheory.T.ncard_rationalPoints_translatedCompact_le_pow D θ V hθ C hC
+      obtain ⟨m, hm⟩ := _root_.GlobalTheory.RatCount.ncard_rational_le D θ V hθ C hC
       obtain ⟨c, hc⟩ := hm 1
       refine _root_.GlobalTheory.QuotLocInt.integrableOn_compact (GA D V) μ (GQ V) 𝓕 hp.fd C hC (c * normInf θ V 1 ^ m) fun y => ?_
       simpa using hc 1 (one_mem _) y)

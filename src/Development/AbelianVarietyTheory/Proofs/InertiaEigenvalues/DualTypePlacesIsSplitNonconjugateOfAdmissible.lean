@@ -8,11 +8,14 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameTwi
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryDetCharacterEqProdResidueGoodBaseFrameStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsInvariantForm
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdjointHalfDatumStabilizerPairMove
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetTwoDiagBlocksPropertiesStatement
+public import Formalism.LocalToGlobal.Divisibility.DefGroup
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetTwoDiagBlocksProperties
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrameMatrixMovedHomIntegralReductions
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHomLatticeIffFrameStabilizerActMemStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHomLatticeIffFrameStabilizerActMem
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerIntertwinerSchwartzBruhatIsThetaStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerIntertwinerSchwartzBruhatIsTheta
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.StepVectorLiftPairFlagLevelRealizedChain
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -182,9 +185,9 @@ theorem om_vec_move {B : Base S T} (hB : B.Good) (hS : S.SigOK) {ν : Twist D Ci
   have hF := hB.frame
   have hsq : (halfIdem B.G.Pg (B.de.Q ∪ ν.Q)) * (halfIdem B.G.Pg (B.de.Q ∪ ν.Q)) = halfIdem B.G.Pg (B.de.Q ∪ ν.Q) :=
     hQ.1.isOrthSum.1.idem
-  refine om_theta_move hω (fun Tm hT Ψ hΨ => GlobalTheory.T.schrodingerIntertwiner_schwartzBruhat_isTheta D _ hF.vac.1 S T _ _ hF.sdS hF.sdT _ hsq hQ.1.isOrthSum.1.infPart_eq _
+  refine om_theta_move hω (fun Tm hT Ψ hΨ => _root_.GlobalTheory.SchrTheta.isTheta_placeModel D _ hF.vac.1 S T _ _ hF.sdS hF.sdT _ hsq hQ.1.isOrthSum.1.infPart_eq _
       hF.vac.2.theta Tm hT Ψ hΨ) (Base.isThetaAt_vecAt hB hQ φ) (Base.isThetaAt_vecAt hB hQ φ')
-    (GlobalTheory.T.mem_homLattice_iff_frameStabilizer_act_mem D S T _ _ _ _ hF.sdS hF.sdT hF.frS hF.frT g h sg sh) (Units.ne_zero _) (om_vac_base hB hS hν hQ hω hg hh sg sh) hD
+    (_root_.GlobalTheory.StabLatInv.mem_latO_iff_actO_mem D S T _ _ _ _ hF.sdS hF.sdT hF.frS hF.frT g h sg sh) (Units.ne_zero _) (om_vac_base hB hS hν hQ hω hg hh sg sh) hD
 
 section Datum
 
@@ -441,7 +444,7 @@ theorem levFn_eq {ψ : Twist D Circle} (hQ : B.admitted ψ.Q) {k : GA D S}
   congr 1
   · refine Finset.prod_congr rfl fun PP hP => ?_
     rw [show (B.levS ψ).s = 1 from rfl, Finset.prod_range_one, resP_g hQ hP]
-    exact congrArg _ ((GlobalTheory.T.det_twoDiagBlocks_properties _ _ _ _ B.hr _).2.1 eS (parLev_g hp hP))
+    exact congrArg _ ((_root_.GlobalTheory.VecInv.TwoBlockDet.det_blocks _ _ _ _ B.hr _).2.1 eS (parLev_g hp hP))
   · exact Finset.prod_congr rfl fun PP hP => by rw [resP_dq hQ hP]; rfl
 
 theorem alg3 {G : Type} [CommGroup G] (X Y C : G) : X⁻¹ * Y⁻¹ * (C * X⁻¹)⁻¹ = (C * Y)⁻¹ := by
@@ -460,7 +463,7 @@ theorem dualTypeVacuumScalar_div_levelScalar {ψ : Twist D Circle} (hQ : B.admit
       (resP B ψ PP (dBlk (blk2 T.rank) 1 (redFn B.F.βS PP (Lev.finE S k))))⁻¹ := by
     unfold vacC
     refine Finset.prod_congr rfl fun PP hP => ?_
-    rw [finE_one, map_one, map_one, mul_one, (GlobalTheory.T.det_twoDiagBlocks_properties _ _ _ 0 B.hr _).1 (tri PP hP), map_mul, mul_inv]
+    rw [finE_one, map_one, map_one, mul_one, (_root_.GlobalTheory.VecInv.TwoBlockDet.det_blocks _ _ _ 0 B.hr _).1 (tri PP hP), map_mul, mul_inv]
     rfl
   have hs : srcC B ψ k hk = B.G.P.chi ⟨rTup B.F.βS (B.levS ψ) (Lev.finE S k), hk.2⟩ *
       ∏ PP ∈ allP B ψ.Q, (resP B ψ PP (blkA B k PP))⁻¹ := by

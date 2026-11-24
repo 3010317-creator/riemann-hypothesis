@@ -13,7 +13,7 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProjBySmoot
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.NonemptyCubicalPull
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHomEvenDefectBimultiplicativePeriods
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMonomialTrivialisationSqrtRefinedPolarised
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompleteNormalLocalCoverOfFiniteHomStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompleteNormalLocalCoverOfFiniteHom
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.PrimitiveCocycle
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMumfordBundleIsoValueOneOriginPolarised
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSymmetricPolarisationFiniteExtension
@@ -74,7 +74,11 @@ import Mathlib.Algebra.Azumaya.Basic
 import Development.AbelianVarietyTheory.Definitions.Uniformization.PointEqOfSubsingleton
 import Mathlib.Tactic.TypeStar
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsPositiveDefiniteQuadraticFormEndomorphisms
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHoldStatement
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.OLinBaseChangeSt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHold
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SelfTorusExtensionCoordValuesEqOne
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBLocal
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FirstCohomology.AlphaPair
@@ -350,7 +354,7 @@ theorem exists_sqrt_one (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (b 
     have := RingHom.finite_algebraMap.mpr hg.finite_adjoinRoot
     rwa [AdjoinRoot.algebraMap_eq] at this
   obtain ⟨R', _, _, _, ρ, σ, hC, hi, hf, hl, hσ⟩ :=
-    GlobalTheory.T.exists_complete_normal_local_cover_of_finite_hom R (AdjoinRoot g) (AdjoinRoot.of g) h hinj hfin
+    _root_.GlobalTheory.LocExt.exists_isCN_cover_of_finite R (AdjoinRoot g) (AdjoinRoot.of g) h hinj hfin
   refine ⟨R', inferInstance, inferInstance, inferInstance, ρ, σ (AdjoinRoot.root g), hC, hi, hf, hl, ?_⟩
   have hroot : AdjoinRoot.root g ^ 2 = AdjoinRoot.of g b := by
     have h0 : AdjoinRoot.mk g g = 0 := AdjoinRoot.mk_self
@@ -766,7 +770,7 @@ theorem kappa_unique (R : Type) [CommRing R] [IsDomain R] (R' : Type) [CommRing 
 theorem half_exists : ∀ (R : Type) [CommRing R] [IsDomain R] (R' : Type) [CommRing R'] [IsDomain R'] [IsLocalRing R'] [IsNoetherianRing R'] (Q : Data R) (ρ : R →+* R') (P : PolAV (Sp R')) (β : P.A.left ⟶ Q.B.left) (β₂ : (G2 P.A).left ⟶ (G2 Q.B).left), Function.Injective ρ → IsGrpPullback P.A Q.B (spMap ρ) β → IsSquare β β₂ → (letI := P.isAb.comm; LBIso (abelian₂ P.A P.L) ((abelian₂ Q.B Q.M.L).pull β₂)) → ∃ (D : DegPre R') (e : D.X ≃+ Q.X) (f : D.X → D.X → (FractionRing R')ˣ), Half Q ρ D e f := by
   intro R _ _ R' _ _ _ _ Q ρ P β β₂ hρ hpb hsq hiso
   obtain ⟨rig, hrig⟩ := P.rigid
-  obtain ⟨cub⟩ := (GlobalTheory.T.all_six_abelian_scheme_laws_hold.1.cube _ P ⟨P.L, rig, P.isLB, hrig⟩ rfl).1
+  obtain ⟨cub⟩ := (_root_.GlobalTheory.allSixLaws.1.cube _ P ⟨P.L, rig, P.isLB, hrig⟩ rfl).1
   obtain ⟨sym, hsym, hsr⟩ := GlobalTheory.SelfUnif.exists_sym P
   have hF := hpb.1
   obtain ⟨c, hc⟩ : ∃ c : Q.X → (𝟙_ (Over (Sp R')) ⟶ P.A), ∀ x,

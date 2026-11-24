@@ -7,9 +7,11 @@ public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegralInvOf
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjugateIntertwinerValuesIsCuspFun
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjugateIntertwinerValuesSmoothAutomorphic
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsContinuousLeftInvariantRepConjugateTensor
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjIntertwinerPointValueSobolevContinuousStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjIntertwinerPointValueSobolevContinuous
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjugateEvaluationMapIntertwinesRealPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DiscreteSeriesTestDataOfNoncompactGapsStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.HidaSetting
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DiscreteSeriesTestDataOfNoncompactGaps
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.EvalTOnto
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
@@ -56,7 +58,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TranslateToSecondModelCuspFormMapValueAutomorphiStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TranslateToSecondModelCuspFormMapValueAutomorphi
 import Mathlib.Tactic.TypeStar
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -235,7 +237,7 @@ theorem see_onto : GlobalTheory.Published.DiscreteSeriesClassification → ∀ (
        GlobalTheory.T.conjugateIntertwiner_values_isCuspFun hDS D X h θ S M J χ t c hS hθ hGap hIdE hM hc Φ hΦ hrep,
        GlobalTheory.T.conjugate_evaluation_map_has_level hDS D X h θ S M J χ t c hS hθ hGap hIdE hM hc Φ hΦ hrep,
        fun τ g hg v w hw => GlobalTheory.T.conjugate_evaluation_map_intertwines_real_places hDS D X h θ S M J χ t c hS hθ hGap hIdE hM hc Φ hΦ hrep τ g hg v w hw,
-       fun τ v x => GlobalTheory.T.conjIntertwiner_pointValue_sobolevContinuous hDS D X h θ S M J χ t c hS hθ hGap hIdE hM hc Φ hΦ hrep τ v x⟩
+       fun τ v x => _root_.GlobalTheory.ConjRowCont.conjMap_cont hDS D X h θ S M J χ t c hS hθ hGap hIdE hM hc Φ hΦ hrep τ v x⟩
   refine ⟨PiTensorProduct.lift (GlobalTheory.ConjRowMult.conjMap X M c Φ h t), (mem_multT θ M J χ _).2 (by simpa using hmult), ?_⟩
   have hw : GlobalTheory.ConjRowMult.vecC X M c v₀ = X.B.w := GlobalTheory.ConjRowMult.vecC_eq X M c v₀ X.B.w hv₀
   obtain ⟨ψ, hψ⟩ := hrep v₀
@@ -391,7 +393,7 @@ theorem evalAll_rows : GlobalTheory.Published.DiscreteSeriesClassification → G
     exact h1
   have hne : ∀ τ, (v₀ τ : M.H τ) ≠ 0 := fun τ h0 => by
     have := hnorm τ; rw [h0, norm_zero] at this; exact zero_ne_one this
-  have hfun := GlobalTheory.T.translateToSecondModel_cuspFormMap_value_automorphic hCusp D X h θ S M J χ t hθ hMat
+  have hfun := _root_.GlobalTheory.Core.Mi.rowFun_evS hCusp D X h θ S M J χ t hθ hMat
   obtain ⟨f, hf⟩ : ∃ f : MultT θ M J χ → L2X X, ∀ T : MultT θ M J χ, ((f T : L2X X) : X.B.I.GA → ℂ) =ᵐ[muX X]
       evS X h t (T.1 (PiTensorProduct.tprod ℂ v₀)) :=
     ⟨fun T => ((hfun T.1 T.2 (PiTensorProduct.tprod ℂ v₀)).2).toLp _, fun T => MemLp.coeFn_toLp _⟩

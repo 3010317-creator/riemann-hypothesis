@@ -8,8 +8,8 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Fin
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergFixesLatticeVacuumPeriodLattice
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsRatDatum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryPairMapsCompletedHomLatticeOntoTranslate
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GaussianReadingFiniteRationalHeisenbergTranslateStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GaussianTwistedRealReadingEntireAndInjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GaussianReadingFiniteRationalHeisenbergTranslate
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GaussianTwistedRealReadingEntireAndInjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -243,7 +243,7 @@ theorem fixedLine : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D
   intro D ψ θ S T a b hS hT δ sc hP g hg h hh N N' hN hN' f hf hl x hx z
   obtain ⟨γ, hγ, rfl, v, hv⟩ := _root_.GlobalTheory.AdForm.LamPre.exists_mat_of_mem_lamC D S T a b hS hT δ N N' x hx
   have hs := latSign D ψ θ S T a b hS hT δ sc hP g hg h hh N N' hN hN' f hf hl γ hγ v hv
-  have hu := GlobalTheory.T.gaussianReading_finiteRationalHeisenbergTranslate D ψ θ S T a b hS hT δ sc hP f hf γ v hv
+  have hu := _root_.GlobalTheory.AdForm.HeisRead.xiN_heisO_finOf D ψ θ S T a b hS hT δ sc hP f hf γ v hv
   rw [← hu]
   simp only [xiN]
   rw [← hs]
@@ -276,7 +276,7 @@ theorem vac_moved : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D
     have h1 := hvac.2.norm.2 p hp
     rw [h0] at h1
     simp [nrm2] at h1
-  have hII := GlobalTheory.T.gaussianTwistedRealReading_entire_and_injective D ψ θ S T a b hS hT δ sc hP
+  have hII := _root_.GlobalTheory.AdForm.VacRead.xiN_entire_and_injective D ψ θ S T a b hS hT δ sc hP
   refine ⟨hvac, ⟨GlobalTheory.SCV.analyticOnNhd_of_differentiable (hII.1 _ hI.1) _,
     fixedLine D ψ θ S T a b hS hT δ sc hP g hg h hh N N' hN hN' _ hth' hvac.2.lat⟩, fun h0 => hne (hII.2 _ hth' h0)⟩
 

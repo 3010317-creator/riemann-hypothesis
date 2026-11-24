@@ -25,7 +25,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharacterLap
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjResultantOfEllPolysStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOrEqOfUnderMaximalRealSubfieldEqCMFieldStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KappaConstantMulOfCoprimeEllipticPolynomials
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryHeckeCharCMLocKNonsplitEqNegOnePowStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryHeckeCharCMLocKNonsplitEqNegOnePow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryHeckeCharCMSplitPlaceMulConjPlaceEqOneStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -1034,7 +1034,7 @@ theorem resultant_factors_prod_eq_one {E : Type} [Field E] [NumberField E] [IsCM
       simp only [hn₁, hn₂, hdl]
       rw [if_neg hsp]
       simp only [f]
-      rw [GlobalTheory.T.unitaryHeckeCharCM_locK_nonsplit_eq_neg_one_pow E μ e hμ w hsp k]
+      rw [_root_.GlobalTheory.BCT.inertChar_muLocK E μ e hμ w hsp k]
       rfl
   have hS' : ∀ x : Pl E, ∃! s, s ∈ S ∧ s.under (𝓞 (maximalRealSubfield E)) = x.under (𝓞 (maximalRealSubfield E)) := hS
   have hfib := GlobalTheory.T.finprod_eq_finprod_mem_fibres_of_section' (fun x : Pl E => x.under (𝓞 (maximalRealSubfield E))) S f hS' hfin
@@ -1115,7 +1115,7 @@ theorem delta_eventually_one {E : Type} [Field E] [NumberField E] [IsCMField E] 
     rw [hres]
     simp only [hn₁, hn₂, hdl]
     rw [if_neg hsp, h3, mul_one]
-    have := GlobalTheory.T.unitaryHeckeCharCM_locK_nonsplit_eq_neg_one_pow E μ e hμ w hsp k
+    have := _root_.GlobalTheory.BCT.inertChar_muLocK E μ e hμ w hsp k
     rw [h1] at this
     simpa [k] using this.symm
 

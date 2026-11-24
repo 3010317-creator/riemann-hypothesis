@@ -7,8 +7,8 @@ public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.Fir
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.ExistsInKNeOne
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHeckeQuotientTriple
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsClosedSubschemeTranslationKernelStatement
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FlatKernelPolarisationCosetsOverDVRStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsClosedSubschemeTranslationKernel
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FlatKernelPolarisationCosetsOverDVR
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsAffineOfQuasiAffine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -206,12 +206,12 @@ theorem exists_section_translate : Laws → ∀ (V : Type) [CommRing V] [IsDomai
   have proj : IsProjBy P.A.hom := by
     obtain ⟨d, -, n, s, hs⟩ := (GlobalTheory.Unif.relAmple_iff_veryAmpleBy V P.A P.L P.isLB).1 P.ample
     exact ⟨_, isLB_pw P.isLB _, n, s, hs⟩
-  obtain ⟨H, j, hj, hH⟩ := GlobalTheory.T.exists_closed_subscheme_translation_kernel hL.globalFns V P.A P.isAb proj P.L O P.isLB hO
+  obtain ⟨H, j, hj, hH⟩ := _root_.GlobalTheory.UU.TwistKer.exists_closed_twist_kernel hL.globalFns V P.A P.isAb proj P.L O P.isLB hO
   have fin : IsFinite H.hom := GlobalTheory.AmpleStabFinite.isFinite_of_relAmple hL.globalFns V P.A P.isAb P.L O P.isLB hO
     P.ample H j hj hH
   obtain ⟨r, hr⟩ := P.rigid
   obtain ⟨c⟩ := (hL.cube _ P ⟨P.L, r, P.isLB, hr⟩ rfl).1
-  have flat : Flat H.hom := GlobalTheory.T.flat_kernelPolarisation_cosets_over_DVR hL.globalFns V P.A P.isAb proj ⟨P.L, r, P.isLB, hr⟩ c O hO hu H j hj hH fin
+  have flat : Flat H.hom := _root_.GlobalTheory.StabFlat.flat_of_isFinite hL.globalFns V P.A P.isAb proj ⟨P.L, r, P.isLB, hr⟩ c O hO hu H j hj hH fin
   have mono : Mono H.hom := ⟨fun {Z} a b e => by
     let a' : Over.mk (b ≫ H.hom) ⟶ H := Over.homMk a e
     let b' : Over.mk (b ≫ H.hom) ⟶ H := Over.homMk b rfl

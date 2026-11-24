@@ -1,11 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocClosed
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalFramePairsDifferIsometryUnitriangularStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalFramePairsDifferIsometryUnitriangular
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.GenericRatioOfBoundHolds
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.LeadingMinorEqPointMinor
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.ToPtsInj
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FamDefs
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.PoincareConstantEq
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GgNone
@@ -22,12 +22,10 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.Unitr
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsDatumOfTwoCongruentFrames
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsTermLocalTermMoveOfIsometry
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalDataGlobalTermIndependentOfRepresentativeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalAutomorphismLocalExtensionMovesLatticesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalAutomorphismLocalExtensionMovesLattices
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermAtBasePointOfFrames
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermAtBasePointOfFramesStatement
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.TermLoc
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeLocalGlobalPrinciple
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeLocalGlobalPrincipleStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalTermLatticeOverInnerDatumFgSpanStatement
 public import Formalism.SharpRestriction.CuspSpanNormBounds.IsTermOver
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryComplementMovesLocalTermsWithData
@@ -36,7 +34,7 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFram
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsComplementUnitaryMulActionLocalInnerDatum
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDatumEqOfSameLattice
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniqueIsometryFixingBothFramesOfFrameAdaptStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermRowDoubleCosetEqIffIsometriesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermRowDoubleCosetEqIffIsometries
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsRowTermOfLocalCompletionsTermsStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitCountRowsDoubleCosetsInnerDatumClassStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalClassLatticesIffRationalClassLocalFramePStatement
@@ -145,7 +143,7 @@ theorem tg_of_base_point : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' :
     apply hG
     rw [← hGw]
     exact (Formalism.L2.SG.NGCut.LeadingMinorIntegrality.gpt_eq (T := Tu D u) (T' := Tu D u') _ _ w hcell').trans h0
-  obtain ⟨-, γ, hγ, ⟨A, hA, hc⟩, ⟨B, hB, hd⟩⟩ := GlobalTheory.T.rationalFramePairs_differ_isometry_unitriangular D (lf D (X.Fu u)) F t.frame F' w
+  obtain ⟨-, γ, hγ, ⟨A, hA, hc⟩, ⟨B, hB, hd⟩⟩ := _root_.GlobalTheory.LocOver.witt_frames_at_point D (lf D (X.Fu u)) F t.frame F' w
     (Formalism.L2.SG.Corank.tu_ne_zero u) (Formalism.L2.SG.Corank.tu_ne_zero u') hGt hcell' hZ
   exact ⟨Formalism.HermitianLatticesTheory.gmap γ t.lam, γ, ⟨hγ, fun a => GlobalTheory.FlagChange.chg_sub_mem F.fl hA hc a⟩,
     ⟨hγ, fun a => GlobalTheory.FlagChange.chg_sub_mem F'.fl hB hd a⟩, rfl⟩
@@ -455,8 +453,8 @@ theorem finrank_Vp_eq (p : PlF D) : Module.finrank (D.s.atP p).Ep (Vp D p) = D.R
 
 theorem local_data_of_term : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), ∀ (F : LFlag (D.sp.Y 0) D.R.rS (((D.mem u).A.T : ℕ) : D.host.E)) (F' : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E)) (w : Point D.host.E (D.R.rS + 1)), ZhatOM (ZhatL F F') = ptMat w → Gval F F' ≠ 0 → ∀ (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (locH Z p) D.R.rS), Based Z FP (Tu D u) (Tu D u') F F' → (∀ p, (FP p).RelG (LocNG.theta (Z.M p))) → ∀ (t : TauC Y u u') (Λ : LV D), TG F F' t Λ → ∃ y : Dat Z FP, LocOver Λ y ∧ ∀ p d, GlobalTheory.LocOver.Over (FP p) d (GlobalTheory.LocOver.locU Z p t.toTerm.lam (lf D (X.Fu u)) (Quot.out t.toTerm.cls).1 (Tu D u) (Tu D u')) ↔ LocNG.Datum.Rel d (y p) := by
   intro D X Y u u' F F' w hZ hG Z FP hB hRel t Λ hTG
-  obtain ⟨hExt, -, hlat, -⟩ := GlobalTheory.T.rationalAutomorphism_local_extension_moves_lattices D X Y u u' F F' w hZ hG Z FP hB hRel
-  have hGt : t.G ≠ 0 := (GlobalTheory.T.term_at_base_point_of_frames D X Y u u' F F' w hZ hG t Λ hTG).1
+  obtain ⟨hExt, -, hlat, -⟩ := _root_.GlobalTheory.RatLocMove.rat_ext_moves D X Y u u' F F' w hZ hG Z FP hB hRel
+  have hGt : t.G ≠ 0 := (_root_.GlobalTheory.Unfold.BasePt.term_at_base_point D X Y u u' F F' w hZ hG t Λ hTG).1
   obtain ⟨g, hgF, hgF', hΛ⟩ := hTG
   have hrow : IsRowLat D (X.Fu u) t.lam := (Y.rowsOK u).1 t.lam t.mem
   have hPD : Formalism.L2.SG.TermDef.PD D t.lam (lf D (X.Fu u)) u' t.frame := t.rep.2.2.2.2
@@ -645,7 +643,7 @@ theorem glue_local_orbits : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' 
     rw [finrank_top, Module.finrank_eq_card_basis (VS D).frame, Fintype.card_fin]
     simpa only [Module.finrank_fin_fun, Fintype.card_fin] using
       finrank_le_of_span_eq_top (show Submodule.span (D.s.atP p).Ep _ = ⊤ from htop)
-  obtain ⟨Λ', hΛ', hp⟩ := (GlobalTheory.T.hermitianLattice_local_global_principle D Z).2 Λ hfull (fun p => LocNG.img (h p) (lattice₂ D Z.M p Λ))
+  obtain ⟨Λ', hΛ', hp⟩ := (_root_.GlobalTheory.Unfold.LatLoc.lattices_local_global D Z).2 Λ hfull (fun p => LocNG.img (h p) (lattice₂ D Z.M p Λ))
     (fun p => by
       obtain ⟨t, ht, heq⟩ := hτ p
       apply img_lattice
@@ -700,7 +698,7 @@ theorem finrank_Vp_k (D : D7) (p : PlF D) :
 
 theorem inGen_of_gRel : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), ∀ (F : LFlag (D.sp.Y 0) D.R.rS (((D.mem u).A.T : ℕ) : D.host.E)) (F' : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E)) (w : Point D.host.E (D.R.rS + 1)), ZhatOM (ZhatL F F') = ptMat w → Gval F F' ≠ 0 → ∀ (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (locH Z p) D.R.rS), Based Z FP (Tu D u) (Tu D u') F F' → (∀ p, (FP p).RelG (LocNG.theta (Z.M p))) → ∀ (Λ : LV D) (d y y' : Dat Z FP), LocOver Λ y → InGen d y → GRel F F' y y' → InGen d y' := by
   intro D X Y u u' F F' w hw hG Z FP hB hRel Λ d y y' hov hgen hgr
-  obtain ⟨hext, hUW, -, hmove⟩ := GlobalTheory.T.rationalAutomorphism_local_extension_moves_lattices D X Y u u' F F' w hw hG Z FP hB hRel
+  obtain ⟨hext, hUW, -, hmove⟩ := _root_.GlobalTheory.RatLocMove.rat_ext_moves D X Y u u' F F' w hw hG Z FP hB hRel
   obtain ⟨h, hh, hmv⟩ := hgr
   obtain ⟨y'', hov'', hmv''⟩ := hmove h hh Λ y hov
   have hact := fun p => _root_.GlobalTheory.InnerDatumAct.exists_mulAction (Z.M p) (Z.agree p).1 (locH Z p) D.R.rS D.R.k (FP p)
@@ -762,7 +760,7 @@ theorem inGen_of_gRel : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.
       rw [finrank_top, Module.finrank_eq_card_basis (VS D).frame, Fintype.card_fin]
       simpa only [Module.finrank_fin_fun, Fintype.card_fin] using
         finrank_le_of_span_eq_top (show Submodule.span (D.s.atP p).Ep _ = ⊤ from htop)
-    have hfin := ((GlobalTheory.T.hermitianLattice_local_global_principle D Z).1 Λ (Formalism.HermitianLatticesTheory.gmap h Λ) (full_of_over Λ y hov) (full_of_over _ y'' hov'')).1
+    have hfin := ((_root_.GlobalTheory.Unfold.LatLoc.lattices_local_global D Z).1 Λ (Formalism.HermitianLatticesTheory.gmap h Λ) (full_of_over Λ y hov) (full_of_over _ y'' hov'')).1
     refine (hfin.union hgen.2).subset fun p hp => ?_
     by_cases hyd : y p = d p
     · left
@@ -1091,7 +1089,7 @@ theorem same_key_lrel : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.
   intro D X Y u u' F F' w hZ hG t t' Λ₁ Λ₂ hT1 hT2 hk
   obtain ⟨g1, hA1, hA1', rfl⟩ := hT1
   obtain ⟨g2, hA2, hA2', rfl⟩ := hT2
-  obtain ⟨hl, hl', ⟨n, hn, n', hn', heq⟩, hio⟩ := (GlobalTheory.T.term_row_double_coset_eq_iff_isometries D X Y u u' t t').1 hk
+  obtain ⟨hl, hl', ⟨n, hn, n', hn', heq⟩, hio⟩ := (_root_.GlobalTheory.Unfold.KeyIff.key_eq_iff D X Y u u' t t').1 hk
   have hγ1 : t.lin ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := t.rep.2.2.1
   have hγ2 : t'.lin ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := t'.rep.2.2.1
   have hΛ1 : Formalism.HermitianLatticesTheory.gmap t.lin t.lam' = t.lam := t.rep.2.2.2.1
@@ -1517,7 +1515,7 @@ theorem rows_mass_genus : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : 
           full_of_local_span D (zOf Y) Λ₀ hL0 p0 (by
             rw [← hτ0l]
             exact (GlobalTheory.T.localTermLattice_over_innerDatum_fg_span D (zOf Y) Fm.FP p0 (Fm.d0 p0) τ0 hτ0o).2)
-        have hfin := ((GlobalTheory.T.hermitianLattice_local_global_principle D (zOf Y)).1 Λ Λ₀ hfull hfull0).1
+        have hfin := ((_root_.GlobalTheory.Unfold.LatLoc.lattices_local_global D (zOf Y)).1 Λ Λ₀ hfull hfull0).1
         refine ((Fm.P.finite_toSet).union hfin).subset ?_
         intro p hp
         simp only [Set.mem_setOf_eq] at hp
@@ -1588,7 +1586,7 @@ theorem rows_mass_genus : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : 
     have hyt : LocOver Λt yt := hyt0
     have hgt : InGen dd yt := hgt0
     subst hkt
-    have hpt := (GlobalTheory.T.term_at_base_point_of_frames D X Y u u' F F' w hZ hG t Λt hΛt).2
+    have hpt := (_root_.GlobalTheory.Unfold.BasePt.term_at_base_point D X Y u u' F F' w hZ hG t Λt hΛt).2
     cases hdc : Fm.dat (cls t) (nmlOf Y u u' t) with
     | none =>
       exact absurd ⟨t, ht, rfl, hpt, rfl⟩ ((hdat (cls t) (nmlOf Y u u' t)).1 hdc)

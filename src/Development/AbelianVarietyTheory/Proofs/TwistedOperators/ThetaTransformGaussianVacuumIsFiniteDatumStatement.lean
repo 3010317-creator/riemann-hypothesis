@@ -15,7 +15,8 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchwartzE
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThetaFunctionThetaTransformRationalDarboux
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRationalDarbouxOrientedPairTransportStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingInl
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRationalDarbouxOrientedPairTransport
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergDerivativeRealPlacePureDatumStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSchrodingerThetaDatumAddAdelicSchwartz
 import Mathlib.Algebra.Order.Floor.Extended
@@ -790,7 +791,7 @@ theorem isFinF_of_isGauss : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : 
   intro D ψ θ hθ ε S X A B d e Bs hBs hψ Vs Ws r s r' s' hJ hJW hV hW hemb M hM cS hcS g φ hg hφ hvac
   have hsch : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure g φ ∈ GlobalTheory.WeilM.schA D.host.F (Fin S.rank × Fin d) :=
     GlobalTheory.TensUniq.pure_mem_schA g φ hφ ((hvac.and hM.std).mono fun v hv => hv.1.trans hv.2)
-  obtain ⟨ξ, JB, co, hξ, hrat, hiff⟩ := GlobalTheory.T.exists_rational_darboux_orientedPair_transport D ψ θ hθ ε S X A B e Bs hBs hψ Vs Ws r s r' s' hJ hJW hV hW hemb M hM cS hcS
+  obtain ⟨ξ, JB, co, hξ, hrat, hiff⟩ := _root_.GlobalTheory.SquareAgree.exists_darboux_transport D ψ θ hθ ε S X A B e Bs hBs hψ Vs Ws r s r' s' hJ hJW hV hW hemb M hM cS hcS
   have hstd : IsStdChar D ψ (-1) := GlobalTheory.StdCharFromIsStd.isStdChar_of_isStd D ψ (hψ ▸ hBs.std)
   have hD : IsDatum M ψ cS (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure g φ) (GlobalTheory.WeilSchrodinger.thetaTr D.host.F co ψ (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure g φ)) :=
     (hiff _ _).2 ⟨hsch, rfl⟩

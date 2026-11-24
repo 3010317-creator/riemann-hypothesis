@@ -24,17 +24,17 @@ public import Formalism.LocalToGlobal.IndefiniteReal.ConcretePkgSpec
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoreClausesOfWeakCharacterisation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankWEigenpartEqRowsFullHeckeStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ISupStableInfTypeSpace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RangeComplexPointsLevelFormsEqGoodFormsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RangeGoodProjectorBaseLevelTwistedModelStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RangeComplexPointsLevelFormsEqGoodForms
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RangeGoodProjectorBaseLevelTwistedModel
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
 public import Formalism.LocalToGlobal.IndefiniteReal.BaseLiftsPackageOfPrimitiveLinks
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseLevelWFormsEqPrincipalForms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseLevelWOrthogonalSumOfParts
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalLevelRowsEqTop
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjointLiftRangeLeGoodBlockEigenspacesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjointLiftRangeLeGoodBlockEigenspaces
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ISupRowsEigenpartsPrincipalLevelEqTopStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLiftCarryingOfBaseTupleRowsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLiftCarryingOfBaseTupleRows
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelRowsOrthogonalSumOfParts
 public import Development.AbelianVarietyTheory.PublishedTheorems.SiegelWeil₂.SiegelEisensteinContinuationOfDoublingMethod
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HeckeFormNSOfHeckeForm
@@ -54,7 +54,6 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUni
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GoodFormsDefiniteExist
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsNilpotentSubOneOfFullBlockUnipotent
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ScalarHypothesesOfTopRows
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLiftCarryingOfBaseTupleRows
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivOfRangeEq
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LiftIntegOfCuspRapidDecay
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RationalZeroIffRationalSubspace
@@ -87,7 +86,8 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CopyL
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CoverFieldOfWeberLev
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsBare
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LUnifAtDat
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LargeCoefficientFieldContainsTwistValuesStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsAbsIrrCharCompIff
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LargeCoefficientFieldContainsTwistValues
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StandardLatticesDiagonal
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GoodTypesOfTypesTrue
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.WeakCharInertPartRealAdelicDataTransport
@@ -135,14 +135,13 @@ import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.RingTheory.SimpleRing.Principal
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLabelThetaLiftSpaceIffDualStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSphericalOperatorsRowsNormalEigenspacesStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLabelThetaLiftSpaceIffDual
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSphericalOperatorsRowsNormalEigenspaces
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GoodProjectorUnitaryFormsModelLaws
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalOperatorsFormsOnRankSpaceNormalStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalOperatorsFormsOnRankSpaceNormal
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ClassPresExtMemExtBijIsom
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSphericalOperatorsRowsNormalEigenspaces
 import Formalism.LocalToGlobal.Divisibility.RowLatLemmas
 import Formalism.LocalToGlobal.IndefiniteReal.ExistsChosenExtremalVector
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
@@ -453,20 +452,20 @@ theorem dimParts_of_schur {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : 
     (hU : R.toRealDat.LUnif) (hS : SchurAll R.toRealDat) : (R.toCx3 F).DimParts false := by
   obtain ⟨hC, hSF, hEE, hWc⟩ := GlobalTheory.CoreOfWeak.core_of_weak R F hW hEx
   have hIrr : ∀ χ ∈ A3.A.X, IsAbsIrrChar χ := hOk.ok2.irr
-  obtain ⟨hE, -, -, -, hEev, hEchar⟩ := GlobalTheory.T.exists_sphericalOperators_rows_normal_eigenspaces R.toRealDat F.lv2 hC hS R.SF hSF
+  obtain ⟨hE, -, -, -, hEev, hEchar⟩ := _root_.GlobalTheory.Hk3.OpsRows.exists_opsE R.toRealDat F.lv2 hC hS R.SF hSF
   intro j p
-  obtain ⟨hWo, -, -, -, hWtop, hWstab, hWev, hWchar⟩ := GlobalTheory.T.sphericalOperators_forms_on_rank_space_normal R.toRealDat F.lv2 hC hS hIrr R.SF hSF j
+  obtain ⟨hWo, -, -, -, hWtop, hWstab, hWev, hWchar⟩ := _root_.GlobalTheory.SphOpsModel.sphericalOperators_forms_on_rank_space_normal_alt R.toRealDat F.lv2 hC hS hIrr R.SF hSF j
   have hI := (GlobalTheory.Hk3.eH_laws R.toRealDat F.lv2 hC hIrr j).1
   have hlab : ∀ P d, Good R.toRealDat A3.A.μ0 P → (IsLab (Wc D j) P d ↔ IsLab (Yc D 0) P (dualLab d)) :=
-    fun P d hP => (GlobalTheory.T.isLabel_thetaLiftSpace_iff_dual (s := 0) R.toRealDat F.lv2 hC j P d hP).1
+    fun P d hP => (_root_.GlobalTheory.LabEq.isLab_W_iff (s := 0) R.toRealDat F.lv2 hC j P d hP).1
   let LevW : Submodule ℂ (R.HW j (sg0 D A3.A)).H :=
     (R.toRealDat.Wat j (sg0 D A3.A) (R.toRealDat.levL F.lv2 false (sg0 D A3.A))).comap (R.HW j (sg0 D A3.A)).e
   let LevE : Submodule ℂ R.HE.H := (R.toRealDat.EEat (R.toRealDat.levR F.lv2 false)).comap R.HE.e
   have hWle : ∀ c, Wcc R.toRealDat R.SF j c ≤ LinearMap.range (eH R.toRealDat j) := fun c =>
     hWtop ▸ le_iSup (fun c => Wcc R.toRealDat R.SF j c) c
   have hr1 : LinearMap.range ((R.toCx3 F).w0C false j) = Tw.sub (twAt D.what₂.embLL A3.A.v0) LevW :=
-    GlobalTheory.T.range_complex_points_level_forms_eq_good_forms R F hOk hW hU false j
-  have hr2 := GlobalTheory.T.range_goodProjector_baseLevel_twistedModel R F hOk hW hEx hU j
+    _root_.GlobalTheory.LevelRange.range_w0C_eq R F hOk hW hU false j
+  have hr2 := _root_.GlobalTheory.WType.range_w0C_type R F hOk hW hEx hU j
   have hWside : (R.toCx3 F).Wp j p ⊓ LinearMap.range ((R.toCx3 F).w0C false j) =
       Tw.sub (twAt D.what₂.embLL A3.A.v0)
         (⨆ (c : Pl D.host.E → List ℤ → ℂ) (_ : R.Carries p c), Wcc R.toRealDat R.SF j c ⊓ LevW) := by
@@ -652,8 +651,8 @@ namespace GlobalTheory.LevelRowsPrincipal
 
 theorem pLevE_of : GlobalTheory.Published.CuspRapidDecay → HoweUnram → ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type} {A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3) {s : ℕ}, GlobalTheory.Chain.LiftInteg D → A3.fam3.Ok3 s → R.WeakCharacterisation F → R.toRealDat.ExAt → ((∀ t (k : A3.okI t × List ℕ), A3.heckeRI t k = 0 ∨ ∃ y, Formalism.L2.Col.InertTypeOk (A3.A.fam.R t).n y ∧ A3.heckeRI t k = A3.heckeRI t (k.1, y)) ∧ ∀ j t (k : A3.okI t × List ℕ), A3.heckeLI j t k = 0 ∨ ∃ y, Formalism.L2.Col.InertTypeOk (A3.A.fam.L j t).n y ∧ A3.heckeLI j t k = A3.heckeLI j t (k.1, y)) → R.PGEquiv F → (∀ b, (lv (F.fc (R.toCx3 F).zs) b).Pos) → (0 < R.kap ∧ ∀ i t p, 0 < R.lam3 i t p A3.A.v0) → R.PThmB → Formalism.IndefR.Rat.RowTest (R.toCx3 F) → R.PLevE F := by
   intro hCusp hHowe D G _ _ Pl0 I0 T A3 Ks _ _ _ R F s hLI hOk hC hEx hJunk hGE hPos hScal hB hRT
-  have hBlock : (R.toCx3 F).zs.InBlock := GlobalTheory.T.adjointLift_range_le_goodBlock_eigenspaces hCusp R F hLI hOk hC hEx hGE
-  have hCarry : ∀ c, R.EEc c ≠ ⊥ → ∃ p, R.Carries p c := GlobalTheory.T.thetaLift_carrying_of_base_tuple_rows hCusp hHowe R F hLI hOk hC hEx hJunk hGE hPos
+  have hBlock : (R.toCx3 F).zs.InBlock := _root_.GlobalTheory.Hk3.inBlock_of_cuspRapidDecay hCusp R F hLI hOk hC hEx hGE
+  have hCarry : ∀ c, R.EEc c ≠ ⊥ → ∃ p, R.Carries p c := _root_.GlobalTheory.Hk3.carries_of_rows_top hCusp hHowe R F hLI hOk hC hEx hJunk hGE hPos
   have hSpan : (⨆ p, R.EEp3 p) = ⊤ :=
     GlobalTheory.T.iSup_eEp3_eq_whole_space_of_weakCharacterisation R F hC hEx (GlobalTheory.Hk3.schurAll_of_cuspRapidDecay hCusp R.toRealDat) hCarry
   have hTop := GlobalTheory.T.EEg3_eq_univ_of_weakCharacterisation R F hOk hC hSpan hScal hB hRT hBlock
@@ -729,7 +728,7 @@ theorem primRows3_of_parts : GlobalTheory.Published.CuspRapidDecay → HoweUnram
       hecke := hHk
       gUnit := hGU
       gEquiv := hGE
-      block := GlobalTheory.T.adjointLift_range_le_goodBlock_eigenspaces hCusp R F hLift hOk hC hEx hGE
+      block := _root_.GlobalTheory.Hk3.inBlock_of_cuspRapidDecay hCusp R F hLift hOk hC hEx hGE
       rowTest := hRT
       liftTest := hLT
       liftTestB := hLTB
@@ -1188,7 +1187,7 @@ theorem atDat_holds_alt (hP : _root_.GlobalTheory.PrimIn.PublishedThetaCondition
       GlobalTheory.Mem.R3.Holds z.R z.F := by
   have e1 := (evG_of_ev (ev_scale (_root_.GlobalTheory.PrimIn.holds_of_ties_alt hP hL))).inter
     ((evG_of_ev LedRec.ev_exists_sizeData).inter (evG_of_ev GlobalTheory.Mem.HostFrames.hostHyp_frames_ev))
-  have s1 : Step KPx (fun _ _ _ _ => True) _ := Step.of_evLgG (evLgG_of_evLg GlobalTheory.T.valsIn_and_fam3_ok_of_coefficientField)
+  have s1 : Step KPx (fun _ _ _ _ => True) _ := Step.of_evLgG (evLgG_of_evLg _root_.GlobalTheory.Mem.R3.OkVals.large_coefficientField_contains_twist_values)
   have s2 : Step KPx (fun _ _ _ _ => True) _ := Step.of_evLgG (q := fun _ => CoverAt.WeberLev) (evG_all CoverAt.lg_weberLev)
   refine (s1.and (s2.and (Step.and (lUnif_atDat hP.q3 hP.q2 hP.q1) (atDat_lIntegral hP.q3 hP.q2 hP.q1)))).trans
     (Step.of_evG (e1.imp ?_))

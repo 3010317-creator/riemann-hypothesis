@@ -10,7 +10,7 @@ public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.C
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.LengthBallQuotientEqSumMulFdeg
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CechComplexAcyclicPrimitiveNontrivialAlgClosedStatement
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFinAffineCover
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LineBundleProductAcyclicOfAffineBaseAcyclicStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LineBundleProductAcyclicOfAffineBaseAcyclic
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SubsingletonOfForallIsMaximalSmulEqZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -287,7 +287,7 @@ theorem exists_point_translate : Laws → ∀ (K : Type) [Field K] [IsAlgClosed 
     rw [cls_pull hF, eF, map_sub, pull_lam, ← pull_comp, ← Over.comp_left, lift_fst, lift_snd, pull_const, sub_zero,
       lam_comm]
   have total : Ac ((fst P.A P.A).left ≫ P.A.hom) F := by
-    refine (GlobalTheory.T.lineBundle_product_acyclic_of_affine_base_acyclic K _ _ _ _ _ _ _ hpq inferInstance inferInstance inferInstance inferInstance F hF).1
+    refine (_root_.GlobalTheory.ProductAcyclic.acyclic_of_over_affine_and_converse K _ _ _ _ _ _ _ hpq inferInstance inferInstance inferInstance inferInstance F hF).1
       fun R _ t Y π f h ht => ac_of_slices hproj hpq h hF fun x hx _ => ?_
     let x' : 𝟙_ _ ⟶ P.A := Over.homMk x hx
     refine ⟨(lift (toUnit P.A ≫ x') (𝟙 P.A)).left, ?_, ?_, ac_of_primitive P.isAb hpr (pull_isLB hF _) ?_ ?_⟩
@@ -309,7 +309,7 @@ theorem exists_point_translate : Laws → ∀ (K : Type) [Field K] [IsAlgClosed 
       (by rw [show ({IsLocalRing.closedPoint K} : Set (Spec (CommRingCat.of K))) = Set.univ from
         Set.eq_univ_of_forall fun z => Subsingleton.elim (α := PrimeSpectrum K) _ _]; exact isClosed_univ)
     exact (congrArg IsClosed Set.image_singleton).mp h
-  have all := (GlobalTheory.T.lineBundle_product_acyclic_of_affine_base_acyclic K _ _ _ _ _ _ _ hpq.flip inferInstance inferInstance inferInstance inferInstance F hF).2
+  have all := (_root_.GlobalTheory.ProductAcyclic.acyclic_of_over_affine_and_converse K _ _ _ _ _ _ _ hpq.flip inferInstance inferInstance inferInstance inferInstance F hF).2
     _ hcl (fun R _ t Y π f h ht hne => ac_of_slices hproj hpq.flip h hF fun x hx hr => by
       let x' : 𝟙_ _ ⟶ P.A := Over.homMk x hx
       refine ⟨(lift (𝟙 P.A) (toUnit P.A ≫ x')).left, ?_, ?_, ac_of_primitive P.isAb hpr (pull_isLB hF _) ?_ ?_⟩

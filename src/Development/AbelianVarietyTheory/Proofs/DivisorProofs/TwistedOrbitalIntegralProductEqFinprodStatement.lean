@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteAdelicUnitaryPointLocalComponentMemLocalUnStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteAdelicUnitaryPointLocalComponentMemLocalUn
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteUnitaryLocalPointEqMapRational
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyDefiniteUnitaryLocalPointMemMaxCompact
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyFiniteAdelicUnitaryComponentMemIntegra
@@ -13,7 +14,6 @@ public import Mathlib.GroupTheory.DoubleCoset
 public import Mathlib.Topology.Algebra.Group.Defs
 public import Mathlib.Topology.Algebra.Support
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
-public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCompactDefiniteUnitaryRestrictedProduct
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalComponentDefiniteUnitaryFinitePartEqLocalPo
 public import Mathlib.Algebra.BigOperators.Finprod
@@ -124,7 +124,7 @@ theorem toSub_cLoc_continuous_of_mem {E : Type} [Field E] [NumberField E] [IsCMF
 theorem toSub_cLoc_fin_continuous : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ n : ℕ,
     ∀ w : Pl E, Continuous (fun x : finU (E := E) (n := n) => toSub (UL n w) (cLoc w (x : UA E n))) := by
   intro E _ _ _ hE n w
-  exact toSub_cLoc_continuous_of_mem w (GlobalTheory.T.finiteAdelicUnitaryPoint_localComponent_mem_localUnitary E hE n w)
+  exact toSub_cLoc_continuous_of_mem w (_root_.GlobalTheory.BCT.cLoc_mem_UL E hE n w)
 
 end GlobalTheory.BCT
 end -- clump:auto
@@ -1029,11 +1029,11 @@ theorem twOrb_globFn_eq_finprod : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   have hKo : ∀ w : Pl E, IsOpen (KL n w : Set (UL n w)) := fun w => (hTB w).2.2.2.2.2.2.1
   have hKc : ∀ w : Pl E, IsCompact (KL n w : Set (UL n w)) := fun w => (hTB w).2.2.2.2.2.2.2.1
   let p : ∀ i : S, finU (E := E) (n := n) →* UL n i.1 := fun i =>
-    ((cLoc i.1).comp (finU (E := E) (n := n)).subtype).codRestrict (UL n i.1) (fun x => GlobalTheory.T.finiteAdelicUnitaryPoint_localComponent_mem_localUnitary E hU n i.1 x)
+    ((cLoc i.1).comp (finU (E := E) (n := n)).subtype).codRestrict (UL n i.1) (fun x => _root_.GlobalTheory.BCT.cLoc_mem_UL E hU n i.1 x)
   have hp : ∀ (i : S) (x : finU (E := E) (n := n)), p i x = toSub (UL n i.1) (cLoc i.1 (x : UA E n)) := by
     intro i x
     unfold toSub
-    rw [dif_pos (GlobalTheory.T.finiteAdelicUnitaryPoint_localComponent_mem_localUnitary E hU n i.1 x)]
+    rw [dif_pos (_root_.GlobalTheory.BCT.cLoc_mem_UL E hU n i.1 x)]
     rfl
   have hδ : ∀ i : S, p i (finPt γ) = locPt i.1 γ := fun i => (hp i _).trans (GlobalTheory.T.localComponent_definiteUnitaryFinitePart_eq_localPoint E hU n γ i.1)
   have hsep : ∀ w : Pl E, (locPt w γ).1.val.charpoly.Separable := by

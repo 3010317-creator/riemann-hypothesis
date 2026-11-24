@@ -25,7 +25,6 @@ public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Goo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousOnReadingIntegerExponentSection
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.OfRealRpowNegLe
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntMemModelSmall
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AllWeightSectionsCompatStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentNormConstantModelsStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodOriginComponentSectionsStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TowerWeightOfZeroStatement
@@ -787,7 +786,7 @@ theorem vs_arch : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   obtain ⟨k, y₀⟩ := z
   have hy₀ : y₀ ∈ ((U σ).X k).dom := hz.1
   have hk : Over (U σ) (e Z) k :=
-    ((GlobalTheory.T.all_weight_sections_compat E H Dw l Xo c r U h e hL 0 Z).2.2.2.2 σ hσ k y₀ hy₀).1 hz
+    ((_root_.GlobalTheory.CompanionTheory.Ar.Rec.bridge_allWt E H Dw l Xo c r U h e hL 0 Z).2.2.2.2 σ hσ k y₀ hy₀).1 hz
   have hU := hL.unf σ hσ
   have hpq : 1 ≤ Dw.p + Dw.q := by
     have h1 := T.j_pos

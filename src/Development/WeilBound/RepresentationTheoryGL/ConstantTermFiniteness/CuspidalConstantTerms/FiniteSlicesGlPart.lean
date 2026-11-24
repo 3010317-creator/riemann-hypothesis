@@ -122,7 +122,8 @@ import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolyFunMemSmoothVec
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RightLieDerivativeRealEntryPolynomialFunctionStatement
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.UnitaryLieGeneratorsRep
 import Mathlib.Dynamics.Ergodic.Action.Regular
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.DenomBound
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
 import Mathlib.RingTheory.Etale.Weakly
@@ -1597,7 +1598,7 @@ variable {D : D7} {θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E 
 theorem zfin_of_gelf (hθ : IsInfFam θ) {φ : GA D V → ℂ} (hs : IsSm D.sp.cm.sig V.gram φ) {c : D.what₂.Tau → ℕ → ℂ}
     (hg : ∀ τ k, gelf θ V τ k φ = c τ k • φ) :
     FiniteDimensional ℂ (Submodule.span ℂ {f | ∃ z, IsCentral D.sp.cm.sig V.gram z ∧ f = dop z φ}) := by
-  have R := (GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ V
+  have R := (_root_.GlobalTheory.SmoothForms.RealPts.realPoints D).2 θ hθ V
   have hW : ∀ τ k, ∀ f ∈ Submodule.span ℂ {φ}, gelf θ V τ k f ∈ Submodule.span ℂ {φ} := by
     intro τ k f hf
     obtain ⟨a, rfl⟩ := Submodule.mem_span_singleton.1 hf

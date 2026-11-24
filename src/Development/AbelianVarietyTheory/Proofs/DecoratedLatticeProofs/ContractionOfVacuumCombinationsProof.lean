@@ -23,7 +23,8 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Spl
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittCoreEmbeddingPreservesSupportedUnitarySubgro
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsSelfDualLatticeAtPlaceLatticeCompletion
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EventuallyFinEqOne
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselLineContractionHeisenbergInvariantStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselLineContractionHeisenbergInvariant
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeCompletionLeClosureIsotropicHalvesStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeCompletionSelfAnnihilatorAtPlaces
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicMatrixQuotientPeriodicIntegralContinuousPa
@@ -1412,7 +1413,7 @@ theorem vanish : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topological
       rw [OrthDec.resS_symm_apply, Matrix.zero_mul, zero_add]; exact _root_.GlobalTheory.LinkKapInv.isHalf_mul_r hhalf _)
   have hth : IsThetaFunO ψ B.V₀ S (heisO ψ B.V₀ S ((B.o.resS S).symm (0, y)) f₁) :=
     GlobalTheory.FinTranslate.isTheta_heisO_fin hψ.1 (fin_of_mxAt' hyM) h₁.1
-  have hmove := GlobalTheory.T.besselLineContraction_heisenberg_invariant D ψ hψ ρ σ B B' l S vL _ f₂ hth h₂.1 x'
+  have hmove := _root_.GlobalTheory.Unf.ContrHeis.contr_heisO D ψ hψ ρ σ B B' l S vL _ f₂ hth h₂.1 x'
   rw [hf₂, GlobalTheory.SplitScalar.heisO_comm, hf₁, contr_smul_left', hkx, hpair] at hmove
   set C := GlobalTheory.Unf.contr l S vL (heisO ψ B.V₀ S ((B.o.resS S).symm (0, y)) f₁) f₂
   have : (ψ (symplO B.V₀ S u ((B.o.resS S).symm (0, y))) - 1) • C = 0 := by
@@ -1516,7 +1517,7 @@ theorem line_step {ρ σ : ℕ} {B : BesLev D ρ} {B' : BesLev D σ} (ψ : AddCh
   have hth : IsThetaFunO ψ B.V₀ S (heisO ψ B.V₀ S (-(B.o.resS S).symm (0, l.κ S w))
       (heisO ψ B.V₀ S ((B.o.resS S).symm (0, y)) f₁)) :=
     GlobalTheory.FinTranslate.isTheta_heisO_fin hψ.1 hk (GlobalTheory.FinTranslate.isTheta_heisO_fin hψ.1 hy hf₁)
-  have hmove := GlobalTheory.T.besselLineContraction_heisenberg_invariant D ψ hψ ρ σ B B' l S vL _ f₂ hth hf₂ w
+  have hmove := _root_.GlobalTheory.Unf.ContrHeis.contr_heisO D ψ hψ ρ σ B B' l S vL _ f₂ hth hf₂ w
   rw [heisO_neg_cancel] at hmove
   rw [hmove, GlobalTheory.SplitScalar.heisO_heisO, _root_.GlobalTheory.FinPl.LineVanish.contr_smul_left']
   have he : -(B.o.resS S).symm (0, l.κ S w) + (B.o.resS S).symm (0, y) = (B.o.resS S).symm (0, y - l.κ S w) := by

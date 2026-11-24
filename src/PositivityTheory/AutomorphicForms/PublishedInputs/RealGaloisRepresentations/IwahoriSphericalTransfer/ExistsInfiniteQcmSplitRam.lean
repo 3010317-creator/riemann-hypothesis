@@ -7,7 +7,8 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.Automorphic
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.FinrankAdjoinSqrtNegOne
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.CmInertiaRestrictionHolds
 public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.InertiaMovesSquareRoot
-public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.InfinitePrimesNegSquarePadic
+public import Mathlib.NumberTheory.Padics.PadicNumbers
+public import PositivityTheory.AutomorphicForms.PublishedInputs.RealGaloisRepresentations.IwahoriSphericalTransfer.InfinitePrimesNegIsSquare
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -222,7 +223,7 @@ theorem GlobalTheory.RealGal.exists_infinite_qcm_split_ram : ∀ (F Ω : Type) [
       refine ((Set.finite_singleton 2).union ?_).union (finite_primes_of_finite (Filter.eventually_cofinite.1 hT))
       exact (Nat.divisors (discr F).natAbs).finite_toSet.subset fun p hp =>
         Nat.mem_divisors.2 ⟨hp, Int.natAbs_ne_zero.2 (discr_ne_zero F)⟩
-    refine ((GlobalTheory.T.infinite_primes_neg_square_padic q).diff hbad).mono ?_
+    refine ((_root_.GlobalTheory.RealGal.PrimesNegSquare.infinite_primes_neg_isSquare q).diff hbad).mono ?_
     rintro p ⟨⟨hp, hs⟩, hn⟩
     simp only [Set.mem_union, Set.mem_singleton_iff, Set.mem_setOf_eq, not_or, not_and, not_exists] at hn
     refine ⟨hp, hs, hn.1.1, fun h => hn.1.2 (Int.natCast_dvd.1 h), fun u hu => ?_⟩

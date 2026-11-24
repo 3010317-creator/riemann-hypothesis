@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDimEqOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankEqMulOfRankAtStalk
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsogenyFlatFinrankStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsogenyFlatFinrank
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,8 +61,8 @@ namespace GlobalTheory.AV.AbVar
 theorem isIsogeny_comp_and_deg_comp : ∀ (K : Type) [Field K] (A B C : AbVar K) (f : A ⟶ B) (g : B ⟶ C),
     IsIsogeny f → IsIsogeny g → IsIsogeny (f ≫ g) ∧ deg (f ≫ g) = deg f * deg g := by
   intro K _ A B C f g hf hg
-  obtain ⟨-, hflf, -, hrf⟩ := GlobalTheory.T.dim_eq_flat_finrank_eq_deg_of_isIsogeny K A B f hf
-  obtain ⟨-, hflg, -, -⟩ := GlobalTheory.T.dim_eq_flat_finrank_eq_deg_of_isIsogeny K B C g hg
+  obtain ⟨-, hflf, -, hrf⟩ := _root_.GlobalTheory.AV.AbVar.isogeny_flat_finrank K A B f hf
+  obtain ⟨-, hflg, -, -⟩ := _root_.GlobalTheory.AV.AbVar.isogeny_flat_finrank K B C g hg
   have : IsFinite f.hom.left := hf.1
   have : Surjective f.hom.left := hf.2
   have : IsFinite g.hom.left := hg.1

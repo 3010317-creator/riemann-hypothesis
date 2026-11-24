@@ -5,8 +5,8 @@ public import Formalism.LocalToGlobal.Divisibility.DefGroupLemmas
 import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.StarPurelyImaginaryEqNeg
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinPartConjMem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeIsometrySignFirst
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrameMatricesIntegralOfMemCompletedLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCompletedLatticeOfFrameMatrixIntegralStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrameMatricesIntegralOfMemCompletedLattice
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCompletedLatticeOfFrameMatrixIntegral
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GramMapMulInv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -151,7 +151,7 @@ theorem isHalf_smul {m n : ℕ} {e : AE D} (he : e * e = e) (x : Mx D m n) : IsH
 
 theorem mem_lat_piece {S T : HSp D} {F : Frame S T} (hF : F.Good) {R : Finset (Pl D.host.E)} (hR : PlacesOK ∅ R)
     (x : WO S T) (hi : IsIntM (frMapO S T F.βS F.βT x)) : idem R • x ∈ F.lat := by
-  refine GlobalTheory.T.mem_completedLattice_of_frameMatrix_integral hF hR (isHalf_smul (idem_sq hR) x) ?_
+  refine _root_.GlobalTheory.IntHalfLat.mem_lat_of_frMapO_int hF hR (isHalf_smul (idem_sq hR) x) ?_
   rw [frMapO_smul]
   exact fun i j => by
     rw [Matrix.smul_apply, smul_eq_mul]
@@ -170,9 +170,9 @@ theorem mem_lat_iff_isIntM_halfIdem : ∀ {D : D7} {S T : HSp D} {F : GlobalTheo
     exact (Matrix.ext fun i j => hx i j).symm
   constructor
   · intro hl
-    obtain ⟨o1, a1⟩ := GlobalTheory.T.frameMatrices_integral_of_mem_completedLattice hF hR (isHalf_smul (idem_sq hR) x)
+    obtain ⟨o1, a1⟩ := _root_.GlobalTheory.LatHalfInt.frMap_int_of_mem_lat hF hR (isHalf_smul (idem_sq hR) x)
       (GlobalTheory.PlaceModelSum.idem_smul_latO (idem_sq hR) hl)
-    obtain ⟨o2, a2⟩ := GlobalTheory.T.frameMatrices_integral_of_mem_completedLattice hF hQ (isHalf_smul (idem_sq hQ) x)
+    obtain ⟨o2, a2⟩ := _root_.GlobalTheory.LatHalfInt.frMap_int_of_mem_lat hF hQ (isHalf_smul (idem_sq hQ) x)
       (GlobalTheory.PlaceModelSum.idem_smul_latO (idem_sq hQ) hl)
     rw [hxe, GlobalTheory.PlaceVec.frMapAdj_add, frMapO_add]
     exact ⟨fun i j => add_mem (a1 i j) (a2 i j), fun i j => add_mem (o1 i j) (o2 i j)⟩

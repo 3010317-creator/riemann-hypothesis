@@ -21,17 +21,17 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLieFrames
 public import Development.AbelianVarietyTheory.PublishedTheorems.RelativeAmpleness.RelAmpleAndKTrivIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KernelOfLineBundleFiniteFlatSubgroupScheme
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyMumfordClassMulLeftStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyMumfordClassMulLeft
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BiadditiveClassEqPoincarePullbackUniqueHomStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFiniteIffFiniteKerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjectiveOfIsFiniteOfDimEqAbelianVarietyHomStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyExistsDualPairStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFiniteIffFiniteKer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjectiveOfIsFiniteOfDimEqAbelianVarietyHom
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyExistsDualPair
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuasiInverseIsogeny
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BirigidifiedPullbackMulPairIsoTensorPowSq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeFieldSmoothOfRelativeDimensionExistStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeTorsionPointLocallyConstantGeomPoinStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyIntCastSmulIsogenyDegreeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFactorThroughIsogenyOfKillsKernelStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyIntCastSmulIsogenyDegree
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFactorThroughIsogenyOfKillsKernel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvExp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorExistsTypeTjPIsogeny
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomTorsionFree
@@ -779,13 +779,13 @@ theorem exists_phi : ∀ (K : Type) [Field K] (A A' : AbVar K) (P : LB (A.X ⊗ 
       CechPic.pull (lift (a * a') t).left β = CechPic.pull (lift a t).left β + CechPic.pull (lift a' t).left β := by
     intro Y a a' t
     rw [hpull, hpull, hpull]
-    exact GlobalTheory.T.abelianVarietyMumfordClass_mul_left K A c Y a a' t
+    exact _root_.GlobalTheory.AV.AbVar.lam_mul_left_of_cube K A c Y a a' t
   have hnorm : CechPic.pull (lift (𝟙 A.X) (1 : A.X ⟶ A.X)).left β = 0 := by
     rw [hpull, AbVar.lam, _root_.mul_one, pull_one_eq_zero, sub_self, sub_zero]
   obtain ⟨ψ, hψ, -⟩ := _root_.GlobalTheory.AV.FamHom.main K A A' A P hP β hadd hnorm
   refine ⟨ψ, hψ, fun hc => ?_⟩
   have hfin : IsFinite ψ.hom.left := by
-    refine (GlobalTheory.T.isFinite_iff_finite_ker' K A A' ψ).2 ?_
+    refine (_root_.GlobalTheory.AV.AbVar.isFinite_iff_finite_ker K A A' ψ).2 ?_
     have hF := GlobalTheory.T.finite_mumfordClass_eq_zero_ample K A c hc
     refine Finite.of_injective (β := {x : A.Pt // AbVar.lam c (fst A.X (ptOver K (AlgebraicClosure K)))
       (snd A.X _ ≫ x) = 0}) (fun x => ⟨x.1, ?_⟩) ?_
@@ -797,7 +797,7 @@ theorem exists_phi : ∀ (K : Type) [Field K] (A A' : AbVar K) (P : LB (A.X ⊗ 
       exact AbDual.evc_one_right hP.isLB hP.zero _
     · intro x y h
       exact Subtype.ext (Subtype.mk.inj h)
-  exact ⟨hfin, GlobalTheory.T.surjective_of_isFinite_of_dim_eq_abelianVarietyHom K A A' ψ hdim.symm hfin⟩
+  exact ⟨hfin, _root_.GlobalTheory.AV.AbVar.surjective_of_isFinite_of_dim_eq K A A' ψ hdim.symm hfin⟩
 
 end GlobalTheory.AV.AbVar
 end -- clump:auto
@@ -842,7 +842,7 @@ namespace GlobalTheory.AV.AbVar
 theorem exists_isAdj : ∀ (K : Type) [Field K] (A B : AbVar K) (c : Pic A.X.left) (d : Pic B.X.left),
     IsAmpleCls c → ∀ f : A ⟶ B, ∃ (n : ℕ) (h : B ⟶ A), 0 < n ∧ IsAdj c d f n h := by
   intro K _ A B c d hc f
-  obtain ⟨A', P, ⟨hP, -⟩, hdim⟩ := GlobalTheory.T.abelianVariety_exists_dual_pair K A
+  obtain ⟨A', P, ⟨hP, -⟩, hdim⟩ := _root_.GlobalTheory.AV.exists_dualPair K A
   obtain ⟨φ, hφ, hiso⟩ := GlobalTheory.T.exists_hom_to_dual_of_mumfordClass K A A' P hP hdim c
   obtain ⟨n, v, hn, -, -, hvφ⟩ := exists_quasiInverse_isogeny K A A' φ (hiso hc)
   have hadd : ∀ (Y : Over (Sp K)) (a a' : Y ⟶ A.X) (t : Y ⟶ B.X),
@@ -852,7 +852,7 @@ theorem exists_isAdj : ∀ (K : Type) [Field K] (A B : AbVar K) (c : Pic A.X.lef
     intro Y a a' t
     simp only [lam_eq, CechPic.pull_lam, lift_fst_assoc, lift_snd, MonObj.mul_comp]
     simp only [← lam_eq]
-    exact GlobalTheory.T.abelianVarietyMumfordClass_mul_left K B d Y _ _ t
+    exact _root_.GlobalTheory.AV.AbVar.lam_mul_left_of_cube K B d Y _ _ t
   have hzero : CechPic.pull (lift (𝟙 A.X) (1 : A.X ⟶ B.X)).left
       (AbVar.lam d (fst A.X B.X ≫ f.hom) (snd A.X B.X)) = 0 := by
     rw [lam_eq, CechPic.pull_lam, lift_snd, CechPic.lam_one_right]
@@ -940,7 +940,7 @@ private theorem eq_zero_of_zsmul_eq_zero {K : Type} [Field K] (A B : AbVar K)
         GlobalTheory.CechPic.pull (lift a t).left β + GlobalTheory.CechPic.pull (lift a' t).left β)
     (hnorm : GlobalTheory.CechPic.pull (lift (𝟙 A.X) (1 : A.X ⟶ B.X)).left β = 0)
     (m : ℤ) (hm : m ≠ 0) (hmβ : m • β = 0) : β = 0 := by
-  obtain ⟨A', P, hdual, -⟩ := GlobalTheory.T.abelianVariety_exists_dual_pair K A
+  obtain ⟨A', P, hdual, -⟩ := _root_.GlobalTheory.AV.exists_dualPair K A
   have hP := hdual.1
   obtain ⟨ψ, hψ, -⟩ := _root_.GlobalTheory.AV.FamHom.main K A A' B P hP β hadd hnorm
   obtain ⟨ψ0, -, huniq⟩ := _root_.GlobalTheory.AV.FamHom.main K A A' B P hP 0 (by intros; simp) (by simp)
@@ -1127,7 +1127,7 @@ private theorem exists_adjoint :
     have := pow_gcd_eq_one.mpr ⟨h1, h2⟩
     rwa [hg, pow_one] at this
   let q : av o₁ ⟶ av o₁ := ((p ^ a : ℕ) : ℤ) • 𝟙 (av o₁)
-  have hq := (GlobalTheory.T.abelianVariety_intCast_smul_isogeny_degree Ω (av o₁) ((p ^ a : ℕ) : ℤ) (by exact_mod_cast (pow_pos hp.pos a).ne')).1
+  have hq := (_root_.GlobalTheory.MulIsogeny.mul_isogeny Ω (av o₁) ((p ^ a : ℕ) : ℤ) (by exact_mod_cast (pow_pos hp.pos a).ne')).1
   have hqhom : ∀ (T : Over (Sp Ω)) (x : T ⟶ o₁.A), x ≫ GlobalTheory.AV.AbVar.Hom.hom q = x ^ (p ^ a) := by
     intro T x
     have e1 := congrArg (fun u => x ≫ u)
@@ -1135,7 +1135,7 @@ private theorem exists_adjoint :
     have e2 := GlobalTheory.AV.AbVar.AdjCalc.comp_zpow' (G := o₁.A) x (𝟙 o₁.A) ((p ^ a : ℕ) : ℤ)
     rw [Category.comp_id, zpow_natCast] at e2
     exact e1.trans e2
-  obtain ⟨g, hg⟩ := GlobalTheory.T.exists_factor_through_isogeny_of_kills_kernel Ω (av o₁) (av o₁) (av o₂) q h hq (fun T x hx => by
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.AV.AbVar.exists_factor_of_isogeny Ω (av o₁) (av o₁) (av o₂) q h hq (fun T x hx => by
     have := hkill T x ((hqhom T x).symm.trans hx)
     rw [hνdef] at this
     exact this)
@@ -1208,13 +1208,13 @@ private theorem exists_div :
     rfl
   have hf : GlobalTheory.AV.AbVar.Hom.hom f = o₁.act.act (algebraMap (𝓞 D.F) D.O β) ≫ ψ₁ ≫ φ₂ := rfl
   have hqi : GlobalTheory.AV.AbVar.IsIsogeny q :=
-    (GlobalTheory.T.abelianVariety_intCast_smul_isogeny_degree Ω (avOf o₁) _ (Nat.cast_ne_zero.mpr (pow_ne_zero _ (Fact.out : p.Prime).ne_zero))).1
+    (_root_.GlobalTheory.MulIsogeny.mul_isogeny Ω (avOf o₁) _ (Nat.cast_ne_zero.mpr (pow_ne_zero _ (Fact.out : p.Prime).ne_zero))).1
   have hker : ∀ (T : Over (Sp Ω)) (x : T ⟶ (avOf o₁).X), x ≫ GlobalTheory.AV.AbVar.Hom.hom q = 1 →
       x ≫ GlobalTheory.AV.AbVar.Hom.hom f = 1 := by
     intro T x hx0
     rw [hf]
     exact hker' T x (hq ▸ hx0)
-  obtain ⟨g, hg⟩ := GlobalTheory.T.exists_factor_through_isogeny_of_kills_kernel Ω (avOf o₁) (avOf o₁) (avOf o₂) q f hqi hker
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.AV.AbVar.exists_factor_of_isogeny Ω (avOf o₁) (avOf o₁) (avOf o₂) q f hqi hker
   haveI hgm : IsMonHom (GlobalTheory.AV.AbVar.Hom.hom g) := (Additive.toMul g).property
   refine ⟨GlobalTheory.AV.AbVar.Hom.hom g, hgm, ?_⟩
   rw [← hf, ← hg, GlobalTheory.AV.AbVar.comp_hom, hq]

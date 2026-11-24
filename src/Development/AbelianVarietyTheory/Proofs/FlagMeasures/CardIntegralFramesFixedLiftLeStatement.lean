@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
 public import Formalism.FlagUnipotentLattices.CardSubmodulesAndLinearEquivBounds
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FixedFramesPerpendicularVectors
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLattice
 public import Formalism.FlagUnipotentLattices.CardSubgroupsOfIndexLe
 public import Mathlib.Analysis.Complex.Norm
 public import Mathlib.NumberTheory.NumberField.Basic
@@ -375,7 +375,7 @@ theorem mem_perpE_iff (D : D7) (P : LatW D) (w : (D.sp.X 0).V) :
 
 theorem frame_diff : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ : LatV D), Stand D u u' → IsBase D u F0 → IsRowLat D F0 Λ → ∀ (P : LatW D) (φ : P →ₗ[𝓞 D.host.E] (hS D).V) (Z : GramM D), (∀ p, φ p ∈ XLam Λ (lf D F0)) → ∀ F₁ ∈ FixSet D Λ (lf D F0) ((Tu D u' : ℕ) : D.host.E) Z P φ, ∀ F₂ ∈ FixSet D Λ (lf D F0) ((Tu D u' : ℕ) : D.host.E) Z P φ, (∀ b, ∃ w, IsWcomp D P (frame F₁ b) w ∧ IsWcomp D P (frame F₂ b) w) → ∃ x : Matrix (Fin D.R.rS) (Fin (D.R.rS + 1)) D.host.E, (∀ b, frame F₂ b = frame F₁ b + ∑ a, x a b • F0.e a) ∧ (∀ a b, x a b ∈ (ddS D ^ (-(D.R.rS : ℤ)) : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E)) ∧ xᴴ * Z.submatrix Fin.castSucc id + (Z.submatrix Fin.castSucc id)ᴴ * x = 0 := by
   intro D u u' F0 Λ hst hb hrow P φ Z hφ F₁ h₁ F₂ h₂ hw
-  obtain ⟨hW, -, hpos, -⟩ := GlobalTheory.T.standardBaseFlag_complement_integralLattice D u u' F0 Λ hst hb hrow
+  obtain ⟨hW, -, hpos, -⟩ := _root_.GlobalTheory.LoopC.Base.main D u u' F0 Λ hst hb hrow
   obtain ⟨l₁, e₁, z₁, o₁⟩ := h₁
   obtain ⟨l₂, e₂, z₂, o₂⟩ := h₂
   have hiso : ∀ x y, (hS D).hT (D.sp.iXY 0 x) (D.sp.iXY 0 y) = (D.sp.X 0).hT x y :=
@@ -1490,7 +1490,7 @@ theorem card_frames_le : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ 
   rcases X.eq_empty_or_nonempty with hE | ⟨F1, hF1⟩
   · simp [cntCl, hE]
   obtain ⟨hcard, -, hf, -, hrd, hstar, hnorm, -⟩ := GlobalTheory.real_places_facts D
-  obtain ⟨-, -, hpos, hlat, hint, -⟩ := GlobalTheory.T.standardBaseFlag_complement_integralLattice D u u' F0 Λ hSt hb hΛ
+  obtain ⟨-, -, hpos, hlat, hint, -⟩ := _root_.GlobalTheory.LoopC.Base.main D u u' F0 Λ hSt hb hΛ
   obtain ⟨hrk, I, hI, hIN, hIS⟩ := GlobalTheory.T.perpendicular_rank_ideal_bound D u u' F0 Λ hSt hb hΛ P s De hsk hsub
   obtain ⟨hQ1, hQrd, ⟨b₀, hd, hdQ⟩, hG, hGQ⟩ := hQ
   have huni : Formalism.HermitianLatticesTheory.IsUnimodular (hS D).hT Λ := hΛ.2.1.2.1

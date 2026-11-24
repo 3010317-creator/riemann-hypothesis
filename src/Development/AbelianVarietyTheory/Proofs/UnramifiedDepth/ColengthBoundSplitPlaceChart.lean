@@ -19,7 +19,7 @@ public import Mathlib.NumberTheory.Padics.PadicIntegers
 public import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.PadicPlaceBasisOfIdempotent
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.TateModuleEigenspaceDimEqLieAlgebraSum
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.EigenspaceDimAddSplitExactTransposeStatement
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.EigenspaceDimAddSplitExactTranspose
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import ReciprocityTheory.DualLattices.CotangentSurjective
 public import ReciprocityTheory.DualLattices.ColengthSqBlockVandermonde
@@ -30,13 +30,13 @@ public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.LocalRing.Module
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HasLenExistsMonoFp
 public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.MapPderiv
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsHodgeTateDatumPolarisedAbelianCharactersStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsLinearDataOfSplitFormalGroupExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsNilpotentGroupChartSmoothCommGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsPowerSeriesReadingGroupHomNilpotentChartsStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FormalGroupActionLinearPartRingHomStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.NilChartOfIsChartJStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.UniformizationSplitFormalGroupLawEquivariantStatement
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsHodgeTateDatumPolarisedAbelianCharacters
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsLinearDataOfSplitFormalGroupExtension
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsNilpotentGroupChartSmoothCommGroup
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsPowerSeriesReadingGroupHomNilpotentCharts
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FormalGroupActionLinearPartRingHom
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.NilChartOfIsChartJ
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.UniformizationSplitFormalGroupLawEquivariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,7 +98,7 @@ import Mathlib.RingTheory.TotallySplit
 import ReciprocityTheory.DualLattices.ProdDvdOfIso
 import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.PadicUnitQuotientPrincipalBasis
 import Mathlib.Algebra.Order.Star.Real
-import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FormalGroupLawJacobianExtensionChangeCoeffStatement
+import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FormalGroupLawJacobianExtensionChangeCoeff
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.RangeIdempotentRankSumEigenspaceDim, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.RangeIdempotentRankSumEigenspaceDimStatement, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AbelianPartCokernelLengthLe, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AbelianPartCokernelLengthLeStatement, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.DiscrPowerBasis, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.EigenbasisRestrictionSurjectiveEquivariantStatement, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.EmbeddingsLiftIntegersIdempotentsConjugationStatement, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsFreeGeneratorsStatement, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.PadicIntAlgebraOfIsAdicCompleteMatrixUniqueStatement, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.PadicPlaceBasisOfIdempotentStatement, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.TateModuleEigenspaceDimEqLieAlgebraSumStatement, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsAbelianTorusGeneratorsAtPlace, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsAbelianTorusGeneratorsAtPlaceStatement, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LatticeInequalityValuationIntegers, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LatticeInequalityValuationIntegersStatement, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ColengthBoundSplitPlaceLinearData, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ColengthBoundSplitPlaceLinearDataStatement, Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ColengthBoundSplitPlaceChart
@@ -839,8 +839,8 @@ theorem exists_generators : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [I
     have e1 := hyd τ hτe
     have e2 := hzd τ hτe
     have e3 := (GlobalTheory.T.eigenbasis_restriction_surjective_equivariant C v O hv OE d rp ρG τ (W j₀) (hW j₀)).2.2
-    have e4 := (GlobalTheory.T.eigenspaceDim_add_split_exact_transpose C O OE d r g A B hL.exact ρG NO LB hL.eqB hL.eqA ((algebraMap O C).comp τ)).1
-    have e5 := (GlobalTheory.T.eigenspaceDim_add_split_exact_transpose C O OE r r 0 1 0 (splitEx_one r) NO NO
+    have e4 := (_root_.GlobalTheory.EigAdd.eigDim_add_transpose C O OE d r g A B hL.exact ρG NO LB hL.eqB hL.eqA ((algebraMap O C).comp τ)).1
+    have e5 := (_root_.GlobalTheory.EigAdd.eigDim_add_transpose C O OE r r 0 1 0 (splitEx_one r) NO NO
       ⟨⟨⟨fun _ => 1, rfl⟩, fun _ _ => Subsingleton.elim _ _⟩, Subsingleton.elim _ _, fun _ _ => Subsingleton.elim _ _⟩
       (fun a => Subsingleton.elim _ _) (fun a => by simp) ((algebraMap O C).comp τ)).2
     have e2' : (fun a : OE => (extM p (trR NZ) (1 ⊗ₜ[ℤ] a)).map (algebraMap ℤ_[p] O)) = fun a => (NO a)ᵀ := by
@@ -1352,7 +1352,7 @@ theorem colength_bound_linDat : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C
     intro τ hτ
     obtain ⟨W', hW''⟩ := hW' τ hτ
     have h1 := (GlobalTheory.ChF.eigB_res_surjective C v O hv OE d rm ρG τ W' hW'').2.2
-    have h2 := (GlobalTheory.T.eigenspaceDim_add_split_exact_transpose C O OE d r g A B hL.exact ρG
+    have h2 := (_root_.GlobalTheory.EigAdd.eigDim_add_transpose C O OE d r g A B hL.exact ρG
       ((RingHom.mapMatrix (Int.castRingHom O)).comp N)
       (H.ρL.comp (Algebra.TensorProduct.includeRight : OE →ₐ[ℤ] ℤ_[p] ⊗[ℤ] OE).toRingHom)
       hL.eqB hL.eqA ((algebraMap O C).comp τ)).1
@@ -1464,28 +1464,28 @@ namespace GlobalTheory.ChF
 theorem colength_bound_split_place_chart : ∀ (p : ℕ) [Fact p.Prime], AvFSt p := by
   intro p _ T _ _ _ _ _ _ hpT G _ _ D A U d F x hx OE _ _ _ _ _ _ _ io oD oA hlin act hact
     C _ _ _ v O _ _ hv _ _ _ iota hiota w t vd hvd rp rm W hW hW'
-  obtain ⟨X, hX, hXr⟩ := GlobalTheory.T.exists_nilChart_reads_of_isChartJ T G U.smooth d F x hx
+  obtain ⟨X, hX, hXr⟩ := _root_.GlobalTheory.ChF.nilChart_of_isChartJ T G U.smooth d F x hx
   have hread := hXr OE io act hact
-  obtain ⟨FB, XB, hXB⟩ := GlobalTheory.T.exists_nilpotentGroupChart_smooth_commGroup T D.toPre.P.A D.toPre.P.g D.toPre.P.smoothDim
+  obtain ⟨FB, XB, hXB⟩ := _root_.GlobalTheory.ChF.exists_nilChart T D.toPre.P.A D.toPre.P.g D.toPre.P.smoothDim
   have hαB : ∀ a : OE, ∃ φ : Fin D.toPre.P.g → PS T 1 D.toPre.P.g, Reads XB XB (oD.onB.act a) φ :=
-    fun a => GlobalTheory.T.exists_powerSeries_reading_groupHom_nilpotentCharts T D.toPre.P.A D.toPre.P.A _ _ FB.F FB.F XB XB hXB hXB _ (oD.onB.hom a)
+    fun a => _root_.GlobalTheory.ChF.exists_reads T D.toPre.P.A D.toPre.P.A _ _ FB.F FB.F XB XB hXB hXB _ (oD.onB.hom a)
   choose αB hαB using hαB
-  obtain ⟨r, J, Q, hext, heq⟩ := GlobalTheory.T.uniformization_split_formal_group_law_equivariant T _ D A G U d _ F FB X XB hX hXB
+  obtain ⟨r, J, Q, hext, heq⟩ := _root_.GlobalTheory.unif_extSer_equivariant T _ D A G U d _ F FB X XB hX hXB
   obtain ⟨N, hN⟩ := heq OE io oD oA hlin act.act αB hread hαB
-  obtain ⟨hlaw, hlinm, hextm⟩ := GlobalTheory.T.formalGroupLaw_jacobian_extension_changeCoeff T O iota
+  obtain ⟨hlaw, hlinm, hextm⟩ := _root_.GlobalTheory.ChF.changeCoeff_law_lin_extSer T O iota
   obtain ⟨F', hF'⟩ := hlaw d F
   obtain ⟨FB', hFB'⟩ := hlaw _ FB
-  obtain ⟨ρ, hρ⟩ := GlobalTheory.T.formalGroupAction_linearPart_ringHom T d F OE act O iota
+  obtain ⟨ρ, hρ⟩ := _root_.GlobalTheory.ChF.linPart_act_ringHom T d F OE act O iota
   have hext' := hextm d _ r F FB J Q hext
   have hFH : FH p F'.F := by
     intro k
     rw [hF']
     obtain ⟨h1, h2, -, h4⟩ := GlobalTheory.FormalTorsion.fhSt p T hpT G D A U d F x hx C v O hv iota hiota k
     exact ⟨h1, h2, h4⟩
-  have hB := GlobalTheory.T.exists_hodgeTateDatum_polarisedAbelian_characters p C v O hv T iota D.toPre.P _ rfl OE oD.onB FB XB hXB αB hαB
+  have hB := _root_.GlobalTheory.ChF.exists_htd_characters_base p C v O hv T iota D.toPre.P _ rfl OE oD.onB FB XB hXB αB hαB
   rw [← hF', ← hFB'] at hext'
   rw [← hFB'] at hB
-  obtain ⟨cp, hS, H, B, m, u, hu, hL⟩ := GlobalTheory.T.exists_linearData_of_split_formalGroup_extension p C v O hv OE d _ r F' FB' _ _ hext' hFH ρ N
+  obtain ⟨cp, hS, H, B, m, u, hu, hL⟩ := _root_.GlobalTheory.ChF.exists_linDat_of_extSer p C v O hv OE d _ r F' FB' _ _ hext' hFH ρ N
     (fun a j => MvPowerSeries.map iota (αB a j))
     (fun a => by
       rw [hlinm, hlinm, (hρ a).2, ← Matrix.map_mul, ← Matrix.map_mul, (hN a).1])

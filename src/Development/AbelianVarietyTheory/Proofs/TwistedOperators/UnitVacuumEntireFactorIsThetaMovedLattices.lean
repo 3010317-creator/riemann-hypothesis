@@ -7,7 +7,8 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrT
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.OmAtSmulRight
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HESmulRight
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ApplyAddInfRat
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HomSymplecticHalfFormAlgebraicLawsContinuousStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HomSymplecticHalfFormAlgebraicLawsContinuous
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalFrameCoordsOfMemTorusLattice
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticePointSignEqThetaLawSemicharacter
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualImageOrthonormalFrameLattice
@@ -58,7 +59,7 @@ import Mathlib.Tactic.Polynomial.Basic
 import Formalism.LocalRingCardinality.DataTheta
 import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDualStatement
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalPointFinitePartIsotropicPairing
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusHermitianFormScaledCoordinateEq
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIntegerMapEqHalfOneAddSqrt
@@ -397,7 +398,7 @@ theorem sign_eq_alpha_sd : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : 
     ring
   have hb : (b : D.host.E) + star (b : D.host.E) = 1 := by rw [hbs]; ring
   obtain ⟨χ, hχ, hval⟩ := GlobalTheory.ThetaSignLat.semichar_value ψ S T ΛS ΛT hψ hSd hTd b hb
-  obtain ⟨f1, -, f3, -⟩ := GlobalTheory.T.homSymplecticHalfForm_algebraic_laws_continuous D S T
+  obtain ⟨f1, -, f3, -⟩ := _root_.GlobalTheory.OrientedFormLaws.symplOH_laws D S T
   have hz : ∀ w : WO S T, symplOH S T 0 w = 0 := fun w => by
     have := f1 0 0 w
     rw [add_zero] at this
@@ -415,7 +416,7 @@ theorem sign_eq_alpha_sd : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : 
     rw [e1] at this
     rw [this, Pi.smul_apply, e0, smul_eq_mul, mul_one]
   have hpm : ε = 1 ∨ ε = -1 := by
-    obtain ⟨ε', h1, h2⟩ := (GlobalTheory.T.self_dual_lattice_pairing_dual D ψ S T ΛS ΛT hψ hSd hTd).2.2 χ hχ u huL
+    obtain ⟨ε', h1, h2⟩ := (_root_.GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T ΛS ΛT hψ hSd hTd).2.2 χ hχ u huL
     have := congrFun (h2 χ hχ) 0
     rw [e1, Pi.smul_apply, e0, smul_eq_mul, mul_one] at this
     rw [hεu, this]; exact h1
@@ -515,7 +516,7 @@ theorem theta_of_vacuum_moved : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (�
   have hψ := hf.1
   have hθ := hf.2.inf
   obtain ⟨σ, hch⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
-  obtain ⟨-, -, h3⟩ := GlobalTheory.T.self_dual_lattice_pairing_dual D ψ S T ΛS ΛT hψ hSd hTd
+  obtain ⟨-, -, h3⟩ := _root_.GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T ΛS ΛT hψ hSd hTd
   refine ⟨hΦd.comp ((differentiable_id).const_smul δ⁻¹), ?_⟩
   intro x hx Y
   obtain ⟨v, hv, rfl⟩ := mem_La_frame_sd S T frS frT hS hT Ls Lt hLs δ x hx

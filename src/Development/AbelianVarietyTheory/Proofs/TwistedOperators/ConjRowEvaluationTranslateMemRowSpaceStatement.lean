@@ -20,7 +20,8 @@ public import Mathlib.Analysis.Normed.Operator.Extend
 public import Mathlib.LinearAlgebra.Multilinear.Basic
 public import Formalism.LocalToGlobal.IndefiniteReal.AutomorphicEvaluation
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteSeriesTestDataLargeGapsIntegrableStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TranslatedRowEvaluationSquareIntegrableNormStatement
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RowDict
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RowsJoinPinned
 import Formalism.LocalToGlobal.IndefiniteReal.SchurOrthogonality
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -949,7 +950,7 @@ theorem GlobalTheory.RowEvalHH.conj_eval_mem_HH : ∀ {D : D7} {G : Type} [Group
     funext τ
     apply Subtype.ext
     exact (c τ).symm_apply_apply (v₀ τ)
-  obtain ⟨c', -, hnorm⟩ := GlobalTheory.T.translatedRowEvaluation_squareIntegrable_norm R F X h hLev hGrp hMod t ht
+  obtain ⟨c', -, hnorm⟩ := _root_.GlobalTheory.EvalNormTransfer.evalTranslate_norm R F X h hLev hGrp hMod t ht
   have hunit : ∀ τ, ‖((v₀ τ : (MP R).H τ))‖ = 1 := by
     intro τ
     rw [← (c τ).norm_map, hv τ]

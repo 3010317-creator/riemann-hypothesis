@@ -13,8 +13,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ActOMemFinSu
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.NotMemSpanOfCommute
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.OmVacuumEqSplitFacSmulSum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeFinitelyGeneratedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeMultipleMemOpenLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeFinitelyGenerated
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeMultipleMemOpenLevel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitPlacesSelectingAdelicIdempotentStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRepresentationOfLatticeVacua
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantFormNormalizedHeisenbergIntertwinerEq
@@ -24,7 +24,7 @@ public import Mathlib.Analysis.Complex.Norm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantFormNormalizedHeisenbergIntertwiner
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfFinite
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanHeisenbergTranslatesOfLatticeVacuaEqTop
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormUnitaryPairActionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormUnitaryPairAction
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsGoodIndexNormalizationNegativeInert
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -237,11 +237,11 @@ variable {D : D7} {S T : HSp D} {ψ : AddChar (AF D.host.F) ℂ}
 
 theorem gamF_rhoF (p : GA D S × GA D T) (x y : XF S T) :
     gamF ψ S T (rhoF S T p x) (rhoF S T p y) = gamF ψ S T x y := by
-  rw [gamF, gamF, coe_rhoF, coe_rhoF, GlobalTheory.T.symplecticForm_unitaryPairAction]
+  rw [gamF, gamF, coe_rhoF, coe_rhoF, _root_.GlobalTheory.SymplOInv.symplO_actO]
 
 theorem phase_rhoF (w : 𝓞 D.host.E) (p : GA D S × GA D T) (x : XF S T) :
     phase ψ w (rhoF S T p x) = phase ψ w x := by
-  rw [phase, phase, coe_rhoF, ← actO_smul, symplOH, symplOH, GlobalTheory.T.symplecticForm_unitaryPairAction]
+  rw [phase, phase, coe_rhoF, ← actO_smul, symplOH, symplOH, _root_.GlobalTheory.SymplOInv.symplO_actO]
 
 structure IsLatRep (hψ : IsCharAF D.host.F ψ) (ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E))
     (ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)) (w : 𝓞 D.host.E) (lam : ℕ →* ℂ)
@@ -260,7 +260,7 @@ theorem exists_isLatRep (hψ : IsStdChar D ψ (-1)) (hS : IsSelfDualC S ΛS) (hT
   obtain ⟨w, hw⟩ := exists_w D
   have H := isHeis_opF hψ.1 S T hw
   have hA := selfDual_latF (GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T ΛS ΛT hψ hS hT).1
-  obtain ⟨hlev, hmov⟩ := GlobalTheory.T.completedHomLattice_multiple_mem_open_level D S T ΛS ΛT hS hT (GlobalTheory.T.completedHomLattice_finitelyGenerated D S T ΛS ΛT hS hT)
+  obtain ⟨hlev, hmov⟩ := _root_.GlobalTheory.LatLevel.level_of_generators D S T ΛS ΛT hS hT (_root_.GlobalTheory.LatFinGen.latO_finitely_generated D S T ΛS ΛT hS hT)
   have hspan := _root_.GlobalTheory.FinWeil.span_translates_vacua H _ hA (smooth_theta hψ.1 hS hT hw hA hlev)
   have hidx : ∀ p, idx (latF S T ΛS ΛT) ((latF S T ΛS ΛT).map (rhoF S T p)) ≠ 0 := fun p => by
     obtain ⟨N, hN, h⟩ := hmov p.1 p.2
@@ -310,8 +310,8 @@ theorem heis_fin (p : GA D S × GA D T) (x : XF S T) (f f' : thetaSub ψ S T)
 theorem eventually_fix (hS : IsSelfDualC S ΛS) (hT : IsSelfDualC T ΛT) (f : thetaSub ψ S T) :
     ∀ᶠ p in 𝓝 (1 : GA D S × GA D T), Om p f = f := by
   have H := isHeis_opF hψ S T h.hw
-  have hgen := GlobalTheory.T.completedHomLattice_finitelyGenerated D S T ΛS ΛT hS hT
-  obtain ⟨hlev, -⟩ := GlobalTheory.T.completedHomLattice_multiple_mem_open_level D S T ΛS ΛT hS hT hgen
+  have hgen := _root_.GlobalTheory.LatFinGen.latO_finitely_generated D S T ΛS ΛT hS hT
+  obtain ⟨hlev, -⟩ := _root_.GlobalTheory.LatLevel.level_of_generators D S T ΛS ΛT hS hT hgen
   obtain ⟨h1, h2⟩ := GlobalTheory.T.eventually_unitaryPair_keeps_completedLattice D S T ΛS ΛT hS hT hgen
   have hf : f ∈ Submodule.span ℂ
       {m | ∃ x e, Fixes (opF hψ S T w) (latF S T ΛS ΛT) e ∧ m = opF hψ S T w x e} := by

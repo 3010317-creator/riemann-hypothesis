@@ -33,7 +33,7 @@ public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RealTowe
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SectionsGenericIndicators
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NefPolarization
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreeWeightFormula
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AllWeightSectionsCompatStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AllWeightSectionsCompat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -1453,7 +1453,7 @@ theorem volL_eq_of_growth [DecidableEq (CMType H)] {U : ∀ σ : c.F →+* ℂ, 
     intro n
     have hWn : WEq Dw (n • a) (n • (GlobalTheory.AllWt.wtOf Dw u 0).1) := fun τ i hi => by simp [hW τ i hi]
     rw [(((GlobalTheory.T.lattice_sections_cusp_laws E H Dw l Xo c r U h e hL (n • a) 0).2 _ hWn).2.2.2.2.2 Z).1,
-      (GlobalTheory.T.all_weight_sections_compat E H Dw l Xo c r U h e hL (n • (GlobalTheory.AllWt.wtOf Dw u 0).1) Z).2.2.1]
+      (_root_.GlobalTheory.CompanionTheory.Ar.Rec.bridge_allWt E H Dw l Xo c r U h e hL (n • (GlobalTheory.AllWt.wtOf Dw u 0).1) Z).2.2.1]
     conv_rhs => rw [hG0]
     rw [Prod.smul_mk, smul_zero]
   have hfun : (fun n : ℕ => ((Top.dimFl (CMType H) (Dw.p + Dw.q)).factorial : ℝ) *

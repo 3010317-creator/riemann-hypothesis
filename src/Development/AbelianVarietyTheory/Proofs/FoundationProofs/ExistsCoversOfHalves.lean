@@ -13,8 +13,8 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHal
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.CoeSelfDualLatticeInFrameCoordinatesEq
 public import Formalism.LocalToGlobal.ProjectiveLattices.CompHt
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsOpenCongruenceIdelesAndRealFiniteParts
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeCharEqOneOfTrivialFinitePartOneStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdelicCharacterPowEqOneFiniteIdelesOfOrderDvdStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeCharEqOneOfTrivialFinitePartOne
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdelicCharacterPowEqOneFiniteIdelesOfOrderDvd
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.MemRangeOfIsAlgebraicRatFun
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsSecCharVal
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.PowClassNumberIntegral
@@ -168,8 +168,8 @@ theorem exists_xi (D : D7) (V : HSp D) (c : (AE D)ˣ →* Circle) (χ : HChar D.
           xi (Matrix.GeneralLinearGroup.det (finHom V g)) = 1) ∧
       (∀ γ ∈ GQ V, xi (Matrix.GeneralLinearGroup.det (finHom V γ)) = 1) ∧
       ∀ g : GA D V, xi (Matrix.GeneralLinearGroup.det (finHom V g)) ^ n = 1 := by
-  have h1 : ∀ x, c x ^ n = 1 := GlobalTheory.T.heckeChar_eq_one_of_trivial_finitePartOne D (c ^ n) ⟨h.1.1.pow n, fun x => by
-    rw [MonoidHom.pow_apply, h.1.2, one_pow]⟩ (GlobalTheory.T.idelicCharacter_pow_eq_one_finiteIdeles_of_orderDvd D c χ h n ho)
+  have h1 : ∀ x, c x ^ n = 1 := _root_.GlobalTheory.HeckeFinTrivial.eq_one_of_trivial_on_finite D (c ^ n) ⟨h.1.1.pow n, fun x => by
+    rw [MonoidHom.pow_apply, h.1.2, one_pow]⟩ (_root_.GlobalTheory.CharOrderFin.char_pow_eq_one_of_orderDvd D c χ h n ho)
   have h2 : ∀ x : (AE D)ˣ, finPart D (x : AE D) = 1 → c x = 1 := fun x hx => by
     obtain ⟨y, rfl⟩ := GlobalTheory.T.exists_nthRoot_idele_finitePart_one D n hn x hx
     rw [map_pow, h1]

@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.MidChart
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsTransportAdelicCorrection
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoordsStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,7 +63,7 @@ theorem exists_lift_of_ptOf : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.
   intro B X I hI hP l Z i hi k hk
   obtain ⟨p, hp, -⟩ := hk
   have hu := hp.uni
-  obtain ⟨-, -, -, hg⟩ := GlobalTheory.T.trueColumn_spaces_standard_in_frameCoords I hI hP l Z
+  obtain ⟨-, -, -, hg⟩ := _root_.GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hI hP l Z
   have hg1 := (hg i hi).1
   unfold Formalism.L2.Forms.gramN at hg1
   have hy : k ∈ Formalism.UG.UPts (Formalism.L2.Forms.sigD (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G))

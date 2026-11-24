@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlaceLaws
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryFiniteAdelicGroupSplitFinitePlaceSetStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryFiniteAdelicGroupSplitFinitePlaceSet
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawDoubleStepFiniteIntegralCollapseTwistPlaceAlt
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValueDoubleUnif
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleStepIntegrandBesselPeriodInvariantProof
@@ -9,17 +10,17 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Hei
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacua
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HandBFSmul
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawFixedLevelElementEqProdLocalParts
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsLatticeStabilizerTwistAndLevelAway
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsHeightLeTwoMulQuotHeight
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralQuotientEqIntegralFactorQuotient
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawDoubleStepIntegrandVanishesOffBessel
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapHandedFunctionVanishingPeriodInvariant
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryAdelicInfFinSplitPeriodsUnimodularStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittSmallGroupEmbeddingMemPointwiseStabilizerIso
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryAdelicInfFinSplitPeriodsUnimodular
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawUnfoldedDataEqKernelDataAtLevel
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaFlatMapIndepUnfoldingStep
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacuaStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CombAtSingleZero
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawCommonRealDatumBiThetaVacuumContractionStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSmoothAutomorphicRightTranslateFinite
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LowerTowerLiftsVanishOfVanishOnFock
@@ -65,7 +66,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.JointSmooth
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOneIntegralAdd
-import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittSmallGroupEmbeddingMemPointwiseStabilizerIso
 import Formalism.LocalToGlobal.IndefiniteReal.IndefiniteWeightData
 import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsUniqueIsProdMeasureFinAway
@@ -92,7 +92,7 @@ namespace GlobalTheory.SeeSaw
 theorem normAt_exists : ∀ (D : D7) (V : HSp D) (R : Subgroup (GA D V)), IsClosed (R : Set (GA D V)) → ∀ (L : Lat V),
     IsSelfDualC V L → ∀ Q : Finset (Pl D), ∃ ρ μ, IsNormAt V R L (· ∈ Q) ρ μ := by
   intro D V R hR L hL Q
-  obtain ⟨⟨K, hK, hKc, hKo⟩, -⟩ := (GlobalTheory.T.unitaryFiniteAdelicGroup_split_finitePlaceSet D V Q).2.2.2.2.2.2.2.2.1 L hL (· ∈ Q)
+  obtain ⟨⟨K, hK, hKc, hKo⟩, -⟩ := (_root_.GlobalTheory.FinPl.SetCut.grp_split D V Q).2.2.2.2.2.2.2.2.1 L hL (· ∈ Q)
   have hKG : ∀ g : GA D V, g ∈ K → g ∈ grpAt V (· ∈ Q) := fun g hg => ((hK g).1 hg).1
   have h1 : InK V L (· ∈ Q) 1 := (hK 1).1 K.one_mem
 
@@ -675,10 +675,10 @@ theorem off_union {V : HSp D} {P P' R : Pl D → Prop} (hR : ∀ p, R p → P p 
   · exact b ⟨u.1, k⟩
 
 theorem at_le_off (V : HSp D) {P P' : Pl D → Prop} (h : ∀ p, P p → ¬ P' p) : grpAt V P ≤ grpOff V P' :=
-  (GlobalTheory.T.unitaryFiniteAdelicGroup_split_finitePlaceSet D V ∅).2.2.2.2.2.2.1 P P' h
+  (_root_.GlobalTheory.FinPl.SetCut.grp_split D V ∅).2.2.2.2.2.2.1 P P' h
 
 theorem at_eq (V : HSp D) (P : Pl D → Prop) : grpAt V P = GfC V ⊓ grpOff V (fun p => ¬ P p) := by
-  rw [(GlobalTheory.T.unitaryFiniteAdelicGroup_split_finitePlaceSet D V ∅).2.2.2.2.2.2.2.1]
+  rw [(_root_.GlobalTheory.FinPl.SetCut.grp_split D V ∅).2.2.2.2.2.2.2.1]
   simp only [not_not]
 
 theorem at_mono (V : HSp D) {P P' : Pl D → Prop} (h : ∀ p, P p → P' p) : grpAt V P ≤ grpAt V P' := by
@@ -688,7 +688,7 @@ theorem at_mono (V : HSp D) {P P' : Pl D → Prop} (h : ∀ p, P p → P' p) : g
 theorem split_two (V : HSp D) (A B : Finset (Pl D)) {x : GA D V} (hx : x ∈ GfC V)
     (ho : x ∈ grpOff V (fun p => p ∉ A ∧ p ∉ B)) :
     ∃ a ∈ grpAt V (· ∈ A), ∃ b ∈ grpAt V (· ∈ B), b ∈ grpAt V (· ∉ A) ∧ x = a * b := by
-  obtain ⟨e, he⟩ := (GlobalTheory.T.unitaryFiniteAdelicGroup_split_finitePlaceSet D V A).2.2.2.2.2.1
+  obtain ⟨e, he⟩ := (_root_.GlobalTheory.FinPl.SetCut.grp_split D V A).2.2.2.2.2.1
   obtain ⟨⟨a, b⟩, hab⟩ := e.surjective ⟨x, hx⟩
   have h1 : x = a.1 * b.1 := by
     have := he (a, b)
@@ -795,7 +795,7 @@ theorem main : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), 
   obtain ⟨r', hr', hr'P, k, hk, hsk⟩ := (hG j σ h _ _ (vac_om hW vG hgo hyo) (k₂ _)).1 s hs hfl
   refine ⟨r * r', mul_mem hr hr', mul_mem (_root_.GlobalTheory.FinPl.SetCut.grpAt_le_GfC _ _ hrP) (_root_.GlobalTheory.FinPl.SetCut.grpAt_le_GfC _ _ hr'P), y, hy, κ, hκ, k, hk, ?_⟩
   have hkP : k ∈ grpAt (c.V (j + 1)) (· ∈ v.gP) := (hv.JG (j + 1) (by omega)).1 hk
-  have hcm := (GlobalTheory.T.unitaryFiniteAdelicGroup_split_finitePlaceSet D (c.V (j + 1)) v.gP).2.2.2.2.1 k hkP (y * κ)
+  have hcm := (_root_.GlobalTheory.FinPl.SetCut.grp_split D (c.V (j + 1)) v.gP).2.2.2.2.1 k hkP (y * κ)
     (mul_mem hy' (at_mono _ (fun p hp => hp.1) hκ.1))
   rw [hdec, hzs, hsk]
   calc r * (r' * k * y) * κ = r * r' * (k * (y * κ)) := by group
@@ -855,13 +855,13 @@ theorem cell_collapse : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : 
   set F := integ v w j σ h Ψ₁ Ψ₂ φ f with hFdef
   obtain ⟨f₁', hf₁', hinn⟩ := hz
 
-  obtain ⟨-, hfc₁, -, -, -, hd₁⟩ := GlobalTheory.T.unitaryAdelic_inf_fin_split_periods_unimodular D (c.V (j + 1))
-  obtain ⟨-, hfc₂, -, -, -, hd₂⟩ := GlobalTheory.T.unitaryAdelic_inf_fin_split_periods_unimodular D (c.V (j + 1 + 1))
+  obtain ⟨-, hfc₁, -, -, -, hd₁⟩ := _root_.GlobalTheory.AdelicSplit.adelic_split D (c.V (j + 1))
+  obtain ⟨-, hfc₂, -, -, -, hd₂⟩ := _root_.GlobalTheory.AdelicSplit.adelic_split D (c.V (j + 1 + 1))
   have invJ : (c.ρJ j (σ + 1) h).IsInvInvariant := (hd₁ _ _ (c.jac j (σ + 1) h).d).1.2.2 _ (hc.ρJ j (σ + 1) h)
   have invB : (c.ρB (j + 1 + 1) σ (idx_step h)).IsInvInvariant :=
     ((hd₂ _ _ (c.bes (j + 1 + 1) σ (idx_step h)).d).2 _ _ (c.bes (j + 1 + 1) σ (idx_step h)).o).2.2 _ (hc.ρB _ _ _)
-  obtain ⟨hQc₁, hQ'c₁, hQle₁, hQ'le₁, hcm₁, he₁, -, -, -, hR₁⟩ := GlobalTheory.T.unitaryFiniteAdelicGroup_split_finitePlaceSet D (c.V (j + 1)) w.Q
-  obtain ⟨hQc₂, hQ'c₂, hQle₂, hQ'le₂, hcm₂, he₂, -, -, -, hR₂⟩ := GlobalTheory.T.unitaryFiniteAdelicGroup_split_finitePlaceSet D (c.V (j + 1 + 1)) w.Q
+  obtain ⟨hQc₁, hQ'c₁, hQle₁, hQ'le₁, hcm₁, he₁, -, -, -, hR₁⟩ := _root_.GlobalTheory.FinPl.SetCut.grp_split D (c.V (j + 1)) w.Q
+  obtain ⟨hQc₂, hQ'c₂, hQle₂, hQ'le₂, hcm₂, he₂, -, -, -, hR₂⟩ := _root_.GlobalTheory.FinPl.SetCut.grp_split D (c.V (j + 1 + 1)) w.Q
   have splitJ := (hR₁ _ _ (c.jac j (σ + 1) h).d).1
   have splitB := (hR₂ _ _ (c.bes (j + 1 + 1) σ (idx_step h)).d).2 _ _ (c.bes (j + 1 + 1) σ (idx_step h)).o
   have hJcl := GlobalTheory.jacGrp_isClosed D _ _ _ (c.jac j (σ + 1) h).d
@@ -1039,8 +1039,8 @@ namespace GlobalTheory.VMove
 theorem seeSaw_iteratedIntegrand_vacuumForm_base_points_alt : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), c.Is → v.Is → t.Is → VForm v w → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m) P₁ P₂, ∀ a ∈ GinfC (c.V (j + 1)), ∀ a' ∈ GinfC (c.V (j + 1 + 1)), ∀ (φ : t.Ch j → GA D (c.X j) → ℂ) (F : GA D (c.V (j + 1 + 1)) → ℂ) Ψ₁ Ψ₂ f z, Ψ₁ = v.Ψ j P₁ 1 a → Ψ₂ = v.Ψ (j + 1) P₂ a a' → f = rTrans (a' * v.b (j + 1 + 1)) F → Iter2 (c.ρJ j (σ + 1) h) (c.μf (j + 1)) (c.ρB (j + 1 + 1) σ (idx_step h)) (c.μf (j + 1 + 1)) (fun q₁ q₂ : _ => ∑ α, ∑ g ∈ (w.ε j α).support, w.ε j α g * (c.B (j + 1 + 1) σ (idx_step h)).per c.ψ (Chain.hand (t.sBF j (σ + 1) h) (t.sFB j σ h) (c.lnk j σ h) (c.vL j σ h) (comb c.ψ _ _ (v.eG j) (comb c.ψ _ _ (w.eQ j) Ψ₁)) (comb c.ψ _ _ (v.eG (j + 1)) (comb c.ψ _ _ (w.eQ (j + 1)) Ψ₂)) (φ α) g q₁.1 q₂.1) (rTrans q₂.1 f)) z → Iter2 (c.ρJ j (σ + 1) h) (c.μf (j + 1)) (c.ρB (j + 1 + 1) σ (idx_step h)) (c.μf (j + 1 + 1)) (fun q₁ q₂ => t.integrand j σ h P₁ P₂ φ F (a * q₁.1) (a' * q₂.1)) (w.sc j * w.sc (j + 1) * z) := by
   intro D c v t w hc hv ht hw j σ h P₁ P₂ a ha a' ha' φ F Ψ₁ Ψ₂ f z hΨ₁ hΨ₂ hf hI
   classical
-  obtain ⟨-, -, hcomm₁, -, hright₁, -⟩ := GlobalTheory.T.unitaryAdelic_inf_fin_split_periods_unimodular D (c.V (j + 1))
-  obtain ⟨-, -, hcomm₂, -, hright₂, -⟩ := GlobalTheory.T.unitaryAdelic_inf_fin_split_periods_unimodular D (c.V (j + 1 + 1))
+  obtain ⟨-, -, hcomm₁, -, hright₁, -⟩ := _root_.GlobalTheory.AdelicSplit.adelic_split D (c.V (j + 1))
+  obtain ⟨-, -, hcomm₂, -, hright₂, -⟩ := _root_.GlobalTheory.AdelicSplit.adelic_split D (c.V (j + 1 + 1))
   have hj₁ : j + 1 < D.R.m := by omega
   have hj₂ : j + 1 + 1 < D.R.m := by omega
 
@@ -1220,7 +1220,7 @@ variable {D : D7}
 theorem vac_of_all {ψ : AddChar (AF D.host.F) ℂ} (hstd : IsStdChar D ψ (-1)) {S T : HSp D} {LS : Lat S} {LT : Lat T}
     (hS : IsSelfDualC S LS) (hT : IsSelfDualC T LT) (Q : Pl D → Prop) {f : WO S T → ℂ}
     (hf : Vac ψ S T LS LT (fun _ => True) f) : Vac ψ S T LS LT Q f := by
-  have key := (GlobalTheory.T.heisenbergCombination_disjoint_places_commute_vacua D ψ hstd S T Q (fun p => ¬ Q p) (fun p hp hn => hn hp)).2.2.2.2 LS LT f hS hT
+  have key := (_root_.GlobalTheory.DisjComb.main D ψ hstd S T Q (fun p => ¬ Q p) (fun p hp hn => hn hp)).2.2.2.2 LS LT f hS hT
   have e : (fun p => Q p ∨ ¬ Q p) = fun _ => True := funext fun p => propext ⟨fun _ => trivial, fun _ => em _⟩
   rw [e] at key
   exact (key.1 hf).1
@@ -1269,8 +1269,8 @@ theorem valX : ∀ (D : D7) (c : Comm D) (v : VCom c) (𝒯 : Type) (t : 𝒯 �
     (besGrp (c.bes (j + 1 + 1) σ (idx_step h)).d (c.bes (j + 1 + 1) σ (idx_step h)).o)
     (GlobalTheory.BesClosed.besGrp_isClosed _ _ _ _ _ _ _ _) (v.N (j + 1 + 1)) (hv.sd (j + 1 + 1) hj2) (w s).Q
   have hdisj : ∀ p, p ∈ v.gP → ¬ p ∈ (w s).Q := fun p hp hq => Finset.disjoint_left.mp hF.disjG hq hp
-  have K₁ := GlobalTheory.T.heisenbergCombination_disjoint_places_commute_vacua D c.ψ hc.std (c.V j) (c.V (j + 1)) (· ∈ v.gP) (· ∈ (w s).Q) hdisj
-  have K₂ := GlobalTheory.T.heisenbergCombination_disjoint_places_commute_vacua D c.ψ hc.std (c.V (j + 1)) (c.V (j + 1 + 1)) (· ∈ v.gP) (· ∈ (w s).Q) hdisj
+  have K₁ := _root_.GlobalTheory.DisjComb.main D c.ψ hc.std (c.V j) (c.V (j + 1)) (· ∈ v.gP) (· ∈ (w s).Q) hdisj
+  have K₂ := _root_.GlobalTheory.DisjComb.main D c.ψ hc.std (c.V (j + 1)) (c.V (j + 1 + 1)) (· ∈ v.gP) (· ∈ (w s).Q) hdisj
   have hVQ₁ : Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (· ∈ (w s).Q) (comb c.ψ _ _ (v.eG j) (v.Ψ j P₁ 1 a)) :=
     (K₁.2.1 (v.eG j) (hv.atG j).1).2 _ _ _
       (vac_of_all hc.std (hv.sd j (by omega)) (hv.sd (j + 1) hj1) _ hV₁)

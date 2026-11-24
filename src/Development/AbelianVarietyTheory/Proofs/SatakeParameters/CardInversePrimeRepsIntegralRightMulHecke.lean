@@ -20,11 +20,11 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.NotMem
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.OmVacuumEqSplitFacSmulSum
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CardKerSubspacesAndHeckePolyOfConvolution
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsInvariantForm
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsPlaceChartOfSplitIdempotentStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSplitFrameSelfDualLatticeCompletionStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeElementComponentMemStandardDoubleCosetStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemHyperspecialIffGIntOfSuppAtSplitStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitChartUniformiserAndResidueCardStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsPlaceChartOfSplitIdempotent
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSplitFrameSelfDualLatticeCompletion
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeElementComponentMemStandardDoubleCoset
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemHyperspecialIffGIntOfSuppAtSplit
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitChartUniformiserAndResidueCard
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -475,7 +475,7 @@ theorem suppAt_mul {V : HSp D} {g g' : GA D V} (h : SuppAt e V g) (h' : SuppAt e
 theorem reps_of (he : IsSplitIdem D e) (hπ : Chart e v π) {V : HSp D} {β : GL (Fin V.rank) (Fv D.host.F v)}
     (hβ : Frame V e π β) {α : GA D V} (hα : SuppAt e V α) {R : Finset (GA D V)} (hR : ∀ γ ∈ R, SuppAt e V γ)
     (h : IsCosetRep V (locPart V (KsphC V ∅) e) α R) : Reps (Ov D v) (rho V π β α) R (rho V π β) := by
-  have st := GlobalTheory.T.mem_hyperspecial_iff_gInt_of_suppAt_split e v π he hπ V β hβ
+  have st := _root_.GlobalTheory.SplitHecke.Stab.mem_KsphC_iff_gInt e v π he hπ V β hβ
   refine ⟨fun γ hγ => ?_, fun k₁ k₂ h₁ h₂ => ?_⟩
   · obtain ⟨-, k₁, h₁, k₂, h₂, rfl⟩ := h.1 γ hγ
     exact ⟨_, _, (st _ h₁.2).1 h₁.1, (st _ h₂.2).1 h₂.1, by rw [map_mul, map_mul]⟩
@@ -657,10 +657,10 @@ theorem hecke_identity_split : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S 
   intro D ψ S T χS χT om P e ϖ x f αS αT RS RT t hW hP hϖ hϖ2 hx hχ hf hfix hS hT
   classical
   have he := hP.1
-  obtain ⟨v, π, hπ⟩ := GlobalTheory.T.exists_place_chart_of_splitIdempotent e he
-  obtain ⟨⟨p, hpϖ, hp⟩, hq⟩ := GlobalTheory.T.splitChart_uniformiser_and_residueCard e P v π hP hπ ϖ hϖ hϖ2
-  obtain ⟨βS, hβS⟩ := GlobalTheory.T.exists_splitFrame_selfDualLattice_completion e v π he hπ S
-  obtain ⟨βT, hβT⟩ := GlobalTheory.T.exists_splitFrame_selfDualLattice_completion e v π he hπ T
+  obtain ⟨v, π, hπ⟩ := _root_.GlobalTheory.SplitChart.exists_chart e he
+  obtain ⟨⟨p, hpϖ, hp⟩, hq⟩ := _root_.GlobalTheory.SplitUnif.unif_chart e P v π hP hπ ϖ hϖ hϖ2
+  obtain ⟨βS, hβS⟩ := _root_.GlobalTheory.SplitFrame.exists_frame e v π he hπ S
+  obtain ⟨βT, hβT⟩ := _root_.GlobalTheory.SplitFrame.exists_frame e v π he hπ T
   obtain ⟨c, hc, hΛ⟩ := GlobalTheory.T.mem_homLattice_iff_integralMatrix_splitChart e v π he hπ S T βS βT hβS hβT
   have hq0 : Ideal.absNorm P.asIdeal ≠ 0 := fun h => P.ne_bot (Ideal.absNorm_eq_zero_iff.1 h)
   have : Finite (ResidueField (Ov D v)) := Nat.finite_of_card_ne_zero (hq ▸ hq0)
@@ -687,7 +687,7 @@ theorem hecke_identity_split : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S 
         ∑ w, (nKer j w : ℂ) • heisO ψ S T (U w) f := by
     intro j hj
     obtain ⟨h1, h2, h3⟩ := hS j hj
-    have hα := GlobalTheory.T.heckeElement_component_mem_standardDoubleCoset e v π he hπ S βS hβS _ p j _ hpϖ h1
+    have hα := _root_.GlobalTheory.SplitHecke.HeckeComp.hk_of_isHeckeElt e v π he hπ S βS hβS _ p j _ hpϖ h1
     have hR := reps_of he hπ hβS h1.2.1 h2 h3
     simp only [← card_heckeCosetReps_integral_right_inversePrime hp hj hα hR]
     rw [← sum_ite_eq]
@@ -705,7 +705,7 @@ theorem hecke_identity_split : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S 
         ∑ w, (nKer j wᵀ : ℂ) • heisO ψ S T (U w) f := by
     intro j hj
     obtain ⟨h1, h2, h3⟩ := hT j hj
-    have hα := GlobalTheory.T.heckeElement_component_mem_standardDoubleCoset e v π he hπ T βT hβT _ p j _ hpϖ h1
+    have hα := _root_.GlobalTheory.SplitHecke.HeckeComp.hk_of_isHeckeElt e v π he hπ T βT hβT _ p j _ hpϖ h1
     have hR := reps_of he hπ hβT (suppAt_inv h1.2.1) h2 h3
     rw [MonoidHom.map_inv] at hR
     simp only [← count_tgt hp hj hα hR]
@@ -728,8 +728,8 @@ theorem hecke_identity_split : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S 
     mul_ne_zero z.coe_ne_zero (pow_ne_zero _ (Complex.ofReal_ne_zero.2
       (Real.sqrt_pos.2 (Nat.cast_pos.2 (Nat.pos_of_ne_zero hq0))).ne'))
   refine ⟨fun k hk k' hk' => ?_, fun hr k hk => ?_, fun hr k hk => ?_⟩
-  · have g₁ := (GlobalTheory.T.mem_hyperspecial_iff_gInt_of_suppAt_split e v π he hπ S βS hβS k hk.2).1 hk.1
-    have g₂ := (GlobalTheory.T.mem_hyperspecial_iff_gInt_of_suppAt_split e v π he hπ T βT hβT k' hk'.2).1 hk'.1
+  · have g₁ := (_root_.GlobalTheory.SplitHecke.Stab.mem_KsphC_iff_gInt e v π he hπ S βS hβS k hk.2).1 hk.1
+    have g₂ := (_root_.GlobalTheory.SplitHecke.Stab.mem_KsphC_iff_gInt e v π he hπ T βT hβT k' hk'.2).1 hk'.1
     have hact : ∀ u, IsHalf e u → (actO S T k⁻¹ k'⁻¹ u ∈ latO S T (L0c D S) (L0c D T) (fun _ => True) ↔
         u ∈ latO S T (L0c D S) (L0c D T) (fun _ => True)) := fun u hu => by
       rw [hΛ _ (isHalf_actO _ _ hu), hΛ _ hu]

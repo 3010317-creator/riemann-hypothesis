@@ -19,17 +19,20 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemHomLat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ActOMemFinSub
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsFinWeil
 public import Development.AbelianVarietyTheory.Definitions.Foundations.EqPlaceIdemOfIsPrimeIdem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicUnitaryCharacterTrivialAtNonsplitPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicUnitaryCharacterTrivialAtNonsplitPlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteWeilRepEqLatticeIntertwinerMulCharacter
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumFixesVacuumNonSplitPlaceUnramifiedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumFixesVacuumNonSplitPlaceUnramified
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IndexNormalizationInertNormEqNeg
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaInnerProductHermitian
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilLatticeIntertwinerCoefficientAtPlace
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.HalfLinearCocycle
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.SqNormIntegralFundamentalDomainEqL2NormSq
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsStandardLocalisationWeilDatumInertPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeckeCharValueInertPlaceAndSegmentStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilMatrixCoefficientVacuaUnramifiedPlaceStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalThetaInertPlace
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeckeCharValueInertPlaceAndSegment
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InnerProductFormula
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilMatrixCoefficientVacuaUnramifiedPlace
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -79,9 +82,9 @@ import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.RealLowestKTypeCoeffSquareIntegrable
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InnerProductFormula
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLocalHomLatticeOfKeepsCompletedLatticesStatement
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLocalHomLatticeOfKeepsCompletedLattices
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurLemmaThetaFunctionsOrientedPair
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQua
 import Mathlib.RingTheory.Etale.Weakly
@@ -562,7 +565,7 @@ theorem weilScalar_source_eq_one_nonsplit_unramified (hψ : IsStdChar D ψ (-1))
     {v : HeightOneSpectrum (𝓞 D.host.F)} {ε : AF D.host.F} (hv : NonSplitAt D v ε) (uS : UnramAt ε χS)
     (uT : UnramAt ε χT) {g : GA D S} (hg : SuppPl ε S g) : ν g = 1 := by
   obtain ⟨Φ, hΦ⟩ := GlobalTheory.IdemSupport.exists_comp D
-  refine GlobalTheory.T.adelic_unitary_character_trivial_at_nonsplit_place D S ΛS hS v ε hv ν (fun k hk hst => ?_) g hg
+  refine _root_.GlobalTheory.InertChar.char_eq_one_of_nonSplit D S ΛS hS v ε hv ν (fun k hk hst => ?_) g hg
   have hvac' : ∃ f, f ≠ 0 ∧ IsThetaFunO ψ S T f ∧ ∀ v η, NonSplitAt D v η →
       ∀ u ∈ (latO S T ΛS ΛT fun w => w = v), heisO ψ S T u f = f := by
     obtain ⟨f, f0, hf⟩ := GlobalTheory.FinWeilForm.exists_theta hψ S T
@@ -592,11 +595,11 @@ theorem weilScalar_source_eq_one_nonsplit_unramified (hψ : IsStdChar D ψ (-1))
     rwa [h2, one_smul] at h1
   obtain ⟨f₀, f0, hf₀, hvac⟩ := hvac'
   have hfix := hvac v ε hv
-  have hst' := GlobalTheory.T.mem_localHomLattice_of_keeps_completedLattices D S T ΛS ΛT hS hT v ε hv.1 k 1 hst
+  have hst' := _root_.GlobalTheory.LocalLatStab.mem_latO_place_iff_actO D S T ΛS ΛT hS hT v ε hv.1 k 1 hst
     (fun y => by rw [GlobalTheory.FinWeilForm.finMat_one, Matrix.one_mulVec])
   have s1 : SuppPl ε T (1 : GA D T) := fun i j => by
     rw [GlobalTheory.FinWeilO.mt_one, sub_self, Matrix.zero_apply, mul_zero]
-  have a := GlobalTheory.T.weilDatum_fixes_vacuum_nonSplitPlace_unramified D ψ hψ S T ΛS ΛT hS hT χS χT om
+  have a := _root_.GlobalTheory.VacInert.fixesVacAt_of_unram D ψ hψ S T ΛS ΛT hS hT χS χT om
     ((GlobalTheory.Mem.EtaTilde.exists_etaTilde D).imp fun _ h => ⟨h.1, h.2.2.2, h.2.2.1, h.2.1⟩) hW v ε hv uS uT k 1 hk s1 hst'
     f₀ hf₀ hfix
   have b := hL.inert hv hk s1 (fun u hu => (hst' u).1 hu) ⟨f₀, hf₀⟩ hfix
@@ -838,8 +841,8 @@ theorem std_cayley_of_inert : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T
     fun w' h' => by
       rw [eq_of_inert_under hin w' h']
       exact ⟨hS, hT⟩
-  obtain ⟨φ2, hk2, hc2⟩ := GlobalTheory.T.weilMatrixCoefficient_vacua_unramifiedPlace D ψ S T χS χT om hW μ 𝓕 hμ v hunr
-  have hval := (GlobalTheory.T.heckeChar_value_inert_place_and_segment D χS S.rank hW.hecS hW.resS v w h hin hS).1
+  obtain ⟨φ2, hk2, hc2⟩ := _root_.GlobalTheory.VacCoef.vac_coef D ψ S T χS χT om hW μ 𝓕 hμ v hunr
+  have hval := (_root_.GlobalTheory.ChainOnto.val_seg_of_isInertAt D χS S.rank hW.hecS hW.resS v w h hin hS).1
   have hk2' := (hk2 w h).2 hin c ϖ eT hU heT
   rw [hval] at hk2'
   refine ⟨δ, ψ', M, ρ, ω, s, hstd, hsf, hω, hcay.1 φ1 hk1 fun g => ?_, hcay.2 (φ2 ∘ eT.symm) hk2' fun g => ?_⟩

@@ -84,7 +84,8 @@ import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsSplitOfMe
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DualTypePlacesIsSplitNonconjugateOfAdmissible
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGoodCoverGalois
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsHalfOfAuxiliarySplitLevel
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunctionStatement
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TranslateMemCoefLatFn
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunction
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SmallCoeffFieldEmbeddingCompHostMap
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistingCharacterAdmissibleGaloisTwistGood
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UpperLeftBlockEqOneIffOfMemBlockTri
@@ -778,7 +779,7 @@ theorem exists_coef_sum : ∀ (D : D7) (Γ : Type) [Group Γ] [Fintype Γ] (Pl0 
   obtain ⟨m, o, φ, hsum⟩ := Submodule.mem_span_set'.1 hP2
   choose G _ hG using fun t => (φ t).2
   choose v hv1 hv2 using fun t => UnivRat.exists_vec_of_small j hBo.lam (G t)
-  refine ⟨m, fun t => o t, v, fun t => (o t).2, hv1, sub_eq_zero.1 (GlobalTheory.T.harmonic_polynomial_eq_zero_of_function D _ _ (ρ.B i j b).w (ρ.B i j b).F.BS hB.wt hm _
+  refine ⟨m, fun t => o t, v, fun t => (o t).2, hv1, sub_eq_zero.1 (_root_.GlobalTheory.ExportSeries.HarmInj.harm_inj D _ _ (ρ.B i j b).w (ρ.B i j b).F.BS hB.wt hm _
     (sub_mem (Submodule.smul_mem _ _ hP1) (sum_mem fun t _ => Submodule.smul_mem _ _
       (BaseRat.ioP_mem_valSpace hcore hio hv hB hBo hu _))) ?_)⟩
 

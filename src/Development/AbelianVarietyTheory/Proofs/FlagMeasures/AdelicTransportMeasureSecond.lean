@@ -9,14 +9,15 @@ public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelicU
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvariantExtensionIntegrableOnCompact
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RightRegularRepUnitaryStronglyContinuous
 import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ConjAtFixedIff
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscreteSeriesModelUnitaryIrreducibleOrthonormalStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsSmoothVector
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscreteSeriesModelUnitaryIrreducibleOrthonormal
 import Mathlib.Analysis.CStarAlgebra.Classes
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSumIntegralCubeDerivatives
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EquivariantMultilinearMapsSmoothVectorsIntertwinStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EquivariantMultilinearMapsSmoothVectorsIntertwin
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsArchimedeanLiftUnitaryGroupProduct
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeMulSetIntegralImage2OfForallLe
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalSobolevInequalityAdelicUnitary
@@ -25,7 +26,7 @@ import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SetIntegralLeOfExpa
 import Mathlib.Analysis.Calculus.ContDiff.Defs
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothAlongCurveProductsStable
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVectorsSubspaceStableSobolevFormDerivStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVectorsSubspaceStableSobolevFormDeriv
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalUnitaryPointsDiscreteFundamentalDomain
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SobolevIteratedOneParameterSubgroups
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicUnitaryTopology
@@ -314,12 +315,12 @@ theorem exists_mmap {D : D7} {θ : InfFam D} {V : HSp D} (hθ : IsInfFam θ) {S 
         ∀ w : M.sm τ, ℓ w = T (Function.update u τ w) x := by
   obtain ⟨_, _, _, _, _, -, _⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
   obtain ⟨R, L, hL, hR, hb⟩ := exists_adelic_rep hθ hμ hμ' hloc hlin hiso hρ htr hU
-  have hsmM := GlobalTheory.T.equivariantMultilinear_maps_smoothVectors_intertwines D θ V hθ S M _ ρ Φ he
+  have hsmM := _root_.GlobalTheory.SmoothMultilinear.smooth_map D θ V hθ S M _ ρ Φ he
   have p := fun y : M.Vec => hR _ (hsmM y).1 (hfix _)
-  haveI : ∀ τ, CompleteSpace (M.H τ) := fun τ => (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).1
+  haveI : ∀ τ, CompleteSpace (M.H τ) := fun τ => (_root_.GlobalTheory.HolDict.ModelRep.model_rep D V S M τ).1
   have hH : ∀ τ, (gramAt D V τ).IsHermitian := GlobalTheory.SmoothAutCheck.gramAt_herm V
   have hdet : ∀ τ, (gramAt D V τ).det ≠ 0 := fun τ => (GlobalTheory.SmoothAutCheck.gramAt_unit V τ).ne_zero
-  have hsv := fun τ => GlobalTheory.T.smoothVectors_subspace_stable_sobolevForm_deriv V.rank (gramAt D V τ) (M.H τ) (M.rep τ) (hH τ) (hdet τ) (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).2.1
+  have hsv := fun τ => _root_.GlobalTheory.UnitarySmVec.smoothVec_basic V.rank (gramAt D V τ) (M.H τ) (M.rep τ) (hH τ) (hdet τ) (_root_.GlobalTheory.HolDict.ModelRep.model_rep D V S M τ).2.1
   have hsm : ∀ τ, ∀ X ∈ lieAt V τ, ∀ w : M.sm τ, dRep (M.rep τ) X (w : M.H τ) ∈ M.sm τ := fun τ X hX w =>
     Submodule.subset_span (((hsv τ).2 w ((hsv τ).1 w w.2)).2.1 X hX).1
   have uniq : ∀ (y : M.Vec) f, Continuous f → ι (Φ fun τ => (y τ : M.H τ)) =ᵐ[μ] f →

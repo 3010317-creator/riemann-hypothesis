@@ -2,15 +2,18 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.KTypeExtension
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SobolevFormEqZeroOnSmoothOfKFiniteDiscreteSeriesStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SobolevFormEqZeroOnSmoothOfKFiniteDiscreteSeries
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasDRepIffHasDerivAt
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CasselmanWallachMultMapEquivariantSobolevContinuStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCommonLevelGrowthExponentGKMapStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.SqNormIntegralFundamentalDomainEqL2NormSq
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCommonLevelGrowthExponentGKMap
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSmoothCuspFormFrechetModerateGrowthRepStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSmoothAutomorphicFormMultMapValueStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemKFinOfMemLowT
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MultilinearGKMapExtendsToSmoothVectorsStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealPlacePointCommuteOfNePlaceStatement
+public import Formalism.LocalToGlobal.BesselHermitianTheta.TiedSmooth
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealPlacePointCommuteOfNePlace
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsVacFOfIsVacVec
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -128,7 +131,7 @@ theorem lev : GlobalTheory.Published.HarishChandraModules → ∀ (D : D7) (θ :
         have a2 := e₂ ⟨w, hsm τ w hw⟩
         simp only at a1 a2
         rw [LinearMap.sub_apply, LinearMap.smul_apply, a1, a2, hi, smul_eq_mul, sub_self]
-      have hz := GlobalTheory.T.sobolevForm_eq_zero_on_smooth_of_kFinite_discreteSeries hHC D V S M τ _ (sobCont_sub_smul (χ k) h₁ h₂) h0 (v τ) (v τ).2
+      have hz := _root_.GlobalTheory.KFiniteDense.eq_zero_of_kFin hHC D V S M τ _ (sobCont_sub_smul (χ k) h₁ h₂) h0 (v τ) (v τ).2
       have a1 := e₁ (v τ)
       have a2 := e₂ (v τ)
       rw [Function.update_eq_self] at a1 a2
@@ -185,7 +188,7 @@ theorem extExists : GlobalTheory.Published.HarishChandraModules → GlobalTheory
     GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.ExtExists D := by
   intro hHC hCW D θ hθ V S M J χ μ 𝓕 _ _ T₀ hT₀
   refine existsUnique_of_exists_of_unique ?_ ?_
-  · obtain ⟨U, N, hU, hTU⟩ := GlobalTheory.T.exists_common_level_growth_exponent_gKMap hHC D θ hθ V S M J χ μ 𝓕 T₀ hT₀
+  · obtain ⟨U, N, hU, hTU⟩ := _root_.GlobalTheory.GKUnif.exists_level_exponent hHC D θ hθ V S M J χ μ 𝓕 T₀ hT₀
     obtain ⟨E, i1, i2, i3, i4, i5, i6, p, ι, hinj, hrange, hp, hπ⟩ :=
       _root_.GlobalTheory.CuspFrechet.exists_frechet D θ hθ V (GlobalTheory.ChainFr.Fr.ofModel M) U N hU
     choose π dπ hπ using hπ
@@ -236,7 +239,7 @@ theorem extExists : GlobalTheory.Published.HarishChandraModules → GlobalTheory
       rw [(hπ τ).2.1 g hg, (hπ τ').2.1 g' hg', (hπ τ').2.1 g' hg', (hπ τ).2.1 g hg]
       funext y
       simp only [rTr, mul_assoc]
-      exact congrArg (fun z => ι x (y * z)) (GlobalTheory.T.realPlacePoint_commute_of_ne_place D θ hθ V τ τ' hne _ (conj_mem_UH (M.fr_unit τ) (M.fr_gram τ) hg) _
+      exact congrArg (fun z => ι x (y * z)) (_root_.GlobalTheory.PointAtPlaceComm.atTau_comm D θ hθ V τ τ' hne _ (conj_mem_UH (M.fr_unit τ) (M.fr_gram τ) hg) _
         (conj_mem_UH (M.fr_unit τ') (M.fr_gram τ') hg'))
     obtain ⟨TE, hTE1, hTE2, hTE3⟩ := GlobalTheory.T.multilinear_gKMap_extends_to_smooth_vectors hHC hCW D V S M E p π dπ (fun τ => (hπ τ).1) hcomm T₀' hK hL
     obtain ⟨hequiv, hcont⟩ := GlobalTheory.T.casselmanWallach_multMap_equivariant_sobolevContinuous D θ V S M E p ι N π hp

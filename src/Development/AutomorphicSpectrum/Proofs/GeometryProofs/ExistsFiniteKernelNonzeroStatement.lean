@@ -7,7 +7,8 @@ public import Mathlib.AlgebraicGeometry.Morphisms.FlatRank
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.FlatAndSurjectiveOfIsFiniteAbelianEnd
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ForallGeometricallyIntegralOfSmoothOfGeometrical
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
-public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsHighTwistSectionNeZeroStatement
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsHighTwistSectionNeZero
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsPositiveDefiniteQuadraticFormEndomorphisms
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CardTorsionPointsAbelianVariety
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ConnectedSpaceSpecOfIsLocalRing
@@ -21,7 +22,7 @@ import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsSymmet
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FiniteMonotoneGrowth
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FinrankSecPullSandwich
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsFiniteOfPullVeryAmpleIsoPowStatement
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsProjectiveOverRingByChartsAbelianVarietyStatement
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsProjectiveOverRingByChartsAbelianVariety
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LeOfPowLePolyMulPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -381,7 +382,7 @@ theorem exists_eff_sub [IsIntegral X] {R : Type} [CommRing R] (f : X ⟶ Spec (C
     (hH : H.IsLB) {m : ℕ} {s : Fin (m + 1) → LB.Sec H} (hs : VeryAmpleBy f H s) (c : Pic X) :
     ∃ N : ℕ, Eff (N • cls H hH - c) := by
   obtain ⟨M, hM, e⟩ := cls_surj (-c)
-  obtain ⟨t₀, ht⟩ := GlobalTheory.T.exists_high_twist_section_ne_zero R X f H m s M hH hM hs
+  obtain ⟨t₀, ht⟩ := _root_.GlobalTheory.AbLaw.exists_sec_tw_ne_zero R X f H m s M hH hM hs
   obtain ⟨σ, i, hσ⟩ := ht (t₀.toNat : ℕ) (Int.self_le_toNat t₀)
   have := eff_of_sec (isLB_tw hM hH _) σ i hσ
   rw [cls_tw hM hH, e, natCast_zsmul] at this
@@ -532,7 +533,7 @@ theorem finrank_act {E : Type} [Field E] [NumberField E] (hB : IsAbelianScheme B
   haveI : GeometricallyIntegral B.hom :=
     GlobalTheory.forall_geometricallyIntegral_of_smooth_of_geometricallyConnected _ _ _ hB.smooth hB.geomConnected
   haveI : IsIntegral B.left := GeometricallyIntegral.isIntegral_of_subsingleton B.hom
-  have hproj := GlobalTheory.T.isProjectiveOverRingByCharts_abelian_variety k B hB
+  have hproj := _root_.GlobalTheory.AbelianProjective.isProjBy_of_isAbelianScheme k B hB
   obtain ⟨H, m, s, hH, hs, hsym⟩ := GlobalTheory.SymVeryAmple.exists_symmetric_veryAmpleBy k B hB hproj
   have hΘ := GlobalTheory.AbLaw.CubeProj.exists_gen_theta_abelianVariety hG k B hB hproj H hH
   let q : 𝓞 E → Pic B.left := fun a => pull (ρ.act a).left (cls H hH)

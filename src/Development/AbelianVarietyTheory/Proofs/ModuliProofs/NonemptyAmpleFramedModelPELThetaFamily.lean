@@ -20,7 +20,7 @@ public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.TopAmpEx
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.UTorsSt
 public import Development.AbelianVarietyTheory.PublishedTheorems.SemistableReduction₂.SemistableReductionSt
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsNormalModelThetaTupleMaximalMinors
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaSystemHasTestsOfRealPointStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaSystemHasTestsOfRealPoint
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsBigThetaSysWithAction
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsBirationalModelSemiAbelianAmpleFrames
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.ExistsArBaseAway
@@ -1001,7 +1001,7 @@ theorem exists_zon_ampFrames_component :
   intro j hj o Ω _ _ _ _ R J b u t₀ e v hR hfr he hL hth hfin
   obtain ⟨S, ρ, h, φ, act, hbig, hN, hfin', hcart, hLφ, hact, hadj, hprim⟩ :=
     hk j hj o Ω R J b u t₀ e v hR hfr he hL hth hfin
-  have htests : S.HasTests := (GlobalTheory.T.thetaSystem_hasTests_of_real_point hss hU h1 h2 hT o Ω S ρ).1
+  have htests : S.HasTests := (_root_.GlobalTheory.ZH.hasTests_of_real hss hU h1 h2 hT o Ω S ρ).1
   obtain ⟨m, a, GG, X, Z, U₀, EE, f, Xab, -, -, hNm, hO, hEE, -, -, -, hgen, hlast⟩ :=
     GlobalTheory.ZH.exists_minor_model o Ω S htests hfin'
   obtain ⟨Y⟩ := hG o Ω S ρ hbig Z U₀ EE hO hEE ⟨m, a, GG, hgen⟩

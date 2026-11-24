@@ -5,15 +5,15 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.Normal
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComapRangeAdjointLeBlockSum
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSphericalOperatorsRowsNormalEigenspacesStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSphericalOperatorsRowsNormalEigenspaces
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSplitPrimeHeckeTransferCompositeLiftStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FamilySplitOperatorsEqLabelOperatorsModels
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MatchedSphericalPairsCommuteCompositeLiftStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperatorsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RealizationFamilyNormalOperators
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LiftsEquivariant
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ClassPresExtMemExtBijIsom
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormalFamilyOrthogonalDecomposition
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalOperatorsFormsOnRankSpaceNormalStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalOperatorsFormsOnRankSpaceNormal
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftTransferHeckePolySplitPrimeStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoreClausesOfWeakCharacterisation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RangeAdjointThLeSpanGood
@@ -257,8 +257,8 @@ theorem range_adjoint_le_span : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {P
     intro v
     simp only [Finset.mem_image, HeightOneSpectrum.ext_iff]
     rfl
-  have htop : ⨆ c, EEc R _ c = ⊤ := (GlobalTheory.T.exists_sphericalOperators_rows_normal_eigenspaces R F hC hS _ hSF).elim fun _ h => h.2.2.1
-  choose hX hXo _ using (GlobalTheory.T.realization_family_normal_operators R F hC.lev hC.fam hC.models).1 t
+  have htop : ⨆ c, EEc R _ c = ⊤ := (_root_.GlobalTheory.Hk3.OpsRows.exists_opsE R F hC hS _ hSF).elim fun _ h => h.2.2.1
+  choose hX hXo _ using (_root_.GlobalTheory.DefiniteOps.definite_ops R F hC.lev hC.fam hC.models).1 t
   have hsplit := (GlobalTheory.SplitHeckeLabel.split_ops R F hC.lev hC.fam hC.models).1 t hX hXo
   have hf := GlobalTheory.AdjBlock.model_form (W := R.cX.W) (ι := Bridge.ratF D.sp.X') (ρ := R.cX.coef.ρ)
     (J := (levEnv _ R.βX (R.datXt t)).J) (χ := (levEnv _ R.βX (R.datXt t)).χ) (R.B.R t).pres (R.HX t) (hC.models.HX t)
@@ -668,11 +668,11 @@ theorem normal_of_normalFam {H : Type} [NormedAddCommGroup H] [InnerProductSpace
 theorem range_adjoint_le : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A) {s : ℕ}, GlobalTheory.Chain.LiftInteg D → A.fam.Ok s → Core R F → SchurAll R → ∀ i t, LinearMap.range (LinearMap.adjoint (R.thG i t)) ≤ Submodule.span ℂ (R.jV i t '' ((A.fam.L i t).ZH : Set (A.fam.L i t).S.Forms)) := by
   intro D G _ _ Pl0 T A Ks _ _ _ R F s _ hOk hC hS i t
   refine (exists_isSF R).elim fun SF hSF => ?_
-  refine (GlobalTheory.T.sphericalOperators_forms_on_rank_space_normal R F hC hS hOk.irr SF hSF i).elim fun h hh => ?_
+  refine (_root_.GlobalTheory.SphOpsModel.sphericalOperators_forms_on_rank_space_normal_alt R F hC hS hOk.irr SF hSF i).elim fun h hh => ?_
   have hW := hh.1
   have hN := hh.2.1
   clear hh
-  refine ((GlobalTheory.T.realization_family_normal_operators R F hC.lev hC.fam hC.models).2 i t).elim fun hV hh => ?_
+  refine ((_root_.GlobalTheory.DefiniteOps.definite_ops R F hC.lev hC.fam hC.models).2 i t).elim fun hV hh => ?_
   have hVo := hh.1
   have hNV := hh.2
   have hsplit := (GlobalTheory.SplitHeckeLabel.split_ops R F hC.lev hC.fam hC.models).2 i t hV hVo

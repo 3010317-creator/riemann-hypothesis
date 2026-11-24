@@ -6,7 +6,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicTransv
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsArchimedeanLiftUnitaryGroupProduct
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagDomainFramesEqGramFramesUnitary
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicAdelicFormOfBoundedSectionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransvectionSubgroupCocompactHaarFundamentalDomaStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransvectionSubgroupCocompactHaarFundamentalDoma
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicUnitaryTopology
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.EmbeddingHermitianPairs
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.LatticeSpanMembership
@@ -183,7 +183,7 @@ theorem zCusp_adel : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau
   obtain ⟨-, -, -, hB, hT, -, hQ⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
   obtain ⟨L, hL1, -, hLc, hLU, hLL, -, -, -, hH⟩ := GlobalTheory.RealLift.exists_real_lift D θ V hθ
   obtain ⟨⟨eZ, -⟩, -, hZ1, hZ2, -⟩ := GlobalTheory.HolDict.TransvGroup.transvection_group D θ V hθ ξ hξ
-  obtain ⟨-, hfin, hdec⟩ := GlobalTheory.T.transvectionSubgroup_cocompact_haar_fundamentalDomain D θ V hθ ξ hξ
+  obtain ⟨-, hfin, hdec⟩ := _root_.GlobalTheory.TransvMeasure.transvection_measure D θ V hθ ξ hξ
   obtain ⟨e, he, -, -⟩ := FdDom.dom_iff_frDoms D θ V S M w _ rfl Comp X la dict mu c Kf hM hG (dict g).1
   have hcomm : ∀ a b : ZI V ξ, a * b = b * a := fun a b => by
     obtain ⟨a, rfl⟩ := eZ.surjective a

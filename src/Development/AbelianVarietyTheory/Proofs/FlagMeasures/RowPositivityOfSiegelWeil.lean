@@ -24,7 +24,7 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.Gaug
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.FamilyGroupSumFactorsWeightAmplitude
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NonGenericFamilyClassesDetermineRows
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.InVolumesAtOfSWS
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamilyGenericMassPositiveBoundedProofStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamilyGenericMassPositiveBoundedProof
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamilyGroupSumFactorsRowWeightAmplitudeProof
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamilyLocalObjectsExistAtTermsProof
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamilyRowWeightSumUnfoldingIdentityProof
@@ -723,7 +723,7 @@ theorem rowNGP_of_formNGVanish (hSW : PI.VolStabS.MassDataS.SWXS) (hC : StepChoi
     (hP : StepPinExists) (hF : Formalism.L2.SG.NGVanish.FormNGC) (hB : StepThmBPinnedP) :
     RowNGP := by
   obtain ⟨h5, hw, h4, he⟩ := GlobalTheory.T.nongeneric_row_statements_of_family_statements GlobalTheory.T.non_generic_corank_one_terms_family_cut_by_defect
-  exact _root_.GlobalTheory.rowNGP_of_leaves hC hP hF hB (h5 _root_.GlobalTheory.SnFam.familyRowWeightSumUnfoldingIdentity_proof) (hw (GlobalTheory.T.familyGenericMassPositiveBounded_proof hSW))
+  exact _root_.GlobalTheory.rowNGP_of_leaves hC hP hF hB (h5 _root_.GlobalTheory.SnFam.familyRowWeightSumUnfoldingIdentity_proof) (hw (_root_.GlobalTheory.WeightsFamPf.weightsFam_of hSW))
     (h4 _root_.GlobalTheory.FamilyNormRational.familyGroupSumFactorsRowWeightAmplitude) (he _root_.GlobalTheory.SnFam.existFam)
 
 theorem close : PI.VolStabS.MassDataS.SWXS → StepChoiceConstantsC → StepPinExists →

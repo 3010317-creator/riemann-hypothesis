@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.RealSizeNonneg
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelSourceSupportFiniteComponentInBox
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinateDecayRealEntriesStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedCoordinateDecayRealEntries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -92,7 +92,7 @@ theorem mixS_le_maj : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D
   intro D ψ hψ θ hθ S S₀ T ρ d v U hU
   obtain ⟨K, hK, hsupp⟩ := GlobalTheory.T.mixedModelSource_support_finiteComponentInBox D ψ hψ S S₀ T ρ d v U hU
   refine ⟨K, hK, fun N => ?_⟩
-  obtain ⟨C, hC⟩ := GlobalTheory.T.mixedCoordinate_decay_realEntries D ψ hψ θ hθ S S₀ T ρ d v N
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.Unf.mixS_decay D ψ hψ θ hθ S S₀ T ρ d v N
   refine ⟨C, fun f hf x w => ?_⟩
   by_cases h0 : (_root_.I195MixedCoordinates.source d) T ψ v.μ v.𝓕 f x w = 0
   · change ‖(_root_.I195MixedCoordinates.source d) T ψ v.μ v.𝓕 f x w‖ₑ ≤ _

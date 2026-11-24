@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.QuasiOfFam
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.KerBF
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselGroupActionFourierBesselBasePointStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsRationalOrbitPointEqBesselBasePointStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselGroupActionFourierBesselBasePoint
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsRationalOrbitPointEqBesselBasePoint
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.EmbeddingXiZeroNeZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -109,7 +109,7 @@ theorem basePoint_spec : ∀ (D : D7) (σ : ℕ) (B : BesLev D σ), ∃ x₀ : M
     (∀ a : Fin (σ + 1) → D.host.E, gramQ B.V x₀ *ᵥ a = 0 → a (Fin.last σ) = 0) ∧
     ∀ (S S₀ : HSp D) (d : HypDec S S₀ (σ + 1)) (c : skewA D (σ + 1)), d.qS B.V c (x0 B) = d.qS B.L c (zl B) := by
   intro D σ B
-  obtain ⟨x, ⟨hli, hg⟩, hx⟩ := GlobalTheory.T.exists_mem_orb_rat_eq_x0 D σ B
+  obtain ⟨x, ⟨hli, hg⟩, hx⟩ := _root_.GlobalTheory.Unf.FB.exists_rationalOrbit_point_eq_besselBasePoint D σ B
   rw [← rat_zlQ] at hg
   have hG : gramQ B.V x = gramQ B.L (zlQ B) := gramQ_eq_of_gramSkew x (zlQ B) hg
   have hA : adj (x0 B) ⬝ (gA B.V ⬝ x0 B) = adj (zl B) ⬝ (gA B.L ⬝ zl B) := by
@@ -122,7 +122,7 @@ theorem basePoint_spec : ∀ (D : D7) (σ : ℕ) (B : BesLev D σ), ∃ x₀ : M
       _ = adj (zl B) ⬝ (gA B.L ⬝ zl B) := by rw [hz]
   · ext g
     rw [hx]
-    exact ((GlobalTheory.T.mem_besGrp_iff_mt_mul_x0_eq_x0_mul D σ B).1 g).symm
+    exact ((_root_.GlobalTheory.Unf.FB.besselGroup_action_fourierBesselBasePoint D σ B).1 g).symm
   · have h1 := congrFun ha (Fin.last σ)
     rw [hG, gramQ_zlQ_mulVec_last, Pi.zero_apply] at h1
     exact (mul_eq_zero.1 h1).resolve_left B.line.2

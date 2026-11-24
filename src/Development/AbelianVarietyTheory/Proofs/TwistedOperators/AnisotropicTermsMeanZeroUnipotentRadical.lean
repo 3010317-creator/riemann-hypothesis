@@ -6,8 +6,8 @@ public import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.Star
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasDerivAtZeroAndIsTheta
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulEqZeroOfInf
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.EmbeddingXiZeroNeZero
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaRestrictIsotropicQuotientWittTowerPropertieStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WittTowerRestrictionUnipotentRadicalInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaRestrictIsotropicQuotientWittTowerPropertie
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WittTowerRestrictionUnipotentRadicalInvariant
 import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp
 import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 import Mathlib.Algebra.Module.StablyFree.Basic
@@ -242,7 +242,7 @@ theorem res_om_heis (hs : IsIsoSplit V V' C B) {ψ : AddChar (AF D.host.F) ℂ} 
   have hth : IsThetaFunO ψ V W (heisO ψ V W (HMul.hMul (w : Matrix (Fin W.rank) (Fin V.rank) (AE D))
       (Formalism.L2.Theta.mt V (n : GA D V))) g) := isTheta_heisO hω.std hg _
   conv_lhs => rw [← actO_mul_mt V W (n : GA D V) w, ← hω.om_heis (n : GA D V) 1 _ g hg]
-  exact GlobalTheory.T.wittTower_restriction_unipotentRadical_invariant D V V' W r C B hs ψ χS χT ω hω μ 𝓨 hμ n _ hth
+  exact _root_.GlobalTheory.UnipRes.res_unip D V V' W r C B hs ψ χS χT ω hω μ 𝓨 hμ n _ hth
 
 theorem mean_rat_shift (hs : IsIsoSplit V V' C B) {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1))
     (hμ : IsCovolOne (ratMx D W.rank r) μ 𝓨) {g : WO V W → ℂ} (hg : IsThetaFunO ψ V W g)
@@ -264,8 +264,8 @@ theorem mean_rat_shift (hs : IsIsoSplit V V' C B) {ψ : AddChar (AF D.host.F) �
   rw [hm, hi, e, ← heisO_rat hψ.1, ← heisO_rat hψ.1, ← hi, ← hm]
   have h0 := isTheta_heisO hψ hg (x.map (incA D))
   have h1 := isTheta_heisO hψ h0 (midPart V V' W B (a.map (incA D)))
-  obtain ⟨-, -, -, hIso⟩ := (GlobalTheory.T.thetaRestrictIsotropicQuotient_wittTower_properties D V V' W r C B hs ψ hψ μ 𝓨 hμ).1 _ h1
-  obtain ⟨-, hR, hMid, -⟩ := (GlobalTheory.T.thetaRestrictIsotropicQuotient_wittTower_properties D V V' W r C B hs ψ hψ μ 𝓨 hμ).1 _ h0
+  obtain ⟨-, -, -, hIso⟩ := (_root_.GlobalTheory.TowerRestrict.res_theta D V V' W r C B hs ψ hψ μ 𝓨 hμ).1 _ h1
+  obtain ⟨-, hR, hMid, -⟩ := (_root_.GlobalTheory.TowerRestrict.res_theta D V V' W r C B hs ψ hψ μ 𝓨 hμ).1 _ h0
   rw [hIso, hMid]
   have hq := hR.quasi a 0
   rw [add_zero, GlobalTheory.FinTranslate.symplOH_zero_right, neg_zero, AddChar.map_zero_eq_one, one_mul] at hq
@@ -278,7 +278,7 @@ theorem mean_iso_shift (hs : IsIsoSplit V V' C B) {ψ : AddChar (AF D.host.F) �
     res V V' W C B μ 𝓨 (heisO ψ V W w g) x = ψ (symplOH V W (isoPart V W C b) w) *
       res V V' W C B μ 𝓨 (heisO ψ V W (isoPart V W C b + w) g) x := by
   have hth := isTheta_heisO hψ hg w
-  obtain ⟨-, -, -, hIso⟩ := (GlobalTheory.T.thetaRestrictIsotropicQuotient_wittTower_properties D V V' W r C B hs ψ hψ μ 𝓨 hμ).1 _ hth
+  obtain ⟨-, -, -, hIso⟩ := (_root_.GlobalTheory.TowerRestrict.res_theta D V V' W r C B hs ψ hψ μ 𝓨 hμ).1 _ hth
   rw [← hIso b, GlobalTheory.FinTranslate.heisO_heisO, res_smul]
 end Res
 end GlobalTheory.AnisoMean

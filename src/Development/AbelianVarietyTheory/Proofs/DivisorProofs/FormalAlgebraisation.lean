@@ -6,7 +6,8 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsLineBundleOfThickenings
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsVeryAmpleH1Zero
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PullCub
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalAlgebraisationMorphismsStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.FormalAlgebraisation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalAlgebraisationMorphisms
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.ExistsSecNonzeroLocusEqOfLbIso
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsProjByOfIsPullback
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.PolarizedAbelianEmbeddingBySections
@@ -19,7 +20,6 @@ public import Mathlib.AlgebraicGeometry.Morphisms.Affine
 public import Mathlib.AlgebraicGeometry.Morphisms.FiniteType
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThickTransComp
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.FormalAlgebraisation
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -298,7 +298,7 @@ theorem exists_lb_of_generated_system_proper : ∀ (R : Type) [CommRing R] [IsNo
       (by rw [Category.assoc, hc', hc', c₁]) ((isGen_iff _).2 (T.pgen_comp (hH (e + 1)).1 hw' hv)) (hw e)
       (fun j => Rel.comp T (hH (e + 1)).1 (hr (e + 1) j) (hs e j)) (hr e)
   haveI hPp : IsProper f := GlobalTheory.AbLaw.isProper_of_isProjBy R P f ⟨O, hO, n, t, hva⟩
-  obtain ⟨g, hg, -⟩ := GlobalTheory.T.formalAlgebraisation_morphisms' R I hcI X (Over.mk f) hX (inferInstanceAs (IsSeparated f))
+  obtain ⟨g, hg, -⟩ := _root_.GlobalTheory.FormalAlgMorphisms.formalAlgebraisation_morphisms R I hcI X (Over.mk f) hX (inferInstanceAs (IsSeparated f))
     (inferInstanceAs (LocallyOfFiniteType f)) (inferInstanceAs (QuasiCompact f)) Y β b hb hbb
     c hc' hcc
   have hM : (O.pull g.left).IsLB := LB.isLB_pull hO _
@@ -1119,7 +1119,7 @@ theorem exists_isGen_of_reductions : ∀ (R : Type) [CommRing R] [IsNoetherianRi
         exact appLE_eq_of_gm (β e) (b e) (b (e + 1)) (hβ e) i (s e i) (s (e + 1) i) (hsβ e · i)⟩
       ⟨hfq e, hfu e⟩
   let Z : Over (Spec (CommRingCat.of R)) := Over.mk (q ≫ X.hom)
-  have H := GlobalTheory.T.formalAlgebraisation_morphisms'
+  have H := _root_.GlobalTheory.FormalAlgMorphisms.formalAlgebraisation_morphisms
   obtain ⟨g, hg, -⟩ := H R I hI X Z hX (inferInstanceAs (IsSeparated (q ≫ X.hom)))
     (inferInstanceAs (LocallyOfFiniteType (q ≫ X.hom))) (inferInstanceAs (QuasiCompact (q ≫ X.hom)))
     Y β b hb hβ f (fun e => by
@@ -1346,7 +1346,7 @@ section -- clump:auto
 namespace GlobalTheory
 
 theorem formalAlgebraisation : GlobalTheory.Published.FormalAlgebraisation :=
-  ⟨GlobalTheory.T.formalAlgebraisation_morphisms', GlobalTheory.FormalAlg.formalAlgebraisation_schemes⟩
+  ⟨_root_.GlobalTheory.FormalAlgMorphisms.formalAlgebraisation_morphisms, GlobalTheory.FormalAlg.formalAlgebraisation_schemes⟩
 
 end GlobalTheory
 end -- clump:auto

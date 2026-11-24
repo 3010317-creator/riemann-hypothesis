@@ -9,7 +9,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjRestrict
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CubeTheorem
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.CubeTheorem.CubeTheoremHolds
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditionalStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TheoremOfCubeProjectiveAbelianSchemeAffineBase
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ConnectedSpaceSpecOfIsLocalRing
@@ -89,7 +90,9 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.Can
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProjBySmoothIsProperGeometricallyIntegral
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.StalkOfSmoothLocalStatement
+import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+import Mathlib.Combinatorics.Quiver.ReflQuiver
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.StalkOfSmoothLocal
 import Mathlib.AlgebraicGeometry.Morphisms.WeaklyEtale
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.RelAmpleIffVeryAmpleBy
 import Mathlib.AlgebraicGeometry.ZariskisMainTheorem
@@ -99,7 +102,6 @@ import Mathlib.Tactic.Basify
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.RingTheory.SimpleRing.Principal
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBLocal
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LineBundleProductAcyclicOfAffineBaseAcyclicStatement
 import Mathlib.CategoryTheory.Limits.Shapes.Connected
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -599,7 +601,7 @@ theorem flat_of_isFinite_twist : GlobalFnsSt → ∀ (V : Type) [CommRing V] [Is
     rwa [Set.image_singleton] at this
   have hm : (IsLocalRing.maximalIdeal V).map σ ≤ IsLocalRing.maximalIdeal _ :=
     Ideal.map_le_iff_le_comap.2 fun v hv => map_nonunit σ v hv
-  obtain ⟨h₀, h₁, h₂, h₃⟩ := GlobalTheory.T.stalk_regular_flat_of_smooth V B.left B.hom g hg (j.left h)
+  obtain ⟨h₀, h₁, h₂, h₃⟩ := _root_.GlobalTheory.StabFlat.stalk_of_smooth_local V B.left B.hom g hg (j.left h)
     (cl h (IsLocalRing.closedPoint _) hm Scheme.fromSpecStalk_closedPoint.symm) σ hσ hn
   refine @exists_ideal hG V _ _ _ B _ _ hB hp g hg L O hL hO hΘ hu H j hH
     (B.left.presheaf.stalk (j.left h)) _ h₀ _
@@ -644,8 +646,8 @@ theorem flat_local : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A], I
       _ (pullback.fst A.hom (φ ≫ T.hom)) (pullback.snd A.hom (φ ≫ T.hom)) (IsPullback.of_hasPullback _ _)).1
   have hL' : (L.pull (pullback.fst A.hom (φ ≫ T.hom))).IsLB := LB.isLB_pull hL _
   have hO : (twist A φ N).IsLB := pull_isLB hN.isLB _
-  refine flat_of_isFinite_twist GlobalTheory.T.abelianScheme_laws_unconditional.1.globalFns V (bc A φ) hB hP _ hL'
-    (GlobalTheory.AbLaw.CubeAffine.triv_theta_of_isProjBy GlobalTheory.T.abelianScheme_laws_unconditional.1 _ _ hB hP _ hL') (twist A φ N) hO
+  refine flat_of_isFinite_twist _root_.GlobalTheory.abelianSchemeLaws_all.1.globalFns V (bc A φ) hB hP _ hL'
+    (GlobalTheory.AbLaw.CubeAffine.triv_theta_of_isProjBy _root_.GlobalTheory.abelianSchemeLaws_all.1 _ _ hB hP _ hL') (twist A φ N) hO
     (GlobalTheory.T.lineBundleFamilyAtPoint_lambda_trivial A φ N hN) (ker A φ h) (kerι A φ h) (GlobalTheory.T.isClosedImmersion_fibreOverPointToBaseChange A φ h hh) (fun Y x => ?_) hfin
   rw [GlobalTheory.T.factors_fibreOverPoint_iff_factors_product A φ h Y x, ← hH, GlobalTheory.T.mumfordBundle_iso_family_iff_locally_trivial_translationDiff A T hA L hL N hN]
   exact forall_congr' fun p => exists_congr fun U => and_congr_right' (GlobalTheory.T.translationDifference_trivial_baseChange_iff_over_A A φ L hL N hN.isLB Y x U)
@@ -1357,7 +1359,7 @@ theorem additive_eq_lam_of_ample : ∀ (K : Type) [Field K] [IsAlgClosed K] (A :
     rw [cls_pull hF, eF, map_sub, pull_lam, ← pull_comp, ← Over.comp_left, lift_fst, lift_snd, pull_const, sub_zero,
       lam_comm]
   have total : Ac ((fst A A).left ≫ A.hom) F := by
-    refine (GlobalTheory.T.lineBundle_product_acyclic_of_affine_base_acyclic K _ _ _ _ _ _ _ hpq inferInstance inferInstance inferInstance inferInstance F hF).1
+    refine (_root_.GlobalTheory.ProductAcyclic.acyclic_of_over_affine_and_converse K _ _ _ _ _ _ _ hpq inferInstance inferInstance inferInstance inferInstance F hF).1
       fun R _ t Y π f h ht => ac_of_slices hproj hpq h hF fun x hx _ => ?_
     let x' : 𝟙_ _ ⟶ A := Over.homMk x hx
     refine ⟨(lift (toUnit A ≫ x') (𝟙 A)).left, ?_, ?_, ac_of_primitive hA hpr (pull_isLB hF _) ?_ ?_⟩

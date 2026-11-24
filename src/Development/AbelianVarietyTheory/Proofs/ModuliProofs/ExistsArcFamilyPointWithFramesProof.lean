@@ -32,18 +32,20 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.Degener
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCompleteIsAlgClosedCExt
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespondStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LiftValuationIntegralNormStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModuliModelUltrametricPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionCoordinatesEqDegenerationSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsRigidifiedIso
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TorsionIsoOfLinearUniformisationTripleStatement
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissibleBaseOfCompleteDvr
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespond
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LiftValuationIntegralNormStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModuliModelUltrametricPoints
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionCoordinatesEqDegenerationSeries
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsRigidifiedIso
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.VRatioGtStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.PeriodicValuation
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TorsionIsoOfLinearUniformisationTriple
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSinglePolarisationGeneratorAllTraits
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FullTorsionObjectExistsUniqueModuliPoint
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FullTorsionPolarizedCMObjectExtendsAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsProperOfThetaUnitInEveryCosetStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModuliModelUltrametricPoints
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.ArcFamSt
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsExtendValuation
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.MemRangeIffOfFinite
@@ -110,7 +112,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPushEquiv
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.PolBaseChangeOfRelAmpleLocal
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValuesStatement
 import Mathlib.Analysis.Normed.Ring.Ultra
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
 import Mathlib.Algebra.Order.Star.Real
@@ -1340,14 +1341,14 @@ theorem hasArcData_of_model (hV : HV) (h6 : Laws6) (hU : GlobalTheory.LN.UDvrSt)
   letI := H.starRing
   have hLL := hV.1
   obtain ⟨hL, hL2, hL3, hL4, hL5⟩ := hV.1
-  have hGt : BrGtSt := GlobalTheory.T.torus_torsion_points_correspond_values
+  have hGt : BrGtSt := _root_.GlobalTheory.Ex.GtValues.points_correspond
   have : IsNoetherianRing O' := by
     rcases hB with h | h
     · letI := h.1.toField; infer_instance
     · have := h.1; infer_instance
   have := M.cdv.1
   have := M.cdv.2.2
-  have tors := GlobalTheory.T.torsionIso_of_linear_uniformisation_triple hV.1 hV.2.1 hV.2.2.1 hV.2.2.2.1 hV.2.2.2.2 E H M.W _ (admissible_base_of_complete_dvr M.cdv) M.t M.P
+  have tors := _root_.GlobalTheory.UT.torsionIso_of_pelUnif hV.1 hV.2.1 hV.2.2.1 hV.2.2.2.1 hV.2.2.2.2 E H M.W _ (admissible_base_of_complete_dvr M.cdv) M.t M.P
   obtain ⟨n, hn, hno, hn3, hn1⟩ := exists_odd_prime C
   obtain ⟨N', ν', J, hlin, hlab, DW, _, oW, φ, he, w₀, e₀, νW, hm, -, hpt, Φ, wΦ, -, hΦ, hwΦ, hΦpt, -⟩ :=
     _root_.GlobalTheory.ModelData.data_of_model hV h6 hU hH hT hE hTU E H D l Xo c W₀ Y O' b ϖ a hB C A u r o M f u₀ hI hR.1 hu₁ hu hf n hn hno hn1
@@ -1390,7 +1391,7 @@ theorem hasArcData_of_model (hV : HV) (h6 : Laws6) (hU : GlobalTheory.LN.UDvrSt)
     exact (congrArg (· ≫ _) (pψ z).symm).trans (Category.assoc _ _ _)
   obtain ⟨s₁, s₂, s₃, s₄, s₅, s₆⟩ := GlobalTheory.T.modelIso_of_valued_agreement_over_field hLL E H D l c _ _ O' b a C A u r o M f N' ν' J hR.1 hf u₀ hu ψ heψ w e fit hrig act
   have lab := GlobalTheory.T.twistedLabels_all_levels_of_four_le hLL hGt E H D l c _ _ O' b a C A u r o M f N' ν' J hR.1 hf tors
-    (GlobalTheory.T.twistedLabels_match_of_level_ge_four hLL (GlobalTheory.T.torsionCoordinates_eq_degenerationSeries hV hGt (GlobalTheory.T.families_values_correspond hL hL2)) hGt E H D l c _ _ O' b a C A u r o M f N' ν' J hR.1 hf tors
+    (GlobalTheory.T.twistedLabels_match_of_level_ge_four hLL (_root_.GlobalTheory.Ex.CoordSeries.coord_eq_series hV hGt (_root_.GlobalTheory.Ex.brFam hL hL2)) hGt E H D l c _ _ O' b a C A u r o M f N' ν' J hR.1 hf tors
       hR n hno hn3 (hlab 2))
   refine ⟨M.t, m, M.P, ψ, heψ, w, e, s₁, s₂, s₃, s₄, s₅, fun F _ _ _ _ uF hF huF => ⟨s₆ F uF hF huF, ?_⟩⟩
   intro yF hyF k p₀ σ hσ q₀ q x h₀ hq hg hx

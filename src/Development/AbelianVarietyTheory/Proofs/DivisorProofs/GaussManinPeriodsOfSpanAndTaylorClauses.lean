@@ -42,7 +42,7 @@ public import Mathlib.Analysis.Calculus.FDeriv.Defs
 public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.EntireApplyEqOfPeriodicOfSpanReal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeIsSeparatedOfAffineBaseStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAnalyticChartsRealizationOfAffineStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAnalyticChartsRealizationOfAffine
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmallChartPairAlongLinearMapStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PchernOfStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -1381,7 +1381,7 @@ theorem pLie_holds : PLie := by
   have hs := GlobalTheory.T.abelianScheme_isSeparated_of_affine_base A hA
   obtain ⟨K, -, -, hK, hsm, -⟩ := GlobalTheory.T.exists_small_chart_pair_along_linear_map (fibUnif u) (fibUnif u) id analyticOnNhd_id (fun _ h ↦ h)
     LinearMap.id (AddMonoidHom.id _) (fun _ _ _ ↦ rfl)
-  obtain ⟨r, hr, -⟩ := GlobalTheory.T.exists_analyticChartsRealization_of_affine (fibUnif u) hs K hsm
+  obtain ⟨r, hr, -⟩ := _root_.GlobalTheory.AnPer.exists_real_isFor (fibUnif u) hs K hsm
   obtain ⟨k, hk⟩ := hK.1 0 trivial
   obtain ⟨ρ, hρ⟩ := GlobalTheory.T.exists_firstOrderJet_algHom (K.W k) 0 hk (0, (x : Fin g → ℂ))
   obtain ⟨v, hv, ht, hd⟩ := GlobalTheory.T.exists_tangent_of_uniformisation_jet u hs (K.W k) (r.x k) (hr k)

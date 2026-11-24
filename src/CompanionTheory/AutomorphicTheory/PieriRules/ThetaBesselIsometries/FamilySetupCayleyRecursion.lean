@@ -5,11 +5,11 @@ public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.DualTensorCayleyCompatibleStatement
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RightTypeAction
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.DerivedActionDiscreteSeriesProperties
-public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.FrechetContinuousContinuousOnOrbitHasDerivAtStatement
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.FrechetContinuousContinuousOnOrbitHasDerivAt
 public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPrAlt
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FrameWConjMatrixUnits
 public import Formalism.HermitianCurvature.BesselNonvanishingReduction
-public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExpMemUnipotentAndHasDerivAtCharacter
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.QuantumDeterminantEigenvalue
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CasimirScalarOfCapelliDeterminantEigenvalue
@@ -417,7 +417,7 @@ theorem on_real (hK : PI.KFinSmooth) {ε : Fin (2 * r + k + 1) → Bool} {mu : F
       (Formalism.QuantumDeterminants.ell k r z X - star (Formalism.QuantumDeterminants.ell k r z X)) • l v := by
   obtain ⟨hadd, hsmul, heq, hc⟩ := hl
   obtain ⟨hN, hd⟩ := _root_.GlobalTheory.UnipotentExp.exp_mem_and_deriv k r z X hz hX hP
-  have h1 := (GlobalTheory.T.frechetContinuous_continuousOn_orbit_hasDerivAt hK k r ε mu R hR Wp l hadd hsmul hc v hv).2 X hX
+  have h1 := (_root_.Gp91.GlobalTheory.cwCont_continuousOn_hasDerivAt hK k r ε mu R hR Wp l hadd hsmul hc v hv).2 X hX
   have h2 := hd.smul_const (l v)
   have hone : (1 : Mx k r) ∈ Formalism.QuantumDeterminants.UWset k r z := by
     refine ⟨?_, fun a => ⟨Matrix.one_mulVec _, Matrix.one_mulVec _⟩, Matrix.one_mulVec _⟩

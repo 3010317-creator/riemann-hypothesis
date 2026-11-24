@@ -36,7 +36,13 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CharpolyS
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AutomorphicFormsFiniteGL
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIsWeight
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SatWDCharPolChars
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIsPlaceOverFiniteExtensionOfIsPlaceOverStatement
+public import Formalism.ConjugateSelfDual.Statement
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIsPlaceOverFiniteExtensionOfIsPlaceOver
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalGaloisCompatibility.ToralDeRham.WeaklyAttachedToralOfCmLift
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -867,7 +873,7 @@ theorem exists_sph_lift_of_toral : UpperTheory.Gal.ToralGalois.Inq → ∀ (Ω :
   have hξ₀ : ∀ j, IsSmoothChar (ξ₀ j) := fun j => (hξ j).mul (isSmoothChar_absPow _)
   obtain ⟨M, _, _, _, _, _, _, _, P, χ', hP, hcl, hfix, hkill⟩ :=
     GlobalTheory.T.weaklyAttached_toral_of_cm_lift hI Ω E l ι n hn π χ hπ r hr w A h ξ₀ hξ₀ a ha g hg
-  obtain ⟨u, h', -⟩ := GlobalTheory.T.exists_isPlaceOver_finiteExtension_of_isPlaceOver E M Ω A w h
+  obtain ⟨u, h', -⟩ := _root_.GlobalTheory.AboveL.exists_isPlaceOver_of_tower E M Ω A w h
   haveI := liesOver_of_isPlaceOver (M := M) h h'
   have hunr := _root_.GlobalTheory.RoadU.unram_comp_normU_of_fix Ω E M A w u h h' n ξ₀ a ha hkill
   obtain ⟨B, hB, hch⟩ :=

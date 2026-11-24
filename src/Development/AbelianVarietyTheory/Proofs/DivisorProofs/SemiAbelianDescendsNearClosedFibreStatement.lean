@@ -7,9 +7,8 @@ public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Mathlib.AlgebraicGeometry.PullbackCarrier
 public import Mathlib.AlgebraicGeometry.Morphisms.Flat
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDescentOfEqualisedProperCoverNormalStatement
-public import Mathlib.AlgebraicGeometry.Pullbacks
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDescentOfEqualisedProperCoverNormal
+public import Mathlib.AlgebraicGeometry.Pullbacks
 public import Mathlib.AlgebraicGeometry.Gluing
 public import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 public import Mathlib.AlgebraicGeometry.Restrict
@@ -395,7 +394,7 @@ theorem chart_transition_descends : ∀ (R : Type) [CommRing R] [IsDomain R] [Is
       rw [← cancel_mono (e j), h₂e]; simp only [Category.assoc, hZe]
     subst this
     simpa only [Category.assoc] using h₂p.symm
-  obtain ⟨τ, hτ, -⟩ := GlobalTheory.T.exists_descent_of_equalised_proper_cover_normal R S V.toScheme (pullback.fst U.hom π ⁻¹ᵁ V).toScheme U.left π
+  obtain ⟨τ, hτ, -⟩ := _root_.GlobalTheory.MorDescent.descend R S V.toScheme (pullback.fst U.hom π ⁻¹ᵁ V).toScheme U.left π
     (V.ι ≫ U.hom) p' _ hπ hs hS hflat hpb _ heq
   refine ⟨τ, fun T a b v hab hv => ?_⟩
   let a' := hpb0.lift v a hv
@@ -494,7 +493,7 @@ theorem GlobalTheory.MumDescent.cocycle : ∀ (R : Type) [CommRing R] [IsDomain 
   haveI := hU
   have heq : pullback.fst p' p' ≫ c ≫ pP = pullback.snd p' p' ≫ c ≫ pP := by
     rw [← h2, pullback.condition_assoc]
-  obtain ⟨h₀, -, huniq⟩ := GlobalTheory.T.exists_descent_of_equalised_proper_cover_normal R S O.toScheme FinalForm.toScheme U.left π (O.ι ≫ U.hom) p'
+  obtain ⟨h₀, -, huniq⟩ := _root_.GlobalTheory.MorDescent.descend R S O.toScheme FinalForm.toScheme U.left π (O.ι ≫ U.hom) p'
     (FinalForm.ι ≫ pullback.snd U.hom π) hπp hπs hS inferInstance hsq (c ≫ pP) heq
   have E : w₀ ≫ τ j k = m₂ ≫ τ i k := (huniq _ h3).trans (huniq _ h2).symm
 
@@ -1290,8 +1289,8 @@ theorem unit_descends : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
   have heq : pullback.fst π π ≫ h = pullback.snd π π ≫ h := by
     rw [← hy1, hy, Category.assoc]
   have sq : IsPullback π (𝟙 S) (𝟙 (Sp R)) π := IsPullback.of_vert_isIso ⟨by simp⟩
-  obtain ⟨e, he, -⟩ := GlobalTheory.T.exists_descent_of_equalised_proper_cover_normal R S (Sp R) S N.U.left π (𝟙 _) π (𝟙 S) hP hS hI inferInstance sq h heq
-  obtain ⟨e₁, -, huniq⟩ := GlobalTheory.T.exists_descent_of_equalised_proper_cover_normal R S (Sp R) S (Sp R) π (𝟙 _) π (𝟙 S) hP hS hI inferInstance sq π
+  obtain ⟨e, he, -⟩ := _root_.GlobalTheory.MorDescent.descend R S (Sp R) S N.U.left π (𝟙 _) π (𝟙 S) hP hS hI inferInstance sq h heq
+  obtain ⟨e₁, -, huniq⟩ := _root_.GlobalTheory.MorDescent.descend R S (Sp R) S (Sp R) π (𝟙 _) π (𝟙 S) hP hS hI inferInstance sq π
     pullback.condition
   refine ⟨e, ?_, x₀, he.symm, hx₀s, hx₀u⟩
   rw [huniq (e ≫ N.U.hom) (show π ≫ e ≫ N.U.hom = π by rw [← Category.assoc, he, hh]),

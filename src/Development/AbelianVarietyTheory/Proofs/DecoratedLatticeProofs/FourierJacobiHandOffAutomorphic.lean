@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientParaStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PairedThetaKernelContinuousAndRationallyInvarianStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientPara
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PairedThetaKernelContinuousAndRationallyInvarian
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,11 +55,11 @@ theorem handFBLaw : ∀ D : D7, HandFBLaw D := by
   unfold HandFBLaw
   intro ψ σ J B s vL Y Ξ hY hΞ
 
-  obtain ⟨hc, hl, hr⟩ := GlobalTheory.T.pairedThetaKernel_continuous_and_rationally_invariant D ψ σ J B s vL Y Ξ hY hΞ
+  obtain ⟨hc, hl, hr⟩ := _root_.GlobalTheory.PairKer.pairKer_law D ψ σ J B s vL Y Ξ hY hΞ
   refine ⟨fun γ hγ g => ?_, ?_⟩
   ·
     simp only [handFB, hr γ hγ]
   ·
-    exact (GlobalTheory.T.continuous_integral_compactAutomorphicQuotient_param D J.W₀ J.cpt J.v0 (GA D B.A) (pairKer s vL Y Ξ) hc hl).2.1
+    exact (_root_.GlobalTheory.CocompactParam.continuous_integral_param D J.W₀ J.cpt J.v0 (GA D B.A) (pairKer s vL Y Ξ) hc hl).2.1
 
 end GlobalTheory

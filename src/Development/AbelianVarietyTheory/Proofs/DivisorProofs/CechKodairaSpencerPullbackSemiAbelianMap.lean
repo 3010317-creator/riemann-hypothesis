@@ -23,7 +23,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpenc
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDeformationChartPointSpecMap
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LePreimageOfIsTranslate
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReductionEqBasePoint
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentTranslateLiftsSemiAbelianTripleMapStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentTranslateLiftsSemiAbelianTripleMap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -944,7 +944,7 @@ theorem isTranslate_push {X X' : Scheme.{0}} {t : SAB H X} {t' : SAB H X'} {g : 
     rw [Category.assoc, mu.cart.1.w, ← Category.assoc, hg₀, Category.assoc, hx, ← Category.assoc,
       GlobalTheory.LogKSLoc.spMap_comp']
   obtain ⟨w, hw, -⟩ := existsUnique_isTranslate t (φS.comp (g.appLE U.1 U'.1 hU).hom) hg hvb
-  obtain ⟨w'', h1, h2⟩ := GlobalTheory.T.tangentTranslate_lifts_semiAbelianTripleMap E H X X' t t' g mu _ _ (g.appLE U.1 U'.1 hU).hom (chart U) (chart U') hx vb vb'
+  obtain ⟨w'', h1, h2⟩ := _root_.GlobalTheory.TransLift.lift_isTranslate E H X X' t t' g mu _ _ (g.appLE U.1 U'.1 hU).hom (chart U) (chart U') hx vb vb'
     hvb hvb' hvv S φS g₀ hg₀ w hw
   obtain ⟨_, _, huniq⟩ := existsUnique_isTranslate t' φS hg₀ hvb'
   have e : w'' = w' := (huniq _ h2).trans (huniq _ hw').symm

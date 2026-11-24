@@ -10,8 +10,10 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomolog
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLanglandsClassificationDetCharacterStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeilDeligneCharpolyTwistSpecialStatement
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.LanglandsMultisegments
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EpsilonFactorRecCompatibleStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedWeilDeligneEqDiagonalInvStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EpsilonFactorRecCompatible
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MonodromyZeroOfWeilDeligneRepClassIff
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedWeilDeligneEqDiagonalInv
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIrreducibleFixed
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistRecCompatible
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CentralCharacterRecCompatibleStatement
@@ -149,15 +151,15 @@ theorem isSpherical_iff_unr_of_lawsLit : LanglandsExhaustionGL → LanglandsMult
   · intro hs
     obtain ⟨α, hα⟩ := GlobalTheory.SatakeExists.main hBZ (w.adicCompletion E) x.1
       ⟨x.2.rep.V, x.2.rep.ρ, x.2.rep.smooth, x.2.rep.irr⟩ hs
-    rw [GlobalTheory.T.epsilon_factor_rec_compatible hEx hMS hSC hZP hGL hBZ E Ω A w h a ha e rc H x α hα]
+    rw [_root_.GlobalTheory.LocLanglands.SatakeLaw.sat_of_lawsLit hEx hMS hSC hZP hGL hBZ E Ω A w h a ha e rc H x α hα]
     exact (WD.unr_mk _).2 (WDRep.unr_diag _)
   · intro hu
-    obtain ⟨α, hα⟩ := GlobalTheory.T.unramified_weilDeligne_eq_diagonal_inv E Ω A w h (rc x) hu
+    obtain ⟨α, hα⟩ := _root_.GlobalTheory.LocLanglands.unr_eq_diag_inv E Ω A w h (rc x) hu
     obtain ⟨π, hπ⟩ := GlobalTheory.CuspRep.ParLaws.exists_hasSatake (k := w.adicCompletion E) α
     have φ := equivRep π
     have hπ' : HasSatake (cls π).rep α := ⟨IrrRep.irr _, fixed_ne_bot_of_equiv φ hπ.2.1,
       (IsSubquotient.of_surjective φ.toIntertwiningMap φ.toLinearEquiv.surjective).trans hπ.2.2⟩
-    have e1 := GlobalTheory.T.epsilon_factor_rec_compatible hEx hMS hSC hZP hGL hBZ E Ω A w h a ha e rc H (cls π) α hπ'
+    have e1 := _root_.GlobalTheory.LocLanglands.SatakeLaw.sat_of_lawsLit hEx hMS hSC hZP hGL hBZ E Ω A w h a ha e rc H (cls π) α hπ'
     have e2 : cls π = x := H.bij.1 (e1.trans hα.symm)
     rw [← e2]
     exact hπ'.2.1
@@ -216,7 +218,7 @@ theorem isRec_of_isRecLit : DepthZeroCuspidalLL → DepthZeroInduction → Langl
       prod := GlobalTheory.T.twist_rec_compatible hEx hLM hSC E Ω A w h a ha _ rc L
       supp := GlobalTheory.T.central_character_rec_compatible hEx hZP hGL hBZ E Ω A w h a ha _ rc L
       sph := GlobalTheory.T.l_factor_rec_compatible hEx hLM hSC hZP hGL hBZ E Ω A w h a ha _ rc L
-      sat := GlobalTheory.T.epsilon_factor_rec_compatible hEx hLM hSC hZP hGL hBZ E Ω A w h a ha _ rc L
+      sat := _root_.GlobalTheory.LocLanglands.SatakeLaw.sat_of_lawsLit hEx hLM hSC hZP hGL hBZ E Ω A w h a ha _ rc L
       depth := GlobalTheory.T.conductor_rec_compatible hDZ hDI hEx hZP hGL hBZ E Ω A w h rc ⟨a, ha, ε, hε, L⟩ }
 
 end GlobalTheory.LocLanglands

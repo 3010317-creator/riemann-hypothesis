@@ -5,8 +5,9 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Exis
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockHarmonicLatticeFgAndSpansValueSpace
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LinearIndependentComplexOfSubfieldCoeffLatticeStatement
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.CenUsedOfCenReal
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockHarmonicValueSpaceMapEqDualWeylModuleFunctioStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunctionStatement
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TranslateMemCoefLatFn
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockHarmonicValueSpaceMapEqDualWeylModuleFunctio
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunction
 import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsGlob
 import Mathlib.Algebra.Order.Floor.Extended
@@ -271,7 +272,7 @@ theorem coefLat_le_span (hB : B.Good) (R O : Subring ℂ) (h : Bridge.Gf S) {P :
     rw [e]
     exact Submodule.subset_span ⟨F, hF, rfl⟩
   obtain ⟨Q, hQ, e⟩ := h1 hP.2
-  have h0 : P - Q = 0 := GlobalTheory.T.harmonic_polynomial_eq_zero_of_function D _ _ B.w B.F.BS hB.wt (pq_le hB) _ (sub_mem hP.1 (hle hQ))
+  have h0 : P - Q = 0 := _root_.GlobalTheory.ExportSeries.HarmInj.harm_inj D _ _ B.w B.F.BS hB.wt (pq_le hB) _ (sub_mem hP.1 (hle hQ))
     (by rw [map_sub]; exact sub_eq_zero.2 e.symm)
   rw [sub_eq_zero.1 h0]
   exact hQ

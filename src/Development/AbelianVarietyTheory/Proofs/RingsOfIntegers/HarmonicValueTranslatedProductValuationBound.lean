@@ -1,12 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.PlaceAdaptation.AdaptStd
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.HarmonicValueChainRuleNormalizedPullbackStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.HarmonicValueChainRuleNormalizedPullback
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.HarmonicValueIntegralPointEqValueOnBiextensionCoStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IntegralChartFormalBiextensionGaugeBoundStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.ConnectionKillsSeries
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IntegralChartFormalBiextensionGaugeBound
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.MixedTranslatePullbackEqReachedSectionStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ReachedSectionRegularOnIntegralModelStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.RegularSectionIntegralGermUniqueScaleStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ReachedSectionRegularOnIntegralModel
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.RegularSectionIntegralGermUniqueScale
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -127,12 +128,12 @@ theorem term_bound : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
   have h45 := fun b => GlobalTheory.T.mixed_translate_pullback_eq_reached_section E H Dw l Xo T.Fr (xOf y) N n' A Bn α β hN hNe hA hBn (sOf1 y)
     (x₁ b) (x₂ b) (F b) (hx b).1 (hx b).2.1 (hx b).2.2.1 (hx b).2.2.2.1 (hx b).2.2.2.2
   choose hh hReach hPull using fun b => (h45 b).2
-  have hReg := fun b => GlobalTheory.T.reachedSection_regular_on_integralModel E H Dw l Xo c hstar T io y C hC (n' ^ 2 * A) (hh b) (hReach b)
+  have hReg := fun b => _root_.GlobalTheory.ReachRegular.regular_of_reach E H Dw l Xo c hstar T io y C hC (n' ^ 2 * A) (hh b) (hReach b)
   choose f hf using fun b =>
     (_root_.GlobalTheory.RegularGerm.regular_germ E H Dw l Xo c hstar T io y C hC.1 (n' ^ 2 * A) (hh b)).1 (hReg b)
   obtain ⟨B, hB, h49⟩ := _root_.GlobalTheory.PlaceInt.integralBiext_gauge_eig_bound E H Dw l Xo c hstar T io y C
   have h48 := GlobalTheory.T.harmonicValue_integralPoint_eq_value_on_biextensionCopies E H Dw l Xo c hstar T io y C nab hnab B hB (n' ^ 2 * A) n hh f hf w P hP
-  have h58 := GlobalTheory.T.harmonic_value_chain_rule_normalized_pullback E H Dw l Xo c hstar nab hnab T.Fr y.1 β Bn (n' ^ 2 * A) (N ^ 2) hBn hN2 n hh
+  have h58 := _root_.GlobalTheory.PlaceInt.hv_pulls E H Dw l Xo c hstar nab hnab T.Fr y.1 β Bn (n' ^ 2 * A) (N ^ 2) hBn hN2 n hh
     (fun b => sqN Xo N (F b)) hPull w P hP
   by_cases hP0 : P = 0
   · subst hP0

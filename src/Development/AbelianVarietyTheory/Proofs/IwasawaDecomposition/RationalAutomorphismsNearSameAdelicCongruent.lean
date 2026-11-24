@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftsInvOne
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MemPrinCongOfSm
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicMatrixCongruenceBadPrimeIffCompletionStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicMatrixCongruenceBadPrimeIffCompletion
 import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -155,9 +155,9 @@ namespace GlobalTheory.Mem.Col2.AdT.AdTieNear
 theorem main : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (a : I.ι) (i : ℕ) (fb : SBof I a → GL (Fin ((I.rec7 l Z).R.N i)) (I.rec7 l Z).host.E) (dep dep' : SBof I a → ℕ) (P : SBof I a) (κ : GL (Fin ((I.rec7 l Z).R.N i)) (AfE (I.rec7 l Z).host.F (I.rec7 l Z).host.E)) (g g' : Sp B.fields.E (B.R.N i) ≃ₗ[B.fields.E] Sp B.fields.E (B.R.N i)), g ∈ Formalism.L2.Col.GLint B.fields.E (B.R.N i) P.1 → 1 ≤ dep' P → dep' P ≤ dep P → GlobalTheory.TwU.InFrame (i := i) (sm I l Z) fb dep P κ g → GlobalTheory.TwU.InFrame (i := i) (sm I l Z) fb dep' P κ g' → CongE P.1 (dep' P) g' g := by
   intro B X I hOk l Z a i fb dep dep' P κ g g' hg h1 hdd hF hF'
   unfold GlobalTheory.TwU.InFrame GlobalTheory.TwU.NearAt at hF hF'
-  have hq := (GlobalTheory.T.adelicMatrixCongruenceBadPrime_iff_completion I hOk l Z a ((I.rec7 l Z).R.N i) 0 P 1).2.1
-  have hy := (GlobalTheory.T.adelicMatrixCongruenceBadPrime_iff_completion I hOk l Z a _ (dep P) P _).2.2.1 hF
-  have hy' := (GlobalTheory.T.adelicMatrixCongruenceBadPrime_iff_completion I hOk l Z a _ (dep' P) P _).2.2.1 hF'
+  have hq := (_root_.GlobalTheory.Mem.Col2.AdT.AdelicValuationDictionary.main I hOk l Z a ((I.rec7 l Z).R.N i) 0 P 1).2.1
+  have hy := (_root_.GlobalTheory.Mem.Col2.AdT.AdelicValuationDictionary.main I hOk l Z a _ (dep P) P _).2.2.1 hF
+  have hy' := (_root_.GlobalTheory.Mem.Col2.AdT.AdelicValuationDictionary.main I hOk l Z a _ (dep' P) P _).2.2.1 hF'
   exact congE_of_near (F := B.host.F) P.1 (dep P) (dep' P) h1 hdd _ g g'
     (GlobalTheory.TwU.seamGL (sm I l Z) g) (GlobalTheory.TwU.seamGL (sm I l Z) g')
     (fun w => GlobalTheory.TwU.seamGL_mulVec (sm I l Z) g w) (fun w => GlobalTheory.TwU.seamGL_mulVec (sm I l Z) g' w)

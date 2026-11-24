@@ -6,7 +6,7 @@ public import Formalism.LocalToGlobal.IndefiniteReal.FWTie
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OmegaLevelVPCore
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OscillatorModelValuesFourth
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoefficientMapUniqueBijectiveComplexExtension
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjugateTuplesConjugateResidueLevelsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjugateTuplesConjugateResidueLevels
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGaloisConjDefiniteFormsSemilinearEquiv
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaSeriesEqThetaLiftDefiniteGroupForm
@@ -209,7 +209,7 @@ theorem exists_conjForm_thF_eq_ser : ∀ (D : D7) (G : Type) [Group G] [Fintype 
   have hs := hTW.1
   have hTc := hTW.2.1
   have hρ := hTW.2.2
-  have hZ := (GlobalTheory.T.conjugate_tuples_conjugate_residue_levels D G Pl0 T0 A T R F κ v₀ hCore τ t t' hConj).2.2.2 i hFix
+  have hZ := (_root_.GlobalTheory.ConjRes.conj_res D G Pl0 T0 A T R F κ v₀ hCore τ t t' hConj).2.2.2 i hFix
   have hJ := hZ.1
   have hχ := hZ.2
   have hV := hCore.models.HV i t

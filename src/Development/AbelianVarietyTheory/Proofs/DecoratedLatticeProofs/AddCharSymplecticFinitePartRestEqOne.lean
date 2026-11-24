@@ -5,8 +5,11 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.OmAtSm
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsDenominatorAvoidingGivenPrimesStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OffIdempotentMemIdealTwoIntegersStatement
+public import Formalism.LocalToGlobal.Columns.FiniteSumNonzeroLargeDepth
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsDenominatorAvoidingGivenPrimes
+public import Formalism.LocalToGlobal.Columns.DecoFin
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OffIdempotentMemIdealTwoIntegers
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StdCharSymplecticHalfPeriodLatticeEqOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergOperatorFinitePartLatticeVacuumSign
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.EmbHInjective
@@ -132,9 +135,9 @@ theorem ybmem : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S
     have he : expS SS Q = 0 := by
       unfold expS; rw [if_neg fun h => hQ (Or.inl h), if_neg fun h => hQ (Or.inr h)]
     rwa [he, zpow_zero, _root_.inv_one, one_smul] at h
-  obtain ⟨d, hd0, hdx, hdQ⟩ := GlobalTheory.T.exists_denominator_avoiding_given_primes D.host.E S.rank T.rank _
+  obtain ⟨d, hd0, hdx, hdQ⟩ := _root_.GlobalTheory.OffDen.exists_den_avoid D.host.E S.rank T.rank _
     (fun Q => Q ∈ SS ∨ Formalism.L2.Col.conjPrime₂ Q ∈ SS) c hc x' hcx hloc
-  obtain ⟨a₁, a₂, ha₁, ha₂, ho⟩ := GlobalTheory.T.offIdempotent_mem_ideal_two_integers D e SS hE c hc d hd0 hdQ
+  obtain ⟨a₁, a₂, ha₁, ha₂, ho⟩ := _root_.GlobalTheory.OffIdemTwo.off_two D e SS hE c hc d hd0 hdQ
   have hB : a₁ • GlobalTheory.LatVac.finTens 1 (LinearMap.toMatrix' ((c : D.host.E) • x')) ∈
       latO S T (N : Set (Fin S.rank → D.host.E)) (N' : Set (Fin T.rank → D.host.E)) fun _ => True :=
     GlobalTheory.LatticeStable.smul_mem_latO D S T _ _ _ _ ha₁ _

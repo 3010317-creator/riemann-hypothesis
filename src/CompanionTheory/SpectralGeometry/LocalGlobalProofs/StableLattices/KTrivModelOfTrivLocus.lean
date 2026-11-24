@@ -10,7 +10,7 @@ public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.Morphis
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FirstCohomology.DimSplitPf
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.SmoothMorphisms.LineBundleSpreadsOut
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianSchemeModelBaseChangeSubalgebraStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianSchemeModelBaseChangeSubalgebra
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianSchemeSpreadsOutFiniteTypeSubringStatement
 public import CompanionTheory.AutomorphicTheory.TemperedLocalSpectra.ObstructionLifting.H1StructureDimLe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LiftLeftFst
@@ -60,7 +60,6 @@ import Mathlib.AlgebraicGeometry.AffineTransitionLimit
 import Mathlib.Data.Finset.Functor
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Tactic.Linter.HaveILetI
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianSchemeModelBaseChangeSubalgebra
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: CompanionTheory.SpectralGeometry.LocalGlobalProofs.SmoothMorphisms.AbelianSchemeSpreadsOut, CompanionTheory.SpectralGeometry.LocalGlobalProofs.SmoothMorphisms.ExistsFgSmoothOfRelativeDimension, CompanionTheory.SpectralGeometry.LocalGlobalProofs.SmoothMorphisms.LineBundleSpreadsOutStatement, CompanionTheory.SpectralGeometry.LocalGlobalProofs.SmoothMorphisms.ExistsModelAbelianLb, CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.KTrivModelOfTrivLocus
@@ -208,7 +207,7 @@ theorem exists_model_abelian_lb : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) 
   have hsep : IsSeparated B.hom := inferInstance
   obtain ⟨R', hR', M, hM, hσ⟩ :=
     GlobalTheory.T.line_bundle_spreads_out S0 R B.left A.left B.hom A.hom φ hqc hsep hpb'.1 L hL
-  obtain ⟨gB', φ₁, hB'B, hAB', hφ₁⟩ := GlobalTheory.T.abelianScheme_model_baseChange_subalgebra S0 R A B φ hpb' R'
+  obtain ⟨gB', φ₁, hB'B, hAB', hφ₁⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Approx.model_passes_to_subalgebra S0 R A B φ hpb' R'
   refine ⟨R'.toSubring, Over.mk (pullback.snd B.hom (spMap (algebraMap S0 R'))), gB', φ₁, M,
     ?_, ?_, hAB', hM, ?_⟩
   · have h1 : Algebra.FiniteType S0 R' := (Subalgebra.fg_iff_finiteType R').mp hR'

@@ -6,7 +6,8 @@ public import Formalism.LocalToGlobal.HermitianForms.TiedSym
 public import Formalism.LocalToGlobal.HermitianForms.PsiZeroNontrivialCharacter
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.UnipotentTypeLevelCharacterFiniteOrderRootsOfUni
 public import Formalism.SharpRestriction.GlobalSchurBounds.IntegralityOfRationalityLocal
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsStandardColumnComparisonsTrueColumnsStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StdLvPr
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsStandardColumnComparisonsTrueColumns
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -91,7 +92,7 @@ namespace GlobalTheory.Mem.Col2.TC
 
 theorem colsTiedSym_chiFin0 : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∃ C : ColsTiedSym (I.rec7 l Z), ∀ u, Formalism.MainNotions.RT.ChiFin0 (C.forms u) := by
   intro B X I hI hP l Z
-  obtain ⟨C, -, -⟩ := GlobalTheory.T.exists_standardColumnComparisons_trueColumns I hI hP l Z
+  obtain ⟨C, -, -⟩ := _root_.GlobalTheory.Mem.Col2.TC.colsTiedSym_std I hI hP l Z
   refine ⟨C, fun u => ?_⟩
   exact GlobalTheory.formsTiedSym_chi_zero_finite (I.rec7 l Z) u _ _ (C.forms u)
     (fun i => GlobalTheory.T.exists_primitiveRoots_coeffField_trueColumns I hI l Z i)

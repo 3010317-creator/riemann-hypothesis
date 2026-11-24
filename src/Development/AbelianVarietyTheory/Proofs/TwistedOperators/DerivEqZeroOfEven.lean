@@ -15,7 +15,7 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqZer
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EqZeroOfLintegralEqZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PureTensorOInjective
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasDerivAtHeisenbergMatrixCoeffRealLineSkewStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaInnerProductHermitianStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaInnerProductHermitian
 public import Mathlib.RingTheory.MvPolynomial
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralMulConjSelf
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
@@ -36,10 +36,10 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilRepAc
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PureTensorLIntertwine
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisThetaLaws
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AeZeroOfSmall
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CmAdeleIdempotentOfPlacePropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUniquePureTensorRestrictedFamilyStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CmAdeleIdempotentOfPlaceProperties
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUniquePureTensorRestrictedFamily
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocalFactorStableUnitaryGroupsAtPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PureTensorInnerProductEqFinprodLocalInnerProductStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PureTensorInnerProductEqFinprodLocalInnerProduct
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ComplexEmbeddingHermitianQuadrupleSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -96,13 +96,14 @@ import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 import Mathlib.RingTheory.TotallySplit
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.CocompactTensor
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RationalSymplecticPointsSelfAnnihilatorStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVacuaLocalFactorsStableHeisenbergAwayStatement
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RationalSymplecticPointsSelfAnnihilator
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVacuaLocalFactorsStableHeisenbergAway
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOperatorPureTensorPlaceByPlaceStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsPureTensorBaseVectorAndLocalFactorStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerModelIsometryHalfLatticeVolumeOneStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsPureTensorBaseVectorAndLocalFactor
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerModelIsometryHalfLatticeVolumeOne
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitIdempotentBaseFunctionIdentityStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPlaceMatrixCoordinateOnHalfStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPlaceMatrixCoordinateOnHalf
 import Mathlib.Tactic.TypeStar
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -925,8 +926,8 @@ theorem acts_by_fockP : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfF
     rw [hann, ← Matrix.mul_assoc, Matrix.mul_nonsing_inv_cancel_left _ _ (onb_diag (bT ρ)).2.2,
       Matrix.mul_nonsing_inv_cancel_right _ _ (onb_diag (bS ρ)).2.2] at this
     exact this
-  have ip := fun g (hg : IsThetaFunO ψ S T g) => GlobalTheory.T.theta_inner_product_hermitian D ψ S T μ 𝓕 hψ hμ g h hg ht
-  have ip' := fun g (hg : IsThetaFunO ψ S T g) => GlobalTheory.T.theta_inner_product_hermitian D ψ S T μ 𝓕 hψ hμ h g ht hg
+  have ip := fun g (hg : IsThetaFunO ψ S T g) => _root_.GlobalTheory.ThetaPairingLaws.ipO_laws D ψ S T μ 𝓕 hψ hμ g h hg ht
+  have ip' := fun g (hg : IsThetaFunO ψ S T g) => _root_.GlobalTheory.ThetaPairingLaws.ipO_laws D ψ S T μ 𝓕 hψ hμ h g ht hg
   let L : thetaSub S T ψ →ₗ[ℂ] ℂ :=
     { toFun := fun g => ipO μ 𝓕 g h
       map_add' := fun g g' => ((ip g g.2).2.2.2.1 g' g'.2).1
@@ -939,8 +940,8 @@ theorem acts_by_fockP : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfF
     have z : ipO μ 𝓕 g (ann (pS ρ) (pT ρ) (d ρ) N h : thetaSub S T ψ) = 0 := by
       rw [k1]; simp [ipO]
     rw [ann, LinearMap.add_apply, LinearMap.smul_apply, Submodule.coe_add,
-      ((GlobalTheory.T.theta_inner_product_hermitian D ψ S T μ 𝓕 hψ hμ _ g (d ρ N h).2 g.2).2.2.2.1 _ (I • d ρ _ h).2).2, Submodule.coe_smul,
-      ((GlobalTheory.T.theta_inner_product_hermitian D ψ S T μ 𝓕 hψ hμ g _ g.2 (d ρ _ h).2).2.2.1 I).2, conj_I] at z
+      ((_root_.GlobalTheory.ThetaPairingLaws.ipO_laws D ψ S T μ 𝓕 hψ hμ _ g (d ρ N h).2 g.2).2.2.2.1 _ (I • d ρ _ h).2).2, Submodule.coe_smul,
+      ((_root_.GlobalTheory.ThetaPairingLaws.ipO_laws D ψ S T μ 𝓕 hψ hμ g _ g.2 (d ρ _ h).2).2.2.1 I).2, conj_I] at z
     rw [cre, LinearMap.sub_apply, LinearMap.smul_apply, map_sub, map_smul, sk, sk, smul_eq_mul]
     linear_combination -z
   have l2 : L (E F) = 0 := by
@@ -1463,7 +1464,7 @@ theorem approx_uniform {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdCha
   have hann : ∀ x : WO S T, (∀ γ ∈ ratL T S, ψ (symplOH S T x γ + symplOH S T x γ) = 1) ↔ x ∈ ratL T S := by
     intro x
     simp only [hdbl]
-    exact GlobalTheory.T.rationalSymplecticPoints_self_annihilator D ψ hψ S T x
+    exact _root_.GlobalTheory.RatAnnih.ratL_annihilator D ψ hψ S T x
   exact approx_abstract (G := WO S T) (ratL T S) K hK hcov ψ hψc hψn (symplOH S T) hl hr halt hcont hann f₀ f
     h₀.cont hf.cont (GlobalTheory.HeisTotal.quasi_of_mem h₀) (GlobalTheory.HeisTotal.quasi_of_mem hf) hne _ (fun _ _ => rfl) ε hε
 
@@ -1648,7 +1649,7 @@ theorem unitary (D : D7) : Unitary D := by
   have hstd := hW.std
   obtain ⟨μ₀, 𝓕₀, h₀⟩ := GlobalTheory.ThetaAllChar.covolOneExists (D := D) S T
   refine ⟨⟨(μ₀, 𝓕₀), h₀⟩, fun q hq f₁ f₂ hf₁ hf₂ => ?_⟩
-  have L := GlobalTheory.T.theta_inner_product_hermitian D ψ S T q.1 q.2 hstd hq f₁ f₂ hf₁ hf₂
+  have L := _root_.GlobalTheory.ThetaPairingLaws.ipO_laws D ψ S T q.1 q.2 hstd hq f₁ f₂ hf₁ hf₂
   refine ⟨fun c => GlobalTheory.OrientedHeis.theta_add (GlobalTheory.OrientedHeis.theta_smul c hf₁) hf₂, L.1, L.2.2.2.2.2.1,
     L.2.2.2.2.2.2.2, fun w => ⟨?_, (L.2.2.2.2.2.2.1 w).1⟩, fun p => ⟨hW.om_pres p f₁ hf₁, ?_⟩,
     GlobalTheory.T.continuous_nrm2_om_sub D ψ S T χS χT om q.1 q.2 hW hq f₁ f₂ hf₁ hf₂⟩
@@ -1659,24 +1660,24 @@ theorem restrictedTensor (D : D7) : RestrictedTensor D := by
   intro ψ θ S T χS χT om sS sT ΛS ΛT f₀ μ 𝓕 hW hB hμ
   have hstd := base_std hB
   have hinf := base_inf hB
-  refine ⟨fun p f hf => ⟨((GlobalTheory.T.fockVacua_localFactors_stable_heisenberg_away D ψ θ S T sS sT ΛS ΛT hstd hinf f hf.1).2 p hf).1,
+  refine ⟨fun p f hf => ⟨((_root_.GlobalTheory.PlaceStable.heis_stable D ψ θ S T sS sT ΛS ΛT hstd hinf f hf.1).2 p hf).1,
       GlobalTheory.T.localFactor_stable_unitaryGroupsAtPlace D ψ θ S T χS χT om sS sT ΛS ΛT hW hinf p f hf⟩,
-    fun x hx => GlobalTheory.T.existsUnique_pureTensor_restrictedFamily D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ x hx, fun f hf ε hε => ?_,
+    fun x hx => _root_.GlobalTheory.PureTensorExists.existsUnique_isPure D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ x hx, fun f hf ε hε => ?_,
     fun x f hx => ⟨fun w => GlobalTheory.T.heisenberg_operator_pure_tensor_place_by_place D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ x f hx w,
       fun g h => GlobalTheory.T.weilRep_acts_on_pureTensors_placewise D ψ θ S T χS χT om sS sT ΛS ΛT f₀ μ 𝓕 hW hB hμ x f hx g h⟩⟩
   obtain ⟨f', hf', hlt⟩ := GlobalTheory.T.heisenberg_translates_span_dense_thetaFunctions D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ f hf ε hε
   refine ⟨f', Submodule.span_mono ?_ hf', hlt⟩
   rintro _ ⟨w, rfl⟩
   exact ⟨_, GlobalTheory.T.heisenberg_operator_pure_tensor_place_by_place D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ (fun _ => f₀) f₀
-    (GlobalTheory.T.isPureTensor_base_vector_and_local_factor D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ).1 w⟩
+    (_root_.GlobalTheory.LocalPure.isPure_base_and_local D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ).1 w⟩
 
 theorem coeffProduct (D : D7) : CoeffProduct D := by
   intro ψ θ S T χS χT om sS sT ΛS ΛT f₀ μ 𝓕 hW hB hμ x₁ f₁ x₂ f₂ h₁ h₂ g h
-  exact GlobalTheory.T.pureTensor_innerProduct_eq_finprod_localInnerProducts D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ _ x₂ _ f₂
+  exact _root_.GlobalTheory.PlaceTensor.PureScalar.ip_pure_eq_finprod D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ _ x₂ _ f₂
     (GlobalTheory.T.weilRep_acts_on_pureTensors_placewise D ψ θ S T χS χT om sS sT ΛS ΛT f₀ μ 𝓕 hW hB hμ x₁ f₁ h₁ g h) h₂
 
 theorem cA_cA {D : D7} {e : AE D} {p : Place D} (h : e + cA D e = idem D p) : cA D (cA D e) = e := by
-  have hp : cA D (idem D p) = idem D p := (GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D).2.2.1 p
+  have hp : cA D (idem D p) = idem D p := (_root_.GlobalTheory.PlaceTensor.idem_spec D).2.2.1 p
   have h2 : cA D e + cA D (cA D e) = cA D e + e := by
     rw [← map_add (f := _), h, hp, ← h, add_comm]
   exact add_left_cancel h2
@@ -1691,12 +1692,12 @@ theorem isSplitIdem_cA {D : D7} {e : AE D} {p : Place D} (he : IsSplitIdem D e) 
 
 theorem splitModel (D : D7) : SplitModel D := by
   intro ψ θ S T χS χT om sS sT ΛS ΛT f₀ μ 𝓕 hW hB hμ v φ e he BS BT
-  have hC := GlobalTheory.T.splitPlace_matrix_coordinate_on_half D S T ΛS ΛT hB.2.2.1 hB.2.2.2.1 v φ e he BS BT
+  have hC := _root_.GlobalTheory.PlaceCoord.isCoord_mapCo D S T ΛS ΛT hB.2.2.1 hB.2.2.2.1 v φ e he BS BT
   refine ⟨(GlobalTheory.T.split_idempotent_base_function_identity D ψ θ S T sS sT ΛS ΛT f₀ hB v e he.1 he.2.1).1, fun Tm hTm => ?_⟩
   have M := GlobalTheory.T.schrodingerModel_coordinates_bijOn_and_weil_linear D ψ θ S T χS χT om sS sT ΛS ΛT f₀ μ 𝓕 hW hB hμ v e e he.1 he.2.1 (Or.inl rfl)
     T.rank S.rank (mapCo φ S T BS BT) hC.1 Tm hTm
   rw [onHalf_eq_pull]
-  exact ⟨M.1, fun ν hν => GlobalTheory.T.schrodingerModel_halfLatticeVolume_mul_inner_eq_inner D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ v e he.1 T.rank S.rank
+  exact ⟨M.1, fun ν hν => _root_.GlobalTheory.PlaceIsometry.placeModel_isometry D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ v e he.1 T.rank S.rank
     (mapCo φ S T BS BT) hC.1 Tm hTm ν hν, fun g h hg hh x y hx hy Φ hΦ =>
     M.2 g h hg hh x y hx hy (grpCo φ S BS g) (grpCo φ T BT h) (fun t => hC.2 g h t) Φ hΦ⟩
 
@@ -1711,7 +1712,7 @@ theorem splitModelAdj (D : D7) : SplitModelAdj D := by
   have M := GlobalTheory.T.schrodingerModel_coordinates_bijOn_and_weil_linear D ψ θ S T χS χT om sS sT ΛS ΛT f₀ μ 𝓕 hW hB hμ v e (cA D e) he.1 he.2.1 (Or.inr rfl)
     S.rank T.rank (adjCo φ S T BS BT) hC.1 Tm hTm
   rw [onHalfAdj_eq_pull]
-  exact ⟨M.1, fun ν hν => GlobalTheory.T.schrodingerModel_halfLatticeVolume_mul_inner_eq_inner D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ v (cA D e) hs S.rank T.rank
+  exact ⟨M.1, fun ν hν => _root_.GlobalTheory.PlaceIsometry.placeModel_isometry D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ v (cA D e) hs S.rank T.rank
     (adjCo φ S T BS BT) hC.1 Tm hTm ν hν, fun g h hg hh x y hx hy Φ hΦ =>
     M.2 g h hg hh x y hx hy (grpCo φ T BT h) (grpCo φ S BS g) (fun t => hC.2 g h t) Φ hΦ⟩
 

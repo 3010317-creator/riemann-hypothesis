@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameOnOne
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameHeckeIntegralUnitsEqResidueCharProduct
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PlaceOverTypePrimeDividesOrConjugateStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+public import Formalism.LocalToGlobal.UnitaryNorms.CharHost
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PlaceOverTypePrimeDividesOrConjugate
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -158,7 +160,7 @@ theorem tameOn_step : ∀ (D : D7) (T0 : Type) (L : LevCh D T0) (μ0 : T0), L.Is
     refine GlobalTheory.T.tameHecke_integralUnits_eq_residueCharProduct D _ (L.C.mu0 j) e P _ (hL.mu0 j) hM.tame he ?_ ?_
     · intro PP h1 h2
       refine hM.unr PP fun k hk => ?_
-      rcases GlobalTheory.T.place_over_typePrime_divides_or_conjugate D L.C.P k PP hk with h | ⟨PP', h, hc⟩
+      rcases _root_.GlobalTheory.StepLaw.div_or_isConjPl_div D L.C.P k PP hk with h | ⟨PP', h, hc⟩
       · exact h1 ((hP PP).2 (Or.inl ((hL.Pg PP).2 ⟨k, h⟩)))
       · exact h2 ⟨PP', (hP PP').2 (Or.inl ((hL.Pg PP').2 ⟨k, h⟩)), hc⟩
     · intro PP h

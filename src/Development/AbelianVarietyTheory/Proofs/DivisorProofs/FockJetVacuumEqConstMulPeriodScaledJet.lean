@@ -60,7 +60,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDualStatement
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.ReduceModChar
@@ -128,7 +127,7 @@ theorem vacuum_real_ne_zero : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Cons
     N.selfDual (X := .top j) (show j ≤ D.R.m by omega)
   have hT : IsSelfDualC (G.pT (.top t j)) (N.latT (.top t j)) :=
     N.selfDual (X := .top (j + 1)) (show j + 1 ≤ D.R.m by omega)
-  obtain ⟨-, h2, h3⟩ := GlobalTheory.T.self_dual_lattice_pairing_dual D W.ψ _ _ _ _ hψ hS hT
+  obtain ⟨-, h2, h3⟩ := _root_.GlobalTheory.LatVac.latO_selfDual_approx_sign D W.ψ _ _ _ _ hψ hS hT
   have hinf := fun u => GlobalTheory.VacUnique.latO_inf (u := u) (G.pS (.top t j)) (G.pT (.top t j))
     ((N.latS (.top t j) : Set _)) ((N.latT (.top t j) : Set _)) fun _ => True
   choose ε _ hε2 using h3 f hf.2.lat

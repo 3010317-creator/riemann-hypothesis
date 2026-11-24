@@ -4,8 +4,8 @@ public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmTraceEqAddStar
 public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsSemicharacterCompletedSelfDualLattice
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HomSymplecticHalfFormAlgebraicLawsContinuousStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDualStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HomSymplecticHalfFormAlgebraicLawsContinuous
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinTensMemLatO
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusSemicharacterEqNegOnePowTraceExponent
 public import Formalism.LocalToGlobal.BesselHermitianTheta.TiedWeil
@@ -178,8 +178,8 @@ theorem exists_abstract_value {G R : Type} [AddCommGroup G] [AddCommGroup R] (ψ
 theorem exists_semichar_value : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)) (ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)), IsStdChar D ψ (-1) → IsSelfDualC S ΛS → IsSelfDualC T ΛT → ∀ b : 𝓞 D.host.E, (b : D.host.E) + star (b : D.host.E) = 1 → ∃ χ : WO S T → ℂ, IsLatVac (heisO ψ S T) (latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True) χ ∧ ∀ l ∈ latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) (fun _ => True), χ l = ψ (symplOH S T (l.map fun z => incA D (b : D.host.E) * z) l) := by
   intro D ψ S T ΛS ΛT hψ hS hT b hb
   have hinf := GlobalTheory.SemiChar.latO_inf S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True
-  obtain ⟨f1, f2, f3, f4, -, -, f7, f8, f9⟩ := GlobalTheory.T.homSymplecticHalfForm_algebraic_laws_continuous D S T
-  have g := (GlobalTheory.T.self_dual_lattice_pairing_dual D ψ S T ΛS ΛT hψ hS hT).1
+  obtain ⟨f1, f2, f3, f4, -, -, f7, f8, f9⟩ := _root_.GlobalTheory.OrientedFormLaws.symplOH_laws D S T
+  have g := (_root_.GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T ΛS ΛT hψ hS hT).1
   obtain ⟨χ, -, -, -, -, c5, c6, c7⟩ := exists_abstract_value ψ (fun r => (hψ.1.2.1 r).le) (symplOH S T) f1 f2 f3
     (latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True)
     (fun x => x.map (finPart D) = 0) (by funext i j; exact (finPart D).map_zero)
@@ -442,7 +442,7 @@ theorem sign_eq_alpha : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp
     ring
   have hb : (b : D.host.E) + star (b : D.host.E) = 1 := by rw [hbs]; ring
   obtain ⟨χ, hχ, hval⟩ := GlobalTheory.ThetaSignLat.semichar_value ψ S T (colLat frS) (colLat frT) hψ hSd hTd b hb
-  obtain ⟨f1, -, f3, -⟩ := GlobalTheory.T.homSymplecticHalfForm_algebraic_laws_continuous D S T
+  obtain ⟨f1, -, f3, -⟩ := _root_.GlobalTheory.OrientedFormLaws.symplOH_laws D S T
   have hz : ∀ w : WO S T, symplOH S T 0 w = 0 := fun w => by
     have := f1 0 0 w
     rw [add_zero] at this
@@ -460,7 +460,7 @@ theorem sign_eq_alpha : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp
     rw [e1] at this
     rw [this, Pi.smul_apply, e0, smul_eq_mul, mul_one]
   have hpm : ε = 1 ∨ ε = -1 := by
-    obtain ⟨ε', h1, h2⟩ := (GlobalTheory.T.self_dual_lattice_pairing_dual D ψ S T (colLat frS) (colLat frT) hψ hSd hTd).2.2 χ hχ u huL
+    obtain ⟨ε', h1, h2⟩ := (_root_.GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T (colLat frS) (colLat frT) hψ hSd hTd).2.2 χ hχ u huL
     have := congrFun (h2 χ hχ) 0
     rw [e1, Pi.smul_apply, e0, smul_eq_mul, mul_one] at this
     rw [hεu, this]; exact h1

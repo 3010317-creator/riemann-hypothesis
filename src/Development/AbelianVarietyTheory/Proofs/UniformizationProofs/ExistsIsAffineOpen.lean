@@ -5,7 +5,7 @@ public import Development.AbelianVarietyTheory.Definitions.Uniformization.Exists
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsTorusQuotientSchemeOverNilpotentThickening
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsGroupQuotientPullback
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsProperAndGeometricallyConnectedOfIsNilpotent
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LocallyTrivialTorusQuotientFlatSurjectiveCosetsStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LocallyTrivialTorusQuotientFlatSurjectiveCosets
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.PreimageEqTopOfSurjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -185,7 +185,7 @@ theorem main : (∀ (A : Type) [CommRing A] [IsLocalRing A] (J : Ideal A), IsNil
   intro A _ _ J hJ X _ _ _ G _ _ _ G₀ _ F h Q₀
   obtain ⟨i, hi, hc⟩ := exists_torus A J hJ X G G₀ F h Q₀
   obtain ⟨B, q, j, hjpb, -, haff, hloc⟩ := GlobalTheory.T.exists_torus_quotient_scheme_over_nilpotent_thickening A J hJ X G G₀ F h Q₀ i hi hc
-  obtain ⟨hmono, hflat, hsurj, hsmooth, hcoset⟩ := GlobalTheory.T.locallyTrivial_torusQuotient_flat_surjective_cosets _ X G B i q hi haff hloc
+  obtain ⟨hmono, hflat, hsurj, hsmooth, hcoset⟩ := _root_.GlobalTheory.LocTriv.main _ X G B i q hi haff hloc
   have : IsAffineHom q.left := haff
   obtain ⟨grpB, hcommB, hq, hker⟩ := GlobalTheory.grpObj_of_flat_coset_quotient _ G (splitTorus _ X) B i q
     hi hmono hflat hsurj inferInstance hcoset

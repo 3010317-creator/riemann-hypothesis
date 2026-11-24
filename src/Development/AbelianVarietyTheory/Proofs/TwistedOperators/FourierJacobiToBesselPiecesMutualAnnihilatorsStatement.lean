@@ -16,12 +16,10 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DepthLatt
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdempotentSmulMemHatLattice
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittCoreInclusionMemCompletedHomLattice
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeCompletionSelfAnnihilatorAtPlaces
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DepthLatticeGridRowLeSelfDualHomLatticeShiftStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsConjugateInverseStaircaseModulusIdealStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualFractionalIdealSmulLatticeOfNormOneStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalisationEqStdAtOfCongruentOneAtPrime
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridLatticesCompactSelfDualSplittingStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsFiniteAdelicMatrixLatticeDepthLatticeOfPairStatement
 import Formalism.LocalToGlobal.IndefiniteReal.PHeisFC
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -352,7 +350,7 @@ theorem latRow_bidual : All fun {D} _ _ {sc} {G} W _ => ∀ i, i < D.R.m → ∀
   have hB : ∀ v ∈ latRow G i, v ∈ latBig G i := by
     rcases Nat.eq_zero_or_pos i with rfl | hi1
     · exact fun v hv => GlobalTheory.T.depthLatticeGridRow_zero_le_selfDualHomLattice D hq T L μ0 hL sc G W M hM hi hv
-    · exact fun v hv => GlobalTheory.T.depthLatticeGridRow_le_selfDualHomLatticeShift D hq T L μ0 hL sc G W M hM i hi1 hi hv
+    · exact fun v hv => _root_.GlobalTheory.RowBig.latRow_le_latBig D hq T L μ0 hL sc G W M hM i hi1 hi hv
   have hdep := GlobalTheory.T.idempotent_smul_mem_hat_lattice D hq T L μ0 hL sc G W M hM i hi
   have finO := (GlobalTheory.AscFinWit.finLat_latO
     (S := G.V (.grid (i + 1) 0)) (T := G.V (.grid i 0))
@@ -569,7 +567,7 @@ theorem latRow_ann_open : All fun {D} _ _ {sc} {G} W _ => ∀ i, i < D.R.m → �
     | succ i => exact (G.sp.V_is (i + 1) 0 (by omega) hi (by omega)).sd
   have hS : IsSelfDualC (G.pS (.chi i 0)) (G.latS (.chi i 0)) := isSelfDualC_neg (sdG (i + 1) hi)
   have hT : IsSelfDualC (G.pT (.chi i 0)) (G.latT (.chi i 0)) := sdG i hi.le
-  have hfin := GlobalTheory.T.isFiniteAdelicMatrixLattice_depthLatticeOfPair G (.chi i 0) hS hT
+  have hfin := _root_.GlobalTheory.AscFin.DepLat.finLat_depLat G (.chi i 0) hS hT
   obtain ⟨U, hU, h0, hUA⟩ := hfin.opn
   refine ⟨U, hU, h0, fun u' hu' hfu' u hu => ?_⟩
   have hu'R : u' ∈ latRow G i := hUA u' hu' hfu'

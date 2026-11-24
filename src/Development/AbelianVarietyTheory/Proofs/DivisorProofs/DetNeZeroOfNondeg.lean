@@ -8,12 +8,12 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicWeilRe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousTransportedWeilDatumAdelicSchwartzStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledSchroedingerModelSiegelRuleStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDoubledSchrodingerModelTransposedSiegelRulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianSelfDualLatticeSpaceFormHermitianNondegStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddCharStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianSelfDualLatticeSpaceFormHermitianNondeg
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictsToQuadraticSignPowIdelicRestrictionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewHermitianNegTraceZeroInvHermitianUnimodularStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewHermitianNegTraceZeroInvHermitianUnimodular
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledUnitaryPartnerDiagStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTransportAdelicSchwartzThetaTransStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTransportAdelicSchwartzThetaTrans
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransportedWeilDatumIsUnitaryAdelicSchwartzStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransportedWeilDatumKeepsAdmissibleFormsStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -94,11 +94,11 @@ theorem exists_isTransport (D : D7) (B : Base D.host.F D.host.E) (hB : B.IsGood 
     (om : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep D.sp.cm.sig X Y) (hom : Mo.IsWeil B.ψ χX χW om) :
     ∃ ω : GA D S × GA D T →* Module.End ℂ (Formalism.IndefR.Datum.WO S T → ℂ),
       Formalism.IndefR.Datum.IsWeilDatumO B.ψ S T χW χX ω ∧ IsTransport B.ψ Mo.co ω om := by
-  have hψ : IsStdChar D B.ψ (-1) := GlobalTheory.T.isStdChar_neg_one_of_standardTraceAdelicAddChar D B.ψ hB.std
+  have hψ : IsStdChar D B.ψ (-1) := _root_.GlobalTheory.StdCharFromIsStd.isStdChar_of_isStd D B.ψ hB.std
   have rS := GlobalTheory.T.restrictsToQuadraticSignPow_idelic_restriction D χW S.rank rW
   have rT := GlobalTheory.T.restrictsToQuadraticSignPow_idelic_restriction D χX T.rank rX
   obtain ⟨ω, hω⟩ := GlobalTheory.weilRepresentationUnitaryPair D B.ψ S T χW χX hψ hcW hcX rS rT
-  obtain ⟨om₀, hom₀⟩ := GlobalTheory.T.exists_weilDatum_transport_adelicSchwartz_thetaTransform D B.ψ hψ S T χW χX hcW hcX rS rT X.J Y.J (-1) eA eB
+  obtain ⟨om₀, hom₀⟩ := _root_.GlobalTheory.ThetaTransform.exists_isTransport D B.ψ hψ S T χW χX hcW hcX rS rT X.J Y.J (-1) eA eB
     (Fin T.rank × Fin S.rank) Mo.co hMo.rat ω hω
   have h2 := GlobalTheory.T.transportedWeil_preserves_schwartz_heisenberg_equivariant D B.ψ hψ S T χW χX hcW hcX rS rT X.J Y.J (-1) eA eB _ Mo.co hMo.rat ω hω om₀ hom₀
   have h3 := GlobalTheory.T.transportedWeilDatum_keeps_admissible_forms D B.ψ hψ S T χW χX hcW hcX rS rT X.J Y.J (-1) eA eB _ Mo.co hMo.rat ω hω om₀ hom₀
@@ -110,8 +110,8 @@ theorem exists_isTransport (D : D7) (B : Base D.host.F D.host.E) (hB : B.IsGood 
       (GlobalTheory.WeilM.actAB (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA D.sp.cm.sig)) om₀ := ⟨⟨h2.1, h2.2, h3⟩, h4, h5⟩
   have hw₀ : Mo.IsWeil B.ψ χX χW om₀ :=
     ⟨⟨isUSplitting_inr hsp, h6⟩, ⟨transD _ Mo.co, transD_e Mo.co, isUSplitting_inl hsp, h7⟩, h5⟩
-  obtain ⟨h1X, h2X, -⟩ := GlobalTheory.T.hermitianSelfDualLatticeSpace_form_hermitian_nondeg_unimodular D B hB T.rank X r s hX
-  obtain ⟨hdY, -⟩ := GlobalTheory.T.skewHermitian_neg_traceZero_inv_hermitian_unimodular D B hB S.rank Y r' s' hY
+  obtain ⟨h1X, h2X, -⟩ := _root_.GlobalTheory.WeilSchrodingerHerm.main D B hB T.rank X r s hX
+  obtain ⟨hdY, -⟩ := _root_.GlobalTheory.WeilSchrodingerSkew.main D B hB S.rank Y r' s' hY
   have hdX : X.J.det ≠ 0 := by
     have := det_ne_zero_of_nondeg D X.Jᵀ h2X
     rwa [Matrix.det_transpose] at this

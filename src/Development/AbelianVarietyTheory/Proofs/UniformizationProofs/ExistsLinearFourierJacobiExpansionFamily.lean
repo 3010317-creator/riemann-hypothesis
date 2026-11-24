@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.PsiScal
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.ExistsUniqueSamePt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFourierJacobiExpansionOverFieldStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFourierJacobiExpansionOverField
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExpFLinear
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FourierJacobiExpansionOverFieldInjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FourierJacobiExpansionOverFieldInjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,8 +82,8 @@ theorem exists_expansion_linear : Laws → Laws2 → (AllPre fun {V} _ _ _ {D} {
   intro h1 h2 V _ _ _ hV D A G _ _ U F _ _ k hk
   obtain ⟨ex, a, b, c, d⟩ := exists_linear_of_rel (F := F) (M := EA A (jFK (R := V) F) k) (N := fun α => WB D F k α)
     (fun t s => U.ExpF F k t.sec (fun α => (s α).sec))
-    (fun t => GlobalTheory.T.exists_fourierJacobi_expansion_over_field h1 h2 V hV D A G U F k hk t.sec)
-    (fun t t' s s' h h' => GlobalTheory.T.fourierJacobiExpansion_overField_injective V hV D A G U F k t.sec t'.sec _ _ h h')
+    (fun t => _root_.GlobalTheory.UU.ExpTotal.expF_total h1 h2 V hV D A G U F k hk t.sec)
+    (fun t t' s s' h h' => _root_.GlobalTheory.UU.ExpFUniq.main V hV D A G U F k t.sec t'.sec _ _ h h')
     (fun c t t' s s' h h' => ExpLin.expF_linear V hV D A G U F k t.sec t'.sec _ _ _ _ c h h'
       (fun _ => rfl) (fun _ _ => rfl))
   refine ⟨ex, a, fun t s h α => b (SecMod.mk _ t) (fun α => SecMod.mk _ (s α)) h α, c, fun α => Iff.trans ?_ (d α)⟩

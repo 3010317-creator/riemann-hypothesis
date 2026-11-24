@@ -9,8 +9,8 @@ public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TensorLatticeSelfDualSemicharacterIndex
 public import Development.AbelianVarietyTheory.Counterexamples.LevelGroupExamples.ZeroNotAdmissibleOfRankPos
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DetFrameNeZero
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DualHalfLevelMarkingExistsAndMatchStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UniformisationComponentLatticesMarkingsStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DualHalfLevelMarkingExistsAndMatch
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UniformisationComponentLatticesMarkings
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -515,9 +515,9 @@ theorem GlobalTheory.Dict.exists_components_tied : ∀ (E : Type) [Field E] [Num
   have hζ : IsPrimitiveRoot (σ (zetaM c)) l.M :=
     (GlobalTheory.LevelPairing.zetaM_prim c).map_of_injective σ.injective
   have hL (k) : SelfD (U.X k₀) (U.X k).Λ :=
-    Setup.selfD_of_same (hs k) (GlobalTheory.T.uniformisation_component_lattices_markings E H Dw l Xo c σ r U hσ hU hr W k).2.1
-  have hmk (k) : IsMark l (U.X k).Λ (W.mark k) := (GlobalTheory.T.uniformisation_component_lattices_markings E H Dw l Xo c σ r U hσ hU hr W k).2.2.1
-  have hdual (k) := GlobalTheory.T.dual_half_level_marking_exists_and_match E H Dw l r (U.X k₀) _ _ _ (hL k) (hmk k) hζ
+    Setup.selfD_of_same (hs k) (_root_.GlobalTheory.Dict.uw_lattice E H Dw l Xo c σ r U hσ hU hr W k).2.1
+  have hmk (k) : IsMark l (U.X k).Λ (W.mark k) := (_root_.GlobalTheory.Dict.uw_lattice E H Dw l Xo c σ r U hσ hU hr W k).2.2.1
+  have hdual (k) := _root_.GlobalTheory.Dict.DualMark.dual_marking E H Dw l r (U.X k₀) _ _ _ (hL k) (hmk k) hζ
   choose δ hδ using fun k => (hdual k).1
   have hle : D.𝔪 ≤ Mfr l := hT.prod.le.trans Ideal.mul_le_left
   have hp : IsCoprime (Ideal.span {(d.pd : 𝓞 E)}) (Mfr l) := by
@@ -544,14 +544,14 @@ theorem GlobalTheory.Dict.exists_components_tied : ∀ (E : Type) [Field E] [Num
     exact zero_mem _
   · obtain ⟨hu', kk, -, hred⟩ := (Lev.mem_grp g').1 hg'
     obtain ⟨s, hs', hk, -⟩ := Lev.keeps hred
-    have h1 := ((GlobalTheory.T.dual_half_level_marking_exists_and_match E H Dw l r (U.X k₀) _ _ _ (hl k).1 (hmv k).1 hζ).2.1 _ (hmv k).2).2.2.1 g' hu'
+    have h1 := ((_root_.GlobalTheory.Dict.DualMark.dual_marking E H Dw l r (U.X k₀) _ _ _ (hl k).1 (hmv k).1 hζ).2.1 _ (hmv k).2).2.2.1 g' hu'
     rw [e] at h1
     have h2 := Setup.sub_mem_of_cong D hle (hl k') h1.2.mem (hmv k').2.mem hb hp fun i => by
       refine Lev.cong_trans ?_ (Lev.cong_symm (hcg k' i))
       refine Lev.cong_trans ?_ (Stab.cong_frame hle (fun k hk => (hT.grp k).1 hk) hg' i)
       have := Lev.cong_lin (Stab.cop_mono hle hs') hk (hcg k i)
       rwa [map_smul] at this
-    have h3 := ((GlobalTheory.T.dual_half_level_marking_exists_and_match E H Dw l r (U.X k₀) _ _ _ (hl k').1 h1.1 hζ).2.1 _ h1.2).2.2.2 _ _
+    have h3 := ((_root_.GlobalTheory.Dict.DualMark.dual_marking E H Dw l r (U.X k₀) _ _ _ (hl k').1 h1.1 hζ).2.1 _ h1.2).2.2.2 _ _
       (hmv k').1 (hmv k').2 h2
     refine GlobalTheory.T.component_eq_of_matched_lattices_markings E H Dw l Xo c σ r U hσ hU hr hA W k k' (Setup.sameSp_trans_symm (hs k) (hs k'))
       ((ga k')⁻¹ * (g' * ga k))

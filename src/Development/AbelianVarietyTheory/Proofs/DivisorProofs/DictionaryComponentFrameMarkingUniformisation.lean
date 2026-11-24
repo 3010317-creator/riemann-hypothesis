@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.GenReads
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MarkAd
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 public import Development.AbelianVarietyTheory.Counterexamples.LevelGroupExamples.OrthonormalBaseFrameNeg
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicativeStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.EquivariantFiniteGroup
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicative
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueLinearLiftUniformisedFibres
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameUniformEmbeddingSecond
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsDerivAt0CompLinear
@@ -216,7 +217,7 @@ theorem GlobalTheory.AdTh.dict_atComp_markAd : ∀ (D : D7) (H : Geo.Tor.Host D.
   subst hr
   obtain ⟨γ, hγ, hΛ, hm, hfr⟩ := hD.2 h
   obtain ⟨θ', hθ'⟩ := (GlobalTheory.Member.infiniteAdele_bijective D).1
-  obtain ⟨hAr, -, -⟩ := GlobalTheory.T.archimedeanMatrix_unitary_continuous_multiplicative D W θ' hθ'
+  obtain ⟨hAr, -, -⟩ := _root_.GlobalTheory.Member.Arch.archM_spec D W θ' hθ'
   generalize hk : dict h = kx at hΛ hm hfr
   obtain ⟨k, x⟩ := kx
   dsimp only at hΛ hm hfr ⊢

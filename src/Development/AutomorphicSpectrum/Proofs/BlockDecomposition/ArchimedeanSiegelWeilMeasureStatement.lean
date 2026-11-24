@@ -87,7 +87,7 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
 import Mathlib.Tactic.Polynomial.Basic
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ComplexCoordinatesExistAtInfinityStatement
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ComplexCoordinatesExistAtInfinity
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.T2SpaceTensorProductFiniteExtension
 import Mathlib.RingTheory.PiTensorProduct
 
@@ -1367,7 +1367,7 @@ theorem avgInf_tendsto : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   classical
   have hlam : lam.IsAddHaarMeasure := hinf.1
   obtain ⟨ρ0, e, hρ0, he, hρe, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.real_iso F hCM.1
-  obtain ⟨τ₀, κ, hco⟩ := GlobalTheory.T.complex_coordinates_exist_at_infinity F E σ hCM ρ0 e hρ0 he hρe
+  obtain ⟨τ₀, κ, hco⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.exists_isCoord F E σ hCM ρ0 e hρ0 he hρe
   obtain ⟨hκ, -, hκa⟩ := isSplitK_of_isCoord hCM hco
   have hloc := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   obtain ⟨hTR, hLC, hSC, hT2, -⟩ := id hloc

@@ -4,7 +4,9 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.EisValueA
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsHeightLeTwoMulQuotHeight
 public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicIwasawaDoubledGroupSelfDualLatticeStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalVolumeLift
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicIwasawaDoubledGroupSelfDualLattice
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalZero
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsHeightDoublingEmbeddingLePowMulHeights
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegrableUnitaryQuotientHeightPowMulRapidlyDecrStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DetGramSmul
@@ -47,8 +49,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalVolumeLift
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalZero
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IntegrandSZero
 
 @[expose] public section
@@ -135,7 +135,7 @@ theorem absConv_unfolded : ∀ (D : D7) (V : HSp D) (a : GL (Fin V.rank) (AE D))
     GlobalTheory.Eis.DblConv V μ m (GlobalTheory.Eis.eis V φ) f₁ f₂ := by
   intro D V a ha μ hμ s hs φ hφ hgrow m hm f₁ f₂ h₁ h₂
   have hI : HasIwasawa D.sp.cm.sig (dblSp V).gram (Khat V a) :=
-    GlobalTheory.T.adelicIwasawa_doubledGroup_selfDualLattice D V (frameLat V) a (isSelfDualC_frameLat V) ha
+    _root_.GlobalTheory.Core.Rk.IP.hasIwasawa_KAd_selfDual D V (frameLat V) a (isSelfDualC_frameLat V) ha
   have hS : SphConv V a := GlobalTheory.Eis.sphConv D V a hI
   have hσ : (V.rank : ℝ) / 2 < ((s.re : ℂ)).re := by simpa using hs
   have hconvS : ∀ g, EisConv V (sph V a (s.re : ℂ)) g := fun g => (((sphConv_iff hI).1 hS).1 _ hσ).2 g

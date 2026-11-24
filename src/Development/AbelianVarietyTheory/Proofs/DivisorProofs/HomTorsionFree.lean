@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDimEqOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyIsIntegralNoetherianCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyIntCastSmulIsogenyDegreeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyIsIntegralNoetherianCompact
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyIntCastSmulIsogenyDegree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,7 +61,7 @@ namespace GlobalTheory.AV.AbVar
 theorem cancel_of_surjective : ∀ (K : Type) [Field K] (A B : AbVar K) (p : A ⟶ B), Surjective p.hom.left →
     ∀ (C : AbVar K) (f g : B ⟶ C), p ≫ f = p ≫ g → f = g := by
   intro K _ A B p hp C f g h
-  have hB : IsIntegral B.X.left := (GlobalTheory.T.abelianVariety_isIntegral_noetherian_compact K B).1
+  have hB : IsIntegral B.X.left := (_root_.GlobalTheory.AV.AbVar.isIntegral_isLocallyNoetherian_compactSpace K B).1
   have hsep : IsSeparated C.X.hom := C.ab.proper.toIsSeparated
   apply Subtype.ext
   change f.hom = g.hom
@@ -107,7 +107,7 @@ namespace GlobalTheory.AV.AbVar
 
 theorem hom_torsionFree : ∀ (K : Type) [Field K] (A B : AbVar K) (n : ℤ) (f : A ⟶ B), n ≠ 0 → n • f = 0 → f = 0 := by
   intro K _ A B n f hn h
-  have hs := (GlobalTheory.T.abelianVariety_intCast_smul_isogeny_degree K A n hn).1.2
+  have hs := (_root_.GlobalTheory.MulIsogeny.mul_isogeny K A n hn).1.2
   refine GlobalTheory.T.cancel_of_surjective_abelianVarietyHom K A A (n • 𝟙 A) hs B f 0 ?_
   rw [Preadditive.zsmul_comp, Category.id_comp, Limits.comp_zero, h]
 

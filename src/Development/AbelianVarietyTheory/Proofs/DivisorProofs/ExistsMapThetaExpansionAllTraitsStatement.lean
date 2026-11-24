@@ -16,7 +16,8 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Glo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.PhiGenPf
 public import Development.AbelianVarietyTheory.Counterexamples.JetSurvey.InVVwIffOfNotTorsion
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LabExt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelPointsAlgClosureFractionRingBijectiveStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.TateProductRigidificationTrivial
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelPointsAlgClosureFractionRingBijective
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsLeadOfUnif
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsExpandsAtSectionUniformised
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntFamPull
@@ -24,12 +25,10 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLineBu
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsExtensionSecPull
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsFinsetRepresentatives
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.TorsionEqOneOfTranslationKeepsRatios
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelPointsAlgClosureFractionRingBijective
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.LinearIndependentOfIsExtension
-public import Development.AbelianVarietyTheory.Definitions.Divisors.TateProductRigidificationTrivial
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFiniteAndFlatTorsion
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionRationalOverFiniteExt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueFieldExtensionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueFieldExtension
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SymFrameClause
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EquivariantBijectionsFamiliesSectionsDifferBySca
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraitInverseExpansionEquivariantLabelsStatement
@@ -101,7 +100,6 @@ import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.FormallyUnramifiedOfTangentMapInjective
 import Development.AbelianVarietyTheory.Statements.PrincipalLattices.LogHermFormOfUnitDiscriminant
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExpFOfExpT
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueFieldExtension
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.PullQkSurjective
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPullFib
@@ -437,7 +435,7 @@ open GlobalTheory.Mum GlobalTheory.Mum.Desc
 
 theorem GlobalTheory.Mum.Desc.lab_onto_of_labExt : ∀ (R : Type) [CommRing R] [IsDomain R] [CharZero R] (D : DegPre R) (A : PolAV (Sp (FractionRing R))) (N : ℕ), 1 ≤ N → ∀ (lab : QkPt D (Kb R) N → (TFK (R := R) (Kb R) ⟶ A.A)) (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] (em : Kb R →ₐ[FractionRing R] F) (lab' : QkPt D F N → (TFK (R := R) F ⟶ A.A)), LabExt em lab lab' → (∀ x : TFK (R := R) F ⟶ A.A, x ^ N = 1 ↔ ∃ p, lab' p = x) → ∀ x : TFK (R := R) (Kb R) ⟶ A.A, x ^ N = 1 ↔ ∃ p, lab p = x := by
   intro R _ _ _ D A N hN lab F _ _ _ em lab' hext hon x
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.levelPoints_algClosure_fractionRing_bijective R D F em N hN
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.Mum.qkPt_algClosure_bijective R D F em N hN
   have cancel : ∀ y y' : TFK (R := R) (Kb R) ⟶ A.A, baseEm em ≫ y = baseEm em ≫ y' → y = y' := by
     intro y y' h
     apply Over.OverMorphism.ext
@@ -637,7 +635,7 @@ theorem eqv_down : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Bas
       ThetaGrp A.A A.L (N : ℤ) (TFK (R := R) (Kb R)) // GlobalTheory.UT.TXFrame N q.1 q.2.1 ∧ SymLift A.A A.L N N (lab q.1) q.2.2}
   choose a ha using fun i : J => GlobalTheory.T.exists_linearMap_torsionPoint_symmetricFrame_operator R (maximalIdeal R) hAdm D (Kb R) N hN i.1.1 i.1.2.1 i.2.1
   choose b hb using fun i : J => GlobalTheory.T.exists_linearMap_thetaGroup_action_sections R A (Kb R) N i.1.2.2
-  have hq := (GlobalTheory.T.levelPoints_algClosure_fractionRing_bijective R D.toPre F em N hN1).1
+  have hq := (_root_.GlobalTheory.Mum.qkPt_algClosure_bijective R D.toPre F em N hN1).1
   choose p' hp' using fun i : J => (hq i.1.1).exists
   choose w' hw' using fun i : J => hframe F (p' i)
   have hlab : ∀ i : J, lab' (p' i) = baseEm em ≫ lab i.1.1 := fun i =>
@@ -1138,7 +1136,7 @@ theorem exists_eqv_ext : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R
       map_smul' := fun c s => SecOver.ext _ _ fun j => hE.smul c s (c • s) ((isSmul_iff _ _ _).2 rfl) j }
   obtain ⟨e', he', hc⟩ := GlobalTheory.T.exists_linearEquiv_extension_fieldBaseChange _ _ _ _ _ _ (famPull D.toPre (Kb R) F GlobalTheory.globalFns_holds N) (secPull A (Kb R) F N)
     (isExtension_famPull _ _ _ GlobalTheory.globalFns_holds hN1) (isExtension_secPull A (Kb R) F N) e hE.bij
-  have hq := GlobalTheory.T.levelPoints_algClosure_fractionRing_bijective R D.toPre F em N hN1
+  have hq := _root_.GlobalTheory.Mum.qkPt_algClosure_bijective R D.toPre F em N hN1
   have onto : ∀ x : TFK (R := R) F ⟶ A.A, x ^ N = 1 ↔ ∃ p, lab' p = x := by
     intro x
     constructor
@@ -1164,9 +1162,9 @@ theorem exists_eqv_ext : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R
     rw [map_smul]
     rfl
   · intro F₀ s hs
-    obtain ⟨s₀, hs₀, -⟩ := GlobalTheory.T.existsUnique_fieldExtension R (maximalIdeal R) D.toPre N F₀ (Kb R)
+    obtain ⟨s₀, hs₀, -⟩ := _root_.GlobalTheory.Mum.IntFam.existsUnique_over R (maximalIdeal R) D.toPre N F₀ (Kb R)
     have h1 := GlobalTheory.T.integralThetaFamily_over_degenerationFamilyPullback R (maximalIdeal R) D.toPre N F₀ (Kb R) F s₀ hs₀
-    obtain rfl := (GlobalTheory.T.existsUnique_fieldExtension R (maximalIdeal R) D.toPre N F₀ F).unique hs h1
+    obtain rfl := (_root_.GlobalTheory.Mum.IntFam.existsUnique_over R (maximalIdeal R) D.toPre N F₀ F).unique hs h1
     intro Z p p' hpp z J hJ
     show sval (e' (famPull D.toPre (Kb R) F GlobalTheory.globalFns_holds N s₀)) p z J = _
     rw [hc]

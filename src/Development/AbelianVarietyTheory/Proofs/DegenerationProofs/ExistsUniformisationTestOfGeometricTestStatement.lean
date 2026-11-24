@@ -7,16 +7,18 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRed
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.Ser
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.BaseFacts
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnitCharts
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LePreimageOpenPartIffTestCoordinatesStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LePreimageOpenPartIffTestCoordinates
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.BCTools
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniqueIsRatio
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ImmByWeightZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.KbIsAlgClosedAndConj
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisedTestDimensionsAndSplitFibre
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsReducedAlgebraOfSmoothOfIsNoetherianRing
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TestFieldFiniteOverPadicStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.IsBasisB
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TestFieldFiniteOverPadic
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TestModelMapsIntoOpenPartStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisedTestDimensionsAndSplitFibreStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.RigGen
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -489,7 +491,7 @@ theorem exists_lift : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [Fie
     have := CrdCalc.crd_map ψ hw'
     refine (congrArg _ (funext fun i => ?_)).mp this
     exact RingHom.map_mulVec ψ _ _ i
-  obtain ⟨i₀, hi₀, hne⟩ := (GlobalTheory.T.le_preimage_openPart_iff_testCoordinates o Ω S ρ M U₀ EE hB Q p y y₀ t c tm hbig (rPt p ≫ b')
+  obtain ⟨i₀, hi₀, hne⟩ := (_root_.GlobalTheory.ZH.TestCrit.le_preimage_G_iff_test o Ω S ρ M U₀ EE hB Q p y y₀ t c tm hbig (rPt p ≫ b')
     (fun i => IsLocalRing.residue (OO p) (w i))
     (by rw [Category.assoc, ← Category.assoc b', hb', hb]) (hmap _)).1 (by
       rw [Category.assoc, hb']
@@ -711,7 +713,7 @@ theorem isClosedImmersion_special_fibre : GlobalTheory.UT.LL → ∀ (o Ω : Typ
     have hv' : v = (tm.m.map ψ).mulVec ((tm.m.map ψ)⁻¹.mulVec v) := by
       rw [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ hm, Matrix.one_mulVec]
     rw [hv'] at hv
-    obtain ⟨i, hi, hne⟩ := (GlobalTheory.T.le_preimage_openPart_iff_testCoordinates o Ω S ρ M U₀ EE hbf Q p y y₀ t c tm hBig (x ≫ e) _ (by
+    obtain ⟨i, hi, hne⟩ := (_root_.GlobalTheory.ZH.TestCrit.le_preimage_G_iff_test o Ω S ρ M U₀ EE hbf Q p y y₀ t c tm hBig (x ≫ e) _ (by
       rw [Category.assoc, reassoc_of% he, pullback.condition, reassoc_of% hx]) hv).1 (by
       rw [Category.assoc, he, ← Category.assoc, Scheme.Hom.comp_preimage, Scheme.Opens.ι_preimage_self]
       exact le_rfl)
@@ -772,8 +774,8 @@ theorem Clos.exists_core_test_of_geoTest : GlobalTheory.UT.LL → ∀ (o Ω : Ty
     exact hin (Set.mem_univ x)
   let f' : t.u.G.left ⟶ Q.G.toScheme := IsOpenImmersion.lift Q.G.ι _ hrange
   have hf' : f' ≫ Q.G.ι = tm.f ≫ (Q.P.hom ⁻¹ᵁ Q.W tm.l).ι := IsOpenImmersion.lift_fac _ _ _
-  obtain ⟨-, hloc, hinj, -⟩ := GlobalTheory.T.testField_finite_over_padic o Ω S ρ p y₀ t.u
-  obtain ⟨-, -, hsm, -, hsplit⟩ := GlobalTheory.T.uniformisedTest_dimensions_and_split_fibre hL o Ω S ρ p y₀ t.u
+  obtain ⟨-, hloc, hinj, -⟩ := _root_.GlobalTheory.ZH.FieldOfTest.fractionRing_finite_over_padic o Ω S ρ p y₀ t.u
+  obtain ⟨-, -, hsm, -, hsplit⟩ := _root_.GlobalTheory.ZH.utest_dim_and_split hL o Ω S ρ p y₀ t.u
   have hgen := t.u.U.gen_hom
   have g1 : IsGrpPullback ((Over.pullback (jK t.u.V)).obj t.u.G) ρ.P.A (c.yK ≫ Q.u₀)
       (tm.φ ≫ pullback.fst ρ.P.A.hom Q.u₀) :=

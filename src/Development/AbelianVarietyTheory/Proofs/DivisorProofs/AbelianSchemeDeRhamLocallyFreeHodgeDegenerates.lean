@@ -5,7 +5,7 @@ public import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AxesVanishingStructureSheafDegOne
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeGlobalOneFormsClosedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianStructureCohomologyStatementStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianStructureCohomologyStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CupSumClosedGlobalOneFormsEqZeroIffSumWedgeStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeRhamH1RankPrimitiveStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeRhamToStructureH1SurjectiveStatement
@@ -231,7 +231,7 @@ theorem cupHH_self_eq_zero : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpO
   have hc2 := GlobalTheory.T.abelianScheme_globalOneForms_closed R (A ⊗ A) (g + g) hb.2.2.1 hb.2.2.2
   have hsur := GlobalTheory.T.de_rham_to_structure_h1_surjective R A g hA hs
   have hsur2 := GlobalTheory.T.de_rham_to_structure_h1_surjective R (A ⊗ A) (g + g) hb.2.2.1 hb.2.2.2
-  have hW := (GlobalTheory.T.abelian_structure_cohomology_statement R A g hA hs).2.1
+  have hW := (_root_.GlobalTheory.AbCoh.oStr R A g hA hs).2.1
   have hP : ∀ x : HH1 A.hom, deRhamH1Pullback μ[A] x = deRhamH1Pullback (fst A A) x + deRhamH1Pullback (snd A A) x := (GlobalTheory.T.de_rham_h1_rank_primitive R A g hA hs).2
   have hPF : ∀ x : GlobForm A.hom, pF μ[A] x = pF (fst A A) x + pF (snd A A) x := GlobalTheory.T.abelianScheme_globalOneForms_primitive R A g hA hs
   have hax := GlobalTheory.T.grpObj_pullback_axes_cohomology_projections R A
@@ -906,7 +906,7 @@ theorem baseChange_HH1_globForm : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) 
     simpa using this
   have hW := GlobalTheory.T.exists_equiv_globalOneForms_baseChange R R' A.left X' A.hom s' φ h hfr h0 hfr' h0' hflat hsurj
   refine ⟨?_, hW⟩
-  have hH := (GlobalTheory.T.abelian_structure_cohomology_statement R A g hab hsm).2.2.1 R' X' s' φ h
+  have hH := (_root_.GlobalTheory.AbCoh.oStr R A g hab hsm).2.2.1 R' X' s' φ h
   refine GlobalTheory.T.semilinear_short_exact_compatible R R' (GlobForm A.hom) (HH1 A.hom) (HO1 A.hom) (GlobForm s') (HH1 s') (HO1 s')
     (clAll (OAff A.hom) hc) (toHO1 A.hom) (clAll (OAff s') hc') (toHO1 s')
     (pullForm h.w) (pullHH1 h.w) (pullHO1 h.w)
@@ -1441,7 +1441,7 @@ namespace GlobalTheory.AbCoh
 theorem abelianHodgeDeRham : GlobalTheory.Published.AbelianHodgeDeRham := by
   intro R _ A _ g hA hg
   obtain ⟨hfr, h0, -, -⟩ := GlobalTheory.T.abelianScheme_oneFormFrame_and_square R A g hA hg
-  obtain ⟨hO, hW, hB1, -⟩ := GlobalTheory.T.abelian_structure_cohomology_statement R A g hA hg
+  obtain ⟨hO, hW, hB1, -⟩ := _root_.GlobalTheory.AbCoh.oStr R A g hA hg
   have hcl := GlobalTheory.T.abelianScheme_globalOneForms_closed R A g hA hg
   have hs := GlobalTheory.T.de_rham_to_structure_h1_surjective R A g hA hg
   have hH := (GlobalTheory.T.de_rham_h1_rank_primitive R A g hA hg).1

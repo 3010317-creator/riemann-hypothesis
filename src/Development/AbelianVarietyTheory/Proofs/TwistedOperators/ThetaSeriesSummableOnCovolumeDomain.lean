@@ -17,7 +17,7 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqZer
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RationalSymplecticPointsSelfAnnihilator
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsInvariantForm
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InfPartOneSubEInfSmul
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaRestrictIsotropicQuotientWittTowerPropertieStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaRestrictIsotropicQuotientWittTowerPropertie
 import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
@@ -584,7 +584,7 @@ theorem core (D : D7) (V V' W S : HSp D) (hS : S.gram = 1) (C C' : Matrix (Fin V
   have hmid : midPart V V' W B 0 = 0 := Matrix.zero_mul _
   have hres : ∀ g, res V V' W C B μ 𝓨 g 0 = ∫ a, g (isoPart V W C a) ∂(μ.restrict 𝓨) := fun g => by
     simp only [res, hmid, add_zero]
-  obtain ⟨hH, -⟩ := GlobalTheory.T.thetaRestrictIsotropicQuotient_wittTower_properties D V V' W S.rank C B hs ψ hψ μ 𝓨 hcov'
+  obtain ⟨hH, -⟩ := _root_.GlobalTheory.TowerRestrict.res_theta D V V' W S.rank C B hs ψ hψ μ 𝓨 hcov'
   have hinv : ∀ g, IsThetaFunO ψ V W g → ∀ a, ∫ x, heisO ψ V W (isoPart V W C a) g (isoPart V W C x) ∂(μ.restrict 𝓨) =
       ∫ x, g (isoPart V W C x) ∂(μ.restrict 𝓨) := fun g hg a => by
     have := congrFun ((hH g hg).2.2.2 a) 0

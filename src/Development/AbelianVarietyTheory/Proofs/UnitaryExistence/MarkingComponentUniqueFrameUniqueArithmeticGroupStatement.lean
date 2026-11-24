@@ -3,16 +3,18 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.CoeSelfDualLatticeInFrameCoordinatesEq
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVarietyStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVariety
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicCompletionRationalPointsAndApproximation
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletionStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeRationalTranslateInvarianceStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicativeStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletion
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeRationalTranslateInvariance
+public import Formalism.LocalToGlobal.ProjectiveLattices.EquivariantFiniteGroup
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicative
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsPeriodCompIsometry
 public import Formalism.LocalToGlobal.ProjectiveLattices.UnFree
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RelabelEmbeddingsGoodBijectiveConjCompat
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RationalPointsAdelicUnitaryEqUnitaryStatement
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RationalPointsAdelicUnitaryEqUnitary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,7 +80,7 @@ lemma sub_eq_nsmul_sub {M : Type} [AddCommGroup M] {N : ℕ} {x y z w w' : M} (h
 lemma exists_of_finVec_eq_nsmul {D : D7} (V : HSp D) (g : GA D V) (N : ℕ) (hN : N ≠ 0)
     (u : Fin V.rank → D.host.E) (w : Fin V.rank → Af D.host.F ⊗[D.host.F] D.host.E) (hw : w ∈ latGHat V g)
     (h : finVec V u = N • w) : ∃ x ∈ latG V g, u = N • x := by
-  obtain ⟨h1, h2, -, -, h5, -⟩ := GlobalTheory.T.adelicElementLattice_full_and_completion D V g
+  obtain ⟨h1, h2, -, -, h5, -⟩ := _root_.GlobalTheory.Member.latG_lattice_and_completion D V g
   have hNE : (N : D.host.E) ≠ 0 := Nat.cast_ne_zero.mpr hN
   have hNF : (N : D.host.F) ≠ 0 := Nat.cast_ne_zero.mpr hN
   have hu : u = N • ((N : D.host.E)⁻¹ • u) := by
@@ -130,11 +132,11 @@ lemma matched {D : D7} {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.
         ∃ w ∈ (C.M.X k').Λ,
           (δ : Matrix (Fin V.rank) (Fin V.rank) D.host.E) *ᵥ (C.M.φ k (C.F.t k a) : Fin V.rank → D.host.E) =
             (C.M.φ k' (C.F.t k' a) : Fin V.rank → D.host.E) + l.M • w := by
-  obtain ⟨r1, -, -, -, r5⟩ := GlobalTheory.T.rational_points_adelicUnitary_eq_unitary D V
+  obtain ⟨r1, -, -, -, r5⟩ := _root_.GlobalTheory.Member.RatElt.rational_elements D V
   obtain ⟨hγ, hΛ, hk⟩ := hm
   obtain ⟨hγ', hΛ', hk'⟩ := hm'
   obtain ⟨δ, hδ⟩ := (r1 _).1 ((GQ V).mul_mem hγ' ((GQ V).inv_mem hγ))
-  obtain ⟨m1, m2⟩ := (GlobalTheory.T.adelicUnitaryLattice_rationalTranslate_invariance D V).1 _ δ (γ * h) hδ
+  obtain ⟨m1, m2⟩ := (_root_.GlobalTheory.Member.latG_move D V).1 _ δ (γ * h) hδ
   have hg : γ' * γ⁻¹ * (γ * h) = γ' * h := by group
   rw [hg] at m1 m2
   have hL : (C.M.X k).Λ = latG V (γ * h) := SetLike.ext' (hΛ.trans (Set.image_id _))
@@ -156,11 +158,11 @@ lemma matched {D : D7} {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.
 theorem mark_unique : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (σ : c.F →+* ℂ) (V : HSp D) (r : ℕ) (C : Ctx Xo c σ V r), C.OK → ∀ h, (∀ k k' γ γ', C.Mark h k γ → C.Mark h k' γ' → k = k') ∧ ∀ k γ γ', C.Mark h k γ → C.Mark h k γ' → ∃ δ ∈ (C.M.X k).Γ, C.fr (γ' * h) k = lact δ (C.fr (γ * h) k) := by
   intro D H Dw l Xo c σ V r C hC h
   obtain rfl : V.rank = r := C.hr
-  obtain ⟨-, r2, -, -, r5⟩ := GlobalTheory.T.rational_points_adelicUnitary_eq_unitary D V
+  obtain ⟨-, r2, -, -, r5⟩ := _root_.GlobalTheory.Member.RatElt.rational_elements D V
   have hG : ∀ k, (C.M.X k).Gm = -V.gramᵀ := fun k => (hC.modelW k).1
   refine ⟨fun k k' γ γ' hm hm' => ?_, fun k γ γ' hm hm' => ?_⟩
   · obtain ⟨δ, hδ, hΛ, hmk⟩ := matched C h k k' γ γ' hm hm'
-    refine GlobalTheory.ClassUniq.eq_of_matched GlobalTheory.T.thetaUniformisation_complexAbelianVariety GlobalTheory.firstFiveLaws.1 _ H Dw l Xo _ C.g _ C.F _ C.M k k' δ
+    refine GlobalTheory.ClassUniq.eq_of_matched _root_.GlobalTheory.thetaUnifAV_all GlobalTheory.firstFiveLaws.1 _ H Dw l Xo _ C.g _ C.F _ C.M k k' δ
       hC.pos hC.good ((_root_.GlobalTheory.Relab.relab_good _ H l c σ hC.good).2.2.2 Dw C.g C.e) hC.base
       ((hG k').trans (hG k).symm) ((hC.modelW k').2.trans (hC.modelW k).2.symm)
       (by rw [hG k]; exact r2 _ δ hδ) hΛ hmk (fun a => ?_)
@@ -183,7 +185,7 @@ theorem mark_unique : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.Geo
       rw [hb', hC.lA, one_smul]; abel
     · funext τ
       have hg : γ' * h = γ' * γ⁻¹ * (γ * h) := by group
-      have e := ((GlobalTheory.T.archimedeanMatrix_unitary_continuous_multiplicative D V C.θ hC.inf).1 τ.1).2.1 (γ' * γ⁻¹) (γ * h)
+      have e := ((_root_.GlobalTheory.Member.Arch.archM_spec D V C.θ hC.inf).1 τ.1).2.1 (γ' * γ⁻¹) (γ * h)
       rw [← hg, (r5 _ δ hδ).2 τ.1 _ (hC.inf τ.1)] at e
       change archM V (C.θ τ.1) (γ' * h) * C.x₀ τ.1 =
         (δ : Matrix (Fin V.rank) (Fin V.rank) D.host.E).map τ.1 * (archM V (C.θ τ.1) (γ * h) * C.x₀ τ.1)

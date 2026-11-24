@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AxesVanishingStructureSheafDegOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalTwoFormEqSumWedgeGlobalOneFormsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalTwoFormEqSumWedgeGlobalOneForms
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -103,7 +103,7 @@ theorem hyp2_eq_sum_cup_of_fn_exact : ∀ (R : Type) [CommRing R] (C : Type) [Ca
     rw [cechDeRhamTotalCocyclesTwo.two c' φ, ← ha, hd]
     simp only [he', map_add (f := _), LinearMap.add_apply, Finset.sum_add_distrib, ← hw]
     abel
-  obtain ⟨n, u, v, huv⟩ := GlobalTheory.T.globalTwoForm_eq_sumWedgeGlobalOneForms R C F ⟨m, ⟨fr⟩⟩ h0 η' hη'
+  obtain ⟨n, u, v, huv⟩ := _root_.GlobalTheory.AbCoh.twoForm_eq_wsum R C F ⟨m, ⟨fr⟩⟩ h0 η' hη'
   refine ⟨m + n, Fin.append (fun i ↦ Hyp1.mk F (e i)) (fun k ↦ clAll F hc (u k)), Fin.append fr.w v, ?_⟩
   rw [Fin.sum_univ_add]
 

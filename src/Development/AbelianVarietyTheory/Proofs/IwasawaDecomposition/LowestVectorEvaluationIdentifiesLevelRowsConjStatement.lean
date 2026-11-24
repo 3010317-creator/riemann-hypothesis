@@ -28,8 +28,7 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Exi
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.EvalTOnto
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.EvalTPh
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TranslatedRowEvaluationSquareIntegrableNorm
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ModelIdentificationRespectsRealAndFiniteStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TranslateToSecondModelCuspFormMapValueAutomorphiStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TranslateToSecondModelCuspFormMapValueAutomorphi
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CastGAMemGFset
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHaarFund
 import Formalism.LocalToGlobal.IndefiniteReal.SquareIntegrableTransfer
@@ -129,11 +128,11 @@ theorem GlobalTheory.Mem.SRe.conj_ev_mem_HHX : GlobalTheory.Dec.DSInfChar → Gl
     have hs : Integrable (fun g => star (Formalism.L2.SG.WuDecayPf.coefV X v g)) (Formalism.REAL.muG (X.B.I.ε v)) :=
       h1.mono (continuous_star.comp_aestronglyMeasurable h1.1) (ae_of_all _ fun g => le_of_eq (norm_star _))
     exact hs.const_mul ((X.dv v : ℝ) : ℂ)
-  have hR := GlobalTheory.T.modelIdentification_respects_real_and_finite D X h R.θ hθ hIdE
+  have hR := _root_.GlobalTheory.Core.Mi.SeeReal.realSplit_of_idE D X h R.θ hθ hIdE
   have hT : PiTensorProduct.lift S ∈ MultT R.θ (MP R) (JR R F) (chiR R F) := by
     refine (mem_multT R.θ (MP R) (JR R F) (chiR R F) _).2 ?_
     rw [LinearEquiv.symm_apply_apply]; exact hS
-  obtain ⟨hRow, hMem⟩ := GlobalTheory.T.translateToSecondModel_cuspFormMap_value_automorphic hP D X h R.θ _ (MP R) (JR R F) (chiR R F) t hθ hMat _ hT
+  obtain ⟨hRow, hMem⟩ := _root_.GlobalTheory.Core.Mi.rowFun_evS hP D X h R.θ _ (MP R) (JR R F) (chiR R F) t hθ hMat _ hT
     (PiTensorProduct.tprod ℂ v₀)
   have hfx : ∀ x, evS X h t (PiTensorProduct.lift S (PiTensorProduct.tprod ℂ v₀)) x =
       S v₀ ((iotaX X h).symm x * t) := fun x => by
@@ -543,7 +542,7 @@ theorem equiv_gen {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h : 
     (hrep : ∀ u : M.Vec, ∃ ψ, Formalism.L2.SG.EvalTOntoRep.IsContRep X (Φ (X.B.tens (GlobalTheory.ConjRowMult.vecC X M c u))) ψ) :
     ∀ τ : D.what₂.Tau, ∀ g ∈ Formalism.QuantumDeterminants.UH (gramAt D (D.sp.Y 0) τ), ∀ (v : M.Vec) (w : M.sm τ), (w : M.H τ) = M.rep τ g (v τ) → GlobalTheory.ConjRowMult.conjMap X M c Φ h t (Function.update v τ w) = rTr (D.sp.Y 0) (atTau θ (D.sp.Y 0) τ g) (GlobalTheory.ConjRowMult.conjMap X M c Φ h t v) := by
   intro τ g hg v w hw
-  obtain ⟨hfin, -, hreal, -⟩ := GlobalTheory.T.modelIdentification_respects_real_and_finite D X h θ hθ hιE
+  obtain ⟨hfin, -, hreal, -⟩ := _root_.GlobalTheory.Core.Mi.SeeReal.realSplit_of_idE D X h θ hθ hιE
   obtain ⟨ha2, ha1, -⟩ := hreal τ g hg
   set a := iotaX X h (atTau θ (D.sp.Y 0) τ g) with ha
   have hvec : vecC X M c (Function.update v τ w) =

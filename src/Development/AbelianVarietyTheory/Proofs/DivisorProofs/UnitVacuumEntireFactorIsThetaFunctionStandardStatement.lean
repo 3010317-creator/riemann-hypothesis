@@ -43,7 +43,8 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDualStatement
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusHermitianFormScaledCoordinateEq
 import Mathlib.Tactic.Linter.Style
 
@@ -105,7 +106,7 @@ theorem theta_of_vacuum_real : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ
   obtain ⟨σ, hch⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
   have hSd := GlobalTheory.FunObj.VecEx.isSelfDualC_colLat S frS hS
   have hTd := GlobalTheory.FunObj.VecEx.isSelfDualC_colLat T frT hT
-  obtain ⟨-, -, h3⟩ := GlobalTheory.T.self_dual_lattice_pairing_dual D ψ S T (colLat frS) (colLat frT) hψ hSd hTd
+  obtain ⟨-, -, h3⟩ := _root_.GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T (colLat frS) (colLat frT) hψ hSd hTd
   refine ⟨hΦd.comp ((differentiable_id).const_smul δ⁻¹), ?_⟩
   intro x hx Y
   obtain ⟨v, hv, rfl⟩ := GlobalTheory.T.exists_rational_frameCoords_of_mem_torusLattice S T frS frT hS hT δ x hx

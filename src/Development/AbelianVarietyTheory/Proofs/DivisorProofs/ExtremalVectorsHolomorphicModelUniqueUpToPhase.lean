@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSmoothVector
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseFrameBorelActsExtremalVectorByWeightStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscreteSeriesModelUnitaryIrreducibleOrthonormalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseFrameBorelActsExtremalVectorByWeight
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscreteSeriesModelUnitaryIrreducibleOrthonormal
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.EmbeddingXiZeroNeZero
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HolomorphicDiscreteSeriesLowestKTypeSmoothIrredu
 import Mathlib.Algebra.Order.Floor.Extended
@@ -66,8 +66,8 @@ theorem extLine_of_holShape : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SP
     exact zero_ne_one hn
   choose w hw using fun ρ c => wt_int (h1 ρ) (hv0 ρ) (hv ρ).2.2 (arr (nNeg (M.ε ρ)) c)
   have hW : WtIs M w := fun ρ c => hw ρ c
-  obtain ⟨hsm, hk⟩ := GlobalTheory.T.baseFrameBorel_acts_extremalVector_by_weight D θ V S M w v hθ hM hW hv τ
-  obtain ⟨hC, hU, hI, hO⟩ := GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ
+  obtain ⟨hsm, hk⟩ := _root_.GlobalTheory.HolDict.VKill.borel_extVec D θ V S M w v hθ hM hW hv τ
+  obtain ⟨hC, hU, hI, hO⟩ := _root_.GlobalTheory.HolDict.ModelRep.model_rep D V S M τ
   haveI := hC
   have hOF := (hO hM).1
 

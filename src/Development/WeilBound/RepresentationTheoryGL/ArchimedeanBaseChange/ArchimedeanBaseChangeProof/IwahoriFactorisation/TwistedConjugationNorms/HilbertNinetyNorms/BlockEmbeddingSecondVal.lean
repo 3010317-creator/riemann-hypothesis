@@ -1,7 +1,8 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.OneCoset
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalConjugationInvolutiveValuationPreservingStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalConjugationInvolutiveValuationPreserving
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryRankOneSphericalIntegrandDiagonalTorusFac
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -427,7 +428,7 @@ theorem split_caseA_pf (w : Pl E) (hw : ¬ IsSplitAt w) (n a : ℕ) (ha : a ≤ 
     have hkr : k = i.rev := by
       apply hanti.injective
       rw [← (hu k).2, hku, GlobalTheory.WeylCell.U21TorusFactor.ordL_inv,
-        GlobalTheory.WeylCell.U21TorusFactor.ordL_map (GlobalTheory.T.localConjugation_involutive_valuation_preserving E w).2, (hu i).2, wexp_rev]
+        GlobalTheory.WeylCell.U21TorusFactor.ordL_map (_root_.GlobalTheory.BCT.cj_involutive_valuation E w).2, (hu i).2, wexp_rev]
     rw [← hkr]
     exact hk
   have hsymc : ∀ i, i ∈ Tᶜ → i.rev ∈ Tᶜ := fun i hi => by

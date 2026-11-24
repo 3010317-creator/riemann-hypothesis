@@ -8,9 +8,10 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaLift
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.AdjointIsotropicDecomposition
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOneIntegralAdd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumOfSplittingCharactersStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumOfSplittingCharacters
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConstantTermLiftIsotropicSubspaceStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsLowerWittTowerIsotropicSplitEmbeddingStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsLowerWittTowerIsotropicSplitEmbedding
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasDRepIffHasDerivAt
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.BarMatrix
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RapidDecayLift
@@ -25,14 +26,16 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteS
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEmbeddingSkew
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIntegralForm
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRealPlaceThetaObjectsTheoremARParts
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GkMapCuspFormsExtendsToSmoothVectorsStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.KTypeExtension
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GkMapCuspFormsExtendsToSmoothVectors
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegrableOnMulRight
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ItEqSumKMean
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.KMeanMemKFinOfCoefFam
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MultTEqZero
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SignBlockDeterminantNeZeroOfMemMaxCompact
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaVacuumCharactersRealPlacesStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RaisingLoweringOperators
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaVacuumCharactersRealPlaces
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.VacuumFockFromSquareIntegrability
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -85,7 +88,7 @@ import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InclTprodUpdate
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsCuspGrowOfMemSpan
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SubstitutionTotalDegreeLe
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaLiftCuspFormAutomorphicSmoothModerateGrowth
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandraStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandra
 import Development.AbelianVarietyTheory.Statements.HaarFundamentalDomain.ExistsHaarFundDom
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.TopoAF
@@ -258,13 +261,13 @@ theorem constTerm_multT (hct : TowerConstTerm D) (hP : GlobalTheory.Published.Cu
 theorem liftCusp : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CuspRapidDecay →
     ∀ D : D7, GlobalTheory.Chain.LiftCusp D := by
   intro hDS hHC hP D k V W M M' θ ψ hθ hch ω hω ν 𝓕 hν h𝓕 J χ F hF v f hf r C hC κ 𝓝 hκ h𝓝 g
-  obtain ⟨V', B, hs, hsig⟩ := GlobalTheory.T.exists_lowerWittTower_isotropicSplitEmbedding D V _ M r C hC
+  obtain ⟨V', B, hs, hsig⟩ := _root_.GlobalTheory.TowerSplit.exists_isoSplit D V _ M r C hC
   have hr : 1 ≤ r := by
     obtain ⟨h0, -⟩ := hC
     exact h0
   obtain ⟨χS, χT, hW, hexp⟩ := hω
   obtain ⟨η, h1, h2, h3, h4⟩ := GlobalTheory.Mem.EtaTilde.exists_etaTilde D
-  obtain ⟨ω', hW'⟩ := GlobalTheory.T.exists_weilDatum_of_splittingCharacters D ψ hW.std V' W χS χT (Exists.intro η (And.intro h1 (And.intro h4 (And.intro h3 h2))))
+  obtain ⟨ω', hW'⟩ := _root_.GlobalTheory.WeilExist.exists_isWeilDatumO D ψ hW.std V' W χS χT (Exists.intro η (And.intro h1 (And.intro h4 (And.intro h3 h2))))
     hW.hecS hW.hecT (resEta_parity hW.resS (by have := hs.rank; omega)) hW.resT
   have hst : GlobalTheory.Chain.IsStepWeil k ψ V' W ω' := Exists.intro χS (Exists.intro χT (And.intro hW' hexp))
   exact constTerm_multT (GlobalTheory.T.constantTermLift_isotropicSubspace D) hP hs hθ hW hW' hν h𝓕 M' J χ F hF v hf
@@ -642,7 +645,7 @@ theorem ioPair_onObjects : GlobalTheory.Published.DiscreteSeriesCover → Global
   intro hD hH hC hW D
   obtain ⟨X, hX, -, -, -, -, h3, -⟩ := _root_.GlobalTheory.RealPlaceTheta.exists_record_theta hD hH
   exact ioPair_of_rapid D X hX h3 (GlobalTheory.T.thetaChainLifts_areCuspForms hD hH hC D) (GlobalTheory.Chain.LiftReg.liftProps_obj hC D)
-    (GlobalTheory.T.gkMapCuspForms_extends_to_smoothVectors hH hW D) (GlobalTheory.VacuumFockLaws.vacuumFock_onObjects D) (GlobalTheory.T.thetaVacuumCharacters_realPlaces D) (GlobalTheory.T.thetaModels_are_coverDiscreteSeries_of_harishChandra hD hH D) hC hH
+    (_root_.GlobalTheory.GKExtensionToSmoothVectors.gkExtension hH hW D) (GlobalTheory.VacuumFockLaws.vacuumFock_onObjects D) (_root_.GlobalTheory.VacuumCharacter.vacChar D) (_root_.GlobalTheory.CoverModel.modelsAreCoverSeries_all hD hH D) hC hH
 
 end GlobalTheory.Chain.IoLift
 

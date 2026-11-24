@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Leng
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.HalfLinearCocycle
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisThetaLaws
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CmAdeleIdempotentOfPlacePropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CmAdeleIdempotentOfPlaceProperties
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVacuaLocalFactorsStableHeisenbergAway
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergCompressionRealPlaceFockVacuaScalar
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsPureTensorBaseVectorAndLocalFactor
@@ -92,7 +92,7 @@ theorem sum_wAt_real {S T : HSp D} (w : WO S T) (hw : w.map (finPart D) = 0) :
   show ∑ τ : D.what₂.Tau, idem D (.inr τ) * w i j = w i j
   rw [← Finset.sum_mul]
   refine GlobalTheory.SplitScalar.adele_ext ?_ ?_
-  · rw [RingHom.map_mul, (GlobalTheory.T.cmAdeleIdempotentOfPlace_properties D).2.2.2.2.2.1, one_mul]
+  · rw [RingHom.map_mul, (_root_.GlobalTheory.PlaceTensor.idem_spec D).2.2.2.2.2.1, one_mul]
   · have h0 : finPart D (w i j) = 0 := congrFun (congrFun hw i) j
     rw [RingHom.map_mul, h0, mul_zero]
 

@@ -6,7 +6,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfOrth
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteWeilRepEqLatticeIntertwinerMulCharacter
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisThetaLaws
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.CocompactTensor
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RationalSymplecticPointsSelfAnnihilatorStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RationalSymplecticPointsSelfAnnihilator
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,7 +70,7 @@ theorem eq_zero_of_orthogonal_theta : ∀ (D : D7) (ψ : AddChar (AF D.host.F) �
   have hann : ∀ x : WO S T, (∀ γ ∈ ratL T S, ψ (symplOH S T x γ + symplOH S T x γ) = 1) ↔ x ∈ ratL T S := by
     intro x
     simp only [hdbl]
-    exact GlobalTheory.T.rationalSymplecticPoints_self_annihilator D ψ hψ S T x
+    exact _root_.GlobalTheory.RatAnnih.ratL_annihilator D ψ hψ S T x
   have hq' : ∀ γ ∈ ratL T S, ∀ w, q (γ + w) = ψ (-(symplOH S T γ w)) * q w := by
     intro γ hγ w
     obtain ⟨γ', rfl⟩ := hγ

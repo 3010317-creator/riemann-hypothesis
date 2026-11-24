@@ -6,7 +6,9 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDesc
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIsDiscreteValuationRingOfMaximalIdealEqSpa
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.BijectiveRestrictPointsOfEtaleOfHenselian
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ValuationRingOfFlatOfFormallyUnramified
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CardTorsionPointsAbelianVarietyStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CardTorsionPointsAbelianVariety
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMulEquivOfIsGrpPullback
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FormallyUnramifiedMulN
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsUnitNatCastSections
@@ -276,7 +278,7 @@ theorem card_torsion (hL : Laws) {S : Scheme.{0}} (G : Over S) [GrpObj G] (hG : 
   obtain ⟨e, -⟩ := exists_mulEquiv_of_isGrpPullback (isGrpPullback_pullback G t) (𝟙 _) t
     (Category.id_comp t).symm
   rw [Nat.card_congr (torsionEquiv G n _),
-    ← GlobalTheory.T.card_torsion_points_abelianVariety hL.globalFns hL.rigidity K ((Over.pullback t).obj G) g n hB' hg' hn]
+    ← _root_.GlobalTheory.UU.TorsionCount.card_torsion_points hL.globalFns hL.rigidity K ((Over.pullback t).obj G) g n hB' hg' hn]
   refine (Nat.card_congr (e.toEquiv.subtypeEquiv fun x => ?_)).symm
   show x ^ n = 1 ↔ e x ^ n = 1
   rw [← map_pow, MulEquiv.map_eq_one_iff]

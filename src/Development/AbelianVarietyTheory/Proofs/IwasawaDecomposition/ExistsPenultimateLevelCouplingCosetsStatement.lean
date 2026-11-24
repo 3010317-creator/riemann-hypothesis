@@ -8,18 +8,18 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NearP
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ChartPointRightTranslateByLevelCoupledStep
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TypePrimeFramesRightTranslateDifferIntegralGL
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CongAtOfNearSame
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CouplingCosetInFramesShapeAtBadPrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftsInvOne
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CouplingCosetInFramesShapeAtBadPrime
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRationalFramesNearAdelicAtBadPrimes
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnKernelDataCompatibleStepCharts
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ChartPointsFramesCongrAwayFromBadPrimes
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicMatrixCongruenceBadPrimeIffCompletionStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicMatrixCongruenceBadPrimeIffCompletion
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicMatrixCongruenceMoveRationalFrameStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLevelElementSameCharacterNearBad
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsMiddleStepLevelInverseLiftsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelElementAtBadPrimesIntegralAndNearStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StdPointMatrixAndInverseIntegralAtEveryPrimeStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ValLtOfRedM
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftsInvOne
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChartWiden
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLevJCosetsOfFurther
 import Mathlib.Algebra.Order.Floor.Extended
@@ -501,10 +501,10 @@ theorem chi_embU_mul_valV : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok
   have hm : B.R.m - 1 < B.R.m := by omega
   have hlast : B.R.m - 1 + 1 = B.R.m := by omega
   let y0 : SBof I a → Sp B.fields.E (B.R.N (B.R.m - 1)) := fun P =>
-    ((GlobalTheory.T.couplingCosetInFrames_shape_at_bad_prime I hOk u a _ ((I.stp u a _).rep c) P).2 hlast).1.some
+    ((_root_.GlobalTheory.Mem.Col2.AdT.CosShape.cosShape I hOk u a _ ((I.stp u a _).rep c) P).2 hlast).1.some
   have H := lev_mid hOk hPins hR c hfb (hFin _) hm y0
     (Rel := fun P g z => MidAt I hm c.1 P g z ∧ (B.R.m - 1 + 1 = B.R.m → GlobalTheory.TwU.SameCoset I.sel (I.tup a) (I.cst a) P (g (y0 P)) (y0 P)))
-    (fun _ P => ((GlobalTheory.T.couplingCosetInFrames_shape_at_bad_prime I hOk u a _ ((I.stp u a _).rep c) P).2 hlast).1.some_mem) (fun _ _ _ => Iff.rfl)
+    (fun _ P => ((_root_.GlobalTheory.Mem.Col2.AdT.CosShape.cosShape I hOk u a _ ((I.stp u a _).rep c) P).2 hlast).1.some_mem) (fun _ _ _ => Iff.rfl)
   have hx : bc (prV (E := (I.rec7 l Z).host.E) v) (GlobalTheory.Mem.Col2.ChartLevel.emb v x.1) ∈ (K (chOf c)).lev.Uloc v := by
     rw [GlobalTheory.Mem.Col2.ChartLevel.emb_self]; exact x.2
   have key : ∀ (P : SBof I a) (j : ℕ), j = B.R.m - 2 + 1 → ∀ b, (I.idx a).h j b P = 1 := by
@@ -767,7 +767,7 @@ theorem exists_level_elt : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok 
     · obtain ⟨v, hv, hv'⟩ := LevelElt.place_under I hOk hPins l Z a P hP
       obtain ⟨z, -, hz2, hz3, hz4⟩ := LevelElt.one_prime I hOk hPins l Z a _ i hi bad (triv (K (chOf c)).lev) (chiFin_triv I l Z _) P hP v hv ((I.cst a).D P) (y * (show GA B (B.R.N i) from κ.1)) kk
       refine ⟨⟨z.1, z.2⟩, fun P' hP' r s => ?_, hz3, fun _ => hz4⟩
-      have e := (GlobalTheory.T.adelicMatrixCongruenceBadPrime_iff_completion I hOk l Z a (B.R.N i) 0 P' z.1).1
+      have e := (_root_.GlobalTheory.Mem.Col2.AdT.AdelicValuationDictionary.main I hOk l Z a (B.R.N i) 0 P' z.1).1
       have h2 := hv' P' hP'
       rw [e] at h2
       exact LevelElt.support_one z.1 v hz2 P'.1 h2 r s
@@ -819,9 +819,9 @@ theorem exists_level_elt : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok 
   · intro P
     have e : κ.1⁻¹ * (κ * w).1 = w.1 := inv_mul_cancel_left κ.1 w.1
     refine (congrArg (GlobalTheory.TwU.CongAt (GlobalTheory.TwU.seamP (sm I l Z) P.1) ((I.cst a).D P)) e).mpr ?_
-    refine ((GlobalTheory.T.adelicMatrixCongruenceBadPrime_iff_completion I hOk l Z a (B.R.N i) ((I.cst a).D P) P w.1).2.2).mpr fun r s => ?_
+    refine ((_root_.GlobalTheory.Mem.Col2.AdT.AdelicValuationDictionary.main I hOk l Z a (B.R.N i) ((I.cst a).D P) P w.1).2.2).mpr fun r s => ?_
     have e := LevelElt.entry_eq_of_eq (cP P.1) _ _ (hwP P) r s
-    have D2 := ((GlobalTheory.T.adelicMatrixCongruenceBadPrime_iff_completion I hOk l Z a (B.R.N i) ((I.cst a).D P) P (zf P).1).2.2.1 (hzf3 P)) r s
+    have D2 := ((_root_.GlobalTheory.Mem.Col2.AdT.AdelicValuationDictionary.main I hOk l Z a (B.R.N i) ((I.cst a).D P) P (zf P).1).2.2.1 (hzf3 P)) r s
     convert D2 using 3
     exact e
 

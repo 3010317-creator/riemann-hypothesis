@@ -6,7 +6,8 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.Term
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InnerPreimageEqOfLocalInnerLatticeEq
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalOrbitLatticesInfFrameSpanEq
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TotallyPositiveOrthogonalOfTwoFlagExtendedSpacesStatement
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.PoincareConstantEq
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TotallyPositiveOrthogonalOfTwoFlagExtendedSpaces
 public import Formalism.SharpRestriction.CuspSpanNormBounds.IsPrimitiveSub
 public import Formalism.HermitianLattices.StatementLat
 public import Formalism.HermitianLattices.FinalNeighbourConstruct
@@ -66,7 +67,6 @@ import Mathlib.RingTheory.HopfAlgebra.Basic
 import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.TermOp
 import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.NGData
 import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RowsConc
-import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.PoincareConstantEq
 import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.HidaSetting
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfQuad
 import Mathlib.Tactic.Basify
@@ -591,7 +591,7 @@ theorem dual_part : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what
     simp only [orth, Submodule.mem_iInf, LinearMap.mem_ker]
   have hdef : ∀ x ∈ orth (VS D) U, (VS D).hT x x = 0 → x = 0 := fun x hx h => by
     by_contra hne
-    have := GlobalTheory.T.totallyPositive_orthogonal_of_two_flagExtendedSpaces D X Y u u' F F' w hw hG x hx hne
+    have := _root_.GlobalTheory.ComplPos.complement_totPos D X Y u u' F F' w hw hG x hx hne
     rw [h, map_zero] at this; exact lt_irrefl _ this
   have hUW : U ⊓ orth (VS D) U = ⊥ := by
     rw [eq_bot_iff]; rintro x ⟨hxU, hxW⟩
@@ -1332,7 +1332,7 @@ theorem lattice_between_parts : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
   have hU : ∀ y ∈ Xplus F ⊔ Xplus F', y ∈ orth (VS D) (Xplus F ⊔ Xplus F') → y = 0 := by
     intro y hyU hyW
     by_contra hy
-    have hpos := GlobalTheory.T.totallyPositive_orthogonal_of_two_flagExtendedSpaces D X Y u u' F F' w hZ hG y hyW hy
+    have hpos := _root_.GlobalTheory.ComplPos.complement_totPos D X Y u u' F F' w hZ hG y hyW hy
     have h0 : (VS D).hT y y = 0 := (mem_orth_iff _ y).1 hyW y hyU
     rw [h0, map_zero] at hpos
     exact lt_irrefl _ hpos
@@ -1440,7 +1440,7 @@ namespace GlobalTheory.Unfold.ClFin
 
 theorem classes_finite : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), ∀ (F : LFlag (D.sp.Y 0) D.R.rS (((D.mem u).A.T : ℕ) : D.host.E)) (F' : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E)) (w : Point D.host.E (D.R.rS + 1)), ZhatOM (ZhatL F F') = ptMat w → Gval F F' ≠ 0 → ∀ (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (locH Z p) D.R.rS), Based Z FP (Tu D u) (Tu D u') F F' → (∀ p, (FP p).RelG (LocNG.theta (Z.M p))) → ∀ Λ₀ : LV D, Submodule.IsFullLattice D.host.E Λ₀ → {h | h ∈ H0 F F' ∧ Formalism.HermitianLatticesTheory.gmap h Λ₀ = Λ₀}.Finite ∧ ∃ S : Finset (LV D), ∀ Λ : LV D, Submodule.IsLattice D.host.E Λ → (∀ p, ∃ h ∈ (FP p).UW0, LocNG.img h (lattice₂ D Z.M p Λ₀) = lattice₂ D Z.M p Λ) → ∃ Λs ∈ S, ∃ γ ∈ H0 F F', Formalism.HermitianLatticesTheory.gmap γ Λs = Λ := by
   intro D X Y u u' F F' w hw hG Z FP hB hR Λ₀ hΛ₀
-  have hpos := GlobalTheory.T.totallyPositive_orthogonal_of_two_flagExtendedSpaces D X Y u u' F F' w hw hG
+  have hpos := _root_.GlobalTheory.ComplPos.complement_totPos D X Y u u' F F' w hw hG
   refine ⟨GlobalTheory.T.finite_isometriesFixingBothFrames_stabilizing_lattice D F F' hpos Λ₀ hΛ₀, ?_⟩
   obtain ⟨N, hN, hNs⟩ := GlobalTheory.T.orbitLattice_between_frameAndComplementParts D X Y u u' F F' w hw hG Z FP hB hR Λ₀ hΛ₀
   obtain ⟨d, c, hd, hc, hdc⟩ := GlobalTheory.T.based_flag_pair_lattice_containment D X Y u u' F F' w hw hG Z FP hB hR Λ₀ (by first | exact hΛ₀)

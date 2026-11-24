@@ -4,7 +4,7 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDesc
 public import Development.AbelianVarietyTheory.PublishedTheorems.Landherr₂.ExistsNormTensor
 public import Formalism.LocalToGlobal.ProjectiveLattices.IntegrableOnIntegrand
 public import Formalism.LocalToGlobal.ProjectiveLattices.UnFree
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArithmeticGroupCuspCentreLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArithmeticGroupCuspCentreLattice
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.NormConst
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFlagDomainModelsOfFamilyUniformisation
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramedPointsAllNormalisationsFamilyUnif
@@ -71,7 +71,7 @@ theorem exists_unf_of_space : N1c → GlobalTheory.Published.HasseNormSt → Out
   obtain ⟨un, hun⟩ := _root_.GlobalTheory.FrameUnif.exists_framesOK hB hT E H Dw l Xo c σ _ e F r M hσ hM hX
   have hred : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
   refine ⟨unfOf e F M un, _root_.GlobalTheory.FrameUnif.isUnf_built hB E H Dw l Xo c σ _ e F r M un hσ hM hX hun, ⟨⟨0, F.n_pos⟩⟩, hM.chi, hG,
-    fun k x => _root_.GlobalTheory.Frames.allTest_of_secBaseChange hB E H Dw l Xo c (CAt σ) _, fun ρ => ⟨GlobalTheory.T.arithmeticGroup_cuspCentre_lattice E r ρ _ _, fun hA => ?_⟩⟩
+    fun k x => _root_.GlobalTheory.Frames.allTest_of_secBaseChange hB E H Dw l Xo c (CAt σ) _, fun ρ => ⟨_root_.GlobalTheory.CuspCentre.latZ E r ρ _ _, fun hA => ?_⟩⟩
   exact _root_.GlobalTheory.ExpoModels.expoMatch_models E H Dw l Xo _ _ _ F r M ρ hM hA
 
 end GlobalTheory.FrameUnif

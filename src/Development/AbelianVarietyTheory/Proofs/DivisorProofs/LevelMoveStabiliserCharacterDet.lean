@@ -11,7 +11,8 @@ import Development.AbelianVarietyTheory.Counterexamples.LevelGroupExamples.Ortho
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterEmbeddingCompat
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.NumericalConsequencesOfPins
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.MarkedIsometryHalf
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicativeStatement
+import Formalism.LocalToGlobal.ProjectiveLattices.EquivariantFiniteGroup
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicative
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameUniformEmbeddingSecond
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RealAdelesCmFieldEquivComplexCmType
 import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
@@ -99,7 +100,7 @@ theorem exists_carries {V W : HSp D} (hV : V = W) {l : ReciprocityTheory.ChartRe
   have hG : ∀ k, (U.X k).Gm = -V.gramᵀ := fun k => (hW k).1
   have hxi : ∀ k k', (U.X k).ξ0 = (U.X k').ξ0 := fun k k' => (hW k).2.trans (hW k').2.symm
   obtain ⟨θ, hθ⟩ := (GlobalTheory.Member.infiniteAdele_bijective D).1
-  obtain ⟨hAr, -, -⟩ := GlobalTheory.T.archimedeanMatrix_unitary_continuous_multiplicative D V θ hθ
+  obtain ⟨hAr, -, -⟩ := _root_.GlobalTheory.Member.Arch.archM_spec D V θ hθ
   obtain ⟨γ₁, hγ₁, hΛ₁, hm₁, hf₁⟩ := hL.2 h
   obtain ⟨γ₂, hγ₂, hΛ₂, hm₂, hf₂⟩ := hL.2 (h * κ)
   have e₀ : γ₂ * (h * κ) = γ₂ * γ₁⁻¹ * (γ₁ * h) * κ := by group

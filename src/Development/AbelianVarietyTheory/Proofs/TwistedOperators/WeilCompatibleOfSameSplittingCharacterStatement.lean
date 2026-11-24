@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.AdjointIsotropicDecomposition
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousMovPair
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaRestrictIsotropicQuotientWittTowerPropertieStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaRestrictIsotropicQuotientWittTowerPropertie
 public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.NumFieldHosCountable
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HalfSymplZeroRight
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.T2SpaceHalfAdelicMatrixAddSubgroup
@@ -89,7 +89,7 @@ theorem continuous_char : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (F
   have hg4 : SecondCountableTopology (GA D W) := by
     obtain ⟨h1, h2, h3⟩ := Formalism.IndefR.Eqv.G5.af_facts D.host.F
     exact (Formalism.IndefR.Eqv.G5.ha_facts (AF D.host.F) D.sp.cm.deg2 D.sp.cm.sig W.gram).2.2.2.1
-  have hres := GlobalTheory.T.thetaRestrictIsotropicQuotient_wittTower_properties D V V' W r C B hs ψ hω.std μ 𝓨 hμ
+  have hres := _root_.GlobalTheory.TowerRestrict.res_theta D V V' W r C B hs ψ hω.std μ 𝓨 hμ
   obtain ⟨f₀, hf₀, hne⟩ := hres.2
   haveI : IsFiniteMeasure (μ.restrict 𝓨) :=
     ⟨by rw [Measure.restrict_apply_univ, hμ.2.2]; exact ENNReal.one_lt_top⟩
@@ -285,7 +285,7 @@ theorem res_smul_twisted_operators {V V' W : HSp D} {r : ℕ} {C : Matrix (Fin V
 
 theorem avgForm_ne_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V.rank) (Fin r) D.host.E) (B : Matrix (Fin V.rank) (Fin V'.rank) D.host.E), IsIsoSplit V V' C B → ∀ (μ : Measure (Mx D W.rank r)) (𝓨 : Set (Mx D W.rank r)), IsCovolOne (ratMx D W.rank r) μ 𝓨 → ∀ K : Matrix (Fin r) (Fin V.rank) D.host.E, K * C = 1 → K * B = 0 → ∀ e, IsSplitIdem D e → ∃ ℓ' : (WO V' W → ℂ) →ₗ[ℂ] ℂ, (∀ u : WO V' W, (∀ i j, cA D e * u i j = u i j) → ∀ f, IsThetaFunO ψ V' W f → ℓ' (heisO ψ V' W u f) = ℓ' f) ∧ ∃ f, IsThetaFunO ψ V W f ∧ avgForm ψ V V' W C B μ 𝓨 K e ℓ' f ≠ 0 := by
   intro D ψ hψ V V' W r C B hs μ 𝓨 hμ K hKC hKB e he
-  have hR := GlobalTheory.T.thetaRestrictIsotropicQuotient_wittTower_properties D V V' W r C B hs ψ hψ μ 𝓨 hμ
+  have hR := _root_.GlobalTheory.TowerRestrict.res_theta D V V' W r C B hs ψ hψ μ 𝓨 hμ
   have hth : ∀ {f : WO V W → ℂ}, IsThetaFunO ψ V W f → ∀ u, IsThetaFunO ψ V W (heisO ψ V W u f) :=
     fun hf u => GlobalTheory.ThetaClosed.isThetaFunO_heisO_all hψ hf u
   obtain ⟨f₁, hf₁, hres₁⟩ := hR.2
@@ -649,7 +649,7 @@ theorem charTwist_eq_one_at_split : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C :
   intro D V V' W r C B hs ψ χS χT χT' ω ω' hω hω' μ 𝓨 hμ c hc e he g hg
   have hψ := hω.std
   obtain ⟨K, hKC, hKB⟩ := GlobalTheory.T.exists_leftInverse_isotropicFrame_killing_embedding D V V' r C B hs
-  have hR := (GlobalTheory.T.thetaRestrictIsotropicQuotient_wittTower_properties D V V' W r C B hs ψ hψ μ 𝓨 hμ).1
+  have hR := (_root_.GlobalTheory.TowerRestrict.res_theta D V V' W r C B hs ψ hψ μ 𝓨 hμ).1
   obtain ⟨ℓ', hℓ', f₀, hf₀, hA⟩ := GlobalTheory.T.exists_halfInvariantForm_isotropicAverage_ne_zero D ψ hψ V V' W r C B hs μ 𝓨 hμ K hKC hKB e he
   have hth : ∀ {f : WO V W → ℂ}, IsThetaFunO ψ V W f → ∀ u, IsThetaFunO ψ V W (heisO ψ V W u f) :=
     fun hf u => GlobalTheory.ThetaClosed.isThetaFunO_heisO_all hψ hf u
@@ -988,7 +988,7 @@ theorem res_om_rat {V V' W : HSp D} {r : ℕ} {C : Matrix (Fin V.rank) (Fin r) D
 
 theorem char_eq_one_of_rat : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V.rank) (Fin r) D.host.E) (B : Matrix (Fin V.rank) (Fin V'.rank) D.host.E), GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.IsIsoSplit V V' C B → ∀ (ψ : AddChar (AF D.host.F) ℂ) (χS χT χS' χT' : (AE D)ˣ →* Circle) (ω : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)) (ω' : GA D V' × GA D W →* Module.End ℂ (WO V' W → ℂ)), IsWeilDatumO ψ V W χS χT ω → IsWeilDatumO ψ V' W χS' χT' ω' → ∀ (μ : Measure (Mx D W.rank r)) (𝓨 : Set (Mx D W.rank r)), IsCovolOne (GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.ratMx D W.rank r) μ 𝓨 → ∀ c : GA D W →* Circle, (∀ h f, IsThetaFunO ψ V W f → GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.res V V' W C B μ 𝓨 (ω (1, h) f) = (c h : ℂ) • ω' (1, h) (GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.res V V' W C B μ 𝓨 f)) → ∀ γ ∈ GQ W, c γ = 1 := by
   intro D V V' W r C B hs ψ χS χT χS' χT' ω ω' hω hω' μ 𝓨 hμ c hc γ hγ
-  obtain ⟨hall, f₀, hf₀, hne⟩ := GlobalTheory.T.thetaRestrictIsotropicQuotient_wittTower_properties D V V' W r C B hs ψ hω.std μ 𝓨 hμ
+  obtain ⟨hall, f₀, hf₀, hne⟩ := _root_.GlobalTheory.TowerRestrict.res_theta D V V' W r C B hs ψ hω.std μ 𝓨 hμ
   obtain ⟨x, hx⟩ : ∃ x, res V V' W C B μ 𝓨 f₀ x ≠ 0 := by
     by_contra h
     push Not at h

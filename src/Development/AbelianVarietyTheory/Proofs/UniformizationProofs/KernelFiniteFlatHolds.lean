@@ -5,11 +5,14 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDesc
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProjBySmoothIsProperGeometricallyIntegral
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TheoremOfCubeProjectiveAbelianSchemeAffineBase
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFiniteClosedSubschemeRepresentsKernelAmpleStatement
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FlatOfIsFiniteOfFlatLocalizationMaximalStatement
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LineBundleKernelFlatOfFiniteNoetherianLocalStatement
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.MemKernelOfLineBundleBaseChangeRepresentableStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFiniteClosedSubschemeRepresentsKernelAmple
+public import Mathlib.AlgebraicGeometry.Morphisms.Finite
+public import Mathlib.AlgebraicGeometry.Morphisms.Flat
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FlatOfIsFiniteOfFlatLocalizationMaximal
 public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.LineBundleKernelFlatOfFiniteNoetherianLocal
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.MemKernelOfLineBundleBaseChangeRepresentableStatement
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -67,8 +70,8 @@ namespace GlobalTheory.KernelFlat
 
 theorem kernelFiniteFlat : Laws → GlobalTheory.Published.KernelFiniteFlatSt := by
   intro hLaw V _ _ A _ hA L hL ha
-  obtain ⟨H, j, hj, hfin, hH⟩ := GlobalTheory.T.exists_finite_closed_subscheme_represents_kernel_ample hLaw.globalFns V A hA L hL ha
-  refine ⟨H, j, hj, hfin, GlobalTheory.T.flat_of_isFinite_of_flat_at_maximal V H hfin fun m _ => ?_, hH⟩
+  obtain ⟨H, j, hj, hfin, hH⟩ := _root_.GlobalTheory.KernelRep.exists_finite_closed_kernel hLaw.globalFns V A hA L hL ha
+  refine ⟨H, j, hj, hfin, _root_.GlobalTheory.flat_of_isFinite_of_flat_localization_maximal V H hfin fun m _ => ?_, hH⟩
   let f := spMap (algebraMap V (Localization.AtPrime m))
   have hA' : IsAbelianScheme ((Over.pullback f).obj A) := GlobalTheory.isAbelianScheme_pullback_obj f A hA
   have : IsCommMonObj ((Over.pullback f).obj A) := hA'.comm
@@ -80,7 +83,7 @@ theorem kernelFiniteFlat : Laws → GlobalTheory.Published.KernelFiniteFlatSt :=
     MorphismProperty.overPullbackMap (P := @IsClosedImmersion) f j hj
   have hfin' : IsFinite ((Over.pullback f).obj H).hom :=
     MorphismProperty.of_isPullback (P := @IsFinite) (IsPullback.of_hasPullback H.hom f) hfin
-  exact GlobalTheory.T.lineBundleKernel_flat_of_finite_noetherian_local hLaw.globalFns (Localization.AtPrime m) ((Over.pullback f).obj A) hA' hP _ hL'
+  exact _root_.GlobalTheory.StabFlatLocal.flat_of_isFinite hLaw.globalFns (Localization.AtPrime m) ((Over.pullback f).obj A) hA' hP _ hL'
     (GlobalTheory.AbLaw.CubeAffine.triv_theta_of_isProjBy hLaw _ _ hA' hP _ hL') ((Over.pullback f).obj H)
     ((Over.pullback f).map j) hj' (GlobalTheory.T.memKernelOfLineBundle_baseChange_representable _ _ f A L hL H j hH) hfin'
 

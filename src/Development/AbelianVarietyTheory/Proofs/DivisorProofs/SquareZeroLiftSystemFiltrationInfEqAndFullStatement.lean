@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SurjectiveOfIsPullbackSqZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdealCochainOfCoboundaryConstantsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocIsoTransportCochainsInIdealStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyLocIsoSquareZeroSmoothLiftSystemsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyLocIsoSquareZeroSmoothLiftSystems
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,7 +77,7 @@ theorem K_inf_eq_and_full : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I 
       S.K hI ⊓ I • (⊤ : Submodule R (Cr hI π s₀)) ≤ S'.K hI ⊓ I • (⊤ : Submodule R (Cr hI π s₀)) := by
     intro S S' c hc'
     obtain ⟨hcK, hcI⟩ := hc'
-    obtain ⟨Φ⟩ := GlobalTheory.T.nonempty_locIso_squareZeroSmoothLiftSystems R R₀ I hI π hπ hk X₀ s₀ S S'
+    obtain ⟨Φ⟩ := _root_.GlobalTheory.LiftSys.locIso_nonempty R R₀ I hI π hπ hk X₀ s₀ S S'
     obtain ⟨-, h2, h3⟩ := GlobalTheory.T.locIso_transport_cochains_in_ideal R R₀ I hI π hπ hk X₀ s₀ S S' Φ
     obtain ⟨z, z', hz, hmk, hmk', hzz⟩ := h3 c hcI
     have h0 : H1.mk _ z = 0 := hmk.trans (LinearMap.mem_ker.1 hcK)
@@ -88,7 +88,7 @@ theorem K_inf_eq_and_full : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I 
     funext U V a
     rw [h2 g hg U V a, hdg, hzz]
   refine fun S S' ↦ ⟨le_antisymm (key S S') (key S' S), fun hF z₁' hz₁' ↦ ?_⟩
-  obtain ⟨Ψ⟩ := GlobalTheory.T.nonempty_locIso_squareZeroSmoothLiftSystems R R₀ I hI π hπ hk X₀ s₀ S' S
+  obtain ⟨Ψ⟩ := _root_.GlobalTheory.LiftSys.locIso_nonempty R R₀ I hI π hπ hk X₀ s₀ S' S
   obtain ⟨h1, h2, h3⟩ := GlobalTheory.T.locIso_transport_cochains_in_ideal R R₀ I hI π hπ hk X₀ s₀ S' S Ψ
   obtain ⟨z₁, hz₁, hz₁e⟩ := h1 z₁' hz₁'
   obtain ⟨c, hcI, hc₁⟩ := hF z₁ hz₁

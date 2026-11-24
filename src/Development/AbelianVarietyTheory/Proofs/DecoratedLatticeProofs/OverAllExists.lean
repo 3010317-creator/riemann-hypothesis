@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValueDoubleExact
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselLevelStepFourierJacobiPeriodLinkStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiHandOffAutomorphicStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiHandOffAutomorphic
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceBaseVacuumDatumExistsUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceDataDistinctPlacesCommuteStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceDataDistinctPlacesCommute
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -136,7 +138,7 @@ theorem overAll_last (hstd : IsStdChar D ψ (-1)) (hunit : ∀ i, (p i).UnitAA) 
     · have hil : i ∈ l := by simpa [hij] using hi
       obtain ⟨g₁, hg₁, hv₁⟩ := ih hl.2 f g₀ hf hg₀ i hil
       have hjv : Vac ψ S T LS LT (· = (p j).v) g₁ := hv₁ j (Or.inr hl.1)
-      obtain ⟨g', hg'1, hg'2⟩ := GlobalTheory.T.splitPlaceData_distinct_places_commute D k (p i) (p j) n n' n n' ψ hstd (hunit i) (hunit j)
+      obtain ⟨g', hg'1, hg'2⟩ := _root_.GlobalTheory.FinPl.overSwap D k (p i) (p j) n n' n n' ψ hstd (hunit i) (hunit j)
         (fun e => hij (hinj e)) S T (α i) (β i) (α j) (β j) LS LT g₁ g₀ f' (Ψ i) (Ψ j) hjv hg₁ hf'
       refine ⟨g', hg'2, fun j' hj' => ?_⟩
       have hne : j' ≠ j := by
@@ -155,6 +157,6 @@ theorem contAut_hand0 {ψ : AddChar (AF D.host.F) ℂ} {σ : ℕ} {B : BesLev D 
     (s₁ : StepBF ψ B J) (s₂ : StepFB ψ J B') (l : Link B B'.L B'.ζ) (vL : VolM D B'.L.rank J.W₀.rank) {φ : GA D B.A → ℂ}
     {Ξ₁ : WO B.V₀ J.W₀ → ℂ} {Ξ₂ : WO J.W₀ B'.V₀ → ℂ} (hφ : IsContAut B.A φ) (h₁ : IsThetaFunO ψ B.V₀ J.W₀ Ξ₁)
     (h₂ : IsThetaFunO ψ J.W₀ B'.V₀ Ξ₂) : IsContAut B'.A (hand0 s₁ s₂ l vL φ Ξ₁ Ξ₂) :=
-  GlobalTheory.T.fourierJacobiHandOff_automorphic D ψ σ J B' s₂ vL _ Ξ₂ (GlobalTheory.T.bessel_level_step_fourierJacobi_period_link D ψ (σ + 1) B J s₁ B'.L B'.ζ B'.line l φ Ξ₁ hφ h₁).1 h₂
+  _root_.GlobalTheory.handFBLaw D ψ σ J B' s₂ vL _ Ξ₂ (GlobalTheory.T.bessel_level_step_fourierJacobi_period_link D ψ (σ + 1) B J s₁ B'.L B'.ζ B'.line l φ Ξ₁ hφ h₁).1 h₂
 
 end GlobalTheory.FinPl.ValDbl

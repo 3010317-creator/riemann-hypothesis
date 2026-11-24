@@ -8,9 +8,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeBasis
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CubicalWeilPairingTorsionConstHolomorphicFamilyStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsExponentialChartAtPoint
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFramedChartExponentialToroidalModel
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHolomorphicLatticeBasisPunctPolydiscCoverPStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PerValNeZero
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHolomorphicLatticeBasisPunctPolydiscCoverP
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsToricTorsionCubicalWeilOneComplexPointStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExponentialKernelLatticeRiemannFormOffBoundaryStatement
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.PointEqOfSubsingleton
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExponentialKernelLatticeRiemannFormOffBoundary
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TorsionCountThroughExponentialLatticeKernelStatement
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DetJacMatCoordsEqTransitionJacobianDet
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousLatticeVectorsAlongArc
@@ -419,7 +421,7 @@ theorem exists_continuous_latBasis_of_arc : ∀ (E : Type) [Field E] [NumberFiel
       rfl
     let xp : CxPts (genStr Z) σ := ⟨spMap (ψ ((ρ₂ : ℂ) * z 0)) ≫ x, hpt⟩
     have hin := hinner _ hur hu0 (IsLocalRing.closedPoint ℂ)
-    obtain ⟨Hm, hH, hpos, hspan, hint, hw⟩ := GlobalTheory.T.exponentialKernel_lattice_riemannForm_off_boundary E H Dw l Xo c O β Z σ g' xp (exN z) hσ hpq hin
+    obtain ⟨Hm, hH, hpos, hspan, hint, hw⟩ := _root_.GlobalTheory.ShFam.Hor.LogCh.kernel_lattice_of_inner E H Dw l Xo c O β Z σ g' xp (exN z) hσ hpq hin
       (hExpN z hzb) (hsliceN z hzb)
     exact ⟨Hm, hH, hpos, hspan, fun v hv w hw' => hint v w hv hw', fun N v w hN hv hw' => hw N v w _ hN hv hw' rfl⟩
   have hP4 : ∀ N : ℕ, 0 < N → ∃ S : Set (Fin r₀ → ZMod N), N ^ r₀ * Nat.card S = N ^ (2 * g') ∧
@@ -439,7 +441,7 @@ theorem exists_continuous_latBasis_of_arc : ∀ (E : Type) [Field E] [NumberFiel
     rw [unitOn_one]
     exact hT2 _ (hS a ha) _ (pow_eq_one_of_map _ (hExpN 0 hmem0).1 (hzeroN 0 hmem0) hN ((hB0.2 _).2 ⟨a', rfl⟩))
   obtain ⟨m, lam, ρc, hc, hs, hg⟩ :=
-    GlobalTheory.T.exists_holomorphic_latticeBasis_punctPolydiscCover_polyGrowth 1 1 g' r₀ K ζ' Pair hLF hζan hζli hζK hB0 hζC hζstd hP1 hP2 hP3 hP4
+    _root_.GlobalTheory.ShFam.Hor.LogCh.Core.core 1 1 g' r₀ K ζ' Pair hLF hζan hζli hζK hB0 hζC hζstd hP1 hP2 hP3 hP4
   let sv : ℂ → Fin 1 → ℂ := fun s _ => s
   have hsv : ∀ s : ℂ, ‖sv s‖ = ‖s‖ := fun s => pi_norm_const s
   have hdom : ∀ s : ℂ, s.re < 0 → sv s ∈ GlobalTheory.ShFam.Hor.logDom 1 1 := fun s hsr k => by

@@ -57,7 +57,7 @@ import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsUnique
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.FamMod
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.PrecompleteBases.PsbLb
 import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.ExistsSecNonzeroLocusEqOfLbIso
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsIsoOfSectionRingEquivStatement
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsIsoOfSectionRingEquiv
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.HomExtOfSecPullEq
 import Mathlib.AlgebraicGeometry.Modules.Sheaf
 import Mathlib.AlgebraicGeometry.QuasiAffine
@@ -582,7 +582,7 @@ theorem exists_iso_of_compatible_thickenings_gen {R : Type} [CommRing R] [IsLoca
     refine ⟨(i, k), (l' _).ge ⟨hi, (Rel.mem_iff hM hM' (hθ n₀ h4 _) 0 z).1 ?_⟩⟩
     rw [Equiv.apply_symm_apply]
     exact hk
-  obtain ⟨Ψ, hΨ⟩ := GlobalTheory.T.exists_iso_of_sectionRing_equiv_alt R P.A P'.A M M' hM hM' θ hlin hmul
+  obtain ⟨Ψ, hΨ⟩ := _root_.GlobalTheory.exists_iso_of_sectionRing_equiv R P.A P'.A M M' hM hM' θ hlin hmul
     ⟨n₀ + n₀, h4.trans (Nat.le_add_right n₀ n₀), κ' × κ, d,
       eq_top_of_thick I P'.A _ fun z => Opens.mem_iSup.2 (mem z),
       eq_top_of_thick I P.A _ fun z => by

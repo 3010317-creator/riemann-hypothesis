@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.XiVal
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
 public import Formalism.LocalToGlobal.ProjectiveLattices.CompHt
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsOpenCongruenceIdelesAndRealFiniteParts
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletionStatement
+public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.CoeSelfDualLatticeInFrameCoordinatesEq
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletion
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLatticeEmbeddingLiftDatumHermitianSpace
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLevelSubgroup
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMemberDictionaryContextGoodEmbedding
@@ -163,7 +164,7 @@ theorem iotaOK_of_latIsom (Q : Par D) (h : Q.Pins) (j : ℕ) (hj : InR D j) (V :
         s.toLinearMap '' (latG (D.sp.W j) 1 : Set _) := by
       rw [← h1.2, LinearMap.coe_range, ← Set.range_comp]
       rfl
-    rw [e1, ← Submodule.map_span, (GlobalTheory.T.adelicElementLattice_full_and_completion D _ 1).2.1, Submodule.map_top, LinearEquiv.range]
+    rw [e1, ← Submodule.map_span, (_root_.GlobalTheory.Member.latG_lattice_and_completion D _ 1).2.1, Submodule.map_top, LinearEquiv.range]
   subst hs
   exact ⟨h.1.2.1, h.1.2.2.1, h1, fun x y => by simpa using hε x y⟩
 

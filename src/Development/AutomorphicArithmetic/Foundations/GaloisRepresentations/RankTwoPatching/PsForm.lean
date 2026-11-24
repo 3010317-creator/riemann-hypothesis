@@ -5,7 +5,9 @@ import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.EmbedsLevel
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChevalleyUnits
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousRingEquivLocalFieldPreservesValuation
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSubquotientUnramPrinSeriesOfHasSupport
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalArtinMapUniqueTransportPlaceIsoStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Langlands
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.ChevalleyUnits
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalArtinMapUniqueTransportPlaceIso
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalLanglandsExtensionPreservesCuspidal
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PlaceOverTransportRingIsoSymm
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Mono0OfLpDimEqOne
@@ -238,7 +240,7 @@ theorem recTr (hG : GlobalTheory.Published.GlobalArtinReciprocity) {K : Type} [F
   congr 2
   refine List.ofFn_inj.mpr (funext fun k => hch _ _ _ _ fun s s' hss => ?_)
   rw [MonoidHom.comp_apply, MonoidHom.comp_apply,
-    GlobalTheory.T.localArtinMap_unique_transport_placeIso hG GlobalTheory.Published.chevalleyUnits' E Ω A w h K Ω A u h' _ j i P a a' ha ha' s s' hss]
+    _root_.GlobalTheory.LocLanglands.isLocalArtin_transport hG GlobalTheory.Published.chevalleyUnits' E Ω A w h K Ω A u h' _ j i P a a' ha ha' s s' hss]
   exact (congrArg (ξ k) (h5 _)).symm
 
 def RatioT : Prop :=

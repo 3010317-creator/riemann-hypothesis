@@ -58,7 +58,9 @@ import Formalism.LocalToGlobal.IndefiniteReal.RecTie
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvolutionSphericalHeckeAnti
 import Mathlib.Tactic.Linter.Style
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotentsStatement
+import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
+import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
 import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.SecondStepGluing
 import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ValBasic
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
@@ -199,7 +201,7 @@ theorem lev_split_at : ∀ (X : Stages) {px : PreX X.B.toPre} (I : Col2.ColIn X.
 
   obtain ⟨e, he⟩ := GlobalTheory.MovedIdem.exists_isIdemAt P hPc
   have hpi : IsPrimeIdem P e (e + cA X.toD7 e) := Or.inl ⟨he, rfl⟩
-  have h01 := (GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents (Vc X.toD7 i)).2.2.1 P e _ hpi
+  have h01 := (_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents (Vc X.toD7 i)).2.2.1 P e _ hpi
   have hff := h01.1
   have hcf := h01.2.1
   have h1 : ((1 : ℕ) : 𝓞 X.toD7.host.E) ∉ P.asIdeal := by

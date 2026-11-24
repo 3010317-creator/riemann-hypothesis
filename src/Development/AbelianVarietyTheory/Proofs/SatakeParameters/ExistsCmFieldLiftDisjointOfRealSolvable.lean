@@ -4,7 +4,13 @@ public import ReciprocityTheory.GaloisValuations.Global
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChebotarevDegreeOne
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.RegPolOfRepOf
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CmSubfieldsCompositumClosedStatement
+public import Mathlib.NumberTheory.NumberField.CMField
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CmSubfieldsCompositumClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -231,7 +237,7 @@ theorem GlobalTheory.KLift.exists_cm_lift : ∀ (Ω : Type) [Field Ω] (E : Type
   haveI : NumberField M := NumberField.of_module_finite E M
   haveI : IsAlgClosure M Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.tower_top (K := E) _⟩
   haveI : IsGalois E M := ⟨⟩
-  have hCM : IsCMField M := (GlobalTheory.T.cm_subfields_compositum_closed Ω E).2.2 M (F₁ : Set Ω) (fun x hx φ => by
+  have hCM : IsCMField M := (_root_.GlobalTheory.CMSub.isCMField_sup_le_adjoin Ω E).2.2 M (F₁ : Set Ω) (fun x hx φ => by
       have := hre x hx φ
       rw [Complex.star_def] at this
       exact Complex.conj_eq_iff_im.1 this) rfl

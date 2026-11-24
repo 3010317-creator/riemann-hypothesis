@@ -39,7 +39,7 @@ public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.CanonGau
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralChartDirectionsAreEigenvectors
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralChartFormalBiext
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SumSupportRename
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UniversalStatementStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UniversalStatement
 public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.CanonGaugeExists
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthBoundFromCharactersPointDatumStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MinorStProdRange
@@ -892,7 +892,7 @@ theorem transfer_columns : Laws → Laws2 → Laws4 → TwistBaseChangeStatement
     C.xT C.eT C.wPT C.chartT C.frameT C.primT
   obtain ⟨x, hx, j, hj, u, hu, B, hB, ρ, hρ, ε, hrel, hgerm⟩ := GlobalTheory.T.chartFromPointDatum_of_laws L1 L2 L4 TW E H T.V T.cpl C.I.G P tors ϖ hϖ
     Q hQ F v hv (chD C.ch) BT C.tgT C.xT C.eT C.wPT (by rw [e1, e2]; exact C.chartT)
-    (by rw [e1, e2, e3, e4, e5, e6]; exact C.frameT) C.primT (GlobalTheory.T.universal_statement E H Dw l Xo c T io y C) hFr τ hτ
+    (by rw [e1, e2, e3, e4, e5, e6]; exact C.frameT) C.primT (_root_.GlobalTheory.PowGerm.univSt_holds E H Dw l Xo c T io y C) hFr τ hτ
     (by rw [e2]; exact hEL)
   refine ⟨x, hx, j, hj, u, hu, B, hB, ρ, hρ, (Transfer.law_eq hrel).trans e1, (Transfer.act_eq hrel).trans e2, ?_⟩
   intro g g' π hg hg' hπ n D' A' G' _ _ pD pA pG U' PU _ oD' hxe hon s s' t f hcol

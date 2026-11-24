@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalVolumeLift
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoublingHeightAtRealPlaceLeOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IwasawaDoubledHermitianSpaceRealPlaceStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.T2SpaceAdeleRing
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IwasawaDoubledHermitianSpaceRealPlace
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,7 +81,7 @@ theorem hgtW_pos (D : D7) (V : HSp D) (a : GL (Fin V.rank) (AE D)) (w : Infinite
   exact h
 
 theorem hgtW_cont_pos_le_one : ∀ (D : D7) (V : HSp D) (a : GL (Fin V.rank) (AE D)), GlobalTheory.Doubling.IsMaj V a → ∀ w, Continuous (GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift.hgtW V a w) ∧ ∀ g, 0 < GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift.hgtW V a w g ∧ GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift.hgtW V a w g ≤ 1 := fun D V a ha w =>
-  ⟨continuous_hgtW D V a w (GlobalTheory.T.iwasawa_doubled_hermitian_space_real_place D V a ha w), fun g => ⟨hgtW_pos D V a w g, GlobalTheory.T.doublingHeightAtRealPlace_le_one D V a ha w g⟩⟩
+  ⟨continuous_hgtW D V a w (_root_.GlobalTheory.Core.Rk.IwArch.hasIwasawa_dblSp_arch D V a ha w), fun g => ⟨hgtW_pos D V a w g, GlobalTheory.T.doublingHeightAtRealPlace_le_one D V a ha w g⟩⟩
 
 end GlobalTheory.Corev.RealHeight
 end -- clump:auto

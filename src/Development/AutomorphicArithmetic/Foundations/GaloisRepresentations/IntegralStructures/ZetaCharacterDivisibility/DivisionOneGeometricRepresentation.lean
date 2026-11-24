@@ -21,7 +21,8 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsPstAtOf
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsSstAtOfIsCrysAt
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DirectSumDeRhamCrystallineJumpsAdd
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SumRepDeRhamIffAndMultiplicityAdd
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SumRepDeRhamIffAndMultiplicityAddStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.SumRepresentations
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 public import Mathlib.RepresentationTheory.Semisimple
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SphericalHeckeValuesSameParameters
 public import Development.AutomorphicArithmetic.DivisorFrames.FiniteDimensionalAutomorphicFormsUnitaryOfTypeLe
@@ -1211,7 +1212,7 @@ theorem UpperTheory.Gal.Int.Div.locSum_of :
     exact ⟨(m₁.isCrysAt_iff P).2 h3.1, (m₂.isCrysAt_iff P).2 h3.2⟩
   · obtain ⟨L, ρ, hm, hd, τ', t, -⟩ := id hJ
     obtain ⟨r₁, s₁, m₁, m₂, m⟩ := model_split hm
-    have S := GlobalTheory.T.sumRep_deRham_iff_and_multiplicity_add l P AI tied E Ω _ O Bw L a b r₁ s₁
+    have S := _root_.GlobalTheory.DirectSumLocal.isdRE_sumRep_and_multE_add l P AI tied E Ω _ O Bw L a b r₁ s₁
     have hds := S.1.1 ((m.isdRAt_iff P).1 ⟨L, ρ, hm, hd⟩)
     obtain ⟨K, hK⟩ := m₂.exists_isJumpsAt P hds.2 t
     rw [Multiset.le_iff_count]

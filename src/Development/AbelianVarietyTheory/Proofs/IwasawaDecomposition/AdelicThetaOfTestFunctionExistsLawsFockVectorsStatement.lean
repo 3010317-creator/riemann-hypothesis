@@ -1,15 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsTestFunctionOfFockVacuumThetaFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorTestThetaZeroEqThetaSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelTestFunctionMapLinearInjectiveEquivarStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUnique
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsTestFunctionOfFockVacuumThetaFunction
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorTestThetaZeroEqThetaSeries
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelTestFunctionMapLinearInjectiveEquivar
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FibExtMarked
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsConjugateModelSameThetaFunctionsStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsConjugateModelSameThetaFunctions
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorLaws
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinearStatement
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinear
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,13 +73,13 @@ namespace GlobalTheory.Ker
 
 theorem th_bij_fock : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ B, C.IsB B → (∀ φ : TF S.rank C.g, SW.IsSB φ → C.IsZak (C.xB B) φ (C.Th (C.xB B) φ) ∧ C.IsFock B (C.Th (C.xB B) φ)) ∧ (∀ f, C.IsTh f → C.IsFock B f → ∃! φ : TF S.rank C.g, SW.IsSB φ ∧ f = C.Th (C.xB B) φ) := by
   intro D S T C B hB
-  have hx : C.xB B ∈ C.X.dom := ((GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2 B hB).2.1
-  refine ⟨fun φ hφ => ⟨(GlobalTheory.T.adelicZakTheta_exists_unique D S T C _ hx φ hφ).1, ((GlobalTheory.T.fockPolynomialVector_testTheta_zero_eq_thetaSeries D S T C).2 B hB φ hφ).1⟩, ?_⟩
+  have hx : C.xB B ∈ C.X.dom := ((_root_.GlobalTheory.Ker.onBasis_frame_period D S T C).2 B hB).2.1
+  refine ⟨fun φ hφ => ⟨(_root_.GlobalTheory.Ker.ZakEx.isZak_Th D S T C _ hx φ hφ).1, ((_root_.GlobalTheory.Ker.fvec_Th_zero D S T C).2 B hB φ hφ).1⟩, ?_⟩
   intro f hf hF
-  obtain ⟨φ, hφ, rfl⟩ := GlobalTheory.T.exists_testFunction_of_fockVacuum_thetaFunction D S T C B hB f hf hF
+  obtain ⟨φ, hφ, rfl⟩ := _root_.GlobalTheory.Ker.exists_test_of_fock D S T C B hB f hf hF
   refine ⟨φ, ⟨hφ, rfl⟩, ?_⟩
   rintro ψ ⟨hψ, h⟩
-  exact (((GlobalTheory.T.thetaKernel_testFunction_map_linear_injective_equivariant D S T C _ hx φ hφ).1 ψ hψ).2 h).symm
+  exact (((_root_.GlobalTheory.Ker.Ctx.th_laws D S T C _ hx φ hφ).1 ψ hψ).2 h).symm
 
 end GlobalTheory.Ker
 end -- clump:auto
@@ -148,23 +148,23 @@ theorem zak_laws : ∀ (D : D7) (S T : HSp D) (r g : ℕ) (hr : T.rank = r) (ψ 
   intro D S T r g hr ψ θ X eT bas idx hS Z hZ
   have hq0 : X.p0 + (r - X.p0) = r := Nat.add_sub_cancel' X.p0_le
   obtain ⟨X', m, hq', bas', idx', hs, π, -, -, hheis, hZZ⟩ :=
-    GlobalTheory.T.exists_conjugateModel_same_thetaFunctions D S T r g hr ψ θ X eT bas idx hS (r - X.p0) hq0
+    _root_.GlobalTheory.OneMapRef.Flip.exists_flip_model D S T r g hr ψ θ X eT bas idx hS (r - X.p0) hq0
   obtain ⟨hB, hrest⟩ := hZZ Z
   obtain ⟨hsB, hzak, hthP⟩ := hrest hZ
   have hB := hB.1 hZ
   set C := ctxOf hS.1 hS.2.1 hS.2.2.2.1 X' m hq' bas' idx' hs with hC
   set B : C.Bas := fun ρ => (Z ρ).submatrix id π with hBdef
-  have hx : C.xB B ∈ C.X.dom := ((GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2 B hB).2.1
+  have hx : C.xB B ∈ C.X.dom := ((_root_.GlobalTheory.Ker.onBasis_frame_period D S T C).2 B hB).2.1
   have key : ∀ φ : TF S.rank g, GlobalTheory.SW.IsSB φ → ∀ f,
       Zak ψ θ hr eT bas idx (frOf hr eT Z) φ f ↔ f = C.Th (C.xB B) φ := by
     intro φ hφ f
     rw [← hzak]
-    exact ⟨(GlobalTheory.T.adelicZakTheta_exists_unique D S T C _ hx φ hφ).2 f, fun h => h ▸ (GlobalTheory.T.adelicZakTheta_exists_unique D S T C _ hx φ hφ).1⟩
+    exact ⟨(_root_.GlobalTheory.Ker.ZakEx.isZak_Th D S T C _ hx φ hφ).2 f, fun h => h ▸ (_root_.GlobalTheory.Ker.ZakEx.isZak_Th D S T C _ hx φ hφ).1⟩
   refine ⟨fun φ hφ => ⟨⟨_, (key φ hφ _).2 rfl⟩, fun f hf => ?_⟩, fun f hf hF => ?_⟩
   · have hth : C.IsTh f := hf.1
     obtain rfl := (key φ hφ f).1 hf
-    obtain ⟨l1, l2, l3, -⟩ := GlobalTheory.T.thetaKernel_testFunction_map_linear_injective_equivariant D S T C _ hx φ hφ
-    obtain ⟨f1, f2⟩ := (GlobalTheory.T.fockPolynomialVector_testTheta_zero_eq_thetaSeries D S T C).2 B hB φ hφ
+    obtain ⟨l1, l2, l3, -⟩ := _root_.GlobalTheory.Ker.Ctx.th_laws D S T C _ hx φ hφ
+    obtain ⟨f1, f2⟩ := (_root_.GlobalTheory.Ker.fvec_Th_zero D S T C).2 B hB φ hφ
     refine ⟨fun f' hf' => (key φ hφ f').1 hf', fun φ' hφ' h => ?_, fun a => ?_, fun φ' f' hφ' h => ?_,
       fun y => ?_, fun ρ => ?_, fun q0 hq Q => ?_⟩
     · exact ((l1 φ' hφ').2 ((key φ' hφ' _).1 h)).symm

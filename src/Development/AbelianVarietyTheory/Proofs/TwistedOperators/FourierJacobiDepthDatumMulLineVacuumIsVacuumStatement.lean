@@ -9,7 +9,7 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFr
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WittCoreProjectionMemLatticeOfSplits
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompletedHomLatticeModulusDepthMemShiftStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridLatticesCompactSelfDualSplittingStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemSelfDualLatticeOfMemAllLatticeCompletionsStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemSelfDualLatticeOfMemAllLatticeCompletions
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RationalMatrixSandwichMemCompletedHomLatticeSelfStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlacewiseToAdelicDecompositionForall
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacua
@@ -300,13 +300,13 @@ theorem line_mem : OnStd fun {D} _ _ {sc} {G} W F => ∀ σ (h : 2 * (σ + 1) + 
   have hℓ' := hline (σ + 1)
   have h0 := (hfr σ h').1
   have hj : ∀ y ∈ G.Λ (.core (2 * (σ + 1) + 1)), (F.dJ (σ + 1) h).i₀ *ᵥ y ∈ G.Λ (.grid (2 * (σ + 1) + 1) 0) :=
-    GlobalTheory.T.wittCoreEmbedding_mulVec_mem_lattice_of_splits _ (GlobalTheory.T.mem_selfDualLattice_of_mem_all_latticeCompletions hSg) fun v => ((hfr (σ + 1) h).2.1 v).2
+    GlobalTheory.T.wittCoreEmbedding_mulVec_mem_lattice_of_splits _ (_root_.GlobalTheory.FinPl.LocGlob.mem_of_mem_latV_all hSg) fun v => ((hfr (σ + 1) h).2.1 v).2
   have hq : ∀ t ∈ G.Λ (.grid (2 * σ + 2) 0), ((F.oB σ h').qB * (F.dB σ h').q0) *ᵥ t ∈
       idLat (G.pl.stA sc ^ (σ + 1) * (G.pl.stAbar sc ^ (σ + 1))⁻¹) (Submodule.span (𝓞 D.host.E) {F.ζ 0}) := by
     intro t ht
     rw [← Matrix.mulVec_mulVec]
-    exact GlobalTheory.T.orthogonalSummandProjection_mem_lattice_of_splits _ (GlobalTheory.T.mem_selfDualLattice_of_mem_all_latticeCompletions hℓ) (hfr σ h').2.2.2 _
-      (GlobalTheory.T.q0_mulVec_mem_of_splits _ (GlobalTheory.T.mem_selfDualLattice_of_mem_all_latticeCompletions h0) (fun v => ((hfr σ h').2.1 v).1) t ht)
+    exact GlobalTheory.T.orthogonalSummandProjection_mem_lattice_of_splits _ (_root_.GlobalTheory.FinPl.LocGlob.mem_of_mem_latV_all hℓ) (hfr σ h').2.2.2 _
+      (GlobalTheory.T.q0_mulVec_mem_of_splits _ (_root_.GlobalTheory.FinPl.LocGlob.mem_of_mem_latV_all h0) (fun v => ((hfr σ h').2.1 v).1) t ht)
   have key : ((F.oB σ h').resT _ u).2 =
       rat ((F.oB σ h').qB * (F.dB σ h').q0) * ((F.dB σ h').j0 * u * (F.dJ (σ + 1) h).p0) * rat (F.dJ (σ + 1) h).i₀ := by
     rw [OrthDec.resT_apply, rat_mul]

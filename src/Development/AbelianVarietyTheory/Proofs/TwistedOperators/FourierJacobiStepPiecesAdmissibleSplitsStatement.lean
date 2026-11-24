@@ -13,18 +13,18 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Tmu
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitIdealCompletionAtPlaceEqIntegralAdelesAtPlac
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsValuationOneElementAtGridPlaces
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdVLeOfLoc
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealCompletionPropertiesAtPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealCompletionPropertiesAtPlace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.JacobiToBesselFlatMapSupportProof
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PrimAtOfMonoId
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PsiUnipotentTrivialOnLevel
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHomLatticeCompletionIffSupportedMaps
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsLatticeDualZIdealMul
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridLatticesCompactSelfDualSplittingStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralAdeleSmulDepthLatticeGridRowMemLatOStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralAdeleSmulDepthLatticeGridRowMemLatO
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.StandardFramesSuccessiveLevelsStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselToJacobiFlatMapVacuumAtGoodPlace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExtZeroIncZeroMemLattice
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsNeZeroLatticeVacuumSelfDualStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsNeZeroLatticeVacuumSelfDual
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SmulMemLatOIdem
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapPreservesVacuumProof
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeCompletionSelfAnnihilatorAtPlaces
@@ -71,7 +71,7 @@ import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Definitions.Divisors.NatCastSmulMemHatL
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.CmHostImaginaryGeneratorNeZero
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MulFractionalIdealCompletionSubsetIffMemQuotientStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MulFractionalIdealCompletionSubsetIffMemQuotient
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeSelfDualTraceForm
 import Mathlib.Tactic.Linter.Style
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsTopologicalRingAE
@@ -343,7 +343,7 @@ theorem psiE_idem_entry {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (
     (N : Mx D (σ + 1) (σ + 1))
     (hY : ∀ y ∈ latV V LV (· = v), (xLast dW z ⬝ N ⬝ dV.pX) *ᵥ y ∈ latA W LW (· = v))
     (i j : Fin (σ + 1)) (hij : j.1 = i.1 + 1) : psiE ψ (idem D (· = v) * N i j) = 1 := by
-  obtain ⟨-, -, -, -, -, -, f7⟩ := GlobalTheory.T.fractionalIdealCompletion_properties_at_place D ψ hψ v
+  obtain ⟨-, -, -, -, -, -, f7⟩ := _root_.GlobalTheory.SeeSaw.idV_props D ψ hψ v
   have hiσ : i.1 < σ := by have := j.2; omega
   set i' : Fin σ := ⟨i.1, hiσ⟩ with hi'
   have hii : i'.castSucc = i := Fin.ext rfl
@@ -588,7 +588,7 @@ theorem lineW (F : GlobalTheory.Asc.Frames G) (hF : Std F) (σ : ℕ) (h' : 2 * 
       stairId (G.pl.stA sc) (G.pl.stAbar sc) (2 * σ + 2 - 1) (Fin.castLE (by omega) p) ≠ 0 :=
     mul_ne_zero (by rw [Ne, FractionalIdeal.spanSingleton_eq_zero_iff]; exact inv_ne_zero (pow_ne_zero _ (neg_ne_zero.2 cmHost_imaginaryGenerator_ne_zero)))
       (mul_ne_zero (pow_ne_zero _ hA) (inv_ne_zero (pow_ne_zero _ hB)))
-  have key := (GlobalTheory.T.mul_fractionalIdealCompletion_subset_iff_mem_quotient D v I⁻¹ _ (inv_ne_zero hI) hb _ hc).1 fun s hs => by
+  have key := (_root_.GlobalTheory.IdealQuot.mul_subset_iff D v I⁻¹ _ (inv_ne_zero hI) hb _ hc).1 fun s hs => by
     have h1 := ((hm _).1 (hsm s hs)).1 p
     rw [Matrix.mulVec_smul, Pi.smul_apply, smul_eq_mul] at h1
     have e1 : colMul (F.dB σ h').jX p (s * ((F.dB σ h').pX *ᵥ y) p) = fun k => s * ((F.dB σ h').pX *ᵥ y) p *
@@ -615,7 +615,7 @@ open scoped Pointwise
 
 theorem unipotent_character_trivial_at_S0 : OnStd fun {D} _ _ {sc} {G} W F => ∀ σ (h : 2 * (σ + 1) + 2 ≤ D.R.m) (h' : 2 * σ + 2 ≤ D.R.m), ∀ u : UX D (σ + 1), MxAt (fun _ => True) (u.1.1 - 1) → xFB F σ h' ⬝ u.1.1 - xFB F σ h' ∈ (pcFB W F σ h h').A₁ → ∀ v ∈ G.pl.S0, ∀ i j : Fin (σ + 1), j.1 = i.1 + 1 → psiE W.ψ (GlobalTheory.FinPlLoc.idem D (· = v) * u.1.1 i j) = 1 := by
   intro D hq T L μ0 hL sc G W M hM F hF σ h h' u hu hA1 v hv i j hij
-  obtain ⟨-, -, -, -, f5, -, -⟩ := GlobalTheory.T.fractionalIdealCompletion_properties_at_place D W.ψ W.ψ_std v
+  obtain ⟨-, -, -, -, f5, -, -⟩ := _root_.GlobalTheory.SeeSaw.idV_props D W.ψ W.ψ_std v
   have hiσ : i.1 < σ := by have := j.2; omega
   have hii : (⟨i.1, hiσ⟩ : Fin σ).castSucc = i := Fin.ext rfl
   have hne : i ≠ j := fun e => by rw [e] at hij; omega
@@ -662,7 +662,7 @@ theorem unipotent_character_trivial_at_S0 : OnStd fun {D} _ _ {sc} {G} W F => �
     show (xFB F σ h' ⬝ u.1.1 - xFB F σ h') ⬝ (F.dJ (σ + 1) h).pX = _
     rw [Matrix.mul_sub, Matrix.mul_one]
 
-  have hloc := GlobalTheory.T.integralAdele_smul_depthLatticeGridRow_mem_latO D hq T L μ0 hL sc G W M hM (2 * σ + 2) (by omega) v _ (idem_mem_intAt (· = v)) _ hrow
+  have hloc := _root_.GlobalTheory.RowInt.smul_mem_latO_at D hq T L μ0 hL sc G W M hM (2 * σ + 2) (by omega) v _ (idem_mem_intAt (· = v)) _ hrow
   have sdV : IsSelfDualC (G.V (.grid (2 * σ + 2 + 1) 0)) (G.Λ (.grid (2 * σ + 2 + 1) 0)) :=
     (G.isV (X := .grid (2 * σ + 2 + 1) 0) ⟨by omega, by omega⟩ fun j e => by cases e).sd
   have sdW : IsSelfDualC (G.V (.grid (2 * σ + 2) 0)) (G.Λ (.grid (2 * σ + 2) 0)) :=
@@ -678,7 +678,7 @@ theorem unipotent_character_trivial_at_S0 : OnStd fun {D} _ _ {sc} {G} W F => �
   have r1 := mul_mem_idV_of_lines (F.dJ (σ + 1) h) (F.dB σ h') _ _ (latA _ (G.Λ (.grid (2 * σ + 2) 0)) (· = v)) 𝔟V 𝔟W1
     ⟨i.1, hiσ⟩ j hV (fun y hy => lineW F hF σ h' v hmW ⟨i.1, hiσ⟩ D.host.AA hAA y hy) N hY1
   rw [hii] at r1
-  have hs1 : s ∈ idV (𝔟W1 * 𝔟V⁻¹) v := (GlobalTheory.T.mul_fractionalIdealCompletion_subset_iff_mem_quotient D v 𝔟V 𝔟W1 hbV hbW1 s hs).1 fun a ha => by
+  have hs1 : s ∈ idV (𝔟W1 * 𝔟V⁻¹) v := (_root_.GlobalTheory.IdealQuot.mul_subset_iff D v 𝔟V 𝔟W1 hbV hbW1 s hs).1 fun a ha => by
     rw [hsdef, mul_comm (idem D (· = v)) (N i j), mul_assoc, (mem_idAt_iff _ a).1 (hsupp a ha)]
     exact r1 a ha
 
@@ -693,7 +693,7 @@ theorem unipotent_character_trivial_at_S0 : OnStd fun {D} _ _ {sc} {G} W F => �
     ⟨i.1, hiσ⟩ j hV (fun y hy => lineW F hF σ h' v hmW ⟨i.1, hiσ⟩ _ hN0 y hy) (e • N) hY2
   rw [hii] at r2
   have hs2 : e * s ∈ idV (𝔟W2 * 𝔟V⁻¹) v :=
-    (GlobalTheory.T.mul_fractionalIdealCompletion_subset_iff_mem_quotient D v 𝔟V 𝔟W2 hbV hbW2 (e * s) (Ideal.mul_mem_left _ _ hs)).1 fun a ha => by
+    (_root_.GlobalTheory.IdealQuot.mul_subset_iff D v 𝔟V 𝔟W2 hbV hbW2 (e * s) (Ideal.mul_mem_left _ _ hs)).1 fun a ha => by
       have h3 := r2 a ha
       rw [Matrix.smul_apply, smul_eq_mul] at h3
       have e4 : e * s * a = e * N i j * (idem D (· = v) * a) := by rw [hsdef]; ring
@@ -733,7 +733,7 @@ theorem unipotent_character_trivial_off_S0 : OnStd fun {D} _ _ {sc} {G} W F => �
   intro D hq T L μ0 hL sc G W M hM F hF σ h h' u hA v hv i j hij
   obtain ⟨hgood, -⟩ := GlobalTheory.T.standard_frames_successive_levels D hq T L μ0 hL sc G W M hM F hF σ h h' v hv
   have hrow : (F.dJ (σ + 1) h).extX _ (xFB F σ h' ⬝ u.1.1 - xFB F σ h') ∈ latRow G (2 * σ + 2) := hA
-  have hloc := GlobalTheory.T.integralAdele_smul_depthLatticeGridRow_mem_latO D hq T L μ0 hL sc G W M hM (2 * σ + 2) (by omega) v _ (idem_mem_intAt (· = v)) _ hrow
+  have hloc := _root_.GlobalTheory.RowInt.smul_mem_latO_at D hq T L μ0 hL sc G W M hM (2 * σ + 2) (by omega) v _ (idem_mem_intAt (· = v)) _ hrow
   have sdV : IsSelfDualC (G.V (.grid (2 * σ + 2 + 1) 0)) (G.Λ (.grid (2 * σ + 2 + 1) 0)) :=
     (G.isV (X := .grid (2 * σ + 2 + 1) 0) ⟨by omega, by omega⟩ fun j e => by cases e).sd
   have sdW : IsSelfDualC (G.V (.grid (2 * σ + 2) 0)) (G.Λ (.grid (2 * σ + 2) 0)) :=
@@ -891,7 +891,7 @@ theorem pcFB_vac : OnStd fun {D} _ _ {sc} {G} W F => ∀ σ (h : 2 * (σ + 1) + 
     (node_isV G hL (X := .core (2 * (σ + 1) + 1)) (show 2 * (σ + 1) + 1 ≤ D.R.m by omega)).sd
   have sdV : IsSelfDualC (G.V (.grid (2 * (σ + 1) + 1) 0)) (G.Λ (.grid (2 * (σ + 1) + 1) 0)) :=
     (node_isV G hL (X := .grid (2 * (σ + 1) + 1) 0) (show 2 * (σ + 1) + 1 ≤ D.R.m ∧ 0 ≤ D.R.m by omega)).sd
-  refine GlobalTheory.T.exists_ne_zero_latticeVacuum_selfDual D W.ψ W.ψ_std _ _ (G.Λ (.core (2 * (σ + 1) + 1))) (lat0 F σ h') sdS sdT _ ?_
+  refine _root_.GlobalTheory.AscFin.VacSub.exists_vacG_ne_zero D W.ψ W.ψ_std _ _ (G.Λ (.core (2 * (σ + 1) + 1))) (lat0 F σ h') sdS sdT _ ?_
   intro u hu
   have hw := (GlobalTheory.FinPl.LatMem.mem_latO_iff D _ _ _ _ sdC.1 sdC.2 (fun _ => True) _).1 hu.1
   rw [GlobalTheory.FinPl.LatMem.mem_latO_iff D _ _ _ _ sdS sdT]

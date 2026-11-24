@@ -8,7 +8,8 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThetaPToLiftReal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MultiplicitySpaceEqZeroOfLowestKTypes
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankWeightComponentEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaAdjointAtLiftEqLowestKTypeRestrictionStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.ThetaFireRow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaAdjointAtLiftEqLowestKTypeRestriction
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsProvisionalDivX
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NonemptyRingHomComplexOfLeContinuum
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PointGlobalSectionsNeBot
@@ -254,7 +255,7 @@ theorem thetaP_read_noEta : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I
       rw [Y.muAt, Equiv.apply_symm_apply, hw]
   set xM := D.what₂.jMt (Y.tup t) ((i : ℕ) + 1) (Y.eMt i t x) with hxM
   set zt := R.jV i t (liftForm A3.A F.P0 F.ψ0 i t x) with hzt
-  obtain ⟨w, hwM, hwK, hwW⟩ := GlobalTheory.T.thetaAdjoint_at_lift_eq_lowestKType_restriction R.toRealDat F.lv2 Y.tupT Y.hm Y.hTop Y.hinj hP.char.base.lev
+  obtain ⟨w, hwM, hwK, hwW⟩ := _root_.GlobalTheory.ThetaFireLift.thetaFireL R.toRealDat F.lv2 Y.tupT Y.hm Y.hTop Y.hinj hP.char.base.lev
     hP.char.base.grp hM hE R.hv0 Y.IL (Y.tup t) hμ i xM
   have hth := Y.tied.lift.theta (Y.tup t) hμ i xM w
     (GlobalTheory.ThetaPRead.isThetaP_toLiftReal R.toRealDat F.lv2 Y.tupT Y.hm Y.hTop Y.hinj hE.thF (Y.tup t) i) hwM hwK hwW

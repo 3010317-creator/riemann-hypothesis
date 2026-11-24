@@ -27,7 +27,6 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsD
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGtExtOfTorsion
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralDegenerationValues
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissibleBaseOfCompleteDvr
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralDegenerationValuesStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsQkPullEquiv
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HomTransport
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DetCondIffOfFieldExtension
@@ -745,7 +744,7 @@ theorem det_iff {D₀ : DegPre R} {D' : DegPre K} (hD : IsPullDeg φ D₀ D') [M
 
 theorem exists_values (hL : Laws) (hGt : BrGtSt) [IsAlgClosed F] (D' : DegPre K) (he : D'.PsiEven) (hB : D'.TauBimult) :
     ∃ (N : NumD F) (ν : NumOf D' F N), ∀ k (p : QkPt D' F k), ∃ q, ν.QPt p q := by
-  obtain ⟨N, ν, -⟩ := GlobalTheory.T.exists_integral_degeneration_values hL K D' he hB F ⊤ fun _ => trivial
+  obtain ⟨N, ν, -⟩ := _root_.GlobalTheory.ValuesExist.exists_integral_values hL K D' he hB F ⊤ fun _ => trivial
   exact ⟨N, ν, fun k p => (((hGt K D' he hB F N ν).2.2.2.2 k).1 p).exists⟩
 
 theorem exists_up (hL : Laws) (hGt : BrGtSt) [IsAlgClosed F] (hF : ArcPull.Compat φ F) (A : ArcF D R F) :

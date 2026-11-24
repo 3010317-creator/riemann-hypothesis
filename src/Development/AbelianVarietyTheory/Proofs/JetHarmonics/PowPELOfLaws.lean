@@ -9,7 +9,10 @@ public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsBasi
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.TwistingStatementsOfLaws
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ValFinProdGen
 import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ValuationThetaRatioEqBilinear
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TorsionIsoOfLinearUniformisationTripleStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.VRatioGtStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.PeriodicValuation
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TorsionIsoOfLinearUniformisationTriple
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,7 +73,7 @@ theorem powPEL_of_laws : Laws → Laws2 → Laws3 → Laws4 → Laws5 → TwistB
     GlobalTheory.exists_pelUnif_of_unifPow h₁ h₂ h₄ hT T.V E H C.I.G P n D' A' G' pD pA pG U' PU oD' hx hB
   refine ⟨oA', hoA, GlobalTheory.QBox.main T.V ϖ hϖ n P.D D' pD Q hQ,
     GlobalTheory.exists_tateIso_of_isPowPolAV h₁ h₂ h₄ hT E H T.V n P.A A' pA F _ _ hoA Dw I, t', P', ?_, hP'⟩
-  exact GlobalTheory.T.torsionIso_of_linear_uniformisation_triple ⟨h₁, h₂, h₃, h₄, h₅⟩ (twistBCSpan_of hT) GlobalTheory.RatioVal.main
+  exact _root_.GlobalTheory.UT.torsionIso_of_pelUnif ⟨h₁, h₂, h₃, h₄, h₅⟩ (twistBCSpan_of hT) GlobalTheory.RatioVal.main
     (GlobalTheory.twisting_statements_of_laws h₁ hT).1 (GlobalTheory.UnitBallFree.main h₁.globalFns hT) E H T.V _ hA t' P'
 
 end GlobalTheory.PowGerm

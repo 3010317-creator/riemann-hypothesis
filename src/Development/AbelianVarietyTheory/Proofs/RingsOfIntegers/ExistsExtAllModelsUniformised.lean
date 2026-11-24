@@ -7,7 +7,7 @@ import Mathlib.Tactic.Basify
 public import Development.AbelianVarietyTheory.Definitions.PlaceAdaptation.AdaptStd
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.BaseChangeHomTopBijective
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsCdvrFiniteExtension
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.TorsionRationalOverFiniteExtensionLevelStructureStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.TorsionRationalOverFiniteExtensionLevelStructure
 public import Formalism.LocalToGlobal.ProjectiveLattices.IntAllProofFree
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsAbelianSchemeThick
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsOpenOfRangeGenericSubset
@@ -266,13 +266,13 @@ theorem exists_ext_intChart_unif : ∀ (E : Type) [Field E] [NumberField E] [IsC
 theorem exists_good_chart_allRat : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io), T.FinRes → ∀ M : ℕ, 0 < M → ∃ (T' : CDVR) (iT : T.Fr →+* T'.Fr) (e : ℕ) (y' : IntFr Xo c T' (iT.comp io)) (C' : IntegralChartA3 Xo c T' (iT.comp io) y'), IsExt y iT e y' ∧ T'.FinRes ∧ Good3 C' ∧ AllRat Xo (xOf y') M := by
   intro E _ _ _ H Dw l Xo c _ hstar T io y hfin M hM
   obtain ⟨T₁, i₁, e₁, y₁, C₁, hext₁, hfin₁, hgood₁⟩ := exists_ext_intChart_unif E H Dw l Xo c hstar T io y hfin
-  obtain ⟨L, _, _, hL, hrat⟩ := (GlobalTheory.T.torsion_rational_over_finite_extension_level_structure E H Dw l Xo T₁.Fr (xOf y₁) M hM).1
+  obtain ⟨L, _, _, hL, hrat⟩ := (_root_.GlobalTheory.torsion_rational_over_finite_extension E H Dw l Xo T₁.Fr (xOf y₁) M hM).1
   obtain ⟨T₂, i₂, e₂, ψ, φ, he₂, hv₂, hψ, -, hfin₂⟩ := GlobalTheory.PlaceExtField.exists_cdvr_finite_extension T₁ L
   obtain ⟨⟨y₂, hext₂⟩, hy⟩ := exists_isExt_and_trans E H Dw l Xo c T₁ T₂ (i₁.comp io) y₁ i₂ e₂ he₂ hv₂
   have hx₂ := (hy y₂ hext₂).1
   obtain ⟨C₂, hgood₂⟩ := exists_good_chart_ext E H Dw l Xo c hstar T₁ (i₁.comp io) y₁ C₁ hgood₁ T₂ i₂ e₂ y₂ hext₂
   have htr := ((exists_isExt_and_trans E H Dw l Xo c T T₁ io y i₁ e₁ hext₁.1 hext₁.2.1).2 y₁ hext₁).2 T₂ i₂ e₂ y₂ hext₂
-  have hrat₂ := ((GlobalTheory.T.torsion_rational_over_finite_extension_level_structure E H Dw l Xo L _ M hM).2 hrat).1 T₂.Fr ψ.toRingHom
+  have hrat₂ := ((_root_.GlobalTheory.torsion_rational_over_finite_extension E H Dw l Xo L _ M hM).2 hrat).1 T₂.Fr ψ.toRingHom
   have hi : i₂ = ψ.toRingHom.comp (algebraMap T₁.Fr L) := RingHom.ext fun a => (hψ a).symm
   have hsp : spMap ψ.toRingHom ≫ spMap (algebraMap T₁.Fr L) ≫ xOf y₁ = xOf y₂ := by
     rw [hx₂, hi, ← Category.assoc]

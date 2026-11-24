@@ -8,7 +8,8 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.Cry
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeFirstDeRhamStructure
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianLifting
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeHomLiftingNilpotentDividedPowers
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeUnobstructedSquareZeroAffineStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianUnobstructed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeUnobstructedSquareZeroAffine
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GrothendieckDeformationOfLifting
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GroupObjectLiftDividedPowers
 import Mathlib.Algebra.Order.Floor.Extended
@@ -109,7 +110,7 @@ theorem exists_lift_oAct : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.H
   intro p _ D R _ b N C C₀ _ _ _ _ π hπ hsq tR o₀ E hE hFil hstab
   have GD := GlobalTheory.Published.grothendieckDeformation_of_lifting _root_.GlobalTheory.abelianDeRham _root_.GlobalTheory.abelianScheme_hom_lifting_nilpotent_dividedPowers
   have hκ := isDPNilpotent_squareZero hsq
-  obtain ⟨A₁, _, i₁, h₁, hA₁⟩ := GlobalTheory.T.abelianScheme_unobstructed_squareZero_affine C (RingHom.ker π) hsq C₀ π hπ rfl o₀.A o₀.ab
+  obtain ⟨A₁, _, i₁, h₁, hA₁⟩ := _root_.GlobalTheory.UnobTop.abelianUnobstructed C (RingHom.ker π) hsq C₀ π hπ rfl o₀.A o₀.ab
   haveI := hA₁.smooth
   haveI := hA₁.geomConnected
   haveI := _root_.GlobalTheory.LocalFibre.connectedSpace_sp C

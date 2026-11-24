@@ -12,19 +12,22 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLiftEqC
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstRelIffTwistFactorAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTwistHeckeCharacters
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsHeckeCharMulInv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctionsStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctions
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsHomogeneousOfRowDeg
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ConstantUniqueOfEqProduct
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoverValueCore
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockCoefficientMapExtremalEqPhaseSmulLettersStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockCoefficientMapExtremalEqPhaseSmulLetters
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenReadsOfUnfBC
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LettersEqFockVarsCore
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmulMemLatGHat
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKernelOneClassEqClassicalShortSeriesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MarkAd
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PerCEmb
+public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKernelOneClassEqClassicalShortSeries
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnfoldingFrameDeltaChange
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DualHalfLevelMarkingExistsAndMatch
-import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 import Formalism.LocalToGlobal.UnitaryNorms.CharUniq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -60,7 +63,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-import Development.AbelianVarietyTheory.Definitions.Divisors.PerCEmb
 import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.DatEqZero
 import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
 import Mathlib.Topology.Sheaves.Init
@@ -180,7 +182,7 @@ namespace GlobalTheory.AdThCore
 
 theorem weil_twist_base : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Type) (A : Formalism.L2.DIV.FamIn D.what₂.LL G Pl0 T0 D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A), GlobalTheory.Hk3.Core R F → ∀ (i : Fin D.R.m) (t : T0) (k : GA D (Wc D i)) (x : (AE D)ˣ), IsDetRoot (Wc D i) k x → ∀ f, IsThetaFunO R.ψ (Vc D i) (Wc D i) f → R.ωP i t (1, k) f = ((R.xi t x : Circle) : ℂ) • R.ωP i A.μ0 (1, k) f := by
   intro D G _ _ Pl0 T0 A Ks _ _ _ R F hR i t k x hx f hf
-  have h := GlobalTheory.TwistFactorProof.frame_ratio R (GlobalTheory.T.weilDatum_unique_on_thetaFunctions D) (GlobalTheory.WeilChange.exists_weilDatum_twist D) hR.thP.ωP i A.μ0 t hx hf
+  have h := GlobalTheory.TwistFactorProof.frame_ratio R (_root_.GlobalTheory.WeilUniq.weilDatum_unique D) (GlobalTheory.WeilChange.exists_weilDatum_twist D) hR.thP.ωP i A.μ0 t hx hf
   rw [GlobalTheory.TwistFactorCompare.eq_one_of_chrEq_one (hR.lev.xi_base ▸ hR.lev.xi A.μ0) x, Circle.coe_one, one_smul] at h
   exact h
 
@@ -362,8 +364,8 @@ theorem exists_serOf_core : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartI
   intro _ D G _ _ Pl0 T0 A T _ R F κ v₀ hR hT hI i Tp tup O hP cc hcc
   have hs : O.s0 = T.toCore.σ₀ := sOv_eq _ _ _
   obtain ⟨h1, h2, -⟩ := GlobalTheory.PtId.dict_cast T hT.laws _ (inR i) O.s0 (hs ▸ T.toCore.good_σ₀) (Wc D i) O.hV (rank_Wc i)
-  obtain ⟨δ, hδ⟩ := GlobalTheory.T.thetaKernel_oneClass_eq_classicalShortSeries D G Pl0 T0 A _ R F hR i hP.lift.std _ _ (iotaW T i) h1 h2
-  obtain ⟨ka, hka, hio⟩ := GlobalTheory.T.fockCoefficientMap_extremal_eq_phase_smul_letters D G Pl0 T0 A T R F κ v₀ hR hT hI i Tp tup O hP
+  obtain ⟨δ, hδ⟩ := _root_.GlobalTheory.AdTh.ShortSeriesCore.thetaKO_eq_short_series_core D G Pl0 T0 A _ R F hR i hP.lift.std _ _ (iotaW T i) h1 h2
+  obtain ⟨ka, hka, hio⟩ := _root_.GlobalTheory.AdTh.PhaseMapCore.io_eq_phase_smul_core D G Pl0 T0 A T R F κ v₀ hR hT hI i Tp tup O hP
   obtain ⟨c0, hc0, hcov⟩ := GlobalTheory.AdTh.CoverVal.cover_value_core D G Pl0 T0 A T R F κ v₀ hR hT i Tp tup O hP
   have hd : ‖((δ : ℤ) : ℂ)‖ = 1 := by
     rcases Int.units_eq_one_or δ with rfl | rfl <;> simp

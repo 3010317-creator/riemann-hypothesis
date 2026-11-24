@@ -5,7 +5,8 @@ public import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
 public import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ConjAtFixedIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscreteSeriesModelUnitaryIrreducibleOrthonormal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasDerivAtSobolevContinuousOrbitStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVectorsUnitaryRepStableConjSkewAdjointStatement
+public import Formalism.LocalToGlobal.BesselHermitianTheta.TiedType
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVectorsUnitaryRepStableConjSkewAdjoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,7 +79,7 @@ theorem rder_eq : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau �
   have hH := GlobalTheory.SmoothAutCheck.gramAt_herm V τ
   have hU := GlobalTheory.SmoothAutCheck.gramAt_unit V τ
   have hπ := (GlobalTheory.HolDict.ModelRep.model_rep D V S M τ).2.1
-  obtain ⟨h1, -, h3⟩ := GlobalTheory.T.smoothVectors_unitaryRep_stable_conj_skewAdjoint _ _ _ _ hH hU hπ _ hs
+  obtain ⟨h1, -, h3⟩ := _root_.GlobalTheory.SmVecCalc.smooth_calculus _ _ _ _ hH hU hπ _ hs
   refine ⟨⟨_, Submodule.subset_span (h3 X hX).1⟩, rfl, ?_⟩
   funext x
   obtain ⟨ℓ, hℓ, hℓT⟩ := hT.cont τ v x

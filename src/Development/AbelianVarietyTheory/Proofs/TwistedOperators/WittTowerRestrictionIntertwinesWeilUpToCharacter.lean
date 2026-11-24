@@ -22,13 +22,12 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinTen
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulEqZeroOfInf
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsHomSpaceDualIsotropicMiddleDecompositionStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsotropicDualMiddlePartsSymplecticOrthogonalStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsotropicDualMiddlePartsSymplecticOrthogonal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisThetaLaws
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurLemmaThetaFunctionsOrientedPair
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsotropicDualMiddlePartsSymplecticOrthogonal
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RestrictedHeisenbergTermsPermutedRationalUnitary
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HomSymplecticHalfFormAlgebraicLawsContinuous
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsotropicDualFrameOfSplitEmbeddingStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsotropicDualFrameOfSplitEmbedding
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.MeasureTheory.Group.FundamentalDomain
@@ -95,7 +94,7 @@ import Mathlib.Algebra.Azumaya.Basic
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.MeanSquareAddFundamentalDomainOfCocompact
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Mathlib.Tactic.TypeStar
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaRestrictIsotropicQuotientWittTowerPropertieStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaRestrictIsotropicQuotientWittTowerPropertie
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaFunctionScalarProductPreservedIsometry
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
@@ -1003,7 +1002,7 @@ open GlobalTheory.LatVac in
 theorem chars : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V.rank) (Fin r) D.host.E) (B : Matrix (Fin V.rank) (Fin V'.rank) D.host.E), IsIsoSplit V V' C B → ∀ C' : Matrix (Fin V.rank) (Fin r) D.host.E, adj D C * V.gram * C' = 1 → adj D C' * V.gram * C' = 0 → adj D C' * V.gram * B = 0 → ∀ (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → (∀ (a : Matrix (Fin W.rank) (Fin r) D.host.E), Continuous fun t : Mx D W.rank r => ψ (symplO V W (isoPart V W C' t) (isoPart V W C (a.map (incA D))))) ∧ (∀ (a : Matrix (Fin W.rank) (Fin r) D.host.E) t s, ψ (symplO V W (isoPart V W C' (t + s)) (isoPart V W C (a.map (incA D)))) = ψ (symplO V W (isoPart V W C' t) (isoPart V W C (a.map (incA D)))) * ψ (symplO V W (isoPart V W C' s) (isoPart V W C (a.map (incA D))))) ∧ (∀ (a b : Matrix (Fin W.rank) (Fin r) D.host.E) t, ψ (symplO V W (isoPart V W C' t) (isoPart V W C ((a + b).map (incA D)))) = ψ (symplO V W (isoPart V W C' t) (isoPart V W C (a.map (incA D)))) * ψ (symplO V W (isoPart V W C' t) (isoPart V W C (b.map (incA D))))) ∧ (∀ t, (∀ a : Matrix (Fin W.rank) (Fin r) D.host.E, ψ (symplO V W (isoPart V W C' t) (isoPart V W C (a.map (incA D)))) = 1) ↔ t ∈ ratMx D W.rank r) ∧ ∀ a : Matrix (Fin W.rank) (Fin r) D.host.E, (∀ t, ψ (symplO V W (isoPart V W C' t) (isoPart V W C (a.map (incA D)))) = 1) → a = 0 := by
   intro D V V' W r C B hs C' h1 h2 h3 ψ hψ
   obtain ⟨e, he, hrat⟩ := GlobalTheory.T.exists_homSpace_dual_isotropic_middle_decomposition D V V' W r C B hs C' h1 h2 h3
-  obtain ⟨oII, oIM, oDM, oDD⟩ := GlobalTheory.T.isotropicDualMiddleParts_symplectic_orthogonal D V V' W r C B hs C' h1 h2 h3
+  obtain ⟨oII, oIM, oDM, oDD⟩ := _root_.GlobalTheory.TwistFormsOrth.orthogonal D V V' W r C B hs C' h1 h2 h3
   have hdual : ∀ t, isoPart V W C' t = e (t, 0, 0) := fun t => by
     rw [he, isoPart_zero, midPart_zero, add_zero, add_zero]
   have hiso : ∀ y, isoPart V W C y = e (0, y, 0) := fun y => by
@@ -1312,7 +1311,7 @@ theorem sum_translates_eq : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix 
   haveI : Countable D.host.E := Countable.of_equiv _ (Module.finBasis ℚ D.host.E).equivFun.toEquiv.symm
   haveI : Countable (Matrix (Fin W.rank) (Fin r) D.host.E) :=
     inferInstanceAs (Countable (Fin W.rank → Fin r → D.host.E))
-  have hsp := GlobalTheory.T.isotropicDualMiddleParts_symplectic_orthogonal D V V' W r C B hCB C' h1 h2 h3
+  have hsp := _root_.GlobalTheory.TwistFormsOrth.orthogonal D V V' W r C B hCB C' h1 h2 h3
   have hiso0 : isoPart V W C' (0 : Mx D W.rank r) = 0 := by
     have e := _root_.GlobalTheory.TwistEquiRat.isoPart_add V W C' (0 : Mx D W.rank r) 0
     rw [add_zero] at e
@@ -1364,7 +1363,7 @@ theorem sum_translates_eq : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix 
 
 theorem coef_unfold : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V.rank) (Fin r) D.host.E) (B : Matrix (Fin V.rank) (Fin V'.rank) D.host.E), IsIsoSplit V V' C B → ∀ (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (μ : Measure (Mx D W.rank r)) (𝓨 : Set (Mx D W.rank r)), IsCovolOne (ratMx D W.rank r) μ 𝓨 → ∀ (μV : Measure (WO V W)) (𝓕V : Set (WO V W)), μV.IsAddHaarMeasure → IsAddFundamentalDomain (ratL W V) 𝓕V μV → ∀ (μ' : Measure (WO V' W)) (𝓕' : Set (WO V' W)), μ'.IsAddHaarMeasure → IsAddFundamentalDomain (ratL W V') 𝓕' μ' → ∃ ν : Measure (Mx D W.rank r), ν.IsAddHaarMeasure ∧ ∀ F G, IsThetaFunO ψ V W F → IsThetaFunO ψ V W G → ∀ x : WO V' W, ∫ w in 𝓕', heisO ψ V' W x (res V V' W C B μ 𝓨 F) w * star (res V V' W C B μ 𝓨 G w) ∂μ' = ∫ y, (∫ w in 𝓕V, heisO ψ V W (isoPart V W C y + midPart V V' W B x) F w * star (G w) ∂μV) ∂ν := by
   intro D V V' W r C B hCB ψ hψ μ 𝓨 hY μV 𝓕V hμV hFV μ' 𝓕' hμ' hF'
-  obtain ⟨C', h1, h2, h3⟩ := GlobalTheory.T.exists_isotropicDualFrame_of_splitEmbedding D V V' r C B hCB
+  obtain ⟨C', h1, h2, h3⟩ := _root_.GlobalTheory.TwistDual.exists_isotropic_dual D V V' r C B hCB
   obtain ⟨κ, hκ0, hκ⟩ := GlobalTheory.T.integral_hom_fundamental_domain_isotropic_split_coords D V V' W r C B hCB C' h1 h2 h3 μ 𝓨 hY μV 𝓕V hμV hFV μ' 𝓕' hμ' hF'
   have hY' := hY
   obtain ⟨hμH, hYF, -⟩ := hY'
@@ -1378,14 +1377,14 @@ theorem coef_unfold : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V
   have hc0 : ENNReal.ofReal κ⁻¹ ≠ 0 := (ENNReal.ofReal_pos.2 (inv_pos.2 hκ0)).ne'
   refine ⟨ENNReal.ofReal κ⁻¹ • μ, MeasureTheory.Measure.IsAddHaarMeasure.smul μ hc0 ENNReal.ofReal_ne_top, ?_⟩
   intro F G hF hG x
-  have hsp := GlobalTheory.T.isotropicDualMiddleParts_symplectic_orthogonal D V V' W r C B hCB C' h1 h2 h3
+  have hsp := _root_.GlobalTheory.TwistFormsOrth.orthogonal D V V' W r C B hCB C' h1 h2 h3
   have hF₁ := (GlobalTheory.HeisThetaLaws.heis_theta_laws D ψ hψ V W).1 (midPart V V' W B x) F hF
   have he : ∀ y : Mx D W.rank r, heisO ψ V W (isoPart V W C y) (heisO ψ V W (midPart V V' W B x) F) =
       heisO ψ V W (isoPart V W C y + midPart V V' W B x) F := by
     intro y
     rw [(GlobalTheory.HeisThetaLaws.heis_theta_laws D ψ hψ V W).2.1, _root_.GlobalTheory.CoefUnfold.symplOH_eq_zero_of_symplO_eq_zero V W _ _ (hsp.2.1 y x),
       AddChar.map_zero_eq_one, one_smul]
-  rw [← ((GlobalTheory.T.thetaRestrictIsotropicQuotient_wittTower_properties D V V' W r C B hCB ψ hψ μ 𝓨 hY).1 F hF).2.2.1 x,
+  rw [← ((_root_.GlobalTheory.TowerRestrict.res_theta D V V' W r C B hCB ψ hψ μ 𝓨 hY).1 F hF).2.2.1 x,
     ← GlobalTheory.T.isotropicMean_thetaProduct_conj_eq_restrictionProduct D V V' W r C B hCB ψ hψ μ 𝓨 hY μ' 𝓕' hμ' hF' _ G hF₁ hG]
   simp_rw [← he]
   obtain ⟨hsum, hint⟩ := _root_.GlobalTheory.Twist.Periodize.integral_eq_setIntegral_tsum D W.rank r μ 𝓨 hμH hYF
@@ -1508,7 +1507,7 @@ theorem per_h {V V' W : HSp D} {r : ℕ} {C : Matrix (Fin V.rank) (Fin r) D.host
     ∃ c : ℂ, ‖c‖ = 1 ∧ ∀ f, IsThetaFunO ψ V W f →
       res V V' W C B μ 𝓨 (ω (1, h) f) = c • ω' (1, h) (res V V' W C B μ 𝓨 f) := by
   have hψ := hω.std
-  obtain ⟨hR, f₀, hf₀, hR0⟩ := GlobalTheory.T.thetaRestrictIsotropicQuotient_wittTower_properties D V V' W r C B hs ψ hψ μ 𝓨 hμ
+  obtain ⟨hR, f₀, hf₀, hR0⟩ := _root_.GlobalTheory.TowerRestrict.res_theta D V V' W r C B hs ψ hψ μ 𝓨 hμ
   have thV := (GlobalTheory.HeisThetaLaws.heis_theta_laws D ψ hψ V W).1
   have thV' := (GlobalTheory.HeisThetaLaws.heis_theta_laws D ψ hψ V' W).1
   obtain ⟨μV, 𝓕V, hμV, h𝓕V⟩ := exists_fd (D := D) V W
@@ -1622,7 +1621,7 @@ theorem per_h {V V' W : HSp D} {r : ℕ} {C : Matrix (Fin V.rank) (Fin r) D.host
 theorem main : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V.rank) (Fin r) D.host.E) (B : Matrix (Fin V.rank) (Fin V'.rank) D.host.E), IsIsoSplit V V' C B → ∀ (ψ : AddChar (AF D.host.F) ℂ) (χS χT χS' χT' : (AE D)ˣ →* Circle) (ω : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)) (ω' : GA D V' × GA D W →* Module.End ℂ (WO V' W → ℂ)), IsWeilDatumO ψ V W χS χT ω → IsWeilDatumO ψ V' W χS' χT' ω' → ∀ (μ : Measure (Mx D W.rank r)) (𝓨 : Set (Mx D W.rank r)), IsCovolOne (ratMx D W.rank r) μ 𝓨 → ∃ c : GA D W →* Circle, ∀ h f, IsThetaFunO ψ V W f → res V V' W C B μ 𝓨 (ω (1, h) f) = (c h : ℂ) • ω' (1, h) (res V V' W C B μ 𝓨 f) := by
   intro D V V' W r C B hs ψ χS χT χS' χT' ω ω' hω hω' μ 𝓨 hμ
   have P := fun h => per_h hs hω hω' hμ h
-  obtain ⟨-, f₀, hf₀, hR0⟩ := GlobalTheory.T.thetaRestrictIsotropicQuotient_wittTower_properties D V V' W r C B hs ψ hω.std μ 𝓨 hμ
+  obtain ⟨-, f₀, hf₀, hR0⟩ := _root_.GlobalTheory.TowerRestrict.res_theta D V V' W r C B hs ψ hω.std μ 𝓨 hμ
   let c : GA D W → ℂ := fun h => Classical.choose (P h)
   have hc1 : ∀ h, ‖c h‖ = 1 := fun h => (Classical.choose_spec (P h)).1
   have hc : ∀ h f, IsThetaFunO ψ V W f →

@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.GeneralizedEigenspaces.IsLevel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNeZeroWeightTensorIntertwiningAutRepStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanInfinitePlacesWeightRepresentationEqTop
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSplitFinMulSplitInf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNeZeroWeightTensorIntertwiningAutRep
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanInfinitePlacesWeightRepresentationEqTop
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.GeneralizedEigenspaces.SmoothDepth.ContCoef
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.LitAut
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.PairwiseDisjointCell
@@ -266,7 +266,7 @@ theorem UpperTheory.V.Z.Sym.Al.infVec :
   classical
   intro L _ _ _ π hπ j hW
   choose lam hlam hj using hW
-  obtain ⟨T, hT0, hTπ, hT⟩ := GlobalTheory.T.exists_ne_zero_weightTensor_intertwining_autRep L 2 lam π hπ hlam
+  obtain ⟨T, hT0, hTπ, hT⟩ := _root_.GlobalTheory.BCT.TrKer.exists_ne_zero_wsp_intertwining L 2 lam π hπ hlam
   let c : (InfinitePlace L → Fin (j + 1)) → GlobalTheory.BCT.TrKer.Wsp lam := fun κ =>
     PiTensorProduct.tprod ℂ fun v => mon (lam v) (hj v) (κ v)
   let a : (InfinitePlace L → Fin (j + 1)) → Wt.VD (InfinitePlace L) j := fun κ => ⟨A _ j κ, A_mem _ j κ⟩

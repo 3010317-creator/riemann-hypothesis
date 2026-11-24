@@ -4,13 +4,20 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GrothendieckDeformation
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.RelAmpleOfGenericIso
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleIsoTangentPullConstantDeformationStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOneOfRetraction
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleIsoTangentPullConstantDeformation
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsTorusAndQuotientHom
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionDualNumberPointEqConstantCharZeroStatement
+public import Mathlib.Algebra.DualNumber
+public import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionDualNumberPointEqConstantCharZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GroupLiftTangentCompatibility
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPolarizationFormIsotropicFiltration
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentGroupPullbackEpsilonLift
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFrameTangentVectorsOfIsGrpPullbackStatement
+public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.FormallyUnramifiedOfTangentMapInjective
+public import Formalism.LocalToGlobal.ProjectiveLattices.IsCombAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFrameTangentVectorsOfIsGrpPullback
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGroupLiftKodairaSpencerZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerMatrixUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLieCombIffIsCombAt
@@ -60,17 +67,17 @@ import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsGrpPullbackOfLoc
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbelianSchemeGerms
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.RigIsoCongr
 import Mathlib.Tactic.Linter.Style
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPolarizationCrystalFormPerfectSelfAnnihilaStatement
+import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPolarizationCrystalFormPerfectSelfAnnihila
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRingActionOfIsGrpPullbackStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameLiftsBasisDeRhamHomologyModHodgeFiltrationStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsKodairaSpencerValueEndomorphismLiftStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerRowDualEigenvectorMemSpanField
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerUniqueValueAbelianSchemeField
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolarizationCrystalFormAdjointConjActionStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolarizationCrystalFormAdjointConjAction
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeG
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ObjPull
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WedgeOrdVpBaseChangeOfNeBot
-import Formalism.LocalToGlobal.ProjectiveLattices.IsCombAt
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsTangentModuleUniversalGroup
 import Mathlib.Tactic.Basify
 import Mathlib.Algebra.Azumaya.Basic
@@ -158,7 +165,7 @@ theorem cubical_structure_pullback_const_point : _root_.GlobalTheory.CovTop.Hypo
   refine GlobalTheory.TripleModel.isPullCubical_of_lbIso GlobalTheory.SemiRigid.globalFns hA hF o.t.cub Xo.univ.t.cub ?_
   obtain ⟨w, -, hw, -⟩ := rigIso_congr rfl m.cm m.lin rfl rfl
   have K2 : LBIso (Xo.univ.t.PP.L.pull π') (Xo.univ.t.PP.L.pull (q ≫ π)) :=
-    GlobalTheory.T.lineBundle_iso_tangent_pull_constant_deformation E H Dw l Xo c K y.x x' A A' π π' i q hi hπ hπ' hiπ hiq hq
+    _root_.GlobalTheory.TangentConstLB.lbIso_tangent_const E H Dw l Xo c K y.x x' A A' π π' i q hi hπ hπ' hiπ hiq hq
   have hM := Xo.univ.t.PP.isLB
   have h1 : LBIso o.t.PP.L (Xo.univ.t.PP.L.pull (g ≫ π')) := hg1 ▸ ⟨w, hw⟩
   have h2 : LBIso ((Xo.univ.t.PP.L.pull π').pull g) (Xo.univ.t.PP.L.pull (g ≫ q ≫ π)) :=
@@ -212,7 +219,7 @@ theorem constDeformation_objMap_eq : _root_.GlobalTheory.CovTop.Hypotheses'' →
     intro σ τ n hn hσ hστ
     let u := pushHom hgq (𝟙_ (Over (Sp (DualNumber K)))) σ
     have hu : u ^ n = 1 := by rw [← map_pow, hσ, map_one]
-    have e := GlobalTheory.T.torsion_dualNumber_point_eq_constant_charZero K A _ (by simp) (hcomm _) u n hn hu
+    have e := _root_.GlobalTheory.TorsConst.torsion_eq_const K A _ (by simp) (hcomm _) u n hn hu
     have hul : u.left = σ.left ≫ g ≫ q := by
       show σ.left ≫ (g ≫ q) = _; rfl
     rw [hul] at e
@@ -375,9 +382,9 @@ theorem kodaira_spencer_full : _root_.GlobalTheory.CovTop.Hypotheses'' → ∀ (
     apply hπ'.1.hom_ext
     · rw [Category.assoc, Category.assoc, ha' z, ← Category.assoc i π', e, ha z]
     · rw [Category.assoc, Category.assoc, Over.w, h.1.w, ← Category.assoc, Over.w]
-  obtain ⟨ψ₀, hpol₀, hiso, hperf, hlag⟩ := GlobalTheory.T.exists_polarizationCrystalForm_perfect_selfAnnihilating P Xo hπ
+  obtain ⟨ψ₀, hpol₀, hiso, hperf, hlag⟩ := _root_.GlobalTheory.PolExists.polForm_exists P Xo hπ
   obtain rfl : ψ = ψ₀ := IsPolForm.unique P.1 hA gA (pull_isLB Xo.univ.t.PP.isLB π) hpol hpol₀
-  have hadj := GlobalTheory.T.polarizationCrystalForm_adjoint_conj_action P Xo hπ a ha hpol
+  have hadj := _root_.GlobalTheory.PolAdjoint.polForm_adjoint P Xo hπ a ha hpol
   have hK := GlobalTheory.DeRham.ksRegular_of_isAbelianScheme P h hA' gA'
   obtain ⟨ub₀, hu₀, ht₀, he₀, hbasis₀⟩ := _root_.GlobalTheory.KSExist.exists_frame_of_isGrpPullback y hπ a ha
   obtain rfl : ub = ub₀ := by

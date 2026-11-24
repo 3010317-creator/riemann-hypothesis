@@ -43,7 +43,7 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SitePlace
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ReindexRenamePointDetLatK
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LatticeTupleAdelicPointStepZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LatticeTupleBasesSpanAtPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LatticeTupleAdelicPointStepSuccStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LatticeTupleAdelicPointStepSucc
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LatticeTupleChartSuccEqComponentChartStatement
 public import Formalism.SharpRestriction.GrowthBounds.FormalGroupSystem
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ModelsOK
@@ -1423,7 +1423,7 @@ end GlobalTheory.TwV.KerSucc
 
 theorem GlobalTheory.TwV.Joint.kerN_succ_heq : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : G.Inst D L} {Gl : G.LatInst D} {Kc : G.Consts} {Dx : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Dx cX} (t : KerEntTied ex) {u : D.what₂.Word} {μ : D.what₂.Tup} {w : D.what₂.places.Pl} {hg : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w)} {Lv : Levels (Gl.Fl u w hg)} {I : CmpJIn ex.tw u μ w hg Lv} {H : CmpJHyp ex.cmp I} {X : LabIn I} [Fact (D.what₂.places.resChar w).Prime] (std : Lt.StdAtW D Gl u w hg) (J : Joint t H X), ∀ j (hj : j + 1 ≤ D.R.m) (La : (sysS H X std).Lt (j + 1)), ((sysS H X std).Pj (j + 1)).IsLatTup La.2 → HEq ((J.fd std).kerN (j + 1) La) (latK D.sp (gramN D (j + 1) hj) J.a (J.pt std (j + 1) hj La).1 ((J.St (j + 1) hj).K (J.chart std (j + 1) hj La)).lev.Lb) := by
   intro D L hT Gi Gl Kc Dx cX ex t u μ w hg Lv I H X _ std J j hj La hLa
-  obtain ⟨hr, hx⟩ := (GlobalTheory.T.lattice_tuple_adelic_point_step_succ t std J j hj La).1
+  obtain ⟨hr, hx⟩ := (_root_.GlobalTheory.TwV.Joint.pt_succ_isPt t std J j hj La).1
   have hLb := (GlobalTheory.T.lattice_tuple_chart_succ_eq_component_chart t std J j hj La hLa).2.1
   have hJ : (J.cp std).J (j + 1) La = (gramN D (j + 1) hj).reindex (finCongr hr.symm) (finCongr hr.symm) :=
     GlobalTheory.TwV.KerSucc.gram_succ _ _ _ _ _ _ _ _ _ I _ _ _ _ j hj La hr.symm
@@ -1465,7 +1465,7 @@ theorem GlobalTheory.TwV.Joint.pt_succ_coset : ∀ {D : D7} {L : SizeData₂ D} 
   intro D L hT Gi Gl Kc Dx cX ex t u μ w hg Lv I H X _ std J j hj La hLa
   have hb := GlobalTheory.T.lattice_tuple_bases_span_at_places t std J (j + 1) La hLa
   obtain ⟨-, -, hU, -, hy⟩ := GlobalTheory.T.lattice_tuple_chart_succ_eq_component_chart t std J j hj La hLa
-  have hp := (GlobalTheory.T.lattice_tuple_adelic_point_step_succ t std J j hj La).2
+  have hp := (_root_.GlobalTheory.TwV.Joint.pt_succ_isPt t std J j hj La).2
   obtain ⟨hc, κ, hγ, e⟩ := kaAt_pt H j hj ((I.at' j hj).st.eC.symm La.1).1 ((I.at' j hj).st.eC.symm La.1).2 La.2 _
     (fun v => hb v) (J.pt std (j + 1) hj La) hp
   have ea : (I.at' j hj).st.eC ⟨((I.at' j hj).st.eC.symm La.1).1, ((I.at' j hj).st.eC.symm La.1).2⟩ = La.1 :=
@@ -1515,7 +1515,7 @@ theorem GlobalTheory.TwV.joint_dict : ∀ {D : D7} {L : SizeData₂ D} {hT : Gat
     have hp := (GlobalTheory.T.lattice_tuple_adelic_point_step_zero t std J La).1
     exact ⟨hp, GlobalTheory.T.stepZero_point_mem_doubleCoset_classRep t std J La hLa, GlobalTheory.T.stepZero_kernelLattice_eq_pointKernelLattice t std J La, GlobalTheory.T.lattice_tuple_det_eq_adelic_point_det t std J 0 hj La _ hp⟩
   | succ j =>
-    have hp := (GlobalTheory.T.lattice_tuple_adelic_point_step_succ t std J j hj La).1
+    have hp := (_root_.GlobalTheory.TwV.Joint.pt_succ_isPt t std J j hj La).1
     exact ⟨hp, GlobalTheory.T.succStep_point_mem_doubleCoset_classRep t std J j hj La hLa, GlobalTheory.T.succStep_kernelLattice_eq_pointKernelLattice t std J j hj La hLa, GlobalTheory.T.lattice_tuple_det_eq_adelic_point_det t std J (j + 1) hj La _ hp⟩
 end -- clump:auto
 end -- clump:auto

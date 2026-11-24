@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Jets.TwoPlaces
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NonemptyUniformisedFormalChartAlgebraicPoint
 public import Development.AutomorphicArithmetic.CMTraceForms.Places
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmTypeDirectionsEigenbasisValuedIntegersStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmTypeDirectionsEigenbasisValuedIntegers
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -40,7 +40,7 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCmTypeEmbeddingsIntoValuationRingStatement
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCmTypeEmbeddingsIntoValuationRing
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.Tactic.Basify
@@ -90,7 +90,7 @@ theorem colength_bound_at_two : ∀ (p : ℕ) [Fact p.Prime], AvFSt p → ∀ (E
   intro T io y Ch X hy f vd hTP
   classical
   obtain ⟨U⟩ := GlobalTheory.T.nonempty_uniformised_formal_chart_algebraic_point E H Dw l Xo c T io y Ch hy p X
-  obtain ⟨τT, -, hty, hinj, hrt, -⟩ := GlobalTheory.T.exists_cmType_embeddings_into_valuation_ring E H l c T io p X
+  obtain ⟨τT, -, hty, hinj, hrt, -⟩ := _root_.GlobalTheory.CharDepth.exists_types_valuationRing E H l c T io p X
   set τO : (E →+* ℂ) → (𝓞 E →+* X.O) := fun τ => X.ι.comp (τT τ) with hτO
   have heig := fun τ => (_root_.GlobalTheory.CharDepth.isEigBasis_valExt E H Dw l Xo c T io y Ch p X τO hty τ).1
   obtain ⟨n, w, vdi, hwn, hsum, he, hu, hb, hvd⟩ := hTP X.C X.v X.O X.ints τO hinj hrt

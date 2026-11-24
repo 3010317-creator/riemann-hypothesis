@@ -6,8 +6,9 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFor
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SphericalSegmentRepLengthOneUnramified
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.LanglandsExhaustionGL
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSphericalFactorOfSphericalSubquotientStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LanglandsClassificationSupercuspidalSupportMultiStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSphericalFactorOfSphericalSubquotient
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LanglandsClassificationSupercuspidalSupportMulti
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,8 +47,8 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasExponentZeroIff
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportOfPrincipalSeriesSubquotientStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportUniqueGLStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportOfPrincipalSeriesSubquotient
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportUniqueGL
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SphericalSegmentRepLengthOneUnramifiedStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SphericalSatakeEqLanglandsQuotientUnramified
@@ -87,7 +88,7 @@ theorem isL_single_unrChar : LanglandsExhaustionGL → LanglandsMultisegments �
   obtain ⟨h, y, hd, ⟨Δ, hord, hseg⟩, hcos⟩ := id hL
 
   have hsphy : ∀ a, IsSpherical (y a).rep :=
-    GlobalTheory.T.isSpherical_factor_of_spherical_subquotient k h x.1 y hd x.2.rep.V x.rep hcos.isSubquotient hsat.2.1
+    _root_.GlobalTheory.LocLanglands.SphFac.isSpherical_factor k h x.1 y hd x.2.rep.V x.rep hcos.isSubquotient hsat.2.1
 
   have hlen : ∀ i, (Δ i).len = 1 := fun i =>
     (GlobalTheory.T.sphericalSegmentRep_length_one_unramified hLM hSC hZP hGL hBZ k (Δ i) (y i) (hseg i) (hsphy i)).1
@@ -96,10 +97,10 @@ theorem isL_single_unrChar : LanglandsExhaustionGL → LanglandsMultisegments �
   have hms : ∀ i, (Δ i).ms = {(Δ i).first} := fun i =>
     (congrArg Segment.ms (hsingle i)).trans (Segment.ms_single _ _)
 
-  have h1 : HasSupport x.rep (msupp 𝔪) := GlobalTheory.T.langlandsClassification_supercuspidalSupport_multisegment hZP k 𝔪 x hL
-  have h2 := GlobalTheory.T.supercuspidalSupport_of_principalSeries_subquotient k x.1 (fun i => GlobalTheory.SmGL.unrChar k (α i))
+  have h1 : HasSupport x.rep (msupp 𝔪) := _root_.GlobalTheory.LocGL.hasSupport_msupp_of_isL hZP k 𝔪 x hL
+  have h2 := _root_.GlobalTheory.LocLanglands.hasSupport_of_isSubquotient_prinSeries k x.1 (fun i => GlobalTheory.SmGL.unrChar k (α i))
     (fun i => isSmoothChar_of_isUnram (isUnram_unrChar k (α i))) x.2.rep hsat.2.2
-  have heq := GlobalTheory.T.supercuspidalSupport_unique_GL hGL hBZ hZP k x _ _ h1 h2
+  have heq := _root_.GlobalTheory.LocGL.SupportUnique.hasSupport_unique hGL hBZ hZP k x _ _ h1 h2
   have hsupp : msupp 𝔪 = Finset.univ.val.map fun i => (Δ i).first := by
     rw [msupp, ← hord.1, Multiset.bind_map]
     simp only [hms]

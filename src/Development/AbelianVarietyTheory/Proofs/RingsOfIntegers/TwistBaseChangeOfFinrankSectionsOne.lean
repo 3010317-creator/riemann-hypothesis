@@ -5,7 +5,9 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Abe
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.TwistBCPf
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SecBaseChangeOfPerf
 public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.CubeTheoremAndSectionsFiniteGrowthAbelianVarietyStatement
+public import Mathlib.Tactic.ENatToNat
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThetaVV
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.CubeTheoremAndSectionsFiniteGrowthAbelianVariety
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsMulEqSmulOneOfMulVecInjective
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.FinrankSectionsLineBundlePowEqPow
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.FirstCohomologyVanishesDescent
@@ -57,14 +59,15 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRin
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBLocalC
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBPull
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.PrecompleteBases.PsbLb
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsWithoutCohomologyStatement
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsWithoutCohomology
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsGenOfLocalOnBase
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsGenOfMemChart
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsUniqueDescendOfTorsionInvariant
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ForallGeometricallyIntegralOfSmoothOfGeometrical
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.MulPullOfCubeOfSymm
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.NonemptyPerfectSectionsComplexOfSmoothProjStatement
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SerreVanishingVeryAmpleStatement
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.NonemptyPerfectSectionsComplexOfSmoothProj
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SerreVanishingVeryAmple
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.TwistedPowTranslate
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.VeryAmpleByOfRelAmple
 
@@ -442,16 +445,16 @@ theorem twistBaseChange_of_finrank_sections_one :
       Module.finrank Γ((baseOver (Spec (CommRingCat.of K))).left, ⊤)
         (SecM P.A P.L 1 (baseOver (Spec (CommRingCat.of K)))) = 1) → DVR.TwistBaseChangeStatement := by
   intro h1
-  obtain ⟨hGF, -, hBC, -, -⟩ := GlobalTheory.T.abelianScheme_laws_without_cohomology
-  obtain ⟨hcube, -, hgrow⟩ := GlobalTheory.T.cube_theorem_and_sections_finite_growth_abelianVariety
+  obtain ⟨hGF, -, hBC, -, -⟩ := _root_.GlobalTheory.laws_without_cohomology
+  obtain ⟨hcube, -, hgrow⟩ := _root_.GlobalTheory.AbLaw.CubeAssembly.cube_and_sections
   obtain ⟨-, -, -, -, -, -, -, -, hmulq, hrel⟩ := GlobalTheory.T.abelianSchemeLaws_of_cubeBundleGenerator hcube
   have hproj := GlobalTheory.AbLaw.polAV_veryAmpleBy hBC
   have hmul := (GlobalTheory.MulPull.mulPull_of_cube_of_symm hcube (GlobalTheory.exists_gen_negLB hGF)).1
-  have hvan := GlobalTheory.AbLaw.PowVanish.first_cohomology_vanishes_powers hproj GlobalTheory.T.serre_vanishing_very_ample.1 GlobalTheory.AbLaw.h1Zero_of_isIso hmul hmulq
+  have hvan := GlobalTheory.AbLaw.PowVanish.first_cohomology_vanishes_powers hproj _root_.GlobalTheory.AbLaw.serre_h1Zero_and_sections_polynomial.1 GlobalTheory.AbLaw.h1Zero_of_isIso hmul hmulq
     (GlobalTheory.torsion_invariant_descends hmulq)
   have h0 := GlobalTheory.FinrankGrowthBounds.finrank_sections_lineBundlePow_eq_pow
     GlobalTheory.forall_geometricallyIntegral_of_smooth_of_geometricallyConnected h1 hrel hgrow hmulq
-  exact GlobalTheory.T.sections_powerTwist_basis_stable_baseChange GlobalTheory.T.nonempty_perfectSectionsComplex_of_smooth_proj hproj hvan GlobalTheory.AbLaw.h1Zero_of_isIso
+  exact GlobalTheory.T.sections_powerTwist_basis_stable_baseChange _root_.GlobalTheory.AbLaw.nonempty_perf_of_smooth_isProjBy hproj hvan GlobalTheory.AbLaw.h1Zero_of_isIso
     GlobalTheory.exists_matrix_basis_ker_of_exact_at_point hBC ((GlobalTheory.secM_invariant_eq_bot_or_univ_at_geometric_point hBC).1 h0)
     (GlobalTheory.twisted_pow_translate (GlobalTheory.AbSquare.square_of_cube hcube).1 hmulq)
 

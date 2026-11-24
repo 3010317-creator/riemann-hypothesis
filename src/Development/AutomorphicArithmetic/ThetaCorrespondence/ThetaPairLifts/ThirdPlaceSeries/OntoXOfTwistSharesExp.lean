@@ -29,7 +29,7 @@ public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.BetaEx
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortValTotOfPinned
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.NumericalConsequencesOfPins
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliSchemeLevelMapsHeckePoints
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ShortThetaSeriesDominantWeightIsCuspFormStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ShortThetaSeriesDominantWeightIsCuspForm
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UnitCOfFiniteCharacter
 public import Formalism.LocalToGlobal.ProjectiveLattices.CuspidalL2Subspace
 public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
@@ -457,7 +457,7 @@ theorem lawsSh_of_pinned (hC : Formalism.MainNotions.ModuliIntegralCharts.H1.Cha
       dPhi := fun j hj n hn => (hd j hj n).2.2.2.2.2.2 ((hr j hj).symm ▸ hn)
       dRoot := hroot
       shTot := fun j hj a n _ => htot j hj a n
-      shCusp := fun j hj a n _ _ => GlobalTheory.T.short_thetaSeries_dominant_weight_isCuspForm hC D.host.E T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c n (T.dδ j n)
+      shCusp := fun j hj a n _ _ => _root_.GlobalTheory.Dict.shortInCusp_cusp hC D.host.E T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c n (T.dδ j n)
         D.R.r (fun σ => Formalism.L2.PjFree.Unf.ofPj (T.U j σ)) (hnum j hj).2.1 (fun σ hσ => hM.unf j hj σ hσ)
         (hd j hj n).2.1 (hd j hj n).2.2.2.1 (hunit j hj n) (hpin j hj n) (T.nab j) (badN D) D.R.nV a
       shNe := ?_ }

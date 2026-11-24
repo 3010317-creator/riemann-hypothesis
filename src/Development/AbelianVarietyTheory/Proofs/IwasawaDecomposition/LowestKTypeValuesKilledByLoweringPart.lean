@@ -8,7 +8,9 @@ import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ConjAtFixed
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsArchimedeanLiftUnitaryGroupProduct
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqTopOfTranslates
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsWeilDatumGeneratorRealOneParamGroupStatement
+public import Formalism.LocalToGlobal.BesselHermitianTheta.TiedSmooth
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsWeilDatumGeneratorRealOneParamGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -148,7 +150,7 @@ theorem exists_op (hom : IsWeilDatumO ψ S T χS χT om) (hθ : IsInfFam θ) (τ
   have key : ∀ X ∈ lieAt T τ, ∃ L : Module.End ℂ (WO S T → ℂ), ∀ f, IsThetaFunO ψ S T f → ∀ h,
       Rder θ T τ X (fun g => thetaKO om h g f) = fun g => thetaKO om h g (L f) := by
     intro X hX
-    obtain ⟨L, hL⟩ := GlobalTheory.T.exists_weilDatum_generator_realOneParamGroup D ψ S T χS χT om hom θ hθ τ X hX
+    obtain ⟨L, hL⟩ := _root_.GlobalTheory.DefLift.Gen.exists_generator D ψ S T χS χT om hom θ hθ τ X hX
     refine ⟨L, fun f hf h => funext fun g => ?_⟩
     have := ((hL f hf).2.2.2 (h, g) 0).deriv
     simp only [Prod.mk_mul_mk, mul_one] at this

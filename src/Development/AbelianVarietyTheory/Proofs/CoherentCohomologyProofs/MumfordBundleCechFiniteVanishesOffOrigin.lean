@@ -14,7 +14,7 @@ public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.C
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsLocalizedModuleResBasicOpenOfQcqs
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.PolBaseChangeOfRelAmpleLocal
-public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.CechLBHomologyFiniteOfAffineCoverStatement
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.CechLBHomologyFiniteOfAffineCover
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsSmulHomologyEqZeroOfAcyclicFibre
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -419,7 +419,7 @@ theorem cohomology_finite_and_vanishes_off_origin : ∀ (K : Type) [Field K] [Is
   have hI := isAffineOpen_biInf_of_isSeparated f hD
   have hflat : ∀ p, Module.Flat R ((cechLB f ((translDiff P.A P.L (𝟙 P.A)).pull π) D).X p) :=
     flat_cechLB_X f hM hI
-  have hfin := GlobalTheory.T.finite_cechLB_homology_of_affine_cover R Y f _ κ D hM hsep hproj hD hc
+  have hfin := _root_.GlobalTheory.AbLaw.cechLB_homology_finite_of_affine_cover R Y f _ κ D hM hsep hproj hD hc
   refine ⟨hN, hflat, hfin, fun χ h₁ h₂ => ?_⟩
   refine exists_smul_homology_eq_zero_of_acyclic_fibre R K χ _ (Fintype.card κ)
     (fun p hp => isZero_cechLB_X _ _ _ hp.le) hflat hfin ?_

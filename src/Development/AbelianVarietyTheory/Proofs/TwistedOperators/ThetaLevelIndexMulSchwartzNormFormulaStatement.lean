@@ -22,8 +22,9 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Exist
 public import Mathlib.Algebra.Group.AddChar
 public import Mathlib.Analysis.Complex.Norm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPairCharactersAtLevel
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdjointFrameMatrixIntegralOfConjugateHalfStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdempotentSumSelfDualFramesBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdjointFrameMatrixIntegralOfConjugateHalf
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdempotentSumSelfDualFramesBound
+public import Formalism.LocalToGlobal.UnitaryNorms.CharTied
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TypePlacesDisjointTwistPlaces
 public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.LocalIntegralGL
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InnerProductFormula
@@ -1003,10 +1004,10 @@ theorem halfLat_iff_isIntM : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 
     exact PP.asIdeal.mul_mem_right _ hmem
   constructor
   · intro hmem
-    exact GlobalTheory.T.adjointFrameMatrix_integral_of_conjugate_half D (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (R.βV i) (R.βW i) sV sW hcV.1 hcW.1
+    exact _root_.GlobalTheory.HalfAdjInt.frMapAdj_int_of_half D (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (R.βV i) (R.βW i) sV sW hcV.1 hcW.1
       (R.Pg ∪ R.Q t) e he hP x hmem hx
   · intro hint
-    exact GlobalTheory.T.idempotent_sum_self_dual_frames_bound D (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (R.βV i) (R.βW i) sV sW hcV.1 hcW.1
+    exact _root_.GlobalTheory.HalfAdjLattice.mem_latO_of_adj_int D (Vc D i) (Wc D i) (R.ΛV i) (R.ΛW i) (R.βV i) (R.βW i) sV sW hcV.1 hcW.1
       (R.Pg ∪ R.Q t) e he hP x hx hint
 
 end GlobalTheory.HalfLatFrames

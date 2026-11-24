@@ -16,7 +16,9 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.WeilDelig
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.SplitLineSubtraction.PContLeft
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EigencharacterOfSummandCharZero
 public import Formalism.SharpRestriction.LevelLetterCocycles.ExistsInertiaCharpolyFactorOfTameType
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SumRepDeRhamIffAndMultiplicityAddStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.SumRepresentations
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SumRepDeRhamIffAndMultiplicityAdd
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamPotentiallySemistable
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
 public import CompanionTheory.AutomorphicTheory.PlaceSeparation.IsOpenQuotientMapArt0
@@ -1030,16 +1032,16 @@ theorem sumDR_holds : SumDR := by
   refine ⟨?_, ?_, ?_⟩
   · obtain ⟨L, ρ, hm, -⟩ := id hd
     obtain ⟨r₁, s₁, m₁, m₂, m⟩ := model_split hm
-    have S := GlobalTheory.T.sumRep_deRham_iff_and_multiplicity_add l P AI tied E Ω _ O Bw L a b r₁ s₁
+    have S := _root_.GlobalTheory.DirectSumLocal.isdRE_sumRep_and_multE_add l P AI tied E Ω _ O Bw L a b r₁ s₁
     exact ⟨L, r₁, m₁, (S.1.1 ((m.isdRAt_iff P).1 hd)).1⟩
   · obtain ⟨L, ρ, hm, -⟩ := id hd
     obtain ⟨r₁, s₁, m₁, m₂, m⟩ := model_split hm
-    have S := GlobalTheory.T.sumRep_deRham_iff_and_multiplicity_add l P AI tied E Ω _ O Bw L a b r₁ s₁
+    have S := _root_.GlobalTheory.DirectSumLocal.isdRE_sumRep_and_multE_add l P AI tied E Ω _ O Bw L a b r₁ s₁
     exact ⟨L, s₁, m₂, (S.1.1 ((m.isdRAt_iff P).1 hd)).2⟩
   · intro τ J J' hJ hJ'
     obtain ⟨L, ρ, hm, -, τ', t, -⟩ := id hJ
     obtain ⟨r₁, s₁, m₁, m₂, m⟩ := model_split hm
-    have S := GlobalTheory.T.sumRep_deRham_iff_and_multiplicity_add l P AI tied E Ω _ O Bw L a b r₁ s₁
+    have S := _root_.GlobalTheory.DirectSumLocal.isdRE_sumRep_and_multE_add l P AI tied E Ω _ O Bw L a b r₁ s₁
     refine ⟨L, r₁, m₁, (S.1.1 ((m.isdRAt_iff P).1 hd)).1, τ', t, fun n => ?_⟩
     have c₁ := hJ.count_eq P m t n
     have c₂ := hJ'.count_eq P m₂ t n

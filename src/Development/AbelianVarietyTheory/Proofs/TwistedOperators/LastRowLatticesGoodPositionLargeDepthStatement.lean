@@ -3,13 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TiltSc
 public import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.FormulaAt
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsHermitianAuxiliaryVectorSystemBesselVectors
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealCompletionPropertiesAtPlaceStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.LineLatAt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealCompletionPropertiesAtPlace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PrimAtOfMonoId
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneSquareFittedIdentity
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsLatticeDualZIdealMul
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EmbeddingColumnLatticeIff
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealLineOfPeriodsOnLine
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.LineLatAt
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsRealFam
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealCompletionLocallyPrincipal
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IncAdjYZeroMulVec
@@ -135,7 +135,7 @@ theorem primAt_rowN {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1))
     obtain ⟨a, ha⟩ := D.R.m_even
     rintro ⟨b, hb⟩
     omega
-  obtain ⟨-, f2, f3, -, f5, -, -⟩ := GlobalTheory.T.fractionalIdealCompletion_properties_at_place D ψ hψ v
+  obtain ⟨-, f2, f3, -, f5, -, -⟩ := _root_.GlobalTheory.SeeSaw.idV_props D ψ hψ v
   have hξ : D.host.xi0 ≠ 0 := GlobalTheory.LocFrame.cmHost_imaginaryGenerator_ne_zero
 
   set I : Fin σ → FI D := fun i => FractionalIdeal.spanSingleton _ (D.host.xi0 ^ (i : ℕ))⁻¹ *

@@ -39,9 +39,9 @@ public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.Exist
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExpFLinear
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.DimEqAddFinrankOfKernel
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsBasisOfFormEq
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFourierJacobiExpansionOverFieldStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFourierJacobiExpansionOverField
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FinrankFamOfLaws
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FourierJacobiExpansionOverFieldInjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FourierJacobiExpansionOverFieldInjective
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.SameB
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.SecScalOfPointwise
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsLiftUnitTensor
@@ -1226,7 +1226,7 @@ namespace GlobalTheory.UU.ExpOnto
 theorem exists_expF_of_fam : Laws → Laws2 → AllPre fun {V} _ _ _ {D} {_} {_} _ _ U => D.TauBimult → ∀ (F : Type) [Field F] [Algebra (FractionRing V) F] (k : ℕ), 1 ≤ k → U.FE F k → ∀ s : Fam D F k, ∃ t, U.ExpF F k t s.s := by
   intro hL hL2 V _ _ _ hV D A G _ _ U hB F _ _ k hk hFE s
   obtain ⟨b, hb⟩ := GlobalTheory.PowBasis.exists_basis_pow_field hL2.secTwist V A F k hk
-  choose e he using fun i => GlobalTheory.T.exists_fourierJacobi_expansion_over_field hL hL2 V hV D A G U F k hk (b i)
+  choose e he using fun i => _root_.GlobalTheory.UU.ExpTotal.expF_total hL hL2 V hV D A G U F k hk (b i)
   let f : Fin (k ^ A.g) → Fam D F k := fun i => ⟨e i, hFE _ _ (he i)⟩
   have comb : ∀ c : Fin (k ^ A.g) → F, ∃ t, (∀ j, t.f j = ∑ i,
       liftFun A.A _ ((Scheme.ΓSpecIso (CommRingCat.of F)).inv.hom (c i)) * (b i).f j) ∧
@@ -1242,7 +1242,7 @@ theorem exists_expF_of_fam : Laws → Laws2 → AllPre fun {V} _ _ _ {D} {_} {_}
     obtain ⟨t', ht', hE'⟩ := comb 0
     have h0 : (∑ i, (0 : Fin (k ^ A.g) → F) i • f i) = ∑ i, c i • f i := by
       rw [hc]; simp
-    have htt : t = t' := (GlobalTheory.T.fourierJacobiExpansion_overField_injective V hV D A G U F k t t' _ _ hE hE').2 (by rw [h0])
+    have htt : t = t' := (_root_.GlobalTheory.UU.ExpFUniq.main V hV D A G U F k t t' _ _ hE hE').2 (by rw [h0])
     subst htt
     exact congrFun ((hb t).unique ht ht')
   obtain ⟨hfin, hdim⟩ := finrank_fam_of_laws hL hL2 V D hB F k hk
@@ -1430,8 +1430,8 @@ theorem expBij_of_match : Laws → Laws2 → ∀ (V : Type) [CommRing V] [IsDoma
     unfold UnifPre.SecK
     rw [hM.LG]
   have hK := GlobalTheory.GenericFibreSections.sameK_bijective V _ D.toPre A G U k
-  have hu := GlobalTheory.T.fourierJacobiExpansion_overField_injective V hV D.toPre A G U (FractionRing V) k
-  have ht := GlobalTheory.T.exists_fourierJacobi_expansion_over_field h1 h2 V hV D.toPre A G U (FractionRing V) k hk
+  have hu := _root_.GlobalTheory.UU.ExpFUniq.main V hV D.toPre A G U (FractionRing V) k
+  have ht := _root_.GlobalTheory.UU.ExpTotal.expF_total h1 h2 V hV D.toPre A G U (FractionRing V) k hk
   have e1 := GlobalTheory.T.valueExpansion_of_chartExpansion V _ D A G U U' hM k
   have e2 := _root_.GlobalTheory.UU.ExpFrac.expands_of_expF V _ D A G U U' hM k
   unfold UnifPre.ExpBij

@@ -2,7 +2,8 @@ module
 
 public import Formalism.LocalToGlobal.ProjectiveLattices.HasDataCondition
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.SupBoundPageRows
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditionalStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.PublishedTheorems.Landherr₂.ExistsNormTensor
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasseNormTheoremQuadraticExtension
 public import Formalism.LocalToGlobal.ProjectiveLattices.CuspidalL2Subspace
@@ -14,7 +15,8 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDo
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.PrincipalDatumFgPerfectTracePairing
 public import Formalism.LocalToGlobal.ProjectiveLattices.IsGenFrGenFr
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.NumericalConsequencesOfPins
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVarietyStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVariety
 public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -81,7 +83,7 @@ theorem log_card_comp_le : ∀ (D : D7) (T : Top D) (_h : LawsP T) (large₂ : S
     · rw [b]; simp; linarith
     rw [Nat.cast_mul, Real.log_mul (by exact_mod_cast a.ne') (by exact_mod_cast b.ne')]
     linarith
-  have key := GlobalTheory.log_card_comp_unf_le _root_.GlobalTheory.QNorm.hasseNormSt GlobalTheory.T.thetaUniformisation_complexAbelianVariety GlobalTheory.T.abelianScheme_laws_unconditional.1 D.host.E _ _ _ (T.Q.Xo j) T.Q.c σ D.R.r
+  have key := GlobalTheory.log_card_comp_unf_le _root_.GlobalTheory.QNorm.hasseNormSt _root_.GlobalTheory.thetaUnifAV_all _root_.GlobalTheory.abelianSchemeLaws_all.1 D.host.E _ _ _ (T.Q.Xo j) T.Q.c σ D.R.r
     (Formalism.L2.PjFree.Unf.ofPj (T.U j σ)) hr hσ ((Formalism.L2.PjFree.isUnf_ofPj _).2 (h.unf j hj σ hσ))
     D.host.xi0 AA hsk hne hFG hA hdual large₂.sc.L (by rw [hfd]; exact_mod_cast h16) h2 hdE hrL
     (by rw [hfd]; exact_mod_cast hf) hML

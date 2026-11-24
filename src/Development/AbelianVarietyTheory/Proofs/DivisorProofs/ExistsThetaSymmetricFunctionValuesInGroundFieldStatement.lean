@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SymTupOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSymmetricFunctionsDegreeFactorialBasicPrope
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThetaConstantListOfFibrePullbackFieldExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipallyPolarisedFibreIffOfGrpPullbackStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThetaConstantListOfFibrePullbackFieldExtension
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipallyPolarisedFibreIffOfGrpPullback
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaConstantListsUniqueUpToPermScalarStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaConstantsListedFiniteGaloisExtensionStatement
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemeGlueAffineCover
@@ -147,8 +147,8 @@ theorem symAt_exists : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonOb
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   have hcomp : (jj : Ω' →+* AlgebraicClosure K).comp (algebraMap Ω Ω') = k.comp i :=
     RingHom.ext fun r => jj.commutes r
-  obtain ⟨p1, -, h1⟩ := GlobalTheory.T.isThetaConstantListOfFibre_pullback_field_extension S G L ρ hL hρ m N Ω' (AlgebraicClosure K) (jj : Ω' →+* AlgebraicClosure K) _ _ pt₀ c₀ hT
-  obtain ⟨p2, -, h2⟩ := GlobalTheory.T.isThetaConstantListOfFibre_pullback_field_extension S G L ρ hL hρ m N K (AlgebraicClosure K) k _ _ pt c hc
+  obtain ⟨p1, -, h1⟩ := _root_.GlobalTheory.UMin.ThPull.thList_pull S G L ρ hL hρ m N Ω' (AlgebraicClosure K) (jj : Ω' →+* AlgebraicClosure K) _ _ pt₀ c₀ hT
+  obtain ⟨p2, -, h2⟩ := _root_.GlobalTheory.UMin.ThPull.thList_pull S G L ρ hL hρ m N K (AlgebraicClosure K) k _ _ pt c hc
   simp only [SecAt.pull] at h1 h2
   rw [pullS_comp G hL] at h1 h2
   have ey1 : spMap (jj : Ω' →+* AlgebraicClosure K) ≫ spMap (algebraMap Ω Ω') ≫ x = spMap (k.comp i) ≫ x := by
@@ -160,7 +160,7 @@ theorem symAt_exists : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonOb
   obtain ⟨q2, H2⟩ := thList_congr θ ey2 _ (Over.homMk (spMap (k.comp i)) rfl : Over.mk (spMap (k.comp i) ≫ x) ⟶ Over.mk x)
     (by simp only [Over.comp_left, Over.homMk_left]; rw [spMap_comp_ring]) h2
   have hPy : PolFib G L g (spMap (k.comp i) ≫ x) :=
-    (GlobalTheory.T.principallyPolarisedFibre_iff_of_grpPullback S S G L G L (𝟙 S) (𝟙 G.left) hL hL (grpPullback_self G) (GlobalTheory.ThetaAffineGlue.lbIso_pull_id hL) g Ω
+    (_root_.GlobalTheory.UMin.FibMove.polFib_move S S G L G L (𝟙 S) (𝟙 G.left) hL hL (grpPullback_self G) (GlobalTheory.ThetaAffineGlue.lbIso_pull_id hL) g Ω
       x).2 (AlgebraicClosure K) (k.comp i) hP
   have hmAC : (m : AlgebraicClosure K) ≠ 0 := by
     rw [← map_natCast (k.comp i) m]

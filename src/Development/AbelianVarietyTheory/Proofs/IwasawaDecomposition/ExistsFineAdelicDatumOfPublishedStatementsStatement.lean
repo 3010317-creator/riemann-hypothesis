@@ -17,9 +17,11 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRep
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntValuationEqOfMem
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCoeffExtRationalFormsValuesField
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsGaloisGe
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHarmonicCoefficientMapAtWeightsStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.FWExist
+public import Formalism.LocalToGlobal.ProjectiveLattices.ThClassPinsRec
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHarmonicCoefficientMapAtWeights
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLevelAtEachIndex
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNumberFieldHeckeCharacterSqrtNormValuesStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNumberFieldHeckeCharacterSqrtNormValues
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsOmegaField
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMapOfOfExtends
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
@@ -41,7 +43,6 @@ public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUni
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFinPartMat
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameMulTriangularOrthonormal
 public import Formalism.LocalToGlobal.ProjectiveLattices.ReadQuot
-public import Formalism.LocalToGlobal.IndefiniteReal.FWExist
 public import Development.AbelianVarietyTheory.Counterexamples.TwistSurvey.ConjModelCast
 public import Formalism.LocalToGlobal.IndefiniteReal.ExistsChosenExtremalVector
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LowestKTypeSmoothModelsOnThetaTargets
@@ -60,9 +61,13 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForm
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.DsExistsOfDiscreteSeriesExists
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAnalyticDataKeptClausesColumnChoicesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LargeCoefficientFieldContainsTwistValuesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LinksAnalyticHypothesesOfWeilRepHarishChandraStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntertwinersAndLiftsExistAtChoicesStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsAbsIrrCharCompIff
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LargeCoefficientFieldContainsTwistValues
+public import Formalism.LocalToGlobal.IndefiniteReal.LinksStage
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LinksAnalyticHypothesesOfWeilRepHarishChandra
+public import Formalism.LocalToGlobal.IndefiniteReal.LinksW
+public import Formalism.LocalToGlobal.IndefiniteReal.LinksLemmas
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntertwinersAndLiftsExistAtChoices
 import Formalism.LocalToGlobal.IndefiniteReal.LinksExist
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -102,11 +107,12 @@ import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.Stable
 import Formalism.LocalToGlobal.HilbertRowConditions.CenterIdempotentAction
 import Formalism.LocalToGlobal.IndefiniteReal.RecTie
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FunKilled
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InverseSelfDualFrameStandardSpaceIntegralStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InverseSelfDualFrameStandardSpaceIntegral
 import Formalism.LocalToGlobal.ProjectiveLattices.ThClass
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LawOfSquaresSelfDualSplitLattice
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelCoefficientCompatibility
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParahoricLevelLiftsExistStatement
+import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParahoricLevelLiftsExist
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFirstOfSecond
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
@@ -309,7 +315,7 @@ theorem exists_phi (hR : GlobalTheory.RealGeo.PreChar R) (hV : VStd D i) (t : T0
   obtain ⟨M, hM, hv⟩ := exists_omega_field R.Pg (R.Q t)
   refine ⟨M, hM, fun M' hle hP J hJ => ?_⟩
   obtain ⟨-, e, he, -⟩ := hR.thP.vP i t
-  have hβ := GlobalTheory.T.inverse_selfDual_frame_standard_space_integral D i _ _ hV (hR.lev.βV i)
+  have hβ := _root_.GlobalTheory.StdFrameInv.isIntM_inv D i _ _ hV (hR.lev.βV i)
   have hi : ∀ x a, rowP (Wc D i) (R.βW i) e (ι x) a ∈ Formalism.L2.Herm.intAf D.host.F D.host.E := fun x a =>
     rowP_int _ _ _ (hR.lev.βW i) e _ he (fun PP h => hP PP (by simpa using h)) _
       (hι.2.le (LinearMap.mem_range_self ι x)) a
@@ -370,7 +376,7 @@ theorem exists_levIs (hT : LawsJ T) (hL : R.toLevCh.Is A.μ0) (hpb : T.pb = R.C.
     exact Ideal.map_comap_le
   have hlift : Lev.LiftsExist (Wc D i) (R.βW i) (R.datWp i R.triv) := by
     obtain ⟨c, hc⟩ := hβ
-    refine GlobalTheory.T.parahoricLevel_liftsExist _ _ _ _ _ hc (fun PP h PP' h' => ?_) (Finset.disjoint_empty_right _)
+    refine _root_.GlobalTheory.ParahoricLift.liftsExist _ _ _ _ _ hc (fun PP h PP' h' => ?_) (Finset.disjoint_empty_right _)
     rcases h' with h' | h'
     · exact not_isConjPl T.Q.l (hle PP h) (hle PP' h')
     · exact absurd h' (Finset.notMem_empty _)
@@ -420,7 +426,7 @@ theorem exists_pins : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Ty
   have hT := fw.laws
   obtain ⟨pd, l₂, c₁, h1, h2, hc⟩ := GlobalTheory.TupleCover.exists_covers T R hT hR.lev hpb hG i (Vc D i).rank
   choose Mφ hMφ hφ using fun t => exists_phi R i hR hV t (iotaW T i) (latEmb_iotaW T hT i)
-  choose MB hMB hB using fun t => GlobalTheory.T.exists_numberField_heckeCharacter_sqrtNorm_values D G Pl0 T0 A _ R hR.lev i t
+  choose MB hMB hB using fun t => _root_.GlobalTheory.Mem.BVal.exists_field_BIs D G Pl0 T0 A _ R hR.lev i t
   choose MC hMC hC using fun t => exists_char_field (R.Pg ∪ R.Q t)
   have := c₁.fin
   obtain ⟨c', hc'⟩ := GlobalTheory.TupleCover.exists_coeff_ge T.Q.l (c₁.F ⊔ ⨆ t, ((Mφ t ⊔ MB t) ⊔ MC t))
@@ -451,7 +457,7 @@ theorem exists_pins : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Ty
     omega
   choose epF hepF using fun t => (GlobalTheory.ClassTieCompare.exists_epIs_iff (n := (Vc D i).rank) (Dw := T.Q.Dw ((i : ℕ) + 1))
     (bad t) (B t)).2 fun L cc g d => _root_.GlobalTheory.LawOfSquares.law_of_squares _ _ _ _ hodd L cc g.1 g.2.2 d.1 d.2
-  obtain ⟨io, hw, hio⟩ := GlobalTheory.T.exists_harmonicCoefficientMap_at_weights D T.Q hT.pins κ fw.kap i c'
+  obtain ⟨io, hw, hio⟩ := _root_.GlobalTheory.CoefMapRecord.exists_io_record D T.Q hT.pins κ fw.kap i c'
   choose φ hφis using fun t => hφ t c'.F (le_sup_left.trans (h4 t)) (hhalf t).2.2 (Mfr (dδ t).l₂) fun PP hPP c hc => by
     have hM : (dδ t).l₂.Mb ≤ PP.asIdeal := by
       rw [(hcov t).1.2.2.2.1]
@@ -1755,7 +1761,7 @@ theorem datExS_evLg (h1 : GlobalTheory.Published.DiscreteSeriesCover) (h2 : Glob
       R3.GrpAt (w.st Z) w.I → Formalism.L2.Theta.VolTieG (w.D Z) →
       ∃ z : R3.Dat (w.st Z) w.I hX T {v | B.places.resChar v ∈ T.pl}, Fine z := by
   refine GlobalTheory.Mem.Top.V4.TwoPass.ev_mono ?_ (GlobalTheory.Mem.Top.V4.TwoPass.ev_and GlobalTheory.Mem.HostFrames.hostHyp_frames_ev
-    (GlobalTheory.Mem.Top.V4.TwoPass.ev_and GlobalTheory.T.eventually_definiteSpaces_standard_and_large GlobalTheory.T.valsIn_and_fam3_ok_of_coefficientField))
+    (GlobalTheory.Mem.Top.V4.TwoPass.ev_and GlobalTheory.T.eventually_definiteSpaces_standard_and_large _root_.GlobalTheory.Mem.R3.OkVals.large_coefficientField_contains_twist_values))
   rintro K ⟨hK, hKC, hO⟩
   refine hO.imp ?_
   rintro B f T hOv hOB w ⟨pin⟩ Z hX _ hgrp hVol
@@ -1785,7 +1791,7 @@ theorem datExS_evLg (h1 : GlobalTheory.Published.DiscreteSeriesCover) (h2 : Glob
   have hpbR : C.pb = R₀.C.P.pb := by rw [hLev.C, hC]; exact hpb
   have hExAt : ∀ R : RealDat X.toD7 (famR X I hX (usedOf I T Wt) Xg tr₀).A C.Q.c.F,
       R.Pre1 (face0 X I hX (usedOf I T Wt) Xg tr₀).lv2 → R.IsChainW → R.IsThPW → R.FullY → R.FullP → R.ExAt :=
-    fun R hP hc ht _ _ => GlobalTheory.T.intertwinersAndLifts_exist_at_choices h1 h2 h3 h4 X.toD7 _ _ _ _ _ R hP.1.lev hP.1.fam hP.2 hP.1.record hHH hc ht
+    fun R hP hc ht _ _ => _root_.GlobalTheory.ExAtAssembly.exAt_holds h1 h2 h3 h4 X.toD7 _ _ _ _ _ R hP.1.lev hP.1.fam hP.2 hP.1.record hHH hc ht
   have hfinT : Finite (TupU I (usedOf I T Wt)) := by
     have hs : ({τ | τ = (mu0F (X := X.B.fields) (tuOf I (usedOf I T Wt))).1 ∨ τ ∈ tuOf I (usedOf I T Wt)} : Set _).Finite :=
       (Set.finite_singleton _).union (tuOf I (usedOf I T Wt)).finite_toSet
@@ -1793,7 +1799,7 @@ theorem datExS_evLg (h1 : GlobalTheory.Published.DiscreteSeriesCover) (h2 : Glob
   have hGeoEx := GlobalTheory.T.geometricExistence_core_forms_analytic_phaseOne h3 X.toD7 _ _ _ _ _ C (face0 X I hX (usedOf I T Wt) Xg tr₀).lv2 hVol hLJ hLC hAT
     hfinT hVS hnV
   obtain ⟨tr, dict, mu, chiW, x₀, cE, R, cG', hPins, hEx, hLevEq, hEG, hCG, -, hmuEq, htw, hBrgI, hGeo⟩ :=
-    GlobalTheory.StandardWeightCharacter.charW_seed_std X w.px I hX (usedOf I T Wt) Xg tr₀ C R₀ cG (GlobalTheory.T.linksAnalyticHypotheses_of_weilRep_harishChandra h5 h6 h7 h3 X.toD7) hIdem hExAt hGeoEx
+    GlobalTheory.StandardWeightCharacter.charW_seed_std X w.px I hX (usedOf I T Wt) Xg tr₀ C R₀ cG (_root_.GlobalTheory.LinksInputs.inputs_of_hypotheses h5 h6 h7 h3 X.toD7) hIdem hExAt hGeoEx
       hValR hpbR hPre0 hIn hTup hAll hKeep
   have hPg : R.Pg = R₀.Pg := congrArg LevCh.Pg hLevEq
   have hRC : R.C = R₀.C := congrArg LevCh.C hLevEq

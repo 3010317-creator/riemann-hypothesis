@@ -5,7 +5,6 @@ public import Mathlib.NumberTheory.NumberField.Basic
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSq
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLattice
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLatticeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -392,7 +391,7 @@ theorem base_full (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ : LatV D)
 
 theorem main : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ : LatV D), Stand D u u' → IsBase D u F0 → IsRowLat D F0 Λ → ∀ (P : LatW D) (s : ℕ) (Q : ℝ), s ≤ D.R.k → SubOK D (L0X D Λ (lf D F0)) P s Q → rkW D (perpW D (L0X D Λ (lf D F0)) P) = s ∧ ∃ I : Ideal (𝓞 D.host.E), I ≠ ⊥ ∧ (Ideal.absNorm I : ℝ) ≤ Q ^ 2 * NT D u ^ 2 ∧ I • dualInH (D.sp.X 0).hT (perpW D (L0X D Λ (lf D F0)) P) ≤ perpW D (L0X D Λ (lf D F0)) P := by
   intro D u u' F0 Λ hS hB hR P s Q hs hP
-  obtain ⟨-, -, hpd, hL, hi, hdet, -⟩ := GlobalTheory.T.standardBaseFlag_complement_integralLattice D u u' F0 Λ hS hB hR
+  obtain ⟨-, -, hpd, hL, hi, hdet, -⟩ := _root_.GlobalTheory.LoopC.Base.main D u u' F0 Λ hS hB hR
   have hLfull := base_full D u u' F0 Λ hS hB hR
   generalize L0X D Λ (lf D F0) = L at *
   obtain ⟨hPL, hrk, -, -, hQ⟩ := hP

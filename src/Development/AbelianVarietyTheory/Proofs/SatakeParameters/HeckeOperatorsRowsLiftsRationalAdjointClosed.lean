@@ -5,10 +5,11 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DcOpCommO
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ReprMemOfBasisRational
 public import Formalism.LocalToGlobal.IndefiniteReal.ZeroPartEigenvalueConvention
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.GoodGeneric
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharacterisationPlacesPartsOfWeakStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertHeckeOperatorsLiftsRationalSelfAdjointLabelStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharacterisationPlacesPartsOfWeak
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertHeckeOperatorsLiftsRationalSelfAdjointLabel
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertHeckeOperatorsRowsRationalSelfAdjointLabelsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SelfDualAntitoneListIffInertPrimeHeckeExponentsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SelfDualAntitoneListIffInertPrimeHeckeExponents
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +46,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 import Mathlib.Tactic.ReduceModChar
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -179,12 +179,12 @@ theorem inertHeckeOperators_rows_rational_adjointClosed (R : RealDat3 D A3 Ks) (
     (A3.rowI t).InertRationalAdjoint := by
   obtain ⟨tie⟩ := hW.inert.hR t
   have hrk : D.sp.X'.rank = A3.A.r + D.R.m * A3.A.t := R.toRealDat.B.rankR
-  have hpl := (GlobalTheory.T.heckeCharacterisation_places_of_weakCharacterisation R F hW).2.2.1 t
+  have hpl := (_root_.GlobalTheory.CoreThree.heckeCharacterisation_places_parts_of_weak R F hW).2.2.1 t
   have key := GlobalTheory.T.inertHeckeOperators_rows_rational_selfAdjoint_labels R.toRealDat F.lv2 hW.base.lev hW.base.fam hW.base.models t (A3.okI t × List ℕ)
     (fun i => R.plI i.1) (fun i => Formalism.IndefR.Links.labIn D.sp.X'.rank i.2) (A3.heckeRI t)
     (fun i => Formalism.L2.Col.InertTypeOk D.sp.X'.rank i.2)
     (fun i hi => ⟨(hpl i.1 i.1.2).1, (hpl i.1 i.1.2).2,
-      ((GlobalTheory.T.selfDual_antitone_list_iff_inertPrimeHeckeExponents D.sp.X'.rank (Formalism.IndefR.Links.labIn D.sp.X'.rank i.2)).mpr ⟨i.2, hi.2.2, hi.1, hi.2.1, rfl⟩).2.1⟩) tie
+      ((_root_.GlobalTheory.Hk3.labIn_selfDual_iff D.sp.X'.rank (Formalism.IndefR.Links.labIn D.sp.X'.rank i.2)).mpr ⟨i.2, hi.2.2, hi.1, hi.2.1, rfl⟩).2.1⟩) tie
   have hop : ∀ k : A3.okI t × List ℕ, A3.heckeRI t k = 0 ∨
       ∃ s', Formalism.L2.Col.InertTypeOk D.sp.X'.rank s' ∧ A3.heckeRI t k = A3.heckeRI t (k.1, s') := by
     rintro ⟨Q, s⟩
@@ -213,12 +213,12 @@ theorem inertHeckeOperators_lifts_rational_adjointClosed (R : RealDat3 D A3 Ks) 
     (A3.liftI j t).InertRationalAdjoint := by
   obtain ⟨tie⟩ := hW.inert.hL j t
   have hrk : (Vc D j).rank = A3.A.r + A3.A.t := R.toRealDat.B.rankL j
-  have hpl := (GlobalTheory.T.heckeCharacterisation_places_of_weakCharacterisation R F hW).2.2.1 t
-  have key := GlobalTheory.T.inertHeckeOperators_lifts_rational_selfAdjoint_labels R.toRealDat F.lv2 hW.base.lev hW.base.fam hW.base.models j t (A3.okI t × List ℕ)
+  have hpl := (_root_.GlobalTheory.CoreThree.heckeCharacterisation_places_parts_of_weak R F hW).2.2.1 t
+  have key := _root_.GlobalTheory.InertHeckeLift.inert_lifts R.toRealDat F.lv2 hW.base.lev hW.base.fam hW.base.models j t (A3.okI t × List ℕ)
     (fun i => R.plI i.1) (fun i => Formalism.IndefR.Links.labIn (Vc D j).rank i.2) (A3.heckeLI j t)
     (fun i => Formalism.L2.Col.InertTypeOk (Vc D j).rank i.2)
     (fun i hi => ⟨(hpl i.1 i.1.2).1, (hpl i.1 i.1.2).2,
-      ((GlobalTheory.T.selfDual_antitone_list_iff_inertPrimeHeckeExponents (Vc D j).rank (Formalism.IndefR.Links.labIn (Vc D j).rank i.2)).mpr ⟨i.2, hi.2.2, hi.1, hi.2.1, rfl⟩).2.1⟩) tie
+      ((_root_.GlobalTheory.Hk3.labIn_selfDual_iff (Vc D j).rank (Formalism.IndefR.Links.labIn (Vc D j).rank i.2)).mpr ⟨i.2, hi.2.2, hi.1, hi.2.1, rfl⟩).2.1⟩) tie
   have hop : ∀ k : A3.okI t × List ℕ, A3.heckeLI j t k = 0 ∨
       ∃ s', Formalism.L2.Col.InertTypeOk (Vc D j).rank s' ∧ A3.heckeLI j t k = A3.heckeLI j t (k.1, s') := by
     rintro ⟨Q, s⟩

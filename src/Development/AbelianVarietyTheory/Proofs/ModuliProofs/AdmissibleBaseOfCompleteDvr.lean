@@ -29,7 +29,7 @@ public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsTo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsProjectiveModel
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.GenRelNeZero
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesOfExpansionLawsStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesOfExpansionLaws
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesTorsionPairingSeparationIntegra
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationDataTorsionStructureAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationValuesIntOfAdmissibleBase
@@ -1629,9 +1629,9 @@ theorem recognition_iff : RecognitionSt ↔ URecDvrSt := by
     have hO : CExt V ⊥ C := ⟨hC.1, fun r hr => hC.2 r (bot_le (a := IsLocalRing.maximalIdeal V) hr)⟩
     obtain ⟨M, ν₀, q, I, hI, hq, hl, hB, hP⟩ := exists_integral hV D hC ν
     obtain ⟨M', ν₀', q', I', hI', hq', hl', hB', hP'⟩ := exists_integral hV D' hC ν'
-    have hT := ValuesTorsion.tors_of_integral hL firstFiveLaws.2.1 (GlobalTheory.T.abelianPartValues_of_expansionLaws hL) V _ D.psi_even D.tau_bimult C hO M ν₀
+    have hT := ValuesTorsion.tors_of_integral hL firstFiveLaws.2.1 (_root_.GlobalTheory.ThetaInValues.brUth_of_laws hL) V _ D.psi_even D.tau_bimult C hO M ν₀
       hI n hn ho h1
-    have hT' := ValuesTorsion.tors_of_integral hL firstFiveLaws.2.1 (GlobalTheory.T.abelianPartValues_of_expansionLaws hL) V _ D'.psi_even D'.tau_bimult C hO M'
+    have hT' := ValuesTorsion.tors_of_integral hL firstFiveLaws.2.1 (_root_.GlobalTheory.ThetaInValues.brUth_of_laws hL) V _ D'.psi_even D'.tau_bimult C hO M'
       ν₀' hI' n hn ho h1
     obtain ⟨w₀, hw₀⟩ := exists_move I I' hB hB' w
     have hp₀ : w₀.Proportional c₀ := fun i p => by

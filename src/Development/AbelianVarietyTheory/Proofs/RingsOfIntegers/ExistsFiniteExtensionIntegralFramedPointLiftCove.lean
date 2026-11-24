@@ -7,7 +7,7 @@ public import Development.AbelianVarietyTheory.Definitions.PlaceAdaptation.Adapt
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsFramedPointBaseChangeAlgHom
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FramedPointsLiftToLevelCover
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsCdvrFiniteExtension
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsIntegralFramedPointBaseChangeCdvrTransitivStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsIntegralFramedPointBaseChangeCdvrTransitiv
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointReducedFromTestRing
 import Mathlib.Algebra.Order.Floor.Extended
@@ -170,7 +170,7 @@ theorem exists_ext_lift_to_cover : ∀ (E : Type) [Field E] [NumberField E] [IsC
     rfl
   obtain ⟨T', iT, e, ψ, φ, he, hv, hψ, -, hfin⟩ := GlobalTheory.PlaceExtField.exists_cdvr_finite_extension T K
   have hψ' : ψ.toRingHom.comp (algebraMap T.Fr K) = iT := RingHom.ext hψ
-  obtain ⟨⟨y', hy'⟩, hx⟩ := GlobalTheory.T.exists_integralFramedPoint_baseChange_cdvr_transitive E H Dw l Xo c T T' io y iT e he hv
+  obtain ⟨⟨y', hy'⟩, hx⟩ := _root_.GlobalTheory.PlaceInt.exists_isExt_and_trans E H Dw l Xo c T T' io y iT e he hv
   have hx' := (hx y' hy').1
   let io₂ : d.c₂.F →+* T'.Fr := iT.comp (io.comp j)
   have hio : ∀ a : c.F, io₂ (d.eF a) = iT (io a) := fun a => by

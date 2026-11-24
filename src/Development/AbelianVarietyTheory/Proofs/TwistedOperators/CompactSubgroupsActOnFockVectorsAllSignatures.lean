@@ -5,10 +5,11 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnT
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EqZeroOfLintegralEqZero
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PureTensorLIntertwine
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdeleAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacterStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacter
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.APlusComm
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQuaStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.AdelicDataRowMeasureScaleTrivialTuple
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQua
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorChangeOrthonormalBasesSubst
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorMaximalCompactBasisSubstitut
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
@@ -508,7 +509,7 @@ theorem detPlus_one_one {m n : ℕ} (s : Matrix (Fin n) (Fin n) ℂ) (t : Matrix
 
 theorem compactFockAll : ∀ D : D7, GlobalTheory.ChainFr.CompactFockAll D := by
   intro D V W A B θ ψ χS χT ω f τ aS aT hθ hW hS hT hf _
-  obtain ⟨η, e1, e2, e3, e4⟩ := GlobalTheory.T.exists_unramifiedHeckeChar_halfExponent_restrict_quadratic D
+  obtain ⟨η, e1, e2, e3, e4⟩ := _root_.GlobalTheory.Mem.EtaTilde.exists_etaTilde D
   obtain ⟨cS, hcS⟩ := exp_twist_int hθ V hW.resS e3 hS (e2 τ)
   obtain ⟨cT, hcT⟩ := exp_twist_int hθ V hW.resT e3 hT (e2 τ)
   refine ⟨fun e => -cT - ((Finset.univ.filter fun i => B.ε τ i = e).card : ℕ),
@@ -528,7 +529,7 @@ theorem compactFockAll : ∀ D : D7, GlobalTheory.ChainFr.CompactFockAll D := by
   have c2 : ∀ ρ, B.cart ρ * compAt θ ρ (Formalism.L2.Theta.mt W (B.elt θ τ k)) =
       compAt θ ρ (Formalism.L2.Theta.mt W (B.elt θ τ k)) * B.cart ρ := fun ρ => by
     rw [compAt_elt B hθ hk]; exact cart_comm B (atPl_mem B hk ρ)
-  have hvac := GlobalTheory.T.weilDatum_realPlaces_fockVacuum_character D ψ hW.std V W θ hθ χS χT ω η ⟨e1, e4, e3, e2⟩ hW A.cart B.cart (cart_isCartanInv A)
+  have hvac := _root_.GlobalTheory.WeilVacChar.vacuum_character D ψ hW.std V W θ hθ χS χT ω η ⟨e1, e4, e3, e2⟩ hW A.cart B.cart (cart_isCartanInv A)
     (cart_isCartanInv B) (A.elt θ τ h) (GlobalTheory.PointAtPlaceHom.atTau_mem V τ _) (B.elt θ τ k)
     (GlobalTheory.PointAtPlaceHom.atTau_mem W τ _) c1 c2 x y hx hy f hf.1 hf.2
   have hmove := (GlobalTheory.OrientedHeis.om_pureTensorO D ψ θ V W χS χT ω hW hθ A.cart A.cart A.onb

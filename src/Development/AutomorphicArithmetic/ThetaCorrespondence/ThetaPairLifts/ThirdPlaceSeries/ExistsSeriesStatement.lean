@@ -7,16 +7,16 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Good
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSplitSupportedRepFiniteUnitaryClass
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealizationEmbeddingCompatible
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TupleReadBaseTupleEqFamily
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentralUniformiserActsByDilationTameKernelStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentralUniformiserActsByDilationTameKernel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoefLatticeIndepCoefMapProof
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatThetaQuotientAtPrincipalLevelProof
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeLowerBlockVectorMultipleKernelTranslate
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TameKernelVectorUnitMulDilatedFlatStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TameKernelVectorUnitMulDilatedFlat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTraceLevelCompatibleProof
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsCentAtScalar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodFormsSpannedByThetaSeriesOfClassSums
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemLatAtIffHat
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistingCharacterAdmissibleGaloisTwistGoodStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistingCharacterAdmissibleGaloisTwistGood
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLowestKTypeFockMapThetaVectors
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ForcedContentEqScaleAtResidueChar
 public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.KerDiag
@@ -231,9 +231,9 @@ theorem exists_om_eq (hC : GlobalTheory.Hk3.Core R F) (hG : QGuard R) (hV : VStd
   obtain ⟨ϖ, hϖ0, hϖ⟩ := exists_uniformiser D.host.E B.de.Q
   have hϖE : (ϖ : D.host.E) ≠ 0 := by exact_mod_cast hϖ0
   obtain ⟨z, hz, hzm⟩ := GlobalTheory.CentScal.exists_isCentAt_scalar D i B.de.Q eQ heQ (ϖ : D.host.E) hϖE
-  obtain ⟨κ, hκ, hact⟩ := GlobalTheory.T.central_uniformiser_acts_by_dilation_tame_kernel D G Pl0 T0 A Ks R F hC hG i hV ξ χ ξR _ ω φ hK hQ N hN hNQ eg eQ fg heg heQ hfg ϖ
+  obtain ⟨κ, hκ, hact⟩ := _root_.GlobalTheory.BaseCmp.dilKer_of_ne_zero D G Pl0 T0 A Ks R F hC hG i hV ξ χ ξR _ ω φ hK hQ N hN hNQ eg eQ fg heg heQ hfg ϖ
     (by first | exact hϖE) hϖ z hzm
-  obtain ⟨Gc, hGc, hSB, hvP⟩ := GlobalTheory.T.tameKernel_vector_unit_mul_dilated_flat D G Pl0 T0 A Ks R F hC hG i hV ξ χ ξR _ ω φ hK hQ N hN hNQ eg eQ fg heg heQ hfg ϖ hϖ0 hϖ
+  obtain ⟨Gc, hGc, hSB, hvP⟩ := _root_.GlobalTheory.BaseCmp.liftKer_of_ne D G Pl0 T0 A Ks R F hC hG i hV ξ χ ξR _ ω φ hK hQ N hN hNQ eg eQ fg heg heQ hfg ϖ hϖ0 hϖ
   obtain ⟨Tm, hTm⟩ := hf.1
   refine ⟨z, κ * Gc, hz, _root_.GlobalTheory.BaseCmp.unitOff_mul' hκ hGc, ?_⟩
   have hcomp : ∀ x : WO (Vc D i) (Wc D i), dil i (ϖ : D.host.E) (dil i (ϖ : D.host.E)⁻¹ x) = x := by
@@ -339,7 +339,7 @@ theorem exists_move {h : GA D (Vc D j)} (hh : h ∈ GfC (Vc D j)) :
     ∃ (s : Finset (Pl D.host.E)) (h' : GA D (Vc D j)) (T : PolF D (Wc D j).rank (Vc D j).rank →ₗ[ℂ] PolF D (Wc D j).rank (Vc D j).rank)
       (ζ : ℂ), (∃ n : ℕ, n ≠ 0 ∧ ζ ^ n = 1) ∧ (∀ P, ρ.theta i j b h P = ζ • ρ.theta i j b h' (T P)) ∧
       ∀ P ∈ ρ.lat i j b (ρ.eO i b).range h, ρ.IsDatum i j b s h' (T P) := by
-  obtain ⟨hg, ha, -⟩ := GlobalTheory.T.twistingCharacter_admissibleGaloisTwist_good D _ D.ntw ρ hρ i j b 0 ∅ 1 (twOK_one i 0)
+  obtain ⟨hg, ha, -⟩ := _root_.GlobalTheory.TwistGood.tw_good D _ D.ntw ρ hρ i j b 0 ∅ 1 (twOK_one i 0)
   have hB := hρ.base i j b
   obtain ⟨γ, s, h', k, hs, hoff, hh', hsupp, e⟩ := GlobalTheory.T.exists_split_supported_rep_finite_unitary_class D ρ hρ i j b h hh
   obtain ⟨n, hn, hk⟩ := _root_.GlobalTheory.BaseCmp.levLamRoot D _ _ (ρ.B i j b) _ k

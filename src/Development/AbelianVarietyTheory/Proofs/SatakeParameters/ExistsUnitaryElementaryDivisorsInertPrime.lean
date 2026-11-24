@@ -5,7 +5,8 @@ public import Formalism.LocalToGlobal.Columns.StdLatUnimodular
 public import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
 public import Formalism.SatakeDualWeyl.StatementF
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryDivisorDualLabel
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotentsStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -255,8 +256,8 @@ theorem exists_suppF_divAt : ∀ {D : D7} (V : HSp D) (P : HeightOneSpectrum (�
   obtain ⟨v, hf, hef⟩ : ∃ v, GlobalTheory.PlaceComp.IsIdemOf D.host.E v e ∧ e * e = e := by
     rcases id hP with ⟨⟨⟨a1, a2, v, ε, ⟨a, rfl, b1, b2⟩, a3⟩, -⟩, he⟩ | ⟨-, ⟨v, ε, ⟨a, rfl, b1, b2⟩, a3⟩, -⟩
     · rw [← he] at a3
-      exact ⟨v, a3 ▸ GlobalTheory.PlaceComp.isIdemOf_algebraMap b1 b2, ((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 P e e hP).1⟩
-    · exact ⟨v, a3 ▸ GlobalTheory.PlaceComp.isIdemOf_algebraMap b1 b2, ((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 P e e hP).1⟩
+      exact ⟨v, a3 ▸ GlobalTheory.PlaceComp.isIdemOf_algebraMap b1 b2, ((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 P e e hP).1⟩
+    · exact ⟨v, a3 ▸ GlobalTheory.PlaceComp.isIdemOf_algebraMap b1 b2, ((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 P e e hP).1⟩
   have h0 : (ϖ : D.host.E) ≠ 0 := fun h => h2 (by
     rw [show ϖ = 0 from Subtype.ext h]
     exact zero_mem _)

@@ -11,17 +11,22 @@ import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteAdelicI
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGoodFixedVectorOfTypeOccurringInRows
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalFixed
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankWEigenpartEqRowsFullHecke
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodFormsEqKilledByGroupAlgebraStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodFormsEqKilledByGroupAlgebra
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCompatFiniteIsometry
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdemOfCoeffRealStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsometryMatchesParahoricLevelsStatement
+import Formalism.LocalToGlobal.Divisibility.LiftLat
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdemOfCoeffReal
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsometryMatchesParahoricLevels
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelTypeHeckeKilledCorrespondMatchingIsoStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SignAtBasePlaceEqEmbedding
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StarRowsLevelCharacterEqLiftsLevelCharacter
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TypePlacesNotPairwiseConjugateStatement
+import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+import Formalism.LocalToGlobal.UnitaryNorms.CharHost
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TypePlacesNotPairwiseConjugate
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffDerivSnoc
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsLevelVectorGoodTypeStableSubspace
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ComplexConjugationMapsMultiplicitySpaceStatement
+import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ComplexConjugationMapsMultiplicitySpace
 import Formalism.LocalToGlobal.Divisibility.ProjLemmas
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -254,7 +259,7 @@ theorem exists_conj_map : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T :
     rw [this, LinearMap.range_zero]
   obtain ⟨M₀, c, hc⟩ := GlobalTheory.PartDims.exists_conjModel (S' := parA (Ptw D) 0)
     (fun τ => by rw [Nat.zero_min]; exact (dualPar_dualPar _).symm) (R.MY 0)
-  obtain ⟨h, hM⟩ := GlobalTheory.T.complexConjugation_maps_multiplicitySpace R.θ (R.MY 0) M₀ c hc
+  obtain ⟨h, hM⟩ := _root_.GlobalTheory.ConjMult.conj_mult R.θ (R.MY 0) M₀ c hc
   let st : π.S → (principalLevelFrame.FinTyp.conjT π).S := fun x => ⟨fun g => star (x.1 g), by
     show (fun g => star (star (x.1 g))) ∈ π.S
     simp only [star_star]
@@ -308,7 +313,7 @@ theorem exists_good_vec : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T :
     have eg := congrArg star (congrFun (hxG κ hκ) g)
     rw [← eg, Finset.sum_apply, Finset.sum_apply, star_sum]
     refine Finset.sum_congr rfl fun a _ => ?_
-    have := GlobalTheory.T.star_idemOf_coeff_eq_self D.what₂.embLL A.X hOk.irr hX a
+    have := _root_.GlobalTheory.CuspMult.idemOf_coeff_real D.what₂.embLL A.X hOk.irr hX a
     simp only [principalLevelFrame.rt_apply, Pi.smul_apply, smul_eq_mul, star_mul']
     congr 1
     exact this.symm
@@ -386,7 +391,7 @@ theorem exists_mem_isotL (hP : GlobalTheory.Published.HarishChandraFinite) {D : 
   obtain ⟨c', hc'⟩ := hC.lev.βW i
   have hrk : (Yc D 0).rank = (Wc D i).rank := GlobalTheory.PartDims.rank_zeroth_component_eq.trans (GlobalTheory.PartDims.rank_weight_component_eq i).symm
   obtain ⟨j, Φ, hΦ⟩ := GlobalTheory.FinIsoExists.exists_isFinIso (Yc D 0) (Wc D i) (R.βY 0) (R.ΛY 0) _ (R.βW i) (R.ΛW i) _ R.Pg hrk hc hc'
-    (GlobalTheory.T.typePlaces_not_pairwise_conjugate R.C.P R.Pg hC.lev.Pg)
+    (_root_.GlobalTheory.TypePlaces.not_isConjPl R.C.P R.Pg hC.lev.Pg)
   obtain ⟨h, hh⟩ := frames_inner (Yc D 0) (Wc D i) hF PY PW hPY hPW (by rw [GlobalTheory.PartDims.rank_zeroth_component_eq]; exact odd_r D.R) _ _ _ j Φ hΦ
   set P := R.levL F false (sg0 D A) with hPdef
   let e := eqv PY
@@ -441,7 +446,7 @@ theorem exists_mem_isotL (hP : GlobalTheory.Published.HarishChandraFinite) {D : 
     rw [Submodule.rank_eq_zero] at h1
     rw [h1] at hfm
     exact hf0 hfm
-  have hl := GlobalTheory.T.isometry_matches_parahoric_levels (Yc D 0) (Wc D i) (R.βY 0) (R.βW i) D.R.r D.R.t (r_le_Y 0) (r_le_rank_Wc i) R.Pg R.chi
+  have hl := _root_.GlobalTheory.LevTrans.levtrans (Yc D 0) (Wc D i) (R.βY 0) (R.βW i) D.R.r D.R.t (r_le_Y 0) (r_le_rank_Wc i) R.Pg R.chi
     (fun _ _ => 1) j Φ hΦ
   have e4 : killed ((finRep (R.MW i (sg0 D A))).comp Φ.toMulEquiv.toMonoidHom : Representation ℂ (GfC (Yc D 0)) _)
         (eqSet (Yc D 0) (R.βY 0) (R.dat0 R.triv) R.eG (RealDat.eC (A := A) D.what₂.embLL) P (∅ : Set Empty) Empty.elim Empty.elim Empty.elim) =
@@ -454,7 +459,7 @@ theorem exists_mem_isotL (hP : GlobalTheory.Published.HarishChandraFinite) {D : 
         Submodule ℂ (MMap (R.MW i (sg0 D A)))) =
       allMaps R.θ (R.MW i (sg0 D A)) ⊓ killed (finRep (R.MW i (sg0 D A))) (eqSet (Wc D i) (R.βW i) (R.datWp i R.triv) R.eG
         (RealDat.eC (A := A) (sg0 D A)) P (∅ : Set Empty) Empty.elim Empty.elim Empty.elim) :=
-    GlobalTheory.T.goodForms_eq_killed_by_groupAlgebra R.θ (R.MW i (sg0 D A)) (R.βW i) (R.datWp i R.triv) R.eG _ P (∅ : Set Empty) Empty.elim Empty.elim Empty.elim rfl rfl
+    _root_.GlobalTheory.CuspMult.EqCut.good_hecke_eq_killed R.θ (R.MW i (sg0 D A)) (R.βW i) (R.datWp i R.triv) R.eG _ P (∅ : Set Empty) Empty.elim Empty.elim Empty.elim rfl rfl
       (GlobalTheory.DimFull.liftsW' hC i)
   have e3 : RealDat.eC (A := A) (sg0 D A) = RealDat.eC (A := A) D.what₂.embLL := by rw [GlobalTheory.PartDims.sign_at_base_place_eq_embedding R]
   have hw : f' ⟨y, hyS⟩ ∈ R.Wat i (sg0 D A) P := by

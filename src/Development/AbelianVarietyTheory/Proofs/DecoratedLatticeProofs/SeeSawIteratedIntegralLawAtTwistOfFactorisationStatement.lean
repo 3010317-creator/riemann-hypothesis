@@ -10,9 +10,12 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Hei
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IdempotentMulEntryEqZeroOfCutInverse
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsUnitarySupportedAtPlaceOfMulEqIdem
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalSchrodingerModelUniqTransportExists
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PeriodLocalGroupsNormalFramesSplitPlaceStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FourierJacobiAverage
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PeriodLocalGroupsNormalFramesSplitPlace
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ToOneSucc
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceDoubleStepFinitelyManyCellsUniformProoStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupClosedEmbeddingIntegralStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupClosedEmbeddingIntegral
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryAdelicTrivialAtPlacesSubgroupAntitone
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitarySupportedSplitPlacesEqProdLocalParts
 public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
@@ -22,9 +25,7 @@ public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsHeightLeTwoMulQuotHeight
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FramePositiveSum
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValLastX
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FourierJacobiAverage
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsOneComb
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ToOneSucc
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FixLevCompactOpen
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselToJacobiFirstStepFlatMapSupportAll
 public import Formalism.LocalToGlobal.BesselHermitianTheta.TiedWeil
@@ -38,7 +39,6 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Ite
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsIteratedQuotientIntegralFinsetSum
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CosInj
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleStepEqTwoThetaColumnLifts
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralIndicatorGivesLocalVacuumSplitPlace
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualSplitComponentIsLatticeStabilizerEq
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryFiniteAdelicGroupSplitFinitePlaceSet
@@ -92,7 +92,8 @@ import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MatrixProjEqOneOfSuppAtDistinctFinitePlaceStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemSupportedSubgroupOfSuppAtSplitPlaceMemStatement
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemSupportedSubgroupOfSuppAtSplitPlaceMem
 import Development.AbelianVarietyTheory.BlockTheory.ExistenceTori.UnitaryHaarVolume
 import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.Fischer
 import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
@@ -421,7 +422,7 @@ theorem gl_mem_off (hinj : Function.Injective fun i => (q i).v) (h : ∀ i g, (o
 
 theorem gl_comm (h : ∀ i g, (ofSplit (q i)).IsLoc (F i) (gl i g) g) (i : Fin r) (g : GL (Y i) (k i)) :
     ∀ y ∈ GlobalTheory.FinPl.grpOff V (· = (q i).v), gl i g * y = y * gl i g :=
-  (GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D (k i) (q i) V (Y i) (F i) (gl i) (h i)).2.2.2.1 g
+  (_root_.GlobalTheory.LocGl.local_group D (k i) (q i) V (Y i) (F i) (gl i) (h i)).2.2.2.1 g
 
 theorem exists_prod (hinj : Function.Injective fun i => (q i).v) (h : ∀ i g, (ofSplit (q i)).IsLoc (F i) (gl i g) g) :
     ∀ a ∈ GlobalTheory.FinPl.grpAt V fun v => ∃ i, (q i).v = v, ∃ x : ∀ i, GL (Y i) (k i), a = (List.ofFn fun i => gl i (x i)).prod := by
@@ -430,7 +431,7 @@ theorem exists_prod (hinj : Function.Injective fun i => (q i).v) (h : ∀ i g, (
     (GlobalTheory.CellLevels.grpAt_le_of_imp V (fun _ ⟨i, hi⟩ => ⟨i, hi.symm⟩) ha)
   have hr : ∀ i, ∃ x, gl i x = y i := fun i => by
     have := (GlobalTheory.FinPl.Model.mem_grpAt_iff (q i) V _).2 (hy i)
-    rw [← (GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D (k i) (q i) V (Y i) (F i) (gl i) (h i)).2.1] at this
+    rw [← (_root_.GlobalTheory.LocGl.local_group D (k i) (q i) V (Y i) (F i) (gl i) (h i)).2.1] at this
     exact this
   choose x hx using hr
   exact ⟨x, by rw [e, List.ofFn_eq_map, funext hx]⟩
@@ -479,7 +480,7 @@ theorem cells_second (hψ : IsStdChar D ψ (-1)) {r : ℕ} (Q : Fin r → QStep 
   classical
   obtain ⟨-, -, -, hv, -, -, -, hg, -, hh₂⟩ := hH
   obtain ⟨f₁', f₂', hv', e₁, e₂⟩ := exists_vac hψ Q hinj f₁ f₂ hv i
-  obtain ⟨x₀, hx₀, -⟩ := (GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D (Q i).k (Q i).q S.J.W _ (Q i).F.G₁ (Q i).gl₁ (Q i).loc₁).2.2.1 (h₁ * x)
+  obtain ⟨x₀, hx₀, -⟩ := (_root_.GlobalTheory.LocGl.local_group D (Q i).k (Q i).q S.J.W _ (Q i).F.G₁ (Q i).gl₁ (Q i).loc₁).2.2.1 (h₁ * x)
   choose _ _ T hT using GlobalTheory.T.splitPlaceDoubleStepFinitelyManyCellsUniform_proof D ψ hψ σ S (Q i)
   refine ⟨(Q i).e₀.support.biUnion fun a => T a x₀, fun z hz y hy => ?_⟩
   obtain ⟨a, ha, g', hg', hc⟩ := exists_con Q hinj hg hy i
@@ -503,7 +504,7 @@ theorem finite_cells : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar 
       (fun i => gl_mem_at (fun i => (Q i).q) (fun i => (Q i).F.G₁) _ (fun i => (Q i).loc₁) i.succ ⟨i, rfl⟩)
       (exists_prod (fun i : Fin r => (Q i.succ).q) (fun i => (Q i.succ).F.G₁) _ hinj' fun i => (Q i.succ).loc₁)
       (jacGrp S.J.d) (fun i => (Q i).L₁.J) (RFJ (Q 0).k (Q 0).n₁ ((Q 0).c + 1 + 1) (σ + 1))
-      (fun h => (((GlobalTheory.T.periodLocalGroups_normalFrames_splitPlace D (Q 0).k (Q 0).q (Q 0).n₁ ((Q 0).c + 1 + 1) (σ + 1)).1 S.J _ _ _ _ (Q 0).gl₁ (Nat.le_add_left 1 σ)
+      (fun h => (((_root_.GlobalTheory.LocGrpIff.local_groups_iff D (Q 0).k (Q 0).q (Q 0).n₁ ((Q 0).c + 1 + 1) (σ + 1)).1 S.J _ _ _ _ (Q 0).gl₁ (Nat.le_add_left 1 σ)
         (Q 0).F.s_ne (GlobalTheory.LocMod.Witness.hz_ne _ S.B) (Q 0).F.jac (Q 0).loc₁).1 h).1)
       (fun x => ∃ y, integrand Q c₁ c₂ f₁ f₂ φ f g h₁ h₂ x y ≠ 0) (cells_first hψ Q hinj hH)
     exact ⟨T, fun x y h => hT x ⟨_, h⟩⟩
@@ -513,7 +514,7 @@ theorem finite_cells : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar 
       (fun i => gl_mem_at (fun i => (Q i).q) (fun i => (Q i).F.G₂) _ (fun i => (Q i).loc₂) i.succ ⟨i, rfl⟩)
       (exists_prod (fun i : Fin r => (Q i.succ).q) (fun i => (Q i.succ).F.G₂) _ hinj' fun i => (Q i.succ).loc₂)
       (besGrp S.B'.d S.B'.o) (fun i => (Q i).L₂.J) (R (Q 0).k (Q 0).n₂ ((Q 0).c + 1) (σ + 1))
-      (fun h => (((GlobalTheory.T.periodLocalGroups_normalFrames_splitPlace D (Q 0).k (Q 0).q (Q 0).n₂ ((Q 0).c + 1) σ).2 S.B' _ _ _ (Q 0).gl₂
+      (fun h => (((_root_.GlobalTheory.LocGrpIff.local_groups_iff D (Q 0).k (Q 0).q (Q 0).n₂ ((Q 0).c + 1) σ).2 S.B' _ _ _ (Q 0).gl₂
         (mul_ne_zero (Q 0).F.s_ne (GlobalTheory.LocMod.Witness.xi_ne _)) (Q 0).F.bes' (Q 0).loc₂).1 h).1)
       (fun y => integrand Q c₁ c₂ f₁ f₂ φ f g h₁ h₂ (x.1.1 * (Q 0).gl₁ x.2) y ≠ 0) (cells_second hψ Q hinj hH _)
 
@@ -1047,7 +1048,7 @@ theorem isCO_iSup_map (V : HSp D) {r : ℕ} (k : Fin r → Type) [∀ i, Field (
     rw [hmat_ne i j hij g, Matrix.mul_one, (F i).γβ])
   set H := ⨆ i, (L i).map (gl i) with hHdef
   have hglA : ∀ i g, gl i g ∈ GlobalTheory.FinPl.grpAt V P := fun i g =>
-    GlobalTheory.T.mem_supportedSubgroup_of_suppAt_splitPlace_mem D (k i) (q i) V _ (hgl i g).1 P ⟨i, rfl⟩
+    _root_.GlobalTheory.SuppGrp.mem_grpAt_of_suppAt D (k i) (q i) V _ (hgl i g).1 P ⟨i, rfl⟩
   have hHL : ∀ x ∈ H, ∀ i, lh i x ∈ L i := by
     intro x hx i
     have hle : H ≤ (L i).comap (lh i) := iSup_le fun j => Subgroup.map_le_iff_le_comap.2 fun g hg => by
@@ -1312,9 +1313,9 @@ variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {σ : ℕ} {S : Dbl2 ψ σ}
 theorem gl₂_comm (Q₀ Q' : QStep S) (hne : Q₀.q.v ≠ Q'.q.v) (a : GL (Q₀.n₂ ⊕ Fin (Q₀.c + 1)) Q₀.k)
     (b : GL (Q'.n₂ ⊕ Fin (Q'.c + 1)) Q'.k) : Q₀.gl₂ a * Q'.gl₂ b = Q'.gl₂ b * Q₀.gl₂ a := by
   have h0 : Q₀.gl₂ a ∈ grpAt S.B'.V (· = Q₀.q.v) := by
-    rw [← (GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D Q₀.k Q₀.q S.B'.V _ Q₀.F.G₂ Q₀.gl₂ Q₀.loc₂).2.1]; exact ⟨a, rfl⟩
+    rw [← (_root_.GlobalTheory.LocGl.local_group D Q₀.k Q₀.q S.B'.V _ Q₀.F.G₂ Q₀.gl₂ Q₀.loc₂).2.1]; exact ⟨a, rfl⟩
   have h1 : Q'.gl₂ b ∈ grpAt S.B'.V (· = Q'.q.v) := by
-    rw [← (GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D Q'.k Q'.q S.B'.V _ Q'.F.G₂ Q'.gl₂ Q'.loc₂).2.1]; exact ⟨b, rfl⟩
+    rw [← (_root_.GlobalTheory.LocGl.local_group D Q'.k Q'.q S.B'.V _ Q'.F.G₂ Q'.gl₂ Q'.loc₂).2.1]; exact ⟨b, rfl⟩
   exact GlobalTheory.SeeSawLastValue.grpAt_comm (fun p hp hp' => hne (hp.symm.trans hp')) h0 h1
 
 theorem typed_trc (Q₀ Q' : QStep S) (hne : Q₀.q.v ≠ Q'.q.v) (e : GL (Q₀.n₂ ⊕ Fin (Q₀.c + 1)) Q₀.k →₀ ℂ)
@@ -1734,7 +1735,7 @@ theorem norm_eq (hv : v.Is) {w : VTup t} (F : QFam v t) (hF : F.Pins w) (n : ℕ
     (hd : ∀ i, n + d = (F.Q i).s + 1) (x : GA D (c.V n)) (hx : x ∈ grpAt (c.V n) (· ∈ w.Q)) :
     (∀ i, IntAt (F.Q i).q.v ((F.Q i).gl n d (hd i)) x) ↔ InK (c.V n) (v.N n) (· ∈ w.Q) x := by
   have key : ∀ i, IntAt (F.Q i).q.v ((F.Q i).gl n d (hd i)) x ↔ Moves (c.V n) x (v.N n) (v.N n) (· = (F.Q i).q.v) := fun i => by
-    obtain ⟨-, h1, h2, -, h3⟩ := GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D _ (F.Q i).q (c.V n) _ ((F.Q i).FY n d (hd i)) ((F.Q i).gl n d (hd i))
+    obtain ⟨-, h1, h2, -, h3⟩ := _root_.GlobalTheory.LocGl.local_group D _ (F.Q i).q (c.V n) _ ((F.Q i).FY n d (hd i)) ((F.Q i).gl n d (hd i))
       ((F.Q i).gl_loc n d (hd i))
     exact intAt_iff_moves _ _ h1 h2 (h3 _ (hv.sd n hn) ((F.Q i).latY n d (hd i))) x
   simp only [key, InK, hx, true_and]

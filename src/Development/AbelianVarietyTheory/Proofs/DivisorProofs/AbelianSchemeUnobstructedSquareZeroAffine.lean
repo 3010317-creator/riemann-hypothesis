@@ -12,12 +12,13 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSc
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanInvariantOneFormsAffineOpenAbelianSchemeEqToStatement
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AxesVanishingStructureSheafDegOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeGlobalOneFormsProjectiveRankStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSquareAffineH1VanishStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ComparisonMemCechHodgeFiltration
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSquareAffineH1Vanish
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AxesO1OfProjectiveRankCup
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrimOfAxes
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianUnobstructed
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeUnobstructedOfCohomologyStructureStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianStructureCohomologyStatementStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianStructureCohomologyStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -75,7 +76,7 @@ import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.LocalProperties.FinitePresentation
 import Mathlib.Tactic.Linter.Style
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasFrameOfIsBaseChange
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalFunctionsConstantAfterBaseChangeOfAbelianSStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalFunctionsConstantAfterBaseChangeOfAbelianS
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjectiveSpMapOfSq, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGroupLawTranslateDerivationInvariantForms, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGroupLawTranslateDerivationInvariantFormsStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalOneFormEqZeroOfAffineCoverRestrictions, Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalOneFormEqZeroOfAffineCoverRestrictionsStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorKaehlerEqZeroOfDerivationsVanish, Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorKaehlerEqZeroOfDerivationsVanishStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRetractionDifferentialsInvariantOneFormsAf, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRetractionDifferentialsInvariantOneFormsAfStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantOneFormsAbelianSchemeFiniteProjective, Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantOneFormsAbelianSchemeFiniteProjectiveStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvariantOneFormFrameAbelianScheme, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvariantOneFormFrameAbelianSchemeStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSquareGlobalOneFormEqZeroOfAxes, Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSquareGlobalOneFormEqZeroOfAxesStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalOneFormsPrimitiveAbelianScheme, Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalOneFormsPrimitiveAbelianSchemeStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeOneFormFrameAndPrimitiveOneForms, Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeOneFormFrameAndPrimitiveOneFormsStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeUnobstructedSquareZeroAffine
@@ -763,7 +764,7 @@ open GlobalTheory.AbCoh.PrimForm
 
 theorem eq_zero_of_axes : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ y : GlobForm (A ⊗ A).hom, GlobalTheory.AbCoh.pF (lift (𝟙 A) (toUnit A ≫ η[A])) y = 0 → GlobalTheory.AbCoh.pF (lift (toUnit A ≫ η[A]) (𝟙 A)) y = 0 → y = 0 := by
   intro R _ A _ g hA hg y h₁ h₂
-  obtain ⟨hA2, hg2⟩ := (GlobalTheory.T.abelian_square_affine_h1_vanish R).1 A g hA hg
+  obtain ⟨hA2, hg2⟩ := (_root_.GlobalTheory.Obs.sq_abelian_and_affine_H1 R).1 A g hA hg
   obtain ⟨f1, p1, r1⟩ := GlobalTheory.T.abelianScheme_global_oneForms_projective_rank R A g hA hg
   obtain ⟨f2, p2, r2⟩ := GlobalTheory.T.abelianScheme_global_oneForms_projective_rank R (A ⊗ A) (g + g) hA2 hg2
   let N : GlobForm (A ⊗ A).hom →ₗ[R] GlobForm A.hom × GlobForm A.hom :=
@@ -892,8 +893,8 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestric
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem GlobalTheory.UnobTop.abelianUnobstructed : GlobalTheory.Published.AbelianUnobstructed :=
-  GlobalTheory.T.abelianScheme_unobstructed_of_cohomology_structure GlobalTheory.T.abelian_structure_cohomology_statement fun R _ A _ g hA hg =>
-    ⟨(GlobalTheory.T.abelianScheme_oneFormFrame_and_primitiveOneForms R A g hA hg).1, GlobalTheory.T.globalFunctionsConstantAfterBaseChange_of_abelianScheme R A hA, (GlobalTheory.T.abelianScheme_oneFormFrame_and_primitiveOneForms R A g hA hg).2⟩
+  GlobalTheory.T.abelianScheme_unobstructed_of_cohomology_structure _root_.GlobalTheory.AbCoh.oStr fun R _ A _ g hA hg =>
+    ⟨(GlobalTheory.T.abelianScheme_oneFormFrame_and_primitiveOneForms R A g hA hg).1, _root_.GlobalTheory.AbCoh.uConst_of_isAbelianScheme R A hA, (GlobalTheory.T.abelianScheme_oneFormFrame_and_primitiveOneForms R A g hA hg).2⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeUnobstructedSquareZeroAffine =====

@@ -6,7 +6,7 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DoubleCos
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalHeckeConjPlaceEqDualLabel
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalLabelOperatorsOnHyperspecialFixedVector
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitHeckeElementLabelZerosThenNegOnesStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitHeckeElementLabelZerosThenNegOnes
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -125,7 +125,7 @@ theorem UpperTheory.exists_sphericalHeckeRep_splitLabel_of_offLevelPlace :
   intro D L hT Gi Gl Kc Y cX ex Csz p j t Q k hpos hk
   obtain ⟨hg, -, -⟩ := (GlobalTheory.GoodPrimes.good_primes p.R.toRealDat (p.P.face p.Dcf p.Spf p.Del p.h0 Csz).lv2
     p.charW.base.lev).2.2.2 p.charW.base.fam t Q.1 Q.2
-  have hs := fun x => GlobalTheory.T.split_hecke_element_label_zeros_then_neg_ones (Vc D j) p.R.pl _ ((Q, k) : _ × ℕ) x
+  have hs := fun x => _root_.GlobalTheory.Hk3Split.isLabElt_of_isTEnv (Vc D j) p.R.pl _ ((Q, k) : _ × ℕ) x
   have hloc : ∀ a ∈ hkA p j t (Q, k), GlobalTheory.Hk3.IsLocElt (Vc D j) (plOf p j t Q) a :=
     fun a ha => (hs a).2.1 ((p.R.B.L j t).hecke.hA_loc (Q, k) ⟨hpos, hk⟩ a ha)
   exact ⟨hloc, UpperTheory.hecke_offprime_sum (Vc D j) (p.R.βV j) (p.R.ΛV j) (p.R.datVt j t) (p.charW.base.lev.βV j) (plOf p j t Q) hg

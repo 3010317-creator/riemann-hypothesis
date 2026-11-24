@@ -7,7 +7,7 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertPlac
 public import Formalism.LocalToGlobal.IndefiniteReal.Bridge
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffDerivSnoc
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DivisorsAtInvDualLabelAndStabilizerMulStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DivisorsAtInvDualLabelAndStabilizerMul
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsAntiInvolutionOfChars
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntegrableOnFundamentalDomainMulRight
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsDCOfMemDoubleCoset
@@ -46,8 +46,9 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvolutionSphericalHeckeAntiStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotentsStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvolutionSphericalHeckeAnti
+import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
 import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp
 import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Tactic.Basify
@@ -292,8 +293,8 @@ def RealUnif (P : HeightOneSpectrum (𝓞 D.host.E)) : Prop :=
     y ∈ P.asIdeal ∧ y ∉ P.asIdeal ^ 2
 
 theorem exists_loc (h : IsPrimeIdem P e f) : ∃ L : Subgroup (GA D V), ∀ g, g ∈ L ↔ SuppF V f g :=
-  have h1 := (GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 P e f h
-  ((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).1 f h1.1 h1.2.1).1
+  have h1 := (_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 P e f h
+  ((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).1 f h1.1 h1.2.1).1
 
 theorem isDC_of_rep (hL : ∀ g, g ∈ L ↔ SuppF V f g) {α : GA D V} {R : Finset (GA D V)}
     (h : IsCosetRep V {k | k ∈ (J : Set (GA D V)) ∧ SuppF V f k} α R) : IsDC (J ⊓ L) α R := by
@@ -323,7 +324,7 @@ theorem local_data (hu : RealUnif P) (h : IsPrimeIdem P e f) (hL : ∀ g, g ∈ 
   have m2 : ∀ {a}, a ∈ KsphC V ∅ → SuppF V f a → a ∈ (J ⊓ L) ⊓ L := fun h1 h2 => ⟨m1 h1 h2, (hL _).2 h2⟩
   rw [hK]
   rcases id h with ⟨hs, rfl⟩ | ⟨rfl, -⟩
-  · obtain ⟨⟨ι, i1, i2, i3, i4, i5⟩, hR, -⟩ := GlobalTheory.T.involution_spherical_hecke_anti V P e hs
+  · obtain ⟨⟨ι, i1, i2, i3, i4, i5⟩, hR, -⟩ := _root_.GlobalTheory.SplitPlace.split_local V P e hs
     refine ⟨⟨ι, fun g hg => (hL _).2 (i1 g ((hL _).1 hg)), fun x hx y hy => i2 x y ((hL _).1 hx) ((hL _).1 hy),
       fun x hx => i3 x ((hL _).1 hx), fun k hk => ?_, fun g hg => ?_⟩, hR, ?_⟩
     · have := (hL _).1 hk.2
@@ -357,7 +358,7 @@ theorem labelUnique (hu : ∀ P : HeightOneSpectrum (𝓞 D.host.E), RealUnif P)
     LabelUnique (J : Set (GA D V)) χ Sb := by
   rintro P d R R' ⟨e, f, ϖ, α, -, hP, h1, h2, hd, hJ, hχ, hα, hD, hR, hc⟩
     ⟨e', f', ϖ', α', -, hP', h1', h2', -, -, -, hα', hD', hR', hc'⟩ F hF
-  obtain ⟨rfl, rfl⟩ := ((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 P e f hP).2.2.2.1 e' f' hP'
+  obtain ⟨rfl, rfl⟩ := ((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 P e f hP).2.2.2.1 e' f' hP'
   obtain ⟨L, hL⟩ := exists_loc (V := V) hP
   exact (GlobalTheory.HkB.dcOp_eq_and_level (J ⊓ L) L 1 α α' R R' F split_triv (fun _ _ => rfl)
     (fun a ha => (hL _).2 (hR a ha)) (fun a ha => (hL _).2 (hR' a ha)) (isDC_of_rep hL hc) (isDC_of_rep hL hc')
@@ -391,9 +392,9 @@ theorem level_heckeLin {d : List ℤ} {R : Finset (GA D V)}
     ⟨1, 1, by simp⟩ (inv_loc hL hχ hF)).2
   intro k hk g
   obtain ⟨k₁, hk₁, k₂, hk₂, s₁, s₂, rfl⟩ := hs e f hS hP k hk
-  have h1 := (GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 P e f hP
+  have h1 := (_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 P e f hP
   have hc : ∀ a ∈ R, Commute a k₂ := fun a ha =>
-    ((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).1 f h1.1 h1.2.1).2.2 (1 - f) a k₂ (by rw [mul_sub, mul_one, h1.1, sub_self]) (hR a ha) s₂
+    ((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).1 f h1.1 h1.2.1).2.2 (1 - f) a k₂ (by rw [mul_sub, mul_one, h1.1, sub_self]) (hR a ha) s₂
   have h2 : heckeLin V R F (g * k₁) = heckeLin V R F g := by
     show dcOp R F (g * k₁) = dcOp R F g
     simpa using h0 ⟨k₁, hk₁, (hL _).2 s₁⟩ g
@@ -408,13 +409,13 @@ theorem comm_heckeLin (hu : RealUnif P) {P' : HeightOneSpectrum (𝓞 D.host.E)}
     heckeLin V R (heckeLin V R' F) = heckeLin V R' (heckeLin V R F) := by
   obtain ⟨e, f, ϖ, α, hS, hP, -, -, -, hJ, hχ, hα, -, hR, hc⟩ := h
   obtain ⟨e', f', ϖ', α', -, hP', -, -, -, -, -, hα', -, hR', hc'⟩ := h'
-  have h1 := (GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 P e f hP
+  have h1 := (_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 P e f hP
   rcases h1.2.2.2.2 P' e' f' hP' with h0 | ⟨rfl, -⟩
   · funext g
     simp only [heckeLin_apply]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun b hb => Finset.sum_congr rfl fun a ha => ?_
-    rw [mul_assoc, mul_assoc, (((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).1 f h1.1 h1.2.1).2.2 f' a b h0 (hR a ha) (hR' b hb)).eq]
+    rw [mul_assoc, mul_assoc, (((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).1 f h1.1 h1.2.1).2.2 f' a b h0 (hR a ha) (hR' b hb)).eq]
   · obtain ⟨L, hL⟩ := exists_loc (V := V) hP
     obtain ⟨hι, hrep, -⟩ := local_data hu hP hL hJ
     obtain ⟨A', hA', hc''⟩ := hrep α⁻¹ ((hL _).1 (inv_mem ((hL _).2 hα)))
@@ -431,7 +432,7 @@ theorem dualLab_pairwise {d : List ℤ} (h : d.Pairwise fun a b => b ≤ a) :
 theorem idem_of_isPrimeIdem (h : IsPrimeIdem P e f) (V : HSp D) : e * e = e := by
   rcases id h with ⟨hs, -⟩ | ⟨rfl, -⟩
   · exact hs.1.1
-  · exact ((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).2.2.1 P f f h).1
+  · exact ((_root_.GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 P f f h).1
 
 theorem exists_dual (hu : RealUnif P) {d : List ℤ} {R : Finset (GA D V)}
     (h : Hecke₂ V (J : Set (GA D V)) χ Sb P d R) :
@@ -447,7 +448,7 @@ theorem exists_dual (hu : RealUnif P) {d : List ℤ} {R : Finset (GA D V)}
     rw [show ϖ = 0 from RingOfIntegers.coe_eq_zero_iff.1 h0]
     exact zero_mem _)
   refine ⟨R', ⟨e, f, ϖ, α⁻¹, hS, hP, h1, h2, dualLab_pairwise hd, hJ, hχ, hα',
-    (GlobalTheory.T.divisorsAt_inv_dualLabel_and_stabilizer_mul V e ϖ d α (idem_of_isPrimeIdem hP V) h0 hD).1, hR', hc'⟩, ?_, J ⊓ L, α,
+    (_root_.GlobalTheory.DivDual.divAt_inv_and_mul V e ϖ d α (idem_of_isPrimeIdem hP V) h0 hD).1, hR', hc'⟩, ?_, J ⊓ L, α,
     fun k hk => ⟨hk.1, hχ k hk.1 ((hL _).1 hk.2)⟩, fun a ha => ?_, fun a ha => ?_⟩
   · exact (GlobalTheory.DoubleCosetComm.dcOp_comm_and_card (W := ℂ) (J ⊓ L) L 1 α α R R R' 0 split_triv (fun _ _ => rfl) hι
       (fun a ha => (hL _).2 (hR a ha)) (fun a ha => (hL _).2 (hR a ha)) (fun a ha => (hL _).2 (hR' a ha))

@@ -16,7 +16,8 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Loc
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsSelfDualOfHasConductor
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselPeriodRightTranslateSobolevSepContinuous
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BiThetaOfVac
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsJointlySmoothBiThetaTwoVarCombinationStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsBiSmooth
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsJointlySmoothBiThetaTwoVarCombination
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawDoubleLiftAdditive
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawDoubleStepLinearRelationsPeriods
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawLastTwoStepsDoubleLiftPeriodValue
@@ -27,10 +28,12 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsOneCo
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselPeriodRightTranslationInvariant
 public import Mathlib.Analysis.Complex.Norm
 public import Mathlib.Analysis.Normed.Ring.Basic
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupClosedEmbeddingIntegralStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupClosedEmbeddingIntegral
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FourierJacobiAverage
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ToOneSucc
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsOpenNormalisedSubgroupSubset
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CombAtSingleZero
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsBiSmooth
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselThetaContractionExtendByZeroVacuumSmooth
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousKappa
@@ -79,7 +82,8 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselGroupQuotientFundamentalDomainCocompactStatement
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsThetaFam
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselGroupQuotientFundamentalDomainCocompact
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselGroupSemidirectProductRational
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegrand
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiInvariantFunctionIntegrable
@@ -103,7 +107,7 @@ import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Lemma
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctionsStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctions
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SpanSchwartzBruhatProductEqTop
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilCharacterSplitPlaceExistsContinuousNontrivia
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
@@ -363,7 +367,7 @@ theorem per_int {ρ : ℕ} (B : BesLev D ρ) {ψ : AddChar (AF D.host.F) ℂ} (h
     {φ : GA D B.A → ℂ} (hφ : IsContAut B.A φ) {f : GA D B.V → ℂ} (hf : f ∈ contLeft B.V) :
     (∀ h, IntegrableOn (GlobalTheory.MixPer.besFun ψ 1 B.d B.o B.ζ φ f h) B.vN.𝓝 B.vN.ν) ∧
       IntegrableOn (fun h => ∫ n in B.vN.𝓝, GlobalTheory.MixPer.besFun ψ 1 B.d B.o B.ζ φ f h n ∂B.vN.ν) B.vA.𝓕 B.vA.μ := by
-  obtain ⟨-, -, ⟨Ω, hΩc, hΩ⟩, -⟩ := GlobalTheory.T.besselGroup_quotient_fundamentalDomain_cocompact D ρ B
+  obtain ⟨-, -, ⟨Ω, hΩc, hΩ⟩, -⟩ := _root_.GlobalTheory.BesselQuot.besGrp_quotient D ρ B
   obtain ⟨Cφ, hCφ⟩ := GlobalTheory.Unf.EvalCont.bounded_of_contAut B.cpt hφ
   have hμ : B.vA.μ B.vA.𝓕 < ⊤ := GlobalTheory.Unf.vol_fund_lt_top B.cpt B.vA
   have hν1 : B.vN.ν B.vN.𝓝 = 1 := B.vN.unit.2.2
@@ -432,7 +436,7 @@ theorem GlobalTheory.TriStep.valK_bilin : ∀ (D : D7) (ψ : AddChar (AF D.host.
   intro D ψ hψ σ S Q c₁ c₂ _ _ φ hφ Λ _ hΛ
   have hB : BiAct D := GlobalTheory.SeeSaw.biAct_all D
   have hC : ∀ Ξ, IsBiTheta ψ S.B.A S.J.W₀ S.B'.A (biComb ψ S.B.A S.J.W₀ S.B'.A c₁ c₂ (Λ Ξ)) :=
-    fun Ξ => GlobalTheory.T.isJointlySmoothBiTheta_twoVarCombination D ψ hψ S.B.A S.J.W₀ S.B'.A (Λ Ξ) (hΛ Ξ) c₁ c₂
+    fun Ξ => _root_.GlobalTheory.FrCombAny.biTheta_biComb D ψ hψ S.B.A S.J.W₀ S.B'.A (Λ Ξ) (hΛ Ξ) c₁ c₂
   have hA : ∀ Ξ, IsContAut S.B'.A (biLift S.oma S.omb S.B.vA S.J.v0 φ (biComb ψ S.B.A S.J.W₀ S.B'.A c₁ c₂ (Λ Ξ))) :=
     fun Ξ => GlobalTheory.SeeSawLastValue.contAut_biLift hB S.weila S.weilb S.B.cpt S.J.cpt S.B.vA S.J.v0 hφ (hC Ξ)
   have hL : ∀ Ξ Ξ', biLift S.oma S.omb S.B.vA S.J.v0 φ (biComb ψ S.B.A S.J.W₀ S.B'.A c₁ c₂ (Λ (Ξ + Ξ'))) =
@@ -459,7 +463,7 @@ theorem GlobalTheory.TriStep.valK_bilin : ∀ (D : D7) (ψ : AddChar (AF D.host.
     rw [map_smul, biComb_smul, GlobalTheory.SeeSawRhs.biLift_smul, GlobalTheory.SeeSawStep.per_smul_left, smul_eq_mul]
   · intro Ξ f g
     simp only [GlobalTheory.TriStep.valK]
-    obtain ⟨-, -, ⟨Ω, hΩc, hΩ⟩, -⟩ := GlobalTheory.T.besselGroup_quotient_fundamentalDomain_cocompact D σ S.B'
+    obtain ⟨-, -, ⟨Ω, hΩc, hΩ⟩, -⟩ := _root_.GlobalTheory.BesselQuot.besGrp_quotient D σ S.B'
     obtain ⟨Cp, hadd, -⟩ := per_add_bound S.B' hψ (hA Ξ) Ω hΩc hΩ
     exact hadd _ _ (hf f) (hf g)
   · intro a Ξ f
@@ -1013,7 +1017,7 @@ variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {σ : ℕ} {S : Dbl2 ψ σ}
 theorem mem_space_of_typed : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (S : Dbl2 ψ σ) (Q : QStep S)
     (f : GA D S.B'.V → ℂ), IsContAut S.B'.V f → Q.Typed f → f ∈ GlobalTheory.TriStep.space Q := by
   intro D ψ σ S Q f hf hT
-  have hgl : Continuous Q.gl₂ := (GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D Q.k Q.q S.B'.V _ Q.F.G₂ Q.gl₂ Q.loc₂).1.continuous
+  have hgl : Continuous Q.gl₂ := (_root_.GlobalTheory.LocGl.local_group D Q.k Q.q S.B'.V _ Q.F.G₂ Q.gl₂ Q.loc₂).1.continuous
   refine ⟨fun y => ⟨fun γ hγ x => ?_, ?_⟩, ?_⟩
   · simp only [rTrans]
     rw [mul_assoc, hf.1 γ hγ]
@@ -1119,8 +1123,8 @@ theorem isBiTheta_of_prod {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {A S A' : HS
 
 theorem tri : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (σ : ℕ) (S : Dbl2 ψ σ) (Q : QStep S) c₁ c₂, Q.Away c₁ → Q.Away c₂ → ∀ T₁ T₂, (ofSplit Q.q).IsModel ψ Q.F.G₀ Q.F.G₁ T₁ → (ofSplit Q.q).IsModel ψ Q.F.G₁ Q.F.G₂ T₂ → ∀ φ, IsContAut S.B.A φ → ∃ (A : Submodule ℂ (GA D S.B'.V → ℂ)) (τ : Representation ℂ (GL (Q.n₂ ⊕ Fin (Q.c + 1)) Q.k) A) (T : SB (Matrix Q.n₁ Q.n₀ Q.k) →ₗ[ℂ] SB (Matrix Q.n₂ Q.n₁ Q.k) →ₗ[ℂ] A →ₗ[ℂ] ℂ), IsSmoothRep τ ∧ (∀ y (f : A), (τ y f).1 = rTrans (Q.gl₂ y) f.1) ∧ (∀ f, IsContAut S.B'.V f → Q.Typed f → f ∈ A) ∧ TriPos Q.ψk Q.μ₁ Q.μ₂ (σ + 1) τ T ∧ (∀ Φ₁ Φ₂ (f : A), HasTensorVal (fun Ψ Φ₀ => app (T Ψ) (opEFJ Q.ψk Q.ν (σ + 1) Φ₀.1 Φ₂.1) f) (fl Q.ψk Q.ν Q.μ₁ (σ + 1) Φ₁.1) (S.val c₁ c₂ (T₁ Φ₁) (T₂ Φ₂) φ f.1 1 1 1)) ∧ ∀ (Ξ₁ : SB (Matrix Q.n₁ Q.n₀ Q.k)) (Ξ₂ : SB (Matrix Q.n₂ Q.n₁ Q.k)) d₁ d₂, (ofSplit Q.q).IsCombAt ψ Q.F.F₀ Q.F.F₁ d₁ Ξ₁.1 → (ofSplit Q.q).IsCombAt ψ Q.F.F₁ Q.F.F₂ d₂ Ξ₂.1 → ∀ O₁ O₂, IsOne O₁ → IsOne O₂ → ∀ f : A, T Ξ₁ Ξ₂ f = S.val (aconv [c₁, d₁]) (aconv [c₂, d₂]) (T₁ O₁) (T₂ O₂) φ f.1 1 1 1 := by
   intro D ψ hstd σ S Q c₁ c₂ hc₁ hc₂ T₁ T₂ hT₁ hT₂ φ hφ
-  have hBF := _root_.GlobalTheory.FlatBFLoc.flatBF_of_laws D (GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D) (GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D) (_root_.GlobalTheory.LocOm.omLoc D)
-  have hFB := _root_.GlobalTheory.LocMod.flatFB_holds D (GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D) (GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D) (_root_.GlobalTheory.LocOm.omLoc D)
+  have hBF := _root_.GlobalTheory.FlatBFLoc.flatBF_of_laws D (_root_.GlobalTheory.Unf.Flat.flatLaw D) (GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D) (_root_.GlobalTheory.LocOm.omLoc D)
+  have hFB := _root_.GlobalTheory.LocMod.flatFB_holds D (_root_.GlobalTheory.Unf.Flat.flatLaw D) (GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D) (_root_.GlobalTheory.LocOm.omLoc D)
   have hCL := _root_.GlobalTheory.ContrLocProof.contrLoc D GlobalTheory.LocFlat.contrFactor
   have hν : Q.ν.IsAddHaarMeasure := Q.unitVol.1
   obtain ⟨C₀, hC₀⟩ := GlobalTheory.LocMod.GValProof.core_of_bes (ofSplit Q.q) S.B Q.F.s Q.F.F₀ Q.F.G₀ Q.F.bes
@@ -1156,7 +1160,7 @@ theorem tri : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1)
     rw [← e, ← h2]
     exact (_root_.GlobalTheory.ContrComb.contr_comb_main D ψ hstd _ _ S.B S.B' S.l S.J.W₀ S.vL _ _ (hU₁.theta _) (hU₂.theta _)).1
   have hθ : ∀ Ξ, IsBiTheta ψ S.B.A S.J.W₀ S.B'.A (biComb ψ S.B.A S.J.W₀ S.B'.A c₁ c₂ (Λ Ξ)) :=
-    fun Ξ => GlobalTheory.T.isJointlySmoothBiTheta_twoVarCombination D ψ hstd _ _ _ _ (hΛθ Ξ) c₁ c₂
+    fun Ξ => _root_.GlobalTheory.FrCombAny.biTheta_biComb D ψ hstd _ _ _ _ (hΛθ Ξ) c₁ c₂
   obtain ⟨T, hT⟩ := GlobalTheory.T.doubleThetaLiftValue_bilinear D ψ hstd σ S Q c₁ c₂ hc₁ hc₂ φ hφ Λ hΛ hΛθ
   have key : ∀ Ξ₁ Ξ₂ (f : GlobalTheory.TriStep.space Q), (GlobalTheory.LocFlat.CFac.prodSBBil _ _).compr₂ T Ξ₁ Ξ₂ f =
       GlobalTheory.TriStep.valK S Q c₁ c₂ φ Λ (GlobalTheory.LocFlat.CFac.prodSB Ξ₁ Ξ₂) f.1 := fun Ξ₁ Ξ₂ f => hT _ f

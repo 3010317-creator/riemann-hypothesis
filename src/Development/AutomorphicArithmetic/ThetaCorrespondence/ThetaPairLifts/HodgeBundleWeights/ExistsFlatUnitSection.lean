@@ -96,7 +96,9 @@ import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsEvenSecEv
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivComp
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntegerExponentSectionOfChartRegular
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelMapsClosed
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ShortThetaSeriesDominantWeightIsCuspFormStatement
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ShortThetaSeriesDominantWeightIsCuspForm
 import Development.AbelianVarietyTheory.Proofs.TorusSplitting.CuspAndSupCLeOfBounded
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CuspFormsFiniteDimensionalOfGoodEmb
@@ -512,7 +514,7 @@ theorem holSub0_le_span_cusp_upto : Formalism.MainNotions.ModuliIntegralCharts.H
   refine (GlobalTheory.LargeCover.holSub0_le_span_shortGen_upto hC E H Dw l Xo c n d σ r (U σ) hσ (hU σ hσ) hr hA hG hlev hnab hunit h3
     (fun _ => ⟨ph, 1, x₀, hpin⟩) nab 1 0 a Nat.one_pos hdom hn hP hχ htot).trans
     (Submodule.span_mono (Set.image_mono ?_))
-  exact GlobalTheory.T.short_thetaSeries_dominant_weight_isCuspForm hC E H Dw l Xo c n d r U hr hU hlev hnab hunit (fun _ => ⟨ph, 1, x₀, hpin⟩) nab 1 0 a hdom hlast
+  exact _root_.GlobalTheory.Dict.shortInCusp_cusp hC E H Dw l Xo c n d r U hr hU hlev hnab hunit (fun _ => ⟨ph, 1, x₀, hpin⟩) nab 1 0 a hdom hlast
 
 theorem princUpTo_of_det {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} (X : Data E r) (M : ℕ) (hM : 3 ≤ M)
     (hdet : ∀ γ ∈ X.Γ, (γ : Matrix (Fin r) (Fin r) E).det = 1)

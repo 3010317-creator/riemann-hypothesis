@@ -3,7 +3,7 @@ module
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.DegProd
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.KTrivExternalTensorPowerLineBundleStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.KTrivExternalTensorPowerLineBundle
 public import Development.AbelianVarietyTheory.Definitions.KeyFormula.KeyRuleOneOfKeyFormula
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.BoxPowerBasic
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.IsLieCombIffProd
@@ -71,7 +71,7 @@ theorem kTriv_boxLB_powObj : ∀ (R : Type) [CommRing R] (P : Out.PolAV (Sp R)) 
     Out.KTriv (Out.powObj P.A j) (Out.boxLB P.L (Out.powPr P.A (n := j))) := by
   intro R _ P j
   have : IsCommMonObj P.A := P.isAb.comm
-  exact T.kTriv_external_tensor_power_lineBundle _ (Out.powObj P.A j) P.A j (Out.powIsPowGrp P.A j) P.L P.isLB P.ktriv
+  exact _root_.GlobalTheory.kTriv_boxLB _ (Out.powObj P.A j) P.A j (Out.powIsPowGrp P.A j) P.L P.isLB P.ktriv
 
 end GlobalTheory
 end -- clump:auto

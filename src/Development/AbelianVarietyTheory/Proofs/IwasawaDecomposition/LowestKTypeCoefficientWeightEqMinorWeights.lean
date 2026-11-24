@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsHolRepOfIsTau
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.InfinityTypes
 public import Development.AbelianVarietyTheory.Counterexamples.RotationExamples.OneLeAPlLast
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaWeightArithmeticAtPlaceProofStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaWeightArithmeticAtPlaceProof
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HolomorphicDiscreteSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -63,9 +63,9 @@ theorem weights_of_minors : ∀ (D : D7) (i : Fin D.R.m) (σ : D.what₂.LL →+
   obtain ⟨s, hs⟩ := hnr
   have hsq : (D.R.r : ℚ) + D.R.t = 2 * s := by exact_mod_cast hs
   choose e he using fun τ : D.what₂.Tau => (D.hc τ).e_int i
-  choose d hd using fun τ : D.what₂.Tau => (GlobalTheory.T.thetaWeightArithmeticAtPlace_proof D i τ).d_int
+  choose d hd using fun τ : D.what₂.Tau => (_root_.GlobalTheory.PairWeightArith.arithAt D i τ).d_int
   refine ⟨fun τ => -e τ + s, fun τ => -e τ - s, fun τ => -d τ, fun τ => ?_⟩
-  have A := GlobalTheory.T.thetaWeightArithmeticAtPlace_proof D i τ
+  have A := _root_.GlobalTheory.PairWeightArith.arithAt D i τ
   obtain ⟨hpq, hV⟩ := A.rank
   have hVq : ((Vc D i).rank : ℚ) = 2 * s := by rw [hV, hs]; push_cast; rfl
   refine ⟨?_, ?_, ?_, ?_, ?_⟩

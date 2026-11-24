@@ -17,7 +17,7 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsHarishC
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TestGridRowZeroVerticesAgreeWeilData
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.DiscreteSeriesUpqExistsIffDsExists
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDiscreteSeriesModelOfOrthonormalBasisCartaStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDiscreteSeriesModelOfOrthonormalBasisCarta
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NatCastSmulMemHatL
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsOrthogonalSumLatticeSameLatticedSpace
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
@@ -779,7 +779,7 @@ theorem exists_gridPre_spaces : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ]
   have hMod : ∀ X, good X → ∃ M : DSModel (G'.V X) (Sx X), cart M = W.cart X ∧ onb M = W.onb X := by
     intro X hX
     have hv := G'.isV (hgood X hX).1 (hgood X hX).2
-    refine GlobalTheory.T.exists_discreteSeriesModel_of_orthonormalBasis_cartan D hDS (G'.V X) (Sx X) (W.onb X) (W.cart X) ?_ (W.onb_is X (hgood X hX).1)
+    refine _root_.GlobalTheory.dsModel_of_onb_cart D hDS (G'.V X) (Sx X) (W.onb X) (W.cart X) ?_ (W.onb_is X (hgood X hX).1)
     intro τ
     rcases X with ⟨i, j⟩ | i | j
     · obtain ⟨lam, ε, h1, h2⟩ := hOV i j hX.1 hX.2.1 hX.2.2 τ

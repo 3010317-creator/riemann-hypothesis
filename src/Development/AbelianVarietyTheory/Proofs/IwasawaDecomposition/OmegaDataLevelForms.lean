@@ -21,7 +21,8 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RedMU
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsAdelicUnitaryOfLatticeIsometries
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCompletedIsometryInducingHalfLevelAutomorp
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DatEqOfPhiHat
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletionStatement
+import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletion
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryLatticeRationalTranslateInvariance
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CompletedLatticeEqAdelicCompletionAndGram
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.DetOneAddSubOne
@@ -212,12 +213,12 @@ theorem exists_psi (V : HSp D) {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {n
   have hItop : d.I ≠ ⊤ := fun hT => P.1.isPrime.ne_top (top_le_iff.1 (hT ▸ hQ P.1 P.2))
   have hrange : (latG V 1 : Set (Fin V.rank → D.host.E)) = Set.range io := by
     rw [← hι.2, LinearMap.coe_range]
-  obtain ⟨a, ha₁, ha₂⟩ := GlobalTheory.TwistTie.det_sub_mem_hat D.host.F io (hrange ▸ (GlobalTheory.T.adelicElementLattice_full_and_completion D V 1).2.1) d.I hItop v hv₃ s
+  obtain ⟨a, ha₁, ha₂⟩ := GlobalTheory.TwistTie.det_sub_mem_hat D.host.F io (hrange ▸ (_root_.GlobalTheory.Member.latG_lattice_and_completion D V 1).2.1) d.I hItop v hv₃ s
     d.l₂.M (by rw [hM, Nat.cast_mul]; exact d.I.mul_mem_left _ hpI) (finHom V u).1 (by
       rw [← GlobalTheory.IdeleParts.integralFiniteAdeles_eq_adelicCompletion_integers, ← hU]
       exact unswap_int U)
     (fun j => by
-      rw [← hrange, ← (GlobalTheory.T.adelicElementLattice_full_and_completion D V 1).2.2.2.2.1]
+      rw [← hrange, ← (_root_.GlobalTheory.Member.latG_lattice_and_completion D V 1).2.2.2.2.1]
       exact hlift _ (hv₁ j))
   have hdet := hδ k a fun j => by
 
@@ -386,7 +387,7 @@ theorem datEq_of_values (S T : HSp D) (βS : GL (Fin S.rank) (EAf D)) (βT : GL 
       redM P (uMat S T βS βT e fun b => io (s.f d.l₂.M (X b))) * (Formalism.UG.bc (resS D.host.F P) y).1 := fun P hP =>
     GlobalTheory.AdjMove.redM_uMat_move D S T βS βT e _ io hint u y hy d.l₂.M P
       (hQ P hP (Ideal.mul_le_right (hMb.le (natCast_mem_Mb d.l₂)))) _ X fun b => by
-        rw [← hrange, ← (GlobalTheory.T.adelicElementLattice_full_and_completion D T 1).2.2.2.2.1]
+        rw [← hrange, ← (_root_.GlobalTheory.Member.latG_lattice_and_completion D T 1).2.2.2.2.1]
         exact hus _ hM₂ _
   have hval := hψ kI (s.f d.l₂.M) u y.1.det (fun a => (h1 _ _ (hσ a)).2.symm) (fun a _ => by
     obtain ⟨z, hz, ez⟩ := hus _ hM₂ a

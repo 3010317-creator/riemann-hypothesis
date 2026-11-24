@@ -61,7 +61,7 @@ public import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFro
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsThresholdCriticalLevelLowerBound
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RowColumnShapeOfWindowDataWidthGeOne
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassRatioStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalizedFormalDegreeEqVandermondeOfSizesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalizedFormalDegreeEqVandermondeOfSizes
 public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.SplitColumnClasses
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RowAmplitudeBoundsUniformSingletonWidthStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowsPosTypeP
@@ -1416,7 +1416,7 @@ theorem smallOn_univ_unconditional : SmallOn Set.univ := by
   intro Cg cb Cu cT CT δ hcb _ hδ
   obtain ⟨t1, h1⟩ := elementary_size_bounds_of_size_hypotheses (8 / Real.log (1 + δ))
   obtain ⟨t2, h2⟩ := _root_.GlobalTheory.CritLevelSize.tcritLow_sizes cb Cu hcb
-  obtain ⟨t3, h3⟩ := GlobalTheory.T.normalizedFormalDegree_eq_vandermonde_of_sizes
+  obtain ⟨t3, h3⟩ := _root_.GlobalTheory.Core.Deg.CritVand.vv_eq_vand_of_sizes
   refine ⟨max (max t1 t2) t3, fun C0 _ C' Cl hC' hCl D large₂ hT hR => ?_⟩
   have hC1 : t1 ≤ C' := (le_max_left _ _).trans ((le_max_left _ _).trans hC')
   have hCl1 : t1 ≤ Cl := (le_max_left _ _).trans ((le_max_left _ _).trans hCl)

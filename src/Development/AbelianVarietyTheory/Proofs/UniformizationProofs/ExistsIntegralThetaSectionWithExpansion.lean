@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.PsiScal
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.ExistsUniqueSamePt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFourierJacobiExpansionOverFieldStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFourierJacobiExpansionOverField
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsProjectiveRep
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -79,7 +79,7 @@ theorem exists_sec_ne_zero (h1 : Laws) (h2 : Laws2) (S : Scheme.{0}) [IsLocallyN
 theorem exists_theta : Laws → Laws2 → (AllPre fun {V} _ _ _ {D} {A} {G} _ _ U => ∃ θ f, U.Theta θ f) := by
   intro h1 h2 V _ _ _ hV D A G _ _ U
   obtain ⟨v, hv⟩ := exists_sec_ne_zero h1 h2 _ A (Kbar V) (jFK (R := V) (Kbar V))
-  obtain ⟨s, n, c, σ, f, hE, hA, -⟩ := GlobalTheory.T.exists_fourierJacobi_expansion_over_field h1 h2 V hV D A G U (Kbar V) 1 le_rfl (SecM.toSec A.A v)
+  obtain ⟨s, n, c, σ, f, hE, hA, -⟩ := _root_.GlobalTheory.UU.ExpTotal.expF_total h1 h2 V hV D A G U (Kbar V) 1 le_rfl (SecM.toSec A.A v)
   by_contra hn
   have hz : ∀ i j, (σ i).f j = 0 := fun i j => by
     by_contra h

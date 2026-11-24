@@ -17,7 +17,8 @@ public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.Subsi
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.CechLBPullIsoOfIsOpenImmersion
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.MumfordBundleCechFiniteVanishesOffOrigin
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.CubeTotalComplexAcyclicOfSlicesInductionOnCard
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsProjectiveOverRingByChartsAbelianVarietyStatement
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsProjectiveOverRingByChartsAbelianVariety
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -990,8 +991,8 @@ theorem pointSurj_pf : (∀ (k : Type) [Field k] [IsAlgClosed k] (A : Over (Sp k
   push Not at hno
   have : IsCommMonObj A := hA.comm
   have : IsCommMonObj B := hB.comm
-  have hpA : IsProjBy A.hom := GlobalTheory.T.isProjectiveOverRingByCharts_abelian_variety k A hA
-  have hpB : IsProjBy B.hom := GlobalTheory.T.isProjectiveOverRingByCharts_abelian_variety k B hB
+  have hpA : IsProjBy A.hom := _root_.GlobalTheory.AbelianProjective.isProjBy_of_isAbelianScheme k A hA
+  have hpB : IsProjBy B.hom := _root_.GlobalTheory.AbelianProjective.isProjBy_of_isAbelianScheme k B hB
   have := hA.proper
   have := hB.proper
   have := hA.smooth

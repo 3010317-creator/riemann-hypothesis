@@ -7,11 +7,11 @@ public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSt
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EventuallyFinEqOne
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HomSymplecticHalfFormAlgebraicLawsContinuous
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CompletedTensorLatticeStrongApproxOpenCompactStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CompletedTensorLatticeStrongApproxOpenCompact
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.GaussRMulFactor
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPointsClassicalModelRealVectorSpaceStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPointsClassicalModelRealVectorSpace
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SymplecticCharacterRealFinitePointsMatchStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionSpaceHeisenbergLawsStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionSpaceHeisenbergLaws
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -239,7 +239,7 @@ alias stdL_full := _root_.GlobalTheory.ThetaSpace.stdL_full
 
 theorem psi_hat (C : Ctx S T) {u u' : WO S T} (hu : u ∈ hatA S T (tens (GlobalTheory.SW.stdL D.host.E S.rank) C.X.Λ))
     (hu' : u' ∈ hatA S T (tens (GlobalTheory.SW.stdL D.host.E S.rank) C.X.Λ)) : C.ψ (symplOH S T (2 • u) u') = 1 := by
-  obtain ⟨-, h2, h3, h4, -⟩ := GlobalTheory.T.completedTensorLattice_strongApprox_open_compact D S T C _ C.X.Λ (stdL_full _ _) ⟨C.X.Λ_fg, C.X.Λ_span⟩
+  obtain ⟨-, h2, h3, h4, -⟩ := _root_.GlobalTheory.Ker.HatLat.hatA_tens D S T C _ C.X.Λ (stdL_full _ _) ⟨C.X.Λ_fg, C.X.Λ_span⟩
   obtain ⟨-, -, s3, -⟩ := GlobalTheory.T.symplecticCharacter_real_finite_points_match D S T C
   have rat : ∀ y ∈ tens (GlobalTheory.SW.stdL D.host.E S.rank) C.X.Λ, ∀ y' ∈ tens (GlobalTheory.SW.stdL D.host.E S.rank) C.X.Λ,
       C.ψ (symplOH S T (finW S T y) (finW S T y')) ^ 2 = 1 := by
@@ -301,9 +301,9 @@ theorem exists_isZak (C : Ctx S T) {x : Frame C.X.Ψ T.rank} (hx : x ∈ C.X.dom
     (hφ : SW.IsSB φ) : ∃ f, C.IsZak x φ f := by
   obtain ⟨N, hN, hfix⟩ := heisG_fix_of_mem_lattice _ _ C.X C.g C.q0 C.hr C.bas C.idx S.rank C.sympl C.even φ hφ
   obtain ⟨hsm, hth, -⟩ := thR_laws _ _ C.X C.g C.q0 C.hr C.bas C.idx S.rank C.sympl C.even x hx φ hφ
-  obtain ⟨h1, h2, h3, -, h5, -⟩ := GlobalTheory.T.completedTensorLattice_strongApprox_open_compact D S T C _ C.X.Λ (stdL_full _ _) ⟨C.X.Λ_fg, C.X.Λ_span⟩
+  obtain ⟨h1, h2, h3, -, h5, -⟩ := _root_.GlobalTheory.Ker.HatLat.hatA_tens D S T C _ C.X.Λ (stdL_full _ _) ⟨C.X.Λ_fg, C.X.Λ_span⟩
   obtain ⟨-, s2, -, -, -, -, -, s8⟩ := GlobalTheory.T.symplecticCharacter_real_finite_points_match D S T C
-  obtain ⟨R, -, r1, r2, r3, r4, r5, r6, -⟩ := GlobalTheory.T.realPoints_classicalModel_realVectorSpace D S T C
+  obtain ⟨R, -, r1, r2, r3, r4, r5, r6, -⟩ := _root_.GlobalTheory.KerReal.real_points D S T C
   set H := hatA S T (tens (GlobalTheory.SW.stdL D.host.E S.rank) C.X.Λ) with hH
   let p : WO S T →+ WR C.X S.rank := AddMonoidHom.mk' C.realPt r2
   let q : Matrix (Fin S.rank) (Fin T.rank) D.host.E →+ WO S T :=
@@ -366,7 +366,7 @@ theorem isZak_Th : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ x ∈ C.X.dom, 
   have h1 : C.IsZak x φ (C.Th x φ) := by
     rw [Ctx.Th, dite_eq_left h]
     exact h.choose_spec
-  exact ⟨h1, fun f hf => ((GlobalTheory.T.thetaFunction_space_heisenberg_laws D S T C).2.1 f _ hf.1 h1.1).2 fun w hw => (hf.2 w hw).trans (h1.2 w hw).symm⟩
+  exact ⟨h1, fun f hf => ((_root_.GlobalTheory.ThetaSpace.theta_space_laws D S T C).2.1 f _ hf.1 h1.1).2 fun w hw => (hf.2 w hw).trans (h1.2 w hw).symm⟩
 
 end GlobalTheory.Ker.ZakEx
 end -- clump:auto

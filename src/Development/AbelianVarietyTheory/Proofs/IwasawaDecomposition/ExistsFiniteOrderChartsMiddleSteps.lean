@@ -74,8 +74,8 @@ import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SetStab
 import Mathlib.Tactic.ENatToNat
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ColumnPointEqOfDecoAndCosetReduction
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsDefiniteLaws
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicPointDecoratedLatticeAllTwistsStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoordsStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicPointDecoratedLatticeAllTwists
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 import Formalism.LocalToGlobal.Columns.RecLevelLocP
 import Formalism.LocalToGlobal.Columns.RecLevelStep
 
@@ -1705,7 +1705,7 @@ theorem chart_of (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I.
       (∀ c, (K.y c).1 = g c.1 * k⁻¹) ∧ ∀ c a', (K.stabI c a').1 = (I.stp u a i).gam c.1.1 a'.1 := by
   have hPr := l.pr
   have hX := GlobalTheory.Mem.FieldsLaws.fields_ok B
-  obtain ⟨hg1, -, hl⟩ := (GlobalTheory.T.trueColumn_spaces_standard_in_frameCoords I hI hP l Z).2.2.2 i hi
+  obtain ⟨hg1, -, hl⟩ := (_root_.GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hI hP l Z).2.2.2 i hi
   have hf : B.fields.f = B.R.f := (hPr.vT_card u).symm.trans (l.lev u a).card_ST
   have hd := q_disj I hI a
   have hq := hqG hPr
@@ -1830,7 +1830,7 @@ theorem exists_charts : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok →
     rw [← cosetIn_iff hd hq]
     conv_lhs => rw [← hs β]
     exact key c (s β)
-  choose g hg using fun c : (I.stp u a i).Cl => GlobalTheory.T.exists_adelicPoint_decoratedLattice_allTwists I hI u _ (extTo I.SQ ((I.stp u a i).rep c).1.1)
+  choose g hg using fun c : (I.stp u a i).Cl => _root_.GlobalTheory.Mem.Col2.PtTwist.exists_ptOf_twists I hI u _ (extTo I.SQ ((I.stp u a i).rep c).1.1)
   choose K q K1 K2 K3 K4 K5 K6 using fun β => chart_of I hI hP l Z u a Q i hi hm hQ (k β) (hk.std β) (hk.off β) (hk.T β) g hg (s β)
     (fun c => GlobalTheory.Mem.Col2.TC.ChTw.chartOf I u a i c = β) (hp β)
   have hy : ∀ c, (id ((K (GlobalTheory.Mem.Col2.TC.ChTw.chartOf I u a i c)).y ⟨c, rfl⟩).1 : GA B (B.R.N i)) = g c * (k (GlobalTheory.Mem.Col2.TC.ChTw.chartOf I u a i c))⁻¹ := fun c => K5 _ _

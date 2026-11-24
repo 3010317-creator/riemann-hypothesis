@@ -82,7 +82,8 @@ import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteRamified
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FlatVecExistsUnique
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FlatVectorEqUnitMulCentralTranslateLiftVector
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemLatOfIsIntMAdjConjHalf
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeilOperatorIdempotentSumVacuumNormalisedSumStatement
+import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeilOperatorIdempotentSumVacuumNormalisedSum
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeilRepCentralActsByDilationUnit
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNonvanishingFiniteDatumDefiniteLift
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNsmulIntMemLatO
@@ -839,7 +840,7 @@ theorem om_model {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {χS χ
   have hfix' : ∀ u ∈ latAll S T ΛS ΛT, (IsHalf (cA D e) u ∨ IsHalf (cA D (cA D e)) u) → heisO ψ S T u f = f :=
     fun u hu h => hfix u hu (by rw [hcc] at h; exact h.symm)
   refine ⟨_, hRc, fun Tm hTm Φ hΦ => ?_⟩
-  have hom := GlobalTheory.T.weilOperator_idempotentSum_vacuum_normalised_sum D ψ S T _ _ _ hW ΛS ΛT hS hT _ _ he' g x hg' (by rw [hcc]; exact hx) Rr
+  have hom := _root_.GlobalTheory.SumHecke.om_eq_sum_idemSum D ψ S T _ _ _ hW ΛS ΛT hS hT _ _ he' g x hg' (by rw [hcc]; exact hx) Rr
     (by rw [hcc]; exact hR1) (by rw [hcc]; exact hR2) (by rw [hcc]; exact l1) f hθ hfix'
   have hsum := GlobalTheory.T.sum_heisenbergTranslates_baseVector_eq_card_smul D ψ hW.std S T ΛS ΛT hS hT _ _ he' g l3 Rr
     (by rw [hcc]; exact hR1) (by rw [hcc]; exact hR2) (by rw [hcc]; exact l1) f Tm hTm

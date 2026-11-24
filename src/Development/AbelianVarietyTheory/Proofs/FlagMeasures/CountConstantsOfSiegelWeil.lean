@@ -28,7 +28,7 @@ public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSelfDua
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaussianTermMeasurableAndStabilizerInvariant
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IndicatorCompletedLatticeEqFinprodLocal
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsOrthComplementOfUnitVectorAtRealPlace
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsSchwartzBruhatIndicatorLocalLatticeCompletionStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsSchwartzBruhatIndicatorLocalLatticeCompletion
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemAdelicLatticeClosureIffSwapMemSpan
 public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
 public import Mathlib.Analysis.InnerProductSpace.Calculus
@@ -809,7 +809,7 @@ theorem siegelMeanCc_of_oneVectorCc : OneVectorCc → SiegelMeanCc := by
   have hsg : ∀ (R : Type) [CommRing R] [Algebra I.F R], algebraMap I.F R (sgn I.F s) = sgn R s := fun R _ _ => by
     cases s <;> simp [sgn]
   obtain ⟨⟨ψ, hψ⟩, hB⟩ := b1 hn (sgn I.F s) (hs1 _) _ b _ _ _ _ g1 g2 g3
-    ⟨GlobalTheory.T.isSchwartzBruhat_indicator_localLatticeCompletion I.F I.E I.n I.L hLfull, (_root_.GlobalTheory.AdelicU.Cofinite.eventually_latLoc_eq_latV I.F I.E I.n _ b I.L hLfull).mono fun v hv => by rw [hv],
+    ⟨_root_.GlobalTheory.LatticeIndicator.isSB_indicator_latLoc I.F I.E I.n I.L hLfull, (_root_.GlobalTheory.AdelicU.Cofinite.eventually_latLoc_eq_latV I.F I.E I.n _ b I.L hLfull).mono fun v hv => by rw [hv],
       _root_.GlobalTheory.AdelicU.indicator_latHat_eq_finprod I.F I.E I.n I.L hLfull⟩ fun _ => rfl
   obtain ⟨⟨μi, hμi⟩, ⟨νi, hνi⟩, ⟨μv, hμv⟩, ⟨νv, hνv⟩, hQ⟩ := ((hB ψ hψ).2 μ hμ).2 S hS
   obtain ⟨Fi, Fl, hFi, hFl, -, hmean⟩ := hQ μi νi μv νv hμi hνi hμv hνv

@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BlkGLMem
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnitCharTriangle
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmall
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteBottomDictionaryFramesExponentsKernelStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteBottomDictionaryFramesExponentsKernel
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BottomExistsIntegrable
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaBottomFinitePlaceMatching
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaIntegralVanishesOnFiniteRelations
@@ -132,7 +132,7 @@ theorem bottom_triple_integral_factorization_real : _root_.GlobalTheory.FunPr.Th
   have hH := hP.howeDualityReal
   have hLM := _root_.GlobalTheory.SquareLM.twisted_square_local_matching hH hP hK hM
   have hTA := _root_.GlobalTheory.T.twisted_square_theta_integrals_eq hP hK hM
-  obtain ⟨CF1, H1⟩ := GlobalTheory.T.definiteBottom_dictionary_frames_exponents_kernel
+  obtain ⟨CF1, H1⟩ := _root_.GlobalTheory.BotDict.bottom_dictionary
   obtain ⟨CF2, H2⟩ := _root_.GlobalTheory.T.theta_bottom_finite_place_matching hH hP hK hM
   refine ⟨max CF1 CF2, fun ε CF hCF => ?_⟩
   obtain ⟨C1, x1, G1⟩ := H1 ε CF (le_trans (le_max_left _ _) hCF)

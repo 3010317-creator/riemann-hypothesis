@@ -4,7 +4,7 @@ public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HomSymplecticHalfFormAlgebraicLawsContinuous
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CocompactTensor
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqZeroOfCoefficientsSeparatingCharactersEqZero
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RationalSymplecticPointsSelfAnnihilatorStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RationalSymplecticPointsSelfAnnihilator
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -153,7 +153,7 @@ theorem eq_zero_of_orthogonal_translates (D : D7) (ψ : AddChar (AF D.host.F) �
   have hann : ∀ x : WO S T, (∀ γ ∈ ratL T S, ψ (symplOH S T x γ + symplOH S T x γ) = 1) ↔ x ∈ ratL T S := by
     intro x
     simp only [hdbl]
-    exact GlobalTheory.T.rationalSymplecticPoints_self_annihilator D ψ hψ S T x
+    exact _root_.GlobalTheory.RatAnnih.ratL_annihilator D ψ hψ S T x
   exact eq_zero_abstract (G := WO S T) (ratL T S) K hK hcov ψ hψc hψn (symplOH S T) hl hr halt hcont hann f₀ f
     h₀.cont hf.cont (quasi_of_mem h₀) (quasi_of_mem hf) hne μ 𝓕 hμ h𝓕 horth
 

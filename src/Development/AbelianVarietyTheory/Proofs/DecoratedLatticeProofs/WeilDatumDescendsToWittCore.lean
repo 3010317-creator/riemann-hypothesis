@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.WeilDatumExistence
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumDescendsToWittCoreOfExists
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsWeilDatumHermitianPairStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsWeilDatumHermitianPair
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,7 +74,7 @@ open GlobalTheory.Unf
 namespace GlobalTheory.Desc
 
 theorem weil_data_descend : ∀ D : D7, Descent D :=
-  fun D => GlobalTheory.T.weilDatumDescendsToWittCore_of_exists D (GlobalTheory.T.exists_weilDatum_hermitianPair D)
+  fun D => GlobalTheory.T.weilDatumDescendsToWittCore_of_exists D (_root_.GlobalTheory.WeilDatumExistence.weilDatumExists D)
 
 end GlobalTheory.Desc
 end -- clump:auto

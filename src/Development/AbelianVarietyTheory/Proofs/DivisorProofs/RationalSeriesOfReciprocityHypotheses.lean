@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAlgebraicOfSmallInt
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LevelOfOfSameBut
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SeriesRationalityBackFromMovedReadings
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalScalarNormalisedStandardFrameStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsRatScalarMulIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalScalarNormalisedStandardFrame
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAlgebraicOfPowEqOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaleRootOfPrint
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHalfOfBasePins
@@ -127,7 +128,7 @@ theorem core_cases (hA : GlobalTheory.Published.GlobalArtinReciprocity) (hRF : G
     have h0 : f = 0 := Subtype.ext ((Submodule.eq_bot_iff _).1 hc f.1 f.2)
     rw [h0, map_zero] at hf
     exact (congrArg Subtype.val hf).symm
-  · obtain ⟨ν, hN, hν⟩ := GlobalTheory.T.exists_rationalScalar_normalised_standardFrame hA hRF hS D Γ Pl0 I0 T0 A3 T Rl cG S YS F κ v₀ O ρ hρ i j b hV hpin H hc
+  · obtain ⟨ν, hN, hν⟩ := _root_.GlobalTheory.SeriesTie.NormRatStd.exists_isNorm_isRatScalar_std hA hRF hS D Γ Pl0 I0 T0 A3 T Rl cG S YS F κ v₀ O ρ hρ i j b hV hpin H hc
     exact Or.inr ⟨ν, hN, algComb_of_ratScalar YS hRF fw (fw.evaluates_of_lUnif H.unif) H.core H.io
       (GlobalTheory.CoverHalf.primes_eq_of_halfIs T.toCore Rl.toRealDat H.laws.toLawsM H.core.lev (H.pins.2.tuple ()).half)
       H.size H.galois H.small.val H.small.ray H.small.roots hsp hρ hpin i j b hV hν⟩

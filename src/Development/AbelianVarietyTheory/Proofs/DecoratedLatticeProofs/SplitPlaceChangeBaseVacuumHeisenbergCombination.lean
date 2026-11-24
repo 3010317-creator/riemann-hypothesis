@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CombAtSingleZero
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNsmulHalf
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeIndicatorOnSplitHalfEqHalfIndicatorStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeIndicatorOnSplitHalfEqHalfIndicator
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceBaseVacuumDatumExistsUniqueStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceSchwartzBruhatActsAsSupportedCombinati
 import Mathlib.Algebra.Order.Floor.Extended
@@ -54,7 +55,7 @@ theorem rebase : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topological
   have hOB := GlobalTheory.T.splitPlace_baseVacuum_datum_exists_unique D k p n n' ψ hψ S T α β
   refine ⟨fun ΛS ΛT hΛS hΛT f₀ g hg => ?_, fun Ψ hΨ => ?_⟩
   · obtain ⟨-, -, hvac0, -, ⟨Tm, hTm⟩, hall⟩ := id hg
-    have hE := GlobalTheory.T.homLatticeIndicator_on_split_half_eq_half_indicator D k p n n' S T α β MS MT hMS hMT hU ΛS ΛT hΛS hΛT
+    have hE := _root_.GlobalTheory.FinPl.LatIndHalf.extFun_latInd_eq_halfInd D k p n n' S T α β MS MT hMS hMT hU ΛS ΛT hΛS hΛT
     have hgT : g = Tm (halfInd p.e (latO S T (MS : Set (Fin S.rank → D.host.E)) (MT : Set (Fin T.rank → D.host.E)) (· = p.v))) := by
       rw [← hE]; exact hall Tm hTm
     have hmono := sbHalf_mono D k p S T LS MS LT MT hLS hLT hMS hMT

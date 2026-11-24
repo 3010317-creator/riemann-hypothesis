@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSquareIntegrableAutomorphicSpace
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsUnitaryOfCharIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormSqIntegrableAndIsDiscreteSplitCentreStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalLetterCentralExponentPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalLetterRealExponentEqZeroIffIsUnitaryStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdelicAbsValueCpowCharacterStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.IsNormalisedOfIsDiscrete
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalLetterCentralExponentProperties
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalLetterRealExponentEqZeroIffIsUnitary
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdelicAbsValueCpowCharacter
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DiscreteAutomorphicRepGLLocalComponentIsUnitaris
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -75,8 +76,8 @@ theorem isUnitarisable_of_isLocComp_cusp : ∀ (E : Type) [Field E] [NumberField
     (x : CuspSub E a), 1 ≤ a → x.IsUnitary → ∀ (w : HeightOneSpectrum (𝓞 E))
     (σ : SmIrr (GL (Fin a) (w.adicCompletion E))), x.IsLocComp w σ → GlobalTheory.SmGL.IsUnitarisable σ.ρ := by
   intro E _ _ _ a x ha hu w σ hσ
-  have hcex := (GlobalTheory.T.cuspidalLetter_centralExponent_properties E ⟨a, x⟩).1
-  have hr : rexp (⟨a, x⟩ : Letter E) = 0 := ((GlobalTheory.T.cuspidalLetterRealExponent_eq_zero_iff_isUnitary E ⟨a, x⟩ ha).1).2 hu
+  have hcex := (_root_.GlobalTheory.ResW.letter_centralExponent E ⟨a, x⟩).1
+  have hr : rexp (⟨a, x⟩ : Letter E) = 0 := ((_root_.GlobalTheory.ResW.rexp_eq_zero_iff_isUnitary E ⟨a, x⟩ ha).1).2 hu
   have hd : (0 : ℝ) < (a : ℝ) * Module.finrank ℚ E := by
     have := Module.finrank_pos (R := ℚ) (M := E)
     have : (1 : ℝ) ≤ a := by exact_mod_cast ha
@@ -88,12 +89,12 @@ theorem isUnitarisable_of_isLocComp_cusp : ∀ (E : Type) [Field E] [NumberField
     · exact h
     · exact absurd h hd.ne'
   have hdc : ((a : ℂ) * (Module.finrank ℚ E : ℂ)) = (((a : ℝ) * Module.finrank ℚ E : ℝ) : ℂ) := by push_cast; ring
-  obtain ⟨χ, hz, -, hn, -⟩ := GlobalTheory.T.exists_idelic_absValue_cpow_character E (-(cex (⟨a, x⟩ : Letter E)) / ((a : ℂ) * (Module.finrank ℚ E : ℂ)))
+  obtain ⟨χ, hz, -, hn, -⟩ := _root_.GlobalTheory.ResW.exists_abs_cpow E (-(cex (⟨a, x⟩ : Letter E)) / ((a : ℂ) * (Module.finrank ℚ E : ℂ)))
   have hzre : (-(cex (⟨a, x⟩ : Letter E)) / ((a : ℂ) * (Module.finrank ℚ E : ℂ))).re = 0 := by
     rw [hdc, Complex.div_ofReal_re, Complex.neg_re, hre]; simp
   have hχu : χ.IsUnitary := fun y => by rw [hn y, hzre]; exact nu_zero_isUnitary E y
   have hnorm : IsNormalised (x.twist χ) := by
-    have h4 := GlobalTheory.T.cuspidalLetter_centralExponent_properties E ⟨a, x.twist χ⟩
+    have h4 := _root_.GlobalTheory.ResW.letter_centralExponent E ⟨a, x.twist χ⟩
     refine h4.2.2.2.1.1 (h4.2.2.2.2 0 ?_)
     obtain ⟨φ, hφ, h0⟩ := (Submodule.ne_bot_iff _).1 x.ne_bot
     refine ⟨mulChi a χ φ, ⟨φ, hφ, rfl⟩, fun h => h0 ((mulChi a χ).map_eq_zero_iff.1 h), ?_⟩

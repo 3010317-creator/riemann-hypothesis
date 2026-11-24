@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.SplitPa
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ComplexEmbeddingHermitianQuadrupleSum
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EqZeroOfLintegralEqZero
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GaussianTwistedRealReadingEntireAndInjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GaussianTwistedRealReadingEntireAndInjective
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FoldrHolDEqIteratedFDeriv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -394,7 +394,7 @@ theorem pureTensorO_zero_eq_jetP : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
   subst hS hT
   obtain ⟨σ, h⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hP.inf
   refine ⟨cK D * -δ, mul_ne_zero (cK_ne_zero D) (neg_ne_zero.2 hP.ne), fun f hf P => ?_⟩
-  have hG : Differentiable ℂ (xiN θ S T rfl rfl δ sc f) := (GlobalTheory.T.gaussianTwistedRealReading_entire_and_injective D ψ θ S T _ _ rfl rfl δ sc hP).1 f hf
+  have hG : Differentiable ℂ (xiN θ S T rfl rfl δ sc f) := (_root_.GlobalTheory.AdForm.VacRead.xiN_entire_and_injective D ψ θ S T _ _ rfl rfl δ sc hP).1 f hf
   set G := xiN θ S T rfl rfl δ sc f with hG0
   let A := aPlusAll (heisO ψ S T) θ
     (fun _ => cplxO (1 : Matrix (Fin S.rank) (Fin S.rank) ℂ) (1 : Matrix (Fin T.rank) (Fin T.rank) ℂ))

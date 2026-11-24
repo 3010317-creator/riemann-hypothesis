@@ -8,14 +8,14 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Hecke
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsAlgebraicHeckeCharOfWeightOfIntegerExpo
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.ContinuousAdeleNorm
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExponentHeckeCharCompNormConjEmbeddingStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExponentHeckeCharCompNormConjEmbedding
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IdeleMapInfDiagMaxRealSubfieldCmStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IdeleMapNormToMaxRealInfiniteIdeleStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IdeleMapOfAlgebraMaximalRealSubfieldInjectiveStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CapCommuteRtInfGL
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CommuteCapOfCommuteEop
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasInfCharInfCharOfCommute
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InfCharConjEmbeddingNegOfInvariantPairingStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InfCharConjEmbeddingNegOfInvariantPairing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,7 +104,7 @@ theorem isAlgPos_of_compNorm : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   intro E _ _ _ χ h
   choose k hk using h
   have hkc : ∀ τ, k (ComplexEmbedding.conjugate τ) = k τ := fun τ => by
-    have := (hk _).symm.trans ((GlobalTheory.T.exponent_heckeChar_compNorm_conjEmbedding E χ τ).trans (hk τ))
+    have := (hk _).symm.trans ((_root_.GlobalTheory.NormExpo.expo_compNorm_conjugate E χ τ).trans (hk τ))
     exact_mod_cast this
   obtain ⟨n, hn⟩ := _root_.GlobalTheory.cm_prod_regroup_maximalReal E k hkc
   refine ⟨n, fun x hx => ?_⟩
@@ -217,7 +217,7 @@ theorem isAlgPos_of_polarizedPair : ∀ (E : Type) [Field E] [NumberField E] [Is
     GlobalTheory.CuspRep.hasInfChar_infChar_of_commute E a hcomm (CG.mk π) σ
   set ψ := GlobalTheory.GalOfCusp.compNorm E χ
   have h1 := (hm τ).twist ψ⁻¹
-  have key := GlobalTheory.T.infChar_conjEmbedding_neg_of_invariant_pairing E a (π.twist ψ⁻¹) π hpol.dual τ _ _ h1 (hm (NumberField.ComplexEmbedding.conjugate τ))
+  have key := _root_.GlobalTheory.CapPair.infChar_conj_of_paired E a (π.twist ψ⁻¹) π hpol.dual τ _ _ h1 (hm (NumberField.ComplexEmbedding.conjugate τ))
   obtain ⟨z, hz⟩ : ∃ z, z ∈ (CG.mk π).infChar τ :=
     Multiset.card_pos_iff_exists_mem.1 (by rw [(hm τ).1]; omega)
   obtain ⟨n, hn⟩ := (hreg τ).2 z hz

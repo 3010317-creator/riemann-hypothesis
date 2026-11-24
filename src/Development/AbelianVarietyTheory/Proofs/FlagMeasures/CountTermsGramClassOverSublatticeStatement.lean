@@ -49,7 +49,7 @@ import Mathlib.Tactic.Monotonicity.Lemmas
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Presheaf
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLatticeStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLattice
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Std.Tactic.BVDecide.Normalize.Prop
@@ -844,7 +844,7 @@ theorem main : ∀ Cg cb Cu cT CT C0 A : ℝ, ∃ C₀ : ℝ, ∀ C ≥ C₀, �
   have hC1 : 1 ≤ C := le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) hC
   have hCT : 2 * |CT| ≤ C := le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) hC
   have hCC₁ : C ≥ C₁ := le_trans (le_max_left _ _) hC
-  obtain ⟨-, -, hpos, hlat, hint, -, -⟩ := GlobalTheory.T.standardBaseFlag_complement_integralLattice D u u' F0 Λ hstand hbase hΛ
+  obtain ⟨-, -, hpos, hlat, hint, -, -⟩ := _root_.GlobalTheory.LoopC.Base.main D u u' F0 Λ hstand hbase hΛ
   have hsub : SubOK D (L0X D Λ (lf D F0)) P s De := subOK_of D _ P hlat.fg hpos hint hP s hr De hd
   have hNTZ : NT D u ^ 2 ≤ HHZ D large₂.sc.b C Z :=
     NT_sq_le D u large₂.sc.b C CT (_root_.Formalism.MainNotions.Lnk.one_le_b _) hC1 hCT (hTr u).2 Z

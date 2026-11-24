@@ -11,7 +11,8 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Idemp
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FirstStandardPairMemberHasThetaFunction
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HermitianSpaceBaseLatticeEqFrameLattice
 public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemSum
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FinitePartMemFrameStabilizerIffLocalStabilizerStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FinitePartMemFrameStabilizerIffLocalStabilizer
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FinitePartMemLevelOfThetaDatumNeZero
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FrameMatrixWeilPairActionLeftInvStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetIdlVal
@@ -97,13 +98,17 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdeleTensorComponentIdempotentSumAddConjEqOneStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIdempotentComponentOfGroupElementStatement
+import Development.AbelianVarietyTheory.Definitions.Foundations.EventuallyNormFinLeOne
+import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdeleTensorComponentIdempotentSumAddConjEqOne
+import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
+import Formalism.LocalToGlobal.BesselHermitianTheta.TiedWeil
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIdempotentComponentOfGroupElement
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteEmbeddingIdempotentPatchInFrameStatement
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrameIdempotentCutMatrixMemStabiliserReductionStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdempotentSumAddConjIdempotentConjFixedStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdempotentSumAddConjIdempotentConjFixed
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocalProjectionEqOfIdempotentPatchStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SelfDualFrameConjIntegralSmulOfIntegralStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SelfDualFrameConjIntegralSmulOfIntegral
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Std.Tactic.BVDecide.Normalize.Prop
@@ -384,9 +389,9 @@ theorem UpperTheory.finiteComponent_mem_stabilizer_of_standardSection_ne_zero :
   rw [hu'] at hI' hy'
   obtain ⟨h1, h2⟩ := UpperTheory.integral_unit_det_both hZe _ (βS⁻¹ * Lev.finE S g * βS) hI hI' y y' hy hy'
   have hUA := GlobalTheory.LevSplit.finE_mem_UA S g
-  obtain ⟨h3, h4⟩ := GlobalTheory.T.selfDualFrame_conj_integral_smul_of_integral S ΛS βS hsd hfr _ hUA _ rfl e h1 h2
-  obtain ⟨hεε, hεc⟩ := GlobalTheory.T.idempotentSum_add_conj_idempotent_conj_fixed Z e hZe
-  obtain ⟨k, hk, hmt⟩ := GlobalTheory.T.exists_idempotent_component_of_group_element S (GlobalTheory.LevelNbhd.finPartG S g) (e + cA D e)
+  obtain ⟨h3, h4⟩ := _root_.GlobalTheory.ConjIntegral.conj_smul_isIntM S ΛS βS hsd hfr _ hUA _ rfl e h1 h2
+  obtain ⟨hεε, hεc⟩ := _root_.GlobalTheory.IdemConjSum.idemSum_add_conj_idem Z e hZe
+  obtain ⟨k, hk, hmt⟩ := _root_.GlobalTheory.GfCut.exists_cut S (GlobalTheory.LevelNbhd.finPartG S g) (e + cA D e)
     (GlobalTheory.LevelNbhd.finPartG_mem_GfC S g) hεε hεc
   have hfk := GlobalTheory.T.finiteEmbedding_idempotent_patch_in_frame S βS _ k (e + cA D e) hmt
   rw [GlobalTheory.SuppLevO.finE_finPartG] at hfk
@@ -394,9 +399,9 @@ theorem UpperTheory.finiteComponent_mem_stabilizer_of_standardSection_ne_zero :
   have hcomp : ∀ PP ∈ Z, GlobalTheory.AdelicU.proj D.sp.cm.sig S.gram ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)) k =
       GlobalTheory.AdelicU.proj D.sp.cm.sig S.gram ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)) g := fun PP hP => by
     rw [← GlobalTheory.SuppLevO.proj_finPartG S g]
-    exact GlobalTheory.T.localProjection_eq_of_idempotent_patch S _ _ k _ (GlobalTheory.T.adeleTensorComponent_idempotentSum_add_conj_eq_one Z e hZe PP hP) hmt
-  have hkloc := (GlobalTheory.T.finitePart_mem_frameStabilizer_iff_local_stabilizer D S βS ΛS hfr k).1 hSt
-  refine (GlobalTheory.T.finitePart_mem_frameStabilizer_iff_local_stabilizer D S βS ΛS hfr g).2 fun v => ?_
+    exact GlobalTheory.T.localProjection_eq_of_idempotent_patch S _ _ k _ (_root_.GlobalTheory.CompFinIdemSum.compFin_add_cA_eq_one Z e hZe PP hP) hmt
+  have hkloc := (_root_.GlobalTheory.ChainOnto.LStab.finE_mem_St_iff_stabLoc D S βS ΛS hfr k).1 hSt
+  refine (_root_.GlobalTheory.ChainOnto.LStab.finE_mem_St_iff_stabLoc D S βS ΛS hfr g).2 fun v => ?_
   by_cases hv : ∃ PP ∈ Z, (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) = v
   · obtain ⟨PP, hP, rfl⟩ := hv
     rw [← hcomp PP hP]
@@ -874,7 +879,7 @@ private theorem fin_fix {μ₀ : T} (hL : L.Is μ₀) (hX : IsBottomTri W i j X)
   have hloc : ∀ v, proj D.sp.cm.sig (GlobalTheory.Grid.neg A).gram v k ∈ stabLoc D.sp.cm.sig (GlobalTheory.Grid.neg A).gram X.rA.Λ v :=
     fun v => hk' v (Finset.notMem_empty v)
   have hSt : Lev.finE (GlobalTheory.Grid.neg A) k ∈ Formalism.L2.DIV.St X.rA.β :=
-    (GlobalTheory.T.finitePart_mem_frameStabilizer_iff_local_stabilizer D (GlobalTheory.Grid.neg A) X.rA.β X.rA.Λ h.rigA.2.1 k).2 hloc
+    (_root_.GlobalTheory.ChainOnto.LStab.finE_mem_St_iff_stabLoc D (GlobalTheory.Grid.neg A) X.rA.β X.rA.Λ h.rigA.2.1 k).2 hloc
   have hid : ∀ w ∈ locPl G t, Formalism.L2.NTheta.IsIdemAt (GlobalTheory.RowVacScalar.idemAt w) w := fun w hw => by
     obtain ⟨⟨es, hes, -⟩, -⟩ := he
     exact Classical.epsilon_spec (p := fun e : AE D => Formalism.L2.NTheta.IsIdemAt e w) ⟨es w, hes w hw⟩
@@ -978,7 +983,7 @@ private theorem wcoef_off (hX : IsBottomTri W i j X) (t : T) {ν : Measure (WO (
       obtain ⟨w, hw, e⟩ := Finset.mem_image.1 hm
       exact hv w hw e
   have hsupp := fun x hx => by_contra fun hx' => hn fun v _ =>
-    (GlobalTheory.T.finitePart_mem_frameStabilizer_iff_local_stabilizer D (GlobalTheory.Grid.neg A) X.rA.β X.rA.Λ h.rigA.2.1 g).1
+    (_root_.GlobalTheory.ChainOnto.LStab.finE_mem_St_iff_stabLoc D (GlobalTheory.Grid.neg A) X.rA.β X.rA.Λ h.rigA.2.1 g).1
       (UpperTheory.finiteComponent_mem_stabilizer_of_standardSection_ne_zero D (GlobalTheory.Grid.neg A) WW X.rA.Λ X.rA.β X.rW.β (alphaB L i j t / betaB G i j) (X.e t) (locPl G t)
         (X.ideal (locPl G) t) sdA h.rigA.2.1 (show A.rank ≤ WW.rank from h.rank ▸ Nat.le_add_right _ _) he g hint x hx hx') v
   obtain ⟨n, a, y, h0, h1, h2⟩ := GlobalTheory.T.heisenberg_fix_and_kill_theta_off_support_move D W.ψ (GlobalTheory.Grid.neg A) WW hW.std X.rA.Λ X.rW.Λ sdA h.rigW.1

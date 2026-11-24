@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.Regularis
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnitCharTriangle
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatInOfUnit
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaKernelLeftInvariantRationalUnitaryBis
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BlkGLMem
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaKernelLeftInvariantRationalUnitary
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistRegulariserIsGood
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistedSquareThetaIntegralsEq
 import Mathlib.Algebra.Order.Floor.Extended
@@ -147,7 +148,7 @@ theorem thetaIntegral_eq_zero_of_finiteRelation (hP : _root_.GlobalTheory.FunPr.
     thetaInt ωB ν₁ 𝓕₁ Ψ = 0 := by
   set S := algF ψ θ false A₁ B with hSdef
   have hL : ∀ Φ ∈ S, ∀ γ ∈ GQ W₁, ∀ g h, thetaKO ωB (γ * g) h Φ = thetaKO ωB g h Φ :=
-    GlobalTheory.T.thetaKernel_leftInvariant_rational_unitary D ψ θ hθ W₁ X A₁ B α (α / β) ωB hw
+    _root_.GlobalTheory.SquareComm.ThetaLeft.main D ψ θ hθ W₁ X A₁ B α (α / β) ωB hw
   have hle : finRel ωB S ≤ S := by
     refine Submodule.span_le.2 ?_
     rintro _ ⟨u, hu, Φ, hΦ, rfl⟩

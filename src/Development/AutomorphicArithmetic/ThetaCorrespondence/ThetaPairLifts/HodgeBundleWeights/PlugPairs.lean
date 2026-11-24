@@ -12,7 +12,7 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHype
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PermMMulTranspose
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasureTranslateLevelRealBoxLeIndexMul
 public import Development.WeilBound.RepresentationTheoryGL.TubeMeasures.DisjointTubes.TubeSt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsContinuousRealComponentHomUnitaryAdelicStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsContinuousRealComponentHomUnitaryAdelic
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianMassUpperBound
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsCompactParahoricLevelAndContainsLifts
 public import Formalism.LocalToGlobal.LatticeGeometry.DegFlLApply
@@ -287,7 +287,7 @@ theorem up_core (hV : VolSt) (hS : StabSt) (hN : NumSt) (D : D7) (Tu : Type) (C 
   obtain ⟨⟨θ, hθ⟩, H1⟩ := hF.1.2
   obtain ⟨⟨A, hA⟩, H2⟩ := H1 θ hθ
   obtain ⟨⟨m, hm⟩, -⟩ := H2 A hA
-  obtain ⟨rp, hrpc, hrp⟩ := GlobalTheory.T.exists_continuous_realComponentHom_unitaryAdelic D (Wc D i) θ A (D.sp.W_sig _) hθ hA
+  obtain ⟨rp, hrpc, hrp⟩ := _root_.GlobalTheory.CovTop.VolUp.exists_realPart_hom D (Wc D i) θ A (D.sp.W_sig _) hθ hA
   haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).1
   haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.1
   haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.1

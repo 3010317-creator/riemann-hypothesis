@@ -21,16 +21,16 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.DvReBaseMain
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MapFinNeg
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsDefiniteOfAllPlus
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SelfDualLatticeHasRigidificationStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SelfDualLatticeHasRigidification
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegIdxOfIsStd
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsEtaTildeUnramified
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegIdxOfOrth
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsThetaFunctionStandardPairSecondStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsThetaFunctionStandardPairSecond
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FirstStandardPairMemberHasThetaFunctionStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatInOfDefinite
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHyperbolicPlaneSplitHermitianLatticeSpace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRealEmbeddingsSharedBaseTowerStage
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialHeckeLFunctionSquareEqPrimitiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialHeckeLFunctionSquareEqPrimitive
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewHermitianSelfDualLatticeHyperbolicPlaneSplit
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StageTriangleFactorStepFirst
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaStepFactorRatioUnitGaussSumQuotientStatement
@@ -95,7 +95,8 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
 import Development.AbelianVarietyTheory.Definitions.Foundations.EventuallyNormFinLeOne
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiffsZeroOfLev
 import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.StarPurelyImaginaryEqNeg
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.CmTypeRestrictRealSubfieldInfinitePlaceBijectiveStatement
+import Formalism.LocalRingCardinality.DataTheta
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.CmTypeRestrictRealSubfieldInfinitePlaceBijective
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsTopologicalRingAE
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasSign
 import Formalism.LocalToGlobal.ProjectiveLattices.HostInt
@@ -670,7 +671,7 @@ private theorem exists_place (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilT
   refine ⟨InfinitePlace.mk ((tauE D τ).comp (algebraMap D.host.F D.host.E)), ?_⟩
   obtain ⟨τ', hτ'⟩ := h (InfinitePlace.mk ((tauE D τ).comp (algebraMap D.host.F D.host.E)))
   have e : τ' = τ := by
-    apply (GlobalTheory.T.cmType_restrict_realSubfield_infinitePlace_bijective D).1
+    apply (_root_.GlobalTheory.CMTypePlaces.places_bijective D).1
     have h1 := (Bs.emb (InfinitePlace.mk ((tauE D τ).comp (algebraMap D.host.F D.host.E)))).2
     have h2 : ComplexEmbedding.conjugate ((tauE D τ').comp (algebraMap D.host.F D.host.E)) =
         (InfinitePlace.mk ((tauE D τ).comp (algebraMap D.host.F D.host.E))).embedding := by
@@ -920,7 +921,7 @@ theorem withIdx_sigOK {D : D7} {V : HSp D} {p : ℕ} (h : NegIdx V p) : (withIdx
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle in
 theorem rig_exists {D : D7} {V : HSp D} {p : ℕ} (h : NegIdx V p) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E))
     (hΛ : IsSelfDualC V Λ) : ∃ r : Rig V, r.Λ = Λ ∧ r.Is := by
-  obtain ⟨r, e, hr⟩ := GlobalTheory.T.self_dual_lattice_has_rigidification D (withIdx V p) Λ (withIdx_sigOK h) hΛ
+  obtain ⟨r, e, hr⟩ := _root_.GlobalTheory.RigExists.exists_rig D (withIdx V p) Λ (withIdx_sigOK h) hΛ
   exact ⟨⟨r.Λ, r.β, r.s, r.B⟩, e, hr⟩
 
 
@@ -996,7 +997,7 @@ theorem exists_quadratic_tower_stage : _root_.GlobalTheory.FunPr.ThetaLocalInput
     Finset.prod_ne_zero_iff.2 fun w _ => pow_ne_zero _ w.ne_bot
   choose f hf _ using fun t => GlobalTheory.T.first_standard_pair_member_has_theta_function D W.ψ W.θ _ WW rA rW _ _ _ _ _ hA hW (ch t).2.2.1 (he t) (hI t) hv
   choose f' hf' _ using fun t =>
-    GlobalTheory.T.exists_thetaFunction_standardPairSecond D W.ψ W.θ _ WW rA' rW _ _ _ _ A.rank _ hA' hW (ch t).2.2.1 (he t) (hI t) hv'
+    _root_.GlobalTheory.CompanionTheory.StdSndTheta.exists_theta D W.ψ W.θ _ WW rA' rW _ _ _ _ A.rank _ hA' hW (ch t).2.2.1 (he t) (hI t) hv'
   obtain ⟨m, fd, hm⟩ := GlobalTheory.ConstRatio.exists_meas A
   obtain ⟨m', fd', hm'⟩ := GlobalTheory.ConstRatio.exists_meas A'
   exact ⟨⟨rA, rA', rW, ω, ω', vac, vac', e, c, f, f', m, fd, m', fd'⟩,
@@ -1194,7 +1195,7 @@ theorem theta_tower_norm_step_large_rank : _root_.GlobalTheory.FunPr.ThetaLocalI
         GlobalTheory.SqTower.IsStageC W i j p 0 Y ∧ Y.IsConst W.ψ W.θ c ∧
         (∀ t, y t ≠ 0 ∧ lam t = y t * Lf t (e : ℂ) * c t) ∧ ∀ t, GlobalTheory.Square.StepRatio D.what₂.embLL (Qn G t) G.pl.S0 (condExp G.pl) (fun v => Ideal.absNorm v.asIdeal) (y t) (y μ₀) := by
   intro hP hK hM
-  refine gbig_of_three (_root_.GlobalTheory.SqStepBig.theta_tower_step_norm_identity hP hK hM) GlobalTheory.T.thetaStepFactor_ratio_unit_gaussSumQuotient GlobalTheory.T.partialHeckeLFunction_square_eq_primitive ?_
+  refine gbig_of_three (_root_.GlobalTheory.SqStepBig.theta_tower_step_norm_identity hP hK hM) GlobalTheory.T.thetaStepFactor_ratio_unit_gaussSumQuotient _root_.GlobalTheory.SqStep.charL_chs_eq ?_
   intro D T Lc sc G μ₀ C x b q1 q2 q3 W S hψ hN i j p A A' WW X lam e Lf hX hF he hL
   obtain ⟨B, B', WW₁, Y, c, hY, hc, H⟩ := q1 W S hψ hN i j p A A' WW X lam e hX hF he
   have he2 := two_le_half hX he

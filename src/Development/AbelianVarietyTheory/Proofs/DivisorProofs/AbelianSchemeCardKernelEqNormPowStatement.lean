@@ -70,7 +70,7 @@ import Mathlib.Topology.Sheaves.Init
 import Mathlib.Tactic.Linter.Style
 import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsogenyDegreeEqCardKernelOfKilledByInvertible
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsogenyFlatFinrankStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsogenyFlatFinrank
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsIsoIffBijectiveOverAlgClosed
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -512,7 +512,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem deg_eq_card_ker_of_unram : ∀ (K : Type) [Field K] (A B : AbVar K) (f : A ⟶ B), IsIsogeny f → FormallyUnramified (pullback.snd (Hom.hom f).left η[B.X].left) → deg f = Nat.card (ptMap f).ker := by
   intro K _ A B f hiso hpfu
-  have hfl : Flat f.hom.left := (GlobalTheory.T.dim_eq_flat_finrank_eq_deg_of_isIsogeny K A B f hiso).2.1
+  have hfl : Flat f.hom.left := (_root_.GlobalTheory.AV.AbVar.isogeny_flat_finrank K A B f hiso).2.1
   have hfin : IsFinite f.hom.left := hiso.1
   let e : Sp K ⟶ B.X.left := η[B.X].left
   let p := pullback.snd f.hom.left e

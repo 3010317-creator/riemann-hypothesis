@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Langlands
 public import GroundTheory.LocalFields.PadicLogSeries
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalLanglandsTransport
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PlaceOverTransportRingIsoStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PlaceOverTransportRingIso
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PlaceOverTransportRingIsoSymm
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TransportKeepsCuspidalTwistsCharacters
 import Mathlib.Algebra.Order.Floor.Extended
@@ -155,7 +155,7 @@ variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAl
 
 theorem equiv_lpDual (P : PlaceIso A w A' w' φ j i) (S : WD h ≃ WD h') (hS : ∀ y y', WDRel φ y y' ↔ S y = y')
     (y : WD h) : S y.lpDual = (S y).lpDual := by
-  obtain ⟨c, hc, hdegc, hq, hsm⟩ := GlobalTheory.T.place_over_transport_ring_iso E Ω A w h E' Ω' A' w' h' φ j i P
+  obtain ⟨c, hc, hdegc, hq, hsm⟩ := _root_.GlobalTheory.WeilTransport.weil_equiv E Ω A w h E' Ω' A' w' h' φ j i P
   have hd1 : ∀ σ, deg (c.symm.toMonoidHom σ) = deg σ := fun σ => by
     have := hdegc (c.symm σ); simp only [MulEquiv.apply_symm_apply] at this
     simpa using this.symm

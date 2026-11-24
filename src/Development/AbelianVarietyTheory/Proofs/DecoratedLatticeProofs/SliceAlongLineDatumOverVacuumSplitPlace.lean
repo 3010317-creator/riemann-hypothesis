@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSBExtFunEqHalfInd
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNsmulHalf
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExtendByZeroSourceTensorColumnProductStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LatIndLastKerRow
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExtendByZeroSourceTensorColumnProduct
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OfTensColMem
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceBaseVacuumDatumExistsUnique
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceBaseVacuumDatumExistsUniqueStatement
@@ -180,7 +181,7 @@ theorem main : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
       intro Φ hΦ
       have h1 := sb_of_sbHalf p α β hLA hLS hΦ
       have h2 := extFun_wr p α β (Φ := Φ) hΦ.1
-      rw [hbox, ← h2, ← GlobalTheory.T.extendByZero_source_tensor_column_product D k p n n' V₀ A L S o ζ α α₀ β hsum]
+      rw [hbox, ← h2, ← _root_.GlobalTheory.FinPl.ExtZero.extFun_tensCol_sum D k p n n' V₀ A L S o ζ α α₀ β hsum]
       exact OverProof.isSBHalf_extFun D k p _ _ V₀ S α₀ β L₁ L₂ hL₁ hL₂ _ (Comm.tensCol_mem h1 haSB)
 
     have hmodel : IsPlaceModel ψ (symplO A S) (heisO ψ A S) p.e ΛA 1 g T₁ := by
@@ -214,7 +215,7 @@ theorem main : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
       obtain ⟨F, hF, -⟩ := hover _ (Comm.tensCol_mem hΨA haSB)
       have hFth := ((GlobalTheory.T.splitPlace_baseVacuum_datum_exists_unique D k p n (n' ⊕ Fin 1) ψ hψ V₀ S α₀ β L₁ L₂ hL₁ hL₂ f₁ hf₁).2.1 _ _ hF).1
       have hFT : F = T (extFun α₀ β (tensCol ΨA a)) := hF.2.2.2.2.2 T hT
-      rw [GlobalTheory.T.extendByZero_source_tensor_column_product D k p n n' V₀ A L S o ζ α α₀ β hsum, hΨAe] at hFT
+      rw [_root_.GlobalTheory.FinPl.ExtZero.extFun_tensCol_sum D k p n n' V₀ A L S o ζ α α₀ β hsum, hΨAe] at hFT
       have := GlobalTheory.BoxSlice.isThetaFunO_slice_left o hFth y
       rw [hFT] at this
       exact this
@@ -222,7 +223,7 @@ theorem main : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
 
     have hslice : (fun u => Ξ ((o.resS S).symm (u, y))) = T₁ (extFun α β Ψ) := by
       funext u
-      rw [ExtZero.restrModel_apply, hΞT, GlobalTheory.T.extendByZero_source_tensor_column_product D k p n n' V₀ A L S o ζ α α₀ β hsum]
+      rw [ExtZero.restrModel_apply, hΞT, _root_.GlobalTheory.FinPl.ExtZero.extFun_tensCol_sum D k p n n' V₀ A L S o ζ α α₀ β hsum]
       rfl
     refine ⟨g, ?_⟩
     obtain ⟨f, hf, -⟩ := (GlobalTheory.T.splitPlace_baseVacuum_datum_exists_unique D k p n n' ψ hψ A S α β LA LS hLA hLS g hvac).1 Ψ hΨSB

@@ -4,8 +4,11 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Val
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsCompactOpenLatticeStabilizerAtPlaces
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralQuotientEqIntegralFactorQuotient
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalInvariantIntegralsSymmetricHaarSubgroupsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PeriodLocalGroupsNormalFramesSplitPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupClosedEmbeddingIntegralStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FourierJacobiAverage
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PeriodLocalGroupsNormalFramesSplitPlace
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ToOneSucc
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupClosedEmbeddingIntegral
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlagUnipotentAnisotropicProjectionEqOne
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.T2SpaceCmHostAdeles
 import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsUniqueIsProdMeasureFinAway
@@ -236,7 +239,7 @@ def IsLocGrp (V : HSp D) (w : Pl D) (gl : GL Y k →* GA D V) : Prop :=
 
 theorem isLocGrp (q : SplitPt D k) (V : HSp D) (F : GlobalTheory.LocMod.Frame k V.rank Y) (gl : GL Y k →* GA D V)
     (h : ∀ g, (ofSplit q).IsLoc F (gl g) g) : IsLocGrp V q.v gl := by
-  obtain ⟨h1, h2, h3, h4, -⟩ := GlobalTheory.T.splitPlace_local_group_closedEmbedding_integral D k q V Y F gl h
+  obtain ⟨h1, h2, h3, h4, -⟩ := _root_.GlobalTheory.LocGl.local_group D k q V Y F gl h
   exact ⟨h1.continuous, fun g => h2 ▸ ⟨g, rfl⟩, h3, h4⟩
 
 variable {V : HSp D} {w : Pl D} {gl : GL Y k →* GA D V}
@@ -389,14 +392,14 @@ theorem loc₁ (Q : QStep S) : IsLocGrp S.J.W Q.q.v Q.gl₁ := isLocGrp Q.q _ Q.
 theorem loc₂ (Q : QStep S) : IsLocGrp S.B'.V Q.q.v Q.gl₂ := isLocGrp Q.q _ Q.F.G₂ _ Q.loc₂
 
 theorem sub₁ (Q : QStep S) : IsLocSub Q.q.v Q.gl₁ (jacGrp S.J.d) (RFJ Q.k Q.n₁ (Q.c + 1 + 1) (σ + 1)) := by
-  obtain ⟨h1, h2⟩ := (GlobalTheory.T.periodLocalGroups_normalFrames_splitPlace D Q.k Q.q Q.n₁ (Q.c + 1 + 1) (σ + 1)).1 S.J _ _ Q.F.F₁ Q.F.G₁ Q.gl₁ (by omega) Q.F.s_ne
+  obtain ⟨h1, h2⟩ := (_root_.GlobalTheory.LocGrpIff.local_groups_iff D Q.k Q.q Q.n₁ (Q.c + 1 + 1) (σ + 1)).1 S.J _ _ Q.F.F₁ Q.F.G₁ Q.gl₁ (by omega) Q.F.s_ne
     (div_ne_zero_iff.1 (hz_div_xi_ne Q)).1 Q.F.jac Q.loc₁
   refine ⟨GlobalTheory.jacGrp_isClosed D _ _ _ S.J.d, h1, h2, fun s hs hs1 => ?_⟩
   exact ((GlobalTheory.T.localInvariantIntegrals_symmetric_haarSubgroups Q.k Q.ν Q.unitVol Q.n₁ (Q.c + 1 + 1) (σ + 1) Q.m₁ (GlobalTheory.SplitFlip.haarVol (KO _ _)) Q.haar₁
     GlobalTheory.SplitFlip.isHaarMeasure_haarVol_KO Q.vol₁).2 (by omega) Q.F.jac.1 s hs hs1).1
 
 theorem sub₂ (Q : QStep S) : IsLocSub Q.q.v Q.gl₂ (besGrp S.B'.d S.B'.o) (R Q.k Q.n₂ (Q.c + 1) (σ + 1)) := by
-  obtain ⟨h1, h2⟩ := (GlobalTheory.T.periodLocalGroups_normalFrames_splitPlace D Q.k Q.q Q.n₂ (Q.c + 1) σ).2 S.B' _ Q.F.F₂ Q.F.G₂ Q.gl₂
+  obtain ⟨h1, h2⟩ := (_root_.GlobalTheory.LocGrpIff.local_groups_iff D Q.k Q.q Q.n₂ (Q.c + 1) σ).2 S.B' _ Q.F.F₂ Q.F.G₂ Q.gl₂
     (mul_ne_zero Q.F.s_ne (div_ne_zero_iff.1 (hz_div_xi_ne Q)).2) Q.F.bes' Q.loc₂
   refine ⟨GlobalTheory.BesClosed.besGrp_isClosed _ _ _ _ _ _ S.B'.d S.B'.o, h1, h2, fun s hs hs1 => ?_⟩
   exact ((GlobalTheory.T.localInvariantIntegrals_symmetric_haarSubgroups Q.k Q.ν Q.unitVol Q.n₂ (Q.c + 1) (σ + 1) Q.m₂ (GlobalTheory.SplitFlip.haarVol (KO _ _)) Q.haar₂

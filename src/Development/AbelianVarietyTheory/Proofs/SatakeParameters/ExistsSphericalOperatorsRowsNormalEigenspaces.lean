@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMulRightInvariantHaarAdelicUnitaryGroupHermitiStatement
+public import Formalism.LocalToGlobal.BesselHermitianTheta.IsAutFunDef
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMulRightInvariantHaarAdelicUnitaryGroupHermiti
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeterssonAdjointHeckeOperatorEqDualLabel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnderEqOrSmulUnderEq
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffDerivSnoc
@@ -10,8 +11,8 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHype
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelOperatorsAtPrimeOffLevelDatum
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormalFamilyOrthogonalDecomposition
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalHeckeCombinationsCommuteFixedVectorsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalHeckeConjPlaceEqDualLabelStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalLabelOperatorsOnHyperspecialFixedVectorStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalHeckeConjPlaceEqDualLabel
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalLabelOperatorsOnHyperspecialFixedVector
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersUnramifiedOffLevelPlaces
@@ -138,8 +139,8 @@ theorem hk_comm (V : HSp D) (P P' : Pl D.host.E) (d d' : List ℤ) (u : GA D V �
     exact GlobalTheory.T.sphericalHeckeCombinations_commute_fixedVectors V _ _ _ _ (rt V) u hu
   · obtain rfl := eq_conj hc
     simp only [← opOf_rt]
-    rw [(GlobalTheory.T.sphericalHecke_conjPlace_eq_dualLabel V P).2.2 _ _ (rt V) u hu,
-      (GlobalTheory.T.sphericalHecke_conjPlace_eq_dualLabel V P).2.2 _ _ (rt V) _ ((GlobalTheory.T.spherical_label_operators_on_hyperspecial_fixed_vectors V P).2.1 _ _ (rt V) u hu)]
+    rw [(_root_.GlobalTheory.SphConj.sph_conj V P).2.2 _ _ (rt V) u hu,
+      (_root_.GlobalTheory.SphConj.sph_conj V P).2.2 _ _ (rt V) _ ((_root_.GlobalTheory.SphLabelOps.label_operators V P).2.1 _ _ (rt V) u hu)]
     exact GlobalTheory.T.sphericalHeckeCombinations_commute_fixedVectors V _ _ _ _ (rt V) u hu
 
 variable {V : HSp D} {S : D.what₂.Tau → SPar} {θ : InfFam D} {M : DSModel V S}
@@ -215,7 +216,7 @@ theorem exists_ops (J : Subgroup (GA D V)) (χ : GA D V → ℂ) (SF : Finset (H
     exact hk_comm V P P' d d' _ (hfix P hP x v)
   have hadj1 : ∀ P, ok P → ∀ d, LinearMap.adjoint (h P (Finsupp.single d 1)) = h P (Finsupp.single (dualLab d) 1) := by
     intro P hP d
-    have hdd := ((GlobalTheory.T.spherical_label_operators_on_hyperspecial_fixed_vectors V P).2.2.2.1 d).1
+    have hdd := ((_root_.GlobalTheory.SphLabelOps.label_operators V P).2.2.2.1 d).1
     by_cases hd : IsLab V P d
     · symm
       rw [LinearMap.eq_adjoint_iff]
@@ -241,7 +242,7 @@ theorem exists_ops (J : Subgroup (GA D V)) (χ : GA D V → ℂ) (SF : Finset (H
       have : Countable (GQ V) :=
         Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig V.gram
       have : μ.IsMulRightInvariant :=
-        GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D V μ hμ
+        _root_.GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V μ hμ
       have hPair := hS hθ hμ h𝓕
       have hleft := ipM_spec M μ 𝓕 _ _ (hPair _ hRx _ hy)
       have hright := ipM_spec M μ 𝓕 _ _ (hPair _ hx _ hRy)
@@ -273,7 +274,7 @@ theorem exists_ops (J : Subgroup (GA D V)) (χ : GA D V → ℂ) (SF : Finset (H
     rw [Submodule.mem_comap, mem_partFull]
     refine ⟨hW (hmW x), fun P d B hB v => ?_⟩
     obtain ⟨hP, hB⟩ := (hfull _ _ _).1 hB
-    have e1 := ((GlobalTheory.T.spherical_label_operators_on_hyperspecial_fixed_vectors V P).1 d B hB).2 _ (rt V) _ (hfix P hP x v)
+    have e1 := ((_root_.GlobalTheory.SphLabelOps.label_operators V P).1 d B hB).2 _ (rt V) _ (hfix P hP x v)
     rw [← LinearMap.sum_apply, sum_rt, opOf_rt] at e1
     have e2 := hh P (Finsupp.single d 1) hP x
     rw [hx P d hP ⟨B, hB⟩, map_smul] at e2

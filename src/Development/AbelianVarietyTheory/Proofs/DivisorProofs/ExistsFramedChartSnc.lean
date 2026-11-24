@@ -9,10 +9,11 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Exist
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousOnFrameDirectionsInverse
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsExponentialChartAtPoint
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFramedChartExponentialToroidalModel
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHolomorphicLatticeBasisPunctPolydiscCoverPStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHolomorphicLatticeBasisPunctPolydiscCoverP
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLocallyHolomorphicPeriodsFamily
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsToricTorsionCubicalWeilOneComplexPointStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExponentialKernelLatticeRiemannFormOffBoundaryStatement
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.PointEqOfSubsingleton
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExponentialKernelLatticeRiemannFormOffBoundary
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FlatSectionIsFlat
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HorizontalCoordinateLatticeIsometryDetOne
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodLinearAlgebraHodgeSequenceExact
@@ -60,7 +61,7 @@ import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExponentialDeriv
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsCombAtIffIsDerivAt0
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsEigAtIffOfIsDerivAt0
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPeriodsInFrameOffBoundary
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSncCoordinatesComplexPointSmoothVarietyStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSncCoordinatesComplexPointSmoothVariety
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExponentialKernelsIsHolomorphicLatticeFamilyStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwoMarkingsDifferByLevelIsometry
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsDifferentiableOnTransfer
@@ -589,7 +590,7 @@ end Level
 theorem exists_framed_chart_snc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Z : Model Xo c β) (hsm : SmoothOfRelativeDimension Dw.dim (genStr Z)) (hsnc : ReciprocityTheory.AnForm.R.FinalTheorems.Snc (genBdIdeal Z)) (σ : c.F →+* ℂ) (x₀ : CxPts (genStr Z) σ), ∃ (n a g r₀ : ℕ) (e : OpenPartialHomeomorph (CxPts (genStr Z) σ) (Fin n → ℂ)) (ex : ExpMaps Z σ g) (ζ : (Fin n → ℂ) → Fin r₀ → Fin g → ℂ), x₀ ∈ e.source ∧ e x₀ = 0 ∧ IsExpChart e ex ∧ (∀ x ∈ e.source, Inner x ↔ ∀ k : Fin n, (k : ℕ) < a → e x k ≠ 0) ∧ Function.Surjective (ex x₀) ∧ AnalyticOnNhd ℂ ζ (Metric.ball 0 1) ∧ (∀ z ∈ Metric.ball (0 : Fin n → ℂ) 1, LinearIndependent ℝ (ζ z)) ∧ (∀ z ∈ Metric.ball (0 : Fin n → ℂ) 1, ∀ i, ex (e.symm z) (ζ z i) = 1) ∧ IsLatBasis {w | ex x₀ w = 1} (ζ 0) ∧ (∃ C : ℝ, ∀ z ∈ Metric.ball (0 : Fin n → ℂ) 1, ‖ζ z‖ ≤ C) ∧ ∀ j : Fin g, ∃ i, ∀ z ∈ Metric.ball (0 : Fin n → ℂ) 1, ζ z i = Pi.single j 1 := by
   intro E _ _ _ H Dw l Xo c O _ β Z hsm hsnc σ x₀
   obtain ⟨a, e0, hx₀, he0, hhol, hsymm, hbd⟩ :=
-    GlobalTheory.T.exists_snc_coordinates_complexPoint_smoothVariety c.F (gen Z) (genStr Z) Dw.dim (genBd Z) σ hsm hsnc x₀
+    _root_.GlobalTheory.SncChart.exists_coords c.F (gen Z) (genStr Z) Dw.dim (genBd Z) σ hsm hsnc x₀
   have hsym0 : e0.symm 0 = x₀ := by rw [← he0]; exact e0.left_inv hx₀
   have h0t : (0 : Fin Dw.dim → ℂ) ∈ e0.target := he0 ▸ e0.map_source hx₀
   obtain ⟨g, r₀, e, ex, ζ, h⟩ := exists_framed_of_chart (a := a) e0 h0t hhol hsymm hbd
@@ -657,7 +658,7 @@ theorem exists_isLogChart_snc : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     have hin : Inner (e.symm z) := (hbd _ (hsymm z hz)).2 fun k hk => by
       rw [e.right_inv (by rw [htarget]; exact hz)]
       exact hnz k hk
-    obtain ⟨Hm, hH, hpos, hspan, hint, hw⟩ := GlobalTheory.T.exponentialKernel_lattice_riemannForm_off_boundary E H Dw l Xo c O β Z σ g (e.symm z) (ex (e.symm z)) hσ hpq
+    obtain ⟨Hm, hH, hpos, hspan, hint, hw⟩ := _root_.GlobalTheory.ShFam.Hor.LogCh.kernel_lattice_of_inner E H Dw l Xo c O β Z σ g (e.symm z) (ex (e.symm z)) hσ hpq
       hin (hExpAt _ (hsymm z hz)) (hslice z hz)
     exact ⟨Hm, hH, hpos, hspan, fun v hv w hw' => hint v w hv hw', fun N v w hN hv hw' => hw N v w _ hN hv hw' rfl⟩
   have hP4 : ∀ N : ℕ, 0 < N → ∃ S : Set (Fin r₀ → ZMod N), N ^ r₀ * Nat.card S = N ^ (2 * g) ∧
@@ -674,7 +675,7 @@ theorem exists_isLogChart_snc : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       (ex (e.symm 0) ((N : ℂ)⁻¹ • ∑ j, a' j • ζ 0 j)) (unitOn 1)
     rw [h0, unitOn_one]
     exact hT2 _ (hS a ha) _ (pow_eq_one_of_map _ (hadd x₀ hx₀) (hzero x₀ hx₀) hN ((hζB.2 _).2 ⟨a', rfl⟩))
-  obtain ⟨r, lam, ρ, hc, hs, hg⟩ := GlobalTheory.T.exists_holomorphic_latticeBasis_punctPolydiscCover_polyGrowth n a g r₀ K ζ Pair hLF hζan hζli hζK hB0 hζC hζstd hP1 hP2 hP3 hP4
+  obtain ⟨r, lam, ρ, hc, hs, hg⟩ := _root_.GlobalTheory.ShFam.Hor.LogCh.Core.core n a g r₀ K ζ Pair hLF hζan hζli hζK hB0 hζC hζstd hP1 hP2 hP3 hP4
   exact ⟨n, g, r, a, e, ex, lam, ρ, hx₀, he0, ⟨htarget, hholE, hsymmHol, hadd, hjoint, htan⟩, hbd, hc, hs, hg⟩
 
 theorem logGrowth_snc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Z : Model Xo c β) (hsm : SmoothOfRelativeDimension Dw.dim (genStr Z)) (hsnc : ReciprocityTheory.AnForm.R.FinalTheorems.Snc (genBdIdeal Z)) (σ : c.F →+* ℂ) (g : ℕ) (e : Fin g ≃ Letter Dw) (Fu : Fam Xo c σ e) (τ : E →+* ℂ) (x : ∀ i, Idx Dw τ → (Fu.Di i).La) (hm : Fin Fu.n → Matrix (Idx Dw τ) (Idx Dw τ) E) (h : CxFr Z σ → ℂ), Formalism.L2.PjFree.GoodEmb c σ → 1 ≤ Dw.p + Dw.q → (∀ i, IsPerBasis (Fu.Di i) (x i) (hm i)) → (∀ a i Q, Per Fu a i Q → h a = perVal c σ τ (x i) (hm i) Q) → LogGrowth h := by
