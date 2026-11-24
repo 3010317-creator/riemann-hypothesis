@@ -48,6 +48,11 @@ open Formalism.BasicNotions
 
 namespace GlobalTheory.Published
 
+/-- **Weyl dimension formula for general linear groups**: the dimension of the irreducible representation
+of `GL_n(\mathbb{C})` with highest weight `\lambda` is given by the ratio product of weight differences.
+
+Proposed reference:
+[H. Weyl, *Theorie der Darstellung kontinuierlicher halbeinfacher Gruppen*][weyl1925dimension]. -/
 def WeylDimensionGL : Prop :=
   ∀ (n : ℕ) (lam : DomWeight n),
     (FiniteDimensional ℂ (nablaSq ℂ n lam) ∧
