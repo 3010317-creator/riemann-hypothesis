@@ -1279,12 +1279,7 @@ private theorem gsLevelBijective_of_pairing [Nonempty S] (hμ : ∀ ζ : ℚ̄, 
     goal.assign (Lean.Meta.mkExpectedPropHint (Lean.mkAppN dual args) (← goal.getType))
 
 
-/-- The degree-three cores map of `gsRoots S n` to level `U` is surjective.
-
-`gsBaseBijective_of_le` and `gsBaseBijective_of_fixing` take this as a hypothesis for every `U`.
-Written out, it repeats the type of `galUnramifiedOutside K.1 ℚ̄ S` many times, so its expression is
-small as a graph but very large as a tree, and `linter.unusedSectionVars`, which walks the statement
-as a tree, spent about 35 s on each of those theorems. -/
+/-- The degree-three cores map of `gsRoots S n` to level `U` is surjective. -/
 def GsCompactCoresSurjective (U : OpenSubgroup (galUnramifiedOutside K.1 ℚ̄ S)) : Prop :=
   Function.Surjective (compactCores (gsFinFamily S ιs) U (gsRoots S n) 3).hom
 
