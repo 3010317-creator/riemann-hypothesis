@@ -99,12 +99,6 @@ theorem linkDIV_L2R_face [_root_.NumberField.IsTotallyComplex K] {Bs : DefBase K
     (Nu : Submodule (𝓞 K) (Fin ((fc Pk.Zs).Dc.a u) → K)) (sg : HeightOneSpectrum (𝓞 K) → ℝ)
     (I : DivInputsR Pk.core R u Nu sg) : DivClausesR Pk.core R u Nu sg :=
   divClausesR_of wf0 wf1 Pk.core R u Nu sg I
-theorem linkDIV_L2R_core_face [_root_.NumberField.IsTotallyComplex K] {Bs : DefBase K} {A : DefAmb Bs} {fc : DefSub A → DefFace Bs} {cf : ConvFace Bs} {C CH : ℝ}
-    (Pk : IndefPkgR A fc cf C CH) (wf0 : (fc Pk.Zs).Df0.WF) (wf1 : (fc Pk.Zs).Df1.WF)
-    {Pl : Type} [Fintype Pl] [DecidableEq Pl] (R : RecNums Bs.J Pl) (u : (fc Pk.Zs).Dc.Mem)
-    (Nu : Submodule (𝓞 K) (Fin ((fc Pk.Zs).Dc.a u) → K)) (sg : HeightOneSpectrum (𝓞 K) → ℝ)
-    (I : DivInputsR Pk.core R u Nu sg) : DivCoreClausesR Pk.core R u Nu sg :=
-  divCoreClausesR_of wf0 wf1 Pk.core R u Nu sg I
 
 
 end Face
@@ -608,14 +602,11 @@ theorem wordFacts_of_core_clauses (L : SizeData₂ D) (C Cabs : ℝ) (u : D.what
     (tR : R.rhs ≤ L.MAIN u + C * (D.host.TT.card : ℝ) * L.sc.a * L.La +
       C * (D.R.m : ℝ) * (L.B0 + L.Nc) * L.sc.x ^ (Cabs * L.sc.eps)) :
     WordFacts L C Cabs u := by
-  have hIntegral := hcl.1
-  have hNormMajorants := hcl.2.1
-  have hSlope := hcl.2.2
   refine wordFacts_of L C Cabs u (NuC (wU u)) P.cols.RR eNu eRR hNu.lat hRR.lat
     (P.cols.col.B (wU u)) hBk (htLink P (wU u)) P.cols.muCC (meanLog P.cols.κ) R.hu (2 * FoOfR P) R.rhs
-    ?_ ?_ hSlope tHt tMu tH tFo tR
-  · rw [hNs]; exact hIntegral
-  · exact fun hne => htMap_le_of_bound _ _ _ _ _ hNormMajorants (hPos hne)
+    ?_ ?_ hcl.2.2 tHt tMu tH tFo tR
+  · rw [hNs]; exact hcl.1
+  · exact fun hne => htMap_le_of_bound _ _ _ _ _ hcl.2.1 (hPos hne)
 
 /-- Compatibility wrapper for the full four-clause output. -/
 theorem wordFacts_of_clauses (L : SizeData₂ D) (C Cabs : ℝ) (u : D.what₂.Word) (P : IndefCoreR Df0 Df1 Dc Sp Nn)
@@ -753,10 +744,7 @@ theorem linkDIV_at_words (L : SizeData₂ D) (Z : DivX D) (Csz C Cabs CH : ℝ)
     (hH : Formalism.MainNotions.LocalQuadraticParts.FrameNumberBound D L Z Csz CH) (h11 : Formalism.MainNotions.LocalQuadraticParts.adm11 D L C) (h13 : Formalism.MainNotions.LocalQuadraticParts.adm13 D)
     (hBR : D.BuRational) (hRR : D.RRFull) (hZ : L.ZeroAbove) : LinkDIV_at L C Cabs CH := by
   have hfun : D.div.h = hExpl6 D L Z Csz := funext hh
-  have hIntegral := fun u => (hW u).1
-  have hMapHeight := fun u hu => (hW u).2.1 hu
-  have hSlope := fun u => (hW u).2.2
-  refine ⟨hIntegral, ?_, hZ, ⟨hBR, h13⟩, hRR, hMapHeight, hSlope, ?_, ?_⟩
+  refine ⟨fun u => (hW u).1, ?_, hZ, ⟨hBR, h13⟩, hRR, fun u hu => (hW u).2.1 hu, fun u => (hW u).2.2, ?_, ?_⟩
   · rw [hfun]; exact hH
   · intro u j hj
     have h := (h11 u j hj).1
@@ -980,24 +968,14 @@ structure DivisionPackageFace {D : D7} {L : SizeData₂ D} (Rw : DivisionRowsFac
 
 attribute [instance] DivisionPackageFace.plF DivisionPackageFace.plD
 
-/-- Recover the local valuation estimate from the tied column realization and the
-shifted lattice. The arithmetic norm and slope inputs are not used here. -/
-theorem DivisionPackageFace.val2 {D : D7} {L : SizeData₂ D} {Rw : DivisionRowsFace L} {C Cabs : ℝ} (P : DivisionPackageFace Rw C Cabs)
-    (h2 : Formalism.MainNotions.LocalQuadraticParts.adm2 D L) (hcut : ∀ μ, Formalism.BasicNotions.DV.Used D μ → Formalism.L2.G.ServJoint.CutUp D μ)
-    (hN : Formalism.BasicNotions.DV.NprimeDef D L) (u : D.what₂.Word) (w : HeightOneSpectrum (𝓞 D.what₂.LL)) :
-    ∀ φ ∈ P.Nu u, ∀ F ∈ (Rw.fc P.Pk.Zs).Df1.Mt (P.Pk.core.cols.μ w),
-      (Rw.fc P.Pk.Zs).Dc.Pt (P.wU u) (P.Pk.core.cols.μ w) φ F = 0 ∨
-        sgRec L u w ≤ (vw w ((Rw.fc P.Pk.Zs).Dc.Pt (P.wU u) (P.Pk.core.cols.μ w) φ F) : ℝ) :=
-  Formalism.L2.G.ServJointF.val2AllAtRF D L _ P.brTied hcut h2 u (P.Nu u)
-    (Formalism.L2.G.ServJoint.nu_into L hN u (P.eNu u) (P.NuC (P.wU u)) (P.Nu u) (P.hNu u).lat (P.shift u)) w
-
 theorem DivisionPackageFace.wordFacts {D : D7} {L : SizeData₂ D} {Rw : DivisionRowsFace L} {C Cabs : ℝ} (P : DivisionPackageFace Rw C Cabs)
     (h2 : Formalism.MainNotions.LocalQuadraticParts.adm2 D L) (hcut : ∀ μ, Formalism.BasicNotions.DV.Used D μ → Formalism.L2.G.ServJoint.CutUp D μ)
     (hN : Formalism.BasicNotions.DV.NprimeDef D L) (u : D.what₂.Word) : WordFacts L C Cabs u :=
   wordFacts_of_core_face L C Cabs u P.Pk.core P.wU P.NuC (P.eNu u) P.eRR (P.hNu u) P.hRR (P.hBk u) (P.R u) (P.Nu u) (sgRec L u)
-    (linkDIV_L2R_core_face P.Pk (P.hZs ▸ Rw.wf0) (P.hZs ▸ Rw.wf1) (P.R u) (P.wU u) (P.Nu u) (sgRec L u)
+    (divCoreClausesR_of (P.hZs ▸ Rw.wf0) (P.hZs ▸ Rw.wf1) P.Pk.core (P.R u) (P.wU u) (P.Nu u) (sgRec L u)
       { toDivInputs0R := P.inp u,
-        val2 := P.val2 h2 hcut hN u })
+        val2 := Formalism.L2.G.ServJointF.val2AllAtRF D L _ P.brTied hcut h2 u (P.Nu u)
+          (Formalism.L2.G.ServJoint.nu_into L hN u (P.eNu u) (P.NuC (P.wU u)) (P.Nu u) (P.hNu u).lat (P.shift u)) })
     (P.shift u) (P.hTie u) P.foTie (P.rhs u)
 
 structure BridgeRowsF {eps : ℝ} (Fm : FamP eps) (Rw : Σ' x0 : ℝ, ∀ x, Fm.x1 < x → x0 ≤ x → ∀ i : Fm.Ix x, DivisionRowsFace (Fm.L x i))

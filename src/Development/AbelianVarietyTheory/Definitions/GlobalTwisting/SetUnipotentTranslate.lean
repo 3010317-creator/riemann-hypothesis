@@ -663,10 +663,6 @@ namespace LedPart
 
 variable {C : FC} {D : D7} {Y : Lay D} (p : LedPart C Y)
 
-/-- The explicit numerical height assigned to the transported divisibility data.
-`pt` installs this function via `setDiv`, making the field `h_eq` definitional.
-The arithmetic height and slope bounds are separate obligations of the divisibility
-bridge (`WordFacts`); this assignment does not establish them. -/
 def ht : D.what₂.Word → ℝ := DV.hExpl6 D p.L Y.X C.Csz
 
 def pt : Pt C where

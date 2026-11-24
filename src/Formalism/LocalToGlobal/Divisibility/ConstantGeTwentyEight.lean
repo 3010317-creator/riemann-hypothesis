@@ -96,9 +96,6 @@ def FoOfR (P : IndefCoreR Df0 Df1 Dc Sp N) : ℝ :=
 def boundBR (P : IndefCoreR Df0 Df1 Dc Sp N) (LG E3 : ℝ) (E2 : Bs.J → ℝ) : ℝ :=
   (∑ j, N.l3 j) + 2 * FoOfR P + LG + (∑ j, (N.E1 j + E2 j)) + E3
 
-/-- Arithmetic input data for the local divisibility estimates. In particular, `nP` and
-`nKcb` bound the operator norms along the column chain; the finite-place base-slope estimates and numerical
-error and passage budgets provide independent inputs to the slope estimate. -/
 structure DivInputs0R {Pl : Type} [Fintype Pl] [DecidableEq Pl] (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl)
     (u : Dc.Mem) (Nu : Submodule (𝓞 K) (Fin (Dc.a u) → K)) (sg : HeightOneSpectrum (𝓞 K) → ℝ) where
 
@@ -184,34 +181,24 @@ structure DivInputsR {Pl : Type} [Fintype Pl] [DecidableEq Pl] (P : IndefCoreR D
   val2 : ∀ w, ∀ φ ∈ Nu, ∀ F ∈ Df1.Mt (P.cols.μ w),
     Dc.Pt u (P.cols.μ w) φ F = 0 ∨ sg w ≤ (vw w (Dc.Pt u (P.cols.μ w) φ F) : ℝ)
 
-/-- Integrality of the bilinear map on the shifted lattice. -/
-abbrev DivIntegralR (P : IndefCoreR Df0 Df1 Dc Sp N)
+/-- The three arithmetic clauses used in the per-word bridge. -/
+def DivCoreClausesR {Pl : Type} [Fintype Pl] [DecidableEq Pl] (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl)
     (u : Dc.Mem) (Nu : Submodule (𝓞 K) (Fin (Dc.a u) → K)) (sg : HeightOneSpectrum (𝓞 K) → ℝ) : Prop :=
-  (∀ φ ∈ shiftLat Nu sg, P.cols.col.B u φ ∈ Formalism.HN.dualLat P.cols.RR)
-
-/-- Positive squared-norm majorants with a prescribed logarithmic mean. -/
-abbrev DivNormR {Pl : Type} [Fintype Pl] [DecidableEq Pl] (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl)
-    (u : Dc.Mem) : Prop :=
+  (∀ φ ∈ shiftLat Nu sg, P.cols.col.B u φ ∈ Formalism.HN.dualLat P.cols.RR) ∧
   (∃ cu : InfinitePlace K → ℝ, (∀ v, 0 < cu v ∧
       Formalism.HN.opNormAt (Pi.basisFun K (Fin (Dc.a u))) (Dc.Xc u) (Pi.basisFun K (Fin P.cols.D)).dualBasis
         (Formalism.HN.dualFrame P.cols.XE) v (P.cols.col.B u) ^ 2 ≤ cu v) ∧
-    (1 / (Formalism.HN.nPl K : ℝ)) * ∑ v, Real.log (cu v) = R.hu - meanLog P.cols.κ)
-
-/-- The normalized column slope plus the height budget, minus twice the finite-place sum. -/
-abbrev DivSlopeR {Pl : Type} [Fintype Pl] [DecidableEq Pl] (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl) : Prop :=
+    (1 / (Formalism.HN.nPl K : ℝ)) * ∑ v, Real.log (cu v) = R.hu - meanLog P.cols.κ) ∧
   P.cols.muCC - meanLog P.cols.κ + R.hu - 2 * FoOfR P ≤ R.rhs
 
-/-- The arithmetic clauses consumed by the per-word divisibility bridge.
-The change in degree under the ideal shift is not needed for this interface. -/
-def DivCoreClausesR {Pl : Type} [Fintype Pl] [DecidableEq Pl] (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl)
-    (u : Dc.Mem) (Nu : Submodule (𝓞 K) (Fin (Dc.a u) → K)) (sg : HeightOneSpectrum (𝓞 K) → ℝ) : Prop :=
-  DivIntegralR P u Nu sg ∧ DivNormR P R u ∧ DivSlopeR P R
-
-/-- The local divisibility output also records the change in lattice degree.
-The original right-associated conjunction is retained for existing consumers. -/
 def DivClausesR {Pl : Type} [Fintype Pl] [DecidableEq Pl] (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl)
     (u : Dc.Mem) (Nu : Submodule (𝓞 K) (Fin (Dc.a u) → K)) (sg : HeightOneSpectrum (𝓞 K) → ℝ) : Prop :=
-  DivIntegralR P u Nu sg ∧ DivNormR P R u ∧ DivSlopeR P R ∧
+  (∀ φ ∈ shiftLat Nu sg, P.cols.col.B u φ ∈ Formalism.HN.dualLat P.cols.RR) ∧
+  (∃ cu : InfinitePlace K → ℝ, (∀ v, 0 < cu v ∧
+      Formalism.HN.opNormAt (Pi.basisFun K (Fin (Dc.a u))) (Dc.Xc u) (Pi.basisFun K (Fin P.cols.D)).dualBasis
+        (Formalism.HN.dualFrame P.cols.XE) v (P.cols.col.B u) ^ 2 ≤ cu v) ∧
+    (1 / (Formalism.HN.nPl K : ℝ)) * ∑ v, Real.log (cu v) = R.hu - meanLog P.cols.κ) ∧
+  P.cols.muCC - meanLog P.cols.κ + R.hu - 2 * FoOfR P ≤ R.rhs ∧
   Formalism.HN.muDef (Pi.basisFun K (Fin (Dc.a u))) (Dc.Xc u) (shiftLat Nu sg) =
     Formalism.HN.muDef (Pi.basisFun K (Fin (Dc.a u))) (Dc.Xc u) Nu +
       2 * ∑ᶠ w : HeightOneSpectrum (𝓞 K), lw w * (shiftZ sg w : ℝ)
@@ -277,140 +264,73 @@ theorem height_chain_atR {Df : DefSide Bs} {Dc : DefCols Df} {Sp : SPer Dc} [Non
   rw [e, h4]
   linarith [h2]
 
-/-- Local integrality uses only the lattice, the finite-support ideal shift,
-and the local valuation estimate, in addition to the well-formed core. -/
-theorem divIntegralR_of [_root_.NumberField.IsTotallyComplex K] (wf0 : Df0.WF) (wf1 : Df1.WF)
-    (P : IndefCoreR Df0 Df1 Dc Sp N) (u : Dc.Mem) (Nu : Submodule (𝓞 K) (Fin (Dc.a u) → K))
-    (sg : HeightOneSpectrum (𝓞 K) → ℝ) (hNu : Submodule.IsFullLattice K Nu)
-    (hsg : (Function.support (shiftZ sg)).Finite)
-    (val2 : ∀ w, ∀ φ ∈ Nu, ∀ F ∈ Df1.Mt (P.cols.μ w),
-      Dc.Pt u (P.cols.μ w) φ F = 0 ∨ sg w ≤ (vw w (Dc.Pt u (P.cols.μ w) φ F) : ℝ)) :
-    DivIntegralR P u Nu sg := by
-  have : Nonempty Bs.Ix := nonempty_Ix wf0 P.base.pos
-  have hsh := shiftEx K (Dc.a u) Nu hNu (shiftZ sg) hsg
-  exact P.cols.intoDual divIntoDualShift latticeGlue wf1 u Nu (shiftLat Nu sg) sg (shiftZ sg) val2
-    (fun w => Int.floor_le_ceil _) hsh.1
-
-/-- A zero column map has positive norm majorants with any prescribed logarithmic mean.
-No column-chain, eigenvalue or local valuation bound is needed in this case. -/
-theorem divNormR_of_zero [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype Pl] [DecidableEq Pl] (wf0 : Df0.WF)
-    (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl) (u : Dc.Mem)
-    (hz : P.cols.col.B u = 0) : DivNormR P R u := by
-  have : Nonempty Bs.Ix := nonempty_Ix wf0 P.base.pos
-  have hX := fun v => OperatorNormFrames.opNormAt_nonneg (Pi.basisFun K (Fin (Dc.a u))) (Dc.Xc u) (Pi.basisFun K (Fin P.cols.D)).dualBasis
-    (Formalism.HN.dualFrame P.cols.XE) v (P.cols.col.B u)
-  refine exists_cu _ (fun _ => R.hu - meanLog P.cols.κ) _ hX (fun v => Or.inl ?_) (le_of_eq ?_)
-  · rw [hz]; simp [Formalism.HN.opNormAt]
-  · have hn : (0 : ℝ) < (Fintype.card (InfinitePlace K) : ℝ) := by
-      have : 0 < Fintype.card (InfinitePlace K) := Fintype.card_pos
-      exact_mod_cast this
-    simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
-    field_simp
-
-/-- The nonzero column case needs only the archimedean chain estimates and the
-eigenvalue budget, not the lattice-shift or finite-place slope data. -/
-theorem divNormR_of_nonzero [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype Pl] [DecidableEq Pl] (wf0 : Df0.WF) (wf1 : Df1.WF)
-    (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl) (u : Dc.Mem)
-    (hne : P.cols.col.B u ≠ 0)
-    (X0 : InfinitePlace K → Matrix (Fin (Df1.nV Bs.μ0)) (Fin (Df1.nV Bs.μ0)) ℂ)
-    (hX0 : ∀ v, IsUnit (X0 v).det ∧ ((X0 v)⁻¹).conjTranspose * (X0 v)⁻¹ = (Df1.HV Bs.μ0).map v.embedding)
-    (ch : ColChain Dc u) (hn : HtNums R (InfinitePlace K))
-    (nP : ∀ v, Formalism.HN.opNormAt (Pi.basisFun K (Fin (ch.c (Fin.last ch.mm)))) (ch.X (Fin.last ch.mm))
-      (Pi.basisFun K (Fin (Df1.nV Bs.μ0))).dualBasis (Formalism.HN.dualFrame X0) v ch.PtL ^ 2 ≤ Real.exp hn.hPn)
-    (cb : CBData ch.X ch.Kj)
-    (nKcb : ∀ j v, Real.log (cb.sq j v) ≤ ∑ l ∈ Finset.univ.filter (fun l => ch.lf l = j), hn.sz l v)
-    (eig6 : ∑ j, R.hX j ≤ ∑ j, N.l6 j) : DivNormR P R u := by
-  have : Nonempty Bs.Ix := nonempty_Ix wf0 P.base.pos
-  have hX := fun v => OperatorNormFrames.opNormAt_nonneg (Pi.basisFun K (Fin (Dc.a u))) (Dc.Xc u) (Pi.basisFun K (Fin P.cols.D)).dualBasis
-    (Formalism.HN.dualFrame P.cols.XE) v (P.cols.col.B u)
-  have nK := nK_of_cb cb (fun j v => ∑ l ∈ Finset.univ.filter (fun l => ch.lf l = j), hn.sz l v) nKcb
-  obtain ⟨Hv, Hm⟩ := height_chain_atR wf1 P.cols u hne X0 hX0 ch hn.hPn hn.sz nP nK
-  have h1 := hn.le_hu (∑ j, N.l6 j) eig6
-  refine exists_cu _ (fun v => hn.hPn + ∑ j, ∑ l ∈ Finset.univ.filter (fun l => ch.lf l = j), hn.sz l v -
-    Real.log (P.cols.κ v) - minOver (fun p => ∑ j, Real.log (P.cols.lam j Bs.μ0 p v))) _ hX (fun v => Or.inr (Hv v)) ?_
-  linarith [Hm, h1]
-
-/-- The norm majorants use the arithmetic input before the local valuation estimate
-is adjoined. The zero-map case and the nonzero-map height argument remain distinct. -/
-theorem divNormR_of [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype Pl] [DecidableEq Pl] (wf0 : Df0.WF) (wf1 : Df1.WF)
-    (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl) (u : Dc.Mem) (Nu : Submodule (𝓞 K) (Fin (Dc.a u) → K))
-    (sg : HeightOneSpectrum (𝓞 K) → ℝ) (I : DivInputs0R P R u Nu sg) : DivNormR P R u := by
-  by_cases hne : P.cols.col.B u = 0
-  · exact divNormR_of_zero wf0 P R u hne
-  · exact divNormR_of_nonzero wf0 wf1 P R u hne I.X0 I.base_matrix_det_unit I.ch I.hn I.nP I.cb I.nKcb I.eig6
-
-/-- Once the normalized base slope is bounded, only the numerical error and
-passage budgets are needed for the final slope inequality. -/
-theorem divSlopeR_of_base_bound [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype Pl] [DecidableEq Pl]
-    (wf0 : Df0.WF) (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl)
-    (LG E3 El3 Q : ℝ) (E2 : Bs.J → ℝ)
-    (hbase : P.base.muCC - meanLog P.base.κ ≤ boundBR P LG E3 E2)
-    (hL3 : ∑ j, N.l3 j ≤ (∑ j, ∑ ρ, R.pq j * R.w j ρ * R.logOm) + El3)
-    (herr : El3 + LG + (∑ j, (N.E1 j + E2 j)) + E3 ≤ R.errB)
-    (hde0 : 0 ≤ N.de) (hdeQ : 3 * N.de * Q ≤ 1) (hQ1 : 1 ≤ Q)
-    (hQb : boundBR P LG E3 E2 + N.hh + 28 * N.la ≤ Q)
-    (hla : N.la ≤ R.lam0) (h28 : 28 ≤ R.C0) : DivSlopeR P R := by
-  have : Nonempty Bs.Ix := nonempty_Ix wf0 P.base.pos
-  have de0 : 0 ≤ N.de := hde0
-  have deQ : 3 * N.de * Q ≤ 1 := hdeQ
-  have de3 : N.de ≤ 1 / 3 := by nlinarith [hQ1]
-  have hp := (P.extra.passage de0 de3 _ P.extra.fun0).2
-  have hκ : P.cols.κ = P.base.κ := P.extra.level.2.1.symm
-  set mu0 : ℝ := P.base.muCC - meanLog P.base.κ with hmu0def
-  have hmu0 : mu0 ≤ boundBR P LG E3 E2 := by
-    simpa only [hmu0def] using hbase
-  have hpass : 3 * N.de * (mu0 + N.hh + 28 * N.la) + 28 * N.la ≤ 1 + R.C0 * (R.m * R.lam0) := by
-    have h1 : 3 * N.de * (mu0 + N.hh + 28 * N.la) ≤ 3 * N.de * Q :=
-      mul_le_mul_of_nonneg_left (by linarith [hQb]) (by linarith)
-    have h2 : 28 * R.lam0 ≤ R.C0 * (R.m * R.lam0) := by
-      have h3 : R.lam0 ≤ R.m * R.lam0 := by nlinarith [R.p14, R.p35]
-      nlinarith [h28, R.p35, R.c1]
-    linarith [hla]
-  have hC : P.cols.muCC - meanLog P.cols.κ ≤ mu0 + (3 * N.de * (mu0 + N.hh + 28 * N.la) + 28 * N.la) := by
-    rw [hκ, hmu0def]
-    have : P.cols.muCC ≤ P.base.muCC + 3 * N.de * (P.base.muCC + (N.hh - meanLog P.base.κ) + 28 * N.la) +
-        28 * N.la := hp
-    have e : P.base.muCC + (N.hh - meanLog P.base.κ) + 28 * N.la =
-        P.base.muCC - meanLog P.base.κ + N.hh + 28 * N.la := by ring
-    rw [e] at this
-    linarith
-  have hM : mu0 ≤ (∑ j, ∑ ρ, R.pq j * R.w j ρ * R.logOm) + 2 * FoOfR P +
-      (El3 + LG + (∑ j, (N.E1 j + E2 j)) + E3) := by
-    have h1 := hL3
-    have h2 : boundBR P LG E3 E2 = (∑ j, N.l3 j) + 2 * FoOfR P + LG + (∑ j, (N.E1 j + E2 j)) + E3 := rfl
-    linarith
-  exact R.divIneq _ mu0 (FoOfR P) _ _ hC hM hpass herr
-
-/-- Bound the normalized base slope using the local bases, valuation estimates
-and error sums, then apply the numerical passage estimate. -/
-theorem divSlopeR_of [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype Pl] [DecidableEq Pl] (wf0 : Df0.WF)
-    (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl) (u : Dc.Mem) (Nu : Submodule (𝓞 K) (Fin (Dc.a u) → K))
-    (sg : HeightOneSpectrum (𝓞 K) → ℝ) (I : DivInputs0R P R u Nu sg) : DivSlopeR P R := by
-  have : Nonempty Bs.Ix := nonempty_Ix wf0 P.base.pos
-  have hB := P.base.boundsMu _root_.Formalism.DivisorInequality.slope_bounds specDet reduction_lemma_zero latticeGlue ramBasic wf0 P.extra.untw I.eb I.heb
-    I.Sy I.Sy_tw I.G0 I.LG I.E3 I.E2 I.gy I.ηy I.bi I.bLG I.biv I.borderedMinorImage I.twisted_third_sum_le
-  have hbase : P.base.muCC - meanLog P.base.κ ≤ boundBR P I.LG I.E3 I.E2 := by
-    have : P.base.muCC ≤ meanLog P.base.κ + (∑ j, N.l3 j) +
-        2 * (∑ j, ∑ y ∈ P.base.Tw, lw y * ((ramw y : ℝ) * N.F0 y j)) + I.LG +
-        (∑ j, (N.E1 j + I.E2 j)) + I.E3 := hB
-    simp only [boundBR, FoOfR]
-    linarith
-  exact divSlopeR_of_base_bound wf0 P R I.LG I.E3 I.El3 I.Q I.E2 hbase I.L3main I.errB
-    I.de0 I.deQ I.Q1 I.Qb I.la_le I.constant_ge_twenty_eight
-
-/-- Assemble the three arithmetic clauses consumed by the per-word bridge.
-Only the integrality clause needs the additional valuation estimate in `DivInputsR`. -/
 theorem divCoreClausesR_of [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype Pl] [DecidableEq Pl] (wf0 : Df0.WF) (wf1 : Df1.WF)
     (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl) (u : Dc.Mem) (Nu : Submodule (𝓞 K) (Fin (Dc.a u) → K))
-    (sg : HeightOneSpectrum (𝓞 K) → ℝ) (I : DivInputsR P R u Nu sg) : DivCoreClausesR P R u Nu sg :=
-  ⟨divIntegralR_of wf0 wf1 P u Nu sg I.Nu_lat I.sg_fin I.val2,
-    divNormR_of wf0 wf1 P R u Nu sg I.toDivInputs0R,
-    divSlopeR_of wf0 P R u Nu sg I.toDivInputs0R⟩
+    (sg : HeightOneSpectrum (𝓞 K) → ℝ) (I : DivInputsR P R u Nu sg) : DivCoreClausesR P R u Nu sg := by
+  have : Nonempty Bs.Ix := nonempty_Ix wf0 P.base.pos
+  have hsh := shiftEx K (Dc.a u) Nu I.Nu_lat (shiftZ sg) I.sg_fin
+  refine ⟨?_, ?_, ?_⟩
+  ·
+    exact P.cols.intoDual divIntoDualShift latticeGlue wf1 u Nu (shiftLat Nu sg) sg (shiftZ sg) I.val2
+      (fun w => Int.floor_le_ceil _) hsh.1
+  ·
+    have hX := fun v => OperatorNormFrames.opNormAt_nonneg (Pi.basisFun K (Fin (Dc.a u))) (Dc.Xc u) (Pi.basisFun K (Fin P.cols.D)).dualBasis
+      (Formalism.HN.dualFrame P.cols.XE) v (P.cols.col.B u)
+    by_cases hne : P.cols.col.B u = 0
+    · refine exists_cu _ (fun _ => R.hu - meanLog P.cols.κ) _ hX (fun v => Or.inl ?_) (le_of_eq ?_)
+      · rw [hne]; simp [Formalism.HN.opNormAt]
+      · have hn : (0 : ℝ) < (Fintype.card (InfinitePlace K) : ℝ) := by
+          have : 0 < Fintype.card (InfinitePlace K) := Fintype.card_pos
+          exact_mod_cast this
+        simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
+        field_simp
+    · have nK := nK_of_cb I.cb (fun j v => ∑ l ∈ Finset.univ.filter (fun l => I.ch.lf l = j), I.hn.sz l v) I.nKcb
+      obtain ⟨Hv, Hm⟩ := height_chain_atR wf1 P.cols u hne I.X0 I.base_matrix_det_unit I.ch I.hn.hPn I.hn.sz I.nP nK
+      have h1 := I.hn.le_hu (∑ j, N.l6 j) I.eig6
+      refine exists_cu _ (fun v => I.hn.hPn + ∑ j, ∑ l ∈ Finset.univ.filter (fun l => I.ch.lf l = j), I.hn.sz l v -
+        Real.log (P.cols.κ v) - minOver (fun p => ∑ j, Real.log (P.cols.lam j Bs.μ0 p v))) _ hX (fun v => Or.inr (Hv v)) ?_
+      linarith [Hm, h1]
+  ·
+    have hB := P.base.boundsMu _root_.Formalism.DivisorInequality.slope_bounds specDet reduction_lemma_zero latticeGlue ramBasic wf0 P.extra.untw I.eb I.heb
+      I.Sy I.Sy_tw I.G0 I.LG I.E3 I.E2 I.gy I.ηy I.bi I.bLG I.biv I.borderedMinorImage I.twisted_third_sum_le
+    have de0 : 0 ≤ N.de := I.de0
+    have deQ : 3 * N.de * I.Q ≤ 1 := I.deQ
+    have de3 : N.de ≤ 1 / 3 := by nlinarith [I.Q1]
+    have hp := (P.extra.passage de0 de3 _ P.extra.fun0).2
+    have hκ : P.cols.κ = P.base.κ := P.extra.level.2.1.symm
+    set mu0 : ℝ := P.base.muCC - meanLog P.base.κ with hmu0def
+    have hmu0 : mu0 ≤ boundBR P I.LG I.E3 I.E2 := by
+      have : P.base.muCC ≤ meanLog P.base.κ + (∑ j, N.l3 j) +
+          2 * (∑ j, ∑ y ∈ P.base.Tw, lw y * ((ramw y : ℝ) * N.F0 y j)) + I.LG +
+          (∑ j, (N.E1 j + I.E2 j)) + I.E3 := hB
+      simp only [boundBR, FoOfR, hmu0def]
+      linarith
+    have hpass : 3 * N.de * (mu0 + N.hh + 28 * N.la) + 28 * N.la ≤ 1 + R.C0 * (R.m * R.lam0) := by
+      have h1 : 3 * N.de * (mu0 + N.hh + 28 * N.la) ≤ 3 * N.de * I.Q :=
+        mul_le_mul_of_nonneg_left (by linarith [I.Qb]) (by linarith)
+      have h2 : 28 * R.lam0 ≤ R.C0 * (R.m * R.lam0) := by
+        have h3 : R.lam0 ≤ R.m * R.lam0 := by nlinarith [R.p14, R.p35]
+        nlinarith [I.constant_ge_twenty_eight, R.p35, R.c1]
+      linarith [I.la_le]
+    have hC : P.cols.muCC - meanLog P.cols.κ ≤ mu0 + (3 * N.de * (mu0 + N.hh + 28 * N.la) + 28 * N.la) := by
+      rw [hκ, hmu0def]
+      have : P.cols.muCC ≤ P.base.muCC + 3 * N.de * (P.base.muCC + (N.hh - meanLog P.base.κ) + 28 * N.la) +
+          28 * N.la := hp
+      have e : P.base.muCC + (N.hh - meanLog P.base.κ) + 28 * N.la =
+          P.base.muCC - meanLog P.base.κ + N.hh + 28 * N.la := by ring
+      rw [e] at this
+      linarith
+    have hM : mu0 ≤ (∑ j, ∑ ρ, R.pq j * R.w j ρ * R.logOm) + 2 * FoOfR P +
+        (I.El3 + I.LG + (∑ j, (N.E1 j + I.E2 j)) + I.E3) := by
+      have h1 := I.L3main
+      have h2 : boundBR P I.LG I.E3 I.E2 = (∑ j, N.l3 j) + 2 * FoOfR P + I.LG + (∑ j, (N.E1 j + I.E2 j)) + I.E3 := rfl
+      linarith
+    exact R.divIneq _ mu0 (FoOfR P) _ _ hC hM hpass I.errB
 
-/-- Extend the three arithmetic clauses by the separate change-of-degree formula. -/
 theorem divClausesR_of [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype Pl] [DecidableEq Pl] (wf0 : Df0.WF) (wf1 : Df1.WF)
     (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl) (u : Dc.Mem) (Nu : Submodule (𝓞 K) (Fin (Dc.a u) → K))
     (sg : HeightOneSpectrum (𝓞 K) → ℝ) (I : DivInputsR P R u Nu sg) : DivClausesR P R u Nu sg := by
+  have : Nonempty Bs.Ix := nonempty_Ix wf0 P.base.pos
   obtain ⟨hIntegral, hNorm, hSlope⟩ := divCoreClausesR_of wf0 wf1 P R u Nu sg I
   have hsh := shiftEx K (Dc.a u) Nu I.Nu_lat (shiftZ sg) I.sg_fin
   exact ⟨hIntegral, hNorm, hSlope,
