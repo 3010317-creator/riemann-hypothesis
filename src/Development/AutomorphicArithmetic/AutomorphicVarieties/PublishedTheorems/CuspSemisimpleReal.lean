@@ -51,6 +51,11 @@ open scoped Matrix TensorProduct
 
 namespace UpperTheory.V.Published
 
+/-- **Eichler's theorem on quaternion algebras**: a quaternion algebra over a number field is
+uniquely determined up to isomorphism by its ramification set of even cardinality.
+
+Proposed reference:
+[M. Eichler, *Allgemeine Kongruenzklasseneinteilungen der Ideale einfacher Algebren*][eichler1938quaternion]. -/
 def DefQuatExists : Prop :=
   ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F], Even (Module.finrank ℚ F) → Nonempty (DefQuat F)
 
