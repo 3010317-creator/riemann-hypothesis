@@ -450,15 +450,6 @@ structure Pend where
 
   gP : D.what₂.places.Pl → (D.fm u).clsP → D.what₂.Tau → GL (Fin (D.R.N D.R.m - 1)) ℂ
 
-  ipV_co : ∀ w c, ∀ φ ∈ (D.fm u).Fi D.R.m, ((D.fm u).ipV D.R.m ((D.fm u).til c) (φ ((D.fm u).til c)) (φ ((D.fm u).til c))).re =
-    (nfAll ((D.fm u).lam D.R.m)
-      (blk (fun τ => sqAct ℂ _ (lamTr D u τ) (gFull D u (gP w c τ))) (coM w c (φ ((D.fm u).til c))))
-      (blk (fun τ => sqAct ℂ _ (lamTr D u τ) (gFull D u (gP w c τ))) (coM w c (φ ((D.fm u).til c))))).re
-
-  re_petersson_self_eq_sum_coord : ∀ w, ∀ z ∈ (D.fm u).ptC, ((D.fm u).ipP z z).re = ∑ c, ((Nat.card ((D.fm u).stabilizer₂ c) : ℝ))⁻¹ *
-    (nfAll (D.fm u).sg (blk (fun τ => sqAct ℂ _ (sgTr D u τ) (gP w c τ)) (coP w z c))
-      (blk (fun τ => sqAct ℂ _ (sgTr D u τ) (gP w c τ)) (coP w z c))).re
-
   beOn_eq : ∀ τ, (D.fm u).beOn τ = opNorm D u τ (br τ)
 
   interlace : (D.fm u).SgInterlace
