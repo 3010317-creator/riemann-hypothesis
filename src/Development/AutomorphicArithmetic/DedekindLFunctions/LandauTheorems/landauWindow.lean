@@ -998,7 +998,7 @@ theorem landau_window_contra {c d e E M C : ℝ} (hc : 0 < c) (hd : 0 < d) (hde 
   linarith
 
 theorem landau_window_key {g : ℝ → ℝ} {Φ : ℂ → ℂ} {Z : Set ℂ} (hP : PoleData g Φ Z) {θ δ : ℝ}
-    (hθ : 0 < θ) (hθ1 : θ < 1) (hδ : 0 < δ) (hW : WindowHypU g θ δ) :
+    (hθ : 0 < θ) (hθ2 : θ < 2) (hδ : 0 < δ) (hW : WindowHypU g θ δ) :
     ∃ σ : ℝ, 2 < σ ∧ ∃ C : ℝ, ∀ η : ℝ, 0 < η → ∀ U₀ : ℝ, ∃ U : ℝ, U₀ ≤ U ∧ ∃ k : ℕ, U ≤ k ∧ ∀ γ : ℝ,
       ‖(-1) ^ k * iteratedDeriv k Φ ((σ : ℂ) + γ * I) / (k.factorial : ℂ)‖ +
         ((-1) ^ k * iteratedDeriv k Φ (σ : ℂ) / (k.factorial : ℂ)).re ≤
@@ -1040,20 +1040,12 @@ theorem landau_window_re_pos {z w : ℂ} {r : ℝ} (hr : r ≤ z.re) (hw : w ∈
   simp only [Complex.sub_re] at h3
   linarith
 
-/-- A criterion of Landau type on windows: under the pole data `hP : PoleData g Φ Z` and the window
-hypothesis `hW`, every `ρ ∈ Z` has real part at most `θ`.
-
-The classical theorem behind it is
-[E. Landau, *Über einen Satz von Tschebyschef* (§2, Satz)][landau1905]: a Dirichlet series whose
-coefficients are eventually positive has a singularity at the real point of its line of
-convergence. Landau's theorem does not state this lemma, which asks for an upper bound on windows
-only. This reference is a reader's proposal and has not been checked by a mathematician. -/
-theorem landau_window {g : ℝ → ℝ} {Φ : ℂ → ℂ} {Z : Set ℂ} (hP : PoleData g Φ Z) {θ δ : ℝ}
-    (hθ : 0 < θ) (hθ1 : θ < 1) (hδ : 0 < δ) (hW : WindowHypU g θ δ) : ∀ ρ ∈ Z, ρ.re ≤ θ := by
+private theorem landau_window_of_pos_lt_two {g : ℝ → ℝ} {Φ : ℂ → ℂ} {Z : Set ℂ} (hP : PoleData g Φ Z) {θ δ : ℝ}
+    (hθ : 0 < θ) (hθ2 : θ < 2) (hδ : 0 < δ) (hW : WindowHypU g θ δ) : ∀ ρ ∈ Z, ρ.re ≤ θ := by
   intro ρ₀ h₀
   by_contra hρ₀
   rw [not_le] at hρ₀
-  obtain ⟨σ, hσ, C, hkey⟩ := landau_window_key hP hθ hθ1 hδ hW
+  obtain ⟨σ, hσ, C, hkey⟩ := landau_window_key hP hθ hθ2 hδ hW
   have hle : ∀ ρ ∈ Z, ρ.re < σ := fun ρ hρ => (landau_pole_re_le hP ρ hρ).trans_lt hσ
   rcases landau_dichotomy hP.iso hle hθ (by linarith) h₀ hρ₀ with
     ⟨D, hD, hfree, ρ₁, h₁, hρ₁⟩ | ⟨β, hβZ, hβ, r, hr1, hr2, huniq⟩
@@ -1132,6 +1124,48 @@ theorem landau_window {g : ℝ → ℝ} {Φ : ℂ → ℂ} {Z : Set ℂ} (hP : P
     rw [Complex.sub_re, h4] at h6
     have h7 := norm_nonneg ((-1) ^ k * iteratedDeriv k Φ ((σ : ℂ) + (0 : ℝ) * I) / (k.factorial : ℂ))
     linarith
+
+private theorem WindowHypU.mono {g : ℝ → ℝ} {θ θ' δ : ℝ} (hW : WindowHypU g θ δ) (hθ : θ ≤ θ') :
+    WindowHypU g θ' δ := by
+  intro η hη U₀
+  obtain ⟨U, hU, R, hRint, hRle, hRbound⟩ := hW η hη (max U₀ 0)
+  have hweight (u : ℝ) : R u * Real.exp ((θ' - θ) * u) * Real.exp (-θ' * u) =
+      R u * Real.exp (-θ * u) := by
+    rw [mul_assoc, ← Real.exp_add]
+    ring_nf
+  refine ⟨U, (le_max_left _ _).trans hU, fun u => R u * Real.exp ((θ' - θ) * u),
+    ?_, ?_, ?_⟩
+  · simpa only [hweight] using hRint
+  · intro u hu
+    have hu0 : 0 ≤ u := (le_max_right U₀ 0).trans (hU.trans hu.1)
+    have hfac := Real.one_le_exp (mul_nonneg (sub_nonneg.mpr hθ) hu0)
+    have hr := le_mul_of_one_le_right (hRle u hu).1 hfac
+    exact ⟨(hRle u hu).1.trans hr, (hRle u hu).2.trans hr⟩
+  · simpa only [hweight] using hRbound
+
+/-- A criterion of Landau type on windows: under the pole data `hP : PoleData g Φ Z` and the window
+hypothesis `hW`, every `ρ ∈ Z` has real part at most `θ`.
+
+The classical theorem behind it is
+[E. Landau, *Über einen Satz von Tschebyschef* (§2, Satz)][landau1905]: a Dirichlet series whose
+coefficients are eventually positive has a singularity at the real point of its line of
+convergence. Landau's theorem does not state this lemma, which asks for an upper bound on windows
+only. This reference is a reader's proposal and has not been checked by a mathematician. -/
+theorem landau_window {g : ℝ → ℝ} {Φ : ℂ → ℂ} {Z : Set ℂ}
+    (hP : PoleData g Φ Z) {θ δ : ℝ} (hδ : 0 < δ) (hW : WindowHypU g θ δ) :
+    ∀ ρ ∈ Z, ρ.re ≤ θ := by
+  intro ρ hρ
+  by_cases hhigh : 2 ≤ θ
+  · exact (landau_pole_re_le hP ρ hρ).trans hhigh
+  by_cases hpos : 0 < θ
+  · exact landau_window_of_pos_lt_two hP hpos (lt_of_not_ge hhigh) hδ hW ρ hρ
+  have hρpos := hP.pos ρ hρ
+  let t := min 1 (ρ.re / 2)
+  have htpos : 0 < t := lt_min (by norm_num) (by linarith)
+  have ht2 : t < 2 := (min_le_left _ _).trans_lt (by norm_num)
+  have hWt := WindowHypU.mono hW ((le_of_not_gt hpos).trans htpos.le)
+  have hρθ := landau_window_of_pos_lt_two hP htpos ht2 hδ hWt ρ hρ
+  exact False.elim (not_lt_of_ge hρθ ((min_le_right _ _).trans_lt (by linarith)))
 
 end Deduction
 
