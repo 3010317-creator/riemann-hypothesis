@@ -14,14 +14,18 @@ or `theorem N : T := X`.  For each wrapper this script
 * in every module importing the wrapper, rewrites references to `N` as `_root_.X'` (keeping a
   leading `@`), where `X'` is the final target;
 * replaces the importer's `import W` by W's own imports plus the module declaring `X'`
-  (all reachable from the importer before, so no cycle can appear), with the same modifier;
+  (all reachable from the importer before, so no cycle can appear), with the same modifier,
+  at the same place in the header;
 * deletes the wrapper file.
 
 Wrappers are kept when `N` and `X` do not take the same sequence of explicit, implicit,
 strict-implicit and instance arguments (parsed from their source by lean_signature.py; anything
-it cannot parse counts as a mismatch), when the wrapper file declares `variable`s, when `X` does
-not resolve to exactly one project declaration, when a caller
-mentions `N` in a way that might not be a reference (field notation, a local declaration of
+it cannot parse counts as a mismatch), when the wrapper file has any column-0 line other than the
+theorem and scaffolding (`open`, `namespace`, `section`, `set_option`, `attribute [local instance]`
+and the like), when the wrapper file declares `variable`s, when `X` does
+not resolve to exactly one project declaration, when a module that does not import the wrapper
+directly names `N` (only direct importers are rewritten), when a caller
+mentions `N` in a way that might not be a reference (field notation such as `N.f`, a local declaration of
 the same short name, a possible string literal), when the wrapper is imported by a protected module, or when they are
 listed in `scripts/collapse-wrappers-exclude.txt` (e.g. because a caller failed to compile).
 This is not reversible by a script.
@@ -55,8 +59,11 @@ ID_REST = ID_LETTERS + r"0-9'!?\u2080-\u2089\u2090-\u209c\u1d62-\u1d6a\u2c7c"
 ID_COMPONENT = rf"(?:«[^»]*»|[{ID_LETTERS}][{ID_REST}]*)"
 IDENT_RE = re.compile(rf"(@?)({ID_COMPONENT}(?:\.{ID_COMPONENT})*)")
 PROTECTED = {"Main", "Statements", "Challenge"}
+# Column-0 lines a wrapper file may have besides its theorem. A local instance only affects how
+# the wrapper's own statement elaborates; callers never see it.
 ALLOWED_OTHER = re.compile(
-    r"^(?:open\b|namespace\b|end\b|section\b|noncomputable\s+section|@\[expose\]|public\s+section|set_option\b|universe\b|variable\b|--|/-|-/)")
+    r"^(?:open\b|namespace\b|end\b|section\b|noncomputable\s+section|@\[expose\]|public\s+section|set_option\b|universe\b|variable\b|--|/-|-/"
+    r"|attribute\s+\[local\s+instance(?:\s+\d+)?\]\s)")
 
 
 def contexts(body):
@@ -199,9 +206,31 @@ def main():
             x = wrappers[name_to_mod[x]][1]
         return x
 
+    # Only direct importers are rewritten below, but a module that imports a wrapper through
+    # another module can name `N` too (also as `N.f`). Keep every wrapper named outside its
+    # direct importers.
+    wrapper_of_last = collections.defaultdict(list)
+    for m, (n, _) in wrappers.items():
+        wrapper_of_last[n.rsplit(".", 1)[-1]].append(m)
+    direct = {m: set(rev[m]) for m in wrappers}
+    indirect = set()
+    for c, mod in mods.items():
+        for mt in IDENT_RE.finditer(mod.body):
+            t = mt.group(2)
+            parts = (t[len("_root_."):] if t.startswith("_root_.") else t).split(".")
+            for i in range(1, len(parts) + 1):
+                p = ".".join(parts[:i])
+                for m in wrapper_of_last.get(parts[i - 1], ()):
+                    n = wrappers[m][0]
+                    if c != m and c not in direct[m] and (n == p or n.endswith("." + p)):
+                        indirect.add(m)
+
     # Check every caller; drop wrappers with any doubtful use.
     plan = {}
     for m, (n, x) in wrappers.items():
+        if m in indirect:
+            stats["indirect-caller"] += 1
+            continue
         last = n.rsplit(".", 1)[-1]
         ok = True
         for c in rev[m]:
@@ -211,7 +240,10 @@ def main():
             # Every string literal lies between the first and last double quote.
             # Keep doubtful uses, including raw/interpolated strings, rather than
             # rewrite their contents. This may also retain a use between strings.
-            if '"' in body and last in body[body.index('"'):body.rindex('"') + 1]:
+            # The JSON in clump.py's `-- clump-header:` comments is not a string
+            # literal, and would otherwise put almost all of a clump between quotes.
+            code = "\n".join(l for l in body.split("\n") if not l.startswith(clump.HEADER_TAG))
+            if '"' in code and last in code[code.index('"'):code.rindex('"') + 1]:
                 ok = False
                 break
             if any(d.rsplit(".", 1)[-1] == last for d in mods[c].decls):
@@ -221,6 +253,9 @@ def main():
                 t = mt.group(2)
                 if "«" in t and last in t:
                     ok = False  # the source name index does not resolve escaped components
+                    break
+                if last in t.split(".")[:-1]:
+                    ok = False  # `N.f` (field notation on N): the rewrite below only replaces whole names
                     break
                 if t.rsplit(".", 1)[-1] != last:
                     continue
@@ -294,9 +329,9 @@ def main():
                         keep[y] = keep.get(y, False) or pub
             else:
                 keep[x] = keep.get(x, False) or pub
-        header = ["module", ""]
-        header += ["public import " + x for x, p in keep.items() if p]
-        header += ["import " + x for x, p in keep.items() if not p]
+        # Keep the caller's import order: Lean tries instances of equal priority in an order that
+        # depends on it, and a reordered header can make instance search time out.
+        header = ["module", ""] + [("public import " if p else "import ") + x for x, p in keep.items()]
         text = "\n".join(header) + "\n\n" + body
         with open(os.path.join(root, mod.path), "w", encoding="utf-8") as f:
             f.write(text)
