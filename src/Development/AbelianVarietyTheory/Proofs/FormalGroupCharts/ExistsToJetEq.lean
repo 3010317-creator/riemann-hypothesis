@@ -354,10 +354,19 @@ theorem exists_toJet_eq (p : ∀ m, JetR R κ m) (hp : ∀ m, jetTruncR R κ m (
   exact ⟨g, fun m => (finiteVariableJetAlgEquiv_apply g m).symm.trans
     (congrArg (fun p : compatibleJetSubalgebra R κ => p.val m) hg)⟩
 
+private def jetSubstitutionAt {σ : Type} (a : σ → MvPowerSeries κ R)
+    (ha : ∀ j, constantCoeff (a j) = 0) (m : ℕ) : JetR R σ m →ₐ[R] JetR R κ m :=
+  jetLift R (RingHom.ker (jetAug R κ m)) (ker_jetAug_pow κ m) (fun j => toJet m (a j))
+    (fun j => (jetAug_toJet m (a j)).trans (ha j))
+
+private theorem jetSubstitutionAt_zR {σ : Type} (a : σ → MvPowerSeries κ R)
+    (ha : ∀ j, constantCoeff (a j) = 0) (m : ℕ) (j : σ) :
+    jetSubstitutionAt a ha m (zR m j) = toJet m (a j) :=
+  jetLift_zR _ _ _ _ j
+
 theorem exists_jetHom {σ : Type} (a : σ → MvPowerSeries κ R) (ha : ∀ j, constantCoeff (a j) = 0) (m : ℕ) :
     ∃ ψ : JetR R σ m →ₐ[R] JetR R κ m, ∀ j, ψ (zR m j) = toJet m (a j) :=
-  ⟨jetLift R (RingHom.ker (jetAug R κ m)) (ker_jetAug_pow κ m) (fun j => toJet m (a j))
-    (fun j => (jetAug_toJet m (a j)).trans (ha j)), fun j => jetLift_zR _ _ _ _ j⟩
+  ⟨jetSubstitutionAt a ha m, jetSubstitutionAt_zR a ha m⟩
 
 theorem jetHom_toJet {σ : Type} [Finite σ] (a : σ → MvPowerSeries κ R) (ha : ∀ j, constantCoeff (a j) = 0) (m : ℕ)
     (ψ : JetR R σ m →ₐ[R] JetR R κ m) (hψ : ∀ j, ψ (zR m j) = toJet m (a j)) (g : MvPowerSeries σ R) :
@@ -383,6 +392,112 @@ theorem jetHom_toJet {σ : Type} [Finite σ] (a : σ → MvPowerSeries κ R) (ha
       _ ≤ _ := mul_le_mul' h1 hro
   have h3 : coeff e (subst a r) = 0 := coeff_of_lt_order (lt_of_lt_of_le (by exact_mod_cast he) h2)
   rwa [hr, ← substAlgHom_apply hs, map_sub, map_sub, sub_eq_zero, substAlgHom_apply, substAlgHom_apply] at h3
+
+/-- Maps of finite jet rings that commute with the transition maps. -/
+abbrev CompatibleJetMaps (R σ κ : Type) [CommRing R] :=
+  {ψ : ∀ m, JetR R σ m →ₐ[R] JetR R κ m //
+    ∀ m, (jetTruncR R κ m).comp (ψ (m + 1)) = (ψ m).comp (jetTruncR R σ m)}
+
+private def compatibleJetMap {σ : Type} (ψ : CompatibleJetMaps R σ κ) :
+    compatibleJetSubalgebra R σ →ₐ[R] compatibleJetSubalgebra R κ :=
+  (AlgHom.pi fun m => (ψ.val m).comp
+    ((Pi.evalAlgHom R (fun n => JetR R σ n) m).comp (compatibleJetSubalgebra R σ).val)).codRestrict _
+    (fun p m => (AlgHom.congr_fun (ψ.property m) (p.val (m + 1))).trans
+      (congrArg (ψ.val m) (p.property m)))
+
+/-- A compatible family of jet maps induces a single map of power-series algebras. -/
+@[no_expose]
+def compatibleJetSeriesHom {σ : Type} [Finite σ] (ψ : CompatibleJetMaps R σ κ) :
+    MvPowerSeries σ R →ₐ[R] MvPowerSeries κ R :=
+  (finiteVariableJetAlgEquiv R κ).symm.toAlgHom.comp
+    ((compatibleJetMap ψ).comp (finiteVariableJetAlgEquiv R σ).toAlgHom)
+
+theorem toJet_compatibleJetSeriesHom {σ : Type} [Finite σ] (ψ : CompatibleJetMaps R σ κ)
+    (m : ℕ) (g : MvPowerSeries σ R) :
+    toJet m (compatibleJetSeriesHom ψ g) = ψ.val m (toJet m g) := by
+  rw [← finiteVariableJetAlgEquiv_apply]
+  change (finiteVariableJetAlgEquiv R κ
+    ((finiteVariableJetAlgEquiv R κ).symm (compatibleJetMap ψ (finiteVariableJetAlgEquiv R σ g)))).val m = _
+  rw [AlgEquiv.apply_symm_apply]
+  exact congrArg (ψ.val m) (finiteVariableJetAlgEquiv_apply g m)
+
+omit [Finite κ] in
+/-- Every compatible family of jet maps preserves the augmentation to the base ring. -/
+theorem compatibleJetMaps_comp_aug {σ : Type} (ψ : CompatibleJetMaps R σ κ) (m : ℕ) :
+    (jetAug R κ m).comp (ψ.val m) = jetAug R σ m := by
+  have htr (ι : Type) (i : ℕ) :
+      (jetAug R ι i).comp (jetTruncR R ι i) = jetAug R ι (i + 1) :=
+    jet_ext fun j => (jetAug_zR i j).trans (jetAug_zR (i + 1) j).symm
+  induction m with
+  | zero =>
+    apply jet_ext
+    intro j
+    have hz : zR (R := R) 0 j = 0 :=
+      Ideal.Quotient.eq_zero_iff_mem.2 (by rw [pow_one]; exact Ideal.subset_span ⟨j, rfl⟩)
+    simp only [hz, map_zero]
+  | succ m ih =>
+    calc
+      _ = ((jetAug R κ m).comp (jetTruncR R κ m)).comp (ψ.val (m + 1)) := by rw [htr]
+      _ = ((jetAug R κ m).comp (ψ.val m)).comp (jetTruncR R σ m) := by
+        rw [AlgHom.comp_assoc, ψ.property m, ← AlgHom.comp_assoc]
+      _ = _ := by rw [ih, htr]
+
+private theorem compatibleJetSeriesHom_X_const {σ : Type} [Finite σ] (ψ : CompatibleJetMaps R σ κ) (j : σ) :
+    constantCoeff (compatibleJetSeriesHom ψ (X j)) = 0 := by
+  rw [← jetAug_toJet 0, toJet_compatibleJetSeriesHom, ← AlgHom.comp_apply,
+    compatibleJetMaps_comp_aug, jetAug_toJet, constantCoeff_X]
+
+private def jetMapsOfCoordinates {σ : Type} (a : σ → MvPowerSeries κ R)
+    (ha : ∀ j, constantCoeff (a j) = 0) : CompatibleJetMaps R σ κ :=
+  ⟨jetSubstitutionAt a ha, fun m => jet_ext fun j => by
+    change jetTruncR R κ m (jetSubstitutionAt a ha (m + 1) (zR (m + 1) j)) =
+      jetSubstitutionAt a ha m (zR m j)
+    rw [jetSubstitutionAt_zR, jetSubstitutionAt_zR, jetTruncR_toJet]⟩
+
+/-- Compatible jet maps are classified by the series of zero constant coefficient
+that they assign to the source coordinates. -/
+@[no_expose]
+def compatibleJetMapsEquiv (R σ κ : Type) [CommRing R] [Finite σ] [Finite κ] :
+    CompatibleJetMaps R σ κ ≃ {a : σ → MvPowerSeries κ R // ∀ j, constantCoeff (a j) = 0} where
+  toFun ψ := ⟨fun j => compatibleJetSeriesHom ψ (X j), compatibleJetSeriesHom_X_const ψ⟩
+  invFun a := jetMapsOfCoordinates a.val a.property
+  left_inv ψ := by
+    apply Subtype.ext
+    funext m
+    apply jet_ext
+    intro j
+    change jetSubstitutionAt (fun i => compatibleJetSeriesHom ψ (X i))
+      (compatibleJetSeriesHom_X_const ψ) m (zR m j) = ψ.val m (zR m j)
+    rw [jetSubstitutionAt_zR, toJet_compatibleJetSeriesHom, toJet_X]
+  right_inv a := by
+    apply Subtype.ext
+    funext j
+    apply eq_of_toJet_eq
+    intro m
+    change toJet m (compatibleJetSeriesHom (jetMapsOfCoordinates a.val a.property) (X j)) = _
+    rw [toJet_compatibleJetSeriesHom, toJet_X]
+    exact jetSubstitutionAt_zR a.val a.property m j
+
+theorem compatibleJetMapsEquiv_toJet {σ : Type} [Finite σ] (ψ : CompatibleJetMaps R σ κ) (m : ℕ) (j : σ) :
+    toJet m ((compatibleJetMapsEquiv R σ κ ψ).val j) = ψ.val m (zR m j) :=
+  (toJet_compatibleJetSeriesHom ψ m (X j)).trans (congrArg (ψ.val m) (toJet_X m j))
+
+theorem compatibleJetMapsEquiv_symm_zR {σ : Type} [Finite σ]
+    (a : {a : σ → MvPowerSeries κ R // ∀ j, constantCoeff (a j) = 0}) (m : ℕ) (j : σ) :
+    ((compatibleJetMapsEquiv R σ κ).symm a).val m (zR m j) = toJet m (a.val j) :=
+  jetSubstitutionAt_zR a.val a.property m j
+
+/-- The induced map of power series is substitution by the coordinate images. -/
+theorem compatibleJetSeriesHom_eq_subst {σ : Type} [Finite σ] (ψ : CompatibleJetMaps R σ κ) :
+    compatibleJetSeriesHom ψ =
+      substAlgHom (hasSubst_of_constantCoeff_zero (compatibleJetMapsEquiv R σ κ ψ).property) := by
+  apply AlgHom.ext
+  intro g
+  apply eq_of_toJet_eq
+  intro m
+  rw [toJet_compatibleJetSeriesHom, substAlgHom_apply]
+  exact jetHom_toJet (compatibleJetMapsEquiv R σ κ ψ).val (compatibleJetMapsEquiv R σ κ ψ).property
+    m (ψ.val m) (fun j => (compatibleJetMapsEquiv_toJet ψ m j).symm) g
 
 theorem jetAlg : JetAlgSt := fun R _ κ _ =>
   ⟨fun m => ⟨toJetHom R κ m, fun _ => rfl, fun j => toJet_X m j⟩,
