@@ -1,8 +1,9 @@
 name: module paths
 
-# Module paths stay portable: ASCII letters, digits and `_` in every component (#179). A path
-# with `₂` in it breaks checkouts and tools on some systems. The check reads file names and
-# the member names recorded in clump files; it builds nothing.
+# Module paths stay portable: ASCII letters, digits and `_` in every component (#179), in
+# UpperCamelCase as Mathlib's lint-style wants (#1079). A path with `₂` in it breaks checkouts
+# and tools on some systems. The check reads file names and the member names recorded in clump
+# files; it builds nothing.
 
 on:
   push:

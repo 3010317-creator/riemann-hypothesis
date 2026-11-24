@@ -93,6 +93,16 @@ class PortablePaths(unittest.TestCase):
         with self.assertRaises(SystemExit):
             pp.new_name("A.Bé")
 
+    def test_upper_camel_names(self):
+        for good in ("A.B_", "A.Bc.D2", "A.HodgeBCMap", "A.B2.CPrimePrime"):
+            self.assertTrue(pp.allowed(good), good)
+        for bad in ("A.bc", "A.b.C", "A.B_c", "A_.B", "A.B₂"):
+            self.assertFalse(pp.allowed(bad), bad)
+        self.assertEqual(pp.new_name("A.cut_GCore_GTS"), "A.CutGCoreGTS")
+        self.assertEqual(pp.new_name("A.projection2.KappaZero"), "A.Projection2.KappaZero")
+        self.assertEqual(pp.new_name("A.lift_levelP_alt₂"), "A.LiftLevelPAlt2")
+        self.assertEqual(pp.new_name("A.bar_"), "A.Bar_")
+
     def test_check(self):
         t = Tree(self, TREE)
         code, out = t.run(pp.check)
@@ -157,6 +167,35 @@ class PortablePaths(unittest.TestCase):
         t.git("add", "-A")
         self.assertEqual(t.files(), EXPECTED)
 
+    def test_rename_upper_camel_inside_clumps(self):
+        """A lowercase folder and a snake_case module, the second folded into a clump."""
+        tree = {
+            "A/low/Base": "module\n\npublic import Mathlib.Data.Nat.Basic\n\ntheorem a : True := trivial\n",
+            "A/low/cut_Mid": "module\n\npublic import A.low.Base\n\ntheorem b : True := a\n",
+            "A/Top": "module\n\nimport A.low.cut_Mid\n\nnamespace A.low\ntheorem c : True := b\nend A.low\n",
+        }
+        expected = {
+            "A/Low/Base": tree["A/low/Base"],
+            "A/Low/CutMid": tree["A/low/cut_Mid"].replace("A.low.Base", "A.Low.Base"),
+            "A/Top": tree["A/Top"].replace("import A.low.cut_Mid", "import A.Low.CutMid"),
+        }
+        t = Tree(self, tree)
+        t.run(pp.rename)
+        self.assertEqual(t.files(), expected)
+
+        t = Tree(self, tree)
+        t.fold("A.Top", ["A.low.cut_Mid", "A.Top"])
+        code, out = t.run(pp.check)
+        self.assertEqual((code, len(out.splitlines())), (1, 2))
+        t.run(pp.rename)
+        self.assertEqual(sorted(t.files()), ["A/Low/Base", "A/Top"])
+        self.assertIn("-- Members: A.Low.CutMid, A.Top\n", t.files()["A/Top"])
+        self.assertEqual(t.run(pp.check)[0], 0)
+        with contextlib.redirect_stdout(io.StringIO()):
+            clump.unclump(t.root)
+        t.git("add", "-A")
+        self.assertEqual(t.files(), expected)
+
     def test_refuses_collisions(self):
         t = Tree(self, {"A/B₂": "module\n", "A/B2": "module\n"})
         with self.assertRaises(SystemExit):
@@ -165,6 +204,12 @@ class PortablePaths(unittest.TestCase):
         t = Tree(self, {"A/B₂": "module\n", "A/b2": "module\n"})
         with self.assertRaises(SystemExit):
             t.run(pp.rename)
+        # `b_c` becomes `BC`: taken, or taken up to case.
+        for other in ("A/BC", "A/Bc"):
+            t = Tree(self, {"A/b_c": "module\n", other: "module\n"})
+            with self.assertRaises(SystemExit):
+                t.run(pp.rename)
+            self.assertEqual(sorted(t.files()), sorted([other, "A/b_c"]))
 
     def test_refuses_unknown_import(self):
         t = Tree(self, {"A/B₂": "module\n\nimport A.Gone₂\n"})

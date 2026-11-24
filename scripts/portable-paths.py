@@ -5,6 +5,11 @@ A module path is portable if every component consists of ASCII letters, digits a
 Other characters make the tree hard to use: `₂` in a path breaks checkouts and tools on some
 systems (#179), and `'` needs quoting in every shell command.
 
+Module names must also be in UpperCamelCase, as Mathlib's `lake exe lint-style` wants them
+(#1079): `Lake.toUpperCamelCase` must leave the name unchanged, except that it may end in
+`_`.  That function capitalises each part of a component between `_`s and drops the `_`s,
+so `cut_GCore` becomes `CutGCore` and a folder `projection2` becomes `Projection2`.
+
     portable-paths.py check  [ROOT]   # exit 1 and list the offenders, if any
     portable-paths.py rename [ROOT]   # rename the offenders and every reference to them
 
@@ -21,8 +26,9 @@ systems (#179), and `'` needs quoting in every shell command.
 Declaration names and namespaces are left alone, also where they resemble a module name:
 a namespace such as `GroundTheory.Heights₂` is not a path.
 
-The new name of a component replaces `₂` by `2` and `'` by `Prime`.  Any other character
-outside the portable set stops the run, as does a new name that is already taken.
+The new name of a component replaces `₂` by `2` and `'` by `Prime`, and then goes through
+`Lake.toUpperCamelCase`.  Any other character outside the portable set stops the run, as
+does a new name that is already taken, also one taken by a name that differs only in case.
 """
 
 import argparse
@@ -48,11 +54,26 @@ def portable(name):
     return all(PORTABLE_RE.fullmatch(c) for c in name.split("."))
 
 
+def upper_camel(name):
+    """`Lake.toUpperCamelCase`: split each component at `_` and `-`, capitalise the parts, join."""
+    return ".".join("".join(p[:1].upper() + p[1:] for p in re.split(r"[_-]", c))
+                    for c in name.split("."))
+
+
+def allowed(name):
+    """Portable, and in UpperCamelCase the way lint-style checks it (a trailing `_` is fine)."""
+    camel = upper_camel(name)
+    return portable(name) and (camel == name or camel + "_" == name)
+
+
 def new_name(name):
     out = name
     for old, new in REPLACEMENTS.items():
         out = out.replace(old, new)
     if not portable(out):
+        sys.exit(f"error: no rule to make this module name portable: {name}")
+    out = upper_camel(out) + ("_" if out.endswith("_") else "")
+    if not allowed(out):
         sys.exit(f"error: no rule to make this module name portable: {name}")
     return out
 
@@ -155,21 +176,22 @@ def rewrite(text, mapping, where):
 
 def check(root):
     _, names = inventory(root)
-    bad = sorted(m for m in names if not portable(m))
+    bad = sorted(m for m in names if not allowed(m))
     if not bad:
         print(f"all {len(names)} module names are portable")
         return 0
     for m in bad:
         print(f"{names[m]}: {m}")
     print(f"\n{len(bad)} module names are not portable (allowed in a component: ASCII letters, "
-          "digits and `_`).\nRename new files by hand; `scripts/portable-paths.py rename` "
-          "renames modules that already have importers.", file=sys.stderr)
+          "digits and `_`, in UpperCamelCase).\nRename new files by hand; "
+          "`scripts/portable-paths.py rename` renames modules that already have importers.",
+          file=sys.stderr)
     return 1
 
 
 def rename(root):
     files, names = inventory(root)
-    mapping = {m: new_name(m) for m in names if not portable(m)}
+    mapping = {m: new_name(m) for m in names if not allowed(m)}
     if not mapping:
         print("nothing to rename")
         return 0
