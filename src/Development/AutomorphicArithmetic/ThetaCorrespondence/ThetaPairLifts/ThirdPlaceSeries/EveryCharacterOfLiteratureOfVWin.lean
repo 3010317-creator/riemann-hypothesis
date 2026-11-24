@@ -362,7 +362,7 @@ theorem lieIrr_of [CompleteSpace H] (hσ : Formalism.MainNotions.S.IsURepOn (For
     have e2 := hL _ (ReciprocityTheory.ChartRestriction.DS.SmDerA.inG_cpart2 ε (Matrix.single a b 1)) (v : H) hv
     rw [dRep_eq_dS] at e1 e2
     exact S.add_mem e1 (S.smul_mem _ e2)
-  rcases GlobalTheory.HcPort.uIrr n ε H σ hσ hirr N hNK hst with h | h
+  rcases CompanionTheory.D.gk.HC.uIrr n ε H σ hσ hirr N hNK hst with h | h
   · left
     refine eq_bot_iff.2 fun v hv => ?_
     have hvN : (⟨v, h1 v (hS hv)⟩ : smD ε σ) ∈ N := hv
