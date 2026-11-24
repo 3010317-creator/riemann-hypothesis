@@ -186,7 +186,7 @@ def LocalFiniteness : Prop :=
 
 /-- With `D` and `M` as in `LocalFiniteness`, `H²(D, μ_{l^r})` is isomorphic to `ZMod (l ^ r)`, and
 cup product pairs `Hⁱ(D, M)` perfectly with `H²⁻ⁱ(D, Hom(M, μ_{l^r}))` for `i = 0, 1, 2`.
-[J. S. Milne, *Arithmetic Duality Theorems* (Chapter I, Corollary 2.3, p. 28)][milne2006].
+[J. S. Milne, *Arithmetic Duality Theorems* (Chapter I, Corollary 2.3, p. 28; for `H²(μ_{l^r})`, p. 27)][milne2006].
 This is a special case: the modules are killed by `l ^ r`.
 This reference is a reader's proposal and has not been checked by a mathematician. -/
 def LocalTateDuality : Prop :=
