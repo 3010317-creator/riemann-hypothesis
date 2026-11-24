@@ -244,6 +244,16 @@ class Fake(batch.GitHub):
                     return 200, {}
         return 404, {"message": "Not Found"}
 
+    def _reset_ref(self, payload, name):
+        if name not in self.refs:
+            return 422, {"message": "Reference does not exist"}
+        self.refs[name] = payload["sha"]
+        for pr in self.pulls.values():
+            if pr["own"] and pr["ref"] == name:
+                pr["sha"] = payload["sha"]
+                self.touch(pr["number"])
+        return 200, {}
+
     def _drop_ref(self, _, name):
         return (204, None) if self.refs.pop(name, None) else (422, {"message": "Reference does not exist"})
 
@@ -270,6 +280,7 @@ class Fake(batch.GitHub):
         (r"DELETE issues/(\d+)/labels/(.+)", _drop_label),
         (r"POST issues/(\d+)/comments", _comment),
         (r"PATCH issues/comments/(\d+)", _edit_comment),
+        (r"PATCH git/refs/heads/(.+)", _reset_ref),
         (r"DELETE git/refs/heads/(.+)", _drop_ref),
     ]
 
@@ -884,7 +895,8 @@ class FrozenByHand(unittest.TestCase):
         sync(gh)
         self.assertEqual((gh.pulls[11]["labels"], gh.pulls[12]["labels"]), ({BUILDING}, {QUEUED}))
         body = batch_pull(gh)["body"]
-        self.assertIn(f"- #12 at `{short('head12')}`\n\nAlso in this branch:\n\n- #11, in the frozen batch #1018", body)
+        # The batch being assembled was rebuilt on top of #1018, which holds #11 now.
+        self.assertIn(f"In this batch:\n\n- #12 at `{short('head12')}`\n\nMerge this", body)
         self.assertEqual(gh.said(11), [])
 
     def test_a_new_head_is_looked_through_again(self):
@@ -910,9 +922,11 @@ class FrozenByHand(unittest.TestCase):
         sync(gh)
         self.assertEqual([gh.pulls[n]["labels"] for n in (11, 12, 13)], [{BUILDING}] * 3)
         self.assertIn("In this batch: #11, #12, #13.", gh.said(1018)[0])
-        # Whether the old head is in the new one, and #13, which was not in the old one.
+        # Whether the old head is in the new one, and #13, which was not in the old one. Then the
+        # batch being assembled on top asks the first question again before it follows.
         self.assertEqual([path for path in gh.reads if path.startswith("compare/")],
-                         [f"compare/{new}...{old}?per_page=1", f"compare/{new}...{sha('head13')}?per_page=1"])
+                         [f"compare/{new}...{old}?per_page=1", f"compare/{new}...{sha('head13')}?per_page=1",
+                          f"compare/{new}...{old}?per_page=1"])
 
     def test_a_batch_inside_another_one_is_built_as_part_of_it(self):
         gh = Fake()
@@ -953,6 +967,177 @@ class FrozenByHand(unittest.TestCase):
         gh.left = 900
         sync(gh)
         self.assertEqual((gh.pulls[11]["labels"], gh.pulls[12]["labels"]), ({BUILDING}, {BUILDING}))
+
+
+def resets(gh):
+    return [(path, payload["sha"]) for method, path, payload in gh.writes if method == "PATCH" and path.startswith("git/refs/")]
+
+
+class StackedOnABatchByHand(unittest.TestCase):
+    """The batch being assembled sits on top of the frozen batch assembled by hand."""
+
+    def stacked(self):
+        gh = Fake()
+        queue(gh, 11, 12, 13)
+        by_hand(gh, 11, 12)
+        freeze(gh, 1018)
+        return gh, sync(gh)
+
+    def move_on(self, gh, name="kim-2"):
+        """Commits are pushed onto the batch assembled by hand."""
+        old, new = gh.refs[HAND], sha(name)
+        gh.inside[new] = gh.inside[old] | {old}
+        gh.commits[new] = {"message": "Fix the build", "parents": [{"sha": old}]}
+        gh.refs[HAND] = gh.pulls[1018]["sha"] = new
+        gh.touch(1018)
+        return new
+
+    def test_a_new_batch_starts_on_top_of_it(self):
+        gh, log = self.stacked()
+        self.assertIn(("POST", "git/refs", {"ref": f"refs/heads/{FIRST}", "sha": sha("kim")}), gh.writes)
+        self.assertEqual(merges(gh), [sha("head13")])
+        self.assertIn(f"started `{FIRST}` on top of #1018", log)
+        body = batch_pull(gh)["body"]
+        self.assertIn(f"Built on top of #1018 at `{short('kim')}`. Merge it after #1018: merging it first lands "
+                      "the pull requests of #1018 too.", body)
+        self.assertIn(f"In this batch:\n\n- #13 at `{short('head13')}`\n\nMerge this", body)
+        gh.writes = []
+        self.assertEqual(sync(gh), ["nothing to do"])
+        self.assertEqual(gh.writes, [])
+
+    def test_a_batch_started_on_main_is_rebuilt_on_top_of_it(self):
+        gh = Fake()
+        queue(gh, 11, 12, 13)
+        sync(gh)
+        by_hand(gh, 11, 12)
+        freeze(gh, 1018)
+        gh.writes = []
+        log = sync(gh)
+        self.assertEqual((resets(gh), merges(gh)), ([(f"git/refs/heads/{FIRST}", sha("kim"))], [sha("head13")]))
+        self.assertIn(f"rebuilt `{FIRST}` on top of #1018 at `{short('kim')}`", log)
+        body = batch_pull(gh)["body"]
+        self.assertIn(f"In this batch:\n\n- #13 at `{short('head13')}`\n\nMerge this", body)
+        self.assertNotIn("Also in this branch", body)
+        self.assertEqual((gh.said(11), gh.said(12)), ([], []))
+
+    def test_when_it_moves_on_its_new_head_is_merged_in(self):
+        gh, _ = self.stacked()
+        new = self.move_on(gh)
+        gh.writes = []
+        log = sync(gh)
+        self.assertEqual((resets(gh), merges(gh)), ([], [new]))
+        self.assertIn(new, gh.inside[gh.refs[FIRST]])
+        self.assertIn(f"brought `{FIRST}` up to date with #1018 at `{short('kim-2')}`", log)
+        self.assertIn(f"Built on top of #1018 at `{short('kim-2')}`.", batch_pull(gh)["body"])
+        self.assertEqual(sync(gh), ["nothing to do"])
+
+    def test_the_walk_back_through_the_branch_stops_where_it_was_started(self):
+        gh, _ = self.stacked()
+        self.move_on(gh)
+        sync(gh)
+        # A maintainer pushes a fix onto the batch, so its note no longer matches its head.
+        tip, fix = gh.refs[FIRST], sha("fix")
+        gh.inside[fix] = gh.inside[tip] | {tip}
+        gh.commits[fix] = {"message": "Fix by hand", "parents": [{"sha": tip}]}
+        gh.refs[FIRST] = batch_pull(gh)["sha"] = fix
+        gh.touch(batch_pull(gh)["number"])
+        gh.reads, gh.writes = [], []
+        sync(gh)
+        self.assertIn(f"- #13 at `{short('head13')}`", batch_pull(gh)["body"])
+        self.assertEqual((resets(gh), merges(gh)), ([], []))
+        self.assertNotIn(f"git/commits/{sha('kim')}", gh.reads)
+
+    def test_when_it_is_rebuilt_so_is_the_batch_on_top(self):
+        gh, _ = self.stacked()
+        by_hand(gh, 11, 12, name="kim-rebased")
+        gh.writes = []
+        log = sync(gh)
+        self.assertEqual((resets(gh), merges(gh)), ([(f"git/refs/heads/{FIRST}", sha("kim-rebased"))], [sha("head13")]))
+        self.assertNotIn(sha("kim"), gh.inside[gh.refs[FIRST]])
+        self.assertIn(f"rebuilt `{FIRST}` on top of #1018 at `{short('kim-rebased')}`", log)
+
+    def test_when_it_is_closed_without_merging_the_batch_goes_back_to_main(self):
+        gh, _ = self.stacked()
+        gh.close(1018)
+        gh.writes = []
+        sync(gh)  # #11 and #12 are queued again, and nothing is assembled in this run
+        self.assertEqual(resets(gh), [])
+        log = sync(gh, hours=1)
+        self.assertEqual((resets(gh), merges(gh)),
+                         ([(f"git/refs/heads/{FIRST}", MAIN)], [sha("head11"), sha("head12"), sha("head13")]))
+        self.assertIn(f"rebuilt `{FIRST}` on main", log)
+        self.assertNotIn("Built on top", batch_pull(gh)["body"])
+
+    def test_once_it_has_landed_nothing_needs_doing(self):
+        gh, _ = self.stacked()
+        for number in (11, 12, 1018):
+            gh.close(number, merged=True)
+        gh.writes = []
+        log = sync(gh)
+        self.assertEqual((resets(gh), merges(gh)), ([], []))
+        self.assertIn(f"#1018, which `{FIRST}` was built on, has landed on main", log)
+        self.assertIn(sha("head13"), gh.inside[gh.refs[FIRST]])
+        self.assertNotIn("Built on top", batch_pull(gh)["body"])
+        self.assertEqual(sync(gh), ["nothing to do"])
+
+    def test_a_frozen_batch_on_top_is_never_moved(self):
+        gh, _ = self.stacked()
+        number = batch_pull(gh)["number"]
+        freeze(gh, number)
+        sync(gh)
+        new = self.move_on(gh)
+        gh.writes = []
+        sync(gh)
+        self.assertEqual((resets(gh), merges(gh)), ([], []))
+        self.assertIn(f"#1018 has moved on to `{short('kim-2')}` since. This batch is frozen, so it was not brought "
+                      "up to date.", gh.pulls[number]["body"])
+        # The next batch starts on top of where #1018 is now.
+        queue(gh, 14)
+        sync(gh, hours=2)
+        self.assertLessEqual({new, sha("head14")}, gh.inside[gh.refs["batch/2026-11-23-061230"]])
+
+    def test_a_build_dispatched_just_now_stops_a_rebuild(self):
+        gh = Fake()
+        queue(gh, 11, 12, 13)
+        sync(gh)
+        number = batch_pull(gh)["number"]
+        by_hand(gh, 11, 12)
+        freeze(gh, 1018)
+        gh.runs = [f"Build PR #{number} manual"]  # the freeze job has not run yet
+        gh.writes = []
+        log = sync(gh)
+        self.assertEqual((resets(gh), merges(gh)), ([], []))
+        self.assertIn(BUILDING, gh.pulls[number]["labels"])
+        self.assertIn(f"batch #{number} was frozen during this run: stopped adding to it", log)
+
+    def test_with_two_being_built_the_batch_goes_on_main_and_says_why(self):
+        gh = Fake()
+        queue(gh, 11, 12, 13)
+        by_hand(gh, 11)
+        by_hand(gh, 12, number=2000, ref="batch/other", name="other")
+        freeze(gh, 1018)
+        freeze(gh, 2000)
+        sync(gh)
+        self.assertIn(("POST", "git/refs", {"ref": f"refs/heads/{FIRST}", "sha": MAIN}), gh.writes)
+        self.assertEqual(merges(gh), [sha("head13")])
+        self.assertIn("Built on `main`, because more than one batch assembled by hand is labelled `building`: "
+                      "#1018, #2000.", batch_pull(gh)["body"])
+
+    def test_a_refusal_names_the_batch_underneath_and_is_told_again_after_a_rebuild(self):
+        gh = Fake()
+        queue(gh, 11, 13)
+        gh.conflicting = {sha("head13")}
+        sync(gh)
+        self.assertEqual(len(gh.said(13)), 1)
+        by_hand(gh, 11)
+        freeze(gh, 1018)
+        sync(gh)
+        said = gh.said(13)
+        self.assertEqual(len(said), 2)
+        self.assertTrue(said[1].startswith(f"<!-- batch-queue-refused {FIRST} {sha('head13')} on #1018 -->"))
+        self.assertIn("#1018, which this batch is built on, and the pull requests added before it.", said[1])
+        sync(gh)
+        self.assertEqual(len(gh.said(13)), 2)
 
 
 class ClosedPullRequests(unittest.TestCase):

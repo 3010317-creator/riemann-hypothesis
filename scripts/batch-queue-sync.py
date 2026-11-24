@@ -30,11 +30,19 @@ This script records them in a comment of its own on the batch's pull request, an
 when the branch's head moves. A pull request that has left the branch by then goes back to
 `batch queue`.
 
+The batch being assembled is built on top of the frozen batch assembled by hand, when exactly one
+has a pull request into main: its branch starts at that batch's head, and its pull request is
+to be merged after that batch's. When the batch underneath moves on, its new head is merged in.
+When it is rebuilt, closed without being merged, or replaced by another, the batch being
+assembled is rebuilt as well: its branch is reset to the new base, or to main, and every queued
+commit is merged in again. Once the batch underneath has landed on main there is nothing to do.
+A frozen batch is never moved.
+
 A frozen batch that was merged or closed is found by its pull request, which keeps `building`
 until this script has tidied up after it. Its branch may already have been deleted by then.
 
 Taking a pull request out of the queue never changes a batch. Commits already merged into one
-stay there, and the batch's description says so. No batch is ever rebuilt.
+stay there, and the batch's description says so. No batch is rebuilt for that.
 
 A pull request that is closed, whether merged or not, loses `batch queue` and `building`: it is
 neither waiting for a build nor in one any more. A batch's own pull request is the exception,
@@ -76,6 +84,7 @@ APPROVED = re.compile(r"<!-- batch-queue-approved ([0-9a-f]{40}) -->")
 WITHDRAWN = "<!-- batch-queue-withdrawn -->"
 # Comments this script leaves on a pull request, each once.
 REFUSAL = "<!-- batch-queue-refused {branch} {sha} -->"
+REFUSAL_ON = "<!-- batch-queue-refused {branch} {sha} on #{base} -->"
 MOVED = "<!-- batch-queue-moved {sha} -->"
 STAYS = "<!-- batch-queue-stays {branch} -->"
 # The comment on a frozen batch assembled by hand that records what it contains.
@@ -83,8 +92,10 @@ BY_HAND = re.compile(r"<!-- batch-queue-by-hand (\{.*\}) -->")
 # In a batch pull request's text: the part this script writes, and its note to itself.
 BODY = "<!-- batch-queue -->"
 STATE = re.compile(r"<!-- batch-queue-state (\{.*\}) -->")
-# The merge commit that adds a pull request to a batch, and the name of a build run.
+# The merge commit that adds a pull request to a batch, the one that brings the batch underneath
+# up to date, and the name of a build run.
 ADDED = re.compile(r"Add #(\d+) to the batch\n\nMerged at ([0-9a-f]{40})\.")
+UPDATED = "Bring #{number} up to date\n\nMerged at {sha}."
 BUILD_RUN = re.compile(r"(?:Build PR|Proof shard) #(\d+)(?: |$)")
 
 
@@ -305,14 +316,18 @@ def finished(gh, closed_building, main_sha, known):
     return found
 
 
-def added(gh, batch, main_sha, limit=400):
+def added(gh, batch, main_sha, stop=None, limit=400):
     """What this workflow merged into a batch, as {number: commit}, read from the branch itself.
 
-    Follows first parents from the batch's head back to main. Commits a maintainer pushed on top
-    are stepped over.
+    Follows first parents from the batch's head back to main, or to `stop`, the commit the
+    branch was started from when it was started on top of another batch: the walk would
+    otherwise go on through every commit of that one. Commits a maintainer pushed on top are
+    stepped over.
     """
     merged, sha = {}, batch["sha"]
     for _ in range(limit):
+        if sha == stop:
+            break
         commit = gh.get(f"git/commits/{sha}")
         match = ADDED.match(commit["message"])
         if match and len(commit["parents"]) == 2:
@@ -324,12 +339,16 @@ def added(gh, batch, main_sha, limit=400):
 
 
 def recall(gh, batch, main_sha):
-    """What is known about a batch: {"merged": {number: commit}, "refused": {...}, "seen": {...}}.
+    """What is known about a batch: {"merged": {number: commit}, "refused": {...}, "seen": {...},
+    "base": ...}.
 
     `merged` and `refused` come from the note in the pull request's text when the note was
     written for the batch's present head. Otherwise `merged` is read again from the branch.
+    `base` is the batch it is built on, as {number, sha, start}: the head of that batch it was
+    last brought up to date with, and the commit its own branch was started from. It is None
+    for a batch built on main.
     """
-    state = {"merged": {}, "refused": {}, "seen": {}}
+    state = {"merged": {}, "refused": {}, "seen": {}, "base": None}
     match = STATE.search(batch["body"])
     try:
         note = json.loads(match.group(1)) if match else {}
@@ -337,15 +356,17 @@ def recall(gh, batch, main_sha):
         note = {}
     if isinstance(note.get("seen"), dict):
         state["seen"] = note["seen"]
+    if isinstance(note.get("base"), dict):
+        state["base"] = note["base"]
     if note.get("head") == batch["sha"] and isinstance(note.get("merged"), dict):
         state["merged"], state["refused"] = note["merged"], dict(note.get("refused") or {})
     else:
-        state["merged"] = added(gh, batch, main_sha)
+        state["merged"] = added(gh, batch, main_sha, (state["base"] or {}).get("start"))
     return state
 
 
-def describe(batch, state, members, also=(), refused=(), unapproved=()):
-    """The text of a batch pull request."""
+def describe(batch, state, members, also=(), refused=(), unapproved=(), stack=()):
+    """The text of a batch pull request. `stack` is what to say about the batch it is built on."""
     lines = [BODY, "The batch-queue workflow assembles this pull request. When a maintainer comments "
              "`batch` on a pull request, the commit that was its head at that moment is merged in here."]
     if batch["frozen"]:
@@ -355,6 +376,8 @@ def describe(batch, state, members, also=(), refused=(), unapproved=()):
         lines.append("\nCommenting `freeze` here, or starting a build of this pull request, freezes it: "
                      f"nothing more is added, and what it contains is relabelled `{BUILDING}`. "
                      "To be sure of the commit that gets built, comment `freeze` before starting the build.")
+    if stack:
+        lines += [""] + list(stack)
     lines += ["", "In this batch:", ""]
     lines += [f"- #{number} at `{sha[:10]}`" for number, sha in members] or ["- nothing yet"]
     if also:
@@ -368,6 +391,8 @@ def describe(batch, state, members, also=(), refused=(), unapproved=()):
     lines += ["", "Merge this with a merge commit, not a squash, so that GitHub marks the pull "
               "requests above as merged."]
     note = {"head": batch["sha"], "merged": state["merged"], "refused": state["refused"], "seen": state["seen"]}
+    if state.get("base"):
+        note["base"] = state["base"]
     lines += ["", f"<!-- batch-queue-state {json.dumps(note, sort_keys=True)} -->"]
     return "\n".join(lines) + "\n"
 
@@ -390,15 +415,16 @@ def publish(gh, batch, main, text):
             "will be picked up, or allow GitHub Actions to create pull requests in the repository settings.")
 
 
-def start(gh, main, main_sha, now, log):
-    """Create the branch for a new batch, under a name no other batch has."""
+def start(gh, main, head, now, log, on=None):
+    """Create the branch for a new batch at `head`, under a name no other batch has. `on` is the
+    number of the batch whose head that is, when it is not main's."""
     stamp = (now or datetime.datetime.now(datetime.timezone.utc)).strftime("%Y-%m-%d-%H%M%S")
     status, data = None, None
     for name in [PREFIX + stamp] + [f"{PREFIX}{stamp}-{count}" for count in range(2, 6)]:
-        status, data = gh.write("POST", "git/refs", {"ref": f"refs/heads/{name}", "sha": main_sha})
+        status, data = gh.write("POST", "git/refs", {"ref": f"refs/heads/{name}", "sha": head})
         if status in (0, 201):
-            log.append(f"started `{name}` from `{main}`")
-            return {"ref": name, "sha": main_sha, "number": None, "frozen": False, "body": ""}
+            log.append(f"started `{name}` on top of #{on}" if on else f"started `{name}` from `{main}`")
+            return {"ref": name, "sha": head, "number": None, "frozen": False, "body": ""}
         if status != 422:
             break
     raise Refused(f"GitHub would not create a batch branch ({status}: {(data or {}).get('message', 'no reason given')}).")
@@ -554,6 +580,86 @@ def describe_by_hand(note):
 
 
 # ---------------------------------------------------------------------------------------------
+# Building on a batch assembled by hand.
+
+
+def restack(gh, batch, state, base, main_sha, log):
+    """Keep the batch being assembled on top of `base`, {number, sha}, or on main when it is None.
+
+    When the batch underneath has moved on from what this one was last brought up to date with,
+    its new head is merged in. When it was rebuilt, or when this one should now sit on another
+    batch or on main, this one is rebuilt: its branch is reset, and what it held is forgotten,
+    so that every queued commit is merged in again. A batch underneath that has landed on main
+    is already in this one, and needs nothing. Nothing is done when GitHub does not say whether
+    one commit is in another, or when this batch was frozen meanwhile.
+
+    Returns False when this batch turned out to be frozen.
+    """
+    have = state.get("base")
+    if base is None and have is None:
+        return True
+    if base and have and base["number"] == have.get("number"):
+        if base["sha"] == have.get("sha"):
+            return True
+        ahead = contains(gh, base["sha"], have.get("sha"))
+        if ahead is None:
+            return True
+        if ahead:
+            if frozen_now(gh, batch):
+                return False
+            message = UPDATED.format(number=base["number"], sha=base["sha"])
+            status, data = gh.write("POST", "merges", {"base": batch["ref"], "head": base["sha"], "commit_message": message})
+            if status in (0, 201, 204):
+                if status == 201:
+                    batch["sha"] = data["sha"]
+                have["sha"] = base["sha"]
+                log.append(f"brought `{batch['ref']}` up to date with #{base['number']} at `{base['sha'][:10]}`")
+                return True
+            log.append(f"GitHub could not merge the new head of #{base['number']} into `{batch['ref']}` ({status})")
+    elif base is None:
+        landed = contains(gh, main_sha, have.get("sha"))
+        if landed is None:
+            return True
+        if landed:
+            state["base"] = None
+            log.append(f"#{have.get('number')}, which `{batch['ref']}` was built on, has landed on main")
+            return True
+    if frozen_now(gh, batch):
+        return False
+    head = base["sha"] if base else main_sha
+    status, data = gh.write("PATCH", f"git/refs/heads/{batch['ref']}", {"sha": head, "force": True})
+    if status not in (0, 200):
+        raise Refused(f"GitHub would not reset `{batch['ref']}` ({status}: {(data or {}).get('message', 'no reason given')}).")
+    batch["sha"] = head
+    state["merged"], state["refused"] = {}, {}
+    state["base"] = {"number": base["number"], "sha": head, "start": head} if base else None
+    log.append(f"rebuilt `{batch['ref']}` " + (f"on top of #{base['number']} at `{head[:10]}`" if base else "on main"))
+    return True
+
+
+def on_top(batch, state, pulls, crowded=()):
+    """What a batch's description says about the batch it is built on. `crowded` lists the
+    batches assembled by hand that are being built, when there are too many to choose one."""
+    base = state.get("base")
+    if not base:
+        if crowded:
+            return [f"Built on `main`, because more than one batch assembled by hand is labelled `{BUILDING}`: "
+                    + ", ".join(f"#{number}" for number in crowded) + "."]
+        return []
+    number = base["number"]
+    lines = [f"Built on top of #{number} at `{base['sha'][:10]}`. Merge it after #{number}: merging it first "
+             f"lands the pull requests of #{number} too."]
+    if batch["frozen"]:
+        now = pulls.get(number)
+        if now is None:
+            lines.append(f"#{number} is no longer open.")
+        elif now["sha"] != base["sha"]:
+            lines.append(f"#{number} has moved on to `{now['sha'][:10]}` since. This batch is frozen, so it was not "
+                         "brought up to date.")
+    return lines
+
+
+# ---------------------------------------------------------------------------------------------
 # One run.
 
 
@@ -684,7 +790,7 @@ def sync(gh, now=None):
                 members.append((int(key), sha))
             else:
                 also.append((int(key), "no longer queued" if pr else "closed since it was merged in"))
-        publish(gh, batch, main, describe(batch, state, members, also))
+        publish(gh, batch, main, describe(batch, state, members, also, stack=on_top(batch, state, pulls)))
     for batch in hand:
         requeued |= hold(gh, batch, pulls, held, log)
     held = holders(frozen, hand)
@@ -694,11 +800,20 @@ def sync(gh, now=None):
         log.append("not starting a new batch in this run: the next `batch` or `-batch` comment does")
         return log
 
+    # The batch being assembled goes on top of the frozen batch assembled by hand, when there is
+    # just one into main. With more than one it is not clear which comes first, so it goes on main.
+    under = [item for item in hand if item["base"] == main]
+    base = {"number": under[0]["number"], "sha": under[0]["sha"]} if len(under) == 1 else None
+    crowded = [item["number"] for item in under] if len(under) > 1 else []
+
     # The batch being assembled takes each commit a maintainer queued.
     assembling = sorted((item for item in found if not item["frozen"]), key=lambda item: item["ref"])
     batch = assembling[-1] if assembling else None
-    state = recall(gh, batch, main_sha) if batch else {"merged": {}, "refused": {}, "seen": {}}
+    state = recall(gh, batch, main_sha) if batch else {"merged": {}, "refused": {}, "seen": {}, "base": None}
     members, refused, unapproved, stopped, before = [], [], [], False, len(log)
+    if batch and not restack(gh, batch, state, base, main_sha, log):
+        log.append(f"batch #{batch['number']} was frozen during this run: stopped adding to it")
+        stopped = True
     queued = sorted((pr for pr in pulls.values() if QUEUED in pr["labels"] and not is_batch(pr) and pr["base"] == main),
                     key=lambda pr: pr["number"])
     for pr in queued:
@@ -725,7 +840,9 @@ def sync(gh, now=None):
             stopped = True
             continue
         if batch is None:
-            batch = start(gh, main, main_sha, now, log)
+            batch = start(gh, main, base["sha"] if base else main_sha, now, log, on=base and base["number"])
+            if base:
+                state["base"] = {"number": base["number"], "sha": base["sha"], "start": base["sha"]}
         # Look again before every merge: the batch may have been frozen a moment ago.
         if frozen_now(gh, batch):
             log.append(f"batch #{batch['number']} was frozen during this run: stopped adding to it")
@@ -740,10 +857,17 @@ def sync(gh, now=None):
             members.append((number, sha))
             log.append(f"{'would add' if gh.dry_run else 'added'} #{number} at `{sha[:10]}` to `{batch['ref']}`")
             continue
-        reason = ("GitHub could not merge it with what is already there." if status == 409 else
-                  f"GitHub refused the merge ({status}: `{(data or {}).get('message', 'no reason given')}`).")
+        on = (state["base"] or {}).get("number")
+        if status != 409:
+            reason = f"GitHub refused the merge ({status}: `{(data or {}).get('message', 'no reason given')}`)."
+        elif on:
+            reason = (f"GitHub could not merge it with what is already there: #{on}, which this batch is built on, "
+                      "and the pull requests added before it.")
+        else:
+            reason = "GitHub could not merge it with what is already there."
         link = f"#{batch['number']}" if batch["number"] else f"`{batch['ref']}`"
-        tell(gh, number, comments, REFUSAL.format(branch=batch["ref"], sha=sha),
+        marker = REFUSAL_ON.format(branch=batch["ref"], sha=sha, base=on) if on else REFUSAL.format(branch=batch["ref"], sha=sha)
+        tell(gh, number, comments, marker,
              f"The commit `{sha[:10]}` of this pull request was not added to the batch {link}: {reason}\n\n"
              f"It keeps its `{QUEUED}` label. It is tried again when a maintainer queues a new commit, "
              "or when the next batch starts.")
@@ -781,7 +905,8 @@ def sync(gh, now=None):
                     "new batch from what is still queued."):
                 log.append(f"told #{number} that its commits stay in batch #{batch['number']}")
     if members or batch["number"]:
-        publish(gh, batch, main, describe(batch, state, members, also, refused, unapproved))
+        publish(gh, batch, main, describe(batch, state, members, also, refused, unapproved,
+                                          on_top(batch, state, pulls, crowded)))
         if len(log) > before:
             log.append(f"batch pull request #{batch['number']} lists {len(members)} pull request(s)"
                        if batch["number"] else f"`{batch['ref']}` has no pull request yet")
