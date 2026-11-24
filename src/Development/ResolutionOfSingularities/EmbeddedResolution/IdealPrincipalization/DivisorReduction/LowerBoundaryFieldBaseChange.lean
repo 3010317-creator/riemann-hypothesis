@@ -68,19 +68,6 @@ private theorem sameNontrivialBoundary_take_eraseIdx_comap {X Y : Scheme.{u}} (p
   rw [hE, hB, ← List.eraseIdx_map]
   exact hBE.symm.eraseIdx j htake
 
-private theorem isClosed_setOf_connectedComponent_subset {X : Type u} [TopologicalSpace X]
-    (hop : ∀ x : X, IsOpen (connectedComponent x)) (P : Set X) :
-    IsClosed {x : X | connectedComponent x ⊆ P} := by
-  rw [← isOpen_compl_iff, isOpen_iff_forall_mem_open]
-  intro x hx
-  refine ⟨connectedComponent x, ?_, hop x, mem_connectedComponent⟩
-  intro y hy
-  simp only [Set.mem_compl_iff, Set.mem_ofPred_eq] at hx ⊢
-  intro hsub
-  apply hx
-  rw [connectedComponent_eq hy]
-  exact hsub
-
 theorem lowerBoundaryWithoutBlowup_baseChange_sameNontrivialBoundary (T : MarkedIdealWithBoundary.{u}) (j : ℕ)
     (hj : j < T.boundary.length) (K : Type u) [Field K] [CharZero K] (f : T.base →+* K)
     (E' : List (T.baseChange K f).scheme.IdealSheafData)
@@ -109,8 +96,7 @@ theorem preimageSupportEqComponentsInOrderLocus_of_isAdmissible (T : MarkedIdeal
     intro V _ _
     exact TopologicalSpace.NoetherianSpace.isCompact _
   have hclosed : IsClosed (boundaryComponentsInOrderLocus T j hj) :=
-    isClosed_setOf_connectedComponent_subset
-      (fun x => Blowup.isOpen_connectedComponent_of_noetherianSpace _ x) _
+    TopologicalSpace.NoetherianSpace.isClosed_setOf_connectedComponent_subset _ _
   have hinj : Function.Injective ⇑(T.boundary.get ⟨j, hj⟩).subschemeι :=
     (Scheme.Hom.isClosedEmbedding (T.boundary.get ⟨j, hj⟩).subschemeι).injective
   have himg : IsClosed (⇑(T.boundary.get ⟨j, hj⟩).subschemeι '' boundaryComponentsInOrderLocus T j hj) :=
