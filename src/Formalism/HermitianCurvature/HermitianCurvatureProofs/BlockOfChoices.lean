@@ -137,8 +137,7 @@ theorem quad_nonneg {α : Type} {Y : Finset α} {k : α → α → ℂ} (hk : TB
       ∑ p ∈ Y, ∑ q ∈ Y, c p * conj (c q) * k p q := by
     refine Finset.sum_congr rfl fun p _ => Finset.sum_congr rfl fun q _ => ?_
     rw [Complex.conj_conj]; ring
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem psd_mix {α N : Type} [Fintype N] {Y : Finset α} (A : N → α → α → ℂ) (θ : N → ℝ) (M : ℝ)
     (hM : 0 ≤ M) (hθ : ∀ n, 0 ≤ θ n) (hA : ∀ n, TB.PSDOn Y (A n)) :
@@ -196,8 +195,7 @@ theorem block_of_choices {α N : Type} [Fintype N] (Y : Finset α) (A B P : N �
   have eW : (∑ p ∈ Y, ∑ q ∈ Y, c p * conj (d q) * ∑ n, (θ n : ℂ) * P n p q) =
       ∑ n, (θ n : ℂ) * ∑ p ∈ Y, ∑ q ∈ Y, c p * conj (d q) * P n p q := by
     have := quad_mix Y P θ 1 c d
-    simp only [one_mul] at this
-    exact this
+    simpa only [one_mul] using this
   rw [eW]
   have hn : ∀ n, ‖(θ n : ℂ) * ∑ p ∈ Y, ∑ q ∈ Y, c p * conj (d q) * P n p q‖ ≤
       R * (Real.sqrt (θ n * a n) * Real.sqrt (θ n * b n)) := by
@@ -257,8 +255,7 @@ theorem block_iso (h0 : Dv 0) (hadd : ∀ x y, Dv x → Dv y → Dv (x + y)) (hs
   have hr' : ∀ x y₁ y₂ (c : ℂ), Dv x → Dv y₁ → Dv y₂ → β' x (y₁ + c • y₂) = β' x y₁ + conj c * β' x y₂ := by
     intro x y₁ y₂ c hx h₁ h₂; simp only [hβ', hr _ _ _ _ hx h₁ h₂]; ring
   have hpos' : ∀ x, Dv x → 0 ≤ β' x x := fun x hx => by
-    simp only [hβ']
-    exact mul_nonneg (by exact_mod_cast hc0) (hpos x hx)
+    simpa only [hβ'] using mul_nonneg (by exact_mod_cast hc0) (hpos x hx)
   set z : α ⊕ α → V := fun x => match x with
     | .inl p => Vop (u p)
     | .inr q => u q with hz

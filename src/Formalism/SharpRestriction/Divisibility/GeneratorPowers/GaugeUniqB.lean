@@ -71,8 +71,7 @@ theorem mem_orig_pow_of_coeff (n : ℕ) (p : MvPolynomial ι R) (h : ∀ e, e.de
   rw [p.as_sum]
   refine Ideal.sum_mem _ (fun e he => ?_)
   have hn : n ≤ e.degree := by
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     exact (mem_support_iff.mp he) (h e hlt)
   exact Ideal.pow_le_pow_right hn (monomial_mem_orig_pow e _)
 
@@ -94,8 +93,7 @@ theorem psJet_mul (m : ℕ) (f g : MvPowerSeries ι R) : psJet m (f * g) = psJet
     refine Finset.sum_congr rfl (fun x hx => ?_)
     have hx' := Finset.HasAntidiagonal.mem_antidiagonal.mp hx
     have hd : x.1.degree + x.2.degree ≤ m := by
-      rw [← map_add Finsupp.degree, hx']
-      exact he
+      rwa [← map_add Finsupp.degree, hx']
     rw [GermFun.coeff_psTrunc m f x.1 (by omega), GermFun.coeff_psTrunc m g x.2 (by omega)]
   rw [key, map_mul]
   rfl
@@ -158,8 +156,7 @@ theorem exists_ps_of_compat (ρ : ∀ m, Jet R ι m) (h : ∀ m, jetTrunc (ρ (m
     intro m
     rw [← Ideal.Quotient.eq]
     have h1 := h m
-    rw [← hP (m + 1), ← hP m] at h1
-    exact h1
+    rwa [← hP (m + 1), ← hP m] at h1
   have hcoef : ∀ n k (e : ι →₀ ℕ), e.degree ≤ n → AddMonoidAlgebra.coeff (P (n + k)) e = AddMonoidAlgebra.coeff (P n) e := by
     intro n k e he
     induction k with

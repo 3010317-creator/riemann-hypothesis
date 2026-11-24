@@ -153,8 +153,7 @@ theorem localLength_cyclic_not_mem {A B : Submodule (𝓞 E) S.V} {t : 𝓞 E}
       rw [← ha, ← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero, smul_eq_mul]
       exact Ideal.mul_mem_right a _ (Ideal.mem_span_singleton_self t)
     have h2 := (LinearEquiv.map_eq_zero_iff e).mp h1
-    rw [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap] at h2
-    exact h2
+    rwa [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap] at h2
   have hsub : Subsingleton ((Formalism.HermitianLatticesTheory.localization₂ P A) ⧸ (Formalism.HermitianLatticesTheory.localization₂ P B).comap (Formalism.HermitianLatticesTheory.localization₂ P A).subtype) := by
     rw [Submodule.Quotient.subsingleton_iff, eq_top_iff]
     rintro ⟨x, hx⟩ -
@@ -315,8 +314,7 @@ theorem corank_one_mod_prime_over (p : Ideal (𝓞 D.host.F)) (hp : p.IsMaximal)
   set K : Submodule (𝓞 D.host.E) Md := (M ⊔ P • Md).comap Md.subtype with hK
   have hTP : ((T : ℕ) : 𝓞 D.host.E) ∈ P := by
     have := Ideal.mem_map_of_mem (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) hTp
-    rw [map_natCast] at this
-    exact this
+    rwa [map_natCast] at this
   have hstep : ∀ n ∈ P • Md, ∃ b ∈ P, n - b • w₁ ∈ M := by
     intro n hn
     refine Submodule.smul_induction_on hn ?_ ?_
@@ -362,8 +360,7 @@ theorem corank_one_mod_prime_over (p : Ideal (𝓞 D.host.F)) (hp : p.IsMaximal)
       have : a = ((T : ℕ) : 𝓞 D.host.E) * o + b := by rw [← ho]; ring
       rw [this]
       exact P.add_mem (P.mul_mem_right _ hTP) hb
-    · intro ha
-      exact Submodule.mem_sup_right (Submodule.smul_mem_smul ha hw₁)
+    · exact fun ha => Submodule.mem_sup_right (Submodule.smul_mem_smul ha hw₁)
   have hcard : Nat.card (Md ⧸ K) = Ideal.absNorm p ^ 2 := by
     rw [← Nat.card_congr (φ.quotKerEquivOfSurjective hsurj).toEquiv,
       Nat.card_congr (Submodule.quotEquivOfEq _ _ hker).toEquiv, ← Formalism.MainNotions.BridgeLemma.absNorm_pE]

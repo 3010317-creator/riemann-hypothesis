@@ -133,8 +133,7 @@ theorem VF.ge_of_pow_eq_one (V : VF C) {ζ : C} {n : ℕ} (hn : n ≠ 0) (h : ζ
   have h1 : n • V.v ζ = 0 := by
     rw [← AddValuation.map_pow, h, AddValuation.map_one]
   have ht : V.v ζ ≠ ⊤ := by
-    rw [Ne, AddValuation.top_iff]
-    exact hζ0
+    rwa [Ne, AddValuation.top_iff]
   obtain ⟨r, hr⟩ := WithTop.ne_top_iff_exists.mp ht
   rw [← hr, ← WithTop.coe_nsmul, WithTop.coe_eq_zero, nsmul_eq_mul, mul_eq_zero] at h1
   have hr0 : r = 0 := h1.resolve_left (Nat.cast_ne_zero.mpr hn)
@@ -186,8 +185,7 @@ theorem unV_mem (V : VF C) (g : Fin 2) (hlg0 : ∀ i, MvPowerSeries.constantCoef
   have hζX : PowerSeries.constantCoeff (ζ • (PowerSeries.X : PowerSeries C)) = 0 := by simp
   have hγζ : (fun i => PowerSeries.subst (ζ • (PowerSeries.X : PowerSeries C)) (γ i)) = γ := by
     apply X.lg_inj hlg0 hexlg
-    · intro i
-      exact constantCoeff_subst_zero (σ := Unit) (fun _ => hζX) (hγ i).1
+    · exact fun i => constantCoeff_subst_zero (σ := Unit) (fun _ => hζX) (hγ i).1
     · exact fun i => (hγ i).1
     · intro i
       rw [alongCv_repar (fun i => (hγ i).1) hζX, ← PowerSeries.rescale_eq_subst]

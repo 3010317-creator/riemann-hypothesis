@@ -128,8 +128,7 @@ theorem sx_frob_sum {ι α K' : Type} [Field K'] (R : Subring K') (s : Finset α
   · rw [MvPowerSeries.coeff_map]
     exact (MvPowerSeries.coeff n r).2
   · have hsum : ∀ i ∈ s, MvPowerSeries.map R.subtype (y' i) = x i := fun i hi => by
-      simp only [y', dite_eq_left hi]
-      exact hy i hi
+      simpa only [y', dite_eq_left hi] using hy i hi
     have h2 := congrArg (MvPowerSeries.map R.subtype) hr
 
     simp only [map_pow, map_sum, map_add (f := _), map_mul, map_natCast] at h2
@@ -180,10 +179,8 @@ theorem sx_lam_int (vp : K') (hvp : vp ^ (p ^ 2 - 1) = (p : K')) (n : ℕ) :
       · simp
       · intro b _ hb
         rw [ite_eq_right]
-        intro h
-        exact hb (hinj h).symm
-      · intro hj
-        exact absurd (Finset.mem_range.2 hjlt) hj
+        exact fun h => hb (hinj h).symm
+      · exact fun hj => absurd (Finset.mem_range.2 hjlt) hj
     rw [hsum]
     have key : ∀ m : ℕ, ∃ e : ℕ, vp ^ ((p ^ 2) ^ m - 1) = (p : K') ^ e ∧ m ≤ e ∧
         (m ≤ 1 → e = m) ∧ (2 ≤ m → m + 1 ≤ e) := by
@@ -230,8 +227,7 @@ theorem sx_lam_int (vp : K') (hvp : vp ^ (p ^ 2 - 1) = (p : K')) (n : ℕ) :
           have := hinj (show (p ^ 2) ^ j = (p ^ 2) ^ 1 by rw [h, pow_one])
           omega
         rw [ite_eq_right hn1, ite_eq_right hnq]
-        simp only [add_zero, sub_zero]
-        exact dvd_pow_self _ (by omega)
+        simpa only [add_zero, sub_zero] using dvd_pow_self _ (by omega)
   · have hsum : (∑ i ∈ range (n + 1), if n = (p ^ 2) ^ i then ((p : K') ^ i)⁻¹ else 0) = 0 :=
       Finset.sum_eq_zero fun i _ => ite_eq_right fun h => hn ⟨i, h⟩
     rw [hsum, mul_zero]
@@ -249,10 +245,8 @@ private theorem sum_sign_if_eq_pow_at_pow (q : ℕ) (hq : 1 < q) (l : ℕ) :
   · simp
   · intro b _ hb
     rw [ite_eq_right]
-    intro h
-    exact hb (hinj h).symm
-  · intro hl
-    exact absurd (Finset.mem_range.2 hlt) hl
+    exact fun h => hb (hinj h).symm
+  · exact fun hl => absurd (Finset.mem_range.2 hlt) hl
 
 private theorem sum_sign_if_eq_pow_eq_zero_of_ne_pow (q m : ℕ) (hm : ∀ l, m ≠ q ^ l) :
     (∑ i ∈ range (m + 1), if m = q ^ i then ((-1 : ℤ)) ^ i else 0) = 0 :=
@@ -315,8 +309,7 @@ private theorem coeff_pow_eq_of_lower_coeff_eq {R : Type} [CommRing R] (a b : Po
       rw [he, pow_succ]
       exact mul_dvd_mul h1 h2
     have h4 := (PowerSeries.X_pow_dvd_iff.1 h3) n (by omega)
-    rw [map_sub, sub_eq_zero] at h4
-    exact h4
+    rwa [map_sub, sub_eq_zero] at h4
 
 private theorem coeff_subst_eq_sum_coeff_mul_coeff_pow {K : Type} [Field K] (μ f : PowerSeries K)
     (h0 : PowerSeries.constantCoeff μ = 0) (n : ℕ) :
@@ -460,8 +453,7 @@ theorem sx_mu_alt_int (vp : K') (hvp : vp ^ (p ^ 2 - 1) = (p : K')) (μ : PowerS
           exact hPμ m h
         · have hmn : m = n := by omega
           subst hmn
-          rw [ite_eq_left rfl, hPz m le_rfl, zero_add]
-          exact hcμ
+          rwa [ite_eq_left rfl, hPz m le_rfl, zero_add]
       · intro m hm
         rw [Polynomial.coeff_add, Polynomial.coeff_C_mul_X_pow]
         rcases Nat.lt_or_ge m n with h | h
@@ -469,8 +461,7 @@ theorem sx_mu_alt_int (vp : K') (hvp : vp ^ (p ^ 2 - 1) = (p : K')) (μ : PowerS
           exact hPd m h
         · have hmn : m = n := by omega
           subst hmn
-          rw [ite_eq_left rfl, hPz m le_rfl, zero_add]
-          exact hcd
+          rwa [ite_eq_left rfl, hPz m le_rfl, zero_add]
   obtain ⟨P, -, -, hPμ, hPd⟩ := key (n + 1) (by omega)
   obtain ⟨y, hy⟩ := hPd n (by omega)
   refine ⟨y, ?_⟩
@@ -592,9 +583,7 @@ theorem th_posAdd_posSub {n' : ℕ} (t : Fin n') (d : ℕ) : posAdd (posSub t d)
   rw [e2, Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt t.isLt]
 
 theorem th_odd_posAdd {n' : ℕ} (hev : Even n') (s : Fin n') (d : ℕ) :
-    (posAdd s d).val % 2 = (s.val + d) % 2 := by
-  show (s.val + d) % n' % 2 = _
-  exact Nat.mod_mod_of_dvd _ hev.two_dvd
+    (posAdd s d).val % 2 = (s.val + d) % 2 := Nat.mod_mod_of_dvd _ hev.two_dvd
 
 end Pos
 
@@ -635,8 +624,7 @@ theorem th_Aw_succ (hW : FrobWH p) (w : WW p) (k : ℕ) :
     ∃ y ∈ Rp p K' vp, Aw K' w (k + 1) = Aw K' w k ^ p + (p : K') * y := by
   obtain ⟨y, hy⟩ := hW ((sigW p)^[k] w)
   refine ⟨wK' p K' y, ?_, ?_⟩
-  · have h1 := th_Aw_mem vp y 0
-    simpa [Aw] using h1
+  · simpa [Aw] using th_Aw_mem vp y 0
   · simp only [Aw, wK', Function.iterate_succ_apply', hy, map_add (f := _), map_mul, map_pow, map_natCast]
 
 theorem th_frob_lin (hF : FrobSumH p n' r0 r1 K' (Rp p K' vp)) (hW : FrobWH p) (w : WW p) (P : Finset (Fin n'))
@@ -832,8 +820,7 @@ theorem th_sumR {ν : ℕ} (w1 w2 : Fin ν → WW p) (P Q : Finset (Fin n'))
       split_ifs <;> simp
     rw [Finset.sum_congr rfl e, Finset.sum_ite_eq' P (posAdd t' 1), ite_eq_left (hQ t' ht')]
   simp only [Finset.sum_mul, Finset.mul_sum]
-  rw [Finset.sum_comm]
-  rw [Finset.sum_congr rfl fun t _ => Finset.sum_comm]
+  rw [Finset.sum_comm, Finset.sum_congr rfl fun t _ => Finset.sum_comm]
   exact Finset.sum_congr rfl key
 
 abbrev Pev (n' : ℕ) : Finset (Fin n') := univ.filter fun s : Fin n' => ¬ IsOddPos s
@@ -1013,15 +1000,13 @@ theorem restTwoSums_of (hT1 : MuAltH p) (hT2 : DualH p)
         (∑ t ∈ Pev n, MvPowerSeries.C (Aw L (B.omS r) t.val) * sSer p L t a b) := by
     intro r a b
     have h := th_claimM vp hFS hW μ hM (B.omS r) (B.fixS r) (Pev n) hEv1 hEv2 a b
-    rw [← th_coordZ_inl] at h
-    exact h
+    rwa [← th_coordZ_inl] at h
   have hZ : ∀ (r : Fin (n / 2)) (a : Fin r0) (b : Fin r1),
       Cg (Rp p L vp) (p : L) (sOf B L μ (Sum.inr (r, a, b)))
         (∑ t ∈ Pod n, MvPowerSeries.C (Aw L (B.om r) t.val) * sSer p L t a b) := by
     intro r a b
     have h := th_claimM vp hFS hW μ hM (B.om r) (B.fix r) (Pod n) hOd1 hOd2 a b
-    rw [← th_coordZ_inr] at h
-    exact h
+    rwa [← th_coordZ_inr] at h
   have hT1' : ∀ (r : Fin (n / 2)) (a : Fin r0) (b : Fin r1),
       Cg (Rp p L vp) (p : L)
         (MvPowerSeries.C (wK' p L c) * (sOf B L μ (Sum.inl (r, a, b)) * sOf B L μ (Sum.inr (r, a, b)) ^ p))
@@ -1073,8 +1058,7 @@ theorem restTwoSums_of (hT1 : MuAltH p) (hT2 : DualH p)
   have hR : (hhS p L u : MvPowerSeries (Zidx n r0 r1) L) = ∑ a : Fin r0, ∑ b : Fin r1, ∑ s : Fin n,
       MvPowerSeries.C (u s) * (sSer p L s a b ^ p * sSer p L (posAdd s 1) a b) := by
     unfold hhS
-    simp only [Finset.mul_sum]
-    exact triple_sum_comm _ _
+    simpa only [Finset.mul_sum] using triple_sum_comm _ _
   have hQ1 : ∀ t' ∈ Pod n, posAdd t' 1 ∈ Pev n := by
     intro t' ht'
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ht' ⊢
@@ -1083,8 +1067,7 @@ theorem restTwoSums_of (hT1 : MuAltH p) (hT2 : DualH p)
   have hQ2 : ∀ t' ∈ Pev n, posAdd t' 1 ∈ Pod n := by
     intro t' ht'
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ht' ⊢
-    rw [th_par_one hev]
-    exact ht'
+    rwa [th_par_one hev]
   have hD1 : ∀ t ∈ Pev n, ∀ t' ∈ Pod n,
       ∑ r, Aw L (B.omS r) t.val * Aw L (B.om r) (t'.val + 1) = if t = posAdd t' 1 then 1 else 0 := by
     intro t ht t' ht'

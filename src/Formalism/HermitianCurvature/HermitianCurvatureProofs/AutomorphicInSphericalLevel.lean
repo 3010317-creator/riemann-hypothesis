@@ -253,7 +253,6 @@ theorem isoExpl (H : Matrix (Fin n) (Fin n) ℂ) (m : ι → Fin n → ℂ) (hH 
     hD0 hK hX rfl ha2 hnv)
 
 theorem nsq_cont : Continuous fun x : Fin n → ℂ => nsq x := by
-  show Continuous fun x : Fin n → ℂ => ∑ i, Complex.normSq (x i)
   exact continuous_finsetSum _ fun i _ => Complex.continuous_normSq.comp (continuous_apply i)
 
 theorem eN_eq_sqrt (x : Fin n → ℂ) : eN x = Real.sqrt (nsq x) := by
@@ -272,8 +271,7 @@ theorem gramOf_cont {X : Type*} [TopologicalSpace X] (H : Matrix (Fin n) (Fin n)
   refine continuousOn_pi.2 fun i => continuousOn_pi.2 fun j => ?_
   simp only [gramOf, Matrix.of_apply, herm, dotProduct, Matrix.mulVec, Pi.star_apply]
   refine continuousOn_finsetSum _ fun l _ => ?_
-  refine ((hmi i l).star).mul ?_
-  exact continuousOn_finsetSum _ fun q _ => continuousOn_const.mul (hmi j q)
+  exact ((hmi i l).star).mul (continuousOn_finsetSum _ fun q _ => continuousOn_const.mul (hmi j q))
 
 theorem isoUnif {X : Type*} [TopologicalSpace X] (H : Matrix (Fin n) (Fin n) ℂ) (hH : Hᴴ = H)
     (hHH : H * H = 1) (m : X → ι → Fin n → ℂ) (Kx : Set X) (hK : IsCompact Kx) (hm : ContinuousOn m Kx)
@@ -781,8 +779,7 @@ theorem cd_ent {f : X → Mt k r} (hf : ContDiff ℝ n f) (i j : Fin (2 * r + k 
 theorem cd_mm {f g : X → Mt k r} (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) :
     ContDiff ℝ n fun x => mm (f x) (g x) := by
   refine contDiff_pi.mpr (fun i => contDiff_pi.mpr (fun j => ?_))
-  simp only [mm]
-  exact ContDiff.sum (fun l _ => (cd_ent hf i l).mul (cd_ent hg l j))
+  simpa only [mm] using ContDiff.sum (fun l _ => (cd_ent hf i l).mul (cd_ent hg l j))
 
 theorem cd_ct {f : X → Mt k r} (hf : ContDiff ℝ n f) : ContDiff ℝ n fun x => ct (f x) := by
   refine contDiff_pi.mpr (fun i => contDiff_pi.mpr (fun j => ?_))
@@ -801,8 +798,7 @@ theorem cd_sgsP : ContDiff ℝ n fun q : B.SS k r × Mt k r => sgsP q.1 q.2 := b
 
 theorem norm_le_gN (x : Mt k r) : ‖x‖ ≤ B.gN (Matrix.of x) := by
   refine (pi_norm_le_iff_of_nonneg (GN.gN_nonneg _)).2 fun i => ?_
-  refine (pi_norm_le_iff_of_nonneg (GN.gN_nonneg _)).2 fun j => ?_
-  exact GN.entry_le_gN (Matrix.of x) i j
+  exact (pi_norm_le_iff_of_nonneg (GN.gN_nonneg _)).2 fun j => GN.entry_le_gN (Matrix.of x) i j
 
 end alg
 
@@ -981,8 +977,7 @@ theorem local_smooth (Bs : B.RealPlaceData k r Wp Wq) (ν' : Fin (2 * r + k + 1)
     refine ⟨hgG, ?_⟩
     have hZ' := hKΩ hZ
     rw [hΩdef] at hZ'
-    rw [PBI.gf_eq_gPoly, hZg]
-    exact hZ'
+    rwa [PBI.gf_eq_gPoly, hZg]
   obtain ⟨Rp, hRp⟩ := fibreProper Bs.z Bs.z' hstd Kg hKg hKpos R
   have hρ : 0 < max Rp 1 := lt_max_of_lt_right one_pos
   let φ : ContDiffBump (0 : B.SS k r) := ⟨max Rp 1, max Rp 1 + 1, hρ, by linarith⟩
@@ -1007,8 +1002,7 @@ theorem local_smooth (Bs : B.RealPlaceData k r Wp Wq) (ν' : Fin (2 * r + k + 1)
         (fun q : G.Mat (r + 1) × B.SS k r => (-q.2, sec q.1)) (ball Z₀ (δ₀ / 2) ×ˢ univ) :=
       contDiff_snd.neg.contDiffOn.prodMk hsec2
     have hin := (cd_sgsP (k := k) (r := r) (n := ((⊤ : ℕ∞) : WithTop ℕ∞))).comp_contDiffOn hpair
-    have hfull := hφ.contDiffOn.smul (hFt.comp_contDiffOn hin)
-    exact hfull.congr fun q _ => rfl
+    exact (hφ.contDiffOn.smul (hFt.comp_contDiffOn hin)).congr fun q _ => rfl
   have hconv := contDiffOn_convolution_right_with_param_comp (𝕜 := ℝ) (n := ⊤)
     (μ := (Bs.μW.prod μ0).prod (Bs.μW'.prod μ0'))
     (ContinuousLinearMap.restrictScalarsL ℂ (Wq →L[ℂ] Wp) (Wq →L[ℂ] Wp) ℝ ℝ)

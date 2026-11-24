@@ -181,8 +181,7 @@ theorem lamStar_lamStar {m : ℕ} (lam : Fin (m + 1) → ℤ) : lamStar (lamStar
 
 theorem antitone_lamStar {m : ℕ} {lam : Fin (m + 1) → ℤ} (h : Antitone lam) : Antitone (lamStar lam) := by
   intro i j hij
-  simp only [lamStar]
-  exact neg_le_neg (h (Fin.rev_le_rev.mpr hij))
+  simpa only [lamStar] using neg_le_neg (h (Fin.rev_le_rev.mpr hij))
 
 theorem isUnit_invT {n : ℕ} {g : Matrix (Fin n) (Fin n) K} (hg : IsUnit g.det) : IsUnit ((g⁻¹)ᵀ).det := by
   rw [det_transpose]
@@ -293,13 +292,11 @@ theorem dir1 (hC : ∀ (R : Type) [CommRing R] (m : ℕ) (lam : Fin (m + 1) → 
     obtain ⟨F'', hF''mem, hrel'', hF''hom⟩ :=
       hG O K m lam (g'⁻¹)ᵀ hh hbal hhom (hC O m lam hl) F (hF _ ⟨hh, hspan'⟩)
     rw [invT_invT hg'] at hF''mem
-    rw [eq_of_rel_of_isHomogeneous_of_uniq hU hrel hrel'' hF'hom hF''hom]
-    exact hF''mem
+    rwa [eq_of_rel_of_isHomogeneous_of_uniq hU hrel hrel'' hF'hom hF''hom]
   refine ⟨C (sgnK K m ^ lamStar lam (Fin.last m)) * F', ?_,
     fun z hz => hE K m _ _ _ _ F F' hbal hrel hF'hom z hz⟩
   rcases sgn_zpow_pm (K := K) hS m (lamStar lam (Fin.last m)) with h | h
-  · rw [h, C_1, one_mul]
-    exact hF'lat
+  · rwa [h, C_1, one_mul]
   · rw [h, C_neg, C_1, neg_one_mul]
     exact Submodule.neg_mem _ hF'lat
 

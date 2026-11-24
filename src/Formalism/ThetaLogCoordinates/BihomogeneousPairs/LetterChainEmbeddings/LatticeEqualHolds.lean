@@ -138,14 +138,12 @@ theorem Y_iter (hF : HypJoin p (r := r) D) (i : Fin D.T.t) :
   | zero =>
     intro j jp y hy
     have h0 : j + Pi.single i 0 = j := by simp
-    rw [h0, pow_zero, Module.End.one_apply]
-    exact hy
+    rwa [h0, pow_zero, Module.End.one_apply]
   | succ m ih =>
     intro j jp y hy
     have h := hF _ jp i _ (ih j jp y hy)
     rw [update_single] at h
-    rw [pow_succ', Module.End.mul_apply]
-    exact h
+    rwa [pow_succ', Module.End.mul_apply]
 
 theorem lat_tie (hB : D.BlockOK) (hF : HypJoin p (r := r) D) (j : Fin D.T.t → ℕ) (jp : ℕ) (i : Fin D.T.t)
     (m L : ℕ) (hmL : Nat.log p m ≤ L) :
@@ -165,7 +163,6 @@ theorem lat_tie (hB : D.BlockOK) (hF : HypJoin p (r := r) D) (j : Fin D.T.t → 
 end tieop
 
 theorem lattice_equal_holds : LatTie := by
-  intro p _ N r _ D hB hF j jp i m L hmL x hx
-  exact lat_tie hB hF j jp i m L hmL x hx
+  exact fun p _ N r _ D hB hF j jp i m L hmL x hx => lat_tie hB hF j jp i m L hmL x hx
 
 end Formalism.InvariantFactorPaths.KP.LL

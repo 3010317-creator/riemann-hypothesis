@@ -80,8 +80,7 @@ lemma zv_two_sq_step (h2 : ℓ = 2) {x : ℤ_[ℓ]} (h4 : (ℓ : ℤ_[ℓ]) ^ 2 
   have hx1 : (ℓ : ℤ_[ℓ]) ∣ x - 1 := (dvd_pow_self _ two_ne_zero).trans h4
   have e : x + 1 = (x - 1) + (ℓ : ℤ_[ℓ]) := by
     have hc : (ℓ : ℤ_[ℓ]) = 2 := by
-      have h7 := congrArg (fun n : ℕ => (n : ℤ_[ℓ])) h2
-      simpa using h7
+      simpa using congrArg (fun n : ℕ => (n : ℤ_[ℓ])) h2
     rw [hc]
     ring
 
@@ -91,8 +90,7 @@ lemma zv_two_sq_step (h2 : ℓ = 2) {x : ℤ_[ℓ]} (h4 : (ℓ : ℤ_[ℓ]) ^ 2 
     have h3 : (ℓ : ℤ_[ℓ]) ^ 2 ∣ (ℓ : ℤ_[ℓ]) ^ 1 := by
       have h5 := dvd_sub hd h4
       rw [e, add_sub_cancel_left] at h5
-      rw [pow_one]
-      exact h5
+      rwa [pow_one]
     have h6 := (pow_dvd_pow_iff zv_prime.ne_zero zv_prime.not_unit).1 h3
     omega
   rw [show x ^ 2 - 1 = (x - 1) * (x + 1) by ring, emultiplicity_mul zv_prime, hp1]
@@ -121,8 +119,7 @@ lemma zv_not_dvd_cast {m : ℕ} (hm : ¬ ℓ ∣ m) : ¬ (ℓ : ℤ_[ℓ]) ∣ (
   intro h
   rw [← PadicInt.norm_lt_one_iff_dvd] at h
   have h' : ‖((m : ℤ) : ℤ_[ℓ])‖ < 1 := by
-    rw [Int.cast_natCast]
-    exact h
+    rwa [Int.cast_natCast]
   exact hm (Int.natCast_dvd_natCast.1 ((PadicInt.norm_int_lt_one_iff_dvd (m : ℤ)).1 h'))
 
 lemma zv_pow_nat (x : ℤ_[ℓ]) (hx : (ℓ : ℤ_[ℓ]) ∣ x - 1)

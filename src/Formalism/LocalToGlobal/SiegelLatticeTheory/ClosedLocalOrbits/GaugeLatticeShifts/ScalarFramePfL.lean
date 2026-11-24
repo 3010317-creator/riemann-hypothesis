@@ -113,8 +113,7 @@ theorem scal_om (F : LFlag (D.sp.Y 0) D.R.rS T) (F' F'' : LFlag (D.sp.Y 0) D.R.r
 
       rw [map_sum, LinearMap.sum_apply] at this
       simp only [LinearMap.map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply] at this
-      simp only [Matrix.vecMul, dotProduct, Pi.zero_apply, GZ_apply]
-      exact this
+      simpa only [Matrix.vecMul, dotProduct, Pi.zero_apply, GZ_apply] using this
     rw [GDl_top'] at hdet
     have hκ := Matrix.eq_zero_of_vecMul_eq_zero hdet hm
     have : κ = 0 := by
@@ -155,8 +154,7 @@ theorem scal_om (F : LFlag (D.sp.Y 0) D.R.rS T) (F' F'' : LFlag (D.sp.Y 0) D.R.r
       ring
   have hu'oX : u' ∈ orth (VS D) (Xsp F') := by
     rw [mem_orth]
-    intro x hx
-    exact (mem_orth (VS D)).1 hu'o x (Submodule.mem_sup_left hx)
+    exact fun x hx => (mem_orth (VS D)).1 hu'o x (Submodule.mem_sup_left hx)
   have hβU : β u' ∈ UUE Λ F F'' := htrβ u' hu'U hu'oX
   have hβo : β u' ∈ orth (VS D) (Xplus F'') := by
     rw [Xplus, mem_orth_Xplus]
@@ -293,8 +291,7 @@ theorem gfacts_of (F : LFlag (D.sp.Y 0) D.R.rS T) (F' F'' : LFlag (D.sp.Y 0) D.R
     intro x hx
     rw [← hPX] at hx
     obtain ⟨y, hy, rfl⟩ := hx
-    rw [LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply]
-    exact hy
+    rwa [LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply]
   have hiso : ∀ x y, (VS D).hT (β x) (β y) = (VS D).hT x y := fun x y => hP.1.1 x y
   have hβz : β F'.fl.z = F''.fl.z := hP.2.2.1
 
@@ -373,8 +370,7 @@ theorem gfacts_of (F : LFlag (D.sp.Y 0) D.R.rS T) (F' F'' : LFlag (D.sp.Y 0) D.R
     rw [← hP.1.2] at hv
     obtain ⟨w, hw, rfl⟩ := hv
     show β.symm (β w) ∈ Λ
-    rw [LinearEquiv.symm_apply_apply]
-    exact hw
+    rwa [LinearEquiv.symm_apply_apply]
   · intro a
     show _ ∈ Xs (S := VS D) (frameAct (frame F'') (admXi D Λ F F'')⁻¹)
     rw [hXg2]
@@ -405,13 +401,11 @@ theorem gfacts_of (F : LFlag (D.sp.Y 0) D.R.rS T) (F' F'' : LFlag (D.sp.Y 0) D.R
     have ha : frameAct (frame F'') (admXi D Λ F F'')⁻¹ a.castSucc ∈ F''.fl.X := by
       have h : frameAct (frame F'') (admXi D Λ F F'')⁻¹ a.castSucc ∈
           Xs (S := VS D) (frameAct (frame F'') (admXi D Λ F F'')⁻¹) := Submodule.subset_span ⟨a, rfl⟩
-      rw [hXg2] at h
-      exact h
+      rwa [hXg2] at h
     have hb : frameAct (frame F'') (admXi D Λ F F'')⁻¹ b.castSucc ∈ F''.fl.X := by
       have h : frameAct (frame F'') (admXi D Λ F F'')⁻¹ b.castSucc ∈
           Xs (S := VS D) (frameAct (frame F'') (admXi D Λ F F'')⁻¹) := Submodule.subset_span ⟨b, rfl⟩
-      rw [hXg2] at h
-      exact h
+      rwa [hXg2] at h
     exact hT_X_X F''.fl ha hb
   · intro y
     have hsup : UUE Λ F F' ⊔ orth (VS D) (UUE Λ F F') = ⊤ := by

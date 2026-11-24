@@ -76,8 +76,7 @@ theorem val_ell_lt {K : Type} [Field K] [NumberField K] {p : HeightOneSpectrum (
     valuation Fp ((Loc.resChar p : ℕ) : Fp) < 1 := by
   have hmem := resChar_memK p
   have h1 : p.valuation K ((Loc.resChar p : ℕ) : K) < 1 := by
-    have h := (p.valuation_lt_one_iff_mem (K := K) ((Loc.resChar p : ℕ) : 𝓞 K)).mpr hmem
-    simpa using h
+    simpa using (p.valuation_lt_one_iff_mem (K := K) ((Loc.resChar p : ℕ) : 𝓞 K)).mpr hmem
   have h2 : ¬ (ι 1 ≤ᵥ ι ((Loc.resChar p : ℕ) : K)) := by
     rw [hval, map_one]
     exact not_le.mpr h1
@@ -148,8 +147,7 @@ theorem approx_core {K : Type} [Field K] [NumberField K] {ℓ : ℕ} [Fact ℓ.P
 
       simp only [β, Finset.sum_mul, map_sum, smul_mul_assoc, map_smul, htb, smul_eq_mul, mul_ite, mul_one,
       mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
-    intro x
-    exact congrArg (fun L => L x) hL
+    exact fun x => congrArg (fun L => L x) hL
   have hker : ∀ x, piMap K ℓ Fp ι x = 0 → β * x = 0 := by
     intro x hx
     apply hnd

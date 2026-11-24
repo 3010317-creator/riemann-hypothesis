@@ -62,8 +62,7 @@ namespace PI.ProdFormulaE.ROpen
 
 theorem isOpen_addSubgroup {G : Type*} [TopologicalSpace G] [AddCommGroup G] [ContinuousAdd G]
     (H : AddSubgroup G) (U : Set G) (hU : IsOpen U) (h0 : (0 : G) ∈ U) (hUH : U ⊆ H) :
-    IsOpen (H : Set G) := by
-  exact H.isOpen_of_mem_nhds (Filter.mem_of_superset (hU.mem_nhds h0) hUH)
+    IsOpen (H : Set G) := H.isOpen_of_mem_nhds (Filter.mem_of_superset (hU.mem_nhds h0) hUH)
 
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F]
 variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E]
@@ -129,9 +128,7 @@ theorem isOpen_R [MeasurableSpace E] (M : Formalism.MainNotions.S.Loc.Model F E)
       simp only [Formalism.MainNotions.S.Loc.Model.R, hs]
     rw [hR]
     exact isOpen_O M.L
-  · have hq0 : ((g.q : 𝒪[F]) : F) ≠ 0 := by
-      intro h
-      exact g.q_irr.ne_zero (Subtype.ext h)
+  · have hq0 : ((g.q : 𝒪[F]) : F) ≠ 0 := fun h => g.q_irr.ne_zero (Subtype.ext h)
     have he : Continuous g.e := IsModuleTopology.continuous_of_linearMap g.e.toLinearMap
     have hV : IsOpen ((fun c : F => c * ((g.q : 𝒪[F]) : F)⁻¹) ⁻¹' (𝒪[F] : Set F)) :=
       (continuous_id.mul continuous_const).isOpen_preimage _ isOpen_integer

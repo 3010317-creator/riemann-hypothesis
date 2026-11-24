@@ -110,22 +110,15 @@ theorem IsUB.zero_of_blk {blk : Fin m → ℕ} {C : Matrix (Fin m) (Fin m) ℂ} 
   exact hij (h.2 i j hne).2
 
 theorem IsUB.det_eq_one {blk : Fin m → ℕ} {C : Matrix (Fin m) (Fin m) ℂ} (h : IsUB blk C) : C.det = 1 := by
-  have hup : C.BlockTriangular id := by
-    intro i j hij
-    exact h.zero_of_lt hij
+  have hup : C.BlockTriangular id := fun i j hij => h.zero_of_lt hij
   rw [Matrix.det_of_upperTriangular hup]
   exact Finset.prod_eq_one fun i _ => h.1 i
 
 theorem IsUB.inv {blk : Fin m → ℕ} {C : Matrix (Fin m) (Fin m) ℂ} (h : IsUB blk C) : IsUB blk C⁻¹ := by
-  have hup : C.BlockTriangular id := by
-    intro i j hij
-    exact h.zero_of_lt hij
-  have hb1 : C.BlockTriangular blk := by
-    intro i j hij
-    exact h.zero_of_blk hij.ne'
+  have hup : C.BlockTriangular id := fun i j hij => h.zero_of_lt hij
+  have hb1 : C.BlockTriangular blk := fun i j hij => h.zero_of_blk hij.ne'
   have hb2 : C.BlockTriangular (fun i => OrderDual.toDual (blk i)) := by
-    intro i j hij
-    exact h.zero_of_blk (OrderDual.toDual_lt_toDual.mp hij).ne
+    exact fun i j hij => h.zero_of_blk (OrderDual.toDual_lt_toDual.mp hij).ne
   have hdet : IsUnit C.det := by
     rw [h.det_eq_one]
     exact isUnit_one
@@ -142,8 +135,7 @@ theorem IsUB.inv {blk : Fin m → ℕ} {C : Matrix (Fin m) (Fin m) ℂ} (h : IsU
       rcases lt_or_gt_of_ne hk with hlt | hlt
       · rw [h.zero_of_lt hlt, zero_mul]
       · rw [iup hlt, mul_zero]
-    · intro hi
-      exact absurd (Finset.mem_univ i) hi
+    · exact fun hi => absurd (Finset.mem_univ i) hi
   · by_contra hlt
     exact hij (iup (not_le.mp hlt))
   · by_contra hne
@@ -194,8 +186,7 @@ theorem conj_apply (X : Matrix (Fin m) (Fin m) ℂ) (j i : Fin m) :
       apply hl
       rw [(hZ j l).mp hne, hπ]
     rw [h0, zero_mul]
-  · intro hj
-    exact absurd (Finset.mem_univ _) hj
+  · exact fun hj => absurd (Finset.mem_univ _) hj
 
 end Mono
 
@@ -266,12 +257,10 @@ theorem gram_last {blk : Fin (m + 1) → ℕ} {A : Matrix (Fin (m + 1)) (Fin (m 
         simp
     · intro k _ hk
       rw [hΓ k (Fin.last m) (Or.inl hk), mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   · intro l _ hl
     rw [Finset.sum_eq_zero (fun k _ => by rw [hΓ k l (Or.inr hl), mul_zero]), zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 end Formalism.L2.S.L6.UnitaryStandardVectors
 end -- clump:auto
@@ -381,8 +370,7 @@ theorem Yc_unitary {C : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ} (hC : IsUB blk C
   refine fromBlocks_inj.2 ⟨?_, ?_, ?_, ?_⟩
   · exact gram_last hA _ (hL _)
   · exact hAZC
-  · have h2 := congrArg conjTranspose hAZC
-    simpa [conjTranspose_mul, Matrix.mul_assoc] using h2
+  · simpa [conjTranspose_mul, Matrix.mul_assoc] using congrArg conjTranspose hAZC
   · exact gram_last hC _ (hL _)
 
 end Main

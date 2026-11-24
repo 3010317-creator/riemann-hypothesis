@@ -55,8 +55,7 @@ theorem taylorMv_sum [DecidableEq n] (hLin : TaylorMvLinear) {κ : Type} (S : Fi
   induction S using Finset.induction_on with
   | empty =>
     refine ⟨by simpa using analyticAt_const, ?_⟩
-    have h0 := (hLin n (fun _ => 0) (fun _ => 0) analyticAt_const analyticAt_const).2 0
-    simpa using h0
+    simpa using (hLin n (fun _ => 0) (fun _ => 0) analyticAt_const analyticAt_const).2 0
   | insert a S ha ih =>
     have h1 : AnalyticAt ℂ (fun z => c a * F a z) 0 := analyticAt_const.mul (hF a)
     simp only [Finset.sum_insert ha]
@@ -114,8 +113,7 @@ theorem trans_mem (L : PeriodPair) {m : Type} (Λb : AddSubgroup (m → ℂ)) (s
     simp only [Pi.smul_apply, Pi.add_apply, smul_eq_mul, nsmul_eq_mul]
     push_cast
     ring
-  rw [h4]
-  exact h3
+  rwa [h4]
 
 theorem smul_img_mem {n : Type} [Fintype n] (Λ : AddSubgroup (n → ℂ))
     (g : (Fin 4 × n → ℂ) ≃ₗ[ℂ] (Fin 4 × n → ℂ)) (t : n → ℂ) (c : ℂ) (h : c • t ∈ Λ) :
@@ -171,8 +169,7 @@ theorem quadraticSemicharacterIdentity_of_reformulated_of_taylorMv_of_repsExist_
     rw [h1, one_mul]
   refine ⟨{x // x ∈ S}, inferInstance, fun x => ι (c x), fun x w => (mvExp ph : PowerSeries ℂ_[l]) *
       (PowerSeries.map (ι : ℂ →+* ℂ_[l]) (Formalism.L2.Th1.F.taylor0 (f x w))).subst lg, ?_, ?_, ?_⟩
-  · intro x
-    exact norm_coeff ι _ _ hD.selfDual β hD.betaSemi _ hln ε hε _ _ N hN hNt' (hS.1 x x.2)
+  · exact fun x => norm_coeff ι _ _ hD.selfDual β hD.betaSemi _ hln ε hε _ _ N hN hNt' (hS.1 x x.2)
   · intro x w
     refine hTI _ (N * relIdx (stdLat L (Fin 4 × n))
       (imgLat (g : (Fin 4 × n → ℂ) →ₗ[ℂ] (Fin 4 × n → ℂ)) (pow4 Λ))) (Nat.mul_pos hN (Nat.pos_of_ne_zero hD.idx₁)) ?_

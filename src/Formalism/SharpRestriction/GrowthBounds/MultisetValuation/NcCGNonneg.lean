@@ -139,17 +139,11 @@ theorem nc_ties (X : Formalism.MainNotions.G.Inst D L) (Y : Formalism.MainNotion
   have h1 : 1 < (D.gat u w hg).P.m + 1 := by omega
   have hM : (D.gat u w hg).P.m < (D.gat u w hg).P.m + 1 := by omega
   have e0 : (0 : Fin ((D.gat u w hg).P.m + 1)) = ⟨0, h0⟩ := Fin.ext (by simp)
-  have hA01 : ∀ s, (D.gat u w hg).P.lam0 (Y.vOf u w hg t0) s ⟨1, h1⟩ ≤
-      (D.gat u w hg).P.lam0 (Y.vOf u w hg t0) s ⟨0, h0⟩ := fun s =>
-    lam_antitone_of_isDominant_liftWt (Y.Fl u w hg).t ((D.gat u w hg).P.lam0 (Y.vOf u w hg t0))
-      ((Y.Fl u w hg).w (Y.vOf u w hg t0)) hd s 0 1 h0 h1 (by omega)
-  have hA1M : ∀ s, (D.gat u w hg).P.lam0 (Y.vOf u w hg t0) s ⟨(D.gat u w hg).P.m, hM⟩ ≤
-      (D.gat u w hg).P.lam0 (Y.vOf u w hg t0) s ⟨1, h1⟩ := fun s =>
-    lam_antitone_of_isDominant_liftWt (Y.Fl u w hg).t ((D.gat u w hg).P.lam0 (Y.vOf u w hg t0))
-      ((Y.Fl u w hg).w (Y.vOf u w hg t0)) hd s 1 (D.gat u w hg).P.m h1 hM (by omega)
-  have hTT1 : ∀ s, s ∈ (Y.Fl u w hg).TT (Y.vOf u w hg t0) →
-      |(D.gat u w hg).P.lam0 (Y.vOf u w hg t0) s ⟨1, h1⟩| ≤ ((Y.Fl u w hg).c : ℤ) :=
-    fun s hsT => ((hbase s).1 hsT).2.2 ⟨1, h1⟩ Nat.one_pos (show 1 < (D.gat u w hg).P.m by omega)
+  have hA01 := fun s => lam_antitone_of_isDominant_liftWt _ _ _ hd s 0 1 h0 h1 (by omega)
+  have hA1M := fun s =>
+    lam_antitone_of_isDominant_liftWt _ _ _ hd s 1 (D.gat u w hg).P.m h1 hM (by omega)
+  have hTT1 := fun s hsT =>
+    ((hbase s).1 hsT).2.2 ⟨1, h1⟩ Nat.one_pos (show 1 < (D.gat u w hg).P.m by omega)
   have hA : ∀ s, s ∈ (Y.Fl u w hg).TT (Y.vOf u w hg t0) →
       (D.gat u w hg).P.lam0 (Y.vOf u w hg t0) s ⟨0, h0⟩ = (Y.Fl u w hg).a (Y.vOf u w hg t0) s := by
     intro s hsT
@@ -162,12 +156,9 @@ theorem nc_ties (X : Formalism.MainNotions.G.Inst D L) (Y : Formalism.MainNotion
     exact (hbase s).2 hsT 0
   have hwZ : ∀ s, -(D.gat u w hg).P.lam0 (Y.vOf u w hg t0) s ⟨(D.gat u w hg).P.m, hM⟩ ≤
       (Y.Fl u w hg).w (Y.vOf u w hg t0) 1 s := fun s => (le_max_right _ _).trans (hwge s)
-  have hwj : ∀ s j, 1 ≤ j →
-      (Y.Fl u w hg).w (Y.vOf u w hg t0) 1 s ≤ (Y.Fl u w hg).w (Y.vOf u w hg t0) j s :=
-    fun s => le_of_monotone_from_one (fun j => (Y.Fl u w hg).w (Y.vOf u w hg t0) j s) (fun j hj => hwm s j hj)
-  have hj1 : 1 ≤ j := by
-    unfold Formalism.BasicNotions.SizeData₂.lifts at hj
-    exact (Finset.mem_Icc.mp hj).1
+  have hwj := fun s =>
+    le_of_monotone_from_one (fun j => (Y.Fl u w hg).w (Y.vOf u w hg t0) j s) (hwm s)
+  have hj1 : 1 ≤ j := (Finset.mem_Icc.mp hj).1
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro s hsT
     have hA' := (hA s hsT).trans ((hs s).2.2.1 hsT).1

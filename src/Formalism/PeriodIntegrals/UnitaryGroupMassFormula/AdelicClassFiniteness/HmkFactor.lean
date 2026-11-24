@@ -71,8 +71,7 @@ theorem hmk_int {N : ℕ} (x : Fin N → ℝ)
   choose c hc using hx
   refine ⟨c, funext fun i => ?_⟩
   have := hc i
-  simp only [Pi.basisFun_repr, algebraMap_int_eq, Int.coe_castRingHom] at this
-  exact this
+  simpa only [Pi.basisFun_repr, algebraMap_int_eq, Int.coe_castRingHom] using this
 
 theorem hmk_box {N : ℕ} (hN : 1 ≤ N) (B : Matrix (Fin N) (Fin N) ℝ) (hB : B.det ≠ 0) :
     ∃ c : Fin N → ℤ, c ≠ 0 ∧
@@ -166,9 +165,7 @@ theorem partMink : PartMink := by
       mul_comm]
   rw [hq, hdetG, ← hpow]
   calc ∑ i, (B *ᵥ v) i ^ 2 ≤ ∑ _i : Fin N, (2 * d ^ ((1 : ℝ) / N)) ^ 2 := by
-        apply Finset.sum_le_sum
-        intro i _
-        exact sq_le_sq' (abs_le.mp (hc i)).1 (abs_le.mp (hc i)).2
+        exact Finset.sum_le_sum (fun i _ => sq_le_sq' (abs_le.mp (hc i)).1 (abs_le.mp (hc i)).2)
     _ = 4 * N * (d ^ ((1 : ℝ) / N)) ^ 2 := by
         simp [Finset.sum_const, Finset.card_univ]; ring
 

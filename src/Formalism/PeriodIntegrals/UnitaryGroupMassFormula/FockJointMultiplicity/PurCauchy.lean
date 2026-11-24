@@ -72,10 +72,8 @@ variable {σ : Type*}
 private theorem fin_zero_lt_of_ne_zero {k : ℕ} (i : Fin (k + 1)) (hi : i ≠ 0) : (0 : Fin (k + 1)) < i := by
   revert hi
   refine Fin.cases ?_ ?_ i
-  · intro h
-    exact absurd rfl h
-  · intro j _
-    exact Fin.succ_pos j
+  · exact fun h => absurd rfl h
+  · exact fun j _ => Fin.succ_pos j
 
 private theorem aeval_fill_sub_multiple_of_zeroth_line {m n : ℕ} (ι : Fin (m + 1) × Fin n → σ) (hι : Function.Injective ι)
     (f : MvPolynomial σ ℂ) (hf : ∀ b : Fin (m + 1), 0 < b → PI.FJM.bRow ι 0 b f = 0)
@@ -195,8 +193,7 @@ theorem diag_zero : ∀ (m n : ℕ) (ι : Fin m × Fin n → σ), Function.Injec
       simp only [offD, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
       rintro ⟨i, _, _, _⟩
       exact Fin.elim0 i
-    rw [hempty, aeval_killS_empty] at hg
-    exact hg
+    rwa [hempty, aeval_killS_empty] at hg
   | succ m ih =>
     intro n
     cases n with
@@ -207,8 +204,7 @@ theorem diag_zero : ∀ (m n : ℕ) (ι : Fin m × Fin n → σ), Function.Injec
         simp only [offD, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
         rintro ⟨_, k, _, _⟩
         exact Fin.elim0 k
-      rw [hempty, aeval_killS_empty] at hg
-      exact hg
+      rwa [hempty, aeval_killS_empty] at hg
     | succ n =>
       intro ι hι f hf hg
       have hinj : Function.Injective (fun x : Fin m × Fin n => ι (x.1.succ, x.2.succ)) := by
@@ -218,8 +214,7 @@ theorem diag_zero : ∀ (m n : ℕ) (ι : Fin m × Fin n → σ), Function.Injec
         exact Prod.ext h.1 h.2
       apply elim_step ι hι f hf
       apply ih n (fun x : Fin m × Fin n => ι (x.1.succ, x.2.succ)) hinj _ (hwb_restrict ι hι f hf)
-      rw [aeval_killS_union, offD_step ι hι]
-      exact hg
+      rwa [aeval_killS_union, offD_step ι hι]
 
 end PI.FJMB
 end -- clump:auto
@@ -263,8 +258,7 @@ variable {σ : Type*}
 
 theorem exists_support_of_killS {S : Set σ} {P : MvPolynomial σ ℂ} (h : aeval (killS S) P ≠ 0) :
     ∃ e ∈ P.support, ∀ v ∈ S, e v = 0 := by
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   apply h
   conv_lhs => rw [P.as_sum]
 
@@ -332,40 +326,32 @@ theorem cauchyHW_of (hA : HypAnti) (hS : HypShape) (hD : HypDiag) (hF : HypFree)
   have hrowsum : ∀ (i : Fin m) (k : Fin n), (i : ℕ) = k → α i = e (ι (i, k)) := by
     intro i k hik
     rw [← (hsum e heP).1 i, Finset.sum_eq_single k]
-    · intro k' _ hk'
-      exact hoff i k' fun h => hk' (Fin.ext (h.symm.trans hik))
-    · intro h
-      exact absurd (Finset.mem_univ k) h
+    · exact fun k' _ hk' => hoff i k' fun h => hk' (Fin.ext (h.symm.trans hik))
+    · exact fun h => absurd (Finset.mem_univ k) h
   have hcolsum : ∀ (i : Fin m) (k : Fin n), (i : ℕ) = k → β k = e (ι (i, k)) := by
     intro i k hik
     rw [← (hsum e heP).2 k, Finset.sum_eq_single i]
-    · intro i' _ hi'
-      exact hoff i' k fun h => hi' (Fin.ext (h.trans hik.symm))
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+    · exact fun i' _ hi' => hoff i' k fun h => hi' (Fin.ext (h.trans hik.symm))
+    · exact fun h => absurd (Finset.mem_univ i) h
   have hrowlt : ∀ i : Fin m, (i : ℕ) < n := by
     intro i
-    by_contra hi
-    push Not at hi
+    by_contra! hi
     have h0 : α i = 0 := by
       rw [← (hsum e heP).1 i]
       exact Finset.sum_eq_zero fun k _ => hoff i k (by have := k.isLt; omega)
     exact (hα i).ne' h0
   have hcollt : ∀ k : Fin n, (k : ℕ) < m := by
     intro k
-    by_contra hk
-    push Not at hk
+    by_contra! hk
     have h0 : β k = 0 := by
       rw [← (hsum e heP).2 k]
       exact Finset.sum_eq_zero fun i _ => hoff i k (by have := i.isLt; omega)
     exact (hβ k).ne' h0
   have hmn : m = n := by
     apply le_antisymm
-    · by_contra h
-      push Not at h
+    · by_contra! h
       exact lt_irrefl n (hrowlt ⟨n, h⟩)
-    · by_contra h
-      push Not at h
+    · by_contra! h
       exact lt_irrefl m (hcollt ⟨m, h⟩)
   have hanti : Antitone α := hA τ m n ι hι α P hP hrow fun e he i => (hsum e he).1 i
   refine ⟨hmn, hanti, fun i k h => (hrowsum i k h).trans (hcolsum i k h).symm, ?_⟩

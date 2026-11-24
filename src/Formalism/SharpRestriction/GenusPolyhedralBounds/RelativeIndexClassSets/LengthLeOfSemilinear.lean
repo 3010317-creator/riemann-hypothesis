@@ -341,8 +341,7 @@ theorem isLat_comap (A : Submodule O X) (hA : IsLat O K X A) (W : Submodule K X)
     have hmem : d • w ∈ Submodule.span K (A.comap ι : Set W) := by
       apply Submodule.subset_span
       show ((d • w : W) : X) ∈ A
-      rw [Submodule.coe_smul_of_tower]
-      exact hdw
+      rwa [Submodule.coe_smul_of_tower]
     have hw : w = (algebraMap O K d)⁻¹ • (d • w) := by
       rw [← algebraMap_smul K d w, smul_smul, inv_mul_cancel₀ hdK, one_smul]
     rw [hw]
@@ -408,13 +407,11 @@ theorem qlen_comap (W : Submodule K X) (A B : Submodule O X) :
   · intro h
     have h' : (((e.symm z : ↥(A.comap ((W.subtype).restrictScalars O))) : W) : X) ∈ B := h
     rw [key] at h'
-    show (z : X) ∈ B ⊓ W.restrictScalars O
     exact Submodule.mem_inf.mpr ⟨h', hzW⟩
   · intro h
     have h2 : (z : X) ∈ B ⊓ W.restrictScalars O := h
     have h' : (z : X) ∈ B := (Submodule.mem_inf.mp h2).1
-    rw [← key] at h'
-    exact h'
+    rwa [← key] at h'
 
 theorem idx_comap (W : Submodule K X) (A B : Submodule O X) :
     idx O W (A.comap ((W.subtype).restrictScalars O)) (B.comap ((W.subtype).restrictScalars O)) =
@@ -475,8 +472,7 @@ theorem index_last_reduction_holds : IndexLastStep := by
   have hadd2 := lattice_index_add O K W ((M.comap ι).map fW) (N.comap ι) (Θ.comap ι) hS₀ hN₀ hB₀
   have h1 : idx O W (M.comap ι) ((M.comap ι).map fW) = e * (finrank K W : ℤ) := by
     have hs := lattice_index_scale O K W ϖ hϖ (-e) (M.comap ι) hA₀
-    rw [neg_neg] at hs
-    exact hs
+    rwa [neg_neg] at hs
   have hSN : (M.comap ι).map fW ≤ N.comap ι := by
     rintro _ ⟨y, hy, rfl⟩
     have := hMN _ hy

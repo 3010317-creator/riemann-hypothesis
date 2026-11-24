@@ -76,22 +76,19 @@ theorem valb_le_of_coeff_eq_zero (r : OCb l) (n : ℕ) (hr : PreTilt.coeff n r =
   by_cases h0 : r = 0
   · rw [h0, map_zero]; exact zero_le
   have hex : ∃ m, PreTilt.coeff m r ≠ 0 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     exact h0 (Perfection.ext fun m => (hall m).trans (map_zero _).symm)
   obtain ⟨N, hM⟩ : ∃ N, PreTilt.coeff (N + n) r ≠ 0 :=
     ⟨_, PreTilt.coeff_nat_find_add_ne_zero (h := hex) n⟩
   have hk : PreTilt.coeff (N + n) r ^ (l ^ N) = 0 := by
     have h1 := coeff_add_pow r n (N)
-    rw [hr, Nat.add_comm] at h1
-    exact h1
+    rwa [hr, Nat.add_comm] at h1
   show PreTilt.valAux (PadicComplex l) (PadicComplex.valued l).v (OC l) l r ≤ _
   rw [PreTilt.valAux_eq (PadicComplexInt.integers l) hM]
   obtain ⟨y, hy⟩ := Ideal.Quotient.mk_surjective (PreTilt.coeff (N + n) r)
   rw [← hy, ModP.preVal_mk (PadicComplexInt.integers l) (by rw [hy]; exact hM)]
   have hdiv : ((l : ℕ) : OC l) ∣ y ^ (l ^ N) := by
-    rw [← Ideal.mem_span_singleton, ← Ideal.Quotient.eq_zero_iff_mem, map_pow, hy]
-    exact hk
+    rwa [← Ideal.mem_span_singleton, ← Ideal.Quotient.eq_zero_iff_mem, map_pow, hy]
   have hle := (PadicComplexInt.integers l).le_of_dvd hdiv
   rw [map_pow, map_pow, map_natCast] at hle
   rw [pow_add, pow_mul]
@@ -125,14 +122,12 @@ theorem tiltGlue : TiltGlue := by
     Perfection.coeff_surjective (frob_surj (l := l) hR) n z0
   obtain ⟨rr, hrr⟩ : ∃ rr : OCb l, rr = z ^ l - c * z - b := ⟨_, rfl⟩
   have hcr : PreTilt.coeff n rr = 0 := by
-    rw [hrr, map_sub, map_sub, map_mul, map_pow, hz']
-    exact hz0
+    rwa [hrr, map_sub, map_sub, map_mul, map_pow, hz']
   have hvr : valb l rr < valb l ((s : OCb l) ^ l) :=
     lt_of_le_of_lt (valb_le_of_coeff_eq_zero rr n hcr) hn
   obtain ⟨e, he⟩ := hD l rr ((s : OCb l) ^ l) hvr.le
   have hve : valb l e < 1 := by
-    by_contra hge
-    push Not at hge
+    by_contra! hge
     have h3 : valb l ((s : OCb l) ^ l) ≤ valb l rr := by
       rw [he, map_mul]
       exact le_mul_of_one_le_right zero_le hge

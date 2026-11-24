@@ -513,9 +513,7 @@ theorem coefCap_carrierInT_own (u u' : D.what₂.Word) (e : InfinitePlace D.host
   obtain ⟨g, rfl⟩ : ∃ g' : Matrix (Fin (2 * D.R.rS + D.R.k + 1)) (Fin (2 * D.R.rS + D.R.k + 1)) ℂ, g' = g := ⟨g, rfl⟩
   set w := tauE X e j with hw
   set τ := e (plE D j) with hτ
-  have hpl : X.pl w = τ := by
-    show X.pl (X.pl.symm (e (plE D j))) = _
-    exact Equiv.apply_symm_apply _ _
+  have hpl : X.pl w = τ := Equiv.apply_symm_apply _ _
   obtain ⟨hQP, hPQ, hH, -⟩ := isTransp_Qcs X C w
   rw [hpl] at hQP hPQ hH
   set P := Qcs C τ

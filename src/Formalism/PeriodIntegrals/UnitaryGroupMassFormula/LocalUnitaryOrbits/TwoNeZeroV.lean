@@ -86,8 +86,7 @@ theorem two_ne_zero_v : (2 : Fv F v) ≠ 0 := by
   intro h2
   apply h
   apply (algebraMap F (Fv F v)).injective
-  rw [map_ofNat, map_zero]
-  exact h2
+  rwa [map_ofNat, map_zero]
 
 theorem fix_sc (hcm : IsCMExt F E σ) (z : Fv F v ⊗[F] E) (hz : sigR (Fv F v) σ z = z) :
     ∃ a : Fv F v, z = sc (E := E) v a := by
@@ -150,8 +149,7 @@ private theorem fixLoc_holds_lemma {c : Fv F v} (hc : c ∈ v.adicCompletionInte
     exact zero_ne_one hcw
   have hweq : w = sc v c⁻¹ := by
     have h1 : sc (E := E) v c⁻¹ * (sc v c * w) = sc v c⁻¹ := by rw [hcw, mul_one]
-    rw [← mul_assoc, sc_mul, inv_mul_cancel₀ hc0, sc_one, one_mul] at h1
-    exact h1
+    rwa [← mul_assoc, sc_mul, inv_mul_cancel₀ hc0, sc_one, one_mul] at h1
   have hinv : c⁻¹ ∈ v.adicCompletionIntegers F := sc_mem_int v (hweq ▸ hw)
   have hprod : (⟨c, hc⟩ : v.adicCompletionIntegers F) * ⟨c⁻¹, hinv⟩ = 1 := by
     apply Subtype.ext

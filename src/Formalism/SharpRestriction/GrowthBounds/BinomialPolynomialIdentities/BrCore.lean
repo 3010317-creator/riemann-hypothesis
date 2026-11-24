@@ -97,14 +97,12 @@ lemma qh_lt_colH_iff {mu : Fin n → ℤ} (hmu : Dominant mu) (t : Fin n) (c : �
   unfold colH
   constructor
   · intro h
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have hsub : (univ.filter fun m : Fin n => c ≤ mu m) ⊆ Finset.Iio t := by
       intro m hm
       rw [Finset.mem_filter] at hm
       rw [Finset.mem_Iio]
-      by_contra hmt
-      push Not at hmt
+      by_contra! hmt
       exact (not_le.mpr hc) (hm.2.trans (hmu hmt))
     have hcard := Finset.card_le_card hsub
     rw [Fin.card_Iio] at hcard
@@ -225,8 +223,7 @@ lemma qh_count_all [NeZero n] {mu : Fin n → ℤ} (hmu : Dominant mu) (k : ℕ)
       refine Finset.card_bij (fun κ _ => κ.1) ?_ ?_ ?_
       · intro κ hκ
         simpa using hκ
-      · intro a _ b _ h
-        exact Subtype.ext h
+      · exact fun a _ b _ h => Subtype.ext h
       · intro κ hκ
         simp only [mem_filter, mem_univ, true_and] at hκ
         exact ⟨⟨κ, by omega⟩, by simpa using hκ, rfl⟩
@@ -244,8 +241,7 @@ lemma qh_count_all [NeZero n] {mu : Fin n → ℤ} (hmu : Dominant mu) (k : ℕ)
         simp only [TCols, mem_Ioc] at hc2
         rw [mem_Ioc]
         exact ⟨hc2.1, (_root_.Formalism.InvariantFactorPaths.ColumnFamilies.qh_lt_colH_iff hmu ⟨t, htn⟩ c.1).mp hc⟩
-      · intro a _ b _ h
-        exact Subtype.ext h
+      · exact fun a _ b _ h => Subtype.ext h
       · intro c hc
         rw [mem_Ioc] at hc
         refine ⟨⟨c, by simp only [TCols, mem_Ioc]; exact ⟨hc.1, hc.2.trans hle⟩⟩, ?_, rfl⟩
@@ -396,8 +392,7 @@ lemma qh_bidet_mem [NeZero n] {mu : Fin n → ℤ} (hmu : Dominant mu) (k : ℕ)
     have hz : sz κ.1 = 0 := by
       have := κ.2
       omega
-    simp only [hF]
-    exact gen0 _ _ hz
+    simpa only [hF] using gen0 _ _ hz
   have hsub : ∏ κ, F κ = ∏ κ : {κ // 0 < sz κ}, F κ.1 := by
     rw [← Fintype.prod_subtype_mul_prod_subtype (fun κ => 0 < sz κ) F, Fintype.prod_eq_one _ hone, mul_one]
   have hre : ∏ κ : {κ // 0 < sz κ}, F κ.1 = ∏ y, F (e.symm y).1 :=
@@ -418,8 +413,7 @@ lemma qh_bidet_mem [NeZero n] {mu : Fin n → ℤ} (hmu : Dominant mu) (k : ℕ)
       intro s J hs
       rw [hs]
       exact qhM_full J
-    simp only [hF]
-    exact gen _ _ (hsz_l i)
+    simpa only [hF] using gen _ _ (hsz_l i)
   choose ε1 hε1 using hl
   have hr : ∀ c : ↥(TCols mu), ∃ (S : Finset (Fin n)) (hS : S.card = colH mu c) (ε : R),
       F (e.symm (Sum.inr c)).1 = ε • algebraMap _ (GLCoord R n)
@@ -433,8 +427,7 @@ lemma qh_bidet_mem [NeZero n] {mu : Fin n → ℤ} (hmu : Dominant mu) (k : ℕ)
       intro s J hs
       subst hs
       exact exists_qhM_eq_smul_det (colH_le mu c) J
-    simp only [hF]
-    exact gen _ _ (hsz_r c)
+    simpa only [hF] using gen _ _ (hsz_r c)
   choose S hS ε2 hε2 using hr
   let I' : TIdx mu := fun c => ⟨S c, hS c⟩
   have hbrk : mapCoord (n := n) R (brk mu I') =
@@ -697,8 +690,7 @@ lemma qh_mem_dualWeyl [IsDomain R] (Q : MvPolynomial (Fin n × Fin n) R) (ν : F
   rw [Formalism.GradedWeylDivisibility.dualWeyl, Submodule.mem_inf]
   refine ⟨qh_homog Q ν hQ, ?_⟩
   simp only [Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero]
-  intro l j hlj
-  exact qh_invariant Q ν hQ l j hlj
+  exact fun l j hlj => qh_invariant Q ν hQ l j hlj
 
 end Formalism.InvariantFactorPaths.ColumnFamilies
 end -- clump:auto
@@ -751,8 +743,7 @@ lemma qh_reduce [IsDomain R] (mu : Fin n → ℤ) (f : GLCoord R n) (hf : f ∈ 
       have e : (fun a => ((mu a + ((N + M : ℕ) : ℤ)).toNat : ℤ)) = (fun _ : Fin n => ((N + M : ℕ) : ℤ)) + mu := by
         funext a
         rw [Pi.add_apply, Int.toNat_of_nonneg (hk a), add_comm]
-      rw [e]
-      exact h
+      rwa [e]
     exact qh_mem_dualWeyl _ _ hmem
 
 lemma qh_span_transfer (T : Submodule R (GLCoord R n)) (u : GLCoord R n)
@@ -776,8 +767,7 @@ private theorem antitone_of_step_lemma {n : ℕ} (g : Fin n → ℤ) (h : ∀ l 
   induction b, hab using Nat.le_induction with
   | base => intro hb; exact le_rfl
   | succ b hab ih =>
-    intro hb
-    exact (h ⟨b, by omega⟩ ⟨b + 1, hb⟩ rfl).trans (ih (by omega))
+    exact fun hb => (h ⟨b, by omega⟩ ⟨b + 1, hb⟩ rfl).trans (ih (by omega))
 
 theorem highest_weight_corollary_one : InducedSectionsSpanStatement := by
   intro n _ mu R _ _ _
@@ -1251,8 +1241,7 @@ theorem qn_rowDiv_zero (n : ℕ) (a b : Fin n) (F : MvPolynomial (Fin n × Fin n
       simp only [RingHom.comp_apply, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom, rowGen, aeval_X,
         Polynomial.coe_evalRingHom, Polynomial.eval_add, Polynomial.eval_C, RingHom.id_apply]
       split_ifs <;> simp
-  have h2 := RingHom.congr_fun h F
-  simpa using h2
+  simpa using RingHom.congr_fun h F
 
 theorem qn_natsmul (n : ℕ) (k : ℕ) (p : MvPolynomial (Fin n × Fin n) ℚ) :
     p * ((k : MvPolynomial (Fin n × Fin n) ℚ) + 1) = ((k + 1 : ℕ) : ℚ) • p := by
@@ -1359,8 +1348,7 @@ theorem qn_interlaced_lowerTri {r n : ℕ} (m : Fin r × Fin n →₀ ℕ) (h : 
         exact ih ⟨k, hl⟩ rfl b (by omega)
       rw [hR, add_zero, Nat.le_zero, Finset.sum_eq_zero_iff] at hI
       exact hI a (by simp)
-  intro a s has
-  exact key s.val s rfl a has
+  exact fun a s has => key s.val s rfl a has
 
 theorem qn_lowerTriIntegral : LowerTriIntegral := by
   classical
@@ -1376,8 +1364,7 @@ theorem qn_lowerTriIntegral : LowerTriIntegral := by
       (colLex r n).toSyn ((colLex r n).degree Q) = s → Q ∈ dualWeyl ℚ r n ν →
       (∀ e : Fin r × Fin n →₀ ℕ, LowerTri e → ∃ z : ℤ, AddMonoidAlgebra.coeff Q e = z) →
       ∃ Q' : MvPolynomial (Fin r × Fin n) ℤ, Q = intQ r n Q' by
-    intro Q hQ hint
-    exact H _ Q rfl hQ hint
+    exact fun Q hQ hint => H _ Q rfl hQ hint
   intro s
   induction s using WellFoundedLT.induction with
   | ind s ih =>

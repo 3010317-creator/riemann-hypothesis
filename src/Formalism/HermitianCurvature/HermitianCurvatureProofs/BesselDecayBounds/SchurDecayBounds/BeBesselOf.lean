@@ -71,9 +71,7 @@ theorem cwCont_conv {Wp : Type} [NormedAddCommGroup Wp] {σ : Mx k r → (H →L
     (h : Formalism.MainNotions.S.IsCWCont (k := k) (r := r) σ B) : PI.BesselMapUniq.IsCWCont (k := k) (r := r) σ B := by
   obtain ⟨C, Ws, hW, hB⟩ := h
   refine ⟨C, Ws, hW, fun v hv => ?_⟩
-  have h1 := hB v hv
-  simp only [dsigW_eq] at h1
-  exact h1
+  simpa only [dsigW_eq] using hB v hv
 
 theorem psiConst : Formalism.FourierDecayAlt.ThreeDimData.PsiConst := by
   intro k r z c g

@@ -81,8 +81,7 @@ theorem det_sub {R : Type*} [CommRing R] {k : ℕ} {ι : Type*} [Fintype ι] [De
   have h1 : A.submatrix eI eJ = (A.submatrix eI eI).submatrix id (eJ.trans eI.symm) := by
     ext i j
     simp
-  rw [h1]
-  rw [det_permute', det_submatrix_equiv_self]
+  rw [h1, det_permute', det_submatrix_equiv_self]
 
 theorem sign_sq {R : Type*} [CommRing R] (u : ℤˣ) : ((u : ℤ) : R) * ((u : ℤ) : R) = 1 := by
   rcases Int.units_eq_one_or u with rfl | rfl <;> simp
@@ -145,9 +144,7 @@ theorem jacobi {R : Type*} [CommRing R] {k : ℕ} {m n : Type*} [Fintype m] [Fin
   have e2 : φ.mapMatrix ((G.submatrix eI eJ).toBlocks₁₁) = (A.submatrix eI eJ).toBlocks₁₁ := by
     ext i j
     exact congrFun (congrFun hφG (eI (Sum.inl i))) (eJ (Sum.inl j))
-  have h := congrArg φ hcore
-  simp only [map_mul, map_pow, map_intCast, RingHom.map_det, hφG, e1, e2] at h
-  exact h
+  simpa only [map_mul, map_pow, map_intCast, RingHom.map_det, hφG, e1, e2] using congrArg φ hcore
 
 end PI.OddDualWeyl.Jac
 

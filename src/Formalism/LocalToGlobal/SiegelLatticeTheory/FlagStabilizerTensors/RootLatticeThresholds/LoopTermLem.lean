@@ -99,23 +99,20 @@ theorem Q_fvec (u : D.what₂.Word) (τ : D.what₂.Tau) (a : Fin (D.R.rS + 1)) 
   · have h1 := (hEv ⟨a.val, h⟩ ⟨a.val, h⟩ rfl).1
     have ha : a = Fin.castSucc ⟨a.val, h⟩ := Fin.ext rfl
     have h2 : (X.Fu u).fvec (Fin.castSucc ⟨a.val, h⟩) = X.eX ⟨a.val, h⟩ := by
-      simp only [Formalism.MainNotions.S.FlagG.fvec, Fin.snoc_castSucc]
-      exact congrFun (X.Fu_e u) _
+      simpa only [Formalism.MainNotions.S.FlagG.fvec, Fin.snoc_castSucc] using congrFun (X.Fu_e u) _
     rw [← ha] at h2
     rw [h2, ← frS_pow D a h, Formalism.QuantumDeterminants.fvec, dite_eq_left h, Formalism.QuantumDeterminants.bvec, h1]
     rfl
   · have ha : a = Fin.last D.R.rS := Fin.ext (by have := a.isLt; simp; omega)
     subst ha
     have h3 : (X.Fu u).fvec (Fin.last D.R.rS) = X.zu u := by
-      simp only [Formalism.MainNotions.S.FlagG.fvec, Fin.snoc_last]
-      exact X.flagZVector u
+      simpa only [Formalism.MainNotions.S.FlagG.fvec, Fin.snoc_last] using X.flagZVector u
     rw [h3, rhoF_last, Formalism.QuantumDeterminants.fvec, dite_eq_right h]
     simp only [zB, Complex.ofReal_one, one_smul]
     rw [Matrix.mulVec_mulVec, hQQi, Matrix.one_mulVec]
     rfl
 
-theorem tau_nonempty (D : D7) : Nonempty D.what₂.Tau := by
-  exact D.eTau.nonempty
+theorem tau_nonempty (D : D7) : Nonempty D.what₂.Tau := D.eTau.nonempty
 
 theorem trG_mem {n m : ℕ} {ε : Fin n → Bool} (Q : Matrix (Fin n) (Fin m) ℂ) (Qi : Matrix (Fin m) (Fin n) ℂ)
     (H : Matrix (Fin m) (Fin m) ℂ) (hQQi : Q * Qi = 1) (hH : Qᴴ * Formalism.REAL.Jm ε * Q = H) (g : Formalism.REAL.UJ ε) :

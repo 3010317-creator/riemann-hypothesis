@@ -81,11 +81,9 @@ theorem sum_jacobiSym_eq_sum_residueClass (m₀ s a₀ : ℕ) (X : ℝ) (hm : 0 
       simp only [clsB, Finset.mem_filter, Finset.mem_range]
       refine ⟨Nat.mod_lt _ hM, by rw [Nat.mod_mod_of_dvd _ (dvd_mul_right m₀ s), hqm], ?_⟩
       have hg := (Nat.ModEq.of_dvd (dvd_mul_left s m₀) (Nat.mod_modEq q (m₀ * s))).gcd_eq
-      rw [Nat.Coprime, hg]
-      exact hc
+      rwa [Nat.Coprime, hg]
     have h0 : jacobiSym (q : ℤ) s = 0 := by
-      rw [jacobiSym.eq_zero_iff_not_coprime, Int.gcd_natCast_natCast]
-      exact hnc
+      rwa [jacobiSym.eq_zero_iff_not_coprime, Int.gcd_natCast_natCast]
     rw [h0]
     simp
   symm

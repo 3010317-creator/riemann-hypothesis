@@ -79,8 +79,7 @@ theorem rdsp_adjFn_vanish (T : B.DTerm k r Wp Wq) {O : Set (B.Mat k r)}
   rw [hz g hg hgO, map_zero]
 
 theorem rdsp_lie_rev (T : B.DTerm k r Wp Wq) : ∀ X ∈ T.word.reverse, inLie k r X := by
-  intro X hX
-  exact T.word_lie X (List.mem_reverse.mp hX)
+  exact fun X hX => T.word_lie X (List.mem_reverse.mp hX)
 
 theorem rdsp_opAdj_eq (Θ : B.DiffOp k r Wp Wq) (F : B.Mat k r → (Wq →L[ℂ] Wp)) :
     B.opAdj Θ F = fun g => (Θ.map fun T => ((-1 : ℂ) ^ T.word.length) • B.Rw T.word.reverse (ap T.coefAdj F) g).sum := rfl
@@ -159,8 +158,7 @@ theorem spectral_polynomial_property : RDSPolyProp := by
     by_contra hlt
     exact hne (rdsp_opApply_vanish Θ hO hz g hg (not_le.1 hlt))
   · exact (rdsp_opAdj_cc Θ κ hG F hFck 0 (fun m => hFcc _ m)).1
-  · intro A' m'
-    exact (rdsp_opAdj_cc Θ κ hG F hFck A' (fun m => hFcc _ m)).2 m'
+  · exact fun A' m' => (rdsp_opAdj_cc Θ κ hG F hFck A' (fun m => hFcc _ m)).2 m'
   · intro g hg hne
     by_contra hlt
     exact hne (rdsp_opAdj_vanish Θ hO hz g hg (not_le.1 hlt))

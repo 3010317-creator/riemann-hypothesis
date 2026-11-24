@@ -130,8 +130,7 @@ theorem slice_spec (γ : MvPolynomial (S × τ) K →ₗ[K] K) (Q : MvPolynomial
   beta_reduce at h
   have h2 : e.filter (fun v : S × τ => v.1 ∈ A) = 0 := by
     rw [Finsupp.filter_eq_zero_iff]
-    intro v hv
-    exact (Finsupp.filter_eq_zero_iff _ _).1 h.2 v (not_not.2 hv)
+    exact fun v hv => (Finsupp.filter_eq_zero_iff _ _).1 h.2 v (not_not.2 hv)
   have h3 : (monomial e (AddMonoidAlgebra.coeff Q e) : MvPolynomial (S × τ) K) = AddMonoidAlgebra.coeff Q e • monomial e 1 := by
     rw [smul_monomial, smul_eq_mul, mul_one]
   rw [slice_monomial, h.1, h2, ← C_apply, C_1, h3, map_smul, smul_eq_mul]
@@ -282,8 +281,7 @@ theorem slice_V (hP : Peel A X XT sp)
     (fun s hs => ⟨by rw [lamAt_zero (hP.off s hs).1, ite_eq_left (anti_zero m), nuOf_zero]; exact one_mem_dualWeyl, by
       rw [lamAt_congr (hP.off s hs).2]⟩)
     γ 1 (fun Q _ => ⟨γ Q, by simp⟩) u hu
-  rw [he, one_smul]
-  exact hy
+  rwa [he, one_smul]
 
 variable {O : Type} [CommRing O] [Algebra O Kf]
 
@@ -316,8 +314,7 @@ theorem Hten_le_V (hd : IsDominant X) (Λ : Fin n' → Submodule O (Fin (m + 1) 
       fun s => dualWeyl Kf (m + 1) (m + 1) (nuOf (lamAt X s)) := by
     funext s
     rw [ite_eq_left (kp_lamAt_antitone X hd s)]
-  rw [this]
-  exact h2
+  rwa [this]
 
 end
 
@@ -592,8 +589,7 @@ theorem rho_peel (D : Formalism.BasicNotions.D7) {p n' : ℕ} {W Qq O Kf : Type}
     intro G hG u hu
     obtain ⟨z, hz, hze⟩ := mem_scale.1 (peel_Re h hPl hlam hdlT hdsp r e he 0 G (G1 G hG) u hu)
     rw [zpow_zero, one_smul] at hze
-    rw [← hze]
-    exact hz
+    rwa [← hze]
   refine ⟨IxT × {G : Module.Dual Kf (Vsp Kf sp) // G ∈ Re' p ι σ w r sp e},
     fun x => (ρT x.1).comp (peelMap hPl cp x.2.1), ?_, ?_, ?_, ?_, ?_⟩
   · intro β u hu
@@ -652,8 +648,7 @@ theorem rho_peel (D : Formalism.BasicNotions.D7) {p n' : ℕ} {W Qq O Kf : Type}
           · simp only [ite_eq_left hs, lamAt_zero (hPl.top s hs).2, ite_eq_left (anti_zero m), nuOf_zero]
             exact one_mem_dualWeyl
           · have := hF s
-            simp only [ite_eq_right hs, lamAt_congr (hPl.off s hs).2]
-            exact this
+            simpa only [ite_eq_right hs, lamAt_congr (hPl.off s hs).2] using this
         have hPs : ∏ s, blockEmb Kf s (if s ∈ TT then F s else 1) ∈
             supported Kf {v : Fin n' × (Fin (m + 1) × Fin (m + 1)) | v.1 ∈ TT} := by
           refine Subalgebra.prod_mem _ fun s _ => ?_

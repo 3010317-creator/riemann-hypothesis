@@ -132,8 +132,7 @@ theorem gval_eq_zero_of_inSF {T T' : E} (hT : star T = T) {F : LFlag S r T} {F' 
         rw [Fin.snoc_castSucc, h0]
       simp only [Zhat, brS, hv]
       refine Fin.lastCases ?_ (fun b => ?_) a
-      · simp only [FlagG.fvec, Fin.snoc_last]
-        exact S.herm.eq_iff.1 (F.fl.z_orth ⟨0, hr⟩)
+      · simpa only [FlagG.fvec, Fin.snoc_last] using S.herm.eq_iff.1 (F.fl.z_orth ⟨0, hr⟩)
       · simp [FlagG.fvec, F.fl.e_iso]
     have hDl : ∀ l, 1 ≤ l → l ≤ r + 1 → Dl F.fl F'.fl l = 0 := by
       intro l hl1 hl2
@@ -165,8 +164,7 @@ theorem isInS_mk (hI : InSFun Λ F P) (x : Carrier P) : IsInS Λ F P (mk Λ F P 
   · rintro ⟨F', ⟨h, hmk⟩, hin⟩
     have := const_of_mk (fun y : Carrier P => InSF F y.1) (fun a b hab => propext (hI a b hab)) hmk
     simpa [this] using hin
-  · intro h
-    exact ⟨x.1, rep_mk x, h⟩
+  · exact fun h => ⟨x.1, rep_mk x, h⟩
 
 theorem gt_eq_zero_of_isInS (hG : GFun Λ F P) (hT : star T = T) {t : TermQ Λ F P} (h : IsInS Λ F P t) :
     Gt Λ F P t = 0 := by
@@ -196,8 +194,7 @@ variable {D u u' F0 what₂}
 
 theorem G_eq_zero_of_termInS {t : Term D u u' F0 what₂} (hG : GFun t.lam (lf D F0) (PD D t.lam (lf D F0) u'))
     (h : termInS t) : t.G = 0 := by
-  refine gt_eq_zero_of_isInS (T := ((Tu D u : ℕ) : D.host.E)) hG ?_ h
-  exact star_natCast _
+  exact gt_eq_zero_of_isInS (T := ((Tu D u : ℕ) : D.host.E)) hG (star_natCast _) h
 
 end D7
 

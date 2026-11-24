@@ -76,8 +76,7 @@ theorem nsq_mulVec_le {k r : ℕ} (g : B.Mat k r) (x : Fin (2 * r + k + 1) → �
     have e : (g *ᵥ x) i = ∑ j, g i j * x j := rfl
     rw [e]
     have h2 : ‖∑ j, g i j * x j‖ ≤ ∑ j, ‖g i j‖ * ‖x j‖ := by
-      refine (norm_sum_le _ _).trans (le_of_eq ?_)
-      exact Finset.sum_congr rfl fun j _ => norm_mul _ _
+      exact (norm_sum_le _ _).trans (le_of_eq (Finset.sum_congr rfl fun j _ => norm_mul _ _))
     calc ‖∑ j, g i j * x j‖ ^ 2 ≤ (∑ j, ‖g i j‖ * ‖x j‖) ^ 2 :=
           pow_le_pow_left₀ (norm_nonneg _) h2 2
       _ ≤ (∑ j, ‖g i j‖ ^ 2) * ∑ j, ‖x j‖ ^ 2 := Finset.sum_mul_sq_le_sq_mul_sq _ _ _
@@ -97,8 +96,7 @@ theorem gN_sq_cols {k r : ℕ} (g : B.Mat k r) : B.gN g ^ 2 = ∑ j, nsq (g *ᵥ
     intro j i
     simp [bvec, mulVec, dotProduct, Pi.single_apply]
   unfold GN.hs nsq
-  simp only [e]
-  exact Finset.sum_comm
+  simpa only [e] using Finset.sum_comm
 
 theorem gnFacts : GNFacts := fun _ _ =>
   ⟨GN.gN_nonneg, GN.gN_mul_le, nsq_mulVec_le, gN_sq_cols⟩

@@ -115,13 +115,11 @@ theorem admissible_of_places {g : C.Word S.f} (h : ∀ v, ∃ w0 : S.W, w0.1 v =
   · obtain ⟨w0, hw⟩ := h v
     have hA : S.admitted w0.1 := And.left w0.2
     have hA1 := (And.left hA) v
-    rw [hw] at hA1
-    exact hA1
+    rwa [hw] at hA1
   · obtain ⟨w0, hw⟩ := h v
     have hA : S.admitted w0.1 := And.left w0.2
     have hA2 := (And.right hA) v
-    rw [hw] at hA2
-    exact hA2
+    rwa [hw] at hA2
 
 theorem mem_listsUpTo {T : Finset ℝ} {n : ℕ} (L : List C.Letter) (hl : L.length ≤ n)
     (hT : ∀ x ∈ L, x.2 ∈ T) : L ∈ C.listsUpTo T n := by
@@ -273,9 +271,7 @@ theorem pθ_prob (hP : ∀ v ∈ A, TB.IsProb (U v) (θ v))
     apply hw'
     have hg : w'.1 ∈ Fintype.piFinset (supp S A w U) := by
       rw [Fintype.mem_piFinset]
-      intro v
-      refine pw_ne_zero hP fun h1 => h0 ?_
-      exact Finset.prod_eq_zero (Finset.mem_univ v) h1
+      exact fun v => pw_ne_zero hP fun h1 => h0 (Finset.prod_eq_zero (Finset.mem_univ v) h1)
     exact mem_Wb S (supp_word hU hw hn hg).2
   · have := expand hP hU hw hn (fun _ _ => 1)
     simp only [mul_one, Finset.prod_const_one] at this

@@ -147,8 +147,7 @@ theorem gram_block_determinant : GramBlock := by
   let f' : ι → E := f ∘ e.symm
   have hf'on : Orthonormal ℝ f' := hfon.comp _ e.symm.injective
   have hspan' : Submodule.span ℝ (Set.range f') = W := by
-    rw [Set.range_comp, e.symm.surjective.range_eq, Set.image_univ]
-    exact hspanf
+    rwa [Set.range_comp, e.symm.surjective.range_eq, Set.image_univ]
   have hex : ∀ j, ∃ a : ι → ℝ, ∑ i, a i • f' i = u j := by
     intro j
     have : u j ∈ Submodule.span ℝ (Set.range f') := by
@@ -182,8 +181,7 @@ theorem gram_block_determinant : GramBlock := by
   have hTf : ∀ a, T (f a) ∈ Ev' a.1 ∧ ‖T (f a)‖ ≤ c a.1 := by
     intro a
     have h1 := hT a.1 (f a) (hfW a).2
-    rw [hfon.1 a, mul_one] at h1
-    exact h1
+    rwa [hfon.1 a, mul_one] at h1
   have hprod : ∏ v, c v ^ (2 * Module.finrank ℝ (W ⊓ Ev v : Submodule ℝ E)) =
       ∏ a : (Σ v, Fin (k v)), c a.1 ^ 2 := by
     rw [Fintype.prod_sigma]

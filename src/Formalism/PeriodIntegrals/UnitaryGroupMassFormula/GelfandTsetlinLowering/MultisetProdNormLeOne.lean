@@ -123,9 +123,7 @@ theorem multiset_prod_norm_le_one (m : Multiset ℂ) (h : ∀ μ ∈ m, ‖μ‖
   | empty => simp
   | cons a s ih =>
     rw [Multiset.prod_cons, norm_mul]
-    have ha := h a (by simp)
-    have hs := ih (fun μ hμ => h μ (by simp [hμ]))
-    exact mul_le_one₀ ha (norm_nonneg _) hs
+    exact mul_le_one₀ (h a (by simp)) (norm_nonneg _) (ih (fun μ hμ => h μ (by simp [hμ])))
 
 theorem det_sub_norm_le_one {N s : ℕ} (x : Matrix (Fin N) (Fin N) ℂ) (hx : x ∈ Matrix.unitaryGroup (Fin N) ℂ)
     (I J : Fin s → Fin N) (hI : Function.Injective I) (hJ : Function.Injective J) :
@@ -151,8 +149,7 @@ theorem det_sub_norm_le_one {N s : ℕ} (x : Matrix (Fin N) (Fin N) ℂ) (hx : x
     exact lt_of_lt_of_le (Complex.normSq_pos.2 hq)
       (Finset.single_le_sum (fun i _ => Complex.normSq_nonneg (v i)) (Finset.mem_univ q))
   have h1 : Complex.normSq μ ≤ 1 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     nlinarith
   have h2 := Complex.normSq_eq_norm_sq μ
   nlinarith [norm_nonneg μ]

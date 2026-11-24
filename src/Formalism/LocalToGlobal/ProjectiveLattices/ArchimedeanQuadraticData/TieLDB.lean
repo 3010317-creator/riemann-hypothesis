@@ -45,8 +45,7 @@ theorem span_inf_eq (M : Submodule A V) (W : Submodule (Localization.AtPrime p) 
       Submodule.span (Localization.AtPrime p) (M : Set V) ⊓ W := by
   apply le_antisymm
   · rw [Submodule.span_le]
-    intro x hx
-    exact ⟨Submodule.subset_span hx.1, hx.2⟩
+    exact fun x hx => ⟨Submodule.subset_span hx.1, hx.2⟩
   · rintro x ⟨hxM, hxW⟩
     obtain ⟨s, hs, hsx⟩ := exists_smul_mem p M hxM
     have hu := IsLocalization.map_units (Localization.AtPrime p) (⟨s, hs⟩ : p.primeCompl)
@@ -114,8 +113,7 @@ theorem isLocalizedModule : IsLocalizedModule p.primeCompl (locMap p H G) := by
     refine ⟨⟨s, hs⟩, ?_⟩
     rw [← Submodule.Quotient.mk_smul, ← Submodule.Quotient.mk_smul, Submodule.Quotient.eq]
     change (s • (h1 : V)) - s • (h2 : V) ∈ G
-    rw [← smul_sub]
-    exact hsx
+    rwa [← smul_sub]
 
 theorem length_localized_eq {P : Type*} [AddCommGroup P] [Module A P]
     (e : P ≃ₗ[A] H ⧸ G.comap H.subtype) :

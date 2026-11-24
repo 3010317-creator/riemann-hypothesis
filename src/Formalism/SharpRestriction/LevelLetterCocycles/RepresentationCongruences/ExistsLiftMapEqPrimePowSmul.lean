@@ -396,8 +396,7 @@ theorem smul_eq_zero_of_aeval_prod {O : Type*} [CommRing O] [IsDomain O] {V : Ty
       | (rw [Module.End.mul_apply, h₂, map_zero])
   have hev : ∀ k ∈ S₁, R.eval (c k) = d := by
     intro k hk
-    rw [hR, eval_mul, eval_finsetSum, eval_prod]
-    rw [Finset.sum_eq_single k]
+    rw [hR, eval_mul, eval_finsetSum, eval_prod, Finset.sum_eq_single k]
     · simp only [eval_mul, eval_C, eval_prod, eval_sub, eval_X]
       rw [he k hk]
       ring
@@ -405,8 +404,7 @@ theorem smul_eq_zero_of_aeval_prod {O : Type*} [CommRing O] [IsDomain O] {V : Ty
       simp only [eval_mul, eval_C, eval_prod, eval_sub, eval_X]
       exact mul_eq_zero_of_right _
         (Finset.prod_eq_zero (Finset.mem_erase.mpr ⟨Ne.symm hmk, hk⟩) (sub_self _))
-    · intro h
-      exact absurd hk h
+    · exact fun h => absurd hk h
   have hdvd : (∏ m ∈ S₁, (X - C (c m))) ∣ R - C d := by
     apply prod_X_sub_C_dvd_of_eval_eq_zero_of_injOn c S₁
       (hinj.mono (Finset.coe_subset.mpr (by intro y hy; exact Finset.mem_union_left _ hy)))
@@ -454,12 +452,10 @@ private theorem card_filter_dvd_sub_mul_le_Icc_length_add (q : ℤ) (hq : 0 < q)
     have hlt : q * (v - u) < q := by linarith
     have hgt : -q < q * (v - u) := by linarith
     have h1' : v - u < 1 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       nlinarith
     have h2' : -1 < v - u := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       nlinarith
     have hvu : v = u := by omega
     subst hvu
@@ -501,8 +497,7 @@ private theorem sum_padicValInt_sub_eq_sum_card_filter_pow_dvd (l : ℕ) [Fact l
       ((Finset.range (Nat.log l N)).filter (fun k => (l : ℤ) ^ (k + 1) ∣ m - t)).card :=
     fun t ht => padicValInt_eq_card_filter_pow_dvd l N (m - t) (sub_ne_zero.mpr (hT t ht).1.symm) (hT t ht).2
   rw [Finset.sum_congr rfl h]
-  simp only [Finset.card_filter]
-  exact Finset.sum_comm
+  simpa only [Finset.card_filter] using Finset.sum_comm
 
 private theorem geom_sum_inv_pow_succ_le_inv_sub_one (l : ℝ) (hl : 2 ≤ l) (K : ℕ) :
     ∑ k ∈ Finset.range K, (1 / l ^ (k + 1)) ≤ 1 / (l - 1) := by
@@ -582,8 +577,7 @@ theorem lemmaG_exp (l : ℕ) [Fact l.Prime] (a S η b : ℕ) (ha : 1 ≤ a) (hb 
           ∑ m' ∈ IB, padicValInt l (m - m') := by
       rw [← Finset.sum_union hdisj]
       apply Finset.sum_le_sum_of_subset
-      rw [hIB]
-      exact hS₂
+      rwa [hIB]
     have hdisj2 : Disjoint ((Finset.Icc ((b : ℤ) - a + 1) b).erase m)
         (Finset.Icc ((b : ℤ) + 1) ((b : ℤ) + S + a)) := by
       rw [Finset.disjoint_left]
@@ -791,8 +785,7 @@ theorem step_ii (hcase : Formalism.MainNotions.LiftingTheory.CaseA W) (hP9 : For
     rw [LinearMap.map_smul, hzx, ← algebraMap_smul W.EE (qA W ^ N) x, smul_smul, mul_comm, key, one_smul]
   have hy : Formalism.MainNotions.LiftingTheory.InNΔi W T₁ i (aeval dop₁ P (e • z)) := by
     apply hCONS
-    rw [hqy]
-    exact hzN
+    rwa [hqy]
   exact ⟨aeval dop₁ P (e • z), hy, by rw [aeval_dop_map W hπ F dop₁ hd₁ dop₂ hd₂, hFy]⟩
 
 end Formalism.MainNotions.N.FrobeniusPowerSeries
@@ -1314,8 +1307,7 @@ theorem existsLiftMapEqPrimePowSmul (W : LocWach PD LL O v n) (hcase : Formalism
       ((imgSub W F i).mkQ (s • lam))
       (by rw [haev]; exact (Submodule.Quotient.mk_eq_zero _).2 h₁)
       (by rw [haev]; exact (Submodule.Quotient.mk_eq_zero _).2 h₂) hE
-    rw [← map_smul, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at key
-    exact key
+    rwa [← map_smul, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at key
 
 end Formalism.MainNotions.N.FrobeniusPowerSeries
 end -- clump:auto

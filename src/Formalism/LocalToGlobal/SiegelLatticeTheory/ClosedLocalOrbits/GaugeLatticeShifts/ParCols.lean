@@ -40,8 +40,7 @@ theorem hform_mulVec' {A : Type} [CommRing A] {n : Type} [Fintype n] [DecidableE
 theorem hA_unit (g : X.B.I.Gf) (x y : VA X.B.I) :
     hA X.B.I (X.B.I.fmat g *ᵥ x) (X.B.I.fmat g *ᵥ y) = hA X.B.I x y := by
   unfold hA
-  refine hform_mulVec' _ _ (X.B.I.fmat g) ?_ x y
-  exact g.2
+  exact hform_mulVec' _ _ (X.B.I.fmat g) g.2 x y
 
 theorem hA_adj (g : X.B.I.Gf) (x y : VA X.B.I) :
     hA X.B.I x (X.B.I.fmat g *ᵥ y) = hA X.B.I (X.B.I.fmat g⁻¹ *ᵥ x) y := by

@@ -121,8 +121,7 @@ private theorem length_le_of_cyclic_pow_smul_eq_zero {R : Type} [CommRing R] [Is
         (span_singleton_self_subtype_eq_univ _) ?_
       apply Subtype.ext
       show π ^ k • π • x = 0
-      rw [smul_smul, ← pow_succ]
-      exact h0
+      rwa [smul_smul, ← pow_succ]
     have hq : Module.length R (Q ⧸ Submodule.span R {π • x}) ≤ 1 := by
       refine length_le_one_of_cyclic_smul_eq_zero π hπ (Submodule.mkQ _ x) ?_ ?_
       · rw [← Set.image_singleton (f := (Submodule.span R {π • x}).mkQ),
@@ -180,8 +179,7 @@ private theorem length_le_sum_of_antitone_chain_quot_le {R Z : Type} [CommRing R
     intro E b hV _ _
     have h0 : ∀ z ∈ E 0, z = 0 := by
       rw [hV]
-      intro z hz
-      exact (Submodule.mem_bot R).mp hz
+      exact fun z hz => (Submodule.mem_bot R).mp hz
     have : Subsingleton (E 0) := ⟨fun a c => Subtype.ext ((h0 _ a.2).trans (h0 _ c.2).symm)⟩
     rw [Module.length_eq_zero_iff.mpr this]
     simp
@@ -211,8 +209,7 @@ private theorem length_quot_comap_le_mul_of_pow_smul_mem {R Z : Type} [CommRing 
   obtain ⟨m, b⟩ := Submodule.basisOfPid (Pi.basisFun R (Fin n)) (E.comap ψ)
   have hm : m ≤ n := by
     have h1 := Submodule.finrank_le (E.comap ψ)
-    rw [Module.finrank_eq_card_basis b, Fintype.card_fin, Module.finrank_fin_fun] at h1
-    exact h1
+    rwa [Module.finrank_eq_card_basis b, Fintype.card_fin, Module.finrank_fin_fun] at h1
   set Ψ : (E.comap ψ) →ₗ[R] E := LinearMap.codRestrict E (ψ ∘ₗ (E.comap ψ).subtype)
     (fun p => p.2)
   have hΨ : Function.Surjective Ψ := by

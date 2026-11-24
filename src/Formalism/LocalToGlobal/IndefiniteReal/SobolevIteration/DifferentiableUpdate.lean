@@ -42,8 +42,7 @@ lemma contDiff_pds (L : List (Fin N)) {f : (Fin N → ℝ) → H} (hf : ContDiff
   | cons i L ih => simpa only [pds_cons] using contDiff_pd i ih
 
 lemma differentiable_pds (L : List (Fin N)) {f : (Fin N → ℝ) → H} (hf : ContDiff ℝ ∞ f) :
-    Differentiable ℝ (pds L f) := by
-  exact (contDiff_pds L hf).differentiable (by simp)
+    Differentiable ℝ (pds L f) := (contDiff_pds L hf).differentiable (by simp)
 
 lemma pd_hasDerivAt (i : Fin N) {f : (Fin N → ℝ) → H} (p : Fin N → ℝ) (hf : DifferentiableAt ℝ f p) :
     HasDerivAt (fun t : ℝ => f (p + t • Pi.single i 1)) (pd i f p) 0 := by
@@ -51,12 +50,10 @@ lemma pd_hasDerivAt (i : Fin N) {f : (Fin N → ℝ) → H} (p : Fin N → ℝ) 
     simpa using ((hasDerivAt_id (0 : ℝ)).smul_const (Pi.single i (1 : ℝ) : Fin N → ℝ)).const_add p
   have h2 : HasFDerivAt f (fderiv ℝ f (p + (0 : ℝ) • Pi.single i 1)) (p + (0 : ℝ) • Pi.single i 1) := by
     simpa using hf.hasFDerivAt
-  have h3 := h2.comp_hasDerivAt (0 : ℝ) h1
-  simpa [pd, Function.comp_def] using h3
+  simpa [pd, Function.comp_def] using h2.comp_hasDerivAt (0 : ℝ) h1
 
 lemma pd_eq_deriv (i : Fin N) {f : (Fin N → ℝ) → H} (p : Fin N → ℝ) (hf : DifferentiableAt ℝ f p) :
-    pd i f p = deriv (fun t : ℝ => f (p + t • Pi.single i 1)) 0 := by
-  exact (pd_hasDerivAt i p hf).deriv.symm
+    pd i f p = deriv (fun t : ℝ => f (p + t • Pi.single i 1)) 0 := (pd_hasDerivAt i p hf).deriv.symm
 
 lemma pd_clm (i : Fin N) (A : H →L[ℝ] H) {f : (Fin N → ℝ) → H} (hf : Differentiable ℝ f) :
     pd i (fun p => A (f p)) = fun p => A (pd i f p) := by

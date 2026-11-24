@@ -213,13 +213,10 @@ lemma least_odd_top_level_spec {d : ℕ} [NeZero d] (TT : Finset (ZMod d)) (s : 
     (Odd e ∧ s + (e : ZMod d) ∈ TT) ∧ ∀ e' : ℕ, Odd e' → s + (e' : ZMod d) ∈ TT → e ≤ e' := by
   classical
   have hex : ∃ e' : ℕ, Odd e' ∧ s + (e' : ZMod d) ∈ TT := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     have htop : dTop d TT s = ⊤ := by
       unfold dTop
-      simp only [iInf_eq_top]
-      intro e' he'
-      exact absurd he'.2 (hne e' he'.1)
+      simpa only [iInf_eq_top] using fun e' he' => absurd he'.2 (hne e' he'.1)
     rw [htop] at h
     first
     | exact ENat.top_ne_coe e h

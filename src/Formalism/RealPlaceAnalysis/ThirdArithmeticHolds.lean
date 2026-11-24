@@ -221,8 +221,7 @@ theorem CharId_kill {V : Type} [AddCommGroup V] [Module ℂ V] {n : ℕ}
   intro k
   induction k with
   | zero =>
-    intro j hj q _ y hy
-    exact CharId_ker E hE v j q (fun t ht => absurd t.isLt (by omega)) y hy
+    exact fun j hj q _ y hy => CharId_ker E hE v j q (fun t ht => absurd t.isLt (by omega)) y hy
   | succ k ih =>
     intro j hj q hq y hy
     refine CharId_ker E hE v j q (fun t ht => ?_) y hy
@@ -241,8 +240,7 @@ theorem CharId_kill {V : Type} [AddCommGroup V] [Module ℂ V] {n : ℕ}
     rw [hq', map_mul, Module.End.mul_apply, map_sub, aeval_X, aeval_C, CharId_sub_lsh_apply_single E ν v hv t]
     refine ih (t.1 + 1) (by omega) _ (dvd_mul_right _ _) _ ?_
     refine Submodule.sum_mem _ fun a ha => twistedAction_mem_tailSubmodule E v _ a t _ (CharId_F_gen E v _ a ?_)
-    have h := (Finset.mem_filter.1 ha).2
-    exact h
+    exact (Finset.mem_filter.1 ha).2
 
 theorem CharId_single {V : Type} [AddCommGroup V] [Module ℂ V] {n : ℕ}
     (f : Fin n → Module.End ℂ V) (b : Fin n) (v : V) :
@@ -264,8 +262,7 @@ theorem CharId_on_v {V : Type} [AddCommGroup V] [Module ℂ V] {n : ℕ}
     rw [Polynomial.natDegree_finsetProd_X_sub_C_eq_card]
     simp
   rw [aeval_eq_sum_range' hdeg] at hk
-  have h := congrFun hk a
-  simpa [LinearMap.sum_apply, Finset.sum_apply, CharId_Mpow, CharId_single] using h
+  simpa [LinearMap.sum_apply, Finset.sum_apply, CharId_Mpow, CharId_single] using congrFun hk a
 
 def CharId_P {V : Type} [AddCommGroup V] [Module ℂ V] {n : ℕ}
     (E : Fin n → Fin n → Module.End ℂ V) (ν : Fin n → ℂ) (a b : Fin n) : Module.End ℂ V :=
@@ -391,8 +388,7 @@ theorem wdCas : WDCas := by
   have hU' : IsUnitary ε (fun a b => if ε a = ε b then E a b else 0) := by
     intro a b x y
     by_cases h : ε a = ε b
-    · simp only [ite_eq_left h, ite_eq_left h.symm]
-      exact hU a b x y
+    · simpa only [ite_eq_left h, ite_eq_left h.symm] using hU a b x y
     · have h' : ¬ ε b = ε a := fun e => h e.symm
       simp only [ite_eq_right h, ite_eq_right h', LinearMap.zero_apply, inner_zero_left, inner_zero_right,
         mul_zero]

@@ -301,8 +301,7 @@ theorem infCond (v : InfinitePlace D.host.F) {A : Matrix (Fin P ⊕ Fin Q) (Fin 
   have hX : infMat D.sp.cm.sig V.gram (Formalism.IndefR.Eqv.thetaC D ((Formalism.L2.Host.tauPl D).symm v))
       (Formalism.IndefR.Eqv.UI.brg fr x) = fr.P v * Formalism.IndefR.Eqv.uM fr x v * (fr.P v)⁻¹ := by
     have h := Formalism.IndefR.Eqv.infMat_brg fr x ((Formalism.L2.Host.tauPl D).symm v)
-    rw [Equiv.apply_symm_apply] at h
-    exact h
+    rwa [Equiv.apply_symm_apply] at h
   have hu := Formalism.IndefR.Eqv.P_isUnit_det fr v
   set u := Formalism.IndefR.Eqv.uM fr x v with hudef
   set C := A * fr.P v with hCdef
@@ -453,8 +452,7 @@ theorem isVolMeas_muV (hcd : cdScaleTie D) (hΛ : fr.Λ = Formalism.IndefR.Eqv.U
     · intro h ρ
       have := (ZsCovInf.infCond fr (Formalism.L2.Host.tauPl D ρ) (hA ((Formalism.L2.Host.tauPl D).symm (Formalism.L2.Host.tauPl D ρ)))
         (e _) (h1 _) (h2 _) x _).2 (h (Formalism.L2.Host.tauPl D ρ) (Set.mem_univ _))
-      rw [Equiv.symm_apply_apply] at this
-      exact this
+      rwa [Equiv.symm_apply_apply] at this
   have hmap := (Formalism.IndefR.Eqv.UI.brg fr).toHomeomorph.toMeasurableEquiv.map_apply
     (μ := (Formalism.IndefR.Eqv.UI.instV fr).muA μf) {h : GA D V | (∀ y, y ∈ latHat D.host.F D.host.E (L0c D V) ↔
         (finMat D.sp.cm.sig V.gram h).mulVec y ∈ latHat D.host.F D.host.E (L0c D V)) ∧
@@ -559,8 +557,7 @@ theorem mem_rr_iff' (x : I.GA) :
       h ∈ ratHA I ↔ h ∈ HFinIn (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF I.F) I.cm.sig I.J := fun h => Iff.rfl
   rw [← hrat, ← hGF, Formalism.MainNotions.LeviCoordinates.rr_mem_GF]
   constructor
-  · intro hx
-    exact ⟨x, hx, rfl⟩
+  · exact fun hx => ⟨x, hx, rfl⟩
   · rintro ⟨y, hy, hyx⟩
     rwa [← (toHA I hb).injective hyx]
 
@@ -581,8 +578,7 @@ theorem isFD_image (μf : Measure I.Gf) [SigmaFinite μf] [μf.IsHaarMeasure] (f
       left_inv := fun g => Subtype.ext (ContinuousMulEquiv.apply_symm_apply _ _)
       right_inv := fun x => Subtype.ext (ContinuousMulEquiv.symm_apply_apply _ _) }
   have hqmp : Measure.QuasiMeasurePreserving e.toEquiv.symm ((I.muA μf).map e) (I.muA μf) := by
-    refine (MeasurePreserving.quasiMeasurePreserving ⟨e.symm.measurable, ?_⟩)
-    exact e.map_symm_map
+    exact (MeasurePreserving.quasiMeasurePreserving ⟨e.symm.measurable, e.map_symm_map⟩)
   have hfd : IsFundamentalDomain Γ (e '' fund) ((I.muA μf).map e) := by
     refine hfd0.image_of_equiv e.toEquiv hqmp eΓ fun g x => ?_
     show e ((eΓ g : I.GA) * x) = (g : HA _ _ _) * e x

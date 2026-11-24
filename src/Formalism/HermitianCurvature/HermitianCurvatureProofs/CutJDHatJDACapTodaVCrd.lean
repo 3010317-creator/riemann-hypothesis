@@ -217,8 +217,7 @@ theorem gam_smooth (a : Fin r) : ContDiffOn ℝ ∞ (gam k r a) (OmX r) := by
   have h1 : ContDiffAt ℝ ∞ (fun c : Fin r → ℂ => ‖c a‖) x :=
     (contDiffAt_norm ℝ (hx a)).comp x
       (ContinuousLinearMap.proj a : (Fin r → ℂ) →L[ℝ] ℂ).contDiff.contDiffAt
-  have h2 := Complex.ofRealCLM.contDiff.contDiffAt.comp x (h1.pow (Mdim k r a - 1))
-  exact h2.contDiffWithinAt
+  exact (Complex.ofRealCLM.contDiff.contDiffAt.comp x (h1.pow (Mdim k r a - 1))).contDiffWithinAt
 
 theorem gaugeF_smooth : ContDiffOn ℝ ∞ (gaugeF k r) (OmX r) := by
   rw [gaugeF_eq]
@@ -299,8 +298,7 @@ theorem pbOp_gauge (i : Fin r) (f : (Fin r → ℂ) → X) (hf : f ∈ WSm r X) 
     rw [ite_eq_left hx] at hpg
     have key : star (x i) * wirtBar i (gam k r i) x =
         ((Mdim k r i - 1 : ℕ) : ℂ) / 2 * gam k r i x := by
-      rw [← smul_eq_mul]
-      exact hpg
+      rwa [← smul_eq_mul]
     unfold pbOp
     rw [ite_eq_left hx, ite_eq_left hx, hsplit, wbar_smul_lemma i (gam k r i) (fun y => gamO k r i y • f y) x hgi (hgO.smul hfd),
       wbar_smul_lemma i _ _ x hgO hfd, hwO, gauge_split]
@@ -345,8 +343,7 @@ theorem loc (Φ : (Fin r → ℂ) → X) (U : Set (Fin r → ℂ)) (c : Fin r �
     by_cases hyU : y ∈ U
     · have hg := (gaugeF_smooth (k := k)).contDiffAt (hO.mem_nhds hyO)
       have hgi := hg.inv (gaugeF_ne hyO)
-      have hΨ' := hΨ.contDiffAt (hU.mem_nhds hyU)
-      exact χ.contDiff.contDiffAt.smul (hgi.smul hΨ')
+      exact χ.contDiff.contDiffAt.smul (hgi.smul (hΨ.contDiffAt (hU.mem_nhds hyU)))
     · have hyc : y ∉ Metric.closedBall c (ε / 2) := fun h => hyU (hcl h)
       refine (contDiffAt_const (c := (0 : X))).congr_of_eventuallyEq ?_
       refine Filter.eventually_of_mem (Metric.isClosed_closedBall.isOpen_compl.mem_nhds hyc)
@@ -422,8 +419,7 @@ theorem iteratedOperator_germ (w : ℂ) : ∀ (m : ℕ) (f₁ f₂ : (Fin r → 
   intro m
   induction m with
   | zero =>
-    intro f₁ f₂ c h
-    exact ⟨h, EventuallyEq.rfl⟩
+    exact fun f₁ f₂ c h => ⟨h, EventuallyEq.rfl⟩
   | succ m ih =>
     intro f₁ f₂ c h
     have hin : (fun c' => (w - (m : ℂ)) • f₁ c' - pbN r (r - m - 1) f₁ c') =ᶠ[𝓝 c]
@@ -444,8 +440,7 @@ theorem vABm_germ (y : ℂ) : ∀ (m : ℕ) (f₁ f₂ : (Fin r → ℂ) → X) 
   intro m
   induction m with
   | zero =>
-    intro f₁ f₂ c h
-    exact ⟨h, EventuallyEq.rfl⟩
+    exact fun f₁ f₂ c h => ⟨h, EventuallyEq.rfl⟩
   | succ i ih =>
     intro f₁ f₂ c h
     have hgerm := ih f₁ f₂ c h
@@ -455,8 +450,7 @@ theorem vABm_germ (y : ℂ) : ∀ (m : ℕ) (f₁ f₂ : (Fin r → ℂ) → X) 
       filter_upwards [hgerm.1, pbOp_germ ⟨i, hi⟩ hgerm.1, cbOp_germ ⟨i, hi⟩ hgerm.2] with c' h1 h2 h3
       simp only [Pi.sub_apply, Pi.smul_apply]
       rw [h1, h2, h3]
-    · simp only [vABm, dite_eq_right hi]
-      exact hgerm
+    · simpa only [vABm, dite_eq_right hi] using hgerm
 
 end Formalism.FourierDecayAlt.P.CutMP.TVCrdGerm
 end -- clump:auto
@@ -601,8 +595,7 @@ theorem hee : ∀ i j, Ee r X i * Ee r X j = Ee r X j * Ee r X i := by
   exact this.eq
 
 theorem hGe (k : ℕ) : ∀ j, Gop k r X * Ee r X j = Ee r X j * Gop k r X := by
-  intro j
-  exact ((comm_G_CbN k j).mul_right (comm_G_CbiN k (j - 1))).eq
+  exact fun j => ((comm_G_CbN k j).mul_right (comm_G_CbiN k (j - 1))).eq
 
 theorem shift_eq (k : ℕ) (y : ℂ) {m : ℕ} (hm : m < r) :
     kvTop k r y - (m : ℂ) + sG k r ⟨r - m - 1, by omega⟩ = y := by
@@ -629,8 +622,7 @@ theorem iteratedOperator_coe (w : ℂ) : ∀ (m : ℕ) (f : WSm r X),
   intro m
   induction m with
   | zero =>
-    intro f
-    exact ⟨rfl, rfl⟩
+    exact fun f => ⟨rfl, rfl⟩
   | succ m ih =>
     intro f
     have hD : (fun c => (w - (m : ℂ)) • (f : (Fin r → ℂ) → X) c - pbN r (r - m - 1) (f : (Fin r → ℂ) → X) c) =
@@ -647,8 +639,7 @@ theorem vABm_coe (y : ℂ) : ∀ (i : ℕ) (f : WSm r X),
   intro i
   induction i with
   | zero =>
-    intro f
-    exact ⟨rfl, rfl⟩
+    exact fun f => ⟨rfl, rfl⟩
   | succ i ih =>
     intro f
     by_cases h : i < r
@@ -678,8 +669,7 @@ theorem toda_coordinate_holds : TVCrd := by
     intro m
     induction m with
     | zero =>
-      intro u v huv
-      exact ⟨huv, EventuallyEq.rfl⟩
+      exact fun u v huv => ⟨huv, EventuallyEq.rfl⟩
     | succ m ih =>
       intro u v huv
       have hIn : (fun x => (kvTop k r y - (m : ℂ)) • u x - pbN r (r - m - 1) u x) =ᶠ[𝓝 c]
@@ -698,8 +688,7 @@ theorem toda_coordinate_holds : TVCrd := by
     intro i
     induction i with
     | zero =>
-      intro u v huv
-      exact ⟨huv, EventuallyEq.rfl⟩
+      exact fun u v huv => ⟨huv, EventuallyEq.rfl⟩
     | succ i ih =>
       intro u v huv
       obtain ⟨h1, h2⟩ := ih u v huv

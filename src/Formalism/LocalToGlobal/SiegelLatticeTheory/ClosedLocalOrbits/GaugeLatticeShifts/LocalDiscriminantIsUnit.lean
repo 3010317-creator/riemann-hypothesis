@@ -361,8 +361,7 @@ theorem bt_span_tri {n : ℕ} (φ : Fin n → (D.s.atP p).Ep)
     have e : v = frameAct (frameAct v ξ⁻¹) ξ := by
       rw [bt_frameAct_comp, Matrix.nonsing_inv_mul ξ (bt_unitri_det ξ h1 h2), bt_frameAct_one]
     have := bt_tri Z p φ hφ (frameAct v ξ⁻¹) ξ h1 b
-    rw [← e] at this
-    exact this
+    rwa [← e] at this
 
 theorem bt_span_snoc {n : ℕ} (w : Fin (n + 1) → Vp D p) :
     Submodule.span (Z.M p).L.O (Set.range w) =
@@ -1112,9 +1111,7 @@ theorem bt_sat_Xplus (Λ : Submodule (𝓞 E) S.V) {T : E} (F : LFlag S r T) (hz
   obtain ⟨c, rfl⟩ := Submodule.mem_span_singleton.1 ht
   have horth : ∀ v ∈ F.fl.Xplus, v ∈ orth S (Xsp F) := by
     intro v hv
-    simp only [orth, Submodule.mem_iInf, LinearMap.mem_ker]
-    intro y hy
-    exact bt_X_orth F.fl hy hv
+    simpa only [orth, Submodule.mem_iInf, LinearMap.mem_ker] using fun y hy => bt_X_orth F.fl hy hv
   have hcz : c • F.fl.z ∈ Lsub Λ F := by
     refine Submodule.mem_inf.2 ⟨?_, horth _ (Submodule.smul_mem _ _ (bt_z_mem_Xplus F.fl))⟩
     have e : c • F.fl.z = x + (-w) := by rw [← hwt]; abel
@@ -1230,8 +1227,7 @@ theorem bt_det_unitri_sub {n l : ℕ} (hl : l ≤ n) {R : Type*} [CommRing R] (U
     (h1 : ∀ a b, b < a → U a b = 0) (h2 : ∀ a, U a a = 1) :
     (U.submatrix (Fin.castLE hl) (Fin.castLE hl)).det = 1 := by
   have hbt : (U.submatrix (Fin.castLE hl) (Fin.castLE hl)).BlockTriangular id := by
-    intro i j hij
-    exact h1 _ _ hij
+    exact fun i j hij => h1 _ _ hij
   rw [Matrix.det_of_isUpperTriangular hbt]
   simp [h2]
 
@@ -1462,8 +1458,7 @@ theorem bt_li_shear {ι R M : Type*} [Fintype ι] [CommRing R] [AddCommGroup M] 
       _ = 0 := by rw [this, zero_mul]
   rintro (a | b)
   · have := key (Sum.inl a)
-    simp only [Sum.elim_inl, hr a, zero_mul, sub_zero] at this
-    exact this
+    simpa only [Sum.elim_inl, hr a, zero_mul, sub_zero] using this
   · exact hr b
 
 theorem bt_typed_Mle (hE : LocEqC D Z) (p : PlF D) {T T' : D.host.E} (F0 : FlagG (VS D) D.R.rS T)
@@ -1557,8 +1552,7 @@ theorem bt_ff_li (p : PlF D) {T T' : ℕ} (F0 : FlagG (VS D) D.R.rS (T : D.host.
     rw [linearIndependent_sum]
     refine ⟨by simpa using h1, by simpa using hWli, ?_⟩
     simp only [Sum.elim_comp_inl, Sum.elim_comp_inr]
-    rw [bt_span_frameAct_eq _ _ hdet]
-    exact hd
+    rwa [bt_span_frameAct_eq _ _ hdet]
   have hbc := bt_bc_linIndep p _ hsum
   have hu' : ∀ i : Fin (D.R.rS + 1) ⊕ Fin (D.R.rS + 1),
       IsUnit (Sum.elim (fun a => sgnP D p a * frFac Z.δ p a) (fun b => sgnP' D p b * frFac Z.δ p b) i) := by

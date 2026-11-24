@@ -118,9 +118,7 @@ theorem mem_UJ_of (hdet : IsUnit J.det) (T : Matrix (Fin n) (Fin n) S)
     have h3 : s T.det * T.det * J.det = 1 * J.det := by linear_combination h1
     have h4 : s T.det * T.det = 1 := hdet.mul_left_inj.mp h3
     exact ⟨⟨T.det, s T.det, by rw [mul_comm]; exact h4, h4⟩, rfl⟩
-  refine ⟨Matrix.nonsingInvUnit T hdT, ?_, rfl⟩
-  show cT s T * J * T = J
-  exact hM
+  exact ⟨Matrix.nonsingInvUnit T hdT, hM, rfl⟩
 
 theorem step (hs : ∀ z, s (s z) = z) (hJ : IsHerm s J) (hdet : IsUnit J.det)
     (a b : Fin n → S) (hab : hform s J b b = hform s J a a) (hu : IsUnit (hform s J a a))

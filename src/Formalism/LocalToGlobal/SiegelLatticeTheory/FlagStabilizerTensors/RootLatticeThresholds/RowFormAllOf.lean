@@ -372,9 +372,7 @@ theorem pointRegroupC_of (hA : ClassAbsC X Y u u' vR i0 i0' νq κ) : PointRegro
         have hVn : ‖V w‖ ≠ 0 := norm_ne_zero_iff.2 hV
         simpa only [mul_div_assoc, div_self hVn, mul_one] using h5
       exact ((Summable.of_norm h4).tsum_smul_const (V w)).symm
-  rw [tsum_congr h2]
-  rw [← hsumF.tsum_sigma]
-  rw [tsum_congr hFe]
+  rw [tsum_congr h2, ← hsumF.tsum_sigma, tsum_congr hFe]
   have hsuppf : Function.support f ⊆ Set.range e := by
     intro t ht
     by_cases h : ∃ w, t.1.atPt w
@@ -889,12 +887,10 @@ theorem normSq_tsum_eq (w : α → E) (hw : Summable fun a => ‖w a‖) :
     exact (Complex.abs_re_le_norm _).trans (norm_inner_le_norm _ _)
   refine ⟨hsum, ?_⟩
   have h1 : HasSum (fun a => (inner ℂ v (w a)).re) (inner ℂ v v).re := by
-    have h := Complex.reCLM.hasSum ((innerSL ℂ v).hasSum hs)
-    simpa [innerSL_apply_apply] using h
+    simpa [innerSL_apply_apply] using Complex.reCLM.hasSum ((innerSL ℂ v).hasSum hs)
   have h2 : ∀ a, HasSum (fun b => (inner ℂ (w a) (w b)).re) (inner ℂ (w a) v).re := by
     intro a
-    have h := Complex.reCLM.hasSum ((innerSL ℂ (w a)).hasSum hs)
-    simpa [innerSL_apply_apply] using h
+    simpa [innerSL_apply_apply] using Complex.reCLM.hasSum ((innerSL ℂ (w a)).hasSum hs)
   have h3 : ∀ a, (inner ℂ (w a) v).re = (inner ℂ v (w a)).re := fun a => by
     simpa using inner_re_symm (𝕜 := ℂ) (w a) v
   rw [hsum.tsum_prod' (fun a => (h2 a).summable), tsum_congr (fun a => (h2 a).tsum_eq), tsum_congr h3, h1.tsum_eq]
@@ -948,8 +944,7 @@ theorem inner_toLp_single_same {K F : Type*} [Fintype K] [DecidableEq K] [Normed
   · simp
   · intro b _ hb
     simp [Pi.single_eq_of_ne hb]
-  · intro h
-    exact absurd (Finset.mem_univ k) h
+  · exact fun h => absurd (Finset.mem_univ k) h
 
 end Formalism.L2.SG.Pf.RowRegroup
 

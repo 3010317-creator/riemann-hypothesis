@@ -111,9 +111,7 @@ lemma sub_pow_principal (S : Submodule (𝓞 F) ℂ) (hS : S ≠ ⊥) (t : ℂ) 
     rw [hSS0, ← hI, h, Submodule.map_bot, Submodule.mul_bot]
   obtain ⟨a, ha0, ha⟩ := ideal_pow_principal F I hI0
   refine ⟨algebraMap (𝓞 F) F a, ?_, ?_⟩
-  · intro h
-    apply ha0
-    exact RingOfIntegers.ext (by simpa using h)
+  · exact fun h => ha0 (RingOfIntegers.ext (by simpa using h))
   have hmap : S0 ^ hF F = span (𝓞 F) {algebraMap (𝓞 F) ℂ a} := by
     have hp : Submodule.map (Algebra.linearMap (𝓞 F) ℂ) (I ^ hF F) = S0 ^ hF F := by
       rw [← hI]; exact Submodule.map_pow (M := I) (f := Algebra.ofId (𝓞 F) ℂ) (n := hF F)

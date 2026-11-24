@@ -100,8 +100,7 @@ theorem emb_trace (v : InfinitePlace X.B.I.F) (e : X.B.I.E) :
     apply Finset.eq_of_subset_of_card_le (Finset.subset_univ _)
     rw [Finset.card_univ, hcard, Finset.card_pair hne]
   have h := trace_eq_sum_embeddings (K := X.B.I.F) (L := X.B.I.E) ℂ (x := e)
-  rw [huniv, Finset.sum_pair hne] at h
-  exact h
+  rwa [huniv, Finset.sum_pair hne] at h
 
 theorem evInf_conj (v : InfinitePlace X.B.I.F) (a : Ainf X.B.I.F) :
     conj (PI.AprimeInfU.evInf X v a) = PI.AprimeInfU.evInf X v a := by

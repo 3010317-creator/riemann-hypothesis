@@ -132,14 +132,12 @@ private theorem existsUnique_mem_iUnion_translate_preimage {V : Type} [AddCommGr
   refine ⟨⟨(l : V) - ρ i, ha⟩, ?_, ?_⟩
   · refine Set.mem_iUnion.2 ⟨i, ?_⟩
     show ρ i + (((l : V) - ρ i) + v) ∈ FL
-    rw [show ρ i + (((l : V) - ρ i) + v) = (l : V) + v by abel]
-    exact hl
+    rwa [show ρ i + (((l : V) - ρ i) + v) = (l : V) + v by abel]
   · intro b hb
     obtain ⟨j, hj⟩ := Set.mem_iUnion.1 hb
     have hj' : ((⟨ρ j + (b : V), L.add_mem (hρL j) (hle b.2)⟩ : L) : V) + v ∈ FL := by
       show ρ j + (b : V) + v ∈ FL
-      rw [add_assoc]
-      exact hj
+      rwa [add_assoc]
     have hy : ρ j + (b : V) = l := congrArg Subtype.val (hlu _ hj')
     have hj2 : ρ j + -(l : V) ∈ Λ := by
       have e : ρ j + -(l : V) = -(b : V) := by rw [← hy]; abel
@@ -406,13 +404,11 @@ private theorem existsUnique_add_mem_preimage_of_additive_equiv {V W : Type} [Ad
   have hfl : f l ∈ M := (hLM _).2 (by rw [hgf]; exact l.2)
   refine ⟨⟨f l, hfl⟩, ?_, ?_⟩
   · show g (f l + y) ∈ F
-    rw [hg, hgf]
-    exact hl
+    rwa [hg, hgf]
   · rintro ⟨m, hm⟩ hm'
     have hm'' : g m + g y ∈ F := by
       have h3 := hm'
-      rw [Set.mem_preimage, hg] at h3
-      exact h3
+      rwa [Set.mem_preimage, hg] at h3
     have h2 : g m = l := congrArg Subtype.val (hu ⟨g m, (hLM m).1 hm⟩ hm'')
     apply Subtype.ext
     show m = f l
@@ -465,8 +461,7 @@ theorem exists_fd (K : Type) [Field K] [NumberField K] [IsEmpty {w : InfinitePla
   let g : (ι → ℂ) → mixedSpace K := fun v => phiInv σ cj (fun i => s⁻¹ * v i)
   have hgf : ∀ x, g (f x) = x := fun x => by
     show phiInv σ cj (fun i => s⁻¹ * (s * phiMap σ cj x i)) = x
-    simp only [inv_mul_cancel_left₀ hs]
-    exact phiInv_phiMap σ cj x
+    simpa only [inv_mul_cancel_left₀ hs] using phiInv_phiMap σ cj x
   have hfg : ∀ y, f (g y) = y := fun y => by
     show (fun i => s * phiMap σ cj (phiInv σ cj (fun j => s⁻¹ * y j)) i) = y
     simp only [phiMap_phiInv, mul_inv_cancel_left₀ hs]
@@ -503,8 +498,7 @@ theorem exists_fd (K : Type) [Field K] [NumberField K] [IsEmpty {w : InfinitePla
   have hle : Λ' ≤ L := AddSubgroup.map_mono (fun a ha => hΛ a ha)
   have hri : Λ'.relIndex L ≠ 0 := by
     show Λ'.relIndex (IA.map E) ≠ 0
-    rw [← AddSubgroup.relIndex_comap, AddSubgroup.comap_map_eq_self_of_injective hE]
-    exact hk0
+    rwa [← AddSubgroup.relIndex_comap, AddSubgroup.comap_map_eq_self_of_injective hE]
   have hfin : (Λ'.addSubgroupOf L).FiniteIndex := ⟨hri⟩
   obtain ⟨G, hGm, hG⟩ := coset_fd L Λ' hle hfin (g ⁻¹' FL) (hFLm.preimage hgm) hdL
   refine ⟨G, hGm, fun v => ?_⟩
@@ -512,8 +506,7 @@ theorem exists_fd (K : Type) [Field K] [NumberField K] [IsEmpty {w : InfinitePla
   obtain ⟨a, ha, rfl⟩ := AddSubgroup.mem_map.1 hw
   refine ⟨⟨a, ha⟩, hwG, ?_⟩
   rintro ⟨b, hb⟩ hbG
-  have h3 := hu ⟨E b, AddSubgroup.mem_map_of_mem E hb⟩ hbG
-  exact Subtype.ext (hE (congrArg Subtype.val h3))
+  exact Subtype.ext (hE (congrArg Subtype.val (hu ⟨E b, AddSubgroup.mem_map_of_mem E hb⟩ hbG)))
 
 private theorem measurePreserving_mul_left_of_norm_eq_one (u : ℂ) (hu : ‖u‖ = 1) :
     MeasurePreserving (fun z : ℂ => u * z) volume volume := by

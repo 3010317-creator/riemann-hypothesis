@@ -158,8 +158,7 @@ lemma uw_block {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hh 
       · rw [Matrix.conjTranspose_apply, hcol, ite_eq_left rfl, star_one, one_mul]
       · intro x _ hx
         rw [Matrix.conjTranspose_apply, hcol, ite_eq_right hx, star_zero, zero_mul]
-      · intro hm
-        exact absurd (Finset.mem_univ _) hm
+      · exact fun hm => absurd (Finset.mem_univ _) hm
     have e := congrFun (congrFun hU (piI k r i)) j
     rw [Matrix.mul_apply] at e
     simp only [hrowp] at e
@@ -171,8 +170,7 @@ lemma uw_block {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hh 
       exact (mul_eq_zero.mp e).resolve_left hc
     · intro y _ hy
       rw [Hpk_applyUnitaryQuotientCompactness (piI k r i) y, _root_.PI.QuotSetU.UnitaryGroupMassFormula.SW.piI_piI, ite_eq_right hy, zero_mul]
-    · intro hm
-      exact absurd (Finset.mem_univ _) hm
+    · exact fun hm => absurd (Finset.mem_univ _) hm
   · exact uw_col_out hh j hj i
 
 lemma one_mem_UW : (1 : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) ∈ UWset k r z := by
@@ -236,8 +234,7 @@ lemma inv_mem_UW {a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
   have hinv : a⁻¹ = Hpk k r * aᴴ * Hpk k r := Matrix.inv_eq_left_inv hl
   have hr : a * a⁻¹ = 1 := by
     have hla : a⁻¹ * a = 1 := by
-      rw [hinv]
-      exact hl
+      rwa [hinv]
     exact Matrix.mul_nonsing_inv a (Matrix.isUnit_det_of_left_inverse hla)
   refine ⟨?_, fun i => ⟨inv_fix ha1 (ha2 i).1, inv_fix ha1 (ha2 i).2⟩, inv_fix ha1 ha3⟩
   show (a⁻¹)ᴴ * Hpk k r * a⁻¹ = Hpk k r

@@ -83,8 +83,7 @@ theorem exists_pair_of_between (L L' : PeriodPair) (S : Submodule ℤ ℂ)
     have heq : (![((b 0 : S) : ℂ), ((b 1 : S) : ℂ)] : Fin 2 → ℂ) = ⇑(b.ofZLatticeBasis ℝ S) := by
       ext i
       fin_cases i <;> simp [Module.Basis.ofZLatticeBasis_apply]
-    rw [heq]
-    exact hl
+    rwa [heq]
   · have hset : ({((b 0 : S) : ℂ), ((b 1 : S) : ℂ)} : Set ℂ) =
         Set.range (b.ofZLatticeBasis ℝ S) := by
       ext x
@@ -145,8 +144,7 @@ theorem chain_core (d : ℕ) (L : PeriodPair) (hd : d % 8 = 7) (hL : HasCMBy d L
     · subst hi
       simp only [M, ite_eq_left rfl, mem_S, pow_zero, one_mul]
       exact ⟨fun hz => ⟨stπ z hz, hz⟩, fun hz => hz.2⟩
-    · simp only [M, ite_eq_right hi]
-      exact hP i z
+    · simpa only [M, ite_eq_right hi] using hP i z
 
   have claimA : ∀ i u v, u ∈ S L π (i + 1) → v ∈ S L π (i + 1) → u ∉ S L π i → v ∉ S L π i →
       u - v ∈ S L π i := by
@@ -162,8 +160,7 @@ theorem chain_core (d : ℕ) (L : PeriodPair) (hd : d % 8 = 7) (hL : HasCMBy d L
     refine ⟨?_, ?_⟩
     · rw [mul_sub]
       exact sub_mem hu.1 hv.1
-    · rw [mul_sub]
-      exact key
+    · rwa [mul_sub]
   refine ⟨M, by simp [M], ?_, ?_, ?_⟩
   · intro i z hz
     rw [hM] at hz ⊢
@@ -195,8 +192,7 @@ theorem chain_core (d : ℕ) (L : PeriodPair) (hd : d % 8 = 7) (hL : HasCMBy d L
     have htS1 : t ∈ S L π (i + 1) := ⟨by rw [htπ]; exact pow_two_mul_mem L j hw, by rw [ht3]; exact stπb _ hw⟩
     have htS0 : t ∉ S L π i := fun h' => hw2 (by rw [← ht2]; exact h'.2)
     refine ⟨t, ?_, ?_, ?_⟩
-    · rw [hM]
-      exact htS0
+    · rwa [hM]
     · rw [hM]
       refine ⟨?_, ?_⟩
       · rw [mul_left_comm, htπ]

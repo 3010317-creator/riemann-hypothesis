@@ -54,15 +54,13 @@ theorem petPos (V : HSp D) (μ : Measure (GA D V)) (𝓕 : Set (GA D V)) (hH : �
     simp [hUdef]
   have hFU : μ (U ∩ 𝓕) = 0 := by
     have h1 := ae_iff.1 hz
-    rw [hset, Measure.restrict_apply hUo.measurableSet] at h1
-    exact h1
+    rwa [hset, Measure.restrict_apply hUo.measurableSet] at h1
   have key : U ≤ᵐ[μ] (⋃ γ : GQ V, (fun x => (γ : GA D V) * x) ⁻¹' (U ∩ 𝓕) : Set (GA D V)) := by
     filter_upwards [hF.ae_covers] with x hx hxU
     obtain ⟨γ, hγ⟩ := hx
     refine Set.mem_iUnion.2 ⟨γ, ?_, ?_⟩
     · show F ((γ : GA D V) * x) ≠ 0
-      rw [hinv _ γ.2 x]
-      exact hxU
+      rwa [hinv _ γ.2 x]
     · exact hγ
   have hU0 : μ U = 0 := by
     refine le_antisymm ((measure_mono_ae key).trans ?_) bot_le

@@ -72,16 +72,14 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem finMaxElt (a : 𝓞 E) (ha : a ≠ 0) : {p : Ideal (𝓞 E) | p.IsMaximal ∧ a ∈ p}.Finite := by
   have hI : Ideal.span {a} ≠ 0 := by
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact ha
+    rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   have hfin := (Ideal.finite_factors hI).image (fun v : HeightOneSpectrum (𝓞 E) => v.asIdeal)
   apply hfin.subset
   rintro p ⟨hp, hap⟩
   have hne : p ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hp (RingOfIntegers.not_isField E)
   refine ⟨⟨p, hp.isPrime, hne⟩, ?_, rfl⟩
   show p ∣ Ideal.span {a}
-  rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-  exact hap
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
 
 theorem primesOver_finite (T : Finset (HeightOneSpectrum (𝓞 F))) :
     {p : Ideal (𝓞 E) | p.IsMaximal ∧ ∃ v ∈ T, p.comap (algebraMap (𝓞 F) (𝓞 E)) = v.asIdeal}.Finite := by
@@ -130,8 +128,7 @@ theorem hermToF (hst : ∀ a : F, star (algebraMap F E a) = algebraMap F E a)
     have : t = algebraMap (𝓞 F) (𝓞 E) s := by
       apply FaithfulSMul.algebraMap_injective (𝓞 E) E
       rw [ht, e1, hst]
-    rw [this]
-    exact hsQ
+    rwa [this]
   have hxX : x ∈ loc (K := E) Q X := ⟨_, hs', hsx⟩
   rw [h Q hQm hQc] at hxX
   obtain ⟨t, ht, htx⟩ := hxX

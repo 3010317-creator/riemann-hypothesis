@@ -142,9 +142,7 @@ theorem gauge_kappa_of_point_line : GTKapOfCut := by
     have hc0 : c0 ∈ OmX P.r := fun _ => one_ne_zero
     have hq0 : ((c0, ζ0) : (Fin P.r → ℂ) × ℂ) ∈ NF.QR P.k P.r Bs.z Bs.z' := ⟨hc0, by rw [hTz]; exact hζ0⟩
     have hval : Φ c0 (NF.muZ P.k P.r Bs.μsec ζ0) = Z := by
-      have h := congrFun hrad (c0, ζ0)
-      simp only [NF.radR, Set.indicator_of_mem hq0, φ] at h
-      exact h
+      simpa only [NF.radR, Set.indicator_of_mem hq0, φ] using congrFun hrad (c0, ζ0)
     let q0 : MA.Qp P.r P.TT := ⟨(c0, ζ0), ⟨hc0, hζ0⟩⟩
     let f : M.Ty P → ℂ := fun σ => if σ = ρ then 1 else 0
     have hk := hQk f ⟨Φ, hΦ⟩ q0
@@ -158,8 +156,7 @@ theorem gauge_kappa_of_point_line : GTKapOfCut := by
     have hk' : (((d.κ f).1 ⟨Φ, hΦ⟩ : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) c0
         (NF.muZ P.k P.r Bs.μsec ζ0) = Z.comp (Qr ρ) := by
       rw [← hval]; exact hk
-    rw [hk'] at h2
-    exact h2
+    rwa [hk'] at h2
   refine ⟨fun ρ _ => E ρ, ⟨fun ρ => contDiffOn_const, fun ζ hζ => ⟨fun ρ => ?_, fun ρ ρ' => ?_, fun Z hZ => ?_⟩⟩, ?_⟩
   · rw [hFib ζ hζ]; exact hEF ρ
   · split_ifs with h

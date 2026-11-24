@@ -87,8 +87,7 @@ theorem multiInv {A S : Type} [CommRing A] [CommRing S] [Algebra A S] (r : ℕ)
         try ring
       · simp [hw, hf, Finset.sum_insert hj0]
         try ring
-    rw [← hφ, AlgHom.comp_apply, h0, MvPolynomial.aeval_rename]
-    exact ih
+    rwa [← hφ, AlgHom.comp_apply, h0, MvPolynomial.aeval_rename]
 
 variable {K : Type} [Field K] {r : ℕ}
 
@@ -284,8 +283,7 @@ theorem lam_caseM (L : MvPolynomial (Bool × (Fin r × Fin r)) K →ₗ[K] K) (N
       l.det ^ N • lamOf K r L (blockEmb K true v * blockEmb K false t) := by
   have hc : ∀ (h : MvPolynomial (Fin (r + 1 + 1) × Fin (r + 1 + 1)) (MvPolynomial (Bool × (Fin r × Fin r)) K))
       (u : Fin (r + 1 + 1) × Fin (r + 1 + 1) →₀ ℕ), AddMonoidAlgebra.coeff (lcoef L h) u = L (AddMonoidAlgebra.coeff h u) := by
-    intro h u
-    exact coeff_sum_monomial_linear L h u
+    exact fun h u => coeff_sum_monomial_linear L h u
   rw [lam_eq, lcoef_comm, map_mul, caseM ψ (rowAct K l) hgen hnone, caseM ψ (rowAct K l) hgen hnone]
   ext u
 
@@ -306,8 +304,7 @@ theorem lam_scaleM (L : MvPolynomial (Bool × (Fin r × Fin r)) K →ₗ[K] K) (
     simp
   have key := lam_caseM L N α α' hInv (scCol K (r + 1 + 1) (midI r j) c)
     (Matrix.diagonal (fun i : Fin r => if i = j then c else 1)) (by rw [hdet]; exact hc.isUnit) ?_ ?_ v t hv ht
-  · rw [hdet] at key
-    exact key
+  · rwa [hdet] at key
   · intro b a j'
     refine Finset.sum_congr rfl fun i _ => ?_
 
@@ -349,8 +346,7 @@ theorem lam_addM (L : MvPolynomial (Bool × (Fin r × Fin r)) K →ₗ[K] K) (N 
   have hdet : (Matrix.transvection l j c).det = 1 := Matrix.det_transvection_of_ne l j hlj c
   have key := lam_caseM L N α α' hInv (colAdd K (midI r l) (midI r j) c) (Matrix.transvection l j c)
     (by rw [hdet]; exact isUnit_one) ?_ ?_ v t hv ht
-  · rw [hdet, one_pow, one_smul] at key
-    exact key
+  · rwa [hdet, one_pow, one_smul] at key
   · intro b a j'
     simp only [rowAct_transv, colAdd, aeval_X, midI_inj]
     have e : ∀ i : Fin r, (if i = j then X (a, midI r i) + C c * X (a, midI r l) else X (a, midI r i) :

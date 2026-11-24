@@ -32,11 +32,7 @@ theorem one_sub_re_sq {b : ℂ} (hb : ‖b‖ = 1) : 1 - (b ^ 2).re = 2 * (1 - b
 
 theorem eq_one_of_pow {a : ℂ} (h : ∀ n : ℤ, ‖a ^ n - 1‖ < 1) (ha : a ≠ 0) : a = 1 := by
   have hb : ∀ n : ℤ, ‖a‖ ^ n < 2 := fun n => by
-    have h2 := h n
-    rw [← norm_zpow]
-    calc ‖a ^ n‖ = ‖(a ^ n - 1) + 1‖ := by ring_nf
-      _ ≤ ‖a ^ n - 1‖ + ‖(1 : ℂ)‖ := norm_add_le _ _
-      _ < 2 := by rw [norm_one]; linarith
+    linarith [h n, norm_le_insert' (a ^ n) 1, norm_zpow a n, (norm_one : ‖(1 : ℂ)‖ = 1)]
   have hpos : 0 < ‖a‖ := norm_pos_iff.2 ha
   have h1 : ‖a‖ = 1 := by
     by_contra hne
@@ -47,9 +43,7 @@ theorem eq_one_of_pow {a : ℂ} (h : ∀ n : ℤ, ‖a ^ n - 1‖ < 1) (ha : a �
       rw [zpow_neg, zpow_natCast, ← inv_pow] at h2
       linarith
     · obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt 2 hgt
-      have h2 := hb n
-      rw [zpow_natCast] at h2
-      linarith
+      linarith [hb n, zpow_natCast ‖a‖ n]
   have hre : ∀ n : ℕ, 1 / 2 < (a ^ (2 ^ n)).re := fun n => by
     have hn := h ((2 ^ n : ℕ) : ℤ)
     rw [zpow_natCast] at hn
@@ -63,29 +57,17 @@ theorem eq_one_of_pow {a : ℂ} (h : ∀ n : ℤ, ‖a ^ n - 1‖ < 1) (ha : a �
       have e : a ^ (2 ^ (n + 1)) = (a ^ (2 ^ n)) ^ 2 := by rw [pow_succ, pow_mul]
       rw [e, one_sub_re_sq hnorm, pow_succ]
       have h3 := hre n
-      have h4 : 0 ≤ 1 - (a ^ (2 ^ n)).re := by
-        have h5 := Complex.re_le_norm (a ^ (2 ^ n))
-        rw [hnorm] at h5
-        linarith
-      have h6 : 3 * (1 - (a ^ (2 ^ n)).re) ≤ 2 * (1 - (a ^ (2 ^ n)).re) * (1 + (a ^ (2 ^ n)).re) := by nlinarith
+      have h4 : 0 ≤ 1 - (a ^ (2 ^ n)).re := by linarith [Complex.re_le_norm (a ^ (2 ^ n))]
+      have h6 : 3 * (1 - (a ^ (2 ^ n)).re) ≤
+          2 * (1 - (a ^ (2 ^ n)).re) * (1 + (a ^ (2 ^ n)).re) := by nlinarith
       nlinarith
   have hd0 : 1 - a.re ≤ 0 := by
-    by_contra hpos0
-    push Not at hpos0
+    refine not_lt.1 fun hpos0 => ?_
     obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt (1 / (1 - a.re)) (by norm_num : (1 : ℝ) < 3)
-    have h2 := hd n
-    have h5 := hre n
     rw [div_lt_iff₀ hpos0] at hn
-    linarith
-  have hre1 : a.re = 1 := by
-    have h5 := Complex.re_le_norm a
-    rw [h1] at h5
-    linarith
-  have him : a.im = 0 := by
-    have h0 := Complex.sq_norm a
-    rw [h1, Complex.normSq_apply, hre1] at h0
-    have h7 : a.im * a.im = 0 := by nlinarith
-    exact mul_self_eq_zero.1 h7
+    linarith [hd n, hre n]
+  have hre1 : a.re = 1 := by linarith [Complex.re_le_norm a]
+  have him : a.im = 0 := Complex.abs_re_eq_norm.1 (by rw [hre1, h1, abs_one])
   exact Complex.ext (by simp [hre1]) (by simp [him])
 
 section Top
@@ -93,8 +75,7 @@ section Top
 variable {L : Type} [Field L] [NumberField L]
 
 theorem isOpen_integers (v : HeightOneSpectrum (𝓞 L)) :
-    IsOpen (v.adicCompletionIntegers L : Set (v.adicCompletion L)) := by
-  exact Valued.isOpen_integer _
+    IsOpen (v.adicCompletionIntegers L : Set (v.adicCompletion L)) := Valued.isOpen_integer _
 
 open Classical in
 theorem finiteSingle_eq (v : HeightOneSpectrum (𝓞 L)) (x : v.adicCompletion L) (hx : x ∈ v.adicCompletionIntegers L) :
@@ -120,8 +101,7 @@ theorem single_mem_nhds {S : Set (AdeleRing (𝓞 L) L)} (hS : S ∈ 𝓝 (1 : A
   have hw' : w ∈ Filter.map (RestrictedProduct.structureMap (fun w : HeightOneSpectrum (𝓞 L) => w.adicCompletion L)
       (fun w => (w.adicCompletionIntegers L : Set (w.adicCompletion L))) cofinite)
       (𝓝 (1 : Π v : HeightOneSpectrum (𝓞 L), v.adicCompletionIntegers L)) := by
-    rw [← RestrictedProduct.nhds_eq_map_structureMap (fun v => isOpen_integers v)]
-    exact hw
+    rwa [← RestrictedProduct.nhds_eq_map_structureMap (fun v => isOpen_integers v)]
   have hw'' : RestrictedProduct.structureMap (fun w : HeightOneSpectrum (𝓞 L) => w.adicCompletion L)
       (fun w => (w.adicCompletionIntegers L : Set (w.adicCompletion L))) cofinite ⁻¹' w ∈
       𝓝 (1 : Π v : HeightOneSpectrum (𝓞 L), v.adicCompletionIntegers L) := hw'
@@ -137,8 +117,7 @@ theorem single_mem_nhds {S : Set (AdeleRing (𝓞 L) L)} (hS : S ∈ 𝓝 (1 : A
     exact mem_of_mem_nhds (ht w')
   have := hIt hf
   show finiteSingle L v x ∈ w
-  rw [finiteSingle_eq v x hx]
-  exact this
+  rwa [finiteSingle_eq v x hx]
 
 end Top
 

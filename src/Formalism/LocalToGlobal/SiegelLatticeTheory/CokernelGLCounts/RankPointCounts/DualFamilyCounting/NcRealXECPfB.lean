@@ -61,8 +61,7 @@ theorem continuous_sJ : Continuous (sJ (k := k) (r := r)) :=
 theorem entry_of_fil {D E : Mx k r} {p : ℕ} (h : Fil (p + 1) (D - E)) {i j : Fin (2 * r + k + 1)}
     (hij : dg k r j ≤ dg k r i + p) : D i j = E i j := by
   have h1 := h i j (by omega)
-  rw [Matrix.sub_apply, sub_eq_zero] at h1
-  exact h1
+  rwa [Matrix.sub_apply, sub_eq_zero] at h1
 
 theorem mof_sub {g g' : Mx k r} (hg : g ∈ Nset k r) (hg' : g' ∈ Nset k r) (a b : Fin r)
     (hG : Fil (2 * r - a.val - b.val) (g - g')) :

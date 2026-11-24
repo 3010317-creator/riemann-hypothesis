@@ -88,8 +88,7 @@ theorem coeff_zero_of_dd {σ : Type*} (v : MvPolynomial σ ℂ) (i j : σ) (hij 
     (h : pderiv i (pderiv j v) = 0) (α : σ →₀ ℕ) (hα : AddMonoidAlgebra.coeff v α ≠ 0) :
     α i = 0 ∨ α j = 0 := by
   classical
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   obtain ⟨hi, hj⟩ := hcon
   have hsplit : α = (α - Finsupp.single i 1 - Finsupp.single j 1) + Finsupp.single i 1 +
       Finsupp.single j 1 := by
@@ -175,8 +174,7 @@ theorem SS_swap (v : Pol p q r s) (a b : Ix p q) : SS v a b = starRingEnd ℂ (S
   refine Finset.sum_congr rfl fun c _ => ?_
 
   rw [map_sum]
-  refine Finset.sum_congr rfl fun d _ => ?_
-  exact fockInner_swap _ _
+  exact Finset.sum_congr rfl fun d _ => fockInner_swap _ _
 
 theorem SS_self_re (v : Pol p q r s) (a : Ix p q) :
     (SS v a a).re = ∑ c : Ix r s, ∑ d : Ix r s, (fockInner (gg v a c d) (gg v a c d)).re := by
@@ -196,8 +194,7 @@ theorem SS_offblock (v : Pol p q r s) (a b : Ix p q) (h : ¬ sameBlock a b) : SS
   · by_cases h2 : (¬ sameBlock c d) ∧ linePos ((b, d) : Ln p q r s) = true
     · exfalso
       apply h
-      rw [side_sb]
-      rw [(side_lp a d).1 h1.2, (side_lp b d).1 h2.2]
+      rw [side_sb, (side_lp a d).1 h1.2, (side_lp b d).1 h2.2]
     · rw [ite_eq_right h2, fockInner_zero_right]
   · rw [ite_eq_right h1, fockInner_zero_left]
 

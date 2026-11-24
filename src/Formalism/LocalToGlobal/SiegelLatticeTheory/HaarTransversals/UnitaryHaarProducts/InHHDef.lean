@@ -66,8 +66,7 @@ theorem card_le_of_orth (ε : Fin n → Bool) (q : ℕ) (w : Fin (q + 1) → Fin
     set x : Fin n → ℂ := ∑ j, g j • w j with hx
     have hπx : ∀ i, ε i = false → x i = 0 := by
       intro i hi
-      have h := congrFun hg ⟨i, hi⟩
-      simpa [hx, Finset.sum_apply] using h
+      simpa [hx, Finset.sum_apply] using congrFun hg ⟨i, hi⟩
     have hnn : ∀ i ∈ (univ : Finset (Fin n)),
         0 ≤ (if ε i then (1 : ℝ) else -1) * Complex.normSq (x i) := by
       intro i _
@@ -149,17 +148,14 @@ theorem card_le_of_orth' (ε : Fin n → Bool) (q : ℕ) (nv : Fin q → Fin n �
     | cast j =>
       induction k using Fin.lastCases with
       | last =>
-        simp only [Fin.snoc_last, Fin.snoc_castSucc]
-        exact hξ j
+        simpa only [Fin.snoc_last, Fin.snoc_castSucc] using hξ j
       | cast k =>
-        simp only [Fin.snoc_castSucc]
-        exact horth j k (fun h => hjk (by rw [h]))
+        simpa only [Fin.snoc_castSucc] using horth j k (fun h => hjk (by rw [h]))
   · intro j hj
     induction j using Fin.lastCases with
     | last => exact absurd rfl hj
     | cast j =>
-      simp only [Fin.snoc_castSucc]
-      exact hneg j
+      simpa only [Fin.snoc_castSucc] using hneg j
   · simpa using hξξ
   · simpa using hne
 
@@ -202,8 +198,7 @@ theorem card_epsS_false (R : Formalism.BasicNotions.Ranks) : (univ.filter fun i 
   · intro i hi
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, epsS_false_iff] at hi
     exact Fin.ext (Nat.sub_add_cancel hi.1)
-  · intro t _
-    exact Nat.add_sub_cancel _ _
+  · exact fun t _ => Nat.add_sub_cancel _ _
 
 end Sig
 
@@ -318,8 +313,7 @@ theorem wuDefinite_holds : WuDefinite X u := by
     rw [← phi_hform, ← ha, X.B.I.φ_over v a, hemb]; rfl
   have hre : ι a = (hJ (X.B.I.ε v) (rv X.B.I v x) (rv X.B.I v x)).re := by rw [← hval]; simp
   rw [hre]
-  by_contra hle
-  push Not at hle
+  by_contra! hle
 
   let nv : Fin (D.R.rS + 1) → Fin X.B.I.n → ℂ := fun j =>
     if h : j.1 < D.R.rS then rv X.B.I v (X.eR ⟨j.1, h⟩) - rv X.B.I v (X.fR ⟨j.1, h⟩) else rv X.B.I v (X.zR u)

@@ -144,16 +144,14 @@ theorem herm_zero {r : ℕ} {v : Fin (2 * r + 0 + 1) → ℂ} (hv : inWb 0 r v) 
     · intro b _ hb
       have hb' : b.val ≠ r := fun h => hb (Fin.ext h)
       rw [hv b (by have := b.isLt; omega), mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   rw [herm, hmv]
   simp only [dotProduct, Pi.star_apply]
   rw [Finset.sum_eq_single ⟨r, by omega⟩]
   · simp
   · intro b _ hb
     simp [hb]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem normSq_zero {r : ℕ} {v w : Fin (2 * r + 0 + 1) → ℂ} (hv : inWb 0 r v) (hw : inWb 0 r w) :
     Complex.normSq (herm (Hpk 0 r) v w) = Tz 0 r v * Tz 0 r w := by
@@ -247,8 +245,7 @@ theorem qrow_sum (y x : Fin (2 * r + k + 1) → ℂ) (Bs : Fin (k - 1) → Fin (
         have h2 := congrArg Fin.val h
         simp only [posL, Fin.val_last] at h2 ⊢
         omega
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     · rw [hv i (by omega)]
       symm
       apply Finset.sum_eq_zero
@@ -358,8 +355,7 @@ theorem capelli_two_by_two : Formalism.FourierDecayAlt.Q.CapelliIdentityEntry :=
     rw [Complex.normSq_eq_conj_mul_self, Complex.star_def]
     ring
   have hd : gd k r (g⁻¹ *ᵥ z) z' ≠ 0 := by
-    rw [hδ, neg_ne_zero, Complex.ofReal_ne_zero]
-    exact hGG
+    rwa [hδ, neg_ne_zero, Complex.ofReal_ne_zero]
   set y : Fin (2 * r + k + 1) → ℂ := g⁻¹ *ᵥ z with hydef
   set P : Matrix (Fin (mdim k r (Fin.last r))) (Fin (mdim k r (Fin.last r))) ℂ :=
     Matrix.of fun c j => bc k r y z' Bs j (posL k r (Fin.last r) c) with hP

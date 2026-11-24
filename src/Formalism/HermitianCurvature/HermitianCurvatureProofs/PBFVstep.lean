@@ -93,8 +93,7 @@ theorem pairAt_mulOp_right (μ : Measure (Mt k r)) (l : Fin r) (s : ℂ) (Wv : M
     (hW : multiplicationOperator Wv (fun c _ => fsv s (c l))) (Φ Ψ : RadSp k r z z' π π') (c : Fin r → ℂ) :
     pairAt μ Φ (Wv Ψ) c = conj (fsv s (c l)) * pairAt μ Φ Ψ c := by
   unfold pairAt
-  simp only [hW Ψ c, hsInner_smul_right]
-  exact integral_const_mul _ _
+  simpa only [hW Ψ c, hsInner_smul_right] using integral_const_mul _ _
 
 theorem form_mulOp_right (μ : Measure (Mt k r)) (l : Fin r) (s : ℂ) (Wv Wv' : Module.End ℂ (RadSp k r z z' π π'))
     (hW : multiplicationOperator Wv (fun c _ => fsv s (c l))) (u y : Ix S → RadSp k r z z' π π') (c : Fin r → ℂ) (t : ℂ) :
@@ -220,9 +219,7 @@ theorem topDens_wave_right (hD : IsData P z z' π π' X μ L st l0) (w : List (L
   have hfn : ∀ g ∈ Fr.zfns L, Commute (mkP Wv Wv') g := by
     obtain ⟨-, -, -, -, -, -, hz, hzi, hzb, hzbi, hG, hGi, -⟩ := hAL
     have key : ∀ j j' : Fin 6, Commute (mkP Wv Wv') (mkP (X.fn j) (X.fn j')) := by
-      intro j j'
-      show _ * _ = _ * _
-      exact pr_ext (mulOp_comm_fn X Wv _ hW j) (mulOp_comm_fn X Wv' _ hW' j').symm
+      exact fun j j' => pr_ext (mulOp_comm_fn X Wv _ hW j) (mulOp_comm_fn X Wv' _ hW' j').symm
     intro g hg
     simp only [Fr.zfns, Set.mem_insert_iff, Set.mem_singleton_iff] at hg
     rcases hg with rfl | rfl | rfl | rfl | rfl | rfl

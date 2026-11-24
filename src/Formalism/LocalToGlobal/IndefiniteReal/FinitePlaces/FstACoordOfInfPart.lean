@@ -134,8 +134,7 @@ theorem tendsto_AE (z : AE D) (hz : infPart D z = 0) :
   simp only [hz']
   have : (0 : AE D) = ∑ i, (0 : AF D.host.F) • bA i := by simp
   rw [this]
-  refine tendsto_finsetSum _ fun i _ => ?_
-  exact (tendsto_AF _ (fstA_coord_of_infPart hz b i)).smul_const _
+  exact tendsto_finsetSum _ fun i _ => (tendsto_AF _ (fstA_coord_of_infPart hz b i)).smul_const _
 
 theorem tendsto_GA {V : HSp D} {ι : Type*} {l : Filter ι} (k : ι → GA D V) (g : GA D V)
     (h1 : ∀ i j, Tendsto (fun a => Formalism.L2.Theta.mt V (k a) i j) l (𝓝 (Formalism.L2.Theta.mt V g i j)))
@@ -194,8 +193,7 @@ theorem tendsto_trunc_entry {n : ℕ} (M : Matrix (Fin n) (Fin n) (AE D))
     rw [← neg_sub, map_neg, hM i j, neg_zero]
   have : ContinuousAdd (AE D) := IsModuleTopology.toContinuousAdd (AF D.host.F) (AE D)
   simp only [heq]
-  have h := (tendsto_const_nhds (x := M i j)).add (tendsto_AE _ hz)
-  simpa using h
+  simpa using (tendsto_const_nhds (x := M i j)).add (tendsto_AE _ hz)
 
 theorem tendsto_trunc {V : HSp D} {g : GA D V} (hg : g ∈ GfC V) (k : Finset (HeightOneSpectrum (𝓞 D.host.F)) → GA D V)
     (hk : ∀ A, Formalism.L2.Theta.mt V (k A) = 1 + algebraMap (AF D.host.F) (AE D) (idemS A) • (Formalism.L2.Theta.mt V g - 1))
@@ -204,11 +202,9 @@ theorem tendsto_trunc {V : HSp D} {g : GA D V} (hg : g ∈ GfC V) (k : Finset (H
     Tendsto k atTop (𝓝 g) := by
   apply tendsto_GA
   · intro i j
-    simp only [hk]
-    exact tendsto_trunc_entry _ (infPart_mt_sub_one hg) i j
+    simpa only [hk] using tendsto_trunc_entry _ (infPart_mt_sub_one hg) i j
   · intro i j
-    simp only [hk']
-    exact tendsto_trunc_entry _ (infPart_mt_sub_one (Subgroup.inv_mem _ hg)) i j
+    simpa only [hk'] using tendsto_trunc_entry _ (infPart_mt_sub_one (Subgroup.inv_mem _ hg)) i j
 
 theorem om_fix_of_trunc {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {χS χT : (AE D)ˣ →* Circle}
     {om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)} (hW : IsWeilDatumO ψ S T χS χT om) {f₀ : WO S T → ℂ}

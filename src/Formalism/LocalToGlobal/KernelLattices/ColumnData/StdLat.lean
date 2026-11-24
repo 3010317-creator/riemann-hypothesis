@@ -21,10 +21,8 @@ theorem single_mem_stdL {N : ℕ} (a : Fin N) : (Pi.single a 1 : Fin N → D.hos
   intro i
   by_cases h : i = a
   · subst h
-    simp only [Pi.single_eq_same]
-    exact one_mem _
-  · simp only [Pi.single_eq_of_ne h]
-    exact zero_mem _
+    simpa only [Pi.single_eq_same] using one_mem _
+  · simpa only [Pi.single_eq_of_ne h] using zero_mem _
 
 theorem star_mem_range (x : D.host.E) (h : x ∈ (algebraMap (𝓞 D.host.E) D.host.E).range) :
     (letI := D.host.cmStar; star x) ∈ (algebraMap (𝓞 D.host.E) D.host.E).range := by

@@ -97,8 +97,7 @@ theorem cV_zero {k r : ℕ} {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E
 
 theorem coefficient_vector_support : CVSupp := by
   intro k r Wp Wq _ _ _ _ _ _ z z' c s Y F hF hsupp g hg hne
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have hU : IsOpen {x | Gf k r z z' x < c} :=
     isOpen_lt (Formalism.FourierDecayAlt.P.Ux8.cont_Gf k r z z') continuous_const
   have hF0 : ∀ x ∈ {x | Gf k r z z' x < c} ∩ B.GV k r,
@@ -143,8 +142,7 @@ theorem coefficient_vector_smoothness : CVSmooth := by
       B.CkOn ⊤ (B.GV k r) f → B.CkOn ⊤ (B.GV k r) (Formalism.REAL.RdV X f) := by
     intro X hX f hf
     have h1 : B.CkOn ((⊤ : ℕ∞) + 1) (B.GV k r) f := by
-      rw [top_add]
-      exact hf
+      rwa [top_add]
     exact Formalism.FourierDecayAlt.P.B5.ckOn_RdV hX h1
   have hTop : ∀ (u : ℂ) (a b : Fin (2 * r + k + 1)) {f : B.Mat k r → (Wq →L[ℂ] Wp)},
       B.CkOn ⊤ (B.GV k r) f → B.CkOn ⊤ (B.GV k r) (Formalism.QuantumDeterminants.Top (Q.EH k r) u a b f) := by

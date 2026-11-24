@@ -52,8 +52,7 @@ theorem inN_conj (ε : Fin n → Bool) (e : Fin r → Fin n → ℂ) (z : Fin n 
     have h : (Q * g * P - 1) *ᵥ v = Q *ᵥ ((g - 1) *ᵥ v) := by
       rw [Matrix.sub_mulVec, Matrix.sub_mulVec, Matrix.one_mulVec,
         ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, hv, Matrix.mulVec_sub, hQv v hv]
-    rw [h, fix_span e Q hQe k _ hw]
-    exact hw
+    rwa [h, fix_span e Q hQe k _ hw]
   obtain ⟨⟨h1a, h1b⟩, h2⟩ := hg
   refine ⟨⟨fun a => key (e a) a (he a) (h1a a), key z r hz h1b⟩, fun y hy => ?_⟩
   have hy' : ∀ a, hJ ε (e a) (P *ᵥ y) = 0 := fun a =>
@@ -64,8 +63,7 @@ theorem inN_conj (ε : Fin n → Bool) (e : Fin r → Fin n → ℂ) (z : Fin n 
   have h : (Q * g * P - 1) *ᵥ y = Q *ᵥ ((g - 1) *ᵥ (P *ᵥ y)) := by
     rw [Matrix.sub_mulVec, Matrix.sub_mulVec, Matrix.one_mulVec, Matrix.one_mulVec,
       ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Matrix.mulVec_sub, hQv' y]
-  rw [h, fix_span e Q hQe r _ hw]
-  exact hw
+  rwa [h, fix_span e Q hQe r _ hw]
 
 end Mat
 
@@ -111,8 +109,7 @@ theorem ninf_conj_iff (u : D.what₂.Word) (s : X.B.I.Ginf)
       fun v a => fix_inv X s (he v a)
     have hz' : ∀ v, uMat (s⁻¹ v) *ᵥ rv X.B.I v (X.zR u) = rv X.B.I v (X.zR u) :=
       fun v => fix_inv X s (hz v)
-    have h2 := ninf_conj X u s⁻¹ he' hz' h
-    simpa [mul_assoc] using h2
+    simpa [mul_assoc] using ninf_conj X u s⁻¹ he' hz' h
 
 end Grp
 

@@ -194,17 +194,14 @@ private theorem minus_positive_of_parts_lemma_3 {k r m : ℕ} (hm : m + 2 ≤ r)
     simp only [E', Subalgebra.coe_sub, Subalgebra.coe_mul]
     rw [this]
     split_ifs <;> simp
-  have hR' : C3.RightRuleFn k r z' E' La' := by
-    intro x p q hpq
-    exact hR (x : B') p q hpq
+  have hR' : C3.RightRuleFn k r z' E' La' := fun x p q hpq => hR (x : B') p q hpq
   have key := head_algebra_relations_vector S M k r m hm z' E' La' y W d ℓ hgl' hR' hW hd
     (fun b x => hS b (x : B') x.2) hy1 hy2
   have hmap : ∀ n (hn : n ≤ r), (S.val (C3.AAv k r E' y n hn ℓ)) = C3.AAv k r E0 y n hn ℓ := fun n hn =>
     map_AAv S.val k r E' y n hn ℓ
   simp only [La', LinearMap.comp_apply, AlgHom.toLinearMap_apply, map_mul, map_add (f := _), AlgHom.commutes] at key
   rw [hmap, hmap, hmap] at key
-  rw [map_add (algebraMap ℂ B')]
-  exact key
+  rwa [map_add (algebraMap ℂ B')]
 
 theorem _root_.Formalism.FourierDecayAlt.P.minus_positive_of_parts : MinusPosOfParts := by
   intro hNf hDm hStar hTor hFr k r j hj z z' E _ _ Dm Φ Z γ τ hj1 hH Y

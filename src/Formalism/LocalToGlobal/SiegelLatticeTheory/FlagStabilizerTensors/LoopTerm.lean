@@ -193,8 +193,7 @@ theorem jt_irr (hA : Formalism.L2.SG.TermOp.Vanish.AvgCore) (hK : Formalism.L2.S
       apply hn
       rw [hI.relevant t]
       unfold Formalism.L2.SG.TermOp.GTerm.relevant at hr
-      rw [h.choose_spec] at hr
-      exact hr
+      rwa [h.choose_spec] at hr
     have h0 := Formalism.L2.SG.TermOp.Vanish.ooVanish_of hA Formalism.L2.SG.Pf.ginfUnimod_holds Formalism.L2.SG.Pf.nLamNinf_holds hK
       Formalism.L2.SG.Pf.psiInfChar_holds Formalism.L2.SG.Pf.rClosedC_holds Formalism.L2.SG.Pf.roDiscreteC_holds h3 h4 Y h.choose hs
     unfold Formalism.L2.SG.TermOp.ampN
@@ -389,10 +388,8 @@ theorem gram_holds {u u' : D.what₂.Word} (hL : FrameLiftEx hI u u') : GramTr W
     exact Formalism.L2.SG.Pf.Level.rv_mulVec X (vOf X τ) _ y
   have hfr : linOf hI t ((X.Fu u').fvec b) = (repF (tc hI t)).fl.fvec b := by
     refine Fin.lastCases ?_ (fun b' => ?_) b
-    · simp only [FlagG.fvec, Fin.snoc_last]
-      exact hlin.2.2
-    · simp only [FlagG.fvec, Fin.snoc_castSucc]
-      exact hlin.2.1 b'
+    · simpa only [FlagG.fvec, Fin.snoc_last] using hlin.2.2
+    · simpa only [FlagG.fvec, Fin.snoc_castSucc] using hlin.2.1 b'
   rw [hA, Q_fvec C u τ a, Q_fvec C u' τ b, Matrix.mulVec_smul, hC, ← hM3, hfr, hJ_smul_real,
     Formalism.L2.SG.Pf.Level.hJ_rv, X.φ_eq, show X.pl (vOf X τ) = τ from X.pl.apply_symm_apply τ]
   refine congrArg (fun z => ((rhoF D a * rhoF D b : ℝ) : ℂ) * embS D τ z) ?_
@@ -639,8 +636,7 @@ theorem dmin_eq {u u' : D.what₂.Word} (t : D.s.Term u u') (τ : D.what₂.Tau)
         embS D τ ((ZhatL (lf D (FlagOfWord W u)) (fl'Of W hI t)).submatrix (Fin.castLE (Nat.le_of_lt_succ l.isLt))
           (Fin.castLE (Nat.le_of_lt_succ l.isLt))).det := by
   unfold Formalism.QuantumDeterminants.Dmin
-  rw [zhat_eq W hI C t τ]
-  rw [← det_scaled]
+  rw [zhat_eq W hI C t τ, ← det_scaled]
   rfl
 
 end GfSec
@@ -676,9 +672,7 @@ theorem gf_ne {u u' : D.what₂.Word} (t : D.s.Term u u') (hG : D.s.Gterm t ≠ 
     Formalism.QuantumDeterminants.Gf D.R.k D.R.rS (zB X (C.Qi τ) u τ) (zB X (C.Qi τ) u' τ) (gamR hI C t τ) ≠ 0 := by
   have hGv : Gval (lf D (FlagOfWord W u)) (fl'Of W hI t) ≠ 0 := by
     rw [← G_eqC W hI t]
-    intro h0
-    apply hG
-    exact (algebraMap D.host.F D.host.E).injective (by rw [h0, map_zero])
+    exact fun h0 => hG ((algebraMap D.host.F D.host.E).injective (by rw [h0, map_zero]))
   unfold Formalism.QuantumDeterminants.Gf
   rw [dmin_eq W hI C t τ, dmin_eq W hI C t τ, tz_zB C u τ, tz_zB C u' τ, prod_rho_last D]
   intro h0
@@ -763,11 +757,9 @@ theorem thetaWin_of {large₂ : SizeData₂ D} {C1 : ℝ} {u u' : D.what₂.Word
         push_cast
         field_simp
       rw [he, Real.rpow_one]
-    rw [hth]
-    exact hW
+    rwa [hth]
   · unfold thetaS
-    rw [ite_eq_right h]
-    exact h1
+    rwa [ite_eq_right h]
 
 end ThetaCut
 
@@ -840,8 +832,7 @@ theorem sinf_norm {u : D.what₂.Word} {a : X.B.I.Ginf} (ha : a ∈ X.SinfU u) {
     hS.mul_mem (hS.mul_mem (show n0 ∈ hS from hn0) (show n ∈ hS from hn)) (hS.inv_mem (show n0 ∈ hS from hn0))
   have h2 := Formalism.L2.SG.Pf.Sinf.conj_ninf X u hh h1
   have e : h * n0 * n * (h * n0)⁻¹ = h * (n0 * n * n0⁻¹) * h⁻¹ := by group
-  rw [e]
-  exact h2
+  rwa [e]
 
 theorem stInf_conj {u u' : D.what₂.Word} {γ γw s s' : X.B.I.Ginf} (hs : s ∈ X.SinfU u) (hs' : s' ∈ X.SinfU u')
     (hf : γ = s * γw * s'⁻¹) {x : X.B.I.Ginf} (hx : x ∈ Formalism.L2.SG.RealObj.StInf X u u' γw) :
@@ -873,8 +864,7 @@ theorem stInf_conj_inv {u u' : D.what₂.Word} {γ γw s s' : X.B.I.Ginf} (hs : 
     have h3 : γw⁻¹ * (s⁻¹ * y * s) * γw =
         s'⁻¹ * ((s * γw * s'⁻¹)⁻¹ * y * (s * γw * s'⁻¹)) * s'⁻¹⁻¹ := by
       group
-    rw [h3]
-    exact h2
+    rwa [h3]
 
 end Covol
 

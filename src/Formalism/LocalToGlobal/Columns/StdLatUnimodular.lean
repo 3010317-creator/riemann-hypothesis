@@ -192,8 +192,7 @@ theorem hStd_isSymm : (hStd E n).IsSymm := by
 
 theorem mem_locP {W : Type*} [AddCommGroup W] [Module (𝓞 E) W] (P : HeightOneSpectrum (𝓞 E))
     (L : Submodule (𝓞 E) W) (x : W) :
-    x ∈ localization₂ P.asIdeal L ↔ ∃ s : 𝓞 E, s ∉ P.asIdeal ∧ s • x ∈ L := by
-  exact Iff.rfl
+    x ∈ localization₂ P.asIdeal L ↔ ∃ s : 𝓞 E, s ∉ P.asIdeal ∧ s • x ∈ L := Iff.rfl
 
 theorem le_locP {W : Type*} [AddCommGroup W] [Module (𝓞 E) W] (P : HeightOneSpectrum (𝓞 E))
     (L : Submodule (𝓞 E) W) : L ≤ localization₂ P.asIdeal L := fun x hx =>
@@ -510,8 +509,7 @@ theorem stdLat_lattice : Submodule.IsLattice E (stdLat E n) := by
   constructor
   · rw [stdLat_eq_span]
     exact Submodule.fg_span (Set.finite_range _)
-  · intro s hs hli
-    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+  · exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
 theorem star_coe_mem_one (r : 𝓞 E) : star (algebraMap (𝓞 E) E r) ∈ (1 : Submodule (𝓞 E) E) :=
   Submodule.mem_one.2 ⟨RingOfIntegers.mapRingHom (starRingEnd E) r, rfl⟩
 
@@ -560,69 +558,47 @@ theorem mem_localization_standardLattice (P : HeightOneSpectrum (𝓞 E)) (x : S
     rw [e]
     exact single_mem_stdLat i r
 
-theorem Deco.base_ok [NeZero n] : (Deco.base E n ST SG).Ok := by
-  exact {
+theorem Deco.base_ok [NeZero n] : (Deco.base E n ST SG).Ok := {
     lat := stdLat_lattice
     uni := stdLat_unimodular
-    f_add P x hx y hy := by
-      replace hx : x ∈ localization₂ P.1.asIdeal (stdLat E n) := hx
-      replace hy : y ∈ localization₂ P.1.asIdeal (stdLat E n) := hy
-      have hxy : x + y ∈ localization₂ P.1.asIdeal (stdLat E n) := Submodule.add_mem _ hx hy
-      simp only [Deco.base]
-      rw [ite_eq_left hxy, ite_eq_left hx, ite_eq_left hy]
+    f_add P x (hx : x ∈ localization₂ P.1.asIdeal (stdLat E n)) y
+        (hy : y ∈ localization₂ P.1.asIdeal (stdLat E n)) := by
+      simp only [Deco.base, ite_eq_left (add_mem hx hy), ite_eq_left hx, ite_eq_left hy]
       exact reduction_add ((mem_localization_standardLattice _ _).1 hx _) ((mem_localization_standardLattice _ _).1 hy _)
-    f_smul P a x hx := by
-      replace hx : x ∈ localization₂ P.1.asIdeal (stdLat E n) := hx
-      have hax : a • x ∈ localization₂ P.1.asIdeal (stdLat E n) := Submodule.smul_mem _ a hx
-      simp only [Deco.base]
-      rw [ite_eq_left hax, ite_eq_left hx]
+    f_smul P a x (hx : x ∈ localization₂ P.1.asIdeal (stdLat E n)) := by
+      simp only [Deco.base, ite_eq_left (Submodule.smul_mem _ a hx), ite_eq_left hx]
       exact redP_osmul a ((mem_localization_standardLattice _ _).1 hx _)
-    f_off P x hx := by
-      replace hx : x ∉ localization₂ P.1.asIdeal (stdLat E n) := hx
-      simp only [Deco.base]
-      rw [ite_eq_right hx]
+    f_off P x (hx : x ∉ localization₂ P.1.asIdeal (stdLat E n)) := by
+      simp only [Deco.base, ite_eq_right hx]
     f_ne P := by
       have h1 : (Pi.single (lastIdx n) (algebraMap (𝓞 E) E 1) : Sp E n) ∈ stdLat E n := single_mem_stdLat _ 1
       refine ⟨_, h1, ?_⟩
-      simp only [Deco.base]
-      rw [ite_eq_left (le_locP _ _ h1), Pi.single_eq_same, reduction_coe, map_one]
+      simp only [Deco.base, ite_eq_left (le_locP _ _ h1)]
+      rw [Pi.single_eq_same, reduction_coe, map_one]
       exact one_ne_zero
-    be_add w x hx y hy := by
-      replace hx : x ∈ localization₂ w.1.asIdeal (stdLat E n) := hx
-      replace hy : y ∈ localization₂ w.1.asIdeal (stdLat E n) := hy
-      have hxy : x + y ∈ localization₂ w.1.asIdeal (stdLat E n) := Submodule.add_mem _ hx hy
-      simp only [Deco.base]
-      rw [ite_eq_left hxy, ite_eq_left hx, ite_eq_left hy]
+    be_add w x (hx : x ∈ localization₂ w.1.asIdeal (stdLat E n)) y
+        (hy : y ∈ localization₂ w.1.asIdeal (stdLat E n)) := by
+      simp only [Deco.base, ite_eq_left (add_mem hx hy), ite_eq_left hx, ite_eq_left hy]
       funext i
       exact reduction_add ((mem_localization_standardLattice _ _).1 hx _) ((mem_localization_standardLattice _ _).1 hy _)
-    be_smul w a x hx := by
-      replace hx : x ∈ localization₂ w.1.asIdeal (stdLat E n) := hx
-      have hax : a • x ∈ localization₂ w.1.asIdeal (stdLat E n) := Submodule.smul_mem _ a hx
-      simp only [Deco.base]
-      rw [ite_eq_left hax, ite_eq_left hx]
+    be_smul w a x (hx : x ∈ localization₂ w.1.asIdeal (stdLat E n)) := by
+      simp only [Deco.base, ite_eq_left (Submodule.smul_mem _ a hx), ite_eq_left hx]
       funext i
       exact redP_osmul a ((mem_localization_standardLattice _ _).1 hx _)
-    be_off w x hx := by
-      replace hx : x ∉ localization₂ w.1.asIdeal (stdLat E n) := hx
-      simp only [Deco.base]
-      rw [ite_eq_right hx]
+    be_off w x (hx : x ∉ localization₂ w.1.asIdeal (stdLat E n)) := by
+      simp only [Deco.base, ite_eq_right hx]
     be_surj w c := by
       choose r hr using fun i => Ideal.Quotient.mk_surjective (c i)
       have h1 : (fun i => algebraMap (𝓞 E) E (r i) : Sp E n) ∈ stdLat E n :=
         (mem_stdLat _).2 fun i => ⟨r i, rfl⟩
       refine ⟨_, h1, ?_⟩
-      simp only [Deco.base]
-      rw [ite_eq_left (le_locP _ _ h1)]
+      simp only [Deco.base, ite_eq_left (le_locP _ _ h1)]
       funext i
       rw [reduction_coe, hr]
-    be_ker w x hx h0 := by
-      replace hx : x ∈ stdLat E n := hx
-      simp only [Deco.base] at h0
-      rw [ite_eq_left (le_locP _ _ hx)] at h0
-      have hx' := (mem_stdLat _).1 hx
-      choose r hr using hx'
-      have hmem : ∀ i, r i ∈ w.1.asIdeal := by
-        intro i
+    be_ker w x (hx : x ∈ stdLat E n) h0 := by
+      simp only [Deco.base, ite_eq_left (le_locP _ _ hx)] at h0
+      choose r hr using (mem_stdLat _).1 hx
+      have hmem : ∀ i, r i ∈ w.1.asIdeal := fun i => by
         have := congrFun h0 i
         rw [← hr i, reduction_coe] at this
         exact Ideal.Quotient.eq_zero_iff_mem.1 this

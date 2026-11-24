@@ -99,8 +99,7 @@ theorem cnt_eq (o : Finset (Fin (D.nB j + D.r))) (i : D.ML) (l0 : Fin (D.nB j + 
   · rw [ite_eq_left h]
   · intro l _ hl
     rw [ite_eq_right]
-    intro h2
-    exact hl (D.fk_inj j o (h2.trans h.symm))
+    exact fun h2 => hl (D.fk_inj j o (h2.trans h.symm))
   · intro h2; exact absurd (Finset.mem_univ _) h2
 
 theorem cnt_zero (o : Finset (Fin (D.nB j + D.r))) (i : D.ML) (h : ∀ l, D.fk j o l ≠ i) :
@@ -189,8 +188,7 @@ theorem cnt_tp_le (o : Finset (Fin (D.nB j + D.r))) (m : Fin D.r) :
       rw [this]; exact hl
     have h2 := Finset.single_le_sum (f := fun a : Fin (D.nB j) => if Fin.castAdd D.r a ∈ o then 1 else 0)
       (fun _ _ => Nat.zero_le _) (Finset.mem_univ (⟨l.val, hln⟩ : Fin (D.nB j)))
-    simp only [this] at h2
-    exact h2
+    simpa only [this] using h2
   · rw [D.cnt_zero j o]
     · exact Nat.zero_le _
     · intro l hl
@@ -303,8 +301,7 @@ theorem vG_zero : vG v (0 : MvPolynomial σ K) = ⊤ := by
 theorem vG_one : vG v (1 : MvPolynomial σ K) = 0 := by
   classical
   apply le_antisymm
-  · have h := vG_le_coeff (v := v) (1 : MvPolynomial σ K) 0
-    simpa using h
+  · simpa using vG_le_coeff (v := v) (1 : MvPolynomial σ K) 0
   · rw [le_vG_iff]
     intro α
     rw [coeff_one]
@@ -322,8 +319,7 @@ theorem exists_coeff_eq_vG (F : MvPolynomial σ K) (hF : F ≠ 0) :
 theorem vG_ne_top (F : MvPolynomial σ K) (hF : F ≠ 0) : vG v F ≠ ⊤ := by
   obtain ⟨α, hα, h⟩ := exists_coeff_eq_vG (v := v) F hF
   rw [← h]
-  intro ht
-  exact (mem_support_iff.mp hα) ((AddValuation.top_iff v).mp ht)
+  exact fun ht => (mem_support_iff.mp hα) ((AddValuation.top_iff v).mp ht)
 
 theorem vG_add_vG_le_vG_mul (F G : MvPolynomial σ K) : vG v F + vG v G ≤ vG v (F * G) := by
   classical
@@ -490,8 +486,7 @@ theorem ph_rename_fk (p : ℕ) (o : Finset (Fin (D.nB j + D.r)))
       rename (Prod.map (D.eA j) (id : Fin D.r → Fin D.r)) := by
     apply MvPolynomial.algHom_ext
     rintro ⟨l, a⟩
-    simp only [AlgHom.comp_apply, rename_X, Prod.map_apply, id_eq]
-    exact D.ph_X_fk j p o l a
+    simpa only [AlgHom.comp_apply, rename_X, Prod.map_apply, id_eq] using D.ph_X_fk j p o l a
   exact DFunLike.congr_fun this G
 
 theorem substitution_rename_first_embedding (p : ℕ) (G : MvPolynomial (Fin (D.nB j + D.r) × Fin D.r) K) :
@@ -522,8 +517,7 @@ theorem card_unmarked (o : Finset (Fin (D.nB j + D.r))) (hM : ¬ D.Marked j o) (
       refine ⟨?_, hl'.2.1⟩
       by_contra hlt
       exact hM ⟨l, hl'.1, not_le.mp hlt⟩
-    · intro x _ y _ h
-      exact Fin.ext h
+    · exact fun x _ y _ h => Fin.ext h
   rw [Nat.card_Ico] at h1
   have := m.2
   have h2 : D.stg j m - D.nB j < D.r := by unfold stg; omega

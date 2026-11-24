@@ -110,8 +110,7 @@ theorem intS_iff_integral (f : K⟦X⟧) : IntS f ↔ Formalism.DworkPowerSeries
   · intro h n
     have := h (n ())
     rwa [coeff_def (s := n) rfl] at this
-  · intro h n
-    exact h (Finsupp.single () n)
+  · exact fun h n => h (Finsupp.single () n)
 
 theorem unitAt_mul {j k : ℕ} {f g : K⟦X⟧} (hf : UnitAt j f) (hg : UnitAt k g) :
     UnitAt (j + k) (f * g) := by

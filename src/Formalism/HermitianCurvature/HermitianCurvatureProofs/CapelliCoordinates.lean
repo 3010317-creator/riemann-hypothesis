@@ -390,8 +390,7 @@ end Cap
 end CapelliCoordinates
 
 theorem capelli_right_good : Formalism.FourierDecayAlt.Qr.CapRGood := by
-  intro E _ _ k r m i D hD Bs hB w
-  exact CapelliCoordinates.good_capR hD Bs hB w
+  exact fun E _ _ k r m i D hD Bs hB w => CapelliCoordinates.good_capR hD Bs hB w
 
 namespace CapelliCoordinates
 

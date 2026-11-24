@@ -60,8 +60,7 @@ theorem mem_compactSpan_self {V : Type*} [AddCommGroup V] [Module ℂ V] {n : �
     (F : Fin n → Fin n → Module.End ℂ V) (x : V) : x ∈ kSpan ε F x := by
   unfold kSpan
   rw [Submodule.mem_sInf]
-  intro S hS
-  exact hS.1
+  exact fun S hS => hS.1
 
 theorem compactSpan_le_of_mem {V : Type*} [AddCommGroup V] [Module ℂ V] {n : ℕ} (ε : Fin n → Bool)
     (F : Fin n → Fin n → Module.End ℂ V) {x : V} {S : Submodule ℂ V} (hx : x ∈ S)
@@ -73,8 +72,7 @@ theorem compactSpan_isCompactInvariant {V : Type*} [AddCommGroup V] [Module ℂ 
   intro a b hab y hy
   unfold kSpan at *
   rw [Submodule.mem_sInf] at *
-  intro S hS
-  exact hS.2 a b hab y (hy S hS)
+  exact fun S hS => hS.2 a b hab y (hy S hS)
 
 theorem inner_compactCasimir_self {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℂ V] {n : ℕ}
     (ε : Fin n → Bool) (F : Fin n → Fin n → Module.End ℂ V) (hu : KUnit ε F) (y : V) :
@@ -158,28 +156,22 @@ theorem compactDecomposition_of_finrank (he : KHiExist) (V : Type) [NormedAddCom
   refine ⟨m + 1, Fin.cons x xs, Fin.cons μ μs, ?_, ?_, ?_⟩
   · intro i
     rcases Fin.eq_zero_or_eq_succ i with rfl | ⟨j, rfl⟩
-    · simp only [Fin.cons_zero]
-      exact ⟨hxS, hx0, hxμ⟩
-    · simp only [Fin.cons_succ]
-      exact ⟨(h1 j).1.2, (h1 j).2⟩
+    · simpa only [Fin.cons_zero] using ⟨hxS, hx0, hxμ⟩
+    · simpa only [Fin.cons_succ] using ⟨(h1 j).1.2, (h1 j).2⟩
   · intro i i' hii'
     rcases Fin.eq_zero_or_eq_succ i with rfl | ⟨j, rfl⟩ <;>
       rcases Fin.eq_zero_or_eq_succ i' with rfl | ⟨j', rfl⟩
     · exact absurd rfl hii'
     · simp only [Fin.cons_zero, Fin.cons_succ]
-      intro y hy z hz
-      exact Submodule.inner_right_of_mem_orthogonal hy (hle j' hz).1
+      exact fun y hy z hz => Submodule.inner_right_of_mem_orthogonal hy (hle j' hz).1
     · simp only [Fin.cons_zero, Fin.cons_succ]
-      intro y hy z hz
-      exact Submodule.inner_left_of_mem_orthogonal hz (hle j hy).1
-    · simp only [Fin.cons_succ]
-      exact h2 j j' (fun h => hii' (congrArg Fin.succ h))
+      exact fun y hy z hz => Submodule.inner_left_of_mem_orthogonal hz (hle j hy).1
+    · simpa only [Fin.cons_succ] using h2 j j' (fun h => hii' (congrArg Fin.succ h))
   · apply le_antisymm
     · refine iSup_le fun i => ?_
       rcases Fin.eq_zero_or_eq_succ i with rfl | ⟨j, rfl⟩
       · simpa using hKS
-      · simp only [Fin.cons_succ]
-        exact (hle j).trans inf_le_right
+      · simpa only [Fin.cons_succ] using (hle j).trans inf_le_right
     · calc S = kSpan ε F x ⊔ (kSpan ε F x)ᗮ ⊓ S :=
             (Submodule.sup_orthogonal_inf_of_hasOrthogonalProjection hKS).symm
         _ ≤ _ := by

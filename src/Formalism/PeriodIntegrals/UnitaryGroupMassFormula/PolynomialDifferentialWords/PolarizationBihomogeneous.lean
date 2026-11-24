@@ -186,8 +186,7 @@ theorem comp_mul_zero {σ : Type} {K : Type} [Field K] (w : σ → ℤ) {φ : Mv
     · have hx0 := hφ h0
       have hsum := by simpa using hx
       have hw : weight w x.2 ≠ n := by
-        rw [← hsum, map_add (f := _), hx0, zero_add] at hd
-        exact hd
+        rwa [← hsum, map_add (f := _), hx0, zero_add] at hd
       rw [ite_eq_right hw, mul_zero]
 
 theorem tt_ne_zero (K : Type) [Field K] [CharZero K] (k : ℕ) (hk : 0 < k) : tt K k ≠ 0 := by
@@ -198,8 +197,7 @@ theorem tt_ne_zero (K : Type) [Field K] [CharZero K] (k : ℕ) (hk : 0 < k) : tt
 
 theorem pairingWeightCancel : TTWt := by
   intro K _ _ k c g h m hm a
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   obtain ⟨n, hn⟩ : ∃ n : ℤ, n = (m (Sum.inl a) : ℤ) - m (Sum.inr a) := ⟨_, rfl⟩
   have hwm : weight (va k a) m = n := by rw [weight_va, hn]
   have hk : 0 < k := Fin.pos a

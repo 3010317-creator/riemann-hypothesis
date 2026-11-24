@@ -71,8 +71,7 @@ theorem orbitCount : OrbitCount := by
               ((Finset.mem_filter.mp (Finset.mem_coe.mp hj)).2).symm
             obtain ⟨hγ, κ, hκ, he⟩ := (key j i0 hj').choose_spec
             rw [Finset.mem_coe, Set.Finite.mem_toFinset]
-            simp only [g, dite_eq_left hj']
-            exact hΓ i0 j _ hγ κ hκ he
+            simpa only [g, dite_eq_left hj'] using hΓ i0 j _ hγ κ hκ he
           · intro j hj j' hj' hgg
             have h1 : DoubleCoset.mk Γ K (t i0) = DoubleCoset.mk Γ K (t j) :=
               ((Finset.mem_filter.mp (Finset.mem_coe.mp hj)).2).symm
@@ -88,8 +87,7 @@ theorem orbitCount : OrbitCount := by
             rw [e1]
             exact K.mul_mem (K.inv_mem hκ) hκ'
       _ ≤ N := by
-          rw [← Set.ncard_eq_toFinset_card A hA, ← Nat.card_coe_set_eq]
-          exact hAN
+          rwa [← Set.ncard_eq_toFinset_card A hA, ← Nat.card_coe_set_eq]
   have e : Nat.card (Set.range fun i => DoubleCoset.mk Γ K (t i)) =
       (Finset.univ.image fun i => DoubleCoset.mk Γ K (t i)).card := by
     first

@@ -131,9 +131,7 @@ theorem exists_next_unit (hS : IsHermSemilocal S)
   set y := m0 - ∑ i ∈ s, c i • x i with hy
   have hcS : ∀ i ∈ s, c i ∈ S := fun i hi =>
     S.mul_mem (hint _ (hxM i hi) _ hm0) ((hunit _).mp (hxu i hi)).2.2
-  have hyM : y ∈ M := by
-    refine M.sub_mem hm0 (M.sum_mem fun i hi => ?_)
-    exact hsm _ (hcS i hi) _ (hxM i hi)
+  have hyM : y ∈ M := M.sub_mem hm0 (M.sum_mem fun i hi => (hsm _ (hcS i hi) _ (hxM i hi)))
   have hyo : ∀ j ∈ s, h (x j) y = 0 := by
     intro j hj
 
@@ -145,8 +143,7 @@ theorem exists_next_unit (hS : IsHermSemilocal S)
       rw [inv_mul_cancel_right₀ hne, sub_self]
     · intro i hi hij
       rw [hxo j hj i hi (Ne.symm hij), mul_zero]
-    · intro hjs
-      exact absurd hj hjs
+    · exact fun hjs => absurd hj hjs
   have hyw : h y w = 1 := by
 
     rw [hy, map_sub, map_sum, LinearMap.sub_apply]

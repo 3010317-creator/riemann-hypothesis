@@ -69,8 +69,7 @@ theorem rFree [Module.Finite O R'] : Module.Free O R' := by
   haveI : Module.IsTorsionFree O (X' → Matrix d d (FractionRing O)) :=
     Module.IsTorsionFree.mk fun r hr x y hxy => by
       funext a i j
-      have h := congrFun (congrFun (congrFun hxy a) i) j
-      exact hK.isSMulRegular hr h
+      exact hK.isSMulRegular hr (congrFun (congrFun (congrFun hxy a) i) j)
   haveI : Module.IsTorsionFree O R' := inferInstance
   exact Module.free_of_finite_type_torsion_free'
 
@@ -84,8 +83,7 @@ theorem idempotent_submodule_free [Module.Finite O R'] (e₁ : R') : Module.Free
   haveI : Module.IsTorsionFree O (X' → Matrix d d (FractionRing O)) :=
     Module.IsTorsionFree.mk fun r hr x y hxy => by
       funext a i j
-      have h := congrFun (congrFun (congrFun hxy a) i) j
-      exact hK.isSMulRegular hr h
+      exact hK.isSMulRegular hr (congrFun (congrFun (congrFun hxy a) i) j)
   haveI : Module.IsTorsionFree O R' := inferInstance
   haveI : Module.IsTorsionFree O (FirstSummandSubmodule O e₁) := inferInstance
   exact Module.free_of_finite_type_torsion_free'

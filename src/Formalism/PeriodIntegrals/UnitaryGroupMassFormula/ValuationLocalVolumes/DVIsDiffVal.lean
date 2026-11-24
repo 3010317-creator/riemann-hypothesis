@@ -90,8 +90,7 @@ theorem diffExists_main {F : Type} [Field F] [NumberField F]
         rw [hu, WithZero.coe_one]
         exact v.intValuation_le_one z
       rw [WithZero.coe_le_coe] at h1
-      have h2 := Multiplicative.toAdd_le.2 h1
-      simpa using h2
+      simpa using Multiplicative.toAdd_le.2 h1
     rw [hfdef z hz, Int.toNat_of_nonneg (by linarith), neg_neg, ofAdd_toAdd, hu]
   have hP : ∃ n, ∃ x ∈ differentIdeal ℤ (𝓞 F), x ≠ 0 ∧ f x = n := ⟨_, y, hyI, hy0, rfl⟩
   obtain ⟨x₀, hx₀I, hx₀0, hfx₀⟩ := Nat.find_spec hP
@@ -147,8 +146,7 @@ theorem val_pow_le (k : ℕ) (x : 𝓞 F) (hx : x ∈ differentIdeal ℤ (𝓞 F
   have hint : ∀ y : 𝓞 F, Valued.v (algebraMap F (Fv F v) (y : F)) ≤ 1 := by
     intro y
     have e := IsDedekindDomain.HeightOneSpectrum.valuedAdicCompletion_eq_valuation (K := F) v y
-    have hle := IsDedekindDomain.HeightOneSpectrum.valuation_le_one (K := F) v y
-    exact e.le.trans hle
+    exact e.le.trans (IsDedekindDomain.HeightOneSpectrum.valuation_le_one (K := F) v y)
   induction k generalizing x with
   | zero =>
     rw [pow_zero]

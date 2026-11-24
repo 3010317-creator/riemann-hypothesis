@@ -37,8 +37,7 @@ theorem evRow0_mem (x : Fin (V0C W Ch sel mu h Xg P).d → X.K) : evRow0 W Ch se
     show ((mtildeKGSD W Ch sel mu).coordOf h (mtildeKGSD W Ch sel mu).outSec).symm ((V0C W Ch sel mu h Xg P).E.mulVecLin x) = φ
     rw [← e]
     exact LinearEquiv.symm_apply_apply _ φ
-  rw [this]
-  exact hφ
+  rwa [this]
 
 def evRow : (Fin (V0C W Ch sel mu h Xg P).d → X.K) →ₗ[X.K] V0X W Ch sel mu Xg P :=
   LinearMap.codRestrict _ (evRow0 W Ch sel mu h Xg P) (evRow0_mem W Ch sel mu h Xg P)

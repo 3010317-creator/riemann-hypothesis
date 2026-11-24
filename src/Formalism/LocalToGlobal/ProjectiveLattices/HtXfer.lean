@@ -43,8 +43,7 @@ def toHtData (G : GlobalFamilyData X ka wL wF) (Qf : ∀ la, LocalPointData G la
   vEt la ζ := (X.vAt la ((Qf la).y ζ) (X.inc _ G.et)).toReal
 
 theorem heights_of_htConcl (G : GlobalFamilyData X ka wL wF) (Qf : ∀ la, LocalPointData G la) (Gc PH Prw Pet : ℝ)
-    (h : HtConcl (toHtData G Qf Gc PH Prw Pet)) : Heights Qf Gc PH Prw Pet := by
-  exact h
+    (h : HtConcl (toHtData G Qf Gc PH Prw Pet)) : Heights Qf Gc PH Prw Pet := h
 
 end Formalism.MainNotions.Gaps.HeightData
 end -- clump:auto
@@ -104,8 +103,7 @@ theorem htConcl_toHtData_of (d : Data B.KO ι Ω WT A) (hd : d.AxH 𝒜) (hs : d
         (G.del : ℝ) * Real.log G.del + 2 * ∑ k, (d.htOf hd hs).S k +
         8 / 3 * (WeightFamilies.dimY D j : ℝ) * ((WeightFamilies.dimY D j : ℝ) + 4) * G.del * Prw * wL.size +
         2 * ((WeightFamilies.dimY D j : ℝ) + 4) * ((WeightFamilies.dimY D j : ℝ) + 1) * G.del * (2 * Gc + 6 * PH) * wL.size := by
-      rw [hDr, hδr, hL, hG, hPH, hPrw] at hineq
-      exact hineq
+      rwa [hDr, hδr, hL, hG, hPH, hPrw] at hineq
     show 2 * ∑' la : HeightOneSpectrum (𝓞 B.KO),
           (((toHtData G Qf Gc PH Prw Pet).Ila la).toNat : ℝ) * Formalism.MainNotions.Gaps.HeightData.lN B.KO la ≤
         (G.del : ℝ) * Real.log G.del + 2 * ∑ k, WeightFamilies.meanLogSup B (G.th' k) +

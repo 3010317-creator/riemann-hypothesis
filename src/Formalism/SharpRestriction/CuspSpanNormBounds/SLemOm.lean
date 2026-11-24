@@ -211,11 +211,9 @@ theorem ut_of_mem {a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
             rw [adj_apply, hcolv (tau k r j) (tau k r m) (by omega) (by omega),
               ite_eq_right (fun h => by have := congrArg Fin.val h; omega)]
             simp only [star_zero, mul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ j) h
+      · exact fun h => absurd (Finset.mem_univ j) h
     have E := congrFun (congrFun hab i) j
-    rw [Matrix.mul_apply, Matrix.one_apply, hsum] at E
-    exact E
+    rwa [Matrix.mul_apply, Matrix.one_apply, hsum] at E
   unfold UT
   intro i j hij
   have hil := i.isLt
@@ -494,8 +492,7 @@ theorem stabBig : PI.StabBig := by
     exact eq_one_of hc hR (ut_of_mem ha) (ut_of_mem hb) E
   · rintro rfl
     refine ⟨h1N, ?_⟩
-    rw [Matrix.mul_one, Matrix.nonsing_inv_mul _ hdet]
-    exact h1N
+    rwa [Matrix.mul_one, Matrix.nonsing_inv_mul _ hdet]
 
 end PI.StabBigW
 end -- clump:auto

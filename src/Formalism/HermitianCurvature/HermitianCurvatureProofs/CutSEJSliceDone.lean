@@ -277,8 +277,7 @@ variable (X : ActualOps k r z z' π π') (l : Fin r) (s : ℂ) (Wv : Module.End 
 theorem nfp_nil (hW : multiplicationOperator Wv (fun c _ => fsv s (c l))) : NFP X l s Wv [] := by
   refine ⟨1, fun _ _ => 1, fun _ => [], fun _ => contDiffOn_const, fun _ j hj => by simp at hj, ?_⟩
   intro Φ p _ g
-  simp only [wOp_nil, Fin.sum_univ_one, one_mul]
-  exact hW Φ p g
+  simpa only [wOp_nil, Fin.sum_univ_one, one_mul] using hW Φ p g
 
 theorem nfp_mul (j : Fin 6) (a : ℂ → ℂ) (ha : ContDiffOn ℝ ∞ a {0}ᶜ)
     (hop : ∀ (Ψ : RadSp k r z z' π π') (p : Fin r → ℂ) (g : Mx k r),
@@ -496,8 +495,7 @@ theorem four_le_seven (X : ActualOps k r z z' π π') (l : Fin r) (Ξ : RadSp k 
   have eS : ∀ Ψ Ψ' : RadSp k r z z' π π', a (Ψ - Ψ') = a Ψ - a Ψ' := fun Ψ Ψ' => by
     simp only [ha, Submodule.coe_sub, Pi.sub_apply, map_sub]
   have eI : ∀ Ψ : RadSp k r z z' π π', ‖a (Complex.I • Ψ)‖ = ‖a Ψ‖ := fun Ψ => by
-    simp only [ha, Submodule.coe_smul, Pi.smul_apply]
-    exact hsVecR_Ismul _
+    simpa only [ha, Submodule.coe_smul, Pi.smul_apply] using hsVecR_Ismul _
   have hx : ‖a (Dx X l Ξ)‖ ^ 2 ≤ 2 * ‖a (dT X l Ξ)‖ ^ 2 + 2 * ‖a (dTb X l Ξ)‖ ^ 2 := by
     rw [Dx, eA]; exact sq_add_le_two _ _
   have hy : ‖a (Dy X l Ξ)‖ ^ 2 ≤ 2 * ‖a (dT X l Ξ)‖ ^ 2 + 2 * ‖a (dTb X l Ξ)‖ ^ 2 := by
@@ -911,7 +909,6 @@ theorem jsl_wOp_lc (X : ActualOps k r z z' π π') (l : Fin r) (js : List (Fin 6
     simpa [wOp] using hΦ
   | cons j js ih =>
     intro Φ hΦ
-    show X.op l j (wOp X l js Φ) ∈ lcSub k r z z' π π'
     exact hop j _ (ih Φ hΦ)
 
 theorem jsl_hsInner_self_norm (C : Wq →L[ℂ] Wp) : ‖B.hsInner C C‖ = ‖B.hsVec C‖ ^ 2 := by
@@ -1040,8 +1037,7 @@ theorem jSL2Loc_of : JSWordNF → JSRadLoc → SpectralL2Locality := by
     intro c' g
     by_cases hxo : glue l.succ (Function.update c l t) c' ∈ OmX P.r
     · have e := hE (Wn Ψ) _ hxo g
-      rw [hΨeq, jsl_glue_self] at e
-      exact e
+      rwa [hΨeq, jsl_glue_self] at e
     · have h0 : ∀ w : RadSp P.k P.r z z' π π',
           (w : Fn P.k P.r (Wq →L[ℂ] Wp)) (glue l.succ (Function.update c l t) c') g = 0 :=
         fun w => radSp_zero_off w (x := (glue l.succ (Function.update c l t) c', g)) (fun h => hxo h.1)
@@ -1174,8 +1170,7 @@ theorem sob1' {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {a b : ℝ}
   have hd' : ∀ t ∈ Icc a b, HasDerivAt (fun s => ι (φ s)) (ι (φ' t)) t := fun t ht =>
     ι.hasFDerivAt.comp_hasDerivAt t (hd t ht)
   have hc' : ContinuousOn (fun s => ι (φ' s)) (Icc a b) := ι.continuous.comp_continuousOn hc
-  have h := sob1 hab hd' hc' hx
-  simpa [ι, UniformSpace.Completion.norm_coe] using h
+  simpa [ι, UniformSpace.Completion.norm_coe] using sob1 hab hd' hc' hx
 
 theorem path_hasDerivAt_im (x v : ℝ) :
     HasDerivAt (fun w : ℝ => (x : ℂ) + (w : ℂ) * Complex.I) Complex.I v := by

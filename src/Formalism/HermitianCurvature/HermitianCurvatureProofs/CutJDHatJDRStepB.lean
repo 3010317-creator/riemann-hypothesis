@@ -89,15 +89,13 @@ theorem la_qminor {f : Mx k r → E} (hf : SmoothLev k r 0 D f) {t : ℕ} (a b :
   have hloc := (good_qminor (E := E) hD (cI ∘ a) (cI ∘ b) u).loc (cut k r 0 D f) f
     (fun x' hx' => cut_of_mem _ hx') _ hx
   rw [posL_cI_comp, posL_cI_comp] at hloc
-  rw [posL_cI_comp, posL_cI_comp]
-  exact hloc
+  rwa [posL_cI_comp, posL_cI_comp]
 
 include hD in
 theorem sm_qminor {f : Mx k r → E} (hf : SmoothLev k r 0 D f) {t : ℕ} (a b : Fin t → Fin (2 * r + k + 1)) (u : ℂ) :
     SmoothLev k r 0 D (qminorOp (EH k r) a b u f) := by
   have h := (good_qminor (E := E) hD (cI ∘ a) (cI ∘ b) u).sm f hf
-  rw [posL_cI_comp, posL_cI_comp] at h
-  exact h
+  rwa [posL_cI_comp, posL_cI_comp] at h
 
 theorem cell_mem {c : Fin r → ℂ} (hc : c ∈ OmX r) {g : Mx k r} (hg : g ∈ Glev k r (Fin.last r)) :
     wCell k r (Fin.last r) c * g ∈ Glev k r 0 :=
@@ -270,8 +268,7 @@ theorem stepB_pt (z z' : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (hz' : i
   have hread : ∀ {t' : ℕ} (a' b' : Fin t' → Fin (2 * r + k + 1)) (w : ℂ) (x : Mx k r), x ∈ Glev k r 0 ∩ D →
       La hD v₀ x (qminor (EA hD) a' b' w) = qminorOp (EH k r) a' b' w f x :=
     fun a' b' w x hx => la_qminor hD hf a' b' w hx
-  rw [hΛ, hread _ _ _ _ hx0, hread _ _ _ _ hx0, ← hΛ] at hring
-  rw [ha, hb] at hring
+  rw [hΛ, hread _ _ _ _ hx0, hread _ _ _ _ hx0, ← hΛ, ha, hb] at hring
   simp only [top_qminor_cast] at hring
   rw [hring]
 
@@ -291,8 +288,7 @@ theorem stepB_pt (z z' : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (hz' : i
   apply pOp_ev
   filter_upwards [nhds_cell hD hc hg hcD] with c' hc'
   have := hread (rowsN k r ⟨l + 1, by omega⟩ s ∘ Fin.cast hT1) (rowsN k r ⟨l + 1, by omega⟩ t ∘ Fin.cast hT1) (u - 1) _ hc'.2
-  rw [La_apply, top_qminor_cast] at this
-  exact this
+  rwa [La_apply, top_qminor_cast] at this
 
 end pt
 

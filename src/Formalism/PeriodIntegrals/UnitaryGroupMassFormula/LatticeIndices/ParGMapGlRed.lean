@@ -144,8 +144,7 @@ theorem sG_map_glRed {A B : Type} [CommRing A] [IsLocalRing A] [Field B] {r k : 
   refine parG_map_glRed π hπ _ _ (fun h hh => ?_) (fun h hh => ?_)
   · rw [← RingHom.mapMatrix_apply, ← RingHom.map_det]; exact hh.map π
   · refine isUnit_of_map π hπ _ ?_
-    rw [RingHom.map_det, RingHom.mapMatrix_apply, map_lift π hπ]
-    exact hh
+    rwa [RingHom.map_det, RingHom.mapMatrix_apply, map_lift π hπ]
 
 section Grp
 
@@ -176,8 +175,7 @@ theorem map_eq_conj (ψ : K →* Q) (hψ : Function.Surjective ψ) (S' : Subgrou
     obtain ⟨x, hx⟩ := hψ (c * h' * c⁻¹)
     refine ⟨x, (h x).2 ?_, hx⟩
     have e : c⁻¹ * (c * h' * c⁻¹) * c = h' := by group
-    rw [hx, e]
-    exact hh'
+    rwa [hx, e]
 
 end Grp
 

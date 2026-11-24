@@ -86,8 +86,7 @@ lemma ff_zero (x : ℝ) : ff 0 x = 1 := by simp [ff]
 lemma ff_diff (j : ℕ) (x : ℝ) : ff (j + 1) (x + 1) - ff (j + 1) x = ((j : ℝ) + 1) * ff j x := by
   have h1 : ff (j + 1) (x + 1) = (x + 1) * ff j x := by
     unfold ff
-    rw [Finset.prod_range_succ']
-    rw [mul_comm]
+    rw [Finset.prod_range_succ', mul_comm]
     congr 1
     · simp
     · refine Finset.prod_congr rfl fun k _ => ?_
@@ -319,8 +318,7 @@ theorem fT_hasDerivAt (k' : ℕ) (y : ℝ) (hy : 0 ≤ y) : HasDerivAt (fT k') (
   have h2 := h1.log (by positivity)
   have e2 : 1 / (y + (j : ℝ)) = 1 / (j : ℝ) / ((y + j) / j) :=
     (div_div_div_cancel_right₀ hj1.ne' _ _).symm
-  rw [e2]
-  exact h2
+  rwa [e2]
 
 theorem fT'_nonneg (k' : ℕ) (y : ℝ) (hy : 0 ≤ y) : 0 ≤ fT' k' y := by
   unfold fT'
@@ -447,8 +445,7 @@ theorem logBinomialDeficit : LogBinomialDeficit := by
     simp only [Finset.sum_sub_distrib] at h
     rw [← h, ← Finset.sum_sub_distrib]
     apply Finset.sum_le_sum
-    intro l hl
-    exact fT_concave k' (al l) (Bs l) (hal l) (hB0 l (Finset.mem_range.mp hl))
+    exact fun l hl => fT_concave k' (al l) (Bs l) (hal l) (hB0 l (Finset.mem_range.mp hl))
   have hterm : ∀ u ∈ range L, (fT' k' (Bs u) - (if u = 0 then 0 else fT' k' (Bs (u - 1)))) *
         ((∑ l ∈ Ico u L, al l) - (∑ l ∈ Ico u L, Bs l)) ≤ 0 := by
     intro u hu
@@ -635,8 +632,7 @@ lemma dom_anti {n : ℕ} {la : ℕ → ℤ} (h : Dom n la) {i j : ℕ} (hij : i 
   induction k with
   | zero => intro _; simp
   | succ k ih =>
-    intro hj
-    exact (h (i + k) (by omega)).trans (ih (by omega))
+    exact fun hj => (h (i + k) (by omega)).trans (ih (by omega))
 
 lemma pos_idx {n Ns : ℕ} {la : ℕ → ℤ} (h : Dom n la)
     (hc : ((range n).filter fun m => 0 < la m).card ≤ Ns) {i : ℕ} (hi : i < n) (hp : 0 < la i) :
@@ -888,10 +884,8 @@ private theorem log_weylDim_lemma_4 {n : ℕ} {la : ℕ → ℤ} (hd : Formalism
     intro j hj
     rw [Real.log_prod]
     · rfl
-    · intro i hi
-      exact (hpos j hj i hi).ne'
-  · intro j hj
-    exact (Finset.prod_pos (hpos j hj)).ne'
+    · exact fun i hi => (hpos j hj i hi).ne'
+  · exact fun j hj => (Finset.prod_pos (hpos j hj)).ne'
 
 lemma sum_pa_le {Ns n : ℕ} {la : ℕ → ℤ} {L : ℝ} (hL0 : 0 ≤ L)
     (hP : ((range n).filter fun m => 0 < la m).card ≤ Ns)
@@ -961,8 +955,7 @@ theorem logWeylDimensionEstimate : LogWeylDimensionEstimate := by
   have hbot : ∀ j, j < n → la (n - 1) ≤ la j := fun j hj => Formalism.InvariantFactorPaths.BranchingDimensions.TDim.dom_anti hd (by omega) (by omega)
   have hA0nn : 0 ≤ A0 := by
     have := hA 0 (by linarith)
-    rw [Int.cast_zero] at this
-    exact this
+    rwa [Int.cast_zero] at this
   have hL0 : 0 ≤ Real.log (1 + A0) := Real.log_nonneg (by linarith)
   have hG : ∀ i j, i < j → j < n → Formalism.InvariantFactorPaths.BranchingDimensions.TDim.G la i j ≤ Real.log (1 + A0) := by
     intro i j hij hj
@@ -1128,8 +1121,7 @@ lemma tailNeg_eq (n : ℕ) (la : ℕ → ℤ) (u : ℕ) : tailNeg n la u = tailP
 lemma HStrip.rev {n : ℕ} {a b : ℕ → ℤ} (h : HStrip n a b) : HStrip n (revW n b) (revW n a) := by
   obtain ⟨h1, h2⟩ := h
   refine ⟨fun m hm => ?_, fun m hm => ?_⟩
-  · simp only [revW]
-    exact neg_le_neg (h1 _ (by omega))
+  · simpa only [revW] using neg_le_neg (h1 _ (by omega))
   · simp only [revW]
     have h3 := h2 (n - 1 - (m + 1)) (by omega)
     have e : n - 1 - (m + 1) + 1 = n - 1 - m := by omega
@@ -1253,8 +1245,7 @@ lemma abs_bound (N : ℕ) (T : ℕ → ℕ → ℤ) (S : ℕ → ℕ → ℕ) (a
   intro i
   induction i with
   | zero =>
-    intro _ u
-    exact h0 u
+    exact fun _ u => h0 u
   | succ i ih =>
     intro hi u
     have ih' := ih (by omega)
@@ -1284,8 +1275,7 @@ lemma deficit_persists_of_active_inactive_recursion (N : ℕ) (T : ℕ → ℕ �
   induction i, hi using Nat.le_induction with
   | base =>
     have hc : ((Icc (i₀ + 1) i₀).filter fun l => act l = true).card = 0 := by simp
-    rw [hc, add_zero]
-    exact h
+    rwa [hc, add_zero]
   | succ i hi ih =>
     have ih' := ih (by omega)
     rw [card_filter_Icc_succ _ (i₀ + 1) i (by omega)]
@@ -1530,12 +1520,10 @@ theorem pathInterlacingCriterion : PathInterlacingCriterion := by
   have hr1 : 1 ≤ D.r := hW.1
   refine ⟨fun hPre hH => ⟨fun hP i' h1 h2 => ?_, fun h => ?_⟩, fun hP => ?_⟩
   · have hIj := interl_of_path hW hP (i' - 1) (by omega)
-    rw [show i' - 1 + 1 = i' by omega, show D.n0 + (i' - 1) = D.n0 + i' - 1 by omega] at hIj
-    exact hIj
+    rwa [show i' - 1 + 1 = i' by omega, show D.n0 + (i' - 1) = D.n0 + i' - 1 by omega] at hIj
   · refine path_of_interl hW hPre hH (fun j hj => ?_)
     have hIj := h (j + 1) (by omega) (by omega)
-    rw [show D.n0 + (j + 1) - 1 = D.n0 + j by omega] at hIj
-    exact hIj
+    rwa [show D.n0 + (j + 1) - 1 = D.n0 + j by omega] at hIj
   · have hpre : -(D.beNeg : ℤ) ≤ ent mu D.n0 (D.k - 1) ∧ ent mu D.n0 0 ≤ (D.bePos : ℤ) :=
       pre_size hk1 (pre_of_path hP) D.n0 le_rfl
     have hD0 : Dom D.k (ent mu D.n0) := hP.2.1 D.n0 (n0_le_Ns D)
@@ -1759,13 +1747,11 @@ theorem pathTailBounds : PathTailBounds := by
   · have h1 := deficit_persists_of_active_inactive_recursion D.Ns (fun i u => tailPos (D.stLen i) (stage mu i) u) (fun u i => D.SPos u i) (actV D)
       (fun i u _ ha => pos_A hP i u ha) (fun i u hi ha => pos_I hW hP i u hi ha) i₀ u X h D.Ns hi₀ le_rfl
     beta_reduce at h1
-    rw [card_actV, hsP] at h1
-    exact h1
+    rwa [card_actV, hsP] at h1
   · have h1 := deficit_persists_of_active_inactive_recursion D.Ns (fun i u => tailNeg (D.stLen i) (stage mu i) u) (fun u i => D.SNeg u i) (actC D)
       (fun i u _ ha => neg_A hP i u ha) (fun i u hi ha => neg_I hW hP i u hi ha) i₀ u X h D.Ns hi₀ le_rfl
     beta_reduce at h1
-    rw [card_actC, hsN] at h1
-    exact h1
+    rwa [card_actC, hsN] at h1
 
 end Formalism.InvariantFactorPaths.BranchingDimensions
 end -- clump:auto
@@ -1864,9 +1850,7 @@ theorem weyl_dim_eq_gelfand_tsetlin : WeylGT := by
       Formalism.InvariantFactorPaths.GelfandTsetlinBases.Pieri.dGT_succ, Nat.cast_sum]
     refine Finset.sum_congr rfl (fun la hla => ih la ?_)
     have hI := (interl_iff la μ).mpr hla
-    apply (dom_iff la).mp
-    intro m hm
-    exact le_trans (hI (m + 1) hm).1 (hI m (by omega)).2
+    exact (dom_iff la).mp (fun m hm => le_trans (hI (m + 1) hm).1 (hI m (by omega)).2)
 
 
 end Formalism.InvariantFactorPaths.BranchingDimensions

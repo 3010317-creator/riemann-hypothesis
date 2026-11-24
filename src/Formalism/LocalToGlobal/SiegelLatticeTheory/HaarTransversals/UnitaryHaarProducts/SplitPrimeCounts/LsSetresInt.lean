@@ -76,8 +76,7 @@ theorem inAt_of_smul_mem (A : UnitaryGroupInstance D) (y : (VS D).V) (c : ℕ) (
   have hL : crdOf A.I A.ιE A.bas (((c : ℕ) : D.host.E) • y) ∈ A.I.L := by
     rw [A.L_eq]
     simp only [crdOf, RingEquiv.apply_symm_apply]
-    rw [A.bas.sum_repr]
-    exact hy
+    rwa [A.bas.sum_repr]
   have hmem : incl A.I (crdOf A.I A.ιE A.bas (((c : ℕ) : D.host.E) • y)) ∈ A.I.Lf :=
     Submodule.subset_span ⟨⟨_, hL⟩, rfl⟩
   have heq : incl A.I (crdOf A.I A.ιE A.bas (((c : ℕ) : D.host.E) • y)) =
@@ -86,8 +85,7 @@ theorem inAt_of_smul_mem (A : UnitaryGroupInstance D) (y : (VS D).V) (c : ℕ) (
     simp [incl, crdOf, map_natCast]
   rw [← heq]
   unfold mL
-  apply Submodule.subset_span
-  exact ⟨_, hmem, by simp⟩
+  exact Submodule.subset_span ⟨_, hmem, by simp⟩
 
 theorem coprime_norm_pow (m : ℕ) :
     Nat.Coprime (Ideal.absNorm (differentIdeal ℤ (𝓞 D.host.F)) ^ m) (gD D) := ((coprime_gi (D := D) 0).mul_right (coprime_gi (D := D) 1)).pow_left m

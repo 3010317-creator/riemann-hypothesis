@@ -81,8 +81,7 @@ private theorem exists_linear_rightInverse_of_surjective {R : Type} [CommRing R]
     refine (Pi.basisFun R (Fin m₂)).ext fun j => ?_
     rw [LinearMap.comp_apply, Basis.constr_basis, LinearMap.id_apply, Pi.basisFun_apply]
     exact (hf (Pi.single j 1)).choose_spec
-  intro y
-  exact LinearMap.congr_fun h y
+  exact fun y => LinearMap.congr_fun h y
 
 theorem exists_basis_of_surjective {R : Type} [CommRing R] [IsLocalRing R] {m₁ m₂ : ℕ}
     (f : (Fin m₁ → R) →ₗ[R] (Fin m₂ → R)) (hf : Function.Surjective f) :
@@ -248,8 +247,7 @@ theorem exists_lift_of_onto (hs : W.s = 1) (hLem3 : Formalism.MainNotions.DeltaI
     refine ⟨(↑hunit.unit⁻¹ : W.EE) • z, ?_⟩
     have hz' : W.map F z = algebraMap (LetA O n) W.EE (W.X ^ (⨆ j, (M j + h j))) •
         (letE i : LetA O n) • y := by
-      rw [algebraMap_smul]
-      exact hz
+      rwa [algebraMap_smul]
     rw [map_smul, hz', smul_smul, hunit.val_inv_mul, one_smul]
   choose v hv using hi
   refine ⟨∑ i, v i, ?_⟩
@@ -341,8 +339,7 @@ theorem unitStep_holds {e : W.DD W.one} (hUnitGen : UnitGen W e) (hCrysOne : IsC
         conv_lhs => rw [← h2 δ hδ, hε]
         rw [W.γD_smul, hγ]
       exact huniq _ hx'
-    · simp only [lc, Fintype.sum_unique]
-      exact hε.symm
+    · simpa only [lc, Fintype.sum_unique] using hε.symm
 
 theorem splitStep_holds (hOloc : IsLocalRing O)
     (hOnil : ∀ c ∈ IsLocalRing.maximalIdeal O, ∃ (N : ℕ) (d : O), c ^ N = ((PD.p : ℕ) : O) * d)
@@ -384,8 +381,7 @@ theorem splitStep_holds (hOloc : IsLocalRing O)
 
     simp only [hcoef, Finset.sum_smul, map_sum, map_smul]
     have h1 : ∀ l, W.map F (B₁ l) = ∑ k, M l k • B₂ k := fun l => (B₂.sum_repr _).symm
-    simp only [h1, Finset.smul_sum, smul_smul]
-    exact Finset.sum_comm
+    simpa only [h1, Finset.smul_sum, smul_smul] using Finset.sum_comm
   have hstd : ∀ k, ∃ u : Fin m₁ → k17R W i, k17f μ u = Pi.single k 1 := by
     intro k
     have hd : ∀ l, k17e W i * B₁.repr (w k) l ∈ EEl W i := by

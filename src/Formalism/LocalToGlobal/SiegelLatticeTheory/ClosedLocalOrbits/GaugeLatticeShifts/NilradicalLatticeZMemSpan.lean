@@ -178,8 +178,7 @@ theorem incl_span' (y : VA I) :
     rw [inclHom_apply]
     show Formalism.UG.inclE (F := I.F) (Af I.F) _ = _
     by_cases h : i = k <;> simp [h]
-  simp only [h1]
-  exact pi_eq_sum_univ y
+  simpa only [h1] using pi_eq_sum_univ y
 
 end Maps
 
@@ -251,8 +250,7 @@ theorem nlam_e (a : Fin D.R.rS) : (M - 1) *ᵥ X.eR a ∈ Submodule.span X.B.I.E
   have := crd_span' X h1
   rw [Set.image_image] at this
   show (M - 1) *ᵥ X.crd (X.eX a) ∈ _
-  rw [mcrd X h3]
-  exact this
+  rwa [mcrd X h3]
 
 
 include hn h3 in
@@ -264,8 +262,7 @@ theorem nilradical_lattice_z_mem_span : (M - 1) *ᵥ X.zR u ∈ Submodule.span X
   have := crd_span' X h1
   rw [← Set.range_comp] at this
   show (M - 1) *ᵥ X.crd (X.zu u) ∈ _
-  rw [mcrd X h3]
-  exact this
+  rwa [mcrd X h3]
 
 
 include hn h3 in
@@ -279,8 +276,7 @@ theorem nlam_orth (w : Fin X.B.I.n → X.B.I.E)
     rw [← h]
     have : hE X (X.crd (X.eX a)) w = 0 := by
       have := hw a
-      rw [hfL_apply] at this
-      exact this
+      rwa [hfL_apply] at this
     rw [this, map_zero]
   have h1 := hn.2.2 _ ho
   have e : Xsp (lf D (X.Fu u)) = Submodule.span D.host.E (Set.range (X.Fu u).e) := rfl
@@ -288,8 +284,7 @@ theorem nlam_orth (w : Fin X.B.I.n → X.B.I.E)
   have := crd_span' X h1
   rw [← Set.range_comp] at this
   have hw' : w = X.crd (toV X w) := (crd_toV X w).symm
-  rw [hw', mcrd X h3]
-  exact this
+  rwa [hw', mcrd X h3]
 
 end Coords
 
@@ -320,8 +315,7 @@ theorem nLamNinf_holds : Formalism.L2.SG.TermOp.Vanish.NLamNinf := by
       (fun x y => by rw [hJL_apply, hfL_apply, rvHom_apply, rvHom_apply]; exact hJ_rv X v x y)
       X.eR X.fR (hef_crd X) _ _ hG (nlam_orth X hn h3) y hy
     unfold spanLt
-    rw [← range_eq_image_lt]
-    exact this
+    rwa [← range_eq_image_lt]
 
 theorem nLamNfin_holds : Formalism.L2.SG.TermOp.Vanish.NLamNfin := by
   intro D X u Λ x n hx hn
@@ -350,8 +344,7 @@ theorem roDiscreteC_holds : Formalism.L2.SG.TermOp.Vanish.RODiscreteC := by
   have e : Formalism.L2.SG.TermOp.Vanish.ROsub X (X.Fu u) (X.Fu u') t.lam t.lam' t.lin =
       ROsub X (X.Fu u) (X.Fu u') t.lam t.lam' t.lin := by
     ext; rfl
-  rw [e]
-  exact h
+  rwa [e]
 
 namespace Vanish2
 

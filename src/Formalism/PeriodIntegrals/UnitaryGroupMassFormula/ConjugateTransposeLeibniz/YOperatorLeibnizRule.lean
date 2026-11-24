@@ -270,8 +270,7 @@ private theorem hasDerivAt_mul_exp_smul_zero' {n : ℕ} (g X : Matrix (Fin n) (F
     { toFun := fun M => g * M
       map_add' := fun M N => Matrix.mul_add g M N
       map_smul' := fun c M => by simp }
-  have h := large₂.hasFDerivAt.comp_hasDerivAt (0 : ℝ) (hasDerivAt_matrix_exp_smul_at_zero X)
-  exact h
+  exact large₂.hasFDerivAt.comp_hasDerivAt (0 : ℝ) (hasDerivAt_matrix_exp_smul_at_zero X)
 
 lemma hasDerivAt_f {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
     (f F : Mx k r → E) (U : Set (Mx k r)) (g X : Mx k r) (hU : IsOpen U) (hgU : g ∈ U)

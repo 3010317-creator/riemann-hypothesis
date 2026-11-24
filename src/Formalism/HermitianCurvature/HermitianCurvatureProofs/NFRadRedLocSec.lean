@@ -185,10 +185,8 @@ variable {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] {n : WithTop ℕ
 theorem cdm_iff {F : X → Matrix (Fin m) (Fin m) ℂ} :
     ContDiffOn ℝ n F s ↔ ∀ i j, ContDiffOn ℝ n (fun x => F x i j) s := by
   constructor
-  · intro h i j
-    exact contDiffOn_pi.1 (contDiffOn_pi.1 h i) j
-  · intro h
-    exact contDiffOn_pi.2 fun i => contDiffOn_pi.2 fun j => h i j
+  · exact fun h i j => contDiffOn_pi.1 (contDiffOn_pi.1 h i) j
+  · exact fun h => contDiffOn_pi.2 fun i => contDiffOn_pi.2 fun j => h i j
 
 theorem cdm_mul {F G : X → Matrix (Fin m) (Fin m) ℂ} (hF : ContDiffOn ℝ n F s) (hG : ContDiffOn ℝ n G s) :
     ContDiffOn ℝ n (fun x => F x * G x) s := by
@@ -617,8 +615,7 @@ theorem locSec : NFRadRedS.LocSec := by
         unfold u2
         rw [Matrix.mulVec_add, Matrix.mulVec_smul, hRz, inv_one, Matrix.one_mul, Matrix.mulVec_mulVec]
       refine ⟨R, hR, ?_⟩
-      rw [hu2R, hRi, h1q]
-      exact hqc
+      rwa [hu2R, hRi, h1q]
     · exact ⟨1, hone, h0⟩
 
   have hfc : ContinuousOn (fun g : Q.Mx k r => herm (Hpk k r) (u1 k r z z' μsec g) (u2 k r z z' a₀ g)) {g : Q.Mx k r | 0 < GGl k r z z' g} :=
@@ -634,8 +631,7 @@ theorem locSec : NFRadRedS.LocSec := by
       contDiffOn_const) (G := fun g => g) contDiffOn_id
   refine ⟨{g : Q.Mx k r | 0 < GGl k r z z' g} ∩ (fun g : Q.Mx k r => herm (Hpk k r) (u1 k r z z' μsec g) (u2 k r z z' a₀ g)) ⁻¹' {0}ᶜ, hfc.isOpen_inter_preimage hWo isOpen_compl_singleton, ⟨hG₀, hne⟩,
     fun g => af k r z z' μsec a₀ g, fun g => bf k r z z' μsec a₀ g, haS, hbS, ?_⟩
-  intro g hg hgl hG
-  exact pt hz hz' hT hsec ha₀ hgl hG hg.2
+  exact fun g hg hgl hG => pt hz hz' hT hsec ha₀ hgl hG hg.2
 
 end Formalism.FourierDecayAlt.P.NFRadRedLocSec
 

@@ -131,14 +131,12 @@ theorem lam_eval (hG : LamGeo X p K) (m : Fin X.F.J → (ℤ × Fin (r + K) →�
       · rw [ite_eq_left rfl]
       · intro x hx hne
         rw [ite_eq_right]
-        intro h
-        exact hne (hG.U1 j0 j0 x hx x0 hx0 h).2
+        exact fun h => hne (hG.U1 j0 j0 x hx x0 hx0 h).2
       · intro h; exact absurd hx0 h
     · intro j _ hne
       refine Finset.sum_eq_zero fun x hx => ?_
       rw [ite_eq_right]
-      intro h
-      exact hne (hG.U1 j j0 x hx x0 hx0 h).1
+      exact fun h => hne (hG.U1 j j0 x hx x0 hx0 h).1
     · intro h; exact absurd (Finset.mem_univ _) h
   have hW : (∑ j : Fin X.F.J, ∑ x ∈ (X.F.letters (j.val : ℤ)).filter fun x => X.F.IsW (j.val : ℤ) x,
       if posOf n' x = posOf n' x0 then X.Pz p K (j.val : ℤ) x * m j (x, c) else 0) =
@@ -237,18 +235,15 @@ theorem restLamInj_of (C₀ : ℝ) (hGeo : RestLamGeo C₀) (hTau : RestLamTau) 
             · intro y hy hne
               obtain ⟨hyl, hyW⟩ := Finset.mem_filter.mp hy
               rw [ite_eq_right]
-              intro h
-              exact hne (hG.U2 j j y hyl hyW x hv.1 hW (h.trans hpos)).2
+              exact fun h => hne (hG.U2 j j y hyl hyW x hv.1 hW (h.trans hpos)).2
             · intro h; exact absurd (Finset.mem_filter.mpr ⟨hv.1, hW⟩) h
           · intro j' _ hne
             refine Finset.sum_eq_zero fun y hy => ?_
             obtain ⟨hyl, hyW⟩ := Finset.mem_filter.mp hy
             rw [ite_eq_right]
-            intro h
-            exact hne (hG.U2 j' j y hyl hyW x hv.1 hW (h.trans hpos)).1
+            exact fun h => hne (hG.U2 j' j y hyl hyW x hv.1 hW (h.trans hpos)).1
           · intro h; exact absurd (Finset.mem_univ _) h
-        rw [hwv m, hwv m'] at h3
-        exact h3
+        rwa [hwv m, hwv m'] at h3
       · exact (hdec j x (Finset.mem_filter.mpr ⟨hv.1, hW⟩) c).2.1
     · have z1 : m j (x, c) = 0 := by
         by_contra h; exact hv (hok j _ h)

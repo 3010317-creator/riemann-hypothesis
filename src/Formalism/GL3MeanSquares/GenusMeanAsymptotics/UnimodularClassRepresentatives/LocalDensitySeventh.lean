@@ -67,8 +67,7 @@ theorem exists_trace_one (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (h
   have h1 : (conjO K θ - θ) * conjO K e - 1 ∈ extP K 𝔭 ^ N := by
     have h := hJ _ he
     simp only [map_sub, map_mul, map_one] at h
-    rw [L3.conjO_conjO θ] at h
-    exact h
+    rwa [L3.conjO_conjO θ] at h
   have h2 : (θ - conjO K θ) * (e + conjO K e) ∈ extP K 𝔭 ^ N := by
     have e2 : (θ - conjO K θ) * (e + conjO K e) =
         ((θ - conjO K θ) * e - 1) - ((conjO K θ - θ) * conjO K e - 1) := by ring
@@ -85,8 +84,7 @@ theorem exists_trace_one (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (h
 theorem exists_tr_notMem (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) {𝔭 : Ideal (𝓞 F)}
     (h𝔭 : 𝔭.IsMaximal) {N : ℕ} {z : 𝓞 K} (hz : z ∉ extP K 𝔭 ^ N) :
     ∃ b : 𝓞 K, trF hF (b * z) ∉ 𝔭 ^ N := by
-  by_contra hall
-  push Not at hall
+  by_contra! hall
   obtain ⟨θ, hθ⟩ := exists_theta hK hF h𝔭
   have htr : ∀ b : 𝓞 K, b * z + conjO K (b * z) ∈ extP K 𝔭 ^ N := by
     intro b
@@ -177,7 +175,6 @@ theorem exists_solve_matrix (hF : IsFixF K F) {𝔭 : Ideal (𝓞 F)}
     exact Ideal.pow_le_pow_right (by omega) h1
   · rw [Matrix.sub_apply, e1, Matrix.smul_apply, Matrix.of_apply, hD, smul_eq_mul]
     have h2 := neg_mem (hV' i j)
-    rw [neg_sub] at h2
-    exact h2
+    rwa [neg_sub] at h2
 
 end Formalism.HermitianLattices.Ext.L3.traceDeterminantCongruences

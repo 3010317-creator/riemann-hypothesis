@@ -70,8 +70,7 @@ theorem ci_fns (L : R.LevelData A r) (l : Fin r) : L.ci l ∈ L.fns := by
   exact Or.inl (Or.inl (Or.inl (Or.inr ⟨l, rfl⟩)))
 theorem cb_fns (L : R.LevelData A r) (l : Fin r) : L.cb l ∈ L.fns := by
   exact Or.inl (Or.inl (Or.inr ⟨l, rfl⟩))
-theorem cbi_fns (L : R.LevelData A r) (l : Fin r) : L.cbi l ∈ L.fns := by
-  exact Or.inl (Or.inr ⟨l, rfl⟩)
+theorem cbi_fns (L : R.LevelData A r) (l : Fin r) : L.cbi l ∈ L.fns := Or.inl (Or.inr ⟨l, rfl⟩)
 
 theorem hol_comm_star (L : R.LevelData A r) (hp : ∀ l, star (L.p l) = -L.pb l) (hc : ∀ l, star (L.c l) = L.cb l)
     (hci : ∀ l, star (L.ci l) = L.cbi l) (l m : Fin r) :
@@ -134,8 +133,7 @@ variable {V : Type} [AddCommGroup V] [Module ℂ V]
 theorem pair_operator_commute {a b c d : Module.End ℂ V} (h1 : a * c = c * a) (h2 : d * b = b * d) :
     (mkP a b : Pr V) * mkP c d = mkP c d * mkP a b := by
   refine Prod.ext ?_ ?_
-  · show a * c = c * a
-    exact h1
+  · exact h1
   · show MulOpposite.op b * MulOpposite.op d = MulOpposite.op d * MulOpposite.op b
     rw [← MulOpposite.op_mul, ← MulOpposite.op_mul, h2]
 
@@ -166,8 +164,7 @@ theorem isSite_actual {X : ActualOps k r z z' π π'} {L : R.LevelData (Pr (RadS
   obtain ⟨hp, hc, hci⟩ := star_site_ops hL
   refine ⟨⟨L.c_ci l, L.ci_c l, ?_⟩, hol_comm_star L hp hc hci l l⟩
   have h := L.p_c l l
-  rw [ite_eq_left rfl] at h
-  exact h
+  rwa [ite_eq_left rfl] at h
 
 theorem QQi_mem_all (L : R.LevelData (Pr (RadSp k r z z' π π')) r) (st : Fr.Start (Pr (RadSp k r z z' π π')))
     (𝒜 : StarSubalgebra ℂ (Pr (RadSp k r z z' π π'))) (i : Fin (r + 1)) (Y : ℂ)
@@ -202,8 +199,7 @@ theorem QQi_mem_all (L : R.LevelData (Pr (RadSp k r z z' π π')) r) (st : Fr.St
     induction n with
     | zero =>
       intro j hj hij
-      rw [tprod, dite_eq_right (by omega)]
-      exact hone
+      rwa [tprod, dite_eq_right (by omega)]
     | succ n ih =>
       intro j hj hij
       rw [tprod, dite_eq_left (by omega)]

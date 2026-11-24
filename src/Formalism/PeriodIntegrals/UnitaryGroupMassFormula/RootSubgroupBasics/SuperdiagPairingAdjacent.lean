@@ -130,8 +130,7 @@ theorem relA (hσ : ∀ i, σ (σ i) = i) (hZ : ∀ i j, Z i j = if j = σ i the
       _ = (u⁻¹)ᴴ * Z := by rw [hrel]
   have h := congrFun (congrFun hZu i) j
   rw [Matrix.mul_apply, Matrix.mul_apply, Finset.sum_eq_single (σ i), Finset.sum_eq_single (σ j)] at h
-  · rw [Z_at hZ, Z_at' hσ hZ, Matrix.conjTranspose_apply] at h
-    exact h
+  · rwa [Z_at hZ, Z_at' hσ hZ, Matrix.conjTranspose_apply] at h
   · intro a _ ha; rw [Z_col hσ hZ a j ha, mul_zero]
   · intro h; exact absurd (Finset.mem_univ _) h
   · intro b _ hb; rw [Z_row hZ i b hb, zero_mul]
@@ -147,8 +146,7 @@ theorem relB (hσ : ∀ i, σ (σ i) = i) (hZ : ∀ i j, Z i j = if j = σ i the
       _ = Z * u'⁻¹ := by rw [hrel]
   have h := congrFun (congrFun hZu i) j
   rw [Matrix.mul_apply, Matrix.mul_apply, Finset.sum_eq_single (σ j), Finset.sum_eq_single (σ i)] at h
-  · rw [Z_at hZ, Z_at' hσ hZ, Matrix.conjTranspose_apply] at h
-    exact h
+  · rwa [Z_at hZ, Z_at' hσ hZ, Matrix.conjTranspose_apply] at h
   · intro b _ hb; rw [Z_row hZ i b hb, zero_mul]
   · intro h; exact absurd (Finset.mem_univ _) h
   · intro a _ ha; rw [Z_col hσ hZ a j ha, mul_zero]

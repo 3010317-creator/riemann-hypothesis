@@ -209,8 +209,7 @@ theorem hsN_le (A : Matrix (Fin m) (Fin m) ℂ) {b : ℝ} (hb : 0 ≤ b) (h : �
 theorem one_le_hsN_exp (hm : 0 < m) {X : Matrix (Fin m) (Fin m) ℂ} (hX : SUpper X) :
     1 ≤ hsN (NormedSpace.exp X) := by
   have h := entry_le_hsN (NormedSpace.exp X) ⟨0, hm⟩ ⟨0, hm⟩
-  rw [exp_diag hX, norm_one] at h
-  exact h
+  rwa [exp_diag hX, norm_one] at h
 
 theorem pow_entry_bound {X : Matrix (Fin m) (Fin m) ℂ} (hX : SUpper X) {h : ℕ} {b : ℝ} (hb : 0 ≤ b)
     (hB : ∀ i j : Fin m, (j : ℕ) < i + h → ‖X i j‖ ≤ b) :
@@ -228,11 +227,9 @@ theorem pow_entry_bound {X : Matrix (Fin m) (Fin m) ℂ} (hX : SUpper X) {h : �
     have hterm : ∀ l : Fin m, ‖(X ^ (p + 1)) i l * X l j‖ ≤ (m : ℝ) ^ p * b ^ (p + 1) * b := by
       intro l
       by_cases h1 : (j : ℕ) ≤ l
-      · rw [hX l j (Fin.le_iff_val_le_val.mpr h1), mul_zero, norm_zero]
-        exact hR
+      · rwa [hX l j (Fin.le_iff_val_le_val.mpr h1), mul_zero, norm_zero]
       by_cases h2 : (l : ℕ) < i + (p + 1)
-      · rw [pow_entry_zero hX (p + 1) i l h2, zero_mul, norm_zero]
-        exact hR
+      · rwa [pow_entry_zero hX (p + 1) i l h2, zero_mul, norm_zero]
       rw [norm_mul]
       exact mul_le_mul (ih i l (by omega)) (hB l j (by omega)) (norm_nonneg _) hR0
     calc ‖∑ l, (X ^ (p + 1)) i l * X l j‖ ≤ ∑ l, ‖(X ^ (p + 1)) i l * X l j‖ := norm_sum_le _ _

@@ -91,8 +91,7 @@ theorem coefX_zero (F : FlagG S r T) (a : Fin r) : F.coefX 0 a = 0 := by
   simp only [Formalism.MainNotions.S.FlagG.coefX, dite_eq_left h0]
   rw [show (⟨0, h0⟩ : Submodule.span E (Set.range F.e)) = 0 from rfl, map_zero, Finsupp.zero_apply]
 
-theorem e_mem_X (F : FlagG S r T) (a : Fin r) : F.e a ∈ F.X := by
-  exact Submodule.subset_span ⟨a, rfl⟩
+theorem e_mem_X (F : FlagG S r T) (a : Fin r) : F.e a ∈ F.X := Submodule.subset_span ⟨a, rfl⟩
 
 theorem nlam_mem {Λ : Submodule (𝓞 E) S.V} {G : LFlag S r T} {n : S.V ≃ₗ[E] S.V} (hn : n ∈ NLam Λ G)
     {v : S.V} (hv : v ∈ Λ) : n v ∈ Λ := by
@@ -124,12 +123,10 @@ theorem fi_zero {D : D7} (I : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) 
   exact (I : Submodule (𝓞 D.host.E) D.host.E).zero_mem
 
 theorem fi_add {D : D7} (I : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) {x y : D.host.E}
-    (hx : x ∈ I) (hy : y ∈ I) : x + y ∈ I := by
-  exact (I : Submodule (𝓞 D.host.E) D.host.E).add_mem hx hy
+    (hx : x ∈ I) (hy : y ∈ I) : x + y ∈ I := (I : Submodule (𝓞 D.host.E) D.host.E).add_mem hx hy
 
 theorem fi_smul {D : D7} (I : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) (o : 𝓞 D.host.E)
-    {x : D.host.E} (hx : x ∈ I) : o • x ∈ I := by
-  exact (I : Submodule (𝓞 D.host.E) D.host.E).smul_mem o hx
+    {x : D.host.E} (hx : x ∈ I) : o • x ∈ I := (I : Submodule (𝓞 D.host.E) D.host.E).smul_mem o hx
 
 abbrev aaI (D : D7) (a : Fin D.R.rS) : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E :=
   ddS D ^ (-((D.R.rS : ℤ) - (a : ℕ)))

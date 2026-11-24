@@ -152,8 +152,7 @@ theorem length_quot_free {ι : Type} [Fintype ι] (bO : Module.Basis ι O O') (a
     Submodule.Quotient.equiv _ _ bO.equivFun hPQ
   have e3 : ((ι → O) ⧸ Q) ≃ₗ[O] (ι → O ⧸ Ideal.span {a}) := Submodule.quotientPi _
   have h1 := (e1.symm.trans (e2.trans e3)).length_eq
-  rw [Module.length_pi, ENat.card_eq_coe_fintype_card] at h1
-  exact h1
+  rwa [Module.length_pi, ENat.card_eq_coe_fintype_card] at h1
 
 end Len
 
@@ -310,15 +309,13 @@ theorem mJ_eq (ρ : Representation LL G V) (g : G) (v : V) (x : V ⊗[Qp] B)
     ((1 : LL') ⊗ₜ[LL] v) ⊗ₜ[Qp] (1 : B) =
       actVB PD (bρ LL' ρ) g (mJ (LL := LL) (B := B) LL' x) - mJ (LL := LL) (B := B) LL' x := by
   have h1 := congrArg (mJ (LL := LL) (B := B) LL') h
-  rw [map_sub, mJ_act] at h1
-  exact h1
+  rwa [map_sub, mJ_act] at h1
 
 theorem mP_eq (φ : LL' →ₗ[LL] LL) (ρ : Representation LL G V) (g : G) (u : LL' ⊗[LL] V)
     (x : (LL' ⊗[LL] V) ⊗[Qp] B) (h : u ⊗ₜ[Qp] (1 : B) = actVB PD (bρ LL' ρ) g x - x) :
     prj φ V u ⊗ₜ[Qp] (1 : B) = actVB PD ρ g (mP φ x) - mP φ x := by
   have h1 := congrArg (mP (B := B) φ) h
-  rw [map_sub, mapPoint_act] at h1
-  exact h1
+  rwa [map_sub, mapPoint_act] at h1
 
 theorem prj_coc (φ : LL' →ₗ[LL] LL) (ρ : Representation LL G V) (g : G) (a b : LL' ⊗[LL] V) :
     prj φ V (a + bρ LL' ρ g b) = prj φ V a + ρ g (prj φ V b) := by
@@ -719,14 +716,11 @@ theorem bcAt_fin (hJ : Formalism.MainNotions.N.GlobalTheory.CoefJumpGen) (Th : L
   letI sO : SMul ↥(OL LL) ↥(OL LL') := iO.toSMul
   haveI t1 : IsScalarTower ↥(OL LL) ↥(OL LL') ↥LL'.1 := IsScalarTower.of_algebraMap_eq fun _ => rfl
   haveI := isFrac_OL LL
-  have hc : Continuous (algebraMap ↥LL.1 ↥LL'.1) := by
-    refine continuous_induced_rng.2 ?_
-    exact continuous_subtype_val
+  have hc : Continuous (algebraMap ↥LL.1 ↥LL'.1) := continuous_induced_rng.2 continuous_subtype_val
   have hO' : Function.Injective (algebraMap ↥(OL LL') ↥LL'.1) := Subtype.val_injective
   have hjO : Function.Injective (algebraMap ↥(OL LL) ↥(OL LL')) := by
     intro a b h
-    have h1 := congrArg (fun x : ↥(OL LL') => ((x : ↥LL'.1) : Om l)) h
-    exact Subtype.ext (Subtype.ext h1)
+    exact Subtype.ext (Subtype.ext (congrArg (fun x : ↥(OL LL') => ((x : ↥LL'.1) : Om l)) h))
 
   haveI tZ : IsScalarTower ℤ_[l] ↥(OL LL) ↥(OL LL') := IsScalarTower.of_algebraMap_eq fun z => by
     apply Subtype.ext; apply Subtype.ext
@@ -774,8 +768,7 @@ theorem bcAt_fin (hJ : Formalism.MainNotions.N.GlobalTheory.CoefJumpGen) (Th : L
         IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] ↥LL'.1]
       rfl
     have hz0 : (z : ℚ_[l]) ≠ 0 := by
-      intro h0
-      exact nonZeroDivisors.coe_ne_zero ⟨z, hz⟩ (PadicInt.coe_eq_zero.1 h0)
+      exact fun h0 => nonZeroDivisors.coe_ne_zero ⟨z, hz⟩ (PadicInt.coe_eq_zero.1 h0)
     have hq : algebraMap ℚ_[l] ↥LL'.1 (z : ℚ_[l]) ≠ 0 := (map_ne_zero _).2 hz0
     have hxe : x = algebraMap ↥LL.1 ↥LL'.1 (algebraMap ℚ_[l] ↥LL.1 (z : ℚ_[l])⁻¹) *
         algebraMap ↥(OL LL') ↥LL'.1 a := by
@@ -804,8 +797,7 @@ theorem bcAt_fin (hJ : Formalism.MainNotions.N.GlobalTheory.CoefJumpGen) (Th : L
   exact bcAt_desc ((Th l).PD K) hc hO' hJ bO bL hb hlin hk
 
 theorem base_change_of_coefficient_jump (hJ : Formalism.MainNotions.N.GlobalTheory.CoefJumpGen) (Th : LocTheory) : Formalism.MainNotions.WachCoordinates.admBC Th := by
-  intro l _ K LL LL' hLL
-  exact bcAt_fin hJ Th K LL LL' hLL
+  exact fun l _ K LL LL' hLL => bcAt_fin hJ Th K LL LL' hLL
 
 theorem base_change_statement_of_jump (hJ : Formalism.MainNotions.N.GlobalTheory.CoefJumpGen) (D : D7) : Formalism.MainNotions.UnusedSlot80.H1fBaseChangeTheorem D :=
   base_change_of_coefficient_jump hJ D.loc

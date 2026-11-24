@@ -63,8 +63,7 @@ lemma g_B_big (hϖ : Irreducible ϖ) {q Y : Q} (hq : q ≠ 0) (hqs : Sm Q ϖ 1 q
     ring
   rw [e]
   have h2 : Sm Q ϖ 0 (1 + (q⁻¹) ^ r) := Sm.add Sm.one (ht.mono hϖ (by norm_num))
-  have h3 := h2.mul hϖ hY
-  simpa using h3
+  simpa using h2.mul hϖ hY
 
 lemma g_B_small (hϖ : Irreducible ϖ) {q Y : Q} (hq : Sm Q ϖ 1 q) {m : ℤ} (hY : Sm Q ϖ m Y) {r : ℕ}
     (hr : 1 ≤ r) (hrm : 1 ≤ (r : ℤ) + m) : Sm Q ϖ 1 (q ^ r * (1 + q ^ r)⁻¹ * Y) := by
@@ -178,8 +177,7 @@ theorem big_existence_holds : BigExists := by
             rw [← this, h, map_zero])
           refine ⟨z ^ r * (1 + z ^ r)⁻¹ * y,
             mul_ne_zero (mul_ne_zero (pow_ne_zero _ hz0) (inv_ne_zero hd')) hy0, ?_, ?_⟩
-          · rw [hmap]
-            exact hbig
+          · rwa [hmap]
           · intro k hk hki
             rw [hmap]
             rcases Finset.mem_insert.mp hk with h | hkS

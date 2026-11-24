@@ -223,8 +223,7 @@ theorem transfer_holds : Transfer := by
           (NF.muZ P.k P.r μ0 ζ) =
       (Bs.π h⁻¹).comp ((S ζ ((Bs.π h).comp (((Φ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) c (NF.muZ P.k P.r μ0 ζ)).comp
         (Bs.π' h')))).comp (Bs.π' h'⁻¹))
-    rw [← hf, ← hS Φ c hc ζ hζ]
-    exact hb1
+    rwa [← hf, ← hS Φ c hc ζ hζ]
   obtain ⟨n, q, hq⟩ := h0 Wp Wq P Bs0 rfl hk X d hA l hl S0 hS0 Pr hPr Bw Bw' hBw hBw' π ρ hUp
   refine ⟨n, q, fun ζ hζ Xf hXf hline => ?_⟩
   obtain ⟨hh, hh', hd⟩ := hH ζ hζ
@@ -254,8 +253,7 @@ theorem transfer_holds : Transfer := by
     have h1 := congrArg (fun T : Wq →L[ℂ] Wp => Bs.π h⁻¹ (T (Bs.π' h'⁻¹ x))) hline
     simp only [ContinuousLinearMap.comp_apply] at h1
     rw [rep_inv_l Bs.π_rep hh] at h1
-    simp only [hXf0, ContinuousLinearMap.comp_apply]
-    exact h1
+    simpa only [hXf0, ContinuousLinearMap.comp_apply] using h1
   have hkey : (((Complex.normSq ζ - P.TT : ℝ) : ℂ) ^ n) • (Pr ρ ν).comp (S0 ζ Xf0) =
       q.eval ((Real.sqrt (Complex.normSq ζ - P.TT) : ℝ) : ℂ) • (Pr ρ ν).comp
         (tht P.k P.r Bs.z Bs.z' Bs.π Bs.π' Bw Bw' ν ν' ι Xf0) := hq ζ hζ Xf0 hmem0 hline0
@@ -272,8 +270,7 @@ theorem transfer_holds : Transfer := by
   simp only [ContinuousLinearMap.comp_apply, _root_.smul_apply, map_smul] at h1
   rw [rep_inv_l Bs.π'_rep hh'] at h1
   simp only [ContinuousLinearMap.comp_apply, _root_.smul_apply]
-  rw [rep_inv_l Bs.π_rep hh]
-  exact h1
+  rwa [rep_inv_l Bs.π_rep hh]
 
 end
 

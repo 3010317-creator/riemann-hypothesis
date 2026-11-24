@@ -158,8 +158,7 @@ theorem sum_phi {H : Sesq V} {α : V → ℂ} {Λ₁ Λ₂ Λ₃ : AddSubgroup V
   refine Finset.sum_bij
     (fun q hq => (QuotientAddGroup.mk ⟨q, idx_pairs hS₂ hS₃ hq⟩ : Quo Λ₁ Λ₂ Λ₃))
     (fun _ _ => Finset.mem_univ _) ?_ ?_ ?_
-  · intro p hp q hq h
-    exact idx_inj hS₂ hS₃ hp hq ((mk_eq_iff _ _).1 h)
+  · exact fun p hp q hq h => idx_inj hS₂ hS₃ hp hq ((mk_eq_iff _ _).1 h)
   · intro c _
     induction c using QuotientAddGroup.induction_on with
     | H p =>
@@ -248,8 +247,7 @@ theorem TripleEighth_of (hF : TripleFormula) (hS : TripleSumEighth) (hC : Triple
   have e2 : inter H α Λ₃ Λ₂ (inter H α Λ₁ Λ₃ F) = conj μ • G := by
     funext v
     have := hF V H α Λ₁ Λ₃ Λ₂ hT.swap S₃' S₂' hS₃' hS₂' F hFf v
-    rw [hμ', ← hG] at this
-    exact this
+    rwa [hμ', ← hG] at this
   have e3 : G = (μ * conj μ) • G := by
     funext v
     have := interInv V H hT.herm Λ₂ Λ₃ α hT.sd₂ hT.sd₃ hT.sc₂ hT.sc₃ hT.i₂₃ hT.i₃₂ G hGf v
@@ -390,12 +388,10 @@ theorem big_swap (Λ₁ Λ₂ Λ₃ : AddSubgroup V) :
     constructor
     · rintro ⟨q, ⟨q1, q2, q3⟩, rfl⟩
       refine ⟨q2, q1, ?_⟩
-      rw [add_comm] at q3
-      exact q3
+      rwa [add_comm] at q3
     · rintro ⟨p1, p2, p3⟩
       refine ⟨(p.2, p.1), ⟨p2, p1, ?_⟩, rfl⟩
-      rw [add_comm] at p3
-      exact p3
+      rwa [add_comm] at p3
   rw [e1, AddSubgroup.relIndex_comap, e2]
 
 theorem psi_conj {H : Sesq V} {α : V → ℂ} {Λ₁ Λ₂ Λ₃ : AddSubgroup V} (hT : TripleData H α Λ₁ Λ₂ Λ₃)

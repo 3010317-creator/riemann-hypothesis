@@ -30,8 +30,7 @@ theorem reGL_mem_UJ {a b : ℕ} (h : a = b) {R : Type} [CommRing R] (σ : R →+
     ext x y
     rw [reGL_apply]
     simp
-  rw [hg']
-  exact hg
+  rwa [hg']
 
 theorem LocAt.actB_of {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n p : ℕ}
     {G : GAtP p} (A : LocAt F E n G) {k : ℕ} (hk : k = n) (B0 : GL (Fin k) E) (γ0 : ∀ i, (G.lev i).Γ → GL (Fin k) E)
@@ -89,8 +88,7 @@ theorem locAt_actB (u : D.what₂.Word) (w : D.what₂.places.Pl) (hg : GIdx D.h
         (inclE (F := D.host.F) _)) ((X.g u w hg).gamI i γ : GL (Fin D.R.k) D.host.E) := by
     ext x y
     rfl
-  rw [hbc] at h1
-  exact h1
+  rwa [hbc] at h1
 
 theorem locAt_std (u : D.what₂.Word) (w : D.what₂.places.Pl) (hg : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w))
     (B : GL (Fin D.R.k) D.host.E) (hB : StdB D B) :

@@ -234,9 +234,7 @@ theorem split_units {p : PlF D} (hA : Agree δ M p) (g : Loc.SplitG (M p).L) (i 
   exact ⟨hu.1.ne_zero, hu.2.ne_zero⟩
 
 theorem q_ne {p : PlF D} (g : Loc.SplitG (M p).L) : (g.q : (D.s.atP p).Fp) ≠ 0 := by
-  intro h0
-  apply g.q_irr.ne_zero
-  exact Subtype.ext h0
+  exact fun h0 => g.q_irr.ne_zero (Subtype.ext h0)
 
 theorem move {p : PlF D} (hA : Agree δ M p) (a b : MatR D) (ha : IsLoUni a) (hb : IsUpUni b) (Z : MatZ D) :
     ZZP (M := M) δ u u' p (ZhatOM (a * ZhatOM Z * b)) = lOf δ M p a b * ZZP (M := M) δ u u' p Z * ρOf δ M p a b := by
@@ -329,8 +327,7 @@ theorem uniq {p : PlF D} (hA : Agree δ M p) (a b : MatR D) (ha : IsLoUni a) (hb
         lOf δ M p a b * Matrix.single i j (frFac δ p j * (M p).L.cj (frFac δ p i)) * ρOf δ M p a b := by
       intro i j
       have := hm (Matrix.single i j 1)
-      rw [zzp_none δ M u u' hs, zLoc_single] at this
-      exact this
+      rwa [zzp_none δ M u u' hs, zLoc_single] at this
     exact pair_unique _ _ _ _ (ρOf_diag δ M hA a b ha hb) hρ (lOf_diag δ M hA a b ha hb) hl _
       (fun i j => (frFac_unit δ M hA j).mul ((frFac_unit δ M hA i).map _)) key
   | some g =>

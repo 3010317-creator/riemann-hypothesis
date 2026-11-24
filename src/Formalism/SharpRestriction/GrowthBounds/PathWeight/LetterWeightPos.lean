@@ -268,8 +268,7 @@ theorem segment_substitution_weighted_homog (hn : Even n') (Y : MvPolynomial (Fi
   have e : m v • symWt (r := r) (K := K) (LLs F j).toLetters (omL F j p) v =
       m v • (omL F j p v.1 • normalVariableWeight n' (r + K) r (rho F j (r + K) v)) := by
     rw [symbol_weight_factor F j p K hn v]; rfl
-  rw [e]
-  exact h1
+  rwa [e]
 
 variable {O} [IsDomain O] [Fact p.Prime]
 
@@ -376,8 +375,7 @@ theorem key_column_leading_bound (D : Formalism.BasicNotions.D7) (hB2 : admB2 D)
   · exact leading_part_normal_degree r _ _ _ (segment_substitution_weighted_homog Cx.Fr j p K O hn _ _ hWH)
   · have h1 := inWj_mul (inWj_Cpow (σ := TV n' (r + K)) (w := Cx.S.w) (oc (omL Cx.Fr j p) Pth.mu c))
       (inWj_map (w := Cx.S.w) (phSeg O K p Cx.Fr j (plnm Cx.Fr j O K (plTanCol O Pth.mu c J))))
-    rw [add_zero] at h1
-    exact h1
+    rwa [add_zero] at h1
   · rw [hka0, substitution_rename_lift Cx.Fr j Cx.S.w hn, ← map_sub]
     exact depth_filtration_rename _ htail'
   · intro g' hg'
@@ -448,8 +446,7 @@ theorem generator_path_homogeneous_holds (D : Formalism.BasicNotions.D7) (hB2 : 
         (PsiPl O nu I' * PsiTan O ka I'') (∑ c ∈ colRange Pth.mu, oc (omL Cx.Fr j p) Pth.mu c) := by
       rw [← hI2]; exact weightedHomogeneousComponent_isWeightedHomogeneous _ _
     have h1 := leading_part_normal_degree r _ (1 : KK O) _ (segment_substitution_weighted_homog Cx.Fr j p K O hn _ _ hWH)
-    rw [C_1, one_mul] at h1
-    exact h1
+    rwa [C_1, one_mul] at h1
   · rw [hPsi]
     exact AddSubmonoid.subset_closure
       ⟨_, 1, key_polynomial_leading_part Cx j D hB2 hC1 B Pth I (colRange Pth.mu), bc_IT_one, (mul_one _).symm⟩

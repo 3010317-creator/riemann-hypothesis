@@ -103,8 +103,7 @@ theorem specialise_genericMatrix {R : Type*} [CommRing R] {n : ℕ} {K : Type*} 
   ext i k
   have hg := congrFun (congrFun (generic_matrix_evaluation_eq (j := φ) (g0 := g0)) i) k
   simp only [RingHom.mapMatrix_apply, Matrix.map_apply] at hg
-  simp only [genericMatrixRootWeights, Matrix.map_apply, mul_sp_alg]
-  exact hg
+  simpa only [genericMatrixRootWeights, Matrix.map_apply, mul_sp_alg] using hg
 
 theorem specialise_genericMatrixInverse {R : Type*} [CommRing R] {n : ℕ} {K : Type*} [CommRing K] (φ : R →+* K)
     {g0 g0inv : Matrix (Fin n) (Fin n) K} (h : g0 * g0inv = 1) :
@@ -127,8 +126,7 @@ theorem generic_monomials_specialise : GenericMonomialsSpecialise := by
     have e := congrFun (congrFun (specialise_genericMatrixInverse φ h) a) b
     simpa only [Matrix.map_apply] using e
   have hAg : ∀ a b, mul_sp φ g0 g0inv h (genericMatrixRootWeights R n a b) = g0 a b := fun a b => by
-    have e := congrFun (congrFun (specialise_genericMatrix φ h) a) b
-    simpa only [Matrix.map_apply] using e
+    simpa only [Matrix.map_apply] using congrFun (congrFun (specialise_genericMatrix φ h) a) b
   have hAc : ∀ r, mul_sp φ g0 g0inv h (coefficientMap R n r) = φ r := fun r =>
     RingHom.congr_fun (specialise_coefficientMap φ h) r
   have e : (MvPolynomial.map (mul_sp φ g0 g0inv h)).comp

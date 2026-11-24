@@ -60,8 +60,7 @@ theorem lemma4_element_normal_degree {p n' r : ℕ} [NeZero n'] {K : ℕ} [NeZer
       rfl
     rw [this, rename_id_apply]
   rw [hren]
-  intro mm hmm
-  exact h5 mm (support_map_subset _ _ hmm)
+  exact fun mm hmm => h5 mm (support_map_subset _ _ hmm)
 
 theorem lemma4_element_zero {p n' r : ℕ} (hp : 0 < p) [NeZero n'] {K : ℕ} [NeZero r] [NeZero K] {O : Type} [CommRing O] [IsDomain O]
     (Fr : Frames n' r) (N₁ G' cP : ℕ) (deg : Fin n' → ℕ) (Y : ℝ) {k : ℕ} (hk : k = r + K) (o : ℕ) :
@@ -126,8 +125,7 @@ theorem xiAt_of {K : ℕ} [NeZero r] [NeZero K] {hk : m + 1 = r + K} {Fr : Frame
   obtain ⟨nq, o, sig, hs, hv⟩ := hN F1 h1 h2 h3
   refine ⟨nq, fun q => if o q ≤ tF then o q else 0, fun q => if o q ≤ tF then sig q else 0, fun q => ?_, ?_⟩
   · by_cases hq : o q ≤ tF
-    · simp only [ite_eq_left hq]
-      exact ⟨hq, (hs q).1, (hs q).2⟩
+    · simpa only [ite_eq_left hq] using ⟨hq, (hs q).1, (hs q).2⟩
     · simp only [ite_eq_right hq]
       exact ⟨Nat.zero_le _, Submodule.zero_mem _, lemma4_element_zero (Fact.out : p.Prime).pos Fr N₁ G' cP _ Y hk 0⟩
   · have e1 : fock (subst p n' O w n' r g (F1 : MvPolynomial (TV n' (m + 1)) (KK O)))
@@ -147,8 +145,7 @@ theorem xiAt_of {K : ℕ} [NeZero r] [NeZero K] {hk : m + 1 = r + K} {Fr : Frame
         have h5 := lemma4_element_normal_degree hk (hs q).2 mm h4
         have h6 := hD _ h1 mm hmm
         omega
-    rw [e1]
-    exact hv
+    rwa [e1]
 
 end At
 

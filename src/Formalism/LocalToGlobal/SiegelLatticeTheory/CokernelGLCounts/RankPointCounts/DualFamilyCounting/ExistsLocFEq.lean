@@ -35,9 +35,7 @@ theorem fibP_eq (h : V →ₗ⋆[K] V →ₗ[K] K) (U : Submodule K V) (𝔭 : I
 
 theorem isLattice_sup {X Y : Submodule K V} (hc : IsCompl X Y) {A B : Submodule (𝓞 K) V}
     (hA : IsLatIn X A) (hB : IsLatIn Y B) : Submodule.IsLattice K (A ⊔ B) := by
-  refine ⟨hA.1.sup hB.1, ?_⟩
-  intro s hs hli
-  exact (LinearIndependent.iff_fractionRing _ _).mp hli
+  exact ⟨hA.1.sup hB.1, fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli⟩
 theorem exists_locF_eq {A B : Submodule (𝓞 K) V} (hA : Submodule.IsFullLattice K A)
     (hB : Submodule.IsFullLattice K B) :
     ∃ s : Finset {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal}, ∀ 𝔭 ∉ s, locF 𝔭.1 A = locF 𝔭.1 B := by

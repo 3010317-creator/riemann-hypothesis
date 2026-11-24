@@ -27,8 +27,7 @@ theorem mem_gmap_iff {Λ : Submodule (𝓞 E) S.V} (g : S.V ≃ₗ[E] S.V) (x : 
   constructor
   · rintro ⟨y, hy, rfl⟩
     simpa using hy
-  · intro h
-    exact ⟨g.symm x, h, by simp⟩
+  · exact fun h => ⟨g.symm x, h, by simp⟩
 
 theorem gmap_eq_iff {Λ : Submodule (𝓞 E) S.V} (g : S.V ≃ₗ[E] S.V) :
     Formalism.HermitianLatticesTheory.gmap g Λ = Λ ↔ ∀ x, g x ∈ Λ ↔ x ∈ Λ := by
@@ -162,8 +161,7 @@ theorem mem_xflag_of_frame {T₁ T₂ : E} {F₁ : LFlag S r T₁} {F₂ : LFlag
   constructor
   · rintro ⟨y, hy, rfl⟩
     simpa using hy
-  · intro h
-    exact ⟨γ.symm x, h, by simp⟩
+  · exact fun h => ⟨γ.symm x, h, by simp⟩
 
 theorem mem_xsp_of_frame {T₁ T₂ : E} {F₁ : LFlag S r T₁} {F₂ : LFlag S r T₂} {γ : S.V ≃ₗ[E] S.V}
     (hF : ∀ a, frame F₂ a = γ (frame F₁ a)) (x : S.V) :
@@ -196,14 +194,12 @@ theorem nlam_conj {Λ : Submodule (𝓞 E) S.V} {T₁ T₂ : E} {F₁ : LFlag S 
   · intro j x hx
     rw [mem_xflag_of_frame hF] at hx ⊢
     have := hp.2.1 j _ hx
-    rw [e x]
-    exact this
+    rwa [e x]
   · intro x hx
     rw [mem_orth_of_frame hF hiso] at hx
     rw [mem_xsp_of_frame hF]
     have := hp.2.2 _ hx
-    rw [e x]
-    exact this
+    rwa [e x]
 
 variable (Λ : Submodule (𝓞 E) S.V) {T T' : E} (F : LFlag S r T)
 
@@ -255,8 +251,7 @@ theorem double_coset_equivalence : EqIff Λ F P := by
     | refl a => exact dcrel_refl Λ F a.1
     | symm a b _ ih => exact dcrel_symm Λ F ih
     | trans a b c _ _ ih1 ih2 => exact dcrel_trans Λ F ih1 ih2
-  · intro h
-    exact Quot.sound h
+  · exact fun h => Quot.sound h
 
 section Zhat
 
@@ -368,13 +363,11 @@ theorem leadMinor_uni {N : ℕ} (A Z B : Matrix (Fin N) (Fin N) E) (hA0 : ∀ a 
     have hA : (A.submatrix (Fin.castLE h) (Fin.castLE h)).det = 1 := by
       rw [Matrix.det_of_lowerTriangular]
       · simp [hA1]
-      · intro i j hij
-        exact hA0 _ _ (by simpa using hij)
+      · exact fun i j hij => hA0 _ _ (by simpa using hij)
     have hB : (B.submatrix (Fin.castLE h) (Fin.castLE h)).det = 1 := by
       rw [Matrix.det_of_upperTriangular]
       · simp [hB1]
-      · intro i j hij
-        exact hB0 _ _ (by simpa using hij)
+      · exact fun i j hij => hB0 _ _ (by simpa using hij)
     rw [hA, hB, one_mul, mul_one]
   · rfl
 
@@ -384,8 +377,7 @@ theorem gval_rel {T T' : E} (F : LFlag S r T) {F₁ F₂ : LFlag S r T'} (h : DC
   have hD : ∀ l, Dl F.fl F₂.fl l = Dl F.fl F₁.fl l := by
     intro l
     have := leadMinor_uni A (ZhatL F F₁) B hA0 hA1 hB0 hB1 l
-    rw [← hZ] at this
-    exact this
+    rwa [← hZ] at this
   simp only [Gval, Gflag, hD]
 
 theorem isLoUni_mul {N : ℕ} {A L : Matrix (Fin N) (Fin N) E} (hA : IsLoUni A) (hL : IsLoUni L) :

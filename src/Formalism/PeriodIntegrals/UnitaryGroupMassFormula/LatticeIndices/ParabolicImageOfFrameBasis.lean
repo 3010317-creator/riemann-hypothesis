@@ -105,8 +105,7 @@ theorem latCoreX_holds : LatCoreX := by
       Kloc (E := X.B.I.E) p.1 (X.B.I.L : Set (Fin X.B.I.n → X.B.I.E)) := by
     intro h
     have : (h : HAp X p) ∈ (K : Set (HAp X p)) := h.2
-    rw [hK] at this
-    exact this
+    rwa [hK] at this
   have hKl : ∀ h x, x ∈ MassDataIdxCore.Lat (p.1.adicCompletionIntegers X.B.I.F) θ (JR (FpX X p) X.B.I.J) P ↔
       ((m h : GL (Fin X.B.I.n) (TpX X p)) : Matrix _ _ (TpX X p)) *ᵥ x ∈
         MassDataIdxCore.Lat (p.1.adicCompletionIntegers X.B.I.F) θ (JR (FpX X p) X.B.I.J) P := by
@@ -143,8 +142,7 @@ theorem latCoreX_holds : LatCoreX := by
     exact hv0 _
   refine ⟨φ.toMonoidHom.comp ψ0, φ.surjective.comp ?_, fun h => ?_, fun h => ?_⟩
   · exact hψ0s
-  · rw [hv, reindex_one_mem]
-    rw [hker h]
+  · rw [hv, reindex_one_mem, hker h]
     have hsm : ∀ z : Fin X.B.I.n → TpX X p,
         (((gOf p : ℕ) : Op X p) : FpX X p) • z = ((gOf p : ℕ) : Op X p) • z := fun z => rfl
     constructor

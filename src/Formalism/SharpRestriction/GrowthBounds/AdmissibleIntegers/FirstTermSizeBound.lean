@@ -60,8 +60,7 @@ theorem sz_div_le_fact {p : ℕ} (hp : p.Prime) (n : ℕ) : n / p ≤ (n.factori
   rw [Nat.factorization_def _ hp, padicValNat_factorial (b := Nat.log p n + 2) (by omega)]
   have h1 : (1 : ℕ) ∈ Finset.Ico 1 (Nat.log p n + 2) := by simp
   have h2 := Finset.single_le_sum (f := fun i => n / p ^ i) (fun _ _ => Nat.zero_le _) h1
-  simp only [pow_one] at h2
-  exact h2
+  simpa only [pow_one] using h2
 
 private theorem primesLE_eq_filter_prime_range (n : ℕ) :
     Nat.primesLE n = Finset.filter Nat.Prime (Finset.range (n + 1)) := by
@@ -85,8 +84,7 @@ theorem sz_sum_div_log (n : ℕ) :
         exact_mod_cast sz_div_le_fact hp.2 n
     _ ≤ ∑ p ∈ (n.factorial).factorization.support, ((n.factorial.factorization p : ℕ) : ℝ) * Real.log p := by
         apply Finset.sum_le_sum_of_subset_of_nonneg hsub
-        intro p _ _
-        exact mul_nonneg (Nat.cast_nonneg _) (Real.log_natCast_nonneg _)
+        exact fun p _ _ => mul_nonneg (Nat.cast_nonneg _) (Real.log_natCast_nonneg _)
 
 theorem sz_log_fact (n : ℕ) : Real.log (n.factorial : ℕ) ≤ n * Real.log n := by
   rcases Nat.eq_zero_or_pos n with rfl | hn
@@ -128,8 +126,7 @@ theorem sz_mertens (n : ℕ) (hn : 1 ≤ n) :
           ring
       _ ≤ ∑ p ∈ Nat.primesLE n, ((((n / p : ℕ) : ℝ) + 1) * Real.log p) := by
           apply Finset.sum_le_sum
-          intro p hp
-          exact mul_le_mul_of_nonneg_right (hfloor p hp) (Real.log_natCast_nonneg _)
+          exact fun p hp => mul_le_mul_of_nonneg_right (hfloor p hp) (Real.log_natCast_nonneg _)
       _ = ∑ p ∈ Nat.primesLE n, ((n / p : ℕ) : ℝ) * Real.log p + ∑ p ∈ Nat.primesLE n, Real.log p := by
           rw [← Finset.sum_add_distrib]
           apply Finset.sum_congr rfl

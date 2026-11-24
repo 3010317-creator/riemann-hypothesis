@@ -184,8 +184,7 @@ theorem ine_le_I {v : HeightOneSpectrum (𝓞 D.host.E)} (hv : v ∈ plSet i dc)
     rw [plOf_idx i dc hv]
   intro g hg
   have hg' : g ∈ Ine (F := D.host.E) (Aw i dc (idx i dc v)) := hA ▸ hg
-  refine Subgroup.mem_map.2 ⟨⟨g, Ine_le_Dec _ hg'⟩, ?_, rfl⟩
-  exact Subgroup.mem_subgroupOf.2 hg'
+  exact Subgroup.mem_map.2 ⟨⟨g, Ine_le_Dec _ hg'⟩, Subgroup.mem_subgroupOf.2 hg', rfl⟩
 
 theorem coverClause : CoverClause i dc Dd := by
   intro v
@@ -261,8 +260,7 @@ theorem rblk (hE : Ev r π Dd) (hN : RepresentationBoundsCohomology.NormAt D.nd 
       algebraMap (D.nd.O i) (FractionRing (D.nd.O i))
         (rO D.nd i r π g (Fin.natAdd D.R.r c') (Fin.natAdd D.R.r c')) := by
     have h := congrFun (congrFun (hE.ρπ_eval (Dd.r g)) (Fin.natAdd D.R.r c')) (Fin.natAdd D.R.r c')
-    rw [hE.r_eval, hE.pπ] at h
-    exact h
+    rwa [hE.r_eval, hE.pπ] at h
   rw [h1]
   exact congrArg _ (hN.2.1 g c')
 
@@ -284,8 +282,7 @@ theorem conj_eq {M : Type*} [Monoid M] (u : Mˣ) (b c : M) (h : ↑u⁻¹ * b * 
 
 theorem plOf_mem_Q {w : ℕ} (hw : w ∈ qsN i dc) : plOf i dc w ∈ D.nd.Q i := by
   obtain ⟨v, hv, rfl⟩ := Finset.mem_image.1 hw
-  rw [plOf_idx i dc (Finset.mem_union_right _ hv)]
-  exact hv
+  rwa [plOf_idx i dc (Finset.mem_union_right _ hv)]
 
 theorem locQ (hE : Ev r π Dd) (hN : RepresentationBoundsCohomology.NormAt D.nd r ρ π) (hG5 : TruncatedSeriesCountingIdentities.admG5 i r) (h5x : TruncatedSeriesCountingIdentities.TameGeneratorConditions i)
     (hQP : QPow i) (c' : Fin D.R.t) :
@@ -488,8 +485,7 @@ theorem locS_pde (hE : Ev r π Dd) (hN : RepresentationBoundsCohomology.NormAt D
   · intro m hm
     rw [sub_smul, r_act hE hN c', one_smul, chi_c_eq i h5x _ (Or.inl hS) c' _ hγ] at hm
     have h1 : (D.nd.zeta i v.1 - 1) • m = 0 := by
-      rw [sub_smul, one_smul]
-      exact hm
+      rwa [sub_smul, one_smul]
     obtain ⟨u, hu'⟩ := hu
     calc m = ((u⁻¹ : (D.nd.O i)ˣ) : D.nd.O i) • ((u : D.nd.O i) • m) := by
           rw [smul_smul, Units.inv_mul, one_smul]

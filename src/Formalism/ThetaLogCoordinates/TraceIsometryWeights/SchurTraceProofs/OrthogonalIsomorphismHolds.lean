@@ -177,8 +177,7 @@ private theorem le_iSup_gS_highestWeight_of_stable_of_finW {K V : Type} [Field K
         have hneμ : μ ≠ i.2.2.2.choose := by
           intro heq
           rw [← heq] at hle
-          have h2 := Dle_antisymm hle (Dle_raise μ hab)
-          exact dl_ne_zero (ne_of_lt hab) (by simpa using h2)
+          exact dl_ne_zero (ne_of_lt hab) (by simpa using (Dle_antisymm hle (Dle_raise μ hab)))
         have hlt := cas_lt hdomμ hdomν hμν hneμ
         rw [hc, ← hc0] at hlt
         exact lt_irrefl _ hlt
@@ -257,8 +256,7 @@ theorem gSall_le_perpV (LL : Letters N) (j : ℕ) (e : Fin n ↪o Fin r) {μ ν 
     rw [SetLike.mem_coe, mem_perpS]
     intro y hy
     have hy' := gS_le_perpV LL j e (Ne.symm hne) hh' hv hy
-    rw [mem_perpV] at hy'
-    exact hy'
+    rwa [mem_perpV] at hy'
   · intro y hy
     rw [mem_perpS] at hy
     rw [mem_perpV, fock_symm']
@@ -319,8 +317,7 @@ theorem projection_lattice_holds : ProjP := by
       refine iSup₂_le fun mu hmu => ?_
       intro z hz
       rw [mem_perpS]
-      intro w hw
-      exact horth la mu hla hmu w hw z hz
+      exact fun w hw => horth la mu hla hmu w hw z hz
     have hx' := hBle hx
     rw [mem_perpS] at hx'
     rw [fock_symm']

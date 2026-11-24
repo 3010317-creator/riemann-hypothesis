@@ -87,8 +87,7 @@ theorem levE_eq (h0 : constantCoeff (W.lev c ζ Eπ) = 0) : W.lev c ζ Eπ = X *
   eq_X_mul_shift _ h0
 
 theorem Vs_cc (h1 : coeff 1 (W.lev c ζ Eπ) ≠ 0) : constantCoeff (Vs W c ζ Eπ) ≠ 0 := by
-  rw [Vs, ← PowerSeries.coeff_zero_eq_constantCoeff_apply, PowerSeries.coeff_mk]
-  exact h1
+  rwa [Vs, ← PowerSeries.coeff_zero_eq_constantCoeff_apply, PowerSeries.coeff_mk]
 
 theorem Vs_Ui (h1 : coeff 1 (W.lev c ζ Eπ) ≠ 0) : Vs W c ζ Eπ ^ h' * Ui W c ζ Eπ h' = 1 := by
   rw [Ui, ← mul_pow, PowerSeries.mul_inv_cancel _ (Vs_cc h1), one_pow]
@@ -207,8 +206,7 @@ theorem lev_const_of_ev (h0 : constantCoeff (W.lev c ζ Eπ) = 0) (h1 : coeff 1 
     by_cases hjh : j < h'
     · rw [coeff_lev_pow_eq_zero_of_lt h0 j hjh, zero_mul]
     · rw [h ((i : ℤ) - j) (by omega) (by omega), mul_zero]
-  · intro hi'
-    exact absurd (Finset.mem_range.mpr (by omega)) hi'
+  · exact fun hi' => absurd (Finset.mem_range.mpr (by omega)) hi'
 
 end Ev
 

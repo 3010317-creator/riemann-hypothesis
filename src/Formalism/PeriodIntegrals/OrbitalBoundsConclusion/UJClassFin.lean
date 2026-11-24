@@ -135,8 +135,7 @@ theorem adelic_bounds : AdelBounds := by
     have e2 : D • hermA σ J (g'.mulVec (vinc x)) (g'.mulVec (vinc y)) ∈ Oh F E :=
       hermA_Oh σ J hdJi (up_Oh L huL hX) (up_Oh L huL hY)
     apply oh_inter (F := F)
-    rw [map_mul, map_natCast, ← nsmul_eq_mul, ← hermA_vinc, e1]
-    exact e2
+    rwa [map_mul, map_natCast, ← nsmul_eq_mul, ← hermA_vinc, e1]
   ·
     intro y hy
     set Z := g'.mulVec (vinc (F := F) y) with hZdef
@@ -176,8 +175,7 @@ theorem adelic_bounds : AdelBounds := by
       have e6 : (D * k) • ((JR (Af F) J).mulVec Z) i =
           D • ((k • (1 : Af F ⊗[F] E)) * ((JR (Af F) J).mulVec Z) i) := by
         rw [smul_mul_assoc, one_mul, mul_smul]
-      rw [e6]
-      exact this
+      rwa [e6]
     have hJinv : (J⁻¹).map (inclR (F := F) (Af F)) * JR (Af F) J = 1 := by
       rw [JR, ← Matrix.map_mul, Matrix.nonsing_inv_mul _ (Ne.isUnit hJdet)]
       exact Matrix.map_one _ (map_zero _) (map_one _)
@@ -264,8 +262,7 @@ theorem uJClassFin_of (hR : RatDense) (hC : ClassFinite) : UJClassFin := by
     have hq : rel (Quotient.mk st x).out x := Quotient.exact (Quotient.out_eq (Quotient.mk st x))
     obtain ⟨γ, hγ, k, hk, hx⟩ := hsymm hq
     refine ⟨e (Quotient.mk st x), ⟨γ, hγ⟩, ⟨k, hk⟩, ?_⟩
-    simp only [Equiv.symm_apply_apply]
-    exact hx
+    simpa only [Equiv.symm_apply_apply] using hx
   · intro i j γ γ' k k' hEq
     simp only at hEq
     have hr : rel (e.symm i).out (e.symm j).out := by

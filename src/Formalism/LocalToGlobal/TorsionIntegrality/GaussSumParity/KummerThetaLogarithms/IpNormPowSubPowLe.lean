@@ -150,14 +150,12 @@ theorem IPLemma_of : FrobSq → IPLemma := by
     refine ⟨fun _ => ?_, fun j i => ?_⟩
     · by_contra hc
       have hc' : PowerSeries.coeff 0 (lgF K l) ≠ 0 := by
-        rw [PowerSeries.coeff_zero_eq_constantCoeff]
-        exact hc
+        rwa [PowerSeries.coeff_zero_eq_constantCoeff]
       obtain ⟨j, hj⟩ := Formalism.InvariantFactorPaths.G7.coeff_lgF_ne_zero hc'
       exact (pow_ne_zero j hq) hj.symm
     · have h1 := Formalism.InvariantFactorPaths.G7.coeff_lgF_pow K hl.two_le 0
       simp only [pow_zero, inv_one] at h1
-      rw [ite_eq_left (Subsingleton.elim i j)]
-      exact h1
+      rwa [ite_eq_left (Subsingleton.elim i j)]
   have hf : Formalism.FG.IsFunEqTypeV l (l ^ 2) hq (σ.comp σ) (fun _ _ : Unit => (1 : K))
       (fun _ : Unit => (lgF K l : MvPowerSeries Unit K)) := by
     intro _

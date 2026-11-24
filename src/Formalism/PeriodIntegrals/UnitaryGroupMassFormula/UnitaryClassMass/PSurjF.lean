@@ -110,8 +110,7 @@ theorem finF (D : ℤ) (hD : D ≠ 0) :
   apply (Ideal.finite_factors hI).subset
   intro v hv
   show v.asIdeal ∣ Ideal.span {((D : 𝓞 F))}
-  rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-  exact hv
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
 
 theorem interLocStd [FiniteDimensional E V] (N : Submodule (𝓞 E) V) (hN : Submodule.IsLattice E N) (x : V)
     (hx : ∀ p : Ideal (𝓞 E), p.IsMaximal → ∃ t : 𝓞 E, t ∉ p ∧ t • x ∈ N) : x ∈ N := by
@@ -146,8 +145,7 @@ theorem surjStep_of_F (hP : PatchF) (hS : SemiApprox) (hO : LSOne) : SurjStep :=
   obtain ⟨D, hD0, hDL, hDN⟩ := cofinStep E V L0 N hL hN.1
   set T := (finF (F := F) D hD0).toFinset with hT
   have hTm : ∀ v, v ∉ T → ((D : 𝓞 F)) ∉ v.asIdeal := by
-    intro v hv hDv
-    exact hv ((Set.Finite.mem_toFinset _).2 hDv)
+    exact fun v hv hDv => hv ((Set.Finite.mem_toFinset _).2 hDv)
   obtain ⟨γ, hγ⟩ := hS F E σ V h M b L0 hσ hθ hsymm hnd hL N hN T
   have hsat : ∀ y : Fin M → E, PI.UnitaryGroupMassFormula.UJClassFin.vinc (F := F) y ∈ latHat F E (crdOf b L0) →
       y ∈ crdOf b L0 := by
@@ -155,8 +153,7 @@ theorem surjStep_of_F (hP : PatchF) (hS : SemiApprox) (hO : LSOne) : SurjStep :=
     rw [← hO F E σ V h M b L0 hσ hθ hτ hsymm hnd hL hsig]
     show (finMat σ (gramOf h b) (1 : HA (AF F) σ (gramOf h b))⁻¹).mulVec (PI.UnitaryGroupMassFormula.UJClassFin.vinc (F := F) y) ∈
       latHat F E (crdOf b L0)
-    rw [inv_one, finMat_one, Matrix.one_mulVec]
-    exact hy
+    rwa [inv_one, finMat_one, Matrix.one_mulVec]
   obtain ⟨g, hg⟩ := hP F E σ V M (gramOf h b) b L0 hL hsat γ T
   refine ⟨g, ?_⟩
   rw [hg]

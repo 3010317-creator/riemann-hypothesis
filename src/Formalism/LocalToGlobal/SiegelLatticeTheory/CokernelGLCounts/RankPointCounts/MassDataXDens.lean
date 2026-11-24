@@ -36,9 +36,7 @@ theorem etaP_pm {D : D7} (p : PlF D) : eta₃ p = 1 ∨ eta₃ p = -1 := by
 
 theorem aPD_nonneg {D : D7} (p : PlF D) (T : ℕ) : 0 ≤ aPD p T := by
   unfold aPD
-  apply Finset.prod_nonneg
-  intro i _
-  exact one_sub_eta_nonneg _ (etaP_pm p) _ _
+  exact Finset.prod_nonneg (fun i _ => one_sub_eta_nonneg _ (etaP_pm p) _ _)
 
 theorem alpD_nonneg {D : D7} (u u' : D.what₂.Word) (p : PlF D) : 0 ≤ alpD u u' p := by
   unfold alpD

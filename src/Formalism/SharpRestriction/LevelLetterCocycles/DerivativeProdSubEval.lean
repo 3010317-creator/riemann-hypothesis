@@ -98,8 +98,7 @@ theorem map_letA_smul_comm {T₁ T₂ : LocLat G Qp LL O} (F : LatHom T₁.L T�
   | exact LinearMap.map_smul_of_tower (W.map F) a x
 
 theorem map_gamma_comm {T₁ T₂ : LocLat G Qp LL O} (F : LatHom T₁.L T₂.L) (x : W.DD T₁) :
-    W.map F (W.γ T₁ x) = W.γ T₂ (W.map F x) := by
-  exact W.map_γ F W.gam x
+    W.map F (W.γ T₁ x) = W.γ T₂ (W.map F x) := W.map_γ F W.gam x
 
 theorem smul_eq_algebraMap_letA_smul (T : LocLat G Qp LL O) (c : O) (y : W.DD T) :
     c • y = (algebraMap (LetA O n) W.EE (algebraMap O (LetA O n) c)) • y := by
@@ -189,8 +188,7 @@ theorem map_comm_derivation {T₁ T₂ : LocLat G Qp LL O} (F : LatHom T₁.L T�
   have hinj : ∀ a b : W.DD T₂, W.π₀ • a = W.π₀ • b → a = b := by
     intro a b h
     rw [← algebraMap_smul W.EE W.π₀ a, ← algebraMap_smul W.EE W.π₀ b, ← hu] at h
-    have h' := congrArg (fun t => ((u⁻¹ : W.EEˣ) : W.EE) • t) h
-    simpa [smul_smul] using h'
+    simpa [smul_smul] using congrArg (fun t => ((u⁻¹ : W.EEˣ) : W.EE) • t) h
   apply hinj
   rw [← map_letA_smul_comm W F W.π₀ (dop₁ y), hd₁, hd₂, map_sub, map_gamma_comm W F y]
 
@@ -221,8 +219,7 @@ theorem derivation_preserves_invariants {T : LocLat G Qp LL O} (i : ZMod n)
   have hinj : ∀ a b : W.DD T, W.π₀ • a = W.π₀ • b → a = b := by
     intro a b h
     rw [← algebraMap_smul W.EE W.π₀ a, ← algebraMap_smul W.EE W.π₀ b, ← hu] at h
-    have h' := congrArg (fun t => ((u⁻¹ : W.EEˣ) : W.EE) • t) h
-    simpa [smul_smul] using h'
+    simpa [smul_smul] using congrArg (fun t => ((u⁻¹ : W.EEˣ) : W.EE) • t) h
   have hy' : y ∈ W.NΔ T ∧ y ∈ W.Nl T i := (mem_invariantLetter_iff W).mp hy
   obtain ⟨hyΔ, hyl⟩ := hy'
   obtain ⟨x', hx'Δ, hx'⟩ := hmod y hyΔ
@@ -273,8 +270,7 @@ theorem exists_invariant_preimage_average (hΔ : IsUnit ((W.DelF.card : ℕ) : O
     rw [hs, map_sum]
     refine Finset.sum_nbij' (δ' * ·) (δ'⁻¹ * ·) (fun a ha => hclos _ hδ' _ ha)
       (fun a ha => hclos _ (hinv _ hδ') _ ha) (fun a _ => by simp) (fun a _ => by simp) ?_
-    intro a _
-    exact (W.γD_mul T₁ δ' a y₀).symm
+    exact fun a _ => (W.γD_mul T₁ δ' a y₀).symm
   have hyΔ : ∀ δ' ∈ W.DelF, W.γD T₁ δ' (r • s) = r • s := by
     intro δ' hδ'
     rw [gammaD_smul_letA W T₁ δ' r s, hsΔ δ' hδ', hr, AlgHom.commutes]

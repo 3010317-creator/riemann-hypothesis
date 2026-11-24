@@ -184,16 +184,14 @@ theorem lg_intsmul (N : ℤ) {f : K⟦X⟧} (hf : LG R' (f : MvPowerSeries Unit 
       have e : ((((n + 1 : ℕ) : ℤ) : K) • f : K⟦X⟧) = (((n : ℤ) : K) • f : K⟦X⟧) + f := by
         push_cast
         rw [add_smul, one_smul]
-      rw [e]
-      exact h1
+      rwa [e]
   rcases Int.eq_nat_or_neg N with ⟨n, rfl | rfl⟩
   · exact key n
   · have h1 := hneg _ (key n)
     have e : (((-(n : ℤ) : ℤ) : K) • f : K⟦X⟧) = -((((n : ℤ) : K) • f : K⟦X⟧)) := by
       push_cast
       rw [neg_smul]
-    rw [e]
-    exact h1
+    rwa [e]
 
 theorem integral_phi1_variable_change (W : WeierstrassCurve K) (hW : CoeffIn R' W) (C : WeierstrassCurve.VariableChange K)
     (hu : ((C.u : Kˣ) : K) ∈ R') (hr : C.r ∈ R') (hs : C.s ∈ R') (ht : C.t ∈ R') :
@@ -352,8 +350,7 @@ theorem phNormAt_varChange (W : WeierstrassCurve K) (hW : CoeffIn R' W) (C : Wei
   unfold PhNormAt Cong
   rw [Formalism.L2.KerInert.VC.mulBy_eq, ← PowerSeries.subst_comp_subst_apply hφ hmψ, e1, hadd _ _ _ hmψ,
     ← PowerSeries.subst_comp_subst_apply hm hψ]
-  rw [e2]
-  rw [hadd _ _ _ hψ, hN]
+  rw [e2, hadd _ _ _ hψ, hN]
   have e3 : PowerSeries.subst (Formalism.L2.Th1.A.compInv (phi W C))
       (PowerSeries.subst (mulBy (Formalism.L2.Th1.A.logSer W) (Formalism.L2.Th1.A.expSer W) c) (Formalism.L2.Th1.B.phW W s2)
         - (N : K) • Formalism.L2.Th1.B.phW W s2) =
@@ -361,8 +358,7 @@ theorem phNormAt_varChange (W : WeierstrassCurve K) (hW : CoeffIn R' W) (C : Wei
         (PowerSeries.subst (mulBy (Formalism.L2.Th1.A.logSer W) (Formalism.L2.Th1.A.expSer W) c) (Formalism.L2.Th1.B.phW W s2))
       - (N : K) • PowerSeries.subst (Formalism.L2.Th1.A.compInv (phi W C)) (Formalism.L2.Th1.B.phW W s2) := by
     rw [subst_sub' hψ0, subst_smul' hψ0]
-  rw [hN] at hL1
-  rw [e3] at hL1
+  rw [hN, e3] at hL1
   have := Formalism.L2.Th1.C.Calc.lg_add (Formalism.L2.Th1.C.Calc.lg_add hL1 hL2) (Formalism.L2.Th1.C.Calc.lg_neg hL3)
   convert this using 1
   rw [smul_add]
@@ -542,8 +538,7 @@ theorem phNormOKInert_of : Formalism.L2.KerInert.PhNormOKInert := by
   obtain ⟨h0, h1⟩ := hT
   refine ⟨h0, ?_⟩
   rw [Formalism.L2.KerInert.Dict.expMv_eq_mvExp h0]
-  intro e
-  exact h1 e
+  exact fun e => h1 e
 
 end Main
 

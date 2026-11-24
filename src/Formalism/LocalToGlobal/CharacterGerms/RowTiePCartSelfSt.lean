@@ -44,8 +44,7 @@ theorem coeff_tyS_congr {l : ℕ} (hl : 2 ≤ l) (a b : ℕ → C) (N : ℕ) (ha
   by_cases hs : l ^ s = m
   · rw [ite_eq_left hs, ite_eq_left hs]
     apply hab
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have h1 : l ^ N ≤ l ^ s := Nat.pow_le_pow_right (by omega) hc
     rw [hs] at h1
     exact absurd hm (not_lt.2 h1)
@@ -122,8 +121,7 @@ theorem sumV_mem (V : VF C) (g : Fin 2) (hlg0 : ∀ i, MvPowerSeries.constantCoe
     rfl
   have htyN : ∀ N n, ∀ m < V.l ^ N, PowerSeries.coeff m (tyS V.l fun s => sumV y s n) =
       PowerSeries.coeff m (tyS V.l fun s => (∑ s ∈ Finset.range N, Vpow s (y s)) s n) := by
-    intro N n m hm
-    exact coeff_tyS_congr hl2 _ _ N (fun i hi => (hPeq N i hi n).symm) m hm
+    exact fun N n m hm => coeff_tyS_congr hl2 _ _ N (fun i hi => (hPeq N i hi n).symm) m hm
   have hγN' : ∀ N i, ∀ m < V.l ^ N, PowerSeries.coeff m (γ i) = PowerSeries.coeff m (γN N i) := by
     intro N i m hm
     rw [X.curve_eq_ex_lg hlg0 hexlg (γN N) (fun i => (hγN N i).1) i]
@@ -268,7 +266,6 @@ theorem FBChart.self_chart_exp_constantCoeff (x : Fin 2 × Fin dd) : constantCoe
 
 theorem FBChart.rawSelf_axis0 (e : Fin 2 × (Fin 2 × Fin dd) →₀ ℕ) (he : ∀ s ∈ e.support, s.1 ≠ 0) :
     coeff e (Y.rawSelf p).h = 0 := by
-  show coeff e (∑ col, hCol col Y.h) = 0
   exact van_sum Finset.univ _ (fun col _ => van_hCol col 0 Y.h (gauge_axes Y 0)) e he
 
 theorem FBChart.rawSelf_exlg (x : Fin 2 × Fin dd) :
@@ -337,8 +334,7 @@ theorem FBChart.exists_integral_right_inverse (g : Fin 2) :
   by_cases hc : c = c'
   · subst hc
     rw [ite_eq_left rfl]
-    simp only [mul_one]
-    exact SelfData.gm_pair Y p _ g
+    simpa only [mul_one] using SelfData.gm_pair Y p _ g
   · simp [hc]
 
 def PTSelfSt : Prop :=

@@ -195,7 +195,6 @@ theorem dimSq_of (h : Schur) : DimSq := by
     exact Finset.single_le_sum (f := fun x : G => ‖σ (charOf (τ s) x)‖ ^ 2)
       (fun x _ => by positivity) (Finset.mem_univ 1)
   have key' : finrank K (T s) ^ 2 ≤ Fintype.card G := by exact_mod_cast key
-  refine ⟨key', fun H χ => le_trans ?_ key'⟩
-  exact Nat.pow_le_pow_left (Submodule.finrank_le _) 2
+  exact ⟨key', fun H χ => le_trans (Nat.pow_le_pow_left (Submodule.finrank_le _) 2) key'⟩
 
 end Formalism.IndefR.LatticeTransfer

@@ -252,8 +252,7 @@ theorem akM_smul (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {𝔭 : Id
     rw [map_smul_mk, Matrix.mul_smul, Matrix.smul_mul, hR, ← hHR, ← Matrix.ext_iff,
       ← Matrix.ext_iff]
     refine forall_congr' fun i => forall_congr' fun j => ?_
-    simp only [Matrix.smul_apply, smul_eq_mul, Matrix.map_apply]
-    exact mul_eq_mul_iff h𝔭 hc hk _ _
+    simpa only [Matrix.smul_apply, smul_eq_mul, Matrix.map_apply] using mul_eq_mul_iff h𝔭 hc hk _ _
   have hsurj : Function.Surjective
       ((rd K 𝔭 k (vF 𝔭 c)).toAddMonoidHom.mapMatrix :
         Matrix κ κ (𝓞 K ⧸ extP K 𝔭 ^ k) →+ Matrix κ κ (𝓞 K ⧸ extP K 𝔭 ^ (k - vF 𝔭 c))) := by
@@ -332,8 +331,7 @@ theorem isIntegralLat_smul {h : V →ₗ⋆[K] V →ₗ[K] K} {L : Submodule (�
   have h1 : algebraMap F K (c : F) ∈ (1 : Submodule (𝓞 K) K) :=
     Submodule.mem_one.2 ⟨algebraMap (𝓞 F) (𝓞 K) c, rfl⟩
   have h2 := Submodule.mul_mem_mul h1 (hLi x hx y hy)
-  rw [one_mul] at h2
-  exact h2
+  rwa [one_mul] at h2
 
 theorem akCount_smul (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F)
     {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) (hd : IsTotPosDef h) {L : Submodule (𝓞 K) V}
@@ -408,8 +406,7 @@ theorem discrIdeal_smul_le_iff {h : V →ₗ⋆[K] V →ₗ[K] K} {L : Submodule
     have hd : d ∉ 𝔭 ^ (v + 1) :=
       pow_notMem h𝔭 (localValuationFiltration.notMem_pow_vF h𝔭 hc) (finrank K V)
     have hz : algebraMap (𝓞 F) (𝓞 K) d * z ∈ extP K 𝔭 ^ (v + e) := by
-      apply hle
-      exact Ideal.subset_span ⟨x, hx, by rw [gram_smul, map_mul, ez]⟩
+      exact hle (Ideal.subset_span ⟨x, hx, by rw [gram_smul, map_mul, ez]⟩)
     have hspan : extP K 𝔭 ^ v ≤
         Ideal.span {algebraMap (𝓞 F) (𝓞 K) d} ⊔ extP K 𝔭 ^ (v + e) := by
       have h := idealPowerSpanBounds.pow_le_span_sup h𝔭.isPrime (idealPowerSpanBounds.ne_bot h𝔭) hd (v + e)

@@ -55,8 +55,7 @@ private theorem mem_ideal_smul_top_pi_iff' {R : Type*} [CommRing R] {n : ℕ} (J
       simpa using J.add_mem hy hz
   · intro h
     rw [pi_eq_sum_univ x]
-    refine Submodule.sum_mem _ fun i _ => ?_
-    exact Submodule.smul_mem_smul (h i) Submodule.mem_top
+    exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem_smul (h i) Submodule.mem_top
 
 private theorem isPrecomplete_fin_pi {R : Type*} [CommRing R] (J : Ideal R) [IsPrecomplete J R] (n : ℕ) :
     IsPrecomplete J (Fin n → R) := by
@@ -156,8 +155,7 @@ theorem isLocalRing_of_complete {B : Type*} [CommRing B] [IsDedekindDomain B] (I
     refine K.add_mem (hIle2 ?_) hk
     have hxj : x - k = j := by
       linear_combination h1 - hjk
-    rw [← hxj]
-    exact hxk
+    rwa [← hxj]
 
 section Main
 

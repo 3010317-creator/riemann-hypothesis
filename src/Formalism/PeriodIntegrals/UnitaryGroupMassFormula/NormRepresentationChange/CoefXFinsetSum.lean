@@ -108,18 +108,15 @@ theorem loc_entry (D : D7) (Λ : Submodule (𝓞 D.host.E) (VS D).V) {T T' : D.h
   have hw : ∀ c, frame G₁ c - frame G c ∈ LP P (Ideal.span {((gS D : ℕ) : 𝓞 D.host.E)} • Λ) := by
     intro c
     have := hA1.2.2 c P hP
-    rw [frameAct_one] at this
-    exact this
+    rwa [frameAct_one] at this
   have hw2 : ∀ c, frame G₂ c - frame G c ∈ LP P (Ideal.span {((gS D : ℕ) : 𝓞 D.host.E)} • Λ) := by
     intro c
     have := hA2.2.2 c P hP
-    rw [frameAct_one] at this
-    exact this
+    rwa [frameAct_one] at this
   have hwe : ∀ c : Fin D.R.rS, G₁.fl.e c - G.fl.e c ∈ LP P (Ideal.span {((gS D : ℕ) : 𝓞 D.host.E)} • Λ) := by
     intro c
     have := hw c.castSucc
-    rw [frame_castSucc, frame_castSucc] at this
-    exact this
+    rwa [frame_castSucc, frame_castSucc] at this
   have hf1LP : ∀ c, frame G₁ c ∈ LP P Λ := by
     intro c
     induction c using Fin.lastCases with
@@ -175,8 +172,7 @@ theorem loc_entry (D : D7) (Λ : Submodule (𝓞 D.host.E) (VS D).V) {T T' : D.h
     rw [h3, add_zero]
     simp only [coefX_smul_e, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rfl
-  rw [← hYa]
-  exact hcoef
+  rwa [← hYa]
 
 theorem stepLoc (D : D7) : StepLoc D := by
   intro Λ T T' G G₁ G₂ n m hn hm hfr hC hC₁ hA1 hA2 _ hz₁ P hP

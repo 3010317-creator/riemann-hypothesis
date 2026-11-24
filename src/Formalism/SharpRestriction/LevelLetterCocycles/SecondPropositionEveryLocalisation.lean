@@ -226,22 +226,16 @@ theorem len_ker_le (F : A →ₗ[O] Matrix δ δ O) (κ : (δ → KO O) →ₗ[O
       rintro _ ⟨k, rfl⟩
       rw [SetLike.mem_coe, LinearMap.mem_ker]
       funext b
-      have hk := congrFun hv (k, b)
-      simpa [L, relMap, bigRect, Fintype.sum_prod_type, Finset.sum_apply] using hk
+      simpa [L, relMap, bigRect, Fintype.sum_prod_type, Finset.sum_apply] using congrFun hv (k, b)
     rw [LinearMap.mem_ker] at hL
     have hs : ∑ j, actQ (F (θ j)) (φ v j) = κ (L θ) := by
 
       simp only [L, LinearMap.coe_mk, AddHom.coe_mk, map_sum]
-      refine Finset.sum_congr rfl fun j _ => ?_
-      exact hact _ _
+      exact Finset.sum_congr rfl fun j _ => hact _ _
     rw [hs, hL, map_zero]
   let ψ : LinearMap.ker (relMap O (KO O) (bigRect F P)) →ₗ[O] H :=
     LinearMap.codRestrict H (φ.comp (LinearMap.ker _).subtype) fun v => hmem v v.2
-  have hψ : Function.Injective ψ := by
-    intro v w hvw
-    apply Subtype.ext
-    apply hφinj
-    exact congrArg Subtype.val hvw
+  have hψ : Function.Injective ψ := fun v w hvw => Subtype.ext (hφinj (congrArg Subtype.val hvw))
   first
   | exact Module.length_le_of_injective ψ hψ
 
@@ -703,8 +697,7 @@ theorem relation_lemma_of_large_residue (hG : GoodCongruenceObjects N r ρ π S)
       ((nρ + ∑ c, nχ c : ℕ) : ℕ∞) := by
     push_cast
     rw [hnρ]
-    simp only [hnχ]
-    exact key
+    simpa only [hnχ] using key
   have key3 := ENat.toNat_le_of_le_natCast key2
   rw [← Finset.sum_div, ← add_div]
   apply div_le_div_of_nonneg_right _ (Nat.cast_nonneg _)
@@ -739,8 +732,7 @@ theorem relation_lemma_clause {D : D7} (i : D.nd.Loc)
     (r : D.nd.X i → (Formalism.MainNotions.N.GE D.nd →* Matrix.GeneralLinearGroup (Fin D.R.nV) (D.nd.O i)))
     (ρ : D.nd.X i → (Formalism.MainNotions.N.GE D.nd →* Matrix.GeneralLinearGroup (Fin D.R.r) (D.nd.O i)))
     (π : D.nd.X i) : HomRelationsLemmaAllChoices i r ρ π := by
-  intro _ S hG
-  exact Br.relation_lemma D.nd r ρ π S hG
+  exact fun _ S hG => Br.relation_lemma D.nd r ρ π S hG
 
 end Formalism.MainNotions.LargeLevelLemmas
 
@@ -811,8 +803,7 @@ theorem inj_of_card {A : Type} [CommRing A] [IsDomain A] {t : ℕ} {F : Type} [F
       rw [ite_eq_left h]
       exact hsw.symm
     · dsimp only [τ]
-      rw [ite_eq_right h]
-      exact h
+      rwa [ite_eq_right h]
   have hτinj : Function.Injective τ := by
     intro y y' h
     apply hinj
@@ -841,8 +832,7 @@ theorem sep_of_indep {A : Type} [CommRing A] [IsDomain A] {F : Type} [Fintype F]
   apply hv
   apply hind
   intro z
-  have hz := congrFun hMv (e z)
-  simpa [M, Matrix.vecMul, dotProduct] using hz
+  simpa [M, Matrix.vecMul, dotProduct] using congrFun hMv (e z)
 
 end Count
 
@@ -1044,8 +1034,7 @@ theorem span_lemma_of_charpoly
       have := hx x'
       simp only [map_self] at this
       exact this.symm
-    rw [this]
-    exact ht
+    rwa [this]
   · intro g Θ hΘ
     have hsub : LemmaDetSub.{0, 0, 0} := eta_determinant_comparison det_poly_statement blockDet
     let R'K : Subalgebra (N.O i) (X' → Matrix (Fin R.nV) (Fin R.nV) (KK N i)) :=
@@ -1066,8 +1055,7 @@ theorem span_lemma_of_charpoly
       apply IsFractionRing.injective (N.O i) (KK N i)
       rw [hx x', RingHom.map_det]
       rfl
-    rw [this]
-    exact hf
+    rwa [this]
 
 end Det
 
@@ -1101,8 +1089,7 @@ theorem exists_nonfixed_twisted_vector
     (x : N.X i) (hx : x ∉ N.Z i) (η : Fin R.nV → KK N i) (hη : η ≠ 0) :
     ∃ g : GE N, toK N i (((chiU N i 1 g)⁻¹ : (N.O i)ˣ) : N.O i) •
       (mapM (toK N i) (rO N i r x) g).mulVec η ≠ η := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   apply hx
   apply hG6 x
   refine ⟨η, hη, fun g => ?_⟩
@@ -1160,8 +1147,7 @@ variable {D : D7} (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd →* GL (Fin D.R.nV)
   (ρ : D.nd.X i → (GE D.nd →* GL (Fin D.R.r) (D.nd.O i))) (π : D.nd.X i)
 
 theorem eigenspace_lemma_clause : SpanQuotientLemma i r ρ π := by
-  intro _ S hG
-  exact Formalism.MainNotions.N.Inst.eigenspace_lemma D.nd hG
+  exact fun _ S hG => Formalism.MainNotions.N.Inst.eigenspace_lemma D.nd hG
 
 theorem span_lemma_clause (h : Formalism.MainNotions.TruncatedSeriesCountingIdentities.admG1 i r) : CharpolyCoeffsLemmaFamily i r := Formalism.MainNotions.N.Inst.span_lemma_of_charpoly_coeffs D.nd r h
 

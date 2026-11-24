@@ -78,8 +78,7 @@ theorem iiset_eq (O : Subring F) (ϖ : F) (hϖ0 : ϖ ≠ 0) {n a : ℕ} :
   simp only [IIset, Set.mem_setOf_eq]
   refine forall₂_congr fun i j => ⟨?_, fun h => ⟨_, h, ?_⟩⟩
   · rintro ⟨o, ho, e⟩
-    rw [e, ← mul_assoc, inv_mul_cancel₀ hϖ0, one_mul]
-    exact ho
+    rwa [e, ← mul_assoc, inv_mul_cancel₀ hϖ0, one_mul]
   · rw [← mul_assoc, mul_inv_cancel₀ hϖ0, one_mul]
 
 theorem sub_mem_iff {O : Subring F} {ϖ : F} (hϖ : ϖ ∈ O) {x y : F} (hx : x ∈ O) (hy : y ∈ O) :
@@ -180,8 +179,7 @@ theorem mul_cong_mem_piece (O : Subring F) (ϖ : F) (hϖ0 : ϖ ≠ 0) {a : ℕ} 
       ϖ • ((g : Matrix (Fin a) (Fin a) F) * (ϖ⁻¹ • ((k : Matrix (Fin a) (Fin a) F) - 1))) := by
     rw [Matrix.mul_smul, smul_smul, mul_inv_cancel₀ hϖ0, one_smul, Matrix.mul_sub,
       Matrix.mul_one, Units.val_mul]
-  have h1 := congrFun (congrFun e i) j
-  simpa [Matrix.sub_apply, Matrix.smul_apply] using h1
+  simpa [Matrix.sub_apply, Matrix.smul_apply] using congrFun (congrFun e i) j
 
 theorem piece_sub_mul_cong (O : Subring F) (ϖ : F) (hϖ : ϖ ∈ O) (hϖ0 : ϖ ≠ 0)
     (hloc : IsLocalAt O ϖ) {a : ℕ} {g : GL (Fin a) F} (hg : g ∈ GLint O a)
@@ -344,8 +342,7 @@ theorem measure_subgroupMatrixSet_mul_card (O : Subring F) (hO : IsOpen (O : Set
     intro q q' hqq
     apply hcos
     rw [mem_piece]
-    intro i j
-    exact (sub_mem_iff hϖ _ _).mpr (congrFun (congrFun hqq i) j).symm
+    exact fun i j => (sub_mem_iff hϖ _ _).mpr (congrFun (congrFun hqq i) j).symm
   haveI : Fintype (J' ⧸ K) := Fintype.ofFinite _
   have hU : Jset J' = ⋃ q : J' ⧸ K,
       piece O ϖ (((Quotient.out q : J') : GL (Fin a) F) : Matrix (Fin a) (Fin a) F) := by

@@ -39,10 +39,8 @@ theorem clsCrd_eq_glob {i : ℕ} {hi : i ≤ D.R.m} (K : ClsTied u i hi) (c : (D
     clsCrd D u i hi c = Formalism.UG.CS.globLat (K.y c).1 K.lev.Lb := by
   ext x
   constructor
-  · intro hx
-    exact (K.y_lat c _).1 (latS_of_mem _ x hx)
-  · intro hx
-    exact latLocGlob _ _ _ _ (clsCrd_finite i hi c) x ((K.y_lat c _).2 hx)
+  · exact fun hx => (K.y_lat c _).1 (latS_of_mem _ x hx)
+  · exact fun hx => latLocGlob _ _ _ _ (clsCrd_finite i hi c) x ((K.y_lat c _).2 hx)
 
 theorem ld_eq_glob {i : ℕ} {hi : i ≤ D.R.m} (K : ClsTied u i hi) (c : (D.mem u).C.cls i) :
     Ld D u i hi c = Formalism.UG.CS.globLat (K.y c).1 (Comp.dl (sigD D) (gramN D i hi) K.lev.Lb) := by
@@ -80,8 +78,7 @@ theorem locDual (w : HeightOneSpectrum (𝓞 F)) (g : GL (Fin n) (E ⊗[F] Finit
       funext a
       exact RingHom.congr_fun (Formalism.L2.G.Cmp.prV_incl (E := E) w) (z a)
     rw [hc]
-  rw [e]
-  exact h2
+  rwa [e]
 
 theorem conj_step (w : HeightOneSpectrum (𝓞 F)) (Y κ : GL (Fin n) (E ⊗[F] w.adicCompletion F)) (γ : GL (Fin n) E)
     (h : bc (inclE (F := F) (w.adicCompletion F)) γ = Y * κ * Y⁻¹) (x : Fin n → E) :

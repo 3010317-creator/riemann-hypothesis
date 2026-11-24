@@ -138,8 +138,7 @@ private theorem foldr_max_le_lemma (t : ℕ) : ∀ l : List ℕ, (∀ x ∈ l, x
   | nil => intro _; simp
   | cons a l ih =>
     intro h
-    simp only [List.foldr_cons]
-    exact max_le (h a (by simp)) (ih fun x hx => h x (by simp [hx]))
+    simpa only [List.foldr_cons] using max_le (h a (by simp)) (ih fun x hx => h x (by simp [hx]))
 
 private theorem le_foldr_max_lemma_2 : ∀ (l : List ℕ) (x : ℕ), x ∈ l → x ≤ l.foldr max 0 := by
   intro l
@@ -153,8 +152,7 @@ private theorem le_foldr_max_lemma_2 : ∀ (l : List ℕ) (x : ℕ), x ∈ l →
     · exact le_trans (ih x hx) (le_max_right _ _)
 
 theorem foldr_max_eq (t : ℕ) : ∀ l : List ℕ, (∀ x ∈ l, x ≤ t) → t ∈ l → l.foldr max 0 = t := by
-  intro l hl ht
-  exact le_antisymm (foldr_max_le_lemma t l hl) (le_foldr_max_lemma_2 l t ht)
+  exact fun l hl ht => le_antisymm (foldr_max_le_lemma t l hl) (le_foldr_max_lemma_2 l t ht)
 
 end terms
 

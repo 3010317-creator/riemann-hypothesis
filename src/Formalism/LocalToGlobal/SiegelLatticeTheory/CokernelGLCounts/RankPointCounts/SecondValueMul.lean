@@ -194,12 +194,10 @@ theorem va_of_lowW (g : Formalism.DoubleCosetMeasures.lowW E (Formalism.MainNoti
     have hlt : eA a i < eA a j := (eA_lt a).2 hij
     simp only [Matrix.submatrix_apply, mk, hne, ite_false]
     rw [dite_eq_right]
-    intro hp
-    exact absurd hp.1 (not_lt.2 hlt.le)
+    exact fun hp => absurd hp.1 (not_lt.2 hlt.le)
   · have hne : eA a i ≠ eA a j := (eA a).injective.ne hij
     have hs : sbA a (eA a i) (eA a j) = true := by
-      simp only [sbA, eA_val]
-      exact hsb
+      simpa only [sbA, eA_val] using hsb
     simp only [Matrix.submatrix_apply, mk, hne, ite_false]
     rw [dite_eq_right]
     intro hp
@@ -233,8 +231,7 @@ theorem lowW_of_va {v : Matrix (Fin (m + 1)) (Fin (m + 1)) E} (hv : v ∈ VaSet 
           by_contra h
           exact hP ⟨hcb, by simpa using h⟩
         apply hv.2.2 _ _ hne
-        rw [hval b, hval c]
-        exact hsb
+        rwa [hval b, hval c]
   have hdet : X.det = 1 := by
     rw [← hX]
     exact (isCoordA a).det _
@@ -326,8 +323,7 @@ theorem rel_low (g g' : Formalism.DoubleCosetMeasures.lowW E (Formalism.MainNoti
   · intro hmem
     obtain ⟨hI, _⟩ := hmem
     refine ⟨vOf a (g' * g⁻¹), ⟨(va_of_lowW a (g' * g⁻¹)).1, (va_of_lowW a (g' * g⁻¹)).2.1, ?_⟩, ?_⟩
-    · intro i j
-      exact hI _ _
+    · exact fun i j => hI _ _
     · show rhoA a ((g' : GL (Fin (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1.sum) E) :
           Matrix (Fin (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1.sum) (Fin (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1.sum) E) = _
       rw [← rhoA_gl_mul, hcoe, inv_mul_cancel_right]
@@ -361,8 +357,7 @@ theorem rel_up (g g' : Formalism.DoubleCosetMeasures.upUniG E (Formalism.MainNot
   · intro hmem
     obtain ⟨hI, _⟩ := hmem
     refine ⟨uOf a (g⁻¹ * g'), ⟨(up_of_upUniG a (g⁻¹ * g')).1, (up_of_upUniG a (g⁻¹ * g')).2, ?_⟩, ?_⟩
-    · intro i j
-      exact hI _ _
+    · exact fun i j => hI _ _
     · show rhoA a ((g' : GL (Fin (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1.sum) E) :
           Matrix (Fin (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1.sum) (Fin (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1.sum) E) = _
       rw [← rhoA_gl_mul, hcoe, mul_inv_cancel_left]
@@ -407,8 +402,7 @@ private theorem mem_of_cellSetoid_rel_of_mem (O : Set (Matrix (Fin (m + 1)) (Fin
     p'.1.1 * a.mat * p'.1.2 ∈ O := by
   obtain ⟨⟨l, hl, e1⟩, ⟨ρ, hρ, e2⟩⟩ := h
   rw [e1, e2]
-  have h' := hO _ hp l ρ hl hρ
-  simpa only [Matrix.mul_assoc] using h'
+  simpa only [Matrix.mul_assoc] using hO _ hp l ρ hl hρ
 
 theorem cellCos_bijOn (O : Set (Matrix (Fin (m + 1)) (Fin (m + 1)) E))
     (hO : ∀ Z ∈ O, ∀ l ρ, TieN.IntLow M l → TieN.IntUp M ρ → l * Z * ρ ∈ O) :
@@ -418,8 +412,7 @@ theorem cellCos_bijOn (O : Set (Matrix (Fin (m + 1)) (Fin (m + 1)) E))
   refine ⟨?_, ?_, ?_⟩
   · intro q hq
     refine ⟨pairOf M a q, rfl, ?_⟩
-    rw [← zQ_eq]
-    exact hq
+    rwa [← zQ_eq]
   · intro q _ q' _ he
     have hr : (cellSetoid M a).r (pairOf M a q) (pairOf M a q') := Quotient.exact he
     obtain ⟨⟨l, hl, e1⟩, ⟨ρ, hρ, e2⟩⟩ := hr
@@ -427,8 +420,7 @@ theorem cellCos_bijOn (O : Set (Matrix (Fin (m + 1)) (Fin (m + 1)) E))
     have h2 := (rel_up M a q.2.out q'.2.out).2 ⟨ρ, hρ, e2⟩
     apply Prod.ext
     · rw [← Quotient.out_eq q.1, ← Quotient.out_eq q'.1]
-      apply Quotient.sound
-      exact QuotientGroup.rightRel_apply.2 h1
+      exact Quotient.sound (QuotientGroup.rightRel_apply.2 h1)
     · rw [← Quotient.out_eq q.2, ← Quotient.out_eq q'.2]
       exact QuotientGroup.eq.2 h2
   · rintro c ⟨p, rfl, hp⟩
@@ -452,8 +444,7 @@ theorem cellCos (O : Set (Matrix (Fin (m + 1)) (Fin (m + 1)) E))
     (hO : ∀ Z ∈ O, ∀ l ρ, TieN.IntLow M l → TieN.IntUp M ρ → l * Z * ρ ∈ O) :
     {q : Formalism.FourierDecayAlt.A5.Cos M.R (Formalism.MainNotions.LocalModelPeriodLattices.tr a) | LocOrbCut.zQ M.R a q ∈ O}.ncard =
       {c : Quotient (cellSetoid M a) | ∃ p : CellPair a, Quotient.mk _ p = c ∧ p.1.1 * a.mat * p.1.2 ∈ O}.ncard := by
-  have hb := cellCos_bijOn M a O hO
-  exact hb.ncard_eq
+  exact (cellCos_bijOn M a O hO).ncard_eq
 
 theorem cellCos_finite_iff (O : Set (Matrix (Fin (m + 1)) (Fin (m + 1)) E))
     (hO : ∀ Z ∈ O, ∀ l ρ, TieN.IntLow M l → TieN.IntUp M ρ → l * Z * ρ ∈ O) :

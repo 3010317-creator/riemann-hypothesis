@@ -378,8 +378,7 @@ theorem yT'_orth (t : TauC Y u u') : ∀ x ∈ (X.Fu u').X, brS (VS D) (NormalVe
   show (VS D).hT x (t.lin.symm (NormalVectorPairings.yv t.frame.fl (X.Fu u))) = 0
   have e := hiso x (t.lin.symm (NormalVectorPairings.yv t.frame.fl (X.Fu u)))
   rw [LinearEquiv.apply_symm_apply] at e
-  rw [← e]
-  exact h
+  rwa [← e]
 
 theorem yT'_self (t : TauC Y u u') :
     brS (VS D) (NormalVectorPairings.yT' Y u u' t) (NormalVectorPairings.yT' Y u u' t) =

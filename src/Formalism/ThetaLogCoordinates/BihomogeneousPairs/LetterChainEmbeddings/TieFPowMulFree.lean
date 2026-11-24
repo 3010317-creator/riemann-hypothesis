@@ -222,10 +222,9 @@ private lemma factorial_choose_signed_sum_eq_zero [CharZero k] (N j : ℕ) (hj :
         show j - (l + 1) = u by omega]
       rw [cast_choose_add_eq_factorial_div_of_charZero (u + 1 + v) (u + 1), cast_choose_add_eq_factorial_div_of_charZero (2 * u + 3 + v) l,
         cast_choose_add_eq_factorial_div_of_charZero (u + v) u, cast_choose_add_eq_factorial_div_of_charZero (2 * u + 1 + v) (l + 1), hu]
-      have F1 : ((u + 1).factorial : k) = ((u + 1 : ℕ) : k) * (u.factorial : k) := by
-        rw [Nat.factorial_succ]
-        push_cast
-        ring
+      have F : ∀ n : ℕ, ((n + 1).factorial : k) = ((n + 1 : ℕ) : k) * (n.factorial : k) := by
+        intro n
+        rw [Nat.factorial_succ, Nat.cast_mul]
       have F2 : ((u + 1 + v).factorial : k) = ((u + 1 + v : ℕ) : k) * ((u + v).factorial : k) := by
         rw [show u + 1 + v = u + v + 1 by ring, Nat.factorial_succ]
         push_cast
@@ -246,46 +245,30 @@ private lemma factorial_choose_signed_sum_eq_zero [CharZero k] (N j : ℕ) (hj :
           Nat.factorial_succ]
         push_cast
         ring
-      have F6 : ((l + 1).factorial : k) = ((l + 1 : ℕ) : k) * (l.factorial : k) := by
-        rw [Nat.factorial_succ]
-        push_cast
-        ring
       have F7 : ((2 * u + 1 + v).factorial : k) = ((u + v + u + 1 : ℕ) : k) * ((u + v + u).factorial : k) := by
         rw [show 2 * u + 1 + v = u + v + u + 1 by ring, Nat.factorial_succ]
         push_cast
         ring
-      rw [F3, F4, F5, F7, F2, F1, F6]
-      clear hW hc W c hl hl' hlj hu hv hj hN F1 F2 F3 F4 F5 F6 F7
-      have nB1 : ((u.factorial : ℕ) : k) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero _)
-      generalize hB1 : ((u.factorial : ℕ) : k) = B1 at nB1 ⊢
-      have nB2 : (((u + v).factorial : ℕ) : k) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero _)
-      generalize hB2 : (((u + v).factorial : ℕ) : k) = B2 at nB2 ⊢
-      have nB3 : (((u + v + u).factorial : ℕ) : k) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero _)
-      generalize hB3 : (((u + v + u).factorial : ℕ) : k) = B3 at nB3 ⊢
-      have nB4 : ((l.factorial : ℕ) : k) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero _)
-      generalize hB4 : ((l.factorial : ℕ) : k) = B4 at nB4 ⊢
-      have nB5 : (((2 * u + 1 + v + (l + 1)).factorial : ℕ) : k) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero _)
-      generalize hB5 : (((2 * u + 1 + v + (l + 1)).factorial : ℕ) : k) = B5 at nB5 ⊢
-      have nL1 : ((u + 1 : ℕ) : k) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
-      generalize hL1 : ((u + 1 : ℕ) : k) = L1 at nL1 ⊢
-      have nL2 : ((u + 1 + v : ℕ) : k) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
-      generalize hL2 : ((u + 1 + v : ℕ) : k) = L2 at nL2 ⊢
-      have nL3 : ((u + v + u + 2 : ℕ) : k) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
-      generalize hL3 : ((u + v + u + 2 : ℕ) : k) = L3 at nL3 ⊢
-      have nL4 : ((u + v + u + 1 : ℕ) : k) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
-      generalize hL4 : ((u + v + u + 1 : ℕ) : k) = L4 at nL4 ⊢
-      have nL5 : ((2 * u + 3 + v + l : ℕ) : k) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
-      generalize hL5 : ((2 * u + 3 + v + l : ℕ) : k) = L5 at nL5 ⊢
-      have nL6 : ((u + v + u + 3 : ℕ) : k) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
-      generalize hL6 : ((u + v + u + 3 : ℕ) : k) = L6 at nL6 ⊢
-      have nL7 : ((l + 1 : ℕ) : k) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
-      generalize hL7 : ((l + 1 : ℕ) : k) = L7 at nL7 ⊢
-      have nL8 : ((l + 1 + u : ℕ) : k) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
-      generalize hL8 : ((l + 1 + u : ℕ) : k) = L8 at nL8 ⊢
-      have nL9 : ((2 * u + 3 + v : ℕ) : k) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
-      generalize hL9 : ((2 * u + 3 + v : ℕ) : k) = liftZP_newton at nL9 ⊢
-      have nL10 : ((2 * u + 1 + v : ℕ) : k) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
-      generalize hL10 : ((2 * u + 1 + v : ℕ) : k) = ParameterUpperBound at nL10 ⊢
+      rw [F3, F4, F5, F7, F2, F u, F l]
+      clear hW hc W c hl hl' hlj hu hv hj hN F F2 F3 F4 F5 F7
+      have hg : ∀ n : ℕ, n ≠ 0 → ∃ x : k, (n : k) = x ∧ x ≠ 0 :=
+        fun n hn => ⟨_, rfl, Nat.cast_ne_zero.mpr hn⟩
+      obtain ⟨B1, hB1, nB1⟩ := hg _ (Nat.factorial_ne_zero u)
+      obtain ⟨B2, hB2, nB2⟩ := hg _ (Nat.factorial_ne_zero (u + v))
+      obtain ⟨B3, hB3, nB3⟩ := hg _ (Nat.factorial_ne_zero (u + v + u))
+      obtain ⟨B4, hB4, nB4⟩ := hg _ (Nat.factorial_ne_zero l)
+      obtain ⟨B5, hB5, nB5⟩ := hg _ (Nat.factorial_ne_zero (2 * u + 1 + v + (l + 1)))
+      obtain ⟨L1, hL1, nL1⟩ := hg (u + 1) (by omega)
+      obtain ⟨L2, hL2, nL2⟩ := hg (u + 1 + v) (by omega)
+      obtain ⟨L3, hL3, nL3⟩ := hg (u + v + u + 2) (by omega)
+      obtain ⟨L4, hL4, nL4⟩ := hg (u + v + u + 1) (by omega)
+      obtain ⟨L5, hL5, nL5⟩ := hg (2 * u + 3 + v + l) (by omega)
+      obtain ⟨L6, hL6, nL6⟩ := hg (u + v + u + 3) (by omega)
+      obtain ⟨L7, hL7, nL7⟩ := hg (l + 1) (by omega)
+      obtain ⟨L8, hL8, nL8⟩ := hg (l + 1 + u) (by omega)
+      obtain ⟨liftZP_newton, hL9, nL9⟩ := hg (2 * u + 3 + v) (by omega)
+      obtain ⟨ParameterUpperBound, hL10, nL10⟩ := hg (2 * u + 1 + v) (by omega)
+      rw [hB1, hB2, hB3, hB4, hB5, hL1, hL2, hL3, hL4, hL5, hL6, hL7, hL8, hL9, hL10]
       field_simp [nB1, nB2, nB3, nB4, nB5, nL1, nL2, nL3, nL4, nL5, nL6, nL7, nL8, nL9, nL10]
       subst hB1 hB2 hB3 hB4 hB5 hL1 hL2 hL3 hL4 hL5 hL6 hL7 hL8 hL9 hL10
       push_cast

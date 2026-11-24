@@ -182,7 +182,6 @@ theorem kVec_le : (1 : Submodule O' (FractionRing O')) ≤ (Formalism.MainNotion
   rw [Submodule.mem_comap]
   refine ⟨fun _ => σ c, ?_⟩
   funext j
-  show algebraMap O LL (σ c) = eK (algebraMap O' (FractionRing O') c)
   exact (heK c).symm
 
 def koTo : KO O' →ₛₗ[σ.toRingHom] ((Fin 1 → LL) ⧸ Formalism.MainNotions.N.stdG O LL 1) :=
@@ -211,7 +210,6 @@ def koEquiv : KO O' ≃+ ((Fin 1 → LL) ⧸ Formalism.MainNotions.N.stdG O LL 1
   map_add' x y := map_add _ x y
 
 theorem koEquiv_smul (a : O') (x : KO O') : koEquiv σ eK heK (a • x) = σ a • koEquiv σ eK heK x := by
-  show koTo σ eK heK (a • x) = σ a • koTo σ eK heK x
   exact (koTo σ eK heK).map_smulₛₗ a x
 
 end KO

@@ -95,13 +95,10 @@ theorem exists_adapted_basis_alt (O K V : Type) [CommRing O] [IsDomain O] [IsDis
     have h1 : (⟨m, hm⟩ : M) ∈ Submodule.span O (Set.range bM) := by
       rw [bM.span_eq]; trivial
     have h2 := Submodule.mem_map_of_mem (f := M.subtype) h1
-    rw [Submodule.map_span, ← Set.range_comp] at h2
-    exact h2
+    rwa [Submodule.map_span, ← Set.range_comp] at h2
   have hspanK : ⊤ ≤ Submodule.span K (Set.range (fun i => (bM i : V))) := by
     rw [← hM.2]
-    apply Submodule.span_le.mpr
-    intro m hm
-    exact Submodule.span_le_restrictScalars O K _ (hspanO hm)
+    exact Submodule.span_le.mpr (fun m hm => Submodule.span_le_restrictScalars O K _ (hspanO hm))
   let b : Basis (Fin (finrank K V)) K V := Basis.mk hliK hspanK
   have hb : ∀ i, b i = (bM i : V) := fun i => by simp [b]
   have hrange : Set.range b = Set.range (fun i => (bM i : V)) := by
@@ -238,8 +235,7 @@ theorem span_inf_eq (M : Submodule O V) (hM : Formalism.LatticeIndexTer.IsLat O 
     Submodule.span K ((M ⊓ V'.restrictScalars O : Submodule O V) : Set V) = V' := by
   apply le_antisymm
   · rw [Submodule.span_le]
-    intro x hx
-    exact hx.2
+    exact fun x hx => hx.2
   · intro v hv
     obtain ⟨d, hd, hdv⟩ := Formalism.LatticeIndexTer.LatticeIndexLength.exists_smul_mem_of_span (K := K) M hM.2 v
     have hd' : (algebraMap O K d) ≠ 0 :=

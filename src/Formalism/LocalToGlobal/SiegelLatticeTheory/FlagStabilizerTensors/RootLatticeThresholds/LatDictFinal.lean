@@ -77,8 +77,7 @@ theorem gl_mul {s : Finset ι} {e : ι → R} (he : Orth s e) (M N : Matrix n n 
     · rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul, he i hi i hi, ite_eq_left rfl]
     · intro b hb hbi
       rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul, he i hi b hb, ite_eq_right (Ne.symm hbi), zero_smul]
-    · intro h
-      exact absurd hi h
+    · exact fun h => absurd hi h
   rw [add_mul, mul_add, mul_add, h1, Finset.mul_sum, Finset.sum_mul, add_assoc, ← Finset.sum_add_distrib,
     ← Finset.sum_add_distrib]
   congr 1
@@ -133,8 +132,7 @@ theorem mkI_apply (c : ∀ v : HeightOneSpectrum (𝓞 F), v.adicCompletion F)
     (hc : ∀ v, c v ∈ v.adicCompletionIntegers F) (v : HeightOneSpectrum (𝓞 F)) : mkI c hc v = c v := rfl
 
 theorem mkI_mem (c : ∀ v : HeightOneSpectrum (𝓞 F), v.adicCompletion F)
-    (hc : ∀ v, c v ∈ v.adicCompletionIntegers F) : mkI c hc ∈ Formalism.UG.intAd F := by
-  exact hc
+    (hc : ∀ v, c v ∈ v.adicCompletionIntegers F) : mkI c hc ∈ Formalism.UG.intAd F := hc
 
 def ev (v : HeightOneSpectrum (𝓞 F)) : Af F →+* v.adicCompletion F where
   toFun a := a v
@@ -151,8 +149,7 @@ open Classical in
 def eT (T : Set (HeightOneSpectrum (𝓞 F))) : Af F :=
   mkI (fun v => if v ∈ T then 1 else 0) (fun v => by split_ifs; exacts [one_mem _, zero_mem _])
 
-theorem eT_mem (T : Set (HeightOneSpectrum (𝓞 F))) : eT T ∈ Formalism.UG.intAd F := by
-  exact mkI_mem _ _
+theorem eT_mem (T : Set (HeightOneSpectrum (𝓞 F))) : eT T ∈ Formalism.UG.intAd F := mkI_mem _ _
 
 theorem eT_of_mem {T : Set (HeightOneSpectrum (𝓞 F))} {v : HeightOneSpectrum (𝓞 F)} (h : v ∈ T) :
     eT T v = 1 := by
@@ -179,8 +176,7 @@ theorem eT_orth (i j : HeightOneSpectrum (𝓞 F)) :
     by_cases hv : v ∈ ({i} : Set (HeightOneSpectrum (𝓞 F)))
     · have hv' : v ∉ ({j} : Set (HeightOneSpectrum (𝓞 F))) := by
         rw [Set.mem_singleton_iff] at hv ⊢
-        rw [hv]
-        exact hij
+        rwa [hv]
       rw [eT_of_not hv', mul_zero]
     · rw [eT_of_not hv, zero_mul]
 
@@ -207,10 +203,8 @@ theorem eT_sum {Q : Set (HeightOneSpectrum (𝓞 F))} (hQ : Q.Finite) :
   by_cases hv : v ∈ Q
   · rw [eT_of_not (T := Qᶜ) (fun h => h hv), zero_add, Finset.sum_eq_single v]
     · exact eT_of_mem (Set.mem_singleton v)
-    · intro b _ hb
-      exact eT_of_not (fun h => hb (Set.mem_singleton_iff.mp h).symm)
-    · intro h
-      exact absurd (hQ.mem_toFinset.mpr hv) h
+    · exact fun b _ hb => eT_of_not (fun h => hb (Set.mem_singleton_iff.mp h).symm)
+    · exact fun h => absurd (hQ.mem_toFinset.mpr hv) h
   · rw [eT_of_mem hv, Finset.sum_eq_zero, add_zero]
     intro b hb
     apply eT_of_not
@@ -358,8 +352,7 @@ theorem glue (T : Set (HeightOneSpectrum (𝓞 I.F))) (w : Fin I.n → I.E)
   obtain ⟨a, haA, haU⟩ := Set.not_subset.1 hav
   have haw : algebraMap (𝓞 I.F) (𝓞 I.E) a • w ∈ I.L := haA
   have hav' : ∀ v ∈ T, mO ∈ v.asIdeal → a ∉ v.asIdeal := by
-    intro v hvT hvm hva
-    exact haU (Set.mem_biUnion (x := v) (by simp [s, hvT, hvm]) hva)
+    exact fun v hvT hvm hva => haU (Set.mem_biUnion (x := v) (by simp [s, hvT, hvm]) hva)
   obtain ⟨u0, hu0, hu0v⟩ : ∃ u0 : Af I.F, u0 ∈ Formalism.UG.intAd I.F ∧ ∀ v, u0 v =
       if v ∈ T ∧ mO ∉ v.asIdeal then (algebraMap (𝓞 I.F) (v.adicCompletion I.F) mO)⁻¹ else 0 :=
     ⟨mkI (fun v => if v ∈ T ∧ mO ∉ v.asIdeal then (algebraMap (𝓞 I.F) (v.adicCompletion I.F) mO)⁻¹ else 0)
@@ -437,8 +430,7 @@ theorem loc_iff (p : Ideal (𝓞 I.E)) (hp : p.IsMaximal) (N : Submodule (𝓞 I
       rw [coeOF]
       exact (I.cm.fixed _).2 ⟨_, rfl⟩
     rw [hfix] at ht
-    rw [IsFractionRing.injective (𝓞 I.E) I.E ht]
-    exact ha
+    rwa [IsFractionRing.injective (𝓞 I.E) I.E ht]
 
 theorem loc_congr {p p' : Ideal (𝓞 I.E)} (hp : p.IsMaximal) (hp' : p'.IsMaximal)
     (h : p.comap (algebraMap (𝓞 I.F) (𝓞 I.E)) = p'.comap (algebraMap (𝓞 I.F) (𝓞 I.E)))
@@ -485,8 +477,7 @@ theorem adelic_gluing : Z0.AdelGlue := by
     refine (hfin.image fun p => if hp : p.IsMaximal then under I p hp else Classical.arbitrary _).subset ?_
     rintro q ⟨p, hp, hne, hq⟩
     refine ⟨p, ⟨hp, hne⟩, ?_⟩
-    simp only [dite_eq_left hp]
-    exact HeightOneSpectrum.ext hq
+    simpa only [dite_eq_left hp] using HeightOneSpectrum.ext hq
   have hQex : ∀ q ∈ Q, ∃ p : Ideal (𝓞 I.E), p.IsMaximal ∧
       p.comap (algebraMap (𝓞 I.F) (𝓞 I.E)) = q.asIdeal :=
     fun q ⟨p, hp, _, hq⟩ => ⟨p, hp, hq⟩
@@ -566,8 +557,7 @@ theorem adelic_gluing : Z0.AdelGlue := by
     rw [cT_gl σR hσε, Formalism.UG.cT_one]
     conv_lhs => rw [show J' = gl Qs ε J' (fun _ => J') from (gl_const _ _ _).symm]
     rw [gl_mul horth, gl_mul horth]
-    simp only [hGu, mul_one, one_mul]
-    exact gl_const _ _ _
+    simpa only [hGu, mul_one, one_mul] using gl_const _ _ _
   let xg : GL (Fin I.n) (I.E ⊗[I.F] Af I.F) := ⟨gl Qs ε 1 G, gl Qs ε 1 Gi, hXY, hYX⟩
   have hxU : xg ∈ Formalism.UG.UPts I.cm.sig I.J (Af I.F) := hXU
   let x : I.Gf := ⟨xg, hxU⟩
@@ -920,8 +910,7 @@ theorem plane_star₁ {p : Ideal (𝓞 K)} {a : K} (h : InI p p a) :
     InI p (Formalism.HermitianLatticesTheory.conjIdeal (K := K) p) (star a) := by
   obtain ⟨r, s, hs, hr, rfl⟩ := h
   refine ⟨ReciprocityTheory.ChartRestriction.L3.conjO K r, ReciprocityTheory.ChartRestriction.L3.conjO K s, conjO_mem_hcompl hs, ?_, ?_⟩
-  · rw [mem_conjIdeal_iff, conjO_conjO]
-    exact hr
+  · rwa [mem_conjIdeal_iff, conjO_conjO]
   · rw [algebraMap_conjO, algebraMap_conjO, star_div₀]
 
 theorem plane_star₂ {p : Ideal (𝓞 K)} {a : K} (h : InI p (Formalism.HermitianLatticesTheory.conjIdeal (K := K) p) a) :
@@ -1169,8 +1158,7 @@ theorem isCompl_orth (hs : h.IsSymm) (hd : ∀ x, (∀ y, h x y = 0) → x = 0)
     obtain ⟨a, haP, ha⟩ := hdec y
     have e1 : h x a = 0 := orth_symm hs haP hxW
     have e2 : h x (y - a) = 0 := mem_orth.mp ha x hxP
-    rw [map_sub, e1, sub_zero] at e2
-    exact e2
+    rwa [map_sub, e1, sub_zero] at e2
   · rw [codisjoint_iff, eq_top_iff]
     intro v _
     obtain ⟨a, haP, ha⟩ := hdec v
@@ -1199,8 +1187,7 @@ theorem isSelfDualMod_res (hM : IsSelfDualMod S h M) (hsp : Splits h P M) :
     have e1 : h w₁ x = 0 := mem_orth.mp x.2 w₁ hw₁P
     have e2 := hx ⟨m - w₁, hw₁⟩ (mem_res.mpr (M.sub_mem hm hw₁M))
     rw [LinearMap.domRestrict₁₂_apply] at e2
-    rw [e, e1, zero_add]
-    exact e2
+    rwa [e, e1, zero_add]
   · intro x
     obtain ⟨t, ht0, htx⟩ := hM.span x
     exact ⟨t, ht0, mem_res.mpr (by rw [Submodule.coe_smul]; exact htx)⟩
@@ -1218,8 +1205,7 @@ theorem res_nondeg (hs : h.IsSymm) (hd : ∀ x, (∀ y, h x y = 0) → x = 0)
   have e1 : h x a = 0 := orth_symm hs haP x.2
   have e2 := hx ⟨b, hbW⟩
   rw [LinearMap.domRestrict₁₂_apply] at e2
-  rw [map_add (f := _), e1, zero_add]
-  exact e2
+  rwa [map_add (f := _), e1, zero_add]
 
 theorem mem_iff_split {Q : Submodule K V} (hc : IsCompl P Q)
     (hsp : ∀ w ∈ M, ∃ w₁ ∈ M, w₁ ∈ P ∧ w - w₁ ∈ Q) (x : V) :
@@ -1301,8 +1287,7 @@ theorem isSelfDualMod_comap (F : V ≃ₗ[K] V) (hF : ∀ x y, h (F x) (F y) = h
     rw [← e]
     apply hx
     change F.symm (F m) ∈ M
-    rw [F.symm_apply_apply]
-    exact hm
+    rwa [F.symm_apply_apply]
   · intro x
     obtain ⟨t, ht0, htx⟩ := hM.span (F.symm x)
     exact ⟨t, ht0, by change F.symm (t • x) ∈ M; rw [map_smul]; exact htx⟩
@@ -1417,19 +1402,16 @@ theorem isUnitIn_one_sub {p : Ideal (𝓞 K)} (hp : p.IsPrime) {a b : K}
   have hr : ¬ (r ∉ p ∧ conjO K r ∉ p) := by
     intro hr'
     apply hna
-    rw [isUnitIn_div_iff hp r hs, mem_hcompl_iff hp, mem_conjIdeal_iff]
-    exact hr'
+    rwa [isUnitIn_div_iff hp r hs, mem_hcompl_iff hp, mem_conjIdeal_iff]
   have hsc := (mem_hcompl_iff hp s).mp hs
   rw [mem_conjIdeal_iff] at hsc
   have e : star (algebraMap (𝓞 K) K r) * algebraMap (𝓞 K) K s =
       algebraMap (𝓞 K) K r * star (algebraMap (𝓞 K) K s) := by
-    rw [star_div₀, div_eq_div_iff (star_ne_zero.mpr hs0) hs0] at has
-    exact has
+    rwa [star_div₀, div_eq_div_iff (star_ne_zero.mpr hs0) hs0] at has
   have hrel : conjO K r * s = r * conjO K s := by
     apply RingOfIntegers.ext
     change algebraMap (𝓞 K) K (conjO K r * s) = algebraMap (𝓞 K) K (r * conjO K s)
-    rw [map_mul, map_mul, algebraMap_conjO, algebraMap_conjO]
-    exact e
+    rwa [map_mul, map_mul, algebraMap_conjO, algebraMap_conjO]
   have hrp : r ∈ p ∧ conjO K r ∈ p := by
     by_cases h1 : r ∈ p
     · refine ⟨h1, ?_⟩
@@ -1625,14 +1607,11 @@ theorem zOnly (h1 : SemiGenusLoc) (h2 : PrimPlaneLoc) (hK : Formalism.HermitianL
     fun x => Iff.rfl
   have hM₁' := isSelfDualMod_comap F hFi hM₁
   have hz' : z ∈ M₁.comap F.symm.toLinearMap.toAddMonoidHom := by
-    rw [hmem', F.symm_apply_eq.mpr hFz.symm]
-    exact hz₁
+    rwa [hmem', F.symm_apply_eq.mpr hFz.symm]
   have hy' : y₂ ∈ M₁.comap F.symm.toLinearMap.toAddMonoidHom := by
-    rw [hmem', F.symm_apply_eq.mpr hFy.symm]
-    exact hy₁M
+    rwa [hmem', F.symm_apply_eq.mpr hFy.symm]
   have hD₂ : IsUnitIn (locRing p) (1 - h z z * h y₂ y₂) := by
-    rw [hy₂y₂]
-    exact hD
+    rwa [hy₂y₂]
   obtain ⟨g₂, hg₂, hg₂P, hg₂M⟩ := fix_of h1 hK hs hd hp (Submodule.span K {z, y₂}) hM₁' hM₂
     (splits_plane hs hM₁' hz' hy' hzy₂ hD₂) (splits_plane hs hM₂ hz₂ hy₂M hzy₂ hD₂) (by
       intro w hw
@@ -1679,8 +1658,7 @@ theorem semiGenusZLoc_of (h1 : SemiGenusLoc) (h2 : PrimPlaneLoc) : SemiGenusZLoc
   obtain ⟨g, hg, hgU, hgW, hgM⟩ := glue hs hc hS₁ hS₂ hag g' (fun x y => hg'i x y) (fun x => hg'M x)
   refine ⟨g, hg, fun a => hgU _ (Submodule.subset_span ⟨a, rfl⟩), ?_, hgM⟩
   have e := hgW ⟨z, hzW⟩
-  rw [hg'z] at e
-  exact e
+  rwa [hg'z] at e
 
 end Formalism.L2.SG.Pf.LatDictZ.Z3
 end -- clump:auto

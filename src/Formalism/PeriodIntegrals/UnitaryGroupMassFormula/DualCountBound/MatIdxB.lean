@@ -359,8 +359,7 @@ theorem exists_blk {n : ℕ} (A : Matrix (Fin (n + 1)) (Fin (n + 1)) R) :
   refine ⟨b, B2.submatrix Fin.succ Fin.succ, ?_, ?_⟩
   · have h := eq_blk B2 h2_r h2_c
     rw [h2_00] at h
-    rw [← h]
-    exact hAB2
+    rwa [← h]
   · intro i k
     have hU3 : IsUnit (1 + vecMulVec (Pi.single (0 : Fin (n + 1)) (1 : R)) (Pi.single i.succ 1)) :=
       isUnit_one_add_vecMulVec _ _ (by simp [Fin.succ_ne_zero])
@@ -392,8 +391,7 @@ theorem smith (n : ℕ) : ∀ A : Matrix (Fin n) (Fin n) R,
       rw [← h, Matrix.mul_apply]
       refine Finset.dvd_sum fun l _ => ?_
       rw [Matrix.mul_apply, Finset.sum_mul]
-      refine Finset.dvd_sum fun m _ => ?_
-      exact Dvd.dvd.mul_right (Dvd.dvd.mul_left (hbD m l) _) _
+      exact Finset.dvd_sum fun m _ => Dvd.dvd.mul_right (Dvd.dvd.mul_left (hbD m l) _) _
     have eb : blk b (diagonal d) = diagonal (Fin.cons b d : Fin (n + 1) → R) := by
       ext a c
       cases a using Fin.cases with
@@ -512,8 +510,7 @@ theorem card_coker_matrix {R : Type} [CommRing R] [IsDomain R] [IsPrincipalIdeal
   have hVs : LinearMap.range V.mulVecLin = ⊤ := by
     letI := hV.invertible
     rw [LinearMap.range_eq_top]
-    intro y
-    exact ⟨Matrix.mulVec (⅟V) y, by simp [Matrix.mulVec_mulVec]⟩
+    exact fun y => ⟨Matrix.mulVec (⅟V) y, by simp [Matrix.mulVec_mulVec]⟩
   have hrange : (LinearMap.range A.mulVecLin).map (Ue : (Fin n → R) →ₗ[R] (Fin n → R)) =
       LinearMap.range (Matrix.diagonal d).mulVecLin := by
     rw [← hD, Matrix.mulVecLin_mul, LinearMap.range_comp_of_range_eq_top _ hVs, Matrix.mulVecLin_mul,

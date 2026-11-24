@@ -94,8 +94,7 @@ def G (x : W) : WittVector p Qq :=
 theorem ghostComponent_G (x : W) (n : ℕ) :
     ghostComponent n (G p Qq F x) = algebraMap W Qq ((F^[n]) x) := by
   have h := congrFun ((ghostEquiv p Qq).apply_symm_apply (fun n => algebraMap W Qq ((F^[n]) x))) n
-  rw [← WittVector.ghostMap_apply, ← WittVector.ghostEquiv_coe p Qq]
-  exact h
+  rwa [← WittVector.ghostMap_apply, ← WittVector.ghostEquiv_coe p Qq]
 
 theorem ghost_sum_G (x : W) (k : ℕ) :
     ∑ i ∈ range (k + 1), (p : Qq) ^ i * (G p Qq F x).coeff i ^ p ^ (k - i) = algebraMap W Qq ((F^[k]) x) := by
@@ -104,8 +103,7 @@ theorem ghost_sum_G (x : W) (k : ℕ) :
   simp [map_sum, MvPolynomial.aeval_X]
 
 theorem G_coeff_zero (x : W) : (G p Qq F x).coeff 0 = algebraMap W Qq x := by
-  have h := ghost_sum_G p Qq F x 0
-  simpa using h
+  simpa using ghost_sum_G p Qq F x 0
 
 theorem G_add (x y : W) : G p Qq F (x + y) = G p Qq F x + G p Qq F y := by
   have hit : ∀ n, (F^[n]) = ⇑(F ^ n) := fun n => (RingHom.coe_pow F n).symm

@@ -76,21 +76,18 @@ theorem nset_iff (a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) :
       by_cases hj : j.val < r
       · have hle : j.val ≤ i.val := by split_ifs at hij <;> omega
         have := h2 ⟨j.val, hj⟩ i hle
-        rw [hE j hj, ite_eq_right hne] at this
-        exact this
+        rwa [hE j hj, ite_eq_right hne] at this
       · have hj2 : j.val ≤ r + k := by split_ifs at hij <;> omega
         have hi : r ≤ i.val := by split_ifs at hij <;> omega
         have := h3 i j (by omega) hj2 hi
-        rw [ite_eq_right hne] at this
-        exact this
+        rwa [ite_eq_right hne] at this
     · intro i j hij hjr
       unfold nβ at hij hjr
       rw [Matrix.one_apply]
       by_cases hj : j.val < r
       · have hv : i.val = j.val := by split_ifs at hij <;> omega
         have := h2 ⟨j.val, hj⟩ i (by show j.val ≤ i.val; omega)
-        rw [hE j hj] at this
-        exact this
+        rwa [hE j hj] at this
       · have hj2 : j.val ≤ r + k := by split_ifs at hjr <;> omega
         have hi : r ≤ i.val := by split_ifs at hij <;> omega
         exact h3 i j (by omega) hj2 hi

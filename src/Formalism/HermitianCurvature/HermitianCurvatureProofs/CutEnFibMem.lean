@@ -77,11 +77,9 @@ theorem fibre_membership_holds : FibMem := by
   have hdom : q ∈ JF.QDom S.G.k S.G.r (T v).base.z (T v).base.z' := by
     obtain ⟨hq1, hq2⟩ := hq
     refine ⟨hq1, ?_⟩
-    rw [hP.2.2.2.1, hP.2.2.2.2.1]
-    exact hq2
+    rwa [hP.2.2.2.1, hP.2.2.2.2.1]
   have hg := om_sub' (Formalism.FourierDecayAlt.P.BigCellHermitian.gqDom (T v).base hdom)
   have hfix := stab_fix_gq (T v).base.μsec q hp
-  have hJe := hJ.2.2.2 (B.gq (T v).base q) ⟨hg.1, hg.2⟩ p.1 hp.1 p.2 hp.2.1
-  exact hJe.symm.trans (congrArg J hfix)
+  exact (hJ.2.2.2 (B.gq (T v).base q) ⟨hg.1, hg.2⟩ p.1 hp.1 p.2 hp.2.1).symm.trans (congrArg J hfix)
 
 end Formalism.FourierDecayAlt.P.CutMP.En

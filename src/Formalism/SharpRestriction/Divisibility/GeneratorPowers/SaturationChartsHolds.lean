@@ -135,8 +135,7 @@ theorem exists_basis_of_saturated {R : Type} [CommRing R] [IsDomain R] [IsPrinci
   refine ⟨fun k => b k, ⟨fun i => e (Sum.inl i), e.injective.comp Sum.inl_injective⟩, fun i => ?_, fun v => ?_⟩
   · simp [b, B, Module.Basis.reindex_apply, Module.Basis.mk_apply, w']
   · refine ⟨fun k => b.repr v k, fun j => ?_, fun a ha => ?_⟩
-    · have h := congrFun (b.sum_repr v) j
-      simpa [Finset.sum_apply, smul_eq_mul] using h
+    · simpa [Finset.sum_apply, smul_eq_mul] using congrFun (b.sum_repr v) j
     · have hv : ∑ k, a k • b k = v := funext fun j => by simpa [Finset.sum_apply, smul_eq_mul] using ha j
       funext k
       rw [← hv]
@@ -217,8 +216,7 @@ theorem prodPts_of_combAt {m : ℕ} (v : Fin m → (Sp (DualNumber V) ⟶ t.G.le
   obtain ⟨u, hu, hp⟩ := hc
   have h1 : toT t w hw = eT ≫ (List.ofFn u).prod := by
     apply Over.OverMorphism.ext
-    simp only [toT, Over.homMk_left, Over.comp_left, eT, Category.id_comp]
-    exact hp.symm
+    simpa only [toT, Over.homMk_left, Over.comp_left, eT, Category.id_comp] using hp.symm
   rw [h1, comp_listProd]
   unfold ReciprocityTheory.ChartRestriction.G.Chart.prodPts
   congr 2
@@ -413,9 +411,7 @@ theorem saturation_charts_holds : ChartSaturated Xo c := by
       exact (congrArg CommaMorphism.left e2).symm
     obtain ⟨a0, _, huniq⟩ := C.I.basis τ 1 htan1 heig1
     have hg1 := huniq g ((isComb_iff' C.I.G _ _ _).2 h1.symm)
-    have hg0 := huniq 0 ((isComb_iff' C.I.G _ _ _).2 h0.symm)
-    intro i
-    exact congrFun (hg1.trans hg0.symm) i
+    exact fun i => congrFun (hg1.trans (huniq 0 ((isComb_iff' C.I.G _ _ _).2 h0.symm)).symm) i
 
   have hsat : ∀ (v : Fin (chD C.ch) → T.V) (a : T.V), a ≠ 0 →
       a • v ∈ Submodule.span T.V (Set.range u) → v ∈ Submodule.span T.V (Set.range u) := by

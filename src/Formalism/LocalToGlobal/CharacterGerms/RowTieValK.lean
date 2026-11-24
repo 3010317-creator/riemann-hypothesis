@@ -51,8 +51,7 @@ private theorem constantCoeff_and_linear_coeff_finsupp_prod_pow (a : Fin 1 × Fi
     have hne : Finsupp.single s b + f ≠ 0 := by
       intro h
       apply hb
-      have h2 := congrArg (fun g : Fin 1 × Fin dd →₀ ℕ => g s) h
-      simpa [hfs] using h2
+      simpa [hfs] using congrArg (fun g : Fin 1 × Fin dd →₀ ℕ => g s) h
     have hP : (Finsupp.single s b + f).prod (fun s n => a s ^ n) =
         a s ^ b * f.prod (fun s n => a s ^ n) := by
       rw [Finsupp.prod_add_index' (fun _ => pow_zero _) (fun _ _ _ => pow_add _ _ _)]
@@ -67,9 +66,7 @@ private theorem constantCoeff_and_linear_coeff_finsupp_prod_pow (a : Fin 1 × Fi
       rw [coeff_single_one_mul', hcs, zero_mul, add_zero]
       by_cases hf : f = 0
       · subst hf
-        have hb1 : b ≠ 1 := by
-          intro h1
-          exact hnot s (by rw [h1, add_zero])
+        have hb1 : b ≠ 1 := fun h1 => hnot s (by rw [h1, add_zero])
         obtain ⟨k, rfl⟩ : ∃ k, b = k + 1 + 1 := ⟨b - 2, by omega⟩
         rw [coeff_single_one_pow_add_two_eq_zero (a s) (hac s) t k, zero_mul]
       · rw [ih.1, ite_eq_right hf, mul_zero]
@@ -92,8 +89,7 @@ private theorem coeff_single_one_ev_eq_sum (f : PS C 1 dd) (ψ : Pt C 1 dd) (hψ
   refine (finsum_eq_sum_of_support_subset _ (s := Finset.univ.image fun s => Finsupp.single s 1) ?_).trans ?_
   · intro d hd
     simp only [Finset.coe_image, Finset.coe_univ, Set.image_univ, Set.mem_range]
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     apply hd
     try dsimp only
     rw [(constantCoeff_and_linear_coeff_finsupp_prod_pow _ (fun s => hψ s.2) _ d).2 (fun s h => hne s h.symm), smul_zero]
@@ -117,8 +113,7 @@ theorem linAct_smul (φ : Pt C 1 dd) (c : C) (x : Fin dd → C) : linAct φ (c �
 theorem linAct_sum {ι : Type} (φ : Pt C 1 dd) (s : Finset ι) (x : ι → Fin dd → C) :
     linAct φ (∑ c ∈ s, x c) = ∑ c ∈ s, linAct φ (x c) := by
   funext i
-  simp only [linAct, Finset.sum_apply, Finset.mul_sum]
-  exact Finset.sum_comm
+  simpa only [linAct, Finset.sum_apply, Finset.mul_sum] using Finset.sum_comm
 
 end VP
 

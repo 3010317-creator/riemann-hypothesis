@@ -69,8 +69,7 @@ theorem isotropic_to_std_subst_degree : IsotropicToStdSubstLineDegree := by
     have h := (isWeightedHomogeneous_C (wLet r n σ c0) (gm x.2.1 x.2.2.2.1 col x.2.2.1)).mul
       (isWeightedHomogeneous_X (R := C) (wLet r n σ c0)
         (⟨tau x.2.1 x.2.2.2.1, x.2.2.2.2, plc (x.1, col)⟩ : Letter T r n))
-    rw [zero_add, wLet_mk] at h
-    exact h
+    rwa [zero_add, wLet_mk] at h
   · by_cases hσ : ∃ o t, tau o t = σ
     · obtain ⟨o0, t0, rfl⟩ := hσ
       have keyEq : ∀ o t (c : Fin (r (tau o t))),
@@ -281,8 +280,7 @@ theorem SelfConjugatePlaceSetting.rowsOK (H : SelfConjugatePlaceSetting r cc a t
       rw [zmod_two_add_one_add_one_eq] at h1
       have h2 := (H.supp o (t + 1) k (by omega)).2
       rw [H.rkF_eq o 0 (t + 1)] at h2
-      rw [H.rkF_eq o 1 t]
-      exact h2
+      rwa [H.rkF_eq o 1 t]
   choose kind hk using h
   exact ⟨_, rowsOK_prodAll _ _ (plAt_inj N H.plinj o) _ kind hk⟩
 
@@ -330,8 +328,7 @@ theorem isotropic_to_std_subst_harmonic : IsotropicToStdSubstHarmonic := by
   · push Not at hτ
     refine Finset.sum_eq_zero fun b _ => ?_
     rw [pderiv_comm', pderiv_subG_off plc (ℓ := ⟨τ, a1, b⟩), map_zero]
-    intro z e
-    exact hτ _ _ (congrArg Sigma.fst e).symm
+    exact fun z e => hτ _ _ (congrArg Sigma.fst e).symm
 
 end Formalism.L2.FormalSeriesBounds.RF
 end -- clump:auto

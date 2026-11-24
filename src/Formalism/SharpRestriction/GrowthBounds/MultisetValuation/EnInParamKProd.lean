@@ -106,8 +106,7 @@ theorem X_mem {π : σ → Pl} {v : Pl} {x : σ} (h : π x = v) : (MvPowerSeries
   split_ifs at hm with hmx
   · subst hmx
     rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.mem_singleton] at hy
-    rw [hy]
-    exact h
+    rwa [hy]
   · exact absurd rfl hm
 
 theorem C_mem {π : σ → Pl} {v : Pl} (c : R) : (MvPowerSeries.C c : MvPowerSeries σ R) ∈ SuppOn π v := by

@@ -110,8 +110,7 @@ lemma ew_sh (p : KB.Pl P Wp Wq) (q : KB.Pl (shP P u u') Wp Wq') (hz : q.T.base.z
     Ew q (fun _ => 1) F (P.r + 1) [] γ =
       (Real.sqrt (nPt P.k P.r (TTp p) γ) * Real.sqrt (nPt P.k P.r (TTp p) γ)) * ‖B.hsVec (q.V F γ)‖ ^ 2 := by
   have h := Formalism.FourierDecayAlt.P.TBBx2.Tri.Ew_top q F hγ
-  rw [ttp_sh p q hz hz'] at h
-  exact h
+  rwa [ttp_sh p q hz hz'] at h
 
 lemma V_fpmSh (p : KB.Pl P Wp Wq) (q : KB.Pl (shP P u u') Wp Wq') (f : B.Mat P.k P.r → (Wq →L[ℂ] Wp))
     (A : B.Mat P.k P.r → (Wq' →L[ℂ] Wq)) (APt : C.LPt → (Wq' →L[ℂ] Wq)) (p₀ : ℕ)
@@ -124,8 +123,7 @@ lemma V_fpmSh (p : KB.Pl P Wp Wq) (q : KB.Pl (shP P u u') Wp Wq') (f : B.Mat P.k
     rw [ttp_sh p q hz hz']
     rfl
   have h := Formalism.FourierDecayAlt.P.TBBx4.vec_Gpow q (fun g => (f g).comp (A g)) p₀ hγ (hGq ▸ hG)
-  rw [hA, hGq] at h
-  exact h
+  rwa [hA, hGq] at h
 
 lemma big_sh (p : KB.Pl P Wp Wq) (q : KB.Pl (shP P u u') Wp Wq') (f : B.Mat P.k P.r → (Wq →L[ℂ] Wp))
     (A : B.Mat P.k P.r → (Wq' →L[ℂ] Wq)) (APt : C.LPt → (Wq' →L[ℂ] Wq)) (n₀ p₀ : ℕ)
@@ -182,8 +180,7 @@ lemma big_sh (p : KB.Pl P Wp Wq) (q : KB.Pl (shP P u u') Wp Wq') (f : B.Mat P.k 
       rw [dite_eq_right]
       rintro ⟨-, h⟩
       apply hG
-      rw [← hGq]
-      exact h
+      rwa [← hGq]
     have hp0 : p.V f γ = 0 := by
       unfold KB.Pl.V D.vecV
       rw [dite_eq_right]

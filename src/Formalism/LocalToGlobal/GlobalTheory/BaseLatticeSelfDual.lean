@@ -92,8 +92,7 @@ theorem Coord.mem_lat (K : Coord hc S n) (L : Submodule (𝓞 E) S.V) (y : n →
   · rintro ⟨x, hx, rfl⟩
     show K.κ.symm (K.κ x) ∈ L
     rwa [LinearEquiv.symm_apply_apply]
-  · intro h
-    exact ⟨_, h, K.κ.apply_symm_apply y⟩
+  · exact fun h => ⟨_, h, K.κ.apply_symm_apply y⟩
 
 theorem Coord.lat_dual (K : Coord hc S n) (L : Submodule (𝓞 E) S.V) :
     K.lat (Formalism.HermitianLatticesTheory.dual S.hT L) = dl hc.sig K.J (K.lat L) := by
@@ -118,8 +117,7 @@ theorem Coord.isLat_lat (K : Coord hc S n) {L : Submodule (𝓞 E) S.V} (hL : Su
   intro y _
   have h1 : K.κ.symm y ∈ Submodule.span E (L : Set S.V) := by rw [hL.span_eq_top]; trivial
   have h2 : K.κ (K.κ.symm y) ∈ (Submodule.span E (L : Set S.V)).map (K.κ : S.V →ₗ[E] (n → E)) := ⟨_, h1, rfl⟩
-  rw [LinearEquiv.apply_symm_apply, Submodule.map_span] at h2
-  exact h2
+  rwa [LinearEquiv.apply_symm_apply, Submodule.map_span] at h2
 
 theorem star_int (r : 𝓞 E) : star (algebraMap (𝓞 E) E r) ∈ Set.range (algebraMap (𝓞 E) E) :=
   ⟨⟨_, Formalism.HermitianLatticesTheory.majDual_star_int r⟩, rfl⟩

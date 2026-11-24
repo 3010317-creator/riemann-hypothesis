@@ -171,8 +171,7 @@ theorem imA_ew_split (p : TypX X) :
     have h3 : ε • ratV (F := X.B.I.F) (Fv X.B.I.F p.1) l =
         ((X.B.g : ℕ) : p.1.adicCompletionIntegers X.B.I.F) • PI.FinKW.vecV X.B.I p.1 y := by
       rw [Nat.cast_smul_eq_nsmul] at h2
-      rw [hε, Nat.cast_smul_eq_nsmul]
-      exact h2
+      rwa [hε, Nat.cast_smul_eq_nsmul]
     rw [h3]
     exact Submodule.smul_mem_smul (Ideal.mem_span_singleton_self _)
       (PI.FinKW.LocTo.mem_local_lattice_iff X.B.I y hy p.1)
@@ -195,8 +194,7 @@ theorem imA_ew_split (p : TypX X) :
     have : φ (ratV (F := X.B.I.F) (Fv X.B.I.F p.1) l) ∈
         (latLoc (E := X.B.I.E) p.1 (X.B.I.L : Set (Fin X.B.I.n → X.B.I.E))).map φ :=
       Submodule.mem_map_of_mem (Submodule.subset_span ⟨l, hl, rfl⟩)
-    rw [hbot] at this
-    exact this
+    rwa [hbot] at this
   have hex : ∃ l ∈ X.B.I.L, l ≠ 0 := by
     by_contra h
     simp only [not_exists, not_and, not_not] at h

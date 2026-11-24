@@ -276,12 +276,10 @@ theorem rep_of_DS {ε : Fin (2 * r + k + 1) → Bool} {lm : Fin (2 * r + k + 1) 
       calc P * a * P.conjTranspose * (P * b * P.conjTranspose) = P * a * (P.conjTranspose * P) * b * P.conjTranspose := by simp only [Matrix.mul_assoc]
         _ = P * (a * b) * P.conjTranspose := by rw [hsP, Matrix.mul_one, Matrix.mul_assoc P a b]
     have := hmul _ (hmem a ha) _ (hmem b hb)
-    simp only [e, conj] at this
-    exact this
+    simpa only [e, conj] using this
   · intro a ha v
     have := hiso _ (hmem a ha) v
-    simp only [conj] at this
-    exact this
+    simpa only [conj] using this
 
 private theorem isUnit_det_of_mem_UH_Hpk' {a : Mat k r} (ha : a ∈ UH (Hpk k r)) : IsUnit a.det := by
   have ha' : a.conjTranspose * Hpk k r * a = Hpk k r := ha
@@ -922,8 +920,7 @@ theorem lim_leftLimit : LeftLimit := by
   have key := lim_dil_fubini D.μW D.μN hJ D.χ D.χ_smooth.continuous (lim_chi_hcs D) (fun t ht => lim_chi_zero D ht)
     D.χ_int {n : Mt k r | Matrix.of n ∈ Nset k r} (ae_iff.2 D.haarN.conc)
     (fun n : Mt k r => lam k r D.z (Matrix.of n)) hΛ (Lf D σ v ξ) hLi2
-  rw [← hfint, ← hLint]
-  exact key
+  rwa [← hfint, ← hLint]
 
 theorem lim_rightLimit : RightLimit := by
   intro k r Wp Wq _ _ _ _ _ _ D ε lm H _ _ _ σ hHC hDS v' ξ' hv' hI
@@ -958,8 +955,7 @@ theorem lim_rightLimit : RightLimit := by
   have key := lim_dil_fubini D.μW' D.μN hJ D.χ D.χ_smooth.continuous (lim_chi_hcs D) (fun t ht => lim_chi_zero D ht)
     D.χ_int {n : Mt k r | Matrix.of n ∈ Nset k r} (ae_iff.2 D.haarN.conc)
     (fun n : Mt k r => -lam k r D.z' (Matrix.of n)) hΛ (Rf D σ v' ξ') hLi2
-  rw [← hfint, ← hLint]
-  exact key
+  rwa [← hfint, ← hLint]
 
 end PI.BICNZ
 end -- clump:auto

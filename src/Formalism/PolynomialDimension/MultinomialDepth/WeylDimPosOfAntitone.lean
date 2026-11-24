@@ -189,10 +189,6 @@ theorem cwt_bound (m A c B : ℕ) (μ : Fin m → ℤ) (hμ : Antitone μ) (h0 :
 
 theorem hwt_bound (m A c B : ℕ) (t : ℝ) (ht : 0 ≤ t) (hA : (c : ℝ) ≤ t * A) (hB : (c : ℝ) ≤ t * B) :
     (weylDim (m + 2) (hwt m (A + c) (B + c)) : ℝ) ≤ (1 + t) ^ (2 * m + 1) * (weylDim (m + 2) (hwt m A B) : ℝ) := by
-  have hA0 : (0 : ℝ) ≤ A := Nat.cast_nonneg A
-  have hB0 : (0 : ℝ) ≤ B := Nat.cast_nonneg B
-  have hm0 : (0 : ℝ) ≤ m := Nat.cast_nonneg m
-  have hc0 : (0 : ℝ) ≤ c := Nat.cast_nonneg c
   rw [weylDim_hwt, weylDim_hwt]
   push_cast
   have f1 : ∀ j : Fin m, 0 ≤ ((A : ℝ) + c + ((j : ℕ) : ℝ) + 1) / (((j : ℕ) : ℝ) + 1) := fun j => by positivity
@@ -216,16 +212,10 @@ theorem hwt_bound (m A c B : ℕ) (t : ℝ) (ht : 0 ≤ t) (hA : (c : ℝ) ≤ t
     apply div_le_div_of_nonneg_right _ (by positivity)
     have : 0 ≤ t * ((m : ℝ) + 1) := by positivity
     nlinarith
-  have g1 : 0 ≤ ∏ j : Fin m, ((A : ℝ) + c + ((j : ℕ) : ℝ) + 1) / (((j : ℕ) : ℝ) + 1) :=
-    Finset.prod_nonneg fun j _ => f1 j
   have g2 : 0 ≤ ∏ j : Fin m, ((B : ℝ) + c + (m : ℝ) - ((j : ℕ) : ℝ)) / ((m : ℝ) - ((j : ℕ) : ℝ)) :=
     Finset.prod_nonneg fun j _ => f2 j
-  have f3 : 0 ≤ ((A : ℝ) + c + (B + c) + m + 1) / ((m : ℝ) + 1) := by positivity
-  have k1 : 0 ≤ ∏ j : Fin m, ((A : ℝ) + ((j : ℕ) : ℝ) + 1) / (((j : ℕ) : ℝ) + 1) :=
-    Finset.prod_nonneg fun j _ => by positivity
   have k2 : 0 ≤ ∏ j : Fin m, ((B : ℝ) + (m : ℝ) - ((j : ℕ) : ℝ)) / ((m : ℝ) - ((j : ℕ) : ℝ)) :=
     Finset.prod_nonneg fun j _ => by have := fin_sub_pos m j; apply div_nonneg <;> linarith
-  have k3 : 0 ≤ (1 + t) ^ m := by positivity
   calc _ ≤ ((1 + t) ^ m * ∏ j : Fin m, ((A : ℝ) + ((j : ℕ) : ℝ) + 1) / (((j : ℕ) : ℝ) + 1)) *
         ((1 + t) ^ m * ∏ j : Fin m, ((B : ℝ) + (m : ℝ) - ((j : ℕ) : ℝ)) / ((m : ℝ) - ((j : ℕ) : ℝ))) *
         ((1 + t) * (((A : ℝ) + B + m + 1) / ((m : ℝ) + 1))) := by gcongr

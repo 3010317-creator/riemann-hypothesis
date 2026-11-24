@@ -544,18 +544,14 @@ theorem nilpotent_chart_left_inverse {g : Mx k r} (hg : g ∈ Nset k r) : phi0 (
 theorem continuous_cA : Continuous (cA (k := k) (r := r)) := by
   refine continuous_matrix fun a b => ?_
   by_cases h : a < b
-  · simp only [cA, dite_eq_left h]
-    exact continuous_apply _
-  · simp only [cA, dite_eq_right h]
-    exact continuous_const
+  · simpa only [cA, dite_eq_left h] using continuous_apply _
+  · simpa only [cA, dite_eq_right h] using continuous_const
 
 theorem continuous_cB : Continuous (cB (k := k) (r := r)) := by
   refine continuous_matrix fun a j => ?_
-  simp only [cB]
-  exact continuous_apply _
+  simpa only [cB] using continuous_apply _
 
 theorem continuous_cF : Continuous (cF (k := k) (r := r)) := by
-  show Continuous fun x => (cA x).adjugateᴴ
   exact continuous_cA.matrix_adjugate.matrix_conjTranspose
 
 theorem continuous_cE : Continuous (cE (k := k) (r := r)) := by
@@ -604,15 +600,12 @@ theorem continuous_nilpotent_chart : Continuous fun t : (CI k r → ℂ) × (Fin
   exact contMk_lemma hA hB (hA.matrix_mul hM) hE hF
 
 theorem continuous_bF : Continuous (bF (k := k) (r := r)) := by
-  refine continuous_matrix fun a b => ?_
-  exact continuous_id.matrix_elem (esI k r a) (esI k r b)
+  exact continuous_matrix fun a b => continuous_id.matrix_elem (esI k r a) (esI k r b)
 
 theorem continuous_bC : Continuous (bC (k := k) (r := r)) := by
-  refine continuous_matrix fun a b => ?_
-  exact continuous_id.matrix_elem (eI k r a) (esI k r b)
+  exact continuous_matrix fun a b => continuous_id.matrix_elem (eI k r a) (esI k r b)
 
 theorem continuous_mof : Continuous (mof (k := k) (r := r)) := by
-  show Continuous fun g : Mx k r => (bF g)ᴴ * bC g
   exact continuous_bF.matrix_conjTranspose.matrix_mul continuous_bC
 
 theorem continuous_psiC : Continuous (psiC (k := k) (r := r)) := by
@@ -620,11 +613,9 @@ theorem continuous_psiC : Continuous (psiC (k := k) (r := r)) := by
   rcases i with p | q | p
   · exact continuous_id.matrix_elem (eI k r p.1.1) (eI k r p.1.2)
   · exact continuous_id.matrix_elem (eI k r q.1) (wI k r q.2)
-  · show Continuous fun g : Mx k r => (mof g p.1.1 p.1.2 - star (mof g p.1.2 p.1.1)) / 2
-    exact ((continuous_mof.matrix_elem _ _).sub (continuous_mof.matrix_elem _ _).star).div_const _
+  · exact ((continuous_mof.matrix_elem _ _).sub (continuous_mof.matrix_elem _ _).star).div_const _
 
 theorem continuous_psiR : Continuous (psiR (k := k) (r := r)) := by
-  refine continuous_pi fun a => ?_
-  exact Complex.continuous_im.comp (continuous_mof.matrix_elem a a)
+  exact continuous_pi fun a => Complex.continuous_im.comp (continuous_mof.matrix_elem a a)
 
 end WlocSk.NB

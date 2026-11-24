@@ -152,10 +152,7 @@ theorem tle_of (hO : RestOddTops) {K : Cst} (hK : K.Pos) {CH : ℝ} {C : ℝ} (h
     linarith
   have hS'0 : 0 ≤ S' := by
     apply Finset.sum_nonneg
-    intro j _
-    apply Finset.sum_nonneg
-    intro i _
-    exact le_min (by positivity) (by positivity)
+    exact fun j _ => Finset.sum_nonneg (fun i _ => le_min (by positivity) (by positivity))
 
   have ha1 : (1 : ℝ) ≤ X.a := by linarith [B.haa]
   have hlog0 : 0 ≤ Real.log X.a := Real.log_nonneg ha1

@@ -94,8 +94,7 @@ theorem alongCv_zero {σ : Type} [Finite σ] {f : MvPowerSeries σ C} (hf : MvPo
   · subst hd
     simp [hf]
   · obtain ⟨s, hs⟩ : ∃ s, d s ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hd (Finsupp.ext h)
     have h0 : (d.prod fun _ e => (0 : PowerSeries C) ^ e) = 0 :=
       Finset.prod_eq_zero (Finsupp.mem_support_iff.2 hs) (zero_pow hs)
@@ -184,8 +183,7 @@ theorem coeff_subst_X_pow {l : ℕ} (hl : 0 < l) (f : PowerSeries C) (q : ℕ) :
   · rw [← pow_mul, PowerSeries.coeff_X_pow_self, smul_eq_mul, mul_one]
   · intro d hd
     rw [← pow_mul, PowerSeries.coeff_X_pow, ite_eq_right, smul_zero]
-    intro h
-    exact hd (Nat.eq_of_mul_eq_mul_left hl h).symm
+    exact fun h => hd (Nat.eq_of_mul_eq_mul_left hl h).symm
 
 theorem coeff_subst_X_pow_of_not_dvd {l : ℕ} (hl : 0 < l) (f : PowerSeries C) (m : ℕ) (hm : ¬ l ∣ m) :
     PowerSeries.coeff m (PowerSeries.subst ((PowerSeries.X : PowerSeries C) ^ l) f) = 0 := by
@@ -265,8 +263,7 @@ theorem const_mem_type_set_of_nonneg (hlg : ∀ i, MvPowerSeries.constantCoeff (
     · have hm1 : m ≠ 1 := fun h => hm 0 (by simp [h])
       simp [PowerSeries.coeff_X, hm1]
   refine ⟨fun _ => 0, fun q => ζ q • PowerSeries.X, ?_, ?_, ?_, ?_⟩
-  · intro i
-    exact ⟨map_zero _, fun n => by simpa using ge_zero_lemma V⟩
+  · exact fun i => ⟨map_zero _, fun n => by simpa using ge_zero_lemma V⟩
   · intro q
     refine ⟨by simp, fun n => ?_⟩
     rw [PowerSeries.coeff_smul, PowerSeries.coeff_X]
@@ -284,10 +281,8 @@ theorem zero_mem (hlg : ∀ i, MvPowerSeries.constantCoeff (X.lg i) = 0)
     (hh : ∀ e : Fin 2 × κ →₀ ℕ, (∀ s ∈ e.support, s.1 ≠ 0) → MvPowerSeries.coeff e X.h = 0)
     (V : VF C) (g : Fin 2) : (0 : ℕ → I g ⊕ JJ I g → C) ∈ X.TySet V g := by
   refine ⟨fun _ => 0, fun _ => 0, ?_, ?_, ?_, ?_⟩
-  · intro i
-    exact ⟨map_zero _, fun n => by simpa using ge_zero_lemma V⟩
-  · intro q
-    exact ⟨map_zero _, fun n => by simpa using ge_zero_lemma V⟩
+  · exact fun i => ⟨map_zero _, fun n => by simpa using ge_zero_lemma V⟩
+  · exact fun q => ⟨map_zero _, fun n => by simpa using ge_zero_lemma V⟩
   · intro i
     rw [alongCv_zero (hlg i)]
     simp [tyS_zero]

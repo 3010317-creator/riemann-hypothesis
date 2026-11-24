@@ -29,8 +29,7 @@ theorem log_card_le_unit_exponent {G : Type} [Fintype G] (L : SizeData₂ D) (hS
   have hlam : Real.log (Fintype.card G : ℝ) ≤
       2 * (D.R.f : ℝ) * (D.R.r : ℝ) ^ 2 * Real.log (2 * (D.host.g 0 : ℝ)) := by
     have h := _root_.PI.GZeroLogBound.UnitaryGroupMassFormula.target D (D.host.g 0 : ℝ) (fun i => (hSG i 0).2.1)
-    rw [hc]
-    exact h
+    rwa [hc]
   have hth : L.sc.x ^ szTh L ≤ L.sc.x ^ L.sc.eps := by
     apply Real.rpow_le_rpow_of_exponent_le hx1
     unfold szTh
@@ -39,7 +38,6 @@ theorem log_card_le_unit_exponent {G : Type} [Fintype G] (L : SizeData₂ D) (hS
     rw [Real.log_mul (by norm_num) hg0.ne']
     have h1 := (hSG 0 0).2.2
     have h2 : L.sc.x ^ szTh L * L.sc.L ≤ L.sc.x ^ L.sc.eps * L.sc.x ^ L.sc.eps := by
-      show L.sc.x ^ szTh L * L.sc.x ^ L.sc.eps ≤ _
       exact mul_le_mul_of_nonneg_right hth hX0
     have h3 := Real.log_two_lt_d9
     have h4 : (1 : ℝ) ≤ L.sc.x ^ L.sc.eps * L.sc.x ^ L.sc.eps := by nlinarith
@@ -222,8 +220,7 @@ theorem dGamSize_record_one {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {m :
     (C : ℝ) (hC : 0 ≤ C) (hF : FactDGam D C) :
     DGamSize A P0 ψ0 (ofRecord D L Del h0) Nc hT 1 (2 + 9 * C) := by
   have h := dGamSize_record A P0 ψ0 hT L hSG hSC Del h0 Nc hNc hc u0 hGam C hC hF 1 0 (by simp)
-  rw [add_zero] at h
-  exact h
+  rwa [add_zero] at h
 
 end Formalism.L2.DIV.Cons
 

@@ -67,8 +67,7 @@ theorem hermitianSelfDual_of_fourfoldBlock {n : Type} [Fintype n] (h : Matrix n 
     · simp
     · intro b _ hb
       simp [hb]
-    · intro hh
-      exact absurd (Finset.mem_univ _) hh
+    · exact fun hh => absurd (Finset.mem_univ _) hh
   ext x
   constructor
   · intro hx
@@ -85,8 +84,7 @@ theorem hermitianSelfDual_of_fourfoldBlock {n : Type} [Fintype n] (h : Matrix n 
       exact CmData.embA_mem Λ 0 hx
     obtain ⟨m, hm⟩ := h1 _ (CmData.embA_mem Λ 0 hy)
     refine ⟨m, ?_⟩
-    rw [key, CmData.slice_embA, ite_eq_left rfl] at hm
-    exact hm
+    rwa [key, CmData.slice_embA, ite_eq_left rfl] at hm
 
 theorem locNorm_of_kappa (a₀ : ℕ) (b₀ c₀ : ℤ) (dK : ℕ) (ha : 0 < a₀) (hdK : 0 < dK) (lam : ℂ) (hlam : lam ≠ 0)
     (hcm : CmOK a₀ b₀ c₀ dK) {n : Type} [Fintype n] [DecidableEq n] (h : Matrix n n ℂ) (Λ : AddSubgroup (n → ℂ))
@@ -150,8 +148,7 @@ theorem selfDual_fourfold_curveIdeal_lattice (hcc : TaylorLogMetric.IsCurveIdeal
     (Formalism.MainNotions.GlobalTheoryTheory.Inhab.Adm_std D 2 2 even_two even_two)).1
   rw [show TaylorLogMetric.area (TaylorLogMetric.lamOf D cc δ) = _ from B.areaOK, show TaylorLogMetric.La D B.tor _ _ = _ from B.lat0OK 2 2] at h
   have h2 := SO.selfDual_img _ _ (SO.reix D.what₂.Tau) (SO.reix_isom B.L D.what₂.Tau) _ h
-  rw [SO.reix_pow] at h2
-  exact h2
+  rwa [SO.reix_pow] at h2
 
 theorem selfDual_lamM (hcc : TaylorLogMetric.IsCurveIdeal D cc) (hδ : TaylorLogMetric.IsDiscriminantTwelfthRootOfIdealLattice D cc δ) :
     IsSelfDual (matH (hOne B.L D.what₂.Tau)) B.lamM :=
@@ -160,8 +157,7 @@ theorem selfDual_lamM (hcc : TaylorLogMetric.IsCurveIdeal D cc) (hδ : TaylorLog
 theorem stable_lamM (b : ℤ) (hb : Odd b) : ∀ x ∈ B.lamM, cmTheta b D.host.d • x ∈ B.lamM := by
   refine stable_of_one _ _ (fun x hx => ?_) b hb
   have := SO.lamMM_smul (AR.om D) hx
-  rw [← SO.theta_eq] at this
-  exact this
+  rwa [← SO.theta_eq] at this
 
 theorem locNormMM_of (hcc : TaylorLogMetric.IsCurveIdeal D cc) (hδ : TaylorLogMetric.IsDiscriminantTwelfthRootOfIdealLattice D cc δ) (a₀ : ℕ) (b₀ c₀ : ℤ) (ha : 0 < a₀)
     (hd : 0 < D.host.d) (lam : ℂ) (hlam : lam ≠ 0) (hcm : CmOK a₀ b₀ c₀ D.host.d) (hB : B.IsCm a₀ b₀ ha hd lam hlam)
@@ -193,10 +189,8 @@ theorem mem_imgLat (R : V ≃ₗ[ℂ] W) (Λ : AddSubgroup V) (y : W) : y ∈ im
   · rintro ⟨x, hx, rfl⟩
     have : R.symm (R x) = x := R.symm_apply_apply x
     show R.symm (R x) ∈ Λ
-    rw [this]
-    exact hx
-  · intro hy
-    exact ⟨R.symm y, hy, R.apply_symm_apply y⟩
+    rwa [this]
+  · exact fun hy => ⟨R.symm y, hy, R.apply_symm_apply y⟩
 
 theorem apply_mem_imgLat (R : V ≃ₗ[ℂ] W) (Λ : AddSubgroup V) (x : V) : R x ∈ imgLat (R : V →ₗ[ℂ] W) Λ ↔ x ∈ Λ := by
   rw [mem_imgLat, R.symm_apply_apply]
@@ -218,14 +212,12 @@ theorem isReps_map (R : V ≃ₗ[ℂ] W) {Λ₁ Λ₂ : AddSubgroup V} {S : Fins
     obtain ⟨x', hx', rfl⟩ := Finset.mem_map.1 hx
     obtain ⟨y', hy', rfl⟩ := Finset.mem_map.1 hy
     have h1 : R (x' - y') ∈ imgLat (R : V →ₗ[ℂ] W) Λ₁ := by
-      rw [map_sub]
-      exact hxy
+      rwa [map_sub]
     rw [h.2.1 x' hx' y' hy' ((apply_mem_imgLat R _ _).1 h1)]
   · intro y hy
     obtain ⟨x, hx, hxy⟩ := h.2.2 (R.symm y) ((mem_imgLat R _ y).1 hy)
     refine ⟨R x, Finset.mem_map.2 ⟨x, hx, rfl⟩, ?_⟩
-    rw [mem_imgLat, map_sub, R.symm_apply_apply]
-    exact hxy
+    rwa [mem_imgLat, map_sub, R.symm_apply_apply]
 
 theorem relIdx_map (R : V ≃ₗ[ℂ] W) (Λ₁ Λ₂ : AddSubgroup V) :
     relIdx (imgLat (R : V →ₗ[ℂ] W) Λ₁) (imgLat (R : V →ₗ[ℂ] W) Λ₂) = relIdx Λ₁ Λ₂ :=
@@ -307,8 +299,7 @@ theorem stdLat_rx (L : PeriodPair) (e : n' ≃ n) : stdLat L n' = imgLat (rx e :
   ext z
   rw [mem_imgLat, mem_stdLat, mem_stdLat]
   constructor
-  · intro hz j
-    exact hz (e.symm j)
+  · exact fun hz j => hz (e.symm j)
   · intro hz i
     have := hz (e i)
     simpa [rx] using this
@@ -323,10 +314,8 @@ theorem fourth_power_image_reindex (e : n' ≃ n) (Λ : AddSubgroup (n → ℂ))
   ext z
   rw [mem_imgLat]
   constructor
-  · intro hz a
-    exact (mem_imgLat (rx e) Λ _).1 (hz a)
-  · intro hz a
-    exact (mem_imgLat (rx e) Λ _).2 (hz a)
+  · exact fun hz a => (mem_imgLat (rx e) Λ _).1 (hz a)
+  · exact fun hz a => (mem_imgLat (rx e) Λ _).2 (hz a)
 
 theorem hOne_rx (L : PeriodPair) (e : n' ≃ n) : (hOne L n).submatrix e e = hOne L n' := by
   unfold hOne
@@ -361,10 +350,8 @@ theorem locNorm_reindex (a₀ : ℕ) (b₀ c₀ : ℤ) (dK : ℕ) (ha : 0 < a₀
     simp only [LinearEquiv.coe_coe, LinearEquiv.trans_apply, LinearEquiv.symm_apply_apply]
     rw [stdH_rx]
     exact hI x y
-  · rw [himg, stdLat_rx _ (e4 e), relIdx_map]
-    exact hidx
-  · rw [himg, stdLat_rx _ (e4 e), relIdx_map]
-    exact hidx2
+  · rwa [himg, stdLat_rx _ (e4 e), relIdx_map]
+  · rwa [himg, stdLat_rx _ (e4 e), relIdx_map]
   · funext z
     obtain ⟨z, rfl⟩ := (rx (e4 e)).surjective z
     have h1 : tens4 (fun z => θ ((rx e).symm z)) (rx (e4 e) z) = tens4 θ z := by
@@ -430,8 +417,7 @@ theorem locNorm_thMMX (hcc : TaylorLogMetric.IsCurveIdeal D cc) (hδ : TaylorLog
     LocNorm a₀ b₀ D.host.d ha hd lam hlam (hOne B.L X.Tau) (lamMX s B) (thMMX s B) p ι := by
   have h := locNorm_reindex a₀ b₀ c₀ D.host.d ha hd lam hlam hcm s.iT (hOne B.L D.what₂.Tau) B.lamM (selfDual_lamM B hcc hδ)
     (stable_lamM B b₀ (odd_of_cmOK hcm)) B.thMM p ι (locNormMM_of B hcc hδ a₀ b₀ c₀ ha hd lam hlam hcm hB p ι hK)
-  rw [hOne_rx, ← lamMX_eq] at h
-  exact h
+  rwa [hOne_rx, ← lamMX_eq] at h
 
 end Flat
 

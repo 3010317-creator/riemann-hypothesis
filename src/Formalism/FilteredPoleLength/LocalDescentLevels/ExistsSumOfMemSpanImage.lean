@@ -67,8 +67,7 @@ private theorem exists_orth_decomp_of_finiteDimensional (K : Submodule ℝ V) [F
   have : CompleteSpace K := FiniteDimensional.complete ℝ K
   obtain ⟨w, hw, z, hz, h⟩ : ∃ w ∈ K, ∃ z ∈ K.orthogonal, a = w + z := by
     exact K.exists_add_mem_mem_orthogonal a
-  refine ⟨w, hw, z, fun p hp => ?_, h⟩
-  exact Submodule.inner_right_of_mem_orthogonal hp hz
+  exact ⟨w, hw, z, fun p hp => (Submodule.inner_right_of_mem_orthogonal hp hz), h⟩
 
 theorem exists_orth_split {ι : Type*} (v : ι → V) (T : Finset ι) (a : V) :
     ∃ w ∈ Submodule.span ℝ (v '' (T : Set ι)), ∃ z : V,
@@ -104,8 +103,7 @@ private theorem exists_sum_repr_of_mem_span_image {R M ι : Type*} [Semiring R] 
     · simp
     · intro i _ hij
       simp [hij]
-    · intro hjT
-      exact absurd (Finset.mem_coe.mp hj) hjT
+    · exact fun hjT => absurd (Finset.mem_coe.mp hj) hjT
   exact hle hx
 
 theorem nearestPlane_finset {ι : Type*} [DecidableEq ι] (v : ι → V) (T : Finset ι) :

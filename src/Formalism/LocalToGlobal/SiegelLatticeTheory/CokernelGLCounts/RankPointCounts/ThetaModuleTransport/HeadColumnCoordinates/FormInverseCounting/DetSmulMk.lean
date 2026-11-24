@@ -80,7 +80,6 @@ theorem lam_keep {Z₁ Z₂ : Matrix (Fin (r + 1)) (Fin (r + 1)) O} (hu₁ : IsU
   have hdet : IsUnit ((Z₁.det : O) : E) := by rw [det_coe]; exact hu₁
   apply hdet.mul_left_cancel
   rw [det_mul_lamL O Z₁ hu₁ y₁]
-  rw [Subring.smul_def, Subring.smul_def, smul_eq_mul, smul_eq_mul, mul_one] at key
-  exact key
+  rwa [Subring.smul_def, Subring.smul_def, smul_eq_mul, smul_eq_mul, mul_one] at key
 
 end Formalism.L2.SG.LocalCountModules.LocCnt0LAlg

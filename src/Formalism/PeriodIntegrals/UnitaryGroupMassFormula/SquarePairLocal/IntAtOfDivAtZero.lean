@@ -79,8 +79,7 @@ theorem divAt_of_map {Q : Ideal (𝓞 E)} {N : ℕ} (A : Matrix (Fin N) (Fin N) 
   obtain ⟨s, hs, w, hw⟩ := h a b
   refine ⟨s, hs, w, ?_⟩
   have h2 := congrArg (algebraMap (𝓞 E) E) hw
-  rw [map_mul, map_mul] at h2
-  exact h2
+  rwa [map_mul, map_mul] at h2
 
 theorem divAt_conj {Q : Ideal (𝓞 E)} [hQ : Q.IsPrime] {N : ℕ} (ϖ d : 𝓞 E) (hϖ : ϖ ≠ 0)
     (hd : d ∉ Q) (k m : ℕ) (G : Matrix (Fin N) (Fin N) (𝓞 E)) (X : Matrix (Fin N) (Fin N) E)
@@ -104,8 +103,7 @@ theorem divAt_conj {Q : Ideal (𝓞 E)} [hQ : Q.IsPrime] {N : ℕ} (ϖ d : 𝓞 
     linear_combination h2
   have h4 := mul_left_cancel₀ hp h3
   show algebraMap (𝓞 E) E (s * d) * X a b = algebraMap (𝓞 E) E (ϖ ^ m) * algebraMap (𝓞 E) E w
-  rw [map_mul, map_pow]
-  exact h4
+  rwa [map_mul, map_pow]
 
 theorem intAt_of_divAt_zero {Q : Ideal (𝓞 E)} (ϖ : 𝓞 E) {x : E} (h : DivAt Q (ϖ ^ 0) x) :
     IntAt Q x := by

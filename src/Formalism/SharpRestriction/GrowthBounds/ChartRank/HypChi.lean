@@ -83,8 +83,7 @@ theorem chiUnit_of (hU : SameUlocJ hi S Uloc) (e : D.what₂.LL →+* (D.gat u w
       show bc (prV (E := D.host.E) v) (κ.1⁻¹ * y'.1) = 1
       rw [map_mul, map_inv, hoff v (hbad v hv)]
       exact inv_mul_cancel _)
-    rw [map_mul, map_inv, inv_mul_eq_one] at h1
-    exact h1
+    rwa [map_mul, map_inv, inv_mul_eq_one] at h1
   have ha : (reGL (rankN D (i + 1) hi) _).symm y'.1 ∈
       awayG D.sp.cm.sig (D.sp.X (i + 1)).gram Uloc (D.what₂.places.resChar w) := by
     refine (mem_awayG _ _ _ _ _).2 ⟨reGL_symm_mem_UPts (rankN D (i + 1) hi) D.sp.cm.sig (D.sp.X (i + 1)).gram _
@@ -96,8 +95,7 @@ theorem chiUnit_of (hU : SameUlocJ hi S Uloc) (e : D.what₂.LL →+* (D.gat u w
       apply (reGL (rankN D (i + 1) hi) _).injective
       rw [← bc_reGL, MulEquiv.apply_symm_apply]
       exact hbe.symm
-    rw [e1]
-    exact hb
+    rwa [e1]
   obtain ⟨r, hr, hr1⟩ := hψ ⟨_, ha⟩ ⟨y'.1, hy'U⟩ (fun v hv => hover v hv) (fun w' _ => by rw [MulEquiv.apply_symm_apply])
   have h3 : algebraMap (D.gat u w hg).O (D.gat u w hg).Kf ((ψ ⟨_, ha⟩ : (D.gat u w hg).Oˣ) : (D.gat u w hg).O) *
       algebraMap (D.gat u w hg).O (D.gat u w hg).Kf (((ψ ⟨_, ha⟩)⁻¹ : (D.gat u w hg).Oˣ) : (D.gat u w hg).O) = 1 := by

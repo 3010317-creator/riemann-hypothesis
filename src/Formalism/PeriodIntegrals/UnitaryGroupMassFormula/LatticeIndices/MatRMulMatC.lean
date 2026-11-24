@@ -231,8 +231,7 @@ theorem adapt_of_eps (hθ : IsSplitEquiv X p θ) (hε : θ (epsP X p) = (1, 0)) 
     by_cases h : zI = t
     · subst h; simp; ring
     · rw [ite_eq_right h, ite_eq_right (Ne.symm h)]; ring
-  · intro i
-    exact PIW.MassDataColumns.secondProj_weight_vector_zero (X := X) (p := p) (θ := θ) hε i
+  · exact fun i => PIW.MassDataColumns.secondProj_weight_vector_zero (X := X) (p := p) (θ := θ) hε i
 
 theorem adaptA_holds : ∃ θ : TpX X p ≃ₐ[FpX X p] FpX X p × FpX X p, IsSplitEquiv X p θ ∧
     ∃ Q : GL (IdxD D) (FpX X p), LatBasis X p θ (reindex₂ X p Q) ∧ AdaptA X p θ Q := by

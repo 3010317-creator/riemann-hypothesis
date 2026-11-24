@@ -59,15 +59,13 @@ theorem isRealPtO_iff {θ : InfFam D} (hθ : IsInfFam θ) {m n : ℕ} (z : RPt D
   · rintro ⟨h1, h2⟩
     have hf : ∀ i j, finPart D (w i j) = 0 := fun i j => by
       have := congrFun (congrFun h1 i) j
-      rw [Matrix.map_apply, Matrix.zero_apply] at this
-      exact this
+      rwa [Matrix.map_apply, Matrix.zero_apply] at this
     rw [← Lb_sigH w hf]
     congr 1
     funext ρ i j
     have := congrFun (congrFun (h2 ρ) i) j
     simp only [compAt, Matrix.map_apply, Matrix.of_apply] at this
-    rw [sigH_apply]
-    exact this
+    rwa [sigH_apply]
   · rintro rfl
     refine ⟨?_, fun τ => compAt_Lb z τ⟩
     ext i j

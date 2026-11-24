@@ -40,8 +40,7 @@ theorem fundamentalDomainExists : FundDomain := by
   have hmem : ∀ v : V, v ∈ L → ∀ x : V, (v + x ∈ D ↔ v = -(ZSpan.floor b x : V)) := by
     intro v hv x
     have := ZSpan.vadd_mem_fundamentalDomain b ⟨v, hv⟩ x
-    rw [Subtype.ext_iff, Submodule.coe_neg] at this
-    exact this
+    rwa [Subtype.ext_iff, Submodule.coe_neg] at this
   have hfl : ∀ x : V, (ZSpan.floor b x : V) ∈ L := fun x => (ZSpan.floor b x).2
   set H := Λ'.addSubgroupOf L with hH
   have hcardQ : Nat.card (L ⧸ H) = relIdx Λ' L := rfl
@@ -84,8 +83,7 @@ theorem fundamentalDomainExists : FundDomain := by
       obtain ⟨q, hq⟩ := Set.mem_iUnion.mp hg
       rw [Set.mem_vadd_set_iff_neg_vadd_mem, vadd_eq_add] at hq
       have hgx : -rep q + (g : V) + x ∈ D := by
-        rw [add_assoc]
-        exact hq
+        rwa [add_assoc]
       have hv : -rep q + (g : V) ∈ L := L.add_mem (L.neg_mem (hrepL q)) (hle g.2)
       have e1 : -rep q + (g : V) = l0 := (hmem _ hv x).mp hgx
       have hqq : q = q0 := by

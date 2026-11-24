@@ -64,8 +64,7 @@ theorem hcompl_le_primeCompl {p : Ideal (𝓞 K)} (hp : p.IsMaximal) :
   have := hp.isPrime
   unfold hcompl
   rw [Submonoid.closure_le]
-  intro s hs
-  exact hs.1
+  exact fun s hs => hs.1
 
 theorem one_mem_locR (p : Ideal (𝓞 K)) : (1 : K) ∈ locR (K := K) p :=
   ⟨1, (hcompl (K := K) p).one_mem, by rw [one_smul]; exact Submodule.mem_one.2 ⟨1, map_one _⟩⟩
@@ -101,8 +100,7 @@ theorem mem_one_of_locR {x : K} (hx : ∀ p : Ideal (𝓞 K), p.IsMaximal → x 
     obtain ⟨s, hs, hsx⟩ := hx p hp
     have hsJ : s ∈ J := by
       show LinearMap.toSpanSingleton (𝓞 K) K x s ∈ (1 : Submodule (𝓞 K) K)
-      rw [LinearMap.toSpanSingleton_apply]
-      exact hsx
+      rwa [LinearMap.toSpanSingleton_apply]
     exact hcompl_le_primeCompl hp hs (hJp hsJ)
   have h1 : (1 : 𝓞 K) ∈ J := hJ ▸ Submodule.mem_top
   change LinearMap.toSpanSingleton (𝓞 K) K x 1 ∈ (1 : Submodule (𝓞 K) K) at h1
@@ -123,8 +121,7 @@ theorem exists_local (h : K →ₗ⋆[K] K →ₗ[K] K) (h1 : h 1 1 ≠ 0) {M : 
     refine ⟨g.symm y, hy, ?_⟩
     rw [← hgx, LinearEquiv.apply_symm_apply]
   · rintro ⟨r, hr, rfl⟩
-    rw [← hgx, LinearEquiv.symm_apply_apply]
-    exact hr
+    rwa [← hgx, LinearEquiv.symm_apply_apply]
 
 theorem norm_unit (h : K →ₗ⋆[K] K →ₗ[K] K) (h1 : h 1 1 ≠ 0) {M M' : Submodule (𝓞 K) K}
     (hM : M ∈ genus h (1 : Submodule (𝓞 K) K)) (hM' : M' ∈ genus h (1 : Submodule (𝓞 K) K)) {a : K}

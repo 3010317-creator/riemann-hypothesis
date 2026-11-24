@@ -122,8 +122,7 @@ theorem expFact_ioExp (C0 CE1 CE2 : ℝ) (X : Loc) (j : Fin (numSeg X.TT)) (b : 
     rw [ioExp, Finsupp.add_apply, hsumv, Finset.sum_eq_zero, add_zero]
     intro v _
     rw [ite_eq_right]
-    intro h
-    exact hx (Finset.mem_image.2 ⟨v, Finset.mem_univ _, h⟩)
+    exact fun h => hx (Finset.mem_image.2 ⟨v, Finset.mem_univ _, h⟩)
   have hin : ∀ v, ioExp C0 CE1 CE2 X j b μ (symVar C0 CE1 CE2 X j v) =
       baseExp C0 CE1 CE2 X j b (symVar C0 CE1 CE2 X j v) + symLev X.p C0 CE1 CE2 X j v * μ v := by
     intro v
@@ -169,20 +168,16 @@ theorem baseExp_odd (C0 CE1 CE2 : ℝ) (X : Loc) (j : Fin (numSeg X.TT)) (b : Se
       · intro c _ hc
         rw [Finsupp.add_apply, Finsupp.single_apply, Finsupp.single_apply, ite_eq_right, ite_eq_right]
         · rfl
-        · intro h
-          exact hc (congrArg (fun y => y.2) h)
-        · intro h
-          exact hc (congrArg (fun y => y.2) h)
-      · intro h
-        exact absurd (Finset.mem_univ c0) h
+        · exact fun h => hc (congrArg (fun y => y.2) h)
+        · exact fun h => hc (congrArg (fun y => y.2) h)
+      · exact fun h => absurd (Finset.mem_univ c0) h
     · intro i _ hi
       rw [Finsupp.finsetSum_apply]
       refine Finset.sum_eq_zero fun c _ => ?_
       rw [Finsupp.add_apply, Finsupp.single_apply, Finsupp.single_apply, ite_eq_right (hne i true c hi),
         ite_eq_right (hne i false c hi)]
       rfl
-    · intro h
-      exact absurd (Finset.mem_univ i0) h
+    · exact fun h => absurd (Finset.mem_univ i0) h
   · rw [Finsupp.finsetSum_apply, Finset.sum_eq_single i0]
     · rw [hite]
       by_cases h1 : (i0 : ℕ) < (X.seg C0 CE1 CE2 j).sigma
@@ -193,10 +188,8 @@ theorem baseExp_odd (C0 CE1 CE2 : ℝ) (X : Loc) (j : Fin (numSeg X.TT)) (b : Se
         · rw [ite_eq_left h1, ite_eq_right (fun h => hc h.2), Finsupp.add_apply, Finsupp.single_apply,
             Finsupp.single_apply, ite_eq_right, ite_eq_right]
           · rfl
-          · intro h
-            exact hc (congrArg (fun y => y.2) h).symm
-          · intro h
-            exact hc (congrArg (fun y => y.2) h).symm
+          · exact fun h => hc (congrArg (fun y => y.2) h).symm
+          · exact fun h => hc (congrArg (fun y => y.2) h).symm
       · rw [ite_eq_right h1, ite_eq_right (fun h => h1 h.1)]
     · intro i _ hi
       rw [hite]
@@ -205,8 +198,7 @@ theorem baseExp_odd (C0 CE1 CE2 : ℝ) (X : Loc) (j : Fin (numSeg X.TT)) (b : Se
           ite_eq_right (hne i false 0 hi)]
         rfl
       · rfl
-    · intro h
-      exact absurd (Finset.mem_univ i0) h
+    · exact fun h => absurd (Finset.mem_univ i0) h
 
 theorem baseExp_end (C0 CE1 CE2 : ℝ) (X : Loc) (j : Fin (numSeg X.TT)) (b : SegBlock (segS X.TT j) X.m)
     (β0 : Bool) (c0 : Fin (X.m + 1)) : baseExp C0 CE1 CE2 X j b ((topEnd X j, β0), c0) = 0 := by

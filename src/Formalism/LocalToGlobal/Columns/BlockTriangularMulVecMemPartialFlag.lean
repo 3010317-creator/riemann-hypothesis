@@ -204,11 +204,9 @@ theorem residueR1_lifts_to_stabilizer (hq0 : (q : E) ≠ 0) {n c : ℕ}
     show ρ (Pi.single ⟨n + i, hi⟩ 1) l = _
     by_cases he : l.1 = n + i
     · rw [ite_eq_left (Fin.ext he), sub_eq_zero] at h3
-      rw [ite_eq_left he]
-      exact h3
+      rwa [ite_eq_left he]
     · rw [ite_eq_right (fun h' => he (by rw [h'])), sub_zero] at h3
-      rw [ite_eq_right he]
-      exact h3
+      rwa [ite_eq_right he]
   have hcol0 : ∀ (l : Fin (n + c)) (hi : n < n + c), ob2rMat ρ l ⟨n, hi⟩ = if l.1 = (⟨n, hi⟩ : Fin (n + c)).1 then 1 else 0 := by
     intro l hi
     have h := congrFun hρ.1.2.1 l
@@ -356,8 +354,7 @@ theorem liftFromResidueParabolicProduct_holds (m2 : ℕ) : LiftFromResidueParabo
   rw [hB.sharp]
   refine ⟨ρ', hρ'R, ρ'⁻¹ * h₀, ?_, by rw [mul_one, mul_inv_cancel_left]⟩
   unfold Jat
-  rw [ite_eq_left hP, ite_eq_left rfl]
-  exact hJ
+  rwa [ite_eq_left hP, ite_eq_left rfl]
 
 end B3
 

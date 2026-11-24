@@ -98,8 +98,7 @@ theorem finrank_iSup_eq_sum {ι : Type} [Fintype ι] (S : ι → Submodule R V) 
       rw [Finset.iSup_insert, Finset.sum_insert ha, ← ih]
       have hd : Disjoint (S a) (⨆ i ∈ s, S i) := hS.disjoint_biSup (y := (s : Set ι)) (by exact_mod_cast ha)
       have h := Submodule.finrank_sup_add_finrank_inf_eq (S a) (⨆ i ∈ s, S i)
-      rw [hd.eq_bot, finrank_bot, add_zero] at h
-      exact h
+      rwa [hd.eq_bot, finrank_bot, add_zero] at h
   have hu : (⨆ i ∈ (Finset.univ : Finset ι), S i) = ⨆ i, S i := iSup_congr fun i => iSup_pos (Finset.mem_univ i)
   rw [← hu]
   exact key Finset.univ
@@ -120,8 +119,7 @@ theorem indep_of_orth {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℂ E
     (h : ∀ p q, p ≠ q → ∀ e ∈ T p, ∀ e' ∈ T q, ⟪e, e'⟫_ℂ = 0) : iSupIndep T := by
   apply OrthogonalFamily.independent
   rw [orthogonalFamily_iff_pairwise]
-  intro p q hpq
-  exact (Submodule.isOrtho_iff_inner_eq).2 (h p q hpq)
+  exact fun p q hpq => (Submodule.isOrtho_iff_inner_eq).2 (h p q hpq)
 
 theorem finrank_Ep (hW : (lv (fc X.zs) b).WF) (h2 : X.H2 cr b) (h3 : X.H3 cr b) (hE : X.PartsE b) (p : Bs.Ix) :
     finrank K (X.Ep cr b p) = finrank ℂ (X.EEp p ⊓ X.EEl b : Submodule ℂ X.EE) := by

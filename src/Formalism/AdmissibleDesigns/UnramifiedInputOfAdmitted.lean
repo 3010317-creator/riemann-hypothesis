@@ -131,8 +131,7 @@ theorem tie_clause (hG : K.SelfGood i) (hR : TruncatedSeriesCountingIdentities.L
     rw [plOf_idx i dc hpl]
     exact (dc.cover w).mp (Or.inl hw)
   have hrw : plOf i dc (idx i dc w) ∈ dc.row := by
-    rw [plOf_idx i dc hpl]
-    exact hw
+    rwa [plOf_idx i dc hpl]
   have hrow := hR (plOf i dc (idx i dc w)) hwo hrw (TruncatedSeriesCountingIdentities.CoefExt.self i _ hwo) (hG _ hwo)
   obtain ⟨h1, h2⟩ := hRT _ hn hwo _ hrow
   refine ⟨h1, h2.trans (le_of_eq ?_)⟩
@@ -354,8 +353,7 @@ theorem rowTie_disp (hπ : Function.Surjective π)
       (O := ↥(OL (TruncatedSeriesCountingIdentities.CoefExt.self i (K.plOf i dc n) hw).LL)) = k := hk
   refine ⟨by rw [hm']; exact ENat.coe_ne_top m, ?_⟩
   rw [hm', hk']
-  simp only [ENat.toNat_coe]
-  exact hmk
+  simpa only [ENat.toNat_coe] using hmk
 
 
 end Rec
@@ -508,15 +506,13 @@ theorem unrFinIn_of (hA : UnrIn i dc) (l : K.Col i dc) : KFin.UnrFinIn i dc δO 
       KHf.TrV (KHf.eK Bw) V)
   show lhs ∈ finiteCocycles (Br.PD D.loc D.nbr i _ hn) ρ'
   suffices hfun : lhs = ⇑f0 ∘ c' by
-    rw [hfun]
-    exact key
+    rwa [hfun]
   funext g
   show _ = f0 (c' g)
   rw [LinearMap.toSpanSingleton_apply]
   show _ = ((KHf.eK Bw).symm (c' g) • (show V from v0) : V)
   simp only [c', RingEquiv.symm_apply_apply]
-  rw [algebraMap_smul]
-  rw [← map_smul]
+  rw [algebraMap_smul, ← map_smul]
   show KHf.mkK ((KFin.uzOf i dc δO l f hf.1 : ↥(KFin.Γc i dc l) → ↥(Ideal.span {δO})) (Br.iota D.nbr i _ hn g)) =
     KHf.mkK _
   congr 1

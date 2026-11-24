@@ -138,8 +138,7 @@ theorem useGermOfParts : UseGermOfParts := by
   intro t D ht hD'
   have hA' : (C₁ : ℝ) * ((m : ℝ) + 2) ^ 2 ≤ U.a C₂ A₀ := by
     have e : ((m + 1 + 1 : ℕ) : ℝ) = (m : ℝ) + 2 := by push_cast; ring
-    rw [e] at twice_smooth_le_first
-    exact twice_smooth_le_first
+    rwa [e] at twice_smooth_le_first
   have hA0 : 0 ≤ U.a C₂ A₀ := le_trans (by positivity) hA'
   have hK0 : 0 ≤ max C 0 * c := mul_nonneg (le_max_right _ _) hc0
   have hDB' : G.DerivBound (C₂ * (m + 1 + 1) ^ 2) (G.detSet (m + 1) Kc)
@@ -216,8 +215,7 @@ theorem corollary_u2_of_parts_holds : GermExpansionHypothesisFromComponents := b
   obtain ⟨h1, h2⟩ := hbd Z hZ
   refine ⟨h1, fun q hq => ?_⟩
   have h3 := h2 q hq
-  rw [← mul_assoc] at h3
-  exact h3
+  rwa [← mul_assoc] at h3
 
 private theorem one_le_gN_of_mem_GV {k r : ℕ} (g : B.Mat k r) (hg : g ∈ B.GV k r) : 1 ≤ B.gN g := by
   letI : NormedAddCommGroup (B.Mat k r) := Matrix.frobeniusNormedAddCommGroup
@@ -242,8 +240,7 @@ private theorem one_le_gN_of_mem_GV {k r : ℕ} (g : B.Mat k r) (hg : g ∈ B.GV
     congr 1
     refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
     rw [Complex.normSq_eq_norm_sq, Real.rpow_two]
-  rw [h4]
-  exact h3
+  rwa [h4]
 
 theorem ccMono : CCMono := by
   intro k ρ E _ _ a AB c mm F hAB hF

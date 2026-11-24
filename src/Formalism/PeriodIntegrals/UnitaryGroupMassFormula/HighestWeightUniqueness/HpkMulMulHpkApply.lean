@@ -131,8 +131,7 @@ lemma Hpk_conjTranspose : (Hpk k r)ᴴ = Hpk k r := by
 lemma inv_mul_UH {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hg : g ∈ UH (Hpk k r)) :
     (Hpk k r * gᴴ * Hpk k r) * g = 1 := by
   have h : gᴴ * (Hpk k r * g) = Hpk k r := by
-    rw [← Matrix.mul_assoc]
-    exact hg
+    rwa [← Matrix.mul_assoc]
   simp only [Matrix.mul_assoc]
   rw [h, Hpk_mul_self]
 
@@ -140,8 +139,7 @@ lemma inv_eq_UH {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hg
     g⁻¹ = Hpk k r * gᴴ * Hpk k r := Matrix.inv_eq_left_inv (inv_mul_UH hg)
 
 lemma mul_inv_UH {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hg : g ∈ UH (Hpk k r)) :
-    g * g⁻¹ = 1 := by
-  exact Matrix.mul_nonsing_inv g (Matrix.isUnit_det_of_left_inverse (inv_mul_UH hg))
+    g * g⁻¹ = 1 := Matrix.mul_nonsing_inv g (Matrix.isUnit_det_of_left_inverse (inv_mul_UH hg))
 
 lemma inv_mul_UH' {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hg : g ∈ UH (Hpk k r)) :
     g⁻¹ * g = 1 := by

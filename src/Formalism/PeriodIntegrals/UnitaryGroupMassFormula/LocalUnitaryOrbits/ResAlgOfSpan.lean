@@ -117,13 +117,11 @@ theorem resQ_of (hT : ThetaBas σ J ψ v) : ResQ σ J ψ v := by
       sc (E := E) v (iO v a) := fun a => inclR_alg' v (a : F)
   have hiθ2 : iθ * iθ = sc (E := E) v (iO v t) * iθ - sc (E := E) v (iO v m) := by
     have e1 := congrArg (fun y : 𝓞 E => inclR (F := F) (Fv F v) (y : E)) hθ2
-    simp only [map_mul, map_sub, hinc] at e1
-    exact e1
+    simpa only [map_mul, map_sub, hinc] using e1
   have hsiθ : sigR (Fv F v) σ iθ = sc (E := E) v (iO v t) - iθ := by
     have e1 := congrArg (fun y : 𝓞 E => inclR (F := F) (Fv F v) (y : E)) hσθ
     simp only [map_sub, hinc, sigO_coe] at e1
-    rw [hiθ, _root_.PI.OmLocU.Orb.sigR_inclR]
-    exact e1
+    rwa [hiθ, _root_.PI.OmLocU.Orb.sigR_inclR]
   let T0 : v.adicCompletionIntegers F := ⟨iO v t, mem_O_iO v t⟩
   let M0 : v.adicCompletionIntegers F := ⟨iO v m, mem_O_iO v m⟩
   have huniq : ∀ a0 a1 b0 b1 : Fv F v, sc (E := E) v a0 + sc (E := E) v a1 * iθ =
@@ -297,8 +295,7 @@ theorem theta_exists (h : IsCMExt F E σ) : ∃ θ : 𝓞 E,
     rw [← Finite.one_lt_card_iff_nontrivial, hcard]
     nlinarith
   have hx : ∃ x : QE (E := E) v, x ∉ Set.range (algebraMap (𝓞 F ⧸ v.asIdeal) (QE (E := E) v)) := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     have hs : Function.Surjective (algebraMap (𝓞 F ⧸ v.asIdeal) (QE (E := E) v)) := fun y => hne y
     have hle := Nat.card_le_card_of_surjective _ hs
     rw [hcard] at hle

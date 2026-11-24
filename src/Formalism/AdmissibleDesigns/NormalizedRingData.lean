@@ -170,8 +170,7 @@ theorem exists_irreducible_big (k : Type) [Field k] [Finite k] (N : ℕ) :
   have e1 : Cardinal.mk (AdjoinRoot (minpoly k α)) =
       Cardinal.mk (IntermediateField.adjoin k {α}) :=
     Cardinal.mk_congr (IntermediateField.adjoinRootEquivAdjoin k hint).toEquiv
-  rw [e1, hα]
-  rw [Cardinal.mk_congr IntermediateField.topEquiv.toEquiv]
+  rw [e1, hα, Cardinal.mk_congr IntermediateField.topEquiv.toEquiv]
   have hSF : ∀ x ∈ S, x ∈ IntermediateField.adjoin k (S : Set (AlgebraicClosure k)) :=
     fun x hx => IntermediateField.subset_adjoin k _ hx
   have hle : (S.card : Cardinal) ≤
@@ -229,8 +228,7 @@ theorem unram_ext (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing 
         intro i
         have h3 : res ((p - f * q).coeff i) = 0 := by
           rw [← Polynomial.coeff_map, h1, Polynomial.coeff_zero]
-        rw [IsLocalRing.residue_eq_zero_iff, hϖ.maximalIdeal_eq, Ideal.mem_span_singleton] at h3
-        exact h3
+        rwa [IsLocalRing.residue_eq_zero_iff, hϖ.maximalIdeal_eq, Ideal.mem_span_singleton] at h3
       obtain ⟨h, hh⟩ := h2
       rw [Ideal.mem_span_singleton]
       refine ⟨AdjoinRoot.mk f h, ?_⟩
@@ -254,8 +252,7 @@ theorem unram_ext (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing 
       rw [IsLocalRing.eq_maximalIdeal h1]
       exact hϖ.not_isUnit
     have h3 : RingHom.ker ψ ≤ M := by
-      rw [hker, Ideal.span_singleton_le_iff_mem]
-      exact h2
+      rwa [hker, Ideal.span_singleton_le_iff_mem]
     exact (hmaxk.eq_of_le hM.ne_top h3).symm
   have hmA : IsLocalRing.maximalIdeal A = Ideal.span {ϖ'} := by
     rw [← hker]
@@ -392,8 +389,7 @@ theorem exists_sigma (hj : Function.Injective (algebraMap O O')) (hX : DistinctE
     let α' : ℕ → O := fun i => if h : i < t then b i h else 0
     have hα' : ∀ i, i < t → algebraMap O O' (α' i) = (D'.rr i : D'.X' → O') y' := by
       intro i hi
-      simp only [α', dite_eq_left hi]
-      exact hb i hi
+      simpa only [α', dite_eq_left hi] using hb i hi
     have hPinj : Function.Injective
         (Polynomial.map ((algebraMap O' (FractionRing O')).comp (algebraMap O O'))) :=
       Polynomial.map_injective _ (hι'inj.comp hj)
@@ -539,8 +535,7 @@ theorem exists_square {O : Type} [CommRing O] [IsDomain O] [IsPrincipalIdealRing
   obtain ⟨k, b⟩ := Submodule.basisOfPid (Pi.basisFun O n) (Submodule.span O (Set.range A))
   have hk : Fintype.card (Fin k) ≤ Fintype.card n := by
     have h := Submodule.finrank_le (Submodule.span O (Set.range A))
-    rw [Module.finrank_eq_card_basis b, Module.finrank_fintype_fun_eq_card] at h
-    exact h
+    rwa [Module.finrank_eq_card_basis b, Module.finrank_fintype_fun_eq_card] at h
   obtain ⟨f⟩ := Function.Embedding.nonempty_of_card_le hk
   have hA : ∀ i, A i ∈ Submodule.span O (Set.range A) := fun i => Submodule.subset_span ⟨i, rfl⟩
   have hb : ∀ j, ∃ w : m → O, ∑ i, w i • A i = (b j : n → O) := fun j =>
@@ -696,8 +691,7 @@ theorem moduleBc : StatModuleBc := by
       intro h
       apply hφ0
       ext z
-      have hz := LinearMap.congr_fun h (eq z)
-      simpa [ψ] using hz
+      simpa [ψ] using LinearMap.congr_fun h (eq z)
     let v := homEquiv (O := FractionRing O) P ψ
     have hv0 : v ≠ 0 := fun h => hψ ((LinearEquiv.map_eq_zero_iff _).mp h)
     let v' : Fin g → EvalSp O' d D'.R' y' := fun i a => κ ((v : Fin g → EvalSp O d D.R' (σ y')) i a)
@@ -708,8 +702,7 @@ theorem moduleBc : StatModuleBc := by
       have h1 := congrFun (congrFun (LinearMap.mem_ker.mp v.2) i) a
       have h2 : ∑ q, ∑ b, (P i q).1 (σ y') a b *
           ((v : Fin g → EvalSp O d D.R' (σ y')) q b : FractionRing O) = 0 := by
-        rw [← relMap_ev]
-        exact h1
+        rwa [← relMap_ev]
       rw [relMap_ev]
       show _ = (0 : FractionRing O')
       have h3 := congrArg κ h2

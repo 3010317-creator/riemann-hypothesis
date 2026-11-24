@@ -217,16 +217,14 @@ lemma g_col_e (i : Fin (2 * r + k + 1)) : g i (eI k r l) = if i = eI k r l then 
   simp only [Glev, Set.mem_setOf_eq] at h
   have e := (h.2 l (by simp)).1
   rw [mulVec_bvec] at e
-  have e' := congrFun e i
-  simpa [bvec, Pi.single_apply] using e'
+  simpa [bvec, Pi.single_apply] using congrFun e i
 
 lemma diagonal_column_dual_isotropic (i : Fin (2 * r + k + 1)) : g i (esI k r l) = if i = esI k r l then 1 else 0 := by
   have h := hg
   simp only [Glev, Set.mem_setOf_eq] at h
   have e := (h.2 l (by simp)).2
   rw [mulVec_bvec] at e
-  have e' := congrFun e i
-  simpa [bvec, Pi.single_apply] using e'
+  simpa [bvec, Pi.single_apply] using congrFun e i
 
 lemma diagonal_row_dual_isotropic (j : Fin (2 * r + k + 1)) : g (esI k r l) j = if j = esI k r l then 1 else 0 := by
   have h := hg

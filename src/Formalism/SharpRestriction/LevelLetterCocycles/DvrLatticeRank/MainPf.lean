@@ -128,8 +128,7 @@ theorem exists_aut_prim (K : FinExt l) {z z' : Om l} (hz : IsPrimitiveRoot z l)
       · have hx1 : x ^ l = 1 := by simpa using hx
         obtain ⟨b, -, rfl⟩ := hz.eq_pow_of_pow_eq_one hx1
         exact pow_mem (IntermediateField.mem_adjoin_simple_self ↥(K0 K) z) b
-    intro x hx
-    exact h hx
+    exact fun x hx => h hx
   haveI := IntermediateField.adjoin.finiteDimensional hint
   have hd : l - 1 ≤ (minpoly ↥(K0 K) z).natDegree := by
     rw [← IntermediateField.adjoin.finrank hint, ← hdeg]
@@ -165,8 +164,7 @@ theorem exists_pt (D : D7) (HW : HWOf D.loc) {K LL : FinExt l} (hG : Good K 1 LL
   obtain ⟨b, -, hb⟩ := hσζ₁.eq_pow_of_pow_eq_one hζO.pow_eq_one
   have hβ : IsPrimitiveRoot ((D.loc l).ζQ 1 ^ b) l := by
     apply IsPrimitiveRoot.of_map_of_injective (f := σ) _ hσinj
-    rw [map_pow, hb]
-    exact hζO
+    rwa [map_pow, hb]
   obtain ⟨g, hg⟩ := exists_aut_prim K hζ₁ hβ
   let g' : Om l →ₐ[ℚ_[l]] Om l := (g.toAlgHom).restrictScalars ℚ_[l]
   have hmem : ∀ y, ((σ.comp g').comp (Ks K 1).val) y ∈ LL.1 := hG.2.2.2 _
@@ -385,8 +383,7 @@ theorem frobenius_span_exact_local (W : LocWach PD LL O v n) [IsAdicComplete (Id
     refine ⟨π' ^ k • x0, ?_, Formalism.MainNotions.LiftingTheory.wmap_map_smul W ι _ _⟩
     rw [mem_PiNS]
     refine ⟨⟨x0, h4 x0 hy0N, rfl⟩, hΔ _ ?_⟩
-    rw [Formalism.MainNotions.LiftingTheory.wmap_map_smul]
-    exact hyΔ
+    rwa [Formalism.MainNotions.LiftingTheory.wmap_map_smul]
   · intro y hy hyπ
     rw [mem_LamPS] at hy
     obtain ⟨hyE, hyΔ, hyL⟩ := hy
@@ -397,8 +394,7 @@ theorem frobenius_span_exact_local (W : LocWach PD LL O v n) [IsAdicComplete (Id
     rw [mem_LamPS]
     refine ⟨?_, hΔ x hyΔ, hL x _ hyL⟩
     have e : z' = Eπ ^ h' • x := hinj (by rw [hz'e, Formalism.MainNotions.LiftingTheory.wmap_map_smul])
-    rw [← e]
-    exact hz'
+    rwa [← e]
   · intro y hy hyπ
     rw [mem_NcS] at hy
     obtain ⟨hyN, hyΔ, hyL⟩ := hy
@@ -600,8 +596,7 @@ theorem Ks_stable (K : FinExt l) {σ : GQ l} (hσ : σ ∈ GK K) {x : Om l} (hx 
       rw [← map_pow, show y ^ (l ^ 1) = 1 from hy, map_one]
   obtain ⟨y, hy, hyx⟩ := (IntermediateField.mem_map _).1 (hle hx)
   have hyx' : σ.symm y = x := hyx
-  rw [← hyx', AlgEquiv.apply_symm_apply]
-  exact hy
+  rwa [← hyx', AlgEquiv.apply_symm_apply]
 
 theorem GKin_normal (K : FinExt l) (hKK : K.1 ≤ (cycL K).1) : (GKin hKK).Normal := by
   constructor
@@ -619,8 +614,7 @@ theorem range_inclusion_eq (K : FinExt l) (hKK : K.1 ≤ (cycL K).1) (hle : GK (
   constructor
   · rintro ⟨y, rfl⟩
     exact Subgroup.mem_subgroupOf.2 y.2
-  · intro hx
-    exact ⟨⟨x.1, Subgroup.mem_subgroupOf.1 hx⟩, rfl⟩
+  · exact fun hx => ⟨⟨x.1, Subgroup.mem_subgroupOf.1 hx⟩, rfl⟩
 
 theorem chi_cong (P : LocPrime l) (K : FinExt l) (g : GQ l) (hg : g ∈ GK (cycL K)) :
     ‖(P.χQ g : ℚ_[l]) - 1‖ ≤ (l : ℝ)⁻¹ := by
@@ -806,8 +800,7 @@ theorem lift_jumps_bounded {l : ℕ} [Fact l.Prime] (P : LocPrime l) (K LL : Fin
   refine ⟨_, hJ1, hJ2, ?_⟩
   have he := ePB_le_expLift_pf l _ _ h Js hMm hHm
   unfold Formalism.WeaklyAdmissibleFiltrations.LatHom.LiftF at hL ⊢
-  intro c hc
-  exact pow_smul_mem_of_le _ _ he (hL c hc)
+  exact fun c hc => pow_smul_mem_of_le _ _ he (hL c hc)
 
 theorem lift_bound_of_hypotheses (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
     (Cm : CmpOf D.loc D.locA HW F) (CA CB CK : ℝ) (hA : Adm1 D HW F Cm CA CB CK) : liftR D := by
@@ -1214,8 +1207,7 @@ theorem univLinkPf_cong {T₁ T₂ : LocLat G Qp LL O} (F : LatHom T₁.L T₂.L
       ∑ i, o i • ((⟨xb i, hxbL i⟩ : ↥(LamLA W T₂ π' Eπ h' c ⊤)) : LA W T₂ π' c) ∈
       piNL W T₂ Pt π' Eπ h' c 1 := by
     have h := Submodule.add_mem _ hrel ho
-    rw [sub_add_sub_cancel] at h
-    exact h
+    rwa [sub_add_sub_cancel] at h
   have htr := univLinkPf_transport W T₂ hMF hM ⟨x, hx⟩ _ hαx Xj Yj (fun j => (hYj j).symm)
     (fun i => ⟨xb i, hxbL i⟩) Yb hYb o hrel'
   have hL : ∀ j, LiftsBy W F π' Eπ h' y₁ c (Yj j : W.DD T₂) := fun j =>
@@ -1504,8 +1496,7 @@ theorem univlink_pf : UnivLinkStep := by
       (2 * sigA l (sK l K) h' + kapA l (eK K) h' S +
         (rhoA l (eK K) h' + max (2 * sigA l (sK l K) h') (ycA l h' η))) := by
     unfold y2K; ring
-  rw [hexp, ← Nat.cast_smul_eq_nsmul ↥(OL LL), Nat.cast_pow]
-  exact h
+  rwa [hexp, ← Nat.cast_smul_eq_nsmul ↥(OL LL), Nat.cast_pow]
 
 end Formalism.MainNotions.N.Ln34
 
@@ -1617,9 +1608,7 @@ theorem normA_holds {l : ℕ} [Fact l.Prime] (P : LocPrime l) (K LL : FinExt l) 
       unfold multV
       rw [hnj, sub_self]
 
-theorem normR_holds (D : D7) : normR D := by
-  intro l _ _ K LL _
-  exact normA_holds (D.loc l) K LL
+theorem normR_holds (D : D7) : normR D := fun l _ _ K LL _ => normA_holds (D.loc l) K LL
 
 end Formalism.MainNotions.N.Ln34
 

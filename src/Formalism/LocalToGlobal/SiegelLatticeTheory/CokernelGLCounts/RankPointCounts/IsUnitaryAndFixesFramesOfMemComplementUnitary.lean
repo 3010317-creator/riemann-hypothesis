@@ -63,8 +63,7 @@ theorem N_perp (Fr : FrameD H r) {s : V ≃ₗ[E] V} (hs : s ∈ Fr.N) {v : V} (
     intro g hg
     obtain ⟨_, hgF, _⟩ := hg
     have pres : ∀ j, j ≤ r → ∀ w ∈ Fr.Fj j, g w ∈ Fr.Fj j := fun j hj w hw => by
-      have h1 := (Fr.Fj j).add_mem hw (hFmono j (hgF j hj w hw))
-      simpa using h1
+      simpa using (Fr.Fj j).add_mem hw (hFmono j (hgF j hj w hw))
     have presinv : ∀ j, j ≤ r → ∀ w ∈ Fr.Fj j, g⁻¹ w ∈ Fr.Fj j := by
       intro j
       induction j with
@@ -86,8 +85,7 @@ theorem N_perp (Fr : FrameD H r) {s : V ≃ₗ[E] V} (hs : s ∈ Fr.N) {v : V} (
     exact ⟨pres r le_rfl, presinv r le_rfl⟩
   have inPerp : ∀ t : V ≃ₗ[E] V, (∀ w ∈ H.perp (H.X Fr.f), t w - w ∈ H.X Fr.f) → ∀ w ∈ H.perp (H.X Fr.f), t w ∈ H.perp (H.X Fr.f) := by
     intro t ht w hw
-    have h1 := (H.perp (H.X Fr.f)).add_mem hw (hXp _ (ht w hw))
-    simpa using h1
+    simpa using (H.perp (H.X Fr.f)).add_mem hw (hXp _ (ht w hw))
   have hQ : ∀ t ∈ Fr.N, IsUnitary H t ∧ (∀ y ∈ H.X Fr.f, t y ∈ H.X Fr.f) ∧ (∀ y ∈ H.X Fr.f, t⁻¹ y ∈ H.X Fr.f) ∧
       (∀ w ∈ H.perp (H.X Fr.f), t w - w ∈ H.X Fr.f) ∧ (∀ w ∈ H.perp (H.X Fr.f), t⁻¹ w - w ∈ H.X Fr.f) := by
     intro t ht
@@ -103,8 +101,7 @@ theorem N_perp (Fr : FrameD H r) {s : V ≃ₗ[E] V} (hs : s ∈ Fr.N) {v : V} (
       have h1 := hgP _ hu
       rw [LinearEquiv.coe_inv, LinearEquiv.apply_symm_apply] at h1
       rw [LinearEquiv.coe_inv]
-      have h2 := (H.X Fr.f).neg_mem h1
-      simpa using h2
+      simpa using (H.X Fr.f).neg_mem h1
     | one => exact ⟨fun x y => rfl, fun y hy => hy, fun y hy => by simpa using hy, fun w _ => by simp,
         fun w _ => by simp⟩
     | mul x y _ _ hx hy =>
@@ -117,14 +114,12 @@ theorem N_perp (Fr : FrameD H r) {s : V ≃ₗ[E] V} (hs : s ∈ Fr.N) {v : V} (
       · rw [LinearEquiv.mul_apply]
         have h1 := hx.2.2.2.1 (y w) (inPerp y hy.2.2.2.1 w hw)
         have h2 := hy.2.2.2.1 w hw
-        have h3 := (H.X Fr.f).add_mem h1 h2
-        simpa using h3
+        simpa using (H.X Fr.f).add_mem h1 h2
       · rw [mul_inv_rev, LinearEquiv.mul_apply]
         have hxw : x⁻¹ w ∈ H.perp (H.X Fr.f) := inPerp x⁻¹ hx.2.2.2.2 w hw
         have h1 := hy.2.2.2.2 (x⁻¹ w) hxw
         have h2 := hx.2.2.2.2 w hw
-        have h3 := (H.X Fr.f).add_mem h1 h2
-        simpa using h3
+        simpa using (H.X Fr.f).add_mem h1 h2
     | inv x _ hx =>
       refine ⟨fun u v => ?_, hx.2.2.1, by simpa using hx.2.1, hx.2.2.2.2, by simpa using hx.2.2.2.1⟩
       rw [LinearEquiv.coe_inv, ← hx.1 (x.symm u) (x.symm v), LinearEquiv.apply_symm_apply,
@@ -245,14 +240,12 @@ theorem lset_LamStd (L : Submodule M.L.O (H.Wb Fr.f)) (w : H.Wb Fr.f) :
     have hpx := prF_mem_perp Fr (x : V)
     have hmk : H.mkW Fr.f ⟨Fr.prF x, hpx⟩ = H.mkW Fr.f x := by
       rw [mkW_eq_iff]
-      have h3 := (H.X Fr.f).neg_mem (sub_prF_mem_X Fr x.2)
-      simpa using h3
+      simpa using (H.X Fr.f).neg_mem (sub_prF_mem_X Fr x.2)
     have hS : Fr.prF (x : V) ∈ Fr.LamStd L := by
       apply Submodule.subset_span
       refine ⟨fun a => (hkey x a).2 ▸ zero_mem _, fun a => (hkey x a).1 ▸ zero_mem _, ⟨Fr.prF x, hpx⟩,
         (prF_prF' Fr (x : V)).symm, ?_⟩
-      rw [hmk, hxw']
-      exact hw
+      rwa [hmk, hxw']
     exact ⟨⟨Fr.prF x, hpx⟩, hS, by rw [hmk, hxw']⟩
   · rintro ⟨x, hxS, rfl⟩
     have hφ : ∀ u ∈ Fr.LamStd L, H.mkW Fr.f ⟨Fr.prF u, prF_mem_perp Fr u⟩ ∈ L := by
@@ -261,8 +254,7 @@ theorem lset_LamStd (L : Submodule M.L.O (H.Wb Fr.f)) (w : H.Wb Fr.f) :
       | mem u hu =>
         obtain ⟨_, _, w', hw'1, hw'2⟩ := hu
         have h6 : (⟨Fr.prF u, prF_mem_perp Fr u⟩ : ↥(H.perp (H.X Fr.f))) = w' := Subtype.ext hw'1.symm
-        rw [h6]
-        exact hw'2
+        rwa [h6]
       | zero =>
         have h6 : (⟨Fr.prF 0, prF_mem_perp Fr 0⟩ : ↥(H.perp (H.X Fr.f))) = 0 :=
           Subtype.ext (by simpa using prF_smul' Fr 0 0)
@@ -281,8 +273,7 @@ theorem lset_LamStd (L : Submodule M.L.O (H.Wb Fr.f)) (w : H.Wb Fr.f) :
     have h1 := hφ x hxS
     have h2 : H.mkW Fr.f ⟨Fr.prF x, prF_mem_perp Fr x⟩ = H.mkW Fr.f x := by
       rw [mkW_eq_iff]
-      have h3 := (H.X Fr.f).neg_mem (sub_prF_mem_X Fr x.2)
-      simpa using h3
+      simpa using (H.X Fr.f).neg_mem (sub_prF_mem_X Fr x.2)
     rwa [h2] at h1
 
 theorem lset_N {n : V ≃ₗ[E] V} (hn : n ∈ Fr.N) (Λ : Submodule M.L.O V) (w : H.Wb Fr.f) :
@@ -291,8 +282,7 @@ theorem lset_N {n : V ≃ₗ[E] V} (hn : n ∈ Fr.N) (Λ : Submodule M.L.O V) (w
   · rintro ⟨x, hxΛ, rfl⟩
     obtain ⟨h1, h2⟩ := N_perp Fr hn x.2
     refine ⟨⟨n x, h1⟩, ⟨x, hxΛ, rfl⟩, ?_⟩
-    rw [mkW_eq_iff]
-    exact h2
+    rwa [mkW_eq_iff]
   · rintro ⟨y, ⟨x, hxΛ, hxy⟩, rfl⟩
     have hni : n⁻¹ ∈ Fr.N := Fr.N.inv_mem hn
     obtain ⟨h1, h2⟩ := N_perp Fr hni y.2
@@ -302,8 +292,7 @@ theorem lset_N {n : V ≃ₗ[E] V} (hn : n ∈ Fr.N) (Λ : Submodule M.L.O V) (w
     refine ⟨⟨x, hx ▸ h1⟩, hxΛ, ?_⟩
     rw [mkW_eq_iff]
     show x - (y : V) ∈ H.X Fr.f
-    rw [← hx]
-    exact h2
+    rwa [← hx]
 
 end Lset
 

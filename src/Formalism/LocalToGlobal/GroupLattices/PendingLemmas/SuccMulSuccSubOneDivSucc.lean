@@ -104,8 +104,7 @@ theorem pderiv_linP (x y : σ) : pderiv y (linP L x) = C (L x y) := by
   · simp
   · intro b _ hb
     simp [hb]
-  · intro h
-    exact absurd (mem_univ y) h
+  · exact fun h => absurd (mem_univ y) h
 
 theorem constantCoeff_linP (x : σ) : constantCoeff (linP L x) = 0 := by
   unfold linP
@@ -135,8 +134,7 @@ theorem pderiv_aeval_linP (F : MvPolynomial σ S) (y : σ) :
         ring
       · intro b _ hb
         simp [Ne.symm hb]
-      · intro h
-        exact absurd (mem_univ x0) h
+      · exact fun h => absurd (mem_univ x0) h
 
 theorem ap_sub (P : MvPolynomial σ S) : ∀ F : MvPolynomial σ S, ap P (aeval (linP L) F) = ap (aeval (linT L) P) F := by
   induction P using MvPolynomial.induction_on with
@@ -171,8 +169,7 @@ theorem ap_monomial (R : MvPolynomial σ S) (m : σ →₀ ℕ) : ap R (monomial
     · rw [coeff_monomial, ite_eq_left rfl, mul_one]
     · intro n _ hn
       rw [coeff_monomial, ite_eq_right (Ne.symm hn), mul_zero, zero_mul]
-    · intro h
-      exact absurd hm h
+    · exact fun h => absurd hm h
   · rw [notMem_support_iff.1 hm, mul_zero]
     refine Finset.sum_eq_zero fun n hn => ?_
     rw [coeff_monomial, ite_eq_right (fun h : m = n => hm (h ▸ hn)), mul_zero, zero_mul]
@@ -324,8 +321,7 @@ theorem linS_LkB (z : X.ZA j) : linS (LkB X Kc j B) z = actS X Kc j B z := by
   · rw [ite_eq_left rfl]
   · intro b _ hb
     rw [ite_eq_right hb, map_zero, zero_mul]
-  · intro h
-    exact absurd (mem_univ _) h
+  · exact fun h => absurd (mem_univ _) h
 
 def lamF (y : X.ZA j) : DA X Kc j :=
   ∑ a, MvPolynomial.C (algebraMap Kc (XspC (X.Pj (j + 1)) Kc) (cf X Kc j B y.1 y.2.1 a y.2.2.1)) *
@@ -341,16 +337,14 @@ theorem LkB_same (y : X.ZA j) (a : Fin (NN X.G.P.m X.t j)) :
     refine ite_eq_right fun h => ha' ?_
     simp only [Sigma.mk.injEq, heq_eq_eq, Prod.mk.injEq, true_and, and_true] at h
     exact h.symm
-  · intro h
-    exact absurd (mem_univ _) h
+  · exact fun h => absurd (mem_univ _) h
 
 theorem linT_LkB (y : X.ZA j) :
     linT (fun x y => algebraMap Kc (XspC (X.Pj (j + 1)) Kc) (LkB X Kc j B x y)) y = lamF X Kc j B y := by
   unfold linT lamF
   have hinj : Function.Injective fun a : Fin (NN X.G.P.m X.t j) => (⟨y.1, (y.2.1, a, y.2.2.2)⟩ : X.ZA j) := by
     intro a a' h
-    simp only [Sigma.mk.injEq, heq_eq_eq, Prod.mk.injEq, true_and, and_true] at h
-    exact h
+    simpa only [Sigma.mk.injEq, heq_eq_eq, Prod.mk.injEq, true_and, and_true] using h
   rw [← Finset.sum_subset (Finset.subset_univ (univ.image fun a : Fin (NN X.G.P.m X.t j) =>
     (⟨y.1, (y.2.1, a, y.2.2.2)⟩ : X.ZA j))), Finset.sum_image fun a _ a' _ h => hinj h]
   · refine Finset.sum_congr rfl fun a _ => ?_
@@ -387,8 +381,7 @@ theorem sum_block {M : Type} [AddCommMonoid M] (F : X.ZA j → M) (v : X.Pl) (s 
   have hinj : Function.Injective fun ab : Fin (NN X.G.P.m X.t j) × Fin (NN X.G.P.m X.t (j + 1)) =>
       (⟨v, (s, ab)⟩ : X.ZA j) := by
     intro a a' h
-    simp only [Sigma.mk.injEq, heq_eq_eq, Prod.mk.injEq, true_and] at h
-    exact h
+    simpa only [Sigma.mk.injEq, heq_eq_eq, Prod.mk.injEq, true_and] using h
   rw [h1, ← Finset.sum_image (f := F) (s := univ) fun a _ a' _ h => hinj h]
   symm
   refine Finset.sum_subset (Finset.subset_univ _) fun z _ hz => h0 z fun h => hz ?_
@@ -455,8 +448,7 @@ theorem pairD_SA (Q : DA X Kc j) (f : MvPowerSeries (X.ZA j) Kc) :
   classical
   have h := pr_sub (LkB X Kc j B) (GoodDeg X j) (hGd_B X Kc j B) Q f
   rw [lamB_eq, (funext (linS_LkB X Kc j B) : linS (LkB X Kc j B) = actS X Kc j B)] at h
-  rw [pairD_eq_pr, pairD_eq_pr]
-  exact h
+  rwa [pairD_eq_pr, pairD_eq_pr]
 
 end Filter
 
@@ -539,8 +531,7 @@ theorem cf_mul_cf_inv (v : X.Pl) (s : Fin (X.G.P.n' v)) :
   rw [cf_inv]
   unfold cf
   by_cases h : IsOddPos s
-  · simp only [ite_eq_left h]
-    exact hM_mul_gM X Kc j B v s
+  · simpa only [ite_eq_left h] using hM_mul_gM X Kc j B v s
   · simp only [ite_eq_right h]
     rw [← Matrix.transpose_mul, hM_mul_gM, Matrix.transpose_one]
 
@@ -920,8 +911,7 @@ variable {p : ℕ} [Fact p.Prime] (X : Sys p)
 theorem numO : NumO X := by
   intro j v s h
   have hne : ¬ Even s.val := by
-    rw [Nat.not_even_iff]
-    exact h
+    rwa [Nat.not_even_iff]
   have h1 : cMu X j v s = X.G.P.lam0 v s 0 + X.w v (j + 1) s := by
     unfold cMu Sys.nuv nu lamI
     rw [ite_eq_left ⟨le_refl 1, by omega⟩, dite_eq_left ⟨le_refl 1, by omega⟩]

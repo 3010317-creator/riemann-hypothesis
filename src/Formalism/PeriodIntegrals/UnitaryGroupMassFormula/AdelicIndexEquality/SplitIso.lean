@@ -91,8 +91,7 @@ theorem exists_alpha (σ : E →ₐ[F] E) (hσσ : ∀ a, σ (σ a) = a)
     omega
   obtain ⟨a, ha⟩ := this
   refine ⟨a - σ a, ?_, ?_⟩
-  · intro h0
-    exact ha (hfix a (by linear_combination -h0))
+  · exact fun h0 => ha (hfix a (by linear_combination -h0))
   · rw [map_sub, hσσ]; ring
 
 variable (σ : E →ₐ[F] E) (hσσ : ∀ a, σ (σ a) = a)

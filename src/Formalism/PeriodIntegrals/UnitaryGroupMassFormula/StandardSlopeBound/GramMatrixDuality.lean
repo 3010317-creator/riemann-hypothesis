@@ -137,8 +137,7 @@ theorem gram_matrix_duality : GramDual := by
       have hk := congrFun hv k
       simp only [Matrix.mulVec, dotProduct, hG'_def, Matrix.of_apply, Pi.zero_apply] at hk
 
-      rw [hy, map_sum]
-      rw [← hk]
+      rw [hy, map_sum, ← hk]
       exact Finset.sum_congr rfl fun l _ => by rw [map_smul, smul_eq_mul, mul_comm]
     have e2 : ∀ l, B y (u l) = 0 := fun l => by rw [hB, fqB_symm, ← hB]; exact hx l
     have hxx : B y y = 0 := by
@@ -173,8 +172,7 @@ theorem gram_matrix_duality : GramDual := by
       simp only [map_smul, smul_eq_mul, hfu, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
         Finset.mem_univ, ite_true]
     rw [hB, fqB_apply, div_eq_iff hne] at hB1
-    rw [expand e' p hp]
-    exact hB1
+    rwa [expand e' p hp]
   have hNex0 : ∀ j, ∃ c : Fin r → ℤ, f j = ∑ i, (c i : ℚ) • w i := by
     intro j
     obtain ⟨p, hp, hpf⟩ := hf_mem j

@@ -145,10 +145,8 @@ theorem infDiag_eq (k : Lˣ) : (infDiag k : Ideles L) = ∏ w : InfinitePlace L,
 theorem pw_infDiag (w : InfinitePlace L) (k : Lˣ) : pw w (infDiag k) = (atInf w k : w.Completion) := by
   rw [infDiag_eq, map_prod, Finset.prod_eq_single w]
   · exact infIdele_fst_self L w _
-  · intro b _ hb
-    exact infIdele_fst_ne L b w (Ne.symm hb) _
-  · intro h
-    exact absurd (Finset.mem_univ w) h
+  · exact fun b _ hb => infIdele_fst_ne L b w (Ne.symm hb) _
+  · exact fun h => absurd (Finset.mem_univ w) h
 
 theorem pv_infDiag (v : HeightOneSpectrum (𝓞 L)) (k : Lˣ) : pv v (infDiag k) = 1 := by
   rw [infDiag_eq, map_prod]
@@ -223,8 +221,7 @@ theorem productRule (χ : HChar L) : χ.ProductRule := by
   have hD : diagUnits L k = A * u := by rw [hu, mul_inv_cancel_left]
   have hmain : χ.inf k * ∏ v ∈ T0, χ.locK v k = 1 := by
     have h := χ.2.2 k
-    rw [hD, map_mul, hu1, mul_one, hA, map_mul, map_prod] at h
-    exact h
+    rwa [hD, map_mul, hu1, mul_one, hA, map_mul, map_prod] at h
   have hord : ∀ v ∉ T0, ordF v k = 0 := by
     intro v hv
     have h1 : Valued.v ((diagUnits L k : AdeleRing (𝓞 L) L).2 v) = 1 := by
@@ -244,7 +241,6 @@ theorem productRule (χ : HChar L) : χ.ProductRule := by
     · intro v hv
       rw [Finset.coe_sdiff] at hv
       exact hv.2
-  rw [hfp, mul_assoc, mul_comm (∏ v ∈ S, χ.locK v k), Finset.prod_sdiff Finset.subset_union_left]
-  exact hmain
+  rwa [hfp, mul_assoc, mul_comm (∏ v ∈ S, χ.locK v k), Finset.prod_sdiff Finset.subset_union_left]
 
 end PI.HeckeProdW

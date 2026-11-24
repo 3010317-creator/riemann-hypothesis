@@ -57,8 +57,7 @@ theorem coeff_alongCv_low {σ : Type} [Fintype σ] {γ : σ → PowerSeries C} {
         unfold Finsupp.prod
         rw [Finsupp.degree_apply, pow_mul, ← Finset.prod_pow_eq_pow_sum]
         apply Finset.prod_dvd_prod_of_dvd
-        intro i _
-        exact pow_dvd_pow_of_dvd (PowerSeries.X_pow_dvd_iff.2 (hγ i)) _
+        exact fun i _ => pow_dvd_pow_of_dvd (PowerSeries.X_pow_dvd_iff.2 (hγ i)) _
       have hz : PowerSeries.coeff n (e.prod fun s m => γ s ^ m) = 0 :=
         PowerSeries.X_pow_dvd_iff.1 hdvd n (by nlinarith)
       show MvPowerSeries.coeff e f • PowerSeries.coeff n (e.prod fun s m => γ s ^ m) = 0
@@ -71,8 +70,7 @@ theorem coeff_tyS_lt {l : ℕ} (hl : 2 ≤ l) (a : ℕ → C) (s : ℕ) (ha : �
   intro t _
   split_ifs with ht
   · apply ha
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have : l ^ s ≤ l ^ t := Nat.pow_le_pow_right (by omega) hc
     omega
   · rfl
@@ -101,8 +99,7 @@ theorem val_nonneg_leading_coeff_of_mem_tySet (V : VF C) (g : Fin 2)
     by_cases hji : j = i
     · rw [hji, ite_eq_left rfl, ite_eq_left rfl]
     · rw [ite_eq_right hji, ite_eq_right]
-      intro h
-      exact hji (Finsupp.single_left_injective one_ne_zero h)
+      exact fun h => hji (Finsupp.single_left_injective one_ne_zero h)
   have hpos : 1 ≤ V.l ^ s := Nat.one_le_pow _ _ (by omega)
   have hlow : ∀ (m : ℕ) (hm1 : 1 ≤ m), (∀ i, ∀ m' < m, PowerSeries.coeff m' (γ i) = 0) → ∀ i,
       PowerSeries.coeff m (γ i) = ∑ c : I g, X.u g c i * PowerSeries.coeff m (tyS V.l fun s => x s (Sum.inl c)) := by

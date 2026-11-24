@@ -282,8 +282,7 @@ theorem SegHyp.top_ord (H : SegHyp p S b' de be aS Q) {aTop : Fin s → ℕ} {b 
       exact hband ⟨not_lt.mp hcon, le_trans hlt.le (le_mul_of_one_le_right hab0 (by linarith))⟩
     have hxb : (p : ℝ) ^ (S.d i) * b' < (S.a : ℝ) * (1 - 2 * de) := by
       have e : ((S.a : ℝ) / b') * (1 - 2 * de) = (S.a : ℝ) * (1 - 2 * de) / b' := by ring
-      rw [e, lt_div_iff₀ hb] at hlo
-      exact hlo
+      rwa [e, lt_div_iff₀ hb] at hlo
     have hbi : (S.bTop i : ℝ) ≤ aS / (p : ℝ) ^ (S.d i) := by
       rw [le_div_iff₀ hx0]
       have h1 : (S.bTop i : ℝ) * (p : ℝ) ^ (S.d i) ≤ (1 + be) * ((p : ℝ) ^ (S.d i) * b') := by
@@ -337,8 +336,7 @@ theorem SegHyp.top_ord (H : SegHyp p S b' de be aS Q) {aTop : Fin s → ℕ} {b 
       exact hband ⟨le_trans (mul_le_of_le_one_right hab0 (by linarith)) hge, not_lt.mp hcon⟩
     have hxb : (S.a : ℝ) * (1 + 2 * de) < (p : ℝ) ^ (S.d i) * b' := by
       have e : ((S.a : ℝ) / b') * (1 + 2 * de) = (S.a : ℝ) * (1 + 2 * de) / b' := by ring
-      rw [e, div_lt_iff₀ hb] at hhi
-      exact hhi
+      rwa [e, div_lt_iff₀ hb] at hhi
     have hmin : (S.a : ℝ) / (p : ℝ) ^ (S.d i) ≤ min (S.bTop i : ℝ) (aS / (p : ℝ) ^ (S.d i)) := by
       apply le_min
       · rw [div_le_iff₀ hx0]
@@ -455,9 +453,7 @@ theorem SegHyp.oplus (H : SegHyp p S b' de be aS Q) (b : SegBlock s r) :
     linarith
   have hsumP : (∑ i, 2 * (S.a : ℝ) / (S.P p i : ℝ)) ≤ (s : ℝ) * (2 * (S.a : ℝ) / p) := by
     calc (∑ i, 2 * (S.a : ℝ) / (S.P p i : ℝ)) ≤ ∑ _i : Fin s, 2 * (S.a : ℝ) / p := by
-          apply Finset.sum_le_sum
-          intro i _
-          exact div_le_div_of_nonneg_left (by positivity) hp0 (hPi i)
+          exact Finset.sum_le_sum (fun i _ => div_le_div_of_nonneg_left (by positivity) hp0 (hPi i))
       _ = (s : ℝ) * (2 * (S.a : ℝ) / p) := by simp
   have hcoef : 0 ≤ S.La / ((r : ℝ) + 1) + 4 / (p : ℝ) ^ 2 :=
     add_nonneg (div_nonneg hLa hr0.le) (by positivity)

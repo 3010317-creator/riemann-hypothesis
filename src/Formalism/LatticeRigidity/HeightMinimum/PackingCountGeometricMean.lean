@@ -114,7 +114,6 @@ theorem card_le_of_separated {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ
     first
     | (field_simp; done)
     | (field_simp; ring)
-  rw [hq, div_pow, le_div_iff₀ hpos]
-  exact key3
+  rwa [hq, div_pow, le_div_iff₀ hpos]
 
 end Formalism.SA.P

@@ -158,15 +158,13 @@ theorem adapted_of_saturated [IsDiscreteValuationRing O] (ϖ : O) (hϖ : Irreduc
   · right
     intro u hu
     have := ha u hu
-    rw [a0, Ideal.mem_span_singleton, zero_dvd_iff] at this
-    exact this
+    rwa [a0, Ideal.mem_span_singleton, zero_dvd_iff] at this
   left
   obtain ⟨n, w, hw⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible a0 hϖ
   cases n with
   | zero =>
     have h := V.smul_mem (↑w⁻¹ : O) hab
-    rw [hw, pow_zero, mul_one, smul_smul, Units.inv_mul, one_smul] at h
-    exact h
+    rwa [hw, pow_zero, mul_one, smul_smul, Units.inv_mul, one_smul] at h
   | succ m =>
     exfalso
     set a' : O := (w : O) * ϖ ^ m with ha'
@@ -179,8 +177,7 @@ theorem adapted_of_saturated [IsDiscreteValuationRing O] (ϖ : O) (hϖ : Irreduc
     have a'0 : a' ≠ 0 := by
       intro h0; apply a0; rw [haa, h0, mul_zero]
     have : a' * 1 = a' * (ϖ * t) := by rw [mul_one]; nth_rewrite 1 [ht]; ring
-    have h3 := mul_left_cancel₀ a'0 this
-    exact hϖ.not_isUnit (IsUnit.of_mul_eq_one t h3.symm)
+    exact hϖ.not_isUnit (IsUnit.of_mul_eq_one t (mul_left_cancel₀ a'0 this).symm)
 
 theorem ext_add_sat_step [IsDiscreteValuationRing O] (ϖ : O) (hϖ : Irreducible ϖ)
     (V : Submodule O (Fin r → O)) (hV : Saturated ϖ V) (P : PowerSeries O)
@@ -197,8 +194,7 @@ theorem ext_add_sat_step [IsDiscreteValuationRing O] (ϖ : O) (hϖ : Irreducible
     · exact ⟨coordA b j w, 0, by simp, Submodule.smul_mem _ _ (cst_mem_ext V _ hbj)⟩
     · have hc0 : coordA b j c = 0 := by
         have := coordA_mem_of_ext b j V 0 (fun u hu => by rw [h0 u hu]; exact zero_mem _) c hc
-        rw [map_zero, Ideal.mem_span_singleton, zero_dvd_iff] at this
-        exact this
+        rwa [map_zero, Ideal.mem_span_singleton, zero_dvd_iff] at this
       have e1 := congrArg (coordA b j) hw
       rw [coordA_smul, coordA_add, coordA_smul, hc0, zero_add] at e1
       have : coordA b j w ∈ Ideal.span {P} :=

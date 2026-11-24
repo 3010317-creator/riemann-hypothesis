@@ -229,8 +229,7 @@ theorem lift_gens (hc : ∀ x, Continuous fun g => ρ g x) (L : Lattice (O := O)
     have h1 : N.mkQ (rep q) = N.mkQ c := by rw [hrep]; exact hcq.symm
     have h2 : rep q - c ∈ N := (Submodule.Quotient.eq N).mp h1
     have h3 : ((rep q : ↥(latticeCocycles L)) : G → V) - (c : G → V) ∈ latticeFiniteCocycles PD L := hB h2
-    have h4 := (latticeFiniteCocycles PD L).add_mem h3 hc'
-    simpa using h4
+    simpa using (latticeFiniteCocycles PD L).add_mem h3 hc'
   apply le_antisymm
   · refine sup_le ?_ hB
     rw [Submodule.span_le]
@@ -248,14 +247,12 @@ theorem lift_gens (hc : ∀ x, Continuous fun g => ρ g x) (L : Lattice (O := O)
       refine ⟨rep q, ?_, hrep q⟩
       apply Submodule.mem_sup_left
       apply Submodule.subset_span
-      simp only [ht, Finset.coe_image, Set.mem_image, Finset.mem_coe]
-      exact ⟨q, hq, rfl⟩
+      simpa only [ht, Finset.coe_image, Set.mem_image, Finset.mem_coe] using ⟨q, hq, rfl⟩
     have hspan : latticeFiniteCohomology PD L ≤ W.map N.mkQ := by
       rw [← hs, Submodule.span_le]; exact hsW
     have hpf : N.mkQ ⟨p, hpZ⟩ ∈ latticeFiniteCohomology PD L := ⟨⟨p, hpZ⟩, hp, rfl⟩
     have h1 : (⟨p, hpZ⟩ : ↥(latticeCocycles L)) ∈ (W.map N.mkQ).comap N.mkQ := hspan hpf
-    rw [Submodule.comap_map_mkQ, sup_eq_right.mpr hNW] at h1
-    exact h1
+    rwa [Submodule.comap_map_mkQ, sup_eq_right.mpr hNW] at h1
 
 end Gen
 

@@ -27,8 +27,7 @@ theorem colH_ge (hν : Antitone ν) {k : ℕ} (t : Fin n) (h : k < ν t) : t.val
   have hsub : Finset.Iic t ⊆ Finset.univ.filter fun u : Fin n => k < ν u := by
     intro u hu
     rw [Finset.mem_Iic] at hu
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-    exact lt_of_lt_of_le h (hν hu)
+    simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using lt_of_lt_of_le h (hν hu)
   have := Finset.card_le_card hsub
   rwa [Fin.card_Iic] at this
 
@@ -105,16 +104,14 @@ theorem card_fin_Ico (c a b : ℕ) (hb : b ≤ c) :
 
 theorem card_fin_lt (c m : ℕ) (hm : m ≤ c) : (Finset.univ.filter fun k : Fin c => k.val < m).card = m := by
   have := card_fin_Ico c 0 m hm
-  simp only [Nat.zero_le, true_and, Nat.sub_zero] at this
-  exact this
+  simpa only [Nat.zero_le, true_and, Nat.sub_zero] using this
 
 theorem card_colH_eq {n : ℕ} {ν : Fin n → ℕ} (hν : Antitone ν) (c : ℕ) (hc : ∀ t, ν t ≤ c) (s : Fin n) :
     (Finset.univ.filter fun k : Fin c => colH ν k.val = s.val + 1).card = ν s - nuNext ν s := by
   have : (Finset.univ.filter fun k : Fin c => colH ν k.val = s.val + 1) =
       Finset.univ.filter fun k : Fin c => nuNext ν s ≤ k.val ∧ k.val < ν s := by
     ext k
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-    exact colH_eq_iff hν k.val s
+    simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using colH_eq_iff hν k.val s
   rw [this, card_fin_Ico c _ _ (hc s)]
 
 theorem prod_colH {M : Type*} [CommMonoid M] {n : ℕ} {ν : Fin n → ℕ} (hν : Antitone ν) (c : ℕ) (hc : ∀ t, ν t ≤ c)
@@ -508,8 +505,7 @@ theorem pairing_odd_holds : PairO := by
       rw [← hXg]
       rfl
     rw [hXL, ← RingHom.mapMatrix_apply, ← RingHom.map_det]
-    intro h0
-    exact Matrix.det_mvPolynomialX_ne_zero (Fin n) K (hι (by rw [h0, map_zero]))
+    exact fun h0 => Matrix.det_mvPolynomialX_ne_zero (Fin n) K (hι (by rw [h0, map_zero]))
   have hU : IsUnit XL.det := isUnit_iff_ne_zero.2 hdet
   have h1 := pairO_inv (FractionRing (MvPolynomial (Fin n × Fin n) K)) n μ hμ c hc
     (fun a i => algebraMap _ _ (xg a i)) XL⁻¹ (Matrix.nonsing_inv_mul XL hU) (Matrix.mul_nonsing_inv XL hU) I

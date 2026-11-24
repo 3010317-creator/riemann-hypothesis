@@ -82,8 +82,7 @@ theorem proj_comm_abs' (PE A : V →ₗ[k] V) (R W L : Submodule k V) (h1 : PE �
     rw [h3]
     exact ⟨hL _ hker.1, hW _ hker.2⟩
   have h0 : PE (A (x - PE x)) = 0 := hA2.1
-  rw [map_sub, map_sub, hA1', sub_eq_zero] at h0
-  exact h0
+  rwa [map_sub, map_sub, hA1', sub_eq_zero] at h0
 
 end Abs
 
@@ -120,8 +119,7 @@ theorem hwProj_comm' (LL : Letters N) (j : ℕ) (ρ : Fin r) (la : Fin r → ℤ
     intro x hx
     simp only [WtSpC, MvPolynomial.restrictSupport, AddMonoidAlgebra.supported, Finsupp.mem_supported, Submodule.mem_comap,
       LinearEquiv.coe_coe, AddMonoidAlgebra.coeffLinearEquiv_apply] at hx ⊢
-    intro m hm c _
-    exact hx (show m ∈ (↑x.support : Set _) from hm) c (Finset.mem_univ c)
+    exact fun m hm c _ => hx (show m ∈ (↑x.support : Set _) from hm) c (Finset.mem_univ c)
   have hR : ∀ x ∈ HWC p LL j (univ.erase ρ) la ⊓ WtSpC p LL j univ la,
       A x ∈ HWC p LL j (univ.erase ρ) la ⊓ WtSpC p LL j univ la := by
     intro x hx
@@ -336,8 +334,7 @@ theorem highest_vector_projection : ProjX := by
       rw [ite_eq_left hk] at this
       exact Submodule.mem_inf.mp this
     · have := h3 k
-      rw [ite_eq_right hk] at this
-      exact this
+      rwa [ite_eq_right hk] at this
   have hYmin : ∀ g ∈ XH p LL J M ρ w, ∀ k, g ∈ YCond p LL (min (J k) K) (M k) := by
     intro g hg k
     obtain ⟨-, -, h3, h4, -⟩ := hXH g hg
@@ -356,16 +353,14 @@ theorem highest_vector_projection : ProjX := by
         have hk0' : min (J k0) K = j := (Finset.mem_filter.mp hk0).2
         refine ycond_fix LL j (Tu j) (M k0) (P j) (hTPu j hj) (fun la hla => ?_) g ⟨?_, hgP⟩
         · rw [hTu']
-          intro k' hk'
-          exact hla.trans (hmin k' (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hk'⟩))
+          exact fun k' hk' => hla.trans (hmin k' (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hk'⟩))
         · have := hYmin g hg k0
           rwa [hk0'] at this
       · refine idempotent_apply_eq_self_of_ker_eq_bot (P j) (hTPu j hj).1 ?_ g
         rw [(hTPu j hj).2.2]
         refine le_antisymm (iSup_le fun la => iSup_le fun hla => absurd ?_ hla) bot_le
         rw [hTu']
-        intro k hk
-        exact absurd ⟨k, hk⟩ hex
+        exact fun k hk => absurd ⟨k, hk⟩ hex
     · by_cases hex : ∃ k, K + 1 ≤ J k
       · obtain ⟨k, hk⟩ := hex
         obtain ⟨k0, hk0, hmin⟩ := Finset.exists_min_image (univ.filter fun k => K + 1 ≤ J k) M
@@ -378,14 +373,12 @@ theorem highest_vector_projection : ProjX := by
         refine SetLike.le_def.mp (iSup_le fun la => iSup_le fun hla => ?_) hgt
         refine le_iSup₂_of_le (f := fun la (_ : la ∈ Te) => IsoC p LL (K + 1) (univ.erase ρ) la) la ?_ le_rfl
         rw [hTe']
-        intro k' hk'
-        exact hla.trans (hmin k' (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hk'⟩))
+        exact fun k' hk' => hla.trans (hmin k' (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hk'⟩))
       · refine idempotent_apply_eq_self_of_ker_eq_bot (P j) (hTPe j hj).1 ?_ g
         rw [(hTPe j hj).2.2]
         refine le_antisymm (iSup_le fun la => iSup_le fun hla => absurd ?_ hla) bot_le
         rw [hTe']
-        intro k hk
-        exact absurd ⟨k, hk⟩ hex
+        exact fun k hk => absurd ⟨k, hk⟩ hex
 
   obtain ⟨G, hG⟩ : ∃ G : MvPolynomial (Fin (K + 1) × Fin r) ℚ_[p] → MvPolynomial (Fin (K + 1) × Fin r) ℚ_[p],
       G = fun u => resL p (Fin.last K, ρ) 0 (PE (lcomp P (List.range (K + 2)) u)) := ⟨_, rfl⟩
@@ -497,8 +490,7 @@ theorem highest_vector_projection : ProjX := by
     have he : ((p : ℚ_[p]) ^ ((K + 3) * e1)) • x
         = resL p (Fin.last K, ρ) 0 (((p : ℚ_[p]) ^ (e1 + e1 * (K + 2))) • z) := by
       rw [map_smul, hx, show (K + 3) * e1 = e1 + e1 * (K + 2) by ring]
-    rw [he]
-    exact hxI
+    rwa [he]
   · intro g hg
     obtain ⟨-, hgF, -, -, hgH, hgW⟩ := hXH g hg
     have f1 : fock p g x = fock p g z := by

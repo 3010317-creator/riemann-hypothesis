@@ -198,8 +198,7 @@ theorem toTerm_tmap (hN : AutFConjN) (hx : RatLink X x β) (t : GTerm X u u' F0 
     let f : GCar X u u' F0 F0' t.lam t.lam' → TermDef.TermQ t.lam (lf D F0) (TermDef.PD D t.lam (lf D F0) u') :=
       fun p => TermDef.mk _ _ _ ⟨mapLF p.1.2 (lf D F0'), p.2.2.2.2⟩
     have hf : ∀ p q, GRel X u u' F0 F0' t.lam t.lam' p q → f p = f q := by
-      intro p q h
-      exact Quot.sound (hTR _ _ p q h)
+      exact fun p q h => Quot.sound (hTR _ _ p q h)
     have key : ∀ c : GQ X u u' F0 F0' t.lam t.lam', f (Quot.out c) = Quot.lift f hf c :=
       fun c => congrArg (Quot.lift f hf) (Quot.out_eq c)
     have h1 := tmap_cls x β hN hx t hβ

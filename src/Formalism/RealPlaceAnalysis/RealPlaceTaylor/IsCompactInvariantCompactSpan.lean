@@ -167,8 +167,7 @@ theorem highestWeightExists_holds : KHiExist := by
         simp only [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply,
           sub_eq_zero]
       have hvker : F a a v = c • v := by
-        have h1 := congrArg Subtype.val hv.apply_eq_smul
-        simpa using h1
+        simpa using congrArg Subtype.val hv.apply_eq_smul
       refine ⟨W ⊓ LinearMap.ker (F a a - c • 1), inf_le_left.trans hWS, ?_, ?_, Function.update lam a c, ?_⟩
       · intro h
         have hvmem : v ∈ W ⊓ LinearMap.ker (F a a - c • 1) := ⟨hvW, (hker v).2 hvker⟩

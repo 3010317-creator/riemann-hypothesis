@@ -54,8 +54,7 @@ theorem infMat_brg_i (x : (Formalism.IndefR.RationalEmbedding.inst D).GA) (ρ : 
     have h := ((Formalism.IndefR.RationalEmbedding.iota_symm_isBridge D) x).1 (Formalism.L2.Host.tauPl D ρ)
     have h2 := thetaV_eq_psiT_i ρ
     unfold Formalism.L2.SG.AdBridge.ofHAInf at h
-    rw [h2] at h
-    exact h
+    rwa [h2] at h
   rw [hb, infMat_thetaC]
   have hu := P_isUnit_det' (Formalism.L2.Host.tauPl D ρ)
   rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hu, Matrix.one_mul, Matrix.mul_assoc,
@@ -88,8 +87,7 @@ theorem brg_mem_GfC_i (x : (Formalism.IndefR.RationalEmbedding.inst D).GA) : (Fo
     constructor
     · intro hh
       exact congrArg (fun u : GL (Fin (D.sp.Y 0).rank) (Ainf D.host.F ⊗[D.host.F] D.host.E) => u.1) (MonoidHom.mem_ker.mp hh)
-    · intro hh
-      exact MonoidHom.mem_ker.mpr (Units.ext hh)
+    · exact fun hh => MonoidHom.mem_ker.mpr (Units.ext hh)
   rw [key, uM_one_iff_i]
   have hc : ∀ ρ, ((matA D (D.sp.Y 0) ((Formalism.IndefR.RationalEmbedding.iota D).symm x)).map (infPart D)).map (thetaC D ρ) =
       Pi (D := D) (Formalism.L2.Host.tauPl D ρ) * uM' x (Formalism.L2.Host.tauPl D ρ) * (Pi (D := D) (Formalism.L2.Host.tauPl D ρ))⁻¹ := by
@@ -133,8 +131,7 @@ theorem iota_symm_mem_GinfC (x : (Formalism.IndefR.RationalEmbedding.inst D).GA)
   show finHom (D.sp.Y 0) ((Formalism.IndefR.RationalEmbedding.iota D).symm x) = 1 ↔ _
   rw [Formalism.IndefR.Eqv.finHom_eq_one_iff, finE_brg_i]
   constructor
-  · intro e
-    exact Subtype.ext e
+  · exact fun e => Subtype.ext e
   · intro e
     rw [e]
     rfl

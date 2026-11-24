@@ -208,8 +208,7 @@ theorem sg_swap (x : X.B.I.Gf) (u v : VA X.B.I) :
     sg X.B.I (hhat X.B.I u (X.B.I.fmat x *ᵥ v)) = hhat X.B.I v (X.B.I.fmat x⁻¹ *ᵥ u) := by
   rw [hhat_conj]
   have := hhat_fmat X.B.I x v (X.B.I.fmat x⁻¹ *ᵥ u)
-  rw [Matrix.mulVec_mulVec, ← fmat_mul, mul_inv_cancel, fmat_one, Matrix.one_mulVec] at this
-  exact this
+  rwa [Matrix.mulVec_mulVec, ← fmat_mul, mul_inv_cancel, fmat_one, Matrix.one_mulVec] at this
 
 variable {w : HeightOneSpectrum (𝓞 X.B.I.E)} {p : ℕ}
 
@@ -247,8 +246,7 @@ theorem congC (ob : Bool) (hew : X.ew - (if ob then 1 else 0) ∈ Wq X.B.I w) {x
       rw [hob] at this
       rwa [frd_wt, fr_wt] at this
     · refine congW_zero_of (hhat_Lq_right (X.vectorsInLattice.2.2 i).2 (stab_w X.B.I w hx (bw_Lq X ?_ _)))
-      simp only [hob, Bool.false_eq_true, ite_false, sub_zero] at hew
-      exact hew
+      simpa only [hob, Bool.false_eq_true, ite_false, sub_zero] using hew
     · exact congW_zero_of (zero_mem _)
 
 theorem congW_of_sg {t : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F} {m : ZMod p} (h : CongW (w := w) p (sg X.B.I t) m) :
@@ -279,8 +277,7 @@ theorem congCc (ob : Bool) (hsew : sg X.B.I X.ew - (if ob then 0 else 1) ∈ Wq 
     · show CongW p (sg X.B.I (hhat X.B.I _ _)) _
       rw [sg_swap]
       refine congW_zero_of (hhat_Lq_right (X.vectorsInLattice.2.2 _).1 (stab_w X.B.I w (K_inv X.B.I hx) (bwd_Lq X ?_ i)))
-      simp only [hob, ite_true, sub_zero] at hsew
-      exact hsew
+      simpa only [hob, ite_true, sub_zero] using hsew
     · show CongW p (sg X.B.I (hhat X.B.I _ _)) _
       rw [sg_swap]
       have := hN' (wI (hrD D) (rv ⟨i.1 + 1, h⟩)) (wI (hrD D) (rv i))
@@ -514,8 +511,7 @@ theorem Wq_of_smul {I : AutInst} {w : HeightOneSpectrum (𝓞 I.E)} {p : ℕ} (h
       · simp
       · intro j _ hj
         simp [hj]
-      · intro h0
-        exact absurd (Finset.mem_univ _) h0
+      · exact fun h0 => absurd (Finset.mem_univ _) h0
     rw [hs]
     exact hcy _ (Submodule.subset_span ⟨⟨b i0, hb.1 i0⟩, rfl⟩)
   have hdvd : (p : ℤ) ∣ c := by
@@ -545,14 +541,12 @@ theorem ew_res (kv : Σ k : Fin 2, D.nd.PlG k) :
     obtain ⟨m0, c, -, hc⟩ := congW_exists (w := wc X.B.I (wK X kv)) hp (card_wKc X kv) X.ew_int
     have h1 := sg_Wq hc
     rw [wc_wc, map_sub, sg_intCast] at h1
-    have h2 := (IntAf X.B.I.F X.B.I.E).add_mem (Wq_int h1) (intCast_int c)
-    simpa using h2
+    simpa using (IntAf X.B.I.F X.B.I.E).add_mem (Wq_int h1) (intCast_int c)
   have hA : 1 - X.ew - sg X.B.I X.ew ∈ Wq X.B.I (wK X kv) := by
     refine Wq_of_smul hp hcard hn ?_ ?_
     · exact (IntAf X.B.I.F X.B.I.E).sub_mem
         ((IntAf X.B.I.F X.B.I.E).sub_mem (IntAf X.B.I.F X.B.I.E).one_mem X.ew_int) hsI
-    · intro y hy
-      exact mL_le (level_mem_wB' X kv) (X.ew_full y hy)
+    · exact fun y hy => mL_le (level_mem_wB' X kv) (X.ew_full y hy)
   have key : ∀ ob : Bool, sg X.B.I X.ew - (if ob then 0 else 1) =
       -(1 - X.ew - sg X.B.I X.ew) - (X.ew - (if ob then 1 else 0)) := by
     intro ob

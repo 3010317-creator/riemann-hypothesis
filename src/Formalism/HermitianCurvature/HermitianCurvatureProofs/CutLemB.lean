@@ -80,8 +80,7 @@ theorem hsVec_norm_CinL (S : B.RealPlaceData k r Wp Wq) {hA hB : B.Mat k r} (hhA
     rw [Formalism.FourierDecayAlt.P.PBI.hsInner_comp_left _ (S.π_unitary hA hhA),
       Formalism.FourierDecayAlt.P.PBI.hsInner_comp_right _ (S.π'_unitary _ (WeylGroupFacts.uw_inv hhB))]
   rw [TBBx2.Tri.hsInner_self, TBBx2.Tri.hsInner_self] at e
-  have e2 := Complex.ofReal_injective e
-  exact (pow_left_inj₀ (norm_nonneg _) (norm_nonneg _) two_ne_zero).1 e2
+  exact (pow_left_inj₀ (norm_nonneg _) (norm_nonneg _) two_ne_zero).1 (Complex.ofReal_injective e)
 
 end hs
 
@@ -111,9 +110,7 @@ theorem ptLast_bigPt (r : ℕ) (c : Fin (r + 1) → ℂ) : D.ptLast (TBB.bigPt r
     simp only [List.length_ofFn, Nat.add_sub_cancel]
     rw [List.getElem?_eq_getElem (by simp), List.getElem_ofFn]
     rfl
-  have h2 := h r (fun i => ((1 : ℕ), c i)) (0, 0)
-  simp only [D.ptLast, TBB.bigPt]
-  exact h2
+  simpa only [D.ptLast, TBB.bigPt] using h r (fun i => ((1 : ℕ), c i)) (0, 0)
 
 theorem nPt_bigPt (k r : ℕ) (T T' : ℝ) (c : Fin (r + 1) → ℂ) (hζ : T * T' ≤ Complex.normSq (c (Fin.last r))) :
     TBB.nPt k r (T * T') (TBB.bigPt r c) = bcWeight k r T T' ((fun j => c j.castSucc), c (Fin.last r)) := by

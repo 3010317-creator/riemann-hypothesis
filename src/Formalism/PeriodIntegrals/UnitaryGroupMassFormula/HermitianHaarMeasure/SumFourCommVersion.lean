@@ -77,8 +77,7 @@ def covC {A : Type*} [Ring A] [Algebra ℂ A] {m : ℕ} (P : Matrix (Fin m) (Fin
 theorem qpApply {m : ℕ} (P Q : Matrix (Fin m) (Fin m) ℂ) (hQP : Q * P = 1) (b c : Fin m) :
     ∑ j, Q b j * P j c = if b = c then 1 else 0 := by
   have h := congrFun (congrFun hQP b) c
-  rw [Matrix.mul_apply, Matrix.one_apply] at h
-  exact h
+  rwa [Matrix.mul_apply, Matrix.one_apply] at h
 
 theorem glConj {A : Type*} [Ring A] [Algebra ℂ A] {m : ℕ} (E : Fin m → Fin m → A)
     (P Q : Matrix (Fin m) (Fin m) ℂ) (hGl : GlRel E) (hQP : Q * P = 1) : GlRel (Econj E P Q) := by
@@ -108,8 +107,7 @@ theorem glConj {A : Type*} [Ring A] [Algebra ℂ A] {m : ℕ} (E : Fin m → Fin
     rw [Finset.sum_comm, Finset.sum_congr rfl (fun j _ => Finset.sum_comm)]
     simp only [← Finset.sum_smul, ← Finset.mul_sum, qpApply P Q hQP d a]
     split_ifs with h
-    · simp only [mul_one]
-      exact Finset.sum_comm
+    · simpa only [mul_one] using Finset.sum_comm
     · simp
 
 theorem leibVec {A : Type*} [Ring A] [Algebra ℂ A] {m : ℕ} (E : Fin m → Fin m → A) (Y : Fin m → A)

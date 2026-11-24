@@ -201,8 +201,7 @@ theorem det_wh {σ R : Type} [CommRing R] (w : σ → ℕ) {m : ℕ} (M : Matrix
     have := IsWeightedHomogeneous.prod (w := w) Finset.univ (fun i => M (τ i) i) (fun _ => d) fun i _ => h (τ i) i
     rwa [Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul] at this
   rcases Int.units_eq_one_or (Equiv.Perm.sign τ) with h2 | h2
-  · rw [h2, one_smul]
-    exact h1
+  · rwa [h2, one_smul]
   · rw [h2, Units.neg_smul, one_smul]
     exact (mem_weightedHomogeneousSubmodule R w _ _).1
       (neg_mem ((mem_weightedHomogeneousSubmodule R w _ _).2 h1))
@@ -244,8 +243,7 @@ theorem PI_wh (I : X.ColCh j) (i0 : X.Pl → ℕ) (v : X.Pl) (s : Fin (X.G.P.n' 
   · simp
   · intro b _ hb
     simp [hb]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem PI_good (I : X.ColCh j) (i0 : X.Pl → ℕ) (n : X.ZA j →₀ ℕ) (hn : AddMonoidAlgebra.coeff (X.PI j I i0) n ≠ 0) : GoodDeg X j n := by
   intro v s

@@ -171,8 +171,7 @@ theorem coeff_P_of_le (ha : IsTri c a) (d e : σ →₀ ℕ) (he : e.degree ≤ 
     have : (∑ i ∈ d.support, d i) = d.degree := rfl
     rw [this]
     exact_mod_cast Nat.lt_succ_of_le he
-  rw [map_sub, prod_CX, coeff_monomial, sub_eq_zero] at h0
-  exact h0
+  rwa [map_sub, prod_CX, coeff_monomial, sub_eq_zero] at h0
 
 theorem coeff_subst_tri (ha : IsTri c a) (F : MvPowerSeries σ K) (e : σ →₀ ℕ) :
     coeff e (subst a F) = c ^ e.degree * coeff e F +
@@ -319,8 +318,7 @@ theorem jet_lin (l d : ℕ) [Fact l.Prime] {β : Type*} (w : ZMod d × β) (n : 
       first
       | exact Nat.one_lt_pow he h2
     omega
-  · intro h
-    exact absurd (Finset.mem_range.mpr (Nat.succ_pos _)) h
+  · exact fun h => absurd (Finset.mem_range.mpr (Nat.succ_pos _)) h
 
 theorem log_lin (D : D7) (p : ℕ) [Fact p.Prime] {β : Type} (v : Pl D × β) (n : Pl D × β →₀ ℕ) (hn : n.degree ≤ 1) :
     coeff n (logPl D p v) = if n = single v 1 then 1 else 0 := by
@@ -341,8 +339,7 @@ theorem log_lin (D : D7) (p : ℕ) [Fact p.Prime] {β : Type} (v : Pl D × β) (
       first
       | exact Nat.one_lt_pow he h2
     omega
-  · intro h
-    exact absurd (Finset.mem_range.mpr (Nat.succ_pos _)) h
+  · exact fun h => absurd (Finset.mem_range.mpr (Nat.succ_pos _)) h
 
 theorem isTri_jet (l d : ℕ) [Fact l.Prime] [NeZero d] {β : Type} [Finite β] (ep : ℂ_[l]) :
     Tri.IsTri ep (fun w : ZMod d × β => C ep * jetLogG l d w) := by
@@ -402,8 +399,7 @@ theorem rename_jet (D : D7) (p : ℕ) [Fact p.Prime] {β : Type} (r : Pl D) (w :
   · refine (Finset.sum_eq_zero ?_).trans ?_
     · intro n hn
       exfalso
-      apply hm
-      exact ⟨n, by simpa using hn⟩
+      exact hm ⟨n, by simpa using hn⟩
     · symm
       unfold logPl
       refine Finset.sum_eq_zero fun e _ => ite_eq_right ?_

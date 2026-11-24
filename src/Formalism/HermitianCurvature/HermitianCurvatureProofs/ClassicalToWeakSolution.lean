@@ -110,11 +110,9 @@ theorem ctw_pdc_perm {U : Set (Fin d → ℝ)} (hU : IsOpen U) {l₁ l₂ : List
       intro n f hf hl x hx
       have hg : ContDiffOn ℝ 2 (pdc l f) U :=
         ctw_contDiffOn_pdc hU l 2 n f hf (by simp only [List.length_cons] at hl; omega)
-      simp only [pdc]
-      exact ctw_swap hU hg hx _ _
+      simpa only [pdc] using ctw_swap hU hg hx _ _
   | trans h₁ _ ih₁ ih₂ =>
-      intro n f hf hl
-      exact (ih₁ n f hf hl).trans (ih₂ n f hf (h₁.length_eq ▸ hl))
+      exact fun n f hf hl => (ih₁ n f hf hl).trans (ih₂ n f hf (h₁.length_eq ▸ hl))
 
 theorem ctw_integrable {U : Set (Fin d → ℝ)} (hU : IsOpen U) {F G : (Fin d → ℝ) → ℂ}
     (hF : ContinuousOn F U) (hG : Continuous G) (hGc : HasCompactSupport G) (hGU : tsupport G ⊆ U) :

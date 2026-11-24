@@ -28,13 +28,11 @@ theorem exp_int_sign (b : ℤ) :
 theorem local_global_comparison_holds : Bridge := by
   intro D T N N'
   refine ⟨fun x y => ?_, fun x G => rfl, fun La₁ La₂ G => ?_, fun La' G hG => ?_, fun La' hI => ?_⟩
-  · show Hf D T y x = starRingEnd ℂ (Hf D T x y)
-    exact Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.IO.Hf_herm T x y
+  · exact Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.IO.Hf_herm T x y
   · funext z
     simp only [Iop, inter, relIdx, AddSubgroup.relIndex]
     rfl
-  · intro x hx z
-    exact hG.2 x hx z
+  · exact fun x hx z => hG.2 x hx z
   · refine ⟨fun x _ => al_pm D T x, fun x hx y hy => ?_⟩
     have h := Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.IO.semiChar_of_HfInt T hI x hx y hy
     rw [h]

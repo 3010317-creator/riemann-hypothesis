@@ -67,8 +67,7 @@ theorem F_0P {n : ℕ} (P : Pt C n d) (hP : ∀ j, constantCoeff (P j) = 0) (a :
     fin_cases k
     · exact ev_zero (z0_1 P hP)
     · exact ev_X (z0_1 P hP) 0 i
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem group_law_zero_right {n : ℕ} (P : Pt C n d) (hP : ∀ j, constantCoeff (P j) = 0) (a : Fin d) :
     ev ![P, 0] (G.F a) = P a := by
@@ -153,8 +152,7 @@ theorem vec_cancel (u : Fin d → PS C 1 d) (a : Fin d) :
     ∑ k, (∑ c, Mm G c k * u c) * NN G k a = u a := by
   have h : ∀ c, ∑ k, Mm G c k * NN G k a = if c = a then 1 else 0 := fun c => by
     have := congrFun (congrFun (MM_NN G) c) a
-    simp only [Matrix.mul_apply, Matrix.one_apply, MM, Matrix.of_apply] at this
-    exact this
+    simpa only [Matrix.mul_apply, Matrix.one_apply, MM, Matrix.of_apply] using this
   simp_rw [Finset.sum_mul]
   rw [Finset.sum_comm]
   have e : ∀ c, ∑ k, Mm G c k * u c * NN G k a = u c * ∑ k, Mm G c k * NN G k a := fun c => by

@@ -121,8 +121,7 @@ theorem len_chain (P : Submodule O M) (k : ℕ) (F : ℕ → Submodule O M) (hF0
   | succ k ih =>
     have ih' := ih (fun i hi => hF i (by omega))
     rw [len_two_step (F k) (F (k + 1)) P (hF k (by omega))] at ih'
-    rw [Finset.sum_range_succ, add_assoc]
-    exact ih'
+    rwa [Finset.sum_range_succ, add_assoc]
 
 theorem len_bound (a : O) (g e : ℕ) (Z Bc I : Submodule O M) (s : Finset M)
     (hcard : s.card ≤ g) (hZ : Submodule.span O (s : Set M) ⊔ Bc = Z) (hBc : Bc ≤ I)
@@ -146,8 +145,7 @@ theorem len_bound (a : O) (g e : ℕ) (Z Bc I : Submodule O M) (s : Finset M)
       rw [← hZ]
       refine sup_le ?_ ?_
       · rw [Submodule.span_le]
-        intro y hy
-        exact ⟨⟨y, hsZ y hy⟩, Submodule.subset_span ⟨⟨y, hy⟩, rfl⟩, rfl⟩
+        exact fun y hy => ⟨⟨y, hsZ y hy⟩, Submodule.subset_span ⟨⟨y, hy⟩, rfl⟩, rfl⟩
       · intro b hb
         have hbZ : b ∈ Z := hZ ▸ Submodule.mem_sup_right hb
         refine ⟨⟨b, hbZ⟩, ?_, rfl⟩

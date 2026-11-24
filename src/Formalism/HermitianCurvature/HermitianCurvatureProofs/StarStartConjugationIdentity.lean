@@ -123,13 +123,11 @@ theorem cz_zfns {L : LevelData A r} {st : Start A} (h : IsLevelStart L st) {g : 
 
 theorem cz_mul {st : Start A} {a b : A} (ha : Cz st a) (hb : Cz st b) : Cz st (a * b) := by
   unfold Cz at *
-  intro c hc
-  exact (ha c hc).mul_right (hb c hc)
+  exact fun c hc => (ha c hc).mul_right (hb c hc)
 
 theorem cz_smul {st : Start A} {a : A} (z : ℂ) (ha : Cz st a) : Cz st (z • a) := by
   unfold Cz at *
-  intro c hc
-  exact (ha c hc).smul_right z
+  exact fun c hc => (ha c hc).smul_right z
 
 theorem star_xi {L : LevelData A r} {st : Start A} (h : IsLevelStart L st) {Y : ℂ} (hr : star Y = Y)
     (hY : Y ∈ st.inv) : star (st.xi Y) = st.xi Y := by
@@ -148,14 +146,12 @@ theorem kAlg_star {L : LevelData A r} {st : Start A} (h : IsLevelStart L st) {a 
         simp only [Set.mem_setOf_eq, star_mul] at hx hy ⊢
         exact Subalgebra.mul_mem _ hy hx
       one_mem' := by
-        simp only [Set.mem_setOf_eq, star_one]
-        exact Subalgebra.one_mem _
+        simpa only [Set.mem_setOf_eq, star_one] using Subalgebra.one_mem _
       add_mem' := fun {x y} hx hy => by
         simp only [Set.mem_setOf_eq, star_add] at hx hy ⊢
         exact Subalgebra.add_mem _ hx hy
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, star_zero]
-        exact Subalgebra.zero_mem _
+        simpa only [Set.mem_setOf_eq, star_zero] using Subalgebra.zero_mem _
       algebraMap_mem' := fun z => by
         simp only [Set.mem_setOf_eq, ← algebraMap_star_comm]
         exact Subalgebra.algebraMap_mem _ _ }
@@ -247,28 +243,22 @@ def FP (L : LevelData A r) (a : A) : Prop := ∀ b, FC L b → Commute b a
 
 theorem fc_fns (L : LevelData A r) {a : A} (ha : a ∈ L.fns) : FC L a := by
   unfold FC
-  intro g hg
-  exact L.fns_comm a ha g hg
+  exact fun g hg => L.fns_comm a ha g hg
 theorem fp_fns (L : LevelData A r) {a : A} (ha : a ∈ L.fns) : FP L a := by
   unfold FP FC
-  intro b hb
-  exact hb a ha
+  exact fun b hb => hb a ha
 theorem fc_mul {L : LevelData A r} {a b : A} (ha : FC L a) (hb : FC L b) : FC L (a * b) := by
   unfold FC at *
-  intro g hg
-  exact (ha g hg).mul_left (hb g hg)
+  exact fun g hg => (ha g hg).mul_left (hb g hg)
 theorem fp_mul {L : LevelData A r} {a b : A} (ha : FP L a) (hb : FP L b) : FP L (a * b) := by
   unfold FP at *
-  intro c hc
-  exact (ha c hc).mul_right (hb c hc)
+  exact fun c hc => (ha c hc).mul_right (hb c hc)
 theorem fc_smul {L : LevelData A r} (z : ℂ) {a : A} (ha : FC L a) : FC L (z • a) := by
   unfold FC at *
-  intro g hg
-  exact (ha g hg).smul_left z
+  exact fun g hg => (ha g hg).smul_left z
 theorem fp_smul {L : LevelData A r} (z : ℂ) {a : A} (ha : FP L a) : FP L (z • a) := by
   unfold FP at *
-  intro c hc
-  exact (ha c hc).smul_right z
+  exact fun c hc => (ha c hc).smul_right z
 
 theorem fc3 (L : LevelData A r) {a b c : A} (ha : a ∈ L.fns) (hb : b ∈ L.fns) (hc : c ∈ L.fns) : FC L (a * b * c) := fc_mul (fc_mul (fc_fns L ha) (fc_fns L hb)) (fc_fns L hc)
 theorem fp3 (L : LevelData A r) {a b c : A} (ha : a ∈ L.fns) (hb : b ∈ L.fns) (hc : c ∈ L.fns) : FP L (a * b * c) := fp_mul (fp_mul (fp_fns L ha) (fp_fns L hb)) (fp_fns L hc)

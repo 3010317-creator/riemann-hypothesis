@@ -120,10 +120,8 @@ theorem coeff_one_alongCv_lg (X : RawChart C d I κ) {V : VF C} (hB : Basic X V)
   · rw [hB.lin i _ (by simp), MvPowerSeries.coeff_X, ite_eq_left rfl, one_mul]
   · intro j _ hj
     rw [hB.lin i _ (by simp), MvPowerSeries.coeff_X, ite_eq_right, zero_mul]
-    intro h
-    exact hj (Finsupp.single_left_injective one_ne_zero h)
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+    exact fun h => hj (Finsupp.single_left_injective one_ne_zero h)
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 theorem coeff_one_tyS {l : ℕ} (hl : 2 ≤ l) (a : ℕ → C) : PowerSeries.coeff 1 (tyS l a) = a 0 := by
   have h := coeff_tyS_pow hl a 0
@@ -171,7 +169,6 @@ theorem r1sRestB_holds : OtherGroupCurvesClosed := by
     rw [coeff_one_of_mem X hB (fun i => (hε i).1) hε1 i]
     refine Finset.sum_congr rfl fun c _ => ?_
     ring
-  · intro q'
-    exact (H g').t2 _ ((H g').Fm x hx) 0 (fun i hi => absurd hi (Nat.not_lt_zero _)) _
+  · exact fun q' => (H g').t2 _ ((H g').Fm x hx) 0 (fun i hi => absurd hi (Nat.not_lt_zero _)) _
 
 end Formalism.L2.FormalSeriesBounds

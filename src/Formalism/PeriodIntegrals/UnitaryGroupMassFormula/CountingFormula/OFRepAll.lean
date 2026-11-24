@@ -212,8 +212,7 @@ private theorem pW_smul' (D : Formalism.BasicNotions.D7) (c : D.host.E) (v : (VS
   simp only [map_smul, smul_eq_mul, mul_div_assoc, mul_smul, smul_sub, smul_add, Finset.smul_sum]
 
 private theorem pW_sum' (D : Formalism.BasicNotions.D7) {ι : Type} (s : Finset ι) (f : ι → (VS D).V) :
-    pW D (∑ i ∈ s, f i) = ∑ i ∈ s, pW D (f i) := by
-  exact map_sum (AddMonoidHom.mk' (pW D) (pW_add' D)) f s
+    pW D (∑ i ∈ s, f i) = ∑ i ∈ s, pW D (f i) := map_sum (AddMonoidHom.mk' (pW D) (pW_add' D)) f s
 
 private theorem hT_pW_self_of_hT_hypE_eq_zero (D : Formalism.BasicNotions.D7) (w : (VS D).V)
     (hw : ∀ a, (VS D).hT (D.sp.hypE a) w = 0) :
@@ -266,8 +265,7 @@ theorem tv_norm (D : Formalism.BasicNotions.D7) {T : D.host.E} (T' : D.host.E) (
     simp only [pW_smul']
   have hEu : ∀ a b', (VS D).hT (D.sp.hypE a) (fr D x b') = Z (Fin.castSucc a) b' := by
     intro a b'
-    have h := hZ (Fin.castSucc a) b'
-    simpa [brS, FlagG.fvec, he] using h
+    simpa [brS, FlagG.fvec, he] using hZ (Fin.castSucc a) b'
   have hzu : ∀ b', (VS D).hT D.sp.zm (fr D x b') = Z (Fin.last D.R.rS) b' / star c0 := by
     intro b'
     have h := hZ (Fin.last D.R.rS) b'
@@ -676,8 +674,7 @@ theorem semidef (D : Formalism.BasicNotions.D7) (w : (VS D).V) (hE : ∀ a, (VS 
       · simp only [wv, d, Sum.elim_inr, Bool.false_eq_true, ite_false, D.sp.zm_norm, map_neg,
           map_natCast]
         push_cast; ring
-      · simp only [wv, d, Sum.elim_inr, ite_true]
-        exact real_of_emb D τ w
+      · simpa only [wv, d, Sum.elim_inr, ite_true] using real_of_emb D τ w
   have hneg : ∀ i, d i < 0 := by
     intro i
     rcases i with a | b

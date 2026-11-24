@@ -72,8 +72,7 @@ theorem lvPr_eq_zero (hle : M ≤ M') (hs : ∀ x ∈ M', s • x ∈ M) (hst : 
       abel
     rw [e]
     exact Submodule.sub_mem _ h1 h2
-  · intro h
-    exact Submodule.smul_mem _ t (key _ h)
+  · exact fun h => Submodule.smul_mem _ t (key _ h)
 
 theorem lvPr_smul (hs : ∀ x ∈ M', s • x ∈ M) (r : 𝓞 E) (z : ↥M') :
     lvPr P hs t (r • z) = Ideal.Quotient.mk P.asIdeal r • lvPr P hs t z := by
@@ -174,8 +173,7 @@ theorem fv_dPr (z : ↥d.1.Lsh) : d.fv P (dPr d ha P t z) = d.1.f P z.1 := by
   have hz : z.1 ∈ d.1.at P.1 := d.2.Lsh_le_at ha P z.2
   rw [d.2.f_smul P t _ (Submodule.smul_mem _ a hz), d.2.f_smul P a _ hz, ← mul_assoc, ← map_mul]
   have h1 : Ideal.Quotient.mk P.1.asIdeal (t * a) = 1 := by
-    rw [← map_one (Ideal.Quotient.mk P.1.asIdeal), Ideal.Quotient.eq, mul_comm]
-    exact hat
+    rwa [← map_one (Ideal.Quotient.mk P.1.asIdeal), Ideal.Quotient.eq, mul_comm]
   rw [h1, one_mul]
 
 

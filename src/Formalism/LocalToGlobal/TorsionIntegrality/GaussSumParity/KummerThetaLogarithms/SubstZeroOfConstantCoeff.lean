@@ -165,8 +165,7 @@ theorem subst_single_var {ι κ : Type} {b : ι → MvPowerSeries κ K} (hb : Mv
   unfold at1
   have h := MvPowerSeries.subst_comp_subst_apply (PowerSeries.HasSubst.X x :
     PowerSeries.HasSubst (MvPowerSeries.X x : MvPowerSeries ι K)).const hb f
-  rw [MvPowerSeries.subst_X hb] at h
-  exact h
+  rwa [MvPowerSeries.subst_X hb] at h
 
 theorem subst_zero_of_constantCoeff {κ : Type} (f : PowerSeries K)
     (hf : PowerSeries.constantCoeff f = 0) :
@@ -255,8 +254,7 @@ end TorusDerivation
 open TorusDerivation
 
 theorem torus_coefficient : TorusCoeff := by
-  intro K _ l d _ u f n
-  exact coeff_subst_scale (fun s => u ^ lw l s) f n
+  exact fun K _ l d _ u f n => coeff_subst_scale (fun s => u ^ lw l s) f n
 
 theorem torus_tilde : TorusTil := by
   intro K _ l d _ σ _ be0 ι _ om oms u hu hσ
@@ -445,10 +443,8 @@ theorem wt_ne_one {l : ℕ} (hl : 2 ≤ l) {ζ : K} (hζ : IsPrimitiveRoot ζ (l
         · have := ht c hct
           rwa [ite_eq_right hc] at this
       rw [hc0, pow_zero]
-    · intro h
-      exact absurd (Finset.mem_univ s) h
-    · intro h
-      exact absurd (Finset.mem_univ t) h
+    · exact fun h => absurd (Finset.mem_univ s) h
+    · exact fun h => absurd (Finset.mem_univ t) h
   intro h1
   rw [hw, hζ.zpow_eq_one_iff_dvd] at h1
   have e : lw l s + lw l t = (l : ℤ) ^ s.val - (l : ℤ) ^ t.val := by

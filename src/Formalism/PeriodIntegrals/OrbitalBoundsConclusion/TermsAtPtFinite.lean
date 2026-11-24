@@ -242,8 +242,7 @@ theorem shortFin_holds : ShortFin := by
     | zero => intro j; simpa using (isIntegral_zero : IsIntegral ℤ (0 : E))
     | add x y _ _ hx hy =>
       intro j
-      simp only [map_add (f := _), Finsupp.add_apply, mul_add]
-      exact (hx j).add (hy j)
+      simpa only [map_add (f := _), Finsupp.add_apply, mul_add] using (hx j).add (hy j)
     | smul a x _ hx =>
       intro j
       rw [← algebraMap_smul E a x, map_smul, Finsupp.smul_apply, smul_eq_mul, mul_left_comm]
@@ -279,8 +278,7 @@ theorem shortFin_holds : ShortFin := by
       rw [hBapp]; simp only [hxc]; ring
     have h1 : (Φ x p) ^ 2 ≤ K p * (2 * Algebra.trace ℚ E c) := by
       have := hK p ⟨x, hxP⟩
-      rw [hf, hB] at this
-      exact this
+      rwa [hf, hB] at this
     have h2 : ((n ^ 2 : ℤ) : ℚ) ≤ (R p : ℚ) := by
       push_cast
       rw [hn]

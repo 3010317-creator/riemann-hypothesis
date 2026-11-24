@@ -37,8 +37,7 @@ theorem gramN_posDef_at {Ch : ℕ → Type} {u : D.what₂.Word} {chOf : ∀ i, 
     have h1 : (C.1⁻¹ * C.1).map ι = 1 := by
       rw [Matrix.nonsing_inv_mul _ hCi, Matrix.map_one _ (map_zero _) (map_one _)]
     have h2 := congrArg (fun v => ((C.1⁻¹).map ι) *ᵥ v) hxy
-    simp only [Matrix.mulVec_mulVec, hA, ← Matrix.map_mul, h1, Matrix.one_mulVec] at h2
-    exact h2
+    simpa only [Matrix.mulVec_mulVec, hA, ← Matrix.map_mul, h1, Matrix.one_mulVec] using h2
   rw [hG]
   exact Matrix.PosDef.conjTranspose_mul_self A hinj
 
@@ -61,8 +60,7 @@ theorem gramP_posDef_at {Ch : ℕ → Type} {u : D.what₂.Word} {chOf : ∀ i, 
       rw [Matrix.mul_assoc, ← Matrix.mul_assoc C.1⁻¹, Matrix.nonsing_inv_mul _ hCi, Matrix.one_mul, hL,
         Matrix.map_one _ (map_zero _) (map_one _)]
     have h2 := congrArg (fun v => ((L * C.1⁻¹).map ι) *ᵥ v) hxy
-    simp only [Matrix.mulVec_mulVec, hA, ← Matrix.map_mul, h1, Matrix.one_mulVec] at h2
-    exact h2
+    simpa only [Matrix.mulVec_mulVec, hA, ← Matrix.map_mul, h1, Matrix.one_mulVec] using h2
   rw [hG]
   exact Matrix.PosDef.conjTranspose_mul_self A hinj
 

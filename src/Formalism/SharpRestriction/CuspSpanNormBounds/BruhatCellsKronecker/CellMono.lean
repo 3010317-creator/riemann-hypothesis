@@ -74,8 +74,7 @@ theorem cmono_supSum_succ (p q : Fin n) (y : K) (h : q.val = p.val + 1) : supSum
     · unfold cmonoE
       rw [ite_eq_right (fun hh => hne hh.1)]
     · rfl
-  · intro hh
-    exact absurd (Finset.mem_univ p) hh
+  · exact fun hh => absurd (Finset.mem_univ p) hh
 
 theorem cmono_supSum_ne (p q : Fin n) (y : K) (h : q.val ≠ p.val + 1) : supSum (cmonoE p q y) = 0 := by
   unfold supSum
@@ -101,8 +100,7 @@ theorem cmono_left [StarRing K] (σ : Fin n → Fin n) (t : Fin n → K) (hσ : 
   · intro k _ hk
     simp only [mono]
     rw [ite_eq_right hk, mul_zero]
-  · intro hh
-    exact absurd (Finset.mem_univ _) hh
+  · exact fun hh => absurd (Finset.mem_univ _) hh
 
 theorem cmono_right (σ : Fin n → Fin n) (t : Fin n → K) (c b : Fin n) (x : K) (i j : Fin n) :
     (mono σ t * cmonoE c b x) i j = if i = σ c ∧ j = b then t c * x else 0 := by
@@ -116,8 +114,7 @@ theorem cmono_right (σ : Fin n → Fin n) (t : Fin n → K) (c b : Fin n) (x : 
   · intro k _ hk
     simp only [cmonoE]
     rw [ite_eq_right (fun hh => hk hh.1), mul_zero]
-  · intro hh
-    exact absurd (Finset.mem_univ _) hh
+  · exact fun hh => absurd (Finset.mem_univ _) hh
 
 end
 

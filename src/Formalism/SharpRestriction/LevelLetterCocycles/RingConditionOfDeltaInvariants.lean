@@ -253,9 +253,7 @@ theorem baseIdOf_inj (hR : Ring9 W) : (baseIdOf hR).Inj := by
   intro x y hxy
   exact ιOf_inj hR hxy
 
-theorem baseIdOf_full (hR : Ring9 W) : (baseIdOf hR).Full := by
-  intro a ha
-  exact ιOf_full hR a ha
+theorem baseIdOf_full (hR : Ring9 W) : (baseIdOf hR).Full := fun a ha => ιOf_full hR a ha
 
 
 variable (W) in
@@ -292,8 +290,7 @@ theorem unit_desc (hR : Ring9 W) {w b c : PowerSeries O} (hw : IsUnit w) (hb : I
   have hwinv : Inv1 W (w' : PowerSeries O) := by
     intro δ hδ
     have e : W.γ₀ δ b = W.γ₀ δ ((w' : PowerSeries O) * c) := by rw [h]
-    rw [hb δ hδ, map_mul, hc δ hδ] at e
-    rw [h] at e
+    rw [hb δ hδ, map_mul, hc δ hδ, h] at e
     exact (mul_right_cancel₀ hc0 e).symm
   have hwinv' : Inv1 W ((w'⁻¹ : (PowerSeries O)ˣ) : PowerSeries O) := by
     intro δ hδ
@@ -510,8 +507,7 @@ theorem mem_smul_top_pi (k : ℕ) (x : Fin k → R) :
       rw [Submodule.mem_pi]
       intro j _
       simpa [smul_eq_mul] using J.mul_mem_right (m j) hr
-    intro i
-    exact (Submodule.mem_pi.mp (hle hx)) i (Set.mem_univ i)
+    exact fun i => (Submodule.mem_pi.mp (hle hx)) i (Set.mem_univ i)
   · intro hx
     rw [pi_eq_sum_univ x]
     exact sum_mem fun i _ => Submodule.smul_mem_smul (hx i) Submodule.mem_top
@@ -551,8 +547,7 @@ theorem complete_OL (LL : FinExt l) :
   have h2 : IsPrecomplete (IsLocalRing.maximalIdeal ℤ_[l]) ↥(OL LL) := precomplete_of_surj _ f hf
   have h3 : IsAdicComplete (IsLocalRing.maximalIdeal ℤ_[l]) ↥(OL LL) := { }
   have h4 := (IsAdicComplete.map_algebraMap_iff (S := ↥(OL LL)) (IsLocalRing.maximalIdeal ℤ_[l]) ↥(OL LL)).2 h3
-  rw [PadicInt.maximalIdeal_eq_span_p, Ideal.map_span, Set.image_singleton, map_natCast] at h4
-  exact h4
+  rwa [PadicInt.maximalIdeal_eq_span_p, Ideal.map_span, Set.image_singleton, map_natCast] at h4
 
 theorem valRing_rec (P : LocPrime l) (LL : FinExt l) : ValRing (LL := ↥LL.1) ↥(OL LL) (P.v LL) := by
   unfold ValRing

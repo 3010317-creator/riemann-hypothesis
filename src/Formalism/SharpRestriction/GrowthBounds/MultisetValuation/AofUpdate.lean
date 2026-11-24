@@ -84,8 +84,7 @@ theorem Zop_smul (hL : LinD X) (v : X.Pl) (u m : ℕ → X.G.Kf) (j : ℕ) (a : 
   ring
 
 theorem Zop_zero (hL : LinD X) (v : X.Pl) (u m : ℕ → X.G.Kf) (j : ℕ) : X.Zop v u m j 0 = 0 := by
-  have h := Zop_smul hL v u m j 0 0
-  simpa using h
+  simpa using Zop_smul hL v u m j 0 0
 
 variable (X)
 
@@ -176,8 +175,7 @@ theorem Zop_gen (hfr : IsFractionRing X.G.O X.G.Kf) (hL : LinD X) (v : X.Pl) (u 
       have hcl : X.vGeK (X.cl v m (j + 1) l) (if X.G.P.r - l = 0 then (X.alEven v : ℝ) else 0) := by
         split_ifs with h
         · have hlr : l = X.G.P.r := by omega
-          rw [hlr]
-          exact hcr
+          rwa [hlr]
         · exact hc0 l (by omega)
       have key := vGeK_mul X hfr ha (vGeK_mul X hfr (vGeK_mul X hfr (vGeK_negOnePow X l) hcl) hUk)
       convert key using 1
@@ -239,12 +237,10 @@ theorem ZL_bound {Y : Pend X} (hfr : IsFractionRing X.G.O X.G.Kf) (hL : LinD X) 
             linarith [h1 v hv]
           · right
             refine ⟨by omega, hr v, ?_⟩
-            simp only [hgQ, hv, hi, and_false, ite_false, sub_zero]
-            exact h1 v hv
+            simpa only [hgQ, hv, hi, and_false, ite_false, sub_zero] using h1 v hv
         · left
           refine ⟨h0 v hv, Or.inl ?_⟩
-          simp only [hgQ, hv, false_and, ite_false, sub_zero]
-          exact h2 v hv
+          simpa only [hgQ, hv, false_and, ite_false, sub_zero] using h2 v hv
       have hTt := form_of_place hF hE j hj i0 vs gQ hnd hr h0 hP G' hG'
       have hsum : ∑ v, gQ v = ∑ v, gP v - Aof X i0 vs := by
         simp only [hgQ, Aof, Finset.sum_sub_distrib]
@@ -257,8 +253,7 @@ theorem ZL_bound {Y : Pend X} (hfr : IsFractionRing X.G.O X.G.Kf) (hL : LinD X) 
     | smul a x _ hx =>
       have ha : X.vGeK (algebraMap X.G.O X.G.Kf a) 0 := (vGeK_zero_iff X).2 ((mem_intK X).2 ⟨a, rfl⟩)
       have hs := vGe_smul X hfr ha hx
-      rw [zero_add, algebraMap_smul] at hs
-      exact hs
+      rwa [zero_add, algebraMap_smul] at hs
   exact key _ (ZL_mem hfr hL u m j hj hu hc0 hcr vs hnd G hG)
 
 end Formalism.MainNotions.FormalGroupSystem.Pf

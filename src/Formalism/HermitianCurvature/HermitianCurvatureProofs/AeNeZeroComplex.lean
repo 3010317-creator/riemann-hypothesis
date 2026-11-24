@@ -292,8 +292,7 @@ theorem gN_setC_app {Cb Cc : ℝ} {S : C.HidaSetting E Wp Wq} {p : ∀ v, KB.Pl 
               rw [hlam1, Complex.ofReal_one, one_mul]
               rw [hTT]; linarith)
           simp only [hRRs]
-          rw [show j + 1 = (D.parOf S v).r + 1 by rw [hjt]]
-          exact this
+          rwa [show j + 1 = (D.parOf S v).r + 1 by rw [hjt]]
         rw [h0, mul_zero, mul_zero]
     · have hx : xw c = (S.fr (j + 1) 1 * ‖c‖) ^ (2 * (Mj - 2)) := by
         simp only [hxw, C.nAux]
@@ -484,8 +483,7 @@ theorem gN_setC_form {Cb Cc : ℝ} {S : C.HidaSetting E Wp Wq} {p : ∀ v, KB.Pl
         (KB.slv (p v).T (F v ε) i hi w (stdS S Q) ((stdS_size S Q).trans hQ.2)) := by
   have hg := g_pos_of_built hB
   have key : ∀ R : C.LPt, D.IsLocPt R i → D.IsLocPt (stdS S R) i := by
-    intro R hR
-    exact And.intro ((tent_lemma _ _ hg.ne' R 1).mpr hR.1) ((stdS_size S R).trans hR.2)
+    exact fun R hR => And.intro ((tent_lemma _ _ hg.ne' R 1).mpr hR.1) ((stdS_size S R).trans hR.2)
   rw [gN_setC hB F v ε i w P Q, rr_eq_form (p v) (F v ε) i hi w (stdS S P) (stdS S Q) (key P hP) (key Q hQ)]
   unfold dW
   rfl
@@ -501,8 +499,7 @@ theorem gN_setC_zero {Cb Cc : ℝ} {S : C.HidaSetting E Wp Wq} {p : ∀ v, KB.Pl
     intro R hR
     exact And.intro ((tent_lemma _ _ hg.ne' R 1).mp hR.1) ((stdS_size S R).symm.trans hR.2)
   rw [gN_setC hB F v ε i w P Q, rr_zero_of_not (p v) (F v ε) i w (stdS S P) (stdS S Q), mul_zero]
-  intro h
-  exact hn ⟨key P h.1, key Q h.2⟩
+  exact fun h => hn ⟨key P h.1, key Q h.2⟩
 
 theorem hatB_setC_zero {Cb Cc : ℝ} {S : C.HidaSetting E Wp Wq} {p : ∀ v, KB.Pl (D.parOf S v) (Wp (S.pl v)) (Wq (S.pl v))}
     {f : ∀ v : Fin S.f, B.Mat S.G.k S.G.r → (Wq (S.pl v) →L[ℂ] Wp (S.pl v))} {χ : ℝ → ℝ} {A₀ : ℝ}
@@ -518,8 +515,7 @@ theorem hatB_setC_zero {Cb Cc : ℝ} {S : C.HidaSetting E Wp Wq} {p : ∀ v, KB.
     rintro ⟨h1, h2⟩
     apply hn
     have key : ∀ R : C.LPt, D.ptSize R = j → D.IsLocPt (R ++ [(1, c)]) (j + 1 + 1 - 1) → D.IsLocPt R j := by
-      intro R hR hRl
-      exact And.intro (fun b hb => hRl.1 b (List.mem_append_left _ hb)) hR
+      exact fun R hR hRl => And.intro (fun b hb => hRl.1 b (List.mem_append_left _ hb)) hR
     exact ⟨key h hsz h1, key h' hsz' h2⟩
   simp only [h0, zero_mul, MeasureTheory.integral_zero, mul_zero]
 

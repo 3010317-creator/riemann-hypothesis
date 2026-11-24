@@ -247,8 +247,7 @@ theorem be_nat (hph : PowerSeries.constantCoeff ph = 0)
         MvPowerSeries.C ((k + 1 : ℕ) : ℂ_[p]) * be l ex ph z y := by
       rw [Nat.cast_succ, map_add (f := _), map_one]
       ring
-    rw [← h4]
-    exact h3
+    rwa [← h4]
 
 include hE hSub hex0 hinv hB in
 theorem be_zp (hC : CalcClosed) (hD : NatDense) (hph : PowerSeries.constantCoeff ph = 0)

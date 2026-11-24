@@ -150,9 +150,7 @@ theorem reduceJ {k r : ℕ} (T : D.LevTower k r Wp Wq) (F : B.Mat k r → (Wq �
         simp [Finset.sum_apply]
       rw [e1, Formalism.FourierDecayAlt.P.JCx2.bc_JF_sum Finset.univ (fun l : Fin (j + 1) => ((y : ℂ) ^ (l : ℕ)) • V l a')
         (fun l _ => Formalism.FourierDecayAlt.P.JCx2.mn_nice_smul _ (hV l)) hg]
-      apply Finset.sum_congr rfl
-      intro l _
-      exact Formalism.FourierDecayAlt.P.JCx2.bc_JF_smul _ _ _
+      exact Finset.sum_congr rfl (fun l _ => Formalism.FourierDecayAlt.P.JCx2.bc_JF_smul _ _ _)
     have hgGV : g ∈ B.GV k (r - j) := hg.1
 
     have hL : ∀ y' : ℝ, B.JF (T.bs j) (KB.slv T F j hj ((b, y' + δ) :: w') (h ++ [(s, τ)]) ha (Fin.cons 1 a')) g =

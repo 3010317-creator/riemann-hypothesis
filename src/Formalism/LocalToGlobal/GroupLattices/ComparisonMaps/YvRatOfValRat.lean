@@ -82,8 +82,7 @@ theorem li_of_rat (hsep : ∀ F : W, (∀ t, ev t F = 0) → F = 0)
 
   simp only [map_sum, map_smul, smul_eq_mul, map_zero] at h0
 
-  simp only [map_sum, hsm, map_smul, smul_eq_mul, key]
-  exact h0
+  simpa only [map_sum, hsm, map_smul, smul_eq_mul, key] using h0
 
 def descOp (hsm : ∀ (a : LL) x, cmp (a • x) = e a • cmp x) (hinj : Function.Injective cmp) (Tp : W →ₗ[Kf] W)
     (h : ∀ x, ∃ y, cmp y = Tp (cmp x)) : V →ₗ[LL] V where
@@ -142,8 +141,7 @@ theorem isRational_iff (F : FnP P α) : RatFnP P α e F ↔ IsRat e (evP P α) F
     refine ⟨∑ n ∈ (F i L).support, MvPolynomial.monomial n (π (AddMonoidAlgebra.coeff (F i L) n)), ?_⟩
 
     rw [map_sum]
-    simp only [MvPolynomial.map_monomial, hc]
-    exact (MvPolynomial.as_sum (F i L)).symm
+    simpa only [MvPolynomial.map_monomial, hc] using (MvPolynomial.as_sum (F i L)).symm
 
 end Pl
 
@@ -191,9 +189,7 @@ theorem span_M_zero (F : G.Fn) (hF : F ∈ Submodule.span G.Kf (G.M : Set G.Fn))
     have h0 : F' ∈ Submodule.pi Set.univ (fun j => (G.lev j).funMod G.P.HtupW) := hF'
     have h1 := (Submodule.mem_pi.1 h0) i (Set.mem_univ i)
     have h2 := (Submodule.mem_inf.1 (Submodule.mem_inf.1 h1).1).2
-    have h3 := (Submodule.mem_iInf _).1 h2 L
-    have h4 := (Submodule.mem_iInf _).1 h3 hL
-    exact LinearMap.mem_ker.1 h4
+    exact LinearMap.mem_ker.1 ((Submodule.mem_iInf _).1 ((Submodule.mem_iInf _).1 h2 L) hL)
   induction hF using Submodule.span_induction with
   | mem x hx => exact key x hx
   | zero => rfl

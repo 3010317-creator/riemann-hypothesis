@@ -65,10 +65,8 @@ theorem types_of_lift_eigenvalues {s : ℕ} (hOk : A3.fam3.Ok3 s) (hsep : A3.fam
   refine (A3.fam3.LI j A3.A.fam.μ0).inert_parts_span_top (ℓ := A3.A.fam.lvlA P ψ) (Z := X.Zl j A3.A.fam.μ0)
     hOk.ok2.conj (hOk.ok2.lifts j A3.A.fam.μ0) (hOk.lifts j A3.A.fam.μ0)
     hOk.ok2.irr ?_ (fun p : A3.fam3.base3.Ix => A3.fam3.tr3 j p.1) ?_ ?_
-  · intro i
-    exact Submodule.map_le_iff_le_comap.1 (hst.2 j A3.A.fam.μ0 (Sum.inl i))
-  · intro p q hpq
-    exact hsep p.1 p.2 q.1 q.2 (fun h => hpq (Subtype.ext h)) j
+  · exact fun i => Submodule.map_le_iff_le_comap.1 (hst.2 j A3.A.fam.μ0 (Sum.inl i))
+  · exact fun p q hpq => hsep p.1 p.2 q.1 q.2 (fun h => hpq (Subtype.ext h)) j
   · refine (hC j).le.trans ?_
     apply BlockDat.good_part_coordinates_mono
     refine Col.eigSum_mono fun x hx => ?_

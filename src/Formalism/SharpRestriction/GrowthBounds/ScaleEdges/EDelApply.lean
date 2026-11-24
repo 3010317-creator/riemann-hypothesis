@@ -161,8 +161,7 @@ theorem del_bound (hF : FramesOK TT L₁ L₂ N₁ G' F) (hr : 1 ≤ r) (hG : G'
         refine ite_eq_right ?_
         intro h
         exact hne (Fin.ext (huniq j0 j0 hj0' hj0' l l0 l.isLt l0.isLt (h.symm.trans ht0)).2)
-      · intro h
-        exact absurd (Finset.mem_univ l0) h
+      · exact fun h => absurd (Finset.mem_univ l0) h
     rw [Finset.sum_eq_single j0 hz (fun h => absurd hj0 h), h0]
     apply Nat.mul_le_mul
     · have hzz : (zF F ((j0 : ℤ) + 1) - zF F (j0 : ℤ)).toNat ≤ G' := by
@@ -300,14 +299,12 @@ private theorem arow_lt_self_and_sub_lt_of_framesOK (hF : FramesOK TT L₁ L₂ 
       _ ≤ (evensBefore F s).length := List.toFinset_card_le _
   have hl' : l < (evensBefore F s).length := by omega
   have harow : Arow F s l = (evensBefore F s)[l] := by
-    simp only [Arow]
-    exact List.getD_eq_getElem _ _ hl'
+    simpa only [Arow] using List.getD_eq_getElem _ _ hl'
   have hyl : (evensBefore F s)[l] < s := by
     have := (Formalism.MainNotions.G.symbolGeneratorData.dv_ev_mem (F := F) s _).1 (List.getElem_mem hl')
     exact this.1.2
   have hge : F.fr j0 0 ≤ (evensBefore F s)[l] := by
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     have hsub : ((Finset.range r).image fun i => F.fr j0 i) ⊆ ((evensBefore F s).take l).toFinset := by
       intro a ha
       obtain ⟨i, hi, rfl⟩ := Finset.mem_image.1 ha
@@ -389,12 +386,10 @@ theorem d_bound (hF : FramesOK TT L₁ L₂ N₁ G' F) (hr : 1 ≤ r) (hG : G' �
     · rw [smul_eq_mul]
       exact Nat.mul_le_mul_right _ (tops_near hF hr hG hI t)
   · intro s _ hne
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     apply hne
     rw [eD_apply, Finset.sum_eq_zero, mul_zero]
-    intro l _
-    exact ite_eq_right (hno l)
+    exact fun l _ => ite_eq_right (hno l)
 
 theorem eSP_off (hF : FramesOK TT L₁ L₂ N₁ G' F) (k c' Q : ℕ) (t : Fin n') (ht : t ∉ F.TT) :
     eSP p n' F k c' Q t = 0 := by

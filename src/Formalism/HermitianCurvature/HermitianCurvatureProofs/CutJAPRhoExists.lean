@@ -135,10 +135,8 @@ theorem mem_K {z b : Fin (2 * r + k + 1) → ℂ} {π : Mx k r → (Wp →L[ℂ]
         have hl := Qx8.capRep_lin hFr (z := z) (by simp) hrep hcont w
         rw [hl.map_smul, hx Fr hFr w, smul_comm] }
   constructor
-  · intro hx
-    exact (Submodule.span_le (p := S)).2 (fun y hy => hy) hx
-  · intro hx
-    exact Submodule.subset_span hx
+  · exact fun hx => (Submodule.span_le (p := S)).2 (fun y hy => hy) hx
+  · exact fun hx => Submodule.subset_span hx
 
 theorem Kset_uw {z b : Fin (2 * r + k + 1) → ℂ} {π : Mx k r → (Wp →L[ℂ] Wp)} {f : ℂ → ℂ}
     (hrep : IsCRepOn (UWset k r z) π) (hcont : ContinuousOn π (UWset k r z)) {h : Mx k r} (hh : h ∈ UWset k r z)
@@ -676,8 +674,7 @@ theorem generic (P : M.Par) : ∃ Y : ℂ, ∀ (ρ : M.Ty P) (σ : M.Ty (Qx8.P2 
     · exact one_ne_zero
     · exact sub_ne_zero.mpr h
   obtain ⟨Y, hY⟩ : ∃ Y, D.eval Y ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hD (Polynomial.funext fun y => by rw [hcon y, Polynomial.eval_zero])
   refine ⟨Y, fun ρ σ hex hEq => ?_⟩
   obtain ⟨Y', hY'⟩ := hex
@@ -731,8 +728,7 @@ theorem lagrange_annihilation : Lagrange := by
       v ∈ K P.k P.r z e π (fun w' => M.xC P ρ (w' - ((P.k : ℂ) - 2) / 2)) := by
     intro σ heq v hv
     have hfun : ∀ Y', M.xC (Qx8.P2 P) σ Y' = M.xC P ρ Y' := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hY ρ σ hc heq
     refine Submodule.subset_span (fun Fr' hFr' w' => ?_)
     show capRep P.k P.r π Fr' w' v = M.xC P ρ (w' - ((P.k : ℂ) - 2) / 2) • v

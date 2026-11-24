@@ -72,14 +72,12 @@ theorem comap_eq_comap_iff (hσ : ∀ x, σ (σ x) = x) (hfix : ∀ x, σ x = x 
     P.comap ι = Q.comap ι ↔ Q = P ∨ Q = P.comap σ := by
   constructor
   · intro h
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     have hP' : (P.comap σ).IsMaximal := comap_isMaximal_invol hσ hP
 
     have hout : ∀ R : Ideal B, R.IsMaximal → Q ≠ R → ∃ y ∈ Q, y ∉ R := by
       intro R hR hQR
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hQR (hQ.eq_of_le hR.ne_top hc)
     obtain ⟨y, hyQ, hyP⟩ := hout P hP hne.1
     obtain ⟨z, hzQ, hzP'⟩ := hout _ hP' hne.2
@@ -109,8 +107,7 @@ theorem comap_eq_comap_iff (hσ : ∀ x, σ (σ x) = x) (hfix : ∀ x, σ x = x 
 theorem exists_sub_mem_of_split (hσ : ∀ x, σ (σ x) = x) (hfix : ∀ x, σ x = x ↔ x ∈ Set.range ι)
     {P : Ideal B} (hP : P.IsMaximal) (hc : P.comap σ ≠ P) (b : B) : ∃ a : A, b - ι a ∈ P := by
   have hP' : (P.comap σ).IsMaximal := comap_isMaximal_invol hσ hP
-  have hsup : P ⊔ P.comap σ = ⊤ := by
-    exact Ideal.IsMaximal.coprime_of_ne hP hP' (Ne.symm hc)
+  have hsup : P ⊔ P.comap σ = ⊤ := Ideal.IsMaximal.coprime_of_ne hP hP' (Ne.symm hc)
   obtain ⟨u, hu, v, hv, huv⟩ := Submodule.mem_sup.1 (hsup ▸ Submodule.mem_top : (1 : B) ∈ P ⊔ P.comap σ)
   rw [Ideal.mem_comap] at hv
   have hfx : σ (b * v + σ (b * v)) = b * v + σ (b * v) := by rw [map_add (f := _), hσ, add_comm]
@@ -139,12 +136,10 @@ theorem not_isPrime_map_of_split (hσ : ∀ x, σ (σ x) = x) (hfix : ∀ x, σ 
     {P : Ideal B} (hP : P.IsMaximal) (hc : P.comap σ ≠ P) : ¬ ((P.comap ι).map ι).IsPrime := by
   intro hpr
   have hP' : (P.comap σ).IsMaximal := comap_isMaximal_invol hσ hP
-  have hsup : P ⊔ P.comap σ = ⊤ := by
-    exact Ideal.IsMaximal.coprime_of_ne hP hP' (Ne.symm hc)
+  have hsup : P ⊔ P.comap σ = ⊤ := Ideal.IsMaximal.coprime_of_ne hP hP' (Ne.symm hc)
   obtain ⟨u, hu, v, hv, huv⟩ := Submodule.mem_sup.1 (hsup ▸ Submodule.mem_top : (1 : B) ∈ P ⊔ P.comap σ)
   have hu' : u ∉ P.comap σ := by
-    intro h
-    exact hP'.ne_top ((Ideal.eq_top_iff_one _).2 (huv ▸ (P.comap σ).add_mem h hv))
+    exact fun h => hP'.ne_top ((Ideal.eq_top_iff_one _).2 (huv ▸ (P.comap σ).add_mem h hv))
   have hle1 : (P.comap ι).map ι ≤ P := Ideal.map_comap_le
   have hle2 : (P.comap ι).map ι ≤ P.comap σ := by
     rw [← comap_ι_comap hfix P]

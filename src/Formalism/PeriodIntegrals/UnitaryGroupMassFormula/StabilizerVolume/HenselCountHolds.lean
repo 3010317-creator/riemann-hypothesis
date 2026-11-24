@@ -193,8 +193,7 @@ theorem hensel_main (μ : Measure V) (ν : Measure X) [μ.IsAddHaarMeasure] [ν.
         have a2 := hAi d Z hd
         have : -x c + x d = (-x c + f Z) - (-x d + f Z) := by abel
         rw [this]; exact (H (m + 1)).sub_mem a1 a2
-      · intro c
-        exact ((hopen (m + 1)).preimage (continuous_const.add continuous_id)).measurableSet
+      · exact fun c => ((hopen (m + 1)).preimage (continuous_const.add continuous_id)).measurableSet
     have hν : ν (H m) = (Fintype.card C : ENNReal) * ν (H (m + 1)) := by
       have hU : (H m : Set X) = ⋃ c : C, (fun u => -x c + u) ⁻¹' (H (m + 1) : Set X) := by
         ext u
@@ -214,8 +213,7 @@ theorem hensel_main (μ : Measure V) (ν : Measure X) [μ.IsAddHaarMeasure] [ν.
         simp only [Set.mem_preimage, SetLike.mem_coe] at hc hd
         have : -x c + x d = (-x c + u) - (-x d + u) := by abel
         rw [this]; exact (H (m + 1)).sub_mem hc hd
-      · intro c
-        exact ((hHo (m + 1)).preimage (continuous_const.add continuous_id)).measurableSet
+      · exact fun c => ((hHo (m + 1)).preimage (continuous_const.add continuous_id)).measurableSet
     have hc0 : (Fintype.card C : ENNReal) ≠ 0 := by
       exact_mod_cast (Fintype.card_ne_zero : Fintype.card C ≠ 0)
     have hct : (Fintype.card C : ENNReal) ≠ ⊤ := ENNReal.natCast_ne_top _

@@ -131,9 +131,7 @@ theorem nfLeibBd_term (Bs : B.RealPlaceData k r Wp Wq) {nf : ℕ} (fib : Fin nf 
     rw [e] at h
     rw [hco g hgd]
     simpa using h
-  have hb0 : 0 ≤ b := by
-    have h := hF.2 [] [] (by simp) (by simp) (by simp) g hg
-    exact le_trans (by positivity) h
+  have hb0 : 0 ≤ b := le_trans (by positivity) (hF.2 [] [] (by simp) (by simp) (by simp) g hg)
   have hc2 : ‖B.Rw T'.word F g‖ ≤ cw * (b * B.gN g ^ (-A)) := by
     rw [P.BetaSesquilinearity.Rw_scale]
     simp only
@@ -146,8 +144,7 @@ theorem nfLeibBd_term (Bs : B.RealPlaceData k r Wp Wq) {nf : ℕ} (fib : Fin nf 
     have e : B.dLR [] (T'.word.map P.BetaSesquilinearity.nrm) F g = B.Rw (T'.word.map P.BetaSesquilinearity.nrm) F g := rfl
     rw [e] at h
     have hpw : 0 < B.gN g ^ A := Real.rpow_pos_of_pos hgp _
-    rw [Real.rpow_neg hgp.le, ← div_eq_mul_inv, le_div_iff₀ hpw, mul_comm]
-    exact h
+    rwa [Real.rpow_neg hgp.le, ← div_eq_mul_inv, le_div_iff₀ hpw, mul_comm]
   have hc3 : ‖Pc g‖ ≤ CP * B.gN g ^ D := by
     have := hCP g hg
     simpa [P.B4.W_nil] using this
@@ -360,8 +357,7 @@ theorem nfLeibOps_of (hE : NFLeibExp) : NFLeibOps := by
     refine ⟨T, hT, t.2.1, t.2.2.1, hP, ?_, fun g _ => rfl⟩
     have hlie : ∀ X ∈ t.2.2.2, B.inLie k r X := fun X hX => T.word_lie X (hsub.subset hX)
     simp only [nfLeibOps_mk]
-    rw [ite_eq_left hlie]
-    exact hsub
+    rwa [ite_eq_left hlie]
   ·
     intro Ψ hΨ F hF x hx
     have hT1 : ∀ T ∈ Dop, T.coef x (B.Rw T.word (fun y => ((Ψ 0 (Gf k r Bs.z Bs.z' y) : ℝ) : ℂ) • F y) x) =

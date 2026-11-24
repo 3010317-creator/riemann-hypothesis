@@ -265,14 +265,12 @@ theorem liftedThirdRoot_sub_X_zero_ne_zero (W : WeierstrassCurve ℂ_[p]) (wq : 
     s3 W wq - MvPowerSeries.X 0 ≠ 0 := by
   intro h
   apply pairSubst_zero_one_ne_zero (PI.AddIntG.Wk.thirdRoot_sub_var_zero_ne_zero W wq)
-  rw [← liftedThirdRoot_sub_X W wq 0]
-  exact h
+  rwa [← liftedThirdRoot_sub_X W wq 0]
 
 theorem liftedThirdRoot_sub_X_one_ne_zero (W : WeierstrassCurve ℂ_[p]) (wq : PowerSeries ℂ_[p]) :
     s3 W wq - MvPowerSeries.X 1 ≠ 0 := by
   intro h
   apply pairSubst_zero_one_ne_zero (PI.AddIntG.Wk.thirdRoot_sub_var_one_ne_zero W wq)
-  rw [← liftedThirdRoot_sub_X W wq 1]
-  exact h
+  rwa [← liftedThirdRoot_sub_X W wq 1]
 
 end PI.FglTriFactor.Wk

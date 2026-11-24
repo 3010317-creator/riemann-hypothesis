@@ -142,8 +142,7 @@ theorem exp_deriv (X : Matrix (Fin n) (Fin n) ℂ) :
     rw [hasDerivAt_pi]
     intro i
     rw [hasDerivAt_pi]
-    intro j
-    exact exp_entry X i j
+    exact fun j => exp_entry X i j
   exact this
 
 def mulL (a : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ →L[ℝ] Matrix (Fin n) (Fin n) ℂ :=
@@ -214,10 +213,8 @@ theorem exp_mem_N {X : Mx k r} (hX : InLieN k r X) : NormedSpace.exp X ∈ Nset 
   refine ⟨?_, ?_, ?_⟩
   · have := exp_mem_UH hX.1 1
     simpa using this
-  · intro a i hai
-    exact exp_entry_of_InA i _ (fun n => (hX.2.pow n).1 a i hai)
-  · intro i j h1 h2 h3
-    exact exp_entry_of_InA i j (fun n => (hX.2.pow n).2 i j h1 h2 h3)
+  · exact fun a i hai => exp_entry_of_InA i _ (fun n => (hX.2.pow n).1 a i hai)
+  · exact fun i j h1 h2 h3 => exp_entry_of_InA i j (fun n => (hX.2.pow n).2 i j h1 h2 h3)
 
 theorem InLieN.add {X Y : Mx k r} (hX : InLieN k r X) (hY : InLieN k r Y) : InLieN k r (X + Y) := by
   apply PI.WUN.InLieN.add <;> assumption
@@ -523,8 +520,7 @@ theorem lie_stabilizer_splitting : LieSsetSplit := by
       · intro l _ hl
         rw [hpk_row, ite_eq_right (by simp only [a]; intro e; exact hl (Fin.ext (by omega))), zero_mul]
       · intro hn; exact absurd (Finset.mem_univ _) hn
-    rw [s1, s2, zero_add] at hE
-    exact hE
+    rwa [s1, s2, zero_add] at hE
   refine ⟨aP X, ?_, X - aP X, ?_, by abel⟩
   ·
     have hPz : Matrix.diagonal (pw k r) *ᵥ z = z := by
@@ -564,8 +560,7 @@ theorem lie_stabilizer_splitting : LieSsetSplit := by
         · have : pw k r i = 1 := by unfold pw; rw [ite_eq_left ⟨h3, hi⟩]
           rw [this, one_mul, sub_self]
         · rw [F3 i j h1 h2 (by omega), mul_zero, sub_zero]
-    intro t
-    exact PI.exp_mem_N (hN.smul t)
+    exact fun t => PI.exp_mem_N (hN.smul t)
 
 end Formalism.FourierDecayAlt.P.CutMP.SmoothTransferRegularity
 end -- clump:auto

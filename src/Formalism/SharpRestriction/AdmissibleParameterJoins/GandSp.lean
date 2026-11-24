@@ -171,8 +171,7 @@ theorem K1core {ι : Type} (Kc : Type) [Field Kc] [Algebra (K0 p) Kc] (Oc : Subr
   · have hn : constantCoeff (-Ph) = 0 := by rw [map_neg, hPh, neg_zero]
     rw [← mul_assoc, ← map_mul, expS_eq_Ex p hn, expS_eq_Ex p hPh, Ex_neg_mul hPh, map_one, one_mul]
   · have hInt' : IntegralMv (subst (diagS lgE) (map iC (map (algebraMap (K0 p) Kc) (expS p Ph) * Th))) := by
-      rw [map_mul, mmap_map, MvPowerSeries.subst_mul (hs_dg hlgE0), hE, mul_comm]
-      exact hInt
+      rwa [map_mul, mmap_map, MvPowerSeries.subst_mul (hs_dg hlgE0), hE, mul_comm]
     have key : map iC (subst (diagS (PowerSeries.subst th' lg))
         (map (algebraMap (K0 p) Kc) (expS p Ph) * Th)) =
         subst (diagS lgE) (map iC (map (algebraMap (K0 p) Kc) (expS p Ph) * Th)) := by
@@ -184,8 +183,7 @@ theorem K1core {ι : Type} (Kc : Type) [Field Kc] [Algebra (K0 p) Kc] (Oc : Subr
     refine descent Oc th' lg ps' hth'0 hps'0 hps'O hinv hlg0 _ (fun m => ?_) n
     rw [iC_int]
     have hm := hInt' m
-    rw [← key, MvPowerSeries.coeff_map] at hm
-    exact hm
+    rwa [← key, MvPowerSeries.coeff_map] at hm
 
 end Core
 

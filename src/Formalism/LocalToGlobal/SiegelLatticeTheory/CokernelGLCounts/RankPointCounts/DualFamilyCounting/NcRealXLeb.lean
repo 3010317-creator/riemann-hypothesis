@@ -386,8 +386,7 @@ theorem lebLoc {n r k : ℕ} (hn : n = 2 * r + k + 1) (ε : Fin n → Bool) (e f
       · rintro ⟨t, rfl⟩
         show Φ (ψ (Φ t)) = Φ t
         rw [hleft t]
-      · intro hx
-        exact ⟨ψ x, hx⟩
+      · exact fun hx => ⟨ψ x, hx⟩
     rw [hr]
     exact (isClosed_eq (hΦc.comp hψc) continuous_id).measurableSet
   have hΦN : ∀ t : (WlocSk.NB.CI k r → ℂ) × (Fin r → ℝ), WlocSk.NB.phi0 t.1 t.2 ∈ Nset k r := fun t =>

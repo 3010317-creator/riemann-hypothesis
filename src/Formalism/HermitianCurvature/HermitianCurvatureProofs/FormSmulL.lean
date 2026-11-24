@@ -79,14 +79,12 @@ theorem form_zero_r (x : Wd.Ix (Fin w.length) → B.Mat P.k (P.r - j) → (Wq �
 theorem form_smul_l (x y : Wd.Ix (Fin w.length) → B.Mat P.k (P.r - j) → (Wq →L[ℂ] Wp)) (c : ℂ)
     (hx : NV (p.T.bs j) ε x) (hy : NV (p.T.bs j) ε y) : p.form j hj w (c • x) y = c * p.form j hj w x y := by
   have h := form_sl p j hj w 0 x y c nv_zero hx hy
-  rw [zero_add, form_zero_l p j hj w y hy, zero_add] at h
-  exact h
+  rwa [zero_add, form_zero_l p j hj w y hy, zero_add] at h
 
 theorem form_smul_r (x y : Wd.Ix (Fin w.length) → B.Mat P.k (P.r - j) → (Wq →L[ℂ] Wp)) (c : ℂ)
     (hx : NV (p.T.bs j) ε x) (hy : NV (p.T.bs j) ε y) : p.form j hj w x (c • y) = conj c * p.form j hj w x y := by
   have h := form_sr p j hj w x 0 y c hx nv_zero hy
-  rw [zero_add, form_zero_r p j hj w x hx, zero_add] at h
-  exact h
+  rwa [zero_add, form_zero_r p j hj w x hx, zero_add] at h
 
 end formh
 
@@ -206,8 +204,7 @@ theorem hatB_uB (hA : P5.ThmPActual) (hPS : KB.PStd) (hB : KB.IsLeadingFormSetti
           (KB.slv (p v).T (F v ε) j hj w (stdS S h) ((stdS_size S h).trans hh.2)) := by
       have := PBG.waveG_add_smul ((p v).T.bs j) (sW S j l) w 0
         (KB.slv (p v).T (F v ε) j hj w (stdS S h) ((stdS_size S h).trans hh.2)) (((√(nnS S h) / bS S h : ℝ) : ℂ))
-      rw [zero_add, PBG.waveG_zero, zero_add] at this
-      exact this
+      rwa [zero_add, PBG.waveG_zero, zero_add] at this
     rw [e1, e2, ew, form_smul_l (p v) j hj w _ _ _ hws (nv_smul _ hs'), form_smul_r (p v) j hj w _ _ _ hws hs',
       Complex.conj_ofReal, dW_split]
     push_cast
@@ -252,8 +249,7 @@ theorem block0 (hA : P5.ThmPActual) (hPS : KB.PStd) (hVI : KB.VIso) (hFP : FormP
       exact (PBD.gamLev_pos _ _ _ _ (by unfold D.kapG; positivity) (by unfold D.deG; positivity) _).le
     positivity
   · intro h hh h' hh'
-    simp only [hh, hh', ite_true]
-    exact gN_uB hB F hF v ε hε j hj w h h'
+    simpa only [hh, hh', ite_true] using gN_uB hB F hF v ε hε j hj w h h'
   · intro h hh h' hh'
     simp only [hh, hh', ite_true]
     exact hatB_uB hA hPS hB F hF v ε hε j hj w hw l h h' (hY h hh) (hY h' hh')

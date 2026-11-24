@@ -145,8 +145,7 @@ theorem ea_colH_le (J : ℕ) (s : Fin n') (x : ℕ) : ea_colH t lam0 w (J + 1) s
         intro i hi
         simp only [Finset.mem_filter, Finset.mem_Icc] at hi ⊢
         refine ⟨hi.1.1, ?_⟩
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         have e := ea_nu_last (t := t) (lam0 := lam0) (w := w) J s hc hi.1.2
         rw [e] at hi
         omega
@@ -164,8 +163,7 @@ theorem ea_colH_eq_one (h : Std p n' k1 t m c r TT a b lam0 w) {J : ℕ} (hJ : J
   have hN := ea_NN_two h J
   constructor
   · intro h1
-    by_contra h2
-    push Not at h2
+    by_contra! h2
     have hsub : ({1, 2} : Finset ℕ) ⊆ (Icc 1 (NN k1 t J)).filter fun i => (x : ℤ) < nu t lam0 w J s i := by
       intro i hi
       simp only [Finset.mem_insert, Finset.mem_singleton] at hi
@@ -231,8 +229,7 @@ theorem ea_sum_colH (h : Std p n' k1 t m c r TT a b lam0 w) {J : ℕ} (hJ1 : 1 �
       omega
     rw [hf, Finset.card_range]
   rw [key, Nat.cast_sum]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  exact Int.toNat_of_nonneg (ea_nu_nonneg h hJ1 hJ s i)
+  exact Finset.sum_congr rfl fun i _ => Int.toNat_of_nonneg (ea_nu_nonneg h hJ1 hJ s i)
 
 end Shape
 

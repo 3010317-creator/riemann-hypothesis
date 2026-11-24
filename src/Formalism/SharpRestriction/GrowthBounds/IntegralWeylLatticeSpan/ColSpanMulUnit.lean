@@ -225,16 +225,14 @@ theorem valIntRec_of {T : ∀ u : D.what₂.Word, Forms0 D u} {Gt : GatTies D} {
     obtain ⟨P, hP, hz⟩ := h1 B' hB'
     refine ⟨P, hP, fun z => ?_⟩
     have := hz (((T u).val0).eY z)
-    rw [lamT_zero]
-    rw [← this]
+    rw [lamT_zero, ← this]
     show _ = (D.fm u).emb 0 x c (((T u).val0).eY.symm (((T u).val0).eY z))
     rw [Equiv.symm_apply_apply]
   · intro h1 B' hB'
     obtain ⟨P, hP, hz⟩ := h1 B' hB'
     refine ⟨P, hP, fun z => ?_⟩
     have := hz (((T u).val0).eY.symm z)
-    rw [lamT_zero, Equiv.apply_symm_apply] at this
-    exact this
+    rwa [lamT_zero, Equiv.apply_symm_apply] at this
 
 end Formalism.L2.G.RelativeIndexFlags
 end -- clump:auto
@@ -269,8 +267,7 @@ theorem colSpan_mul_le {O Kf : Type} [CommRing O] [Field Kf] [Algebra O Kf] {k :
     rw [Pi.smul_apply, Algebra.smul_def, hu, mul_comm]
   have hmem : (∑ b, u b c • (fun i => X i b)) ∈ Submodule.span O (Set.range fun c : Fin k => fun i => X i c) :=
     Submodule.sum_mem _ fun b _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨b, rfl⟩)
-  rw [← h] at hmem
-  exact hmem
+  rwa [← h] at hmem
 
 theorem colSpan_mul_unit {O Kf : Type} [CommRing O] [Field Kf] [Algebra O Kf] {k : ℕ} (X U U' : Matrix (Fin k) (Fin k) Kf)
     (hU : ∀ a b, U a b ∈ Set.range (algebraMap O Kf)) (hU' : ∀ a b, U' a b ∈ Set.range (algebraMap O Kf)) (h : U * U' = 1) :
@@ -364,8 +361,7 @@ theorem latO_of (tE : Tau → E →+* LL)
       rw [ite_eq_right hs] at h4
       have h5 : σ ((cT (σ : E →+* E) (N⁻¹).1) (finCongr A.rk a) (finCongr A.rk b)) =
           (N⁻¹).1 (finCongr A.rk b) (finCongr A.rk a) := hσσ _
-      rw [h5] at h4
-      exact h4
+      rwa [h5] at h4
     rw [hY, Matrix.map_mul, ← Matrix.submatrix_mul_equiv _ _ _ (finCongr A.rk) _]
     refine (colSpan_mul_unit ((N.1.map ((rho G v s.val).comp (A.iw v))).submatrix (finCongr A.rk) (finCongr A.rk))
       ((Gm⁻¹.map ((rho G v s.val).comp (A.iw v))).submatrix (finCongr A.rk) (finCongr A.rk))
@@ -486,8 +482,7 @@ theorem restChi_of (T : ∀ u : D.what₂.Word, Forms0 D u) (h : ∀ u, LevelZer
       have h1 : algebraMap (𝓞 D.host.F) (v.adicCompletionIntegers D.host.F) (D.host.g i : 𝓞 D.host.F) ∈
           IsLocalRing.maximalIdeal (v.adicCompletionIntegers D.host.F) := (Formalism.L2.GlobalTheoryTheory.LocalLatticeBases.mem_maximal_ideal_completion_iff v _).2 hv
       have h2 := (IsLocalRing.residue_eq_zero_iff _).2 h1
-      rw [map_natCast, map_natCast] at h2
-      exact h2
+      rwa [map_natCast, map_natCast] at h2
     rw [map_pow, map_one, hr, ← AddChar.map_nsmul_eq_pow, nsmul_eq_mul, h0, zero_mul, AddChar.map_zero_eq_one]
   obtain ⟨r, hr, hr', e⟩ := key
   exact ⟨r, hr, hr', e⟩

@@ -141,8 +141,7 @@ theorem gmap_locS (u : V ≃ₗ[E] V) (S : Submonoid (𝓞 E)) (X : Submodule (�
     have hsz : s • u.symm x = z := by
       apply u.injective
       rw [osmul_comm, LinearEquiv.apply_symm_apply, hzx]
-    rw [hsz]
-    exact hz
+    rwa [hsz]
 
 theorem gmap_comp (u w : V ≃ₗ[E] V) (X : Submodule (𝓞 E) V) : gmap (u * w) X = gmap u (gmap w X) := by
   ext x
@@ -162,8 +161,7 @@ theorem gmap_le_locS (b : Module.Basis (Fin M) E V) (L0 : Submodule (𝓞 E) V) 
   obtain ⟨v, hv, rfl⟩ := hy
   have hx : (b.repr v : Fin M → E) ∈ crdOf b L0 := by
     show ∑ i, b.repr v i • b i ∈ L0
-    rw [b.sum_repr]
-    exact hv
+    rwa [b.sum_repr]
   obtain ⟨s, hs, hK⟩ := h _ hx
   refine (mem_locS_iff' S L0 _).2 ⟨s, hs, ?_⟩
   have e : linOf b K v = ∑ j, ((K : Matrix (Fin M) (Fin M) E).mulVec (b.repr v)) j • b j := by
@@ -194,8 +192,7 @@ private theorem algebraMap_smul_mem_crdOf (b : Module.Basis (Fin M) E V) (L0 : S
 private theorem add_mem_crdOf (b : Module.Basis (Fin M) E V) (L0 : Submodule (𝓞 E) V)
     {x y : Fin M → E} (hx : x ∈ crdOf b L0) (hy : y ∈ crdOf b L0) : x + y ∈ crdOf b L0 := by
   show ∑ j, (x + y) j • b j ∈ L0
-  simp only [Pi.add_apply, add_smul, Finset.sum_add_distrib]
-  exact L0.add_mem hx hy
+  simpa only [Pi.add_apply, add_smul, Finset.sum_add_distrib] using L0.add_mem hx hy
 
 theorem glob_stab {F : Type} [Field F] [Algebra F E] (b : Module.Basis (Fin M) E V) (L0 : Submodule (𝓞 E) V)
     {u k : ℕ} (hu : ∀ x ∈ crdOf b L0, ∀ i, IsIntegral ℤ ((u : F) • x i))
@@ -415,8 +412,7 @@ theorem local_integral_of_substitution : LocInt := by
       | exact HeightOneSpectrum.valuedAdicCompletion_eq_valuation' t x
     have hv : t.valuation F (z / (c : F)) ≤ 1 := by
       rw [HeightOneSpectrum.mem_adicCompletionIntegers] at hu'
-      rw [← e]
-      exact hu'
+      rwa [← e]
     obtain ⟨n, m, hm, hnm⟩ := IsFractionRing.div_surjective (A := 𝓞 F) (z / (c : F))
     have hm0 : m ≠ 0 := nonZeroDivisors.ne_zero hm
     have hvm : t.intValuation m ≠ 0 := HeightOneSpectrum.intValuation_ne_zero t m hm0
@@ -425,8 +421,7 @@ theorem local_integral_of_substitution : LocInt := by
         HeightOneSpectrum.valuation_of_algebraMap] at hv
       exact (div_le_one₀ (zero_lt_iff.2 hvm)).1 hv
     have hI0 : Ideal.span {m} ≠ 0 := by
-      rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-      exact hm0
+      rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     obtain ⟨k, J, hJt, hmJ⟩ := WfDvdMonoid.max_power_factor hI0 t.irreducible
     have hnk : n ∈ t.asIdeal ^ k := by
       have hdm : t.asIdeal ^ k ∣ Ideal.span {m} := ⟨J, hmJ⟩
@@ -560,14 +555,12 @@ theorem local_switching_lattice : LocSw := by
     have hcp : algebraMap (𝓞 F) (𝓞 E) c ∉ p := by
       intro h'
       apply Ideal.mem_primeCompl_iff.1 hc
-      rw [ht, Ideal.mem_comap]
-      exact h'
+      rwa [ht, Ideal.mem_comap]
     refine ⟨hcp, fun t' ht' => ?_⟩
     have h3 : t' = algebraMap (𝓞 F) (𝓞 E) c := by
       apply hinj
       rw [ht', hcomm, ← hσ, AlgHom.commutes]
-    rw [h3]
-    exact hcp
+    rwa [h3]
   have key : ∀ s ∈ hcompl (K := E) p, ∃ r : 𝓞 E, r * s ∈ Sw F E t := by
     intro s hs
     induction hs using Submonoid.closure_induction with

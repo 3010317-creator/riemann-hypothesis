@@ -308,9 +308,7 @@ theorem ctl_TL_mem {N' k r t m rS : ℕ} (h : r ≤ N' + 1) (h' : r ≤ N') {M :
   have hb : ((y : GL (Fin (N' + 1)) κ) : Matrix (Fin (N' + 1)) (Fin (N' + 1)) κ).BlockTriangular fun i => blkIdx (r :: List.replicate m t) i.1 :=
     y.2
   refine Subgroup.mem_map.mpr ⟨⟨ctlTLGL (y : GL (Fin (N' + 1)) κ) hM hM', ?_⟩, ?_, rfl⟩
-  · show (ctlTL ((y : GL (Fin (N' + 1)) κ) : Matrix (Fin (N' + 1)) (Fin (N' + 1)) κ)).BlockTriangular fun i => blkIdx (r :: List.replicate m t) i.1
-    intro p s hlt
-    exact hb (i := Fin.castSucc p) (j := Fin.castSucc s) hlt
+  · exact fun p s hlt => hb (i := Fin.castSucc p) (j := Fin.castSucc s) hlt
   · rw [Subgroup.mem_comap] at hy ⊢
     convert hy using 1
     apply Units.ext
@@ -423,8 +421,7 @@ private theorem exists_intAt_eq_q_mul_of_redP_eq_zero (hq : ((q : ℕ) : 𝓞 E)
   obtain ⟨r, s, hs, h⟩ := hx
   have hr : r ∈ P.asIdeal := by
     have h1 := reduction_spec P hs h
-    rw [h0, mul_zero, eq_comm, Ideal.Quotient.eq_zero_iff_mem] at h1
-    exact h1
+    rwa [h0, mul_zero, eq_comm, Ideal.Quotient.eq_zero_iff_mem] at h1
   have hdvd : P.asIdeal ∣ Ideal.span {((q : ℕ) : 𝓞 E)} :=
     Ideal.dvd_iff_le.mpr ((Ideal.span_singleton_le_iff_mem _).mpr hq)
   obtain ⟨J, hJ⟩ := hdvd
@@ -446,9 +443,7 @@ private theorem exists_intAt_eq_q_mul_of_redP_eq_zero (hq : ((q : ℕ) : 𝓞 E)
   have hs'E : algebraMap (𝓞 E) E s' ≠ 0 := fun h3 =>
     hs'P (by rw [(map_eq_zero_iff _ hinj).mp h3]; exact P.asIdeal.zero_mem)
   have hcE : algebraMap (𝓞 E) E c * (q : E) = algebraMap (𝓞 E) E r * algebraMap (𝓞 E) E s' := by
-    have h4 := congrArg (algebraMap (𝓞 E) E) hc
-    simp only [map_mul, map_natCast] at h4
-    exact h4
+    simpa only [map_mul, map_natCast] using congrArg (algebraMap (𝓞 E) E) hc
   refine ⟨algebraMap (𝓞 E) E c / (algebraMap (𝓞 E) E s * algebraMap (𝓞 E) E s'), ⟨c, s * s', ?_, ?_⟩, ?_⟩
   · intro hm
     rcases P.isPrime.mem_or_mem hm with h5 | h5

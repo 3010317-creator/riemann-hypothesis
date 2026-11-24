@@ -111,8 +111,7 @@ theorem mem_xiMons_of (n : ℕ) (m : Formalism.GM.M.BVar N r G.T.t →₀ ℕ)
     · simp
     · intro d _ hd
       rw [Finsupp.single_apply, ite_eq_right]
-      intro h
-      exact hd (xiVar_inj G h)
+      exact fun h => hd (xiVar_inj G h)
     · intro h; exact absurd (Finset.mem_univ c) h
   · have h0 : m v = 0 := by
       by_contra hne
@@ -120,8 +119,7 @@ theorem mem_xiMons_of (n : ℕ) (m : Formalism.GM.M.BVar N r G.T.t →₀ ℕ)
     rw [h0]
     refine Finset.sum_eq_zero fun c _ => ?_
     rw [Finsupp.single_apply, ite_eq_right]
-    intro h
-    exact hv ⟨c, h.symm⟩
+    exact fun h => hv ⟨c, h.symm⟩
 
 theorem xi_mem_spanZ (n : ℕ) (g : MvPolynomial (Formalism.GM.M.BVar N r G.T.t) ℚ_[p])
     (hg : g ∈ Formalism.GM.M.XiPolZ p N r G.T.t n) :
@@ -375,8 +373,7 @@ theorem lvlDim_gen (j : Fin G.T.t → ℕ) (jp : ℕ) (hpre : preF (p := p) (r :
   simp only [Fintype.card_fin, Finset.sum_const, Finset.card_univ, smul_eq_mul, Fintype.card_coe] at hcard
   rw [card_xiMons_eq] at hcard
   unfold dimY
-  rw [mul_comm]
-  exact hcard
+  rwa [mul_comm]
 
 end Gen
 

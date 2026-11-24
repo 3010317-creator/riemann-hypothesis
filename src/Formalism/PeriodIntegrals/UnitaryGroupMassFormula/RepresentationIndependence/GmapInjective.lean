@@ -55,8 +55,7 @@ theorem mem_gmap {γ : S.V ≃ₗ[E] S.V} {L : Submodule (𝓞 E) S.V} {x : S.V}
   constructor
   · rintro ⟨y, hy, rfl⟩
     simpa using hy
-  · intro h
-    exact ⟨γ.symm x, h, by simp⟩
+  · exact fun h => ⟨γ.symm x, h, by simp⟩
 
 theorem ap_mem_gmap {γ : S.V ≃ₗ[E] S.V} {L : Submodule (𝓞 E) S.V} {x : S.V} :
     γ x ∈ Formalism.HermitianLatticesTheory.gmap γ L ↔ x ∈ L := by
@@ -98,8 +97,7 @@ theorem gmap_toO (γ : S.V ≃ₗ[E] S.V) (U : Submodule E S.V) :
 
 theorem gmap_smul (γ : S.V ≃ₗ[E] S.V) (I : Ideal (𝓞 E)) (L : Submodule (𝓞 E) S.V) :
     Formalism.HermitianLatticesTheory.gmap γ (I • L) = I • Formalism.HermitianLatticesTheory.gmap γ L := by
-  simp only [Formalism.HermitianLatticesTheory.gmap]
-  exact Submodule.map_smul'' _ _ _
+  simpa only [Formalism.HermitianLatticesTheory.gmap] using Submodule.map_smul'' _ _ _
 
 theorem gmap_locS (γ : S.V ≃ₗ[E] S.V) (M : Submonoid (𝓞 E)) (L : Submodule (𝓞 E) S.V) :
     Formalism.HermitianLatticesTheory.gmap γ (Formalism.HermitianLatticesTheory.locS M L) = Formalism.HermitianLatticesTheory.locS M (Formalism.HermitianLatticesTheory.gmap γ L) := by

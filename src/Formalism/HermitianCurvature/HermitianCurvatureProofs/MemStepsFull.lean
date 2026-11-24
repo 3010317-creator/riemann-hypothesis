@@ -165,8 +165,7 @@ lemma ckOn_epart (D : RealPlaceData k r Wp Wq) {nf : ℕ} (fib : Fin nf → Mat 
   | cons e es ih =>
     intro hes
     have h1 := ckOn_Rw_top (hfib e.1) (hes e (by simp))
-    have h2 := ih (fun e' he' => hes e' (List.mem_cons_of_mem _ he'))
-    exact ckOn_mul h1 h2
+    exact ckOn_mul h1 (ih (fun e' he' => hes e' (List.mem_cons_of_mem _ he')))
 
 lemma ckOn_cv (D : RealPlaceData k r Wp Wq) {nf : ℕ} (fib : Fin nf → Mat k r → C6.EndH Wp Wq)
     (hfib : ∀ j, CkOn ⊤ (GPos D) (fib j)) {L : Finset (Fin (r + 2))} {e : CT k r nf × List (Mat k r)}
@@ -250,8 +249,7 @@ lemma bound_steps (D : RealPlaceData k r Wp Wq) {nf : ℕ} :
   intro w
   induction w with
   | nil =>
-    intro Lf e' he'
-    exact ⟨e', he', by simp, by simp⟩
+    exact fun Lf e' he' => ⟨e', he', by simp, by simp⟩
   | cons X w ih =>
     intro Lf e' he'
     simp only [steps, List.foldr_cons, step, List.mem_flatMap] at he'

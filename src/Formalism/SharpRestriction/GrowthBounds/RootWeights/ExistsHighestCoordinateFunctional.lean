@@ -159,9 +159,7 @@ theorem highest_line_isCompl_other_weights [NeZero n] [CharZero (KK O)] {E : GLO
     · subst h
       obtain ⟨c, rfl⟩ := irreducible_highest_weight_line hI hx
       exact Submodule.mem_sup_left (Submodule.smul_mem _ c (Submodule.mem_span_singleton_self v))
-    · apply Submodule.mem_sup_right
-      show x ∈ ⨆ mu ∈ {mu | mu ≠ lam}, weightSp E mu
-      exact Submodule.mem_iSup_of_mem mu (Submodule.mem_iSup_of_mem h hx)
+    · exact Submodule.mem_sup_right (Submodule.mem_iSup_of_mem mu (Submodule.mem_iSup_of_mem h hx))
 
 theorem exists_highest_coordinate_functional [NeZero n] [CharZero (KK O)] {E : GLOps n (KK O) V} {lam : Fin n → ℤ} {v : V}
     (hI : IsIrrHW E lam v) : ∃ xi : V →ₗ[KK O] KK O, xi v = 1 ∧ (∀ w ∈ otherWts E lam, xi w = 0) ∧

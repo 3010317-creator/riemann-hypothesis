@@ -79,16 +79,14 @@ theorem exists_fd_Ljj (j : Fin G.T.t → ℕ) (jp : ℕ) :
         have h3 : (⟨y, hyY⟩ : Yq) ∈ (⊤ : Submodule ℚ_[p] Yq) := Submodule.mem_top
         rw [← bY.span_eq] at h3
         have h4 := Submodule.mem_map_of_mem (f := Yq.subtype) h3
-        rw [Submodule.map_span, ← Set.range_comp] at h4
-        exact h4
+        rwa [Submodule.map_span, ← Set.range_comp] at h4
       have hg2 := xi_mem_span p G (G.B - jp) g hg
       show rename (Formalism.GM.M.chainEmb N r G.T.t) y * g ∈ W
       have hy3 : rename (Formalism.GM.M.chainEmb N r G.T.t) y ∈ Submodule.span ℚ_[p]
           (Set.range fun a => rename (Formalism.GM.M.chainEmb N r G.T.t) ((bY a : Yq) : MvPolynomial _ ℚ_[p])) := by
         have := Submodule.mem_map_of_mem (f := (rename (Formalism.GM.M.chainEmb N r G.T.t) :
           MvPolynomial _ ℚ_[p] →ₐ[ℚ_[p]] MvPolynomial _ ℚ_[p]).toLinearMap) hy2
-        rw [Submodule.map_span, ← Set.range_comp] at this
-        exact this
+        rwa [Submodule.map_span, ← Set.range_comp] at this
       have hmul := Submodule.mul_mem_mul hy3 hg2
       rw [Submodule.span_mul_span] at hmul
       refine Submodule.span_mono ?_ hmul
@@ -154,8 +152,7 @@ theorem xiMons_spec (n : ℕ) (m : Formalism.GM.M.BVar N r G.T.t →₀ ℕ) (hm
     · simp
     · intro d _ hd
       rw [Finsupp.single_apply, ite_eq_right]
-      intro h
-      exact hd (xiVar_inj (r := r) G h)
+      exact fun h => hd (xiVar_inj (r := r) G h)
     · intro h; exact absurd (Finset.mem_univ c) h
   refine ⟨fun v hv => ?_, by simp only [happ]; exact hsum, ?_⟩
   · by_contra hne
@@ -164,8 +161,7 @@ theorem xiMons_spec (n : ℕ) (m : Formalism.GM.M.BVar N r G.T.t →₀ ℕ) (hm
     rw [Finsupp.finsetSum_apply]
     refine Finset.sum_eq_zero fun d _ => ?_
     rw [Finsupp.single_apply, ite_eq_right]
-    intro h
-    exact hne d h.symm
+    exact fun h => hne d h.symm
   · have : (∑ d : Fin r, Finsupp.single (Formalism.GM.M.xiVar N r G.T.t d) (e d)).sum (fun _ k => k) = ∑ c, e c := by
       rw [← Finsupp.sum_finsetSum_index (fun _ => rfl) (fun _ _ _ => rfl)]
       exact Finset.sum_congr rfl fun d _ => Finsupp.sum_single_index rfl

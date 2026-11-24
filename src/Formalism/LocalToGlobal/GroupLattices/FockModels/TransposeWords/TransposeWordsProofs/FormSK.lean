@@ -34,8 +34,7 @@ theorem charZero_of_irreducible_natCast {W : Type*} [CommRing W] [IsDomain W] {p
     exact CharP.charP_to_charZero W
 
 theorem nuOf_antitone {m : ℕ} {lam : Fin (m + 1) → ℤ} (hl : Antitone lam) : Antitone (nuOf lam) := by
-  intro a b hab
-  exact Int.toNat_le_toNat (sub_le_sub_right (hl hab) _)
+  exact fun a b hab => Int.toNat_le_toNat (sub_le_sub_right (hl hab) _)
 
 theorem lastIdx_succ (m : ℕ) : lastIdx (m + 1) = Fin.last m := by
   ext
@@ -56,8 +55,7 @@ theorem formCoreSK_of (h : FormCoreG) : FormCoreSK := by
     ι.injective.comp (IsFractionRing.injective W Qq)
   have : CharZero Kf := charZero_of_injective_ringHom hinj
   have hj : Function.Injective j := by
-    intro x y hxy
-    exact hinj (by simpa [RingHom.comp_apply, hS.ι_comp] using hxy)
+    exact fun x y hxy => hinj (by simpa [RingHom.comp_apply, hS.ι_comp] using hxy)
   have hp : ¬ IsUnit ((p : ℕ) : O) := by
     intro hu
     have := hS.finite.to_isIntegral.isLocalHom hj

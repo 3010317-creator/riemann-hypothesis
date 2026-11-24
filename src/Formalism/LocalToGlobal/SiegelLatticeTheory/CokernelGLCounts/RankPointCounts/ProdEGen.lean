@@ -52,8 +52,7 @@ theorem relIndex_glob (A C : ∀ i, Subgroup (H i)) (S : Finset ι) (hS : ∀ i 
       by_cases hi : i ∈ S
       · have h1 := hg1 i hi
         simp only [dite_eq_left hi] at h1
-        have h2 := (A i).mul_mem (r ⟨i, hi⟩).2 (Subgroup.mem_inf.1 h1).1
-        simpa using h2
+        simpa using (A i).mul_mem (r ⟨i, hi⟩).2 (Subgroup.mem_inf.1 h1).1
       · exact hg2 i hi
     refine ⟨⟨g, hgA⟩, ?_⟩
     funext i
@@ -76,8 +75,7 @@ theorem relIndex_glob (A C : ∀ i, Subgroup (H i)) (S : Finset ι) (hS : ∀ i 
       exact ⟨QuotientGroup.mk a, ha⟩
   have hcard := Nat.card_congr (Equiv.ofBijective Ψ hbij)
   rw [Nat.card_pi] at hcard
-  rw [← Finset.prod_coe_sort S]
-  exact hcard
+  rwa [← Finset.prod_coe_sort S]
 
 theorem idxRatio_glob (A C : ∀ i, Subgroup (H i)) (S : Finset ι) (hS : ∀ i ∉ S, A i = C i)
     (hfinA : ∀ i, (C i).relIndex (A i) ≠ 0) (hfinC : ∀ i, (A i).relIndex (C i) ≠ 0)

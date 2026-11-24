@@ -85,8 +85,7 @@ theorem InJSym_mul {k rS t : ℕ} {zl : Bool} {M N : Matrix (Fin n) (Fin n) κ} 
       · by_cases hz' : lvSym k rS t x < lvSym k rS t z
         · rw [hN1 z x hz', mul_zero]
         · exact absurd (Fin.ext (lvSym_eq (t := t) hx (by omega))) hzx
-    · intro h
-      exact absurd (Finset.mem_univ x) h
+    · exact fun h => absurd (Finset.mem_univ x) h
   · intro x y hx hy
     rw [Matrix.mul_apply]
     refine Finset.sum_eq_zero fun z _ => ?_
@@ -107,14 +106,12 @@ theorem InJSym_mul {k rS t : ℕ} {zl : Bool} {M N : Matrix (Fin n) (Fin n) κ} 
       · rw [(h4N y y hy).1, ite_eq_left rfl, mul_one, (h4M x y hy).1]
       · intro z _ hzy
         rw [(h4N z y hy).1, ite_eq_right hzy, mul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ y) h
+      · exact fun h => absurd (Finset.mem_univ y) h
     · rw [Matrix.mul_apply, Finset.sum_eq_single y]
       · rw [(h4M y y hy).2, ite_eq_left rfl, one_mul, (h4N x y hy).2]
       · intro z _ hzy
         rw [(h4M z y hy).2, ite_eq_right hzy, zero_mul]
-      · intro h
-        exact absurd (Finset.mem_univ y) h
+      · exact fun h => absurd (Finset.mem_univ y) h
 
 theorem InJSym_one (k rS t : ℕ) (zl : Bool) : InJSym k rS t zl (1 : Matrix (Fin n) (Fin n) κ) := by
   refine ⟨?_, ?_, ?_, ?_⟩
@@ -123,8 +120,7 @@ theorem InJSym_one (k rS t : ℕ) (zl : Bool) : InJSym k rS t zl (1 : Matrix (Fi
       rintro rfl
       exact lt_irrefl _ h
     exact Matrix.one_apply_ne hxy
-  · intro x _
-    exact Matrix.one_apply_eq x
+  · exact fun x _ => Matrix.one_apply_eq x
   · intro x y hx hy
     refine Matrix.one_apply_ne ?_
     intro h

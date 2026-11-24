@@ -164,8 +164,7 @@ theorem existsPeriodRingData_holds : ExPD := by
   let χ : Multiplicative ℤ →* ℚˣ := zpowersHom ℚˣ lpTwo
   let act : Multiplicative ℤ →* (LaurentPolynomial ℚ ≃ₐ[ℚ] LaurentPolynomial ℚ) := lpScaleHom.comp χ
   have hact : ∀ g (f : LaurentPolynomial ℚ) m, (act g f).coeff m = ((χ g ^ m : ℚˣ) : ℚ) * f.coeff m := by
-    intro g f m
-    exact lpScaleE_coeff (χ g) f m
+    exact fun g f m => lpScaleE_coeff (χ g) f m
   have hone : act (Multiplicative.ofAdd 1) = lpScaleE lpTwo := by
     show lpScaleE (χ (Multiplicative.ofAdd 1)) = lpScaleE lpTwo
     simp [χ]
@@ -276,8 +275,7 @@ theorem wachCol_lift_transfer (N I : Submodule O X) (f : N →ₗ[O] H) (Hf S : 
     (∀ m ∈ N, a • m ∈ I) ↔ ∀ x ∈ Hf, a • x ∈ S := by
   have key : ∀ n : N, (a • (n : X) ∈ I ↔ a • f n ∈ S) := by
     intro n
-    have h := SetLike.ext_iff.mp hI (a • n)
-    simpa using h
+    simpa using SetLike.ext_iff.mp hI (a • n)
   constructor
   · intro h x hx
     rw [← hr] at hx
@@ -398,8 +396,7 @@ theorem cokernelLengthEqWach_holds : WachCol := by
     have hsm : ∀ pr : D' × D', ((Bw.p ^ e : ℕ)) • pr = ((PD.p : O) ^ e) • pr := by
       intro pr
       rw [hp, ← Nat.cast_smul_eq_nsmul O, Nat.cast_pow]
-    simp only [hsm]
-    exact hWl.symm
+    simpa only [hsm] using hWl.symm
 
 end Formalism.WeaklyAdmissibleFiltrations
 end -- clump:auto

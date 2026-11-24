@@ -60,8 +60,7 @@ theorem isCompl_MM (H : HermSp M V) {r : ℕ} (t : Term V M r) (hg : H.IsGeneric
   have hF' : Formalism.MainNotions.ThinScalesBound.FrameK H t.f' t.T' := ⟨hT.2.2.1.2.1, hT.2.2.1.2.2.1⟩
   have h := isCompl_span_frames_W0 (H := H) t.f t.f' t.T t.T' hF hF' hT.2.2.2.1
     (isUnit_Gdet (H := H) t.f t.f' t.T t.T' hT.2.2.2.2.1)
-  rw [← hermSp_W0_eq_perp_span_range_MMfam H t, span_MMfam H t]
-  exact h
+  rwa [← hermSp_W0_eq_perp_span_range_MMfam H t, span_MMfam H t]
 
 theorem MMo_le (H : HermSp M V) {r : ℕ} (t : Term V M r) (hg : H.IsGeneric t) : MMo H t ≤ t.abelian₂ := Submodule.span_le.2 (by rintro _ ⟨a, rfl⟩; exact hg.2.1 a)
 
@@ -73,15 +72,13 @@ theorem mem_spanE_of_mem_MMo (H : HermSp M V) {r : ℕ} (t : Term V M r) {m : V}
 theorem hermitian_span_orthogonal_W0 (H : HermSp M V) {r : ℕ} (t : Term V M r) {m n : V}
     (hm : m ∈ Submodule.span E (Set.range (H.MMfam t))) (hn : n ∈ H.W0 t.f t.f') : H.h m n = 0 := by
   have hn' : n ∈ H.perp (Submodule.span E (Set.range (H.MMfam t))) := by
-    rw [← hermSp_W0_eq_perp_span_range_MMfam H t]
-    exact hn
+    rwa [← hermSp_W0_eq_perp_span_range_MMfam H t]
   rw [H.h_herm n m, hn' m hm, map_zero]
 
 theorem hermitian_W0_orthogonal_span (H : HermSp M V) {r : ℕ} (t : Term V M r) {m n : V}
     (hm : m ∈ Submodule.span E (Set.range (H.MMfam t))) (hn : n ∈ H.W0 t.f t.f') : H.h n m = 0 := by
   have hn' : n ∈ H.perp (Submodule.span E (Set.range (H.MMfam t))) := by
-    rw [← hermSp_W0_eq_perp_span_range_MMfam H t]
-    exact hn
+    rwa [← hermSp_W0_eq_perp_span_range_MMfam H t]
   exact hn' m hm
 
 theorem dwMk_eq_iff (H : HermSp M V) {r : ℕ} (t : Term V M r) (N : Submodule M.L.O V)

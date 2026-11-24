@@ -172,8 +172,7 @@ theorem scale_box (b : Basis ι K E) (μ : Measure E) [μ.IsAddHaarMeasure] (i :
           by_cases hj : j = i
           · subst hj
             rw [Function.update_self]
-            rw [Set.mem_preimage, hc] at hx2
-            exact hx2
+            rwa [Set.mem_preimage, hc] at hx2
           · rw [Function.update_of_ne hj]
             rw [hP] at hx1
             exact hx1 j hj
@@ -210,8 +209,7 @@ theorem scale_box (b : Basis ι K E) (μ : Measure E) [μ.IsAddHaarMeasure] (i :
     ext x
     rw [hP, hc]
     constructor
-    · intro h
-      exact ⟨fun j _ => h j, h i⟩
+    · exact fun h => ⟨fun j _ => h j, h i⟩
     · rintro ⟨h1, h2⟩ j
       by_cases hj : j = i
       · subst hj; exact h2
@@ -238,8 +236,7 @@ theorem scale_box (b : Basis ι K E) (μ : Measure E) [μ.IsAddHaarMeasure] (i :
         rw [hrepr]
         by_cases hj : j = i
         · subst hj
-          rw [Function.update_self, ← hzy', ← mul_assoc, inv_mul_cancel₀ ha, one_mul]
-          exact hz
+          rwa [Function.update_self, ← hzy', ← mul_assoc, inv_mul_cancel₀ ha, one_mul]
         · rw [Function.update_of_ne hj, Pi.one_apply, one_mul]
           exact h1 j hj
       · show Matrix.toLin b b _ (Matrix.toLin b b _ y) = y
@@ -373,8 +370,7 @@ theorem haarScaling : St.HaarAlg := by
   refine haarAlg_of ?_ ?_
   · intro K _ _ _ _ E _ _ _ _ _ _ n b μ _ i a ha
     exact PI.ProdFormulaE.HaarBox.scale_box b μ i a ha
-  · intro K _ _ _ _ E _ _ _ _ n b t
-    exact PI.ProdFormulaE.HaarBox.transvection_box b t
+  · exact fun K _ _ _ _ E _ _ _ _ n b t => PI.ProdFormulaE.HaarBox.transvection_box b t
 
 end PI.ProdFormulaE.HaarAlgP
 end -- clump:auto

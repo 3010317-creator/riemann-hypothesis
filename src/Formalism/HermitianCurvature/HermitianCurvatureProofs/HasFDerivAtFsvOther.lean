@@ -138,8 +138,7 @@ section TL
 
 variable {k r : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
-theorem eH_smulC (a b : Fin (2 * r + k + 1)) : SmulC (E := E) (EH k r a b) := by
-  exact eabH_smulC _ a b
+theorem eH_smulC (a b : Fin (2 * r + k + 1)) : SmulC (E := E) (EH k r a b) := eabH_smulC _ a b
 
 theorem chatL_smulC {t : ℕ} (pos : Fin t → Fin (2 * r + k + 1)) (u : ℂ) (a β : Mx k r → Fin t → ℂ) :
     SmulC (E := E) (chatL (EH k r) pos u a β) := by

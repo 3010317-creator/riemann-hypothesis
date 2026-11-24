@@ -33,7 +33,6 @@ private theorem exists_subring_iff_ge_zero : ∃ R : Subring C, ∀ a, a ∈ R �
   · intro a b ha hb
     have ha' : ((0 : ℝ) : WithTop ℝ) ≤ V.v a := ha
     have hb' : ((0 : ℝ) : WithTop ℝ) ≤ V.v b := hb
-    show ((0 : ℝ) : WithTop ℝ) ≤ V.v (a + b)
     exact le_trans (le_min ha' hb') (V.v.map_add a b)
   · show ((0 : ℝ) : WithTop ℝ) ≤ V.v 0
     rw [AddValuation.map_zero]
@@ -41,8 +40,7 @@ private theorem exists_subring_iff_ge_zero : ∃ R : Subring C, ∀ a, a ∈ R �
   · intro a ha
     have ha' : ((0 : ℝ) : WithTop ℝ) ≤ V.v a := ha
     show ((0 : ℝ) : WithTop ℝ) ≤ V.v (-a)
-    rw [AddValuation.map_neg]
-    exact ha'
+    rwa [AddValuation.map_neg]
 
 theorem VF.Ge.prod {ι : Type*} {s : Finset ι} {f : ι → C} (h : ∀ i ∈ s, V.Ge 0 (f i)) :
     V.Ge 0 (∏ i ∈ s, f i) := by
@@ -110,8 +108,7 @@ def U : Matrix I I C := Matrix.of S.tan
 
 theorem U_int (c k : I) : V.Ge 0 (S.U c k) := by
   have := X.t2 _ (S.mem c) 0 (fun i hi => absurd hi (Nat.not_lt_zero _)) (Sum.inl k)
-  rw [S.cur_zero_inl] at this
-  exact this
+  rwa [S.cur_zero_inl] at this
 
 theorem U_det_ne : S.U.det ≠ 0 := by
   intro h0
@@ -125,7 +122,6 @@ def co (h : I ⊕ J → C) (b : I) : C := ∑ k, h (Sum.inl k) * S.U⁻¹ k b
 theorem co_int {h : I ⊕ J → C} (hh : ∀ n, V.Ge 0 (h n)) (b : I) : V.Ge 0 (S.co h b) := by
   obtain ⟨R, hR⟩ := exists_subring_iff_ge_zero (V := V)
   have hinv := inv_int S.U (fun i j => S.U_int i j) S.unimod
-  show V.Ge 0 (∑ k, h (Sum.inl k) * S.U⁻¹ k b)
   exact (hR _).1 (sum_mem fun k _ => mul_mem ((hR _).2 (hh _)) ((hR _).2 (hinv k b)))
 
 theorem co_spec (h : I ⊕ J → C) (k : I) : ∑ b, S.co h b * S.U b k = h (Sum.inl k) := by
@@ -151,8 +147,7 @@ private theorem ge_zero_l_pow_mul_of_mem_Ty (X : Cart V d I J) :
     intro x hx n
     have h := ih (Fs V.l x) (X.F_mem x hx) n
     simp only [Fs] at h
-    rw [pow_succ, mul_assoc]
-    exact h
+    rwa [pow_succ, mul_assoc]
 
 private theorem ge_neg_of_ge_zero_l_pow_mul (i : ℕ) (y : C) (h : V.Ge 0 ((V.l : C) ^ i * y)) : V.Ge (-(i : ℝ)) y := by
   unfold VF.Ge at *

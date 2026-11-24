@@ -380,10 +380,8 @@ theorem hinf_compact : IsCompact ((Hinf X u : Subgroup X.B.I.Ginf) : Set X.B.I.G
     simp only [Set.mem_pi, Set.mem_univ, true_implies, Set.mem_preimage, Set.mem_setOf_eq]
     show (∀ v, ∀ x ∈ fixSet X u, uMat (s v) *ᵥ rv X.B.I v x = rv X.B.I v x) ↔ _
     constructor
-    · intro hs v
-      exact ⟨(s v).2, hs v⟩
-    · intro hs v
-      exact (hs v).2
+    · exact fun hs v => ⟨(s v).2, hs v⟩
+    · exact fun hs v => (hs v).2
   rw [e]
   exact isCompact_univ_pi fun v =>
     ((Formalism.REAL.uJEmb X.B.I.n (X.B.I.ε v)).1).isCompact_preimage (hv_compact X u v)
@@ -442,8 +440,7 @@ theorem colBound_of (hK : X.LevelSubgroupCharacter) (hCF : Cut.ClassFin X u hK) 
   rw [hval, norm_mul, hpsi, one_mul]
   have h1 : ‖Lc c (piRep X u (iotaI X u γ)⁻¹ ξ)‖ ≤ ‖LinearMap.toContinuousLinearMap (Lc c)‖ * ‖ξ‖ := by
     have := (LinearMap.toContinuousLinearMap (Lc c)).le_opNorm (piRep X u (iotaI X u γ)⁻¹ ξ)
-    rw [piU_norm] at this
-    exact this
+    rwa [piU_norm] at this
   refine h1.trans (mul_le_mul_of_nonneg_right ?_ (norm_nonneg _))
   exact Finset.single_le_sum (f := fun c => ‖LinearMap.toContinuousLinearMap (Lc c)‖)
     (fun _ _ => norm_nonneg _) (Finset.mem_univ c)

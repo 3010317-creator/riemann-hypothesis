@@ -64,9 +64,7 @@ theorem smInv_mem (f : MA.SmQ r TT) (hf : ∀ q, (f : MA.Qp r TT → ℂ) q ≠ 
   have hsm : ContDiffOn ℝ MA.sm (MA.ext (f : MA.Qp r TT → ℂ)) (MA.Qset r TT) := f.2
   have hne : ∀ x ∈ MA.Qset r TT, MA.ext (f : MA.Qp r TT → ℂ) x ≠ 0 := by
     intro x hx
-    simp only [MA.ext, dite_eq_left hx]
-    exact hf _
-  show ContDiffOn ℝ MA.sm (MA.ext (fun q => ((f : MA.Qp r TT → ℂ) q)⁻¹)) (MA.Qset r TT)
+    simpa only [MA.ext, dite_eq_left hx] using hf _
   exact (hsm.inv hne).congr fun x hx => by simp only [Pi.inv_apply, MA.ext, dite_eq_left hx]
 
 theorem inverse_apply (f : MA.SmQ r TT) (hf : ∀ q, (f : MA.Qp r TT → ℂ) q ≠ 0) (q : MA.Qp r TT) :
@@ -149,9 +147,7 @@ theorem sec_pt (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq) (hpl : Q.IsPlace
   exact ⟨Formalism.FourierDecayAlt.P.NFRadRedA.mem_domR hpl.2.1 hpl.2.2.1 Bs.sec hq,
     Formalism.FourierDecayAlt.P.NFRadRedA.zeta_muZ hpl.2.1 hpl.2.2.1 Bs.sec hζ⟩
 
-theorem tt_pos (P : M.Par) (hP : P.OK) : 0 < P.TT := by
-  show 0 < P.T * P.T'
-  exact mul_pos hP.T_pos hP.T'_pos
+theorem tt_pos (P : M.Par) (hP : P.OK) : 0 < P.TT := mul_pos hP.T_pos hP.T'_pos
 
 theorem zeta_ne (P : M.Par) (hP : P.OK) (q : MA.Qp P.r P.TT) : q.1.2 ≠ 0 := by
   have h2 : P.TT < Complex.normSq q.1.2 :=

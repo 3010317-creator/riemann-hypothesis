@@ -144,8 +144,7 @@ theorem cspB_isClopen (hdisj : ∀ Z Z' : Comp Xo c, Z ≠ Z' → Disjoint (Z : 
       obtain ⟨W, hW, hpW⟩ := Set.mem_sUnion.1 hall
       by_contra hpZ
       refine hp (Set.mem_iUnion.2 ⟨⟨⟨W, hW⟩, fun hWZ => hpZ ?_⟩, hpW⟩)
-      rw [← hWZ]
-      exact hpW
+      rwa [← hWZ]
   rw [hU]
   exact (isClosed_iUnion_of_finite fun Z' : {Z' : Comp Xo c // Z' ≠ Z} =>
     isClosed_of_mem_irreducibleComponents _ Z'.1.2).isOpen_compl

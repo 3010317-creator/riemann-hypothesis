@@ -73,8 +73,7 @@ theorem cond_iff (a : S) (i j : Fin 2) (x y : Ix S) :
 
 theorem eU_apply (a : S) (i j : Fin 2) (x y : Ix S) :
     (eU a i j : SlopeTestRemainingChoices S A) x y = if x a = i ∧ y = Function.update x a j then 1 else 0 := by
-  simp only [eU, Matrix.of_apply]
-  exact if_congr (cond_iff a i j x y) rfl rfl
+  simpa only [eU, Matrix.of_apply] using if_congr (cond_iff a i j x y) rfl rfl
 
 theorem eU_mul_apply (a : S) (i j : Fin 2) (B : SlopeTestRemainingChoices S A) (x y : Ix S) :
     ((eU a i j : SlopeTestRemainingChoices S A) * B) x y = if x a = i then B (Function.update x a j) y else 0 := by
@@ -99,8 +98,7 @@ theorem sum_eU_diag (a : S) : ∑ i, (eU a i i : SlopeTestRemainingChoices S A) 
     rw [eU_apply, ite_eq_right]
     rintro ⟨h, _⟩
     exact hi h.symm
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem eU_comm_of_ne {a c : S} (hc : c ≠ a) (i j k l : Fin 2) :
     Commute (eU c i j : SlopeTestRemainingChoices S A) (eU a k l) := by
@@ -133,8 +131,7 @@ theorem ins_star [StarRing A] (a : S) (M : M2 (SlopeTestRemainingChoices S A)) (
     intro i j
     have h := congrArg star (hM i j i j).eq
     rw [star_mul, star_mul, star_eU] at h
-    rw [star_mul, star_eU]
-    exact h
+    rwa [star_mul, star_eU]
   simp only [ins, Fin.sum_univ_two, star_add, key, Matrix.conjTranspose_apply]
   abel
 
@@ -174,16 +171,13 @@ namespace Formalism.FourierDecayAlt.P
 open Formalism.FourierDecayAlt.Wd
 
 theorem position_insertion_mul_compat : Formalism.FourierDecayAlt.Wd.InsMul := by
-  intro K A S _ _ _ _ _ _ _ _ a M N hM
-  exact Wd1.ins_mul a M N hM
+  exact fun K A S _ _ _ _ _ _ _ _ a M N hM => Wd1.ins_mul a M N hM
 
 theorem position_insertion_star_compat : Formalism.FourierDecayAlt.Wd.InsStar := by
-  intro K A S _ _ _ _ _ _ _ _ a M hM
-  exact Wd1.ins_star a M hM
+  exact fun K A S _ _ _ _ _ _ _ _ a M hM => Wd1.ins_star a M hM
 
 theorem position_insertion_diagonal_compat : Formalism.FourierDecayAlt.Wd.InsDiag := by
-  intro K A S _ _ _ _ _ _ _ _ a b
-  exact ⟨Wd1.ins_one a, Wd1.insert_diagonal_extract a b⟩
+  exact fun K A S _ _ _ _ _ _ _ _ a b => ⟨Wd1.ins_one a, Wd1.insert_diagonal_extract a b⟩
 
 theorem position_insertion_free_compat : Formalism.FourierDecayAlt.Wd.InsFree := by
   intro K A S _ _ _ _ _ _ _ _ a M

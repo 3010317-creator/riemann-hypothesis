@@ -167,8 +167,7 @@ theorem framepf_hh_nat (M : ℕ) (lσ : O)
     have h1 := hm₂ _ (framepf_map_NcS f hfN (c - 1) hz)
     have h2 := framepf_map_PiNS f hfN π' 1 (hm₁ z hz)
     have h3 := Submodule.sub_mem _ h1 h2
-    rw [map_sub, LinearMap.map_smul_of_tower, sub_sub_sub_cancel_right] at h3
-    exact h3
+    rwa [map_sub, LinearMap.map_smul_of_tower, sub_sub_sub_cancel_right] at h3
   · have h3 := Submodule.sub_mem _ (hγ₂ (framepf_Lmap f hfN π' c ℓ)) (framepf_map_PiNS f hfN π' M (hγ₁ ℓ))
     rw [map_sub, W.map_γ] at h3
     rw [map_sub]
@@ -365,8 +364,7 @@ theorem framepf_α_nat (x₁ : LA W T₁ π' c) (hx₁ : x₁ ∈ LamLA W T₁ �
     Ψ₂ x₂ - W.map f y₁ ∈ JP W T₂ π' Eπ h' M c := by
   have h := Submodule.add_mem _ (hnat x₁ hx₁) (framepf_map_JP f hfN π' c Eπ h' M hxy)
   rw [map_sub, sub_add_sub_cancel] at h
-  rw [framepf_LAover f hfN π' c hov]
-  exact h
+  rwa [framepf_LAover f hfN π' c hov]
 
 
 include hnat in
@@ -391,8 +389,7 @@ theorem framepf_β_nat (Φ₁ : W.DD T₁ →ₗ[W.EE] W.EE ⊗[O] LcQ W T₁ π
   have h3 := hsat _ (Submodule.sub_mem _ (hΦ₂ _ hy₂) hL) h2
   have h4 := Submodule.add_mem _ h3 (framepf_Lmap_JLA f hfN π' c Eπ h' M hxy)
   rw [map_sub, sub_add_sub_cancel] at h4
-  rw [framepf_LAover f hfN π' c hov]
-  exact h4
+  rwa [framepf_LAover f hfN π' c hov]
 
 end Nat
 

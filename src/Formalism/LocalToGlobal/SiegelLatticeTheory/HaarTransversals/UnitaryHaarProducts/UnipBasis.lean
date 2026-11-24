@@ -203,9 +203,7 @@ theorem cE_recon (x : Fin X.B.I.n → X.B.I.E) : ∑ k, cE X x k • bv X k = x 
 
 theorem wb_mem (i : Fin (mW X)) (a : Fin D.R.rS) :
     hE X (X.eR a) ((wb X i : Wsub X) : Fin X.B.I.n → X.B.I.E) = 0 ∧
-      hE X (X.fR a) ((wb X i : Wsub X) : Fin X.B.I.n → X.B.I.E) = 0 := by
-  have h := (wb X i).2
-  exact h a
+      hE X (X.fR a) ((wb X i : Wsub X) : Fin X.B.I.n → X.B.I.E) = 0 := ((wb X i).2) a
 
 theorem pW_of_mem {x : Fin X.B.I.n → X.B.I.E} (hx : x ∈ Wsub X) : pW X x = x := by
   have hx' : ∀ a, hE X (X.eR a) x = 0 ∧ hE X (X.fR a) x = 0 := hx
@@ -266,8 +264,7 @@ theorem JB_eq : JB X = (Bm X)ᴴ * X.B.I.J * Bm X := by
 
 theorem JB_herm : (JB X)ᴴ = JB X := by
   ext k k'
-  simp only [Matrix.conjTranspose_apply, JB, Matrix.of_apply]
-  exact (hE_symm X _ _).symm
+  simpa only [Matrix.conjTranspose_apply, JB, Matrix.of_apply] using (hE_symm X _ _).symm
 
 theorem JB_graded : Graded (lvk X) (2 * D.R.rS + 2) (JB X) := by
   have hw1 : ∀ a i, hE X (X.eR a) ((wb X i : Wsub X) : Fin X.B.I.n → X.B.I.E) = 0 := fun a i => (wb_mem X i a).1
@@ -394,8 +391,7 @@ theorem phi_star (a : X.B.I.E) : X.B.I.φ v (star a) = star (X.B.I.φ v a) := by
 theorem map_conjTranspose {m p : Type*} (M : Matrix m p X.B.I.E) :
     (M.map (X.B.I.φ v))ᴴ = Mᴴ.map (X.B.I.φ v) := by
   ext i j
-  simp only [Matrix.conjTranspose_apply, Matrix.map_apply]
-  exact (phi_star X v _).symm
+  simpa only [Matrix.conjTranspose_apply, Matrix.map_apply] using (phi_star X v _).symm
 
 theorem P_unit' : IsUnit (X.B.I.P v).det := (Matrix.isUnit_iff_isUnit_det _).mp (X.B.I.P_unit v)
 
@@ -430,12 +426,10 @@ def JBv : Matrix (Kap X) (Kap X) ℂ := (JB X).map (X.B.I.φ v)
 def JBv' : Matrix (Kap X) (Kap X) ℂ := (JB' X).map (X.B.I.φ v)
 
 theorem JBv_graded : Graded (lvk X) (2 * D.R.rS + 2) (JBv X v) := by
-  intro k k' h
-  exact JB_graded X k k' (fun h0 => h (by simp [JBv, h0]))
+  exact fun k k' h => JB_graded X k k' (fun h0 => h (by simp [JBv, h0]))
 
 theorem JBv'_graded : Graded (lvk X) (2 * D.R.rS + 2) (JBv' X v) := by
-  intro k k' h
-  exact JB'_graded X k k' (fun h0 => h (by simp [JBv', h0]))
+  exact fun k k' h => JB'_graded X k k' (fun h0 => h (by simp [JBv', h0]))
 
 theorem JBv'_mul : JBv' X v * JBv X v = 1 := by
   have h1 : ((1 : Matrix (Kap X) (Kap X) X.B.I.E).map (X.B.I.φ v)) = 1 :=

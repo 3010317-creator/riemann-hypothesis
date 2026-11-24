@@ -28,11 +28,9 @@ theorem trace_eq_sum_psi (Ψ : Finset (E →+* ℂ))
     refine Finset.sum_nbij' ComplexEmbedding.conjugate ComplexEmbedding.conjugate ?_ ?_ ?_ ?_ ?_
     · intro σ hσ
       simp only [Finset.mem_compl] at hσ ⊢
-      rw [hΨ, show ComplexEmbedding.conjugate (ComplexEmbedding.conjugate σ) = σ from star_star σ]
-      exact hσ
+      rwa [hΨ, show ComplexEmbedding.conjugate (ComplexEmbedding.conjugate σ) = σ from star_star σ]
     · intro τ hτ
-      simp only [Finset.mem_compl]
-      exact (hΨ τ).mp hτ
+      simpa only [Finset.mem_compl] using (hΨ τ).mp hτ
     · intro σ _; exact star_star σ
     · intro τ _; exact star_star τ
     · intro σ _; simp [ComplexEmbedding.conjugate_coe_eq]

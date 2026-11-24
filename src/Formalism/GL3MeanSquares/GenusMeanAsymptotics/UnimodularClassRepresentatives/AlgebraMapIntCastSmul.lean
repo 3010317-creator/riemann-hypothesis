@@ -73,8 +73,7 @@ theorem mem_closure_iff {𝔭 : Ideal (𝓞 F)} (hp : 𝔭.IsPrime) (s : 𝓞 K)
       obtain ⟨t, ht, rfl⟩ := iha
       obtain ⟨u, hu, rfl⟩ := ihb
       exact ⟨t * u, fun h => (hp.mem_or_mem h).elim ht hu, map_mul _ _ _⟩
-  · intro hs
-    exact Submonoid.subset_closure hs
+  · exact fun hs => Submonoid.subset_closure hs
 
 theorem mem_locF_iff {𝔭 : Ideal (𝓞 F)} (hp : 𝔭.IsPrime) (L : Submodule (𝓞 K) W) (x : W) :
     x ∈ locF 𝔭 L ↔ ∃ t : 𝓞 F, t ∉ 𝔭 ∧ algebraMap (𝓞 F) (𝓞 K) t • x ∈ L := by
@@ -133,8 +132,7 @@ theorem exists_prime_to_part {c : 𝓞 F} (hc : c ≠ 0) {𝔭 : Ideal (𝓞 F)}
   obtain ⟨t, htb, htp⟩ := SetLike.not_le_iff_exists.mp hnd
   refine ⟨t, htp, fun 𝔮 hq hne => ?_⟩
   have h1 : ¬ 𝔭 ^ multiplicity 𝔭 (Ideal.span {c}) ≤ 𝔮 := by
-    intro hle
-    exact hne (hp.eq_of_le hq.ne_top (hq.isPrime.le_of_pow_le hle)).symm
+    exact fun hle => hne (hp.eq_of_le hq.ne_top (hq.isPrime.le_of_pow_le hle)).symm
   obtain ⟨u, hu1, hu2⟩ := SetLike.not_le_iff_exists.mp h1
   refine ⟨u, hu2, ?_⟩
   rw [← Ideal.mem_span_singleton, hb]
@@ -218,8 +216,7 @@ theorem patch {L₀ : Submodule (𝓞 K) V} (hL₀ : Submodule.IsFullLattice K L
       rintro _ ⟨x, hx, rfl⟩
       exact h3 x hx
     exact hL₀.fg.of_le hle
-  · intro s hs hli
-    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+  · exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
   · intro 𝔭
     apply le_antisymm
     · calc locF 𝔭.1 Λ ≤ locF 𝔭.1 (locF 𝔭.1 (B 𝔭)) := locF_mono _ (hΛle 𝔭)

@@ -188,8 +188,7 @@ theorem basis_vector_eq_zero_or_torsionFree (W : LocWach PD LL O v n) (e : W.DD 
   have h2 : e = ∑ j, (a j + β) • b j := by
     simp only [add_smul, Finset.sum_add_distrib]
     rw [← ha, hz, add_zero]
-  have h3 := congrFun (hu (fun j => a j + β) h2) ⟨0, hr⟩
-  simpa using h3
+  simpa using congrFun (hu (fun j => a j + β) h2) ⟨0, hr⟩
 
 theorem eq_zero_of_natCast_pow_mul (hζ : ∃ ζ : LL, IsPrimitiveRoot ζ PD.p)
     (hO : ∃ _ : IsDomain O, IsDiscreteValuationRing O ∧ IsFractionRing O LL) (N : ℕ) (β : LetA O n)
@@ -274,8 +273,7 @@ theorem pullback_span_of_exact (W : LocWach PD LL O v n) {T Y : LocLat G Qp LL O
     have hπlet : W.map π z = (letE (i - 1) : LetA O n) • W.map π z := by
       rw [← locWach_map_letA_smul_comm, hz_idem]
     have hce : c • e' = ((letE (i - 1) : LetA O n) * c) • e' := by
-      rw [← smul_smul, hc]
-      exact hπlet
+      rwa [← smul_smul, hc]
     have hw : W.map π (((PD.p : ℕ) : LetA O n) ^ N • z - c • ε) = 0 := by
       rw [map_sub, locWach_map_letA_smul_comm W π _ z, locWach_map_letA_smul_comm W π c ε, hεπ, ← hc, hce]
       simp only [smul_smul]
@@ -351,8 +349,7 @@ theorem extDataOne_π₀_cancel (W : LocWach PD LL O v n) (R : lifta_Ring W) {T 
     (x : W.DD T) (h : W.π₀ • x = 0) : x = 0 := by
   apply (liftb_unit_bij W T W.π₀ R.πU).1
   change W.π₀ • x = W.π₀ • (0 : W.DD T)
-  rw [smul_zero]
-  exact h
+  rwa [smul_zero]
 
 theorem extDataOne_Qqp (W : LocWach PD LL O v n) (R : lifta_Ring W) (hs : W.s = 1) {T : LocLat G Qp LL O}
     (S : Submodule (LetA O n) (W.DD T)) (M : ℕ) (x : W.DD T) (h : W.Q ^ M • x ∈ S) : qp W ^ M • x ∈ S := by
@@ -537,8 +534,7 @@ theorem extDataOne_exists [NeZero n] (W : LocWach PD LL O v n)
     have hfin : W.map ι (((PD.p : ℕ) : O) ^ N • (qp W ^ hi i •
         (((PD.p : ℕ) : O) ^ N • ((letE i : LetA O n) • y) + W.φD T (μ (i - 1)) - μ i))) = W.map ι p := by
       rw [natCast_pow_smul_eq_algebra W T N (qp W ^ hi i • _), liftb_map_smul, liftb_map_smul, hw4, hβe, hβz, add_zero]
-    rw [hinj hfin]
-    exact hp
+    rwa [hinj hfin]
   have h6' : ((PD.p : ℕ) : O) ^ N • ν i - qp W ^ a • μ i ∈ W.N T := hsat _ (by
     rw [natCast_pow_smul_eq_algebra W T N, map_sub, liftb_map_smul, liftb_map_smul, hν i, hμ i, smul_sub, smul_sub,
       smul_comm (((PD.p : ℕ) : LetA O n) ^ N) (qp W ^ a) ((letE i : LetA O n) • X), sub_sub_sub_cancel_right]
@@ -655,8 +651,7 @@ theorem extData_extTool [NeZero n] (W : LocWach PD LL O v n)
           ↥(herrZ1Δ (W.γD T₂ W.gamK) (W.φD T₂) W.DelF (W.γD T₂))) := by
       apply Subtype.ext
       rw [Submodule.coe_sum]
-      simp only [Submodule.coe_smul]
-      exact hpair
+      simpa only [Submodule.coe_smul] using hpair
     have hsum : (⟨((g f : ↥(latticeFiniteCocycles PD T₂.L)) : G → T₂.V), hκ⟩ : ↥(latticeCocycles T₂.L)) =
         ∑ j, bF.equivFun f j • (⟨((g (bF j) : ↥(latticeFiniteCocycles PD T₂.L)) : G → T₂.V), hcZj j⟩ : ↥(latticeCocycles T₂.L)) := by
       apply Subtype.ext
@@ -836,8 +831,7 @@ theorem step1Kill_kill [NeZero n] (hR : Formalism.MainNotions.LiftingTheory.lift
       constructor
       · exact fun h => h.2
       · rintro rfl; exact ⟨h0m, rfl⟩
-    rw [hf, Finset.prod_singleton, hc0, map_zero, sub_zero, mul_comm] at hNs
-    exact hNs
+    rwa [hf, Finset.prod_singleton, hc0, map_zero, sub_zero, mul_comm] at hNs
   · have hf : (step1Kill_roots W T c (Mi c) (hi c) a).filter (fun x => ¬ x ≠ 0) = ∅ := by
       ext x
       simp only [Finset.mem_filter, Finset.notMem_empty, not_not, iff_false, not_and]
@@ -1079,8 +1073,7 @@ theorem lift_of_killing_polynomial [NeZero n] (hR : Formalism.MainNotions.Liftin
     rw [hdu]
     refine (W.N T).add_mem (hkill u₀ hu₀) ?_
     have h := (qLattice_polynomial_derivation W T hDS hA hT c 0 (X * R1) hyQ).2
-    rw [pow_zero, one_smul] at h
-    exact h
+    rwa [pow_zero, one_smul] at h
   have hduDL : Formalism.MainNotions.CrystallineLiftingInputs.DL W T c (d u) := invariantLetter_derivation W T hπΔ hU hQu.1
 
   set w := pp ^ s₁ • dz + d (liftingSection W T R a ν zc) with hwdef
@@ -1579,8 +1572,7 @@ theorem first_lift_of_hypotheses [NeZero n] (W : LocWach PD LL O v n) (hV : Form
     intro f δ hδ
     obtain ⟨x, -, hxe, -⟩ := hX1 f
     have h := delta_fixes_cocycle_second W T₂ x δ hδ
-    rw [hxe] at h
-    exact h
+    rwa [hxe] at h
   let smE : W.EE → W.DD T₂ →ₗ[O] W.DD T₂ := fun e =>
     (LinearMap.lsmul W.EE (W.DD T₂) e).restrictScalars O
   let smA : LetA O n → W.DD T₂ →ₗ[O] W.DD T₂ := fun e =>
@@ -1723,8 +1715,7 @@ theorem caseA_loc' {l : ℕ} [Fact l.Prime] {K LL : Loc.FinExt l} (hg : Loc.Good
   obtain ⟨y, hy⟩ := hCA.1.2 ⟨x, hx⟩
   have h2 := y.2.2
   have : ((y : ↥(K0 K)) : Om l) = x := congrArg Subtype.val hy
-  rw [this] at h2
-  exact h2
+  rwa [this] at h2
 
 theorem laurent_clause_of_admitted' (hA : admitted D HW F Cm CR CA CB CK) : Formalism.MainNotions.DeltaInvariantLattices.P4 D HW F Cm :=
   fun l _ K s LL h => (hA.1 l K s LL h).2.2.2.1

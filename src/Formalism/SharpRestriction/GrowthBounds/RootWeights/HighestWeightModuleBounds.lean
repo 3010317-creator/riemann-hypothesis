@@ -101,9 +101,7 @@ theorem v2rep_Y_low (E : GLOps n K V) (v : V) (k : ℕ) (a b : Fin n) (h : b < a
     E a b x ∈ cyclicLevelSubmodule E v (k + 1) := by
   show E a b x ∈ cyclicLevelSubmodule E v k ⊔ _
   refine Submodule.mem_sup_right ?_
-  refine Submodule.mem_iSup_of_mem (a, b) ?_
-  refine Submodule.mem_iSup_of_mem h ?_
-  exact Submodule.mem_map_of_mem hx
+  exact Submodule.mem_iSup_of_mem (a, b) (Submodule.mem_iSup_of_mem h (Submodule.mem_map_of_mem hx))
 
 theorem v2rep_Y_up (E : GLOps n K V) (hR : SatisfiesGLRelations E) (mu : Fin n → ℤ) (v : V) (hv : IsHWV E mu v) (k : ℕ) :
     ∀ c d : Fin n, c ≤ d → ∀ x ∈ cyclicLevelSubmodule E v k, E c d x ∈ cyclicLevelSubmodule E v k := by
@@ -152,11 +150,9 @@ theorem v2rep_Umon_Y (E : GLOps n K V) (hR : SatisfiesGLRelations E) (mu : Fin n
   induction hu using Submonoid.closure_induction with
   | mem u hu =>
     obtain ⟨ab, rfl⟩ := hu
-    intro k x hx
-    exact ⟨k + 1, v2rep_Y_all E hR mu v hv k ab.1 ab.2 x hx⟩
+    exact fun k x hx => ⟨k + 1, v2rep_Y_all E hR mu v hv k ab.1 ab.2 x hx⟩
   | one =>
-    intro k x hx
-    exact ⟨k, hx⟩
+    exact fun k x hx => ⟨k, hx⟩
   | mul u₁ u₂ _ _ h₁ h₂ =>
     intro k x hx
     obtain ⟨k₂, hk₂⟩ := h₂ k x hx

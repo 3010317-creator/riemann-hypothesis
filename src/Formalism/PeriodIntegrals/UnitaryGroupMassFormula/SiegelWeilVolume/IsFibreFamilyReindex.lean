@@ -110,16 +110,14 @@ theorem fib_set_nonneg [IsFiniteMeasureOnCompacts ν]
       filter_upwards [hae] with v hv
       have hv' : v ∈ f' ⁻¹' S := by
         show f' v ∈ S
-        rw [hv]
-        exact hb
+        rwa [hv]
       rw [Set.indicator_apply, ite_eq_left hv']
     · rw [Set.indicator_apply, ite_eq_right hb]
       refine (lintegral_congr_ae ?_).trans lintegral_zero
       filter_upwards [hae] with v hv
       have hv' : v ∉ f' ⁻¹' S := by
         show f' v ∉ S
-        rw [hv]
-        exact hb
+        rwa [hv]
       rw [Set.indicator_apply, ite_eq_right hv']
   have hG0 : ∀ b, 0 ≤ ∫ v, ρ v ∂(fib b) := fun b => integral_nonneg hρ0
   rw [integral_eq_lintegral_of_nonneg_ae (Filter.Eventually.of_forall hρ0) hρc.aestronglyMeasurable,
@@ -146,8 +144,7 @@ theorem fib_set [IsFiniteMeasureOnCompacts μ] [IsFiniteMeasureOnCompacts ν]
   have hup : tsupport ρp ⊆ U := (tsupport_comp_subset (g := fun x : ℝ => max x 0) (by simp) ρ).trans hρU
   have hun : tsupport ρn ⊆ U := by
     refine (tsupport_comp_subset (g := fun x : ℝ => max x 0) (by simp) (-ρ)).trans ?_
-    rw [tsupport_neg]
-    exact hρU
+    rwa [tsupport_neg]
   have hp := fib_set_nonneg hfib hf' hff' hι ρp hcp hsp hup (fun v => le_max_right _ _) S hS hSB
   have hn := fib_set_nonneg hfib hf' hff' hι ρn hcn hsn hun (fun v => le_max_right _ _) S hS hSB
   have hip : Integrable ρp μ := hcp.integrable_of_hasCompactSupport hsp

@@ -108,8 +108,7 @@ theorem sum_tops_on_orbit (X : Inst D L) {p : ℕ} (hsg : IsSg D p) {t0 : HH D} 
       have hodd : ¬ Odd (m + m) := Nat.not_odd_iff_even.2 ⟨m, rfl⟩
       refine Prod.ext (by simp [hodd]) ?_
       show t0 + (m + m) • hP D p = t
-      rw [show (m + m) • hP D p = m • (2 • hP D p) by rw [smul_smul, mul_two]]
-      exact hm
+      rwa [show (m + m) • hP D p = m • (2 • hP D p) by rw [smul_smul, mul_two]]
     refine ⟨((m + m : ℕ) : ZMod (nP D p)), ?_, ?_⟩
     · rw [Finset.mem_coe, hTT, ho]
       exact ⟨rfl, hTT'⟩
@@ -204,10 +203,7 @@ theorem orbit_place_term_le_sum {X : Inst D L} {E : Ent D} (hS : Shape D L X E) 
   have htT : t ∈ D.host.TT := hs'.2
   have hpart : ∀ e : ℕ, orbMap D p (false, t0) (s + (e : ZMod (nP D p))) = partner D p t e := by
     intro e; rw [orbit_map_add_natCast, hom, positionPlace_conjugate_partner]
-  have hpart1 : ∀ e, Odd e → (partner D p t e).1 = true := by
-    intro e he
-    show decide (IsSg D p ∧ Odd e) = true
-    exact decide_eq_true ⟨hsg, he⟩
+  have hpart1 : ∀ e, Odd e → (partner D p t e).1 = true := fun e he => decide_eq_true ⟨hsg, he⟩
   have hExcl : ∀ e, Odd e → ¬ Excl D p t e := by
     rintro e he ⟨_, s', _, _, hd⟩
     have h2 := congrArg Prod.fst hd.2.1

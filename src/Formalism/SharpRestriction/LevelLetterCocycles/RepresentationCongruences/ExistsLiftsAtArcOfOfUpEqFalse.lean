@@ -262,12 +262,10 @@ theorem lift2a [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDomain O] [IsDiscreteVa
       rw [Nat.cast_one, hc'1, hty1] at this
       cases this
     · have := h c' hc'cut
-      rw [hc'1, hty1] at this
-      exact this
+      rwa [hc'1, hty1] at this
   have hηw : η < w' := by
     have := hok (c - 1)
-    rw [hty1] at this
-    exact this
+    rwa [hty1] at this
   have hT₁ : IsCrys PD T₁.ρ := hW₁.1
   have hT₂ : IsCrys PD T₂.ρ := hW₂.1
   obtain ⟨-, hqu, hΔu⟩ := lemG_units W hcase hP9 hT₁ hO hOv hinj
@@ -332,8 +330,7 @@ theorem lift2a [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDomain O] [IsDiscreteVa
     intro s hs
     obtain rfl : s = 0 := by omega
     show dvO W T₂ 1 bb (Pi.single k₀ 1) ∈ FilS W T₂ a 0 (-(-(w' : ℤ)))
-    rw [neg_neg]
-    exact hlamFil
+    rwa [neg_neg]
   have hSec₂ : SecIn W a 1 (condNN W T₂ a 1 bb) (fun k => lE W 0 * f₂ k) := by
     refine ⟨1, fun _ => g₂, fun _ => Pi.single k₀ 1, fun _ _ => -(w' : ℤ), fun _ => ⟨hId, hcond⟩, fun k => ?_⟩
     simp only [lE, pow_zero, one_mul, Fin.sum_univ_one, hf₂]
@@ -346,8 +343,7 @@ theorem lift2a [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDomain O] [IsDiscreteVa
   have hy' : y ∈ W.N T₂ ∧ ∀ δ ∈ W.DelF, W.γD T₂ δ y = y := hyΔ
   have hyNl : y ∈ W.Nl T₂ a := by
     refine ⟨y, hy'.1, ?_⟩
-    simp only [LinearMap.smul_apply, LinearMap.id_apply]
-    exact hylet
+    simpa only [LinearMap.smul_apply, LinearMap.id_apply] using hylet
   have hK : Formalism.MainNotions.LiftingTheory.KillsΔ W F a (W.π₀ ^ AA) := by
     rw [hac]
     exact (hWR hcase T₁ T₂ F Mi hi hsur hJL (c - 1)).2.1
@@ -429,8 +425,7 @@ theorem lift2a [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDomain O] [IsDiscreteVa
     refine ⟨V, hV, ?_⟩
     show algebraMap (LetA O n) W.EE (qA W ^ (-(α i 0)).toNat) * g i =
       algebraMap (LetA O n) W.EE (letE a * qA W ^ (α i 0).toNat * V)
-    simp only [Finset.prod_range_one, hps] at e
-    exact e
+    simpa only [Finset.prod_range_one, hps] using e
   choose V hVm hVeq using hgI
   choose Ψ hΨ using fun i => EL_of_mem Br a (hVm i)
   have hgE : ∀ i, algebraMap (LetA O n) W.EE (qA W ^ Nn i) * g i = EL Br a (X ^ Pn i * Ψ i) := by
@@ -617,8 +612,7 @@ theorem lift2a [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDomain O] [IsDiscreteVa
       have hu : ((u₀⁻¹ : Oˣ) : O) * ((W.DelF.card : ℕ) : O) = 1 := by
         have := hΔu.unit.inv_mul
         rw [hΔu.unit_spec] at this
-        rw [hu₀]
-        exact this
+        rwa [hu₀]
       by_cases hk : k = k₀
       · rw [ite_eq_left hk, hk, Pi.single_eq_same, ← mul_assoc, hu, one_mul, mul_one]
       · rw [ite_eq_right hk, Pi.single_eq_of_ne hk, mul_zero, mul_zero]

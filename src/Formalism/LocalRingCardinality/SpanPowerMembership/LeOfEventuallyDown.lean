@@ -165,9 +165,7 @@ theorem limsup_liminf_bounds {ε δ : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) (hδ 
     by_contra hcon
     apply hpos
     have h3 := ae_iff.mp (hae.and hfin)
-    refine measure_mono_null (fun y hy => ?_) h3
-    show ¬ _
-    exact fun h => hcon ⟨y, hy, h.1, h.2⟩
+    exact measure_mono_null (fun y hy => (fun h => hcon ⟨y, hy, h.1, h.2⟩)) h3
   have hXn : ‖X‖ < δ := mem_ball_zero_iff.mp hX
   have key : ∀ t : ℝ, 0 < t → ∀ r : ℝ, 0 < r →
       nu (closedBall X (t * r)) / lam (closedBall 0 r) =
@@ -284,7 +282,6 @@ theorem exists_density
       exact (ENNReal.div_le_iff_le_mul (Or.inl (hlam0 r hr0)) (Or.inl (hlamT r))).mp hr.le) _ hB
     exact absurd hle (not_le.mpr hClt)
   refine ⟨limsup (fun r : ℝ => nu (closedBall (0 : V) r) / lam (closedBall (0 : V) r)) (𝓝[>] (0 : ℝ)), hc0, hlsT.ne, hup, fun C hC => hdown C ?_⟩
-  rw [heq]
-  exact hC
+  rwa [heq]
 
 end Formalism.BasicNotions.Examples₂.CD

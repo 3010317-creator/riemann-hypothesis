@@ -139,8 +139,7 @@ theorem twNext_surj {i : ℕ} {st : TwSt X Pr R (QE sel (mu : Chr X.F X.E X.K)) 
   let b : (twNext Ch sel mu cst st).β := ⟨fun P => ⟨_, hmem P⟩, hne⟩
   refine ⟨b, fun P => ?_⟩
   by_cases hP : P.1 ∈ twQOff (Pr := Pr) sel mu
-  · have h1 := (twNext_spec hN b ⟨P.1, hP⟩).1
-    exact Quotient.exact h1
+  · exact Quotient.exact ((twNext_spec hN b ⟨P.1, hP⟩).1)
   · have hG := tw_mem_vGs_of_not hP
     rw [twNext_h_g st b P hG]
     obtain ⟨al, hal⟩ := H P
@@ -332,7 +331,6 @@ theorem nElem : NElem := by
     have hl' : n + i ≤ l.1 := by simpa using hl
     by_cases hi : i < c
     · rw [hνcol i hi, Pi.sub_apply, embedMatrix_basisVec_apply_of_not_free xj tt i hi l (hnf l i hi (Or.inr hl'))]
-      show (if l.1 = n + i then (1 : k) else 0) - (if l.1 = n + i then 1 else 0) = 0
       exact sub_self _
     · rw [hzero i hi, map_zero, sub_zero]
       rfl
@@ -346,8 +344,7 @@ theorem nElem : NElem := by
       by_cases hs : s.1 < n
       · rw [hM_lt l s hs, ite_eq_right (fun h => hsl h.symm), zero_mul]
       · rw [hinX v s hs, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ l) h
+    · exact fun h => absurd (Finset.mem_univ l) h
 
 end PI.OneCosetSharp.W
 end -- clump:auto
@@ -378,8 +375,7 @@ theorem toLin'_eN {A B : ℕ} (X : Matrix (Fin B) (Fin A) k) (i : ℕ) (hi : i <
   · intro b _ hb
     have hb' : (b : ℕ) ≠ i := fun h => hb (Fin.ext h)
     simp [PI.OneCosetSharp.Loc.eN, hb']
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 def xj0 (k₀ n' n : ℕ) : (Fin n' → k) →ₗ[k] (Fin n → k) :=
   Matrix.toLin' (Matrix.of fun (l : Fin n) (s : Fin n') =>
@@ -509,8 +505,7 @@ theorem prod_blocks [DecidableEq k] {k₀ m t j n' c n : ℕ} (hN : Nums k₀ m 
     · subst h
       simp
     · rw [ite_eq_right h, ite_eq_right]
-      intro h'
-      exact h (Fin.ext (by omega))
+      exact fun h' => h (Fin.ext (by omega))
   rw [hM, Matrix.det_one, chiV_one]
 
 
@@ -630,8 +625,7 @@ theorem fix_of_basis (g : (Fin (n + c) → k) ≃ₗ[k] (Fin (n + c) → k))
     · intro b _ hb
       have hx : x.1 ≠ b.1 := fun h => hb (Fin.ext h).symm
       simp [eN_apply, hx]
-    · intro hx
-      exact absurd (Finset.mem_univ x) hx
+    · exact fun hx => absurd (Finset.mem_univ x) hx
 
   rw [hsum, map_sum]
   refine Finset.sum_congr rfl fun l _ => ?_
@@ -639,8 +633,7 @@ theorem fix_of_basis (g : (Fin (n + c) → k) ≃ₗ[k] (Fin (n + c) → k))
   by_cases hl : l.1 < n
   · have h0 : w l = 0 := by
       have h1 := congrFun hw l
-      rw [lowProj_apply₂, ite_eq_left hl] at h1
-      exact h1
+      rwa [lowProj_apply₂, ite_eq_left hl] at h1
     rw [h0, zero_smul, zero_smul]
   · have hlt := l.2
     have hl' : l.1 = n + (l.1 - n) := by omega
@@ -889,8 +882,7 @@ theorem kappaZero : KappaZero := by
     have e1 := PI.OneCosetSharp.W.P2.ent_eq hk κ ((PI.OneCosetSharp.W.P2.fe k₀ c n hk).symm l) ⟨p, hpN⟩
     rw [hperm, hK, ite_eq_left hpa] at e1
     unfold PI.OneCosetSharp.ent at e1
-    rw [hl, hcoord, hcoord] at e1
-    exact e1
+    rwa [hl, hcoord, hcoord] at e1
 
 end PI.OneCosetSharp.W
 end -- clump:auto

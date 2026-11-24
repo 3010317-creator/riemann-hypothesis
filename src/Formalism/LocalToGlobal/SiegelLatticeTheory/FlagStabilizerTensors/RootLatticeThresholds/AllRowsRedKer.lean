@@ -61,8 +61,7 @@ theorem isConjPl_conjH (X : HidaSetting D) (w : HeightOneSpectrum (𝓞 D.host.E
 theorem natCast_mem_conjH {w : HeightOneSpectrum (𝓞 D.host.E)} {p : ℕ} (h : (p : 𝓞 D.host.E) ∈ w.asIdeal) :
     (p : 𝓞 D.host.E) ∈ (conjH w).asIdeal := by
   show sigH D (p : 𝓞 D.host.E) ∈ w.asIdeal
-  rw [map_natCast]
-  exact h
+  rwa [map_natCast]
 
 theorem wB_conjH (X : HidaSetting D) (w : HeightOneSpectrum (𝓞 D.host.E)) : wB X (conjH w) = wc X.B.I (wB X w) := by
   apply HeightOneSpectrum.ext
@@ -105,8 +104,7 @@ theorem cover (X : HidaSetting D) (k : Fin 2) (w : HeightOneSpectrum (𝓞 D.hos
     apply D.naut.plGw_nconj k v' v
     have := isConjPl_conjH X (D.naut.plGw k v')
     have hv'' : conjH (D.naut.plGw k v') = D.naut.plGw k v := hv'
-    rw [hv''] at this
-    exact this
+    rwa [hv''] at this
   have hcA : A.ncard = 2 * D.R.f := by
     rw [hA, Set.ncard_union_eq hdisj (Set.finite_range _) (Set.finite_range _),
       Set.ncard_range_of_injective (D.naut.plGw_inj k), Set.ncard_range_of_injective hinj2,
@@ -157,8 +155,7 @@ theorem redKerP_holds (X : HidaSetting D) (k : Fin 2) : Formalism.L2.SG.AllRowsO
   have hp := D.host.g_prime k
   have hA : ∀ v, ∀ y ∈ X.B.I.Lf, (X.B.I.fmat x - 1) *ᵥ y ∈ Lq X.B.I (wB X (D.naut.plGw k v)) := by
     intro v
-    have h0 := (redMat_iff X _ _ x _).1 (hred v)
-    exact stepA X.B.I hp (by rw [card_wB, card_res_host]) hx h0
+    exact stepA X.B.I hp (by rw [card_wB, card_res_host]) hx ((redMat_iff X _ _ x _).1 (hred v))
   refine glue X.B.I hp (unram X k) hx fun w hw => ?_
   have hwH : ((D.host.g k : ℕ) : 𝓞 D.host.E) ∈ (toH X w).asIdeal := by
     show (RingOfIntegers.mapRingEquiv X.ιE).symm ((D.host.g k : ℕ) : 𝓞 D.host.E) ∈ w.asIdeal

@@ -72,16 +72,14 @@ theorem curveEndoZ_of (hD : CurveSecondLogDerivative) : CurveEndoZ := by
   have := hD K W (xP P) (yP P) (hE P)
   show HasSecondLogDeriv (wpShift (wpReg W) (xP P + W.b₂ / 12))
     (2 * wpReg W - wTr W (xP P) (yP P) - wTr W (xP (neg P)) (yP (neg P)))
-  rw [(hxy P).1, (hxy P).2]
-  exact this
+  rwa [(hxy P).1, (hxy P).2]
 
 theorem curveEndoR_of (hD : CurveSecondLogDerivative) : CurveEndoR := by
   intro K _ _ R W hW ι _ neg xP yP al albar h hx hy hN ha ha' hc
   obtain ⟨h1, h2, h3, h4, h6⟩ := hW
   have hM := Formalism.L2.Th1.A.coeffMem.{0} K W R h1 h2 h3 h4 h6
   refine ⟨curveEndoZ_of hD K W ι neg xP yP al h, hN, fun P => subst_wTr W _ _, ?_, hx, ha, ha', hc⟩
-  intro P n
-  exact (hM.2.2.2.2.2.2.2.2.2.2 (xP P) (hx P) (yP P) (hy P) n).1
+  exact fun P n => (hM.2.2.2.2.2.2.2.2.2.2 (xP P) (hx P) (yP P) (hy P) n).1
 
 theorem curveEndoAll_of (hD : CurveSecondLogDerivative) : CurveEndoAll := by
   intro K _ _ _ _ R hR h2 W hW s2 hF1 O _ _ _ τ hτ hstar hself h2O hsum Dn hDn hdata
@@ -104,8 +102,7 @@ theorem curveEndoAll_of (hD : CurveSecondLogDerivative) : CurveEndoAll := by
     exact jetOne K R (logSer W) (expSer W) _ hlp hl' hPh.1 hm h2
 
 theorem curve_second_log_derivative_holds : CurveSecondLogDerivative := by
-  intro K _ _ W xP yP hP
-  exact Formalism.L2.Th1.A.plusZCleared.{0} K W xP yP hP
+  exact fun K _ _ W xP yP hP => Formalism.L2.Th1.A.plusZCleared.{0} K W xP yP hP
 
 theorem curve_real_multiplication_series : CurveEndoR := curveEndoR_of curve_second_log_derivative_holds
 

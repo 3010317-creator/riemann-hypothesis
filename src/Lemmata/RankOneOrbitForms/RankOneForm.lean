@@ -42,8 +42,7 @@ private lemma span_orbit (τ : Representation K G T)
   · exfalso
     apply hv
     have : τ 1 v ∈ Submodule.span K (Set.range fun g => τ g v) := Submodule.subset_span ⟨1, rfl⟩
-    rw [h, Submodule.mem_bot, map_one, Module.End.one_apply] at this
-    exact this
+    rwa [h, Submodule.mem_bot, map_one, Module.End.one_apply] at this
   · exact h
 
 private lemma orbit_ker (τ : Representation K G T)
@@ -99,8 +98,7 @@ theorem goal1 (τ : Representation K G T)
     have key : ∀ g, ∑ j, w g j • b j = 0 := by
       intro g
       have := hle' (Submodule.subset_span ⟨g, rfl⟩)
-      rw [LinearMap.mem_ker, LinearMap.pi_apply_eq_sum_univ] at this
-      exact this
+      rwa [LinearMap.mem_ker, LinearMap.pi_apply_eq_sum_univ] at this
     have hx : ∑ j, b j • ε (τ (γ j) v) = 0 := by
       apply orbit_ker τ hirr φ hφ
       intro g

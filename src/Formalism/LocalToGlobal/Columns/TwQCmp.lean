@@ -35,8 +35,7 @@ theorem qsp_le_of_val (x : E) (hx : P.valuation E x ≤ 1) : Valued.v (φ x) ≤
   obtain ⟨a, t, ht, hxt⟩ := qsp_frac P x hx
   have h1 := qsp_val_one P φ hint hPv t ht
   have h2 := hint a
-  rw [← hxt, map_mul, Valuation.map_mul, h1, mul_one] at h2
-  exact h2
+  rwa [← hxt, map_mul, Valuation.map_mul, h1, mul_one] at h2
 
 
 include hint hPv in
@@ -46,11 +45,9 @@ theorem qsp_lt_of_val (x : E) (hx : P.valuation E x < 1) : Valued.v (φ x) < 1 :
   have ha : a ∈ P.asIdeal := by
     rw [← HeightOneSpectrum.valuation_lt_one_iff_mem (K := E)]
     change P.valuation E (algebraMap (𝓞 E) E a) < 1
-    rw [← hxt, map_mul, (HeightOneSpectrum.valuation_eq_one_iff_notMem (K := E) P).2 ht, mul_one]
-    exact hx
+    rwa [← hxt, map_mul, (HeightOneSpectrum.valuation_eq_one_iff_notMem (K := E) P).2 ht, mul_one]
   have h2 := (hPv a).2 ha
-  rw [← hxt, map_mul, Valuation.map_mul, h1, mul_one] at h2
-  exact h2
+  rwa [← hxt, map_mul, Valuation.map_mul, h1, mul_one] at h2
 
 
 include hint hPv in

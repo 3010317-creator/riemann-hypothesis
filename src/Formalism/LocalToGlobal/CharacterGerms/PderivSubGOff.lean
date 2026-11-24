@@ -108,8 +108,7 @@ theorem pderiv_subG_lam (inj : Function.Injective fun x : Orb × ZMod 2 => tau x
     simp only [Equiv.apply_symm_apply]
     first | rw [ite_eq_right hα]
     first | exact mul_zero _
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 end Chain
 

@@ -86,8 +86,7 @@ theorem adq_kloc : (HA.mat (Fv X.B.I.F p.1) X.B.I.cm.sig X.B.I.J (xuP X hb u p))
 theorem adq_lat (v : Fin X.B.I.n → TpX X p)
     (hv : v ∈ latLoc (E := X.B.I.E) p.1 (X.B.I.L : Set (Fin X.B.I.n → X.B.I.E))) :
     adqM X hb u p *ᵥ v ∈ latLoc (E := X.B.I.E) p.1 (X.B.I.L : Set (Fin X.B.I.n → X.B.I.E)) := by
-  have h := adq_kloc X hb u p
-  exact (h v).1 hv
+  exact ((adq_kloc X hb u p) v).1 hv
 
 theorem adq_hR (v w : Fin X.B.I.n → TpX X p) :
     hR (FpX X p) X.B.I.cm.sig X.B.I.J (adqM X hb u p *ᵥ v) (adqM X hb u p *ᵥ w) =
@@ -98,8 +97,7 @@ theorem adq_fix_f (b : Fin D.R.rS) :
     adqM X hb u p *ᵥ ratV (F := X.B.I.F) (Fv X.B.I.F p.1) (crdOf X.B.I X.ιE X.bas (X.fY b)) =
       ratV (F := X.B.I.F) (Fv X.B.I.F p.1) (crdOf X.B.I X.ιE X.bas (X.fY b)) := by
   have h := congrArg (PI.FinKW.vecV X.B.I p.1) (X.xu_fix u b).2
-  rw [PIW.MassDataColumns.vecV_fmat X hb p, PIW.MassDataColumns.vecV_incl] at h
-  exact h
+  rwa [PIW.MassDataColumns.vecV_fmat X hb p, PIW.MassDataColumns.vecV_incl] at h
 
 private lemma vecV_sub' (x y : Fin X.B.I.n → X.B.I.E ⊗[X.B.I.F] Formalism.MainNotions.S.Af X.B.I.F) :
     PI.FinKW.vecV X.B.I p.1 (x - y) = PI.FinKW.vecV X.B.I p.1 x - PI.FinKW.vecV X.B.I p.1 y := by

@@ -377,10 +377,8 @@ theorem cmpS_inj (I : Ideal (𝓞 E)) (h : I ≠ ⊥) : Function.Injective (cmpS
     · rintro _ ⟨a, ha, rfl⟩
       exact Submodule.subset_span ⟨φ a, ⟨a, ha, rfl⟩, rfl⟩
     · exact Submodule.zero_mem _
-    · intro x y _ _ hx hy
-      exact Submodule.add_mem _ hx hy
-    · intro c x _ hx
-      exact Submodule.smul_mem _ c hx
+    · exact fun x y _ _ hx hy => Submodule.add_mem _ hx hy
+    · exact fun c x _ hx => Submodule.smul_mem _ c hx
   have hg := Formalism.UG.P.global_lattice_one_holds F E (Fin 1) Λ hfin hspan
   have hmem : φ b ∈ Formalism.UG.CS.globLat (F := F) 1 Λ := by
     show ((1⁻¹ : GL (Fin 1) (E ⊗[F] Af F)) : Matrix (Fin 1) (Fin 1) (E ⊗[F] Af F)) *ᵥ
@@ -481,8 +479,7 @@ theorem mem_parah {β : GL (Fin n) (E ⊗[F] Af F)} {PP : Pl E} {b : Fin n → �
   · rintro ⟨y, hy, rfl⟩
     refine ⟨y.2, ?_⟩
     show ext1 (St β) (redAt β PP) y.1 ∈ _
-    rw [extendOne_of_mem _ y.2]
-    exact hy
+    rwa [extendOne_of_mem _ y.2]
   · rintro ⟨h1, h2⟩
     unfold redFn at h2
     rw [extendOne_of_mem _ h1] at h2
@@ -497,8 +494,7 @@ theorem mem_princAt {β : GL (Fin n) (E ⊗[F] Af F)} {PP : Pl E} {x : GL (Fin n
   · rintro ⟨y, hy, rfl⟩
     refine ⟨y.2, ?_⟩
     show ext1 (St β) (redAt β PP) y.1 = 1
-    rw [extendOne_of_mem _ y.2]
-    exact hy
+    rwa [extendOne_of_mem _ y.2]
   · rintro ⟨h1, h2⟩
     unfold redFn at h2
     rw [extendOne_of_mem _ h1] at h2
@@ -518,8 +514,7 @@ theorem stdSpace_gram (n : ℕ) (neg : Bool) :
   ext i j
   have h := Formalism.BasicNotions.Examples₂.stdSpace_gram_apply (E := E) Formalism.BasicNotions.Examples₂.star_isIntegral n (fun _ => neg)
     (if neg then 0 else n) (if neg then n else 0) i j
-  rw [Matrix.diagonal_apply]
-  exact h
+  rwa [Matrix.diagonal_apply]
 
 structure IsDefUnimod (hc : CMData F E) (J : Matrix (Fin n) (Fin n) E) (L : Submodule (𝓞 E) (Fin n → E)) : Prop where
   herm : IsHerm (hc.sig : E →+* E) J

@@ -533,8 +533,7 @@ theorem charZero_WW : CharZero (WW p) := by
     have h0 : ((q : ℕ) : WW p) = 0 := CharP.cast_eq_zero (WW p) q
     have h1 : ((q : ℕ) : kb p) = 0 := by
       have := congrArg (WittVector.constantCoeff (p := p) (R := kb p)) h0
-      rw [map_natCast, map_zero] at this
-      exact this
+      rwa [map_natCast, map_zero] at this
     have h2 : p ∣ q := (CharP.cast_eq_zero_iff (kb p) p q).mp h1
     have h3 : p = q := (Nat.prime_dvd_prime_iff_eq (Fact.out : p.Prime) h).mp h2
     have h4 : ((p : ℕ) : WW p) = ((q : ℕ) : WW p) := congrArg (Nat.cast) h3
@@ -1823,10 +1822,8 @@ theorem first_kernel_small_of_frame_twist (D : D7) (h5 : 5 ≤ p) (X : Sys p) [I
     obtain ⟨S₀, hp, hS⟩ := hXi
     refine ⟨S₀, hp, fun j La La' y => ?_⟩
     by_cases h : j < X.mm ∧ La ∈ repOf X.Lv hfin j ∧ (X.Pj (j + 1)).IsLatTup La'.2
-    · simp only [Ξ₁, ite_eq_left h]
-      exact hS j h.1 La h.2.1 La' h.2.2 y
-    · simp only [Ξ₁, ite_eq_right h]
-      exact IntOff.zero
+    · simpa only [Ξ₁, ite_eq_left h] using hS j h.1 La h.2.1 La' h.2.2 y
+    · simpa only [Ξ₁, ite_eq_right h] using IntOff.zero
   have hK := first_kernel_small_of_frame D h5 X E hfin g hLT pos fd cc δ B χ SS cl Ξ₁ muT ρ hAt hIn hM hcc hδ hχ hLam
     hAdm hCl hXi1 hSc hρ hMI hL
   intro j hj L0 h0 La' hLa' φ

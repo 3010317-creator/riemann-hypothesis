@@ -94,9 +94,7 @@ theorem ev_equiv (r : G →* A) (χ : G →* T'ˣ) (Dl : Subgroup G) (inc : P �
 theorem ev_equiv_triv {N : Type*} [AddCommGroup N] [Module O N] (r : G →* A) (χ : G →* T'ˣ)
     (Dl : Subgroup G) (ev : P →ₗ[O] N) (hev : ∀ g p, ev (uElt r χ g • p) = ev p) :
     IsEquivMap (resRep (uRep O (M := P) r χ) Dl) (Representation.trivial O Dl N) ev := by
-  intro g p
-  show ev (uElt r χ (g : G) • p) = ev p
-  exact hev g p
+  exact fun g p => hev g p
 
 end Ev
 

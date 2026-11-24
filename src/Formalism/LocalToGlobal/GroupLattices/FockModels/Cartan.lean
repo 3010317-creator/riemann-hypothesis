@@ -51,9 +51,7 @@ theorem cartanDomain_proved : Formalism.MainNotions.flipOneThree.CartanDomain :=
   rw [eM] at hG
   rw [eLM] at hX
   rw [eL, eM]
-  have hc : algebraMap O Kf w ≠ 0 := by
-    intro h0
-    exact hw.ne_zero (hinj (by rw [h0, map_zero]))
+  have hc : algebraMap O Kf w ≠ 0 := fun h0 => hw.ne_zero (hinj (by rw [h0, map_zero]))
   have hmap : ∀ f : MvPolynomial (Fin (m + 1) × Fin (m + 1)) O,
       (mapAlgHom (Algebra.ofId O Kf)).toLinearMap f = map (algebraMap O Kf) f := fun f => rfl
   have hF' := (nablaLTwMem O Kf m lam g hg F).1 hF
@@ -114,8 +112,7 @@ theorem initMinor_mem (R : Type) [CommRing R] {r n s : ℕ} (I : Fin s → Fin r
     funext t
     simp only [shapeDeg, om, Finset.card_filter]
     simp
-  rw [h1, h2] at h
-  exact h
+  rwa [h1, h2] at h
 
 def ProdSpan (R : Type) [CommRing R] (r n : ℕ) (ν ν' : Fin n → ℕ) : Submodule R (MvPolynomial (Fin r × Fin n) R) :=
   Submodule.span R {X | ∃ f ∈ dualWeyl R r n ν, ∃ f' ∈ dualWeyl R r n ν', X = f * f'}

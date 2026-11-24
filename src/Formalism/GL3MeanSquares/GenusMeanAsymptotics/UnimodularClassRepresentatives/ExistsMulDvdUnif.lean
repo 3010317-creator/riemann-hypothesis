@@ -80,8 +80,7 @@ theorem mem_pK {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {k : ℕ} {a : K
     exact ⟨t, ht, z, hz, by rw [Algebra.linearMap_apply, e, Algebra.smul_def, MeanB.algebraMap_comp]⟩
 
 theorem congrP_algebraMap_iff_sub_mem {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {k : ℕ} {a b : K} :
-    CongrP 𝔭 k a b ↔ a - b ∈ pK K 𝔭 k := by
-  exact (mem_pK h𝔭).symm
+    CongrP 𝔭 k a b ↔ a - b ∈ pK K 𝔭 k := (mem_pK h𝔭).symm
 
 theorem locF_one_eq (𝔭 : Ideal (𝓞 F)) : locF 𝔭 (1 : Submodule (𝓞 K) K) = pK K 𝔭 0 := by
   unfold pK
@@ -176,8 +175,7 @@ theorem mem_pK_iff_unif {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {π : �
     have h1 : Ideal.span {(algebraMap (𝓞 F) (𝓞 K)) s} * extP K 𝔭 ^ k ≤ Ideal.span {(algebraMap (𝓞 F) (𝓞 K)) (π ^ k)} := by
       have h2 : Ideal.span {s} * 𝔭 ^ k ≤ Ideal.span {π ^ k} := by
         rw [Ideal.span_singleton_mul_le_iff]
-        intro x hx
-        exact Ideal.mem_span_singleton.2 (hdvd x hx)
+        exact fun x hx => Ideal.mem_span_singleton.2 (hdvd x hx)
       have := Ideal.map_mono (f := algebraMap (𝓞 F) (𝓞 K)) h2
       rwa [Ideal.map_mul, Ideal.map_span, Set.image_singleton, Ideal.map_span, Set.image_singleton,
         Ideal.map_pow] at this

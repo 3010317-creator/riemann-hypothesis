@@ -256,12 +256,10 @@ theorem one_le_NGPt (TT : ℕ) (γ : Formalism.FourierDecayAlt.PN.Pts D.host.E D
   have hrd := rd_pos (D := D)
   have hX : (D.host.rdE ^ D.R.f) ^ (2 * D.R.rS * (D.R.rS + 1)) ≤ ∏ w : InfinitePlace D.host.E, w (GPt TT γ) := by
     refine (pow_le_pow_iff_left₀ (by positivity) hP0 two_ne_zero).1 ?_
-    rw [← pow_mul, mul_comm _ 2]
-    exact hsq
+    rwa [← pow_mul, mul_comm _ 2]
   have e : (D.host.rdE ^ (2 * D.R.rS * (D.R.rS + 1))) ^ D.R.f = (D.host.rdE ^ D.R.f) ^ (2 * D.R.rS * (D.R.rS + 1)) := by
     rw [← pow_mul, ← pow_mul, mul_comm]
-  rw [inv_pow, ← div_eq_inv_mul, one_le_div (by positivity), e]
-  exact hX
+  rwa [inv_pow, ← div_eq_inv_mul, one_le_div (by positivity), e]
 
 theorem one_le_NDPt (γ : Formalism.FourierDecayAlt.PN.Pts D.host.E D.R.rS)
     (hmin : ∀ a, ∃ o ∈ dI D ^ (endIdx γ a * (2 * D.R.rS + 1 - endIdx γ a)),
@@ -278,8 +276,7 @@ theorem one_le_NDPt (γ : Formalism.FourierDecayAlt.PN.Pts D.host.E D.R.rS)
   have e2 : (D.host.rdE ^ (2 * (endIdx γ a * (2 * D.R.rS + 1 - endIdx γ a)))) ^ D.R.f =
       (D.host.rdE ^ D.R.f) ^ (2 * (endIdx γ a * (2 * D.R.rS + 1 - endIdx γ a))) := by
     rw [← pow_mul, ← pow_mul, mul_comm]
-  rw [inv_pow, ← div_eq_inv_mul, one_le_div (by positivity), e2]
-  exact hsq
+  rwa [inv_pow, ← div_eq_inv_mul, one_le_div (by positivity), e2]
 
 end Bounds
 

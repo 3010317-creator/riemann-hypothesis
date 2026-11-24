@@ -76,8 +76,7 @@ theorem bddAbove_vF {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {n : 𝓞 F
   have h1 : 𝔭 ^ e ∣ Ideal.span {n} := Ideal.dvd_span_singleton.mpr he
   have h2 : Ideal.absNorm (𝔭 ^ e) ∣ Ideal.absNorm (Ideal.span {n}) := map_dvd Ideal.absNorm h1
   have h3 : Ideal.absNorm (Ideal.span {n}) ≠ 0 := by
-    rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-    exact hn
+    rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
   have h4 := Nat.le_of_dvd (Nat.pos_of_ne_zero h3) h2
   rw [map_pow] at h4
   have h5 : Ideal.absNorm 𝔭 ≠ 0 := by
@@ -148,8 +147,7 @@ theorem exists_local_data (hF : IsFixF K F) {h : V →ₗ⋆[K] V →ₗ[K] K} (
   simp only [Set.mem_ofPred_eq]
   rw [← mem_pow_iff (K := K), hD]
   constructor
-  · intro hle
-    exact hle (Ideal.subset_span ⟨b, fun i => Submodule.subset_span ⟨i, rfl⟩, hdet⟩)
+  · exact fun hle => hle (Ideal.subset_span ⟨b, fun i => Submodule.subset_span ⟨i, rfl⟩, hdet⟩)
   · intro hmem
     refine BallB.discrIdeal_le b fun x hx z hz => ?_
     have hx' : b.det x = algebraMap (𝓞 K) K (Matrix.of fun i j => crd b ⟨x j, hx j⟩ i).det := by

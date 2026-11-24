@@ -86,8 +86,7 @@ theorem perp_full {ι : Type} [Fintype ι] [DecidableEq ι] (X : ι → Fin n �
   have hA : cT (sigR (Fv F v) σ) M * JR (Fv F v) J * M = (gramG σ J v X).submatrix eq.symm eq.symm := by
     ext p q
     simp only [cT, Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, Finset.sum_mul]
-    simp only [M, Matrix.of_apply, gramG, hR, hform, Matrix.submatrix_apply]
-    exact Finset.sum_comm
+    simpa only [M, Matrix.of_apply, gramG, hR, hform, Matrix.submatrix_apply] using Finset.sum_comm
   have hdA : IsUnit (cT (sigR (Fv F v) σ) M * JR (Fv F v) J).det := by
     have h1 := congrArg det hA
     rw [det_submatrix_equiv_self, det_mul] at h1
@@ -99,8 +98,7 @@ theorem perp_full {ι : Type} [Fintype ι] [DecidableEq ι] (X : ι → Fin n �
     simp only [hR, hform] at h2
     simp only [Matrix.mulVec, dotProduct, cT, Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, Pi.zero_apply, Finset.sum_mul]
     simp only [M, Matrix.of_apply]
-    rw [Finset.sum_comm]
-    exact h2
+    rwa [Finset.sum_comm]
   have h3 := congrArg (fun y => (cT (sigR (Fv F v) σ) M * JR (Fv F v) J)⁻¹ *ᵥ y) hB
   simpa [mulVec_mulVec, nonsing_inv_mul _ hdA] using h3
 

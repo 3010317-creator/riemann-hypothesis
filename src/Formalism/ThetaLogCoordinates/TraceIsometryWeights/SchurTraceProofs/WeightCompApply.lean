@@ -228,8 +228,7 @@ theorem hwc_iff (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r)) (la : Fin r →
   simp only [Submodule.mem_iInf, LinearMap.mem_ker, GAe_E]
   refine and_congr_right fun _ => ?_
   constructor
-  · intro h a b hab
-    exact h _ _ ⟨enumC_mem Cs a, enumC_mem Cs b, (enumC Cs).lt_iff_lt.mpr hab⟩
+  · exact fun h a b hab => h _ _ ⟨enumC_mem Cs a, enumC_mem Cs b, (enumC Cs).lt_iff_lt.mpr hab⟩
   · rintro h c d ⟨hc, hd, hcd⟩
     obtain ⟨a, rfl⟩ := enumC_surj Cs hc
     obtain ⟨b, rfl⟩ := enumC_surj Cs hd
@@ -239,8 +238,7 @@ theorem stableC_iff (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r))
     (S : Submodule ℚ_[p] (MvPolynomial (Fin N × Fin r) ℚ_[p])) :
     GlStableC p LL j Cs S ↔ (GAe p LL j (enumC Cs)).Stable S := by
   constructor
-  · intro h a b x hx
-    exact h _ (enumC_mem Cs a) _ (enumC_mem Cs b) x hx
+  · exact fun h a b x hx => h _ (enumC_mem Cs a) _ (enumC_mem Cs b) x hx
   · intro h c hc d hd x hx
     obtain ⟨a, rfl⟩ := enumC_surj Cs hc
     obtain ⟨b, rfl⟩ := enumC_surj Cs hd

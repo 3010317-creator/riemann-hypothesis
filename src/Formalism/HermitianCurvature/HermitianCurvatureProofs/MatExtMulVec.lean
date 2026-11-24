@@ -105,10 +105,8 @@ theorem xiV_eq_sum (ξ : Fin r → ℂ) : C2.xiV k r ξ = ∑ a : Fin r, ξ a �
       simp only [C2.xiV, dite_eq_left h]
     · intro b _ hb
       rw [ite_eq_right]
-      intro hi
-      exact hb (Fin.ext (congrArg Fin.val hi).symm)
-    · intro hb
-      exact absurd (Finset.mem_univ _) hb
+      exact fun hi => hb (Fin.ext (congrArg Fin.val hi).symm)
+    · exact fun hb => absurd (Finset.mem_univ _) hb
   · simp only [C2.xiV, dite_eq_right h]
     symm
     apply Finset.sum_eq_zero
@@ -429,8 +427,7 @@ private theorem isDFrame_inv_mul_mul_of_frame_compat (S : B.RealPlaceData k r Wp
     rw [hinv, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, hPi', ← key, hPn]
 
 theorem tau_N {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) {v : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ}
-    (hv : v ∈ C2.UTset (r + 1)) : C2.tauM k r z v ∈ Nset k r := by
-  exact (c2_tau_mem k r z hz v hv).1
+    (hv : v ∈ C2.UTset (r + 1)) : C2.tauM k r z v ∈ Nset k r := (c2_tau_mem k r z hz v hv).1
 
 theorem hzz_ne {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) : herm (Hpk k r) z z ≠ 0 := by
   simpa [herm_self_alt, neg_ne_zero, Complex.ofReal_ne_zero] using hz.2.ne'

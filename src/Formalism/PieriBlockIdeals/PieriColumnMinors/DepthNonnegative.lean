@@ -122,8 +122,7 @@ theorem isUnit_intCast_of_not_dvd' (R : Type) [CommRing R] (l : ℕ) (hu : ∀ m
   · have e : (m : R) = ((m.natAbs : ℕ) : R) := by
       conv_lhs => rw [h]
       simp
-    rw [e]
-    exact h2
+    rwa [e]
   · have e : (m : R) = -((m.natAbs : ℕ) : R) := by
       conv_lhs => rw [h]
       simp
@@ -250,10 +249,7 @@ theorem simple_subquotient_of_power_holds : SimpleSubquotOfPower := by
   set Fa : ℕ → Submodule A V := fun a => F ⊔ (F' ⊓ scaleSub A V (ϖ ^ a)) with hFa
   have hle : ∀ a, F ≤ Fa a := fun a => le_sup_left
   have hle' : ∀ a, Fa a ≤ F' := fun a => sup_le hFF inf_le_left
-  have h0 : Fa 0 = F' := by
-    apply le_antisymm (hle' 0)
-    intro x hx
-    exact Submodule.mem_sup_right ⟨hx, x, by simp⟩
+  have h0 : Fa 0 = F' := le_antisymm (hle' 0) (fun x hx => Submodule.mem_sup_right ⟨hx, x, by simp⟩)
   have hnF : Fa n = F := le_antisymm (sup_le le_rfl (inf_le_right.trans hn)) (hle n)
   have hex : ∃ a, Fa a = F := ⟨n, hnF⟩
   have ha1 := Nat.find_spec hex
@@ -361,14 +357,12 @@ theorem tensor_weight_kill_holds : TensorWeightKill := by
     intro τ
     by_cases h : τ = a
     · subst h
-      simp only [Function.update_self, chainB, ite_eq_right ha]
-      exact hp _
+      simpa only [Function.update_self, chainB, ite_eq_right ha] using hp _
     · rw [Function.update_of_ne h]
       have h1 := hx τ
       simp only [chainB, Finset.mem_insert, h, false_or] at h1 ⊢
       exact h1
-  intro y hy
-  exact key hy
+  exact fun y hy => key hy
 
 theorem chain_monotone_holds : ChainMono := by
   intro O _ ι _ _ Nb _ _ B s s' hss
@@ -458,8 +452,7 @@ theorem forms_devissage_holds : FormsDevissage := by
       rw [mul_smul]
       exact hs'f g⟩
     apply hmin (Φ F0) ⟨F0, hF0, rfl⟩
-    refine lt_of_le_not_ge (hΦmono _ _ hF0F.le) fun h => ?_
-    exact absurd (hΦ F0 F hDF0 h) (not_le_of_gt hF0F)
+    exact lt_of_le_not_ge (hΦmono _ _ hF0F.le) fun h => absurd (hΦ F0 F hDF0 h) (not_le_of_gt hF0F)
 
 theorem theorem_w_central_of_simple_quotients (hSS : SimpleSubquotOfPower) (hIso : SubquotIso) : TheoremWCore := by
   intro O _ A _ _ G _ Γ K jK ι _ _ Nb _ _ B _ _ T _ _ _ _ S l ϖ n₀ ω pr e Λ L _ _ _ _ _ hwt depth i T2
@@ -544,8 +537,7 @@ theorem theorem_w_central_of_simple_quotients (hSS : SimpleSubquotOfPower) (hIso
     have hker : ∀ x : F', ψ x = 0 → (x : ⨂[O] τ, Nb τ) ∈ F := by
       intro x hx
       have h1 : (F.comap F'.subtype).mkQ x = 0 := iso.injective (by rw [map_zero]; exact hx)
-      rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at h1
-      exact h1
+      rwa [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at h1
     have hdeep : i a < depth a (hwt μ a) := by
       by_contra hnot
       have hle' : depth a (hwt μ a) ≤ i a := not_lt.mp hnot
@@ -572,8 +564,7 @@ theorem theorem_w_central_of_simple_quotients (hSS : SimpleSubquotOfPower) (hIso
     intro s
     induction s using Finset.induction_on with
     | empty =>
-      intro f hf
-      exact ⟨1, S.one_mem, by simpa using hf⟩
+      exact fun f hf => ⟨1, S.one_mem, by simpa using hf⟩
     | insert a s ha ih =>
       intro f hf
       obtain ⟨σ1, hσ1, h1⟩ := hstep s a ha f hf

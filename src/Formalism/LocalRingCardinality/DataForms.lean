@@ -87,9 +87,7 @@ theorem inj_of_li {K V M ι : Type} [Field K] [AddCommGroup V] [Module K V] [Add
   have hsum : ∑ j, (σ (b.repr x j) - σ (b.repr y j)) • e (b j) = 0 := by
     simp only [sub_smul, Finset.sum_sub_distrib, ← key, hxy, sub_self]
   have hz := (Fintype.linearIndependent_iff.mp h) _ hsum
-  apply b.ext_elem
-  intro i
-  exact σ.injective (sub_eq_zero.mp (hz i))
+  exact b.ext_elem (fun i => σ.injective (sub_eq_zero.mp (hz i)))
 
 def descend {K V W M N : Type} [Field K] [AddCommGroup V] [Module K V] [AddCommGroup W]
     [Module K W] [AddCommGroup M] [Module ℂ M] [AddCommGroup N] [Module ℂ N] {σ : K →+* ℂ}

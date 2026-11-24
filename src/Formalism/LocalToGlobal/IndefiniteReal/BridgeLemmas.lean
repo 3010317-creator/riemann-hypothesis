@@ -83,8 +83,7 @@ private theorem coef_smul_eq_of_double_coset_eq (f : S.Forms) (γ γ' : Γ) (c :
   have hfix : (χ (k * k'⁻¹) : ℂ) • ρ (γ'⁻¹ * γ) (P.coef ((f : S.Cl → S.V) c)) =
       P.coef ((f : S.Cl → S.V) c) := by
     have h1 := P.coef_fixed f c ⟨γ'⁻¹ * γ, hmem⟩
-    rw [hK] at h1
-    exact h1
+    rwa [hK] at h1
   have hχ : χ k' * χ (k * k'⁻¹) = χ k := by
     rw [map_mul, map_inv, mul_comm (χ k), mul_inv_cancel_left]
   conv_lhs => rw [← hfix]
@@ -220,8 +219,7 @@ theorem linInd (P : ClassPres ι S σ ρ J χ) : LinearIndependent ℂ (fun i =>
   intro a ha
   have hc : ∀ c, ∑ i, a i • P.coef ((S.basis i : S.Cl → S.V) c) = 0 := by
     intro c
-    have h1 := congrFun ha (P.y c)
-    simpa [Finset.sum_apply, Pi.smul_apply, hL, P.ext_rep] using h1
+    simpa [Finset.sum_apply, Pi.smul_apply, hL, P.ext_rep] using congrFun ha (P.y c)
   have hmul : (S.H.map σ).mulVec a = 0 := by
     funext j
     rw [P.mulVec_eq]
@@ -269,8 +267,7 @@ theorem span_eq (P : ClassPres ι S σ ρ J χ) : Submodule.span ℂ (Set.range 
     have hmem : F (P.y c) ∈ Submodule.span ℂ (Set.range fun l => P.coef (S.bV l)) := by
       rw [P.coef_span]
       exact Submodule.mem_top
-    rw [Submodule.mem_span_range_iff_exists_fun] at hmem
-    exact hmem
+    rwa [Submodule.mem_span_range_iff_exists_fun] at hmem
   choose β hβ using hw
   obtain ⟨F', hF'def⟩ : ∃ F' : G → W, F' = ∑ c, ∑ l, β c l • P.extL (clsSingle S c (S.bV l)) := ⟨_, rfl⟩
   have hF'mem : F' ∈ Submodule.span ℂ (Set.range P.extL) := by
@@ -317,8 +314,7 @@ theorem span_eq (P : ClassPres ι S σ ρ J χ) : Submodule.span ℂ (Set.range 
       congr 1
       ring
     rw [hF'c, hB, hβ c, hA]
-  rw [heq]
-  exact hF'mem
+  rwa [heq]
 
 theorem extBij_holds (P : ClassPres ι S σ ρ J χ) : P.ExtBij := by
   unfold ClassPres.ExtBij
@@ -349,8 +345,7 @@ theorem mem_stab_translate (J : Subgroup G) (y : G) (γ : Γ) (k : J) (δ : Γ) 
         (k : G) * ((k : G)⁻¹ * (y⁻¹ * ((ι γ)⁻¹ * ι δ * ι γ) * y) * (k : G)) * (k : G)⁻¹ := by group
     rw [e2]
     exact J.mul_mem (J.mul_mem k.2 h) (J.inv_mem k.2)
-  · intro h
-    exact J.mul_mem (J.mul_mem (J.inv_mem k.2) h) k.2
+  · exact fun h => J.mul_mem (J.mul_mem (J.inv_mem k.2) h) k.2
 
 theorem card_stab_translate (J : Subgroup G) (y : G) (γ : Γ) (k : J) :
     Nat.card (stab ι J (ι γ * y * k)) = Nat.card (stab ι J y) := by
@@ -443,8 +438,7 @@ def adEval (y : I → G) : AdForms ι ρ J χ →ₗ[ℂ] (I → W) where
 
 theorem adEval_injective (hy : IsReps ι J y) :
     Function.Injective (adEval (ι := ι) (ρ := ρ) (χ := χ) y) := by
-  intro F F' hEq
-  exact Subtype.ext (adForms_ext hy F.2 F'.2 fun i => congrFun hEq i)
+  exact fun F F' hEq => Subtype.ext (adForms_ext hy F.2 F'.2 fun i => congrFun hEq i)
 
 theorem adForms_fd (hy : IsReps ι J y) [FiniteDimensional ℂ W] :
     FiniteDimensional ℂ (AdForms ι ρ J χ) := FiniteDimensional.of_injective (adEval (ι := ι) (ρ := ρ) (χ := χ) y) (adEval_injective hy)
@@ -469,8 +463,7 @@ theorem re_natCast_inv_mul (n : ℕ) (z : ℂ) : (((n : ℂ))⁻¹ * z).re = ((n
 theorem adInner_pos (hy : IsReps ι J y) (hst : ∀ i, Nat.card (stab ι J (y i)) ≠ 0) {F : G → W}
     (hF : F ∈ AdForms ι ρ J χ) (hne : F ≠ 0) : 0 < (adInner ι J y F F).re := by
   have hex : ∃ i, F (y i) ≠ 0 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     exact hne (adForms_ext hy hF (Submodule.zero_mem _) (fun i => by rw [hall i]; rfl))
   have hre : ∀ x : W, (inner ℂ x x).re = ‖x‖ ^ 2 := fun x => inner_self_eq_norm_sq (𝕜 := ℂ) x
   unfold adInner
@@ -488,14 +481,10 @@ theorem adInner_pos (hy : IsReps ι J y) (hst : ∀ i, Nat.card (stab ι J (y i)
 theorem adInner_ipOn (hy : IsReps ι J y) (hst : ∀ i, Nat.card (stab ι J (y i)) ≠ 0)
     [FiniteDimensional ℂ W] : IPOnG (AdForms ι ρ J χ) (adInner ι J y) := by
   refine ⟨adForms_fd hy, ?_, ?_, ?_, ?_⟩
-  · intro x x' z
-    exact adInner_add_left (ι := ι) (J := J) (y := y) x.val x'.val z.val
-  · intro s x z
-    exact adInner_smul_left (ι := ι) (J := J) (y := y) s x.val z.val
-  · intro x z
-    exact adInner_conj (ι := ι) (J := J) (y := y) x.val z.val
-  · intro x hx
-    exact adInner_pos hy hst x.2 (fun h => hx (Subtype.ext h))
+  · exact fun x x' z => adInner_add_left (ι := ι) (J := J) (y := y) x.val x'.val z.val
+  · exact fun s x z => adInner_smul_left (ι := ι) (J := J) (y := y) s x.val z.val
+  · exact fun x z => adInner_conj (ι := ι) (J := J) (y := y) x.val z.val
+  · exact fun x hx => adInner_pos hy hst x.2 (fun h => hx (Subtype.ext h))
 
 end IPV
 

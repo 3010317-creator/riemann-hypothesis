@@ -269,7 +269,6 @@ theorem sq_chart_core {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
       _ = c (Tm * Ti) := (hcmul Tm Ti).symm
       _ = 1 := by rw [hTTi, hc1]
   have hcont_c : Continuous c := by
-    show Continuous fun P : Matrix (Fin m) (Fin m) (Ainf F ⊗[F] E) => (P.map (sigR (Ainf F) σ))ᵀ
     exact (continuous_id.matrix_map (continuous_sigRP (Ainf F) σ)).matrix_transpose
   set Bq : Matrix (Fin m) (Fin m) (Ainf F ⊗[F] E) → Matrix (Fin m) (Fin m) (Ainf F ⊗[F] E) →
       Matrix (Fin m) (Fin m) (Ainf F ⊗[F] E) := fun h k => c (Ti * h) * Tm * (Ti * k) with hBq
@@ -315,14 +314,12 @@ theorem sq_chart_core {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
     have h2 : Lq h + Lq h = 0 := by
       have e1 := congrArg c hT''
       rw [hcadd, hP, hLL, hTh] at e1
-      have e2 := add_left_cancel (hT''.trans e1.symm)
-      exact eq_neg_iff_add_eq_zero.mp e2
+      exact eq_neg_iff_add_eq_zero.mp (add_left_cancel (hT''.trans e1.symm))
     have h0 : Lq h = 0 := by
       calc Lq h = ((1 / 2 : F) * 2) • Lq h := by norm_num
         _ = (1 / 2 : F) • (Lq h + Lq h) := by rw [mul_smul, two_smul]
         _ = 0 := by rw [h2, smul_zero]
-    rw [h0, add_zero] at hT''
-    exact hT''
+    rwa [h0, add_zero] at hT''
 
 theorem sqChart_holds : SqChart := by
   intro D X u' ψ hT μinf νinf fibInf hP

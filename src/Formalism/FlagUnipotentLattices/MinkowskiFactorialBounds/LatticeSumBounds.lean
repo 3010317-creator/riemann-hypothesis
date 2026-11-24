@@ -615,8 +615,7 @@ theorem prodMinLeOfProdRatio : SmallTerm := by
           rw [← mul_pow, ← pow_mul, mul_comm (Fintype.card ι) 2, pow_mul]
           congr 1
           rw [mul_pow, mul_pow, hsq2]; ring
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   obtain ⟨ha, hb⟩ := hcon
   have hc0 : 0 ≤ (4 * Real.sqrt (T' / T) * g) ^ Fintype.card ι := by positivity
   have hlt := mul_lt_mul'' ha hb hc0 hc0
@@ -774,13 +773,11 @@ theorem prodHyperbolicRatioSqLe : DegFactorBound := by
 
 lemma summable_one_div_add_one_pow (j : ℕ) (hj : 2 ≤ j) : Summable (fun n : ℕ => 1 / ((n : ℝ) + 1) ^ j) := by
   have h := Real.summable_one_div_nat_pow.mpr (show 1 < j by omega)
-  have h1 := (summable_nat_add_iff 1).mpr h
-  exact h1.congr (fun n => by simp)
+  exact ((summable_nat_add_iff 1).mpr h).congr (fun n => by simp)
 
 lemma summable_one_div_add_two_pow (j : ℕ) (hj : 2 ≤ j) : Summable (fun n : ℕ => 1 / ((n : ℝ) + 2) ^ j) := by
   have h := Real.summable_one_div_nat_pow.mpr (show 1 < j by omega)
-  have h1 := (summable_nat_add_iff 2).mpr h
-  exact h1.congr (fun n => by simp)
+  exact ((summable_nat_add_iff 2).mpr h).congr (fun n => by simp)
 
 lemma zetaSeries_eq_one_add_tsum (j : ℕ) (hj : 2 ≤ j) : zetaR j = 1 + ∑' n : ℕ, 1 / ((n : ℝ) + 2) ^ j := by
   have h1 := (hasSum_nat_add_iff' 1).mpr (summable_one_div_add_one_pow j hj).hasSum

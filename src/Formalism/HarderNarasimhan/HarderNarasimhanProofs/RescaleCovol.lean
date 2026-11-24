@@ -182,8 +182,7 @@ theorem rescaleCovol_of (h1 : PlaceSplit) (h2 : GramBlock) (h3 : PlLat) : Rescal
         two_ne_zero).1 h
   have hspZ : Submodule.span ℤ (Set.range fun i => (bL i : E)) = L := by
     have := congrArg (Submodule.map L.subtype) bL.span_eq
-    rw [Submodule.map_span, ← Set.range_comp, Submodule.map_top, Submodule.range_subtype] at this
-    exact this
+    rwa [Submodule.map_span, ← Set.range_comp, Submodule.map_top, Submodule.range_subtype] at this
   have hspan : Submodule.span ℝ (Set.range fun i => (bL i : E)) = Submodule.span ℝ (L : Set E) := by
     apply le_antisymm
     · exact Submodule.span_le.2 (by rintro _ ⟨i, rfl⟩; exact Submodule.subset_span (bL i).2)

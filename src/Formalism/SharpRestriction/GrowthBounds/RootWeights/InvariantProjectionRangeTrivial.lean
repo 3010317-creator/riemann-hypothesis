@@ -384,7 +384,7 @@ theorem equivariant_commutes_isotypic (D : Formalism.BasicNotions.D7) (h2 : adm2
 
 theorem invariant_projection_range_trivial (D : Formalism.BasicNotions.D7) (h2 : adm2 D) {n : ℕ} {K V : Type} [Field K] [CharZero K] [AddCommGroup V]
     [Module K V] [FiniteDimensional K V] (E : GLOps n K V) (hE : IsGLRep E) (P : Module.End K V)
-    (hP : IsInvProj E P) (x : V) : P x ∈ isoSub E 0 :=  by
+    (hP : IsInvProj E P) (x : V) : P x ∈ isoSub E 0 := by
   have htop := isotypic_submodules_span_top D h2 n K V E hE
   have hx : x ∈ ⨆ mu, isoSub E mu := by
     rw [htop]
@@ -393,8 +393,7 @@ theorem invariant_projection_range_trivial (D : Formalism.BasicNotions.D7) (h2 :
   · intro mu y hy
     by_cases hmu : mu = 0
     · subst hmu
-      rw [hP.1 y hy]
-      exact hy
+      rwa [hP.1 y hy]
     · rw [hP.2 mu hmu y hy]
       exact Submodule.zero_mem _
   · rw [map_zero]

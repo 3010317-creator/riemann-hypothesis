@@ -534,8 +534,7 @@ theorem gv_det {r : ℕ} {γ : B.Mat k r} (hγ : γ ∈ B.GV k r) : IsUnit γ.de
   have h2 := congrArg Matrix.det h
   rw [Matrix.det_mul, Matrix.det_mul] at h2
   have h3 : IsUnit ((γᴴ).det * (Hpk k r).det * γ.det) := by
-    rw [h2]
-    exact hH
+    rwa [h2]
   exact isUnit_of_mul_isUnit_right h3
 
 theorem skewOf_apply_lt {n : ℕ} (q : (G.UT n → ℂ) × (Fin n → ℝ)) (a b : Fin n) (h : a < b) :
@@ -558,8 +557,7 @@ theorem skewOf_inj {n : ℕ} (q q' : (G.UT n → ℂ) × (Fin n → ℝ)) (h : s
     funext i
     have := congrFun (congrFun h i) i
     simp only [skewOf_apply_diag] at this
-    have h3 := mul_left_cancel₀ Complex.I_ne_zero this
-    simpa using h3
+    simpa using mul_left_cancel₀ Complex.I_ne_zero this
   rw [h1, h2]
 
 theorem bigCell_uniq (x1 x1' x2 x2' : RC k j ρ) (Z1 Z2 : Matrix (Fin j) (Fin j) ℂ) (γ1 γ2 : B.Mat k ρ)
@@ -773,8 +771,7 @@ theorem bigCell_exists (g : B.Mat k (j + ρ)) (hg : g ∈ B.GV k (j + ρ)) (hD :
     have hU := Formalism.QuantumDeterminants.uHGroup _ (Hpk k (j + ρ)) (hpk_det k (j + ρ))
     have h1 := hU.2.1 _ (rn_unitary (Matrix.of.symm c, skewCoords S)) _ hg
     have h2 := hU.2.1 _ h1 _ (hU.2.2 _ (rn_unitary (Matrix.of.symm c', skewCoords S'))).2
-    rw [hm] at h2
-    exact h2
+    rwa [hm] at h2
   have hm2 := hm
   rw [hRx, hRx', uni_inv, block3_mul, block3_mul, block3_eq_iff] at hm2
   obtain ⟨h11, h12, h13, h21, h22, h23, h31, h32, h33⟩ := hm2

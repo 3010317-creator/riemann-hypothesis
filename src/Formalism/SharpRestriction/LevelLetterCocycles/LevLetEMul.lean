@@ -189,8 +189,7 @@ theorem step (hR : ToolsR.RingP W) (hpu : ¬ IsUnit ((PD.p : ℕ) : O))
     exact_mod_cast this
   have heq : f a = D * H + (r : PowerSeries O) := HD.eq_mul_add
   have hr : (r : PowerSeries O) = r.coeff 0 • (1 : PowerSeries O) := by
-    have hle : r.degree ≤ 0 := by
-      exact Nat.WithBot.lt_one_iff_le_zero.mp hdeg
+    have hle : r.degree ≤ 0 := Nat.WithBot.lt_one_iff_le_zero.mp hdeg
     conv_lhs => rw [Polynomial.eq_C_of_degree_le_zero hle]
     rw [Polynomial.coe_C, smul_eq_C_mul, mul_one]
   have hDn : D = X + ((PD.p : ℕ) : PowerSeries O) := by rw [hD, map_natCast]
@@ -236,8 +235,7 @@ theorem divLev_of (hR : ToolsR.RingP W) (hpu : ¬ IsUnit ((PD.p : ℕ) : O))
   intro g hg k
   induction k generalizing g with
   | zero =>
-    intro _
-    exact ⟨letE a * g, W.AΔ.mul_mem (letE_mem a) hg, by simp⟩
+    exact fun _ => ⟨letE a * g, W.AΔ.mul_mem (letE_mem a) hg, by simp⟩
   | succ k ih =>
     intro hv
     obtain ⟨S, hS0, hLqP⟩ := lev_qP_X hR a ζ hζ

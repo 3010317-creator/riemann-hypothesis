@@ -64,8 +64,7 @@ theorem mem_isSt_Ican {N r : ℕ} [NeZero r] {n0 : ℕ} {be : ℤ} {ν : Fin (N 
     rwa [H.fin] at this
   have hlast : ν (Fin.last N) 0 = be := by
     have := H.fin 0
-    rw [← stg_eq ν N (by omega)] at this
-    exact this
+    rwa [← stg_eq ν N (by omega)] at this
   refine ⟨?_, ?_, ?_⟩
   · intro c hc
     rw [Ican_eq H, ite_eq_right]
@@ -201,8 +200,7 @@ theorem mem_vg_A (D : Formalism.BasicNotions.D7) (hB2 : admB2 D) (hX : X.Hyp p K
   have h4 := mem_vg_mul D hB2 S (mem_vg_mul D hB2 S (mem_vg_mul D hB2 S h1 h2) h3) ha
   unfold Dat.memA Dat.discPowerTimesMonomial Dat.memMu
   have e : (X.m0 K : ℤ) * 1 + 0 + 0 + a = (X.m0 K : ℤ) + a := by ring
-  rw [e] at h4
-  exact h4
+  rwa [e] at h4
 
 end Ctx
 

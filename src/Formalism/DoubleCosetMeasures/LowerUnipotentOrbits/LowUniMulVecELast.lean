@@ -74,8 +74,7 @@ theorem coeLin_apply (v : Fin n → R) (j : Fin n) : coeLin R v j = (v j : K) :=
   rfl
 
 theorem coeLin_injective : Function.Injective (coeLin R : (Fin n → R) →ₗ[R] (Fin n → K)) := by
-  intro v w h
-  exact funext fun j => Subtype.ext (by simpa only [coeLin_apply] using congrFun h j)
+  exact fun v w h => funext fun j => Subtype.ext (by simpa only [coeLin_apply] using congrFun h j)
 
 theorem coeLin_mulVec (M : Matrix (Fin n) (Fin n) R) (v : Fin n → R) :
     coeLin R (M *ᵥ v) = M.map R.subtype *ᵥ coeLin R v := by
@@ -83,14 +82,12 @@ theorem coeLin_mulVec (M : Matrix (Fin n) (Fin n) R) (v : Fin n → R) :
   simp [Matrix.mulVec, dotProduct, coeLin_apply]
 
 theorem mem_latZ (Z : Matrix (Fin n) (Fin n) K) (x : Fin n → R) :
-    x ∈ latZ R Z ↔ ∃ y, Z *ᵥ coeLin R y = coeLin R x := by
-  exact Iff.rfl
+    x ∈ latZ R Z ↔ ∃ y, Z *ᵥ coeLin R y = coeLin R x := Iff.rfl
 
 theorem det_lift_eq_one (M : Matrix (Fin n) (Fin n) R) (h : (M.map R.subtype).det = 1) :
     M.det = 1 := by
   have h2 : R.subtype M.det = R.subtype 1 := by
-    rw [RingHom.map_det, map_one]
-    exact h
+    rwa [RingHom.map_det, map_one]
   exact Subtype.ext h2
 
 theorem lowUni_mulVec_eLast {M : Matrix (Fin n) (Fin n) K} (h : IsLowUni M) :
@@ -107,8 +104,7 @@ theorem lowUni_mulVec_eLast {M : Matrix (Fin n) (Fin n) K} (h : IsLowUni M) :
     · rw [ite_eq_left hi, h.2 i]
     · intro j _ hj
       rw [ite_eq_right]
-      intro hj'
-      exact hj (Fin.ext (by omega))
+      exact fun hj' => hj (Fin.ext (by omega))
     · simp
   · rw [ite_eq_right hi]
     apply Finset.sum_eq_zero
@@ -255,14 +251,12 @@ theorem isoInv : IsoInv := by
   · rintro ⟨h1, h2⟩
     refine ⟨?_, fun v => ?_⟩
     · show φ (cokEquiv R A B Z hA hB (eZ R Z)) = e
-      rw [cokEquiv_eZ R A B Z hA hB ha]
-      exact h1
+      rwa [cokEquiv_eZ R A B Z hA hB ha]
     · show lam (φ (cokEquiv R A B Z hA hB (Submodule.Quotient.mk v))) = lamLin R Z v
       rw [cokEquiv_mk, h2, lamLin_mul R A B Z hA hb]
   · rintro ⟨h1, h2⟩
     refine ⟨?_, fun v => ?_⟩
-    · rw [← cokEquiv_eZ R A B Z hA hB ha]
-      exact h1
+    · rwa [← cokEquiv_eZ R A B Z hA hB ha]
     · have h3 := h2 (A⁻¹ *ᵥ v)
       change lam (φ (cokEquiv R A B Z hA hB (Submodule.Quotient.mk (A⁻¹ *ᵥ v)))) = _ at h3
       rw [cokEquiv_mk, Matrix.mulVec_mulVec, hAA, Matrix.one_mulVec] at h3
@@ -293,16 +287,14 @@ theorem isoFinite : IsoFinite := by
             = Zr.det * c := by
         intro j
         have h1 := Function.surjInv_eq hs (Ideal.Quotient.mk (Ideal.span {Zr.det}) (x j))
-        rw [Ideal.Quotient.eq, Ideal.mem_span_singleton] at h1
-        exact h1
+        rwa [Ideal.Quotient.eq, Ideal.mem_span_singleton] at h1
       choose c hc using hc
       show Submodule.Quotient.mk _ = Submodule.Quotient.mk x
       rw [Submodule.Quotient.eq]
       have hsub : (fun j => Function.surjInv hs (Ideal.Quotient.mk (Ideal.span {Zr.det}) (x j)))
           - x = Zr.det • c := by
         funext j
-        simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
-        exact hc j
+        simpa only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul] using hc j
       rw [hsub]
       exact hmem c
     exact Finite.of_surjective g hg

@@ -17,8 +17,7 @@ variable {D : D7}
 
 theorem norm_le_one_of_int {k : Type} [NormedField k] [IsUltrametricDist k] {y : k}
     (hy : IsIntegral ℤ y) : ‖y‖ ≤ 1 := by
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   obtain ⟨P, hPm, hPy⟩ := hy
   rw [hPm.as_sum] at hPy
   simp only [Polynomial.eval₂_add, Polynomial.eval₂_X_pow, Polynomial.eval₂_finsetSum, Polynomial.eval₂_mul,
@@ -122,8 +121,7 @@ theorem lemmaU : LemmaU D := by
   have hpow : χ 𝔞 ^ k = ∏ τ : D.what₂.Tau, (embT D τ z)⁻¹ := by
     have h := hχ.2 ⟨z, hzu⟩
     simp only at h
-    rw [← hspan, CU.chi_pow D χ hχ ha k hk] at h
-    exact h
+    rwa [← hspan, CU.chi_pow D χ hχ ha k hk] at h
   have hz𝔞 : z ∈ 𝔞 ^ k := by rw [hspan]; exact Submodule.mem_span_singleton_self z
   have hA : (s : D.host.E) ^ k * z ∈ (1 : IdE D) := oneAt_pow_mem h1 k z hz𝔞
   have hsk : (s : D.host.E) ^ k ∈ 𝔞 ^ k := Submodule.pow_mem_pow 𝔞 h2 k
@@ -149,8 +147,7 @@ theorem lemmaU : LemmaU D := by
       have n0 := norm_nonneg (lam (embQ τ ((s : D.host.E) ^ k * z)))
       have n1 := norm_nonneg (lam (embQ τ ((s : D.host.E) ^ k * z⁻¹)))
       nlinarith
-    simp only [map_mul, map_pow, map_natCast, norm_mul, norm_pow, hn, one_pow, one_mul] at hA1
-    exact hA1
+    simpa only [map_mul, map_pow, map_natCast, norm_mul, norm_pow, hn, one_pow, one_mul] using hA1
   have hmem : χ 𝔞 ∈ Qbar := by
     rw [mem_algebraicClosure_iff']
     refine IsIntegral.of_pow (by omega : 0 < k) ?_

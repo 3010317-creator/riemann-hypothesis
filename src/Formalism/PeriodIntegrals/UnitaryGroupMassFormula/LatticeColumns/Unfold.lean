@@ -72,8 +72,7 @@ theorem unfoldGenStep_of (hM : MassUnfoldGen) (hH : MassDataMassesW.HinfCompact)
     (hV : MassDataMassesW.VolHTie) : UnfoldGenStep := by
   unfold UnfoldGenStep
   intro D X hb u hT U hUo hUc hMF
-  have hN : (X.measW u).IsTextNorm := by
-    exact X.measW_norm u
+  have hN : (X.measW u).IsTextNorm := X.measW_norm u
   have hC := hH X u
   have key := hM X u hN hC U hUc hUo hMF
   have hV' := hV X hb u hT

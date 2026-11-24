@@ -89,8 +89,7 @@ theorem latL_le {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E]
   have heq : (⟨u, hu⟩ : A.O) • bc A (algebraMap (𝓞 F) (𝓞 E) d • x) = bc A x := by
     rw [Subring.smul_def, bc_smul, smul_smul]
     simp only [hu1, one_smul]
-  rw [SetLike.mem_coe, ← heq]
-  exact hmem
+  rwa [SetLike.mem_coe, ← heq]
 
 theorem locLatEq_of (hU : UnitP) (hA : AvoidP) (hC : CoreP) : PI.LocLatEq.Stmt := by
   intro F E _ _ _ _ _ h2 sig p A n Λ₁ Λ₂ hf1 hf2
@@ -105,8 +104,7 @@ theorem locLatEq_of (hU : UnitP) (hA : AvoidP) (hC : CoreP) : PI.LocLatEq.Stmt :
       intro hm
       rcases P.isPrime.mem_or_mem hm with h | h
       · apply hd
-        rw [← hP]
-        exact h
+        rwa [← hP]
       · exact hs h
     exact ⟨key Λ₁ Λ₂ hf2 heq, key Λ₂ Λ₁ hf1 heq.symm⟩
   · intro h

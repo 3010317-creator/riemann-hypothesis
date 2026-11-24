@@ -89,8 +89,7 @@ theorem dv_whc_mul (φ ψ : MvPolynomial (ι × Fin n) R) (e d : ι → ℕ) (h�
   · exact (hφ'.mul ((dv_pol_iff _ _).1 (homogeneous_component_mem d ψ))).weightedHomogeneousComponent_same
   · intro b _ hb
     refine (hφ'.mul ((dv_pol_iff _ _).1 (homogeneous_component_mem b ψ))).weightedHomogeneousComponent_ne _ ?_
-    intro h
-    exact hb (add_left_cancel h).symm
+    exact fun h => hb (add_left_cancel h).symm
   · intro h
     rw [dv_comp_zero ψ d (fun m hm he => h ((@Finset.mem_image _ _ (fun _ _ => Classical.propDecidable _) _ _ _).2 ⟨m, hm, he⟩)), mul_zero, map_zero]
 
@@ -137,8 +136,7 @@ theorem dv_detA_hom (A : Fin r → ι) : letterDeterminant R A ∈ Pol R r (dv_e
       (∏ i : Fin r, (Matrix.of fun i j : Fin r => (X (A i, j) : MvPolynomial (ι × Fin r) R)) (σ i) i)
       (∑ i : Fin r, (Pi.single (A (σ i)) 1 : ι → ℕ)) := by
     apply IsWeightedHomogeneous.prod
-    intro i _
-    exact isWeightedHomogeneous_X R (letterWeight (ι := ι) (n := r)) (A (σ i), i)
+    exact fun i _ => isWeightedHomogeneous_X R (letterWeight (ι := ι) (n := r)) (A (σ i), i)
   have h2 : (∑ i : Fin r, (Pi.single (A (σ i)) 1 : ι → ℕ)) = dv_eA A := by
     unfold dv_eA
     exact Equiv.sum_comp σ (fun l => (Pi.single (A l) 1 : ι → ℕ))
@@ -226,8 +224,7 @@ theorem dv_div_list (hE : FieldMultidegreeDivisibility) (LL : Letters ι) (tasks
         ((x - (((tasks.map fun t => t.2.2).sum : ℕ) : ℤ) : ℤ) : WithTop ℤ) ≤ valS LL S' Qt := by
   induction tasks with
   | nil =>
-    intro _ d G hG _
-    exact ⟨d, G, hG, by simp, fun S' t ht => by simpa using ht⟩
+    exact fun _ d G hG _ => ⟨d, G, hG, by simp, fun S' t ht => by simpa using ht⟩
   | cons t ts ih =>
     intro ht d G hG hv
     have h0 := hv t List.mem_cons_self

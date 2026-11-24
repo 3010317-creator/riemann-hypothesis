@@ -107,8 +107,7 @@ theorem idempotentCalculation_holds : IdemCalc := by
         Formalism.L2.DIV.idemAd_neg (P := fun x => x ∉ T) (not_not.2 hw), add_zero]
       · intro b _ hb
         exact Formalism.L2.DIV.idemAd_neg (P := fun x => x = b) (v := w) (fun h => hb h.symm)
-      · intro h
-        exact absurd hw h
+      · exact fun h => absurd hw h
     · rw [Finset.sum_eq_zero, Formalism.L2.DIV.idemAd_pos (P := fun x => x ∉ T) hw, zero_add]
       intro b hb
       exact Formalism.L2.DIV.idemAd_neg (P := fun x => x = b) (v := w) (fun h => hw (by subst h; exact hb))
@@ -118,8 +117,7 @@ theorem idempotentIntegral_holds : IdemInt := by
   exact eP_mul_mem _ r (fun w hw => by subst hw; exact hr) u hu
 
 theorem idempotentCofinite_holds : IdemCof := by
-  intro F E _ _ _ _ _ D _ u hu
-  exact eP_mul_mem _ D (fun _ h => h) u hu
+  exact fun F E _ _ _ _ _ D _ u hu => eP_mul_mem _ D (fun _ h => h) u hu
 
 theorem idempotentDenominator_holds : IdemDenom := by
   intro F E _ _ _ _ _ v u hu

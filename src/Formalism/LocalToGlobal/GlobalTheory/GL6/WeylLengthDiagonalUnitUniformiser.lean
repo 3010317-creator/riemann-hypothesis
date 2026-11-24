@@ -285,8 +285,7 @@ theorem weyl_lattice_internal_sum (hν : Antitone ν) :
       · by_contra hne
         apply h
         simp only [t2wW, Fintype.mem_piFinset, Finset.mem_range]
-        intro a
-        exact Nat.lt_succ_of_le (weyl_support_row_weight_le ℤ hn ν hν x hx d hne a)
+        exact fun a => Nat.lt_succ_of_le (weyl_support_row_weight_le ℤ hn ν hν x hx d hne a)
     have hmem : ∀ m : t2wW r K, weightedHomogeneousComponent (Formalism.GradedWeylDivisibility.rowW r n) (m : Fin r → ℕ) x ∈
         Formalism.GradedWeylDivisibility.weyl ℤ r n hn ν := fun m => weyl_homogeneous_component_mem ℤ hn ν hν _ x hx
     have : (⟨x, hx⟩ : Formalism.GradedWeylDivisibility.weyl ℤ r n hn ν) = ∑ m : t2wW r K, ⟨_, hmem m⟩ := by
@@ -297,7 +296,6 @@ theorem weyl_lattice_internal_sum (hν : Antitone ν) :
       exact hsum
     rw [this]
     refine Submodule.sum_mem _ fun m _ => Submodule.mem_iSup_of_mem m ?_
-    show weightedHomogeneousComponent (Formalism.GradedWeylDivisibility.rowW r n) (m : Fin r → ℕ) x ∈ weightedHomogeneousSubmodule ℤ _ _
     exact weightedHomogeneousComponent_mem _ _ _
 
 end Pieces
@@ -454,8 +452,7 @@ theorem weyl_piece_eq_bot_of_large (hν : Antitone ν) (m : Fin r → ℕ) (hm :
   apply hm
   rw [← hxm hd]
   simp only [t2wW, Fintype.mem_piFinset, Finset.mem_range]
-  intro a
-  exact Nat.lt_succ_of_le (weyl_support_row_weight_le ℤ hn ν hν _ x.2 d hd a)
+  exact fun a => Nat.lt_succ_of_le (weyl_support_row_weight_le ℤ hn ν hν _ x.2 d hd a)
 
 theorem weyl_homogeneous_basis (hν : Antitone ν) :
     ∃ (ι : Type) (_ : Fintype ι) (b : Module.Basis ι ℤ (Formalism.GradedWeylDivisibility.weyl ℤ r n hn ν)) (μ : ι → Fin r → ℕ),
@@ -703,8 +700,7 @@ theorem prod_update_pow_alt {R : Type} [CommRing R] (j : Fin r) (p : R) (μ : Fi
   · simp
   · intro b _ hb
     simp [hb]
-  · intro h
-    exact absurd (Finset.mem_univ j) h
+  · exact fun h => absurd (Finset.mem_univ j) h
 
 theorem weyl_length_diagonal_unit_uniformiser (hν : Antitone ν) (K : Type) [Field K] [CharZero K] (O : Subring K)
     [IsDiscreteValuationRing O] (ϖ : O) (hϖ : Irreducible ϖ) (u : Oˣ) (j : Fin r) (a : ℕ) :
@@ -752,8 +748,7 @@ theorem weyl_length_diagonal_unit_uniformiser (hν : Antitone ν) (K : Type) [Fi
     intro i
     have hom := weighted_homogeneous_map (Int.castRingHom K) _ (μ i) (hh i)
     show Formalism.GradedWeylDivisibility.rowAct K _ (e i) = _
-    rw [row_action_diagonal_homogeneous K _ (e i) (μ i) hom, prod_update_pow_alt]
-    rw [Subring.smul_def]
+    rw [row_action_diagonal_homogeneous K _ (e i) (μ i) hom, prod_update_pow_alt, Subring.smul_def]
     simp
   set W : Submodule O Λ := Submodule.span O (Set.range fun i => ((u : O) * ϖ ^ a) ^ μ i j • bΛ i) with hW
   have hWeq : W = Submodule.span O (Set.range fun i => ϖ ^ (a * μ i j) • bΛ i) := by

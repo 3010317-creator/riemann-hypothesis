@@ -175,8 +175,7 @@ theorem derivative_digit_expansion (D : Formalism.BasicNotions.D7) : DerivativeD
     have h4 : ∑ k, l k ≤ c + (∑ k, M k) / p ^ t := by omega
     have h5 : ((∑ k, l k : ℕ) : ℝ) ≤ (c : ℝ) + ((((∑ k, M k) / p ^ t : ℕ)) : ℝ) := by exact_mod_cast h4
     linarith
-  · intro l hl k
-    exact (Finset.mem_filter.1 hl).2.1 k
+  · exact fun l hl k => (Finset.mem_filter.1 hl).2.1 k
   · intro e'
     have hexp : ∏ k, (((rho k + p ^ t * e' k).choose (M k) : ℕ) : ℤ) =
         ∑ l ∈ B, ∏ k, (a k (l k) * (((e' k).choose (l k) : ℕ) : ℤ)) := by
@@ -232,7 +231,6 @@ theorem hdU_proved {p : ℕ} (hp : p.Prime) : HdU p := by
   · rw [unit_product_eq_choose]
     exact_mod_cast choose_shift_binomial_expansion (p ^ (t + 1)) rho rho n
   · have h := binomial_expansion_coeff_padic_dvd p (t + 1) hp rho rho l
-    rw [Nat.div_eq_of_lt hrho, Nat.sub_zero] at h
-    exact h
+    rwa [Nat.div_eq_of_lt hrho, Nat.sub_zero] at h
 
 end Formalism.MainNotions.G.GLWeightTheory

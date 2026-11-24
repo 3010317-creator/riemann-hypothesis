@@ -135,8 +135,7 @@ theorem intAf_le_mulSet (I : AutInst) (v : HeightOneSpectrum (𝓞 I.F)) :
   · intro z hz
     rw [psiV_tmul]
     have h := Submodule.smul_mem _ (⟨a v, ha v⟩ : v.adicCompletionIntegers I.F) hz
-    rw [ov_smul_vec] at h
-    exact h
+    rwa [ov_smul_vec] at h
 
 theorem mem_local_lattice_iff : PI.FinKW.MemLocTo := by
   intro I x hx v

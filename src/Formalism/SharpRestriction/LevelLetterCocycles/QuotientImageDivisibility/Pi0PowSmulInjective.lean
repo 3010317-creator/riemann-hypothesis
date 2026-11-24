@@ -194,8 +194,7 @@ theorem trunc_polesFin (T : LocLat G Qp LL O) (c : ZMod n) (η σ : ℕ) {w z : 
         (Pq ^ η * Formalism.MainNotions.LiftingTheory.qp W ^ K) * (Formalism.MainNotions.LiftingTheory.qp W ^ η * Pq ^ K) := by ring
     rw [e, smul_comm _ (((PD.p : ℕ) : O) ^ σ), mul_smul]
     refine Submodule.smul_of_tower_mem _ _ ((W.N T).smul_mem _ ?_)
-    rw [mul_smul]
-    exact hφq
+    rwa [mul_smul]
 
 theorem pi0_pow_smul_injective (T : LocLat G Qp LL O)
     (hu : ∃ u : (LetA O n)ˣ, W.π₀ = (u : LetA O n) * letπ ^ (PD.p - 1)) (M : ℕ) {y y' : W.DD T}
@@ -216,8 +215,7 @@ theorem inPN_of_inv (T : LocLat G Qp LL O)
     Formalism.MainNotions.CrystallineLiftingInputs.InPN W T M x := by
   refine ⟨y, hy, fun δ hδ => pi0_pow_smul_injective W T hu M ?_, hx⟩
   have := hxΔ δ hδ
-  rw [hx, γD_smulA, map_pow, hΔπ δ hδ] at this
-  exact this
+  rwa [hx, γD_smulA, map_pow, hΔπ δ hδ] at this
 
 theorem mem_ImF_of_cls {T₁ T₂ : LocLat G Qp LL O} (F : LatHom T₁.L T₂.L) (p : ↥(latticeCocycles T₂.L))
     (h : Submodule.Quotient.mk p ∈ (latticeFiniteCohomology PD T₁.L).map F.H1map) : (p : G → T₂.V) ∈ F.ImF PD := by

@@ -260,8 +260,7 @@ theorem oPlusAt_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ}
     have hsumP : (∑ i, 2 * (S.a : ℝ) / (S.P p i : ℝ)) ≤ (s : ℝ) * (2 * (S.a : ℝ) / p) := by
       calc (∑ i, 2 * (S.a : ℝ) / (S.P p i : ℝ)) ≤ ∑ _i : Fin s, 2 * (S.a : ℝ) / p := by
             apply Finset.sum_le_sum
-            intro i _
-            exact div_le_div_of_nonneg_left (by positivity) hp0 (hPi i)
+            exact fun i _ => div_le_div_of_nonneg_left (by positivity) hp0 (hPi i)
         _ = (s : ℝ) * (2 * (S.a : ℝ) / p) := by simp
     have hcoef : 0 ≤ S.La / ((r : ℝ) + 1) + 4 / (p : ℝ) ^ 2 :=
       add_nonneg (div_nonneg hLa hr0.le) (by positivity)

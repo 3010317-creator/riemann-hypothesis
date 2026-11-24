@@ -104,8 +104,7 @@ theorem mem_MMo_of_dual (H : HermSp M V) {r : ℕ} (t : Term V M r) (hG : IsUnit
       · rw [H.h_herm u, hu' j, ite_eq_left rfl, map_one, mul_one]
       · intro i _ hij
         rw [H.h_herm u, hu' i, ite_eq_right hij, map_zero, mul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ j) h
+      · exact fun h => absurd (Finset.mem_univ j) h
     rwa [h2] at h1
   refine Submodule.sum_mem _ fun i _ => ?_
   exact Submodule.smul_mem (MMo H t) (⟨c i, hc i⟩ : M.L.O) (Submodule.subset_span ⟨i, rfl⟩)
@@ -122,8 +121,7 @@ theorem sharp_le_span_dual (H : HermSp M V) {r : ℕ} (t : Term V M r) (hG : IsU
     · rw [hu' i i, ite_eq_left rfl, mul_one]
     · intro j _ hji
       rw [hu' j i, ite_eq_right (Ne.symm hji), mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+    · exact fun h => absurd (Finset.mem_univ i) h
   have hmem : x - ∑ j, H.h x (H.MMfam t j) • u j ∈ Submodule.span E (Set.range (H.MMfam t)) :=
     Submodule.sub_mem _ hx'.1 (Submodule.sum_mem _ fun j _ => Submodule.smul_mem _ _ (hu j))
   obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun E).1 hmem

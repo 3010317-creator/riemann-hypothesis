@@ -166,9 +166,7 @@ theorem transport_holds : Transport := by
   · show Submodule.map _ (Submodule.span _ _) = Submodule.span _ _
     rw [Submodule.map_span, Set.image_image, X.Fu_e]
     congr 1
-    apply Set.image_congr
-    intro a _
-    exact hfix _ (Or.inl (Or.inl ⟨a, rfl⟩))
+    exact Set.image_congr (fun a _ => hfix _ (Or.inl (Or.inl ⟨a, rfl⟩)))
   · rw [X.flagZVector]
     exact hfix _ (Or.inr rfl)
   · ext y

@@ -316,8 +316,7 @@ theorem exists_prime_pow_eq {M : Type} [Monoid M] (n : ℕ) (hn : 2 ≤ n) (u : 
     obtain ⟨p, hp, hpn⟩ := Nat.exists_prime_and_dvd (by omega : n ≠ 1)
     exact ⟨p, Nat.mem_primeFactors.mpr ⟨hp, hpn, by omega⟩, by rw [hk', one_pow]⟩
   · have hln : l ^ k ∣ n := by
-      rw [← hk']
-      exact hd1
+      rwa [← hk']
     have hl_n : l ∣ n := (dvd_pow_self l hpos.ne').trans hln
     refine ⟨l, Nat.mem_primeFactors.mpr ⟨hl, hl_n, by omega⟩, ?_⟩
     rw [← orderOf_dvd_iff_pow_eq_one, hk']
@@ -352,18 +351,15 @@ theorem key (P : K[X]) (hP : Irreducible P) (hm : P.Monic) (x : L) (hx : aeval x
     have hcard : Fintype.card (IntermediateField.adjoin K {x}) = q ^ d := by
       rw [Module.card_eq_pow_finrank (K := K), IntermediateField.adjoin.finrank hint, ← hmin]
     have hxE : (⟨x, IntermediateField.mem_adjoin_simple_self K x⟩ : IntermediateField.adjoin K {x}) ≠ 0 := by
-      intro h0
-      exact hx0 (congrArg Subtype.val h0)
+      exact fun h0 => hx0 (congrArg Subtype.val h0)
     have h1 := FiniteField.pow_card_sub_one_eq_one _ hxE
     rw [hcard] at h1
-    have h2 := congrArg (fun e : IntermediateField.adjoin K {x} => (e : L)) h1
-    simpa using h2
+    simpa using congrArg (fun e : IntermediateField.adjoin K {x} => (e : L)) h1
   have hc0 : (c₀ : K) ≠ 0 := c₀.ne_zero
   have hcK : (c₀ : K) ^ n = 1 := by
     have h1 := FiniteField.pow_card_pow d (c₀ : K)
     have h2 : (c₀ : K) ^ n * (c₀ : K) = (c₀ : K) := by
-      rw [← pow_succ, hn, Nat.sub_add_cancel (by omega : 1 ≤ q ^ d)]
-      exact h1
+      rwa [← pow_succ, hn, Nat.sub_add_cancel (by omega : 1 ≤ q ^ d)]
     exact mul_right_cancel₀ hc0 (h2.trans (one_mul _).symm)
   have hcL : algebraMap K L (c₀ : K) ≠ 0 := (_root_.map_ne_zero _).mpr hc0
   have hcn : algebraMap K L (c₀ : K) ^ n = 1 := by rw [← map_pow, hcK, map_one]
@@ -400,8 +396,7 @@ theorem key (P : K[X]) (hP : Irreducible P) (hm : P.Monic) (x : L) (hx : aeval x
     C ((c₀ : K) ^ (l' ^ padicValNat l' n)) : K[X])) ?_
   · rwa [← hmin] at hdiv
   · rw [map_sub, map_pow, Polynomial.aeval_X, Polynomial.aeval_C, map_pow, sub_eq_zero]
-    rw [div_pow, div_eq_one_iff_eq (pow_ne_zero _ hcL)] at hyl'
-    exact hyl'
+    rwa [div_pow, div_eq_one_iff_eq (pow_ne_zero _ hcL)] at hyl'
 
 
 open Classical in
@@ -448,14 +443,12 @@ theorem count (δ : ℕ) (c₀ : Kˣ) :
         apply hne
         apply hinj
         exact Polynomial.eq_of_monic_of_associated (hmon c) (hmon c') (hi.associated_of_dvd hi' hdvd)
-      · intro c hc
-        exact (Finset.mem_filter.mp hc).2.2
+      · exact fun c hc => (Finset.mem_filter.mp hc).2.2
     have hdeg := Polynomial.natDegree_le_of_dvd hprod hF0
     rw [Polynomial.natDegree_prod_of_monic _ _ (fun c _ => hmon c),
       Polynomial.natDegree_X_pow_sub_C _] at hdeg
     simp only [hdegc, Finset.sum_const, smul_eq_mul] at hdeg
-    rw [mul_comm]
-    exact hdeg
+    rwa [mul_comm]
   set m := Fintype.card K ^ δ - 1 with hmdef
   have hsub : Bset K δ c₀ ⊆ m.primeFactors.biUnion (fun l' => Finset.univ.filter
       (fun c : Fin δ → K => Irreducible (Formalism.IrreducibleCountingLemmas.GaloisIrreducibility.monicOf c) ∧
@@ -479,8 +472,7 @@ theorem count (δ : ℕ) (c₀ : Kˣ) :
         rw [Finset.mul_sum]
     _ ≤ ∑ l' ∈ m.primeFactors, l' ^ padicValNat l' m := by
         apply Finset.sum_le_sum
-        intro l' hl'
-        exact hgen _ _ (pow_pos (Nat.prime_of_mem_primeFactors hl').pos _)
+        exact fun l' hl' => hgen _ _ (pow_pos (Nat.prime_of_mem_primeFactors hl').pos _)
 
 theorem sqWeight_irred (P : K[X]) (hP : Irreducible P) (hm : P.Monic) :
     sqWeight P = ((Fintype.card K : ℝ) ^ P.natDegree - 1)⁻¹ := by
@@ -510,8 +502,7 @@ theorem weight_le (N : ℕ) (c₀ : Kˣ) (hq : 3 ≤ Fintype.card K) :
       apply ((mem_sqSet c).1 hc).2
       have : aeval (0 : L) (monicOf c) = algebraMap K L ((monicOf c).coeff 0) := by
         rw [aeval_def, eval₂_at_zero]
-      rw [this, map_eq_zero] at hfx
-      exact hfx
+      rwa [this, map_eq_zero] at hfx
     set P := minpoly K x with hPdef
     have hPi : Irreducible P := minpoly.irreducible hint
     have hPm : P.Monic := minpoly.monic hint
@@ -539,8 +530,7 @@ theorem weight_le (N : ℕ) (c₀ : Kˣ) (hq : 3 ≤ Fintype.card K) :
     (by rw [monicOf_natDegree]; exact (Finset.mem_Icc.1 hδ).2)
     ((sqSet K N).filter (fun c => monicOf c' ∣ monicOf c))
     (fun c hc => by simpa only [Finset.mem_filter] using hc)
-  rw [sqWeight_irred _ hi (monicOf_monic c'), monicOf_natDegree] at this
-  exact this
+  rwa [sqWeight_irred _ hi (monicOf_monic c'), monicOf_natDegree] at this
 
 end E4
 
@@ -572,8 +562,7 @@ theorem local_estimate_third : LocalEstimateIII := by
       δ * (Fintype.card K - 1) + (Fintype.card K ^ δ - 1) / (Fintype.card K - 1) := fun δ hδ =>
     (E4.count δ c₀).trans (prime_power_order_count (Fintype.card K) δ hq2
       (dvd_trans (by norm_num) h16) (by omega))
-  have ha := E4.arith (Fintype.card K) N hN hq2 (fun δ => (E4.Bset K δ c₀).card) _ h1 h2
-  exact hw.trans ha
+  exact hw.trans (E4.arith (Fintype.card K) N hN hq2 (fun δ => (E4.Bset K δ c₀).card) _ h1 h2)
 
 end Formalism.IrreducibleCountingLemmas.GaloisIrreducibility
 end -- clump:auto
@@ -711,8 +700,7 @@ theorem cross_factor_count : CrossFactorCount := by
     norm_cast
     rw [Finset.card_eq_zero, Finset.filter_eq_empty_iff]
     rintro c - ⟨-, -, x, -, y, hy, -⟩
-    rw [h0] at hy
-    exact hy
+    rwa [h0] at hy
   have hy0r : aeval y0 P' = 0 := (mem_rootSet.mp hy0).2
   have hm' : 0 < Fintype.card K ^ P'.natDegree - 1 :=
     Nat.sub_pos_of_lt (Nat.one_lt_pow (Irreducible.natDegree_pos hP').ne' hq)
@@ -720,11 +708,9 @@ theorem cross_factor_count : CrossFactorCount := by
     (fun x => primeToPart l x = primeToPart l y0)
   have hSprop : ∀ x ∈ S, x ^ (Fintype.card K ^ δ - 1) = 1 ∧ primeToPart l x = primeToPart l y0 := by
     intro x hx
-    rw [Finset.mem_filter, mem_nthRootsFinset (Nat.pos_of_ne_zero hn)] at hx
-    exact hx
+    rwa [Finset.mem_filter, mem_nthRootsFinset (Nat.pos_of_ne_zero hn)] at hx
   refine le_trans (Nat.cast_le.mpr (card_le_of_root_mem _ ?_ S ?_)) ?_
-  · intro c hc
-    exact (Finset.mem_filter.mp hc).2.1
+  · exact fun c hc => (Finset.mem_filter.mp hc).2.1
   · intro c hc
     obtain ⟨hirr, hc0, x, hx, y, hy, hxy⟩ := (Finset.mem_filter.mp hc).2
     have hxr : aeval x (monicOf c) = 0 := (mem_rootSet.mp hx).2
@@ -917,8 +903,7 @@ theorem wt_caseB (N δ δ' l : ℕ) (hl : l.Prime) (hδ : 1 ≤ δ) (hδ' : 1 �
   have hI : ((e3I K δ').card : ℝ) ≤ G ^ δ' - 1 := by
     have h1 := irreducible_count_upper_unit K δ' hδ'
     have h2 : (e3I K δ').card ≤ Fintype.card K ^ δ' - 1 := by
-      refine le_trans ?_ h1
-      exact Nat.le_mul_of_pos_left _ (by omega)
+      exact le_trans (Nat.le_mul_of_pos_left _ (by omega)) h1
     have h3 : 1 ≤ Fintype.card K ^ δ' := Nat.one_le_pow _ _ Fintype.card_pos
     have h4 : ((e3I K δ').card : ℝ) ≤ ((Fintype.card K ^ δ' - 1 : ℕ) : ℝ) := by exact_mod_cast h2
     rw [Nat.cast_sub h3] at h4
@@ -1014,8 +999,7 @@ theorem mem_e3SB {N : ℕ} {c : Fin N → K} (hc : c ∈ sqSet K N) {l : ℕ} (h
   have hxp := pow_card_pow_sub_one_eq_one_of_aeval_monicOf hi' h0' hx
   have hyp := pow_card_pow_sub_one_eq_one_of_aeval_monicOf hi'' h0'' hy
   have hldiv : l ∣ Fintype.card K ^ δ - 1 ∨ l ∣ Fintype.card K ^ δ' - 1 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hne
     calc x = primeToPart l x := (primeToPart_eq_self_of_not_dvd hl (hn δ hδ1) hxp hcon.1).symm
       _ = primeToPart l y := hxy
@@ -1048,8 +1032,7 @@ theorem square_set_mem_exceptional_union {N : ℕ} {c : Fin N → K} (hc : c ∈
       l ^ (4 * padicValNat l (Fintype.card K ^ d - 1)) ≤ Fintype.card K ^ d := by
     intro d hd
     have hd' := Finset.mem_Icc.1 hd
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     have hqd : 1 ≤ Fintype.card K ^ d := Nat.one_le_pow _ _ (by omega)
     have hv : padicValNat l (Fintype.card K ^ d - 1) ≠ 0 := by
       intro hv
@@ -1205,8 +1188,7 @@ theorem local_estimate_second : LocalEstimateII := by
     rw [hsdef, show (4 : ℝ)⁻¹ = ((4 : ℕ) : ℝ)⁻¹ by norm_num]
     exact Real.rpow_inv_natCast_pow hQ0 (by norm_num)
   have hs8 : 8 ≤ s := by
-    by_contra h
-    push Not at h
+    by_contra! h
     have h2 : s ^ 2 < 64 := by nlinarith
     have h4 : s ^ 4 < 4096 := by
       nlinarith [mul_pos (by linarith : (0 : ℝ) < 64 - s ^ 2) (by positivity : (0 : ℝ) < 64 + s ^ 2)]

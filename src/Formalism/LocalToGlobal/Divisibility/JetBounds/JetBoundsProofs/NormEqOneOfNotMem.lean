@@ -26,8 +26,7 @@ theorem mem_pow_iff (w : HeightOneSpectrum (𝓞 K)) (x : 𝓞 K) (hx : x ≠ 0)
     x ∈ w.asIdeal ^ m ↔ (m : ℤ) ≤ vw w (x : K) := by
   classical
   have hspan : Ideal.span {x} ≠ (0 : Ideal (𝓞 K)) := by
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact hx
+    rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   rw [Formalism.DivisionValues.ValuationRepresentative.vw_int, FractionalIdeal.count_coe K w hspan, Nat.cast_le,
     ← Ideal.dvd_span_singleton, ← Associates.mk_le_mk_iff_dvd, Associates.mk_pow]
   exact Associates.prime_pow_dvd_iff_le (Associates.mk_ne_zero.2 hspan) w.associates_irreducible
@@ -58,8 +57,7 @@ theorem exists_clear (w : HeightOneSpectrum (𝓞 K)) (b : K) (hb : 0 ≤ vw w b
     push_cast at h2
     omega
   have hdvd : w.asIdeal ^ m ∣ Ideal.span {y} := by
-    rw [Ideal.dvd_iff_le, Ideal.span_le, Set.singleton_subset_iff]
-    exact hym
+    rwa [Ideal.dvd_iff_le, Ideal.span_le, Set.singleton_subset_iff]
   obtain ⟨J, hJ⟩ := hdvd
   have hJw : ¬ J ≤ w.asIdeal := fun h => by
     apply hym1

@@ -137,8 +137,7 @@ theorem cmpZeroMu_image : cmpZeroMu c Tw u μ w h '' (((Tw.fm u μ).lat 0).L : S
   constructor
   · rintro ⟨y, hy, rfl⟩
     refine ⟨(Tw.e0 u μ).symm y, ?_, rfl⟩
-    rw [SetLike.mem_coe, Tw.twist_preserves_base_lattice u μ, LinearEquiv.apply_symm_apply]
-    exact hy
+    rwa [SetLike.mem_coe, Tw.twist_preserves_base_lattice u μ, LinearEquiv.apply_symm_apply]
   · rintro ⟨x, hx, rfl⟩
     exact ⟨Tw.e0 u μ x, (Tw.twist_preserves_base_lattice u μ x).1 hx, comparison_zero_weight_base c Tw u μ w h x⟩
 
@@ -269,8 +268,7 @@ theorem val_quot_nonneg (val : AddValuation LL (WithTop ℤ)) {a d : LL} (ha : a
   by_contra hneg
   rw [not_le] at hneg
   have hatop : val a ≠ ⊤ := by
-    rw [Ne, AddValuation.top_iff]
-    exact ha
+    rwa [Ne, AddValuation.top_iff]
   have h2 : val a + val (a⁻¹ * d) < val a + 0 := WithTop.add_lt_add_left hatop hneg
   rw [add_zero, ← h1] at h2
   exact absurd hle (not_le.2 h2)
@@ -287,8 +285,7 @@ theorem val_gen (f : V →ₛₗ[e] W) (A : Subring LL) (val : AddValuation LL (
   · exact ⟨0, 0, Submodule.zero_mem _, by rw [hy0, smul_zero], Or.inl rfl⟩
   have hsupp : (b.repr y).support.Nonempty := by
     rw [Finsupp.support_nonempty_iff]
-    intro h0
-    exact hy0 (b.repr.map_eq_zero_iff.1 h0)
+    exact fun h0 => hy0 (b.repr.map_eq_zero_iff.1 h0)
   obtain ⟨i0, hi0, hmin⟩ := Finset.exists_min_image _ (fun i => val (b.repr y i)) hsupp
   have ha : b.repr y i0 ≠ 0 := Finsupp.mem_support_iff.1 hi0
   have hyy : y = ∑ i ∈ (b.repr y).support, (b.repr y) i • b i := by
@@ -568,8 +565,7 @@ theorem free_gen (A : Subring LL) (val : AddValuation LL (WithTop ℤ)) (hval : 
       · rw [hgi, mul_zero]; exact A.zero_mem
       · exact (hval _).2 (val_quot_nonneg val h0 (hmin0 i (by simp [hgi])))
     have hsum : g i0 • (i0 : V) + ∑ i ∈ Finset.univ.erase i0, g i • (i : V) = 0 := by
-      rw [Finset.add_sum_erase _ (fun i : S => g i • (i : V)) (Finset.mem_univ i0)]
-      exact hg
+      rwa [Finset.add_sum_erase _ (fun i : S => g i • (i : V)) (Finset.mem_univ i0)]
     have hx : (i0 : V) = ∑ i ∈ Finset.univ.erase i0, (-((g i0)⁻¹ * g i)) • (i : V) := by
       have h1 : g i0 • (i0 : V) = -∑ i ∈ Finset.univ.erase i0, g i • (i : V) := eq_neg_of_add_eq_zero_left hsum
       have h2 : (i0 : V) = (g i0)⁻¹ • (g i0 • (i0 : V)) := by rw [smul_smul, inv_mul_cancel₀ h0, one_smul]

@@ -86,16 +86,14 @@ theorem continuous_norm_tens : Continuous (fun x : R ⊗[F] E => Algebra.norm R 
 
 theorem isUnit_iff_norm_tens (x : R ⊗[F] E) : IsUnit x ↔ IsUnit (Algebra.norm R x) := by
   constructor
-  · intro h
-    exact h.map (Algebra.norm R)
+  · exact fun h => h.map (Algebra.norm R)
   · intro h
     rw [Algebra.norm_apply, ← LinearMap.isUnit_iff_isUnit_det] at h
     obtain ⟨u, hu⟩ := h
     have h1 : x * (↑u⁻¹ : Module.End R (R ⊗[F] E)) 1 = 1 := by
       have e := congrArg (fun f : Module.End R (R ⊗[F] E) => f 1) u.mul_inv
       simp only [Module.End.mul_apply, Module.End.one_apply] at e
-      rw [hu] at e
-      exact e
+      rwa [hu] at e
     exact ⟨⟨x, _, h1, by rw [mul_comm]; exact h1⟩, rfl⟩
 
 theorem isOpen_units_tens (h : IsOpen {r : R | IsUnit r}) :

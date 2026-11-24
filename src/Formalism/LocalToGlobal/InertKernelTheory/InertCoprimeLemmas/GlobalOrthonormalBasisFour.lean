@@ -94,8 +94,7 @@ theorem isLocONB_of_orthonormal (p : ℕ) [Fact p.Prime] (lam : Qbar →+* ℂ_[
       · rw [Matrix.one_apply_eq, map_one, mul_one]
       · intro n _ hn
         rw [Matrix.one_apply_ne (Ne.symm hn), map_zero, mul_zero]
-    rw [Finset.sum_congr rfl (fun m _ => h1 m)]
-    rw [Finset.sum_eq_single_of_mem i (Finset.mem_univ i)]
+    rw [Finset.sum_congr rfl (fun m _ => h1 m), Finset.sum_eq_single_of_mem i (Finset.mem_univ i)]
     · rw [Matrix.one_apply_eq, one_mul, ho i j]
       by_cases h : i = j
       · rw [ite_eq_left h, ite_eq_left h, lamC_phi_K_one]
@@ -134,8 +133,7 @@ theorem homL_le_intS (N N' : ℕ) : homL D (Formalism.MainNotions.StandardLattic
     by_cases h : i = c
     · subst h; simpa using (isInt_one (D := D))
     · simp [h]
-  have h2 := (mem_stdL _).1 (hA _ h1) a
-  simpa [Matrix.mulVec, dotProduct, Pi.single_apply] using h2
+  simpa [Matrix.mulVec, dotProduct, Pi.single_apply] using (mem_stdL _).1 (hA _ h1) a
 
 def pos : Fin 2 × Fin 2 ≃ Fin 4 := finProdFinEquiv
 
@@ -512,8 +510,7 @@ theorem loop (hU : UnitVec) (p : ℕ) [Fact p.Prime] (hp : 5 ≤ p) (hin : jacob
         induction j using Fin.cases with
         | zero => simpa using orth_symm (D := D) (hz2 i)
         | succ j =>
-          simp only [Fin.cons_succ]
-          exact h2 i j (fun h => hij (by rw [h]))
+          simpa only [Fin.cons_succ] using h2 i j (fun h => hij (by rw [h]))
     · intro i
       refine Fin.cases ?_ (fun i => ?_) i
       · simpa using hz3
@@ -699,8 +696,7 @@ theorem unit_or_PZ {q : ℚ} (hz : Zp p q) : (¬ (p : ℤ) ∣ q.num ∧ ¬ p �
     have h1 : ((q.den : ℤ)) ∣ (b : ℤ) := by
       have := Rat.den_dvd a b
       rw [Rat.divInt_eq_div] at this
-      rw [hq]
-      exact this
+      rwa [hq]
     exact hb (Int.natCast_dvd_natCast.1 ((Int.natCast_dvd_natCast.2 h).trans h1))
   by_cases hn : (p : ℤ) ∣ q.num
   · right
@@ -1272,8 +1268,7 @@ theorem gram_schmidt_unit_vector : UnitVec := by
     rw [e1, trace_rat_mul, hq0e]
     push_cast
     ring
-  rw [hq] at hZ
-  exact hZ
+  rwa [hq] at hZ
 
 end unit
 

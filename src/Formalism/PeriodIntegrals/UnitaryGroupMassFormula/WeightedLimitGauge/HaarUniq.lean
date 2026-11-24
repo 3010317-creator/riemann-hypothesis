@@ -74,8 +74,7 @@ theorem hpk_mul_apply (A : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) �
   · rw [hpk_row, ite_eq_left rfl]
   · intro m _ hm
     rw [hpk_row, ite_eq_right hm, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem tau_tau (i : Fin (2 * r + k + 1)) : tau k r (tau k r i) = i := by
   unfold tau
@@ -206,17 +205,11 @@ theorem inc_memb : MeasurableEmbedding (inc : Gp k r → Mt k r) :=
 theorem range_inc : Set.range (inc : Gp k r → Mt k r) = amb k r := Subtype.range_coe
 
 theorem lmulM_mem {x y : Mt k r} (hx : x ∈ amb k r) (hy : y ∈ amb k r) :
-    lmulM (Matrix.of x) y ∈ amb k r := by
-  show (Matrix.of x : Mat k r) * Matrix.of y ∈ UWb k r
-  exact uwb_mul hx hy
+    lmulM (Matrix.of x) y ∈ amb k r := uwb_mul hx hy
 
-theorem invM_mem {x : Mt k r} (hx : x ∈ amb k r) : invM x ∈ amb k r := by
-  show (Matrix.of x : Mat k r)⁻¹ ∈ UWb k r
-  exact uwb_inv hx
+theorem invM_mem {x : Mt k r} (hx : x ∈ amb k r) : invM x ∈ amb k r := uwb_inv hx
 
-theorem one_mem_amb : (fun i j => (1 : Mat k r) i j : Mt k r) ∈ amb k r := by
-  show (1 : Mat k r) ∈ UWb k r
-  exact uwb_one
+theorem one_mem_amb : (fun i j => (1 : Mat k r) i j : Mt k r) ∈ amb k r := uwb_one
 
 instance : Group (Gp k r) where
   mul a b := ⟨lmulM (Matrix.of a.1) b.1, lmulM_mem a.2 b.2⟩

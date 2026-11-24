@@ -197,9 +197,7 @@ theorem instance_sizes : InstSizes := by
       simp [supBS, h1]
   have hQle : ∀ b, 1 ≤ b → b ≤ G.r + 1 →
       ∏ w, Sz.lamPrimeHat b C G.ka G.N G.lenI G.g (G.supI de de' T T' l w) (T * T') ≤ (Θ ^ G.f)⁻¹ := by
-    intro b hb hb'
-    apply hGr.2
-    exact ⟨b, hb, hb', Or.inr (Or.inr (Or.inr rfl))⟩
+    exact fun b hb hb' => hGr.2 ⟨b, hb, hb', Or.inr (Or.inr (Or.inr rfl))⟩
   have hthrw : ∀ b s, 1 ≤ b → 1 ≤ s → ∀ w, thrS G C de de' T T' l b s w =
       Sz.lamHat b s C G.ka G.N G.lenI G.g (supBS G de de' T T' l b s w) /
         (G.g * S6.rd E ^ (S6.nuBlock G.r b s + 1)) := by
@@ -290,8 +288,7 @@ theorem instance_sizes : InstSizes := by
             2 * Sz.lamPrimeHat b C G.ka G.N G.lenI G.g (G.supI de de' T T' l w) (T * T') /
               (G.g * S6.rd E ^ (S6.nuBlock G.r b s)) := by
           intro w
-          rw [eq_div_iff (hcp _).ne', mul_assoc, ← hν]
-          rw [thrP_norm G C de de' T T' l hFP hv hg b hb w]
+          rw [eq_div_iff (hcp _).ne', mul_assoc, ← hν, thrP_norm G C de de' T T' l hFP hv hg b hb w]
         rw [Finset.prod_congr rfl fun w _ => hw w, Finset.prod_div_distrib, Finset.prod_const,
           Finset.card_univ, Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, div_eq_mul_inv]
         change 2 ^ G.f * _ * ((G.g * S6.rd E ^ (S6.nuBlock G.r b s)) ^ G.f)⁻¹ ≤ _
@@ -388,8 +385,7 @@ theorem global_positive : GlobPositive := by
     linarith
   have hlogbb : Cb / 2 ≤ Real.log bb := by nlinarith
   have hkCb : 2 ≤ (G.k : ℝ) * Cb := by
-    rw [div_le_iff₀ hCb] at hkC
-    exact hkC
+    rwa [div_le_iff₀ hCb] at hkC
   have hf2r : (2 : ℝ) ≤ G.f := by exact_mod_cast hf2
   have hbase : 2 ≤ (G.k : ℝ) * G.f * Real.log bb := by
     have e1 : (G.k : ℝ) * 2 * (Cb / 2) ≤ (G.k : ℝ) * G.f * Real.log bb := by

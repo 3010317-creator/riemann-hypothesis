@@ -164,12 +164,10 @@ theorem ae_UH_conj {k r : ℕ} {μG μR νR : Measure (Mt k r)}
   have hUm : MeasurableSet {x : Mt k r | Matrix.of x ∉ UH (Hpk k r)} :=
     Formalism.FourierDecayAlt.P.DDSmoothness.uh_measurableSet
   refine Formalism.FourierDecayAlt.P.DDSmoothness.ae_UH_of_quot hG.2.2.1 ?_ ?_ hq
-  · intro h0
-    exact hR.2.1 ((Measure.map_eq_zero_iff hf.aemeasurable).1 h0)
+  · exact fun h0 => hR.2.1 ((Measure.map_eq_zero_iff hf.aemeasurable).1 h0)
   · rw [Measure.map_apply hf hUm]
     refine measure_mono_null (fun x hx => ?_) hR.2.2.1
     simp only [Set.mem_preimage, Set.mem_setOf_eq] at hx ⊢
-    intro hxR
-    exact hx hxR.2.1
+    exact fun hxR => hx hxR.2.1
 
 end Formalism.L2.SG.AmpOrbPf

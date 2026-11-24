@@ -123,8 +123,7 @@ theorem exceptional_zero_bound_of : ExcBoundOf := by
   have hq0 : (0 : ℝ) < q := by linarith
   have hu1 : 1 ≤ (q : ℝ) ^ (ε / 3) := Real.one_le_rpow hq1 hε3.le
   have hqε : (q : ℝ) ^ (-ε) = (((q : ℝ) ^ (ε / 3)) ^ 3)⁻¹ := by
-    have h := rpow_neg_eq_inv_pow (q : ℝ) ε hq0 3 (by norm_num)
-    simpa using h
+    simpa using rpow_neg_eq_inv_pow (q : ℝ) ε hq0 3 (by norm_num)
   have hq3 : (q : ℝ) ^ (-(ε / 3)) = ((q : ℝ) ^ (ε / 3))⁻¹ := Real.rpow_neg hq0.le _
   have hlogK : Real.log (3 * q) ≤ K * (q : ℝ) ^ (ε / 3) := hKb q hq1
   have hlog_pos : 0 < Real.log (3 * q) := Real.log_pos (by linarith)
@@ -145,8 +144,7 @@ theorem exceptional_zero_bound_of : ExcBoundOf := by
         _ = u := by field_simp
         _ ≤ u ^ 3 := hu3
     have h1 : c * (u ^ 3)⁻¹ ≤ 1 / Real.log (3 * q) := by
-      rw [← div_eq_mul_inv, div_le_div_iff₀ (pow_pos hu0 3) hlog_pos, one_mul]
-      exact key
+      rwa [← div_eq_mul_inv, div_le_div_iff₀ (pow_pos hu0 3) hlog_pos, one_mul]
     linarith
   · simp only [not_le] at hcase
     have hdiff := DirichletCharacter.differentiable_LFunction hχ1
@@ -156,10 +154,8 @@ theorem exceptional_zero_bound_of : ExcBoundOf := by
       refine norm_image_sub_le_of_norm_deriv_le_segment'
         (f := fun t : ℝ => DirichletCharacter.LFunction χ (t : ℂ)) (a := β) (b := 1)
         (f' := fun t : ℝ => deriv (DirichletCharacter.LFunction χ) (t : ℂ)) ?_ ?_ 1 ⟨hβ1.le, le_refl _⟩
-      · intro t _
-        exact ((hdiff (t : ℂ)).hasDerivAt.comp_ofReal).hasDerivWithinAt
-      · intro t ht
-        exact hC q χ hχ1 t (by linarith [ht.1]) ht.2.le
+      · exact fun t _ => ((hdiff (t : ℂ)).hasDerivAt.comp_ofReal).hasDerivWithinAt
+      · exact fun t ht => hC q χ hχ1 t (by linarith [ht.1]) ht.2.le
     simp only [hβ, sub_zero, Complex.ofReal_one] at hmvt
     have h1β : 0 < 1 - β := by linarith
     have hlog2 : Real.log (3 * q) ^ 2 ≤ (K * u) ^ 2 := pow_le_pow_left₀ hlog_pos.le hlogK 2
@@ -275,8 +271,7 @@ lemma log_deriv_sub_exceptional_zeros {c₁ : ℝ} (hc₁ : 0 < c₁) {q : ℕ} 
   have hnear : ∀ β ∈ B, (β : ℂ) ∉ Z → ‖1 / (s - (β : ℂ))‖ ≤ 120 / 11 := by
     intro β hβ hβZ
     have hout : ¬ (β : ℂ) ∈ Metric.closedBall ((21 / 20 : ℂ) + s.im * I) (11 / 20 / 3) := by
-      intro hin
-      exact hβZ ((hZ _).mpr ⟨hin, (hBmem β hβ).2.2.1⟩)
+      exact fun hin => hβZ ((hZ _).mpr ⟨hin, (hBmem β hβ).2.2.1⟩)
     rw [Metric.mem_closedBall, dist_eq_norm, not_le] at hout
     have hsc : ‖s - ((21 / 20 : ℂ) + s.im * I)‖ ≤ 47 / 540 := by
       refine (Complex.norm_le_abs_re_add_abs_im _).trans ?_
@@ -884,8 +879,7 @@ lemma chebyshev_principal_character_bound {q : ℕ} [NeZero q] {cg Kg c₀ y : �
         - ((y * (1 + h) - y : ℝ) : ℂ) * ((ψ₀ : ℝ) : ℂ)
         = (((y * Formalism.Sz (y * (1 + h)) - (y * (1 + h)) * Formalism.Sz y) - (y * (1 + h) - y) * ψ₀ : ℝ) : ℂ) := by
       push_cast; ring
-    rw [e, Complex.norm_real, Real.norm_eq_abs] at hD
-    exact hD
+    rwa [e, Complex.norm_real, Real.norm_eq_abs] at hD
   have hGY := hG (y * (1 + h)) hyY
   have hGy := hG y le_rfl
   set eY := Real.exp (-cg * Real.sqrt (Real.log (y * (1 + h))))
@@ -1068,9 +1062,7 @@ lemma exists_exceptional_zero_set (cZ c₁ : ℝ) (hle : c₁ ≤ cZ)
       rw [hss]
       exact Complex.ext (by simp) (by simp [him])
   · push Not at h
-    refine ⟨∅, by simp, by simp, ?_⟩
-    intro s hs hL
-    exact absurd hL (h s hs)
+    exact ⟨∅, by simp, by simp, fun s hs hL => absurd hL (h s hs)⟩
 
 lemma chebyshev_character_trivial_bound {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) (x : ℝ) (hx : 1 ≤ x) :
     ‖psiChi χ x - (if χ = 1 then (x : ℂ) else 0)‖ ≤ x * (Real.log x + 1) := by
@@ -1101,8 +1093,7 @@ lemma chebyshev_character_trivial_bound {q : ℕ} [NeZero q] (χ : DirichletChar
   have h2 : ‖(if χ = 1 then (x : ℂ) else 0)‖ ≤ x := by
     split_ifs
     · rw [Complex.norm_real, Real.norm_of_nonneg hx0]
-    · rw [norm_zero]
-      exact hx0
+    · rwa [norm_zero]
   calc ‖psiChi χ x - (if χ = 1 then (x : ℂ) else 0)‖
       ≤ ‖psiChi χ x‖ + ‖(if χ = 1 then (x : ℂ) else 0)‖ := norm_sub_le _ _
     _ ≤ x * Real.log x + x := add_le_add h1 h2
@@ -1163,8 +1154,7 @@ lemma bounded_of_exp_sqrt_lt_pow (A c : ℝ) (hA : 0 < A) (hc : 0 < c) :
   have hb := ho.bound (show (0:ℝ) < 1 / 2 by norm_num)
   obtain ⟨N, hN⟩ := Filter.eventually_atTop.mp hb
   refine ⟨max N 0, le_max_right _ _, fun L hL hlt => ?_⟩
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hLN : N ≤ L := le_trans (le_max_left _ _) hcon.le
   have h2 : ‖Real.sqrt L ^ (2 * A)‖ ≤ 1 / 2 * ‖Real.exp (c * Real.sqrt L)‖ := hN L hLN
   have hs : Real.sqrt L ^ (2 * A) = L ^ A := by
@@ -1236,8 +1226,7 @@ theorem siegel_walfisz_character_of : SiegelWalfiszOf := by
         obtain ⟨hχ1, hreg, hL0, -⟩ := hmem β hβ
         have hβ1 : 1 / 2 ≤ β := half_le_of_real_in_region hc₁20 hreg
         have hχ2 : χ ^ 2 = 1 := (hZ' q χ (β:ℂ) (zero_free_region_mono hc₁Z hreg) ⟨Or.inl hχ1, hL0⟩).1
-        have hβ2 := hEB q χ β hχ2 hχ1 hL0
-        exact exceptional_zero_term_bound x A q cE β hx hA hq1 hqL hcE hβ1 hβ2
+        exact exceptional_zero_term_bound x A q cE β hx hA hq1 hqL hcE hβ1 (hEB q χ β hχ2 hχ1 hL0)
     have e1 : Real.exp (-c * Real.sqrt (Real.log x)) ≤ Real.exp (-cf * Real.sqrt (Real.log x)) := by
       apply Real.exp_le_exp.mpr
       have h1 : cf ≤ c := min_le_left _ _
@@ -1440,8 +1429,7 @@ theorem chebyshev_character_explicit_general (hP : PerronChi) (hRS : RectShiftCh
     obtain ⟨-, -, hz, hd⟩ := hBz β hβ.1
     refine ⟨hβ.2, ?_, hd⟩
     have hβ1 : β < 1 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact DirichletCharacter.LFunction_ne_zero_of_one_le_re χ (Or.inl hχ) (by simpa using hc) hz
     linarith
   have hB₁z : ∀ β ∈ B.filter (fun β => σ₁ < β), DirichletCharacter.LFunction χ (β : ℂ) = 0 := by
@@ -1515,8 +1503,7 @@ theorem chebyshev_character_explicit_general (hP : PerronChi) (hRS : RectShiftCh
         exact hb')
     have h2T : |T - -T| = 2 * T := by
       rw [sub_neg_eq_add, abs_of_pos (by linarith)]; ring
-    rw [h2T] at hb
-    exact hb
+    rwa [h2T] at hb
 
   have hO : ‖∑ β ∈ B \ B.filter (fun β => σ₁ < β),
       (y : ℂ) ^ (β : ℂ) / ((β : ℂ) * ((β : ℂ) - 1))‖ ≤ y ^ σ₁ * (8 * L / c₁) := by
@@ -1525,8 +1512,7 @@ theorem chebyshev_character_explicit_general (hP : PerronChi) (hRS : RectShiftCh
       (mul_nonneg (Real.rpow_nonneg hy0.le _) (div_pos (by linarith) hc₁).le) (fun β hβ => ?_)
     rw [Finset.mem_sdiff] at hβ
     have hβσ : β ≤ σ₁ := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hβ.2 (Finset.mem_filter.mpr ⟨hβ.1, hc⟩)
     have hreg := (hBz β hβ.1).2.1
     unfold InRegion at hreg
@@ -1539,8 +1525,7 @@ theorem chebyshev_character_explicit_general (hP : PerronChi) (hRS : RectShiftCh
     have hrh : c₁ / Real.log ((q : ℝ) * 2) ≤ 1 / 2 := by rw [div_le_iff₀ (by linarith)]; linarith
     have hβhalf : 1 / 2 ≤ β := by linarith
     have hom := real_zero_residue_term_bound y β σ₁ (c₁ / (4 * L)) hy1 hβhalf hβσ (div_pos hc₁ (by linarith)) hgap
-    rw [h2ε] at hom
-    exact hom
+    rwa [h2ε] at hom
 
   have hmain : ‖Schi χ y - (negLD χ 1 * y - ∑ β ∈ B.filter (fun β => σ₁ < β),
       (y : ℂ) ^ (β : ℂ) / ((β : ℂ) * ((β : ℂ) - 1)))‖ ≤

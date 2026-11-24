@@ -162,8 +162,7 @@ theorem nval_factProd_le (ho : OverLa la V ι e) {σ : Type} (α : σ →₀ ℕ
   have hp := resCharOf_prime la
   haveI : Fact (resCharOf la).Prime := ⟨hp⟩
   have hne : (α.prod fun _ t => t.factorial) ≠ 0 := by
-    simp only [Finsupp.prod]
-    exact Finset.prod_ne_zero_iff.mpr fun _ _ => Nat.factorial_ne_zero _
+    simpa only [Finsupp.prod] using Finset.prod_ne_zero_iff.mpr fun _ _ => Nat.factorial_ne_zero _
   rw [crv_nval_natCast la ho hne, EReal.coe_le_coe_iff]
   have hleg := crv_legendre (resCharOf la) α
   have hp1 : (1 : ℝ) < resCharOf la := by exact_mod_cast hp.one_lt
@@ -183,8 +182,7 @@ theorem nval_factProd_le_zero (ho : OverLa la V ι e) {σ : Type} (α : σ →�
   have hp := resCharOf_prime la
   haveI : Fact (resCharOf la).Prime := ⟨hp⟩
   have hne : (α.prod fun _ t => t.factorial) ≠ 0 := by
-    simp only [Finsupp.prod]
-    exact Finset.prod_ne_zero_iff.mpr fun _ _ => Nat.factorial_ne_zero _
+    simpa only [Finsupp.prod] using Finset.prod_ne_zero_iff.mpr fun _ _ => Nat.factorial_ne_zero _
   have hv : padicValNat (resCharOf la) (α.prod fun _ t => t.factorial) = 0 := by
     rw [crv_padic_prod]
     refine Finset.sum_eq_zero fun s _ => by

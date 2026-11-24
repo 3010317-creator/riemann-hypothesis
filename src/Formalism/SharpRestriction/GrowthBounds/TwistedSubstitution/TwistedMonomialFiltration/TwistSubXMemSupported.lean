@@ -90,12 +90,10 @@ theorem coeff_wCoeff (w : Set ι) (M ν : ι × Fin n →₀ ℕ) (P : MvPolynom
       refine ⟨?_, ?_⟩
       · rw [Finsupp.filter_add, h2, add_zero]
         have := Finsupp.filter_pos_add_filter_neg M (fun v => v.1 ∈ w)
-        rw [h3, add_zero] at this
-        exact this
+        rwa [h3, add_zero] at this
       · rw [Finsupp.filter_add, h3, zero_add]
         have := Finsupp.filter_pos_add_filter_neg ν (fun v => v.1 ∈ w)
-        rw [h2, zero_add] at this
-        exact this
+        rwa [h2, zero_add] at this
   split_ifs with hc
   · by_cases hm : M + ν ∈ P.support
     · rw [Finset.sum_eq_single (M + ν)]
@@ -103,8 +101,7 @@ theorem coeff_wCoeff (w : Set ι) (M ν : ι × Fin n →₀ ℕ) (P : MvPolynom
       · intro μ hμ hne
         rw [Finset.mem_filter] at hμ
         rw [ite_eq_right]
-        intro h2
-        exact hne ((key μ).1 ⟨hμ.2, h2⟩).1
+        exact fun h2 => hne ((key μ).1 ⟨hμ.2, h2⟩).1
       · intro h; exact absurd (Finset.mem_filter.2 ⟨hm, ((key _).2 ⟨rfl, hc⟩).1⟩) h
     · rw [MvPolynomial.notMem_support_iff.1 hm]
       refine Finset.sum_eq_zero fun μ hμ => ?_
@@ -117,8 +114,7 @@ theorem coeff_wCoeff (w : Set ι) (M ν : ι × Fin n →₀ ℕ) (P : MvPolynom
   · refine Finset.sum_eq_zero fun μ hμ => ?_
     rw [Finset.mem_filter] at hμ
     rw [ite_eq_right]
-    intro h2
-    exact hc ((key μ).1 ⟨hμ.2, h2⟩).2
+    exact fun h2 => hc ((key μ).1 ⟨hμ.2, h2⟩).2
 
 def WFree {B : Type*} [CommRing B] (w : Set ι) (P : MvPolynomial (ι × Fin n) B) : Prop :=
   ∀ ν ∈ P.support, ν.filter (fun v => v.1 ∈ w) = 0
@@ -476,8 +472,7 @@ theorem valS_wCoeff_ge (w : Set ι) (hw : ∀ l ∈ w, LL.vec l = true) (hd : Di
     · have : ¬ (-(dw : ℤ) - (-wDegHom w) m ≤ 0) := by
         rw [AddMonoidHom.neg_apply, wDegHom_eq]; omega
       have h3 : AddMonoidAlgebra.coeff (twistSub LL (S ∪ w) (lastIdx n) F) m ∈ (⊥ : AddSubgroup (GLLaurent R n)) := by
-        rw [trivFil_F, ite_eq_right this] at h2
-        exact h2
+        rwa [trivFil_F, ite_eq_right this] at h2
       rw [AddSubgroup.mem_bot] at h3
       rw [h3]
       exact AddSubgroup.zero_mem _

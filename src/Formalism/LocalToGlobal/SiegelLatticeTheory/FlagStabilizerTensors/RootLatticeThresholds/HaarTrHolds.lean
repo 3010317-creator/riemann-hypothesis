@@ -84,9 +84,7 @@ theorem haarTr_holds (u u' : D.what₂.Word) (τ : D.what₂.Tau) : HaarTr C u u
     rw [hme.map_apply, Set.preimage_univ] at h
     exact Measure.measure_univ_eq_zero.1 h
   · rw [hme.map_apply]
-    refine measure_mono_null (fun y hy => ?_) hconc
-    intro hyS
-    exact hy (hfwd y hyS)
+    exact measure_mono_null (fun y hy => (fun hyS => hy (hfwd y hyS))) hconc
   · intro s hs
     obtain ⟨hsN, hsN'⟩ := hs
     have hmem := Formalism.L2.SG.Pf.LocJEq.transp_mem C τ hsN.1

@@ -98,8 +98,7 @@ theorem pairAbs_le_ampSum (hG : 0 ≤ X.Gam1) (Q : Set (τ × τ))
       Q.indicator (fun p : τ × τ => ‖X.vec p.1‖ * ‖X.vec p.2‖) p := by
     intro p
     by_cases hp : p ∈ Q
-    · simp only [Set.indicator_of_mem hp]
-      exact norm_inner_le_norm _ _
+    · simpa only [Set.indicator_of_mem hp] using norm_inner_le_norm _ _
     · simp [hp]
   have hnn : ∀ p, 0 ≤ Q.indicator (fun p : τ × τ => ‖inner ℂ (X.vec p.1) (X.vec p.2)‖) p :=
     fun p => Set.indicator_nonneg (fun _ _ => norm_nonneg _) p

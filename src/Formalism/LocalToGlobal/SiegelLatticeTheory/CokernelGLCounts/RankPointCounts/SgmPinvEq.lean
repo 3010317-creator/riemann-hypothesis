@@ -97,16 +97,14 @@ theorem condX_iff (y : FreeE w → D.host.E) :
       have e := hgt_qbar w q
       unfold hgt at e
       simp only [qbar, pinv_pinv] at h1 e
-      rw [e, Xmat_q] at h1
-      exact h1
+      rwa [e, Xmat_q] at h1
     refine ⟨hy, fun q => ?_⟩
     obtain ⟨-, -, h3⟩ := h (qbar w q).1.1 (qbar w q).1.2 (qbar w q).2.1 (qbar w q).2.2
     rw [condX_third w _ _ _ (qbar w q).2.2] at h3
     have e := hgt_qbar w q
     unfold hgt at e
     simp only [qbar, pinv_pinv] at h3 e
-    rw [e] at h3
-    exact h3
+    rwa [e] at h3
   · rintro ⟨hy, hE⟩ a c hac hs
     have hG := grD_inv (Xmat_upU w y) (Xmat_grD w y hy)
     set p : FreeE w := qbar w ⟨(a, c), hac, hs⟩ with hp

@@ -284,8 +284,7 @@ theorem lhwline_pivot_ne (k : ℕ) (hr : k + 1 ≤ r) (hn : k + 1 ≤ n) (y : Fi
   · subst hi
     have e1 : Fin.castLE hr (Fin.last k) = ⟨k, hr⟩ := Fin.ext (by simp)
     have e2 : Fin.castLE hn (Fin.last k) = ⟨k, hn⟩ := Fin.ext (by simp)
-    rw [e1, e2]
-    exact h0
+    rwa [e1, e2]
   · have hik : i.val < k := Fin.val_lt_last hi
     exact hy _ _ (by rw [Fin.coe_castLE, Fin.coe_castLE, Fin.val_last]; omega)
       (Or.inl (by rw [Fin.coe_castLE]; exact hik))
@@ -391,8 +390,7 @@ theorem lhwline_elim_cleared [Infinite K] (x : Fin r × Fin n → K)
     apply lhwline_pivot_ne k hr hn _ hy
     have hinv := lhwline_elim_inv (fun z : Fin r × Fin n → K => eval z (lpMinor K (k + 1) hr hn))
       (lhwline_minor_RInv _ _ _) (lhwline_minor_CInv _ _ _) k x
-    intro h0
-    exact hx k hr hn (hinv.symm.trans h0)
+    exact fun h0 => hx k hr hn (hinv.symm.trans h0)
 
 end LHwlineClear
 
@@ -489,8 +487,7 @@ theorem lhwline_mnu_apply (hn : n ≤ r) (ν : Fin n → ℕ) (a : Fin r) (j : F
       simp [this, h]
   · intro b _ hb
     rw [ite_eq_right]
-    intro h'
-    exact hb (Prod.mk.inj h').2
+    exact fun h' => hb (Prod.mk.inj h').2
   · simp
 
 theorem lhwline_mono_zero (hn : n ≤ r) (ν : Fin n → ℕ)

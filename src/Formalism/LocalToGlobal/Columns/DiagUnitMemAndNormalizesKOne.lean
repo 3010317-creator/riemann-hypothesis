@@ -97,11 +97,9 @@ theorem twRed0_of_val {w : E} (hw : P.valuation E w < 1) : IntAt P w ∧ redP P 
   have hzP : z ∈ P.asIdeal := by
     rw [← P.intValuation_lt_one_iff_mem, ← HeightOneSpectrum.valuation_of_algebraMap (K := E)]
     change P.valuation E (algebraMap (𝓞 E) E z) < 1
-    rw [← hrel, map_mul, ht1, one_mul]
-    exact hw
+    rwa [← hrel, map_mul, ht1, one_mul]
   refine ⟨⟨z, t, htP, hrel⟩, redP_eq P htP hrel ?_⟩
-  rw [mul_zero, eq_comm, Ideal.Quotient.eq_zero_iff_mem]
-  exact hzP
+  rwa [mul_zero, eq_comm, Ideal.Quotient.eq_zero_iff_mem]
 
 end TwK1b
 

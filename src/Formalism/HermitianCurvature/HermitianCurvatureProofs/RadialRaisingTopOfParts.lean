@@ -73,8 +73,7 @@ theorem vAB_loc (Y : ℂ) : ∀ (i : ℕ) (f₁ f₂ : (Fin r → ℂ) → E), (
   intro i f₁ f₂ h
   induction i with
   | zero =>
-    intro c hc
-    exact ⟨h c hc, rfl⟩
+    exact fun c hc => ⟨h c hc, rfl⟩
   | succ i ih =>
     intro c hc
     by_cases hi : i < r
@@ -84,8 +83,7 @@ theorem vAB_loc (Y : ℂ) : ∀ (i : ℕ) (f₁ f₂ : (Fin r → ℂ) → E), (
         rw [(ih c hc).1, (ih c hc).2, pOp_locO _ (fun c' hc' => (ih c' hc').1) hc]
       · simp only [ciOp]
         rw [(ih c hc).1]
-    · simp only [Q.vAB, dite_eq_right hi]
-      exact ih c hc
+    · simpa only [Q.vAB, dite_eq_right hi] using ih c hc
 
 end loc
 

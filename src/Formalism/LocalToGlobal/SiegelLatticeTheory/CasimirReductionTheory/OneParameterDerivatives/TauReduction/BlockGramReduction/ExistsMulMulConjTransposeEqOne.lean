@@ -45,8 +45,7 @@ theorem det_bounds_of_rayleigh {j : ℕ} (M : Matrix (Fin j) (Fin j) ℂ) (hM : 
       rw [hv_def, hM.mulVec_eigenvectorBasis i, dotProduct_smul, Complex.smul_re, smul_eq_mul,
         ← hv_def, re_star_dotProduct_self, hnorm, mul_one]
     have := h v
-    rw [e, hnorm, mul_one, mul_one] at this
-    exact this
+    rwa [e, hnorm, mul_one, mul_one] at this
   refine ⟨∏ i, hM.eigenvalues i, ?_, ?_, ?_⟩
   · rw [hM.det_eq_prod_eigenvalues]
     norm_cast
@@ -112,8 +111,7 @@ theorem t5 : GramDistortionBound := by
   set V := C * Sᴴ with hV_def
   have hV : Vᴴ * V = 1 := by
     rw [hV_def, conjTranspose_mul, conjTranspose_conjTranspose]
-    rw [show S * Cᴴ * (C * Sᴴ) = S * (Cᴴ * C) * Sᴴ by simp only [Matrix.mul_assoc]]
-    exact hS
+    rwa [show S * Cᴴ * (C * Sᴴ) = S * (Cᴴ * C) * Sᴴ by simp only [Matrix.mul_assoc]]
   set M := (Y * V)ᴴ * (Y * V) with hM_def
   have hMH : M.IsHermitian := Matrix.isHermitian_conjTranspose_mul_self _
   have hray : ∀ z : Fin j → ℂ, a * ∑ i, ‖z i‖ ^ 2 ≤ (star z ⬝ᵥ (M *ᵥ z)).re ∧
@@ -125,8 +123,7 @@ theorem t5 : GramDistortionBound := by
       rw [← re_star_dotProduct_self, ← star_dotProduct_gram, hV, Matrix.one_mulVec, re_star_dotProduct_self]
     have := hY (V *ᵥ z)
     rw [Matrix.mulVec_mulVec, e2] at this
-    rw [e1]
-    exact this
+    rwa [e1]
   obtain ⟨μ, hμ, h1, h2⟩ := det_bounds_of_rayleigh M hMH a b ha hray
   have hMeq : M = S * ((Y * C)ᴴ * (Y * C)) * Sᴴ := by
     simp only [hM_def, hV_def, conjTranspose_mul, conjTranspose_conjTranspose, Matrix.mul_assoc]

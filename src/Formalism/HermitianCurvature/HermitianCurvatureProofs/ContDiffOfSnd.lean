@@ -126,8 +126,7 @@ theorem ZOp.smooth {T : (MJ j → E) → MJ j → E} (hT : ZOp T) {V : Set (MJ j
   have hUi : U ⊆ {q | (Matrix.of q.2).det ≠ 0} := fun q hq => hVi hq
   have hκ : ContDiffOn ℝ ∞ (fun q : ℂ × (Fin j → Fin j → ℂ) => (fun _ : ℂ => h) q.1 (Matrix.of q.2)) U :=
     hh.comp contDiff_ofSnd.contDiffOn (fun q hq => hq)
-  have h1 := (hT.par U (fun _ => h) hU hUi hκ).1
-  exact h1.comp (contDiff_pair 0).contDiffOn (fun Z hZ => hZ)
+  exact ((hT.par U (fun _ => h) hU hUi hκ).1).comp (contDiff_pair 0).contDiffOn (fun Z hZ => hZ)
 
 theorem ZOp.add' {T S : (MJ j → E) → MJ j → E} (hT : ZOp T) (hS : ZOp S) :
     ZOp (fun h Z => T h Z + S h Z) := by
@@ -204,8 +203,7 @@ theorem zop_sum {ι : Type*} (s : Finset ι) {T : ι → (MJ j → E) → MJ j �
   induction s using Finset.induction_on with
   | empty => simpa using (zop_zero (E := E) (j := j))
   | insert a s ha ih =>
-    have h1 := (hT a (by simp)).add' (ih (fun i hi => hT i (by simp [hi])))
-    simpa [Finset.sum_insert ha] using h1
+    simpa [Finset.sum_insert ha] using (hT a (by simp)).add' (ih (fun i hi => hT i (by simp [hi])))
 
 theorem zop_foldr : ∀ L : List ((MJ j → E) → MJ j → E), (∀ T ∈ L, ZOp T) →
     ZOp (fun f => L.foldr (fun T h => T h) f)

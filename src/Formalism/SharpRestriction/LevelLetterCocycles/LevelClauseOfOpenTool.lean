@@ -241,10 +241,7 @@ theorem TToolAlg_holds : TToolAlg := by
         have : ((l * y : ℕ) : ℝ) ≤ ((l * y - X : ℕ) : ℝ) + X := by
           exact_mod_cast (by omega : l * y ≤ (l * y - X) + X)
         push_cast at this ⊢; linarith)
-      have e1 : (u₁ * PowerSeries.X * (PowerSeries.X + ((l : ℕ) : PowerSeries O)) ^ (l - 1)) ^ y =
-          u₁ ^ y * (PowerSeries.X * (PowerSeries.X + ((l : ℕ) : PowerSeries O)) ^ (l - 1)) ^ y := by
-        rw [← mul_pow]; ring
-      rw [e1]
+      rw [mul_assoc u₁, mul_pow]
       by_cases hle : X ≤ l * y
       · have hR := Formalism.TruncatedSeriesCounting.X.pX_conditions.2.2.1 (PowerSeries O) l hl PowerSeries.X y X (l * y - X)
           (by omega)
@@ -252,29 +249,20 @@ theorem TToolAlg_holds : TToolAlg := by
       · have h0 : l * y - X = 0 := by omega
         have ht0 : t = 0 := by rw [h0] at htc; omega
         subst ht0
-        have : (1 : PowerSeries O) ∈ Ideal.span {PowerSeries.C (ϖ ^ 0),
-            PowerSeries.X * (PowerSeries.X + ((l : ℕ) : PowerSeries O)) ^ X} :=
-          Ideal.subset_span (by simp)
-        rw [(Ideal.eq_top_iff_one _).2 this]; trivial
+        simp [Ideal.span_insert]
     · intro ht
       have hR := rem_M (R := PowerSeries O) l hl PowerSeries.X y M η (l * y - η - M)
       have htc : t ≤ e * (l * y - η - M) := nat_le_of_real ht (by
         have : ((l * y : ℕ) : ℝ) ≤ ((l * y - η - M : ℕ) : ℝ) + η + M := by
           exact_mod_cast (by omega : l * y ≤ (l * y - η - M) + η + M)
         push_cast at this ⊢; linarith)
-      have e1 : (u₁ * PowerSeries.X * (PowerSeries.X + ((l : ℕ) : PowerSeries O)) ^ (l - 1)) ^ y =
-          u₁ ^ y * (PowerSeries.X * (PowerSeries.X + ((l : ℕ) : PowerSeries O)) ^ (l - 1)) ^ y := by
-        rw [← mul_pow]; ring
-      rw [e1]
+      rw [mul_assoc u₁, mul_pow]
       by_cases hle : η + M ≤ l * y
       · exact Ideal.mul_mem_left _ _ (span_pair_mono_left (C_pow_dvd hass htc) (hR (by omega)))
       · have h0 : l * y - η - M = 0 := by omega
         have ht0 : t = 0 := by rw [h0] at htc; omega
         subst ht0
-        have : (1 : PowerSeries O) ∈ Ideal.span {PowerSeries.C (ϖ ^ 0),
-            PowerSeries.X ^ M * (PowerSeries.X + ((l : ℕ) : PowerSeries O)) ^ η} :=
-          Ideal.subset_span (by simp)
-        rw [(Ideal.eq_top_iff_one _).2 this]; trivial
+        simp [Ideal.span_insert]
     · intro ht
       set c : ℕ := (l - 1) * y - (X - 1) / l with hcdef
       have htc : t ≤ e * c := nat_le_of_real ht (by
@@ -288,23 +276,13 @@ theorem TToolAlg_holds : TToolAlg := by
         have h5 : (((l - 1) * y : ℕ) : ℝ) = ((l : ℝ) - 1) * y := by
           rw [Nat.cast_mul, Nat.cast_sub hl, Nat.cast_one]
         linarith)
-      have e1 : (u₂ * PowerSeries.X * (PowerSeries.X + ((l : ℕ) : PowerSeries O)) ^ (l - 1) *
-          (u * (PowerSeries.X + ((l : ℕ) : PowerSeries O)) ^ l + ((l : ℕ) : PowerSeries O) * ε)
-            ^ (l - 1)) ^ y =
-          u₂ ^ y * (PowerSeries.X * (PowerSeries.X + ((l : ℕ) : PowerSeries O)) ^ (l - 1) *
-          (u * (PowerSeries.X + ((l : ℕ) : PowerSeries O)) ^ l + ((l : ℕ) : PowerSeries O) * ε)
-            ^ (l - 1)) ^ y := by
-        rw [← mul_pow]; ring
-      rw [e1]
+      rw [mul_assoc u₂, mul_assoc u₂, mul_pow]
       rcases Nat.eq_zero_or_pos y with rfl | hy
       · have ht0 : t = 0 := by
           have : c = 0 := by simp [hcdef]
           rw [this] at htc; omega
         subst ht0
-        have : (1 : PowerSeries O) ∈ Ideal.span {PowerSeries.C (ϖ ^ 0),
-            PowerSeries.X * (PowerSeries.X + ((l : ℕ) : PowerSeries O)) ^ X} :=
-          Ideal.subset_span (by simp)
-        rw [(Ideal.eq_top_iff_one _).2 this]; trivial
+        simp [Ideal.span_insert]
       · by_cases hle : (X - 1) / l ≤ (l - 1) * y
         · exact Ideal.mul_mem_left _ _ (span_pair_mono_left (C_pow_dvd hass htc)
             (rem_2 l hl PowerSeries.X _ u ε y X c hy (by omega)))
@@ -312,10 +290,7 @@ theorem TToolAlg_holds : TToolAlg := by
             have : c = 0 := by omega
             rw [this] at htc; omega
           subst ht0
-          have : (1 : PowerSeries O) ∈ Ideal.span {PowerSeries.C (ϖ ^ 0),
-              PowerSeries.X * (PowerSeries.X + ((l : ℕ) : PowerSeries O)) ^ X} :=
-            Ideal.subset_span (by simp)
-          rw [(Ideal.eq_top_iff_one _).2 this]; trivial
+          simp [Ideal.span_insert]
   · intro l y X M η hl
     exact Formalism.TruncatedSeriesCounting.X.pX_conditions.2.1 l (by omega) y X M η
 

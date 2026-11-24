@@ -195,10 +195,8 @@ theorem tiePsi_of (D : Formalism.BasicNotions.D7) (h1 : ExplicitMapInjective) (h
   · rintro Λ ⟨g, hg, rfl⟩
     have hgi : IsUnit (g⁻¹).det := Matrix.isUnit_nonsing_inv_det g hg
     refine ⟨Matrix.GeneralLinearGroup.mk'' g⁻¹ hgi, ?_, ?_⟩
-    · intro P Q f hf
-      exact h5 p n' R m hm1 g hg _ rfl P Q f hf
-    · intro a b y
-      exact tie5b h2 h5 hCO R m hm1 g hg _ rfl a b y
+    · exact fun P Q f hf => h5 p n' R m hm1 g hg _ rfl P Q f hf
+    · exact fun a b y => tie5b h2 h5 hCO R m hm1 g hg _ rfl a b y
 
 end Formalism.MainNotions.flipOneThree.Pf
 

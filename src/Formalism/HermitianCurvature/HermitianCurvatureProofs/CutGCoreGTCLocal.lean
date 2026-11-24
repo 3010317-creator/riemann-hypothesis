@@ -195,8 +195,7 @@ theorem gcl_wRc_smooth (P : M.Par) :
     simp_rw [Complex.normSq_apply]
     exact ((hre.mul hre).add (him.mul him)).sub contDiff_const
   have h2 : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun ζ : ℂ => wR P.k P.TT ζ) (Ann P) := by
-    simp only [wR]
-    exact ((h1.pow _).contDiffOn).sqrt (fun ζ hζ => (pow_pos (sub_pos.2 hζ) _).ne')
+    simpa only [wR] using ((h1.pow _).contDiffOn).sqrt (fun ζ hζ => (pow_pos (sub_pos.2 hζ) _).ne')
   exact Complex.ofRealCLM.contDiff.comp_contDiffOn h2
 
 theorem gcl_wR_ne (P : M.Par) {ζ : ℂ} (hζ : ζ ∈ Ann P) : ((wR P.k P.TT ζ : ℝ) : ℂ) ≠ 0 := by
@@ -261,8 +260,7 @@ theorem gcl_trR_val (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq) (hpl : Q.Is
   have hq : q.1 ∈ NF.QR P.k P.r Bs.z Bs.z' := by
     obtain ⟨h1, h2⟩ := q.2
     refine ⟨h1, ?_⟩
-    rw [hpl.2.2.2.1, hpl.2.2.2.2.1]
-    exact h2
+    rwa [hpl.2.2.2.1, hpl.2.2.2.2.1]
   have h1 : ((trR P Bs e Φ ρ : MA.SmQ P.r P.TT) : MA.Qp P.r P.TT → ℂ) =
       rawR P Bs.μsec e (Φ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) ρ := by
     simp only [trR, MA.toSm, dite_eq_left hmem]
@@ -338,8 +336,7 @@ theorem gcl_core (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq)
     · have h1 : ContDiffOn ℝ ∞ (fun x : (Fin P.r → ℂ) × ℂ => e σ x.2) (NF.QR P.k P.r Bs.z Bs.z') :=
         (he.1 σ).comp contDiff_snd.contDiffOn fun x hx => ((hQR x).1 hx).2
       exact h1.congr fun x hx => by simp [Set.indicator_of_mem hx]
-    · simp only [Set.indicator_of_mem hx]
-      exact (he.2 x.2 ((hQR x).1 hx).2).1 σ
+    · simpa only [Set.indicator_of_mem hx] using (he.2 x.2 ((hQR x).1 hx).2).1 σ
     · simp [Set.indicator_of_notMem hx]
   choose Ψ0 hΨ0 hradΨ using fun σ =>
     Formalism.FourierDecayAlt.P.radical_reduction_surjective Wp Wq P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' hRB _ (hφ σ)
@@ -440,8 +437,7 @@ theorem gcl_core (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq)
         ((T (Ψ σ) : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) (c1, x.2)))
       rw [heq]
     · rw [ite_eq_right hσ]
-      rw [ite_eq_right (Ne.symm hσ), zero_mul] at h1
-      exact h1
+      rwa [ite_eq_right (Ne.symm hσ), zero_mul] at h1
 
   let wc : ℂ → ℂ := fun ζ => ((wR P.k P.TT ζ : ℝ) : ℂ)
   have hwc : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) wc (Ann P) := gcl_wRc_smooth P
@@ -494,8 +490,7 @@ theorem gcl_core (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq)
     (B.hsVec (NF.radR P.k P.r Bs.z Bs.z' Bs.μsec (Φ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) x))
   have hGev : MA.ext ((trR P Bs e Φ ρ : MA.SmQ P.r P.TT) : MA.Qp P.r P.TT → ℂ) =ᶠ[nhds q.1] G := by
     filter_upwards [(MA.Qset_open P.r P.TT).mem_nhds q.2] with x hx
-    simp only [MA.ext, dite_eq_left hx]
-    exact gcl_trR_val P Bs hpl hk2 e he Φ ρ ⟨x, hx⟩
+    simpa only [MA.ext, dite_eq_left hx] using gcl_trR_val P Bs hpl hk2 e he Φ ρ ⟨x, hx⟩
   have hGs : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) G (NF.QR P.k P.r Bs.z Bs.z') :=
     (hwc.comp contDiff_snd.contDiffOn fun x hx => ((hQR x).1 hx).2).mul
       ((Formalism.FourierDecayAlt.P.CutMP.En.hsVec_contDiff.comp_contDiffOn
@@ -939,12 +934,10 @@ theorem radR_kap [FiniteDimensional ℂ Wp] (P : M.Par) (Bs : B.RealPlaceData P.
   obtain ⟨hpl, hk2, -, -, -, -, -⟩ := hH
   have hζ : P.TT < Complex.normSq q.2 := by
     have h := hq.2
-    rw [hpl.2.2.2.1, hpl.2.2.2.2.1] at h
-    exact h
+    rwa [hpl.2.2.2.1, hpl.2.2.2.2.1] at h
   let q' : MA.Qp P.r P.TT := ⟨q, hq.1, hζ⟩
   have hw : ((wR P.k P.TT q.2 : ℝ) : ℂ) ≠ 0 := by
-    refine Complex.ofReal_ne_zero.2 (ne_of_gt ?_)
-    exact Real.sqrt_pos.2 (pow_pos (sub_pos.2 hζ) _)
+    exact Complex.ofReal_ne_zero.2 (ne_of_gt (Real.sqrt_pos.2 (pow_pos (sub_pos.2 hζ) _)))
   have hcoef : ∀ ρ, inner ℂ (B.hsVec (e ρ q.2)) (B.hsVec (NF.radR P.k P.r Bs.z Bs.z' Bs.μsec
       ((d.κ f).1 Φ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) q)) =
       f ρ * inner ℂ (B.hsVec (e ρ q.2)) (B.hsVec (NF.radR P.k P.r Bs.z Bs.z' Bs.μsec

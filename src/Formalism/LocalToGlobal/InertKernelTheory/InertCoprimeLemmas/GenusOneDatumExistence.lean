@@ -44,8 +44,7 @@ theorem mem_Wp_of_kur {x : ℂ_[p]} (hx : x ∈ Formalism.L2.Th1.CM.MaximalUnram
     · rintro ⟨n, h0, hn, h⟩
       exact ⟨n, h0, (Nat.Prime.coprime_iff_not_dvd hp).mp (Nat.coprime_comm.mp hn), h⟩
   unfold Formalism.L2.Th1.D.ringB Formalism.L2.Th1.D.ringA at hB
-  rw [hS] at hB
-  exact hB
+  rwa [hS] at hB
 
 theorem logF_eq : logF p = Formalism.L2.Th1.CM.ltLog ℂ_[p] p := by
   have hp : p.Prime := Fact.out
@@ -63,8 +62,7 @@ theorem logF_eq : logF p = Formalism.L2.Th1.CM.ltLog ℂ_[p] p := by
     · rw [ite_eq_left hn]
     · intro j _ hne
       rw [ite_eq_right]
-      intro h'
-      exact hne (hinj (h'.symm.trans hn))
+      exact fun h' => hne (hinj (h'.symm.trans hn))
     · intro hj0
       exfalso
       apply hj0
@@ -75,8 +73,7 @@ theorem logF_eq : logF p = Formalism.L2.Th1.CM.ltLog ℂ_[p] p := by
   · apply Finset.sum_eq_zero
     intro j _
     rw [ite_eq_right]
-    intro h'
-    exact h ⟨j, by rw [h', pow_mul]⟩
+    exact fun h' => h ⟨j, by rw [h', pow_mul]⟩
 
 theorem isWq_wU (W : WeierstrassCurve ℂ_[p]) : Formalism.MainNotions.TaylorLogMetric.IsWq W (Formalism.L2.Th1.A.wU W) := by
   have hF := (Formalism.L2.Th1.A.CurveSer.wSer_fixed W).2
@@ -129,8 +126,7 @@ theorem datum_of_short (h5 : 5 ≤ p) (lam : Formalism.MainNotions.TaylorLogMetr
   have hOk : g.Ok := by
     refine ⟨hU, hWq, hx0, ?_⟩
     show PowerSeries.subst (Formalism.L2.Th1.A.expSer S) (Formalism.MainNotions.TaylorLogMetric.flog g.W (Formalism.L2.Th1.A.wU S)) = PowerSeries.X
-    rw [hgW, hfl]
-    exact hLE
+    rwa [hgW, hfl]
   have hM : ModelOverW lam Λ C := by
     show (C • Formalism.MainNotions.TaylorLogMetric.wModel lam Λ).a₁ ∈ Wp p ∧ (C • Formalism.MainNotions.TaylorLogMetric.wModel lam Λ).a₂ ∈ Wp p ∧
       (C • Formalism.MainNotions.TaylorLogMetric.wModel lam Λ).a₃ ∈ Wp p ∧ (C • Formalism.MainNotions.TaylorLogMetric.wModel lam Λ).a₄ ∈ Wp p ∧
@@ -138,10 +134,8 @@ theorem datum_of_short (h5 : 5 ≤ p) (lam : Formalism.MainNotions.TaylorLogMetr
     rw [hW]
     refine ⟨by simp [hS, Formalism.L2.Th1.A.shortW], by simp [hS, Formalism.L2.Th1.A.shortW],
       by simp [hS, Formalism.L2.Th1.A.shortW], mem_Wp_of_kur ?_ na4, mem_Wp_of_kur ?_ na6⟩
-    · simp only [hS, Formalism.L2.Th1.A.shortW]
-      exact div_mem (neg_mem k2) (ofNat_mem _ 4)
-    · simp only [hS, Formalism.L2.Th1.A.shortW]
-      exact div_mem (neg_mem k3) (ofNat_mem _ 4)
+    · simpa only [hS, Formalism.L2.Th1.A.shortW] using div_mem (neg_mem k2) (ofNat_mem _ 4)
+    · simpa only [hS, Formalism.L2.Th1.A.shortW] using div_mem (neg_mem k3) (ofNat_mem _ 4)
   have hpt : (g.pt (MvPowerSeries.C ε * logF p) : MvPowerSeries Unit ℂ_[p]) =
       (Formalism.L2.Th1.CM.uSer g2 g3).subst (PowerSeries.C ε * Formalism.L2.Th1.CM.ltLog ℂ_[p] p) := by
     show PowerSeries.subst (MvPowerSeries.C ε * logF p) (Formalism.L2.Th1.A.expSer S) = _

@@ -57,8 +57,7 @@ theorem kron_one : kron (fun τ => (1 : Matrix (Fin (r τ)) (Fin (r τ)) ℝ)) =
 
 theorem kron_smul (c : ι → ℝ) (A : ∀ τ, Matrix (Fin (r τ)) (Fin (r τ)) ℝ) : kron (fun τ => c τ • A τ) = (∏ τ, c τ) • kron A := by
   ext I I'
-  simp only [kron, Matrix.of_apply, Matrix.smul_apply, smul_eq_mul]
-  exact Finset.prod_mul_distrib
+  simpa only [kron, Matrix.of_apply, Matrix.smul_apply, smul_eq_mul] using Finset.prod_mul_distrib
 
 def kronDet : (∀ τ, GL (Fin (r τ)) ℝ) →* ℝ where
   toFun g := (kron fun τ => ((g τ : GL (Fin (r τ)) ℝ) : Matrix (Fin (r τ)) (Fin (r τ)) ℝ)).det
@@ -184,8 +183,7 @@ theorem li_semilin_gen {K F V M ι κ : Type} [Field K] [Field F] [AddCommGroup 
     intro x hx
     conv_lhs => rw [← b.linearCombination_repr x]
     rw [Finsupp.linearCombination_apply, Finsupp.sum_of_support_subset _ hx]
-    intro i _
-    exact zero_smul K _
+    exact fun i _ => zero_smul K _
   have hsub : ∀ a' ∈ s, (b.repr (v a')).support ⊆ T := fun a' ha' =>
     Finset.subset_biUnion_of_mem (fun a' => (b.repr (v a')).support) ha'
   have hexp : ∀ a' ∈ s, e (v a') = ∑ i ∈ T, σ (b.repr (v a') i) • e (b i) := by
@@ -215,8 +213,7 @@ theorem li_semilin_gen {K F V M ι κ : Type} [Field K] [Field F] [AddCommGroup 
         · rw [hf a, ite_eq_left rfl, map_one, mul_one]
         · intro a' _ hne
           rw [hf a', ite_eq_right hne, map_zero, mul_zero]
-        · intro h
-          exact absurd ha h
+        · exact fun h => absurd ha h
     _ = ∑ a' ∈ s, g a' * σ (∑ i ∈ T, b.repr (v a') i * f (b i)) :=
         Finset.sum_congr rfl fun a' ha' => by rw [hfv a' ha']
     _ = ∑ i ∈ T, σ (f (b i)) * ∑ a' ∈ s, g a' * σ (b.repr (v a') i) := by

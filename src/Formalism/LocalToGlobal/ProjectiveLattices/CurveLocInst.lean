@@ -30,10 +30,8 @@ theorem birAt_of_ev {B : WeightFamilies.Prov D} {P : ModuliIntegralCharts.Prov D
   intro a
   obtain ⟨k, g, Pw, hP, hne, he⟩ := hB a
   refine ⟨k, g, Pw, hP, ?_, ?_⟩
-  · simp only [hev]
-    exact hne
-  · simp only [hev]
-    exact he
+  · simpa only [hev] using hne
+  · simpa only [hev] using he
 
 theorem birAt_of {ka wL wF : WeightFamilies.Wt D j} (G : GlobalFamilyData (recPlus h j hj) ka wL wF) (hB : BIRSt h j hj hG G)
     (Z : Comp (T.Q.Xo j) T.Q.c) : CurveLoc.BirAt (recPlus h j hj) G.N G.w (formsEvR j hG hT Z) :=

@@ -224,8 +224,7 @@ theorem frameA_letter {K : Type u} [NormedField K] [IsUltrametricDist K] (J N0 :
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl (fun i'' _ => ?_)
       rw [hAc]
-      simp only [c, Finset.sum_mul]
-      exact Finset.sum_congr rfl (fun a _ => by ring)
+      simpa only [c, Finset.sum_mul] using Finset.sum_congr rfl (fun a _ => by ring)
     rw [h1, ← Matrix.mul_apply, Matrix.mul_nonsing_inv _ hunit, Matrix.one_apply]
 
   have hzy : ∀ i'' a, ∑ i', c (e i'') i' * z i' a = y (e i'') a := by
@@ -369,8 +368,7 @@ theorem thmAFrame_of : ThmAGen.{u} → ThmAFrame.{u} := by
       · intro k _ hk
         rw [ite_eq_right hk, zero_mul]
       · intro h; exact absurd (Finset.mem_univ _) h
-    · simp only [effMat, ite_eq_right hi]
-      exact hrec s i b hi
+    · simpa only [effMat, ite_eq_right hi] using hrec s i b hi
   · intro s k s0 j hsp
     obtain ⟨i, rfl⟩ := hspec_some s k (by rw [hsp]; simp)
     rw [hspec_e] at hsp
@@ -469,8 +467,7 @@ theorem generic_mono_det {R : Type*} [CommRing R] [Nontrivial R] {d N0 n : ℕ} 
     · simp
     · intro j _ hj
       rw [Finsupp.single_apply, ite_eq_right]
-      intro h
-      exact hj (hγ (Prod.ext_iff.mp (Prod.ext_iff.mp h).2).2)
+      exact fun h => hj (hγ (Prod.ext_iff.mp (Prod.ext_iff.mp h).2).2)
     · simp
   have hval2 : ∀ (i : Fin n) (u : ZMod d),
       (∑ j, Finsupp.single (t j, z, γ j) (L j)) (u, z, γ i) = if t i = u then L i else 0 := by
@@ -480,12 +477,10 @@ theorem generic_mono_det {R : Type*} [CommRing R] [Nontrivial R] {d N0 n : ℕ} 
       by_cases h : t i = u
       · simp [h]
       · rw [ite_eq_right, ite_eq_right h]
-        intro h'
-        exact h (Prod.ext_iff.mp h').1
+        exact fun h' => h (Prod.ext_iff.mp h').1
     · intro j _ hj
       rw [Finsupp.single_apply, ite_eq_right]
-      intro h
-      exact hj (hγ (Prod.ext_iff.mp (Prod.ext_iff.mp h).2).2)
+      exact fun h => hj (hγ (Prod.ext_iff.mp (Prod.ext_iff.mp h).2).2)
     · simp
   have key : ∀ σ : Equiv.Perm (Fin n),
       (∑ i, Finsupp.single (t (σ i), z, γ i) (L (σ i))) = ∑ i, Finsupp.single (t i, z, γ i) (L i) → σ = 1 := by
@@ -771,10 +766,8 @@ theorem young_second_row_length_count (μ : YoungDiagram) :
   refine Finset.card_bij (fun (c : Fin (μ.rowLen 0)) _ => (c : ℕ)) ?_ ?_ ?_
   · intro c hc
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hc
-    rw [Finset.mem_range, ← YoungDiagram.mem_iff_lt_rowLen, YoungDiagram.mem_iff_lt_colLen]
-    exact hc
-  · intro a _ b _ h
-    exact Fin.ext h
+    rwa [Finset.mem_range, ← YoungDiagram.mem_iff_lt_rowLen, YoungDiagram.mem_iff_lt_colLen]
+  · exact fun a _ b _ h => Fin.ext h
   · intro b hb
     rw [Finset.mem_range] at hb
     refine ⟨⟨b, lt_of_lt_of_le hb (μ.rowLen_anti 0 1 zero_le_one)⟩, ?_, rfl⟩

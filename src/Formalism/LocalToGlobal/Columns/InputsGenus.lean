@@ -38,13 +38,10 @@ theorem approximationAdelic_holds : ApproxA := by
     Formalism.UG.P.csGlob_approx Formalism.UG.P.integral_adele_approximation_holds (d * D) (mul_ne_zero hd hD) _ hdu
   have hlevel (a : 𝓞 F) : Formalism.UG.P.levelafC E a = iA F E (algebraMap (𝓞 F) E a) := by
     have h := Formalism.UG.P.csGlob_tmul_int (F := F) (E := E) (1 : E) a
-    rw [mul_one] at h
-    exact h
+    rwa [mul_one] at h
   rw [hlevel, hlevel] at heq
   have hdE : algebraMap (𝓞 F) E d ≠ 0 := by
-    intro h0
-    apply hd
-    exact (FaithfulSMul.algebraMap_injective (𝓞 F) E) (by rw [h0, map_zero])
+    exact fun h0 => hd ((FaithfulSMul.algebraMap_injective (𝓞 F) E) (by rw [h0, map_zero]))
   have hinv : iA F E (algebraMap (𝓞 F) E d)⁻¹ * iA F E (algebraMap (𝓞 F) E d) = 1 := by
     rw [← map_mul, inv_mul_cancel₀ hdE, map_one]
   refine ⟨(algebraMap (𝓞 F) E d)⁻¹ * algebraMap (𝓞 E) E b0, t, ht, ?_⟩
@@ -134,8 +131,7 @@ theorem integralAtInverse_holds : IntAtInv := by
   show eAt E v * Formalism.UG.sigR hc.sig (Formalism.L2.Herm.Af F)
     (((y : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) : Matrix (Fin n) (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) j i) ∈ _
   have hm := (Formalism.L2.DIV.sigS hc ⟨_, hI j i⟩).2
-  rw [Formalism.L2.DIV.sigS_coe, map_mul, hσ] at hm
-  exact hm
+  rwa [Formalism.L2.DIV.sigS_coe, map_mul, hσ] at hm
 
 end Formalism.L2.GenusGluing.Gen
 end -- clump:auto
@@ -337,8 +333,7 @@ theorem cayleyStep_of : EAtNeZero → ApproxA → UnitNear → CayleyStep := by
       rw [hb j i, map_add (f := _), map_mul, hσι, hσD, hι2D]
     have e3 : Q i j + σA (Q j i) = iA F E ((1 : Matrix (Fin n) (Fin n) E) i j) := by
       have h := congrFun (congrFun hQ i) j
-      rw [Matrix.add_apply, cay_cT_apply, hδA] at h
-      exact h
+      rwa [Matrix.add_apply, cay_cT_apply, hδA] at h
     rw [hι2D] at e1
     rw [Matrix.add_apply, Matrix.map_apply, Matrix.smul_apply, smul_eq_mul, hQ0d, hsd, Matrix.of_apply,
       Matrix.of_apply, map_mul, map_add, map_sub]
@@ -424,8 +419,7 @@ theorem cayleyStep_of : EAtNeZero → ApproxA → UnitNear → CayleyStep := by
       (IntM.smul (mul_mem heS (iA_algebraMap_mem _)) (IntM.mul (IntM.mul (IntM.mul hI1 hs) hR) hI2))
   have := hint i j
   rw [Matrix.smul_apply, smul_eq_mul] at this
-  rw [Units.val_mul, hγι]
-  exact this
+  rwa [Units.val_mul, hγι]
 
 end Formalism.L2.GenusGluing.Gen
 end -- clump:auto
@@ -496,8 +490,7 @@ theorem shiftDiag_of (hS : ShiftOne) : ShiftDiag := by
         refine Fin.cases ?_ ?_ i
         · simp
         · intro i; simp
-      rw [hf, det_add_diagonal_cons]
-      exact hw
+      rwa [hf, det_add_diagonal_cons]
 
 end Formalism.L2.GenusGluing.Gen
 end -- clump:auto
@@ -566,8 +559,7 @@ theorem unitDichotomy_holds : UnitDich := by
     let f : ∀ w : HeightOneSpectrum (𝓞 F), w.adicCompletion F := fun w => if w = v then (a w)⁻¹ else 0
     have hf : ∀ᶠ w in Filter.cofinite, f w ∈ w.adicCompletionIntegers F := by
       filter_upwards [Filter.eventually_cofinite_ne v] with w hw
-      simp only [f, ite_eq_right hw]
-      exact zero_mem _
+      simpa only [f, ite_eq_right hw] using zero_mem _
     let a' : Formalism.L2.Herm.Af F := ⟨f, hf⟩
     have hprod : idem * a * a' = idem := by
       apply FiniteAdeleRing.ext
@@ -581,8 +573,7 @@ theorem unitDichotomy_holds : UnitDich := by
     refine ⟨σ u * ((1 : E) ⊗ₜ[F] a'), ?_⟩
     rw [← mul_assoc u (σ u), ha, ← mul_assoc, eAt_eq, Algebra.TensorProduct.tmul_mul_tmul,
       Algebra.TensorProduct.tmul_mul_tmul]
-    simp only [one_mul]
-    exact congrArg _ hprod
+    simpa only [one_mul] using congrArg _ hprod
 
 section Aux2
 
@@ -737,7 +728,6 @@ theorem weakApproxU_at (hSD : ShiftDiag) (hCS : CayleyStep) (hII : IntAtInv) (hc
   set g0 : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F) := Formalism.UG.bc (iA F E) γ0 with hg0
   have hg0v : (g0 : Matrix (Fin n) (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) = Matrix.diagonal fun i => iA F E (t i) := by
     rw [hg0]
-    show (Matrix.diagonal t).map (iA F E) = _
     exact Matrix.diagonal_map (map_zero _)
   have hg0A : g0 ∈ UAd hc n := (ratIn hc n ⟨γ0, hγ0⟩).2
   rw [← hg0v] at hw
@@ -830,8 +820,7 @@ theorem weakApproxU_at (hSD : ShiftDiag) (hCS : CayleyStep) (hII : IntAtInv) (hc
 end At
 
 theorem weakApproxAll_of : ShiftDiag → CayleyStep → IntAtInv → WeakApproxAll := by
-  intro hSD hCS hII F E _ _ _ _ _ _ hc n x hx v
-  exact weakApproxU_at hSD hCS hII hc n x hx v
+  exact fun hSD hCS hII F E _ _ _ _ _ _ hc n x hx v => weakApproxU_at hSD hCS hII hc n x hx v
 
 end Formalism.L2.GenusGluing.Gen
 end -- clump:auto
@@ -863,8 +852,7 @@ theorem asm_mem_gmap {n : ℕ} (γ : GL (Fin n) E) (L : Submodule (𝓞 E) (Sp E
   simp only [Formalism.HermitianLatticesTheory.gmap, Submodule.mem_map, LinearMap.restrictScalars_apply, LinearEquiv.coe_coe]
   constructor
   · rintro ⟨x, hx, rfl⟩
-    rw [glEquiv_apply_lemma, Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec]
-    exact hx
+    rwa [glEquiv_apply_lemma, Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec]
   · intro h
     refine ⟨_, h, ?_⟩
     rw [glEquiv_apply_lemma, Matrix.mulVec_mulVec, Units.mul_inv, Matrix.one_mulVec]
@@ -891,8 +879,7 @@ theorem asm_smul_mulVec {n : ℕ} (f : E ⊗[F] Formalism.L2.Herm.Af F) (M M' : 
     (h : f • M = f • M') (w : Fin n → E ⊗[F] Formalism.L2.Herm.Af F) (i : Fin n) :
     f * (M *ᵥ w) i = f * (M' *ᵥ w) i := by
   have hij : ∀ j, f * M i j = f * M' i j := fun j => by
-    have hh := congrFun (congrFun h i) j
-    simpa [Matrix.smul_apply, smul_eq_mul] using hh
+    simpa [Matrix.smul_apply, smul_eq_mul] using congrFun (congrFun h i) j
   change f * (∑ j, M i j * w j) = f * (∑ j, M' i j * w j)
   simp only [Finset.mul_sum, ← mul_assoc, hij]
 
@@ -906,7 +893,6 @@ theorem asm_iota_OF_mem (r : 𝓞 F) : iA F E (algebraMap (𝓞 F) E r) ∈ Form
   exact _root_.Formalism.L2.Col.iA_mem _
 
 theorem asm_smul_apply {n : ℕ} (c : 𝓞 E) (y : Sp E n) (i : Fin n) : (c • y) i = algebraMap (𝓞 E) E c * y i := by
-  show c • y i = _
   exact Algebra.smul_def c (y i)
 
 theorem asm_mem_std {n : ℕ} (y : Sp E n) :
@@ -939,8 +925,7 @@ theorem asm_of_mem_complF {v : HeightOneSpectrum (𝓞 F)} {s : 𝓞 E} (hs : s 
 end SlopeTestRemainingChoices
 
 theorem locToAd_of (hG : GenusToPoint) : LocToAd := by
-  intro F E _ _ _ _ _ _ hc n hL N hN hU
-  exact hG F E hc n N hN (hL hc.cmUnram N hN hU)
+  exact fun F E _ _ _ _ _ _ hc n hL N hN hU => hG F E hc n N hN (hL hc.cmUnram N hN hU)
 
 theorem adToLoc_of (hP : PointToGenus) : AdToLoc := by
   intro F E _ _ _ _ _ _ hc n hW hU _ N hN hUni
@@ -948,8 +933,7 @@ theorem adToLoc_of (hP : PointToGenus) : AdToLoc := by
   exact hP F E hc n hW x hx
 
 theorem bridge_of (h1 : LocToAd) (h2 : AdToLoc) : Bridge := by
-  intro F E _ _ _ _ _ _ hc n hW
-  exact ⟨h1 F E hc n, h2 F E hc n hW⟩
+  exact fun F E _ _ _ _ _ _ hc n hW => ⟨h1 F E hc n, h2 F E hc n hW⟩
 
 private theorem glob_lemma_2 {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E]
     {n : ℕ} (x : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (y : Sp E n) :
@@ -1013,8 +997,7 @@ private theorem unit_lemma_5 {F E : Type} [Field F] [NumberField F] [Field E] [N
   simp only [Matrix.conjTranspose_apply]
   convert h using 1
   · simp [Matrix.mulVec, dotProduct, Pi.single_apply]
-  · simp [Pi.single_apply, apply_ite star, Finset.sum_ite_eq']
-    exact if_congr eq_comm rfl rfl
+  · simpa [Pi.single_apply, apply_ite star, Finset.sum_ite_eq'] using if_congr eq_comm rfl rfl
 
 private theorem over_lemma_6 {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E] (v : HeightOneSpectrum (𝓞 F)) :
     ∃ PP : HeightOneSpectrum (𝓞 E), Formalism.L2.DIV.underPl F PP = v := by
@@ -1048,8 +1031,7 @@ private theorem split_lemma_8 {F E : Type} [Field F] [NumberField F] [Field E] [
     (u : E ⊗[F] Formalism.L2.Herm.Af F) :
     u ∈ Formalism.L2.Herm.intAf F E ↔ (∀ v ∈ T, eAt E v * u ∈ Formalism.L2.Herm.intAf F E) ∧ eP E (fun v => v ∉ T) * u ∈ Formalism.L2.Herm.intAf F E := by
   constructor
-  · intro hu
-    exact ⟨fun v _ => mul_mem ((hI F E).1 _) hu, mul_mem ((hI F E).1 _) hu⟩
+  · exact fun hu => ⟨fun v _ => mul_mem ((hI F E).1 _) hu, mul_mem ((hI F E).1 _) hu⟩
   · rintro ⟨h1, h2⟩
     have e : u = ∑ v ∈ T, eAt E v * u + eP E (fun v => v ∉ T) * u := by
       rw [← Finset.sum_mul, ← add_mul, (hI F E).2.2 T, one_mul]
@@ -1088,8 +1070,7 @@ theorem genusToPoint_of (hLoc : LocEq) (hMem : MemLocFStd) (hCof : IdemCof) (hI 
   obtain ⟨D, hD, hD1, hD2⟩ := hCm F E n N (fullLattice_of_sameGenus hN hG)
   have hfin : {v : HeightOneSpectrum (𝓞 F) | D ∈ v.asIdeal}.Finite := by
     have h0 : Ideal.span ({D} : Set (𝓞 F)) ≠ 0 := by
-      rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-      exact hD
+      rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact (Ideal.finite_factors h0).subset (fun v hv => Ideal.dvd_span_singleton.2 hv)
   set T := hfin.toFinset with hT
   have memT : ∀ v, v ∈ T ↔ D ∈ v.asIdeal := fun v => hfin.mem_toFinset
@@ -1100,8 +1081,7 @@ theorem genusToPoint_of (hLoc : LocEq) (hMem : MemLocFStd) (hCof : IdemCof) (hI 
     obtain ⟨g, hg, hgl⟩ := hG PP.asIdeal PP.isMaximal
     obtain ⟨γ, hγ, rfl⟩ := unit_lemma_5 hc g hg
     refine ⟨γ, hγ, ?_⟩
-    rw [hLoc F E hc n PP, hLoc F E hc n PP, hPP] at hgl
-    exact hgl
+    rwa [hLoc F E hc n PP, hLoc F E hc n PP, hPP] at hgl
   choose γ hγ hγl using hloc
   obtain ⟨x, hx, hx1, hx2⟩ := hGl F E hc n T (fun v => ⟨γ v, hγ v⟩)
   have hx1' : ∀ v ∈ T, eAt E v • ((x⁻¹ : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) : Matrix (Fin n) (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) =
@@ -1170,10 +1150,8 @@ theorem genusToPoint_of (hLoc : LocEq) (hMem : MemLocFStd) (hCof : IdemCof) (hI 
             · exact fun h => h.1
             · intro h
               refine ⟨h, ?_⟩
-              rw [h]
-              exact hw
-          rw [e] at hh
-          exact hh
+              rwa [h]
+          rwa [e] at hh
         obtain ⟨s, hs, hsy⟩ : ∃ s ∈ complF E w, s • y ∈ stdLat E n := hyw
         obtain ⟨r, hr, rfl⟩ := asm_of_mem_complF hs
         have hDw : D ∉ w.asIdeal := fun h => hw ((memT w).2 h)
@@ -1192,8 +1170,7 @@ theorem genusToPoint_of (hLoc : LocEq) (hMem : MemLocFStd) (hCof : IdemCof) (hI 
     · rw [hout i, hPT]
       apply hCof F E D hD
       have hh := asm_iota_std (F := F) (hD1 y hy) i
-      rw [asm_smul_apply, map_mul, ← asm_iota_OF] at hh
-      exact hh
+      rwa [asm_smul_apply, map_mul, ← asm_iota_OF] at hh
 
 private theorem isom_lemma_3 {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E]
     (hc : Formalism.BasicNotions.CMData F E) {n : ℕ} (γ : GL (Fin n) E) (hγ : γ ∈ URat hc n) :
@@ -1258,8 +1235,7 @@ private theorem pt_loc_lemma_4 {F E : Type} [Field F] [NumberField F] [Field E] 
             (((x⁻¹ : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) : Matrix (Fin n) (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) *ᵥ (fun j => iA F E ((s • y) j))) := by
         rw [Matrix.mulVec_mulVec, ← Units.val_mul, mul_inv_cancel_right, K1, Matrix.mulVec_smul]
       have hh := asm_mulVec_int hI (fun w => w = v) _ _ h1 hw' i
-      rw [← e] at hh
-      exact hh
+      rwa [← e] at hh
     obtain ⟨t, ht, htz⟩ : ∃ t ∈ complF E v, t • (s • ((((γ⁻¹ : GL (Fin n) E)) : Matrix (Fin n) (Fin n) E) *ᵥ y)) ∈ stdLat E n := hz
     exact (⟨t * s, (complF E v).mul_mem ht hs, by rw [mul_smul]; exact htz⟩ :
       ∃ t ∈ complF E v, t • ((((γ⁻¹ : GL (Fin n) E)) : Matrix (Fin n) (Fin n) E) *ᵥ y) ∈ stdLat E n)
@@ -1338,13 +1314,11 @@ theorem localEquality_holds : LocEq := by
     set r : 𝓞 F := ⟨a, hint⟩ with hr
     have hrm : algebraMap (𝓞 F) (𝓞 E) r = m := by
       apply RingOfIntegers.ext
-      rw [loc_coe_algebraMap]
-      exact ha
+      rwa [loc_coe_algebraMap]
     have hmp : m ∉ PP.asIdeal := fun h => (PP.isPrime.mem_or_mem h).elim hs1 hs2
     refine Formalism.HermitianLatticesTheory.locBasic_mem_locS.mpr ⟨m, ⟨r, ?_, hrm⟩, ?_⟩
     · show r ∉ (underPl F PP).asIdeal
-      rw [underPl_asIdeal, Ideal.mem_comap, hrm]
-      exact hmp
+      rwa [underPl_asIdeal, Ideal.mem_comap, hrm]
     · rw [hm, mul_comm, mul_smul]
       exact L.smul_mem _ hsx
   · apply Formalism.HermitianLatticesTheory.locBasic_locS_le_of_le
@@ -1354,16 +1328,14 @@ theorem localEquality_holds : LocEq := by
       intro h
       apply hr
       show r ∈ (underPl F PP).asIdeal
-      rw [underPl_asIdeal, Ideal.mem_comap]
-      exact h
+      rwa [underPl_asIdeal, Ideal.mem_comap]
     refine ⟨hr', fun t ht htp => hr' ?_⟩
     have hfix : star (algebraMap (𝓞 E) E (algebraMap (𝓞 F) (𝓞 E) r)) =
         algebraMap (𝓞 E) E (algebraMap (𝓞 F) (𝓞 E) r) :=
       (hc.fixed _).2 ⟨(r : F), rfl⟩
     rw [hfix] at ht
     have : t = algebraMap (𝓞 F) (𝓞 E) r := FaithfulSMul.algebraMap_injective (𝓞 E) E ht
-    rw [← this]
-    exact htp
+    rwa [← this]
 
 section CommensSec
 

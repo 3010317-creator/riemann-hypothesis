@@ -84,8 +84,7 @@ lemma herm_decomp {n : ℕ} {A : Matrix (Fin n) (Fin n) ℂ} (hA : A.IsHermitian
     have e : (RCLike.ofReal ∘ hA.eigenvalues : Fin n → ℂ) =
         fun i => ((hA.eigenvalues i : ℝ) : ℂ) := by
       funext i; rfl
-    rw [e] at h
-    exact h
+    rwa [e] at h
 
 lemma det_ne_zero_of_unitary {n : ℕ} {U : Matrix (Fin n) (Fin n) ℂ} (hU : Uᴴ * U = 1) :
     Uᴴ.det ≠ 0 := by
@@ -99,8 +98,7 @@ private theorem exists_diagonal_unitary_gram_of_posDef {n : ℕ} {G : Matrix (Fi
       V * Vᴴ = 1 ∧ G = (diagonal s * Vᴴ)ᴴ * (diagonal s * Vᴴ) := by
   obtain ⟨V, h1, h2, hV⟩ := herm_decomp hG.1
   refine ⟨fun i => ((Real.sqrt (hG.1.eigenvalues i) : ℝ) : ℂ), V, ?_, h1, h2, ?_⟩
-  · intro i
-    exact Complex.ofReal_ne_zero.2 (Real.sqrt_pos.2 (hG.eigenvalues_pos i)).ne'
+  · exact fun i => Complex.ofReal_ne_zero.2 (Real.sqrt_pos.2 (hG.eigenvalues_pos i)).ne'
   · have hd : (diagonal (fun i => ((Real.sqrt (hG.1.eigenvalues i) : ℝ) : ℂ)))ᴴ *
         diagonal (fun i => ((Real.sqrt (hG.1.eigenvalues i) : ℝ) : ℂ)) =
         diagonal (fun i => ((hG.1.eigenvalues i : ℝ) : ℂ)) := by
@@ -146,8 +144,7 @@ theorem svdStep : SVDStep := by
       _ = (Cᴴ)⁻¹ * (Cᴴ * C) * C⁻¹ := by rw [hG]
       _ = ((Cᴴ)⁻¹ * Cᴴ) * (C * C⁻¹) := by simp only [Matrix.mul_assoc]
       _ = 1 := by rw [nonsing_inv_mul _ hCH, mul_nonsing_inv _ hCdet, Matrix.one_mul]
-  · rw [conjTranspose_conjTranspose]
-    exact hV2
+  · rwa [conjTranspose_conjTranspose]
   · rw [Matrix.mul_assoc (g * C⁻¹) (diagonal s) Vᴴ, ← hC, nonsing_inv_mul_cancel_right C g hCdet]
 
 end PI.UD
@@ -176,8 +173,7 @@ theorem unitaryDense_of (h : PI.FramesDense) : PI.UnitaryDense := by
     refine h Unit n (fun _ => 1) (fun _ => Matrix.PosDef.one) (rename e.symm P) ?_
     intro y hy
     rw [eval_rename]
-    have h1 := hP (y ()) (by simpa using hy ())
-    exact h1
+    exact hP (y ()) (by simpa using hy ())
   exact rename_injective _ e.symm.injective (by rw [hR, map_zero])
 end -- clump:auto
 end -- clump:auto

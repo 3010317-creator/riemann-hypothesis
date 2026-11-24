@@ -152,8 +152,7 @@ theorem gramUnit_split_holds : GramUnitG := by
     ring
   have h2 : ph2 g (gramG (M.L.cj : E →+* E) (algebraMap F E ((g.q : F)⁻¹)) Zh (algebraMap F E T)
       (algebraMap F E T')).det ≠ 0 := by
-    rw [det_ph, gram_map_secondProj_transpose, Matrix.det_transpose, ← det_ph]
-    exact h1
+    rwa [det_ph, gram_map_secondProj_transpose, Matrix.det_transpose, ← det_ph]
   exact (isUnit_iff_ph (g := g) _).2 ⟨h1, h2⟩
 
 end Formalism.L2.SG.LocalCountModules.ThetaMbe0GWork
@@ -316,15 +315,13 @@ theorem gHat_cj (Zh : Matrix (Fin (r + 1)) (Fin (r + 1)) E) (T T' : F) :
   rw [Matrix.fromBlocks_transpose, Matrix.transpose_transpose]
   congr 1
   · ext a b
-    simp only [Matrix.of_apply, Matrix.transpose_apply]
-    exact if_congr and_comm rfl rfl
+    simpa only [Matrix.of_apply, Matrix.transpose_apply] using if_congr and_comm rfl rfl
   · ext a b
     simp only [Matrix.map_apply, hcj2]
   · ext a b
     simp only [Matrix.transpose_apply, Matrix.map_apply, hcj1]
   · ext a b
-    simp only [Matrix.of_apply, Matrix.transpose_apply]
-    exact if_congr and_comm rfl rfl
+    simpa only [Matrix.of_apply, Matrix.transpose_apply] using if_congr and_comm rfl rfl
 
 end Formalism.L2.SG.LocalCountModules.ThetaMbe0GWork
 end -- clump:auto

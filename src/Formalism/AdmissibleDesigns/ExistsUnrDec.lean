@@ -70,8 +70,7 @@ variable {D : D7} (i : D.nd.Loc) (dc : TruncatedSeriesCountingIdentities.Decl D 
 
 private lemma plOf_colIdx (l : K.Col i dc) : K.plOf i dc (K.colIdx i dc l) = l.1 := by
   have hmem : l.1 ∈ K.plSet i dc := by
-    simp only [K.plSet, Finset.mem_union]
-    exact Or.inl (Or.inr l.2)
+    simpa only [K.plSet, Finset.mem_union] using Or.inl (Or.inr l.2)
   have hlt : ((K.plSet i dc).equivFin ⟨l.1, hmem⟩ : ℕ) < (K.plSet i dc).card := Fin.is_lt _
   unfold K.colIdx K.idx K.plOf
   rw [dite_eq_left hmem, dite_eq_left hlt]
@@ -88,8 +87,7 @@ theorem col_hp (l : K.Col i dc) :
   rw [plOf_colIdx] at hov
   unfold K.Aw
   rw [plOf_colIdx]
-  have h2 := (D.nd.plOm.2 l.1 ((D.nd.l i : ℕ) : 𝓞 D.host.E)).mpr hov
-  simpa using h2
+  simpa using (D.nd.plOm.2 l.1 ((D.nd.l i : ℕ) : 𝓞 D.host.E)).mpr hov
 
 theorem unrHom (l : K.Col i dc) : KFin.UnrHom i dc l := by
   obtain ⟨χ, hc, hm, hI, g1, h1⟩ :=

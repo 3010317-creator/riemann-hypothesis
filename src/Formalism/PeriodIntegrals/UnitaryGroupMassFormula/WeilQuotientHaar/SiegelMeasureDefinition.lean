@@ -78,8 +78,7 @@ lemma eq_one_of_mul_self {c : ℝ≥0∞} (h : c * c = 1) : c = 1 := by
 
 lemma exists_pos_fin (μ : Measure G) [SigmaFinite μ] (h0 : μ ≠ 0) :
     ∃ A : Set G, μ A ≠ 0 ∧ μ A ≠ ⊤ := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   apply h0
   rw [← Measure.measure_univ_eq_zero, ← iUnion_spanningSets μ]
   apply measure_iUnion_null
@@ -100,8 +99,7 @@ lemma map_inv_eq_self (K : Set G) (hc : IsClosed K) (hK : IsGrp K) (μ : Measure
     · intro h
       have h2 := hK.2.2 _ h
       rwa [inv_inv] at h2
-    · intro h
-      exact hK.2.2 _ h
+    · exact fun h => hK.2.2 _ h
   have hpreC : (fun x : G => x⁻¹) ⁻¹' Kᶜ = Kᶜ := by
     rw [Set.preimage_compl, hpre]
   have hν : InvOn (μ.map (fun x => x⁻¹)) K := by
@@ -129,8 +127,7 @@ lemma map_inv_eq_self (K : Set G) (hc : IsClosed K) (hK : IsGrp K) (μ : Measure
   haveI := hsf
   obtain ⟨A, hA0, hAt⟩ := exists_pos_fin μ hne
   have h3 : μ A = (c * c) * μ A := by
-    have h4 := congrArg (fun m : Measure G => m A) hμc
-    simpa only [Measure.smul_apply, smul_eq_mul] using h4
+    simpa only [Measure.smul_apply, smul_eq_mul] using congrArg (fun m : Measure G => m A) hμc
   have hcc : c * c = 1 := eq_one_of_eq_mul hA0 hAt h3
   rw [hceq, eq_one_of_mul_self hcc, one_smul]
 
@@ -147,8 +144,7 @@ lemma map_mul_right_eq_self (K : Set G) (hc : IsClosed K) (hK : IsGrp K) (μ : M
     · intro h
       have h2 := hK.2.1 _ h _ (hK.2.2 s hs)
       rwa [mul_assoc, mul_inv_cancel, mul_one] at h2
-    · intro h
-      exact hK.2.1 _ h _ hs
+    · exact fun h => hK.2.1 _ h _ hs
   have hpreC : (fun x : G => x * s) ⁻¹' Kᶜ = Kᶜ := by
     rw [Set.preimage_compl, hpre]
   have hν : InvOn (μ.map (fun x => x * s)) K := by
@@ -214,8 +210,7 @@ theorem siegel_measure_definition : SMeas := by
     ((Measure.quasiMeasurePreserving_fst.ae hHae).and
       (Measure.quasiMeasurePreserving_snd.ae hNae)).mono fun p hp => Set.mem_prod.2 hp
   have hnull : (μH.prod μN) (H ×ˢ N)ᶜ = 0 := by
-    rw [ae_iff] at hae
-    exact hae
+    rwa [ae_iff] at hae
   have hSeq : prodSet N H = N * H := by
     ext x
     simp only [prodSet, Set.mem_mul, Set.mem_ofPred_eq]
@@ -236,8 +231,7 @@ theorem siegel_measure_definition : SMeas := by
       intro p hp
       by_cases hp2 : p ∈ H ×ˢ N
       · left
-        refine ⟨hp2.1, ?_⟩
-        exact Set.mem_mul.2 ⟨p.2 * p.1, hp, p.1⁻¹, Set.inv_mem_inv.2 hp2.1, by group⟩
+        exact ⟨hp2.1, (Set.mem_mul.2 ⟨p.2 * p.1, hp, p.1⁻¹, Set.inv_mem_inv.2 hp2.1, by group⟩)⟩
       · right
         exact hp2
     calc (μH.prod μN) ((fun p : G × G => p.2 * p.1) ⁻¹' L)
@@ -253,8 +247,7 @@ theorem siegel_measure_definition : SMeas := by
       hUo.preimage (continuous_snd.mul continuous_fst)
     have hmem : (b, a) ∈ (fun p : G × G => p.2 * p.1) ⁻¹' U := by
       show a * b ∈ U
-      rw [← hx]
-      exact hxU
+      rwa [← hx]
     obtain ⟨V₁, V₂, hV₁, hV₂, hb1, ha2, hsub⟩ := isOpen_prod_iff.1 hopen b a hmem
     intro h0
     have h1 : (μH.prod μN) (V₁ ×ˢ V₂) = 0 := measure_mono_null hsub h0

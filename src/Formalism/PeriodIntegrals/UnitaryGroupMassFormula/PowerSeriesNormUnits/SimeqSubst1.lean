@@ -136,8 +136,7 @@ theorem norm_at {ph : PowerSeries ℂ_[p]} (c N : ℂ_[p])
     rw [sb_C_mul (fun _ : Unit => w) hs N, sb_phAt (fun _ : Unit => w) hs ph _ hv,
       sb_X (fun _ : Unit => w) hs ()]
   have key := simeq_subst1 hSub hex0 hinv w hw0 hw h
-  rw [eL, eR] at key
-  exact key
+  rwa [eL, eR] at key
 
 end
 
@@ -174,8 +173,7 @@ theorem units_i (c N : ℂ_[p])
         - MvPowerSeries.C N * PI.PhNormUnits.phAt ph (PI.PhNormUnits.Xv 1) := by
     simp only [PI.PhNormUnits.be]
     ring
-  rw [eL, eR]
-  exact hsum
+  rwa [eL, eR]
 
 include hE hSub hC hD hex0 hinv hph hIA hB in
 theorem units_ii (c d : ℂ_[p]) (n : ℤ_[p]) (hn : c * d = zc n) :
@@ -232,8 +230,7 @@ theorem units_iv (c d : ℂ_[p]) (hc : c ≠ 0)
       sb_mulBy _ hs hex0 hinv c _ h1, hs0, hs1, hcc]
   have key := simeq_subst2 hSub hex0 hinv (PI.PhNormUnits.Xv 0 : MvPowerSeries (Fin 2) ℂ_[p])
     (PI.PhNormUnits.mulBy l ex c⁻¹ (PI.PhNormUnits.Xv 1)) h0 hy0 (int_X 0) hw h
-  rw [eL, eR] at key
-  exact key
+  rwa [eL, eR] at key
 
 end Units
 

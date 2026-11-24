@@ -88,8 +88,7 @@ def goodSub (w : O) (δ : (σ →₀ ℕ) → ℕ) (h0 : δ 0 = 0) (hadd : ∀ a
 
 lemma mem_goodSub {w : O} {δ : (σ →₀ ℕ) → ℕ} {h0 : δ 0 = 0} {hadd : ∀ a b, δ (a + b) = δ a + δ b}
     {P : MvPolynomial σ (KK O)} :
-    P ∈ goodSub w δ h0 hadd ↔ ∀ m, ∃ a : O, P.coeff m = algebraMap O (KK O) (w ^ δ m * a) := by
-  exact Iff.rfl
+    P ∈ goodSub w δ h0 hadd ↔ ∀ m, ∃ a : O, P.coeff m = algebraMap O (KK O) (w ^ δ m * a) := Iff.rfl
 
 lemma C_mem_sub (Sg : Subalgebra O (MvPolynomial σ (KK O))) (c : O) :
     (C (algebraMap O (KK O) c) : MvPolynomial σ (KK O)) ∈ Sg := by
@@ -223,8 +222,7 @@ theorem lift_substitution_coeff_divisible {ι : Type} (w : O) (LL : LiftLetters 
   have hmem : liftSubst p f O w r LL g F ∈ usSub O w LL r := by
     refine aeval_mem_sub (usSub O w LL r) _ (fun v => ?_) F hF
     have := liftSubst_X_mem p f O w LL r g hg v
-    simp only [liftSubst, MvPolynomial.aeval_X] at this
-    exact this
+    simpa only [liftSubst, MvPolynomial.aeval_X] using this
   exact mem_goodSub.mp hmem m
 
 end PartB
@@ -264,8 +262,7 @@ lemma plane_block (r : ℕ) (g g' : Matrix (Fin k) (Fin k) (WF p f)) (hg' : IsGL
 
     rw [Matrix.mul_apply, map_sum]
     simp only [map_mul]
-  rw [e]
-  exact h2
+  rwa [e]
 
 lemma p_dvd_of_cc (x : WF p f) (h : WittVector.constantCoeff x = 0) : ∃ y : WF p f, x = (p : WF p f) * y := by
   by_cases hx : x = 0

@@ -73,8 +73,7 @@ theorem qdf_phi_intAt (q : QLoc hc n Q Θ) (P : Q) {a : E} (h : IntAt P.1 a) : q
     rw [← map_mul]
     exact congrArg (q.phi P) h
   have ha : q.phi P a = q.phi P (r : E) * (q.phi P (s : E))⁻¹ := by
-    rw [eq_mul_inv_iff_mul_eq₀ hu.1, mul_comm]
-    exact hm
+    rwa [eq_mul_inv_iff_mul_eq₀ hu.1, mul_comm]
   rw [ha]
   exact mul_mem (qdf_phi_int q P r) hu.2
 
@@ -162,8 +161,7 @@ theorem qdf_frLat (q : QLoc hc n Q Θ) : FrLat ST SG q := by
         ((((bc (q.phi P) (qGL n fr))⁻¹ : GL (Fin n) _) : Matrix (Fin n) (Fin n) _) *ᵥ
           fun k => qPi q P ((xm : Matrix (Fin n) (Fin n) _) k j)) i := by
       rw [Units.val_mul, qdf_at_val]; rfl
-    rw [e7]
-    exact this
+    rwa [e7]
   ·
     intro i j
     have e0 : (((bc (q.phi P) (qGL n fr))⁻¹ * q.at P x)⁻¹ : GL (Fin n) _) = (q.at P x)⁻¹ * bc (q.phi P) (qGL n fr) := by

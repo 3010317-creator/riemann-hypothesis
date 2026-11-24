@@ -103,8 +103,7 @@ theorem agreeOnH : AgreeOnH := by
     exact (show Xsp F ≤ Xplus F from le_sup_left).trans le_sup_left
   have hHp : finrank E (Hp Λ F F') + (2 * r + 2) = finrank E S.V := by
     have := finrank_orth_add S (UUE Λ F F')
-    rw [n'.1] at this
-    exact this
+    rwa [n'.1] at this
   have hle : ∀ β, Th Λ F F' F'' β ≤ Hp Λ F F' := by
     intro β y hy
     obtain ⟨p, hp, rfl⟩ := Submodule.mem_map.mp hy
@@ -293,8 +292,7 @@ theorem line_reduction_holds : LineReduce' := by
     have hUB : U ≤ B := by
       show Submodule.span E (UU Λ F F' : Set S.V) ≤ B
       rw [Submodule.span_le]
-      intro x hx
-      exact hUU hx
+      exact fun x hx => hUU hx
     have hB1 : finrank E B ≤ finrank E (Xsp F ⊔ Submodule.span E {F.zt} : Submodule E S.V) + finrank E X' :=
       Submodule.finrank_add_le_finrank_add_finrank _ _
     have hB2 := Submodule.finrank_add_le_finrank_add_finrank (Xsp F) (Submodule.span E {F.zt})
@@ -591,8 +589,7 @@ theorem eigenOne_gen (Λ : Submodule (𝓞 E) S.V) {g r : ℕ} {T T' : E} {F : L
     exact hqv ((Module.forall_dual_apply_eq_zero_iff E _).mp h)
   let π : S.V →ₗ[E] E := (f (X'.mkQ v))⁻¹ • (f ∘ₗ X'.mkQ)
   have hπv : π v = 1 := by
-    simp only [π, LinearMap.smul_apply, LinearMap.comp_apply, smul_eq_mul]
-    exact inv_mul_cancel₀ hf
+    simpa only [π, LinearMap.smul_apply, LinearMap.comp_apply, smul_eq_mul] using inv_mul_cancel₀ hf
   have hπX : ∀ x ∈ X', π x = 0 := by
     intro x hx
     simp only [π, LinearMap.smul_apply, LinearMap.comp_apply, smul_eq_mul,

@@ -59,8 +59,7 @@ private lemma exists_simultaneous_eigenvector {n : ℕ} {X : Type u_1} [NormedAd
     intro c hc
     by_cases hca : c = a
     · subst hca
-      rw [Function.update_self]
-      exact hw1
+      rwa [Function.update_self]
     · rw [Function.update_of_ne hca]
       exact hμ c ((Finset.mem_insert.mp hc).resolve_left hca)
 

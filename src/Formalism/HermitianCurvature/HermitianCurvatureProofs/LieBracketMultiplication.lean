@@ -301,8 +301,7 @@ theorem conj_hasDeriv (X Y : Mx k r) :
     (mulB k r).hasDerivAt_of_bilinear (fun _ => hu) (fun _ => hv)
   simp only [Matrix.one_mul, Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, Matrix.mul_one,
     Matrix.mul_neg] at h
-  rw [neg_add_eq_sub] at h
-  exact h
+  rwa [neg_add_eq_sub] at h
 
 variable {W : Type} [NormedAddCommGroup W] [NormedSpace ℂ W] [FiniteDimensional ℂ W]
 
@@ -313,8 +312,7 @@ theorem op_hasDeriv (A B : W →L[ℂ] W) :
   have hb := hasDerivAt_exp_smul_const (𝕂 := ℝ) (-A) (0 : ℝ)
   have h := (ha.mul_const B).mul hb
   simp only [zero_smul, NormedSpace.exp_zero, one_mul, mul_one, mul_neg] at h
-  rw [← sub_eq_add_neg] at h
-  exact h
+  rwa [← sub_eq_add_neg] at h
 
 end Bracket
 
@@ -351,7 +349,6 @@ theorem qr_dOpBracket_of (hP : Formalism.FourierDecayAlt.Qr.PiExp) (hL : Formali
     rfl
   rw [e] at h1
   have h4 := h1.unique h2
-  rw [← hΛ' _ hbr]
-  exact h4
+  rwa [← hΛ' _ hbr]
 
 end Formalism.FourierDecayAlt.P

@@ -94,8 +94,7 @@ theorem rMeas_exact (D : D7) (W : LocW D.R.k D.R.rS) (hz : inWb D.R.k D.R.rS W.z
     by_cases hi : q.1.1.val < D.R.rS
     · simp only [hi, ↓reduceDIte]
       fun_prop
-    · simp only [hi, ↓reduceDIte]
-      exact continuous_const
+    · simpa only [hi, ↓reduceDIte] using continuous_const
   have hid : μ₀.map (fun x => fun i j => ((1 : MatKR D.R.k D.R.rS)⁻¹ * Matrix.of x * 1) i j) = μ₀ := by
     have : (fun x : Mt D.R.k D.R.rS => fun i j => ((1 : MatKR D.R.k D.R.rS)⁻¹ * Matrix.of x * 1) i j) = id := by
       funext x i j
@@ -107,8 +106,7 @@ theorem rMeas_exact (D : D7) (W : LocW D.R.k D.R.rS) (hz : inWb D.R.k D.R.rS W.z
     (rset_matGroup hu) hsub hG hH0
   refine ⟨ν, p, μ₀, ⟨1, hN1, 1, hN1, g₀, by simp, hZ, μ₀, hH0.2.2.1, ?_, hid.symm⟩, ?_⟩
   · rw [hmap0]
-  · rw [ENNReal.ofReal_one, one_smul]
-    exact hν
+  · rwa [ENNReal.ofReal_one, one_smul]
 
 variable {D : D7} {X : HidaSetting D} {θ : ℝ} (C : Choice X θ) (u u' : D.what₂.Word)
 

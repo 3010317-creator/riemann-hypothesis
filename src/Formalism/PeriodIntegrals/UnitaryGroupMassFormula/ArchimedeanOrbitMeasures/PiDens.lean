@@ -177,10 +177,8 @@ theorem pi_chart_dens {V : Type} [Fintype V] {X E : V → Type} [∀ v, Measurab
           have hzz' : z' = z := by
             funext v
             exact hinj v (hAU hz' v (mem_univ v)) (hzU v (mem_univ v)) (congrFun hzz v)
-          rw [← hzz']
-          exact hz'
-        · intro hz
-          exact ⟨⟨z, hz, rfl⟩, hAU hz⟩
+          rwa [← hzz']
+        · exact fun hz => ⟨⟨z, hz, rfl⟩, hAU hz⟩
     _ = ∫⁻ z in A, ∏ v, ENNReal.ofReal (D v (z v)) ∂Measure.pi lam := by
         rw [← withDensity_apply _ hA, withDensity_pi lam D hD]
 

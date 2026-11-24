@@ -78,8 +78,7 @@ theorem bru_lo_mul {A B : Matrix (Fin n) (Fin n) K} (hA : IsLoUni A) (hB : IsLoU
       rcases lt_or_gt_of_ne hk with h | h
       · rw [(hB k i).1 h, mul_zero]
       · rw [(hA i k).1 h, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+    · exact fun h => absurd (Finset.mem_univ i) h
 
 def bruL (u : Fin n → K) (p : Fin n) : Matrix (Fin n) (Fin n) K :=
   fun a k => (if a = k then 1 else 0) + u a * (if k = p then 1 else 0)
@@ -139,9 +138,7 @@ theorem bru_step {m : ℕ} (hm : m < n) (M : Matrix (Fin n) (Fin n) K) (hdet : M
     intro b hb e
     rw [← e, hq] at hb
     exact lt_irrefl _ hb
-  have hpσ : ∀ b : Fin n, b.val < m → p ≠ σ b := by
-    intro b hb e
-    exact hp (e ▸ h4 b hb q (hqb b hb))
+  have hpσ : ∀ b : Fin n, b.val < m → p ≠ σ b := fun b hb e => hp (e ▸ h4 b hb q (hqb b hb))
   have hrow : ∀ c : Fin n, c.val < m → M p c = 0 := fun c hc => h3 c hc p (hpσ c hc)
   have hcase : ∀ b : Fin n, b.val < m + 1 → b = q ∨ b.val < m := by
     intro b hb
@@ -210,8 +207,7 @@ theorem bru_step {m : ℕ} (hm : m < n) (M : Matrix (Fin n) (Fin n) K) (hdet : M
         exact h1 b b' hb1 hb1' e
   · intro b hb
     rcases hcase b hb with rfl | hb1
-    · rw [Function.update_self, hM', ite_eq_left rfl, ite_eq_left rfl]
-      exact hp
+    · rwa [Function.update_self, hM', ite_eq_left rfl, ite_eq_left rfl]
     · rw [Function.update_of_ne (hqb b hb1).symm, hM', ite_eq_right (hpσ b hb1).symm,
         h4 b hb1 q (hqb b hb1), zero_div, zero_mul, sub_zero]
       exact h2 b hb1
@@ -264,8 +260,7 @@ theorem cell_bruhat : BruhatDecomposition := by
     by_cases hab : a = σ b
     · rw [ite_eq_left hab, hab]
     · rw [ite_eq_right hab, h3 b b.isLt a hab]
-  rw [← hMm]
-  exact hZ
+  rwa [← hMm]
 
 end Formalism.MainNotions.BridgeLemma
 

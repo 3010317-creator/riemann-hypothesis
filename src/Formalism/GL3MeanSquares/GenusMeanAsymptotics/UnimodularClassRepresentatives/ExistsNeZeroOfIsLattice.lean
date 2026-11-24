@@ -165,8 +165,7 @@ theorem loc_mul {p : Ideal (𝓞 K)} (hp : p.IsMaximal) (I M : Submodule (𝓞 K
       refine Submodule.mul_mem_mul hi ?_
       show ∃ t ∈ hcompl (K := K) p, t • ((algebraMap (𝓞 K) K s)⁻¹ * m) ∈ M
       refine ⟨s, hs, ?_⟩
-      rw [Algebra.smul_def, ← mul_assoc, mul_inv_cancel₀ hs0, one_mul]
-      exact hm
+      rwa [Algebra.smul_def, ← mul_assoc, mul_inv_cancel₀ hs0, one_mul]
     have h2 := hle hsx
     rw [Submodule.mem_comap, LinearMap.mulLeft_apply, Algebra.smul_def, ← mul_assoc,
       inv_mul_cancel₀ hs0, one_mul] at h2
@@ -220,13 +219,11 @@ theorem mass_eq_of_lattices {h₁ h₂ : K →ₗ⋆[K] K →ₗ[K] K} (hn₁ : 
     · intro hM
       have e := isLattice_mul (isLattice_mul hA hB') hM
       rwa [← mul_assoc, hJC, one_mul] at e
-    · intro hM
-      exact isLattice_mul (isLattice_mul hB hA') hM
+    · exact fun hM => isLattice_mul (isLattice_mul hB hA') hM
   have hΦA : mulE (B * A') (A * B') hJC A = B := by
     show B * A' * A = B
     rw [mul_assoc, hA'A, mul_one]
   have he := (mass_transfer (mulE (B * A') (A * B') hJC) (Equiv.refl _) t1 t2 t3 t4 hex).2
-  rw [hΦA] at he
-  exact he
+  rwa [hΦA] at he
 
 end Formalism.HermitianLattices.Ext.L3.RankOne

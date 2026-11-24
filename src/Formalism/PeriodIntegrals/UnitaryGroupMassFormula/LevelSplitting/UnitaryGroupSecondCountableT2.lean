@@ -101,8 +101,7 @@ theorem mem_spanR_iff {m : ℕ} (Y D : Fin m → Fin n → E)
         split_ifs
         · rw [covR_ratV, hD, ite_eq_right (Ne.symm hne), map_zero, zero_smul]
         · exact zero_smul _ _
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     | zero => rw [projD_zero]
     | add x y _ _ hx hy => rw [projD_add, ← hx, ← hy]
     | smul c x _ hx => rw [projD_smul, ← hx]
@@ -215,8 +214,7 @@ theorem isClosed_stabT {a : ℕ} (X : Fin a → Fin n → E) :
   have h : (stabT (Af F) σ J X : Set (HA (Af F) σ J)) =
       ⋂ b, {g | lin (Af F) σ J g (ratV (F := F) (Af F) (X b)) = ratV (F := F) (Af F) (X b)} := by
     ext g
-    simp only [Set.mem_iInter, Set.mem_ofPred_eq, SetLike.mem_coe]
-    exact mem_stabT (Af F) σ J X g
+    simpa only [Set.mem_iInter, Set.mem_ofPred_eq, SetLike.mem_coe] using mem_stabT (Af F) σ J X g
   rw [h]
   exact isClosed_iInter fun b => isClosed_eq (continuous_lin _) continuous_const
 

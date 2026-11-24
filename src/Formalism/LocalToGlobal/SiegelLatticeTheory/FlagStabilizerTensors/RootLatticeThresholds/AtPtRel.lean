@@ -32,14 +32,12 @@ private theorem matRel_smono_lemma (π : Fin n → Fin n) (hπ : ∀ a, π (π a
     · rw [ite_eq_left (hπ b).symm]
     · intro k _ hk
       rw [ite_eq_right (fun h => hk (by rw [h, hπ])), zero_mul, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   · rw [Finset.sum_eq_single (π a)]
     · rw [ite_eq_left rfl]
     · intro k _ hk
       rw [ite_eq_right hk, zero_mul, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem matRel_smono (π : Fin n → Fin n) (hπ : ∀ a, π (π a) = a) (c ε : Fin n → K) (hc : ∀ a, c a ≠ 0)
     (hε : ∀ a, ε a ≠ 0) (hεs : ∀ (y : Fin n) (h : y.val + 1 < n), ε ⟨y.val + 1, h⟩ = -ε y)
@@ -178,13 +176,11 @@ theorem matRel_ptSign (w : Point K (r + 1)) :
   · exact Formalism.L2.SG.PtCell.pinv_pinv w
   · intro a
     exact Formalism.L2.SG.PtCell.pval_ne w.1 (fun b hb => (w.2.1 b hb).1) a.val (by rw [w.2.2]; exact a.isLt)
-  · intro a
-    exact pow_ne_zero _ (neg_ne_zero.mpr one_ne_zero)
+  · exact fun a => pow_ne_zero _ (neg_ne_zero.mpr one_ne_zero)
   · intro y h
     rw [show r - y.val = (r - (y.val + 1)) + 1 by have := y.isLt; omega, pow_succ]
     ring
-  · intro y h
-    exact pinv_step w y h
+  · exact fun y h => pinv_step w y h
 
 theorem matRel_conj {n : ℕ} {L M U : Matrix (Fin n) (Fin n) K} (hL : IsLoUni L) (hU : IsUpUni U) (hM : MatRel M) :
     MatRel (L * M * U) := by
@@ -369,8 +365,7 @@ theorem rel_of_matRel (K : Type) [Field K] [Algebra K E]
 theorem relevant_of_cell (K : Type) [Field K] [Algebra K E]
     (htr : ∀ x : E, algebraMap K E (Algebra.trace K E x) = x + star x)
     (F : FlagG S r T) (F' : FlagG S r T') (w : Point E (r + 1)) (h : IsInCell (ZhatOM (Zhat F F')) w) :
-    Relevant K F F' := by
-  exact rel_of_matRel K htr F F' (matRel_of_cell _ w h)
+    Relevant K F F' := rel_of_matRel K htr F F' (matRel_of_cell _ w h)
 
 end Geo
 

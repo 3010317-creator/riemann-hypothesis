@@ -136,8 +136,7 @@ theorem intS_invG {σ : Type*} [Fintype σ] (Φ t G : σ → MvPowerSeries σ C)
       have : w y = (L⁻¹.mulVec c) y := by rw [← hwsol]
       show IntC v (w y)
       rw [this]
-      simp only [Matrix.mulVec, dotProduct]
-      exact intC_sum _ fun x _ => intC_mul (hinv y x) (hc x)
+      simpa only [Matrix.mulVec, dotProduct] using intC_sum _ fun x _ => intC_mul (hinv y x) (hc x)
 
 end Formalism.L2.FormalSeriesBounds.AltInv
 end -- clump:auto
@@ -283,8 +282,7 @@ theorem one_group {σ : Type} [Fintype σ] (t t₂ φ φ₂ : σ → MvPowerSeri
         simp
       · rw [ite_eq_right hij, ite_eq_right]
         · simp
-        · intro h'
-          exact hij (Finsupp.single_left_injective one_ne_zero h')
+        · exact fun h' => hij (Finsupp.single_left_injective one_ne_zero h')
   have hlow : ∀ (M : ℕ) (i : σ), Formalism.FG.SolveVAux.Low M (t i - t' i) := by
     intro M
     induction M with
@@ -326,8 +324,7 @@ private theorem cc_subst_lemma {σ τ A : Type} [Finite σ] [CommRing A] (a : σ
   · simp
   · intro e he
     obtain ⟨s, hs⟩ : ∃ s, e s ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact he (Finsupp.ext h)
     rw [map_finsuppProd]
     simp only [map_pow, ha, Finsupp.prod]

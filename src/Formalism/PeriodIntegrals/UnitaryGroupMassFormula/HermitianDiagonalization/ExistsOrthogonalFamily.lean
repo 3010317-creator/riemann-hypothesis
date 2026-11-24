@@ -110,8 +110,7 @@ theorem exists_orthogonal_family [CharZero E] (σ : E →+* E) :
   intro k
   induction k with
   | zero =>
-    intro V _ _ _ hk h hh
-    exact ⟨Fin.elim0, linearIndependent_empty_type, fun i => Fin.elim0 i⟩
+    exact fun V _ _ _ hk h hh => ⟨Fin.elim0, linearIndependent_empty_type, fun i => Fin.elim0 i⟩
   | succ k ih =>
     intro V _ _ _ hk h hh
     by_cases hzero : ∀ x, h x x = 0
@@ -158,7 +157,6 @@ theorem exists_orthogonal_family [CharZero E] (σ : E →+* E) :
             simp only [Fin.cons_zero, Fin.cons_succ]
             rw [hh.herm, hw0 i, map_zero]
           | succ j =>
-            simp only [Fin.cons_succ]
-            exact hwo i j (fun e => hij (by rw [e]))
+            simpa only [Fin.cons_succ] using hwo i j (fun e => hij (by rw [e]))
 
 end PI.UnitaryGroupMassFormula.HermConj

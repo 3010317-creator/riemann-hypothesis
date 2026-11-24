@@ -56,8 +56,7 @@ open NumberField IsDedekindDomain
 theorem galois_condition_six_of (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (Formalism.MainNotions.N.GE D.nd →* GL (Fin D.R.nV) (D.nd.O i)))
     (h32 : Formalism.MainNotions.SumRepresentations.ConclusionG6 D) (hg : Formalism.MainNotions.N.HG D.nd D.naut i) (hr : Formalism.MainNotions.N.GoodR D.nd i r) :
     Formalism.MainNotions.TruncatedSeriesCountingIdentities.admG6 (D := D) i r := by
-  intro x hx
-  exact (D.Z_tie i x).2 (h32 i hg r hr x hx).1
+  exact fun x hx => (D.Z_tie i x).2 (h32 i hg r hr x hx).1
 
 theorem galois_condition_five_of (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (Formalism.MainNotions.N.GE D.nd →* GL (Fin D.R.nV) (D.nd.O i)))
     (h32 : Formalism.MainNotions.SumRepresentations.ConclusionG5 D) (hg : Formalism.MainNotions.N.HG D.nd D.naut i) (hr : Formalism.MainNotions.N.GoodR D.nd i r) :
@@ -117,8 +116,7 @@ theorem inertia_character_mem_zpowers (D : D7) (i : D.nd.Loc) (v : HeightOneSpec
       simp only [Subgroup.coe_comap, Set.mem_preimage, SetLike.mem_coe, Set.mem_iUnion,
         Set.mem_ofPred_eq, exists_prop]
       constructor
-      · intro h
-        exact ⟨_, h, rfl⟩
+      · exact fun h => ⟨_, h, rfl⟩
       · rintro ⟨u, hu, h⟩
         rwa [Units.ext h]
     rw [e]
@@ -176,8 +174,7 @@ theorem galois_condition_five_extra_of (D : D7) (i : D.nd.Loc) (hc : TameCharact
       apply le_antisymm
       · rintro _ ⟨g, hg, rfl⟩
         exact inertia_character_mem_zpowers D i v hgen (hc.1 v (Or.inr ⟨hS, hp⟩)) hfin g hg
-      · rw [Subgroup.zpowers_le]
-        exact hmem
+      · rwa [Subgroup.zpowers_le]
     have hord : orderOf ζ = 15 := by
       rw [← Nat.card_zpowers, ← heq, hcard]
     have hprim : IsPrimitiveRoot ((ζ : (D.nd.O i)ˣ) : D.nd.O i) 15 := by

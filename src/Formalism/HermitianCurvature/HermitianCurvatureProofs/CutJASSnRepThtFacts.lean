@@ -515,13 +515,11 @@ theorem hs_sandw_adj (A₁ A₂ : Wp →L[ℂ] Wp) (B₁ B₂ : Wq →L[ℂ] Wq)
 
 theorem hs_sum_left {ι : Type*} (s : Finset ι) (T : ι → Wq →L[ℂ] Wp) (Y : Wq →L[ℂ] Wp) :
     B.hsInner (∑ i ∈ s, T i) Y = ∑ i ∈ s, B.hsInner (T i) Y := by
-  simp only [P.Topx1.hsInner_eq, ContinuousLinearMap.sum_apply, inner_sum]
-  exact Finset.sum_comm
+  simpa only [P.Topx1.hsInner_eq, ContinuousLinearMap.sum_apply, inner_sum] using Finset.sum_comm
 
 theorem hs_sum_right {ι : Type*} (s : Finset ι) (X : Wq →L[ℂ] Wp) (T : ι → Wq →L[ℂ] Wp) :
     B.hsInner X (∑ i ∈ s, T i) = ∑ i ∈ s, B.hsInner X (T i) := by
-  simp only [P.Topx1.hsInner_eq, ContinuousLinearMap.sum_apply, sum_inner]
-  exact Finset.sum_comm
+  simpa only [P.Topx1.hsInner_eq, ContinuousLinearMap.sum_apply, sum_inner] using Finset.sum_comm
 
 theorem hs_smul_right (c : ℂ) (X T : Wq →L[ℂ] Wp) : B.hsInner X (c • T) = star c * B.hsInner X T := by
   simp only [P.Topx1.hsInner_eq, ContinuousLinearMap.smul_apply, inner_smul_left, Finset.mul_sum, Complex.star_def]

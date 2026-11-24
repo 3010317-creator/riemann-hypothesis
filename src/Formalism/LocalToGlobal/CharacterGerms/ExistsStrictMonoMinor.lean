@@ -59,8 +59,7 @@ theorem exists_topMinor_le (v : AddValuation R (WithTop ℝ)) (hv : ∀ x, 0 ≤
   intro k
   induction k with
   | zero =>
-    intro Y
-    exact ⟨Fin.castAdd 0, Fin.strictMono_castAdd 0, le_of_eq rfl⟩
+    exact fun Y => ⟨Fin.castAdd 0, Fin.strictMono_castAdd 0, le_of_eq rfl⟩
   | succ k ih =>
     intro Y
     have hexp := Matrix.det_succ_row Y (Fin.last (n + k))
@@ -220,8 +219,7 @@ theorem frobSum_alt {d : ℕ} {l : ℕ} (hl : 1 < l) (n j j' : ℕ) (big : ZMod 
         exact not_not.mpr hk
       rw [hps _ hb, ite_eq_left hk]
     · have hb : big (a + ((k + 1 : ℕ) : ZMod d)) := by
-        rw [hpar, Nat.even_add_one]
-        exact hk
+        rwa [hpar, Nat.even_add_one]
       rw [hpb _ hb, ite_eq_right hk]
       push_cast
       ring
@@ -356,8 +354,7 @@ theorem ch_minor (v : AddValuation R (WithTop ℝ)) (hv : ∀ x, 0 ≤ v x) {n p
     ext k c
     rfl
   have hmain : v (Matrix.of fun k c => (S * α) c (f k)).det ≤ lenCoker v α := by
-    rw [htr, Matrix.det_transpose, hfv, hgv]
-    exact h1
+    rwa [htr, Matrix.det_transpose, hfv, hgv]
   refine ⟨f, hf, hmain, ?_⟩
   intro F _ _ D χ ev hD hev y
   set a : Matrix (Fin n) (Fin n) R := Matrix.of fun k c => (S * α) c (f k) with ha

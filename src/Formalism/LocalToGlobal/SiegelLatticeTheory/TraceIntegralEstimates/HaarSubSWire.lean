@@ -137,8 +137,7 @@ theorem isHaarSub_comap (Φ : G ≃* H) (hΦ : Continuous Φ) (hΦ' : Continuous
     exact MeasurableEquiv.map_apply M.symm A
   refine ⟨hC.preimage hΦ, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · show Φ 1 ∈ S
-    rw [map_one]
-    exact h1
+    rwa [map_one]
   · intro a ha b hb
     show Φ (a * b) ∈ S
     rw [map_mul]
@@ -151,8 +150,7 @@ theorem isHaarSub_comap (Φ : G ≃* H) (hΦ : Continuous Φ) (hΦ' : Continuous
     show SigmaFinite (μ.map M.symm)
     first
       | exact M.symm.sigmaFinite_map
-  · intro h
-    exact h0 ((Measure.map_eq_zero_iff hs.aemeasurable).1 h)
+  · exact fun h => h0 ((Measure.map_eq_zero_iff hs.aemeasurable).1 h)
   · rw [hmap]
     convert hc using 2
     ext x
@@ -192,10 +190,8 @@ theorem isFolner_of_equiv (Φ : G ≃* H) (hΦ : Continuous Φ) (hΦ' : Continuo
   · intro x hx
     have := hΩS hx
     simpa using this
-  · rw [← hmap]
-    exact hpos
-  · rw [← hmap]
-    exact hfin
+  · rwa [← hmap]
+  · rwa [← hmap]
   · have hset : {t | t ∈ ⇑Φ.symm ⁻¹' Ω ∧ ∀ k ∈ K, k * t ∈ ⇑Φ.symm ⁻¹' Ω} =
         ⇑Φ.symm ⁻¹' {t | t ∈ Ω ∧ ∀ k ∈ ⇑Φ ⁻¹' K, k * t ∈ Ω} := by
       ext t
@@ -206,10 +202,8 @@ theorem isFolner_of_equiv (Φ : G ≃* H) (hΦ : Continuous Φ) (hΦ' : Continuo
         have := h2 (Φ k) hk
         rwa [MulEquiv.symm_apply_apply] at this
       · rintro ⟨h1, h2⟩
-        refine ⟨h1, fun k hk => ?_⟩
-        exact h2 (Φ.symm k) (by simpa using hk)
-    rw [hset, ← hmap, ← hmap]
-    exact hle
+        exact ⟨h1, fun k hk => (h2 (Φ.symm k) (by simpa using hk))⟩
+    rwa [hset, ← hmap, ← hmap]
 
 end Formalism.L2.S.Pv.FolnerT
 end -- clump:auto
@@ -269,7 +263,6 @@ def psiF (hF : IsFrameJ ε e f wf z0) : GH k r ≃* Formalism.REAL.UJ ε where
 
 theorem continuous_psiF (hF : IsFrameJ ε e f wf z0) : Continuous (psiF hF) := by
   rw [(Formalism.REAL.isClosedEmbeddingMatrix _ ε).1.isEmbedding.continuous_iff]
-  show Continuous (fun g : GH k r => Qm e f wf z0 * g.toM * Qi ε e f wf z0)
   exact (continuous_const.matrix_mul continuous_toM).matrix_mul continuous_const
 
 theorem continuous_psiF_symm (hF : IsFrameJ ε e f wf z0) : Continuous (psiF hF).symm := by
@@ -290,8 +283,7 @@ theorem inS_psiF_iff {T : ℝ} {z : Fin (2 * r + k + 1) → ℂ} (hF : IsFrameJ 
   constructor
   · intro hs
     exact HNset_of_inS (fun k r T hT s hs h1 h2 => _root_.PI.UnitaryGroupMassFormula.BesselLevi.main k r T hT s hs h1 h2) hF hT hz hs
-  · intro hs
-    exact inS_of_HNset hF hz (inWb_zB T) ⟨_, rfl⟩ hs
+  · exact fun hs => inS_of_HNset hF hz (inWb_zB T) ⟨_, rfl⟩ hs
 
 theorem isFolner_Sinf {ι : Type} [Fintype ι] {εv : ι → Fin (2 * r + k + 1) → Bool}
     (ev fv : ι → Fin r → Fin (2 * r + k + 1) → ℂ) (wv : ι → Fin k → Fin (2 * r + k + 1) → ℂ)
@@ -306,7 +298,6 @@ theorem isFolner_Sinf {ι : Type} [Fintype ι] {εv : ι → Fin (2 * r + k + 1)
   have hset : Φ ⁻¹' {s : ∀ v, Formalism.REAL.UJ (εv v) | ∀ v, InS (ev v) (zv v) (uMat (s v))} =
       SP (fun v => zBv k r (T v)) := by
     ext x
-    show (∀ v, InS (ev v) (zv v) (uMat (psiF (hF v) (x v)))) ↔ ∀ v, (x v).toM ∈ PI.QuotSetU.Sset k r (zBv k r (T v))
     exact forall_congr' fun v => inS_psiF_iff (hF v) (hT v) (x v)
   refine isFolner_of_equiv Φ hΦ hΦ' hμ ?_
   have hμ' := isHaarSub_comap Φ hΦ hΦ' hμ
@@ -386,8 +377,7 @@ theorem finite_bi {H : Set G} (hHm : MeasurableSet H) (hinvH : ∀ h ∈ H, h⁻
     by_contra hinf
     rw [not_lt, top_le_iff] at hinf
     obtain ⟨i, hi⟩ : ∃ i, μ (spanningSets μ i) ≠ 0 := by
-      by_contra hall
-      push Not at hall
+      by_contra! hall
       have h0 : μ Set.univ = 0 := by
         rw [← iUnion_spanningSets μ]
         exact measure_iUnion_null hall
@@ -562,12 +552,9 @@ theorem folner_of_haar {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) 
           Tw (D := D) u : ℝ) : ℂ) := by push_cast; ring
     rw [this, hs]
     simp
-  · intro v a b
-    exact X.wfr_on u v a b
-  · intro v c a
-    exact ((X.wfr_perp u v a).1 c).1
-  · intro v c a
-    exact ((X.wfr_perp u v a).1 c).2
+  · exact fun v a b => X.wfr_on u v a b
+  · exact fun v c a => ((X.wfr_perp u v a).1 c).1
+  · exact fun v c a => ((X.wfr_perp u v a).1 c).2
   · intro v a
     rw [hermitian_scaled_left]
     have h0 : hJ (X.B.I.ε v) (rv X.B.I v (X.zR u)) (X.wfr u v a) = 0 := (X.wfr_perp u v a).2
@@ -808,8 +795,7 @@ theorem entry_bound (t : Fin r → ℝ) (lam : ℝ) (hlam : 1 ≤ lam) (ht1 : �
     refine mul_le_mul_of_nonneg_right ?_ (norm_nonneg _)
     refine (norm_sum_le _ _).trans ?_
     rw [Finset.mul_sum]; exact Finset.sum_le_sum fun c _ => k4 b c
-  · refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun c _ => ?_)
-    exact k5 c
+  · exact (norm_sum_le _ _).trans (Finset.sum_le_sum fun c _ => (k5 c))
 
 end Tri
 
@@ -911,13 +897,10 @@ theorem measure_contraction_formula : Contract := by
   have hm' : m⁻¹ ∈ Ninf I e z := (PI.ScMuExists.UnitaryGroupMassFormula.NSub I e z).inv_mem hm
   choose s hs hC using fun v => local_contract (hG v) (m v) (hm v) (hm' v)
   refine ⟨fun v => aUJ (hG v) (s v) (hs v), fun x hx v => ?_, fun x hx v => ?_, fun v _ => hC v⟩
-  · show InN _ _ _ (Amat _ _ _ (s v) * Formalism.MainNotions.S.uMat (x v) * Amat _ _ _ (s v)⁻¹)
-    exact inN_A_conj (hG v) (s v) (hs v) (hez v) (hfz v) (hx v)
+  · exact inN_A_conj (hG v) (s v) (hs v) (hez v) (hfz v) (hx v)
   · have hs' : ∀ b, (s v)⁻¹ b ≠ 0 := fun b => by simp [hs v b]
     have := inN_A_conj (hG v) (s v)⁻¹ hs' (hez v) (hfz v) (hx v)
-    rw [inv_inv] at this
-    show InN _ _ _ (Amat _ _ _ (s v)⁻¹ * Formalism.MainNotions.S.uMat (x v) * Amat _ _ _ (s v))
-    exact this
+    rwa [inv_inv] at this
 
 end Inst
 
@@ -1087,7 +1070,6 @@ theorem sigmaFinite_of_weil [LocallyCompactSpace G] [T2Space G]
     obtain ⟨x, hxT, hyx⟩ := Set.mem_iUnion₂.1 hy
     obtain ⟨n, hn⟩ := ENNReal.exists_inv_nat_lt (hpos x y hyx).ne'
     refine Set.mem_sUnion.2 ⟨E (⟨x, hxT⟩, n), ⟨_, rfl⟩, ?_⟩
-    show ((n : ℝ≥0∞) + 1)⁻¹ ≤ h x y
     exact le_trans (ENNReal.inv_le_inv.2 le_self_add) hn.le
 
 end PI.UnitaryGroupMassFormula.QuotNuSigma

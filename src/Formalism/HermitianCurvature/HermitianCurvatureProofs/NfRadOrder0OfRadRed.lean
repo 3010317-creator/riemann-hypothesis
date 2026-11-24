@@ -516,11 +516,9 @@ theorem radOrder0_of (hMem : RadRedMem) (hInj : RadRedInj) : RadOrder0 := by
       abel
     have h0 := jetR_zero hUo hx.2 hJ hmono f hf
     rw [hΛeq f hf Ψ hΨ] at h0
-    rw [eD, radR_sub, radR_sub, radR_mulZ hB _ (T Φ).2 hx, radR_mulZ hB _ Φ.2 hx]
-    exact h0
+    rwa [eD, radR_sub, radR_sub, radR_mulZ hB _ (T Φ).2 hx, radR_mulZ hB _ Φ.2 hx]
   have hD0 := hInj Wp Wq k r z z' μsec π π' hB _ D.2 _ (0 : RadSp k r z z' π π').2 key
-  rw [eD, Submodule.coe_zero, sub_sub, sub_eq_zero] at hD0
-  exact hD0
+  rwa [eD, Submodule.coe_zero, sub_sub, sub_eq_zero] at hD0
 
 end Formalism.FourierDecayAlt.P.NFRO
 

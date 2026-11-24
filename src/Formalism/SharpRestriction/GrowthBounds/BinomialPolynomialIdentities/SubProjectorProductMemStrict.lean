@@ -60,9 +60,7 @@ theorem mem_iSup_components_iff (h : DecSys W e) (pi : Set I) (x : V) : x ∈ (�
   · intro hx
     have hle : (⨆ a ∈ pi, W a) ≤ ⨅ a ∈ piᶜ, LinearMap.ker (e a) := by
       refine iSup₂_le fun b hb => ?_
-      refine le_iInf₂ fun a ha => ?_
-      intro y hy
-      exact h.zero_on a b (fun hab => ha (hab ▸ hb)) y hy
+      exact le_iInf₂ fun a ha => fun y hy => h.zero_on a b (fun hab => ha (hab ▸ hb)) y hy
     have := hle hx
     intro a ha
     simp only [Submodule.mem_iInf, LinearMap.mem_ker] at this
@@ -266,13 +264,11 @@ theorem strict_joint_lower_eq_span [Nonempty κ] (lam : ∀ i, Λ i) :
     refine Submodule.span_mono (Set.image_mono ?_) this
     intro y hy
     rw [Set.mem_iInter] at hy
-    refine ⟨fun i => hy (some i), fun h => ?_⟩
-    exact (hy none).2.2 (congrFun h j)
+    exact ⟨fun i => hy (some i), fun h => ((hy none).2.2 (congrFun h j))⟩
   · rw [Submodule.span_le]
     rintro _ ⟨y, ⟨hy1, hy2⟩, rfl⟩
     obtain ⟨j, hj⟩ : ∃ j, J.P y j ≠ lam j := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       exact hy2 (funext hcon)
     refine Submodule.mem_iSup_of_mem j ?_
     simp only [strictLowerPart, Submodule.mem_inf]
@@ -357,8 +353,7 @@ theorem restJointDim : RestJointDim := by
         exact ⟨hd, J.le_refl i _⟩
   have hdisj : Disjoint {x | (∀ i, J.P x i ∈ lowerLabels J lam i) ∧ J.P x ≠ lam} {x | J.P x = lam} := by
     rw [Set.disjoint_left]
-    intro x h1 h2
-    exact h1.2 h2
+    exact fun x h1 h2 => h1.2 h2
   have hcard : Nat.card {x | ∀ i, J.P x i ∈ lowerLabels J lam i} =
       Nat.card {x | (∀ i, J.P x i ∈ lowerLabels J lam i) ∧ J.P x ≠ lam} + Nat.card {x // J.P x = lam} := by
     rw [hset, Nat.card_coe_set_eq, Set.ncard_union_eq hdisj (Set.toFinite _) (Set.toFinite _),

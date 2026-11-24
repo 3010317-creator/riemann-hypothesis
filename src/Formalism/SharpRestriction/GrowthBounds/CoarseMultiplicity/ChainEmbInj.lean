@@ -134,8 +134,7 @@ theorem IsMult.pow {vec : Fin N → Bool} {q : ℕ} {J : Fin q → ℕ} {aW aE :
       funext k
       rw [add_assoc]
       norm_cast
-    rw [e1, e2] at h1
-    exact h1
+    rwa [e1, e2] at h1
 
 theorem isMult_XX (D7 : Formalism.BasicNotions.D7) (vec : Fin N → Bool) {q : ℕ} (J : Fin q → ℕ) (aW aE : Fin N) (hne : aW ≠ aE)
     (hE : vec aE = false) (c c' : Fin r) : IsMult O r vec J aW aE (X (aW, c) * X (aE, c')) := by
@@ -150,8 +149,7 @@ theorem isMult_XX (D7 : Formalism.BasicNotions.D7) (vec : Fin N → Bool) {q : �
       · subst h1; simp [hne]
       · simp [h1]) J (thr := thr) (thr' := fun k => thr k + ((1 : ℤ) : WithTop ℤ)) 1 (fun _ => le_rfl)
     (fun k => by norm_cast) h1
-  rw [mul_assoc]
-  exact h2
+  rwa [mul_assoc]
 
 theorem IsMult.neg {vec : Fin N → Bool} {q : ℕ} {J : Fin q → ℕ} {aW aE : Fin N}
     {q0 : MvPolynomial (Fin N × Fin r) (KK O)} (h : IsMult O r vec J aW aE q0) : IsMult O r vec J aW aE (-q0) := by
@@ -425,8 +423,7 @@ theorem nv_add {v : σ} {F G : MvPolynomial σ K} (h1 : v ∉ F.vars) (h2 : v �
   · exact h2 h'
 
 theorem nv_pow {v : σ} {F : MvPolynomial σ K} (h1 : v ∉ F.vars) (n : ℕ) : v ∉ (F ^ n).vars := by
-  intro h
-  exact h1 (MvPolynomial.vars_pow F n h)
+  exact fun h => h1 (MvPolynomial.vars_pow F n h)
 
 theorem nv_prod {v : σ} {ι : Type} (s : Finset ι) {f : ι → MvPolynomial σ K} (h1 : ∀ i ∈ s, v ∉ (f i).vars) :
     v ∉ (∏ i ∈ s, f i).vars := by
@@ -448,8 +445,7 @@ theorem nv_sum {v : σ} {ι : Type} (s : Finset ι) {f : ι → MvPolynomial σ 
 
 theorem nv_X {v u : σ} (h : v ≠ u) : v ∉ (X u : MvPolynomial σ K).vars := by
   classical
-  rw [MvPolynomial.vars_X, Finset.mem_singleton]
-  exact h
+  rwa [MvPolynomial.vars_X, Finset.mem_singleton]
 
 theorem nv_rename {τ : Type} {v : σ} (f : τ → σ) (h : ∀ x, f x ≠ v) (y : MvPolynomial τ K) : v ∉ (rename f y).vars := by
   classical

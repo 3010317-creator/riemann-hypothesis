@@ -64,8 +64,7 @@ theorem le_of_imageLattice_le {R V E : Type*} [Ring R] [AddCommGroup V] [Module 
     h ((satR_mem_zl ρ N₁ (ρ x)).2 ⟨x, hx, rfl⟩)
   obtain ⟨y, hy, hyx⟩ := (satR_mem_zl ρ N₂ (ρ x)).1 hx'
   have hxy : y = x := hinj (h₂ hy) (h₁ hx) hyx
-  rw [← hxy]
-  exact hy
+  rwa [← hxy]
 
 universe u v w in
 theorem ratioMax_of (h1 : SatR.{u, v, w}) (h2 : SatBasic.{u, v, w}) : RatioMax.{u, v, w} := by
@@ -155,8 +154,7 @@ theorem ratioMax_of (h1 : SatR.{u, v, w}) (h2 : SatBasic.{u, v, w}) : RatioMax.{
       exact hff.trans (hNmax N'' hN''T)
     · have hlt : f N' < f L := not_le.1 hc
       exact hlt.le.trans ((hmemT N).1 hNT).2.2
-  rw [hf N', hf N, div_le_div_iff₀ hpos' hposN] at key
-  exact key
+  rwa [hf N', hf N, div_le_div_iff₀ hpos' hposN] at key
 
 theorem maximal_slope_ratio : RatioMax :=
   ratioMax_of real_saturation_property saturation_basic_properties

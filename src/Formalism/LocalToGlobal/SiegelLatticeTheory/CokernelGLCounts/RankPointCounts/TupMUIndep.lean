@@ -121,15 +121,13 @@ theorem gram_moved (F : FlagG S r T) (F1 F2 : FlagG S r T') (M U : Matrix (Fin (
   rcases i with a | a <;> rcases j with b | b
   · simp only [tupMU, Sum.elim_inl]
     rw [hexp]
-    simp only [hFF]
-    exact hdiag M hM (-T) a b
+    simpa only [hFF] using hdiag M hM (-T) a b
   · exact hcross a b
   · rw [hT_swap, hcross b a, ← hT_swap]
     rfl
   · simp only [tupMU, Sum.elim_inr]
     rw [hexp]
-    simp only [hFF']
-    exact hdiag U hU (-T') a b
+    simpa only [hFF'] using hdiag U hU (-T') a b
 
 theorem tupMU_indep (F : FlagG S r T) (F1 : FlagG S r T') (M U : Matrix (Fin (r + 1)) (Fin (r + 1)) E)
     (hM : IsUpUni M) (hU : IsUpUni U) (hG : Gflag F F1 ≠ 0) : LinearIndependent E (tupMU F F1 M U) := by

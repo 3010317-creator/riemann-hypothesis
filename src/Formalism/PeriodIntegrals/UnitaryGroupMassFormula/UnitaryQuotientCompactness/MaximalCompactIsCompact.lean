@@ -119,8 +119,7 @@ lemma hpk_mul_self (k r : ℕ) : Hpk k r * Hpk k r = 1 := by
     · rw [ite_eq_right (Ne.symm h), ite_eq_right h, mul_zero]
   · intro l _ hl
     rw [hpk_eq, ite_eq_right hl, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 lemma hs_hσ (k r : ℕ) (i : Fin (2 * r + k + 1)) : hs k r (hσ k r i) = hs k r i := by
   have hi := i.isLt
@@ -227,8 +226,7 @@ theorem maximal_compact_isCompact : KCompact := by
     mem_closedBall_zero_iff.2 (entry_norm_bound_of_unitary hu' i j)
 
 lemma pow_bdd_le_one {x M : ℝ} (hx : 0 < x) (h : ∀ n : ℕ, x ^ n ≤ M) : x ≤ 1 := by
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt M hlt
   exact absurd (h n) (not_le.2 hn)
 
@@ -241,8 +239,7 @@ theorem trivG_of (hPol : PolarUH) (hK : KCompact) : TrivG := by
   have hD1 : D 1 = 1 := by
     have h1 := hmul 1 one_mem 1 one_mem
     rw [Matrix.one_mul] at h1
-    have h0 := hpos 1 one_mem
-    exact mul_left_cancel₀ h0.ne' (h1.symm.trans (mul_one (D 1)).symm)
+    exact mul_left_cancel₀ (hpos 1 one_mem).ne' (h1.symm.trans (mul_one (D 1)).symm)
   have inv_D : ∀ x ∈ UH (Hpk k r), D x * D x⁻¹ = 1 := by
     intro x hx
     rw [← hmul x hx x⁻¹ (uh_inv hx), Matrix.mul_nonsing_inv x (uh_det hx), hD1]
@@ -254,8 +251,7 @@ theorem trivG_of (hPol : PolarUH) (hK : KCompact) : TrivG := by
       induction n with
       | zero =>
         refine ⟨by rw [pow_zero]; exact one_mem, by rw [pow_zero]; simp, ?_⟩
-        rw [pow_zero v, pow_zero (D v)]
-        exact hD1
+        rwa [pow_zero v, pow_zero (D v)]
       | succ n ih =>
         obtain ⟨h1, h2, h3⟩ := ih
         refine ⟨by rw [pow_succ]; exact uh_mul h1 hv, ?_, ?_⟩
@@ -292,8 +288,7 @@ theorem trivG_of (hPol : PolarUH) (hK : KCompact) : TrivG := by
             = (Hpk k r * Hpk k r) * x * (Hpk k r * Hpk k r) := by simp only [Matrix.mul_assoc]
           _ = x := by rw [hpk_mul_self, Matrix.one_mul, Matrix.mul_one]
       rwa [e] at h4
-    · intro hx
-      exact uh_mul (uh_mul hH hx) hH
+    · exact fun hx => uh_mul (uh_mul hH hx) hH
   have hp1 : D p = 1 := by
     have hpH : p * Hpk k r * p = Hpk k r := by
       have h0 : pᴴ * Hpk k r * p = Hpk k r := hp

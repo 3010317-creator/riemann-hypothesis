@@ -116,8 +116,7 @@ theorem smooth_right' : SmoothRight := by
   obtain ⟨U, F, hU, hgU, hF, hfF⟩ := hf (g₀ * s) (ana_mul hg₀ hs)
   refine ⟨(fun x => x * s) ⁻¹' U, fun x => F (x * s), hU.preimage hL.continuous, hgU, ?_, ?_⟩
   · exact hF.comp hL.contDiffOn (fun x hx => hx)
-  · intro g hg hgH
-    exact hfF (g * s) hg (ana_mul hgH hs)
+  · exact fun g hg hgH => hfF (g * s) hg (ana_mul hgH hs)
 
 section Rd
 
@@ -132,8 +131,7 @@ lemma ana_rdSmooth (hH : HInvol H) {f : Matrix (Fin n) (Fin n) ℂ → E} {X : M
     have h2 : ContDiffOn ℝ ∞ (fun k : Matrix (Fin n) (Fin n) ℂ => k * X) U :=
       (mulRightRealCLM X).contDiff.contDiffOn
     exact h1.clm_apply h2
-  · intro k hk hkH
-    exact rd_extension_h n H E f F U k X hH hU hk hkH hF hfF hX
+  · exact fun k hk hkH => rd_extension_h n H E f F U k X hH hU hk hkH hF hfF hX
 
 lemma ana_rdLin (hH : HInvol H) {f f' : Matrix (Fin n) (Fin n) ℂ → E} (c : ℂ)
     {X g : Matrix (Fin n) (Fin n) ℂ} (hf : SmoothOnH H f) (hf' : SmoothOnH H f') (hX : inLH H X)

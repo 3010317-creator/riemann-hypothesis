@@ -92,7 +92,6 @@ theorem list_prod_preserves_submodule (W : Submodule K V) (l : List (Module.End 
   | cons u l ih =>
     intro x hx
     rw [List.prod_cons]
-    show u (l.prod x) ∈ W
     exact h u (by simp) _ (ih (fun v hv => h v (by simp [hv])) x hx)
 
 theorem binomial_preserves_diagonal_stable (E : GLOps n K V) (W : Submodule K V) (hW : ∀ a, ∀ x ∈ W, E a a x ∈ W)
@@ -123,8 +122,7 @@ theorem binomial_subring_preserves_stable (E : GLOps n K V) (W : Submodule K V) 
     rw [Subring.closure_le]
     rintro v ⟨a, k, rfl⟩
     exact binomial_preserves_diagonal_stable E W hW a k
-  intro x hx
-  exact (hle hu : u ∈ S) x hx
+  exact fun x hx => (hle hu : u ∈ S) x hx
 
 theorem weight_projection_mem_weightSpace (E : GLOps n K V) (hE : IsGLRep E) (Θ : (Fin n → ℤ) → Module.End K V)
     (hΘ : ∀ μ ν, ∀ x ∈ weightSp E ν, Θ μ x = if ν = μ then x else 0) (μ : Fin n → ℤ) (x : V) :

@@ -335,8 +335,7 @@ theorem linkS_concl (C0 C' Cl Cg cb Cu cT CT c7 : ℝ) (h1 : 1 ≤ C0)
   refine ⟨fun u u' huu => ?_, fun u => ?_, ?_⟩
   · have ha := h76.1 u u' huu
     have hb := h76.2.2.1 u u' huu
-    rw [ha, sub_zero] at hb
-    exact hb
+    rwa [ha, sub_zero] at hb
   · exact diag_unproj L C0 C' Cl Cg cb Cu cT CT hh h76 u
   · have := abs_le.1 (hc hH)
     have h2 := this.2
@@ -1376,8 +1375,7 @@ theorem type_prime_size_bounds (i : Fin 2) :
   have hY : 0 < Y := lt_of_lt_of_le (by positivity) y1
   refine ⟨le_trans y1 (y4 i).1, le_trans (y4 i).2 ?_⟩
   have a : Y ≤ L.sc.b ^ P.CYL := by
-    rw [← Real.log_le_log_iff hY (by positivity), Real.log_rpow hb0, log_scb L]
-    exact y3
+    rwa [← Real.log_le_log_iff hY (by positivity), Real.log_rpow hb0, log_scb L]
   rw [Real.rpow_add hb0, Real.rpow_one]
   have hp : 0 ≤ L.sc.b ^ P.CYL := by positivity
   have h2 := mul_le_mul_of_nonneg_left hb2 hp
@@ -1609,8 +1607,7 @@ theorem tuWin_of {D : D7} (L : SizeData₂ D) (C : ℝ) (h1 : L.TuGe)
   have hT : (0 : ℝ) < (D.mem u).A.T := by exact_mod_cast (D.mem u).A.T_prime.pos
   constructor
   · have := h1 u
-    rw [show (1 / 2 : ℝ) * (D.R.m : ℝ) = (D.R.m : ℝ) / 2 by ring]
-    exact this
+    rwa [show (1 / 2 : ℝ) * (D.R.m : ℝ) = (D.R.m : ℝ) / 2 by ring]
   · unfold Tr
     rw [← Real.log_le_log_iff hT (by positivity), Real.log_rpow hb0, log_scb L]
     exact h2 u

@@ -136,8 +136,7 @@ theorem prime_smul_target_mem_source (p r : ℕ) (hp : (p : Qq) ≠ 0) (B : Matr
 
 theorem mulVec_cancel (B : Matrix (Fin k) (Fin k) Qq) (hB : IsUnit B.det) {u v : Fin k → Qq}
     (h : B.mulVec u = B.mulVec v) : u = v := by
-  have h2 := congrArg (fun w => B⁻¹.mulVec w) h
-  simpa [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hB] using h2
+  simpa [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hB] using congrArg (fun w => B⁻¹.mulVec w) h
 
 theorem dD_det (p r : ℕ) (hp : (p : Qq) ≠ 0) : IsUnit (dD Qq p r k).det := by
   unfold dD
@@ -212,9 +211,7 @@ theorem isEdge_of_basis [IsDomain W] [IsFractionRing W Qq] (p n' r : ℕ) (hp0 :
     have h0 : (B * dD Qq p r k).mulVec (fun c => algebraMap W Qq (y c)) =
         (B * dD Qq p r k).mulVec 0 := by
       rw [hy, Matrix.mulVec_zero]
-    have h2 := mulVec_cancel _ hMu h0
-    intro c
-    exact hinj (by simpa using congrFun h2 c)
+    exact fun c => hinj (by simpa using congrFun (mulVec_cancel _ hMu h0) c)
   let b : Module.Basis (Fin k) W ↥(colSpan W (B * dD Qq p r k)) := Module.Basis.span hli
   have hcoe : ∀ y : Fin k → W, ((b.equivFun.symm y : ↥(colSpan W (B * dD Qq p r k))) : Fin k → Qq) =
       (B * dD Qq p r k).mulVec (fun c => algebraMap W Qq (y c)) := by
@@ -249,18 +246,15 @@ theorem isEdge_of_basis [IsDomain W] [IsFractionRing W Qq] (p n' r : ℕ) (hp0 :
       Submodule W W)) = if c.val < r then p ^ n' else 1 := by
     intro c
     by_cases hc : c.val < r
-    · simp only [hc, ↓reduceIte]
-      exact hcard
-    · simp only [hc, ↓reduceIte]
-      exact Nat.card_unique
+    · simpa only [hc, ↓reduceIte] using hcard
+    · simpa only [hc, ↓reduceIte] using Nat.card_unique
   rw [Finset.prod_congr rfl (fun c _ => hfac c)]
   have hcardF : (Finset.univ.filter fun c : Fin k => c.val < r).card = r := by
     have hF : (Finset.univ.filter fun c : Fin k => c.val < r) = Finset.univ.map (Fin.castLEEmb hr) := by
       ext c
       simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_map, Fin.castLEEmb_apply]
       constructor
-      · intro hc
-        exact ⟨⟨c.val, hc⟩, Fin.ext rfl⟩
+      · exact fun hc => ⟨⟨c.val, hc⟩, Fin.ext rfl⟩
       · rintro ⟨a, rfl⟩
         exact a.isLt
     rw [hF, Finset.card_map, Finset.card_univ, Fintype.card_fin]
@@ -322,16 +316,14 @@ theorem mem_plane (r : ℕ) (g : Matrix (Fin k) (Fin k) (WF p n')) (x : Fin k �
     dsimp only
     by_cases hi : i.val < r
     · rw [ite_eq_left hi]
-      apply Submodule.subset_span
-      exact ⟨i, hi, rfl⟩
+      exact Submodule.subset_span ⟨i, hi, rfl⟩
     · rw [ite_eq_right hi]
       exact Submodule.zero_mem _
   have hS : ratPlane p n' r g ≤ Submodule.span (GaloisField p n') (Set.range fun i : Fin k =>
       if i.val < r then (fun c => WittVector.constantCoeff (g⁻¹ i c)) else 0) := by
     refine Submodule.span_le.mpr ?_
     rintro _ ⟨i, hi, rfl⟩
-    apply Submodule.subset_span
-    exact ⟨i, ite_eq_left hi⟩
+    exact Submodule.subset_span ⟨i, ite_eq_left hi⟩
   have hEq := le_antisymm hS (Submodule.span_le.mpr hR)
   rw [hEq, Submodule.mem_span_range_iff_exists_fun]
   constructor
@@ -353,9 +345,7 @@ private theorem cc_zero_lemma_3 (r : ℕ) (g g' : Matrix (Fin k) (Fin k) (WF p n
     (hpl : ratPlane p n' r g ≤ ratPlane p n' r g') (c i : Fin k) (hc : c.val < r) (hi : ¬ i.val < r) :
     WittVector.constantCoeff ((g⁻¹ * g') c i) = 0 := by
   have hmem : (fun j => WittVector.constantCoeff (g⁻¹ c j)) ∈ ratPlane p n' r g' := by
-    apply hpl
-    apply Submodule.subset_span
-    exact ⟨c, hc, rfl⟩
+    exact hpl (Submodule.subset_span ⟨c, hc, rfl⟩)
   obtain ⟨a, ha⟩ := (mem_plane r g' _).mp hmem
   have hrow : ∀ j, WittVector.constantCoeff (g⁻¹ c j) =
       ∑ l, a l * (if l.val < r then WittVector.constantCoeff (g'⁻¹ l j) else 0) := by
@@ -367,8 +357,7 @@ private theorem cc_zero_lemma_3 (r : ℕ) (g g' : Matrix (Fin k) (Fin k) (WF p n
     intro l hl
     have h1 : (g'⁻¹ * g') l i = 0 := by
       rw [Matrix.nonsing_inv_mul _ hg', Matrix.one_apply_ne]
-      intro hli
-      exact hi (hli ▸ hl)
+      exact fun hli => hi (hli ▸ hl)
     have h2 := congrArg WittVector.constantCoeff h1
 
     rw [Matrix.mul_apply, map_sum] at h2

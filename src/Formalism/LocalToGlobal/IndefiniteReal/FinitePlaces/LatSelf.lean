@@ -112,8 +112,7 @@ theorem mem_AA_of_trace {z : D.host.E}
     have h0 : D.host.AA * Y ≠ 0 := by rw [hAY]; exact dual_ne_zero'
     exact right_ne_zero_of_mul h0
   have hzY : FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 D.host.E)) z * Y ≤ D.host.AA * Y := by
-    rw [hAY, hYdef, ← mul_assoc, FractionalIdeal.spanSingleton_mul_spanSingleton, mul_comm z]
-    exact hle
+    rwa [hAY, hYdef, ← mul_assoc, FractionalIdeal.spanSingleton_mul_spanSingleton, mul_comm z]
   have hsp : FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 D.host.E)) z ≤ D.host.AA :=
     calc FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 D.host.E)) z
         = FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 D.host.E)) z * Y * Y⁻¹ := by
@@ -609,16 +608,13 @@ lemma four_terms {S T : HSp D} {ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → 
   · have h1 := nsmul_mem m1 kG
     rw [smul_smul] at h1
     have e : c * c' * kH * kG = kG * (c * (kH * c')) := by ring
-    rw [e]
-    exact h1
+    rwa [e]
   · have h2 := nsmul_mem m2 kH
     rw [smul_smul] at h2
     have e : c * c' * kH * kG = kH * (c * (c' * kG)) := by ring
-    rw [e]
-    exact h2
+    rwa [e]
   · have e : c * c' * kH * kG = c * (kH * c' * kG) := by ring
-    rw [e]
-    exact m3
+    rwa [e]
 
 theorem placeLatDualVi (D : D7) : PlaceLatDualVi D := by
   intro ψ _ S T ΛS ΛT hS hT e' he' g h hg hh
@@ -793,8 +789,7 @@ lemma nsmul_cancel_AE {x y : AE D} {k : ℕ} (hk : 0 < k) (h : k • x = k • y
 lemma nsmul_cancel_Mx {m n : ℕ} {X Y : Mx D m n} {k : ℕ} (hk : 0 < k) (h : k • X = k • Y) : X = Y := by
   ext i j
   apply nsmul_cancel_AE hk
-  have h1 := congrFun (congrFun h i) j
-  simpa using h1
+  simpa using congrFun (congrFun h i) j
 
 
 
@@ -983,8 +978,7 @@ theorem placeLatDualIi_of (hL : LatSelfDual D) : PlaceLatDualIi D := by
     have hh : IsHalf e (e • u) := fun i j => by rw [Matrix.smul_apply, smul_eq_mul, ← mul_assoc, hee]
     have h1 := hx _ hm hh
     rw [symplO_half_right S T hy u, symplO_swap S T (e • u) y, AddChar.map_neg_eq_inv, h1, inv_one]
-  · intro hyL x hx hxh
-    exact (hL4 x (half_infPart hfe hxh)).1 hx y hyL
+  · exact fun hyL x hx hxh => (hL4 x (half_infPart hfe hxh)).1 hx y hyL
 
 theorem placeLatDualIii_of (hL : LatSelfDual D) : PlaceLatDualIii D := by
   intro ψ hψ S T ΛS ΛT hS hT P e he x hx
@@ -1002,8 +996,7 @@ theorem placeLatDualIii_of (hL : LatSelfDual D) : PlaceLatDualIii D := by
     have hh : IsHalf (cA D e) (cA D e • u) := fun i j => by rw [Matrix.smul_apply, smul_eq_mul, ← mul_assoc, hcc]
     rw [symplO_half_right S T hxc u]
     exact hy _ hm hh
-  · intro hxL y hy _
-    exact (hL4 x hx0).1 hxL y hy
+  · exact fun hxL y hy _ => (hL4 x hx0).1 hxL y hy
 
 end Formalism.IndefR.Fin.PDA
 

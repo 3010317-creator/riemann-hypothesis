@@ -120,15 +120,13 @@ theorem hasDerivAt_dS (hσ : IsURepOn (UJset ε) σ) (w : H) {v : H} (hv : v ∈
     HasDerivAt (fun t : ℝ => σ (NormedSpace.exp ((t : ℂ) • X)) v) (dS σ X v) 0 := by
   obtain ⟨x', -, hx'⟩ := Vsub_deriv hσ w hv hX
   unfold dS
-  rw [hx'.deriv]
-  exact hx'
+  rwa [hx'.deriv]
 
 theorem dS_mem (hσ : IsURepOn (UJset ε) σ) (w : H) {v : H} (hv : v ∈ Vsub ε hσ w)
     {X : Matrix (Fin n) (Fin n) ℂ} (hX : inG ε X) : dS σ X v ∈ Vsub ε hσ w := by
   obtain ⟨x', hm, hx'⟩ := Vsub_deriv hσ w hv hX
   unfold dS
-  rw [hx'.deriv]
-  exact hm
+  rwa [hx'.deriv]
 
 theorem dS_vec (hσ : IsURepOn (UJset ε) σ) (w : H) {Φ : Matrix (Fin n) (Fin n) ℂ → ℂ} (hΦ : IsTest Φ)
     {X : Matrix (Fin n) (Fin n) ℂ} (hX : inG ε X) :

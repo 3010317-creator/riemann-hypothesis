@@ -84,8 +84,7 @@ theorem mulR_eq {K : Type} [CommRing K] (R : Subring K) (d e : K) (hd : d ∈ R)
   constructor
   · rintro ⟨y, hy, rfl⟩
     exact R.mul_mem hd hy
-  · intro hz
-    exact ⟨e * z, R.mul_mem he hz, by rw [← mul_assoc, hde, one_mul]⟩
+  · exact fun hz => ⟨e * z, R.mul_mem he hz, by rw [← mul_assoc, hde, one_mul]⟩
 
 theorem modK_eq_one {K : Type} [CommRing K] (R : Subring K) (d e : K) (hd : d ∈ R) (he : e ∈ R)
     (hde : d * e = 1) : modK R d = 1 := by
@@ -165,8 +164,7 @@ theorem first_theta_equality_of_kernel_facts (hPer : SingleBlockPeriodic) (hGram
     funext h h'
     simp only [Θ]
     rw [this]
-  · intro x
-    exact hGram K R ψ hL m F hF (cr x)
+  · exact fun x => hGram K R ψ hL m F hF (cr x)
   · obtain ⟨ϖ, hϖ, hϖx⟩ := hL.unif
     choose M hM using fun h : Point K => hϖx (((pt_det_isUnit h).unit⁻¹ : Kˣ) : K)
     let N := F.sup M
@@ -193,8 +191,7 @@ theorem first_theta_equality_of_kernel_facts (hPer : SingleBlockPeriodic) (hGram
           rw [← mul_assoc, ← mul_pow, Units.inv_mul, one_pow, one_mul]
         · rintro ⟨y, hy, rfl⟩
           show (ϖ : K) ^ N * (((ϖ⁻¹ : Kˣ) : K) ^ N * y) ∈ R
-          rw [← mul_assoc, ← mul_pow, Units.mul_inv, one_pow, one_mul]
-          exact hy
+          rwa [← mul_assoc, ← mul_pow, Units.mul_inv, one_pow, one_mul]
       rw [this]
       exact hL.isCompact.image (continuous_const_mul _)
     · intro x hx h hh h' _
@@ -270,8 +267,7 @@ theorem mem_rangeR (a : K) : a ∈ LinearMap.range (Algebra.linearMap R K) ↔ a
   · intro h
     obtain ⟨r, rfl⟩ := LinearMap.mem_range.mp h
     exact r.2
-  · intro ha
-    exact LinearMap.mem_range.mpr ⟨⟨a, ha⟩, rfl⟩
+  · exact fun ha => LinearMap.mem_range.mpr ⟨⟨a, ha⟩, rfl⟩
 
 theorem psiKR_mk (ψ : AddChar K ℂ) (hψ : ∀ r ∈ R, ψ r = 1) (a : K) :
     psiKR R ψ (Submodule.Quotient.mk a : KR R) = ψ a := by
@@ -450,8 +446,7 @@ theorem first_kernel_periodic_of_formula (hF : SingleBlockFormula) : SingleBlock
   intro K _ _ _ R ψ hLD h h' c c' hs hc
   rw [hF K R ψ hLD h h' c hs, hF K R ψ hLD h h' c' hs]
   have e : (Submodule.Quotient.mk (c : K) : KR R) = Submodule.Quotient.mk (c' : K) := by
-    rw [Submodule.Quotient.eq, mem_rangeR]
-    exact hc
+    rwa [Submodule.Quotient.eq, mem_rangeR]
   simp only [singleBlockInner]
   rw [e]
 

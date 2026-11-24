@@ -176,7 +176,6 @@ theorem isCompact_gN_le (k r : ℕ) (R : ℝ) : IsCompact {g : B.Mat k r | B.gN 
   intro g hg
   rw [Metric.mem_closedBall, dist_zero_right]
   refine (Matrix.norm_le_iff ((norm_nonneg _).trans ((Formalism.FourierDecayAlt.P.Dx3.entry_le_gN g 0 0).trans hg))).2 ?_
-  intro i j
-  exact (Formalism.FourierDecayAlt.P.Dx3.entry_le_gN g i j).trans hg
+  exact fun i j => (Formalism.FourierDecayAlt.P.Dx3.entry_le_gN g i j).trans hg
 
 end Formalism.FourierDecayAlt.P.PBE

@@ -206,8 +206,7 @@ theorem w_mem (hR : Formalism.MainNotions.N.FrobeniusPowerSeries.GS.RD W) :
     rw [Finset.sum_congr rfl hsum]
     refine Finset.sum_equiv (Equiv.mulLeft δ) (fun g => ?_) (fun g _ => rfl)
     constructor
-    · intro hg
-      exact hmul δ g hδ hg
+    · exact fun hg => hmul δ g hδ hg
     · intro hg
       have := hmul δ⁻¹ (δ * g) (hinv δ hδ) hg
       rwa [inv_mul_cancel_left] at this
@@ -216,7 +215,6 @@ theorem w_mem (hR : Formalism.MainNotions.N.FrobeniusPowerSeries.GS.RD W) :
     show W.γA δ (W.π₀ + lA W) = W.π₀ + lA W
     rw [map_add (f := _), hπ δ hδ]
     congr 1
-    show W.γA δ ((PD.p : ℕ) : LetA O n) = ((PD.p : ℕ) : LetA O n)
     exact map_natCast _ _
   have hc : ∀ δ (a : LetA O n), W.γA δ (W.φA a) = W.φA (W.γA δ a) := by
     intro δ a
@@ -449,9 +447,7 @@ theorem build [IsDomain O] (W : LocWach PD LL O v n) (hcase : Formalism.MainNoti
     rw [mul_smul]
     exact smul_comm _ _ _
   obtain ⟨wv, hwA, -, hw⟩ := Formalism.MainNotions.N.FrobeniusPowerSeries.DYAa.w_mem hR
-  have hLA : lA W ∈ W.AΔ := by
-    show ((PD.p : ℕ) : LetA O n) ∈ W.AΔ
-    exact Subalgebra.natCast_mem _ _
+  have hLA : lA W ∈ W.AΔ := Subalgebra.natCast_mem _ _
   have hLc : ∀ j : ℕ, algebraMap O (LetA O n) ((PD.p : O) ^ j) = lA W ^ j := by
     intro j; rw [map_pow, map_natCast]; rfl
 

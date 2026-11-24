@@ -119,10 +119,8 @@ theorem tm_equiv (C : Level P) (v : Fin P.nV) (i : ℕ) (F : P.Tup → P.Xsp)
     have h2 := nt_edge_map p (P.n' v) i (C.act v γ)⁻¹ B ((L v).map (nt_phi (P.W v) (C.act v γ))) hB'
     rw [nt_map_inv] at h2
     exact (tm_fin P v i (L v)).mem_toFinset.mpr h2
-  · intro A _
-    exact nt_map_inv _ _
-  · intro B _
-    exact nt_map_inv' _ _
+  · exact fun A _ => nt_map_inv _ _
+  · exact fun B _ => nt_map_inv' _ _
   · intro A _
     have h := hF' γ (Function.update L v A)
     rw [smul_update] at h

@@ -74,8 +74,7 @@ theorem rkK_pos (b : Basis ι K V) (M : Submodule (𝓞 K) V) (hM0 : M ≠ ⊥) 
   intro x hx
   have hx' : x ∈ Submodule.span K (M : Set V) := Submodule.subset_span hx
   rw [h, Submodule.mem_bot] at hx'
-  rw [Submodule.mem_bot]
-  exact hx'
+  rwa [Submodule.mem_bot]
 
 theorem mu_smul_ideal (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι ℂ)
     (hX : ∀ v, IsUnit (X v).det) (M : Submodule (𝓞 K) V) (hM : M.FG) (hM0 : M ≠ ⊥)
@@ -155,9 +154,7 @@ theorem mu_frac (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι ℂ)
   set d : 𝓞 K := (I.den : 𝓞 K) with hd
   have hd0 : d ≠ 0 := nonZeroDivisors.coe_ne_zero I.den
   set J : Ideal (𝓞 K) := I.num with hJ
-  have hJ0 : J ≠ ⊥ := by
-    intro h
-    exact hI (FractionalIdeal.num_eq_zero_iff.1 h)
+  have hJ0 : J ≠ ⊥ := fun h => hI (FractionalIdeal.num_eq_zero_iff.1 h)
   have hden := FractionalIdeal.den_mul_self_eq_num I
   have hkey : (Ideal.span {d}) • N = J • M := by
     apply le_antisymm
@@ -334,8 +331,7 @@ theorem sum_lwP_le (D : D7) (p : ℕ) (hp : p.Prime) (S : Finset D.what₂.place
     obtain ⟨w, hw, rfl⟩ := Finset.mem_map.1 hv
     rw [hT]
     have := resChar_mem D w
-    rw [hS w hw] at this
-    exact this
+    rwa [hS w hw] at this
   have h2 : ∑ v ∈ S.map D.plEq.toEmbedding, lw D.what₂.LL v ≤ ∑ v ∈ T, lw D.what₂.LL v :=
     Finset.sum_le_sum_of_subset_of_nonneg hsub (fun v _ _ => lw_nonneg v)
   have h3 : ∑ v ∈ T, lw D.what₂.LL v ≤ ∑ v ∈ T, lw D.what₂.LL v * (eWL D.what₂.LL v : ℝ) := by
@@ -378,8 +374,7 @@ theorem sum_log_primes_le (N : ℕ) :
   have h1 : Real.log ((primorial N : ℕ) : ℝ) =
       ∑ p ∈ (Finset.range (N + 1)).filter Nat.Prime, Real.log (p : ℝ) := by
     rw [hpr, Real.log_prod]
-    intro p hp
-    exact Nat.cast_ne_zero.mpr (Finset.mem_filter.mp hp).2.ne_zero
+    exact fun p hp => Nat.cast_ne_zero.mpr (Finset.mem_filter.mp hp).2.ne_zero
   rw [← h1]
   have h2 : ((primorial N : ℕ) : ℝ) ≤ (4 : ℝ) ^ N := by exact_mod_cast primorial_le_four_pow N
   have h3 : (0 : ℝ) < ((primorial N : ℕ) : ℝ) := by exact_mod_cast primorial_pos N
@@ -394,16 +389,14 @@ theorem sum_log_primeFactors_le (n : ℕ) (hn : 0 < n) :
   have h1 : Real.log ((∏ p ∈ n.primeFactors, p : ℕ) : ℝ) =
       ∑ p ∈ n.primeFactors, Real.log (p : ℝ) := by
     rw [Nat.cast_prod, Real.log_prod]
-    intro p hp
-    exact Nat.cast_ne_zero.mpr (Nat.prime_of_mem_primeFactors hp).ne_zero
+    exact fun p hp => Nat.cast_ne_zero.mpr (Nat.prime_of_mem_primeFactors hp).ne_zero
   rw [← h1]
   exact Real.log_le_log (by exact_mod_cast hpos) (by exact_mod_cast hle)
 
 theorem Iu_ne_zero (D : D7) (L : SizeData₂ D) (u : D.what₂.Word) : DV.Iu D L u ≠ 0 := by
   unfold DV.Iu
   rw [Finset.prod_ne_zero_iff]
-  intro w _
-  exact zpow_ne_zero _ (FractionalIdeal.coeIdeal_ne_zero.2 (D.plEq w).ne_bot)
+  exact fun w _ => zpow_ne_zero _ (FractionalIdeal.coeIdeal_ne_zero.2 (D.plEq w).ne_bot)
 
 theorem log_absNorm_Iu (D : D7) (L : SizeData₂ D) (u : D.what₂.Word) :
     Real.log ((FractionalIdeal.absNorm (DV.Iu D L u) : ℚ) : ℝ) =
@@ -638,9 +631,6 @@ theorem fN_le (hN : SizeN L) (hEta : SizeEta L) (hNodes : SizeNodes L) :
   have hx1 := L.sc.one_lt_alt
   have hx : 0 < L.sc.x := by linarith
   have hb := th_bounds L
-  unfold SizeN at hN
-  unfold SizeEta at hEta
-  unfold SizeNodes at hNodes
   have hn1 : (1 : ℝ) ≤ D.R.n := by exact_mod_cast n_pos D.R
   have hm2 : (2 : ℝ) ≤ D.R.m := by exact_mod_cast D.R.two_le_m
   have hN2n : 2 ≤ D.R.N D.R.m := by
@@ -659,28 +649,19 @@ theorem fN_le (hN : SizeN L) (hEta : SizeEta L) (hNodes : SizeNodes L) :
   have heta1 : 1 ≤ L.etaSz := le_trans ht1 hEta.1
   have heta0 : 0 < L.etaSz := by linarith
   have hNeta : (D.R.N D.R.m : ℝ) ≤ L.etaSz := by
-    have h1 := hNodes.2.2.2.2.2.2
     have hp : (1 : ℝ) ≤ (D.R.m : ℝ) ^ 10 := one_le_pow₀ (by linarith)
-    have h2 : (D.R.N D.R.m : ℝ) ≤ (D.R.N D.R.m : ℝ) * (D.R.m : ℝ) ^ 10 :=
-      le_mul_of_one_le_right (by linarith) hp
-    have h3 : L.etaSz / D.R.m ≤ L.etaSz := div_le_self heta0.le (by linarith)
-    linarith
-  have hlogeta : L.etaSz ≤ Real.exp (L.sc.x ^ (L.sc.eps / 4)) :=
-    (Real.log_le_iff_le_exp heta0).mp hEta.2.2.1
-  have hq : L.sc.x ^ (L.sc.eps / 4) ≤ L.sc.x ^ (L.sc.eps / 3) :=
-    Real.rpow_le_rpow_of_exponent_le hx1.le hb.2.2.2.2.2
+    linarith [hNodes.2.2.2.2.2.2, le_mul_of_one_le_right (by linarith : (0 : ℝ) ≤ D.R.N D.R.m) hp,
+      div_le_self heta0.le (by linarith : (1 : ℝ) ≤ D.R.m)]
   have hNX : (D.R.N D.R.m : ℝ) ≤ L.sc.X' := by
     unfold Scale.X'
     calc (D.R.N D.R.m : ℝ) ≤ L.etaSz := hNeta
-      _ ≤ Real.exp (L.sc.x ^ (L.sc.eps / 4)) := hlogeta
-      _ ≤ Real.exp (L.sc.x ^ (L.sc.eps / 3)) := Real.exp_le_exp.mpr hq
+      _ ≤ Real.exp (L.sc.x ^ (L.sc.eps / 4)) := (Real.log_le_iff_le_exp heta0).mp hEta.2.2.1
+      _ ≤ Real.exp (L.sc.x ^ (L.sc.eps / 3)) :=
+        Real.exp_le_exp.mpr (Real.rpow_le_rpow_of_exponent_le hx1.le hb.2.2.2.2.2)
   have hlogn : Real.log (D.R.n : ℝ) ≤ 3 * Real.log L.sc.x := by
-    have h1 : Real.log (D.R.n : ℝ) ≤ Real.log (L.sc.x ^ (2 + 8 * L.sc.eps + szTh L)) :=
-      Real.log_le_log (by linarith) hN.2
+    have h1 := Real.log_le_log (by linarith) hN.2
     rw [Real.log_rpow hx] at h1
-    have h2 : 0 ≤ Real.log L.sc.x := Real.log_nonneg hx1.le
-    have h3 := mul_le_mul_of_nonneg_right hb.2.2.2.1 h2
-    linarith
+    linarith [mul_le_mul_of_nonneg_right hb.2.2.2.1 (Real.log_nonneg hx1.le)]
   have hlogN : Real.log (D.R.N D.R.m : ℝ) ≤ L.sc.x := by
     calc Real.log (D.R.N D.R.m : ℝ) ≤ Real.log L.etaSz := Real.log_le_log (by linarith) hNeta
       _ ≤ L.sc.x ^ (L.sc.eps / 4) := hEta.2.2.1
@@ -688,32 +669,24 @@ theorem fN_le (hN : SizeN L) (hEta : SizeEta L) (hNodes : SizeNodes L) :
   have hf : (D.R.f : ℝ) = 2 * D.R.n := by
     simp only [Ranks.f, Nat.cast_mul, Nat.cast_ofNat]
   have hlx : Real.log L.sc.x ≤ L.sc.x - 1 := Real.log_le_sub_one_of_pos hx
-  have hl2 : Real.log 2 < 1 := by
-    have := Real.log_two_lt_d9
-    linarith
-  have hn0 : (D.R.n : ℝ) ≠ 0 := ne_of_gt (by linarith)
-  have h2n0 : 2 * (D.R.n : ℝ) ≠ 0 := ne_of_gt (by linarith)
-  have hN0 : (D.R.N D.R.m : ℝ) ≠ 0 := ne_of_gt (by linarith)
+  have hl2 : Real.log 2 < 1 := by linarith [Real.log_two_lt_d9]
   have hlog : Real.log (2 * (D.R.n : ℝ) * D.R.N D.R.m) ≤ 4 * L.sc.x := by
-    rw [Real.log_mul h2n0 hN0, Real.log_mul two_ne_zero hn0]
+    rw [Real.log_mul (ne_of_gt (by linarith)) (ne_of_gt (by linarith)),
+      Real.log_mul two_ne_zero (ne_of_gt (by linarith))]
     linarith
-  have hprod1 : (1 : ℝ) ≤ 2 * D.R.n * D.R.N D.R.m :=
-    one_le_mul_of_one_le_of_one_le (by linarith) hN1
-  have hlog0 : 0 ≤ Real.log (2 * (D.R.n : ℝ) * D.R.N D.R.m) := Real.log_nonneg hprod1
+  have hlog0 : 0 ≤ Real.log (2 * (D.R.n : ℝ) * D.R.N D.R.m) :=
+    Real.log_nonneg (one_le_mul_of_one_le_of_one_le (by linarith) hN1)
   have hXpp := Xpp_eq L.sc D.R.n (n_pos D.R)
   have hX1 := one_le_Xp L.sc
   rw [hf]
   refine ⟨?_, mul_nonneg (by positivity) hlog0⟩
   rw [hXpp]
-  have hA : 2 * (D.R.n : ℝ) * D.R.N D.R.m ≤ 2 * D.R.n * L.sc.X' :=
-    mul_le_mul_of_nonneg_left hNX (by positivity)
-  have hB := mul_le_mul hA hlog hlog0 (mul_nonneg (by positivity) (by linarith : (0 : ℝ) ≤ L.sc.X'))
+  have hB := mul_le_mul
+    (mul_le_mul_of_nonneg_left hNX (by positivity : (0 : ℝ) ≤ 2 * D.R.n)) hlog hlog0
+    (mul_nonneg (by positivity) (by linarith))
   have hpos : 0 ≤ L.sc.X' * L.sc.x * D.R.n :=
     mul_nonneg (mul_nonneg (by linarith) hx.le) (by linarith)
-  calc 2 * (D.R.n : ℝ) * D.R.N D.R.m * Real.log (2 * (D.R.n : ℝ) * D.R.N D.R.m)
-      ≤ 2 * D.R.n * L.sc.X' * (4 * L.sc.x) := hB
-    _ = 8 * (L.sc.X' * L.sc.x * D.R.n) := by ring
-    _ ≤ 10 * (L.sc.X' * L.sc.x * D.R.n) := by linarith
+  linarith
 
 theorem log_DGam_le (hN : SizeN L) (hEta : SizeEta L) (hNodes : SizeNodes L) (C : ℝ)
     (hC : FactDGam D C) (u : D.what₂.Word) :

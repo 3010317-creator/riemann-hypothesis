@@ -85,8 +85,7 @@ theorem absV_one : absV v (1 : Fv F v) = 1 := by
 
 theorem absV_pos {x : Fv F v} (hx : x ≠ 0) : 0 < absV v x := by
   have hx' : Valued.v x ≠ 0 := (Valuation.ne_zero_iff _).2 hx
-  simp only [absV, dite_eq_right hx']
-  exact zpow_pos (absNorm_pos v) _
+  simpa only [absV, dite_eq_right hx'] using zpow_pos (absNorm_pos v) _
 
 theorem absV_inv {x : Fv F v} (hx : x ≠ 0) : absV v x⁻¹ = (absV v x)⁻¹ := by
   have h := absV_mul v x⁻¹ x
@@ -179,9 +178,7 @@ theorem triU (n : ℕ) :
 theorem finSum2 (n : ℕ) (h : ℕ → ℕ → ℝ) :
     ∑ i : Fin n, ∑ j : Fin n, h i j = ∑ i ∈ Finset.range n, ∑ j ∈ Finset.range n, h i j := by
   rw [Fin.sum_univ_eq_sum_range (fun i => ∑ j : Fin n, h i j) n]
-  apply Finset.sum_congr rfl
-  intro i _
-  exact Fin.sum_univ_eq_sum_range (fun j => h i j) n
+  exact Finset.sum_congr rfl (fun i _ => Fin.sum_univ_eq_sum_range (fun j => h i j) n)
 
 theorem sumZ (r : ℕ) :
     ∑ p : Fin (r + 1) × Fin (r + 1),

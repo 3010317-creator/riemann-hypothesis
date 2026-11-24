@@ -136,8 +136,7 @@ theorem globalConcrete_of (hD : StatDescent.{u, v, w}) (hV : StatVccSpan.{u, v})
     intro x' v
     funext i
     show ∑ j, (C * P) i j • v j = ∑ l, C i l • ∑ j, P l j • v j
-    simp only [Matrix.mul_apply, Finset.sum_smul, Finset.smul_sum, mul_smul]
-    exact Finset.sum_comm
+    simpa only [Matrix.mul_apply, Finset.sum_smul, Finset.smul_sum, mul_smul] using Finset.sum_comm
   have hvanish : ∀ x', p x' ∉ Z → f x' = 0 := by
     intro x' hx
     obtain ⟨φ, hφ0⟩ := hφ x' hx
@@ -178,8 +177,7 @@ theorem globalConcrete_of (hD : StatDescent.{u, v, w}) (hV : StatVccSpan.{u, v})
     rw [Module.length_eq_zero_iff]
     exact ⟨fun a b => Subtype.ext (Subsingleton.elim _ _)⟩
   have hBT : (bigMat (fun r : R' => ρπ r) (C * P)).BlockTriangular (fun x : g × d => bl x.2) := by
-    intro x y hxy
-    exact hbl _ hxy
+    exact fun x y hxy => hbl _ hxy
   have himage : (Finset.univ.image fun x : g × d => bl x.2) = Finset.univ.image bl := by
     ext k
     simp only [Finset.mem_image, Finset.mem_univ, true_and]

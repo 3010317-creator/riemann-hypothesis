@@ -126,8 +126,7 @@ private theorem appr_den_lemma_2 (k : F) (hk : v.valuation F k ≤ 1) :
   have hLe : WithZero.exp (WithZero.log (v.intValuation d)) = v.intValuation d := WithZero.exp_log hιd0
   have hL0 : WithZero.log (v.intValuation d) ≤ 0 := by
     have h := hιd1
-    rw [← hLe, ← WithZero.exp_zero, WithZero.exp_le_exp] at h
-    exact h
+    rwa [← hLe, ← WithZero.exp_zero, WithZero.exp_le_exp] at h
   obtain ⟨e, he⟩ : ∃ e : ℕ, (e : ℤ) = -WithZero.log (v.intValuation d) :=
     ⟨(-WithZero.log (v.intValuation d)).toNat, Int.toNat_of_nonneg (by omega)⟩
   have hιd : v.intValuation d = WithZero.exp (-(e : ℤ)) := by
@@ -188,8 +187,7 @@ theorem exists_appr {x : Fv F v} (hx : x ∈ v.adicCompletionIntegers F) :
   refine ⟨a, ?_⟩
   have h2 : Valued.v (algebraMap F (Fv F v) (algebraMap (𝓞 F) F m / algebraMap (𝓞 F) F c) - iO v a) < 1 := by
     show Valued.v (algebraMap F (Fv F v) _ - algebraMap F (Fv F v) (algebraMap (𝓞 F) F a)) < 1
-    rw [← map_sub, vcoe]
-    exact ha
+    rwa [← map_sub, vcoe]
   have h3 : x - iO v a = (x - algebraMap F (Fv F v) (algebraMap (𝓞 F) F m / algebraMap (𝓞 F) F c)) +
       (algebraMap F (Fv F v) (algebraMap (𝓞 F) F m / algebraMap (𝓞 F) F c) - iO v a) := by
     ring
@@ -226,8 +224,7 @@ theorem red_eq_mk_iff {x : Fv F v} (hx : x ∈ v.adicCompletionIntegers F) (a : 
   · intro h
     rw [e1]
     refine Valuation.map_add_lt _ h ?_
-    rw [Valuation.map_neg]
-    exact h1
+    rwa [Valuation.map_neg]
 
 theorem mem_O_iO (a : 𝓞 F) : iO v a ∈ v.adicCompletionIntegers F := v_iO_le v a
 

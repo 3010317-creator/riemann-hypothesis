@@ -91,8 +91,7 @@ theorem coeff_frobVar_ne_zero {K ι : Type} [Field K] {p : ℕ} (hp : p ≠ 0)
     simp only [Finsupp.smul_apply, Finsupp.mapRange_apply, smul_eq_mul]
     exact (Nat.mul_div_cancel' (hd i)).symm
   refine ⟨_, hn, ?_⟩
-  rw [hn, coeff_frobVar_smul hp] at h
-  exact h
+  rwa [hn, coeff_frobVar_smul hp] at h
 
 theorem coeff_single_variable_series {K ι : Type} [Field K] [DecidableEq ι] (x : ι) (f : PowerSeries K)
     (n : ι →₀ ℕ) : MvPowerSeries.coeff n (at1 x f) =
@@ -191,8 +190,7 @@ theorem sum_range_ite_unique {M : Type} [AddCommMonoid M] (N : ℕ) (P : ℕ →
   · rw [ite_eq_left hP]
   · intro b _ hb
     rw [ite_eq_right (fun h => hb (hu b h))]
-  · intro h
-    exact absurd (Finset.mem_range.mpr h0) h
+  · exact fun h => absurd (Finset.mem_range.mpr h0) h
 
 theorem coeff_lgF_pow (K : Type) [Field K] {p : ℕ} (hp : 2 ≤ p) (j : ℕ) :
     PowerSeries.coeff ((p ^ 2) ^ j) (lgF K p) = ((p : K) ^ j)⁻¹ := by
@@ -205,8 +203,7 @@ theorem coeff_lgF_ne_zero {K : Type} [Field K] {p n : ℕ}
     (h : PowerSeries.coeff n (lgF K p) ≠ 0) : ∃ j, n = (p ^ 2) ^ j := by
   unfold lgF at h
   rw [PowerSeries.coeff_mk] at h
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   apply h
   apply Finset.sum_eq_zero
   intro i _
@@ -223,8 +220,7 @@ theorem coeff_g0F_ne_zero {K : Type} [Field K] {p n : ℕ}
     (h : PowerSeries.coeff n (g0F K p) ≠ 0) : ∃ j, n = p * (p ^ 2) ^ j := by
   unfold g0F at h
   rw [PowerSeries.coeff_mk] at h
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   apply h
   apply Finset.sum_eq_zero
   intro i _
@@ -266,8 +262,7 @@ theorem coeff_AA_ne_zero {K : Type} [Field K] {p : ℕ} {x y : Fin 2} {n : Fin 2
     ∃ i j, i ≤ j ∧ n x = (p ^ 2) ^ i ∧ n y = p * (p ^ 2) ^ j := by
   change AA K p x y n ≠ 0 at h
   simp only [AA] at h
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   apply h
   apply Finset.sum_eq_zero
   intro i _
@@ -339,8 +334,7 @@ theorem g_zero_relation_holds : OddLogRelation := by
         have h1 : (p ^ 2) ^ (k + 1) ≠ 1 := by
           have := lt_powq hp (k + 1)
           have h2 : (p ^ 2) ^ (k + 1) = (p ^ 2) ^ 0 → k + 1 = 0 := powq_inj hp
-          intro h
-          exact absurd (h2 (by simpa using h)) (by omega)
+          exact fun h => absurd (h2 (by simpa using h)) (by omega)
         rw [ite_eq_right h1, sub_zero, powq_succ, ite_eq_left (Dvd.intro _ rfl),
           Nat.mul_div_cancel_left _ (by omega), coeff_g0F_of K hp]
     · have h1 : PowerSeries.coeff n (lgF K p) = 0 := by
@@ -408,8 +402,7 @@ theorem identity_b : IdentityB := by
   intro K _ p hp hpK
   refine ⟨frobVar_AA_eq K hp hpK (by decide), ?_⟩
   have h := frobVar_AA_eq K hp hpK (x := 1) (y := 0) (by decide)
-  rw [mul_comm (at1 0 (lgF K p))]
-  exact h
+  rwa [mul_comm (at1 0 (lgF K p))]
 
 theorem frobenius_expression_g : FrobExprG := by
   intro K _ p c c' hp hpK
@@ -445,8 +438,7 @@ theorem valuation_table : ValTable := by
       intro m
       have h := one_add_mul_le_pow (show (-2 : ℝ) ≤ (p : ℝ) ^ 2 - 1 by nlinarith) m
       have e : (1 : ℝ) + ((p : ℝ) ^ 2 - 1) = (p : ℝ) ^ 2 := by ring
-      rw [e] at h
-      exact h
+      rwa [e] at h
     have h1 := hB i
     have h2 := hB k
     have hk0 : (0 : ℝ) ≤ (k : ℝ) * ((p : ℝ) ^ 2 - 1) := mul_nonneg (Nat.cast_nonneg k) hq1.le

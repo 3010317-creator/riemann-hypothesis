@@ -187,8 +187,7 @@ lemma fockInner_self (P : MvPolynomial σ ℂ) : FockH1Action.fockInner P P =
       ((α.prod fun _ k => k.factorial : ℕ) : ℝ) : ℝ) : ℂ) := by
   rw [fockInner_eq_sum_support_left]
   refine Finset.sum_congr rfl (fun α _ => ?_)
-  rw [conj_mul_self_eq_normSq, wt_eq_nat]
-  rw [Complex.ofReal_mul, Complex.ofReal_natCast]
+  rw [conj_mul_self_eq_normSq, wt_eq_nat, Complex.ofReal_mul, Complex.ofReal_natCast]
 
 lemma fockInner_self_re_nonneg (P : MvPolynomial σ ℂ) : 0 ≤ (FockH1Action.fockInner P P).re := by
   rw [fockInner_self, Complex.re_sum]
@@ -236,8 +235,7 @@ lemma wt_add_single [Fintype σ] [DecidableEq σ] (β : σ →₀ ℕ) (l : σ) 
 
 private theorem X_mul_monomial_eq_monomial_add_single (l : σ) (a : σ →₀ ℕ) (c : ℂ) :
     X l * monomial a c = monomial (a + Finsupp.single l 1) c := by
-  rw [add_comm]
-  rw [MvPolynomial.monomial_single_add, pow_one]
+  rw [add_comm, MvPolynomial.monomial_single_add, pow_one]
 
 private theorem fockInner_monomial_monomial_self (a : σ →₀ ℕ) (c d : ℂ) :
     FockH1Action.fockInner (monomial a c) (monomial a d) = (starRingEnd ℂ) c * d * wt a := by

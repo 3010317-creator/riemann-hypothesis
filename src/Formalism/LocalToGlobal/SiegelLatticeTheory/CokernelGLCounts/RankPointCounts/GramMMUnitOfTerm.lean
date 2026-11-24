@@ -59,8 +59,7 @@ theorem gramMM_unit_of_term (t : Term V M r) (hT : H.IsTerm t) : IsUnit (H.gram 
   · have hMM : H.MMfam t = Sum.elim t.f t.f' := by
       unfold HermSp.MMfam
       rw [hsplit]
-    rw [hMM]
-    exact hgu
+    rwa [hMM]
   · set qi : E := algebraMap F E ((g.q : F)⁻¹)
     have hqi : IsUnit qi := ((Units.mk0 (g.q : F) (q_ne g))⁻¹.isUnit).map (algebraMap F E)
     have hMM : H.MMfam t = Sum.elim t.f (fun a => qi • (t.f' a - t.f a)) := by
@@ -130,8 +129,7 @@ theorem f'_eq_G (g : SplitG M.L) (hs : M.split = some g) (t : Term V M r) (a : F
 
 theorem smul_mem_lat (g : SplitG M.L) (abelian₂ : Submodule M.L.O V) {x : V} (hx : x ∈ abelian₂) :
     algebraMap F E (g.q : F) • x ∈ abelian₂ := by
-  have h1 := abelian₂.smul_mem (⟨algebraMap F E (g.q : F), q_mem_O g⟩ : M.L.O) hx
-  exact h1
+  exact abelian₂.smul_mem (⟨algebraMap F E (g.q : F), q_mem_O g⟩ : M.L.O) hx
 
 theorem iota_fst_of (hM : M.OK) (g : SplitG M.L) (hs : M.split = some g) (t : Term V M r) (hg : H.IsGeneric t)
     (hU : IsCompl (Submodule.span E (Set.range (Sum.elim t.f t.f'))) (H.W0 t.f t.f')) {x : V} (hx : x ∈ t.abelian₂)

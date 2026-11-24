@@ -177,11 +177,9 @@ variable {p : ℕ} [Fact p.Prime] (X : Sys p)
 def len (v : X.Pl) (j : ℕ) (L : (X.Pj j).Tup) : ℤ :=
   lenLat ((X.Pj j).W (X.vJ j v)) p (L (X.vJ j v))
 
-theorem vJ_vB (j : ℕ) (v' : Fin (X.Pj j).nV) : X.vJ j (X.vB j v') = v' := by
-  exact Fin.ext rfl
+theorem vJ_vB (j : ℕ) (v' : Fin (X.Pj j).nV) : X.vJ j (X.vB j v') = v' := Fin.ext rfl
 
-theorem vB_vJ (j : ℕ) (v : X.Pl) : X.vB j (X.vJ j v) = v := by
-  exact Fin.ext rfl
+theorem vB_vJ (j : ℕ) (v : X.Pl) : X.vB j (X.vJ j v) = v := Fin.ext rfl
 
 theorem len_edge : ∀ j (v' : Fin (X.Pj j).nV) (i : ℕ) (L : (X.Pj j).Tup)
     (L'' : Submodule ((X.Pj j).W v') (Fin ((X.Pj j).m + 1) → (X.Pj j).Qq v')),

@@ -159,8 +159,7 @@ theorem deX_eq_sum (hCB : PI.WwCauchyBinet.WwCauchyBinet) {K : Type} [CommRing K
   have h' : (∑ᶠ J : ColChoice N nu, C (minY N nu J y) * map (Int.castRingHom K) (nablaX N nu J)) =
       ∑ J : ColChoice N nu, C (minY N nu J y) * map (Int.castRingHom K) (nablaX N nu J) :=
     finsum_eq_sum_of_fintype _
-  rw [← h']
-  exact h
+  rwa [← h']
 
 theorem sum_smul_eq_zero (hCB : PI.WwCauchyBinet.WwCauchyBinet) (l : ℕ) [Fact l.Prime]
     (ph : Module.Dual ℂ_[l] (MvPolynomial (Lt × ℕ × Fin N) ℂ_[l]))
@@ -177,8 +176,7 @@ theorem sum_smul_eq_zero (hCB : PI.WwCauchyBinet.WwCauchyBinet) (l : ℕ) [Fact 
 
   simp only [map_sum, MvPolynomial.smul_eq_C_mul, MvPolynomial.eval_mul, MvPolynomial.eval_C,
   eval_map_nablaX, map_zero]
-  refine Eq.trans ?_ hx
-  exact Finset.sum_congr rfl fun J _ => mul_comm _ _
+  exact Eq.trans (Finset.sum_congr rfl fun J _ => mul_comm _ _) hx
 
 theorem wwInjective_of (hCB : PI.WwCauchyBinet.WwCauchyBinet) : PI.WwInjective.WwInjective := by
   unfold PI.WwInjective.WwInjective
@@ -318,8 +316,7 @@ theorem Lfun_sum' {Lt : Type} (l : ℕ) [Fact l.Prime] (N0 N1 : ℕ)
   rw [Lfun_eq_of_subset l N0 N1 Th _ (s.biUnion fun i => (f i).support) MvPolynomial.support_sum]
   rw [Finset.sum_congr rfl (fun i hi => Lfun_eq_of_subset l N0 N1 Th (f i)
     (s.biUnion fun i => (f i).support) (Finset.subset_biUnion_of_mem (fun i => (f i).support) hi))]
-  simp only [MvPolynomial.coeff_sum, Finset.sum_mul]
-  exact Finset.sum_comm
+  simpa only [MvPolynomial.coeff_sum, Finset.sum_mul] using Finset.sum_comm
 
 theorem lH : LH := by
   unfold LH Hpol
@@ -390,8 +387,7 @@ theorem sum_inj_eq_sum_pairs {R : Type} [CommRing R] {p n : ℕ} (F : (Fin p →
   classical
   refine Finset.sum_bij (fun x _ => (x.1 : Fin p → Fin n) ∘ x.2) ?_ ?_ ?_ (fun _ _ => rfl)
   · intro x _
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-    exact x.1.injective.comp x.2.injective
+    simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using x.1.injective.comp x.2.injective
   · rintro ⟨I, σ⟩ _ ⟨J, τ⟩ _ h
     simp only at h
     have hr : Set.range (I : Fin p → Fin n) = Set.range (J : Fin p → Fin n) := by

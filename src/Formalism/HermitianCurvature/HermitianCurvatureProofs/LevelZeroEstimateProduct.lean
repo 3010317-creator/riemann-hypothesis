@@ -145,8 +145,7 @@ theorem lift_estimate_of_base : C.EstLiftOfParts := by
   exact h
 
 theorem block_estimate_of_base : C.EstBlockOfParts := by
-  intro E _ _ _ Wp Wq _ _ _ _ S C₄ h Kr hK0 Th e
-  exact h
+  exact fun E _ _ _ Wp Wq _ _ _ _ S C₄ h Kr hK0 Th e => h
 
 theorem level_zero_estimate_product : C.EstEOfParts := by
   intro E _ _ _ Wp Wq _ _ _ _ S jv hG hE Kr hK0 Th e w _

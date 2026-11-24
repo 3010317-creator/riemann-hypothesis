@@ -114,8 +114,7 @@ theorem vAB_succ (y : ℂ) (i : ℕ) (hi : i < r) (G : (Fin r → ℂ) → V) :
     (Q.vAB r y (i + 1)).1 G = (fun c => y • (Q.vAB r y i).1 G c + pOp ⟨i, hi⟩ ((Q.vAB r y i).1 G) c -
       cOp ⟨i, hi⟩ ((Q.vAB r y i).2 G) c) ∧
     (Q.vAB r y (i + 1)).2 G = ciOp ⟨i, hi⟩ ((Q.vAB r y i).1 G) := by
-  simp only [Q.vAB, dite_eq_left hi]
-  exact ⟨funext fun c => rfl, trivial⟩
+  simpa only [Q.vAB, dite_eq_left hi] using ⟨funext fun c => rfl, trivial⟩
 
 end vab
 
@@ -221,9 +220,7 @@ theorem claim (hRR : RightRuleE) (hLR : LeftRuleCell) (hTC : TorusCell) (hGP : G
         intro s t a b d h
         rw [h, smul_sub, smul_comm]
       apply key
-      have h2 := hX
-      simp only [hLaP_apply, La_apply, mul_assoc] at h2
-      exact h2
+      simpa only [hLaP_apply, La_apply, mul_assoc] using hX
     rw [eL, ih1, ih0]
 
     obtain ⟨G', hG'def⟩ : ∃ G' : (Fin r → ℂ) → E,
@@ -246,8 +243,7 @@ theorem claim (hRR : RightRuleE) (hLR : LeftRuleCell) (hTC : TorusCell) (hGP : G
       intro i
       induction i with
       | zero =>
-        intro f₁ f₂ h c hc
-        exact ⟨h c hc, rfl⟩
+        exact fun f₁ f₂ h c hc => ⟨h c hc, rfl⟩
       | succ i ih =>
         intro f₁ f₂ h c hc
         by_cases hi : i < r
@@ -258,8 +254,7 @@ theorem claim (hRR : RightRuleE) (hLR : LeftRuleCell) (hTC : TorusCell) (hGP : G
               pOp_locO _ (fun c' hc' => (ih f₁ f₂ h c' hc').1) hc]
           · simp only [ciOp]
             rw [(ih f₁ f₂ h c hc).1]
-        · simp only [Q.vAB, dite_eq_right hi]
-          exact ih f₁ f₂ h c hc
+        · simpa only [Q.vAB, dite_eq_right hi] using ih f₁ f₂ h c hc
     have hl1 := vAB_loc (m + 1)
       (fun c' => Q.resG k r (Fin.last r) (((T * P : SA E hD) : Module.End ℂ (VS k r 0 D E)) v₀ : Mx k r → E) c' g₀)
       (pOp ⟨m + 1, by omega⟩ G' + y • G') hTS c hc

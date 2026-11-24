@@ -104,8 +104,7 @@ theorem prod_sub_one_dvd (ℓ : ℕ) [Fact ℓ.Prime] (hℓ : ℓ ≠ 2) (u : �
     by_contra hnu
     apply hw
     have hm : w ∈ IsLocalRing.maximalIdeal ℤ_[ℓ] := (IsLocalRing.mem_maximalIdeal w).2 (mem_nonunits_iff.2 hnu)
-    rw [PadicInt.maximalIdeal_eq_span_p, Ideal.mem_span_singleton] at hm
-    exact hm
+    rwa [PadicInt.maximalIdeal_eq_span_p, Ideal.mem_span_singleton] at hm
   have hne : (u : ℤ_[ℓ]) - 1 ≠ 0 := by
     intro h0
     rw [h0, PadicInt.valuation_zero] at hv
@@ -126,8 +125,7 @@ theorem prod_sub_one_dvd (ℓ : ℕ) [Fact ℓ.Prime] (hℓ : ℓ ≠ 2) (u : �
     have hcop : Nat.Coprime ℓ m := (Nat.coprime_comm.1 ((Nat.Prime.coprime_iff_not_dvd hp).2 hm).symm)
     have hg : Int.gcd (ℓ : ℤ) (m : ℤ) = 1 := by
       have := Int.gcd_natCast_natCast ℓ m
-      rw [this]
-      exact hcop
+      rwa [this]
     have hz : (1 : ℤ) = ℓ * Int.gcdA ℓ m + m * Int.gcdB ℓ m := by
       rw [← Int.gcd_eq_gcd_ab, hg]
       rfl

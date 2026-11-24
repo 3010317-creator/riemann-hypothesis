@@ -76,8 +76,7 @@ theorem ann_preconn (P : M.Par) (hTT : 0 < P.TT) : IsPreconnected (Ann P) := by
       refine ⟨(‖ζ‖, Complex.arg ζ), ⟨?_, Set.mem_univ _⟩, Complex.norm_mul_exp_arg_mul_I ζ⟩
       show Real.sqrt P.TT < ‖ζ‖
       rw [Complex.normSq_eq_norm_sq] at h'
-      by_contra hle
-      push Not at hle
+      by_contra! hle
       nlinarith [norm_nonneg ζ, mul_le_mul hle hle (norm_nonneg ζ) hs]
     · rintro ⟨⟨a, b⟩, ⟨ha, -⟩, rfl⟩
       have ha' : Real.sqrt P.TT < a := ha
@@ -312,26 +311,22 @@ theorem second_shift_constant : GTSSConst := by
   have hNs : star d.L.nabs = d.L.nab := by rw [← hS.2.1, star_star]
   have E1 : d.L.nab.1 ((d.SS l).1 U) = (d.SS l).1 (d.L.nab.1 U) - d.L.ζb.1 (d.L.GGi.1 ((d.SS l).1 U)) := by
     have h := congrArg (fun x : Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') => x.1 U) hrel.1
-    simp only [pm, ps, Module.End.mul_apply, LinearMap.sub_apply] at h
-    exact h
+    simpa only [pm, ps, Module.End.mul_apply, LinearMap.sub_apply] using h
   have E2 : d.L.nabs.1 ((d.SS l).1 U) = (d.SS l).1 (d.L.nabs.1 U) - d.L.ζ.1 (d.L.GGi.1 ((d.SS l).1 U)) := by
     have h := congrArg (fun x : Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') => x.1 U) hrel.2
-    simp only [pm, ps, Module.End.mul_apply, LinearMap.sub_apply] at h
-    exact h
+    simpa only [pm, ps, Module.End.mul_apply, LinearMap.sub_apply] using h
   have F1 : (star (d.SS l)).1 (d.L.nabs.1 U) =
       d.L.nabs.1 ((star (d.SS l)).1 U) - (star (d.SS l)).1 (d.L.GGi.1 (d.L.ζ.1 U)) := by
     have h0 := congrArg star hrel.1
     rw [star_mul, star_sub, star_mul, star_mul, star_mul, hS.2.1, hGi, hZb] at h0
     have h := congrArg (fun x : Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') => x.1 U) h0
-    simp only [pm, ps, Module.End.mul_apply, LinearMap.sub_apply] at h
-    exact h
+    simpa only [pm, ps, Module.End.mul_apply, LinearMap.sub_apply] using h
   have F2 : (star (d.SS l)).1 (d.L.nab.1 U) =
       d.L.nab.1 ((star (d.SS l)).1 U) - (star (d.SS l)).1 (d.L.GGi.1 (d.L.ζb.1 U)) := by
     have h0 := congrArg star hrel.2
     rw [star_mul, star_sub, star_mul, star_mul, star_mul, hNs, hGi, hS.1] at h0
     have h := congrArg (fun x : Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') => x.1 U) h0
-    simp only [pm, ps, Module.End.mul_apply, LinearMap.sub_apply] at h
-    exact h
+    simpa only [pm, ps, Module.End.mul_apply, LinearMap.sub_apply] using h
 
   have hDs : ∀ q : MA.Qp P.r P.TT, M.Up P l ρ0 ρ' →
       NF.dZ (s l ρ' ρ0) q.1.2 = 0 ∧ NF.dZb (s l ρ' ρ0) q.1.2 = 0 := by

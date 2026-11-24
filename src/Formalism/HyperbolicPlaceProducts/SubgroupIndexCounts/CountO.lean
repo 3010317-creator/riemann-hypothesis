@@ -208,8 +208,7 @@ theorem card_hom_le (P : Ideal R) [P.IsMaximal] [Finite (R ⧸ P)] {X : Type}
       · refine Submodule.smul_le.mpr fun r hr n _ => ?_
         rw [LinearMap.mem_ker, map_smul, Algebra.smul_def, Ideal.Quotient.algebraMap_eq,
           Ideal.Quotient.eq_zero_iff_mem.mpr hr, zero_mul]
-    rw [hs, top_le_iff, LinearMap.ker_eq_top, sub_eq_zero] at hle
-    exact hle
+    rwa [hs, top_le_iff, LinearMap.ker_eq_top, sub_eq_zero] at hle
   refine ⟨Finite.of_injective F hF, ?_⟩
   calc Nat.card (X →ₗ[R] R ⧸ P) ≤ Nat.card (s → R ⧸ P) := Nat.card_le_card_of_injective F hF
     _ = Nat.card (R ⧸ P) ^ s.card := by rw [Nat.card_fun]; simp
@@ -273,8 +272,7 @@ theorem hyp_count (P : Ideal R) [P.IsMaximal] [Finite (R ⧸ P)] {X : Type}
     if h : L ∈ hyp P X then Classical.choose (exists_hom_ker P L h.1 h.2) else 0
   have hF : ∀ L ∈ hyp P X, LinearMap.ker (F L) = L := by
     intro L hL
-    simp only [F, dite_eq_left hL]
-    exact Classical.choose_spec (exists_hom_ker P L hL.1 hL.2)
+    simpa only [F, dite_eq_left hL] using Classical.choose_spec (exists_hom_ker P L hL.1 hL.2)
   have hinj : Set.InjOn F (hyp P X) := by
     intro L₁ h₁ L₂ h₂ h
     rw [← hF L₁ h₁, ← hF L₂ h₂, h]
@@ -434,8 +432,7 @@ variable {E}
 
 theorem TF.submodule {X : Type} [AddCommGroup X] [Module (𝓞 E) X] (h : TF E X)
     (L : Submodule (𝓞 E) X) : TF E L := by
-  intro a ha x hx
-  exact Subtype.ext (h a ha x (congrArg Subtype.val hx))
+  exact fun a ha x hx => Subtype.ext (h a ha x (congrArg Subtype.val hx))
 
 theorem LIB.submodule {X : Type} [AddCommGroup X] [Module (𝓞 E) X] {k : ℕ} (h : LIB E X k)
     (L : Submodule (𝓞 E) X) : LIB E L k := by
@@ -521,8 +518,7 @@ theorem count_prime_pow (k p : ℕ) (hp : p.Prime) (e : ℕ) :
     have hP0 : P ≠ ⊥ := (Ideal.bot_lt_of_maximal P (RingOfIntegers.not_isField E)).ne'
     obtain ⟨s, hsk, hs⟩ := exists_gen_mod P hP0 htf k hli
     have := hyp_count P k (card_hom_le P k s hsk hs)
-    rw [hfc P hP] at this
-    exact this
+    rwa [hfc P hP] at this
   have hA : ∀ P ∈ G, ∀ L ∈ hyp P X,
       (A P L).Finite ∧ (A P L).ncard ≤ n ^ (e - f P) * (p ^ (e - f P)) ^ k := by
     intro P hP L _
@@ -609,13 +605,11 @@ theorem card_submodules_of_index_le : Formalism.SLP.SubmoduleIndexCountO := by
     | prime_pow p e hp _ =>
       intro _
       have h := count_prime_pow k p hp e M htf hli
-      rw [hp.primeFactorsList_pow, List.length_replicate]
-      exact h
+      rwa [hp.primeFactorsList_pow, List.length_replicate]
     | zero => intro h; omega
     | one =>
       intro _
-      have h := count_prime_pow k 2 Nat.prime_two 0 M htf hli
-      simpa using h
+      simpa using count_prime_pow k 2 Nat.prime_two 0 M htf hli
     | coprime a b ha hb hab iha ihb =>
       intro _
       obtain ⟨fa, ca⟩ := iha (by omega)

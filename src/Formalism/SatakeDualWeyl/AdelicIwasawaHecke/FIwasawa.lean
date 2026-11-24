@@ -106,8 +106,7 @@ private lemma blockTriangular_mul_diag (B C : Matrix (Fin n) (Fin n) L)
     rcases lt_or_gt_of_ne hki with h | h
     · rw [hB (show id k < id i from h), zero_mul]
     · rw [hC (show id i < id k from h), mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 private lemma GL_blockTriangular_diag_ne_zero (g : GL (Fin n) L)
     (hg : (g : Matrix (Fin n) (Fin n) L).BlockTriangular id) (i : Fin n) :
@@ -210,8 +209,7 @@ theorem exists_spherical_function_unitary : Formalism.UG.SphericalExistsU := by
   choose B K hB hK hBK using fIwasawa_iwasawa (n := n) σ hσ hσv
   have htri : ∀ g : GU σ n, IsBorelU g →
       (((g : GL (Fin n) L)) : Matrix (Fin n) (Fin n) L).BlockTriangular id := by
-    intro g hg i j hij
-    exact hg i j hij
+    exact fun g hg i j hij => hg i j hij
   have h1tri : (((1 : GU σ n) : GL (Fin n) L) : Matrix (Fin n) (Fin n) L).BlockTriangular id :=
     Matrix.blockTriangular_one
   refine ⟨fun g => chiDeltaU q α (B g), ?_, ?_, ?_⟩

@@ -256,8 +256,7 @@ theorem clXQ_phiQ_tgt {q : ℕ} (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : 
     LocE.PhiQ q ξ k₀ r c' n' c n (g.toLinearMap ∘ₗ y) =
       LocE.unitV ξ ((LinearEquiv.det g : Eˣ) : E) * LocE.lamQB ξ kj n g.toLinearMap * LocE.PhiQ q ξ k₀ r c' n' c n y := by
   have e0 := phiQ_lawG hq hu ξ k₀ r c' n' c n kj' kj h' h hk' hk e' e hr' hr (one_mem (LocE.JQ P q kj' n' c')) hg y
-  rw [clXQ_tl_one, mul_one, clXQ_scal hq hu ξ h hk hkn e hr hg] at e0
-  exact e0
+  rwa [clXQ_tl_one, mul_one, clXQ_scal hq hu ξ h hk hkn e hr hg] at e0
 
 end PhiQ
 
@@ -611,8 +610,7 @@ theorem Q_iff {n' n c : ℕ} (xj : (Fin n' → k) →ₗ[k] (Fin n → k)) (x : 
       by_cases hj0 : j = 0
       · subst hj0
         have hc : 0 < c := by omega
-        have k2 := congrFun (h2 hc) l
-        simpa [eN] using k2
+        simpa [eN] using congrFun (h2 hc) l
       · have hjlt : j < c := by have := s.2; omega
         obtain ⟨hl1, hl2⟩ := hj2 (by omega)
         have hl : ¬ l.1 < n + j := by omega
@@ -625,8 +623,7 @@ theorem Q_iff {n' n c : ℕ} (xj : (Fin n' → k) →ₗ[k] (Fin n → k)) (x : 
         x (eN k (n' + (c + 1)) s) l = base xj l ⟨s, hs⟩ := by
       intro l s hs h
       have k5 := H l ⟨s, hs⟩ h
-      rw [← eN_val_eq_single] at k5
-      exact k5
+      rwa [← eN_val_eq_single] at k5
     refine ⟨?_, ?_, ?_⟩
     · intro v
       have e : x ∘ₗ inX k n' (c + 1) = inX k n c ∘ₗ xj := by
@@ -717,8 +714,7 @@ theorem cq_rep_int (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : ℕ) : 
   intro D
   induction D with
   | zero =>
-    intro y hy
-    exact ⟨0, by simp, by simpa using hy⟩
+    exact fun y hy => ⟨0, by simp, by simpa using hy⟩
   | succ D ih =>
     intro y hy
     have hq0 : (q : E) ≠ 0 := ciQ_ne_zero hu
@@ -736,8 +732,7 @@ theorem cq_rep_int (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : ℕ) : 
         push_cast
         field_simp
         ring
-      rw [e]
-      exact hzd
+      rwa [e]
 
 theorem cq_rep (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : ℕ) : 𝓞 E) ∉ P.asIdeal ^ 2) (hp : q.Prime)
     (hcard : Nat.card (𝓞 E ⧸ P.asIdeal) = q) (A B : ℕ) (x : E) (hx : IntAt P ((q : E) ^ A * x)) :
@@ -748,8 +743,7 @@ theorem cq_rep (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : ℕ) : 𝓞
   have e : (x - (i : E) / (q : E) ^ A) / (q : E) ^ B = ((q : E) ^ A * x - i) / (q : E) ^ (A + B) := by
     rw [pow_add]
     field_simp
-  rw [e]
-  exact hz
+  rwa [e]
 
 theorem cq_rep_unique (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : ℕ) : 𝓞 E) ∉ P.asIdeal ^ 2) (hp : q.Prime)
     {A B : ℕ} {v v' : E} (hv : v ∈ LocE.valsQ E q A B) (hv' : v' ∈ LocE.valsQ E q A B) (h : IntAt P ((v - v') / (q : E) ^ B)) :
@@ -832,8 +826,7 @@ theorem cq_decomp (z : Fin (n + c) → k) :
       rw [Pi.smul_apply, smul_eq_mul]
       show z (Fin.natAdd n i) * (if (Fin.natAdd n j).1 = n + i.1 then 1 else 0) = 0
       rw [ite_eq_right (fun h => hij (Fin.ext (by simp at h; omega))), mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem cq_r_apply {r : (Fin (n + c) → k) ≃ₗ[k] (Fin (n + c) → k)} {g : (Fin n → k) ≃ₗ[k] (Fin n → k)}
     (hg : ∀ x, r (Loc.inX k n c x) = Loc.inX k n c (g x)) (z : Fin (n + c) → k) :

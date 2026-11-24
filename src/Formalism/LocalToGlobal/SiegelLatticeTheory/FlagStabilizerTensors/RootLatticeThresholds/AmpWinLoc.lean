@@ -101,8 +101,7 @@ theorem uh_sub_range {x : Mt D.R.k D.R.rS} (hx : Matrix.of x ∈ UH (Hpk D.R.k D
           simp only [Matrix.conjTranspose_mul, Matrix.mul_assoc]
       _ = Formalism.REAL.Jm ε := by rw [h2, Matrix.conjTranspose_one, Matrix.one_mul, Matrix.mul_one]
   have hg' : gᴴ * (Formalism.REAL.Jm ε * g) = Formalism.REAL.Jm ε := by
-    rw [← Matrix.mul_assoc]
-    exact hg
+    rwa [← Matrix.mul_assoc]
   have hinv : (Formalism.REAL.Jm ε * gᴴ * Formalism.REAL.Jm ε) * g = 1 := by
     simp only [Matrix.mul_assoc]
     rw [hg', hJJ]
@@ -196,8 +195,7 @@ theorem hDict (γ : Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) :
     have := Formalism.L2.SG.Pf.EquivPf.fix_loc (n_eq' X) (X.B.I.ε (vOf X τ)) (C.Q τ) (C.Qi τ) h1 h2 hgQ
       (fun a => rv X.B.I (vOf X τ) (X.eR a)) (fun a => rv X.B.I (vOf X τ) (X.fR a)) _ _ hc hd
       (fun a => (hcol a a rfl).1) (fun a => (hcol a a rfl).2) (rv X.B.I (vOf X τ) (X.zR u)) hh
-    rw [e] at this
-    exact this
+    rwa [e] at this
   · rintro ⟨hhe, hhf, hhz⟩
     exact Formalism.L2.SG.Pf.EquivPf.uw_loc (n_eq' X) (X.B.I.ε (vOf X τ)) (C.Q τ) (C.Qi τ) h1 h2 hgQ
       (fun a => rv X.B.I (vOf X τ) (X.eR a)) (fun a => rv X.B.I (vOf X τ) (X.fR a)) _ _
@@ -273,8 +271,7 @@ theorem invOn_mulMap : QPK.InvOn (QPK.mulMap (muNl C τ (vOf X τ)) (muHl C u τ
       QPK.prodSet (Formalism.L2.SG.Pf.WuDec.Nloc X u (vOf X τ)) (Formalism.L2.SG.Pf.WuDec.Hfix X u (vOf X τ)) := by
     ext γ
     rw [Set.mem_setOf_eq, Formalism.L2.SG.Pf.LocF.local_dictionary_all D X θ C u τ γ, Formalism.L2.SG.Pf.WuDec.NHloc_eq]
-  rw [heq, ← hset]
-  exact hμS
+  rwa [heq, ← hset]
 
 theorem bruhat_mulMap : ∃ β : Formalism.REAL.UJ (X.B.I.ε (vOf X τ)) → ℝ≥0∞, Measurable β ∧
     ∀ x, ∫⁻ s, β (s * x) ∂(QPK.mulMap (muNl C τ (vOf X τ)) (muHl C u τ (vOf X τ))) = 1 := by

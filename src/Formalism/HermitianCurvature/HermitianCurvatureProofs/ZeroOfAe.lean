@@ -140,8 +140,7 @@ theorem zero_of_ae {μG : Measure (Formalism.QuantumDeterminants.Mt k r)} (hμ :
     have hxO' : (g : MX)⁻¹ * ((g : MX) * Matrix.of x) ∈ V := hxO
     have hxU' : (g : MX) * Matrix.of x ∈ UHk := hxU
     refine ⟨?_, ?_⟩
-    · rw [h1] at hxO'
-      exact hxO'
+    · rwa [h1] at hxO'
     · have := Formalism.QuantumDeterminants.WeylGroupFacts.uh_mul (Formalism.QuantumDeterminants.WeylGroupFacts.uh_inv g.2) hxU'
       rwa [h1] at this
   have hUnull : μG {x : Formalism.QuantumDeterminants.Mt k r | Matrix.of x ∈ UHk} = 0 := by
@@ -156,8 +155,7 @@ theorem zero_of_ae {μG : Measure (Formalism.QuantumDeterminants.Mt k r)} (hμ :
   have hsplit : (Set.univ : Set (Formalism.QuantumDeterminants.Mt k r)) =
       {x | Matrix.of x ∈ UHk} ∪ {x | Matrix.of x ∉ UHk} := by
     ext x
-    simp only [Set.mem_univ, Set.mem_union, Set.mem_ofPred_eq, true_iff]
-    exact em _
+    simpa only [Set.mem_univ, Set.mem_union, Set.mem_ofPred_eq, true_iff] using em _
   rw [hsplit]
   exact measure_union_null hUnull hμ.2.2.1
 
@@ -236,15 +234,13 @@ theorem aez {Wp : Type} [NormedAddCommGroup Wp] [NormedSpace ℂ Wp]
       simp
     · have hnot : (fun i j => (Matrix.of (fun i j => (Matrix.of p.1 * Matrix.of p.2) i j) * Matrix.of x) i j :
           Formalism.QuantumDeterminants.Mt k r) ∉ S := by
-        intro hm
-        exact hxU (DDSmoothness.uh_cancel hsU hm)
+        exact fun hm => hxU (DDSmoothness.uh_cancel hsU hm)
       simp only [G, Set.piecewise, hnot, ite_false]
   have hGaeG : ∀ᵐ x ∂μG, G x = 0 := (lintegral_eq_zero_iff hGm).1 hμGint
   have hae : ∀ᵐ x ∂μG, Matrix.of x ∈ UHk → F (Matrix.of x) = 0 := by
     filter_upwards [hGaeG] with x hx hxU
     exact hGval x hxU hx
-  intro g hg
-  exact zero_of_ae hμG hFc hae hg
+  exact fun g hg => zero_of_ae hμG hFc hae hg
 
 end UnipotentHaarMeasurability
 

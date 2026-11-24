@@ -137,7 +137,6 @@ theorem annihilation_of_scaled_spans {O M ι : Type} [CommRing O] [AddCommGroup 
       refine sup_le le_sup_right (le_sup_of_le_left (Submodule.span_mono ?_))
       intro z hz
       exact Finset.mem_coe.2 (Finset.mem_biUnion.2 ⟨c, Finset.mem_univ _, Finset.mem_coe.1 hz⟩)
-    show b • y ∈ (Submodule.span O ((Finset.univ.biUnion s : Finset M) : Set M) ⊔ Im)
     exact hle h1
   obtain ⟨x, hx, y, hy, hxy⟩ := Submodule.mem_sup.1 hp
   rw [← hxy, smul_add]
@@ -200,8 +199,7 @@ theorem killR_of_steps (D : D7) (HW : HWOf D.loc) (hd : dvdR) (hq : quotR D) (hn
     have hY : (l ^ YA l (eK K) (sK l K) h' S η₁ : ℕ) • p ∈
         Submodule.span ↥(OL LL) ((Finset.univ.biUnion s₀ : Finset _) : Set (↥(GK K) → T₂.V)) ⊔
           F.ImF ((D.loc l).PD K) := by
-      rw [YA_split, pow_add, mul_comm, mul_smul]
-      exact hk
+      rwa [YA_split, pow_add, mul_comm, mul_smul]
     have e1 : YA l (eK K) (sK l K) h' S η =
         (YA l (eK K) (sK l K) h' S η - YA l (eK K) (sK l K) h' S η₁) + YA l (eK K) (sK l K) h' S η₁ :=
       (Nat.sub_add_cancel (YA_mono l (eK K) (sK l K) h' S hη)).symm

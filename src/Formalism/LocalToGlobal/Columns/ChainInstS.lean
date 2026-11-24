@@ -101,8 +101,7 @@ theorem JGsym_entry (hq0 : (q : E) ≠ 0) {k₀ rS r t n c : ℕ} (hk : k₀ ≤
       have hA := zpow_ne_zero (LocE.scE n (fun i => i + 1) (LocE.fIdx k₀ c n p)) hq0
       field_simp
       ring
-  rw [← e]
-  exact h3
+  rwa [← e]
 
 theorem JGsym_red (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hq0 : (q : E) ≠ 0) {k₀ rS r t n c : ℕ} (hk : k₀ ≤ n) (hr : k₀ + rS ≤ r)
     {κ : Sp E (n + c) ≃ₗ[E] Sp E (n + c)} (hκ : κ ∈ LocE.JGsym P q k₀ rS r t n c) {p p' : ℕ} (hp : p < n + c) (hp' : p' < r) (hpn : p' < n + c)
@@ -190,8 +189,7 @@ theorem psiAt_sym {m2 : ℕ} (hc' : cOf R m2 = 1) (hc : cOf R (m2 + 1) = 0) (hs 
   have hi : i.1 < R.N (m2 + 1) + cOf R (m2 + 1) := Nat.lt_of_lt_of_le i.2 (Nat.le_add_right _ _)
   have hq0 : ((qOf P.1 : ℕ) : X.E) ≠ 0 := Nat.cast_ne_zero.2 (qOf_pos P.1).ne'
   have a := phiGS_col (xqQ_mem P.1) hq0 _ _ hkr _ h' hi
-  rw [symEntB_join_col _ hc' hc x₀ y' i.2] at a
-  exact a
+  rwa [symEntB_join_col _ hc' hc x₀ y' i.2] at a
 
 end Glob
 

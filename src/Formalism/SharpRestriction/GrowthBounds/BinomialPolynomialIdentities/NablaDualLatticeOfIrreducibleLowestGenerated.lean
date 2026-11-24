@@ -119,8 +119,7 @@ theorem nablaDualLattice_of_irreducible_lowest_generated (hIrr : ContragredientI
           exact (neg_injective this).symm
       | zero => simp
       | add a b _ _ ha hb => rw [map_add (f := _), ha, hb]; simp
-    rw [hs, hy0z, zero_add]
-    exact hrest
+    rwa [hs, hy0z, zero_add]
   have hNab : Nabla (O := O) (dualOps E) (dualWt mu) v' = (NSub (O := O) E x0 : Set _) := by
     ext φ
     constructor
@@ -142,8 +141,7 @@ theorem nablaDualLattice_of_irreducible_lowest_generated (hIrr : ContragredientI
     | mem y hy =>
       obtain ⟨u, hu, rfl⟩ := hy
       have h1 := dualLattice_comp_integralMonoid_mem E hE' (NSub (O := O) E x0) (NSub_stable E x0) hu φ hφ
-      have h2 := h1 1 (Submonoid.one_mem _)
-      exact h2
+      exact h1 1 (Submonoid.one_mem _)
     | zero => rw [map_zero]; exact Oval.zero
     | add a b _ _ ha hb => rw [map_add (f := _)]; exact Oval.add ha hb
     | smul c a _ ha =>
@@ -173,7 +171,6 @@ theorem weylDualityLattice_of_nabla_fg_bidual (D : Formalism.BasicNotions.D7) (h
     apply Submodule.subset_span
     exact Submodule.subset_span ⟨u, rationalMonoid_le_integralMonoid E hu, rfl⟩
   have hB := hBid O V (Delta (O := O) E v) (hFG p O S n V E mu v v' hI hH himg) hspan
-  rw [hNab p O S n V E mu v v' hI hH himg]
-  exact hB
+  rwa [hNab p O S n V E mu v v' hI hH himg]
 
 end Formalism.MainNotions.G.ColumnFamilies

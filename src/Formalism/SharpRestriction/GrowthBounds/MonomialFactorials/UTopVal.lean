@@ -174,10 +174,8 @@ theorem S_bound (a : Fin X.s → ℕ) (hT : a ∈ Fintype.piFinset (fun _ : Fin 
         · simp
         · intro c _ hc
           rw [ite_eq_right]
-          intro hc'
-          exact hc (Fin.ext hc')
-        · intro hc
-          exact absurd (Finset.mem_univ _) hc
+          exact fun hc' => hc (Fin.ext hc')
+        · exact fun hc => absurd (Finset.mem_univ _) hc
 
 end SI
 

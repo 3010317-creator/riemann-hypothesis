@@ -245,8 +245,7 @@ lemma label_second {l k t h : ℕ} {i : ℝ} {xm mB : ℤ} (hl : l.Prime) (hi : 
         (by rw [e]; exact h3)
       rw [← hd0] at hle
       have hle' : (d0 : ℤ) ≤ ((xm - ct).toNat : ℤ) := by exact_mod_cast hle
-      rw [hnn] at hle'
-      exact hle'
+      rwa [hnn] at hle'
   obtain ⟨g, hg⟩ : ∃ g : ℤ → ℕ, ∀ ct, g ct = ((xm - ct - d0) / (l : ℤ)).toNat :=
     ⟨_, fun _ => rfl⟩
   have hgZ : ∀ ct ∈ S, (l : ℤ) * (g ct : ℤ) = xm - ct - d0 := by
@@ -301,8 +300,7 @@ lemma label_second {l k t h : ℕ} {i : ℝ} {xm mB : ℤ} (hl : l.Prime) (hi : 
       ≤ ∑ x ∈ S, F (g x) := Finset.sum_le_sum hterm
     _ = ∑ j ∈ S.image g, F j := by
         rw [Finset.sum_image]
-        intro a ha b hb hab
-        exact hinj a ha b hb hab
+        exact fun a ha b hb hab => hinj a ha b hb hab
     _ ≤ ∑ j ∈ Finset.range (h / l + 1), F j :=
         Finset.sum_le_sum_of_subset_of_nonneg (Finset.image_subset_iff.mpr hmaps)
           (fun j _ _ => hF0 j)
@@ -455,8 +453,7 @@ theorem counts_cloud_holds : CountsCloud := by
   · refine le_trans ?_ (ld_boxes_le t (M - w) i (k + j) (dual M lam) tau htau (cont t w M ct))
     unfold cloudBoxes boxesOfContent
     refine Finset.card_le_card ?_
-    intro b hb
-    exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, (Finset.mem_filter.mp hb).2.2⟩
+    exact fun b hb => Finset.mem_filter.mpr ⟨Finset.mem_univ _, (Finset.mem_filter.mp hb).2.2⟩
 
 theorem counts_deep_holds : CountsDeep := by
   intro k j t w M i lam xm xp hR tau htau ct hct
@@ -616,8 +613,7 @@ theorem depth_valuation_sum_holds : DnValSum := by
     have hv : ((M - w : ℕ) : ℤ) - cont t w M ct = ct - maxB t w := by
       unfold cont; ring
     refine ⟨(cont t w M ct + ((k + j : ℕ) : ℤ)).toNat, Finset.mem_range.mpr (by omega), ?_, ?_⟩
-    · rw [hx, hv]
-      exact h2
+    · rwa [hx, hv]
     · rw [hx, hv]
       ring
   · intro a _ _
@@ -658,8 +654,7 @@ theorem first_bound_holds : FactorialValuationSum := by
   · have h := sum_padicVal_shift_eq_factorial l mB (xm - mB - 1).toNat
     rw [hn] at h
     have he : mB + 1 + (xm - mB - 1) = xm := by ring
-    rw [he] at h
-    exact h
+    rwa [he] at h
   · have h3 := Nat.Prime.sub_one_mul_multiplicity_factorial (n := (xm - mB - 1).toNat) hl
     have h4 : (l - 1) * padicValNat l ((xm - mB - 1).toNat).factorial ≤ (xm - mB - 1).toNat := by
       rw [Nat.padicValNat_def, h3]; exact Nat.sub_le _ _
@@ -782,8 +777,7 @@ theorem label_sum_plus_holds : LabelSumPlus := by
     rw [ite_eq_right hlh]
     have e : xp - mB - (xm - mB) = xp - xm := by ring
     rw [indexIntegral_shift, e] at h1
-    simp only [sub_zero] at h1
-    exact h1
+    simpa only [sub_zero] using h1
 
 theorem harmonic_monotone (l h : ℕ) : Monotone (harm l h) := by
   intro a b hab
@@ -858,13 +852,11 @@ theorem second_valuation_holds : Step2Val := by
       have hm := multiplicity_bound_holds k j t w M i lam xm xp hR ct
       rw [ite_eq_right (by omega), ite_eq_right (by omega), zero_add] at hm
       exact mul_le_mul_of_nonneg_right (le_trans hm (min_le_right _ _)) (Nat.cast_nonneg _)
-    · intro ct _ _
-      exact mul_nonneg (Nat.cast_nonneg _) (Nat.cast_nonneg _)
+    · exact fun ct _ _ => mul_nonneg (Nat.cast_nonneg _) (Nat.cast_nonneg _)
   have hA : ∑ ct ∈ Finset.Ioo (maxB t w) xm, (vl l (ct - maxB t w) : ℝ) ≤
       (((xm - maxB t w : ℤ) : ℝ) - 1) / ((l : ℝ) - 1) := by
     have h3 := hA1.2
-    rw [← hA1.1, Nat.cast_sum] at h3
-    exact h3
+    rwa [← hA1.1, Nat.cast_sum] at h3
   have hA' := mul_le_mul_of_nonneg_left hA (Nat.cast_nonneg j : (0 : ℝ) ≤ (j : ℝ))
   unfold labelLHS at hLS
   linarith

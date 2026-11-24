@@ -150,8 +150,7 @@ theorem tau_count (D : Formalism.BasicNotions.D7) (h3 : admB3 D) (h4 : ColumnFam
       have hs1 : s - 1 < N := by omega
       have h1 := ((hv.2.2 ⟨s - 1, hs1⟩ (by simp only; omega)).2 (by simp only; omega)).2 m (by simp only; omega)
       have he : (⟨s - 1, hs1⟩ : Fin N).succ = (⟨s, hs⟩ : Fin N).castSucc := Fin.ext (by simp; omega)
-      rw [he, hlaeq] at h1
-      exact h1
+      rwa [he, hlaeq] at h1
     have hν : ∀ l : Fin (K + t + 1), (tailT (t + 1) la : Fin (K + t + 1) → ℤ) l =
         la ⟨(r - (t + 1)) + l.val, by have := l.2; omega⟩ := fun l => tailT_apply (t + 1) ht la l
     have hνdom : Dominant (tailT (t + 1) la : Fin (K + t + 1) → ℤ) := by
@@ -187,8 +186,7 @@ theorem tau_count (D : Formalism.BasicNotions.D7) (h3 : admB3 D) (h4 : ColumnFam
         · have := hS.2.1 ⟨(r - (t + 1)) + l.val, by omega⟩ (by simp only; omega)
           have he : (⟨(r - (t + 1)) + l.val + 1, by omega⟩ : Fin (r + K)) = ⟨(r - t) + l.val, by omega⟩ :=
             Fin.ext (by simp only; omega)
-          rw [he] at this
-          exact this
+          rwa [he] at this
       · funext m
         by_cases hm : m.val < r - t
         · rw [glueT_lt t _ _ m hm, hh m (by simp only; omega)]
@@ -230,8 +228,7 @@ theorem tau_count (D : Formalism.BasicNotions.D7) (h3 : admB3 D) (h4 : ColumnFam
           rw [hν] at h2
           have he : (⟨(r - (t + 1)) + ((⟨x.val - (r - t), by have := x.2; omega⟩ : Fin (K + t)).succ :
               Fin (K + t + 1)).val, by have := x.2; simp; omega⟩ : Fin (r + K)) = x := Fin.ext (by simp; omega)
-          rw [he] at h2
-          exact h2
+          rwa [he] at h2
       have hst' : StepOK LL n0 B ⟨s, hs⟩ (μ0 (⟨s, hs⟩ : Fin N).castSucc) (glueT (r := r) t (beA n0 B : ℤ) τ) := by
         rw [hlaeq]
         refine ⟨fun h => absurd h (by simp only; omega), fun _ => ⟨⟨(∑ x, (glueT (r := r) t (beA n0 B : ℤ) τ x - la x)).toNat,
@@ -244,8 +241,7 @@ theorem tau_count (D : Formalism.BasicNotions.D7) (h3 : admB3 D) (h4 : ColumnFam
             rw [hν] at h2
             have he : (⟨(r - (t + 1)) + ((⟨x.val + 1 - (r - t), by have := x.2; omega⟩ : Fin (K + t)).castSucc :
                 Fin (K + t + 1)).val, by have := x.2; simp; omega⟩ : Fin (r + K)) = x := Fin.ext (by simp; omega)
-            rw [he] at h2
-            exact h2
+            rwa [he] at h2
         · exact (Int.toNat_of_nonneg (Finset.sum_nonneg fun x _ => sub_nonneg.mpr (hS1 x))).symm
       have hv' := vp_update hs hv _ hd' hst'
       rw [ih (s + 1) (by omega) (by omega) _ hv']
@@ -678,15 +674,13 @@ theorem count_from_eq_vcount (LL : Letters (Fin N)) (B : Fin N → ℕ) (M t : �
     beta_reduce
     rw [toL_vec LL B (l.val + 1) ⟨by omega, by omega⟩]
     exact ⟨⟨by omega, by omega⟩, hl.2.2, by omega⟩
-  · intro l _ l' _ h
-    exact Fin.ext (by omega)
+  · exact fun l _ l' _ h => Fin.ext (by omega)
   · intro y hy
     rw [Finset.mem_filter, Finset.mem_Icc] at hy
     have hv : (toL r K LL B).vec y = true := hy.2.1
     rw [toL_vec LL B y ⟨hy.1.1, by omega⟩] at hv
     refine ⟨⟨y - 1, by omega⟩, ?_, by simp only; omega⟩
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-    exact ⟨by omega, by omega, hv⟩
+    simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using ⟨by omega, by omega, hv⟩
 
 theorem vcount_tau_eq_add (H : HypT N n0 r K LL B od bb a La p) (t : ℕ) (ht : t ≤ n0) :
     ∀ s, n0 ≤ s → s ≤ N → vcount LL t s = vcount LL t n0 + (s - n0) := by
@@ -772,8 +766,7 @@ theorem typ_of_Typical [NeZero r] (H : HypT N n0 r K LL B od bb a La p) {dd : Fi
       show BranchingDimensions.Letters.ent (D := toL r K LL B) P.mu i.val (r - 1) = _
       rw [entry_eq_of_lt LL B P.mu i.val (r - 1) (by omega) (by have := H.r1; omega)]
       rfl
-    rw [he] at h
-    exact h
+    rwa [he] at h
 
 end
 
@@ -799,8 +792,7 @@ theorem atypical_path_small_weight (D : Formalism.BasicNotions.D7) (h3 : admB3 D
     unfold BranchingDimensions.Letters.rankAA
     rw [hn0]
     exact rank_eq_prod_choose LL B n0 (by omega)
-  rw [hk', hrk] at h
-  exact h
+  rwa [hk', hrk] at h
 
 end Formalism.MainNotions.SelectionLemmas.Pf.T
 end -- clump:auto

@@ -164,10 +164,8 @@ theorem lowOf_coord {m : ℕ} (p : Fin m × Fin m → Prop) [DecidablePred p] (h
   · simp
   · intro b _ hb
     rw [ite_eq_right]
-    intro h
-    exact hb (Subtype.ext h)
-  · intro h
-    exact absurd (Finset.mem_univ q) h
+    exact fun h => hb (Subtype.ext h)
+  · exact fun h => absurd (Finset.mem_univ q) h
 
 def swUT {m : ℕ} : G.UT m ≃ C2.Lidx m where
   toFun q := ⟨(q.1.2, q.1.1), q.2⟩
@@ -190,17 +188,14 @@ private theorem lowP_apply' {m : ℕ} (w : Equiv.Perm (Fin m)) (y : C2.LPidx w �
     · simp
     · intro b _ hb
       rw [ite_eq_right]
-      intro hh
-      exact hb (Subtype.ext hh)
-    · intro hh
-      exact absurd (Finset.mem_univ _) hh
+      exact fun hh => hb (Subtype.ext hh)
+    · exact fun hh => absurd (Finset.mem_univ _) hh
   · refine Finset.sum_eq_zero fun q _ => ?_
     rw [ite_eq_right]
     intro hq
     apply h
     have := q.2
-    rw [hq] at this
-    exact this
+    rwa [hq] at this
 
 theorem lowerUnipotent_mem {m : ℕ} (w : Equiv.Perm (Fin m)) (y : C2.LPidx w → ℂ) :
     lowP w y ∈ C2.LPg (C2.monoP w fun _ => (1 : ℂ)) := by
@@ -224,8 +219,7 @@ theorem lowerUnipotent_mem {m : ℕ} (w : Equiv.Perm (Fin m)) (y : C2.LPidx w �
     · rw [hent, lowP_apply', Matrix.one_apply_eq, dite_eq_right (fun hh => lt_irrefl _ hh.1), add_zero]
 
 theorem lowS_mem {m : ℕ} (w : Equiv.Perm (Fin m)) (x : C2.Lstidx w → ℂ) :
-    lowS w x ∈ C2.Lstg (C2.monoP w fun _ => (1 : ℂ)) := by
-  exact Dx2.Rad.low_mem w (fun _ => 1) one_ne x
+    lowS w x ∈ C2.Lstg (C2.monoP w fun _ => (1 : ℂ)) := Dx2.Rad.low_mem w (fun _ => 1) one_ne x
 
 theorem prod_UT {m : ℕ} (w : Equiv.Perm (Fin m)) (p : (C2.Lstidx w → ℂ) × (C2.LPidx w → ℂ)) :
     (lowS w p.1)ᴴ * (lowP w p.2)ᴴ ∈ C2.UTset m :=
@@ -328,17 +322,14 @@ theorem lowerUnipotent_symm_apply (y : C2.LPidx σ.symm → ℂ) (i j : Fin m) :
     · simp
     · intro b _ hb
       rw [ite_eq_right]
-      intro hh
-      exact hb (Subtype.ext hh)
-    · intro hh
-      exact absurd (Finset.mem_univ _) hh
+      exact fun hh => hb (Subtype.ext hh)
+    · exact fun hh => absurd (Finset.mem_univ _) hh
   · refine Finset.sum_eq_zero fun q _ => ?_
     rw [ite_eq_right]
     intro hq
     apply h
     have := q.2
-    rw [hq] at this
-    exact this
+    rwa [hq] at this
 
 theorem permutationMatrix_mul_lowerUnipotent (y : C2.LPidx σ.symm → ℂ) :
     U.wP σ * U.lowW σ (fun l => y ((iota σ).symm l)) = lowP σ.symm y * U.wP σ := by

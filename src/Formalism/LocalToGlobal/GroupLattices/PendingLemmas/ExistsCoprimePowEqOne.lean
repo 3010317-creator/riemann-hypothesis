@@ -135,8 +135,7 @@ theorem range_wToC : Set.range (wToC p) = (Formalism.MainNotions.GL3Theta.Wp p :
   constructor
   · rintro ⟨x, rfl⟩
     exact wToC_mem_Wp p x
-  · intro hy
-    exact Wp_le_range p hy
+  · exact fun hy => Wp_le_range p hy
 
 theorem mem_Wp_iff (y : ℂ_[p]) : y ∈ Formalism.MainNotions.GL3Theta.Wp p ↔ ∃ x : WW p, wToC p x = y := by
   have := Set.ext_iff.1 (range_wToC p) y
@@ -285,8 +284,7 @@ theorem ltIso_of (g : G1 p) (hOk : g.Ok) {c : ℂ_[p]} (hc : c ∈ Wp p) (hc1 : 
       ← PowerSeries.coeff_zero_eq_constantCoeff_apply, PowerSeries.coeff_map]
   have hΘ01 : IsUnit (PowerSeries.coeff 1 Θ0) := by
     apply isUnit_of_norm_eq_one
-    rw [← PowerSeries.coeff_map, hΘ0']
-    exact hΘ1
+    rwa [← PowerSeries.coeff_map, hΘ0']
   refine ⟨hu0.unit⁻¹, Θ0.substInvOfIsUnit hΘ01,
     PowerSeries.constantCoeff_substInvOfIsUnit _ _, ?_, ?_⟩
   · rw [PowerSeries.coeff_one_substInvOfIsUnit]
@@ -306,8 +304,7 @@ theorem ltIso_of (g : G1 p) (hOk : g.Ok) {c : ℂ_[p]} (hc : c ∈ Wp p) (hc1 : 
       have h3' : PowerSeries.map (wToC p) (PowerSeries.subst th Θ0) =
           PowerSeries.subst (PowerSeries.map (wToC p) th) (PowerSeries.map (wToC p) Θ0) :=
         PowerSeries.map_subst (PowerSeries.HasSubst.of_constantCoeff_zero' hth0) Θ0
-      rw [h3', hΘ0', PowerSeries.map_X] at h3
-      exact h3
+      rwa [h3', hΘ0', PowerSeries.map_X] at h3
 
     have h4 := lg_pt g hex hinv hA0
     have h5 := congrArg (PowerSeries.subst (PowerSeries.map (wToC p) th)) h4

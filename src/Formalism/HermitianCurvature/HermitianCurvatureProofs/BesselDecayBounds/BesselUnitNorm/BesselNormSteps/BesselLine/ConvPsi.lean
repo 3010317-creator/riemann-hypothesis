@@ -70,8 +70,7 @@ theorem ellT_conj {z : Fin (2 * r + k + 1) → ℂ} {h : Mx k r} (hh : h ∈ UWs
     ellT k r z (h⁻¹ * g * h) a = ellT k r z g a := by
   have hh' := uw_inv hh
   have hrow : ∀ l, h⁻¹ (eI k r a) l = if eI k r a = l then 1 else 0 := fun l => by
-    have h1 := uw_coordX hh' (bvec l) a
-    simpa [Matrix.mulVec, dotProduct, bvec, Pi.single_apply] using h1
+    simpa [Matrix.mulVec, dotProduct, bvec, Pi.single_apply] using uw_coordX hh' (bvec l) a
   unfold ellT
   split_ifs with hlt
   · have hcol : ∀ l, h l (eI k r ⟨a.val + 1, hlt⟩) = if l = eI k r ⟨a.val + 1, hlt⟩ then 1 else 0 := by
@@ -97,8 +96,7 @@ theorem n_last {n : Mx k r} (hn : n ∈ Nset k r) {d : Fin (2 * r + k + 1) → �
       have h1 := hn.2.1 ⟨j.val, hjr⟩ (eI k r a) (by simp only [eI]; omega)
       rw [show eI k r ⟨j.val, hjr⟩ = j from Fin.ext rfl, ite_eq_right (Ne.symm hj)] at h1
       rw [h1, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem ellT_mul {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) {n m : Mx k r} (hn : n ∈ Nset k r)
     (hm : m ∈ Nset k r) (a : Fin r) : ellT k r z (n * m) a = ellT k r z n a + ellT k r z m a := by
@@ -120,10 +118,8 @@ theorem ellT_mul {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) {n m : Mx k
         have h1 := hn.2.1 ⟨c.val, hcr⟩ (eI k r a) (by simp only [eI]; omega)
         rw [show eI k r ⟨c.val, hcr⟩ = c from Fin.ext rfl, ite_eq_right (Ne.symm hc.1)] at h1
         rw [h1, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   · have hd := n_on_Wb hm hz
     have hz0 : z (eI k r a) = 0 := hz _ (Or.inl (by simp [eI]))
     have key : n *ᵥ (m *ᵥ z) = n *ᵥ z + n *ᵥ (m *ᵥ z - z) := by

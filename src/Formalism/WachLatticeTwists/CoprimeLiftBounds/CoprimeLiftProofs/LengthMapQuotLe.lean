@@ -61,8 +61,7 @@ lemma length_map_quot_le {O X Y : Type*} [CommRing O] [AddCommGroup X] [Module O
       Module.length O (S ⧸ S'.comap S.subtype) := by
   refine Module.length_le_of_surjective
     ((S'.comap S.subtype).mapQ ((S'.map f).comap (S.map f).subtype) (f.submoduleMap S) ?_) ?_
-  · intro x hx
-    exact Submodule.mem_map_of_mem hx
+  · exact fun x hx => Submodule.mem_map_of_mem hx
   · intro y
     obtain ⟨y0, rfl⟩ := Submodule.mkQ_surjective _ y
     obtain ⟨x, rfl⟩ := LinearMap.submoduleMap_surjective f S y0
@@ -94,9 +93,7 @@ theorem rowTB : StatRowTB := by
   intro O _ _ _ A T' G _ _ _ _ _ M _ _ _ _ _ r χ E e₁ δ ι _ D j Kc k0 Dw ℓ c cB deg Hc F hFH hc hH
     htor hlen
   refine ⟨Hc ⊓ divBy F ((ℓ : O) ^ c), le_inf hFH ?_, ?_, fun φ => ⟨hH φ, ?_⟩⟩
-  · intro z hz
-    show ((ℓ : O) ^ c) • z ∈ F
-    exact F.smul_mem _ hz
+  · exact fun z hz => F.smul_mem _ hz
   · exact hlen.trans (mul_le_mul' (mul_le_mul' le_rfl (by exact_mod_cast hc))
       (add_le_add le_rfl one_le_two))
   · show ((ℓ : O) ^ c) • (Submodule.mkQ _ (restrictCocycles1 (uRep O (M := M) r χ) Dw

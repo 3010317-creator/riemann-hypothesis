@@ -90,16 +90,13 @@ theorem gval_ne (t : TauC Y u u) (ht : t ∈ (Y.tO u u).genSet) : Gval (lf D (X.
   intro h0
   apply hG
   show Formalism.L2.SG.TermDef.Gt _ _ _ (Formalism.L2.SG.TermDef.mk _ _ _ ⟨t.frame, t.rep.2.2.2.2⟩) = 0
-  rw [hmk]
-  exact h0
+  rwa [hmk]
 
 theorem lam_eq {t t' : TauC Y u u} (h : (Y.tO u u).rowOf t = (Y.tO u u).rowOf t') : t.lam = t'.lam := by
-  have h2 := congrArg Prod.fst h
-  exact congrArg Subtype.val h2
+  exact congrArg Subtype.val (congrArg Prod.fst h)
 
 theorem lam'_eq {t t' : TauC Y u u} (h : (Y.tO u u).rowOf t = (Y.tO u u).rowOf t') : t.lam' = t'.lam' := by
-  have h2 := congrArg Prod.fst (congrArg Prod.snd h)
-  exact congrArg Subtype.val h2
+  exact congrArg Subtype.val (congrArg Prod.fst (congrArg Prod.snd h))
 
 theorem pairOfRowC_of (h : LiftIotaEqC) : PairOfRowC := by
   intro D X Y u hc t₁ t₂ h₁ h₂ hr

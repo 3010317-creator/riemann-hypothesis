@@ -110,8 +110,7 @@ theorem exists_ne_zero_mem (b : (FiniteAdeleRing (𝓞 F) F)ˣ) : ∃ r : 𝓞 F
       ((b⁻¹ : (FiniteAdeleRing (𝓞 F) F)ˣ) : FiniteAdeleRing (𝓞 F) F)) w) ≤ 1 := h w
   rw [v_mul, v_algR, v_inv] at h1
   have hpos : 0 < Valued.v ((b : FiniteAdeleRing (𝓞 F) F) w) := zero_lt_iff.2 (v_unit_ne b w)
-  rw [mul_inv_le_iff₀ hpos, one_mul] at h1
-  exact h1
+  rwa [mul_inv_le_iff₀ hpos, one_mul] at h1
 
 theorem approx (b : (FiniteAdeleRing (𝓞 F) F)ˣ)
     (hb : ∀ w : HeightOneSpectrum (𝓞 F), Valued.v ((b : FiniteAdeleRing (𝓞 F) F) w) ≤ 1)
@@ -136,8 +135,7 @@ theorem approx (b : (FiniteAdeleRing (𝓞 F) F)ˣ)
           ((b : FiniteAdeleRing (𝓞 F) F) w - algebraMap F (w.adicCompletion F) (algebraMap (𝓞 F) F a)) := by
       ring
     rw [e]
-    refine (Valuation.map_sub _ _ _).trans (max_le le_rfl ?_)
-    exact (ha w).trans ((hsmall w).trans (hr0I w))
+    exact (Valuation.map_sub _ _ _).trans (max_le le_rfl ((ha w).trans ((hsmall w).trans (hr0I w))))
   · by_contra hlt
     rw [not_le] at hlt
     have hbpos : 0 < Valued.v ((b : FiniteAdeleRing (𝓞 F) F) v) := zero_lt_iff.2 (v_unit_ne b v)
@@ -251,12 +249,10 @@ theorem idele_class_finite : IdeleClassFin := by
     have h1 : Valued.v ((algebraMap (𝓞 F) (FiniteAdeleRing (𝓞 F) F) r * (a : FiniteAdeleRing (𝓞 F) F)) w) ≤ 1 :=
       hra w
     rw [v_mul, v_algR] at h1
-    rw [hbw w]
-    exact h1
+    rwa [hbw w]
   have hex : ∃ b' : (FiniteAdeleRing (𝓞 F) F)ˣ, IsIntU b' ∧ cls b' = cls b := ⟨b, hb, rfl⟩
   have hb0 : IsIntU (rep (cls b)) ∧ cls (rep (cls b)) = cls b := by
-    simp only [rep, dite_eq_left hex]
-    exact hex.choose_spec
+    simpa only [rep, dite_eq_left hex] using hex.choose_spec
   obtain ⟨x, y, hx, hy, hv⟩ := val_eq_of_cls b (rep (cls b)) hb hb0.1 hb0.2.symm
   have hxF : algebraMap (𝓞 F) F x ≠ 0 := (map_ne_zero_iff _ (IsFractionRing.injective (𝓞 F) F)).2 hx
   have hyF : algebraMap (𝓞 F) F y ≠ 0 := (map_ne_zero_iff _ (IsFractionRing.injective (𝓞 F) F)).2 hy
@@ -287,8 +283,7 @@ theorem idele_class_finite : IdeleClassFin := by
     have hB0 : Valued.v (((rep (cls b)) : FiniteAdeleRing (𝓞 F) F) w) ≠ 0 := v_unit_ne _ w
     rw [Units.val_mul, v_mul, v_inv, Units.val_mul, v_mul, hV, inv_mul_cancel₀ (v_unit_ne a w)]
   refine ⟨f, rep (cls b), Finset.mem_image.2 ⟨cls b, Finset.mem_univ _, rfl⟩, e, ?_, ?_, ?_⟩
-  · intro w
-    exact (hE w).le
+  · exact fun w => (hE w).le
   · intro w
     have : Valued.v (((e⁻¹ : (FiniteAdeleRing (𝓞 F) F)ˣ) : FiniteAdeleRing (𝓞 F) F) w) = 1 := by
       rw [v_inv, hE w, inv_one]

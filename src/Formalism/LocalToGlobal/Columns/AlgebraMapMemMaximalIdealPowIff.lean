@@ -239,8 +239,7 @@ theorem prW_prime (w : HeightOneSpectrum (𝓞 K)) : (prW w).Prime := by
 
 theorem natCast_prW_mem (w : HeightOneSpectrum (𝓞 K)) : ((prW w : ℕ) : 𝓞 K) ∈ w.asIdeal := by
   have h := Ideal.absNorm_mem (w.asIdeal.under ℤ)
-  have h2 := Ideal.mem_comap.1 h
-  simpa [prW] using h2
+  simpa [prW] using Ideal.mem_comap.1 h
 
 theorem eq_prW_of_mem (w : HeightOneSpectrum (𝓞 K)) {q : ℕ} (hq : q.Prime)
     (h : ((q : ℕ) : 𝓞 K) ∈ w.asIdeal) : q = prW w := by
@@ -446,8 +445,7 @@ theorem lenW_eq_length (w : HeightOneSpectrum (𝓞 K)) (A B : Submodule (𝓞 K
   constructor
   · rintro ⟨y, hy, rfl⟩
     exact (hB _).1 hy
-  · intro hx
-    exact ⟨e.symm x, (hB _).2 hx, e.apply_symm_apply x⟩
+  · exact fun hx => ⟨e.symm x, (hB _).2 hx, e.apply_symm_apply x⟩
 
 theorem lenW_toNat (w : HeightOneSpectrum (𝓞 K)) (A B : Submodule (𝓞 K) V) :
     (lenW w A B).toNat = Formalism.HermitianLatticesTheory.locLen w.asIdeal A B := by
@@ -502,8 +500,7 @@ theorem lenW_one_pow (w : HeightOneSpectrum (𝓞 K)) (n : ℕ) :
     (Algebra.linearMap (Ow w) K).codRestrict _ hmem
   have hf : Function.Bijective f := by
     constructor
-    · intro a b hab
-      exact algebraMap_ow_injective w (congrArg Subtype.val hab)
+    · exact fun a b hab => algebraMap_ow_injective w (congrArg Subtype.val hab)
     · rintro ⟨x, hx⟩
       obtain ⟨r, rfl⟩ := (mem_range_ow_iff w x).2 ((mem_atW_one_iff w x).1 hx)
       exact ⟨r, rfl⟩

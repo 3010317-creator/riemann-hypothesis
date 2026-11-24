@@ -75,8 +75,7 @@ theorem evalAt_actL (hL : ActLaws pts mapR borR actR) (hWD : EvalWD pts mapR)
       have h2 := hL.mul g g⁻¹ _ _ _ _ (hm g y) (hm g⁻¹ (mvPt pts actR g y))
       first
         | rw [mul_inv_cancel] at h2
-      have h3 := hL.func 1 _ _ _ _ h2 (hL.one _ y)
-      exact ⟨p, φ, _, hTr _ _ φ _ _ _ h1 h3⟩
+      exact ⟨p, φ, _, hTr _ _ φ _ _ _ h1 (hL.func 1 _ _ _ _ h2 (hL.one _ y))⟩
     unfold evalAt
     rw [dite_eq_right hF, dite_eq_right hmy]
 
@@ -108,8 +107,7 @@ theorem spMap_algHom_id (K : Type) [Field K] (T : Type) [CommRing T] [Algebra K 
   rw [h, Spec.map_id]
 
 theorem dualMap_id (T : Type) [CommRing T] : dualMap (RingHom.id T) = RingHom.id _ := by
-  refine RingHom.ext fun x => ?_
-  exact TrivSqZeroExt.inl_fst_add_inr_snd_eq x
+  exact RingHom.ext fun x => TrivSqZeroExt.inl_fst_add_inr_snd_eq x
 
 theorem frMap_trans_id {c : Coeff l} :
     MapTransId (K := c.F) (fun S _ _ => FrPt Xo c S) (fun φ y z => FrMap φ y z) := by
@@ -282,10 +280,8 @@ theorem cuspBC_of (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (hS : SecBC Xo hle
     have hm : ∑ i, τ.toRingHom (B i) • rdU (U (τ.toRingHom.comp (incF c c' hle))) (hs i) ∈
         holSub (U (τ.toRingHom.comp (incF c c' hle))).X (laU (U (τ.toRingHom.comp (incF c c' hle))) a n) := by
       have := hcusp τ.toRingHom (goodEmb_ext hle hσ hτ)
-      rw [rdU_unfBC hle U τ.toRingHom hBC', laU_unfBC] at this
-      exact this
-    rw [hτ] at hm
-    exact hm
+      rwa [rdU_unfBC hle U τ.toRingHom hBC', laU_unfBC] at this
+    rwa [hτ] at hm
   let Bd := (Algebra.traceForm c.F c'.F).dualBasis (traceForm_nondegenerate c.F c'.F) B
   have hinv : rdU (U σ) (hs j) =
       ∑ τ : c'.F →ₐ[c.F] ℂ, τ (Bd j) • ∑ i, τ (B i) • rdU (U σ) (hs i) := by

@@ -35,9 +35,7 @@ theorem span_frames_le_MM {M : Model F E} {V : Type} [AddCommGroup V] [Module E 
   split
   · exact Submodule.subset_span ⟨i, rfl⟩
   · rename_i g _
-    have hq : ((g.q : F)) ≠ 0 := by
-      intro h0
-      exact g.q_irr.ne_zero (Subtype.ext h0)
+    have hq : ((g.q : F)) ≠ 0 := fun h0 => g.q_irr.ne_zero (Subtype.ext h0)
     set c : E := algebraMap F E ((g.q : F))⁻¹ with hc
     have hcu : IsUnit c := by
       rw [hc]

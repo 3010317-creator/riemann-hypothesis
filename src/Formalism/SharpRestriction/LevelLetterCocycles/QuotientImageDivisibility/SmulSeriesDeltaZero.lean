@@ -108,10 +108,8 @@ theorem trunc_s_Δ [IsDomain O] {j M X σ y : ℕ} {r s : LetA O n} (hr : Formal
     rw [map_add (f := _), map_sub, map_one, map_natCast, map_sum]
     congr 1
     refine Finset.sum_nbij' (δ * ·) (δ⁻¹ * ·) ?_ ?_ ?_ ?_ ?_
-    · intro a ha
-      exact hDel _ _ hδ ha
-    · intro a ha
-      exact hDel _ _ (hInv _ hδ) ha
+    · exact fun a ha => hDel _ _ hδ ha
+    · exact fun a ha => hDel _ _ (hInv _ hδ) ha
     · intro a _
       simp
     · intro a _
@@ -136,18 +134,15 @@ theorem trunc_s_Δ [IsDomain O] {j M X σ y : ℕ} {r s : LetA O n} (hr : Formal
   have hpX : ((PD.p : ℕ) : PowerSeries O) ≠ 0 := by
     intro h
     apply hp0
-    have h3 := congrArg PowerSeries.constantCoeff h
-    simpa using h3
+    simpa using congrArg PowerSeries.constantCoeff h
   have hcan : ∀ (k : ℕ) (x x' : LetA O n), ((PD.p : ℕ) : LetA O n) ^ k * x =
       ((PD.p : ℕ) : LetA O n) ^ k * x' → x = x' := by
     intro k x x' hxx
     funext i
-    have hi := congrFun hxx i
-    exact mul_left_cancel₀ (pow_ne_zero k hpX) hi
+    exact mul_left_cancel₀ (pow_ne_zero k hpX) (congrFun hxx i)
   have h2 : ((PD.p : ℕ) : LetA O n) ^ Formalism.MainNotions.CrystallineLiftingInputs.eY PD.p y * W.γA δ s =
       ((PD.p : ℕ) : LetA O n) ^ σ * r := by
-    have h4 := congrArg (W.γA δ) hrs
-    simpa only [map_mul, map_pow, map_natCast, hr'] using h4
+    simpa only [map_mul, map_pow, map_natCast, hr'] using congrArg (W.γA δ) hrs
   apply hcan (Formalism.MainNotions.CrystallineLiftingInputs.eY PD.p y)
   rw [h2, hrs]
 
@@ -161,8 +156,7 @@ theorem trunc_DL [IsDomain O] {c : ZMod n} {M X σ : ℕ} {w z : W.DD T}
     exact (Formalism.MainNotions.WachCoordinates.Br.φl (W := W) T c ⟨x, hx⟩).2
   have hsub : ∀ x y, Formalism.MainNotions.CrystallineLiftingInputs.DL W T c x → Formalism.MainNotions.CrystallineLiftingInputs.DL W T c y →
       Formalism.MainNotions.CrystallineLiftingInputs.DL W T c (x - y) := by
-    intro x y hx hy
-    exact (Formalism.MainNotions.WachCoordinates.Br.DDl W T c).sub_mem hx hy
+    exact fun x y hx hy => (Formalism.MainNotions.WachCoordinates.Br.DDl W T c).sub_mem hx hy
   have hosmul : ∀ (o : O) x, Formalism.MainNotions.CrystallineLiftingInputs.DL W T c x → Formalism.MainNotions.CrystallineLiftingInputs.DL W T c (o • x) := by
     rintro o x ⟨hx1, hx2⟩
     show _ ∧ _
@@ -536,8 +530,7 @@ theorem contentBoundLevel_of [NeZero n] (h5 : Formalism.MainNotions.DeltaInvaria
           X ^ Bn * (W.lev c ζ W.π₀ * v ^ Bn * W.lev c ζ (U : LetA O n) ^ Bn) := by
         rw [Formalism.MainNotions.CrystallineLiftingInputs.fMX, map_mul, map_mul, map_pow, map_pow, hltqp, pow_one, map_pow]; ring
       rw [hlf, smulS_mul hLBp, smulS_X_pow (LB_smulS hLBp _)]
-      intro k hk'
-      exact LB_smulS hLBp _ (k - Bn) (by omega)
+      exact fun k hk' => LB_smulS hLBp _ (k - Bn) (by omega)
 
     have hR1 : LB (2 * Bn) (W.levN T₂ c ζ ⟨_, hk⟩ - smulS ((X * v) ^ Bn) (del0 C)) := by
       intro r hr
@@ -556,8 +549,7 @@ theorem contentBoundLevel_of [NeZero n] (h5 : Formalism.MainNotions.DeltaInvaria
       (LB_mono (lowerBound_delta_zero C) (min_le_right mdd 0))) v hv0 Bn hkey
     refine ⟨fun i hi hi0 => ?_, ?_, ?_⟩
     · have := hdiff i hi
-      simp only [Pi.sub_apply, del0, hi0, ite_false, sub_zero] at this
-      exact this
+      simpa only [Pi.sub_apply, del0, hi0, ite_false, sub_zero] using this
     · have hηb := rk_eta_lt W hset c
       have hB1 : 1 ≤ Bn := by omega
       have := hdiff 0 (by omega)

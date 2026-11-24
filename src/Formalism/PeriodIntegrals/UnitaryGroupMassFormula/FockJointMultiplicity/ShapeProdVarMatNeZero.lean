@@ -180,35 +180,13 @@ theorem hwVec_mem_supported (p q r s : ℕ) (a b c d : List ℤ) :
     hwVec p q r s a b c d ∈ MvPolynomial.supported ℂ
       {l : Ln p q r s | inS a.length b.length c.length d.length l} := by
   unfold PI.FJM.hwVec
-  refine mul_mem (mul_mem (mul_mem ?_ ?_) ?_) ?_
-  · apply shapeProd_mem
-    intro i j hi hj
-    rw [posPart_length] at hi hj
+  refine mul_mem (mul_mem (mul_mem ?_ ?_) ?_) ?_ <;> apply shapeProd_mem <;> intro i j hi hj <;>
     apply varMat_apply_mem_supported
-    simp only [Set.mem_setOf_eq, inS]
-    exact ⟨hi, hj⟩
-  · apply shapeProd_mem
-    intro i j hi hj
-    rw [negPart_length] at hi hj
-    apply varMat_apply_mem_supported
-    simp only [Set.mem_setOf_eq, inS, fin_rev_val]
+  all_goals
+    simp only [posPart_length, negPart_length, Set.mem_setOf_eq, inS, fin_rev_val] at hi hj ⊢
     have := i.isLt
     have := j.isLt
-    constructor <;> omega
-  · apply shapeProd_mem
-    intro i j hi hj
-    rw [posPart_length] at hi hj
-    apply varMat_apply_mem_supported
-    simp only [Set.mem_setOf_eq, inS]
-    exact ⟨hi, hj⟩
-  · apply shapeProd_mem
-    intro i j hi hj
-    rw [negPart_length] at hi hj
-    apply varMat_apply_mem_supported
-    simp only [Set.mem_setOf_eq, inS, fin_rev_val]
-    have := i.isLt
-    have := j.isLt
-    constructor <;> omega
+    omega
 
 theorem shapeVector_ne_zero : VecNe := by
   intro p q r s a b c d h

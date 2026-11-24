@@ -77,9 +77,7 @@ theorem segFacts {CYb Cde Ck CD Cb Cc : ℝ} (hCYb : 2 ≤ CYb) (hCb : 1 ≤ Cb)
     have : 1 ≤ X.L.TT.card := Finset.card_pos.2 ⟨s0, hs0⟩
     show (1 : ℝ) ≤ (X.L.TT.card : ℝ)
     exact_mod_cast this
-  have hQ1 : (1 : ℝ) ≤ X.L.Q := by
-    show (1 : ℝ) ≤ (X.L.p : ℝ) ^ X.L.G'
-    exact one_le_pow₀ (by linarith)
+  have hQ1 : (1 : ℝ) ≤ X.L.Q := one_le_pow₀ (by linarith)
   have hk1 : (1 : ℝ) ≤ X.L.k := by rw [hk]; have : (0 : ℝ) ≤ X.L.m := Nat.cast_nonneg _; linarith
   have hlogb : 0 ≤ Real.logb X.L.p X.L.a := Real.logb_nonneg (by linarith) hF.a1
   have hDLP0 : 0 ≤ X.L.DLP := by

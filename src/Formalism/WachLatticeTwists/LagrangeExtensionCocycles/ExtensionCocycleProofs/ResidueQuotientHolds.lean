@@ -114,8 +114,7 @@ theorem residue_at_truncation : StatResCut := by
     linarith
   have hg := geom_id (2 * G + c + 3) (ℓ - 1) hq j
   have htail : 0 ≤ (2 * G + c + 3) * (ℓ - 1) / ((ℓ - 1 - 1) * (ℓ - 1) ^ j) := by
-    apply div_nonneg (mul_nonneg hK0 hq0.le)
-    exact mul_nonneg (by linarith) (pow_pos hq0 j).le
+    exact div_nonneg (mul_nonneg hK0 hq0.le) (mul_nonneg (by linarith) (pow_pos hq0 j).le)
   have hlast : s (i + (j : ZMod n)) / (ℓ - 1) ^ j ≤ Hm / (ℓ - 1) ^ j := by
     rw [div_eq_mul_inv, div_eq_mul_inv Hm]
     exact mul_le_mul_of_nonneg_right (hHm _) (inv_nonneg.mpr (pow_pos hq0 j).le)
@@ -190,8 +189,7 @@ theorem frame_invariance_holds : StatFrameInv := by
       simp only [Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk, Nat.succ_eq_add_one,
         Finset.sum_range_succ', h0, one_mul, Nat.sub_zero] at hs
       have hCr : Cf' r = -∑ k ∈ Finset.range r, Cf (k + 1) * Cf' (r - (k + 1)) := by
-        rw [eq_neg_iff_add_eq_zero, add_comm]
-        exact hs
+        rwa [eq_neg_iff_add_eq_zero, add_comm]
       rw [hCr, mul_neg, Finset.mul_sum]
       apply neg_mem
       apply sum_mem

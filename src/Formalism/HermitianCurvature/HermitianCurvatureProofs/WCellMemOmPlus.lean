@@ -171,8 +171,7 @@ theorem wCell_mem_omPlus {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) 
       have := i.isLt
       simp only [Fin.val_castLE]
       omega
-    simp only [dite_eq_left hi]
-    exact hc _
+    simpa only [dite_eq_left hi] using hc _
   · unfold Gf
     rw [h1, h0, Complex.normSq_mul]
     have hP' : 0 < Complex.normSq (∏ a : Fin r, c a) := Complex.normSq_pos.mpr hP

@@ -567,8 +567,7 @@ theorem extract_prob {ι X : Type} [Fintype ι] (U : Finset X) (θ : ℕ → ι 
     intro n
     refine ⟨fun p => (hθ n p.1).1 _, fun p => ?_⟩
     have h := Finset.single_le_sum (fun y _ => (hθ n p.1).1 y) p.2.2
-    rw [(hθ n p.1).2.2] at h
-    exact h
+    rwa [(hθ n p.1).2.2] at h
   obtain ⟨y, _, φ, hφ, hlim⟩ := hK.tendsto_subseq hmem
   have hl : ∀ A z (h : z ∈ U), Tendsto (fun n => θ (φ n) A z) atTop (𝓝 (y (A, ⟨z, h⟩))) := fun A z h =>
     ((continuous_apply (A, (⟨z, h⟩ : U))).tendsto y).comp hlim
@@ -576,21 +575,18 @@ theorem extract_prob {ι X : Type} [Fintype ι] (U : Finset X) (θ : ℕ → ι 
   · intro A
     refine ⟨fun z => ?_, fun z hz => by simp [hz], ?_⟩
     · by_cases h : z ∈ U
-      · simp only [h, dite_true]
-        exact ge_of_tendsto' (hl A z h) fun n => (hθ (φ n) A).1 z
+      · simpa only [h, dite_true] using ge_of_tendsto' (hl A z h) fun n => (hθ (φ n) A).1 z
       · simp [h]
     · have hs : Tendsto (fun n => ∑ z ∈ U, θ (φ n) A z) atTop
           (𝓝 (∑ z ∈ U, if h : z ∈ U then y (A, ⟨z, h⟩) else 0)) := by
         apply tendsto_finsetSum
         intro z hz
-        simp only [hz, dite_true]
-        exact hl A z hz
+        simpa only [hz, dite_true] using hl A z hz
       have h1 : (fun n => ∑ z ∈ U, θ (φ n) A z) = fun _ => (1 : ℝ) := funext fun n => (hθ (φ n) A).2.2
       rw [h1] at hs
       exact tendsto_nhds_unique hs tendsto_const_nhds
   · intro A z hz
-    simp only [hz, dite_true]
-    exact hl A z hz
+    simpa only [hz, dite_true] using hl A z hz
 
 section conv
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {Wp Wq : InfinitePlace E → Type}
@@ -978,8 +974,7 @@ theorem locSup_step (S : C.HidaSetting E Wp Wq) (hpos : C.ThmPPos S) (hg : 0 < S
   have e : KB.gN S v ε (b + n - 1) (w.1 v) (h ++ [(n, t)]) (h ++ [(n, t)]) =
       ((KB.gN S v ε (b + n - 1) (w.1 v) (h ++ [(n, t)]) (h ++ [(n, t)])).re : ℂ) :=
     Complex.ext (by simp) (by simp [hc.2.symm])
-  rw [e, Complex.norm_real, Real.norm_of_nonneg hc.1]
-  exact hH
+  rwa [e, Complex.norm_real, Real.norm_of_nonneg hc.1]
 
 theorem locSup_all (S : C.HidaSetting E Wp Wq) (hpos : C.ThmPPos S) (hI : KB.IntAll S) (hg : 0 < S.g) (v : Fin S.f)
     (Λ : ℕ → ℕ → Fin S.f → ℝ) (hLL : KB.LiftLoc S v fun b s => Λ b s v) (hGL : KB.GermLoc S v)
@@ -1052,8 +1047,7 @@ theorem blockPSD_same {α : Type} (Y : Finset α) (κ : α → α → ℂ) (hκ 
   · rfl
   · rw [Finset.inr_mem_disjSum] at hx
     rw [Finset.inl_mem_disjSum] at hy
-    simp only [blk, Sum.elim_inl, Sum.elim_inr, id]
-    exact psd_herm Y κ hκ hy hx
+    simpa only [blk, Sum.elim_inl, Sum.elim_inr, id] using psd_herm Y κ hκ hy hx
   · rfl
 
 theorem image_prod_loc {X : Type} (σ : E →+* ℂ) (Y : Finset (TB.Pt E)) (Xs : Finset X) :
@@ -1411,8 +1405,7 @@ theorem embV_ne (S : C.HidaSetting E Wp Wq) (t : E) (ht : t ≠ 0) : Good (embV 
 theorem embV_inj (S : C.HidaSetting E Wp Wq) [Nonempty (Fin S.f)] : Function.Injective (embV S) := by
   intro a c h
   obtain ⟨v⟩ := ‹Nonempty (Fin S.f)›
-  have h1 := congrFun h v
-  exact (S.σ v).injective h1
+  exact (S.σ v).injective (congrFun h v)
 
 theorem nst_eq_nstV (S : C.HidaSetting E Wp Wq) (ε : ℝ) (i s : ℕ) (hi : i ≤ S.G.r + 1) (w : S.W)
     (Y : Finset (TB.Pt E)) (κ : TB.Pt E → TB.Pt E → ℂ) (t : E) :
@@ -1785,8 +1778,7 @@ theorem psd_of_tendsto {α : Type} (Y : Finset α) (k : ℕ → α → α → �
   refine ⟨fun x _ y _ => ?_, fun c => ?_⟩
   · have h1 : Tendsto (fun n => k n y x) atTop (𝓝 (conj (k0 x y))) := by
       have := ((Complex.continuous_conj.tendsto _).comp (hl x y))
-      refine this.congr fun n => ?_
-      exact (((PBA.psd_iff_qf Y (k n)).1 (hk n)).1 x ‹_› y ‹_›).symm
+      exact this.congr fun n => (((PBA.psd_iff_qf Y (k n)).1 (hk n)).1 x ‹_› y ‹_›).symm
     exact tendsto_nhds_unique (hl y x) h1
   · have hq : Tendsto (fun n => (PBA.qf Y (k n) c).re) atTop (𝓝 (PBA.qf Y k0 c).re) := by
       refine (Complex.continuous_re.tendsto _).comp ?_
@@ -1859,8 +1851,7 @@ theorem core (hW : WaveLocB) (hL : LiftLocB) (hTL : PBL.TopLocB) (hDT : KB.DegTo
           (D.toStd S.G.r (S.g : ℝ) 1 Q) := by
       rw [hpd]
       simp only [D.componentFamilySetting_ofSetting, KB.Pl.RR, hl0, one_pow]
-    rw [hval]
-    exact ht
+    rwa [hval]
 
   set RR : ℕ → Fin S.f → ℝ → ℕ → List C.Letter → C.LPt → C.LPt → ℂ := fun n => PBL.rrC S p (cutSeq S p f χ n)
     with hRR
@@ -1880,14 +1871,12 @@ theorem core (hW : WaveLocB) (hL : LiftLocB) (hTL : PBL.TopLocB) (hDT : KB.DegTo
     · simp only [hXdef, ite_eq_right hi, le_refl]
   have hXt : JC.HidaCurvatureBarriers S X := by
     intro i hi1 hi2 v
-    simp only [hXdef, ite_eq_left (And.intro hi1 hi2)]
-    exact hXt0 i hi1 hi2 v
+    simpa only [hXdef, ite_eq_left (And.intro hi1 hi2)] using hXt0 i hi1 hi2 v
   have hXl : ∀ F : ∀ v : Fin S.f, ℝ → B.Mat S.G.k S.G.r → (Wq (S.pl v) →L[ℂ] Wp (S.pl v)),
       (∀ v ε, 0 < ε → KB.CptCoef (p v).T.base (F v ε)) → ∀ v, KB.WaveLoc (PBL.setC S p F) v fun i => X i v := by
     intro F hF v i hi1 hi2
     have hXi : X i v = X0 i v := by rw [hXdef]; exact ite_eq_left ⟨hi1, hi2⟩
-    simp only [hXi]
-    exact hXl0 F hF v i hi1 hi2
+    simpa only [hXi] using hXl0 F hF v i hi1 hi2
   obtain ⟨Λ, hΛ0, hΛs, hΛl⟩ := h3 E Wp Wq S p f χ A₀ (PBJoint.built_setting_to_model_place le3 hB)
   obtain ⟨hTt, hTl⟩ := hTL hDT hVT hTR Cb Cc E Wp Wq S p f χ A₀ le9 hB
   have hGL := h4 E Wp Wq S p f χ A₀ (PBJoint.built_setting_to_model_place le4 hB)

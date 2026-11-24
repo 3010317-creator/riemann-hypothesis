@@ -76,8 +76,7 @@ theorem iteratedDeriv_ofReal {U : Set ℂ} (hU : IsOpen U) {F : ℂ → ℂ} (hF
         funext y; rw [he y]
       rw [h4] at h3
       have h5 := h3.unique h1.ofReal_comp
-      rw [h1.deriv]
-      exact h5
+      rwa [h1.deriv]
 
 theorem rpow_le_exp_one {σ : ℝ} (hσ : 4 ≤ σ) : (1 - 2 * (1 / (4 * σ))) ^ (-σ) ≤ Real.exp 1 := by
   have hσ0 : 0 < σ := by linarith
@@ -153,8 +152,7 @@ theorem cauchy_theta_identity : Formalism.FourierDecayAlt.E.CauchyTheta := by
   have hFd : DifferentiableOn ℂ F U := by
     intro w hw
     apply DifferentiableAt.differentiableWithinAt
-    apply DifferentiableAt.cpow_const (by fun_prop)
-    exact Or.inl hw
+    exact DifferentiableAt.cpow_const (by fun_prop) (Or.inl hw)
   have hpos : ∀ x : ℝ, 0 < 1 + ε * Real.exp (-x) := fun x => by positivity
   have hcast : ∀ x : ℝ, 1 + (ε : ℂ) * Complex.exp (-(x : ℂ)) = ((1 + ε * Real.exp (-x) : ℝ) : ℂ) := by
     intro x; push_cast; ring

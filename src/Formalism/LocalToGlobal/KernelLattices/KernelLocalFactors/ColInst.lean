@@ -182,8 +182,7 @@ theorem homG_fg (N : Submodule (𝓞 E) (Sp E a)) (N' : Submodule (𝓞 E) (Sp E
     have hspan : Submodule.span E (G : Set (Sp E a)) = ⊤ := by
       rw [← Submodule.span_span_of_tower (𝓞 E), hG]
       exact hN.span_eq_top
-    refine LinearMap.ext_on hspan fun g hg => ?_
-    exact congrArg Subtype.val (congrFun h ⟨g, hg⟩)
+    exact LinearMap.ext_on hspan fun g hg => congrArg Subtype.val (congrFun h ⟨g, hg⟩)
   have : Module.Finite (𝓞 E) ↥(homG N N') := Module.Finite.of_injective ev hinj
   exact Module.Finite.iff_fg.1 this
 
@@ -396,8 +395,7 @@ theorem Seam.int_iff (z : X.E) : s.iE z ∈ (algebraMap (𝓞 D.host.E) D.host.E
   · intro h
     have := map_isIntegral_int s.iE.symm.toRingHom h
     simpa using this
-  · intro h
-    exact map_isIntegral_int s.iE.toRingHom h
+  · exact fun h => map_isIntegral_int s.iE.toRingHom h
 
 theorem Seam.vec_add {n : ℕ} (x y : Sp X.E n) : s.vec (x + y) = s.vec x + s.vec y := by
   funext i
@@ -646,8 +644,7 @@ theorem exists_unit_pow (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : �
     rw [← map_mul]
     simpa using this.symm
   have hrE : (r : E) ≠ 0 := by
-    intro h
-    exact hr (FaithfulSMul.algebraMap_injective (𝓞 E) E (h.trans (map_zero _).symm))
+    exact fun h => hr (FaithfulSMul.algebraMap_injective (𝓞 E) E (h.trans (map_zero _).symm))
   have hr'E : (r' : E) ≠ 0 := by
     intro h
     apply hr'P

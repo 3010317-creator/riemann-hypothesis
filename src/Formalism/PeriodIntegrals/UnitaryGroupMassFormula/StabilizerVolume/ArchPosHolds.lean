@@ -87,8 +87,7 @@ theorem lbInf_of (hC : CoordInf) (hS : SubmLB) : LBInf := by
   have hW' : IsOpen (eV.symm ⁻¹' W) := hWo.preimage eV.symm.continuous
   have hx0W : eV X1 ∈ eV.symm ⁻¹' W := by
     show eV.symm (eV X1) ∈ W
-    rw [Homeomorph.symm_apply_apply]
-    exact hXW
+    rwa [Homeomorph.symm_apply_apply]
   obtain ⟨c, hc0, hct, N', hN', hlb'⟩ :=
     hS n m _ _ hμ' hν' f' hf' (eV X1) (hsurj X1 hX1U) _ hW' hx0W
   have hfx0 : f' (eV X1) = eH T := by
@@ -118,10 +117,8 @@ theorem lbInf_of (hC : CoordInf) (hS : SubmLB) : LBInf := by
     · rintro ⟨⟨s, hs, hsX⟩, h2⟩
       refine ⟨?_, h2⟩
       have : s = eH.symm (f' (eV X)) := Subtype.ext (hsX.trans (hG X).symm)
-      rw [← this]
-      exact hs
-  rw [e1, e2] at h
-  exact h
+      rwa [← this]
+  rwa [e1, e2] at h
 
 theorem lbInf_holds : LBInf :=
   lbInf_of (coordInf_of quadCoord_holds tensR_holds (freeSurj_of semisimpleTens_holds))

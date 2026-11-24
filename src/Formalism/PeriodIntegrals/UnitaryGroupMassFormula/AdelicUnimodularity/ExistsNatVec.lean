@@ -75,8 +75,7 @@ theorem exists_nat_E {E : Type} [Field E] [NumberField E] (e : E) :
   have hd0 : d ≠ 0 := nonZeroDivisors.ne_zero hd
   obtain ⟨c, hc⟩ := Ideal.mem_span_singleton'.mp (Ideal.absNorm_mem (Ideal.span {d}))
   refine ⟨Ideal.absNorm (Ideal.span {d}), ?_, c * a, ?_⟩
-  · rw [Nat.pos_iff_ne_zero, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-    exact hd0
+  · rwa [Nat.pos_iff_ne_zero, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
   · have h1 : ((Ideal.absNorm (Ideal.span {d}) : ℕ) : E) =
         algebraMap (𝓞 E) E c * algebraMap (𝓞 E) E d := by
       rw [← map_mul, hc, map_natCast]
@@ -200,10 +199,8 @@ theorem T_smulO {L : Submodule (𝓞 E) (Fin n → E)} (hm : ∀ i, m i ∈ L)
   | mem x hx =>
     rcases hx with ⟨⟨s, hs⟩, rfl⟩ | ⟨⟨a, ha⟩, rfl⟩
     · obtain ⟨t, rfl⟩ := hs
-      intro w hw
-      exact T_smul_left hm hgen t hw
-    · intro w hw
-      exact T_smulA ha hw
+      exact fun w hw => T_smul_left hm hgen t hw
+    · exact fun w hw => T_smulA ha hw
   | zero => intro w _; rw [zero_smul]; exact T_zero
   | one => intro w hw; rwa [one_smul]
   | add x y _ _ hx hy => intro w hw; rw [add_smul]; exact T_add (hx w hw) (hy w hw)

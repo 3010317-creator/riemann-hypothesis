@@ -36,8 +36,7 @@ theorem lift_fixed (w : 𝓞 E) (hw : star (w : E) = w) : ∃ r : 𝓞 (fixF E),
     have hinj : Function.Injective ((algebraMap (fixF E) E).toIntAlgHom) := (algebraMap (fixF E) E).injective
     rw [← isIntegral_algHom_iff _ hinj]
     exact w.2
-  refine ⟨⟨f, hf⟩, ?_⟩
-  exact RingOfIntegers.ext rfl
+  exact ⟨⟨f, hf⟩, RingOfIntegers.ext rfl⟩
 
 theorem exists_norm (s : 𝓞 E) : ∃ r : 𝓞 (fixF E), phi E r = s * cj E s := by
   apply lift_fixed
@@ -54,12 +53,10 @@ theorem gen_iff (P : Ideal (𝓞 E)) (hP : P.IsPrime) (s : 𝓞 E) (r : 𝓞 (fi
       r ∉ P.comap (phi E) := by
   have ht : (∀ t : 𝓞 E, algebraMap (𝓞 E) E t = star (algebraMap (𝓞 E) E s) → t ∉ P) ↔ cj E s ∉ P := by
     constructor
-    · intro h
-      exact h (cj E s) rfl
+    · exact fun h => h (cj E s) rfl
     · intro h t ht
       have : t = cj E s := RingOfIntegers.ext ht
-      rw [this]
-      exact h
+      rwa [this]
   rw [ht, Ideal.mem_comap, hr, hP.mul_mem_iff_mem_or_mem, not_or]
 
 theorem hcompl_eq (P P' : Ideal (𝓞 E)) (hP : P.IsPrime) (hP' : P'.IsPrime)
@@ -171,8 +168,7 @@ theorem loc_of_mem (v : HeightOneSpectrum (𝓞 (fixF E))) (f : fixF E)
     ∃ a s : 𝓞 (fixF E), s ∉ v.asIdeal ∧
       f * algebraMap (𝓞 (fixF E)) (fixF E) s = algebraMap (𝓞 (fixF E)) (fixF E) a := by
   have h1 : v.valuation (fixF E) f ≤ 1 := by
-    rw [← HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
-    exact hf
+    rwa [← HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
   have h2 : f ∈ (v.valuation (fixF E)).valuationSubring := h1
   rw [← HeightOneSpectrum.valuationSubringAtPrime_eq_valuationSubring] at h2
   obtain ⟨a, s, hs, hx⟩ := h2
@@ -249,8 +245,7 @@ theorem locInt_fix (f : fixF E)
   refine ⟨phi E a, s, hs, ?_⟩
   have h' := congrArg (fun z : fixF E => (z : E)) h
   simp only [Subfield.coe_mul] at h'
-  rw [mul_comm]
-  exact h'
+  rwa [mul_comm]
 
 theorem locInt_of_tens (θ : 𝓞 E) {x : E}
     (hx : PI.UnitaryApproxDefs.inclE (F := fixF E) (v.adicCompletion (fixF E)) x ∈
@@ -278,9 +273,7 @@ theorem locInt_of_tens (θ : 𝓞 E) {x : E}
 theorem exists_int_mul (s : Finset E) :
     ∃ c : ℤ, c ≠ 0 ∧ ∀ x ∈ s, ∃ a : 𝓞 E, algebraMap (𝓞 E) E a = (c : E) * x := by
   obtain ⟨y, hy, h⟩ := exists_integral_multiples ℤ ℚ s
-  refine ⟨y, hy, fun x hx => ⟨⟨y • x, (mem_integralClosure_iff ℤ E).mpr (h x hx)⟩, ?_⟩⟩
-  show (y • x : E) = (y : E) * x
-  exact zsmul_eq_mul _ _
+  exact ⟨y, hy, fun x hx => ⟨⟨y • x, (mem_integralClosure_iff ℤ E).mpr (h x hx)⟩, zsmul_eq_mul _ _⟩⟩
 
 end Formalism.L2.KerInert.WAP
 
@@ -374,14 +367,12 @@ theorem mulVec_loc (Q : Ideal (𝓞 E)) (hv : Q.comap (phi E) = v.asIdeal) {A : 
   have hr' : algebraMap (𝓞 E) E r = algebraMap (𝓞 E) E s * x j := by
     rw [hr, Pi.smul_apply, Algebra.smul_def]
   have htQ : phi E t ∉ Q := by
-    rw [← Ideal.mem_comap, hv]
-    exact ht
+    rwa [← Ideal.mem_comap, hv]
   refine ⟨phi E t * s, ?_, ?_⟩
   · refine Submonoid.mul_mem _ (Submonoid.subset_closure ⟨htQ, ?_⟩) hs
     intro t' ht'
     have : t' = phi E t := RingOfIntegers.ext (ht'.trans (star_phi t))
-    rw [this]
-    exact htQ
+    rwa [this]
   · rw [wa_mem_std]
     intro k
     by_cases hk : k = i
@@ -423,8 +414,7 @@ theorem local_step {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ}
           ((G i j - γ i j) / ((c * c : ℤ) : E)) = s := by
         rw [div_eq_mul_inv, map_mul, map_sub, hsx, mul_comm _ s, mul_assoc, ← map_mul, mul_inv_cancel₀ hcc,
           map_one, mul_one]
-      rw [e]
-      exact hs
+      rwa [e]
     have h1 := locInt_of_tens (v := v) θ hx
     obtain ⟨a, ha⟩ := hcδ
     have h2 : LocInt v ((c : E) * ((θ : E) - star (θ : E))⁻¹) := by
@@ -504,10 +494,8 @@ theorem weak_approximation_places : WAPlaces := by
     if h : ∃ P : PS, vOf P = v then LinearMap.toMatrix' (G h.choose : PI.UG.Sp E n →ₗ[E] PI.UG.Sp E n) else 1
   have hGm : ∀ v, Gm v ∈ Matrix.unitaryGroup (Fin n) E := fun v => by
     by_cases h : ∃ P : PS, vOf P = v
-    · simp only [Gm, dite_eq_left h]
-      exact wa_unitary _ (hGi _)
-    · simp only [Gm, dite_eq_right h]
-      exact one_mem _
+    · simpa only [Gm, dite_eq_left h] using wa_unitary _ (hGi _)
+    · simpa only [Gm, dite_eq_right h] using one_mem _
   let gv : (v : HeightOneSpectrum (𝓞 (fixF E))) → GL (Fin n) (E ⊗[fixF E] v.adicCompletion (fixF E)) := fun v =>
     Units.map (RingHom.mapMatrix (PI.UnitaryApproxDefs.inclE (F := fixF E) (v.adicCompletion (fixF E)))).toMonoidHom
       (glOf (Gm v) (hGm v))
@@ -549,8 +537,7 @@ theorem weak_approximation_places : WAPlaces := by
     obtain ⟨s, hs, h⟩ := hcong (vOf P') hvT' i j
     refine ⟨s, hs, ?_⟩
     have e1 : algebraMap (fixF E) E (((c * c : ℤ) : 𝓞 (fixF E)) : fixF E) = ((c * c : ℤ) : E) := by simp
-    rw [← e1]
-    exact h
+    rwa [← e1]
   obtain ⟨hA, hB⟩ := local_step (vOf P') θ hδ c hc0 hcδ (Gm (vOf P')) (hGm (vOf P')) hcG
     (γ : Matrix (Fin n) (Fin n) E) hcg
   have hGu := hGm (vOf P')

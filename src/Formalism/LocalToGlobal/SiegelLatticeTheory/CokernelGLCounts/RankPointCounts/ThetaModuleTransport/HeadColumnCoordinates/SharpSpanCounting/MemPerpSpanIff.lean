@@ -19,8 +19,7 @@ variable {M : Model F E} {V : Type} [AddCommGroup V] [Module E V] (H : HermSp M 
 theorem mem_perp_span_iff {ι : Type} (s : ι → V) (v : V) :
     v ∈ H.perp (Submodule.span E (Set.range s)) ↔ ∀ i, H.h v (s i) = 0 := by
   constructor
-  · intro hv i
-    exact hv _ (Submodule.subset_span ⟨i, rfl⟩)
+  · exact fun hv i => hv _ (Submodule.subset_span ⟨i, rfl⟩)
   · intro hv x hx
     induction hx using Submodule.span_induction with
     | mem x hx => obtain ⟨i, rfl⟩ := hx; exact hv i
@@ -62,8 +61,7 @@ theorem omP_mem (f f' : Fin (r + 1) → V) (hD : IsUnit (H.Dl f f' (r + 1))) :
 theorem z_mem (f : Fin (r + 1) → V) (T : F) (hF : Formalism.MainNotions.ThinScalesBound.FrameK H f T) :
     f (Fin.last r) ∈ H.perp (H.X f) := by
   rw [mem_perpX_iff]
-  intro a
-  exact hF.1 _ _ (Or.inr (Fin.castSucc_lt_last a).ne)
+  exact fun a => hF.1 _ _ (Or.inr (Fin.castSucc_lt_last a).ne)
 
 theorem h_X_perp (f : Fin (r + 1) → V) (v : V) (hv : v ∈ H.perp (H.X f)) (x : V) (hx : x ∈ H.X f) :
     H.h x v = 0 := by

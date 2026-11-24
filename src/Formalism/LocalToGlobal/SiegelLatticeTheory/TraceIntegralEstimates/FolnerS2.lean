@@ -87,8 +87,7 @@ theorem haarSub_prop {S : Set G} {μ ν : Measure G} (hμ : LeftHaarSub S μ) (h
   set μ' := μ.comap (Subtype.val : H → G) with hμ'
   set ν' := ν.comap (Subtype.val : H → G) with hν'
   obtain ⟨n, hn⟩ : ∃ n, ν' (spanningSets (μ' + ν') n) ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hν0
     rw [← Measure.measure_univ_eq_zero, ← iUnion_spanningSets (μ' + ν')]
     exact measure_iUnion_null hcon
@@ -144,8 +143,7 @@ theorem map_cjB {S : Set G} {μ : Measure G} (hμ : LeftHaarSub S μ) (b : G) (h
       show SigmaFinite (μ.map M)
       first
         | exact M.sigmaFinite_map
-    · intro h
-      exact h0 ((Measure.map_eq_zero_iff hcont.measurable.aemeasurable).1 h)
+    · exact fun h => h0 ((Measure.map_eq_zero_iff hcont.measurable.aemeasurable).1 h)
     · rw [hmap]
       convert hc using 2
       ext x
@@ -186,8 +184,7 @@ private theorem preimage_cjB_lemma {S : Set G} {μ : Measure G} (hμ : LeftHaarS
       continuous_toFun := continuous_cjB b, continuous_invFun := continuous_cjB _ }
   let M : G ≃ᵐ G := E.toMeasurableEquiv
   refine ⟨c, hc0, hctop, fun A => ?_⟩
-  have h1 : (μ.map (cjB b)) A = μ (cjB b ⁻¹' A) := by
-    exact MeasurableEquiv.map_apply M A
+  have h1 : (μ.map (cjB b)) A = μ (cjB b ⁻¹' A) := MeasurableEquiv.map_apply M A
   rw [← h1, hceq, Measure.smul_apply, smul_eq_mul]
 
 theorem isFolner_of_contract {S : Set G} {μS : Measure G} (hS : IsHaarSub S μS) (C : Set G) (f : G → ℝ)
@@ -203,8 +200,7 @@ theorem isFolner_of_contract {S : Set G} {μS : Measure G} (hS : IsHaarSub S μS
     rw [hLdef]
     rfl
   have hLc : ∀ ρ, IsCompact (L ρ) := by
-    rw [hLdef]
-    exact hfK
+    rwa [hLdef]
   have hLm : ∀ ρ, MeasurableSet (L ρ) := fun ρ => (hLc ρ).isClosed.measurableSet
   have hLfin : ∀ ρ, μS (L ρ) ≠ ⊤ := fun ρ => (hSK _ (hLc ρ)).ne
   have hLmono : Monotone L := by
@@ -213,8 +209,7 @@ theorem isFolner_of_contract {S : Set G} {μS : Measure G} (hS : IsHaarSub S μS
     exact ⟨hx.1.trans h, hx.2⟩
   intro K hK hKS ε hε
   obtain ⟨n₀, hn₀⟩ : ∃ n : ℕ, μS (L n) ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hS0
     have hsub : (Set.univ : Set G) ⊆ (⋃ n : ℕ, L n) ∪ Sᶜ := by
       intro x _
@@ -229,18 +224,14 @@ theorem isFolner_of_contract {S : Set G} {μS : Measure G} (hS : IsHaarSub S μS
   have hcount : Set.Countable {t : ℝ | 0 < μS {x | f x = t}} :=
     Measure.countable_meas_level_set_pos hf.measurable
   obtain ⟨ρ, hρI, hρN⟩ : ∃ ρ ∈ Set.Icc (n₀ : ℝ) (n₀ + 1), ρ ∉ {t : ℝ | 0 < μS {x | f x = t}} := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have h0 : volume (Set.Icc (n₀ : ℝ) (n₀ + 1)) = 0 :=
       measure_mono_null hcon (hcount.measure_zero volume)
     rw [Real.volume_Icc] at h0
     simp at h0
   have hlevel : μS {x | f x = ρ} = 0 := by
-    simp only [Set.mem_setOf_eq, not_lt, nonpos_iff_eq_zero] at hρN
-    exact hρN
-  have hV0 : μS (L ρ) ≠ 0 := by
-    intro h
-    exact hn₀ (measure_mono_null (hLmono hρI.1) h)
+    simpa only [Set.mem_setOf_eq, not_lt, nonpos_iff_eq_zero] using hρN
+  have hV0 : μS (L ρ) ≠ 0 := fun h => hn₀ (measure_mono_null (hLmono hρI.1) h)
   have hmonoSeq : Monotone fun n : ℕ => L (ρ - 1 / ((n : ℝ) + 1)) := by
     intro i j hij
     apply hLmono
@@ -263,9 +254,7 @@ theorem isFolner_of_contract {S : Set G} {μS : Measure G} (hS : IsHaarSub S μS
       exact ⟨n, by linarith, hxS⟩
   have hVeq : μS ({x | f x < ρ} ∩ S) = μS (L ρ) := by
     apply le_antisymm
-    · apply measure_mono
-      intro x hx
-      exact (hLmem _ _).2 ⟨le_of_lt hx.1, hx.2⟩
+    · exact measure_mono (fun x hx => (hLmem _ _).2 ⟨le_of_lt hx.1, hx.2⟩)
     · calc μS (L ρ) ≤ μS (({x | f x < ρ} ∩ S) ∪ {x | f x = ρ}) := by
             apply measure_mono
             intro x hx

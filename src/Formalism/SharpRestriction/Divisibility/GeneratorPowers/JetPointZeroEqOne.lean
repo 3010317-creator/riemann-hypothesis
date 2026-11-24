@@ -145,8 +145,6 @@ theorem wL_zero (C : ChartAt Xo c y) (a : 𝓞 E) (wL : ExpGC.AdTy Xo a) (hrel :
           Fin 2 → Fin C.d → MvPolynomial (Fin 2 × Fin C.d) S) p.1 p.2)]
     unfold pe
     rw [hm]
-  rw [hpe, mul_eq_right] at h1
-  rw [Category.assoc, ← Over.comp_left, hι] at h1
-  exact h1
+  rwa [hpe, mul_eq_right, Category.assoc, ← Over.comp_left, hι] at h1
 
 end Formalism.MainNotions.ModuliIntegralCharts.H1.ExpGD

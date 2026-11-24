@@ -202,9 +202,7 @@ lemma key (ρ : G →* Matrix n n R) (L0 : R × ℕ × G) (h0 : 1 ≤ L0.2.1) (r
   simp only [Function.comp_apply]
   rw [map_list_sum, List.map_map]
   congr 1
-  apply List.map_congr_left
-  intro k _
-  exact (hnew L k).symm
+  exact List.map_congr_left (fun k _ => (hnew L k).symm)
 
 variable {S : Subring R}
 

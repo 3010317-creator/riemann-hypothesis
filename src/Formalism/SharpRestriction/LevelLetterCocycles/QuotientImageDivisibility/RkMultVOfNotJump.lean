@@ -102,8 +102,7 @@ theorem rk_filV_fd (U : Submodule LL (V ⊗[Qp] BdR)) [FiniteDimensional LL ↥U
   by_cases hne : s.Nonempty
   · refine ⟨s.inf' hne f, ?_⟩
     rw [← hs, Submodule.span_le]
-    intro x hx
-    exact rk_filV_anti PD (Finset.inf'_le f hx) (hf x hx)
+    exact fun x hx => rk_filV_anti PD (Finset.inf'_le f hx) (hf x hx)
   · refine ⟨0, ?_⟩
     rw [← hs, Finset.not_nonempty_iff_eq_empty.1 hne]
     simp
@@ -124,8 +123,7 @@ theorem rk_filV_sep (x : V ⊗[Qp] BdR) (hx : ∀ a, x ∈ FilV PD (LL := LL) (V
       simp only [AlgebraTensorModule.map_tmul, LinearMap.id_apply, Submodule.subtype_apply, he]
       exact Submodule.smul_of_tower_mem _ _ w.2
     | add y z hy hz =>
-      simp only [map_add (f := _), Finsupp.add_apply]
-      exact Submodule.add_mem _ hy hz
+      simpa only [map_add (f := _), Finsupp.add_apply] using Submodule.add_mem _ hy hz
   have h0 : e x = 0 := by
     ext i
     exact PD.Fil_sep _ fun a => hmem a x (hx a) i

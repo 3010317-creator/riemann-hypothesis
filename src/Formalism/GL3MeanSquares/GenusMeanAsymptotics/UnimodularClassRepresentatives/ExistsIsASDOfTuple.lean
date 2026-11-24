@@ -172,8 +172,7 @@ theorem exists_isASD_of_tuple [FiniteDimensional K V] (hS : IsHermSemilocal S) (
     have e := Finset.mul_prod_erase (Finset.univ.erase i₁) (fun i => h (y i) (y i)) hmem
     refine isUnitIn_of_mul (S.prod_mem fun j _ => haS j :
       ∏ j ∈ (Finset.univ.erase i₁).erase i, h (y j) (y j) ∈ S) (haS i) ?_
-    rw [mul_comm, e]
-    exact hQu
+    rwa [mul_comm, e]
   have hne : ∀ i, h (y i) (y i) ≠ 0 := by
     intro i
     by_cases hi : i = i₁
@@ -216,8 +215,7 @@ theorem exists_isASD_of_tuple [FiniteDimensional K V] (hS : IsHermSemilocal S) (
       have hu : IsUnitIn S (star l⁻¹ * l⁻¹) := by
         refine ⟨mul_ne_zero (star_ne_zero.mpr (inv_ne_zero hl0)) (inv_ne_zero hl0),
           S.mul_mem (hS.star_mem _ hli) hli, ?_⟩
-        rw [star_inv₀, mul_inv, inv_inv, inv_inv]
-        exact hNl
+        rwa [star_inv₀, mul_inv, inv_inv, inv_inv]
       have := (isUnitIn_of_mul (hS.star_mem _ hli) hli hu).2.2
       rwa [inv_inv] at this
     intro c hc

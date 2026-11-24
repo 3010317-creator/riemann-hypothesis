@@ -102,8 +102,7 @@ private theorem isOpen_isCompact_restrictedProduct_box {κ : Type*} {R : κ → 
           show f i ∈ A i
           rw [← h]
           exact hf i
-      · intro i _
-        exact hf i
+      · exact fun i _ => hf i
       · rfl
     · rintro ⟨g, hg, rfl⟩ i
       exact hg i (mem_univ i)
@@ -157,8 +156,7 @@ theorem boxes_inter {s t : Set (ι → Af F)} (hs : s ∈ boxes F ι) (ht : t �
     constructor
     · rintro ⟨h1, h2⟩ c v
       exact ⟨h1 c v, h2 c v⟩
-    · intro h
-      exact ⟨fun c v => (h c v).1, fun c v => (h c v).2⟩
+    · exact fun h => ⟨fun c v => (h c v).1, fun c v => (h c v).2⟩
 
 private theorem preimage_sub_integers_mem_and_eq_of_mem (v : HeightOneSpectrum (𝓞 F)) (a : Fv F v) :
     IsClopen ((fun z => z - a) ⁻¹' (v.adicCompletionIntegers F : Set (Fv F v))) ∧
@@ -171,23 +169,20 @@ private theorem preimage_sub_integers_mem_and_eq_of_mem (v : HeightOneSpectrum (
   have hOo : IsOpen (v.adicCompletionIntegers F : Set (Fv F v)) := Valued.isOpen_valuationSubring _
   refine ⟨IsClopen.preimage ⟨hOc.isClosed, hOo⟩ (continuous_id.sub continuous_const),
     (Homeomorph.subRight a).isCompact_preimage.2 hOc, ?_, fun ha => ?_⟩
-  · simp only [mem_preimage, sub_self, SetLike.mem_coe]
-    exact zero_mem _
+  · simpa only [mem_preimage, sub_self, SetLike.mem_coe] using zero_mem _
   · ext z
     simp only [mem_preimage, SetLike.mem_coe]
     constructor
     · intro h
       simpa using add_mem h ha
-    · intro h
-      exact sub_mem h ha
+    · exact fun h => sub_mem h ha
 
 theorem exists_box_mem (y : ι → Af F) : ∃ D, IsBoxD D ∧ y ∈ boxS D := by
   refine ⟨fun c v => (fun z => z - y c v) ⁻¹' (v.adicCompletionIntegers F : Set (Fv F v)),
     ⟨fun c v => ⟨(preimage_sub_integers_mem_and_eq_of_mem v (y c v)).1, (preimage_sub_integers_mem_and_eq_of_mem v (y c v)).2.1⟩, ?_⟩, ?_⟩
   · filter_upwards [eventually_all.2 fun c => (y c).2] with v hv c
     exact (preimage_sub_integers_mem_and_eq_of_mem v (y c v)).2.2.2 (hv c)
-  · show ∀ c v, y c v ∈ (fun z => z - y c v) ⁻¹' (v.adicCompletionIntegers F : Set (Fv F v))
-    exact fun c v => (preimage_sub_integers_mem_and_eq_of_mem v (y c v)).2.2.1
+  · exact fun c v => (preimage_sub_integers_mem_and_eq_of_mem v (y c v)).2.2.1
 
 theorem boxes_seq : ∃ bs : ℕ → Set (ι → Af F), (∀ n, bs n ∈ boxes F ι) ∧ ⋃ n, bs n = univ := by
   have hopen : ∀ s ∈ boxes F ι, IsOpen s := by
@@ -307,9 +302,7 @@ theorem generateFrom_boxes : generateFrom (boxes F ι) = (MeasurableSpace.pi : M
         obtain ⟨E, h1, h2, h3, h4⟩ := exists_restricted_box_subset_of_isOpen hUo hyU
         exact ⟨E, h1, h2, h3, h4.trans hUt⟩
       choose E hE1 hE2 hE3 hE4 using hE
-      have hyE : y ∈ boxS E := by
-        show ∀ c v, y c v ∈ E c v
-        exact fun c v => hE3 c v
+      have hyE : y ∈ boxS E := fun c v => hE3 c v
       refine ⟨boxS E, ⟨⟨E, ⟨hE1, eventually_all.2 hE2⟩, rfl⟩, fun z hz => hIt fun c _ => ?_⟩, hyE⟩
       have hz' : ∀ c v, z c v ∈ E c v := hz
       exact hE4 c (hz' c)

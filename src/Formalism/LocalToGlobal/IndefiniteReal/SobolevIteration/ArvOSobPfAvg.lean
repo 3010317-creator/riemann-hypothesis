@@ -129,8 +129,7 @@ theorem contDiff_integral_param {μ : Measure X} [IsFiniteMeasure μ] {K : Set X
   apply contDiff_of_differentiable_iteratedFDeriv
   intro i _
   rw [key i]
-  intro t
-  exact (hasFDerivAt_integral_pIter hK hKm hμK hΦ hc i t).differentiableAt
+  exact fun t => (hasFDerivAt_integral_pIter hK hKm hμK hΦ hc i t).differentiableAt
 
 end Formalism.IndefR.Tow.SobPf.Avg
 
@@ -383,8 +382,7 @@ theorem contOn_pIter_avgTerm (h4 : SobChart) {G s : Matrix (Fin n) (Fin n) ℂ} 
     exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => isOpen_lt (hcont i j) continuous_const
   have hk0V : ∀ i j, ‖(u⁻¹ * Matrix.of k0) i j - (1 : Matrix (Fin n) (Fin n) ℂ) i j‖ < δ := by
     intro i j
-    rw [← hu_eq, Matrix.nonsing_inv_mul _ hdu, sub_self, norm_zero]
-    exact hδ
+    rwa [← hu_eq, Matrix.nonsing_inv_mul _ hdu, sub_self, norm_zero]
   obtain ⟨ρ, hρ, hρV⟩ := Metric.isOpen_iff.1 hV k0 hk0V
   refine ⟨min η ρ, lt_min hη hρ, fun {x} hx hdx => ?_⟩
   obtain ⟨t, k⟩ := x
@@ -406,8 +404,7 @@ theorem contOn_pIter_avgTerm (h4 : SobChart) {G s : Matrix (Fin n) (Fin n) ℂ} 
   rw [dist_pi_lt_iff hη]
   intro i
   refine Fin.addCases (fun i => ?_) (fun i => ?_) i
-  · simp only [Fin.append_left]
-    exact lt_of_le_of_lt (dist_le_pi_dist t t0 i) hd1
+  · simpa only [Fin.append_left] using lt_of_le_of_lt (dist_le_pi_dist t t0 i) hd1
   · simp only [Fin.append_right, Pi.zero_apply]
     rw [Real.dist_eq, sub_zero]
     exact hs' i
@@ -455,8 +452,7 @@ theorem smoothVec_rep {G : Matrix (Fin n) (Fin n) ℂ} (hG : IsUnit G.det) {π :
     show π (oneProd Xs t) (π (Matrix.of k) w) = (1 : ℂ) • π (oneProd Xs t * Matrix.of k) w
     rw [one_smul, hπ.2.1 _ (smooth_oneProd hπ hw Xs hXs t).2 _ hk]
     rfl
-  rw [e]
-  exact h
+  rwa [e]
 
 end Avg
 

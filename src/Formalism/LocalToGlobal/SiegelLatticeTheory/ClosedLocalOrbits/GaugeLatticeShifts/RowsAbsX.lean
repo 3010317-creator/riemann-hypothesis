@@ -34,10 +34,8 @@ theorem summable_of_fibre_bound {P T : Type*} (A : P → T → Prop)
         · obtain ⟨p, hp, hpt⟩ := h
           rw [Finset.sum_eq_single p]
           · exact (Set.indicator_of_mem (show t ∈ {t | A p t} from hpt) g).le
-          · intro q _ hq
-            exact Set.indicator_of_notMem (fun hqt => hq (hA q p t hqt hpt)) g
-          · intro h
-            exact absurd hp h
+          · exact fun q _ hq => Set.indicator_of_notMem (fun hqt => hq (hA q p t hqt hpt)) g
+          · exact fun h => absurd hp h
         · simp only [not_exists, not_and] at h
           exact (Finset.sum_eq_zero fun p hp =>
             Set.indicator_of_notMem (show t ∉ {t | A p t} from h p hp) g).le.trans (hg0 t)

@@ -21,8 +21,7 @@ theorem mem_cj {s : G} {X : Subgroup G} {g : G} : g ∈ cj s X ↔ s * g * s⁻�
   constructor
   · rintro ⟨x, hx, rfl⟩
     simpa [mul_assoc] using hx
-  · intro h
-    exact ⟨s * g * s⁻¹, h, by simp [mul_assoc]⟩
+  · exact fun h => ⟨s * g * s⁻¹, h, by simp [mul_assoc]⟩
 
 theorem cj_le {s : G} {X Y : Subgroup G} (h : X ≤ Y) : cj s X ≤ cj s Y := Subgroup.map_mono h
 
@@ -33,8 +32,7 @@ theorem cj_self {s : G} {X : Subgroup G} (hs : s ∈ X) : cj s X = X := by
   · intro h
     have h2 : s⁻¹ * (s * g * s⁻¹) * s ∈ X := X.mul_mem (X.mul_mem (X.inv_mem hs) h) hs
     simpa [mul_assoc] using h2
-  · intro h
-    exact X.mul_mem (X.mul_mem hs h) (X.inv_mem hs)
+  · exact fun h => X.mul_mem (X.mul_mem hs h) (X.inv_mem hs)
 
 theorem relIndex_cj (s : G) (X Y : Subgroup G) : (cj s X).relIndex (cj s Y) = X.relIndex Y := Subgroup.relIndex_map_map_of_injective _ _ (MulAut.conj s⁻¹).injective
 

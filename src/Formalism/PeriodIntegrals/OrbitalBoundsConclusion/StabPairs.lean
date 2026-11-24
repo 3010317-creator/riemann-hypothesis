@@ -125,8 +125,7 @@ theorem expand_of_tail (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (b : 
           omega
         simp [bvec, hne]
       · exact hz i (Or.inl hir)
-    rw [hfb, mul_zero, zero_add]
-    rw [Finset.sum_eq_single ⟨i.val, by omega⟩]
+    rw [hfb, mul_zero, zero_add, Finset.sum_eq_single ⟨i.val, by omega⟩]
     · rw [dite_eq_left ⟨by simp; omega, rfl⟩]
     · intro a _ ha
       rw [dite_eq_right]
@@ -193,15 +192,13 @@ theorem Sset_frame (z : Fin (2 * r + k + 1) → ℂ) (hz : StdZ k r z) (s : B.Ma
       split_ifs
       · exact (hh.2.1 _).1
       · exact hh.2.2
-    have e2 := congrFun e i
-    simpa [Matrix.mulVec, dotProduct, Matrix.mul_apply, Ff] using e2
+    simpa [Matrix.mulVec, dotProduct, Matrix.mul_apply, Ff] using congrFun e i
   have hsF : h * m * Ff k r z = Ff k r z *
       (Matrix.of fun a b => coefOf (k := k) b (m *ᵥ fvec k r z b) a) := by
     rw [Matrix.mul_assoc, hmX, ← Matrix.mul_assoc, hhF]
   have hu := uMap_eq z hz _ _ hsF
   refine ⟨hGV, ?_, ?_⟩
-  · rw [hu]
-    exact hsF
+  · rwa [hu]
   · rw [hu]
     exact coefOf_UT (fun b => m *ᵥ fvec k r z b)
 
@@ -230,8 +227,7 @@ theorem mapsStep : MapsStep := by
   have hρH : ρᴴ * Hpk k r * ρ = Hpk k r := hρG
   refine ⟨hρU, ?_, ?_⟩
   · show uMap k r z' (γ⁻¹ * ρ * γ) ∈ UTset (r + 1)
-    rw [hc1]
-    exact hsU
+    rwa [hc1]
   · show (uMap k r z ρ)ᴴ * Zhat k r z z' γ * uMap k r z' (γ⁻¹ * ρ * γ) = Zhat k r z z' γ
     rw [hc1, Zhat_eq]
     calc (uMap k r z ρ)ᴴ * ((Ff k r z)ᴴ * Hpk k r * γ * Ff k r z') * uMap k r z' s'
@@ -257,11 +253,9 @@ theorem mul_eq_of_fix (z z' : Fin (2 * r + k + 1) → ℂ) (γ ρ : B.Mat k r)
     simp only [Uperp, LinearMap.mem_ker, Matrix.mulVecLin_apply]
     rw [hE]
     funext a
-    have e := congrFun (congrFun hQ a) j
-    simpa [Matrix.mulVec, dotProduct, Matrix.mul_apply] using e
+    simpa [Matrix.mulVec, dotProduct, Matrix.mul_apply] using congrFun (congrFun hQ a) j
   ext i j
-  have e := congrFun (hfix _ (hcol j)) i
-  simpa [Matrix.mulVec, dotProduct, Matrix.mul_apply] using e
+  simpa [Matrix.mulVec, dotProduct, Matrix.mul_apply] using congrFun (hfix _ (hcol j)) i
 
 theorem gramInv_of (h : GramIndependentSignature) : GramInv := by
   intro k r z z' γ hs hp
@@ -331,8 +325,7 @@ theorem compDet : CompDet := by
   · intro h2
     have e : p.1ᴴ * (Zhat k r z z' γ * p.2) = q.1ᴴ * (Zhat k r z z' γ * p.2) := by
       rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, hpe, h2, hqe]
-    have h1 := (hZu.mul (hU hp2)).mul_right_cancel e
-    exact Prod.ext (Matrix.conjTranspose_inj.1 h1) h2
+    exact Prod.ext (Matrix.conjTranspose_inj.1 ((hZu.mul (hU hp2)).mul_right_cancel e)) h2
 
 end PI.StabPairsW
 end -- clump:auto
@@ -490,8 +483,7 @@ theorem Z_cR (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) (γ : B.Mat k r) (
       · rw [hHz _ _ ha (by omega), zero_mul]
     · intro i _ hi
       rw [Pi.single_eq_of_ne hi, star_zero, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   have hfz : ∀ (y : Fin (2 * r + k + 1) → ℂ), inWb k r y → ∀ (b : Fin (r + 1)) (c : Fin (2 * r + k + 1)),
       r + k < c.val → fvec k r y b c = 0 := by
     intro y hy b c hc
@@ -539,8 +531,7 @@ theorem Z_cL (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) (γ : B.Mat k r) (
       · rw [hHz _ _ ha (by omega), zero_mul]
     · intro i _ hi
       rw [Pi.single_eq_of_ne hi, star_zero, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   have hfz : ∀ (y : Fin (2 * r + k + 1) → ℂ), inWb k r y → ∀ (b : Fin (r + 1)) (c : Fin (2 * r + k + 1)),
       r + k < c.val → fvec k r y b c = 0 := by
     intro y hy b c hc
@@ -623,8 +614,7 @@ theorem N2gen (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (M : B.Mat k r)
             simp [eI] at this
             omega) _
         rw [this, zero_mul]
-    · intro h'
-      exact absurd (Finset.mem_univ _) h'
+    · exact fun h' => absurd (Finset.mem_univ _) h'
   rw [← hL, h1, hR]
 
 theorem N3gen (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (M : B.Mat k r) (i j : Fin (2 * r + k + 1))

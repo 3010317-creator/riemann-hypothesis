@@ -90,10 +90,8 @@ def extNe {ι : Type} [DecidableEq ι] (a : ι) (y : {i // i ≠ a} → ℂ) : �
 theorem measurable_extNe {ι : Type} [DecidableEq ι] (a : ι) : Measurable (extNe a) := by
   refine Measurable.of_eval fun j => ?_
   by_cases h : j ≠ a
-  · simp only [extNe, dite_eq_left h]
-    exact measurable_pi_apply _
-  · simp only [extNe, dite_eq_right h]
-    exact measurable_const
+  · simpa only [extNe, dite_eq_left h] using measurable_pi_apply _
+  · simpa only [extNe, dite_eq_right h] using measurable_const
 
 theorem measurePreserving_of_card (n : ℕ) : ∀ (ι : Type) [Fintype ι] [DecidableEq ι], Fintype.card ι = n →
     ∀ (r : ι → ℕ) (g : ι → (ι → ℂ) → ℂ), (∀ i, Measurable (g i)) →
@@ -128,8 +126,7 @@ theorem measurePreserving_of_card (n : ℕ) : ∀ (ι : Type) [Fintype ι] [Deci
         intro j y z hyz
         refine hdep j _ _ fun l hl => ?_
         by_cases h : l ≠ a
-        · simp only [extNe, dite_eq_left h]
-          exact hyz ⟨l, h⟩ hl
+        · simpa only [extNe, dite_eq_left h] using hyz ⟨l, h⟩ hl
         · simp only [extNe, dite_eq_right h])
     let e := MeasurableEquiv.piEquivPiSubtypeProd (fun _ : ι => ℂ) (fun j => j ≠ a)
     have he : MeasurePreserving e volume volume :=

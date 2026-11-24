@@ -386,8 +386,7 @@ theorem Lead_det (k : Type*) [CommRing k] {m : ℕ} (r c : Fin m → Fin n) (hr 
       have := mon_LL hr hc π hπ
       rw [h] at this
       exact LL_irrefl _ _ this
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   · intro e he hne
     rw [MvPolynomial.mem_support_iff, hcoeff] at he
     obtain ⟨π, -, hπ⟩ := Finset.exists_ne_zero_of_sum_ne_zero he
@@ -472,10 +471,8 @@ theorem colDiag_eq (J : Finset (Fin n)) {k : ℕ} (h : J.card = k) (r : Fin k �
   · rw [ite_eq_left (hr i), Equiv.Perm.one_apply]
   · intro a _ ha
     rw [ite_eq_right]
-    intro hc
-    exact ha (Fin.ext (by rw [hc, hr i]))
-  · intro hc
-    exact absurd (Finset.mem_univ _) hc
+    exact fun hc => ha (Fin.ext (by rw [hc, hr i]))
+  · exact fun hc => absurd (Finset.mem_univ _) hc
 
 theorem colDiag_apply (J : Finset (Fin n)) (a b : Fin n) :
     colDiag J (a, b) = if nthElt J a.val = b.val then 1 else 0 := by
@@ -497,8 +494,7 @@ theorem colDiag_apply (J : Finset (Fin n)) (a b : Fin n) :
       rintro ⟨h1, _⟩
       have h3 := congrArg Fin.val h1
       exact hi (Fin.ext h3)
-    · intro hc
-      exact absurd (Finset.mem_univ _) hc
+    · exact fun hc => absurd (Finset.mem_univ _) hc
   · rw [ite_eq_right hab]
     apply Finset.sum_eq_zero
     intro i _
@@ -649,8 +645,7 @@ open leadingTermLemmas in
 theorem path_basis_lemma : LemmaA := by
   intro k _ n C
   refine linearIndependent_of_Lead key_inj _ (fun T => tabDiag T.1) ?_ (fun T => Lead_tab k T.1)
-  intro T T' h
-  exact Subtype.ext (tab_inj T.2 T'.2 h)
+  exact fun T T' h => Subtype.ext (tab_inj T.2 T'.2 h)
 
 end Formalism.InvariantFactorPaths.GelfandTsetlinBases
 end -- clump:auto
@@ -936,8 +931,7 @@ theorem fact_break : FactBrk := by
       {T : Fin (hi - lo).toNat → Finset (Fin n) // SemiStd T} :=
     fun I => ⟨colT lo (hi - lo).toNat I.1, semi_colT I.2 lo _⟩
   have he : Function.Injective e := by
-    intro I I' h
-    exact Subtype.ext (colT_inj hlo hhi hb I.2.1 I'.2.1 (congrArg Subtype.val h))
+    exact fun I I' h => Subtype.ext (colT_inj hlo hhi hb I.2.1 I'.2.1 (congrArg Subtype.val h))
   have h1 := hA.comp e he
   let φ : MvPolynomial (Fin n × Fin n) k →ₗ[k] GenField k n :=
     (IsScalarTower.toAlgHom k (MvPolynomial (Fin n × Fin n) k) (GenField k n)).toLinearMap
@@ -961,8 +955,7 @@ theorem fact_break : FactBrk := by
           tabMinors k T.1) ∘ e) := by
     funext I
     exact brk_eq hlo hhi hb I.2.1
-  rw [h5]
-  exact h4
+  rwa [h5]
 
 end Formalism.InvariantFactorPaths.GelfandTsetlinBases
 end -- clump:auto

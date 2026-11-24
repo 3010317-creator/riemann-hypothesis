@@ -40,8 +40,7 @@ theorem lintegral_comp_symm_mul_eq_ofReal_mul_setLIntegral (μ : Measure (GA D (
     · rintro ⟨y, hy, hxy⟩
       have : y = x := ι.symm.injective (by rw [hxy]; rfl)
       exact this ▸ hy
-    · intro hx
-      exact ⟨x, hx, rfl⟩
+    · exact fun hx => ⟨x, hx, rfl⟩
 
   have h1 : ∫⁻ x, f (ι.symm x * t) ∂(muX X) = ENNReal.ofReal c * ∫⁻ y in 𝓕', f (y * t) ∂μ := by
     have hm : Measure.map e (muX X) = (ENNReal.ofReal c • μ).restrict 𝓕' := by
@@ -61,8 +60,7 @@ theorem lintegral_comp_symm_mul_eq_ofReal_mul_setLIntegral (μ : Measure (GA D (
     constructor
     · rintro ⟨y, hy, rfl⟩
       simpa using hy
-    · intro hz
-      exact ⟨z * t⁻¹, hz, by simp⟩
+    · exact fun hz => ⟨z * t⁻¹, hz, by simp⟩
   have hFD : IsFundamentalDomain (GQ (D.sp.Y 0)) ((fun y => y * t) '' 𝓕') μ := by
     rw [himg]
     refine h𝓕'.preimage_of_equiv (measurePreserving_mul_right μ t⁻¹).quasiMeasurePreserving
@@ -119,8 +117,7 @@ theorem fund_image_of (μ : Measure (GA D (D.sp.Y 0)))
     constructor
     · rintro ⟨x, hx, rfl⟩
       simpa using hx
-    · intro hy
-      exact ⟨ι y, hy, by simp⟩
+    · exact fun hy => ⟨ι y, hy, by simp⟩
 
   have hnull : ∀ A : Set X.B.I.GA, X.B.I.muA X.B.μf A = 0 → μ (ι ⁻¹' A) = 0 := by
     intro A hA

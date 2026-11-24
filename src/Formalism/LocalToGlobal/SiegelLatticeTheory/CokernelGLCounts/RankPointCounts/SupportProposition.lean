@@ -87,8 +87,7 @@ theorem hasSum_prod_offS [DecidableEq P] (θ0 : ∀ p, C p) (f : ∀ p, C p → 
           refine Prod.ext (Function.update_self _ _ _) (Subtype.ext (funext fun p => ?_))
           by_cases hpq : p = q
           · subst hpq
-            simp only [Function.update_self]
-            exact (x.2.2 p hq).symm
+            simpa only [Function.update_self] using (x.2.2 p hq).symm
           · simp only [Function.update_of_ne hpq]
         right_inv := fun θ => Subtype.ext (funext fun p => by
           by_cases hpq : p = q
@@ -352,8 +351,7 @@ theorem totPos_of_kind {T T' : ℕ} {w w' : Point D.host.E (D.R.rS + 1)} (hk : k
     have hp' : 0 < Complex.normSq (D.host.emb (D.eTau τ : D.R.GG) (Dmin w' D.R.rS)) :=
       Complex.normSq_pos.mpr ((map_ne_zero _).mpr h0')
     have hq : 0 < Complex.normSq (D.host.emb (D.eTau τ : D.R.GG) (zetaOf w')) - (T : ℝ) * T' := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       nlinarith
     nlinarith [mul_pos hq hp]
 
@@ -380,8 +378,7 @@ theorem det_assoc_cls (Mo : Loc.Model F E) {m : ℕ} (a b : Loc.Pt E (m + 1)) (c
   refine ⟨hZ1 ▸ Z1.unit, u, ?_⟩
   have e := congrArg Mo.R.subtype hu
   rw [map_mul, RingHom.map_det, RingHom.map_det] at e
-  rw [← hZ1, ← hZ2]
-  exact e
+  rwa [← hZ1, ← hZ2]
 
 end LocCls
 
@@ -520,8 +517,7 @@ theorem n0_pos {c : ℝ} (hc : 0 < c) {T T' : ℕ} {w : Point D.host.E (D.R.rS +
 theorem unramOff_mono {M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep} {δ : ∀ p, (D.s.atP p).Fp}
     {T T' : ℕ} {θ0 : ∀ p, Option ((M p).Cls D.R.rS)} {S S' : Finset (PlF D)} {w : Point D.host.E (D.R.rS + 1)}
     (hu : UnramOff M δ T T' θ0 S w) (hS : S ⊆ S') : UnramOff M δ T T' θ0 S' w := by
-  intro p hp
-  exact hu p (fun h => hp (hS h))
+  exact fun p hp => hu p (fun h => hp (hS h))
 
 theorem ktop_sub_posSemidef {M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep} {δ : ∀ p, (D.s.atP p).Fp}
     {T T' : ℕ} {ι : Type*} [Fintype ι] (w : ι → Point D.host.E (D.R.rS + 1)) (θ0 : ∀ p, Option ((M p).Cls D.R.rS))
@@ -579,8 +575,7 @@ theorem ktop_sub_posSemidef {M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.at
       simp only [Function.comp_apply, e, Prod.mk.eta, ite_eq_left i.2]
     · intro j hj
       rw [ite_eq_right]
-      intro hmem
-      exact hj ⟨⟨(j.1, j.2.1), hmem⟩, rfl⟩
+      exact fun hmem => hj ⟨⟨(j.1, j.2.1), hmem⟩, rfl⟩
   convert hA.sub hB' using 1
   all_goals first
     | rfl

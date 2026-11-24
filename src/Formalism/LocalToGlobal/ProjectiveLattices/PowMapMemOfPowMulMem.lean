@@ -89,8 +89,7 @@ theorem pow_map_mem_of_pow_mul_mem (h : IsDer δ) (I : Ideal A) (hI : ∀ x ∈ 
 
 theorem pow_mem (h : IsDer δ) (I : Ideal A) (hI : ∀ x ∈ I, δ x ∈ I) (hu : ∀ n : ℕ, 0 < n → IsUnit (n : A))
     {y : A} {n : ℕ} (hy : y ^ n ∈ I) : δ y ^ (2 * n) ∈ I := by
-  have e := h.pow_map_mem_of_pow_mul_mem I hI hu y n 0 (by simpa using hy)
-  simpa using e
+  simpa using h.pow_map_mem_of_pow_mul_mem I hI hu y n 0 (by simpa using hy)
 
 theorem mem_max [IsArtinianRing A] (h : IsDer δ) (hu : ∀ n : ℕ, 0 < n → IsUnit (n : A)) (m : Ideal A)
     [hm : m.IsMaximal] {x : A} (hx : x ∈ m) : δ x ∈ m := by
@@ -188,8 +187,7 @@ theorem ofLoc {B : Type*} [CommRing B] [Algebra A B] (S : Submonoid A) [IsLocali
       simp only [RingHom.comp_apply, RingHom.id_apply, hφ]
       show TrivSqZeroExt.fst (ψ a) = _
       simp [ψ]
-    intro x
-    exact congrArg (fun f : B →+* B => f x) e
+    exact fun x => congrArg (fun f : B →+* B => f x) e
   refine ⟨fun x => (φ x).snd, ⟨fun x y => by simp, fun x y => ?_⟩, fun a => by simp [hφ, ψ]⟩
   simp only [map_mul, TrivSqZeroExt.snd_mul, hfst, smul_eq_mul, op_smul_eq_mul]
   ring

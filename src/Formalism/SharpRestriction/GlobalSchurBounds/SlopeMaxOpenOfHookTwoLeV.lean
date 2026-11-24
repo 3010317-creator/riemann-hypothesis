@@ -96,16 +96,14 @@ theorem natWeight_cast_eq_sub_last {N : ℕ} (lam : DomWeight N) (hN : 0 < N) (i
   ring
 
 theorem antitone_natWeight {N : ℕ} (lam : DomWeight N) : Antitone lam.natW := by
-  intro i j h
-  exact Int.toNat_le_toNat (sub_le_sub_right (lam.anti h) _)
+  exact fun i j h => Int.toNat_le_toNat (sub_le_sub_right (lam.anti h) _)
 
 theorem columnCount_pos (D : D7) : 0 < D.R.k := by
   have := D.R.m_add_three_le_k
   omega
 
 theorem rank_zero_pos (D : D7) : 0 < D.R.N 0 := by
-  simp only [Formalism.BasicNotions.Ranks.N, zero_mul, add_zero]
-  exact columnCount_pos D
+  simpa only [Formalism.BasicNotions.Ranks.N, zero_mul, add_zero] using columnCount_pos D
 
 theorem weight_eq_lamCol (D : D7) (u : D.what₂.Word) (τ : D.what₂.Tau) (i : Fin (D.R.N 0)) :
     ((((D.fm u).lam 0 τ).w i : ℤ) : ℝ) = ((lamCol D u τ i : ℚ) : ℝ) := by
@@ -113,9 +111,7 @@ theorem weight_eq_lamCol (D : D7) (u : D.what₂.Word) (τ : D.what₂.Tau) (i :
   have hi : i.1 < D.R.k := lt_of_lt_of_eq i.2 (Ranks.N_zero _)
   unfold lamLiftN at h
   rw [ite_eq_left hi] at h
-  have h' := congrArg (fun q : ℚ => (q : ℝ)) h
-  simp only [Rat.cast_intCast] at h'
-  exact h'
+  simpa only [Rat.cast_intCast] using congrArg (fun q : ℚ => (q : ℝ)) h
 
 theorem natWeight_eq_lamCol_sub (D : D7) (u : D.what₂.Word) (τ : D.what₂.Tau) (l : Fin (D.R.N 0)) :
     (((((D.fm u).lam 0 τ).natW l : ℕ)) : ℝ) = (lamCol D u τ l : ℝ) - (lamCol D u τ (D.R.k - 1) : ℝ) := by

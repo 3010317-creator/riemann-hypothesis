@@ -140,8 +140,7 @@ theorem kr_eq_integral_krI_psiR {k p ρ : ℕ} {Wp Wq : Type} [NormedAddCommGrou
   have hmp : MeasurePreserving (LeftFubiniLemmas.PsiR (k := k) (p := p) (ρ := ρ)) (LeftFubiniLemmas.muR Bj) (B0.μW'.prod B0.μN) := by
     have h := LeftFubiniLemmas.right_measure_preserving k p ρ Bj.z' Bj.μW' B0.μW' Bj.haarW' hW' hW0'
     unfold LeftFubiniLemmas.muR
-    rw [hN0, hNj]
-    exact h
+    rwa [hN0, hNj]
 
   have hinj : Set.InjOn (LeftFubiniLemmas.PsiR (k := k) (p := p) (ρ := ρ)) S := by
     intro s hs s' hs' he
@@ -273,9 +272,7 @@ variable {m : ℕ}
 
 theorem cd_det : ContDiff ℝ ∞ (fun M : Fin m → Fin m → ℂ => (Matrix.of M).det) := by
   simp only [Matrix.det_apply, Matrix.of_apply]
-  refine ContDiff.sum fun σ _ => ?_
-  refine ContDiff.const_smul _ ?_
-  exact contDiff_prod fun i _ => by fun_prop
+  exact ContDiff.sum fun σ _ => ContDiff.const_smul _ (contDiff_prod fun i _ => by fun_prop)
 
 theorem cd_adj (i j : Fin m) : ContDiff ℝ ∞ (fun M : Fin m → Fin m → ℂ => (Matrix.of M).adjugate i j) := by
   have h : (fun M : Fin m → Fin m → ℂ => (Matrix.of M).adjugate i j) =
@@ -705,8 +702,7 @@ theorem krI_pt (Bj : B.RealPlaceData k ρ Wp Wq) (B0 : B.RealPlaceData k (p + ρ
   have hL : (Matrix.of (PsiR s).1 : B.Mat k (p + ρ)) = U.embG k p ρ h'' := of_levMt _
   have hdet : (Matrix.of (Matrix.of.symm (Matrix.of Z * G.upper s.2.2))).det ≠ 0 := by
     simp only [Equiv.apply_symm_apply]
-    rw [Matrix.det_mul, Formalism.FourierDecayAlt.P.Ux3.det_upper, mul_one]
-    exact hZ
+    rwa [Matrix.det_mul, Formalism.FourierDecayAlt.P.Ux3.det_upper, mul_one]
   have hy'G : (Matrix.of (Matrix.of.symm (h⁻¹ * Matrix.of y * h'')) : B.Mat k ρ) ∈ B.GV k ρ := by
     simp only [Equiv.apply_symm_apply]
     exact BetaSesquilinearity.gv_mul (BetaSesquilinearity.gv_mul (Formalism.FourierDecayAlt.P.B6.UWset_sub k ρ Bj.z (hW.inv_mem h hh)) hyG)

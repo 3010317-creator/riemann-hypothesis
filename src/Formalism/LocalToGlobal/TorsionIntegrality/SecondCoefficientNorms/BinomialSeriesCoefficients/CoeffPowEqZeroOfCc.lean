@@ -79,8 +79,7 @@ theorem mvExp_zero : mvExp (0 : MvPowerSeries σ K) = 1 := by
 
 theorem constantCoeff_mvExp {f : MvPowerSeries σ K} (hf : MvPowerSeries.constantCoeff f = 0) :
     MvPowerSeries.constantCoeff (mvExp f) = 1 := by
-  have h := coeff_mvExp hf (n := 0) (N := 1) (by simp)
-  simpa using h
+  simpa using coeff_mvExp hf (n := 0) (N := 1) (by simp)
 
 private theorem coeff_mvExp_eq_coeff_trunc_sum {f : MvPowerSeries σ K} (hf : MvPowerSeries.constantCoeff f = 0)
     (N : ℕ) (m : σ →₀ ℕ) (hm : m.degree < N) :
@@ -229,8 +228,7 @@ private theorem eq_zero_of_mvExp_eq_one {h : MvPowerSeries σ K} (hh : MvPowerSe
   classical
   by_contra hne
   have hex : ∃ d : ℕ, ∃ m : σ →₀ ℕ, m.degree = d ∧ MvPowerSeries.coeff m h ≠ 0 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     exact hne (MvPowerSeries.ext fun m => by simpa using hall _ m rfl)
   obtain ⟨m, hmd, hm⟩ := Nat.find_spec hex
   have hmin : ∀ m' : σ →₀ ℕ, m'.degree < Nat.find hex → MvPowerSeries.coeff m' h = 0 := by
@@ -255,8 +253,7 @@ private theorem eq_zero_of_mvExp_eq_one {h : MvPowerSeries σ K} (hh : MvPowerSe
       subst hk
       simp [hm0, MvPowerSeries.coeff_one]
     · rw [coeff_pow_eq_zero_of_degree_lt_mul hmin k m (by rw [hmd]; nlinarith), mul_zero]
-  · intro h1
-    exact absurd (Finset.mem_range.2 (by omega)) h1
+  · exact fun h1 => absurd (Finset.mem_range.2 (by omega)) h1
 
 theorem mvExp_inj {f g : MvPowerSeries σ K} (hf : MvPowerSeries.constantCoeff f = 0)
     (hg : MvPowerSeries.constantCoeff g = 0) (h : mvExp f = mvExp g) : f = g := by

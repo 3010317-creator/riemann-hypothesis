@@ -112,8 +112,7 @@ theorem quadratic_transfer_identity : GQBridge := by
     refine ⟨Qx5.isOpen_OpR P.k P.r Bs.z Bs.z', fun c _ => Qx8.Dp_dom P.k P.r Bs.z Bs.z', fun q => ?_, ?_, ?_⟩
     · exact (Gauge.GC.GT.sec_pt P Bs hpl q).1.2.2
     · exact NFx1.TC.radSp_fam hΦ
-    · intro c hc
-      exact Qx8.slice_FF hz hz' hΦ hc
+    · exact fun c hc => Qx8.slice_FF hz hz' hΦ hc
   have h := hg (fun _ => Qx8.Dp P.k P.r Bs.z Bs.z') (Φ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) hF Y a b
   funext ρ
   show MA.toSm P (Gauge.rawR P Bs.μsec e ((X.t (Y : ℂ) a b Φ : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') :
@@ -181,8 +180,7 @@ theorem lagrange_all {T : Type} [Fintype T] (K : (T → ℂ) → Prop) (hc : ∀
     · intro t _ htu
       rw [Finset.prod_eq_zero (Finset.mem_erase.mpr ⟨Ne.symm htu, Finset.mem_univ u⟩), mul_zero]
       rw [add_neg_cancel, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ u) h
+    · exact fun h => absurd (Finset.mem_univ u) h
   rw [key]
   exact hsum _ _ _ fun t _ => hmul _ _ (hc _) (hprod _ _ _ fun s _ => hmul _ _ (hadd _ _ hx (hc _)) (hc _))
 
@@ -380,8 +378,7 @@ theorem projected_block_lower_sum (hR : Rai κ S) {B : A} (hB : ∀ f, Commute (
     Finset.sum_congr rfl (fun j _ => hterm j), Finset.sum_eq_single l]
   · intro j _ hjl
     rw [blk_zero κ S hR (hoth j hjl), smul_zero]
-  · intro h
-    exact absurd hl h
+  · exact fun h => absurd hl h
 
 theorem projected_block_upper_sum (hR : RaiS κ S) {B : A} (hB : ∀ f, Commute (κ f) B) {l : ℕ} (hl : l ∈ Finset.Icc 1 (P.k - 1))
     {ρ ρ' : M.Ty P} (hU : M.Up P l ρ ρ') (Y : ℂ) :
@@ -399,8 +396,7 @@ theorem projected_block_upper_sum (hR : RaiS κ S) {B : A} (hB : ∀ f, Commute 
     Finset.sum_congr rfl (fun j _ => hterm j), Finset.sum_eq_single l]
   · intro j _ hjl
     rw [blk_zeroS κ S hR (hoth j hjl), smul_zero]
-  · intro h
-    exact absurd hl h
+  · exact fun h => absurd hl h
 
 def yl (l : ℕ) (ρ : M.Ty P) : ℝ := -M.rho P ρ l
 
@@ -502,8 +498,7 @@ theorem intw_zero : Gauge.GC.Intw P Bs e 0 0 := by
   have h0 : Gauge.GC.trR P Bs e 0 = 0 := by
     have h := Gauge.GC.trR_smul hsm (0 : ℂ) 0
     rwa [zero_smul, zero_smul] at h
-  rw [Gauge.actA_zero]
-  exact h0
+  rwa [Gauge.actA_zero]
 
 theorem intw_smul' (c : ℂ) {X : Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π')} {X' : MA.A P (MA.DQ P)}
     (h : Gauge.GC.Intw P Bs e X X') : Gauge.GC.Intw P Bs e (c • X) (c • X') := by
@@ -735,9 +730,7 @@ theorem second_shift_entry_holds : SSn.Rep.Core.SSEntry := by
   let Ψ : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π' := ⟨Ψ0, hΨ0⟩
   have hΨ : (Ψ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) c0 (NF.muZ P.k P.r Bs.μsec ζ) = e π ζ := by
     have hq : ((c0, ζ) : (Fin P.r → ℂ) × ℂ) ∈ NF.QR P.k P.r Bs.z Bs.z' := ⟨hc0, by rw [hTz]; exact hζ⟩
-    have h := congrFun hΨr (c0, ζ)
-    simp only [NF.radR, Set.indicator_of_mem hq] at h
-    exact h
+    simpa only [NF.radR, Set.indicator_of_mem hq] using congrFun hΨr (c0, ζ)
 
   have hv : ∀ (Θ : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') (σ : M.Ty P),
       ((Gauge.GC.trR P Bs e Θ σ : MA.SmQ P.r P.TT) : MA.Qp P.r P.TT → ℂ) =
@@ -871,9 +864,7 @@ theorem second_shift_pointwise_holds : SSn.Rep.Core.SSPointwise := by
       (Ψ ρ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) c (NF.muZ P.k P.r Bs0.μsec ζ) = e0 ρ ζ := by
     intro ρ c hc ζ hζ
     have hq : ((c, ζ) : (Fin P.r → ℂ) × ℂ) ∈ NF.QR P.k P.r Bs.z Bs.z' := ⟨hc, by rw [hTz]; exact hζ⟩
-    have h := congrFun (hΨr ρ) (c, ζ)
-    simp only [NF.radR, Set.indicator_of_mem hq] at h
-    exact h
+    simpa only [NF.radR, Set.indicator_of_mem hq] using congrFun (hΨr ρ) (c, ζ)
 
   have hdec : ∀ ζ : ℂ, ∃ hh : Q.Mx P.k P.r × Q.Mx P.k P.r, ζ ∈ Gauge.GC.Ann P →
       hh.1 ∈ UWset P.k P.r Bs.z ∧ hh.2 ∈ UWset P.k P.r Bs.z' ∧
@@ -1160,8 +1151,7 @@ theorem theta_gauge_constancy_holds : ThtGaugeConstOfCore := by
     intro Y
     have h1 := hsInner_lmul (Pr ρ n0) hsa Y (e ρ ζ)
     simp only [B.hsInner, lmul_apply] at h1
-    rw [hfixc ρ] at h1
-    exact h1
+    rwa [hfixc ρ] at h1
   have hsm : ∀ (c : ℂ) (A : Wq (S.pl v) →L[ℂ] Wp (S.pl v)), B.hsVec (c • A) = c • B.hsVec A := by
     intro c A
     unfold B.hsVec
@@ -1230,8 +1220,7 @@ theorem polynomial_finish_holds : PolyFinish := by
     have hb0 : q.eval b = 0 := (Polynomial.mem_roots hq).1 hb
     have := congrArg (Polynomial.eval b) hid
     simp only [eval_mul, hb0, zero_mul, eval_C, eval_pow, eval_sub, eval_X] at this
-    have h2 := (mul_eq_zero.1 this.symm).resolve_left hC
-    exact sub_eq_zero.1 (pow_eq_zero_iff'.1 h2).1
+    exact sub_eq_zero.1 (pow_eq_zero_iff'.1 ((mul_eq_zero.1 this.symm).resolve_left hC)).1
   have hcard : Multiset.card q.roots = q.natDegree := by
     first
       | exact IsAlgClosed.card_roots_eq_natDegree

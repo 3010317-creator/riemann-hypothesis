@@ -122,8 +122,7 @@ theorem wtN_step (n : ℕ) (hn : n + 1 < R.N R.m) : wtN P (n + 1) ≤ wtN P n :=
       have hm0 : 0 < R.m := by have := R.two_le_m; omega
       have hb : blkN R (n + 1) < R.m := by
         unfold blkN
-        rw [show n + 1 - R.k = 0 by omega, Nat.zero_div]
-        exact hm0
+        rwa [show n + 1 - R.k = 0 by omega, Nat.zero_div]
       have hb0 : blkN R (n + 1) = 0 := by
         unfold blkN
         rw [show n + 1 - R.k = 0 by omega, Nat.zero_div]
@@ -162,8 +161,7 @@ theorem wtN_anti {n n' : ℕ} (h : n ≤ n') (hn' : n' < R.N R.m) : wtN P n' ≤
   induction n', h using Nat.le_induction with
   | base => intro _; exact le_rfl
   | succ q hq ih =>
-    intro hq'
-    exact le_trans (wtN_step P q hq') (ih (by omega))
+    exact fun hq' => le_trans (wtN_step P q hq') (ih (by omega))
 
 theorem N_mono {j : ℕ} (hj : j ≤ R.m) : R.N j ≤ R.N R.m := by
   unfold Ranks.N

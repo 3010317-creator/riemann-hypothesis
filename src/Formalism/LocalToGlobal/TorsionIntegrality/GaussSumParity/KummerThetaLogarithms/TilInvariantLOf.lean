@@ -101,8 +101,7 @@ lemma sum_rule {P : MvPowerSeries τ K → Prop} (h0 : P 0) (hadd : ∀ g g', P 
     have h' : Simeq (0 : MvPowerSeries τ K) (φ 0) := by
       unfold Simeq at h ⊢
       have e : (0 : MvPowerSeries τ K) - φ 0 = φ 0 - (φ 0 + φ 0) := by ring
-      rw [e]
-      exact h
+      rwa [e]
     simpa using sim_symm h'
   | insert a s ha ih =>
     obtain ⟨ih1, ih2⟩ := ih fun i hi => hg i (Finset.mem_insert_of_mem hi)
@@ -164,8 +163,7 @@ theorem dual_expansion : DualExpand := by
   have hAB : A * B = 1 := by
     ext r r'
     rw [Matrix.mul_apply, Matrix.one_apply, ← hdual r r', sum_even]
-    refine Finset.sum_congr rfl fun s _ => ?_
-    exact (iterate_map_mul σ _ _ _).symm
+    exact Finset.sum_congr rfl fun s _ => (iterate_map_mul σ _ _ _).symm
   have hce : Fintype.card ι = Fintype.card E := by
     have h := card_even (d := d) hd
     show Fintype.card ι = Fintype.card {s : ZMod d // s.val % 2 = 0}
@@ -175,8 +173,7 @@ theorem dual_expansion : DualExpand := by
       if s = s' then 1 else 0 := by
     intro s s'
     have := congrFun (congrFun hBA s) s'
-    rw [Matrix.mul_apply, Matrix.one_apply] at this
-    exact this
+    rwa [Matrix.mul_apply, Matrix.one_apply] at this
   let z : E := ⟨0, by simp⟩
   have hz : ∀ y : K, σ^[z.1.val] y = y := by
     intro y
@@ -343,7 +340,6 @@ theorem MeanSimeqL_of : TilInvariantL → MeanSimeqL := by
     rw [subst_mul hLs, subst_C, Pair.subst_sum hLs, Finset.sum_sub_distrib, Finset.sum_const,
       Finset.card_range, mul_sub, sub_zero, e0]
   unfold Simeq
-  rw [e]
-  exact hlam
+  rwa [e]
 
 end Formalism.L2.Th1.D

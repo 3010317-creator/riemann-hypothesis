@@ -85,8 +85,7 @@ theorem model_inj {K V W Z : Type*} [Field K] [AddCommGroup V] [Module K V] [Add
     exact T.neg_mem ht
   have h0 := hT w hbaw
   have ht0 : t = 0 := by
-    rw [h0, zero_add] at hb
-    exact hb
+    rwa [h0, zero_add] at hb
   subst ht0
   rw [map_zero, zero_add] at h
   have hz : ζ z = a (-w) := by
@@ -198,8 +197,7 @@ theorem field_mat {K : Type*} [Field K] {n m : ℕ} (A0 A B0 B : Matrix (Fin n) 
   have inj : ∀ {A' : Matrix (Fin n) (Fin m) K} {L' : Matrix (Fin m) (Fin n) K}, L' * A' = 1 →
       Function.Injective (Matrix.toLin' A') := by
     intro A' L' h x y hxy
-    have h2 := congrArg (Matrix.toLin' L') hxy
-    simpa [Matrix.toLin'_apply, Matrix.mulVec_mulVec, h] using h2
+    simpa [Matrix.toLin'_apply, Matrix.mulVec_mulVec, h] using congrArg (Matrix.toLin' L') hxy
   have sec : ∀ {B' : Matrix (Fin n) (Fin m) K} {M' : Matrix (Fin m) (Fin n) K}, M' * B' = 1 →
       ∀ w, Matrix.toLin' B'ᵀ (Matrix.toLin' M'ᵀ w) = w := by
     intro B' M' h w
@@ -282,8 +280,7 @@ theorem transitiveOverLocalRings : WCore := by
   obtain ⟨kb, hkbu, hkbA, hkbB⟩ := field_mat (A0.map f) (A.map f) (B0.map f) (B.map f) (L0.map f) (L.map f)
     (M0.map f) (M.map f) (hmap1 hL0) (hmap1 hL) (hmap1 hM0) (hmap1 hM) hCf
   have hC' : B0ᵀ * A0 = Bᵀ * A := by
-    have h := congrArg Matrix.transpose hC
-    simpa only [Matrix.transpose_mul, Matrix.transpose_transpose] using h
+    simpa only [Matrix.transpose_mul, Matrix.transpose_transpose] using congrArg Matrix.transpose hC
 
   obtain ⟨hk1A, hk1B⟩ := affine_sol A0 A B0 B L0 M hL0 hM hC' 0
   simp only [Matrix.mul_zero, Matrix.zero_mul, add_zero] at hk1A hk1B

@@ -408,8 +408,7 @@ theorem ind_fil (τ : K →ₐ[Qp] LL) (U : PowerSeries LL) (hU : PowerSeries.co
         have h0 := Submodule.sub_mem _ hs hrest
         rw [add_sub_cancel_left, PowerSeries.coeff_zero_eq_constantCoeff_apply, Nat.cast_zero, sub_zero] at h0
         exact (Submodule.smul_mem_iff _ hU).1 h0
-  intro j
-  exact key ((j - m₀).toNat + 1) j (by omega)
+  exact fun j => key ((j - m₀).toNat + 1) j (by omega)
 
 end Generic
 
@@ -649,8 +648,7 @@ theorem expwd_core {O A E L X Y : Type*} [CommRing O] [AddCommGroup A] [Module O
   have h3 : LinearMap.rTensor X j (∑ i, a i ⊗ₜ[O] g (s i)) =
       LinearMap.rTensor X j (∑ k, b k ⊗ₜ[O] g (t k)) := by
 
-    simp only [map_sum, LinearMap.rTensor_tmul]
-    exact h2
+    simpa only [map_sum, LinearMap.rTensor_tmul] using h2
   have h5 := congrArg μ (hinjX h3)
 
   simpa only [map_sum] using h5
@@ -694,8 +692,7 @@ theorem lev_letE_mul (c : ZMod n) (ζ : LL) (a : LetA O n) :
     first
     | (simp [letE]; done)
   have h1 := W.79 c ζ _ h0
-  rw [map_sub, sub_eq_zero] at h1
-  exact h1
+  rwa [map_sub, sub_eq_zero] at h1
 
 theorem levN_smul_alg (i : ZMod n) (ζ : LL) (o : O) (x : ↥(W.N T)) (k : ℤ) :
     W.levN T i ζ ((algebraMap O (LetA O n) o) • x) k = algebraMap O LL o • W.levN T i ζ x k := by
@@ -783,9 +780,7 @@ theorem valL_ker {c : ZMod n} {ζ : LL} (hP : PtHyp (W := W) T c ζ) (π' : LetA
   change valAt W T c ζ (x : W.DD T) = 0
   rw [valAt_eq Ct T hP ⟨x, hxN⟩]
   have hzx' : (π' ^ 1) • z = (x : W.DD T) := hzx
-  have hxe : (⟨x, hxN⟩ : ↥(W.N T)) = (π' ^ 1) • ⟨z, hz⟩ := by
-    apply Subtype.ext
-    exact hzx'.symm
+  have hxe : (⟨x, hxN⟩ : ↥(W.N T)) = (π' ^ 1) • ⟨z, hz⟩ := Subtype.ext hzx'.symm
   have hneg := hP.2.2.2.2.2.1
   have h0 : Ct.levB T (c - 1) 1 ⟨x, hxN⟩ 0 = 0 := by
     apply framepf_ιV_inj (PD := PD) T
@@ -852,8 +847,7 @@ theorem expS_wd [IsDomain O] [IsDedekindDomain O] (hinj : Function.Injective (al
   have key2 : ∑ j, serC (W.lev c ζ (a j)) (valAt W T c ζ (y j)) =
       ∑ k, serC (W.lev c ζ (b k)) (valAt W T c ζ (z k)) := by
     refine (Finset.sum_congr rfl (fun j _ => (e1 j).symm)).trans ?_
-    refine Eq.trans ?_ (Finset.sum_congr rfl (fun k _ => e2 k))
-    exact key
+    exact Eq.trans key (Finset.sum_congr rfl (fun k _ => e2 k))
   funext i
   have := congrFun key2 i
   simpa [expS, Finset.sum_apply] using this
@@ -913,8 +907,7 @@ theorem rec_WD (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpO
     · intro x k hk
       have h4 := ((h4W T hT).1 (c - 1) 1 ⟨0, by simp⟩ (by rw [hX]; exact hπ1)).1 x k
       exact h4.2 hk
-    · intro x hx
-      exact ((HW l).W K 1 LL hG).N_φ T x hx
+    · exact fun x hx => ((HW l).W K 1 LL hG).N_φ T x hx
   exact MLA.expS_wd ((Cm l).C K 1 LL hG).tie T hinj hP π' hπ a y hy b z hz h
 
 

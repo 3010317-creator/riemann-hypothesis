@@ -81,13 +81,11 @@ theorem trace_isIntegral_rank2 (b : Module.Basis (Fin 2) K A) {y : A} (hy : IsIn
   have hpy : Polynomial.aeval y p = 0 := hp
   have hpM : Polynomial.aeval M p = 0 := by
     have h1 := Polynomial.aeval_algHom_apply ((Algebra.leftMulMatrix b).restrictScalars R) y p
-    rw [hpy, map_zero] at h1
-    exact h1
+    rwa [hpy, map_zero] at h1
   have hpM' : Polynomial.aeval M' p = 0 := by
     have h1 := Polynomial.aeval_algHom_apply
       (((Algebra.ofId K L).mapMatrix : Matrix (Fin 2) (Fin 2) K →ₐ[K] Matrix (Fin 2) (Fin 2) L).restrictScalars R) M p
-    rw [hpM, map_zero] at h1
-    exact h1
+    rwa [hpM, map_zero] at h1
   have hroot : ∀ μ ∈ M'.charpoly.roots, IsIntegral R μ := by
     intro μ hμ
     have h1 : μ ∈ spectrum L M' := by

@@ -168,8 +168,7 @@ theorem log_index_le : Real.log U.index ≤ 2 * SS U := by
           rw [Finset.mem_filter, Nat.mem_divisors] at hm
           have hmN : N / m ∣ N := Nat.div_dvd_of_dvd hm.1.1
           have hex' : ∃ u ∈ KK N (N / m), u ∉ U := by
-            by_contra hcon
-            push Not at hcon
+            by_contra! hcon
             exact hm.2 (hcdvd _ hmN hcon)
           have h12 := half_le_rho U hmN hex'
           have hΛ : 0 ≤ vonMangoldt m := vonMangoldt_nonneg
@@ -276,8 +275,7 @@ theorem rho_two {e M i : ℕ} (hM : Nat.Coprime 2 M) (hN : 2 ^ (e + 2) * M ∣ N
         push_cast; rw [hval]; ring
       rw [CharP.cast_eq_zero_iff (ZMod (2 ^ (e + 2))) (2 ^ (e + 2))] at h1
       have h4 : 4 ∣ (u : ZMod N).val + 1 := by
-        have h5 := (pow_dvd_pow 2 (by omega : 2 ≤ e + 2)).trans h1
-        simpa using h5
+        simpa using (pow_dvd_pow 2 (by omega : 2 ≤ e + 2)).trans h1
       have h4' : (u : ZMod N).val ≡ 1 [MOD 4] := by
         have h6 := Nat.ModEq.of_dvd ((pow_dvd_pow 2 hi2).trans (dvd_mul_right _ M))
           (mem_KK.mp hu)
@@ -592,8 +590,7 @@ theorem minpoly_map : (minpoly E ζ).map (algebraMap E L) = Lagrange.nodal Finse
       fun σ _ => ?_
     rw [Polynomial.dvd_iff_isRoot, IsRoot.def, eval_map, ← aeval_def]
     have := Polynomial.aeval_algHom_apply (σ : L →ₐ[E] L) ζ (minpoly E ζ)
-    rw [minpoly.aeval, _root_.map_zero] at this
-    exact this
+    rwa [minpoly.aeval, _root_.map_zero] at this
   · refine le_of_eq ?_
     rw [natDegree_map, ← IntermediateField.adjoin.finrank hint_r, htop, IntermediateField.finrank_top',
       Lagrange.natDegree_nodal, Finset.card_univ, hcard]
@@ -636,8 +633,7 @@ theorem absNorm_diff : ((Ideal.absNorm (differentIdeal (𝓞 E) (𝓞 L)) : ℕ)
     rw [← aeval_algebraMap_apply, hζL, aeval_def, eval₂_eq_eval_map, ← derivative_map, hmapL]
     have h1 := Lagrange.eval_nodal_derivative_eval_node_eq (s := (Finset.univ : Finset (L ≃ₐ[E] L)))
       (v := fun σ : L ≃ₐ[E] L => σ ζ) (Finset.mem_univ 1)
-    rw [Lagrange.eval_nodal] at h1
-    exact h1
+    rwa [Lagrange.eval_nodal] at h1
   have hnormR : ((Algebra.norm ℤ (aeval z (derivative (minpoly (𝓞 E) z))) : ℤ) : ℝ) =
       ((Algebra.norm ℚ (∏ σ ∈ (Finset.univ : Finset (L ≃ₐ[E] L)).erase 1, (ζ - σ ζ)) : ℚ) : ℝ) := by
     rw [← hy, ← Algebra.coe_norm_int]; norm_cast
@@ -662,11 +658,7 @@ theorem log_discr_tower : Real.log |(discr L : ℝ)| =
       |((Algebra.norm ℚ (ζ - σ ζ) : ℚ) : ℝ)| ≠ 0 := by
     intro σ hσ
     have hσ1 : σ ≠ 1 := Finset.ne_of_mem_erase hσ
-    have hne : ζ - σ ζ ≠ 0 := by
-      intro h
-      apply hσ1
-      apply gal_inj hζ E
-      exact (sub_eq_zero.1 h).symm
+    have hne : ζ - σ ζ ≠ 0 := fun h => hσ1 (gal_inj hζ E (sub_eq_zero.1 h).symm)
     rw [abs_ne_zero, Rat.cast_ne_zero]
     exact Algebra.norm_ne_zero_iff.2 hne
   have hdE : |(discr E : ℝ)| ≠ 0 := abs_ne_zero.2 (Int.cast_ne_zero.2 (NumberField.discr_ne_zero E))
@@ -749,8 +741,7 @@ theorem log_norm_weight (u : ZMod N) (hu : u ≠ 1) :
   rw [IsCyclotomicExtension.finrank L (cyclotomic.irreducible_rat (NeZero.pos N))] at key
   rw [hfac, map_mul, map_pow, Rat.cast_mul, Rat.cast_pow, abs_mul, abs_pow, hnz, one_pow, one_mul]
   have ht : (0 : ℝ) < (addOrderOf (u - 1)).totient := by exact_mod_cast Nat.totient_pos.2 (by omega)
-  rw [mul_div_assoc', eq_div_iff ht.ne']
-  exact key
+  rwa [mul_div_assoc', eq_div_iff ht.ne']
 
 
 local instance (p : Prop) : Decidable p := Classical.propDecidable p
@@ -886,8 +877,7 @@ theorem log_rd_eq : Real.log H.rd = SS H.art.ker := by
     have h2 := H.art_spec u σ hσ
     rw [MonoidHom.mem_ker, ← H.gal.symm.map_eq_one_iff]
     constructor
-    · intro h3
-      exact AlgEquiv.ext fun x => H.cycEmb.injective ((h2 x).trans (h3 x))
+    · exact fun h3 => AlgEquiv.ext fun x => H.cycEmb.injective ((h2 x).trans (h3 x))
     · intro h3 x
       rw [h3] at h2
       exact (h2 x).symm)
@@ -918,7 +908,6 @@ private theorem q_mul_d_ne_zero : H.q * H.d ≠ 0 := by
   norm_num at h3
 
 theorem div_d : H.condN / H.d = H.QS * H.q := by
-  show H.QS * H.q * H.d / H.d = H.QS * H.q
   exact Nat.mul_div_cancel _ (Nat.pos_of_ne_zero (right_ne_zero_of_mul (q_mul_d_ne_zero H)))
 
 theorem div_q : H.condN / H.q = H.QS * H.d := by

@@ -81,8 +81,7 @@ theorem coeff_l_frob {P : PS C 1 dd} (hP : IntS V P) (hPz : MvPowerSeries.consta
           apply hi
           have := (Finsupp.single_left_inj (by omega : V.l ≠ 0)).1 h
           rw [this]
-        · intro h
-          exact absurd (Finset.mem_univ _) h
+        · exact fun h => absurd (Finset.mem_univ _) h
   have hz : MvPowerSeries.subst (fun q : Fin 1 × Fin dd => γ q.2) (0 : PS C 1 dd) = 0 := by
     rw [← MvPowerSeries.coe_substAlgHom hG, map_zero]
   have hsplit : P = D1 + (P - D1 - D3) + D3 := by ring
@@ -111,8 +110,7 @@ theorem coeff_l_frob {P : PS C 1 dd} (hP : IntS V P) (hPz : MvPowerSeries.consta
     rw [map_sub, coeff_frobTw, ite_eq_left (fun s => by simp)] at h
     have e : (Finsupp.single () V.l).mapRange (fun n => n / V.l) (Nat.zero_div V.l) = Finsupp.single () 1 := by
       rw [Finsupp.mapRange_single, Nat.div_self (by omega)]
-    rw [e] at h
-    exact h
+    rwa [e] at h
   have eP : MvPowerSeries.subst (fun q : Fin 1 × Fin dd => γ q.2) P =
       MvPowerSeries.subst (fun q : Fin 1 × Fin dd => γ q.2) D1 +
         MvPowerSeries.subst (fun q : Fin 1 × Fin dd => γ q.2) (P - D1 - D3) +
@@ -178,8 +176,7 @@ theorem coeff_lt_frob {P : PS C 1 dd} (hPz : MvPowerSeries.constantCoeff P = 0) 
         MvPowerSeries.subst (fun q : Fin 1 × Fin dd => γ q.2) (P - D1) := by
     conv_lhs => rw [show P = D1 + (P - D1) by ring]
     rw [MvPowerSeries.subst_add hG]
-  rw [eP, map_add (f := _), hA2', add_zero]
-  exact hB1
+  rwa [eP, map_add (f := _), hA2', add_zero]
 
 def LowMM (V : VF C) (f : PowerSeries C) : Prop := ∀ n ≤ V.l, V.MM (PowerSeries.coeff n f)
 
@@ -248,8 +245,7 @@ theorem coeff_one_subst_curve {P : PS C 1 dd} (hPz : MvPowerSeries.constantCoeff
         apply hi
         have := (Finsupp.single_left_inj (by omega : (1 : ℕ) ≠ 0)).1 h
         rw [this]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
   have hA := (agr_subst_right (a := fun q : Fin 1 × Fin dd => γ q.2) (fun q => hγ0 q.2) hD2)
     (Finsupp.single () 1) (by rw [Finsupp.degree_single]; omega)
   have hA' : PowerSeries.coeff 1 (MvPowerSeries.subst (fun q : Fin 1 × Fin dd => γ q.2) P) =

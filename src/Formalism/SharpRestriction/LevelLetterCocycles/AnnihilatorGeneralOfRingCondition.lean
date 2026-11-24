@@ -81,9 +81,7 @@ theorem pi0Core_of (W : LocWach PD LL O v n) (w : (LetA O n)ˣ) (k : ℕ) (h1 : 
       Uc = fun _ => PowerSeries.C ((W.χΓ g : Oˣ) : O) + PowerSeries.X * t := ⟨_, rfl⟩
   have hπ : W.γA g letπ = letπ * Uc := by
     funext i
-    rw [hUc]
-    show W.γ₀ g PowerSeries.X = PowerSeries.X * (PowerSeries.C ((W.χΓ g : Oˣ) : O) + PowerSeries.X * t)
-    exact ht
+    rwa [hUc]
   obtain ⟨u, hu⟩ : ∃ u : LetA O n, u = (↑w⁻¹ : LetA O n) * W.γA g (w : LetA O n) * Uc ^ k :=
     ⟨_, rfl⟩
   have heq : W.γA g W.π₀ = W.π₀ * u := by

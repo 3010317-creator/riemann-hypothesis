@@ -151,9 +151,7 @@ theorem induced_eq (H : Subgroup G) (hcl : IsClosed (H : Set G)) (μ : Measure G
       ∫⁻ g, f g ∂m = ∫⁻ q, ∫⁻ h, f (q.out * (h : G)) ∂ν ∂ρ' := by
     intro f hf
     rw [hmdef, Measure.lintegral_bind hκ.aemeasurable hf.aemeasurable]
-    apply lintegral_congr
-    intro q
-    exact lintegral_map hf (hmulc _)
+    exact lintegral_congr (fun q => lintegral_map hf (hmulc _))
   have hρmap : ∀ g : G, ρ'.map (fun q => g • q) = ρ' := by
     intro g
     ext s hs
@@ -344,8 +342,7 @@ theorem exStab_of_U (hW : SecCtblW) (hP : LCSCPolish) (hO : OrbTup) (hI : NuInv)
     apply measure_mono_null _ hν.1
     intro y hy
     simp only [Set.mem_ofPred_eq] at hy ⊢
-    intro hg
-    exact hy (hO F E σ hCM M J hJ ha hc a ha1 ha2 X0 hT hdet y hg)
+    exact fun hg => hy (hO F E σ hCM M J hJ ha hc a ha1 ha2 X0 hT hdet y hg)
   obtain ⟨hemb, hcont⟩ := orbEmb_of hW hP F E σ hCM M J hJ ha hc a ha1 ha2 X0 hT hdet
   obtain ⟨μ', h1, h2⟩ := weil_orbit_u (G := HA (AF F) σ J) (ratTup (AF F) X0)
     (stabClosed_holds F E σ hCM M J hJ ha hc a ha1 ha2 X0 hT hdet) μ νX hnull
@@ -517,8 +514,7 @@ theorem orbTup_holds : OrbTup := by
     have hc : (cT sE P).det = sE P.det := by
       rw [cT, det_transpose, RingHom.map_det]; rfl
     rw [hD, det_mul, det_mul, hc]
-    refine mul_ne_zero (mul_ne_zero ?_ hdet) hPu.ne_zero
-    exact (map_ne_zero sE).mpr hPu.ne_zero
+    exact mul_ne_zero (mul_ne_zero ((map_ne_zero sE).mpr hPu.ne_zero) hdet) hPu.ne_zero
   have hDne : ∀ j, D j j ≠ 0 := by
     intro j
     rw [hDdiag, det_diagonal] at hDdet

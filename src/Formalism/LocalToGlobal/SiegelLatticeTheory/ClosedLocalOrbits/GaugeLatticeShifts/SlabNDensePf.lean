@@ -202,8 +202,7 @@ theorem cg_D_exists {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
 end Adelic
 
 theorem cayley_continuous : CayCont := by
-  intro D X Z c hc
-  exact cg_cay (O := IntAf X.B.I.F X.B.I.E) (fun A => cg_D_exists A) _ Z c hc
+  exact fun D X Z c hc => cg_cay (O := IntAf X.B.I.F X.B.I.E) (fun A => cg_D_exists A) _ Z c hc
 
 end Formalism.L2.SG.Pf.SlabNDensePf
 end -- clump:auto
@@ -319,9 +318,7 @@ theorem cg_approx (k : ℕ) (hk : 1 ≤ k) (z : E ⊗[F] Af F) :
   have ha : Formalism.UG.inclE (F := F) (Af F) ((a : E) / m) =
       Formalism.UG.inclE (F := F) (Af F) ((1 : E) / m) * Formalism.UG.inclE (F := F) (Af F) (a : E) := by
     rw [← map_mul]; congr 1; ring
-  rw [ha]
-  rw [hz]
-  rw [e]
+  rw [ha, hz, e]
   push_cast
   linear_combination (-(k : E ⊗[F] Af F) * r') * h2
 
@@ -336,8 +333,7 @@ theorem cg_approx_mat {ι : Type} [Fintype ι] (lv : ι → ℕ) (Z : Matrix ι 
       simp only [Matrix.sub_apply, Matrix.map_apply, Matrix.of_apply, ite_eq_left h, map_zero, hZ i j h,
         sub_zero, mul_zero]
     · refine ⟨t i j, ht i j, ?_⟩
-      simp only [Matrix.sub_apply, Matrix.map_apply, Matrix.of_apply, ite_eq_right h]
-      exact e i j
+      simpa only [Matrix.sub_apply, Matrix.map_apply, Matrix.of_apply, ite_eq_right h] using e i j
 
 end Approx
 

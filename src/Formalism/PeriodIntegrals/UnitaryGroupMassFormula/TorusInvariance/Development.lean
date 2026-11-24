@@ -237,7 +237,6 @@ lemma Tf_mem {φ : Pt k r i D → E} (hφ : φ ∈ Sm E k r i D) (a b : Fin (mdi
     Tf a b φ ∈ Sm E k r i D := by
   have hφ' : SmoothLev k r i D (ext k r i D φ) := hφ
   have h1 := (hP E k r (fun _ => 0) i D a b (ext k r i D φ) (ext k r i D φ) 0 hD hφ' hφ').1
-  show SmoothLev k r i D (ext k r i D (Tf a b φ))
   exact lev_congr hD (fun g hg => (ext_at (φ := Tf a b φ) hg).symm) h1
 
 lemma Tf_add {φ ψ : Pt k r i D → E} (hφ : φ ∈ Sm E k r i D) (hψ : ψ ∈ Sm E k r i D)
@@ -271,7 +270,6 @@ def Ealg (a b : Fin (mdim k r i)) : Module.End ℂ (Sm E k r i D) where
 lemma E_rep {F : Mx k r → E} {x : Sm E k r i D} (h : Rep F x.1) (a b : Fin (mdim k r i)) :
     Rep (EH k r (posL k r i a) (posL k r i b) F) (Ealg hP hC hD a b x).1 := by
   intro g hg
-  show EH k r (posL k r i a) (posL k r i b) F g = EH k r (posL k r i a) (posL k r i b) (ext k r i D x.1) g
   exact hC E k r i D a b F (ext k r i D x.1) g hD hg (fun y hy => by rw [h y hy, ext_at hy])
 
 lemma Top_rep {F : Mx k r → E} {x : Sm E k r i D} (h : Rep F x.1) (u : ℂ)

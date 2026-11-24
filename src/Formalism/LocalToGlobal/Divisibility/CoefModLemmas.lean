@@ -497,8 +497,7 @@ theorem pairSymm : PairSymm := by
     have h2 : star (extNorm K lam) = extNorm K lam := by
       unfold extNorm
       rw [star_prod]
-      refine Finset.prod_congr rfl fun τ _ => ?_
-      exact (fockSHerm K _ _ _).symm
+      exact Finset.prod_congr rfl fun τ _ => (fockSHerm K _ _ _).symm
     rw [star_div₀, h1, h2]
   have e : (fun τ => ((G τ)ᵀ)ᴴ) = fun τ => (G τ)ᵀ := by
     funext τ
@@ -543,8 +542,7 @@ theorem localization_gLat (w : HeightOneSpectrum (𝓞 K)) (g : GL (Fin n) K) (M
     · have : s • (((g⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) *ᵥ x) = y := by
         rw [← Matrix.mulVec_smul, ← hyx', Matrix.mulVec_mulVec]
         simp
-      rw [this]
-      exact hy
+      rwa [this]
     · show (g : Matrix (Fin n) (Fin n) K) *ᵥ (((g⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) *ᵥ x) = x
       rw [Matrix.mulVec_mulVec]
       simp
@@ -602,8 +600,7 @@ theorem transLat_gLat (lam : ι → DomWeight n) (T : Submodule (𝓞 K) (Pol K 
     rw [← polyAction_mul, mul_inv_cancel, polyAction_one₂]
   · rintro ⟨y, hy, rfl⟩
     show actP lam g⁻¹ (actP lam g y) ∈ _
-    rw [← polyAction_mul, inv_mul_cancel, polyAction_one₂]
-    exact hy
+    rwa [← polyAction_mul, inv_mul_cancel, polyAction_one₂]
 
 end Equiv
 

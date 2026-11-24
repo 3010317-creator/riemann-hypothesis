@@ -118,8 +118,7 @@ theorem Mof_span (D : D7) {T : D.host.E} (F0 : FlagG (VS D) D.R.rS T) (Λ : Subm
   have hmem : (Submodule.Quotient.mk (d • a) : WbQ D F0) ∈ Mof D F0 Λ := by
     rw [mem_Mof]
     refine ⟨d • a, ?_, rfl⟩
-    rw [Submodule.coe_smul_of_tower]
-    exact hdm
+    rwa [Submodule.coe_smul_of_tower]
   have e : (Submodule.Quotient.mk a : WbQ D F0) =
       (algebraMap (𝓞 D.host.E) D.host.E d)⁻¹ • (Submodule.Quotient.mk (d • a) : WbQ D F0) := by
     rw [← algebraMap_smul D.host.E d a, Submodule.Quotient.mk_smul, smul_smul, inv_mul_cancel₀ hdE, one_smul]
@@ -191,8 +190,7 @@ theorem Mof_unimod (D : D7) {T : D.host.E} (F0 : FlagG (VS D) D.R.rS T) (Λ : Su
       exact Submodule.add_mem _ a.2 (X_le_perp D F0 hwX)
     rw [mem_Mof]
     refine ⟨⟨w, hwp⟩, hwΛ, ?_⟩
-    rw [mk_eq_mk]
-    exact hwX
+    rwa [mk_eq_mk]
   · intro x hx
     rw [Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
     intro y hy

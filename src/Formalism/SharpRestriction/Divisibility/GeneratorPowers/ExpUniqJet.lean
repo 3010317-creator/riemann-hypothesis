@@ -94,8 +94,7 @@ theorem mem_pow_of_trunc_eq_zero {κ : Type} {m : ℕ} (p : Jet R κ (m + 1))
         Ideal.Quotient.mk _ P := by
       first
       | rfl
-    rw [e, Ideal.Quotient.eq_zero_iff_mem] at h
-    exact h
+    rwa [e, Ideal.Quotient.eq_zero_iff_mem] at h
   rw [Ij_eq_map, ← Ideal.map_pow]
   exact Ideal.mem_map_of_mem _ hP
 
@@ -204,8 +203,7 @@ theorem sc_pow_mem {κ : Type} (m : ℕ) (c : R) :
     refine Submodule.mul_induction_on hp ?_ ?_
     · intro a ha b hb
       have hsb : sc m c b ∈ Ij R κ m := by
-        have h := Ideal.add_mem _ (sc_sub_mem m c b) hb
-        simpa using h
+        simpa using Ideal.add_mem _ (sc_sub_mem m c b) hb
       have e : sc m c (a * b) - c ^ (k + 1) • (a * b) =
           (sc m c a - c ^ k • a) * sc m c b + (c ^ k • a) * (sc m c b - c • b) := by
         simp only [map_mul, Algebra.smul_def, map_pow]
@@ -281,8 +279,7 @@ theorem sub_kill_mem (m : ℕ) (i : Fin 2) (e : Jet R (Fin 2 × Fin n) m) : e - 
   rw [h1, ← map_sub]
   have h2 := Ideal.mem_map_of_mem (Ideal.Quotient.mk (orig R (Fin 2 × Fin n) ^ (m + 1)))
     (poly_sub_kill_mem i P)
-  rw [Ideal.map_span, ← Set.range_comp] at h2
-  exact h2
+  rwa [Ideal.map_span, ← Set.range_comp] at h2
 
 theorem mem_mul_of_kill (m : ℕ) (e : Jet R (Fin 2 × Fin n) m) (h0 : kill m 0 e = 0) (h1 : kill m 1 e = 0) :
     e ∈ Kp m 0 * Kp m 1 := by

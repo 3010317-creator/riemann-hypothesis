@@ -102,8 +102,7 @@ theorem split_mem_iff (J₁ : Matrix n n R) (g : GL n (R × R)) :
     · rw [split_map_snd_mul, split_map_snd_mul, split_cT_snd, splitJ_snd]
       have h' := congrArg Matrix.transpose h
       rw [Matrix.transpose_mul, Matrix.transpose_mul, Matrix.transpose_transpose] at h'
-      rw [← Matrix.mul_assoc] at h'
-      exact h'
+      rwa [← Matrix.mul_assoc] at h'
 
 theorem split_conj_mul (J₁ : Matrix n n R) (hJ : IsUnit J₁.det) {P Q : Matrix n n R}
     (hPQ : P * Q = 1) : (J₁ * P * J₁⁻¹) * (J₁ * Q * J₁⁻¹) = 1 := by
@@ -186,8 +185,7 @@ theorem split_unitary_group_iso : Formalism.UG.SplitIso := by
     fun g => rfl⟩
   · intro a b hab
     apply Subtype.ext
-    apply split_injective J₁ hJ a b a.2 b.2
-    exact congrArg (fun u : GL n R => (u : Matrix n n R)) hab
+    exact split_injective J₁ hJ a b a.2 b.2 (congrArg (fun u : GL n R => (u : Matrix n n R)) hab)
   · intro h
     obtain ⟨g, hg, he⟩ := split_surjective J₁ hJ h
     exact ⟨⟨g, hg⟩, he⟩

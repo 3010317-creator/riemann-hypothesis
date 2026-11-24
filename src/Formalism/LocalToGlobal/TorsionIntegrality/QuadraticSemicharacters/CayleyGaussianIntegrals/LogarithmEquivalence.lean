@@ -100,10 +100,8 @@ private theorem sum_char_isReps_eq_zero_of_nontrivial {Λ₁ Λ₂ : AddSubgroup
     exact h.symm
   have hperm : ∑ x ∈ S, χ (rep (x + x')) = ∑ x ∈ S, χ x := by
     refine Finset.sum_nbij' (i := fun x => rep (x + x')) (j := fun x => rep (x - x')) ?_ ?_ ?_ ?_ ?_
-    · intro a ha
-      exact hrepS _ (Λ₁.add_mem (hsub a ha) hx')
-    · intro a ha
-      exact hrepS _ (Λ₁.sub_mem (hsub a ha) hx')
+    · exact fun a ha => hrepS _ (Λ₁.add_mem (hsub a ha) hx')
+    · exact fun a ha => hrepS _ (Λ₁.sub_mem (hsub a ha) hx')
     · intro a ha
       have h1 : a + x' ∈ Λ₁ := Λ₁.add_mem (hsub a ha) hx'
       have h2 : rep (a + x') - x' ∈ Λ₁ := Λ₁.sub_mem (hsub _ (hrepS _ h1)) hx'
@@ -174,8 +172,7 @@ theorem characterSum : CharSum := by
   · rw [ite_eq_right hy₁]
     have hy₁' : y ∉ dualLat H Λ₁ := by rw [h₁']; exact hy₁
     have hx' : ∃ x' ∈ Λ₁, Complex.exp (-(2 * (Real.pi : ℂ)) * Complex.I * (altE H x' y : ℂ)) ≠ 1 := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       apply hy₁'
       show ∀ x ∈ Λ₁, ∃ m : ℤ, altE H y x = m
       intro x hx

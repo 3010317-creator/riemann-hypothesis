@@ -68,8 +68,7 @@ theorem gram_matrix_mul_left (gm_hyp : ∀ o t (s s' : Fin 2), ∑ q, gm o (t + 
     exact gram_matrix_mul_right gm_hyp α g g'
   have hBA := mul_eq_one_comm.1 hAB
   have := congrFun (congrFun hBA col') col
-  rw [Matrix.mul_apply, Matrix.one_apply] at this
-  exact this
+  rwa [Matrix.mul_apply, Matrix.one_apply] at this
 
 variable (r tau gm)
 
@@ -92,8 +91,7 @@ theorem sum_coS (inj : Function.Injective fun x : Orb × ZMod 2 => tau x.1 x.2) 
     (α : AA r tau N) (col : Fin 2) (Φ : C → (Fin N × WVO fun o (_ : Fin 2) => IIs r tau o) → M) (h0 : ∀ y, Φ 0 y = 0) :
     ∑ y, Φ (coS r tau gm plc (lam r tau plc (α, col)) y) y =
       ∑ g, Φ (Mm r tau gm α col g) ((eW r tau N).symm (α, g)) := by
-  rw [← Equiv.sum_comp (eW r tau N).symm, Fintype.sum_prod_type]
-  rw [Finset.sum_eq_single α]
+  rw [← Equiv.sum_comp (eW r tau N).symm, Fintype.sum_prod_type, Finset.sum_eq_single α]
   · refine Finset.sum_congr rfl fun g _ => ?_
     rw [coS_lam plc inj, ite_eq_left rfl]
   · intro α' _ hne

@@ -23,8 +23,7 @@ theorem natCast_mem_Int (c : ℕ) : ((c : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F)) ∈ 
   exact natCast_mem _ c
 
 theorem smul_mem_mL_int {s : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F} (hs : s ∈ IntAf X.B.I.F X.B.I.E) {w : VA X.B.I}
-    (hw : w ∈ mL X.B.I X.B.g) : s • w ∈ mL X.B.I X.B.g := by
-  exact (mL X.B.I X.B.g).smul_mem ⟨s, hs⟩ hw
+    (hw : w ∈ mL X.B.I X.B.g) : s • w ∈ mL X.B.I X.B.g := (mL X.B.I X.B.g).smul_mem ⟨s, hs⟩ hw
 
 theorem InAt_add {a b : VA X.B.I} (ha : InAt X.B.I X.B.g X.B.g a) (hb : InAt X.B.I X.B.g X.B.g b) :
     InAt X.B.I X.B.g X.B.g (a + b) := by
@@ -264,9 +263,7 @@ theorem norm_congruence_of_carrier (hTF : FrameTie X u u' F0 F0') (hM : Formalis
     exact Submodule.smul_mem _ _ (sub_Mo X.B.I ⟨i, rfl⟩)
 
 theorem adm_norm_of_fixed_frames (hTF : FrameTie X u u' F0 F0') (hK : TermK F0 F0' cs cs') (hM : ModGAt X) :
-    AdmN F0 F0' cs cs' := by
-  intro t
-  exact norm_congruence_of_carrier cs cs' hTF hM t.mem t.rep (hK t)
+    AdmN F0 F0' cs cs' := fun t => norm_congruence_of_carrier cs cs' hTF hM t.mem t.rep (hK t)
 
 
 end AdmNMain

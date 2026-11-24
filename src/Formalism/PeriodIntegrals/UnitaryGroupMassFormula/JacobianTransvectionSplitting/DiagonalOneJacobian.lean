@@ -92,10 +92,8 @@ theorem image_update_pi (i : ι) (a : F) (_ha : a ≠ 0) (s : ι → Set F) :
   · rintro ⟨x, hx, rfl⟩ j
     by_cases hj : j = i
     · subst hj
-      simp only [update_self]
-      exact ⟨x j, hx j, rfl⟩
-    · simp only [update_of_ne hj]
-      exact hx j
+      simpa only [update_self] using ⟨x j, hx j, rfl⟩
+    · simpa only [update_of_ne hj] using hx j
   · intro hy
     have hyi := hy i
     simp only [update_self, Set.mem_image] at hyi

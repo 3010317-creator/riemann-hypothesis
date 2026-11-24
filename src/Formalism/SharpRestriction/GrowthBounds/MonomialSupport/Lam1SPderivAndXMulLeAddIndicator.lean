@@ -286,8 +286,7 @@ theorem span_isoOn (hee : ∀ i mu, IsIsoProj (E i) mu (ee i mu))
     (I : Finset ι) : ∀ y : V, y ∈ Submodule.span K (isoOn E I) := by
   induction I using Finset.induction_on with
   | empty =>
-    intro y
-    exact Submodule.subset_span ⟨fun _ => 0, fun i hi => absurd hi (Finset.notMem_empty i)⟩
+    exact fun y => Submodule.subset_span ⟨fun _ => 0, fun i hi => absurd hi (Finset.notMem_empty i)⟩
   | insert i0 I hi0 ih =>
     have key : ∀ x ∈ isoOn E I, x ∈ Submodule.span K (isoOn E (insert i0 I)) := by
       rintro x ⟨ka, hka⟩
@@ -305,8 +304,7 @@ theorem span_isoOn (hee : ∀ i mu, IsIsoProj (E i) mu (ee i mu))
         rw [this]
         obtain ⟨_, _, h3⟩ := hdec i (ee i0 mu x)
         exact h3 (ka i)
-    intro y
-    exact (Submodule.span_le.2 key) (ih y)
+    exact fun y => (Submodule.span_le.2 key) (ih y)
 
 theorem joint_dec (hee : ∀ i mu, IsIsoProj (E i) mu (ee i mu))
     (hcomm : ∀ i i' mu mu', ee i mu * ee i' mu' = ee i' mu' * ee i mu)
@@ -338,11 +336,9 @@ theorem joint_dec (hee : ∀ i mu, IsIsoProj (E i) mu (ee i mu))
             · exact ha
             · exact hL i hi
           · rw [(hee a (ka' a)).2 (ka a) (Ne.symm ha) x (hx a), ite_eq_right]
-            intro h
-            exact ha (h a List.mem_cons_self)
+            exact fun h => ha (h a List.mem_cons_self)
         · rw [ite_eq_right hL, map_zero, ite_eq_right]
-          intro h
-          exact hL fun i hi => h i (List.mem_cons_of_mem _ hi)
+          exact fun h => hL fun i hi => h i (List.mem_cons_of_mem _ hi)
     rw [hL]
     congr 1
     apply propext
@@ -512,8 +508,7 @@ theorem noOpStep : NoOpStep := by
       show κ ⟨j, ⟨u, hu⟩⟩ = (if h : u < Dt.nL j + r + 1 then κ ⟨j, ⟨u, h⟩⟩ else ka' j u)
       rw [dite_eq_left hu]
     have hlt : κ ⟨j, ⟨u, hu⟩⟩ 0 + inN Dt.nL x0 j u < ka' j u 0 := by
-      rw [hki]
-      exact hju
+      rwa [hki]
     rw [oneT_eq_zero _ _ (fun mo => hkill κ ⟨j, ⟨u, hu⟩⟩ hlt (G.coeff mo)), planeCoeff_zero']
     exact XXg_zero Dt d th thL
 

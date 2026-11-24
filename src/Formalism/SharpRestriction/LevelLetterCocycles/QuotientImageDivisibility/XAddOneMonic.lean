@@ -111,8 +111,7 @@ include hlm
 theorem Zs_res : PowerSeries.map (IsLocalRing.residue O) (Zs p m) = PowerSeries.X ^ (p ^ m) := by
   have hpp : p.Prime := Fact.out
   have hp : ((p : ℕ) : IsLocalRing.ResidueField O) = 0 := by
-    have h := (IsLocalRing.residue_eq_zero_iff ((p : ℕ) : O)).mpr hlm
-    simpa using h
+    simpa using (IsLocalRing.residue_eq_zero_iff ((p : ℕ) : O)).mpr hlm
   haveI hk : CharP (IsLocalRing.ResidueField O) p := by
     first
     | exact (CharP.charP_iff_prime_eq_zero hpp).mpr hp
@@ -180,8 +179,7 @@ theorem evalWeierstrassMod_eq_aeval_of_eq {x : F} (hx : Polynomial.aeval x (Zp (
     | exact (PowerSeries.IsWeierstrassDivision.elim hne H1 H2).2.symm
   have hdvd : Zp p m ∣ r0 - r := (Polynomial.modByMonic_eq_zero_iff_dvd hP).mp hb
   have h3 := Polynomial.aeval_eq_zero_of_dvd_aeval_eq_zero hdvd hx
-  rw [map_sub, sub_eq_zero] at h3
-  exact h3
+  rwa [map_sub, sub_eq_zero] at h3
 
 def evR {x : F} (hx : Polynomial.aeval x (Zp (O := O) p m) = 0) : PowerSeries O →ₐ[O] F where
   toFun := evP p m x

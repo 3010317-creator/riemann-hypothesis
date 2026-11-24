@@ -142,8 +142,7 @@ theorem pderiv_subst {R σ τ : Type} [CommRing R] [Fintype σ] {a : σ → MvPo
         · rw [pderiv_X_self, ← coe_substAlgHom ha, map_one, mul_one]
         · intro i _ hij
           rw [pderiv_X_of_ne hij.symm, ← coe_substAlgHom ha, map_zero, mul_zero, zero_mul]
-        · intro h
-          exact absurd (Finset.mem_univ j) h
+        · exact fun h => absurd (Finset.mem_univ j) h
       · exact Finset.sum_congr rfl fun i _ => by ring
   have key := WithPiTopology.denseRange_toMvPowerSeries (σ := σ) (R := R).equalizer hc1 hc2
     (funext main)
@@ -351,8 +350,7 @@ theorem FirstDeriv_of (hL : LawSymm) : FirstDeriv := by
 
   have hE : subst ![(X 0 : MvPowerSeries (Fin 2) K), 0, X 1] (in3 F) = X 0 := by
     unfold in3
-    rw [subst_subst2 he0 HasSubst.X_X, subst_X he0, subst_X he0]
-    exact hF4
+    rwa [subst_subst2 he0 HasSubst.X_X, subst_X he0, subst_X he0]
   have hx0 : subst ![(X 0 : MvPowerSeries (Fin 2) K), 0, X 1] (X 0 : MvPowerSeries (Fin 3) K) = X 0 :=
     subst_X he0 0
   have hx1 : subst ![(X 0 : MvPowerSeries (Fin 2) K), 0, X 1] (X 1 : MvPowerSeries (Fin 3) K) = 0 :=
@@ -460,8 +458,7 @@ theorem CobLin_of (_hL : LawSymm) : CobLin := by
     unfold d1 cob
     rw [map_sub, map_sub, subst_sub he, subst_sub he, b1, b2, b3, hE, subst_X he, subst_X he]
     rfl
-  rw [← hC]
-  exact hI
+  rwa [← hC]
 
 namespace GramFrameCompositionLinFacts
 
@@ -693,8 +690,7 @@ theorem divided_derivative : DivDeriv := by
           simp
           omega
         exact_mod_cast this
-      rw [h2, h3, mul_comm] at h1
-      exact h1
+      rwa [h2, h3, mul_comm] at h1
   have e3 : MvPowerSeries.coeff d Φ • MvPowerSeries.coeff n (d.prod fun s e => φ' s ^ e) -
       MvPowerSeries.coeff d Φ • MvPowerSeries.coeff n (d.prod fun s e => φ s ^ e) =
       MvPowerSeries.coeff n (MvPowerSeries.C (MvPowerSeries.coeff d Φ) *
@@ -800,8 +796,7 @@ theorem DeIntegral_of (hD : DivDeriv) (hL : LawSymm) : DeIntegral := by
   have hri : Integral r := by
     refine hscale _ fun n => ?_
     have h := frob_congr (σ := σ) hp hnp hσ (f := F) hFi n
-    rw [PhiH_apply, hσF, map_sub, norm_sub_rev, ← map_sub] at h
-    exact h
+    rwa [PhiH_apply, hσF, map_sub, norm_sub_rev, ← map_sub] at h
   have hr0 : MvPowerSeries.constantCoeff r = 0 := by
     have h1 : MvPowerSeries.constantCoeff (frobVar p F) = 0 := by
       have := coeff_frobVar_smul hp.ne_zero F 0
@@ -1056,8 +1051,7 @@ theorem coeff_partial_coboundary {F : MvPowerSeries (Fin 2) K} (hF : MvPowerSeri
   have h1 := coeff_subst_slice (f := (MvPowerSeries.X 1 : MvPowerSeries (Fin 2) K))
     (MvPowerSeries.constantCoeff_X 1) G e m
   rw [include_three_X] at h0 h1
-  rw [d1, map_sub, map_sub, coeff_subst_slice hF, cob, map_sub, map_sub, at1, at1]
-  rw [← h0, ← h1]
+  rw [d1, map_sub, map_sub, coeff_subst_slice hF, cob, map_sub, map_sub, at1, at1, ← h0, ← h1]
   rfl
 
 end Slice
@@ -1173,8 +1167,7 @@ theorem LemmaTwo_of (h1 : LemmaOne) (hL : LawSymm) : LemmaTwo := by
     · rw [ite_eq_left rfl]
     · intro j _ hj
       rw [ite_eq_right]
-      intro h
-      exact hj (Nat.pow_right_injective hpp h).symm
+      exact fun h => hj (Nat.pow_right_injective hpp h).symm
     · intro hk
       exfalso
       apply hk
@@ -1187,8 +1180,7 @@ theorem LemmaTwo_of (h1 : LemmaOne) (hL : LawSymm) : LemmaTwo := by
     · rw [ite_eq_left rfl]
     · intro j _ hj
       rw [ite_eq_right]
-      intro h
-      exact hj (Nat.pow_right_injective hpp (Nat.eq_of_mul_eq_mul_left (by omega) h)).symm
+      exact fun h => hj (Nat.pow_right_injective hpp (Nat.eq_of_mul_eq_mul_left (by omega) h)).symm
     · intro hk
       exfalso
       apply hk
@@ -1263,8 +1255,7 @@ theorem LemmaTwo_of (h1 : LemmaOne) (hL : LawSymm) : LemmaTwo := by
     simp only [mul_zero, add_zero, zero_add] at s
     refine ultra (b := α ((p ^ 2) ^ N) * ((p : K) ^ (k + 1))⁻¹) ?_ ?_
       (one_le_pow₀ (by exact_mod_cast (by omega : 1 ≤ p)))
-    · rw [norm_sub_rev]
-      exact s
+    · rwa [norm_sub_rev]
     · rw [norm_mul, np]
       exact mul_le_of_le_one_left (by positivity) (hα _)
   have hB : ∀ m, α m = 0 := by
@@ -1518,8 +1509,7 @@ theorem coeff_lin_pow (n i : ℕ) (hi : i ≤ n) :
     apply hm
     have := congrArg (fun e => e 0) h
     simpa using this.symm
-  · intro h
-    exact absurd (mem_range.mpr (by omega)) h
+  · exact fun h => absurd (mem_range.mpr (by omega)) h
 
 theorem coeff_pow_top {F : MvPowerSeries (Fin 2) K} (hF0 : MvPowerSeries.constantCoeff F = 0)
     (hF1 : ∀ n : Fin 2 →₀ ℕ, n.degree = 1 → MvPowerSeries.coeff n F = 1) (n i : ℕ) (hi : i ≤ n) :
@@ -1767,13 +1757,11 @@ theorem good_zero {p : ℕ} (hp : p.Prime) (hnp : ‖(p : K)‖ = (p : ℝ)⁻¹
       by_contra hc
       obtain ⟨i, hi⟩ := coeff_lgF_ne_zero hc
       exact (pow_pos (pow_pos hp.pos 2) i).ne hi
-    rw [hl, mul_zero, sub_zero, PowerSeries.coeff_zero_eq_constantCoeff_apply, hf0]
-    exact h0
+    rwa [hl, mul_zero, sub_zero, PowerSeries.coeff_zero_eq_constantCoeff_apply, hf0]
   · have hl : PowerSeries.coeff 1 (lgF K p) = 1 := by
       have := coeff_lgF_pow K hp.two_le 0
       simpa using this
-    rw [hl, mul_one, sub_self]
-    exact h0
+    rwa [hl, mul_one, sub_self]
 
 theorem good_succ {p : ℕ} (hp : p.Prime) (hnp : ‖(p : K)‖ = (p : ℝ)⁻¹)
     {F : MvPowerSeries (Fin 2) K}
@@ -1866,8 +1854,7 @@ theorem exists_limit [CompleteSpace K] {p : ℕ} (hp : p.Prime) (hnp : ‖(p : K
     fun n => ?_⟩
   have hlim : Filter.Tendsto (fun j => PowerSeries.coeff n (rem p f (s j).1 (s j).2)) Filter.atTop
       (nhds (PowerSeries.coeff n (rem p f a b))) := by
-    simp only [coeff_rem]
-    exact (tendsto_const_nhds.sub (hat.mul_const _)).sub (hbt.mul_const _)
+    simpa only [coeff_rem] using (tendsto_const_nhds.sub (hat.mul_const _)).sub (hbt.mul_const _)
   refine le_of_tendsto hlim.norm (Filter.eventually_atTop.2 ⟨n, fun j hj => (hgood j).2 n ?_⟩)
   have : 2 * j + 1 < p ^ (2 * j + 1) := Nat.lt_pow_self hp.one_lt
   omega

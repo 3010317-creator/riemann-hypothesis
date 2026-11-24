@@ -42,8 +42,7 @@ theorem primesOver_eq_places (g : ℕ) [Fact g.Prime] :
     constructor
     · intro h
       have hg : (g : ℤ) ∈ P.under ℤ := h ▸ Ideal.mem_span_singleton_self _
-      rw [Ideal.under_def, Ideal.mem_comap, map_natCast] at hg
-      exact hg
+      rwa [Ideal.under_def, Ideal.mem_comap, map_natCast] at hg
     · intro h
       have hle : Ideal.span {(g : ℤ)} ≤ P.under ℤ := by
         rw [Ideal.span_le, Set.singleton_subset_iff, SetLike.mem_coe, Ideal.under_def, Ideal.mem_comap, map_natCast]
@@ -119,8 +118,7 @@ private theorem zmod_eq_of_val_sub_mem_prime (g : ℕ) (hg : g.Prime) (w : Heigh
       (Nat.coprime_of_lt_prime (by omega) (by omega) hg).symm
     exact natCast_not_mem_of_coprime_g hwt hw hcop hmem
   · have hmem : (((x.val - y.val : ℕ)) : 𝓞 E) ∈ w.asIdeal := by
-      rw [Nat.cast_sub hle]
-      exact h
+      rwa [Nat.cast_sub hle]
     have hcop : Nat.Coprime (x.val - y.val) g :=
       (Nat.coprime_of_lt_prime (by omega) (by omega) hg).symm
     exact natCast_not_mem_of_coprime_g hwt hw hcop hmem
@@ -134,8 +132,7 @@ theorem exists_zmod_residue (g : ℕ) (hg : g.Prime) (w : HeightOneSpectrum (�
   haveI : Finite (𝓞 E ⧸ w.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hg.ne_zero)
   let f : ZMod g → 𝓞 E ⧸ w.asIdeal := fun x => Ideal.Quotient.mk w.asIdeal ((x.val : ℕ) : 𝓞 E)
   have hinj : Function.Injective f := by
-    intro x y hxy
-    exact zmod_eq_of_val_sub_mem_prime g hg w hw (Ideal.Quotient.eq.1 hxy)
+    exact fun x y hxy => zmod_eq_of_val_sub_mem_prime g hg w hw (Ideal.Quotient.eq.1 hxy)
   have hbij := hinj.bijective_of_nat_card_le (by rw [hcard, Nat.card_zmod])
   obtain ⟨x, hx⟩ := hbij.2 y
   exact ⟨x, hx⟩

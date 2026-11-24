@@ -474,8 +474,7 @@ theorem gen_of (z : W.Gam → ℤ_[PD.p]ˣ)
         exact ⟨k * k', Nat.mul_pos hk hk', by
           rw [mul_pow, pow_mul, hak, one_pow, one_mul, mul_comm, pow_mul, hbk, one_pow]⟩
       one_mem' := by
-        simp only [Finset.mem_coe, W.DelF_def]
-        exact ⟨1, one_pos, one_pow _⟩
+        simpa only [Finset.mem_coe, W.DelF_def] using ⟨1, one_pos, one_pow _⟩
       inv_mem' := by
         intro a ha
         simp only [Finset.mem_coe, W.DelF_def] at ha ⊢
@@ -491,8 +490,7 @@ theorem gen_of (z : W.Gam → ℤ_[PD.p]ˣ)
     have h : (⟨δ, (memH δ).mpr hδ⟩ : H) ^ (PD.p - 1) = 1 := by
       rw [← hHcard]
       exact pow_card_eq_one'
-    have h2 := congrArg (fun y : H => (y : W.Gam)) h
-    simpa only [Subgroup.coe_pow, Subgroup.coe_one] using h2
+    simpa only [Subgroup.coe_pow, Subgroup.coe_one] using congrArg (fun y : H => (y : W.Gam)) h
 
   have hzΔ : ∀ δ : ↥W.DelF, (z δ) ^ (PD.p - 1) = 1 := by
     intro δ
@@ -681,8 +679,7 @@ theorem reduction_zero_of_principal_unit (u : ℤ_[l]ˣ) (h1 : (u : ℤ_[l]) - 1
     redU l 0 u = 1 := by
   apply Units.ext
   show PadicInt.toZModPow (0 + 1) (u : ℤ_[l]) = 1
-  rw [invCutPf_eq_one_iff, zero_add, pow_one]
-  exact h1
+  rwa [invCutPf_eq_one_iff, zero_add, pow_one]
 
 theorem invCutPf_teich (x : (ZMod (l ^ 1))ˣ) : ∃ d : DeltaT l, redU l 0 d.1 = x := by
   have hl := (Fact.out : l.Prime)

@@ -93,8 +93,7 @@ theorem eq_one_of_toHA_fin {D : D7} (X : HidaSetting D) (hb : AdBridgeIso X.B.I)
     have := congrArg (fun g : HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J =>
       (HA.mat (Af X.B.I.F) X.B.I.cm.sig X.B.I.J g).val i j) h
     exact this
-  rw [h2] at e
-  rw [Formalism.MainNotions.S.AutInst.fmat] at e
+  rw [h2, Formalism.MainNotions.S.AutInst.fmat] at e
   show _ = (1 : Matrix (Fin X.B.I.n) (Fin X.B.I.n) (X.B.I.E ⊗[X.B.I.F] Af X.B.I.F)) i j
   rw [e, Matrix.one_apply, Matrix.one_apply]
   split_ifs <;> simp
@@ -168,8 +167,7 @@ theorem toHA_inf_one (hS : MassDataMassesW.SplitIso) (x : X.B.I.Gf) :
   set h' := e.symm (1, (splitA X.B.I.cm.sig X.B.I.J h).2) with hh'
   have hs' : splitA X.B.I.cm.sig X.B.I.J h' = (1, (splitA X.B.I.cm.sig X.B.I.J h).2) := by
     have h0 := e.apply_symm_apply (1, (splitA X.B.I.cm.sig X.B.I.J h).2)
-    rw [he] at h0
-    exact h0
+    rwa [he] at h0
   set q := (toHA X.B.I hb).symm h' with hq
   have hqh : toHA X.B.I hb q = h' := (toHA X.B.I hb).apply_symm_apply h'
   have h1 : ofHAInf X.B.I (toHA X.B.I hb q) = ofHAInf X.B.I (toHA X.B.I hb (1, 1)) := by
@@ -210,8 +208,7 @@ theorem toInf_surjective (hS : MassDataMassesW.SplitIso) : Function.Surjective (
   have h2 : p.2 = 1 := eq_one_of_toHA_fin X hb p (by rw [hp])
   refine ⟨p.1, ?_⟩
   have := congrArg Prod.fst hp
-  rw [split_toHA X hb hS] at this
-  exact this
+  rwa [split_toHA X hb hS] at this
 
 end Bridge
 

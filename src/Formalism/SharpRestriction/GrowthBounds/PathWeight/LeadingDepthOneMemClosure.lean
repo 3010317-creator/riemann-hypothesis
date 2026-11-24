@@ -200,8 +200,7 @@ theorem mn_main (D : Formalism.BasicNotions.D7) (mon : Fin n' × Fin (r + K) →
   · rw [hom_iff]
     have h1 : IsWeightedHomogeneous (normalVariableWeight n' (r + K) r) (monomial mon (1 : KK O)) (normDeg r mon) :=
       isWeightedHomogeneous_monomial _ mon 1 (weight_eq_normal_degree r mon)
-    have h2 := h1.mul (IT_hom (mn_DkQ_IT X))
-    simpa using h2
+    simpa using h1.mul (IT_hom (mn_DkQ_IT X))
   · have ho : normDeg r mon = ∑ v ∈ mon.support.filter (fun v => IsNormal r v), mon v := by
       unfold normDeg
       rw [Finset.sum_filter]
@@ -255,8 +254,7 @@ theorem mn_main (D : Formalism.BasicNotions.D7) (mon : Fin n' × Fin (r + K) →
       AddSubmonoid.subset_closure ⟨1, _, isKeyProduct_one X.S.w X.Fr X.Q X.g, hB, by rw [one_mul]⟩
     have hAB := bc_gr_mul (bc_agen_mul X.S.w X.Fr X.Q X.g) hA hB'
     rw [add_zero, add_zero] at hAB
-    rw [hid, ho]
-    exact hAB
+    rwa [hid, ho]
 
 end Mon
 

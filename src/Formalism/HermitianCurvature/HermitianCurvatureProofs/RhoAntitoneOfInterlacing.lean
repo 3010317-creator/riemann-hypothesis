@@ -149,8 +149,7 @@ theorem polynomial_sign : C7.PSign := by
         ext j; simp only [Finset.mem_filter, Finset.mem_range, Finset.mem_Ico]; omega), Nat.card_Ico]
       omega
     rw [hcard, pow_add, pow_mul, neg_one_sq, one_pow, mul_one] at key
-    rw [hprod]
-    exact key
+    rwa [hprod]
   have hB2 : 0 < (-1 : ℝ) ^ (k - l) * I.xpoly k ρ Y := by
     unfold I.xpoly
     have key := sign_prod_of_split_at_index (Finset.Icc 1 (k - 1)) (fun i => Y + ρ i) l
@@ -160,12 +159,10 @@ theorem polynomial_sign : C7.PSign := by
       rw [(show (Finset.Icc 1 (k - 1)).filter (l ≤ ·) = Finset.Icc l (k - 1) by
         ext j; simp only [Finset.mem_filter, Finset.mem_Icc]; omega), Nat.card_Icc]
       omega
-    rw [hcard] at key
-    exact key
+    rwa [hcard] at key
   refine ⟨hA, hB2, ?_⟩
   have h := abs_of_pos hA
-  rw [abs_mul, abs_pow, abs_neg, abs_one, one_pow, one_mul] at h
-  exact h
+  rwa [abs_mul, abs_pow, abs_neg, abs_one, one_pow, one_mul] at h
 
 theorem roots_outside_jointly : C7.RootsOutJoint := by
   unfold C7.RootsOutJoint LE.Sys.RootsOut

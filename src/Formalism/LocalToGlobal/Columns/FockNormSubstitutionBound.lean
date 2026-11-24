@@ -54,8 +54,7 @@ theorem fockN_lin_le {β : Type} [Fintype β] (c : β → ℂ) (G : β → MvPol
   rw [← Finset.sum_mul, ← mul_assoc]
   refine mul_le_mul_of_nonneg_right ?_ (Nat.cast_nonneg _)
   rw [coeff_sum]
-  simp only [coeff_C_mul]
-  exact cauchy_schwarz_finite_sum c fun b => AddMonoidAlgebra.coeff (G b) m
+  simpa only [coeff_C_mul] using cauchy_schwarz_finite_sum c fun b => AddMonoidAlgebra.coeff (G b) m
 
 variable [DecidableEq σ]
 
@@ -160,22 +159,19 @@ theorem blkHom_pderiv {F : MvPolynomial (ι × Fin n × Fin n) ℂ} {d : ι → 
       · simp
       · intro s _ hs
         rw [Finsupp.single_apply, ite_eq_right]
-        intro h'
-        exact hs (by simpa using (congrArg (fun z : ι × Fin n × Fin n => z.2.2) h').symm)
+        exact fun h' => hs (by simpa using (congrArg (fun z : ι × Fin n × Fin n => z.2.2) h').symm)
       · intro h'; exact absurd (Finset.mem_univ _) h'
       · intro a _ ha
         refine Finset.sum_eq_zero fun s _ => ?_
         rw [Finsupp.single_apply, ite_eq_right]
-        intro h'
-        exact ha (by simpa using (congrArg (fun z : ι × Fin n × Fin n => z.2.1) h').symm)
+        exact fun h' => ha (by simpa using (congrArg (fun z : ι × Fin n × Fin n => z.2.1) h').symm)
       · intro h'; exact absurd (Finset.mem_univ _) h'
     omega
   · rw [Function.update_of_ne hτ]
     have h2 : ∑ a, ∑ s, (Finsupp.single (τ₀, b, t) 1 : (ι × Fin n × Fin n) →₀ ℕ) (τ, a, s) = 0 := by
       refine Finset.sum_eq_zero fun a _ => Finset.sum_eq_zero fun s _ => ?_
       rw [Finsupp.single_apply, ite_eq_right]
-      intro h'
-      exact hτ (by simpa using (congrArg (fun z : ι × Fin n × Fin n => z.1) h').symm)
+      exact fun h' => hτ (by simpa using (congrArg (fun z : ι × Fin n × Fin n => z.1) h').symm)
     omega
 
 theorem fock_norm_substitution_bound (U : ι → Matrix (Fin n) (Fin n) ℂ) : ∀ (D : ℕ) (d : ι → ℕ), ∑ τ, d τ = D →
@@ -207,8 +203,7 @@ theorem fock_norm_substitution_bound (U : ι → Matrix (Fin n) (Fin n) ℂ) : �
   | succ D ih =>
     intro d hd F hF
     obtain ⟨τ₀, hτ₀⟩ : ∃ τ₀, d τ₀ ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       rw [Finset.sum_eq_zero fun τ _ => h τ] at hd
       omega
     obtain ⟨e, he⟩ := Nat.exists_eq_succ_of_ne_zero hτ₀

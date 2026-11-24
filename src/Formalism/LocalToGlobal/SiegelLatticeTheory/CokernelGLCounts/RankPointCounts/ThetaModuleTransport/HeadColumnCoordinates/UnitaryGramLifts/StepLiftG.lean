@@ -40,8 +40,7 @@ theorem liftPQ (Z₁ Z₂ : M.Mat (r + 1)) (γ : IsoMbe Z₁.Z Z₂.Z) :
     intro j
     by_cases hj : j = Fin.last r
     · subst hj
-      refine ⟨Pi.single (Fin.last r) 1, ?_, fun _ => rfl⟩
-      exact γ.2.2.symm
+      exact ⟨Pi.single (Fin.last r) 1, γ.2.2.symm, fun _ => rfl⟩
     · obtain ⟨w, hw⟩ := Submodule.Quotient.mk_surjective _ (γ.1 (Submodule.Quotient.mk (Pi.single j 1)))
       exact ⟨w, hw, fun h => absurd h hj⟩
   choose p hp hpl using hsurj
@@ -56,8 +55,7 @@ theorem liftPQ (Z₁ Z₂ : M.Mat (r + 1)) (γ : IsoMbe Z₁.Z Z₂.Z) :
         ext i; simp [P, Matrix.mulVec_single, mul_comm]
       simp only [LinearMap.comp_apply, Submodule.mkQ_apply, Matrix.mulVecLin_apply, LinearEquiv.coe_coe]
       rw [h2, h1, Submodule.Quotient.mk_smul, map_smul, Submodule.Quotient.mk_smul, hp j]
-    intro v
-    exact LinearMap.congr_fun key v
+    exact fun v => LinearMap.congr_fun key v
   have ht : ∀ j, P.mulVec (fun i => Z₁.Z i j) -
       (if j = Fin.last r then (fun i => Z₂.Z i (Fin.last r)) else 0) ∈ headCols Z₂.Z := by
     intro j
@@ -81,8 +79,7 @@ theorem liftPQ (Z₁ Z₂ : M.Mat (r + 1)) (γ : IsoMbe Z₁.Z Z₂.Z) :
     have h := congrFun (hc j) i
     simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.sub_apply] at h
     rw [Matrix.mul_apply, Matrix.mul_apply]
-    rw [show ∑ k, P i k * Z₁.Z k j = P.mulVec (fun i => Z₁.Z i j) i from rfl]
-    rw [Fin.sum_univ_castSucc]
+    rw [show ∑ k, P i k * Z₁.Z k j = P.mulVec (fun i => Z₁.Z i j) i from rfl, Fin.sum_univ_castSucc]
     simp only [Matrix.of_apply, Fin.lastCases_castSucc, Fin.lastCases_last]
     have hcomm : ∑ x : Fin r, Z₂.Z i x.castSucc * c j x = ∑ x : Fin r, c j x * Z₂.Z i x.castSucc :=
       Finset.sum_congr rfl (fun _ _ => mul_comm _ _)

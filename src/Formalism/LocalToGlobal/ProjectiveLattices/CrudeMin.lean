@@ -58,8 +58,7 @@ theorem crP_map (k : Type) [CommRing k] (β : (Σ σ : T, Fin (r σ)) → Fin n)
   rw [map_pow, RingHom.map_det, hM]
 
 theorem crX_mem {R : Type} [CommRing R] {s : Set (Letter T r n)} {ℓ : Letter T r n} (h : ℓ ∈ s) :
-    (X ℓ : MvPolynomial (Letter T r n) R) ∈ supported R s := by
-  exact Algebra.subset_adjoin ⟨ℓ, h, rfl⟩
+    (X ℓ : MvPolynomial (Letter T r n) R) ∈ supported R s := Algebra.subset_adjoin ⟨ℓ, h, rfl⟩
 
 theorem crP_mem_supported (R : Type) [CommRing R] (β : (Σ σ : T, Fin (r σ)) → Fin n) (a : T → ℕ → ℕ) :
     crP r n R β a ∈ supported R (GoodL r n β) := by
@@ -316,15 +315,13 @@ theorem crP_isWeightedHomogeneous_crW (R : Type) [CommRing R] (β : (Σ σ : T, 
     apply Finset.sum_eq_zero
     intro kk _
     simp [hτ]
-  · intro h
-    exact absurd (Finset.mem_univ σ) h
+  · exact fun h => absurd (Finset.mem_univ σ) h
 
 theorem crW_weight (m : Letter T r n →₀ ℕ) (σ : T) (i : Fin (r σ)) :
     Finsupp.weight (crW (r := r) (n := n) σ i.val) m = ∑ b : Fin n, m ⟨σ, i, b⟩ := by
   classical
   have hinj : Function.Injective (fun b : Fin n => (⟨σ, i, b⟩ : Letter T r n)) := by
-    intro b b' h
-    exact (Prod.mk.inj (eq_of_heq (Sigma.mk.inj h).2)).2
+    exact fun b b' h => (Prod.mk.inj (eq_of_heq (Sigma.mk.inj h).2)).2
   have hw : ∀ ℓ : Letter T r n, crW (r := r) (n := n) σ i.val ℓ =
       if ℓ ∈ Finset.univ.image (fun b : Fin n => (⟨σ, i, b⟩ : Letter T r n)) then 1 else 0 := by
     rintro ⟨τ, x, y⟩
@@ -354,8 +351,7 @@ theorem crP_rowDeg (k : Type) [Field k] (β : (Σ σ : T, Fin (r σ)) → Fin n)
     (ha : Dom r a) : RowDeg r n k a (crP r n k β a) := by
   intro m hm σ i
   have h := crP_isWeightedHomogeneous_crW k β a ha σ i (MvPolynomial.mem_support_iff.mp hm)
-  rw [crW_weight] at h
-  exact h
+  rwa [crW_weight] at h
 
 end Part3
 
@@ -383,10 +379,8 @@ theorem crDiagExp_dl (β : (Σ σ : T, Fin (r σ)) → Fin n) (a : T → ℕ →
     diagExp r n β a (crDl β p) = a p.1 p.2 := by
   rw [crDiagExp_apply, Finset.sum_eq_single p]
   · rw [ite_eq_left rfl]
-  · intro q _ hq
-    exact ite_eq_right (fun h => hq (crDl_inj β h))
-  · intro h
-    exact absurd (Finset.mem_univ p) h
+  · exact fun q _ hq => ite_eq_right (fun h => hq (crDl_inj β h))
+  · exact fun h => absurd (Finset.mem_univ p) h
 
 theorem crDiagExp_off (β : (Σ σ : T, Fin (r σ)) → Fin n) (a : T → ℕ → ℕ) (ℓ : Letter T r n)
     (h : ∀ p, crDl β p ≠ ℓ) : diagExp r n β a ℓ = 0 := by
@@ -412,8 +406,7 @@ theorem crRho_monomial (R : Type) [CommRing R] (β : (Σ σ : T, Fin (r σ)) →
   · push Not at h
     obtain ⟨ℓ, hℓ, hne⟩ := h
     rw [Finsupp.prod, Finset.prod_eq_zero hℓ, mul_zero]
-    simp only [ite_eq_right hne]
-    exact zero_pow (Finsupp.mem_support_iff.mp hℓ)
+    simpa only [ite_eq_right hne] using zero_pow (Finsupp.mem_support_iff.mp hℓ)
 
 theorem crRho_coeff (R : Type) [CommRing R] (β : (Σ σ : T, Fin (r σ)) → Fin n)
     (p : MvPolynomial (Letter T r n) R) (m : Letter T r n →₀ ℕ)
@@ -521,8 +514,7 @@ theorem crP_coeff_diag (k : Type) [Field k] (β : (Σ σ : T, Fin (r σ)) → Fi
       · intro b' _ hb'
         by_contra hne
         exact hb' (hEdiag _ (Finsupp.mem_support_iff.mpr hne))
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     · rw [crDiagExp_off]
       · by_contra hne
         exact hb (hEdiag _ (Finsupp.mem_support_iff.mpr hne))
@@ -533,8 +525,7 @@ theorem crP_coeff_diag (k : Type) [Field k] (β : (Σ σ : T, Fin (r σ)) → Fi
         subst h1
         obtain ⟨rfl, rfl⟩ := Prod.mk.inj (eq_of_heq h2)
         rfl
-  rw [← hEeq]
-  exact hcoeffE
+  rwa [← hEeq]
 
 end Part4
 
@@ -594,8 +585,7 @@ theorem Pmin_degree (ha : Dom r a) (m : Letter T r n →₀ ℕ)
           exact ⟨Finset.mem_univ _, by have := Fin.le_def.mp h; omega⟩]
       exact Fin.card_Iic kk
     rw [← Finset.sum_filter, Finset.sum_const, hcard, smul_eq_mul, smul_eq_mul, mul_comm]
-  rw [← hsum, ← h]
-  rw [Finsupp.degree_apply, Finsupp.weight_apply, Finsupp.sum]
+  rw [← hsum, ← h, Finsupp.degree_apply, Finsupp.weight_apply, Finsupp.sum]
   simp
 
 theorem diagExp_degree : (diagExp r n β a).degree = ∑ σ : T, ∑ i : Fin (r σ), a σ i := by

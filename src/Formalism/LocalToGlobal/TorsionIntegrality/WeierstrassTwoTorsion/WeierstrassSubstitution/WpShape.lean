@@ -37,8 +37,7 @@ theorem alg_second {S : Type*} [CommRing S] (z zi A B c : S) (hz : z * zi = 1)
   have e : z ^ 2 * ((-2) * ((-3) * zi ^ 4) + B) = z ^ 2 * (6 * (zi ^ 2 + A) ^ 2 - c) := by rw [h]
   have e' : z ^ 2 * B = 12 * A * (z * zi) ^ 2 + z ^ 2 * (6 * (A * A)) - z ^ 2 * c := by
     linear_combination e
-  rw [hz, one_pow, mul_one] at e'
-  exact e'
+  rwa [hz, one_pow, mul_one] at e'
 
 variable {K : Type u} [Field K]
 
@@ -149,8 +148,7 @@ theorem cleared_of_clearedM {g2 g3 : K} {r : K⟦X⟧} (h : ClearedM g2 g3 (1 + 
   rw [map_add (f := _), Derivation.map_one_eq_zero, derivative_X_sq_mul] at h
   have e : X * (0 + (2 * X * r + X ^ 2 * derivative r)) - 2 * (1 + X ^ 2 * r)
       = -2 + X ^ 3 * derivative r := by ring
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem cleared_of_ode {g2 g3 : K} {r : K⟦X⟧}
     (h : dL (uPow (-2) + toL r) ^ 2 = 4 * (uPow (-2) + toL r) ^ 3
@@ -266,8 +264,7 @@ theorem cleared_odd [CharZero K] {g2 g3 : K} {r : K⟦X⟧} (h : Cleared g2 g3 r
 theorem second_cleared {c : K} {r : K⟦X⟧}
     (h : dL (dL (uPow (-2) + toL r)) = 6 * (uPow (-2) + toL r) ^ 2 - HahnSeries.C c) :
     X ^ 2 * derivative (derivative r) = 12 * r + X ^ 2 * (6 * (r * r)) - X ^ 2 * C c := by
-  rw [map_add (f := _), dL_uPow, dL_toL] at h
-  rw [map_add (f := _), dL_mul, dL_C, dL_uPow, dL_toL] at h
+  rw [map_add (f := _), dL_uPow, dL_toL, map_add (f := _), dL_mul, dL_C, dL_uPow, dL_toL] at h
   rw [C_neg_two, C_neg_three, uPow_neg_four, mul_zero, add_zero, uPow_neg_two] at h
   have e := alg_second (toL X) (uPow (-1)) (toL r) (toL (derivative (derivative r)))
     (HahnSeries.C c) z_mul_zi h
@@ -303,8 +300,7 @@ theorem sum_even (a : ℕ → K) (h0 : a 0 = 0) (hodd : ∀ n, Odd n → a n = 0
       · by_cases hjq : j = q
         · rw [show 2 * q - k = 0 by omega, h0, mul_zero]
         · exfalso
-          apply hk'
-          exact Finset.mem_image.mpr ⟨j, Finset.mem_Icc.mpr ⟨by omega, by omega⟩, by omega⟩
+          exact hk' (Finset.mem_image.mpr ⟨j, Finset.mem_Icc.mpr ⟨by omega, by omega⟩, by omega⟩)
     · rw [hodd k hko, zero_mul]
 
 theorem recursion_of [CharZero K] {c : K} {r : K⟦X⟧}
@@ -389,8 +385,7 @@ theorem wpL_shape (hE : ExpSpec.{u}) (hO : WpODE.{u}) [CharZero K] (W : Weierstr
     first
     | simp [uPow, show (n : ℤ) ≠ -2 by omega]
   refine ⟨?_, ?_⟩
-  · rw [hR]
-    exact hL
+  · rwa [hR]
   · rw [hR]
     apply cleared_of_ode
     rw [← hL]

@@ -175,8 +175,7 @@ private theorem sum_ite_eq_sum_update {R : Type} [Fintype R] [DecidableEq R] {β
     simp only [Finset.mem_filter, Finset.mem_univ, true_and]
     intro c hc
     rw [Function.update_of_ne hc]
-  · intro b _
-    exact Finset.mem_univ _
+  · exact fun b _ => Finset.mem_univ _
   · intro s _
     simp
   · intro b hb
@@ -227,8 +226,7 @@ theorem oneBT_eq_raw (κ : ℂ) (w : List (Wd.Letter ℂ S)) (x : Wd.Ix S → V1
       · intro b _ hb
         rw [Matrix.one_apply_ne (Ne.symm hb)]
         rfl
-      · intro h
-        exact absurd (Finset.mem_univ e) h
+      · exact fun h => absurd (Finset.mem_univ e) h
     rw [hx]
     rfl
   | cons l w ih =>

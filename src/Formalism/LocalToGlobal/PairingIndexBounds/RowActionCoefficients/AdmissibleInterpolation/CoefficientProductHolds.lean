@@ -156,7 +156,6 @@ theorem coefficient_product_holds : CoefProd := by
       exact (Finset.prod_eq_zero (Finset.mem_univ b) (notMem_support_iff.mp hb)).symm
     · intro q hq
       rw [coeff_monomial, ite_eq_right]
-      intro e
-      exact hp (dGlue_injective xm hxm e ▸ hq)
+      exact fun e => hp (dGlue_injective xm hxm e ▸ hq)
 
 end Formalism.L2.PairingIndexBounds.Ent

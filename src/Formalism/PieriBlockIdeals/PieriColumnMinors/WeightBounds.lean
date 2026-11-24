@@ -464,8 +464,7 @@ theorem shape_w_real_holds : ShapeWReal := by
   · have h1 := weight_le_upper_translation_of_thick P hP hL W hW τ hτ 0 (by omega)
     unfold Wts.U UN at h1
     omega
-  · intro a h1 h2
-    exact weight_lt_lower_translation_of_thick P hP hL W hW τ hτ a h1 (by omega)
+  · exact fun a h1 h2 => weight_lt_lower_translation_of_thick P hP hL W hW τ hτ a h1 (by omega)
   · exact weight_lt_lower_translation_of_thick P hP hL W hW τ hτ _ (by omega) (by omega)
   · have h1 := weight_nonneg' P W τ (kc P + W.j τ) (by omega)
     unfold Wts.U at h1
@@ -484,8 +483,7 @@ theorem shape_a_real_holds : ShapeAReal := by
     have := weights_antitone_le P W hW τ (kc P) (P.Nr - 1) (by omega) (by omega)
     omega
   refine ⟨⟨?_, ?_, by omega, ?_, ?_⟩, ?_, ?_⟩
-  · intro a b hab
-    exact weights_strictAnti P W hW τ a b hab b.isLt
+  · exact fun a b hab => weights_strictAnti P W hW τ a b hab b.isLt
   · intro a
     refine ⟨weight_nonneg' P W τ a a.isLt, ?_⟩
     have := weight_le_upper_translation_of_thick P hP hL W hW τ hτ a a.isLt
@@ -557,8 +555,7 @@ theorem shape_reflect (P : Par) (U : Finset ℤ) (bot H : ℤ) (c e : ℝ) (h : 
     have h4 := h3 u hu hn
     have e1 : (((-1 : ℤ) : ℝ)) * (((H - u : ℤ) : ℝ) - ((H : ℝ) - c)) = ((1 : ℤ) : ℝ) * ((u : ℝ) - c) := by
       push_cast; ring
-    rw [e1]
-    exact h4
+    rwa [e1]
 
 theorem thick_or_top_or_thin (P : Par) {ι : Type} (W : Wts ι) (hW : W.Ok P) (τ : ι) :
     P.Thick (W.e τ) ∨ P.Top (W.e τ) ∨ P.Thin (W.e τ) := by

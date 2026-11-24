@@ -124,8 +124,7 @@ theorem pchain_DN (i : ZMod n) (k : ℕ) {m : ℕ} {cc : ℝ} {FF : Type} [AddCo
   have hXY : X ≤ Y := Submodule.comap_mono le_sup_left
   have hKY : K ≤ Y := hK.trans hXY
   have hlen : Module.length O ((↥(Formalism.MainNotions.RamifiedCoefficientChains.S9.NDl W T i) ⧸ K) ⧸ Y.map K.mkQ) ≤ (L : ℕ∞) := by
-    rw [(Submodule.quotientQuotientEquivQuotient K Y hKY).length_eq]
-    exact hL
+    rwa [(Submodule.quotientQuotientEquivQuotient K Y hKY).length_eq]
   have h1 := pstep_len (m := m) (c := cc) A ψ (Y.map K.mkQ) L kO hlen hkO hLc
   set A₁ := kerSub A ψ (Y.map K.mkQ) with hA₁def
   have hA₁ : A₁ ≤ A := kerSub_le A ψ _
@@ -143,8 +142,7 @@ theorem pchain_DN (i : ZMod n) (k : ℕ) {m : ℕ} {cc : ℝ} {FF : Type} [AddCo
     congr 1
     ext y
     constructor
-    · intro hy
-      exact ⟨⟨y, hsN hy⟩, Finset.mem_subtype.2 hy, rfl⟩
+    · exact fun hy => ⟨⟨y, hsN hy⟩, Finset.mem_subtype.2 hy, rfl⟩
     · rintro ⟨z, hz, rfl⟩
       exact Finset.mem_subtype.1 hz
   have hY : Y ≤ X ⊔ Submodule.span O (↑sN : Set ↥(Formalism.MainNotions.RamifiedCoefficientChains.S9.NDl W T i)) := by

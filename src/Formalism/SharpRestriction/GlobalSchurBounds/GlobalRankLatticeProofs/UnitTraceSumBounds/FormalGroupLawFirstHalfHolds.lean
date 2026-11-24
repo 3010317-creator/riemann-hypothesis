@@ -131,8 +131,7 @@ theorem add_assoc' {l ex : PowerSeries ℂ_[p]}
 theorem simeq_of_sub_eq {f g f' g' : MvPowerSeries σ ℂ_[p]} (e : f - g = f' - g')
     (hs : Simeq f' g') : Simeq f g := by
   show MvPowerSeries.constantCoeff (f - g) = 0 ∧ IntegralMv (expMv (f - g))
-  rw [e]
-  exact hs
+  rwa [e]
 
 theorem cc_Xv (i : Fin 3) : MvPowerSeries.constantCoeff (Xv (p := p) i) = 0 := by
   exact MvPowerSeries.constantCoeff_X i

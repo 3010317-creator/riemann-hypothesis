@@ -41,8 +41,7 @@ theorem duU_core (hs : M.split = some g) {T T' : F} {TT : M.R} {Zh : Matrix (Fin
   have hsum : ∀ l, ∑ i, ((iota1 hs l i : M.L.O) : E) * c i ∈ M.L.O := by
     intro l
     have := h l
-    rw [duU_formG_sub, hGd, hv, hc] at this
-    exact this
+    rwa [duU_formG_sub, hGd, hv, hc] at this
   have hint := duU_c_int hs c hsum
   have hGc : Matrix.mulVec G c = v := by
     rw [← hc, Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ (hGd ▸ hdet), Matrix.one_mulVec]
@@ -50,8 +49,7 @@ theorem duU_core (hs : M.split = some g) {T T' : F} {TT : M.R} {Zh : Matrix (Fin
     intro i
     have := congrArg (ph1 g) (congrFun hGc i)
 
-    simp only [Matrix.mulVec, dotProduct, map_sum, map_mul] at this
-    exact this
+    simpa only [Matrix.mulVec, dotProduct, map_sum, map_mul] using this
   have hG11 : ∀ a b, ph1 g (G (Sum.inl a) (Sum.inl b)) = cor r a b (-T) := by
     intro a b; rw [← hGd]; simp [gramG, firstProj_corner, firstProj_algebraMap]
   have hG12 : ∀ a b, ph1 g (G (Sum.inl a) (Sum.inr b)) = (g.q : F)⁻¹ * (ph2 g (Zh a b) + cor r a b T) := by

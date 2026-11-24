@@ -63,8 +63,7 @@ private theorem colExp_apply {r n h : ℕ} (c : Fin h → Fin r) (hh : h ≤ n) 
   rw [Finsupp.finsetSum_apply]
   simp only [Finsupp.single_apply, Prod.mk.injEq]
   by_cases ht : t.val < h
-  · rw [dite_eq_left ht]
-    rw [Finset.sum_eq_single ⟨t.val, ht⟩]
+  · rw [dite_eq_left ht, Finset.sum_eq_single ⟨t.val, ht⟩]
     · have e : Fin.castLE hh ⟨t.val, ht⟩ = t := Fin.ext rfl
       by_cases hca : c ⟨t.val, ht⟩ = a
       · rw [ite_eq_left ⟨hca, e⟩, ite_eq_left hca]
@@ -74,8 +73,7 @@ private theorem colExp_apply {r n h : ℕ} (c : Fin h → Fin r) (hh : h ≤ n) 
       rintro ⟨_, h2⟩
       have h3 : p.val = t.val := congrArg Fin.val h2
       exact hp (Fin.ext h3)
-    · intro hn
-      exact absurd (Finset.mem_univ _) hn
+    · exact fun hn => absurd (Finset.mem_univ _) hn
   · rw [dite_eq_right ht]
     apply Finset.sum_eq_zero
     intro p _
@@ -92,10 +90,8 @@ private theorem sum_colExp_apply_eq_ite_mem {r n h : ℕ} (c : Fin h → Fin r) 
       if ht : t.val < h then (if c ⟨t.val, ht⟩ ∈ S then 1 else 0) else 0 := by
   simp only [colExp_apply]
   by_cases ht : t.val < h
-  · simp only [dite_eq_left ht]
-    exact Finset.sum_ite_eq S (c ⟨t.val, ht⟩) (fun _ => 1)
-  · simp only [dite_eq_right ht]
-    exact Finset.sum_const_zero
+  · simpa only [dite_eq_left ht] using Finset.sum_ite_eq S (c ⟨t.val, ht⟩) (fun _ => 1)
+  · simpa only [dite_eq_right ht] using Finset.sum_const_zero
 
 theorem semistandardPeel : SSYTPeel := by
   intro r n ν m hcol hint_r _hm
@@ -117,8 +113,7 @@ theorem semistandardPeel : SSYTPeel := by
     | zero =>
       intro t t' htt ht
       have e : t = t' := Fin.ext (by omega)
-      rw [← e]
-      exact ht
+      rwa [← e]
     | succ d ih =>
       intro t t' htt ht
       have hs : t'.val + d < n := by have := t.isLt; omega
@@ -139,8 +134,7 @@ theorem semistandardPeel : SSYTPeel := by
           intro s hs
           rw [Finset.mem_filter] at hs
           rw [Finset.mem_Iio]
-          by_contra hst
-          push Not at hst
+          by_contra! hst
           exact hnt (hmono s t hst hs.2)
         have hc := Finset.card_le_card hsub
         rw [Fin.card_Iio] at hc
@@ -164,8 +158,7 @@ theorem semistandardPeel : SSYTPeel := by
       ⟨a, Finset.mem_filter.mpr ⟨Finset.mem_univ _, ha⟩⟩
     refine ⟨(Finset.univ.filter (fun b : Fin r => 0 < m (b, Fin.castLE hh p))).min' hS, ?_, ?_⟩
     · exact (Finset.mem_filter.mp (Finset.min'_mem _ hS)).2
-    · intro b hb
-      exact Finset.min'_le _ b (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hb⟩)
+    · exact fun b hb => Finset.min'_le _ b (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hb⟩)
   choose c hc1 hc2 using hex
   have hc1' : ∀ (t : Fin n) (ht : t.val < h), 0 < m (c ⟨t.val, ht⟩, t) := by
     intro t ht
@@ -176,8 +169,7 @@ theorem semistandardPeel : SSYTPeel := by
     intro t ht b hb
     have e : Fin.castLE hh ⟨t.val, ht⟩ = t := Fin.ext rfl
     apply hc2 ⟨t.val, ht⟩ b
-    rw [e]
-    exact hb
+    rwa [e]
   have hcstep : ∀ (l j : Fin n) (hl : l.val < h) (hj : j.val < h), j.val = l.val + 1 →
       c ⟨l.val, hl⟩ < c ⟨j.val, hj⟩ := by
     intro l j hl hj hlj
@@ -198,8 +190,7 @@ theorem semistandardPeel : SSYTPeel := by
     intro d
     induction d with
     | zero =>
-      intro p q hpq
-      exact hcstep' p q (by omega)
+      exact fun p q hpq => hcstep' p q (by omega)
     | succ d ih =>
       intro p q hpq
       have hs : p.val + d + 1 < h := by have := q.isLt; omega

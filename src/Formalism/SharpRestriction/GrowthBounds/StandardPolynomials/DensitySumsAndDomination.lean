@@ -109,8 +109,7 @@ theorem glAct_X' (Lt : Letters (Fin N)) (S : Set (Fin N)) (c d : Fin r) (a : Fin
     have h1 : ∀ b : Fin r, pderiv (l, b) (X (a, e) : MvPolynomial (Fin N × Fin r) K) = 0 := by
       intro b
       rw [pderiv_X, Pi.single_apply, ite_eq_right]
-      intro h
-      exact hla (Prod.mk.inj h).1.symm
+      exact fun h => hla (Prod.mk.inj h).1.symm
     by_cases hl : l ∈ S
     · by_cases hv : Lt.vec l = true
       · simp only [ite_eq_left hl, ite_eq_left hv, LinearMap.comp_apply, LinearMap.mulLeft_apply, Derivation.coeFn_coe, h1, mul_zero]
@@ -380,8 +379,7 @@ theorem pol_X' [DecidableEq ι] [Nontrivial K] (a : ι) (c : Fin n) :
   intro m hm
   rw [Finset.coe_singleton, Set.mem_singleton_iff] at hm
   subst hm
-  intro i
-  exact multideg_single' a c 1 i
+  exact fun i => multideg_single' a c 1 i
 
 end PolLem
 
@@ -428,8 +426,7 @@ theorem intPol_pow' {σ : Type} {x : MvPolynomial σ (KK O)} (hx : x ∈ IntPol 
   exact ⟨a ^ k, by simp⟩
 
 theorem zsmul_mem_sub {σ : Type} (M : Submodule O (MvPolynomial σ (KK O))) {x : MvPolynomial σ (KK O)} (hx : x ∈ M) (z : ℤ) :
-    z • x ∈ M := by
-  exact zsmul_mem hx z
+    z • x ∈ M := zsmul_mem hx z
 
 theorem intPol_mul' {σ : Type} {x y : MvPolynomial σ (KK O)} (hx : x ∈ IntPol O σ) (hy : y ∈ IntPol O σ) :
     x * y ∈ IntPol O σ := by
@@ -472,8 +469,7 @@ theorem xi_mono_mem (N t b : ℕ) (γ : Fin r → ℕ) (hb : ∑ c, γ c = b) :
     · rw [hm] at hv
       obtain ⟨c, -, hc⟩ := Finsupp.mem_support_finsetSum v hv
       exact ⟨c, Finset.mem_singleton.mp (Finsupp.support_single_subset hc)⟩
-    · simp only [hval]
-      exact hb
+    · simpa only [hval] using hb
   · rw [IntPol, LinearMap.mem_range]
     exact ⟨monomial m 1, by simp⟩
 

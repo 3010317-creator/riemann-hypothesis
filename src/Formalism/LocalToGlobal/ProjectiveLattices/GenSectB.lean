@@ -61,11 +61,9 @@ theorem exists_pderiv_ne_zero_lt' {K : Type*} [Field K] [CharZero K] {ι : Type*
           have h2 : Finsupp.single i 1 ≤ s := Finsupp.single_le_iff.2 (Nat.one_le_iff_ne_zero.2 hi)
           rw [← tsub_add_cancel_of_le h1, ← tsub_add_cancel_of_le h2, heq]
       · rfl
-    · intro hns
-      exact absurd hs hns
+    · exact fun hns => absurd hs hns
   · have hpos : (⊥ : ℕ) < s.sum fun _ e => e := by
-      rw [← htd]
-      exact hP
+      rwa [← htd]
     rw [htd, hder]
     refine lt_of_le_of_lt (MvPolynomial.totalDegree_finsetSum _ _) ((Finset.sup_lt_iff hpos).2 fun t ht => ?_)
     by_cases hti : t i = 0
@@ -75,8 +73,7 @@ theorem exists_pderiv_ne_zero_lt' {K : Type*} [Field K] [CharZero K] {ι : Type*
       have h2 : (t.sum fun _ e => e) ≤ s.sum fun _ e => e := by
         rw [← htd]
         exact le_totalDegree ht
-      rw [h1] at h2
-      exact h2
+      rwa [h1] at h2
 
 variable {K Ω : Type} [Field K] [Field Ω] [Algebra K Ω] {D m : ℕ}
 
@@ -213,8 +210,7 @@ theorem gs_indep [CharZero K] (x : Fin m → Ω) (j₀ : Fin m) (hx₀ : x j₀ 
       · rwa [sub_zero] at h
       · obtain ⟨i, hi⟩ := Fin.exists_succ_eq.mpr h0
         simp only at h hi
-        rw [← hi, hall i, zero_mul, sub_zero] at h
-        exact h
+        rwa [← hi, hall i, zero_mul, sub_zero] at h
   obtain ⟨i, hi⟩ := hexi
   have hr : ∀ k, IsAlgebraic (Algebra.adjoin K (Set.range (gs (D := D) x j₀)))
       (C (rr x j₀ k) : CT (Ω := Ω) (D := D) j₀) := by

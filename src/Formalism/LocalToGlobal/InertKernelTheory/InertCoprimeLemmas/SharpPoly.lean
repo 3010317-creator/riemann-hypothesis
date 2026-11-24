@@ -79,14 +79,12 @@ theorem sp_gDet_deg_other (u : σ) (hu : ∀ p, e p ≠ u) : degreeOf u (gDet (K
 theorem sp_gDet_deg_le (he : Function.Injective e) (α s : Fin n) : degreeOf (e (α, s)) (gDet (K := K) e) ≤ 1 := by
   unfold gDet
   apply sp_degreeOf_det_le _ _ α
-  · intro j
-    exact sp_degreeOf_X_le _ _
+  · exact fun j => sp_degreeOf_X_le _ _
   · intro i j hi
     classical
     simp only [Matrix.of_apply]
     rw [degreeOf_X, ite_eq_right]
-    intro h
-    exact hi (congrArg Prod.fst (he h)).symm
+    exact fun h => hi (congrArg Prod.fst (he h)).symm
 
 theorem sp_gDet_deg_ge (he : Function.Injective e) (α s : Fin n) : 1 ≤ degreeOf (e (α, s)) (gDet (K := K) e) := by
   classical
@@ -126,8 +124,7 @@ theorem sp_gDet_deg_ge (he : Function.Injective e) (α s : Fin n) : 1 ≤ degree
     by_cases hi : i = α
     · subst hi; simp
     · have hne : e (i, s) ≠ e (α, s) := fun h => hi (congrArg Prod.fst (he h))
-      rw [Function.update_of_ne hne, hx]
-      rw [ite_eq_right]
+      rw [Function.update_of_ne hne, hx, ite_eq_right]
       intro hs
       apply hi
       have : π i = π α := by rw [hs]; simp [hπ]
@@ -170,9 +167,7 @@ theorem sp_merge_row [DecidableEq σ] (he : Function.Injective e) (α s s' : Fin
     simp only [AlgHom.mapMatrix_apply, Matrix.map_apply, Matrix.of_apply, rename_X]
     have h1 : e (i, j) ≠ e (α, s') := fun h => hi (congrArg Prod.fst (he h))
     rw [ite_eq_right h1]
-    apply degreeOf_X_of_ne
-    intro h
-    exact hi (congrArg Prod.fst (he h)).symm
+    exact degreeOf_X_of_ne (fun h => hi (congrArg Prod.fst (he h)).symm)
 
 theorem sp_merge_col [DecidableEq σ] (he : Function.Injective e) (α α' s : Fin n) :
     degreeOf (e (α, s)) (rename (fun u => if u = e (α', s) then e (α, s) else u) (gDet (K := K) e)) ≤ 1 := by
@@ -185,9 +180,7 @@ theorem sp_merge_col [DecidableEq σ] (he : Function.Injective e) (α α' s : Fi
     simp only [AlgHom.mapMatrix_apply, Matrix.map_apply, Matrix.transpose_apply, Matrix.of_apply, rename_X]
     have h1 : e (j, i) ≠ e (α', s) := fun h => hi (congrArg Prod.snd (he h))
     rw [ite_eq_right h1]
-    apply degreeOf_X_of_ne
-    intro h
-    exact hi (congrArg Prod.snd (he h)).symm
+    exact degreeOf_X_of_ne (fun h => hi (congrArg Prod.snd (he h)).symm)
 
 theorem sp_cross [DecidableEq σ] {D g h : MvPolynomial σ K} (hD : D = g * h) {v w : σ} (hvw : v ≠ w)
     (hgv : degreeOf v g = 1) (hgw : degreeOf w g = 0) (hhv : degreeOf v h = 0) (hhw : degreeOf w h = 1)
@@ -216,9 +209,7 @@ theorem sp_cross [DecidableEq σ] {D g h : MvPolynomial σ K} (hD : D = g * h) {
     rw [Equiv.swap_apply_right] at this
     rw [this, hhw]
   have hne : rename (Equiv.swap v w) h ≠ 0 := by
-    intro h0
-    apply hh0
-    exact rename_injective _ (Equiv.swap v w).injective (by rw [h0, map_zero])
+    exact fun h0 => hh0 (rename_injective _ (Equiv.swap v w).injective (by rw [h0, map_zero]))
   rw [hD, map_mul, hgr, hhr, degreeOf_mul_eq hg0 hne, hgv, hsw] at hm
   omega
 
@@ -370,8 +361,7 @@ theorem sp_wt (ν : ι → Fin a → ℕ) (F : (ι → Matrix (Fin a) (Fin a) �
     simp only [Matrix.det_mul, sp_det_bor hβ, mul_pow, Finset.prod_mul_distrib, pow_add, ← Finset.prod_pow]
     ring
   have := congrArg (eval (pt x)) hpoly
-  rw [map_sub, map_mul, eval_C, sp_eval_colSub, map_zero, sub_eq_zero] at this
-  exact this
+  rwa [map_sub, map_mul, eval_C, sp_eval_colSub, map_zero, sub_eq_zero] at this
 
 theorem sp_vanish (w : ι → Fin a → ℕ) (P : Pol ℂ ι a)
     (hw : ∀ x β, IsBor β → eval (pt (fun τ => x τ * β τ)) P = (∏ τ, ∏ r, β τ r r ^ w τ r) * eval (pt x) P)
@@ -600,7 +590,6 @@ theorem sharp_polynomial_frames : SharpPoly := by
   refine ⟨Q, ?_⟩
   funext y
   have := hQ (fr y) (hinv y)
-  rw [hFt] at this
-  exact this
+  rwa [hFt] at this
 
 end Formalism.L2.KerInert.SharpPolyP

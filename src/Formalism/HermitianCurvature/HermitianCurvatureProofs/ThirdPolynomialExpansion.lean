@@ -92,8 +92,7 @@ theorem zb_det (i0 s : ℕ) (h : Matrix (Fin i0) (Fin i0) ℂ) (t : ℂ) :
         simp only [Zb]
         rw [dite_eq_right (lt_irrefl _), ite_eq_left (by omega)]
       simp only [Matrix.of_apply, Fin.val_last]
-      rw [he]
-      rw [show i0 + (i0 + s) = 2 * i0 + s by ring, pow_add, pow_mul]
+      rw [he, show i0 + (i0 + s) = 2 * i0 + s by ring, pow_add, pow_mul]
       norm_num
       ring
     · intro j _ hj
@@ -104,8 +103,7 @@ theorem zb_det (i0 s : ℕ) (h : Matrix (Fin i0) (Fin i0) ℂ) (t : ℂ) :
         rw [dite_eq_right (lt_irrefl _), ite_eq_right (by omega)]
       simp only [Matrix.of_apply]
       rw [he, mul_zero, zero_mul]
-    · intro hn
-      exact absurd (Finset.mem_univ _) hn
+    · exact fun hn => absurd (Finset.mem_univ _) hn
 
 theorem derivative_leading_zb : DleadZb := by
   intro i0 s h t

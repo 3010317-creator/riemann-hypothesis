@@ -69,8 +69,7 @@ private theorem symm_mem_Ufl_of_maps_Ufl {i : ℕ} {r : (Fin (n + c) → k) ≃�
   have : r.symm v = w := by
     rw [LinearEquiv.symm_apply_eq]
     exact hwv.symm
-  rw [this]
-  exact hw
+  rwa [this]
 
 theorem R1cond_symm {r : (Fin (n + c) → k) ≃ₗ[k] (Fin (n + c) → k)} (hr : R1cond k n c r) : R1cond k n c r.symm := by
   obtain ⟨h1, h2, h3⟩ := hr
@@ -82,8 +81,7 @@ theorem R1cond_symm {r : (Fin (n + c) → k) ≃ₗ[k] (Fin (n + c) → k)} (hr 
     have : r.symm (PI.OneCosetSharp.Loc.eN k (n + c) (n + i)) - PI.OneCosetSharp.Loc.eN k (n + c) (n + i) =
         -r.symm (r (PI.OneCosetSharp.Loc.eN k (n + c) (n + i)) - PI.OneCosetSharp.Loc.eN k (n + c) (n + i)) := by
       rw [map_sub, LinearEquiv.symm_apply_apply, neg_sub]
-    rw [this]
-    exact hneg
+    rwa [this]
 
 theorem mem_flagUnipotent {r : (Fin (n + c) → k) ≃ₗ[k] (Fin (n + c) → k)} (hr : R1cond k n c r) : r ∈ R1 k n c :=
   ⟨hr, R1cond_symm hr⟩

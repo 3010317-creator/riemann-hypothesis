@@ -18,8 +18,7 @@ variable {K : Type} [NormedField K] [IsUltrametricDist K]
 theorem i_add {a b : K} (ha : ‖a‖ ≤ 1) (hb : ‖b‖ ≤ 1) : ‖a + b‖ ≤ 1 := (IsUltrametricDist.norm_add_le_max a b).trans (max_le ha hb)
 
 theorem i_neg {a : K} (ha : ‖a‖ ≤ 1) : ‖-a‖ ≤ 1 := by
-  rw [norm_neg]
-  exact ha
+  rwa [norm_neg]
 
 theorem i_sub {a b : K} (ha : ‖a‖ ≤ 1) (hb : ‖b‖ ≤ 1) : ‖a - b‖ ≤ 1 := by
   rw [sub_eq_add_neg]
@@ -63,8 +62,7 @@ theorem s_mul' {a b : K} (ha : ‖a‖ ≤ 1) (hb : ‖b‖ < 1) : ‖a * b‖ <
     _ < 1 := hb
 
 theorem i_of_quadratic {t b c : K} (hb : ‖b‖ ≤ 1) (hc : ‖c‖ ≤ 1) (h : t ^ 2 + b * t = c) : ‖t‖ ≤ 1 := by
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have h1 : t ^ 2 = c - b * t := by rw [← h]; ring
   have h2 : ‖t ^ 2‖ ≤ max ‖c‖ ‖b * t‖ := by
     rw [h1, sub_eq_add_neg]
@@ -121,8 +119,7 @@ theorem nonsingular_norm : NonsingNorm := by
   have hFx : ‖3 * x ^ 2 + 2 * W.a₂ * x + W.a₄ - W.a₁ * y‖ ≤ 1 :=
     i_sub (i_add (i_add (i_mul (i_ofNat 3) (i_pow hx 2))
       (i_mul (i_mul (i_ofNat 2) h2) hx)) h4) (i_mul h1 hy)
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   obtain ⟨hy1, hx1⟩ := hne
   have hy1' : ‖2 * y + W.a₁ * x + W.a₃‖ < 1 := lt_of_le_of_ne hFy hy1
   have hx1' : ‖3 * x ^ 2 + 2 * W.a₂ * x + W.a₄ - W.a₁ * y‖ < 1 := lt_of_le_of_ne hFx hx1
@@ -225,12 +222,10 @@ theorem UnitDiff_of (hN : NonsingNorm) : UnitDiff := by
       have hy2 : ‖y₂‖ ≤ 1 := hyQ
       have e₁ : y₁ ^ 2 + W.a₁ * x₁ * y₁ + W.a₃ * y₁ = x₁ ^ 3 + W.a₂ * x₁ ^ 2 + W.a₄ * x₁ + W.a₆ := by
         have h0 := h₁.1
-        rw [equation_iff] at h0
-        exact h0
+        rwa [equation_iff] at h0
       have e₂ : y₂ ^ 2 + W.a₁ * x₂ * y₂ + W.a₃ * y₂ = x₂ ^ 3 + W.a₂ * x₂ ^ 2 + W.a₄ * x₂ + W.a₆ := by
         have h0 := h₂.1
-        rw [equation_iff] at h0
-        exact h0
+        rwa [equation_iff] at h0
       have hx12 : x₁ ≠ x₂ := by
         intro hxx
         have hprod : (y₁ - y₂) * (y₁ - W.toAffine.negY x₂ y₂) = 0 := by

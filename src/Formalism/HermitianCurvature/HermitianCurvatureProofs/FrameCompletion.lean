@@ -125,8 +125,7 @@ theorem ec_sum (hE : Formalism.FourierDecayAlt.Qr.EcLie) {W : Type} [NormedAddCo
   classical
   induction s using Finset.induction_on with
   | empty =>
-    have h := (hE W k r z π hπ Z0 Z0 h0 h0).2.1 0
-    simpa using h
+    simpa using (hE W k r z π hπ Z0 Z0 h0 h0).2.1 0
   | insert a s ha ih =>
     have h1 := (hE W k r z π hπ (Z a) (Z a) (hZ a) (hZ a)).2.1 (c a)
     have h2 := (hE W k r z π hπ _ _ h1.1 ih.1).1
@@ -156,8 +155,7 @@ theorem exists_frame_two : Formalism.FourierDecayAlt.Qr.FrameExists2 := by
     have h2 : ‖εE‖ ^ 2 = 1 := by rw [@norm_sq_eq_re_inner ℂ, h1]; simp
     nlinarith [norm_nonneg εE, sq_nonneg (‖εE‖ - 1), sq_nonneg (‖εE‖ + 1)]
   have hon : Orthonormal ℂ (({Fin.last n} : Set (Fin (n + 1))).domRestrict fun _ => εE) := by
-    refine ⟨fun _ => hεn, fun i j hij => ?_⟩
-    exact absurd (Subsingleton.elim i j) hij
+    exact ⟨fun _ => hεn, fun i j hij => (absurd (Subsingleton.elim i j) hij)⟩
   obtain ⟨b, hb⟩ := hon.exists_orthonormalBasis_extension_of_card_eq (by simp)
   have hbl : b (Fin.last n) = εE := hb _ rfl
   refine ⟨fun j => ∑ a, (b j.castSucc) a • C a, fun j => HermitianFormSums.inWb_sum _ _ _ hC.1, fun i j => ?_, fun j v hv => ?_⟩
@@ -165,8 +163,7 @@ theorem exists_frame_two : Formalism.FourierDecayAlt.Qr.FrameExists2 := by
     by_cases h : i = j
     · subst h; simp
     · rw [ite_eq_right h, ite_eq_right]
-      intro h'
-      exact h (Fin.castSucc_injective _ h').symm
+      exact fun h' => h (Fin.castSucc_injective _ h').symm
   · simp only [List.mem_cons, List.not_mem_nil, or_false] at hv
     rcases hv with rfl | rfl
     · rw [HermitianFormSums.herm_lsum]
@@ -237,8 +234,7 @@ theorem qr_frameChange_of : Formalism.FourierDecayAlt.Qr.EcLie → Formalism.Fou
     ext p q
     have h1 : Bs a p = ∑ c, P c a * Bs' c p := by
       have := congrFun (hexp a) p
-      rw [Finset.sum_apply] at this
-      exact this
+      rwa [Finset.sum_apply] at this
     have h2 : herm (Hpk (n + 1) r) (bvec q) (Bs b) = ∑ d, Q b d * herm (Hpk (n + 1) r) (bvec q) (Bs' d) := by
       have h3 : herm (Hpk (n + 1) r) (bvec q) (Bs b) = herm (Hpk (n + 1) r) (bvec q) (∑ d, P d b • Bs' d) := by
         rw [← hexp b]

@@ -88,8 +88,7 @@ theorem Low.add {m : ℕ} {x y : MvPowerSeries ι K} (hx : Low m x) (hy : Low m 
   rw [map_add (f := _), hx d hd, hy d hd, add_zero]
 
 theorem low_zero (x : MvPowerSeries ι K) : Low 0 x := by
-  intro d hd
-  exact absurd hd (Nat.not_lt_zero _)
+  exact fun d hd => absurd hd (Nat.not_lt_zero _)
 
 theorem low_one {x : MvPowerSeries ι K} (hx : MvPowerSeries.constantCoeff x = 0) : Low 1 x := by
   intro d hd
@@ -269,8 +268,7 @@ theorem invIntegralOfClass (K : Type u) [NormedField K] [IsUltrametricDist K] (�
             linear_combination -hk
           rw [hcd]
           exact hb
-  intro d
-  exact main (d.degree + 1) d (Nat.lt_succ_self _)
+  exact fun d => main (d.degree + 1) d (Nat.lt_succ_self _)
 
 end Formalism.LT.InvIntP
 

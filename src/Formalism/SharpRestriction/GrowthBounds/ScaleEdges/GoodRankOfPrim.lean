@@ -160,10 +160,8 @@ theorem s7 : S7 := by
     fun k e' he' hs' hne => hFoth _ (eqv k).1.2 _ e' he' hs' hne, Fintype.card T, ?_, ?_⟩
   · have hT : Fintype.card T = ∑ e ∈ E, nE e := by
       rw [Fintype.card_sigma]
-      simp only [Fintype.card_fin]
-      exact Finset.sum_coe_sort E nE
-    rw [hT]
-    exact hcard
+      simpa only [Fintype.card_fin] using Finset.sum_coe_sort E nE
+    rwa [hT]
   refine goodRank_of_prim (IsFractionRing.injective O Kf) (p : O) _ _ D
     (fun k G G' => be_add_right p r lam0 _ G G') (fun k c G => be_smul_right p r lam0 _ c G) ?_ ?_
   · intro k G hG
@@ -176,8 +174,7 @@ theorem s7 : S7 := by
   · rintro c ⟨k0, hk0⟩
     obtain ⟨⟨e0, i0⟩, hx⟩ : ∃ x, eqv k0 = x := ⟨_, rfl⟩
     have hk0' : IsUnit (c (eqv.symm ⟨e0, i0⟩)) := by
-      rw [← hx, Equiv.symm_apply_apply]
-      exact hk0
+      rwa [← hx, Equiv.symm_apply_apply]
     obtain ⟨G, hGN, hval, hGoth⟩ := hprim e0.1 e0.2 (fun i => c (eqv.symm ⟨e0, i⟩)) ⟨i0, hk0'⟩
     obtain ⟨a, b, hva, hab⟩ := hval
     refine ⟨G, hGN, ?_⟩

@@ -141,8 +141,7 @@ section Shift
 
 variable {K : Type u} [Field K] {τ : Type v} [DecidableEq τ]
 
-theorem lt_sq_pow {l : ℕ} (hl : 2 ≤ l) (e : ℕ) : e < (l ^ 2) ^ e := by
-  exact Nat.lt_pow_self (by nlinarith)
+theorem lt_sq_pow {l : ℕ} (hl : 2 ≤ l) (e : ℕ) : e < (l ^ 2) ^ e := Nat.lt_pow_self (by nlinarith)
 
 theorem coeff_genLog {l : ℕ} (hl : 2 ≤ l) (p : τ → τ) (x : τ) (n : τ →₀ ℕ) {M : ℕ}
     (hM : n.degree < M) :
@@ -206,8 +205,7 @@ theorem coeff_X_eq_sum [Finite τ] {l : ℕ} (hl : 2 ≤ l) (p : τ → τ) {g :
     · rw [ite_eq_left rfl]
     · intro e' _ hne
       rw [ite_eq_right]
-      intro h
-      exact hne (hD_inj e e' h).symm
+      exact fun h => hne (hD_inj e e' h).symm
     · intro he
       exfalso
       apply he
@@ -383,8 +381,7 @@ theorem generalized_log_weight : GenLogWeight.{u, v} := by
     have hk2 : 2 ≤ k := le_trans (by nlinarith) (Nat.le_self_pow (by omega) (l ^ 2))
     have hce : coeff n (g (p^[e + 1] y) ^ k) = coeff n (truncBelow N (g (p^[e + 1] y)) ^ k) := by
       have := hpow (p^[e + 1] y) (k - 1) n (by omega)
-      rw [Nat.sub_add_cancel (by omega), map_sub, sub_eq_zero] at this
-      exact this
+      rwa [Nat.sub_add_cancel (by omega), map_sub, sub_eq_zero] at this
     rw [hce, norm_mul, norm_inv, norm_pow]
     have hb := wtGe_pow hπ0 (hw (p^[e + 1] y)) k n
     rw [monoWtGe_iff, dot_const] at hb

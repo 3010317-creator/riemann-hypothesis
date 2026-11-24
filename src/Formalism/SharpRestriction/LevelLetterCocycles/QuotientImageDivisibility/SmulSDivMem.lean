@@ -188,12 +188,10 @@ theorem expRules_of (h4 : Formalism.MainNotions.WachCoordinates.LevelMapHodgeFil
     have hmem : W.γA W.gam a • W.γ T x ∈ W.N T := by
       have h := hγN'
       change W.γD T W.gam (a • x) ∈ W.N T at h
-      rw [RL.γD_smulA] at h
-      exact h
+      rwa [RL.γD_smulA] at h
     refine ⟨⟨m, LB_resc hm _⟩, W.γA W.gam a, hmem, ?_, fun k => ?_⟩
     · rw [hA' i ζ hζ a]
-      intro h0
-      exact hla (PowerSeries.rescale_injective hχ (h0.trans (map_zero _).symm))
+      exact fun h0 => hla (PowerSeries.rescale_injective hχ (h0.trans (map_zero _).symm))
     · have e1 : (⟨W.γA W.gam a • W.γ T x, hmem⟩ : ↥(W.N T)) =
           ⟨W.γ T ((⟨a • x, ha⟩ : ↥(W.N T)) : W.DD T), hγN'⟩ :=
         Subtype.ext (RL.γD_smulA W T W.gam a x).symm

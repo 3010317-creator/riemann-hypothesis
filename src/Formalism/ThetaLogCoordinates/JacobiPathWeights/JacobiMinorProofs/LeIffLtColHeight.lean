@@ -73,8 +73,7 @@ theorem le_iff_lt_colHeight {n : ℕ} {μ : Fin n → ℤ} (h : Antitone μ) (c 
   · intro hm
     have hsub : Finset.Iic m ⊆ univ.filter fun m => c ≤ μ m := by
       intro x hx
-      simp only [mem_filter, mem_univ, true_and]
-      exact hm.trans (h (Finset.mem_Iic.1 hx))
+      simpa only [mem_filter, mem_univ, true_and] using hm.trans (h (Finset.mem_Iic.1 hx))
     have := Finset.card_le_card hsub
     rw [Fin.card_Iic] at this
     omega
@@ -140,8 +139,7 @@ theorem changed_eq {n : ℕ} {ν μ : Fin n → ℤ} {b : ℕ} (hν : Antitone �
     have hh := strip_height hν hμ hs c
     have hn := colHeight_le ν c
     refine ⟨⟨colHeight μ c, by omega⟩, ?_, ?_⟩
-    · refine not_le.1 fun hle => ?_
-      exact absurd ((le_iff_lt_colHeight hμ c _).1 hle) (lt_irrefl _)
+    · exact not_le.1 fun hle => absurd ((le_iff_lt_colHeight hμ c _).1 hle) (lt_irrefl _)
     · refine (le_iff_lt_colHeight hν c _).2 ?_
       show colHeight μ c < colHeight ν c
       omega
@@ -238,8 +236,7 @@ theorem pathWord_unchanged {R : Type*} [CommRing R] {n : ℕ} (isVec : ℕ → B
     intro h
     obtain ⟨a, b⟩ := ih fun i hi => h i (by omega)
     refine ⟨?_, (h j (by omega)).trans b⟩
-    rw [pathWord, ite_eq_left (h j (by omega))]
-    exact a
+    rwa [pathWord, ite_eq_left (h j (by omega))]
 
 theorem hom_intCast {σ R : Type*} [CommRing R] (w : σ → ℕ) (z : ℤ) :
     IsWeightedHomogeneous w ((z : ℤ) : MvPolynomial σ R) 0 := by
@@ -341,8 +338,7 @@ theorem pathProductDegrees : PsiDegrees := by
     ext c
     simp only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     constructor
-    · intro h
-      exact ⟨Set.mem_biUnion (show i ∈ Set.Iio N from hi) h, hi, h⟩
+    · exact fun h => ⟨Set.mem_biUnion (show i ∈ Set.Iio N from hi) h, hi, h⟩
     · rintro ⟨-, -, h⟩
       exact h
   · rw [ite_eq_right hi]

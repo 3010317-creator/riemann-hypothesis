@@ -99,8 +99,7 @@ theorem noncompact_arr_one_values {ε : Fin n → Bool} {E : Fin n → Fin n →
   · intro hne
     rwa [ite_eq_left (fun _ => hne)] at h
   · intro he
-    rw [ite_eq_right (fun h' => h' 0 he), Submodule.mem_bot] at h
-    exact h
+    rwa [ite_eq_right (fun h' => h' 0 he), Submodule.mem_bot] at h
 
 theorem mem_noncompact_arr_one {ε : Fin n → Bool} {E : Fin n → Fin n → Module.End ℂ V} {u : V} {F : Arr V n 1}
     (h1 : ∀ a b, ε a ≠ ε b → F (fun _ => (a, b)) ∈ kSpan ε E u)
@@ -193,8 +192,7 @@ theorem hVCoeff_of (hl : KLow) (hw : KWtOrth) (ha : ArrModule) : HVCoeff := by
       · simp only [ite_eq_right hac, ite_eq_right hbc, sub_zero, zero_add] at h1
         have : ((μ - root a b) c : ℝ) = μ c := by
           simp [root, Ne.symm hac, Ne.symm hbc]
-        rw [this]
-        exact h1
+        rwa [this]
   have hhi : ∀ c d, c < d → ε c = ε d → E c d (f (a, b)) = 0 := by
     intro c d hcd hcomp
     have hcd' := Fin.lt_iff_val_lt_val.mp hcd
@@ -211,8 +209,7 @@ theorem hVCoeff_of (hl : KLow) (hw : KWtOrth) (ha : ArrModule) : HVCoeff := by
       · subst h
         exact hzero (a, c) (by simp only; omega)
       · rfl
-    rw [e1, e2, sub_zero, zero_add] at h1
-    exact h1
+    rwa [e1, e2, sub_zero, zero_add] at h1
   have hν := compact_highest_weight_unique hl hw hg hu hΛ ((hval a b).1 hne) ⟨hwt, hhi⟩ hab0
   rw [← hν]
   simp
@@ -229,8 +226,7 @@ theorem compact_span_stable_general {W : Type} [AddCommGroup W] [Module ℂ W] {
     {F : Fin n → Fin n → Module.End ℂ W} (x : W) : KStable ε F (kSpan ε F x) := by
   intro a b hab y hy
   rw [kSpan, Submodule.mem_sInf] at hy ⊢
-  intro S hS
-  exact hS.2 a b hab y (hy S hS)
+  exact fun S hS => hS.2 a b hab y (hy S hS)
 
 theorem compact_span_le_of_stable {W : Type} [AddCommGroup W] [Module ℂ W] {ε : Fin n → Bool}
     {F : Fin n → Fin n → Module.End ℂ W} {S : Submodule ℂ W} {x : W} (hS : KStable ε F S)
@@ -362,8 +358,7 @@ theorem typesSplit_of (hv : HVCoeff) (hi : KIsoSplit) (ha : ArrModule) : TypesSp
       subst e1; subst e2
       exact absurd h (not_lt.mpr h'.le)
   refine ⟨fun F hF G hG => h1 F hF G (heq ▸ hG), ?_⟩
-  rw [← heq]
-  exact h2
+  rwa [← heq]
 
 theorem root_swap' {n : ℕ} (a b : Fin n) : root a b = -root b a := by
   unfold root; abel
@@ -528,8 +523,7 @@ theorem omPlus_of (hd : KDecomp) (ho : KOrth) (hk : KCasSpan) (hca : CasArr) (ha
         rw [Set.mem_singleton_iff] at hμ''
         subst hμ''
         rw [Submodule.mem_orthogonal]
-        intro G hG
-        exact ho (Arr V n 1) n ε (arrE E 1) _ _ y y' hKR hKU hyh hyh' hμ G hG H hH
+        exact fun G hG => ho (Arr V n 1) n ε (arrE E 1) _ _ y y' hKR hKU hyh hyh' hμ G hG H hH
       intro G hG
       rw [Submodule.mem_orthogonal]
       intro H hH

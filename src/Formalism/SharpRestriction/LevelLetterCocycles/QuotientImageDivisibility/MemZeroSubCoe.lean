@@ -155,8 +155,7 @@ theorem mem_zeroSub_coe {LL : Type} [Field LL] [Algebra O LL] {U : Type} [AddCom
     have : y = x := Subtype.ext hyx
     subst this
     exact hy
-  · intro h
-    exact ⟨x, h, rfl⟩
+  · exact fun h => ⟨x, h, rfl⟩
 
 theorem zeroSub_le {LL : Type} [Field LL] [Algebra O LL] {U : Type} [AddCommGroup U] [Module LL U]
     (A : Submodule O FF) (φ : ↥A →+ U)
@@ -222,8 +221,7 @@ theorem pstep_rank [IsDomain O] [IsPrincipalIdealRing O] {LL : Type} [Field LL] 
       rw [hg, smul_zero]
     have hQ : ∑ j, a j • bQ j = 0 := by
       have : K.mkQ (∑ j, a j • xr j) = 0 := by
-        rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-        exact hsum
+        rwa [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
 
       rw [map_sum] at this
       simpa [hxr] using this

@@ -102,8 +102,7 @@ private theorem selfDual_map_of_isAddHaarMeasure {V : Type} [AddCommGroup V] [To
   have hint' : Integrable (fun y => ∫ x, (Φ ∘ em) x * χ x y ∂μ) μ := by
     have h1 := (integrable_map_equiv em _).mp hint
     refine h1.congr (ae_of_all _ fun y => ?_)
-    simp only [Function.comp_apply]
-    exact hinner y
+    simpa only [Function.comp_apply] using hinner y
   have hz : ∀ y, χ (em y) z = χ y (em.symm z) := by
     intro y
     conv_lhs => rw [← em.apply_symm_apply z]
@@ -157,8 +156,7 @@ private theorem eq_one_of_selfDual_smul {V : Type} [AddCommGroup V] [Topological
     intro y
     rw [integral_smul_measure, Complex.real_smul]
   have hi' : Integrable (fun y => ∫ x, Φ x * χ x y ∂(c • μ)) (c • μ) := by
-    simp only [hin]
-    exact (hi.const_mul _).smul_measure hctop
+    simpa only [hin] using (hi.const_mul _).smul_measure hctop
   have key := hν.2 Φ hc hs hi' z
   simp only [hin] at key
   rw [integral_smul_measure, Complex.real_smul] at key

@@ -84,8 +84,7 @@ theorem two_mem_of_pow {R : Type*} [CommRing R] [IsDomain R] (Q : Ideal R) :
         rw [h4]
         exact Q.neg_mem hQ
     · refine ih (η ^ 2) ?_ h2 ?_
-      · rw [← pow_mul, ← pow_succ']
-        exact h1
+      · rwa [← pow_mul, ← pow_succ']
       · have h5 : η ^ 2 - 1 = (η + 1) * (η - 1) := by ring
         rw [h5]
         exact Q.mul_mem_left _ hQ
@@ -143,9 +142,7 @@ variable {e q d : ℕ} {L : Type} [Field L] [NumberField L] {ζ a b : L}
 theorem algebraMap_smul (σ : hostE ζ a b ≃ₐ[ℚ] hostE ζ a b) (τ : Gal(L/ℚ))
     (hστ : ∀ x : hostE ζ a b, ((σ x : hostE ζ a b) : L) = τ x) (x : 𝓞 (hostE ζ a b)) :
     algebraMap (𝓞 (hostE ζ a b)) (𝓞 L) (σ • x) = τ • algebraMap (𝓞 (hostE ζ a b)) (𝓞 L) x := by
-  apply NumberField.RingOfIntegers.ext
-  show (((σ ((x : hostE ζ a b)) : hostE ζ a b)) : L) = τ (((x : hostE ζ a b)) : L)
-  exact hστ _
+  exact NumberField.RingOfIntegers.ext (hστ _)
 
 theorem mem_of_restrict (P : Ideal (𝓞 (hostE ζ a b))) (Q : Ideal (𝓞 L)) [Q.LiesOver P]
     (σ : hostE ζ a b ≃ₐ[ℚ] hostE ζ a b) (τ : Gal(L/ℚ))
@@ -164,8 +161,7 @@ theorem mem_of_lift (P : Ideal (𝓞 (hostE ζ a b))) (Q : Ideal (𝓞 L)) [Q.Li
     τ • algebraMap (𝓞 (hostE ζ a b)) (𝓞 L) y - algebraMap (𝓞 (hostE ζ a b)) (𝓞 L) y ∈ Q := by
   rw [← algebraMap_smul σ τ hστ y, ← map_sub]
   have h := hσ y
-  rw [Ideal.over_def Q P] at h
-  exact h
+  rwa [Ideal.over_def Q P] at h
 
 theorem hcl_eq_one (h : IsLayer (e + 2) q d ζ a b) (p : ℕ) (hp : p.Prime) (hp2 : p ≠ 2)
     (Q : Ideal (𝓞 L)) [Q.IsPrime] [Q.LiesOver (span {(p : ℤ)})] (τ : Gal(L/ℚ)) (Θ : 𝓞 L)
@@ -214,8 +210,7 @@ theorem hcl_eq_one (h : IsLayer (e + 2) q d ζ a b) (p : ℕ) (hp : p.Prime) (hp
   rw [hdiff] at hmem
   have hQ : Q.IsPrime := inferInstance
   have key : u = 1 ∨ u = -1 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     apply h2Q
     rcases hQ.mem_or_mem hmem with h12 | h3
     · rcases hQ.mem_or_mem h12 with h1 | h2
@@ -267,10 +262,7 @@ theorem sub_h (hqd : HypOdd q d) (h : IsLayer (e + 2) q d ζ a b) (p : ℕ) (hp 
   haveI := (layer_galois hqd h).1
   have hinj : Function.Injective (algebraMap (𝓞 (hostE ζ a b)) (𝓞 L)) := by
     intro x y hxy
-    have h1 := congrArg (fun z : 𝓞 L => (z : L)) hxy
-    apply NumberField.RingOfIntegers.ext
-    apply Subtype.ext
-    exact h1
+    exact NumberField.RingOfIntegers.ext (Subtype.ext (congrArg (fun z : 𝓞 L => (z : L)) hxy))
   obtain ⟨Q, -, hQp, hQc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral P (⊥ : Ideal (𝓞 L))
     (by rw [(show Ideal.under _ ⊥ = ⊥ from Ideal.comap_bot_of_injective _ hinj)]; exact bot_le)
   haveI := hQp
@@ -316,10 +308,7 @@ theorem sup (hqd : HypOdd q d) (h : IsLayer (e + 2) q d ζ a b) (p : ℕ)
   haveI := (layer_galois hqd h).1
   have hinj : Function.Injective (algebraMap (𝓞 (hostE ζ a b)) (𝓞 L)) := by
     intro x y hxy
-    have h1 := congrArg (fun z : 𝓞 L => (z : L)) hxy
-    apply NumberField.RingOfIntegers.ext
-    apply Subtype.ext
-    exact h1
+    exact NumberField.RingOfIntegers.ext (Subtype.ext (congrArg (fun z : 𝓞 L => (z : L)) hxy))
   obtain ⟨Q, -, hQp, hQc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral P (⊥ : Ideal (𝓞 L))
     (by rw [(show Ideal.under _ ⊥ = ⊥ from Ideal.comap_bot_of_injective _ hinj)]; exact bot_le)
   haveI := hQp

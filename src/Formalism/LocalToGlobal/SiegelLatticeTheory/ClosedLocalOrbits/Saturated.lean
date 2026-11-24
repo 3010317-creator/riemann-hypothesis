@@ -54,8 +54,7 @@ section Gen
 variable {E : Type} [Field E] [NumberField E] [StarRing E] {S : HSpace E} {r : ℕ}
 
 theorem isom_apply {β : S.V ≃ₗ[E] S.V} (hβ : β ∈ Formalism.HermitianLatticesTheory.isom S.hT) (x y : S.V) :
-    S.hT (β x) (β y) = S.hT x y := by
-  exact hβ x y
+    S.hT (β x) (β y) = S.hT x y := hβ x y
 
 theorem mem_gmap_iff (β : S.V ≃ₗ[E] S.V) (L : Submodule (𝓞 E) S.V) (x : S.V) :
     x ∈ Formalism.HermitianLatticesTheory.gmap β L ↔ β.symm x ∈ L := by
@@ -64,10 +63,8 @@ theorem mem_gmap_iff (β : S.V ≃ₗ[E] S.V) (L : Submodule (𝓞 E) S.V) (x : 
   constructor
   · rintro ⟨y, hy, hyx⟩
     have hyx' : β y = x := hyx
-    rw [← hyx', LinearEquiv.symm_apply_apply]
-    exact hy
-  · intro h
-    exact ⟨β.symm x, h, β.apply_symm_apply x⟩
+    rwa [← hyx', LinearEquiv.symm_apply_apply]
+  · exact fun h => ⟨β.symm x, h, β.apply_symm_apply x⟩
 
 def mapFlag (β : S.V ≃ₗ[E] S.V) (hβ : β ∈ Formalism.HermitianLatticesTheory.isom S.hT) {T : E} (F : FlagG S r T) : FlagG S r T where
   e a := β (F.e a)
@@ -88,8 +85,7 @@ theorem fvec_mapFlag (β : S.V ≃ₗ[E] S.V) (hβ : β ∈ Formalism.HermitianL
   · simp [FlagG.fvec, mapFlag]
 
 theorem frame_mapL (β : S.V ≃ₗ[E] S.V) (hβ : β ∈ Formalism.HermitianLatticesTheory.isom S.hT) {T : E} (F : LFlag S r T)
-    (a : Fin (r + 1)) : frame (mapL β hβ F) a = β (frame F a) := by
-  exact congrFun (fvec_mapFlag β hβ F.fl) a
+    (a : Fin (r + 1)) : frame (mapL β hβ F) a = β (frame F a) := congrFun (fvec_mapFlag β hβ F.fl) a
 
 theorem zhat_mapL (β : S.V ≃ₗ[E] S.V) (hβ : β ∈ Formalism.HermitianLatticesTheory.isom S.hT) {T T' : E} (F : LFlag S r T)
     (F' : LFlag S r T') : ZhatL (mapL β hβ F) (mapL β hβ F') = ZhatL F F' := by
@@ -126,11 +122,9 @@ private theorem lflag_ext_lemma_2 {T : E} {F₁ F₂ : LFlag S r T} (h1 : F₁.f
 theorem mapL_eq_self (β : S.V ≃ₗ[E] S.V) (hβ : β ∈ Formalism.HermitianLatticesTheory.isom S.hT) {T : E} (F : LFlag S r T)
     (hf : ∀ a, β (frame F a) = frame F a) (hz : β F.zt = F.zt) : mapL β hβ F = F := by
   have he : ∀ a, β (F.fl.e a) = F.fl.e a := fun a => by
-    have h := hf (Fin.castSucc a)
-    simpa [frame, FlagG.fvec] using h
+    simpa [frame, FlagG.fvec] using hf (Fin.castSucc a)
   have hz' : β F.fl.z = F.fl.z := by
-    have h := hf (Fin.last r)
-    simpa [frame, FlagG.fvec] using h
+    simpa [frame, FlagG.fvec] using hf (Fin.last r)
   apply lflag_ext_lemma_2
   · apply flag_ext_lemma
     · funext a
@@ -142,8 +136,7 @@ def AutF {T : E} (Λ : Submodule (𝓞 E) S.V) (F : LFlag S r T) : Set (S.V ≃�
   {β | IsAutLam S Λ β ∧ (∀ a, β (frame F a) = frame F a) ∧ β F.zt = F.zt}
 
 theorem mem_AutF {T : E} {Λ : Submodule (𝓞 E) S.V} {F : LFlag S r T} {β : S.V ≃ₗ[E] S.V} :
-    β ∈ AutF Λ F ↔ IsAutLam S Λ β ∧ (∀ a, β (frame F a) = frame F a) ∧ β F.zt = F.zt := by
-  exact Iff.rfl
+    β ∈ AutF Λ F ↔ IsAutLam S Λ β ∧ (∀ a, β (frame F a) = frame F a) ∧ β F.zt = F.zt := Iff.rfl
 
 variable {T T' : E} {Λ : Submodule (𝓞 E) S.V} {F : LFlag S r T}
 
@@ -187,8 +180,7 @@ theorem inv_of_isoInv {Q : Submodule (𝓞 E) S.V → LFlag S r T → LFlag S r 
 
 theorem gval_act (β : AutF Λ F) (F' : LFlag S r T') : Gval F (act β F') = Gval F F' := by
   have h := gval_mapL β.1 (AutF.isom β) F F'
-  rw [mapL_eq_self β.1 (AutF.isom β) F (mem_AutF.mp β.2).2.1 (mem_AutF.mp β.2).2.2] at h
-  exact h
+  rwa [mapL_eq_self β.1 (AutF.isom β) F (mem_AutF.mp β.2).2.1 (mem_AutF.mp β.2).2.2] at h
 
 
 
@@ -263,8 +255,7 @@ theorem mem_famOf_mk {Q : LFlag S r T' → Prop} (hF : QFun Λ F P Q) (x : Carri
     have he : Q F' = Q x.1 :=
       congrArg (Quot.lift (fun y : Carrier P => Q y.1) (fun a b hab => propext (hF a b hab))) e
     exact he ▸ hq
-  · intro hq
-    exact Exists.intro x.1 (And.intro (Exists.intro x.2 rfl) hq)
+  · exact fun hq => Exists.intro x.1 (And.intro (Exists.intro x.2 rfl) hq)
 
 theorem sat_famOf {Q : LFlag S r T' → Prop} (hQ : Inv Λ F Q) (hF : QFun Λ F P Q) :
     IsSat Λ F P (famOf Λ F P Q) := by

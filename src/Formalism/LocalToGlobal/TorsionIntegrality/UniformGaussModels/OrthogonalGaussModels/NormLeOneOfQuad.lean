@@ -143,8 +143,7 @@ theorem CMDatum_proof : CMDatum := by
   · apply Formalism.L2.Th1.D.CurveNormEndomorphisms.endoCurve_of_endoZ (RingHom.id ℂ_[p]) (curveL p L ι)
       (wF := fun P : S => PowerSeries.map (ι : ℂ →+* ℂ_[p])
         (Formalism.L2.Th1.F.taylor0 (fun z => L.weierstrassP (z + (P : ℂ)))))
-    · intro P
-      exact (Formalism.L2.Th1.E.ScaledModelNorms.nonsing p L ι hΔ _ (hker P).2).1
+    · exact fun P => (Formalism.L2.Th1.E.ScaledModelNorms.nonsing p L ι hΔ _ (hker P).2).1
     · intro P
       constructor
       · exact congrArg ι (hnegP P).1
@@ -153,8 +152,7 @@ theorem CMDatum_proof : CMDatum := by
         ring
     · have h := Formalism.L2.Th1.D.CurveNormEndomorphisms.isEndoZ_map (ι : ℂ →+* ℂ_[p]) hE
       simp only [PowerSeries.map_id, RingHom.id_apply, hb2, zero_div, add_zero]
-      rw [Formalism.L2.Th1.E.wpBridge]
-      exact h
+      rwa [Formalism.L2.Th1.E.wpBridge]
   · intro P
     have h := (Formalism.L2.Th1.E.ptOfInt p L ι hW (P : ℂ) (S.card + 1) (Nat.succ_pos _) hpN
       (hker P).1 (hker P).2).1

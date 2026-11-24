@@ -237,8 +237,7 @@ theorem pairAt_one (D : B.RealPlaceData k r Wp Wq) (μ : Measure (Mt k r)) (hZ :
   have hCm : (C : ℝ) * (D.μW.prod D.μW').real Set.univ = 1 := by
     have h2 := congrArg ENNReal.toReal h1
     rw [ENNReal.toReal_mul, ENNReal.toReal_mul, ENNReal.coe_toReal, ENNReal.toReal_one] at h2
-    rw [Measure.real_def, ← Set.univ_prod_univ, Measure.prod_prod, ENNReal.toReal_mul]
-    exact h2
+    rwa [Measure.real_def, ← Set.univ_prod_univ, Measure.prod_prod, ENNReal.toReal_mul]
   have key : P5.pairAt μ Φ Φ' c = (((C : ℝ) * (D.μW.prod D.μW').real Set.univ : ℝ) : ℂ) *
       ∫ ζ, (B2.zWeight k (Tz k r D.z) (Tz k r D.z') ζ : ℂ) *
         (((rbGauge k r c ^ 2 : ℝ) : ℂ) * B.hsInner (B.JF D F (B.gq D (c, ζ))) (B.JF D F' (B.gq D (c, ζ)))) := by

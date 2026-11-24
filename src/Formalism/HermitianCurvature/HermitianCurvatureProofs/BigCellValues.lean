@@ -99,10 +99,8 @@ theorem big_cell_values : TL.CellVals := by
   have hd0 : ∀ a, d a ≠ 0 := by
     intro a
     by_cases h : (a : ℕ) < r
-    · simp only [d, h, dite_true]
-      exact hc _
-    · simp only [d, h, dite_false]
-      exact hζ
+    · simpa only [d, h, dite_true] using hc _
+    · simpa only [d, h, dite_false] using hζ
   have hP : ∏ a : Fin r, x.1 a ≠ 0 := Finset.prod_ne_zero_iff.mpr fun a _ => hc a
   have hDr : Dmin k r Bs.z Bs.z' (bigCell k r x.1 μ) ⟨r, by omega⟩ = ∏ a : Fin r, x.1 a := by
     rw [hD]

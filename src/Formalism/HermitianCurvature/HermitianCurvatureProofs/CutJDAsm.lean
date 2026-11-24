@@ -191,37 +191,24 @@ theorem jd_arith (C2 C3 C5 R n N A₀ : ℝ) (hC2 : 0 ≤ C2) (hR : 0 ≤ R) (hn
     have h1' : N * n ≤ N * n ^ 2 := mul_le_mul_of_nonneg_left hn2 hN
     have h2' : (R + 1) * (N * n + n) ≤ (R + 1) ^ 4 * (N * n ^ 2 + n ^ 3) :=
       mul_le_mul hρ4 (by linarith) (by positivity) (by positivity)
-    have e : (2 * N + 2) * ((R + 1) * n) = 2 * ((R + 1) * (N * n + n)) := by ring
-    rw [e, hX]; linarith
+    linarith
   have hdm0 : 0 ≤ C2 * (R + 1) * n := by positivity
   have e2 : (2 * N + 2) * (C2 * (R + 1) * n) ≤ 2 * C2 * X := by
-    have := mul_le_mul_of_nonneg_left hXb hC2
-    have e : (2 * N + 2) * (C2 * (R + 1) * n) = C2 * ((2 * N + 2) * ((R + 1) * n)) := by ring
-    rw [e]; linarith
-  have e3 : C3 * (R + 1) * n ^ 2 ≤ |C3| * X :=
-    calc C3 * (R + 1) * n ^ 2 = C3 * ((R + 1) * n ^ 2) := by ring
-      _ ≤ |C3| * ((R + 1) * n ^ 2) := mul_le_mul_of_nonneg_right (le_abs_self C3) (by positivity)
-      _ ≤ |C3| * X := mul_le_mul_of_nonneg_left hXa (abs_nonneg C3)
-  have e3' : C5 * (R + 1) ^ 2 * n ≤ |C5| * X :=
-    calc C5 * (R + 1) ^ 2 * n = C5 * ((R + 1) ^ 2 * n) := by ring
-      _ ≤ |C5| * ((R + 1) ^ 2 * n) := mul_le_mul_of_nonneg_right (le_abs_self C5) (by positivity)
-      _ ≤ |C5| * X := mul_le_mul_of_nonneg_left hXa' (abs_nonneg C5)
+    linarith [mul_le_mul_of_nonneg_left hXb hC2]
+  have hC : ∀ C m : ℝ, 0 ≤ m → m ≤ X → C * m ≤ |C| * X := fun C m h0 h1 =>
+    (mul_le_mul_of_nonneg_right (le_abs_self C) h0).trans
+      (mul_le_mul_of_nonneg_left h1 (abs_nonneg C))
+  have e3 := hC C3 _ (by positivity) hXa
+  have e3' := hC C5 _ (by positivity) hXa'
   have e4 : 0 ≤ |C5| * X := mul_nonneg (abs_nonneg _) hX0
   have e4' : 0 ≤ |C3| * X := mul_nonneg (abs_nonneg _) hX0
   have e6 : 0 ≤ 6 * C2 * X := by positivity
   constructor
   · intro i o hi ho
-    have e1 : (i + 1) * (C2 * (R + 1) * n) ≤ (2 * N + 2) * (C2 * (R + 1) * n) := mul_le_mul_of_nonneg_right hi hdm0
-    have e5 : 6 * R * o ≤ 6 * C2 * X := by
-      have h1 : R * o ≤ R * (C2 * n) := mul_le_mul_of_nonneg_left ho hR
-      have h3 : C2 * (R * n) ≤ C2 * X := mul_le_mul_of_nonneg_left hXc hC2
-      linarith
-    have e : C3 * (R + 1) * n ^ 2 + 6 * R * o + C2 * (R + 1) * n + i * (C2 * (R + 1) * n) =
-        C3 * (R + 1) * n ^ 2 + 6 * R * o + (i + 1) * (C2 * (R + 1) * n) := by ring
-    linarith
+    linarith [mul_le_mul_of_nonneg_right hi hdm0, mul_le_mul_of_nonneg_left ho hR,
+      mul_le_mul_of_nonneg_left hXc hC2]
   · intro i hi
-    have e1 : i * (C2 * (R + 1) * n) ≤ (2 * N + 2) * (C2 * (R + 1) * n) := mul_le_mul_of_nonneg_right hi hdm0
-    linarith
+    linarith [mul_le_mul_of_nonneg_right hi hdm0]
 
 end
 

@@ -93,8 +93,7 @@ theorem map_comap_subgroup (H : Subgroup G) (hH : IsClosed (H : Set G)) (μ : Me
   rw [hr]
   have h1 := measure_inter_add_diff (μ := μ) s hH.measurableSet
   have h2 : μ (s \ (H : Set G)) = 0 := measure_mono_null (fun x hx => hx.2) hc
-  rw [h2, add_zero] at h1
-  exact h1
+  rwa [h2, add_zero] at h1
 
 private theorem abs_inv_lemma (S : Subgroup G) (hS : IsClosed (S : Set G)) (ν : Measure G)
     (hνc : ν (S : Set G)ᶜ = 0) (hνi : ∀ s ∈ S, ν.map (fun x => s * x) = ν) :
@@ -233,8 +232,7 @@ theorem smul_cancel {μ : Measure G} {K : Set G} (hK0 : 0 < μ K) (hKt : μ K < 
     (h : c • μ = d • μ) : c = d := by
   have h' := congrArg (fun ν : Measure G => ν K) h
   simp only [Measure.smul_apply, smul_eq_mul] at h'
-  have h'' := congrArg (· / μ K) h'
-  simpa [ENNReal.mul_div_cancel_right hK0.ne' hKt.ne] using h''
+  simpa [ENNReal.mul_div_cancel_right hK0.ne' hKt.ne] using congrArg (· / μ K) h'
 
 theorem haarOn_map (N : Subgroup G) (hN : IsClosed (N : Set G)) {μ : Measure G} (hμ : HaarOn N μ)
     (φ : G → G) (e : G ≃ₜ G) (he : ⇑e = φ) (hNφ : ∀ x ∈ N, φ x ∈ N)
@@ -244,8 +242,7 @@ theorem haarOn_map (N : Subgroup G) (hN : IsClosed (N : Set G)) {μ : Measure G}
   refine ⟨?_, ?_, ?_, ?_⟩
   · haveI := hσ
     have h1 := e.toMeasurableEquiv.sigmaFinite_map (μ := μ)
-    rw [Homeomorph.toMeasurableEquiv_coe, he] at h1
-    exact h1
+    rwa [Homeomorph.toMeasurableEquiv_coe, he] at h1
   · exact fun h => h0 ((Measure.map_eq_zero_iff hφm.aemeasurable).mp h)
   · rw [Measure.map_apply hφm hN.isOpen_compl.measurableSet]
     exact measure_mono_null (show φ ⁻¹' (N : Set G)ᶜ ⊆ (N : Set G)ᶜ from
@@ -266,8 +263,7 @@ theorem haarOn_conj (N : Subgroup G) (hN : IsClosed (N : Set G)) {μ : Measure G
     (by ext x; simp) (fun x hx => h1 x hx) (fun s hs => ⟨a⁻¹ * s * a, h2 s hs, fun x => by group⟩)
 
 theorem le_one_of_pow_le {x B : ℝ≥0∞} (hB : B ≠ ⊤) (h : ∀ p : ℕ, x ^ p ≤ B) : x ≤ 1 := by
-  by_contra hx
-  push Not at hx
+  by_contra! hx
   have hxt : x ≠ ⊤ := by
     rintro rfl
     have h1 := h 1
@@ -344,8 +340,7 @@ theorem rightInv_of_contract (N : Subgroup G) (hN : IsClosed (N : Set G)) {μ : 
     intro p
     obtain ⟨a, ha1, ha2, haC⟩ := hcon (n ^ p) (N.pow_mem hn p)
     have h1 := hconj a ha1 ha2 (n ^ p) (N.pow_mem hn p) (c ^ p) (hpow n hn c hc p)
-    have h2 := hbound _ haC (c ^ p) h1
-    exact (ENNReal.le_div_iff_mul_le (Or.inl hK0.ne') (Or.inl hKt.ne)).mpr h2
+    exact (ENNReal.le_div_iff_mul_le (Or.inl hK0.ne') (Or.inl hKt.ne)).mpr (hbound _ haC (c ^ p) h1)
   intro n hn
   obtain ⟨c, hc0, hct, hc⟩ := hR n hn
   obtain ⟨d, hd0, hdt, hd⟩ := hR n⁻¹ (N.inv_mem hn)
@@ -374,8 +369,7 @@ theorem invInv_of_right (N : Subgroup G) (hN : IsClosed (N : Set G)) {μ : Measu
   have hinv : HaarOn N (μ.map (fun x => x⁻¹)) := by
     refine ⟨?_, ?_, ?_, ?_⟩
     · haveI := hμ.1
-      have h1 := (Homeomorph.inv G).toMeasurableEquiv.sigmaFinite_map (μ := μ)
-      simpa using h1
+      simpa using (Homeomorph.inv G).toMeasurableEquiv.sigmaFinite_map (μ := μ)
     · intro h; exact hμ.2.1 ((Measure.map_eq_zero_iff measurable_inv.aemeasurable).mp h)
     · rw [Measure.map_apply measurable_inv hN.isOpen_compl.measurableSet]
       exact measure_mono_null (show (fun x : G => x⁻¹) ⁻¹' (N : Set G)ᶜ ⊆ (N : Set G)ᶜ from
@@ -433,8 +427,7 @@ def Contract : Prop :=
 
 theorem haarOn_of (I : Formalism.MainNotions.S.AutInst) {r : ℕ} (e : Fin r → Fin I.n → I.E) (z : Fin I.n → I.E)
     (μ : Measure I.Ginf) (hμ : IsHaarOnSet I (Ninf I e z) μ) :
-    HaarOn (PI.ScMuExists.UnitaryGroupMassFormula.NSub I e z) μ := by
-  exact hμ
+    HaarOn (PI.ScMuExists.UnitaryGroupMassFormula.NSub I e z) μ := hμ
 
 theorem finite_compact_measure : FinCpt := by
   intro I r e f z _ μ hμ K hK

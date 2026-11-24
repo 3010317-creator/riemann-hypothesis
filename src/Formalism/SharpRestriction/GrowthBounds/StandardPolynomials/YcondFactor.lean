@@ -110,10 +110,8 @@ theorem mem_Pol_iffW {d : X.TT × Bool → ℕ} {P : RHH O X} :
   unfold Pol
   rw [mem_restrictSupport_iff]
   constructor
-  · intro h l m hm
-    exact h (Finset.mem_coe.2 hm) l
-  · intro h m hm l
-    exact h l m (Finset.mem_coe.1 hm)
+  · exact fun h l m hm => h (Finset.mem_coe.2 hm) l
+  · exact fun h m hm l => h l m (Finset.mem_coe.1 hm)
 
 theorem mono_sum {ι : Type} (s : Finset ι) (n : ι → ℕ) (a : ι → MonH X) :
     (monomial (∑ i ∈ s, n i • a i) (1 : KK O) : RHH O X) = ∏ i ∈ s, (monomial (a i) (1 : KK O) : RHH O X) ^ n i := by

@@ -189,8 +189,7 @@ theorem hW_uh {s : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (hs : s ∈ UH (Hpk k r)) (hX : colX k r s) : hW k r s ∈ UH (Hpk k r) := by
   have hH : ∀ i j, Hpk k r i j = sgn k r i * (if tau k r i = j then 1 else 0) := fun i j => by
     have e := hpk_mul_apply (1 : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) i j
-    rw [Matrix.mul_one, Matrix.one_apply] at e
-    exact e
+    rwa [Matrix.mul_one, Matrix.one_apply] at e
   show (hW k r s)ᴴ * Hpk k r * hW k r s = Hpk k r
   ext i j
   have := i.isLt
@@ -239,8 +238,7 @@ theorem hW_uh {s : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     · intro p _ hp
       rw [hW_col_out p i hi', ite_eq_right hp]
       simp
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem mulVec_bvec_apply (A : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ)
     (c p : Fin (2 * r + k + 1)) : (A *ᵥ bvec c) p = A p c := by
@@ -268,8 +266,7 @@ theorem n_col {s : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
       exact hc i j hjr (by omega)
     · intro l _ hl
       rw [hW_col_out l j (Or.inl hjr), ite_eq_right hl, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   · have hjm : r ≤ j.val ∧ j.val ≤ r + k := ⟨by omega, hj⟩
     have hir : r ≤ i.val := by omega
     have e := congrFun (congrFun hinv i) j

@@ -75,8 +75,7 @@ theorem v2rep_comp_mem [CharZero K] (E : GLOps n K V) (Z : Submodule K V) (hZ : 
   by_cases hs : ∃ ν ∈ s, ν ≠ μ
   · obtain ⟨ν, hν, hne⟩ := hs
     obtain ⟨a, ha⟩ : ∃ a, μ a ≠ ν a := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hne (funext h).symm
     let g' : (Fin n → ℤ) → V := fun ρ => (((ρ a - ν a : ℤ) : K)) • g ρ
     have hZ' : (E a a - (ν a : K) • (1 : Module.End K V)) (∑ ρ ∈ s, g ρ) ∈ Z := by
@@ -105,15 +104,13 @@ theorem v2rep_comp_mem [CharZero K] (E : GLOps n K V) (Z : Submodule K V) (hZ : 
   · push Not at hs
     have : ∑ ν ∈ s, g ν = g μ :=
       Finset.sum_eq_single_of_mem μ hμ (fun ν hν hne => absurd (hs ν hν) hne)
-    rw [this] at hsum
-    exact hsum
+    rwa [this] at hsum
 
 theorem v2rep_graded [CharZero K] (E : GLOps n K V) (Z : Submodule K V) (hZ : ∀ a, ∀ x ∈ Z, E a a x ∈ Z)
     (x : V) (hx : x ∈ Z) (hw : x ∈ ⨆ ν, weightSp E ν) : x ∈ ⨆ ν, weightSp E ν ⊓ Z := by
   obtain ⟨f, hf, rfl⟩ := (Submodule.mem_iSup_iff_exists_finsupp _ _).mp hw
   have hsum : ∑ ν ∈ f.support, f ν ∈ Z := by simpa [Finsupp.sum] using hx
   have key := v2rep_comp_mem E Z hZ f.support f (fun ν _ => hf ν) hsum
-  show ∑ ν ∈ f.support, f ν ∈ _
   exact Submodule.sum_mem _ fun ν hν => Submodule.mem_iSup_of_mem ν ⟨hf ν, key ν hν⟩
 
 def weightHeight' (ν : Fin n → ℤ) : ℤ := -∑ a : Fin n, (a.val : ℤ) * ν a
@@ -160,8 +157,7 @@ theorem v2rep_exists_hwv [CharZero K] (E : GLOps n K V) (hR : SatisfiesGLRelatio
   obtain ⟨x, hxZ, hx0⟩ := (Submodule.ne_bot_iff Z).mp hne
   have hgr := v2rep_graded E Z (fun a x hx => hZ a a x hx) x hxZ (hw hxZ)
   obtain ⟨ν0, hν0⟩ : ∃ ν, weightSp E ν ⊓ Z ≠ ⊥ := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     simp [hc] at hgr
     exact hx0 hgr
   obtain ⟨v0, hv0m, hv00⟩ := (Submodule.ne_bot_iff _).mp hν0

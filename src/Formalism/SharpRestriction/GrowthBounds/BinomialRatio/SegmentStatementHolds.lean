@@ -262,8 +262,7 @@ theorem sum_segS (TT : Finset (Fin n')) (_h2 : 2 ≤ numSeg TT) :
         add_le_add (Finset.sum_le_sum fun j _ => segS_le TT j) (numSeg_eq TT).le
     _ = (Finset.univ.biUnion (oddSet TT)).card + (TT.filter (fun s => Even s.val)).card := by
         rw [Finset.card_biUnion]
-        intro j _ j' _ h
-        exact oddSet_disj TT j j' h
+        exact fun j _ j' _ h => oddSet_disj TT j j' h
     _ = (Finset.univ.biUnion (oddSet TT) ∪ TT.filter (fun s => Even s.val)).card :=
         (Finset.card_union_of_disjoint hdisj).symm
     _ ≤ TT.card := by

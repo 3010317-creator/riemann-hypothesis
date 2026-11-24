@@ -120,14 +120,12 @@ theorem span_inf_iSup_externalProduct (D : Formalism.BasicNotions.D7) (H : Exter
       {x : PIdx r K LL B | ∀ i, x.1.1.1 i ∈ pi' i ∧ x.1.2.1 i ∈ pi'' i} := by
     ext x
     constructor
-    · intro h i
-      exact ⟨h (.inl i), h (.inr i)⟩
+    · exact fun h i => ⟨h (.inl i), h (.inr i)⟩
     · intro h s
       match s with
       | .inl i => exact (h i).1
       | .inr i => exact (h i).2
-  rw [(H.p16 F N r K LL B).2, ← hsup, ← hset]
-  exact key
+  rwa [(H.p16 F N r K LL B).2, ← hsup, ← hset]
 
 theorem map_externalProduct_vector {O Kf : Type} [CommRing O] [CommRing Kf] (φ : O →+* Kf) {N : ℕ} (r K : ℕ) (LL : Letters (Fin N))
     (B : Fin N → ℕ) (x : PIdx r K LL B) : MvPolynomial.map φ (pvec O r K LL B x) = pvec Kf r K LL B x := by
@@ -205,8 +203,7 @@ theorem linearIndependent_words_all_degrees (R : Type) [CommRing R] (N n : ℕ) 
     intro x hx
     rw [Pol, MvPolynomial.mem_restrictSupport_iff] at hx
     rw [MvPolynomial.mem_restrictSupport_iff]
-    intro m hm
-    exact ⟨i, hi, hx hm⟩
+    exact fun m hm => ⟨i, hi, hx hm⟩
   refine Disjoint.mono (h1 b) h2 (disjoint_restrictSupport_of_disjoint ?_)
   rw [Set.disjoint_left]
   rintro m hm ⟨i, hi, hmi⟩
@@ -214,8 +211,7 @@ theorem linearIndependent_words_all_degrees (R : Type) [CommRing R] (N n : ℕ) 
   have : b = i := by
     funext j
     rw [← hm j, hmi j]
-  rw [this]
-  exact hi
+  rwa [this]
 
 section Theta
 
@@ -321,8 +317,7 @@ theorem linearIndependent_productBasis (R : Type) [CommRing R] (N r K : ℕ) (LL
     rw [MvPolynomial.smul_eq_C_mul, map_mul, towerToPolynomialHom_C_eq_rename_tan, ← map_Psi' (MvPolynomial.C : R →+* _), towerToPolynomialHom_map_C_eq_rename_pl]
     unfold pvec PsiPl PsiTan
     rw [mul_comm]
-  rw [← h2]
-  exact h1
+  rwa [← h2]
 
 end Formalism.MainNotions.G.ColumnFamilies
 end -- clump:auto
@@ -812,8 +807,7 @@ theorem linearIndependent_standardWords_by_weight (hE4 : TypeSumsByEvaluation) {
     rw [ht]
     refine Submodule.smul_mem _ _ ?_
     have := standardWord_mem_isotypicSumInitialLetters D F LL i pi hpi P (J x) (by rw [hP]; exact hst x) (by rw [hP]; exact hx)
-    rw [hP] at this
-    exact this
+    rwa [hP] at this
   apply le_antisymm
   · rintro G ⟨hG, hGT⟩
     have hsplit : Set.range v = v '' {x | lab x i ∈ pi} ∪ v '' {x | lab x i ∉ pi} := by
@@ -844,8 +838,7 @@ theorem linearIndependent_standardWords_by_weight (hE4 : TypeSumsByEvaluation) {
             ⟨b, P, J x, by rw [hP]; exact hst x, by rw [hP]; exact hx, by rw [hP]⟩)
         exact hle h2
       · exact (hE4 F N m k LL _ e dcd hd1 hd2 pi G2).1 hG2T y
-    rw [hz, add_zero]
-    exact h1
+    rwa [hz, add_zero]
   · exact le_inf (Submodule.span_mono (Set.image_subset_range _ _)) hin
 
 end main
@@ -1111,8 +1104,7 @@ theorem span_productBasis_eq_multihomogeneous (R : Type) [CommRing R] (N r K : �
       (b'' := fun i => multideg m2 i) ?_ (monomial_mem_multihomogeneous_multideg R m1) (monomial_mem_multihomogeneous_multideg R m2))
     intro i
     have := hB i
-    rw [hs, multideg_add_apply, multideg_mapDomain_headVar, multideg_mapDomain_tailVar] at this
-    exact this
+    rwa [hs, multideg_add_apply, multideg_mapDomain_headVar, multideg_mapDomain_tailVar] at this
 
 end Formalism.MainNotions.G.ColumnFamilies
 end -- clump:auto

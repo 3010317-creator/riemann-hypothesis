@@ -126,8 +126,7 @@ private lemma stdH_apply_lemma (L : PeriodPair) (m : Type) [Fintype m] [Decidabl
   · intro j _ hji
     rw [ite_eq_right (Ne.symm hji)]
     ring
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 lemma unitary_det {a : ℕ} {b : ℤ} {d : ℕ} {ha : 0 < a} {hd : 0 < d} {lam : ℂ} {hlam : lam ≠ 0}
     {m : Type} [Fintype m] [DecidableEq m] {δ : (m → ℂ) ≃ₗ[ℂ] (m → ℂ)}
@@ -165,8 +164,7 @@ lemma unitary_det {a : ℕ} {b : ℤ} {d : ℕ} {ha : 0 < a} {hd : 0 < d} {lam :
     split_ifs <;> simp
   have hd' := congrArg Matrix.det hU
   rw [Matrix.det_mul, Matrix.det_transpose, Matrix.det_one] at hd'
-  rw [← LinearMap.det_toMatrix', RingHom.map_det, RingHom.mapMatrix_apply]
-  exact hd'
+  rwa [← LinearMap.det_toMatrix', RingHom.map_det, RingHom.mapMatrix_apply]
 
 theorem detInK : DetInK := by
   intro a b c d ha hd lam hlam m _ _ Λa hH δ hA

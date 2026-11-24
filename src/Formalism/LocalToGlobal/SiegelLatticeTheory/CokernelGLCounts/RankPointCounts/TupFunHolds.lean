@@ -100,13 +100,11 @@ theorem cong_at (Λ : Submodule (𝓞 D.host.E) (VS D).V) {T T' : D.host.E} (G :
   have hw : ∀ c, frame G₁ c - frame G c ∈ LP P (Ideal.span {((gS D : ℕ) : 𝓞 D.host.E)} • Λ) := by
     intro c
     have := hA1.2.2 c P hP
-    rw [frameAct_one] at this
-    exact this
+    rwa [frameAct_one] at this
   have hw2 : ∀ c, frame G₂ c - frame G c ∈ LP P (Ideal.span {((gS D : ℕ) : 𝓞 D.host.E)} • Λ) := by
     intro c
     have := hA2.2.2 c P hP
-    rw [frameAct_one] at this
-    exact this
+    rwa [frameAct_one] at this
   have hNU := (stepExp D Λ G n hn).1
   have hMU := (stepExp D Λ G₁ m hm).1
 
@@ -146,8 +144,7 @@ theorem cong_at (Λ : Submodule (𝓞 D.host.E) (VS D).V) {T T' : D.host.E} (G :
   have hYd : G.fl.coefX Y d = (fmat D G n * fmat D G₁ m - 1) d.castSucc b := by
     rw [hYsum, coefX_finset_sum _ _ _ (fun d' => Submodule.smul_mem _ _ (e_mem_X _ d'))]
     simp only [coefX_smul_e, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
-  rw [hYd] at hcoef
-  exact hcoef
+  rwa [hYd] at hcoef
 
 end Cong
 
@@ -599,9 +596,7 @@ theorem one_dir {u u' : D.what₂.Word} {F0 : FlagG (VS D) D.R.rS (Formalism.L2.
     have hφ := fun a => Formalism.L2.SG.Pf.BBTie.bt_typed_frFac Zd (Formalism.L2.SG.Pf.locEqC_holds D Zd)
       (Formalism.L2.SG.Pf.locDiffC_holds D Zd) p F0 Λ hRL.2.1.1.fg hRL.2.2 hRL.2.1.2.2.2 hgP a
     have hκ := (Formalism.L2.SG.Pf.BBTie.bt_kappa Zd p sg hsg).1
-    have hq0 : (sg.q : (D.s.atP p).Fp) ≠ 0 := by
-      intro h
-      exact sg.q_irr.ne_zero (Subtype.ext h)
+    have hq0 : (sg.q : (D.s.atP p).Fp) ≠ 0 := fun h => sg.q_irr.ne_zero (Subtype.ext h)
     have hOO : (Zd.M p).L.O = (D.s.atP p).O := (Zd.agree p).2.2.2.1
     rw [locU_mul, locU_sub_one]
     intro i j
@@ -685,8 +680,7 @@ theorem tupFun_holds {D : D7} (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.
   have key := kkOrb_eq_of hl' hρ' hl hρ h2 h1
   show kkOrb M p (Formalism.L2.SG.CntLocal.ZZP (M := M) δ u u' p (zT γ) * sgnP p) =
     kkOrb M p (Formalism.L2.SG.CntLocal.ZZP (M := M) δ u u' p Z * sgnP p)
-  rw [hzT, ← hZ2]
-  exact key
+  rwa [hzT, ← hZ2]
 
 end Formalism.L2.SG.Pf.FibQ
 end -- clump:auto

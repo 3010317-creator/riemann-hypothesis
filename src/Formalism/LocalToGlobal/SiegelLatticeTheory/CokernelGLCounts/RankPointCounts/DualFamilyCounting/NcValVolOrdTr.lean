@@ -43,8 +43,7 @@ theorem trace_eq_add (σ : E →ₐ[F] E) (hinv : ∀ y, σ (σ y) = y) (hnt : �
   have huniv : (Finset.univ : Finset (E ≃ₐ[F] E)) = {1, σe} := by
     symm
     apply Finset.eq_of_subset_of_card_le (Finset.subset_univ _)
-    rw [Finset.card_univ, Finset.card_pair hne]
-    exact hle
+    rwa [Finset.card_univ, Finset.card_pair hne]
   haveI : IsGalois F E := IsGalois.of_card_aut_eq_finrank F E (by
     rw [Nat.card_eq_fintype_card, ← Finset.card_univ, huniv, Finset.card_pair hne, hfin])
   rw [trace_eq_sum_automorphisms, huniv, Finset.sum_pair hne]

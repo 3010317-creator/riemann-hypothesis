@@ -43,14 +43,12 @@ theorem loUni_iff_ct {A : Matrix (Fin N) (Fin N) K} [StarRing K] : IsLoUni A ↔
 theorem upUni_det {A : Matrix (Fin N) (Fin N) K} (h : IsUpUni A) : A.det = 1 := by
   rw [Matrix.det_of_upperTriangular]
   · exact Finset.prod_eq_one fun i _ => (h i i).2 rfl
-  · intro i j hij
-    exact (h i j).1 hij
+  · exact fun i j hij => (h i j).1 hij
 
 theorem loUni_det {A : Matrix (Fin N) (Fin N) K} (h : IsLoUni A) : A.det = 1 := by
   rw [Matrix.det_of_lowerTriangular]
   · exact Finset.prod_eq_one fun i _ => (h i i).2 rfl
-  · intro i j hij
-    exact (h i j).1 hij
+  · exact fun i j hij => (h i j).1 hij
 
 theorem upUni_inv {A : Matrix (Fin N) (Fin N) K} (h : IsUpUni A) : IsUpUni A⁻¹ := by
   apply Formalism.L2.SG.Pf.StabilizerIndexVolumes.up_inv <;> assumption

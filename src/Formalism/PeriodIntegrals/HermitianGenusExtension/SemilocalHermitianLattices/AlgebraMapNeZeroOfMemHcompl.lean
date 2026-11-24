@@ -83,8 +83,7 @@ theorem conjIdeal_eq_comap (P : Ideal (𝓞 K)) :
       apply RingOfIntegers.ext
       rw [conjO_coe]
       exact (congrArg star h).trans (star_star _)
-    rw [hrs]
-    exact hs
+    rwa [hrs]
   · intro r hr
     rw [Formalism.HermitianLatticesTheory.conjIdeal]
     apply Ideal.subset_span
@@ -101,8 +100,7 @@ theorem exists_sub_conjO_notMem (hK : Formalism.HermitianLatticesTheory.IsCMUnra
     apply RingOfIntegers.ext
     rw [conjO_coe]
     exact ht.symm
-  rw [htθ]
-  exact hθ
+  rwa [htθ]
 
 end NoF
 
@@ -154,8 +152,7 @@ theorem hcompl_eq_closure (p : Ideal (𝓞 K)) :
   simp only [Set.mem_setOf_eq]
   refine and_congr_right fun _ => ⟨fun h => h _ (algebraMap_conjO s), fun h t ht => ?_⟩
   have e : t = conjO K s := IsFractionRing.injective (𝓞 K) K (ht.trans (algebraMap_conjO s).symm)
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem mem_hcompl_iff {p : Ideal (𝓞 K)} (hp : p.IsPrime) (s : 𝓞 K) :
     s ∈ Formalism.HermitianLatticesTheory.hcompl (K := K) p ↔ s ∉ p ∧ s ∉ Formalism.HermitianLatticesTheory.conjIdeal (K := K) p := by

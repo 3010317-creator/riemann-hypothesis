@@ -58,8 +58,7 @@ section Alg
 variable {A : Type} [CommRing A] (σ : A →+* A) {n k : ℕ} (J : Matrix (Fin n) (Fin n) A)
 
 theorem hrow_dot (x y : Fin n → A) : hrow σ J x ⬝ᵥ y = Formalism.UG.hform σ J x y := by
-  simp only [hrow, Formalism.UG.hform, dotProduct, Finset.sum_mul]
-  exact Finset.sum_comm
+  simpa only [hrow, Formalism.UG.hform, dotProduct, Finset.sum_mul] using Finset.sum_comm
 
 theorem sMat_mulVec (b bs : Fin k → Fin n → A) (C D : Matrix (Fin k) (Fin k) A) (y : Fin n → A) :
     sMat σ J b bs C D *ᵥ y = y + ∑ i, ∑ j, (((C - 1) i j * Formalism.UG.hform σ J (bs j) y) • b i +
@@ -172,9 +171,7 @@ theorem idxSurj_of (hAlg : IdxDAlg) (hAd : IdxDAd) (hI : IdxDInt) (hSig : IdxDSi
     · intro hx
       have := sMat_Lf hI b bs hL C' _ hintI _ hx
       rwa [← hsI, Matrix.mulVec_mulVec, h2, Matrix.one_mulVec] at this
-  have hfixs : ∀ w ∈ fixV X u, s *ᵥ w = w := by
-    intro w hw
-    exact hfix C _ w fun j => hperp j w hw
+  have hfixs : ∀ w ∈ fixV X u, s *ᵥ w = w := fun w hw => hfix C _ w fun j => hperp j w hw
   let sF : Hfin X u := ⟨X.xu u * s' * (X.xu u)⁻¹, by
     intro y hy
     have e1 : X.B.I.fmat (X.xu u * s' * (X.xu u)⁻¹) =

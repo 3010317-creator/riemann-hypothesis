@@ -70,8 +70,7 @@ variable {M : ℕ}
 theorem crd_add (b : Module.Basis (Fin M) E V) (L0 : Submodule (𝓞 E) V) {x y : Fin M → E}
     (hx : x ∈ crdOf b L0) (hy : y ∈ crdOf b L0) : x + y ∈ crdOf b L0 := by
   show ∑ i, (x + y) i • b i ∈ L0
-  simp only [Pi.add_apply, add_smul, Finset.sum_add_distrib]
-  exact L0.add_mem hx hy
+  simpa only [Pi.add_apply, add_smul, Finset.sum_add_distrib] using L0.add_mem hx hy
 
 theorem crd_zero (b : Module.Basis (Fin M) E V) (L0 : Submodule (𝓞 E) V) : (0 : Fin M → E) ∈ crdOf b L0 := by
   show ∑ i, (0 : Fin M → E) i • b i ∈ L0
@@ -80,8 +79,7 @@ theorem crd_zero (b : Module.Basis (Fin M) E V) (L0 : Submodule (𝓞 E) V) : (0
 theorem crd_neg (b : Module.Basis (Fin M) E V) (L0 : Submodule (𝓞 E) V) {x : Fin M → E}
     (hx : x ∈ crdOf b L0) : -x ∈ crdOf b L0 := by
   show ∑ i, (-x) i • b i ∈ L0
-  simp only [Pi.neg_apply, neg_smul, Finset.sum_neg_distrib]
-  exact L0.neg_mem hx
+  simpa only [Pi.neg_apply, neg_smul, Finset.sum_neg_distrib] using L0.neg_mem hx
 
 theorem crd_sum (b : Module.Basis (Fin M) E V) (L0 : Submodule (𝓞 E) V) {ι : Type*} (s : Finset ι)
     (f : ι → Fin M → E) (hf : ∀ i ∈ s, f i ∈ crdOf b L0) : ∑ i ∈ s, f i ∈ crdOf b L0 := by
@@ -163,8 +161,7 @@ theorem lsOne : LSOne := by
       funext j
       simp only [Finset.sum_apply, Pi.single_apply, Pi.smul_apply, Nat.cast_mul]
       simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true, Nat.cast_smul_eq_nsmul]
-      rw [mul_comm, mul_smul]
-      rw [Nat.cast_smul_eq_nsmul F, Nat.cast_smul_eq_nsmul F]
+      rw [mul_comm, mul_smul, Nat.cast_smul_eq_nsmul F, Nat.cast_smul_eq_nsmul F]
     rw [e]
     exact crd_sum b L0 _ _ fun i _ => hk' i _ (hi i)
 
@@ -213,7 +210,6 @@ theorem lsOne : LSOne := by
     rw [h2] at h1
     have := crd_add b L0 h1 hl
     simpa using this
-  · intro hx
-    exact vinc_mem L hx
+  · exact fun hx => vinc_mem L hx
 
 end PI.UnitaryGroupMassFormula.UJClassMass

@@ -98,8 +98,7 @@ theorem stabClassFinite_of (hMono : ClassSetMono) (hIdx : ClassSetFinIdx) (hMap 
   obtain ⟨g', hg', hg'K⟩ := hTop I g x hg
   have hCK : congS I S g' ≤ K := by
     rw [Subgroup.closure_le]
-    intro h hh
-    exact hK h (hg'K _ hh)
+    exact fun h hh => hK h (hg'K _ hh)
   apply hMono _ _ _ _ hCK
   obtain ⟨k, J', Φ, hH, hU, hD, hrat, hidx⟩ := hR I S hS
   apply hMap _ _ Φ
@@ -109,8 +108,7 @@ theorem stabClassFinite_of (hMono : ClassSetMono) (hIdx : ClassSetFinIdx) (hMap 
       | exact Formalism.UG.P.standard_lattice_full_holds
   obtain ⟨hfin, hspan⟩ := hStd I.E (Fin k)
   have hL := _root_.Formalism.UG.P.lattice_class_set_finite_local_holds I.F I.E (Fin k) I.cm.sig J' (hSig I) hH hU hD _ hfin hspan
-  have h2 := hIdx _ _ _ _ inf_le_left (hidx g' hg') hL
-  exact hMono _ _ _ _ inf_le_right h2
+  exact hMono _ _ _ _ inf_le_right (hIdx _ _ _ _ inf_le_left (hidx g' hg') hL)
 
 structure Frame (I : Formalism.MainNotions.S.AutInst) (S : Set (Fin I.n → I.E)) where
   m : ℕ

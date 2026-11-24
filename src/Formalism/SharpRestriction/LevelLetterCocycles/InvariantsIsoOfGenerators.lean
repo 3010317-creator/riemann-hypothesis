@@ -123,12 +123,9 @@ private theorem nonempty_invariantLattice_equiv_fixDD (E : S.Comparison₂)
       refine ⟨t, ?_, ?_⟩
       · rw [mem_H0Lat]
         apply hg T t
-        · intro g hgK
-          exact hact g (by rw [hgK, hγ])
-        · intro g hgD
-          exact hact g (hδ _ hgD)
-        · intro g h1
-          exact hact g (by rw [h1, S.W.γD_one])
+        · exact fun g hgK => hact g (by rw [hgK, hγ])
+        · exact fun g hgD => hact g (hδ _ hgD)
+        · exact fun g h1 => hact g (by rw [h1, S.W.γD_one])
       · rw [oneT_apply, ht]
   exact ⟨(Submodule.equivMapOfInjective (oneT S T) (hi T) (invariantLattice T)).trans
     ((LinearEquiv.ofEq _ _ key).trans

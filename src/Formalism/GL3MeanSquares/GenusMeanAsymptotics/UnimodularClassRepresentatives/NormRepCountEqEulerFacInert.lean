@@ -97,8 +97,7 @@ theorem localDensity : LocalDensity := by
   intro K _ _ _ hK P hP M k hM hk n hn hnP
   have hPbot : P ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField K)
   have hN0 : Ideal.absNorm P ≠ 0 := by
-    rw [Ne, Ideal.absNorm_eq_zero_iff]
-    exact hPbot
+    rwa [Ne, Ideal.absNorm_eq_zero_iff]
   constructor
   · intro hc
     obtain ⟨q, hq⟩ := exists_sq_absNorm_of_inert hK hP hc
@@ -154,8 +153,7 @@ theorem normRepCount_eq_eulerFac_split (hK : Formalism.HermitianLatticesTheory.I
     fun h => hc ((conjIdeal_conjIdeal hK P).symm.trans h).symm
   have hPbot : P ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField K)
   have hN0 : Ideal.absNorm P ≠ 0 := by
-    rw [Ne, Ideal.absNorm_eq_zero_iff]
-    exact hPbot
+    rwa [Ne, Ideal.absNorm_eq_zero_iff]
   have hN1 : Ideal.absNorm P ≠ 1 := by
     rw [Ne, Ideal.absNorm_eq_one_iff]
     exact hP.ne_top

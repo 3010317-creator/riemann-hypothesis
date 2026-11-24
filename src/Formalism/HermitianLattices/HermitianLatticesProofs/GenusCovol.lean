@@ -118,8 +118,7 @@ theorem genusCovol_claimA (S : Submonoid R) {X Y : Submodule R W}
       rw [smul_sub, smul_smul, smul_smul, smul_smul, ← pow_succ, ← pow_succ, ← pow_add]
       congr 2
       ring
-    rw [e]
-    exact hmk
+    rwa [e]
   have : y = s ^ k • y + (y - s ^ k • y) := by abel
   rw [this]
   exact Submodule.add_mem_sup hb hr
@@ -146,8 +145,7 @@ theorem genusCovol_claimB (P Q : Ideal R) [P.IsPrime] [Q.IsPrime] {a : R} (haP :
         rw [sub_smul, one_smul, smul_smul, smul_smul, smul_smul, pow_add]
         congr 2
         ring
-      rw [e]
-      exact hmk
+      rwa [e]
 
 theorem genusCovol_ri_peel (S : Submonoid R) {X Y : Submodule R W} (hXY : X ≤ Y)
     (hfin : X.toAddSubgroup.relIndex Y.toAddSubgroup ≠ 0) :
@@ -306,8 +304,7 @@ theorem genus_covolume_local_dual_le (h : V →ₗ⋆[K] V →ₗ[K] K) (g : V �
   have hgen : ∀ m ∈ F, ∃ t ∈ hcompl (K := K) P, t • g.symm m ∈ L := by
     intro m hm
     have : m ∈ gmap g (loc (K := K) P L) := hML (hF ▸ Submodule.subset_span hm)
-    rw [isomAct_mem_gmap] at this
-    exact this
+    rwa [isomAct_mem_gmap] at this
   choose! t ht htL using hgen
   set T := ∏ m ∈ F, t m with hT
   have hTmem : T ∈ hcompl (K := K) P := Submonoid.prod_mem _ (fun m hm => ht m hm)

@@ -56,8 +56,7 @@ theorem gloRho_eq (s : Formalism.L2.Herm.intAf F E) : gloRho v spl halg s = gloK
   have h2 : idS F w.asIdeal ≤ RingHom.ker (gloRho v spl halg) := by
     unfold idS
     rw [Ideal.map_le_iff_le_comap]
-    intro b hb
-    exact hw b hb
+    exact fun b hb => hw b hb
   have h3 : gloRho v spl halg (s - oToS F E a) = 0 := h2 h1
   rw [map_sub, sub_eq_zero] at h3
   rw [h3, ← ha]
@@ -91,8 +90,7 @@ theorem glo_res_surj (z : kv F v) : ∃ r : 𝓞 F,
   refine ⟨r, ?_⟩
   have ev : (x : v.adicCompletion F) = algebraMap (𝓞 F) (v.adicCompletion F) r + algebraMap (𝓞 F) (v.adicCompletion F) D * y v := by
     have := congrArg (fun z : Formalism.L2.Herm.Af F => z v) e
-    rw [afsplitI_self] at this
-    exact this
+    rwa [afsplitI_self] at this
   have hDval : Valued.v (algebraMap (𝓞 F) (v.adicCompletion F) D) < 1 := by
     rw [csApprox_val_int]
     exact (HeightOneSpectrum.intValuation_lt_one_iff_mem v D).2 hDv

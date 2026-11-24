@@ -78,8 +78,7 @@ theorem isLatIn_loc {h : V →ₗ⋆[K] V →ₗ[K] K} {L : Submodule (𝓞 K) V
     (hL : Submodule.IsFullLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {P : Ideal (𝓞 K)}
     (hP : P.IsPrime) : IsLatIn (locRing P) h ⊤ (Formalism.HermitianLatticesTheory.loc (K := K) P L).toAddSubgroup := by
   refine ⟨fun _ _ => Submodule.mem_top, ?_, ?_, ?_⟩
-  · intro a ha m hm
-    exact smul_mem_loc hP ha hm
+  · exact fun a ha m hm => smul_mem_loc hP ha hm
   · intro x hx y hy
     obtain ⟨s, hs, hsx⟩ := Formalism.HermitianLatticesTheory.locBasic_mem_locS.mp
       (show x ∈ Formalism.HermitianLatticesTheory.locS (Formalism.HermitianLatticesTheory.hcompl (K := K) P) L from hx)
@@ -154,8 +153,7 @@ theorem exists_isASD_loc {h : V →ₗ⋆[K] V →ₗ[K] K} (hK : Formalism.Herm
   · intro hdv
     apply hzn
     apply h2
-    rw [hz]
-    exact hdv
+    rwa [hz]
   · intro t ht horth
     choose s hs' hst using fun i => Formalism.HermitianLatticesTheory.locBasic_mem_locS.mp
       (show t i ∈ Formalism.HermitianLatticesTheory.locS (Formalism.HermitianLatticesTheory.hcompl (K := K) P) L from ht i)

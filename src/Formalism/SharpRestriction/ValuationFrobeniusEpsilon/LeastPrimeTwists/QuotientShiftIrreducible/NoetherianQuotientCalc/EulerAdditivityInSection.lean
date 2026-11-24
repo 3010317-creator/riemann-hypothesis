@@ -141,8 +141,7 @@ def sesOfKer {G H : GMod B R k} (N : Submodule R G.M) (φ : G.M →ₗ[R] H.M)
 theorem ann_le_sub (F : GMod B R k) (N : Submodule R F.M) : F.Ann ≤ (F.sub N).Ann := by
   intro a ha
   rw [GMod.Ann, Module.mem_annihilator] at *
-  intro x
-  exact Subtype.ext (ha x.1)
+  exact fun x => Subtype.ext (ha x.1)
 
 theorem ann_le_quo (F : GMod B R k) (N : Submodule R F.M) : F.Ann ≤ (F.quo N).Ann := by
   intro a ha

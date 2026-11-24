@@ -457,8 +457,7 @@ theorem hermBox_eq
     obtain ⟨i, j⟩ := p
     obtain ⟨hO, hup, hdg⟩ := h i j
     rcases lt_trichotomy i j with hij | hij | hij
-    · simp only [ctr, pSet, ite_eq_left hij, Set.mem_setOf_eq]
-      exact hup hij
+    · simpa only [ctr, pSet, ite_eq_left hij, Set.mem_setOf_eq] using hup hij
     · subst hij
       simp only [ctr, pSet, lt_irrefl, ite_false, ite_true, Set.mem_setOf_eq]
       refine ⟨Submodule.sub_mem _ hO (VolUTr.TrW.mul_mem v (hc.2 i i) hθO), ?_⟩
@@ -466,8 +465,7 @@ theorem hermBox_eq
       exact hdg rfl
     · have h1 : ¬ i < j := not_lt.2 hij.le
       have h2 : i ≠ j := hij.ne'
-      simp only [ctr, pSet, ite_eq_right h1, ite_eq_right h2, sub_zero]
-      exact hO
+      simpa only [ctr, pSet, ite_eq_right h1, ite_eq_right h2, sub_zero] using hO
   · intro h i j
     have hp := h (i, j)
     rcases lt_trichotomy i j with hij | hij | hij

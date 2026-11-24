@@ -61,8 +61,7 @@ theorem smul_inj {R E M : Type} [CommRing R] [CommRing E] [Algebra R E] [AddComm
     {a b : M} (h : p • a = p • b) : a = b := by
   obtain ⟨u, hu⟩ := hp
   have h' : (u : E) • a = (u : E) • b := by
-    rw [hu, algebraMap_smul, algebraMap_smul]
-    exact h
+    rwa [hu, algebraMap_smul, algebraMap_smul]
   have := congrArg (fun m => ((u⁻¹ : Eˣ) : E) • m) h'
   simpa [smul_smul] using this
 
@@ -124,8 +123,7 @@ theorem coreDss_iff_mem (W : LocWach PD LL O v n) (h9 : Formalism.MainNotions.De
     have heq := rec_unique (E := W.EE) W.π₀ hu
       (fun k => cO ((Formalism.MainNotions.LiftingTheory.xList W T (Formalism.MainNotions.LiftingTheory.Mmax n Mi) (Formalism.MainNotions.LiftingTheory.Mmax n hi) Y).getD k 0))
       (fun m => W.γD T W.gam m - m) _ s seq (hs0.trans h0.symm) hsrec hrec _ le_rfl
-    rw [← heq]
-    exact hsN
+    rwa [← heq]
   · intro hm hA T Mi hi hT hJ ug hug hv cO hcO Y y₀ hY hδ
     have hu := π₀_unit W h9 hA T hT
     obtain ⟨s, hs0, hs⟩ := rec_exists (E := W.EE) W.π₀ hu
@@ -162,8 +160,7 @@ theorem dssLet_iff_mem (W : LocWach PD LL O v n) (h9 : Formalism.MainNotions.Del
     have heq := rec_unique (E := W.EE) W.π₀ hu
       (fun k => cO ((Formalism.MainNotions.RamifiedCoefficientChains.xListL W T i (Mi i) (hi i) y' Y).getD k 0))
       (fun m => W.γD T W.gam m - m) _ s seq (hs0.trans h0.symm) hsrec hrec _ le_rfl
-    rw [← heq]
-    exact hsN
+    rwa [← heq]
   · intro hm hA T Mi hi hT hJ ug hug hv cO hcO i y' Y y₀ hyY hY hδ
     have hu := π₀_unit W h9 hA T hT
     obtain ⟨s, hs0, hs⟩ := rec_exists (E := W.EE) W.π₀ hu

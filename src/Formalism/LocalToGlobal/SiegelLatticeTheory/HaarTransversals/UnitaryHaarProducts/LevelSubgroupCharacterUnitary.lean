@@ -23,10 +23,8 @@ theorem fmat_one : I.fmat 1 = 1 := rfl
 theorem fmat_inv_mul (x : I.Gf) : I.fmat x⁻¹ * I.fmat x = 1 := by
   rw [← fmat_mul, inv_mul_cancel, fmat_one]
 
-theorem K_one : (1 : I.Gf) ∈ I.Kset := by
-  exact (Formalism.UG.stabGL I.Lf).one_mem
-theorem K_inv {x : I.Gf} (hx : x ∈ I.Kset) : x⁻¹ ∈ I.Kset := by
-  exact (Formalism.UG.stabGL I.Lf).inv_mem hx
+theorem K_one : (1 : I.Gf) ∈ I.Kset := (Formalism.UG.stabGL I.Lf).one_mem
+theorem K_inv {x : I.Gf} (hx : x ∈ I.Kset) : x⁻¹ ∈ I.Kset := (Formalism.UG.stabGL I.Lf).inv_mem hx
 theorem K_mv {x : I.Gf} (hx : x ∈ I.Kset) {y : VA I} (hy : y ∈ I.Lf) : I.fmat x *ᵥ y ∈ I.Lf := by
   exact ((show ∀ z, z ∈ I.Lf ↔ I.fmat x *ᵥ z ∈ I.Lf from hx) y).1 hy
 theorem K_sub_mv {x : I.Gf} (hx : x ∈ I.Kset) {y : VA I} (hy : y ∈ I.Lf) :
@@ -44,15 +42,13 @@ def Mo (g : ℕ) (S : Set (VA I)) : Submodule (IntAf I.F I.E) (VA I) :=
   Submodule.span (IntAf I.F I.E) S ⊔ mL I g
 
 theorem smul_mem_mL {g : ℕ} {y : VA I} (hy : y ∈ I.Lf) :
-    ((g : I.E ⊗[I.F] Af I.F) • y) ∈ mL I g := by
-  exact Submodule.subset_span ⟨y, hy, rfl⟩
+    ((g : I.E ⊗[I.F] Af I.F) • y) ∈ mL I g := Submodule.subset_span ⟨y, hy, rfl⟩
 
 theorem Mo_mono {g : ℕ} {S T : Set (VA I)} (h : S ⊆ T) : Mo I g S ≤ Mo I g T := by
   exact sup_le_sup_right (Submodule.span_mono h) _
 theorem sub_Mo {g : ℕ} {S : Set (VA I)} : S ⊆ Mo I g S := by
   exact fun s hs => Submodule.mem_sup_left (Submodule.subset_span hs)
-theorem mL_Mo {g : ℕ} {S : Set (VA I)} : mL I g ≤ Mo I g S := by
-  exact le_sup_right
+theorem mL_Mo {g : ℕ} {S : Set (VA I)} : mL I g ≤ Mo I g S := le_sup_right
 
 theorem mv_mem (M : Matrix (Fin I.n) (Fin I.n) (I.E ⊗[I.F] Af I.F)) (g : ℕ) (S : Set (VA I))
     (N : Submodule (IntAf I.F I.E) (VA I)) (hS : ∀ s ∈ S, M *ᵥ s ∈ N)
@@ -62,8 +58,7 @@ theorem mv_mem (M : Matrix (Fin I.n) (Fin I.n) (I.E ⊗[I.F] Af I.F)) (g : ℕ) 
   have h : Mo I g S ≤ N.comap (mvO I M) := by
     refine sup_le ?_ ?_
     · rw [Submodule.span_le]
-      intro s hs
-      exact hS s hs
+      exact fun s hs => hS s hs
     · unfold mL
       rw [Submodule.span_le]
       rintro _ ⟨y, hy, rfl⟩
@@ -118,8 +113,7 @@ theorem sigA_sigA (a : I.E ⊗[I.F] Af I.F) : sigA I (sigA I a) = a := by
   | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
 
 theorem sigA_inclE (a : I.E) : sigA I (Formalism.UG.inclE (F := I.F) (Af I.F) a) =
-    Formalism.UG.inclE (F := I.F) (Af I.F) (star a) := by
-  exact sigA_tmul I a 1
+    Formalism.UG.inclE (F := I.F) (Af I.F) (star a) := sigA_tmul I a 1
 
 theorem star_intOE {a : I.E} (ha : a ∈ Formalism.UG.intOE I.E) : star a ∈ Formalism.UG.intOE I.E := by
   obtain ⟨o, rfl⟩ := ha

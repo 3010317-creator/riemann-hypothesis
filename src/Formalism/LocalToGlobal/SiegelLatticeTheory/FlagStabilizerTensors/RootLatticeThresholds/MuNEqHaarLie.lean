@@ -182,8 +182,7 @@ theorem orbJ_std (hk : 1 ≤ k) (L : LocBessel k r) (ka : ℝ) (hka : 0 < ka) (h
     rw [← cjE_coe hκ hτ, MeasurableEquiv.map_apply, ← cAE_coe, MeasurableEquiv.map_apply]
     convert hconc using 2
     ext x
-    simp only [Set.mem_preimage, Set.mem_ofPred_eq, cAE_coe, cjE_coe]
-    exact not_congr (hmem x)
+    simpa only [Set.mem_preimage, Set.mem_ofPred_eq, cAE_coe, cjE_coe] using not_congr (hmem x)
   have hne2 : muStd ka μR ≠ 0 := by
     unfold muStd
     rw [← cjE_coe hκ hτ, ← cAE_coe]
@@ -219,15 +218,13 @@ theorem orbJ_std (hk : 1 ≤ k) (L : LocBessel k r) (ka : ℝ) (hka : 0 < ka) (h
   have hint' : Integrable (fun p => θ' p • besselIntg (standardBesselDatumRescaled L ka hka κ₀) (stdF L ka F) (gStd ka g) p)
       (pairMeas (standardBesselDatumRescaled L ka hka κ₀)) := by
     have h2 := hspec.2
-    rw [hI θ', hμ] at h2
-    exact h2
+    rwa [hI θ', hμ] at h2
   have hθ1 : ∀ p, Formalism.MainNotions.BigCellDensity.InPair (standardBesselDatumRescaled L ka hka κ₀) p →
       ∫ x, θ' (stabAct (gStd ka g) (Matrix.of x) p) ∂(muStd ka μR) = 1 := by
     intro p hp
     refine hspec.1.2.2 p ?_
     unfold Formalism.FourierDecayAlt.B.RealPlaceData.inSS
-    rw [hBz, hBz']
-    exact hp
+    rwa [hBz, hBz']
   have e1 : (∫ p, θ' p • Formalism.FourierDecayAlt.D.orbIntegrand B (gStd ka g) (stdF L ka F) p ∂B.μSS) =
       ∫ p, θ' p • besselIntg (standardBesselDatumRescaled L ka hka κ₀) (stdF L ka F) (gStd ka g) p ∂(pairMeas (standardBesselDatumRescaled L ka hka κ₀)) := by
     rw [hμ]

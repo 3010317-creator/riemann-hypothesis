@@ -104,8 +104,7 @@ theorem qa_weight_rowInd {k n : ℕ} (a : Fin k) (u : Fin k × Fin n →₀ ℕ)
   · intro b _ hb
     refine Finset.sum_eq_zero fun s _ => ?_
     simp [rowInd, hb]
-  · intro h
-    exact absurd (Finset.mem_univ a) h
+  · exact fun h => absurd (Finset.mem_univ a) h
 
 theorem qa_iwh_pow {σ R M : Type} [CommSemiring R] [AddCommMonoid M] {w : σ → M} {φ : MvPolynomial σ R} {n : M}
     (h : IsWeightedHomogeneous w φ n) (k : ℕ) : IsWeightedHomogeneous w (φ ^ k) (k • n) := by
@@ -127,8 +126,7 @@ theorem subRowP : SubRowP := by
       refine IsWeightedHomogeneous.sum _ _ _ fun i _ => ?_
       have h := (isWeightedHomogeneous_C (rowInd a) (X (i, j) : MvPolynomial (Fin r × Fin r) A)).mul
         (isWeightedHomogeneous_X (MvPolynomial (Fin r × Fin r) A) (rowInd a) (x.1, midI r i))
-      rw [zero_add] at h
-      exact h
+      rwa [zero_add] at h
   have hmain : IsWeightedHomogeneous (rowInd a) (subY A r v) d := by
 
     rw [← support_sum_monomial_coeff v, map_sum]
@@ -147,8 +145,7 @@ theorem subRowP : SubRowP := by
       rw [Finsupp.weight_apply] at h0
       exact h0.trans hd
     have h3 := (isWeightedHomogeneous_C (rowInd a) (C (AddMonoidAlgebra.coeff v u) : MvPolynomial (Fin r × Fin r) A)).mul h1
-    rw [zero_add, h2] at h3
-    exact h3
+    rwa [zero_add, h2] at h3
   intro u hu
   rw [← qa_weight_rowInd a u]
   exact hmain hu

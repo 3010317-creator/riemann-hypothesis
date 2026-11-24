@@ -279,8 +279,7 @@ theorem weight_space_anisotropic : WAniso := by
       · exact h'
       · exact absurd (neg_eq_zero.1 h') hTE
     apply hwX
-    rw [← hxy, hc, zero_smul, add_zero]
-    exact hx
+    rwa [← hxy, hc, zero_smul, add_zero]
   let u : Fin (D.R.rS + 1 + 1) → (hS D).V :=
     Fin.snoc (Fin.snoc F'.fl.e F'.fl.z : Fin (D.R.rS + 1) → (hS D).V) w
   have hu : LinearIndependent D.host.E u :=
@@ -319,8 +318,7 @@ theorem weight_space_anisotropic : WAniso := by
       | cast b => simpa [u, Fin.snoc_castSucc] using hze b
   have hsig : Formalism.UG.HasSignature (((hS D).gram).map τ) (D.R.k + D.R.rS) (D.R.rS + 1) := by
     have h := D.sp.Y_sig 0 τ
-    rw [D.sp.baseSpace_signature_eq τ] at h
-    exact h
+    rwa [D.sp.baseSpace_signature_eq τ] at h
   obtain ⟨hcard, Q, hQ⟩ := wa_sig_data _ _ _ hsig
   have hdim := wa_neg_dim (((hS D).gram).map τ) Q hQ hcard (fun k => wa_cv (hS D) τ (u k))
     (fun x hx => wa_indep u hu x hx) (by

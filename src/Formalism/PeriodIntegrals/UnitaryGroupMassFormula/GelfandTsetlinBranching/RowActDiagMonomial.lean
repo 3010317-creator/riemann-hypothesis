@@ -178,10 +178,8 @@ theorem sep_mem_B {ι T V : Type*} [DecidableEq ι] [AddCommGroup V] [Module ℂ
     by_cases hall : ∀ i ∈ F, i = i0
     · have hF : F = {i0} := by
         ext i
-        simp only [Finset.mem_singleton]
-        exact ⟨hall i, fun e => e ▸ hi0⟩
-      rw [hF, Finset.sum_singleton] at hs
-      exact hs
+        simpa only [Finset.mem_singleton] using ⟨hall i, fun e => e ▸ hi0⟩
+      rwa [hF, Finset.sum_singleton] at hs
     push Not at hall
     obtain ⟨i1, hi1, hne⟩ := hall
     obtain ⟨t, ht⟩ := hsep i1 i0 hne
@@ -284,11 +282,9 @@ theorem graded_B {n N : ℕ} (h : n + 1 = N) (lam : DomWeight N) (W : Submodule 
       exact rowAct_diag_homog _ _ _ (weightedHomogeneousComponent_isWeightedHomogeneous _ _)
     · rw [comp_sum_B]
       · exact hf
-      · intro e he
-        exact Finset.mem_image_of_mem _ he
+      · exact fun e he => Finset.mem_image_of_mem _ he
   · rw [comp_zero_B]
     · exact W.zero_mem
-    · intro e he hw
-      exact hm (hw ▸ Finset.mem_image_of_mem _ he)
+    · exact fun e he hw => hm (hw ▸ Finset.mem_image_of_mem _ he)
 
 end PI.WGB

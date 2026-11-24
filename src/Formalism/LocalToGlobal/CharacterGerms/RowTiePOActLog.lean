@@ -120,8 +120,7 @@ theorem linN_coeff {lg : Pt C 1 d} (hlin : LinN lg) (j b : Fin d) :
   by_cases h : b = j
   · subst h; simp
   · rw [ite_eq_right h, ite_eq_right]
-    intro e
-    exact h (congrArg Prod.snd ((Finsupp.single_left_inj one_ne_zero).mp e))
+    exact fun e => h (congrArg Prod.snd ((Finsupp.single_left_inj one_ne_zero).mp e))
 
 theorem log_endo (G : FGLaw C d) (lg : Pt C 1 d) (hlin : LinN lg)
     (hadd : ∀ i, ev (n := 2) ![addOf G.F (pt C d 0) (pt C d 1)] (lg i) =

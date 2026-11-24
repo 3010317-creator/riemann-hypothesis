@@ -164,8 +164,7 @@ theorem coeff_inCol_sg (c : Fin 2) (v : Fin 2 × Fin dd → C) (μ : Fin 2 × Fi
       rw [← Finsupp.mapDomain_comp]
       conv_rhs => rw [← Finsupp.mapDomain_id (v := μ)]
       apply Finsupp.mapDomain_congr rfl
-      intro x hx
-      exact Prod.ext (hr x (Finsupp.mem_support_iff.1 hx)).symm rfl
+      exact fun x hx => Prod.ext (hr x (Finsupp.mem_support_iff.1 hx)).symm rfl
     rw [← hμ, coeff_subst_rename_inj _ (col_inj c)]
     show -∑ i, v (c, i) * MvPowerSeries.coeff
       ((μ.mapDomain Prod.snd).mapDomain (fun x : Fin dd => ((0 : Fin 2), x)) + Finsupp.single ((1 : Fin 2), i) 1) Y.h = _
@@ -188,8 +187,7 @@ theorem coeff_inCol_sg (c : Fin 2) (v : Fin 2 × Fin dd → C) (μ : Fin 2 × Fi
       intro q hq
       simp only [Prod.mk.injEq] at hq
       exact hc' hq.2.1.symm
-    · intro h
-      exact absurd (Finset.mem_univ c) h
+    · exact fun h => absurd (Finset.mem_univ c) h
   · push Not at hr
     obtain ⟨x0, hx0, hx0c⟩ := hr
     rw [coeff_rename_zero (fun x : Fin dd => (c, x)) _ μ x0 hx0 (fun a ha => hx0c (by rw [← ha]))]
@@ -217,8 +215,7 @@ theorem FBChart.rawSelf_sg (v : Fin 2 × Fin dd → C) :
       Finsupp.single ((1 : Fin 2), x) 1) (∑ col, hCol col Y.h) = _
   congr 1
 
-  simp only [map_sum, Finset.mul_sum]
-  exact Finset.sum_comm
+  simpa only [map_sum, Finset.mul_sum] using Finset.sum_comm
 
 theorem addCvSelf_of (hG : GermIAllSt) : AddCvSelfSt := by
   intro C _ _ V O _ _ dd Y d _ I0 _ p γ γ' hγ hγ'

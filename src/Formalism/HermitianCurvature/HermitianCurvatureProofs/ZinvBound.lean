@@ -114,8 +114,7 @@ lemma ubl_prod {ι : Type*} [DecidableEq ι] {S : Set (Mat k r)} (hSG : S ⊆ GV
     (f : ι → Mat k r → ℂ) (h : ∀ i ∈ s, UBL (f i) S n 0 γ) : UBL (fun g => ∏ i ∈ s, f i g) S n 0 γ := by
   induction s using Finset.induction_on with
   | empty =>
-    simp only [Finset.prod_empty]
-    exact ubl_const 1 hSG n γ
+    simpa only [Finset.prod_empty] using ubl_const 1 hSG n γ
   | insert a s ha ih =>
     simp only [Finset.prod_insert ha]
     simpa using ubl_mul hSG (h a (Finset.mem_insert_self a s))

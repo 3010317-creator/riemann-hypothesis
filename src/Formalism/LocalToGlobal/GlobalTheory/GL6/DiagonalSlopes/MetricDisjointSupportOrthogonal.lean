@@ -42,8 +42,7 @@ theorem polynomial_rep_of_rational_form (Tf : Forms0 D u) (x : ((D.fm u).lat 0).
   by_cases h : (D.fm u).emb 0 x c = 0
   · rw [h]
     simp only [h, ite_true, map_zero, Pi.zero_apply]
-  · simp only [h, ite_false, hQ]
-    exact hPe c z
+  · simpa only [h, ite_false, hQ] using hPe c z
 
 theorem norm_form_zero {n : ℕ} (lam : D.what₂.Tau → DomWeight n) : nfAll lam 0 0 = 0 := by
   simp [nfAll, Formalism.REAL.fockF]
@@ -105,8 +104,7 @@ theorem metric_disjoint_support_orthogonal (Tf : Forms0 D u) : MetricOrthogonalC
   have hre : ∀ a : D.what₂.LL, (s a * majAt ((D.fm u).lat 0).b ((D.fm u).lat 0).X v x y).re = 0 := by
     intro a
     have k := key a
-    rw [a1, a2, a2, majAt_swap_eq_conj ((D.fm u).lat 0).b ((D.fm u).lat 0).X v x (a • y)] at k
-    rw [s2] at k
+    rw [a1, a2, a2, majAt_swap_eq_conj ((D.fm u).lat 0).b ((D.fm u).lat 0).X v x (a • y), s2] at k
     simp only [Complex.add_re, Complex.conj_re] at k
     linarith
   obtain ⟨a0, ha0⟩ := exists_im_ne_zero v

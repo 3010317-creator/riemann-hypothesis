@@ -205,8 +205,7 @@ theorem g_weight {n : ℕ} (d : Fin r × Fin n →₀ ℕ) :
       try ring
     · intro b _ hb
       simp [rowW, hb]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem g_of_rowW {R : Type*} [CommRing R] {n : ℕ} {f : MvPolynomial (Fin r × Fin n) R} {μ : Fin r → ℕ}
     (hf : IsWeightedHomogeneous (rowW r n) f μ) :
@@ -243,8 +242,7 @@ theorem dom_dualWeyl (R : Type) [CommRing R] [IsDomain R] (r n : ℕ) (ν : Fin 
     · exact hx d h
     · exact hy d h
   | smul a x _ hx =>
-    intro d hd
-    exact hx d (support_smul hd)
+    exact fun d hd => hx d (support_smul hd)
 
 section Diag
 
@@ -408,8 +406,7 @@ theorem dl_indep (O Kf : Type) [CommRing O] [IsDomain O] [Field Kf] [Algebra O K
   have hst : rowAct O U f ∈ weyl O (m + 1) (m + 1) le_rfl (nuOf lam) := by
     have := _root_.Formalism.UG.P.wlocal_global O (m + 1) (m + 1) le_rfl (nuOf lam) UU⁻¹ f hf
     unfold Formalism.UG.dwAct at this
-    rw [inv_inv] at this
-    exact this
+    rwa [inv_inv] at this
   refine ⟨(algebraMap O Kf U.det) ^ e • F0,
     mem_deltaL.2 ⟨((u ^ e : Oˣ) : O) • rowAct O U f, Submodule.smul_mem _ _ hst, ?_⟩, ?_⟩
   · have h4 : rowAct Kf (U.map (algebraMap O Kf)) (rowAct Kf g F0) = rowAct Kf h F0 := by

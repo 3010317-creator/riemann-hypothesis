@@ -147,8 +147,7 @@ theorem polynomial_isGLRep (LL : Letters ι) (S : Set ι) : IsGLRep (glOps K n L
     intro F _
     have key : ∑ m ∈ F.support, monomial m (AddMonoidAlgebra.coeff F m) ∈ ⨆ mu : Fin n → ℤ, weightSp (glOps K n LL S) mu := by
       apply Submodule.sum_mem
-      intro m _
-      exact Submodule.mem_iSup_of_mem (wtS LL S m) (monomial_mem_weightSpace LL S m _)
+      exact fun m _ => Submodule.mem_iSup_of_mem (wtS LL S m) (monomial_mem_weightSpace LL S m _)
     convert key using 1
     exact F.as_sum
 

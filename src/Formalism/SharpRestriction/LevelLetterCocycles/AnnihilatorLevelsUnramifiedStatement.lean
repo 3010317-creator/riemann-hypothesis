@@ -164,8 +164,7 @@ theorem taylor2 (f D : PowerSeries O) (hD : constantCoeff D = 0) :
     intro i; fin_cases i
     · show PowerSeries.constantCoeff (X : PowerSeries O) = 0
       simp
-    · show PowerSeries.constantCoeff D = 0
-      exact hD
+    · exact hD
   have h2 : HasSubst (MvPowerSeries.X 0 + MvPowerSeries.X 1 : MvPowerSeries (Fin 2) O) :=
     HasSubst.of_constantCoeff_zero (by simp)
   have hx0 : HasSubst (MvPowerSeries.X 0 : MvPowerSeries (Fin 2) O) :=
@@ -262,8 +261,7 @@ theorem ode_unique (c : O) {F G : PowerSeries O} (h0 : constantCoeff F = constan
       exact (mul_eq_zero.mp e).resolve_right (Nat.cast_add_one_ne_zero k)
   ext k
   have := key k
-  rw [map_sub, sub_eq_zero] at this
-  exact this
+  rwa [map_sub, sub_eq_zero] at this
 
 theorem bs_natMul (r : R) : ∀ l : ℕ, binomialSeries O ((l : R) * r) = binomialSeries O r ^ l
   | 0 => by simp
@@ -292,8 +290,7 @@ theorem subst_bs (l : ℕ) (hl : 1 ≤ l) (r : R) :
     have h3 : (1 + X) ^ l * σ (PowerSeries.derivative (R := O) (binomialSeries O r)) =
         algebraMap O (PowerSeries O) (algebraMap R O r) * σ (binomialSeries O r) := by
       have := congrArg σ (bs_ode (O := O) r)
-      rw [map_mul, map_mul, h2, AlgHom.commutes] at this
-      exact this
+      rwa [map_mul, map_mul, h2, AlgHom.commutes] at this
     have hdG : PowerSeries.derivative (R := O) (σ (binomialSeries O r)) =
         σ (PowerSeries.derivative (R := O) (binomialSeries O r)) * ((l : PowerSeries O) * (1 + X) ^ (l - 1)) := by
       rw [hσ, hσ, derivative_subst hs, hd]
@@ -357,8 +354,7 @@ theorem func_unique (φ₀ : PowerSeries O →ₐ[O] PowerSeries O) (l : ℕ) (h
       exact ⟨E', by rw [hE, hE', pow_succ]; ring⟩
   ext k
   have := X_pow_dvd_iff.mp (key k) k (by omega)
-  rw [map_sub, sub_eq_zero] at this
-  exact this
+  rwa [map_sub, sub_eq_zero] at this
 
 section Aut
 
@@ -593,8 +589,7 @@ theorem levg_chi {l : ℕ} [Fact l.Prime] (P : LocPrime l) (H : LocHW l P) (K LL
       (((H.W K 1 LL hg).χΓ (H.W K 1 LL hg).gam : (↥(OL LL))ˣ) : ↥(OL LL)) := by
     rw [hχ, ← hz, ← IsScalarTower.algebraMap_apply]
   refine ⟨z, ?_, ?_⟩
-  · apply Subtype.val_injective
-    exact hzLL.symm
+  · exact Subtype.val_injective hzLL.symm
   · have hgen := (H.W K 1 LL hg).gam_gen
     rw [hs, ← hzLL] at hgen
     have hz1 : z - 1 ≠ 0 := by

@@ -76,16 +76,14 @@ theorem Ljj_span_fd (j : Fin G.T.t → ℕ) (jp : ℕ) :
       have h3 : (⟨y, hyY⟩ : Yq) ∈ (⊤ : Submodule ℚ_[p] Yq) := Submodule.mem_top
       rw [← bY.span_eq] at h3
       have h4 := Submodule.mem_map_of_mem (f := Yq.subtype) h3
-      rw [Submodule.map_span, ← Set.range_comp] at h4
-      exact h4
+      rwa [Submodule.map_span, ← Set.range_comp] at h4
     have hg2 := xi_mem_span p G (G.B - jp) g hg
     show rename (Formalism.GM.M.chainEmb N r G.T.t) y * g ∈ W
     have hy3 : rename (Formalism.GM.M.chainEmb N r G.T.t) y ∈ Submodule.span ℚ_[p]
         (Set.range fun a => rename (Formalism.GM.M.chainEmb N r G.T.t) ((bY a : Yq) : MvPolynomial _ ℚ_[p])) := by
       have := Submodule.mem_map_of_mem (f := (rename (Formalism.GM.M.chainEmb N r G.T.t) :
         MvPolynomial _ ℚ_[p] →ₐ[ℚ_[p]] MvPolynomial _ ℚ_[p]).toLinearMap) hy2
-      rw [Submodule.map_span, ← Set.range_comp] at this
-      exact this
+      rwa [Submodule.map_span, ← Set.range_comp] at this
     have hmul := Submodule.mul_mem_mul hy3 hg2
     rw [Submodule.span_mul_span] at hmul
     refine Submodule.span_mono ?_ hmul
@@ -94,8 +92,7 @@ theorem Ljj_span_fd (j : Fin G.T.t → ℕ) (jp : ℕ) :
   haveI : FiniteDimensional ℚ_[p] W := FiniteDimensional.span_of_finite ℚ_[p] (Set.finite_range fam)
   have hle2 : Submodule.span ℚ_[p] (Ljj p (r := r) G j jp : Set (MvPolynomial (Formalism.GM.M.BVar N r G.T.t) ℚ_[p])) ≤ W := by
     rw [Submodule.span_le]
-    intro x hx
-    exact hle hx
+    exact fun x hx => hle hx
   exact Submodule.finiteDimensional_of_le hle2
 
 theorem finrank_Ljj_span (j : Fin G.T.t → ℕ) (jp : ℕ) :

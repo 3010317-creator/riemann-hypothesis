@@ -201,8 +201,7 @@ theorem pair_top {s r : ℕ} {A : ℕ} {Ai Ci : Fin s → ℕ} {mu : Fin (2 * s 
     have := Int.toNat_of_nonneg c2
     rw [eS] at *
     omega
-  rw [e]
-  exact c1
+  rwa [e]
 
 theorem jE_pair {s r : ℕ} (S : SegData s) (Ai : Fin s → ℕ) (mu : Fin (2 * s + 1 + 1) → Fin (r + 1) → ℤ) (i : Fin s)
     (h : S.sigma ≤ i.val) : jE S (pairLevel S Ai mu) i.val = (pairSg mu Ai i).toNat := by
@@ -232,8 +231,7 @@ theorem pair_chain (p : ℕ) {s r : ℕ} (S : SegData s) (aTop : Fin s → ℕ) 
       unfold pairD pairTail
       rw [finPos_eq (2 * s + 1) (2 * s + 1) (by omega)]
       rfl
-    rw [e]
-    exact h1
+    rwa [e]
   have hW : ∀ i : Fin s, Strip (pairChain mu lam ⟨2 * i.val + 1, by omega⟩) (pairChain mu lam ⟨2 * i.val, by omega⟩)
       (((blockData p S aTop aPlus m (pairBlock S rz ry Ai mu lam jp)).lettersAt (pairLevel S Ai mu) jp).deg
         ⟨2 * i.val, by omega⟩) := by
@@ -255,8 +253,7 @@ theorem pair_chain (p : ℕ) {s r : ℕ} (S : SegData s) (aTop : Fin s → ℕ) 
         rw [ite_eq_right hσ]
         have := Int.toNat_of_nonneg (show 0 ≤ pairO mu Ai i by rw [eO]; omega)
         omega
-    rw [e]
-    exact t1
+    rwa [e]
   have hE : ∀ i : Fin s, Strip (pairChain mu lam ⟨2 * i.val + 1, by omega⟩) (pairChain mu lam ⟨2 * i.val + 2, by omega⟩)
       (((blockData p S aTop aPlus m (pairBlock S rz ry Ai mu lam jp)).lettersAt (pairLevel S Ai mu) jp).deg
         ⟨2 * i.val + 1, by omega⟩) := by
@@ -273,8 +270,7 @@ theorem pair_chain (p : ℕ) {s r : ℕ} (S : SegData s) (aTop : Fin s → ℕ) 
         show Ci i - (if i.val < S.sigma then (pairSg mu Ai i).toNat else 0) = _
         rw [ite_eq_left hσ]
       · rw [ite_eq_right hσ, jE_pair S Ai mu i (by omega), hcc]
-    rw [e]
-    exact t2
+    rwa [e]
   constructor
   · funext t
     show pairChain mu lam ⟨0, by omega⟩ t = 0
@@ -650,8 +646,7 @@ theorem kept_pair_of_three_lines {C0 CYb Cde Ck CD Cb CE1 CE2 Cc H : ℝ}
       show _ ≤ (clA C0 CE1 CE2 X j rz ry i : ℝ) * (1 + 4 / (X.p : ℝ) ^ 2) +
         X.La C0 * ((cap X.p (X.seg C0 CE1 CE2 j) (pairMap C0 CE1 CE2 X j rz ry t).1 i.val : ℤ) : ℝ) / X.k
       linarith
-    · rw [esg, c5]
-      exact s2
+    · rwa [esg, c5]
   ·
     have hd0 := (inter_strip hP.2).2.1
     have eD : pairD t.1 t.2.1 = ∑ x, t.2.1 x - ∑ x : Fin X.m, t.1 (Fin.last _) x.succ := by
@@ -673,8 +668,7 @@ theorem kept_pair_of_three_lines {C0 CYb Cde Ck CD Cb CE1 CE2 Cc H : ℝ}
       have hkY : 2 / (X.k * X.Y) ≤ 1 := by
         rw [div_le_one (by have := hs.Y1; positivity)]
         have hk5 := hs.k5
-        have hY1 := hs.Y1
-        exact le_trans (by linarith : (2 : ℝ) ≤ X.k) (le_mul_of_one_le_right (by linarith) hY1)
+        exact le_trans (by linarith : (2 : ℝ) ≤ X.k) (le_mul_of_one_le_right (by linarith) hs.Y1)
       have ha := hs.apos
       show (clC C0 CE1 CE2 X j rz ry i : ℝ) ≤ 2 * (X.a : ℝ) / ((X.p ^ (segG X.TT j - (segDists X.TT j).get i) : ℕ) : ℝ)
       rw [le_div_iff₀ hP0]

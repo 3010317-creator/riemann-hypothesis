@@ -123,8 +123,7 @@ theorem smul_gen_mem_iff (h𝔭 : 𝔭.IsMaximal) (he : IsGen L 𝔭 e) (k : ℕ
     obtain ⟨t, ht, c, hc, htc⟩ := smul_top_spec h𝔭 he k hb
     have h1 : (algebraMap (𝓞 F) (𝓞 K) t * b) • e = c • e := by
       rw [Submodule.coe_smul] at htc
-      rw [mul_smul]
-      exact htc
+      rwa [mul_smul]
     have h2 : algebraMap (𝓞 F) (𝓞 K) t * b = c := by
       rw [← algebraMap_smul K _ e, ← algebraMap_smul K c e] at h1
       exact IsFractionRing.injective (𝓞 K) K (smul_left_injective K he.2.1 h1)
@@ -134,8 +133,7 @@ theorem smul_gen_mem_iff (h𝔭 : 𝔭.IsMaximal) (he : IsGen L 𝔭 e) (k : ℕ
       rw [← h2, map_sub, map_mul, map_one]; ring
     rw [hb']
     exact Ideal.sub_mem _ (Ideal.mul_mem_left _ _ hc) (Ideal.mul_mem_right _ _ (_root_.Formalism.HermitianLattices.Ext.L3.localizedQuotients.ι_mem_pow hs))
-  · intro hb
-    exact Submodule.smul_mem_smul hb Submodule.mem_top
+  · exact fun hb => Submodule.smul_mem_smul hb Submodule.mem_top
 
 theorem end_surj (h𝔭 : 𝔭.IsMaximal) (he : IsGen L 𝔭 e) (k : ℕ)
     (X : Module.End (𝓞 K) (Qk L 𝔭 k)) :
@@ -361,8 +359,7 @@ theorem normOne_mk_iff (hF : IsFixF K F) (𝔭 : Ideal (𝓞 F)) (j : ℕ) (b : 
       ring
     rw [e]
     exact sub_mem h1 (add_mem (Ideal.mul_mem_left _ _ hy) (Ideal.mul_mem_right _ _ hyb))
-  · intro h
-    exact ⟨b, rfl, Ideal.Quotient.eq.mpr h⟩
+  · exact fun h => ⟨b, rfl, Ideal.Quotient.eq.mpr h⟩
 
 theorem card_normOne (Q : Ideal (𝓞 K)) :
     Nat.card {z : 𝓞 K ⧸ Q // NormOne Q z} = normRepCount K Q 1 1 := by

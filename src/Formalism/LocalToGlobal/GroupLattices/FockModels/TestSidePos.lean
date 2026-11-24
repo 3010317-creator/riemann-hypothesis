@@ -185,8 +185,7 @@ private theorem leAt_eq_colSpan_la_tw_mul_lb_D_of_edgeBasis {p n' : ℕ} {W Qq O
     · have hk := key c
       rw [ite_eq_left hc] at hk
       rw [Rcol c, ite_eq_left hc, ← hk]
-      apply Submodule.mem_sup_right
-      exact Submodule.subset_span ⟨_, Submodule.subset_span ⟨c, rfl⟩, rfl⟩
+      exact Submodule.mem_sup_right (Submodule.subset_span ⟨_, Submodule.subset_span ⟨c, rfl⟩, rfl⟩)
     · rw [Rcol c, ite_eq_right hc, one_smul]
       exact Submodule.mem_sup_left (Submodule.subset_span ⟨c, rfl⟩)
 
@@ -348,15 +347,13 @@ theorem posCore_of_form {O Kf : Type} [CommRing O] [IsDomain O] [Field Kf] [Alge
       have h2 : P ∈ nablaLTw O Kf m lam M := by
         rw [mem_iff M hM, h1]; exact hP0
       have h3 := hQ ⟨P, la_nablaLTw_le m lam M hM P h2⟩ h2
-      rw [hβ, ← key M hM, h1] at h3
-      exact h3
+      rwa [hβ, ← key M hM, h1] at h3
   · intro M hM Q P hQ hP
     rw [hβ]
     have h1 := (mem_iff M hM _).1 hP
     have h2 := (mem_iff _ (det_invT M hM) _).1 hQ
     have h3 := hdd _ h2 _ h1
     rw [map_smul, key M hM] at h3
-    rw [Submodule.coe_smul, map_smul]
-    exact h3
+    rwa [Submodule.coe_smul, map_smul]
 
 end Formalism.L2.G.Model

@@ -37,14 +37,12 @@ theorem scaled_torsion_point_of_add (hA : PtOfAdd) : ScaledTorsionPointNonsingul
   have hc : (ι.symm lam)⁻¹ ≠ 0 := inv_ne_zero hμ0
   obtain ⟨hmem, -, -, hwp, -, -, -, -, -, hg2, hg3⟩ := F.homogeneity L _ hc
   have hz' : (ι.symm lam)⁻¹ * z ∉ (F.scalePair L _ hc).lattice := by
-    rw [hmem, inv_mul_cancel_left₀ hc]
-    exact hz
+    rwa [hmem, inv_mul_cancel_left₀ hc]
   have hNz' : (N : ℂ) * ((ι.symm lam)⁻¹ * z) ∈ (F.scalePair L _ hc).lattice := by
     rw [hmem]
     have e : ((ι.symm lam)⁻¹)⁻¹ * ((N : ℂ) * ((ι.symm lam)⁻¹ * z)) = (N : ℂ) * z := by
       field_simp
-    rw [e]
-    exact hNz
+    rwa [e]
   have htor := Tor.nsmul_ptOf (l := l) (L := F.scalePair L _ hc) (ι := ι) hA PtOfZero_of
     ((ι.symm lam)⁻¹ * z) N
   rw [(PtOfZero_of l (F.scalePair L _ hc) ι _).2 hNz',

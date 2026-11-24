@@ -453,9 +453,7 @@ theorem radial_collapse : RDCollapse := by
     rw [R.LevelData.Tvprod, Matrix.conjTranspose_list_prod, List.map_reverse, List.reverse_reverse,
       List.map_ofFn, List.ofFn_eq_map]
     congr 1
-    apply List.map_congr_left
-    intro l _
-    exact tvl_conjT L hS (Y + 1) hY1 l
+    exact List.map_congr_left (fun l _ => tvl_conjT L hS (Y + 1) hY1 l)
   have hN : L.Tprod Y = ((List.finRange (k + 1)).map (L.Tl Y)).reverse.prod := by
     rw [R.LevelData.Tprod, List.ofFn_eq_map]
   have key : star (L.Avr (Y + 1)) * f * L.Br Y - star (L.Bvr (Y + 1)) * f * L.Ar Y =
@@ -493,8 +491,7 @@ theorem radial_gauge_identity : RadialGaugeAdjointRelation := by
   have h11 := congrFun (congrFun (hLS.start.det Y).1 1) 1
   simp [YangianSpanCharacter.T.J, Matrix.mul_apply, Fin.sum_univ_two, hLS.tau] at h11
   have hrel : st.QQ (Y + 1) 0 1 * (L.GG * st.x Y) = L.GG * st.x (Y + 1) * st.QQ Y 0 1 := by
-    rw [← sub_eq_zero]
-    rw [← h11]
+    rw [← sub_eq_zero, ← h11]
     noncomm_ring
   have hzb : star L.ζb = L.ζ := by rw [← hSL.1, star_star]
   have hGGs : star L.GG = L.GG := by

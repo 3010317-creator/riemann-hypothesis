@@ -67,8 +67,7 @@ theorem toF_mem (ℓ : Lvl K G) (Z : Submodule K B.S.Forms) (y : Fin (B.dZ ℓ Z
     have he' : B.S.basis.equivFun f = (B.vE ℓ).mulVec ((B.zE ℓ Z).mulVec y) := he
     change B.S.basis.equivFun.symm ((B.vE ℓ).mulVec ((B.zE ℓ Z).mulVec y)) = f
     rw [← he', LinearEquiv.symm_apply_apply]
-  rw [this]
-  exact hf
+  rwa [this]
 
 theorem csum_toF (ℓ : Lvl K G) (Z : Submodule K B.S.Forms) (x y : Fin (B.dZ ℓ Z) → K) :
     B.S.csum (B.toF ℓ Z x : B.S.Cl → B.S.V) (B.toF ℓ Z y : B.S.Cl → B.S.V) =
@@ -157,8 +156,7 @@ theorem csum_act_inv {B : BlockDat K G Pl0} (h : B.S.ActGood B.r) (g : G) (f f' 
     show (B.r g * B.r g⁻¹) f' = f'
     rw [← map_mul, mul_inv_cancel, map_one]
     rfl
-  rw [h2] at h1
-  exact h1
+  rwa [h2] at h1
 
 end Concrete
 

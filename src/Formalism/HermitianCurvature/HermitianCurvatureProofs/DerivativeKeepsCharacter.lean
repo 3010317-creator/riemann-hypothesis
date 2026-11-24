@@ -87,8 +87,7 @@ theorem _root_.Formalism.FourierDecayAlt.P.adjoin_lower_unipotent : LevelPointCo
   induction hx using Algebra.adjoin_induction with
   | mem y hy =>
     obtain ⟨⟨p, q⟩, rfl⟩ := hy
-    intro v hv g hg a
-    exact derivative_keeps_character hj z hD hDm p q v hv g hg a
+    exact fun v hv g hg a => derivative_keeps_character hj z hD hDm p q v hv g hg a
   | algebraMap c =>
     intro v hv g hg a
     simp only [Module.algebraMap_end_apply, Submodule.coe_smul, Pi.smul_apply]
@@ -98,7 +97,6 @@ theorem _root_.Formalism.FourierDecayAlt.P.adjoin_lower_unipotent : LevelPointCo
     simp only [LinearMap.add_apply, Submodule.coe_add, Pi.add_apply]
     rw [h1 v hv g hg a, h2 v hv g hg a, smul_add]
   | mul y1 y2 _ _ h1 h2 =>
-    intro v hv
-    exact h1 _ (h2 v hv)
+    exact fun v hv => h1 _ (h2 v hv)
 
 end Formalism.FourierDecayAlt.P.HeadLetterLemmas

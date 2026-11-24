@@ -161,8 +161,7 @@ lemma list_sum_mul_right {α : Type*} (L : List α) (f : α → ℝ) (c : ℝ) :
 
 lemma ckOn_const' {F : Type} [NormedAddCommGroup F] [NormedSpace ℂ F] {m : ℕ∞} (c : F) :
     CkOn m (GV k r) (fun _ : Mat k r => c) := by
-  intro g₀ _
-  exact ⟨Set.univ, fun _ => c, isOpen_univ, trivial, contDiffOn_const, fun _ _ _ => rfl⟩
+  exact fun g₀ _ => ⟨Set.univ, fun _ => c, isOpen_univ, trivial, contDiffOn_const, fun _ _ _ => rfl⟩
 
 lemma ckOn_mulF {f : Mat k r → ℂ} {H : Mat k r → E} {m : ℕ∞} (hf : CkOn m (GV k r) f)
     (hH : CkOn m (GV k r) H) : CkOn m (GV k r) (fun g => f g • H g) := by
@@ -332,8 +331,7 @@ lemma polyClass_pow {D : ℕ} {P : Mat k r → ℂ} (hP : PolyClass D P) :
   | succ n ih =>
     have := polyClass_mul ih hP
     have e : (fun g => P g ^ (n + 1)) = fun g => P g ^ n * P g := by funext g; rw [pow_succ]
-    rw [e, Nat.succ_mul]
-    exact this
+    rwa [e, Nat.succ_mul]
 
 lemma polyClass_prod {ι : Type*} (s : Finset ι) (D : ι → ℕ) (P : ι → Mat k r → ℂ)
     (h : ∀ i ∈ s, PolyClass (D i) (P i)) : PolyClass (∑ i ∈ s, D i) (fun g => ∏ i ∈ s, P i g) := by
@@ -344,8 +342,7 @@ lemma polyClass_prod {ι : Type*} (s : Finset ι) (D : ι → ℕ) (P : ι → M
     have := polyClass_mul (h a (Finset.mem_insert_self a s)) (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
     have e : (fun g => ∏ i ∈ insert a s, P i g) = fun g => P a g * ∏ i ∈ s, P i g := by
       funext g; rw [Finset.prod_insert ha]
-    rw [Finset.sum_insert ha, e]
-    exact this
+    rwa [Finset.sum_insert ha, e]
 
 lemma polyClass_sum {ι : Type*} (s : Finset ι) (D : ℕ) (P : ι → Mat k r → ℂ)
     (h : ∀ i ∈ s, PolyClass D (P i)) : PolyClass D (fun g => ∑ i ∈ s, P i g) := by
@@ -356,8 +353,7 @@ lemma polyClass_sum {ι : Type*} (s : Finset ι) (D : ℕ) (P : ι → Mat k r �
     have := polyClass_add (h a (Finset.mem_insert_self a s)) (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
     have e : (fun g => ∑ i ∈ insert a s, P i g) = fun g => P a g + ∑ i ∈ s, P i g := by
       funext g; rw [Finset.sum_insert ha]
-    rw [e]
-    exact this
+    rwa [e]
 
 lemma op_lin (ℓ : Mat k r →ₗ[ℝ] ℂ) (b : Bool) (X : Mat k r) :
     op b X (fun g => ℓ g) = fun g => (ℓ.comp (vf b X).toLinearMap) g := by

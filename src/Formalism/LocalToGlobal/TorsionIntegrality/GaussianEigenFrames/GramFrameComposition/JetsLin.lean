@@ -67,8 +67,7 @@ theorem four_form {n ν : Type} [Fintype ν] (M : n → ν → K) (k : Fin 4) (i
   · simp [four]
   · intro b _ hb
     simp [four, Ne.symm hb]
-  · intro h
-    exact absurd (Finset.mem_univ k) h
+  · exact fun h => absurd (Finset.mem_univ k) h
 
 theorem linSub_inBlock {n ν : Type} [Fintype n] [Fintype ν] (M : n → ν → K) (k : Fin 4)
     (T : MvPowerSeries n K) : linSub (four M) (inBlock k T) = inBlock k (linSub M T) := by
@@ -107,8 +106,7 @@ theorem FrameCompose_proof : FrameCompose := by
   intro K _ _ m n J X _ _ _ γ D V W th0 q0 A hD hq hA hγ hG
   refine ⟨fun w x => ∑ j, D w (x.1, j) * A j x.2,
     fun x y => ∑ j, ∑ k, A j x.2 * q0 (x.1, j) (y.1, k) * A k y.2, ?_, ?_, ?_, ?_⟩
-  · intro w x
-    exact norm_sum_le_one _ _ fun j _ => norm_mul_le_one (hD _ _) (hA _ _)
+  · exact fun w x => norm_sum_le_one _ _ fun j _ => norm_mul_le_one (hD _ _) (hA _ _)
   · intro x y
     exact norm_sum_le_one _ _ fun j _ => norm_sum_le_one _ _ fun k _ =>
       norm_mul_le_one (norm_mul_le_one (hA _ _) (hq _ _)) (hA _ _)

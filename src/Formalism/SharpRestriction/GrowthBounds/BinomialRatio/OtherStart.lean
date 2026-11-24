@@ -138,10 +138,8 @@ theorem sum_segG (TT : Finset (Fin n')) (h2 : 2 ≤ numSeg TT) : ∑ j, segG TT 
 theorem prod_starts (TT : Finset (Fin n')) (h : Fin n' → ℝ) :
     ∏ j, h (segStart TT j) = ∏ s ∈ TT.filter (fun s => Even s.val), h s := by
   refine Finset.prod_nbij (fun j => segStart TT j) ?_ ?_ ?_ (fun _ _ => rfl)
-  · intro j _
-    exact Finset.mem_filter.mpr (start_mem TT j)
-  · intro j _ j' _ e
-    exact (ev_mono TT).injective e
+  · exact fun j _ => Finset.mem_filter.mpr (start_mem TT j)
+  · exact fun j _ j' _ e => (ev_mono TT).injective e
   · intro s hs
     have hs' := Finset.mem_filter.mp (Finset.mem_coe.mp hs)
     obtain ⟨k, hk⟩ := List.mem_iff_get.mp ((ev_mem TT s).mpr hs')
@@ -159,8 +157,7 @@ theorem pos_spec (TT : Finset (Fin n')) (j : Fin (numSeg TT)) (i : Fin (segS TT 
 theorem prod_pos (TT : Finset (Fin n')) (j : Fin (numSeg TT)) (h : Fin n' → ℝ) :
     ∏ i, h (segPos TT j i) = ∏ s ∈ oddSet TT j, h s := by
   refine Finset.prod_nbij (fun i => segPos TT j i) ?_ ?_ ?_ (fun _ _ => rfl)
-  · intro i _
-    exact (pos_spec TT j i).1
+  · exact fun i _ => (pos_spec TT j i).1
   · intro i _ i' _ e
     have e' : segPos TT j i = segPos TT j i' := e
     have h1 := (pos_spec TT j i).2

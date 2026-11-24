@@ -230,8 +230,7 @@ theorem normExp_abs {τ Rw H K Q1 Q2 R R' : Type} [NormedAddCommGroup H] [InnerP
     have e : (X.vec t).ofLp (intersection_update_fsHerm_neg_one t) = ((w (intersection_update_fsHerm_neg_one t) : ℝ) : ℂ) • a t := by
       rw [hvec t, PiLp.toLp_apply, ite_eq_left rfl]
     have h1 := PiLp.norm_apply_le (X.vec t) (intersection_update_fsHerm_neg_one t)
-    rw [e, norm_smul, Complex.norm_real, Real.norm_of_nonneg (hw0 _).le] at h1
-    exact h1
+    rwa [e, norm_smul, Complex.norm_real, Real.norm_of_nonneg (hw0 _).le] at h1
   have hsm : ∀ (q : Q1 × Q2) (c : τ → Prop) {dc : DecidablePred c} (z : ℂ), (∀ t, c t → intersection_update_fsHerm_neg_one t = q) →
       Summable (fun t => if c t then z • a t else 0) := by
     intro q c dc z hc
@@ -258,8 +257,7 @@ theorem normExp_abs {τ Rw H K Q1 Q2 R R' : Type} [NormedAddCommGroup H] [InnerP
     simp_rw [← tsum_const_smul'', smul_ite, smul_zero]
     rw [← Summable.tsum_finsetSum]
     swap
-    · intro i _
-      exact hsm (lamR ρ, lamR' ρ') _ _ (fun t h => h.2.1)
+    · exact fun i _ => hsm (lamR ρ, lamR' ρ') _ _ (fun t h => h.2.1)
     refine tsum_congr fun t => ?_
     rw [Set.indicator_apply]
     by_cases ht : t ∈ S
@@ -267,19 +265,14 @@ theorem normExp_abs {τ Rw H K Q1 Q2 R R' : Type} [NormedAddCommGroup H] [InnerP
       by_cases hs : intersection_update_fsHerm_neg_one t = (lamR ρ, lamR' ρ')
       · rw [ite_eq_left hs, Finset.sum_eq_single (ιt t)]
         · rw [ite_eq_left ⟨ht, hs, rfl⟩]
-        · intro i _ hi
-          exact ite_eq_right (fun h => hi h.2.2.symm)
+        · exact fun i _ hi => ite_eq_right (fun h => hi h.2.2.symm)
         · intro h; exact absurd (Finset.mem_univ _) h
       · rw [ite_eq_right hs]
         symm
-        apply Finset.sum_eq_zero
-        intro i _
-        exact ite_eq_right (fun h => hs h.2.1)
+        exact Finset.sum_eq_zero (fun i _ => ite_eq_right (fun h => hs h.2.1))
     · rw [ite_eq_right ht, map_zero]
       symm
-      apply Finset.sum_eq_zero
-      intro i _
-      exact ite_eq_right (fun h => ht h.1)
+      exact Finset.sum_eq_zero (fun i _ => ite_eq_right (fun h => ht h.1))
   have hnorm : ‖X.part S‖ ^ 2 = (∑ ρ, ∑ ρ', fForm p (G (lamR ρ, lamR' ρ')) (sR ρ) (sR' ρ')).re := by
     rw [@norm_sq_eq_re_inner ℂ, hBl]
     simp only [hBl_part, inner_sum_smul, fForm, hGdef]
@@ -341,8 +334,7 @@ theorem normExp_abs {τ Rw H K Q1 Q2 R R' : Type} [NormedAddCommGroup H] [InnerP
         exact (Fintype.sum_fiberwise lamR' _).symm
     _ = ∑ q1, ∑ q2, ∑ ρ : {ρ // lamR ρ = q1}, ∑ ρ' : {ρ' // lamR' ρ' = q2},
           fForm p (G (lamR ρ.1, lamR' ρ'.1)) (sR ρ.1) (sR' ρ'.1) := by
-        refine Finset.sum_congr rfl fun q1 _ => ?_
-        exact Finset.sum_comm
+        exact Finset.sum_congr rfl fun q1 _ => Finset.sum_comm
     _ = ∑ q1, ∑ q2, (((w (q1, q2)) ^ 2 : ℝ) : ℂ) * ∑ i, ∑ j, conj (gamOf U p (i * j⁻¹)) * G (q1, q2) i j := by
         refine Finset.sum_congr rfl fun q1 _ => Finset.sum_congr rfl fun q2 _ => hfib q1 q2
     _ = ∑ q : Q1 × Q2, (((w q) ^ 2 : ℝ) : ℂ) * ∑ i, ∑ j, conj (gamOf U p (i * j⁻¹)) * G q i j :=
@@ -526,8 +518,7 @@ theorem blockOf_aTerm (t : GTerm X u u' F0 F0' what₂ rows') (ρ : cs.Cl) (ρ' 
   · rw [Pi.single_eq_same]
   · intro b _ hb
     rw [Pi.single_eq_of_ne hb, map_zero]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 
 variable {TR cs cs' FdN FdN'} in

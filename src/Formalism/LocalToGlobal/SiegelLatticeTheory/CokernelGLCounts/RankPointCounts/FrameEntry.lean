@@ -136,8 +136,7 @@ theorem frame_entry {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) (Λ : Submodu
         -((D.R.rS : ℤ) - ((a : ℕ) : ℤ)) := by
       simp only [Fin.val_last, Fin.val_castSucc]
       rw [Nat.cast_sub a.2.le]
-    rw [e]
-    exact h
+    rwa [e]
   | cast b' =>
     have hab : (a : ℕ) < b' := hcb
     have key : ∀ x ∈ ddS D ^ (-((D.R.rS : ℤ) - ((b' : ℕ) : ℤ))),
@@ -163,8 +162,7 @@ theorem frame_entry {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) (Λ : Submodu
       simp only [Fin.val_castSucc]
       rw [Nat.cast_sub hab.le]
       ring
-    rw [e]
-    exact h
+    rwa [e]
 
 end Formalism.L2.SG.Pf.ZsVolLat
 

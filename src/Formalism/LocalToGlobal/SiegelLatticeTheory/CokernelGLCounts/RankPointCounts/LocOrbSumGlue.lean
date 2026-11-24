@@ -238,8 +238,7 @@ theorem fL_hasSum (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep) (
             ⟨a, ha, xy0, by rw [zAt_eq hmat, add_sub_cancel_right]⟩, ?_⟩
           ext Y
           have h := mem_orbR_iff M δ T T' p w (zAt a xy0 - shM δ T T' p w) (Y + shM δ T T' p w)
-          rw [sub_add_cancel, add_sub_cancel_right] at h
-          exact h
+          rwa [sub_add_cancel, add_sub_cancel_right] at h
         set rep := hL.choose with hrepdef
         have hspec : IntP M p rep ∧ InOrbP δ T T' p w rep ∧
             {Y | Y + shM δ T T' p w ∈ orbR (M p) (zAt a xy0)} = kkOrb M p rep := hL.choose_spec
@@ -255,8 +254,7 @@ theorem fL_hasSum (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep) (
         refine ⟨hX.choose, ?_, ?_⟩
         · have hmem : rep ∈ kkOrb M p rep := ⟨1, 1, intLow_one M p, intUp_one M p, by simp⟩
           rw [← hrepO] at hmem
-          rw [zAt_eq hmat hX.choose, ← hX.choose_spec]
-          exact hmem
+          rwa [zAt_eq hmat hX.choose, ← hX.choose_spec]
         · show fL M δ T T' p w (some c) {Y | Y + shM δ T T' p w ∈ orbR (M p) (zAt a xy0)} = _
           have hr : repL M δ T T' p w {Y | Y + shM δ T T' p w ∈ orbR (M p) (zAt a xy0)} = rep := by
             unfold repL; exact dite_eq_left hL
@@ -329,8 +327,7 @@ theorem gL_hasSum (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep) (
   have ha : Pf.autP M p (some c) = ((M p).nAut c : ℂ) := rfl
   rw [hg, ha]
   refine ⟨hf.1.div_const _, ?_⟩
-  simp only [norm_div]
-  exact hf.2.div_const _
+  simpa only [norm_div] using hf.2.div_const _
 
 theorem locOrbSum_of (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep) (δ : ∀ p : PlF D, (D.s.atP p).Fp)
     (u u' : D.what₂.Word) (hS : ∀ p w, ModShift δ (D.mem u).A.T (D.mem u').A.T p w)

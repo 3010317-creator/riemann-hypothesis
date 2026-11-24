@@ -132,8 +132,7 @@ theorem tb_iff_ta (F : Finset α) (k : α → α → ℂ) : TB.PSDOn F k ↔ TA.
     · let a : α → ℂ := fun i => if h : i ∈ F then x ⟨i, h⟩ else 0
       have hx : (fun i : F => a i) = x := funext fun i => dite_eq_left i.2
       have hr := hp a
-      rw [← quadM, hx] at hr
-      exact hr
+      rwa [← quadM, hx] at hr
     · simpa using (hH.im_star_dotProduct_mulVec_self x).symm
 
 theorem quad1 [DecidableEq α] (F : Finset α) (k : α → α → ℂ) (x : α) (hx : x ∈ F) :
@@ -353,8 +352,7 @@ theorem t_UniformMajorantOn : UniformMajorantOn := by
     have hm : ∀ x ∈ F', (x : α) ∈ F'.image Subtype.val := fun x hx => Finset.mem_image_of_mem _ hx
     let f : F' → (F'.image Subtype.val : Finset α) := fun x => ⟨x.1.1, hm x.1 x.2⟩
     refine ⟨fun t h h' => Th t h.1 h'.1, ?_, ?_, ?_, ?_, ?_, ?_⟩
-    · intro t t' ht ht' h hh h' hh' hne
-      exact h1 t t' ht ht' h.1 (hm h hh) h'.1 (hm h' hh') hne
+    · exact fun t t' ht ht' h hh h' hh' hne => h1 t t' ht ht' h.1 (hm h hh) h'.1 (hm h' hh') hne
     · intro t ht; exact psd_pull f (fun _ _ => rfl) (h2 t ht)
     · intro t t' htt h hh h' hh'; exact h3 t t' htt h.1 (hm _ hh) h'.1 (hm _ hh')
     · intro t; exact psd_pull f (fun _ _ => rfl) (h4 t)
@@ -380,8 +378,7 @@ theorem t_UniformMajorantOn : UniformMajorantOn := by
       rw [hT t h h' (hF h hh) (hF h' hh'), hT t' h h' (hF h hh) (hF h' hh')]
       exact g3 t t' htt ⟨h, hF h hh⟩ (Finset.mem_subtype.2 hh) ⟨h', hF h' hh'⟩
         (Finset.mem_subtype.2 hh')
-    · intro t
-      exact psd_pull f (fun x y => hT t x.1 y.1 (hF x.1 x.2) (hF y.1 y.2)) (g4 t)
+    · exact fun t => psd_pull f (fun x y => hT t x.1 y.1 (hF x.1 x.2) (hF y.1 y.2)) (g4 t)
     · intro t ht
       refine psd_pull f (fun x y => ?_) (g5 t ht)
       show Th t x.1 y.1 - N t t x.1 y.1 = _
@@ -414,8 +411,7 @@ theorem t_UniformMajorantOn : UniformMajorantOn := by
         exact hne (Finset.sum_eq_zero fun y _ => by rw [hz t x y (fun h => hx h.1)]; simp))
     have := q2 a
     simp only [inner] at this
-    rw [outer] at this
-    exact this
+    rwa [outer] at this
 
 theorem t_OutsideSysOk : OutsideSysOk := by
   intro E α _ N L L' F h1 h2 h3

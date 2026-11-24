@@ -143,8 +143,7 @@ theorem jet_listG {ι : Type} (cp : ι → Fin n) (uv : ι → Fin dd → C) (co
       fun ℓ hℓ => h ℓ (by simp [hℓ])
     by_cases hm : m l = 0
     · rw [hm]
-      simp only [Function.iterate_zero, id, pow_zero, one_mul]
-      exact ih h' q
+      simpa only [Function.iterate_zero, id, pow_zero, one_mul] using ih h' q
     · rw [jet_iterG Y M (cp l) (uv l) (co l) (h l (by simp) hm) (m l), ih h']
       congr 1
       ring
@@ -161,8 +160,7 @@ theorem logCoordG {ι : Type} [Fintype ι] (cp : ι → Fin n) (uv : ι → Fin 
     intro m hm
     have h1 := jet_listG Y M cp uv co m F (Finset.univ : Finset ι).toList
       (fun ℓ _ hmℓ => hco ℓ ((MvPolynomial.mem_vars_iff_mem_support ℓ).2 ⟨m, hm, Finsupp.mem_support_iff.2 hmℓ⟩)) 1
-    rw [one_mul, Finset.prod_map_toList, hj1, linPull, VP.cc_subst_eq (cc_linPt Y M)] at h1
-    exact h1
+    rwa [one_mul, Finset.prod_map_toList, hj1, linPull, VP.cc_subst_eq (cc_linPt Y M)] at h1
   unfold DpolyN
   conv_rhs => rw [MvPolynomial.as_sum P]
 
@@ -238,8 +236,7 @@ theorem MS_pl (ρ' ρ : Fin N) (w : WVO (IS I0)) (col : Fin 2) (i : Fin dd) :
 
 theorem MS_off (x : Fin N × WVO (IS I0)) (b : Fin n) (hb : b ∉ Set.range pl) (i : Fin dd) :
     MS Y p pl x (b, i) = 0 := by
-  simp only [MS]
-  exact Finset.sum_eq_zero fun col _ => ite_eq_right fun h => hb ⟨_, h⟩
+  simpa only [MS] using Finset.sum_eq_zero fun col _ => ite_eq_right fun h => hb ⟨_, h⟩
 
 theorem linPt_pl (ρ : Fin N) (col : Fin 2) (i : Fin dd) :
     linPt Y (MS Y p pl) (pl (ρ, col), i) = rowOf ρ (linPt Y (uS Y p) (col, i)) := by

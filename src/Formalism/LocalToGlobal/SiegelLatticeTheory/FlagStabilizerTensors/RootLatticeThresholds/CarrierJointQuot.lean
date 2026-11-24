@@ -44,8 +44,7 @@ theorem lint_eq_bruhat (μR ν : Measure X.B.I.Ginf) (S : Set X.B.I.Ginf) (hS0 :
   refine lintegral_congr fun x => ?_
   show f x = ∫⁻ s, b (s * x) * f (s * x) ∂μR
   have hS : ∀ᵐ s ∂μR, s ∈ S := by
-    rw [ae_iff]
-    exact hS0
+    rwa [ae_iff]
   have h1 : ∫⁻ s, b (s * x) * f (s * x) ∂μR = ∫⁻ s, b (s * x) * f x ∂μR := by
     refine lintegral_congr_ae ?_
     filter_upwards [hS] with s hs

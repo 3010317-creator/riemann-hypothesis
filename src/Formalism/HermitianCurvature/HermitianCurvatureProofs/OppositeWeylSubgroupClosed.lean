@@ -133,9 +133,7 @@ lemma haar_push {k r : ℕ} {Γ : Type*} [Group Γ] [TopologicalSpace Γ] [IsTop
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · rw [Measure.map_apply hmeas hUm.compl]
     have : φ ⁻¹' (U : Set (Mt k r))ᶜ = ∅ := by
-      apply Set.eq_empty_of_forall_notMem
-      intro x hx
-      exact hx (hU ▸ ⟨x, rfl⟩)
+      exact Set.eq_empty_of_forall_notMem (fun x hx => hx (hU ▸ ⟨x, rfl⟩))
     rw [this, measure_empty]
   · intro a ha
     rw [← hU] at ha
@@ -363,8 +361,7 @@ lemma Em_mul_out {X : Type*} (A : Matrix (Fin (k + 1)) X ℂ) (i : Fin (2 * r + 
   apply Finset.sum_eq_zero
   intro b _
   rw [Em, ite_eq_right, zero_mul]
-  intro h
-  exact hi (h ▸ mid_wI b)
+  exact fun h => hi (h ▸ mid_wI b)
 
 lemma mul_EmT_mid {X : Type*} [Fintype X] (A : Matrix X (Fin (k + 1)) ℂ) (j : Fin (2 * r + k + 1)) (x : X) (hj : mid k r j) :
     (A * (Em k r)ᵀ) x j = A x (midx hj) := by
@@ -384,8 +381,7 @@ lemma mul_EmT_out {X : Type*} [Fintype X] (A : Matrix X (Fin (k + 1)) ℂ) (j : 
   apply Finset.sum_eq_zero
   intro b _
   rw [Matrix.transpose_apply, Em, ite_eq_right, mul_zero]
-  intro h
-  exact hj (h ▸ mid_wI b)
+  exact fun h => hj (h ▸ mid_wI b)
 
 lemma EmT_Em : (Em k r)ᵀ * Em k r = 1 := by
   ext a b
@@ -522,8 +518,7 @@ lemma emb_mem (a : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) :
   show (embWb k r a)ᴴ * Hpk k r * embWb k r a = Hpk k r ↔ _
   rw [emb_form]
   constructor
-  · intro h
-    exact sand_inj (add_right_cancel (h.trans (Hpk_eq (k := k) (r := r))))
+  · exact fun h => sand_inj (add_right_cancel (h.trans (Hpk_eq (k := k) (r := r))))
   · intro h
     rw [h]
     exact Hpk_eq.symm
@@ -664,8 +659,7 @@ theorem haarWb : HaarWbExists := by
     exact this.symm
   refine ⟨(muG (εb k)).map ((fun x : Fin (k + 1) → Fin (k + 1) → ℂ => (embWb k r (Matrix.of x) : Mt k r)) ∘ ι), ?_⟩
   apply haar_push (muG (εb k)) (haar_ne_zero _) _ (emb_closedEmb.comp hι)
-  · intro a b
-    exact emb_mul _ _
+  · exact fun a b => emb_mul _ _
   · ext g
     constructor
     · rintro ⟨x, rfl⟩
@@ -682,8 +676,7 @@ theorem haarWb : HaarWbExists := by
       obtain ⟨x, hx⟩ := (hιr a).mp h2
       refine ⟨x, ?_⟩
       show embWb k r (Matrix.of (ι x)) = g
-      rw [hx]
-      exact hag
+      rwa [hx]
 
 lemma hb_form (v w : Fin (k + 1) → ℂ) :
     star w ⬝ᵥ (Hb k *ᵥ v) =
@@ -816,13 +809,11 @@ lemma Em_EmT_mulVec (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) : Em k r
       apply wI_inj (r := r)
       rw [wI_midx hi, h]
     · intro h; exact absurd (Finset.mem_univ _) h
-  · rw [hz i (by omega)]
-    rw [Matrix.mulVec, dotProduct]
+  · rw [hz i (by omega), Matrix.mulVec, dotProduct]
     apply Finset.sum_eq_zero
     intro b _
     rw [Em, ite_eq_right, zero_mul]
-    intro h
-    exact hi (h ▸ mid_wI b)
+    exact fun h => hi (h ▸ mid_wI b)
 
 lemma herm_wb (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) :
     herm (Hpk k r) z z = star ((Em k r)ᵀ *ᵥ z) ⬝ᵥ (Hb k *ᵥ ((Em k r)ᵀ *ᵥ z)) := by

@@ -169,8 +169,7 @@ theorem tyS_good_coeff {g : Fin 2} {w : I g → C} {x : ℕ → I g ⊕ JJ I g �
       have h3 : V.l ^ 2 ≤ V.l ^ s := Nat.pow_le_pow_right (by omega) h2
       rw [hsn] at h3
       exact absurd hn (not_lt.mpr h3)
-  · intro h
-    exact absurd (Finset.mem_range.2 (Nat.succ_pos n)) h
+  · exact fun h => absurd (Finset.mem_range.2 (Nat.succ_pos n)) h
 
 theorem coeffX' (n : ℕ) : PowerSeries.coeff n (MvPowerSeries.X () : PowerSeries C) = if n = 1 then 1 else 0 :=
   PowerSeries.coeff_X n
@@ -197,8 +196,7 @@ theorem lg_addOf (Y : FBChart C V O dd) {τ : Type} (P : Fin 2 → Fin dd → Mv
   rw [hadd, eval_single_eq_subst, eval_single_eq_subst, eval_single_eq_subst, MvPowerSeries.subst_add hPP,
     MvPowerSeries.subst_comp_subst_apply hA hPP, MvPowerSeries.subst_comp_subst_apply (hX 0) hPP,
     MvPowerSeries.subst_comp_subst_apply (hX 1) hPP] at key
-  simp only [pt, MvPowerSeries.subst_X hPP] at key
-  exact key
+  simpa only [pt, MvPowerSeries.subst_X hPP] using key
 
 end Step2
 

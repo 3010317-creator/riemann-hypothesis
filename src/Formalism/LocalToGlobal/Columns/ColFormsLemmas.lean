@@ -96,8 +96,7 @@ theorem formGSD_ok (hX : X.Ok) (hC : C.Eqv) : (formGSD C Λ).Ok := by
     refine Finite.of_injective
       (fun a : MulAction.stabilizer (formGSD C Λ).G d =>
         (⟨FormG.incl Λ a.1, a.2⟩ : MulAction.stabilizer (UF X.E n × GLG (E := X.E) (n := n) (SG := SG)) (d : DecoSet (E := X.E) (n := n) (ST := ST) (SG := SG)))) ?_
-    intro a b hab
-    exact Subtype.ext (FormG.incl_injective Λ (congrArg Subtype.val hab))
+    exact fun a b hab => Subtype.ext (FormG.incl_injective Λ (congrArg Subtype.val hab))
   · intro g d
     obtain ⟨m, hm, hc⟩ := Λ.chr_root g.2
     exact (hC.nab_smul (FormG.incl Λ g) d).trans (map_root_smul _ _ hm hc).symm

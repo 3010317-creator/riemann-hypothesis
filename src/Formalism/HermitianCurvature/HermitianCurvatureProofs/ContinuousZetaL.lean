@@ -141,8 +141,7 @@ theorem map_levM_eq {z z' : Fin (2 * ρ + k + 1) → ℂ} {μ : Measure (Mt k (1
       by_cases hζ : ζ ∈ Metric.closedBall (0 : ℂ) R <;> simp [hζ]
     rw [e, ENNReal.smul_def] at h1
     have h2 : (c : ℝ≥0∞) * ∫⁻ ζ in Metric.closedBall 0 R, wt ζ = 1 * ∫⁻ ζ in Metric.closedBall 0 R, wt ζ := by
-      rw [one_mul]
-      exact h1
+      rwa [one_mul]
     have hc1 : (c : ℝ≥0∞) = 1 := (ENNReal.mul_left_inj hR (hfin R).ne).mp h2
     rw [hc, ENNReal.coe_eq_one.mp hc1, one_smul]
   · push Not at hR

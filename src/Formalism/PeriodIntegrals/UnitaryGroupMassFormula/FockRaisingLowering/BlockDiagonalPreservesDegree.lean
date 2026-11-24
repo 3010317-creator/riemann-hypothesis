@@ -113,15 +113,13 @@ theorem omE_neg_pos {l l' : FockH1Action.Ln p q r s} (h1 : FockH1Action.linePos 
   rw [omE_apply, ite_eq_right hne, add_zero, lowB_apply_of_linePos_eq_true h2, raiB_apply_of_linePos_eq_false h1]
 
 private theorem mem_homog_iff_isHomogeneous' {σ : Type} {d : ℕ} {P : MvPolynomial σ ℂ} :
-    P ∈ FockH1Action.homog σ d ↔ P.IsHomogeneous d := by
-  exact mem_homogeneousSubmodule d P
+    P ∈ FockH1Action.homog σ d ↔ P.IsHomogeneous d := mem_homogeneousSubmodule d P
 
 private theorem isHomogeneous_X_complex {σ : Type} (l : σ) : (X l : MvPolynomial σ ℂ).IsHomogeneous 1 := by
   exact isHomogeneous_X ℂ l
 
 private theorem exists_forall_isHomogeneous_monomial {σ : Type} (u : σ →₀ ℕ) :
-    ∃ k : ℕ, ∀ c : ℂ, (monomial u c).IsHomogeneous k := by
-  exact ⟨_, fun c => isHomogeneous_monomial c rfl⟩
+    ∃ k : ℕ, ∀ c : ℂ, (monomial u c).IsHomogeneous k := ⟨_, fun c => isHomogeneous_monomial c rfl⟩
 
 private theorem homogeneousComponent_eq_ite_of_isHomogeneous {σ : Type} {m n : ℕ} {P : MvPolynomial σ ℂ}
     (h : P.IsHomogeneous m) : homogeneousComponent n P = if m = n then P else 0 := by
@@ -208,12 +206,10 @@ theorem blockDiagonalPreservesDegree : KCStep := by
   rw [omE_apply]
   refine Submodule.add_mem _ ?_ ?_
   · cases h1 : FockH1Action.linePos l
-    · have h2 : FockH1Action.linePos l' = false := by
-        exact hll.symm.trans h1
+    · have h2 : FockH1Action.linePos l' = false := hll.symm.trans h1
       rw [raiB_apply_of_linePos_eq_false h1, lowB_apply_of_linePos_eq_false h2]
       exact neg_mem (mem_homog_iff_isHomogeneous'.mpr (pderiv_X_mul_homog l l' hP'))
-    · have h2 : FockH1Action.linePos l' = true := by
-        exact hll.symm.trans h1
+    · have h2 : FockH1Action.linePos l' = true := hll.symm.trans h1
       rw [raiB_apply_of_linePos_eq_true h1, lowB_apply_of_linePos_eq_true h2]
       exact mem_homog_iff_isHomogeneous'.mpr (X_mul_pderiv_homog l l' hP')
   · split_ifs
@@ -306,27 +302,19 @@ theorem fi_zero_right (P : MvPolynomial σ ℂ) : FockH1Action.fockInner P 0 = 0
 
 theorem fi_smul_left (hL : FockLinL) (c : ℂ) (P Q : MvPolynomial σ ℂ) :
     FockH1Action.fockInner (c • P) Q = (starRingEnd ℂ) c * FockH1Action.fockInner P Q := by
-  have h := hL σ c P 0 Q
-  simp only [add_zero, fi_zero_left] at h
-  exact h
+  simpa only [add_zero, fi_zero_left] using hL σ c P 0 Q
 
 theorem fi_add_left (hL : FockLinL) (P₁ P₂ Q : MvPolynomial σ ℂ) :
     FockH1Action.fockInner (P₁ + P₂) Q = FockH1Action.fockInner P₁ Q + FockH1Action.fockInner P₂ Q := by
-  have h := hL σ 1 P₁ P₂ Q
-  simp only [one_smul, map_one, one_mul] at h
-  exact h
+  simpa only [one_smul, map_one, one_mul] using hL σ 1 P₁ P₂ Q
 
 theorem fi_smul_right (hR : FockLinR) (c : ℂ) (P Q : MvPolynomial σ ℂ) :
     FockH1Action.fockInner P (c • Q) = c * FockH1Action.fockInner P Q := by
-  have h := hR σ c P Q 0
-  simp only [add_zero, fi_zero_right] at h
-  exact h
+  simpa only [add_zero, fi_zero_right] using hR σ c P Q 0
 
 theorem fi_add_right (hR : FockLinR) (P Q₁ Q₂ : MvPolynomial σ ℂ) :
     FockH1Action.fockInner P (Q₁ + Q₂) = FockH1Action.fockInner P Q₁ + FockH1Action.fockInner P Q₂ := by
-  have h := hR σ 1 P Q₁ Q₂
-  simp only [one_smul, one_mul] at h
-  exact h
+  simpa only [one_smul, one_mul] using hR σ 1 P Q₁ Q₂
 
 theorem fi_sum_left {ι : Type} (hL : FockLinL) (t : Finset ι) (f : ι → MvPolynomial σ ℂ)
     (Q : MvPolynomial σ ℂ) :
@@ -340,8 +328,7 @@ theorem fi_sum_left {ι : Type} (hL : FockLinL) (t : Finset ι) (f : ι → MvPo
 private theorem fockInner_neg_right' (hR : FockLinR) (P Q : MvPolynomial σ ℂ) :
     FockH1Action.fockInner P (-Q) = -FockH1Action.fockInner P Q := by
   have h := fi_smul_right hR (-1 : ℂ) P Q
-  rw [neg_one_smul, neg_one_mul] at h
-  exact h
+  rwa [neg_one_smul, neg_one_mul] at h
 
 theorem fi_sum_right {ι : Type} (hR : FockLinR) (t : Finset ι) (f : ι → MvPolynomial σ ℂ)
     (P : MvPolynomial σ ℂ) :

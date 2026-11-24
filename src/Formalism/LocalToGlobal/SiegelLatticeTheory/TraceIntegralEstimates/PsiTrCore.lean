@@ -153,8 +153,7 @@ theorem psiTrCore_holds : Formalism.L2.SG.Pf.PsiTrCore := by
     obtain ⟨⟨N, hN⟩, h⟩ := IsIntegral.exists_multiple_integral_of_isLocalization
       (nonZeroDivisors ℤ) y (Algebra.IsIntegral.isIntegral (R := ℚ) y)
     refine ⟨N, nonZeroDivisors.ne_zero hN, ?_⟩
-    rw [Submonoid.smul_def, zsmul_eq_mul] at h
-    exact h
+    rwa [Submonoid.smul_def, zsmul_eq_mul] at h
   let o₀ : 𝓞 I.E := ⟨(N : I.E) * y, hNy⟩
   obtain ⟨o, s, hs, rfl⟩ := intAf_le_congSub (F := I.F) (E := I.E) N hN ht
   have hsplit : (Formalism.UG.inclE (F := I.F) (Af I.F) (o : I.E) + (N : I.E ⊗[I.F] Af I.F) * s) *
@@ -173,7 +172,6 @@ theorem psiTrCore_holds : Formalism.L2.SG.Pf.PsiTrCore := by
     push_cast
     rw [mul_comm]
     exact Complex.exp_int_mul_two_pi_mul_I m
-  rw [hexp, mul_one] at hP
-  exact hP
+  rwa [hexp, mul_one] at hP
 
 end Formalism.L2.S.Pv.PsiTrCore

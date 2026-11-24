@@ -30,14 +30,12 @@ theorem mul_mono (X : Matrix (Fin n) (Fin n) A) (i j : Fin n) : (X * mono σ ν)
   · intro b _ hb
     have hj : j ≠ σ b := fun h => hb (by rw [h, hσ])
     simp [mono, hj]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem fix_entry {l c : Matrix (Fin n) (Fin n) A} (h : l * mono σ ν = mono σ ν * c) (i j : Fin n) :
     l i j * ν j = ν i * c (σ i) (σ j) := by
   have e := congrFun (congrFun h i) (σ j)
-  rw [mul_mono hσ, mono_mul, hσ] at e
-  exact e
+  rwa [mul_mono hσ, mono_mul, hσ] at e
 
 theorem fix_pat (hν : ∀ a, IsUnit (ν a)) {l c : Matrix (Fin n) (Fin n) A} (hc : ∀ i j, j < i → c i j = 0)
     (h : l * mono σ ν = mono σ ν * c) (i j : Fin n) (hij : σ j < σ i) : l i j = 0 := by
@@ -60,8 +58,7 @@ theorem fix_cOf (hν : ∀ a, IsUnit (ν a)) (l : Matrix (Fin n) (Fin n) A) :
 theorem cOf_up (l : Matrix (Fin n) (Fin n) A) (hl : ∀ i, l i i = 1) (hpat : ∀ i j, σ j < σ i → l i j = 0)
     (hν : ∀ a, IsUnit (ν a)) : (∀ a, cOf σ ν l a a = 1) ∧ ∀ a b, b < a → cOf σ ν l a b = 0 := by
   refine ⟨fun a => ?_, fun a b hab => ?_⟩
-  · simp only [cOf, Matrix.of_apply, hl, mul_one]
-    exact Ring.inverse_mul_cancel _ (hν _)
+  · simpa only [cOf, Matrix.of_apply, hl, mul_one] using Ring.inverse_mul_cancel _ (hν _)
   · simp only [cOf, Matrix.of_apply]
     rw [hpat (σ a) (σ b) (by rw [hσ, hσ]; exact hab), mul_zero, zero_mul]
 

@@ -74,8 +74,7 @@ theorem collapse {A : Type*} [AddCommGroup A] [Module ℂ A] {N r m : ℕ} (hm :
   · intro c _ hc
     by_cases hinj : Function.Injective c
     · have hex : ∃ j, w (c j) (φ (Fin.castLE hm j)) = 0 := by
-        by_contra hall
-        push Not at hall
+        by_contra! hall
         apply hc
         funext j
         obtain ⟨k, hk⟩ := j
@@ -100,8 +99,7 @@ theorem collapse {A : Type*} [AddCommGroup A] [Module ℂ A] {N r m : ℕ} (hm :
       obtain ⟨j, hj⟩ := hex
       rw [Finset.prod_eq_zero (Finset.mem_univ j) hj, zero_smul]
     · rw [hq c hinj, smul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem grouping {A : Type*} [Ring A] [Algebra ℂ A] {t N : ℕ} (κ : Fin N → ℕ) (hκ : Function.Injective κ)
     (F : (Fin t → Fin N) → A)
@@ -164,8 +162,7 @@ theorem grouping {A : Type*} [Ring A] [Algebra ℂ A] {t N : ℕ} (κ : Fin N �
     refine ⟨(d ∘ Tuple.sort (fun l => κ (d l)), (Tuple.sort (fun l => κ (d l))).symm),
       Finset.mem_univ _, ?_, ?_⟩
     · dsimp only
-      rw [ite_eq_left hsm, hcomp]
-      exact hd
+      rwa [ite_eq_left hsm, hcomp]
     · exact hcomp
   · rintro ⟨C, σ⟩ _ h1
     have hC : StrictMono (fun l => κ (C l)) := by

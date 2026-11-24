@@ -22,9 +22,7 @@ def GoodG (g : SplitG M.L) (t : Term V M r) : Prop :=
   M.split = some g ∧ Formalism.MainNotions.ThinScalesBound.FrameK H t.f t.T ∧ Formalism.MainNotions.ThinScalesBound.FrameK H t.f' t.T' ∧
     IsUnit (H.Dl t.f t.f' (r + 1)) ∧ IsUnit (gramH H (H.MMfam t)).det
 
-theorem q_ne (g : SplitG M.L) : (g.q : F) ≠ 0 := by
-  intro h
-  exact g.q_irr.ne_zero (by exact_mod_cast h)
+theorem q_ne (g : SplitG M.L) : (g.q : F) ≠ 0 := fun h => g.q_irr.ne_zero (by exact_mod_cast h)
 
 theorem qi_mul_q (g : SplitG M.L) :
     algebraMap F E ((g.q : F)⁻¹) * algebraMap F E (g.q : F) = 1 := by
@@ -98,8 +96,7 @@ theorem gramH_comb {ι : Type} [Fintype ι] (B : Matrix ι ι E) (v : ι → V) 
     intro s f y
     induction s using Finset.induction_on with
     | empty =>
-      have h0 := H.h_smul_left 0 0 y
-      simpa using h0
+      simpa using H.h_smul_left 0 0 y
     | @insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, H.h_add_left, ih]
   have hsr : ∀ (x : V) (s : Finset ι) (f : ι → V), H.h x (∑ i ∈ s, f i) = ∑ i ∈ s, H.h x (f i) := by
     intro x s f
