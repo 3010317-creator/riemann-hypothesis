@@ -501,6 +501,34 @@ theorem ci_herm {N : ℕ} (μ : Measure (Matrix (Fin N) (Fin N) ℂ)) (p q : MvP
   funext x
   simp [mul_comm]
 
+section
+open Formalism.BasicNotions
+
+theorem cr_rowAct_X {N : ℕ} (g : Matrix (Fin N) (Fin N) ℂ) (w : Fin N × Fin N) :
+    Formalism.GradedWeylDivisibility.rowAct ℂ g (X w : MvPolynomial (Fin N × Fin N) ℂ) = ∑ b : Fin N, C (g w.1 b) * X (b, w.2) := by
+  simp [Formalism.GradedWeylDivisibility.rowAct]
+
+theorem cr_rowAct_C {N : ℕ} (g : Matrix (Fin N) (Fin N) ℂ) (a : ℂ) :
+    Formalism.GradedWeylDivisibility.rowAct ℂ g (C a : MvPolynomial (Fin N × Fin N) ℂ) = C a :=
+  (Formalism.GradedWeylDivisibility.rowAct ℂ g).commutes a
+
+theorem cr_evalM_rowAct {N : ℕ} (g x : Matrix (Fin N) (Fin N) ℂ) (s : MvPolynomial (Fin N × Fin N) ℂ) :
+    evalM x (Formalism.GradedWeylDivisibility.rowAct ℂ g s) = evalM (g * x) s := by
+  induction s using MvPolynomial.induction_on
+  next a =>
+    rw [cr_rowAct_C]
+    simp [evalM]
+  next p q hp hq =>
+    simp only [map_add (f := _), evalM] at hp hq ⊢
+    rw [hp, hq]
+  next p v hp =>
+    simp only [evalM, map_mul] at hp ⊢
+    rw [hp, cr_rowAct_X]
+    congr 1
+    simp [Matrix.mul_apply]
+
+end
+
 theorem ci_invariant {N : ℕ} {μ : Measure (Matrix (Fin N) (Fin N) ℂ)} (hμ : IsHaarU N μ)
     (u : Matrix (Fin N) (Fin N) ℂ) (hu : u ∈ unitaryGroup (Fin N) ℂ) (p q : MvPolynomial (Fin N × Fin N) ℂ) :
     Aform μ (Formalism.GradedWeylDivisibility.rowAct ℂ u p) (Formalism.GradedWeylDivisibility.rowAct ℂ u q) = Aform μ p q := by
@@ -620,29 +648,6 @@ noncomputable section
 namespace PI.WSF
 
 open Formalism.BasicNotions MvPolynomial
-
-theorem cr_rowAct_X {N : ℕ} (g : Matrix (Fin N) (Fin N) ℂ) (w : Fin N × Fin N) :
-    Formalism.GradedWeylDivisibility.rowAct ℂ g (X w : MvPolynomial (Fin N × Fin N) ℂ) = ∑ b : Fin N, C (g w.1 b) * X (b, w.2) := by
-  simp [Formalism.GradedWeylDivisibility.rowAct]
-
-theorem cr_rowAct_C {N : ℕ} (g : Matrix (Fin N) (Fin N) ℂ) (a : ℂ) :
-    Formalism.GradedWeylDivisibility.rowAct ℂ g (C a : MvPolynomial (Fin N × Fin N) ℂ) = C a :=
-  (Formalism.GradedWeylDivisibility.rowAct ℂ g).commutes a
-
-theorem cr_evalM_rowAct {N : ℕ} (g x : Matrix (Fin N) (Fin N) ℂ) (s : MvPolynomial (Fin N × Fin N) ℂ) :
-    evalM x (Formalism.GradedWeylDivisibility.rowAct ℂ g s) = evalM (g * x) s := by
-  induction s using MvPolynomial.induction_on
-  next a =>
-    rw [cr_rowAct_C]
-    simp [evalM]
-  next p q hp hq =>
-    simp only [map_add (f := _), evalM] at hp hq ⊢
-    rw [hp, hq]
-  next p v hp =>
-    simp only [evalM, map_mul] at hp ⊢
-    rw [hp, cr_rowAct_X]
-    congr 1
-    simp [Matrix.mul_apply]
 
 theorem cr_rowAct_one {N : ℕ} (s : MvPolynomial (Fin N × Fin N) ℂ) :
     Formalism.GradedWeylDivisibility.rowAct ℂ (1 : Matrix (Fin N) (Fin N) ℂ) s = s := by
