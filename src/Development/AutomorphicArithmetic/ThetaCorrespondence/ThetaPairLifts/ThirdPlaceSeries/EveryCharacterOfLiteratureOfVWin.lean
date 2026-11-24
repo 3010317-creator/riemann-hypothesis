@@ -172,7 +172,6 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SiegelEisensteinSecondTermHypotheses
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TopCovolSlim2Use
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdmissibleOfIwasawaDecomposition
-public import Development.DiscreteGroups.GlobalIrreducibility.LConvFinal
 public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.PublishedTheoremStatements.BridgesAut
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.SiegelKlingenDeligneRibet
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.DeligneRibet.NotDvdAbsNorm
@@ -1151,8 +1150,6 @@ theorem UpperTheory.LiteratureTheorems.cm_curve_good_outside_prime_st_of_literat
   GlobalTheory.Published.cmCurveGoodOutsidePrime
 theorem UpperTheory.LiteratureTheorems.ess_square_integrable_segments_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : GlobalTheory.Published.EssSquareIntegrableSegments :=
   PositivityTheory.Exh.essSquareIntegrableSegments_of_seg (PositivityTheory.RgGu.segmentRepresentation)
-theorem UpperTheory.LiteratureTheorems.local_converse_gl_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : GlobalTheory.Published.LocalConverseGL :=
-  DiscreteGroups.sglob.LConv.localConverseGL
 theorem UpperTheory.LiteratureTheorems.local_langlands_recT_exists_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : _root_.UpperTheory.Zero.LLC.RecTExists :=
   O.localLanglandsExists
 theorem UpperTheory.LiteratureTheorems.pair_u_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : _root_.UpperTheory.GalS.PairUAlt :=
@@ -1470,7 +1467,6 @@ theorem UpperTheory.LiteratureTheorems.literature_local (O : _root_.UpperTheory.
     exh := (_root_.UpperTheory.LiteratureTheorems.langlands_exhaustion_gl_of_literature O),
     cos := (_root_.UpperTheory.LiteratureTheorems.standard_cosocle_gl_of_literature O),
     llc := (_root_.UpperTheory.LiteratureTheorems.local_langlands_recT_exists_of_literature O),
-    conv := (_root_.UpperTheory.LiteratureTheorems.local_converse_gl_of_literature O),
     dzi := (_root_.UpperTheory.LiteratureTheorems.depth_zero_induction_of_literature O),
     brauer := (_root_.UpperTheory.LiteratureTheorems.brauer_degree_zero_of_literature O),
     chev := (_root_.UpperTheory.LiteratureTheorems.chevalley_units_of_literature O),
