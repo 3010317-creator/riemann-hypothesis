@@ -52,12 +52,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.O
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-namespace GlobalTheory.Published
-
-def TateCharPolySt : Prop := EndCharPolySt
-
-end GlobalTheory.Published
-
 namespace GlobalTheory.TateCharPoly
 
 open ThetaDetCompare ThetaCoord
