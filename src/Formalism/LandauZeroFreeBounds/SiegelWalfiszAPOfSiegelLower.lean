@@ -1016,8 +1016,7 @@ lemma log_analytic_conductor_pos (q : ℕ) [NeZero q] (t : ℝ) : 0 < Real.log (
     exact_mod_cast h1
   apply Real.log_pos
   have ht := abs_nonneg t
-  calc (1 : ℝ) < |t| + 2 := by linarith
-    _ ≤ (q : ℝ) * (|t| + 2) := le_mul_of_one_le_left (by linarith) hq
+  nlinarith
 
 lemma zero_free_region_mono {c c' : ℝ} (h : c ≤ c') {q : ℕ} [NeZero q] {s : ℂ} (hs : InRegion c q s) :
     InRegion c' q s := by
@@ -1314,34 +1313,8 @@ theorem perron_contour_decomposition (hP : PerronChi) {q : ℕ} [NeZero q] (χ :
       + ‖∫ x in σ₁..σ₀, Fchi χ y ((x : ℂ) + (T : ℂ) * I)‖
       + ‖∫ u in (-T)..T, Fchi χ y ((σ₁ : ℂ) + u * I)‖ := by
   obtain ⟨hint, hS⟩ := hP q χ y hy σ₀ hσ₀
-  have hsplit := integral_add_compl (s := Set.Ioc (-T) T) measurableSet_Ioc hint
-  have hIoc : ∫ t in Set.Ioc (-T) T, Fchi χ y ((σ₀ : ℂ) + t * I) =
-      ∫ t in (-T)..T, Fchi χ y ((σ₀ : ℂ) + t * I) :=
-    (intervalIntegral.integral_of_le (by linarith)).symm
-  unfold Formalism.ZF.rectInt at hrect
-  set Cp := ∫ t in (Set.Ioc (-T) T)ᶜ, Fchi χ y ((σ₀ : ℂ) + t * I) with hCp
-  set Bt := ∫ x in σ₁..σ₀, Fchi χ y ((x : ℂ) + ((-T : ℝ) : ℂ) * I) with hBt
-  set Tp := ∫ x in σ₁..σ₀, Fchi χ y ((x : ℂ) + (T : ℂ) * I) with hTp
-  set Lf := ∫ u in (-T)..T, Fchi χ y ((σ₁ : ℂ) + u * I) with hLf
-  set Rt := ∫ t in (-T)..T, Fchi χ y ((σ₀ : ℂ) + t * I) with hRt
-  have hpi : (2 * (Real.pi : ℂ)) ≠ 0 :=
-    mul_ne_zero two_ne_zero (Complex.ofReal_ne_zero.mpr Real.pi_pos.ne')
-  have hinv : (2 * (Real.pi : ℂ)) * (1 / (2 * Real.pi)) = 1 := by field_simp
-  have hI : I * I = -1 := Complex.I_mul_I
-  have key : (2 * (Real.pi : ℂ)) * (Schi χ y - R) = Cp + I * (Bt - Tp) + Lf := by
-    rw [hS, ← hsplit, hIoc]
-    linear_combination (-I) * hrect + (Rt + Cp) * hinv + (Rt - Lf - 2 * Real.pi * R) * hI
-  have hn : ‖(2 * (Real.pi : ℂ))‖ = 2 * Real.pi := by
-    rw [show (2 * (Real.pi : ℂ)) = ((2 * Real.pi : ℝ) : ℂ) by push_cast; ring,
-      Complex.norm_of_nonneg (by positivity)]
-  have hsub := norm_sub_le Bt Tp
-  calc 2 * Real.pi * ‖Schi χ y - R‖ = ‖(2 * (Real.pi : ℂ)) * (Schi χ y - R)‖ := by
-        rw [norm_mul, hn]
-    _ = ‖Cp + I * (Bt - Tp) + Lf‖ := by rw [key]
-    _ ≤ ‖Cp‖ + ‖I * (Bt - Tp)‖ + ‖Lf‖ := norm_add₃_le
-    _ ≤ ‖Cp‖ + ‖Bt‖ + ‖Tp‖ + ‖Lf‖ := by
-        rw [norm_mul, Complex.norm_I, one_mul]
-        linarith
+  apply Formalism.ZF.norm_sub_le_of_rectangle_identity _ _ _ _ _ _ _ ?_ hrect
+  rw [hS, Formalism.ZF.integral_eq_intervalIntegral_add_compl _ hint T hT]
 
 end Formalism.ZeroFreeDirichlet
 end -- clump:auto
@@ -1660,16 +1633,10 @@ theorem exp_gain_from_zero_free_region (y s c₁ σ₁ L : ℝ) (hy0 : 0 < y) (h
 theorem small_scale_exp_bounds (c₁ s : ℝ) (hc₁ : 0 < c₁) (hc₁' : c₁ ≤ 1 / 20) (hs : s < 10) :
     Real.exp (c₁ * s / 2) ≤ 3 ∧ 1 ≤ 3 * Real.exp (-(c₁ / 4) * s) := by
   constructor
-  · have h : c₁ * s / 2 ≤ 1 := by
-      rcases le_or_gt 0 s with hs0 | hs0
-      · have := mul_le_mul hc₁' hs.le hs0 (by norm_num); linarith
-      · have := mul_nonpos_of_nonneg_of_nonpos hc₁.le hs0.le; linarith
+  · have h : c₁ * s / 2 ≤ 1 := by nlinarith
     calc Real.exp (c₁ * s / 2) ≤ Real.exp 1 := Real.exp_le_exp.mpr h
       _ ≤ 3 := by have := Real.exp_one_lt_d9; norm_num at this; linarith
-  · have h : -(1 / 8 : ℝ) ≤ -(c₁ / 4) * s := by
-      rcases le_or_gt 0 s with hs0 | hs0
-      · have := mul_le_mul hc₁' hs.le hs0 (by norm_num); linarith
-      · have := mul_nonpos_of_nonneg_of_nonpos hc₁.le hs0.le; linarith
+  · have h : -(1 / 8 : ℝ) ≤ -(c₁ / 4) * s := by nlinarith
     have := Real.add_one_le_exp (-(c₁ / 4) * s)
     linarith
 
