@@ -180,6 +180,13 @@ namespace GlobalTheory.Published
 
 open GlobalTheory.GLDuality
 
+/-- **Howe duality theorem for general linear groups**: under the oscillator (Weil)
+representation of a reductive dual pair `(GL_n, GL_m)`, the joint representation decomposes
+multiplicity-free into a sum of tensor products of irreducible representations, establishing
+a bijection between the corresponding automorphic representations.
+
+Proposed reference:
+[R. Howe, *Transcending classical invariant theory*][howe1989]. -/
 def GLHoweDuality : Prop :=
   ∀ n n' : ℕ, 1 ≤ n → 1 ≤ n' →
     DualAlong (MonoidHom.id (GL (Fin n) ℂ)) (MonoidHom.id (GL (Fin n') ℂ)) ∧
