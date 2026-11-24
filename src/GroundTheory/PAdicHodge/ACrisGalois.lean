@@ -22,7 +22,8 @@ variable {p : ℕ} [hp : Fact p.Prime] [IsPerfectoidField K p]
 
 theorem ringHom_ext {B : Type*} [CommRing B] [IsHausdorff (Ideal.span {(p : B)}) B]
     {F G : ACris (K := K) (p := p) →+* B}
-    (h : ∀ y : ACrisZero (K := K) (p := p), F (AdicCompletion.of _ _ y) = G (AdicCompletion.of _ _ y)) :
+    (h : ∀ y : ACrisZero (K := K) (p := p), F (algebraMap (ACrisZero K p) (ACris K p) y) =
+      G (algebraMap (ACrisZero K p) (ACris K p) y)) :
     F = G :=
   Reformulated.AutPerF.Acris.hom_ext h
 
@@ -37,16 +38,18 @@ def extendEndo (f : ACrisZero (K := K) (p := p) →+* ACrisZero (K := K) (p := p
     (span_p_le_comap_endo f)
 
 theorem extendEndo_of (f : ACrisZero (K := K) (p := p) →+* ACrisZero (K := K) (p := p)) (y : ACrisZero (K := K) (p := p)) :
-    extendEndo f (AdicCompletion.of _ _ y) = AdicCompletion.of _ _ (f y) :=
+    extendEndo f (algebraMap (ACrisZero K p) (ACris K p) y) =
+      algebraMap (ACrisZero K p) (ACris K p) (f y) :=
   AdicCompletion.extendRingHom_of _ _ _ _ y
 
 theorem extendEndo_id : extendEndo (RingHom.id (ACrisZero (K := K) (p := p))) = RingHom.id (ACris (K := K) (p := p)) :=
-  ringHom_ext fun y => by erw [extendEndo_of, RingHom.id_apply, RingHom.id_apply]
+  ringHom_ext fun y => by rw [extendEndo_of, RingHom.id_apply, RingHom.id_apply]
 
 theorem extendEndo_comp (f g : ACrisZero (K := K) (p := p) →+* ACrisZero (K := K) (p := p)) :
     (extendEndo f).comp (extendEndo g) = extendEndo (f.comp g) :=
   ringHom_ext fun y => by
-    erw [RingHom.comp_apply, extendEndo_of g y, extendEndo_of f (g y)]
+    rw [RingHom.comp_apply, extendEndo_of g y, extendEndo_of f (g y),
+      extendEndo_of (f.comp g) y, RingHom.comp_apply]
 
 theorem phi_eq_extendEndo : phi (K := K) (p := p) = extendEndo (phiZero (K := K) (p := p)) :=
   rfl
@@ -148,7 +151,8 @@ def galCris (σ : Gal(PadicAlgCl p/K)) : ACris (K := ℂ_[p]) (p := p) →+* ACr
   extendEndo (galZero σ)
 
 theorem galCris_of (σ : Gal(PadicAlgCl p/K)) (y : ACrisZero (K := ℂ_[p]) (p := p)) :
-    galCris σ (AdicCompletion.of _ _ y) = AdicCompletion.of _ _ (σ • y) :=
+    galCris σ (algebraMap (ACrisZero ℂ_[p] p) (ACris ℂ_[p] p) y) =
+      algebraMap (ACrisZero ℂ_[p] p) (ACris ℂ_[p] p) (σ • y) :=
   extendEndo_of _ y
 
 theorem galCris_one : galCris (1 : Gal(PadicAlgCl p/K)) = RingHom.id (ACris (K := ℂ_[p]) (p := p)) := by

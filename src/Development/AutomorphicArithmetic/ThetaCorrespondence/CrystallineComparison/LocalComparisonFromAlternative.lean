@@ -278,8 +278,7 @@ theorem jOC_zero (a : Reformulated.AutPerF.AcrisZero l (Cmp6.OC l)) :
       algebraMap (Reformulated.AutPerF.AinfInv l (Cmp6.OC l)) _ (a : Reformulated.AutPerF.AinfInv l (Cmp6.OC l)) := by
   show (Cmp6.cP l).symm (iotaP l (Cmp6.cA l (algebraMap _ _ a))) = _
   rw [RingEquiv.symm_apply_eq, Cmp6.cA_apply, Reformulated.AutPerF.Acris.map_algebraMap_zero]
-  erw [ACris.iota_of]
-  simp only [Algebra.algebraMap_self, RingHom.id_apply]
+  rw [iotaP, ACris.iota_of]
   erw [zt2, zt3]
 
 end Formalism.BasicNotions.CmpTie.Incl

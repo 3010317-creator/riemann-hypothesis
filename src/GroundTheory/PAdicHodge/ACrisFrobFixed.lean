@@ -176,8 +176,10 @@ theorem thetaField_iota (y : ACris K p) :
         rw [RingHom.comp_apply, ha]
         exact acrisZero_le_thetaIntegral a.2
   have hF : F = theta K p := ringHom_ext fun a => Subtype.ext (by
-    change IsPerfectoidField.thetaBDeRhamPlusField p (iota K p (_root_.AdicCompletion.of _ _ a)) = _
-    rw [iota_of, thetaField_toBDeRhamPlus, theta_of, coe_thetaZero])
+    change IsPerfectoidField.thetaBDeRhamPlusField p
+      (iota K p (algebraMap (ACrisZero K p) (ACris K p) a)) = _
+    rw [iota_of, thetaField_toBDeRhamPlus]
+    exact (congrArg Subtype.val (theta_of a)).symm)
   exact congrArg Subtype.val (RingHom.congr_fun hF y)
 
 

@@ -27,27 +27,20 @@ local notation "θ" => fontaineTheta 𝒪 p
 
 theorem exists_approx (a : ACris K p) (N : ℕ) :
     ∃ c : ACrisZero K p, a - algebraMap _ (ACris K p) c ∈ Ideal.span {(p : ACris K p) ^ N} := by
-  obtain ⟨c, hc⟩ := Ideal.Quotient.mk_surjective
-    (_root_.AdicCompletion.evalₐ (Ideal.span {(p : ACrisZero K p)}) N a)
+  obtain ⟨c, z, ha⟩ := Reformulated.AutPerF.Acris.exists_eq_add N a
   refine ⟨c, ?_⟩
-  have h : a - _root_.AdicCompletion.of _ _ c ∈
-      (Ideal.span {(p : ACrisZero K p)} ^ N).map (algebraMap (ACrisZero K p) (ACris K p)) := by
-    rw [← ker_adicCompletion_evalₐ (Submodule.fg_span_singleton _), RingHom.mem_ker]
-    simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, RingHom.map_sub]
-    rw [← hc]
-    exact sub_eq_zero.2 (_root_.AdicCompletion.evalₐ_of _ N c).symm
-  rwa [span_p_pow_map, Ideal.span_singleton_pow] at h
+  rw [Ideal.mem_span_singleton]
+  exact ⟨z, by rw [ha]; ring⟩
 
 theorem exists_eq_pow_mul_of_mem {c₁ c₂ : ACrisZero K p} {N : ℕ}
     (h : algebraMap _ (ACris K p) c₁ - algebraMap _ (ACris K p) c₂ ∈
       Ideal.span {(p : ACris K p) ^ N}) :
     ∃ z : ACrisZero K p, c₁ - c₂ = (p : ACrisZero K p) ^ N * z := by
-  rw [← Ideal.span_singleton_pow, ← span_p_pow_map, ← RingHom.map_sub (algebraMap (ACrisZero K p) (ACris K p)),
-    ← ker_adicCompletion_evalₐ (Submodule.fg_span_singleton _), RingHom.mem_ker] at h
-  have h2 : Ideal.Quotient.mk (Ideal.span {(p : ACrisZero K p)} ^ N) (c₁ - c₂) = 0 := by
-    rw [← _root_.AdicCompletion.evalₐ_of]
-    exact h
-  rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.span_singleton_pow, Ideal.mem_span_singleton] at h2
+  rw [← RingHom.map_sub (algebraMap (ACrisZero K p) (ACris K p))] at h
+  have h2 := (Reformulated.AutPerF.Acris.eval_eq_zero_iff N _).2
+    (Ideal.mem_span_singleton.1 h)
+  rw [Reformulated.AutPerF.Acris.eval_algebraMap, Ideal.Quotient.eq_zero_iff_mem,
+    Ideal.span_singleton_pow, Ideal.mem_span_singleton] at h2
   exact h2
 
 variable {ρ : ℝ}
@@ -186,7 +179,6 @@ theorem exists_lower_bound {a : ACris K p} (ha : a ≠ 0) :
       (p : Q) ^ N * iotaQ K p (m + 1) α := by
     have := congrArg (iotaQ K p (m + 1)) hα
     rw [map_mul, map_pow, map_natCast, RingHom.map_sub (iotaQ K p (m + 1)),
-      show algebraMap (ACrisZero K p) (ACris K p) c = _root_.AdicCompletion.of _ _ c from rfl,
       iotaQ_of] at this
     linear_combination -this
   apply hk₀

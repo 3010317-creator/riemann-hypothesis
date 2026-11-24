@@ -406,9 +406,10 @@ def iotaQ (m : ℕ) : ACris (K := K) (p := p) →+* 𝔸 ⧸ kerAway K p ^ m :=
   (acrisQ K p m).subtype.comp (embedding₂ K p m)
 
 theorem iotaQ_of (m : ℕ) (y : ACrisZero (K := K) (p := p)) :
-    iotaQ K p m (_root_.AdicCompletion.of _ _ y) = Ideal.Quotient.mk (kerAway K p ^ m) (y : 𝔸) := by
-  erw [iotaQ, RingHom.comp_apply, embedding₂, AdicCompletion.extendRingHom_of]
-  rfl
+    iotaQ K p m (algebraMap (ACrisZero K p) (ACris K p) y) = Ideal.Quotient.mk (kerAway K p ^ m) (y : 𝔸) :=
+  congrArg (acrisQ K p m).subtype
+    (AdicCompletion.extendRingHom_of (Ideal.span {(p : ACrisZero K p)})
+      (Ideal.span {(p : acrisQ K p m)}) (iotaZero K p m) (span_p_le_comap_iotaZero m) y)
 
 def acrisQFactor {m n : ℕ} (hle : m ≤ n) : acrisQ K p n →+* acrisQ K p m :=
   ((Ideal.Quotient.factorPow (kerAway K p) hle).comp (acrisQ K p n).subtype).codRestrict
@@ -443,10 +444,10 @@ theorem evalₐ_iota (m : ℕ) (y : ACris (K := K) (p := p)) :
   _root_.AdicCompletion.evalₐ_liftRingHom _ _ _ m y
 
 theorem iota_of (y : ACrisZero (K := K) (p := p)) :
-    iota K p (_root_.AdicCompletion.of _ _ y) = toBDeRhamPlus (normInteger K) p (y : 𝔸) := by
+    iota K p (algebraMap (ACrisZero K p) (ACris K p) y) = toBDeRhamPlus (normInteger K) p (y : 𝔸) := by
   apply _root_.AdicCompletion.ext_evalₐ
   intro m
-  erw [evalₐ_iota, iotaQ_of]
+  rw [evalₐ_iota, iotaQ_of]
   exact (_root_.AdicCompletion.evalₐ_of _ m (y : 𝔸)).symm
 
 theorem iota_algebraMap (w : AInf K p) :
