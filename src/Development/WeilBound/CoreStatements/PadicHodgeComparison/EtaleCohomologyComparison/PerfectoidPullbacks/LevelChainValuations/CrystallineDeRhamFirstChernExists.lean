@@ -1386,8 +1386,8 @@ theorem rho_smul_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m
 
 theorem rho_lin'_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m x f, rhoK S hS hC a j m x f →
     ∀ (k : K) φ, f (k • φ) = algebraMap K (S.L m).B k * f φ := by
-  intro M a hM j m x f hρ₁ k φ
-  obtain ⟨_, s₀, h⟩ := hρ₁
+  intro M a hM j m x f hf k φ
+  obtain ⟨s₀, h⟩ := rhoK_witness S hS hC hf
   exact (h s₀ le_rfl).1 k φ
 
 theorem rho_fil_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m x f, rhoK S hS hC a j m x f → ∀ n r : ℕ, n ≤ m →
