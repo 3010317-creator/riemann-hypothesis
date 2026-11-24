@@ -226,7 +226,7 @@ theorem coef_embed (dual : Bool) {lam : Fin n → ℝ} {H : Type*} [NormedAddCom
     exact Filter.Eventually.of_forall fun g => (occA_coef_Eword dual hσ hD _ w f g.2).symm
   · intro k hk f' _ hff g hg
     show ∑ c, _ = ∑ c, _
-    rw [occA_tensGrp_mul dual hσ hg hk, ← hff]
+    rw [_root_.ReciprocityTheory.ChartRestriction.DS.tensor_group_mul_kDiag dual hσ hg hk, ← hff]
 
 theorem occ_exists (dual : Bool) {ε : Fin n → Bool} {lam lam' : Fin n → ℝ} {T : S7.KType ε (lowK ε lam)}
     {T' : S7.KType ε (lowK ε lam')} {Ψ : Matrix (Fin n) (Fin n) ℂ → (T.V →L[ℂ] T.V)}
