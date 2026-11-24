@@ -297,4 +297,97 @@ theorem LFunction_zero_of_re_nonpos : ∀ (q : ℕ) [NeZero q] (χ : DirichletCh
     · omega
     · exact ho
 
+
+open Filter Topology
+
+private lemma eulerFactor_ne_zero_of_re_neg {M : ℕ} [NeZero M]
+    (χ : DirichletCharacter ℂ M) {p : ℕ} (hp : p.Prime) {s : ℂ} (hs : s.re < 0) :
+    1 - χ p * (p : ℂ) ^ (-s) ≠ 0 := by
+  by_cases hu : IsUnit (p : ZMod M)
+  · have hn : ‖χ (p : ZMod M)‖ = 1 := by simpa using χ.unit_norm_eq_one hu.unit
+    have hlt : 1 < ‖χ p * (p : ℂ) ^ (-s)‖ := by
+      rw [norm_mul, hn, one_mul, Complex.norm_natCast_cpow_of_pos hp.pos, Complex.neg_re]
+      exact Real.one_lt_rpow (by exact_mod_cast hp.one_lt) (by linarith)
+    intro h
+    rw [sub_eq_zero] at h
+    rw [← h, norm_one] at hlt
+    exact lt_irrefl _ hlt
+  · simp [χ.map_nonunit hu]
+
+private lemma zeros_eq_primitiveCharacter_of_re_neg {q : ℕ} [NeZero q]
+    (χ : DirichletCharacter ℂ q) {s : ℂ} (hs : s.re < 0) :
+    have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+    (LFunction χ s = 0 ↔ LFunction χ.primitiveCharacter s = 0) ∧
+      analyticOrderNatAt (LFunction χ) s = analyticOrderNatAt (LFunction χ.primitiveCharacter) s := by
+  have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+  have hs1 : s ≠ 1 := by intro h; norm_num [h] at hs
+  let E : ℂ → ℂ := fun z => ∏ p ∈ q.primeFactors,
+    (1 - χ.primitiveCharacter p * (p : ℂ) ^ (-z))
+  have hEn : E s ≠ 0 :=
+    Finset.prod_ne_zero_iff.mpr fun p hp =>
+      eulerFactor_ne_zero_of_re_neg χ.primitiveCharacter (Nat.prime_of_mem_primeFactors hp) hs
+  have hEa : AnalyticAt ℂ E s := by
+    apply Differentiable.analyticAt
+    change Differentiable ℂ (fun z : ℂ => ∏ p ∈ q.primeFactors,
+      (1 - χ.primitiveCharacter p * (p : ℂ) ^ (-z)))
+    intro z
+    apply DifferentiableAt.fun_finsetProd
+    intro p hp
+    have hp0 : (p : ℂ) ≠ 0 := by exact_mod_cast (Nat.prime_of_mem_primeFactors hp).ne_zero
+    fun_prop (disch := exact Or.inl hp0)
+  have hLa : AnalyticAt ℂ (LFunction χ.primitiveCharacter) s :=
+    DifferentiableOn.analyticAt (s := {z | z ≠ 1})
+      (fun z hz => (differentiableAt_LFunction _ z (.inl hz)).differentiableWithinAt)
+      (isOpen_ne.mem_nhds hs1)
+  have hev : LFunction χ =ᶠ[𝓝 s] LFunction χ.primitiveCharacter * E := by
+    filter_upwards [isOpen_ne.mem_nhds hs1] with z hz
+    have h := LFunction_changeLevel χ.conductor_dvd_level χ.primitiveCharacter (.inr hz)
+    simpa [changeLevel_primitiveCharacter, E] using h
+  constructor
+  · rw [hev.eq_of_nhds, Pi.mul_apply, mul_eq_zero]
+    simp [hEn]
+  · unfold analyticOrderNatAt
+    rw [analyticOrderAt_congr hev, analyticOrderAt_mul hLa hEa,
+      analyticOrderAt_eq_zero.mpr (.inr hEn), add_zero]
+
+/-- In the open left half-plane, the zeros of any Dirichlet L-function are exactly
+those of its Gamma factor. Primitivity is not needed away from the boundary. -/
+theorem LFunction_eq_zero_iff_of_re_neg {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q)
+    {s : ℂ} (hs : s.re < 0) : LFunction χ s = 0 ↔ gammaFactor χ s = 0 := by
+  have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+  have hs0 : s ≠ 0 := by intro h; simp [h] at hs
+  have hparity : χ.primitiveCharacter.Even ↔ χ.Even := by
+    change χ.primitiveCharacter (-1) = 1 ↔ χ (-1) = 1
+    have h := χ.primitiveCharacter_apply_of_isCoprime (a := -1) ⟨-1, 0, by ring⟩
+    simp only [Int.cast_neg, Int.cast_one] at h
+    rw [h]
+  rw [(zeros_eq_primitiveCharacter_of_re_neg χ hs).1,
+    DirichletCharacter.LFunction_eq_zero_iff_of_re_nonpos χ.primitiveCharacter_isPrimitive hs.le]
+  have hg : gammaFactor χ.primitiveCharacter s = gammaFactor χ s := by
+    unfold gammaFactor
+    rw [hparity]
+  rw [hg]
+  simp [hs0]
+
+/-- Strictly to the left of the imaginary axis, all Dirichlet L-function zeros
+are simple and at negative integers, even for imprimitive characters. -/
+theorem LFunction_zero_of_re_neg {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q)
+    {s : ℂ} (hs : s.re < 0) (hzero : LFunction χ s = 0) :
+    (∃ n : ℕ, s = -n) ∧ analyticOrderNatAt (LFunction χ) s = 1 := by
+  have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+  obtain ⟨hz, ho⟩ := zeros_eq_primitiveCharacter_of_re_neg χ hs
+  obtain ⟨hi, hm, _⟩ := LFunction_zero_of_re_nonpos χ.conductor χ.primitiveCharacter
+    χ.primitiveCharacter_isPrimitive s hs.le (hz.mp hzero)
+  exact ⟨hi, ho.trans hm⟩
+
+/-- No Dirichlet L-function vanishes on the contour line `re(s) = -1/2`. -/
+theorem LFunction_ne_zero_of_re_eq_neg_half {q : ℕ} [NeZero q]
+    (χ : DirichletCharacter ℂ q) {s : ℂ} (hs : s.re = -(1 / 2)) : LFunction χ s ≠ 0 := by
+  intro hz
+  obtain ⟨⟨n, hn⟩, _⟩ := LFunction_zero_of_re_neg χ (by linarith) hz
+  have h := congrArg Complex.re hn
+  simp only [Complex.neg_re, Complex.natCast_re] at h
+  have hn0 : (n : ℝ) = 0 ∨ 1 ≤ (n : ℝ) := by exact_mod_cast Nat.eq_zero_or_pos n
+  rcases hn0 with hn0 | hn0 <;> linarith
+
 end GlobalTheory

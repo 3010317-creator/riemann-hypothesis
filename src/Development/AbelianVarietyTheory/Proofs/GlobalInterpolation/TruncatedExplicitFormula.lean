@@ -269,12 +269,8 @@ private theorem half_le_norm_sub_of_re_eq_neg_half_of_LFunction_eq_zero {N : ℕ
 
 open Complex DirichletCharacter ArithmeticFunction MeasureTheory Filter Topology in
 private theorem LFunction_ne_zero_of_re_eq_neg_half {N : ℕ} [NeZero N]
-    (χ : DirichletCharacter ℂ N) (hχ : χ.IsPrimitive) {s : ℂ} (hs : s.re = -(1 / 2)) :
-    LFunction χ s ≠ 0 := by
-  intro h
-  have := half_le_norm_sub_of_re_eq_neg_half_of_LFunction_eq_zero χ hχ hs h
-  simp at this
-  linarith
+    (χ : DirichletCharacter ℂ N) {s : ℂ} (hs : s.re = -(1 / 2)) : LFunction χ s ≠ 0 :=
+  GlobalTheory.LFunction_ne_zero_of_re_eq_neg_half χ hs
 
 open Complex DirichletCharacter ArithmeticFunction MeasureTheory Filter Topology in
 private theorem norm_finsum_div_sub_le_two_mul_finsum_of_half_le_dist {S : Set ℂ} (hS : S.Finite) (k : ℂ → ℕ) (s : ℂ)
@@ -320,7 +316,7 @@ private theorem exists_norm_logDeriv_LFunction_neg_half_le_log_conductor :
     have hs1 : s ≠ 1 := by
       intro h; have := congrArg Complex.re h; rw [hre] at this; norm_num at this
     have hz : riemannZeta s ≠ 0 := by
-      have := LFunction_ne_zero_of_re_eq_neg_half (1 : DirichletCharacter ℂ 1) hχ hre
+      have := LFunction_ne_zero_of_re_eq_neg_half (1 : DirichletCharacter ℂ 1) hre
       rwa [LFunction_modOne_eq] at this
     obtain ⟨hfin, hcnt, hbd⟩ := H₂ s (by rw [hre]; norm_num) (by rw [hre]; norm_num) hs1 hz
     have hsum := norm_finsum_div_sub_le_two_mul_finsum_of_half_le_dist hfin (analyticOrderNatAt riemannZeta) s
@@ -346,7 +342,7 @@ private theorem exists_norm_logDeriv_LFunction_neg_half_le_log_conductor :
     rw [him] at key
     simp only [Nat.cast_one, one_mul]
     linarith [mul_nonneg hC₁.le (by linarith : (0:ℝ) ≤ Real.log (|t| + 2))]
-  · have hLs := LFunction_ne_zero_of_re_eq_neg_half χ hχ hre
+  · have hLs := LFunction_ne_zero_of_re_eq_neg_half χ hre
     obtain ⟨hfin, hcnt, hbd⟩ := H₁ N χ h1 s (by rw [hre]; norm_num) (by rw [hre]; norm_num) hLs
     rw [him] at hcnt hbd
     have hsum := norm_finsum_div_sub_le_two_mul_finsum_of_half_le_dist hfin (analyticOrderNatAt (LFunction χ)) s
@@ -493,7 +489,7 @@ theorem _root_.GlobalTheory.PerronShift.perron_shift : ∃ C : ℝ, 0 < C ∧ �
   have hc3 : c ≤ 5 / 2 := by linarith
   have hid := _root_.GlobalTheory.ExplicitRect.residue_identity N χ hχ u c T' m h hu1 hc1
     (by linarith) hh hev (fun s h1 h2 h3 => (hZ s h1 (by linarith) h3).1)
-    (fun s hs => LFunction_ne_zero_of_re_eq_neg_half χ hχ hs)
+    (fun s hs => LFunction_ne_zero_of_re_eq_neg_half χ hs)
   rw [inv_two_pi_mul_sub_add_eq_of_contour_identity _ _ _ _ _ _ _ hid]
   refine (norm_neg_add_inv_two_pi_mul_add_I_mul_sub_le _ _ _ _).trans ?_
   have hN : (1 : ℝ) ≤ N := by exact_mod_cast Nat.one_le_iff_ne_zero.mpr (NeZero.ne N)
