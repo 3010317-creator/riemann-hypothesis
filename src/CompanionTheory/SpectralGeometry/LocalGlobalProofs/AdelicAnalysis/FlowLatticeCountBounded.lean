@@ -7,6 +7,7 @@ public import Formalism.UnipotentAdelicQuotients.SWXSDefs
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.RationalTuplesDiscreteCocompactAdelic
 public import Mathlib.Basic.Finite.Defs
 public import Mathlib.Basic.Real.Basic
+public import Mathlib.Data.Set.Finite.Lemmas
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -121,7 +122,8 @@ lemma sizeTup_ratTup_pos {d M n : ℕ} (b : Module.Basis (Fin d) F E) (X : Fin n
 
 end SlopeTestRemainingChoices
 
-lemma exists_pos_lt {α : Type} {S : Set α} (hS : S.Finite) (f : α → ℝ) (hf : ∀ x ∈ S, 0 < f x) :
+private theorem exists_pos_lt {α : Type} {S : Set α} (hS : S.Finite)
+    (f : α → ℝ) (hf : ∀ x ∈ S, 0 < f x) :
     ∃ r : ℝ, 0 < r ∧ r ≤ 1 ∧ ∀ x ∈ S, r < f x := by
   rcases S.eq_empty_or_nonempty with h | hne
   · refine ⟨1, one_pos, le_rfl, ?_⟩
@@ -140,7 +142,6 @@ lemma exists_pos_lt {α : Type} {S : Set α} (hS : S.Finite) (f : α → ℝ) (h
       have h2 : f a ≤ f x := hmin x hx
       have : 0 < min (f a) 1 := lt_min hfa one_pos
       linarith
-
 
 theorem count_le : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ τ : Multiplicative ℝ →* (AF F ⊗[F] E)ˣ, IsFlow τ → ∀ (M : ℕ) (Ω : Set (Fin 1 → Fin M → AF F ⊗[F] E)), IsCompact Ω → ∃ x₀ C : ℝ, ∀ x : ℝ, ∑' X : {X : Fin 1 → Fin M → E // X ≠ 0}, (Set.indicator Ω (fun _ => (1 : ℝ≥0∞))) (((τ (Multiplicative.ofAdd (-x)) : (AF F ⊗[F] E)ˣ) : AF F ⊗[F] E) • ratTup (AF F) X.1) ≤ if x < x₀ then 0 else ENNReal.ofReal (C * Real.exp (2 * Module.finrank ℚ F * M * x)) := by
   intro F E _ _ _ _ _ σ hCM τ hτ M Ω hΩ
