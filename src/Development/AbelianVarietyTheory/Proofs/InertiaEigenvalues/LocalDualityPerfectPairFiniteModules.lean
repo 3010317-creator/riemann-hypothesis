@@ -63,19 +63,15 @@ theorem exists_dual_equiv {n : ℕ} [NeZero n] {M : Type} [AddCommGroup M] [Modu
     refine h2 y fun x => ?_
     rw [← hf, hy]
     rfl
-  have c1 : Nat.card (TDual (ZMod n) M) = Nat.card M := GlobalTheory.ZModDual.card_dual_eq n M
-  have : Finite (TDual (ZMod n) M) := Nat.finite_of_card_ne_zero (by rw [c1]; exact Nat.card_pos.ne')
-  have c2 : Nat.card (Module.Dual (ZMod n) M') = Nat.card M' := GlobalTheory.ZModDual.card_dual_eq n M'
-  have : Finite (Module.Dual (ZMod n) M') := Nat.finite_of_card_ne_zero (by rw [c2]; exact Nat.card_pos.ne')
-  have c3 : Nat.card M ≤ Nat.card M' := by
-    rw [← c2]
-    refine Nat.card_le_card_of_injective (fun x => ((P x).toZModLinearMap n : Module.Dual (ZMod n) M')) ?_
+  let g : M → Module.Dual (ZMod n) M' := fun x => (P x).toZModLinearMap n
+  have hg : Function.Injective g := by
     intro x x' hx
     rw [← sub_eq_zero]
     refine h1 _ fun y => ?_
     rw [map_sub, AddMonoidHom.sub_apply, sub_eq_zero]
     exact DFunLike.congr_fun hx y
-  exact ⟨AddEquiv.ofBijective f (inj.bijective_of_nat_card_le (c1 ▸ c3)), hf⟩
+  have bij := (GlobalTheory.ZModDual.bijective_of_mutual_dual_injections n M M' f g inj hg).1
+  exact ⟨AddEquiv.ofBijective f bij, hf⟩
 
 theorem dual_equivariant {n : ℕ} {Λ D : Type} [CommRing Λ] [Group D]
     {M : Type} [AddCommGroup M] [Module (ZMod n) M] [Module Λ M] {M' : Type} [AddCommGroup M'] [Module Λ M']
@@ -86,30 +82,6 @@ theorem dual_equivariant {n : ℕ} {Λ D : Type} [CommRing Λ] [Group D]
   rw [twDual_apply, he, he]
   change _ = _ * P (ρ g⁻¹ x) y
   rw [← hP, ← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply]
-
-section Transport
-
-variable {R R' : Type} [CommRing R] [CommRing R'] {D : Type} [Group D] [TopologicalSpace D]
-  {M : Type} [AddCommGroup M] [Module R M] [TopologicalSpace M] [DiscreteTopology M]
-  {M' : Type} [AddCommGroup M'] [Module R' M'] [TopologicalSpace M'] [DiscreteTopology M']
-  (ρ : Representation R D M) (ρ' : Representation R' D M') (e : M ≃+ M')
-  (he : ∀ g m, e (ρ g m) = ρ' g (e m))
-
-private def cocycleTransport : Z1 ρ ≃+ Z1 ρ' where
-  toFun z := ⟨fun g => e (z.1 g), continuous_of_discreteTopology.comp z.2.1, fun g h => by
-    beta_reduce
-    rw [z.2.2, map_add (f := _), he]⟩
-  invFun z := ⟨fun g => e.symm (z.1 g), continuous_of_discreteTopology.comp z.2.1, fun g h => by
-    apply e.injective
-    rw [map_add (f := _), he]
-    simp only [AddEquiv.apply_symm_apply]
-    exact z.2.2 g h⟩
-  left_inv z := Subtype.ext (funext fun g => e.symm_apply_apply _)
-  right_inv z := Subtype.ext (funext fun g => e.apply_symm_apply _)
-  map_add' z w := Subtype.ext (funext fun g => map_add e _ _)
-
-
-end Transport
 
 theorem local_pair : LocalFiniteness → LocalTateDuality → LocalEulerChar → ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (n : ℕ) (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 F)), IsPlaceOver A v → ∀ (Λ : Type) [CommRing Λ] (W : Type) [AddCommGroup W] [Module Λ W] [TopologicalSpace W] [DiscreteTopology W] [Finite W] (W' : Type) [AddCommGroup W'] [Module Λ W'] [TopologicalSpace W'] [DiscreteTopology W'] [Finite W'] (ρ : Representation Λ (Dec (F := F) A) W) (ρ' : Representation Λ (Dec (F := F) A) W') (P : W →+ W' →+ ZMod (l ^ n)), 0 < n → ContAction ρ → ContAction ρ' → (∀ x, (∀ y, P x y = 0) → x = 0) → (∀ y, (∀ x, P x y = 0) → y = 0) → (∀ g x y, P (ρ g x) (ρ' g y) = ((cycMod F Ω l n g.1 : (ZMod (l ^ n))ˣ) : ZMod (l ^ n)) * P x y) → (∀ y : Z1 ρ', (∀ x : Z1 ρ, CupB (fun g : Dec (F := F) A => ((cycMod F Ω l n g.1 : (ZMod (l ^ n))ˣ) : ZMod (l ^ n))) (fun g m => ρ' g m) P x.1 y.1) ↔ Cob ρ' y.1) ∧ (((l : ℕ) : 𝓞 F) ∉ v.asIdeal → Nat.card (H1 ρ) = Nat.card (H0 ρ) * Nat.card (H0 ρ')) := by
   intro hLF hLD hLE F Ω _ _ _ _ _ l _ n A v hA Λ _ W _ _ _ _ _ W' _ _ _ _ _ ρ ρ' P hn hρ hρ' h1 h2 hP
@@ -128,7 +100,7 @@ theorem local_pair : LocalFiniteness → LocalTateDuality → LocalEulerChar →
     have h0 := hinj (Submodule.Quotient.mk y') (by
       refine LinearMap.ext fun x => ?_
       induction x using Submodule.Quotient.induction_on with | H x =>
-      obtain ⟨x, rfl⟩ := (cocycleTransport ρ ((twDual χ (zmodRep (l ^ n) ρ')).comp (MonoidHom.id _)) e hee).surjective x
+      obtain ⟨x, rfl⟩ := (_root_.GlobalTheory.DualPairFormula.cocycleEquiv ρ ((twDual χ (zmodRep (l ^ n) ρ')).comp (MonoidHom.id _)) e hee).surjective x
       obtain ⟨f, hf1, hf2⟩ := H x
       refine (Submodule.Quotient.mk_eq_zero _).2 ((separated_dvr_second_cohomology_mem _ _).2 ⟨f, hf1.continuous, funext fun p => ?_⟩)
       exact (hf2 p.1 p.2).symm.trans (he _ _).symm)
