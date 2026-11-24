@@ -419,6 +419,76 @@ theorem exists_coordRel_of_isUnivJ : ∀ (V : Type) [CommRing V] (G : Over (Sp V
   · rw [Coord.jetSubstP_trunc m (fun p : Fin 1 × Fin d => φi (0, p.2)), key]
     exact hφi m
 
+section ChartTransition
+
+variable {V : Type} [CommRing V] {G : Over (Sp V)} {d : ℕ}
+  {x y z : ∀ m, jOG (𝟙 (Sp V)) d m 1 ⟶ G}
+
+/-- Successive coordinate relations compose by substitution of the second series into the first. -/
+theorem coordRel_comp {φ ψ : Pt V 1 d}
+    (hφ0 : ∀ i, MvPowerSeries.constantCoeff (φ i) = 0)
+    (hψ0 : ∀ i, MvPowerSeries.constantCoeff (ψ i) = 0)
+    (hφ : CoordRel x y φ) (hψ : CoordRel y z ψ) : CoordRel x z (comp1 φ ψ) := by
+  intro m
+  change z m = CoordLaw.sub1 m (comp1 φ ψ) ≫ x m
+  calc
+    z m = CoordLaw.sub1 m ψ ≫ y m := hψ m
+    _ = (CoordLaw.sub1 m ψ ≫ CoordLaw.sub1 m φ) ≫ x m := by
+      rw [show y m = CoordLaw.sub1 m φ ≫ x m from hφ m, Category.assoc]
+    _ = _ := by rw [CoordLaw.jetSchemeMap_singlePoint_comp_singlePoint m ψ φ hψ0 hφ0]
+
+variable [GrpObj G]
+
+/-- A universal chart determines a coordinate substitution from its effect on all jets. -/
+theorem coordRel_unique (hx : GlobalTheory.PowGerm.IsUnivJ G (Fin 1 × Fin d) x)
+    {φ ψ : Pt V 1 d} (hφ0 : ∀ i, MvPowerSeries.constantCoeff (φ i) = 0)
+    (hψ0 : ∀ i, MvPowerSeries.constantCoeff (ψ i) = 0)
+    (hφ : CoordRel x y φ) (hψ : CoordRel x y ψ) : φ = ψ :=
+  CoordLaw.eq_of_jetSchemeMap_singlePoint_universal hx hφ0 hψ0
+    (fun m => (hφ m).symm.trans (hψ m))
+
+/-- The canonical substitution expressing the chart `y` in the coordinates of `x`. -/
+def chartTransition (hx : GlobalTheory.PowGerm.IsUnivJ G (Fin 1 × Fin d) x)
+    (hy : GlobalTheory.PowGerm.IsUnivJ G (Fin 1 × Fin d) y) : Pt V 1 d :=
+  (exists_coordRel_of_isUnivJ V G d x y hx hy).choose
+
+theorem chartTransition_const (hx : GlobalTheory.PowGerm.IsUnivJ G (Fin 1 × Fin d) x)
+    (hy : GlobalTheory.PowGerm.IsUnivJ G (Fin 1 × Fin d) y) :
+    ∀ i, MvPowerSeries.constantCoeff (chartTransition hx hy i) = 0 :=
+  (exists_coordRel_of_isUnivJ V G d x y hx hy).choose_spec.choose_spec.1.1
+
+theorem chartTransition_coordRel (hx : GlobalTheory.PowGerm.IsUnivJ G (Fin 1 × Fin d) x)
+    (hy : GlobalTheory.PowGerm.IsUnivJ G (Fin 1 × Fin d) y) :
+    CoordRel x y (chartTransition hx hy) :=
+  (exists_coordRel_of_isUnivJ V G d x y hx hy).choose_spec.choose_spec.2.1
+
+theorem chartTransition_comp (hx : GlobalTheory.PowGerm.IsUnivJ G (Fin 1 × Fin d) x)
+    (hy : GlobalTheory.PowGerm.IsUnivJ G (Fin 1 × Fin d) y)
+    (hz : GlobalTheory.PowGerm.IsUnivJ G (Fin 1 × Fin d) z) :
+    comp1 (chartTransition hx hy) (chartTransition hy hz) = chartTransition hx hz := by
+  have hxy := chartTransition_const hx hy
+  have hyz := chartTransition_const hy hz
+  exact coordRel_unique hx (CoordLaw.cc_comp1 hxy hyz) (chartTransition_const hx hz)
+    (coordRel_comp hxy hyz (chartTransition_coordRel hx hy) (chartTransition_coordRel hy hz))
+    (chartTransition_coordRel hx hz)
+
+theorem chartTransition_inv (hx : GlobalTheory.PowGerm.IsUnivJ G (Fin 1 × Fin d) x)
+    (hy : GlobalTheory.PowGerm.IsUnivJ G (Fin 1 × Fin d) y) :
+    IsInvPair (chartTransition hx hy) (chartTransition hy hx) := by
+  obtain ⟨φ, ψ, hinv, hφ, hψ⟩ := exists_coordRel_of_isUnivJ V G d x y hx hy
+  have eφ := coordRel_unique hx hinv.1 (chartTransition_const hx hy)
+    hφ (chartTransition_coordRel hx hy)
+  have eψ := coordRel_unique hy hinv.2.1 (chartTransition_const hy hx)
+    hψ (chartTransition_coordRel hy hx)
+  rw [← eφ, ← eψ]
+  exact hinv
+
+@[simp] theorem chartTransition_refl (hx : GlobalTheory.PowGerm.IsUnivJ G (Fin 1 × Fin d) x) :
+    chartTransition hx hx = pt V (n := 1) d 0 :=
+  (chartTransition_comp hx hx hx).symm.trans (chartTransition_inv hx hx).2.2.2
+
+end ChartTransition
+
 end GlobalTheory.ChartCmp
 end -- clump:auto
 end -- clump:auto
@@ -929,10 +999,32 @@ open GlobalTheory.ChartCmp
 
 namespace GlobalTheory.ChartCmp
 
+/-- The canonical transitions transport both the formal group law and the endomorphism action. -/
+theorem law_act_of_universal_charts
+    (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) [StarRing (𝓞 E)]
+    (V : Type) [CommRing V] (t : SAB H (Sp V)) (d : ℕ) (B B' : FB V d (𝓞 E))
+    (κ κ' : Type) [Fintype κ] [Fintype κ']
+    (tg : κ → (Sp (DualNumber V) ⟶ t.G.left)) (tg' : κ' → (Sp (DualNumber V) ⟶ t.G.left))
+    (uv : κ → Fin d → V) (uv' : κ' → Fin d → V)
+    (x x' : ∀ m, jOG (𝟙 (Sp V)) d m 1 ⟶ t.G)
+    (hc : IsChartG t (𝟙 (Sp V)) d B.G.F B.A.act tg uv x)
+    (hc' : IsChartG t (𝟙 (Sp V)) d B'.G.F B'.A.act tg' uv' x')
+    (hu : GlobalTheory.PowGerm.IsUnivJ t.G (Fin 1 × Fin d) x)
+    (hu' : GlobalTheory.PowGerm.IsUnivJ t.G (Fin 1 × Fin d) x') :
+    (∀ i, B'.G.F i = transF B.G.F (chartTransition hu hu') (chartTransition hu' hu) i) ∧
+      ∀ a, B'.A.act a =
+        comp1 (chartTransition hu' hu) (comp1 (B.A.act a) (chartTransition hu hu')) :=
+  law_act_of_coordRel E H V t d B B' κ κ' tg tg' uv uv' x x' _ _ hc hc' hu
+    (chartTransition_inv hu hu') (chartTransition_coordRel hu hu')
+
 theorem jRel_of_charts_frames : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (V : Type) [CommRing V] [IsLocalRing V] (t : SAB H (Sp V)), Function.Surjective (t.G ⊗ t.G).hom.appTop.hom → ∀ (d : ℕ) (B B' : FB V d (𝓞 E)) (κ κ' : Type) [Fintype κ] [Fintype κ'] (tg : κ → (Sp (DualNumber V) ⟶ t.G.left)) (tg' : κ' → (Sp (DualNumber V) ⟶ t.G.left)) (uv : κ → Fin d → V) (uv' : κ' → Fin d → V) (x : ∀ m, jOG (𝟙 (Sp V)) d m 1 ⟶ t.G) (x' : ∀ m, jOG (𝟙 (Sp V)) d m 1 ⟶ t.G) (e : ∀ m, FrTyG t (𝟙 (Sp V)) d x m) (e' : ∀ m, FrTyG t (𝟙 (Sp V)) d x' m), IsChartG t (𝟙 (Sp V)) d B.G.F B.A.act tg uv x → IsChartG t (𝟙 (Sp V)) d B'.G.F B'.A.act tg' uv' x' → GlobalTheory.PowGerm.IsUnivJ t.G (Fin 1 × Fin d) x → GlobalTheory.PowGerm.IsUnivJ t.G (Fin 1 × Fin d) x' → IsFrameG t (𝟙 (Sp V)) d x B.G.F B.A.act B.ph1 B.ph2 B.sy B.ad e → IsFrameG t (𝟙 (Sp V)) d x' B'.G.F B'.A.act B'.ph1 B'.ph2 B'.sy B'.ad e' → ∃ φ φi : Pt V 1 d, (∀ m, ∃ ε : PS V 2 d, JRel m B B' φ φi ε) ∧ ∀ (u u' : Fin d → V) (v : Sp (DualNumber V) ⟶ t.G.left), IsCombAtG t (𝟙 (Sp V)) (dirs x) u v → IsCombAtG t (𝟙 (Sp V)) (dirs x') u' v → u = (dLin φ).mulVec u' := by
   intro E _ _ _ H _ hstar V _ _ t hsurj d B B' κ κ' _ _ tg tg' uv uv' x x' e e' hc hc' hu hu' hf hf'
-  obtain ⟨φ, φi, hinv, hx, -⟩ := GlobalTheory.T.exists_coordinateRelation_universalJets V t.G d x x' hu hu'
-  obtain ⟨hlaw, hact⟩ := GlobalTheory.T.chart_law_action_eq_transported_of_coordRel E H V t d B B' κ κ' tg tg' uv uv' x x' φ φi hc hc' hu hinv hx
+  let φ := chartTransition hu hu'
+  let φi := chartTransition hu' hu
+  have hinv : IsInvPair φ φi := chartTransition_inv hu hu'
+  have hx : CoordRel x x' φ := chartTransition_coordRel hu hu'
+  obtain ⟨hlaw, hact⟩ :=
+    law_act_of_universal_charts E H V t d B B' κ κ' tg tg' uv uv' x x' hc hc' hu hu'
   obtain ⟨hg, h1, h2, hs, ha⟩ := (isFrameG_iff t _ d x _ _ _ _ _ _ e).1 hf
   obtain ⟨hg', h1', h2', hs', ha'⟩ := (isFrameG_iff t _ d x' _ _ _ _ _ _ e').1 hf'
   have h0 : ∀ i, MvPowerSeries.constantCoeff (φ i) = 0 := hinv.1
