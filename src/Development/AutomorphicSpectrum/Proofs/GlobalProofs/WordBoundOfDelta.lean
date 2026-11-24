@@ -421,12 +421,12 @@ theorem step_sq (X : Fin d → Module.End ℂ M) (c : Fin d → Fin d → Fin d 
         add_le_add t1 t2
     _ = (s ^ 2 * A ^ 2 + (k * γ + a * d) * A * B) * ‖u‖ ^ 2 := by ring
 
-theorem le_of_sq_le_quad (A B s E : ℝ) (hA0 : 0 ≤ A) (hB0 : 0 ≤ B) (hs0 : 0 ≤ s) (hE0 : 0 ≤ E)
+theorem le_of_sq_le_quad (A B s E : ℝ) (hA0 : 0 ≤ A) (hs0 : 0 ≤ s) (hE0 : 0 ≤ E)
     (h : B ^ 2 ≤ s ^ 2 * A ^ 2 + E * A * B) : B ≤ (s + E) * A := by
   by_contra hc
   rw [not_le] at hc
-  have hsA : s * A ≤ B := by nlinarith [mul_nonneg hE0 hA0]
   have hB : 0 < B := lt_of_le_of_lt (mul_nonneg (add_nonneg hs0 hE0) hA0) hc
+  have hsA : s * A ≤ B := by nlinarith [mul_nonneg hE0 hA0]
   have h1 : (s + E) * A * B < B * B := mul_lt_mul_of_pos_right hc hB
   have h2 : s * A * (s * A) ≤ s * A * B := mul_le_mul_of_nonneg_left hsA (mul_nonneg hs0 hA0)
   nlinarith [h1, h2, h]
@@ -463,7 +463,7 @@ theorem next_word_bound (X : Fin d → Module.End ℂ M) (c : Fin d → Fin d �
     have h := mul_self_le_mul_self hB0 hle
     rw [Real.mul_self_sqrt hQ0] at h
     nlinarith [h]
-  have hfin := le_of_sq_le_quad A B s _ hA0 hB0 hs0 hE0 hB2
+  have hfin := le_of_sq_le_quad A B s _ hA0 hs0 hE0 hB2
   intro l hl u hu
   exact (hBb l hl u hu).trans (mul_le_mul_of_nonneg_right hfin (norm_nonneg u))
 
