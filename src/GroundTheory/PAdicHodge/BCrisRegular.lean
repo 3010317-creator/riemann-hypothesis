@@ -19,33 +19,6 @@ section AwayLift
 
 variable {R F : Type*} [CommRing R] [CommRing F] {t : R} (f : R →+* F) (ht : IsUnit (f t))
 
-theorem awayLift_algebraMap' (x : R) :
-    Localization.awayLift f t ht (algebraMap R (Localization.Away t) x) = f x :=
-  IsLocalization.lift_eq _ x
-
-theorem awayLift_injective (hf : Function.Injective f) :
-    Function.Injective (Localization.awayLift f t ht) := by
-  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
-  intro x hx
-  obtain ⟨⟨y, s⟩, hs⟩ := IsLocalization.surj (Submonoid.powers t) x
-  simp only at hs
-  have h1 := congrArg (Localization.awayLift f t ht) hs
-  rw [map_mul, hx, zero_mul, awayLift_algebraMap'] at h1
-  have hy : y = 0 := hf (by rw [map_zero]; exact h1.symm)
-  rw [hy, map_zero] at hs
-  exact (IsLocalization.map_units (Localization.Away t) s).mul_left_eq_zero.1 hs
-
-theorem awayLift_comp_eq (g : Localization.Away t →+* Localization.Away t) (h : F →+* F)
-    (hgh : ∀ x : R, Localization.awayLift f t ht (g (algebraMap R (Localization.Away t) x)) =
-      h (f x)) (z : Localization.Away t) :
-    Localization.awayLift f t ht (g z) = h (Localization.awayLift f t ht z) := by
-  have e : (Localization.awayLift f t ht).comp g = h.comp (Localization.awayLift f t ht) := by
-    apply IsLocalization.ringHom_ext (Submonoid.powers t)
-    refine RingHom.ext fun x => ?_
-    simp only [RingHom.comp_apply]
-    rw [hgh, awayLift_algebraMap']
-  exact RingHom.congr_fun e z
-
 end AwayLift
 
 private theorem localization_comp_eq {R S F : Type*}

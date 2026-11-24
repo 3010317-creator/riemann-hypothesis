@@ -6,7 +6,8 @@ public import Formalism.SizeWindowBrackets.Chain2aCoreNoAnalytic
 public import Formalism.SizeWindowBrackets.ErrorFormsWeakWindowsFalse
 public import Formalism.ThickAverageLoss.PartnersToFactorsAt
 public import Formalism.HarderNarasimhan.StatementPl
-public import Formalism.SizeWindowBrackets.RealSlopeBoundsSplit
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -92,8 +93,6 @@ variable {K : Type} [Field K] [NumberField K]
 def lw (w : HeightOneSpectrum (𝓞 K)) : ℝ :=
   Real.log (Ideal.absNorm w.asIdeal : ℝ) / (finrank ℚ K : ℝ)
 
-def plOf (w : HeightOneSpectrum (𝓞 K)) : slopeLatticeData.FinPl K := ⟨w.asIdeal, w.isMaximal⟩
-
 end Defs4
 
 end Formalism.LFunctionChainParameters.LBrDiv
@@ -103,7 +102,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.SizeWindowBrackets.SBrDiv =====
 
 -- ===== clump member: Formalism.SizeWindowBrackets.SlopesFromSizeAndCount =====
--- clump-header: {"m": "Formalism.SizeWindowBrackets.SlopesFromSizeAndCount", "h": "module\n\npublic import Formalism.SizeWindowBrackets.Chain2aCoreNoAnalytic\npublic import Formalism.SizeWindowBrackets.SBrDiv\npublic import Formalism.SizeWindowBrackets.ErrorFormsWeakWindowsFalse\npublic import Formalism.HarderNarasimhan.StatementPl\npublic import Formalism.SizeWindowBrackets.RealSlopeBoundsSplit\npublic import Formalism.ThickAverageLoss.PartnersToFactorsAt\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.SizeWindowBrackets.FirstPrimeNeSecondPrime\nimport Formalism.SizeWindowBrackets.GrowthBoundGivesRiemannHypothesis\nimport Formalism.SizeWindowBrackets.QuotientSlopeBoundsWith\nimport Formalism.SizeWindowBrackets.SChain\nimport Formalism.SizeWindowBrackets.GaloisToProductIsIso\n\n"}
+-- clump-header: {"m": "Formalism.SizeWindowBrackets.SlopesFromSizeAndCount", "h": "module\n\npublic import Formalism.SizeWindowBrackets.Chain2aCoreNoAnalytic\npublic import Formalism.SizeWindowBrackets.SBrDiv\npublic import Formalism.SizeWindowBrackets.ErrorFormsWeakWindowsFalse\npublic import Formalism.HarderNarasimhan.StatementPl\npublic import Mathlib.Algebra.BigOperators.Group.Finset.Defs\npublic import Mathlib.Basic.Real.Basic\npublic import Formalism.ThickAverageLoss.PartnersToFactorsAt\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.SizeWindowBrackets.FirstPrimeNeSecondPrime\nimport Formalism.SizeWindowBrackets.GrowthBoundGivesRiemannHypothesis\nimport Formalism.SizeWindowBrackets.QuotientSlopeBoundsWith\nimport Formalism.SizeWindowBrackets.SChain\nimport Formalism.SizeWindowBrackets.GaloisToProductIsIso\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -130,29 +129,10 @@ structure Rows {I : Type} {m : ℕ} (F : Fam I m) where
 namespace Fam6
 variable {I : Type} {m : ℕ} (F : Fam I m)
 
-def FoAll : ℝ :=
-  ∑ j, ∑ᶠ z : HeightOneSpectrum (𝓞 F.K), lw z * (if plOf z ∈ F.S then ramE (plOf z) * F.Fj j (plOf z) else 0)
-
-def EAll (u : I) (j : Fin m) : ℝ :=
-  ∑ᶠ z : HeightOneSpectrum (𝓞 F.K), lw z * (if plOf z ∈ F.S then ramE (plOf z) * F.Ej u j (plOf z) else 0)
-
-def sMean [Fintype I] : ℝ := WeightedMeanLemmas.sF F.du (fun u => muDef (F.b u) (F.X u) (F.N' u)) F.h
-
 end Fam6
 
 section Defs
 variable {H : Type} [AddCommGroup H] [Fintype H] [DecidableEq H] {W : H → Type} [∀ u0, Fintype (W u0)] {m : ℕ}
-
-def budgetAtPoint (H : Type) [Fintype H] (G : Glob) (m : ℕ) : ℝ :=
-  (2 * (Fintype.card H : ℝ)) * (m : ℝ) * Real.exp (G.x ^ G.ε) * G.x ^ G.ε
-
-def NcTx (G : Glob) (T2 : Finset H) : ℝ :=
-  (T2.card : ℝ) * G.k * bTx G.x G.ε * G.x ^ G.ε / ((Fintype.card H : ℝ) * ((Fintype.card H : ℝ) * G.x ^ (-G.ε)))
-
-def topPhi (H : Type) [AddCommGroup H] [Fintype H] [DecidableEq H] : H ↪ PhiSet (H := H) :=
-  ⟨fun t => ⟨topPl t, Finset.mem_filter.2 ⟨Finset.mem_univ _, rfl⟩⟩, fun _ _ h => congrArg (fun z => z.1.2) h⟩
-
-def aPhi (a : H → ℝ) : PhiSet (H := H) → ℝ := fun ρ => a ρ.1.2
 
 end Defs
 
@@ -280,8 +260,6 @@ section DefsC
 variable {H : Type} [AddCommGroup H] [Fintype H] [DecidableEq H] {W : H → Type} [∀ u0, Fintype (W u0)] {m : ℕ}
 
 end DefsC
-
-def E8 (x ε : ℝ) : ℝ := Real.exp (-(x ^ (ε / 8)))
 
 def E7 (x ε : ℝ) : ℝ := Real.exp (-(x ^ (ε / 7)))
 

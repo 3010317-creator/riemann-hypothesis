@@ -656,7 +656,6 @@ theorem CrystallineSemistableComparison.P.adj_mor : ∀ {R R' : Type} [CommRing 
 
 theorem CrystallineSemistableComparison.P.initial : ∀ {R : Type} [CommRing R] {C : Type u} [Category.{v} C] (F : C ⥤ ModuleCat.{w} R) (T₀ : C) (h : Limits.IsInitial T₀), (cx F).ResUpTo 1 (aug F fun T => (F.map (h.to T)).hom) := GlobalTheory.T.initial_object_augmented_resolution
 
-theorem CrystallineSemistableComparison.P.el_iso : ∀ {R : Type} [CommRing R] {C : Type u} [Category.{v} C] {E' E : C ⥤ Type t} (p : E' ⟶ E) (F : C ⥤ ModuleCat.{w} R), (∀ T, Function.Bijective (p.app T)) → ∀ n, Function.Bijective ((elMor p F).hom.f n) := _root_.GlobalTheory.CompanionTheory.Cech.elMor_bijective_of_bijective
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.FaceMapCompSuccAboveCastSucc =====

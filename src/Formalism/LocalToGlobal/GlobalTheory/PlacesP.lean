@@ -32,19 +32,7 @@ namespace Formalism.L2.GlobalTheoryTheory.Places
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory
 
-def PlaceConditionsFamily : Prop :=
-  ∀ {eps : ℝ} (Fm : FamP eps) (crystallineComparison : ℝ), product_first_zeroth_parts.ConclusionOnFamily Fm crystallineComparison → SettingEventually Fm → TuSize Fm → J.MuRank Fm →
-    LinkG Fm → LinkMu Fm → Lnk.PlacesF Fm
-
-def SlopeBoundOfMuRank : Prop :=
-  ∀ {eps : ℝ} (Fm : FamP eps) (crystallineComparison : ℝ), product_first_zeroth_parts.ConclusionOnFamily Fm crystallineComparison → SettingEventually Fm → TuSize Fm → J.MuRank Fm →
-    LinkG Fm → LinkMu Fm → LocalQuadraticParts.SlopeLemmaFamily Fm
-
 def LevelPrimeSettingFamily : Prop := ∀ {eps : ℝ} (Fm : FamP eps), TuSize Fm → SettingEventually Fm
-
-def SlopeLemmaLinkForm : Prop :=
-  ∀ {eps : ℝ} (Fm : FamP eps) (Cabs CH C0 crystallineComparison : ℝ), 0 < C0 → product_first_zeroth_parts.ConclusionOnFamily Fm crystallineComparison → TuSize Fm →
-    ChosenE Fm C0 CH → GlobalTheoremInputs Fm Cabs CH C0 → LocalQuadraticParts.SlopeLemmaFamily Fm
 
 end Formalism.L2.GlobalTheoryTheory.Places
 
@@ -785,26 +773,6 @@ theorem placesF_of_local_conditions {eps : ℝ} (Fm : FamP eps) (h26 : LocalQuad
       fun h => hs (Fm.supp_sat x hx1 i w h)
     linarith [not_le.1 h1]
 
-theorem placesF_of : PlaceConditionsFamily := by
-  intro eps Fm crystallineComparison h10 tSet hTu hRank lG lMu
-  have hDl : J.DlSize Fm :=
-    ⟨Fm.x1 + 1, fun x hx i => (Fm.sizes x (by linarith) i).2.2.2.2.2.2.1.2.2.2.2.2.1⟩
-  have h26 : LocalQuadraticParts.LevelTFamily Fm := by
-    obtain ⟨a0, h10'⟩ := h10
-    obtain ⟨a1, hS⟩ := tSet
-    refine J.family_levelPrime_summary_closed Fm crystallineComparison hTu hDl ⟨max (max a0 a1) (Fm.x1 + 1), fun x hx i => ?_⟩
-    have e0 : a0 ≤ x := le_trans (le_trans (le_max_left _ _) (le_max_left _ _)) hx
-    have e1 : a1 ≤ x := le_trans (le_trans (le_max_right _ _) (le_max_left _ _)) hx
-    have e2 : Fm.x1 < x := by have := le_trans (le_max_right (max a0 a1) (Fm.x1 + 1)) hx; linarith
-    exact ⟨fun u => (h10' x e0 i u (hS x e1 e2 i u)).2.1, fun u => (h10' x e0 i u (hS x e1 e2 i u)).2.2.2.2.1⟩
-  have hNC := Lnk.nuCommensF_of Fm crystallineComparison h10 tSet
-  exact placesF_of_local_conditions Fm h26 hNC hTu hRank lG lMu
-
-theorem slope_lemma_division_form : SlopeBoundOfMuRank := by
-  intro eps Fm crystallineComparison h10 tSet hTu hRank lG lMu
-  obtain ⟨C, x0, -, h⟩ := Lnk.slopesNF_of Fm (placesF_of Fm crystallineComparison h10 tSet hTu hRank lG lMu)
-  exact ⟨C, x0, fun x hx i _ u => h x hx i u⟩
-
 end Main
 
 section Link
@@ -830,12 +798,6 @@ theorem settingF_of : LevelPrimeSettingFamily := by
     have : (4 : ℝ) ≤ (Fm.D x i).R.m := le_trans (h3 x e3) z1
     exact_mod_cast this
   exact J.levelPrime_setting_of_sizes le_rfl (hN x e0 i).1 (hN x e0 i).2 (hT x e1 i).1 hm u
-
-theorem slope_lemma_link_form : SlopeLemmaLinkForm := by
-  intro eps Fm Cabs CH C0 crystallineComparison hC0 h10 hTu hCh hIn
-  have tSet := settingF_of Fm hTu
-  have hNF : NuFullF Fm := Lnk.nuFullF_of Fm (Lnk.nuCommensF_of Fm crystallineComparison h10 tSet)
-  exact slope_lemma_division_form Fm crystallineComparison h10 tSet hTu (muRank_of_chosen Fm crystallineComparison hC0 hCh hNF h10 tSet) hIn.1 hIn.2.2.2.2
 
 end Link
 

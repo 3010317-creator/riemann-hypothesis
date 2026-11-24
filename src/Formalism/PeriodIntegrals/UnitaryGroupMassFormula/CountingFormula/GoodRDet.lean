@@ -61,9 +61,6 @@ open Classical ValuativeRel
 
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-def DetGaNe : Prop :=
-  ∀ (D : Formalism.BasicNotions.D7) (T T' : D.host.E) (Z : MatZ D), GZ T T' Z ≠ 0 → (Ga T T' Z).det ≠ 0
-
 end PI.UnitaryGroupMassFormula.CntFormula
 end -- clump:auto
 end -- clump:auto
@@ -205,12 +202,6 @@ theorem det_Ga (D : Formalism.BasicNotions.D7) (T T' : D.host.E) (Z : MatZ D) :
 end PI.UnitaryGroupMassFormula.CntFormula.DetGa
 
 namespace PI.UnitaryGroupMassFormula.CntFormula
-
-theorem gram_determinant_ne_zero : DetGaNe := by
-  intro D T T' Z hG
-  rw [DetGa.det_Ga]
-  exact mul_ne_zero (Int.cast_ne_zero.mpr (Units.ne_zero
-    (Equiv.Perm.sign (Equiv.sumComm (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)))))) hG
 
 end PI.UnitaryGroupMassFormula.CntFormula
 end -- clump:auto

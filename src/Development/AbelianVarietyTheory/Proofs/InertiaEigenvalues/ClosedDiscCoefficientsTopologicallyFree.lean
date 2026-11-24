@@ -73,31 +73,6 @@ theorem ultra (l : ℕ) {A : Type} [CommRing A] (u : A) (ρ : ℝ≥0) : IsUltra
   rw [← map_add (f := _), norm_ofPre, norm_ofPre, norm_ofPre]
   exact gauge_add_le_max l u ρ a b
 
-def smallIdeal (l : ℕ) {A : Type} [CommRing A] (u : A) (ρ : ℝ≥0) (r : ℝ≥0) : Ideal A where
-  carrier := {x | ‖toDisc l u ρ x‖ ≤ r}
-  zero_mem' := by simp
-  add_mem' {x y} hx hy := by
-    haveI := ultra l u ρ
-    change ‖toDisc l u ρ (x + y)‖ ≤ r
-    rw [map_add (f := _)]
-    exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le hx hy)
-  smul_mem' a x hx := by
-    change ‖toDisc l u ρ (a * x)‖ ≤ r
-    rw [map_mul]
-    exact (norm_mul_le _ _).trans ((mul_le_mul (norm_toDisc_le _) hx (norm_nonneg _) zero_le_one).trans
-      (one_mul _).le)
-
-theorem pow_le_smallIdeal (l : ℕ) {A : Type} [CommRing A] (u : A) (ρ θ : ℝ≥0) (I : Ideal A)
-    (h : I ≤ smallIdeal l u ρ θ) (n : ℕ) : I ^ n ≤ smallIdeal l u ρ (θ ^ n) := by
-  induction n with
-  | zero => intro x _; change ‖toDisc l u ρ x‖ ≤ _; simpa using norm_toDisc_le x
-  | succ n ih =>
-    rw [pow_succ]
-    refine Ideal.mul_le.2 fun x hx y hy => ?_
-    change ‖toDisc l u ρ (x * y)‖ ≤ _
-    rw [map_mul, pow_succ, NNReal.coe_mul]
-    exact (norm_mul_le _ _).trans (mul_le_mul (ih hx) (h hy) (norm_nonneg _) (by positivity))
-
 theorem small (l : ℕ) [hl : Fact l.Prime] (K : FinExt l) (bk : BK K) (A : Type) [CommRing A] (s : bk.S →+* A)
     (ρ : ℝ≥0) (h0 : 0 < ρ) (h1 : ρ < 1) (r : ℝ) (hr : 0 < r) :
     ∃ n : ℕ, ∀ x ∈ (bk.J ^ n).map s, ‖toDisc l (s X) ρ x‖ ≤ r := by

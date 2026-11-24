@@ -257,37 +257,6 @@ def chain (hc : X.Tau → HCParam R) : ColumnChain R X.Tau hc where
 def emb (i : ℕ) (φ : (A.F i).Forms) : (A.F i).Cl → Fr X σ (R.N i) → ℂ :=
   fun c => A.ev σ i ((φ c.1).1 (((A.F i).mem c.1).outSec.rep c.2))
 
-def evS (i : ℕ) : (A.F i).V →ₛₗ[σ] (Fr X σ (R.N i) → ℂ) :=
-  (evV X.emb 1 (A.lam i) σ).comp (A.eV i).toLinearMap
-
-theorem evS_apply (i : ℕ) (x : (A.F i).V) : A.evS σ i x = A.ev σ i x := rfl
-
-theorem ev_sum (i : ℕ) {J : Type} [Fintype J] (a : J → X.K) (v : J → (A.F i).V) :
-    A.ev σ i (∑ j, a j • v j) = ∑ j, σ (a j) • A.ev σ i (v j) := by
-
-  simp only [← evS_apply, map_sum, map_smulₛₗ]
-
-theorem exists_ext (i : ℕ) (c : (A.F i).Cl) (c' : (A.F (i + 1)).Cl) :
-    ∃ U : (Fr X σ (R.N i) → ℂ) →ₗ[ℂ] (Fr X σ (R.N (i + 1)) → ℂ), ∀ x, U (A.ev σ i x) = A.ev σ (i + 1) (A.ker i c c' x) := by
-  have hl : LinearIndependent ℂ fun j => A.ev σ i ((A.F i).bV j) :=
-    evV_linearIndependent X.emb 1 (A.lam i) σ (stdFrC _) (fun j => A.eV i ((A.F i).bV j))
-      ((A.F i).bV.linearIndependent.map' (A.eV i).toLinearMap (A.eV i).ker)
-  obtain ⟨L, hL⟩ := LinearMap.exists_leftInverse_of_injective
-    (Finsupp.linearCombination ℂ fun j => A.ev σ i ((A.F i).bV j)) (LinearMap.ker_eq_bot.mpr hl)
-  refine ⟨(Finsupp.linearCombination ℂ fun j => A.ev σ (i + 1) (A.ker i c c' ((A.F i).bV j))) ∘ₗ L, fun x => ?_⟩
-  have hj : ∀ j, L (A.ev σ i ((A.F i).bV j)) = Finsupp.single j 1 := fun j => by
-    have := LinearMap.congr_fun hL (Finsupp.single j 1)
-    simpa using this
-  rw [← (A.F i).bV.sum_repr x, ev_sum]
-
-  simp only [map_sum, map_smul]
-  rw [ev_sum]
-  simp [hj]
-
-theorem kerC_ev (i : ℕ) (c : (A.F i).Cl) (c' : (A.F (i + 1)).Cl) (x : (A.F i).V) :
-    A.kerC σ i c c' (A.ev σ i x) = A.ev σ (i + 1) (A.ker i c c' x) :=
-  Classical.epsilon_spec (A.exists_ext σ i c c') x
-
 theorem prod_de_ne_zero {n : ℕ} (y : Fr X σ n) (e : X.Tau → ℤ) : (∏ τ, deFr y τ ^ e τ) ≠ 0 :=
   Finset.prod_ne_zero_iff.mpr fun τ _ => zpow_ne_zero _ (isUnit_det_fr y τ).ne_zero
 
@@ -305,59 +274,6 @@ theorem Kmap_eq (hc : X.Tau → HCParam R) (i : ℕ) (hi : i < R.m) (c : (A.F i)
   have := prod_de_ne_zero σ y (sD hc i)
   field_simp
   rfl
-
-theorem Kmap_ev (hc : X.Tau → HCParam R) (i : ℕ) (hi : i < R.m) (c : (A.F i).Cl) (c' : (A.F (i + 1)).Cl) (x : (A.F i).V) :
-    (A.chain σ hc).Kmap i c c' (A.ev σ i x) = A.ev σ (i + 1) (A.ker i c c' x) :=
-  (LinearMap.congr_fun (A.Kmap_eq σ hc i hi c c') _).trans (A.kerC_ev σ i c c' x)
-
-theorem unf_sharp_ev (hc : X.Tau → HCParam R) (i : ℕ) (c : (A.F i).Cl) (c' : (A.F (i + 1)).Cl) (x : (A.F i).V)
-    (y : Fr X σ (R.N (i + 1))) :
-    (A.chain σ hc).unf i c c' ((A.chain σ hc).sharp i (A.ev σ i x)) y =
-      (A.rho i c * A.rho' i c')⁻¹ * ((∏ τ, deFr y τ ^ sD hc i τ) * A.ev σ (i + 1) (A.ker i c c' x) y) := by
-  have e : (fun y : Fr X σ (R.N i) => (∏ τ, deFr y τ ^ sS hc i τ)⁻¹ * ((∏ τ, deFr y τ ^ sS hc i τ) * A.ev σ i x y)) = A.ev σ i x :=
-    funext fun y => inv_mul_cancel_left₀ (prod_de_ne_zero σ y _) _
-  show (A.rho i c * A.rho' i c')⁻¹ * ((∏ τ, deFr y τ ^ sD hc i τ) * A.kerC σ i c c'
-      (fun y : Fr X σ (R.N i) => (∏ τ, deFr y τ ^ sS hc i τ)⁻¹ * ((∏ τ, deFr y τ ^ sS hc i τ) * A.ev σ i x y)) y) = _
-  rw [e, kerC_ev]
-
-theorem K_emb (hc : X.Tau → HCParam R) (i : ℕ) (hi : i < R.m) (φ : (A.F i).Forms) :
-    (A.chain σ hc).K i (A.emb σ i φ) = A.emb σ (i + 1) (A.kk.step A.ok i φ) := by
-  funext c'
-  have hR : A.emb σ (i + 1) (A.kk.step A.ok i φ) c' = A.evS σ (i + 1) (∑ b, @Finset.sum _ _ _ (@Finset.univ _ (A.ok i b).fintypeCl)
-      fun c : ((A.F i).mem b).Cl => (((((A.F i).mem b).toCSDOf (A.ok i b) ((A.F i).mem b).outSec).wt c : X.K))⁻¹ •
-        A.ker i ⟨b, c⟩ c' ((φ b).1 (((A.F i).mem b).outSec.rep c))) := by
-    unfold ChSrc.emb
-    rw [evS_apply]
-    congr 1
-    simp only [KerFam.step, GFam.Mat.opOf, LinearMap.pi_apply, LinearMap.sum_apply, LinearMap.comp_apply, LinearMap.proj_apply,
-      Submodule.coe_sum, Finset.sum_apply]
-    rfl
-  have hL : (A.chain σ hc).K i (A.emb σ i φ) c' =
-      @Finset.sum _ _ _ (@Finset.univ _ (A.ok i).fintypeCl) fun c : (A.F i).Cl =>
-        (A.chain σ hc).wt i c • (A.chain σ hc).Kmap i c c' (A.emb σ i φ c) := rfl
-  letI : ∀ b, Fintype ((A.F i).mem b).Cl := fun b => (A.ok i b).fintypeCl
-
-  rw [hL, hR, map_sum]
-  refine (Fintype.sum_sigma _).trans (Finset.sum_congr rfl fun b _ => ?_)
-
-  rw [map_sum]
-  refine Finset.sum_congr rfl fun c _ => ?_
-  rw [LinearMap.map_smulₛₗ, map_inv₀, map_natCast]
-  refine congrArg₂ (fun (a : ℂ) (f : Fr X σ (R.N (i + 1)) → ℂ) => a • f) ?_ (A.Kmap_ev σ hc i hi ⟨b, c⟩ c' _)
-  unfold ColumnChain.wt CSD.wt
-  exact congrArg (fun n : ℕ => (n : ℂ)⁻¹) (@Nat.card_eq_fintype_card _ ((A.ok i b).fintypeStab _))
-
-theorem chain_emb (hc : X.Tau → HCParam R) (φ : (A.F 0).Forms) (j : ℕ) (hj : j ≤ R.m) :
-    Formalism.ThetaLiftIndependence.chainOpM (A.chain σ hc).wt (A.chain σ hc).Kmap j (A.emb σ 0 φ) = A.emb σ j (A.kk.colTo A.ok j φ) := by
-  induction j with
-  | zero => rfl
-  | succ j ih =>
-    have := A.K_emb σ hc j (by omega) (A.kk.colTo A.ok j φ)
-    rw [← ih (by omega)] at this
-    exact this
-
-theorem col_emb (hc : X.Tau → HCParam R) (φ : (A.F 0).Forms) :
-    (A.chain σ hc).col (A.emb σ 0 φ) = A.emb σ R.m (A.kk.colTo A.ok R.m φ) := A.chain_emb σ hc φ R.m le_rfl
 
 def trueWt (hc : X.Tau → HCParam R) (i : ℕ) (τ : X.Tau) : DomWeight (R.N i) :=
   shiftW (Examples₂.lamOf (hc τ) i) (-((i : ℤ) * (((R.t + 1) / 2 : ℕ) : ℤ)))
@@ -417,98 +333,10 @@ structure Tied (hc : X.Tau → HCParam R) : Prop where
   Nab _ := nabAtr X.emb lam (stdLat X.E n)
   Del _ := delAtr X.emb lam (stdLat X.E n)
 
-theorem exampleDatum_isAdmissible (X : Fields) {n : ℕ} (lam : X.Tau → DomWeight n) : (exampleGSD X lam).Ok := by
-  exact {
-    fin_orb := Quotient.finite _
-    fin_stab := fun _ => inferInstance
-    nab_smul := fun _ _ => (Submodule.map_id _).symm
-    del_smul := fun _ _ => (Submodule.map_id _).symm
-    inv := fun _ _ _ => rfl }
-
-theorem card_stabilizer_units_int (d : Unit) : Nat.card (MulAction.stabilizer ℤˣ d) = 2 := by
-  have : MulAction.stabilizer ℤˣ d = ⊤ := by
-    ext g; simp only [Subgroup.mem_top, iff_true]; rfl
-  rw [this, Subgroup.card_top, Nat.card_eq_fintype_card]
-  simp
-
-theorem exists_linearForm_apply_eq_one (X : Fields) {n : ℕ} (lam : X.Tau → DomWeight n) : ∃ f : VV X.K lam →ₗ[X.K] X.K, f (extV X.K lam) = 1 := by
-  obtain ⟨f, hf⟩ := not_forall.mp (mt (Module.forall_dual_apply_eq_zero_iff X.K (extV X.K lam)).mp (extV_ne_zero lam))
-  exact ⟨(f (extV X.K lam))⁻¹ • f, by simp [inv_mul_cancel₀ hf]⟩
-
-def toyExample (hc : X.Tau → HCParam R) : ChSrc X R where
-  F i := (exampleGSD X (trueWt hc i)).toFam
-  ok i _ := exampleDatum_isAdmissible X (trueWt hc i)
-  lam := trueWt hc
-  eV _ := LinearEquiv.refl _ _
-  kk i _ _ :=
-    { k := fun _ _ => (exists_linearForm_apply_eq_one X (trueWt hc i)).choose.smulRight (extV X.K (trueWt hc (i + 1)))
-      equiv := fun _ _ _ _ => rfl }
-  rho _ _ := Complex.I
-  rho' _ _ := -1
-  rho_norm _ _ _ := by simp
-  rho'_norm _ _ _ := by simp
-  DG := 2
-  DG_pos := two_pos
-  dvd _ _ _ := (card_stabilizer_units_int _).dvd
-
-theorem exampleChain_compatible (hc : X.Tau → HCParam R) : (toyExample hc).Tied hc := by
-  refine ⟨fun _ _ => rfl, fun i _ _ => ⟨1, 1, fun g x => ?_⟩⟩
-  rw [MonoidHom.one_apply, MonoidHom.one_apply, map_one, map_one, Units.val_one, one_smul]
-  rfl
-
-def exampleExt (hc : X.Tau → HCParam R) (i : ℕ) : ((toyExample hc).F i).Forms := fun _ => ⟨fun _ => extV X.K (trueWt hc i), fun _ _ => rfl⟩
-
-theorem exampleChain_K_apply (hc : X.Tau → HCParam R) (i : ℕ) (hi : i < R.m) (a : ℂ) :
-    ((toyExample hc).chain σ hc).K i (a • (toyExample hc).emb σ i (exampleExt hc i)) = (a / 2) • (toyExample hc).emb σ (i + 1) (exampleExt hc (i + 1)) := by
-  funext c'
-  have hs : Subsingleton (((toyExample hc).chain σ hc).cls i) := ⟨by
-    rintro ⟨⟨⟩, p⟩ ⟨⟨⟩, q⟩
-    induction p using Quotient.inductionOn
-    induction q using Quotient.inductionOn
-    rfl⟩
-  let c₀ : ((toyExample hc).F i).Cl := ⟨(), Quotient.mk _ ()⟩
-  have hk : (toyExample hc).ker i c₀ c' (extV X.K (trueWt hc i)) = extV X.K (trueWt hc (i + 1)) := by
-    show (exists_linearForm_apply_eq_one X (trueWt hc i)).choose (extV X.K (trueWt hc i)) • extV X.K (trueWt hc (i + 1)) = _
-    rw [(exists_linearForm_apply_eq_one X (trueWt hc i)).choose_spec, one_smul]
-  have hw : ((toyExample hc).chain σ hc).wt i c₀ = 2⁻¹ :=
-    (congrArg (fun n : ℕ => (n : ℂ)⁻¹) (card_stabilizer_units_int _)).trans (by norm_num)
-  have hK := (toyExample hc).Kmap_ev σ hc i hi c₀ c' (extV X.K (trueWt hc i))
-  rw [hk] at hK
-  refine (Fintype.sum_subsingleton (fun c : ((toyExample hc).chain σ hc).cls i => ((toyExample hc).chain σ hc).wt i c •
-    ((toyExample hc).chain σ hc).Kmap i c c' (a • (toyExample hc).emb σ i (exampleExt hc i) c)) c₀).trans ?_
-  have hm := (((toyExample hc).chain σ hc).Kmap i c₀ c').map_smul a ((toyExample hc).ev σ i (extV X.K (trueWt hc i)))
-  rw [hK] at hm
-  rw [hw]
-  refine (congrArg (fun f : Fr X σ (R.N (i + 1)) → ℂ => (2⁻¹ : ℂ) • f) hm).trans ?_
-  exact (smul_smul _ _ _).trans (congrArg (fun z : ℂ => z • (toyExample hc).ev σ (i + 1) (extV X.K (trueWt hc (i + 1)))) (by ring))
-
-theorem exampleChain_col_apply (hc : X.Tau → HCParam R) :
-    ((toyExample hc).chain σ hc).col ((toyExample hc).emb σ 0 (exampleExt hc 0)) = ((1 / 2 : ℂ) ^ R.m) • (toyExample hc).emb σ R.m (exampleExt hc R.m) := by
-  have h : ∀ j, j ≤ R.m → Formalism.ThetaLiftIndependence.chainOpM ((toyExample hc).chain σ hc).wt ((toyExample hc).chain σ hc).Kmap j ((toyExample hc).emb σ 0 (exampleExt hc 0)) =
-      ((1 / 2 : ℂ) ^ j) • (toyExample hc).emb σ j (exampleExt hc j) := by
-    intro j hj
-    induction j with
-    | zero => rw [pow_zero, one_smul]; rfl
-    | succ j ih =>
-      have := exampleChain_K_apply σ hc j (by omega) ((1 / 2 : ℂ) ^ j)
-      rw [← ih (by omega), div_eq_mul_one_div, ← pow_succ] at this
-      exact this
-  exact h R.m le_rfl
-
-def exampleCpl (X : Fields) {n : ℕ} (lam : X.Tau → DomWeight n) : Cpl (exampleGSD X lam) where
-  Yb := ℤˣ
-  ys _ := Set.univ
-  fin _ := Set.finite_univ
-  equiv _ _ _ := Iff.rfl
-
 abbrev UnfFam : Type :=
   ∀ i, (A.F i).Cl → (A.F (i + 1)).Cl → ((Fr X σ (R.N i) → ℂ) →ₗ[ℂ] (Fr X σ (R.N (i + 1)) → ℂ))
 
 def chainWith (hc : X.Tau → HCParam R) (U : A.UnfFam σ) : ColumnChain R X.Tau hc := { A.chain σ hc with unf := U }
-
-def Unfolds (hc : X.Tau → HCParam R) (U : A.UnfFam σ) : Prop :=
-  ∀ i, i < R.m → ∀ c c' x (y : Fr X σ (R.N (i + 1))), U i c c' ((A.chain σ hc).sharp i (A.ev σ i x)) y =
-    (A.rho i c * A.rho' i c')⁻¹ * ((∏ τ, deFr y τ ^ sD hc i τ) * A.ev σ (i + 1) (A.ker i c c' x) y)
 
 
 
@@ -519,8 +347,6 @@ def polFn (X : Fields) (σ : X.K →+* ℂ) (n : ℕ) : Formalism.L2.DIV.Pol ℂ
 theorem polFn_apply {n : ℕ} (Q : Formalism.L2.DIV.Pol ℂ X.Tau n) (y : Fr X σ n) :
     polFn X σ n Q y = MvPolynomial.eval (fun v => y.1 v.1 v.2.1 v.2.2) Q := by
   simp [polFn, fnOf]
-
-theorem polFn_injective (n : ℕ) : Function.Injective (polFn X σ n) := fnOf_injective _ 0 1 (fun _ => by simp) (stdFrC _)
 
 def fnPol (X : Fields) (σ : X.K →+* ℂ) (n : ℕ) : (Fr X σ n → ℂ) →ₗ[ℂ] Formalism.L2.DIV.Pol ℂ X.Tau n := polOf _ 0 (stdFrC _)
 
@@ -577,67 +403,12 @@ def sharpPol (hc : X.Tau → HCParam R) (i : ℕ) (x : (A.F i).V) : Formalism.L2
   MvPolynomial.map σ ((A.eV i x).1 * ∏ τ, Formalism.L2.Ker.frDet X.K (R.N i) τ ^ nuEnd hc i τ)
 
 
-variable {A} in
-theorem Tied.sharp_ev {hc : X.Tau → HCParam R} (h : A.Tied hc) (i : ℕ) (hi : i < R.m) (x : (A.F i).V) :
-    (A.chain σ hc).sharp i (A.ev σ i x) = polFn X σ _ (A.sharpPol σ hc i x) := by
-  funext (y : Fr X σ (R.N i))
-  have hd : ∀ τ, MvPolynomial.eval₂ σ (fun v : X.Tau × Fin (R.N i) × Fin (R.N i) => y.1 v.1 v.2.1 v.2.2)
-      (Formalism.L2.Ker.frDet X.K (R.N i) τ) = (y.1 τ).det := fun τ => by
-    rw [← MvPolynomial.coe_eval₂Hom, Formalism.L2.Ker.frDet, RingHom.map_det]
-    congr 1
-    ext a b
-    simp
-  show (∏ τ, (y.1 τ).det ^ sS hc i τ) * evFr _ (shiftOf (A.lam i)) σ (A.eV i x).1 y = _
-  rw [polFn_apply, sharpPol, MvPolynomial.eval_map, MvPolynomial.eval₂_mul, MvPolynomial.eval₂_prod, evFr_apply, ← mul_assoc,
-    ← Finset.prod_mul_distrib, mul_comm]
-  congr 1
-  refine Finset.prod_congr rfl fun τ _ => ?_
-  rw [MvPolynomial.eval₂_pow, hd, ← zpow_natCast, nuEnd_cast hc hi, zpow_add₀ (isUnit_det_fr y τ).ne_zero, ← h.lam_eq i hi.le, mul_comm]
-  rfl
-
-
-variable {A} in
-theorem Tied.de_mul_ev {hc : X.Tau → HCParam R} (h : A.Tied hc) (i : ℕ) (hi : i < R.m) (x : (A.F (i + 1)).V) (y : Fr X σ (R.N (i + 1))) :
-    (∏ τ, deFr y τ ^ sD hc i τ) * A.ev σ (i + 1) x y = polFn X σ _ (MvPolynomial.map σ (A.eV (i + 1) x).1) y := by
-  show (∏ τ, (y.1 τ).det ^ sD hc i τ) * evFr _ (shiftOf (A.lam (i + 1))) σ (A.eV (i + 1) x).1 y = _
-  rw [polFn_apply, MvPolynomial.eval_map, evFr_apply, ← mul_assoc, ← Finset.prod_mul_distrib, Finset.prod_eq_one, one_mul]
-  intro τ _
-  have : shiftOf (A.lam (i + 1)) τ = -sD hc i τ := by rw [← trueWt_detShift_succ hc hi, ← h.lam_eq _ hi]; rfl
-  rw [this, zpow_neg, mul_inv_cancel₀ (zpow_ne_zero _ (isUnit_det_fr y τ).ne_zero)]
 
 def JetTie (hc : X.Tau → HCParam R) (J : A.JetFam) : Prop :=
   ∀ i, i < R.m → ∀ c c' x, MvPolynomial.map σ (A.eV (i + 1) (A.ker i c c' x)).1 =
     (A.rho i c * A.rho' i c') • J i c c' (A.sharpPol σ hc i x)
 
 
-variable {A} in
-theorem Tied.unfolds_iff {hc : X.Tau → HCParam R} (h : A.Tied hc) (J : A.JetFam) :
-    A.Unfolds σ hc (A.unfJet σ J) ↔ A.JetTie σ hc J := by
-  refine forall_congr' fun i => forall_congr' fun hi => forall_congr' fun c => forall_congr' fun c' => forall_congr' fun x => ?_
-  have h1 : A.rho i c ≠ 0 := fun h => by simpa [h] using A.rho_norm i hi c
-  have h2 : A.rho' i c' ≠ 0 := fun h => by simpa [h] using A.rho'_norm i hi c'
-  have e : A.unfJet σ J i c c' ((A.chain σ hc).sharp i (A.ev σ i x)) = polFn X σ _ (J i c c' (A.sharpPol σ hc i x)) := by
-    rw [h.sharp_ev σ i hi]
-    show polFn X σ _ (J i c c' (fnPol X σ _ (polFn X σ _ _))) = _
-    rw [fnPol_polFn]
-  rw [e, ← (polFn_injective σ _).eq_iff, map_smul, funext_iff]
-  refine forall_congr' fun y => ?_
-  rw [h.de_mul_ev σ i hi, eq_inv_mul_iff_mul_eq₀ (mul_ne_zero h1 h2), eq_comm]
-  rfl
-
-
-variable {A} in
-theorem Tied.exists_jetTie {hc : X.Tau → HCParam R} (h : A.Tied hc) : ∃ J : A.JetFam, A.JetTie σ hc J := by
-  refine ⟨fun i c c' => fnPol X σ _ ∘ₗ (A.chain σ hc).unf i c c' ∘ₗ polFn X σ _, fun i hi c c' x => ?_⟩
-  have h1 : A.rho i c ≠ 0 := fun h => by simpa [h] using A.rho_norm i hi c
-  have h2 : A.rho' i c' ≠ 0 := fun h => by simpa [h] using A.rho'_norm i hi c'
-  have e : (A.chain σ hc).unf i c c' (polFn X σ _ (A.sharpPol σ hc i x)) =
-      (A.rho i c * A.rho' i c')⁻¹ • polFn X σ _ (MvPolynomial.map σ (A.eV (i + 1) (A.ker i c c' x)).1) := by
-    rw [← h.sharp_ev σ i hi]
-    funext y
-    exact (A.unf_sharp_ev σ hc i c c' x y).trans (congrArg _ (h.de_mul_ev σ i hi _ y))
-  show _ = _ • fnPol X σ _ ((A.chain σ hc).unf i c c' (polFn X σ _ (A.sharpPol σ hc i x)))
-  rw [e, map_smul, fnPol_polFn, smul_inv_smul₀ (mul_ne_zero h1 h2)]
 
 abbrev ThFam : Type := ∀ i, (A.F i).Cl → (A.F (i + 1)).Cl → Formalism.L2.Ker.VCx X.Tau (R.N i) (R.N (i + 1)) → ℂ
 

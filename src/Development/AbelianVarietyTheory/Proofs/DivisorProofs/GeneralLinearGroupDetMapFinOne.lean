@@ -209,20 +209,4 @@ theorem spec {E : Spc} (L : E ⟶ ofCat (glCat 1)) :
     ∀ (U : Scheme.{0}) (x : Sx E 1 U), ev γ.1 1 0 (by simp) U x = Sec.map (resι ℤ Gm) (unitSec (lineUnit L x)))
     ⟨_, γ, rfl, h0, h1⟩
 
-theorem cocycle_ext {E : Spc} (γ γ' : Cocycle ((chains ℤ).obj E) (res ℤ Gm) 1)
-    (h0 : ∀ (U : Scheme.{0}) (x : Sx E 0 U), ev γ.1 0 1 (by simp) U x = ev γ'.1 0 1 (by simp) U x)
-    (h1 : ∀ (U : Scheme.{0}) (x : Sx E 1 U), ev γ.1 1 0 (by simp) U x = ev γ'.1 1 0 (by simp) U x) : γ = γ' := by
-  have hExt := CupSpec.ev_ext γ.1 γ'.1
-  refine Cocycle.ext (hExt fun p s h U x => ?_)
-  match p with
-  | 0 =>
-    obtain rfl : s = 1 := by omega
-    exact h0 U x
-  | 1 =>
-    obtain rfl : s = 0 := by omega
-    exact h1 U x
-  | p + 2 =>
-    have hZ := res_isZero Gm s (by omega)
-    exact (sec_eq_zero hZ _).trans (sec_eq_zero hZ _).symm
-
 end GlobalTheory.EtC.PicSpec

@@ -169,38 +169,9 @@ section Base
 
 variable {D : D7} {A : Amb D} {N j : ℕ} {S : Sig A N j} {κ : Lv A} {s : FinalTheorems S κ} (Φ : s.Flag)
 
-def LiesUnder (k : s.Comp) (y : Pt s) (x : (Φ.C k).Y.X) : Prop :=
-  ∃ p : Sp Qb ⟶ (Φ.C k).Y.X, p ≫ (Φ.C k).π = y.y ∧ (Φ.C k).Carries p y.frame ∧ below p = x
-
-def baseOn (k : s.Comp) (y : Pt s) : (Φ.C k).Y.X := Classical.epsilon (LiesUnder Φ k y)
-
-abbrev basePt (y : Pt s) : (Φ.C (compPt s y)).Y.X := baseOn Φ (compPt s y) y
-
 variable {Φ}
 
-theorem LiesUnder.compPt_eq {k : s.Comp} {y : Pt s} {x : (Φ.C k).Y.X} (h : LiesUnder Φ k y x) : compPt s y = k := by
-  obtain ⟨p, hp, -, -⟩ := h
-  let o : Sp Qb := IsLocalRing.closedPoint Qb
-  refine (PtComp.existsUnique_onComp s (y.y o)).unique (PtComp.onComp_compPt s y o) ?_
-  obtain ⟨z, hz⟩ : ((s.U κ.σ₀).X k).dom.Nonempty := GlobalTheory.OrbitScalar.exists_mem_dom _
-  refine ⟨⟨z, hz⟩, fun pt => ?_⟩
-  exact (isPreconnected_range (Φ.C k).π.continuous).subset_connectedComponent ⟨p o, by rw [← hp]; rfl⟩
-    (Φ.label k ⟨z, hz⟩ pt)
 
-
-variable (Φ) in
-theorem existsUnique_liesUnder (y : Pt s) : ∃! x, LiesUnder Φ (compPt s y) y x := by
-  have : IsAlgClosed Qb := (algebraicClosure.isAlgClosure ℚ ℂ).isAlgClosed
-  obtain ⟨⟨k, p⟩, hp, hu⟩ := Φ.lifts Qb y.fK y.y y.y_over y.frame
-  obtain rfl : compPt s y = k := LiesUnder.compPt_eq ⟨p, hp.1, hp.2, rfl⟩
-  refine ⟨below p, ⟨p, hp.1, hp.2, rfl⟩, ?_⟩
-  rintro _ ⟨q, h₁, h₂, rfl⟩
-  rw [eq_of_heq (Sigma.mk.inj (hu ⟨_, q⟩ ⟨h₁, h₂⟩)).2]
-
-
-variable (Φ) in
-theorem liesUnder_basePt (y : Pt s) : LiesUnder Φ (compPt s y) y (basePt Φ y) :=
-  Classical.epsilon_spec (existsUnique_liesUnder Φ y).exists
 
 end Base
 
@@ -210,11 +181,6 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheo
 
 def rootEx (τ : E →+* ℂ) (i : ℕ) : Letter Dw → ℤ := expo Dw (rootSym Dw (fun _ => false) none τ i)
 
-
-open Classical in
-theorem expo_single (a : Sym E) (n : ℤ) (x : Letter Dw) :
-    expo Dw (Finsupp.single a n) x = if letterOf Dw a.2.2 = some x then n else 0 :=
-  Finsupp.sum_single_index (by simp)
 
 end Roots
 
@@ -290,12 +256,6 @@ abbrev ex (x : DV.Rt D.what₂.Tau O.N) : Letter O.S.Dw → ℤ := rootEx O.S.Dw
 
 def adl0 (c : O.s.Comp) (w : Sym D.host.E →₀ ℤ) : Adl (cxSt D.what₂.LL) (O.var c) :=
   adlOf (O.Φ.C c) (fun _ => O.met.h0 c) w
-
-def htWt {c : O.s.Comp} (ρ : DV.Rt D.what₂.Tau O.N → Adl (cxSt D.what₂.LL) (O.var c)) (u : D.what₂.Tau → Fin O.N → ℝ)
-    (z : (O.var c).X) : ℝ := -∑ x, u x.1 x.2 * (ρ x).ht z
-
-def chg (c : O.s.Comp) (R : Option ℝ) (u : D.what₂.Tau → Fin O.N → ℝ) (σ : D.what₂.LL →+* ℂ) (z : Pts (O.var c) σ) : ℝ :=
-  ∑ x : DV.Rt D.what₂.Tau O.N, u x.1 x.2 * lnRatio (O.met.hm c R σ (O.ex x)) (O.met.h0 c σ (O.ex x)) z
 
 structure LatModel (P : Finset ℕ) (c : O.s.Comp) : Type 1 where
 

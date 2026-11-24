@@ -152,8 +152,6 @@ variable {A : Type} [CommRing A] {J : Ideal A}
 
 end Along
 
-def IsThickPoint (A : Type) [CommRing A] : Prop := ∃ _ : IsLocalRing A, IsNilpotent (IsLocalRing.maximalIdeal A)
-
 section Diag
 open GlobalTheory.PairingLevels
 
@@ -178,9 +176,6 @@ open GlobalTheory.PairingLevels
 variable {S : Scheme.{0}} {G H : Over S} [GrpObj G] [IsCommMonObj G] [GrpObj H] [IsCommMonObj H]
 
 end Torus
-
-def IsBase (A : Type) [CommRing A] : Prop :=
-  ConnectedSpace (Spec (CommRingCat.of A)) ∧ ∃ J : Ideal A, IsNilpotent J ∧ IsReduced (A ⧸ J)
 
 section MoreClauses
 variable {S : Scheme.{0}}

@@ -72,8 +72,6 @@ section One
 variable {D : D7} (Y : ShimX D.what₂.Tau)
 
 
-def bcFl : ℝ := (1 / (Y.j : ℝ) - 1 / ((Y.N : ℝ) - Y.j)) * testI Y
-
 end One
 
 def rkB (ι : Type) (N j : ℕ) (a : ι × Bool) : ℕ := cond a.2 j (N - j)

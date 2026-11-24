@@ -137,8 +137,6 @@ def etOf : WEt (ioOf E hs hp hL hI) := { W, E with }
 
 
 
-def clOf : WCl (etOf E hs hp hL hI) := { W, E with }
-
 
 open Classical in
 def nOf (W : LocWach PD LL O v n) (T : LocLat G Qp LL O) : Submodule (LetA O n) (W.DD T) :=
@@ -224,17 +222,12 @@ abbrev EtL := etOf (F.E K s LL h).tie (H.W_s K s LL h) (p_prime P K) hL.lev hL.i
 
 
 
-abbrev ClL := clOf (F.E K s LL h).tie (H.W_s K s LL h) (p_prime P K) hL.lev hL.io
-
 
 
 abbrev LatL :=
   latOf (F.E K s LL h).tie (H.W_s K s LL h) (p_prime P K) hL.lev hL.io _ hL.one (H.W_proj K s LL h)
 
 
-
-theorem latL_N {T : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL)} (hT : IsCrys (P.PD K) T.ρ) :
-    (LatL H F h hL).N T = (H.W K s LL h).N T := nOf_crys _ hT
 
 theorem apply_layers (p : ∀ (Γ : GamS P K s LL) (R : WSer Γ) (I : IoS AI R) (E : WEt I), NS E → Prop)
     (hp : ∀ (Γ : GamS P K s LL) (R : WSer Γ) (I : IoS AI R), IoW I → ∀ (E : WEt I) (Mo : NS E), p Γ R I E Mo) :

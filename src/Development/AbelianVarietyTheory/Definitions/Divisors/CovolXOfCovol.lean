@@ -253,8 +253,6 @@ def Gram : Prop := Lifts fun _ _ _ _ p i _ _ => GramAt p i
 
 def Rec : Prop := Lifts fun _ _ _ _ p i _ _ => RecAt p i
 
-def Cut : Prop := Lifts fun _ _ _ _ p i _ _ => CutAt p i
-
 def abelian₂ : Prop := Lifts fun _ _ _ _ p i _ C => LamAt p i C
 
 def Size : Prop := Lifts fun _ _ _ _ p i PP C => SizeAt p i PP C
@@ -264,10 +262,6 @@ def Meas : Prop := Lifts fun _ _ _ _ p i _ C => MeasAt p i C
 def Rat : Prop := Lifts fun _ _ _ _ p i _ _ => RatAt p i
 
 def CoreLe : Prop := Lifts fun _ _ _ _ p i _ C => CoreAt p i C
-
-def Low : Prop := Lifts fun _ _ _ _ p i _ C => LowAt p i C
-
-def LowDef : Prop := Lifts fun Fm x _ ι p i _ C => (i : ℕ) + 1 = (Fm.D x ι).R.m → LowAt p i C
 
 def Ring : Prop := Covers fun _ _ _ _ p i Y _ _ => RingAt p i Y
 

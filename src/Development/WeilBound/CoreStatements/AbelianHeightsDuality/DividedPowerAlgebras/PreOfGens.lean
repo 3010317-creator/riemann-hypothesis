@@ -60,27 +60,6 @@ open PowerSeries Finset
 
 variable {B : Type} [CommRing B]
 
-def ser (g : ℕ → B) (a : B) : B⟦X⟧ := PowerSeries.mk fun n ↦ a ^ n * g n
-
-theorem ser_zero {g : ℕ → B} (h0 : g 0 = 1) : ser g 0 = 1 := by
-  ext n
-  rcases n with _ | n <;> simp [ser, h0, coeff_one]
-
-theorem ser_add {g : ℕ → B} (hmul : ∀ m n, g m * g n = ((m + n).choose m : B) * g (m + n)) (a b : B) :
-    ser g (a + b) = ser g a * ser g b := by
-  ext n
-  simp only [ser, coeff_mul, coeff_mk, (Commute.all a b).add_pow', Finset.sum_mul]
-  refine Finset.sum_congr rfl fun p hp ↦ ?_
-  have e := Finset.HasAntidiagonal.mem_antidiagonal.1 hp
-  have := hmul p.1 p.2
-  rw [e] at this
-  rw [nsmul_eq_mul]
-  linear_combination (-(a ^ p.1 * b ^ p.2)) * this
-
-theorem ser_mul (g : ℕ → B) (a b : B) : ser g (a * b) = rescale a (ser g b) := by
-  ext n
-  simp only [ser, coeff_rescale, coeff_mk, mul_pow, mul_assoc]
-
 def IsExp (f : B⟦X⟧) : Prop := ∀ m n, coeff m f * coeff n f = ((m + n).choose m : B) * coeff (m + n) f
 
 theorem IsExp.mul {f g : B⟦X⟧} (hf : IsExp f) (hg : IsExp g) : IsExp (f * g) := by
@@ -118,13 +97,5 @@ theorem IsExp.mul {f g : B⟦X⟧} (hf : IsExp f) (hg : IsExp g) : IsExp (f * g)
     have b := hg i.2 k.2
     simp only
     linear_combination (coeff i.2 g * coeff k.2 g) * a + (((i.1 + k.1).choose i.1 : B) * coeff (i.1 + k.1) f) * b
-
-theorem pre_of_gens (B ι : Type) [CommRing B] (x : ι → B) (g : ι → ℕ → B) (h0 : ∀ i, g i 0 = 1)
-    (h1 : ∀ i, g i 1 = x i) (hm : ∀ i n, n ≠ 0 → g i n ∈ Ideal.span (Set.range x))
-    (hmul : ∀ i m n, g i m * g i n = ((m + n).choose m : B) * g i (m + n))
-    (hrel : ∀ c : ι →₀ B, (c.sum fun i a ↦ a * x i) = 0 →
-      (c.prod fun i a ↦ PowerSeries.mk fun n ↦ a ^ n * g i n) = 1) :
-    ∃ γ : ℕ → B → B, IsPreDP (Ideal.span (Set.range x)) γ ∧ ∀ i n, γ n (x i) = g i n := by
-  apply GlobalTheory.PDA.exists_isPreDividedPowers_of_generators₂ <;> assumption
 
 end FubiniStudyChowHeightFormula₂.Adr

@@ -488,10 +488,6 @@ theorem isPotential_locPot (h : φ.IsSmooth R) : IsPotential R.finAtlas φ.locPo
   h.isPotential R.isAlgAtlas_finAtlas
 
 
-variable (φ) in
-theorem isSection_locSec {s : B.ι → CxPts p σ → ℂ} (hs : s ∈ R.holSec B) :
-    IsSection R.finAtlas φ.locPot (φ.locSec s) := φ.isSection_of_isAlgAtlas R.isAlgAtlas_finAtlas hs
-
 end Weight
 
 namespace ProjAn

@@ -154,8 +154,6 @@ open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHeck
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
 
-alias trace_mixedEmbedding := _root_.UpperTheory.Reformulated.B.DYhb7.main
-
 theorem psi_fin_rat {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (x : F) :
     ψ (pairA F 0 (algebraMap F (Af F) x)) =
       Complex.exp (2 * Real.pi * Complex.I * ((Algebra.trace ℚ F x : ℚ) : ℂ)) := by

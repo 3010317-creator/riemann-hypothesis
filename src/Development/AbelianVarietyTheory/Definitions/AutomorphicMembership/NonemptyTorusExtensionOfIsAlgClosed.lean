@@ -208,45 +208,7 @@ def torusCochar (S : Scheme.{0}) (l : X →+ ℤ) : Gm S ⟶ splitTorus S X :=
 
 instance (l : X →+ ℤ) : IsMonHom (torusCochar S l) := SplitTorus.isMonHom_torusMap _
 
-theorem torusCochar_add (l m : X →+ ℤ) :
-    torusCochar S (l + m) = torusCochar S l * torusCochar S m := by
-  rw [torusCochar, torusCochar, torusCochar, AddMonoidHom.comp_add, SplitTorus.torusMap_add]
-
-def ofTorus (i : splitTorus S X ⟶ G) [IsMonHom i] : (X →+ ℤ) →+ Cochar G :=
-  AddMonoidHom.mk' (fun l => ⟨torusCochar S l ≫ i, inferInstance⟩) fun l m => Subtype.ext
-    ((congrArg (· ≫ i) (torusCochar_add l m)).trans (MonObj.mul_comp _ _ i))
-
-theorem ofTorus_injective [Nonempty S] (i : splitTorus S X ⟶ G) [IsMonHom i] [Mono i] :
-    Function.Injective (ofTorus i) := fun l m e => by
-  have k := SplitTorus.torusMap_injective ((cancel_mono i).1 (congrArg Subtype.val e))
-  exact AddMonoidHom.ext fun x => congrArg ULift.down (DFunLike.congr_fun k x)
-
-theorem mem_range_ofTorus [ConnectedSpace S] (i : splitTorus S X ⟶ G) [IsMonHom i] (l : Cochar G)
-    (u : Gm S ⟶ splitTorus S X) [IsMonHom u] (e : u ≫ i = l.1) : ∃ m, ofTorus i m = l := by
-  obtain ⟨v, rfl⟩ := SplitTorus.exists_eq_torusMap u
-  exact ⟨(AddEquiv.ulift : ULift.{0} ℤ ≃+ ℤ).toAddMonoidHom.comp v, Subtype.ext e⟩
-
-theorem ofTorus_id_bijective [ConnectedSpace S] :
-    Function.Bijective (ofTorus (𝟙 (splitTorus S X))) :=
-  ⟨ofTorus_injective _, fun l => mem_range_ofTorus _ l l.1 (Category.comp_id _)⟩
-
-theorem eval_bijective (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] :
-    Function.Bijective (AddMonoidHom.eval : X →+ (X →+ ℤ) →+ ℤ) := by
-  have hb := Module.bijective_dual_eval ℤ X
-  refine ⟨fun x y e => hb.1 (LinearMap.ext fun l => DFunLike.congr_fun e l.toAddMonoidHom), fun F => ?_⟩
-  obtain ⟨x, hx⟩ := hb.2 (F.comp (LinearMap.toAddMonoidHom' (R₁ := ℤ) (R₂ := ℤ))).toIntLinearMap
-  exact ⟨x, AddMonoidHom.ext fun l => LinearMap.congr_fun hx l.toIntLinearMap⟩
-
 variable [Module.Free ℤ X] [Module.Finite ℤ X]
-
-def charEquivOfTorus (i : splitTorus S X ⟶ G) [IsMonHom i] (hi : Function.Bijective (ofTorus i)) :
-    X ≃+ Char G :=
-  (AddEquiv.ofBijective _ (eval_bijective X)).trans
-    (AddEquiv.addMonoidHomCongrLeft (AddEquiv.ofBijective _ hi))
-
-def charEquivSplitTorus (S : Scheme.{0}) [ConnectedSpace S] (X : Type) [AddCommGroup X]
-    [Module.Free ℤ X] [Module.Finite ℤ X] : X ≃+ Char (splitTorus S X) :=
-  charEquivOfTorus (𝟙 _) ofTorus_id_bijective
 
 end Torus
 

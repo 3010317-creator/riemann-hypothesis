@@ -55,12 +55,6 @@ namespace GlobalTheory.QTw
 section Sign
 variable {D : D7} {c : Comm D} {t : Tup c}
 
-def twist (w : VTup t) (s : ∀ j, t.Ch j → ℂ) : VTup t :=
-  { w with
-    dQ := fun j α γ => (s j α * s (j + 1) γ) • w.dQ j α γ
-    ε := fun j α => s j α • w.ε j α
-    εT := fun n h β => s n β • w.εT n h β }
-
 variable {v : VCom c} {B : GlobalTheory.Fam.Base c} {PP : Formalism.L2.DIV.Pl D.host.E}
 
 def QGeo.Res (G : QGeo v B PP) (δ : G.kˣ →* ℂˣ) (ξ : (Formalism.L2.DIV.kP PP)ˣ →* ℂˣ) : Prop :=

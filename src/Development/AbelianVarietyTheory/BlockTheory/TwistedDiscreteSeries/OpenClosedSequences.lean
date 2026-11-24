@@ -157,20 +157,6 @@ theorem omegaOn_apply (μ : kˣ →* ℂˣ) (s : Set ℕ) (γ : GL a k × GL b k
       (omChar a b μ γ : ℂ) * Φ.1 ⟨act x.1 γ, by rw [rank_act]; exact x.2⟩ := rfl
 
 
-variable (a b) in
-def filt (μ : kˣ →* ℂˣ) (s : Set ℕ) (κ : ℕ) : Subrepresentation (omegaOn a b μ s) where
-  toSubmodule :=
-    { carrier := {Φ | ∀ x : RankIn (k := k) (a := a) (b := b) s, x.1.rank < κ → Φ.1 x = 0}
-      add_mem' := fun {f g} hf hg x hx => by
-        show f.1 x + g.1 x = 0
-        rw [hf x hx, hg x hx, add_zero]
-      zero_mem' := fun _ _ => rfl
-      smul_mem' := fun c f hf x hx => by
-        show c * f.1 x = 0
-        rw [hf x hx, mul_zero] }
-  apply_mem_toSubmodule γ Φ hΦ x hx := by
-    rw [omegaOn_apply, hΦ _ (by rwa [rank_act]), mul_zero]
-
 
 
 end Model

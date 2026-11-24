@@ -92,34 +92,6 @@ theorem AttRes.normV_eq_pow (w : HeightOneSpectrum (𝓞 L)) :
   apply _root_.GlobalTheory.DelEps.WeilRes.normV_eq_pow
 
 
-theorem AttRes.hasSat_trivial [IsTotallyReal F] (v : HeightOneSpectrum (𝓞 F)) :
-    (TR.CuspSub.triv F (le_refl 1)).HasSat v {1} := by
-  have hact : ∀ g y, (TR.CuspSub.triv F (le_refl 1)).locRep v g y = y := fun g y => by
-    obtain ⟨c, hc⟩ := Submodule.mem_span_singleton.1 y.2
-    obtain ⟨y, hy⟩ := y
-    obtain rfl : c • TR.oneFn F 1 = y := hc
-    rfl
-  let e := LinearEquiv.toSpanNonzeroSingleton ℂ _ (TR.oneFn F 1) TR.oneFn_ne_zero
-  refine ⟨(Submodule.ne_bot_iff _).2 ⟨⟨TR.oneFn F 1, Submodule.mem_span_singleton_self _⟩,
-    GlobalTheory.LGrp.mem_fixed.2 fun k _ => hact k _, fun h => TR.oneFn_ne_zero (congrArg Subtype.val h)⟩, fun x _ h0 => ?_⟩
-  let f : (TR.CuspSub.triv F (le_refl 1)).V →ₗ[ℂ] (GL (Fin 1) (v.adicCompletion F) → ℂ) :=
-    (LinearMap.toSpanSingleton ℂ _ (fun _ => 1)).comp e.symm.toLinearMap
-  have hi : Function.Injective f := fun a b h => by
-    have := congrFun h 1
-    have h2 : e.symm a • (1 : ℂ) = e.symm b • (1 : ℂ) := this
-    exact e.symm.injective (smul_left_injective ℂ one_ne_zero h2)
-  refine GlobalTheory.LFun.IsSatVecGL.of_map (ρ' := GlobalTheory.PRep.rightReg ℂ _ ℂ) f (fun g y => by rw [hact]; rfl) hi ?_
-  have := GlobalTheory.LFun.isSatVecGL_of_isSpherical (w := v) (α := fun _ : Fin 1 => 1) (φ := f x)
-    (fun b g k _ _ => by simp [f, Formalism.UG.chiDelta]; rfl) (fun h => h0 (hi (by rw [h, map_zero])))
-  simpa using this
-
-
-omit [Algebra F Ω] in
-theorem AttRes.one_triv [IsTotallyReal F] [Algebra L Ω] {l : ℕ} [Fact l.Prime] (ι : Qbar l ≃+* ℂ) :
-    AttRes (Ω := Ω) (TR.CuspSub.triv F (le_refl 1)) ι L 1 := by
-  refine Filter.Eventually.of_forall fun w f _ =>
-    ⟨{1}, AttRes.hasSat_trivial _, fun A _ => ⟨fun _ _ => rfl, fun σ _ => ?_⟩⟩
-  simp [algSat, Matrix.charpoly_one]
 
 end Att
 

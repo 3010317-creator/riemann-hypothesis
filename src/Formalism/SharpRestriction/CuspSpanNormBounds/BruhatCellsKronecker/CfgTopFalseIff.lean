@@ -156,9 +156,6 @@ theorem isWord_deOf (D : D7) (u : D.what₂.Word) : Sz.IsWord D.R.k (deOf D u) :
 theorem cfg_top_iff (D : D7) (τ : D.what₂.Tau) : (cfgOf D τ).top = true ↔ IsTop D τ := by
   simp [cfgOf]
 
-theorem cfg_top_false_iff (D : D7) (τ : D.what₂.Tau) : (cfgOf D τ).top = false ↔ ¬ IsTop D τ := by
-  simp [cfgOf]
-
 theorem cfg_v (D : D7) (τ : D.what₂.Tau) (i : ℕ) (h1 : 1 ≤ i) (h2 : i ≤ D.R.k - 1) :
     (cfgOf D τ).v i = vOne D τ i := by
   show vOne D τ (D.R.k - 1) + 4 * (D.s.Del : ℝ) * ((D.R.k : ℝ) - 1 - (i : ℝ)) = vOne D τ i

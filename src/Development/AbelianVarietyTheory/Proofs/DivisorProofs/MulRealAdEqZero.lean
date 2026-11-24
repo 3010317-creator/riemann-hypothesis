@@ -193,25 +193,6 @@ section Model
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
 variable {n d d₁ : ℕ} {X : Spc F E n} {W : Spc F E d} {W₁ : Spc F E d₁}
 
-theorem incM_gram {p q k : Type} [Fintype k] (P : Matrix k p E) (J : Matrix k k E) (Q : Matrix k q E) :
-    (incM F P)ᵀ * incM F J * (incM F Q).map (cA σ) = incM F (Pᵀ * J * Q.map σ) := by
-  have hinc : ∀ {p q r : Type} [Fintype q] (A : Matrix p q E) (B : Matrix q r E),
-      incM F (A * B) = incM F A * incM F B := fun A B => Matrix.map_mul
-  have hincT : ∀ {p q : Type} (A : Matrix p q E), incM F Aᵀ = (incM F A)ᵀ := fun A => (Matrix.transpose_map).symm
-  have hQ : (incM F Q).map (cA σ) = incM F (Q.map σ) := by
-    ext i j
-    simp only [incM, Matrix.map_apply]
-    first
-      | simp [cA, inclR]
-  rw [hQ, hinc, hinc, hincT]
-
-theorem gram_apply {p q : Type} {m : ℕ} (P : Matrix (Fin m) p E) (J : Matrix (Fin m) (Fin m) E)
-    (Q : Matrix (Fin m) q E) (i : p) (j : q) :
-    (Pᵀ * J * Q.map σ) i j = form σ J (fun a => P a i) (fun b => Q b j) := by
-  simp only [form, Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, dotProduct, Matrix.mulVec,
-    Finset.sum_mul, Finset.mul_sum, mul_assoc]
-  exact Finset.sum_comm
-
 variable (M : Model σ X W)
 
 def coordI (u : Matrix (Fin n) (Fin d) (AE F E)) :
@@ -249,14 +230,6 @@ theorem omega_coordI (u u' : Matrix (Fin n) (Fin d) (AE F E)) :
 
   simp only [omega, trP, coordI, locV, dotProduct, map_sub, map_sum, map_mul, evI_eq]
 
-theorem sympM_eq_zero {p q : Type} [Fintype p] [Fintype q] (P : Matrix (Fin d) p E) (Q : Matrix (Fin d) q E)
-    (h : Pᵀ * W.J * Q.map σ = 0) (a : Matrix (Fin n) p (AE F E)) (b : Matrix (Fin n) q (AE F E)) :
-    sympM (σ := σ) X W (a * (incM F P)ᵀ) (b * (incM F Q)ᵀ) = 0 := by
-  simp only [sympM]
-  unfold symp
-  rw [hTens_mul, incM_gram, h]
-  simp [incM, Matrix.map_zero]
-
 end Model
 
 section Main
@@ -268,19 +241,7 @@ theorem incM_one' : incM F (1 : Matrix (Fin n) (Fin n) E) = 1 := by
   first
     | exact Matrix.map_one _ (map_zero _) (map_one _)
 
-theorem vecMulVec_eq_mul (y : Fin n → AE F E) (x : Fin d → E) :
-    Matrix.vecMulVec y (incV F x) = Matrix.replicateCol Unit y * (incM F (Matrix.replicateCol Unit x))ᵀ := by
-  ext i j
-  first
-    | simp [Matrix.vecMulVec_apply, Matrix.mul_apply, incM, incV]
-
 variable {B : Base F E} {r' s' i₀ i₁ : ℕ} {H' : Plane E d d₁}
-
-theorem gram_xx (hA : H'.IsAdapted σ B W W₁ i₀ i₁) :
-    (Matrix.replicateCol Unit H'.x)ᵀ * W.J * (Matrix.replicateCol Unit H'.x).map σ = 0 := by
-  ext i j
-  rw [gram_apply, Matrix.zero_apply]
-  exact hA.xx
 
 theorem span_plane (hS : W.IsSkew σ B r' s') (hA : H'.IsAdapted σ B W W₁ i₀ i₁) (z : Fin d → E) :
     ∃ (s t : E) (u : Fin d₁ → E), z = s • H'.x + H'.ι *ᵥ u + t • H'.y := by

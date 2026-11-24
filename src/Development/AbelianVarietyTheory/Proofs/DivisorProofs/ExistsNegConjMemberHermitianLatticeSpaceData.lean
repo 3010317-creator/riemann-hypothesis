@@ -120,9 +120,6 @@ theorem isCartan_neg_conj {n : ℕ} {G s : Matrix (Fin n) (Fin n) ℂ} (h : IsCa
     rw [key, Complex.star_def, Complex.conj_re]
     exact (Complex.pos_iff.1 hz).1
 
-theorem star_gram {D : D7} (V : HSp D) (a b : Fin V.rank) : star (V.gram a b) = V.gram b a :=
-  V.herm.eq (V.frame a) (V.frame b)
-
 theorem form_neg_eq {D : D7} (V : HSp D) (y x : Fin V.rank → D.host.E) :
     GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.form D.sp.cm.sig ((-1 : D.host.E) • V.gram) y x =
       -star (∑ i, ∑ j, star ((star x) i) * V.gram i j * (star y) j) := by

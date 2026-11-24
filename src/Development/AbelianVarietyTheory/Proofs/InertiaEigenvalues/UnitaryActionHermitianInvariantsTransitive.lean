@@ -62,12 +62,6 @@ variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [N
 
 theorem star_algebraMap [Unram F E] (x : F) : star (algebraMap F E x) = algebraMap F E x := Unram.star_fix x
 
-def starLin [Unram F E] : E →ₗ[F] E where
-  toFun := star
-  map_add' := star_add
-  map_smul' c z := by
-    simp only [Algebra.smul_def, RingHom.id_apply, star_mul, star_algebraMap, mul_comm]
-
 theorem fixed_mem_range [Unram F E] {y : E} (hy : star y = y) : ∃ x : F, algebraMap F E x = y := by
   apply GlobalTheory.JR.Step.UNormal.exists_algebraMap_of_star_eq <;> assumption
 

@@ -128,8 +128,4 @@ theorem exists_lifts {k : ℕ} [NeZero k] (p : Out.QkPt a.D₀ (FractionRing ℂ
 
 end GtAn₀
 
-abbrev GtAn.fn {b : O →+* ℂ} {a : ArcIn D l β ℂ b} (Λ : GtAn a) (j : ℕ) [NeZero j] : letI := H.starRing
-    ∀ α : Λ.A.X, a.D₀.SecB j (Λ.eX α) ≃ Λ.A.Theta j α :=
-  letI := H.starRing; Λ.sec.fn j
-
 end GlobalTheory

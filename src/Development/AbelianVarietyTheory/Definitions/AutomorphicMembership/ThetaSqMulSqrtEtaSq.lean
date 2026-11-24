@@ -82,8 +82,6 @@ open scoped CategoryTheory.Obj TensorProduct
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.KeyPow GlobalTheory.KeyFam GlobalTheory.ZM GlobalTheory.AbLaw
 
-theorem _root_.GlobalTheory.T.keyDatumConnectedFamily_of_polarizedArithmeticFamily : Out.Laws → Out.Laws2 → PolFam → GlobalTheory.KeyKa.ConnFam := by
-  first | exact @GlobalTheory.KeyFam.connFam_of_polFam
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.KeyDatumConnectedFamilyOfPolarizedArithmeticFamiStatement =====
@@ -99,8 +97,6 @@ open scoped CategoryTheory.Obj TensorProduct
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.KeyPow GlobalTheory.KeyFam GlobalTheory.ZM GlobalTheory.AbLaw
 
-theorem _root_.GlobalTheory.T.polarized_family_of_theta_uniformization : Out.Laws → Out.Laws2 → ThetaUnifAV → GlobalTheory.TorusAlgebraic → PolFam := by
-  first | exact @GlobalTheory.KeyFam.polFam
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.PolarizedFamilyOfThetaUniformizationStatement =====
@@ -111,11 +107,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace GlobalTheory.KeyFam
-
-theorem connFam_holds : GlobalTheory.KeyKa.ConnFam :=
-  GlobalTheory.T.keyDatumConnectedFamily_of_polarizedArithmeticFamily GlobalTheory.abelianSchemeLaws_all.1 GlobalTheory.abelianSchemeLaws_all.2
-    (GlobalTheory.T.polarized_family_of_theta_uniformization GlobalTheory.abelianSchemeLaws_all.1 GlobalTheory.abelianSchemeLaws_all.2 GlobalTheory.thetaUnifAV_closed
-      GlobalTheory.torusAlgebraic_holds)
 
 end GlobalTheory.KeyFam
 end -- clump:auto
@@ -134,9 +125,6 @@ open GlobalTheory.AbLaw
 open GlobalTheory.KeyPow GlobalTheory.KeyKa
 
 namespace GlobalTheory
-
-theorem keyFormula_and_keyCore : KeyFormula ∧ Formalism.L2.LamCM.KeyCore :=
-  ⟨GlobalTheory.keyFormula_of_connFam GlobalTheory.KeyFam.connFam_holds, Formalism.L2.LamCM.key_formula_link (GlobalTheory.keyFormula_of_connFam GlobalTheory.KeyFam.connFam_holds)⟩
 
 end GlobalTheory
 end -- clump:auto
@@ -198,30 +186,6 @@ def lieGram (z : NgC g) : Matrix (Fin g) (Fin g) ℂ :=
 
 def etaSq (z : NgC g) : ℝ := (z.lieGram.det.re)⁻¹
 
-theorem lieGram_eq (z : NgC g) :
-    z.lieGram = (((4 * Real.pi)⁻¹ • (z.Y)⁻¹ : Matrix (Fin g) (Fin g) ℝ)).map fun x : ℝ => (x : ℂ) := by
-  ext i j
-  have hp : (Real.pi : ℂ) ≠ 0 := Complex.ofReal_ne_zero.2 Real.pi_ne_zero
-  have e : star (Pi.single j (2 * Real.pi * Complex.I : ℂ)⁻¹ : Fin g → ℂ) =
-      Pi.single j (-(2 * Real.pi * Complex.I : ℂ)⁻¹) := by
-    funext k
-    by_cases h : k = j
-    · subst h; simp
-    · simp [h]
-  simp only [lieGram, Matrix.of_apply, hermForm, e, single_dotProduct, Matrix.mulVec_single, Matrix.map_apply,
-    Matrix.smul_apply, smul_eq_mul]
-  simp
-  field_simp
-  simp
-  ring
-
-theorem etaSq_eq (z : NgC g) : z.etaSq = (4 * Real.pi) ^ g * z.Y.det := by
-  have e : z.lieGram.det = ((((4 * Real.pi)⁻¹ • (z.Y)⁻¹ : Matrix (Fin g) (Fin g) ℝ)).det : ℝ) := by
-    rw [lieGram_eq]
-    exact (RingHom.map_det Complex.ofRealHom _).symm
-  rw [etaSq, e, Complex.ofReal_re, Matrix.det_smul, Matrix.det_nonsing_inv, Fintype.card_fin, Ring.inverse_eq_inv',
-    mul_inv, inv_inv, inv_pow, inv_inv]
-
 end NgC
 
 structure IsKF (g c : ℕ) (κ : Rule) : Prop where
@@ -270,36 +234,6 @@ theorem ext (h : IsKF g c κ) (h' : IsKF g c κ') (f : NgC g → ℂˣ)
 
 end IsKF
 
-open Classical in
-def cutRule (g : ℕ) (s : ℤˣ) (κ : Rule) : Rule := fun K _ _ x =>
-  if x.P.g = g then Units.map (Int.castRingHom K).toMonoidHom s * κ K x else 1
-
-theorem isKF_cutRule {g c : ℕ} (s : ℤˣ) {κ : Rule}
-    (hH : ∀ (K : Type) [Field K] [CharZero K] (P : Out.PolAV (Sp K)) (hg rig hr th hth v hv th' hth' v' hv') (a : K)
-      (M : Matrix (Fin P.g) (Fin P.g) K), P.g = g → (∀ i, LB.Sec.f th' i = constFn P.A.hom _ a * LB.Sec.f th i) →
-      (∀ i, IsLieComb (M i) v (v' i)) →
-      a ^ (2 * c) * (κ K ⟨P, hg, rig, hr, th', hth', v', hv'⟩ : K) = M.det ^ c * κ K ⟨P, hg, rig, hr, th, hth, v, hv⟩)
-    (hF : Funct κ) (hU : UnitSp κ) : IsKF g c (cutRule g s κ) := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · intro K _ _ P hg rig hr th hth v hv th' hth' v' hv' a M hP h₁ h₂
-    simp only [cutRule, ite_eq_left hP, Units.val_mul]
-    rw [mul_left_comm, hH K P hg rig hr th hth v hv th' hth' v' hv' a M hP h₁ h₂, mul_left_comm]
-  · intro K K' _ _ _ _ f x x' h
-    simp only [cutRule, KeyGalDesc.g_eq h]
-    split_ifs
-    · simp [hF K K' f x x' h]
-    · simp
-  · intro R K _ _ _ _ _ _ _ x xK h
-    by_cases hx : x.P.g = g
-    · obtain ⟨u, hu, hk⟩ := hU R K x xK h
-      refine ⟨Units.map (Int.castRingHom R).toMonoidHom s * u, ?_, fun k _ _ r xk hr hxk => ?_⟩
-      · simp [cutRule, KeyGalDesc.g_eq h, hx, hu]
-      · simp [cutRule, KeyGalDesc.g_eq hxk, hx, hk k r xk hr hxk]
-    · exact ⟨1, by simp [cutRule, KeyGalDesc.g_eq h, hx],
-        fun k _ _ r xk hr hxk => by simp [cutRule, KeyGalDesc.g_eq hxk, hx]⟩
-  · intro K _ _ x hx
-    exact ite_eq_right hx
-
 structure KF (g c : ℕ) : Type where
 
   val : NgC g → ℂˣ
@@ -312,34 +246,9 @@ variable {g c : ℕ} (kf : KF g c)
 
 def rule (kf : KF g c) : Rule := kf.ex.choose
 
-def coef (K : Type) [Field K] [CharZero K] (x : KeyIn K) : Kˣ := (kf.rule K x)⁻¹
-
 def norm (z : NgC g) : ℝ := ‖(kf.val z : ℂ)‖ / (z.thetaSq ^ c * Real.sqrt z.etaSq ^ c)
 
-def ofRule (N : ℕ → ℕ) (κ : Rule) (hH : Homog N κ) (hF : Funct κ) (hU : UnitSp κ) (hT : ThetaOne κ) (g : ℕ) :
-    KF g (4 * N g) where
-  val _ := 1
-  ex := ⟨cutRule g 1 κ, isKF_cutRule 1 (fun K _ _ P hg rig hr th hth v hv th' hth' v' hv' a M hP h₁ h₂ => by
-      subst hP
-      rw [show 2 * (4 * N P.g) = 8 * N P.g by ring]
-      exact hH K P hg rig hr th hth v hv th' hth' v' hv' a M h₁ h₂) hF hU, fun z x h => by
-    obtain ⟨e, h⟩ := h
-    obtain ⟨u, h₁, h₂, h₃, h₄, h₅, h₆⟩ := (normalAt_one_iff x _ _ _).1 h
-    rw [cutRule, ite_eq_left e, hT x u _ _ _ h₁ h₂ (fun i => z.half.1 _) (fun i => z.half.2 _) h₃ h₄ h₅ h₆]
-    simp⟩
-  zero _ _ := Or.inl rfl
-
 end KF
-
-def ngTrue : Formalism.L2.Geo.NgPkg where
-  NgC := NgC
-  NgC_ne _ := inferInstance
-  KF := KF
-  kfNorm kf z := kf.norm z
-
-theorem exists_kf_four (g : ℕ) : ∃ kf : KF g 4, ∀ z, kf.val z = 1 := by
-  obtain ⟨κ, h₁, h₂, h₃, h₄, -⟩ := keyFormula_iff.1 keyFormula_and_keyCore.1
-  exact ⟨KF.ofRule (fun _ => 1) κ h₁ h₂ h₃ h₄ g, fun _ => rfl⟩
 
 end GlobalTheory.LocM
 end

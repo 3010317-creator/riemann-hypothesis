@@ -332,9 +332,6 @@ theorem heckeAll_zero (φ : Lat O K r → E) : heckeAll 0 φ = φ := by
 theorem heckeElem_zero (φ : Lat O K r → E) : heckeElem 0 φ = φ := by
   funext L; simp [heckeElem, subElem_zero]
 
-theorem heckeElem_top (φ : Lat O K r → E) (L : Lat O K r) : heckeElem r φ L = φ (maxMul L) := by
-  simp [heckeElem, subElem_top]
-
 theorem heckeElem_eq_zero {k : ℕ} (hk : r < k) (φ : Lat O K r → E) (L : Lat O K r) :
     heckeElem k φ L = 0 := by
   simp [heckeElem, subElem_eq_empty hk]
@@ -345,14 +342,5 @@ theorem heckeElem_smul (g : GL (Fin r) K) (k : ℕ) (φ : Lat O K r → E) (L : 
   refine finsum_mem_eq_of_bijOn (fun M => g • M) ⟨fun M hM => (smul_mem_subElem_iff g k M L).2 hM,
     (MulAction.injective g).injOn, fun M hM => ⟨g⁻¹ • M, ?_, smul_inv_smul g M⟩⟩ fun _ _ => rfl
   rw [← smul_mem_subElem_iff g, smul_inv_smul]; exact hM
-
-theorem finite_residueField_padicInt (p : ℕ) [Fact p.Prime] :
-    Finite (IsLocalRing.ResidueField ℤ_[p]) :=
-  Finite.of_equiv _ (PadicInt.residueField (p := p)).toEquiv.symm
-
-theorem qRes_padicInt (p : ℕ) [Fact p.Prime] [Finite (IsLocalRing.ResidueField ℤ_[p])] :
-    qRes ℤ_[p] = p := by
-  unfold qRes
-  rw [Nat.card_congr (PadicInt.residueField (p := p)).toEquiv, Nat.card_zmod]
 
 end GlobalTheory.LatHecke

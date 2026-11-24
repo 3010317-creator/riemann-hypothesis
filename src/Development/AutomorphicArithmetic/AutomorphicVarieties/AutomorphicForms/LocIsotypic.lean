@@ -124,28 +124,6 @@ def SatLoc : Prop :=
     ∀ (V : Type) [AddCommGroup V] [Module ℂ V] (ρ : Representation ℂ (GL (Fin n) (Af F)) V), LocIsotypic ρ w σ →
       ∀ B, GlobalTheory.LFun.HasSatGL w (ρ.comp (locGL F n w)) B ↔ GlobalTheory.LFun.HasSatGL w σ.ρ B
 
-def SatFrob : Prop :=
-  ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime]
-    (ι : Qbar l ≃+* ℂ) (n : ℕ) (r : G F Ω →* GL (Fin n) (Qbar l)), Continuous r →
-    ∀ (w : HeightOneSpectrum (𝓞 F)), ((l : ℕ) : 𝓞 F) ∉ w.asIdeal →
-    ∀ (σ : SmIrr (GL (Fin n) (w.adicCompletion F))) (B : Multiset ℂˣ), GlobalTheory.LFun.HasSatGL w σ.ρ B →
-      (∀ (A : ValuationSubring Ω) (h : IsPlaceOver A w) (rc : IrrGL (k := w.adicCompletion F) → WD h), IsRec h rc →
-        IsWDOf ι r (rc (algNorm σ))) → FrobEig ι r w (algSat n (normV w) B)
-
-def CrysSlopes : Prop :=
-  ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (p : ℕ) [Fact p.Prime],
-    ¬ (p : ℤ) ∣ discr F → ∀ (ι : Qbar p ≃+* ℂ) (n : ℕ) (m : Fin n → ℤ) (r : G F Ω →* GL (Fin n) (Qbar p)), Continuous r →
-    ∀ (w : HeightOneSpectrum (𝓞 F)) (A : ValuationSubring Ω) (h : IsPlaceOver A w)
-      (O : Type) [CommRing O] [Algebra ℤ_[p] O] [TopologicalSpace O]
-      (Bw : LocBridge p F Ω (Dec (F := F) A) O) (hj : Induces Bw),
-      IsCrysAt (Loc.PP p) Bw (r.comp (Dec (F := F) A).subtype) →
-      (∀ (τ : F →+* Qbar p) (LL' : FinExt p) (τ' : ↥Bw.Kw.1 →ₐ[ℚ_[p]] ↥LL'.1), IsInduced Bw τ τ' →
-        IsJumpsAt (Loc.PP p) Bw (r.comp (Dec (F := F) A).subtype) τ (Finset.univ.val.map fun i => -m i)) →
-      ∀ (σ : SmIrr (GL (Fin n) (w.adicCompletion F))) (B : Multiset ℂˣ), GlobalTheory.LFun.HasSatGL w σ.ρ B →
-      ∀ rc, IsRec h rc → wdAt (Loc.PP p) ι Bw h hj (r.comp (Dec (F := F) A).subtype) = rc (algNorm σ) →
-      ∀ b ∈ algSat n (normV w) B, (∀ a : ℤ, (∀ i, -a ≤ m i) → ‖ι.symm ((normV w : ℂ) ^ a * b⁻¹)‖ ≤ 1) ∧
-        ∀ a : ℤ, (∀ i, m i ≤ a) → ‖ι.symm ((normV w : ℂ) ^ a * b)‖ ≤ 1
-
 def WeylC : Prop :=
   ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (n : ℕ), ∃ c A : ℕ, ∀ m : Fin n → ℤ, StrictAnti m →
     ∀ H : ℕ, (∀ i, |m i| ≤ H) → ∃ Ξ : GlobalTheory.GKCoh.AlgRep E n, (∀ τ, AlgInfChar Ξ τ ((infOf m).map Neg.neg)) ∧ Ξ.d ≤ c * (H + 1) ^ A

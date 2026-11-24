@@ -58,11 +58,6 @@ open Complex Filter Topology
 
 namespace PositivityTheory.RgJS.LandauNonnegativeDirichletSeries
 
-theorem summable_pow {ι : Type} (b μ : ι → ℝ) (hb : ∀ j, 0 ≤ b j) (hμ : ∀ j, 0 ≤ μ j) (a : ℝ)
-    (h : ∀ σ : ℝ, a < σ → Summable (fun j => b j * Real.exp (-(μ j) * σ))) (n : ℕ) (σ : ℝ) (hσ : a < σ) :
-    Summable (fun j => b j * μ j ^ n * Real.exp (-(μ j) * σ)) := by
-  apply GlobalTheory.genDirichlet_summable_pow <;> assumption
-
 theorem hasSum_iteratedDeriv {ι : Type} (b μ : ι → ℝ) (F : ℂ → ℂ)
     (hb : ∀ j, 0 ≤ b j) (hμ : ∀ j, 0 ≤ μ j) (a : ℝ)
     (h : ∀ s : ℂ, a < s.re → HasSum (fun j => (b j : ℂ) * Complex.exp (-(μ j : ℂ) * s)) (F s))

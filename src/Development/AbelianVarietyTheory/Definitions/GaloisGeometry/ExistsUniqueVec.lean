@@ -152,9 +152,6 @@ def EigString (i : D.nd.Loc) : Prop :=
 
 def EigGood (i : D.nd.Loc) : Prop := OnGood X i fun j t y => GlobalTheory.DownLift.GoodVt X.R j t y
 
-theorem used_mu (i : D.nd.Loc) : Used0 D (D.nd.mu i) :=
-  Or.inr ⟨D.nd.w i, (D.nd.mu_w i).trans ((D.what₂.muAt_or _).resolve_left (D.nd.w_tw i)).symm⟩
-
 theorem RealAt.existsUnique_vec {μ} (hμ : Used0 D μ) (j : Fin D.R.m) (f : D.what₂.Mt μ (j.1 + 1)) :
     ∃! y, X.R.extV j (X.tupT μ) y = X.fn hμ j f := by
   have h : ∃ y, X.R.extV j (X.tupT μ) y = X.fn hμ j f := (X.IL.jMt μ hμ j f).2.1

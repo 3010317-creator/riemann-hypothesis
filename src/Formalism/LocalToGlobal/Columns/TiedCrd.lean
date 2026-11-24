@@ -40,12 +40,6 @@ theorem gramN_eq (hS : SpStd d.toColBase) (i : ℕ) (hi : i ≤ d.R.m) : CF.gram
   rw [hS.X_on i hi, Matrix.one_apply]
   simp only [EmbeddingLike.apply_eq_iff_eq]
 
-theorem gramP_eq (hS : SpStd d.toColBase) : CF.gramP (d.colRec a) = 1 := by
-  refine Matrix.ext fun x y => ?_
-  show d.sp.X'.hT (d.sp.X'.frame _) (d.sp.X'.frame _) = _
-  rw [hS.P_on, Matrix.one_apply]
-  simp only [EmbeddingLike.apply_eq_iff_eq]
-
 private theorem map_clsLat_crd (u : d.what₂.Word) (i : ℕ) (hi : i ≤ d.R.m)
     (c : StCl (Pr := d.Pr) d.W d.lev u i) :
     (d.clsLat u i c).map ((d.crd i hi).toLinearMap.restrictScalars (𝓞 d.host.E)) = (d.repr u i c).1.L := by

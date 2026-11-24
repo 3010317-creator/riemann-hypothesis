@@ -62,13 +62,6 @@ abbrev quadField (H : Host E) : IntermediateField ℚ E := IntermediateField.adj
 
 instance (H : Host E) : Fact H.d.Prime := ⟨H.d_prime⟩
 
-def quadChar (H : Host E) : DirichletCharacter ℂ H.d :=
-  (quadraticChar (ZMod H.d)).ringHomComp (Int.castRingHom ℂ)
-
-def logOmega (H : Host E) : ℝ :=
-  Real.eulerMascheroniConstant + Real.log (Real.pi / (rootDiscr E / 2)) -
-    (deriv (quadChar H).LFunction 1 / (quadChar H).LFunction 1).re
-
 def TameAtRamified (H : Host E) : Prop :=
   ∀ (l : ℕ) (w : Ideal (𝓞 E)), l.Prime → (l : ℤ) ∣ discr E → w.IsMaximal → (l : 𝓞 E) ∈ w →
     w.map (H.bar : 𝓞 E →+* 𝓞 E) ≠ w ∧
@@ -78,9 +71,6 @@ def TameAtRamified (H : Host E) : Prop :=
 section Degree
 
 variable (k : Type) [Field k] [NumberField k]
-
-def adelicDeg (a : HeightOneSpectrum (𝓞 k) → k) (r : (k →+* ℂ) → ℝ) : ℝ :=
-  (-(∑ σ : k →+* ℂ, Real.log (r σ) / 2) + ∑ᶠ v, Real.log (FinitePlace.mk v (a v))) / Module.finrank ℚ k
 
 end Degree
 

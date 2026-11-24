@@ -125,14 +125,6 @@ def ClosedAtL : Prop :=
           IsJumpsAt P Bw (r.comp (Dec (F := E) A).subtype) τ (J τ)) ∧
       ((∀ ρ ∈ C, IsCrysAt P Bw (ρ.comp (Dec (F := E) A).subtype)) → IsCrysAt P Bw (r.comp (Dec (F := E) A).subtype))
 
-def Limit : Prop :=
-  ∀ (E Ω : Type) [Field E] [NumberField E] [IsCMField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω]
-    (l : ℕ) [Fact l.Prime] (ι : Qbar l ≃+* ℂ) (a : ℕ), 1 ≤ a → ∀ π : CuspSub E a, InScope .csd l π (quadChar E ^ a) →
-    ∀ w₀ : HeightOneSpectrum (𝓞 E), ((l : ℕ) : 𝓞 E) ∈ w₀.asIdeal →
-    ∃ r : G E Ω →* GL (Fin a) (Qbar l), SplitAtt π ι r ∧
-      ∀ w, IsSplitAt w → Apart w w₀ →
-        ClauseAt .ss π ι r w ∧ ClauseAt .crys π ι r w ∧ (IwaAt π w → ClauseAt .dR π ι r w)
-
 theorem not_apart_self (w : HeightOneSpectrum (𝓞 E)) : ¬ Apart w w := fun h => h rfl
 
 end GlobalTheory.Cong

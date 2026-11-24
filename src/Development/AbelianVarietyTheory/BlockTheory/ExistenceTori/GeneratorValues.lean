@@ -195,8 +195,6 @@ theorem ord_vw_uniformiser {ϖ : R} (h0 : ϖ ≠ 0) (h : maximalIdeal R = Ideal.
     IsDedekindDomain.HeightOneSpectrum.intValuation_singleton _ h0 h]
   simp
 
-def ramIdx {p : ℕ} (hp : IsOverPrime R p) : ℤ := (ord_vw R).toFun (toUnitK (p : R) hp.ne_zero)
-
 end DVR
 
 section Normed
@@ -207,10 +205,5 @@ variable {φ : FractionRing R →+* F}
 
 
 end Normed
-
-theorem isOverPrime_padicInt (p : ℕ) [hp : Fact p.Prime] : IsOverPrime ℤ_[p] p := by
-  refine ⟨hp.out, Nat.cast_ne_zero.2 hp.out.ne_zero, ?_⟩
-  rw [PadicInt.maximalIdeal_eq_span_p]
-  exact Ideal.mem_span_singleton_self _
 
 end GlobalTheory.IndefiniteRowSideFullHecke.GeneratorValues

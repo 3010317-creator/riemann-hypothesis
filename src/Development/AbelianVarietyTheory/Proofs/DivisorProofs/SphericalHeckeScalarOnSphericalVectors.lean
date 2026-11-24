@@ -402,10 +402,6 @@ section Concrete
 
 variable {D : D7} {V : HSp D} {n : ℕ}
 
-theorem countRank {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} (π : Formalism.L2.NG.FinTyp L n) :
-    Module.rank ℂ π.S ≤ Cardinal.aleph0 :=
-  _root_.GlobalTheory.FinTyp.rank_le_aleph0 π
-
 def rtHom (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) :
     Formalism.AUTREP.GAf L n →* Module.End ℂ (Formalism.AUTREP.GAf L n → ℂ) where
   toFun h := Formalism.L2.NG.rt L n h

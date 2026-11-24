@@ -124,17 +124,6 @@ theorem fockB_projVV [CharZero K] (p : Pol K ι n) (v : Pol K ι n) (hv : v ∈ 
   simp only [← fockBL_apply, map_sum, map_smul]
   simp only [fockBL_apply, fockB_projVV_basis]
 
-theorem projVV_of_mem [CharZero K] (v : Pol K ι n) (hv : v ∈ VV K sg) : (projVV sg v : Pol K ι n) = v := by
-  set d : VV K sg := projVV sg v - ⟨v, hv⟩ with hd
-  have hd0 : ∀ y : VV K sg, pairBK sg y d = 0 := by
-    intro y
-    rw [pairBK_apply, pairB_apply, hd, Submodule.coe_sub, ← fockBL_apply, map_sub, fockBL_apply, fockBL_apply,
-      fockB_comm (y : Pol K ι n), fockB_comm (y : Pol K ι n), fockB_projVV sg v y y.2]
-    simp
-  have := (pairingBNondegenerate_holds K ι n sg).2 d hd0
-  rw [hd, sub_eq_zero] at this
-  exact congrArg Subtype.val this
-
 end Proj
 
 section Adj
@@ -1298,8 +1287,6 @@ open Formalism.BasicNotions Formalism.L2.DIV Formalism.L2.Col Formalism.L2.Col.B
 
 section Small
 
-def wt0 : DomWeight 1 := ⟨![0], by intro a b _; fin_cases a; fin_cases b; simp⟩
-
 end Small
 
 end Formalism.L2.Ker
@@ -2434,13 +2421,6 @@ end A
 section B
 
 variable {K : Type} [Field K] {r n : ℕ}
-
-theorem hwD_sum_apply {ι' A : Type} [CommRing A] [Algebra K A] (s : Finset ι') (D : ι' → Derivation K A A) (x : A) :
-    (∑ i ∈ s, D i) x = ∑ i ∈ s, D i x := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp
-  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, Derivation.add_apply, ih]
 
 theorem hwD_fockB_rE (a a' : Fin r) (f g : MvPolynomial (Fin r × Fin n) K) :
     fockB (rE K r n a a' f) g = fockB f (rE K r n a' a g) := by

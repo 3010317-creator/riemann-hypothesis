@@ -96,12 +96,6 @@ open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNo
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E] {S : HSpace E} {r : ℕ} {T : E}
 
-theorem Xflag_mono (F : LFlag S r T) (j : ℕ) : Xflag F j ≤ Xflag F (j + 1) := by
-  show Submodule.span E (F.fl.e '' {i | i.1 < j}) ≤ Submodule.span E (F.fl.e '' {i | i.1 < j + 1})
-  exact Submodule.span_mono (Set.image_mono fun i hi => by
-    simp only [Set.mem_setOf_eq] at hi ⊢
-    omega)
-
 theorem X_le_orth (F : LFlag S r T) : Xsp F ≤ orth S (Xsp F) := by
   intro x hx
   simp only [orth, Submodule.mem_iInf, LinearMap.mem_ker]

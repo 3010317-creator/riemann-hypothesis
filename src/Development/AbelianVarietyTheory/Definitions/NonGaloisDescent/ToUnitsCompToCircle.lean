@@ -386,10 +386,6 @@ theorem baseOf_baseAt (hB : R.models_BV) (δ : Twist D Circle) (P : LevelP R.Pg 
     BaseOf R i (baseAt R i hB δ P) :=
   ⟨rfl, rfl, rfl, fun _ => rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
-theorem isTupOf_baseAt (hB : R.models_BV) (t₀ : T0) (P : LevelP R.Pg (Wc D i).rank ℂ) :
-    IsTupOf R (baseAt R i hB (tupTwist R t₀) P) (Twist.triv Circle ∅) t₀ :=
-  ⟨(mul_one _).symm, by classical exact (Finset.union_empty _).symm.trans (by congr)⟩
-
 theorem isTupOf_tupTwist (hB : R.models_BV) (t : T0) (P : LevelP R.Pg (Wc D i).rank ℂ) :
     IsTupOf R (baseAt R i hB (Twist.triv Circle ∅) P) (tupTwist R t) t :=
   ⟨(one_mul _).symm, by classical exact (Finset.empty_union _).symm.trans (by congr)⟩

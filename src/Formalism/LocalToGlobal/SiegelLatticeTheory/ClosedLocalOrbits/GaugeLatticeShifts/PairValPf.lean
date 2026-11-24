@@ -559,18 +559,6 @@ section Big
 
 variable {K : Type} [Field K] {N : ℕ}
 
-theorem det_loUni {L : Matrix (Fin N) (Fin N) K} (h : IsLoUni L) : L.det = 1 := by
-  rw [Matrix.det_of_isLowerTriangular L (fun i j hij => (h i j).1 hij)]
-  exact Finset.prod_eq_one fun i _ => (h i i).2 rfl
-
-theorem ptMat_sq (p : Point K N) :
-    ptMat p * ptMat p = Matrix.diagonal (fun i : Fin N => pv p.1 i * pv p.1 (fσ p i)) := by
-  ext i j
-  rw [ptMat_mul, ptMat_fσ, fσ_fσ, Matrix.diagonal_apply]
-  by_cases h : j = i
-  · subst h; simp
-  · rw [if_neg h, if_neg (Ne.symm h), mul_zero]
-
 theorem zhatOM_eq_pv {r : ℕ} (Z : Matrix (Fin (r + 1)) (Fin (r + 1)) K) :
     ZhatOM Z = Z * Matrix.diagonal (fun b : Fin (r + 1) => (-1 : K) ^ (r - b.val)) := by
   ext a b

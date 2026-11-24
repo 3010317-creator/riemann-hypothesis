@@ -92,8 +92,6 @@ namespace AddBlockData
 
 variable {P : ArithVariety n} (D : AddBlockData P)
 
-def extSizes : Option ι → ℕ := fun o ↦ o.elim D.size n
-
 def den (d : ι → ℕ) (g : ((k : ι) → Fin (n k + 1)) → Fin (D.size + 1) → MvPolynomial (Coord n) ℤ)
     {r : ℕ} (G : Fin r → MvPolynomial (Coord n) ℤ) (δ : Fin r → ι → ℕ) (z : Cone n ℂ) : ℝ :=
   (∑ c, ∑ j, ‖evalCone z (g c j)‖ ^ 2) +
@@ -126,11 +124,6 @@ def inv (A : Heights.HermLine n) : Heights.HermLine n where
   metric_smooth := A.metric_smooth.inv fun z hz ↦ (A.metric_pos z hz).ne'
 
 end HermLine
-
-omit [DecidableEq ι] in
-theorem chartMonomial_add (c : (k : ι) → Fin (n k + 1)) (d d' : ι → ℕ) :
-    chartMonomial c (d + d') = chartMonomial c d * chartMonomial c d' := by
-  simp only [chartMonomial, Pi.add_apply, pow_add, Finset.prod_mul_distrib]
 
 omit [DecidableEq ι] in
 theorem chartMonomial_nsmul (c : (k : ι) → Fin (n k + 1)) (m : ℕ) (d : ι → ℕ) :

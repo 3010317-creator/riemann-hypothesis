@@ -108,12 +108,6 @@ instance isNoetherian_projX {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : Is
   (isNoetherian_iff_of_finite_iSup_eq_top (S := chartOpen hP) (iSup_chartOpen_eq_top hP)).mpr
     (isNoetherianRing_gammaChart hP)
 
-def projB (P D : Ideal (MvPolynomial (Σ k, ι k) ℂ)) (hP : IsMultiHomogIdeal P) :
-    TopologicalSpace.Closeds (projX P hP) :=
-  letI := segreGraded hP
-  ⟨ProjectiveSpectrum.zeroLocus (segreGrading P) (Ideal.Quotient.mk (segreIdeal P) '' (segreIdeal D : Set _)),
-    ProjectiveSpectrum.isClosed_zeroLocus _ _⟩
-
 def ptIdealOf {σ : Type} (z : σ → ℂ) : Ideal (MvPolynomial σ ℂ) :=
   RingHom.ker (MvPolynomial.eval z : MvPolynomial σ ℂ →+* ℂ)
 

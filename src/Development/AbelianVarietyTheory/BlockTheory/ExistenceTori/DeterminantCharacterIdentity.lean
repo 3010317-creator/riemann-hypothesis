@@ -199,16 +199,8 @@ section Minors
 
 variable {T : Type} [Fintype T] (r : T → ℕ) (n : ℕ) (R : Type) [CommRing R]
 
-def leadMinor (col : ∀ σ : T, Fin (r σ) → Fin n) (σ : T) (i : Fin (r σ)) : MvPolynomial (Letter T r n) R :=
-  Matrix.det (Matrix.of fun s t : Fin (i.val + 1) =>
-    (X ⟨σ, Fin.castLE (Nat.succ_le_of_lt i.isLt) s, col σ (Fin.castLE (Nat.succ_le_of_lt i.isLt) t)⟩ :
-      MvPolynomial (Letter T r n) R))
-
 def gap (a : T × ℕ → ℕ) (σ : T) (i : Fin (r σ)) : ℕ :=
   a (σ, i.val) - if i.val + 1 < r σ then a (σ, i.val + 1) else 0
-
-def minorProd (col : ∀ σ : T, Fin (r σ) → Fin n) (a : T × ℕ → ℕ) : MvPolynomial (Letter T r n) R :=
-  ∏ σ : T, ∏ i : Fin (r σ), leadMinor r n R col σ i ^ gap r a σ i
 
 end Minors
 
@@ -233,11 +225,6 @@ section Coeff
 variable {n : ℕ} {T : Type} [AddCommGroup T] [Module c.F T] [Module (𝓞 c.F) T] [IsScalarTower (𝓞 c.F) c.F T]
 
 end Coeff
-
-def MovesDatum {n : ℕ} (J : Subgroup (UA E n)) (ψ : J →* c.Fˣ) (ph : (Fin n → ConjQ Dw l) → c.F) : Prop :=
-  ∀ (k : J) (κ : Fin n → Fin n → 𝓞 E),
-    (∀ a b, ∃ u ∈ intAd E, star (k.1.1 a b) - diagE E (κ a b : E) = (l.M : AdE E) * u) →
-      ∀ x, ph (fun a => ∑ b, κ a b • x b) = ((ψ k : c.Fˣ) : c.F) * ph x
 
 end GlobalTheory.IndefiniteRowSideFullHecke.DeterminantCharacterIdentity
 end -- clump:auto

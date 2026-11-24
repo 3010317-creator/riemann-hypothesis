@@ -335,9 +335,6 @@ def typeOp (hl : IsTypeLevel l) (fr : TypeFrame Dw l) (e : MonoidAlgebra c.F (Le
 
 variable (hl : IsTypeLevel l) (fr : TypeFrame Dw l)
 
-theorem isRightAct_pullType (hpq : 1 ≤ Dw.p + Dw.q) : IsRightAct (pullType Xo c hl fr) :=
-  (isRightAct_pull hpq hl.coprime).comp (typeEmb hl fr)
-
 
 variable (Xo c) in
 def goodOp (om : ∀ i : Fin 2, (ZMod (D.host.g i))ˣ →* (c.F)ˣ) (j : Fin D.R.m) : Module.End c.F (Rul Xo c) :=

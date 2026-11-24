@@ -196,24 +196,9 @@ variable {n a g : ℕ} (P : PeriodPolydisc n a g)
 
 end PeriodPolydisc
 
-theorem im_mul_inv_two_pi_I (x : ℝ) (w : ℂ) :
-    ((x : ℂ) * (2 * Real.pi * Complex.I)⁻¹ * w).im = -x * w.re / (2 * Real.pi) := by
-  have hπ : (Real.pi : ℝ) ≠ 0 := Real.pi_ne_zero
-  simp [Complex.mul_im, Complex.mul_re, Complex.inv_re, Complex.inv_im, Complex.normSq_apply]
-  field_simp
-
 section ProjectiveLine
 
 open ReciprocityTheory.AnForm.M
-
-theorem norm_fin_one_eq_alt (y : Fin 1 → ℂ) : ‖y‖ = ‖y 0‖ := by
-  have h : y = fun _ => y 0 := funext fun i => by fin_cases i; rfl
-  conv_lhs => rw [h]
-  exact pi_norm_const _
-
-theorem isPsh_const (U : Set (Fin D → ℂ)) (c : ℝ) : ReciprocityTheory.AnForm.A.IsPsh U (fun _ => c) :=
-  ⟨continuousOn_const.upperSemicontinuousOn,
-    fun _ _ _ => ⟨circleIntegrable_const c 0 1, (Real.circleAverage_const c 0 1).ge⟩⟩
 
 end ProjectiveLine
 

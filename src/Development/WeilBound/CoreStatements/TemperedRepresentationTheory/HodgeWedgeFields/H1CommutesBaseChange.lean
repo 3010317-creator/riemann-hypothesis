@@ -108,9 +108,6 @@ def Par : Prop := ∀ T : C, IsBaseChange (F.obj T) (evForm F T)
 def Wedge : Prop :=
   ∃ e : ⋀[R]^2 (H1 F) ≃ₗ[R] H2 F, ∀ a b, e (exteriorPower.ιMulti R 2 ![a, b]) = cup F a b
 
-def WedgeHyp : Prop :=
-  ∃ e : ⋀[R]^2 (Hyp1 F) ≃ₗ[R] Hyp2 F, ∀ a b, e (exteriorPower.ιMulti R 2 ![a, b]) = cupHyp F a b
-
 def Bi : Prop :=
   ∃ (D : Type) (_ : Category.{0} D) (G : D ⥤ CommAlgCat.{0} R) (m p q : CoefMap (RingHom.id R) F G),
     Stein G ∧ Par G ∧ Function.Bijective (fun x : H1 F × H1 F ↦ p.pull1 x.1 + q.pull1 x.2) ∧
@@ -214,32 +211,9 @@ theorem wOver {R : Type} [CommRing R] {Y Z : Over (Sp R)} (f : Y ⟶ Z) :
     f.left ≫ Z.hom = Y.hom ≫ spMap (RingHom.id R) := by
   rw [GlobalTheory.Cris.spMap_id, Category.comp_id]; exact Over.w f
 
-def tsz {R B W M : Type} [CommRing R] [CommRing B] [Algebra R B] [AddCommGroup W] [Module R W] [Module Rᵐᵒᵖ W]
-    [IsCentralScalar R W] [AddCommGroup M] [Module B M] [Module Bᵐᵒᵖ M] [IsCentralScalar B M] [Module R M]
-    [IsScalarTower R B M] (u : W →ₗ[R] M) : TrivSqZeroExt R W →+* TrivSqZeroExt B M where
-  toFun c := TrivSqZeroExt.inl (algebraMap R B c.fst) + TrivSqZeroExt.inr (u c.snd)
-  map_one' := by ext <;> simp
-  map_zero' := by ext <;> simp
-  map_add' a b := by ext <;> simp
-  map_mul' a b := by ext <;> simp
-
-def IsCot {R : Type} [CommRing R] (s : X ⟶ Sp R) (e : Sp R ⟶ X) (W : Type) [AddCommGroup W] [Module R W]
-    [Module Rᵐᵒᵖ W] [IsCentralScalar R W] (y₀ : Sp (TrivSqZeroExt R W) ⟶ X) : Prop :=
-  y₀ ≫ s = spMap (TrivSqZeroExt.inlHom R W) ∧ spMap (TrivSqZeroExt.fstHom R R W).toRingHom ≫ y₀ = e ∧
-    ∀ (B : Type) [CommRing B] [Algebra R B] (M : Type) [AddCommGroup M] [Module B M] [Module Bᵐᵒᵖ M]
-      [IsCentralScalar B M] [Module R M] [IsScalarTower R B M] (y : Sp (TrivSqZeroExt B M) ⟶ X),
-      y ≫ s = spMap ((TrivSqZeroExt.inlHom B M).comp (algebraMap R B)) →
-      spMap (TrivSqZeroExt.fstHom B B M).toRingHom ≫ y = spMap (algebraMap R B) ≫ e →
-      ∃! u : W →ₗ[R] M, y = spMap (tsz u) ≫ y₀
-
 def AllAb (Q : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A], ℕ → Prop) : Prop :=
   ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A →
     SmoothOfRelativeDimension g A.hom → Q R A g
-
-def CotSt : Prop :=
-  ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (s : X ⟶ Sp R) (e : Sp R ⟶ X) (g : ℕ), e ≫ s = 𝟙 _ →
-    SmoothOfRelativeDimension g s → ∃ (W : Type) (_ : AddCommGroup W) (_ : Module R W) (_ : Module Rᵐᵒᵖ W)
-      (_ : IsCentralScalar R W) (y₀ : Sp (TrivSqZeroExt R W) ⟶ X), VB R W g ∧ IsCot s e W y₀
 
 def DescentSt : Prop :=
   ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (s : X ⟶ Sp R), IsSeparated s →
@@ -256,15 +230,6 @@ def SysBCSt : Prop :=
     ∀ (P : Type) [SemilatticeInf P] (S : Sys X P), ∃ (S' : Sys X' P) (m : BC (OSys s S) (OSys s' S')),
       ∀ c c', m.coef.pull1 ((resSys s S).pull1 c) = (resSys s' S').pull1 c' → IsPullO h.w c c'
 
-def PerfSt : Prop :=
-  ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (s : X ⟶ Sp R), Smooth s → IsProper s →
-    ∃ (P : Type) (_ : SemilatticeInf P) (_ : Finite P) (S : Sys X P), Perf (OSys s S)
-
-def FinCohSt : Prop :=
-  ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (X : Scheme.{0}) (s : X ⟶ Sp R), IsProper s →
-    ∀ (P : Type) [SemilatticeInf P] [Finite P] (S : Sys X P),
-      Module.Finite R (LinearMap.ker (dn (OSys s S) 0)) ∧ ∀ n, Module.Finite R (Hs (OSys s S) n)
-
 def SteinSt : Prop := AllAb fun _ _ A _ _ ↦ Stein (OAff A.hom)
 
 def ParSt : Prop := AllAb fun R _ A _ g ↦ Par (OAff A.hom) ∧ VB R (GlobForm A.hom) g
@@ -272,22 +237,11 @@ def ParSt : Prop := AllAb fun R _ A _ g ↦ Par (OAff A.hom) ∧ VB R (GlobForm 
 def AxOSt : Prop := AllAb fun _ _ A _ _ ↦ ∀ c : HO1 (A ⊗ A).hom,
   IsPullO (wOver (lift (𝟙 A) (1 : A ⟶ A))) c 0 → IsPullO (wOver (lift (1 : A ⟶ A) (𝟙 A))) c 0 → c = 0
 
-def AxFormSt : Prop := AllAb fun _ _ A _ _ ↦ ∀ c : GlobForm (A ⊗ A).hom,
-  IsPullForm (wOver (lift (𝟙 A) (1 : A ⟶ A))) c 0 → IsPullForm (wOver (lift (1 : A ⟶ A) (𝟙 A))) c 0 → c = 0
-
-def H1StructureBundle : Prop := AllAb fun R _ A _ g ↦ VB R (HO1 A.hom) g
-
 def VanSt : Prop := AllAb fun R _ A _ g ↦ IsField R → ∀ (P : Type) [SemilatticeInf P] [Finite P] (S : Sys A.left P)
   (n : ℕ), g ≤ n → Function.Exact (dn (OSys A.hom S) n) (dn (OSys A.hom S) (n + 1))
 
 def HopfSt : Prop := AllAb fun R _ A _ _ ↦ ∀ (P : Type) [SemilatticeInf P] [Finite P] (S : Sys A.left P),
   Hopf (OSys A.hom S) (IsField R)
-
-def BiSt : Prop := AllAb fun _ _ A _ _ ↦ Bi (OAff A.hom)
-
-def WedgeFieldSt : Prop := AllAb fun R _ A _ _ ↦ IsField R → Wedge (OAff A.hom)
-
-def WedgeSt : Prop := AllAb fun _ _ A _ _ ↦ Wedge (OAff A.hom)
 
 def OBCSt : Prop := AllAb fun R _ A _ _ ↦
   ∀ (R' : Type) [CommRing R'] [Algebra R R'] (X' : Scheme.{0}) (s' : X' ⟶ Sp R') (φ : X' ⟶ A.left)
@@ -298,10 +252,6 @@ def FormBCSt : Prop := AllAb fun R _ A _ _ ↦
   ∀ (R' : Type) [CommRing R'] [Algebra R R'] (X' : Scheme.{0}) (s' : X' ⟶ Sp R') (φ : X' ⟶ A.left)
     (h : IsPullback φ s' A.hom (spMap (algebraMap R R'))),
     ∃ e : R' ⊗[R] GlobForm A.hom ≃ₗ[R'] GlobForm s', ∀ c, IsPullForm h.w c (e (1 ⊗ₜ c))
-
-def DegenSt : Prop := AllAb fun _ _ A _ _ ↦ ClosedForm A.hom = ⊤ ∧ Function.Surjective (toHO1 A.hom)
-
-def WedgeHypSt : Prop := AllAb fun _ _ A _ _ ↦ WedgeHyp (OAff A.hom)
 
 def CmpSt : Prop :=
   ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (s : X ⟶ Sp R), IsSeparated s →
@@ -315,21 +265,6 @@ def AllF (Q : ∀ (R : Type) [CommRing R] (C : Type) [Category.{0} C], (C ⥤ Co
 
 def AllFin (Q : ∀ (R : Type) [CommRing R] (C : Type) [Category.{0} C], (C ⥤ CommAlgCat.{0} R) → Prop) : Prop :=
   ∀ (R : Type) [CommRing R] (P : Type) [SemilatticeInf P] [Finite P] (F : Pᵒᵖ ⥤ CommAlgCat.{0} R), Q R Pᵒᵖ F
-
-def Framed {R : Type} [CommRing R] {C : Type} [Category.{0} C] (F : C ⥤ CommAlgCat.{0} R) : Prop :=
-  Stein F ∧ Par F ∧ Module.Finite R (Glob1 F) ∧ Module.Projective R (Glob1 F)
-
-def OneFormCohSt : Prop := AllF fun R _ C _ F ↦ Framed F →
-  ∃ mu : Z1 F ⊗[R] Glob1 F →ₗ[R] A1 F, (∀ f ω T T' φ, mu (f ⊗ₜ ω) T T' φ = f.1 T T' φ • ω.1 T') ∧
-    (∀ a : A1 F, (∀ (T T' T'' : C) (φ : T ⟶ T') (ψ : T' ⟶ T''),
-      a T T'' (φ ≫ ψ) = p1 F ψ (a T T' φ) + a T' T'' ψ) → ∃ t, mu t = a) ∧
-    ∀ (t : Z1 F ⊗[R] Glob1 F) (β : A0 F), (∀ T T' φ, mu t T T' φ = β T' - p1 F φ (β T)) →
-      (H1.mk F).rTensor (Glob1 F) t = 0
-
-def TwoFormCohSt : Prop := AllF fun R _ C _ F ↦ Framed F →
-  ∃ ν : ⋀[R]^2 (Glob1 F) →ₗ[R] W0 F 2,
-    (∀ a b T, ν (exteriorPower.ιMulti R 2 ![a, b]) T = wedge R _ (a.1 T) (b.1 T)) ∧ Function.Injective ν ∧
-    ∀ w : W0 F 2, (∀ (T T' : C) (φ : T ⟶ T'), w T' = pOm F 2 φ (w T)) → ∃ t, ν t = w
 
 def DictSt : Prop := AllF fun R _ C _ F ↦
   ∃ (e₀ : Cn F 0 ≃ₗ[R] C0 F) (e₁ : Cn F 1 ≃ₗ[R] C1 F) (e₂ : Cn F 2 ≃ₗ[R] C2 F) (e₃ : Cn F 3 ≃ₗ[R] C3 F),
@@ -386,37 +321,7 @@ def AffAcycSt : Prop :=
     let aug : Sec s W.1 →ₗ[R] Cn F 0 := LinearMap.pi fun c ↦ (Sec.res s (hle (c.obj (Fin.last 0)).unop)).toLinearMap
     Function.Injective aug ∧ Function.Exact aug (dn F 0) ∧ ∀ n, Function.Exact (dn F n) (dn F (n + 1))
 
-def ClosedSt : Prop := AllF fun _ _ _ _ F ↦ Framed F → Bi F → Closed1 F = ⊤
-
-def LiftSt : Prop := AllF fun _ _ _ _ F ↦ Framed F → Bi F → Closed1 F = ⊤ → Function.Surjective (toO F)
-
-def AltSt : Prop := AllF fun _ _ _ _ F ↦ Framed F → Bi F → Closed1 F = ⊤ → Function.Surjective (toO F) →
-  (∀ c, cup F c c = 0) → ∀ c, cupHyp F c c = 0
-
-def H2FieldHypothesis : Prop := AllF fun R _ _ _ F ↦ Framed F → Module.Finite R (H1 F) → Module.Projective R (H1 F) →
-  Closed1 F = ⊤ → Function.Surjective (toO F) → Wedge F → (∀ c, cupHyp F c c = 0) → WedgeHyp F
-
-def PerfNoethSt : Prop := AllFin fun R _ _ _ F ↦ IsNoetherianRing R → (∀ T, Module.Flat R (F.obj T)) →
-  Module.Finite R (LinearMap.ker (dn F 0)) → (∀ n, Module.Finite R (Hs F n)) → Perf F
-
-def PerfBaseSt : Prop := AllFin fun R _ C _ F ↦ Perf F →
-  ∀ (R' : Type) [CommRing R'] [Algebra R R'] (F' : C ⥤ CommAlgCat.{0} R'), BC F F' → Perf F'
-
 def SteinU {R : Type} [CommRing R] {C : Type} [Category.{0} C] (F : C ⥤ CommAlgCat.{0} R) : Prop :=
   ∀ (R' : Type) [CommRing R'] [Algebra R R'], ∃ (F' : C ⥤ CommAlgCat.{0} R') (_ : BC F F'), Stein F'
-
-def PerfectH1BaseChange : Prop := AllFin fun R _ C _ F ↦ ∀ g : ℕ, Perf F → SteinU F → VB R (H1 F) g →
-  (∀ (k : Type) [Field k] [Algebra R k], ∃ (F' : C ⥤ CommAlgCat.{0} k) (_ : BC F F'),
-    Module.finrank k (H1 F') = g) → H1CommutesBaseChange F
-
-def PerfectH2FromFibres : Prop := AllFin fun R _ C _ F ↦ ∀ g : ℕ, Perf F → SteinU F → VB R (H1 F) g → H1CommutesBaseChange F →
-  (∀ (k : Type) [Field k] [Algebra R k], ∃ (F' : C ⥤ CommAlgCat.{0} k) (_ : BC F F'), Wedge F') →
-  VB R (H2 F) (g.choose 2) ∧ Submodule.span R (Set.range fun x : H1 F × H1 F ↦ cup F x.1 x.2) = ⊤
-
-def WedgeOfSt : Prop := AllFin fun R _ _ _ F ↦ ∀ g : ℕ, Hopf F False → VB R (H1 F) g → H1CommutesBaseChange F →
-  VB R (H2 F) (g.choose 2) → Submodule.span R (Set.range fun x : H1 F × H1 F ↦ cup F x.1 x.2) = ⊤ → Wedge F
-
-def HopfFieldSt : Prop := AllFin fun R _ _ _ F ↦ ∀ g : ℕ, IsField R → Stein F → VB R (H1 F) g →
-  (∀ n, g ≤ n → Function.Exact (dn F n) (dn F (n + 1))) → Hopf F True → Wedge F
 
 end MainStatements.Hodge

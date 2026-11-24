@@ -74,11 +74,6 @@ variable {K : Type} [Field K] [NumberField K] [StarRing K] {I : Type} (C : ColOb
 
 def S : Finset (Formalism.LFunctionChainParameters.slopeLatticeData.FinPl K) := C.supp.map (plEquiv K).toEmbedding
 
-def sgExpW (u : I) (w : HeightOneSpectrum (𝓞 K)) : ℤ := ⌊(eW w : ℝ) * C.sg u w⌋
-
-def sgExp (u : I) : Formalism.LFunctionChainParameters.slopeLatticeData.FinPl K →₀ ℤ :=
-  Finsupp.indicator C.S fun z _ => C.sgExpW u ((plEquiv K).symm z)
-
 def tauExpW (w : HeightOneSpectrum (𝓞 K)) : ℤ := ⌊(eW w : ℝ) * C.tau w⌋
 
 def tauExp : Formalism.LFunctionChainParameters.slopeLatticeData.FinPl K →₀ ℤ :=
@@ -87,8 +82,6 @@ def tauExp : Formalism.LFunctionChainParameters.slopeLatticeData.FinPl K →₀ 
 def ItM (u : I) : Submodule (𝓞 K) (C.M u).V :=
   Formalism.HermitianLatticesTheory.idealSmul ((Formalism.LFunctionChainParameters.slopeLatticeData.idealPow C.tauExp : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) :
     Submodule (𝓞 K) K) (C.M u).L
-
-def Npr (u : I) : Submodule (𝓞 K) (C.M u).V := Formalism.LFunctionChainParameters.slopeLatticeData.modLat (C.sgExp u) (C.Nu u)
 
 end ColObj
 
@@ -197,25 +190,6 @@ theorem mem_localization_iff (w : HeightOneSpectrum (𝓞 K)) (L : Submodule (�
     x ∈ Formalism.HermitianLatticesTheory.localization₂ w.asIdeal L ↔ ∃ s : 𝓞 K, s ∉ w.asIdeal ∧ s • x ∈ L := by
   rw [← atW_restrictScalars]
   exact mem_atW_iff
-
-theorem locP_map_equiv (e : V ≃ₗ[K] V') (w : HeightOneSpectrum (𝓞 K)) (L : Submodule (𝓞 K) V) :
-    Formalism.HermitianLatticesTheory.localization₂ w.asIdeal (L.map (e.toLinearMap.restrictScalars (𝓞 K))) =
-      (Formalism.HermitianLatticesTheory.localization₂ w.asIdeal L).map (e.toLinearMap.restrictScalars (𝓞 K)) := by
-  ext y
-  rw [mem_localization_iff]
-  constructor
-  · rintro ⟨s, hs, x, hx, e1⟩
-    refine ⟨e.symm y, (mem_localization_iff w L _).2 ⟨s, hs, ?_⟩, e.apply_symm_apply y⟩
-    have e2 : e x = s • y := e1
-    have e3 : s • e.symm y = x := by
-      rw [← algebraMap_smul K s (e.symm y), ← map_smul, algebraMap_smul, ← e2, e.symm_apply_apply]
-    rw [e3]
-    exact hx
-  · rintro ⟨x, hx, rfl⟩
-    obtain ⟨s, hs, h1⟩ := (mem_localization_iff w L x).1 hx
-    refine ⟨s, hs, s • x, h1, ?_⟩
-    show e (s • x) = s • e x
-    rw [← algebraMap_smul K s x, map_smul, algebraMap_smul]
 
 end
 

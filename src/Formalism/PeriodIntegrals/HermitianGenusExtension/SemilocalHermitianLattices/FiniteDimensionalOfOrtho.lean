@@ -90,24 +90,12 @@ theorem form_sum {h : V →ₗ⋆[K] V →ₗ[K] K} {n : ℕ} {e : Fin n → V}
 
   simp [map_sum, LinearMap.sum_apply, he, mul_comm, starRingEnd_apply]
 
-theorem form_left {h : V →ₗ⋆[K] V →ₗ[K] K} {n : ℕ} {e : Fin n → V}
-    (he : ∀ i j, h (e i) (e j) = if i = j then 1 else 0) (i : Fin n) (d : Fin n → K) :
-    h (e i) (∑ j, d j • e j) = d i := by
-
-  simp [map_sum, he]
-
 theorem star_int (r : 𝓞 K) : ∃ t : 𝓞 K, algebraMap (𝓞 K) K t = star (algebraMap (𝓞 K) K r) :=
   ⟨RingOfIntegers.mapRingHom (starRingEnd K) r, rfl⟩
 
 theorem exists_coord {n : ℕ} {e : Fin n → V} (hsp : Submodule.span K (Set.range e) = ⊤) (x : V) :
     ∃ c : Fin n → K, ∑ i, c i • e i = x :=
   (Submodule.mem_span_range_iff_exists_fun K).1 (hsp ▸ Submodule.mem_top)
-
-theorem mem_lat_iff {n : ℕ} {e : Fin n → V} (x : V) :
-    x ∈ Submodule.span (𝓞 K) (Set.range e) ↔
-      ∃ c : Fin n → 𝓞 K, ∑ i, algebraMap (𝓞 K) K (c i) • e i = x := by
-  rw [Submodule.mem_span_range_iff_exists_fun]
-  simp only [algebraMap_smul]
 
 end StandardSymmetricSums
 
@@ -157,10 +145,6 @@ theorem trace_pos_of_ortho (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) 
     simp
   rw [this] at hpos
   exact_mod_cast hpos
-
-theorem isIntegralLat_of_ortho {h : V →ₗ⋆[K] V →ₗ[K] K} {L : Submodule (𝓞 K) V} {n : ℕ}
-    (hL : Formalism.HermitianLatticesTheory.IsOrthoLattice h L n) : Formalism.HermitianLatticesTheory.IsIntegralLat h L := by
-  apply Formalism.HermitianLattices.Ext.L3.isIntegralLat_of_ortho <;> assumption
 
 theorem isUnimodular_of_ortho {h : V →ₗ⋆[K] V →ₗ[K] K} {L : Submodule (𝓞 K) V} {n : ℕ}
     (hL : Formalism.HermitianLatticesTheory.IsOrthoLattice h L n) : Formalism.HermitianLatticesTheory.IsUnimodular h L := by

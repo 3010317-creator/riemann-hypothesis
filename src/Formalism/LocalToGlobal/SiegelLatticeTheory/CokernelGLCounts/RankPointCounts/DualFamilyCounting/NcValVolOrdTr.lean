@@ -71,17 +71,6 @@ theorem one_mem : (1 : Fv F v ⊗[F] E) ∈ OEv (E := E) v := by
 theorem int_mem (r : 𝓞 F) : algebraMap F (Fv F v) (r : F) ∈ v.adicCompletionIntegers F := by
   exact v.coe_mem_adicCompletionIntegers r
 
-omit [NumberField E] in
-theorem inclR_alg (a : F) : inclR (F := F) (Fv F v) (algebraMap F E a) =
-    algebraMap (Fv F v) (Fv F v ⊗[F] E) (algebraMap F (Fv F v) a) := by
-  show (Algebra.TensorProduct.includeRight : E →ₐ[F] Fv F v ⊗[F] E) (algebraMap F E a) = _
-  rw [AlgHom.commutes, IsScalarTower.algebraMap_apply F (Fv F v) (Fv F v ⊗[F] E)]
-
-theorem alg_mem {c : Fv F v} (hc : c ∈ v.adicCompletionIntegers F) :
-    algebraMap (Fv F v) (Fv F v ⊗[F] E) c ∈ OEv (E := E) v := by
-  rw [Algebra.algebraMap_eq_smul_one]
-  exact oev_smul' (F := F) (E := E) v hc (one_mem (F := F) (E := E) v)
-
 theorem mul_mem {x y : Fv F v ⊗[F] E} (hx : x ∈ OEv (E := E) v) (hy : y ∈ OEv (E := E) v) :
     x * y ∈ OEv (E := E) v := by
   first | exact _root_.PI.OmLocU.oEv_mul | (apply _root_.PI.OmLocU.oEv_mul <;> assumption)

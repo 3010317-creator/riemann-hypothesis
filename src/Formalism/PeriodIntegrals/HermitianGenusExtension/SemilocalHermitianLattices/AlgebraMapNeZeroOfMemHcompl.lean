@@ -140,12 +140,6 @@ theorem mem_conjIdeal_iff (p : Ideal (𝓞 K)) (r : 𝓞 K) :
     r ∈ Formalism.HermitianLatticesTheory.conjIdeal (K := K) p ↔ conjO K r ∈ p := by
   rw [ReciprocityTheory.ChartRestriction.L3.conjIdeal_eq_comap, Ideal.mem_comap]
 
-theorem conjIdeal_isPrime {p : Ideal (𝓞 K)} (hp : p.IsPrime) :
-    (Formalism.HermitianLatticesTheory.conjIdeal (K := K) p).IsPrime := by
-  haveI := hp
-  rw [ReciprocityTheory.ChartRestriction.L3.conjIdeal_eq_comap]
-  infer_instance
-
 theorem hcompl_eq_closure (p : Ideal (𝓞 K)) :
     Formalism.HermitianLatticesTheory.hcompl (K := K) p = Submonoid.closure {s : 𝓞 K | s ∉ p ∧ conjO K s ∉ p} := by
   unfold Formalism.HermitianLatticesTheory.hcompl

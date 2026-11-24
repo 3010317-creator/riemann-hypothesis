@@ -265,19 +265,7 @@ def Fitted (Comparison₂ : TieT) : TieT := fun p CF d => GridFit p d.G ∧ Comp
 def Lf (Comparison₂ : TieT) (Q : PropT) : Prop := ∃ CF0 : ℝ, ∀ CF, CF0 ≤ CF → Closed FamHyp fun Fm CH => DIVinN Fm →
   ∃ C0 : ℝ, ∀ C, C0 ≤ C → EvPt Fm fun _ _ _ p => ∀ d : FunIn p CF, Comparison₂ p CF d → Q p CF d C CH
 
-def Ex (Fld : FldT) (Comparison₂ : TieT) : Prop := ∃ CF0 : ℝ, ∀ CF, CF0 ≤ CF → Closed FamHyp fun Fm _ => DIVinN Fm →
-  EvPt Fm fun _ _ _ p => ∀ (G : Grid p CF) (W : G.Weil), W.Over p.R.toRealDat → GridFit p G → Fld p CF G W →
-    ∃ d : FunIn p CF, d.G = G ∧ Comparison₂ p CF d
-
 def Wt (Comparison₂ : TieT) : Prop := Lf (Fitted Comparison₂) fun p _ d C _ => LeafWt d.O C p.Z.b
-
-def Fun0Fit (Fld : FldT) : Prop := ∃ CF0 : ℝ, ∀ CF, CF0 ≤ CF → Closed FamHyp fun Fm CH => DIVinN Fm →
-  EvPt Fm fun _ _ _ p => HasGrid Fld p CF → ∀ C, (p.S false).FUN (p.N C CH)
-
-theorem evPt_imp {eps : ℝ} {Fm : FamP eps} {P Q : ∀ (x : ℝ) (hx : Fm.x1 < x) (i : Fm.Ix x), Pt Fm x hx i → Prop}
-    (hP : EvPt Fm P) (h : ∀ x hx i p, p.Rows → P x hx i p → Q x hx i p) : EvPt Fm Q :=
-  let ⟨a, ha⟩ := hP
-  ⟨a, fun x hx h' i p hp => h x hx i p hp (ha x hx h' i p hp)⟩
 
 end GlobalTheory.BigTop.Fun
 

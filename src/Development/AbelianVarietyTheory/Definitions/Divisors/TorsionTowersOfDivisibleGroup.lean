@@ -123,24 +123,6 @@ variable {B C : Type} [CommRing B] [Algebra O B] [CommRing C] [Algebra O C]
 
 def gmCoord (z : SpAlg O B ⟶ Gm (Sp O)) : B := Diag.charVal z (ULift.up 1)
 
-theorem gmCoord_comp (φ : B →ₐ[O] C) (z : SpAlg O B ⟶ Gm (Sp O)) :
-    gmCoord (spOver φ ≫ z) = φ (gmCoord z) :=
-  (Diag.left_eq_iff (φ : B →+* C) (Over.w (spOver φ)).symm (spOver φ ≫ z) z).1 rfl _
-
-def gmCoordHom : (SpAlg O B ⟶ Gm (Sp O)) →* B where
-  toFun := gmCoord
-  map_one' := Diag.charVal_one _
-  map_mul' x y := Diag.charVal_mul x y _
-
-theorem gmCoord_ext {x y : SpAlg O B ⟶ Gm (Sp O)} (h : gmCoord x = gmCoord y) : x = y := by
-  let f : (SpAlg O B ⟶ Gm (Sp O)) → (Multiplicative ℤ →* Bˣ) := fun z => MonoidHom.toHomUnits
-    { toFun := fun k => Diag.charVal z (ULift.up k.toAdd)
-      map_one' := Diag.charVal_zero z
-      map_mul' := fun k l => Diag.charVal_add z ⟨k.toAdd⟩ ⟨l.toAdd⟩ }
-  have e : f x = f y := MonoidHom.ext_mint (Units.ext h)
-  exact Diag.charVal_ext fun k =>
-    congrArg (fun g : Multiplicative ℤ →* Bˣ => (g (Multiplicative.ofAdd k.down) : B)) e
-
 
 variable (O) in
 def gmPoint (u : Bˣ) : SpAlg O B ⟶ Gm (Sp O) :=
@@ -179,36 +161,7 @@ section Mu
 
 variable (p O) [Fact p.Prime]
 
-def muIncl (n : ℕ) : SpAlg O ((mu p O).A n) ⟶ Gm (Sp O) :=
-  gmPoint O (Units.ofPowEqOne (muT O (p ^ n)) (p ^ n) (muT_pow_self O _) (NeZero.ne _))
 
-
-variable {p O} in
-theorem gmCoord_muIncl {n : ℕ} {B : Type} [CommRing B] [Algebra O B]
-    (φ : (mu p O).A n →ₐ[O] B) : gmCoord (spOver φ ≫ muIncl p O n) = φ (muT O (p ^ n)) := by
-  rw [gmCoord_comp, muIncl, gmCoord_gmPoint]; rfl
-
-def muTower : (mu p O).TorsionTower (Gm (Sp O)) where
-  y := muIncl p O
-  mul n B _ _ φ ψ := gmCoord_ext <| by
-    refine Eq.trans ?_ (map_mul gmCoordHom _ _).symm
-    exact (gmCoord_muIncl _).trans ((convMul_apply_groupLike φ ψ (isGroupLikeElem_muT O _)).trans
-      (congrArg₂ (· * ·) (gmCoord_muIncl _) (gmCoord_muIncl _)).symm)
-  inj n B _ _ φ ψ h := mu_algHom_ext
-    ((gmCoord_muIncl φ).symm.trans ((congrArg gmCoord h).trans (gmCoord_muIncl ψ)))
-  surj n B _ _ z hz := by
-    have h : gmCoord z ^ p ^ n = 1 :=
-      (map_pow gmCoordHom z _).symm.trans ((congrArg gmCoordHom hz).trans (map_one _))
-    exact ⟨muPoint O _ h, gmCoord_ext ((gmCoord_muIncl _).trans (muPoint_muT _ h))⟩
-  res n := gmCoord_ext <| by
-    rw [gmCoord_muIncl, muIncl, gmCoord_gmPoint]
-    exact muRes_muT p O n
-
-
-variable {p O} in
-theorem gmCoord_muTower {n : ℕ} {B : Type} [CommRing B] [Algebra O B]
-    (φ : (mu p O).A n →ₐ[O] B) :
-    gmCoord (spOver φ ≫ (muTower p O).y n) = φ (muT O (p ^ n)) := gmCoord_muIncl φ
 
 end Mu
 

@@ -90,11 +90,6 @@ theorem thetaBound : ThetaBound := by
   have h := hC σ ε hσ hε p (Real.log x)
   rwa [← thetaForm ε σ hε (Real.log x), Real.exp_log hx] at h
 
-theorem iterDeriv_const' (p : ℕ) (k t : ℝ) : iteratedDeriv p (fun _ : ℝ => k) t = if p = 0 then k else 0 := by
-  cases p with
-  | zero => simp
-  | succ n => simp [iteratedDeriv_succ']
-
 theorem cutBound : CutBound := LEx2.cutBound
 
 end Formalism.FourierDecayAlt.P.LEx1

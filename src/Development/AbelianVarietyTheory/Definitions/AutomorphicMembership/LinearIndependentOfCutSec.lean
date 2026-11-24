@@ -130,15 +130,6 @@ theorem valAt_algebraMap (a : Z.presheaf.stalk (below y)) :
 
 variable {y}
 
-theorem valAt_pow (hf : RegAt (below y) f) (m : ℕ) : valAt y (f ^ m) = valAt y f ^ m := by
-  obtain ⟨a, rfl⟩ := hf
-  rw [← map_pow, valAt_algebraMap, valAt_algebraMap, map_pow]
-
-theorem valAt_ne_zero (hf : UnitAt (below y) f) : valAt y f ≠ 0 := by
-  obtain ⟨a, ha, rfl⟩ := hf
-  rw [valAt_algebraMap]
-  exact (ha.map _).ne_zero
-
 variable (y)
 
 
@@ -261,19 +252,7 @@ variable {Y E w c} {x : Y.X} {y : GeomPt Y E} {k k' : Fin n} {g g' e : Y.Fnˣ} {
 
 
 
-omit [NumberField F] in
-theorem isEqn_eqn (Δ : Y.Dv) (x : Y.X) : Δ.IsEqn x (eqn Δ x) := (Δ.exists_isEqn x).choose_spec
 
-
-
-omit [NumberField F] [NumberField E] in
-theorem dsVal_pick {l : Fin Y.dim → Fin n} (hc : ∀ i j, c i j = if j = l i then 1 else 0) (g : Y.Fn) :
-    dsVal Y E w c y k g = valAt y.1 (jacRat Y (fun i => w (l i) / w k) * g) := by
-  rw [dsVal, Finset.sum_eq_single l _ (by simp)]
-  · simp [coef, hc]
-  · intro l' _ hl
-    obtain ⟨i, hi⟩ := Function.ne_iff.1 hl
-    rw [Finset.prod_eq_zero (Finset.mem_univ i) (by simp [coef, hc, hi]), zero_mul]
 
 
 

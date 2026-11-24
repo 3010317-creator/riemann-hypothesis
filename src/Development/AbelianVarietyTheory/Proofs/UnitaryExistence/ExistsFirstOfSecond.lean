@@ -93,11 +93,6 @@ variable {H : Host E} {Dw : Datum H} {r n : ℕ}
 
 def barI (H : Host E) (𝔞 : Ideal (𝓞 E)) : Ideal (𝓞 E) := 𝔞.map (H.bar : 𝓞 E →+* 𝓞 E)
 
-def InLevel (r M : ℕ) (PQ : Ideal (𝓞 E)) (γ : Matrix (Fin n) (Fin n) E) : Prop :=
-  (γ.map cc).transpose * γ = 1 ∧ OneMod M γ ∧
-    ∃ k : ℕ, Nat.Coprime k (Ideal.absNorm PQ) ∧ ∀ i b : Fin n, r ≤ i.val → b.val < r →
-      ∃ o ∈ PQ, (k : E) * γ i b = ((o : 𝓞 E) : E)
-
 def Carries (γ : Matrix (Fin n) (Fin n) E) (L L' : Submodule (𝓞 E) (Fin n → E)) : Prop :=
   ∀ v, v ∈ L' ↔ ∃ u ∈ L, v = γ.mulVec u
 

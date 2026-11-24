@@ -55,9 +55,6 @@ variable {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAddCommGroup H] [Inne
 
 theorem umat_mem (g : Formalism.REAL.UJ ε) : umat g ∈ UJset ε := g.2
 
-theorem continuous_umat : Continuous (fun g : Formalism.REAL.UJ ε => umat g) :=
-  Units.continuous_val.comp continuous_subtype_val
-
 theorem mul_star_eq (z : ℂ) : z * star z = ((‖z‖ ^ 2 : ℝ) : ℂ) := by
   have : star z = (starRingEnd ℂ) z := rfl
   rw [this, Complex.mul_conj, Complex.normSq_eq_norm_sq]

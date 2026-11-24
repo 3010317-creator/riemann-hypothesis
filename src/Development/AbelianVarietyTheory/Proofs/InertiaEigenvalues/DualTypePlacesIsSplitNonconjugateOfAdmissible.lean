@@ -69,8 +69,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open Formalism.IndefR.Links (PolF)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.dualType_residueChars_unramified_tuple : ∀ {D : D7} {S T : HSp D} (B : Base S T), B.Good → ∀ (ν : Twist D Circle), ν.Good → B.admitted ν.Q → (∀ PP ∈ allP B ν.Q, GlobalTheory.StepLaw.ResAt (B.mu * ν.chi) PP (resP B ν PP) ∧ GlobalTheory.StepLaw.ResAt (B.mu * ν.chi * B.eta⁻¹) PP (resP B ν PP)) ∧ GlobalTheory.StepLaw.UnrOff (B.mu * ν.chi) (allP B ν.Q) ∧ GlobalTheory.StepLaw.UnrOff (B.mu * ν.chi * B.eta⁻¹) (allP B ν.Q) := by
-  first | exact @GlobalTheory.ExportSeries.TupleChars.tuple_chars
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DualTypeResidueCharsUnramifiedTupleStatement =====
@@ -118,11 +116,6 @@ open Classical in
 theorem dualTypePlaces_isSplitNonconjugate_of_admissible {B : Base S T} {Q : Finset (Pl D.host.E)} (h : B.admitted Q) : SplitSet (allP B Q) := by
   obtain ⟨P, h1, h2, hP⟩ := h.1.split
   exact hP.mono (Finset.union_subset h1 h2)
-
-theorem char_laws (B : Base S T) (hB : B.Good) (ν : Twist D Circle) (hν : ν.Good) (hQ : B.admitted ν.Q) :
-    (∀ PP ∈ allP B ν.Q, ResAt (B.mu * ν.chi) PP (resP B ν PP) ∧ ResAt (B.mu * ν.chi * B.eta⁻¹) PP (resP B ν PP)) ∧
-      UnrOff (B.mu * ν.chi) (allP B ν.Q) ∧ UnrOff (B.mu * ν.chi * B.eta⁻¹) (allP B ν.Q) :=
-  GlobalTheory.T.dualType_residueChars_unramified_tuple B hB ν hν hQ
 
 theorem om_theta_move {ψ : AddChar (AF D.host.F) ℂ} {χS χT : (AE D)ˣ →* Circle} {om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)}
     (hom : IsWeilDatumO ψ S T χS χT om) {e : AE D} {Λ : AddSubgroup (WO S T)} {f₀ Φ Φ' f f' : WO S T → ℂ}

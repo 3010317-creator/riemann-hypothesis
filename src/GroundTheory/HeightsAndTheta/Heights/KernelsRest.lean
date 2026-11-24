@@ -47,14 +47,6 @@ def lieClass (m : ℕ) : Fin f × Bool → RootPoly f j k
 def vandermonde {R : Type*} [CommRing R] {m : ℕ} (v : Fin m → R) : R :=
   (Matrix.of fun a b : Fin m => v a ^ (m - 1 - (b : ℕ))).det
 
-def fibre : RootPoly f j k :=
-  ∏ τ : Fin f, if k ≤ j then
-      vandermonde (fun b : Fin k => (X (τ, Sum.inr b) : RootPoly f j k)) *
-        vandermonde (fun a : Fin j => (X (τ, Sum.inl a) : RootPoly f j k))
-    else
-      vandermonde (fun a : Fin j => -(X (τ, Sum.inl a) : RootPoly f j k)) *
-        vandermonde (fun b : Fin k => (X (τ, Sum.inr b) : RootPoly f j k))
-
 structure IsFlagIntegral (I : RootPoly f j k →ₗ[ℝ] ℝ) : Prop where
   kills : ∀ (m : ℕ) (τ : Fin f) (G : RootPoly f j k), 1 ≤ m → m ≤ flagDim f j k →
     G.IsHomogeneous (flagDim f j k - m) → I (rootPsum f j k m τ * G) = 0

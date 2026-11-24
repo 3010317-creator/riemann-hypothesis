@@ -95,11 +95,6 @@ def normGroupOrderIso : finiteAbelianExtensions K Ω ≃o (openFiniteIndexSubgro
     OrderDual.toDual
   map_rel_iff' := normGroupMap_le_iff
 
-theorem normGroupOrderIso_apply (L : finiteAbelianExtensions K Ω) :
-    (OrderDual.ofDual (normGroupOrderIso K Ω L)).1 =
-      (have := L.2.1; (normUnits K (L : IntermediateField K Ω)).range) :=
-  rfl
-
 end OrderIso
 
 end GroundTheory.LocalField

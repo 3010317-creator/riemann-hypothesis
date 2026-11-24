@@ -65,17 +65,6 @@ theorem _root_.GlobalTheory.PDivGroup.Test.mulP_injective (G : _root_.GlobalTheo
   rw [hxy, ← hy] at hx
   exact (_root_.GlobalTheory.CartierDual.bidual O (G.A n)).injective (hinj hx)
 
-theorem hodgeTate_values [Fact p.Prime] (hp : ¬ IsUnit (p : O)) :
-    (∀ t, hodgeTate (mu p O) t = 0) ∧ hodgeTate (const p O) (constGen p O) ≠ 0 := by
-  refine ⟨fun t => Subsingleton.elim _ _, fun h => dlogT_ne_zero p O hp ?_⟩
-  rw [hodgeTate_eq_omegaMap, ← dualHom_constHom, show constHom _ (constGen p O) = 𝟙 _ by
-    rw [← LinearEquiv.eq_symm_apply, constHom_symm_apply, tateMap_id], dualHom_id,
-    Category.id_comp] at h
-  have h2 := LinearMap.congr_fun (omegaMap_comp (mu p O).bidual.hom (mu p O).bidual.inv) (dlogT p O)
-  rw [Iso.hom_inv_id, omegaMap_id, LinearMap.id_apply, LinearMap.comp_apply] at h2
-  rw [h2]
-  exact (congrArg _ h).trans (map_zero _)
-
 section Prod
 
 variable (A B : Type) [CommRing A] [CommRing B] [Bialgebra O A] [Bialgebra O B]

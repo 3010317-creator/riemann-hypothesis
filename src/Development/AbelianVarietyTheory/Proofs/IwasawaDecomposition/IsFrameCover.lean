@@ -202,16 +202,6 @@ theorem exists_comb {R : Type} [CommRing R] {x : Sp R ⟶ X} {n : ℕ} {u : Fin 
     (isCombAtG_iff t x (fun j => ovT (hu j)) a _).2 rfl⟩
 
 
-open GlobalTheory.FactorDepth in
-theorem comb_unique {R : Type} [CommRing R] {x : Sp R ⟶ X} {n : ℕ} {u : Fin n → Tn t R} (hu : ∀ j, IsTanAtG t x (u j))
-    {a : Fin n → R} {w w' : Tn t R} (h : IsCombAtG t x u a w) (h' : IsCombAtG t x u a w') : w = w' :=
-  ((isCombAtG_iff t x (fun j => ovT (hu j)) a _).1 h).symm.trans ((isCombAtG_iff t x (fun j => ovT (hu j)) a _).1 h')
-
-theorem comb_tan {R : Type} [CommRing R] {x : Sp R ⟶ X} {n : ℕ} {u : Fin n → Tn t R} (hu : ∀ j, IsTanAtG t x (u j))
-    {a : Fin n → R} {w : Tn t R} (h : IsCombAtG t x u a w) : IsTanAtG t x w := by
-  obtain ⟨w', h1, h2⟩ := exists_comb t hu a
-  exact comb_unique t hu h2 h ▸ h1
-
 
 variable {Dw : Datum H}
 

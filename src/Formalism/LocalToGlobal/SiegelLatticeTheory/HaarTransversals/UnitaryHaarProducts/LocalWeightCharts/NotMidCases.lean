@@ -390,32 +390,6 @@ lemma emb_cont : Continuous fun x : Fin (k + 1) → Fin (k + 1) → ℂ => (embW
   exact (Continuous.matrix_mul (Continuous.matrix_mul continuous_const continuous_id) continuous_const).add
     continuous_const
 
-lemma hb_form (v w : Fin (k + 1) → ℂ) :
-    star w ⬝ᵥ (Hb k *ᵥ v) =
-      (∑ i : Fin k, star (w i.castSucc) * v i.castSucc) - star (w (Fin.last k)) * v (Fin.last k) := by
-  unfold Hb
-  simp only [dotProduct, Matrix.mulVec_diagonal, Fin.sum_univ_castSucc, Pi.star_apply, if_true]
-  have h : ∀ i : Fin k, (if i.castSucc = Fin.last k then (-1 : ℂ) else 1) = 1 := fun i =>
-    if_neg (Fin.castSucc_lt_last i).ne
-  simp only [h, one_mul]
-  ring
-
-lemma real_bound (u z : Fin (k + 1) → ℂ) (τ : ℝ)
-    (h1 : (∑ i : Fin k, ‖u i.castSucc‖ ^ 2) - ‖u (Fin.last k)‖ ^ 2 ≤ 1)
-    (h2 : ‖(∑ i : Fin k, star (z i.castSucc) * u i.castSucc) - star (z (Fin.last k)) * u (Fin.last k)‖ ≤ τ)
-    (hT : (∑ i : Fin k, ‖z i.castSucc‖ ^ 2) < ‖z (Fin.last k)‖ ^ 2) (i : Fin (k + 1)) :
-    ‖u i‖ ≤ 1 + (τ + √(∑ i : Fin k, ‖z i.castSucc‖ ^ 2)) / (‖z (Fin.last k)‖ - √(∑ i : Fin k, ‖z i.castSucc‖ ^ 2)) := by
-  apply Formalism.FourierDecayAlt.P.B2x3.real_bound <;> assumption
-
-lemma normsq_eq (x : ℂ) : star x * x = ((‖x‖ ^ 2 : ℝ) : ℂ) := by
-  rw [Complex.star_def, ← Complex.normSq_eq_conj_mul_self, Complex.normSq_eq_norm_sq]
-
-lemma hb_self_re (v : Fin (k + 1) → ℂ) :
-    (star v ⬝ᵥ (Hb k *ᵥ v)).re = (∑ i : Fin k, ‖v i.castSucc‖ ^ 2) - ‖v (Fin.last k)‖ ^ 2 := by
-  rw [hb_form]
-  simp only [normsq_eq]
-  rw [← Complex.ofReal_sum, ← Complex.ofReal_sub, Complex.ofReal_re]
-
 lemma col_bound (z : Fin (k + 1) → ℂ) (hT : (star z ⬝ᵥ (Hb k *ᵥ z)).re < 0) :
     ∃ R : ℝ, ∀ μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ, μᴴ * Hb k * μ = Hb k → μ *ᵥ z = z → ∀ i j, ‖μ i j‖ ≤ R := by
   apply Formalism.FourierDecayAlt.P.B2x3.col_bound <;> assumption

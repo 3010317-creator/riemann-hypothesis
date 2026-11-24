@@ -127,16 +127,6 @@ noncomputable section
 
 namespace GlobalTheory.ThetaLevel
 
-theorem uniform_locConst {X : Type} [AddCommGroup X] [TopologicalSpace X] [IsTopologicalAddGroup X]
-    [NonarchimedeanAddGroup X] (g : X → ℂ) (hg : IsLocallyConstant g) (hc : HasCompactSupport g) :
-    ∃ H : OpenAddSubgroup X, ∀ z, ∀ a ∈ H, g (z + a) = g z :=
-  _root_.GlobalTheory.locallyConstant_compactSupport_invariant_openAddSubgroup g hg hc
-
-theorem char_dot_compact {K : Type} [CommRing K] [TopologicalSpace K] [IsTopologicalRing K]
-    [NonarchimedeanAddGroup K] (χ : AddChar K ℂ) (hχ : Continuous χ) (κ : Type) [Fintype κ] (C : Set (κ → K))
-    (hC : IsCompact C) : ∃ H : OpenAddSubgroup (κ → K), ∀ z ∈ C, ∀ a ∈ H, ∀ b ∈ H, χ (z ⬝ᵥ b + a ⬝ᵥ b) = 1 :=
-  _root_.GlobalTheory.CharDotKill.charDot_kill χ hχ κ C hC
-
 end GlobalTheory.ThetaLevel
 
 namespace GlobalTheory.ThetaLevel

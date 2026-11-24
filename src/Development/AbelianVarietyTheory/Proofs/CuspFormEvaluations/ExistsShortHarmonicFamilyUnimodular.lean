@@ -940,73 +940,7 @@ private theorem minorProd_mem_Ha_of_herm_orthogonal {K : Type} [Field K] {T : Ty
     · unfold yMinor
       exact det_mem_subalgebra_of_entries_mem' _ _ fun a b => Algebra.subset_adjoin (Or.inr ⟨t, _, f _, hf _, rfl⟩)
 
-theorem exists_short_harmonic_family_few_columns_linear (hfg : Λ.FG)
-    (hint : ∀ x ∈ Λ, ∀ y ∈ Λ, IsIntegral ℤ (herm 1 x y))
-    (hdual : ∀ x, (∀ y ∈ Λ, IsIntegral ℤ (herm 1 x y)) → x ∈ Λ)
-    {p q : ℕ} (hn : p + q ≤ n) {T : Type*} [Fintype T] (c : T → Fin p → ℕ)
-    (c' : T → Fin q → ℕ) (ha : 1 ≤ typeDegree c c') :
-    ∃ S : Finset ((Fin p → Fin n → E) × (Fin q → Fin n → E)),
-      (∀ s ∈ S, (∀ a, s.1 a ∈ Λ) ∧ (∀ b, s.2 b ∈ Λ) ∧ ∀ a b, herm 1 (s.1 a) (s.2 b) = 0) ∧
-      (∀ (K : Type) [Field K] (τ : T → E →+* K), ∀ s ∈ S,
-        (minorProd c c' (fun t a k => τ t (s.1 a k)) fun t b k => τ t (cc (s.2 b k))) ∈
-          Ha τ c c' Λ) ∧
-      (∀ (K : Type) [Field K] [CharZero K] (τ : T → E →+* K),
-        (Function.Injective fun s : T × Bool => fun x : E => τ s.1 (if s.2 then cc x else x)) →
-        Submodule.span K ((fun s : (Fin p → Fin n → E) × (Fin q → Fin n → E) =>
-          minorProd c c' (fun t a k => τ t (s.1 a k)) fun t b k => τ t (cc (s.2 b k))) '' S) =
-          rowHighest K c c') ∧
-      (∀ (τ : T → E →+* ℂ), ∀ s ∈ S,
-        l1Norm (minorProd c c' (fun t a k => τ t (s.1 a k)) fun t b k => τ t (cc (s.2 b k))) ≤
-          (((p + q : ℕ) : ℝ) * Real.sqrt n * (((p + q) + 1).factorial * ((2 * fdeg E * n) *
-            ((2 * (p + q : ℕ) + 1) * typeDegree c c') *
-            (2 * (fdeg E : ℝ) ^ ((3 : ℝ) / 2) * n ^ 2 * rdE E)) ^ (2 * (p + q) + 1))) ^
-            typeDegree c c') ∧
-      S.card ≤ ((2 * (p + q) + 1) * typeDegree c c' + 1) ^ (2 * fdeg E * n * (2 * p + q)) := by
-  classical
-  obtain ⟨hfg', hint', hdual'⟩ := conjLattice_selfDual hfg hint hdual
-  obtain ⟨S', hS'1, hS'2, hS'3, hS'4⟩ :=
-    exists_short_harmonic_family_few_columns (Λ := conjLattice Λ) hfg' hint' hdual' hn c c' ha
-  let cj : (Fin p → Fin n → E) × (Fin q → Fin n → E) → (Fin p → Fin n → E) × (Fin q → Fin n → E) :=
-    fun s => (fun a => conjVec E n (s.1 a), fun b => conjVec E n (s.2 b))
-  have hcc : ∀ x : E, cc (cc x) = x := fun x => by
-    have := congrFun (conjVec_conjVec (E := E) (n := 1) (fun _ => x)) 0
-    simpa only [conjVec_apply] using this
-  have hpoly : ∀ (K : Type) [Field K] (τ : T → E →+* K) (s : (Fin p → Fin n → E) × (Fin q → Fin n → E)),
-      minorProd c c' (fun t a k => τ t ((cj s).1 a k)) (fun t b k => τ t (cc ((cj s).2 b k))) =
-        minorProd c c' (fun t a k => τ t (cc (s.1 a k))) (fun t b k => τ t (s.2 b k)) := by
-    intro K _ τ s
-    simp only [cj, conjVec_apply, hcc]
-  have hmem : ∀ s ∈ S', (∀ a, (cj s).1 a ∈ Λ) ∧ (∀ b, (cj s).2 b ∈ Λ) ∧
-      ∀ a b, herm 1 ((cj s).1 a) ((cj s).2 b) = 0 := by
-    intro s hs
-    obtain ⟨h1, h2, h3⟩ := hS'1 s hs
-    refine ⟨fun a => mem_conjLattice.mp (h1 a), fun b => mem_conjLattice.mp (h2 b), fun a b => ?_⟩
-    simp only [cj]
-    rw [herm_conjVec]
-    exact h3 a b
-  refine ⟨S'.image cj, ?_, ?_, ?_, ?_, ?_⟩
-  · intro s hs
-    obtain ⟨s', hs', rfl⟩ := Finset.mem_image.mp hs
-    exact hmem s' hs'
-  · intro K _ τ s hs
-    obtain ⟨s', hs', rfl⟩ := Finset.mem_image.mp hs
-    obtain ⟨h1, h2, h3⟩ := hmem s' hs'
-    exact minorProd_mem_Ha_of_herm_orthogonal τ c c' _ _ h1 h2 h3
-  · intro K _ _ τ hτ
-    rw [← hS'2 K τ hτ, Finset.coe_image, ← Set.image_comp]
-    exact congrArg _ (Set.image_congr fun s _ => hpoly K τ s)
-  · intro τ s hs
-    obtain ⟨s', hs', rfl⟩ := Finset.mem_image.mp hs
-    rw [hpoly ℂ τ s']
-    exact hS'3 τ s' hs'
-  · exact Finset.card_image_le.trans hS'4
-
 end
-
-theorem short_harmonic_family_few_columns : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (Λ : Submodule (𝓞 E) (Fin n → E)), Λ.FG → (∀ x ∈ Λ, ∀ y ∈ Λ, IsIntegral ℤ (herm 1 x y)) → (∀ x, (∀ y ∈ Λ, IsIntegral ℤ (herm 1 x y)) → x ∈ Λ) → ∀ (p q : ℕ), p + q ≤ n → ∀ (T : Type) [Fintype T] (c : T → Fin p → ℕ) (c' : T → Fin q → ℕ), 1 ≤ typeDegree c c' → ∃ S : Finset ((Fin p → Fin n → E) × (Fin q → Fin n → E)), (∀ (K : Type) [Field K] (τ : T → E →+* K), ∀ s ∈ S, (minorProd c c' (fun t a k => τ t (s.1 a k)) fun t b k => τ t (cc (s.2 b k))) ∈ Ha τ c c' Λ) ∧ (∀ (K : Type) [Field K] [CharZero K] (τ : T → E →+* K), (Function.Injective fun s : T × Bool => fun x : E => τ s.1 (if s.2 then cc x else x)) → Submodule.span K ((fun s : (Fin p → Fin n → E) × (Fin q → Fin n → E) => minorProd c c' (fun t a k => τ t (s.1 a k)) fun t b k => τ t (cc (s.2 b k))) '' S) = rowHighest K c c') ∧ (∀ (τ : T → E →+* ℂ), ∀ s ∈ S, l1Norm (minorProd c c' (fun t a k => τ t (s.1 a k)) fun t b k => τ t (cc (s.2 b k))) ≤ (((p + q : ℕ) : ℝ) * Real.sqrt n * (((p + q) + 1).factorial * ((2 * fdeg E * n) * ((2 * (p + q : ℕ) + 1) * typeDegree c c') * (2 * (fdeg E : ℝ) ^ ((3 : ℝ) / 2) * n ^ 2 * rdE E)) ^ (2 * (p + q) + 1))) ^ typeDegree c c') ∧ S.card ≤ ((2 * (p + q) + 1) * typeDegree c c' + 1) ^ (2 * fdeg E * n * (2 * p + q)) := by
-  intro E _ _ _ n Λ hfg hint hdual p q hn T _ c c' ha
-  obtain ⟨S, -, h2, h3, h4, h5⟩ := exists_short_harmonic_family_few_columns_linear hfg hint hdual hn c c' ha
-  exact ⟨S, h2, h3, h4, h5⟩
 
 end GlobalTheory.Harm
 end -- clump:auto

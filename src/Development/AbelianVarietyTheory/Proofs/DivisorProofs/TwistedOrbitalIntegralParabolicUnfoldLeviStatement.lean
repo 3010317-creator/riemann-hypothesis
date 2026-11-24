@@ -601,8 +601,6 @@ open NumberField IsDedekindDomain Matrix Polynomial Filter GlobalTheory.CuspRep 
 open scoped Classical TensorProduct
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
-theorem _root_.GlobalTheory.T.exists_compact_invertible_krylovMatrices : ∀ (E : Type) [Field E] [NumberField E] (w : Pl E) (r : ℕ) (Ω : Set (GLw r w)), IsCompact Ω → (∀ y ∈ Ω, ∃ e, IsUnit (GlobalTheory.LeviDesc.Krylov.krylov y.val e).det) → ∃ C : Set (GLw r w), IsCompact C ∧ ∀ y ∈ Ω, ∃ e, ∃ c ∈ C, c.val = GlobalTheory.LeviDesc.Krylov.krylov y.val e := by
-  first | exact @GlobalTheory.LeviDesc.Krylov.exists_isCompact_krylov_units
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompactInvertibleKrylovMatricesStatement =====
@@ -723,11 +721,6 @@ theorem isClosed_charpoly_eq (E : Type) [Field E] [NumberField E] (w : Pl E) (r 
   rw [hset]
   refine isClosed_iInter fun t => isClosed_eq ?_ continuous_const
   exact (continuous_const.sub Units.continuous_val).matrix_det
-
-theorem exists_compact_krylov (E : Type) [Field E] [NumberField E] (w : Pl E) (r : ℕ) (Ω : Set (GLw r w))
-    (hΩ : IsCompact Ω) (h : ∀ y ∈ Ω, ∃ e, IsUnit (krylov y.val e).det) :
-    ∃ C : Set (GLw r w), IsCompact C ∧ ∀ y ∈ Ω, ∃ e, ∃ c ∈ C, c.val = krylov y.val e :=
-  GlobalTheory.T.exists_compact_invertible_krylovMatrices E w r Ω hΩ h
 
 theorem isOpen_KGL (E : Type) [Field E] [NumberField E] (w : Pl E) (r : ℕ) :
     IsOpen (GlobalTheory.LFun.KGL w (n := r) : Set (GLw r w)) :=

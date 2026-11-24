@@ -386,15 +386,6 @@ namespace GlobalTheory.NatMultipleIntegralSmulBound
 
 open NumberField
 
-theorem exists_nat_mul_integral {E : Type} [Field E] [NumberField E] (a : E) :
-    ∃ m : ℕ, 0 < m ∧ ∃ b : RingOfIntegers E, (b : E) = (m : E) * a := by
-  have ha : IsAlgebraic ℤ a := (IsFractionRing.isAlgebraic_iff ℤ ℚ E).2 (Algebra.IsAlgebraic.isAlgebraic a)
-  obtain ⟨y, hy, hint⟩ := ha.exists_integral_multiple
-  refine ⟨y.natAbs * y.natAbs, Nat.mul_pos (Int.natAbs_pos.2 hy) (Int.natAbs_pos.2 hy),
-    ⟨y • (y • a), (mem_integralClosure_iff ℤ E).2 (hint.smul y)⟩, ?_⟩
-  show y • (y • a) = ((y.natAbs * y.natAbs : ℕ) : E) * a
-  rw [smul_smul, zsmul_eq_mul, ← Int.cast_natCast, Int.natAbs_mul_self]
-
 theorem exists_nat_smul_mem {E : Type} [Field E] [NumberField E] {n : ℕ}
     (L' : Submodule (RingOfIntegers E) (Fin n → E))
     (h : Submodule.span E (↑L' : Set (Fin n → E)) = ⊤) (x : Fin n → E) :
