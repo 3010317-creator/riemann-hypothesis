@@ -139,7 +139,6 @@ import CompanionTheory.AutomorphicTheory.PadicUnitaryWeights.DixmierMalliavin.Di
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 set_option maxSynthPendingDepth 1
 
 noncomputable section
