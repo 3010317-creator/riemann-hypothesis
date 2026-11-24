@@ -6,6 +6,7 @@ Candidate code/configuration runs only inside Bubblewrap. Dependencies and the
 stock toolchain must already be prepared by the trusted runner.
 """
 import argparse
+import errno
 import gzip
 import hashlib
 import importlib.util
@@ -34,6 +35,7 @@ HASH = re.compile(r"[0-9a-f]{16}\Z")
 SHA = re.compile(r"[0-9a-f]{64}\Z")
 MODULE = re.compile(r"[\w']+(?:\.[\w']+)*\Z")
 SCHEMA = "2026-03-17"
+SNAPSHOT_CONFIGS = ("lakefile.toml", "lake-manifest.json", "lean-toolchain")
 HASH_SOURCE = '''import Lake.Build.Trace
 import Lean.Data.Json.FromToJson
 open Lake Lean
@@ -272,12 +274,16 @@ def git(root, *args):
     return subprocess.check_output(["git", "-C", str(root), *args], env=trusted_env(), text=True).strip()
 
 
-def safe_file(root, relative):
+def reject_symlink_root(root):
     # The caller's root may itself sit below a PR-writable symlink (for example
     # .lake/build/lib/lean). Never resolve that link in the host controller.
     for ancestor in (root, *root.parents):
         if ancestor.is_symlink():
             raise ValueError(f"symlink is not a CI input/output root: {ancestor}")
+
+
+def safe_file(root, relative):
+    reject_symlink_root(root)
     path = root
     for component in PurePosixPath(relative).parts:
         if component in ("", ".", "..") or "/" in component or "\\" in component:
@@ -292,8 +298,7 @@ def safe_file(root, relative):
 
 def snapshot(candidate, head, destination):
     # Expose only attested build inputs, not PR scripts, docs, Git config, or caches.
-    command = ["git", "-C", str(candidate), "archive", head, "--", "src", "lakefile.toml",
-               "lake-manifest.json", "lean-toolchain"]
+    command = ["git", "-C", str(candidate), "archive", head, "--", "src", *SNAPSHOT_CONFIGS]
     process = subprocess.Popen(command, stdout=subprocess.PIPE, env=trusted_env())
     try:
         with tarfile.open(fileobj=process.stdout, mode="r|") as archive:
@@ -319,11 +324,36 @@ def snapshot(candidate, head, destination):
     verify_snapshot(candidate, head, destination)
 
 
+def snapshot_files(destination):
+    # Check the root once, then classify each entry without following symlinks.
+    reject_symlink_root(destination)
+    source = destination / "src"
+    if source.is_symlink():
+        raise ValueError("source symlinks are not supported")
+    directories = ["src"] if source.is_dir() else []
+    while directories:
+        directory = directories.pop()
+        with os.scandir(destination / directory) as entries:
+            for entry in entries:
+                relative = f"{directory}/{entry.name}"
+                if entry.is_dir(follow_symlinks=False):
+                    directories.append(relative)
+                else:
+                    yield relative, entry.path, entry.stat(follow_symlinks=False)
+    for name in SNAPSHOT_CONFIGS:
+        path = destination / name
+        try:
+            metadata = path.lstat()
+        except FileNotFoundError:
+            continue
+        yield name, path, metadata
+
+
 def verify_snapshot(candidate, head, destination):
     # Git archive applies .gitattributes. Verify actual Git blobs so export-ignore
     # cannot omit inputs and export-subst cannot change the attested source tree.
     inventory = subprocess.check_output(["git", "-C", str(candidate), "ls-tree", "-r", "-z", head,
-                                        "--", "src", "lakefile.toml", "lake-manifest.json", "lean-toolchain"],
+                                        "--", "src", *SNAPSHOT_CONFIGS],
                                        env=trusted_env())
     expected = {}
     for entry in inventory.split(b"\0"):
@@ -334,21 +364,32 @@ def verify_snapshot(candidate, head, destination):
         if kind != "blob" or mode not in ("100644", "100755"):
             raise ValueError("source symlinks, submodules and special files are not supported")
         expected[raw_path.decode()] = (mode, blob)
-    source_paths = (destination / "src").rglob("*")
-    actual = {path.relative_to(destination).as_posix() for path in source_paths if not path.is_dir() or path.is_symlink()}
-    actual.update(name for name in ("lakefile.toml", "lake-manifest.json", "lean-toolchain")
-                  if (destination / name).exists() or (destination / name).is_symlink())
-    if actual != set(expected):
-        raise ValueError("archived input inventory differs from Git blobs (check export-ignore attributes)")
-    for relative, (mode, blob) in expected.items():
-        path = safe_file(destination, relative)
-        digest = hashlib.sha1(f"blob {path.stat().st_size}\0".encode())
-        with path.open("rb") as stream:
+    inventory_error = "archived input inventory differs from Git blobs (check export-ignore attributes)"
+    for relative, path, metadata in snapshot_files(destination):
+        identity = expected.pop(relative, None)
+        if identity is None:
+            raise ValueError(inventory_error)
+        if "\\" in relative or not stat.S_ISREG(metadata.st_mode):
+            raise ValueError(f"unsafe or non-regular archived input: {path}")
+        mode, blob = identity
+        try:
+            fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        except OSError as error:
+            if error.errno != errno.ELOOP:
+                raise
+            raise ValueError(f"unsafe or non-regular archived input: {path}") from error
+        with os.fdopen(fd, "rb") as stream:
+            metadata = os.fstat(stream.fileno())
+            if not stat.S_ISREG(metadata.st_mode):
+                raise ValueError(f"unsafe or non-regular archived input: {path}")
+            digest = hashlib.sha1(f"blob {metadata.st_size}\0".encode())
             while block := stream.read(1024 * 1024):
                 digest.update(block)
-        executable = bool(path.stat().st_mode & 0o111)
+        executable = bool(metadata.st_mode & 0o111)
         if digest.hexdigest() != blob or executable != (mode == "100755"):
             raise ValueError("archived input differs from its Git blob (check export-subst attributes)")
+    if expected:
+        raise ValueError(inventory_error)
 
 
 def validate_inputs(project, expected_dependencies):
