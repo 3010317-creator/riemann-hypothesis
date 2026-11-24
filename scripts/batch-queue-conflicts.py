@@ -131,13 +131,23 @@ def compare(repo, base, ours, theirs, *, ours_fork=None, theirs_fork=None,
     if partial:
         fetch_blobs(repo, (base, ours, theirs), to_merge)
     # git's merge ignores `merge.renames=false` in some versions, but it does honour the limit.
-    config = () if len(seen_mine) + len(seen_other) <= rename_limit else ("merge.renameLimit=1",)
+    limit_renames = len(seen_mine) + len(seen_other) > rename_limit
+    config = ("merge.renameLimit=1", "diff.renameLimit=1") if limit_renames else ()
     code, out = git(repo, "merge-tree", "--write-tree", "--name-only", "--no-messages", "-z",
                     f"--merge-base={base}", ours, theirs, ok=(0, 1), config=config)
-    # The first entry is the tree that was written; the conflicted paths follow. A conflict in
-    # a file only one of the two changed is a conflict with main, which GitHub already shows.
-    conflicts = sorted({path for path in out.split(b"\0")[1:] if path} & set(shared)) if code else []
-    return Comparison("conflict" if conflicts else "clean", shared, conflicts)
+    if not code:
+        return Comparison("clean", shared)
+    # Git reports a content conflict at the destination of a rename. The other pull request
+    # edited the source. Keep filtering out paths changed only by main.
+    unmerged = {path for path in out.split(b"\0")[1:] if path}
+    conflicts = unmerged.intersection(shared)
+    sides = ((ours_fork or base, ours, mine, other), (theirs_fork or base, theirs, other, mine))
+    for fork, head, touched, opposite in sides:
+        candidates = (unmerged - conflicts) & touched
+        if candidates:
+            moves = renamed(repo, fork, head, config=config)
+            conflicts.update(path for path in candidates if moves.get(path) in opposite)
+    return Comparison("conflict" if conflicts else "clean", shared, sorted(conflicts))
 
 
 # ---------------------------------------------------------------------------------------------
@@ -151,15 +161,10 @@ def lean_files(repo, fork, head, status):
     return {path for path in out.split(b"\0") if path.startswith(SOURCE) and path.endswith(LEAN)}
 
 
-def renamed(repo, fork, head):
-    """Lean files under SOURCE that a pull request renames, as {new name: old name}.
-
-    git pairs a file the pull request deletes with one it adds when their contents are alike,
-    as it does when it merges, so this reads both. In a clone without blobs, `prefetch_imports`
-    fetches them.
-    """
+def renamed(repo, fork, head, *pathspec, config=()):
+    """Files a pull request renames, as {new name: old name}. Matching edited files reads blobs."""
     _, out = git(repo, "diff", "--name-status", "--find-renames", "--diff-filter=R", "-z", fork, head,
-                 "--", f":(glob){SOURCE.decode()}**/*{LEAN.decode()}")
+                 "--", *pathspec, config=config)
     fields = out.split(b"\0")  # "R<score>", old name, new name, and so on
     return dict(zip(fields[2::3], fields[1::3]))
 
@@ -225,7 +230,8 @@ def added_imports(repo, fork, head, *, limit=IMPORT_LIMIT):
     paths = lean_files(repo, fork, head, "AM")
     if len(paths) > limit:
         return None
-    moved = renamed(repo, fork, head) if len(lean_files(repo, fork, head, "D")) <= limit else {}
+    lean = f":(glob){SOURCE.decode()}**/*{LEAN.decode()}"
+    moved = renamed(repo, fork, head, lean) if len(lean_files(repo, fork, head, "D")) <= limit else {}
     was = {path: moved.get(path, path) for path in paths}
     before, after = blob_ids(repo, fork, set(was.values())), blob_ids(repo, head, paths)
     contents = read_blobs(repo, [*before.values(), *after.values()])
