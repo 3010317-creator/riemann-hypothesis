@@ -717,6 +717,33 @@ theorem box_subset {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) (T : ℝ
   rintro ρ ⟨a, b, c, d⟩
   exact ⟨by linarith, b, by simpa using c, d⟩
 
+/-- Passing to the primitive character preserves zero boxes strictly to the right of
+`re s = 0`; the extra Euler factors can have zeros on the boundary. -/
+theorem zerosBox_eq_primitiveCharacter {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q)
+    {σ : ℝ} (hσ : 0 < σ) (T : ℝ) :
+    have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+    zerosBox χ σ T = zerosBox χ.primitiveCharacter σ T := by
+  have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+  ext ρ
+  have hzero (h0 : σ ≤ ρ.re) (h1 : ρ.re < 1) :=
+    (zeros_eq_zeros_primitiveCharacter q χ ρ (hσ.trans_le h0)
+      (Or.inr (by rintro rfl; simp at h1))).1
+  constructor <;> rintro ⟨h0, h1, ht, hz⟩
+  · exact ⟨h0, h1, ht, (hzero h0 h1).mp hz⟩
+  · exact ⟨h0, h1, ht, (hzero h0 h1).mpr hz⟩
+
+/-- Weighted zero sums, including multiplicities, are unchanged by passage to the
+primitive character in a positive-real-part zero box. -/
+theorem finsum_zerosBox_eq_primitiveCharacter {q : ℕ} [NeZero q]
+    (χ : DirichletCharacter ℂ q) {σ : ℝ} (hσ : 0 < σ) (T : ℝ) (f : ℂ → ℂ) :
+    have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+    (∑ᶠ ρ ∈ zerosBox χ σ T, (ord χ ρ : ℂ) * f ρ) =
+      ∑ᶠ ρ ∈ zerosBox χ.primitiveCharacter σ T, (ord χ.primitiveCharacter ρ : ℂ) * f ρ := by
+  have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+  refine finsum_mem_congr (zerosBox_eq_primitiveCharacter χ hσ T) fun ρ hρ => ?_
+  rw [(zeros_eq_zeros_primitiveCharacter q χ ρ (hσ.trans_le hρ.1)
+    (Or.inr (by intro h; have hr := hρ.2.1; simpa [h] using hr))).2]
+
 theorem left_zeros {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) (u T : ℝ) (hu : 1 ≤ u) :
     ‖zsum χ 0 T (fun ρ => (u : ℂ) ^ ρ / ρ) -
       ∑ᶠ ρ ∈ zerosBox χ (1 / 2) T, (ord χ ρ : ℂ) * ((u : ℂ) ^ ρ / ρ)‖ ≤
@@ -842,21 +869,8 @@ theorem explicit_formula_right : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q]
       rw [← χ.changeLevel_primitiveCharacter, h, map_one]
     · rintro rfl
       exact primitiveCharacter_one
-  have hcmp : ∀ ρ : ℂ, 1 / 2 ≤ ρ.re → ρ.re < 1 →
-      (LFunction χ ρ = 0 ↔ LFunction χ.primitiveCharacter ρ = 0) ∧
-        ord χ ρ = ord χ.primitiveCharacter ρ := fun ρ a b =>
-    _root_.GlobalTheory.Lin.zeros_eq_zeros_primitiveCharacter q χ ρ (by linarith) (Or.inr (by rintro rfl; simp at b))
-  have hbox : zerosBox χ (1 / 2) T = zerosBox χ.primitiveCharacter (1 / 2) T := by
-    ext ρ
-    constructor
-    · rintro ⟨a, b, c, d⟩
-      exact ⟨a, b, c, (hcmp ρ a b).1.mp d⟩
-    · rintro ⟨a, b, c, d⟩
-      exact ⟨a, b, c, (hcmp ρ a b).1.mpr d⟩
-  have hsum : ∑ᶠ ρ ∈ zerosBox χ (1 / 2) T, (ord χ ρ : ℂ) * ((u : ℂ) ^ ρ / ρ) =
-      ∑ᶠ ρ ∈ zerosBox χ.primitiveCharacter (1 / 2) T,
-        (ord χ.primitiveCharacter ρ : ℂ) * ((u : ℂ) ^ ρ / ρ) :=
-    finsum_mem_congr hbox fun ρ hρ => by rw [(hcmp ρ hρ.1 hρ.2.1).2]
+  have hsum := finsum_zerosBox_eq_primitiveCharacter χ (by norm_num : (0 : ℝ) < 1 / 2)
+    T (fun ρ => (u : ℂ) ^ ρ / ρ)
   have hE := HA χ.conductor χ.primitiveCharacter hprim u T hT hu
   obtain ⟨hZ₁, hZ⟩ := HB χ.conductor χ.primitiveCharacter hprim T hT
   have hD := left_zeros χ.primitiveCharacter u T (by linarith)
