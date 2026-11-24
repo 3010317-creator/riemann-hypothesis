@@ -189,20 +189,6 @@ private theorem tri_of_bar {l : ℕ} [Fact l.Prime] {k : Type} [Field k] [CharP 
         exact hq (by linear_combination e)
       · linear_combination e1
       · linear_combination e2
-    have hB : ∀ g h : F.G0, ρ.r g 1 0 * ρ.r h 0 1 = 0 ∧ ρ.r g 1 2 * ρ.r h 2 1 = 0 := by
-      intro g h
-      have e1 := hE g h 1
-      have e2 := hT g h 1
-      simp only [Matrix.mul_apply, Fin.sum_univ_three, hX 0 1 (by decide), hX 0 2 (by decide),
-        hX 1 0 (by decide), hX 1 2 (by decide), hX 2 0 (by decide), hX 2 1 (by decide)] at e1 e2
-      refine two_zero (s := X 0 0) (t := X 2 2) ?_ ?_ ?_
-      · rw [hX0, hX2]
-        intro e
-        apply h2
-        have : (2 : K) * (f ↑p - f ↑p⁻¹) = 0 := by linear_combination e
-        exact (mul_eq_zero.1 this).resolve_right hq
-      · linear_combination e1
-      · linear_combination e2
     have s01 : ∀ g, ρ.r (F.star g) 0 1 = ρ.r g 1 2 := fun g => hst.2.2.2.2 ρ g 0 1
     have s10 : ∀ g, ρ.r (F.star g) 1 0 = ρ.r g 2 1 := fun g => hst.2.2.2.2 ρ g 1 0
     have t12 : (∀ g : F.G0, ρ.r g 0 1 = 0) → ∀ g : F.G0, ρ.r g 1 2 = 0 := fun h g => by
@@ -233,7 +219,7 @@ private theorem tri_of_bar {l : ℕ} [Fact l.Prime] {k : Type} [Field k] [CharP 
       · have hC : ∀ g h : F.G0, ρ.r g 0 2 * ρ.r h 2 1 = 0 := by
           intro g h
           have e := congrFun (congrFun (hP g h) 0) 1
-          simp only [Matrix.mul_apply, Fin.sum_univ_three, a01, a01 h] at e
+          simp only [Matrix.mul_apply, Fin.sum_univ_three, a01] at e
           linear_combination e
         rcases or_zero hC with a02 | a21
         · exact Or.inr (hR a01 a02 a12)
@@ -243,7 +229,7 @@ private theorem tri_of_bar {l : ℕ} [Fact l.Prime] {k : Type} [Field k] [CharP 
       · have hC : ∀ g h : F.G0, ρ.r g 2 0 * ρ.r h 0 1 = 0 := by
           intro g h
           have e := congrFun (congrFun (hP g h) 2) 1
-          simp only [Matrix.mul_apply, Fin.sum_univ_three, a21, a21 h] at e
+          simp only [Matrix.mul_apply, Fin.sum_univ_three, a21] at e
           linear_combination e
         rcases or_zero hC with a20 | a01
         · exact Or.inl (hL a10 a20 a21)

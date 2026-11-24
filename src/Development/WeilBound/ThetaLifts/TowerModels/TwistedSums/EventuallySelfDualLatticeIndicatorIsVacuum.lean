@@ -1,5 +1,6 @@
 module
 
+import Lemmata.MiscLemmasM.Imports
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 public import Development.WeilBound.ThetaLifts.TowerModels.TwistedSums.ExistsIntAddConjEqOneOfBaseGood
@@ -103,30 +104,7 @@ open _root_.GlobalTheory
 variable {F : Type} [Field F] [NumberField F]
 
 theorem eq_one_of_pow (z : ℂ) (h : ∀ n : ℕ, ‖z ^ n - 1‖ < 1 / 2) : z = 1 := by
-  have key : ∀ k : ℕ, (3 / 2 : ℝ) ^ k * ‖z - 1‖ ≤ ‖z ^ (2 ^ k) - 1‖ := by
-    intro k
-    induction k with
-    | zero => simp
-    | succ k ih =>
-      set w := z ^ (2 ^ k) - 1 with hw
-      have e : z ^ (2 ^ (k + 1)) - 1 = w * (w + 2) := by rw [hw, pow_succ, pow_mul]; ring
-      have h1 : (3 / 2 : ℝ) ≤ ‖w + 2‖ := by
-        have h2 := norm_sub_le (w + 2) w
-        have h3 : (w + 2) - w = 2 := by ring
-        rw [h3] at h2
-        have h4 : ‖(2 : ℂ)‖ = 2 := by norm_num
-        have h5 : ‖w‖ < 1 / 2 := h _
-        linarith
-      rw [e, norm_mul, pow_succ]
-      calc (3 / 2 : ℝ) ^ k * (3 / 2) * ‖z - 1‖ = ((3 / 2 : ℝ) ^ k * ‖z - 1‖) * (3 / 2) := by ring
-        _ ≤ ‖w‖ * ‖w + 2‖ := mul_le_mul ih h1 (by norm_num) (norm_nonneg _)
-  by_contra hne
-  have hpos : 0 < ‖z - 1‖ := norm_pos_iff.mpr (sub_ne_zero.mpr hne)
-  obtain ⟨k, hk⟩ := pow_unbounded_of_one_lt (1 / 2 / ‖z - 1‖) (by norm_num : (1 : ℝ) < 3 / 2)
-  have h7 := key k
-  have h8 := h (2 ^ k)
-  rw [div_lt_iff₀ hpos] at hk
-  linarith
+  apply Bl.SecondBlockLemmaN.goal1 <;> assumption
 
 theorem psiLoc_nsmul (ψ : AddChar (AF F) ℂ) (v : HeightOneSpectrum (𝓞 F)) (c : Fv F v) (n : ℕ) :
     psiLoc ψ v (n • c) = psiLoc ψ v c ^ n := by
@@ -293,6 +271,10 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem cA_smul (σ : E →ₐ[F] E) (c : AF F) (z : AE F E) : cA σ (c • z) = c • cA σ z := map_smul (cA σ) c z
 
 theorem cA_inclR (σ : E →ₐ[F] E) (e : E) : cA σ (inclR (F := F) (AF F) e) = inclR (F := F) (AF F) (σ e) := rfl
+
+theorem smul_inclR_eq (c : AF F) (e : E) : c • inclR (F := F) (AF F) e = c ⊗ₜ[F] e := by
+  show c • ((1 : AF F) ⊗ₜ[F] e) = c ⊗ₜ[F] e
+  rw [TensorProduct.smul_tmul', smul_eq_mul, mul_one]
 
 theorem trace_inclR [FiniteDimensional F E] (e : E) :
     Algebra.trace (AF F) (AE F E) (inclR (F := F) (AF F) e) = algebraMap F (AF F) (Algebra.trace F E e) := by
