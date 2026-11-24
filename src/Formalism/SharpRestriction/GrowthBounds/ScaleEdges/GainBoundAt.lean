@@ -88,15 +88,16 @@ theorem flatDeg_bounds {n' m : ℕ} (hm : 2 ≤ m) {TT : Finset (Fin n')} {aT bT
 section Fr
 variable {n' r : ℕ} [NeZero n']
 
-theorem fr_mono {F : Frames n' r} {L₁ N₁ : ℕ} (hV : F.Valid L₁ N₁) (j : ℤ) : ∀ i, i < r → F.fr j 0 ≤ F.fr j i := by
-  intro i hi; induction i with
-  | zero => exact le_rfl
-  | succ k ih => exact (ih (by omega)).trans (hV.2.2.1 j k (by omega)).le
-
 theorem Qj_le {TT : Finset (Fin n')} {L₁ L₂ N₁ G' : ℕ} {F : Frames n' r} (hF : FramesOK TT L₁ L₂ N₁ G' F)
     (hr : 1 ≤ r) (p : ℕ) (hp : 1 ≤ p) (j : ℤ) : Qj F p j ≤ p ^ G' := by
-  have := add_sub_cancel_right j 1 ▸ hF.2.2.1 (j + 1); have := fr_mono hF.2.1 j (r - 1) (by omega)
-  exact Nat.pow_le_pow_right hp (show (F.fr (j + 1) (r - 1) - F.fr j (r - 1)).toNat ≤ G' by omega)
+  obtain ⟨_, hV, hGap, _⟩ := hF
+  have h1 := hGap (j + 1)
+  rw [add_sub_cancel_right] at h1
+  have h2 := _root_.Formalism.MainNotions.G.WittFrameLocaliserOrders.frame_first_entry_le hV j (r - 1) (by omega)
+  show p ^ (zF F (j + 1) - zF F j).toNat ≤ p ^ G'
+  apply Nat.pow_le_pow_right hp
+  show (F.fr (j + 1) (r - 1) - F.fr j (r - 1)).toNat ≤ G'
+  omega
 
 theorem alphaMax_le {TT : Finset (Fin n')} {L₁ L₂ N₁ G' : ℕ} {F : Frames n' r} (hF : FramesOK TT L₁ L₂ N₁ G' F)
     (hr : 1 ≤ r) (p : ℕ) (hp : 1 ≤ p) (k : ℕ) : alphaMax p F k ≤ 1 + r * k * p ^ G' :=
