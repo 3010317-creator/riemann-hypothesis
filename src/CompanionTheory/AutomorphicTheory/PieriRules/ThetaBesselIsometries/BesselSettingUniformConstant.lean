@@ -359,7 +359,7 @@ theorem Ph_sum [FiniteDimensional â„‚ Wp] (D : B.RealPlaceData k r Wp Wq) {m : â
     unfold B.rho
     rw [hF _ (Formalism.FourierDecayAlt.P.B6.conj_product_mem_unitary_group D hp hg)]
     ext v
-    simp []
+    simp
   simp only
   rw [h1, hF _ hg, hsInner_sum_sum]
 
