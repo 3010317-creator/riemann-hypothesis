@@ -46,6 +46,13 @@ namespace GlobalTheory.Published
 
 open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.SplitRead
 
+/-- **Kazhdan--Lusztig Injectivity Theorem for Depth-Zero Jacquet Functors**.
+
+Let $k$ be a non-Archimedean local field and let $\pi$ be an irreducible representation of $\mathrm{GL}_n(k)$.
+If a vector $v$ in the parahoric fixed subspace has vanishing image under the normalized Jacquet functor
+associated with the unipotent radical of a standard parabolic subgroup, then $v = 0$.
+
+Reference: [kazhdanLusztig1987]. -/
 def DepthZeroJacquetInjective : Prop :=
   ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (n s : ℕ) (d : Fin s → ℕ)
     (e : (Σ a, Fin (d a)) ≃ Fin n) (π : Irr k n) (v : π.V),
