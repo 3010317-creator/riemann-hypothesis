@@ -57,7 +57,8 @@ section -- clump:auto
 namespace LateralTheory.Fin.EtaleCochainSemilinearMapOnClasses
 alias etale_evaluation_map_basic_of_components := _root_.LateralTheory.EtaleFoundations.pp_ev_basic_of
 alias etale_cohomology_evaluation_mk := _root_.LateralTheory.EtaleFoundations.pp_ev_mk_of
-alias etale_cohomology_evaluation_connecting_hom := _root_.LateralTheory.EtaleFoundations.pp_ev_delta_of
+theorem etale_cohomology_evaluation_connecting_hom : LateralTheory.EtaleFoundations.pp_ev_delta :=
+  _root_.LateralTheory.EtaleFoundations.etale_chain_cochain_eval_differential_formula_holds
 theorem etale_torsion_cohomology_operation_spec : LateralTheory.EtaleFoundations.EtaleCochainSemilinearMapOnClasses := by
   apply LateralTheory.EtaleFoundations.etale_semilinear_cohomology_operation_exists_of_evaluation <;> first | exact etale_evaluation_map_basic_of_components | exact etale_cohomology_evaluation_mk | exact etale_cohomology_evaluation_connecting_hom
 alias intersectionNumber_baseChange := _root_.LateralTheory.Fin.EtaleCochainSemilinearMapOnClasses.etale_torsion_cohomology_operation_spec
