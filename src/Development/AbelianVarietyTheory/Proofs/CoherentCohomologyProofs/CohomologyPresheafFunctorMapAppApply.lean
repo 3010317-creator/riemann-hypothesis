@@ -140,9 +140,6 @@ instance isFlasque_injectiveShortComplex_X₂ (F : TopCat.Sheaf AddCommGrpCat.{u
     (injectiveShortComplex F).X₂.IsFlasque :=
   isFlasque_of_injective _
 
--- Use the site Abelian instance that occurs in `Sheaf.H'`.
-attribute [-instance] TopCat.Sheaf.instAbelian
-
 variable [HasExt.{w} (Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})]
 
 open CategoryTheory Abelian Opposite Limits TopologicalSpace in
