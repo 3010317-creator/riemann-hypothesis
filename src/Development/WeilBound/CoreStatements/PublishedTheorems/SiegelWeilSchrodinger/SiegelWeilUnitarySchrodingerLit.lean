@@ -50,6 +50,11 @@ namespace GlobalTheory.Published
 
 open GlobalTheory.StdUnn
 
+/-- **Kudla–Sweet theorem on the local Siegel–Weil formula**: the local degenerate Whittaker
+coefficients of Siegel Eisenstein series for unitary groups equal the local representation density of Hermitian forms.
+
+Proposed reference:
+[S. S. Kudla and W. J. Sweet, Jr., *Degenerate principal series for unitary groups*][kudlaSweet1997]. -/
 def SiegelWeilUnitarySchrodingerLit : Prop :=
   ∀ (D : D7) (n : ℕ) (V : HSp D), n < V.rank → V.rank ≤ 2 * n → n + Formalism.MainNotions.SchurIrreducible.wittIdx V < V.rank →
   ∀ ψ : AddChar (AF D.host.F) ℂ, IsCharAF D.host.F ψ →
