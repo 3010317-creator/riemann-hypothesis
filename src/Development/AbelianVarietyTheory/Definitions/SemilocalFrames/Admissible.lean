@@ -56,9 +56,6 @@ def aT (k r : ℕ) (α : ℂ) : B.Mat k r :=
 def conjF {k r : ℕ} {V : Type*} (α : ℂ) (F : B.Mat k r → V) : B.Mat k r → V :=
   fun x => F (aT k r α * x * (aT k r α)⁻¹)
 
-def KH (k r : ℕ) : Set (B.Mat k r) :=
-  UH (Hpk k r) ∩ (Matrix.unitaryGroup (Fin (2 * r + k + 1)) ℂ : Set _)
-
 def IsStdOf {k r : ℕ} (L : Formalism.MainNotions.S.LocBessel k r) (μsec : ℂ → Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ)
     (Bs : B.RealPlaceData k r L.Wp L.Wq) : Prop :=
   Bs.z = L.z ∧ Bs.z' = L.z' ∧ Bs.π = L.π ∧ Bs.π' = L.π' ∧ Bs.μW = L.μW ∧ Bs.μW' = L.μW' ∧

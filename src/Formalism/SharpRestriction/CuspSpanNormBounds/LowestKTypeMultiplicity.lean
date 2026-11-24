@@ -189,20 +189,6 @@ theorem smooth2_step (H X : Matrix (Fin n) (Fin n) ℂ)
     · intro p hpU a b
       exact (key U F hU hF hE p hpU a b).deriv
 
-theorem Smooth2.continuousOn_left {H : Matrix (Fin n) (Fin n) ℂ}
-    {Ψ : Matrix (Fin n) (Fin n) ℂ × Matrix (Fin n) (Fin n) ℂ → E} (h : Smooth2 H Ψ)
-    (a : Matrix (Fin n) (Fin n) ℂ) (ha : inUH H a) :
-    ContinuousOn (fun g => Ψ (g, a)) {g | inUH H g} := by
-  intro g₀ hg₀
-  obtain ⟨U, F, hU, hp, hF, hE⟩ := h (g₀, a) hg₀ ha
-  have hcont : Continuous fun g : Matrix (Fin n) (Fin n) ℂ => (g, a) := by fun_prop
-  have hFc : ContinuousAt F (g₀, a) := hF.continuousOn.continuousAt (hU.mem_nhds hp)
-  have hc : ContinuousAt (fun g => F (g, a)) g₀ := ContinuousAt.comp (g := F) hFc hcont.continuousAt
-  have hV : ∀ᶠ g in nhds g₀, (g, a) ∈ U := hcont.continuousAt.preimage_mem_nhds (hU.mem_nhds hp)
-  refine hc.continuousWithinAt.congr_of_eventuallyEq ?_ (hE _ hp hg₀ ha)
-  filter_upwards [nhdsWithin_le_nhds hV, self_mem_nhdsWithin] with g hgU hg
-  exact hE (g, a) hgU hg ha
-
 end Formalism.MainNotions.LowestKTypeMultiplicity
 
 end
@@ -378,13 +364,6 @@ theorem dsigW_hasDeriv (hσ : IsURepOn (UH (Hpk k r)) σ) {u : H} (hu : IsSmooth
   have hd1 := hdiff (1, 1) (UH_one k r) (UH_one k r)
   simp only [Matrix.one_mul, hσ.1.1, ContinuousLinearMap.one_apply] at hd1
   exact hd1.hasDerivAt
-
-theorem orbit_cont (hσ : IsURepOn (UH (Hpk k r)) σ) {v : H} (hv : IsSmoothVec (k := k) (r := r) σ v)
-    (D : List (Mx k r)) (hD : ∀ X ∈ D, InLieHpk k r X) :
-    ContinuousOn (fun g => dsigW σ D (σ g v)) (UH (Hpk k r)) := by
-  have := (psiD_smooth hσ hv D hD).continuousOn_left 1 (UH_one k r)
-  simp only [hσ.1.1, ContinuousLinearMap.one_apply] at this
-  exact this
 
 end Rep
 
