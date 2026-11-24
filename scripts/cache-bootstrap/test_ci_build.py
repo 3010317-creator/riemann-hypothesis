@@ -236,6 +236,19 @@ def recovery_tests(ci):
         ci.recover_completed_map(project, cache, toolchain, work, destination, known,
                                  known_mappings={"1" * 16: known_name})
         assert ci.load_map(destination) == {"1" * 16: known_name}, "cached LTAR hits need not leave a local archive alias"
+        mapping = ci.load_map(destination)
+        assert ci.collect_mapped_modules(project, cache, mapping, incomplete=True) == [
+            ("Complete", "1" * 16, known_name)
+        ]
+        # A malformed trace may be ignored for an already cached partial map.
+        # Locating a missing archive still requires the strict scan.
+        (cache / "artifacts" / known_name).rename(aliases[0])
+        try:
+            ci.collect_mapped_modules(project, cache, mapping, incomplete=True)
+        except json.JSONDecodeError:
+            pass
+        else:
+            raise AssertionError("staging a missing LTAR accepted a malformed module trace")
     print("PASS missing-map recovery: completed cached LTAR retained; partial cache/trace discarded")
 
 
