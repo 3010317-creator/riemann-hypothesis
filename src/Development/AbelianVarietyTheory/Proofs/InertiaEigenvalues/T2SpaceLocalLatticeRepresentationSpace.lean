@@ -1,12 +1,58 @@
 module
 
-public import Mathlib
-public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExpStar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharacterPadicBasicProperties
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCyclotomicTowerLevelGeneratorProperties
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PadicNormZpowSubOnePadicValInt
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.GroupTheory.Nilpotent
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.Padics.LocalField
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -88,11 +134,11 @@ theorem exists_pair (a : G → M →ₗ[O] M) (hmul : ∀ g h x, a (g * h) x = a
         rw [he, he]
         exact k1 _ _ (by rw [map_mul, hs δ hδ, hs _ (hΔm _ hg _ hδ)])
     simp only [hcoc, Finset.sum_add_distrib, Finset.sum_const] at h1
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hm, map_smul, map_smul, map_sum, map_sum, ← smul_sub,
-      show ∑ δ ∈ Δ, a g (j (e (s δ))) - ∑ δ ∈ Δ, j (e (s δ)) = -(Δ.card • j (e g)) by
-        rw [← h1]; abel,
-      smul_neg, ← Nat.cast_smul_eq_nsmul O, smul_smul, hu, one_smul]
+
+    rw [hm, map_smul, map_smul, map_sum, map_sum, ← smul_sub,
+    show ∑ δ ∈ Δ, a g (j (e (s δ))) - ∑ δ ∈ Δ, j (e (s δ)) = -(Δ.card • j (e g)) by
+      rw [← h1]; abel,
+    smul_neg, ← Nat.cast_smul_eq_nsmul O, smul_smul, hu, one_smul]
   have hz : ∀ g, r g ∈ Δ → c g + (a g (b₁ + j m) - (b₁ + j m)) = 0 := by
     intro g hg
     have h1 := hav g hg
@@ -428,7 +474,7 @@ theorem eq_one_of_pow {j₀ : ℕ} (hj : Lev l j₀) {u : ℚ_[l]} (hu : ‖u - 
     {k : ℕ} (hk : k ≠ 0) (h : u ^ k = 1) : u = 1 := by
   by_contra hne
   obtain ⟨j, hjj, e⟩ := exists_norm_eq (sub_ne_zero.2 hne) hu
-  have h1 := GlobalTheory.T.padic_norm_zpow_sub_one_padicValInt l j (lev_mono hj hjj) u e k (by exact_mod_cast hk)
+  have h1 := _root_.GlobalTheory.Cyc.LiftExp.norm_zpow_sub_one l j (lev_mono hj hjj) u e k (by exact_mod_cast hk)
   rw [zpow_natCast, h, sub_self, norm_zero] at h1
   have hl0 : (0 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).pos
   exact absurd h1 (zpow_pos hl0 _).ne
@@ -439,7 +485,7 @@ theorem norm_pow_sub_one {j₀ : ℕ} (hj : Lev l j₀) {u : ℚ_[l]}
   · simp [hne]
   obtain ⟨j, hjj, e⟩ := exists_norm_eq (sub_ne_zero.2 hne) hu
   have hk0 : k ≠ 0 := by rintro rfl; exact hk (dvd_zero _)
-  have h1 := GlobalTheory.T.padic_norm_zpow_sub_one_padicValInt l j (lev_mono hj hjj) u e k (by exact_mod_cast hk0)
+  have h1 := _root_.GlobalTheory.Cyc.LiftExp.norm_zpow_sub_one l j (lev_mono hj hjj) u e k (by exact_mod_cast hk0)
   rw [zpow_natCast, padicValInt.of_nat, padicValNat.eq_zero_of_not_dvd hk] at h1
   rw [h1, e]; simp
 
@@ -720,7 +766,7 @@ theorem mem_herrCocycles_of_eq {O D : Type} [CommRing O] [AddCommGroup D] [Modul
   simp [herrCocycles, h]
 
 
-set_option maxHeartbeats 1600000 in
+
 theorem herr_a : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW), adm9 D HW F → ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (s : ℕ) (LL : FinExt l) (h : Good K s LL), let S := sit D.loc HW l (D.locA l) K s LL h; let E : S.Comparison₂ := ((F l).E K s LL h).tie; HerrAat S ∧ HerrAsat S := by
   intro D HW F h9 l _ K s LL h S E
   obtain ⟨hF, hD⟩ := h9 l K s LL h
