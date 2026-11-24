@@ -104,8 +104,7 @@ theorem latO_le_right (S T : HSp D) (LS : Set (Fin S.rank → D.host.E)) (N' M' 
     congr 1
     ring
   have h2 := AddSubgroup.mem_comap.1 (key (h hmem))
-  rw [e] at h2
-  exact h2
+  rwa [e] at h2
 
 theorem latO_le_left (S T : HSp D) (N M : Lat S) (LT : Set (Fin T.rank → D.host.E)) (P : Pl D → Prop)
     (h : latV S N P ≤ latV S M P) :
@@ -134,8 +133,7 @@ theorem latO_le_left (S T : HSp D) (N M : Lat S) (LT : Set (Fin T.rank → D.hos
   have hmem : (fun k => pairA D.host.F 0 α ⊗ₜ[D.host.F] (1 * s k)) ∈ latV S N P :=
     AddSubgroup.subset_closure ⟨α, hα, hP, 1, rfl, s, hs, rfl⟩
   have h2 := AddSubgroup.mem_comap.1 (key (h hmem))
-  rw [gen] at h2
-  exact h2
+  rwa [gen] at h2
 
 
 
@@ -212,8 +210,7 @@ theorem latV_le_of_local (S : HSp D) (N M : Lat S) (hN : Submodule.IsLattice D.h
         have e1 : evalV D.host.F w β = evalV D.host.F w α := by rw [hβB, ite_eq_right hw]
         rewrite [map_smul, e1]
         rw [HeightOneSpectrum.mem_adicCompletionIntegers] at hαw ⊢
-        rw [Algebra.smul_def, map_mul, map_inv₀, map_inv₀, hval, inv_one, one_mul]
-        exact hαw
+        rwa [Algebra.smul_def, map_mul, map_inv₀, map_inv₀, hval, inv_one, one_mul]
     · have e0 : evalV D.host.F w β = 0 := by
         rw [hβB]
         split_ifs

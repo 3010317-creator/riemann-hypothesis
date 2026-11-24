@@ -115,8 +115,7 @@ theorem augmented_exact_iff (C : Type 2) [Category.{1} C] [Abelian C] (K : Simpl
       ((AlgebraicTopology.alternatingFaceMapComplex C).obj K).ExactAt (n + 1) :=
     fun n => quasiIsoAt_iff_exactAt' _ _ (ChainComplex.exactAt_succ_single_obj _ _)
   constructor
-  · intro h
-    exact ⟨(hz.1 (h 0)).1, (hz.1 (h 0)).2, fun n => (hs n).1 (h (n + 1))⟩
+  · exact fun h => ⟨(hz.1 (h 0)).1, (hz.1 (h 0)).2, fun n => (hs n).1 (h (n + 1))⟩
   · rintro ⟨h1, h2, h3⟩ i
     cases i with
     | zero => exact hz.2 ⟨h1, h2⟩
@@ -245,10 +244,8 @@ theorem wExact_preadditiveYoneda_of_injective (R : Type) [CommRing R] (T : Type 
     change (free R).map (Ψ.map (X.δ (n := 0) 0)).unop ≫ y = (free R).map (Ψ.map (X.δ (n := 0) 1)).unop ≫ y at hy
     let y' : K.obj (op (SimplexCategory.mk 0)) ⟶ J := y
     have hy' : (K.δ (n := 0) 0 - K.δ (n := 0) 1) ≫ y' = 0 := by
-      refine (Preadditive.sub_comp _ _ _).trans (sub_eq_zero.2 ?_)
-      exact hy
-    refine ⟨hex.descToInjective (J := J) y' hy', ?_⟩
-    exact hex.comp_descToInjective (J := J) y' hy'
+      exact (Preadditive.sub_comp _ _ _).trans (sub_eq_zero.2 hy)
+    exact ⟨hex.descToInjective (J := J) y' hy', hex.comp_descToInjective (J := J) y' hy'⟩
   · intro n
     exact GlobalTheory.alternatingCofaceMapComplex_preadditiveYoneda_exactAt_succ K J n (hn n)
 

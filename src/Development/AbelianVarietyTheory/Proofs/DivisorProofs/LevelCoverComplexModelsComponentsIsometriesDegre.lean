@@ -127,8 +127,7 @@ theorem exists_frBor_of_frOver {E : Type} [Field E] [NumberField E] [IsCMField E
   obtain ⟨cf, c₁, c₂, hcf⟩ := au τ i
   refine ⟨cf, by rw [c₁]; exact (t _).isUnit, c₂, ?_⟩
   have k := (GlobalTheory.FrameLift.comb_iff d.m e (fun j => (p.tan τ j).1) cf (ex ▸ (p'.tan τ i).1)).1 hcf
-  rw [funext (hu τ), hu'] at k
-  exact k
+  rwa [funext (hu τ), hu'] at k
 
 theorem lact_conj_eq_rmul : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ D.R.r) (dict : ∀ σ : c.F →+* ℂ, GA D (D.sp.W j) → Σ k, Frame ((U σ).X k).Ψ D.R.r) (d : DeltaDat Xo c 0) (U₂ : ∀ σ : d.c₂.F →+* ℂ, Unf d.Xo₂ d.c₂ σ D.R.r) (dict₂ : ∀ σ : d.c₂.F →+* ℂ, GA D (D.sp.W j) → Σ k, Frame ((U₂ σ).X k).Ψ D.R.r), Laws D j Xo c U dict → Laws D j d.Xo₂ d.c₂ U₂ dict₂ → d.IsLev → ∀ σ₂, GoodEmb d.c₂ σ₂ → ∀ (k₂ : (U₂ σ₂).Comp) (k : (U (σ₂.comp (d.eF : c.F →+* d.c₂.F))).Comp) (δ : GL (Fin D.R.r) D.host.E), ((U₂ σ₂).X k₂).Gm = ((U (σ₂.comp (d.eF : c.F →+* d.c₂.F))).X k).Gm → (∀ v w, herm ((U₂ σ₂).X k₂).Gm ((δ : Matrix (Fin D.R.r) (Fin D.R.r) D.host.E).mulVec v) ((δ : Matrix (Fin D.R.r) (Fin D.R.r) D.host.E).mulVec w) = herm ((U₂ σ₂).X k₂).Gm v w) → GlobalTheory.LevModel.Over d σ₂ (U (σ₂.comp (d.eF : c.F →+* d.c₂.F))) (U₂ σ₂) k₂ k δ → ∀ γ₂ ∈ ((U₂ σ₂).X k₂).Γ, ∀ x ∈ ((U₂ σ₂).X k₂).dom, ∀ x' : Frame ((U (σ₂.comp (d.eF : c.F →+* d.c₂.F))).X k).Ψ D.R.r, GlobalTheory.LevModel.Moved ((U₂ σ₂).X k₂) ((U (σ₂.comp (d.eF : c.F →+* d.c₂.F))).X k) δ x x' → ∃ γ ∈ ((U (σ₂.comp (d.eF : c.F →+* d.c₂.F))).X k).Γ, ∃ b ∈ Bor ((U (σ₂.comp (d.eF : c.F →+* d.c₂.F))).X k).Ψ D.R.r, lact (MulAut.conj δ γ₂) x' = rmul (lact γ x') b := by
   intro D j H Dw l Xo c U dict d U₂ dict₂ hL hL₂ hLev σ₂ hσ₂ k₂ k δ hG hδ hOv γ₂ hγ₂ x hx x' hM
@@ -203,8 +202,7 @@ theorem isIntegral_eig_of_congr (Λ : Submodule (𝓞 E) (Fin r → E)) (hfg : �
   · intro h0
     have h1 : ∀ x ∈ Λ, φ x = 0 := fun x hx => by
       have : ψ ⟨x, hx⟩ ∈ LinearMap.range ψ := ⟨_, rfl⟩
-      rw [h0] at this
-      exact this
+      rwa [h0] at this
     have h2 : ∀ x : Fin r → E, φ x = 0 := by
       intro x
       have hx : x ∈ Submodule.span E (Λ : Set (Fin r → E)) := hsp ▸ Submodule.mem_top
@@ -553,8 +551,7 @@ theorem conj_arithGroup_le : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.Chart
     apply Units.ext
     show ((MulAut.conj δ γ₂ : GL (Fin D.R.r) D.host.E) : Matrix (Fin D.R.r) (Fin D.R.r) D.host.E) = _
     rw [hζ, h1, mul_one]
-  rw [e]
-  exact hγ
+  rwa [e]
 
 end GlobalTheory.LevModel
 end -- clump:auto
@@ -1150,8 +1147,7 @@ theorem levCover_model : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.ChartRest
   have h4 := fun k₂ => _root_.GlobalTheory.LevRead.reading_pull D j H Dw l Xo c U dict d U₂ dict₂ hL hL₂ hd σ₂ hσ k₂ (π k₂) (δ k₂) (hGm k₂) (hIso k₂) (hOv k₂)
   choose t ht hread using h4
   refine ⟨π, δ, N, hN, fun k₂ => ⟨hGm k₂, hIso k₂, (h2 k₂).1, (h2 k₂).2⟩, hsum, t, ht, ?_⟩
-  intro a n hD f hf g hg hP k₂ x x' hx hm hn
-  exact hread k₂ a n hD f hf g hg hP x x' hx hm hn
+  exact fun a n hD f hf g hg hP k₂ x x' hx hm hn => hread k₂ a n hD f hf g hg hP x x' hx hm hn
 
 end GlobalTheory.LevModel
 end -- clump:auto

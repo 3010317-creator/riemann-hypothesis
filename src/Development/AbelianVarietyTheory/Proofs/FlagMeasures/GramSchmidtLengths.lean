@@ -56,8 +56,7 @@ theorem sub_gs_mem {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℂ E] {
   have h := gramSchmidt_def'' (𝕜 := ℂ) f a
   have hs : f a - gramSchmidt ℂ f a = ∑ i ∈ Finset.Iio a,
       (⟪gramSchmidt ℂ f i, f a⟫_ℂ / (‖gramSchmidt ℂ f i‖ : ℂ) ^ 2) • gramSchmidt ℂ f i := by
-    rw [sub_eq_iff_eq_add']
-    exact h
+    rwa [sub_eq_iff_eq_add']
   rw [hs, ← span_gramSchmidt_Iio (𝕜 := ℂ) f a]
   exact Submodule.sum_mem _ fun i hi =>
     Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, Finset.mem_Iio.1 hi, rfl⟩)
@@ -132,8 +131,7 @@ theorem gramSchmidt_lengths : ∀ (k r : ℕ) (z : (Fin (2 * r + k + 1) → ℂ)
     intro v w hvw
     rw [hLapp, hLapp] at hvw
     have h1 : x⁻¹ *ᵥ v = x⁻¹ *ᵥ w := congrArg WithLp.ofLp hvw
-    have h2 := congrArg (fun t => x *ᵥ t) h1
-    simpa [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv x hxu] using h2
+    simpa [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv x hxu] using congrArg (fun t => x *ᵥ t) h1
   have heinj : Function.Injective (eI k r) := fun a b h => Fin.ext (by have h' := congrArg Fin.val h; exact h')
   have hlie : LinearIndependent ℂ e := by
     have h0 := (Pi.basisFun ℂ (Fin (2 * r + k + 1))).linearIndependent.comp _ heinj

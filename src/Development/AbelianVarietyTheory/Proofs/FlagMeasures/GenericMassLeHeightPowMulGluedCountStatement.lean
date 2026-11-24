@@ -219,8 +219,7 @@ private theorem algebraMap_δ_mul_uP_mem_O (Z : LocDat D) (p : PlF D) :
   obtain ⟨-, -, -, hO, -⟩ := Z.agree p
   have h2 := LocFacts.lf_mem_inv p dualLoc_holds Z 1 (by simpa using h1)
   simp only [map_one, one_mul] at h2
-  rw [hO]
-  exact h2
+  rwa [hO]
 
 private theorem isUnit_algebraMap_δ_mul_uP (Z : LocDat D) (p : PlF D) :
     IsUnit (algebraMap (D.s.atP p).Fp (D.s.atP p).Ep (Z.δ p) * (D.s.atP p).ιE (uP p : D.host.E)) :=
@@ -1419,8 +1418,7 @@ theorem cell_chg : ∀ {K : Type} [CommRing K] {r : ℕ} (Z L U : Matrix (Fin (r
   refine ⟨L, Matrix.diagonal s * U * Matrix.diagonal s, hL, fun i j => ⟨fun hji => ?_, fun hij => ?_⟩, ?_⟩
   · simp [Matrix.diagonal_mul, Matrix.mul_diagonal, hU.1 i j hji]
   · subst hij
-    simp only [Matrix.diagonal_mul, Matrix.mul_diagonal, hU.2 i, mul_one]
-    exact hs i
+    simpa only [Matrix.diagonal_mul, Matrix.mul_diagonal, hU.2 i, mul_one] using hs i
   · rw [← hZ, hZS, hZS]
     rw [show L * (Z * Matrix.diagonal s) * (Matrix.diagonal s * U * Matrix.diagonal s) =
       L * Z * (Matrix.diagonal s * Matrix.diagonal s) * U * Matrix.diagonal s by simp only [Matrix.mul_assoc], hDD,
@@ -1456,9 +1454,7 @@ theorem genericMass_le_heightPow_mul_glueSum : ∀ (D : D7) (X : HidaSetting D) 
       unfold LocNG.FPair.Hp
       refine Real.one_le_rpow_of_pos_of_le_one_of_nonpos (mul_pos (mul_pos a0 b0) c0) ?_ (by norm_num)
       exact mul_le_one₀ (mul_le_one₀ a1 b0.le b1) c0.le c1
-  have hTot : 0 < Fm.toL.ngenTot := by
-    show 0 < Fm.V0 * ∏ p : {p // p ∈ Fm.P}, Fm.ngenL p.1
-    exact mul_pos hV0 (Finset.prod_pos fun p _ => (hpos p.1 p.2).1)
+  have hTot : 0 < Fm.toL.ngenTot := mul_pos hV0 (Finset.prod_pos fun p _ => (hpos p.1 p.2).1)
   refine ⟨hTot, fun p hp => (hpos p hp).2.2, ?_⟩
 
   choose dd tt htt hcls using fun p (hp : p ∈ Fm.P) => (hloc p hp).2
@@ -1524,8 +1520,7 @@ theorem genericMass_le_heightPow_mul_glueSum : ∀ (D : D7) (X : HidaSetting D) 
         hZiso.symm
       unfold Gval Formalism.MainNotions.S.Gflag Formalism.MainNotions.S.Dl
       rw [h']
-    rw [e, GlobalTheory.T.flagPairValue_invariant_unitriangularChange D F G F' G'' A A' hA hA' hZG]
-    exact hTP
+    rwa [e, GlobalTheory.T.flagPairValue_invariant_unitriangularChange D F G F' G'' A A' hA hA' hZG]
   · rw [← hZiso, hZG]
     refine cell_chg _ _ _ w ?_ hA' hZw
     intro i j

@@ -139,8 +139,7 @@ theorem dense_of_sigmaCompact {X : Type} [TopologicalSpace X] [T2Space X] [Sigma
         simp [this]
     rw [integral_zero] at h0
     rw [tendsto_iff_norm_sub_tendsto_zero]
-    have h1 := h0.sqrt
-    simpa using h1
+    simpa using h0.sqrt
   · refine ⟨_, isCompact_compactCovering X n, ?_⟩
     filter_upwards [hu n] with z h hz
     simp [h, hz]
@@ -267,8 +266,7 @@ theorem exists_orthonormal {H : Type} [NormedAddCommGroup H] [InnerProductSpace 
     intro i
     obtain ⟨z, hz⟩ := (b i).2
     have := congrArg (fun A : H →L[ℂ] H => A z) hT.1
-    rw [← hz]
-    exact this
+    rwa [← hz]
   have hexp : ∀ g, T g = ∑ i, ⟪(b i : H), g⟫_ℂ • (b i : H) := by
     intro g
     have h := congrArg Subtype.val (b.sum_repr' ⟨T g, g, rfl⟩)
@@ -351,8 +349,7 @@ theorem norm_sum_sq_le {ι : Type} [Fintype ι] (c F : ι → ℂ) :
     ‖∑ i, c i * F i‖ ^ 2 ≤ (∑ i, ‖c i‖ ^ 2) * ‖∑ i, F i * star (F i)‖ := by
   have e : ∑ i, F i * star (F i) = ((∑ i, ‖F i‖ ^ 2 : ℝ) : ℂ) := by
     push_cast
-    refine Finset.sum_congr rfl fun i _ => ?_
-    exact Complex.mul_conj' (F i)
+    exact Finset.sum_congr rfl fun i _ => Complex.mul_conj' (F i)
   rw [e, Complex.norm_real, Real.norm_of_nonneg (by positivity)]
   refine le_trans ?_ (Finset.sum_mul_sq_le_sq_mul_sq univ (fun i => ‖c i‖) (fun i => ‖F i‖))
   gcongr

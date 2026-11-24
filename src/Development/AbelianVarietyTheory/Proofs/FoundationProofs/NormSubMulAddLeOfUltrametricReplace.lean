@@ -339,8 +339,7 @@ theorem coefO_dvd_pow_l {l : ℕ} [Fact l.Prime] (c : Coef l) {x : Qbar l} (hx :
   have h2 : x' * ((-(aeval x' r)) * algebraMap ℤ_[l] c.O ((w⁻¹ : ℤ_[l]ˣ) : ℤ_[l]))
       = algebraMap ℤ_[l] c.O ((l : ℤ_[l]) ^ a.valuation) := by
     rw [← mul_assoc, ← hrel, ← map_mul, haw]
-  have h3 := congrArg Subtype.val h2
-  simpa using h3
+  simpa using congrArg Subtype.val h2
 
 end GlobalTheory
 
@@ -953,8 +952,7 @@ theorem exists_pow_fix {K C : Type} [Field K] [AddCommGroup C] [Module K C] [Fin
   have h1 : LinearMap.eqLocus (T ^ E) LinearMap.id ≤ LinearMap.eqLocus (T ^ (E * d)) LinearMap.id := fun x hx => hm E d x hx
   have h2 := eq_of_le_of_not_lt h1 (hmax _ ⟨E * d, mul_pos hE hd, rfl⟩)
   have h3 : c ∈ LinearMap.eqLocus (T ^ (E * d)) LinearMap.id := by rw [mul_comm]; exact hm d E c hc
-  rw [← h2] at h3
-  exact h3
+  rwa [← h2] at h3
 
 theorem isClosed_submodule {l : ℕ} [Fact l.Prime] (U : Submodule (Qbar l) (Fin 2 → Qbar l)) :
     IsClosed (U : Set (Fin 2 → Qbar l)) := by
@@ -1064,8 +1062,7 @@ theorem exists_conj_norm : ∀ (Γ : Type) [Group Γ] (K : Type) [Field K] (X : 
     exact sub_eq_zero.1 this
   · have := key γ (e ▸ I.mul_mem (I.pow_mem hγ N) (hJI hj₁))
     rw [e, hzc _ (I.pow_mem hγ N), hz0 _ hj₁, Matrix.mulVec_zero, add_zero, hzp] at this
-    rw [← Matrix.mulVec_mulVec]
-    exact this
+    rwa [← Matrix.mulVec_mulVec]
 
 theorem frob_mulVec_cob : ∀ (Γ : Type) [Group Γ] (K : Type) [Field K] (ρ : Γ →* GL (Fin 2) K) (J : Subgroup Γ) (γ φ : Γ) (N : ℕ), (∃ j ∈ J, φ * γ * φ⁻¹ = γ ^ N * j) → ∀ u : Fin 2 → K, (∀ j ∈ J, ((ρ j : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) *ᵥ u = u) → (((ρ φ⁻¹ : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) * ∑ i ∈ Finset.range N, ((ρ γ : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) ^ i) *ᵥ (((ρ γ : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) *ᵥ u - u) = ((ρ γ : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) *ᵥ (((ρ φ⁻¹ : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) *ᵥ u) - ((ρ φ⁻¹ : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) *ᵥ u := by
   intro Γ _ K _ ρ J γ φ N ⟨j, hj, e⟩ u hu
@@ -1208,8 +1205,7 @@ theorem mem_of_fibre_sums {l : ℕ} [Fact l.Prime] {X : ℕ → Type} [∀ r, Gr
     exact lt_of_mul_lt_mul_left (this.trans_lt hk) hE0.le
   refine ⟨b - o • y, ?_, ?_⟩
   · have h3' : Wo.mkQ (∑ x, a' r x) = Wo.mkQ (o • y) := by
-      rw [map_nsmul, hy, map_sum, map_sum]
-      exact h3
+      rwa [map_nsmul, hy, map_sum, map_sum]
     have := Wo.add_mem (hb r) ((Submodule.Quotient.eq Wo).1 h3')
     rwa [sub_add_sub_cancel] at this
   · rw [dist_eq_norm, sub_sub_cancel, ← Nat.cast_smul_eq_nsmul (Qbar l), norm_smul]
@@ -1490,8 +1486,7 @@ theorem glob_of_shapiro_system_noLayer (l : ℕ) [Fact l.Prime] (Ω : Type) [Fie
     have h := spec_approx_cocycle l r ρ (cycMod ℚ Ω l r)⁻¹ (Y r) (η r) (fun s => (θ s : Qbar l)) (hY r)
       (fun s i j => norm_le_one_of_mem c (hρO s i j)) (hYn r) (hηn r)
       (fun s x => by simpa only [MonoidHom.inv_apply, inv_inv] using hcong r s x) s t i
-    rw [hWθ s, Matrix.smul_mulVec]
-    exact h
+    rwa [hWθ s, Matrix.smul_mulVec]
   have hcoc : ∀ s t, y (s * t) = y s + mat W s *ᵥ y t :=
     _root_.GlobalTheory.LimCoc.limit_cocycle l (mat W) a y (fun s i j => norm_le_one_of_mem c (hWO s i j)) haN happ
       (fun r s i => hyA s i r)
@@ -1540,9 +1535,7 @@ theorem iwSys2_of_shCoc (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra
     simp only [Pi.add_apply, Matrix.mulVec, dotProduct, Fin.sum_univ_two, (hρ s hs).1, (hρ s hs).2, zero_mul,
       zero_add, MonoidHom.inv_apply] at h
     exact h
-  · have h := congrFun (congrFun (hN r s) x) 1
-    simp only [push, Finset.sum_apply] at h
-    exact h
+  · simpa only [push, Finset.sum_apply] using congrFun (congrFun (hN r s) x) 1
 
 end GlobalTheory.KZ
 

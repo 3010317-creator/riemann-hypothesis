@@ -74,9 +74,7 @@ theorem eq_zero_of_cob1_eq_zero : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field
     have := congrArg (coeff α) hm
     rw [coeff_map] at this
     rw [this]; simp
-  have hp : (p : O) ≠ 0 := by
-    intro h
-    exact one_ne_zero (hF.sat 1 (by rw [h, zero_mul]))
+  have hp : (p : O) ≠ 0 := fun h => one_ne_zero (hF.sat 1 (by rw [h, zero_mul]))
   have hev : ∀ n, c.ev n s = 0 := fun n =>
     G.eq_zero_of_cobOne_eq_zero hp n (by
       rw [← (Chart.ev₂_eval p O G d c n s).2.2.2, h0, map_zero])

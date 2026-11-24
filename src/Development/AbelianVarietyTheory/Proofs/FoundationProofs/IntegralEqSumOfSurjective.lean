@@ -94,13 +94,11 @@ theorem integral_eq_sum_of_surjective {G H : Type} [Group G] [Group H] [Topologi
   · intro γ hγ x
     have := hΦ ⟨γ, hγ⟩ (π x) 1
     rw [OneMemClass.coe_one, mul_one] at this
-    rw [map_mul]
-    exact this
+    rwa [map_mul]
   · intro k hk x
     have := hΦ 1 (π x) ⟨π k, hk⟩
     rw [map_one, one_mul] at this
-    rw [map_mul]
-    exact this
+    rwa [map_mul]
 
 theorem integral_eq_classSum : ∀ {D : D7} (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (L : LevDat D.host.E ℂ V.rank) (μ : Measure (GA D V)) (𝓕 : Set (GA D V)), L.P.H = ⊥ → IsMeasDef V (lev D.sp.cm V.gram β L) μ 𝓕 → ∀ (I : Type) [Fintype I] (y : I → Bridge.Gf V), Bridge.IsReps (Bridge.ratF V) (levEnv V β L).J y → (∀ c, Finite (Bridge.stab (Bridge.ratF V) (levEnv V β L).J (y c))) → ∀ Φ : Bridge.Gf V → ℂ, (∀ (γ : GQ V) h (k : (levEnv V β L).J), Φ (Bridge.ratF V γ * h * k) = Φ h) → ∫ h in 𝓕, Φ (fin V h) ∂μ = ∑ c, (Nat.card (Bridge.stab (Bridge.ratF V) (levEnv V β L).J (y c)) : ℂ)⁻¹ * Φ (y c) := by
   intro D V β L μ 𝓕 hL hμ I _ y hy hf Φ hΦ

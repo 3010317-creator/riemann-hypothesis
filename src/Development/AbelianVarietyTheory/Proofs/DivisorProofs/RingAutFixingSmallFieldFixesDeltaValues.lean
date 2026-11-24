@@ -91,8 +91,7 @@ theorem aut_fixes_delta_values : ∀ {D : D7} (ρ : Setup D.ntw), ρ.Good → �
 
   have hchi : ChrEq (charOf ρ.rc f ψ) χ := by
     have := hχ
-    rw [hρ.delta i j b] at this
-    exact this
+    rwa [hρ.delta i j b] at this
 
   let r' : G D.host.E D.nd.Om →* ℂˣ := (Units.map f.toMonoidHom).comp ψ
   let r : G D.host.E D.nd.Om →* ℂˣ := (Units.map ((τ : ℂ →+* ℂ).comp f).toMonoidHom).comp ψ
@@ -123,8 +122,7 @@ theorem aut_fixes_delta_values : ∀ {D : D7} (ρ : Setup D.ntw), ρ.Good → �
     let xe : (Formalism.L2.Theta.AE D)ˣ := (Formalism.L2.JoinChr.isUnit_locE he.1 k).unit
     have hxe : ρ.rc.sym xe = toAb D.host.E D.nd.Om (t⁻¹ * s⁻¹) := by
       have e1 : Units.map ρ.rc.κ.toMonoidHom xe = Neutral.B1.localIdele D.host.E v (atFin v k) := by
-        apply Units.ext
-        exact hρ.rc.loc v e he k
+        exact Units.ext (hρ.rc.loc v e he k)
       have e2 : atFin v k = (x0 * (atFin v k)⁻¹)⁻¹ * x0 := by group
       change ρ.rc.art (Units.map ρ.rc.κ.toMonoidHom xe) = _
       rw [e1, e2, map_mul, map_mul, map_inv, map_inv, hta, hx0a, ← map_inv, ← map_mul]

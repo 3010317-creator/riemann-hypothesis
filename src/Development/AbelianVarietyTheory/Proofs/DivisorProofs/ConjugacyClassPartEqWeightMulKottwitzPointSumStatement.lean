@@ -193,9 +193,7 @@ theorem finsum_orbit_prod_line {U P : Type} [MulAction Γ U] [MulAction Γ P] (Z
     induction q' using Quotient.inductionOn' with | h u' => ?_
     have h' := Quotient.exact' h
     obtain ⟨ζ, hζ⟩ := h'
-    apply Quotient.sound'
-    refine ⟨ζ, ?_⟩
-    exact congrArg Prod.fst hζ
+    exact Quotient.sound' ⟨ζ, congrArg Prod.fst hζ⟩
 
   have hsupp : Function.support (fun o : MulAction.orbitRel.Quotient Z (U × P) => S (Quotient.out o)) ⊆ Set.range φ := by
     intro o ho
@@ -403,8 +401,7 @@ theorem cls_eq_of_uniq : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : Infin
     refine ⟨?_, ?_⟩
     · have hp := (GlobalTheory.LKCx.pos_iff_smul_toV p G v β 1 z₀ a ha0).1 hz₀pos
       have e : ((toV G v β 1 : GL (Fin G.n) ℂ) : Matrix (Fin G.n) (Fin G.n) ℂ) *ᵥ z₀ = z₀ := by simp
-      rw [e, ha] at hp
-      exact hp
+      rwa [e, ha] at hp
     · obtain ⟨d, hd⟩ := hz₀fix
       refine ⟨d, ?_⟩
       rw [← ha, Matrix.mulVec_smul, hd, smul_comm]

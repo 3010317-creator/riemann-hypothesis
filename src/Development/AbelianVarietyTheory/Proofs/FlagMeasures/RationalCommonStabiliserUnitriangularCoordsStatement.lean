@@ -99,8 +99,7 @@ theorem local_eq_one (h : S.GLV) (hS : h ∈ S.St) (hf' : ∀ b, h (S.f' b) = S.
     simp [this]
   have hXle : S.spanTo S.f r ≤ S.ME := by
     refine le_trans (Submodule.span_mono (Set.image_mono ?_)) le_sup_left
-    intro i hi
-    exact Nat.lt_succ_of_lt hi
+    exact fun i hi => Nat.lt_succ_of_lt hi
   have hME : S.ME = Submodule.span E (Set.range (Sum.elim S.f S.f')) := by
     rw [Frames.ME, GlobalTheory.HL.FrameStab.spanTo_top, GlobalTheory.HL.FrameStab.spanTo_top, Set.Sum.elim_range,
       Submodule.span_union]
@@ -155,8 +154,7 @@ theorem eq_one_of_fix : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Nu
     have h1 : x' ((u : (A.loc p).Ep) • (G.S p).f' b) = (u : (A.loc p).Ep) • (G.S p).f' b := by
       rw [hu, G.f'_eq p b, hext, hfix b]
     rw [map_smul] at h1
-    have h2 := congrArg (fun v => ((u⁻¹ : ((A.loc p).Ep)ˣ) : (A.loc p).Ep) • v) h1
-    simpa [smul_smul] using h2
+    simpa [smul_smul] using congrArg (fun v => ((u⁻¹ : ((A.loc p).Ep)ˣ) : (A.loc p).Ep) • v) h1
   have h1 : x' = 1 := local_eq_one (G.S p) x' hx'St hloc
   have hinj := (GlobalTheory.HL.RatExt.rational_extend A (k + 2 * r + 1) p).1
   refine LinearEquiv.ext fun v => hinj ?_
@@ -350,8 +348,7 @@ theorem stab_blockDiag : ∀ {K : Type} [Field K] (sig : K →+* K), (∀ x, sig
       rw [hmm]
       intro i a
       rw [hLapp]
-      simp only [s, hsig]
-      exact div_mul_cancel₀ _ (hc a)
+      simpa only [s, hsig] using div_mul_cancel₀ _ (hc a)
     rw [e, Matrix.mul_assoc, hUs, Matrix.mul_one]
 
 end GlobalTheory.PointStab

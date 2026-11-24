@@ -68,8 +68,7 @@ theorem exists_open_conjStable_sub_level (E : Type) [Field E] [NumberField E] [I
   · refine ⟨GlobalTheory.LFun.KGL w (n := n), hKo, ?_, ?_, fun _ => rfl⟩
     · intro x hx
       refine Subgroup.mem_map.2 ⟨⟨x, hmemU x⟩, ?_, rfl⟩
-      rw [hKL, KL, Subgroup.mem_subgroupOf]
-      exact hx
+      rwa [hKL, KL, Subgroup.mem_subgroupOf]
     · intro k hk x hx
       exact (GlobalTheory.LFun.KGL w (n := n)).mul_mem ((GlobalTheory.LFun.KGL w (n := n)).mul_mem ((GlobalTheory.LFun.KGL w (n := n)).inv_mem hk) hx) hk
   · set S : Subgroup (GLw n w) := K'.map (UL n w).subtype with hSdef
@@ -87,8 +86,7 @@ theorem exists_open_conjStable_sub_level (E : Type) [Field E] [NumberField E] [I
       exact hKo.isOpenMap_subtype_val _ V.isOpen'
     · rintro _ ⟨v, hv, rfl⟩
       have := hV hv
-      rw [SetLike.mem_coe, Subgroup.mem_subgroupOf] at this
-      exact this
+      rwa [SetLike.mem_coe, Subgroup.mem_subgroupOf] at this
     · rintro k hk _ ⟨v, hv, rfl⟩
       refine ⟨(⟨k, hk⟩ : GlobalTheory.LFun.KGL w (n := n))⁻¹ * v * (⟨k, hk⟩ : GlobalTheory.LFun.KGL w (n := n)), ?_, ?_⟩
       · have := V.isNormal'.conj_mem v hv (⟨k, hk⟩ : GlobalTheory.LFun.KGL w (n := n))⁻¹

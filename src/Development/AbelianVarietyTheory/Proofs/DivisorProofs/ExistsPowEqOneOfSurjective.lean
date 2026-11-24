@@ -92,8 +92,7 @@ theorem exists_pow_eq_one_of_surjective (A B : Over (Sp ℂ)) [GrpObj A] [GrpObj
   obtain ⟨a, ha⟩ := ψ.left.surjective (genericPoint B.left)
   have : LocallyQuasiFinite ψ.left := by
     refine locallyQuasiFinite_of_finite_fibre ψ a ((Set.finite_singleton (genericPoint _)).subset ?_)
-    intro x hx
-    exact eq_genericPoint_of_apply_eq ψ.left B.hom hgB hA' (ha ▸ hx)
+    exact fun x hx => eq_genericPoint_of_apply_eq ψ.left B.hom hgB hA' (ha ▸ hx)
   have hf : IsFinite ψ.left := .of_isProper_of_locallyQuasiFinite _
   obtain ⟨Z, _, i, _, hi, hZ, hk⟩ := exists_kernel ψ
   have hm : Mono i := (Over.forget _).mono_of_mono_map (inferInstanceAs (Mono i.left))
@@ -142,8 +141,7 @@ theorem exists_factor_pow (A A' : Over (Sp ℂ)) [GrpObj A] [GrpObj A'] (hA : Is
       have e' := congrArg (fun q => q.left (IsLocalRing.closedPoint ℂ)) e
       have hz' : p.left (IsLocalRing.closedPoint ℂ) = z := pointOfClosedPoint_apply K.hom z hz _
       simp only [Over.comp_left] at e'
-      rw [← hz']
-      exact e'
+      rwa [← hz']
     have hx' : x ≫ (𝟙 A ^ N) = toUnit T ≫ η[A] := hx
     rw [← pullback.lift_fst x (toUnit T) hx', Category.assoc]
     change _ ≫ inc ≫ φ = 1
@@ -202,8 +200,7 @@ theorem exists_isMonHom_of_map_lattice :
       have h2 := hsubv _ _ h1
       have h3 : t • (R (J z) - m • z) = R (J (t • z)) - m • (t • z) := by
         rw [map_smul, map_smul, smul_sub, smul_comm t m z]
-      rw [h3, map_sub, map_nsmul]
-      exact h2
+      rwa [h3, map_sub, map_nsmul]
     have hJy0 : J (R (J z) - m • z) = 0 :=
       LatticeHom.eq_zero_of_forall_smul_mem v.Λ v.discrete fun t => by rw [← map_smul]; exact hJy t
     have hker : ∀ t : ℂ, u.ex (t • (R (J z) - m • z)) ≫ i = 1 := by

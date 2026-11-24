@@ -304,8 +304,7 @@ theorem ros_sum (hG : GlobalFnsSt) (hA : IsAbelianScheme A) (f g f' g' : A ⟶ A
       simp) _ (lift x y).left z J hJ) (ev (lift x y) hJ).2)
   have r₀ : lift x y ≫ p = x := lift_fst _ _
   have r₁ : lift x y ≫ q = y := lift_snd _ _
-  simp only [← Category.assoc, r₀, r₁] at key
-  exact key
+  simpa only [← Category.assoc, r₀, r₁] using key
 
 end GlobalTheory.TauBalAdd
 end -- clump:auto
@@ -344,8 +343,7 @@ theorem ros_val_padd : ∀ {S : Scheme.{0}} {A : Over S} [GrpObj A] [IsCommMonOb
   subst hf hg
   have key := ros_sum cu hG hA f₁ g₁ f₂ g₂ u₁ hu₁ h₁ u₂ hu₂ h₂ u hu h₀ hJ x y
   have C : IsCub (cubV cu z J) := isCub_cubV cu hJ
-  rw [C.s01 x, C.s12 _ x] at key
-  exact key
+  rwa [C.s01 x, C.s12 _ x] at key
 
 end GlobalTheory.RosAddPair
 end -- clump:auto
@@ -516,8 +514,7 @@ theorem bal_alg (O X U : Type) [CommRing O] [StarRing O] [AddCommGroup X] [Modul
   refine ⟨fun y z => (s y).prod (fun x a => (δ a x z)⁻¹), fun y y' z => ?_, fun y z z' => ?_, fun b y z => ?_⟩
   · simp only [map_add (f := _)]
     exact Finsupp.prod_add_index' (fun x => by simp [h0]) (fun x a₁ a₂ => by rw [ha, mul_inv])
-  · simp only [hz, mul_inv]
-    exact Finsupp.prod_mul
+  · simpa only [hz, mul_inv] using Finsupp.prod_mul
   · simp only [map_smul]
     rw [Finsupp.prod_of_support_subset _ Finsupp.support_smul _ (fun i _ => by simp [h0])]
     simp only [Finsupp.smul_apply, smul_eq_mul]
@@ -1567,8 +1564,7 @@ theorem main : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host 
   · refine ⟨GlobalTheory.PolDeg.Wit.grpPullback_id t.G, fun a => ?_, GlobalTheory.PolDeg.Wit.idPull _, GlobalTheory.PolDeg.Wit.idPull_isGen t.PP.isLB⟩
     rw [hoa]
     exact (Category.comp_id _).trans (Category.id_comp _).symm
-  · intro y
-    exact Category.comp_id _
+  · exact fun y => Category.comp_id _
 
 end GlobalTheory.UBaseData
 end -- clump:auto

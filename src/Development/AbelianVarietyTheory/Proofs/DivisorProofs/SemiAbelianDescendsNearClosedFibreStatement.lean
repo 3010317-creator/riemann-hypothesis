@@ -317,8 +317,7 @@ theorem overlap_preimage_open : ∀ (B S X : Scheme.{0}) (π : S ⟶ B) (U : Ove
       (by rw [← pullback.condition, Category.assoc])
     refine ⟨h₂ t', ?_⟩
     have := congrArg (fun f => f t') hh₂
-    simp only [Scheme.Hom.comp_apply, ht'1, ht2] at this
-    exact this
+    simpa only [Scheme.Hom.comp_apply, ht'1, ht2] using this
   refine ⟨⟨(p '' Wᶜ)ᶜ, ?_⟩, ?_⟩
   · exact (p.isClosedMap _ hWo.isClosed_compl).isOpen_compl
   · intro a
@@ -859,8 +858,7 @@ theorem glue_overlap_cocycle : ∀ (B S X : Scheme.{0}) (π : S ⟶ B), Surjecti
       rw [← Scheme.Hom.comp_apply, hv, Scheme.Hom.comp_apply, ht1, ha]
     have : τ i j x = pullback.fst U.hom π b := by
       rw [← hvt, ← Scheme.Hom.comp_apply, key, Scheme.Hom.comp_apply, ht2]
-    rw [this, hV j k, hb]
-    exact hik
+    rwa [this, hV j k, hb]
 
 end GlobalTheory.Mum
 end -- clump:auto
@@ -1107,8 +1105,7 @@ theorem exists_section_translate_mem : ∀ (R : Type) [CommRing R] [IsDomain R] 
   have sqk : IsPullback m k N.u (pullback.fst G'.hom s) := by
     refine IsPullback.of_bot (v₂₁ := pullback.snd G'.hom s) (v₂₂ := G'.hom) (h₃₁ := s) ?_ (pullback.lift_fst _ _ _).symm
       (IsPullback.of_hasPullback G'.hom s)
-    rw [pullback.lift_snd, N.u_over]
-    exact sqP
+    rwa [pullback.lift_snd, N.u_over]
   have hk : IsOpenImmersion k := MorphismProperty.of_isPullback (P := @IsOpenImmersion) sqk N.isOpen
   let TO : Over S := Over.mk (pullback.snd G'.hom s ≫ s)
   let yT : TO ⟶ G' := Over.homMk (pullback.fst G'.hom s) pullback.condition

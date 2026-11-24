@@ -67,8 +67,7 @@ theorem col_mem_SB {n n' : Type} {Ψ : Matrix n n' k → ℂ} {a : (n → k) →
     (h : tensCol Ψ a ∈ SB (Matrix n (n' ⊕ Fin 1) k)) (hΨ : Ψ ≠ 0) : a ∈ SB (n → k) := by
   haveI : T2Space k := GlobalTheory.SplitWeil.t2Space k
   obtain ⟨x₀, hx₀⟩ : ∃ x₀, Ψ x₀ ≠ 0 := by
-    by_contra h0
-    push Not at h0
+    by_contra! h0
     exact hΨ (funext h0)
   have hg := Comm.comp_mem_SB h
     (p := fun y : n → k => Matrix.of fun i j => Sum.elim (x₀ i) (fun _ => y i) j)
@@ -216,8 +215,7 @@ theorem main : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
       have hFT : F = T (extFun α₀ β (tensCol ΨA a)) := hF.2.2.2.2.2 T hT
       rw [GlobalTheory.T.extendByZero_source_tensor_column_product D k p n n' V₀ A L S o ζ α α₀ β hsum, hΨAe] at hFT
       have := GlobalTheory.BoxSlice.isThetaFunO_slice_left o hFth y
-      rw [hFT] at this
-      exact this
+      rwa [hFT] at this
     have hvac : Vac ψ A S LA LS (· = p.v) g := ⟨htheta, hlat⟩
 
     have hslice : (fun u => Ξ ((o.resS S).symm (u, y))) = T₁ (extFun α β Ψ) := by
@@ -227,7 +225,6 @@ theorem main : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
     refine ⟨g, ?_⟩
     obtain ⟨f, hf, -⟩ := (GlobalTheory.T.splitPlace_baseVacuum_datum_exists_unique D k p n n' ψ hψ A S α β LA LS hLA hLS g hvac).1 Ψ hΨSB
     have hfT₁ : f = T₁ (extFun α β Ψ) := hf.2.2.2.2.2 T₁ hmodel
-    rw [hslice, ← hfT₁]
-    exact hf
+    rwa [hslice, ← hfT₁]
 
 end GlobalTheory.LastSrcSlice

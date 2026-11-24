@@ -82,8 +82,7 @@ theorem same_of_local : ∀ (S : Scheme.{0}) (A T U : Over S) [GrpObj A], IsAbel
     (∀ p : Y.left, ∃ (Z : Over S) (z : Z ⟶ Y), IsOpenImmersion z.left ∧ p ∈ Set.range z.left ∧
       Same A N M (z ≫ y) (z ≫ u)) → Same A N M y u := by
   intro S A T U _ hA N M hN hM Y y u loc
-  rw [same_iff hN.isLB hM.isLB]
-  rw [← sub_eq_zero]
+  rw [same_iff hN.isLB hM.isLB, ← sub_eq_zero]
   obtain ⟨L, hL, hc⟩ := cls_surj (evc hN.isLB (fst A Y) (snd A Y ≫ y) - evc hM.isLB (fst A Y) (snd A Y ≫ u))
   rw [← hc]
   have key : ∀ {X : Scheme.{0}} (f : X ⟶ (A ⊗ Y).left), Triv (L.pull f) ↔
@@ -115,7 +114,6 @@ theorem same_of_local : ∀ (S : Scheme.{0}) (A T U : Over S) [GrpObj A], IsAbel
     simp only [pull_evc, lift_fst, lift_snd_assoc] at e
     rw [← Category.assoc t z y, ← Category.assoc t z u, ht, Category.assoc, Category.assoc] at e
     show Triv (L.pull i.left)
-    rw [key, pull_evc, pull_evc]
-    exact e
+    rwa [key, pull_evc, pull_evc]
 
 end GlobalTheory.DualCon

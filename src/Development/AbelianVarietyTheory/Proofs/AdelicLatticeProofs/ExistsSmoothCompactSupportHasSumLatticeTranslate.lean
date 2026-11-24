@@ -87,15 +87,13 @@ theorem exists_smooth_compactSupport_hasSum_lattice_translates :
     intro l hl
     refine ⟨?_, l.2⟩
     show dist (l : V) (-x) < r
-    rw [dist_eq_norm, sub_neg_eq_add, add_comm]
-    exact hl
+    rwa [dist_eq_norm, sub_neg_eq_add, add_comm]
   let S : V → ℝ := fun y => ∑' l : L, φ (y + l)
   have hsupp : ∀ y, (Function.support fun l : L => φ (y + l)).Finite := by
     intro y
     refine (hfin y φ.rOut).subset fun l hl => ?_
     have h : y + (l : V) ∈ Metric.ball (0 : V) φ.rOut := by
-      rw [← φ.support_eq]
-      exact hl
+      rwa [← φ.support_eq]
     simpa [mem_ball_zero_iff] using h
   have hsum : ∀ y, HasSum (fun l : L => φ (y + l)) (S y) :=
     fun y => (summable_of_hasFiniteSupport (hsupp y)).hasSum
@@ -126,8 +124,7 @@ theorem exists_smooth_compactSupport_hasSum_lattice_translates :
         calc ‖x + (l : V)‖ = ‖(y + (l : V)) + (x - y)‖ := by congr 1; abel
           _ ≤ _ := norm_add_le _ _
       have h3 : ‖x - y‖ < 1 := by
-        rw [← dist_eq_norm, dist_comm]
-        exact hy
+        rwa [← dist_eq_norm, dist_comm]
       linarith
     exact (ContDiff.contDiffAt (ContDiff.sum fun l _ =>
       φ.contDiff.comp (contDiff_id.add contDiff_const))).congr_of_eventuallyEq heq

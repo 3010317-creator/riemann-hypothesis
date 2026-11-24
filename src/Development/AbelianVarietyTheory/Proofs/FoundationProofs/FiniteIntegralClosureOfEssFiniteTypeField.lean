@@ -259,8 +259,7 @@ theorem exists_C_mul_eq_C_mul_coeff_notMem {ι o : Type*} [CommRing o] [IsDedeki
       rw [map_mul, map_mul, hc m h, ← mul_assoc, mul_div_cancel₀ _ hb0']
     · rw [notMem_support_iff.mp h, mul_zero, mul_zero]
   · rw [hcoeff, ite_eq_left hm]
-    intro h
-    exact hmJ ((FractionalIdeal.mem_coeIdeal _).mpr ⟨c m, h, hc m hm⟩)
+    exact fun h => hmJ ((FractionalIdeal.mem_coeIdeal _).mpr ⟨c m, h, hc m hm⟩)
 
 theorem algebraicIndependent_of_quotient {ι o S T : Type*} [CommRing o] [IsDedekindDomain o]
     [CommRing S] [Algebra o S] [Module.IsTorsionFree o S] {J : Ideal o} (hJ : J ≠ ⊤)
@@ -625,8 +624,7 @@ theorem finite_integralClosure_of_coneHom [IsDomain o] [IsNoetherianRing o] [IsI
     rw [hom_eval₂, map_zero] at h1
     have h2 : φ.range.val.comp (MvPolynomial.aeval fun i => φ.rangeRestrict (F i)) = θ :=
       MvPolynomial.algHom_ext fun i => by simp [θ]
-    rw [RingHom.algebraMap_toAlgebra, ← h2]
-    exact h1
+    rwa [RingHom.algebraMap_toAlgebra, ← h2]
   have hX : φ (MvPolynomial.X s₀) = X := by simp [hφ, h₀]
   refine finite_integralClosure_of_cone (A := MvPolynomial (Fin δ) o) C (evalRingHom 1) X
     (by simp) (by simp)

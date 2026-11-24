@@ -61,10 +61,8 @@ theorem torsorsTrivial_iff (B : Type) [CommRing B] (q : ℕ) :
       (act : Multiplicative (ZMod q) →* (D ≃ₐ[B] D)), IsZModTorsor B D q act →
         Nonempty (D →ₐ[B] B) := by
   constructor
-  · intro h D _ _ act hD
-    exact h D hD.1 hD.2.1 hD.2.2.1 act hD.2.2.2
-  · intro h D _ _ h1 h2 h3 act h4
-    exact h D act ⟨h1, h2, h3, h4⟩
+  · exact fun h D _ _ act hD => h D hD.1 hD.2.1 hD.2.2.1 act hD.2.2.2
+  · exact fun h D _ _ h1 h2 h3 act h4 => h D act ⟨h1, h2, h3, h4⟩
 
 def LocPiecesEtale (R S : Type) [CommRing R] [CommRing S] [Algebra R S] : Prop :=
   ∃ (ι : Type) (_ : Preorder ι) (_ : IsDirected ι (· ≤ ·)) (_ : Nonempty ι)

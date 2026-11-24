@@ -181,8 +181,7 @@ theorem finiteDimensional_of_commuting_finite_eigen :
   letI : IsMulCommutative (Algebra.adjoin ℂ S) :=
     Algebra.isMulCommutative_adjoin ℂ (fun x hx y hy _ => hS x hx y hy)
   have hcomm : ∀ x ∈ Algebra.adjoin ℂ S, ∀ y ∈ Algebra.adjoin ℂ S, x * y = y * x := by
-    intro x hx y hy
-    exact setLike_mul_comm hx hy
+    exact fun x hx y hy => setLike_mul_comm hx hy
   obtain ⟨T, hT⟩ : (Algebra.adjoin ℂ S).FG :=
     Subalgebra.fg_of_fg_toSubmodule ((Submodule.fg_iff_finiteDimensional _).2 hB)
   have hTA : ∀ u ∈ T, u ∈ Algebra.adjoin ℂ S := fun u hu => hT ▸ Algebra.subset_adjoin hu
@@ -201,8 +200,7 @@ theorem finiteDimensional_of_commuting_finite_eigen :
       have h3 := hv x
       rw [Submodule.mem_iInf] at h3
       have h4 := h3 hx
-      rw [LinearMap.mem_ker, LinearMap.sub_apply, Module.algebraMap_end_apply, sub_eq_zero] at h4
-      exact h4
+      rwa [LinearMap.mem_ker, LinearMap.sub_apply, Module.algebraMap_end_apply, sub_eq_zero] at h4
     | algebraMap r => exact ⟨r, fun v _ => by simp [Module.algebraMap_end_apply]⟩
     | add x y _ _ hx hy =>
       obtain ⟨μ₁, h₁⟩ := hx; obtain ⟨μ₂, h₂⟩ := hy
@@ -220,7 +218,6 @@ theorem finiteDimensional_of_commuting_finite_eigen :
   simp only [Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply, Module.algebraMap_end_apply, sub_eq_zero]
   intro s hs
   have hsA : s ∈ Algebra.adjoin ℂ S := Algebra.subset_adjoin hs
-  simp only [c', dite_eq_left hsA]
-  exact Classical.choose_spec (scal s hsA) v hv
+  simpa only [c', dite_eq_left hsA] using Classical.choose_spec (scal s hsA) v hv
 
 end GlobalTheory.AutGrowth

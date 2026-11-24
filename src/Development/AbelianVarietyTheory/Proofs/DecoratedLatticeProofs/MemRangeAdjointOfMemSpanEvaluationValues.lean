@@ -87,8 +87,7 @@ theorem exists_orthonormal_expansion_of_sesq {C : Type} [AddCommGroup C] [Module
     by_cases hij : i = j
     · simp [hij]
     · simp [hij, Ne.symm hij]
-  · have h := b.sum_repr' x
-    exact h.symm
+  · exact (b.sum_repr' x).symm
 
 theorem value_of_adjoint_of_mem_span : ∀ (X W C : Type) [AddCommGroup W] [Module ℂ W] [AddCommGroup C] [Module ℂ C] [FiniteDimensional ℂ C] (ev : C →ₗ[ℂ] W →ₗ[ℂ] (X → ℂ)) (K : Submodule ℂ W) (ipD : W →ₗ[ℂ] W →ₗ⋆[ℂ] ℂ) (ip : C →ₗ[ℂ] C →ₗ⋆[ℂ] ℂ) (pet : (X → ℂ) → (X → ℂ) → ℂ), (∀ w w', ipD w w' = conj (ipD w' w)) → (∀ w, w ≠ 0 → 0 < (ipD w w).re) → (∀ x y, ip x y = conj (ip y x)) → (∀ x, x ≠ 0 → 0 < (ip x x).re) → (∀ (y : C) (w : W) (n : ℕ) (ys : Fin n → C) (ws : Fin n → W), pet (ev y w) (∑ i, ev (ys i) (ws i)) = ∑ i, ip y (ys i) * ipD w (ws i)) → ∀ (x : C) (F : X → ℂ) (l : W → ℂ), F ∈ Submodule.span ℂ {G | ∃ y, ∃ w ∈ K, G = ev y w} → (∀ y, ∀ w ∈ K, pet (ev y w) F = ip y x * l w) → F ≠ 0 → x ≠ 0 ∧ ∃ w ∈ K, F = ev x w := by
   intro X W C _ _ _ _ _ ev K ipD ip pet hD hDpos hsym hpos hpet x F l hF hl hF0
@@ -116,8 +115,7 @@ theorem value_of_adjoint_of_mem_span : ∀ (X W C : Type) [AddCommGroup W] [Modu
     rw [← hFu, hpet] at h1
     simpa only [hb, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true] using h1
   have hex : ∃ k, u k ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     apply hF0
     rw [← hFu]
     simp [h]

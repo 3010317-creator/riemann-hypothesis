@@ -150,8 +150,7 @@ theorem exists_isJacFrame (hs : s ≠ 0) (J : JacLev D ρ) {hh : k} (hh0 : hh �
       · funext i
         have := congrFun hv (Sum.inr ⟨i.val, by omega⟩)
         refine dot_eq_zero_of_smul (c := s * p.xi ^ (ρ - i.val)) (mul_ne_zero hs (pow_ne_zero _ hx)) ?_
-        refine Eq.trans ?_ this
-        exact congrArg (v ⬝ᵥ ·) (funext fun r => (b1 i _ rfl r).symm)
+        exact Eq.trans (congrArg (v ⬝ᵥ ·) (funext fun r => (b1 i _ rfl r).symm)) this
       · rw [Matrix.vecMul_vecMul]; funext a; exact congrFun hv (Sum.inl a)
       · funext i
         have := congrFun hv (Sum.inr ⟨2 * ρ - 1 - i.val, by omega⟩)
@@ -189,8 +188,7 @@ theorem exists_isBesFrame (hs : s ≠ 0) (B : BesLev D ρ) (FA : GlobalTheory.Lo
       · funext i
         have := congrFun hv (Sum.inr ⟨i.val, by omega⟩)
         refine dot_eq_zero_of_smul (c := s * p.xi ^ (ρ - i.val)) (mul_ne_zero hs (pow_ne_zero _ hx)) ?_
-        refine Eq.trans ?_ this
-        exact congrArg (v ⬝ᵥ ·) (funext fun r => (b1 i _ rfl r).symm)
+        exact Eq.trans (congrArg (v ⬝ᵥ ·) (funext fun r => (b1 i _ rfl r).symm)) this
       · rw [Matrix.vecMul_vecMul, Matrix.vecMul_vecMul, ← Matrix.mul_assoc, ← Matrix.map_mul]
         funext a; exact congrFun hv (Sum.inl a)
       · have := congrFun hv (Sum.inr ⟨ρ, by omega⟩)

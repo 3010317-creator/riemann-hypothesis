@@ -197,7 +197,6 @@ def mk {U : Set E} (hU : IsOpen U) (F : E → ℂ) (hF : AnalyticOnNhd ℂ F U) 
 
 lemma mk_apply {U : Set E} (hU : IsOpen U) (F : E → ℂ)
     (hF : AnalyticOnNhd ℂ F U) {z : E} (hz : z ∈ U) : (mk hU F hF).1 z = F z := by
-  show U.indicator F z = F z
   exact Set.indicator_of_mem hz F
 
 variable [FiniteDimensional ℂ E]
@@ -220,8 +219,7 @@ def vec {U : Set E} (hU : IsOpen U) : (E →ₗ[ℂ] E) →ₗ[ℂ] Module.End �
 
 lemma vec_apply {U : Set E} (hU : IsOpen U) (T : E →ₗ[ℂ] E)
     (F : holSpace U) {z : E} (hz : z ∈ U) : (vec hU T F).1 z = fderiv ℂ F.1 z (T z) := by
-  simp only [vec, LinearMap.mk₂_apply]
-  exact mk_apply hU _ _ hz
+  simpa only [vec, LinearMap.mk₂_apply] using mk_apply hU _ _ hz
 
 lemma vec_vec {U : Set E} (hU : IsOpen U) (S T : E →ₗ[ℂ] E) (F : holSpace U) {z : E} (hz : z ∈ U) :
     (vec hU S (vec hU T F)).1 z =
@@ -426,8 +424,7 @@ lemma der_Phi (lam : Fin n → ℝ) (k k' : Matrix (Fin n) (Fin n) ℂ) (h : k' 
   have hγ : HasDerivAt (fun t : ℂ => z + t • (z * (k * Matrix.single a b (1 : ℂ) * k')))
       (((LinearMap.mul ℂ (Matrix (Fin n) (Fin n) ℂ)).flip (k * Matrix.single a b 1 * k')) z) 0 := by
     have h3 := ((hasDerivAt_id (0 : ℂ)).smul_const (z * (k * Matrix.single a b (1 : ℂ) * k'))).const_add z
-    rw [one_smul] at h3
-    exact h3
+    rwa [one_smul] at h3
   refine Eq.trans (vec_eq_deriv (isOpen_conj k k') _ _ (f := fun y => Phi lam (k' * y * k))
     (fun y hy => mk_apply _ _ _ hy) hz (by simp) hγ) ?_
   have hm : (mk (isOpen_conj k k') _ (analytic_Phi lam k k')).1 z = Phi lam (k' * z * k) := mk_apply _ _ _ hz
@@ -470,8 +467,7 @@ theorem phiEigen : PhiEigen := by
       ((∑ c, (Matrix.of (fun a b => der (isOpen_conj k k⁻¹) (Matrix.single a b (1 : ℂ))) ^ (m + 1)) c c)
         (mk (isOpen_conj k k⁻¹) _ (analytic_Phi lam k k⁻¹))).1 z := by
     rw [← sum_cycWord, LinearMap.sum_apply, Submodule.coe_sum, Finset.sum_apply]
-    simp only [gelfH]
-    exact Finset.sum_congr rfl fun a _ => (rholW_apply _ _ _ hmk z hzU).symm
+    simpa only [gelfH] using Finset.sum_congr rfl fun a _ => (rholW_apply _ _ _ hmk z hzU).symm
   have step2 : (∑ c, (Matrix.of (fun a b => der (isOpen_conj k k⁻¹) (Matrix.single a b (1 : ℂ))) ^ (m + 1)) c c) =
       ∑ c, (Matrix.of (fun a b => der (isOpen_conj k k⁻¹) (k * Matrix.single a b (1 : ℂ) * k⁻¹)) ^ (m + 1)) c c := by
     rw [of_conj]
@@ -481,11 +477,9 @@ theorem phiEigen : PhiEigen := by
       (fun a => -(muInt lam a : ℂ)) (mk (isOpen_conj k k⁻¹) _ (analytic_Phi lam k k⁻¹)) := by
     refine ⟨fun a => ?_, fun a b hab => ?_⟩
     · have h3 := der_Phi lam k k⁻¹ h1 (le_refl a)
-      rw [ite_eq_left rfl] at h3
-      exact h3
+      rwa [ite_eq_left rfl] at h3
     · have h3 := der_Phi lam k k⁻¹ h1 hab.le
-      rw [ite_eq_right hab.ne, zero_smul] at h3
-      exact h3
+      rwa [ite_eq_right hab.ne, zero_smul] at h3
   have hl : lsh (fun a => -(muInt lam a : ℂ)) = fun c => -(lam c : ℂ) + ((n : ℂ) - 1) / 2 := by
     funext c
     obtain ⟨mc, hm⟩ := hlam.2 c

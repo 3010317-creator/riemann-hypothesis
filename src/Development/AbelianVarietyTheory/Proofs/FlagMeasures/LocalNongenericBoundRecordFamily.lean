@@ -380,8 +380,7 @@ theorem ncard_classes {O V : Type} [Ring O] [AddCommGroup V] [Module O V]
       have h2 : y = b - (b - y) := by abel
       rw [h2]
       exact B.sub_mem hb (hMB h1)
-    · intro hy
-      exact ⟨y, hy, rfl⟩
+    · exact fun hy => ⟨y, hy, rfl⟩
   have hset : {C : Set V | ∃ y ∈ A, y ∉ B ∧ C = {x | x - y ∈ M}} =
       (fun c : V ⧸ M => (M.mkQ ⁻¹' {c} : Set V)) ''
         ((A.map M.mkQ : Set (V ⧸ M)) \ (B.map M.mkQ : Set (V ⧸ M))) := by
@@ -421,8 +420,7 @@ theorem exists_family : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSp
 
   let P : ℕ → Prop := fun j => ∃ y ∈ S.sat Λ, S.levC d Λ y = j
   obtain ⟨y0, hy0A, hy0M⟩ : ∃ y ∈ S.sat Λ, y ∉ S.M d Λ := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hB.1 (le_antisymm hMA h)
   let J := Nat.findGreatest P r
   have hle : ∀ y ∈ S.sat Λ, S.levC d Λ y ≤ J := fun y hy =>
@@ -698,9 +696,7 @@ theorem family_bound : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpa
   obtain ⟨-, -, -, -, hH, ⟨i, -, hi⟩, hbz, -⟩ := GlobalTheory.HL.Defect.exponents_and_defect L r k S d₀ Λ₀ ht
   have hβ : β = S.q ^ i := by rw [← hF.2.1, hi]
   have hq0 : 0 < S.q := GlobalTheory.HL.SmallImage.resQ_pos S.ϖ S.ϖ_irr
-  have hq1 : S.q ≠ 1 := by
-    intro h
-    exact hF.1.1 (hbz.2 (by rw [hi, h, one_pow]))
+  have hq1 : S.q ≠ 1 := fun h => hF.1.1 (hbz.2 (by rw [hi, h, one_pow]))
   have hq : 2 ≤ S.q := by omega
   have hβ1 : 1 ≤ β := by rw [hβ]; exact Nat.one_le_pow _ _ hq0
   have hk1 : 1 ≤ k := by omega

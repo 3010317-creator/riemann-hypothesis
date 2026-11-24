@@ -132,8 +132,7 @@ theorem exists_leftInv {K : Type} [Field K] {n g : ℕ} (b : Fin n → Fin g →
     rw [← this, ← LinearMap.comp_apply, hf, LinearMap.id_apply]
   have h3 : (Matrix.mulVec (LinearMap.toMatrix' f) (b j)) = f (b j) := by
     rw [← Matrix.toLin'_apply, Matrix.toLin'_toMatrix']
-  have h2 := congrFun (h3.trans h1) i
-  simpa [Matrix.mulVec, dotProduct, Pi.single_apply] using h2
+  simpa [Matrix.mulVec, dotProduct, Pi.single_apply] using congrFun (h3.trans h1) i
 
 theorem vV_algebraMap_unit (V : Type) {K' : Type} [CommRing V] [IsDomain V] [IsDiscreteValuationRing V]
     [Field K'] [Algebra V K'] [IsFractionRing V K'] {u : V} (hu : IsUnit u) :
@@ -339,8 +338,7 @@ theorem vV_eq_mul_vAdd (K : Type) [Field K] [NumberField K] (𝔓 : HeightOneSpe
     refine lt_of_le_of_ne hle1 fun heq => ?_
     have h3 : v1 ϖ⁻¹ ≤ 1 := by rw [map_inv₀, heq, inv_one]
     have h4 := (hle ϖ⁻¹).1 h3
-    rw [map_inv₀, hϖ, ← WithZero.exp_neg, neg_neg] at h4
-    rw [← WithZero.exp_zero, WithZero.exp_le_exp] at h4
+    rw [map_inv₀, hϖ, ← WithZero.exp_neg, neg_neg, ← WithZero.exp_zero, WithZero.exp_le_exp] at h4
     norm_num at h4
   have ha : 0 < vV T.V (iK ϖ) := by
     have h5 : WithZero.log (v1 ϖ) < WithZero.log 1 := (WithZero.log_lt_log hv1ϖ0 one_ne_zero).2 hlt
@@ -431,8 +429,7 @@ theorem flatWt_char (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Reci
       (∏ i : Fin (Dw.mult τ.1), t (some ⟨τ.1, i⟩))⁻¹ * ∏ j : Fin (Dw.mult (conjEmb τ.1)), t (some ⟨conjEmb τ.1, j⟩) := by
     rw [Fintype.prod_option, Fintype.prod_sigma]
     have h0 : exOf Dw (flatWt Dw τ) 0 none = 0 := rfl
-    rw [h0, zpow_zero, one_mul]
-    rw [Fintype.prod_eq_mul τ.1 (conjEmb τ.1) hne ?_]
+    rw [h0, zpow_zero, one_mul, Fintype.prod_eq_mul τ.1 (conjEmb τ.1) hne ?_]
     · congr 1
       · rw [← Finset.prod_inv_distrib]
         refine Finset.prod_congr rfl fun i _ => ?_
@@ -612,8 +609,7 @@ theorem exists_isLieBasis_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   intro E _ _ _ H K _ _ B F 𝔓 T iK hiK ρV hρV G n
   obtain ⟨N, r, M, hr, hM, -, hloc⟩ := _root_.GlobalTheory.CM.LieGlue.exists_cover_lieLat K B.pol F
   obtain ⟨i, hi⟩ : ∃ i, r i ∉ 𝔓.asIdeal := by
-    by_contra h
-    push Not at h
+    by_contra! h
     refine 𝔓.isPrime.ne_top ?_
     rw [eq_top_iff, ← hr]
     exact Ideal.span_le.2 (by rintro _ ⟨j, rfl⟩; exact h j)
@@ -935,8 +931,7 @@ theorem isLieComb_of_match {K : Type} [Field K] [NumberField K] {B : GlobalTheor
   obtain ⟨w', hw'⟩ := ((GlobalTheory.LieComb.lieComb_algebra T.Fr t'.G _ v' hv'.1).1 (fun k => iK (c k))).exists
   have hpb := IsGrpPullback.comp n'.cart m2.cart
   have hid : spMap (RingHom.id T.Fr) = 𝟙 _ := by
-    simp only [spMap, CommRingCat.ofHom_id]
-    exact Spec.map_id _
+    simpa only [spMap, CommRingCat.ofHom_id] using Spec.map_id _
   have key := GlobalTheory.LamT.LetterInt.comb_match hpb F.fib.2.1 (RingHom.id T.Fr) iK
     (by rw [hid, Category.id_comp]) (v₁ := v') (v₂ := F.v)
     (fun k => by rw [spMap_dualMap_id, Category.id_comp]; exact hv'φ k) (c₁ := fun k => iK (c k)) (c₂ := c)

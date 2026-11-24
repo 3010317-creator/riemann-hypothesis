@@ -113,9 +113,7 @@ theorem exists_integral_of_modelAt (F : IntermediateField ℚ ℂ) [NumberField 
       (C • A).IsIntegral (w.valuationSubringAtPrime F) ∧
         (C • A).Δ = ((u : w.valuationSubringAtPrime F) : F) * D := by
   obtain ⟨C, hu, hr, hs, ht, ⟨h1, h2, h3, h4, h6⟩, hΔ⟩ := h
-  have hu0 : (⟨(C.u : ℂ), hu⟩ : F) ≠ 0 := by
-    intro h0
-    exact C.u.ne_zero (congrArg (fun x : F => (x : ℂ)) h0)
+  have hu0 : (⟨(C.u : ℂ), hu⟩ : F) ≠ 0 := fun h0 => C.u.ne_zero (congrArg (fun x : F => (x : ℂ)) h0)
   let C' : VariableChange F := ⟨Units.mk0 _ hu0, ⟨C.r, hr⟩, ⟨C.s, hs⟩, ⟨C.t, ht⟩⟩
   have hC : C'.map (algebraMap F ℂ) = C := by
     ext <;> rfl
@@ -364,8 +362,7 @@ theorem isMinimal_of_forall_div_pow_twelve (R F : Type) [CommRing R] [IsDomain R
   refine ⟨⟨by simpa using hI, fun C hC _ => ?_⟩⟩
   simp only [one_smul]
   have hC' : (C • W).IsIntegral R := hC
-  rw [← Subtype.coe_le_coe]
-  rw [valuation_Δ_aux_eq_of_isIntegral, valuation_Δ_aux_eq_of_isIntegral]
+  rw [← Subtype.coe_le_coe, valuation_Δ_aux_eq_of_isIntegral, valuation_Δ_aux_eq_of_isIntegral]
   set v := HeightOneSpectrum.valuation F (IsDiscreteValuationRing.maximalIdeal R) with hv
   have hle : ∀ r : R, v (algebraMap R F r) ≤ 1 := fun r =>
     HeightOneSpectrum.valuation_le_one (K := F) (IsDiscreteValuationRing.maximalIdeal R) r
@@ -556,8 +553,7 @@ theorem natPrime_not_mem_cube_of_isUnramifiedAt :
   set y : 𝓞 K := ⟨x, hint⟩ with hydef
   have hy : y ^ 2 = -(p : 𝓞 K) := by
     apply RingOfIntegers.coe_injective
-    rw [map_pow, map_neg, map_natCast]
-    exact hx
+    rwa [map_pow, map_neg, map_natCast]
   have hy0 : y ≠ 0 := by
     intro h0
     rw [h0] at hy
@@ -718,9 +714,7 @@ theorem exists_intV_variableChange (W : WeierstrassCurve ℂ) [W.IsElliptic] (V 
     (u : ℂˣ) (hj : W.j ∈ V) (hu : V.valuation (u : ℂ) ^ 12 = V.valuation W.Δ) :
     ∃ r s t : ℂ, IntV V ((⟨u, r, s, t⟩ : VariableChange ℂ) • W) := by
   have : IsIntegrallyClosedIn V ℂ := (isIntegrallyClosed_iff_isIntegrallyClosedIn ℂ).1 inferInstance
-  have ht : HasRationalTorsion W ℂ 12 := by
-    intro x y h hn
-    exact ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩
+  have ht : HasRationalTorsion W ℂ 12 := fun x y h hn => ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩
   obtain ⟨C, W₀, e, h₀⟩ := exists_integral_model V (L := ℂ) (W := W) ⟨⟨W.j, hj⟩, rfl⟩ ht
   have hΔ : ((C.u⁻¹ : ℂˣ) : ℂ) ^ 12 * W.Δ = 1 := by
     rw [← variableChange_Δ, e, WeierstrassCurve.baseChange, map_Δ, h₀, map_one]
@@ -1194,8 +1188,7 @@ theorem GlobalTheory.CMModel.twist_modelAt_all : ∀ (p : ℕ) (F : Intermediate
     obtain ⟨u, huF, hu0, hu⟩ := _root_.GlobalTheory.valuation_twelfth_power_of_cube p V F (latticeCurve L).Δ A (sqProd p L t) h4 hΔF hAF hsq
       (latticeCurve_Δ_ne_zero L) hA0 hA hsq8
     have him : (sqrtNegNat p).im ≠ 0 := by
-      simp [sqrtNegNat]
-      exact hp.pos.ne'
+      simpa [sqrtNegNat] using hp.pos.ne'
     have hj : (latticeCurve L).j ∈ V := mem_of_isIntegral V (_root_.GlobalTheory.CMModel.LatticeJInt.main L (sqrtNegNat p) hD.mul him)
     have hjΔ := GlobalTheory.j_mul_Δ (latticeCurve L)
     have hDV : -(p : ℂ) ^ 3 ∈ V := neg_mem (pow_mem (natCast_mem V p) 3)
@@ -1211,8 +1204,7 @@ theorem GlobalTheory.CMModel.twist_modelAt_all : ∀ (p : ℕ) (F : Intermediate
     · have hd1 : d = 1 := by rw [hd, ite_eq_left h8]
       rw [ite_eq_left h8] at hu
       refine _root_.GlobalTheory.CMModel.modelAt_short_of_six_unit V F _ _ _ u _ hj hjt h6 huF hu0 hDV ?_
-      rw [short_Δ, hvD, hd1, one_pow, one_mul]
-      exact hu
+      rwa [short_Δ, hvD, hd1, one_pow, one_mul]
     · have hdp : d = -(p : ℂ) := by rw [hd, ite_eq_right h8]
       rw [ite_eq_right h8] at hu
       refine _root_.GlobalTheory.CMModel.modelAt_short_of_six_unit V F _ _ _ (u * p) _ hj hjt h6 (mul_mem huF hpF) (mul_ne_zero hu0 hp0) hDV ?_

@@ -210,10 +210,7 @@ theorem integral_of_commute_sep : ∀ (E : Type) [Field E] [NumberField E] (w : 
     exact Polynomial.Separable.map hP
   have h0 := nilp_eq_zero_of_commute_sep hsep hnil
     (hcomm.map (IsLocalRing.residue (w.adicCompletionIntegers E)).mapMatrix)
-  have hone : u₀ i₀ j₀ = 1 := by
-    apply Subtype.ext
-    show c⁻¹ * c = 1
-    exact inv_mul_cancel₀ hc0
+  have hone : u₀ i₀ j₀ = 1 := Subtype.ext (inv_mul_cancel₀ hc0)
   have := congrFun (congrFun h0 i₀) j₀
   simp only [Matrix.map_apply, Matrix.zero_apply, hone, map_one] at this
   exact one_ne_zero this

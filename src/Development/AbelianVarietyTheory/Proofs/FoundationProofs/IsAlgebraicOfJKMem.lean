@@ -101,8 +101,7 @@ theorem normal_of_fixed (F L : Type) [Field F] [Field L] [Algebra F L] [Algebra.
   have h0 : aeval x Q = 0 := by
     rw [aeval_def, ← eval_map, hQ, hP, eval_prod]
     refine Finset.prod_eq_zero (i := x) ?_ (by simp)
-    simp only [hO, Set.Finite.mem_toFinset, Set.mem_range]
-    exact ⟨1, rfl⟩
+    simpa only [hO, Set.Finite.mem_toFinset, Set.mem_range] using ⟨1, rfl⟩
   have hd : (minpoly F x).map (algebraMap F L) ∣ P := by
     rw [← hQ]
     exact Polynomial.map_dvd _ (minpoly.dvd F x h0)
@@ -131,8 +130,7 @@ theorem isAlgebraic_of_jK_mem [Algebra.IsAlgebraic ℚ Ω] (X : Tower Ω ε) (F 
     let φ : IntermediateField.adjoin Ω {X.jK} →+* A :=
       (IntermediateField.adjoin Ω {X.jK}).toSubfield.subtype.codRestrict A fun y => hle y.2
     refine ⟨p.map φ, (Polynomial.map_ne_zero_iff φ.injective).2 hp, ?_⟩
-    rw [aeval_def, eval₂_map]
-    exact h0
+    rwa [aeval_def, eval₂_map]
   exact h3.restrictScalars F
 
 theorem gal_mem_lev (X : Tower Ω ε) (Γ' : Subgroup SL(2, ℤ)) (m : ℕ) (ζ : Ω) (hm : 0 < m) (hζ : IsPrimitiveRoot ζ m)

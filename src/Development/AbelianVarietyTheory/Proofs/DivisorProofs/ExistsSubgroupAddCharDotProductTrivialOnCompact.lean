@@ -69,10 +69,7 @@ theorem nonarchimedean_pi {κ K : Type} [Finite κ] [AddCommGroup K] [Topologica
     refine ⟨⟨AddSubgroup.pi Set.univ fun i => (M i).toAddSubgroup, ?_⟩, ?_⟩
     · change IsOpen ((AddSubgroup.pi Set.univ fun i => (M i).toAddSubgroup : AddSubgroup (κ → K)) : Set (κ → K))
       rw [AddSubgroup.coe_pi]; exact isOpen_set_pi Set.finite_univ fun i _ => (M i).isOpen
-    · intro x hx
-      apply hsub
-      intro i _
-      exact hM i (hx i (Set.mem_univ i))
+    · exact fun x hx => hsub (fun i _ => hM i (hx i (Set.mem_univ i)))
 
 theorem charDot_kill : ∀ {K : Type} [CommRing K] [TopologicalSpace K] [IsTopologicalRing K]
     [NonarchimedeanAddGroup K] (χ : AddChar K ℂ), Continuous χ → ∀ (κ : Type) [Fintype κ]

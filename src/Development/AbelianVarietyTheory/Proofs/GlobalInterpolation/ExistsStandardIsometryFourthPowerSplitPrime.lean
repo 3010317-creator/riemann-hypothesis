@@ -127,9 +127,7 @@ theorem exists_sq_add (q : ℕ) [Fact q.Prime] (d : ℕ) (h : jacobiSym (-(d : �
     exact zero_ne_one hl
   obtain ⟨r, hr⟩ := (legendreSym.eq_one_iff q h0).1 hl
   refine ⟨?_, ⟨(r.val : ℤ), ?_⟩⟩
-  · intro hd
-    apply h0
-    exact (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).2 (dvd_neg.2 hd)
+  · exact fun hd => h0 ((ZMod.intCast_zmod_eq_zero_iff_dvd _ _).2 (dvd_neg.2 hd))
   · rw [← ZMod.intCast_zmod_eq_zero_iff_dvd]
     push_cast at hr ⊢
     rw [ZMod.natCast_zmod_val]
@@ -163,8 +161,7 @@ theorem exists_small_not_conj {E : Type} [Field E] [CharZero E] (K : Intermediat
   have key : ∀ u : ℤ, (u = t ∨ u = -t) → ‖j (((B + u : 𝓞 K) : K) : E)‖ < 1 →
       1 ≤ ‖j (c (((B + u : 𝓞 K) : K) : E))‖ := by
     intro u hu h1
-    by_contra h2
-    push Not at h2
+    by_contra! h2
     have e2 : c (((B + u : 𝓞 K) : K) : E) = -(s : E) + (u : E) := by
       rw [hcoe, map_add (f := _), map_intCast, hc']
     have hsum : j (((B + u : 𝓞 K) : K) : E) + j (c (((B + u : 𝓞 K) : K) : E)) = (((2 * u : ℤ)) : ℂ_[q]) := by
@@ -191,8 +188,7 @@ theorem exists_small_not_conj {E : Type} [Field E] [CharZero E] (K : Intermediat
   · exact ⟨B + t, h1, key t (Or.inl rfl) h1⟩
   · push Not at h1
     have h2 : ‖j (((B + (-t : ℤ) : 𝓞 K) : K) : E)‖ < 1 := by
-      by_contra h2
-      push Not at h2
+      by_contra! h2
       rw [← hprod, norm_mul] at hpl
       nlinarith
     exact ⟨B + (-t : ℤ), h2, key (-t) (Or.inr rfl) h2⟩
@@ -511,8 +507,7 @@ theorem norm_kappa_sq_mul_det : ∀ (D : D7) (γ₀ γ : IsoK D) (k : KapChoice 
     intro v hv hπ
     apply hv
     have h1 : 𝔭.asIdeal ^ h ≤ v.asIdeal := by
-      rw [hh, k.pi_gen q hqp hs, Ideal.span_singleton_le_iff_mem]
-      exact hπ
+      rwa [hh, k.pi_gen q hqp hs, Ideal.span_singleton_le_iff_mem]
     have h2 : 𝔭.asIdeal ≤ v.asIdeal := v.isPrime.le_of_pow_le h1
     have h3 : 𝔭.asIdeal = v.asIdeal := 𝔭.isMaximal.eq_of_le v.isPrime.ne_top h2
     exact (HeightOneSpectrum.ext h3).symm
@@ -670,8 +665,7 @@ theorem inverseIsometry_fourfoldLattice_denominator_coprime : ∀ (D : D7) (cc :
   have h1 : ∀ x ∈ S, n • x ∈ M := by
     intro x hx
     have := AddSubgroup.nsmul_index_mem (M.addSubgroupOf S) (⟨x, hx⟩ : S)
-    rw [AddSubgroup.mem_addSubgroupOf, AddSubmonoidClass.coe_nsmul] at this
-    exact this
+    rwa [AddSubgroup.mem_addSubgroupOf, AddSubmonoidClass.coe_nsmul] at this
 
   set N := Ideal.absNorm cc with hNdef
   have hNc : ((N : 𝓞 D.host.K)) ∈ cc := Ideal.absNorm_mem cc
@@ -712,8 +706,7 @@ theorem inverseIsometry_fourfoldLattice_denominator_coprime : ∀ (D : D7) (cc :
     rw [map_mul, map_natCast]
     push_cast
     linear_combination h2
-  rw [(embT D τ).injective h3]
-  exact he
+  rwa [(embT D τ).injective h3]
 
 end GlobalTheory.LatInvDenom
 
@@ -775,8 +768,7 @@ theorem linearEquiv_descends_of_preserves_image {K : Type} [Field K] {ι : Type}
     have := congrFun (hG' (Pi.single j 1)) i
     rw [hsingle j] at this
     simp only [LinearMap.toMatrix'_apply, Matrix.map_apply]
-    simp only [LinearEquiv.coe_coe, hg]
-    exact this
+    simpa only [LinearEquiv.coe_coe, hg] using this
   refine ⟨g, fun v => ?_, ?_⟩
   · rw [hg]; exact hG v
   · rw [← LinearMap.det_toMatrix', hmat, ← RingHom.mapMatrix_apply, ← RingHom.map_det,
@@ -808,8 +800,7 @@ theorem unitary_maps_rational : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : 
   have h1 : ∀ x ∈ M, n • x ∈ S := by
     intro x hx
     have := AddSubgroup.nsmul_index_mem (S.addSubgroupOf M) (⟨x, hx⟩ : M)
-    rw [AddSubgroup.mem_addSubgroupOf, AddSubmonoidClass.coe_nsmul] at this
-    exact this
+    rwa [AddSubgroup.mem_addSubgroupOf, AddSubmonoidClass.coe_nsmul] at this
 
   set y := B.γ₀.g.symm v with hy
   obtain ⟨t, ht, hint⟩ := Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.SO.exists_nat_mul D.host.E (Finset.univ.image y)
@@ -988,8 +979,7 @@ theorem hermitianSelfDual_of_fourfoldBlock {n : Type} [Fintype n] (h : Matrix n 
     · simp
     · intro b _ hb
       simp [hb]
-    · intro hh
-      exact absurd (Finset.mem_univ _) hh
+    · exact fun hh => absurd (Finset.mem_univ _) hh
   ext x
   constructor
   · intro hx
@@ -1006,8 +996,7 @@ theorem hermitianSelfDual_of_fourfoldBlock {n : Type} [Fintype n] (h : Matrix n 
       exact CmData.embA_mem Λ 0 hx
     obtain ⟨m, hm⟩ := h1 _ (CmData.embA_mem Λ 0 hy)
     refine ⟨m, ?_⟩
-    rw [key, CmData.slice_embA, ite_eq_left rfl] at hm
-    exact hm
+    rwa [key, CmData.slice_embA, ite_eq_left rfl] at hm
 
 section Base
 
@@ -1019,8 +1008,7 @@ theorem selfDual_fourfold_curveIdeal_lattice (hcc : TaylorLogMetric.IsCurveIdeal
     (Formalism.MainNotions.GlobalTheoryTheory.Inhab.Adm_std D 2 2 even_two even_two)).1
   rw [show TaylorLogMetric.area (TaylorLogMetric.lamOf D cc δ) = _ from B.areaOK, show TaylorLogMetric.La D B.tor _ _ = _ from B.lat0OK 2 2] at h
   have h2 := SO.selfDual_img _ _ (SO.reix D.what₂.Tau) (SO.reix_isom B.L D.what₂.Tau) _ h
-  rw [SO.reix_pow] at h2
-  exact h2
+  rwa [SO.reix_pow] at h2
 
 theorem selfDual_lamM (hcc : TaylorLogMetric.IsCurveIdeal D cc) (hδ : TaylorLogMetric.IsDiscriminantTwelfthRootOfIdealLattice D cc δ) :
     IsSelfDual (matH (hOne B.L D.what₂.Tau)) B.lamM :=
@@ -1029,8 +1017,7 @@ theorem selfDual_lamM (hcc : TaylorLogMetric.IsCurveIdeal D cc) (hδ : TaylorLog
 theorem stable_lamM (b : ℤ) (hb : Odd b) : ∀ x ∈ B.lamM, cmTheta b D.host.d • x ∈ B.lamM := by
   refine stable_of_one _ _ (fun x hx => ?_) b hb
   have := SO.lamMM_smul (AR.om D) hx
-  rw [← SO.theta_eq] at this
-  exact this
+  rwa [← SO.theta_eq] at this
 
 end Base
 

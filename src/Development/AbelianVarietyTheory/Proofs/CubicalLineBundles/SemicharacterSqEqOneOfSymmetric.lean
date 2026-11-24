@@ -95,8 +95,7 @@ lemma valueRules : ValueRules := by
       · rintro k rfl
         rw [map_zero, Scheme.basicOpen_zero] at k
         exact k (x := (default : PrimeSpectrum ℂ)) trivial
-      · intro k
-        exact (Scheme.basicOpen_of_isUnit _ ((isUnit_iff_ne_zero.2 k).map _)).ge
+      · exact fun k => (Scheme.basicOpen_of_isUnit _ ((isUnit_iff_ne_zero.2 k).map _)).ge
     · simp only [valAt', dite_eq_right h, ne_eq, not_true, iff_false]
       exact fun k => h fun p hp => X.basicOpen_le f (k hp)
   · simp only [valAt', dite_eq_left h, valAt, constFn]
@@ -158,8 +157,7 @@ lemma exists_symmetry_values (hv : ValueRules) (hs : Out.Sym A L) :
     rw [Scheme.Opens.range_ι]
     have : A.hom x = (default : PrimeSpectrum ℂ) := Subsingleton.elim (α := PrimeSpectrum ℂ) _ _
     change A.hom x ∈ U
-    rw [this]
-    exact hU
+    rwa [this]
   obtain ⟨σ, hσ⟩ : ∃ σ : A.left ⟶ (A.hom ⁻¹ᵁ U).toScheme, σ ≫ (A.hom ⁻¹ᵁ U).ι = 𝟙 _ :=
     ⟨_, IsOpenImmersion.lift_fac _ _ hr⟩
   revert t

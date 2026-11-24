@@ -201,8 +201,7 @@ theorem bdAt_cP (V : HSp D) (w : Pl D.host.E) : ∃ M : ℕ, M ≠ 0 ∧ ∀ (N 
     exact hN j i
   rw [e]
   have := (hM₁.mul hc).mul hM₂
-  refine this.dvd ?_
-  exact ⟨1, by ring⟩
+  exact this.dvd ⟨1, by ring⟩
 
 theorem bdAt_mem {n : ℕ} (β : GL (Fin n) (Lev.EAf D)) (P : Finset (Pl D.host.E)) {n' : P → ℕ} (h : ∀ w, n' w = n)
     (K : ∀ w : P, Subgroup (GL (Fin (n' w)) (Kw w.1))) (w : P)
@@ -224,8 +223,7 @@ theorem int_off {n : ℕ} (β : GL (Fin n) (Lev.EAf D)) (P : Finset (Pl D.host.E
   have h1 : GlobalTheory.FunObj.inBasis rfl β Q z ∈ GlobalTheory.SplitWeil.KO (Kw Q) (Fin n) :=
     Subgroup.mem_iInf.1 (Subgroup.mem_iInf.1 (Subgroup.mem_inf.1 hz).2 Q) hQ
   have h2 := ((GlobalTheory.SplitFlip.mem_KO_iff _).1 h1).1 (finCongr rfl i) (finCongr rfl j)
-  rw [inBasis_apply rfl] at h2
-  rw [Valuation.mem_integer_iff, ← Valuation.vle_one_iff] at h2
+  rw [inBasis_apply rfl, Valuation.mem_integer_iff, ← Valuation.vle_one_iff] at h2
   have h3 : Valued.v (cpt Q ((β⁻¹ * z * β).val i j)) ≤ Valued.v (1 : Kw Q) := h2
   rwa [map_one] at h3
 
@@ -478,8 +476,7 @@ theorem OpenBdd.map {a b : Type} [Fintype a] [DecidableEq a] [Fintype b] [Decida
   obtain ⟨ho, C, hC, hHC⟩ := hH
   refine ⟨e ▸ ho.preimage hf', f '' C, hC.image hf, ?_⟩
   rw [e]
-  intro x hx
-  exact ⟨_, hHC hx, MulEquiv.apply_symm_apply _ _⟩
+  exact fun x hx => ⟨_, hHC hx, MulEquiv.apply_symm_apply _ _⟩
 
 theorem continuous_reGL {a b : Type} [Fintype a] [DecidableEq a] [Fintype b] [DecidableEq b] (e : a ≃ b) :
     Continuous (reGL (k := k) e) :=

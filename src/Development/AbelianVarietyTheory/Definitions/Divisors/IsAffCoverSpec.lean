@@ -147,10 +147,8 @@ theorem mem_holGe_iff {n p : ℕ} (β : Alt n) :
     β ∈ holGe n p ↔ ∀ S, (bas n).repr β S ≠ 0 → p ≤ holCount S := by
   rw [holGe, Module.Basis.mem_span_image]
   constructor
-  · intro h S hS
-    exact h (Finsupp.mem_support_iff.2 hS)
-  · intro h S hS
-    exact h S (Finsupp.mem_support_iff.1 hS)
+  · exact fun h S hS => h (Finsupp.mem_support_iff.2 hS)
+  · exact fun h S hS => h S (Finsupp.mem_support_iff.1 hS)
 
 end GlobalTheory.CxForm
 end -- clump:auto
@@ -405,8 +403,7 @@ theorem coefwise_dirD_linear (i : Fin n ⊕ Fin n) (L : Alt n →ₗ[ℂ] Alt n)
     coefwise (fun f => dirD i f v) (fun x => L (F x)) = L (coefwise (fun f => dirD i f v) F) := by
   refine (bas n).ext_elem fun S => ?_
   rw [FormMul.repr_coefwise, repr_linear L (coefwise _ F)]
-  simp only [repr_linear L (F _), FormMul.repr_coefwise]
-  exact dirD_sum_mul i hF _
+  simpa only [repr_linear L (F _), FormMul.repr_coefwise] using dirD_sum_mul i hF _
 
 theorem delAt_dbarAt_mul {F G : V n → Alt n} (hF : ∀ S, DifferentiableAt ℝ (fun x => (bas n).repr (F x) S) v)
     (hG : ∀ S, DifferentiableAt ℝ (fun x => (bas n).repr (G x) S) v) :
@@ -960,10 +957,8 @@ variable {M : Type} [TopologicalSpace M] {n : ℕ} (A : HolAtlas M n)
 
 theorem FormOn.of_isForm {α : A.Fld} (h : A.IsForm α) (S : Set M) : FormOn A S α := by
   refine ⟨?_, ?_⟩
-  · intro i T
-    exact (h.smooth i T).mono Set.inter_subset_left
-  · intro x x' _ hx
-    exact h.compat x x' hx
+  · exact fun i T => (h.smooth i T).mono Set.inter_subset_left
+  · exact fun x x' _ hx => h.compat x x' hx
 
 theorem FormOn.zero (S : Set M) : FormOn A S 0 := by
   have h := (HolAtlas.isForm_algebra M n A).1

@@ -162,8 +162,7 @@ theorem intAt_of_forall_norm_le_one (l : ℕ) [hl : Fact l.Prime] (α : algebrai
     simpa using this
   have hint : IsIntegral ℤ ((D : algebraicClosure ℚ ℂ) * α) := by
     refine ⟨Q, hQm, ?_⟩
-    rw [← aeval_def, ← aeval_map_algebraMap ℚ, algebraMap_int_eq, hQ]
-    exact hroot
+    rwa [← aeval_def, ← aeval_map_algebraMap ℚ, algebraMap_int_eq, hQ]
   have := map_isIntegral_int (algebraicClosure ℚ ℂ).val.toRingHom hint
   simpa using this
 
@@ -235,8 +234,7 @@ theorem valGe_iff_forall_sz (l : ℕ) [hl : Fact l.Prime] (r : ℝ) (x : ℂ) :
           _ = (l : ℝ) ^ (r * n) := by rw [← Real.rpow_natCast, ← Real.rpow_mul hl0.le]
           _ ≤ (l : ℝ) ^ (m : ℝ) := Real.rpow_le_rpow_of_exponent_le hl1.le hmn'
           _ = (l : ℝ) ^ m := Real.rpow_intCast _ _
-      rw [inv_mul_le_iff₀ (zpow_pos hl0 m), mul_one]
-      exact h2
+      rwa [inv_mul_le_iff₀ (zpow_pos hl0 m), mul_one]
     have := intAt_of_forall_norm_le_one l _ hb
     have e : (((l : algebraicClosure ℚ ℂ) ^ m * ⟨x, hmem⟩ ^ n : algebraicClosure ℚ ℂ) : ℂ) = (l : ℂ) ^ m * x ^ n :=
       Complex.ext rfl rfl

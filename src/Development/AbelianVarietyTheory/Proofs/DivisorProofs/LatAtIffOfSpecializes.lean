@@ -256,8 +256,7 @@ theorem exists_prime_hom_of_not_surjective {X : Type} [AddCommGroup X] {r : ℕ}
   · have hn0 : n = 0 := by omega
     subst hn0
     obtain ⟨i, hi⟩ : ∃ i, e i ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       apply not_subsingleton ((Fin r → ℤ) ⧸ M.range)
       refine ⟨fun a b => f.injective ?_⟩
       have key : ∀ x : (Fin 0 →₀ ℤ) × DirectSum κ (fun j ↦ ZMod (p j ^ e j)), x = 0 := fun x => by
@@ -367,8 +366,7 @@ theorem isClosedImmersion_special_of_local : ∀ (R : Type) [CommRing R] [IsLoca
       rw [Functor.map_comp, Functor.map_one, ← cancel_epi (bcIso p (ZMod q)).hom, MonObj.comp_one,
         ← Category.assoc]
       change ((bcIso p (ZMod q)).hom ≫ (Over.pullback p).map (torusMap _ φ)) ≫ _ = _
-      rw [← e1, Category.assoc]
-      exact h
+      rwa [← e1, Category.assoc]
 
     have hk := _root_.GlobalTheory.baseChange_map_eq_of_fieldExtension R k Ω _ _ _ _ hΩ
     have hf : torusMap _ φ ≫ u = 1 :=
@@ -590,8 +588,7 @@ theorem isTorPart_pullTorus_closed : ∀ (V : Type) [CommRing V] [IsDomain V] [I
     have h3 : (Spec.map (CommRingCat.ofHom (algebraMap V (ResidueField V)))) (closedPoint (ResidueField V)) =
         (spMap b) (closedPoint κ) :=
       (IsLocalRing.comap_closedPoint (residue V)).trans (IsLocalRing.comap_closedPoint b).symm
-    rw [GlobalTheory.TorusFibreImm.closedImm_iff_residue, ← h3]
-    exact h2
+    rwa [GlobalTheory.TorusFibreImm.closedImm_iff_residue, ← h3]
   have hmono : Mono (pullTorus hψ₀ u) := mono_pullTorus hψ₀ u hfib
   have hmono' : Mono (pullTorus hψ₀ j) := by
     have k : pullTorus hψ₀ j = torusMap _ e.symm.toAddMonoidHom ≫ pullTorus hψ₀ u := by
@@ -607,8 +604,7 @@ theorem isTorPart_pullTorus_closed : ∀ (V : Type) [CommRing V] [IsDomain V] [I
     exact mono_of_mono _ t₀
   have hbij := bijective_of_mono_torusMap (κ := κ) hr ρ
   have h := ht₀.equiv (AddEquiv.ofBijective ρ hbij)
-  rw [hρ]
-  exact h
+  rwa [hρ]
 
 end GlobalTheory.Poinc.FibClosed
 end -- clump:auto
@@ -971,8 +967,7 @@ open GlobalTheory.SplitTorus (torusMap bcMap)
 
 theorem ringHom_eq_of_spMap {A B : Type} [CommRing A] [CommRing B] {a b : A →+* B} (h : spMap a = spMap b) : a = b := by
   have h1 := Spec.map_injective h
-  have h2 := congrArg CommRingCat.Hom.hom h1
-  simpa using h2
+  simpa using congrArg CommRingCat.Hom.hom h1
 
 theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (a : A →+* B) (b : B →+* C) :
     spMap b ≫ spMap a = spMap (b.comp a) := by
@@ -1052,8 +1047,7 @@ theorem LatAt.transfer {X : Type} [AddCommGroup X] [Module.Free ℤ X] [Module.F
     rw [← spMap_comp', ← spMap_comp', ← ha, ← ha', reassoc_of% e1]
   refine ⟨e, K, inferInstance, b', GK, inferInstance, ψ', hψ', ?_⟩
   have hc2 := hc.pull b hψ
-  rw [he, e1, hab, e2] at hc2
-  exact hc2
+  rwa [he, e1, hab, e2] at hc2
 
 theorem Compat.unique [IsSeparated G.hom] (hL : 0 < L) {X : Type} [AddCommGroup X] {m m' : I → X →+ X}
     {c c' : T → X →+ ZMod L} {K : Type} [Field K] {s : Sp K ⟶ M.Z} {a : o →+* K} (hζ : IsPrimitiveRoot (a ζ) L)
@@ -1071,9 +1065,7 @@ theorem Compat.unique [IsSeparated G.hom] (hL : 0 < L) {X : Type} [AddCommGroup 
     obtain ⟨z', hz', hv'⟩ := hc' tt
     have hzz : z = z' := by
       have := ht.mono
-      apply (cancel_mono t).1
-      apply hom_ext_of_pullback hφ
-      exact ValAt.unique hv hv'
+      exact (cancel_mono t).1 (hom_ext_of_pullback hφ (ValAt.unique hv hv'))
     subst hzz
     ext χ
     have h3 := congrArg Units.val (GlobalTheory.ZH.TorusPerp.unitOn_injective ((hz χ).symm.trans (hz' χ)))
@@ -1148,8 +1140,7 @@ theorem latAt_iff_of_specializes [IsNoetherianRing o] [IsCommMonObj G] (hG : IsS
   have ha_cl : (spMap (b₁.comp (IsLocalRing.residue V)) ≫ ξ) ≫ M.s = spMap ((b₁.comp (IsLocalRing.residue V)).comp a) := by
     rw [Category.assoc, ha, spMap_comp']
   have hextV : ∀ t, ExtNear (gγ t) (ξ (closedPoint V)) := by
-    rw [hξ']
-    exact hext
+    rwa [hξ']
   constructor
   · intro h
     obtain ⟨e, K₂, _, b₂, GK₂, _, ψ₂, hψ₂, hc⟩ := h.transfer hξ ha_gen hgen hjt

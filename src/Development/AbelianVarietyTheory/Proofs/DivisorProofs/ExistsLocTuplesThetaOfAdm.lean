@@ -138,8 +138,7 @@ theorem qW_add_smul_single {r : ℕ} (W : Matrix (Fin 8) (Fin 8) ℤ) (b : Linea
 
 theorem psd_of_min : ∀ {r N : ℕ}, 0 < N → ∀ (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W → ∀ (b : LinearMap.BilinForm ℤ (Fin r → ℤ)) (μ : Fin 8 → Fin r → ℤ), (∀ α : Fin 8 → Fin r → ℤ, (∀ u i, ∃ m : ℤ, α u i = μ u i + N * m) → qW W b μ ≤ qW W b α) → ∀ x, 0 ≤ b x x := by
   intro r N hN W hW b μ hmin x
-  by_contra hx
-  push Not at hx
+  by_contra! hx
   have hW0 := isE8_apply_zero_zero_pos hW
   set e : Fin 8 → Fin r → ℤ := Pi.single 0 x with he
   set B : ℤ := ∑ u, ∑ v, W u v * (b (e u) (μ v) + b (μ u) (e v)) with hB
@@ -202,8 +201,7 @@ open Matrix
 
 theorem exists_e8Form_value_not_dvd_prime (W : Matrix (Fin 8) (Fin 8) ℤ) (hW : IsE8 W) (p : ℕ) (hp : p.Prime) :
     ∃ ε : Fin 8 → ℤ, ¬ (p : ℤ) ∣ ∑ u, ∑ v, W u v * ε u * ε v := by
-  by_contra h
-  push Not at h
+  by_contra! h
   have hQ : ∀ ε : Fin 8 → ℤ, ∑ u, ∑ v, W u v * ε u * ε v = ε ⬝ᵥ (W *ᵥ ε) := by
     intro ε
     simp only [dotProduct, Matrix.mulVec, Finset.mul_sum]
@@ -247,8 +245,7 @@ theorem exists_e8Form_value_coprime_oddPrimePow' : ∀ (W : Matrix (Fin 8) (Fin 
     · exact hp.one_lt.ne' h
     · exact hp2 h
   · rw [Nat.Prime.coprime_iff_not_dvd hp]
-    intro hd
-    exact hε (Int.natCast_dvd.2 hd)
+    exact fun hd => hε (Int.natCast_dvd.2 hd)
 
 end GlobalTheory
 end -- clump:auto
@@ -322,7 +319,6 @@ theorem relabel_minimisers : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ) (N : ℕ) [NeZ
   rw [h1]
   apply hmin (σ c) (fun u => e.toLinearMap (α u))
   intro u i
-  show _ = ((e (μ c u) i : ℤ) : ZMod N)
   exact relabel_cong e.toLinearMap (α u) (μ c u) (fun j => (hα u j).trans (hμ c u j).symm) i
 
 end GlobalTheory
@@ -924,8 +920,7 @@ theorem main : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F : SFam 
     have e3 : (⟨RingHom.ker g', RingHom.ker_isPrime g'⟩ : PrimeSpectrum R) = spMap g' w' :=
       PrimeSpectrum.ext (RingHom.ker_eq_comap_bot g')
     show ξR _ ∈ (U₀ : Set M.Z)
-    rw [e3]
-    exact hw'U
+    rwa [e3]
   obtain ⟨ρ0, hsurj, hcoord, hequiv⟩ := GlobalTheory.T.exists_surjective_lattice_coordMap_equivariant_dvr R hR G hGsemi D A U V' hBV inferInstance
     ((Over.pullback ξ').obj FinalForm.G) hG'semi D' A' U' g' β p hp hpm _ hWo hPsiWo hker hβ hLBβ
   obtain ⟨c', pr', hS', hmat⟩ := GlobalTheory.Poinc.Eq8.PullAlong.main g n _ _ F W o' Ω S ρ u c pr hS M U₀ EE FinalForm V' hBV
@@ -965,8 +960,7 @@ theorem main : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F : SFam 
     obtain ⟨m', hm'⟩ := endChar_exists_of_isMonHom V' hBV _ hG'semi D' A' U' f' hf'
     have hq := hequiv fR f' hfR hf' hf'β (m a b) m' hEC hm' y
     obtain ⟨f₁, hf₁, hf₁c⟩ := hmat a b f f' hMO hf'fst
-    have hr := hrel a b f' f₁ m' hf' hf₁ hf₁c hm' (ρ0 y)
-    simpa [hq] using hr
+    simpa [hq] using hrel a b f' f₁ m' hf' hf₁ hf₁c hm' (ρ0 y)
 
 end GlobalTheory.Poinc.Eq8.TraitOne
 end -- clump:auto
@@ -1066,14 +1060,12 @@ theorem mem_maximalIdeal_of_square {X : Scheme.{0}} (x : X) [IsNoetherianRing (X
     have := congrArg PrimeSpectrum.asIdeal h2
     intro a ha
     have e : ((spMap j) ((spMap g') pV)).asIdeal = (maximalIdeal V').comap (g'.comp j) := by subst hpV; rfl
-    rw [← e, this]
-    exact ha
+    rwa [← e, this]
   obtain ⟨e, he⟩ := hj
   have hm : maximalIdeal R ≤ (maximalIdeal (X.presheaf.stalk x)).map j := by
     intro r hr
     have hr' : e.symm r ∈ maximalIdeal (AdicCompletion (maximalIdeal (X.presheaf.stalk x)) (X.presheaf.stalk x)) := by
-      intro hu
-      exact hr (by simpa using hu.map e)
+      exact fun hu => hr (by simpa using hu.map e)
     rw [AdicCompletion.maximalIdeal_eq_map] at hr'
     have := Ideal.mem_map_of_mem (e : _ →+* R) hr'
     rw [Ideal.map_map] at this
@@ -1378,8 +1370,7 @@ theorem GlobalTheory.Poinc.exists_locTuples_theta_of_adm : ∀ (g n : ℕ), 1 �
   let t : ∀ k, Jk k → Ω := fun k j => ∏ c, ((k.2.2 c : Es) : Ω) ^ ((mult k.1 : ℤ) * j.1 c)
   refine ⟨∏ R, ιf R, K, inferInstance, Jk, fun k => inferInstance, t, ?_, ?_, ?_⟩
   · exact Nat.pos_of_ne_zero (Finset.prod_ne_zero_iff.2 fun R _ => by have := (hιf R).1; omega)
-  · intro k j
-    exact Finset.prod_ne_zero_iff.2 fun c _ => zpow_ne_zero _ (k.2.2 c).2.1
+  · exact fun k j => Finset.prod_ne_zero_iff.2 fun c _ => zpow_ne_zero _ (k.2.2 c).2.1
   intro M U₀ EE FinalForm hAdm hEE x
   obtain ⟨r, b₀, μ, e, hr, hsym, hpos, hμ, hmin, he, htr⟩ :=
     GlobalTheory.T.thetaModel_local_lattice_fourierParts_orders g n hg hn hodd F W hW o' Ω S ρ u hBig hSharp hgen hN0 M U₀ EE FinalForm hAdm hEE x

@@ -154,8 +154,7 @@ theorem cotVal_pull (R R' : Type) [CommRing R] [CommRing R'] (σ : R →+* R')
       · rw [hs, ps, ps', s.cot_d]) f
   refine (congrArg (cotSnd R' D') hb).trans ?_
   rw [map_sub, map_add (f := _)]
-  refine (sub_zero _).trans ?_
-  exact congrArg₂ (· + ·) (hs _) (ps' _)
+  exact (sub_zero _).trans (congrArg₂ (· + ·) (hs _) (ps' _))
 
 end GlobalTheory.PtExt
 end -- clump:auto

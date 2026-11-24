@@ -82,8 +82,7 @@ theorem exists_vAdd_ge {K : Type} [Field K] [NumberField K] (S : Finset (HeightO
     · exact h
   · have h := (GlobalTheory.Core.Int.ProdPrimePow.vAdd_ge_of_mem_prod_zpow K _ (Equiv.refl _) S
       (fun _ => -(B : ℤ)) _ hmem w).resolve_left ha0
-    simp only [Equiv.refl_apply, neg_neg, ite_eq_left hw] at h
-    exact h
+    simpa only [Equiv.refl_apply, neg_neg, ite_eq_left hw] using h
 
 end GlobalTheory.FlatTw.Good
 
@@ -159,8 +158,7 @@ theorem lattice_transfer (φ : V ≃ₗ[K] W) (L : Submodule (𝓞 K) V) (L' : S
     have hsub : Submodule.span K (L : Set V) ≤ (Submodule.span K (L' : Set W)).comap (φ : V →ₗ[K] W) := by
       refine Submodule.span_le.2 fun f hf => Submodule.mem_comap.2 ?_
       have h2 := Submodule.smul_mem (Submodule.span K (L' : Set W)) a⁻¹ (Submodule.subset_span (R := K) (hin f hf))
-      rw [smul_smul, inv_mul_cancel₀ ha, one_smul] at h2
-      exact h2
+      rwa [smul_smul, inv_mul_cancel₀ ha, one_smul] at h2
     rw [eq_top_iff]
     intro g _
     have h := hsub (show φ.symm g ∈ Submodule.span K (L : Set V) by rw [hspan]; trivial)

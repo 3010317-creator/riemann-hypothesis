@@ -82,8 +82,7 @@ theorem exists_sb_ext_eq : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [T
   obtain ⟨hsupp, k₀, hk₀, hinv, hsup⟩ := hΦ
   have hkF : ((k₀ : D.host.F)) ≠ 0 := Nat.cast_ne_zero.2 hk₀.ne'
   have hkk : ((k₀ : k)) ≠ 0 := by
-    have h := (map_ne_zero (p.π.comp (algebraMap D.host.F (AE D)))).2 hkF
-    simpa using h
+    simpa using (map_ne_zero (p.π.comp (algebraMap D.host.F (AE D)))).2 hkF
   have hupA : ∀ a : Matrix Y Y' k, a ∈ A ↔ p.up FS FT a ∈ Λ := fun a => Iff.rfl
   have hnsmul : ∀ (x : Matrix Y Y' k), k₀ • x = (k₀ : k) • x := fun x => by
     rw [← Nat.cast_smul_eq_nsmul k]

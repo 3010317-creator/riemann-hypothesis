@@ -154,8 +154,7 @@ theorem der_tail : ∀ (g : ℕ) [Fact g.Prime] (ψ : AddChar (ZMod g) ℂ) (i m
       refine Finset.sum_congr rfl fun x _ => ?_
       by_cases hx : tl m (x : Mt g n) = (p : Mt g m)
       · rw [ite_eq_left hx]
-        rw [← hx] at hp
-        rw [tl_tl him.le] at hp
+        rw [← hx, tl_tl him.le] at hp
         rw [inR_split him.le hmn (x : Mt g n), supFrom_split him hmn (x : Mt g n), AddChar.map_add_eq_mul, mul_inv,
           ← hx]
         by_cases hR : InR m (x : Mt g n)
@@ -183,10 +182,8 @@ theorem der_tail : ∀ (g : ℕ) [Fact g.Prime] (ψ : AddChar (ZMod g) ℂ) (i m
     · rw [ite_eq_left hp.symm]
     · intro q _ hq
       rw [ite_eq_right]
-      intro hh
-      exact hq (Units.ext (hp.trans hh).symm)
-    · intro hh
-      exact absurd (Finset.mem_univ p) hh
+      exact fun hh => hq (Units.ext (hp.trans hh).symm)
+    · exact fun hh => absurd (Finset.mem_univ p) hh
   · simp [hx]
 
 end GlobalTheory.GLm.DerTail

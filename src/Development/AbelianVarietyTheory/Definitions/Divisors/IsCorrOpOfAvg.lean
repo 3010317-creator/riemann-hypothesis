@@ -57,13 +57,11 @@ def pullTot {E E' : Spc} (f : E ⟶ E') : Htot l E' →ₗ[ℚ_[l]] Htot l E :=
   DirectSum.lmap fun n => pullHQ l f n 0
 
 theorem pullTot_id (E : Spc) : pullTot l (𝟙 E) = LinearMap.id := by
-  simp only [pullTot, pullHQ, pullHl_id, LinearMap.baseChange_id]
-  exact DirectSum.lmap_id
+  simpa only [pullTot, pullHQ, pullHl_id, LinearMap.baseChange_id] using DirectSum.lmap_id
 
 theorem pullTot_comp {E E' E'' : Spc} (f : E ⟶ E') (g : E' ⟶ E'') :
     pullTot l (f ≫ g) = pullTot l f ∘ₗ pullTot l g := by
-  simp only [pullTot, pullHQ, pullHl_comp, LinearMap.baseChange_comp]
-  exact DirectSum.lmap_comp _ _
+  simpa only [pullTot, pullHQ, pullHl_comp, LinearMap.baseChange_comp] using DirectSum.lmap_comp _ _
 
 def galTot {k : Type} [Field k] (Ω : Type) [Field Ω] [Algebra k Ω] {X : Scheme.{0}} (p : X ⟶ Spec (CommRingCat.of k)) :
     (Ω ≃ₐ[k] Ω) → Htot l (sch.obj (GlobalTheory.Et.geom Ω p)) →ₗ[ℚ_[l]] Htot l (sch.obj (GlobalTheory.Et.geom Ω p)) :=

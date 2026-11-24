@@ -182,7 +182,6 @@ private lemma at_liftV' {F : Type} [Field F] [NumberField F] {κ : Type} (v : Pl
     At (evFin F v) (fun i => GlobalTheory.LatVac.liftV v (t i)) := by
   intro u hu
   funext i
-  show u • GlobalTheory.LatVac.liftV v (t i) = 0
   exact GlobalTheory.LatVac.at_liftV v (t i) u hu
 
 theorem locality : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E)
@@ -214,8 +213,7 @@ theorem locality : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
       intro Ψ
       funext x
       simp [GlobalTheory.WeilM.schr]
-    rw [hs, hs] at h
-    exact h
+    rwa [hs, hs] at h
 
   refine ⟨fun t => (R 0)⁻¹ * omd g (tens (evFin F v) φ R) (fun i => GlobalTheory.LatVac.liftV v (t i)), ?_, ?_⟩
   · have h1 : omd g (tens (evFin F v) φ R) ∈ schA F (Fin a' × Fin (a + a') ⊕ Fin a' × Fin (a + a')) :=
@@ -348,9 +346,7 @@ theorem dbl_vac_unique : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     ring
   have hφd0 : φd ≠ 0 := by
     obtain ⟨t, ht⟩ := Function.ne_iff.mp hvac0
-    refine Function.ne_iff.mpr ⟨Sum.elim t t, ?_⟩
-    show vac t * star (vac t) ≠ 0
-    exact mul_ne_zero ht (star_ne_zero.mpr ht)
+    exact Function.ne_iff.mpr ⟨Sum.elim t t, mul_ne_zero ht (star_ne_zero.mpr ht)⟩
 
   have hsd := GlobalTheory.LatSelfDualAll.latAtV_selfDual F E σ B _ _ G.V' G.W _ _ _ _ hTr.base hTr.geo.hV' hTr.geo.hW v
   have hunr := (hTr.base.inert v w hin).2.2
@@ -481,8 +477,7 @@ theorem parD_fix : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
     GlobalTheory.SchwartzBox.boxFun_mem_schA F _ _ Ψ hΨ _ (_root_.GlobalTheory.ConjSch.star_mem_schA _ Ψ hΨ)
   have hV := hTr.geo.hM'.vac v
   obtain ⟨y, hy⟩ : ∃ y, G.M'.vac v y ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hV.2.1 (funext h)
   have hΨne : Ψ ≠ 0 := by
     intro h0
@@ -500,8 +495,7 @@ theorem parD_fix : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
   have htp := _root_.GlobalTheory.InertDbl.parD_diag_action F E σ G.W v p hp t ht
   have ha := _root_.GlobalTheory.InertDetChr.alpha_det_eq_one F E σ B a a' G X om om' hTr v w hin hT t htp
   have hb := _root_.GlobalTheory.IntegralDetModule.modu_norm_det_triple F E σ B a a' G X om om' hTr v w hin hT t htp
-  rw [ha, hb] at hS
-  rw [hc, map_smul, smul_eq_mul] at hS
+  rw [ha, hb, hc, map_smul, smul_eq_mul] at hS
   simp only [Circle.coe_one, NNReal.coe_one, Real.one_rpow, Complex.ofReal_one, one_mul] at hS
   have h1 : c = 1 := (mul_eq_right₀ hl0).mp hS
   rw [hc, h1, one_smul]

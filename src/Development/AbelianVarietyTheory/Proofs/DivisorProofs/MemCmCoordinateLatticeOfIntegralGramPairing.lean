@@ -207,8 +207,7 @@ theorem torsion_comp_eq_one {K : Type} [Field K] [NumberField K] (σ : K →+* �
     have h2 := h _ h1
     apply toBase_injective hgB
     rw [tb, toBase_one hgB hmB, eq_one_iff]
-    have h3 := (eq_one_iff _).1 h2
-    simpa [e] using h3
+    simpa [e] using (eq_one_iff _).1 h2
   obtain ⟨α, hα, hfac⟩ := GlobalTheory.HolUnifEnd.exists_factor_pow P'.A Q'.A P'.isAb n hn ψ' hC
   have kill' : ∀ (T' : Over (Sp ℂ)) (y : T' ⟶ P'.A), y ^ n = 1 → y ≫ ψ' = 1 := by
     intro T' y hy
@@ -768,8 +767,7 @@ theorem UpperTheory.exists_nsmul_mem_sum_image_lattice_of_surjective_mod :
   haveI : Countable ΛB := TopologicalSpace.separableSpace_iff_countable.mp inferInstance
   have hΦs : ∀ u, ∃ v, Φ v = u := by
     intro u
-    by_contra hu
-    push Not at hu
+    by_contra! hu
     choose v hv using fun t : ℝ => hsurj (t • u)
     let f : ℝ → ΛB := fun t => ⟨t • u - Φ (v t), by rw [hΦapp]; exact hv t⟩
     have hf : Function.Injective f := by
@@ -779,8 +777,7 @@ theorem UpperTheory.exists_nsmul_mem_sum_image_lattice_of_surjective_mod :
       apply hu ((t - t')⁻¹ • (v t - v t'))
       rw [map_smul, map_sub]
       have h2 : (t - t') • u = Φ (v t) - Φ (v t') := by
-        rw [sub_smul, sub_eq_sub_iff_sub_eq_sub]
-        exact h1
+        rwa [sub_smul, sub_eq_sub_iff_sub_eq_sub]
       rw [← h2, smul_smul, inv_mul_cancel₀ (sub_ne_zero.mpr hne), one_smul]
     exact Cardinal.not_countable_real (Set.countable_univ_iff.mpr hf.countable)
   have hspan : Submodule.span ℝ (Sz : Set (Fin gB → ℂ)) = ⊤ := by
@@ -886,8 +883,7 @@ private theorem pt_mul {G : Over S} [GrpObj G] (x y : 𝟙_ (Over (Sp ℂ)) ⟶ 
   let ρ : Over.mk ((𝟙_ (Over (Sp ℂ))).hom ≫ f) ⟶ Over.mk f := Over.homMk (𝟙 _) (by simp)
   have h := (isGrpPullback_pullback G f).2 _ x y (ρ ≫ pt f x) (ρ ≫ pt f y) (Category.id_comp _) (Category.id_comp _)
   rw [← MonObj.comp_mul] at h
-  refine Over.OverMorphism.ext ?_
-  exact h.symm.trans (Category.id_comp _)
+  exact Over.OverMorphism.ext (h.symm.trans (Category.id_comp _))
 
 private theorem exists_unif (P : Out.PolAV S) : ∃ (L : LB ((Over.pullback f).obj P.A).left)
     (_ : HolUnif ((Over.pullback f).obj P.A) L P.g), IsAbelianScheme ((Over.pullback f).obj P.A) ∧
@@ -1268,8 +1264,7 @@ theorem flat_ker (S : Scheme.{0}) (P : Out.PolAV S) (m : ℕ) (hm : 1 ≤ m) :
     MorphismProperty.of_isPullback (P := @Flat) hp hf
   have hw : (pullback.snd (𝟙 P.A ^ m) η[P.A]).left = (pullback (𝟙 P.A ^ m) η[P.A]).hom := by
     simpa using Over.w (pullback.snd (𝟙 P.A ^ m) η[P.A])
-  rw [hw] at he
-  exact he
+  rwa [hw] at he
 
 theorem kill_complex (A' B' : Over (Sp ℂ)) [GrpObj A'] [GrpObj B'] (hA : IsAbelianScheme A')
     [IsSeparated B'.hom] [LocallyOfFiniteType B'.hom] (N : ℕ) (hN : 1 ≤ N) (φ : A' ⟶ B')
@@ -1300,8 +1295,7 @@ theorem kill_complex (A' B' : Over (Sp ℂ)) [GrpObj A'] [GrpObj B'] (hA : IsAbe
   have e' := congrArg (fun q => q.left (IsLocalRing.closedPoint ℂ)) e
   have hz' : p.left (IsLocalRing.closedPoint ℂ) = z := pointOfClosedPoint_apply _ z hz _
   simp only [Over.comp_left] at e'
-  rw [← hz']
-  exact e'
+  rwa [← hz']
 
 end GlobalTheory.TorsionKill
 
@@ -1748,8 +1742,7 @@ theorem weilEq_gram : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
   have hg : 1 ≤ (X.A true).pol.g := NumInh.dim_pos_of_hasType X.split X.ρ_sq (X.A true) X.typeP
   have e₂ := H.bar.injective (LamF.Faithful.act_injective hL E K (X.A true).pol (X.A true).t.act hg e₁)
   have e₃ : r = r' := mul_left_cancel₀ (Nat.cast_ne_zero.2 hm.ne' : (m : 𝓞 E) ≠ 0) e₂
-  rw [e₃]
-  exact hr'
+  rwa [e₃]
 
 end GlobalTheory.FlatCM.HomLat
 

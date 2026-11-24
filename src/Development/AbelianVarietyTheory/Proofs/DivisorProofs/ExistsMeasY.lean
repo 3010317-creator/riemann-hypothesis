@@ -102,8 +102,7 @@ theorem exists_modX (t : T) : ∃ (H : HMod (Bridge.Gf D.sp.X' → R.cX.W)) (j :
       exact ne_of_eq_of_ne ((R.B.R t).pres.card_stab c) (Nat.pos_iff_ne_zero.mp (by apply Formalism.L2.DIV.CSD.wt_pos))))
   refine (hMod_of_herm herm).elim fun H hH => ?_
   have x := hMod_lift hH (R.B.jR t) (fun x => by exact (R.B.R t).pres.extMem_holds x)
-  refine x.elim fun j hj => ⟨H, j, hH, ?_⟩
-  exact (hj)
+  exact x.elim fun j hj => ⟨H, j, hH, (hj)⟩
 
 
 
@@ -120,8 +119,7 @@ theorem exists_modV (i : Fin D.R.m) (t : T) :
       exact ne_of_eq_of_ne ((R.B.L i t).pres.card_stab c) (Nat.pos_iff_ne_zero.mp (by apply Formalism.L2.DIV.CSD.wt_pos))))
   refine (hMod_of_herm herm).elim fun H hH => ?_
   have x := hMod_lift hH (R.B.jL i t) (fun x => by exact (R.B.L i t).pres.extMem_holds x)
-  refine x.elim fun j hj => ⟨H, j, hH, ?_⟩
-  exact (hj)
+  exact x.elim fun j hj => ⟨H, j, hH, (hj)⟩
 
 variable {R}
 

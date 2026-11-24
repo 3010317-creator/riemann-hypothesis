@@ -239,11 +239,9 @@ theorem utest_geom_nonempty : Laws → ∀ (o Ω : Type) [CommRing o] [Field Ω]
   · have h := isValueAt_move hp τ hτ hL₀ hL₁ (hx a).symm (hfr a).2 hth (ρ.th_val a)
     have q := sv_of_isValueAt h (𝟙 _) z hJ
     rw [Category.id_comp, spMap_appTop_fn] at q
-    rw [val_powFrame, Nat.cast_one, zpow_one]
-    exact q
+    rwa [val_powFrame, Nat.cast_one, zpow_one]
   · have h := isValueAt_move hp τ hτ hL₀ hL₁ (hx a).symm (genThrough_pow τ (hfr a).2 S.N) (hs i) (ρ.ev_val i a)
-    rw [spMap_appTop_fn] at h
-    exact h
+    rwa [spMap_appTop_fn] at h
   · have a₀ : IsActOf ρ.P.A ρ.P.L S.N (ρ.U a) (ρ.s i) (SecM.toSec _ (r₀ (ρ.U a) (SecM.ofSec _ (ρ.s i)))) :=
       (hr₀ _ _ _).2 rfl
     let c : S.J → Γ((baseOver (Sp S.R)).left, ⊤) := fun l => fn (algebraMap o S.R (S.ρ a l i))

@@ -277,8 +277,7 @@ theorem bounded_first_member (hCRD : GlobalTheory.Published.CuspRapidDecay) {D :
   have hrank : s'.V.rank = D.R.r := by
     rw [hflat.rank]; simp [Formalism.BasicNotions.Ranks.rankY]
   have hbd0 := GlobalTheory.T.thetaChain_heckeParams_trivialBound_rapidDecay hCRD D (GlobalTheory.T.thetaChain_level_properties D) c hc 0 hj s' hflat u' B hB'
-  rw [hrank] at hbd0
-  exact hbd0
+  rwa [hrank] at hbd0
 
 theorem conjStable_first_member (hCRD : GlobalTheory.Published.CuspRapidDecay) {D : D7} {c : Com D} (hc : c.Is) (hj : 0 ≤ D.R.m) {s' : PiLocalization₂ D}
     (hflat : s'.Is c 0) (u' : s'.CC c) (B : GlobalTheory.LFun.Fam D.host.E) (hB' : IsPar u' B) :
@@ -286,13 +285,8 @@ theorem conjStable_first_member (hCRD : GlobalTheory.Published.CuspRapidDecay) {
       (∀ w' : HeightOneSpectrum (𝓞 D.host.E), w'.under (𝓞 D.host.F) = w.under (𝓞 D.host.F) → w ≠ w' → B w' = (B w).map star) ∧
       (¬ Formalism.MainNotions.SchurIrreducible.IsSplit (E := D.host.E) (w.under (𝓞 D.host.F)) → (B w).map star = B w) := by
   have hex : ∃ v, PiLocalization₂.val u' v ≠ 0 := by
-    by_contra h
-    push Not at h
-    apply hB'.1
-    apply Subtype.ext
-    apply LinearMap.ext
-    intro v
-    exact h v
+    by_contra! h
+    exact hB'.1 (Subtype.ext (LinearMap.ext (fun v => h v)))
   obtain ⟨v, hv⟩ := hex
   set f : GA D s'.V → ℂ := fun g => conj (PiLocalization₂.val u' v g) with hfdef
   have hPF : ParFun c s' (PiLocalization₂.val u' v) B := hB'.2 v hv

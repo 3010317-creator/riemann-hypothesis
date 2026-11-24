@@ -238,8 +238,7 @@ theorem j_isPullback (M : Model R A) : IsPullback M.j A.hom M.Y.hom (spMap (alge
   have h : M.e.inv.left ≫ pullback.snd M.Y.hom (spMap (algebraMap R K)) = A.hom ≫ 𝟙 _ := by
     rw [Category.comp_id]; exact Over.w M.e.inv
   have := (IsPullback.of_horiz_isIso ⟨h⟩).paste_horiz (IsPullback.of_hasPullback M.Y.hom (spMap (algebraMap R K)))
-  rw [Category.id_comp] at this
-  exact this
+  rwa [Category.id_comp] at this
 
 noncomputable def ofSquare (Y : Over (Sp R)) (h₁ : Smooth Y.hom) (h₂ : IsSeparated Y.hom) (h₃ : QuasiCompact Y.hom)
     {j : A.left ⟶ Y.left} (h : IsPullback j A.hom Y.hom (spMap (algebraMap R K))) : Model R A :=
@@ -632,8 +631,7 @@ theorem exists_fibre {M : Model R A} {W Y : Over (Sp R)} {l : M.Y ⟶ W} {p : W 
   refine ⟨u, ?_, h1⟩
   have e := Over.w (toUnit M.Y)
   show M.Y.hom u = _
-  rw [← e, Scheme.Hom.comp_apply]
-  exact h2
+  rwa [← e, Scheme.Hom.comp_apply]
 
 theorem exists_section_general [IsDomain R] (hR : SH R K) {M : Model R A} (hi : M.Irr) {f : A ⟶ A}
     (hf : GenIso M M f) {V₁ V₂ : Set M.Y.left} (o₁ : IsOpen V₁) (o₂ : IsOpen V₂) (n₁ : (M.sp ∩ V₁).Nonempty)
@@ -677,8 +675,7 @@ theorem lawdef_section [IsDomain R] (hR : SH R K) (A : Over (Sp K)) [GrpObj A] [
     refine (ha' (sp0 Y) false ?_).defAt
     have e : s ≫ lift (𝟙 M.Y) (toUnit M.Y ≫ Y) = Y ≫ lift (toUnit M.Y ≫ s) (𝟙 M.Y) := by
       ext1 <;> simp [reassoc_of% u1]
-    rw [map_modelSectionSpecialPoint_comp, ← e, ← map_modelSectionSpecialPoint_comp]
-    exact hs
+    rwa [map_modelSectionSpecialPoint_comp, ← e, ← map_modelSectionSpecialPoint_comp]
   have d2 : DefAt (M.prod M) (M.prod M) (shear A true) (sp0 (lift X t)) := by
     have e : t ≫ lift (toUnit M.Y ≫ X) (𝟙 M.Y) = lift X t := by
       ext1 <;> simp [reassoc_of% u1]
@@ -805,8 +802,7 @@ theorem mem_range_j [IsDomain R] [IsDiscreteValuationRing R] [IsFractionRing R K
         ((M.Y.hom y : PrimeSpectrum R).isPrime.isMaximal hb)))
     show Disjoint _ _
     rw [hb, Set.disjoint_left]
-    intro a ha ha'
-    exact nonZeroDivisors.ne_zero ha ha'
+    exact fun a ha ha' => nonZeroDivisors.ne_zero ha ha'
   obtain ⟨t, ht⟩ := h1
   obtain ⟨a, ha, -⟩ := Scheme.exists_preimage_of_isPullback (isPullback_j M) y t ht.symm
   exact ⟨a, ha⟩
@@ -882,8 +878,7 @@ theorem compat_of_isoAt_closure : ∀ (R K : Type) [CommRing R] [IsDomain R] [Is
       have ds : IsDominant s := IsDominant.of_comp (M.j ∣_ U) s
       have op : IsOpenImmersion (s ≫ p) := by rw [sp]; infer_instance
       refine ⟨_, s, ds, op, by rw [sq]; exact hg, (section_open p s).2 x ?_⟩
-      rw [sp, Scheme.Opens.range_ι]
-      exact hU
+      rwa [sp, Scheme.Opens.range_ι]
     · have op : IsOpenImmersion (δ.toImage ≫ p) := by rw [hp]; exact jM
       refine ⟨_, δ.toImage, inferInstance, op, by rw [hq]; exact jN, (section_open p _).2 x ?_⟩
       rw [hp]
@@ -964,8 +959,7 @@ theorem val_eq {T X X₁ X₂ O₁ O₂ Y S : Scheme.{0}} (d : T ⟶ X) {z : X} 
     exact ⟨(equalizer.lift t ht).left x, congr(($(equalizer.lift_ι t ht)).left x)⟩
   obtain ⟨e, he⟩ := hc.closure_subset_iff.2 hs ho
   have := congr(($(equalizer.condition P Q)).left e)
-  rw [← f₁, ← f₂, ← he]
-  exact this
+  rwa [← f₁, ← f₂, ← he]
 
 variable {R : Type} [CommRing R] {K : Type} [Field K] [Algebra R K] {A A' A'' : Over (Sp K)}
 
@@ -1192,8 +1186,7 @@ theorem left_shear (a : 𝟙_ (Over (Sp K)) ⟶ A) :
 
 theorem right_shear (a : 𝟙_ (Over (Sp K)) ⟶ A) :
     lift (𝟙 A) (toUnit A ≫ a) ≫ shear A true ≫ snd A A = (transl a).hom := by
-  simp only [shear, transl, MonObj.comp_mul, lift_snd, lift_fst]
-  exact mul_comm _ _
+  simpa only [shear, transl, MonObj.comp_mul, lift_snd, lift_fst] using mul_comm _ _
 
 theorem exists_shear_at [IsLocalRing R] {M : Model R A} (hM : Strict M) (s : 𝟙_ (Over (Sp R)) ⟶ M.Y) :
     ∃ (X : Scheme.{0}) (I G : X ⟶ (M.Y ⊗ M.Y).left) (o : X) (w : M.Y.left), IsOpenImmersion I ∧ IsOpenImmersion G ∧

@@ -339,9 +339,7 @@ theorem exists_finite_topologicalKrullDim_diff_lt :
     have h1 : p ⟨K, hK⟩ ∈ (s'.last : Set Z) := by
       rw [h]; exact hp ⟨K, hK⟩
     exact hlast h1 (hSU ⟨⟨K, hK⟩, rfl⟩)
-  have h2 := Order.krullDim_lt_coe_iff.1 hd (s'.snoc K' hlt)
-  simp [s'] at h2
-  exact h2
+  simpa [s'] using Order.krullDim_lt_coe_iff.1 hd (s'.snoc K' hlt)
 
 end GlobalTheory.Div
 end -- clump:auto
@@ -535,8 +533,7 @@ theorem finrank_range_fderiv_lt_of_not_dominant : ∀ (k : Type) [Field k] (X Y 
     rintro _ ⟨z, hz, rfl⟩
     refine ⟨m ((A'.chart j).symm z), ⟨?_, hZm _⟩, ?_⟩
     · have := hz.2
-      rw [hc] at this
-      exact this
+      rwa [hc] at this
     · simp only [Function.comp_apply, hc]
       rfl
   have h0 : volume ((A.chart l ∘ m ∘ (A'.chart j).symm) '' W) = 0 :=
@@ -781,8 +778,7 @@ theorem selfIntersection_O1 (N : ℕ) : topSelfIntersection k (O1 k N) N = 1 := 
       rw [Nat.cast_sub hjN]; ring
     rw [hc, hn, Ring.choose_natCast, Nat.choose_eq_zero_of_lt (show N - j < N by omega)]
     simp
-  · intro h
-    exact absurd (Finset.mem_range.2 (Nat.succ_pos N)) h
+  · exact fun h => absurd (Finset.mem_range.2 (Nat.succ_pos N)) h
 
 end Space
 

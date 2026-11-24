@@ -137,8 +137,7 @@ theorem isHomeomorph_bcPt (k K : Type) [CommRing k] [CommRing K] (ρ : k →+* K
           valR (E.symm w).1 _ (algX q (j ⁻¹ᵁ U.1 ⊓ q ⁻¹ᵁ ⊤) b) := fun w hw => (ev_algX (hin w hw) b).symm
       have h : Tendsto (fun _ : CxPts p (τ.comp ρ) => τ b) (𝓝 y) (𝓝 (τ b)) := tendsto_const_nhds
       have h' := h.congr' (eventually_of_mem hnb e)
-      rw [e y hyU] at h'
-      exact h'
+      rwa [e y hyU] at h'
   exact (Homeomorph.mk E (continuous_bcPt hp.w τ) hc).isHomeomorph
 
 end GlobalTheory.Mix
@@ -248,8 +247,7 @@ theorem map_part {k K : Type} [CommRing k] [Field K] [Algebra k K] [IsFractionRi
   have hZG : IsClosed (j ⁻¹' (U : Set X)ᶜ) := hZ.preimage j.continuous
   have hgZG : genericPoint G ∉ j ⁻¹' (U : Set X)ᶜ := by
     simp only [Set.mem_preimage]
-    rw [hgen]
-    exact hgZ
+    rwa [hgen]
   have key := GlueCoverNull.map_glueMeas_of_cover D (CxPts p (τ.comp (algebraMap k K))) (CxPts q τ)
     (AlgChart p (τ.comp (algebraMap k K)) D) (AlgChart q τ D) (fun c => c.e)
     (fun c y => ENNReal.ofReal ((ε : ℤ) * dens L c y)) (fun c => c.e)
@@ -268,8 +266,7 @@ theorem map_part {k K : Type} [CommRing k] [Field K] [Algebra k K] [IsFractionRi
       obtain ⟨c, hc, -⟩ := AlgChart.exists_of_etale hU t ht hmem
       obtain ⟨c', hz', hc'⟩ := GlobalTheory.Mix.exists_chart_dens_bc k K (algebraMap k K) X G p q j hp τ D c z hc
       exact ⟨c, c', hz', hc, fun w hw _ => ⟨(hc' w hw).2.1, by simp only [(hc' w hw).2.2 L]⟩⟩)
-  rw [Nat.cast_one, one_smul] at key
-  exact key
+  rwa [Nat.cast_one, one_smul] at key
 
 theorem part_int_generic : ∀ (k K : Type) [CommRing k] [Field K] [Algebra k K] [IsFractionRing k K] (X G : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (q : G ⟶ Sp K) (j : G ⟶ X) (hp : IsPullback j q p (spMap (algebraMap k K))) (τ : K →+* ℂ) (D : ℕ), IsArithVar p D → ∀ (L : Fin D → MLine p (τ.comp (algebraMap k K))), (∀ ε : ℤˣ, Measure.map (bcPt hp.w τ) (part (fun i => (L i).bc hp.w τ) ε) = part L ε) ∧ ∀ f : CxPts p (τ.comp (algebraMap k K)) → ℝ, (Intg (fun i => (L i).bc hp.w τ) (fun y => f (bcPt hp.w τ y)) ↔ Intg L f) ∧ Mix.int (fun i => (L i).bc hp.w τ) (fun y => f (bcPt hp.w τ y)) = Mix.int L f := by
   intro k K _ _ _ _ X G _ p q j hp τ D hX L

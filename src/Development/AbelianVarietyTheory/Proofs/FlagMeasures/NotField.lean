@@ -182,11 +182,8 @@ lemma unit_of {T : F} (hT : T ∈ 𝒪[F]) (u : 𝒪[F]) (h : (u : F) * T = 1) :
   refine ⟨⟨⟨T, hT⟩, u, ?_, ?_⟩, rfl⟩
   · apply Subtype.ext
     show T * (u : F) = 1
-    rw [mul_comm]
-    exact h
-  · apply Subtype.ext
-    show (u : F) * T = 1
-    exact h
+    rwa [mul_comm]
+  · exact Subtype.ext h
 
 end
 

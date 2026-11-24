@@ -78,8 +78,7 @@ theorem mapSt (hJ : JetAlgSt) (hR : RepSt) : MapSt := by
     have h2 := hsub' (Fin n × Fin d) _ ψ hb hψ _ _ hφ
     have h1' : Rep x a (fun m => spMap (ψ m) ≫ y₀ m) := by
       have := gt_comp1_pt a hy.1
-      rw [← this]
-      exact h1
+      rwa [← this]
     have e : y = fun m => spMap (ψ m) ≫ y₀ m :=
       ((hR R G d x hx (Fin n × Fin d)).1 a hy.1).unique hy h1'
     subst e

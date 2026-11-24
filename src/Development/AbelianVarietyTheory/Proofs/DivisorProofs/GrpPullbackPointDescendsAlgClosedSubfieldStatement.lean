@@ -99,12 +99,10 @@ theorem grpPullback_point_descends : ∀ (K : Type) [Field K] [CharZero K] (k₀
   have hy'n : y' ^ n = (y ^ n) ≫ e.hom := hpow n
   have hz' : (y' ^ n).left ≫ pullback.fst B₀.hom (spMap (algebraMap k₀ K)) =
       spMap (algebraMap k₀ K) ≫ z₀'.left := by
-    rw [hy'n, Over.comp_left, Category.assoc, heφ]
-    exact hz
+    rwa [hy'n, Over.comp_left, Category.assoc, heφ]
   obtain ⟨y₀, -, hy₀⟩ := (point_descent B₀ hB n hn' y' z₀' hz').exists
   refine ⟨y₀.left, ?_⟩
-  rw [← heφ, ← Category.assoc]
-  exact hy₀
+  rwa [← heφ, ← Category.assoc]
 
 end GlobalTheory.AlgClosedDescent
 end -- clump:auto

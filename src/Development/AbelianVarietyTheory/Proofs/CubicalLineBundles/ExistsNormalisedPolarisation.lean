@@ -88,13 +88,11 @@ theorem exists_normalised_polarisation : Out.Laws → ∀ (R : Type) [CommRing R
       funext k
       fin_cases k
       exacts [rfl, Category.comp_id _]
-    rw [e₁] at h'
-    exact h'
+    rwa [e₁] at h'
   · have one : ptCls P.L P.A 1 = 1 := by
       have h := (hasGen_iff hM _ _).1 (HasGen.pull (φ := fun _ : PUnit => eSec P.A) (ε := fun _ => 1)
         ⟨rig, hrig⟩ (toUnit P.A).left)
-      rw [Fintype.prod_unique, zpow_one] at h
-      exact h
+      rwa [Fintype.prod_unique, zpow_one] at h
     have two : ptCls P.L P.A (𝟙 P.A * 𝟙 P.A) = ptCls P.L P.A (𝟙 P.A) ^ (4 : ℤ) := by
       have h := (hasGen_iff hM _ _).1 (laws.mulPull _ P 2)
       rw [Fin.prod_univ_two] at h

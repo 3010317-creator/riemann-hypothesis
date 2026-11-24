@@ -112,8 +112,7 @@ theorem sz_of_isIntegral (n : ℕ) (x : ℂ) (hn : ¬ l ∣ n) (h : IsIntegral �
     exact (Nat.Prime.coprime_iff_not_dvd hl.out).2 hn
   have h4 := norm_natCast_mul (lam := lam) n hx hm
   rw [h3, one_mul] at h4
-  rw [Real.rpow_zero, ← h4]
-  exact h2
+  rwa [Real.rpow_zero, ← h4]
 
 theorem sz_add {r : ℝ} {x y : ℂ} (hx : Sz l lam r x) (hy : Sz l lam r y) : Sz l lam r (x + y) := by
   obtain ⟨hx, hx'⟩ := hx
@@ -149,14 +148,12 @@ theorem sz_prime_mul (r : ℝ) (x : ℂ) : Sz l lam r ((l : ℂ) * x) ↔ Sz l l
     have hx := mem_of_natCast_mul hl.out.ne_zero h
     refine ⟨hx, ?_⟩
     rw [norm_natCast_mul l hx h, Padic.norm_p, inv_mul_le_iff₀ hl0] at h'
-    rw [Real.rpow_add_one hl0.ne', mul_comm]
-    exact h'
+    rwa [Real.rpow_add_one hl0.ne', mul_comm]
   · rintro ⟨hx, h'⟩
     have h : (l : ℂ) * x ∈ algebraicClosure ℚ ℂ := mul_mem (natCast_mem _ l) hx
     refine ⟨h, ?_⟩
     rw [norm_natCast_mul l hx h, Padic.norm_p, inv_mul_le_iff₀ hl0]
-    rw [Real.rpow_add_one hl0.ne', mul_comm] at h'
-    exact h'
+    rwa [Real.rpow_add_one hl0.ne', mul_comm] at h'
 
 theorem sz_of_sq {r : ℝ} {x : ℂ} (h : Sz l lam r (x ^ 2)) : Sz l lam (r / 2) x := by
   obtain ⟨h, h'⟩ := h

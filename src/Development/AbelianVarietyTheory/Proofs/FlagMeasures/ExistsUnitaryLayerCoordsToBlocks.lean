@@ -196,15 +196,13 @@ theorem toBlocks_surjective (hU : Biorth r m U (fun b => (U b)ᴴ))
   have hY : Y ∈ lowers W c := by
     refine Submodule.sum_mem _ fun b _ => ?_
     rw [mem_lowers_iff hU hW]
-    intro s t hst
-    exact placed_block hU _ (by omega)
+    exact fun s t hst => placed_block hU _ (by omega)
   refine ⟨fun i => (Y * (B i.1)ᴴ).trace, funext fun b => ?_⟩
   apply Matrix.of.injective
   rw [toBlocks_coords hU hW hB hL c Y hY b, hYdef, Matrix.mul_sum, Matrix.sum_mul,
     Finset.sum_eq_single b]
   · exact placed_block_self hU _
-  · intro b' _ hb
-    exact placed_block hU _ (Or.inl fun h => hb (Fin.ext h.symm))
+  · exact fun b' _ hb => placed_block hU _ (Or.inl fun h => hb (Fin.ext h.symm))
   · simp
 
 theorem toBlocks_norm (hU : Biorth r m U (fun b => (U b)ᴴ))
@@ -239,8 +237,7 @@ theorem toBlocks_norm (hU : Biorth r m U (fun b => (U b)ᴴ))
       · rw [(mem_lowers_iff hU hW _ _).1 hY s t hst]; simp
       · have hX : U s * ((U s)ᴴ * Y * U t) * (U t)ᴴ ∈ lowers W (c + 1) := by
           rw [mem_lowers_iff hU hW]
-          intro s' t' h'
-          exact placed_block hU _ (by omega)
+          exact fun s' t' h' => placed_block hU _ (by omega)
         rw [← horth _ hX, Matrix.mul_assoc (U s), Matrix.mul_assoc (U s), Matrix.trace_mul_comm (U s)]
         simp only [conjTranspose_mul, conjTranspose_conjTranspose, Matrix.mul_assoc]
     · rw [block_eq_zero hU (t := s + c + 1) (by simpa using h)]; simp

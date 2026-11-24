@@ -92,8 +92,7 @@ theorem unitBall_eq_of_integral_dvr (p : ℕ) [Fact p.Prime] (V W : Type) [CommR
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible V
   have hπK0 : algebraMap V (FractionRing V) π ≠ 0 := by
     intro h
-    apply hπ.ne_zero
-    exact IsFractionRing.injective V (FractionRing V) (h.trans (map_zero _).symm)
+    exact hπ.ne_zero (IsFractionRing.injective V (FractionRing V) (h.trans (map_zero _).symm))
   have hπ1 : ‖κ (algebraMap V (FractionRing V) π)‖ < 1 := by
     refine lt_of_le_of_ne ((hV _).2 ⟨π, rfl⟩) fun h => hπ.not_isUnit ?_
     have hinv : ‖κ (algebraMap V (FractionRing V) π)⁻¹‖ ≤ 1 := by

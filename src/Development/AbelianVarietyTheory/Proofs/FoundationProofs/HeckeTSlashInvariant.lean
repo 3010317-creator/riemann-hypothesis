@@ -353,8 +353,7 @@ theorem tinv_fin_fin : ∀ (N l q j : ℕ) (γ : SL(2, ℤ)), q.Prime → ¬ q �
   obtain ⟨ha1, hd1, hc0⟩ := h1
   have hdet : γ 0 0 * γ 1 1 - γ 0 1 * γ 1 0 = 1 := by
     have := γ.det_coe
-    rw [Matrix.det_fin_two] at this
-    exact this
+    rwa [Matrix.det_fin_two] at this
   set a := γ 0 0 with ha
   set b := γ 0 1 with hb
   set c := γ 1 0 with hc
@@ -366,9 +365,7 @@ theorem tinv_fin_fin : ∀ (N l q j : ℕ) (γ : SL(2, ℤ)), q.Prime → ¬ q �
     Matrix.empty_val', Matrix.cons_val_fin_one] at hA
   set A : ℤ := a + j * c with hAdef
   set B : ℤ := b + j * d with hBdef
-  have hAq : ((A : ℤ) : ZMod q) ≠ 0 := by
-    intro h
-    exact hA ((ZMod.intCast_zmod_eq_zero_iff_dvd A q).mp h)
+  have hAq : ((A : ℤ) : ZMod q) ≠ 0 := fun h => hA ((ZMod.intCast_zmod_eq_zero_iff_dvd A q).mp h)
   set j' : ℕ := ((B : ZMod q) * (A : ZMod q)⁻¹).val with hj'
   have hj'lt : j' < q := ZMod.val_lt _
   have hdiv : (q : ℤ) ∣ B - j' * A := by

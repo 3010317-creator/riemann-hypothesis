@@ -66,8 +66,7 @@ theorem card_doubleCoset_mul_card_inter {G : Type} [Group G] [Fintype G] (H K : 
   have hmaps : ∀ p ∈ (Finset.univ : Finset (H × K)),
       (p.1 : G) * w * p.2 ∈ Finset.univ.filter fun y : G => ∃ h ∈ H, ∃ k ∈ K, y = h * w * k := by
     intro p _
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-    exact ⟨p.1, p.1.2, p.2, p.2.2, rfl⟩
+    simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using ⟨p.1, p.1.2, p.2, p.2.2, rfl⟩
   have hcard := Finset.card_eq_sum_card_fiberwise
     (f := fun p : H × K => (p.1 : G) * w * p.2) (s := Finset.univ) hmaps
   have hfib : ∀ y ∈ (Finset.univ.filter fun y : G => ∃ h ∈ H, ∃ k ∈ K, y = h * w * k),

@@ -80,8 +80,7 @@ theorem presents_quotient :
   intro p _ O _ G d c I m hm
   have hp : ∀ n, ((p : (O ⧸ I) ⊗[O] G.A n)) ^ m = 0 := fun n => by
     have h0 : ((p : O ⧸ I)) ^ m = 0 := by
-      rw [← map_natCast (Ideal.Quotient.mk I), ← map_pow, Ideal.Quotient.eq_zero_iff_mem]
-      exact hm
+      rwa [← map_natCast (Ideal.Quotient.mk I), ← map_pow, Ideal.Quotient.eq_zero_iff_mem]
     rw [← map_natCast (algebraMap (O ⧸ I) ((O ⧸ I) ⊗[O] G.A n)), ← map_pow, h0, map_zero]
   have hx : ∀ n i, IsNilpotent ((1 : O ⧸ I) ⊗ₜ[O] c.x n i) := fun n i => by
     obtain ⟨N, y, hy⟩ := c.nil n i
@@ -110,8 +109,7 @@ theorem presents_quotient :
     have h1 : c.ev n f ∈ I • (⊤ : Submodule O (G.A n)) := ((GlobalTheory.PDiv.one_tmul_quot_reduction O (G.A n) I).2.1 _).1 hg
     have h2 : c.ev n f ∈ (I • (⊤ : Submodule O (MvPowerSeries (Fin d) O))).map
         (c.ev n).toLinearMap := by
-      rw [Submodule.map_smul'', Submodule.map_top, LinearMap.range_eq_top.2 (c.surj n)]
-      exact h1
+      rwa [Submodule.map_smul'', Submodule.map_top, LinearMap.range_eq_top.2 (c.surj n)]
     obtain ⟨h, hh, he⟩ := h2
     have h3 : c.ev n (f - h) = 0 := by
       rw [map_sub, sub_eq_zero]
@@ -123,8 +121,7 @@ theorem presents_quotient :
     have h5 : coeff α f ∈ I := by
       have := I.add_mem h4 (coeff_mem_of_mem_smul_top I hh α)
       rwa [map_sub, sub_add_cancel] at this
-    rw [coeff_map, Ideal.Quotient.eq_zero_iff_mem]
-    exact h5
+    rwa [coeff_map, Ideal.Quotient.eq_zero_iff_mem]
 
 end GlobalTheory.QLog.Chart
 end -- clump:auto

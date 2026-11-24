@@ -188,8 +188,7 @@ theorem latRat_selfDual : ∀ (D : D7) (S T : HSp D) (ΛS : Submodule (𝓞 D.ho
     refine (hT.2 _).2 fun t ht => ?_
     rw [form_smul]
     have := FractionalIdeal.mul_mem_mul hb (h5 v hv t ht)
-    rw [inv_mul_cancel₀ hAA, FractionalIdeal.mem_one_iff] at this
-    exact this
+    rwa [inv_mul_cancel₀ hAA, FractionalIdeal.mem_one_iff] at this
   have h7 : ∀ v ∈ ΛS, ∀ v' ∈ ΛS, ∀ e ∈ D.host.AA * D.host.AA⁻¹, genMap S T e v' (ρ *ᵥ v) ∈
       latRat S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) := by
     intro v hv v' hv' e he
@@ -214,8 +213,7 @@ theorem latRat_selfDual : ∀ (D : D7) (S T : HSp D) (ΛS : Submodule (𝓞 D.ho
     simp only [Finset.mul_sum (s := Finset.univ (α := Fin n))]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun i _ => ?_
-    simp only [← mul_assoc]
-    exact (Finset.sum_mul _ _ _).symm
+    simpa only [← mul_assoc] using (Finset.sum_mul _ _ _).symm
   rw [e]
   exact sum_mem fun i _ => h7 _ (hss i).1 _ (hss i).2 1
     (by rw [mul_inv_cancel₀ hAA]; exact FractionalIdeal.one_mem_one _)

@@ -254,8 +254,7 @@ theorem eq_zero_of_sum (lam : InfinitePlace E → DomWeight n) {ι : Type} [Fint
   have := congrArg P h
 
   rw [map_sum, map_zero] at this
-  rw [LinearMap.zero_apply, ← this]
-  rw [Finset.sum_eq_single k]
+  rw [LinearMap.zero_apply, ← this, Finset.sum_eq_single k]
   · rw [← hP _ (hT k)]; simp
   · intro j _ hj
     rw [← hP _ (hT j)]
@@ -440,8 +439,7 @@ theorem rightReg_dual_ne_zero (lam : InfinitePlace E → DomWeight n) [Nontrivia
     rightReg ℂ (finU (E := E) (n := n)) (Module.Dual ℂ (Wsp lam)) x ≠ 0 := by
   obtain ⟨v, hv⟩ := exists_ne (0 : Wsp lam)
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual ℂ (Wsp lam), φ v ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hv ((Module.forall_dual_apply_eq_zero_iff ℂ v).1 hc)
   intro h
   have := congrFun (LinearMap.congr_fun h (fun _ => φ)) 1
@@ -837,8 +835,7 @@ theorem exists_irred_le_orbSpan {H V : Type} [Group H] [TopologicalSpace H] [IsT
     have hN'U : N' ≤ U' := by
       intro u hu
       obtain ⟨w, hw, hwu⟩ := hNU hu
-      rw [← Subtype.ext hwu]
-      exact hw
+      rwa [← Subtype.ext hwu]
     have hN'st : ∀ g, ∀ u ∈ N', ρO g u ∈ N' := fun g u hu => hN g u.1 hu
     have hNe : N'.map O.toSubmodule.subtype = N := by
       rw [Submodule.map_comap_subtype]
@@ -889,15 +886,13 @@ theorem mem_iSup_of_form (E : Type) [Field E] [NumberField E] [IsCMField E] (n :
   have ofX : ∀ g ∈ X, ∀ k ∈ K, rep ρ k g = g := by
     intro g hg k hk
     have h1 := hg ⟨k, hk⟩
-    rw [MonoidHom.one_apply, Units.val_one, one_smul] at h1
-    exact h1
+    rwa [MonoidHom.one_apply, Units.val_one, one_smul] at h1
   have hfA : f ∈ forms ρ := ⟨fun v => hfa v, hfe⟩
   let ff : forms ρ := ⟨f, hfA⟩
   have hffX : ff ∈ X := by
     refine memX ff fun k hk => Subtype.ext (LinearMap.ext fun u => ?_)
     have h1 := hfK u ⟨k, hk⟩
-    rw [MonoidHom.one_apply, Units.val_one, one_smul] at h1
-    exact h1
+    rwa [MonoidHom.one_apply, Units.val_one, one_smul] at h1
   suffices hY : ff ∈ Y from hY
   by_contra hffY
   obtain ⟨m, hm, hmo⟩ := exists_orth_proj Bf hBd (X ⊓ Y) ff
@@ -953,8 +948,7 @@ theorem mem_iSup_of_form (E : Type) [Field E] [NumberField E] [IsCMField E] (n :
     have hN'U : N' ≤ U := by
       intro u hu
       obtain ⟨w, hw, hwu⟩ := hNM hu
-      rw [← Subtype.ext hwu]
-      exact hw
+      rwa [← Subtype.ext hwu]
     have hN'st : ∀ g, ∀ u ∈ N', rep ρ g u ∈ N' := fun g u hu => hN g.1 g.2 u.1 hu
     have hNe : N'.map (forms ρ).subtype = N := by
       rw [Submodule.map_comap_subtype]
@@ -970,8 +964,7 @@ theorem mem_iSup_of_form (E : Type) [Field E] [NumberField E] [IsCMField E] (n :
     have hfixu : z.1 u ∈ fixed (RF E n) K := by
       intro k
       rw [MonoidHom.one_apply, Units.val_one, one_smul]
-      have h1 := congrArg (fun g : forms ρ => g.1 u) (ofX z hzX k k.2)
-      exact h1
+      exact congrArg (fun g : forms ρ => g.1 u) (ofX z hzX k k.2)
     have hidx : IsAutRepU (Submodule.span ℂ {φ | ∃ f ∈ M, ∃ v, f v = φ}) ∧
         ∃ f' : W →ₗ[ℂ] (UA E n → ℂ), f' ≠ 0 ∧ (∀ u, f' u ∈ Submodule.span ℂ {φ | ∃ f ∈ M, ∃ v, f v = φ}) ∧
           ∀ (x : infU E n) u, f' (ρ x u) = RU E n x (f' u) :=
@@ -982,8 +975,7 @@ theorem mem_iSup_of_form (E : Type) [Field E] [NumberField E] [IsCMField E] (n :
   have hzm : Bf z y = 0 := hy ▸ hmo z ⟨hzX, hzY⟩
   have hzz : Bf z z = 0 := by
     have h2 := hP2 y z hzU
-    rw [← hz, map_sub, hzm, zero_sub, neg_eq_zero] at h2
-    exact h2
+    rwa [← hz, map_sub, hzm, zero_sub, neg_eq_zero] at h2
   exact hz0 (hBd z hzz)
 
 end GlobalTheory.FrameAut.VecSemis
@@ -1033,8 +1025,7 @@ namespace GlobalTheory.BCT.TrKer
 theorem span_range_wInf_comp_infU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ)
     (lam : InfinitePlace E → DomWeight n),
     Submodule.span ℂ (Set.range ((wInf lam).comp (infU E n).subtype)) = ⊤ := by
-  intro E _ _ _ n lam
-  exact span_wInf lam
+  exact fun E _ _ _ n lam => span_wInf lam
 
 end GlobalTheory.BCT.TrKer
 end -- clump:auto
@@ -1223,8 +1214,7 @@ theorem isAutFormU_phiFun (hU : Unr E) (S : Set (Pl E)) (lam : InfinitePlace E �
     have ho : IsOpen ((splitFin E n) ⁻¹' (globLev S K' : Set (finU (E := E) (n := n)))) :=
       (isOpen_globLev E hU n S K' hK).preimage continuous_splitFin
     filter_upwards [ho.mem_nhds (by simp [(globLev S K').one_mem])] with y hy g
-    simp only [map_mul]
-    exact hF.2 _ hy _
+    simpa only [map_mul] using hF.2 _ hy _
   have h := GlobalTheory.EquivCoef.isAutFormU_coef E n (Module.Dual ℂ (Wsp lam)) (dualW lam) (fun g => F (splitFin E n g))
     hfin hcont hinf hrat hsm (Module.Dual.eval ℂ (Wsp lam) w)
   convert h using 1
@@ -1236,8 +1226,7 @@ theorem hasWeightAt_of_wInf (lam : InfinitePlace E → DomWeight n) (π : Submod
     (heq : ∀ (x : infU E n) u, f' (wInf lam x.1 u) = RU E n x.1 (f' u)) (v : InfinitePlace E) :
     HasWeightAt π v.embedding (lam v) := by
   obtain ⟨e, he⟩ : ∃ e : ∀ v, nablaSq ℂ n (lam v), f' (PiTensorProduct.tprod ℂ e) ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact h0 (PiTensorProduct.ext (MultilinearMap.ext fun e => by simpa using hc e))
   refine ⟨GlobalTheory.DefU.isIrreducible_sqRep n (lam v), f' ∘ₗ (PiTensorProduct.tprod ℂ).toLinearMap e v, ?_,
     fun a => hπ _, fun x a => ?_⟩

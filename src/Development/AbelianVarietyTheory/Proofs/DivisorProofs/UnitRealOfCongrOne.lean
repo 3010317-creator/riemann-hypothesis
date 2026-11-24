@@ -73,13 +73,11 @@ theorem unit_real_of_congr_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     have a2 : Ideal.Quotient.mk I (v : 𝓞 E) = 1 := by
       rw [← map_one (Ideal.Quotient.mk I), Ideal.Quotient.eq]; exact hv1
     have := congrArg (fun x : (𝓞 E)ˣ => Ideal.Quotient.mk I (x : 𝓞 E)) hζv
-    simp only [Units.val_mul, map_mul, a1, a2, mul_one] at this
-    exact this
+    simpa only [Units.val_mul, map_mul, a1, a2, mul_one] using this
   have ht : ζ ^ Nat.card (Units.torsion E) = 1 := by
     have h4 : (IsCMField.unitsMulComplexConjInv E u) ^ Nat.card (Units.torsion E) = 1 := pow_card_eq_one'
     have := congrArg Subtype.val h4
-    simp only [SubmonoidClass.coe_pow, OneMemClass.coe_one] at this
-    exact this
+    simpa only [SubmonoidClass.coe_pow, OneMemClass.coe_one] using this
   have hζeq : ζ = 1 := by
     by_contra hne
     have hne' : (ζ : 𝓞 E) - 1 ≠ 0 := by

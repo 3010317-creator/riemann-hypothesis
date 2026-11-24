@@ -136,8 +136,7 @@ theorem exists_hermitian_det_ne_zero_two :
   have h12 := mul_ne_zero h1 h2
   have key : ∃ m : Fin n × Fin n → ℕ, MvPolynomial.eval (fun p => (m p : κ))
       ((c.map C * G + d.map C).det * (c'.map C * Gᵀ + d'.map C).det) ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply h12
     apply MvPolynomial.funext_set (fun _ => Set.range (Nat.cast : ℕ → κ))
       (fun _ => Set.infinite_range_of_injective Nat.cast_injective)
@@ -206,10 +205,8 @@ theorem exists_orthogonal_idempotents_of_sum_mul_eq_one (F : Type) [Field F] [Nu
     have h1 : ∑ i, (s i).1 w * (f i).1 w = 1 := by
       have := congrArg (infiniteComponent F w) h
 
-      rw [map_sum, map_one] at this
-      exact this
-    by_contra hc
-    push Not at hc
+      rwa [map_sum, map_one] at this
+    by_contra! hc
     rw [Finset.sum_eq_zero (fun i _ => hc i)] at h1
     exact zero_ne_one h1
   have hfin : ∀ v : HeightOneSpectrum (𝓞 F), ∃ i, 1 ≤ Valued.v ((s i).2 v * (f i).2 v) := by
@@ -217,10 +214,8 @@ theorem exists_orthogonal_idempotents_of_sum_mul_eq_one (F : Type) [Field F] [Nu
     have h1 : ∑ i, (s i).2 v * (f i).2 v = 1 := by
       have := congrArg (finiteComponent F v) h
 
-      rw [map_sum, map_one] at this
-      exact this
-    by_contra hc
-    push Not at hc
+      rwa [map_sum, map_one] at this
+    by_contra! hc
     have := Valuation.map_sum_lt (Valued.v) (s := Finset.univ) (g := 1) one_ne_zero
       (fun i _ => hc i)
     rw [h1, map_one] at this
@@ -440,8 +435,7 @@ theorem exists_herm_notMem (σ : E →+* E) (δ : E) (hδ : δ ≠ 0) (hσδ : �
     have e : π₀ (c * x.map ι + d).det = 0 := Ideal.Quotient.eq_zero_iff_mem.2 h'
     rw [RingHom.map_det] at e
     change (π (c * x.map ι + d)).det = 0 at e
-    rw [map_add (f := _), map_mul] at e
-    exact e
+    rwa [map_add (f := _), map_mul] at e
   · apply hx2
     have e : (π₀.comp τ) (c * x.map ι + d).det = 0 := Ideal.Quotient.eq_zero_iff_mem.2 h'
     rw [RingHom.map_det] at e
@@ -451,8 +445,7 @@ theorem exists_herm_notMem (σ : E →+* E) (δ : E) (hδ : δ ≠ 0) (hσδ : �
       funext i j
       change π₀ (τ (ι (x i j))) = π₀ (ι (x j i))
       rw [hτι, hx]
-    rw [e2] at e
-    exact e
+    rwa [e2] at e
 
 theorem exists_herm_isUnit_generic {A : Type} [CommRing A] (σ : E →+* E) (δ : E) (hδ : δ ≠ 0) (hσδ : σ δ = -δ)
     (ι : E →+* R) (τ : R →+* R) (hτι : ∀ z, τ (ι z) = ι (σ z)) (hττ : ∀ z, τ (τ z) = z)
@@ -474,8 +467,7 @@ theorem exists_herm_isUnit_generic {A : Type} [CommRing A] (σ : E →+* E) (δ 
   have h1 : (1 : R) ∈ Submodule.span R (Set.range f) := (Ideal.eq_top_iff_one _).1 htop
   obtain ⟨C, hC⟩ := Finsupp.mem_span_range_iff_exists_finsupp.1 h1
   have hC' : ∑ i : C.support, C i * f i = 1 := by
-    rw [Finset.sum_coe_sort C.support (fun i => C i * f i)]
-    exact hC
+    rwa [Finset.sum_coe_sort C.support (fun i => C i * f i)]
   have hf : ∀ x, τ (f x) = f x := fun x => by
     simp only [f]
     rw [map_mul, hττ, mul_comm]

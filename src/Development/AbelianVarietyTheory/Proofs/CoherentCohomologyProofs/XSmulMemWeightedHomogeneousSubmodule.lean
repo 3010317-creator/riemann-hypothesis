@@ -99,8 +99,7 @@ theorem degree_comp_X_add_C_sub_lt (P : K[X]) (r : K) (e : ℕ) (hP : P.degree �
     (P.comp (X + C r) - P).degree < (e : ℕ) := by
   have hn : P.natDegree ≤ e := natDegree_le_iff_degree_le.mpr hP
   have h1 : (P.comp (X + C r)).natDegree ≤ e := by
-    rw [← taylor_apply, natDegree_taylor]
-    exact hn
+    rwa [← taylor_apply, natDegree_taylor]
   rw [degree_lt_iff_coeff_zero]
   intro m hm
   rw [coeff_sub]
@@ -228,8 +227,7 @@ theorem proj_map (ℳ : ℤ → Submodule R M) [Decomposition ℳ] (𝒩 : ℤ �
 
   rw [map_sum, map_sum, Finset.sum_eq_single n]
   · rw [proj_of_mem 𝒩 (hf n _ (decompose ℳ m n).2), proj_apply]
-  · intro i _ hi
-    exact proj_of_mem_ne 𝒩 (hf i _ (decompose ℳ m i).2) (by omega)
+  · exact fun i _ hi => proj_of_mem_ne 𝒩 (hf i _ (decompose ℳ m i).2) (by omega)
   · intro hn
     rw [DFinsupp.notMem_support_iff.1 hn]
     simp
@@ -243,8 +241,7 @@ theorem exists_bound_proj (ℳ : ℤ → Submodule R M) [Decomposition ℳ] (G :
   by_contra hne
   have hmem : n ∈ (decompose ℳ g).support := by
     rw [DFinsupp.mem_support_iff]
-    intro h0
-    exact hne (by simp [h0])
+    exact fun h0 => hne (by simp [h0])
   have h1 : |n| ≤ ∑ i ∈ (decompose ℳ g).support, |i| :=
     Finset.single_le_sum (f := fun i => |i|) (fun i _ => abs_nonneg i) hmem
   have h2 : ∑ i ∈ (decompose ℳ g).support, |i| ≤ ∑ g ∈ G, ∑ i ∈ (decompose ℳ g).support, |i| :=
@@ -348,8 +345,7 @@ theorem finite_piece [Finite ι] [Module.Finite (MvPolynomial ι R) M] (n : ℤ)
     ext x
     rw [LinearMap.mem_range]
     constructor
-    · intro hx
-      exact ⟨x, proj_of_mem ℳ hx⟩
+    · exact fun hx => ⟨x, proj_of_mem ℳ hx⟩
     · rintro ⟨y, rfl⟩
       exact proj_mem ℳ n y
   rw [Submodule.map_span] at hrange
@@ -459,7 +455,6 @@ private theorem eventually_mem_of_homogeneous_mem_of_X_smul_mem [Finite ι] [Mod
   have hQX : ∀ i, ∀ m ∈ Q, (MvPolynomial.X i : MvPolynomial ι k) • m ∈ Q := by
     intro i m hm
     have hm' : m ∈ B ∧ ∀ n, b < n → proj ℳ n m ∈ A := hm
-    show _ ∈ B ∧ ∀ n, b < n → _ ∈ A
     exact ⟨B.smul_mem _ hm'.1, fun n _ => hA n _ (hs i m hm'.1)⟩
   have hGQ : ∀ g ∈ (G : Set M), g ∈ Q := by
     intro g hg
@@ -520,8 +515,7 @@ private theorem finrank_graded_inf_add_eq_of_X_smul_comap [Finite ι] [Module.Fi
       exact ⟨⟨hxB, hxA⟩, hxn⟩
     · rintro ⟨⟨hxB, hxA⟩, hxn⟩
       exact ⟨⟨hxB, hxn⟩, hxA, hX i n x hxn⟩
-  rw [e1, e2] at h
-  exact h
+  rwa [e1, e2] at h
 
 theorem exists_polynomial_subquotient [Finite ι] [Module.Finite (MvPolynomial ι k) M]
     (s : Finset ι) (A B : Submodule (MvPolynomial ι k) M) (hAB : A ≤ B)
@@ -599,8 +593,7 @@ theorem exists_polynomial_subquotient [Finite ι] [Module.Finite (MvPolynomial �
       linear_combination h2 - h1 + h3'
     have hQd : (P2.comp (X + C 1) - P1).degree < (s.card : ℕ) := by
       refine lt_of_le_of_lt (degree_sub_le _ _) (max_lt ?_ hP1d)
-      rw [← taylor_apply, degree_taylor]
-      exact hP2d
+      rwa [← taylor_apply, degree_taylor]
     obtain ⟨P, hPd, -, -, hP⟩ := exists_polynomial_of_diff_eventually
       (f := fun n : ℤ => (finrank k (B.restrictScalars k ⊓ ℳ n : Submodule k M) : ℚ)
         - finrank k (A.restrictScalars k ⊓ ℳ n : Submodule k M)) hQd hdiff
@@ -664,8 +657,7 @@ theorem coeff_sub_comp_X_sub_C {K : Type*} [Field K] (P : K[X]) (r : K) (e : ℕ
     rw [comp_assoc]
     simp
   have hdeg : (P.comp (X - C r)).degree ≤ (e + 1 : ℕ) := by
-    rw [sub_eq_add_neg, ← C_neg, ← taylor_apply, degree_taylor]
-    exact hP
+    rwa [sub_eq_add_neg, ← C_neg, ← taylor_apply, degree_taylor]
   have htop : (P.comp (X - C r)).coeff (e + 1) = P.coeff (e + 1) := by
     rw [sub_eq_add_neg, ← C_neg]
     exact coeff_comp_X_add_C_of_natDegree_le P (-r) (e + 1) (natDegree_le_iff_degree_le.mpr hP)

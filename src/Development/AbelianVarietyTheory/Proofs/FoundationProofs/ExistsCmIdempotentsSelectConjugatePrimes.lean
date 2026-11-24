@@ -153,9 +153,7 @@ theorem exists_select [IsDedekindDomain R] [CharZero R] {G : Type*} [Group G]
   have hT2 : ∀ P, c • P ≠ P → ¬ T P → T (c • P) := fun P h1 h2 => by
     simp only [T, hcc] at h2 ⊢
     rcases trichotomous_of WellOrderingRel P (c • P) with h | h | h
-    · exact (h2 h).elim
-    · exact (h1 h.symm).elim
-    · exact h
+    exacts [(h2 h).elim, (h1 h.symm).elim, h]
   have hT3 : ∀ P, c • P = P → ¬ T P := fun P h1 h2 => hT1 P h2 (h1.symm ▸ h2)
   have hex : ∀ N : ℕ, ∃ ε : R, 0 < N →
       ∀ P : Ideal R, P.IsMaximal → LocDvd P (N : R) (ε - if T P then 1 else 0) := fun N => by
@@ -166,12 +164,8 @@ theorem exists_select [IsDedekindDomain R] [CharZero R] {G : Type*} [Group G]
   choose e he using hex
   have he' : ∀ N : ℕ, 0 < N → ∀ P : Ideal R, P.IsMaximal →
       LocDvd P (N : R) (c • e N - if T (c • P) then 1 else 0) := fun N hN P hP => by
-    have hP' : (c • P).IsMaximal := by
-      rcases Ideal.map_eq_top_or_isMaximal_of_surjective (MulSemiringAction.toRingHom G R c)
-        (MulAction.surjective c) hP with h | h
-      · exact absurd h (Ideal.IsPrime.smul (H := hP.isPrime) c).ne_top
-      · exact h
-    obtain ⟨s, hs, t, ht⟩ := he N hN _ hP'
+    obtain ⟨s, hs, t, ht⟩ :=
+      he N hN (c • P) (Ideal.map_isMaximal_of_equiv (MulSemiringAction.toRingEquiv G R c))
     refine ⟨c • s, fun h => hs ?_, c • t, ?_⟩
     · have := Ideal.smul_mem_pointwise_smul c _ _ h
       rwa [smul_smul, hc, one_smul] at this
@@ -179,28 +173,22 @@ theorem exists_select [IsDedekindDomain R] [CharZero R] {G : Type*} [Group G]
       simp only [map_mul, map_sub, map_natCast, MulSemiringAction.toRingHom_apply] at h
       rw [← h]
       split_ifs <;> simp
-  refine ⟨e, fun N m hN hm => ?_, fun N hN => ⟨?_, ?_⟩, fun N hN => ⟨fun h => ?_, fun h => ?_⟩⟩
-  · refine dvd_of_locDvd fun P hP => ?_
-    exact LocDvd.comb hP.isPrime 1 (-1)
+  refine ⟨e, fun N m hN hm => ?_, fun N hN => ⟨?_, ?_⟩, fun N hN => ⟨fun h => ?_, fun h => ?_⟩⟩ <;>
+    refine dvd_of_locDvd fun P hP => ?_
+  · exact LocDvd.comb hP.isPrime 1 (-1)
       ((he (N * m) (Nat.mul_pos hN hm) P hP).of_dvd (by push_cast; exact dvd_mul_right _ _))
       (he N hN P hP) (by ring)
-  · refine dvd_of_locDvd fun P hP => ?_
-    have h := he N hN P hP
-    by_cases hT : T P
-    · rw [ite_eq_left hT] at h
-      exact LocDvd.comb hP.isPrime (e N) 0 h h (by ring)
-    · rw [ite_eq_right hT] at h
-      exact LocDvd.comb hP.isPrime (e N - 1) 0 h h (by ring)
-  · refine dvd_of_locDvd fun P hP => ?_
-    have h := he N hN P hP
+  · have h := he N hN P hP
+    split_ifs at h
+    · exact LocDvd.comb hP.isPrime (e N) 0 h h (by ring)
+    · exact LocDvd.comb hP.isPrime (e N - 1) 0 h h (by ring)
+  · have h := he N hN P hP
     have h' := he' N hN P hP
-    by_cases hT : T P
+    split_ifs at h with hT
     · rw [ite_eq_right (hT1 P hT)] at h'
       exact LocDvd.comb hP.isPrime (e N) 0 h' h' (by ring)
-    · rw [ite_eq_right hT] at h
-      exact LocDvd.comb hP.isPrime (c • e N) 0 h h (by ring)
-  · refine dvd_of_locDvd fun P hP => ?_
-    by_cases hNP : (N : R) ∈ P
+    · exact LocDvd.comb hP.isPrime (c • e N) 0 h h (by ring)
+  · by_cases hNP : (N : R) ∈ P
     · have h1 := he N hN P hP
       have h2 := he' N hN P hP
       have h3 := h P hP hNP
@@ -208,17 +196,13 @@ theorem exists_select [IsDedekindDomain R] [CharZero R] {G : Type*} [Group G]
       rw [ite_eq_right (hT3 P h3)] at h1 h2
       exact LocDvd.comb hP.isPrime 1 1 h1 h2 (by ring)
     · exact LocDvd.of_not_mem hNP _
-  · refine dvd_of_locDvd fun P hP => ?_
-    by_cases hNP : (N : R) ∈ P
+  · by_cases hNP : (N : R) ∈ P
     · have h1 := he N hN P hP
       have h2 := he' N hN P hP
-      have h3 := h P hP hNP
-      by_cases hT : T P
-      · rw [ite_eq_left hT] at h1
-        rw [ite_eq_right (hT1 P hT)] at h2
+      split_ifs at h1 with hT
+      · rw [ite_eq_right (hT1 P hT)] at h2
         exact LocDvd.comb hP.isPrime (-1) (-1) h1 h2 (by ring)
-      · rw [ite_eq_right hT] at h1
-        rw [ite_eq_left (hT2 P h3 hT)] at h2
+      · rw [ite_eq_left (hT2 P (h P hP hNP) hT)] at h2
         exact LocDvd.comb hP.isPrime (-1) (-1) h1 h2 (by ring)
     · exact LocDvd.of_not_mem hNP _
 

@@ -258,8 +258,7 @@ theorem aeval_surjective_of_dUnit_span {K A : Type} [Field K] [CommRing A] [Bial
     rw [RingHom.mem_ker]; exact hx i
   have hnil : IsNilpotent (RingHom.ker (counitAlgHom K A)) := by
     rw [Ideal.FG.isNilpotent_iff_le_nilradical (IsNoetherian.noetherian _)]
-    intro a ha
-    exact mem_nilradical.2 (hconn a ha)
+    exact fun a ha => mem_nilradical.2 (hconn a ha)
   refine GlobalTheory.HeightOneHopf.aeval_surjective_of_span_cotangent (counitAlgHom K A) hnil x hxm ?_
   intro y hy
   obtain ⟨l, hl⟩ := hspan (dUnit (R := K) y)
@@ -542,8 +541,7 @@ theorem finrank_quot_frobKerIdeal_le : ∀ (q : ℕ) (K H : Type) [Field K] [Com
     exact Ideal.Quotient.eq_zero_iff_mem.2 (pow_mem_frobKerIdeal ha)
   have hnil : IsNilpotent (RingHom.ker εQ) := by
     rw [Ideal.FG.isNilpotent_iff_le_nilradical (IsNoetherian.noetherian _)]
-    intro f hf
-    exact ⟨q, hpowQ f hf⟩
+    exact fun f hf => ⟨q, hpowQ f hf⟩
 
   haveI : Module.Finite K (AugCot ε) := Module.Finite.of_surjective _ (AugCot.d_surjective ε)
   set d := Module.finrank K (AugCot ε) with hd
@@ -570,8 +568,7 @@ theorem finrank_quot_frobKerIdeal_le : ∀ (q : ℕ) (K H : Type) [Field K] [Com
   have hmapI : Ideal.map mk (RingHom.ker ε) ≤ RingHom.ker εQ := by
     rw [Ideal.map_le_iff_le_comap]
     intro a ha
-    rw [Ideal.mem_comap, RingHom.mem_ker]
-    exact ha
+    rwa [Ideal.mem_comap, RingHom.mem_ker]
   have hspan : ∀ z ∈ RingHom.ker εQ, ∃ l : Fin d → K, z - ∑ i, l i • y i ∈ RingHom.ker εQ ^ 2 := by
     intro z hz
     obtain ⟨a, ha, rfl⟩ := hkerQ z hz
@@ -704,8 +701,7 @@ theorem GlobalTheory.finrank_span_pow_le : ∀ (p : ℕ) [Fact p.Prime] (K : Typ
     rfl
   have h1 : Module.finrank K S ≤ Module.finrank K (D ⧸ J) := by
     have := LinearMap.finrank_range_le φ
-    rw [LinearMap.range_eq_top.2 hφ, finrank_top, Subspace.dual_finrank_eq] at this
-    exact this
+    rwa [LinearMap.range_eq_top.2 hφ, finrank_top, Subspace.dual_finrank_eq] at this
   have h2 := _root_.GlobalTheory.FrobKerDim.finrank_quot_frobKerIdeal_le (p ^ r) K D (pow_pos (Fact.out : p.Prime).pos r)
   have hfin := (_root_.GlobalTheory.PDivGroup.finrank_rigExt_omega p K h G.dual).1
   have h3 : Module.finrank K (Cot K D) ≤ Module.finrank K G.dual.omega := by
@@ -764,8 +760,7 @@ theorem evA_comp_coe {K A : Type} [Field K] [CommRing A] [Algebra K A] {d : ℕ}
   apply MvPolynomial.algHom_ext
   intro i
   rw [AlgHom.comp_apply, MvPolynomial.coeToMvPowerSeries.algHom_apply, MvPolynomial.aeval_X]
-  simp only [MvPolynomial.coe_X, map_X]
-  exact _root_.GlobalTheory.Katz.evA_X K (Fin d) A x hx i
+  simpa only [MvPolynomial.coe_X, map_X] using _root_.GlobalTheory.Katz.evA_X K (Fin d) A x hx i
 
 theorem exists_chart_of_isConn (p : ℕ) [Fact p.Prime] (K : Type) [Field K] (h : (p : K) = 0)
     (G : PDivGroup p K) (hG : G.IsConn) : ∃ d, Nonempty (Chart G d) := by

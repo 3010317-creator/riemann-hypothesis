@@ -183,8 +183,7 @@ theorem pow_card_sum_of_sq {B : Type} [Fintype B] [DecidableEq B] (w : B → R) 
     · exact Fintype.prod_bijective g ((Fintype.bijective_iff_injective_and_card g).2 ⟨hg, by simp⟩) _ _
         (fun _ => rfl)
     · obtain ⟨i, j, hij, hne⟩ : ∃ i j, g i = g j ∧ i ≠ j := by
-        by_contra h
-        push Not at h
+        by_contra! h
         exact hg h
       exact prod_eq_zero_of_pair (fun k => w (g k)) hne (by simp only [hij]; exact hw _)
   simp only [key, Finset.sum_ite, Finset.sum_const_zero, add_zero, Finset.sum_const]
@@ -245,8 +244,7 @@ theorem sum_pow_card {B : Type} [Fintype B] [DecidableEq B] (s : B → B → R)
   have hnon : ∀ g : B → B, ¬ Function.Injective g → (∏ a, K a (g a)) • ∏ a, s a (g a) = 0 := by
     intro g hg
     obtain ⟨i, j, hij, hne⟩ : ∃ i j, g i = g j ∧ i ≠ j := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hg h
     rw [prod_eq_zero_of_pair (fun k => s k (g k)) hne (by simp only [hij]; exact hzero _ _ _), smul_zero]
   have hsum : ∑ g : B → B, (∏ a, K a (g a)) • ∏ a, s a (g a) =
@@ -799,8 +797,7 @@ theorem row_levi_det_of (hR : ∀ (n : ℕ) (B : Type) [Fintype B] [DecidableEq 
         · simp [e]
         · intro b _ hb
           rw [ite_eq_right]
-          intro h'
-          exact hb (he (show e ⟨s, h⟩ = e b from h')).symm
+          exact fun h' => hb (he (show e ⟨s, h⟩ = e b from h')).symm
         · simp
       · refine Finset.sum_eq_zero fun b _ => ?_
         rw [ite_eq_right]
@@ -838,8 +835,7 @@ theorem row_levi_det_of (hR : ∀ (n : ℕ) (B : Type) [Fintype B] [DecidableEq 
   have hL : leadMinor (upM (fb ε w) τ * G (bsL ε w) τ * (upM (fb ε w) τ)ᴴ) i = (((G (bsL ε w) τ).det.re / Q.det.re : ℝ) : ℂ) := by
     rw [h1, h2] at hQdet'
     push_cast
-    rw [eq_div_iff hQ0, mul_comm]
-    exact hQdet'
+    rwa [eq_div_iff hQ0, mul_comm]
   rw [hL, Complex.ofReal_re]
   conv_lhs => rw [h1, hqre]
   have hgpos : 0 < grD (upM (fb ε w) τ * G (bsL ε w) τ * (upM (fb ε w) τ)ᴴ) i := hsm.2

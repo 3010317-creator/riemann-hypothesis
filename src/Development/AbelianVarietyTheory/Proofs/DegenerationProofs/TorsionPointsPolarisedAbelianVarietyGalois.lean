@@ -102,14 +102,10 @@ noncomputable def tw (τ : Ω ≃ₐ[K] Ω) : Over.mk (spMap (algebraMap K Ω)) 
     ext c
     exact τ.commutes c)
 
-theorem tw_one : tw (1 : Ω ≃ₐ[K] Ω) = 𝟙 _ := by
-  apply Over.OverMorphism.ext
-  show spMap (RingHom.id Ω) = 𝟙 _
-  exact Spec.map_id _
+theorem tw_one : tw (1 : Ω ≃ₐ[K] Ω) = 𝟙 _ := Over.OverMorphism.ext (Spec.map_id _)
 
 theorem tw_mul (τ σ : Ω ≃ₐ[K] Ω) : tw (τ * σ) = tw τ ≫ tw σ := by
-  apply Over.OverMorphism.ext
-  exact spMap_comp' σ.toRingEquiv.toRingHom τ.toRingEquiv.toRingHom
+  exact Over.OverMorphism.ext (spMap_comp' σ.toRingEquiv.toRingHom τ.toRingEquiv.toRingHom)
 
 theorem tw_pow_fix (P : Out.PolAV (Sp K)) (l : ℕ) (τ : Ω ≃ₐ[K] Ω)
     (h : ∀ x : Over.mk (spMap (algebraMap K Ω)) ⟶ P.A, x ^ l = 1 → tw τ ≫ x = x) (n : ℕ)
@@ -223,8 +219,7 @@ theorem GlobalTheory.torsion_points_galois_module : ∀ (K : Type) [Field K] [Ch
   · have hxl : (x ^ l) ^ l ^ n = 1 := by rw [← pow_mul, ← pow_succ']; exact hx
     have hu : IsUnit ((l ^ n * l : ℕ) : Γ((Over.mk (spMap (algebraMap K Ω))).left, ⊤)) := by
       have := (IsUnit.mk0 _ (hne (n + 1))).map (Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom
-      rw [map_natCast, pow_succ] at this
-      exact this
+      rwa [map_natCast, pow_succ] at this
     have H := ((hL.weil _ P (l ^ n) _).2.2.2 l x y _ hu (by rw [← pow_succ]; exact hx) hy).2
       ((he _ _ _ hxl hy _).2 rfl)
     rw [← Nat.cast_mul, ← pow_succ] at H

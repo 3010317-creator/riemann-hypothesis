@@ -180,8 +180,7 @@ theorem no_norm_eight_of_fourier_vanishing_order_fifteen :
       (∀ j : ℕ, j < 15 → ¬ 5 ∣ j → ∑ k ∈ Finset.range 15, (c k : ℂ) * ω ^ (j * k) = 0) → False := by
   intro ω c hω hs hF
   have hinj : Function.Injective (fun j : Fin 15 => ω ^ (j : ℕ)) := by
-    intro a b hab
-    exact Fin.ext (hω.pow_inj a.2 b.2 hab)
+    exact fun a b hab => Fin.ext (hω.pow_inj a.2 b.2 hab)
   have hv : (fun i : Fin 15 => ((c ((i + 12) % 15) - c i : ℤ) : ℂ)) = 0 := by
     apply Matrix.eq_zero_of_forall_index_sum_pow_mul_eq_zero hinj
     intro j
@@ -277,8 +276,7 @@ theorem fourier_inv_sixtythree (ω : ℂ) (c : ℕ → ℤ) (hω : IsPrimitiveRo
           have hk' := Finset.mem_range.mp hk
           rw [ite_eq_right (by omega)]
           simp
-        · intro hm'
-          exact absurd (Finset.mem_range.mpr hm) hm'
+        · exact fun hm' => absurd (Finset.mem_range.mpr hm) hm'
 
 theorem mixed_diff_sixtythree (ω : ℂ) (c : ℕ → ℤ) (hω : IsPrimitiveRoot ω 63)
     (h : ∀ j : ℕ, j < 63 → ¬ 21 ∣ j → ¬ 9 ∣ j →
@@ -1026,8 +1024,7 @@ theorem _root_.GlobalTheory.CuspGL.eq_of_isPrimitive_of_eq_on_elliptic (F : Type
     exact_mod_cast h
   have hpos : 0 < (∑ k ∈ Finset.range (Nat.card F ^ d - 1), a k) *
       ∑ k ∈ Finset.range (Nat.card F ^ d - 1), b k := by
-    by_contra hle
-    push Not at hle
+    by_contra! hle
     have h0 : (0 : ℤ) < ((d * n : ℕ) : ℤ) * ((d * n' : ℕ) : ℤ) := by positivity
     rw [hA, hB] at h0
     have : (∑ k ∈ Finset.range (Nat.card F ^ d - 1), a k) * P *

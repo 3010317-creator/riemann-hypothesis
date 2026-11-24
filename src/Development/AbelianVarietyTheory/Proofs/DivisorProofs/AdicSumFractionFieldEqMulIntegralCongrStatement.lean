@@ -74,8 +74,7 @@ theorem eq_zero_of_mem_pow_smul {V E : Type} [CommRing V] [IsLocalRing V] [IsNoe
     (maximalIdeal.isMaximal V).ne_top
   have hm : (⟨w, hw⟩ : N) ∈ (⨅ n : ℕ, maximalIdeal V ^ n • ⊤ : Submodule V N) := by
     rw [Submodule.mem_iInf]
-    intro n
-    exact (Submodule.mem_smul_top_iff _ N _).mpr (h n)
+    exact fun n => (Submodule.mem_smul_top_iff _ N _).mpr (h n)
   rw [hb, Submodule.mem_bot] at hm
   exact congrArg Subtype.val hm
 
@@ -95,16 +94,14 @@ theorem sumI_smul {V E : Type} [CommRing V] [IsLocalRing V] [IsNoetherianRing V]
       rw [← Submodule.map_smul'']
       exact Submodule.mem_map_of_mem h1
     have h3 : ∑ i ∈ (insert i₀ S).erase i₀, x i ∈ P := by
-      refine Submodule.sum_mem _ fun i hi => ?_
-      exact ⟨y i, hy i (Finset.ne_of_mem_erase hi), by simp [hx i]⟩
+      exact Submodule.sum_mem _ fun i hi => ⟨y i, hy i (Finset.ne_of_mem_erase hi), by simp [hx i]⟩
     have h4 : P.mkQ (∑ i ∈ (insert i₀ S).erase i₀, x i) = 0 :=
       (Submodule.Quotient.mk_eq_zero P).mpr h3
     have h5 : v - y i₀ • k =
         (v - ∑ i ∈ insert i₀ S, x i) + ∑ i ∈ (insert i₀ S).erase i₀, x i := by
       rw [← Finset.add_sum_erase _ x (Finset.mem_insert_self i₀ S), hx i₀]
       abel
-    rw [h5, map_add (f := _), h4, add_zero]
-    exact h2
+    rwa [h5, map_add (f := _), h4, add_zero]
   obtain ⟨a, ha, hak⟩ := (Submodule.Quotient.mk_eq_zero P).mp key
   refine ⟨y i₀ + a, ?_, by simpa using ha⟩
   have hak' : a • k = v - y i₀ • k := by simpa using hak

@@ -181,8 +181,7 @@ theorem finT_isFam (ψ : AddChar (AF F) ℂ) (hψ : IsStd ψ) (φ : ∀ v : Pl (
   refine ⟨fun v => ?_, ?_⟩
   · have e : finT ψ φ y v = schr (GlobalTheory.LatVac.psiAt ψ v) (0, fun i => evFin F v (y i)) (φ v) := by
       funext z
-      simp only [finT, schr, zero_dotProduct, mul_zero, add_zero]
-      exact mul_comm _ _
+      simpa only [finT, schr, zero_dotProduct, mul_zero, add_zero] using mul_comm _ _
     rw [e]
     exact GlobalTheory.SchrSBFin.schr_mem_SB v _ (GlobalTheory.SchrSB.continuous_psiAt ψ hψ.1 v) _ _ (hφ.1 v)
   · filter_upwards [hφ.2, psiUnr_eventually ψ hψ, Filter.eventually_all.2 fun i => evFin_mem (y i)] with v h1 h2 h3

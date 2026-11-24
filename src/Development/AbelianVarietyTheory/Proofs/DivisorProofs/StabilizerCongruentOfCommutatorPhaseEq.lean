@@ -147,8 +147,7 @@ theorem entries_of_mem {δ : ℂ} (hc : Crv D ⊤ δ) {𝔪 : Ideal (𝓞 D.host
     have hint : IsIntegral ℤ ((c : D.host.K) : D.host.E) :=
       (RingOfIntegers.isIntegral_coe c).algebraMap (B := D.host.E)
     have := (skewCoef D 𝔪).smul_mem (⟨_, hint⟩ : 𝓞 D.host.E) (entries_of_YYl h𝔪 hA i j)
-    rw [Matrix.smul_apply, smul_eq_mul]
-    exact this
+    rwa [Matrix.smul_apply, smul_eq_mul]
   have hδ : δ ≠ 0 := (GlobalTheory.CurveLattice.lattice_of_curve D (GlobalTheory.InducedType.induced_type D).1 ⊤ δ hc).2.1
   obtain ⟨z', hz', e⟩ := hle hz
   have : z' = z := GlobalTheory.ThetaLatticePoints.ptHom_injective D ⊤ hδ a d e
@@ -233,8 +232,7 @@ theorem cong_of_kap_eq : ∀ (D : D7) (δ : ℂ), Crv D ⊤ δ → ∀ (𝔪 : I
   have hrow : ∀ (i : Fin d) (j : Fin a), (B * (R - R')) i j ∈ hatId D 𝔪 := by
     intro i j
     have e : (B * (R - R')) i j = (x'.map (inc D) - B * R') i j - (x.map (inc D) - B * R) i j + inc D ((x - x') i j) := by
-      simp only [Matrix.mul_sub, Matrix.sub_apply, Matrix.map_apply, map_sub]
-      exact alg1 _ _ _ _
+      simpa only [Matrix.mul_sub, Matrix.sub_apply, Matrix.map_apply, map_sub] using alg1 _ _ _ _
     have hint : (B * (R - R')) i j ∈ OhE D := by
       rw [Matrix.mul_apply]
       exact sum_mem fun k _ => mul_mem (hBi i k) (by rw [Matrix.sub_apply]; exact sub_mem (hR k j) (hR' k j))
@@ -257,8 +255,7 @@ theorem cong_of_kap_eq : ∀ (D : D7) (δ : ℂ), Crv D ⊤ δ → ∀ (𝔪 : I
     rw [← e]
     exact hrow _ j
   have e1 : R' * P' = 1 := by
-    simp only [hR'def, hP'def, Subgroup.coe_inv]
-    exact Units.inv_mul _
+    simpa only [hR'def, hP'def, Subgroup.coe_inv] using Units.inv_mul _
   intro i j
   have e2 : (((r⁻¹ * r' : GA D a) : GL (Fin a) (AE D)) : Matrix (Fin a) (Fin a) (AE D)) - 1 = (R - R') * P' := by
     rw [Matrix.sub_mul, e1]

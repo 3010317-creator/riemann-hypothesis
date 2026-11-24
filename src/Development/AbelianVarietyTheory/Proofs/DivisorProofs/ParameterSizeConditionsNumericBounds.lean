@@ -84,9 +84,7 @@ theorem sizes_of_sizeRows : ∀ {D : D7} (large₂ : SizeData₂ D), GlobalTheor
     nlinarith
   have hmN : 2 * (D.R.N D.R.m : ℝ) ≤ (D.R.m : ℝ) * (D.R.N D.R.m : ℝ) := by nlinarith
   have hrd1 : 1 ≤ D.host.rdE := Formalism.MainNotions.Gaps.EtaleWeightGaps.Num.Pm.one_le_rdE D
-  have hlogb : Real.log large₂.sc.b = large₂.sc.L := by
-    show Real.log (Real.exp large₂.sc.L) = large₂.sc.L
-    exact Real.log_exp _
+  have hlogb : Real.log large₂.sc.b = large₂.sc.L := Real.log_exp _
   refine ⟨by linarith, by linarith, by simp only [bigN]; omega, hf, by omega, hrd1, ?_, ?_⟩
   · rw [hlogb]; linarith
   · have : (12 : ℝ) ≤ (D.R.m : ℝ) * (D.R.N D.R.m : ℝ) := by nlinarith

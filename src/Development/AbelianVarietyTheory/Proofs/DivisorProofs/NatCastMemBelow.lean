@@ -136,8 +136,7 @@ theorem isBaseCond_condF (P : Places L) (hg : ∀ i, D.host.g i % LevelStarExpon
       intro p hp h15 hs
       have hs' : GlobalTheory.Mem.Chr.SplitsC D.host.E p := by
         have e := GlobalTheory.HostSplit.ncard_placesOver D.host.E hp
-        rw [hs] at e
-        exact e
+        rwa [hs] at e
       exact ⟨hp, by omega, good_prime D.host hp hs'⟩
     rintro p (rfl | rfl | rfl | rfl | rfl)
     · exact ofMod _ (D.host.g_prime 0) (hg 0)
@@ -187,8 +186,7 @@ theorem isCMType_cmPhi (D : D7) : IsCMType (cmPhi D) ∧ ∀ τ τ', cmPhi D τ 
   refine ⟨fun σ => ?_, fun τ τ' => by rw [e, e]; exact hsq _ _⟩
   obtain ⟨g, hg, hu⟩ := hcm σ
   refine ⟨D.eTau.symm g, ?_, fun τ hτ => ?_⟩
-  · simp only [e, Equiv.apply_symm_apply]
-    exact hg
+  · simpa only [e, Equiv.apply_symm_apply] using hg
   · have hτ' : σ = GlobalTheory.LamTie.phi D.host (D.eTau τ) ∨ σ = ComplexEmbedding.conjugate (GlobalTheory.LamTie.phi D.host (D.eTau τ)) := by
       simpa only [e] using hτ
     rw [← hu _ hτ', Equiv.symm_apply_apply]

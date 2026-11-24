@@ -106,8 +106,7 @@ theorem inertPartition_le_partF {K : Type} [Field K] [NumberField K] [StarRing K
   unfold InertDat3.inertTypeEigenspaceSum Formalism.L2.Col.eigSum
   refine iSup₂_le fun x hx => ?_
   have := Formalism.L2.Col.eigAt_le Dd.opAll x (Sum.inr k)
-  rw [hx.2 k] at this
-  exact this
+  rwa [hx.2 k] at this
 
 theorem hkF_single_of_not {D : D7} (V : HSp D) {W : Type} [AddCommGroup W] [Module ℂ W] (P : Pl D.host.E) (d : List ℤ)
     (hd : ¬ IsLab V P d) (F : Bridge.Gf V → W) : GlobalTheory.Hk3.hkF V P (Finsupp.single d 1) F = 0 := by
@@ -237,8 +236,7 @@ theorem lin_lemma (R : RealDat3 D A3 Ks) (hX : Pl D.host.E → (List ℤ →₀ 
     hX P cX x = cX.sum fun d z => z • hX P (Finsupp.single d 1) x := by
   apply heInj
   rw [hXops P hP, map_finsuppSum]
-  simp only [map_smul, hXops P hP]
-  exact hkF_eq_sum _ _ _ _
+  simpa only [map_smul, hXops P hP] using hkF_eq_sum _ _ _ _
 
 
 theorem zer_lemma (R : RealDat3 D A3 Ks) (hX : Pl D.host.E → (List ℤ →₀ ℂ) → Module.End ℂ (R.HX A3.A.μ0).H)
@@ -385,8 +383,7 @@ theorem dir2 (R : RealDat3 D A3 Ks) (F : Face3 D A3) {s : ℕ} (hCore : Core R.t
       intro q e he
       refine eq_of_le_maxGen (A3.heckeRI A3.A.μ0 (Q, y)) _ _ _ (nb q e he) (inertPartition_le_partF (A3.rowI A3.A.μ0) q.1 (Q, y)) ?_
       rw [h0]
-      intro x _
-      exact (Module.End.mem_maxGenEigenspace _ _ _).2 ⟨1, by simp⟩
+      exact fun x _ => (Module.End.mem_maxGenEigenspace _ _ _).2 ⟨1, by simp⟩
     show p.1.2 (Q.1, y) = p'.1.2 (Q.1, y)
     rw [z p c hc, z p' c' hc']
   · have w : ∀ (q : A3.fam3.base3.Ix) (e : Pl D.host.E → List ℤ → ℂ), R.Carries q e →

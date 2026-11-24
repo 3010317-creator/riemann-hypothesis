@@ -153,8 +153,7 @@ theorem exists_model {T : Type} [CommRing T] [IsDomain T]
       apply h2
       simp only [LinearMap.rTensor_tmul, Algebra.linearMap_apply, map_one]
       exact (P.tensorModelOfHasCoeffsEquiv (Polynomial (loc S))).injective hab
-    have h4 := congrArg (TensorProduct.lid (Polynomial (loc S)) _) h3
-    simpa using h4
+    simpa using congrArg (TensorProduct.lid (Polynomial (loc S)) _) h3
   · intro y hy
     have hy' : f y ∈ Set.range (MvPolynomial.map (algebraMap (Polynomial (loc S)) (Polynomial T))) := by
       rw [MvPolynomial.mem_range_map_iff_coeffs_subset]
@@ -321,8 +320,7 @@ theorem exists_noetherian_model_of_mul_eq : ∀ (T O : Type) [CommRing T] [IsDom
     QA, inferInstance, horig, jA, hjA,
     IsLocalization.mk' (Localization.AtPrime QA) xA ⟨uA, hmemA huA⟩,
     IsLocalization.mk' (Localization.AtPrime QA) x'A ⟨u'A, hmemA hu'A⟩, sA, ?_, rfl, ?_, ?_⟩
-  · intro h
-    exact hs0 (congrArg Subtype.val h)
+  · exact fun h => hs0 (congrArg Subtype.val h)
   · rw [← IsLocalization.mk'_mul, IsLocalization.mk'_eq_iff_eq_mul,
       IsScalarTower.algebraMap_apply (loc S) EA (Localization.AtPrime QA), ← map_mul,
       IsLocalization.eq_iff_exists QA.primeCompl]

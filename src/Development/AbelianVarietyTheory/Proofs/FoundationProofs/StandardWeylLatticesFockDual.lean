@@ -152,8 +152,7 @@ theorem lowerTri_of_interlaced {r n : ℕ} {m : Fin r × Fin n →₀ ℕ} (h : 
         Finset.single_le_sum (f := fun b : Fin r => m (b, ⟨k + 1, hk⟩)) (fun _ _ => Nat.zero_le _)
           (Finset.mem_filter.mpr ⟨Finset.mem_univ _, le_rfl⟩)
       omega
-  intro a s has
-  exact key s.val s.2 a has
+  exact fun a s has => key s.val s.2 a has
 
 theorem intQ_apply (r n : ℕ) (P : MvPolynomial (Fin r × Fin n) ℤ) :
     intQ r n P = MvPolynomial.map (Int.castRingHom ℚ) P := rfl
@@ -173,8 +172,7 @@ theorem lowerTriIntegral : Formalism.GradedWeylDivisibility.LowerTriIntegral := 
       (colLex r n).toSyn ((colLex r n).degree f) = d →
       (∀ e : Fin r × Fin n →₀ ℕ, LowerTri e → ∃ z : ℤ, AddMonoidAlgebra.coeff f e = z) →
       ∃ Q' : MvPolynomial (Fin r × Fin n) ℤ, f = intQ r n Q' by
-    intro f hf hint
-    exact key _ f hf rfl hint
+    exact fun f hf hint => key _ f hf rfl hint
   intro d
   induction d using WellFoundedLT.induction with
   | _ d ih =>
@@ -250,8 +248,7 @@ theorem weight_rowW_diagExp (ν : Fin n → ℕ) :
     · simp
     · intro b _ hb
       rw [ite_eq_right]
-      intro e
-      exact hb (Fin.ext e.symm)
+      exact fun e => hb (Fin.ext e.symm)
     · simp
   · refine Finset.sum_eq_zero fun s _ => ?_
     rw [ite_eq_right]
@@ -289,8 +286,7 @@ theorem lowerTri_of_interlaced {m : Fin r × Fin n →₀ ℕ} (hm : Interlaced 
       have h1 : m (a, s) ≤ ∑ b : Fin r with b ≤ a, m (b, s) :=
         Finset.single_le_sum (f := fun b => m (b, s)) (fun _ _ => Nat.zero_le _) (by simp)
       omega
-  intro a s h
-  exact key s.val s rfl a h
+  exact fun a s h => key s.val s rfl a h
 
 theorem eq_diagExp_of_lowerTri (hn : n ≤ r) {ν : Fin n → ℕ} {m : Fin r × Fin n →₀ ℕ} (hm : LowerTri m)
     (hcol : ∀ t : Fin n, ∑ a : Fin r, m (a, t) = ν t)
@@ -318,8 +314,7 @@ theorem eq_diagExp_of_lowerTri (hn : n ≤ r) {ν : Fin n → ℕ} {m : Fin r ×
         Finset.sum_le_sum_of_subset (Finset.subset_univ _)
       rw [Finset.sum_pair hne, hcol s] at h3
       omega
-  intro a s h
-  exact key s.val s rfl a h
+  exact fun a s h => key s.val s rfl a h
 
 theorem eval_idFrame_eq_coeff {R : Type*} [CommRing R] {ν : Fin n → ℕ} {F : MvPolynomial (Fin r × Fin n) R}
     (hcol : ∀ m ∈ F.support, ∀ t : Fin n, ∑ a : Fin r, m (a, t) = ν t) :

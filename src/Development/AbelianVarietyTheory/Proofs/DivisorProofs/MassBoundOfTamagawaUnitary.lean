@@ -479,9 +479,7 @@ theorem suLie_finrank_ge : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E
       rw [show cc (X.trace / δ) = cc X.trace / cc δ from map_div₀ (IsCMField.complexConj E) _ _, htr, hδ,
         neg_div_neg_eq]
     rw [Submodule.mem_span_singleton]
-    refine ⟨⟨X.trace / δ, (IsCMField.complexConj_eq_self_iff E _).mp hz⟩, ?_⟩
-    show X.trace / δ * δ = X.trace
-    exact div_mul_cancel₀ _ hδ0
+    exact ⟨⟨X.trace / δ, (IsCMField.complexConj_eq_self_iff E _).mp hz⟩, div_mul_cancel₀ _ hδ0⟩
 
   have hv : ∀ u v : Fin r → E, herm G u v = u ⬝ᵥ (G *ᵥ fun b => cc (v b)) := by
     intro u v
@@ -1096,8 +1094,7 @@ theorem herm_single {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
 theorem exists_aniso {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
     {G : Matrix (Fin r) (Fin r) E} (hdet : G.det ≠ 0) (hr : 0 < r) :
     ∃ e : Fin r → E, ReciprocityTheory.ChartRestriction.G.FD.herm G e e ≠ 0 := by
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   obtain ⟨ξ, hξ0, hξ⟩ := exists_imag E
   have h0 : ∀ x y, ReciprocityTheory.ChartRestriction.G.FD.herm G x y = 0 := by
     intro x y
@@ -1483,8 +1480,7 @@ theorem discrete_inReal {Ψ : Finset (E →+* ℂ)}
         have e1 : (g.1.1 ⟨τ, hτ⟩ : Matrix (Fin r) (Fin r) ℂ) = (γ : Matrix (Fin r) (Fin r) E).map τ := by
           rw [← e]; rfl
         simp only [f, e1] at h1
-        rw [hz, map_mul, Pi.sub_apply, map_sub, RingHom.map_mulVec]
-        exact h1
+        rwa [hz, map_mul, Pi.sub_apply, map_sub, RingHom.map_mulVec]
       rw [hz0] at hz
       have hd' : (d a : E) ≠ 0 := by
         have := nonZeroDivisors.ne_zero (hd0 a)
@@ -1597,8 +1593,7 @@ theorem conj_mem_congSU {G : Matrix (Fin r) (Fin r) E} {L : Set (Fin r → E)}
     rw [this, Units.val_one, one_mulVec]
   · have h1 := congrArg Matrix.det t.inv_mul
     rw [det_mul, ht.2, mul_one, det_one] at h1
-    rw [Units.val_mul, Units.val_mul, det_mul, det_mul, ht.2, coe_toAd, hβ'.2, mul_one, mul_one]
-    exact h1
+    rwa [Units.val_mul, Units.val_mul, det_mul, det_mul, ht.2, coe_toAd, hβ'.2, mul_one, mul_one]
 
 
 open Classical in
@@ -1704,8 +1699,7 @@ theorem sum_covolume_le_pow_mul_tsum : ∀ (E : Type) [Field E] [NumberField E] 
       fun γ hγ y hy => by
         rw [← SetLike.mem_coe, hL'] at hy ⊢
         have := (hγ.2.2 _).2 hy
-        rw [GlobalTheory.LocGlob.ratM_mulVec_fv] at this
-        exact this
+        rwa [GlobalTheory.LocGlob.ratM_mulVec_fv] at this
     haveI := GlobalTheory.countable_of_discrete_subgroup (inReal Ψ G (ratStab G (L : Set (Fin r → E)) (t (j i))))
     obtain ⟨D, hD, hu, hF⟩ :=
       GlobalTheory.exists_isFundamentalDomain_subgroup (inReal Ψ G (ratStab G (L : Set (Fin r → E)) (t (j i))))

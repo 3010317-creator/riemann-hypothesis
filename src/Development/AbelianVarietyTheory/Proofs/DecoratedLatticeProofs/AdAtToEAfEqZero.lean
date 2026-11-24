@@ -79,15 +79,13 @@ theorem afIso_indP (w : GlobalTheory.FinPl.Pl D) (P : HeightOneSpectrum (𝓞 D.
   have h0 : (GlobalTheory.FinPl.KOpen.indP D (· = w)) (P.under (𝓞 D.host.F)) - algebraMap D.host.F _ 1 = 0 := by
     have := GlobalTheory.FinPl.KOpen.evalV_indP (D := D) (· = w) (P.under (𝓞 D.host.F))
     rw [ite_eq_left hP] at this
-    rw [map_one, sub_eq_zero]
-    exact this
+    rwa [map_one, sub_eq_zero]
   have h1 : ∀ n : ℕ, Valued.v (GlobalTheory.Mem.Col2.afIso D.host.F D.host.E
       ((1 : D.host.E) ⊗ₜ[D.host.F] GlobalTheory.FinPl.KOpen.indP D (· = w)) P
       - algebraMap D.host.E _ (algebraMap D.host.F D.host.E 1)) ≤ WithZero.exp (-(n : ℤ)) := fun n =>
     hs n (by rw [h0, Valuation.map_zero]; exact zero_le')
   have h2 := eq_zero_of_le_exp _ h1
-  rw [Valuation.zero_iff, map_one, map_one, sub_eq_zero] at h2
-  exact h2
+  rwa [Valuation.zero_iff, map_one, map_one, sub_eq_zero] at h2
 
 theorem indicatorAdele_mul_eq_zero (w : GlobalTheory.FinPl.Pl D) (z : Af D.host.F ⊗[D.host.F] D.host.E)
     (hz : GlobalTheory.IndefiniteRowSideFullHecke.UnramifiedCharacter.compFin D w z = 0) :

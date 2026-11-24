@@ -158,12 +158,9 @@ theorem _root_.GlobalTheory.QFam.isFam_algebra : ∀ (ι : Type) (act : ι → S
       simp only [SL_slash_apply]
       rw [← isFam_apply_smul_mul_denom_zpow hf i γ τ, ← isFam_apply_smul_mul_denom_zpow hg i γ τ]
       ring
-  · intro w c f hf
-    exact hf.const_mul_fun c
-  · intro w w' f g hf hg
-    exact hf.mul_fun hg
-  · intro w f k hf
-    exact hf.pow_fun k
+  · exact fun w c f hf => hf.const_mul_fun c
+  · exact fun w w' f g hf hg => hf.mul_fun hg
+  · exact fun w f k hf => hf.pow_fun k
   · intro κ t w f hf
     exact _root_.GlobalTheory.QFam.IsFam.sum_fun t hf
   · intro κ t w f hf

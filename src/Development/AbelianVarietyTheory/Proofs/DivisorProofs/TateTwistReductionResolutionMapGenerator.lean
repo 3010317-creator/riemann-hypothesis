@@ -127,8 +127,7 @@ theorem twRed_sec : ∀ (Q q : ℕ) [NeZero Q] [NeZero q], q ∣ Q → ∀ (i : 
   have he1 : ∀ (V U : Scheme.{0}) (g : V ⟶ U) (ζ : Prim Q Γ(U, ⊤)), Sec.res g (e U ζ) = e V (ζ.map g.appTop.hom) := by
     intro V U g ζ
     have := ts.2.2.2.1 V U g (powPrim hq ζ)
-    rw [powPrim_map] at this
-    exact this
+    rwa [powPrim_map] at this
   have hcast : ∀ u : (ZMod Q)ˣ, ((ZMod.unitsMap hq u : (ZMod q)ˣ) : ZMod q).val = (u : ZMod Q).val % q := by
     intro u
     show (ZMod.castHom hq (ZMod q) (u : ZMod Q)).val = _
@@ -192,9 +191,7 @@ theorem redMap_exists (Q q : ℕ) [NeZero Q] [NeZero q] (hq : q ∣ Q) (i : ℤ)
     rw [HomologicalComplex.comp_f, ← hι]
     change ((HomologicalComplex.single (Shv (ZMod q)) (ComplexShape.up ℤ) 0).map α).f 0 ≫ _ = _
     rw [HomologicalComplex.single_map_f_self]
-    refine (Category.assoc _ _ _).trans ?_
-    refine congrArg (_ ≫ ·) ?_
-    exact Category.assoc _ _ _
+    exact (Category.assoc _ _ _).trans (congrArg (_ ≫ ·) (Category.assoc _ _ _))
   have key : (extSh (ZMod.castHom hq (ZMod q))).map (resι _ (tw Q i)) ≫ m.f 0 = α ≫ resι _ (tw q i) := by
     have e : (extAug (ZMod.castHom hq (ZMod q)) (tw Q i) ≫ m).f 0 =
         ((CochainComplex.singleFunctor (Shv (ZMod q)) 0).map α ≫ resAug (tw q i)).f 0 := by rw [hm]

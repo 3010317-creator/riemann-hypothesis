@@ -189,10 +189,8 @@ theorem isAuxiliaryHyperbolicPart_initialChainSpace : IsAuxiliaryHeckeCharacter 
     refine ⟨D.sp.hyp_ee _ _, D.sp.hyp_ff _ _, ?_⟩
     rw [← (D.sp.Y 0).herm.eq, D.sp.hyp_ef]
     by_cases h : i = l <;> simp [h]
-  · simp only [dite_eq_left hi]
-    exact D.sp.hyp_orthX _ x
-  · simp only [dite_eq_left hi]
-    exact D.sp.hyp_orthz _
+  · simpa only [dite_eq_left hi] using D.sp.hyp_orthX _ x
+  · simpa only [dite_eq_left hi] using D.sp.hyp_orthz _
 
 end GlobalTheory.IndefiniteRowSideFullHecke.ChainMatrices
 

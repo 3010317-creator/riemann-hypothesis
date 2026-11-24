@@ -100,8 +100,7 @@ theorem _root_.GlobalTheory.FieldBC.rulBC_cusp : ∀ (E : Type) [Field E] [Numbe
     refine ⟨hf, fun σ hσ => ?_⟩
     obtain ⟨σ', rfl⟩ := _root_.GlobalTheory.FieldBC.exists_emb_ext hle σ
     have hmem := hcusp σ' (_root_.Formalism.L2.Pj.goodEmb_ext hle hσ rfl)
-    rw [hread, _root_.Formalism.L2.Pj.laU_unfBC] at hmem
-    exact hmem
+    rwa [hread, _root_.Formalism.L2.Pj.laU_unfBC] at hmem
   · rintro ⟨-, hcusp⟩
     refine ⟨hsec, fun σ' hσ' => ?_⟩
     rw [hread, _root_.Formalism.L2.Pj.laU_unfBC]

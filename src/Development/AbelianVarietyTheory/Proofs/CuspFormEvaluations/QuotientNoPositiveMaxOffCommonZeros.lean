@@ -176,13 +176,11 @@ theorem exists_dir {n : ℕ} (s : Fin n → V n → ℂ) (k0 : Fin n) (z0 : V n)
     simp at h1
   have hni : ¬ Function.Injective L := fun h => hns (LinearMap.injective_iff_surjective.mp h)
   obtain ⟨a, b, hab, hne⟩ : ∃ a b, L a = L b ∧ a ≠ b := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hni fun a b h => hcon a b h
   refine ⟨a - b, sub_ne_zero.mpr hne, fun k => ?_⟩
   have h2 := congrFun (show L (a - b) = 0 by rw [map_sub, hab, sub_self]) k
-  rw [hL, Pi.zero_apply] at h2
-  exact h2
+  rwa [hL, Pi.zero_apply] at h2
 
 private theorem contDiffAt_two_log_sum_normSq {n : ℕ} {U : Set (V n)} (hU : IsOpen U) {z0 : V n} (hz : z0 ∈ U) {M : ℕ}
     {w : Fin M → V n → ℂ} (hw : ∀ k, DifferentiableOn ℂ (w k) U)
@@ -234,8 +232,7 @@ theorem no_localMax {n : ℕ} {U : Set (V n)} (hU : IsOpen U) {z0 : V n} (hz : z
         fun z => ((Real.log (∑ k : Fin 1, ‖(fun _ => f) k z‖ ^ 2) : ℝ) : ℂ) := by
       funext z
       rw [Fin.sum_univ_one, Complex.normSq_eq_norm_sq]
-    rw [heq]
-    exact h1
+    rwa [heq]
 
   have hS : (leviV n (fun z => ((Real.log (∑ k, Complex.normSq (s k z)) : ℝ) : ℂ)) z0 ξ).re = 0 := by
     have h1 := hT.1 n s k0 (fun k => hev (hs k)) hs0 hξ
@@ -243,8 +240,7 @@ theorem no_localMax {n : ℕ} {U : Set (V n)} (hU : IsOpen U) {z0 : V n} (hz : z
         fun z => ((Real.log (∑ k, ‖s k z‖ ^ 2) : ℝ) : ℂ) := by
       funext z
       simp only [Complex.normSq_eq_norm_sq]
-    rw [heq]
-    exact h1
+    rwa [heq]
 
   have cone : ∀ {f : V n → ℂ}, DifferentiableOn ℂ f U → f z0 ≠ 0 →
       ContDiffAt ℝ 2 (fun z => Real.log (Complex.normSq (f z))) z0 := by

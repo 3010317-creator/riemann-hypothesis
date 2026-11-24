@@ -1257,8 +1257,7 @@ theorem exists_locSec_of_openImmersion (E : Type) [Field E] [NumberField E] [IsC
   obtain ⟨s, hs, hsgen, hsfib⟩ := GlobalTheory.T.exists_localSection_of_openImmersion_spec S t.G t.PP.L R χ σ hlft hσnz
   refine ⟨s, hs, ?_, hsfib⟩
   have := hsgen K (algebraMap R K)
-  rw [hσ] at this
-  exact this
+  rwa [hσ] at this
 
 theorem exists_locSec_theta_chart : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (k Ω : Type) [CommRing k]
     [IsNoetherianRing k] [Field Ω] [CharZero Ω] [Algebra k Ω] (M : RatModel k Ω) (t : SAB H M.Z) (g m n : ℕ)
@@ -1372,8 +1371,7 @@ theorem glued : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (L : LB G.left) (K 
     obtain ⟨k, hk⟩ := TopologicalSpace.Opens.mem_iSup.1 hp
     have hxk : Set.range x ⊆ N k := by
       rintro _ ⟨q, rfl⟩
-      rw [Subsingleton.elim q p]
-      exact hk
+      rwa [Subsingleton.elim q p]
     obtain ⟨y, i, hyx, hyr, hval⟩ := hnz k K' x hxk
     refine ⟨y, i, hyx, fun z hz => ⟨(hyr hz).1, hN k (hyr hz).2⟩, ?_⟩
     rw [← hres k i] at hval
@@ -1825,8 +1823,7 @@ theorem pull_theta_bundle : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   · obtain ⟨a, ha⟩ := exists_mem_chart k n (h (x (IsLocalRing.closedPoint K)))
     have hx : Set.range x ⊆ h ⁻¹ᵁ chart k n a := by
       rintro _ ⟨w, rfl⟩
-      rw [Subsingleton.elim w (IsLocalRing.closedPoint K)]
-      exact ha
+      rwa [Subsingleton.elim w (IsLocalRing.closedPoint K)]
     obtain ⟨y, i, hyx, hyr, hv⟩ := hfs a K x hx
     have hyr' : Set.range y ⊆ (CechPic.tens t.PP.L (((ProjSpace.O1 k n).pull h).pull t.G.hom)).U
         (i, fun _ _ => a) := fun _ hw =>

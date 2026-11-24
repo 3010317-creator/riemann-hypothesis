@@ -132,8 +132,7 @@ theorem finrank_le_pow_finrank_cot (p : ℕ) [hp : Fact p.Prime] (K H : Type) [F
     exact Ideal.Quotient.eq_zero_iff_mem.2 (pow_mem_frobKerIdeal ha)
   have hnil : IsNilpotent (RingHom.ker εQ) := by
     rw [Ideal.FG.isNilpotent_iff_le_nilradical (IsNoetherian.noetherian _)]
-    intro f hf
-    exact ⟨p, hpowQ f hf⟩
+    exact fun f hf => ⟨p, hpowQ f hf⟩
 
   haveI : Module.Finite K (AugCot ε) := Module.Finite.of_surjective _ (AugCot.d_surjective ε)
   set d := Module.finrank K (AugCot ε) with hd
@@ -160,8 +159,7 @@ theorem finrank_le_pow_finrank_cot (p : ℕ) [hp : Fact p.Prime] (K H : Type) [F
   have hmapI : Ideal.map mk (RingHom.ker ε) ≤ RingHom.ker εQ := by
     rw [Ideal.map_le_iff_le_comap]
     intro a ha
-    rw [Ideal.mem_comap, RingHom.mem_ker]
-    exact ha
+    rwa [Ideal.mem_comap, RingHom.mem_ker]
   have hspan : ∀ z ∈ RingHom.ker εQ, ∃ l : Fin d → K, z - ∑ i, l i • y i ∈ RingHom.ker εQ ^ 2 := by
     intro z hz
     obtain ⟨a, ha, rfl⟩ := hkerQ z hz

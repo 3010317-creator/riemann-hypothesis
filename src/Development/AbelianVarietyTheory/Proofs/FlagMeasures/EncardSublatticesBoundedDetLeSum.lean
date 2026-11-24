@@ -351,8 +351,7 @@ theorem isSquare_disc (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm) (hn : h
       rw [Formalism.HermitianLatticesTheory.locDual_h_smul_left, Formalism.HermitianLatticesTheory.locDual_h_smul_right]
       exact Formalism.HermitianLatticesTheory.locDual_one_mul (hstar1 _ (Formalism.HermitianLatticesTheory.locDual_alg_mem a))
         (Formalism.HermitianLatticesTheory.locDual_one_mul (Formalism.HermitianLatticesTheory.locDual_alg_mem b) hyy)
-    simp only [map_add (f := _), LinearMap.add_apply]
-    exact add_mem (add_mem e1 e3) (add_mem e2 e4)
+    simpa only [map_add (f := _), LinearMap.add_apply] using add_mem (add_mem e1 e3) (add_mem e2 e4)
 
   have hDM'le : dual h M' ≤ dual h M := hanti M M' hMM'
   have hM'DM : M ≤ dual h M' := hMM'.trans hM'int
@@ -399,9 +398,7 @@ theorem latDetH_nat (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm) (ha : ∀
   set MU : Submodule (𝓞 K) U := M.comap φ with hMUdef
   have hmapMU : MU.map φ = M := by
     rw [hMUdef, Submodule.map_comap_eq]
-    refine inf_eq_right.2 ?_
-    intro m hm
-    exact LinearMap.mem_range.2 ⟨⟨m, hMU m hm⟩, rfl⟩
+    exact inf_eq_right.2 (fun m hm => LinearMap.mem_range.2 ⟨⟨m, hMU m hm⟩, rfl⟩)
   have hMUl : Submodule.IsFullLattice K MU := by
     have hfg : MU.FG := Submodule.fg_of_fg_map_injective φ hφ (hmapMU ▸ hM)
     haveI : Submodule.IsLattice K MU := Submodule.IsLattice.of_fg K hfg
@@ -414,8 +411,7 @@ theorem latDetH_nat (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm) (ha : ∀
     constructor
     · rintro ⟨u, hu, rfl⟩
       exact hu
-    · intro hv
-      exact ⟨⟨v, hMU v hv⟩, hv, rfl⟩
+    · exact fun hv => ⟨⟨v, hMU v hv⟩, hv, rfl⟩
   have hMUint : MU ≤ dual g MU := by
     intro x hx
     rw [Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
@@ -445,8 +441,7 @@ theorem latDetH_nat (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm) (ha : ∀
         obtain ⟨hv1, hv2⟩ := Submodule.mem_inf.1 hv
         refine ⟨⟨v, hv2⟩, ?_, rfl⟩
         rw [Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
-        intro y hy
-        exact (Formalism.HermitianLatticesTheory.dualBasic_mem_dual h M v).1 hv1 y hy
+        exact fun y hy => (Formalism.HermitianLatticesTheory.dualBasic_mem_dual h M v).1 hv1 y hy
     rw [h1, AddSubgroup.relIndex_comap, h2]
   have hne : idxN (dual g MU) MU ≠ 0 := GlobalTheory.Mass.DiscOrder.idxN_ne_zero hMUl hDU.1.fg
   rw [hidx] at hsq hne
@@ -459,8 +454,7 @@ theorem latDetH_nat (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm) (ha : ∀
   exact Real.sqrt_mul_self (Nat.cast_nonneg r)
 
 theorem main : ∀ (E : Type) [Field E] [NumberField E] [StarRing E] (S : HSpace E), (∀ (τ : E →+* ℂ) (x : E), τ (star x) = starRingEnd ℂ (τ x)) → (∀ P : HeightOneSpectrum (𝓞 E), Formalism.HermitianLatticesTheory.conjIdeal (K := E) P.asIdeal = P.asIdeal → IsSquare (Ideal.absNorm P.asIdeal)) → (∀ x : S.V, S.hT x x = 0 → x = 0) → ∀ M : Submodule (𝓞 E) S.V, M.FG → M ≤ dualIn S M → ∃ de : ℕ, 1 ≤ de ∧ latDet S M = de := by
-  intro E _ _ _ S _ hP ha M hM hle
-  exact latDetH_nat S.hT S.herm ha hP M hM hle
+  exact fun E _ _ _ S _ hP ha M hM hle => latDetH_nat S.hT S.herm ha hP M hM hle
 
 end GlobalTheory.Mass.DetNat
 end -- clump:auto
@@ -583,8 +577,7 @@ theorem main : ∀ (D : D7) (L : LatW D), IsPosDef (D.sp.X 0).hT → finrank D.h
         simp only [Set.mem_iUnion]
         refine ⟨de, Finset.mem_Icc.2 ⟨h1, Nat.le_floor (by nlinarith)⟩, sat D L P,
           ⟨⟨hS, by rw [hsp]; rfl⟩, hrk.symm.trans hr, h2⟩, hPS, h4, ?_⟩
-        rw [le_div_iff₀' (by linarith)]
-        exact hd
+        rwa [le_div_iff₀' (by linarith)]
     _ ≤ _ := encard_biUnion_le_sum _ _
     _ ≤ _ := by
         refine Finset.sum_le_sum fun de hde => ?_

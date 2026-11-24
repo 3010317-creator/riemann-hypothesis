@@ -234,8 +234,7 @@ theorem fieldPt_appLE {U : X.Opens} (hU : genericPoint X ∈ U) :
     have : x = closedPoint (X.presheaf.stalk (genericPoint X)) :=
       Subsingleton.elim (α := PrimeSpectrum (X.presheaf.stalk (genericPoint X))) _ _
     change X.fromSpecStalk _ x ∈ U
-    rw [this, Scheme.fromSpecStalk_closedPoint]
-    exact hU
+    rwa [this, Scheme.fromSpecStalk_closedPoint]
   rw [← Scheme.Hom.appLE_comp_appLE (Spec.map φ) (X.fromSpecStalk (genericPoint X)) U ⊤ ⊤ h1 le_rfl]
   have h2 : (Spec.map φ).appLE ⊤ ⊤ le_rfl = (Spec.map φ).appTop := (Scheme.Hom.app_eq_appLE _).symm
   rw [h2, Category.assoc, Scheme.ΓSpecIso_naturality, Scheme.Hom.appLE, Scheme.fromSpecStalk_app hU]
@@ -290,8 +289,7 @@ theorem normFun_spec {U : X.Opens} (hU : genericPoint X ∈ U) (hA : IsAffineOpe
     obtain ⟨p, hp, hp0⟩ := ((u.normalizationObjIso hA).hom y).2
     refine ⟨p, hp, ?_⟩
     have := congrArg ε.hom hp0
-    rw [Polynomial.hom_eval₂, map_zero] at this
-    exact this
+    rwa [Polynomial.hom_eval₂, map_zero] at this
   · rintro ⟨p, hp, hp0⟩
     obtain ⟨y, rfl⟩ := hε.2 x
     have hy : IsIntegral Γ(X, U) y := ⟨p, hp, hε.1 (by rw [Polynomial.hom_eval₂, map_zero]; exact hp0)⟩
@@ -461,12 +459,10 @@ theorem exists_normalization_model : ∀ (k Ω : Type) [CommRing k] [IsNoetheria
     have hW : ⊤ ≤ (fieldPt ψ).toNormalization ⁻¹ᵁ ((fieldPt ψ).fromNormalization ⁻¹ᵁ M.Z.basicOpen a) := by
       intro w _
       show (fieldPt ψ).fromNormalization ((fieldPt ψ).toNormalization w) ∈ M.Z.basicOpen a
-      rw [← Scheme.Hom.comp_apply, Scheme.Hom.toNormalization_fromNormalization, fieldPt_apply]
-      exact hηV
+      rwa [← Scheme.Hom.comp_apply, Scheme.Hom.toNormalization_fromNormalization, fieldPt_apply]
     refine ⟨(fieldPt ψ).fromNormalization ⁻¹ᵁ M.Z.basicOpen a, c,
       ⟨_, hW (x := IsLocalRing.closedPoint Ω') trivial⟩, ?_⟩
-    rw [valF, dite_eq_left hW]
-    exact hc
+    rwa [valF, dite_eq_left hW]
   let M' : RatModel k Ω' :=
     { Z := (fieldPt ψ).normalization
       s := (fieldPt ψ).fromNormalization ≫ M.s

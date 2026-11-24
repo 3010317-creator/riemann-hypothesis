@@ -80,8 +80,7 @@ theorem lineDerivList_const_smul (l : List E) (c : 𝕜) (F : E → V) :
   | nil => rfl
   | cons v l ih =>
     funext z
-    simp only [lineDerivList_cons, ih, lineDeriv]
-    exact deriv_fun_const_smul_field c _
+    simpa only [lineDerivList_cons, ih, lineDeriv] using deriv_fun_const_smul_field c _
 
 @[simp] theorem lineDerivList_zero (l : List E) :
     lineDerivList 𝕜 l (fun _ => (0 : V)) = fun _ => 0 := by
@@ -113,8 +112,7 @@ theorem lineDerivList_map_smul {κ : Type*} (c : κ → 𝕜) (e : κ → E) (l 
     funext z
     simp only [List.map_cons, lineDerivList_cons, ih, lineDeriv_smul, List.prod_cons, mul_smul]
     congr 1
-    simp only [lineDeriv]
-    exact deriv_fun_const_smul_field _ _
+    simpa only [lineDeriv] using deriv_fun_const_smul_field _ _
 
 theorem lineDerivList_replicate (n : ℕ) (v : E) (F : E → V) (z : E) (t : 𝕜) :
     lineDerivList 𝕜 (List.replicate n v) F (z + t • v)

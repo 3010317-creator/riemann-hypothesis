@@ -115,8 +115,7 @@ theorem div_finprod_iff {A : Type} [Fintype A] {JJ : A → Type} {tt : ∀ a, JJ
     · simpa using hj
     · intro b _ hb
       simp [Function.update_of_ne hb, div_self (hne b)]
-    · intro ha
-      exact absurd (Finset.mem_univ a) ha
+    · exact fun ha => absurd (Finset.mem_univ a) ha
   · intro h
     refine ⟨Finset.prod_ne_zero_iff.2 fun a _ => (h a).1, fun q' => ?_⟩
     rw [← Finset.prod_div_distrib]

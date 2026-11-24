@@ -274,8 +274,7 @@ theorem connForm_eq_zero {K : Type} [Field K] {X : Over (Sp K)} (hX : Smooth X.h
       (hpb.lift_snd _ _ _)
   have e : u.left ≫ φ = y := hpb.lift_fst _ _ _
   have h := hv u
-  rw [tanVal_pull_eq m u y hy e f, snd_val_affine_eq U l y hy rfl f] at h
-  exact h
+  rwa [tanVal_pull_eq m u y hy e f, snd_val_affine_eq U l y hy rfl f] at h
 
 theorem cmpForm_eq_zero_of_tanVal : ∀ (K : Type) [Field K] (X : Over (Sp K)), Smooth X.hom → ∀ f : Form (X.hom ≫ 𝟙 (Sp K)), (∀ (L : Type) [Field L] (σ : K →+* L), ∃ (X' : Over (Sp L)) (φ : X'.left ⟶ X.left) (m : IsMor (dp0 K) (X.hom ≫ 𝟙 (Sp K)) (dp0 L) (X'.hom ≫ 𝟙 (Sp L)) σ φ), IsPullback φ X'.hom X.hom (spMap σ) ∧ ∀ u : epsR L ⟶ X', tanVal u (m.pullForm f) = 0) → GlobalTheory.CechDR.cmpForm (X.hom ≫ 𝟙 (Sp K)) f = 0 := by
   intro K _ X hX f H
@@ -402,8 +401,7 @@ theorem cmpForm_surjective (hC : GlobalTheory.Published.CrystallineSmoothLift) (
   have h1 : c ∈ F1 (A.hom ≫ 𝟙 (Sp R)) := by
     change toH1O _ c = 0
     apply _root_.GlobalTheory.CechDR.cmpO_injective R A.left _
-    rw [← structureSheaf_comparison_comm, map_zero, hc]
-    exact hF
+    rwa [← structureSheaf_comparison_comm, map_zero, hc]
   rw [hodgeFiltration_eq_range] at h1
   obtain ⟨f, rfl⟩ := h1
   rw [comparison_formClass] at hc
@@ -586,8 +584,7 @@ theorem glob_surjective (hC : GlobalTheory.Published.CrystallineSmoothLift) (hH 
   have h1 : c ∈ F1 (A.hom ≫ 𝟙 (Sp R)) := by
     change toH1O _ c = 0
     apply _root_.GlobalTheory.CechDR.cmpO_injective R A.left _
-    rw [← structureSheaf_comparison_comm, map_zero, hc]
-    exact hF
+    rwa [← structureSheaf_comparison_comm, map_zero, hc]
   rw [hodgeFiltration_eq_range] at h1
   obtain ⟨f, rfl⟩ := h1
   rw [comparison_formClass] at hc
@@ -693,8 +690,7 @@ theorem exists_lieBasis_lift {K : Type} [Field K] (σ : R →+* K) (A : Over (Sp
           pullback.fst A.hom (Chart.fB R (Localization.Away r)) := by
       have := congrArg (fun q ↦ q.left) he
       simp only [Over.comp_left, Chart.pushR_left, Chart.spMap_left] at this
-      rw [← LieAway.scaleS_toRingHom]
-      exact this
+      rwa [← LieAway.scaleS_toRingHom]
     have e1 : Chart.dualMapR σ =
         (Chart.dualMapR τ).comp (Chart.dualMapR (algebraMap R (Localization.Away r))) := by
       rw [← dualMapR_comp, hτ]

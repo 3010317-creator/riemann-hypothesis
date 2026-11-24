@@ -131,8 +131,7 @@ private lemma mem_lowSub_iff_apply_eq_zero {d a : ℕ} (v : Fin d → F) :
     v ∈ _root_.GlobalTheory.CuspGL.UnipNilRad.lowSub F d a ↔ ∀ i : Fin d, a ≤ i.val → v i = 0 := by
   rw [_root_.GlobalTheory.CuspGL.UnipNilRad.lowSub, LinearMap.mem_ker]
   constructor
-  · intro h i hi
-    exact congrFun h ⟨i, hi⟩
+  · exact fun h i hi => congrFun h ⟨i, hi⟩
   · intro h
     funext i
     exact h i.1 i.2
@@ -209,7 +208,6 @@ theorem _root_.GlobalTheory.CuspGL.UnipNilRad.exists_unip_bijOn_nilRad :
       refine ⟨u, ?_, hu⟩
       show Matrix.toLin' (u : Matrix (Fin d) (Fin d) F) - 1 ∈
         _root_.GlobalTheory.CuspGL.nilRad (_root_.GlobalTheory.CuspGL.UnipNilRad.lowSub F d a)
-      rw [hu]
-      exact hf
+      rwa [hu]
 
 end GlobalTheory.CuspGL.UnipNilRad

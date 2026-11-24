@@ -150,8 +150,7 @@ private lemma leading_polynomial_eq_zero_iff_lt_weightedOrder {k : Type} [Field 
     · intro h; exact absurd he h
   constructor
   · intro h0
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     have heq : MvPowerSeries.weightedOrder (![m, n] : Fin 2 → ℕ) f = D := le_antisymm hlt hD
     obtain ⟨e, hne, hwe⟩ := MvPowerSeries.exists_coeff_ne_zero_and_weightedOrder
       (![m, n] : Fin 2 → ℕ) (f := f) (by rw [heq]; rfl)
@@ -1058,8 +1057,7 @@ theorem dichotomy_alg (p : ℕ) [CharP k p] (hG : SmConn G)
       ht.gen_of_lt hc hd (m := m) (n := m + 1) (by omega) (by omega) (hm₀ m (by omega))
     refine hna (_root_.GlobalTheory.SS.ArcInf.extends_of_regular_second_axis k G A j ε r f hc a h d hd ht (s4 fun n hn => ?_))
     refine (s3 1 n (m₀ + 1) (by omega)).1 (ht.lt_of_rel hc hd (by omega) (Nat.mul_pos (by omega) hn) ?_)
-    intro z w hz hw
-    exact all _ _ z w (by omega) (Nat.le_mul_of_pos_right _ hn) hz hw
+    exact fun z w hz hw => all _ _ z w (by omega) (Nat.le_mul_of_pos_right _ hn) hz hw
   · obtain ⟨m, n, hm, hmn, hle, i, hi⟩ := (_root_.GlobalTheory.SS.weightedOrder_slope_comparison k r (fun i => (MvPowerSeries.subst (![MvPowerSeries.X 0, MvPowerSeries.X 0 + MvPowerSeries.X 1] : Fin 2 → MvPowerSeries (Fin 2) k) (h i))) _ hd' _
       (fun _ _ => Iff.rfl)).1 hXh hXd ⟨1, 1, le_rfl, le_rfl, hQ⟩
     obtain ⟨Pd, P, ψ, hPd, hP, hg⟩ := ht.shear hc hd' hm (hm.trans hmn) hle
@@ -1110,8 +1108,7 @@ theorem infinite_torsion_or_cocharacter : ∀ (k : Type) [Field k] [IsAlgClosed 
       exact Spec.map_id _)
     refine @Infinite.of_injective _ _ hI (fun x : {x : (algOver k k ⟶ G) // x ^ p = 1} =>
       (⟨e.hom ≫ x.1, by rw [← MonObj.comp_pow, x.2, MonObj.comp_one]⟩ : {x : (𝟙_ (Over (Sp k)) ⟶ G) // x ^ p = 1})) ?_
-    intro x y hxy
-    exact Subtype.ext ((cancel_epi e.hom).1 (congrArg Subtype.val hxy))
+    exact fun x y hxy => Subtype.ext ((cancel_epi e.hom).1 (congrArg Subtype.val hxy))
 
 end GlobalTheory.SS
 end

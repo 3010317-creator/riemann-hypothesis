@@ -277,8 +277,7 @@ theorem exists_finite_cones : ∀ (g : ℕ) (φ : InvFun ℤ), IsPolFan id g φ 
       linarith
     obtain ⟨m, γ, k, cf, hγ, hk, hcf, hkβ⟩ := GlobalTheory.Poinc.Cover.exists_cone ℤ id φ (Fin r → ℤ) hFr _ hβs hβp
     have hγd : ∀ y, y ≠ 0 → 0 < ∑ j, γ j y y := fun y hy => by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       have h0 : ∀ j, γ j y y = 0 := fun j => le_antisymm ((Finset.single_le_sum (fun j _ => hγ.nonneg j y)
         (Finset.mem_univ j)).trans hcon) (hγ.nonneg j y)
       have h1 := LinearMap.congr_fun₂ hkβ y y
@@ -298,8 +297,7 @@ theorem exists_finite_cones : ∀ (g : ℕ) (φ : InvFun ℤ), IsPolFan id g φ 
   obtain ⟨cf, hcf⟩ := exists_nat_comb_of_infinite φ r _ _ ((hL _).1 (List.get_mem L i)).1 b' b₀ hb's hb₀s (f ⁻¹' {i})
     (Set.infinite_coe_iff.1 hi) fun n hn => by
       have := hf n
-      rw [show f n = i from hn] at this
-      exact this
+      rwa [show f n = i from hn] at this
   exact ⟨i, 1, cf, one_pos, by rw [one_smul]; exact hcf⟩
 
 end GlobalTheory.Poinc.Cells

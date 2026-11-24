@@ -144,8 +144,7 @@ theorem exists_cover_tensor_hom :
     · rw [map_mul, (hf x).1, (hf y).1, ← map_mul]
       simp
     · rw [map_mul, (hf x).2, (hf y).2]
-      simp only [Prod.fst_mul, Prod.snd_mul, map_mul, mul_pow]
-      exact mul_mul_mul_comm _ _ _ _
+      simpa only [Prod.fst_mul, Prod.snd_mul, map_mul, mul_pow] using mul_mul_mul_comm _ _ _ _
   · show ((T0.cov (f (g, h)) : GL _ ℂ) : Mat (p * r + q * s) (p * s + q * r)) = _
     rw [(hf (g, h)).1]
     rfl

@@ -106,11 +106,9 @@ theorem schur_posDef {n : ℕ} {M : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ} (hM 
       rw [hB, sq, Finset.mul_sum, Finset.sum_mul]
       congr 1
       · refine Finset.sum_congr rfl fun i _ => ?_
-        simp only [Finset.mul_sum]
-        exact Finset.sum_congr rfl fun j _ => by ring
+        simpa only [Finset.mul_sum] using Finset.sum_congr rfl fun j _ => by ring
       · refine Finset.sum_congr rfl fun i _ => ?_
-        simp only [Finset.mul_sum]
-        exact Finset.sum_congr rfl fun j _ => by ring
+        simpa only [Finset.mul_sum] using Finset.sum_congr rfl fun j _ => by ring
     rw [e2]
     rw [e1] at h1
     field_simp at h1
@@ -213,8 +211,7 @@ theorem exists_smul_eq_sum_vecMulVec_span :
   let e := Fintype.equivFin ((Fin r × Fin D) ⊕ ι)
   refine ⟨D * d, Fintype.card ((Fin r × Fin D) ⊕ ι), b ∘ e.symm, ?_, ?_, ?_⟩
   · nlinarith
-  · rw [e.symm.surjective.range_comp]
-    exact hspan
+  · rwa [e.symm.surjective.range_comp]
   · rw [hsum]
     exact (e.symm.sum_comp (fun k => vecMulVec (b k) (b k))).symm
 

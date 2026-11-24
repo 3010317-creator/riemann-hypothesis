@@ -149,8 +149,7 @@ theorem infSigns_eq_of_mem {K L : Type} [Field K] [NumberField K] [Field L] [Alg
   funext w
   refine eta_eq_of_div_mem ?_
   have := toUnits_mem_normGroup (K := K) (L := L) w.Completion h
-  rw [← div_eq_inv_mul, _root_.map_div] at this
-  exact this
+  rwa [← div_eq_inv_mul, _root_.map_div] at this
 
 theorem infSigns_out {K L : Type} [Field K] [NumberField K] [Field L] [Algebra K L]
     [FiniteDimensional K L] (t : Kˣ) :
@@ -188,14 +187,12 @@ theorem card_classes_mul_two : ∀ (K L : Type) [Field K] [NumberField K] [Field
     have hy : ∀ w, eta K L w.Completion (y w) = s w := by
       intro w
       rcases Int.units_eq_one_or (s w) with h | h
-      · simp only [y, h, ite_true]
-        exact eta_eq_one_iff.2 (one_mem _)
+      · simpa only [y, h, ite_true] using eta_eq_one_iff.2 (one_mem _)
       · simp only [y, h, show (-1 : ℤˣ) ≠ 1 by decide, ite_false]
         exact eta_eq_neg_one_iff.2 (neg_one_not_mem_normGroup hL (hK.isReal w))
     have hy1 : etaProd K L x y = 1 := by
       unfold etaProd
-      rw [Finset.prod_congr rfl fun w _ => hy w]
-      exact hs
+      rwa [Finset.prod_congr rfl fun w _ => hy w]
     obtain ⟨t, ht1, ht2⟩ := (hseq x y hx).2 hy1
     refine ⟨⟨QuotientGroup.mk t, t, rfl, fun u => ht1 u⟩, Subtype.ext ?_⟩
     simp only [infSigns_out]

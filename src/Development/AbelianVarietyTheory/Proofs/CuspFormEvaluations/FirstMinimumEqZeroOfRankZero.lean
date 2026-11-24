@@ -203,8 +203,7 @@ theorem eq_zero_of_hasSum_pow {ι : Type*} (B z : ι → ℂ) (c : ℂ) (hB : Su
         simp [norm_pow, hz]
       have h3 : (0 : ℝ) < ((N + 1 : ℕ) : ℝ) := by positivity
       have h4 : ((N + 1 : ℕ) : ℝ)⁻¹ * ‖∑ k ∈ Finset.range (N + 1), z i ^ k‖ ≤ 1 := by
-        rw [inv_mul_le_iff₀ h3, mul_one]
-        exact h2
+        rwa [inv_mul_le_iff₀ h3, mul_one]
       exact mul_le_of_le_one_right (norm_nonneg _) h4
   simp only [hF, tsum_zero] at hlim
   exact tendsto_nhds_unique tendsto_const_nhds hlim
@@ -262,8 +261,7 @@ theorem setIntegral_eq_zero (L : AddSubgroup (Ψ → ℝ)) [Countable L] {D : Se
       refine tsum_congr fun i => ?_
       rw [expo_add, expo_nsmul]
       ring
-    rw [e1, e2] at h
-    exact h
+    rwa [e1, e2] at h
 
 end General
 
@@ -318,8 +316,7 @@ theorem fj_eq_zero_of_hasSum_ne (X : Data E r) (la : Wt X.Ψ r) (ξ : Fin r → 
         simp only [Pi.neg_apply, Pi.sub_apply]
         push_cast
         ring
-      rw [e] at h1
-      exact h1
+      rwa [e] at h1
   · rfl
   · rfl
 

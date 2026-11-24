@@ -234,8 +234,7 @@ theorem centraliser_field_involution : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup
     exact left_eq_add.mp h
   let τ : E →+* E := { toFun := t, map_one' := h1, map_mul' := hm, map_zero' := h0, map_add' := ha }
   refine ⟨E, inferInstance, inferInstance, j.toRingHom.toRatAlgHom, τ.toRatAlgHom, hj, ?_, ?_, ?_⟩
-  · intro z
-    exact hcent z
+  · exact fun z => hcent z
   · intro x; exact ht x
   · intro x; exact tt x
 
@@ -290,8 +289,7 @@ theorem units_ringOfIntegers_mod_sq (L : Type) [Field L] [NumberField L] :
   refine ⟨Additive.toMul y, ?_⟩
   have h2 : Additive.toMul ((2 : ℤ) • y) = Additive.toMul (Additive.ofMul x - rep q) := by
     simpa using congrArg Additive.toMul hy
-  rw [toMul_zsmul, toMul_sub, toMul_ofMul] at h2
-  rw [eq_div_iff_mul_eq'] at h2
+  rw [toMul_zsmul, toMul_sub, toMul_ofMul, eq_div_iff_mul_eq'] at h2
   rw [← h2]; exact mul_comm _ _
 
 theorem units_fixed_eq_mul_mul_conj : ∀ (L : Type) [Field L] [NumberField L] (c : L →ₐ[ℚ] L), (∀ x, c (c x) = x) →
@@ -419,8 +417,7 @@ theorem exists_rat_approx (L : Type) [Field L] [NumberField L] (c : L →ₐ[ℚ
       have e : mc y = Algebra.TensorProduct.map (AlgHom.id ℚ K) c y := rfl
       rw [e, ← h, Algebra.TensorProduct.tmul_mul_tmul, one_mul, inv_mul_cancel₀ ha, Algebra.TensorProduct.one_def, sub_self]
     simp only [U, Set.mem_iInter, Set.mem_preimage, Set.mem_setOf_eq, hF0, map_zero]
-    intro j
-    exact zero_lt_one
+    exact fun j => zero_lt_one
   have hd : DenseRange (Prod.map (algebraMap ℚ K) (Pi.map fun (_ : Module.Free.ChooseBasisIndex ℤ (𝓞 L)) => algebraMap ℚ K)) :=
     (HeightOneSpectrum.denseRange_algebraMap ℚ v).prodMap
       (DenseRange.piMap fun _ => HeightOneSpectrum.denseRange_algebraMap ℚ v)
@@ -640,8 +637,7 @@ theorem valuation_conj (L : Type) [Field L] [NumberField L] (c : L →ₐ[ℚ] L
     rw [smul_smul]
     have : conjEquiv c hc * conjEquiv c hc = 1 := AlgEquiv.ext hc
     rw [this, one_smul]
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem under_conj (L : Type) [Field L] [NumberField L] (c : L →ₐ[ℚ] L) (hc : ∀ x, c (c x) = x)
     (w : HeightOneSpectrum (𝓞 L)) : (conjEquiv c hc • w).under ℤ = w.under ℤ := by
@@ -681,8 +677,7 @@ theorem exists_finset_classes (L : Type) [Field L] [NumberField L] (c : L →ₐ
   let B : (HeightOneSpectrum (𝓞 L) → ℤ) → L := fun φ => if h : ∃ b, P φ b then h.choose else 1
   have hB : ∀ φ b, P φ b → P φ (B φ) := fun φ b hb => by
     have h : ∃ b, P φ b := ⟨b, hb⟩
-    simp only [B, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [B, dite_eq_left h] using h.choose_spec
   refine ⟨(Φ ×ˢ S₆).image (fun p => B p.1 * p.2), fun a ha => ?_⟩
   obtain ⟨ha0, hca, hloc⟩ := hX a ha
   have hl : ∀ v : HeightOneSpectrum ℤ, v ∉ S → ∃ (q : ℚ) (z : L), q ≠ 0 ∧ z ≠ 0 ∧
@@ -711,8 +706,7 @@ theorem exists_finset_classes (L : Type) [Field L] [NumberField L] (c : L →ₐ
   have hn : ∀ᶠ w in Filter.cofinite, n w = 0 := by
     refine Filter.eventually_cofinite.2 ((finite_under L (S ∪ T)).subset fun w hw => ?_)
     simp only [Set.mem_setOf_eq, Finset.mem_union] at hw ⊢
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hw (by simp only [n, ite_eq_right h.1, ite_eq_right h.2])
   obtain ⟨f, hfF, z₁, hz₁, hnf⟩ := hF n hn
   let Δ : Finset (HeightOneSpectrum (𝓞 L)) := WS.filter (fun w => ord w a % 2 = 1)
@@ -1593,8 +1587,7 @@ theorem roots_eig (G : HTGroup p) (P : DPair G) (v : InfinitePlace G.F) (w : ℂ
         (1 : ℂ) ⊗ₜ[G.F] ((P.γ : G.C) ^ (i : ℕ))) = fun i : Fin (minpoly G.F (P.γ : G.C)).natDegree => Γ ^ (i : ℕ) := by
       funext i
       exact hΨ i
-    rw [e] at hli
-    exact hli
+    rwa [e] at hli
   have hd : (minpoly G.F (P.γ : G.C)).natDegree = G.n := P.reg.1
   have hint : IsIntegral G.F (P.γ : G.C) := Algebra.IsIntegral.isIntegral _
   have hpm : P.pol.Monic := minpoly.monic hint
@@ -1609,8 +1602,7 @@ theorem roots_eig (G : HTGroup p) (P : DPair G) (v : InfinitePlace G.F) (w : ℂ
     exact h
   have hroot : Q.IsRoot w := by
     rw [Polynomial.IsRoot, hQ, Polynomial.eval_map]; exact hw
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have hdet : (Γ - algebraMap ℂ (Matrix (Fin G.n) (Fin G.n) ℂ) w).det ≠ 0 := by
     intro h0
     obtain ⟨x, hx0, hx⟩ := Matrix.exists_mulVec_eq_zero_iff.2 h0

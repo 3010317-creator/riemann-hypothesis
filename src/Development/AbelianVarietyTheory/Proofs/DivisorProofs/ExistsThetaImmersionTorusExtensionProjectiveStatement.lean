@@ -248,8 +248,7 @@ theorem cv_torI_mul {Z : Over (Sp R)} (t : Z ⟶ splitTorus (Sp R) D.X) (g : Z �
     cv (Y.Φ Z ((t ≫ Y.torI) * g)) χ z J = gm t.left z ⊤ (charUnit (Sp R) D.X χ) * cv (Y.Φ Z g) χ z J := by
   have h := ((TorusModel.isAdd_iff _ _ _).1 (Y.rep.2 Z (t ≫ Y.torI) g)).2 χ z J hJ
   have C : IsCub (th D (T := Z) z J) := isCub_cubV D.cub hJ
-  rw [(Y.torI_pt t).1, C.face₂, _root_.mul_one, Y.cv_torI t χ z J hJ] at h
-  exact h
+  rwa [(Y.torI_pt t).1, C.face₂, _root_.mul_one, Y.cv_torI t χ z J hJ] at h
 
 end Ext
 
@@ -700,8 +699,7 @@ theorem exists_immersion : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
   have hτ : ⨆ i, nonzeroLocus (τJ (e i)) = ⊤ := top_le_iff.1 fun y _ => by
     obtain ⟨a, ha⟩ := TopologicalSpace.Opens.mem_iSup.1 (hs₁.ge (Set.mem_univ (Y.q.left y)))
     refine TopologicalSpace.Opens.mem_iSup.2 ⟨e.symm (.inl a), ?_⟩
-    rw [GlobalTheory.Mum.TermLocus.nonzeroLocus_eq R D.toPre Y k 0 _ _ (ht₀ a)]
-    exact ha
+    rwa [GlobalTheory.Mum.TermLocus.nonzeroLocus_eq R D.toPre Y k 0 _ _ (ht₀ a)]
   refine ⟨_, fun i => αJ (e i), fun i => bJ (e i), fun i => τJ (e i), hτ, fun i => ⟨?_, hτJ (e i)⟩, ?_⟩
   · show αJ (e i) ∈ _
     generalize e i = j
@@ -856,8 +854,7 @@ theorem exists_immersion : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
     · refine ⟨(hupr c).symm ▸ hS_chart _, ?_⟩
       obtain ⟨w, hw, hrw⟩ := hS_unit _ (hUr c)
       rw [← hupr c] at hrw
-      rw [Units.mul_eq_one_iff_inv_eq.1 hrw]
-      exact hw
+      rwa [Units.mul_eq_one_iff_inv_eq.1 hrw]
   intro x
   have hx : x ∈ S := hSt ▸ Subring.mem_top x
   exact hx

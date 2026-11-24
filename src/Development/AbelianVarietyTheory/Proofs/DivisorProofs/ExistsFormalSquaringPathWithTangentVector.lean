@@ -346,8 +346,7 @@ theorem limit_of_jets (A B R : Type) [CommRing A] [CommRing B] [CommRing R] (π 
   let g : A → PowerSeries R := fun f => PowerSeries.mk fun k => coeff k (φ k f)
   have hg : ∀ f k j, k ≤ j + 1 → coeff k (g f) = coeff k (φ j f) := by
     intro f k j hkj
-    simp only [g, PowerSeries.coeff_mk]
-    exact (hstab f k j hkj).symm
+    simpa only [g, PowerSeries.coeff_mk] using (hstab f k j hkj).symm
   have gmul : ∀ f h, g (f * h) = g f * g h := by
     intro f h; ext k
     rw [hg _ k k (by omega), hdv _ _ _ ((hφ k).1.1 f h) k (by omega), coeff_mul, coeff_mul]
@@ -418,8 +417,7 @@ theorem firstOrder_isJet : ∀ (A B R : Type) [CommRing A] [CommRing B] [CommRin
     simp only [map_add (f := _), map_mul, map_neg]
     ring
   · intro f g
-    simp [map_add (f := _)]
-    exact ⟨0, by ring⟩
+    simpa [map_add (f := _)] using ⟨0, by ring⟩
   · simp [hδ1]
   · intro b
     simp [hεπ', hδπ]
@@ -598,8 +596,7 @@ theorem exists_stalkDer_of_lie : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (R
     obtain ⟨V₀, h₀, a₀, rfl⟩ := TopCat.Presheaf.germ_exist _ a
     have hU : unitSec G s ∈ G.hom ⁻¹ᵁ V₀ := by
       show (unitSec G ≫ G.hom) s ∈ V₀
-      rw [sec_hom]
-      exact h₀
+      rwa [sec_hom]
     rw [hI.1 V₀ h₀ _ hU le_rfl a₀]
     simp only [AddMonoidHom.mk'_apply, tanStalk_germ, tanCan, tanVal, dUnit_base, map_zero, mul_zero,
       Finset.sum_const_zero]

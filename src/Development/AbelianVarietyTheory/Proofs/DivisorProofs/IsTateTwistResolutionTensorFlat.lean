@@ -222,8 +222,7 @@ theorem sec_eq_zero_of_isZero {F : Shv R} (hF : IsZero F) {U : Scheme.{0}} (a : 
   have h2 : Sec.map (0 : F ⟶ F) a = 0 := by
     simp only [Sec.map]
     rfl
-  rw [h1, h2] at this
-  exact this
+  rwa [h1, h2] at this
 
 theorem isZero_of_sec {F : Shv R} (h : ∀ (U : Scheme.{0}) (a : Sec F U), a = 0) : IsZero F := by
   rw [IsZero.iff_id_eq_zero]
@@ -351,8 +350,7 @@ theorem tw_mul_order : ∀ (q : ℕ) [NeZero q] (i j : ℤ) (W : Scheme.{0}) (ζ
     (toSheafify Scheme.etaleTopology (Scheme.Γ ⋙ twF q j)) hφ.1 hφ.2.1 W).2
     (c • (twGen i ζ ⊗ₜ pgen q j ζ)) (by rw [map_nsmul, LinearMap.lTensor_tmul, twGen_eq]; exact h)
   refine loc_bind key fun V g hg => step_swap q i j V (ζ.map g.appTop.hom) c ?_
-  rw [map_nsmul, TensorProduct.map_tmul, pgen_map, twGen_res] at hg
-  exact hg
+  rwa [map_nsmul, TensorProduct.map_tmul, pgen_map, twGen_res] at hg
 
 end GlobalTheory.TwMulOrder
 
@@ -411,8 +409,7 @@ theorem nsmul_eq_zero_of_dvd {q : ℕ} {M : Type*} [AddCommGroup M] [Module (ULi
   rw [← Nat.cast_smul_eq_nsmul (ULift.{1} (ZMod q))]
   have : ((c : ℕ) : ULift.{1} (ZMod q)) = 0 := by
     apply ULift.ext
-    simp only [ULift.down_natCast, ULift.zero_down]
-    exact (CharP.cast_eq_zero_iff (ZMod q) q c).2 h
+    simpa only [ULift.down_natCast, ULift.zero_down] using (CharP.cast_eq_zero_iff (ZMod q) q c).2 h
   rw [this, zero_smul]
 
 alias res_zero := _root_.GlobalTheory.TwSec.res_zero
@@ -503,8 +500,7 @@ theorem tw_mul_loc_injective : ∀ (q : ℕ) [NeZero q] (i j k : ℤ), i + j = k
         rw [Tj.2.2.2.1 V' V g' ζ] at h
         exact (congrArg ((HomologicalComplex.singleObjXSelf (ComplexShape.up ℤ) 0 (tw q j)).hom.hom.app (op V')).hom h).trans
           (sglι_left _ _)
-      rw [ei, ej] at e3
-      exact e3
+      rwa [ei, ej] at e3
     refine loc_bind (hyp V' ζ' c h2) ?_
     intro V'' g'' hq
     rcases isEmpty_or_nonempty V'' with hV | hV
@@ -663,8 +659,7 @@ theorem tw_mul_locSurj : ∀ (q : ℕ) [NeZero q] (i j k : ℤ), i + j = k → �
           rw [h0]
           exact good_zero φ V
     | add x x' hx hx' => rw [map_add (f := _)]; exact good_add φ hx hx'
-  intro U y
-  exact good_bind φ y (hτ.1 U 0 y) fun V g ⟨x, hx⟩ => hx ▸ key V x
+  exact fun U y => good_bind φ y (hτ.1 U 0 y) fun V g ⟨x, hx⟩ => hx ▸ key V x
 
 end GlobalTheory.EtC
 end -- clump:auto
@@ -821,8 +816,7 @@ theorem tensor_flat_loc_exact : ∀ (R : Type) [CommRing R] (M : Shv R), FlatS M
   refine loc_mono U _ _ (loc_and U _ _ h1 hx) ?_
   rintro V k ⟨⟨x', hx'⟩, hz⟩
   have hz0 : LinearMap.lTensor _ (φ.app (op V)).hom (LinearMap.rTensor _ (g.hom.app (op V)).hom x') = 0 := by
-    rw [← rl_comm, hx']
-    exact hz
+    rwa [← rl_comm, hx']
   have h2 := (_root_.GlobalTheory.EtC.TensLocBij.main R C.obj P M.obj φ hsurj hinj V).2 _ hz0
   apply loc_trans
   refine loc_mono V _ _ h2 ?_

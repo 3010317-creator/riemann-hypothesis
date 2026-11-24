@@ -89,8 +89,7 @@ theorem polW_eq_zero (hW : PosW W) {β : LinearMap.BilinForm ℤ X} (hs : ∀ a 
     (hβ : ∀ y, 0 ≤ β y y) {x : Fin s → X} (hx : qW W β x = 0) (y : Fin s → X) : polW W β x y = 0 := by
   have h : ∀ a : ℤ, 0 ≤ a * polW W β x y + qW W β y := fun a => by
     have := qW_nonneg hW hs hβ (a • x + y)
-    rw [qW_smul_add, hx, mul_zero, zero_add] at this
-    exact this
+    rwa [qW_smul_add, hx, mul_zero, zero_add] at this
   have hy := qW_nonneg hW hs hβ y
   rcases lt_trichotomy (polW W β x y) 0 with hp | hp | hp
   · have := h (qW W β y + 1); nlinarith
@@ -119,8 +118,7 @@ theorem exists_qW_pos (hW : PosW W) {m : ℕ} (δ : Fin m → LinearMap.BilinFor
     (hs : ∀ k a b, δ k a b = δ k b a) (hn : ∀ k y, 0 ≤ δ k y y) (hp : ∀ x, x ≠ 0 → ∃ k, 0 < δ k x x)
     {mu : Fin s → X} (hmu : mu ≠ 0) : ∃ k, 0 < qW W (δ k) mu := by
   obtain ⟨u, hu⟩ : ∃ u, mu u ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hmu (funext h)
   obtain ⟨k, hk⟩ := hp _ hu
   obtain ⟨c, hc0, hc⟩ := QWDom.qW_ge s W hW
@@ -322,8 +320,7 @@ theorem map_mono_eq_zero {O : Type} [CommRing O] {bar : O → O} {q s : ℕ} {W 
     simpa using this
   have hhA : h ∈ IsLocalRing.maximalIdeal A := by
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-    intro hu
-    exact (IsLocalRing.mem_maximalIdeal _).1 hevh (hu.map _)
+    exact fun hu => (IsLocalRing.mem_maximalIdeal _).1 hevh (hu.map _)
   have hφh : φ (Φ.ev y h) = 0 := hJ h hhA
 
   set q₀ := (qW W β mu₀).toNat with hq₀

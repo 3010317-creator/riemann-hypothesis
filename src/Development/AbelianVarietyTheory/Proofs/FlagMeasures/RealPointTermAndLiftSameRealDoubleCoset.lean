@@ -261,12 +261,10 @@ theorem dcoset : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (hF : FinX Y) (hI
   have hnE : ∀ a : Fin D.R.rS, n (X.eX a) - X.eX a ∈ Submodule.span D.host.E (X.eX '' {i | i.1 < a.1}) := by
     intro a
     have h := hn.2.1 a.val _ (Formalism.L2.SG.FourParts.e_mem_Xflag (lf D (X.Fu u)) a)
-    rw [hXu, show (lf D (X.Fu u)).fl.e a = X.eX a from congrFun (X.Fu_e u) a] at h
-    exact h
+    rwa [hXu, show (lf D (X.Fu u)).fl.e a = X.eX a from congrFun (X.Fu_e u) a] at h
   have hnZ : n (X.zu u) - X.zu u ∈ Submodule.span D.host.E (Set.range X.eX) := by
     have h := hn.2.2 _ (Formalism.L2.SG.FourParts.z_mem_orth (lf D (X.Fu u)))
-    rw [hXsu, show (lf D (X.Fu u)).fl.z = X.zu u from X.flagZVector u] at h
-    exact h
+    rwa [hXsu, show (lf D (X.Fu u)).fl.z = X.zu u from X.flagZVector u] at h
 
   have hpull : ∀ (S : Set (Fin D.R.rS)) (y : (VS D).V), y ∈ Submodule.span D.host.E (s.frame.fl.e '' S) →
       s.lin⁻¹ y ∈ Submodule.span D.host.E (X.eX '' S) := by
@@ -283,16 +281,13 @@ theorem dcoset : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (hF : FinX Y) (hI
       Submodule.span D.host.E (X.eX '' {i | i.1 < a.1}) := by
     intro a
     have h := hpull _ _ (hm.2.1 a.val _ (Formalism.L2.SG.FourParts.e_mem_Xflag s.frame a))
-    rw [map_sub, hse a, hinv] at h
-    exact h
+    rwa [map_sub, hse a, hinv] at h
   have hμZ : (s.lin⁻¹ * m * s.lin) (X.zu u') - X.zu u' ∈ Submodule.span D.host.E (Set.range X.eX) := by
     have h0 := hm.2.2 _ (Formalism.L2.SG.FourParts.z_mem_orth s.frame)
     have h0' : m s.frame.fl.z - s.frame.fl.z ∈ Submodule.span D.host.E (s.frame.fl.e '' Set.univ) := by
-      rw [Set.image_univ]
-      exact h0
+      rwa [Set.image_univ]
     have h := hpull _ _ h0'
-    rw [Set.image_univ, map_sub, hsz, hinv] at h
-    exact h
+    rwa [Set.image_univ, map_sub, hsz, hinv] at h
 
   have hxc : RatLink X ((ptR hI t)⁻¹ * xn * xm * s.pt) ((linOf hI t)⁻¹ * n * m * s.lin) :=
     Formalism.L2.SG.TermOp.Vanish.ratLink_mul X (Formalism.L2.SG.TermOp.Vanish.ratLink_mul X

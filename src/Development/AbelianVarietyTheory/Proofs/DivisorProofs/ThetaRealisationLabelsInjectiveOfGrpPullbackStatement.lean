@@ -97,9 +97,7 @@ theorem realPt_inj_of_grpPullback : ∀ {o₂ Ω₂ : Type} [CommRing o₂] [Fie
   have hz : (u ≫ ρ₂.pt x) ^ (S₂.r * S₂.N) = 1 := by
     rw [← _root_.GlobalTheory.SemiAbTorsion.comp_pow_points, hkill, MonObj.comp_one]
   obtain ⟨a, _, huniq⟩ := ρ₂.pt_bij K x₀ (u ≫ ρ₂.pt x) hz
-  have h1 := huniq x rfl
-  have h2 := huniq y (by rw [hpt])
-  exact h1.trans h2.symm
+  exact (huniq x rfl).trans (huniq y (by rw [hpt])).symm
 
 end GlobalTheory.Poinc.Sep
 end -- clump:auto

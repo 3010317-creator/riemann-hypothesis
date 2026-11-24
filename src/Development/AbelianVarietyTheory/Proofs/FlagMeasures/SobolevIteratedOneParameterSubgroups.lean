@@ -67,8 +67,7 @@ theorem continuous_prod_ofFn_curves {G : Type} [Group G] [TopologicalSpace G]
     Continuous fun t : Fin N → ℝ => (List.ofFn fun i => c i (t i)).prod := by
   induction N with
   | zero =>
-    simp only [List.ofFn_zero, List.prod_nil]
-    exact continuous_const
+    simpa only [List.ofFn_zero, List.prod_nil] using continuous_const
   | succ n ih =>
     simp only [List.ofFn_succ, List.prod_cons]
     exact ((hc 0).comp (continuous_apply 0)).mul
@@ -140,8 +139,7 @@ private theorem sq_norm_le_sobolev_of_hasDerivAt {G H : Type} [Group G] [Topolog
     (hg.comp (continuous_const.mul hγc)).continuousOn
   rw [intervalIntegral.integral_of_le hs.le, intervalIntegral.integral_of_le hs.le] at key
   rw [integral_Icc_eq_integral_Ioc, integral_Icc_eq_integral_Ioc]
-  simp only [hγ0, mul_one] at key
-  exact key
+  simpa only [hγ0, mul_one] using key
 
 private theorem sobolev_iter_lemma_2 {G V H : Type} [Group G] [TopologicalSpace G]
     [IsTopologicalGroup G] [NormedAddCommGroup V] [NormedAddCommGroup H] [InnerProductSpace ℝ H]

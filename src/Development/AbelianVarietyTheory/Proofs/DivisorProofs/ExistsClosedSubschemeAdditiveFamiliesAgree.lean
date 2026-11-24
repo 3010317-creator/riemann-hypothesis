@@ -108,8 +108,7 @@ theorem isPullback_lift {Y T : Over S} (y : Y ⟶ T) :
   have big : IsPullback ((lift (fst A Y) (snd A Y ≫ y)).left ≫ pullback.fst A.hom T.hom) (snd A Y).left A.hom
       (y.left ≫ T.hom) := by
     have := IsPullback.of_hasPullback A.hom Y.hom
-    rw [e₁, Over.w y]
-    exact this
+    rwa [e₁, Over.w y]
   exact IsPullback.of_right big (by rw [← Over.comp_left, lift_snd, Over.comp_left]) h₀
 
 theorem exists_closed_locTriv_noeth (hG : GlobalFnsSt) {T : Over S} [GrpObj A] [IsLocallyNoetherian T.left]
@@ -177,8 +176,7 @@ theorem same_iff_locTriv (hG : GlobalFnsSt) (hA : IsAbelianScheme A) {T : Over S
     rw [a, b, sub_zero]
   rw [TrivSubscheme.locTrivOver_iff (isPullback_lift A y), hs]
   constructor
-  · intro h q
-    exact ⟨⊤, trivial, (key _).2 (by rw [h, map_zero])⟩
+  · exact fun h q => ⟨⊤, trivial, (key _).2 (by rw [h, map_zero])⟩
   · intro h
     have cl : ∀ {Z : Scheme.{0}} (φ' : Fin 2 → (Z ⟶ (A ⊗ T).left)),
         Triv (LB.LinComb F φ' ![1, -1]) ↔

@@ -64,12 +64,10 @@ theorem minor_of_triangular (g : GL (Fin n) k) (m : Fin n)
     rcases h with h | h
     · rw [Matrix.det_of_lowerTriangular]
       · rfl
-      · intro i j hij
-        exact h i j (OrderDual.toDual_lt_toDual.1 hij)
+      · exact fun i j hij => h i j (OrderDual.toDual_lt_toDual.1 hij)
     · rw [Matrix.det_of_upperTriangular]
       · rfl
-      · intro i j hij
-        exact h i j hij
+      · exact fun i j hij => h i j hij
   rw [hdet]
   exact (Finset.prod_subtype (Finset.univ.filter (fun i => i ≤ m)) (p := fun i => i ≤ m)
     (fun x => by simp) (fun i => g.val i i)).symm

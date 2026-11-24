@@ -72,8 +72,7 @@ theorem nullMeasurableSet_classesOver_framesOn : ∀ (D : D7) (H : ReciprocityTh
   have key : ∀ g, dict σ g ∈ framesOn (U σ) Z ↔ (dict σ g).1 ∈ S := by
     intro g
     constructor
-    · intro h
-      exact ⟨(dict σ g).2, h⟩
+    · exact fun h => ⟨(dict σ g).2, h⟩
     · rintro ⟨y, hy⟩
       exact _root_.GlobalTheory.FramesUnion.framesOn_of_mem D.host.E H Dw l Xo c r U σ hU Z _ y _ (d4 g) hy
   have hP : IsOpen {g : GA D (V σ) | (dict σ g).1 ∈ S} := by
@@ -87,8 +86,7 @@ theorem nullMeasurableSet_classesOver_framesOn : ∀ (D : D7) (H : ReciprocityTh
     have f1 := congrArg Sigma.fst e1
     have f2 := congrArg Sigma.fst e2
     show (dict σ (g₀ * k * h)).1 ∈ S
-    rw [f2, f1]
-    exact hg₀
+    rwa [f2, f1]
   have hpre : (Quotient.mk'' ⁻¹' classesOver (V σ) (dict σ) (framesOn (U σ) Z) : Set (GA D (V σ))) =
       {g : GA D (V σ) | (dict σ g).1 ∈ S} := by
     ext g
@@ -283,8 +281,7 @@ theorem orthogonal_mass_idem : ∀ (D : D7) (H : ReciprocityTheory.ChartRestrict
     exact (petAt_muOn_sq _ _ _ _ _ (Submodule.mem_inf.1 f.2).2).symm
   · simp only [mass]
     exact ENNReal.toReal_le_of_le_ofReal zero_le_one (by rw [ENNReal.ofReal_one]; exact prob_le_one)
-  · simp only [petW]
-    exact petAt_idem_le _ _ _ _ _ _ _ ((mem_cuspW.1 f.2).2 _ (goodEmb_goodOf c σ))
+  · simpa only [petW] using petAt_idem_le _ _ _ _ _ _ _ ((mem_cuspW.1 f.2).2 _ (goodEmb_goodOf c σ))
 
 end GlobalTheory.CompPetOrth
 end -- clump:auto

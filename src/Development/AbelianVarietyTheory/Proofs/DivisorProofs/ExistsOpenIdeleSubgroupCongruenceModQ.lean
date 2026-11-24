@@ -67,9 +67,7 @@ theorem exists_open_congr : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
       (Continuous.units_map _ hc)
   · have hfin : (Θ (z : AF F ⊗[F] E)).2 = 1 := by
       let a : AF F := pairA F 0 1
-      have ha : evI F a = 0 := by
-        show InfiniteAdeleRing.ringEquiv_mixedSpace F 0 = 0
-        exact map_zero _
+      have ha : evI F a = 0 := map_zero _
       have h0 : a • ((z : AF F ⊗[F] E) - 1) = 0 := hz a ha
       have h1 : Θ (a • ((z : AF F ⊗[F] E) - 1)) =
           GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.adeleMap F E a * Θ ((z : AF F ⊗[F] E) - 1) := by
@@ -98,7 +96,6 @@ theorem exists_open_congr : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     refine ⟨u, hu, (GlobalTheory.RayChar.mem_iff_at hm _).2 fun v hv => ?_⟩
     rw [GlobalTheory.RayChar.at'_sub_one]
     have h2 := (GlobalTheory.RayChar.mem_congrIdl hm).1 hk'.2 v hv
-    rw [GlobalTheory.RayChar.cmp_diag, ← hu] at h2
-    exact h2
+    rwa [GlobalTheory.RayChar.cmp_diag, ← hu] at h2
 
 end GlobalTheory.OpenCongrIdele

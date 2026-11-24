@@ -73,8 +73,7 @@ theorem contDiffOn_repr_pull_fderiv : ∀ (m n : ℕ) (τ : V m → V n) (U : Se
   induction γ using ExteriorAlgebra.induction with
   | algebraMap r =>
     intro S
-    simp only [AlgHom.commutes]
-    exact contDiffOn_const
+    simpa only [AlgHom.commutes] using contDiffOn_const
   | ι u =>
     intro S
     have hcoef : ∀ x, (bas m).repr (pull (fderiv ℂ τ x) (ExteriorAlgebra.ι ℂ u)) S =
@@ -104,7 +103,6 @@ theorem contDiffOn_repr_pull_fderiv : ∀ (m n : ℕ) (τ : V m → V n) (U : Se
       ((ha S₁).mul (hb S₂)).mul contDiffOn_const
   | add a b ha hb =>
     intro S
-    simp only [map_add (f := _), Finsupp.add_apply]
-    exact (ha S).add (hb S)
+    simpa only [map_add (f := _), Finsupp.add_apply] using (ha S).add (hb S)
 
 end GlobalTheory.PullSmooth

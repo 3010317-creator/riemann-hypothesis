@@ -119,13 +119,11 @@ theorem exists_open_inter_fiber_subset_sectionComponent (X S : Scheme.{0}) (f : 
   · change e s ∈ U
     rw [← hy₀]
     have : y₀ ∈ connectedComponent y₀ := mem_connectedComponent
-    rw [← hUe] at this
-    exact this
+    rwa [← hUe] at this
   · intro x hx hxs
     obtain ⟨y, rfl⟩ : x ∈ Set.range (f.fiberι s) := by rw [hrange]; exact hxs
     refine (_root_.GlobalTheory.component_in_fibre_iff_of_isPullback X S f e s _ _ _ y₀ hpb hy₀ y).mpr ?_
-    rw [← hUe]
-    exact hx
+    rwa [← hUe]
 
 theorem exists_affine_chart_preirreducible_fiber : ∀ (X S : Scheme.{0}) (f : X ⟶ S) (e : S ⟶ X), Smooth f → e ≫ f = 𝟙 _ → ∀ s : S, ∃ (V : S.Opens) (W : X.Opens) (_ : W ≤ f ⁻¹ᵁ V), IsAffineOpen V ∧ IsAffineOpen W ∧ e s ∈ W ∧ ∀ (k : Type) [Field k] (p : Spec (CommRingCat.of k) ⟶ S), p (IsLocalRing.closedPoint k) = s → PreirreducibleSpace ↥(pullback (W.ι ≫ f) p) := by
   intro X S f e hf he s
@@ -260,8 +258,7 @@ theorem hypersurface_diff_isPreirreducible (Ω : Type) [Field Ω] [IsAlgClosed �
     · simp only [PrimeSpectrum.mem_zeroLocus, Set.singleton_subset_iff, SetLike.mem_coe]
       exact Ideal.mem_span_singleton.mpr (dvd_mul_right u v)
     · simp only [PrimeSpectrum.mem_zeroLocus, Set.singleton_subset_iff, SetLike.mem_coe]
-      intro hg
-      exact hgp (((Ideal.span_singleton_le_iff_mem _).mpr hup) hg)
+      exact fun hg => hgp (((Ideal.span_singleton_le_iff_mem _).mpr hup) hg)
   have hxU : x ∈ U := by
     have := key p hpS
     rw [mem_closure_iff] at this
@@ -441,8 +438,7 @@ theorem no_common_zero_spreads : ∀ (A : Type) [CommRing A] (τ J : Type) [Fini
     simp only [PA, AddMonoidHom.mk'_apply] at this
     rw [← hP1]
     convert this using 1
-    refine Finset.sum_congr rfl fun j _ => ?_
-    exact (hPmul _ _).symm
+    exact Finset.sum_congr rfl fun j _ => (hPmul _ _).symm
 
   let S : Finset Ω := c.support.biUnion (fun j => (P (c j)).coeffs)
   obtain ⟨b, hb, hbS⟩ := exists_common_denominator φ S (by
@@ -632,8 +628,7 @@ theorem bad_iff (f g : MvPolynomial σ A) (D : ℕ) (k : Type) [Field k] (ψ : A
       ?_, hinv true, ?_, hinv false⟩
     · ext n
       have := hz (Sum.inl n)
-      rw [eval_eqs_coeff, MvPolynomial.coeff_sub, sub_eq_zero] at this
-      exact this
+      rwa [eval_eqs_coeff, MvPolynomial.coeff_sub, sub_eq_zero] at this
     · have := hz (Sum.inr (Sum.inl true)); rwa [eval_eqs_point] at this
     · have := hz (Sum.inr (Sum.inl false)); rwa [eval_eqs_point] at this
   · rintro ⟨u, v, hu, hv, huv, P, Q, hPu, hPg, hQv, hQg⟩
@@ -1132,8 +1127,7 @@ theorem exists_basicOpen_fibres_preirreducible :
       rfl
     · have : PrimeSpectrum.comap (algebraMap B (Localization.Away b)) r' ∈
           Set.range (PrimeSpectrum.comap (algebraMap B (Localization.Away b))) := ⟨r', rfl⟩
-      rw [PrimeSpectrum.localization_away_comap_range (Localization.Away b) b] at this
-      exact this
+      rwa [PrimeSpectrum.localization_away_comap_range (Localization.Away b) b] at this
 
 end GlobalTheory
 end -- clump:auto
@@ -1186,8 +1180,7 @@ theorem preirreducibleSpace_tensor_of_pullback :
   have := (PreirreducibleSpace.isPreirreducible_univ (X := ↥(pullback (W.ι ≫ f)
         (Spec.map (CommRingCat.ofHom (algebraMap Γ(S, V) k)) ≫ hV.fromSpec)))).image
     (Scheme.homeoOfIso φ.symm) (Scheme.homeoOfIso φ.symm).continuous.continuousOn
-  rw [Set.image_univ_of_surjective hsurj] at this
-  exact this
+  rwa [Set.image_univ_of_surjective hsurj] at this
 
 end GlobalTheory
 end -- clump:auto

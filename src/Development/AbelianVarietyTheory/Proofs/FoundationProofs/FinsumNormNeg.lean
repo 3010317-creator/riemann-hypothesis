@@ -92,8 +92,7 @@ theorem exists_norm_eq {k : Type} [Field k] [Finite k] (s : k →+* k) (hs : ∀
     ext x
     rw [IntermediateField.mem_fixedField_iff, IntermediateField.mem_bot]
     constructor
-    · intro h
-      exact ⟨⟨x, h σ (Subgroup.mem_zpowers σ)⟩, rfl⟩
+    · exact fun h => ⟨⟨x, h σ (Subgroup.mem_zpowers σ)⟩, rfl⟩
     · rintro ⟨r, rfl⟩ τ _
       exact τ.commutes r
   have htop : Subgroup.zpowers σ = ⊤ := by
@@ -190,10 +189,8 @@ theorem sum_norm_neg {k : Type} [Field k] [Fintype k] (s : k →+* k) (hs : ∀ 
           rw [map_mul]
           ring
         rw [e, ht, ht0, one_mul]
-      · intro t _
-        exact inv_mul_cancel_right₀ ht0ne t
-      · intro t _
-        exact mul_inv_cancel_right₀ ht0ne t
+      · exact fun t _ => inv_mul_cancel_right₀ ht0ne t
+      · exact fun t _ => mul_inv_cancel_right₀ ht0ne t
   have hsplit : ∑ t : k, ψ (t * s t) =
       ∑ u : F, ((Finset.univ.filter (fun t : k => N t = u)).card : ℂ) * ψ (u : k) := by
     rw [← Finset.sum_fiberwise Finset.univ N (fun t => ψ (t * s t))]

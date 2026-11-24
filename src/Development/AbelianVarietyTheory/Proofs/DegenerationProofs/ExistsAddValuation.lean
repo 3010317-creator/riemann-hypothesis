@@ -91,8 +91,7 @@ theorem exists_addValuation (π : PadicAlgCl p) (h0 : 0 < ‖π‖) (h1 : ‖π�
   let r : PadicAlgCl p → ℚ := fun x => if hx : x = 0 then 0 else Classical.choose (hex x hx)
   have hr : ∀ x, x ≠ 0 → Real.log ‖x‖ = r x * Real.log ‖π‖ := by
     intro x hx
-    simp only [r, dite_eq_right hx]
-    exact Classical.choose_spec (hex x hx)
+    simpa only [r, dite_eq_right hx] using Classical.choose_spec (hex x hx)
   have hr' : ∀ x, x ≠ 0 → (r x : ℝ) = Real.log ‖x‖ / Real.log ‖π‖ := by
     intro x hx
     rw [hr x hx, mul_div_cancel_right₀ _ hL.ne]
@@ -140,8 +139,7 @@ theorem exists_addValuation (π : PadicAlgCl p) (h0 : 0 < ‖π‖) (h1 : ‖π�
       rw [hr' _ hxy, hr' x hx, hr' y hy, norm_mul,
         Real.log_mul (norm_ne_zero_iff.2 hx) (norm_ne_zero_iff.2 hy), add_div]
     exact_mod_cast h
-  · intro x hx
-    exact ⟨r x, f_ne x hx, hr x hx⟩
+  · exact fun x hx => ⟨r x, f_ne x hx, hr x hx⟩
 
 theorem tendsto_of_null {π : PadicAlgCl p} (h0 : 0 < ‖π‖) (h1 : ‖π‖ < 1)
     {v : AddValuation (PadicAlgCl p) (WithTop ℚ)}
@@ -160,12 +158,10 @@ theorem tendsto_of_null {π : PadicAlgCl p} (h0 : 0 < ‖π‖) (h1 : ‖π‖ <
   apply hi
   rw [dist_zero_right, norm_norm]
   by_cases hxi : x i = 0
-  · rw [hxi, norm_zero]
-    exact hε
+  · rwa [hxi, norm_zero]
   obtain ⟨q', hv', hlog⟩ := hv (x i) hxi
   have hqq : q ≤ q' := by
-    rw [hv', not_lt, WithTop.coe_le_coe] at hlt
-    exact hlt
+    rwa [hv', not_lt, WithTop.coe_le_coe] at hlt
   have h2 : (q' : ℝ) * Real.log ‖π‖ ≤ q * Real.log ‖π‖ :=
     mul_le_mul_of_nonpos_right (by exact_mod_cast hqq) hL.le
   have h3 : (q : ℝ) * Real.log ‖π‖ < Real.log ε := (div_lt_iff_of_neg hL).1 hq
@@ -178,8 +174,7 @@ theorem summable_of_mem (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDi
   have : CompleteSpace K := FiniteDimensional.complete ℚ_[p] K
   let y : I → K := fun i => ⟨x i, hK i⟩
   have hy : Filter.Tendsto y Filter.cofinite (nhds 0) := by
-    rw [tendsto_subtype_rng]
-    exact hx
+    rwa [tendsto_subtype_rng]
   have hs : Summable y := NonarchimedeanAddGroup.summable_of_tendsto_cofinite_zero hy
   exact hs.map K.val continuous_subtype_val
 

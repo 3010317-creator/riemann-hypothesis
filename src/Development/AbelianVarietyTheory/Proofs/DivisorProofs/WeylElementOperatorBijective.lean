@@ -139,9 +139,7 @@ theorem fourier_twice_sInf : ∀ (F : Type) [Field F] [NumberField F] (κ : Type
     rw [LinearMap.neg_apply, LinearMap.neg_apply, traceDot_apply]
     push_cast
     ring_nf
-  have h := hinv f f.continuous (hint f).1 (hint f).2 a
-  simp only [hk] at h
-  exact h
+  simpa only [hk] using hinv f f.continuous (hint f).1 (hint f).2 a
 
 end GlobalTheory.ArchFourier
 end -- clump:auto
@@ -191,8 +189,7 @@ theorem inversion_circle [MeasurableSpace k] [BorelSpace k] (ψ : AddChar k Circ
     rw [GlobalTheory.FourierLocBij.translate_fourier, neg_dotProduct, neg_neg, dotProduct_comm a y, mul_comm]
   have key' : ∫ y, (∫ x, φ x * (ψ (x ⬝ᵥ y) : ℂ) ∂m) * (ψ (y ⬝ᵥ a) : ℂ) ∂m = φ (-a) := by
     refine Eq.trans ?_ (key.trans (congrArg φ (zero_add (-a))))
-    refine integral_congr_ae (Filter.Eventually.of_forall fun y => ?_)
-    exact (hinner y).symm
+    exact integral_congr_ae (Filter.Eventually.of_forall fun y => (hinner y).symm)
   have hsm : ∀ G : (κ → k) → ℂ, ∫ y, G y ∂μ = ((r : ℝ) : ℂ) * ∫ y, G y ∂m := by
     intro G
     rw [hμ, integral_smul_nnreal_measure, NNReal.smul_def, Complex.real_smul]

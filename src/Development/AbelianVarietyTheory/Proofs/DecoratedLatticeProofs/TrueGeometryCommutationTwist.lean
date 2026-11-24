@@ -217,8 +217,7 @@ theorem norm_notMem_sq {D : D7} {PP : Pl D.host.E} (h : ((D.host.g 0 * D.host.g 
     (PP.isPrime.mem_or_mem h).elim (fun h => ⟨0, h⟩) fun h => ⟨1, h⟩
   obtain ⟨h1, h2⟩ := hspl k _ PP.isMaximal hk
   unfold Formalism.L2.Col.qOf
-  rw [h1]
-  exact h2
+  rwa [h1]
 
 section Levels
 
@@ -235,8 +234,7 @@ theorem prod_single {ι : Type} [Fintype ι] (pl : ι ≃ Pg) (α : ∀ i, AddCh
   rw [Finset.prod_eq_single n, Pi.mulSingle_eq_same, edgeSum_elem Ed hE h hij]
   · intro m _ hm
     rw [Pi.mulSingle_eq_of_ne (pl.injective.ne hm), edgeSum_one Ed hE, AddChar.map_zero_eq_one]
-  · intro hn
-    exact absurd (Finset.mem_univ n) hn
+  · exact fun hn => absurd (Finset.mem_univ n) hn
 
 theorem single_mem (H : ∀ PP : Pg, Subgroup (GL (Fin r) (kP PP.1))) (n : Pg) {x : GL (Fin r) (kP n.1)} (hx : x ∈ H n) :
     (Pi.mulSingle n x : G0 Pg r) ∈ Subgroup.pi Set.univ H := fun PP _ => by
@@ -255,8 +253,7 @@ theorem edgeSum_eq_supSum {κ : Type} [CommRing κ] {r : ℕ} (g : GL (Fin r) κ
   split_ifs with h
   · rw [Finset.sum_eq_single ⟨i.1 + 1, h⟩]
     · exact ite_eq_left (show supEdge i ⟨i.1 + 1, h⟩ from rfl)
-    · intro j _ hj
-      exact ite_eq_right (fun hj' => hj (Fin.ext hj'))
+    · exact fun j _ hj => ite_eq_right (fun hj' => hj (Fin.ext hj'))
     · intro hn; exact absurd (Finset.mem_univ _) hn
   · refine Finset.sum_eq_zero fun j _ => ?_
     refine ite_eq_right (fun hj => ?_)

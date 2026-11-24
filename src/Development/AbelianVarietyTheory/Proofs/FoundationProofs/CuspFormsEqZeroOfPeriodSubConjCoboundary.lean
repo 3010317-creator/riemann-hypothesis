@@ -508,8 +508,7 @@ theorem cuspForm_eq_zero_of_periodic_of_bound : ∀ (Γ : Subgroup SL(2, ℤ)) (
       rw [UpperHalfPlane.coe_vadd, hcoe _ hs', hcoe _ hs]
       ring
     have key := hper (ofComplex s)
-    rw [← e, hcoe _ hs', hcoe _ hs] at key
-    exact key
+    rwa [← e, hcoe _ hs', hcoe _ hs] at key
   have hhper := periodic_of_dbar _ ⇑h (k - 2) (h₀ : ℝ) hd hUper
   have hperh : Function.Periodic (⇑h ∘ ofComplex) ((h₀ : ℝ) : ℂ) := by
     intro s
@@ -1179,8 +1178,7 @@ private theorem eq_C_of_eval_add_natCast_eq {Q : ℂ[X]} {n : ℕ} (hn : 0 < n)
     | succ k ih =>
       have hk : ((k + 1 : ℕ) : ℂ) * n = (k : ℂ) * n + n := by push_cast; ring
       simp only [IsRoot.def, eval_sub, eval_C] at ih ⊢
-      rw [hk, hQ]
-      exact ih
+      rwa [hk, hQ]
   have hinf : Set.Infinite {x | IsRoot (Q - C (Q.eval 0)) x} :=
     Set.infinite_of_injective_forall_mem (f := fun k : ℕ => (k : ℂ) * n)
       (fun a b hab => by exact_mod_cast mul_right_cancel₀ hn' hab) hroot
@@ -1551,8 +1549,7 @@ theorem decay_at_cusp : ∀ (Γ : Subgroup SL(2, ℤ)) (k : ℕ), Γ.FiniteIndex
   have := hA τ' (him ▸ hτ) hr1 hr2
   rw [hg, him] at this
   simp only [Set.mem_setOf_eq, Real.dist_eq, sub_zero]
-  rw [abs_of_nonneg (by positivity)]
-  exact this
+  rwa [abs_of_nonneg (by positivity)]
 
 end GlobalTheory.HeckeFamilyMatrices.Decay
 end -- clump:auto
@@ -1583,8 +1580,7 @@ open scoped MatrixGroups ModularForm in
 open scoped Manifold in
 private lemma sl_denom_ne_zero (γ : SL(2, ℤ)) (τ : ℍ) :
     ((γ 1 0 : ℤ) : ℂ) * τ + ((γ 1 1 : ℤ) : ℂ) ≠ 0 := by
-  have h := UpperHalfPlane.denom_ne_zero (γ : GL (Fin 2) ℝ) τ
-  simpa [UpperHalfPlane.denom] using h
+  simpa [UpperHalfPlane.denom] using UpperHalfPlane.denom_ne_zero (γ : GL (Fin 2) ℝ) τ
 
 open Polynomial UpperHalfPlane in
 open scoped MatrixGroups ModularForm in

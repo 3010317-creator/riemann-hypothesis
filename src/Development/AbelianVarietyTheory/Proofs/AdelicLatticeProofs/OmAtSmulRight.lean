@@ -95,8 +95,7 @@ theorem cplxO_add {m n : ℕ} (s : Matrix (Fin n) (Fin n) ℂ) (t : Matrix (Fin 
 
 theorem cplxO_smul {m n : ℕ} (s : Matrix (Fin n) (Fin n) ℂ) (t : Matrix (Fin m) (Fin m) ℂ) (c : ℝ)
     (x : Matrix (Fin m) (Fin n) ℂ) : cplxO s t (c • x) = c • cplxO s t x := by
-  simp only [cplxO, Matrix.mul_smul, Matrix.smul_mul]
-  exact smul_comm _ _ _
+  simpa only [cplxO, Matrix.mul_smul, Matrix.smul_mul] using smul_comm _ _ _
 
 def jO (S T : HSp D) (sS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ)
     (sT : D.what₂.Tau → Matrix (Fin T.rank) (Fin T.rank) ℂ) : RW T S →ₗ[ℝ] RW T S where
@@ -121,7 +120,6 @@ def finRat (S T : HSp D) : Matrix (Fin T.rank) (Fin S.rank) D.host.E →+ WO S T
 theorem finRat_inf (S T : HSp D) (γ : Matrix (Fin T.rank) (Fin S.rank) D.host.E) :
     (finRat S T γ).map (infPart D) = 0 := by
   funext i j
-  show (0 : Ainf D.host.F) ⊗ₜ[D.host.F] (γ i j) = 0
   exact TensorProduct.zero_tmul _ _
 
 theorem finRat_fin (S T : HSp D) (γ : Matrix (Fin T.rank) (Fin S.rank) D.host.E) :
@@ -158,7 +156,6 @@ theorem latO_inf (S T : HSp D) (LS : Set (Fin S.rank → D.host.E)) (LT : Set (F
     refine (AddSubgroup.closure_le _).2 ?_
     rintro _ ⟨α, -, -, a, -, s, -, t, -, rfl⟩
     funext i j
-    show (0 : Ainf D.host.F) ⊗ₜ[D.host.F] _ = 0
     exact TensorProduct.zero_tmul _ _
   exact this hu
 

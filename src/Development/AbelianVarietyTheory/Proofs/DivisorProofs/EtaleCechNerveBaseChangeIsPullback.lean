@@ -67,8 +67,7 @@ theorem widePullback_isPullback {C : Type u} [Category.{v} C] {Y X Y' X' : C}
     · intro j
       rw [Category.assoc, WidePullback.lift_π, ← Category.assoc, WidePullback.lift_π, IsPullback.lift_fst]
     · rw [Category.assoc, WidePullback.lift_base, ← Category.assoc, WidePullback.lift_base, s.condition]
-  · intro s
-    exact WidePullback.lift_base _ _ _ _
+  · exact fun s => WidePullback.lift_base _ _ _ _
   · intro s m h1 h2
     apply WidePullback.hom_ext
     · intro j
@@ -104,8 +103,7 @@ theorem GlobalTheory.cech_baseChange : ∀ (Y X Y' X' : Scheme.{0}) (a : Y' ⟶ 
     rw [← yoneda.map_comp, ← yoneda.map_comp, hP.w]
   have hY : IsPullback (yoneda.map a) (yoneda.map f') (yoneda.map f) (yoneda.map b) := hP.map yoneda
   refine ⟨Arrow.mapCechNerve (Arrow.homMk' (f := yoneda.map f') (g := yoneda.map f) (yoneda.map a) (yoneda.map b) hw), ?_, ?_⟩
-  · refine IsPullback.of_forall_isPullback_app (fun n => ?_)
-    exact widePullback_isPullback hY n.unop.len
+  · exact IsPullback.of_forall_isPullback_app (fun n => (widePullback_isPullback hY n.unop.len))
   · intro k U x y h
     have h' : ∀ i, (y i ≫ a) ≫ f = x ≫ b := fun i => by rw [Category.assoc, hP.w, ← Category.assoc, h i]
     refine ⟨h', ?_⟩

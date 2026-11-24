@@ -251,14 +251,12 @@ theorem setup_ok (B : Base D cc δ) (hcc : IsCurveIdeal D cc) (hδ : IsDiscrimin
         = f '' (La D (tor0 D cc δ) L L' : Set (VC D N N')) := by
       ext y
       constructor
-      · intro hy
-        exact ⟨(coord D N N').symm y, hy, by simp [f]⟩
+      · exact fun hy => ⟨(coord D N N').symm y, hy, by simp [f]⟩
       · rintro ⟨x, hx, rfl⟩
         show (coord D N N').symm (coord D N N' x) ∈ La D (tor0 D cc δ) L L'
         simpa using hx
     rw [hset, Submodule.span_image, hspan, Submodule.map_top, LinearMap.range_eq_top]
-    intro y
-    exact ⟨(coord D N N').symm y, by simp [f]⟩
+    exact fun y => ⟨(coord D N N').symm y, by simp [f]⟩
   ·
     intro x hx
     obtain ⟨o, ho⟩ := (hOK (GlobalTheory.MomOne.wK D.host.d)).1 ⟨0, 1, by simp⟩

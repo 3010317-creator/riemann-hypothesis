@@ -175,8 +175,7 @@ theorem ae_eq_of_dense_of_local_sq_bound : ∀ {X : Type} [MeasurableSpace X] (�
     simpa [sub_eq_zero] using hx'
   have hall : ∀ᵐ x ∂μ.restrict (⋃ n, K n), P u x = Q u x :=
     (ae_restrict_iUnion_iff K (fun x => P u x = Q u x)).mpr key
-  rw [hcov, Measure.restrict_univ] at hall
-  exact hall
+  rwa [hcov, Measure.restrict_univ] at hall
 
 end GlobalTheory
 end -- clump:auto
@@ -632,8 +631,7 @@ theorem lint_Afun_compact_le : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H]
         rw [hF, Set.indicator_of_mem hx]
     _ ≤ C₀ * ∫⁻ x, F x ∂ν := hC F hFm hFinv
     _ ≤ C₀ * ∫⁻ x, (‖A x‖₊ : ENNReal) ^ 2 ∂ν := by
-        refine mul_le_mul_right ?_ _
-        exact lintegral_mono fun x => Set.indicator_le_self _ _ x
+        exact mul_le_mul_right (lintegral_mono fun x => Set.indicator_le_self _ _ x) _
     _ = ENNReal.ofReal (C₀.toReal * bc.re / d * ‖u‖ ^ 2) := by
         rw [hlin]
         have hC₁ : C₀ = ENNReal.ofReal C₀.toReal := (ENNReal.ofReal_toReal hC₀.ne).symm
@@ -996,8 +994,7 @@ theorem GlobalTheory.SgInf.exists_besselExt : ∀ (k r : ℕ) {H : Type} [Normed
       ‖F u 1‖ ≤ C * (Ws.map fun ws => ‖dsigW σ ws u‖).sum := by
     intro u hu
     have := (hreg u hu).choose_spec
-    simp only [F, dite_eq_left hu]
-    exact this
+    simpa only [F, dite_eq_left hu] using this
   have hDDsm : ∀ u ∈ DD σ w, IsSmoothVec σ u := fun u hu => (hDDi.2.2.2.2 hw).1 u (hDDi.2.2.1 hu)
   refine ⟨fun u => F u 1, ⟨?_, ?_, ?_, ?_⟩, ?_⟩
   · intro u hu u' hu'
@@ -1091,8 +1088,7 @@ theorem exists_rankOne_of_hermitian_nonneg_operatorKernel {H Wp : Type*} [Normed
     have h := hadj' u₀ hu₀ v hv ξ (l₀ u₀)
     rw [hcf v hv ξ u₀ hu₀, hcf u₀ hu₀ (l₀ u₀) v hv, inner_smul_right, inner_smul_left, hself] at h
     rw [div_mul_eq_mul_div, eq_div_iff hN0, mul_comm (cf v ξ)]
-    rw [mul_comm] at h
-    exact h
+    rwa [mul_comm] at h
   have hB : ∀ u ∈ V, ∀ v ∈ V, ∀ ξ : Wp, B u v ξ = (lam * ⟪l₀ v, ξ⟫_ℂ) • l₀ u := by
     intro u hu v hv ξ
     rw [hcf v hv ξ u hu, hcol v hv ξ]

@@ -458,8 +458,7 @@ theorem branchesAlong_of_irreducible {H : Type} [Group H] {n N : ℕ} (ι : H �
     rw [hm, Finset.sum_eq_single (⟨mu, hI⟩ : Below h lam)]
     · have := hirr mu
       exact Representation.IsIrreducible.finrank_intertwiningMap_self _
-    · intro b _ hb
-      exact h0 b.1 fun e => hb (Subtype.ext e.symm)
+    · exact fun b _ hb => h0 b.1 fun e => hb (Subtype.ext e.symm)
     · simp
   · unfold mult
     rw [hm]
@@ -518,8 +517,7 @@ theorem comult_of_irreducible {H : Type} [Group H] {n N : ℕ} (ι : H →* GL (
   · rw [hm, Finset.sum_eq_single (⟨mu, hI⟩ : Below h lam)]
     · have := hirr mu
       exact Representation.IsIrreducible.finrank_intertwiningMap_self _
-    · intro b _ hb
-      exact h0 b.1 fun e => hb (Subtype.ext e)
+    · exact fun b _ hb => h0 b.1 fun e => hb (Subtype.ext e)
     · simp
   · rw [hm]
     exact Finset.sum_eq_zero fun b _ => h0 b.1 fun e => hI (e ▸ b.2)

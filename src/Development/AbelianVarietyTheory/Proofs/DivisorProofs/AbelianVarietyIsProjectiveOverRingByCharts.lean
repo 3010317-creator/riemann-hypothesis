@@ -91,16 +91,14 @@ abbrev bcProj (X : Over S) : ((Over.pullback f).obj X).left ⟶ X.left := pullba
 
 theorem map_left_bcProj {X Y : Over S} (g : X ⟶ Y) :
     ((Over.pullback f).map g).left ≫ bcProj f Y = bcProj f X ≫ g.left := by
-  simp only [Over.pullback_map_left]
-  exact pullback.lift_fst _ _ _
+  simpa only [Over.pullback_map_left] using pullback.lift_fst _ _ _
 
 theorem isPullback_bcProj {X Y : Over S} (g : X ⟶ Y) :
     IsPullback (bcProj f X) ((Over.pullback f).map g).left g.left (bcProj f Y) := by
   refine IsPullback.of_bot (v₂₁ := pullback.snd Y.hom f) (v₂₂ := Y.hom) (h₃₁ := f) ?_ (map_left_bcProj f g).symm
     (IsPullback.of_hasPullback Y.hom f)
   have e : ((Over.pullback f).map g).left ≫ pullback.snd Y.hom f = pullback.snd X.hom f := by
-    simp only [Over.pullback_map_left]
-    exact pullback.lift_snd _ _ _
+    simpa only [Over.pullback_map_left] using pullback.lift_snd _ _ _
   rw [e, Over.w]
   exact IsPullback.of_hasPullback X.hom f
 
@@ -203,8 +201,7 @@ theorem normChart_baseChange : ∀ (K Ω : Type) [Field K] [Field Ω] [Algebra K
       obtain ⟨z', rfl, hz'⟩ := Scheme.exists_preimage_of_isPullback pb z x' hz
       have h' := h z' hz'
       change bcProj f A (((fst _ _ ≫ (Over.pullback f).map a) * snd _ _).left z') ∈ U at h'
-      rw [← Scheme.Hom.comp_apply, bcSum_left, Scheme.Hom.comp_apply] at h'
-      exact h'
+      rwa [← Scheme.Hom.comp_apply, bcSum_left, Scheme.Hom.comp_apply] at h'
 
 end GlobalTheory.ProjField
 end -- clump:auto

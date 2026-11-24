@@ -169,8 +169,7 @@ theorem Gen.congr {c c' : G × G → ℤ_[l]} (h : Gen χ r c) (hc : ∀ p, (l :
     Gen χ r c' := by
   intro M _ _ _ hM
   have e : ∀ p (x : M), c' p • x = c p • x := fun p x => smul_congr hM (hc p) x
-  simp only [e]
-  exact h M hM
+  simpa only [e] using h M hM
 
 theorem Gen.mono {c : G × G → ℤ_[l]} (h : Gen χ (r + 1) c) : Gen χ r c :=
   fun M _ _ _ hM => h M fun m => by rw [pow_succ, mul_smul, hM]

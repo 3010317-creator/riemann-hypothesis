@@ -71,8 +71,7 @@ theorem hasSignature_map_star {n p q : ℕ} {M : Matrix (Fin n) (Fin n) ℂ} (h 
   simp only [Matrix.map_mul] at this
   have hJ : (Formalism.UG.Jpq p q : Matrix _ _ ℂ).map (starRingEnd ℂ) = Formalism.UG.Jpq p q := by
     ext (a | a) (b | b) <;> simp [Formalism.UG.Jpq, Matrix.one_apply, apply_ite]
-  rw [hJ] at this
-  exact this
+  rwa [hJ] at this
 
 theorem hasSignature_all {D : D7} {V : HSp D} (h : NegIdx V 0) (σ : D.host.E →+* ℂ) :
     Formalism.UG.HasSignature (V.gram.map σ) V.rank 0 := by
@@ -81,8 +80,7 @@ theorem hasSignature_all {D : D7} {V : HSp D} (h : NegIdx V 0) (σ : D.host.E �
     simpa [gramAt] using h τ
   · subst hσ
     have h1 := hasSignature_map_star (by simpa [gramAt] using h τ)
-    rw [Matrix.map_map] at h1
-    exact h1
+    rwa [Matrix.map_map] at h1
 
 def posResign {D : D7} (V : HSp D) : HSp D := { V with sig := fun _ => (V.rank, 0) }
 

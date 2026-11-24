@@ -182,8 +182,7 @@ theorem le_of_injOn_differentiableOn :
     ∀ (d d' : ℕ) (U : Set (Fin d → ℂ)) (f : (Fin d → ℂ) → (Fin d' → ℂ)), IsOpen U →
       U.Nonempty → DifferentiableOn ℂ f U → Set.InjOn f U → d ≤ d' := by
   intro d d' U f hU hne hf hinj
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   obtain ⟨a, ha⟩ := hne
   let L : (Fin d' → ℂ) →L[ℂ] (Fin d → ℂ) := LinearMap.toContinuousLinearMap (padZero d' d)
   have hL : Function.Injective L := padZero_injective hlt.le
@@ -296,8 +295,7 @@ theorem isPeriod_trP {ρ : O →+* Matrix (Fin g) (Fin g) ℂ} {D D'' : PLat O b
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · intro a x
     rw [mixedTracePairing_apply, mixedTracePairing_apply, map_smul, hlin, Matrix.mulVec_mulVec, hMc, ← Matrix.mulVec_mulVec]
-  · intro x y hxy
-    exact w.injective (hinj (hMinj hxy))
+  · exact fun x y hxy => w.injective (hinj (hMinj hxy))
   · have hmem : ∀ v, v ∈ (trP M P w).range ↔ φ v ∈ P.range := by
       intro v
       simp only [AddMonoidHom.mem_range]
@@ -313,8 +311,7 @@ theorem isPeriod_trP {ρ : O →+* Matrix (Fin g) (Fin g) ℂ} {D D'' : PLat O b
   · let Lr : (Fin g → ℂ) →ₗ[ℝ] (Fin g → ℂ) := (Matrix.mulVecLin M).restrictScalars ℝ
     have hLr : Set.range (trP M P w) = Lr '' Set.range P := hrange
     rw [hLr, Submodule.span_image, hspan, Submodule.map_top, LinearMap.range_eq_top]
-    intro v
-    exact ⟨M⁻¹ *ᵥ v, by simp [Lr, Matrix.mulVec_mulVec, hMN]⟩
+    exact fun v => ⟨M⁻¹ *ᵥ v, by simp [Lr, Matrix.mulVec_mulVec, hMN]⟩
   · refine ⟨(M⁻¹)ᵀ * Hm * (M⁻¹)ᴴᵀ, ?_, ?_, ?_⟩
     · unfold Matrix.IsHermitian
       have e1 : ((M⁻¹)ᴴᵀ)ᴴ = (M⁻¹)ᵀ := by ext i j; simp
@@ -803,8 +800,7 @@ theorem unif_of_fineAt : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ :
     exact hdist i j w hw
   · intro i P P' hP hP'
     constructor
-    · intro huu
-      exact cmpEq _ _ _ _ _ _ _ _ _ _ huu (hunif i P hP) (hunif i P' hP')
+    · exact fun huu => cmpEq _ _ _ _ _ _ _ _ _ _ huu (hunif i P hP) (hunif i P' hP')
     · rintro ⟨w, h, hw, hPw⟩
       exact hF.sep _ _ _ _ _ _ _ _ _ _ (hunif i P hP) (hunif i P' hP') w h hw hPw
   · intro i m B P hB hHol

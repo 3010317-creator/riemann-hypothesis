@@ -287,9 +287,7 @@ theorem exists_lift_actW (he : R.models_HW) (hw : R.models_gW) {i : Fin D.R.m} {
   · refine absurd (subsingleton_of_forall_eq 0 fun x => ?_) hn
     have h1 : (R.HW i σ).e (R.gW i σ g (R.gW i σ g⁻¹ x)) = 0 := by
       rw [hw]
-      refine MultilinearMap.ext fun v => ?_
-      show actG0 (Wc D i) (R.βW i) (R.datWp i R.triv) (R.eG g) _ = 0
-      exact dite_eq_right hk
+      exact MultilinearMap.ext fun v => dite_eq_right hk
     rw [Representation.self_inv_apply] at h1
     exact (he i σ).1 (h1.trans (map_zero _).symm)
 
@@ -330,8 +328,7 @@ theorem rhoIs_of_values (t : FWTie T R κ v₀) (he : R.models_HW) (hw : R.model
   have h6 := equiv_of_values he hw hv hk2 h5
   have h7 := (congrArg ((R.FW i).j σ) h1.symm).trans (jK_apply t i σ ⟨_, hf⟩).symm
   have h8 := (congrArg (R.HW i σ).e h7).trans h6
-  rw [jK_apply] at h8
-  exact h8
+  rwa [jK_apply] at h8
 
 theorem rhoIs_of_subsingleton {i : Fin D.R.m} {σ : D.what₂.LL →+* ℂ} (hn : Subsingleton (R.HW i σ).H) :
     RhoIs σ ((R.FW i).j σ) (R.HW i σ).e (actW R i σ) (R.FW i).chi (R.FW i).ρ := fun g x => by

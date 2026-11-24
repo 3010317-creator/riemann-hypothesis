@@ -817,8 +817,7 @@ theorem isThetaPt_fibre : ∀ (F Ω T : Type) [Field F] [IsAlgClosed F] [CharZer
       refine Over.OverMorphism.ext ?_
       simp only [Over.comp_left, Over.homMk_left]
       rw [← Category.assoc, e2]
-    rw [hpts]
-    exact hF
+    rwa [hpts]
   obtain ⟨z, hz, hne⟩ := GlobalTheory.ThetaCoset.exists_ne_zero_over hL hL2 P (spMap tR) (k := m) (by omega) hmF
     (GlobalTheory.ThetaUniq.isThetaPtOver_of_local P _ hF') 1
   obtain ⟨i₀, hi₀⟩ := hcov z hz
@@ -839,9 +838,7 @@ theorem isThetaPt_fibre : ∀ (F Ω T : Type) [Field F] [IsAlgClosed F] [CharZer
   have hfin : ∀ i, (r (w i₀) / v i₀)⁻¹ * r (w i) = v i := fun i => by
     rw [inv_div, div_mul_eq_mul_div, div_eq_iff hr0]
     linear_combination hrw i
-  have H := GlobalTheory.Ex.Specialise.isThetaPt_mul P hF' (inv_ne_zero hd)
-  simp only [hfin] at H
-  exact H
+  simpa only [hfin] using GlobalTheory.Ex.Specialise.isThetaPt_mul P hF' (inv_ne_zero hd)
 
 end GlobalTheory.Mum
 end -- clump:auto

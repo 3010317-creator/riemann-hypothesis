@@ -118,8 +118,7 @@ theorem exists_order [Finite σ] (w : σ → ℕ) :
   · exact (InvImage.wf key wellFounded_lt).apply
   · intro c d h
     change key c < key d
-    simp only [key, Prod.Lex.toLex_lt_toLex]
-    exact Or.inl h
+    simpa only [key, Prod.Lex.toLex_lt_toLex] using Or.inl h
 
 variable {K : Type} [Field K] (m : MonomialOrder.{0,0} σ)
 
@@ -481,14 +480,12 @@ theorem exists_harm (φ : K →+* ℂ) {ρ : Type} [Fintype ρ] [DecidableEq ρ]
       simp [h2]
   have hc : IsCompl W (B.orthogonal W) := by
     rw [LinearMap.BilinForm.isCompl_orthogonal_iff_disjoint hB, Submodule.disjoint_def]
-    intro h h1 h2
-    exact Subtype.ext (harm_ideal_zero x y φ h1 (hH h h2))
+    exact fun h h1 h2 => Subtype.ext (harm_ideal_zero x y φ h1 (hH h h2))
   have : (⟨P, hP⟩ : V) ∈ W ⊔ B.orthogonal W := by rw [hc.sup_eq_top]; trivial
   obtain ⟨u, hu, h, hh, e⟩ := Submodule.mem_sup.1 this
   refine ⟨h, h.2, hH h hh, ?_⟩
   have e' : (u : MvPolynomial σ K) + h = P := congrArg Subtype.val e
-  rw [← e', add_sub_cancel_right]
-  exact hu
+  rwa [← e', add_sub_cancel_right]
 
 end Harm
 
@@ -562,8 +559,7 @@ def pev (t : S) (z : S × (Fin n × Fin n) → K) :
 
 theorem pev_self (t : S) (z : S × (Fin n × Fin n) → K) (f : MvPolynomial (Fin n × Fin n) K) :
     pev t z (blockEmb K t f) = f := by
-  simp only [pev, blockEmb, aeval_rename, Function.comp_def, ite_true]
-  exact aeval_X_left_apply f
+  simpa only [pev, blockEmb, aeval_rename, Function.comp_def, ite_true] using aeval_X_left_apply f
 
 theorem pev_ne {s t : S} (h : s ≠ t) (z : S × (Fin n × Fin n) → K) (f : MvPolynomial (Fin n × Fin n) K) :
     pev t z (blockEmb K s f) = C (eval (fun v => z (s, v)) f) := by
@@ -1513,8 +1509,7 @@ theorem NN_act [CharZero K] (t : Ix) (a : Row Ix p q → ℕ) (g : GL (Fin n) K)
   have hm : _ ∈ NN h K t a := ⟨_, act_deg g' h1, act_inv g' h2, e⟩
   rw [Submodule.smul_mem_iff] at hm
   · simpa [g', Formalism.BasicNotions.inside₂] using hm
-  · refine Finset.prod_ne_zero_iff.2 fun s _ => pow_ne_zero _ (inv_ne_zero ?_)
-    exact (g' s).det_ne_zero
+  · exact Finset.prod_ne_zero_iff.2 fun s _ => pow_ne_zero _ (inv_ne_zero (g' s).det_ne_zero)
 
 theorem shift_rename_self {m : ℕ} {ρ : Fin m → Row Ix p q} (hρ : Function.Injective ρ) (e : Fin n → Fin n)
     (i i' : Fin m) (c : K) (H : MvPolynomial (Fin n × Fin m) K) :
@@ -1976,8 +1971,7 @@ theorem harm_fw (P : MvPolynomial (Lt Ix Dw.p Dw.q n) K) :
   · intro hP τ hτ i j
     obtain ⟨t, rfl⟩ := (he.2 _).1 hτ
     have := lap_fw Dw he t (Fin.cast (mult_pl Dw he _) i) (Fin.cast (mult_conj Dw he _) j) P
-    rw [hP, map_zero] at this
-    exact this
+    rwa [hP, map_zero] at this
 
 theorem degC_eq (a : (E →+* ℂ) × ℕ → ℕ) (t : Ix) : degC Dw pl a t = ∑ j, aa Dw pl a (t, Sum.inr j) := by
   unfold degC
@@ -1994,8 +1988,7 @@ theorem mu_eq (h : Dw.p + Dw.q ≤ n) {a : (E →+* ℂ) × ℕ → ℕ} {s : Ix
     split_ifs with hk
     · rw [Finset.sum_eq_single ⟨k, hk⟩]
       · exact ite_eq_left rfl
-      · intro i _ hi
-        exact ite_eq_right fun e => hi (Fin.ext (show (i : ℕ) = k from congrArg Fin.val e))
+      · exact fun i _ hi => ite_eq_right fun e => hi (Fin.ext (show (i : ℕ) = k from congrArg Fin.val e))
       · simp
     · refine Finset.sum_eq_zero fun i _ => ite_eq_right fun e => hk ?_
       rw [← e]; exact i.2

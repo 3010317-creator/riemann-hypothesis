@@ -88,12 +88,10 @@ theorem finsum_char (χ : AddChar 𝓀[k] ℂ) (hχ : χ ≠ 1) (L : Submodule �
     push_cast
     rfl
   · obtain ⟨f₁, hf₁⟩ : ∃ f₁ : Module.Dual 𝓀[k] (Red L), f₁ z ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hz ((Module.forall_dual_apply_eq_zero_iff 𝓀[k] z).1 h)
     obtain ⟨a, ha⟩ : ∃ a, χ a ≠ 1 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hχ (by ext a; rw [h a, AddChar.one_apply])
     set g : Module.Dual 𝓀[k] (Red L) := (-(a * (f₁ z)⁻¹)) • f₁
     have hg : g z = -a := by simp [g, hf₁]
@@ -275,8 +273,7 @@ theorem coset_total (q : Unif k) (L : Submodule 𝒪[k] (n → k)) [L.IsFullLatt
   rw [finsum_split] at hs
   simp only [one_mul, dite_eq_ite] at hs
   rw [Pi.add_apply, Finset.sum_apply, dualInd_eq q, ← finsum_ofDual L (fun Q => cosetInd q Q.lat Q.red η)]
-  simp only [cosetInd_pair]
-  exact hs
+  simpa only [cosetInd_pair] using hs
 
 end GlobalTheory.GluedExp
 
@@ -378,11 +375,9 @@ theorem last_lat (q : Unif k) (L : Submodule 𝒪[k] (n → k)) [L.IsFullLattice
   refine if_congr ⟨fun h => ⟨fun y hy => ((hm _).1 (h y hy)).1, fun y hy => ?_⟩,
     fun h y hy => (hm _).2 ⟨h.1 y hy, ?_⟩⟩ rfl rfl
   · have h1 := ((hm _).1 (h y hy)).2
-    rw [smul_dotProduct]
-    exact h1
+    rwa [smul_dotProduct]
   · have h1 := h.2 y hy
-    rw [smul_dotProduct] at h1
-    exact h1
+    rwa [smul_dotProduct] at h1
 
 end GlobalTheory.GluedExp
 
@@ -430,8 +425,7 @@ theorem _root_.GlobalTheory.T.gluedLattice_finite_expansions_localField : ∀ (k
     · rw [smul_dotProduct]
       exact ((hm _).1 (h y hy)).2
     · have hη := h.2 y hy
-      rw [smul_dotProduct] at hη
-      exact hη
+      rwa [smul_dotProduct] at hη
   exact ⟨GlobalTheory.GluedExp.last_ker Λ L, hlast⟩
 end -- clump:auto
 end -- clump:auto

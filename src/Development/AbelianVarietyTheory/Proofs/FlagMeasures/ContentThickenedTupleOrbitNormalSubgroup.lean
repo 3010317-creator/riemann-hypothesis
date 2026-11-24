@@ -77,8 +77,7 @@ theorem cont_iUnion_cosets {W : Type} [AddCommGroup W] (W0 : AddSubgroup W) {Γ 
     constructor
     · rintro ⟨a, ha⟩
       refine ⟨(a : Γ ⧸ (N ⊔ H)), ?_⟩
-      rw [heq _ a (QuotientGroup.eq.1 (QuotientGroup.out_eq' _))]
-      exact ha
+      rwa [heq _ a (QuotientGroup.eq.1 (QuotientGroup.out_eq' _))]
     · rintro ⟨q, hq⟩
       exact ⟨_, hq⟩
   rw [hU, (_root_.GlobalTheory.HL.cont_biUnion W0 Finset.univ (fun q : Γ ⧸ (N ⊔ H) => S q.out) (fun q _ => hco _)).2]
@@ -209,8 +208,7 @@ theorem GlobalTheory.HL.cont_thick_torb_normal : ∀ {F : Type} [Field F] [Valua
         ← Subgroup.inf_relIndex_right K' (Fx ⊓ K)]
       congr 1
       rw [inf_comm, inf_assoc, inf_eq_right.2 hK']
-    rw [hU, ← hI]
-    exact main
+    rwa [hU, ← hI]
   · intro a b hab
     obtain ⟨w, ⟨_, ⟨_, ⟨k, hk, rfl⟩, A, hA, rfl⟩, rfl⟩, ⟨_, ⟨_, ⟨k', hk', rfl⟩, A', hA', rfl⟩, hw⟩⟩ :=
       Set.not_disjoint_iff.1 hab

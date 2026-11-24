@@ -348,8 +348,7 @@ theorem exists_ptJ (y : ∀ m, sp (R₀ := R) (JetR R (Fin n × Fin d) m) ⟶ G)
     · rw [← AlgHom.comp_assoc, (hψ m).1, jetAug_comp_jetTruncR_eq_jetAug_succ hx]
     · rw [jet_spMap_square_comm, Category.assoc, hx.1 m, (hψ m).2]
   have hz : ∀ j m, jetTruncR R (Fin n × Fin d) m (ψ (m + 1) (zR (m + 1) j)) = ψ m (zR m j) := by
-    intro j m
-    exact congrArg (fun φ => φ (zR (m + 1) j)) (hc m)
+    exact fun j m => congrArg (fun φ => φ (zR (m + 1) j)) (hc m)
   choose P hP using fun j => exists_pj (fun m => ψ m (zR m j)) (hz j)
   have hP0 : ∀ j, constantCoeff (P j) = 0 := by
     intro j
@@ -439,15 +438,13 @@ theorem exists_series [IsCommMonObj G] {O : Type} [CommRing O] (a : Geo.Tor.OAct
     have E : A0 (c₁ + c₂) = op F0 (A0 c₁) (A0 c₂) :=
       ptJ_inj hx fun m => by rw [hA0, hop, hA0, hA0, a.add, MonObj.comp_mul]
     have h := congrArg Subtype.val E
-    rw [op_val] at h
-    exact h
+    rwa [op_val] at h
   case mul =>
     intro c₁ c₂
     have E : A0 (c₁ * c₂) = ac (A0 c₁) (A0 c₂) :=
       ptJ_inj hx fun m => by rw [hA0, hac, hA0, Category.assoc, ← a.mul c₂ c₁, _root_.mul_comm c₂ c₁]
     have h := congrArg Subtype.val E
-    rw [ac_val] at h
-    exact h
+    rwa [ac_val] at h
   case one =>
     have E : A0 1 = (gen 0 : Q R d 1) :=
       ptJ_inj hx fun m => by rw [hA0, a.one, Category.comp_id]
@@ -801,8 +798,7 @@ theorem jetCoord_unique (R : Type) [CommRing R] (G : Over (Spec (CommRingCat.of 
           rw [AlgHom.comp_apply, AlgHom.comp_apply, ← map_sub]
           exact Ideal.mem_map_of_mem _ (ih j))
         (by rw [← spMap_comp, ← spMap_comp, Category.assoc, Category.assoc, h])
-      intro j
-      exact Ideal.Quotient.eq.1 (AlgHom.congr_fun e (zR m j)).symm
+      exact fun j => Ideal.Quotient.eq.1 (AlgHom.congr_fun e (zR m j)).symm
   refine jet_ext fun j => ?_
   have := main m j
   rw [hN, Ideal.mem_bot] at this

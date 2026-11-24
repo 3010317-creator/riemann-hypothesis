@@ -199,8 +199,7 @@ theorem polyAction_mem_locP_nabStd (K : Type) [Field K] [NumberField K] (ι : Ty
       have h1 := actTen K ι n lam g f
       unfold ten at h1
       rw [h1, ← IsScalarTower.algebraMap_smul K, map_prod]
-      simp only [map_smul]
-      exact (Finset.prod_smul _ _ _).symm
+      simpa only [map_smul] using (Finset.prod_smul _ _ _).symm
     | zero => rw [map_zero]; exact Submodule.zero_mem _
     | add x y _ _ hx hy => rw [map_add (f := _)]; exact Submodule.add_mem _ hx hy
     | smul r x _ hx =>
@@ -210,7 +209,6 @@ theorem polyAction_mem_locP_nabStd (K : Type) [Field K] [NumberField K] (ι : Ty
   obtain ⟨t, ht, h2⟩ := key _ hF
   refine ⟨t * s, Submonoid.mul_mem _ ht hs, ?_⟩
   rw [LinearMap.map_smul_of_tower] at h2
-  rw [mul_smul]
-  exact h2
+  rwa [mul_smul]
 
 end GlobalTheory.NabStab

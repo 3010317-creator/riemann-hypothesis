@@ -121,8 +121,7 @@ theorem int_bound {X : Type} [AddCommGroup X] (q : X → ℤ) (h0 : ∀ x, 0 ≤
   · have : (j : ℤ) ≤ j * q m := by nlinarith
     linarith [h0 (m + α)]
   · have hB : q α ≤ q (m + α) := by
-      by_contra hlt
-      push Not at hlt
+      by_contra! hlt
       set n : ℕ := (q α).toNat + 1 with hn
       have hnz : (n : ℤ) = q α + 1 := by
         rw [hn]; push_cast; rw [Int.toNat_of_nonneg (h0 α)]
@@ -338,8 +337,7 @@ theorem gm_jK_eq_unitAt {Z : Scheme.{0}} (r : Z ⟶ Spec (CommRingCat.of (Fracti
   have hW' : jK R ⁻¹ᵁ W = ⊤ := by subst hW; rfl
   rw [← gm_pull r (jK R) z W (by rw [hW]; trivial) b, gm_eq_unitAt r z _ hW']
   congr 1
-  apply Units.ext
-  exact DVR.GC.evalTop_specMap (algebraMap R (FractionRing R)) W hW hW' b.val
+  exact Units.ext (DVR.GC.evalTop_specMap (algebraMap R (FractionRing R)) W hW hW' b.val)
 
 theorem commGroup_mul_eq_mul_mul_div {G : Type} [CommGroup G] (T A B : G) : T * A = A * B⁻¹ * (T * B) := by
   rw [_root_.mul_comm T B, ← _root_.mul_assoc, inv_mul_cancel_right, _root_.mul_comm]
@@ -365,8 +363,7 @@ theorem chK_top (χ : D.X) : LB.wchart D.P.L (K := PUnit) (fun _ => ptK (D.c χ)
   refine eq_top_iff.2 fun y _ => Set.mem_iInter.2 fun k => ?_
   have h1 := (ch_top D χ).ge (show jK R y ∈ (⊤ : (Spec (CommRingCat.of R)).Opens) from trivial)
   have h2 := Set.mem_iInter.1 h1 k
-  rw [← DegPre.xK, xK_eq]
-  exact h2
+  rwa [← DegPre.xK, xK_eq]
 
 def kap (χ : D.X) : (FractionRing R)ˣ :=
   Units.map (DVR.GC.evalTop _ (chK_top D χ)).toMonoidHom ((D.psi χ).s (ch D χ)) *
@@ -524,8 +521,7 @@ theorem psiIn_mem (I : Ideal R) (χ : D.X) (h : D.PsiIn χ I) :
     intro y _
     have h1 := Set.mem_iInter.1
       ((ch_top D χ).ge (show y ∈ (⊤ : (Spec (CommRingCat.of R)).Opens) from trivial)) PUnit.unit
-    rw [ptR_eq] at h1
-    exact h1
+    rwa [ptR_eq] at h1
   have hh : jK R ⁻¹ᵁ ⊤ ≤ (LB.LinComb D.P.L (K := PUnit) (fun _ => D.xK χ) (fun _ => -1)).U (ch D χ) :=
     fun y _ => (chK_top D χ).ge trivial
   obtain ⟨r, hr, e⟩ := h (ch D χ) ⊤ (isAffineOpen_top _) hle hh
@@ -636,8 +632,7 @@ theorem eq_zero_of_even_cubic {ι X G : Type*} [AddCommGroup X] [AddCommGroup G]
         have h := hAll a c
         rw [hBapp, sub_sub, sub_eq_zero] at h
         exact h }
-  intro a
-  exact hext F h1 a
+  exact fun a => hext F h1 a
 
 section Quadratic
 
@@ -1141,8 +1136,7 @@ theorem core (hR : Base R) (D : DegData R (maximalIdeal R)) (κ : D.toPre.X → 
   refine ⟨⟨F, Function.update g α b, fun β => ?_, fun e => ?_⟩, Function.update_self α b g, fun β hβ => ?_⟩
   · by_cases h : β = α
     · subst h
-      rw [Function.update_self]
-      exact hb
+      rwa [Function.update_self]
     · rw [Function.update_of_ne h]
       exact (hg β).1
   · refine (((h2 (e + 1)).image (fun mu => α + k • mu)).insert α).subset fun β hβ => ?_

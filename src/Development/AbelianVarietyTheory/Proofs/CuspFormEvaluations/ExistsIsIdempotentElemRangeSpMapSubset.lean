@@ -62,14 +62,12 @@ private theorem eq_one_iff_isUnit_of_isIdempotentElem {R : Type} [CommRing R] {u
   constructor
   · rintro rfl
     exact isUnit_one
-  · intro h
-    exact h.mul_left_cancel (by rw [hu.eq, _root_.mul_one])
+  · exact fun h => h.mul_left_cancel (by rw [hu.eq, _root_.mul_one])
 
 private theorem isUnit_iff_forall_primeSpectrum_notMem {R : Type} [CommRing R] (x : R) :
     IsUnit x ↔ ∀ q : PrimeSpectrum R, x ∉ q.asIdeal := by
   constructor
-  · intro h q hq
-    exact q.isPrime.ne_top (Ideal.eq_top_of_isUnit_mem _ hq h)
+  · exact fun h q hq => q.isPrime.ne_top (Ideal.eq_top_of_isUnit_mem _ hq h)
   · intro h
     by_contra hx
     obtain ⟨I, hI, hxI⟩ := exists_max_ideal_of_mem_nonunits (mem_nonunits_iff.mpr hx)
@@ -94,8 +92,7 @@ theorem exists_isIdempotentElem_range_spMap_subset {B : Type} [CommRing B] {U : 
   constructor
   · rintro h _ ⟨q, rfl⟩
     exact (hmem _).2 (h q)
-  · intro h q
-    exact (hmem _).1 (h ⟨q, rfl⟩)
+  · exact fun h q => (hmem _).1 (h ⟨q, rfl⟩)
 
 theorem exists_isIdempotentElem_torsion_eq :
     Laws → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (B : Type) [CommRing B] (x0 : Sp B ⟶ Xo.X) (k : ℕ), 0 < k → ∀ (a b : ptO Xo x0 ⟶ Xo.univ.t.G), a ^ k = 1 → b ^ k = 1 → ∃ e : B, IsIdempotentElem e ∧ ∀ (T : Type) [CommRing T] (χ : B →+* T), χ e = 1 ↔ spMap χ ≫ a.left = spMap χ ≫ b.left := by

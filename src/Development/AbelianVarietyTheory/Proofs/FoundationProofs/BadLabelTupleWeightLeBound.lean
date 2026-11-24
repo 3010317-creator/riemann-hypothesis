@@ -103,8 +103,7 @@ theorem card_GG_eq (g : ℕ) [Fact g.Prime] (N : ℕ) :
   rw [← prod_pow_sub_pow_eq, ← Nat.card_eq_fintype_card]
   have h := Matrix.card_GL_field (𝔽 := ZMod g) N
   rw [ZMod.card] at h
-  rw [← Fin.prod_univ_eq_prod_range (fun i => g ^ N - g ^ i) N]
-  exact h
+  rwa [← Fin.prod_univ_eq_prod_range (fun i => g ^ N - g ^ i) N]
 
 end GlobalTheory.BadShare
 end -- clump:auto
@@ -676,8 +675,7 @@ lemma act_colElt {M : Type} [AddCommGroup M] [Module ℂ M] (ρ : Representation
       simp
     · intro b _ hb
       rw [ite_eq_right]
-      intro e
-      exact hb (Fin.ext (by rw [(hE m b).1 e, hmn]))
+      exact fun e => hb (Fin.ext (by rw [(hE m b).1 e, hmn]))
     · simp
     · intro a _ ha
       refine Finset.sum_eq_zero fun b _ => ?_
@@ -1480,8 +1478,7 @@ theorem exchange (M : Type) [AddCommGroup M] [Module ℂ M] [FiniteDimensional �
       · rw [Matrix.vecMulVec_apply, Pi.smul_apply, Pi.single_eq_of_ne hb, smul_zero, mul_zero]
     have hm : L.Mem (y⁻¹ * x⁻¹ * y * x) := by
       refine mem_of_val L _ _ hc (fun a b hab => hD a b ?_) (fun a b ha _ _ => hD a b (Or.inl ?_))
-      · by_contra hcon
-        push Not at hcon
+      · by_contra! hcon
         rw [hcon.1, hcon.2, Fin.le_def] at hab
         omega
       · intro e; rw [e] at ha; omega

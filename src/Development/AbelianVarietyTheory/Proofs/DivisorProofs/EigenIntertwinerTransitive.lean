@@ -57,8 +57,7 @@ theorem pure_ne_zero {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype �
     GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ ≠ 0 := by
   classical
   obtain ⟨yi, hyi⟩ : ∃ y, f y ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hf (SchwartzMap.ext h)
   have hS : Set.Finite {v | ¬ (φ v = Set.indicator {x | ∀ i, x i ∈ v.adicCompletionIntegers F} 1)} :=
     Filter.eventually_cofinite.mp hstd
@@ -82,7 +81,6 @@ theorem pure_ne_zero {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype �
   have hx := congrFun hz x
   have h1 : (fun i => evI F (x i)) = yi := by
     funext i
-    show InfiniteAdeleRing.ringEquiv_mixedSpace F ((InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (yi i)) = yi i
     exact RingEquiv.apply_symm_apply _ _
   have h2 : ∀ v, (fun i => evFin F v (x i)) = fun i => if v ∈ S then p v i else 0 := fun v => rfl
   simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.zero_apply, h1, h2] at hx
@@ -109,8 +107,7 @@ theorem exists_mem_schA_ev_ne_zero : ∀ (F E : Type) [Field F] [NumberField F] 
   intro F E _ _ _ _ _ σ B n d n₁ d₁ X W X₁ W₁ M M₁ ι ι' I e hM hM₁ hE
   obtain ⟨ei, ev, hei, hev, hpure⟩ := hE.loc
   obtain ⟨f, hf⟩ : ∃ f, ei f ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hei (ContinuousLinearMap.ext h)
   refine ⟨GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f M.vac, GlobalTheory.TensUniq.pure_mem_schA f M.vac (fun v => (hM.vac v).1) hM.std, ?_⟩
   rw [hpure f M.vac (fun v => (hM.vac v).1) (Filter.Eventually.of_forall fun _ => rfl)]

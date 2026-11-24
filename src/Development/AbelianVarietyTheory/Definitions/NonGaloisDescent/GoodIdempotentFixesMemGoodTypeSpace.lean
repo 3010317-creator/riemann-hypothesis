@@ -75,8 +75,7 @@ open Polynomial in
 private lemma norm_le_one_of_monic_root_lemma {K : Type*} [NormedField K] [IsUltrametricDist K]
     {p : K[X]} (hp : p.Monic) (hc : ∀ i, ‖p.coeff i‖ ≤ 1) {x : K} (hx : p.eval x = 0) :
     ‖x‖ ≤ 1 := by
-  by_contra h
-  push Not at h
+  by_contra! h
   rw [hp.as_sum] at hx
   simp only [eval_add, eval_pow, eval_X, Polynomial.eval_finsetSum, eval_mul, eval_C] at hx
   set n := p.natDegree
@@ -116,8 +115,7 @@ theorem _root_.GlobalTheory.padicAlgCl_embedding_bounded_continuous (l : ℕ) [F
     intro a
     obtain ⟨p, hpm, hpa⟩ := Algebra.IsIntegral.isIntegral (R := ℤ_[l]) a
     have hroot : (p.map g).eval (ι a) = 0 := by
-      rw [eval_map, ← hg, ← hom_eval₂]
-      rw [hpa, map_zero]
+      rw [eval_map, ← hg, ← hom_eval₂, hpa, map_zero]
     refine norm_le_one_of_monic_root_lemma (hpm.map g) (fun i => ?_) hroot
     rw [coeff_map]
     change ‖algebraMap ℚ_[l] (PadicAlgCl l) ((p.coeff i : ℤ_[l]) : ℚ_[l])‖ ≤ 1
@@ -216,8 +214,7 @@ def smallIdeal {L K : Type} [Field L] [NormedField K] [IsUltrametricDist K]
     exact mul_lt_one_of_nonneg_of_lt_one_right (norm_int_le_one a c) (norm_nonneg _) hx
 
 theorem mem_smallIdeal {L K : Type} [Field L] [NormedField K] [IsUltrametricDist K]
-    (a : L →+* K) (x : 𝓞 L) : x ∈ smallIdeal a ↔ ‖a (x : L)‖ < 1 := by
-  exact Iff.rfl
+    (a : L →+* K) (x : 𝓞 L) : x ∈ smallIdeal a ↔ ‖a (x : L)‖ < 1 := Iff.rfl
 
 theorem norm_eq_one {L K : Type} [Field L] [NormedField K] [IsUltrametricDist K]
     (a : L →+* K) (x : 𝓞 L) (h : ¬ ‖a (x : L)‖ < 1) : ‖a (x : L)‖ = 1 := by

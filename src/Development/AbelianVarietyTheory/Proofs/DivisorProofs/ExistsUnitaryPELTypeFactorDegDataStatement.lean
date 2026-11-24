@@ -544,8 +544,7 @@ theorem tensorData_symmetric_pullback_and_psi_eq_tau : ∀ (R : Type) [CommRing 
             (![1, -2, -1, 2] : Fin 4 → ℤ) a) * val u₀ (D'.toPre.xK x) z J' = val t (D'.toPre.xK x) z J := h₀
         rw [Fin.prod_univ_four] at h₁
         simp only [Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two, Matrix.cons_val_three, Matrix.head_cons, Matrix.tail_cons, Category.comp_id] at h₁
-        rw [k0, k2, k3] at h₁
-        exact h₁
+        rwa [k0, k2, k3] at h₁
       have e2 : val t (D'.toPre.xK x) z J = Tv (x + w₀ • x) ^ (-1 : ℤ) * Tv x ^ (2 : ℤ) * Tv (w₀ • x) ^ (1 : ℤ) *
           Tv 0 ^ (-2 : ℤ) := by
         have h₀ := vt x z J hJ

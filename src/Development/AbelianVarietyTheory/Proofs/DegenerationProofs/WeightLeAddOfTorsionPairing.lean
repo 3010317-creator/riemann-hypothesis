@@ -521,8 +521,7 @@ theorem matrix_nilpotent (l : ℕ) [hl : Fact l.Prime] (h3 : 3 ≤ l) {n : Type}
     refine ⟨Y.charpoly, Y.charpoly_monic, ?_⟩
     have := Matrix.mem_spectrum_iff_isRoot_charpoly.mp hμ
     rw [show f Y = Y.map (algebraMap ℤ_[l] K) from rfl, Matrix.charpoly_map] at this
-    rw [← Polynomial.eval_map]
-    exact this
+    rwa [← Polynomial.eval_map]
   have hspec : 1 + l • μ ∈ spectrum K (f (1 + l • Y)) := by
     have := spectrum.subset_polynomial_aeval (f Y) (1 + l • (X : K[X])) ⟨μ, hμ, rfl⟩
     simpa using this
@@ -604,8 +603,7 @@ theorem finrank_le_of_card (l : ℕ) [hl : Fact l.Prime] {T M : Type} [AddCommGr
       haveI := hfin (n + e)
       refine Finite.of_injective (β := {x : M // l ^ (n + e) • x = 0})
         (fun x => ⟨x.1.1, congrArg Subtype.val x.2⟩) ?_
-      intro x y h
-      exact Subtype.ext (Subtype.ext (congrArg (fun z => z.1) h))
+      exact fun x y h => Subtype.ext (Subtype.ext (congrArg (fun z => z.1) h))
     let v : (Fin u → Fin (l ^ n)) → U := fun c => snf.bN.equivFun.symm fun i => ((c i : ℕ) : ℤ_[l])
     let F : (Fin u → Fin (l ^ n)) → {x : H // l ^ (n + e) • x = 0} := fun c =>
       ⟨⟨π (n + e) (v c), hU _ _ (v c).2⟩, Subtype.ext (htor _)⟩
@@ -639,8 +637,7 @@ theorem finrank_le_of_card (l : ℕ) [hl : Fact l.Prime] {T M : Type} [AddCommGr
       ext; omega
     have := Nat.card_le_card_of_injective F hF
     simpa using this
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   set n := C * l ^ (e * k) with hn
   have h1 := key n
   have h2 : l ^ n * l ^ (n * k) ≤ (l ^ n) ^ u := by
@@ -679,8 +676,7 @@ theorem finrank_le_ker_add (l : ℕ) [Fact l.Prime] {T : Type} [AddCommGroup T]
     have hs : (algebraMap ℤ_[l] ℚ_[l] s) ≠ 0 :=
       (map_ne_zero_iff _ (IsFractionRing.injective ℤ_[l] ℚ_[l])).2 (nonZeroDivisors.ne_zero s.2)
     refine ⟨(algebraMap ℤ_[l] ℚ_[l] s)⁻¹, t, ?_⟩
-    rw [eq_inv_smul_iff₀ hs, algebraMap_smul]
-    exact h
+    rwa [eq_inv_smul_iff₀ hs, algebraMap_smul]
   let S' : V ≃ₗ[ℚ_[l]] V := LinearEquiv.baseChange ℤ_[l] ℚ_[l] T T S
   let Φ' : V ≃ₗ[ℚ_[l]] V := LinearEquiv.baseChange ℤ_[l] ℚ_[l] T T Φ
   have hS' : ∀ t, S' (ι t) = ι (S t) := fun t => LinearEquiv.baseChange_tmul ..
@@ -688,8 +684,7 @@ theorem finrank_le_ker_add (l : ℕ) [Fact l.Prime] {T : Type} [AddCommGroup T]
   let B' : LinearMap.BilinForm ℚ_[l] V := B.baseChange ℚ_[l]
   have hB' : ∀ x y, B' (ι x) (ι y) = algebraMap ℤ_[l] ℚ_[l] (B x y) := fun x y => by
     have := LinearMap.BilinForm.baseChange_tmul (A := ℚ_[l]) B 1 x 1 y
-    rw [mul_one, ← Algebra.algebraMap_eq_smul_one] at this
-    exact this
+    rwa [mul_one, ← Algebra.algebraMap_eq_smul_one] at this
   have hsk' : ∀ x y, B' y x = - B' x y := by
     intro x y
     obtain ⟨s, x, rfl⟩ := hsurj x
@@ -739,8 +734,7 @@ theorem finrank_le_ker_add (l : ℕ) [Fact l.Prime] {T : Type} [AddCommGroup T]
     obtain ⟨s, t, ht, rfl⟩ := hfix v (by simpa [sub_eq_zero] using hv)
     exact hmem _ s t (by simpa [sub_eq_zero] using ht)
   · have := hN.map (Module.End.baseChangeHom ℤ_[l] ℚ_[l] T)
-    rw [map_sub, map_one] at this
-    exact this
+    rwa [map_sub, map_one] at this
   · intro x y
     obtain ⟨s, x, rfl⟩ := hsurj x
     obtain ⟨s', y, rfl⟩ := hsurj y
@@ -933,8 +927,7 @@ theorem le_add_of_pairing (M A : Type) [AddCommGroup M] [AddCommGroup A] (l q g 
   · intro x hx n
 
     rw [map_sum]
-    simp only [map_zsmul, hit Φ Φ' hΦ']
-    exact hPW n _ (hfixH x hx n) (htor n _)
+    simpa only [map_zsmul, hit Φ Φ' hΦ'] using hPW n _ (hfixH x hx n) (htor n _)
 
 theorem card_torsion_units (K : Type) [Field K] [IsAlgClosed K] (l : ℕ) (hl : (l : K) ≠ 0)
     (n : ℕ) : Nat.card {x : Additive Kˣ // l ^ n • x = 0} = l ^ n := by
@@ -974,8 +967,7 @@ theorem GlobalTheory.SS.Weight.le_add_of_torsion : ∀ (M : Type) [CommGroup M] 
     obtain ⟨h1, h2⟩ := hSΦ n x.toMul y.toMul hx hy
     exact ⟨congrArg (fun z => Additive.ofMul (u z)) h1,
       (congrArg (fun z => Additive.ofMul (u z)) h2).trans (by rw [map_pow, ofMul_pow])⟩
-  · intro n x hx hx'
-    exact hPW n x.toMul hx hx'
+  · exact fun n x hx hx' => hPW n x.toMul hx hx'
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.WeightLeAddOfTorsionPairing =====

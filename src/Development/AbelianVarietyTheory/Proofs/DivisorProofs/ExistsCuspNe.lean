@@ -154,8 +154,7 @@ theorem tsum_pow_eventually_ne_zero : ∀ {ι : Type} (a : ι → ℂ) (i0 : ι)
     · intro i
       by_cases hi : i = i0
       · subst hi; simp [h0]
-      · simp only [hi, ite_false]
-        exact tendsto_pow_atTop_nhds_zero_of_norm_lt_one (hlt i hi)
+      · simpa only [hi, ite_false] using tendsto_pow_atTop_nhds_zero_of_norm_lt_one (hlt i hi)
     · filter_upwards [Filter.eventually_ge_atTop k0] with k hk i
       rw [norm_pow]
       exact pow_le_pow_of_le_one (norm_nonneg _) (h1 i) hk
@@ -327,8 +326,7 @@ theorem norm_qS_lact_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
         _ = (N σ)⁻¹ := mul_one _
     have hNs : N σ ≤ 1 := by
       have hpos : 0 < N σ := by linarith [hN1 σ]
-      rw [le_inv_comm₀ one_pos hpos, inv_one] at hs
-      exact hs
+      rwa [le_inv_comm₀ one_pos hpos, inv_one] at hs
     have hF0 : sumBdFsq (KU.gm X x0 γ σ).toBlocks₁₂ ≤ 0 := by linarith [hF σ]
     ext i j
     have he := sumBd_entry_le_fsq (KU.gm X x0 γ σ).toBlocks₁₂ i j
@@ -609,8 +607,7 @@ theorem GlobalTheory.ScalarPoin.exists_cusp_ne : ∀ (E : Type) [Field E] [Numbe
     ⟨GlobalTheory.T.scalarPoincareDetRatioPower_differentiableOn E r X x0 ho k, fun x _ b hb => _root_.GlobalTheory.ScalarPoin.qS_rmul E r X x0 k x b hb⟩ (fun z _ => qS_cpt X ho k z)
   set a : X.Γ → ℂ := fun γ => qS X x0 1 (lact γ.1 x0) with ha
   have ha1 : a 1 = 1 := by
-    simp only [ha, OneMemClass.coe_one, KU.lact_one]
-    exact qS_base X ho 1
+    simpa only [ha, OneMemClass.coe_one, KU.lact_one] using qS_base X ho 1
   have hterm : ∀ k (γ : X.Γ), (X.χ (laS X k) γ.1)⁻¹ * qS X x0 k (lact γ.1 x0) = a γ ^ k := by
     intro k γ
     rw [hχk k γ.1 γ.2, inv_one, one_mul, qS_pow]

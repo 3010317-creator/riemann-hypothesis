@@ -228,15 +228,13 @@ theorem _root_.GlobalTheory.StepData.mul_mem_of_hat_cosetInd_ne_zero : ∀ (k : 
   haveI := sigmaCompactSpace_of_isNonarchimedeanLocalField' k
   by_contra hx
   obtain ⟨t, ht, hψt⟩ : ∃ t ∈ 𝒪[k], ψ (t * (ε * η i * c)) ≠ 1 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hx (_root_.GlobalTheory.RootEx.Unram.mem_of_psi hψ h)
   have hvmem : Pi.single i ((c : k) * t) ∈ _root_.GlobalTheory.StepData.box n c := by
     show ∀ j, valuation k (Pi.single (M := fun _ => k) i ((c : k) * t) j) ≤ valuation k (c : k)
     intro j
     rcases eq_or_ne j i with rfl | hj
-    · simp only [Pi.single_eq_same, map_mul]
-      exact mul_le_of_le_one_right' ht
+    · simpa only [Pi.single_eq_same, map_mul] using mul_le_of_le_one_right' ht
     · simp [Pi.single_eq_of_ne hj]
   apply hne
   unfold _root_.GlobalTheory.StepData.hat
@@ -267,8 +265,7 @@ theorem _root_.GlobalTheory.StepData.mul_mem_of_hat_cosetInd_ne_zero : ∀ (k : 
     (Pi.single i ((c : k) * t))
   simp only [hshift, integral_const_mul] at h1
   have hne1 : (ψ (t * (ε * η i * c)) : ℂ) ≠ 1 := by
-    intro h
-    exact hψt (Circle.ext_iff.mpr (by simpa using h))
+    exact fun h => hψt (Circle.ext_iff.mpr (by simpa using h))
   have hzero : ((ψ (t * (ε * η i * c)) : ℂ) - 1) * (∫ y, g y ∂Measure.pi fun _ => ν) = 0 := by
     rw [sub_mul, h1, one_mul, sub_self]
   exact (mul_eq_zero.1 hzero).resolve_left (sub_ne_zero.2 hne1)

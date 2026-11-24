@@ -85,8 +85,7 @@ theorem maps_iff (hq : q ≠ 0) {N' N : ℕ} (e' e : ℕ → ℤ) (x : HomE E N'
       · simp only [Pi.smul_apply, eN, hi, ite_true, smul_eq_mul, mul_one]
         rw [inv_mul_cancel₀ (zpow_ne_zero _ hq')]
         exact intAt_one P
-      · simp only [Pi.smul_apply, eN, hi, ite_false, smul_eq_mul, mul_zero]
-        exact intAt_zero P
+      · simpa only [Pi.smul_apply, eN, hi, ite_false, smul_eq_mul, mul_zero] using intAt_zero P
     have h2 := (mem_sclLat P q _ _ _).1 (h _ h1) l
     rw [map_smul, Pi.smul_apply, smul_eq_mul] at h2
     convert h2 using 1
@@ -123,13 +122,11 @@ theorem maps_lamY_iff (hq : q ≠ 0) {k c' n' c n : ℕ} (hk' : k ≤ n') (hk : 
   · intro h p p' hp hp'
     have := h ⟨_, fIdx_lt hk hp⟩ ⟨_, fIdx_lt hk' hp'⟩
     unfold entB atN
-    rw [dite_eq_left (fIdx_lt hk hp)]
-    exact this
+    rwa [dite_eq_left (fIdx_lt hk hp)]
   · intro h l l'
     have := h _ _ (fIdx_fPos hk l.2).1 (fIdx_fPos hk' l'.2).1
     unfold entB atN at this
-    rw [(fIdx_fPos hk l.2).2, (fIdx_fPos hk' l'.2).2, dite_eq_left l.2] at this
-    exact this
+    rwa [(fIdx_fPos hk l.2).2, (fIdx_fPos hk' l'.2).2, dite_eq_left l.2] at this
 
 omit [NumberField E] [StarRing E] in
 theorem entB_add_smul {N' N : ℕ} (k c' n' c n : ℕ) (ex' ex : ℕ → ℕ) (x z : HomE E N' N) (u : E) (p p' : ℕ) :
@@ -254,8 +251,7 @@ theorem locSmall_phiGS (E K : Type) [Field E] [NumberField E] [StarRing E] [Fiel
     unfold Formalism.L2.Col.LocE.PhiGS at hx
     simp only at hx
     split_ifs at hx with h
-    · intro p p' hp hp'
-      exact h.1 p p' hp (ha ▸ hp')
+    · exact fun p p' hp hp' => h.1 p p' hp (ha ▸ hp')
     · exact absurd rfl hx
   · rw [maps_lamY_iff P q hq hk' hk] at hz
     unfold Formalism.L2.Col.LocE.PhiGS

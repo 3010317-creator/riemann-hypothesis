@@ -109,8 +109,7 @@ theorem eq_smul_haarProb (μ : Measure K) [μ.IsHaarMeasure] :
   have h1 : μ Set.univ = haarScalarFactor μ (haarProb K) := by
     conv_lhs => rw [h]
     simp
-  rw [h1]
-  exact h
+  rwa [h1]
 
 theorem isMulRightInvariant_of_compactSpace (μ : Measure K) [μ.IsHaarMeasure] :
     μ.IsMulRightInvariant := by

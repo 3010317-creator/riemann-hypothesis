@@ -229,8 +229,7 @@ theorem fn_hsne_pre (N : ℕ) (hN : 0 < N) (C : ℝ) (x : ℂ) (hx : x ≠ 0)
       rw [this, Complex.im_ofReal_mul]
       simp [Complex.mul_im, Complex.log_re]
       ring
-    rw [him]
-    rw [lt_div_iff₀ (by positivity)]
+    rw [him, lt_div_iff₀ (by positivity)]
     have := mul_lt_mul_of_pos_left hlog hNr
     have e : (N : ℝ) * -(2 * Real.pi * C / N) = -(C * (2 * Real.pi)) := by
       field_simp
@@ -282,8 +281,7 @@ theorem fn_hasSum_ne_zero : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ) (C : 
   have hz2 : -(N * Real.log ρ') / (2 * Real.pi) < z.im := lt_of_le_of_lt (le_max_right _ _) hzi
   set x := Complex.exp (2 * Real.pi * Complex.I * z / N) with hxdef
   have hxn : ‖x‖ < ρ' := by
-    rw [hxdef, Complex.norm_exp, fn_hsne_re]
-    rw [← Real.exp_log hρ'0, Real.exp_lt_exp]
+    rw [hxdef, Complex.norm_exp, fn_hsne_re, ← Real.exp_log hρ'0, Real.exp_lt_exp]
     rw [div_lt_iff₀ (by positivity)] at hz2
     rw [neg_lt, lt_div_iff₀ hNr]
     nlinarith [hz2]

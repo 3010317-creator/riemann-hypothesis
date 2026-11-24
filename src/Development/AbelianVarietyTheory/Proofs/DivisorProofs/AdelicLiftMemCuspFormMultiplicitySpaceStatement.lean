@@ -185,8 +185,7 @@ theorem exists_sum_zero {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.
     have := hbres (oToS D.host.F D.host.E (rep κ) + oToS D.host.F D.host.E (rep κ')) (κ + κ') (by
       rw [map_add (f := _), Formalism.L2.DIV.resS_oToS, Formalism.L2.DIV.resS_oToS, hrep, hrep])
     rw [AddMemClass.coe_add, RingHom.map_add (f := _)] at this
-    rw [← Valuation.map_neg, show -(b (κ + κ') - b κ - b κ') = b κ + b κ' - b (κ + κ') by ring]
-    exact this
+    rwa [← Valuation.map_neg, show -(b (κ + κ') - b κ - b κ') = b κ + b κ' - b (κ + κ') by ring]
   have he1 : π e = 1 := by
     have := (hπ.2.1 (1 - e)).2 (by rw [mul_sub, mul_one, hv.1, sub_self])
     rwa [map_sub, map_one, sub_eq_zero, eq_comm] at this
@@ -200,8 +199,7 @@ theorem exists_sum_zero {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.
     have h2 : φ s = π a := by
       change φ (toEAf D (e * a)) = π a
       rw [hφ, map_mul, he1, one_mul]
-    rw [← Valuation.map_neg, neg_sub, ← h2]
-    exact h1
+    rwa [← Valuation.map_neg, neg_sub, ← h2]
 
   let s : Fv D.host.F v := -(x / (π (incA D D.host.xi0) * d j))
   choose l₀ hl₀ using fun (κ : Fin T.rank → kP PP) (a : Fin S.rank) =>
@@ -500,12 +498,10 @@ theorem holShape_overK : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : 
   have hm := model_overK R i σ hK
   refine ⟨fun ρ => ?_, fun ρ c => w0 (lab σ ρ) c, fun ρ c => ?_⟩
   · have h := hH (lab σ ρ)
-    rw [← (hm ρ).1, ← (hm ρ).2] at h
-    exact h
+    rwa [← (hm ρ).1, ← (hm ρ).2] at h
   · have h := hw0 (lab σ ρ) c
     unfold extWt at h ⊢
-    rw [← (hm ρ).1, ← (hm ρ).2] at h
-    exact h
+    rwa [← (hm ρ).1, ← (hm ρ).2] at h
 
 end GlobalTheory.LowRow
 end -- clump:auto
@@ -730,8 +726,7 @@ theorem rderC_theta_eq_zero_any : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) 
   have a3 := congrFun (congrArg (om (h, g)) key) 0
   rw [LinearMap.add_apply, LinearMap.smul_apply, map_add (f := _), map_smul, map_zero] at a3
   simp only [Pi.add_apply, Pi.smul_apply, Rder, thetaKO]
-  rw [a1, a2]
-  exact a3
+  rwa [a1, a2]
 
 theorem rderC_ptAt_delta_eq_zero : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A), ∀ i t σ s P cμ cη m om BW f₀ f c io, IsLiftDataC R F i t σ s P cμ cη m om BW f₀ f c io → ∀ τ, ∀ Z ∈ GlobalTheory.IndefiniteRowSideFullHecke.HolomorphicParabolicSmoothFunctions.pMinus (R.MW i σ) τ, ∀ h, RderC R.θ (Wc D i) τ Z (fun g => thetaKO om h g (GlobalTheory.IndefiniteRowSideFullHecke.TwistedLevelValues.ptAt R i σ BW f (deltaAtEmb D i σ))) = 0 := by
   intro D G _ _ Pl0 T A Ks _ _ _ R F i t σ s P cμ cη m om BW f₀ f c io hL τ Z hZ h

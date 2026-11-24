@@ -102,8 +102,7 @@ theorem isCartan_neg_conj {n : ℕ} {G s : Matrix (Fin n) (Fin n) ℂ} (h : IsCa
     simp only [Matrix.map_mul] at this
     have a1 : sᴴ.map (starRingEnd ℂ) = sᵀ := by ext a b; simp [Matrix.conjTranspose_apply]
     have a2 : ∀ M : Matrix (Fin n) (Fin n) ℂ, M.map (starRingEnd ℂ) = M.map star := fun M => rfl
-    rw [a1, a2, a2] at this
-    exact this
+    rwa [a1, a2, a2] at this
   refine ⟨by rw [neg_mul_neg, h1], ?_, ?_⟩
   · have e1 : (-s).map star = -(s.map star) := by ext a b; simp
     rw [e1, Matrix.transpose_neg]
@@ -178,8 +177,7 @@ theorem negConj_isHerm : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {
       constructor
       · rintro ⟨y, hy, rfl⟩
         simpa using hy
-      · intro hx
-        exact ⟨star x, hx, star_star x⟩
+      · exact fun hx => ⟨star x, hx, star_star x⟩
     rw [← heq]
     exact Formalism.L2.Col.brp_star_span_top D.host.E _ (Submodule.IsFullLattice.span_eq_top (self := hN))
   have hb : ∀ v : B.P, ∃ β, GlobalTheory.AdelicU.IsSplitBasis (B.τ v) (Formalism.L2.Col.starLat D.host.E (G.Λ (.grid (i : ℕ) (j : ℕ)))) β :=
@@ -197,8 +195,7 @@ theorem negConj_isHerm : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {
     show GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.HasSig (((-1 : D.host.E) • (spW₁ G i j).gram).map (B.emb w).1) _ _
     rw [eJ]
     exact hasSig_neg_of_hasSignature hs
-  · intro y
-    exact mem_starLat_iff_form (spW₁ G i j) hsd y
+  · exact fun y => mem_starLat_iff_form (spW₁ G i j) hsd y
   · intro w
     have eJ : ((-1 : D.host.E) • (spW₁ G i j).gram).map (B.emb w).1 =
         -((gramAt D (spW₁ G i j) (τf w)).map star) := by

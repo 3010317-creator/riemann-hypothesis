@@ -86,8 +86,7 @@ private lemma Fine_map_addEquiv_and_finsum_eq (e : W ≃+ W') {A B : AddSubgroup
   let q : W ⧸ B ≃+ W' ⧸ B.map e.toAddMonoidHom := QuotientAddGroup.congr _ _ e rfl
   have hq : ∀ y : W, q (QuotientAddGroup.mk y) = QuotientAddGroup.mk (e y) := fun _ => rfl
   refine ⟨⟨AddSubgroup.map_mono hBA, ?_, hφ', ?_⟩, ?_⟩
-  · rw [AddSubgroup.relIndex_map_map_of_injective _ _ e.injective]
-    exact hBi
+  · rwa [AddSubgroup.relIndex_map_map_of_injective _ _ e.injective]
   · refine (hsupp.image q).subset ?_
     rintro _ ⟨y, hy, rfl⟩
     refine ⟨QuotientAddGroup.mk (e.symm y), ⟨e.symm y, by simpa using hy, rfl⟩, ?_⟩
@@ -123,9 +122,7 @@ private lemma Fine_of_le_and_finsum_eq_relIndex_mul {A B C : AddSubgroup W} {φ 
     rw [he, apply_out_mk_eq_of_invariant hφC, apply_out_mk_eq_of_invariant hφ]
   set T : Set (W ⧸ B) := (fun w : W => (w : W ⧸ B)) '' Function.support φ with hT
   have hgT : Function.support (fun c : W ⧸ B => φ (Quotient.out c)) ⊆ T := by
-    intro c hc
-    refine ⟨Quotient.out c, hc, ?_⟩
-    exact Quotient.out_eq c
+    exact fun c hc => ⟨Quotient.out c, hc, Quotient.out_eq c⟩
   refine ⟨⟨hCB.trans hBA, ?_, hφC, ?_⟩, ?_⟩
   · rw [← AddSubgroup.relIndex_mul_relIndex C B A hCB hBA]
     exact mul_ne_zero hC hBi

@@ -103,8 +103,7 @@ theorem IsPerp.exists_split {I : AutInst} {D : Sib I} {s : Bool} {x : Fin I.n �
       exact eq_sub_of_add_eq' hdec.symm
     rw [e]
     exact Submodule.sub_mem _ hy (Submodule.smul_mem _ a hx)
-  · rw [← hca]
-    exact hdec
+  · rwa [← hca]
 
 theorem afVec_mulVec_eq_afMat_mulVec (I : AutInst) {m k : ℕ} (A : Matrix (Fin m) (Fin k) I.E) (w : Fin k → I.E) :
     afVec I (A *ᵥ w) = afMat I A *ᵥ afVec I w := by
@@ -139,8 +138,7 @@ theorem adelicLattice_split : ∀ (I : AutInst) (D : Sib I) (s : Bool) (x : Fin 
     | mem v hv =>
       obtain ⟨y, hy, rfl⟩ := hv
       have hy' : y ∈ lamX I (1, xf) := by
-        rw [GlobalTheory.PointLattice.lamX_eq_globLat]
-        exact hy
+        rwa [GlobalTheory.PointLattice.lamX_eq_globLat]
       obtain ⟨a0, w0, hw0, e⟩ := IsPerp.exists_split h hy'
       refine ⟨Formalism.UG.inclE (F := I.F) (Af I.F) (algebraMap (𝓞 I.E) I.E a0), Formalism.UG.CS.incl_int a0,
         afVec I w0, Submodule.subset_span ⟨⟨w0, hw0⟩, rfl⟩, ?_⟩

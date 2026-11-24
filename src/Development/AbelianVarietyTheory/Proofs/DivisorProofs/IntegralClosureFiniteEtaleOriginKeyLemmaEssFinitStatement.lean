@@ -132,8 +132,7 @@ theorem algHom_quot_eq_of_etaleLow : ∀ (A R C : Type) [CommRing A] [IsDomain A
       exact Ideal.mul_mem_left _ _ (Ideal.pow_mem_pow (Ideal.mem_span_singleton_self t) n)
     have hdv : u ∣ (u - e) ^ n := by
       have h1 := sub_dvd_pow_sub_pow (u - e) (-e) n
-      rw [neg_pow, he, mul_zero, sub_zero, sub_neg_eq_add, sub_add_cancel] at h1
-      exact h1
+      rwa [neg_pow, he, mul_zero, sub_zero, sub_neg_eq_add, sub_add_cancel] at h1
     obtain ⟨k, hk⟩ := hdv
     have hue : u - e = Ideal.Quotient.mk _ (algebraMap A R a) := by
       simp only [u, e, map_sub, sub_sub_cancel]
@@ -213,8 +212,7 @@ theorem hartRep_one (A R : Type) [CommRing A] [IsDomain A] [IsNoetherianRing A] 
     refine GlobalTheory.PrincipalHartogs.mem_span_singleton_of_forall_height_le_one a (ρ r) fun p hp hp1 => ?_
     obtain ⟨u, hu, m', hm⟩ := h p hp hp1
     refine ⟨u, hu, Ideal.mem_span_singleton.2 ⟨ρ m', ?_⟩⟩
-    rw [← hker, RingHom.mem_ker, map_sub, map_mul, map_mul, hρa, hρa, sub_eq_zero] at hm
-    exact hm
+    rwa [← hker, RingHom.mem_ker, map_sub, map_mul, map_mul, hρa, hρa, sub_eq_zero] at hm
   obtain ⟨b, hb⟩ := Ideal.mem_span_singleton.1 hmem
   refine ⟨algebraMap A R b, ?_⟩
   rw [← hker, RingHom.mem_ker, map_sub, map_mul, hρa, hρa, hb, sub_self]
@@ -422,8 +420,7 @@ theorem local_lift (A R C : Type) [CommRing A] [CommRing R] [Algebra A R] [CommR
   have := congrArg (fun f => f c) hφ
   simp only [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk, ψ, AlgHom.coe_mk, RingHom.coe_comp,
       Function.comp_apply] at this
-  rw [Ideal.Quotient.eq, Ideal.mem_span_singleton] at this
-  exact this
+  rwa [Ideal.Quotient.eq, Ideal.mem_span_singleton] at this
 
 end GlobalTheory.GoodEtaleSection
 
@@ -445,8 +442,7 @@ theorem mem_span_of_mul_eq (A R : Type) [CommRing A] [IsDomain A] [CommRing R] [
   have h2 : algebraMap A R a * r ∈ Ideal.span {t ^ 1} := by
     rw [pow_one]
     have := Ideal.add_mem _ h1 (Ideal.mul_mem_right r' _ (Ideal.mem_span_singleton_self t))
-    rw [sub_add_cancel, mul_comm] at this
-    exact this
+    rwa [sub_add_cancel, mul_comm] at this
   obtain ⟨q, rfl⟩ := Ideal.mem_span_singleton.1
     (by simpa using mem_pow_of_mul_mem_pow A R ρ hρ t hker ht a ha 1 r h2)
   rw [map_mul]
@@ -479,8 +475,7 @@ theorem exists_algHom_quot_pow : ∀ (A R C : Type) [CommRing A] [IsDomain A] [I
     rw [mem_nonZeroDivisors_iff_right]
     intro x hx
     refine torsionFree_quot A R ρ hρ t hker ht n a (hne a ha) x ?_
-    rw [Algebra.smul_def, mul_comm]
-    exact hx
+    rwa [Algebra.smul_def, mul_comm]
   have hinj : Function.Injective (algebraMap B L0) := IsLocalization.injective L0 hM0
   let ι : B →ₐ[R] L0 := IsScalarTower.toAlgHom R B L0
   have hι : ∀ b, ι b = algebraMap B L0 b := fun b => rfl
@@ -884,8 +879,7 @@ theorem galElt_dvd_of_unramified : ∀ (R C O : Type) [CommRing R] [CommRing C] 
     have := congrArg ψ (ht1 s)
     rw [map_mul, map_sub, hψ, hψ, map_zero] at this
     simp only [map_one, one_mul, mul_one] at this
-    rw [← he] at this
-    rw [sub_mul, sub_eq_zero] at this
+    rw [← he, sub_mul, sub_eq_zero] at this
     exact this.symm
 
   have hii : τ e = 1 := by
@@ -1074,8 +1068,7 @@ theorem noTorsion_of_faithfullyFlat_point : ∀ (A R C O : Type) [CommRing A] [C
     exact sub_eq_zero.mp (hRO (by rw [h3, map_zero]))
   have hO : IsSMulRegular O (algebraMap R O (algebraMap A R a)) := IsSMulRegular.of_flat hreg
   apply hO
-  simp only [smul_eq_mul, mul_zero]
-  exact hv
+  simpa only [smul_eq_mul, mul_zero] using hv
 
 theorem hart_of_local : ∀ (A O M : Type) [CommRing A] [CommRing O] [Algebra A O] [AddCommGroup M] [Module O M],
     GlobalTheory.GoodEtale.Hart A O M → ∀ (a : A), a ≠ 0 → ∀ m : M,
@@ -1085,8 +1078,7 @@ theorem hart_of_local : ∀ (A O M : Type) [CommRing A] [CommRing O] [Algebra A 
   intro A O M _ _ _ _ _ hH a ha m hloc
   apply hH a ha m
   intro p hp hpht
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   let J : Ideal O :=
     { carrier := {o | ∃ m' : M, o • m = algebraMap A O a • m'}
       add_mem' := by
@@ -1227,8 +1219,7 @@ theorem flat_noetherian_nzd_intClosed : ∀ (A : Type) [CommRing A] [IsDomain A]
     have h1 : ∀ z : R, algebraMap (Polynomial A) R Polynomial.X * z = 0 → z = 0 := by
       intro z hz
       apply hreg
-      simp only [Algebra.smul_def, mul_zero]
-      exact hz
+      simpa only [Algebra.smul_def, mul_zero] using hz
     exact ⟨h1, fun z hz => h1 z (by rw [mul_comm]; exact hz)⟩
   · intro f hf
     set K := FractionRing A
@@ -1439,8 +1430,7 @@ theorem injective_trace_galoisData : ∀ (F D : Type) [CommRing F] [CommRing D] 
     refine ⟨n, x, y, fun g => ?_⟩
     have := congrFun hz g
 
-    rw [map_sum, Finset.sum_apply] at this
-    exact this
+    rwa [map_sum, Finset.sum_apply] at this
 
 end GlobalTheory.TorsorTrace
 end -- clump:auto

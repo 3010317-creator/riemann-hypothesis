@@ -112,8 +112,7 @@ theorem _root_.GlobalTheory.ExtPrime.isPrime_map_and_generic_form_notMem (K L : 
         have hk : Ideal.map (C : MvPolynomial (Fin N) K →+* MvPolynomial (Fin N) (MvPolynomial (Fin N) K)) P =
             RingHom.ker (MvPolynomial.map (σ := Fin N) (Ideal.Quotient.mk P)) := by
           rw [MvPolynomial.ker_map, Ideal.mk_ker]
-        rw [hk, RingHom.mem_ker]
-        exact hb'
+        rwa [hk, RingHom.mem_ker]
       rw [hb]
       have h2 : Ideal.map e.symm (Ideal.map C P) ≤ P.map ι := by
         rw [Ideal.map_le_iff_le_comap, Ideal.map_le_iff_le_comap]
@@ -165,8 +164,7 @@ theorem _root_.GlobalTheory.ExtPrime.isPrime_map_and_generic_form_notMem (K L : 
   rw [← hG₀] at hG
   have hG₀Q : G₀ ∈ P.map ι := by
     have h := IsLocalization.under_map_of_isPrime_disjoint _ (MvPolynomial (Fin N) L) hQprime hdisj
-    rw [← h]
-    exact hG
+    rwa [← h]
   rw [hQ, RingHom.mem_ker] at hG₀Q
   have hπG : π G₀ = ∑ i : Fin N, X i * C (Ideal.Quotient.mk P (X i)) := by
 

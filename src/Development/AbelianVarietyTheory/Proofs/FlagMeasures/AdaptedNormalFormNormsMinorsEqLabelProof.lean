@@ -80,9 +80,7 @@ theorem nloc_ne_zero (D : D7) (hd : dI D ≠ ⊥) (r l : ℕ) (x : D.host.E) :
   have hA : (Ideal.absNorm (dI D) : ℝ) ≠ 0 := by
     exact_mod_cast (Ideal.absNorm_eq_zero_iff.not.2 hd)
   rw [nloc_eq, mul_ne_zero_iff, abs_ne_zero, Rat.cast_ne_zero, Algebra.norm_ne_zero_iff]
-  simp only [ne_eq, zpow_neg, inv_eq_zero, and_iff_left_iff_imp]
-  intro _
-  exact zpow_ne_zero _ hA
+  simpa only [ne_eq, zpow_neg, inv_eq_zero, and_iff_left_iff_imp] using fun _ => zpow_ne_zero _ hA
 
 theorem T_eq {K V : Type} [Field K] [StarRing K] [AddCommGroup V] [Module K V] {H : Formalism.HermitianLatticeCounting.S6.HermSpace K V} {r : ℕ}
     (F G : Formalism.HermitianLatticeCounting.S6.FlagD H r) (h : G.e (Fin.last r) - F.e (Fin.last r) ∈ F.X) : G.T = F.T := by
@@ -131,8 +129,7 @@ theorem labC : LabC := by
     intro l hl
     have hl' : l ≤ D.R.rS + 1 := by omega
     have hlab : labT t l = star (Formalism.HermitianLatticeCounting.S6.Dl (F0 X u) (Ft t) l hl') := by
-      simp only [labT, ite_eq_left hl]
-      exact hnf l hl'
+      simpa only [labT, ite_eq_left hl] using hnf l hl'
     unfold GlobalTheory.DegCnt.NF.nD
     rw [dite_eq_left hl', hDl l hl', nloc_eq, hlab, norm_star, hd, frameExp_cast _ _ hl']
   refine ⟨hjT, ?_, ?_, ?_, ?_⟩

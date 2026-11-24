@@ -639,8 +639,7 @@ theorem opNorm_le_sqrt_hs {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) : ‖A‖ �
   have h1 : ‖∑ j, A i j * x j‖ ≤ ∑ j, ‖A i j‖ * ‖x j‖ :=
     (norm_sum_le _ _).trans (le_of_eq (Finset.sum_congr rfl fun j _ => norm_mul _ _))
   have h2 := Finset.sum_mul_sq_le_sq_mul_sq Finset.univ (fun j => ‖A i j‖) (fun j => ‖x j‖)
-  refine le_trans ?_ h2
-  exact pow_le_pow_left₀ (norm_nonneg _) h1 2
+  exact le_trans (pow_le_pow_left₀ (norm_nonneg _) h1 2) h2
 
 
 open scoped Matrix.Norms.L2Operator in
@@ -745,14 +744,12 @@ theorem continuous_mean {G : Type} [Group G] [TopologicalSpace G] [IsTopological
     {f : G → ℂ} (hf : Continuous f) : Continuous fun y => ∫ m, f (m * y) ∂ν := by
 
   have hae : ∀ᵐ m ∂ν, m ∈ C := by
-    rw [ae_iff]
-    exact hν
+    rwa [ae_iff]
   have hres : ν.restrict C = ν := Measure.restrict_eq_self_of_ae_mem hae
   have hcont : Continuous (Function.uncurry fun (y m : G) => f (m * y)) :=
     hf.comp (continuous_snd.mul continuous_fst)
   have h := continuous_parametric_integral_of_continuous (μ := ν) hcont hC
-  rw [hres] at h
-  exact h
+  rwa [hres] at h
 
 theorem norm_le_of_mean_zero {X : Type} [MeasurableSpace X] (ν : Measure X) [IsProbabilityMeasure ν] {D : ℕ}
     (f : Fin D → X → ℂ) (c : Fin D → ℂ) (r : ℝ) (hi : ∀ i, Integrable (f i) ν)
@@ -845,8 +842,7 @@ theorem norm_le_of_cusp (I : AutInst) (μf : Measure I.Gf) [μf.IsHaarMeasure] [
     have hci : Continuous fun m => Fn i (m * x) := (hF i).1.comp (continuous_id.mul continuous_const)
     obtain ⟨B, hB⟩ := hCp.exists_bound_of_continuousOn hci.continuousOn
     have hae : ∀ᵐ m ∂ν, m ∈ Cp := by
-      rw [ae_iff]
-      exact hνCp
+      rwa [ae_iff]
     refine Integrable.of_bound hci.aestronglyMeasurable B ?_
     filter_upwards [hae] with m hm
     exact hB m hm
@@ -919,9 +915,7 @@ theorem hasDerivAt_vv (B : RowsAut) {D : ℕ} (T : Fin D → (B.Hs →L[ℂ] B.I
     intro i
     have h0 := (h i P u hu).2.2 E (pt B E z s)
     rw [← sub_self s] at h0
-    have h2 := h0.comp_sub_const s s
-    simp only [← pt_add, add_sub_cancel] at h2
-    exact h2
+    simpa only [← pt_add, add_sub_cancel] using h0.comp_sub_const s s
   have h2 : HasDerivAt (fun t => fun i => Fr i u (pt B E z t)) (fun i => Fr i (dAct B E u) (pt B E z s)) s :=
     hasDerivAt_pi.2 h1
   exact ((EuclideanSpace.equiv (Fin D) ℂ).symm.toContinuousLinearMap.restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt s h2
@@ -1117,8 +1111,7 @@ theorem flag_pieces : ∀ (I : AutInst) (x : I.GA) (a : ℕ) (S : Fin (a + 1) �
       rw [hsucc]
       exact GlobalTheory.PointFlag.stepLe_le I x _
     refine ⟨?_, hlei, ?_, ?_, hlarge.le, ?_⟩
-    · intro N hlt hle
-      exact hge N hlt (hle.trans hsuccle)
+    · exact fun N hlt hle => hge N hlt (hle.trans hsuccle)
     · rw [hcs, hsucc, (h35.2.2.1 _ hτpos).1, (h35.2.2.1 _ hτpos).2]
       exact GlobalTheory.FlagPieces.sizesLe_stepLe I x (inv_pos.mpr hτpos) _
     · intro h
@@ -1129,8 +1122,7 @@ theorem flag_pieces : ∀ (I : AutInst) (x : I.GA) (a : ℕ) (S : Fin (a + 1) �
       · have e : (⟨(i : ℕ) + 1, h⟩ : Fin a).castSucc = i.succ := Fin.ext (by simp)
         have hn := (h34.1 ⟨(i : ℕ) + 1, h⟩).2.2.2.1
         rw [e] at hn
-        intro N hlt hle
-        exact hn N hlt hle
+        exact fun N hlt hle => hn N hlt hle
       · have hi := i.isLt
         have e : i.succ = Fin.last a := Fin.ext (by simp; omega)
         rw [e, hF.2.2.1]
@@ -1263,9 +1255,7 @@ theorem unipotent_orbit_cover : ∀ (I : AutInst) (x : I.GA) (g q : ℕ), 1 ≤ 
     rw [← hK] at hk ⊢
     exact K.inv_mem hk
   refine ⟨γ, hγF, ((x⁻¹ * γ * x).2)⁻¹, hkinv, ((m * x.1 : I.Ginf), x.2), ?_, ?_⟩
-  · refine ⟨rfl, A, Z, hAZ, hbound, fun v => ?_, hst⟩
-    show uMat (m v) * uMat (x.1 v) = _
-    exact hm' v
+  · exact ⟨rfl, A, Z, hAZ, hbound, fun v => (hm' v), hst⟩
   · have key : ∀ v, uMat (ν v) * uMat (x.1 v) = uMat (γ.1 v) * (uMat (m v) * uMat (x.1 v)) := by
       intro v
       rw [heq v, hm' v]

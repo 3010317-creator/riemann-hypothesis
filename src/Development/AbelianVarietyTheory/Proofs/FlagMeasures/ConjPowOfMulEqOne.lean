@@ -121,8 +121,7 @@ theorem isIntegral_of_left_eigenvector_of_lattice {E K : Type} [Field E] [Number
       simpa using this
     have hk : (⊤ : Submodule E (Fin n → E)) ≤ LinearMap.ker φ := by
       rw [← hsp, Submodule.span_le]
-      intro y hy
-      exact h0 y hy
+      exact fun y hy => h0 y hy
     ext i
     have := hk (Submodule.mem_top (x := Pi.single i (1 : E)))
     have h2 : v ⬝ᵥ (fun j => algebraMap E K ((Pi.single i (1 : E) : Fin n → E) j)) = 0 := this
@@ -132,8 +131,7 @@ theorem isIntegral_of_left_eigenvector_of_lattice {E K : Type} [Field E] [Number
     refine ⟨z, hz, ?_⟩
     have h := hφ y
     rw [hyz, map_smul, Algebra.smul_def, mul_assoc] at h
-    have h' := mul_left_cancel₀ hcK h
-    simpa using h'
+    simpa using mul_left_cancel₀ hcK h
 
 theorem trace_mem_of_nilpotent_mod_radical (E : Type) [Field E] [NumberField E] (n m g : ℕ)
     (Λ : Submodule (𝓞 E) (Fin n → E)) (A : Matrix (Fin n) (Fin n) E) (hfg : Λ.FG)
@@ -519,8 +517,7 @@ theorem near_unipotent : NearUnip := by
   have hmap : ∀ {A : Type} [CommRing A] (ι : B.I.E →+* A), (G.map ι - 1) ^ B.I.n = 0 := by
     intro A _ ι
     have := congrArg ι.mapMatrix hnil
-    rw [map_pow, map_sub, map_one, map_zero] at this
-    exact this
+    rwa [map_pow, map_sub, map_one, map_zero] at this
   refine ⟨by rw [hfin]; exact hmap _, fun v => ?_, ha, hK, fun v => ?_⟩
   · have e : uMat (a.1 v) - 1 = (B.I.P v)⁻¹ * (G.map (B.I.φ v) - 1) * B.I.P v := by
       rw [hinf, mul_sub, sub_mul, mul_one, mul_eq_one_comm.1 (hP v)]
@@ -528,8 +525,7 @@ theorem near_unipotent : NearUnip := by
   · rw [hδ]
     apply (harch v).2
     have := htr v 1
-    rw [htn 1 hn, pow_one, map_natCast] at this
-    exact this
+    rwa [htn 1 hn, pow_one, map_natCast] at this
 
 end GlobalTheory.NearElement
 end -- clump:auto

@@ -104,8 +104,7 @@ theorem exists_finset_cosetReps : ∀ {D : D7} {a b : ℕ} (β' : GL (Fin b) (Le
     constructor
     · intro h
       exact Set.mem_univ_pi.2 fun w => Set.mem_univ_pi.2 fun r => Set.mem_univ_pi.2 fun s => h w r s
-    · intro h w r s
-      exact Set.mem_univ_pi.1 (Set.mem_univ_pi.1 (Set.mem_univ_pi.1 h w) r) s
+    · exact fun h w r s => Set.mem_univ_pi.1 (Set.mem_univ_pi.1 (Set.mem_univ_pi.1 h w) r) s
   have hHo : IsOpen (H : Set V) := by
     rw [hHset]
     exact isOpen_set_pi Set.finite_univ fun w _ => isOpen_set_pi Set.finite_univ fun r _ =>
@@ -121,8 +120,7 @@ theorem exists_finset_cosetReps : ∀ {D : D7} {a b : ℕ} (β' : GL (Fin b) (Le
     simp [U, H.zero_mem]⟩)
   have hsmall : ∀ (m : ℤ) t, IsSmall P β' β m t ↔ ∀ (w : P) r s,
       valuation (Kw w.1) (φ t w r s) ≤ valuation (Kw w.1) ((unifAt w.1 ^ m : (Kw w.1)ˣ) : Kw w.1) := by
-    intro m t
-    exact ⟨fun h w r s => h w.1 w.2 r s, fun h w hw r s => h ⟨w, hw⟩ r s⟩
+    exact fun m t => ⟨fun h w r s => h w.1 w.2 r s, fun h w hw r s => h ⟨w, hw⟩ r s⟩
   let S : Set (Mx D b a) := {t | IsHalf e t ∧ IsSmall P β' β (-(n : ℤ)) t}
   have hSK : ∀ t ∈ S, φ t ∈ K := fun t ht => by
     have h := (hsmall _ t).1 ht.2
@@ -135,8 +133,7 @@ theorem exists_finset_cosetReps : ∀ {D : D7} {a b : ℕ} (β' : GL (Fin b) (Le
   have hrep : ∀ c ∈ C, rep c ∈ S ∧ ((φ (rep c) : V) : V ⧸ H) = c := by
     intro c hc
     have h : ∃ t, t ∈ S ∧ ((φ t : V) : V ⧸ H) = c := (Finset.mem_filter.1 hc).2
-    simp only [rep, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [rep, dite_eq_left h] using h.choose_spec
   refine ⟨C.image rep, ?_, ?_, ?_⟩
   · intro r hr
     obtain ⟨c, hc, rfl⟩ := Finset.mem_image.1 hr

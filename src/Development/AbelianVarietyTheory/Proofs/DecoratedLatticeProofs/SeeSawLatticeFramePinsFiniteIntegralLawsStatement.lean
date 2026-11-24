@@ -453,8 +453,7 @@ theorem GlobalTheory.FinPl.glued_last_integral : ∀ (D : D7) (k : Type) [Field 
   rw [FrameLat.pairing_inv] at h2
   change form p B.V₀ (β₀.b *ᵥ x) zk ∈ 𝒪[k] at h2
   rw [hN, Valuation.mem_integer_iff, map_mul, hvN] at h2
-  rw [Valuation.mem_integer_iff, map_mul]
-  exact h2
+  rwa [Valuation.mem_integer_iff, map_mul]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1036,8 +1035,7 @@ theorem offOfShape_of_supp (h1 : SuppFirst D) (h2 : SuppSecond D) : OffOfShape D
   rw [← (ht.sBF j (σ + 1) h).1, ← (ht.sFB j σ h).1]
   refine ⟨fun κ hκ => ⟨A.1 1 κ (one _ _) hκ, B.1 κ 1 hκ (one _ _)⟩, fun κ hκ => B.1 1 κ (one _ _) hκ,
     (A.2 1 (one_mem _)).1, fun φ hφ h₂ => (B.2 1 (one_mem _)).2 1 (one_mem _) φ ?_ h₂⟩
-  rw [hS.ram] at hφ
-  exact hφ
+  rwa [hS.ram] at hφ
 
 theorem offOfShape_all : ∀ D : D7, OffOfShape D := fun D => offOfShape_of_supp (_root_.GlobalTheory.FinPl.suppFirst_all D) (_root_.GlobalTheory.FinPl.suppSecond_holds D)
 

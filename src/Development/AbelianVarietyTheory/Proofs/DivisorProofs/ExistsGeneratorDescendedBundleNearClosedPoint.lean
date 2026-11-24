@@ -289,8 +289,7 @@ theorem exists_sec_of_flat {R R' : Type} [CommRing R] [CommRing R'] (g : R →+*
     rw [_root_.mul_mul_mul_comm]
     refine Ideal.mul_mem_left _ _ ?_
     have h₄ : ¬ IsUnit (gs π z ⊤ (a i j)) := fun h => hz _ (hne i j) ((_root_.GlobalTheory.LBGerm.isUnit_gs_iff π z ⊤ trivial _).1 h)
-    rw [ha i j X' π z k hk] at h₄
-    exact h₄
+    rwa [ha i j X' π z k hk] at h₄
 
 theorem flat_of_basis {R R' : Type} [CommRing R] [CommRing R'] (g : R →+* R') (d : ℕ) (b : Fin d → R')
     (h : ∀ r' : R', ∃! c : Fin d → R, r' = ∑ l, g (c l) * b l) : g.Flat := by
@@ -451,8 +450,7 @@ theorem exists_sec_of_gen_near : ∀ (Z X : Scheme.{0}) (e : X ⟶ Z), IsOpenImm
       le := fun J y hy => by
         have h1 := mem_pull.1 (mem_pull.1 (mem_powChart.1 hy))
         show ψ y ∈ (M.pull O.ι).U _
-        rw [mem_pull, hpt]
-        exact h1
+        rwa [mem_pull, hpt]
       g := fun y J J' hJ hJ' => by
         have h1 := mem_powChart.1 hJ
         have h2 := mem_powChart.1 hJ'
@@ -591,8 +589,7 @@ theorem exists_separating_basicOpen_functions : ∀ (X : Scheme.{0}) (U : X.Open
     intro b hb hba hbg
     have hbV : b ∈ V := hgV hbg
     apply hbV.2
-    simp only [C, Set.mem_iUnion]
-    exact ⟨b, Finset.mem_erase.mpr ⟨hba, hb⟩, subset_closure rfl⟩
+    simpa only [C, Set.mem_iUnion] using ⟨b, Finset.mem_erase.mpr ⟨hba, hb⟩, subset_closure rfl⟩
   choose! f hf using key
   exact ⟨f, hf⟩
 
@@ -1098,8 +1095,7 @@ theorem exists_gen_near_closed_point : ∀ (R : Type) [CommRing R] [IsDomain R] 
       rw [Category.assoc, Category.assoc, m₁, n₁, ← pullback.condition_assoc, morphismRestrict_ι, Category.assoc])
     fun f hf z => by
       have := hn (pullback.snd (β ∣_ V) k z) f hf
-      rw [← Scheme.Hom.comp_apply n m, ← Scheme.Hom.comp_apply (pullback.snd (β ∣_ V) k)] at this
-      exact this
+      rwa [← Scheme.Hom.comp_apply n m, ← Scheme.Hom.comp_apply (pullback.snd (β ∣_ V) k)] at this
   have sq : IsPullback (β ∣_ V) ((β ⁻¹ᵁ V).ι ≫ G'.hom) (V.ι ≫ G.hom) M.π :=
     (isPullback_morphismRestrict β V).paste_vert hpb.1
   have hnoeth : IsLocallyNoetherian G.left := LocallyOfFiniteType.isLocallyNoetherian G.hom

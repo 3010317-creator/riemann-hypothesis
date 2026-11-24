@@ -84,10 +84,8 @@ theorem isInv_iff (ρ : Γ →* GL (Fin n) k) (U : Submodule k (Fin n → k)) :
 theorem isInv_ker_iff (ρ : Γ →* GL (Fin n) k) (η : Γ →* ℤˣ) (U : Submodule k (Fin n → k)) :
     IsInv (ρ.comp η.ker.subtype) U ↔ ∀ g, η g = 1 → tr ρ g U ≤ U := by
   constructor
-  · intro h g hg
-    exact (tr_le_iff ρ g U).2 (h ⟨g, hg⟩)
-  · intro h g
-    exact (tr_le_iff ρ g.1 U).1 (h g.1 g.2)
+  · exact fun h g hg => (tr_le_iff ρ g U).2 (h ⟨g, hg⟩)
+  · exact fun h g => (tr_le_iff ρ g.1 U).1 (h g.1 g.2)
 
 theorem isSSRep_ker (ρ : Γ →* GL (Fin n) k) (η : Γ →* ℤˣ) (hρ : IsSSRep ρ) :
     IsSSRep (ρ.comp η.ker.subtype) := by

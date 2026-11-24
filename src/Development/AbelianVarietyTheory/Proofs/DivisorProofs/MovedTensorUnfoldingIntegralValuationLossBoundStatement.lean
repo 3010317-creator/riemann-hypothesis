@@ -178,8 +178,7 @@ theorem aff_rowVar (x : ColArgs G) (j : ℕ) (s) : Aff O (intVars O G) fun e : V
   by_cases h : j < G.m - 1
   · simp only [rowVar, dite_eq_left h]
     exact Aff.sum _ fun l => Aff.ite _ (aff_stepPt O ⟨j, h⟩ (x j) _ _)
-  · simp only [rowVar, dite_eq_right h]
-    exact Aff.const _
+  · simpa only [rowVar, dite_eq_right h] using Aff.const _
 
 theorem quad_phase (x : ColArgs G) : Quad O (intVars O G) fun e : Vars G => phase x e := by
   unfold phase
@@ -260,8 +259,7 @@ theorem absNorm_eq_plc_pow {K : Type} [Field K] [NumberField K] (P : HeightOneSp
   letI : Fintype (𝓞 K ⧸ P.asIdeal) := Fintype.ofFinite _
   obtain ⟨n, -, hn⟩ := FiniteField.card (𝓞 K ⧸ P.asIdeal) (ringChar (𝓞 K ⧸ P.asIdeal))
   refine ⟨n, ?_⟩
-  rw [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card]
-  exact hn
+  rwa [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card]
 
 theorem vw_resCard_eq_zero : ∀ {D : D7} (P : Pl D.host.E) (w : PlL D),
     ((Formalism.EigenvalueLevelCeiling.plc P : ℕ) : 𝓞 D.what₂.LL) ∉ w.asIdeal →
@@ -548,8 +546,7 @@ theorem coset_integral [MeasurableSpace X] [OpensMeasurableSpace X] [MeasurableA
       by_cases hy : y ∈ S
       · rw [Set.indicator_of_mem hy, Set.indicator_of_mem (hiff.2 hy)]
         have := hg c u hu _ ((hmem y).1 hy)
-        rw [add_neg_cancel_left, show c + u + (-c + y) = u + y by abel] at this
-        exact this
+        rwa [add_neg_cancel_left, show c + u + (-c + y) = u + y by abel] at this
       · rw [Set.indicator_of_notMem hy, Set.indicator_of_notMem (fun h => hy (hiff.1 h)), zero_mul, mul_zero]
     have h1 : (∫ y, S.indicator g y ∂μ) * g c = g (c + u) * ∫ y, S.indicator g y ∂μ := by
       conv_lhs => rw [← integral_add_left_eq_self (μ := μ) (S.indicator g) u]
@@ -670,8 +667,7 @@ theorem stairElt_diag (G : Grid k) (hs : 1 ≤ G.s) (ϖ : kˣ) (e : ℕ) (J : G.
       | zero => exact h2 0
       | succ j =>
         have : ¬ j < G.m - 2 := by omega
-        simp only [dite_eq_right this]
-        exact h1 _
+        simpa only [dite_eq_right this] using h1 _
   · rw [Reps.elt, onColumn, dite_eq_right hi]
     exact h1 _
 
@@ -684,8 +680,7 @@ theorem valuation_fill_sub_le (G : Grid k) (hs : 1 ≤ G.s) (ϖ : kˣ) (n : ℕ)
     · simp only [Matrix.reindex_apply, Matrix.submatrix_apply, stepPt, Matrix.add_apply, Matrix.of_apply,
         add_sub_add_left_eq_sub]
       split_ifs
-      · simp only [Pi.add_apply, add_sub_cancel_left]
-        exact hl ⟨j, h⟩ _
+      · simpa only [Pi.add_apply, add_sub_cancel_left] using hl ⟨j, h⟩ _
       · simp
     · simp
     · simp
@@ -923,8 +918,7 @@ theorem moved_loss : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : T
   have hb : β P ∈ unfSupport (psiAt ch.W P.1) (unitVol P.1) false
       (Reps.through one_le_sLen (givenLevel ch.G t P) (stair (locGrid ch.G t P) (unifAt P.1) e)) (Tflip ch.W ch.S.B t Φ P) := by
     have := hβ P
-    rw [hkeep] at this
-    exact this
+    rwa [hkeep] at this
   have hβ' := funext (hO _ hb)
   have hdet : ∀ X, ∃ a : ℕ, gdet ((repsAt ch.G t P).elt (β P) X) = unifAt P.1 ^ a ∧
       a ≤ (locGrid ch.G t P).rank X * (e * D.R.m) := fun X => by
@@ -1508,8 +1502,7 @@ theorem datum_loss {large₂ : SizeData₂ D} {F : Face D A} {CF b : ℝ} (hS : 
       rw [this]; exact ⟨0, map_zero _, Or.inl rfl⟩
     · have hψ := GlobalTheory.T.coeffValuationLossLe_addChar_neg_unfoldingPhase ch large₂ F CF b hS hIs hSc hF t Φ β hβ P X Y v h0 hv w
       have := lossLe_mul' (hK (fill one_le_sLen X Y v)) hψ
-      rw [add_zero] at this
-      exact this
+      rwa [add_zero] at this
   have hint : ∀ (n : ℕ) (K1 : ℝ), (∀ v, ∀ u ∈ varLat (locGrid ch.G t P) (unifAt P.1) n,
       ∀ u' ∈ varLat (locGrid ch.G t P) (unifAt P.1) n, f (v + u + u') * f v = f (v + u) * f (v + u')) →
       (∀ v, LossLe w (f v) (c + K1)) →
@@ -1534,8 +1527,7 @@ theorem datum_loss {large₂ : SizeData₂ D} {F : Face D A} {CF b : ℝ} (hS : 
     have hb : β P ∈ unfSupport (psiAt ch.W P.1) (unitVol P.1) false
         (Reps.through one_le_sLen (givenLevel ch.G t P) (stair (locGrid ch.G t P) (unifAt P.1) e)) (Tflip ch.W ch.S.B t Φ P) := by
       have := hβ P
-      rw [hkeep] at this
-      exact this
+      rwa [hkeep] at this
     have hβ' := funext (hO _ hb)
     have hSeq : S = moved (locGrid ch.G t P) (keepAt ch.G P)
         ((Reps.through one_le_sLen (givenLevel ch.G t P) (stair (locGrid ch.G t P) (unifAt P.1) e)).elt
@@ -1584,8 +1576,7 @@ theorem datum_loss {large₂ : SizeData₂ D} {F : Face D A} {CF b : ℝ} (hS : 
       have e2 : ∀ y, f (y + u') = f y := hn hu'
       rw [e2, e1, e2]
     have hmov := GlobalTheory.T.movedTensorFactor_coeffValuationLossLe_awayPrime ch large₂ F CF b hS hIs hSc hF t Φ β hβ P hW w hw c hc hT
-    have h1 := hint n 0 hrel (hval 0 fun z => by simpa using hmov z)
-    simpa [he0, hv0] using h1
+    simpa [he0, hv0] using hint n 0 hrel (hval 0 fun z => by simpa using hmov z)
 
 end Main
 

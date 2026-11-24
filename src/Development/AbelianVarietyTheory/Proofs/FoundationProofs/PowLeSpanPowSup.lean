@@ -64,8 +64,7 @@ theorem span_sup_sq_eq {A : Type} [CommRing A] [IsDedekindDomain A] {Q : Ideal A
     rw [pow_zero, Ideal.one_eq_top] at heq
     rw [heq, top_le_iff] at hle
     exact (Ideal.IsPrime.ne_top ‹_› hle).elim
-  · rw [pow_one] at heq
-    exact heq
+  · rwa [pow_one] at heq
   ·
     have hmem : π ∈ Ideal.span {π} ⊔ Q ^ 2 := Ideal.mem_sup_left (Ideal.mem_span_singleton_self π)
     rw [heq] at hmem

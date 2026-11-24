@@ -76,8 +76,7 @@ theorem secRel_of_charts (hL₀ : L₀.IsLB) (hL₁ : L₁.IsLB) (h₂ : Ψ ≫ 
   have m₁ : (snd T A).left ⁻¹ᵁ ((LB.div (L₀.pull φ) L₁).U ((fun _ => i), j)) ≤
       Ψ ⁻¹ᵁ (LPow G L₀ 1 T₀).U (fun _ => i) := fun p hp => Set.mem_iInter.2 fun _ => by
     have h : ((snd T A).left ≫ φ) p ∈ L₀.U i := mem_pull.1 hp.1
-    rw [← h₂] at h
-    exact h
+    rwa [← h₂] at h
   have m₂ : (snd T A).left ⁻¹ᵁ ((LB.div (L₀.pull φ) L₁).U ((fun _ => i), j)) ≤
       (LPow A L₁ 1 T).U (fun _ => j) := fun p hp => Set.mem_iInter.2 fun _ => hp.2
   have e := congrArg (gs (𝟙 _) x _) (H i j _ rfl le_rfl m₁ m₂)

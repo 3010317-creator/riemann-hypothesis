@@ -478,8 +478,7 @@ theorem isObU_unique : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ide
       rw [hQ, hyσ, add_sub_cancel, _root_.mul_assoc, Units.inv_mul, _root_.mul_one]
     have vab : (v' T T'' (a ≫ b) : L.B T'') = (1 + Y) * (v T T'' (a ≫ b) : L.B T'') := by
       rw [hY, hyσ, add_sub_cancel, _root_.mul_assoc, Units.inv_mul, _root_.mul_one]
-    rw [va, vb, vab, map_mul, map_add (f := _), map_one, nat.1] at e2
-    rw [← hP] at e2
+    rw [va, vb, vab, map_mul, map_add (f := _), map_one, nat.1, ← hP] at e2
     have mem : ∀ x, σ T'' x ∈ I.map (algebraMap R (L.B T'')) := bas.1
     have sq : ∀ x x', σ T'' x * σ T'' x' = 0 := fun x x' ↦ mul_eq_zero_of_mem_map hI (mem x) (mem x')
     have hPQ : P * Q = 0 := sq _ _
@@ -570,8 +569,7 @@ theorem obAt_eq_of_iso : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : I
   refine GlobalTheory.T.lineBundleLiftObstruction_eq_of_cohomologous R R₀ I hI π hπ hk R₁ α C (G ⋙ OAff s₀) ((ofSys S).restrict G) u u' t d d'
     ((ofSys_isFun S).restrict G) (fun T T' a ↦ ?_) hobs hobs'
   have := congrArg (fun w : Γ(X₀, opOf G T')ˣ ↦ (w : Γ(X₀, opOf G T'))) (ht T T' a)
-  rw [Units.val_mul, Units.val_mul] at this
-  exact this
+  rwa [Units.val_mul, Units.val_mul] at this
 
 end GlobalTheory.LBObsUniq
 end -- clump:auto

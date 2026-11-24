@@ -415,8 +415,7 @@ theorem mem_smoothLocus {V : Type} [CommRing V] [IsLocalRing V] [IsNoetherianRin
     have h4 : Smooth ((pullbackSpecIso V Γ(X, W) (V ⧸ I ^ (e + 1))).inv ≫ pullback.snd _ _) := by
       have : Smooth (pullback.snd (Spec.map (CommRingCat.ofHom (algebraMap V Γ(X, W))))
           (Spec.map (CommRingCat.ofHom (algebraMap V (V ⧸ I ^ (e + 1)))))) := by
-        rw [← hg]
-        exact h3
+        rwa [← hg]
       infer_instance
     rw [pullbackSpecIso_inv_snd] at h4
     have h5 := (HasRingHomProperty.Spec_iff (P := @Smooth)).mp h4
@@ -427,8 +426,7 @@ theorem mem_smoothLocus {V : Type} [CommRing V] [IsLocalRing V] [IsNoetherianRin
           (Algebra.TensorProduct.includeRight : (V ⧸ I ^ (e + 1)) →ₐ[V] _).toRingHom := by
       ext t
       simp
-    rw [← RingHom.smooth_algebraMap, heq]
-    exact h6
+    rwa [← RingHom.smooth_algebraMap, heq]
   have hq : Algebra.IsSmoothAt V p.asIdeal := GlobalTheory.T.isSmoothAt_of_smooth_mod_ideal_powers V I hI Γ(X, W) hsm p.asIdeal hcomap
   rw [Scheme.Hom.mem_smoothLocus, formallySmooth_stalkMap_iff ⊤ (isAffineOpen_top _) W hW' hWle hxW]
   let : Algebra Γ(Spec (CommRingCat.of V), ⊤) Γ(X, W) := ψ.hom.toAlgebra
@@ -686,8 +684,7 @@ theorem nilpotent_ker_factor {V : Type} [CommRing V] {J J' : Ideal V} (h : J ≤
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective x
     exact Ideal.mem_map_of_mem _ ((mk_mem_ker h x).1 hx)
   refine (Ideal.pow_right_mono h₁ N).trans ?_
-  rw [← Ideal.map_pow, Ideal.map_le_iff_le_comap, ← RingHom.ker_eq_comap_bot, Ideal.mk_ker]
-  exact hN
+  rwa [← Ideal.map_pow, Ideal.map_le_iff_le_comap, ← RingHom.ker_eq_comap_bot, Ideal.mk_ker]
 
 theorem correction {V σ : Type} [CommRing V] [IsNoetherianRing V] {M J₁ : Ideal V} (hM : M.IsMaximal)
     (hJ₁ : J₁ ≤ M) (N : ℕ) {X₀ X₁ : Scheme.{0}} (f₀ : X₀ ⟶ Spec (CommRingCat.of (V ⧸ M)))
@@ -914,8 +911,7 @@ theorem exists_section_local (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V
     have h₂ : IsClosedImmersion (j 0) := IsClosedImmersion.of_comp _ q.left
     have h₃ : IsClosedImmersion (pullback.lift (j 0) (thickObj V (IsLocalRing.maximalIdeal V) 0 Y).hom (hjV 0) ≫
         pullback.fst P.hom (thick V (IsLocalRing.maximalIdeal V) 0)) := by
-      rw [pullback.lift_fst]
-      exact h₂
+      rwa [pullback.lift_fst]
     exact IsClosedImmersion.of_comp _ (pullback.fst P.hom (thick V (IsLocalRing.maximalIdeal V) 0))
   have hpb : ∀ e, IsPullback (thickMap V (IsLocalRing.maximalIdeal V) e Y) (thickObj V (IsLocalRing.maximalIdeal V) e Y).hom (thickObj V (IsLocalRing.maximalIdeal V) (e + 1) Y).hom
       (thickTrans V (IsLocalRing.maximalIdeal V) e) := fun e => by

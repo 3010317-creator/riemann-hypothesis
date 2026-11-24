@@ -144,8 +144,7 @@ theorem tExp_hi {n : ℕ} (a : Fin (n / 2) → ℤ) (i : Fin (n / 2)) :
     omega
   · rw [neg_inj]
     congr 1
-    apply Fin.ext
-    exact e
+    exact Fin.ext e
   · exfalso
     exact h' ⟨by show n - n / 2 ≤ n - 1 - i.1; omega, by show n - 1 - (n - 1 - i.1) < n / 2; omega⟩
 

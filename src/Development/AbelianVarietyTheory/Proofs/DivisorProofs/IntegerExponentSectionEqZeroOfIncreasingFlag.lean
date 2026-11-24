@@ -230,8 +230,7 @@ theorem upd_map {K T : Type} [CommSemiring K] [CommRing T] [Algebra K S] [Algebr
   funext τ'
   by_cases h : τ' = τ
   · subst h; simp only [upd, Function.update_self]
-  · simp only [upd, Function.update_of_ne h]
-    exact Matrix.map_one φ (map_zero φ) (map_one φ)
+  · simpa only [upd, Function.update_of_ne h] using Matrix.map_one φ (map_zero φ) (map_one φ)
 
 theorem upd_mul (τ : E →+* ℂ) (M N : Matrix (Fin (Dw.mult τ)) (Fin (Dw.mult τ)) S) :
     (fun τ' => upd τ M τ' * upd τ N τ') = upd τ (M * N) := by
@@ -330,8 +329,7 @@ theorem eq_zero_of_lt (Xo : Moduli Dw l) (c : Coeff l) (e : Ix Dw → ℤ) (τ :
   rw [upd_map, swpM_map, map_one] at hcw
   have hct : FrChg (upd τ (triM i j x2 ξ2)) 1 yw yX2 := by
     refine ((frChg_calculus E H Dw l Xo c r2.R).1 _ _ _ _ y2 yw yX2 hcw).2 ?_
-    rw [upd_mul, triM_mul_swpM hne _ _ hxξ, one_mul]
-    exact hc2
+    rwa [upd_mul, triM_mul_swpM hne _ _ hxξ, one_mul]
 
   let t : Ix Dw → (r2.R)ˣ := fun k =>
     if k = some ⟨τ, i⟩ then ux else if k = some ⟨τ, j⟩ then -ux⁻¹ else 1

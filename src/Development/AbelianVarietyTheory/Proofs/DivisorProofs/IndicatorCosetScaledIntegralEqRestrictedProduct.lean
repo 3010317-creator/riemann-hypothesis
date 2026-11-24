@@ -92,8 +92,7 @@ theorem indicator_cosetBoxV_mem_SB [Finite κ] {a : F} (ha : a ≠ 0) (r : κ �
     refine (hPc.image hg).of_isClosed_subset hcl.isClosed ?_
     intro x hx
     refine ⟨f x, ?_, ?_⟩
-    · rw [hS] at hx
-      exact hx
+    · rwa [hS] at hx
     · funext i
       simp only [f, g]
       rw [mul_inv_cancel_left₀ ha0, sub_add_cancel]

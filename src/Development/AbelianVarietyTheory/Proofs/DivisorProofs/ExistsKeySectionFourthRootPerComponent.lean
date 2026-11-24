@@ -177,8 +177,7 @@ theorem rule_tied_eq : ∀ κ : GlobalTheory.KeyCl.Rule, GlobalTheory.KeyCl.Homo
     obtain ⟨w, hw, hw'⟩ := (GlobalTheory.MetricChange.lift_comb Φ'.m.cart).2 _ _ v _ h3
     have : w = v (π i) := Over.OverMorphism.ext
       (Φ'.m.cart.1.hom_ext hw ((Over.w _).trans (Over.w _).symm))
-    rw [h2, hπ, ← this]
-    exact hw'
+    rwa [h2, hπ, ← this]
   have e1 := hF K K (RingHom.id K) _ _ hpb
   have e2 := hH K Φ'.T.pol Φ'.g_pos Φ'.T.t.PP.rig Φ'.T.t.PP.rigGen Φ'.th Φ'.th_ne v hvb Φ'.th Φ'.th_ne Φ'.v Φ'.basis
     1 _ (fun i => by simp [constFn]) hcomb
@@ -187,8 +186,7 @@ theorem rule_tied_eq : ∀ κ : GlobalTheory.KeyCl.Rule, GlobalTheory.KeyCl.Homo
     rcases Int.units_eq_one_or (Equiv.Perm.sign π) with h | h <;> rw [h] <;> norm_num
   apply Units.ext
   rw [one_pow, _root_.one_mul] at e2
-  refine e2.trans ?_
-  exact (congrArg₂ (fun a b : K => a * b) e3 e1).trans (_root_.one_mul _)
+  exact e2.trans ((congrArg₂ (fun a b : K => a * b) e3 e1).trans (_root_.one_mul _))
 
 
 
@@ -304,8 +302,7 @@ theorem exists_keySec_pow_four : ∀ (κ : GlobalTheory.KeyCl.Rule), GlobalTheor
     have h3 := mul_mem_secZ h2 h2
     rw [← pow_two, ← pow_two, ← pow_mul] at h3
     have e4 : (4 : ℤ) • keyEx Dw = keyEx Dw + keyEx Dw + (keyEx Dw + keyEx Dw) := by abel
-    rw [e4]
-    exact h3
+    rwa [e4]
   have hq := mul_mem_secZ (mul_mem_secZ h4 (inv_mem_secZ hK)) (idem_mem_secZ Z)
   have hi := idem_mem_secZ Z
   rw [add_neg_cancel, add_zero, secZ_zero_eq] at hq

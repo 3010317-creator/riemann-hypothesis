@@ -218,5 +218,4 @@ end GlobalTheory.Mum.RosatiTens
 
 open GlobalTheory.Mum.RosatiTens in
 theorem GlobalTheory.Mum.rosatiAdj_tens : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (D D' : DegData R (maximalIdeal R)) {r : ℕ} (W : Matrix (Fin r) (Fin r) ℤ) (h : IsUnit (W + W.transpose).det), ((W + W.transpose).map (Int.cast : ℤ → ℝ)).PosDef → ∀ (T : Tens D.toPre D'.toPre W) (a : TensO (symUnitOf W h)), RosatiAdj D'.toPre.P.A D'.toPre.P.L (T.act (TensO.mat _ a)) (T.act (TensO.mat _ (star a))) := by
-  intro R _ _ _ _ D D' r W h _ T a
-  exact rosatiAdj_core T h a
+  exact fun R _ _ _ _ D D' r W h _ T a => rosatiAdj_core T h a

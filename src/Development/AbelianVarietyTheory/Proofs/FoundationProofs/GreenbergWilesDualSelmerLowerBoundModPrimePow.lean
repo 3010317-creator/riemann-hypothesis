@@ -118,8 +118,7 @@ theorem exists_pos_pow_idem {M : Type} [Monoid M] [Finite M] (x : M) :
     unfold IsIdempotentElem
     rw [← pow_add]
     have := h1 (i + 1) k
-    rw [← hk] at this
-    exact this
+    rwa [← hk] at this
   obtain ⟨i, j, hij, h⟩ := Finite.exists_ne_map_eq_of_infinite (fun n : ℕ => x ^ n)
   rcases lt_or_gt_of_ne hij with hlt | hlt
   · exact key i (j - i) (by omega) (by rw [Nat.add_sub_cancel' hlt.le]; exact h.symm)
@@ -1124,8 +1123,7 @@ theorem dual_cob_on_line : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l 
         ((μ (locHom (S : Set Pl) B g) : (ZMod (l ^ n))ˣ) : ZMod (l ^ n)) *
           f.1 h (rhoS c n W hint S hN (locHom (S : Set Pl) B g)⁻¹ (Pi.single 0 u)) := by
       rw [f.2.2 g h]; rfl
-    rw [hμχ, hs'] at e
-    exact e
+    rwa [hμχ, hs'] at e
   have hcup : cupH1H1TwistedDual χ (rhoL c n W hint B hB) (MonoidHom.id _)
       ((contAction_rhoL c n W hint B hB hcont).comp' continuous_id) (Submodule.mkQ _ ⟨_, hψ⟩) = 0 := by
     refine LinearMap.ext fun x => ?_
@@ -1146,8 +1144,7 @@ theorem dual_cob_on_line : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l 
     obtain ⟨g, h⟩ := p
     have e : ((μ (locHom (S : Set Pl) B g) : (ZMod (l ^ n))ˣ) : ZMod (l ^ n)) * cc h - cc (g * h) + cc g =
         f.1 g (rhoS c n W hint S hN (locHom (S : Set Pl) B g) (Pi.single 0 (a0.1 h))) := congrFun hd (g, h)
-    rw [hμχ, hs] at e
-    exact e
+    rwa [hμχ, hs] at e
   have h0 := hinj (hcup.trans (map_zero _).symm)
   obtain ⟨m0, hm0⟩ := (mem_coboundaries1 _ _).1 ((Submodule.Quotient.mk_eq_zero _).1 h0)
   refine ⟨TDual.mk (LinearMap.comp (show Qn c n →ₗ[ZMod (l ^ n)] ZMod (l ^ n) from m0) (LinearMap.proj 0)),
@@ -1236,8 +1233,7 @@ theorem tau_mul_dvd (c : Coef l) (n : ℕ) (b' : c.O)
     ∃ q : ℤ_[l], tau c (b' * x) = (l : ℤ_[l]) ^ n * q := by
   have h1 := h (red c n x)
   rw [← map_mul, tbA_red, ← RingHom.mem_ker, PadicInt.ker_toZModPow, Ideal.mem_span_singleton] at h1
-  rw [mul_comm]
-  exact h1
+  rwa [mul_comm]
 
 theorem pair_nondeg (l : ℕ) [Fact l.Prime] (c : Coef l) (n : ℕ) (b : Qn c n)
     (h : ∀ a : Qn c n, GlobalTheory.Ord2.SelPerp.tbA c n (a * b) = 0) : b = 0 := by
@@ -1520,8 +1516,7 @@ theorem sel_perp : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [
       rw [Pi.sub_apply, Pi.sub_apply, h]
       rfl
     have h2 := congrArg (Phi c n) key
-    rw [map_sub, map_sub, hY x s, hY x' s, heq s] at h2
-    exact h2
+    rwa [map_sub, map_sub, hY x s, hY x' s, heq s] at h2
 
 end GlobalTheory.Ord2.SelPerp
 end -- clump:auto
@@ -1871,8 +1866,7 @@ theorem gw_ineq : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [F
   let eqv := Finite.equivFin (SelD c n W hint S hN A hW.cont μ)
   refine ⟨Nat.card (SelD c n W hint S hN A hW.cont μ), fun i => z (eqv.symm i), ?_, fun i => hz _, ?_⟩
   · exact hN1.trans hsel
-  · intro i j hij
-    exact hzd _ _ (fun h => hij (eqv.symm.injective h))
+  · exact fun i j hij => hzd _ _ (fun h => hij (eqv.symm.injective h))
 
 end GlobalTheory.Ord2.GwIneq
 end -- clump:auto

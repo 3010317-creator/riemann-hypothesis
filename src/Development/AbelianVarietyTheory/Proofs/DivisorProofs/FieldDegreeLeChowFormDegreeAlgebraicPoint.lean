@@ -101,8 +101,7 @@ theorem _root_.GlobalTheory.CompHt.PointLow.finrank_le_of_isChowFormInt : ∀ (K
       apply Subtype.ext
       have := MvPolynomial.comp_aeval_apply yE E.val g
       show E.val (MvPolynomial.aeval yE g) = E.val 0
-      rw [this, map_zero]
-      exact hy
+      rwa [this, map_zero]
     have := MvPolynomial.comp_aeval_apply yE σ g
     rw [hE0, map_zero] at this
     exact this.symm
@@ -139,8 +138,7 @@ theorem _root_.GlobalTheory.CompHt.PointLow.finrank_le_of_isChowFormInt : ∀ (K
       Finset.sum_ite_eq', Finset.mem_univ, ite_true] at this
     exact hk (sub_eq_zero.mp this)
   obtain ⟨a, ha⟩ : ∃ a, eval a Q ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hQ0 (MvPolynomial.funext fun x => by rw [hcon x, map_zero])
   have hfa : eval a fΩ ≠ 0 := fun h => ha (by rw [hQ, eval_mul, h, zero_mul])
   let c : (E →ₐ[K] AlgebraicClosure K) → AlgebraicClosure K := fun σ => ∑ k, a (0, k) * pt σ k

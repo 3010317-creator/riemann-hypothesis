@@ -88,8 +88,7 @@ theorem finite_chars_pow_eq_one (X : Type) [AddCommGroup X] [Module.Finite ℤ X
   let g : {t : Multiplicative X →* Rˣ // t ^ n = 1} → (S → rootsOfUnity n R) := fun t s =>
     ⟨t.1 s.1, (mem_rootsOfUnity _ _).2 (by simpa using DFunLike.congr_fun t.2 s.1)⟩
   refine Finite.of_injective g fun a b h => Subtype.ext ?_
-  refine MonoidHom.eq_of_eqOn_dense hS fun s hs => ?_
-  exact congrArg Subtype.val (congrFun h ⟨s, hs⟩)
+  exact MonoidHom.eq_of_eqOn_dense hS fun s hs => congrArg Subtype.val (congrFun h ⟨s, hs⟩)
 
 theorem finite_ringHom (A F : Type) [CommRing A] [CommRing F] [Finite F]
     [Algebra.FiniteType ℤ A] : Finite (A →+* F) := by
@@ -136,15 +135,13 @@ theorem finite_points_over {Z : Scheme.{0}} (π : Z ⟶ Sp ℤ) [LocallyOfFinite
     intro x
     have h1 : x.left pt ∈ G.hom ⁻¹ᵁ U := by
       change (x.left ≫ G.hom) pt ∈ U
-      rw [Over.w x]
-      exact hxU
+      rwa [Over.w x]
     rw [hsU] at h1
     simp only [TopologicalSpace.Opens.mem_iSup] at h1
     obtain ⟨V, hV, hx⟩ := h1
     refine Set.mem_biUnion hV ?_
     rintro _ ⟨y, rfl⟩
-    rw [hpt y]
-    exact hx
+    rwa [hpt y]
   exact Finite.of_injective (fun x => (⟨x.left, hm x⟩ : (⋃ V ∈ s,
     {f : Sp F ⟶ G.left | Set.range f ⊆ V.1} : Set _)))
     fun a b h => Over.OverMorphism.ext (congrArg Subtype.val h)
@@ -171,8 +168,7 @@ theorem semiAbelian_torsion_finite_and_closedPoint_finiteOrder : (∀ (K : Type)
     have hk := E.isKernel
     refine finite_pow_eq_one_of_extension (IsMonHom.monoidHom E.i (𝟙_ (Over (Sp K))))
       (IsMonHom.monoidHom E.q (𝟙_ (Over (Sp K)))) ?_ ?_ n ?_ (hB K E.B E.isAbelian n hn)
-    · intro a b h
-      exact hk.hom_ext h (toUnit_unique _ _)
+    · exact fun a b h => hk.hom_ext h (toUnit_unique _ _)
     · intro x hx
       have hx' : x ≫ E.q = 1 := hx
       exact ⟨hk.lift x (toUnit _) (by rw [hx', Hom.one_def]), hk.lift_fst _ _ _⟩
@@ -182,8 +178,7 @@ theorem semiAbelian_torsion_finite_and_closedPoint_finiteOrder : (∀ (K : Type)
       let e := splitTorusPointsEquiv (Sp K) E.X (𝟙_ (Over (Sp K)))
       refine Finite.of_injective (fun t => (⟨e t.1, by rw [← map_pow, t.2, map_one]⟩ :
         {t : Multiplicative E.X →* Γ((𝟙_ (Over (Sp K))).left, ⊤)ˣ // t ^ n = 1})) ?_
-      intro a b h
-      exact Subtype.ext (e.injective (congrArg Subtype.val h))
+      exact fun a b h => Subtype.ext (e.injective (congrArg Subtype.val h))
   · intro Z π _ G _ _ _ w hw
     haveI : Finite (G.left.residueField w) :=
       (jacobson_closedPoints_tools_int G.left (G.hom ≫ π)).2.1 w hw

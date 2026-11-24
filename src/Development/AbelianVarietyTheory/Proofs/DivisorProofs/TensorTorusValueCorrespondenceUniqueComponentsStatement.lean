@@ -131,16 +131,13 @@ theorem gtRelV_components_unique : ∀ (F : Type) [Field F] (N N' : NumD F) {r :
     have a := hv.2 χ'
     have b := hu.2 χ'
     rw [a, gtRelV_prod_tor_mul W (e χ') vs T] at b
-    have c := mul_right_cancel₀ (hwv _) (mul_right_cancel₀ (hwv 1) b)
-    have d := Units.ext c
-    exact (mul_eq_left.1 d.symm)
+    exact (mul_eq_left.1 (Units.ext (mul_right_cancel₀ (hwv _) (mul_right_cancel₀ (hwv 1) b))).symm)
   have hall : ∀ χ j, T j (Multiplicative.ofAdd χ) = 1 := by
     intro χ
     refine eq_one_of_prod_zpow_matrix (W + W.transpose) hdet (fun j => T j (Multiplicative.ofAdd χ)) fun i => ?_
     obtain ⟨χ', hχ'⟩ := hT.2.2.2.1.2 (Pi.single i χ)
     have := key χ'
-    rw [hχ', gtRelV_prod_single W T i χ] at this
-    exact this
+    rwa [hχ', gtRelV_prod_single W T i χ] at this
   funext j
   have : T j = 1 := MonoidHom.ext fun m => by simpa using hall m.toAdd j
   rw [this, NumD.tor_one, _root_.one_mul]

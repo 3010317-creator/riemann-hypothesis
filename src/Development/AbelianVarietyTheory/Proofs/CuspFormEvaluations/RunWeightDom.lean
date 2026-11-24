@@ -225,50 +225,28 @@ theorem run_weight_dom : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : 
   have hwn : ((wL.n / 2 : ℕ) : ℤ) * 2 = (nW : ℤ) := by
     rw [← hwLn]
     exact_mod_cast Nat.div_two_mul_two_of_even wL.n_even
-  have gP : ∀ (t : D.what₂.Tau) (i : Fin (D.R.sigW j).1), i.1 + 1 < (D.R.sigW j).1 →
-      ((Tn : ℤ) + (WeightFamilies.dimY D j : ℤ) + 2) * ((Tn : ℤ) + (WeightFamilies.dimY D j : ℤ) + 2 + 2 * (D.R.r : ℤ)) ≤
-        gapZ (ka.aP t) i + 2 := by
-    intro t i hi
-    have h1 := hgP t i hi
-    push_cast at h1
-    rw [hTp] at h1
-    exact h1
-  have gM : ∀ (t : D.what₂.Tau) (i : Fin (D.R.sigW j).2), i.1 + 1 < (D.R.sigW j).2 →
-      ((Tn : ℤ) + (WeightFamilies.dimY D j : ℤ) + 2) * ((Tn : ℤ) + (WeightFamilies.dimY D j : ℤ) + 2 + 2 * (D.R.r : ℤ)) ≤
-        gapZ (ka.aM t) i + 2 := by
-    intro t i hi
-    have h1 := hgM t i hi
-    push_cast at h1
-    rw [hTp] at h1
-    exact h1
-  have lP : ∀ (t : D.what₂.Tau) (i : Fin (D.R.sigW j).1), i.1 + 1 = (D.R.sigW j).1 →
-      2 * (Tn : ℤ) ^ 2 ≤ (ka.aP t i : ℤ) := by
-    intro t i hi
-    have h1 := hlP t i hi
-    have h2 : 2 * (Tn : ℝ) ^ 2 ≤ (ka.aP t i : ℝ) := by linarith
-    exact_mod_cast h2
-  have lM : ∀ (t : D.what₂.Tau) (i : Fin (D.R.sigW j).2), i.1 + 1 = (D.R.sigW j).2 →
-      2 * (Tn : ℤ) ^ 2 ≤ (ka.aM t i : ℤ) := by
-    intro t i hi
-    have h1 := hlM t i hi
-    have h2 : 2 * (Tn : ℝ) ^ 2 ≤ (ka.aM t i : ℝ) := by linarith
-    exact_mod_cast h2
-  have LPf : ∀ (t : D.what₂.Tau) (i : Fin (D.R.sigW j).1), gapZ (wL.aP t) i =
-      if i.1 + 1 < (D.R.sigW j).1 then Int.fdiv (gapZ (ka.aP t) i + 2) ((Tn : ℤ) + (WeightFamilies.dimY D j : ℤ) + 2)
-      else Int.fdiv ((ka.aP t i : ℤ) - (((WeightFamilies.dimY D j : ℤ) + 2) * (nW : ℤ) + 2 * (D.R.r : ℤ)))
-        ((Tn : ℤ) + (WeightFamilies.dimY D j : ℤ) + 2) := by
-    intro t i
-    rw [hLP t i, hTp, sub_sub]
-  have LMf : ∀ (t : D.what₂.Tau) (i : Fin (D.R.sigW j).2), gapZ (wL.aM t) i =
-      if i.1 + 1 < (D.R.sigW j).2 then Int.fdiv (gapZ (ka.aM t) i + 2) ((Tn : ℤ) + (WeightFamilies.dimY D j : ℤ) + 2)
-      else Int.fdiv ((ka.aM t i : ℤ) - 0) ((Tn : ℤ) + (WeightFamilies.dimY D j : ℤ) + 2) := by
-    intro t i
-    rw [hLM t i, hTp, sub_zero]
   have BP := fun t : D.what₂.Tau => block hp (ka.aP t) (wL.aP t) (wF.aP t) (Tn : ℤ) (WeightFamilies.dimY D j : ℤ)
-    (D.R.r : ℤ) (((WeightFamilies.dimY D j : ℤ) + 2) * (nW : ℤ) + 2 * (D.R.r : ℤ)) hD hr0 h40' hc' (gP t) (lP t)
-    (LPf t) (hFP t)
+    (D.R.r : ℤ) (((WeightFamilies.dimY D j : ℤ) + 2) * (nW : ℤ) + 2 * (D.R.r : ℤ)) hD hr0 h40' hc'
+    (fun i hi => by
+      have h1 := hgP t i hi
+      push_cast at h1
+      rwa [hTp] at h1)
+    (fun i hi => by
+      have h1 := hlP t i hi
+      have h2 : 2 * (Tn : ℝ) ^ 2 ≤ (ka.aP t i : ℝ) := by linarith
+      exact_mod_cast h2)
+    (fun i => by rw [hLP t i, hTp, sub_sub]) (hFP t)
   have BM := fun t : D.what₂.Tau => block hq (ka.aM t) (wL.aM t) (wF.aM t) (Tn : ℤ) (WeightFamilies.dimY D j : ℤ)
-    (D.R.r : ℤ) 0 hD hr0 h40' (by positivity) (gM t) (lM t) (LMf t) (hFM t)
+    (D.R.r : ℤ) 0 hD hr0 h40' (by positivity)
+    (fun i hi => by
+      have h1 := hgM t i hi
+      push_cast at h1
+      rwa [hTp] at h1)
+    (fun i hi => by
+      have h1 := hlM t i hi
+      have h2 : 2 * (Tn : ℝ) ^ 2 ≤ (ka.aM t i : ℝ) := by linarith
+      exact_mod_cast h2)
+    (fun i => by rw [hLM t i, hTp, sub_zero]) (hFM t)
   have RW := fun τ : ((T.U j T.σ₀).X k).Ψ =>
     row (r := D.R.r) (p := (D.R.sigW j).1) (q := (D.R.sigW j).2) hsum (Tn : ℤ) (WeightFamilies.dimY D j : ℤ)
       ((wL.n / 2 : ℕ) : ℤ) ((wF.n / 2 : ℕ) : ℤ) (by positivity) (by positivity)

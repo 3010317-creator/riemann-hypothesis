@@ -96,11 +96,9 @@ theorem exists_invol {E : Type} [CommRing E] (bs : List (Eˣ × ℕ+)) :
           exact if_congr (by omega) rfl rfl
     · by_cases h : c + 1 < s
       · have h' : c < s := by omega
-        simp only [ite_eq_left h, ite_eq_left h']
-        exact Or.inl ⟨by omega, trivial⟩
+        simpa only [ite_eq_left h, ite_eq_left h'] using Or.inl ⟨by omega, trivial⟩
       · by_cases h' : c < s
-        · simp only [ite_eq_right h, ite_eq_left h']
-          exact Or.inr (by omega)
+        · simpa only [ite_eq_right h, ite_eq_left h'] using Or.inr (by omega)
         · simp only [ite_eq_right h, ite_eq_right h']
           have e : c + 1 - s = c - s + 1 := by omega
           rw [e]
@@ -177,8 +175,7 @@ theorem simple_sum {E : Type} [CommRing E] {r : ℕ} (w : Pt E (r + 1))
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [Finset.sum_eq_single j.castSucc]
     · simp
-    · intro b _ hb
-      exact ite_eq_right fun e => hb (Fin.ext (Nat.add_right_cancel e).symm)
+    · exact fun b _ hb => ite_eq_right fun e => hb (Fin.ext (Nat.add_right_cancel e).symm)
     · simp
   rw [← hs A, ← hs (fun a c => C c a)]
   simp only [term, Finset.sum_neg_distrib]

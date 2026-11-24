@@ -92,8 +92,7 @@ theorem exists_kerPow_zero_finrank_eq_deg : ∀ (k : Type) [Field k] (A B : AbVa
   · intro R _ _ x hx _
     have hx' : x.left ≫ f.hom.left = spMap (algebraMap k R) ≫ e := by
       have := congrArg Over.Hom.left hx
-      rw [Over.comp_left, one_left_eq] at this
-      exact this
+      rwa [Over.comp_left, one_left_eq] at this
     let l : Sp R ⟶ P := pullback.lift x.left (spMap (algebraMap k R)) hx'
     obtain ⟨φ0, hφ0⟩ := Spec.map_surjective (l ≫ P.isoSpec.hom)
     have hc : CommRingCat.ofHom (algebraMap k H) ≫ φ0 = CommRingCat.ofHom (algebraMap k R) := by
@@ -119,8 +118,7 @@ theorem exists_kerPow_zero_finrank_eq_deg : ∀ (k : Type) [Field k] (A B : AbVa
           exact ψ.commutes c
       have h2 : spMap ψ.toRingHom = spMap φ.toRingHom := by
         rw [hφ, ← h1, Category.assoc, Iso.inv_hom_id, Category.comp_id]
-      have h3 := Spec.map_injective h2
-      exact AlgHom.ext fun a => congrArg (fun u => u.hom a) h3
+      exact AlgHom.ext fun a => congrArg (fun u => u.hom a) (Spec.map_injective h2)
   · haveI : IsFinite (spMap (algebraMap k H)) := by rw [← hig]; infer_instance
     haveI : Flat (spMap (algebraMap k H)) := by rw [← hig]; infer_instance
     haveI : Module.Finite k H := by

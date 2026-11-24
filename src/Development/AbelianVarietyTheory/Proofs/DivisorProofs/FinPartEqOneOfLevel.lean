@@ -74,8 +74,7 @@ theorem ball_mem_nhds (P : HeightOneSpectrum (𝓞 E)) (n : ℕ) (z : P.adicComp
     rw [sub_self, zero_div]; exact zero_mem _
   · intro x hx
     have hx' : Valued.v ((x - z) / (t : P.adicCompletion E)) ≤ 1 := hx
-    rw [map_div₀, hv, div_le_one₀ (WithZero.exp_pos)] at hx'
-    exact hx'
+    rwa [map_div₀, hv, div_le_one₀ (WithZero.exp_pos)] at hx'
 
 theorem val_int_le (P : HeightOneSpectrum (𝓞 E)) (n : ℕ) (b : 𝓞 E) (hb : b ∈ P.asIdeal ^ n) :
     Valued.v (algebraMap E (Af E) (algebraMap (𝓞 E) E b) P) ≤ WithZero.exp (-(n : ℤ)) := by
@@ -90,8 +89,7 @@ theorem exists_cong {c : Ideal (OF E)} (v : HeightOneSpectrum (OF E)) (n : ℕ) 
     RestrictedProduct.continuous_eval P
   have hU : ∀ᶠ x : Af E in 𝓝 z, ∀ P ∈ S, Valued.v (x P - z P) ≤ WithZero.exp (-(n : ℤ)) := by
     rw [Filter.eventually_all_finset]
-    intro P _
-    exact (hev P).tendsto z (ball_mem_nhds P n (z P))
+    exact fun P _ => (hev P).tendsto z (ball_mem_nhds P n (z P))
   have hz1 : z ∈ closure (((orderC c).map (algebraMap E (Af E)) : Subring (Af E)) : Set (Af E)) := hz
   obtain ⟨x, ⟨k, hk, rfl⟩, hx⟩ := ((mem_closure_iff_frequently.1 hz1).and_eventually hU).exists
   obtain ⟨a, b, hb, rfl⟩ := mem_orderC.1 hk

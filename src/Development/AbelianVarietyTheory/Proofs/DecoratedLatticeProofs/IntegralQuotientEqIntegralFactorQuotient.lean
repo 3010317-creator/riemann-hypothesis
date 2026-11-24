@@ -150,8 +150,7 @@ theorem f_mul_eq_zero (hc : ∀ a ∈ G₁, ∀ b ∈ G₂, a * b = b * a) (e : 
     simp only [mul_assoc]
   have hy' : y = p.2 * k := congrArg Subtype.val (congrArg Prod.snd key)
   refine hno _ (R.inv_mem hb) (G₂.inv_mem p.2.2) ?_
-  rw [hy', ← mul_assoc, inv_mul_cancel, one_mul]
-  exact hk
+  rwa [hy', ← mul_assoc, inv_mul_cancel, one_mul]
 
 end Fn
 

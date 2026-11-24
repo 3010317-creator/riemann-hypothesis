@@ -251,8 +251,7 @@ theorem hasLabel_of {r : ℕ} (τ : FDRep ℂ (GL (Fin r) (ZMod g))) (f : (ZMod 
     have ht : (fun x => LinearMap.trace ℂ (hcSpace (ZMod g) b lam) (hcRep (ZMod g) b lam x)) =
         hcL (canonList b lam) r := funext (_root_.GlobalTheory.HCChar.trace_hcRep_eq_hcL g r s b lam hb)
     have := (_root_.GlobalTheory.GLq.ConstIff.constituent_hcRep_iff g r s b lam τ hτ).1 hcon
-    rw [ht] at this
-    exact this
+    rwa [ht] at this
 
 omit h1 in
 theorem exists_labelO {r : ℕ} (τ : FDRep ℂ (GL (Fin r) (ZMod g))) (f : (ZMod g)[X]) (hτ : Simple τ)
@@ -274,8 +273,7 @@ theorem exists_labelO {r : ℕ} (τ : FDRep ℂ (GL (Fin r) (ZMod g))) (f : (ZMo
     exact Finset.prod_ne_zero_iff.2 fun c _ => (hp c).2.2.1
   · refine (_root_.GlobalTheory.GLq.ConstIff.constituent_hcRep_iff g _ _ b lam τ hτ).2 ?_
     have e := funext (_root_.GlobalTheory.HCChar.trace_hcRep_eq_hcL g _ _ b lam hb)
-    rw [e, hcan]
-    exact hip
+    rwa [e, hcan]
 
 include hσ in
 theorem eSer_eq (h5 : 5 ≤ g) (hG : Green) (r : ℕ) {f : (ZMod g)[X]} (hm : f.Monic) (h0 : f.coeff 0 ≠ 0) :

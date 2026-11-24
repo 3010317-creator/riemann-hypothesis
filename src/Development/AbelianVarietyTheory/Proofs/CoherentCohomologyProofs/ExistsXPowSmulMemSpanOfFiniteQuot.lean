@@ -107,8 +107,7 @@ theorem _root_.GlobalTheory.exists_X_pow_smul_mem_span_of_finite_quot : ∀ (ι 
   have hspanT : ∀ y : M, ∃ s ∈ Submodule.span (MvPolynomial ι R) (T : Set M), y - s ∈ I := by
     intro y
     have hsub : (G : Set (QuotSMulTop (X i - 1 : MvPolynomial ι R) M)) ⊆ I.mkQ '' (T : Set M) := by
-      intro q hq
-      exact ⟨f q, Finset.mem_coe.2 (Finset.mem_image_of_mem f hq), hfq q⟩
+      exact fun q hq => ⟨f q, Finset.mem_coe.2 (Finset.mem_image_of_mem f hq), hfq q⟩
     have hy : I.mkQ y ∈ Submodule.span (MvPolynomial ι R) (I.mkQ '' (T : Set M)) :=
       Submodule.span_mono hsub (hG ▸ Submodule.mem_top)
     rw [← Submodule.map_span] at hy
@@ -193,8 +192,7 @@ theorem _root_.GlobalTheory.exists_X_pow_smul_mem_span_of_finite_quot : ∀ (ι 
     rw [pow_add, mul_smul]
     have hkm : (X i : MvPolynomial ι R) ^ k • ((X i : MvPolynomial ι R) ^ m • y) =
         (X i : MvPolynomial ι R) ^ k • s' := by
-      rw [← sub_eq_zero, ← smul_sub]
-      exact hk
+      rwa [← sub_eq_zero, ← smul_sub]
     rw [hkm]
     exact Submodule.smul_mem _ _ hs'T
   refine ⟨T, fun y => ?_⟩

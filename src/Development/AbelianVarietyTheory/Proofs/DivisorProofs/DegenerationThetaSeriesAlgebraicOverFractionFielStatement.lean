@@ -155,8 +155,7 @@ theorem exists_sumF_of_coeff : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocal
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [← Algebra.smul_def]
     rfl
-  rw [e]
-  exact hs
+  rwa [e]
 
 end GlobalTheory.Mum
 end -- clump:auto
@@ -328,8 +327,7 @@ theorem adic_coeffs_tendsto_zero :
       obtain ⟨a, ha, hm⟩ := coef _ _ hmem
       refine ⟨a, ha, fun n hn hzn => hn fun j => ?_⟩
       have hlt : n < N := by
-        by_contra hle
-        push Not at hle
+        by_contra! hle
         exact (Nat.find_spec h) (anti hle hzn)
       exact Ideal.pow_le_pow_right (by omega) (hm j)
     · push Not at h
@@ -456,8 +454,7 @@ theorem vF_sF_mem {F : Type} [Field F] {A : Type} [CommRing A] (f : A →+* F) {
   have hr : ⊤ ≤ r₀ ⁻¹ᵁ LB.wchart L φ j := fun z _ => Set.mem_iInter.2 fun k => hJ k trivial
   let g : Γ(Y, LB.wchart L φ j) →* A :=
     ((Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom.comp (r₀.appLE _ ⊤ hr).hom).toMonoidHom
-  refine ⟨fun t => ⟨Units.map g (t.s j), ?_⟩, fun s => ⟨_, (key _ hr (s.f j)).symm⟩⟩
-  exact (key _ hr _).symm
+  exact ⟨fun t => ⟨Units.map g (t.s j), (key _ hr _).symm⟩, fun s => ⟨_, (key _ hr (s.f j)).symm⟩⟩
 
 theorem ext_unique {R : Type} [CommRing R] [IsDomain R] (D : DegPre R) {F : Type} [Field F] {A : Type} [CommRing A]
     [IsDomain A] (f : A →+* F) (hf : Function.Injective f) (x y : Sp A ⟶ D.P.A.left)
@@ -508,7 +505,6 @@ theorem top_of_finite_local {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R]
     exact IsFractionRing.injective R (FractionRing R) ((algebraMap (FractionRing R) (Kb R)).injective e')
   haveI := Algebra.IsIntegral.isLocalHom R S
   have hc : (spMap (algebraMap R S)).base (IsLocalRing.closedPoint S) = IsLocalRing.closedPoint R := by
-    show PrimeSpectrum.comap (algebraMap R S) _ = _
     exact IsLocalRing.comap_closedPoint _
   have hm : IsLocalRing.closedPoint R ∈ U := hc ▸ h (Set.mem_univ (IsLocalRing.closedPoint S))
   exact fun w _ => (IsLocalRing.specializes_closedPoint (R := R) w).mem_open U.isOpen hm
@@ -586,8 +582,7 @@ theorem gauge : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R
       · rw [Set.mem_singleton_iff] at h
         subst h
         refine ⟨Over.homMk x₀ hx₀A, Over.OverMorphism.ext ?_⟩
-        rw [NumD.Gt.pow_b, map_pow, hq'.2.1]
-        exact hx₀
+        rwa [NumD.Gt.pow_b, map_pow, hq'.2.1]
     | one => exact ⟨1, by rw [map_one, comp_one]⟩
     | mul a b _ _ ha hb =>
       obtain ⟨a₀, ha₀⟩ := ha
@@ -752,8 +747,7 @@ theorem theta_term_smul_add (O : Type) [CommRing O] (N : GlobalTheory.Ex.NumD O)
     intro a
     have := fadd a (-a)
     rw [add_neg_cancel, N.ψ_zero, map_one, fneg, Bnegr, mul_assoc, eq_comm, inv_mul_eq_one] at this
-    rw [sq]
-    exact this
+    rwa [sq]
   have Bsmul : ∀ (k : ℕ) a b, π (N.τ (k • a) b) = π (N.τ a b) ^ k := by
     intro k a b
     induction k with

@@ -110,8 +110,7 @@ theorem upper_coords_mul {r : ℕ} (x y : UT r → ℂ) : upper (coords (upper x
       rcases lt_or_gt_of_ne hc with hlt | hgt
       · rw [upper_of_gt x hlt, zero_mul]
       · rw [upper_of_gt y hgt, mul_zero]
-    · intro ha
-      exact absurd (Finset.mem_univ a) ha
+    · exact fun ha => absurd (Finset.mem_univ a) ha
   · rw [upper_of_gt _ hba, Matrix.mul_apply]
     refine (Finset.sum_eq_zero fun c _ => ?_).symm
     rcases lt_or_ge c a with hca | hac
@@ -121,20 +120,16 @@ theorem upper_coords_mul {r : ℕ} (x y : UT r → ℂ) : upper (coords (upper x
 theorem continuous_upper (r : ℕ) : Continuous (upper : (UT r → ℂ) → Matrix (Fin r) (Fin r) ℂ) := by
   refine continuous_pi fun a => continuous_pi fun b => ?_
   by_cases h : a < b
-  · simp only [upper, dite_eq_left h]
-    exact continuous_apply _
-  · simp only [upper, dite_eq_right h]
-    exact continuous_const
+  · simpa only [upper, dite_eq_left h] using continuous_apply _
+  · simpa only [upper, dite_eq_right h] using continuous_const
 
 theorem continuous_upperIn {r : ℕ} (β : Fin r → ℕ) : Continuous (upperIn β) := by
   have hg : Continuous fun (x : UTin β → ℂ) (p : UT r) =>
       if h : β p.1.1 = β p.1.2 then x ⟨p, h⟩ else 0 := by
     refine continuous_pi fun p => ?_
     by_cases h : β p.1.1 = β p.1.2
-    · simp only [dite_eq_left h]
-      exact continuous_apply _
-    · simp only [dite_eq_right h]
-      exact continuous_const
+    · simpa only [dite_eq_left h] using continuous_apply _
+    · simpa only [dite_eq_right h] using continuous_const
   exact (continuous_upper r).comp hg
 
 theorem continuous_upperOff {r : ℕ} (β : Fin r → ℕ) : Continuous (upperOff β) := by
@@ -142,10 +137,8 @@ theorem continuous_upperOff {r : ℕ} (β : Fin r → ℕ) : Continuous (upperOf
       if h : β p.1.1 ≠ β p.1.2 then x ⟨p, h⟩ else 0 := by
     refine continuous_pi fun p => ?_
     by_cases h : β p.1.1 ≠ β p.1.2
-    · simp only [dite_eq_left h]
-      exact continuous_apply _
-    · simp only [dite_eq_right h]
-      exact continuous_const
+    · simpa only [dite_eq_left h] using continuous_apply _
+    · simpa only [dite_eq_right h] using continuous_const
   exact (continuous_upper r).comp hg
 
 def prodMap {r : ℕ} (β : Fin r → ℕ) (u : UT r → ℂ) : UT r → ℂ :=

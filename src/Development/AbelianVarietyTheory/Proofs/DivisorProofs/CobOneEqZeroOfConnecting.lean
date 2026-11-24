@@ -274,8 +274,7 @@ end
 theorem exists_coact_eq_add_of_primitive : ∀ {R Λ B : Type} [CommRing R] [CommRing Λ] [HopfAlgebra R Λ] [Module.Finite R Λ] [Module.Projective R Λ] [CommRing B] [Algebra R B] (ρ : B →ₐ[R] B ⊗[R] Λ), (∀ a, TensorProduct.assoc R B Λ Λ (ρ.toLinearMap.rTensor Λ (ρ a)) = (Coalgebra.comul (R := R) (A := Λ)).lTensor B (ρ a)) → (∀ a, TensorProduct.rid R B ((Coalgebra.counit (R := R) (A := Λ)).lTensor B (ρ a)) = a) → Function.Surjective (Algebra.TensorProduct.productMap (Algebra.TensorProduct.includeLeft : B →ₐ[R] B ⊗[R] Λ) ρ) → ∀ b : Λ, cobOne R Λ b = 0 → ∃ x : B, ρ x = x ⊗ₜ[R] 1 + 1 ⊗ₜ[R] b := by
   intro R Λ B _ _ _ _ _ _ _ ρ hassoc hcounit hsurj b hb0
   have hb : Coalgebra.comul (R := R) b = b ⊗ₜ[R] 1 + 1 ⊗ₜ[R] b := by
-    rw [cobOne_apply, sub_sub, sub_eq_zero] at hb0
-    exact hb0
+    rwa [cobOne_apply, sub_sub, sub_eq_zero] at hb0
   obtain ⟨-, -, hff, -⟩ := finite_faithfullyFlat_ker ρ hassoc hcounit hsurj
   set B₀ := AlgHom.equalizer ρ (Algebra.TensorProduct.includeLeft : B →ₐ[R] B ⊗[R] Λ) with hB₀
   let I : Ideal B₀ :=
@@ -321,8 +320,7 @@ theorem exists_coact_eq_add_of_primitive : ∀ {R Λ B : Type} [CommRing R] [Com
     rw [this]
     exact Ideal.sum_mem _ fun k _ => hall k _
   have h2 : (1 : B₀) ∈ I := by
-    rw [← Ideal.comap_map_eq_self_of_faithfullyFlat (B := B) I, Ideal.mem_comap, map_one]
-    exact h1
+    rwa [← Ideal.comap_map_eq_self_of_faithfullyFlat (B := B) I, Ideal.mem_comap, map_one]
   exact h2
 
 end GlobalTheory.HopfQuot
@@ -373,8 +371,7 @@ theorem exists_funs_transl_eq_add {p : ℕ} {R : Type} [CommRing R] (G : PDivGro
       intro a
       simp only [BialgHom.coe_toLinearMap, LinearMap.id_apply, resOne_zero]
     rw [transl_apply, h, LinearMap.lTensor_id, LinearMap.id_apply]
-    rw [cobOne_apply, sub_sub, sub_eq_zero] at hb
-    exact hb
+    rwa [cobOne_apply, sub_sub, sub_eq_zero] at hb
   let s : ∀ n, {x : G.A (n + 1) // G.transl n x = x ⊗ₜ[R] 1 + 1 ⊗ₜ[R] b} := fun n =>
     Nat.rec (motive := fun n => {x : G.A (n + 1) // G.transl n x = x ⊗ₜ[R] 1 + 1 ⊗ₜ[R] b})
       ⟨b, h0⟩ (fun n x => ⟨f n x.1 x.2, hf n x.1 x.2⟩) n
@@ -654,8 +651,7 @@ variable [Fact p.Prime] (G)
 
 theorem vecExtMap_natCast_smul_id (hp : (p : R) = 0) : vecExtMap ((p : ℤ_[p]) • 𝟙 G) = 0 := by
   have h := map_nsmul (AddMonoidHom.mk' (vecExtMap (G := G) (H := G)) vecExtMap_add) p (𝟙 G)
-  rw [← Nat.cast_smul_eq_nsmul ℤ_[p], ← Nat.cast_smul_eq_nsmul R, hp, zero_smul] at h
-  exact h
+  rwa [← Nat.cast_smul_eq_nsmul ℤ_[p], ← Nat.cast_smul_eq_nsmul R, hp, zero_smul] at h
 
 theorem cocyclesMap_natCast_val (c : G.cocycles) (n : ℕ) :
     (cocyclesMap ((p : ℤ_[p]) • 𝟙 G) c).1 n = pullbackTwo (mulBy R (G.A n) p) (c.1 n) := by

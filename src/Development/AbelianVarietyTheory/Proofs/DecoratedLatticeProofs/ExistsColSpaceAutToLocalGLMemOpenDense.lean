@@ -106,5 +106,4 @@ theorem GlobalTheory.denseGL_completion : ∀ {E k : Type} [Field E] [Field k] [
   rw [h2]
   have h3 : n.submatrix e e = m' := by
     ext i j; simp [n]
-  rw [h3]
-  exact hm'W
+  rwa [h3]

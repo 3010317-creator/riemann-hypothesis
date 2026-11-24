@@ -69,8 +69,7 @@ namespace GlobalTheory.RowCuspKType
 private theorem one_mem_Kg_flag_measures (I : AutInst) (g : ℕ) : (1 : I.Gf) ∈ I.Kg g := by
   refine ⟨?_, fun y _ => ⟨0, Submodule.zero_mem _, ?_⟩⟩
   · show (1 : I.Gf) ∈ I.Kset
-    simp only [AutInst.Kset, Set.mem_ofPred_eq, OneMemClass.coe_one]
-    exact one_mem _
+    simpa only [AutInst.Kset, Set.mem_ofPred_eq, OneMemClass.coe_one] using one_mem _
   · simp only [AutInst.fmat, OneMemClass.coe_one, Units.val_one, sub_self, Matrix.zero_mulVec, smul_zero]
 
 theorem level_comp_Re (B : RowsAut) (k : B.I.Gf) (hk : k ∈ B.I.Kg B.g) (hg : 1 ≤ B.g) :
@@ -157,8 +156,7 @@ theorem row_isCuspFn : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (h : 
   have hvan := _root_.GlobalTheory.RealFibre.integral_phe_eq_zero_of_isKTypeOf B d h hd hK hl hh
   refine (_root_.GlobalTheory.CuspFixed.cusp_of_fixed B d h hd hvan hl hbig T hT _ f (C * ‖(B.Re.comp A₀) (B.tens B.w)‖) ?_ hf ?_).2
   · simpa using hfix
-  · intro x
-    exact (hfb x).trans_eq (by ring)
+  · exact fun x => (hfb x).trans_eq (by ring)
 
 end GlobalTheory.RowCuspKType
 end -- clump:auto

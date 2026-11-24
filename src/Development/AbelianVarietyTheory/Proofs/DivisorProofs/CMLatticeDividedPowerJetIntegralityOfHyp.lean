@@ -242,8 +242,7 @@ theorem norm_bound {l : ℕ} [Fact l.Prime] (W S P : ℂ_[l]) (hl : 4 < l) (hW :
     rwa [← e, norm_mul, norm_mul, norm_mul, h2, h1W, one_mul, mul_one] at this
   have hsq : ‖S‖ ^ 2 ≤ l := by
     have h3 : (‖W‖ * ‖S‖) ^ 2 ≤ 1 := pow_le_one₀ (by positivity) hA
-    rw [mul_pow, hW2, inv_mul_le_iff₀ hl0, mul_one] at h3
-    exact h3
+    rwa [mul_pow, hW2, inv_mul_le_iff₀ hl0, mul_one] at h3
   rw [← Real.sqrt_eq_rpow]
   exact Real.le_sqrt_of_sq_le hsq
 
@@ -346,8 +345,7 @@ theorem main : ∀ (L : PeriodPair) (α β Ω P : ℂ) (M n : ℕ), MulStable L 
     have hn' : (n : ℂ) = conj α * α := by
       rw [mul_comm, Complex.mul_conj, hnorm]
       simp
-    rw [hn', mul_assoc]
-    exact h1
+    rwa [hn', mul_assoc]
   have hs2' : (α ^ 2 - (n : ℂ)) * s2 L = ∑ T ∈ S, L.weierstrassP T := by
     rw [← hs2, hnorm]
     simp
@@ -474,8 +472,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (lam : algebraicClosure ℚ ℂ →+
         push_cast
         ring
       obtain ⟨k, hk⟩ : 3 ∣ d + 1 := by omega
-      have h1 := hkey 0 le_rfl (hmulk 0 3 k hk h3p)
-      exact hcancel 0 (2 * d) σ (by omega) h1
+      exact hcancel 0 (2 * d) σ (by omega) (hkey 0 le_rfl (hmulk 0 3 k hk h3p))
     · have hl2 : ∀ n : ℕ, n.Prime → l ∣ n → l = n := fun n hn h =>
         (Nat.prime_dvd_prime_iff_eq hlp hn).mp h
       have h12 : ¬ l ∣ 12 := by
@@ -519,8 +516,7 @@ theorem main : ∀ [Fact (Nat.Prime 3)] (lam : algebraicClosure ℚ ℂ →+* �
     intro x y hx hy
     rw [sub_eq_add_neg]; exact hadd 0 x (-y) hx (hneg 0 y hy)
   have hI : ∀ x : ℂ, IsIntegral ℤ x → Sz 3 lam 0 x := by
-    intro x hx
-    exact hint 1 x (by norm_num) (by simpa using hx)
+    exact fun x hx => hint 1 x (by norm_num) (by simpa using hx)
   have hw_int : IsIntegral ℤ w := by
     refine ⟨Polynomial.X ^ 2 + Polynomial.C (d : ℤ), ?_, ?_⟩
     · exact Polynomial.Monic.def.mpr (by
@@ -556,8 +552,7 @@ theorem main : ∀ [Fact (Nat.Prime 3)] (lam : algebraicClosure ℚ ℂ →+* �
   have hm := hmul 0 0 _ _ hinv hcomb
   rw [zero_add] at hm
   have hfin := hneg 0 _ hm
-  rw [← mul_assoc, inv_mul_cancel₀ hd0, one_mul, neg_neg] at hfin
-  exact hfin
+  rwa [← mul_assoc, inv_mul_cancel₀ hd0, one_mul, neg_neg] at hfin
 
 end GlobalTheory.ArithThreeInert
 end -- clump:auto
@@ -778,8 +773,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (lam : algebraicClosure ℚ ℂ →+
     rw [add_div, h1, (h2 N x).1, ← add_div]
     have hh := (_root_.GlobalTheory.WpFam.homogeneity_of_isTauOf Λ c τ hτ).1
     refine _root_.GlobalTheory.CMSize.main l lam d Λ Ω _ M hd h4 hst hΩ hM ?_ ?_
-    · rw [hh, (GlobalTheory.WpFam.TorsMem.main N τ).2.2.1 x]
-      exact hx0
+    · rwa [hh, (GlobalTheory.WpFam.TorsMem.main N τ).2.2.1 x]
     · rw [mul_left_comm, hh]
       exact (GlobalTheory.WpFam.natCast_mul_tors_mem_lattice_iff N τ M x).2 hx
 
@@ -1192,8 +1186,7 @@ theorem nat_mul_integral_mem_lattice : ∀ (E : Type) [Field E] [NumberField E] 
   intro E _ _ l c y R hl hy hR hRc
   obtain ⟨M, hM, hMz⟩ := GlobalTheory.HilbFam.AdeleDen.exists_den_prime_to E l ((y⁻¹ : (Af E)ˣ) : Af E) hl (fun w hw => by
     have h1 : ((y⁻¹ : (Af E)ˣ) : Af E) w * (y : Af E) w = 1 := by
-      have h := congrArg (fun a : Af E => a w) (Units.inv_mul y)
-      exact h
+      exact congrArg (fun a : Af E => a w) (Units.inv_mul y)
     rw [hy w hw, mul_one] at h1
     rw [h1, map_one])
   refine ⟨M, hM, fun x hx => ?_⟩
@@ -1293,9 +1286,7 @@ theorem passl : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (l : ℕ)
       rw [h']; ring
     have h := _root_.GlobalTheory.HilbFam.isIntegral_coord_of_isIntegral E θ D (fun j => (D : FR E)⁻¹ * x j) hD hθ hθD (by rw [hpt]; exact hMint y' hy') j
     refine ⟨h.1, ?_⟩
-    have h2 := h.2
-    simp only [mul_inv_cancel_left₀ hDF] at h2
-    exact h2
+    simpa only [mul_inv_cancel_left₀ hDF] using h.2
   refine ⟨M, M₀ * M * D' * M₂ * M₁, passScaled θ c y (M * D), hMl, ?_, ⟨M * D' * M₂ * M₁, by ring⟩, ?_, ?_, ?_, ?_⟩
   · intro h
     rcases (Nat.Prime.dvd_mul hl).1 h with h | h
@@ -1549,8 +1540,7 @@ theorem core (hjsz : EisExp → ∀ (F : Type) [Field F] [NumberField F] [IsTota
     · have h1 : Ω / (l : ℂ) ^ a0 𝔣 l * (2 * Real.pi / (Real.sqrt d : ℝ) * γ / (Ω / (l : ℂ) ^ a0 𝔣 l)) * (Real.sqrt d : ℝ) /
           (2 * Real.pi) = γ := by field_simp
       beta_reduce
-      rw [h1]
-      exact hγ'
+      rwa [h1]
   · obtain ⟨e, he⟩ := _root_.GlobalTheory.CMTypeEmb.exists_equiv E I φ hCM
     have hD := GlobalTheory.HilbFam.iterD_defSum_eq_jet hEis E I φ e θ τ _ L (M * D) s _ g κ u hf2 hs hNpos hL he hφθ
       (Nat.mul_pos hMpos hD0) hLm hg hu

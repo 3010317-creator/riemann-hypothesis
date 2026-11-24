@@ -91,8 +91,7 @@ theorem _root_.GlobalTheory.CM.GenFib.exists_lieRep_eigLat (K : Type) [Field K]
     by_contra hne
     obtain ⟨φ, hφ0, hle⟩ := Submodule.exists_le_ker_of_lt_top _ (lt_top_iff_ne_top.2 hne)
     obtain ⟨x, hx⟩ : ∃ x, φ x ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hφ0 (LinearMap.ext h)
     have hM : F.IsDiffOf F (act.act 1) (1 + φ.smulRight x) := by
       intro u c h
@@ -117,8 +116,7 @@ theorem _root_.GlobalTheory.CM.GenFib.exists_lieRep_eigLat (K : Type) [Field K]
         (_root_.GlobalTheory.CM.IntCoord.isLieComb_one_iff _ _ _).2 rfl
       have he := hinj _ _ _ (hR a u c hu)
         (by rw [hc a]; exact _root_.GlobalTheory.CM.IntCoord.isCoord_smul F hu hs)
-      rw [he]
-      exact hs
+      rwa [he]
   refine ⟨RingHom.mk' ⟨⟨R, hone⟩, hmul⟩ hadd, fun a => hR a, fun τ c => ⟨hlat τ c, ?_⟩⟩
   show _ ↔ ∀ a, R a c = τ a • c
   constructor

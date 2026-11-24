@@ -196,8 +196,7 @@ theorem exists_finiteEtale_subgroup_of_points : ∀ (K : Type) [Field K] (A : Ab
     obtain ⟨p⟩ : Nonempty (Sp Ω) := inferInstance
     have hmem : (y ≫ j).left p ∈ U := by
       have h1 : V.ι (y.left p) ∈ Set.range V.ι := ⟨_, rfl⟩
-      rw [Scheme.Opens.range_ι] at h1
-      exact h1
+      rwa [Scheme.Opens.range_ι] at h1
     obtain ⟨x, hx, p', hp'⟩ := hmem
     rw [Subsingleton.elim p' p] at hp'
     obtain ⟨σ, hσ⟩ := exists_gal_of_apply_eq T (y ≫ j) (lt x (hpow x hx)) p hp'.symm
@@ -300,8 +299,7 @@ theorem exists_quotient_finite :
     have hw := congrArg (fun f => lift y (1 : T ⟶ A.X) ≫ f) hsq.w
     rw [← Category.assoc, ← Category.assoc, MonObj.comp_mul, lift_snd, ← Category.assoc, lift_fst,
       _root_.mul_one] at hw
-    rw [MonObj.one_comp] at hw
-    exact hw
+    rwa [MonObj.one_comp] at hw
 
 end GlobalTheory.AV.AbVar
 end -- clump:auto
@@ -395,8 +393,7 @@ theorem exists_quot_of_galois_stable : ∀ (K : Type) [Field K] (A : AbVar K) (G
       refine hext A.X _ _ ?_
       intro z hz y' hy'
       rw [MonObj.comp_pow, hy', MonObj.comp_one]
-      have h1 := pow_card_eq_one' (G := G) (x := ⟨z, hz⟩)
-      exact congrArg Subtype.val h1
+      exact congrArg Subtype.val (pow_card_eq_one' (G := G) (x := ⟨z, hz⟩))
     rw [← MonObj.comp_pow, hpow, MonObj.comp_one]
   · intro C f hf
     refine GlobalTheory.AV.AbVar.exists_factor_of_isogeny K A B C q f hq ?_

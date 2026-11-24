@@ -312,8 +312,7 @@ lemma exists_six : ∃ (σ : ℍ) (u : SL(2, ℤ)), u • σ = σ ∧
   · rw [denom_mul_SL, ModularGroup.denom_S]
     have : ∀ z : ℍ, denom ((ModularGroup.T : SL(2, ℤ)) : GL (Fin 2) ℝ) z = 1 := fun z => by
       rw [ModularGroup.denom_apply]; simp [ModularGroup.T]
-    rw [this, one_mul]
-    exact hp
+    rwa [this, one_mul]
 
 theorem elliptic_of_zero : ∀ τ₀ : ℍ,
     (E₆ τ₀ = 0 → ∃ u : SL(2, ℤ), u • τ₀ = τ₀ ∧ IsPrimitiveRoot (denom (u : GL (Fin 2) ℝ) τ₀) 4) ∧
@@ -362,8 +361,7 @@ theorem tendsto_E {k : ℕ} (hk : 3 ≤ k) (hk2 : Even k) :
   obtain ⟨c, hc, h⟩ := ModularFormClass.exp_decay_sub_atImInfty' (ModularForm.E hk)
   rw [h0] at h
   have h2 : Tendsto (fun τ : ℍ ↦ Real.exp (-c * τ.im)) atImInfty (𝓝 0) := by
-    refine Real.tendsto_exp_atBot.comp ?_
-    exact Tendsto.const_mul_atTop_of_neg (by linarith) tendsto_comap
+    exact Real.tendsto_exp_atBot.comp (Tendsto.const_mul_atTop_of_neg (by linarith) tendsto_comap)
   simpa using (h.trans_tendsto h2).add_const 1
 
 theorem tendsto_E₄ : Tendsto (E₄ : ℍ → ℂ) atImInfty (𝓝 1) := tendsto_E _ ⟨2, rfl⟩
@@ -403,8 +401,7 @@ theorem exists_local_data : ∀ τ₀ : ℍ, ∃ (n : ℕ) (a b : ℤ) (E : ℍ 
     have h4 : E₄ τ₀ ≠ 0 := fun h => hD (by simp [h, h6])
     refine ⟨4, 0, 6, E₆, u, hu, by norm_num, hp, by norm_num, by decide, isMF_E₆, fun τ hτ => ⟨?_, ?_⟩,
       ⟨1, one_ne_zero, tendsto_E₆⟩, ?_⟩
-    · intro h
-      exact _root_.GlobalTheory.EisWronskian.wronskian_E₄_E₆_ne_zero τ (by simp [h, hτ])
+    · exact fun h => _root_.GlobalTheory.EisWronskian.wronskian_E₄_E₆_ne_zero τ (by simp [h, hτ])
     · exact _root_.GlobalTheory.JOrbit.exists_smul_of_E₄_E₆ τ τ₀ (by simp [h6, hτ])
     · rintro d hd ⟨m, rfl⟩
       obtain ⟨m, rfl⟩ := Int.eq_ofNat_of_zero_le (show 0 ≤ m by push_cast at hd; omega)
@@ -416,8 +413,7 @@ theorem exists_local_data : ∀ τ₀ : ℍ, ∃ (n : ℕ) (a b : ℤ) (E : ℍ 
   · obtain ⟨u, hu, hp⟩ := (_root_.GlobalTheory.EllipticZero.elliptic_of_zero τ₀).2 h4
     refine ⟨6, 0, 4, E₄, u, hu, by norm_num, hp, by norm_num, by decide, isMF_E₄, fun τ hτ => ⟨?_, ?_⟩,
       ⟨1, one_ne_zero, tendsto_E₄⟩, ?_⟩
-    · intro h
-      exact _root_.GlobalTheory.EisWronskian.wronskian_E₄_E₆_ne_zero τ (by simp [h, hτ])
+    · exact fun h => _root_.GlobalTheory.EisWronskian.wronskian_E₄_E₆_ne_zero τ (by simp [h, hτ])
     · exact _root_.GlobalTheory.JOrbit.exists_smul_of_E₄_E₆ τ τ₀ (by simp [h4, hτ])
     · rintro d hd ⟨m, rfl⟩
       obtain ⟨m, rfl⟩ := Int.eq_ofNat_of_zero_le (show 0 ≤ m by push_cast at hd; omega)

@@ -164,8 +164,7 @@ theorem _root_.GlobalTheory.KZ.SSAdm.lift_sub_smul_mem {f : _root_.GlobalTheory.
     induction hP using Algebra.adjoin_induction with
     | mem P hP =>
       obtain ⟨T, hT, rfl⟩ := hP
-      simp only [FreeAlgebra.lift_ι_apply]
-      exact ⟨hW T hT, hx T hT⟩
+      simpa only [FreeAlgebra.lift_ι_apply] using ⟨hW T hT, hx T hT⟩
     | algebraMap r =>
       simp only [AlgHom.commutes, Module.algebraMap_end_apply, Algebra.algebraMap_self,
         RingHom.id_apply, sub_self]
@@ -201,8 +200,7 @@ theorem eigen_of_two_step {f : Letter → Module.End R M} {lam : Letter → R} {
   have hZW : ∀ z ∈ Z, z ∈ W := fun z hz => (hmem z).2 fun T hT => by
     simpa using Z.sub_mem (hZ T hT z hz) (Z.smul_mem _ hz)
   have hW : ∀ T ∈ A, ∀ y ∈ W, f T y ∈ W := fun T hT y hy => by
-    have h := W.add_mem (hZW _ ((hmem y).1 hy T hT)) (W.smul_mem (lam T) hy)
-    simpa using h
+    simpa using W.add_mem (hZW _ ((hmem y).1 hy T hT)) (W.smul_mem (lam T) hy)
   have hx' : ∀ T ∈ A, f T x - lam T • x ∈ W := fun T hT => (hmem _).2 fun S hS => by
     simpa using hx S hS T hT
   have h2 := lift_sub_smul_mem hW hx' hP
@@ -809,8 +807,7 @@ theorem mem_sp_of_adjoin (z y : PadicAlgCl l) (hy : y ∈ IntermediateField.adjo
     y ∈ sp W z fun _ => True := by
   have hz : IsAlgebraic W z := Algebra.IsAlgebraic.isAlgebraic z
   have hy' : y ∈ Algebra.adjoin W {z} := by
-    rw [← IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic hz]
-    exact hy
+    rwa [← IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic hz]
   rw [Algebra.adjoin_singleton_eq_range_aeval] at hy'
   obtain ⟨p, rfl⟩ := hy'
   change aeval z p ∈ _
@@ -1120,8 +1117,7 @@ theorem small_inf (j : ℕ) (H : Subgroup (PadicAlgCl l ≃ₐ[W] PadicAlgCl l))
   refine ⟨D / ‖(∏ t ∈ Finset.univ.erase t₀, (X - Polynomial.C (t : PadicAlgCl l))).eval (t₀ : PadicAlgCl l)‖, fun x ε h => ?_⟩
   have := hD x ε h
   rw [Finset.sum_eq_single t₀, norm_mul, norm_mul, c1, one_mul, _root_.GroundTheory.PAdicHodge.norm_gal_apply] at this
-  · rw [div_mul_eq_mul_div, le_div_iff₀ (norm_pos_iff.2 hne), mul_comm]
-    exact this
+  · rwa [div_mul_eq_mul_div, le_div_iff₀ (norm_pos_iff.2 hne), mul_comm]
   · intro t _ ht
     rw [eval_prod, Finset.prod_eq_zero (Finset.mem_erase.2 ⟨ht, Finset.mem_univ t⟩) (by simp), zero_mul]
   · simp
@@ -1569,8 +1565,7 @@ theorem exists_period [IsAlgClosure ℚ Ω] (X : Tower Ω ε) (A : ValuationSubr
       refine lam_le hC (mul_ne_zero (inv_ne_zero hlc) (pow_ne_zero _ l_ne_zero)) _ fun t => ?_
       have h3 := norm_le_of_cgA hj (hc b hbB (fun s hs hs' => hbe ⟨s, hs, hs'⟩) n φ hφ ((t : ℚ) / D))
       rw [map_zero, sub_zero, map_mul, map_pow, map_natCast, norm_mul] at h3
-      rw [norm_mul, norm_inv, le_inv_mul_iff₀ hp]
-      exact h3
+      rwa [norm_mul, norm_inv, le_inv_mul_iff₀ hp]
     have e : L (1 ⊗ₜ[ℤ_[l]] b) = (lam (seqN D j φ) : ℂ_[l]) + -((lam (seqN D j φ) : ℂ_[l]) - L (1 ⊗ₜ[ℤ_[l]] b)) := by
       ring
     rw [e]

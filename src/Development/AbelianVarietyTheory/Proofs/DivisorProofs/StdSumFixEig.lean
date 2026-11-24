@@ -147,8 +147,7 @@ theorem Om_sum {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} {N N' : ℕ} {e0 : VC D N
   induction s using Finset.induction_on with
   | empty =>
     refine ⟨by simpa using zero_mem_TT (tor0 D cc δ) N N', ?_⟩
-    have h := W.smul g g' 0 0 (zero_mem_TT _ N N')
-    simpa using h
+    simpa using W.smul g g' 0 0 (zero_mem_TT _ N N')
   | @insert i s hi ih =>
     rw [Finset.sum_insert hi, Finset.sum_insert hi]
     have hfi := hf i (Finset.mem_insert_self i s)
@@ -192,8 +191,7 @@ theorem sum_reindex (hv : v ∈ TT D (tor0 D ⊤ δ) a d) (hfix : ∀ k ∈ intG
   · intro s hs
     obtain ⟨r, hr, hc⟩ := surj s hs
     exact ⟨r, hr, (hR (φ r) (hφ r hr)).unique (hψ r hr) ⟨hs, hc⟩⟩
-  · intro r hr
-    exact Om_rep W hv hfix (hφ r hr) (hRi _ (hψ r hr).1) (hψ r hr).2
+  · exact fun r hr => Om_rep W hv hfix (hφ r hr) (hRi _ (hψ r hr).1) (hψ r hr).2
 
 end Reps
 

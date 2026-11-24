@@ -109,8 +109,7 @@ theorem reduction_natCast_eq_zero (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) : re
   have := reduction_coe P ((q : ℕ) : 𝓞 E)
   simp only [map_natCast] at this
   rw [this]
-  have h2 := Ideal.Quotient.eq_zero_iff_mem.2 hq
-  simpa using h2
+  simpa using Ideal.Quotient.eq_zero_iff_mem.2 hq
 
 theorem q_ne_zero (hu : ((q : ℕ) : 𝓞 E) ∉ P.asIdeal ^ 2) : (q : E) ≠ 0 := by
   intro h
@@ -211,8 +210,7 @@ theorem volN_one_ne (j : ℕ) {P : HeightOneSpectrum (𝓞 X.E)} (hP : P ∈ Pr.
     refine Subgroup.mem_inf.2 ⟨(Subgroup.mem_inf.1 hg).2, hJ ?_⟩
     have h1 := (Subgroup.mem_inf.1 hg).1
     unfold Loc.Cbe at h1
-    have h2 := (Subgroup.mem_inf.1 h1).2
-    simpa using h2
+    simpa using (Subgroup.mem_inf.1 h1).2
   have hne := relIndex_congruenceJacobiSubgroup_stabilizer_ne_zero (E := X.E) (ChainCounts.unifAt_of_not_mem_sq P hu) R.k R.rS R.r R.t (R.N j) (cOf R j)
   unfold Loc.volN
   rw [Subgroup.relIndex_eq_one.2 hle, Nat.cast_one, one_div]

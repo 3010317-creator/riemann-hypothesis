@@ -71,8 +71,7 @@ theorem norm_addChar_eq_one {k : Type} [Field k] [ValuativeRel k] [TopologicalSp
     have hK : IsCompact ((fun u : k => y * u) '' (𝒪[k] : Set k)) :=
       (IsNonarchimedeanLocalField.isCompact_closedBall k 1).image (by fun_prop)
     obtain ⟨C, hC⟩ := (hK.image (continuous_norm.comp hψ)).isBounded.exists_norm_le
-    by_contra h
-    push Not at h
+    by_contra! h
     obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt C h
     have hmem : ‖ψ (y * (n : k))‖ ∈ (fun z => ‖ψ z‖) '' ((fun u : k => y * u) '' (𝒪[k] : Set k)) :=
       ⟨y * n, ⟨n, natCast_mem _ n, rfl⟩, rfl⟩
@@ -137,8 +136,7 @@ theorem schr_irreducible_local (k : Type) [Field k] [ValuativeRel k] [Topologica
     intro Φ hΦ
     have h := sb_comp e.symm (hN hΦ)
     have : (Φ ∘ e) ∘ e.symm = Φ := by funext M; simp
-    rw [← this]
-    exact h
+    rwa [← this]
   have hT : ∀ Φ ∈ N.comap L, ∀ x : Matrix κ Unit k, (fun t => Φ (t + x)) ∈ GlobalTheory.SplitWeil.SB (Matrix κ Unit k) →
       (fun t => Φ (t + x)) ∈ N.comap L := by
     intro Φ hΦ x _

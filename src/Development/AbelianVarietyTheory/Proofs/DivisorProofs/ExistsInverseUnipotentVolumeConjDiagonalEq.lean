@@ -281,8 +281,7 @@ theorem mem_conj_iff {ϖ : kˣ} (hϖ : IsUnif ϖ) (t : ι) {z : GL ι k} (hz : z
     constructor
     · rintro ⟨w, hw, rfl⟩
       simpa [mul_assoc] using hw
-    · intro h
-      exact ⟨_, h, by simp [mul_assoc]⟩
+    · exact fun h => ⟨_, h, by simp [mul_assoc]⟩
   obtain ⟨h1, h2⟩ := (mem_KO_iff z).1 hz
   have ev : (g * z * g⁻¹).val = g.val * z.val * (g⁻¹).val := by simp only [Units.val_mul]
   have ei : ((g * z * g⁻¹)⁻¹).val = g.val * (z⁻¹).val * (g⁻¹).val := by
@@ -349,8 +348,7 @@ theorem relIndex_conj_col : ∀ {k : Type} [Field k] [ValuativeRel k] [Topologic
     · intro p q
       induction p using QuotientGroup.induction_on
       induction q using QuotientGroup.induction_on
-      intro h
-      exact QuotientGroup.eq.2 ((hφ _ _).1 h)
+      exact fun h => QuotientGroup.eq.2 ((hφ _ _).1 h)
     · intro c
       choose u hu using fun r : S => IsLocalRing.residue_surjective (c r)
       let y : ι → k := fun r => if h : r ∈ S then (u ⟨r, h⟩ : k) else 0
@@ -404,8 +402,7 @@ theorem red_val (x : KO k ι) (r s : ι) (h : x.1.val r s ∈ 𝒪[k]) :
   set u := (MonoidHom.ofInjective (mapInt_injective (k := k) (ι := ι))).symm x with hu
   have h1 : Matrix.GeneralLinearGroup.map (algebraMap 𝒪[k] k) u = x.1 := by
     have := congrArg Subtype.val ((MonoidHom.ofInjective (mapInt_injective (k := k) (ι := ι))).apply_symm_apply x)
-    rw [MonoidHom.ofInjective_apply] at this
-    exact this
+    rwa [MonoidHom.ofInjective_apply] at this
   have h2' : ((u.val r s : 𝒪[k]) : k) = x.1.val r s := by rw [← h1]; rfl
   have h2 : u.val r s = ⟨x.1.val r s, h⟩ := Subtype.ext h2'
   show IsLocalRing.residue 𝒪[k] (u.val r s) = _

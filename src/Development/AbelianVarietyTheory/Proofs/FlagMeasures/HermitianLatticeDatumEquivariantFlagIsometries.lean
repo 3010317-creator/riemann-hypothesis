@@ -133,11 +133,9 @@ theorem smul_graphOf_subset_of_mem_hermitianStabilizer {g : S.GLV} (hg : g ∈ S
   refine ⟨g y', (mem_smul_iff S g Λ _).2 ⟨y', hy', rfl⟩, g y, (mem_smul_iff S g Λ _).2 ⟨y, hy, rfl⟩,
     hermitianOrthogonalComplement_mapsTo_of_mem_stabilizer S _ (X'_le S) hg h1, hermitianOrthogonalComplement_mapsTo_of_mem_stabilizer S _ (X_le S) hg h2, ?_, ?_, ?_⟩
   · show g y' - g p.1 ∈ S.X'
-    rw [← map_sub, complementGroup_fixes_frameSpan S hg (X'_le S h3)]
-    exact h3
+    rwa [← map_sub, complementGroup_fixes_frameSpan S hg (X'_le S h3)]
   · show g y - g p.2 ∈ S.X
-    rw [← map_sub, complementGroup_fixes_frameSpan S hg (X_le S h4)]
-    exact h4
+    rwa [← map_sub, complementGroup_fixes_frameSpan S hg (X_le S h4)]
   · rw [← map_sub]
     exact inTh_smul S g Λ h5
 
@@ -163,8 +161,7 @@ theorem std_inner [IsNonarchimedeanLocalField F] [CharZero F] (g : Fin (r + 1) �
   · refine sup_le ?_ ?_
     · rintro y ⟨hy1, hy2⟩
       exact (h3 y).2 ⟨y, hy1, hy2, by simp⟩
-    · intro x hx
-      exact hA.1 x hx
+    · exact fun x hx => hA.1 x hx
   · intro x hx
     obtain ⟨y, hy, hyp, hyx⟩ := (h3 x).1 hx
     have e : x = y - (y - x) := by abel

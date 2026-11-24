@@ -497,8 +497,7 @@ theorem goodFam_H : GlobalTheory.Published.ArCalc → ∀ (k : Type) [CommRing k
   refine ⟨fun m => le_rfl, fun m => ?_, ⟨∑ s ∈ Finset.range e, Cs s, ?_, fun m hm => ?_⟩, ?_⟩
   · obtain ⟨c, hc⟩ := hup (m % e)
     have h := (hc (m / e)).1
-    rw [Nat.div_add_mod] at h
-    exact h
+    rwa [Nat.div_add_mod] at h
   · exact (hCs1 0).trans (Finset.single_le_sum (fun j _ => zero_le_one.trans (hCs1 j)) (Finset.mem_range.2 he))
   · have hs := Nat.mod_lt m he
     have h := hCs (m % e) (m / e) (by rw [Nat.div_add_mod]; exact hm)
@@ -508,8 +507,7 @@ theorem goodFam_H : GlobalTheory.Published.ArCalc → ∀ (k : Type) [CommRing k
     refine h.trans (AddSubgroup.closure_mono ?_)
     rintro f ⟨hf, hf'⟩
     exact ⟨hf, fun σ y => (hf' σ y).trans (pow_le_pow_left₀ (zero_le_one.trans (hCs1 _)) hle _)⟩
-  · rw [← hg]
-    exact hrank
+  · rwa [← hg]
 
 end GlobalTheory.HSAmp.GoodH
 end -- clump:auto
@@ -573,16 +571,14 @@ theorem hsGrowth_exp_radius : ∀ (D e δ : ℕ) (N : ℕ → ℝ → ℕ) (κ t
     · obtain ⟨h1, h2⟩ := hdiv (q + c s) s hs
       simp only [h1, h2, Nat.add_sub_cancel, le_refl]
     · obtain ⟨h1, h2⟩ := hdiv q s hs
-      simp only [h1, h2, add_zero]
-      exact Nat.mul_le_mul_left _ (Nat.choose_le_choose _ (by omega))
+      simpa only [h1, h2, add_zero] using Nat.mul_le_mul_left _ (Nat.choose_le_choose _ (by omega))
   have hup : Tendsto (fun m : ℕ => ((δ * (m / e + c' (m % e) + D).choose D : ℕ) : ℝ) / (m : ℝ) ^ D)
       atTop (𝓝 L) := by
     refine _root_.GlobalTheory.tendsto_rank_div_pow_of_choose_bounds D e δ (fun m => δ * (m / e + c' (m % e) + D).choose D) he ?_
     intro s hs
     refine ⟨0, c' s, fun q => ⟨?_, ?_⟩⟩
     · obtain ⟨h1, h2⟩ := hdiv q s hs
-      simp only [add_zero, h1, h2]
-      exact Nat.mul_le_mul_left _ (Nat.choose_le_choose _ (by omega))
+      simpa only [add_zero, h1, h2] using Nat.mul_le_mul_left _ (Nat.choose_le_choose _ (by omega))
     · obtain ⟨h1, h2⟩ := hdiv q s hs
       simp only [h1, h2, le_refl]
   set B : ℝ := ∑ s ∈ Finset.range e, |Real.log (C s)| with hBdef
@@ -777,8 +773,7 @@ theorem lc_exp_bounds : GlobalTheory.Published.ArCalc → ∀ (k : Type) [CommRi
   have e2 : (Module.finrank (ratF x) X.functionField : ℝ) / ((e : ℝ) ^ D * D.factorial) =
       gdeg P.L D / D.factorial := by
     rw [hdeg, mul_div_mul_left _ _ (pow_pos he D).ne']
-  rw [e2] at key
-  exact key
+  rwa [e2] at key
 
 end GlobalTheory.HSAmp
 end -- clump:auto

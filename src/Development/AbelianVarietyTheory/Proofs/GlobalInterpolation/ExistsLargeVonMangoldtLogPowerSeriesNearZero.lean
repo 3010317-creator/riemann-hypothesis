@@ -185,8 +185,7 @@ theorem cauchy_exterior (g : ℂ → ℂ) (r : ℝ) (hr : 0 < r)
       intro ρ h1 ζ hζ
       rw [mem_sphere_zero_iff_norm] at hζ
       show r ≤ ‖ζ‖
-      rw [hζ]
-      exact h1
+      rwa [hζ]
     have split : ∀ ρ, r ≤ ρ → ‖w‖ ≠ ρ → (∮ ζ in C(0, ρ), (ζ - w)⁻¹ * g ζ)
         = g w * (∮ ζ in C(0, ρ), (ζ - w)⁻¹) + ∮ ζ in C(0, ρ), F ζ := by
       intro ρ h1 hne
@@ -216,8 +215,7 @@ theorem cauchy_exterior (g : ℂ → ℂ) (r : ℝ) (hr : 0 < r)
       · refine hFc.mono ?_
         intro ζ hζ
         have := hζ.2
-        rw [Metric.mem_ball, dist_zero_right, not_lt] at this
-        exact this
+        rwa [Metric.mem_ball, dist_zero_right, not_lt] at this
       · intro ζ hζ
         have hζ1 := hζ.1.2
         rw [Metric.mem_closedBall, dist_zero_right, not_le] at hζ1
@@ -318,8 +316,7 @@ theorem interpolation : ∀ (l : ℕ) (z : Fin l → ℂ) (g : ℂ → ℂ) (r G
   have hcont : ∀ j, ContinuousOn (fun ζ => g ζ / (∏ k, (ζ - z k)) * b j ζ)
       (Metric.sphere (0 : ℂ) r) := by
     intro j
-    refine ContinuousOn.mul ?_ (hbc j).continuousOn
-    exact (hg.continuousOn.mono hsph).div (by fun_prop) hPne
+    exact ContinuousOn.mul ((hg.continuousOn.mono hsph).div (by fun_prop) hPne) (hbc j).continuousOn
   obtain ⟨c, hc⟩ : ∃ c : Fin l → ℂ,
       c = fun j => -(2 * (Real.pi : ℂ) * I)⁻¹ * ∮ ζ in C(0, r), g ζ / (∏ k, (ζ - z k)) * b j ζ :=
     ⟨_, rfl⟩
@@ -529,8 +526,7 @@ lemma tendsto_inv_prod {κ : Type*} (a : κ → ℂ) (T : Finset κ) (ha : ∀ t
         have := ha t ht
         linarith)
   have hq : ‖w‖ ≤ ‖w‖ ^ (M + 1) := le_self_pow₀ (by linarith) (by omega)
-  apply inv_anti₀ (by linarith)
-  exact hq.trans (le_mul_of_one_le_right (by positivity) hp)
+  exact inv_anti₀ (by linarith) (hq.trans (le_mul_of_one_le_right (by positivity) hp))
 
 lemma inv_pow_le_exp (N M : ℕ) (hN : 0 < N) (r : ℝ) (hr : 1 - (N : ℝ) / (2 * (M + N)) ≤ r) :
     1 ≤ r ^ M * Real.exp 1 ^ N := by

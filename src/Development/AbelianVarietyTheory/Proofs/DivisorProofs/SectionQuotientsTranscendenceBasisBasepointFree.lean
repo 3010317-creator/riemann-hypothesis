@@ -113,8 +113,7 @@ theorem trBasis_of_integral_ratR (K : Type) [Field K] [CharZero K] (D : ℕ) (x 
     rintro _ ⟨j, rfl⟩
     rcases Fin.eq_self_or_eq_succAbove l j with h | ⟨j', rfl⟩
     · subst h
-      simp only [hy, div_self hl]
-      exact isAlgebraic_one
+      simpa only [hy, div_self hl] using isAlgebraic_one
     · exact isAlgebraic_algebraMap (⟨z j', Algebra.subset_adjoin ⟨j', rfl⟩⟩ :
         Algebra.adjoin ℤ (Set.range z))
   have hZ : IsTranscendenceBasis ℤ z :=
@@ -123,8 +122,7 @@ theorem trBasis_of_integral_ratR (K : Type) [Field K] [CharZero K] (D : ℕ) (x 
     intro j
     rcases Fin.eq_self_or_eq_succAbove l j with h | ⟨j', rfl⟩
     · exact h ▸ hl
-    · intro h0
-      exact hZ.1.ne_zero j' (by simp [hz, h0])
+    · exact fun h0 => hZ.1.ne_zero j' (by simp [hz, h0])
   set u : Fin D → K := fun j => x j.succ / x 0 with hu
   have hv : ∀ k, x k / x 0 ∈ Algebra.adjoin ℤ (Set.range u) := by
     intro k

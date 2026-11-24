@@ -77,8 +77,7 @@ theorem lamX_move (I : AutInst) (x x' : I.Gf) (h : ∃ γ ∈ I.GFset, ∃ k ∈
     have hzy' : (g : Matrix (Fin I.n) (Fin I.n) I.E) *ᵥ z = (g : Matrix (Fin I.n) (Fin I.n) I.E) *ᵥ y := by
       simpa using hzy
     rwa [← GL_mulVec_injective g hzy']
-  · intro hy
-    exact ⟨y, hy, by simp⟩
+  · exact fun hy => ⟨y, hy, by simp⟩
 
 theorem isLattice_move {E : Type} [Field E] [NumberField E] {m : ℕ} (Λ Λ' : Submodule (𝓞 E) (Fin m → E))
     (γ : GL (Fin m) E) (h : ∀ y, (γ : Matrix (Fin m) (Fin m) E) *ᵥ y ∈ Λ' ↔ y ∈ Λ)
@@ -96,9 +95,7 @@ theorem isLattice_move {E : Type} [Field E] [NumberField E] {m : ℕ} (Λ Λ' : 
   have hspan : Submodule.span E (Λ : Set (Fin m → E)) ≤
       (Submodule.span E (Λ' : Set (Fin m → E))).comap
         (Matrix.toLin' (γ : Matrix (Fin m) (Fin m) E)) := by
-    apply Submodule.span_le.mpr
-    intro y hy
-    exact Submodule.subset_span ((h y).2 hy)
+    exact Submodule.span_le.mpr (fun y hy => Submodule.subset_span ((h y).2 hy))
   rw [hΛ.span_eq_top] at hspan
   refine { toIsLattice := ?_, span_eq_top := ?_ }
   · rw [hmap]

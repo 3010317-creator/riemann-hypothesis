@@ -57,14 +57,12 @@ variable {k r : ℕ}
 private lemma mEmb_apply_of_not_mem_block (m : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (i j : Fin (2 * r + k + 1))
     (h : ¬((r ≤ i.val ∧ i.val ≤ r + k) ∧ (r ≤ j.val ∧ j.val ≤ r + k))) :
     mEmb k r m i j = if i = j then 1 else 0 := by
-  simp only [mEmb]
-  exact dite_eq_right h
+  simpa only [mEmb] using dite_eq_right h
 
 private lemma mEmb_apply_of_mem_block (m : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (i j : Fin (2 * r + k + 1))
     (h : (r ≤ i.val ∧ i.val ≤ r + k) ∧ (r ≤ j.val ∧ j.val ≤ r + k)) :
     mEmb k r m i j = m ⟨i.val - r, by omega⟩ ⟨j.val - r, by omega⟩ := by
-  simp only [mEmb]
-  exact dite_eq_left h
+  simpa only [mEmb] using dite_eq_left h
 
 theorem mEmb_mulVec_of_supp (m : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) {v : Fin (2 * r + k + 1) → ℂ}
     (hv : ∀ i : Fin (2 * r + k + 1), r ≤ i.val → v i = 0) : mEmb k r m *ᵥ v = v := by
@@ -78,8 +76,7 @@ theorem mEmb_mulVec_of_supp (m : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) {v : Fi
     by_cases hj : r ≤ j.val
     · rw [hv j hj, mul_zero]
     · rw [mEmb_apply_of_not_mem_block m i j (fun h => hj h.2.1), ite_eq_right (Ne.symm hji), zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 private lemma mEmb_mul' (m n : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) :
     mEmb k r m * mEmb k r n = mEmb k r (m * n) := by
@@ -106,22 +103,18 @@ private lemma mEmb_mul' (m n : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) :
           exact Finset.mem_map.2 ⟨⟨l.val - r, by omega⟩, Finset.mem_univ _,
             Fin.ext (by show r + (l.val - r) = l.val; omega)⟩
         rw [mEmb_apply_of_not_mem_block m i l (fun h => hl' h.2), ite_eq_right (by rintro rfl; exact hl' hi), zero_mul]
-    · rw [mEmb_apply_of_not_mem_block (m * n) i j (fun h => hj h.2)]
-      rw [Finset.sum_eq_single j]
+    · rw [mEmb_apply_of_not_mem_block (m * n) i j (fun h => hj h.2), Finset.sum_eq_single j]
       · rw [mEmb_apply_of_not_mem_block n j j (fun h => hj h.1), ite_eq_left rfl, mul_one]
         exact mEmb_apply_of_not_mem_block m i j (fun h => hj h.2)
       · intro l _ hlj
         rw [mEmb_apply_of_not_mem_block n l j (fun h => hj h.2), ite_eq_right hlj, mul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ j) h
-  · rw [mEmb_apply_of_not_mem_block (m * n) i j (fun h => hi h.1)]
-    rw [Finset.sum_eq_single i]
+      · exact fun h => absurd (Finset.mem_univ j) h
+  · rw [mEmb_apply_of_not_mem_block (m * n) i j (fun h => hi h.1), Finset.sum_eq_single i]
     · rw [mEmb_apply_of_not_mem_block m i i (fun h => hi h.1), ite_eq_left rfl, one_mul]
       exact mEmb_apply_of_not_mem_block n i j (fun h => hi h.1)
     · intro l _ hli
       rw [mEmb_apply_of_not_mem_block m i l (fun h => hi h.1), ite_eq_right (Ne.symm hli), zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+    · exact fun h => absurd (Finset.mem_univ i) h
 
 private lemma mEmb_one' : mEmb k r (1 : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) = 1 := by
   ext i j
@@ -176,8 +169,7 @@ theorem uEmb_diagonal (a : Fin r → ℂ) (ha : ∀ b, a b ≠ 0) :
             dite_eq_right (show ¬ i.val < r from fun h => h1 ⟨h, h⟩), dite_eq_left h2.1]
         · have hne : (2 * r + k - j.val) ≠ (2 * r + k - i.val) := by
             intro h
-            apply hij
-            exact Fin.ext (by omega)
+            exact hij (Fin.ext (by omega))
           rw [Matrix.diagonal_apply_ne _ hij, Matrix.diagonal_apply_ne, star_zero]
           intro h
           have h2 := congrArg Fin.val h
@@ -213,8 +205,7 @@ theorem eucl_single {N : ℕ} (i : Fin N) (c : ℂ) : eucl (Pi.single i c : Fin 
   · rw [Pi.single_eq_same, Complex.normSq_eq_norm_sq, Real.sqrt_sq (norm_nonneg _)]
   · intro j _ hj
     rw [Pi.single_eq_of_ne hj, Complex.normSq_zero]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 theorem lA_torus (z : Fin (2 * r + k + 1) → ℂ) (a : Fin r → ℝ) (ha : ∀ b, 0 < a b)
     {m : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hm : IsUnit m.det) (b : Fin r) :

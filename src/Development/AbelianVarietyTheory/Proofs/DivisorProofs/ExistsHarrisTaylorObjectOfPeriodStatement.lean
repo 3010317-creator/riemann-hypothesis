@@ -202,8 +202,7 @@ theorem hasGen_lam_pull_of_eq_on_open : ∀ (A : Over (Sp ℂ)) [GrpObj A], IsAb
   have : fst A (𝟙_ (Over (Sp ℂ))) ≫ e = 𝟙 _ := by
     apply CartesianMonoidalCategory.hom_ext
     · simp [e]
-    · simp only [e, Category.assoc, lift_snd, Category.id_comp]
-      exact toUnit_unique _ _
+    · simpa only [e, Category.assoc, lift_snd, Category.id_comp] using toUnit_unique _ _
   rw [this, Category.id_comp]
 
 end GlobalTheory.PointDesc
@@ -276,8 +275,7 @@ theorem locally_eq_const_of_pow_eq_one : ∀ (A : Over (Sp ℂ)) [GrpObj A], IsA
   have hxf : x.left ≫ f.left = T.hom ≫ η[A].left := by
     have h1 : x ≫ f = toUnit T ≫ η[A] := by
       rw [hf, comp_pow_overScheme_grpObj, Category.comp_id, hx]; rfl
-    have h2 := congrArg (fun h => h.left) h1
-    simpa [hTu] using h2
+    simpa [hTu] using congrArg (fun h => h.left) h1
   haveI : IsFinite f.left := hfin
   haveI : Etale f.left := het
   haveI := hA.smooth
@@ -306,8 +304,7 @@ theorem locally_eq_const_of_pow_eq_one : ∀ (A : Over (Sp ℂ)) [GrpObj A], IsA
   have hy0f : y0 ≫ f.left = η[A].left := by
     refine ext_of_apply_closedPoint_eq A.hom ?_ hη ?_
     · rw [Category.assoc, hfw, hy0]
-    · show f.left (pointOfClosedPoint A.hom a ha (IsLocalRing.closedPoint ℂ)) = _
-      exact (congrArg f.left (pointOfClosedPoint_apply A.hom a ha _)).trans hfa
+    · exact (congrArg f.left (pointOfClosedPoint_apply A.hom a ha _)).trans hfa
   have hg : x.left ≫ f.left = (T.hom ≫ y0) ≫ f.left := by
     rw [hxf, Category.assoc, hy0f]
   have hψ := Spec.map_preimage (T.left.fromSpecResidueField t ≫ T.hom)
@@ -480,8 +477,7 @@ theorem kernel_pow_eq_one : ∀ (A : Over (Sp ℂ)) [GrpObj A] [IsCommMonObj A] 
       rw [lam_comm, ← hpullP _ _ (pull_isLB hP _)]
       exact (cls_eq_zero_iff _).2 ht
     refine ⟨(cls_eq_zero_iff (pull_isLB hlamM _)).1 ?_, (cls_eq_zero_iff (pull_isLB hlamL _)).1 ?_⟩
-    · rw [GlobalTheory.RealMult.Elliptic.cls_pull_lam hM]
-      exact h0
+    · rwa [GlobalTheory.RealMult.Elliptic.cls_pull_lam hM]
     · rw [GlobalTheory.RealMult.Elliptic.cls_pull_lam hL, hcL, lam_lam_diag hM hΘ, h0, smul_zero]
   have hk : x ^ (N * N) = 1 :=
     GlobalTheory.KillSquare.pow_sq_eq_one_of_lam_trivial A hA _ hL Q ψ ρ N hψ hρ e₁ e₂ e₃ T x (hker x hx).2
@@ -605,8 +601,7 @@ theorem exists_abelian_of_isPeriod : ∀ (O : Type) [Ring O] (bar : O → O) (g 
         rw [hc]
         have e : (Q a ⬝ᵥ Hm *ᵥ star (Q b)).im = (D'.EF a b : ℝ) := him a b
         rw [e]; push_cast; rfl)
-    rw [hex] at h
-    exact h
+    rwa [hex] at h
 
 end GlobalTheory.HalvedPeriod
 end -- clump:auto
@@ -882,8 +877,7 @@ theorem exists_tateIsoO_of_period : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (
     have hν : (n : ℤ) ∣ D'.EF (f n a) (f n b) - ν n * (2 * D.EF a b) := by
       rw [← e2]; exact (hgen n hn hc).2.2.2.2 a b
     rw [GlobalTheory.HTTate.unitOn_pull, GlobalTheory.PeriodTate.rt_congr hn hν, GlobalTheory.PeriodTate.rt_mul, map_zpow] at h
-    rw [hev n hn hc, hev n hn hc]
-    exact h
+    rwa [hev n hn hc, hev n hn hc]
   · show toUnit _ ≫ eta y = ev N y
     rw [hev N hN hNp]
     show _ = GlobalTheory.HTTate.toC j ≫ e _
@@ -1075,8 +1069,7 @@ theorem spectral (K : Type) [Field K] [NumberField K] (g : ℕ) (Φ : K →+* Ma
     intro r hr
     have h := congrArg (aeval T) (X_sub_C_mul_basis hr)
     simp only [map_mul, map_sub, aeval_X, aeval_C, hnodal, hfT, mul_zero] at h
-    rw [sub_mul, sub_eq_zero, Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul] at h
-    exact h
+    rwa [sub_mul, sub_eq_zero, Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul] at h
   have hinjS : Set.InjOn (id : ℂ → ℂ) S := fun _ _ _ _ h => h
   refine ⟨fun τ => P (τ θ), fun τ => ?_, ?_, fun τ x => ?_, fun τ x => ?_⟩
   · show aeval T (Lagrange.basis S id (τ θ)) * P (τ θ) = P (τ θ)
@@ -1416,8 +1409,7 @@ theorem GlobalTheory.UPel.HT.lie_of_complexExp : ∀ (p : ℕ) [Fact p.Prime] (D
     simp at h1
   have hE5' : (σ b.ρ - ((D.tr : ℂ) - σ b.ρ)) • ∑ i, E i =
       (ρ.comp (algebraMap (𝓞 D.F) D.O)) D.ω - ((D.tr : ℂ) - σ b.ρ) • (1 : Matrix (Fin D.g) (Fin D.g) ℂ) := by
-    rw [show σ b.ρ - ((D.tr : ℂ) - σ b.ρ) = 2 * σ b.ρ - D.tr by ring]
-    exact hE5
+    rwa [show σ b.ρ - ((D.tr : ℂ) - σ b.ρ) = 2 * σ b.ρ - D.tr by ring]
   have hbc := GlobalTheory.SpecBC.baseChange_specDecomp D.g D.a D.m (𝓞 D.F) (ρ.comp (algebraMap (𝓞 D.F) D.O)) (fun i => σ.comp (b.t i)) D.ω
     (σ b.ρ) ((D.tr : ℂ) - σ b.ρ) E hne hdist hE1 hE2 hE3 hE4 hE5'
   have hpt : ∀ (R' : Type) [CommRing R'] (β : R →+* R') (x : Sp R' ⟶ Sp ℂ), x ≫ spMap σ = spMap β →
@@ -1562,8 +1554,7 @@ theorem GlobalTheory.UPel.HT.exists_obj_unifAt_of_period : ∀ (p : ℕ) [Fact p
           (act.act c) (act.act (D.star c).unop) (AddMonoidHom.mk' (fun x => c • x) (smul_add c))
           (AddMonoidHom.mk' (fun x => (D.star c).unop • x) (smul_add _)) (act.hom c) (act.hom _)
           (fun k x _ => hsc c _ x) (fun k x _ => hsc _ _ x)).2 ?_
-        intro x y
-        exact D'.adj c x y
+        exact fun x y => D'.adj c x y
       lie := hlie
       lieRank := fun k _ _ x β hx i => hlieR k x β hx i
       eta := eta

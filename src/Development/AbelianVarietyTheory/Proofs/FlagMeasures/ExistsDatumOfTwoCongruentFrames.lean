@@ -190,8 +190,7 @@ theorem ideal_eq_top_of_inv [IsNonarchimedeanLocalField F] [CharZero F] (L : Loc
     have hni : ¬ Function.Injective (LinearMap.mulLeft F (a : E)) :=
       fun h => hns (LinearMap.injective_iff_surjective.1 h)
     obtain ⟨s, hs, hs0⟩ : ∃ s : E, (a : E) * s = 0 ∧ s ≠ 0 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hni ((injective_iff_map_eq_zero _).2 (fun s h => hc s h))
     have hts : ∀ t : F, algebraMap F E t * s ∈ L.O := fun t => hJ _ (fun j hj => by
       obtain ⟨k, rfl⟩ := Ideal.mem_span_singleton'.1 hj
@@ -269,8 +268,7 @@ theorem exists_dual_family : ∀ {F : Type} [Field F] [ValuativeRel F] [Topologi
         simp only [sub_smul, Finset.sum_sub_distrib]
         rw [← hwdef, ← hdw]
         simp [Subring.smul_def])
-      intro a
-      exact sub_eq_zero.1 (h2 a)
+      exact fun a => sub_eq_zero.1 (h2 a)
     intro a
     have h3 := hcj _ (show M.L.cj (c a) ∈ M.L.O by rw [heq a]; exact (d a).2)
     rwa [M.L.cj_cj] at h3
@@ -334,8 +332,7 @@ theorem h_add_right (x y y' : V) : H.h x (y + y') = H.h x y + H.h x y' := by
 theorem mem_perp_X {r : ℕ} (f : Fin (r + 1) → V) (v : V) :
     v ∈ H.perp (H.X f) ↔ ∀ a : Fin r, H.h v (f a.castSucc) = 0 := by
   constructor
-  · intro hv a
-    exact hv _ (Submodule.subset_span ⟨a, rfl⟩)
+  · exact fun hv a => hv _ (Submodule.subset_span ⟨a, rfl⟩)
   · intro hv x hx
     obtain ⟨c, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun E).1 hx
     rw [h_sum_right]
@@ -501,8 +498,7 @@ theorem exists_inner : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpa
       rw [Subring.smul_def, H.h_smul_left]
       exact congrArg _ Fr.h_zz
     rw [hwz, ← mul_assoc] at hcw
-    have hcd : (c : E) * d (Fin.last r) = 1 := by
-      exact (hTu.mul_left_inj).1 (by rw [hcw, one_mul])
+    have hcd : (c : E) * d (Fin.last r) = 1 := (hTu.mul_left_inj).1 (by rw [hcw, one_mul])
     exact IsUnit.of_mul_eq_one (d (Fin.last r)) (Subtype.ext (by simpa using hcd))
 
 end GlobalTheory.StdLatInner
@@ -592,8 +588,7 @@ theorem isotropic_dual : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalS
     rw [H.h_herm (y b) (Fr.f k.castSucc), hyE]
     split_ifs <;> simp
   refine ⟨fun a => y a + ∑ k, m a k • Fr.f k.castSucc, fun a => ?_, fun a b => ?_, fun a b => ?_⟩
-  · refine Λ.add_mem (hy a) (Λ.sum_mem fun k _ => ?_)
-    exact Λ.smul_mem ⟨m a k, hmO a k⟩ (he k)
+  · exact Λ.add_mem (hy a) (Λ.sum_mem fun k _ => (Λ.smul_mem ⟨m a k, hmO a k⟩ (he k)))
   · simp only [H.h_add_left, h_sum_left, H.h_smul_left, hEf, mul_zero, Finset.sum_const_zero,
       add_zero, hyf]
   · simp only [H.h_add_left, h_add_right, h_sum_left, h_sum_right, H.h_smul_left, h_smul_right,
@@ -1126,8 +1121,7 @@ lemma img_one (Λ : Submodule M.L.O V) : img (1 : V ≃ₗ[E] V) Λ = Λ := by
   constructor
   · rintro ⟨y, hy, rfl⟩
     exact hy
-  · intro hx
-    exact ⟨x, hx, rfl⟩
+  · exact fun hx => ⟨x, hx, rfl⟩
 
 lemma img_selfDual (H : HermSp M V) {g : V ≃ₗ[E] V} (hg : IsUnitary H g)
     {Λ : Submodule M.L.O V} (hΛ : H.IsSelfDual Λ) : H.IsSelfDual (img g Λ) := by
@@ -1180,8 +1174,7 @@ theorem exists_datum : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpa
     refine ⟨(hg g hgs).2.2, ?_⟩
     ext p
     constructor
-    · intro hp
-      exact ⟨g, hgs, hp⟩
+    · exact fun hp => ⟨g, hgs, hp⟩
     · rintro ⟨g', hg', hp⟩
       obtain rfl : g = g' := Option.some.inj (hgs.symm.trans hg')
       exact hp

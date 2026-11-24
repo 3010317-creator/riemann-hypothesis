@@ -93,8 +93,7 @@ theorem Xsp_mapLF {T : E} {γ : S.V ≃ₗ[E] S.V} (hγ : γ ∈ Formalism.Hermi
 theorem gmap_top (γ : S.V ≃ₗ[E] S.V) : Formalism.HermitianLatticesTheory.gmap γ (⊤ : Submodule (𝓞 E) S.V) = ⊤ := by
   unfold Formalism.HermitianLatticesTheory.gmap
   rw [Submodule.map_top, LinearMap.range_eq_top]
-  intro y
-  exact ⟨γ.symm y, by simp⟩
+  exact fun y => ⟨γ.symm y, by simp⟩
 
 end Gen
 
@@ -132,8 +131,7 @@ theorem conj_nlam_top {T : D.host.E} {G : LFlag (D.sp.Y 0) D.R.rS T} {γ m : (VS
       have h1 := hx (γ w) (by rw [hXs]; exact Submodule.mem_map_of_mem hw)
       have h2 := hγ w (γ.symm x)
       rw [γ.apply_symm_apply] at h2
-      rw [← h2]
-      exact h1
+      rwa [← h2]
     have h3 := hp _ hy
     have e : (γ * m * γ⁻¹) x - x = (γ : (VS D).V →ₗ[D.host.E] (VS D).V) (m (γ.symm x) - γ.symm x) := by
       show γ (m (γ.symm x)) - x = γ (m (γ.symm x) - γ.symm x)

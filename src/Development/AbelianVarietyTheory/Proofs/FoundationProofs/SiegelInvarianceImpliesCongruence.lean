@@ -152,8 +152,7 @@ theorem exp_siegel_ord {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ
     have hd' : (d : ℂ) = (u : ℂ) - v := by exact_mod_cast hd
     rw [hd']; ring
   have hke : k ≤ e := by
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     have hd : (((k - e).toNat : ℕ) : ℤ) = k - e := Int.toNat_of_nonneg (by omega)
     have h1 := hasQ_shift hA (k - e).toNat
     rw [shift k e _ hd] at h1
@@ -182,8 +181,7 @@ theorem exp_siegel_ord {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ
     exact_mod_cast this
   refine ⟨?_, fun r hr => ?_⟩
   · rw [hed, hco d]; exact hAd
-  · by_contra hlt
-    push Not at hlt
+  · by_contra! hlt
     by_cases hex : ∃ n : ℕ, r = ((k : ℚ) + n) / M
     · obtain ⟨n, rfl⟩ := hex
       rw [hco n] at hr
@@ -395,8 +393,7 @@ theorem fix_siegel_pm_one : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
   have hdZ : ((γ 0 0 : ℤ) : ZMod M) * ((γ 1 1 : ℤ) : ZMod M) = 1 := by
     have := congrArg (Int.cast : ℤ → ZMod M) hd
     push_cast at this
-    rw [z10, mul_zero, sub_zero] at this
-    exact this
+    rwa [z10, mul_zero, sub_zero] at this
   rcases hp with hp | hp
   · left
     have e00 : ((γ 0 0 : ℤ) : ZMod M) = 1 := by

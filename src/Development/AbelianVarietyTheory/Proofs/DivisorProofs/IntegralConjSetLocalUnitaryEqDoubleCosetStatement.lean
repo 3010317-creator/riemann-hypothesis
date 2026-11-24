@@ -593,8 +593,7 @@ theorem exists_unitary_matLat_eq : ∀ {O K : Type} [CommRing O] [IsDomain O] [I
   open scoped IsMulCommutative in
   letI : CommRing A := inferInstance
   have hcomm : ∀ u ∈ A, ∀ v ∈ A, u * v = v * u := by
-    intro u hu v hv
-    exact congrArg (fun z : A => z.1) (mul_comm (⟨u, hu⟩ : A) ⟨v, hv⟩)
+    exact fun u hu v hv => congrArg (fun z : A => z.1) (mul_comm (⟨u, hu⟩ : A) ⟨v, hv⟩)
   have hstar : ∀ a ∈ A, (a.map σ)ᵀ ∈ A := fun a ha => conjTranspose_mem_adjoin σ γ hγ ha
   let τ : A →+* A :=
     { toFun := fun a => ⟨(a.1.map σ)ᵀ, hstar a.1 a.2⟩
@@ -633,8 +632,7 @@ theorem exists_unitary_matLat_eq : ∀ {O K : Type} [CommRing O] [IsDomain O] [I
   have hred : IsReduced A := by
     constructor
     rintro a ⟨k, hk⟩
-    obtain ⟨q, hq⟩ : ∃ q, aeval γ q = a.1 := by
-      exact (Algebra.adjoin_singleton_eq_range_aeval K γ).le a.2
+    obtain ⟨q, hq⟩ : ∃ q, aeval γ q = a.1 := (Algebra.adjoin_singleton_eq_range_aeval K γ).le a.2
     have h1 : aeval γ (q ^ k) = 0 := by
       rw [map_pow, hq]; exact congrArg Subtype.val hk
     have hsep : (minpoly K γ).Separable :=
@@ -681,8 +679,7 @@ theorem exists_unitary_matLat_eq : ∀ {O K : Type} [CommRing O] [IsDomain O] [I
 
   have hkeep : ∀ a : A, IsIntegral O a → ∀ v ∈ M, a.1 *ᵥ v ∈ M := by
     intro a ha
-    obtain ⟨q, hq⟩ : ∃ q, aeval γ q = a.1 := by
-      exact (Algebra.adjoin_singleton_eq_range_aeval K γ).le a.2
+    obtain ⟨q, hq⟩ : ∃ q, aeval γ q = a.1 := (Algebra.adjoin_singleton_eq_range_aeval K γ).le a.2
     have ha' : IsIntegral O (aeval γ q) := hq ▸ (hι a).mp ha
     obtain ⟨r, hr⟩ := _root_.GlobalTheory.MaxOrder.isIntegral_aeval_eq_aeval_map n P₀ hcop γ hchar q ha'
     rw [← hq, hr]
@@ -988,8 +985,7 @@ theorem orbit_main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n :
       · ext : 1
         simpa using htc
   refine ⟨⟨t, htU⟩, ?_, (⟨t, htU⟩ * g₁)⁻¹ * g₂, ?_, by group⟩
-  · show (⟨t, htU⟩ : UL n w) * γ = γ * (⟨t, htU⟩ : UL n w)
-    exact Subtype.ext htc
+  · exact Subtype.ext htc
   · rw [hK]
     have e : (((⟨t, htU⟩ : UL n w) * g₁)⁻¹ * g₂ : UL n w).1.val =
         (g₁.1⁻¹ : GLw n w).val * ((t⁻¹ : GLw n w).val * g₂.1.val) := by simp [mul_assoc]

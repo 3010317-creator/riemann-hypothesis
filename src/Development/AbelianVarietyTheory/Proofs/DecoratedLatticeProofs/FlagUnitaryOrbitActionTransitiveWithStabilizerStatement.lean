@@ -65,8 +65,7 @@ variable {D : D7}
 
 theorem isQA_sig (D : D7) : GlobalTheory.SgAlg.IsQA (D.sp.cm.sig : D.host.E →+* D.host.E) := by
   refine ⟨fun x => star_star x, ?_, inferInstance, ?_, fun x _ hx => isUnit_iff_ne_zero.2 hx⟩
-  · by_contra h
-    push Not at h
+  · by_contra! h
     have hbot : (⊥ : Subalgebra D.host.F D.host.E) = ⊤ :=
       eq_top_iff.2 fun x _ => Algebra.mem_bot.2 ((D.sp.cm.fixed x).1 (h x))
     have h1 := Subalgebra.bot_eq_top_iff_finrank_eq_one.1 hbot
@@ -233,8 +232,7 @@ theorem exists_act (hx : IsBase W x₀) (γ : (NFlagQ V d.e).prod (GQ W)) (x : O
     intro a b hab
     have hi : Function.Injective x₁.mulVec := Matrix.mulVec_injective_iff.2 hx₁.1
     have h1 : v *ᵥ a = v *ᵥ b := hi (by simpa only [Matrix.mulVec_mulVec] using hab)
-    have h2 := congrArg (w *ᵥ ·) h1
-    simpa only [Matrix.mulVec_mulVec, e2, Matrix.one_mulVec] using h2
+    simpa only [Matrix.mulVec_mulVec, e2, Matrix.one_mulVec] using congrArg (w *ᵥ ·) h1
   · apply rat_injective
     rw [show gramQ W (x₁ * v) = vᴴ * (gramQ W x₁ * v) by simp only [gramQ, conjTranspose_mul, Matrix.mul_assoc],
       hx₁.2, rat_mul, rat_mul, rat_conjTranspose, hv, hb]
@@ -276,10 +274,8 @@ theorem act_base_iff (hx : IsBase W x₀) (γ : (NFlagQ V d.e).prod (GQ W)) :
   constructor
   · intro h
     have h' := act_spec d hx γ (base hx)
-    rw [h] at h'
-    exact h'
-  · intro h
-    exact orb_ext d γ.1.1.2 ((act_spec d hx γ (base hx)).trans h.symm)
+    rwa [h] at h'
+  · exact fun h => orb_ext d γ.1.1.2 ((act_spec d hx γ (base hx)).trans h.symm)
 
 theorem transitive (hx : IsBase W x₀) (x : Orb W x₀) : ∃ γ : (NFlagQ V d.e).prod (GQ W), act d hx γ (base hx) = x := by
   obtain ⟨h, hh, e⟩ := (GlobalTheory.T.rational_frames_same_gram_one_unitary_orbit D W ρ x₀ hx.1).1 x.1 x.2

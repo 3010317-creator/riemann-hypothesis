@@ -64,8 +64,7 @@ theorem exists_gens_of_between (A : Submodule R V) (m : R) (hm : m ≠ 0) (t : F
       ∃ t' : Finset V, t'.card ≤ t.card ∧ L = A ⊔ Submodule.span R (t' : Set V) := by
   induction t using Finset.induction_on with
   | empty =>
-    intro _ L h1 h2
-    exact ⟨∅, le_rfl, le_antisymm h2 (by simpa using h1)⟩
+    exact fun _ L h1 h2 => ⟨∅, le_rfl, le_antisymm h2 (by simpa using h1)⟩
   | insert x t hx ih =>
     intro ht L h1 h2
     obtain ⟨t', hc, ht'⟩ := ih (fun y hy => ht y (Finset.mem_insert_of_mem hy))
@@ -166,8 +165,7 @@ theorem encard_between_le (A B : Submodule R V) (hn : idxN B A ≠ 0) (e : ℕ)
     have hspan : Submodule.span R (Set.range g) = Submodule.span R (t : Set V) := by
       refine le_antisymm (Submodule.span_le.2 ?_) (Submodule.span_mono ?_)
       · rintro _ ⟨i, rfl⟩; exact hg i
-      · intro x hx
-        exact ⟨emb ⟨x, hx⟩, by simp only [g, emb.injective.extend_apply]⟩
+      · exact fun x hx => ⟨emb ⟨x, hx⟩, by simp only [g, emb.injective.extend_apply]⟩
     have hgB : ∀ i, g i ∈ B := fun i => h2 (by rw [ht]; exact Submodule.mem_sup_right (hg i))
     refine ⟨fun i => ⟨A.mkQ (g i), Submodule.mem_map_of_mem (hgB i)⟩, trivial, ?_⟩
     have : (Set.range fun i => A.mkQ (g i)) = A.mkQ '' Set.range g := by

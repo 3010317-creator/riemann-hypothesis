@@ -921,8 +921,7 @@ theorem res_zpow_g (i j : (lbZPow L n).ι) {W : X.Opens}
     (h' : W ≤ L.U (i PUnit.unit) ⊓ L.U (j PUnit.unit)) :
     res h ((lbZPow L n).g i j) = res h' (L.g (i PUnit.unit) (j PUnit.unit)) ^ n := by
   have := Semi.LB.res_lcg L (fun _ : PUnit.{1} => 𝟙 X) (fun _ => n) i j h
-  rw [Fintype.prod_unique] at this
-  exact this
+  rwa [Fintype.prod_unique] at this
 
 def zcoord {V : X.Opens} (s : Γ(twistZ F L n, V)) (i : L.ι) : Γ(F, V ⊓ L.U i) :=
   resM F (inf_le_inf_left V (le_zidx_U n i)) (coord s (zidx L n i))
@@ -1245,8 +1244,7 @@ theorem zcoord_twistZAddIso_hom_app (hL : L.IsLB) (h : n + m = k) {V : X.Opens}
     have hii : V ⊓ L.U i ≤ L.U i ⊓ L.U i := le_inf inf_le_right inf_le_right
     have e₁ : _ = res hii (L.g i i) ^ n * res hii (L.g i i) ^ m :=
       res_zaddGen ((zidx L k i, zidx L n i), zidx L m i) hu hii hii
-    rw [Semi.LB.res_g_self hL i, one_zpow, one_zpow, one_mul] at e₁
-    exact e₁
+    rwa [Semi.LB.res_g_self hL i, one_zpow, one_zpow, one_mul] at e₁
   refine (coord_twistTwistIso_hom_app _ _ _ _ (isGen_zaddGen hL h) s (zidx L k i) (zidx L n i)
     (zidx L m i) _ (le_inf (le_inf inf_le_left (l m)) (l n)) hu).trans ?_
   rw [← val_res, e, Units.val_one, one_smul, zcoord, zcoord, coord_resM, resM_resM, resM_resM]

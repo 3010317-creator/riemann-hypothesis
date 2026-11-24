@@ -201,8 +201,7 @@ theorem mem_HHa_iff_rename [CharZero K] (a : ι → ℕ → ℕ)
       have := (rowDeg_iff_rename hσ hΨ hp hq hx P (a τ i)).1 fun m hm => hd m hm τ i
       have k := key τ i
       simp only [hx] at k
-      rw [k]
-      exact this
+      rwa [k]
     · intro hQ m hm τ i
       have h2 := hQ (halfRowEquiv hσ hΨ hp hq ⟨τ, i⟩).1 (halfRowEquiv hσ hΨ hp hq ⟨τ, i⟩).2
       rw [key τ i] at h2
@@ -323,14 +322,12 @@ theorem HHa_eq_zero_or_rowHighest [CharZero K] [Fintype ι] [Fintype {τ // Ψ �
           · simp
           · intro k _ hk
             rw [ite_eq_right]
-            intro h
-            exact hk (congrArg (fun x : Formalism.L2.Pj.Letter ι dim n => x.2.2) h).symm
+            exact fun h => hk (congrArg (fun x : Formalism.L2.Pj.Letter ι dim n => x.2.2) h).symm
           · simp
         · rw [Finset.sum_eq_zero, add_zero]
           intro k _
           rw [ite_eq_right]
-          intro h
-          exact hl ⟨k, h⟩
+          exact fun h => hl ⟨k, h⟩
       have hall : ∀ t : K, bind₁ (fun s => X s + ∑ k : Fin n,
           if s = (⟨τ, (j, k)⟩ : Formalism.L2.Pj.Letter ι dim n) then
             C t * X (⟨τ, (i, k)⟩ : Formalism.L2.Pj.Letter ι dim n) else 0) P = P := by

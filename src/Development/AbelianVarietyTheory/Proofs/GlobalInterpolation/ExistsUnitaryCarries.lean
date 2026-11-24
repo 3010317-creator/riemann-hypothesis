@@ -78,8 +78,7 @@ theorem mulVec_mem [StarRing E] {P : HeightOneSpectrum (𝓞 E)} {M : Matrix (Fi
     {x : Sp E n} (hx : x ∈ stdAt E n P) : M *ᵥ x ∈ stdAt E n P := by
   unfold stdAt at hx ⊢
   rw [mem_localization_standardLattice] at hx ⊢
-  intro i
-  exact intAt_sum Finset.univ (fun j => M i j * x j) fun j _ => (hM i j).mul (hx j)
+  exact fun i => intAt_sum Finset.univ (fun j => M i j * x j) fun j _ => (hM i j).mul (hx j)
 
 def Carries (P : HeightOneSpectrum (𝓞 E)) (N : Submodule (𝓞 E) (Sp E n)) (M : Matrix (Fin n) (Fin n) E) : Prop :=
   M.det ≠ 0 ∧ ∀ x, M *ᵥ x ∈ stdAt E n P ↔ x ∈ localization₂ P.asIdeal N
@@ -159,8 +158,7 @@ theorem span_of_self_dual [StarRing E] {L : Submodule (𝓞 E) (Sp E n)} (hLat :
     let coord := (LinearMap.proj i : Sp E n →ₗ[E] E).restrictScalars (𝓞 E)
     have htop : L.map coord = ⊤ := by
       rw [eq_top_iff]
-      intro x _
-      exact ⟨(x / v i) • v, hline _, div_mul_cancel₀ _ hi⟩
+      exact fun x _ => ⟨(x / v i) • v, hline _, div_mul_cancel₀ _ hi⟩
     have : Module.Finite (𝓞 E) E := Module.finite_def.mpr (htop ▸ hLat.1.fg.map coord)
     exact RingOfIntegers.not_isField E
       (isField_of_isIntegral_of_isField (IsFractionRing.injective (𝓞 E) E) (Field.toIsField E))
@@ -323,8 +321,7 @@ theorem localization_conj_le_of_le {P : HeightOneSpectrum (𝓞 E)} {N N' : Subm
   rw [← e', mem_dual] at hx
   have := hx _ (hs y hy)
   rw [← algebraMap_smul E a y, LinearMap.map_smulₛₗ₂] at this
-  rw [← algebraMap_smul E (cO E a) x, map_smul, algebraMap_cO]
-  exact this
+  rwa [← algebraMap_smul E (cO E a) x, map_smul, algebraMap_cO]
 
 theorem val_det_le {P : HeightOneSpectrum (𝓞 E)} {g : Sp E n →ₗ[E] Sp E n}
     (hg : ∀ x ∈ stdAt E n P, g x ∈ stdAt E n P) : P.valuation E (LinearMap.det g) ≤ 1 := by

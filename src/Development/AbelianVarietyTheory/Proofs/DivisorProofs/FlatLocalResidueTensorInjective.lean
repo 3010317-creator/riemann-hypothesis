@@ -84,9 +84,7 @@ theorem exists_surj_pi_quot_pow_ker_eq {A M : Type} [CommRing A] [IsDedekindDoma
     · intro x
       simp
   haveI : P.IsPrime := hP.isPrime
-  have hPr : P ^ r ≠ ⊤ := by
-    intro h
-    exact hP.ne_top (eq_top_iff.mpr (h ▸ Ideal.pow_le_self hr.ne'))
+  have hPr : P ^ r ≠ ⊤ := fun h => hP.ne_top (eq_top_iff.mpr (h ▸ Ideal.pow_le_self hr.ne'))
   haveI : Nontrivial (A ⧸ P ^ r) := Ideal.Quotient.nontrivial_iff.2 hPr
   let Ap := Localization.AtPrime P
   let φ : Ap →ₐ[A] A ⧸ P ^ r := IsLocalization.liftAlgHom (M := P.primeCompl)

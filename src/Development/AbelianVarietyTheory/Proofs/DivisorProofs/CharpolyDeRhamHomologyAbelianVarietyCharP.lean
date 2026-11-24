@@ -151,8 +151,7 @@ theorem charpoly_push : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [CharP
   let E : primDR B.X ≃ₗ[k] G.RigExt := e hR B.ab t
   have : Module.Finite k (primDR B.X) := Module.Finite.equiv E.symm
   have hconj : primPull (dp0 k) (𝟙 _) f.hom = E.symm.conj (rigExtMap (t.map t f.hom)) := by
-    refine LinearMap.ext fun c => ?_
-    exact E.eq_symm_apply.mpr (he.primPull hR B.ab B.ab t t f.hom c)
+    exact LinearMap.ext fun c => E.eq_symm_apply.mpr (he.primPull hR B.ab B.ab t t f.hom c)
   have h3 : (primPull (dp0 k) (𝟙 _) f.hom).charpoly = (rigExtMap (t.map t f.hom)).charpoly := by
     exact (congrArg LinearMap.charpoly hconj).trans (E.symm.charpoly_conj _)
   calc LinearMap.charpoly (push (dp0 k) (𝟙 _) f.hom)

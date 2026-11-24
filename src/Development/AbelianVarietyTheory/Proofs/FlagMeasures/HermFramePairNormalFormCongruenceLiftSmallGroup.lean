@@ -74,8 +74,7 @@ private theorem star_mem_mul_of_star_mem {M N : Submodule (𝓞 K) K} (hM : ∀ 
   refine Submodule.mul_induction_on hx (C := fun x => star x ∈ M * N) ?_ ?_
   · intro m hm n hn
     have hmn := Submodule.mul_mem_mul (hM m hm) (hN n hn)
-    rw [star_mul, mul_comm (star n) (star m)]
-    exact hmn
+    rwa [star_mul, mul_comm (star n) (star m)]
   · intro a b ha hb
     rw [star_add]
     exact Submodule.add_mem _ ha hb
@@ -299,8 +298,7 @@ theorem p_e (a : Fin r) (ha : N.j ≤ a.val) : pI N (N.F.e a.castSucc) = N.F.e a
   · rw [N.ist_e a a ha, ite_eq_left rfl, one_smul]
   · intro b hb hba
     rw [N.ist_e a b (Finset.mem_filter.1 hb).2, ite_eq_right (fun h => hba h.symm), zero_smul]
-  · intro h
-    exact absurd (Finset.mem_filter.2 ⟨Finset.mem_univ a, ha⟩) h
+  · exact fun h => absurd (Finset.mem_filter.2 ⟨Finset.mem_univ a, ha⟩) h
 
 theorem i_e (a b : Fin r) (ha : N.j ≤ a.val) : H.B (N.ist a) (N.F.e b.castSucc) = if b = a then 1 else 0 := by
   rw [← H.herm (N.F.e b.castSucc) (N.ist a), N.ist_e b a ha]
@@ -311,8 +309,7 @@ theorem q_i (a : Fin r) (ha : N.j ≤ a.val) : qI N (N.ist a) = N.ist a := by
   · rw [GlobalTheory.DegCnt.LiftS.i_e N a a ha, ite_eq_left rfl, one_smul]
   · intro b _ hba
     rw [GlobalTheory.DegCnt.LiftS.i_e N a b ha, ite_eq_right hba, zero_smul]
-  · intro h
-    exact absurd (Finset.mem_filter.2 ⟨Finset.mem_univ a, ha⟩) h
+  · exact fun h => absurd (Finset.mem_filter.2 ⟨Finset.mem_univ a, ha⟩) h
 
 theorem p_i (a : Fin r) (ha : N.j ≤ a.val) : pI N (N.ist a) = 0 := by
   exact GlobalTheory.DegCnt.LiftS.p_zero N (fun b hb => N.ist_iso a b ha hb)
@@ -394,8 +391,7 @@ theorem p_II (h0 : II N.F N.F' ⊓ N.F.Xa N.j = ⊥) {y : V} (hy : y ∈ II N.F 
     · rw [p_e N b hbj, sub_self]
       exact Submodule.zero_mem _
     · have hb : N.F.e b.castSucc ∈ N.F.Xa N.j := e_mem_Xa N.F b (by omega)
-      rw [p_Xa N hb, sub_zero]
-      exact hb
+      rwa [p_Xa N hb, sub_zero]
   have hX : y ∈ N.F.X := (Submodule.mem_inf.1 hy).1
   have hm : y - pI N y ∈ II N.F N.F' ⊓ N.F.Xa N.j :=
     Submodule.mem_inf.2 ⟨Submodule.sub_mem _ hy (p_mem N y), key hX⟩
@@ -615,8 +611,7 @@ theorem symm_mem (s : V ≃ₗ[K] V) (n : ℕ) (hn : ((s : V →ₗ[K] V) - 1) ^
     | succ k ih => intro x hx; rw [pow_succ', Module.End.mul_apply]; exact hneg _ (ih x hx)
   have hg : (s : V →ₗ[K] V) * ∑ i ∈ Finset.range n, (-M) ^ i = 1 := by
     have := mul_neg_geom_sum (-M) n
-    rw [neg_pow, hn, mul_zero, sub_zero, sub_neg_eq_add, hM, add_sub_cancel] at this
-    exact this
+    rwa [neg_pow, hn, mul_zero, sub_zero, sub_neg_eq_add, hM, add_sub_cancel] at this
   have e : s.symm y = (∑ i ∈ Finset.range n, (-M) ^ i) y := by
     apply s.injective
     rw [LinearEquiv.apply_symm_apply]
@@ -805,8 +800,7 @@ theorem exists_lift [FiniteDimensional K V] (N : NF H r) (h0 : II N.F N.F' ⊓ N
         (fun w hw => hIIX' _ (hU w (hWtU w hw)))⟩
   · show _ ∈ fixingSubgroup (V ≃ₗ[K] V) ((N.Wt : Submodule K V) : Set V)
     rw [mem_fixingSubgroup_iff]
-    intro y hy
-    exact hfw y hy
+    exact fun y hy => hfw y hy
 
 end Main
 
@@ -824,9 +818,7 @@ theorem dual_congr {K V : Type} [Field K] [NumberField K] [StarRing K] [AddCommG
     refine Submodule.sum_mem _ fun b hb => ?_
     have hb' : N.j ≤ b.val := (Finset.mem_filter.1 hb).2
     refine coef_mem N 𝔫 b hb' _ fun u hu => ?_
-    have hsu : star u ∈ N.aa b := by
-      show star u ∈ ipow N.𝔡 _
-      exact ipow_star N.𝔡 N.𝔡_ne N.𝔡_star _ hu
+    have hsu : star u ∈ N.aa b := ipow_star N.𝔡 N.𝔡_ne N.𝔡_star _ hu
     have hv : s.symm (star u • N.F.e b.castSucc) ∈ Q := hQ b (star u) hsu
     have hd : star u • N.F.e b.castSucc - s.symm (star u • N.F.e b.castSucc) ∈ 𝔫 • N.P0 := by
       have h1 := hc1 _ hv
@@ -955,8 +947,7 @@ private theorem lift_congruence_lemma {K V : Type} [Field K] [NumberField K] [St
     refine sub_mem_smul_P0_of_eqOn_V0 N 𝔫 s s' hc hs'V _ (Submodule.smul_mem _ _ (lastVector_mem_jointSpan_left N)) ?_
     rw [algebraMap_smul]
     exact Submodule.smul_mem _ m (hermFramePairNormalForm_anisotropic_mem_referenceLattice N)
-  · intro a ha t ht
-    exact lift_congruence_lemma_6 N 𝔫 hn τ s s' hF hun hc hs'I a ha t ht
+  · exact fun a ha t ht => lift_congruence_lemma_6 N 𝔫 hn τ s s' hF hun hc hs'I a ha t ht
 
 theorem lift_congruence : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (H : HermSpace K V), Formalism.HermitianLatticesTheory.IsCMUnram K → ∀ (r : ℕ) (N : NF H r), ∀ 𝔫 : Ideal (𝓞 K), (∀ x ∈ 𝔫, ∃ y ∈ 𝔫, (y : K) = star (x : K)) → ∀ s ∈ N.R, (∀ x ∈ N.P0 ⊓ rs (𝓞 K) (V0 N.F N.F'), s x - x ∈ (Ideal.span {(N.T : 𝓞 K)} * 𝔫) • (N.P0 ⊓ rs (𝓞 K) (V0 N.F N.F'))) → ∃ s' ∈ N.Rs, (∀ y ∈ V0 N.F N.F', s' y = s y) ∧ ∀ x ∈ N.P0, s' x - x ∈ 𝔫 • N.P0 := by
   intro K V _ _ _ _ _ _ _ _ H hK r N 𝔫 hn s hs hc

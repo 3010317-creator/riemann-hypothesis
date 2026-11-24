@@ -71,8 +71,7 @@ theorem exists_finset_eq_sum_cind {X : Type} [AddCommGroup X] [TopologicalSpace 
     rw [Finset.sum_eq_single y]
     · rw [ite_eq_left hYy, mul_one]
       have := hper y (Y - y) hYy
-      rw [add_sub_cancel] at this
-      exact this
+      rwa [add_sub_cancel] at this
     · intro y' hy' hne
       rw [ite_eq_right, mul_zero]
       intro hY'
@@ -95,7 +94,6 @@ theorem exists_finset_eq_sum_cind {X : Type} [AddCommGroup X] [TopologicalSpace 
         (F0.image (QuotientAddGroup.mk (s := L))).image Quotient.out :=
       Finset.mem_image.mpr ⟨_, Finset.mem_image.mpr ⟨y0, hy0, rfl⟩, rfl⟩
     apply hex _ hmem
-    rw [hmk _ hmem, QuotientAddGroup.out_eq']
-    rw [← QuotientAddGroup.eq_iff_sub_mem.mpr hYy0]
+    rw [hmk _ hmem, QuotientAddGroup.out_eq', ← QuotientAddGroup.eq_iff_sub_mem.mpr hYy0]
 
 end GlobalTheory.LinSchur

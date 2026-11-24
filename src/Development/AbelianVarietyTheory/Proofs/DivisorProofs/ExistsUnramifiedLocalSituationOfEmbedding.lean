@@ -102,8 +102,7 @@ theorem norm_algHom {K : IntermediateField ℚ_[l] (Om l)} (f : ↥K →ₐ[ℚ_
     ‖f x‖ = ‖(x : Om l)‖ := by
   rw [← PadicAlgCl.spectralNorm_eq, ← PadicAlgCl.spectralNorm_eq, spectralNorm, spectralNorm]
   have h1 := minpoly.algHom_eq f f.toRingHom.injective x
-  have h2 := minpoly.algHom_eq K.val K.val.toRingHom.injective x
-  exact congrArg spectralValue (h1.trans h2.symm)
+  exact congrArg spectralValue (h1.trans (minpoly.algHom_eq K.val K.val.toRingHom.injective x).symm)
 
 theorem norm_sub_lt_one {x y : Om l} (hx : ‖x‖ < 1) (hy : ‖y‖ < 1) : ‖x - y‖ < 1 := by
   rw [sub_eq_add_neg]
@@ -194,8 +193,7 @@ theorem embOf_injective : Function.Injective (embOf Bw hK (LL := LL)) := by
   have h1 := isInduced_embOf Bw hK e (e.comp (IntermediateField.inclusion hK)) fun _ => rfl
   have h2 := isInduced_embOf Bw hK e' (e'.comp (IntermediateField.inclusion hK)) fun _ => rfl
   rw [← h] at h2
-  have h3 := h1.unique h2
-  exact AlgHom.ext fun x => DFunLike.congr_fun h3 (algebraMap ↥(K0 Bw.Kw) ↥Bw.Kw.1 x)
+  exact AlgHom.ext fun x => DFunLike.congr_fun (h1.unique h2) (algebraMap ↥(K0 Bw.Kw) ↥Bw.Kw.1 x)
 
 theorem embOf_frob (P : LocPrime l) (hE : ¬ (l : ℤ) ∣ discr E) {σ : Equiv.Perm (E →+* PadicAlgCl l)}
     (hσ : GlobalTheory.ExpFrame.IsFrobPerm σ) (e : ↥(K0 Bw.Kw) →ₐ[ℚ_[l]] ↥LL.1) :
@@ -255,8 +253,7 @@ theorem exists_place : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAi
     refine ⟨fun a b => ?_, (hM.isCrysAt_iff P).1 hc, fun i τ hτ a => ?_⟩
     · have h1 : Continuous fun g : ↥(GK Bw.Kw) => ((Bw.e.symm g : ↥(ReciprocityTheory.Gal.Dec (F := E) A)) : Ω ≃ₐ[E] Ω) :=
         continuous_subtype_val.comp Bw.e_symm_cont
-      have h2 := (Units.continuous_val.comp (hr.1.comp h1)).matrix_elem a b
-      exact continuous_induced_rng.2 h2
+      exact continuous_induced_rng.2 ((Units.continuous_val.comp (hr.1.comp h1)).matrix_elem a b)
     · have hτ' := isInduced_embOf Bw hK0 (emb i) τ hτ
       exact (GlobalTheory.Pst.IsJumpsAt.count_eq P hM hτ' (hj _ _ _ hτ') a).symm
 

@@ -118,8 +118,7 @@ theorem mem_wat_iff (R : RealDat D A Ks) (F : Face D A) (hg : R.models_gW) (hW :
       simp only [RealDat.eWf, gaL, RealDat.eC, LinearMap.sum_apply, LinearMap.smul_apply, MultilinearMap.sum_apply,
         MultilinearMap.smul_apply, postOn_apply]
       rfl
-    simp only [h3]
-    exact ⟨fun h => MultilinearMap.ext h, fun h v => by rw [h]⟩
+    simpa only [h3] using ⟨fun h => MultilinearMap.ext h, fun h v => by rw [h]⟩
 
 theorem wat_iff_type : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A) {s : ℕ}, A.fam.Ok s → Core R F → ∀ (b : Bool) i (x : (R.HW i (sg0 D A)).H), (R.HW i _).e x ∈ R.Wat i (sg0 D A) (R.levL F b (sg0 D A)) ↔ (eH R i x = x ∧ ∀ p : (F.lvl b).P, R.gW i (sg0 D A) p x = sg0 D A ((((F.lvl b).ψ⁻¹ p : D.what₂.LLˣ)) : D.what₂.LL) • x) := by
   intro D G _ _ Pl0 T A Ks _ _ _ R F s _ hC b i x

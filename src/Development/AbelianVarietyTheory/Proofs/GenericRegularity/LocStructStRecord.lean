@@ -122,8 +122,7 @@ theorem exists_integral_congr (Ω : Type) [Field Ω] (ι : Type) [Finite ι]
   · rw [map_div₀]
     by_cases hi : i = i₀
     · subst hi
-      rw [h1t, div_one]
-      exact ha
+      rwa [h1t, div_one]
     · have hti : v i t = ((Multiplicative.ofAdd (n i) : Multiplicative ℤ) :
           WithZero (Multiplicative ℤ)) := by
         rw [ht i, ite_eq_right hi]
@@ -181,8 +180,7 @@ theorem exists_subfield_valuation_closure :
     intro a ha γ hγ
     obtain ⟨s, hs, hs'⟩ := ha γ hγ
     refine ⟨-s, S.neg_mem hs, ?_⟩
-    rw [show -a - -s = -(a - s) by ring, Valuation.map_neg]
-    exact hs'
+    rwa [show -a - -s = -(a - s) by ring, Valuation.map_neg]
   case hm =>
 
     intro a b ha hb γ hγ
@@ -475,8 +473,7 @@ private theorem residue_comap_ne_zero_iff_valuation_eq_one {F U : Type} [Field F
     (v : Valuation U (WithZero (Multiplicative ℤ))) (c : v.valuationSubring.comap f) :
     IsLocalRing.residue (v.valuationSubring.comap f) c ≠ 0 ↔ v (f c) = 1 := by
   have h := residue_valuationSubring_ne_zero_iff v (ReciprocityTheory.MultiplicativeHeights.comapInclusion v.valuationSubring f c)
-  rw [← IsLocalRing.ResidueField.map_residue, map_ne_zero] at h
-  exact h
+  rwa [← IsLocalRing.ResidueField.map_residue, map_ne_zero] at h
 
 theorem algebraicIndependent_residue_iff_gauss (F U : Type) [Field F] [Field U] (f : F →+* U)
     (v : Valuation U (WithZero (Multiplicative ℤ))) (σ : Type) (t : σ → U)
@@ -540,9 +537,7 @@ theorem eval_mem_closure {Ω U σ : Type} [Field Ω] [Field U] (f : Ω →+* U)
   intro α _
   apply mul_mem
   · exact Subring.subset_closure (Or.inl ⟨Set.mem_range_self _, hp α⟩)
-  · apply prod_mem
-    intro i _
-    exact pow_mem (Subring.subset_closure (Set.mem_union_right _ (hS i))) _
+  · exact prod_mem (fun i _ => pow_mem (Subring.subset_closure (Set.mem_union_right _ (hS i))) _)
 
 theorem exists_normalise {Ω U σ : Type} [Field Ω] [Field U] (f : Ω →+* U)
     (v : Valuation U (WithZero (Multiplicative ℤ))) (p : MvPolynomial σ Ω) (hp : p ≠ 0) :
@@ -554,8 +549,7 @@ theorem exists_normalise {Ω U σ : Type} [Field Ω] [Field U] (f : Ω →+* U)
     ⟨d, MvPolynomial.mem_support_iff.mpr hd⟩
   have hc : p.coeff α₀ ≠ 0 := MvPolynomial.mem_support_iff.mp hα₀
   have hfc : 0 < v (f (p.coeff α₀)) := by
-    rw [zero_lt_iff, Ne, Valuation.zero_iff, map_eq_zero]
-    exact hc
+    rwa [zero_lt_iff, Ne, Valuation.zero_iff, map_eq_zero]
   refine ⟨p.coeff α₀, C (p.coeff α₀)⁻¹ * p, hc, ?_, fun α => ?_, α₀, ?_⟩
   · rw [← mul_assoc, ← C_mul, mul_inv_cancel₀ hc, C_1, one_mul]
   · rw [coeff_C_mul, map_mul, map_mul, map_inv₀, map_inv₀, inv_mul_le_iff₀ hfc, mul_one]
@@ -610,8 +604,7 @@ theorem quotient_of_gauss {Ω U σ : Type} [Field Ω] [Field U] (f : Ω →+* U)
     eval₂ f t Q', eval_mem_closure f v t S hS Q' hQi, hdQ, ?_⟩
   · have : v (f (c' / c)) = v (f c' * eval₂ f t P' / (f c * eval₂ f t Q')) := by
       rw [map_div₀, map_div₀, map_div₀, map_mul, map_mul, hdP, hdQ, mul_one, mul_one]
-    rw [this]
-    exact hv
+    rwa [this]
   · rw [map_div₀]
     field_simp
 
@@ -673,8 +666,7 @@ theorem integral_elements (K Ω U : Type) [Field K] [Field Ω] [Field U] [Algebr
     exact hk₁ h
   have hfa : f (a k₀) ≠ 0 := (map_ne_zero f).mpr ha₀
   have hva : 0 < v (f (a k₀)) := by
-    rw [zero_lt_iff, Ne, Valuation.zero_iff]
-    exact hfa
+    rwa [zero_lt_iff, Ne, Valuation.zero_iff]
   have hsV : ∀ j, s j ∈ v.valuationSubring := hs
   set t : Fin N ⊕ (Fin D × {k : Fin N // k ≠ k₀}) → U :=
     Sum.elim (fun k => s (0, k)) (fun q => s (q.1.succ, q.2.1)) with ht_def
@@ -761,8 +753,7 @@ theorem dvd_of_vL_le [∀ ζ : Pts O A, IsDVRAt ζ] (c b : ↥(As O A))
     intro ζ
     have h1 := h ζ
     rw [vL_eq_addVal, vL_eq_addVal, IsDiscreteValuationRing.addVal_le_iff_dvd] at h1
-    rw [Ideal.map_span, Set.image_singleton, Ideal.mem_span_singleton]
-    exact h1
+    rwa [Ideal.map_span, Set.image_singleton, Ideal.mem_span_singleton]
   exact Ideal.mem_span_singleton.1 (Ideal.mem_of_localization_maximal (fun P hP => h0 ⟨P, hP⟩))
 
 
@@ -837,8 +828,7 @@ theorem as_le_of_val_of_residue (O A : Type) [CommRing O] [IsDomain O] [IsDiscre
     intro ζ a
     rw [ord_of_mem ζ hU a.2, ← vL_eq_zero_iff]
     constructor
-    · intro h
-      exact hinj h
+    · exact fun h => hinj h
     · intro h
       change (vL ζ a).map (Nat.cast : ℕ → ℤ) = 0
       rw [h]
@@ -865,8 +855,7 @@ theorem as_le_of_val_of_residue (O A : Type) [CommRing O] [IsDomain O] [IsDiscre
     rw [e]
     exact Submodule.add_mem_sup hc (Submodule.smul_mem_smul
       ((IsLocalRing.mem_maximalIdeal ϖ).2 hU.irreducible.not_isUnit) Submodule.mem_top)
-  intro x hx
-  exact key (Submodule.mem_top (x := (⟨x, hx⟩ : ↥(As O A))))
+  exact fun x hx => key (Submodule.mem_top (x := (⟨x, hx⟩ : ↥(As O A))))
 
 end GlobalTheory.LocStructNak
 end -- clump:auto
@@ -967,8 +956,7 @@ theorem core {O A : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] 
             · rw [← hw (Zc ζ) ⟨ζ', hz⟩ a, haζ]; exact h1 _
             · rw [show a (Zc ζ') = 0 from Function.update_of_ne hz _ _, map_zero, map_zero]; exact zero_le
           refine ⟨c, hc, ?_⟩
-          rw [hca, haζ, ← map_sub]
-          exact h2
+          rwa [hca, haζ, ← map_sub]
         · obtain ⟨c, hc, rfl⟩ := hT u hu
           exact ⟨c, hc, by rw [sub_self, map_zero]; exact zero_lt_one⟩
       | zero => exact ⟨0, C.zero_mem, by rw [map_zero, sub_self, map_zero]; exact zero_lt_one⟩
@@ -982,8 +970,7 @@ theorem core {O A : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] 
       | neg x _ hx =>
         obtain ⟨c, hc, h1⟩ := hx
         refine ⟨-c, C.neg_mem hc, ?_⟩
-        rw [map_neg, ← neg_sub', Valuation.map_neg]
-        exact h1
+        rwa [map_neg, ← neg_sub', Valuation.map_neg]
       | mul x y _ _ hx hy =>
         obtain ⟨c, hc, h1⟩ := hx
         obtain ⟨c', hc', h2⟩ := hy
@@ -1371,8 +1358,7 @@ theorem residue_at (hU : IsUnif (OsK (xplus X E hM) la G.w) (unifO (xplus X E hM
       exact g1 (jz.comp (algebraMap B.KO Ω)) (fun a => jz_const h gF jz h2 h3 a) p hp hp')
     g hg hg1
   refine ⟨a, ha, d, hd, hd1, ?_⟩
-  rw [← hgd, ← sub_mul, map_mul, hd1, mul_one]
-  exact hgb
+  rwa [← hgd, ← sub_mul, map_mul, hd1, mul_one]
 
 end Point
 

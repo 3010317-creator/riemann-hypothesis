@@ -121,8 +121,7 @@ theorem gm_transfer {φ : K → (Y ⟶ X)} {φ' : K → (Y' ⟶ X)} {ε : K → 
   have m : ∀ i : K → L.ι, r z ∈ LB.wchart L φ i → r' z ∈ LB.wchart L φ' i := fun i hi =>
     Set.mem_iInter.2 fun k => by
       have h1 : (r ≫ φ k) z ∈ L.U (i k) := Set.mem_iInter.1 hi k
-      rw [hr k] at h1
-      exact h1
+      rwa [hr k] at h1
   rw [gen_trans ht r z hj' hj, gen_trans ht' r' z (m _ hj') (m _ hj), h]
   simp only [trF, hr]
 
@@ -503,8 +502,7 @@ theorem exists_model (hl : IsLocalHom u.j) (hj : Function.Injective u.j) (K : In
           DegPre.gtφ u.D.toPre (PadicAlgCl p) g.b χ₀ k := fun k => by
         have := (TorusCoord.comp_eq_of_left b g.b (spMap ((OO p).subtype.comp κ)) (𝟙 _)
           (hb.trans (Category.id_comp _).symm)).1 χ₀ k
-        rw [Category.id_comp, ← TorusCoord.gtφT_eq] at this
-        exact this
+        rwa [Category.id_comp, ← TorusCoord.gtφT_eq] at this
       refine exists_gen_extend hL ((OO p).subtype.comp κ) hφ (g.s χ₀) (g.isGen χ₀)
         (fun k => J (DegPre.gtφ u.D.toPre (PadicAlgCl p) g.b χ₀ k)) ?_ hau.unit (congrArg Subtype.val ha)
       refine (top_le_iff_cpt (𝟙 (Sp W)) (LB.wchart u.D.toPre.P.L (DegPre.gtφT u.D.toPre _ b χ₀)
@@ -512,8 +510,7 @@ theorem exists_model (hl : IsLocalHom u.j) (hj : Function.Injective u.j) (K : In
       refine Set.mem_iInter.2 fun k => ?_
       have h3 := (top_le_iff_cpt _ _).1 (hJ (spMap κ ≫ DegPre.gtφT u.D.toPre _ b χ₀ k)
         ((Category.assoc _ _ _).trans ((congrArg _ (gtφT_over b χ₀ k)).trans ef)))
-      rw [← Category.assoc, ← eκ, hφ k, Scheme.Hom.comp_apply, spMap_cpt] at h3
-      exact h3
+      rwa [← Category.assoc, ← eκ, hφ k, Scheme.Hom.comp_apply, spMap_cpt] at h3
   exact ⟨W, inferInstance, inferInstance, f, κ, hκl, hc, hW, ξ, by rw [h₁]; exact hb, h₂⟩
 
 theorem exists_integral_point : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (g : GtPtF u.D.toPre (PadicAlgCl p)), u.GtN g 0 → ∃ c : Sp (OO p) ⟶ u.G.left, c ≫ u.G.hom = spMap u.j ∧ u.Lev c g := by
@@ -544,8 +541,7 @@ theorem exists_integral_point : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRi
       𝟙 _ ≫ DegPre.gtφ u.D.toPre (PadicAlgCl p) g.b χ k := fun k => by
     have := (TorusCoord.comp_eq_of_left ξ.b g.b (spMap ((OO p).subtype.comp κ)) (𝟙 _)
       (h₁.trans (Category.id_comp _).symm)).1 χ k
-    rw [← TorusCoord.gtφT_eq] at this
-    exact this
+    rwa [← TorusCoord.gtφT_eq] at this
   have hm := mem_wchart_of_eq _ _ (fun k => (hφ k).symm) _ ((top_le_iff_cpt _ _).1 hjj)
   rw [Scheme.Hom.comp_apply, spMap_cpt] at hm
   have ht := (top_le_iff_cpt (spMap κ) _).2 hm

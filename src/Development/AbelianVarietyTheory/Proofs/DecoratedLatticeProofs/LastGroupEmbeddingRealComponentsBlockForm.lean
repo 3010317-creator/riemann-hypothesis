@@ -107,8 +107,7 @@ theorem isBlock_of_frame {p q N n : ℕ} (hp : p = N) (hq : q = n) (hN : N = n +
     exact e
   · have e := congrFun h2 (Br.iL rfl)
     simp only [Matrix.mulVec, dotProduct, mul_ite, mul_one, mul_zero] at e
-    rw [sum_ite_val _ _ (by omega), ite_eq_left (by simp [Br.iL])] at e
-    exact e
+    rwa [sum_ite_val _ _ (by omega), ite_eq_left (by simp [Br.iL])] at e
 
 end GlobalTheory.Mem.Col2.TC.BlockMatrixCriteria
 
@@ -184,8 +183,7 @@ theorem piT_coe_ne_zero {B : GlobalTheory.Mem.Base} (X : PreX B.toPre) (u : B.Wo
   have h1 := X.T_gt u
   have h2 := X.a_gt
   rw [hT] at h1
-  have h3 := h2.trans h1
-  exact (Nat.not_lt_zero _) (by exact_mod_cast h3)
+  exact (Nat.not_lt_zero _) (by exact_mod_cast (h2.trans h1))
 
 theorem isBlock_infM_emb : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)) (u : B.Word) (θ : InfFam (I.rec7 l Z)), IsInfFam θ → ∀ (emb : GA (I.rec7 l Z) (I.rec7 l Z).sp.X' →* GA (I.rec7 l Z) ((I.rec7 l Z).sp.X B.R.m)) (hN : B.R.N B.R.m = (B.R.N B.R.m - 1) + 1), IsEmbTop (D := I.rec7 l Z) (TC.z0 X u) emb → ∀ (k : GA (I.rec7 l Z) (I.rec7 l Z).sp.X') (τ : (I.rec7 l Z).what₂.Tau), GlobalTheory.BranchFormula.IsBlock hN (infM θ _ (rankN (I.rec7 l Z) B.R.m le_rfl) (emb k) τ) (infM θ _ (rankP (I.rec7 l Z)) k τ) 1 := by
   intro B X I _hOk hP l Z u θ _hθ emb hN hemb k τ

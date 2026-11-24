@@ -53,8 +53,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
   {Xo : Moduli Dw l} {c : Coeff l}
 
 theorem exists_embK_ne {σ σ' : E →+* ℂ} (h : σ ≠ σ') : ∃ a : 𝓞 E, embK c σ a ≠ embK c σ' a := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   refine h (IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) (RingHom.ext fun a => ?_))
   have := congrArg Subtype.val (hc a)
   simpa [embK, embF] using this
@@ -122,11 +121,9 @@ theorem GlobalTheory.FlagMod.FieldFlag.atlas_isCover : ∀ (E : Type) [Field E] 
       by_cases hij : i = j
       · subst hij; simp
       · rw [Matrix.one_apply_ne hij, ite_eq_right]
-        intro h'
-        exact hij (eq_of_heq (Sigma.mk.inj_iff.1 h').2)
+        exact fun h' => hij (eq_of_heq (Sigma.mk.inj_iff.1 h').2)
     · rw [eCh_w_mul_u _ hs, Matrix.zero_apply, ite_eq_right]
-      intro h'
-      exact hs (congrArg Sigma.fst h')
+      exact fun h' => hs (congrArg Sigma.fst h')
   · have h0 : ⊤ ≤ (spMap φ ≫ (A.V b).2.fromSpec) ⁻¹ᵁ (A.k b).V := le_preimage_comp _ (tau_le (A.aff b) le_rfl)
     have h0' : ⊤ ≤ (spMap φ' ≫ (A.V b').2.fromSpec) ⁻¹ᵁ (A.k b').V :=
       le_preimage_comp _ (tau_le (A.aff b') le_rfl)

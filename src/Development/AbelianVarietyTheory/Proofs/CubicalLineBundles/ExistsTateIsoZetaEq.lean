@@ -133,9 +133,7 @@ theorem _root_.GlobalTheory.TateRoot.exists_tateIso_zeta_eq : ∀ (E : Type) [Fi
   haveI : NeZero N := ⟨hN.ne'⟩
   obtain ⟨i, -, hi⟩ := hζ.eq_pow_of_pow_eq_one hz.pow_eq_one
   have hcop : IsCoprime (i : ℤ) N := by
-    rw [Nat.isCoprime_iff_coprime]
-    rw [← hζ.pow_iff_coprime hN, hi]
-    exact hz
+    rwa [Nat.isCoprime_iff_coprime, ← hζ.pow_iff_coprime hN, hi]
   suffices h : ∃ g : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sim D, ∃ hν : (∀ (n m : ℕ), 0 < n → 0 < m → (n : ℤ) ∣ g.ν (n * m) - g.ν n ∧
       IsCoprime (g.ν n) n), (N : ℤ) ∣ g.ν N - i by
     obtain ⟨g, hν, hg⟩ := h

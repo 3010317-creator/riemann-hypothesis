@@ -201,8 +201,7 @@ theorem GCoord.c_eq_one_of_gS_mem : ∀ (D : D7) (X : HidaSetting D) (Y : Full X
   obtain ⟨i, hi⟩ := hg
   have hchar : Loc.resChar p = D.host.g i := by
     have hz : ((D.host.g i : ℕ) : 𝓞 D.host.F ⧸ p.asIdeal) = 0 := by
-      rw [← map_natCast (Ideal.Quotient.mk p.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
-      exact hi
+      rwa [← map_natCast (Ideal.Quotient.mk p.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
     have hd : ringChar (𝓞 D.host.F ⧸ p.asIdeal) ∣ D.host.g i := ringChar.dvd hz
     exact (Nat.prime_dvd_prime_iff_eq (D.s.atP p).ellPrime.out (D.host.g_prime i)).1 hd
   have hgp : gpart p = D.host.g i := by
@@ -553,8 +552,7 @@ theorem tri_coeffs {g : Fin (r + 1) → S.V} (hg : ∀ a (j : Fin r), hf L S.Hm 
     simp only [sub_smul, smul_sub, one_smul]; abel
   have h5 := (S.spanTo g b).sub_mem ((S.spanTo g b).sub_mem e1 e2) ((S.spanTo g b).smul_mem ((c b b : L.O) : E) e3)
   rw [← e4] at h5
-  have h6 := coef_zero hli (s := {i | (i : ℕ) < b}) (x := b) (by simp) h5
-  simpa [sub_eq_zero] using h6
+  simpa [sub_eq_zero] using coef_zero hli (s := {i | (i : ℕ) < b}) (x := b) (by simp) h5
 
 end GlobalTheory.HL.FrameChange
 
@@ -644,7 +642,6 @@ theorem mem_lat_span_smul_iff (A : Places F E sig) {n : ℕ} (p : HeightOneSpect
   have hbc : ∀ v : Fin n → E, A.bc p (a • v) = φ (A.bc p v) := by
     intro v
     funext i
-    show (A.loc p).ιE ((a : E) * v i) = (A.loc p).ιE (a : E) * (A.loc p).ιE (v i)
     exact map_mul _ _ _
   have hset : A.bc p '' ((Ideal.span {a} • Λ : Submodule (𝓞 E) (Fin n → E)) : Set (Fin n → E)) =
       φ '' (A.bc p '' (Λ : Set (Fin n → E))) := by
@@ -697,8 +694,7 @@ theorem inTh_lat_iff : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) {T T' : D.h
     intro i hi
     apply resChar_eq_of_mem (below D P) (D.host.g_prime i)
     change _ ∈ Ideal.comap _ P.asIdeal
-    rw [Ideal.mem_comap, map_natCast]
-    exact hi
+    rwa [Ideal.mem_comap, map_natCast]
   have hg : ((gS D : ℕ) : 𝓞 D.host.E) =
       ((D.host.g 0 : ℕ) : 𝓞 D.host.E) * ((D.host.g 1 : ℕ) : 𝓞 D.host.E) := by
     unfold gS
@@ -713,8 +709,7 @@ theorem inTh_lat_iff : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) {T T' : D.h
     · exact ⟨1, 0, D.host.g_ne.symm, h, by rw [hg, mul_comm]⟩
   have hres := hmem i hi
   have hj : ((D.host.g j : ℕ) : 𝓞 D.host.F) ∉ (below D P).asIdeal := by
-    intro hj'
-    exact hij (hres.symm.trans (resChar_eq_of_mem (below D P) (D.host.g_prime j) hj'))
+    exact fun hj' => hij (hres.symm.trans (resChar_eq_of_mem (below D P) (D.host.g_prime j) hj'))
   have hsome : ((D.s.atP (below D P)).split).isSome = true :=
     (D.s_split (below D P)).2 (by rw [hres]; fin_cases i <;> simp)
   obtain ⟨sg, hsg⟩ := Option.isSome_iff_exists.1 hsome
@@ -769,8 +764,7 @@ theorem inTh_lat_iff : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) {T T' : D.h
   have hιS : ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc (below D P)).ιE ((((gS D : ℕ) : 𝓞 D.host.E)) : D.host.E) =
       ((D.host.g i : ℕ) : ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc (below D P)).Ep) *
         ((D.host.g j : ℕ) : ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc (below D P)).Ep) := by
-    rw [hgij]
-    exact hι
+    rwa [hgij]
   obtain ⟨a, ha⟩ : ∃ a : ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc (below D P)).Ep, ((D.host.g i : ℕ) : ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc (below D P)).Ep) = a := ⟨_, rfl⟩
   obtain ⟨b, hb⟩ : ∃ b : ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc (below D P)).Ep, ((D.host.g j : ℕ) : ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc (below D P)).Ep) = b := ⟨_, rfl⟩
   rw [ha, hb] at hιS
@@ -914,8 +908,7 @@ theorem loc_cong : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what�
     apply hinj
     rw [hzv, LinearMap.map_smul]
     rfl
-  rw [← this]
-  exact hz
+  rwa [← this]
 
 end GlobalTheory.HL.LocCong
 end -- clump:auto
@@ -957,8 +950,7 @@ theorem frame_mem_locP (D : D7) {T : D.host.E} (F0 : FlagG (VS D) D.R.rS T) (Λ 
   induction a using Fin.lastCases with
   | last =>
     refine ⟨1, P.asIdeal.primeCompl.one_mem, ?_⟩
-    simp only [one_smul, frame, Formalism.MainNotions.S.FlagG.fvec, Fin.snoc_last]
-    exact hL.1
+    simpa only [one_smul, frame, Formalism.MainNotions.S.FlagG.fvec, Fin.snoc_last] using hL.1
   | cast i =>
     obtain ⟨c, -, hc1, hc⟩ := hF.1.1 P
     have hci : c i = 1 := hc1 hP i
@@ -1047,8 +1039,7 @@ theorem th_mem (S : Frames L r k) : algebraMap F E S.th ∈ L.O := by
 theorem th_ne (S : Frames L r k) : S.th ≠ 0 := by
   unfold Frames.th
   split_ifs
-  · intro h
-    exact S.ϖ_irr.ne_zero (Subtype.ext h)
+  · exact fun h => S.ϖ_irr.ne_zero (Subtype.ext h)
   · exact one_ne_zero
 
 theorem inTh_mem (S : Frames L r k) {Λ : Submodule L.O S.V} {x : S.V} (h : S.InTh Λ x) : x ∈ Λ := by
@@ -1352,8 +1343,7 @@ theorem eq_map_of_local (A : Places F E sig) {n : ℕ} {Λ Γ : Submodule (𝓞 
     obtain ⟨b, hb, hbe⟩ := (Submodule.mem_smul_pointwise_iff_exists _ _ _).1 hy'
     have e : g (A.bc p (x.symm y)) = A.bc p y := by rw [hg]; simp
     have hb' : b = A.bc p (x.symm y) := g.injective (by rw [e]; exact hbe)
-    rw [← hb']
-    exact hb
+    rwa [← hb']
   · rintro ⟨z, hz, rfl⟩ p
     obtain ⟨g, hg, hp⟩ := h p
     rw [hp]

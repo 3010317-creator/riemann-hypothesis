@@ -61,8 +61,7 @@ namespace GlobalTheory.StepAverage
 
 theorem isClosedEmbedding_entries {n : ℕ} (ε : Fin n → Bool) :
     Topology.IsClosedEmbedding (fun g : UJ ε => (fun i j => umat g i j : Fin n → Fin n → ℂ)) := by
-  have key := (uJEmb n ε).1
-  exact key
+  exact (uJEmb n ε).1
 
 theorem isClosedEmbedding_entries_inf (I : AutInst) :
     Topology.IsClosedEmbedding (fun g : I.Ginf =>
@@ -134,8 +133,7 @@ theorem tens_average (B : RowsAut) (hU : ∀ v, IsURepOn (UJset (B.I.ε v)) (B.�
   have hprod := integral_fintype_prod_eq_prod (μ := fun v => muG (B.I.ε v))
     (fun v (h : UJ (B.I.ε v)) => F v (fun i j => uMat h i j) * ⟪x v, B.σ v (uMat h) (w v)⟫_ℂ)
   rw [hglob, hin, hμ]
-  refine Eq.trans ?_ hprod.symm
-  exact Finset.prod_congr rfl (fun v _ => hloc v)
+  exact Eq.trans (Finset.prod_congr rfl (fun v _ => hloc v)) hprod.symm
 
 theorem exists_smooth_average : GlobalTheory.DSId.StrictLow → ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ), IsDSData B d → ∀ P : ℕ, ∀ u ∈ VP B P, ∃ F : (InfinitePlace B.I.F → Fin B.I.n → Fin B.I.n → ℂ) → ℂ, ContDiff ℝ ∞ F ∧ HasCompactSupport F ∧ u = ∫ g, F (fun v i j => uMat (g v) i j) • B.σs g (B.tens B.w) ∂(muInf B.I) := by
   intro hSL B d hd P u hu

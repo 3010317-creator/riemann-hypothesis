@@ -190,8 +190,7 @@ theorem mem_basicOpen_cst (f : X ⟶ Spec (CommRingCat.of R)) (W : X.Opens) (r :
   refine (mem_basicOpen_rs le_top _ hx).trans ?_
   have e₁ := f.preimage_basicOpen_top ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom r)
   have e₂ := basicOpen_eq_of_affine (R := CommRingCat.of R) r
-  refine (congrArg (x ∈ ·) e₁).to_iff.symm.trans ?_
-  exact (congrArg (f x ∈ ·) e₂).to_iff
+  exact (congrArg (x ∈ ·) e₁).to_iff.symm.trans (congrArg (f x ∈ ·) e₂).to_iff
 
 section
 variable {f : X ⟶ Spec (CommRingCat.of R)} {M : LB X} (P : Perf f M)
@@ -222,8 +221,7 @@ theorem triv_of_loc (v : Fin P.a → R') (hv : (P.D₀.map g).mulVec v = 0)
   have hu : ∀ j, IsUnit ((E ⟨v, hv⟩).f j) := fun j => isUnit_of_basicOpen _ fun y hy => by
     obtain ⟨i, hi⟩ := H y
     refine sec_basicOpen (E ⟨v, hv⟩) (j := fun _ => P.ch i) hy ?_
-    rw [← mem_basicOpen_rs (le_pull M π (P.le i)) _ (X'.basicOpen_le _ hi), hE]
-    exact hi
+    rwa [← mem_basicOpen_rs (le_pull M π (P.le i)) _ (X'.basicOpen_le _ hi), hE]
   exact ⟨⟨fun j => (hu j).unit⟩, fun i j => Units.ext ((E ⟨v, hv⟩).compat i j)⟩
 
 theorem loc_of_triv (hM : M.IsLB) (H : Triv (M.pull π)) : ∃ v : Fin P.a → R', (P.D₀.map g).mulVec v = 0 ∧
@@ -312,7 +310,6 @@ theorem seesaw : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (f : X ⟶ Spec (C
       exact fun hm => (f' y).isPrime.ne_top (Ideal.eq_top_of_isUnit_mem _ hm (isUnit_of_mul_isUnit_right hr))
     obtain ⟨i, hi⟩ := TopologicalSpace.Opens.mem_iSup.1 hy
     refine ⟨i, ?_⟩
-    rw [loc_comp P h, ← Scheme.preimage_basicOpen]
-    exact hi
+    rwa [loc_comp P h, ← Scheme.preimage_basicOpen]
 
 end GlobalTheory.AbLaw.Seesaw

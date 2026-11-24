@@ -400,8 +400,7 @@ private lemma ecoef_mem_algebraicClosure_of_isCoef {F : Type} [Field F] [NumberF
   refine mul_mem (mul_mem ?_ ?_) (prod_mem fun i _ ↦ pow_mem ?_ _)
   · rw [mem_algebraicClosure_iff]
     by_cases hξ : ξ = 0
-    · rw [hξ, ha.1]
-      exact ha₀
+    · rwa [hξ, ha.1]
     · obtain ⟨m, hm⟩ := ha.2.1 ξ hξ
       rw [hm]
       exact isAlgebraic_int _
@@ -604,9 +603,7 @@ theorem latAlg_of_siegelKlingen : GlobalTheory.Published.SiegelKlingenDeligneRib
   classical
   obtain ⟨hUn, hCM, hφι, hs, h𝔣, hQ⟩ := hDat
   have hf2 : 2 ≤ Module.finrank ℚ (maximalRealSubfield E) := GlobalTheory.LatAlgebraic.two_le_finrank hUn
-  have hc0 : condQ 𝔣 Q ≠ ⊥ := by
-    show 𝔣 * ∏ q ∈ Q, q.asIdeal ≠ 0
-    exact mul_ne_zero h𝔣.1 (Finset.prod_ne_zero_iff.2 fun q _ => q.ne_bot)
+  have hc0 : condQ 𝔣 Q ≠ ⊥ := mul_ne_zero h𝔣.1 (Finset.prod_ne_zero_iff.2 fun q _ => q.ne_bot)
   have hΩ0 : Ω₀ ≠ 0 := by
     rintro rfl
     exact latDisc_ne_zero Λ₀ (by rw [← hΩ]; simp)
@@ -950,9 +947,7 @@ theorem latIntUnr : GlobalTheory.IndefiniteRowSideFullHecke.DefiningCoordinates.
   have hCM : IsCMType φ := hF.2.2.2.2.2.2.1
   have hcard := card_eq_finrank hCM
   have hf2 : 2 ≤ Module.finrank ℚ (maximalRealSubfield E) := hcard ▸ hF.2.2.2.2.2.1
-  have hc0 : condQ 𝔣 Q ≠ ⊥ := by
-    show 𝔣 * ∏ q ∈ Q, q.asIdeal ≠ 0
-    exact mul_ne_zero h𝔣.1 (Finset.prod_ne_zero_iff.2 fun q _ => q.ne_bot)
+  have hc0 : condQ 𝔣 Q ≠ ⊥ := mul_ne_zero h𝔣.1 (Finset.prod_ne_zero_iff.2 fun q _ => q.ne_bot)
   obtain ⟨⟨g, hg⟩, hD⟩ := (((hSt E I φ hf2 hCM).1 s hs).1 (condQ 𝔣 Q) y hc0).1
   obtain ⟨u, hu⟩ := exists_list_count κ
   have hDg := ((hD g hg).2 κ u hu).1 S hS
@@ -971,8 +966,7 @@ theorem latIntUnr : GlobalTheory.IndefiniteRowSideFullHecke.DefiningCoordinates.
       (((a i * b i * ((Real.sqrt d : ℝ) : ℂ) / (2 * (Real.pi : ℂ)))⁻¹) ^ κ i *
         (a i / Ω) ^ (2 * s + 2 * κ i)) =
       (2 * (Real.pi : ℂ) / ((Real.sqrt d : ℝ) : ℂ)) ^ κ i / Ω ^ (2 * s + 2 * κ i) := by
-    intro i
-    exact per_factor _ _ _ _ _ _ _ (hab i).1 (hab i).2.1 hΩ0 hsd hpi
+    exact fun i => per_factor _ _ _ _ _ _ _ (hab i).1 (hab i).2.1 hΩ0 hsd hpi
   have hX : ((C0 E d (2 * s) κ : ℝ) : ℂ) * S 0 / Ω ^ Formalism.PairingDivisionLocalBalance.wtM (2 * s) κ =
       (-1) ^ (∑ i, κ i) * ((GlobalTheory.IndefiniteRowSideFullHecke.DefiningCoordinates.iterD u g 0 *
         ∏ i, ((b i / a i) ^ κ i / a i ^ (2 * s)))) *

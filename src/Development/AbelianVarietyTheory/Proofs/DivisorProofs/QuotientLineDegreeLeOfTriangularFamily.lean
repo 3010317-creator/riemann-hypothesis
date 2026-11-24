@@ -216,9 +216,7 @@ theorem admissible_degree_twistFamilyAtPlaceByScalar (k F : Type) [Field k] [Fie
     · exact Or.inr hv'
     · exact Or.inl (show ¬ Unimod v (h v) from fun hu => hv (by rw [twistAt_of_ne _ _ _ _ hv']; exact hu))
   · have hfin : (Function.support fun v => ord v (h v).det).Finite := by
-      refine hh.2.subset fun v hv => ?_
-      intro hu
-      exact hv (by simp [ord, hu.2])
+      exact hh.2.subset fun v hv => fun hu => hv (by simp [ord, hu.2])
     have hfin' : (Function.support fun v : Place k F => if v = v₀ then (n : ℤ) * e else 0).Finite :=
       (Set.finite_singleton v₀).subset fun v hv => by
         by_contra h'
@@ -295,8 +293,7 @@ theorem binary_form_splits : ∀ (F : Type) [Field F] (m : ℕ) (p : Fin (m + 1)
   have hdeg : q.natDegree ≤ m := by
     rw [hq_def]
     refine Polynomial.natDegree_sum_le_of_forall_le _ _ ?_
-    intro i _
-    exact (Polynomial.natDegree_C_mul_X_pow_le _ _).trans (Nat.lt_succ_iff.mp i.2)
+    exact fun i _ => (Polynomial.natDegree_C_mul_X_pow_le _ _).trans (Nat.lt_succ_iff.mp i.2)
   let E := q.SplittingField
   set Q : E[X] := q.map (algebraMap F E) with hQ_def
   have hsplit : Q.Splits := Polynomial.SplittingField.splits q
@@ -714,8 +711,7 @@ theorem val_aeval_le (t : F) (p : k[X]) (v : Place k F) :
 theorem val_le_of_monic (t y : F) (P : F[X]) (hP : P.Monic) (hy : P.eval y = 0) (c : ℕ)
     (v : Place k F) (hc : ∀ i < P.natDegree, v.1 (P.coeff i) ≤ Mx t v ^ c) :
     v.1 y ≤ Mx t v ^ c := by
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have hM : 1 ≤ Mx t v ^ c := one_le_pow₀ (one_le_Mx t v)
   have hy1 : 1 < v.1 y := lt_of_le_of_lt hM hlt
   have hy0 : v.1 y ≠ 0 := ne_of_gt (lt_trans zero_lt_one hy1)
@@ -839,8 +835,7 @@ theorem exists_many_bounded_by_pow : ∀ (k F : Type) [Field k] [IsAlgClosed k] 
     have heq : (fun n : ℕ => t ^ n) = (aeval t).toLinearMap ∘ Polynomial.basisMonomials k := by
       funext n
       simp [Polynomial.coe_basisMonomials]
-    rw [heq]
-    exact h1
+    rwa [heq]
   have hpow : LinearIndependent k (fun i : Fin L => (IntermediateField.AdjoinSimple.gen k t) ^ (i : ℕ)) := by
     have heq : (IsScalarTower.toAlgHom k k⟮t⟯ F).toLinearMap ∘
         (fun i : Fin L => (IntermediateField.AdjoinSimple.gen k t) ^ (i : ℕ)) =
@@ -1005,8 +1000,7 @@ theorem riemann_cofinal : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k
     by_contra hw'
     exact hw (hPint w (by by_contra h'; exact hw' ((hpole w).1 h')))
   have hhsupp : Function.support (fun v : Place k F => ord v h) ⊆ {v : Place k F | v.1 h ≠ 1} := by
-    intro v hv hv1
-    exact hv (show ord v h = 0 by simp [ord, hv1])
+    exact fun v hv hv1 => hv (show ord v h = 0 by simp [ord, hv1])
   obtain ⟨g, hg⟩ : ∃ g : Place k F → ℤ, g = fun v => ((2 * M : ℕ) : ℤ) * P v + ord v h := ⟨_, rfl⟩
   have hgfin : (Function.support g).Finite := by
     refine (hPfin.union hhfin).subset fun v hv => ?_
@@ -1067,8 +1061,7 @@ theorem riemann_cofinal : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k
       (LinearMap.ker_eq_bot.2 (mul_left_injective₀ (inv_ne_zero hh0)))
   ·
     have hsub : Function.support g ⊆ ↑(Finsupp.ofSupportFinite g hgfin).support := by
-      intro v hv
-      exact Finsupp.mem_support_iff.2 hv
+      exact fun v hv => Finsupp.mem_support_iff.2 hv
     have hdeg : ((Finsupp.ofSupportFinite g hgfin).sum fun _ m => m) =
         ((2 * M : ℕ) : ℤ) * Module.finrank k⟮t⟯ F := by
       have h1 : ((Finsupp.ofSupportFinite g hgfin).sum fun _ m => m) = ∑ᶠ v, g v := by
@@ -1616,8 +1609,7 @@ theorem GlobalTheory.Nef.deg_le_two_mul_of_triangular : ∀ (k F : Type) [Field 
     push_cast at hreal
     have hm1 : (0 : ℝ) ≤ (m : ℝ) + 1 := by positivity
     nlinarith
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have hpos : (0 : ℝ) < (deg g : ℝ) - 2 * b := by linarith
   obtain ⟨m, hm⟩ := exists_nat_gt (2 * (1 + γ) / ((deg g : ℝ) - 2 * b))
   have hk := key m
@@ -1660,8 +1652,7 @@ theorem val_corner {r : ℕ} (v : Place k K) (M : Matrix (Fin (r + 1)) (Fin (r +
     (hM : ∀ i : Fin r, M i.succ 0 = 0) (h1 : Unimod v M)
     (h2 : Unimod v (M.submatrix Fin.succ Fin.succ)) : v.1 (M 0 0) = 1 := by
   have h := h1.2
-  rw [det_fac M hM, map_mul, h2.2, mul_one] at h
-  exact h
+  rwa [det_fac M hM, map_mul, h2.2, mul_one] at h
 
 theorem nrm_cons {n : ℕ} (v : Place k K) (x : K) (y : Fin n → K) :
     nrm v (Fin.cons x y : Fin (n + 1) → K) = max (v.1 x) (nrm v y) := by

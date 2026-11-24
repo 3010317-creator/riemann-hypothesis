@@ -66,8 +66,7 @@ theorem isUp_iff_isUniUp (u : GG g N) : IsUp g N u ↔ IsUniUp u.val := by
     refine ⟨h2 a b, fun hab => ?_⟩
     subst hab
     exact h1 a
-  · intro h
-    exact ⟨fun a => (h a a).2 rfl, fun a b hab => (h a b).1 hab⟩
+  · exact fun h => ⟨fun a => (h a a).2 rfl, fun a b hab => (h a b).1 hab⟩
 
 
 open Formalism.MainNotions.ArithmeticCylinders in
@@ -94,14 +93,12 @@ theorem sum_ite_entN (M : Matrix (Fin N) (Fin N) (ZMod g)) (a : Fin N) (c : ℕ)
     · simp
     · intro b _ hb
       rw [ite_eq_right]
-      intro hbc
-      exact hb (Fin.ext hbc)
+      exact fun hbc => hb (Fin.ext hbc)
     · simp
   · apply Finset.sum_eq_zero
     intro b _
     rw [ite_eq_right]
-    intro hbc
-    exact h ⟨a.isLt, hbc ▸ b.isLt⟩
+    exact fun hbc => h ⟨a.isLt, hbc ▸ b.isLt⟩
 
 private theorem sum_superdiag_eq_sum_entN (M : Matrix (Fin N) (Fin N) (ZMod g)) (hN : 0 < N) :
     (∑ a : Fin N, ∑ b : Fin N, if (b : ℕ) = a + 1 then M a b else 0) =
@@ -232,8 +229,7 @@ theorem coeff_eJ (ψ : AddChar (ZMod g) ℂ) (hψ : ψ ≠ 1) (s k : ℕ) (hN : 
       rw [show b = ⟨s + k, by omega⟩ from Fin.ext h3]
       have := H a h1 h2
       unfold entN at this
-      rw [dite_eq_left ⟨a.isLt, by omega⟩] at this
-      exact this
+      rwa [dite_eq_left ⟨a.isLt, by omega⟩] at this
     · intro H a h1 h2
       unfold entN
       rw [dite_eq_left ⟨by omega, by omega⟩]

@@ -74,8 +74,7 @@ theorem exists_orthonormal_on {d : ℕ} (p : Fin d → Prop) [DecidablePred p] (
     · subst hik
       simp
     · rw [ite_eq_right hik, ite_eq_right]
-      intro h
-      exact hik (congrArg Subtype.val (e.injective h))
+      exact fun h => hik (congrArg Subtype.val (e.injective h))
   · have hset : (fun i => if h : p i then ((b (e ⟨i, h⟩) : G) : V) else 0) '' {i | p i} =
         G.subtype '' Set.range b := by
       ext x
@@ -164,8 +163,7 @@ theorem exists_orthonormal_adapted {d m : ℕ} (P : ℕ → Submodule ℝ V) (de
           simp only [hi']
         rw [hsplit, Set.image_union, Submodule.span_union, ← h1, himg, ← hfs c]
         exact (Submodule.sup_orthogonal_inf_of_hasOrthogonalProjection (hP c)).symm
-    intro c
-    exact key m c (by omega)
+    exact fun c => key m c (by omega)
 
 end Real
 
@@ -218,8 +216,7 @@ theorem exists_re_orthonormal_adapted {n d m : ℕ} (P : ℕ → Submodule ℝ (
         P c := by
       ext X
       simp
-    rw [h3] at h2
-    exact h2
+    rwa [h3] at h2
 
 
 open GlobalTheory.RadicalAlg Formalism.REAL in
@@ -297,8 +294,7 @@ theorem exists_skew_basis : ∀ (n d m : ℕ) (ε : Fin n → Bool) (A : ℕ →
       split_ifs <;> simp
     · rw [trace_im_eq_zero ε (hBfix i) (hBfix k)]
       split_ifs <;> simp
-  · intro i
-    exact (negAdj_eq_iff ε (B i)).mp (hBfix i)
+  · exact fun i => (negAdj_eq_iff ε (B i)).mp (hBfix i)
   · intro c
     have hmem : ∀ Y ∈ P c, Y ∈ Submodule.span ℂ (B '' {i | c ≤ deg i}) := fun Y hY =>
       Submodule.span_le_restrictScalars (R := ℝ) (S := ℂ) (s := B '' {i | c ≤ deg i})

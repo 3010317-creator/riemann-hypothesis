@@ -249,13 +249,11 @@ theorem unifAt_cls : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [Comm
   let ν : ℕ → ℤ := fun n => if hn : 0 < n ∧ n.Coprime p then Classical.choose (hroot n hn.1 hn.2) else 0
   have hf : ∀ (n : ℕ) (hn : 0 < n) (hnp : n.Coprime p) a, I.ev n a = e ((n : ℂ)⁻¹ • P (f n a)) := by
     intro n hn hnp a
-    simp only [f, dite_eq_left (And.intro hn hnp)]
-    exact Classical.choose_spec (hlift n hn hnp) a
+    simpa only [f, dite_eq_left (And.intro hn hnp)] using Classical.choose_spec (hlift n hn hnp) a
   have hν : ∀ (n : ℕ) (hn : 0 < n) (hnp : n.Coprime p), IsCoprime (ν n) n ∧
       ((I.ζ n : ℂˣ) : ℂ) = Complex.exp (-(2 * Real.pi * Complex.I) * (ν n : ℂ) / n) := by
     intro n hn hnp
-    simp only [ν, dite_eq_left (And.intro hn hnp)]
-    exact Classical.choose_spec (hroot n hn hnp)
+    simpa only [ν, dite_eq_left (And.intro hn hnp)] using Classical.choose_spec (hroot n hn hnp)
   have heq : ∀ {n : ℕ}, 0 < n → ∀ v v' : D'.La,
       e ((n : ℂ)⁻¹ • P v) = e ((n : ℂ)⁻¹ • P v') ↔ ∃ w, v = v' + n • w :=
     fun hn v v' => unifCls_eq_iff e P hadd hker hinj hn v v'
@@ -312,8 +310,7 @@ theorem unifAt_cls : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [Comm
       have hpl : D.plat.EF a a' = 2 * D.EF a a' := by
         show ((2 : ℤ) • D.EF) a a' = 2 * D.EF a a'
         rfl
-      rw [hpl]
-      exact hd
+      rwa [hpl]
   ·
     obtain ⟨E₁, hE, hcrit⟩ := _root_.GlobalTheory.SymBirig.diag_form_two_smul_and_ker o.A D.g o.ab h o.P o.isLB o.rig₁ o.rig₂ o.symm o.ample e D'.La P D'.EF
       hexp hinj hker hweil

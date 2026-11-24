@@ -95,8 +95,7 @@ theorem finite_free_of_definite_form_of_rank_le :
     exact Nat.findGreatest_is_greatest (P := P) (n := r) hlt (hr _ v hv) ⟨v, hv⟩
   have hspan : ∀ h : H, ∃ k : ℕ, 0 < k ∧ ∃ m : Fin n → ℤ, k • h = ∑ i, m i • u i := by
     intro h
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     apply hmax
     refine ⟨Fin.cons h u, LinearIndependent.finCons' h u hu fun c y hy hcy => ?_⟩
     by_contra hc
@@ -105,8 +104,7 @@ theorem finite_free_of_definite_form_of_rank_le :
     rcases Int.natAbs_eq c with hc' | hc'
     · apply hne c.natAbs hpos' (fun i => - m i)
       rw [← natCast_zsmul, ← hc']
-      simp only [neg_smul, Finset.sum_neg_distrib, hm]
-      exact eq_neg_of_add_eq_zero_left hcy
+      simpa only [neg_smul, Finset.sum_neg_distrib, hm] using eq_neg_of_add_eq_zero_left hcy
     · apply hne c.natAbs hpos' m
       rw [← natCast_zsmul, hm]
       have : c • h = - ((c.natAbs : ℤ) • h) := by
@@ -144,7 +142,6 @@ theorem finite_free_of_definite_form_of_rank_le :
     · exact Or.inl hk
     · exact Or.inr (htf k x hk hkx)
   have hfree : Module.Free ℤ H := Module.free_of_finite_type_torsion_free'
-  refine ⟨hfin, hfree, ?_⟩
-  exact hr _ _ (Module.finBasis ℤ H).linearIndependent
+  exact ⟨hfin, hfree, hr _ _ (Module.finBasis ℤ H).linearIndependent⟩
 
 end GlobalTheory

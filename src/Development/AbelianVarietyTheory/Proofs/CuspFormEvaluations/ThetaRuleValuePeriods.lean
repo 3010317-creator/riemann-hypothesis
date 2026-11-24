@@ -278,10 +278,8 @@ theorem thValAt_evR_of_fromTest : ChartIndepSt2 → ∀ (E : Type) [Field E] [Nu
     hy.choose_spec.choose_spec.choose y hy.choose_spec.choose_spec.choose_spec a n x P hP _ w (hf _ _) hw
   have e : evR Xo c f y = w := by
     unfold evR Formalism.L2.Pj.evalAt
-    rw [dite_eq_left hy]
-    exact key
-  rw [e]
-  exact hw
+    rwa [dite_eq_left hy]
+  rwa [e]
 
 end GlobalTheory
 end -- clump:auto
@@ -472,8 +470,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
 theorem bar_bar (a : 𝓞 E) : H.bar (H.bar a) = a := by
   apply Subtype.ext
   have h1 := H.bar_eq (H.bar a)
-  rw [H.bar_eq a, IsCMField.complexConj_apply_apply] at h1
-  exact h1
+  rwa [H.bar_eq a, IsCMField.complexConj_apply_apply] at h1
 
 theorem bar_mem {r : 𝓞 E} (hr : r ∈ Ideal.span {(2 : 𝓞 E)} * (l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E)) ^ 2) :
     ∃ α ∈ l.Mb ^ 2, H.bar r = ((2 : ℕ) : 𝓞 E) * α := by
@@ -719,8 +716,7 @@ theorem thetaRule_value_periods : ChartIndepSt2 → ∀ (E : Type) [Field E] [Nu
   have key := GlobalTheory.T.thetaValue_analyticFrame_eq_polyDeriv_fock hci E H Dw l Xo c (U.un k xf) W.g _ W.e Φ
     (W.Pm.comp (W.F.t (W.ik k)).toAddMonoidHom) (fun a => by rw [hof.2.1]; exact ⟨_, rfl⟩) hlin hlev nab hnab Wu.θ hrd
     n x x2 h2 hx a P hP _ hv
-  rw [hHm] at key
-  exact key
+  rwa [hHm] at key
 
 end GlobalTheory.AnVal
 end -- clump:auto

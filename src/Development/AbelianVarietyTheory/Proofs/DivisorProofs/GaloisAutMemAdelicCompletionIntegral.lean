@@ -186,8 +186,7 @@ theorem span_norm_eq_top (hE : Unr E) (hr : 1 ≤ r) {G : Matrix (Fin r) (Fin r)
     have hi : IsIntegral ℤ (⟨herm G x x, hfix⟩ : maximalRealSubfield E) :=
       (isIntegral_algebraMap_iff ).1 (hint x hx x hx)
     have h1 : (⟨_, hi⟩ : 𝓞 (maximalRealSubfield E)) ∈ m := hIm (Ideal.subset_span ⟨x, hx, rfl⟩)
-    rw [← hPm] at h1
-    exact h1
+    rwa [← hPm] at h1
   have htr : ∀ x (hx : x ∈ Λ) y (hy : y ∈ Λ),
       (⟨herm G x y, hint x hx y hy⟩ + ⟨herm G y x, hint y hy x hx⟩ : 𝓞 E) ∈ P := by
     intro x hx y hy
@@ -361,8 +360,7 @@ theorem isUnit_of_notMem (v : HeightOneSpectrum (𝓞 F)) {m : 𝓞 F} (hm : m �
     IsUnit (algebraMap (𝓞 F) (v.adicCompletionIntegers F) m) := by
   rw [HeightOneSpectrum.adicCompletionIntegers.isUnit_iff_valued_eq_one]
   have h := HeightOneSpectrum.valuedAdicCompletion_eq_valuation' v (m : F)
-  rw [(HeightOneSpectrum.valuation_eq_one_iff_notMem v).2 hm] at h
-  exact h
+  rwa [(HeightOneSpectrum.valuation_eq_one_iff_notMem v).2 hm] at h
 
 theorem exists_idem {ι T : Type} [Fintype T] [DecidableEq T] (O : ι → Type) [∀ v, CommRing (O v)]
     (f : T → ∀ v, O v) (hf : ∀ v, ∃ m, IsUnit (f m v)) :
@@ -398,8 +396,7 @@ theorem exists_idem_adele {T : Type} [Fintype T] [DecidableEq T] (N : T → 𝓞
   · have hsum' := congrArg incl hsum
 
     rw [map_mul, map_sum, map_one] at hsum'
-    simp only [map_mul, incl_algebraMap] at hsum'
-    exact hsum'
+    simpa only [map_mul, incl_algebraMap] using hsum'
 
 theorem hermA_sum_idem (c : E ≃ₐ[F] E) (G : Matrix (Fin n) (Fin n) E) {T : Type} [Fintype T] [DecidableEq T]
     (ε : T → FiniteAdeleRing (𝓞 F) F) (hε : ∀ m m', ε m * ε m' = if m = m' then ε m else 0)

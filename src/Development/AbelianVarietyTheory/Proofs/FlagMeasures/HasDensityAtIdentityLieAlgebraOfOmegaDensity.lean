@@ -209,8 +209,7 @@ theorem mem_lieOf_UH {N : ℕ} (H : Matrix (Fin N) (Fin N) ℂ) (hH : H * H = 1)
         have hs : star (t : ℂ) = (t : ℂ) := Complex.conj_ofReal t
         rw [Matrix.conjTranspose_neg, Matrix.conjTranspose_smul, hs, Matrix.conjTranspose_neg, Complex.coe_smul,
           Matrix.mul_neg, Matrix.mul_smul, Matrix.neg_mul, Matrix.smul_mul, Matrix.mul_neg, Matrix.neg_mul, smul_neg]
-      rw [e1, Complex.coe_smul] at h
-      exact h
+      rwa [e1, Complex.coe_smul] at h
     have d1 := hasDerivAt_exp_smul_const (𝕂 := ℝ) (H * (-X)ᴴ * H) (0 : ℝ)
     have d2 := hasDerivAt_exp_smul_const (𝕂 := ℝ) X (0 : ℝ)
     have d1' : HasDerivAt (fun u : ℝ => NormedSpace.exp (u • X))
@@ -504,11 +503,9 @@ theorem isHaarOnM_map (e : Fin P ⊕ Fin Q ≃ Fin n) (μ : Measure (UpqT P Q)) 
   · intro s hs
     have hss : (s.submatrix e e).submatrix e.symm e.symm = s := by ext i j; simp
     have hX : (s.submatrix e e)ᴴ * Formalism.UG.Jpq P Q * s.submatrix e e = Formalism.UG.Jpq P Q := by
-      rw [← submatrix_mem_UH e, hss]
-      exact hs
+      rwa [← submatrix_mem_UH e, hss]
     obtain ⟨g, hg⟩ : s.submatrix e e ∈ Set.range (UpqT.mat (P := P) (Q := Q)) := by
-      rw [GlobalTheory.UpqTopology.range_mat]
-      exact hX
+      rwa [GlobalTheory.UpqTopology.range_mat]
     have hs' : s = (UpqT.mat g).submatrix e.symm e.symm := by rw [hg, hss]
     have hcomm : PI.lmulQ s ∘ emb e = emb e ∘ (fun h => g * h) := by
       funext h
@@ -585,8 +582,7 @@ theorem omegaDensity_of_hasDens (e : Fin P ⊕ Fin Q ≃ Fin n) (μ : Measure (U
         show (NormedSpace.exp (x : Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ)).submatrix e.symm e.symm i j =
           NormedSpace.exp ((x : Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ).submatrix e.symm e.symm) i j
         rw [GlobalTheory.CompactDualSwap.exp_submatrix]
-      rw [hf]
-      exact hD
+      rwa [hf]
     · rw [hDv, coe_lieCoord, unrealify_coord]
       rfl
   have key := _root_.GlobalTheory.ChartDensity.density_in_chart n (UH (form e)) (μ.map (emb e)) c (isMatGroup_UH _ (form_sq e)) (isHaarOnM_map e μ) hc
@@ -613,8 +609,7 @@ theorem omegaDensity_of_hasDens (e : Fin P ⊕ Fin Q ≃ Fin n) (μ : Measure (U
     constructor
     · rintro ⟨y, hy, rfl⟩
       simpa using hy
-    · intro hx
-      exact ⟨(lieCoord e).symm x, hx, (lieCoord e).apply_symm_apply x⟩
+    · exact fun hx => ⟨(lieCoord e).symm x, hx, (lieCoord e).apply_symm_apply x⟩
 
 theorem hasDens_of_omegaDensity : ∀ (n : ℕ) (ε : Fin n → Bool) (P Q : ℕ) (e : Fin P ⊕ Fin Q ≃ Fin n), (∀ i, ε (e (Sum.inl i)) = true) → (∀ j, ε (e (Sum.inr j)) = false) → ∀ (μ : Measure (Formalism.BasicNotions.UpqT P Q)) (c : ℝ≥0∞), μ.IsHaarMeasure → Formalism.BasicNotions.OmegaDensity μ c → PI.IsHaarOnM (UH (Formalism.REAL.Jm ε)) (μ.map fun g => Matrix.of.symm (Matrix.reindex e e (Formalism.BasicNotions.UpqT.mat g))) ∧ HasDens (UH (Formalism.REAL.Jm ε)) (μ.map fun g => Matrix.of.symm (Matrix.reindex e e (Formalism.BasicNotions.UpqT.mat g))) c := by
   intro n ε P Q e h1 h2 μ c hμ hc
@@ -624,8 +619,7 @@ theorem hasDens_of_omegaDensity : ∀ (n : ℕ) (ε : Fin n → Bool) (P Q : ℕ
   refine ⟨hH, ?_⟩
   obtain ⟨c', -, hc', -⟩ := _root_.GlobalTheory.MatHaarDensity.exists_hasDens n (UH (form e)) (μ.map (emb e)) (isMatGroup_UH _ (form_sq e)) hH
   have h3 := omegaDensity_of_hasDens e μ _ hc'
-  rw [GlobalTheory.OmegaDensityScale.omegaDensity_unique h3 hc]
-  exact hc'
+  rwa [GlobalTheory.OmegaDensityScale.omegaDensity_unique h3 hc]
 
 end GlobalTheory.OmegaFrobenius
 end -- clump:auto

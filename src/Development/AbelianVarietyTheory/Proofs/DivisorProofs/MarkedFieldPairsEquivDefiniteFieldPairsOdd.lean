@@ -119,8 +119,7 @@ theorem cm_conj_extends_of_adjoin :
       show ψ (algebraMap F M x) ∈ φ₀.range
       refine ⟨algebraMap F M (IsCMField.complexConj F x), ?_⟩
       exact (IsCMField.complexEmbedding_complexConj F (φ₀.comp (algebraMap F M)) x)
-    · show ψ π ∈ φ₀.range
-      exact ⟨(c : M) / π, ((hconj φ₀).2).symm⟩
+    · exact ⟨(c : M) / π, ((hconj φ₀).2).symm⟩
   let e : M ≃+* φ₀.range := RingEquiv.ofBijective φ₀.rangeRestrict
     ⟨fun a b h => φ₀.injective (congrArg Subtype.val h), φ₀.rangeRestrict_surjective⟩
   let σ : M →+* M := e.symm.toRingHom.comp (ψ.codRestrict φ₀.range hrange)
@@ -213,8 +212,7 @@ theorem diag_sign_of_pos_eigenvector : ∀ {n : ℕ} (A h g : Matrix (Fin n) (Fi
     ring
   rw [hform, Complex.ofReal_re] at hxpos
   have hd0 : 0 < d i₀ := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     nlinarith [Complex.normSq_nonneg (y i₀)]
   refine ⟨hd0, fun i hi => ?_⟩
   have hNM : ((↑Z⁻¹ : Matrix (Fin n) (Fin n) ℂ) * (↑W⁻¹ : Matrix (Fin n) (Fin n) ℂ)) * M = 1 := by
@@ -236,8 +234,7 @@ theorem diag_sign_of_pos_eigenvector : ∀ {n : ℕ} (A h g : Matrix (Fin n) (Fi
     simp at this
   have hneg := re_form_neg_of_orth_of_sigPosH_eq_one A hA hdet hsig (M *ᵥ Pi.single i₀ 1)
     (M *ᵥ Pi.single i 1) (by rw [hval]; simpa using hd0) (by rw [hval, ite_eq_right (Ne.symm hi)]) hne
-  rw [hval, ite_eq_left rfl, Complex.ofReal_re] at hneg
-  exact hneg
+  rwa [hval, ite_eq_left rfl, Complex.ofReal_re] at hneg
 
 end GlobalTheory
 end -- clump:auto
@@ -639,8 +636,7 @@ theorem dcharpoly (P : DPair G) (v : InfinitePlace G.F) :
   have hdeg : (minpoly G.F γ).natDegree = G.n := P.reg.1
   have hli : LinearIndependent G.F (fun i : Fin G.n => γ ^ (i : ℕ)) := by
     have := linearIndependent_pow (K := G.F) γ
-    rw [hdeg] at this
-    exact this
+    rwa [hdeg] at this
   have hT : LinearIndependent ℂ (fun i : Fin G.n => (1 : ℂ) ⊗ₜ[G.F] (γ ^ (i : ℕ))) :=
     Module.Flat.linearIndependent_one_tmul hli
   have hM : LinearIndependent ℂ (fun i : Fin G.n => (G.psi v γ) ^ (i : ℕ)) := by
@@ -650,14 +646,12 @@ theorem dcharpoly (P : DPair G) (v : InfinitePlace G.F) :
       funext i
       simp only [Function.comp_apply, AlgHom.toLinearMap_apply]
       rw [hL, map_pow]
-    rw [e]
-    exact this
+    rwa [e]
   have hint : IsIntegral ℂ (G.psi v γ) := Algebra.IsIntegral.isIntegral _
   set q := minpoly ℂ (G.psi v γ) with hq
   have hqm : q.Monic := minpoly.monic hint
   have hqdeg : G.n ≤ q.natDegree := by
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     have h0 : aeval (G.psi v γ) q = 0 := minpoly.aeval _ _
     rw [Polynomial.aeval_eq_sum_range' hlt, Finset.sum_range] at h0
     have h1 := Fintype.linearIndependent_iff.1 hM (fun i => q.coeff i) h0 ⟨q.natDegree, hlt⟩
@@ -667,8 +661,7 @@ theorem dcharpoly (P : DPair G) (v : InfinitePlace G.F) :
   have hpol : aeval (G.psi v γ) (P.pol.map v.embedding) = 0 := by
     have h : aeval (g γ) (minpoly G.F γ) = 0 := by rw [Polynomial.aeval_algHom_apply, minpoly.aeval, map_zero]
     change aeval (G.psi v γ) ((minpoly G.F γ).map (algebraMap G.F ℂ)) = 0
-    rw [Polynomial.aeval_map_algebraMap]
-    exact h
+    rwa [Polynomial.aeval_map_algebraMap]
   have hFint : IsIntegral G.F γ := Algebra.IsIntegral.isIntegral _
   have hm1 : (P.pol.map v.embedding).Monic := (minpoly.monic hFint).map _
   have hn1 : (P.pol.map v.embedding).natDegree = G.n := by
@@ -716,8 +709,7 @@ theorem deigenbasis (P : DPair G) (v : InfinitePlace G.F) :
   refine ⟨Z, lam, hlam, fun z => ?_, hZ⟩
   rw [← Polynomial.mem_roots_map_of_injective v.embedding.injective hne, ← hQ, ← Multiset.mem_toFinset]
   constructor
-  · intro hz
-    exact ⟨e.symm ⟨z, hz⟩, by simp [lam]⟩
+  · exact fun hz => ⟨e.symm ⟨z, hz⟩, by simp [lam]⟩
   · rintro ⟨i, rfl⟩
     exact (e i).2
 
@@ -1627,8 +1619,7 @@ theorem cls_equiv_dcls_irr : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a =
     intro P hi hm
     rw [DPair.pol_eq_of_rel (DPair.rel_out (FQ P hi hm))]
     show Irreducible (minpoly G.F ((FQ P hi hm).γ : G.C))
-    rw [hFγ P hi hm]
-    exact hi
+    rwa [hFγ P hi hm]
   have hBok : ∀ (Q : DPair G) (hi : Irreducible Q.pol),
       Irreducible (Quot.out (Quot.mk (Pair.Rel (G := G)) (BP Q hi) : Cls G)).pol ∧
       (Quot.out (Quot.mk (Pair.Rel (G := G)) (BP Q hi) : Cls G)).Mark
@@ -1699,8 +1690,7 @@ theorem cls_equiv_dcls_irr : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a =
   · apply Subtype.ext
     exact ((Pair.mk_eq_iff_rel_and_out_rel p G _ _).1.mpr (hleft _ q.2.1 q.2.2)).symm.trans
       (Quot.out_eq q.1)
-  · apply Subtype.ext
-    exact ((DPair.mk_eq_iff _ _).mpr (hright _ q.2)).trans (Quot.out_eq q.1)
+  · exact Subtype.ext (((DPair.mk_eq_iff _ _).mpr (hright _ q.2)).trans (Quot.out_eq q.1))
 end GlobalTheory.LKDef
 end -- clump:auto
 end -- clump:auto

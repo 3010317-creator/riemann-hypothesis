@@ -271,7 +271,6 @@ private theorem bigCell_mul_bigCell_star (k r : ℕ) (x : Fin r → ℂ) (hx : �
       by_cases hia : i.val = a.val
       · have hij : i = j := Fin.ext (by omega)
         rw [ite_eq_left hia, hij, Matrix.one_apply_eq]
-        show (star (x a))⁻¹ * star (x a) = 1
         exact inv_mul_cancel₀ (star_ne_zero.mpr (hx a))
       · rw [ite_eq_right hia, zero_mul, Matrix.one_apply_ne (show i ≠ j from fun h => hia (by rw [h]; omega))]
     · intro m _ hm
@@ -432,10 +431,8 @@ private lemma mul_wC_apply (N : Mat k r) (i j : Fin (2 * r + k + 1)) : (N * wC k
   · rw [wC_apply, ite_eq_left (sw_sw j).symm, mul_one]
   · intro l _ hl
     rw [wC_apply, ite_eq_right, mul_zero]
-    intro h
-    exact hl (by rw [h, sw_sw])
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+    exact fun h => hl (by rw [h, sw_sw])
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 lemma conj_apply (M : Mat k r) (i j : Fin (2 * r + k + 1)) :
     (wC k r * M * wC k r) i j = M (sw k r i) (sw k r j) := by
@@ -447,10 +444,8 @@ private lemma mul_Hpk_apply' (N : Mat k r) (i j : Fin (2 * r + k + 1)) :
   · rw [hpk_apply, ite_eq_left (sw_sw j).symm, sg_sw]
   · intro l _ hl
     rw [hpk_apply, ite_eq_right, mul_zero]
-    intro h
-    exact hl (by rw [h, sw_sw])
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+    exact fun h => hl (by rw [h, sw_sw])
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 private lemma Hpk_mul_apply' (N : Mat k r) (i j : Fin (2 * r + k + 1)) :
     (Hpk k r * N) i j = sg k r i * N (sw k r i) j := by
@@ -528,8 +523,7 @@ lemma norm_torD (x : Fin r → ℂ) : ∑ i, ∑ j, ‖torD k r x i j‖ ^ 2 = 2
     · intro j _ hj
       rw [hoff i j (Ne.symm hj), norm_zero]
       ring
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+    · exact fun h => absurd (Finset.mem_univ i) h
   simp only [h1, norm_sq_torD_diag_eq, Finset.sum_add_distrib]
   have hsw : (∑ i : Fin (2 * r + k + 1), if h : (sw k r i).val < r then ‖x ⟨(sw k r i).val, h⟩‖ ^ 2 else 0) =
       ∑ i : Fin (2 * r + k + 1), if h : i.val < r then ‖x ⟨i.val, h⟩‖ ^ 2 else 0 :=
@@ -1066,11 +1060,9 @@ theorem exp_inj_strictUpper : ∀ (m : ℕ) (X Y : Matrix (Fin m) (Fin m) ℂ),
     rw [← hinv]
     exact Matrix.exp_conj' D Z hU
   have hxS' : E * X * D ∈ S := by
-    rw [hE, hD, conj_diagonal_eq X hX hτ]
-    exact hxS
+    rwa [hE, hD, conj_diagonal_eq X hX hτ]
   have hyS' : E * Y * D ∈ S := by
-    rw [hE, hD, conj_diagonal_eq Y hY hτ]
-    exact hyS
+    rwa [hE, hD, conj_diagonal_eq Y hY hτ]
   have key : E * X * D = E * Y * D :=
     hinj hxS' hyS' (by rw [hexp, hexp, hXY])
   calc X = (D * E) * X * (D * E) := by rw [hDE, one_mul, mul_one]
@@ -1312,8 +1304,7 @@ theorem dL_bij : Function.Bijective (dL k r) := by
     exact Prod.ext (Prod.ext e1 e2) (Prod.ext e5 e3)
   · intro Z
     obtain ⟨v, hv⟩ := _root_.GlobalTheory.CellDens.Onto.dchart_onto k r (um Z) ((_root_.GlobalTheory.CellLieAlg.lie_entries k r _).1.1 Z.2)
-    refine ⟨v, Subtype.ext ((umL _).injective ?_)⟩
-    exact (um_dL v).trans hv
+    exact ⟨v, Subtype.ext ((umL _).injective ((um_dL v).trans hv))⟩
 
 def dE (k r : ℕ) : EE k r ≃L[ℝ] lieE (GG k r) := (LinearEquiv.ofBijective (dL k r) dL_bij).toContinuousLinearEquiv
 

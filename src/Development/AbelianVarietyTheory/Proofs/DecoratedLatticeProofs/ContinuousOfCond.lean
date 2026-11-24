@@ -375,8 +375,7 @@ theorem exists_toLocGL_mem : ∀ (E k : Type) [Field E] [Field k] [ValuativeRel 
   have hne : (Subtype.val '' (F ⁻¹' U)).Nonempty := by
     refine ⟨_, ⟨g₀.val, g₀.det_ne_zero⟩, ?_, rfl⟩
     have : F ⟨g₀.val, g₀.det_ne_zero⟩ = g₀ := Units.ext rfl
-    rw [Set.mem_preimage, this]
-    exact hg₀
+    rwa [Set.mem_preimage, this]
   obtain ⟨x, M, hM, hx⟩ := (denseRange_toLoc hι e e).exists_mem_open hV hne
   have hd : LinearMap.det x ≠ 0 := by
     intro h0
@@ -387,8 +386,7 @@ theorem exists_toLocGL_mem : ∀ (E k : Type) [Field E] [Field k] [ValuativeRel 
   have hbij : Function.Bijective x := (Module.End.isUnit_iff x).1 ((LinearMap.isUnit_iff_isUnit_det x).2 hd.isUnit)
   refine ⟨LinearEquiv.ofBijective x hbij, ?_⟩
   have : toLocGL ι e (LinearEquiv.ofBijective x hbij) = F M := Units.ext hx.symm
-  rw [this]
-  exact hM
+  rwa [this]
 
 theorem exists_toLoc_ne_zero : ∀ (E k : Type) [Field E] [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     (ι : E →+* k), DenseRange ι → ∀ (A B : Type) [Fintype A] [Fintype B] (a b : ℕ) (e : A ≃ Fin a) (e' : B ≃ Fin b)
@@ -422,8 +420,7 @@ theorem bounds_of_isGL : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (P : Heigh
   rw [hmem] at hx
   refine ⟨(hmem _).2 (mem_latOf_one.2 ?_), (hmem _).2 ?_⟩
   · have h3 : ∀ i, (toLoc ι e e γ.symm.toLinearMap *ᵥ fun i => ι (x (e i))) i ∈ 𝒪[k] := h1 hx
-    rw [toLoc_mulVec] at h3
-    exact h3
+    rwa [toLoc_mulVec] at h3
   · have h3 : (toLocGL ι e γ).val *ᵥ (fun i => ι (x (e i))) ∈ latOf (toLocGL ι e γ * 1) := (mulVec_mem_latOf _).2 hx
     rw [mul_one] at h3
     have h4 := h2 _ h3
@@ -534,16 +531,14 @@ theorem exists_rep_of_bounds : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch 
       intro P' hP'
       by_cases hPP : P' = P
       · subst hPP
-        simp only [hh, ite_eq_left rfl]
-        exact hγ
+        simpa only [hh, ite_eq_left rfl] using hγ
       · simp only [hh, ite_eq_right hPP]
         exact hL.boundQ (j + 1) b₀ P' hP')
     (by
       intro P'
       by_cases hPP : P' = P
       · subst hPP
-        simp only [hh, ite_eq_left rfl]
-        exact hal
+        simpa only [hh, ite_eq_left rfl] using hal
       · simp only [hh, ite_eq_right hPP]
         exact hL.nonvan j hj b₀ P')
   refine ⟨b, ?_⟩

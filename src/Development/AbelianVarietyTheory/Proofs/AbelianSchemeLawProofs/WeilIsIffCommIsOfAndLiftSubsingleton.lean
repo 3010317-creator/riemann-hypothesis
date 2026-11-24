@@ -70,8 +70,7 @@ theorem weilIs_iff_commIsOf (hG : GlobalFnsSt) (hA : IsAbelianScheme A) (hL : L.
     (θx θy : ThetaGrp A L k T) (c : Γ(T.left, ⊤)ˣ) : WeilIs A L k θx.pt θy.pt c ↔ CommIsOf A L k θx θy c := by
   refine ⟨fun H => ?_, weilIs_of_commIsOf hG hA hL⟩
   obtain ⟨c₀, h₀⟩ := CommutatorPairing.exists_commIsOf hG hA hL θx θy
-  rw [CommutatorPairing.weilIs_unique hG hA hL H (weilIs_of_commIsOf hG hA hL h₀)]
-  exact h₀
+  rwa [CommutatorPairing.weilIs_unique hG hA hL H (weilIs_of_commIsOf hG hA hL h₀)]
 
 theorem val_powGen {T : Over S} (θ : ThetaGrp A L k T) (n : ℕ) {Z : Scheme.{0}} (r : Z ⟶ (T ⊗ A).left) {z : Z} {J}
     (hJ : Good L z J) :
@@ -135,8 +134,7 @@ theorem exists_symLift_pull (hL : L.IsLB) {n : ℕ} {T T' : Over S} (h : T' ⟶ 
     rw [v _ _ y J hJ, e, ← MonObj.comp_pow, t]
   · have q := val_corr hJ hs (𝟙 _ ≫ (h ▷ A).left)
     rw [val_symGen _ _ _ hJ, val_one] at q ⊢
-    rw [v _ _ y J hJ, v _ _ y J hJ, w _ _ y J hJ, w _ _ y J hJ, e, ← GrpObj.comp_inv, t, u]
-    exact q
+    rwa [v _ _ y J hJ, v _ _ y J hJ, w _ _ y J hJ, w _ _ y J hJ, e, ← GrpObj.comp_inv, t, u]
 
 theorem exists_symLift_empty (hL : L.IsLB) (n : ℕ) {T : Over S} [IsEmpty T.left] (x : T ⟶ A) :
     ∃ θ : ThetaGrp A L k T, SymLift A L k n x θ := by

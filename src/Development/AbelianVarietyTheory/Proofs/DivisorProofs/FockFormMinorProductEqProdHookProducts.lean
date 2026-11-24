@@ -553,8 +553,7 @@ theorem pol_minor (hd : ∀ r j s c, d r j (x s c) = if r = s ∧ j = c then 1 e
     · intro t _ ht
       refine det_eq_zero_of_row_eq_zero t fun u => ?_
       rw [updateRow_self, ite_eq_right]
-      intro h
-      exact ht (Fin.ext (congrArg Fin.val h :))
+      exact fun h => ht (Fin.ext (congrArg Fin.val h :))
     · simp
   · rw [ite_eq_right (fun h => hj h.2), zero_mul]
     refine Finset.sum_eq_zero fun t _ => det_eq_zero_of_row_eq_zero t fun u => ?_
@@ -791,8 +790,7 @@ theorem prod_Ioi_eq (K : Fin l) (g : ℕ → ℚ) :
   · intro j hj
     have : K < j := Finset.mem_Ioi.mp hj
     exact Finset.mem_Ico.mpr ⟨this, j.2⟩
-  · intro j _ j' _ h
-    exact Fin.ext h
+  · exact fun j _ j' _ h => Fin.ext h
   · intro j hj
     obtain ⟨h1, h2⟩ := Finset.mem_Ico.mp hj
     exact ⟨⟨j, h2⟩, Finset.mem_Ioi.mpr h1, rfl⟩
@@ -852,8 +850,7 @@ theorem hookProd_addCol {a : Fin l → ℕ} (ha : Antitone a) (K : Fin l) (hK : 
         omega
       rw [hu, Finset.prod_union]
       rw [Finset.disjoint_left]
-      intro j h1 h2
-      exact absurd (Finset.mem_Ioc.mp h1).2 (not_le.mpr (Finset.mem_Ioi.mp h2))
+      exact fun j h1 h2 => absurd (Finset.mem_Ioc.mp h1).2 (not_le.mpr (Finset.mem_Ioi.mp h2))
     have e1 : ∏ j ∈ Finset.Ioc i K, ((addCol a K i : ℚ) - addCol a K j + (j : ℕ) - (i : ℕ)) =
         ∏ j ∈ Finset.Ioc i K, ((a i : ℚ) - a j + (j : ℕ) - (i : ℕ)) := by
       refine Finset.prod_congr rfl fun j hj => ?_
@@ -904,8 +901,7 @@ theorem prod_ite_le (K : Fin l) (g : Fin l → ℚ) :
     have := t.2
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, Fin.le_def, Fin.val_castLE]
     omega
-  · intro t _ t' _ h
-    exact Fin.castLE_injective _ h
+  · exact fun t _ t' _ h => Fin.castLE_injective _ h
   · intro j hj
     have : (j : ℕ) ≤ K := (Finset.mem_filter.mp hj).2
     exact ⟨⟨j, by omega⟩, Finset.mem_univ _, rfl⟩
@@ -1202,10 +1198,8 @@ theorem hookOf_eq_hookProd (l : ℕ) (a : ℕ → ℕ) (ha : Antitone a) :
     refine Finset.prod_congr rfl fun i _ => ?_
     symm
     refine Finset.prod_bij (fun j _ => (j : ℕ)) ?_ ?_ ?_ ?_
-    · intro j hj
-      exact Finset.mem_Ioo.mpr ⟨Fin.lt_iff_val_lt_val.mp (Finset.mem_Ioi.mp hj), j.2⟩
-    · intro j _ j' _ e
-      exact Fin.ext e
+    · exact fun j hj => Finset.mem_Ioo.mpr ⟨Fin.lt_iff_val_lt_val.mp (Finset.mem_Ioi.mp hj), j.2⟩
+    · exact fun j _ j' _ e => Fin.ext e
     · intro b hb
       have := Finset.mem_Ioo.mp hb
       exact ⟨⟨b, this.2⟩, Finset.mem_Ioi.mpr (Fin.lt_iff_val_lt_val.mpr this.1), rfl⟩

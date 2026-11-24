@@ -909,8 +909,7 @@ def cHom (c : ℝ → G) (hca : ∀ x y, c (x + y) = c x * c y) : Multiplicative
 
 lemma c_int {c : ℝ → G} (hca : ∀ x y, c (x + y) = c x * c y) (n : ℤ) : c n = c 1 ^ n := by
   have h := map_zpow (cHom c hca) (Multiplicative.ofAdd (1:ℝ)) n
-  rw [← ofAdd_zsmul, zsmul_one] at h
-  exact h
+  rwa [← ofAdd_zsmul, zsmul_one] at h
 
 lemma mem_of_split {H : Subgroup G} {s : G → ℝ} {c : ℝ → G}
     (hsa : ∀ g h, s (g * h) = s g + s h) (hsc : ∀ t, s (c t) = t) (hH : ∀ g, g ∈ H ↔ s g = 0)
@@ -1439,8 +1438,7 @@ theorem leviOne_last_prod : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
   have hTiff : ∀ a : A, (a : GAd σ J) ∈ T ↔ π a = 1 := by
     intro a
     constructor
-    · intro hx
-      exact Subtype.ext (Units.ext (blk_of hPX (h1X _ (Subgroup.mem_inf.1 hx).1)))
+    · exact fun hx => Subtype.ext (Units.ext (blk_of hPX (h1X _ (Subgroup.mem_inf.1 hx).1)))
     · intro h1
       have hb : blk P X (a : GAd σ J) = 1 := by
         have := congrArg (fun x : K => (x : GL (Fin (r + 1)) (AF F ⊗[F] E)).1) h1
@@ -1583,8 +1581,7 @@ namespace GlobalTheory.ResidueEisenstein
 theorem inf_subgroupOf_of_le' {G : Type} [Group G] {Γ P H : Subgroup G} (h : H ≤ P) :
     (Γ ⊓ P).subgroupOf H = Γ.subgroupOf H := by
   ext x
-  simp only [Subgroup.mem_subgroupOf, Subgroup.mem_inf]
-  exact ⟨fun e => e.1, fun e => ⟨e, h x.2⟩⟩
+  simpa only [Subgroup.mem_subgroupOf, Subgroup.mem_inf] using ⟨fun e => e.1, fun e => ⟨e, h x.2⟩⟩
 
 theorem semiLat_frameGrp : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
     (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (r : ℕ) (X Y : Matrix (Fin n) (Fin (r + 1)) E), IsCMExt F E σ → IsHermND σ J →

@@ -321,8 +321,7 @@ theorem main : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [Field Ω] 
     letI : Module u.V (PadicAlgCl p) := Module.compHom _ (algebraMap u.V (FractionRing u.V))
     hasSum_of_sumI φ h1 _ (norm_nonneg _) hlt ϖ hϖ.maximalIdeal_eq le_rfl
       (fun a x => Algebra.smul_def (algebraMap u.V (FractionRing u.V) a) x) (hS α)
-  simp only [hcoef, _root_.mul_assoc]
-  exact hsum.mul_left c
+  simpa only [hcoef, _root_.mul_assoc] using hsum.mul_left c
 
 end GlobalTheory.ZH.SeriesProd
 end -- clump:auto
@@ -498,8 +497,7 @@ theorem exists_he (hL : L.IsLB) {φ : K → ((TF (R := R) F).left ⟶ X)} {t : L
     (fun U _ h => Finset.prod_congr rfl fun i _ => by rw [h₀])
   refine ⟨c, hc, K, _, φ₀, ε, t₀, ht₀, fun U _ h => by simp only [h₀], fun z J hJ => ?_⟩
   have := e (TF (R := R) F).left (𝟙 (TF (R := R) F).left) z J hJ
-  rw [val_pull hJ, Category.id_comp] at this
-  exact this
+  rwa [val_pull hJ, Category.id_comp] at this
 
 end
 
@@ -726,8 +724,7 @@ theorem exists_finset_of_point (hG : GlobalFnsSt) {k : ℕ} (hk : 1 ≤ k) (s : 
       (hS K hK (fun t ht => hSK (by simp [show t ∈ S from ht])) (α + k • mu))) (show ω ∈ K from hSK (by simp))) (hK c),
       fun z J hJ => ?_⟩
     have := hc z J hJ
-    rw [one_pow, cst_eq, map_one, _root_.one_mul] at this
-    exact this
+    rwa [one_pow, cst_eq, map_one, _root_.one_mul] at this
   choose c hcK hc using key
   have E₀ : coef s g w (α + k • mu) = ∑ i, a α i * c i := coef_eq fun z J hJ => by
 
@@ -997,8 +994,7 @@ theorem parAt_of_parAt_mul : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing 
       exact (hsum.unique (h' τ t hτ)).trans (congrArg (κ' * ·) e))
   refine ⟨c, hc, fun σ s hs => ?_⟩
   have := summ s
-  rw [e ⟨(σ, s), hs⟩] at this
-  exact this
+  rwa [e ⟨(σ, s), hs⟩] at this
 
 end GlobalTheory.ParameterRoot
 end -- clump:auto
@@ -1310,8 +1306,7 @@ theorem exists_isGen {R : Type} [CommRing R] [IsLocalRing R] {M : LB (Sp R)} (hM
   refine ⟨⟨fun j => res (le _) (M.g j l)⟩, fun i j => ?_⟩
   have e := congrArg (res (le (M.U i ⊓ M.U j))) (hM.cocycle i j l)
   rw [map_mul, DVR.res_res', DVR.res_res', DVR.res_res', DVR.res_refl'] at e
-  simp only [DVR.res_res']
-  exact e.symm
+  simpa only [DVR.res_res'] using e.symm
 
 end Pull
 

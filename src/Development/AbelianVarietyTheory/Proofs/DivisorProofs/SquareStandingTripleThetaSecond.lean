@@ -159,8 +159,7 @@ theorem exists_nat_conj {w : Pl D.host.E}
     have e : star (((Ideal.absNorm D.host.ccK * Ideal.absNorm D.host.𝔟 : ℕ) : D.host.E) * a) =
         star (r : D.host.E) * (Ideal.absNorm D.host.ccK : ℕ) := by
       rw [show (r : D.host.E) = _ from hr, Nat.cast_mul, mul_assoc, star_mul', star_natCast, mul_comm a, mul_comm]
-    rw [e]
-    exact h7
+    rwa [e]
 
 theorem inv_nat_mem {w : Pl D.host.E} {m : ℕ} (hm : (m : 𝓞 D.host.E) ∉ w.asIdeal) :
     (m : Fv D.host.F (w.under (𝓞 D.host.F))) ≠ 0 ∧
@@ -370,8 +369,7 @@ theorem vac_fixed_half {W : G.Weil} {M : Vol G} {t : T} {e : Num G i j} {Bs : Ba
     linear_combination (γ p q * GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM D.host.F Γ.V'.J p k * GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM D.host.F Γ.W.J q l *
       cA D (γ k l)) * hb
   unfold GlobalTheory.WeilM.symp at h1
-  rw [h0, mul_zero, map_zero, mul_zero, AddChar.map_zero_eq_one, one_smul, h.ψ] at h1
-  exact h1
+  rwa [h0, mul_zero, map_zero, mul_zero, AddChar.map_zero_eq_one, one_smul, h.ψ] at h1
 
 theorem halves (e : Num G i j) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.Geo G i j) (hW : Γ.V'.J = (-1 : D.host.E) • (spW₁ G i j).gram)
     (hWW : Γ.W.J = GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.skewGram (spV G i j) (spV₁ G i j) e) {ψ : AddChar (AF D.host.F) ℂ} (hstd : IsStdChar D ψ (-1))
@@ -487,8 +485,7 @@ theorem isDatum_linB : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : GlobalTheor
           refine hl (GlobalTheory.SmallPlaces.mem_of_sum_smul (P := locPl G t) (a := fun w => cA D (atPl w 1)) ?_
             fun w hw => (congrArg (· ∈ homLatB G i j) (ptB_smul e _ u)).mp (hall w hw))
 
-          rw [← map_sum, ← hεs]
-          exact hu
+          rwa [← map_sum, ← hεs]
         obtain ⟨w, hw, hn⟩ := this
         rw [ite_eq_right fun h' => hl h'.1, mul_zero]
         refine Finset.prod_eq_zero hw (Set.indicator_of_notMem ?_ _)
@@ -526,8 +523,7 @@ theorem isDatum_linB : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : GlobalTheor
     rw [ptE_apply, prodB]
     dsimp only
     by_cases hu : IsHalf (cA D ε) (ptB e u)
-    · rw [ite_eq_left hu]
-      rw [Set.indicator_of_mem ((hH u).2 hu)]
+    · rw [ite_eq_left hu, Set.indicator_of_mem ((hH u).2 hu)]
       exact Finset.prod_congr rfl fun w hw => congrFun (hΨ w hw) _
     · rw [ite_eq_right hu]
       exact Set.indicator_of_notMem (mt (hH u).1 hu) _

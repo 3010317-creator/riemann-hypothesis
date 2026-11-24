@@ -162,8 +162,7 @@ theorem upper_subgroup (E : Type) [Field E] [NumberField E] [IsCMField E] (r : �
   · intro γ hγ P hP
     obtain ⟨hp, hg⟩ := prime_and_mem_of_primesOver hP
     exact ⟨r, fun v hv => hU c γ hγ P hp hg v hv⟩
-  · intro u hu
-    exact ⟨u, hu, 1, (M.comp c).Γ.one_mem, (one_mul _).symm⟩
+  · exact fun u hu => ⟨u, hu, 1, (M.comp c).Γ.one_mem, (one_mul _).symm⟩
 
 end GlobalTheory.UpperArith
 end -- clump:auto
@@ -208,8 +207,7 @@ theorem dmin_sign_of_definite (E : Type) [Field E] [NumberField E] [IsCMField E]
   have hps : psgn X.p0 i = ε ^ (i : ℕ) := by
     unfold psgn
     rw [Finset.prod_congr rfl (g := fun _ => ε), Finset.prod_const, Finset.card_range]
-    intro a ha
-    exact hsgn a (lt_of_lt_of_le (Finset.mem_range.1 ha) hi)
+    exact fun a ha => hsgn a (lt_of_lt_of_le (Finset.mem_range.1 ha) hi)
   obtain ⟨P, hPdet, hP⟩ := X.signature τ
   set M := mat x τ with hM
   set Q := P⁻¹ * M with hQ
@@ -284,8 +282,7 @@ theorem differentiable_det_of {r : ℕ} :
 theorem differentiable_update_frame {Ψ : Type} [Fintype Ψ] [DecidableEq Ψ] {r : ℕ}
     (x : Ψ → Fin r → Fin r → ℂ) (τ : Ψ) :
     Differentiable ℂ (fun y : Fin r → Fin r → ℂ => Function.update x τ y) := by
-  intro y
-  exact (hasFDerivAt_update x y).differentiableAt
+  exact fun y => (hasFDerivAt_update x y).differentiableAt
 
 end GlobalTheory
 
@@ -453,8 +450,7 @@ theorem finiteDimensional_span_of_slices (ι : Type) [Fintype ι] [DecidableEq �
         obtain ⟨w', hw', hgw⟩ := hg x hx i
         exact ⟨w + w', (W i).add_mem hw hw', fun t ht => by simp [hfw t ht, hgw t ht]⟩
       zero_mem' := by
-        intro x hx i
-        exact ⟨0, (W i).zero_mem, fun t ht => by simp⟩
+        exact fun x hx i => ⟨0, (W i).zero_mem, fun t ht => by simp⟩
       smul_mem' := by
         intro c f hf x hx i
         obtain ⟨w, hw, hfw⟩ := hf x hx i
@@ -482,8 +478,7 @@ theorem finiteDimensional_span_of_slices (ι : Type) [Fintype ι] [DecidableEq �
             · simpa [h] using hxT i (by simp [h, hi])
         have h1 := hTz j w hw hwT (x j) (hx j trivial)
         rw [← h1, ← hgw (x j) (hx j trivial), Function.update_eq_self]
-    intro x hx
-    exact hs Finset.univ x hx (fun i hi => absurd (Finset.mem_univ i) hi)
+    exact fun x hx => hs Finset.univ x hx (fun i hi => absurd (Finset.mem_univ i) hi)
   let resD : ((∀ i, A i) → ℂ) →ₗ[ℂ] (Set.univ.pi D → ℂ) := LinearMap.funLeft ℂ ℂ Subtype.val
   let resG : (Set.univ.pi D → ℂ) →ₗ[ℂ] (G → ℂ) := LinearMap.funLeft ℂ ℂ (Set.inclusion hGD)
   have hsub : Submodule.span ℂ ((fun g : (∀ i, A i) → ℂ => fun x : Set.univ.pi D => g x) '' S) ≤
@@ -572,8 +567,7 @@ theorem setOf_prime_mem_eq_primesOver (E : Type) [Field E] [NumberField E] (g : 
     have hle : Ideal.span {(g : ℤ)} ≤ P.under ℤ := by
       rw [Ideal.span_le, Set.singleton_subset_iff]
       show (g : ℤ) ∈ Ideal.comap (algebraMap ℤ (𝓞 E)) P
-      rw [Ideal.mem_comap, map_natCast]
-      exact hgP
+      rwa [Ideal.mem_comap, map_natCast]
     have hne : P.under ℤ ≠ ⊤ := (Ideal.IsPrime.comap (f := algebraMap ℤ (𝓞 E)) (hK := hP)).ne_top
     exact hmax.eq_of_le hne hle
   · rintro ⟨hP, hlo⟩
@@ -621,8 +615,7 @@ variable {U C : Type} [Group U] [MulAction U C] (M : TwoLevels E r U C)
 theorem castFrame_mem_dom (c : C) (x : Frame (M.comp c).Ψ r) :
     castFrame (M.comp_Ψ c) x ∈ M.dom ↔ x ∈ (M.comp c).dom := by
   have := castFrame_mem_GG (M.comp c).toData (M.comp_Ψ c) x
-  rw [M.comp_Gm c, M.comp_basePoint c] at this
-  exact this
+  rwa [M.comp_Gm c, M.comp_basePoint c] at this
 
 def toComp (c : C) : (C → M.dom → ℂ) →ₗ[ℂ] ((M.comp c).dom → ℂ) where
   toFun v x := v c ⟨castFrame (M.comp_Ψ c) x.1, (castFrame_mem_dom M c x.1).2 x.2⟩
@@ -876,8 +869,7 @@ theorem span_colP {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} (
   refine ⟨fun a => c (Fin.castLE X.p0_le a), ?_⟩
   have hsum : ∀ f : Fin r → Fin r → ℂ,
       ∑ a : Fin X.p0, f (Fin.castLE X.p0_le a) = ∑ j : Fin r, f j := by
-    intro f
-    exact Fintype.sum_equiv (finCongr hp) _ _ (fun a => by congr 1)
+    exact fun f => Fintype.sum_equiv (finCongr hp) _ _ (fun a => by congr 1)
   show w = ∑ a : Fin X.p0, (fun j => c j • A.mulVec (ReciprocityTheory.ChartRestriction.G.FD.col (mat x τ) j)) (Fin.castLE X.p0_le a)
   rw [hsum (fun j => c j • A.mulVec (ReciprocityTheory.ChartRestriction.G.FD.col (mat x τ) j))]
   conv_lhs => rw [hw]

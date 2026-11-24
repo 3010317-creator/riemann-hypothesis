@@ -87,8 +87,7 @@ theorem univFrame_borelPairs : Out.SecBaseChangeSt → ∀ (E : Type) [Field E] 
     frMap_cancel (Xo := Xo) (c := c) _ _ _ q b u uB z huB (by rw [hb1]; exact hz)
   have h2 : FrMap b uB' z' := by
     refine (_root_.GlobalTheory.Frames.ChgBC.frChg_baseChange E H Dw l Xo c B.R T b uB uB' z z' Y r huB' h1).2 ?_
-    rw [hb3, funext hb2]
-    exact hgc
+    rwa [hb3, funext hb2]
   have h3 : FrMap (b.comp q') u z' := frMap_trans (Xo := Xo) (c := c) _ _ _ q' b u uB' z' hq' h2
   refine ⟨b, hb1, _root_.GlobalTheory.Frames.univFrame_classifies_unique hS E H Dw l Xo c p.R A.R j y₀ π X s u hj hU T _ _ z' h3 hz', ?_⟩
   rintro (_ | ⟨τ, i⟩)
@@ -148,8 +147,7 @@ theorem ChartCover.cls_loc (hS : Out.SecBaseChangeSt) {R : Type} [CommRing R] [A
       congr 1
       exact φ.comp_algebraMap
   have hq : yF (spMap φ.toRingHom (⟨m, hm⟩ : PrimeSpectrum S)) ∈ Set.range j := by
-    rw [← e] at hp
-    exact hp
+    rwa [← e] at hp
   obtain ⟨g', hg', hT'⟩ := ChartCover.near hS hj hu y yF k1 k2 _ hq
   obtain ⟨p', lam, hl, hlam⟩ := GlobalTheory.testRing_localizationAway c.F p g'
   obtain ⟨z', a', hz', ha'⟩ := hT' p'.R lam hl

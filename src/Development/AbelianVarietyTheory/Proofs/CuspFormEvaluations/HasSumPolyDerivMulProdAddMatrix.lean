@@ -185,8 +185,7 @@ theorem mem_thetaDomain {τ : Matrix (Fin g) (Fin g) ℂ} (hp : (τ.map Complex.
 
 theorem summable_norm_thTerm {τ : Matrix (Fin g) (Fin g) ℂ} (hτ : τ ∈ ThetaDomain (Fin g))
     (a b : Fin g → ℝ) (ζ : Fin g → ℂ) : Summable fun m => ‖thTerm τ a b ζ m‖ := by
-  simp only [thTerm_eq_thetaTerm]
-  exact thetaSummable_holds (Fin g) a b ζ τ hτ
+  simpa only [thTerm_eq_thetaTerm] using thetaSummable_holds (Fin g) a b ζ τ hτ
 
 theorem hasSum_thTerm {τ : Matrix (Fin g) (Fin g) ℂ} (hτ : τ ∈ ThetaDomain (Fin g))
     (a b : Fin g → ℝ) (ζ : Fin g → ℂ) :
@@ -402,9 +401,7 @@ theorem differentiable_canTh (hp : (τ.map Complex.im).PosDef) (a b : Fin g → 
 
 theorem thetaChar_ne_zero (hs : τ.IsSymm) (hp : (τ.map Complex.im).PosDef) (a b : Fin g → ℝ) :
     thetaChar τ (fun i => (a i : ℂ)) (fun i => (b i : ℂ)) ≠ 0 := by
-  have h := theta_ne_zero (τ := τ) ⟨hs, hp⟩ a b
-  simp only [← thetaChar_eq_theta] at h
-  exact h
+  simpa only [← thetaChar_eq_theta] using theta_ne_zero (τ := τ) ⟨hs, hp⟩ a b
 
 theorem canTh_ne_zero (hs : τ.IsSymm) (hp : (τ.map Complex.im).PosDef) (a b : Fin g → ℝ) :
     canTh τ a b ≠ 0 := by

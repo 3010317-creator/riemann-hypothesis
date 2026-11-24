@@ -205,8 +205,7 @@ theorem GlobalTheory.ConstFn.holoOn_univ_const : ∀ (F : Type) [Field F] (Y : G
   have e := congrArg Subtype.val hx
   rw [AnRead.coe_valC] at e
   have := hb PUnit.unit z
-  rw [e] at this
-  exact this
+  rwa [e] at this
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1125,11 +1124,9 @@ theorem exists_extension : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       rw [← hu]
       refine sec_chg (g := RingHom.id K) hσ h' h ⟨hid, fun i => ?_, fun i => ?_⟩
       · refine (isCombination_iff_of_sameVecs E H D l Xo c O β Y K K _ x x _ v' vb v v₀ hid sv' sv _ i).2 ?_
-        simp only [DetExtendZero.dual_id, Category.id_comp, a]
-        exact hc.2.1 i
+        simpa only [DetExtendZero.dual_id, Category.id_comp, a] using hc.2.1 i
       · refine (isCombination_iff_of_sameVecs E H D l Xo c O β Y K K _ x x _ w' wb w w₀ hid sw' sw _ i).2 ?_
-        simp only [DetExtendZero.dual_id, Category.id_comp, b]
-        exact hc.2.2 i
+        simpa only [DetExtendZero.dual_id, Category.id_comp, b] using hc.2.2 i
     · obtain ⟨σ₁, h1, h2, h3⟩ := _root_.GlobalTheory.DetLine.Restrict.exists_restriction E H D l Xo c O β Y U τ σb hb
       obtain ⟨f, hf⟩ := GlobalTheory.detLine_exists_ratio E H l c _ _ _ _ _ τ _ _ U σ₁ σ
         (frameCover_univ E H D l Xo c U τ hτ) h1 (h3 hnz) hσ
@@ -1380,8 +1377,7 @@ theorem isFlatAt_of_conj (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
       simpa only [LinearEquiv.trans_apply, conjEquiv_apply, star_star] using this)
   rw [s, s'] at q
   refine (starRingEnd ℂ).injective ?_
-  rw [map_mul, map_mul]
-  exact q
+  rwa [map_mul, map_mul]
 
 end GlobalTheory
 end -- clump:auto
@@ -1480,8 +1476,7 @@ theorem exists_indep {E : Type} [Field E] [NumberField E] (M : Type) [AddCommGro
     omega
   obtain ⟨c, hc0, hc⟩ := hc
   refine ⟨Ideal.absNorm (Ideal.span {c}), ?_, ?_⟩
-  · rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-    exact hc0
+  · rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
   · obtain ⟨d, hd⟩ := Ideal.mem_span_singleton'.1 (Ideal.absNorm_mem (Ideal.span {c}))
     rw [← Nat.cast_smul_eq_nsmul (𝓞 E), ← hd, mul_smul]
     exact Submodule.smul_mem _ _ hc
@@ -1534,8 +1529,7 @@ theorem exists_isPerBasis : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
       have : ∑ k, ((a * c k : 𝓞 E) : E) * hm k k' = (a : E) * ((d : 𝓞 E) : E) * ∑ k, c₀ k * hm k k' := by
         rw [Finset.mul_sum]
         refine Finset.sum_congr rfl fun k _ => ?_
-        have h2 : ((c k : 𝓞 E) : E) = ((d : 𝓞 E) : E) * c₀ k := by
-          exact (hc k).trans (Algebra.smul_def _ _)
+        have h2 : ((c k : 𝓞 E) : E) = ((d : 𝓞 E) : E) * c₀ k := (hc k).trans (Algebra.smul_def _ _)
         have h3 : ((a * c k : 𝓞 E) : E) = (a : E) * ((c k : 𝓞 E) : E) := map_mul (algebraMap (𝓞 E) E) _ _
         rw [h3, h2]; ring
       rw [this, hk]; simp

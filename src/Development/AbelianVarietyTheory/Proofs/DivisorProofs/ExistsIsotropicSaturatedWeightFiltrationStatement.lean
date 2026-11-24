@@ -318,8 +318,7 @@ theorem exists_cell_section : ∀ {E : Type} [Field E] [NumberField E] [IsCMFiel
   have hε : ∀ a, N • ε a = y (q a) := by
     intro a
     have h2 := congrArg Subtype.val ((LinearEquiv.ofInjective mulN hinj).apply_symm_apply ⟨(y ∘ₗ q) a, hrange a⟩)
-    rw [LinearEquiv.ofInjective_apply] at h2
-    exact h2
+    rwa [LinearEquiv.ofInjective_apply] at h2
   let muln : X →ₗ[𝓞 E] X := n • LinearMap.id
   let S : Submodule (𝓞 E) X := LinearMap.range muln
   let g : Z' →ₗ[𝓞 E] X ⧸ S := S.mkQ ∘ₗ y ∘ₗ Z'.subtype
@@ -413,16 +412,14 @@ theorem ker_mod_eq_perp_range_add : ∀ {E : Type} [Field E] [NumberField E] [Is
       have h1 := hdiv z a ⟨e, he⟩
       have h2 : D.EF (t z) b = D.EF (t z) a - D.EF (t z) (a - b) := by
         rw [map_sub]; ring
-      rw [h2, hperp0 _ hk z, sub_zero]
-      exact h1
+      rwa [h2, hperp0 _ hk z, sub_zero]
     refine ⟨a - b, hk, b'', ?_⟩
     rw [← hb'', sub_add_cancel]
   · rintro ⟨k, hk, e, rfl⟩
     obtain ⟨b, hb, e₁, hb1⟩ := hsurj (y k)
     obtain ⟨b'', rfl⟩ := hdivZ b hb fun z => by
       have h1 := hdiv z (k - b) ⟨-e₁, by rw [map_sub, hb1, smul_neg]; abel⟩
-      rw [map_sub, hperp0 _ hk z, zero_sub, Int.dvd_neg] at h1
-      exact h1
+      rwa [map_sub, hperp0 _ hk z, zero_sub, Int.dvd_neg] at h1
     refine ⟨y b'' - e₁ + y e, ?_⟩
     rw [map_nsmul] at hb1
     rw [map_add (f := _), map_nsmul, smul_add, smul_sub, hb1]
@@ -470,8 +467,7 @@ theorem GlobalTheory.LowFilt.exists_isometry_kerIs : ∀ {E : Type} [Field E] [N
     have hG : ∀ x, G x = g x := fun x => rfl
     refine ⟨G.symm b, fun z hz => ?_, G.symm e, ?_⟩
     · have := hb (t ⟨z, hz⟩) ⟨⟨z, hz⟩, rfl⟩
-      rw [← hgt ⟨z, hz⟩, ← G.apply_symm_apply b, hG, hg] at this
-      exact this
+      rwa [← hgt ⟨z, hz⟩, ← G.apply_symm_apply b, hG, hg] at this
     · apply G.injective
       rw [map_add (f := _), map_nsmul, G.apply_symm_apply, G.apply_symm_apply, hG, he]
   · rintro ⟨b, hb, e, rfl⟩
@@ -568,8 +564,7 @@ theorem exists_saturation (D : Datum H) (W : Submodule (𝓞 E) D.La) (hW : W �
       intro x
       obtain ⟨⟨x, n, hn, hx⟩, rfl⟩ := Submodule.mkQ_surjective _ x
       refine ⟨(n : 𝓞 E), Nat.cast_ne_zero.2 hn, ?_⟩
-      rw [← map_smul, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero, Nat.cast_smul_eq_nsmul]
-      exact hx
+      rwa [← map_smul, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero, Nat.cast_smul_eq_nsmul]
     rw [← h1, h2, zero_add, (Submodule.comapSubtypeEquivOfLe hle).finrank_eq]
 
 theorem exists_succ (D : Datum H) (Z : Submodule (𝓞 E) D.La) (hZ : IsIsoSat D Z)
@@ -597,8 +592,7 @@ theorem exists_succ (D : Datum H) (Z : Submodule (𝓞 E) D.La) (hZ : IsIsoSat D
     have e2 : ∀ (a : 𝓞 E) (z : Z), D.EF (a • (x : D.La)) z = 0 := fun a z => (a • x).2 _ z.2
     have e3 : D.EF (u.2 • (x : D.La)) (v.2 • (x : D.La)) = 0 := by
       have h := hx (H.bar v.2 * u.2)
-      rw [← map_smul, hE, Submodule.coe_smul, mul_smul, D.adj, bar_bar] at h
-      exact h
+      rwa [← map_smul, hE, Submodule.coe_smul, mul_smul, D.adj, bar_bar] at h
     rw [hg, hg]
     simp only [map_add (f := _), LinearMap.add_apply]
     rw [e1, e2, e3, _root_.GlobalTheory.SimLift.form_skew, e2]
@@ -699,8 +693,7 @@ theorem mem_of_perp_perp (hZ : IsIsoSat D Z) (y : D.La) (hy : ∀ p ∈ perp D Z
   by_contra hyZ
   have hu : (Z.restrictScalars ℤ).mkQ y ≠ 0 := fun h => hyZ ((Submodule.Quotient.mk_eq_zero _).1 h)
   obtain ⟨χ, hχ⟩ : ∃ χ : Module.Dual ℤ (D.La ⧸ Z.restrictScalars ℤ), χ ((Z.restrictScalars ℤ).mkQ y) ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hu ((Module.forall_dual_apply_eq_zero_iff ℤ _).1 hc)
   obtain ⟨p, hp⟩ := exists_ef_eq D (χ.comp (Z.restrictScalars ℤ).mkQ).toAddMonoidHom
   have hpZ : p ∈ perp D Z := fun z hz => by
@@ -1655,8 +1648,7 @@ theorem torus_pair (D : Datum H) {R : Type} [CommRing R] [IsDomain R] [IsLocalRi
     subst hz0
     have e : N.tor (tr t') = N.tor (tr t) := by
       have h := hz'
-      rw [NumD.io_zero, _root_.mul_one] at h
-      exact h
+      rwa [NumD.io_zero, _root_.mul_one] at h
     have e' := NumD.tor_injective N e
     refine MonoidHom.ext fun χ => ?_
     have := congrArg (fun s : Multiplicative N.X →* Fˣ => s (Multiplicative.ofAdd (ν.eX.symm χ.toAdd))) e'
@@ -1698,8 +1690,7 @@ theorem exists_char {X F : Type} [AddCommGroup X] [Module.Free ℤ X] [Module.Fi
   have hφ : ∀ v, (QuotientAddGroup.mk (φ v) : AddCircle (1 : ℚ)) = g v := by
     have : (QuotientAddGroup.mk' (AddSubgroup.zmultiples (1 : ℚ))).toIntLinearMap ∘ₗ φ = g := b.ext fun i => by
       simp [φ, hr]
-    intro v
-    exact congrArg (fun f : X →ₗ[ℤ] AddCircle (1 : ℚ) => f v) this
+    exact fun v => congrArg (fun f : X →ₗ[ℤ] AddCircle (1 : ℚ) => f v) this
   have key : ∀ v, g v = 0 ↔ (n : ℤ) ∣ ψ v := fun v => by
     rw [← hφ, QuotientAddGroup.eq_zero_iff, AddSubgroup.mem_zmultiples_iff]
     have hn' : (n : ℚ) ≠ 0 := Nat.cast_ne_zero.2 hn.ne'
@@ -1759,8 +1750,7 @@ theorem tateIsoQ_y_cois : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E]
   have dv : ∀ c : D.La, (∀ a, I.ζ n ^ D.EF c a = 1) → ∃ e, c = n • e := fun c h =>
     _root_.GlobalTheory.Ex.Specialise.exists_eq_smul_of_dvd D hn fun a => ((I.ζ_prim n hn).zpow_eq_one_iff_dvd _).1 (h a)
   refine ⟨fun x => ?_, fun a ha => ?_⟩
-  · by_contra hx
-    push Not at hx
+  · by_contra! hx
     obtain ⟨t, ht, hS, hx'⟩ := exists_char hζ hn (LinearMap.range (y n)).toAddSubgroup x (by
       rintro s ⟨a, rfl⟩ e
       exact hx a e)
@@ -1768,8 +1758,7 @@ theorem tateIsoQ_y_cois : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E]
     obtain ⟨e, he⟩ := dv b fun a => by rw [h1, tv t ht]; exact hS _ ⟨a, rfl⟩
     obtain ⟨e', he'⟩ := dv b' fun a => by rw [h2]; rfl
     exact hx' (by rw [h3 ⟨e - e', by rw [he, he', smul_sub, add_sub_cancel]⟩]; rfl)
-  · by_contra hne
-    push Not at hne
+  · by_contra! hne
     obtain ⟨t, ht, -, hx'⟩ := exists_char hζ hn ⊥ (y n a) (by
       intro s hs e h
       rw [AddSubgroup.mem_bot] at hs

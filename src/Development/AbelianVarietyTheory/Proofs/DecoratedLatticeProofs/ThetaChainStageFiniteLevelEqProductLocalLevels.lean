@@ -94,8 +94,7 @@ theorem finE_gAt_mem_St {V : HSp D} {β : GL (Fin V.rank) (Lev.EAf D)} {Λ : Sub
     (GlobalTheory.AdelicU.emb D.sp.cm.sig V.gram v (GlobalTheory.AdelicU.proj D.sp.cm.sig V.gram v g)) ∈ _
   by_cases e : w = v
   · subst e
-    rw [GlobalTheory.AdelicU.proj_emb_self]
-    exact hv
+    rwa [GlobalTheory.AdelicU.proj_emb_self]
   · rw [GlobalTheory.AdelicU.proj_emb_ne _ _ e]
     exact one_mem _
 
@@ -135,8 +134,7 @@ theorem levLoc : ∀ D : D7, ForStageQ D fun c w _ s => MeasurableSet (levSet s)
     intro PP hPP
     have h1 : PP ∈ c.Pg := by
       rw [hw.union, Finset.mem_union]
-      rw [hL] at hPP
-      exact hPP
+      rwa [hL] at hPP
     unfold Com.S
     exact Finset.mem_image_of_mem _ h1
   set V := s.V
@@ -175,8 +173,7 @@ theorem levLoc : ∀ D : D7, ForStageQ D fun c w _ s => MeasurableSet (levSet s)
             show GlobalTheory.AdelicU.proj D.sp.cm.sig V.gram v
               (GlobalTheory.AdelicU.emb D.sp.cm.sig V.gram v (GlobalTheory.AdelicU.proj D.sp.cm.sig V.gram v g)) = _
             rw [GlobalTheory.AdelicU.proj_emb_self]
-          rw [e] at this
-          exact this
+          rwa [e] at this
         · exact hI v hv
       refine (mem_lev_iff V.gram s.β s.L hP _).2 ⟨GlobalTheory.LevSplit.finE_mem_UA V g, hS, fun PP => ?_⟩
       by_cases hPP : PP ∈ s.L.Pg ∨ PP ∈ s.L.Q

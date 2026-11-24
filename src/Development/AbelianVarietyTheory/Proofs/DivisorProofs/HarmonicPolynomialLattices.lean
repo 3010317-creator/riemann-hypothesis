@@ -124,8 +124,7 @@ theorem harmLat_le_span {K₀ K : Type} [Field K₀] [NumberField K₀] [Field K
   have h0 : P - Q = 0 := GlobalTheory.ExportSeries.HarmInj.harm_inj D m n w B hw hm _ (sub_mem hP.1 (hN hQ)) (by
     rw [map_sub, sub_eq_zero]
     exact e.symm)
-  rw [sub_eq_zero.1 h0]
-  exact hQ
+  rwa [sub_eq_zero.1 h0]
 
 theorem isLattice_latAt {S T : HSp D} {B : Base S T} (hF : B.F.Good) (h : Bridge.Gf S) :
     Submodule.IsFullLattice D.host.E (B.latAt h) :=

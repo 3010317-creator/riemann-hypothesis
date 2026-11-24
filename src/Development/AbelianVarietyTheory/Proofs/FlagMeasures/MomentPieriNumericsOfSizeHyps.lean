@@ -228,12 +228,8 @@ theorem num_of_size : ∀ (D : D7) (large₂ : SizeData₂ D) (C' Cl Cg cb Cu cT
     have : ((2 * D.R.rS + D.R.k + 1 : ℕ) : ℝ) = D.R.r := by rw [hdim]
     push_cast at this
     linarith
-  have hL1 : 1 ≤ large₂.sc.L := by
-    show 1 ≤ large₂.sc.x ^ large₂.sc.eps
-    exact Real.one_le_rpow large₂.sc.one_lt_alt.le large₂.sc.eps_pos.le
-  have hb1 : 1 ≤ large₂.sc.b := by
-    show 1 ≤ Real.exp large₂.sc.L
-    exact Real.one_le_exp (by linarith)
+  have hL1 : 1 ≤ large₂.sc.L := Real.one_le_rpow large₂.sc.one_lt_alt.le large₂.sc.eps_pos.le
+  have hb1 : 1 ≤ large₂.sc.b := Real.one_le_exp (by linarith)
   have hF1 : (1 : ℝ) ≤ D.R.f := by
     have : 1 ≤ D.R.f := le_trans (Nat.one_le_pow _ _ (by omega)) hm4f
     exact_mod_cast this
@@ -362,8 +358,7 @@ theorem num_of_size : ∀ (D : D7) (large₂ : SizeData₂ D) (C' Cl Cg cb Cu cT
   have hu0 : ((D.hcW w τ).u ⟨0, by omega⟩ : ℝ) ≤ large₂.sc.b ^ Cu := by
     have := hu1 w τ
     unfold uOne at this
-    rw [dite_eq_left (show 1 ≤ 1 ∧ 1 ≤ D.R.k by omega)] at this
-    exact this
+    rwa [dite_eq_left (show 1 ≤ 1 ∧ 1 ≤ D.R.k by omega)] at this
   have hC9 : ∀ i ∈ Finset.Icc 1 D.R.k, |U i| ≤ large₂.sc.b ^ max 2 Cu := by
     intro i hi
     rw [Finset.mem_Icc] at hi

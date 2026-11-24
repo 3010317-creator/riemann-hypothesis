@@ -92,8 +92,7 @@ theorem _root_.GlobalTheory.Mass.OrbFib.key (π : α → β)
     constructor
     · rintro ⟨h, rfl⟩
       refine ⟨⟨(h : G) * k, ?_⟩, ?_⟩
-      · show ((h : G) * k) • x = (h : G) • (k • x)
-        exact mul_smul _ _ _
+      · exact mul_smul _ _ _
       · show π ((h : G) • (k • x)) = k • π x
         rw [hπ, hkx]
         exact h.2
@@ -121,10 +120,8 @@ variable {G α β : Type} [Group G] [MulAction G α] [MulAction G β] in
 theorem _root_.GlobalTheory.Mass.OrbFib.mem_orbit_out (q : MulAction.orbitRel.Quotient G α) (x : α) :
     x ∈ MulAction.orbit G (Quotient.out q) ↔ (Quotient.mk (MulAction.orbitRel G α) x) = q := by
   constructor
-  · intro h
-    exact (Quotient.sound h).trans (Quotient.out_eq q)
-  · intro h
-    exact Quotient.exact (h.trans (Quotient.out_eq q).symm)
+  · exact fun h => (Quotient.sound h).trans (Quotient.out_eq q)
+  · exact fun h => Quotient.exact (h.trans (Quotient.out_eq q).symm)
 
 open NumberField Matrix in
 open scoped ENNReal Classical in

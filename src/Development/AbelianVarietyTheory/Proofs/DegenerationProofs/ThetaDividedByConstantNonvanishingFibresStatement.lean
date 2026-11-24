@@ -141,8 +141,7 @@ theorem ZHPre.exists_testFac_of_large : ∀ (o Ω : Type) [CommRing o] [Field Ω
     rw [Scheme.Opens.range_ι]
     rintro _ ⟨x, rfl⟩
     rw [Subsingleton.elim x (spMap (algebraMap (FractionRing u.V) (PadicAlgCl p)) w)]
-    rw [← hg] at hw
-    exact hw
+    rwa [← hg] at hw
   refine ⟨j, yV, IsOpenImmersion.lift U₀.ι _ hr, fun _ => rfl, hfac, IsOpenImmersion.lift_fac _ _ _, ?_⟩
   rw [← Spec.map_preimage (IsOpenImmersion.lift U₀.ι _ hr ≫ Q.u₀)]
   congr 1
@@ -579,8 +578,7 @@ theorem glue_secOn {X : Scheme.{0}} (L : LB X) {I : Type} (V : I → X.Opens) (W
   have h := hσ i j k
   rw [← hs j i, ← hs k i, res_res, res_res] at h
   change resG X _ _ = resG X _ _
-  rw [map_mul, res_res, res_res, res_res]
-  exact h
+  rwa [map_mul, res_res, res_res, res_res]
 
 theorem exists_glue : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (M : RatModel o Ω) (U₀ : M.Z.Opens) (Q : ZHPre ρ M U₀), ∀ (c : Ω), (∀ (N N' : M.Z.Opens) (σ : Q.SecFam N) (σ' : Q.SecFam N'), Q.ThMul c N σ → Q.ThMul c N' σ' → ∀ (j : Q.LOne.ι) (O : Q.G.left.Opens) (h : O ≤ Q.G.hom ⁻¹ᵁ N ⊓ Q.LOne.U j) (h' : O ≤ Q.G.hom ⁻¹ᵁ N' ⊓ Q.LOne.U j), resG _ h (σ j) = resG _ h' (σ' j)) → ∀ W : M.Z.Opens, (∀ z ∈ W, ∃ (N : M.Z.Opens) (σ : Q.SecFam N), z ∈ N ∧ N ≤ W ∧ σ ∈ secOn Q.LOne (Q.G.hom ⁻¹ᵁ N) ∧ Q.ThMul c N σ ∧ Q.FibNe N σ) → ∃ σ ∈ secOn Q.LOne (Q.G.hom ⁻¹ᵁ W), Q.ThMul c W σ ∧ Q.FibNe W σ := by
   intro o Ω _ _ _ _ S ρ M U₀ Q c huniq W hloc
@@ -823,8 +821,7 @@ theorem exists_torsion_valF_ne_zero : Laws → Laws2 → ∀ (o Ω : Type) [Comm
   have hyN : ⊤ ≤ yV ⁻¹ᵁ N := by
     refine (Points.le_preimage_iff yV N).2 ?_
     rw [← hyV] at hy
-    rw [← IsLocalRing.comap_closedPoint jV]
-    exact hy
+    rwa [← IsLocalRing.comap_closedPoint jV]
   have hF : ⊤ ≤ F ⁻¹ᵁ (Q.G.hom ⁻¹ᵁ N) := by
     rw [← Scheme.Hom.comp_preimage, hsq.w]
     exact fun z _ => hyN (x := u.G.hom z) trivial
@@ -969,8 +966,7 @@ theorem torsion_integral_descends : ∀ (o Ω : Type) [CommRing o] [Field Ω] [A
       u.cart.1.lift_snd _ _ _⟩
   have hx' : spMap k ≫ x' = wl ≫ u.U.gen.hom.left := by
     refine u.cart.1.hom_ext ?_ ?_
-    · rw [Category.assoc, x1, ← Category.assoc]
-      exact ha'
+    · rwa [Category.assoc, x1, ← Category.assoc]
     · rw [Category.assoc, x2, Category.comp_id, Category.assoc]
       exact ((congrArg (wl ≫ ·) hg).trans w2).symm
   let x : Sp (FractionRing u.V) ⟶ pullback u.G.hom (jK u.V) := x' ≫ u.U.gen.inv.left
@@ -1227,8 +1223,7 @@ theorem GlobalTheory.ZH.sec_generic_eq_mul_theta : Laws → Laws2 → ∀ (o Ω 
     obtain ⟨j, hj⟩ := exists_chart ρ.P.isLB ((t₀ ≫ (ρ.pt a).left) (IsLocalRing.closedPoint Ω))
     have hj' : Set.range (t₀ ≫ (ρ.pt a).left) ⊆ ρ.P.L.U j := by
       rintro _ ⟨y, rfl⟩
-      rw [Subsingleton.elim y (IsLocalRing.closedPoint Ω)]
-      exact hj
+      rwa [Subsingleton.elim y (IsLocalRing.closedPoint Ω)]
     have hne := valR_ne_zero ρ.P.A ρ.P.L 1 (ρ.th_val a) t₀ j hj'
       ((valR_specMap (C := Ω) (A := CommRingCat.of S.R) (CommRingCat.ofHom S.R.val.toRingHom) _).trans_ne ha)
     let x : Sp Ω ⟶ ((Over.mk t₀ : Over (Sp S.R)) ⊗ ρ.P.A).left := (ptSecT ρ.P.A (h ≫ ρ.pt a)).left
@@ -1631,8 +1626,7 @@ theorem exists_thMul (h1 : Laws) (h2 : Laws2) (ov : S.Over₀ M U₀) (N : M.Z.O
   refine ⟨c, ?_⟩
   intro K _ β g r jP jL hg hr hP hL _
   have hg' : g ≫ pullback.snd _ _ = spMap β ≫ IsOpenImmersion.lift U₀.ι M.pt hpt := by
-    rw [← cancel_mono U₀.ι, Category.assoc, Category.assoc, heta]
-    exact hg
+    rwa [← cancel_mono U₀.ι, Category.assoc, Category.assoc, heta]
   have hcomm : spMap β ≫ spMap S.R.val.toRingHom = (g ≫ pullback.fst ρ.P.A.hom Q.u₀) ≫ ρ.P.A.hom := by
     rw [Category.assoc, pullback.condition, ← Category.assoc, hg', Category.assoc, Q.u₀_gen _ heta]
   let q : Sp K ⟶ ((Over.mk (spMap S.R.val.toRingHom) : Over (Sp S.R)) ⊗ ρ.P.A).left :=
@@ -1719,8 +1713,7 @@ theorem exists_good_label (h0 : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsD
   · have hx : (spMap (IsLocalRing.residue (OO p)) ≫ spMap jV ≫ IsOpenImmersion.lift W.ι yV hrange) ≫ h =
         t.left ≫ F := by
       rw [Category.assoc, Category.assoc, hcomp, ← Category.assoc (spMap jV), hbV, ← Category.assoc, hbt]
-    rw [hx]
-    exact hj
+    rwa [hx]
 
 theorem exists_theta_div : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsDiscreteValuationRing T] [Field K] [Algebra T K] [IsFractionRing T K] (G G' : Over (Sp T)) [GrpObj G] [GrpObj G'], IsSemiAbelian G → IsSemiAbelian G' → ∀ f : (Over.pullback (spMap (algebraMap T K))).obj G ⟶ (Over.pullback (spMap (algebraMap T K))).obj G', IsMonHom f → ∃! F : G ⟶ G', IsMonHom F ∧ (Over.pullback (spMap (algebraMap T K))).map F = f) → GlobalTheory.Published.SemistableReductionSt → ThmUSt → Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (M : RatModel o Ω) (U₀ : M.Z.Opens) (Q : ZHPre ρ M U₀), S.Big → S.Over₀ M U₀ → Q.Sec → Q.LocTheta → ∀ (W : M.Z.Opens) (x₀ : S.Gam), (∀ z ∈ W, x₀ ∈ S.supI M z) → ∃ σ ∈ secOn (LB.LinComb Q.L.L (K := Fin 1) (fun _ => 𝟙 Q.G.left) (fun _ => 1)) (Q.G.hom ⁻¹ᵁ W), GenVal ρ M U₀ Q.u₀ Q.G Q.φ Q.L.L Q.w 1 (fun _ : Unit => ρ.th₁) (fun _ => (S.th x₀)⁻¹) _ σ ∧ ∀ (K : Type) [Field K] [IsAlgClosed K] (x : Sp K ⟶ M.Z), Set.range x ⊆ W → ∃ (g : Sp K ⟶ Q.G.left) (j : _), g ≫ Q.G.hom = x ∧ valF g _ (σ j) ≠ 0 := by
   intro h0 hs hU h1 h2 hT o Ω _ _ _ _ S ρ M U₀ Q big ov hSec hLoc W x₀ hx₀
@@ -1767,8 +1760,7 @@ theorem exists_theta_div : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsDiscre
   have hopen : IsOpen {z' : M.Z | c₀ * S.th x₀ ∈ M.O z' ∧ (c₀ * S.th x₀)⁻¹ ∈ M.O z'} :=
     (M.isOpen_setOf_mem_O _).inter (M.isOpen_setOf_mem_O _)
   have hall : ∀ z' : M.Z, z' ∈ N₀ → z' ∈ W → c₀ * S.th x₀ ∈ M.O z' ∧ (c₀ * S.th x₀)⁻¹ ∈ M.O z' := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     obtain ⟨z₂, hz₂N, hz₂W, hbad⟩ := hcon
     have hZ : (((N₀ : Set M.Z) ∩ (W : Set M.Z)) ∩
         {z' : M.Z | c₀ * S.th x₀ ∈ M.O z' ∧ (c₀ * S.th x₀)⁻¹ ∈ M.O z'}ᶜ).Nonempty :=

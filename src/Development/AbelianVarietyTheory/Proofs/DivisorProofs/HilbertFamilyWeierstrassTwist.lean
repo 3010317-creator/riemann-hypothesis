@@ -155,8 +155,7 @@ private lemma mem_iff_sl2_equiv_mem_mulMat (F : Type) [Field F] [NumberField F] 
   unfold _root_.GlobalTheory.HilbFam.mulMat
   rw [Submodule.mem_map]
   constructor
-  · intro hx
-    exact ⟨x, hx, rfl⟩
+  · exact fun hx => ⟨x, hx, rfl⟩
   · rintro ⟨y, hy, hxy⟩
     rwa [(_root_.GlobalTheory.HilbFam.JetModular.rowEquiv F γ).injective (a₁ := y) (a₂ := x) hxy] at hy
 
@@ -348,8 +347,7 @@ theorem isFam_hfun_twist : EisExp → ∀ (F : Type) [Field F] [NumberField F] [
     rw [hα]; exact _root_.GlobalTheory.HilbFam.TwistSL.twist_mul_sl F N L (α i) γ hL.2
   have h := _root_.GlobalTheory.HilbFam.hfun_slash hE F hF s N (twist N L (α i)) hs hN (_root_.GlobalTheory.HilbFam.hasLevel_twist_of_hasLevel F N L (α i) hL) κ γ (Ch i)
     (Ch (act i γ)) τ ⟨_, _root_.GlobalTheory.HilbFam.hasLevel_twist_of_hasLevel F N L (α (act i γ)) hL, htw⟩ (hC i γ τ)
-  rw [zpow_natCast]
-  rw [h, htw]
+  rw [zpow_natCast, h, htw]
 
 end GlobalTheory.HilbFam
 end -- clump:auto
@@ -425,8 +423,7 @@ theorem isFam_hfun_GL : EisExp → ∀ (F : Type) [Field F] [NumberField F] [IsT
   · intro α γ
     simp only [gact_one, Units.val_mul, famGL_coe_redGL]
   · intro α γ τ
-    simp only [famGL_vmul_gact]
-    exact _root_.GlobalTheory.WpFam.wB_smul_transform N (vmul y α) γ τ
+    simpa only [famGL_vmul_gact] using _root_.GlobalTheory.WpFam.wB_smul_transform N (vmul y α) γ τ
 
 end GlobalTheory.HilbFam
 end -- clump:auto

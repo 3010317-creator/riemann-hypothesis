@@ -64,9 +64,7 @@ theorem pull_zsmul_of_symm : ∀ (K : Type) [Field K] (B A : AbVar K) (c : Pic A
   have bil := _root_.GlobalTheory.AV.AbVar.lam_bilinear K A c B.X
 
   have h1 : CechPic.pull (1 : B.X ⟶ A.X).left c = 0 := by
-    have e := (bil 1 1 1 0).2.1
-    simp only [AbVar.lam, _root_.mul_one, sub_self, zero_sub, neg_eq_zero] at e
-    exact e
+    simpa only [AbVar.lam, _root_.mul_one, sub_self, zero_sub, neg_eq_zero] using (bil 1 1 1 0).2.1
 
   have hinv : ∀ y : B.X ⟶ A.X, CechPic.pull (y⁻¹).left c = CechPic.pull y.left c := by
     intro y

@@ -84,8 +84,7 @@ theorem uOp_modularForm : ∀ (N l q : ℕ) (k : ℤ), 0 < N → 0 < l → q.Pri
   · intro γ hγ
     obtain ⟨s, hs, rfl⟩ := Subgroup.mem_map.1 hγ
     have := hU s hs
-    rw [SL_slash] at this
-    exact this
+    rwa [SL_slash] at this
   · intro c hc
     rw [_root_.GlobalTheory.Hk.uOp_eq_sum_slash q k (⇑f) hq0]
     exact isBoundedAt_finsetSum _ c k fun j _ => _root_.GlobalTheory.Hk.slash_rat_isBoundedAt N l k _ hN hl (by

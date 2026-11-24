@@ -149,8 +149,7 @@ theorem frame_move : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type
     refine Subgroup.mem_inf.2 ⟨PY.into _, ?_⟩
     show finE (Yc D 0) (PY.ψ (h⁻¹ * κ * h)) ∈ lev D.sp.cm (Yc D 0).gram (R.βY 0) (R.dat0 P)
     refine mem_lev.2 ⟨hpY, ?_⟩
-    rw [← hrt]
-    exact hH
+    rwa [← hrt]
   · have e1 : levChi (Wc D i) (R.βW i) (R.datWp i P) (PW.ψ κ) =
         ((ext1 P.H P.chi (rTup (R.βW i) (R.datWp i P) (finE (Wc D i) (PW.ψ κ))) : ℂˣ) : ℂ) :=
       levChi_datY (Wc D i) (R.βW i) D.R.r D.R.t (r_le_rank_Wc i) R.Pg P (fun _ _ => 1) (fun _ => 1) (PW.ψ κ)
@@ -338,8 +337,7 @@ theorem lift_fixed (Q : RowPsi V n) (x : Formalism.AUTREP.GAf D.host.E n → ℂ
     have heq : g * k = Q.ψ (pre Q g * pre Q k) := by rw [map_mul, _root_.Formalism.IndefR.principalLevelFrame.pre_spec Q hg, _root_.Formalism.IndefR.principalLevelFrame.pre_spec Q hkG]
     have hfix := congrFun (hx (pre Q k) (by rw [_root_.Formalism.IndefR.principalLevelFrame.pre_spec Q hkG]; exact hk)) (pre Q g)
     unfold lift
-    rw [ite_eq_left hgk, ite_eq_left hg, heq, _root_.GlobalTheory.SphScalar.pre_psi]
-    exact hfix
+    rwa [ite_eq_left hgk, ite_eq_left hg, heq, _root_.GlobalTheory.SphScalar.pre_psi]
   · have hgk : g * k ∉ GfC V := fun h => hg (by simpa using (GfC V).mul_mem h ((GfC V).inv_mem hkG))
     unfold lift
     rw [ite_eq_right hgk, ite_eq_right hg]
@@ -430,8 +428,7 @@ theorem row_type_eig : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Ty
     dsimp only
     rw [dite_eq_left hex, heckeOperator_eq_of_spherical (PW i0) Pr d B hex.choose (sph_of_full hB) (sph_of_full hex.choose_spec) x hxf]
     exact (hsc Pr d hex.choose (sph_of_full hex.choose_spec)).choose_spec x hxS hxf
-  · intro Pr d hne
-    exact dite_eq_right hne
+  · exact fun Pr d hne => dite_eq_right hne
 
 end GlobalTheory.RowEig
 end -- clump:auto

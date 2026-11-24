@@ -93,8 +93,7 @@ theorem isAlgebraic_of_torsion {k : Type} [Field k] [CharZero k] [Algebra k ℂ]
     (W.baseChange_nonsingular hι _ _).mp h
   have h1 : m • (WeierstrassCurve.Affine.Point.some _ _ hF) = 0 := by
     apply WeierstrassCurve.Affine.Point.map_injective (W' := W) ι
-    rw [map_nsmul, map_zero, WeierstrassCurve.Affine.Point.map_some]
-    exact h0
+    rwa [map_nsmul, map_zero, WeierstrassCurve.Affine.Point.map_some]
   have h2 : ∀ n : ℕ, x + n ∈ S := fun n => by
     have hn : Transcendental k (x + n) := fun ha => hx (by
       have := ha.sub (isAlgebraic_natCast (R := k) (A := ℂ) n)
@@ -132,8 +131,7 @@ theorem weierstrassP_mem (L : PeriodPair) (h2 : L.g₂ ∈ Qbar) (h3 : L.g₃ �
       obtain ⟨rfl, -⟩ := WeierstrassCurve.Affine.Point.some.inj hz
       rw [Polynomial.mem_rootSet]
       exact ⟨hD.ne_zero, (hroot z hz').mpr h0⟩
-    · rw [← latticePoint_of_notMem L ht, hmul, latticePoint_eq_zero_iff]
-      exact hmt
+    · rwa [← latticePoint_of_notMem L ht, hmul, latticePoint_eq_zero_iff]
     · set F := (↥Qbar)⟮L.weierstrassP t⟯
       have e1 : L.weierstrassP t ∈ F := IntermediateField.mem_adjoin_simple_self _ _
       have e2 : L.g₂ ∈ F := F.algebraMap_mem ⟨L.g₂, h2⟩

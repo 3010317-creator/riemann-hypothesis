@@ -709,8 +709,7 @@ theorem om_real_reads : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfF
     have h3 := (GlobalTheory.T.thetaReading_linear_injective_at_orthonormal_frame D ψ θ V W W.rank g rfl X bas idx hstd hP.inf hP.std hP.even hX hS _ (hON u)
       _ _ _ _ h2 h2).1 c 0
     rw [zero_smul, zero_smul, add_zero, add_zero] at h3
-    rw [h1]
-    exact h3
+    rwa [h1]
   choose c hc using hc
   by_cases hφ : φ = 0
   · intro u hu
@@ -874,8 +873,7 @@ theorem latO_le {D : D7} (V W : HSp D) (LV : Set (Fin V.rank → D.host.E))
       rw [smul_smul]
       exact h1 _
   have := key (a • t) (h (Submodule.subset_span ⟨a, ha, t, ht, rfl⟩)) 1
-  rw [one_smul] at this
-  exact this
+  rwa [one_smul] at this
 
 theorem actO_mul {D : D7} (V W : HSp D) (h h' : GA D W) (u : WO V W) :
     actO V W 1 (h * h') u = actO V W 1 h (actO V W 1 h' u) := by
@@ -991,8 +989,7 @@ theorem exists_vacuum_multiplier : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
     rw [_root_.GlobalTheory.RealMove.muVal_mul hmu, this]
     field_simp
   rw [e1, smul_smul, smul_smul, mul_assoc, ← e2] at hR'
-  rw [frMove_mul_fin θ W X u hc]
-  exact hR'
+  rwa [frMove_mul_fin θ W X u hc]
 
 end GlobalTheory.VacFamily
 end -- clump:auto

@@ -148,8 +148,7 @@ theorem N_conj {n : Mat k r} (hn : n ∈ Nset k r) (y : Mat k r) : n * y * n⁻�
       rw [Matrix.mul_assoc, Matrix.nonsing_inv_mul n hu, Matrix.mul_one]
     rw [e]
     exact hmul _ (hmul _ (hinv n hn) _ hy) _ hn
-  · intro hy
-    exact hmul _ (hmul _ hn _ hy) _ (hinv n hn)
+  · exact fun hy => hmul _ (hmul _ hn _ hy) _ (hinv n hn)
 
 theorem Rset_conj {n₁ n₂ : Mat k r} (g : Mat k r) (h₁ : n₁ ∈ Nset k r) (h₂ : n₂ ∈ Nset k r) (x : Mat k r) :
     x ∈ Rset k r (n₁ * g * n₂) ↔ n₂ * x * n₂⁻¹ ∈ Rset k r g := by
@@ -217,8 +216,7 @@ theorem DD_mul {ε : ℝ} (h : ε ≠ 0) : DD k r ε * DD k r ε⁻¹ = 1 := by
   rw [Matrix.diagonal_mul_diagonal, ← Matrix.diagonal_one]
   congr 1
   funext i
-  simp only [Complex.ofReal_inv, _root_.inv_zpow]
-  exact mul_inv_cancel₀ (zpow_ne_zero _ hc)
+  simpa only [Complex.ofReal_inv, _root_.inv_zpow] using mul_inv_cancel₀ (zpow_ne_zero _ hc)
 
 theorem DD_unit {ε : ℝ} (h : ε ≠ 0) : IsUnit (DD k r ε).det := Matrix.isUnit_det_of_right_inverse (DD_mul h)
 
@@ -276,12 +274,10 @@ theorem N_ss {n : Mat k r} (hn : n ∈ Nset k r) (a b : Fin r) (hab : a ≤ b) :
       · rw [Hpk_eI_apply b (esI k r b), ite_eq_left rfl, one_mul, Matrix.conjTranspose_apply]
       · intro p _ hp
         rw [Hpk_eI_apply b p, ite_eq_right hp, zero_mul]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     · intro q _ hq
       rw [Hpk_apply_eI a q, ite_eq_right hq, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   rw [h2] at h1
   have h3 : eI k r b = eI k r a ↔ a = b := by rw [Rad.eI_inj]; exact eq_comm
   have h4 := congrArg star h1
@@ -297,8 +293,7 @@ theorem N_entry {n : Mat k r} (hn : n ∈ Nset k r) (i j : Fin (2 * r + k + 1)) 
   refine Rad.cases3 (P := fun j => pw k r i ≤ pw k r j → n i j = (1 : Mat k r) i j) ?_ ?_ ?_ j
   · intro b h
     have hi : b.val ≤ i.val := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       have hir : i.val < r := lt_trans hc b.isLt
       have hp : pw k r i = (r : ℤ) - i.val := by unfold pw; rw [ite_eq_left hir]
       rw [hp, pw_e] at h
@@ -306,8 +301,7 @@ theorem N_entry {n : Mat k r} (hn : n ∈ Nset k r) (i j : Fin (2 * r + k + 1)) 
     rw [hn.2.1 b i hi, Matrix.one_apply]
   · intro m h
     have hi : r ≤ i.val := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       have hp : pw k r i = (r : ℤ) - i.val := by unfold pw; rw [ite_eq_left hc]
       rw [hp, pw_w] at h
       omega
@@ -343,13 +337,10 @@ theorem ep_ne (m : ℕ) : ep m ≠ 0 := by
 
 theorem tendsto_DD {n : Mat k r} (hn : n ∈ Nset k r) :
     Tendsto (fun m => DD k r (ep m) * n * (DD k r (ep m))⁻¹) atTop (𝓝 1) := by
-  have h0 : Tendsto (fun m : ℕ => ep m) atTop (𝓝 0) := by
-    show Tendsto (fun m : ℕ => 1 / ((m : ℝ) + 1)) atTop (𝓝 0)
-    exact tendsto_one_div_add_atTop_nhds_zero_nat
+  have h0 : Tendsto (fun m : ℕ => ep m) atTop (𝓝 0) := tendsto_one_div_add_atTop_nhds_zero_nat
   have hep : Tendsto (fun m : ℕ => ((ep m : ℝ) : ℂ)) atTop (𝓝 0) := by
     have h := (Complex.continuous_ofReal.tendsto 0).comp h0
-    rw [Complex.ofReal_zero] at h
-    exact h
+    rwa [Complex.ofReal_zero] at h
   refine tendsto_pi_nhds.2 fun i => tendsto_pi_nhds.2 fun j => ?_
   have he : ∀ m : ℕ, (DD k r (ep m) * n * (DD k r (ep m))⁻¹) i j =
       ((ep m : ℝ) : ℂ) ^ pw k r i * n i j * (((ep m : ℝ) : ℂ) ^ pw k r j)⁻¹ := fun m => DD_conj (ep_ne m) n i j
@@ -632,7 +623,6 @@ theorem leb_congr (j : ℕ) {β β' : Fin r → ℕ} (h : Set.range (rEl k r j �
   have e : (fun p : UT r => β p.1.1 = β p.1.2) = (fun p : UT r => β' p.1.1 = β' p.1.2) := by
     funext p
     exact propext ⟨block_of_subset j h.le p, block_of_subset j h.ge p⟩
-  show lebP k r j (fun p : UT r => β p.1.1 = β p.1.2) = lebP k r j (fun p : UT r => β' p.1.1 = β' p.1.2)
   exact lebesgueWeight_congr j _ _ e
 
 theorem DD_iff {ε : ℝ} (h : ε ≠ 0) (j : ℕ) (β : Fin r → ℕ) (x : Mat k r) :
@@ -648,8 +638,7 @@ theorem DD_iff {ε : ℝ} (h : ε ≠ 0) (j : ℕ) (β : Fin r → ℕ) (x : Mat
       rw [show DD k r ε⁻¹ * (DD k r ε * x * DD k r ε⁻¹) * DD k r ε =
           (DD k r ε⁻¹ * DD k r ε) * x * (DD k r ε⁻¹ * DD k r ε) by simp only [Matrix.mul_assoc], hm,
         Matrix.one_mul, Matrix.mul_one]
-    rw [e] at hy2
-    exact hy2
+    rwa [e] at hy2
 
 theorem tendsto_DD_inv {n : Mat k r} (hn : n ∈ Nset k r) :
     Tendsto (fun m => (DD k r (ep m) * n * (DD k r (ep m))⁻¹)⁻¹) atTop (𝓝 1) := by
@@ -793,8 +782,7 @@ theorem normalFormStabilizerMeasure_scalar_le {j : ℕ} (hj : j ≤ r) (z z' : F
   have key : (ENNReal.ofReal s • lebR0 k r j β).map (conjM (m₂ * n₂⁻¹)) = ENNReal.ofReal s' • lebR0 k r j β := by
     have e1 : ((ENNReal.ofReal s • lebR0 k r j β).map (conjM n₂⁻¹)).map (conjM m₂) =
         ((ENNReal.ofReal s' • lebR0 k r j β).map (conjM m₂⁻¹)).map (conjM m₂) := by rw [← hμ, ← hμ']
-    rw [map_conj_conj, map_conj_conj, Matrix.mul_nonsing_inv _ hv₂, conj_one, Measure.map_id] at e1
-    exact e1
+    rwa [map_conj_conj, map_conj_conj, Matrix.mul_nonsing_inv _ hv₂, conj_one, Measure.map_id] at e1
   have hcl0 : IsClosedSub k r (Set.range (rEl k r j β)) := by rw [← hR]; exact hcl
   rw [hR] at hH
   exact le_of_conj j hn (lebR0 k r j β) hcl0 hH _ _ key

@@ -277,8 +277,7 @@ theorem secVal_mem (s : B.Sec) : secVal p σ s ∈ fibSec p σ B := by
   have hij : y ∈ ptsIn p σ (B.U i ⊓ B.U j) := mem_ptsIn_inf.2 ⟨hi, hj⟩
   have e := congrArg (fun f => ev p σ _ f y) (s.2 i j)
   simp only [ev_mul] at e
-  rw [ev_res inf_le_left hij, ev_res inf_le_right hij] at e
-  exact e
+  rwa [ev_res inf_le_left hij, ev_res inf_le_right hij] at e
 
 theorem secVal_smul (a : k) (s : B.Sec) : secVal p σ (algX p ⊤ a • s) = σ a • secVal p σ s := by
   funext i y
@@ -294,8 +293,7 @@ theorem secVal_ne_zero_iff (s : B.Sec) {i : B.ι} (hi : y ∈ ptsIn p σ (B.U i)
     fun l hl => by rw [(secVal_mem s).1 i l y hi hl, mul_ne_zero_iff, and_iff_right (gv_ne_zero hi hl)]
   rw [nonzeroLocus, mem_ptsIn, Opens.mem_iSup]
   constructor
-  · intro h
-    exact ⟨i, mem_ptsIn.1 ((mem_ptsIn_basicOpen hi _).2 h)⟩
+  · exact fun h => ⟨i, mem_ptsIn.1 ((mem_ptsIn_basicOpen hi _).2 h)⟩
   · rintro ⟨l, hl⟩
     have hl' : y ∈ ptsIn p σ (Y.basicOpen (s.f l)) := mem_ptsIn.2 hl
     have hlU : y ∈ ptsIn p σ (B.U l) := ptsIn_mono (Y.basicOpen_le _) hl'
@@ -371,8 +369,7 @@ theorem span_range_of : Submodule.span ℂ (range (of p σ : B.Sec → _)) = ⊤
       rw [TensorProduct.smul_tmul', smul_eq_mul, mul_one]
     rw [e]
     exact Submodule.smul_mem _ c (Submodule.subset_span ⟨s, rfl⟩)
-  · intro x y hx hy
-    exact add_mem hx hy
+  · exact fun x y hx hy => add_mem hx hy
 
 def lift {E : Type*} [AddCommGroup E] [Module ℂ E] (φ : B.Sec →+ E)
     (h : ∀ a s, φ (algX p ⊤ a • s) = σ a • φ s) : SecC p σ B →ₗ[ℂ] E :=
@@ -444,8 +441,7 @@ theorem nsq_eq (hs : s ∈ fibSec p σ B) {i : B.ι} (hi : y ∈ ptsIn p σ (B.U
     (φ.φ (pick φ.isLB y) y - Real.log (‖gv p σ B (pick φ.isLB y) i y‖ ^ 2))
   rw [sub_add_cancel] at e
   unfold nsq
-  rw [hs.1 _ i y hp hi, φ.trans _ i y hp hi]
-  exact e
+  rwa [hs.1 _ i y hp hi, φ.trans _ i y hp hi]
 
 theorem nsq_nonneg (s : B.ι → CxPts p σ → ℂ) (y : CxPts p σ) : 0 ≤ φ.nsq s y := by
   unfold nsq
@@ -603,8 +599,7 @@ theorem noCommonZero_combVal {b : α → B.Sec} (hb : ⨆ j, nonzeroLocus (b j) 
   rw [mem_ptsIn, Opens.mem_iSup] at hy
   obtain ⟨j, hj⟩ := hy
   have hj' : secVal p σ (b j) i y ≠ 0 := (secVal_ne_zero_iff (b j) hi).2 (mem_ptsIn.2 hj)
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hv : Matrix.vecMul (fun l => secVal p σ (b l) i y) M = 0 := by
     funext a
     rw [Pi.zero_apply, ← hcon a]

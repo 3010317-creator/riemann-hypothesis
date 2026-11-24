@@ -99,8 +99,7 @@ theorem eval₂_shift [Infinite k] (φ : k →+* T) {P : MvPolynomial (Letter Ty
     · simp only [G, ite_eq_right hℓ]
       simp [g, h₂ ℓ hℓ]
   have e2 := congrArg (aeval g) hQ
-  rw [← AlgHom.comp_apply, MvPolynomial.comp_aeval, aeval_rename, e1] at e2
-  exact e2
+  rwa [← AlgHom.comp_apply, MvPolynomial.comp_aeval, aeval_rename, e1] at e2
 
 private theorem eval₂Hom_unipotent_substitution_eq [Infinite k] (φ : k →+* T) {P : MvPolynomial (Letter Ty r n) k}
     (hP : RowInv r n k P) (σ : Ty) (i : Fin (r σ))

@@ -330,8 +330,7 @@ theorem exists_unit_norm_of_selfDual_hermitian_lattice :
       linear_combination h2 / 2
     exact ⟨a, by rw [hab, h1, add_zero]⟩
   have hnp : padicNorm p (p : ℚ) = (p : ℚ)⁻¹ := padicNorm.padicNorm_p_of_prime
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hdiv : ∀ y ∈ L, y ∈ W → h y y / p ∈ O := by
     intro y hy hyW
     obtain ⟨u, hu⟩ := hrat y
@@ -685,8 +684,7 @@ theorem selfDual_lattice_exists_norm_one_mod :
       · simpa using (hO s).2 hs
       · have : (s ^ 2 + (p : ℚ) * 0 ^ 2) * u1 - 1 = -((p : ℚ) * t ^ 2 * u1) := by
           linear_combination h2
-        rw [this, padicNorm.neg, padicNorm.mul, hu1n, mul_one]
-        exact ht
+        rwa [this, padicNorm.neg, padicNorm.mul, hu1n, mul_one]
     · haveI : Fact d.Prime := ⟨hd⟩
       have hdn : padicNorm p (d : ℚ) = 1 := padicNorm.padicNorm_of_prime_of_ne hpd
       obtain ⟨a, b, hab'⟩ := hab u1 (u1 * d) hu1n (by rw [padicNorm.mul, hu1n, hdn, mul_one])
@@ -862,8 +860,7 @@ theorem exists_local_ring : ∀ (K : Type) [Field K] [CharZero K] (p : ℕ), p.P
     have h2 : padicNorm p (s : ℚ) = 1 :=
       (padicNorm.nat_eq_one_iff s).2 ((Nat.Prime.coprime_iff_not_dvd hp).1 hs.symm)
     have h3 := padicNorm.of_int (p := p) n
-    rw [show (n : ℚ) = (s : ℚ) * r from hn', padicNorm.mul, h2, one_mul] at h3
-    exact h3
+    rwa [show (n : ℚ) = (s : ℚ) * r from hn', padicNorm.mul, h2, one_mul] at h3
   · refine ⟨r.den, ?_, ?_⟩
     · have h1 : ‖(r : ℚ_[p])‖ ≤ 1 := by rw [Padic.eq_padicNorm]; exact_mod_cast hr
       exact ((Nat.Prime.coprime_iff_not_dvd hp).2 (by
@@ -1214,8 +1211,7 @@ theorem odd_one : ∀ D : D7, odd1 D := by
     have h2 : ∀ j, IsIntegral ℤ (((∏ i, s i : ℕ) : D.host.K) * c j) := by
       intro j
       obtain ⟨t, ht'⟩ := Finset.dvd_prod_of_mem s (Finset.mem_univ j)
-      rw [ht']
-      rw [Nat.cast_mul, mul_comm (s j : D.host.K), mul_assoc]
+      rw [ht', Nat.cast_mul, mul_comm (s j : D.host.K), mul_assoc]
       exact (isIntegral_natCast (R := ℤ) t).mul (hsc j)
     refine ⟨∏ i, s i, Nat.Coprime.prod_left fun i _ => hs i, fun j => ⟨_, h2 j⟩, ?_⟩
     rw [Finset.smul_sum]

@@ -66,8 +66,7 @@ theorem goodOp_rho_comm {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.wh
   have h := LinearMap.congr_fun (goodOp_comm (R := R) hX j g) x
   simp only [LinearMap.comp_apply, twRep_apply, map_smul] at h
   have h' := congrArg (fun y => (((R.FW j).chi g : D.what₂.LLˣ) : D.what₂.LL) • y) h
-  simp only [smul_smul, Units.mul_inv, one_smul] at h'
-  exact h'
+  simpa only [smul_smul, Units.mul_inv, one_smul] using h'
 
 variable {T : Full D} [inst : Algebra T.J.Q.c.F D.what₂.LL] {R : RealDat D A T.J.Q.c.F}
   {κ : ∀ i : Fin D.R.m, WeightFamilies.Wt D ((i : ℕ) + 1)} {v₀ : ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), (R.MW i σ).Vec}
@@ -109,8 +108,7 @@ theorem tie_thetaJ (t : OnTie h fw hinj EX p ι wL wF nT O v i z act inc ℓ U �
       sub_eq_zero]
     intro u
     have hU' : ∀ g : P, g ∈ O.U → inc g ∈ U := fun g hg => by
-      rw [t.U_eq] at hg
-      exact hg
+      rwa [t.U_eq] at hg
     have hu : inc u ∈ U := hU' u u.2
     apply hb.1
     rw [t.rho_eq_of_actionPin ha, hty _ hx' ⟨inc u, hu⟩, map_smul, t.ψ_eq u hu]

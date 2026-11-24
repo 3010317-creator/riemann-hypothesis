@@ -126,8 +126,7 @@ theorem over_scale {g n : ℕ} {F : SFam g n (zetaAway n)} {W : Matrix (Fin 8) (
     rw [← _root_.mul_assoc, ← mul_pow, inv_mul_cancel₀ hc, one_pow, _root_.one_mul]
   rw [hcv] at this
   have hf : coef s' g' wk' = fun j => c⁻¹ ^ k * coef s' g' wk j := funext hscale
-  rw [hf]
-  exact this
+  rwa [hf]
 
 
 attribute [local instance] GlobalTheory.TorusExt.gtGroup in

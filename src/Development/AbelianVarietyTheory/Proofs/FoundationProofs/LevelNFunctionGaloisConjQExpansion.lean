@@ -118,8 +118,7 @@ theorem hasQ_vadd : ∀ (N : ℕ) (f : ℍ → ℂ) (a : ℕ → ℂ) (b : ℝ),
     ring
   show HasSum (fun n : ℕ => a n * Complex.exp (2 * Real.pi * Complex.I * n * b / N) *
       Complex.exp (2 * Real.pi * Complex.I * n * τ / N)) (f (b +ᵥ τ))
-  rw [he]
-  exact h1
+  rwa [he]
 
 end GlobalTheory.QFam
 end -- clump:auto
@@ -163,8 +162,7 @@ theorem hasQ_of_integral_quot : ∀ (N n : ℕ) (A D : ℍ → ℂ) (s : Fin n �
   have hUo : IsOpen {z : ℂ | 0 < z.im} := isOpen_lt continuous_const Complex.continuous_im
   have hUc : IsPreconnected {z : ℂ | 0 < z.im} := (convex_halfSpace_im_gt 0).isPreconnected
   obtain ⟨τ₀, hτ₀⟩ : ∃ τ, D τ ≠ 0 := by
-    by_contra hc'
-    push Not at hc'
+    by_contra! hc'
     exact hD0 (funext hc')
   have hofc : ∀ z : ℂ, 0 < z.im → ((UpperHalfPlane.ofComplex z : ℍ) : ℂ) = z := fun z hz => by
     rw [UpperHalfPlane.ofComplex_apply_of_im_pos hz]
@@ -211,8 +209,7 @@ theorem hasQ_of_integral_quot : ∀ (N n : ℕ) (A D : ℍ → ℂ) (s : Fin n �
       refine Asymptotics.IsBigO.of_bound 1 (Filter.Eventually.of_forall fun τ => ?_)
       have hb := _root_.GlobalTheory.monic_root_norm_le_one_add_sum n (fun j => s j τ) (h τ) (hhp τ)
       have hnn : (0 : ℝ) ≤ 1 + ∑ j, ‖s j τ‖ := by positivity
-      rw [Real.norm_of_nonneg hnn, one_mul]
-      exact hb
+      rwa [Real.norm_of_nonneg hnn, one_mul]
     exact h2.trans h1
   obtain ⟨b, hb⟩ := _root_.GlobalTheory.FN.hasQ_of_periodic_bounded N h hN hhm hper hbd
   exact ⟨h, b, hb, hAh⟩
@@ -283,8 +280,7 @@ theorem conj_exists : ∀ (g : ℂ ≃+* ℂ) (N n : ℕ) (f D D' A A' : ℍ →
     refine hadd _ _ _ _ (hpow _ _ n hA) ?_
     refine (hsumprod (Fin n) Finset.univ (fun j τ => s j τ * A τ ^ (j : ℕ) * D τ ^ (n - j))
       (fun j τ => s' j τ * A' τ ^ (j : ℕ) * D' τ ^ (n - j)) ?_).1
-    intro j _
-    exact hmul _ _ _ _ (hmul _ _ _ _ (hs j) (hpow _ _ _ hA)) (hpow _ _ _ hDD)
+    exact fun j _ => hmul _ _ _ _ (hmul _ _ _ _ (hs j) (hpow _ _ _ hA)) (hpow _ _ _ hDD)
   have hP0 : (fun τ => A τ ^ n + ∑ j, s j τ * A τ ^ (j : ℕ) * D τ ^ (n - j)) = fun _ => 0 := by
     funext τ
     have hx : A τ ^ n + ∑ j, s j τ * A τ ^ (j : ℕ) * D τ ^ (n - j) =
@@ -428,8 +424,7 @@ theorem exists_conj_level_one : ∀ (g : ℂ ≃+* ℂ) (w N : ℕ) (F : ℍ →
       have hm := (h4.mul_fun h6).const_mul_fun (g (c p))
       have e : ((p.1 : ℕ) : ℤ) * 4 + ((p.2 : ℕ) : ℤ) * 6 = (w : ℤ) := by
         rw [← hwt p hp]; push_cast; ring
-      rw [e] at hm
-      exact hm
+      rwa [e] at hm
     intro γ
     exact hfam () γ
   · have hFe : F = fun τ => ∑ p ∈ s, c p * (E₄ τ ^ p.1 * E₆ τ ^ p.2) := funext hF
@@ -475,8 +470,7 @@ theorem prod_sub_eq_sum {κ : Type} (s : Finset κ) (y : κ → ℂ) (x : ℂ) :
     Polynomial.eval_X, Polynomial.eval_C, Polynomial.eval_finsetSum, Polynomial.eval_mul,
     Polynomial.eval_pow, Polynomial.eval_neg, Polynomial.eval_one, Multiset.card_map,
     Finset.esymm_map_val] at h
-  rw [Finset.prod_eq_multiset_prod]
-  rw [h]
+  rw [Finset.prod_eq_multiset_prod, h]
   refine Finset.sum_congr rfl fun j _ => ?_
   simp only [Finset.card_val]
   ring
@@ -564,8 +558,7 @@ theorem lagCoeff_slash {ι : Type} [Fintype ι] [DecidableEq ι] {act : ι → S
       F (act i γ) τ * esymmOff t j (act i γ) τ := fun i => by
     rw [← hF.value_mul_denom i γ τ, ← esymmOff_value hb ht γ j i τ]
     ring
-  simp only [this]
-  exact (hb γ).sum_comp (fun i => F i τ * esymmOff t j i τ)
+  simpa only [this] using (hb γ).sum_comp (fun i => F i τ * esymmOff t j i τ)
 
 theorem lagrange_fam : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (act : ι → SL(2, ℤ) → ι) (m k N : ℕ) (t F : ι → ℍ → ℂ), 0 < N → ActBij act → IsFam act m t → IsFam act k F → (∀ i, ∃ a, HasQ N (t i) a) → (∀ i, ∃ a, HasQ N (F i) a) → ∃ c : ℕ → ℍ → ℂ, (∀ j, (∀ γ : SL(2, ℤ), c j ∣[((k + m * j : ℕ) : ℤ)] γ = c j) ∧ ∃ a, HasQ N (c j) a) ∧ ∀ i τ, F i τ * ∏ l ∈ Finset.univ.erase i, (t i τ - t l τ) = ∑ j ∈ Finset.range (Fintype.card ι), c j τ * t i τ ^ (Fintype.card ι - 1 - j) := by
   intro ι _ _ act m k N t F _ hb ht hF hqt hqF
@@ -618,8 +611,7 @@ theorem qConj_refl {N : ℕ} {f : ℍ → ℂ} (h : ∃ a, HasQ N f a) : QConj (
 
 theorem hasQ_zero (N : ℕ) : HasQ N (0 : ℍ → ℂ) (fun _ => 0) := by
   intro τ
-  simp only [zero_mul, Pi.zero_apply]
-  exact hasSum_zero
+  simpa only [zero_mul, Pi.zero_apply] using hasSum_zero
 
 theorem qConj_ne_zero {g : ℂ ≃+* ℂ} {N : ℕ} (hN : 0 < N) {f f' : ℍ → ℂ} (h : QConj g N f f') (hf : f ≠ 0) :
     f' ≠ 0 := by
@@ -727,8 +719,7 @@ theorem conj_family_of_injective : ∀ (g : ℂ ≃+* ℂ) (ι : Type) [Fintype 
     · apply Finset.prod_nbij (fun l => act' l γ)
       · intro l hl
         exact Finset.mem_erase.mpr ⟨fun h => Finset.ne_of_mem_erase hl ((hb' γ).1 h), mem_univ _⟩
-      · intro l _ l' _ h
-        exact (hb' γ).1 h
+      · exact fun l _ l' _ h => (hb' γ).1 h
       · intro y hy
         obtain ⟨l, hl⟩ := (hb' γ).2 y
         refine ⟨l, ?_, hl⟩
@@ -899,8 +890,7 @@ theorem main : ∀ (N : ℕ) [NeZero N] (τ : ℍ) (x y : Fin 2 → ZMod N), x �
   · right
     have h2 := (tauPair τ).lattice.add_mem (hadd x y) h
     rw [sub_add_cancel] at h2
-    have h3 := (hmem (x + y)).1 h2
-    exact eq_neg_of_add_eq_zero_left h3
+    exact eq_neg_of_add_eq_zero_left ((hmem (x + y)).1 h2)
 
 end GlobalTheory.FN.WpSep
 end -- clump:auto

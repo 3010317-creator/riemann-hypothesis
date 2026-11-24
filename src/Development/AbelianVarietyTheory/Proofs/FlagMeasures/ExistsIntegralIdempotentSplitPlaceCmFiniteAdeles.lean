@@ -71,13 +71,11 @@ def singleAt (v : HeightOneSpectrum (𝓞 L⁺)) (t : v.adicCompletion L⁺) : A
 theorem singleAt_self (v : HeightOneSpectrum (𝓞 L⁺)) (t : v.adicCompletion L⁺) :
     singleAt (L := L) v t v = t := by
   classical
-  show Pi.single v t v = t
   exact Pi.single_eq_same v t
 
 theorem singleAt_ne {v w : HeightOneSpectrum (𝓞 L⁺)} (t : v.adicCompletion L⁺) (h : w ≠ v) :
     singleAt (L := L) v t w = 0 := by
   classical
-  show Pi.single v t w = 0
   exact Pi.single_eq_of_ne h t
 
 theorem singleAt_int (v : HeightOneSpectrum (𝓞 L⁺)) (t : v.adicCompletion L⁺) (ht : Valued.v t ≤ 1) :

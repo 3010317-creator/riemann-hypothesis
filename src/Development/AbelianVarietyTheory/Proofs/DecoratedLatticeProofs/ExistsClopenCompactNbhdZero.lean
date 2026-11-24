@@ -115,12 +115,10 @@ theorem isCompact_intTens : IsCompact (intTens F E) := by
   convert h using 1
   ext x
   constructor
-  · intro hx
-    exact ⟨coordEquiv F E x, hx, (coordEquiv F E).symm_apply_apply x⟩
+  · exact fun hx => ⟨coordEquiv F E x, hx, (coordEquiv F E).symm_apply_apply x⟩
   · rintro ⟨y, hy, rfl⟩
     change coordEquiv F E ((coordEquiv F E).symm y) ∈ Set.univ.pi (fun _ => intAf F)
-    rw [LinearEquiv.apply_symm_apply]
-    exact hy
+    rwa [LinearEquiv.apply_symm_apply]
 
 theorem zero_mem_intTens : (0 : (Af F) ⊗[F] E) ∈ intTens F E := by
   intro i _
@@ -140,7 +138,6 @@ theorem exists_clopen_compact_nbhd_zero : ∀ (D : D7) (m n : ℕ), ∃ U : Set 
   · exact isOpen_set_pi Set.finite_univ fun _ _ =>
       isOpen_set_pi Set.finite_univ fun _ _ => (isClopen_intTens D.host.F D.host.E).2
   · exact isCompact_univ_pi fun _ => isCompact_univ_pi fun _ => isCompact_intTens D.host.F D.host.E
-  · intro i _ j _
-    exact zero_mem_intTens D.host.F D.host.E
+  · exact fun i _ j _ => zero_mem_intTens D.host.F D.host.E
 
 end GlobalTheory.AfTensNbhd

@@ -55,13 +55,11 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 theorem exists_ne_zero_of_hint_ne_zero {H : Type} [Group H] (K : Subgroup H) (u : H → ℂ) (hu : hint K u ≠ 0) :
     ∃ x, u x ≠ 0 := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   exact hu (by simp [hint, hc])
 
 theorem exists_ne_zero_of_avg_ne_zero {H : Type} [Group H] (u : H → ℂ) (hu : avg u ≠ 0) : ∃ x, u x ≠ 0 := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   exact hu (by simp [avg, hc])
 
 theorem blk_inv {n a b : ℕ} (h : a + b = n) (w : Pl E) (m : GLw a w × GLw b w)
@@ -74,8 +72,7 @@ theorem blk_inv {n a b : ℕ} (h : a + b = n) (w : Pl E) (m : GLw a w × GLw b w
   have e2 : m.2.val * (m.2⁻¹).val = 1 := Units.mul_inv _
   simp only [Prod.fst_inv, Prod.snd_inv, Matrix.mul_zero, add_zero, Matrix.zero_mul, zero_add]
   rw [e1, e2, ← Matrix.mul_assoc, e1, Matrix.one_mul, Matrix.mul_assoc m.1.val, add_comm]
-  simp [fromBlocks_one]
-  exact submatrix_one_equiv (blkEq h).symm
+  simpa [fromBlocks_one] using submatrix_one_equiv (blkEq h).symm
 
 end GlobalTheory.BCT.CtLevel
 

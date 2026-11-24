@@ -114,8 +114,7 @@ theorem chernPart_pull_of_lt : ∀ (k : Type) [CommRing k] (X Y : Scheme.{0}) [I
   set Z : Set Y := (⇑g) ⁻¹' T with hZdef
   have hZ : IsClosed Z := hT.preimage g.continuous
   have hZg : genericPoint Y ∉ Z := by
-    simp only [hZdef, mem_preimage, hgen]
-    exact hTg
+    simpa only [hZdef, mem_preimage, hgen] using hTg
   set φ := (N.pull g hg).φ σ
   set A : Set (CxPts q σ) := {y | y.1 (IsLocalRing.closedPoint ℂ) ∈ Z} with hAdef
   have h0 : φ.chernPart e' ε A = 0 := GlobalTheory.ChernNull.chernPart_over_closed hY Z hZ hZg σ φ ε
@@ -130,8 +129,7 @@ theorem chernPart_pull_of_lt : ∀ (k : Type) [CommRing k] (X Y : Scheme.{0}) [I
       c.chernDens φ y = 0 := by
     intro c y hys hyA
     have hy' : (PtsOver.map g hg (spMap σ) y).1 (IsLocalRing.closedPoint ℂ) ∉ T := by
-      intro hT'
-      exact hyA (show g (y.1 (IsLocalRing.closedPoint ℂ)) ∈ T from hT')
+      exact fun hT' => hyA (show g (y.1 (IsLocalRing.closedPoint ℂ)) ∈ T from hT')
     obtain ⟨c', hc'⟩ := hc σ _ hy'
     obtain ⟨P, Q, hPQ⟩ := GlobalTheory.HessPull.hess_pull_factor k X Y p q g hg σ e' e c c' y hys hc'
     obtain ⟨K, hK⟩ := hPQ N (pick φ.isLB y) (mem_pick _ y)
@@ -217,8 +215,7 @@ theorem main : ∀ (k : Type) [CommRing k] (X Y : Scheme.{0}) (p : X ⟶ Sp k) (
   have ref1 : Refines (L.pull (g ≫ cloι (π y)) hC)
       ((L.restr (cloι (π y))).pull g hg1) (fun c _ => c) 0 := by
     refine { le := ?_, g := ?_, φ := ?_ }
-    · intro c z hz
-      exact Set.mem_iInter.2 fun _ => Set.mem_iInter.2 fun a => Set.mem_iInter.1 hz a
+    · exact fun c z hz => Set.mem_iInter.2 fun _ => Set.mem_iInter.2 fun a => Set.mem_iInter.1 hz a
     · intro W s z c c' hc hc'
       have h₁ : (s ≫ g) z ∈ (L.B.pull (cloι (π y))).U c := Set.mem_iInter.2 fun a => Set.mem_iInter.1 hc a
       have h₂ : (s ≫ g) z ∈ (L.B.pull (cloι (π y))).U c' := Set.mem_iInter.2 fun a => Set.mem_iInter.1 hc' a
@@ -586,8 +583,7 @@ theorem exists_affine_finite_free (k : Type) [Field k] (X Y : Scheme.{0}) [IsInt
       (letI := (π.appLE U W hW).hom.toAlgebra; Module.Free Γ(X, U) Γ(Y, W) ∧ Module.Finite Γ(X, U) Γ(Y, W)) →
       (letI := (π.app U).hom.toAlgebra; Module.Free Γ(X, U) Γ(Y, π ⁻¹ᵁ U) ∧ Module.Finite Γ(X, U) Γ(Y, π ⁻¹ᵁ U)) := by
     rintro W hW rfl h
-    rw [Scheme.Hom.app_eq_appLE]
-    exact h
+    rwa [Scheme.Hom.app_eq_appLE]
   obtain ⟨h1, h2⟩ := key V hVU hpre.symm ⟨hfree, hfin⟩
   exact ⟨U, hUa, hxU, hpre ▸ hVa, h1, h2,
     GlobalTheory.GenFinEtField.finrank_app_eq_residueDegree π hg hUa (hpre ▸ hVa) hxU⟩

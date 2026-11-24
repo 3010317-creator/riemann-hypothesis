@@ -63,10 +63,8 @@ theorem exists_lift_of_isProper_of_isHom_id :
       have w : Sp Ω := IsLocalRing.closedPoint Ω
       refine ⟨Y.pt w, ?_⟩
       have h1 : (Y.pt ≫ q) w = (spMap (AlgHom.id o Ω).toRingHom ≫ M.pt) w := by rw [hq']
-      rw [Scheme.Hom.comp_apply, Scheme.Hom.comp_apply, M.pt_apply] at h1
-      exact h1
-    intro z
-    exact (genericPoint_specializes z).mem_closed hc hg
+      rwa [Scheme.Hom.comp_apply, Scheme.Hom.comp_apply, M.pt_apply] at h1
+    exact fun z => (genericPoint_specializes z).mem_closed hc hg
   obtain ⟨K', _, σ, y₁, hσ, hy₁⟩ := exists_finite_ext_point_lift_of_surjective_lft q inferInstance hsurj
     (PadicAlgCl p) (gPt p ≫ y)
   have hbij : Function.Bijective σ := by

@@ -112,8 +112,7 @@ theorem good_avg (hnorm : ∀ y ξ, ‖χ y ξ‖ = 1) (hadd : ∀ y y' ξ, χ (
     calc ∑' ξ, c ξ * χ y ξ * (a ξ * ((M : ℂ)⁻¹ * ∑ m ∈ Finset.range M, χ (m • y') ξ))
         = ∑' ξ, (M : ℂ)⁻¹ * ∑ m ∈ Finset.range M, c ξ * χ y ξ * a ξ * χ (m • y') ξ := by
           congr 1; funext ξ
-          simp only [Finset.mul_sum]
-          exact Finset.sum_congr rfl fun m _ => by ring
+          simpa only [Finset.mul_sum] using Finset.sum_congr rfl fun m _ => by ring
       _ = (M : ℂ)⁻¹ * ∑ m ∈ Finset.range M, ∑' ξ, c ξ * χ y ξ * a ξ * χ (m • y') ξ := by
           rw [tsum_mul_left, Summable.tsum_finsetSum hs]
       _ = 0 := by

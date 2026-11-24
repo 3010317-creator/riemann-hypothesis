@@ -76,17 +76,14 @@ theorem evI_mul (a b : AF F) : evI F (a * b) = evI F a * evI F b := by
     InfiniteAdeleRing.ringEquiv_mixedSpace F a.1 * InfiniteAdeleRing.ringEquiv_mixedSpace F b.1
   rw [map_mul]
 
-theorem evI_realAd (r : ℝ) : evI F (realAd F r) = algebraMap ℝ _ r := by
-  show InfiniteAdeleRing.ringEquiv_mixedSpace F ((InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (algebraMap ℝ _ r)) = _
-  exact RingEquiv.apply_symm_apply _ _
+theorem evI_realAd (r : ℝ) : evI F (realAd F r) = algebraMap ℝ _ r := RingEquiv.apply_symm_apply _ _
 
 theorem mul_infAd (u : AF F) (x : mixedEmbedding.mixedSpace F) : u * infAd x = infAd (evI F u * x) := by
   refine Prod.ext ?_ ?_
   · show u.1 * (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm x =
       (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (InfiniteAdeleRing.ringEquiv_mixedSpace F u.1 * x)
     rw [map_mul, RingEquiv.symm_apply_apply]
-  · show u.2 * 0 = 0
-    exact mul_zero _
+  · exact mul_zero _
 
 theorem infAd_add (x y : mixedEmbedding.mixedSpace F) : infAd (x + y) = infAd x + infAd y := by
   refine Prod.ext ?_ ?_
@@ -212,11 +209,9 @@ theorem exists_at_map (M : InfinitePlace F → Matrix α β ℂ) :
   choose z hz using fun (i : α) (j : β) => GlobalTheory.ThK.exists_at_evI_piInf_eq F E σ hcm τ (fun w => M w i j)
   refine ⟨Matrix.of z, fun t ht => ?_, fun w => ?_⟩
   · ext i j
-    simp only [Matrix.smul_apply, Matrix.of_apply, Matrix.zero_apply]
-    exact (hz i j).1 t ht
+    simpa only [Matrix.smul_apply, Matrix.of_apply, Matrix.zero_apply] using (hz i j).1 t ht
   · ext i j
-    simp only [Matrix.map_apply, Matrix.of_apply]
-    exact (hz i j).2 w
+    simpa only [Matrix.map_apply, Matrix.of_apply] using (hz i j).2 w
 
 theorem eq_of_at_map {u u' : Matrix α β (AE F E)} (h : At (evI F) u) (h' : At (evI F) u')
     (he : ∀ w, u.map (piInf (τ w)) = u'.map (piInf (τ w))) : u = u' := by
@@ -244,8 +239,7 @@ theorem frame_inv (M : Matrix α α ℂ) (A : Matrix α ι ℂ) (J : Matrix ι �
   have e1 : (A.map (starRingEnd ℂ)).map (starRingEnd ℂ) = A := by ext i j; simp
   have hL : (J * Aᵀ * M).map (starRingEnd ℂ) * A = 1 := by
     have := congrArg (fun X : Matrix ι ι ℂ => X.map (starRingEnd ℂ)) e2
-    rw [Matrix.map_mul, e1, Matrix.map_one _ (map_zero _) (map_one _)] at this
-    exact this
+    rwa [Matrix.map_mul, e1, Matrix.map_one _ (map_zero _) (map_one _)] at this
   refine ⟨R, ?_, hR⟩
   have : (J * Aᵀ * M).map (starRingEnd ℂ) = R := by
     calc _ = (J * Aᵀ * M).map (starRingEnd ℂ) * (A * R) := by rw [hR, Matrix.mul_one]
@@ -356,8 +350,7 @@ theorem exists_bridge : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     refine Prod.ext (funext fun w => ?_) ?_
     · show (if ε w = -1 then (1 : w.Completion) else 0) * (if ε w = -1 then 1 else 0) = if ε w = -1 then 1 else 0
       split_ifs <;> simp
-    · show (0 : IsDedekindDomain.FiniteAdeleRing (𝓞 F) F) * 0 = 0
-      exact mul_zero _
+    · exact mul_zero _
   have htt : evI F tm * evI F tm = evI F tm := by rw [← evI_mul, htm]
   have hext : ∀ w, InfinitePlace.Completion.extensionEmbedding w (tm.1 w) = if ε w = -1 then 1 else 0 := by
     intro w

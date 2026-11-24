@@ -112,8 +112,7 @@ theorem exists_conjInvariant_bump (n : ℕ) (ε : Fin n → Bool) (U : Set (UJ �
       y ∈ Metric.ball (umat (1 : UJ ε)) r := by
     intro y hy
     rw [Metric.mem_ball, dist_eq_norm, hone, Matrix.norm_lt_iff hr]
-    intro i j
-    exact lt_of_pow_lt_pow_left₀ 2 hr.le ((norm_apply_sq_le_hs (y - 1) i j).trans_lt hy)
+    exact fun i j => lt_of_pow_lt_pow_left₀ 2 hr.le ((norm_apply_sq_le_hs (y - 1) i j).trans_lt hy)
   have hcb : {y : Matrix (Fin n) (Fin n) ℂ | Formalism.REAL.hs (y - 1) ≤ r ^ 2} ⊆
       Metric.closedBall (1 : Matrix (Fin n) (Fin n) ℂ) r := by
     intro y hy
@@ -126,8 +125,7 @@ theorem exists_conjInvariant_bump (n : ℕ) (ε : Fin n → Bool) (U : Set (UJ �
     ?_, ?_⟩
   · exact Real.smoothTransition.contDiff.comp
       ((contDiff_const.sub contDiff_hs_sub_one).div_const _)
-  · intro y
-    exact Real.smoothTransition.nonneg _
+  · exact fun y => Real.smoothTransition.nonneg _
   · have h0 : Formalism.REAL.hs ((1 : Matrix (Fin n) (Fin n) ℂ) - 1) = 0 := by
       simp [Formalism.REAL.hs]
     simp only [h0, sub_zero, div_self hr2.ne']
@@ -149,8 +147,7 @@ theorem exists_conjInvariant_bump (n : ℕ) (ε : Fin n → Bool) (U : Set (UJ �
     apply hVU
     apply hrV
     apply hball
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hg (Real.smoothTransition.zero_of_nonpos
       (div_nonpos_of_nonpos_of_nonneg (by linarith) hr2.le))
   · intro k hk y
@@ -177,8 +174,7 @@ theorem exists_smooth_fix_lowKSub : ∀ (n : ℕ) (ε : Fin n → Bool) (lam : F
     refine Filter.mem_of_superset hpre ?_
     intro g hg
     have hg' : dist (σ (umat g) s0) (σ (umat (1 : UJ ε)) s0) < ‖s0‖ / 2 := hg
-    rw [h1, dist_eq_norm] at hg'
-    exact hg'
+    rwa [h1, dist_eq_norm] at hg'
   obtain ⟨a, ha_sm, ha_nn, ha1, ha_cpt, ha_supp, ha_conj⟩ := exists_conjInvariant_bump n ε U hU
   haveI : (muG ε).IsMulRightInvariant := ⟨fun g => unimodular n ε g⟩
   have hAc : Continuous (fun g : UJ ε => (a (umat g) : ℂ)) :=
@@ -300,8 +296,7 @@ theorem exists_smooth_fix_lowKSub : ∀ (n : ℕ) (ε : Fin n → Bool) (lam : F
   · intro s hs u
     have h : ∫ g, (a (umat g) : ℂ) * ⟪u, σ (umat g) s⟫_ℂ ∂(muG ε) = c * ⟪u, s⟫_ℂ := by
       have := hinner ⟨s, hs⟩ u
-      rw [hc, inner_smul_right] at this
-      exact this
+      rwa [hc, inner_smul_right] at this
     calc ∫ g, c⁻¹ * (a (umat g) : ℂ) * ⟪u, σ (umat g) s⟫_ℂ ∂(muG ε)
         = c⁻¹ * ∫ g, (a (umat g) : ℂ) * ⟪u, σ (umat g) s⟫_ℂ ∂(muG ε) := by
           rw [← integral_const_mul]

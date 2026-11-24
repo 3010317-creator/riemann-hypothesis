@@ -151,8 +151,7 @@ theorem exists_spread {X Y S : Scheme.{0}} {R A : Type} [CommRing R] [CommRing A
   have hπ (s : (Finset A)ᵒᵖ) : IsPullback (π s) q (pullback.snd p (e s)) (cG.π.app s) := by
     refine IsPullback.of_right (h₁₂ := pullback.fst p (e s)) (v₁₃ := p) (h₂₂ := e s) ?_
       (pullback.lift_snd _ _ _) (.of_hasPullback _ _)
-    rw [hι', pullback.lift_fst]
-    exact H
+    rwa [hι', pullback.lift_fst]
   have hcD : IsLimit cD := isLimitOfIsPullbackOfIsConnected α cD cG
     { hom := q, w s := (pullback.lift_snd _ _ _).symm } hπ hcG
   have hG (s : (Finset A)ᵒᵖ) : IsAffine (G.obj s) := inferInstanceAs (IsAffine (Spec _))
@@ -200,8 +199,7 @@ theorem exists_spread {X Y S : Scheme.{0}} {R A : Type} [CommRing R] [CommRing A
     D.map f₄ ⁻¹ᵁ D.map f₃ ⁻¹ᵁ D.map f₁ ⁻¹ᵁ U₁, D.map f₄ ⁻¹ᵁ D.map f₃ ⁻¹ᵁ D.map f₂ ⁻¹ᵁ V₁,
     ha' _, (hπ _).w, ?_, ?_, ?_, ?_⟩
   · have := congr(D.map f₄ ⁻¹ᵁ $h₃)
-    rw [Scheme.Hom.preimage_sup, Scheme.Hom.preimage_sup] at this
-    exact this
+    rwa [Scheme.Hom.preimage_sup, Scheme.Hom.preimage_sup] at this
   · rw [Scheme.Hom.preimage_inf] at h₄
     exact le_bot_iff.1 h₄
   · exact ((hw f₄ _).trans ((hw f₃ _).trans (hw f₁ U₁))).trans hU₁
@@ -234,8 +232,7 @@ theorem not_mem_image_inter {X T S : Scheme.{0}} (f : X ⟶ S) (t : T ⟶ S) (y 
   have hinf' : (U : Set ↥(pullback f t)) ∩ V = ∅ := by
     simpa using congr(($hinf : Set ↥(pullback f t)))
   obtain ⟨z, -, hz⟩ := hc U V U.2 V.2 (hsup' ▸ Set.subset_univ _) ⟨u, hu', hu⟩ ⟨v, hv', hv⟩
-  rw [hinf'] at hz
-  exact hz
+  rwa [hinf'] at hz
 
 end GlobalTheory.GenericConnected
 
@@ -276,8 +273,7 @@ theorem geometricallyConnected_genericFibre_of_dense :
   have : IsNoetherianRing Γ(S, W) := IsLocallyNoetherian.component_noetherian ⟨W, hW⟩
   have hr : Set.range k ⊆ Set.range hW.fromSpec := by
     rintro _ ⟨z, rfl⟩
-    rw [hW.range_fromSpec, hy]
-    exact hηW
+    rwa [hW.range_fromSpec, hy]
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (IsOpenImmersion.lift hW.fromSpec k hr)
   have hk : Spec.map φ ≫ hW.fromSpec = k := by rw [hφ, IsOpenImmersion.lift_fac]
   algebraize [φ.hom]
@@ -349,8 +345,7 @@ theorem geometricallyConnected_snd_of_range_subset {X S T T' : Scheme.{0}} (f : 
       (pullback.snd f t) m₂ := by
     refine IsPullback.of_right (h₁₂ := pullback.fst f t) (v₁₃ := f) (h₂₂ := t) ?_
       (pullback.lift_snd _ _ _) (.of_hasPullback _ _)
-    rw [pullback.lift_fst]
-    exact H1
+    rwa [pullback.lift_fst]
   have hc : ConnectedSpace ↥(pullback snd m₁) := h.geometrically_connectedSpace _ _ _ H2
   have : Surjective m₁ := ⟨fun z ↦ ⟨(default : PrimeSpectrum _), Subsingleton.elim (α := PrimeSpectrum L) _ _⟩⟩
   have hsurj : Function.Surjective (pullback.fst snd m₁) := (pullback.fst snd m₁).surjective
@@ -385,10 +380,8 @@ theorem geometricallyConnected_and_basePointFree_generic :
       obtain ⟨z, hz, -⟩ := Scheme.exists_preimage_of_isPullback (.of_hasPullback G.hom t) y s hs.symm
       obtain ⟨a, j, hj, hz'⟩ := hi.bpf n z
       have : z ∈ pullback.fst G.hom t ⁻¹ᵁ G.left.basicOpen (C.r a j) := by
-        rw [Scheme.preimage_basicOpen]
-        exact hz'
-      simp only [V, TopologicalSpace.Opens.mem_iSup]
-      exact ⟨a, j, hj, hz ▸ this⟩
+        rwa [Scheme.preimage_basicOpen]
+      simpa only [V, TopologicalSpace.Opens.mem_iSup] using ⟨a, j, hj, hz ▸ this⟩
     have hx := hb (pullback.fst G.hom (Out.jK R) x) (by
       rw [← Scheme.Hom.comp_apply, pullback.condition, Scheme.Hom.comp_apply, jK_asIdeal]
       exact hb0)
@@ -396,8 +389,7 @@ theorem geometricallyConnected_and_basePointFree_generic :
     obtain ⟨a, j, hj, hx⟩ := hx
     refine ⟨a, j, hj, ?_⟩
     have : x ∈ pullback.fst G.hom (Out.jK R) ⁻¹ᵁ G.left.basicOpen (C.r a j) := hx
-    rw [Scheme.preimage_basicOpen] at this
-    exact this
+    rwa [Scheme.preimage_basicOpen] at this
 
 end GlobalTheory.GenericSplit
 end -- clump:auto

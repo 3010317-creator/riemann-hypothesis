@@ -151,8 +151,7 @@ theorem unif_of_isBC : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ : O
     obtain ⟨e, he, hee⟩ := (GlobalTheory.T.uniformisationAt_correspond_of_cartesian O bar g ρ R ℂ σ (RingHom.id ℂ) Λ F F' N f φ hgp hact hL heta (U'.Di i) (U'.t i) P
       (U'.u i P) h.1 (hbase _ h.1)).1 _ h
     have : e = exF i P := funext fun z => Over.OverMorphism.ext (by rw [hee z]; rfl)
-    rw [← this]
-    exact he
+    rwa [← this]
   · intro y hy
     obtain ⟨i, P, hP, hu⟩ := U'.onto (hpb.lift y (spMap (RingHom.id ℂ)) (by rw [hy, hid, Category.id_comp]))
       (IsPullback.lift_snd _ _ _ _)
@@ -177,12 +176,10 @@ theorem unif_of_isBC : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ : O
       else hpb.lift (y b₀) (spMap (RingHom.id ℂ)) (by rw [hy b₀ hb₀, hid, Category.id_comp])
     have hy'1 : ∀ b ∈ B, y' b ≫ F'.s = spMap (RingHom.id ℂ) := by
       intro b hb
-      simp only [y', dite_eq_left (hy b hb)]
-      exact IsPullback.lift_snd _ _ _ _
+      simpa only [y', dite_eq_left (hy b hb)] using IsPullback.lift_snd _ _ _ _
     have hy'2 : ∀ b ∈ B, y' b ≫ f = y b := by
       intro b hb
-      simp only [y', dite_eq_left (hy b hb)]
-      exact IsPullback.lift_fst _ _ _ _
+      simpa only [y', dite_eq_left (hy b hb)] using IsPullback.lift_fst _ _ _ _
     have hh : IsHolTo B y' := (_root_.GlobalTheory.PELU.isHolTo_bc_iff R σ F.X F'.X F.s F'.s f hpb _ B y' hy'1).2
       ((isHolTo_congr_on fun b hb => (hy'2 b hb).symm).1 hhol)
     obtain ⟨B', i, P, hB', hb', hsub, hP, hu⟩ := U'.lift m B y' hB hy'1 hh b₀ hb₀

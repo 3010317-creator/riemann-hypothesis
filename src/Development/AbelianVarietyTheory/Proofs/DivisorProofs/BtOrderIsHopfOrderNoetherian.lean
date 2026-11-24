@@ -89,8 +89,7 @@ theorem roots_eig_any (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : InfinitePlac
         fun i : Fin (minpoly G.F γ).natDegree => Γ ^ (i : ℕ) := by
       funext i
       exact hΨ i
-    rw [e] at hli
-    exact hli
+    rwa [e] at hli
   have hint : IsIntegral G.F γ := Algebra.IsIntegral.isIntegral _
   have hd0 : 0 < (minpoly G.F γ).natDegree := minpoly.natDegree_pos hint
   have hpm : (minpoly G.F γ).Monic := minpoly.monic hint
@@ -105,8 +104,7 @@ theorem roots_eig_any (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : InfinitePlac
     exact h
   have hroot : Q.IsRoot w := by
     rw [Polynomial.IsRoot, hQ, Polynomial.eval_map]; exact hw
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have hdet : (Γ - algebraMap ℂ (Matrix (Fin G.n) (Fin G.n) ℂ) w).det ≠ 0 := by
     intro h0
     obtain ⟨x, hx0, hx⟩ := Matrix.exists_mulVec_eq_zero_iff.2 h0

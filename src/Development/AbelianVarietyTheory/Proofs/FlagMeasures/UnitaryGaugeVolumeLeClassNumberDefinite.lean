@@ -150,8 +150,7 @@ abbrev Isom (E : Type) [Field E] [NumberField E] [StarRing E] (r : ℕ) (X Y : D
 theorem isom_equivalence (E : Type) [Field E] [NumberField E] [StarRing E] (r : ℕ) :
     Equivalence (Isom E r) := by
   refine ⟨?_, ?_, ?_⟩
-  · intro X
-    exact ⟨1, by simp, fun y => by simp⟩
+  · exact fun X => ⟨1, by simp, fun y => by simp⟩
   · rintro X Y ⟨γ, h1, h2⟩
     refine ⟨γ⁻¹, ?_, fun y => ?_⟩
     · have hu : (γ : Matrix (Fin r) (Fin r) E) * ((γ⁻¹ : GL (Fin r) E) : Matrix (Fin r) (Fin r) E) = 1 := by
@@ -186,8 +185,7 @@ theorem coset_of_isom {r : ℕ} (h : HasSig I r 0) (x y : I.GA)
   change ∀ z, (γ : Matrix (Fin I.n) (Fin I.n) I.E) *ᵥ z ∈ lamX I x ↔ z ∈ lamX I y at h2
   have hγ : γ ∈ Formalism.UG.UJ (starRingEnd I.E) I.J := by
     show Formalism.UG.cT (starRingEnd I.E) (γ : Matrix (Fin I.n) (Fin I.n) I.E) * I.J * γ = I.J
-    rw [GlobalTheory.StabCosets.cT_star]
-    exact h1
+    rwa [GlobalTheory.StabCosets.cT_star]
   obtain ⟨a, ha1, ha2⟩ := GlobalTheory.StabCosets.exists_isImage I γ hγ
   refine ⟨a, ⟨γ, hγ, ha1, ha2⟩, ?_⟩
   have hl : lamX I (a * y) = lamX I x := by
@@ -199,8 +197,7 @@ theorem coset_of_isom {r : ℕ} (h : HasSig I r 0) (x y : I.GA)
       exact (h2 u).2 hu
     · intro hz
       refine ⟨((γ⁻¹ : GL (Fin I.n) I.E) : Matrix (Fin I.n) (Fin I.n) I.E) *ᵥ z, (h2 _).1 ?_, ?_⟩
-      · rw [mulVec_mulVec, Units.mul_inv, one_mulVec]
-        exact hz
+      · rwa [mulVec_mulVec, Units.mul_inv, one_mulVec]
       · rw [mulVec_mulVec, Units.mul_inv, one_mulVec]
   exact (GlobalTheory.PointEquivariance.lamX_mul_eq_iff I x (x⁻¹ * (a * y))).2 (by rw [mul_inv_cancel_left]; exact hl)
 
@@ -227,8 +224,7 @@ theorem covol_le {r : ℕ} (h : HasSig I r 0) (μf : Measure I.Gf) [SigmaFinite 
     obtain ⟨a, ha, hk⟩ := coset_of_isom I h hq.choose z e
     refine ⟨a, ha, Set.mem_iUnion.2 ⟨Quot.mk (Isom I.E I.n) (latOf I h z), Set.mem_univ _, ?_⟩⟩
     show (pt (Quot.mk (Isom I.E I.n) (latOf I h z))).2⁻¹ * (a * z).2 ∈ I.Kset
-    rw [hpt]
-    exact hk
+    rwa [hpt]
   calc covol I.GFset (I.muA μf) Set.univ ≤ I.muA μf (⋃ q, D q) := by
         unfold covol
         exact iInf_le_of_le _ (iInf_le_of_le (MeasurableSet.iUnion hDm) (iInf_le_of_le hcover le_rfl))
@@ -249,8 +245,7 @@ theorem gauge_local (N : ℕ) (ε : Fin N → Bool) (hε : ε = allPos N) (c : �
   have hne := GlobalTheory.UnitaryVolume.muG_univ_ne_zero N
   have ht : 0 < (Formalism.REAL.muG (allPos N) Set.univ).toReal := ENNReal.toReal_pos hne hlt.ne
   have hc0 : 0 < c := by
-    by_contra hle
-    push Not at hle
+    by_contra! hle
     nlinarith [_root_.GlobalTheory.UnitaryVolume.volU_pos N]
   refine ⟨hc0.le, ?_⟩
   rw [← ENNReal.ofReal_toReal hlt.ne, ← ENNReal.ofReal_mul hc0.le, h1]

@@ -123,10 +123,8 @@ theorem exists_thetaSys_at : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → 
   · intro w
     rw [← Category.assoc, ef]
     exact hηx w
-  · rw [Category.assoc, ← Category.assoc (spMap S.R.val.toRingHom), ef]
-    exact hbase
-  · rw [← Category.assoc, ef]
-    exact hst
+  · rwa [Category.assoc, ← Category.assoc (spMap S.R.val.toRingHom), ef]
+  · rwa [← Category.assoc, ef]
 
 theorem exists_setup : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F : SFam g n (zetaAway n)) (Z : Scheme.{0}) (z : Z ⟶ Sp (cycAway n))
     (i : F.X ⟶ Z), IsProjOver z → ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme Z → IsOpenImmersion i → i ≫ z = F.s →

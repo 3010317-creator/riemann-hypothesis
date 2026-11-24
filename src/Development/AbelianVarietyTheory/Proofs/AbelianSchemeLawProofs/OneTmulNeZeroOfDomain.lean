@@ -211,8 +211,6 @@ theorem injective_baseChange :
     rw [IsScalarTower.algebraMap_apply R₀ R q.ResidueField, Ideal.algebraMap_residueField_eq_zero,
       ← hqp]
     rfl
-  · intro z a
-    refine hkill a (fun m => Subtype.ext ?_) z
-    exact (Submodule.mem_torsionBySet_iff _ _).1 m.2 a
+  · exact fun z a => hkill a (fun m => Subtype.ext ((Submodule.mem_torsionBySet_iff _ _).1 m.2 a)) z
 
 end GlobalTheory.FlatFibreInjective

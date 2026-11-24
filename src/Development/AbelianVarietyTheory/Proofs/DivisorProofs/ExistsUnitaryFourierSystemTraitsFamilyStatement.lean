@@ -394,15 +394,13 @@ theorem exists_pelUnif_baseChange_of_injective : ∀ (E : Type) [Field E] [Numbe
   have hWS : IsOpen WS := Wo.isOpen
   have hbot : (⊥ : PrimeSpectrum V) ∈ WS := by
     have := hWo
-    rw [genericPoint_eq_bot_of_affine] at this
-    exact this
+    rwa [genericPoint_eq_bot_of_affine] at this
   obtain ⟨_, ⟨f, rfl⟩, hf, hfW⟩ :=
     PrimeSpectrum.isTopologicalBasis_basic_opens.exists_subset_of_mem_open hbot hWS
   have hf0 : f ≠ 0 := by
     intro e
     apply hf
     rw [e]
-    show (0 : V) ∈ (⊥ : PrimeSpectrum V).asIdeal
     exact Ideal.zero_mem _
   have hψW : ∀ x, PsiUnitOn P.D.toPre x (PrimeSpectrum.basicOpen f : Set (PrimeSpectrum V)) := by
     intro x j U hU hUW
@@ -467,8 +465,7 @@ theorem exists_pelUnif_baseChange_of_injective : ∀ (E : Type) [Field E] [Numbe
   obtain ⟨c', -⟩ := sabCancel pullCubCancel E H _ _ _ t tK tK₁ _ _ m₁ b
   obtain ⟨d, -⟩ := sabComp pullCubComp E H _ _ _ Xo.univ.t tK tK₁ _ _ m₂ c'
   refine ⟨tK₁, ⟨n'⟩, ⟨?_⟩⟩
-  rw [Category.assoc]
-  exact d
+  rwa [Category.assoc]
 
 end GlobalTheory.USepBC
 end -- clump:auto
@@ -557,8 +554,7 @@ theorem genfib_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     refine LBIso.trans hA (pull_isLB hA _) (pull_isLB hP _) e₀ ?_
     refine LBIso.trans (pull_isLB hA _) (pull_isLB hT _) (pull_isLB hP _) e₁ ?_
     refine LBIso.trans (pull_isLB hT _) (pull_isLB hK _) (pull_isLB hP _) e₂.symm ?_
-    refine LBIso.trans (pull_isLB hK _) (pull_isLB hU _) (pull_isLB hP _) e₃ ?_
-    exact e₄.symm
+    exact LBIso.trans (pull_isLB hK _) (pull_isLB hU _) (pull_isLB hP _) e₃ e₄.symm
   · intro a
     obtain ⟨f, hfα, hfβ⟩ := hf a
     letI := H.starRing
@@ -668,8 +664,7 @@ theorem member_of_monomial_unif : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     rw [hmo]
     have hu : (↑(w * Units.map ρ.toMonoidHom u₀) : V₁) * ρ (∏ i, s i ^ n i) = ↑w * ρ (↑u₀ * ∏ i, s i ^ n i) := by
       rw [map_mul, Units.val_mul, Units.coe_map, _root_.mul_assoc]; rfl
-    rw [hu]
-    exact hw
+    rwa [hu]
 
 end GlobalTheory.USep
 end -- clump:auto
@@ -1099,8 +1094,7 @@ theorem projective_of_free (E : Type) [Field E] [NumberField E] (X : Type) [AddC
     obtain ⟨r, hr, α, hα⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) (c : 𝓞 E)).exists_nonzero_dvd
       (mem_nonZeroDivisors_of_ne_zero hc0)
     have h0 : r • x = 0 := by
-      rw [← algebraMap_smul (𝓞 E) r x, hα, mul_comm, mul_smul]
-      rw [← Submonoid.smul_def, hc, smul_zero]
+      rw [← algebraMap_smul (𝓞 E) r x, hα, mul_comm, mul_smul, ← Submonoid.smul_def, hc, smul_zero]
     exact hx ((smul_eq_zero.1 h0).resolve_left hr)
   have : Module.FinitePresentation (𝓞 E) X := Module.finitePresentation_of_finite _ _
   exact Module.Flat.projective_of_finitePresentation

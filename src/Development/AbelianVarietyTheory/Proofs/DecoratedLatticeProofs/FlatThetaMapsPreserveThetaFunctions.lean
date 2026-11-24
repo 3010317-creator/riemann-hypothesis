@@ -89,8 +89,7 @@ theorem lastQ_indep (B : BesLev D σ) : LinearIndependent D.host.E (lastQ B).tra
   simp only [Matrix.mulVec_add, Matrix.mulVec_smul, Matrix.mulVec_mulVec, Matrix.mulVec_zero,
     ← Matrix.mul_assoc, a4, a5, Matrix.zero_mulVec, zero_add, Matrix.one_mulVec] at h2
   funext j
-  refine Fin.lastCases ?_ (fun i => congrFun h1 i) j
-  exact (smul_eq_zero.1 h2).resolve_right (zeta_ne B)
+  exact Fin.lastCases ((smul_eq_zero.1 h2).resolve_right (zeta_ne B)) (fun i => congrFun h1 i) j
 
 theorem flat_isThetaFun : ∀ D : D7, FlatLaw D → ∀ (ψ : AddChar (AF D.host.F) ℂ), (∀ (ρ : ℕ) (B : BesLev D ρ) (J : JacLev D ρ) (s : StepBF ψ B J) Ψ, IsThetaFunO ψ B.V J.W Ψ → IsThetaFunO ψ B.V₀ J.W₀ (flatBF s Ψ)) ∧ ∀ (σ : ℕ) (J : JacLev D (σ + 1)) (B : BesLev D σ) (s : StepFB ψ J B) Ψ, IsThetaFunO ψ J.W B.V Ψ → IsThetaFunO ψ J.W₀ B.V₀ (flatFB s Ψ) := by
   intro D hF ψ
@@ -98,8 +97,7 @@ theorem flat_isThetaFun : ∀ D : D7, FlatLaw D → ∀ (ψ : AddChar (AF D.host
   · exact (hF ψ s.weil.std B.V B.V₀ J.W J.W₀ ρ ρ B.d J.d s.vS s.vT s.vU J.d.e (isIsoSub_e J.d).1
       (yZero B.V₀ ρ (vecB B.o B.ζ)) Ψ hΨ).2
   · have h := (hF ψ s.weil.std J.W J.W₀ B.V B.V₀ (σ + 1) σ J.d B.d s.vS s.vT s.vU (lastQ B) (lastQ_indep B) 0 Ψ hΨ).2
-    rw [rat_lastQ] at h
-    exact h
+    rwa [rat_lastQ] at h
 
 end GlobalTheory.Unf.FlatTheta
 

@@ -411,8 +411,7 @@ theorem exists_integer_of_forall (y : D.host.E) (h : ∀ v : Pl D, idem D (· = 
         · rw [ite_eq_right (not_not.2 hw), smul_zero]; exact zero_mem _
         · rw [ite_eq_left hw, Algebra.smul_def, mul_one]
           refine GlobalTheory.IdVGen.inv_mem_integers fun hm => hw ?_
-          rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton]
-          exact hm
+          rwa [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton]
       · rw [hb, TensorProduct.smul_tmul, ← Algebra.smul_def, smul_smul, inv_mul_cancel₀ hF, one_smul]
   have h2 : intAE D ≤ GlobalTheory.AdLat.hat1 D.host.F ((1 : FI D) : Set D.host.E) := by
     refine (AddSubgroup.closure_le _).2 ?_
@@ -444,8 +443,7 @@ theorem selfDual_of_local : ∀ (D : D7) (h : D.host.E) (𝔞 : FI D) (u : (AE D
     have h4 := (H2 v _ h3.1).1 h3
     have he := idem_mul_self (D := D) (· = v)
     rw [RingHom.map_mul (cA D), RingHom.map_mul (cA D), cA_idem, GlobalTheory.FinPl.FrameLat.cA_incA] at h4
-    rw [RingHom.map_mul (incA D), RingHom.map_mul (incA D), alg₁ hU hC he]
-    exact h4
+    rwa [RingHom.map_mul (incA D), RingHom.map_mul (incA D), alg₁ hU hC he]
   · intro hd
     have h𝔞 : 𝔞 ≠ 0 := by
       rintro rfl
@@ -470,8 +468,7 @@ theorem selfDual_of_local : ∀ (D : D7) (h : D.host.E) (𝔞 : FI D) (u : (AE D
       (FractionalIdeal.mem_one_iff _).1 ((FractionalIdeal.mem_inv_iff h𝔞).1 hy c hc)) (hue v)
     have h5 := intAt_mul (s1 v) t
     have he := idem_mul_self (D := D) (· = v)
-    rw [RingHom.map_mul (incA D), alg₃ hU he]
-    exact h5
+    rwa [RingHom.map_mul (incA D), alg₃ hU he]
 
 end GlobalTheory.FinPl.SelfDualIdeal
 
@@ -534,8 +531,7 @@ theorem isSelfDualC_lineLat : ∀ (D : D7) (S : HSp D) (ζ : Fin S.rank → D.ho
     constructor
     · rintro ⟨c, hc, rfl⟩
       simpa [← hz, mul_div_cancel_right₀ _ z0] using hc
-    · intro h
-      exact ⟨_, h, (repr y).symm⟩
+    · exact fun h => ⟨_, h, (repr y).symm⟩
   have sum_eq : ∀ c d : D.host.E, ∑ i, ∑ j, star ((c • ζ) i) * S.gram i j * (d • ζ) j =
       star c * d * (star ζ ⬝ᵥ S.gram *ᵥ ζ) := by
     intro c d
@@ -562,16 +558,13 @@ theorem isSelfDualC_lineLat : ∀ (D : D7) (S : HSp D) (ζ : Fin S.rank → D.ho
   refine ⟨⟨?_, ?_⟩, dual⟩
   · exact (FractionalIdeal.fg_of_isNoetherianRing le_rfl 𝔄).map _
   · obtain ⟨c, hc, hc0⟩ : ∃ c ∈ 𝔄, c ≠ 0 := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       have h1m : (1 : D.host.E) ∈ 𝔄 := by
         rw [h𝔄]
-        intro c hc
-        exact ⟨0, by simp [hcon c hc]⟩
+        exact fun c hc => ⟨0, by simp [hcon c hc]⟩
       exact one_ne_zero (hcon 1 h1m)
     have hcζ : c • ζ ∈ lineLat S ζ 𝔄 := (memΛ _).2 ⟨c, hc, rfl⟩
-    intro s hs hli
-    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+    exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
 end GlobalTheory.SeeSaw.LiftModel
 end -- clump:auto
 end -- clump:auto
@@ -1042,8 +1035,7 @@ theorem mulVec_eq_of_ne {S : HSp D} {x w : Pl D} (h : w ≠ x) {g : GA D S} (hg 
     funext i
     show ∑ j, (mt S g - 1) i j * y j = 0
     exact Finset.sum_eq_zero fun j _ => mul_eq_zero_of_ne h (hg' i j) (hy j)
-  rw [Matrix.sub_mulVec, Matrix.one_mulVec, sub_eq_zero] at h0
-  exact h0
+  rwa [Matrix.sub_mulVec, Matrix.one_mulVec, sub_eq_zero] at h0
 
 theorem latV_eq_off {S : HSp D} {x w : Pl D} (h : w ≠ x) {g : GA D S} (hg : g ∈ grpAt S (· = x)) {L M : Lat S}
     (hm : Moves S g L M (· = w)) : latV S M (· = w) = latV S L (· = w) := by
@@ -1051,8 +1043,7 @@ theorem latV_eq_off {S : HSp D} {x w : Pl D} (h : w ≠ x) {g : GA D S} (hg : g 
   constructor
   · intro hy
     have hid := latV_idAt hy
-    rw [hm y hid, mulVec_eq_of_ne h hg hid]
-    exact hy
+    rwa [hm y hid, mulVec_eq_of_ne h hg hid]
   · intro hy
     have hid := latV_idAt hy
     have := (hm y hid).1 hy

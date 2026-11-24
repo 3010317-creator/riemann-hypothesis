@@ -183,8 +183,7 @@ theorem latO_algebra : ∀ (D : D7) (S T : HSp D) (LS : Set (Fin S.rank → D.ho
         exact pairA_zero_smul_tmul _ _ _ _ _
     · ext i j
       have := pairA_zero_smul_tmul D.host.F D.host.E 1 α (a * t i * ∑ k, star (s k) * S.gram k j)
-      rw [one_mul] at this
-      exact this
+      rwa [one_mul] at this
     · ext i j
       exact infPart_pairA_zero_tmul D α _
     · have h0 : α = 0 := by

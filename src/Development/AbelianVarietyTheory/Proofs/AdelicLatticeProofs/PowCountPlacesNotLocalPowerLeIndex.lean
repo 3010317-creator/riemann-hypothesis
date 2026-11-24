@@ -152,8 +152,7 @@ theorem nonnorm_pTor_map (p : ℕ) {G H : Type} [CommGroup G] [CommGroup H] (f :
   symm
   refine Nat.card_eq_of_bijective
     (fun x => ⟨f x.1, Subgroup.mem_map_of_mem f x.2.1, by rw [← map_pow, x.2.2, map_one]⟩) ⟨?_, ?_⟩
-  · intro x y hxy
-    exact Subtype.ext (hf (congrArg Subtype.val hxy))
+  · exact fun x y hxy => Subtype.ext (hf (congrArg Subtype.val hxy))
   · rintro ⟨_, ⟨x, hx, rfl⟩, h⟩
     refine ⟨⟨x, hx, hf ?_⟩, rfl⟩
     rw [map_pow, h, map_one]
@@ -164,8 +163,7 @@ theorem exists_local_nonnorm : ∀ (p : ℕ) (F : Type) [Field F] [NumberField F
     ∃ c : (v.adicCompletion F)ˣ, c ∉ kNorm p (RingHom.id (v.adicCompletion F))
       (algebraMap F (v.adicCompletion F) δ) := by
   intro p F _ _ ζ δ v hp hζ hδ
-  by_contra hall
-  push Not at hall
+  by_contra! hall
   haveI : CharZero (v.adicCompletion F) :=
     charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
   have hζ' : IsPrimitiveRoot (algebraMap F (v.adicCompletion F) ζ) p :=
@@ -180,8 +178,7 @@ theorem exists_local_nonnorm : ∀ (p : ℕ) (F : Type) [Field F] [NumberField F
       have := v.valuation_le_one (K := F) (p : 𝓞 F)
       simpa using this
     have h2 : WithZero.log (v.valuation F (p : F)) ≤ 0 := by
-      rw [← WithZero.exp_log h0, ← WithZero.exp_zero, WithZero.exp_le_exp] at h1
-      exact h1
+      rwa [← WithZero.exp_log h0, ← WithZero.exp_zero, WithZero.exp_le_exp] at h1
     refine ⟨(-WithZero.log (v.valuation F (p : F))).toNat, ?_⟩
     rw [Int.toNat_of_nonneg (by omega), neg_neg, WithZero.exp_log h0]
   obtain ⟨htL, hiL⟩ := _root_.GlobalTheory.CNorm.pIdx_units_finite_extension_adicCompletion p F v e L hp.pos he
@@ -294,8 +291,7 @@ theorem pow_card_le_index_iInf_of_prime :
         rw [QuotientGroup.mk'_apply, QuotientGroup.eq_one_iff]
         exact hx2 i j (Ne.symm hij)
       rw [this, one_pow]
-    · intro h
-      exact absurd (Finset.mem_univ j) h
+    · exact fun h => absurd (Finset.mem_univ j) h
   let f : (ι → Fin p) → G ⧸ (⨅ i, K i) := fun n => QuotientGroup.mk (∏ i, x i ^ (n i : ℕ))
   have hf : Function.Injective f := by
     intro n m h
@@ -359,8 +355,7 @@ theorem pow_tNon_le_index_finNorm :
   rw [← hcard]
   refine le_trans (_root_.GlobalTheory.CNorm.pow_card_le_index_iInf_of_prime p Fˣ A K hp ?_ ?_ (ne_zero_of_dvd_ne_zero h0 hdvd))
     (Nat.le_of_dvd (Nat.pos_of_ne_zero h0) hdvd)
-  · intro v x
-    exact hpow _ _ _ _ ⟨algebraMap F _ (x : F), by simp⟩
+  · exact fun v x => hpow _ _ _ _ ⟨algebraMap F _ (x : F), by simp⟩
   · intro v
     obtain ⟨c, hc⟩ := _root_.GlobalTheory.CNorm.exists_local_nonnorm p F ζ δ v.1 hp hζ v.2.2
     obtain ⟨x, hx0, hxv⟩ := _root_.GlobalTheory.CNorm.exists_approx_mod_powers p F S

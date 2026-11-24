@@ -897,8 +897,7 @@ theorem exists_perm_of_block_bijection : ∀ (r : ℕ) (b b' : Fin r → ℕ) (R
   have hiff : ∀ i c c', c ∈ Set.range b → c' ∈ Set.range b' → R c c' → (f i = c' ↔ b i = c) := by
     intro i c c' hc hc' hR
     constructor
-    · intro h
-      exact (h2 c' hc').unique ⟨⟨i, rfl⟩, h ▸ hf2 i⟩ ⟨hc, hR⟩
+    · exact fun h => (h2 c' hc').unique ⟨⟨i, rfl⟩, h ▸ hf2 i⟩ ⟨hc, hR⟩
     · intro h
       subst h
       exact (h1 (b i) hc).unique ⟨hf1 i, hf2 i⟩ ⟨hc', hR⟩
@@ -914,10 +913,8 @@ theorem exists_perm_of_block_bijection : ∀ (r : ℕ) (b b' : Fin r → ℕ) (R
       ext i
       simp [hiff i c c' hc hc' hR]
     · rw [Finset.filter_eq_empty_iff.2, Finset.filter_eq_empty_iff.2]
-      · intro i _ h
-        exact hc' ⟨i, h⟩
-      · intro i _ h
-        exact hc' (h ▸ hf1 i)
+      · exact fun i _ h => hc' ⟨i, h⟩
+      · exact fun i _ h => hc' (h ▸ hf1 i)
   let e : ∀ c' : ℕ, {i // f i = c'} ≃ {i // b' i = c'} := fun c' => Fintype.equivOfCardEq (hcard c')
   have hw : ∀ i, b' (Equiv.ofFiberEquiv e i) = f i := fun i => Equiv.ofFiberEquiv_map e i
   refine ⟨Equiv.ofFiberEquiv e, fun i => ?_, fun i j => ?_⟩

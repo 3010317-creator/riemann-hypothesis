@@ -77,8 +77,7 @@ theorem unramIn_of_ine {v : HeightOneSpectrum (𝓞 K)}
   obtain ⟨A, hA⟩ := exists_isPlaceOver Ω w
   have hAv : IsPlaceOver A v := fun x => by
     have := hA (algebraMap (𝓞 K) (𝓞 L) x)
-    rw [hPo.over, Ideal.mem_under, IsScalarTower.algebraMap_apply K L Ω]
-    exact this
+    rwa [hPo.over, Ideal.mem_under, IsScalarTower.algebraMap_apply K L Ω]
   have hu : ∀ s : 𝓞 L, s ∉ P → A.valuation (algebraMap L Ω (s : L)) = 1 := fun s hs =>
     le_antisymm (valuation_int_le_one A s) (not_lt.1 ((hA s).not.2 hs))
   obtain ⟨σ, hσ, e⟩ := GlobalTheory.InertiaLift.exists_mem_Ine_lift A L τ (fun x hx => by
@@ -124,8 +123,7 @@ theorem isFrob_restrict {v : HeightOneSpectrum (𝓞 K)} {A : ValuationSubring �
   · rw [hf]
     have := hσ.2 _ (valuation_int_le_one A x)
     rw [← σ.restrictNormal_commutes L, ← map_pow, ← map_sub] at this
-    rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
-    exact this
+    rwa [Ideal.absNorm_apply, Submodule.cardQuot_apply]
 
 theorem exists_field {B : Type} [CommGroup B] (φ : G K Ω →* B) (ho : IsOpen (φ.ker : Set (G K Ω))) :
     ∃ (L : IntermediateField K Ω) (_ : FiniteDimensional K L) (_ : IsAbelianGalois K L),
@@ -329,8 +327,7 @@ theorem localIdele_mem_rayIdl {𝔪 : Ideal (𝓞 K)} {v : HeightOneSpectrum (�
   · show Valued.v (ev w (localIdele K v x : AdeleRing (𝓞 K) K)) = 1
     by_cases h : w = v
     · subst h
-      rw [ev_local_self]
-      exact hx
+      rwa [ev_local_self]
     · rw [ev_local_ne h, map_one]
   · rw [ev_local_ne (by rintro rfl; exact hv hw)]
     simp

@@ -217,8 +217,7 @@ theorem mem_map_actP (lam : ι → DomWeight n) (B : ι → GL (Fin n) K) (N : S
   constructor
   · rintro ⟨y, hy, rfl⟩
     show actP lam B⁻¹ (actP lam B y) ∈ _
-    rw [← polyAction_mul, inv_mul_cancel, polyAction_one₂]
-    exact hy
+    rwa [← polyAction_mul, inv_mul_cancel, polyAction_one₂]
   · intro h
     refine ⟨_, h, ?_⟩
     show actP lam B (actP lam B⁻¹ F) = F
@@ -237,8 +236,7 @@ theorem transLat_colLat (lam : ι → DomWeight n) (T : Submodule (𝓞 K) (Pol 
   ext F
   rw [mem_map_actP, mem_transLat]
   constructor
-  · intro h
-    exact mem_of_forall_locP T fun w => h w B fun _ => rfl
+  · exact fun h => mem_of_forall_locP T fun w => h w B fun _ => rfl
   · intro h w B' hB'
     exact hI w B' hB' F ⟨1, Submonoid.one_mem _, by rw [one_smul]; exact h⟩
 

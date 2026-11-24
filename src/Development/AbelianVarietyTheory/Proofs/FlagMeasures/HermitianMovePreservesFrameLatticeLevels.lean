@@ -117,19 +117,16 @@ theorem mem_Mof (g g' : Fin (r + 1) → S.V) (y : S.V) :
       · simp only [Pi.add_apply, add_smul, Finset.sum_add_distrib]; abel
       · simpa [mul_add] using L.O.add_mem (ha i).1 (hb i).1
       · have := L.O.add_mem (ha i).2 (hb i).2
-        rw [add_add_add_comm] at this
-        exact this
+        rwa [add_add_add_comm] at this
     | smul c x _ hx =>
       obtain ⟨a, a', rfl, ha⟩ := hx
       refine ⟨fun i => c * a i, fun i => c * a' i, ?_, fun i => ⟨?_, ?_⟩⟩
       · rw [Subring.smul_def]
         simp only [smul_add, Finset.smul_sum, smul_smul]
       · have := L.O.mul_mem c.2 (ha i).1
-        rw [mul_left_comm] at this
-        exact this
+        rwa [mul_left_comm] at this
       · have := L.O.mul_mem c.2 (ha i).2
-        rw [mul_add] at this
-        exact this
+        rwa [mul_add] at this
   · rintro ⟨al, al', rfl, h⟩
     rw [← Finset.sum_add_distrib]
     refine Submodule.sum_mem _ fun i _ => ?_
@@ -176,13 +173,11 @@ theorem indep {n n' : S.GLV} (hn : n ∈ S.N) (hn' : n' ∈ S.N') :
   · refine Submodule.span_le.2 ?_
     rintro _ ⟨b, rfl⟩
     have := TermBasic.map_mem hg hn (r + 1) (TermBasic.self_mem S S.f b.2)
-    rw [TermBasic.spanTo_top] at this
-    exact this
+    rwa [TermBasic.spanTo_top] at this
   · refine Submodule.span_le.2 ?_
     rintro _ ⟨b, rfl⟩
     have := TermBasic.map_mem hg' hn' (r + 1) (TermBasic.self_mem S S.f' b.2)
-    rw [TermBasic.spanTo_top] at this
-    exact this
+    rwa [TermBasic.spanTo_top] at this
 
 end
 
@@ -222,8 +217,7 @@ theorem move_same : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace 
       TermBasic.map_mem hg' hn' _ (TermBasic.self_mem S S.f' hi)
     show n'' (n₀' (S.fr' d Λ i)) = _
     rw [e0', eich, hyu _ (Submodule.mem_sup_right hm), iso_span S hg' hm x' hxX']
-    simp only [zero_smul, add_zero, sub_zero]
-    exact e'' _ (iso_span S hg' hm)
+    simpa only [zero_smul, add_zero, sub_zero] using e'' _ (iso_span S hg' hm)
   refine ⟨⟨(_, _), hW₁⟩, fun y hy => ?_⟩
   have hyu0 := hyu y hy
   obtain ⟨v, hv, v', hv', rfl⟩ := Submodule.mem_sup.1 hy

@@ -99,8 +99,7 @@ lemma differentiable_det (f : (Fin n → Fin n → ℂ) → Matrix (Fin n) (Fin 
     have e : (fun y => ∏ i, f y (σ i) i) = ∏ i, (fun y => f y (σ i) i) := by
       funext y
       rw [Finset.prod_apply]
-    rw [e]
-    exact h
+    rwa [e]
   have hs := Differentiable.sum (𝕜 := ℂ) (u := Finset.univ)
     (A := fun (σ : Equiv.Perm (Fin n)) (y : Fin n → Fin n → ℂ) => ((Equiv.Perm.sign σ : ℤ) : ℂ) * ∏ i, f y (σ i) i)
     (fun σ _ => (differentiable_const (((Equiv.Perm.sign σ : ℤ) : ℂ))).mul (hp σ))
@@ -108,8 +107,7 @@ lemma differentiable_det (f : (Fin n → Fin n → ℂ) → Matrix (Fin n) (Fin 
       ∑ σ : Equiv.Perm (Fin n), (fun y => ((Equiv.Perm.sign σ : ℤ) : ℂ) * ∏ i, f y (σ i) i) := by
     funext y
     rw [Finset.sum_apply]
-  rw [e]
-  exact hs
+  rwa [e]
 
 lemma toMK_inv (k : KG ε) : toMK k⁻¹ = star (toMK k) := by
   have hu : toMK k * star (toMK k) = 1 :=
@@ -217,8 +215,7 @@ lemma sepAlg_dense (ε : Fin n → Bool) : (sepAlg ε).topologicalClosure = ⊤ 
   intro x y hxy
   have hne : toMK x ≠ toMK y := fun h => hxy ((isEmb ε).injective h)
   obtain ⟨i, j, hij⟩ : ∃ i j, toMK x i j ≠ toMK y i j := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hne (Matrix.ext hcon)
   have hmem : ent ε i j ∈ sepAlg ε := ⟨Sep.entry i j, Sep.conjEntry i j⟩
   exact ⟨_, ⟨ent ε i j, hmem, rfl⟩, hij⟩
@@ -249,8 +246,7 @@ lemma eq_zero_of_orth (φ : C(KG ε, ℂ))
       _ = (∫ k, ‖φ k‖ ∂(muK ε)) * ‖p‖ := by rw [integral_const_mul, mul_comm]
   have hcl : IsClosed {p : C(KG ε, ℂ) | L p = 0} := isClosed_eq hL continuous_const
   have hsub : ((sepAlg ε : StarSubalgebra ℂ C(KG ε, ℂ)) : Set C(KG ε, ℂ)) ⊆ {p | L p = 0} := by
-    intro p hp
-    exact h p hp.1
+    exact fun p hp => h p hp.1
   have hall : ∀ p : C(KG ε, ℂ), L p = 0 := by
     intro p
     have hp : p ∈ closure ((sepAlg ε : StarSubalgebra ℂ C(KG ε, ℂ)) : Set C(KG ε, ℂ)) := by
@@ -268,7 +264,6 @@ lemma eq_zero_of_orth (φ : C(KG ε, ℂ))
   have heq : (fun k => ‖φ k‖ ^ 2) = 0 :=
     (Continuous.ae_eq_iff_eq (muK ε) (φ.continuous.norm.pow 2) continuous_const).1 hae
   ext k
-  have hk := congrFun heq k
-  simpa using hk
+  simpa using congrFun heq k
 
 end GlobalTheory.KHolExt

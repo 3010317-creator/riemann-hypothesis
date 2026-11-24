@@ -278,8 +278,7 @@ theorem lseriesSquares_eq : ∀ (e : ℕ) (χ ψ θ : ℕ → ℂ) (s : ℝ), 1 
       simp
       linarith
   constructor
-  · refine (hinj.summable_iff hzero).mp ?_
-    exact (show Summable _ from hsum).congr fun d => (hterm d).symm
+  · exact (hinj.summable_iff hzero).mp ((show Summable _ from hsum).congr fun d => (hterm d).symm)
   · unfold LSeries
     rw [← hinj.tsum_eq (fun n hn => by
       by_contra h
@@ -436,17 +435,12 @@ theorem rankin_convolution_coeff_of_squareSupported (e : ℕ) (χ ψ θ g b z : 
     have hn'' : δ * δ * (x' * y') = n := by rw [← hxy]; ring
     have hxy0 : x' * y' ≠ 0 := fun h0 => hn (by rw [← hn'', h0, mul_zero])
     refine ⟨⟨(δ * δ, x' * y'), (x', y')⟩, ?_, ?_, ?_⟩
-    · simp only [Finset.mem_sigma, Nat.mem_divisorsAntidiagonal]
-      exact ⟨⟨hn'', hn⟩, trivial, hxy0⟩
-    · intro h0
-      apply hne
-      refine Eq.trans ?_ h0
-      exact (key δ x' y' hδ0 hn'').symm
+    · simpa only [Finset.mem_sigma, Nat.mem_divisorsAntidiagonal] using ⟨⟨hn'', hn⟩, trivial, hxy0⟩
+    · exact fun h0 => hne (Eq.trans (key δ x' y' hδ0 hn'').symm h0)
     · simp only [Nat.sqrt_eq]
   · intro a ha hne
     obtain ⟨s, x, y, hs, hn', rfl⟩ := dec a ha hne
-    simp only [Nat.sqrt_eq]
-    exact key s x y hs hn'
+    simpa only [Nat.sqrt_eq] using key s x y hs hn'
 
 theorem rankin_convolution_coeff : ∀ (e : ℕ) (χ ψ θ g b : ℕ → ℂ), (∀ m n, ψ (m * n) = ψ m * ψ n) → (∀ m n, θ (m * n) = θ m * θ n) → (∀ m n : ℕ, 0 < m → 0 < n → g m * g n = ∑ δ ∈ (Nat.gcd m n).divisors, χ δ * (δ : ℂ) ^ (2 * e) * g (m * n / δ ^ 2)) → (∀ n, n ≠ 0 → b n = ∑ p ∈ n.divisorsAntidiagonal, ψ p.1 * (p.1 : ℂ) ^ (e - 1) * θ p.2) → ∀ n : ℕ, n ≠ 0 → LSeries.convolution (fun n : ℕ => ψ n * (n : ℂ) ^ (e - 1) * g n) (fun n : ℕ => θ n * g n) n = LSeries.convolution (fun n : ℕ => if Nat.sqrt n * Nat.sqrt n = n then χ (Nat.sqrt n) * ψ (Nat.sqrt n) * θ (Nat.sqrt n) * (Nat.sqrt n : ℂ) ^ (3 * e - 1) else 0) (fun n : ℕ => g n * b n) n := by
   intro e χ ψ θ g b hψ hθ hg hb n hn

@@ -252,8 +252,7 @@ theorem exists_ne_zero_forall_exists_cen (o Ω : Type) [CommRing o] [Field Ω] [
   have hne : M.val (gPt p ≫ y) (valF M.pt V t) ≠ 0 := by
     have e := hval ⟨valF M.pt V t, RatModel.valF_mem_O hxV t⟩
     rw [e]
-    intro h0
-    exact hs (Subtype.ext h0)
+    exact fun h0 => hs (Subtype.ext h0)
   have hu := (RatModel.val_ne_zero_iff (RatModel.range_eq_singleton _ w')
     ⟨valF M.pt V t, RatModel.valF_mem_O hz t⟩).1 hne
   exact htU ((RatModel.isUnit_valF_iff hz t).1 hu)
@@ -303,8 +302,7 @@ theorem nak_isPrecomplete_pi {R : Type} [CommRing R] {ι : Type} [Fintype ι] [D
   choose l hl using hc
   refine ⟨l, fun n => ?_⟩
   rw [SModEq.sub_mem, key]
-  intro i
-  exact SModEq.sub_mem.1 (hl i n)
+  exact fun i => SModEq.sub_mem.1 (hl i n)
 
 theorem finite_of_finite_quot_map_of_isPrecomplete :
     ∀ (O A : Type) [CommRing O] [CommRing A] [IsLocalRing A] [IsNoetherianRing A] [Algebra O A]
@@ -321,10 +319,8 @@ theorem finite_of_finite_quot_map_of_isPrecomplete :
       rw [Submodule.mem_iInf]
       intro n
       have h1 := SModEq.sub_mem.1 (hx n)
-      rw [sub_zero, hsm n] at h1
-      exact h1
-    rw [Ideal.iInf_pow_eq_bot_of_isLocalRing _ hJ] at this
-    exact this
+      rwa [sub_zero, hsm n] at h1
+    rwa [Ideal.iInf_pow_eq_bot_of_isLocalRing _ hJ] at this
   set I := J.map (algebraMap O A) with hI
   obtain ⟨r, s, hs⟩ := Module.Finite.exists_fin (R := O) (M := A ⧸ I)
   choose s' hs' using fun i => Ideal.Quotient.mk_surjective (s i)
@@ -349,8 +345,7 @@ theorem finite_of_finite_quot_map_of_isPrecomplete :
     rw [Submodule.Quotient.eq]
     have h1 := hsm 1
     simp only [pow_one] at h1
-    rw [h1]
-    exact hmem
+    rwa [h1]
   exact Module.Finite.of_surjective _ (surjective_of_mkQ_comp_surjective hsurj)
 
 end GlobalTheory
@@ -426,8 +421,7 @@ theorem finite_quot_span [IsNoetherianRing C] [Finite (ResidueField C)] (hp0 : (
   haveI : Finite (A ⧸ (maximalIdeal C).map (algebraMap C A)) := by
     have h := Finite.of_injective _
       (RingHom.kerLift_injective (AdicCompletion.evalOneₐ (maximalIdeal C)).toRingHom)
-    rw [AdicCompletion.ker_evalOneₐ_eq_map _ fg] at h
-    exact h
+    rwa [AdicCompletion.ker_evalOneₐ_eq_map _ fg] at h
   obtain ⟨N, hN⟩ := exists_pow_le_span p C hp0 hprime
   haveI : Finite (A ⧸ ((maximalIdeal C).map (algebraMap C A)) ^ N) :=
     Ideal.finite_quotient_pow (fg.map _) N
@@ -696,8 +690,7 @@ theorem exists_ringHom_padicAlgCl_ne_zero : ∀ (B : Type) [CommRing B] [IsDomai
   have hmC : ∀ c ∈ maximalIdeal C, ∃ b ∈ maximalIdeal B, π b = c := by
     intro c hc
     obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective c
-    refine ⟨b, fun hb => hc ?_, rfl⟩
-    exact hb.map π
+    exact ⟨b, fun hb => hc (hb.map π), rfl⟩
   have hfinC : Finite (ResidueField C) := by
     let f : ResidueField B → ResidueField C :=
       Ideal.Quotient.lift (maximalIdeal B) ((residue C).comp π) (fun b hb => by
@@ -985,8 +978,7 @@ theorem iInf_map_smallIdeal_le_span : ∀ (o Ω : Type) [CommRing o] [Field Ω] 
     rw [← residue_eq_zero_iff, map_sub, Classical.choose_spec (residue_surjective (residue A a)), sub_self]
   have hh : ι (G * φ s) ≠ 0 := by
     rw [Ne, ← map_zero ι]
-    intro h
-    exact mul_ne_zero hG0 ((map_ne_zero_iff φ hinj).2 hs0) (hιinj h)
+    exact fun h => mul_ne_zero hG0 ((map_ne_zero_iff φ hinj).2 hs0) (hιinj h)
   obtain ⟨p, hp, χ, hχ1, hχm, hχh⟩ := _root_.GlobalTheory.CurvePoint.exists_ringHom_padicAlgCl_ne_zero B inferInstance (ι (G * φ s)) hh
   set ψ : R →+* PadicAlgCl p := χ.comp ι with hψ
   have hψ1 : ∀ g, ‖ψ g‖ ≤ 1 := fun g => hχ1 _
@@ -1050,8 +1042,7 @@ theorem small_mod_principal : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra
   obtain ⟨a, rfl⟩ := Ideal.mem_span_singleton'.1 hu
   have hm : Ideal.span {c : M.O x | ¬ IsUnit c} = maximalIdeal (M.O x) := Ideal.span_eq (maximalIdeal (M.O x))
   refine ⟨a, b, rfl, ?_⟩
-  rw [hm]
-  exact hb
+  rwa [hm]
 
 end GlobalTheory.Izumi
 end -- clump:auto

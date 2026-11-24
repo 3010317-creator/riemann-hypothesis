@@ -136,8 +136,7 @@ theorem _root_.GlobalTheory.PDivGroup.exists_mulP_eq_of_transl_eq {p : ℕ} {R :
     intro ψ hψ
     have h3 : ψ ∈ RingHom.ker (Ideal.Quotient.mkₐ R K) := by
       apply hK
-      rw [← _root_.GlobalTheory.PDivGroup.ker_dual_mulP]
-      exact hψ
+      rwa [← _root_.GlobalTheory.PDivGroup.ker_dual_mulP]
     rw [RingHom.mem_ker, Ideal.Quotient.mkₐ_eq_mk, Ideal.Quotient.eq_zero_iff_mem] at h3
     simpa using h3 1
   set πL : _root_.GlobalTheory.CartierDual R (G.A (n + 1)) →ₗ[R] _root_.GlobalTheory.CartierDual R (G.A n) :=
@@ -168,7 +167,6 @@ theorem _root_.GlobalTheory.PDivGroup.exists_mulP_eq_of_transl_eq {p : ℕ} {R :
   have h5 := congrArg
     (fun x => x.ofConv (_root_.GlobalTheory.CartierDual.map (G.mulP n) ψ)) he
   simp only at h5
-  rw [← hL ψ]
-  exact h5
+  rwa [← hL ψ]
 
 end GlobalTheory.PDivGroup

@@ -205,8 +205,7 @@ theorem sh_linInd (G : HTGroup p) {ι : Type} (e : ι → G.C) (he : LinearIndep
 
     rw [map_sum, map_zero] at h
     simpa only [shA_apply, sh_smul, sh_sh] using h
-  have h := he s _ key l hl
-  simpa using h
+  simpa using he s _ key l hl
 
 theorem inj (G : HTGroup p) (x : ℚ_[p] ⊗[ℚ] G.C) (h1 : ∀ w, G.locW w x = 0)
     (h2 : ∀ w, G.locW w (starT G.star ℚ_[p] x).unop = 0) : x = 0 := by
@@ -330,8 +329,7 @@ theorem coord_bound : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (B : ℝ), �
     positivity
   have hqn : ‖(q : ℚ_[p])‖ ≤ 1 := by
     rw [hq]; push_cast
-    rw [norm_mul, norm_pow, Padic.norm_p, inv_pow]
-    rw [mul_inv_le_iff₀ hp0, one_mul]
+    rw [norm_mul, norm_pow, Padic.norm_p, inv_pow, mul_inv_le_iff₀ hp0, one_mul]
     exact h2.trans he.le
   exact ⟨q.num, q.den, not_dvd_den_of_norm_le_one' q hqn, (Rat.num_div_den q).symm⟩
 

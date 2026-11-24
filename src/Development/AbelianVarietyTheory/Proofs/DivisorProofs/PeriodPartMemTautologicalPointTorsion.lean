@@ -254,8 +254,7 @@ theorem GlobalTheory.TInj.exists_tautPt : ∀ {o W : Type} [CommRing o] [CommRin
           rw [Category.id_comp]
           rfl
       have h1 := (val_mul hJ _ _ _).symm.trans ((val_corr hJ C r).trans (val_mul hJ _ _ _))
-      refine Eq.trans ?_ h1
-      exact congrArg (_ * ·) (val_cub T.cub ρ hJ _ _ _).symm
+      exact Eq.trans (congrArg (_ * ·) (val_cub T.cub ρ hJ _ _ _).symm) h1
     refine (val_mul hJ' _ _ _).trans (Eq.trans ?_ (val_mul hJ' _ _ _).symm)
     refine (congrArg₂ (· * ·) (hval (χ + χ') y J J' hJ hJ') hcub).trans
       (Eq.trans ?_ (congrArg₂ (· * ·) (hval χ y J J' hJ hJ') (hval χ' y J J' hJ hJ')).symm)
@@ -344,8 +343,7 @@ theorem tautPt_isAdd : ∀ {o W : Type} [CommRing o] [CommRing W] [IsLocalRing W
   have hkk : k'' = k * k' := by
     refine Units.ext ?_
     rw [Units.val_mul, hk'', hk, hk']
-    simp only [map_add (f := _)]
-    exact prod_zpow_add _ _ _ (hk ▸ k.ne_zero) (hk' ▸ k'.ne_zero)
+    simpa only [map_add (f := _)] using prod_zpow_add _ _ _ (hk ▸ k.ne_zero) (hk' ▸ k'.ne_zero)
   have hG : gm (𝟙 (TF (R := V) F).left) y ⊤ (unitOn k'') =
       gm (𝟙 (TF (R := V) F).left) y ⊤ (unitOn k) * gm (𝟙 (TF (R := V) F).left) y ⊤ (unitOn k') := by
     rw [hkk, unitOn, unitOn, unitOn, map_mul, map_mul]
@@ -565,8 +563,7 @@ theorem GlobalTheory.TInj.tautPt_zero_iota : ∀ {o W : Type} [CommRing o] [Comm
         (Scheme.Hom.stalkMap (jFK (R := V) F) z).hom (val (T.τ₀ ((n : ℤ) • e χ) ((n : ℤ) • e y))
           ((TK V).hom ≫ spMap ω) (jFK (R := V) F z) (fun ψ => I₀ (jFK (R := V) F ≫ ψ))).val := by
       have := GlobalTheory.LevelExpansion.val_comp (T.τ₀ ((n : ℤ) • e χ) ((n : ℤ) • e y)) (jFK (R := V) F) ((TK V).hom ≫ spMap ω) hJ
-      rw [← Category.assoc] at this
-      exact this
+      rwa [← Category.assoc] at this
     have hkk : (algebraMap (FractionRing V) F) (k₀ : FractionRing V) = (k : F) := by
       rw [hk, hk₀, map_prod]
       refine Finset.prod_congr rfl fun i _ => ?_

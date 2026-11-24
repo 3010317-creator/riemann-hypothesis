@@ -92,8 +92,7 @@ theorem isDiscreteValuationRing [IsDomain R] [IsNoetherianRing R] [IsDomain S] (
   have hne : algebraMap R S π ≠ 0 :=
     (map_ne_zero_iff _ (algebraMap_atPrime_injective (π := π) S)).2 hπ
   have hf : ¬ IsField S := by
-    rw [isField_iff_maximalIdeal_eq, maximalIdeal_eq_span (π := π) S, Ideal.span_singleton_eq_bot]
-    exact hne
+    rwa [isField_iff_maximalIdeal_eq, maximalIdeal_eq_span (π := π) S, Ideal.span_singleton_eq_bot]
   refine ((IsDiscreteValuationRing.TFAE S hf).out 1 5).2 ?_
   exact ⟨⟨_, maximalIdeal_eq_span (π := π) S⟩⟩
 

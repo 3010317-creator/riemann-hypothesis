@@ -76,8 +76,7 @@ theorem yx_eq_one {σ : E →ₐ[F] E} (hcm : IsCMExt F E σ) {n r : ℕ} {J : M
     ext i j; simp [cT, sigma_sigma hcm]
   have e2 : cT (σ : E →+* E) J = J := by
     ext i j; simp [cT, hJ.1]
-  rw [e1, e2, ← Matrix.mul_assoc] at h
-  exact h
+  rwa [e1, e2, ← Matrix.mul_assoc] at h
 
 def selMat (l d k : ℕ) : Matrix (Fin d) (Fin (k + 1)) E := Matrix.of fun a i => if l + a.val = i.val then 1 else 0
 
@@ -114,8 +113,7 @@ theorem init_mul_selMat (hk : l + d ≤ k.val + 1) (Z : Matrix (Fin n) (Fin r) E
   · rw [ite_eq_left rfl]; rfl
   · intro i _ hi
     rw [ite_eq_right]
-    intro e
-    exact hi (Fin.ext e.symm)
+    exact fun e => hi (Fin.ext e.symm)
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem selMat_mul_transpose (hk : l + d ≤ k.val + 1) :
@@ -131,8 +129,7 @@ theorem selMat_mul_transpose (hk : l + d ≤ k.val + 1) :
       intro e; exact hab (Fin.ext (by simpa using e))
   · intro i _ hi
     rw [ite_eq_right]
-    intro e
-    exact hi (Fin.ext e.symm)
+    exact fun e => hi (Fin.ext e.symm)
   · intro h; exact absurd (Finset.mem_univ _) h
 
 end Frame
@@ -204,8 +201,7 @@ theorem mem_levi_of (hcm : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : GlobalTheo
   simp only [GlobalTheory.StdPar.levi, Subgroup.mem_iInf, Subgroup.mem_inf]
   intro k hk
   have hcase : k.val < l ∨ l + d ≤ k.val + 1 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hS k hc.1 (by omega) hk
   have hYX := yx_eq_one hcm hJ hW
   constructor
@@ -239,8 +235,7 @@ theorem mem_ratPts_of (g : GAd σ J) (M : Matrix (Fin n) (Fin n) E)
   show cT (σ : E →+* E) M * J * M = J
   apply Matrix.map_injective hinj
   have hg : cT (sigR (AF F) σ) (matHom _ σ J g).1 * JR (AF F) J * (matHom _ σ J g).1 = JR (AF F) J := g.2
-  rw [hM, cT_inclR, JR, ← Matrix.map_mul, ← Matrix.map_mul] at hg
-  exact hg
+  rwa [hM, cT_inclR, JR, ← Matrix.map_mul, ← Matrix.map_mul] at hg
 
 end Block
 

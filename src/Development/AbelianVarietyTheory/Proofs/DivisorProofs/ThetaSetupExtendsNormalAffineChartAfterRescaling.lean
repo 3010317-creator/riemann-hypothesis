@@ -502,8 +502,7 @@ theorem exists_real_rechart (hL : Laws) {o Ω : Type} [CommRing o] [Field Ω] [A
     rw [map_natCast, Nat.cast_mul] at this
     exact isUnit_of_mul_isUnit_right this
   have um : IsUnit ((ρ.n ^ ρ.k : ℕ) : Γ(Sp R', ⊤)) := by
-    rw [hN, Nat.cast_pow, isUnit_pow_iff two_ne_zero] at uN
-    exact uN
+    rwa [hN, Nat.cast_pow, isUnit_pow_iff two_ne_zero] at uN
 
   choose w0 hw₁ hw₂ using hw0
   have hw₃ : ∀ x, w0 x ≫ P₀.A.hom = 𝟙 _ := fun x => eq_id_of_comp _ frac' _ (by

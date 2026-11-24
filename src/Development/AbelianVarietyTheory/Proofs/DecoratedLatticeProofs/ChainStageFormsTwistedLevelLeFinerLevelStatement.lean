@@ -103,8 +103,7 @@ theorem prod_diagonal_block_dets_eq_lower_block_det {κ : Type} [CommRing κ] {r
     rfl
   have hu : IsUnit (M.toSquareBlock (blk2 r) 0).det := by rw [← sq _ 0 hg2]; exact Units.isUnit _
   apply Units.ext
-  rw [Units.coe_prod, sq _ 1 hg2]
-  rw [Finset.prod_congr rfl (fun c _ => sq _ (c + 1) hg)]
+  rw [Units.coe_prod, sq _ 1 hg2, Finset.prod_congr rfl (fun c _ => sq _ (c + 1) hg)]
   rw [h0] at h1
   exact hu.mul_right_cancel (h1.symm.trans h2)
 
@@ -137,9 +136,7 @@ theorem lev_flat_le (c : Com D) (w : Twist D) (hw : w.Is c) (j : ℕ) {n : ℕ} 
   have hQ : ∀ PP ∈ w.Q, PP ∈ c.Pg := fun PP h => hw.union ▸ Finset.mem_union_right _ h
   refine ⟨mem_lev.2 ⟨mem_parLev.2 ⟨hUA, hSt, fun PP h => h3' PP (hPg PP h),
     fun PP h => blockTri_blkOf_le _ _ (h3' PP (hQ PP h))⟩, ?_⟩, ?_⟩
-  · show _ ∈ (⊥ : Subgroup (G0 w.Pg D.R.r))
-    refine Subgroup.mem_bot.2 (funext fun PP => ?_)
-    exact hone ⟨PP.1, hPg PP.1 PP.2⟩ PP.2
+  · exact Subgroup.mem_bot.2 (funext fun PP => (hone ⟨PP.1, hPg PP.1 PP.2⟩ PP.2))
   · unfold levFn
     have e1 : ext1 (Lev.datY n D.R.r D.R.t j hr c.Pg ∅ c.P c.chi w.ξ Lev.Frm.B).P.H
         (Lev.datY n D.R.r D.R.t j hr c.Pg ∅ c.P c.chi w.ξ Lev.Frm.B).P.chi

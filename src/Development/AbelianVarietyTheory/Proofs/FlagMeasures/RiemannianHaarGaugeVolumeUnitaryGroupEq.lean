@@ -118,8 +118,7 @@ theorem ball_integral (n : ℕ) {t : ℝ} (ht : 0 < t) :
   have hq (y : Fin (n + 1) → ℂ) : qEps (allPos (n + 1)) y = ∑ i, ‖y i‖ ^ 2 := by
     simp [qEps, allPos]
   have hmeas : MeasurableSet {y : Fin (n + 1) → ℂ | qEps (allPos (n + 1)) y ≤ t} := by
-    simp only [hq]
-    exact measurableSet_le (by fun_prop) measurable_const
+    simpa only [hq] using measurableSet_le (by fun_prop) measurable_const
 
   have hind : {y : Fin (n + 1) → ℂ | qEps (allPos (n + 1)) y ≤ t}.indicator gauss =
       fun y => (Set.Iic (Real.sqrt t)).indicator (fun r => Real.exp (-r ^ 2))
@@ -131,8 +130,7 @@ theorem ball_integral (n : ℕ) {t : ℝ} (ht : 0 < t) :
       rw [Set.indicator_of_mem (by simpa [hq] using hy), Set.indicator_of_mem (show Real.sqrt (∑ i, ‖y i‖ ^ 2) ∈ Set.Iic (Real.sqrt t) from hy'),
         Real.sq_sqrt hs, gauss]
     · have hy' : ¬ Real.sqrt (∑ i, ‖y i‖ ^ 2) ≤ Real.sqrt t := by
-        intro h
-        exact hy ((Real.sqrt_le_sqrt_iff ht.le).mp h)
+        exact fun h => hy ((Real.sqrt_le_sqrt_iff ht.le).mp h)
       rw [Set.indicator_of_notMem (by simpa [hq] using hy), Set.indicator_of_notMem (show Real.sqrt (∑ i, ‖y i‖ ^ 2) ∉ Set.Iic (Real.sqrt t) from hy')]
   rw [← integral_indicator hmeas, hind,
     integral_radial n ((Set.Iic (Real.sqrt t)).indicator (fun r => Real.exp (-r ^ 2))),
@@ -193,8 +191,7 @@ theorem row_norm {N : ℕ} (g : Formalism.REAL.UJ (allPos N)) (i : Fin N) : ∑ 
   have h2 : ((∑ k, ‖uMat g i k‖ ^ 2 : ℝ) : ℂ) = 1 := by
     rw [← h]
     push_cast
-    refine Finset.sum_congr rfl fun k _ => ?_
-    exact (Complex.mul_conj' _).symm
+    exact Finset.sum_congr rfl fun k _ => (Complex.mul_conj' _).symm
   exact_mod_cast h2
 
 theorem muG_univ_lt_top (N : ℕ) : Formalism.REAL.muG (allPos N) Set.univ < ⊤ := by

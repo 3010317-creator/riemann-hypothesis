@@ -1042,8 +1042,7 @@ theorem res_onto : Quoted → ∀ (K : Type) [Field K] [NumberField K] (G : Geo 
     have h₁ := stalkMap_germ_eq_zero (hinv (hσ ((G.ideal s).subschemeι z))) z (hW _) c hc
     rw [map_sub, Vanishing.H0.germ_restr, map_sub, sub_eq_zero] at h₁
     refine (germ_resTo suppIn_top (fun _ => c) z (mem_pull.2 hc) σ).trans ?_
-    rw [hb _ z (hW _) (fun _ => c) (mem_pull.2 hc)]
-    exact h₁
+    rwa [hb _ z (hW _) (fun _ => c) (mem_pull.2 hc)]
   intro y₀
   obtain ⟨f, hf⟩ := key (Vanishing.mulDs G.K G.isLB G.isLB₂ (G.sec s) hs.etale rfl y₀)
   refine ⟨f, ?_⟩
@@ -1198,8 +1197,7 @@ theorem word_global : ∀ (K : Type) [Field K] [NumberField K] (G : Geo K) (t j 
   intro K _ _ G t j
   induction t with
   | zero =>
-    intro u x hx
-    exact ⟨x, hx, by simp [word], fun s hs δ Co p => by simp⟩
+    exact fun u x hx => ⟨x, hx, by simp [word], fun s hs δ Co p => by simp⟩
   | succ t ih =>
     intro u x hx
     obtain ⟨x', hx', hw, hr⟩ := ih (fun q => u q.succ) x hx
@@ -1359,8 +1357,7 @@ theorem totExt_props : ∀ (F : Type) [Field F] [NumberField F] (X : Data F) (Λ
     have h1 : LinearIndependent F (LinearMap.single F (fun k => X.toGeo.Sec k) X.T ∘ f) := by
       have e : (LinearMap.single F (fun k => X.toGeo.Sec k) X.T ∘ f) = ((sysOf X Λ₀).V X.T).subtype ∘ v :=
         funext fun i => (hf i).symm
-      rw [e]
-      exact hv'
+      rwa [e]
     have h2 := X.toGeo.linearIndependent_toExt E X.T m f h1.of_comp
     have h3 := h2.map' (LinearMap.single E (fun k => (X.toGeo.baseChange E).Sec k) X.T)
       (LinearMap.ker_eq_bot.2 (Pi.single_injective _))
@@ -1369,8 +1366,7 @@ theorem totExt_props : ∀ (F : Type) [Field F] [NumberField F] (X : Data F) (Λ
       funext i
       rw [hf i, totExt_single]
       rfl
-    rw [e2]
-    exact h3
+    rwa [e2]
   · intro j
     have hset : (totExt X.toGeo E '' ((sysOf X Λ₀).V j : Set (Tot X.toGeo))) =
         (LinearMap.single E (fun k => (X.toGeo.baseChange E).Sec k) j) ''
@@ -1434,8 +1430,7 @@ theorem fil_spaceV_eq_spaceP (hF : FilMono) (K : Type) [Field K] [NumberField K]
     refine Submodule.sum_mem _ fun α _ => ?_
     unfold spaceP
     exact Submodule.mem_iSup_of_mem α ⟨m α, X.global_le X.D (by have := X.le_T; omega) (hm α), rfl⟩
-  · intro f hf
-    exact ⟨Submodule.mem_sup_right hf, spaceP_le_filTop X s hf⟩
+  · exact fun f hf => ⟨Submodule.mem_sup_right hf, spaceP_le_filTop X s hf⟩
 
 alias filP := _root_.GlobalTheory.HSCore.fil_spaceV_eq_spaceP
 
@@ -1490,8 +1485,7 @@ theorem mulPow_mem (X : Data K) (s : Fin X.D → Fin X.N → K) (hX : X.MulStabl
     have : mulPow X.toGeo s (rfl : j + 0 = j + 0) α m = m := by
       unfold mulPow
       exact mulMono_zero _ _ _ _ _ _
-    rw [this]
-    exact hm
+    rwa [this]
   | succ a ih =>
     intro j l h hl β m hm
     subst h
@@ -1802,8 +1796,7 @@ theorem totFil_totSym_ker : ∀ (K : Type) [Field K] [NumberField K] (X : Data K
   have : totSym Co a x = symV Co a y := rfl
   rw [this, hker y, hx1]
   constructor
-  · intro h
-    exact ⟨y.1, h, rfl⟩
+  · exact fun h => ⟨y.1, h, rfl⟩
   · rintro ⟨z, hz, hzy⟩
     rwa [← incl_injective X X.T hzy]
 

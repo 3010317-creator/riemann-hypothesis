@@ -229,8 +229,7 @@ theorem IsU.inv (hv : v ≠ 0) {U L : ℂ → ℂ} (h : IsU M A v U L) : IsU M A
       refine neg_mem (sum_mem fun p hp => ?_)
       have hp' := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
       have := dm_mem hv (h.mem (p.1 + 1)) (ih p.2 (by omega))
-      rw [← Nat.cast_add, show p.1 + 1 + p.2 = n + 1 by omega] at this
-      exact this
+      rwa [← Nat.cast_add, show p.1 + 1 + p.2 = n + 1 by omega] at this
 
 theorem IsU.lin (hv : ‖v‖ = 1) {j : ℤ} {e : ℕ} (he : 0 < e) (hd : (M : ℤ) ∣ e - A * j) :
     IsU M A v (fun z => 1 - v ^ j * z ^ e) (fun z => -j * (v ^ j * z ^ e / (1 - v ^ j * z ^ e))) := by
@@ -566,8 +565,7 @@ theorem sg_jets {c : ℕ} {b : ℤ} (hM : 0 < M) (hadm : admitted c ![(A : ℚ) 
   have q2 := hasQ_tc (s3.dU.fun_mul s3.dL) hM
   refine ⟨k, fun n => σ * v ^ i * tc U n, fun n => σ * v ^ i * tc (fun z => U z * L z) n + σ * (i * v ^ i) * tc U n,
     ?_, ?_, fun n => ?_, i, ?_⟩
-  · simp only [fun τ => (key τ).1]
-    exact q1.const_mul _
+  · simpa only [fun τ => (key τ).1] using q1.const_mul _
   · have := (q2.const_mul (σ * v ^ i)).add (q1.const_mul (σ * (i * v ^ i)))
     convert this using 2 with τ
     rw [(key τ).1, (key τ).2]
@@ -606,8 +604,7 @@ theorem exp_of_hasQ {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ} 
   have hB0 : ∀ r, r ∉ Set.range ι → B r = 0 := by
     intro r hr
     simp only [B]
-    rw [dite_eq_right]
-    exact hr
+    rwa [dite_eq_right]
   have hBsum : ∀ z : ℂ, 0 < z.im →
       HasSum (fun r : ℚ => B r * Complex.exp (2 * Real.pi * Complex.I * (r : ℂ) * z)) (g (UpperHalfPlane.ofComplex z)) := by
     intro z hz
@@ -876,8 +873,7 @@ theorem hasQ_F (j : ℕ) {M : ℕ} (hM : 0 < M) (a b : ℤ) :
     split_ifs
     · rw [eisensteinFxConstantTerm_rationalIndex_eq j hM, add_zero]
     · rw [zero_add]
-  rw [e]
-  exact h2
+  rwa [e]
 
 theorem hasQ_cF_weight (c j : ℕ) {M : ℕ} (hM : 0 < M) (a b : ℤ) :
     HasQ M (cF c j ![(a : ℚ) / M, (b : ℚ) / M]) (smF (c : ℤ) j M (ee (1 / (M : ℂ))) a b) := by

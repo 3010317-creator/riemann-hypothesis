@@ -95,8 +95,7 @@ theorem chg_refl (y : FrPt Xo c S) : FrChg (fun _ => 1) 1 y y := by
       funext j
       rw [Matrix.one_apply, Pi.single_apply]
       simp only [eq_comm]
-    rw [← e] at h
-    exact h
+    rwa [← e] at h
   · rw [Model.scal_one, _root_.one_mul]
 
 theorem chg_comp {g g' : ∀ τ : E →+* ℂ, Matrix (Fin (Dw.mult τ)) (Fin (Dw.mult τ)) S} {a a' : S}
@@ -116,8 +115,7 @@ theorem chg_comp {g g' : ∀ τ : E →+* ℂ, Matrix (Fin (Dw.mult τ)) (Fin (D
       funext j
       simp only [Matrix.mulVec, dotProduct, Matrix.transpose_apply, Matrix.mul_apply]
       exact Finset.sum_congr rfl fun k _ => _root_.mul_comm _ _
-    rw [e] at h
-    exact h
+    rwa [e] at h
   · have e1 := (Model.secBC_id_iff _ _ _ _).1 hs i
     have e2 := (Model.secBC_id_iff _ _ _ _).1 hs' i
     dsimp only

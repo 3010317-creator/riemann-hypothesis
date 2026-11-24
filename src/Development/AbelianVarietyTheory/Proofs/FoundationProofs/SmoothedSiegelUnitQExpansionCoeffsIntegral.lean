@@ -105,8 +105,7 @@ theorem _root_.GlobalTheory.SiegQ.hasQ_tc {F : ℂ → ℂ}
       ring
     rw [hexp, _root_.GlobalTheory.SiegQ.tc, sub_zero, smul_eq_mul, smul_eq_mul]
     ring
-  rw [heq]
-  exact h
+  rwa [heq]
 
 open scoped UpperHalfPlane MatrixGroups Manifold Topology in
 open Filter in
@@ -277,8 +276,7 @@ theorem _root_.GlobalTheory.SiegQ.ep_ne_zero {M : ℕ} (hM : 0 < M) {w : ℂ} (h
   rcases eq_or_ne z 0 with rfl | hz0
   · have h : ∀ m : ℕ, (1 : ℂ) - w * 0 ^ (e + m * M) = 1 := fun m => by
       simp [zero_pow (by omega : e + m * M ≠ 0)]
-    simp only [_root_.GlobalTheory.SiegQ.ep, h, tprod_one]
-    exact one_ne_zero
+    simpa only [_root_.GlobalTheory.SiegQ.ep, h, tprod_one] using one_ne_zero
   have hq : z ^ M ≠ 0 := pow_ne_zero _ hz0
   have hfac : ∀ m : ℕ, (z ^ M) ^ (m + 1) * (w * z ^ e * (z ^ M)⁻¹) = w * z ^ (e + m * M) := by
     intro m
@@ -290,8 +288,7 @@ theorem _root_.GlobalTheory.SiegQ.ep_ne_zero {M : ℕ} (hM : 0 < M) {w : ℂ} (h
   obtain ⟨P, hP, hprod⟩ := _root_.GlobalTheory.Sieg.Model.hasProd_geom hqn (w * z ^ e * (z ^ M)⁻¹)
     (fun m => by rw [hfac]; exact _root_.GlobalTheory.SiegQ.lin_ne_zero hw (by omega) hz)
   simp only [hfac] at hprod
-  rw [_root_.GlobalTheory.SiegQ.ep, hprod.tprod_eq]
-  exact hP
+  rwa [_root_.GlobalTheory.SiegQ.ep, hprod.tprod_eq]
 
 open scoped UpperHalfPlane MatrixGroups Manifold Topology in
 open Filter in
@@ -494,8 +491,7 @@ theorem _root_.GlobalTheory.SiegQ.cth_eq {c M a : ℕ} (hM : 0 < M) (ha : a < M)
   have hDinv : HasProd (fun m => (D m)⁻¹) ((∏ i ∈ Finset.range (c * a / M), (D i)⁻¹) *
       (_root_.GlobalTheory.SiegQ.ep M (v ^ c)⁻¹ ((c * a / M + 1) * M - c * a) z)⁻¹) := by
     apply HasProd.prod_range_mul
-    simp only [hDshift]
-    exact hD.inv₀ hD0
+    simpa only [hDshift] using hD.inv₀ hD0
   have hfin : ∀ i ∈ Finset.range (c * a / M), (D i)⁻¹ =
       (-v ^ c * (1 - v ^ c * z ^ (c * a - (i + 1) * M))⁻¹) * z ^ (c * a - (i + 1) * M) := by
     intro i hi
@@ -636,8 +632,7 @@ theorem _root_.GlobalTheory.SiegQ.good_unitPart {c M a : ℕ} (hc : 0 < c) (hM :
   have hfirst : _root_.GlobalTheory.SiegQ.Good R
       (fun z => (1 - v * z ^ a) ^ (c ^ 2) * (1 - v ^ c * z ^ (c * a))⁻¹) := by
     rcases Nat.eq_zero_or_pos a with rfl | ha0
-    · simp only [pow_zero, mul_one, mul_zero]
-      exact good_const_foundation (h3 rfl)
+    · simpa only [pow_zero, mul_one, mul_zero] using good_const_foundation (h3 rfl)
     · have hca : c * a ≠ 0 := by positivity
       refine good_mul' (good_pow' (good_one_sub_mul_pow h1 a) _)
         (good_inv_of_ne_zero (good_one_sub_mul_pow hvc _)

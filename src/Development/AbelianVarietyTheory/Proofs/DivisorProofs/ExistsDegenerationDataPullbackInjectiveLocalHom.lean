@@ -59,9 +59,7 @@ theorem specOf_genericPoint {R R' : Type} [CommRing R] [IsDomain R] [CommRing R'
     (hρ : Function.Injective ρ) :
     (specOf ρ).base (genericPoint (Spec (CommRingCat.of R'))) = genericPoint (Spec (CommRingCat.of R)) := by
   rw [genericPoint_eq_bot_of_affine, genericPoint_eq_bot_of_affine]
-  apply PrimeSpectrum.ext
-  show Ideal.comap ρ ⊥ = ⊥
-  exact Ideal.comap_bot_of_injective ρ hρ
+  exact PrimeSpectrum.ext (Ideal.comap_bot_of_injective ρ hρ)
 
 theorem exists_pull : ∀ (R R' : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [CommRing R'] [IsDomain R'] [IsLocalRing R'] (ρ : R →+* R'), Function.Injective ρ → IsLocalHom ρ → ∀ D : DegData R (maximalIdeal R), ∃ D' : DegData R' (maximalIdeal R'), Nonempty (IsPullDeg ρ D.toPre D'.toPre) := by
   intro R R' _ _ _ _ _ _ ρ hρ hloc D

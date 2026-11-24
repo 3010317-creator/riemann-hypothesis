@@ -182,9 +182,7 @@ theorem ex_split {A S : Finset ℕ} (hA : A ⊆ S) (f g : Finset ℕ → ℝ) :
 
 theorem ex_restrict {A S : Finset ℕ} (hA : A ⊆ S) (f : Finset ℕ → ℝ) :
     ex δ S (fun T => f (T ∩ A)) = ex δ A f := by
-  have h := ex_split (δ := δ) hA f (fun _ => 1)
-  simp only [mul_one, ex_const] at h
-  exact h
+  simpa only [mul_one, ex_const] using ex_split (δ := δ) hA f (fun _ => 1)
 
 theorem ex_prod {ι : Type*} (J : Finset ι) (A : ι → Finset ℕ) (g : ι → Finset ℕ → ℝ)
     (hd : ∀ i ∈ J, ∀ j ∈ J, i ≠ j → Disjoint (A i) (A j)) (S : Finset ℕ)
@@ -234,8 +232,7 @@ theorem ex_contains {Q B : Finset ℕ} (hQ : Q ⊆ B) :
     beta_reduce
     rw [ind_neg, mul_zero]
     exact fun h => hne (subset_antisymm (mem_powerset.mp hT) h)
-  · intro h
-    exact absurd (mem_powerset_self Q) h
+  · exact fun h => absurd (mem_powerset_self Q) h
 
 theorem tail_le_choose (h0 : 0 ≤ δ) (h1 : δ ≤ 1) {B : Finset ℕ} {L : ℕ} (hB : B.card ≤ L) (K : ℕ) :
     ex δ B (fun T => ind (K ≤ T.card)) ≤ (L.choose K : ℝ) * δ ^ K := by
@@ -319,8 +316,7 @@ theorem ex_isEmpty (C : Finset ℕ) : ex δ C (fun V => ind (V = ∅)) = (1 - δ
   · intro T _ hne
     beta_reduce
     rw [ind_neg hne, mul_zero]
-  · intro h
-    exact absurd (empty_mem_powerset C) h
+  · exact fun h => absurd (empty_mem_powerset C) h
 
 theorem ex_single_even (h0 : 0 ≤ δ) (h1 : δ ≤ 1) (a u : ℕ) :
     ((u / 2 : ℕ) : ℝ) * δ * (1 - δ) ^ (u - 1) ≤

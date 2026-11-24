@@ -197,8 +197,7 @@ theorem test_compat {L : Type} [CommRing L] [IsLocalRing L] (e : Fr L) {A A' : T
     obtain ⟨hc1, -, k', hk', hd⟩ := hc
     obtain rfl : k' = (algebraMap _ Y.functionField).comp k :=
       lift_unique (pt _ c) (by rw [← hk', h0f, hk, DetExtendZero.spMap_comp, Category.assoc])
-    rw [map_mul, ← _root_.mul_assoc, ← hcoc _ _ _ _ _ _ _ _ hk h0f]
-    exact hd
+    rwa [map_mul, ← _root_.mul_assoc, ← hcoc _ _ _ _ _ _ _ _ hk h0f]
   have e1 := IsFractionRing.injective (Y.presheaf.stalk y) Y.functionField
     ((hunit _ _ _ _ _ h0f).mul_left_cancel ((key b α m hb hf).trans (key b' α' m' hb' hf').symm))
   rw [hcoc _ _ _ _ _ _ _ _ hf hef, hcoc _ _ _ _ _ _ _ _ hf' hef, RingHom.comp_apply, RingHom.comp_apply,
@@ -464,7 +463,6 @@ theorem exists_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     ring
   · rw [hσ R j x v w h]
     exact hu _ _
-  · rw [hσ _ j₀ _ v₀ w₀ h₀]
-    exact h0
+  · rwa [hσ _ j₀ _ v₀ w₀ h₀]
 
 end GlobalTheory.DetLine.FromGeneric

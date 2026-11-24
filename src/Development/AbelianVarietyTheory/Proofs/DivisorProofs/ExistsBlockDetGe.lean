@@ -119,8 +119,7 @@ theorem leading_gram (h : p ≤ n) (g : Matrix (Fin n) (Fin n) ℂ) :
     refine Fintype.sum_of_injective (Fin.castLE h) (Fin.castLE_injective h) _ _ (fun k hk => ?_)
       (fun k => ?_)
     · rw [ite_eq_right]
-      intro hlt
-      exact hk ⟨⟨k, hlt⟩, Fin.ext rfl⟩
+      exact fun hlt => hk ⟨⟨k, hlt⟩, Fin.ext rfl⟩
     · simp [topT, Matrix.conjTranspose_apply]
   rw [Matrix.sub_apply, e2, Matrix.submatrix_apply, Matrix.mul_apply, Matrix.mul_apply,
     ← Finset.sum_sub_distrib]
@@ -340,8 +339,7 @@ theorem exists_smooth_step_sharp_slope (ρ ε : ℝ) (hε : 0 < ε) (h4 : 4 * ε
     show ∫ t in ε..u, ψ t = 0
     rw [intervalIntegral.integral_congr (g := fun _ => (0 : ℝ)) ?_]
     · simp
-    · intro t ht
-      exact hψ0 t (Or.inl (le_trans ht.2 (sup_le le_rfl hu)))
+    · exact fun t ht => hψ0 t (Or.inl (le_trans ht.2 (sup_le le_rfl hu)))
   obtain ⟨I, hI⟩ : ∃ I : ℝ, I = ∫ t in ε..(ρ - ε), ψ t := ⟨_, rfl⟩
   have hFhigh : ∀ u, ρ - ε ≤ u → F u = I := by
     intro u hu
@@ -350,8 +348,7 @@ theorem exists_smooth_step_sharp_slope (ρ ε : ℝ) (hε : 0 < ε) (h4 : 4 * ε
     rw [← intervalIntegral.integral_add_adjacent_intervals (hII ε (ρ - ε)) (hII (ρ - ε) u),
       intervalIntegral.integral_congr (a := ρ - ε) (b := u) (g := fun _ => (0 : ℝ)) ?_]
     · simp
-    · intro t ht
-      exact hψ0 t (Or.inr (le_trans (le_inf le_rfl hu) ht.1))
+    · exact fun t ht => hψ0 t (Or.inr (le_trans (le_inf le_rfl hu) ht.1))
   have hIge : ρ - 4 * ε ≤ I := by
     rw [hI]
     calc ρ - 4 * ε = ∫ _ in (2 * ε)..(ρ - 2 * ε), (1 : ℝ) := by

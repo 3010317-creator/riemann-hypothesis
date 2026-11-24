@@ -157,9 +157,7 @@ theorem dl_dl {N : ℕ} {f : K[X]} (h : f.Monic ∧ f.natDegree = N ∧ f.coeff 
     show dl f = C (f.coeff 0)⁻¹ * f.reverse from rfl, reverse_mul_of_domain, reverse_C,
     rev_rev h.2.2, ← mul_assoc, ← C_mul, mul_inv_cancel₀ h.2.2, C_1, one_mul]
 
-theorem dvd_dl {q f : K[X]} (h : q ∣ f) : q.reverse ∣ dl f := by
-  show q.reverse ∣ C (f.coeff 0)⁻¹ * f.reverse
-  exact dvd_mul_of_dvd_right (rev_dvd h) _
+theorem dvd_dl {q f : K[X]} (h : q ∣ f) : q.reverse ∣ dl f := dvd_mul_of_dvd_right (rev_dvd h) _
 
 theorem ptp_inv (l : ℕ) {L : Type} [Field L] (x : L) :
     Formalism.CyclotomicNorms.primeToPart l x⁻¹ = (Formalism.CyclotomicNorms.primeToPart l x)⁻¹ := by
@@ -197,8 +195,7 @@ theorem root_dl {g : ℕ} [Fact g.Prime] {N : ℕ} {f : (ZMod g)[X]} (h : f.Moni
     rw [eval₂_at_zero, coeff_zero_reverse, hm.leadingCoeff, map_one] at hx'
     exact one_ne_zero hx'
   let _ := invertibleOfNonzero (inv_ne_zero hx0)
-  rw [← eval₂_reverse_eq_zero_iff, invOf_eq_inv, inv_inv]
-  exact hx'
+  rwa [← eval₂_reverse_eq_zero_iff, invOf_eq_inv, inv_inv]
 
 private theorem irreducible_reverse_of_coeff_zero_ne_zero {q : K[X]} (h0 : q.coeff 0 ≠ 0) (hq : Irreducible q) :
     Irreducible q.reverse := by

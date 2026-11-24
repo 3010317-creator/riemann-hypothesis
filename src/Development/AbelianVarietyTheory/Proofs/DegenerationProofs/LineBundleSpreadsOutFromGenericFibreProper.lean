@@ -108,8 +108,7 @@ theorem exists_isLB_of_isLimit {i : I} [CompactSpace (D.obj i)] (M : LB (D.obj i
   refine ⟨k, g ≫ f, isLB_of_gm _ (fun y => ?_) fun y a b c ha hb hc' => ?_⟩
   · obtain ⟨a, ha⟩ := Opens.mem_iSup.1 (hj' (show D.map g' y ∈ D.map f' ⁻¹ᵁ ⊤ from trivial))
     refine ⟨fun _ => a, mem_pull.2 ?_⟩
-    rw [hg, D.map_comp]
-    exact ha
+    rwa [hg, D.map_comp]
   · rw [gm_pull_g M _ (𝟙 _) y a b ha hb, gm_pull_g M _ (𝟙 _) y b c hb hc', gm_pull_g M _ (𝟙 _) y a c ha hc',
       Category.id_comp]
     have hy : D.map (g ≫ f) y ∈ M.U (a PUnit.unit) ⊓ M.U (b PUnit.unit) ⊓ M.U (c PUnit.unit) :=
@@ -207,8 +206,7 @@ theorem exists_lb {R K : Type} [CommRing R] [IsDomain R] [Field K] [Algebra R K]
     refine Topology.IsInducing.of_comp (g := pullback.fst f V₀.1.ι) (Scheme.Hom.continuous _)
       (Scheme.Hom.continuous _) ?_
     have := φ.isEmbedding.isInducing
-    rw [← StalkLimit.cone_π_fst h₁ V₀] at this
-    exact this
+    rwa [← StalkLimit.cone_π_fst h₁ V₀] at this
   obtain ⟨V, L, hL', H⟩ := exists_lb_of_isLimit (StalkLimit.diagram _ f) (fun V => (StalkLimit.cone h₁).π.app V)
     (fun i => (StalkLimit.cone h₁).w i) hc (i := V₀) (fun U W hU hW => hU.inf hW) hi L₀ hL
   obtain ⟨a, ha, Ha⟩ := exists_forall_mem V.2.1

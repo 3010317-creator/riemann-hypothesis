@@ -109,8 +109,7 @@ theorem norm_sq_unrealify {m : ℕ} (x : EuclideanSpace ℝ (Fin m × Fin m × B
 theorem skew_top {k : ℕ} (X : lieE (UH (1 : Matrix (Fin k) (Fin k) ℂ))) (i j : Fin k) :
     conj (unrealify (X : EuclideanSpace ℝ _) j i) + unrealify (X : EuclideanSpace ℝ _) i j = 0 := by
   have h := (_root_.GlobalTheory.TubeLie.mem_lieE_UH_of_sq k 1 (X : EuclideanSpace ℝ _) (by simp)).1 X.2
-  have h' := congrFun (congrFun h i) j
-  simpa [Matrix.conjTranspose_apply, Complex.star_def] using h'
+  simpa [Matrix.conjTranspose_apply, Complex.star_def] using congrFun (congrFun h i) j
 
 theorem lie_entry {k : ℕ} (η : ℝ) (M : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (i j : Fin (k + 1)) :
     (Mᴴ * Hd k η + Hd k η * M) i j =
@@ -247,8 +246,7 @@ theorem measurePreserving_of_isom {A B C D : Type} [NormedAddCommGroup A] [Inner
       (volume.prod (volume.prod volume)) (volume.prod volume) :=
     (MeasurePreserving.id volume).prod (WithLp.volume_preserving_toLp B C)
   have h2 := WithLp.volume_preserving_toLp A (WithLp 2 (B × C))
-  have h3 := (LinearIsometryEquiv.ofSurjective J hs).measurePreserving
-  exact h3.comp (h2.comp h1)
+  exact ((LinearIsometryEquiv.ofSurjective J hs).measurePreserving).comp (h2.comp h1)
 
 theorem measurePreserving_tangL {k : ℕ} {η : ℝ} (hη : η = 1 ∨ η = -1) :
     MeasurePreserving (tangL (k := k) hη) (volume.prod (volume.prod volume)) volume := by
@@ -694,8 +692,7 @@ theorem phase_law (hη : η = 1 ∨ η = -1) {μ : Measure (PI.MtM (k + 1))} (h�
   · rw [hap _ MeasurableSet.univ]; simpa using tube_fin hη hμ ht
   · rw [hap _ (isOpen_ne_fun continuous_norm continuous_const).measurableSet]
     convert measure_empty (μ := μ)
-    refine Set.eq_empty_of_forall_notMem fun g hg => hg.1 ?_
-    exact (decomp hη hg.2.1 (hg.2.2.trans_le ht)).2.1
+    exact Set.eq_empty_of_forall_notMem fun g hg => hg.1 (decomp hη hg.2.1 (hg.2.2.trans_le ht)).2.1
   · ext C hC
     have hm : Measurable fun z : ℂ => u * z := by fun_prop
     have h1 : (1 : Matrix (Fin k) (Fin k) ℂ) ∈ UH (1 : Matrix (Fin k) (Fin k) ℂ) := by simp [UH]
@@ -840,8 +837,7 @@ theorem measure_arc : ∀ (τ : Measure ℂ) (ρ : ℝ), τ Set.univ < ⊤ → �
         rw [h0] at this
         simp at this
       apply mul_left_cancel₀ h0
-      rw [← par_add, add_neg_cancel_left]
-      exact h
+      rwa [← par_add, add_neg_cancel_left]
   obtain ⟨t, ht⟩ : ∃ t : ℝ≥0, ν = t • (volume : Measure (AddCircle (2 * Real.pi))) :=
     ⟨_, Measure.isAddLeftInvariant_eq_smul ν volume⟩
   have hu : τ Set.univ = t * ENNReal.ofReal (2 * Real.pi) := by
@@ -849,8 +845,7 @@ theorem measure_arc : ∀ (τ : Measure ℂ) (ρ : ℝ), τ Set.univ < ⊤ → �
     rw [ht, Measure.smul_apply, AddCircle.measure_univ, Set.image_univ, range_par,
       ENNReal.smul_def, smul_eq_mul] at h1
     rw [h1]
-    apply measure_congr
-    exact (ae_eq_univ.2 hsupp).symm
+    exact measure_congr (ae_eq_univ.2 hsupp).symm
   rw [← image_ball, ← hνa, hu, ht, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul,
     ← measure_congr AddCircle.closedBall_ae_eq_ball, AddCircle.volume_closedBall,
     min_eq_right (by linarith), mul_assoc, ← ENNReal.ofReal_mul Real.two_pi_pos.le]
@@ -1212,8 +1207,7 @@ theorem thin_tube : ∀ (k : ℕ) (η : ℝ), 1 ≤ k → (η = 1 ∨ η = -1) �
     (fun ρ => μ₀ (expSet (UH (1 : Matrix (Fin k) (Fin k) ℂ)) (Metric.ball 0 ρ)))
     (fun ρ => volume (Metric.ball (0 : lieE (UH (1 : Matrix (Fin k) (Fin k) ℂ))) ρ)) hc hc₀ (fun t s ht hs => ⟨?_, ?_⟩)
     (fun ρ hρ => ⟨Metric.measure_ball_pos _ _ hρ, measure_ball_lt_top⟩) hd₀ (hch.congr' ?_)
-  · refine measure_mono fun g hg => ?_
-    exact (abs_id hη hg.1).le.trans hg.2.le
+  · exact measure_mono fun g hg => (abs_id hη hg.1).le.trans hg.2.le
   · refine measure_mono_ae ?_
     have : ∀ᵐ g ∂μ, Matrix.of g ∈ UH (Hd k η) := hμ.2.2.1
     filter_upwards [this] with g hg h

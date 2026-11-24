@@ -62,8 +62,7 @@ def eLeft (g n : ℕ) (x : Fin g ⊕ Fin g → ZMod n) : (Fin g ⊕ Fin g → ZM
 theorem eLeft_apply (g n : ℕ) (x a : Fin g ⊕ Fin g → ZMod n) : eLeft g n x a = eStd g n a x := rfl
 
 theorem eStd_swap (g n : ℕ) (x a : Fin g ⊕ Fin g → ZMod n) : eStd g n a x = -eStd g n x a := by
-  simp only [eStd, ← Finset.sum_neg_distrib]
-  exact Finset.sum_congr rfl fun i _ => by ring
+  simpa only [eStd, ← Finset.sum_neg_distrib] using Finset.sum_congr rfl fun i _ => by ring
 
 theorem addHom_ext_single {d n : ℕ} [NeZero n] {A : Type*} [AddCommGroup A] (f f' : (Fin d → ZMod n) →+ A)
     (h : ∀ i, f (Pi.single i 1) = f' (Pi.single i 1)) : f = f' := by
@@ -131,8 +130,7 @@ theorem test_weights : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] 
     have := addHom_ext_single ((τ.wt β).comp E.symm.toAddMonoidHom) (c.comp E.symm.toAddMonoidHom) fun i => by
       have h1 := τ.wt_eq x β hβ.symm (E.symm (Pi.single i 1))
       have h2 : eStd S.g _ (E.symm (Pi.single i 1) : S.Gam) x = _ := hx i
-      rw [h2, map_natCast, ZMod.natCast_zmod_val] at h1
-      exact h1
+      rwa [h2, map_natCast, ZMod.natCast_zmod_val] at h1
     ext t
     simpa using DFunLike.congr_fun this (E t)
   · obtain ⟨-, d, ⟨E⟩⟩ := hT
@@ -161,8 +159,7 @@ theorem test_weights : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] 
     have hNL : ∀ v : τ.X, S.N • v ∈ L := fun v => AddSubgroup.subset_closure (Or.inr ⟨v, rfl⟩)
     have h6 : S.perp T ≤ (L.map (QuotientAddGroup.mk' _)).comap τ.yy := by
       rw [← hI, AddSubgroup.closure_le]
-      intro i hi
-      exact ⟨w i, AddSubgroup.subset_closure (Or.inl ⟨i, hi, rfl⟩), (hw i).symm⟩
+      exact fun i hi => ⟨w i, AddSubgroup.subset_closure (Or.inl ⟨i, hi, rfl⟩), (hw i).symm⟩
     obtain ⟨l, hl, hl'⟩ := h6 h4
     rw [map_sub, map_nsmul, hx, hw, QuotientAddGroup.mk'_apply, ← QuotientAddGroup.mk_nsmul,
       ← QuotientAddGroup.mk_sub, QuotientAddGroup.eq] at hl'

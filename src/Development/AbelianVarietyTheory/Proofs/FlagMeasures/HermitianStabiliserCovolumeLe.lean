@@ -116,8 +116,7 @@ theorem measure_eq_tsum_inter {G α : Type} [Group G] [MulAction G α] [Measurab
     filter_upwards [this] with x hx
     obtain ⟨s, hs, -⟩ := h x hx
     constructor
-    · intro hxS
-      exact Set.mem_iUnion.2 ⟨⟨s, hs.1⟩, hs.2, hxS⟩
+    · exact fun hxS => Set.mem_iUnion.2 ⟨⟨s, hs.1⟩, hs.2, hxS⟩
     · intro hxS
       obtain ⟨a, ha⟩ := Set.mem_iUnion.1 hxS
       exact ha.2
@@ -125,8 +124,7 @@ theorem measure_eq_tsum_inter {G α : Type} [Group G] [MulAction G α] [Measurab
     refine measure_mono_null ?_ hR
     rintro x ⟨ha, hb⟩ hx
     exact hab (Subtype.ext ((h x hx).unique ⟨a.2, ha.1⟩ ⟨b.2, hb.1⟩))
-  · intro a
-    exact ((hm a hΩ).inter hS).nullMeasurableSet
+  · exact fun a => ((hm a hΩ).inter hS).nullMeasurableSet
 
 theorem measure_eq_invVol_mul : ∀ (G α : Type) [Group G] [MulAction G α] [MeasurableSpace α] (μ : Measure α) (R : Set α) (A B : Subgroup G) (Ω K : Set α), (∀ s : G, Measurable fun x : α => s • x) → Countable A → Countable B → μ Rᶜ = 0 → (∀ s ∈ A ⊔ B, (∀ x ∈ R, s • x ∈ R) ∧ μ.map (fun x => s • x) = μ) → A.relIndex B ≠ 0 → B.relIndex A ≠ 0 → MeasurableSet Ω → MeasurableSet K → (∀ x ∈ R, ∃! s, s ∈ A ∧ s • x ∈ Ω) → (∀ x ∈ R, ∃! s, s ∈ B ∧ s • x ∈ K) → μ K = ENNReal.ofReal (GlobalTheory.HL.invVol A B) * μ Ω := by
   intro G α _ _ _ μ R A B Ω K hm cA cB hR hinv hAB hBA hΩ hK fA fB

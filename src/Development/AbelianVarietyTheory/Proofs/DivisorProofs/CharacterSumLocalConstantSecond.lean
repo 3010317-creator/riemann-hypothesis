@@ -86,8 +86,7 @@ theorem T_mem (hPr : Pr.Ok) {u : Pr.Word} {P : HeightOneSpectrum (𝓞 X.E)} (h 
 
 theorem natCast_mem_of_conjP {P : HeightOneSpectrum (𝓞 X.E)} {n : ℕ} (h : ((n : ℕ) : 𝓞 X.E) ∈ (conjPrime₂ P).asIdeal) :
     ((n : ℕ) : 𝓞 X.E) ∈ P.asIdeal := by
-  rw [mem_conjP, map_natCast] at h
-  exact h
+  rwa [mem_conjP, map_natCast] at h
 
 theorem rowSG_one (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) (Sg : Set ℕ) :
     rowSG Pr sel (1 : Tup X.F X.E X.K Sg) = Pr.vGs := by
@@ -100,8 +99,7 @@ theorem rowSG_one (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (�
     · have h' : w ∈ QE sel ((mu0 X.F X.E X.K Sg : Tup X.F X.E X.K Sg) : Chr X.F X.E X.K) := h
       rw [twistPrimes_trivialTuple_empty sel Sg] at h'
       simp at h'
-  · intro hw
-    exact Finset.mem_union.mpr (Or.inl hw)
+  · exact fun hw => Finset.mem_union.mpr (Or.inl hw)
 
 theorem prod_qOf_vGs (hPr : Pr.Ok) : ∏ P ∈ Pr.vGs, Formalism.L2.Col.qOf P = (Pr.g 0 * Pr.g 1) ^ X.f := by
   classical

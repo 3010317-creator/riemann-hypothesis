@@ -175,8 +175,7 @@ theorem chrW_chs_eq_mul {D : D7} {T : Type} {Lc : LevCh D T} {sc : Consts} (G : 
       ((Lc.xiH t).loc (GlobalTheory.AdelicU.splitPrime τ)).comp
         (Units.map (GlobalTheory.LFun.complMap (GlobalTheory.AdelicU.splitPrime_under τ)).toMonoidHom) := by
   have e : nuH G t i j = nuH G μ₀ i j * Lc.xiH t := by
-    simp only [nuH, hL.xi_base, mul_one]
-    exact (div_mul_eq_mul_div _ _ _).symm
+    simpa only [nuH, hL.xi_base, mul_one] using (div_mul_eq_mul_div _ _ _).symm
   refine MonoidHom.ext fun x => ?_
   rw [MonoidHom.mul_apply, chrW_chs G hL, chrW_chs G hL, MonoidHom.comp_apply, e]
   rfl
@@ -437,10 +436,7 @@ theorem base_place_factor_zero : ∀ {D : D7} {T : Type} {Lc : LevCh D T} {sc : 
           (Units.map (Int.castRingHom (Fv D.host.F v.1)).toMonoidHom s * GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.unifAt v.1 ^ 2))⁻¹ : ℂˣ) : ℂ) := by
       rw [hy1, hy0, map_inv, map_inv]
       rfl
-    rw [he]
-    rw [map_mul D.what₂.embLL]
-    rw [map_div₀]
-    rw [hbe, hξ]
+    rw [he, map_mul D.what₂.embLL, map_div₀, hbe, hξ]
 
 end GlobalTheory.SqStepArith
 end -- clump:auto
@@ -572,7 +568,6 @@ theorem gauss_dvd : ∀ {D : D7} {T : Type} {Lc : LevCh D T} {sc : Consts} (G : 
     refine this.congr fun x => ?_
     rw [hval]; rfl
   have hnorm : ∀ x, ‖(ν x : ℂ)‖ = 1 := fun x => by
-    show ‖((Circle.toUnits _ : ℂˣ) : ℂ)‖ = 1
     exact Circle.norm_coe _
   have hrange : ∀ x : (Fv D.host.F v)ˣ, (ν x : ℂ) ∈ Set.range D.what₂.embLL := by
     intro x
@@ -764,8 +759,7 @@ theorem locK_eq_one_of_levelLe {L : Type} [Field L] [NumberField L] {χ : Formal
       rw [hk]
     have h2 : Valued.v (algebraMap L (w.adicCompletion L) (algebraMap (𝓞 L) L (a - 1))) =
         w.valuation L (algebraMap (𝓞 L) L (a - 1)) := HeightOneSpectrum.valuedAdicCompletion_eq_valuation' w _
-    rw [h1, h2, w.valuation_of_algebraMap, w.intValuation_le_pow_iff_mem]
-    exact ha
+    rwa [h1, h2, w.valuation_of_algebraMap, w.intValuation_le_pow_iff_mem]
 
 theorem unitOff_val : ∀ (L : Type) [Field L] [NumberField L] (χ : Formalism.L2.Host.HChar L) (I : Type) [Fintype I]
     (φ : I → L →+* ℂ) (n : I → ℤ) (v : HeightOneSpectrum (𝓞 L)) (q : ℕ), χ.HasInf φ n → χ.UnrAt v →
@@ -1098,8 +1092,7 @@ theorem twist_factor : ∀ {D : D7} {T : Type} {Lc : LevCh D T} {sc : Consts} (G
     apply hvS
     have := G.pl.under_w hu
     rw [hu'] at this
-    rw [← hunder, this]
-    exact hu
+    rwa [← hunder, this]
   have htw : w ∈ twPl G t := Finset.mem_filter.2 ⟨hloc, hW0⟩
   have hQ : w ∈ Lc.Q t := by
     rcases Finset.mem_union.1 hloc with h | h
@@ -1292,23 +1285,19 @@ theorem stepFac_ratio_core {D : D7} {T : Type} {Lc : LevCh D T} {sc : Consts} (G
   · refine hcmul _ _ (hcmul _ _ (hcmul _ _ (hzpow b1 n1 hn1 hb1 _) (hzpow b2 n2 hn2 hb2 _)) ?_) ?_
     · refine hprod _ _ fun v hv => ?_
       have hv' : v.1 ∈ Sz := by simpa using hv
-      simp only [bS₁, dite_eq_left hv']
-      exact hbS v hv'
+      simpa only [bS₁, dite_eq_left hv'] using hbS v hv'
     · refine hprod _ _ fun v hv => ?_
       have hv' : v.1 ∈ X.T ∧ v.1 ∉ Sz := by simpa using hv
-      simp only [bT₁, dite_eq_left hv']
-      exact hbT v hv'.1 hv'.2
+      simpa only [bT₁, dite_eq_left hv'] using hbT v hv'.1 hv'.2
   · intro v hv
     have h : v ∈ Bs.P ∧ v ∈ Sz := ⟨hSP v hv, hv⟩
-    simp only [g, g', dite_eq_left h]
-    exact ⟨hgS _ h.2, hgS' _ h.2⟩
+    simpa only [g, g', dite_eq_left h] using ⟨hgS _ h.2, hgS' _ h.2⟩
   · have hA : ∀ v ∈ Finset.univ.filter (fun v : Bs.P => v.1 ∈ Sz),
         f X₀ v = σ (bS₁ v * ((g v.1 : D.what₂.LL) / (g' v.1 : D.what₂.LL))) * f X v := by
       intro v hv
       have hv' : v.1 ∈ Sz := by simpa using hv
       have h2 : v.1 ∈ Bs.P ∧ v.1 ∈ Sz := ⟨v.2, hv'⟩
-      simp only [bS₁, g, g', dite_eq_left hv', dite_eq_left h2]
-      exact heS v hv'
+      simpa only [bS₁, g, g', dite_eq_left hv', dite_eq_left h2] using heS v hv'
     have hTw : (∏ v ∈ Finset.univ.filter (fun v : Bs.P => v.1 ∈ X.T ∧ v.1 ∉ Sz), f X v) *
         σ (∏ v ∈ Finset.univ.filter (fun v : Bs.P => v.1 ∈ X.T ∧ v.1 ∉ Sz), bT₁ v) = 1 := by
       rw [map_prod, ← Finset.prod_mul_distrib]

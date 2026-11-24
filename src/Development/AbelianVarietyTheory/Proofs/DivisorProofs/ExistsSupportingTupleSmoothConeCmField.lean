@@ -103,8 +103,7 @@ theorem exists_avg_proj_balForms : ∀ (O : Type) [CommRing O] (bar : O → O) (
       · intro a x y
         rw [hP, hP]
         have := hint a (β.compl₁₂ (sp x) (sp y))
-        simp only [LinearMap.compl₁₂_apply, hsp, mul_smul] at this
-        exact this
+        simpa only [LinearMap.compl₁₂_apply, hsp, mul_smul] using this
     exact key
   · intro β hβ
     obtain ⟨h1, h2⟩ := hβ
@@ -137,8 +136,7 @@ theorem exists_avg_proj_balForms : ∀ (O : Type) [CommRing O] (bar : O → O) (
       rw [← hQ, h0] at this
       simp at this
     obtain ⟨x, hx⟩ : ∃ x, l x ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hl (LinearMap.ext h)
     have := hsumL (l ∘ₗ sp x)
     have hz : ∀ s t, (l ∘ₗ sp x) (bar (b s) * b t) = 0 := by
@@ -296,8 +294,7 @@ theorem exists_cm_trace_tensor : ∀ (E : Type) [Field E] [NumberField E] [Numbe
       rw [map_smul, smul_eq_mul, hsym]
       ring
     rw [Finset.mul_sum, Finset.mul_sum]
-    simp only [h1, h2]
-    exact Finset.sum_comm
+    simpa only [h1, h2] using Finset.sum_comm
   · simp only [Matrix.diagonal_apply, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have hc := StarNormBound.casimir σ e ho fun i => (hdq0 i).ne'
     apply RingOfIntegers.coe_injective
@@ -431,8 +428,7 @@ theorem sumsq_functional : ∀ (X : Type) [AddCommGroup X] [Module.Free ℤ X] [
     calc 2 * lam β = lam β + lam β := by ring
       _ = _ := by
         nth_rewrite 1 [h1]
-        rw [h2]
-        rw [← Finset.sum_add_distrib]
+        rw [h2, ← Finset.sum_add_distrib]
         refine Finset.sum_congr rfl fun i _ => ?_
         rw [← Finset.sum_add_distrib]
         refine Finset.sum_congr rfl fun j _ => ?_

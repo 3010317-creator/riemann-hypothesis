@@ -345,8 +345,7 @@ theorem valR_congr₁ {A : Type} [CommRing A] (x : Sp A ⟶ X) {U U' : X.Opens} 
   rw [valR, valR, dite_eq_left hU, dite_eq_left hU']
   refine congrArg _ (fn_ext fun z hz => ?_)
   rw [gs_appLE₁ _ _ _ _ _ _ hz, gs_appLE₁ _ _ _ _ _ _ hz]
-  simp only [Category.id_comp]
-  exact h z
+  simpa only [Category.id_comp] using h z
 
 theorem mem_of_top_le {A : Type} [CommRing A] {x : Sp A ⟶ X} {U : X.Opens} (h : ⊤ ≤ x ⁻¹ᵁ U) (z : Sp A) :
     x z ∈ U := h (show z ∈ (⊤ : (Sp A).Opens) from trivial)
@@ -713,8 +712,7 @@ theorem isInvDer_of_isInv : ∀ (K : Type) [Field K] (A : Over (Sp K)) [GrpObj A
   let z : Chart.sp (R₀ := K) B ⟶ A := xt ≫ snd (epsR K) A
   have hfst : xt ≫ fst (epsR K) A = Chart.spMap (GlobalTheory.SqZero.epsTo K e he) := by
     apply Over.OverMorphism.ext
-    rw [Over.comp_left, Chart.spMap_left, ← hβe]
-    exact hβ
+    rwa [Over.comp_left, Chart.spMap_left, ← hβe]
   have hmu : x ≫ ((fst (epsR K) A ≫ u) * snd (epsR K) A).left =
       ((Chart.spMap (GlobalTheory.SqZero.epsTo K e he) ≫ u : Chart.sp (R₀ := K) B ⟶ A) * z).left := by
     rw [← hfst, Category.assoc, ← MonObj.comp_mul]
@@ -908,8 +906,7 @@ theorem secM_valR_transition : ∀ (X : Scheme.{0}) (L : LB X) (k : ℕ) (σ : S
   have hW : ∀ i : L.ι, L.U i ≤ LC.U (fun _ => i) :=
     fun i x hx => Set.mem_iInter.2 fun _ => hx
   have h1 : ⊤ ≤ ξ ⁻¹ᵁ (LC.U (fun _ => j) ⊓ LC.U (fun _ => j')) := by
-    intro x hx
-    exact ⟨hW j (hj hx), hW j' (hj' hx)⟩
+    exact fun x hx => ⟨hW j (hj hx), hW j' (hj' hx)⟩
   have h2 : ⊤ ≤ ξ ⁻¹ᵁ ((𝟙 X) ⁻¹ᵁ (L.U j ⊓ L.U j')) := fun x hx => ⟨hj hx, hj' hx⟩
   have hle : LC.U (fun _ => j) ⊓ LC.U (fun _ => j') ≤ (𝟙 X) ⁻¹ᵁ (L.U j ⊓ L.U j') :=
     le_inf (inf_le_left.trans (LB.wchart_le L _ _ 0)) (inf_le_right.trans (LB.wchart_le L _ _ 0))
@@ -1197,16 +1194,14 @@ theorem ksRel_zero : ∀ (K : Type) [Field K] [CharZero K] (P₀ : Out.PolAV (Sp
     rw [← map_natCast ψ]
     exact (map_ne_zero ψ).2 (Nat.cast_ne_zero.2 (by omega))
   have heq : ∀ O (h : ⊤ ≤ ξ ⁻¹ᵁ O) (f g : Γ(P₀.A.left, O)), valR ξ O f = valR ξ O g → f = g := by
-    intro O h f g e
-    exact sub_eq_zero.1 (hinj O _ h (by rw [WtAlg.valR_sub' _ _ h, e, sub_self]))
+    exact fun O h f g e => sub_eq_zero.1 (hinj O _ h (by rw [WtAlg.valR_sub' _ _ h, e, sub_self]))
   have hsub : ∀ O : P₀.A.left.Opens, ¬ ⊤ ≤ ξ ⁻¹ᵁ O → Subsingleton Γ(P₀.A.left, O) := by
     intro O hO
     have hb : O = ⊥ := by
       by_contra hne
       refine hO (GlobalTheory.T.top_le_preimage_nonempty_open_of_pointValue_injective K P₀ F ψ ξ hξ hinj O ?_)
       rw [Set.nonempty_iff_ne_empty]
-      intro he
-      exact hne (TopologicalSpace.Opens.ext (by simpa using he))
+      exact fun he => hne (TopologicalSpace.Opens.ext (by simpa using he))
     exact CommRingCat.subsingleton_of_isTerminal (P₀.A.left.sheaf.isTerminalOfEqEmpty hb)
   have hδψ : ∀ a r, δ a (ψ r) = 0 := by
     intro a r
@@ -1441,8 +1436,7 @@ theorem eq_top_of_forall_maximal (M : Submodule A (Fin n → A))
       (Module.Finite.fg_top) hle
     exact ⟨r, hr, fun q => hr' q trivial⟩
   have h1 : ∀ q : (Fin n → A) ⧸ M, q = 0 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     obtain ⟨q₀, hq₀⟩ := hne
     let I : Ideal A := Module.annihilator A ((Fin n → A) ⧸ M)
     have hI : I ≠ ⊤ := by
@@ -1457,8 +1451,7 @@ theorem eq_top_of_forall_maximal (M : Submodule A (Fin n → A))
       simpa using this
     exact hm.ne_top ((Ideal.eq_top_iff_one m).2 this)
   rw [eq_top_iff]
-  intro x _
-  exact (Submodule.Quotient.mk_eq_zero M).1 (h1 _)
+  exact fun x _ => (Submodule.Quotient.mk_eq_zero M).1 (h1 _)
 
 end GlobalTheory.GcDual
 

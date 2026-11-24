@@ -165,8 +165,7 @@ theorem map_muF (hp : X.p0 = X'.p0) :
   refine map_restrict_withDensity _ (coordIso_mp X X' e) ?_ ?_
   · ext z
     exact mem_dom_coordIso e hp z
-  · intro z
-    exact congrArg ENNReal.ofReal (densF_coordIso e hp z)
+  · exact fun z => congrArg ENNReal.ofReal (densF_coordIso e hp z)
 
 end
 

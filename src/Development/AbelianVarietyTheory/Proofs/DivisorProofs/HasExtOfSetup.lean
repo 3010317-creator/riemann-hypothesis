@@ -142,8 +142,7 @@ theorem exists_ringHom_extend {A R Ω : Type} [CommRing A] [IsLocalRing A] [Comm
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  refine ⟨l.toRingHom.comp (residue R), RingHom.ext fun a => ?_⟩
-  exact l.commutes (residue A a)
+  exact ⟨l.toRingHom.comp (residue R), RingHom.ext fun a => (l.commutes (residue A a))⟩
 
 theorem exists_geom_lift {X S : Scheme.{0}} {j : X ⟶ S} {A : Over X} [GrpObj A] {x : S} (C : Chart j A x) (Ω : Type)
     [Field Ω] [IsAlgClosed Ω] (p : Sp Ω ⟶ S) (hp : p (closedPoint Ω) = x) : ∃ q : Sp Ω ⟶ Sp C.R, q ≫ C.ξ = p := by
@@ -593,8 +592,7 @@ theorem exists_locus_of_span : ∀ (R₁ F : Type) [CommRing R₁] [Field F] (Y 
   have hsec : ∀ i, RegAt y (t i * g) := fun i => by
     have : t i ∈ Sec D₁ k := by rw [hS k]; exact subset_spanBy _ _ (ht i)
     exact hg.regularAt_iff.1 (this y)
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   apply (zeroAt_iff.1 ?_).2 hunit
   rw [Finset.sum_mul]
   refine Finset.sum_induction _ (ZeroAt y) (fun _ _ => ZeroAt.add) (zeroAt_zero y) fun i _ => ?_
@@ -934,8 +932,7 @@ theorem cover (z : Proj (piece hN)) : ∃ k, 1 ≤ k ∧ ∃ b ∈ N k, z ∈ Dp
   classical
   obtain ⟨y, hy, hyz⟩ := Set.not_subset.1 z.not_irrelevant_le
   have : ∃ j, (DirectSum.decompose (piece hN) y j : ring hN) ∉ z.asHomogeneousIdeal := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     apply hyz
     rw [← DirectSum.sum_support_decompose (piece hN) y]
     exact Ideal.sum_mem _ fun j _ => hc j
@@ -1013,8 +1010,7 @@ theorem mem [IsIntegral (Proj (piece hN))] {k : ℕ} (hk : 1 ≤ k) {b : F} (hb 
       rw [Subring.coe_mul, Subring.coe_mul, coe_hel_pow, coe_hel_pow, hnum, hden, monomial_mul_monomial,
         monomial_mul_monomial, show l * k + g.deg = g.deg + k * l by ring]
       congr 1
-      rw [div_eq_div_iff hs (pow_ne_zero _ hb0)] at hv
-      exact hv
+      rwa [div_eq_div_iff hs (pow_ne_zero _ hb0)] at hv
     have : (g.num : ring hN) * hel hN k b hb ^ l ∈ z.asHomogeneousIdeal.toIdeal := by
       rw [key]
       exact Ideal.mul_mem_right _ _ (Ideal.pow_mem_of_mem _ hg _ (by omega))
@@ -1061,8 +1057,7 @@ theorem ringChar [IsIntegral (Proj (piece hN))] {k : ℕ} (hk : 1 ≤ k) {b : F}
         (genericPoint (Proj (piece hN))).asHomogeneousIdeal.toIdeal.primeCompl),
         psiAt hN _ (HomogeneousLocalization.mapId (piece hN) h (mk nd)) =
           ((nd.num : ring hN) : F[X]).coeff nd.deg / ((nd.den : ring hN) : F[X]).coeff nd.deg := by
-      intro h
-      exact psiAt_mk hN _ ⟨nd.deg, nd.num, nd.den, h nd.den_mem⟩
+      exact fun h => psiAt_mk hN _ ⟨nd.deg, nd.num, nd.den, h nd.den_mem⟩
     refine (key _).trans ?_
     rw [← hm, coe_hel_pow, coeff_monomial]
     have he : (Finsupp.single (k * m) (b ^ m)) nd.deg = b ^ m := by
@@ -1194,8 +1189,7 @@ theorem exists_glue : ∀ (Y P : Scheme.{0}) [IsIntegral Y] [P.IsSeparated] (U :
       apply (cancel_mono F.toPartialMap.domain.ι).1
       rw [Category.assoc, hk, Category.comp_id]
       exact (Scheme.homOfLE_ι _ _).symm
-    rw [← hl]
-    rw [Category.assoc, reassoc_of% h2]
+    rw [← hl, Category.assoc, reassoc_of% h2]
     exact (congrArg (l ≫ ·) (g y0).toPartialMap_toRationalMap_restrict).trans (hw y0 l hl)
   refine ⟨k ≫ F.toPartialMap.hom, fun y => ?_, hgpm⟩
   obtain ⟨l, hl⟩ := hlift (U y) (hgen _ y (hU y))
@@ -1486,8 +1480,7 @@ theorem locus_iff {Y : Scheme.{0}} [IsIntegral Y] (D : CartierDiv Y) {k k' : ℕ
   show (k' • D).GeneratesAt y u' ↔ _
   rw [(hg.nsmul k').generatesAt_iff, e]
   constructor
-  · intro h
-    exact (unitAt_pow h k).mul (unitAt_pow h2.inv k')
+  · exact fun h => (unitAt_pow h k).mul (unitAt_pow h2.inv k')
   · intro h
     refine unitAt_of_pow h1 hk ?_
     have e2 : (u' * ((g ^ k' : Y.functionFieldˣ) : Y.functionField)) ^ k =
@@ -1539,8 +1532,7 @@ theorem exists_map_to_model : ∀ (R F : Type) [CommRing R] [IsDomain R] [Field 
   · intro k' hk' b' hb' y
     have hmy : m y ∈ Dp (k y) (b y) := by
       have h1 := hfV y ⟨y, hyU y⟩
-      rw [← hmU y] at h1
-      exact h1
+      rwa [← hmU y] at h1
     rw [hM.mem _ (hk y) _ (hb y) _ hmy k' hk' b' hb']
     obtain ⟨v₀, hv₀, hψ⟩ := (hM.ring _ (hk y) _ (hb y) (hb0 y) (b' ^ (k y) / b y ^ k')).2
       ⟨k', b' ^ (k y), by rw [mul_comm]; exact pow_mem hN hb' _, rfl⟩
@@ -1553,8 +1545,7 @@ theorem exists_map_to_model : ∀ (R F : Type) [CommRing R] [IsDomain R] [Field 
     · rintro ⟨v, hv, hvw⟩
       obtain rfl : v = v₀ := ψ.injective (hvw.trans hψ.symm)
       exact hst.2.2 hv
-    · intro h
-      exact ⟨v₀, hst.2.1 h, hψ⟩
+    · exact fun h => ⟨v₀, hst.2.1 h, hψ⟩
 
 end GlobalTheory.Desc.ToModel
 end -- clump:auto
@@ -1601,8 +1592,7 @@ theorem linDisj_A (σ : Setup) : LinDisj σ.c₀ (Desc.cst σ.A.hom) (RingHom.id
     exact IsPullback.of_horiz_isIso_mono ⟨by simp⟩
   · have : spMap (RingHom.id σ.A.left.functionField) = 𝟙 _ := Spec.map_id _
     rw [this]; simp
-  · intro v g h
-    exact h
+  · exact fun v g h => h
 
 theorem linDisj_C (σ : Setup) (x : Sp σ.R) : LinDisj σ.c₀ (Desc.cst (σ.C x).G.hom) (σ.θ x) := by
   haveI := σ.ab.proper

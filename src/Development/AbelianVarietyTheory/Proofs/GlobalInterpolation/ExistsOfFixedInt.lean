@@ -171,15 +171,13 @@ theorem _root_.GlobalTheory.SelfDualLatticeSplit.unit_vector_splits :
     refine Submodule.add_mem _ (Submodule.mem_sup_left ?_) (Submodule.mem_sup_right (hprojL y hy))
     exact Submodule.smul_mem _ (⟨_, mul_mem hbO (hxy y hy)⟩ : _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryLatticeOrthogonal.OEv F E v)
       (Submodule.subset_span rfl)
-  · rw [Submodule.span_le, Set.singleton_subset_iff]
-    exact hx
+  · rwa [Submodule.span_le, Set.singleton_subset_iff]
   · have heq : _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryLatticeOrthogonal.perpLat σ J v L x =
         L.map ((_root_.GlobalTheory.SelfDualLatticeSplit.proj σ J v x b).restrictScalars
           (_root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryLatticeOrthogonal.OEv F E v)) := by
       ext y
       constructor
-      · intro hy
-        exact ⟨y, ((hperp y).1 hy).2, hfix y ((hperp y).1 hy).1⟩
+      · exact fun hy => ⟨y, ((hperp y).1 hy).2, hfix y ((hperp y).1 hy).1⟩
       · rintro ⟨z, hz, rfl⟩
         exact hprojL z hz
     rw [heq]
@@ -575,8 +573,7 @@ theorem exists_next [Nontrivial A] (hc : ∀ a, c (c a) = a) (hJ : ∀ i j, c (J
       have h5 : (r : A) • π y = 0 := hr0 _ ⟨y, hy, rfl⟩
       show π y = 0
       rw [← one_smul A (π y), ← hb, mul_smul, h5, smul_zero]
-    intro y
-    exact this (hsp ▸ Submodule.mem_top)
+    exact fun y => this (hsp ▸ Submodule.mem_top)
   have h6 : Submodule.span A (Set.range e) = ⊤ := by
     refine eq_top_iff.2 fun y _ => ?_
     have := h4 y
@@ -669,9 +666,7 @@ theorem exists_image (hfg : L.FG) (hsp : Submodule.span A (L : Set (Fin M → A)
     · rintro ⟨y', hy', hyy⟩ _ ⟨z, hz, rfl⟩
       rw [← hyy]
       exact (h_unitary hg z y').symm ▸ (hL y').1 hy' z hz
-    · intro h
-      refine ⟨y, (hL y).2 fun z hz => ?_, rfl⟩
-      exact h_unitary hg z y ▸ h _ ⟨z, hz, rfl⟩
+    · exact fun h => ⟨y, (hL y).2 fun z hz => (h_unitary hg z y ▸ h _ ⟨z, hz, rfl⟩), rfl⟩
 
 end Lattice
 

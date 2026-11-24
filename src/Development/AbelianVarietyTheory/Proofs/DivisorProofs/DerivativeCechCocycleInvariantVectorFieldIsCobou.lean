@@ -165,8 +165,7 @@ theorem tangent_in {v : epsR K ⟶ A} (hv : IsTangent v) {U : A.left.Opens} (h :
     exact ⟨fun hc ↦ by simpa using add_mem hn hc, fun hc ↦ by simpa using sub_mem hc hn⟩
   obtain ⟨q, rfl⟩ := hs p
   have := h (Set.mem_univ q)
-  rw [← hv] at this
-  exact this
+  rwa [← hv] at this
 
 theorem transPair_in (V : J → A.left.Opens) (P : GPt A) {v : epsR K ⟶ A} (hv : IsTangent v) {a c : J}
     (ha : P.In (V a)) (hc : ⊤ ≤ v.left ⁻¹ᵁ V c) : ⊤ ≤ transPair P v ⁻¹ᵁ pairOpen V (a, a, c) := by
@@ -174,12 +173,10 @@ theorem transPair_in (V : J → A.left.Opens) (P : GPt A) {v : epsR K ⟶ A} (hv
   refine ⟨⟨?_, ?_⟩, ?_⟩
   · have := (ha.tr hv) (Set.mem_univ p)
     change p ∈ (P.trx v) ⁻¹ᵁ V a at this
-    rw [← transPair_mul] at this
-    exact this
+    rwa [← transPair_mul] at this
   · have := ha (Set.mem_univ ((spMap (algebraMap P.B (DualNumber P.B))).base p))
     change p ∈ (transPair P v ≫ (fst A A).left) ⁻¹ᵁ V a
-    rw [transPair_fst]
-    exact this
+    rwa [transPair_fst]
   · change p ∈ (transPair P v ≫ (snd A A).left) ⁻¹ᵁ V c
     rw [transPair_snd]
     exact hc (Set.mem_univ _)

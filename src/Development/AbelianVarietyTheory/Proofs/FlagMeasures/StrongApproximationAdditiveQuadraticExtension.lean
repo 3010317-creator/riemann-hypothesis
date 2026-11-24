@@ -172,8 +172,7 @@ theorem approx (A : Places F E sig) (z : ∀ p, (A.loc p).Fp) (hz : ∀ p, valua
       rw [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.valuation_of_algebraMap, h1, map_one]
     have h3 := (PlacesInt.val_le_iff (A.loc p) _ _).2 h2
     rw [map_one, map_one, map_one] at h3
-    refine le_trans ?_ h3
-    exact ((valuation (A.loc p).Fp).map_sub _ _).trans (max_le (hz p) (int_of _ a))
+    exact le_trans (((valuation (A.loc p).Fp).map_sub _ _).trans (max_le (hz p) (int_of _ a))) h3
 
 theorem approxF (A : Places F E sig) (c : ∀ p, ((A.loc p).Fp)ˣ)
     (hc : {p | ¬ ∃ u : (𝒪[(A.loc p).Fp])ˣ, ((u : 𝒪[(A.loc p).Fp]) : (A.loc p).Fp) = c p}.Finite)
@@ -262,8 +261,7 @@ theorem sig_sig (A : Places F E sig) (y : E) : sig (sig y) = y := by
   rw [← (A.loc p).cj_ιE, ← (A.loc p).cj_ιE, ← A.L_cj, (A.L p).cj_cj]
 
 theorem sig_ne (A : Places F E sig) : ∃ e : E, sig e ≠ e := by
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   obtain ⟨p⟩ := exists_place F
   have h2 : ∀ z, (A.loc p).cj z = z := by
     intro z
@@ -292,8 +290,7 @@ theorem exists_d (A : Places F E sig) : ∃ d : 𝓞 E, sig (d : E) = -(d : E) �
     · change (o : E) - sig o ≠ 0
       rw [sub_ne_zero]
       exact fun h => ho h.symm
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   obtain ⟨e, he⟩ := sig_ne A
   obtain ⟨a, s, -, rfl⟩ := IsFractionRing.div_surjective (A := 𝓞 E) e
   apply he
@@ -358,8 +355,7 @@ theorem fin_two (A : Places F E sig) :
     {p : HeightOneSpectrum (𝓞 F) | (A.loc p).ιF 2⁻¹ ∉ 𝒪[(A.loc p).Fp]}.Finite := by
   refine (HeightOneSpectrum.Support.finite (𝓞 F) (2⁻¹ : F)).subset fun p hp => ?_
   have hp' : ¬ (A.loc p).ιF 2⁻¹ ∈ 𝒪[(A.loc p).Fp] := hp
-  rw [PlacesInt.mem_int_iff, not_le] at hp'
-  exact hp'
+  rwa [PlacesInt.mem_int_iff, not_le] at hp'
 
 theorem approxE (A : Places F E sig) (c : ∀ p, ((A.loc p).Fp)ˣ)
     (hc : {p | ¬ ∃ u : (𝒪[(A.loc p).Fp])ˣ, ((u : 𝒪[(A.loc p).Fp]) : (A.loc p).Fp) = c p}.Finite)

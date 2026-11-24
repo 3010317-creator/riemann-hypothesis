@@ -68,8 +68,7 @@ theorem vol_mul_relIndex {G : Type} [Group G] [TopologicalSpace G] [IsTopologica
     constructor
     · rintro ⟨y, hy, rfl⟩
       exact hy
-    · intro hx
-      exact ⟨⟨x, hle hx⟩, hx, rfl⟩
+    · exact fun hx => ⟨⟨x, hle hx⟩, hx, rfl⟩
   rw [e1, e2] at key
   refine ⟨?_, Subgroup.FiniteIndex.index_ne_zero⟩
   rw [Subgroup.relIndex, Measure.real, Measure.real, ← key, ENNReal.toReal_mul, mul_comm]
@@ -112,8 +111,7 @@ theorem integral_eq_sum_cosets {G : Type} [Group G] [TopologicalSpace G] [IsTopo
   · rw [Finset.mul_sum]
     refine Finset.sum_congr rfl fun q _ => ?_
     rw [integral_indicator_const _ (hmeas q), Measure.real, hμ q, Complex.real_smul, Measure.real]
-  · intro q _
-    exact (integrableOn_const (hμ q ▸ hfin)).integrable_indicator (hmeas q)
+  · exact fun q _ => (integrableOn_const (hμ q ▸ hfin)).integrable_indicator (hmeas q)
 
 theorem finite_cosets {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (S : Subgroup G)
     (hS : IsOpen (S : Set G)) {C : Set G} (hC : IsCompact C) : ((fun x : G => (x : G ⧸ S)) '' C).Finite := by

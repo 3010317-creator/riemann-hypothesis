@@ -179,8 +179,7 @@ private theorem mul_card_irreducible_add_one_le_pow (g : ℕ) [Fact g.Prime] {d 
       P.Monic ∧ Irreducible P ∧ P ∣ (X ^ g ^ d - X : (ZMod g)[X]) := by
     intro P hP
     rcases Finset.mem_insert.1 hP with rfl | hP
-    · refine ⟨monic_X, irreducible_X, ?_⟩
-      exact dvd_sub (dvd_pow_self _ (by positivity)) dvd_rfl
+    · exact ⟨monic_X, irreducible_X, dvd_sub (dvd_pow_self _ (by positivity)) dvd_rfl⟩
     · rw [hS, Finset.mem_filter, _root_.GlobalTheory.BadShare.mem_sqSet] at hP
       obtain ⟨⟨hm, hdeg, -, -⟩, hirr⟩ := hP
       refine ⟨hm, hirr, ?_⟩
@@ -194,8 +193,7 @@ private theorem mul_card_irreducible_add_one_le_pow (g : ℕ) [Fact g.Prime] {d 
       show IsCoprime P Q
       refine (hPi.coprime_iff_not_dvd).2 fun h => hPQ ?_
       exact eq_of_monic_of_associated hPm hQm (hPi.associated_of_dvd hQi h)
-    · intro P hP
-      exact (hmem P hP).2.2
+    · exact fun P hP => (hmem P hP).2.2
   have hle := natDegree_le_of_dvd hdvd (FiniteField.X_pow_card_pow_sub_X_ne_zero _ hd.ne' hg)
   rw [FiniteField.X_pow_card_pow_sub_X_natDegree_eq _ hd.ne' hg,
     natDegree_prod_of_monic _ _ (fun P hP => (hmem P hP).1), Finset.sum_insert hX,
@@ -281,8 +279,7 @@ private theorem count_succ_mul_mass_cons_le (g : ℕ) [Fact g.Prime] (N d : ℕ)
       intro f hf
       rw [Finset.mem_filter] at hf
       have := modByMonic_add_div f P
-      rw [(modByMonic_eq_zero_iff_dvd hPm).2 hf.2, zero_add] at this
-      exact this
+      rwa [(modByMonic_eq_zero_iff_dvd hPm).2 hf.2, zero_add] at this
     have hne : ∀ f ∈ A.filter (P ∣ ·), f /ₘ P ≠ 0 := by
       intro f hf h0
       have h := hfac f hf
@@ -387,8 +384,7 @@ theorem _root_.GlobalTheory.BadShare.mass_degType_le : ∀ (g : ℕ) [Fact g.Pri
       calc _root_.GlobalTheory.BadShare.mass g N (fun f => _root_.GlobalTheory.BadShare.degType g f = d ::ₘ ν)
           ≤ (d : ℝ)⁻¹ * _root_.GlobalTheory.BadShare.mass g (N - d)
               (fun f => _root_.GlobalTheory.BadShare.degType g f = ν) / ((ν.count d + 1 : ℕ) : ℝ) := by
-            rw [le_div_iff₀ hc, mul_comm]
-            exact key
+            rwa [le_div_iff₀ hc, mul_comm]
         _ ≤ (d : ℝ)⁻¹ * (∏ e ∈ ν.toFinset, ((e : ℝ) ^ ν.count e * (ν.count e).factorial))⁻¹ /
               ((ν.count d + 1 : ℕ) : ℝ) := by
             gcongr

@@ -97,8 +97,7 @@ theorem eq_zero_or_single {ι : Type} [Fintype ι] [DecidableEq ι] (γ : ι →
   · exact Or.inl h0
   right
   obtain ⟨s, hs⟩ : ∃ s, γ s ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact h0 (Finsupp.ext hc)
   rw [Finsupp.degree_eq_sum] at h
   have hsum : ∑ i, γ i = γ s + ∑ i ∈ Finset.univ.erase s, γ i :=
@@ -325,8 +324,7 @@ theorem coeff_left (p q i j l : ℕ) :
   · by_cases hp : i ≤ p
     · exact if_congr (by omega) rfl rfl
     · rw [Nat.choose_eq_zero_of_lt (by omega)]; simp
-  · intro k _ hk
-    exact ite_eq_right fun h' => hk h'.1
+  · exact fun k _ hk => ite_eq_right fun h' => hk h'.1
   · intro hi
     rw [Nat.choose_eq_zero_of_lt (by simpa using hi)]; simp
 
@@ -340,8 +338,7 @@ theorem coeff_right (p q i j l : ℕ) :
   · by_cases hp : j ≤ q
     · exact if_congr (by omega) rfl rfl
     · rw [Nat.choose_eq_zero_of_lt (by omega)]; simp
-  · intro k _ hk
-    exact ite_eq_right fun h' => hk h'.2.1
+  · exact fun k _ hk => ite_eq_right fun h' => hk h'.2.1
   · intro hi
     rw [Nat.choose_eq_zero_of_lt (by simpa using hi)]; simp
 
@@ -1523,8 +1520,7 @@ theorem exists_quasiLog_red (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [CharP
     funext i
     unfold lin
     rw [hf 0 _ (by simp), hF0]
-  rw [hl]
-  exact hw
+  rwa [hl]
 
 end Katz
 
@@ -1667,8 +1663,7 @@ theorem quasiLog_eq_p_smul_add_int : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Fi
     rw [← algebraMap_smul (Fr p k) (p : WittVector p k) x]
     simp
   have hcg : cob1 (fun i => Katz.lift p (μ i)) ((p : Fr p k)⁻¹ • f') ∈ intBy p k _ 1 := by
-    rw [formalCoboundary_smul hL, hc0e, hsm, smul_smul, inv_mul_cancel₀ hpF, one_smul]
-    exact hc0
+    rwa [formalCoboundary_smul hL, hc0e, hsm, smul_smul, inv_mul_cancel₀ hpF, one_smul]
   refine ⟨(p : Fr p k)⁻¹ • f', ⟨?_, hcg⟩, ?_⟩
   · apply _root_.GlobalTheory.Katz.quasiInt_of_cob1_int_of_lin_int p k d μ h _ _ hcg
     intro i

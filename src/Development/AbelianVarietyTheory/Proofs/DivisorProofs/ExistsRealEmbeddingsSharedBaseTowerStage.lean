@@ -170,8 +170,7 @@ private theorem under_notMem (hL : Lc.Is μ₀) (t : T) {P : HeightOneSpectrum (
   have hw : G.pl.w (P.under (𝓞 D.host.F)) ∈ G.pl.W0 := Finset.mem_image_of_mem _ h
   have hw' : G.pl.w (P.under (𝓞 D.host.F)) ∈ locPl G t := Finset.mem_union_left _ hw
   have e := GlobalTheory.FunObj.Good.under_injOn hL G t hw' h1 (G.pl.under_w h)
-  rw [← e]
-  exact hw
+  rwa [← e]
 
 private theorem chars_good (hL : Lc.Is μ₀) (t : T) (i j : Fin D.R.m) (B : Base D.host.F D.host.E)
     (hsub : (GlobalTheory.SqStep.chs G i j t).T ⊆ B.P) (hv₁ : B.v₁ ∉ (GlobalTheory.SqStep.chs G i j t).T) (hsp : SplitsFully D.host.E B.v₁)
@@ -197,8 +196,7 @@ private theorem chars_good (hL : Lc.Is μ₀) (t : T) (i j : Fin D.R.m) (B : Bas
     have e2 := hx.2 x
     have e3 := he.2 x
     show Lc.mu0 ((j : ℕ) + 1) _ * Lc.xi t _ * (Lc.eta ^ _) _ = 1
-    rw [MonoidHom.pow_apply]
-    rw [e1, e2, e3]
+    rw [MonoidHom.pow_apply, e1, e2, e3]
     simp
   · have hc := (G.ch.chi_eq (D.R.m - (i : ℕ)) (by omega) (by omega)).1
     have he := hL.eta.1
@@ -279,8 +277,7 @@ theorem _root_.GlobalTheory.T.exists_realEmbeddings_sharedBase_towerStage : GBig
       chars_good hL t i j B subset_rfl hv₁P hv₁s (hα t) hβ,
       chars_good hL μ₀ i j B hsub₀ (fun h => hv₁P (hsub₀ h)) hv₁s (hα μ₀) hβ, hκ⟩
     obtain ⟨w, hw, e⟩ := hloc v.1 hv
-    rw [hτP v w hw e]
-    exact hw
+    rwa [hτP v w hw e]
   refine ⟨B, rfl, ?_⟩
   obtain ⟨hp, hq, hA, hA', -⟩ := hX
   have e1 : rankV D (i + 1) (j + 1) = A.rank + 2 * (pp D j - p) := by omega

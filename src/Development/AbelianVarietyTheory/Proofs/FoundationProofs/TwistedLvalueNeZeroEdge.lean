@@ -149,8 +149,7 @@ theorem lseries_cusp_entire : ∀ (k L N : ℕ) (ε : DirichletCharacter ℂ N) 
   obtain ⟨f, hf⟩ := _root_.GlobalTheory.EisM.cuspForm_of_CF k L N ε g hk hL hNL hcf
   have hcoef : ∀ n, (qExpansion 1 ⇑f).coeff n = g n := fun n => by
     have h := _root_.GlobalTheory.EisM.coef_qs g hcf.1.1 n
-    rw [coef, ← hf] at h
-    exact h
+    rwa [coef, ← hf] at h
   have hk0 : (0 : ℤ) < (k : ℤ) := by exact_mod_cast hk
   have hsq := (_root_.GlobalTheory.rankin_mean_square k L (ch ε) g hk hcf).2.2.1
   have hsum : ∀ s : ℂ, ((k : ℝ) + 1) / 2 < s.re → LSeriesSummable g s := lseriesSummable_of_sq g k hsq
@@ -235,8 +234,7 @@ theorem norm_ch_eq_one {L N : ℕ} (ε : DirichletCharacter ℂ N) (hNL : N ∣ 
     have h := congrArg (Int.cast : ℤ → ZMod N) hdet
     push_cast at h
     rw [hc, mul_zero, sub_zero] at h
-    rw [mul_comm]
-    exact h
+    rwa [mul_comm]
   obtain ⟨u, hu⟩ := IsUnit.of_mul_eq_one _ h1
   show ‖ε ((γ 1 1 : ℤ) : ZMod N)‖ = 1
   rw [← hu]
@@ -308,8 +306,7 @@ theorem pet_self_ne_zero : ∀ (k L N : ℕ) (ε : DirichletCharacter ℂ N) (ρ
       have h2 := hτ γ
       simp only [hG, hΦ] at h2 ⊢
       rw [hinv] at h2
-      rw [mul_comm]
-      exact h2
+      rwa [mul_comm]
     have hs := (hW.sum τ).mul_left (Φ τ)
     simp only [hterm, mul_one] at hs
     exact hs.unique hasSum_zero
@@ -541,16 +538,14 @@ theorem summ1 (ρ : ℝ) (h0 : 0 ≤ ρ) (h1 : ρ < 1) :
     Summable (fun r : ℕ => ((r : ℝ) + 1) * ρ ^ r) := by
   have hn : ‖ρ‖ < 1 := by rw [Real.norm_eq_abs, abs_of_nonneg h0]; exact h1
   have a := summable_pow_mul_geometric_of_norm_lt_one 1 hn
-  have b := summable_geometric_of_lt_one h0 h1
-  exact (a.add b).congr (fun r => by ring)
+  exact (a.add (summable_geometric_of_lt_one h0 h1)).congr (fun r => by ring)
 
 theorem summ2 (ρ : ℝ) (h0 : 0 ≤ ρ) (h1 : ρ < 1) :
     Summable (fun r : ℕ => ((r : ℝ) + 1) ^ 2 * ρ ^ r) := by
   have hn : ‖ρ‖ < 1 := by rw [Real.norm_eq_abs, abs_of_nonneg h0]; exact h1
   have a := summable_pow_mul_geometric_of_norm_lt_one 2 hn
   have a1 := summable_pow_mul_geometric_of_norm_lt_one 1 hn
-  have b := summable_geometric_of_lt_one h0 h1
-  exact ((a.add (a1.mul_left 2)).add b).congr (fun r => by ring)
+  exact ((a.add (a1.mul_left 2)).add (summable_geometric_of_lt_one h0 h1)).congr (fun r => by ring)
 
 theorem part1 (x y z : ℂ) (c : ℕ → ℂ) (h0 : c 0 = 1)
     (hs : ∀ r, c (r + 1) = y * c r + x ^ (r + 1))
@@ -1159,8 +1154,7 @@ theorem not_summable_one_div_primes_eq_neg_one :
           · intro x; exact (Real.rpow_pos_of_pos hp x).ne'
         have := (hc.tendsto 1).mono_left (nhdsWithin_le_nhds (s := Set.Ioi (1 : ℝ)))
         simpa using this
-      · simp only [Set.indicator_of_notMem hn, mul_zero]
-        exact tendsto_const_nhds
+      · simpa only [Set.indicator_of_notMem hn, mul_zero] using tendsto_const_nhds
     · filter_upwards [self_mem_nhdsWithin] with x hx n
       have hx : (1 : ℝ) < x := hx
       by_cases hn : n ∈ S
@@ -1231,8 +1225,7 @@ theorem lseries_ne_zero_edge : ∀ (M : ℕ) (b ω : ℕ → ℂ) (C : ℝ) (Λ 
       refine ⟨h2, h3, ?_⟩
       simp only [Function.comp, h0, sub_zero] at h1
       have : ((1 + s : ℝ) : ℂ) - 1 = (s : ℂ) := by push_cast; ring
-      rw [this, Complex.norm_real, Real.norm_eq_abs, abs_of_pos h2] at h1
-      exact h1
+      rwa [this, Complex.norm_real, Real.norm_eq_abs, abs_of_pos h2] at h1
 
     have hC0 : 0 ≤ C := by
       have := hsC 1 one_pos le_rfl

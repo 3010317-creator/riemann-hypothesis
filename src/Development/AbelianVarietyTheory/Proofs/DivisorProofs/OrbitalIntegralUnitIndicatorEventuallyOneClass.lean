@@ -203,8 +203,7 @@ theorem negOne_zpow_ordL_mul {L : Type} [Field L] [Valued L (WithZero (Multiplic
   · simp [hx]
   have h1 : ordL (σ a * a * x) = 2 * ordL a + ordL x := by
     apply key
-    rw [map_mul, map_mul, hσ, spec a ha, spec x hx]
-    rw [← WithZero.coe_mul, ← WithZero.coe_mul]
+    rw [map_mul, map_mul, hσ, spec a ha, spec x hx, ← WithZero.coe_mul, ← WithZero.coe_mul]
     congr 1
     rw [← ofAdd_add, ← ofAdd_add]
     congr 1
@@ -321,8 +320,7 @@ theorem kapSign_conj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n
       exact (hmem y).mp hy
     · intro hx
       refine ⟨((g.1)⁻¹).val *ᵥ x, ?_, ?_⟩
-      · rw [hmem, Matrix.mulVec_mulVec, hinv', Matrix.one_mulVec]
-        exact hx
+      · rwa [hmem, Matrix.mulVec_mulVec, hinv', Matrix.one_mulVec]
       · rw [Matrix.mulVec_mulVec, hinv', Matrix.one_mulVec]
   let e : V' ≃ₗ[w.adicCompletion E] V :=
     (Submodule.equivMapOfInjective _ hinj V').trans (LinearEquiv.ofEq _ _ hmap)
@@ -335,8 +333,7 @@ theorem kapSign_conj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n
     rfl
   have h1 : gram (cj w) (fun i => (b' i : Fin n → w.adicCompletion E)) =
       gram (cj w) (fun i => (c₀ i : Fin n → w.adicCompletion E)) := by
-    simp only [hc₀]
-    exact (gram_unitary (cj w) _ hg _).symm
+    simpa only [hc₀] using (gram_unitary (cj w) _ hg _).symm
   have h2 : (gram (cj w) (fun i => (c₀ i : Fin n → w.adicCompletion E))).det =
       (gram (cj w) (fun i => (c i : Fin n → w.adicCompletion E))).det := by
     have : gram (cj w) (fun i => (c i : Fin n → w.adicCompletion E)) =
@@ -510,8 +507,7 @@ theorem exists_basis {K : Type*} [Field K] (O : Subring K) [IsPrincipalIdealRing
     apply Matrix.toLin'.injective
     apply LinearMap.ext
     intro x
-    simp only [Matrix.toLin'_apply, ← Matrix.mulVec_mulVec]
-    exact h2 _ (h1 x)
+    simpa only [Matrix.toLin'_apply, ← Matrix.mulVec_mulVec] using h2 _ (h1 x)
   let e₀ : Matrix (Fin n) (Fin n) O := Matrix.of fun i j => ⟨e i j, hint i j⟩
   have he₀ : e₀.map O.subtype = e := by ext i j; rfl
   have hee₀ : e₀ * e₀ = e₀ := by
@@ -762,8 +758,7 @@ theorem ker_orthogonal_of_coprime :
       simp only [c]
       rw [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ hGu, Matrix.one_mulVec]
     rw [h2] at h1
-    simp only [Pi.sub_apply, mul_sub, Finset.sum_sub_distrib]
-    exact sub_eq_zero.mpr h1
+    simpa only [Pi.sub_apply, mul_sub, Finset.sum_sub_distrib] using sub_eq_zero.mpr h1
   have hq₂ : aeval γ q₂ *ᵥ (y₁ : Fin n → K) = 0 := by
     apply hVW _ (aeval_mulVec_mem_of_stable γ V hVst q₂ _ y₁.2)
     have h1 := W.neg_mem (aeval_mulVec_mem_of_stable γ W hWst q₂ _ hy₀)

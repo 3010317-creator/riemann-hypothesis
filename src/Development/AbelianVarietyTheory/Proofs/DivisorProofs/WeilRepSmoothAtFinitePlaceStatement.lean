@@ -206,8 +206,7 @@ theorem exists_compact_subgroup_at_place : ∀ {F E : Type} [Field F] [NumberFie
   intro F E _ _ _ _ _ σ hσ n X v U hU
   have heq : GlobalTheory.WeilM.UG (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA σ) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM F X.J) = HR (AF F) σ (X.J.map σ) := by
     have h := GlobalTheory.SiegelSet.ug_eq_hr (F := F) (J := X.J) hσ one_ne_zero
-    rw [one_smul] at h
-    exact h
+    rwa [one_smul] at h
   let e : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.UA σ X.J ≃* GAd σ (X.J.map σ) := MulEquiv.subgroupCongr heq
   have he : Continuous e := continuous_subtype_val.subtype_mk _
   have he' : Continuous e.symm := continuous_subtype_val.subtype_mk _
@@ -230,8 +229,7 @@ theorem exists_compact_subgroup_at_place : ∀ {F E : Type} [Field F] [NumberFie
     have h := smul_mat_emb_sub_one σ (X.J.map σ) v x hu
     have h2 : (HA.mat (AF F) σ (X.J.map σ) (e (f x))).1 = (HA.mat (AF F) σ (X.J.map σ) (emb σ (X.J.map σ) v x)).1 := by
       simp [f]
-    rw [← hmat, h2]
-    exact h
+    rwa [← hmat, h2]
   · rw [Subgroup.coe_map]
     exact hV₁c.image hf
   · show proj σ (X.J.map σ) v (e 1) ∈ V₁
@@ -322,8 +320,7 @@ theorem span_finiteDimensional_of_bounded_forms {V : Type} [AddCommGroup V] [Mod
     rw [key, Complex.norm_natCast] at hle
     linarith
   have hfd : FiniteDimensional ℂ (Submodule.span ℂ t) := FiniteDimensional.span_of_finite ℂ ht
-  rw [hspan] at hfd
-  exact hfd
+  rwa [hspan] at hfd
 
 end GlobalTheory
 end -- clump:auto

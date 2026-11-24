@@ -504,8 +504,7 @@ theorem psiE_ne (hψ : IsStdChar D ψ (-1)) (hS : IsSelfDualC S Λ) (fS : Formal
   have h2 := GlobalTheory.HalfLatInt.isIntM_of_mem hS fS fS (idemSum_single he) hP1 hyh hyL a a
   rw [hy, Matrix.single_apply_same] at h2
   refine (he.2 ϖ h0).1 hϖ (GlobalTheory.PlaceVec.finPart_mem_intAE ?_)
-  rw [map_mul, mul_comm]
-  exact h2
+  rwa [map_mul, mul_comm]
 
 theorem psiE_max (hψ : IsStdChar D ψ (-1)) (hS : IsSelfDualC S Λ) (fS : Formalism.L2.DIV.IsFrame β Λ) (a : Fin S.rank)
     (he : Formalism.L2.NTheta.IsIdemAt e PP)
@@ -820,8 +819,7 @@ theorem sum_char_trace {n r : ℕ} {ψ : AddChar k ℂ} (hψ : ψ.IsPrimitive) (
       have := DFunLike.congr_fun h0 (Matrix.single j i t)
       change ψ (Matrix.trace (Matrix.single j i t * w)) = 1 at this
       rw [Matrix.trace_single_mul, smul_eq_mul] at this
-      rw [AddChar.mulShift_apply, mul_comm]
-      exact this
+      rwa [AddChar.mulShift_apply, mul_comm]
     · rintro rfl
       ext x
       change ψ (Matrix.trace (x * (0 : Matrix (Fin n) (Fin r) k))) = 1
@@ -1123,8 +1121,7 @@ theorem datum_conj_half_fourier : ∀ (D : D7) (G : Type) [Group G] [Fintype G] 
         simp_rw [hterm, mul_ite, mul_one, mul_zero]
         rw [Finset.sum_ite_eq' Finset.univ (-ρt) c, ite_eq_left (Finset.mem_univ _)]
         exact hc ρt _ fun PP => rfl
-      · rw [ite_eq_right (fun h => hl ((h4b _ hdt).1 h.2))]
-        rw [mul_zero]
+      · rw [ite_eq_right (fun h => hl ((h4b _ hdt).1 h.2)), mul_zero]
         refine Finset.sum_eq_zero fun x _ => ?_
         rw [halfInd, ite_eq_right, mul_zero]
         rintro ⟨hm, -⟩
@@ -1132,8 +1129,7 @@ theorem datum_conj_half_fourier : ∀ (D : D7) (G : Type) [Group G] [Fintype G] 
         have := hdm _ hm
         rw [dil_add] at this
         simpa using sub_mem this (hyl x)
-    · rw [ite_eq_right (fun h => ht ((isHalf_dil i hϖ' t).1 h.1))]
-      rw [mul_zero]
+    · rw [ite_eq_right (fun h => ht ((isHalf_dil i hϖ' t).1 h.1)), mul_zero]
       refine Finset.sum_eq_zero fun x _ => ?_
       rw [halfInd, ite_eq_right, mul_zero]
       rintro ⟨-, hh⟩

@@ -105,8 +105,7 @@ theorem exists_bound_orbit (Γ : Subgroup G) [DiscreteTopology Γ] {K : Set G} (
     rw [hs]
     refine le_trans (Finset.sum_le_card_nsmul _ _ 1 fun γ _ =>
       Set.indicator_apply_le' (fun _ => le_rfl) (fun _ => zero_le_one)) ?_
-    simp only [nsmul_eq_mul, mul_one, Nat.cast_le]
-    exact Finset.card_image_le
+    simpa only [nsmul_eq_mul, mul_one, Nat.cast_le] using Finset.card_image_le
   · push Not at h
     simp only [Set.indicator_of_notMem (h _), tsum_zero, zero_le]
 
@@ -360,8 +359,7 @@ theorem exists_vector_of_inner_eq_prod {ι : Type} [Fintype ι] [DecidableEq ι]
     have : DenseRange (Pi.map fun τ => fun x : A τ →₀ ℂ => Finsupp.linearCombination ℂ (e τ) x) := by
       refine DenseRange.piMap fun τ => ?_
       have := hd τ
-      rw [← Finsupp.range_linearCombination, LinearMap.coe_range] at this
-      exact this
+      rwa [← Finsupp.range_linearCombination, LinearMap.coe_range] at this
     exact this
   obtain ⟨u, hu, hlim⟩ := mem_closure_iff_seq_limit.1 (hdl y)
   choose x hx using hu
@@ -1158,8 +1156,7 @@ theorem continuous_reg [LocallyCompactSpace G] [SecondCountableTopology G] [IsFi
       (mem_closure_iff_frequently.1 hF)
     refine Metric.tendstoUniformly_iff.2 fun ε hε => ?_
     filter_upwards [Metric.ball_mem_nhds F hε] with F' h g
-    rw [dist_eq_norm, ← map_sub, norm_reg, ← dist_eq_norm, dist_comm]
-    exact h
+    rwa [dist_eq_norm, ← map_sub, norm_reg, ← dist_eq_norm, dist_comm]
 
 end General
 
@@ -1477,8 +1474,7 @@ theorem eig_class (hp : FinPair V μ 𝓕) (hρ : IsReg V μ 𝓕 ρ) {φ : GA D
   have h := hr.2.2.2.1 F₀ φ k hF
   have e : rTr V k φ = c • φ := funext hc
   rw [e] at h
-  have h3 := hr.2.2.1 _ _ _ h (repr_smul hp hρ c hF)
-  exact h3
+  exact hr.2.2.1 _ _ _ h (repr_smul hp hρ c hF)
 
 theorem exists_map {w : D.what₂.Tau → Fin V.rank → ℤ} {v : M.Vec} (hθ : IsInfFam θ) (hs : HolShape M) (hw : WtIs M w)
     (hv : IsExtVec M v) (hp : FinPair V μ 𝓕) (hρ : IsReg V μ 𝓕 ρ) {J : Set (GA D V)} {χ φ : GA D V → ℂ}
@@ -1492,8 +1488,7 @@ theorem exists_map {w : D.what₂.Tau → Fin V.rank → ℤ} {v : M.Vec} (hθ :
   have h2 := exists_map_abs (K := Lp ℂ 2 (nuQ V μ 𝓕)) (M := M) (v := v) ρ hθ (fun τ => (hv τ).1) hρ.iso F₀
   have h3 := h2 h1
   refine h3.imp fun Φ h => ⟨h.1, h.2.1, h.2.2.1, fun k hk c hc => ?_⟩
-  have h4 := eig_class hp hρ hF k c hc
-  exact h.2.2.2 k hk c h4
+  exact h.2.2.2 k hk c (eig_class hp hρ hF k c hc)
 
 end L2
 
@@ -1539,8 +1534,7 @@ theorem exists_multMap : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂
     obtain ⟨q1, q2⟩ := p4 y [(τ, X)] (by simpa using hX)
     simp only [List.foldr_cons, List.foldr_nil] at q1 q2
     refine (uniq _ _ q1 ?_).symm
-    rw [coe_update, hw, ← (hsmM y).2 τ X hX]
-    exact q2
+    rwa [coe_update, hw, ← (hsmM y).2 τ X hX]
   obtain ⟨N, L, hL, hgr⟩ := GlobalTheory.T.sobolev_bound_for_smooth_vectors D θ V hθ μ 𝓕 ρ hp hρ U hU
   refine ⟨T, ⟨fun y => ⟨p2 y, p3 y, ?_, N, fun l hl x => ?_⟩, fun y => ?_, fun y k hk g => ?_, fun τ g hg y z hz => ?_,
     fun τ y x => ?_⟩, uniq v φ hφ.aut.cont (e1 ▸ hF)⟩

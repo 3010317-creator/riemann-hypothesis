@@ -312,8 +312,7 @@ theorem GlobalTheory.EvalLowType.lowType_of_eval : ∀ (D : D7) (G : Type) [Grou
       exact hu w₀ fun ρ => rfl)
   intro w
   have := key w
-  rw [MultilinearMap.sub_apply, sub_eq_zero, hLf, hRt] at this
-  exact this
+  rwa [MultilinearMap.sub_apply, sub_eq_zero, hLf, hRt] at this
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -471,8 +470,7 @@ theorem covAt_mem (hR : GlobalTheory.Hk3.Core R F) (hT : TieIn T R κ v₀) (O :
     obtain ⟨γ', hγ', h2, h3, -⟩ := hD.2 h
     obtain ⟨x, hx⟩ := hroot (γ' * h)
     have hv := hval h γ' ⟨hγ', h2, h3⟩
-    rw [(hO.tuple ()).xi _ _ hx, hxi, Circle.coe_one, _root_.mul_one] at hv
-    exact hv
+    rwa [(hO.tuple ()).xi _ _ hx, hxi, Circle.coe_one, _root_.mul_one] at hv
   have key : ∀ h, (O.dict₂ () h).2 ∈ ((O.U₂ ()).X (O.dict₂ () h).1).dom ∧
       rdU (O.U₂ ()) (O.dδ ()).cδ (O.dict₂ () h).1 (O.dict₂ () h).2 = c0 := fun h => by
     obtain ⟨hon, γ, ⟨hγ, hl, hfr⟩, hma, -⟩ := GlobalTheory.AdTh.dict_atComp_markAd D _ _ _ _ _ _ _ (O.U₂ ()) hσ hU h1 hA R.θ (Wc D i)
@@ -646,8 +644,7 @@ theorem cover_value_root : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0
     obtain ⟨γ', hγ', h2, h3, -⟩ := hD.2 k
     obtain ⟨a, ha⟩ := hrat γ' hγ'
     have hv := hval k γ' ⟨hγ', h2, h3⟩
-    rw [hxi _ _ (hmul _ _ _ _ ha hxk), map_mul, hχ.1.2 a, _root_.one_mul] at hv
-    exact hv
+    rwa [hxi _ _ (hmul _ _ _ _ ha hxk), map_mul, hχ.1.2 a, _root_.one_mul] at hv
   have hat := GlobalTheory.AdTh.dict_atComp_markAd D _ _ _ _ _ _ _ (U₂ ()) hσ hU h1 hA R.θ (Wc D i) (rank_Wc i)
     (dict₂ ()) (iotaW T.J i) g' e' F' ik φ th _ hR.models.inf hmod hor hth hD Wt
   refine ⟨c0, ?_, hroot, ?_⟩
@@ -1225,8 +1222,7 @@ theorem short_series_base : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T
   have hζI : IsIntegral ℤ ζ := IsIntegral.of_pow hn (hζ ▸ isIntegral_one)
   have hζi : IsIntegral ℤ ζ⁻¹ := by
     have e : ζ⁻¹ = ζ ^ (n - 1) := by
-      rw [eq_comm, ← mul_eq_one_iff_eq_inv₀ hζ0, ← pow_succ, Nat.sub_add_cancel hn]
-      exact hζ
+      rwa [eq_comm, ← mul_eq_one_iff_eq_inv₀ hζ0, ← pow_succ, Nat.sub_add_cancel hn]
     rw [e]
     exact hζI.pow _
   refine ⟨y₀, ζ⁻¹ * c, hrk, fun lam hlam => ?_, fun φ' hφ' w hw F₀ hF₀ => ?_⟩
@@ -1439,8 +1435,7 @@ theorem GlobalTheory.OneMapExact.trace_of_terms {D : D7} {G : Type} [Group G] [F
   classical
   have h0 : adForm R i 0 = 0 := by
     have := adForm_smul (R := R) (i := i) 0 0
-    rw [zero_smul, map_zero, zero_smul] at this
-    exact this
+    rwa [zero_smul, map_zero, zero_smul] at this
   have hadd : ∀ (s : Finset U) (Y : U → Fin (R.nW i) → D.what₂.LL),
       adForm R i (∑ u ∈ s, Y u) = ∑ u ∈ s, adForm R i (Y u) := by
     intro s Y

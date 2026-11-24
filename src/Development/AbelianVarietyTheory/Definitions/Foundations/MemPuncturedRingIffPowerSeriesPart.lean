@@ -284,15 +284,13 @@ theorem mem_range_germ {F : ℂ → ℂ} :
   constructor
   · rintro ⟨f, hf⟩
     exact (analyticAt_sum f.2).congr (Germ.coe_eq.1 hf)
-  · intro h
-    exact ⟨⟨taylor F, (taylor_spec h).1⟩, Germ.coe_eq.2 (taylor_spec h).2⟩
+  · exact fun h => ⟨⟨taylor F, (taylor_spec h).1⟩, Germ.coe_eq.2 (taylor_spec h).2⟩
 
 def u : convSeries := ⟨PowerSeries.X, discSeries_le_convSeries one_pos (X_mem_discSeries 1)⟩
 
 theorem isUnit_iff {f : convSeries} : IsUnit f ↔ PowerSeries.constantCoeff (f : ℂ⟦X⟧) ≠ 0 := by
   constructor
-  · intro h
-    exact (h.map (PowerSeries.constantCoeff.comp convSeries.val.toRingHom)).ne_zero
+  · exact fun h => (h.map (PowerSeries.constantCoeff.comp convSeries.val.toRingHom)).ne_zero
   · intro h
     have h0 : sum f 0 ≠ 0 := by simpa using h
     obtain ⟨g, hg⟩ := mem_range_germ.2 ((analyticAt_sum f.2).inv h0)
@@ -362,8 +360,7 @@ theorem exists_isRoot (P : Polynomial convSeries) (z₀ : ℂ)
     filter_upwards [eventually_sum_eval P ⟨_, ha⟩, hsum, hge] with v h1 h2 h3
     rw [h1]
     simp only [h2]
-    rw [hF0, h₀] at h3
-    exact h3
+    rwa [hF0, h₀] at h3
   · rw [evalZero_apply, ← sum_zero_right]
     exact hsum.self_of_nhds.trans hg0
 

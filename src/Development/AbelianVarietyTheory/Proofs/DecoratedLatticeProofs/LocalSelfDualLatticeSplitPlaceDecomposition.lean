@@ -124,8 +124,7 @@ theorem half_c_of_mem {u : WO S T} (hu : u ∈ lat p ψ S T FS FT) (hc : IsHalf 
     u ∈ dualHalf p ψ S T FS FT := by
   obtain ⟨x, hx, y, hy, rfl⟩ := (mem_lat p ψ FS FT).1 hu
   have hxc : IsHalf (cA D p.e) (p.up FS FT x) := (Witness.half_add hy.1).1 hc
-  rw [eq_zero_of_halves p.split (Witness.up_half p FS FT x) hxc, zero_add]
-  exact hy
+  rwa [eq_zero_of_halves p.split (Witness.up_half p FS FT x) hxc, zero_add]
 
 end
 
@@ -193,9 +192,7 @@ theorem selfDual_lattice_split : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel
     have := congrArg (p.down FS FT) hxx
     rw [Witness.down_up, Witness.down_up] at this
     exact this ▸ hx'
-  · intro u hu he
-    exact half_e_of_mem p ψ FS FT hu he
-  · intro u hu hc' t ht
-    exact (half_c_of_mem p ψ FS FT hu hc').2 t ht
+  · exact fun u hu he => half_e_of_mem p ψ FS FT hu he
+  · exact fun u hu hc' t ht => (half_c_of_mem p ψ FS FT hu hc').2 t ht
 
 end GlobalTheory.SplitSelfDual

@@ -65,8 +65,7 @@ theorem eval₂_eq_of_sub_mem_of_coeff_mem_pow {R B σ : Type} [CommRing R] [Com
       (I ^ (e + 1)).map φ := by
     rw [pow_succ, Ideal.map_mul]
     exact Ideal.mul_mem_mul (Ideal.mem_map_of_mem _ (hF m)) h1
-  rw [hbot, Ideal.mem_bot, mul_sub, sub_eq_zero] at h2
-  exact h2
+  rwa [hbot, Ideal.mem_bot, mul_sub, sub_eq_zero] at h2
 
 theorem eval₂_mem_map_of_coeff_mem {R B σ : Type} [CommRing R] [CommRing B] (φ : R →+* B)
     (J : Ideal R) (F : MvPolynomial σ R) (hF : ∀ m, AddMonoidAlgebra.coeff F m ∈ J) (a : σ → B) :
@@ -94,10 +93,8 @@ theorem Charts.ev_change (R : Type) [CommRing R] (I : Ideal R)
           towerIdeal Y e I (C.D e i) * towerIdeal Y e (I ^ e) (C.D e i) := by
         unfold towerIdeal
         rw [← Ideal.map_mul, ← pow_succ']
-      rw [hm]
-      exact h
-    rw [hbot, Ideal.mem_bot, sub_mul, one_mul, sub_eq_zero] at h'
-    exact h'
+      rwa [hm]
+    rwa [hbot, Ideal.mem_bot, sub_mul, one_mul, sub_eq_zero] at h'
   · have hi : (rs (Y e).left (inf_le_left : C.D e i ⊓ C.D e j ≤ C.D e i)).comp
         (GlobalTheory.AbLaw.cst ((Y e).hom ≫ thick R I e) (C.D e i)) =
         GlobalTheory.AbLaw.cst ((Y e).hom ≫ thick R I e) (C.D e i ⊓ C.D e j) :=

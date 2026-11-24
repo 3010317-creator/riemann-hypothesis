@@ -624,10 +624,8 @@ theorem exists_improves_of_real {E : Type} [Field E] [NumberField E] [IsCMField 
     by_cases hq : 𝔮 = 𝔭
     · subst hq
       refine (range_le_of_ker _ ℓ _ 𝔮 h𝔮 (v := v) (by simpa using hv) ?_).2
-      show e * ℓ₁ v ∉ 𝔮
       exact fun hm' => h1 ((h𝔮.isPrime.mem_or_mem hm').resolve_left he𝔭)
     · exact range_le_of_mem _ ℓ _ 𝔮 fun x => by
-        show e * ℓ₁ x ∈ 𝔮
         exact Ideal.mul_mem_right _ _ (he 𝔮 h𝔮 hn𝔮 hq)
   · have hZ'm : Z'.map y = LinearMap.range (y ∘ₗ Z'.subtype) := by
       rw [LinearMap.range_comp, Submodule.range_subtype]
@@ -666,8 +664,7 @@ private theorem finite_projective_of_free_int (E : Type) [Field E] [NumberField 
   haveI : Module.Finite (𝓞 E) N := Module.Finite.of_restrictScalars_finite ℤ (𝓞 E) N
   haveI : Module.IsTorsionFree (𝓞 E) N := by
     refine Module.isTorsionFree_iff_smul_eq_zero.2 fun a x hax => ?_
-    by_contra hk
-    push Not at hk
+    by_contra! hk
     obtain ⟨c, hc⟩ := Ideal.mem_span_singleton'.1 (Ideal.absNorm_mem (Ideal.span {a}))
     have h0 : Ideal.absNorm (Ideal.span {a}) ≠ 0 := by
       rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
@@ -774,8 +771,7 @@ theorem finite_maximal_ideals_containing_natCast :
     exact hn0 hmem
   refine ⟨⟨𝔮, hmax.isPrime, hne⟩, ?_, rfl⟩
   show 𝔮 ∣ Ideal.span {(n : 𝓞 E)}
-  rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-  exact hmem
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
 
 end GlobalTheory.LowDat
 end -- clump:auto
@@ -819,8 +815,7 @@ theorem exists_pair (D : Datum H) {p : ℕ} (hp : p.Prime) (S : AddSubgroup D.La
     | H x => rw [← QuotientAddGroup.mk_nsmul, QuotientAddGroup.eq_zero_iff]; exact hpS x)
   have hc' : (QuotientAddGroup.mk c : D.La ⧸ S) ≠ 0 := by rwa [Ne, QuotientAddGroup.eq_zero_iff]
   obtain ⟨f, hf⟩ : ∃ f : (D.La ⧸ S) →+ ZMod p, f (QuotientAddGroup.mk c) ≠ 0 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     refine hc' ((Module.forall_dual_apply_eq_zero_iff (ZMod p) _).1 fun φ => ?_)
     exact hne (LinearMap.toAddMonoidHom φ)
   let g : D.La →+ ZMod p := f.comp (QuotientAddGroup.mk' S)
@@ -832,15 +827,13 @@ theorem exists_pair (D : Datum H) {p : ℕ} (hp : p.Prime) (S : AddSubgroup D.La
   have hG : ∀ x, ((G x : ℤ) : ZMod p) = g x := by
     have : (Int.castAddHom (ZMod p)).toIntLinearMap.comp G = g.toIntLinearMap := bs.ext fun i => by
       simp [G]
-    intro x
-    exact LinearMap.congr_fun this x
+    exact fun x => LinearMap.congr_fun this x
   obtain ⟨a, ha⟩ := D.unimod.2 G
   refine ⟨a, fun b hb => ?_, fun hdvd => hf ?_⟩
   · rw [← ZMod.intCast_zmod_eq_zero_iff_dvd, ha, hG]
     show f (QuotientAddGroup.mk b) = 0
     rw [(QuotientAddGroup.eq_zero_iff b).2 hb, map_zero]
-  · rw [← ZMod.intCast_zmod_eq_zero_iff_dvd, ha, hG] at hdvd
-    exact hdvd
+  · rwa [← ZMod.intCast_zmod_eq_zero_iff_dvd, ha, hG] at hdvd
 
 variable {D : Datum H} {Z Z' : Submodule (𝓞 E) D.La}
 
@@ -884,8 +877,7 @@ theorem mem_nsmul_of_img_eq_top (D : Datum H) {X : Type} [AddCommGroup X] [Modul
     have hr00 : r ≠ 0 := fun h0 => hr0 (h0 ▸ 𝔮.zero_mem)
     set N := Ideal.absNorm (Ideal.span {r}) with hN
     have hN0 : N ≠ 0 := by
-      rw [hN, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-      exact hr00
+      rwa [hN, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
     obtain ⟨s, hs⟩ := Ideal.mem_span_singleton'.1 (Ideal.absNorm_mem (Ideal.span {r}))
     let g : Z' →ₗ[ℤ] X := (y.restrictScalars ℤ).comp (Z'.subtype.restrictScalars ℤ)
     have hmem : ∀ x : X, (N • LinearMap.id : X →ₗ[ℤ] X) x ∈ LinearMap.range g := fun x => by
@@ -960,8 +952,7 @@ theorem img_bar_ne_top : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
     rw [← Nat.cast_smul_eq_nsmul (𝓞 E)]
     exact hsmA _ hp𝔭 x
   obtain ⟨c0, hc0⟩ : ∃ c, y c ∉ img D y Z' 𝔭 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     apply hi
     rw [eq_top_iff]
     intro x _

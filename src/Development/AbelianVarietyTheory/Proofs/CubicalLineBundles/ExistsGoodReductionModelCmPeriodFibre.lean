@@ -152,8 +152,7 @@ theorem ontoAt_of_exp {S S' : Scheme.{0}} {G' : Over S'} {G : Over S} [GrpObj G'
   let F : Multiplicative V →* (Over.mk (t ≫ f) ⟶ G) := MonoidHom.mk' (fun z => e z.toAdd) fun z w => hadd _ _
   have h1 : e (∑ j, c j • v j) = (List.ofFn fun j => e (c j • v j)).prod := by
     have := map_list_prod F (List.ofFn fun j => Multiplicative.ofAdd (c j • v j))
-    rw [List.map_ofFn, List.prod_ofFn, ← ofAdd_sum] at this
-    exact this
+    rwa [List.map_ofFn, List.prod_ofFn, ← ofAdd_sum] at this
   rw [← hz, h1, map_list_prod, List.map_ofFn]
   congr 2
   funext j

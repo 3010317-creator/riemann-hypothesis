@@ -502,8 +502,7 @@ theorem exists_basis (φ : ℚ →+* A) (O : Subring A) [IsReduced A] {β : Type
         ring
       have h2 := hint _ q.den q.den_pos _ (mul_mem (natCast_mem _ _) hc) h1
       have h3 : (q.den : ℤ) ∣ q.num := by
-        have h4 := dvd_add h2 (dvd_mul_right (q.den : ℤ) z)
-        simpa using h4
+        simpa using dvd_add h2 (dvd_mul_right (q.den : ℤ) z)
       have h5 : q.den = 1 :=
         Nat.eq_one_of_dvd_coprimes q.reduced.symm dvd_rfl (Int.natCast_dvd.mp h3)
       exact ⟨q.num, ((Rat.den_eq_one_iff q).mp h5).symm⟩
@@ -537,8 +536,7 @@ theorem exists_basis (φ : ℚ →+* A) (O : Subring A) [IsReduced A] {β : Type
       have hdiff : ∑ j, (b.repr a j - c j) • b j = 0 := by
         simp only [sub_smul, Finset.sum_sub_distrib, b.sum_repr]
         rw [sub_eq_zero]
-        simp only [hsmul, hb]
-        exact hra
+        simpa only [hsmul, hb] using hra
       have h := Fintype.linearIndependent_iff.1 b.linearIndependent _ hdiff i
       rw [sub_eq_zero.1 h]
       exact hr i
@@ -789,8 +787,7 @@ variable {A : Type} [CommRing A] [Algebra R A]
 
 theorem sum_leftMul_one (b : Module.Basis β R A) (x : A) (k : β) :
     ∑ l, Algebra.leftMulMatrix b x k l * b.repr 1 l = b.repr x k := by
-  have h := congrFun (Algebra.leftMulMatrix_mulVec_repr b x 1) k
-  simpa [Matrix.mulVec, dotProduct] using h
+  simpa [Matrix.mulVec, dotProduct] using congrFun (Algebra.leftMulMatrix_mulVec_repr b x 1) k
 
 theorem leftMul_expand (b : Module.Basis β R A) (x : A) (k l : β) :
     Algebra.leftMulMatrix b x k l = ∑ m, b.repr x m * Algebra.leftMulMatrix b (b m) k l := by
@@ -875,8 +872,7 @@ theorem exists_equations : ∀ (F β : Type) [Field F] [Algebra ℚ F] [Fintype 
     let G : Matrix (Fin n) (Fin n) A := Matrix.of fun i j => b.equivFun.symm (coordOf c y i j)
     have hG : ∀ i j k, b.repr (G i j) k = coordOf c y i j k := fun i j k => by
       have := congrFun (b.equivFun.apply_symm_apply (coordOf c y i j)) k
-      rw [Module.Basis.equivFun_apply] at this
-      exact this
+      rwa [Module.Basis.equivFun_apply] at this
     have hres : res b G = y.toBlocks₁₁ := by
       ext ⟨i, k⟩ ⟨j, l⟩
       simp only [res, Matrix.of_apply, Matrix.toBlocks₁₁]
@@ -904,8 +900,7 @@ theorem exists_equations : ∀ (F β : Type) [Field F] [Algebra ℚ F] [Fintype 
       · simp only [emb, Matrix.fromBlocks_apply₁₁, hg, hres, Matrix.toBlocks₁₁, Matrix.of_apply]
       · simp only [emb, Matrix.fromBlocks_apply₁₂, a1, Matrix.zero_apply]
       · simp only [emb, Matrix.fromBlocks_apply₂₁, a2, Matrix.zero_apply]
-      · simp only [emb, Matrix.fromBlocks_apply₂₂, Matrix.of_apply]
-        exact hcorner
+      · simpa only [emb, Matrix.fromBlocks_apply₂₂, Matrix.of_apply] using hcorner
   · rintro ⟨g, hg, rfl⟩
     have hco : ∀ i j k, coordOf c (emb b g) i j k = b.repr ((g : Matrix (Fin n) (Fin n) A) i j) k :=
       fun i j k => by
@@ -1008,8 +1003,7 @@ theorem exists_isQGroup_weilRestriction : ∀ (F β : Type) [Field F] [Algebra �
     exact (ed g').1
   · intro σ g hg f hf
     rw [ev_map_complexAut, hg f hf, map_zero]
-  · intro y hy
-    exact (_root_.GlobalTheory.ClassFin.mem_pts_zeroSet_of_isReduced _ S' ℂ y).1 hy
+  · exact fun y hy => (_root_.GlobalTheory.ClassFin.mem_pts_zeroSet_of_isReduced _ S' ℂ y).1 hy
   · intro R A _ _ _ _ _ b hbb
     refine ⟨fun y hy => (hS' R A b hbb y).1 ((_root_.GlobalTheory.ClassFin.mem_pts_zeroSet_of_isReduced _ S' R y).1 hy), fun hR g hg => ?_⟩
     exact (_root_.GlobalTheory.ClassFin.mem_pts_zeroSet_of_isReduced _ S' R _).2 hR ((hS' R A b hbb _).2 ⟨g, hg, rfl⟩)
@@ -1078,8 +1072,7 @@ theorem exists_rat_idempotent_of_stable (ι : Type) [Fintype ι] [DecidableEq ι
     intro v
     have hcol : ∀ j, (fun i => algebraMap ℚ ℂ (LinearMap.toMatrix' f i j)) ∈ W := by
       intro j
-      simp only [LinearMap.toMatrix'_apply]
-      exact (hWq _).1 (hf1 _)
+      simpa only [LinearMap.toMatrix'_apply] using (hWq _).1 (hf1 _)
     have h : (LinearMap.toMatrix' f).map (algebraMap ℚ ℂ) *ᵥ v
         = ∑ j, v j • (fun i => algebraMap ℚ ℂ (LinearMap.toMatrix' f i j)) := by
       ext i
@@ -1215,8 +1208,7 @@ theorem ss_of_isSemisimpleRing {ι : Type} [Fintype ι] [DecidableEq ι] {Γ : S
         rwa [smul_mulVec, one_mulVec] at this }
   refine ⟨W', fun g hg v hv => hsm g (Submodule.subset_span hg) v hv, ?_, ?_⟩
   · rw [Submodule.disjoint_def]
-    intro x hx hx'
-    exact Submodule.disjoint_def.1 hU.disjoint x hx hx'
+    exact fun x hx hx' => Submodule.disjoint_def.1 hU.disjoint x hx hx'
   · rw [codisjoint_iff, Submodule.eq_top_iff']
     intro x
     have : x ∈ U ⊔ U' := by rw [hU.sup_eq_top]; trivial
@@ -1243,8 +1235,7 @@ theorem exists_socle_radical_of_not_ss :
     have hg' : g ∈ spanAlg h := Submodule.subset_span hg
     have h1 : b * (⟨g, hg'⟩ : spanAlg h) ∈ Ring.jacobson (spanAlg h) := Ideal.mul_mem_right _ _ hb
     have h2 := hv _ h1
-    rw [MulMemClass.coe_mul, ← mulVec_mulVec] at h2
-    exact h2
+    rwa [MulMemClass.coe_mul, ← mulVec_mulVec] at h2
   · intro σ v hv b hb
     have h1 : spanAlgMap h σ.symm b ∈ Ring.jacobson (spanAlg h) :=
       map_mem_jacobson_of_surjective _ (spanAlgMap_surjective h σ.symm) hb
@@ -1611,8 +1602,7 @@ theorem classFinite_integralLevel : ∀ (F : Type) [Field F] [NumberField F] (n 
       s = GlobalTheory.ClassFin.emb b (lift s) := by
     intro s hs
     have h := hA.1 s hs
-    simp only [lift, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [lift, dite_eq_left h] using h.choose_spec
   obtain ⟨hemb1, hembmul, -, hembinj⟩ := _root_.GlobalTheory.ClassFin.EmbHom.emb_hom R (FiniteAdeleRing (𝓞 F) F) _ (Fin n) b
   refine ⟨T₀.image lift, ?_, ?_⟩
   · intro t ht
@@ -1624,9 +1614,7 @@ theorem classFinite_integralLevel : ∀ (F : Type) [Field F] [NumberField F] (n 
     obtain ⟨u, huS, rfl⟩ := hA.1 u₀ hu₀
     obtain ⟨hsS, hsemb⟩ := hlift s (hT₀ s hs)
     have h1 : ∀ i, b.repr 1 i ∈ R₀ := by
-      refine (hint 1).1 ?_
-      intro v
-      exact (HeightOneSpectrum.adicCompletionIntegers F v).one_mem
+      exact (hint 1).1 (fun v => (HeightOneSpectrum.adicCompletionIntegers F v).one_mem)
     have hunits := _root_.GlobalTheory.ClassFin.EmbInt.emb_integral_and_rational.1 R _ _ (Fin n) b R₀ u h1 hu₀int
     refine ⟨γ, hγS, lift s, Finset.mem_image_of_mem lift hs, u, huS, ?_, ?_⟩
     · intro i j

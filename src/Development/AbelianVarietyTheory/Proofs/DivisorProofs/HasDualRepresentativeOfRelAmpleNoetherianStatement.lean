@@ -218,8 +218,7 @@ theorem exists_factor_closedImmersion_of_locally :
   have hc : TopologicalSpace.IsOpenCover W := by
     refine TopologicalSpace.IsOpenCover.mk ?_
     rw [eq_top_iff]
-    intro y _
-    exact TopologicalSpace.Opens.mem_iSup.mpr ⟨y, hW y⟩
+    exact fun y _ => TopologicalSpace.Opens.mem_iSup.mpr ⟨y, hW y⟩
   let 𝒰 := Y.openCoverOfIsOpenCover W hc
   obtain ⟨u, hu⟩ : ∃ u : ∀ i, 𝒰.X i ⟶ A, ∀ i, u i ≫ a = 𝒰.f i ≫ g := ⟨z, hz⟩
   have hglue : ∀ i j, pullback.fst (𝒰.f i) (𝒰.f j) ≫ u i =
@@ -325,8 +324,7 @@ theorem exists_glue {X : Scheme.{0}} (S : Set X.Opens) (hcov : ∀ x : X, ∃ U 
     · intro s
       rw [← cancel_mono (c V), Category.assoc, ht, ← Category.assoc,
         ((H U V h _ s.snd).2 ⟨s.fst, s.condition⟩).choose_spec, s.condition]
-    · intro s
-      exact ((H U V h _ s.snd).2 ⟨s.fst, s.condition⟩).choose_spec
+    · exact fun s => ((H U V h _ s.snd).2 ⟨s.fst, s.condition⟩).choose_spec
     · intro s m _ h2
       rw [← cancel_mono (c U), h2, ((H U V h _ s.snd).2 ⟨s.fst, s.condition⟩).choose_spec]
   letI := locallyDirected S hcov hinf
@@ -426,8 +424,7 @@ theorem exists_isPullback_of_factor_iff {C : Type*} [Category C] {X X' A B : C} 
   · intro s
     have hs := ((h s.pt s.snd).1 ⟨s.fst, s.condition⟩).choose_spec
     rw [← cancel_mono b, Category.assoc, hk, ← Category.assoc, hs, s.condition]
-  · intro s
-    exact ((h s.pt s.snd).1 ⟨s.fst, s.condition⟩).choose_spec
+  · exact fun s => ((h s.pt s.snd).1 ⟨s.fst, s.condition⟩).choose_spec
   · intro s l _ hl
     have hs := ((h s.pt s.snd).1 ⟨s.fst, s.condition⟩).choose_spec
     rw [← cancel_mono a, hl, hs]

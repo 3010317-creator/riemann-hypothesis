@@ -222,8 +222,7 @@ theorem gram_re_posdef_adj : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (
       ring
     rw [hq, ← hexp, ← hexp]
     have hor : (fun i => (z i).re) ≠ 0 ∨ (fun i => (z i).im) ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       apply hz
       funext i
       exact Complex.ext (congrFun h.1 i) (congrFun h.2 i)
@@ -819,8 +818,7 @@ theorem holomorphic_map_lifts_to_periods : ∀ (O : Type) [Ring O] (bar : O → 
       simp only [Matrix.mulVec, dotProduct]
       exact DifferentiableOn.fun_sum fun j _ => (hM i j).fun_mul (differentiableOn_pi.1 hv j)
   have hLm : ∀ a i j, DifferentiableOn ℂ (fun b => LinearMap.toMatrix' (L a b) i j) B₁ := fun a i j => by
-    simp only [LinearMap.toMatrix'_apply]
-    exact differentiableOn_pi.1 (hL2 a (Pi.single j 1)) i
+    simpa only [LinearMap.toMatrix'_apply] using differentiableOn_pi.1 (hL2 a (Pi.single j 1)) i
   have hk1 : ∀ b ∈ C, ∀ x, e b (P b x) = 1 := fun b hb x => ((hball b hb).1.2.1 _).2 ⟨x, rfl⟩
   have hlin : ∀ (a : O) x, ∀ b ∈ C, P b (a • x) - L a b (P b x) = 0 := fun a x => by
     haveI := F.hom a
@@ -912,12 +910,10 @@ theorem holomorphic_map_lifts_to_periods : ∀ (O : Type) [Ring O] (bar : O → 
       exact this
     refine ⟨hyσ b (hB₁B hb1), ⟨fun a x => ?_, hPinj, dc, sp, Hm, h1, h2, fun x x' => by rw [h3, hEF]⟩,
       hex, hker, fun a z => ?_, hweil', fun a => ?_⟩
-    · simp only [hP']
-      exact (hh b hb).2 a x
+    · simpa only [hP'] using (hh b hb).2 a x
     · haveI := F.hom a
       have := hL1 a b hb1 ((h b)⁻¹ *ᵥ z)
-      rw [← hclaim, hinv' b hb] at this
-      exact this
+      rwa [← hclaim, hinv' b hb] at this
     · beta_reduce
       rw [hsm]
       exact heC a b hbC

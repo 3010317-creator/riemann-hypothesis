@@ -137,11 +137,9 @@ theorem integralClosure_height_eq_one_of_liesOver : ∀ (k F K : Type) [Field k]
     refine ⟨fun b => ?_⟩
     have key : ∀ x : K, x ∈ B → x ∈ integralClosure A K := by
       intro x hx
-      rw [hB, Subalgebra.mem_restrictScalars] at hx
-      exact hx
+      rwa [hB, Subalgebra.mem_restrictScalars] at hx
     have hb : (b : K) ∈ integralClosure A K := key b b.2
-    rw [← isIntegral_algHom_iff φ Subtype.val_injective]
-    exact hb
+    rwa [← isIntegral_algHom_iff φ Subtype.val_injective]
 
   have hcomap : Q.comap (algebraMap A B) = p := by
     ext a
@@ -673,8 +671,7 @@ theorem mem_iff_dvd_of_height_one : ∀ (k F K : Type) [Field k] [Field F] [Fiel
   letI : Algebra A B := φ.toAlgebra
   have hφ : ∀ a : A, ((algebraMap A B a : B) : K) = algebraMap F K (a : F) := fun a => rfl
   have hinjK : Function.Injective (algebraMap A K) := by
-    intro x y h
-    exact Subtype.val_injective ((algebraMap F K).injective h)
+    exact fun x y h => Subtype.val_injective ((algebraMap F K).injective h)
   haveI : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).mpr (by
     intro x y h
     apply hinjK
@@ -826,8 +823,7 @@ theorem trBasis_mod_irreducible : ∀ (k F : Type) [Field k] [Field F] [Algebra 
     rw [h, hc, map_zero]
   | succ m =>
     obtain ⟨i, hi⟩ : ∃ i, (hu.aevalEquiv.symm t).degreeOf i ≠ 0 := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       have h0 : (hu.aevalEquiv.symm t).totalDegree = 0 := by
         rw [MvPolynomial.totalDegree_eq_zero_iff]
         intro mm hmm x
@@ -864,8 +860,7 @@ theorem trBasis_mod_irreducible : ∀ (k F : Type) [Field k] [Field F] [Algebra 
         fun j => Ideal.Quotient.mk (Ideal.span {t}) (E.symm (Polynomial.C (MvPolynomial.X j))) := by
       funext j
       simp only [Function.comp_apply, Ideal.quotientEquivAlg_symm, Ideal.quotientEquivAlg_mk]
-    rw [hfun] at hb
-    exact hb
+    rwa [hfun] at hb
 
 end GlobalTheory.TrBasisQuot
 end -- clump:auto
@@ -1478,8 +1473,7 @@ theorem pow_dvd_differentIdeal_iff_pow_succ_dvd_map : ∀ (A B : Type) [CommRing
     intro k
     constructor
     · intro h
-      by_contra hlt
-      push Not at hlt
+      by_contra! hlt
       have h3 : Q ^ e * Q ∣ Q ^ e * R := by
         rw [← pow_succ, ← h₂]
         exact (pow_dvd_pow Q hlt).trans h
@@ -1520,8 +1514,7 @@ theorem pow_dvd_differentIdeal_iff_pow_succ_dvd_map : ∀ (A B : Type) [CommRing
   · intro h
     by_contra hlt
     exact hD2 ((pow_dvd_pow Q (by omega)).trans h)
-  · intro h
-    exact (pow_dvd_pow Q (by omega)).trans hD1
+  · exact fun h => (pow_dvd_pow Q (by omega)).trans hD1
 
 end GlobalTheory.TameDifferent
 end -- clump:auto
@@ -1610,8 +1603,7 @@ theorem trace_mem_iff (z : K) :
     · intro h a ha
       obtain ⟨b, rfl⟩ := (FractionalIdeal.mem_one_iff _).1 ha
       exact h b
-    · intro h b
-      exact h _ ((FractionalIdeal.mem_one_iff _).2 ⟨b, rfl⟩)
+    · exact fun h b => h _ ((FractionalIdeal.mem_one_iff _).2 ⟨b, rfl⟩)
   have h2 := coeIdeal_differentIdeal A F K B
   have h3 : ((differentIdeal A B : Ideal B) : FractionalIdeal (nonZeroDivisors B) K) ≠ 0 := by
     rw [h2]; exact inv_ne_zero (FractionalIdeal.dual_ne_zero A F one_ne_zero)

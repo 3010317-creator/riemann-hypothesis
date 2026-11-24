@@ -75,8 +75,7 @@ theorem compFin_cA (σ : E →ₐ[F] E) (v : Pl (F := F)) (a : _root_.GlobalTheo
 theorem self_eq_smul_of_at {n d : ℕ} (v : Pl (F := F)) {u : Matrix (Fin n) (Fin d) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))} (h : At (evFin F v) u) :
     u = GlobalTheory.EmbChart.atPlace v 1 • u := by
   have h1 := h (1 - GlobalTheory.EmbChart.atPlace v 1) (by rw [map_sub, map_one, GlobalTheory.EmbChart.evFin_atPlace, sub_self])
-  rw [sub_smul, one_smul, sub_eq_zero] at h1
-  exact h1
+  rwa [sub_smul, one_smul, sub_eq_zero] at h1
 
 theorem hTens_eq_sum {α β : Type} [Fintype α] [Fintype β] (c : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E) →ₐ[AF F] _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) (JA : Matrix α α (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)))
     (JB : Matrix β β (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) (x y : Matrix α β (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) :
@@ -105,8 +104,7 @@ theorem symp_eq_zero_of_lagAt : ∀ {F E : Type} [Field F] [NumberField F] [Fiel
     convert h1 using 2
     · congr 1
     · ext i j
-      simp only [Matrix.map_apply]
-      exact compFin_cA σ v (C i j)
+      simpa only [Matrix.map_apply] using compFin_cA σ v (C i j)
   have heP : e • P = 0 := by
     ext p q
     rw [Matrix.smul_apply, Matrix.zero_apply]

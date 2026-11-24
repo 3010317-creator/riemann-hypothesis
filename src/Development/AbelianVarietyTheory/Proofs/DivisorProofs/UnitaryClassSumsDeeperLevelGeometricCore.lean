@@ -253,8 +253,7 @@ theorem classSum_norm_eq_of_unique_least : ∀ (p : ℕ) [Fact p.Prime] (X Y : T
     (Finset.add_sum_erase S t (Finset.mem_insert_self _ _)).symm
   have hrest : ‖∑ x ∈ S.erase (e μ), t x‖ ≤ Real.exp (-(sc * ((β μ μ : ℝ) + 1)) / 2) := by
     apply IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg (Real.exp_pos _).le
-    intro x hx
-    exact hbound x (hSc x (Finset.mem_of_mem_erase hx)) (Finset.ne_of_mem_erase hx)
+    exact fun x hx => hbound x (hSc x (Finset.mem_of_mem_erase hx)) (Finset.ne_of_mem_erase hx)
   have hnS : ‖∑ x ∈ S, t x‖ = Real.exp (-(sc * (β μ μ : ℝ)) / 2) := by
     rw [hsum, IsUltrametricDist.norm_add_eq_max_of_norm_ne_norm (by rw [hR']; linarith), hR']
     exact max_eq_left (by linarith)
@@ -287,8 +286,7 @@ theorem GlobalTheory.UPoinc.compat_forces_congMod : ∀ (G₁ G Y : Type) [AddCo
   have e1 := h1 b x hb
   have e2 := h2 b x hb
   have e3 := hg (lab b) (K • x) e1
-  rw [e2, map_nsmul] at e3
-  rw [QuotientAddGroup.eq] at e3
+  rw [e2, map_nsmul, QuotientAddGroup.eq] at e3
   obtain ⟨w, hw⟩ := e3
   simp only [nsmulAddMonoidHom_apply] at hw
   have hK : 0 < K := by
@@ -327,8 +325,7 @@ theorem deep_eq_of_congMod : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     GlobalTheory.Poinc.FinPts.preimage_nonempty D.gen hU₁
   have hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme D.X.M.Z := by
     have := D.X.normal
-    intro x
-    exact ⟨inferInstance, inferInstance⟩
+    exact fun x => ⟨inferInstance, inferInstance⟩
   have hfa : f a κ ∈ D.X.M.O z₂ := hf a κ z₂ hz
   have hfa' : f a' κ ∈ D.X.M.O z₂ := hf a' κ z₂ hz
   have hb : f a κ - f a' κ ∈ D.X.M.O (ct₀.y (cPt p)) := by
@@ -528,8 +525,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
     (hsum ct yy₁ hl₁.uIsLab y h hy yy hl.uIsLab hco a' (d ν') κ (hd _ _ ha'))
   rw [← Category.assoc, hval] at e
   have hsp : ∀ w, (gPt p ≫ y) w ⤳ z₂ := RatModel.gPt_specializes hy
-  have e' := map_sub (RatModel.valHomOf _ z₂ hsp) ⟨_, hσ⟩ ⟨_, hf'⟩
-  exact e'.trans (sub_eq_zero.2 e)
+  exact (map_sub (RatModel.valHomOf _ z₂ hsp) ⟨_, hσ⟩ ⟨_, hf'⟩).trans (sub_eq_zero.2 e)
 
 end GlobalTheory.UPoinc.GalLab
 end -- clump:auto
@@ -910,8 +906,7 @@ theorem exists_udeep_proj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   have hζ : Units.map (algebraMap o₁ Ω₂).toMonoidHom ze₀ ^ (X₁.ρ.n ^ j * (X₁.ρ.n ^ k) ^ 2) ^ 2 = 1 := by
     have h₁ := ((SymLevelDescent.isPrimitiveRoot_unitOn_iff _ _).1 lev₀.prim).pow_eq_one
     have h₂ := congrArg (Units.map R₀.val.toRingHom.toMonoidHom) h₁
-    rw [map_pow, map_one] at h₂
-    exact h₂
+    rwa [map_pow, map_one] at h₂
   obtain ⟨o₂, _, _, _, κ, ze, hκ, hze, hc⟩ := exists_base X₁ Ω₂ _ _ hKpos hζ
   obtain ⟨R, ι, P, φ₀, hfg, hle₀, hι, hPg₁, hpb₁, hlb₁, ⟨lev⟩⟩ := exists_rebase R₀ hfg₀ P₀ _ ze₀ ze hze lev₀
   have hfr : ∀ x : Ω₂, ∃ a ∈ R, ∃ b ∈ R, x = a / b := fun x =>
@@ -1199,8 +1194,7 @@ theorem GLab.norms [ArithBase o Ω] (hM : ReciprocityTheory.ChartRestriction.G.G
     let A : R' := ∑ i, algebraMap o R' (S.proj _ (l.wt (m • ν)) i ρ'.i₀) * ⟨c₀ * S.ev h i, hev h i⟩
     have hA : (A : Ω) = c₀ * partV S yy.ker ρ.i₀ (m • a) h := by
       rw [hker, partV, ← hwt, ← hi, Finset.mul_sum]
-      refine (map_sum R'.val _ _).trans (Finset.sum_congr rfl fun i _ => ?_)
-      exact mul_left_comm _ _ _
+      exact (map_sum R'.val _ _).trans (Finset.sum_congr rfl fun i _ => (mul_left_comm _ _ _))
     have hB : IsUnit (⟨c₀ * S.th d, hle (hth d)⟩ : M.O z₀) :=
       (RatModel.val_ne_zero_iff (RatModel.range_eq_singleton _ _) _).1 (by
         refine fun h0 => hδ.ne' ?_

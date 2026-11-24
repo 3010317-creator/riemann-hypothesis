@@ -758,8 +758,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] (Q : DegPre R) (O : Type
   have e := congrArg (gs r z _) (key fun _ => J (r ≫ Y.q.left))
   rw [_root_.GlobalTheory.LBGerm.gs_sub _ _ _ hm, gs_mul _ _ _ hm, gs_mul _ _ _ hm, gs_res _ _ _ hm, gs_res _ _ _ hm, _root_.GlobalTheory.UU.SchurComp.gs_zero _ _ _,
     sub_eq_zero] at e
-  rw [sval_of ρ r z J _ (fun _ => rfl), sval_of τ r z J _ (fun _ => rfl)]
-  exact e
+  rwa [sval_of ρ r z J _ (fun _ => rfl), sval_of τ r z J _ (fun _ => rfl)]
 
 end GlobalTheory.RayFlatDesc
 end -- clump:auto
@@ -852,21 +851,18 @@ theorem GlobalTheory.ShiftUnit.shift_unit_identity : ∀ (R : Type) [CommRing R]
       cubN (th Q z J) k (cP Q (Over.mk (g ≫ jK R)) α) (cP Q (Over.mk (g ≫ jK R)) mu) (yp ≫ Y.q) =
       val ((Y.Φ _ yp).s α) (𝟙 _) z J * val ((Y.Φ _ yp).s mu) (𝟙 _) z J ^ k := by
     have := cv_nsmul (Y.Φ _ yp) hJ α mu k
-    rw [b1] at this
-    exact this
+    rwa [b1] at this
   have e3 : val ((Y.Φ _ (yp * (toUnit _ ≫ xp))).s α) (𝟙 _) z J *
       th Q z J (cP Q (Over.mk (g ≫ jK R)) α) (yp ≫ Y.q) (cP Q (Over.mk (g ≫ jK R)) mu) =
       val ((Y.Φ _ yp).s α) (𝟙 _) z J * val ((Y.Φ (Over.mk (g ≫ jK R)) (toUnit _ ≫ xp)).s α) (𝟙 _) z J := by
     have := ((GlobalTheory.TorusModel.isAdd_iff _ _ _).1 (Y.rep.2 _ yp (toUnit _ ≫ xp))).2 α z J hJ
-    rw [b1, b2] at this
-    exact this
+    rwa [b1, b2] at this
   have m1 : (yp * (toUnit (Over.mk (g ≫ jK R)) ≫ xp)) * (toUnit (Over.mk (g ≫ jK R)) ≫ xp⁻¹) = yp := by
     rw [GrpObj.comp_inv, mul_inv_cancel_right]
   have e4 : val (Z := (Over.mk (g ≫ jK R)).left) e (yp * (toUnit _ ≫ xp)).left z J * val (Z := (Over.mk (g ≫ jK R)).left) ψ₀ (g ≫ jK R) z J * val (Z := (Over.mk (g ≫ jK R)).left) Q.rig (g ≫ jK R) z J *
       val ((Y.Φ _ yp).s mu) (𝟙 _) z J = 1 := by
     have := he (Over.mk (g ≫ jK R)) (yp * (toUnit _ ≫ xp)) z J hJ
-    rw [m1] at this
-    exact this
+    rwa [m1] at this
   have e5 : (val (Z := (Over.mk (g ≫ jK R)).left) (Q.psi mu) g z J).val = cst (Z := (Over.mk (g ≫ jK R)).left) (g ≫ jK R) z P₀ * (val (Z := (Over.mk (g ≫ jK R)).left) ψ₀ (g ≫ jK R) z J).val :=
     hP Z g z J hJ
   have e6 : cst (Z := (Over.mk (g ≫ jK R)).left) (g ≫ jK R) z A₀ * (val ((Y.Φ _ (toUnit _ ≫ xp)).s α) (𝟙 _) z J).val =
@@ -1098,8 +1094,7 @@ theorem GlobalTheory.HeatShift.shift_term : ∀ (R : Type) [CommRing R] [IsDomai
     rw [e1'] at e1
     have e2 := hT₁ T yp z J hJ
     have e3 : sval τ r z J = _ := hT T y z J hJ
-    rw [gs_scal_eq, gs_scal_eq, hr]
-    rw [e1, e2, e3, hsh, hb']
+    rw [gs_scal_eq, gs_scal_eq, hr, e1, e2, e3, hsh, hb']
     have fin : ∀ {S : Type} [CommRing S] (cA cB U s S' E X : S), cA * U * S' * E = cB * X →
         cA * (U * s * S' * E) = cB * (s * X) := fun cA cB U s S' E X h => by linear_combination s * h
     exact fin _ _ _ _ _ _ _ hK
@@ -1117,11 +1112,9 @@ theorem GlobalTheory.HeatShift.shift_term : ∀ (R : Type) [CommRing R] [IsDomai
         have : (p ≫ h.choose) w0 ∈ Dd.toPre.P.L.U (J h.choose) := by
           rw [Scheme.Hom.comp_apply]; exact hJ _
         rwa [e] at this
-      · simp only [dite_eq_right h]
-        exact (exists_chart Dd.toPre.P.isLB (φ w0)).choose_spec
+      · simpa only [dite_eq_right h] using (exists_chart Dd.toPre.P.isLB (φ w0)).choose_spec
     · have h : ∃ ψ', p ≫ ψ' = p ≫ ψ := ⟨ψ, rfl⟩
-      simp only [dite_eq_left h]
-      exact congrArg J ((cancel_epi p).1 h.choose_spec)
+      simpa only [dite_eq_left h] using congrArg J ((cancel_epi p).1 h.choose_spec)
   obtain ⟨J₁, gJ₁, eJ₁⟩ := hJ₁
   have eJ : J = fun ψ => J₁ (p ≫ ψ) := funext fun ψ => (eJ₁ ψ).symm
   subst eJ

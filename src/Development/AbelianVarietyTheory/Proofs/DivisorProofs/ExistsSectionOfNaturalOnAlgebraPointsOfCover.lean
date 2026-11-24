@@ -122,12 +122,10 @@ theorem exists_sec_of_isNat (R : Type) [CommRing R] (X : Scheme.{0}) (s : X ⟶ 
       have h0 := hf i
       have h1 := GlobalTheory.Points.valR_res P'.x (hVU i) hP'V f
       change valR P'.x i.1.1 (sf i) = _
-      rw [← h0]
-      exact h1
+      rwa [← h0]
     have e4 : valR P'.x U f = φ.ρ (valR P.x U f) := by
       have h2 := GlobalTheory.Points.valR_spMap_comp (φ.ρ : P.B →+* P'.B) P.x U hPU f
-      rw [hpt] at h2
-      exact h2
+      rwa [hpt] at h2
     exact e1.symm.trans (e2.trans (e3.trans e4))
   have hex : ∀ y : Sp P.B, ∃ V' : (Sp P.B).affineOpens, y ∈ V'.1 ∧ ∃ i : Ix, V'.1 ≤ P.x ⁻¹ᵁ i.1.1 := by
     intro y

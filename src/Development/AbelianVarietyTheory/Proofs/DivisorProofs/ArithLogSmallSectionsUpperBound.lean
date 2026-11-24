@@ -133,8 +133,7 @@ theorem le_add_mul_log_sq_of_le_add_mul_log :
   have ht0 : 0 ≤ t := Real.sqrt_nonneg r
   have htt : t * t = r := Real.mul_self_sqrt hr0.le
   have ht1 : 1 ≤ t := by
-    by_contra h
-    push Not at h
+    by_contra! h
     nlinarith
   have htpos : 0 < t := by linarith
   have hlog : Real.log r ≤ 2 * t - 2 := by
@@ -143,8 +142,7 @@ theorem le_add_mul_log_sq_of_le_add_mul_log :
     have h2 := Real.log_le_sub_one_of_pos htpos
     linarith
   have hle : t ≤ α + 2 * β + 1 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     nlinarith [mul_lt_mul_of_pos_left h htpos, mul_nonneg hα (sub_nonneg.mpr ht1),
       mul_le_mul_of_nonneg_left hlog hβ]
   have hrc : r ≤ (α + 2 * β + 1) ^ 2 := by
@@ -202,9 +200,7 @@ theorem finrank_span_finset_le_of_indep {G : Type} [AddCommGroup G] [IsAddTorsio
         change M • (c • (x : G)) = c • (M • (x : G))
         exact smul_comm _ _ _ }
   have hf : Function.Injective f := by
-    intro x y hxy
-    have e := congrArg Subtype.val hxy
-    exact Subtype.ext (smul_right_injective G hM0 e)
+    exact fun x y hxy => Subtype.ext (smul_right_injective G hM0 (congrArg Subtype.val hxy))
   have hsfin : (Subtype.val '' s : Set G).Finite := (Set.toFinite s).image _
   haveI : Module.Finite ℤ (Submodule.span ℤ (Subtype.val '' s)) := Module.Finite.span_of_finite ℤ hsfin
   have h1 := LinearMap.finrank_le_finrank_of_injective hf
@@ -249,10 +245,8 @@ theorem encard_finset_le_pow_mul {G : Type} [AddCommGroup G] [IsAddTorsionFree G
       apply b.equivFun.injective
       rw [map_nsmul, LinearEquiv.apply_symm_apply, map_sub, ← hvx, ← hvy]
       funext i
-      simp only [Pi.smul_apply, Pi.sub_apply, nsmul_eq_mul]
-      exact Int.mul_ediv_cancel' (hdvd i)
-    have e2 := congrArg Subtype.val e
-    simpa [z] using e2
+      simpa only [Pi.smul_apply, Pi.sub_apply, nsmul_eq_mul] using Int.mul_ediv_cancel' (hdvd i)
+    simpa [z] using congrArg Subtype.val e
   have hLΛ : ∀ x ∈ L, x ∈ Λ := by
     intro x hx
     have : L ≤ Λ.toIntSubmodule := Submodule.span_le.2 (fun y hy => hB.subset R (hT hy))
@@ -297,8 +291,7 @@ theorem encard_ball_le_pow_mul : ∀ (G : Type) [AddCommGroup G] [IsAddTorsionFr
     (∀ (n : ℕ) (e : Fin n → G), LinearIndependent ℤ e → (∀ j, e j ∈ B R) → n ≤ r) →
     (B R).encard ≤ ((q ^ r : ℕ) : ℕ∞) * (B (2 * R / q)).encard := by
   intro G _ _ Λ B hB R q r hq hr
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have hC := hlt.ne_top
   obtain ⟨t, hts, htc⟩ := Set.exists_subset_encard_eq (Order.add_one_le_of_lt hlt)
   obtain ⟨m, hm⟩ := ENat.ne_top_iff_exists.1 hC
@@ -326,12 +319,10 @@ theorem exists_linearIndependent_finCons_of_lt {G : Type} [AddCommGroup G] {m k 
     (e : Fin m → G) (he : LinearIndependent ℤ e) (f : Fin k → G) (hf : LinearIndependent ℤ f)
     (hmk : m < k) : ∃ j, LinearIndependent ℤ (Fin.cons (f j) e : Fin m.succ → G) := by
   classical
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hc : ∀ j, ∃ c : ℤ, c ≠ 0 ∧ c • f j ∈ Submodule.span ℤ (Set.range e) := by
     intro j
-    by_contra h
-    push Not at h
+    by_contra! h
     apply hcon j
     refine LinearIndependent.finCons' (f j) e he fun c y hy hxy => ?_
     by_contra hc0
@@ -442,8 +433,7 @@ theorem log_ncard_unit_ball_le_of_indep_bound :
   have hP0 : ∀ i, P i 0 := fun i => ⟨Fin.elim0, linearIndependent_empty_type, fun j => j.elim0⟩
   have hrspec : ∀ i, P i (r i) := fun i => Nat.findGreatest_spec (Nat.zero_le K) (hP0 i)
   have hrmax : ∀ i m (e : Fin m → G), LinearIndependent ℤ e → (∀ j, e j ∈ S i) → m ≤ r i := by
-    intro i m e he hmem
-    exact Nat.le_findGreatest (hsize i m e he hmem) ⟨e, he, hmem⟩
+    exact fun i m e he hmem => Nat.le_findGreatest (hsize i m e he hmem) ⟨e, he, hmem⟩
   have hrdec : ∀ i, r (i + 1) ≤ r i := by
     intro i
     obtain ⟨e, he, hmem⟩ := hrspec (i + 1)
@@ -614,8 +604,7 @@ theorem le_shift_of_isFS_sub : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsI
     have : ((2 : ℕ) : ℝ) * (-(Real.log S - (Real.log S' + 2 * Δ)) / 2) = (Real.log S' + 2 * Δ) - Real.log S := by
       push_cast; ring
     rw [this, Real.exp_sub, Real.exp_add, Real.exp_log hS'pos, Real.exp_log hSpos]
-  rw [← sq_le_one_iff₀ (by positivity), mul_pow, hE]
-  rw [← mul_div_assoc, div_le_one hSpos]
+  rw [← sq_le_one_iff₀ (by positivity), mul_pow, hE, ← mul_div_assoc, div_le_one hSpos]
   linarith [hineq]
 
 end GlobalTheory.HSNef
@@ -676,8 +665,7 @@ theorem rank_le_gdeg_of_isNef : GlobalTheory.Published.ArCalc → AmpleHS → �
     obtain ⟨j', hj'⟩ : ∃ j', z ∈ P.A.B.U j' := by
       have h1 : z ∈ (⨆ j, P.A.B.U j) := by rw [P.A.isLB.cover]; trivial
       exact TopologicalSpace.Opens.mem_iSup.1 h1
-    have h2 := hbox c z i j' hi hj'
-    simpa [Pair.loc, Q] using h2
+    simpa [Pair.loc, Q] using hbox c z i j' hi hj'
   have hbd : ∀ c, ∃ u : ℝ, 0 ≤ u ∧ boxFam e x c ∈ Q.Bl 1 0 (Real.exp u) :=
     fun c => _root_.GlobalTheory.HSNef.bounded_norm k X p D hX Q 1 0 _ (hQbox c)
   choose u hu0 hu using hbd
@@ -697,16 +685,14 @@ theorem rank_le_gdeg_of_isNef : GlobalTheory.Published.ArCalc → AmpleHS → �
       exact (pow_le_one_iff_of_nonneg hnn two_ne_zero).1 h2
   obtain ⟨g, hg, hg0⟩ : ∃ g ∈ Q.Bl 0 1 1, g ≠ 0 := by
     by_cases h : ε s = 0
-    · refine ⟨ε 0, hsm 0 (HermLB.zero_mem_smallSec _), fun h0 => hs0 ?_⟩
-      exact (hεinj (h0.trans h.symm)).symm
+    · exact ⟨ε 0, hsm 0 (HermLB.zero_mem_smallSec _), fun h0 => hs0 (hεinj (h0.trans h.symm)).symm⟩
     · exact ⟨ε s, hsm s hs, h⟩
   have key : ∀ n : ℕ, 0 < n →
       (D.factorial : ℝ) * ((Fintype.card J * n ^ D : ℕ) : ℝ) ≤ gdeg ((P.L.pow n).tens A) D := by
     intro n hn
     have hrep : Q.Rep (n : ℤ) 1 ((Q.L.pow n).tens Q.A) := by
       have h1 := Pair.rep_pow k X p Q 1 0 Q.L n (Pair.rep_base k X p Q).1
-      have h2 := Pair.rep_tens k X p Q _ _ 0 1 _ _ h1 (Pair.rep_base k X p Q).2.1
-      simpa using h2
+      simpa using Pair.rep_tens k X p Q _ _ 0 1 _ _ h1 (Pair.rep_base k X p Q).2.1
     have hamp : IsAmpleLB ((P.L.pow n).tens A).B :=
       _root_.GlobalTheory.AmpleNefFibZ.isAmpleLB_tens_of_nefFib k X p D hX (P.L.pow n) A
         (nefFib_of_isNef (GlobalTheory.NefPow.isNef_pow hAr k X p D hX P.L n hL)) hAamp
@@ -1062,15 +1048,13 @@ theorem exists_idealSheaf_principalises_of_ne_zero : ∀ (X : Scheme.{0}) [IsInt
     · show (1 : Γ(X, V₀)) ∈ (⊤ : X.IdealSheafData).ideal ⟨V₀, hV₀⟩
       rw [Scheme.IdealSheafData.ideal_top]
       exact Submodule.mem_top
-    · rw [Scheme.basicOpen_one]
-      exact hηV₀
+    · rwa [Scheme.basicOpen_one]
   have hJj : ∀ j, genericPoint X ∉ (J j).support := by
     intro j
     obtain ⟨k, hk⟩ := hA j
     have hb : X.basicOpen (A j k) ≠ ⊥ := fun h0 => hk ((basicOpen_eq_bot_iff _).1 h0)
     obtain ⟨x, hx⟩ : ∃ x, x ∈ X.basicOpen (A j k) := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hb (eq_bot_iff.2 fun x hx => (hc x hx).elim)
     have hηb : genericPoint X ∈ X.basicOpen (A j k) := gen_mem hx
     have hηU : genericPoint X ∈ U j := X.basicOpen_le _ hηb
@@ -1282,8 +1266,7 @@ theorem exists_model_total : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsInt
   have := Fintype.ofFinite J
   let g : List X.functionField := (Finset.univ : Finset (J × J)).toList.map (fun q => f q.1 / f q.2)
   have hg : ∀ j l, f j / f l ∈ g := fun j l => by
-    simp only [g, List.mem_map, Finset.mem_toList, Finset.mem_univ, true_and]
-    exact ⟨(j, l), rfl⟩
+    simpa only [g, List.mem_map, Finset.mem_toList, Finset.mem_univ, true_and] using ⟨(j, l), rfl⟩
   obtain ⟨Y, hY, π, φ, hA, hM, hR⟩ := exists_model_list k D g.length X p hp g rfl (by
     intro h hh
     simp only [g, List.mem_map, Finset.mem_toList, Finset.mem_univ, true_and] at hh
@@ -1395,8 +1378,7 @@ theorem GlobalTheory.HSNef.le_shift_of_isFS : ∀ (k : Type) [CommRing k] (X : S
   have hpos : 0 ≤ Q * Real.exp (-(φB + 2 * (Real.log (Fintype.card J) / 2) - Real.log S) / 2) :=
     mul_nonneg (norm_nonneg _) (Real.exp_pos _).le
   refine (pow_le_one_iff_of_nonneg hpos two_ne_zero).1 ?_
-  rw [mul_pow, hE, ← mul_div_assoc, div_le_one (by positivity)]
-  exact hsum
+  rwa [mul_pow, hE, ← mul_div_assoc, div_le_one (by positivity)]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FubiniStudyLeShiftOfSmallSections =====
@@ -1566,8 +1548,7 @@ theorem key_ineq : GlobalTheory.Published.ArCalc → AmpleHS → SemiPull → �
   have hne : ∀ c, boxFam e x c ≠ 0 := by
     intro c
     simp only [boxFam]
-    refine mul_ne_zero (he.ne_zero c.1) ?_
-    exact Finset.prod_ne_zero_iff.2 fun i _ => hx.ne_zero i
+    exact mul_ne_zero (he.ne_zero c.1) (Finset.prod_ne_zero_iff.2 fun i _ => hx.ne_zero i)
   obtain ⟨Y, hY, π, φ, hvarY, hmod, htot⟩ := _root_.GlobalTheory.HSNef.exists_model_total k X p D hX (J × Finset (Fin D)) (boxFam e x) hne
   haveI := hY
   set q := π ≫ p with hq

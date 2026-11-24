@@ -294,8 +294,7 @@ theorem chart_fn_mul_gen_pow : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [Gr
     zpow_one, zpow_neg]
   rw [← mul_pow, ← mul_pow]
   congr 1
-  rw [_root_.mul_assoc _ (gm _ _ _ (L.g (p.2 1) _)), hc]
-  rw [mul_right_comm _ (val e _ y J)]
+  rw [_root_.mul_assoc _ (gm _ _ _ (L.g (p.2 1) _)), hc, mul_right_comm _ (val e _ y J)]
   exact congrArg (· * val e _ y J) (inv_mul_cancel_right _ _).symm
 
 end GlobalTheory.Heat.Gauge
@@ -1024,8 +1023,7 @@ theorem GlobalTheory.HeatTrans.exists_heat_translate : ∀ (R : Type) [CommRing 
   · intro i
     rw [Scheme.Hom.comp_preimage]
     exact T.preimage_mono (h.le i)
-  · intro i
-    exact isLift_conjF Y.H D hTS hST hT hS (h.lift i)
+  · exact fun i => isLift_conjF Y.H D hTS hST hT hS (h.lift i)
   · intro k i i' O₁ hO f
     have hOi : O₁ ≤ T ⁻¹ᵁ h.W i := hO.trans inf_le_left
     have hOi' : O₁ ≤ T ⁻¹ᵁ h.W i' := hO.trans inf_le_right
@@ -1236,8 +1234,7 @@ theorem Heat.acts_const_at_points : ∀ {R : Type} [CommRing R] (G : Over (Sp R)
           rw [sval_of σ (𝟙 G.left) x J (fun _ => h.j i) (fun q => by rw [Category.id_comp]; exact e q)]
           exact (gsR (𝟙 G.left) x (hWc i) hx _).symm
       rw [s1, s1] at hp
-      rw [gs_mul _ x _ hx, gs_mul _ x _ hx, gsC _ x _ hx, gsC _ x _ hx]
-      exact hp
+      rwa [gs_mul _ x _ hx, gs_mul _ x _ hx, gsC _ x _ hx, gsC _ x _ hx]
     rw [hρ i, hτ i, ← leib, ← leib, hA]
 
   intro Z r z J hJ

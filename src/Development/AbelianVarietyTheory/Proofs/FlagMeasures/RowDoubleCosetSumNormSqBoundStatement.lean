@@ -497,8 +497,7 @@ theorem mem_span_range_comp {R W ι : Type} [Semiring R] [AddCommGroup W] [Modul
   · rintro ⟨y, hy, hyw⟩
     have : y = w := e.injective hyw
     exact this ▸ hy
-  · intro h
-    exact ⟨w, h, rfl⟩
+  · exact fun h => ⟨w, h, rfl⟩
 
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
   {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E]
@@ -661,8 +660,7 @@ theorem generic_iff_locU {D : D7} (X : HidaSetting D) (Y : Full X) (u u' : D.wha
         Formalism.L2.SG.Saturated.BBneP t₀.lam (gS D) (lf D (X.Fu u)) y.1 P)
       (fun a b hab => propext (hBF (X.Fu u) t₀.lam hL P a b hab)) hm
     exact e ▸ hbb
-  · intro h
-    exact ⟨t₀.frame, ⟨t₀.rep.2.2.2.2, rfl⟩, h⟩
+  · exact fun h => ⟨t₀.frame, ⟨t₀.rep.2.2.2.2, rfl⟩, h⟩
 
 theorem generic_iff_gen : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), Formalism.MainNotions.S.Cnt.Stand D u u' → 4 * D.R.rS + 7 ≤ D.R.k → ∀ (w : Point D.host.E (D.R.rS + 1)) (F00 : LFlag (D.sp.Y 0) D.R.rS (((D.mem u).A.T : ℕ) : D.host.E)) (F'0 : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E)) (FP : ∀ p : PlF D, LocNG.FPair (locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p) D.R.rS), ZhatOM (ZhatL F00 F'0) = ptMat w → Gval F00 F'0 ≠ 0 → (∀ p, AtBase (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p F00 F'0 (Tu D u) (Tu D u') (FP p) ∧ (FP p).RelG (LocNG.theta (Y.M p))) → ∀ (G : GFrames (placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)) D.R.rS D.R.k) (c : GCoord (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) F00 F'0 FP G), ∀ (t₀ : TauC Y u u') (ρ : ((VS D).V ≃ₗ[D.host.E] (VS D).V)) (U U' : Formalism.L2.SG.PairVal.MatR D), MovesTo F00 F'0 (lf D (X.Fu u)) t₀.frame ρ U U' → (t₀.generic ↔ G.Gen (G.datOf (c.lat ρ t₀.lam)) (c.lat ρ t₀.lam)) := by
   intro D X Y u u' hSt hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hMv
@@ -836,8 +834,7 @@ theorem row_coset_sum_norm_sq : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
     have hg := hgen (τ o) n m hr h
     rw [← he] at hg
     have : (¬ (τ o).generic) = (¬ G.Gen d₀ o.out) := propext (not_congr hg)
-    rw [this]
-    exact hPo
+    rwa [this]
   have hτinj : Set.InjOn τ Cf := by
     intro o ho o' ho' e
     obtain ⟨hT, -⟩ := (hmemC o).1 ho
@@ -864,8 +861,7 @@ theorem row_coset_sum_norm_sq : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
     have hg := hgen (τ o) n' m' hr' h'
     rw [← he', heq] at hg
     have : (¬ G.Gen d₀ o.out) = (¬ t.generic) := propext (not_congr hg.symm)
-    rw [this]
-    exact hq
+    rwa [this]
   obtain ⟨T, hTn, hamp⟩ :=
     GlobalTheory.T.rowTerm_amplitude_eq_mass_mul_phase D X Y u u' hSt hk w F00 F'0 FP hZ hGv hAt G c ν hν t₀ ρ U U' hMv hrelv hpt
   set K : ℝ := ((X.B.g : ℝ) ^ (D.R.f * Fintype.card (Formalism.L2.SG.RealObj.FreeE w)))⁻¹ with hK
@@ -925,8 +921,7 @@ theorem row_coset_sum_norm_sq : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
     unfold GFrames.amp
     rw [tsum_eq_sum (s := Cf)]
     · exact Finset.sum_congr rfl fun o ho => ite_eq_left ((hmemC o).1 ho)
-    · intro o ho
-      exact ite_eq_right fun h => ho ((hmemC o).2 h)
+    · exact fun o ho => ite_eq_right fun h => ho ((hmemC o).2 h)
   rw [tsum_eq_sum hzero, Finset.sum_image hτinj]
   rw [Finset.sum_congr rfl fun o ho => by rw [Set.indicator_of_mem (hτS o ho), hvec o ho], hVsum, hVn]
   have hsum : ∑ o ∈ Cf, ((Formalism.L2.SG.TermOp.wt t₀ : ℝ) : ℂ) •

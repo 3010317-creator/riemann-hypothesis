@@ -71,8 +71,7 @@ theorem pow_smul_cancel {G H : PDivGroup p k} (a : ℕ) {X Y : G ⟶ H}
     rw [smul_smul, ← pow_succ', smul_sub, h, sub_self]
 
 theorem finrank_A (G : PDivGroup p k) (n : ℕ) : Module.finrank k (G.A n) = p ^ (n * G.height) := by
-  have h := G.rank_eq n ⟨⊥, Ideal.isPrime_bot⟩
-  simpa [Module.rankAtStalk_eq_finrank_of_free] using h
+  simpa [Module.rankAtStalk_eq_finrank_of_free] using G.rank_eq n ⟨⊥, Ideal.isPrime_bot⟩
 
 theorem isIsog_pow_smul_id (G : PDivGroup p k) (m : ℕ) : IsIsog ((p : ℤ_[p]) ^ m • 𝟙 G) :=
   ⟨m, 𝟙 G, Category.comp_id _, Category.id_comp _⟩
@@ -149,8 +148,7 @@ theorem hasLogDeg_zero_iff_isIso {G H : PDivGroup p k} (f : G ⟶ H) (hf : IsIso
     refine ⟨0, fun n _ => ?_⟩
     rw [pow_zero]
     refine (_root_.GlobalTheory.Dieu.surjective_iff_finrank_quot_kerIdeal_eq_one k (G.A n) (H.A n) (f.app n)).1 fun x => ⟨(inv f).app n x, ?_⟩
-    have h := congrArg (fun φ : G ⟶ G => φ.app n x) (IsIso.hom_inv_id f)
-    exact h
+    exact congrArg (fun φ : G ⟶ G => φ.app n x) (IsIso.hom_inv_id f)
 
 theorem isog_basics : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [CharP k p] (G : PDivGroup p k),
     (∀ m : ℕ, IsIsog ((p : ℤ_[p]) ^ m • 𝟙 G) ∧ HasLogDeg ((p : ℤ_[p]) ^ m • 𝟙 G) (m * G.height)) ∧

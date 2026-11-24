@@ -424,8 +424,7 @@ theorem exists_pow_norm_val_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
         _ ≤ ‖φ₁ a‖ := hxa
   obtain ⟨h, hh, hnorm⟩ := key _ hpow
   refine ⟨h, hh, ?_⟩
-  rw [hφ', hφ₁, ← norm_pow, ← map_pow]
-  exact hnorm
+  rwa [hφ', hφ₁, ← norm_pow, ← map_pow]
 
 end GlobalTheory.UPoinc.ValBound
 end -- clump:auto
@@ -1628,8 +1627,7 @@ theorem exists_idealSheaf_comap_uValThru : ∀ (E : Type) [Field E] [NumberField
     intro h
     apply hy
     change y ∈ Y.Z.basicOpen (D.f j ^ k)
-    rw [Scheme.basicOpen_pow _ _ hk0]
-    exact h
+    rwa [Scheme.basicOpen_pow _ _ hk0]
 
   obtain ⟨W, hWi, hWc⟩ := _root_.GlobalTheory.UPoinc.exists_open_generic_subset_moduli E H Dw l Xo c C
   let U : Y.Z.Opens := (πY ≫ X₁.π) ⁻¹ᵁ W ⊓ ⟨((D.nsmul k).idealSheaf.support : Set Y.Z)ᶜ, (D.nsmul k).idealSheaf.support.isClosed.isOpen_compl⟩
@@ -1643,8 +1641,7 @@ theorem exists_idealSheaf_comap_uValThru : ∀ (E : Type) [Field E] [NumberField
     · show (πY ≫ X₁.π) _ ∈ (W : Set C.Z)
       rw [Scheme.Hom.comp_apply]
       exact hWi hr
-    · intro hs
-      exact hsupp _ (hsub _ hs) hr
+    · exact fun hs => hsupp _ (hsub _ hs) hr
   have hDU : ∀ x ∈ (D.nsmul k).idealSheaf.support, x ∉ U := fun x hx hxU => hxU.2 hx
   have hrange : ∀ {q : ℕ} [Fact q.Prime] (y : Sp (OO q) ⟶ Y.Z), Set.range (gPt q ≫ y) ⊆ U →
       Set.range (gPt q ≫ y ≫ πY ≫ X₁.π) ⊆ Set.range C.i := by
@@ -1677,12 +1674,10 @@ theorem exists_idealSheaf_comap_uValThru : ∀ (E : Type) [Field E] [NumberField
         rw [hty]
       rcases hfall t with h1 | ⟨h, hh, h2⟩
       · left
-        rw [← hcv, ht f' hf']
-        exact h1
+        rwa [← hcv, ht f' hf']
       · right
         refine ⟨X₁.M.stalkHom z₀ h, ⟨(X₁.M.stalkEquiv z₀ h).2, ?_⟩, ?_⟩
-        · by_contra hne
-          push Not at hne
+        · by_contra! hne
           apply (IsLocalRing.mem_maximalIdeal _).1 hh
           have hu : IsUnit (X₁.M.stalkEquiv z₀ h) :=
             (RatModel.isUnit_O_iff _).2 ⟨hne.1, hne.2⟩
@@ -1691,10 +1686,8 @@ theorem exists_idealSheaf_comap_uValThru : ∀ (E : Type) [Field E] [NumberField
           exact h2)
   refine ⟨Nat.lcm ι d, J, hL0, ?_, ?_⟩
   · rw [hJ]
-    intro y hy
-    exact hsupp y (hsub y hy)
-  · rw [hJ]
-    exact hord'
+    exact fun y hy => hsupp y (hsub y hy)
+  · rwa [hJ]
 
 end GlobalTheory.UPoinc.DescentPow
 end -- clump:auto

@@ -56,11 +56,8 @@ attribute [local instance] Over.cartesianMonoidalCategory
 theorem chart_iff {X Z : Scheme.{0}} (L : LB X) {K : Type} [Fintype K] (φ : K → (Z ⟶ X)) (j : K → L.ι)
     (x : Sp ℂ ⟶ Z) : ⊤ ≤ x ⁻¹ᵁ LB.wchart L φ j ↔ ∀ k, ⊤ ≤ (x ≫ φ k) ⁻¹ᵁ L.U (j k) := by
   constructor
-  · intro h k p _
-    have hp := h (Set.mem_univ p)
-    exact Set.mem_iInter.1 hp k
-  · intro h p _
-    exact Set.mem_iInter.2 fun k => h k (Set.mem_univ p)
+  · exact fun h k p _ => Set.mem_iInter.1 (h (Set.mem_univ p)) k
+  · exact fun h p _ => Set.mem_iInter.2 fun k => h k (Set.mem_univ p)
 
 theorem exists_chart {X : Scheme.{0}} (L : LB X) (hL : L.IsLB) (x : Sp ℂ ⟶ X) : ∃ i, ⊤ ≤ x ⁻¹ᵁ L.U i := by
   have h : x cpt ∈ (⨆ i, L.U i : X.Opens) := by

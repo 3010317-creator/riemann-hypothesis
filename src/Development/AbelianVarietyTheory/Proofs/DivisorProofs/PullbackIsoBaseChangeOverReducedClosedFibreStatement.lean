@@ -209,8 +209,7 @@ theorem isIso_of_isIso_fibres : ∀ (T X Z : Scheme.{0}) (p : X ⟶ T) (q : Z �
     rw [← Scheme.Hom.comp_apply, ← pullback.lift_fst (f := q) (g := x) (pullback.fst p x ≫ h)
       (pullback.snd p x ≫ 𝟙 _) (by simp [hh, pullback.condition]), Scheme.Hom.comp_apply]
     change pullback.fst q x (m (inv m v)) = y
-    rw [← Scheme.Hom.comp_apply m, ← Scheme.Hom.comp_apply, IsIso.inv_hom_id_assoc]
-    exact hv
+    rwa [← Scheme.Hom.comp_apply m, ← Scheme.Hom.comp_apply, IsIso.inv_hom_id_assoc]
   ·
     refine universallyInjective_of_fieldPoints' h fun K _ z z' hz => ?_
     let u : Sp K := IsLocalRing.closedPoint K
@@ -347,8 +346,7 @@ theorem Emb.pullback_iso_of_closed (R : Type) [CommRing R] [IsLocalRing R] (S : 
     intro w
     have h1 : π (G'.hom (pullback.fst G'.hom t w)) = (pullback.fst G'.hom t ≫ G'.hom ≫ π) w := by simp
     rw [h1, pullback.condition_assoc, htk]
-    simp only [Scheme.Hom.comp_apply]
-    exact spMap_residue_apply_eq_closedPoint R _
+    simpa only [Scheme.Hom.comp_apply] using spMap_residue_apply_eq_closedPoint R _
   have hrng : Set.range (pullback.fst G'.hom t) ⊆ Set.range E.H.ι := by
     rintro _ ⟨w, rfl⟩
     rw [Scheme.Opens.range_ι]
@@ -377,8 +375,7 @@ theorem Emb.pullback_iso_of_closed (R : Type) [CommRing R] [IsLocalRing R] (S : 
     have hx : ∀ w, (x0 ≫ t ≫ π) w = closedPoint R := by
       intro w
       rw [htk]
-      simp only [Scheme.Hom.comp_apply]
-      exact spMap_residue_apply_eq_closedPoint R _
+      simpa only [Scheme.Hom.comp_apply] using spMap_residue_apply_eq_closedPoint R _
     obtain ⟨κ, hκ⟩ := spMap_factor_residueField_of_closedPoint R Ω (x0 ≫ t ≫ π) hx
     have hκk : x0 ≫ k = spMap κ := by
       rw [← cancel_mono (spMap (residue R)), Category.assoc, ← htk, hκ]

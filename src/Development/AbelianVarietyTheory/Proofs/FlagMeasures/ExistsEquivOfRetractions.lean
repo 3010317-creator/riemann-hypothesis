@@ -131,54 +131,37 @@ private theorem exists_inv_pair_mul_eq_of_mul_eq {K n m : Type*} [Field K] [Fint
     LinearMap.codRestrict _ (LinearMap.id - Matrix.mulVecLin (X * N * A)) fun v => by
       simp only [LinearMap.mem_ker, Matrix.mulVecLin_apply, LinearMap.sub_apply,
         LinearMap.id_apply, Matrix.mulVec_sub, ← Matrix.mulVec_mulVec, hAXN, sub_self]
-  let p' : (n → K) →ₗ[K] LinearMap.ker (Matrix.mulVecLin A') :=
-    LinearMap.codRestrict _ (LinearMap.id - Matrix.mulVecLin (Y * N * A')) fun v => by
-      simp only [LinearMap.mem_ker, Matrix.mulVecLin_apply, LinearMap.sub_apply,
-        LinearMap.id_apply, Matrix.mulVec_sub, ← Matrix.mulVec_mulVec, hAYN, sub_self]
   let φ : (n → K) →ₗ[K] (n → K) := Matrix.mulVecLin (Y * N * A) +
     (LinearMap.ker (Matrix.mulVecLin A')).subtype ∘ₗ ψ.toLinearMap ∘ₗ p
-  let φ' : (n → K) →ₗ[K] (n → K) := Matrix.mulVecLin (X * N * A') +
-    (LinearMap.ker (Matrix.mulVecLin A)).subtype ∘ₗ ψ.symm.toLinearMap ∘ₗ p'
   have hker : ∀ k : LinearMap.ker (Matrix.mulVecLin A'), A' *ᵥ (k : n → K) = 0 := fun k => k.2
-  have hker' : ∀ k : LinearMap.ker (Matrix.mulVecLin A), A *ᵥ (k : n → K) = 0 := fun k => k.2
   have hφ_eq : ∀ v, φ v = Y *ᵥ (N *ᵥ (A *ᵥ v)) + (ψ (p v) : n → K) := fun v => by
     simp only [φ, LinearMap.add_apply, LinearMap.comp_apply, Matrix.mulVecLin_apply,
-      Submodule.subtype_apply, LinearEquiv.coe_coe, ← Matrix.mulVec_mulVec]
-  have hφ'_eq : ∀ u, φ' u = X *ᵥ (N *ᵥ (A' *ᵥ u)) + (ψ.symm (p' u) : n → K) := fun u => by
-    simp only [φ', LinearMap.add_apply, LinearMap.comp_apply, Matrix.mulVecLin_apply,
       Submodule.subtype_apply, LinearEquiv.coe_coe, ← Matrix.mulVec_mulVec]
   have hp_eq : ∀ v, (p v : n → K) = v - X *ᵥ (N *ᵥ (A *ᵥ v)) := fun v => by
     simp only [p, LinearMap.codRestrict_apply, LinearMap.sub_apply, LinearMap.id_apply,
       Matrix.mulVecLin_apply, ← Matrix.mulVec_mulVec]
-  have hp'_eq : ∀ u, (p' u : n → K) = u - Y *ᵥ (N *ᵥ (A' *ᵥ u)) := fun u => by
-    simp only [p', LinearMap.codRestrict_apply, LinearMap.sub_apply, LinearMap.id_apply,
-      Matrix.mulVecLin_apply, ← Matrix.mulVec_mulVec]
   have hAφ : ∀ v, A' *ᵥ φ v = A *ᵥ v := fun v => by
     rw [hφ_eq, Matrix.mulVec_add, hAYN, hker, add_zero]
-  have hAφ' : ∀ u, A *ᵥ φ' u = A' *ᵥ u := fun u => by
-    rw [hφ'_eq, Matrix.mulVec_add, hAXN, hker', add_zero]
-  have hpφ : ∀ v, p' (φ v) = ψ (p v) := fun v => by
-    apply Subtype.ext
-    rw [hp'_eq, hAφ, hφ_eq, add_sub_cancel_left]
-  have hpφ' : ∀ u, p (φ' u) = ψ.symm (p' u) := fun u => by
-    apply Subtype.ext
-    rw [hp_eq, hAφ', hφ'_eq, add_sub_cancel_left]
-  have hleft : ∀ v, φ' (φ v) = v := fun v => by
-    rw [hφ'_eq, hpφ, hAφ, LinearEquiv.symm_apply_apply, hp_eq, add_sub_cancel]
-  have hright : ∀ u, φ (φ' u) = u := fun u => by
-    rw [hφ_eq, hpφ', hAφ', LinearEquiv.apply_symm_apply, hp'_eq, add_sub_cancel]
   have hφX : ∀ w, φ (X *ᵥ w) = Y *ᵥ w := fun w => by
     have hpX : p (X *ᵥ w) = 0 := by
       apply Subtype.ext
       rw [hp_eq, hNAX, sub_self, ZeroMemClass.coe_zero]
     rw [hφ_eq, hpX, ψ.map_zero, ZeroMemClass.coe_zero, add_zero, hNAX]
-  refine ⟨LinearMap.toMatrix' φ, LinearMap.toMatrix' φ', ?_, ?_, ?_, ?_⟩
-  · rw [← LinearMap.toMatrix'_comp, ← LinearMap.toMatrix'_id]
-    congr 1
-    exact LinearMap.ext hright
-  · rw [← LinearMap.toMatrix'_comp, ← LinearMap.toMatrix'_id]
-    congr 1
-    exact LinearMap.ext hleft
+  have hφinj : Function.Injective φ := by
+    rw [injective_iff_map_eq_zero]
+    intro v hv
+    have hAv : A *ᵥ v = 0 := by rw [← hAφ, hv, Matrix.mulVec_zero]
+    have h0 := hφ_eq v
+    rw [hv, hAv, Matrix.mulVec_zero, Matrix.mulVec_zero, zero_add] at h0
+    have hp0 : p v = 0 := ψ.map_eq_zero_iff.1 (Subtype.ext h0.symm)
+    have h1 := hp_eq v
+    rw [hp0, hAv, Matrix.mulVec_zero, Matrix.mulVec_zero, sub_zero, ZeroMemClass.coe_zero] at h1
+    exact h1.symm
+  have hdet : IsUnit (LinearMap.toMatrix' φ).det :=
+    (Matrix.isUnit_iff_isUnit_det _).1 (Matrix.mulVec_injective_iff_isUnit.1 fun v w h =>
+      hφinj (by rwa [LinearMap.toMatrix'_mulVec, LinearMap.toMatrix'_mulVec] at h))
+  refine ⟨LinearMap.toMatrix' φ, (LinearMap.toMatrix' φ)⁻¹, Matrix.mul_nonsing_inv _ hdet,
+    Matrix.nonsing_inv_mul _ hdet, ?_, ?_⟩
   · apply Matrix.toLin'.injective
     refine LinearMap.ext fun w => ?_
     rw [Matrix.toLin'_mul, LinearMap.comp_apply, Matrix.toLin'_toMatrix', Matrix.toLin'_apply,

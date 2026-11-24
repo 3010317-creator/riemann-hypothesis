@@ -79,12 +79,10 @@ theorem natCast_notMem_sq : ∀ (E : Type) [Field E] [NumberField E] (s : 𝓞 E
     rw [h1]
     exact Ideal.add_mem _ (Ideal.mul_mem_left _ _ (Ideal.pow_mem_pow haP 2)) (Ideal.mul_mem_left _ _ hmem)
   have hd1 : P.asIdeal ^ 2 ∣ Ideal.span {a} := by
-    rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-    exact ha2
+    rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   have hd2 : ∏ Q ∈ (divs a).erase P, Q.asIdeal ∣ Ideal.span {a} := by
     refine Finset.prod_dvd_of_coprime ?_ ?_
-    · intro P _ Q _ hPQ
-      exact (HeightOneSpectrum.isCoprime_of_ne P Q hPQ)
+    · exact fun P _ Q _ hPQ => (HeightOneSpectrum.isCoprime_of_ne P Q hPQ)
     · intro Q hQ
       rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
       exact (mem_divs ha0 Q).1 (Finset.mem_of_mem_erase hQ)

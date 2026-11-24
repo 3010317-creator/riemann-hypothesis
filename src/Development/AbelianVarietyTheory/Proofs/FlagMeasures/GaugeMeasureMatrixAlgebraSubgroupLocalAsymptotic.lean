@@ -165,8 +165,7 @@ theorem _root_.GlobalTheory.GaugeSubHaar.isGaugeSub_haar : ∀ (n : ℕ) (ε : F
   obtain ⟨hmap', hinv', hfin', -⟩ := comap_subtype_val_haar_properties S hS d μ' hμ'
   set ν' := μ'.comap (Subtype.val : S → _root_.Formalism.REAL.UJ ε) with hν'
   have hcover : ∃ k, ν (compactCovering S k) ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hne
     rw [← Measure.measure_univ_eq_zero, ← iUnion_compactCovering]
     exact measure_iUnion_null hcon
@@ -192,8 +191,7 @@ theorem _root_.GlobalTheory.GaugeSubHaar.isGaugeSub_haar : ∀ (n : ℕ) (ε : F
   simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, mul_div_assoc] at h3'
   have heq := tendsto_nhds_unique h4 h3'
   have hc1 : (c : ENNReal) = 1 := by
-    rw [← ENNReal.mul_left_inj hL0 hLtop, one_mul]
-    exact heq
+    rwa [← ENNReal.mul_left_inj hL0 hLtop, one_mul]
   rw [hμc, ENNReal.coe_eq_one.1 hc1, one_smul]
 
 end GlobalTheory.GaugeSubHaar
@@ -286,8 +284,7 @@ private theorem rescaled_integral_comparable_of_nonneg_compactSupport {d : ℕ} 
     intro y hy
     simp only [hU, Set.mem_setOf_eq, not_lt] at hy
     refine hR y ?_
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     nlinarith [mul_lt_mul_of_pos_left hlt hr]
   have hnear : ∀ y ∈ U, ∀ᶠ s : ℝ in nhdsWithin 0 (Set.Ioi 0),
       (ν (Metric.closedBall (r • y) (r * s)) ≤
@@ -676,8 +673,7 @@ theorem chart_surj : ∀ (n : ℕ) (ε : Fin n → Bool) (A : Submodule ℝ (Mat
   have hm : comb E y ∈ A ∧ Formalism.REAL.inG ε (comb E y) :=
     (hs (∑ i, y i • E i)).2 (Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span (Set.mem_range_self i)))
   refine ⟨GaugeConst.expJ ε ⟨comb E y, hm.2⟩, GaugeSubExists.exp_sub_one_mem A hA hm.1, ?_, hyx⟩
-  rw [GaugeConst.sqrt_hs]
-  exact hy
+  rwa [GaugeConst.sqrt_hs]
 
 end GlobalTheory.GaugeSubChartSurj
 end -- clump:auto

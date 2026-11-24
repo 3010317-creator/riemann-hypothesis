@@ -177,8 +177,7 @@ theorem base_data_of_global_term : ∀ (D : D7) (Z : LocDat D), ∀ (u u' : D.wh
   intro p hp
   simp only [Set.mem_setOf_eq] at hp
   simp only [Set.mem_union, Set.mem_setOf_eq]
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   obtain ⟨⟨hpr, hqa⟩, hqb⟩ := hc
   apply hp
   refine ⟨hpr, ?_⟩
@@ -248,8 +247,7 @@ theorem uni_mul {K : Type} [CommRing K] {n : ℕ} {A B : Matrix (Fin n) (Fin n) 
       rcases lt_or_gt_of_ne hc with h | h
       · rw [hA0 a c h, zero_mul]
       · rw [hB0 c a h, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ a) h
+    · exact fun h => absurd (Finset.mem_univ a) h
 
 theorem tri_trans {K W : Type} [CommRing K] [AddCommGroup W] [Module K W] {n : ℕ} {f g h : Fin n → W}
     (h1 : Tri K f g) (h2 : Tri K g h) : Tri K f h := by
@@ -283,8 +281,7 @@ theorem span_map_le (g : V ≃ₗ[E] V) (S : Set V) :
     ∀ v ∈ Submodule.span M.L.O S, g v ∈ Submodule.span M.L.O ((fun x => g x) '' S) := by
   intro v hv
   have h := Submodule.mem_map_of_mem (f := (g : V →ₗ[E] V).restrictScalars M.L.O) hv
-  rw [← Submodule.span_image] at h
-  exact h
+  rwa [← Submodule.span_image] at h
 
 theorem smulLat_map (H : HermSp M V) (g : V ≃ₗ[E] V) (c : E) (Λ : Submodule M.L.O V) {x : V}
     (hx : x ∈ H.smulLat c Λ) : g x ∈ H.smulLat c (img g Λ) := by
@@ -310,8 +307,7 @@ theorem isTerm_move (H : HermSp M V) {g : V ≃ₗ[E] V} (hg : IsUnitary H g) {r
   obtain ⟨hsd, hfr, hfr', hD, hG, hsp⟩ := ht
   refine ⟨_root_.GlobalTheory.LocOver.TermOver.img_selfDual H hg hsd, _root_.GlobalTheory.LocOver.TermOver.img_frame H hg hfr, _root_.GlobalTheory.LocOver.TermOver.img_frame H hg hfr', ?_, ?_, ?_⟩
   · show IsUnit (H.Dl (fun b => g (t.f b)) (fun b => g (t.f' b)) (r + 1))
-    rw [Dl_comp_unitary H hg]
-    exact hD
+    rwa [Dl_comp_unitary H hg]
   · show H.Gdet (fun b => g (t.f b)) (fun b => g (t.f' b)) t.T t.T' ≠ 0
     simpa only [HermSp.Gdet, Dl_comp_unitary H hg] using hG
   · intro q hq
@@ -562,8 +558,7 @@ theorem exists_famTie : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.
     ⟨t₀, ht₀, rfl, fun p _ => (hp p).2.2.1⟩, fun p _ => ⟨_, (hp p).2.2.1⟩,
     ⟨t₀.toTerm.lam, hRL.1.1.toIsLattice, fun p hp' => (hnotP p hp').2⟩, ?_, hcell1, fun p _ => ⟨rfl, d0 p, _, (hp p).2.2.1, ?_⟩⟩,
     fun p _ => (hp p).2.1, fun p _ => ⟨d0 p, _, (hp p).2.2.1⟩, hDs, fun c => ?_⟩
-  · intro p
-    exact Finset.mem_filter.trans (and_iff_right (Finset.mem_attach _ _))
+  · exact fun p => Finset.mem_filter.trans (and_iff_right (Finset.mem_attach _ _))
   · intro p hp' t _ ht
     obtain ⟨-, hGt, hct⟩ := hat t ht
     obtain ⟨d, g, hg, d', hdd', hto⟩ := GlobalTheory.T.globalTerm_lies_over_localDatum_after_isometry D (zOf Y) u u' (X.Fu u) t.toTerm.lam ((Y.rowsOK u).1 t.lam t.mem)
@@ -588,8 +583,7 @@ theorem exists_famTie : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.
         obtain ⟨hh1, hh2⟩ := hc.choose_spec
         rw [(GlobalTheory.T.terms_same_row_same_weight_same_localData D X Y u u' hc.choose t (hG _ hh1) (hrow _ hh1 t ht (hh2.trans hct.symm))).1]
     · have e : Fm.dat c ν = none := dite_eq_right h
-      rw [e]
-      exact h
+      rwa [e]
   · show (locH (zOf Y) p).Zhat (locU (zOf Y) p t₀.toTerm.lam (lf D (X.Fu u)) (Quot.out t₀.toTerm.cls).1 (Tu D u) (Tu D u')).f
       (locU (zOf Y) p t₀.toTerm.lam (lf D (X.Fu u)) (Quot.out t₀.toTerm.cls).1 (Tu D u) (Tu D u')).f' ∈ _
     have hm := mem_clsLoc_self ((zOf Y).M p) ((locH (zOf Y) p).Zhat (locF Y p (lf D (X.Fu u))) (locF' Y p F'1))

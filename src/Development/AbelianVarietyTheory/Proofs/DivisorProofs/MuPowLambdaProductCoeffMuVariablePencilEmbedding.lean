@@ -1335,8 +1335,7 @@ theorem _root_.GlobalTheory.PsCo.Pc1.A.stAlg : _root_.GlobalTheory.PsCo.Pc1.StAl
   intro n ε M P hP
   have hP' : P ∈ Submodule.span ℂ (Submonoid.closure
       {P : _root_.GlobalTheory.PsCo.Pc1.Poly n | ∃ a b, ε a = ε b ∧ P = X (Sum.inl (a, b))} : Set _) := by
-    rw [← Algebra.adjoin_eq_span]
-    exact hP
+    rwa [← Algebra.adjoin_eq_span]
   clear hP
   induction hP' using Submodule.span_induction with
   | mem x hx =>

@@ -130,8 +130,7 @@ theorem topConst_top (c : ℝ) {τ : D.what₂.Tau} {t : D.host.TT}
     (h : (D.eTau τ : D.R.GG) = D.R.tau1 t) : topConst D c τ = c := by
   unfold topConst
   rw [Finset.sum_eq_single t, ite_eq_left h]
-  · intro s _ hs
-    exact ite_eq_right fun h' => hs (Subtype.ext (tau1_injective (h'.symm.trans h)))
+  · exact fun s _ hs => ite_eq_right fun h' => hs (Subtype.ext (tau1_injective (h'.symm.trans h)))
   · simp
 
 theorem topConst_nonneg {c : ℝ} (hc : 0 ≤ c) (τ : D.what₂.Tau) : 0 ≤ topConst D c τ := by
@@ -491,8 +490,7 @@ theorem conj_conj (x : H.E) : H.conj (H.conj x) = x := by
 
 theorem sigma_conj (σ : H.E ≃ₐ[ℚ] H.E) (x : H.E) : σ (H.conj x) = H.conj (σ x) := by
   apply H.φ₀.injective
-  have h1 := phi_conj H (H.φ₀.comp (σ : H.E →+* H.E)) x
-  exact h1.trans (phi_conj H H.φ₀ (σ x)).symm
+  exact (phi_conj H (H.φ₀.comp (σ : H.E →+* H.E)) x).trans (phi_conj H H.φ₀ (σ x)).symm
 
 theorem b_sq : H.sqrtMinusD ^ 2 = -(H.d : H.E) := H.sqd_sq
 
@@ -679,8 +677,7 @@ theorem vAdd_nonneg_of_isIntegral {K : Type} [Field K] [NumberField K]
   have h := IsDedekindDomain.HeightOneSpectrum.valuation_le_one (K := K) w (⟨x, hi⟩ : 𝓞 K)
   have hx' : w.valuation K x ≠ 0 := (map_ne_zero _).2 hx
   unfold vAdd
-  rw [neg_nonneg, ← WithZero.log_one, WithZero.log_le_log hx' one_ne_zero]
-  exact h
+  rwa [neg_nonneg, ← WithZero.log_one, WithZero.log_le_log hx' one_ne_zero]
 
 theorem sigmaOf_fix {R : Ranks} (H : Host R) (g : R.Psi) {x : H.E} (hx : x ∈ H.K) : H.sigmaOf g x = x := by
   have h : H.sigmaOf g (H.sqd) = H.sqd := by
@@ -694,8 +691,7 @@ theorem sigmaOf_fix {R : Ranks} (H : Host R) (g : R.Psi) {x : H.E} (hx : x ∈ H
     rw [IntermediateField.mem_fixedField_iff]
     intro f hf
     have : Subgroup.zpowers (H.sigmaOf g) ≤ MulAction.stabilizer _ (H.sqd) := by
-      rw [Subgroup.zpowers_le]
-      exact h
+      rwa [Subgroup.zpowers_le]
     exact this hf
   exact (IntermediateField.mem_fixedField_iff _ _).1 (hle hx) _ (Subgroup.mem_zpowers _)
 

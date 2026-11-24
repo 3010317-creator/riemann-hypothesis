@@ -85,8 +85,7 @@ theorem one_mem_ddS_zpow (D : D7) (n : ℕ) :
     (1 : D.host.E) ∈ (ddS D ^ (-(n : ℤ)) : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) := by
   have hI0 : ddS D ≠ 0 := by
     unfold ddS
-    rw [Ne, FractionalIdeal.coeIdeal_eq_zero]
-    rw [Ideal.map_eq_bot_iff_of_injective]
+    rw [Ne, FractionalIdeal.coeIdeal_eq_zero, Ideal.map_eq_bot_iff_of_injective]
     · exact differentIdeal_ne_bot
     · exact FaithfulSMul.algebraMap_injective _ _
   have hI1 : ddS D ≤ 1 := FractionalIdeal.coeIdeal_le_one
@@ -309,8 +308,7 @@ theorem exists_coeff_frame {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) (b : F
   · induction c using Fin.lastCases with
     | last => simp
     | cast i =>
-      simp only [Fin.snoc_castSucc]
-      exact hl i (by simpa [Fin.le_def] using hc)
+      simpa only [Fin.snoc_castSucc] using hl i (by simpa [Fin.le_def] using hc)
   · rw [Fin.sum_univ_castSucc]
     simp [frame_castSucc]
 
@@ -675,10 +673,8 @@ theorem coords_of_flag {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F
         simp only [add_smul, Finset.sum_add_distrib, ite_smul, zero_smul, Finset.sum_ite_eq',
           Finset.mem_univ, ite_true]
         rw [hlsum b]; abel
-      rw [eqv, hsum] at hv
-      rw [Finset.sum_eq_single i.castSucc] at hv
-      · rw [Fr.h_es i i, ite_eq_left rfl, mul_one] at hv
-        exact hv
+      rw [eqv, hsum, Finset.sum_eq_single i.castSucc] at hv
+      · rwa [Fr.h_es i i, ite_eq_left rfl, mul_one] at hv
       · intro c _ hc'
         rcases Fin.eq_castSucc_or_eq_last c with ⟨j, rfl⟩ | rfl
         · rw [Fr.h_es j i, ite_eq_right (show j ≠ i from fun h => hc' (h ▸ rfl)), mul_zero]
@@ -813,8 +809,7 @@ theorem smul_mem_gmap (D : D7) (γ : GV D) (I : Ideal (𝓞 D.host.E))
     unfold Formalism.HermitianLatticesTheory.gmap
     rw [Submodule.map_smul'']
   rw [hg1]
-  refine Submodule.mem_map.2 ⟨s • v, h, ?_⟩
-  exact (γ : (VS D).V →ₗ[D.host.E] (VS D).V).map_smul_of_tower s v
+  exact Submodule.mem_map.2 ⟨s • v, h, (γ : (VS D).V →ₗ[D.host.E] (VS D).V).map_smul_of_tower s v⟩
 
 
 
@@ -833,7 +828,6 @@ theorem glued_loc_cong : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D
     obtain ⟨v, hv, hve⟩ := Submodule.mem_map.1 (GlobalTheory.T.fixedFlag_frameVector_mem_rowLattice D F0 _ h a)
     have e : γ (frame (lf D F0) a) = v := by
       rw [← hve]
-      show γ (γ⁻¹ v) = v
       exact γ.apply_symm_apply v
     rw [e]; exact hv
   have hyL : ∀ a, baseChange₂ D (below D P) (g (frame (lf D (X.Fu u)) a)) ∈ τ.abelian₂ := fun a => by
@@ -968,8 +962,7 @@ theorem glued_frame_PD : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D
   obtain ⟨-, ⟨-, -, hlift', hconv'⟩, hX'⟩ := id hr'
   refine ⟨?_, ?_, ?_⟩
   · have h1 := (Formalism.L2.SG.Pf.IsLift_mapL (g⁻¹ * g') hβ _ _).2 hlift'
-    rw [hmap, ← hmapL] at h1
-    exact h1
+    rwa [hmap, ← hmapL] at h1
   · exact _root_.GlobalTheory.FrameGlue.glue (VS D) D.R.rS _ (gS D) (_root_.Formalism.MainNotions.LatticeGluingRadicals.e_gS_pos D) _ _
       (fun P hP a => frame_mem_locP _ _ hr P hP a)
       (fun P hP => _root_.GlobalTheory.Unfold.GluedCong.glued_loc_cong D X Y u u' F F' w hw hG Z FP hB hR Λ y hL g g' hA hA' hr hr' P hP)

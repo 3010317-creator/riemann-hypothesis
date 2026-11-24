@@ -175,8 +175,7 @@ theorem evenSq_absNorm {q d : ℕ} [Fact d.Prime] (h : HostHyp q d) {E : Type} [
       exact (isIntegral_natCast l).neg
     obtain ⟨y, rfl⟩ : ∃ y : 𝓞 E, algebraMap (𝓞 E) E y = x := ⟨⟨x, this⟩, rfl⟩
     refine ⟨y, RingOfIntegers.coe_injective ?_⟩
-    rw [map_pow, map_neg, map_natCast]
-    exact hx
+    rwa [map_pow, map_neg, map_natCast]
   obtain ⟨a', ha'⟩ := hint _ _ ha
   obtain ⟨b', hb'⟩ := hint _ _ hb
   induction B using UniqueFactorizationMonoid.induction_on_prime with
@@ -261,15 +260,13 @@ theorem sigmaOf_aE {R : Ranks} (H : Host R) (g : R.GG) :
     H.sigmaOf g (H.sqq) = ((g.1.1 : ℤ) : H.E) * H.sqq := by
   have h := H.gal_sqq (H.sigmaOf g)
   have hg : H.gal (H.sigmaOf g) = g := (H.gal).apply_symm_apply g
-  rw [hg] at h
-  exact h
+  rwa [hg] at h
 
 theorem sigmaOf_bE {R : Ranks} (H : Host R) (g : R.GG) :
     H.sigmaOf g (H.sqd) = ((g.1.2 : ℤ) : H.E) * H.sqd := by
   have h := H.gal_sqd (H.sigmaOf g)
   have hg : H.gal (H.sigmaOf g) = g := (H.gal).apply_symm_apply g
-  rw [hg] at h
-  exact h
+  rwa [hg] at h
 
 theorem prod_units {M : Type} [CommMonoid M] (f : ℤˣ → M) : ∏ u, f u = f 1 * f (-1) := by
   rw [UnitsInt.univ, Finset.prod_pair (by decide)]

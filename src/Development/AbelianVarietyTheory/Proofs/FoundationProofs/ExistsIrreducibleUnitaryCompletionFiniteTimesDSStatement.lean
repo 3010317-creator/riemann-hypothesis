@@ -116,8 +116,7 @@ theorem eq_smul_on_closure_span {H : Type} [NormedAddCommGroup H] [InnerProductS
     rw [hQ]
     exact sub_mem (hP v hv) (Submodule.smul_mem _ _ hv)
   have h2 : ⟪Q v, Q v⟫_ℂ = 0 := Submodule.inner_right_of_mem_orthogonal (hQcl v hv) (hcl h1)
-  rw [inner_self_eq_zero, hQ, sub_eq_zero] at h2
-  exact h2
+  rwa [inner_self_eq_zero, hQ, sub_eq_zero] at h2
 
 theorem isIrredSubrep_of_isCopyFinDS : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S) (W : Type)
     [AddCommGroup W] [Module ℂ W] (σ : Representation ℂ (GfC V) W), σ.IsIrreducible → IsAdmissible σ →
@@ -198,8 +197,7 @@ theorem isIrredSubrep_of_isCopyFinDS : ∀ (D : D7) (V : HSp D) (S : D.what₂.T
   obtain ⟨c, hc⟩ := _root_.GlobalTheory.SchurAdmissibility.schur_admissible (GfC V) K hKo hKc W σ hirr hadm φ hφ
   have key : ∀ x y, bePi (T' x) (T y) = conj c * bePi (T x) (T y) := fun x y => by
     have := hC x y
-    rw [hc, LinearMap.smul_apply, LinearMap.id_apply, map_smulₛₗ, smul_eq_mul] at this
-    exact this
+    rwa [hc, LinearMap.smul_apply, LinearMap.id_apply, map_smulₛₗ, smul_eq_mul] at this
   have hgen2 : ∀ u ∈ {v | ∃ w y, v = T w y}, ∀ u' ∈ {v | ∃ w y, v = T w y},
       ⟪u', U'.starProjection u - conj c • u⟫_ℂ = 0 := by
     rintro _ ⟨w, z, rfl⟩ _ ⟨w', z', rfl⟩

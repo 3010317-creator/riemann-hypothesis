@@ -241,8 +241,7 @@ theorem ampTK_pt (H : GlobalTheory.GapIn.Hyp) (L : LocBessel k r) (h : ℝ) (μG
     have h1 := hG.mul_mem _ (hG.mul_mem _ (hG.inv_mem _ hγ) _ (hG.inv_mem _ ha.1.1)) _ hγ
     have h3 : γ⁻¹ * (Matrix.of a)⁻¹ * γ * Matrix.of x ∈ UH (Hpk k r) := hx
     have h2 := hG.mul_mem _ (hG.inv_mem _ h1) _ h3
-    rw [Matrix.nonsing_inv_mul_cancel_left _ _ (hG.unit _ h1)] at h2
-    exact h2
+    rwa [Matrix.nonsing_inv_mul_cancel_left _ _ (hG.unit _ h1)] at h2
   have hI := integrable_ker L hγ w v v' ξ ξ' hμ aν (e := Formalism.FourierDecayAlt.ThreeDimData.aOf r h - 1) hb0 (by linarith) hint
     (fun x hx => by rw [neg_sub]; exact hC w hsm x hx) (fun x hx => by rw [neg_sub]; exact hC' w hsm x hx)
   have hgrp : ∀ᵐ p ∂ν, ∫ x, ker L γ w v v' ξ ξ' (p, x) ∂μG =
@@ -502,8 +501,7 @@ theorem gap_thresholds (k r : ℕ) (hk : 1 ≤ k) :
     linarith only [hX3, hXmul, hN3]
   · rw [ha]
     linarith only [hprod, hAG, m1, m2, m3, m4, hbig]
-  · rw [ha]
-    rw [← hPdef]
+  · rw [ha, ← hPdef]
     linarith only [hAG, m3, m4, m5, hbig]
   · unfold GlobalTheory.CellAmp.GapCell
     rw [ha]
@@ -1018,8 +1016,7 @@ theorem integrable_mul_right : ∀ (k r : ℕ) (L : Formalism.MainNotions.S.LocB
     unfold pairMeas
     rw [lintegral_prod _ hm.aemeasurable, lintegral_prod _ hfm.aemeasurable]
     rw [← lintegral_const_mul' _ _ hC]
-    refine lintegral_congr fun x => ?_
-    exact inner_eq L a hmap hfm x
+    exact lintegral_congr fun x => inner_eq L a hmap hfm x
   have hfin : ∫⁻ p, f p ∂(pairMeas L) < ⊤ :=
     (hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall hQ0)).1 hint.2
   refine ⟨(GlobalTheory.CellMaj.meas_pairMaj (γ₁ * a) b).aestronglyMeasurable, ?_⟩
@@ -1257,14 +1254,12 @@ theorem oneBesselTor_of_gapHyp : GlobalTheory.GapIn.Hyp → ∃ Cgf : ℝ, ∀ D
   · have hs' := hs
     obtain ⟨m, x, y, X, hxy, -, hsdef⟩ := hs'
     have hx : ∃ x ∈ (rep L).TK, l x ≠ 0 := by
-      by_contra hne
-      push Not at hne
+      by_contra! hne
       apply hs0
       rw [hsdef]
       exact Finset.sum_eq_zero fun i _ => by rw [hne _ (hxy i).1, inner_zero_left]
     have hy : ∃ y ∈ (rep L).TK, l' y ≠ 0 := by
-      by_contra hne
-      push Not at hne
+      by_contra! hne
       apply hs0
       rw [hsdef]
       exact Finset.sum_eq_zero fun i _ => by rw [hne _ (hxy i).2, map_zero, inner_zero_right]

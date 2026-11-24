@@ -312,8 +312,7 @@ theorem nmat_differentiableAt (X : Data E r) (τ : X.Ψ) (a b : Fin r) :
 
 theorem nmat_zero_apply (X : Data E r) (τ : X.Ψ) (a b : Fin r) :
     nmat X 0 τ a b = (1 : Matrix (Fin r) (Fin r) ℂ) a b := by
-  have h := congrFun (congrFun (PoinPf.nmat_zero X τ) a) b
-  simpa [mat] using h
+  simpa [mat] using congrFun (congrFun (PoinPf.nmat_zero X τ) a) b
 
 theorem gsB_zero_apply (X : Data E r) (τ : X.Ψ) (a b : Fin r) :
     gsB X 0 τ a b = (1 : Matrix (Fin r) (Fin r) ℂ) a b := by
@@ -404,8 +403,7 @@ theorem diagreal {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} (X
   swap
   · simp [dY, fderiv_zero_of_not_differentiableAt hd]
   have hY : ∀ k j : Fin r, DifferentiableAt ℝ (fun w => yF X w τ k j) 0 := by
-    intro k j
-    exact differentiableAt_pi.1 (differentiableAt_pi.1 (differentiableAt_pi.1 hd τ) k) j
+    exact fun k j => differentiableAt_pi.1 (differentiableAt_pi.1 (differentiableAt_pi.1 hd τ) k) j
   have hN : ∀ k m : Fin r, DifferentiableAt ℝ (fun w : V (nd X) => nmat X w τ k m) 0 := fun k m =>
     ((PoinPf.diff_nmat X τ k m) 0).restrictScalars ℝ
   have hB : ∀ n : ℕ, ∀ k : Fin r, k.val = n → DifferentiableAt ℝ (fun w => gsB X w τ k a) 0 := by
@@ -424,8 +422,7 @@ theorem diagreal {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} (X
   have hN0 : ∀ m : Fin r, m < a → nmat X 0 τ a m = 0 := by
     intro m hm
     have := congrFun (congrFun (PoinPf.nmat_zero X τ) a) m
-    simp only [mat, Matrix.of_apply, Matrix.one_apply, hm.ne', ite_false] at this
-    exact this
+    simpa only [mat, Matrix.of_apply, Matrix.one_apply, hm.ne', ite_false] using this
   have hB0 : ∀ m : Fin r, m < a → gsB X 0 τ m a = 0 := by
     intro m hm
     rw [gsB_zero, Matrix.one_apply, ite_eq_right hm.ne]
@@ -601,8 +598,7 @@ theorem exists_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
       exact ((PoinPf.cont_nmatm X τ).comp continuous_subtype_val).matrix_mul (hg τ)
     refine continuous_induced_rng.2 (continuous_pi fun τ => Units.continuous_iff.2 ⟨?_, ?_⟩)
     · refine (hM τ).congr fun w => ?_
-      simp only [Function.comp_apply, Set.restrict_apply]
-      exact (hσ w w.2 τ).symm
+      simpa only [Function.comp_apply, Set.restrict_apply] using (hσ w w.2 τ).symm
     · refine ((hM τ).matrix_adjugate).congr fun w => ?_
       simp only [Function.comp_apply, Set.restrict_apply]
       rw [Matrix.coe_units_inv, hσ w w.2 τ, Matrix.inv_def, GlobalTheory.T.det_unitaryChartSectionConjugatedMatrix X hx (hball w w.2) τ, Ring.inverse_one, one_smul]

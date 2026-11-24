@@ -72,8 +72,7 @@ theorem posDef_of_hasSignature {n : Type} [Fintype n] [DecidableEq n] {J : Matri
   have h1 : (J.reindex e e).PosDef := by
     rw [← Matrix.IsUnit.posDef_star_left_conjugate_iff (Units.isUnit P), hP]
     exact Matrix.PosDef.one
-  have h2 := h1.submatrix (e := e) e.injective
-  simpa using h2
+  simpa using h1.submatrix (e := e) e.injective
 
 theorem trace_pos {E : Type} [Field E] [NumberField E] [StarRing E]
     (hst : ∀ (φ : E →+* ℂ) (a : E), φ (star a) = starRingEnd ℂ (φ a))
@@ -102,8 +101,7 @@ theorem trace_pos {E : Type} [Field E] [NumberField E] [StarRing E]
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
       ring
-    rw [h2]
-    exact h1
+    rwa [h2]
   have ht := trace_eq_sum_embeddings ℂ (K := ℚ) (L := E) (x := W.hT x x)
   have hre := congrArg Complex.re ht
   rw [Complex.re_sum] at hre

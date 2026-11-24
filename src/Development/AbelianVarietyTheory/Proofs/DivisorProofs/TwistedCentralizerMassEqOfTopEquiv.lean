@@ -79,8 +79,7 @@ theorem mem_cptPart_iff {T : Subgroup G} (hT : IsClosed (T : Set G)) (t : T) :
   constructor
   · rintro ⟨s, hs, h⟩
     rwa [show s = t from Subtype.ext h] at hs
-  · intro h
-    exact ⟨t, h, rfl⟩
+  · exact fun h => ⟨t, h, rfl⟩
 
 end Closed
 
@@ -116,8 +115,7 @@ theorem mem_closure_cpt_iff {A B : Type} [Group A] [TopologicalSpace A] [Group B
   rw [himg] at hmap
   rw [← hmap, Subgroup.mem_map]
   constructor
-  · intro h
-    exact ⟨a, h, rfl⟩
+  · exact fun h => ⟨a, h, rfl⟩
   · rintro ⟨x, hx, h⟩
     have : x = a := e.injective h
     rwa [← this]

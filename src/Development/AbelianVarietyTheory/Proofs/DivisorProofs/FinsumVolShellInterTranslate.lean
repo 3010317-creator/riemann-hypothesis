@@ -116,13 +116,11 @@ theorem _root_.GlobalTheory.PureMatch.ShellVolume.finsum_vol_shell_inter_transla
   have hSeq : S = (fun x => u⁻¹ * x * u'⁻¹) '' (K : Set (GL (Fin a) k)) := by
     ext g
     constructor
-    · intro hg
-      exact ⟨u * g * u', hg, by group⟩
+    · exact fun hg => ⟨u * g * u', hg, by group⟩
     · rintro ⟨x, hx, rfl⟩
       show u * (u⁻¹ * x * u'⁻¹) * u' ∈ K
       have hx' : u * (u⁻¹ * x * u'⁻¹) * u' = x := by group
-      rw [hx']
-      exact hx
+      rwa [hx']
   have hScpt : IsCompact S := by
     rw [hSeq]
     exact _root_.GlobalTheory.SplitFlip.isCompact_KO.image
@@ -153,8 +151,7 @@ theorem _root_.GlobalTheory.PureMatch.ShellVolume.finsum_vol_shell_inter_transla
   rw [finsum_eq_sum_of_support_subset _ hsupp]
   have hpd : (↑t : Set {m : Fin a → ℤ // Antitone m}).PairwiseDisjoint
       (fun e => _root_.GlobalTheory.GLDoubling.cell k (Fin a) ϖ e.1 ∩ S) := by
-    intro i _ j _ hij
-    exact (hdisj hij).mono Set.inter_subset_left Set.inter_subset_left
+    exact fun i _ j _ hij => (hdisj hij).mono Set.inter_subset_left Set.inter_subset_left
   have hmeas : ∀ i ∈ t, MeasurableSet (_root_.GlobalTheory.GLDoubling.cell k (Fin a) ϖ i.1 ∩ S) := fun i _ =>
     (_root_.GlobalTheory.GLDoubling.isOpen_cell _ _).measurableSet.inter hSopen.measurableSet
   have hfin : ∀ i ∈ t, μ (_root_.GlobalTheory.GLDoubling.cell k (Fin a) ϖ i.1 ∩ S) ≠ ⊤ := fun i _ =>

@@ -266,9 +266,7 @@ theorem map_muL {μτ : Measure (Formalism.QuantumDeterminants.Mt D.R.k D.R.rS)}
     (μτ.comap (eM C τ)).map (eM C τ) = μτ := by
   rw [(eM_emb C τ).map_comap, Measure.restrict_eq_self_of_ae_mem]
   rw [ae_iff]
-  refine measure_mono_null (fun x hx => ?_) hH.2.2.1
-  intro hR
-  exact hx (uh_range C τ hR.1.1)
+  exact measure_mono_null (fun x hx => (fun hR => hx (uh_range C τ hR.1.1))) hH.2.2.1
 
 theorem sf_muL {μτ : Measure (Formalism.QuantumDeterminants.Mt D.R.k D.R.rS)}
     (hH : IsHaarOn (Rset D.R.k D.R.rS (GlobalTheory.TypeAsm.gamT C t τ)⁻¹) μτ) : SigmaFinite (μτ.comap (eM C τ)) := by
@@ -410,8 +408,7 @@ theorem pullC_holds : GlobalTheory.TypeAsm.PullC := by
     intro v
     obtain ⟨τ, rfl⟩ := X.pl.symm.surjective v
     have := (inferInstance : SigmaFinite (νl' τ))
-    rw [← hνl τ] at this
-    exact this
+    rwa [← hνl τ] at this
   have hpiν : Measure.pi νl = (Measure.pi νl').map Rq := by
     rw [← (measurePreserving_piCongrLeft νl X.pl.symm).map_eq]
     congr 2
@@ -515,8 +512,7 @@ theorem pullC_holds : GlobalTheory.TypeAsm.PullC := by
         rw [hRq_symm]
         exact ((eM_emb C τ).injective (congrFun hxE τ)).symm
       show Rq p ∈ K
-      rw [hpx, Rq.apply_symm_apply]
-      exact hx
+      rwa [hpx, Rq.apply_symm_apply]
   · intro τ
     rw [hνl τ]
     exact map_nuL C t τ (hC τ)

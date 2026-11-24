@@ -288,8 +288,7 @@ theorem GlobalTheory.Shin.inPar_twistedConj_iff : ∀ (F F' : Type) [Field F] [F
       rw [e]; exact inPar_mul (inPar_inv hδP) hq
     have hεN : nrm s (y⁻¹ * galAct F F' n s y) = 1 := by
       have := hconj 1 y
-      rw [nrm_one', mul_one, inv_mul_cancel] at this
-      exact this
+      rwa [nrm_one', mul_one, inv_mul_cancel] at this
     obtain ⟨x, hxB, hε⟩ := _root_.GlobalTheory.HilbertNinety.hilbert90_matrix_subalgebra_norm_one F F' s hs n (parAlg F' a n) hB _ hεP hεN
     have hfx : galAct F F' n s (y * x⁻¹) = y * x⁻¹ := by
       rw [map_mul, map_inv]
@@ -444,8 +443,7 @@ theorem isNorm_exists_twistedConj_adjoin :
     rw [h3, ← hc]; group
   have hcomm1 : Commute (c⁻¹ * δ * galAct F F' n s c) (incl F F' n γ) := by
     have := h4 (c⁻¹ * δ * galAct F F' n s c)
-    rw [hn1, hgfix s] at this
-    exact this
+    rwa [hn1, hgfix s] at this
 
   obtain ⟨δ₀, hδ₀A, hn0⟩ := _root_.GlobalTheory.Shin.NormSurj.nrm_surj_adjoin F F' s hs n γ
   have hδ₀g : Commute δ₀ (incl F F' n γ) := hC δ₀ _ hδ₀A (Commute.refl _)
@@ -467,8 +465,7 @@ theorem isNorm_exists_twistedConj_adjoin :
     subst hg'
     have e := congrArg (fun N => ((s : F' ≃+* F') : F' →+* F').mapMatrix N) (hM _ rfl)
     simp only [map_mul] at e
-    rw [← _root_.GlobalTheory.Shin.NormSurj.map_incl n s γ]
-    exact e
+    rwa [← _root_.GlobalTheory.Shin.NormSurj.map_incl n s γ]
   have hεB : ((δ₀⁻¹ * (c⁻¹ * δ * galAct F F' n s c) : GL (Fin n) F') : Matrix (Fin n) (Fin n) F') ∈
       Subalgebra.centralizer F' {((incl F F' n γ : GL (Fin n) F') : Matrix (Fin n) (Fin n) F')} := by
     rw [Subalgebra.mem_centralizer_iff]
@@ -568,8 +565,7 @@ theorem blocks_twist : ∀ (F : Type) [Field F] (t : F →+* F) (a b n : ℕ), n
     unfold brG
     rw [coe_gal, br_map, toG_map _ _ (BlockPar.units_of_par p hp).2]
   simp only [Prod.ext_iff, Prod.fst_mul, Prod.snd_mul, Prod.fst_inv, Prod.snd_inv] at key
-  rw [← htl, ← hbr]
-  exact key
+  rwa [← htl, ← hbr]
 
 end GlobalTheory.Shin.BlocksTwist
 end -- clump:auto
@@ -777,8 +773,7 @@ theorem nrm_blocks : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Fini
       congr 1
       apply List.map_congr_left
       intro i _
-      simp only [Function.comp_apply, galAct_apply]
-      exact (tlG_gal _ hδ).symm
+      simpa only [Function.comp_apply, galAct_apply] using (tlG_gal _ hδ).symm
     rw [e, ← h2, ← hn, h]
     exact tlG_gal _ hγ
   · have e : nrm s (brG a b δ) = (((List.range (Module.finrank F F')).map
@@ -788,8 +783,7 @@ theorem nrm_blocks : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Fini
       congr 1
       apply List.map_congr_left
       intro i _
-      simp only [Function.comp_apply, galAct_apply]
-      exact (brG_gal _ hδ).symm
+      simpa only [Function.comp_apply, galAct_apply] using (brG_gal _ hδ).symm
     rw [e, ← h3, ← hn, h]
     exact brG_gal _ hγ
 

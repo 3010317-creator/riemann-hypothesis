@@ -72,8 +72,7 @@ theorem intA_eq_range : ((intA F : AddSubgroup _) : Set (FiniteAdeleRing (𝓞 F
       (fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F))) Filter.cofinite) := by
   ext a
   constructor
-  · intro h
-    exact ⟨fun v => ⟨a v, h v⟩, rfl⟩
+  · exact fun h => ⟨fun v => ⟨a v, h v⟩, rfl⟩
   · rintro ⟨x, rfl⟩ v
     exact (x v).2
 
@@ -172,8 +171,7 @@ def locInd {κ : Type} (c : FiniteAdeleRing (𝓞 F) F) (r : κ → FiniteAdeleR
 theorem natCast_mul_apply {N : ℕ} {c : FiniteAdeleRing (𝓞 F) F} (hNc : (N : FiniteAdeleRing (𝓞 F) F) * c = 1)
     (v : Pl (F := F)) : (N : Fv F v) * c v = 1 := by
   have := congrArg (evalV F v) hNc
-  rw [map_mul, map_natCast, map_one] at this
-  exact this
+  rwa [map_mul, map_natCast, map_one] at this
 
 theorem locInd_std {κ : Type} [Fintype κ] {N : ℕ} {c : FiniteAdeleRing (𝓞 F) F}
     (hNc : (N : FiniteAdeleRing (𝓞 F) F) * c = 1) (r : κ → FiniteAdeleRing (𝓞 F) F) :
@@ -193,8 +191,7 @@ theorem locInd_std {κ : Type} [Fintype κ] {N : ℕ} {c : FiniteAdeleRing (𝓞
       linear_combination (-(x i - r i v)) * hNv
     rw [e]
     exact add_mem (mul_mem (natCast_mem _ N) (h i)) (hrv i)
-  · intro h i
-    exact mul_mem hcv (sub_mem (h i) (hrv i))
+  · exact fun h i => mul_mem hcv (sub_mem (h i) (hrv i))
 
 theorem locInd_mem_SB {κ : Type} [Fintype κ] {N : ℕ} {c : FiniteAdeleRing (𝓞 F) F}
     (hNc : (N : FiniteAdeleRing (𝓞 F) F) * c = 1) (r : κ → FiniteAdeleRing (𝓞 F) F) (v : Pl (F := F)) :
@@ -221,19 +218,15 @@ theorem ind_eq_finprod {κ : Type} [Fintype κ] {N : ℕ} {c : FiniteAdeleRing (
     have hy' : c • ((fun i => (x i).2) - r) ∈ intP F κ := hy
     have hm : (fun i => evFin F v (x i)) ∈
         {x' : κ → Fv F v | ∀ i, c v * (x' i - r i v) ∈ v.adicCompletionIntegers F} := by
-      intro i
-      exact (AddSubgroup.mem_pi _).1 hy' i (Set.mem_univ i) v
+      exact fun i => (AddSubgroup.mem_pi _).1 hy' i (Set.mem_univ i) v
     unfold locInd
     rw [Set.indicator_of_mem hm]
     rfl
   · rw [Set.indicator_of_notMem hy]
     have hex : ∃ v, (fun i => evFin F v (x i)) ∉
         {x' : κ → Fv F v | ∀ i, c v * (x' i - r i v) ∈ v.adicCompletionIntegers F} := by
-      by_contra hcon
-      push Not at hcon
-      refine hy ((AddSubgroup.mem_pi _).2 fun i _ => ?_)
-      intro v
-      exact hcon v i
+      by_contra! hcon
+      exact hy ((AddSubgroup.mem_pi _).2 fun i _ => (fun v => hcon v i))
     obtain ⟨v, hv⟩ := hex
     symm
     refine finprod_eq_zero _ v ?_ (GlobalTheory.PureFactor.mulSupport_finite _ (locInd_std hNc r) x)

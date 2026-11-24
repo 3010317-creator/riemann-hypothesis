@@ -131,8 +131,7 @@ theorem divisible_iff {q : ℕ} (hq : q.Prime) (y : FiniteAdeleRing (𝓞 K) K)
         rw [Nat.cast_mul, Nat.cast_pow, mul_assoc]
         rfl
       rw [e3, map_mul, map_pow, h1, one_pow, one_mul] at h2
-      rw [HeightOneSpectrum.mem_adicCompletionIntegers, ev_mul, map_mul, e2, one_mul]
-      exact h2
+      rwa [HeightOneSpectrum.mem_adicCompletionIntegers, ev_mul, map_mul, e2, one_mul]
 
 end Generic
 
@@ -157,8 +156,7 @@ theorem zeroAt_iff_comp {D : D7} {q : ℕ} (hq : q.Prime) (y : Formalism.MainNot
   · rintro ⟨s, hs, e⟩
     obtain ⟨s, rfl⟩ := (toFinE D).surjective s
     refine ⟨s, (mem_OhE_iff s).2 hs, (toFinE D).injective ?_⟩
-    rw [map_mul, map_mul, map_pow, map_natCast, map_natCast]
-    exact e
+    rwa [map_mul, map_mul, map_pow, map_natCast, map_natCast]
 
 theorem toFinE_finQ {D : D7} (a : AE D) :
     toFinE D (finQ D a) = GlobalTheory.LFun.finAdEquiv D.host.F D.host.E (finPart D a) := by
@@ -219,8 +217,7 @@ theorem zeroAt_finQ_iff : ∀ (D : D7) (q : ℕ), q.Prime → ∀ a : AE D, (For
   constructor
   · intro h v η hη hv
     refine (idem_mul_eq_zero_iff hη a).2 fun Q hQ => h Q ((hmem Q).1 ?_)
-    rw [hQ]
-    exact hv
+    rwa [hQ]
   · intro h Q hQ
     obtain ⟨η, hη⟩ := GlobalTheory.IdemSupport.exists_placeIdem (D := D) (Q.under (𝓞 D.host.F))
     exact (idem_mul_eq_zero_iff hη a).1 (h _ η hη ((hmem Q).2 hQ)) Q rfl

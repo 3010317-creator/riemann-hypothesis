@@ -83,8 +83,7 @@ theorem dim_closure_eq_zero_iff {T : Type*} [TopologicalSpace T] [T0Space T] (x 
     have hAB : A ≤ B := specializes_iff_closure_subset.1 hst
     have hBA : B ≤ A := hmax A hAB
     have hts : t ⤳ s := specializes_iff_closure_subset.2 hBA
-    have e := (hst.antisymm hts).eq
-    exact Set.mem_singleton_iff.2 (congrArg Subtype.val e).symm
+    exact Set.mem_singleton_iff.2 (congrArg Subtype.val ((hst.antisymm hts).eq)).symm
   · intro h
     rw [h.closure_eq]
     have : Subsingleton ({x} : Set T) := Set.subsingleton_singleton.coe_sort
@@ -116,8 +115,7 @@ theorem dim_pspace_le (k : Type) [CommRing k] [Module.Finite ℤ k] (N : ℕ) :
   refine (PrimeSpectrum.topologicalKrullDim_eq_ringKrullDim
     (R := MvPolynomial {j // j ≠ i} k)).trans_le ?_
   rw [MvPolynomial.ringKrullDim_of_isNoetherianRing]
-  simp
-  exact (add_le_add_left hk _).trans_eq (add_comm _ _)
+  simpa using (add_le_add_left hk _).trans_eq (add_comm _ _)
 
 theorem finite_residueField (k : Type) [CommRing k] [Module.Finite ℤ k] {X : Scheme.{0}}
     (p : X ⟶ Sp k) (hp : IsProjOver p) {x : X} (hx : IsClosed ({x} : Set X)) :

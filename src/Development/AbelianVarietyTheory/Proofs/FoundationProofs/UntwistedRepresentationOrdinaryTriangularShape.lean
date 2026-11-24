@@ -267,8 +267,7 @@ theorem frobPlace : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] (q : ℕ), q.Pri
   have hover : IsPlaceOver V (ReciprocityTheory.Neutral.Cmp.ratPrime q) := fun x => by
     have h := ReciprocityTheory.Neutral.Cmp.lies_over_ratPrime V hval x
     rw [eq_ratCast] at h
-    rw [eq_ratCast]
-    exact h
+    rwa [eq_ratCast]
   have hmem : ((q : ℕ) : 𝓞 ℚ) ∈ (ReciprocityTheory.Neutral.Cmp.ratPrime q).asIdeal := (hover _).1 (by simpa using hval)
   have hn : normV (ReciprocityTheory.Neutral.Cmp.ratPrime q) = q := normV_ratPrime hq _ hmem
   refine ⟨_, V, hn, hover, ?_⟩
@@ -338,8 +337,7 @@ theorem untw_irr (e : ℕ) (W : R2 Ω l) (χ : G ℚ Ω →* (Qbar l)ˣ) (hirr :
   intro V hV
   refine hirr.2.2 V le_top fun s v hv => ?_
   have h := V.smul_mem ((((cycBar ℚ Ω l ^ (e : ℤ) * χ⁻¹) (s : G ℚ Ω) : (Qbar l)ˣ)⁻¹ : (Qbar l)ˣ) : Qbar l) (hV s v hv)
-  rw [untw_val, Matrix.smul_mulVec, smul_smul, Units.inv_mul, one_smul] at h
-  exact h
+  rwa [untw_val, Matrix.smul_mulVec, smul_smul, Units.inv_mul, one_smul] at h
 
 theorem att_inv_eq (e : ℕ) (W : R2 Ω l) (χ : G ℚ Ω →* (Qbar l)ˣ) (s : G ℚ Ω) :
     (tw W (cycBar ℚ Ω l ^ (-(e : ℤ)) * (dt W)⁻¹ * χ) s⁻¹ : Matrix (Fin 2) (Fin 2) (Qbar l)) =

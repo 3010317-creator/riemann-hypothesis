@@ -157,8 +157,7 @@ theorem rad_eq {p : Mat k r} (hp : p ∈ Nset k r) (he : ∀ a i, p i (eI k r a)
   have hss : ∀ a b : Fin r, p (esI k r a) (esI k r b) = if a = b then 1 else 0 := by
     intro a b
     have h := herm_col hU' (eI k r a) (esI k r b)
-    rw [hcolE, herm_Hpk_bvec_eq_mulVec_apply, H_e, Rad.H_es] at h
-    exact h
+    rwa [hcolE, herm_Hpk_bvec_eq_mulVec_apply, H_e, Rad.H_es] at h
   have hst01 : ∀ c a : Fin r, star (if c = a then (1 : ℂ) else 0) = if c = a then 1 else 0 := by
     intro c a; split_ifs <;> simp
   have hmidw : ∀ j : Fin (k + 1), (fun l => p (wI k r l) (wI k r j)) = bvec j := by
@@ -235,8 +234,7 @@ private theorem exists_upper_eq_inv_upper (x : UT r → ℂ) : ∃ y : UT r → 
     have h := congrFun (congrFun (Matrix.nonsing_inv_mul (upper x) hU) a) a
     rw [Matrix.mul_apply, Finset.sum_eq_single a] at h
     · have hdiag : upper x a a = 1 := by simp [upper]
-      rw [hdiag, mul_one, Matrix.one_apply_eq] at h
-      exact h
+      rwa [hdiag, mul_one, Matrix.one_apply_eq] at h
     · intro c _ hc
       rcases lt_or_gt_of_ne hc with hlt | hlt
       · rw [ht hlt, zero_mul]
@@ -361,10 +359,8 @@ theorem exists_coord {n : Mat k r} (hn : n ∈ Nset k r) :
 theorem cont_upper (r : ℕ) : Continuous (upper : (UT r → ℂ) → Matrix (Fin r) (Fin r) ℂ) := by
   refine continuous_matrix fun a b => ?_
   by_cases h : a < b
-  · simp only [upper, dite_eq_left h]
-    exact continuous_apply _
-  · simp only [upper, dite_eq_right h]
-    exact continuous_const
+  · simpa only [upper, dite_eq_left h] using continuous_apply _
+  · simpa only [upper, dite_eq_right h] using continuous_const
 
 alias det_upper := _root_.GlobalTheory.Amp.UEmb.det_upper
 
@@ -448,7 +444,6 @@ theorem cont_cOf (k r : ℕ) : Continuous (cOf : Mat k r → _) := by
     refine continuous_pi fun p => ?_
     simp only [xOf]
     exact continuous_id.matrix_elem _ _
-  show Continuous fun n : Mat k r => (xOf n, qOf (uEmb k r (upper (xOf n))⁻¹ * n))
   exact hx.prodMk ((cont_qOf k r).comp (((cont_uEmb_inv k r).comp hx).mul continuous_id))
 
 private theorem pOf_mem_Nset (q : PPar k r) : pOf k r q ∈ Nset k r :=

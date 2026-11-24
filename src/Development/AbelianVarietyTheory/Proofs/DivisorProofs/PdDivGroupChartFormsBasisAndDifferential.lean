@@ -65,8 +65,7 @@ theorem ev_coe (n : ℕ) (P : MvPolynomial (Fin d) O) :
       MvPolynomial.aeval (c.x n) :=
     MvPolynomial.algHom_ext fun i => by
       simp [MvPolynomial.coeToMvPowerSeries.algHom_apply, (c.isEval n).1 i]
-  have h2 := DFunLike.congr_fun h P
-  simpa [MvPolynomial.coeToMvPowerSeries.algHom_apply] using h2
+  simpa [MvPolynomial.coeToMvPowerSeries.algHom_apply] using DFunLike.congr_fun h P
 
 theorem exists_split (n m : ℕ) (f : MvPowerSeries (Fin d) O) :
     ∃ (P : MvPolynomial (Fin d) O) (a : G.A n),
@@ -78,7 +77,6 @@ theorem exists_split (n m : ℕ) (f : MvPowerSeries (Fin d) O) :
   have hle : ∀ α : Fin d →₀ ℕ, α.degree < max N 2 →
       α ≤ Finsupp.equivFunOnFinite.symm fun _ => max N 2 := by
     intro α hα i
-    show α i ≤ max N 2
     exact (Finsupp.le_degree i α).trans hα.le
   obtain ⟨a, ha⟩ := hN (f - P) fun α hα => by
     rw [map_sub, MvPolynomial.coeff_coe, hP, coeff_trunc',
@@ -210,8 +208,7 @@ theorem exists_level_dvd [IsAdicComplete (Ideal.span {(p : O)}) O] (m : ℕ) :
     intro z hz
     obtain ⟨g, rfl⟩ := c.surj n z
     refine Ideal.mem_map_of_mem _ ?_
-    rw [RingHom.mem_ker, ← counit_ev c]
-    exact hz
+    rwa [RingHom.mem_ker, ← counit_ev c]
   have hy2 : y ∈ Ideal.map (c.ev n)
       (RingHom.ker (constantCoeff : MvPowerSeries (Fin d) O →+* O) ^ 2) := by
     rw [Ideal.map_pow]

@@ -111,8 +111,7 @@ theorem fourV_sb : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F)
       Continuous.integrable_of_hasCompactSupport
         (hf.1.continuous.mul (hcont.comp (continuous_id.dotProduct continuous_const))) hf.2.mul_right
     funext y
-    simp only [fourV, Pi.add_apply, add_mul]
-    exact integral_add (hint φ hφ y) (hint φ' hφ' y)
+    simpa only [fourV, Pi.add_apply, add_mul] using integral_add (hint φ hφ y) (hint φ' hφ' y)
 
 end GlobalTheory.WeylFour
 

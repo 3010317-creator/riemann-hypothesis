@@ -128,8 +128,7 @@ theorem Dict.existsUnique_isPt (v : B.V) : ∃! g, d.IsPt v g := by
     apply Units.ext
     have h := hg x
     simp only [s, E, AddEquiv.symm_apply_apply, Units.val_mul, Units.val_inv_eq_inv_val, Units.val_mk0]
-    rw [eq_mul_inv_iff_mul_eq₀ (Units.ne_zero _)]
-    exact h
+    rwa [eq_mul_inv_iff_mul_eq₀ (Units.ne_zero _)]
 
 theorem Dict.exists_isPt (g : N.Gt) : ∃ v, d.IsPt v g := by
   obtain ⟨w, hw⟩ := d.ab.2.1 g.b
@@ -145,8 +144,7 @@ theorem Dict.exists_isPt (g : N.Gt) : ∃ v, d.IsPt v g := by
     simp only [φ, map_add (f := _), Units.val_mul, Units.val_inv_eq_inv_val, mul_inv]
     have hS : (g.s (d.eX x + d.eX y) : ℂ) =
         g.s (d.eX x) * g.s (d.eX y) / N.θ (d.ex (B.ct x)) (d.ex (B.ct y)) (d.ex w) := by
-      rw [eq_div_iff (Units.ne_zero _)]
-      exact hm'
+      rwa [eq_div_iff (Units.ne_zero _)]
     have hθ : (N.θ (d.ex (B.ct x)) (d.ex (B.ct y)) (d.ex w) : ℂ) =
         d.fr (B.ct x + B.ct y + w) * d.fr (B.ct x) * d.fr (B.ct y) * d.fr w /
           (d.fr (B.ct x + B.ct y) * d.fr (B.ct x + w) * d.fr (B.ct y + w)) := by
@@ -174,11 +172,9 @@ theorem Dict.IsPt.add {d : Dict N B} {v v' : B.V} {g g' : N.Gt} (h : d.IsPt v g)
     simp only [Prod.fst_add, Prod.snd_add, AddMonoidHom.add_apply, AnArc.e_add, Units.val_div_eq_div_val,
       Units.val_mul, ← add_assoc]
     have h1 : (g.s (d.eX x) : ℂ) = eTwoPi (v.1 x) * d.fr (B.ct x) * d.fr v.2 / d.fr (B.ct x + v.2) := by
-      rw [eq_div_iff (Units.ne_zero _)]
-      exact e1
+      rwa [eq_div_iff (Units.ne_zero _)]
     have h2 : (g'.s (d.eX x) : ℂ) = eTwoPi (v'.1 x) * d.fr (B.ct x) * d.fr v'.2 / d.fr (B.ct x + v'.2) := by
-      rw [eq_div_iff (Units.ne_zero _)]
-      exact e2
+      rwa [eq_div_iff (Units.ne_zero _)]
     have hθ : (N.θ (d.ex (B.ct x)) (d.ex v.2) (d.ex v'.2) : ℂ) =
         d.fr (B.ct x + v.2 + v'.2) * d.fr (B.ct x) * d.fr v.2 * d.fr v'.2 /
           (d.fr (B.ct x + v.2) * d.fr (B.ct x + v'.2) * d.fr (v.2 + v'.2)) := by

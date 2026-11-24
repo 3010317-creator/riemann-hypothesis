@@ -413,8 +413,7 @@ theorem exists_isPrimitive_invol_invariant {B : Type} [CommRing B] [Fintype B] (
   refine ⟨ψ.compAddMonoidHom T, ?_, ?_⟩
   · intro a ha h
     have hex : ∃ u, a * u + c (a * u) ≠ 0 := by
-      by_contra hne
-      push Not at hne
+      by_contra! hne
       have h1 := hne 1
       have h2 := hne ω
       rw [mul_one] at h1
@@ -465,22 +464,19 @@ theorem sum_char_dot_eq_zero {B : Type} [CommRing B] [Fintype B] (χ : AddChar B
     obtain ⟨a, ha⟩ := Function.ne_iff.1 ht
     refine hχ ha ?_
     ext r
-    have h1 := DFunLike.congr_fun h0 (Pi.single a r)
-    simpa [f, Pi.single_apply, mul_comm] using h1
+    simpa [f, Pi.single_apply, mul_comm] using DFunLike.congr_fun h0 (Pi.single a r)
   exact AddChar.sum_eq_zero_iff_ne_zero.2 h
 
 theorem exists_dot_eq_of_indep {B : Type} [CommRing B] [Fintype B] (χ : AddChar B ℂ)
     (hχ : χ.IsPrimitive) {k n : ℕ} (x : Fin k → Fin n → B)
     (hx : ∀ s : Fin k → B, ∑ a, s a • x a = 0 → s = 0) (u : Fin k → B) :
     ∃ z : Fin n → B, ∀ a, ∑ i, x a i * z i = u a := by
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have h1 : ∑ z : Fin n → B, ∑ s : Fin k → B, χ (∑ a, s a * (∑ i, x a i * z i - u a)) = 0 := by
     refine Finset.sum_eq_zero fun z _ => ?_
     refine sum_char_dot_eq_zero χ hχ (fun a => ∑ i, x a i * z i - u a) ?_
     obtain ⟨a, ha⟩ := hne z
-    intro h0
-    exact ha (sub_eq_zero.1 (congrFun h0 a))
+    exact fun h0 => ha (sub_eq_zero.1 (congrFun h0 a))
   rw [Finset.sum_comm, Finset.sum_eq_single (0 : Fin k → B)] at h1
   · simp at h1
   · intro s _ hs
@@ -543,8 +539,7 @@ theorem dep_isUnit_of_skew (c : B →+* B) (hc : ∀ u, c (c u) = u) {ω : B} (h
   obtain ⟨θ, e, -, he, hce⟩ := exists_trace_one c hc hω
   refine isUnit_of_mul_isUnit_left (y := e) (hf _ ?_ ?_)
   · rw [map_mul, hu, hce]; ring
-  · intro h
-    exact h0 (he.mul_left_eq_zero.1 h)
+  · exact fun h => h0 (he.mul_left_eq_zero.1 h)
 
 theorem dep_unit_or_idem (c : B →+* B) (hc : ∀ u, c (c u) = u) {ω : B} (hω : IsUnit (ω - c ω))
     (hf : ∀ t, c t = t → t ≠ 0 → IsUnit t) {a : B} (h0 : a ≠ 0) :
@@ -742,10 +737,8 @@ theorem ncard_extend_prim_one : ∀ {B : Type} [CommRing B] [Fintype B] (c : B �
         rw [h0, zero_smul, zero_add] at hs
         have h3 := hx.eq_zero c (fun i => s i.succ) hs
         funext i
-        refine Fin.cases h0 (fun j => ?_) i
-        exact congrFun h3 j
-      · simp only [neg_smul, Finset.sum_neg_distrib]
-        exact eq_neg_of_add_eq_zero_left hs
+        exact Fin.cases h0 (fun j => (congrFun h3 j)) i
+      · simpa only [neg_smul, Finset.sum_neg_distrib] using eq_neg_of_add_eq_zero_left hs
   have h3 : S.ncard ≤ Z.ncard := Set.ncard_le_ncard h1 (Set.toFinite _)
   have h4 : Z.ncard ≤ S.ncard + 2 * q ^ n :=
     (Set.ncard_le_ncard h2 (Set.toFinite _)).trans
@@ -848,8 +841,7 @@ theorem ncard_sols_eta [Fintype B] (c : B →+* B) (hc : ∀ u, c (c u) = u) (ω
     intro _ G _
     have h1 : sols c n G = Set.univ := by
       ext x
-      simp only [Set.mem_univ, iff_true]
-      exact ⟨⟨x, fun a => a.elim0⟩, fun a => a.elim0⟩
+      simpa only [Set.mem_univ, iff_true] using ⟨⟨x, fun a => a.elim0⟩, fun a => a.elim0⟩
     have h2 : (0 : ℝ) ≤ 2 ^ (2 * 0 + 1) / 2 ^ n := by positivity
     rw [h1, Set.ncard_univ, Nat.card_unique]
     simp only [mul_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, tsub_self,
@@ -976,8 +968,7 @@ theorem henselStep_count {V W T : Type} [AddCommGroup V] [AddCommGroup W] [AddCo
     · simp
     · rintro ⟨⟨y, hy⟩, ⟨w, hw⟩⟩
       have : y + ι w + ι (-w) = y := by simp
-      refine Sigma.subtype_ext ?_ rfl
-      exact Subtype.ext this
+      exact Sigma.subtype_ext (Subtype.ext this) rfl
     · rintro ⟨⟨u, hu⟩, w⟩
       simp
   have hb : ∀ y : S1, Nat.card {w : W // (y : V) + ι w ∈ S2} * Nat.card T1 =
@@ -996,8 +987,7 @@ theorem henselStep_count {V W T : Type} [AddCommGroup V] [AddCommGroup W] [AddCo
     constructor
     · rintro ⟨-, h⟩
       exact (T2.add_mem_cancel_left (T2.add_mem (h3 w) hw0)).1 h
-    · intro h
-      exact ⟨hP y hy w, T2.add_mem (T2.add_mem (h3 w) hw0) h⟩
+    · exact fun h => ⟨hP y hy w, T2.add_mem (T2.add_mem (h3 w) hw0) h⟩
   haveI := Fintype.ofFinite S1
   rw [Nat.card_sigma] at ha
   have hc : S2.ncard * Nat.card W * Nat.card T1 = S1.ncard * (Nat.card W * Nat.card T2) := by
@@ -1061,8 +1051,7 @@ theorem hensel_step [Finite A] (c : A →+* A) (hc : ∀ u, c (c u) = u) {ω : A
   have hq : c (p ^ (i + 1)) = p ^ (i + 1) := by rw [map_pow, hp]
   refine GlobalTheory.henselStep_count (DistribSMul.toAddMonoidHom (Fin m → Fin n → A) (p ^ (i + 1)))
     (henselGram c) _ _ _ G ?_ ?_ ?_
-  · intro H hH
-    exact ⟨hH.1, fun a b => (pow_dvd_pow p (by omega)).trans (hH.2 a b)⟩
+  · exact fun H hH => ⟨hH.1, fun a b => (pow_dvd_pow p (by omega)).trans (hH.2 a b)⟩
   · rintro x ⟨y, hy⟩ w
     refine prim_of_sub_mem c hc (Ideal.span {p}) ?_ _ y fun a b => ?_
     · intro u hu
@@ -1120,8 +1109,7 @@ theorem hensel_iter [Finite A] (c : A →+* A) (hc : ∀ u, c (c u) = u) {ω : A
     have h := hensel_step c hc hω hp hn m n G k
     have hpos : 0 < Nat.card (henselHerm c m (p ^ (k + 1))) := Nat.card_pos
     refine Nat.eq_of_mul_eq_mul_right hpos ?_
-    rw [show k + 1 + 1 = k + 2 from rfl]
-    rw [mul_right_comm, ih, mul_right_comm, h, mul_right_comm]
+    rw [show k + 1 + 1 = k + 2 from rfl, mul_right_comm, ih, mul_right_comm, h, mul_right_comm]
 
 theorem hensel_count : ∀ {A : Type} [CommRing A] [Finite A] (c : A →+* A), (∀ u, c (c u) = u) → ∀ (ω : A), IsUnit (ω - c ω) → ∀ (p : A), c p = p → IsNilpotent p → ∀ (m n : ℕ) (G : Matrix (Fin m) (Fin m) A), (∀ a b, c (G b a) = G a b) → Set.ncard (sols c n G) * Nat.card {H : Matrix (Fin m) (Fin m) A // (∀ a b, c (H b a) = H a b) ∧ ∀ a b, p ∣ H a b} = Set.ncard {x : Fin m → Fin n → A | Prim c x ∧ ∀ a b, p ∣ ip c (x b) (x a) - G a b} := by
   intro A _ _ c hc ω hω p hp hn m n G hG
@@ -1266,8 +1254,7 @@ theorem count_quot (c : O →+* O) (hc : ∀ u, c (c u) = u) (ω : O) (hω : IsU
     obtain ⟨θ, -, hθ, -, -⟩ := exists_trace_one c hc hω
     obtain ⟨u, rfl⟩ := Ideal.Quotient.mk_surjective t
     have h' : Ideal.Quotient.mk (Ideal.span {p}) (c u) = Ideal.Quotient.mk _ u := by
-      rw [hcBdef, quotInv_mk] at ht
-      exact ht
+      rwa [hcBdef, quotInv_mk] at ht
     have hv : c (θ * u + c (θ * u)) = θ * u + c (θ * u) := by
       rw [map_add (f := _), hc, add_comm]
     have hmk : Ideal.Quotient.mk (Ideal.span {p}) (θ * u + c (θ * u)) =
@@ -1276,13 +1263,11 @@ theorem count_quot (c : O →+* O) (hc : ∀ u, c (c u) = u) (ω : O) (hω : IsU
     have hnd : ¬ p ∣ θ * u + c (θ * u) := by
       intro hd
       apply ht0
-      rw [← hmk, Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton]
-      exact hd
+      rwa [← hmk, Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton]
     rw [← hmk]
     exact (hK _ hv hnd).map _
   have hcardB : Fintype.card (O ⧸ Ideal.span {p}) = q ^ 2 := by
-    rw [← Nat.card_eq_fintype_card]
-    exact h1
+    rwa [← Nat.card_eq_fintype_card]
 
   have h29 := _root_.GlobalTheory.GramCount.hensel_count cA hcA _ hωA pA hpA hnil m n GA hGA
   have h31 := _root_.GlobalTheory.GramCount.ncard_gram_mod_eq_card_ker_pow_mul cA cB hcA pA hnil φ hsurj hφc hker m n GA
@@ -1441,8 +1426,7 @@ theorem primitive_gram_count : ∀ {F : Type} [Field F] [ValuativeRel F] [Topolo
       exact congrArg Subtype.val hk
     · rintro ⟨c0, hc0, h⟩
       refine ⟨⟨c0, hc0⟩, Subtype.ext ?_⟩
-      rw [← hpv j] at h
-      exact h
+      rwa [← hpv j] at h
 
   have hrepQ : ∀ z : L.O ⧸ Ideal.span {p ^ j}, ∃ w : E, ∃ hw : w ∈ L.O,
       w ∈ R ∧ Ideal.Quotient.mk _ (⟨w, hw⟩ : L.O) = z := by
@@ -1463,8 +1447,7 @@ theorem primitive_gram_count : ∀ {F : Type} [Field F] [ValuativeRel F] [Topolo
         algebraMap F E ((ϖ : F) ^ j) * c0 := hc
     obtain ⟨w', -, huniq⟩ := hrep w (hR w hw)
     have ea := huniq _ ⟨hrpR _, -c0, neg_mem hc0, by rw [mul_neg, ← hc']; ring⟩
-    have eb := huniq w ⟨hw, 0, zero_mem _, by rw [sub_self, mul_zero]⟩
-    exact ea.trans eb.symm
+    exact ea.trans (huniq w ⟨hw, 0, zero_mem _, by rw [sub_self, mul_zero]⟩).symm
 
   have hfv : ∀ u v : Fin n → L.O,
       hf L 1 (fun i => (u i : E)) (fun i => (v i : E)) = ((ip c u v : L.O) : E) := by
@@ -1523,12 +1506,10 @@ theorem primitive_gram_count : ∀ {F : Type} [Field F] [ValuativeRel F] [Topolo
         funext fun a => funext fun i => hrpmk (z a i)
       refine ⟨fun a i => hrpR (z a i), (hEprim u).2 ?_, (hgram u).2 ?_⟩
       · apply prim_of_map c hc cA _ hφc' Ideal.Quotient.mk_surjective hk
-        rw [hu]
-        exact hzp
+        rwa [hu]
       · intro a b
         have e := hzg a b
-        rw [← hu] at e
-        exact e
+        rwa [← hu] at e
   have hinj : Function.Injective
       (fun (z : Fin m → Fin n → L.O ⧸ Ideal.span {p ^ j}) (a : Fin m) (i : Fin n) => rp (z a i)) := by
     intro z z' h

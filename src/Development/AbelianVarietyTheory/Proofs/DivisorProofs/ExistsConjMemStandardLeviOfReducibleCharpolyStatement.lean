@@ -328,12 +328,8 @@ theorem exists_dual_bases : ∀ {D : D7} {V : HSp D} (X X' : Submodule D.host.E 
   · apply Submodule.eq_of_le_of_finrank_eq
     · rw [Submodule.span_le]; rintro _ ⟨j, rfl⟩; exact hx'X j
     · rw [finrank_span_eq_card hx'li]; simp [a]; omega
-  · intro i j
-    show V.hT (x j) (x i) = 0
-    exact hTX (hxX j) (hxX i)
-  · intro i j
-    show V.hT (x' j) (x' i) = 0
-    exact hTX' (hx'X j) (hx'X i)
+  · exact fun i j => hTX (hxX j) (hxX i)
+  · exact fun i j => hTX' (hx'X j) (hx'X i)
   · intro i j
     show V.hT (x' j) (x i) = _
     rw [← hT_herm, hxx']
@@ -426,8 +422,7 @@ theorem exists_root (K : Type) [Field K] [Algebra F K] (h2 : Module.finrank F E 
     (ha : a ∉ Set.range (algebraMap F E)) (t s : F)
     (hts : a * a = algebraMap F E t * a - algebraMap F E s) (hK : ¬ IsField (K ⊗[F] E)) :
     ∃ β : K, β * β - algebraMap F K t * β + algebraMap F K s = 0 := by
-  by_contra hno
-  push Not at hno
+  by_contra! hno
   apply hK
   haveI : Nontrivial (K ⊗[F] E) :=
     (Algebra.TensorProduct.includeLeft_injective (R := F) (S := F) (A := K) (B := E)
@@ -685,8 +680,7 @@ theorem exists_split_factor : ∀ {F E : Type} [Field F] [Field E] [Algebra F E]
   intro F E _ _ _ n σ J γ hn hreg hAlg hRank hirr hnf
   obtain ⟨k, K, hK, hKA, ⟨e⟩⟩ := hRank.1
   refine ⟨k, K, hK, hKA, ⟨e⟩, ?_⟩
-  by_contra hall
-  push Not at hall
+  by_contra! hall
   have h2 := hRank.2 k K ⟨e⟩
   have hk1 : 1 ≤ k := h2.2.1 ⟨⟨0, hn⟩⟩
   rcases Nat.lt_or_ge k 2 with hk | hk
@@ -943,8 +937,7 @@ theorem idem_isotropic_pair : ∀ {D : D7} {V : HSp D} (γ : GF V) (ε : Matrix 
   have herm : cT σ J = J := _root_.GlobalTheory.AutFunCounterexample.gram_herm V
   have hR' : cT σ ε' * J = J * ε := by
     have h := congrArg (cT σ) hR
-    rw [cT_mul, cT_mul, herm, cTcT] at h
-    exact h
+    rwa [cT_mul, cT_mul, herm, cTcT] at h
   have h0 : ε' * ε = 0 := cancel _ _ (by rw [← Matrix.mul_assoc, hR, hiso, Matrix.mul_zero])
   set g := (γ.1 : Matrix (Fin V.rank) (Fin V.rank) D.host.E) with hg
   set gi := ((γ.1⁻¹ : GL (Fin V.rank) D.host.E) : Matrix (Fin V.rank) (Fin V.rank) D.host.E) with hgi

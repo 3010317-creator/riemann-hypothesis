@@ -217,9 +217,7 @@ theorem cover_KHT (P : CCF) (G : HTGroup p) (L : G.Level) (B : GlobalTheory.LKDe
   let k : G.GAf × Gr G 1 := (k₁, psiP G u.2)
   have hk : k ∈ L.K.toSubgroup.prod (KHT p G.m G.n 1 G.Fw) := Subgroup.mem_prod.2 ⟨hk₁, hk₂⟩
   refine ⟨B.emb δ, ⟨δ, rfl⟩, (B.emb δ)⁻¹ * g * k⁻¹, ⟨s', hs', ?_⟩, k, hk, by group⟩
-  have hΨz : Ψ (z₁, z₂) = fH g := by
-    refine Prod.ext ?_ hψ₂
-    exact psiAway_psiAway_inv G x _
+  have hΨz : Ψ (z₁, z₂) = fH g := Prod.ext (psiAway_psiAway_inv G x _) hψ₂
   have hΨd : Ψ (dg G.C p (δ : G.Cˣ × ℚˣ)) = fH (B.emb δ) := by
     refine Prod.ext ?_ ?_
     · exact (toAfF_eq_psiAway G B.β x t hx δ).symm

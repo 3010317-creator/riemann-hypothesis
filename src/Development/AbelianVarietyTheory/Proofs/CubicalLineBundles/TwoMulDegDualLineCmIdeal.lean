@@ -79,8 +79,7 @@ theorem _root_.GlobalTheory.CM.deg_ideal_smul {K V : Type} [Field K] [NumberFiel
     have hc := h.conj_symm s v v
     apply Complex.ext
     · simp [hf s]
-    · simp only [Complex.ofReal_im]
-      exact Complex.conj_eq_iff_im.mp hc
+    · simpa only [Complex.ofReal_im] using Complex.conj_eq_iff_im.mp hc
   have hcFG : (𝔠 : Submodule (𝓞 K) K).FG := FractionalIdeal.fg_of_isNoetherianRing le_rfl 𝔠
   obtain ⟨r, w, hw⟩ := _root_.ReciprocityTheory.GeometryOfNumbersTheory.exists_isFullRankFamily_of_fg (𝔠 : Submodule (𝓞 K) K) hcFG
   have hw' := hw
@@ -97,8 +96,7 @@ theorem _root_.GlobalTheory.CM.deg_ideal_smul {K V : Type} [Field K] [NumberFiel
       obtain ⟨t, rfl, ht⟩ := hz
       have ht' : t ∈ Submodule.span K (Set.range w) := hwspan ht
       have hmem := Submodule.mem_map_of_mem (f := LinearMap.toSpanSingleton K V v) ht'
-      rw [Submodule.map_span, ← Set.range_comp] at hmem
-      exact hmem
+      rwa [Submodule.map_span, ← Set.range_comp] at hmem
   have hΛFG : Λ.FG := hΛmap ▸ hcFG.map φ
   have hrel : (Submodule.span (𝓞 K) (Set.range (fun i => φ (w i)))).toAddSubgroup.relIndex
       Λ.toAddSubgroup = (Submodule.span (𝓞 K) (Set.range w)).toAddSubgroup.relIndex

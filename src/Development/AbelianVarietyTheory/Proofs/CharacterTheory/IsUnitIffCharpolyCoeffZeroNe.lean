@@ -85,8 +85,7 @@ theorem _root_.GlobalTheory.CuspGL.ipGL_charpoly_eq_finsum_mass (F : Type) [Fiel
       exists_prop]
     rw [hunit]
     constructor
-    · intro h
-      exact ⟨_, ⟨h, g, rfl⟩, rfl⟩
+    · exact fun h => ⟨_, ⟨h, g, rfl⟩, rfl⟩
     · rintro ⟨P, ⟨hP, _⟩, rfl⟩
       exact hP
   have hsupp : S ∩ Function.support (fun P => _root_.GlobalTheory.CuspGL.mass φ P * star (s P)) =
@@ -100,8 +99,7 @@ theorem _root_.GlobalTheory.CuspGL.ipGL_charpoly_eq_finsum_mass (F : Type) [Fiel
       apply hne
       have hempty : {g : Module.End F V | LinearMap.charpoly g = P} = ∅ := by
         ext g
-        simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
-        exact fun h => hr ⟨g, h⟩
+        simpa only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false] using fun h => hr ⟨g, h⟩
       unfold _root_.GlobalTheory.CuspGL.mass
       simp [hempty]
     · rintro ⟨⟨hPS, _⟩, hne⟩
@@ -117,7 +115,6 @@ theorem _root_.GlobalTheory.CuspGL.ipGL_charpoly_eq_finsum_mass (F : Type) [Fiel
     rw [Set.Finite.mem_toFinset] at hg
     show φ g * star (s (LinearMap.charpoly g)) = _
     rw [show LinearMap.charpoly g = P from hg]
-  · intro P _ Q _ hPQ
-    exact Set.disjoint_left.2 fun g hP hQ => hPQ (hP.symm.trans hQ)
+  · exact fun P _ Q _ hPQ => Set.disjoint_left.2 fun g hP hQ => hPQ (hP.symm.trans hQ)
 
 end GlobalTheory.CuspGL

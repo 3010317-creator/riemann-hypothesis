@@ -63,15 +63,13 @@ theorem fn_hahnSeries_of_hasQ : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ) (
     rw [hh, hΦ1]; simp
   have h0 : ∀ r : ℚ, (∀ k : ℕ, r ≠ (k : ℚ) / N) → h.coeff r = 0 := fun r hr => hΦ0 _ r hr
   refine ⟨h, ⟨⟨N, hN, fun r hr => ?_⟩, 0, fun z hz => ?_⟩, hc, h0⟩
-  · by_contra hne
-    push Not at hne
+  · by_contra! hne
     exact hr (h0 r fun k hk => hne k (by rw [hk]; push_cast; rfl))
   · have hc' : ∀ k : ℕ, h.coeff (((0 + k : ℤ) : ℚ) / N) = a k := fun k => by
       simpa using hc k
     have h0' : ∀ r : ℚ, (∀ k : ℕ, r ≠ ((0 + k : ℤ) : ℚ) / N) → h.coeff r = 0 := fun r hr =>
       h0 r fun k hk => hr k (by simpa using hk)
     rw [fn_hasSum_reindex_nat Ω ε h N 0 a z (up f z) hN hc' h0']
-    have hq := (hasQ_iff N f _).mp hf ⟨z, hz⟩
-    simpa [up, UpperHalfPlane.ofComplex_apply_of_im_pos hz] using hq
+    simpa [up, UpperHalfPlane.ofComplex_apply_of_im_pos hz] using (hasQ_iff N f _).mp hf ⟨z, hz⟩
 
 end GlobalTheory

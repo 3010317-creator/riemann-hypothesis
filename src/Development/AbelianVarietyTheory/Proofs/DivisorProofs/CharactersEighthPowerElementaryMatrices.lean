@@ -155,8 +155,7 @@ theorem characters_eighthPower_elementaryMatrices : ∀ (R : Type) [CommRing R] 
     · rw [Category.assoc, hicp w w, ite_eq_left rfl, Category.comp_id]
     · intro v _ hv
       rw [Category.assoc, hicp v w, ite_eq_right (Ne.symm hv), MonObj.comp_one]
-    · intro h
-      exact absurd (Finset.mem_univ w) h
+    · exact fun h => absurd (Finset.mem_univ w) h
   have hprod : (∏ v, pG v ≫ ic v) = 𝟙 G' := by
     have hm : IsMonHom (∏ v, pG v ≫ ic v) :=
       isMonHom_prod _ (fun v => by haveI := hpG v; haveI := hicm v; infer_instance) _
@@ -186,8 +185,7 @@ theorem characters_eighthPower_elementaryMatrices : ∀ (R : Type) [CommRing R] 
         (∑ v ∈ s, (c v).comp (d v)) := by
       intro s
       refine Finset.induction_on s ?_ ?_
-      · rw [Finset.prod_empty, Finset.sum_empty]
-        exact hone'
+      · rwa [Finset.prod_empty, Finset.sum_empty]
       · intro a s ha ih
         rw [Finset.prod_insert ha, Finset.sum_insert ha]
         have h1 := torMatch_comp R hR G' hG' D' A' U' R hR G hG D A U (RingHom.id R) (ic a).left R hR G' hG' D' A' U'

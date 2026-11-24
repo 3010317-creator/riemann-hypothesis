@@ -416,8 +416,7 @@ theorem cube_bound (B : RowsAut) (c : InfinitePlace B.I.F → ℝ) (s : ℝ) {m 
     constructor
     · intro h v j
       simpa using h (ee.symm (v, j))
-    · intro h l
-      exact h _ _
+    · exact fun h l => h _ _
   have hL : ∫⁻ t in Set.pi Set.univ (fun _ : Fin (m * B.I.n ^ 2) => Set.Icc (0 : ℝ) s), ‖φ (y * Pr t)‖ₑ ^ 2 ≤
       ENNReal.ofReal (Real.exp B.I.f * ∏ v, c v) * ∫⁻ a in S, ‖φ (y * (a, 1))‖ₑ ^ 2 ∂(muInf B.I) := by
     rw [← hψ.setLIntegral_comp_preimage (MeasurableSet.univ_pi fun _ => measurableSet_Icc)

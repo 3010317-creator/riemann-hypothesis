@@ -212,8 +212,7 @@ theorem exists_of_pull1_eq (h₁ : IsMor κ₁ s₁ κ' s' σ₁ p₁) (h₂ : I
       G T' - φ.φ (G T) = pv h₁ f φ - (pv h₂ g φ + algebraMap R' T'.B r * pv h₂ b φ) := by
   have e' : H1.mk (O κ' s') (h₁.coef.pullbackOneCocycle f) =
       H1.mk (O κ' s') (h₂.coef.pullbackOneCocycle g + r • h₂.coef.pullbackOneCocycle b) := by
-    rw [map_add (f := _), map_smul]
-    exact e
+    rwa [map_add (f := _), map_smul]
   obtain ⟨G, hG⟩ := H1.mk_eq_mk.1 e'
   refine ⟨G, fun T T' φ ↦ ?_⟩
   rw [← Algebra.smul_def]
@@ -576,8 +575,7 @@ theorem chern_eq_sum_cup_form : GlobalTheory.Published.AbelianDeRham → ∀ (K 
       Form.cl _ w = ((c : primDR A) : FirstDeRham (A.hom ≫ 𝟙 (Sp K))) := fun c ↦ by
     have hc := c.2
     change ((c : primDR A) : FirstDeRham (A.hom ≫ 𝟙 (Sp K))) ∈ F1 _ at hc
-    rw [hodgeFiltration_eq_range] at hc
-    exact hc
+    rwa [hodgeFiltration_eq_range] at hc
   choose form hform using hform
   have hanti : ∀ u v : FirstDeRham (A.hom ≫ 𝟙 (Sp K)),
       cup (O (dp0 K) (A.hom ≫ 𝟙 (Sp K))) u v = -cup (O (dp0 K) (A.hom ≫ 𝟙 (Sp K))) v u := fun u v ↦ by
@@ -756,8 +754,7 @@ theorem le_preimage_of_red {B : Type} [CommRing B] {X : Scheme.{0}} (f : DualNum
   intro p _
   obtain ⟨q, rfl⟩ := spMap_fst_surjective f hf p
   have := h (Set.mem_univ q)
-  rw [← e] at this
-  exact this
+  rwa [← e] at this
 
 theorem ev_eq_of_triv {R : Type} [CommRing R] {X : Scheme.{0}} {s : X ⟶ Sp R} (ω : Form s)
     {T₁ T₂ T : Thick (dp0 R) s} (a : T₁ ⟶ T₂) (ψ : T₂ ⟶ T) (φ : T₁ ⟶ T) (h₁ : T₁.J = ⊥) (h₂ : T₂.J = ⊥)
@@ -1078,8 +1075,7 @@ private theorem snd_signed_sum_add {B : Type} [CommRing B] (a b c d a' b' c' d' 
 theorem prism_add' {I : Type} {U : I → A.left.Opens} (z z' : C2 (OSmall U)) {v : epsR K ⟶ A}
     (hv : IsTangent v) {P Q : GPt A} (φ : P.Hom Q) (h : ∃ i, P.In (U i)) :
     prism (z + z') hv φ h = prism z hv φ h + prism z' hv φ h := by
-  simp only [prism, ev2, Pi.add_apply]
-  exact snd_signed_sum_add _ _ _ _ _ _ _ _
+  simpa only [prism, ev2, Pi.add_apply] using snd_signed_sum_add _ _ _ _ _ _ _ _
 
 private theorem snd_signed_sum_zero (B : Type) [CommRing B] :
     TrivSqZeroExt.snd ((0 : DualNumber B) - 0 - (0 - 0)) = 0 := by
@@ -1088,8 +1084,7 @@ private theorem snd_signed_sum_zero (B : Type) [CommRing B] :
 theorem prism_zero' {I : Type} {U : I → A.left.Opens} {v : epsR K ⟶ A}
     (hv : IsTangent v) {P Q : GPt A} (φ : P.Hom Q) (h : ∃ i, P.In (U i)) :
     prism (0 : C2 (OSmall U)) hv φ h = 0 := by
-  simp only [prism, ev2, Pi.zero_apply]
-  exact snd_signed_sum_zero _
+  simpa only [prism, ev2, Pi.zero_apply] using snd_signed_sum_zero _
 
 private theorem snd_signed_sum_sub {B : Type} [CommRing B] (a b c d a' b' c' d' : DualNumber B) :
     TrivSqZeroExt.snd (a - a' - (b - b') - (c - c' - (d - d'))) =
@@ -1100,8 +1095,7 @@ private theorem snd_signed_sum_sub {B : Type} [CommRing B] (a b c d a' b' c' d' 
 theorem prism_sub' {I : Type} {U : I → A.left.Opens} (z z' : C2 (OSmall U)) {v : epsR K ⟶ A}
     (hv : IsTangent v) {P Q : GPt A} (φ : P.Hom Q) (h : ∃ i, P.In (U i)) :
     prism (z - z') hv φ h = prism z hv φ h - prism z' hv φ h := by
-  simp only [prism, ev2, Pi.sub_apply]
-  exact snd_signed_sum_sub _ _ _ _ _ _ _ _
+  simpa only [prism, ev2, Pi.sub_apply] using snd_signed_sum_sub _ _ _ _ _ _ _ _
 
 theorem prism_sum' {I J : Type} {U : I → A.left.Opens} (t : Finset J) (z : J → C2 (OSmall U))
     {v : epsR K ⟶ A} (hv : IsTangent v) {P Q : GPt A} (φ : P.Hom Q) (h : ∃ i, P.In (U i)) :

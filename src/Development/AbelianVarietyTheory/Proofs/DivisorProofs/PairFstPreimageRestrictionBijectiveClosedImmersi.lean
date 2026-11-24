@@ -60,8 +60,7 @@ theorem pair_pre_bijective : ∀ (R' : Type) [CommRing R'] (X Y Y' : Scheme.{0})
   have hG : Monotone (fun p : Pair ψ ↦ preU χ p.1.1) := fun _ _ h ↦ preU_mono χ (Pair.le_fst h)
   have hF : pairFst ψ ⋙ preAff χ = hG.functor.op := rfl
   have key := GlobalTheory.T.structureSheafCohomology_basis_bijective R' Y' q' (Pair ψ) (fun p ↦ preU χ p.1.1) hG ?cov ?dir
-  · rw [hF]
-    exact key
+  · rwa [hF]
   case cov =>
     intro U x hx
     obtain ⟨t, ht, hte⟩ := χ.isClosedEmbedding.isInducing.isOpen_iff.1 U.1.2
@@ -73,8 +72,7 @@ theorem pair_pre_bijective : ∀ (R' : Type) [CommRing R'] (X Y Y' : Scheme.{0})
     refine ⟨⟨(V, W), fun y hy ↦ (hVle hy).2⟩, hV, ?_⟩
     intro y hy
     have : χ y ∈ t := (hVle hy).1
-    rw [← Set.mem_preimage, hte] at this
-    exact this
+    rwa [← Set.mem_preimage, hte] at this
   case dir =>
     intro a b x ha hb
     have hya : ψ (χ x) ∈ a.1.2.1 := a.2 ha

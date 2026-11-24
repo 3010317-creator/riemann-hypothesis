@@ -132,8 +132,7 @@ theorem mem_ext_iff (h𝔞 : ∀ p, p ∈ 𝔞 ↔ ε p = 0) (x : P) :
       refine Ideal.map_le_iff_le_comap.2 ?_ hy
       intro a ha
       simp [Ideal.mem_comap, ha]
-    rw [map_add (f := _), (h𝔞 z).1 hz, add_zero]
-    exact hy'
+    rwa [map_add (f := _), (h𝔞 z).1 hz, add_zero]
   · intro h
     have hx : x = algebraMap B P (ε x) + (x - algebraMap B P (ε x)) := by ring
     rw [hx]
@@ -148,8 +147,7 @@ theorem th_of_mem (h𝔞 : ∀ p, p ∈ 𝔞 ↔ ε p = 0) {y : P} (hy : y ∈ �
     rw [HasAntidiagonal.mem_antidiagonal] at hp
     have : p.1 ≠ 0 := fun h ↦ hne (Prod.ext h (by simp only; omega))
     rw [δ.dpow_eval_zero this, map_zero, zero_mul]
-  · intro h
-    exact absurd (HasAntidiagonal.mem_antidiagonal.2 (zero_add n)) h
+  · exact fun h => absurd (HasAntidiagonal.mem_antidiagonal.2 (zero_add n)) h
 
 theorem th_algebraMap (j : B) (n : ℕ) : th δ ε η n (algebraMap B P j) = algebraMap B P (δ.dpow n j) := by
   simp only [th, AlgHom.commutes, Algebra.algebraMap_self, RingHom.id_apply, sub_self]
@@ -159,8 +157,7 @@ theorem th_algebraMap (j : B) (n : ℕ) : th δ ε η n (algebraMap B P j) = alg
     rw [HasAntidiagonal.mem_antidiagonal] at hp
     have : p.2 ≠ 0 := fun h ↦ hne (Prod.ext (by simp only; omega) h)
     rw [η.dpow_eval_zero this, mul_zero]
-  · intro h
-    exact absurd (HasAntidiagonal.mem_antidiagonal.2 (add_zero n)) h
+  · exact fun h => absurd (HasAntidiagonal.mem_antidiagonal.2 (add_zero n)) h
 
 theorem th_null (h𝔞 : ∀ p, p ∈ 𝔞 ↔ ε p = 0) (n : ℕ) (x : P) (hx : x ∉ J.map (algebraMap B P) ⊔ 𝔞) :
     th δ ε η n x = 0 := by

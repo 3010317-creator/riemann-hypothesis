@@ -99,16 +99,13 @@ theorem formallyUnramified_cycAway {N : ℕ} (hN : N ≠ 0) (R : Type) [CommRing
     | one => exact Derivation.map_one_eq_zero _
     | add x y hx' hy' hx hy =>
       have := map_add (KaehlerDifferential.D R (cycAway N)) ⟨x, hx'⟩ ⟨y, hy'⟩
-      rw [hx, hy, add_zero] at this
-      exact this
+      rwa [hx, hy, add_zero] at this
     | neg x hx' hx =>
       have := map_neg (KaehlerDifferential.D R (cycAway N)) ⟨x, hx'⟩
-      rw [hx, neg_zero] at this
-      exact this
+      rwa [hx, neg_zero] at this
     | mul x y hx' hy' hx hy =>
       have := (KaehlerDifferential.D R (cycAway N)).leibniz ⟨x, hx'⟩ ⟨y, hy'⟩
-      rw [hx, hy, smul_zero, smul_zero, add_zero] at this
-      exact this
+      rwa [hx, hy, smul_zero, smul_zero, add_zero] at this
   refine ⟨subsingleton_of_forall_eq 0 fun ω => ?_⟩
   have hω : ω ∈ Submodule.span (cycAway N) (Set.range (KaehlerDifferential.D R (cycAway N))) := by
     rw [KaehlerDifferential.span_range_derivation]; trivial

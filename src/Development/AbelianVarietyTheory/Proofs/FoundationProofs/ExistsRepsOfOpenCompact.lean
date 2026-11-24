@@ -101,8 +101,7 @@ theorem finite_stab (V : HSp D) (hV : ∀ τ, (gramAt D V τ).PosDef) (J : Subgr
     (hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hK').finite_of_discrete
   refine Set.Finite.subset hfin fun γ hγ => ⟨x⁻¹ * γ.1 * x, hKe _ ?_, by group⟩
   have h := hJ _ ((Bridge.mem_stab _).1 hγ)
-  rw [map_mul, map_mul, map_inv]
-  exact h
+  rwa [map_mul, map_mul, map_inv]
 
 theorem exists_cover_of_compact {G H : Type} [Group G] [Group H] [TopologicalSpace G] [IsTopologicalGroup G] (Γ : Subgroup G)
     (π : G →* H) (hπ : Function.Surjective π) (J : Subgroup H) (ho : IsOpen (J.comap π : Set G)) {C : Set G} (hC : IsCompact C)

@@ -123,8 +123,7 @@ theorem hpk_mul_apply' {X : Type*} (A : Matrix (Fin (2 * r + k + 1)) X ℂ) (i :
   · rw [HU.hpk_row, ite_eq_left rfl]
   · intro m _ hm
     rw [HU.hpk_row, ite_eq_right hm, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem hpk_Ew : Hpk k r * Ew k r = Ew k r := by
   ext i c
@@ -390,8 +389,7 @@ theorem blk_unitary {g : Mat k r} (hg : g ∈ SW k r) : blk g ∈ U1 k := by
       Matrix.mul_assoc (Ew k r * A), hE, Matrix.mul_one, sub_self, zero_add]
   have hEI : (Ew k r)ᵀ * (iota (r := r) A)ᴴ = Aᴴ * (Ew k r)ᵀ := by
     have := congrArg Matrix.conjTranspose hIE
-    rw [Matrix.conjTranspose_mul, Matrix.conjTranspose_mul, Ew_conjT] at this
-    exact this
+    rwa [Matrix.conjTranspose_mul, Matrix.conjTranspose_mul, Ew_conjT] at this
   have key : (Ew k r)ᵀ * ((iota (r := r) A)ᴴ * Hpk k r * iota (r := r) A) * Ew k r = Aᴴ * A := by
     calc (Ew k r)ᵀ * ((iota (r := r) A)ᴴ * Hpk k r * iota (r := r) A) * Ew k r
         = ((Ew k r)ᵀ * (iota (r := r) A)ᴴ) * Hpk k r * (iota (r := r) A * Ew k r) := by
@@ -637,7 +635,6 @@ theorem continuous_iM : Continuous (iM k r) := by
   exact continuous_const.add ((continuous_const.matrix_mul continuous_id).matrix_mul continuous_const)
 
 theorem continuous_bM : Continuous (bM k r) := by
-  show Continuous fun y : Mt k r => (((Ew k r)ᵀ * Matrix.of y * Ew k r : Matrix (Fin k) (Fin k) ℂ))
   exact (continuous_const.matrix_mul continuous_id).matrix_mul continuous_const
 
 theorem iM_memb : MeasurableEmbedding (iM k r) :=

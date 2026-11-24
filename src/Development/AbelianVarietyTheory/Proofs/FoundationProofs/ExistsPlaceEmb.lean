@@ -69,8 +69,7 @@ theorem norm_le_one_of_isIntegral {R C : Type} [CommRing R] [NormedField C] [IsU
   have h1 : IsIntegral (NormedField.valuation (K := C)).integer x :=
     hx.map_of_comp_eq f (RingHom.id C) (by ext r; rfl)
   have h2 := (Valuation.integer.integers (NormedField.valuation (K := C))).mem_of_integral h1
-  rw [Valuation.mem_integer_iff, NormedField.valuation_apply, ← NNReal.coe_le_coe] at h2
-  exact h2
+  rwa [Valuation.mem_integer_iff, NormedField.valuation_apply, ← NNReal.coe_le_coe] at h2
 
 variable {E C : Type} [Field E] [NumberField E] [NormedField C] [IsUltrametricDist C]
 
@@ -169,8 +168,7 @@ theorem sum_eq_zero (a b : E →+* PadicAlgCl l) (h : ∀ x, ‖a x‖ < 1 ↔ �
     · have := (hcl a).compl.isClosed.union (hcl b).isClosed
       convert this using 1
       ext c
-      simp only [Set.mem_setOf_eq, Set.mem_union, Set.mem_compl_iff]
-      exact imp_iff_not_or
+      simpa only [Set.mem_setOf_eq, Set.mem_union, Set.mem_compl_iff] using imp_iff_not_or
     · have e : ∀ f : E →+* PadicAlgCl l,
           ∑ k, (Pi.map (fun _ : Fin n => (Rat.cast : ℚ → ℚ_[l])) q) k • f (y k) =
             f (∑ k, (q k : E) * y k) := by

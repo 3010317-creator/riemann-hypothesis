@@ -66,8 +66,7 @@ theorem law_right_unit (G : FGLaw k d) (i : Fin d) :
   have hs : ∀ j, GP ((![pt k (n := 2) d 1, pt k (n := 2) d 0] : Fin 2 → Pt k 2 d) j) :=
     pair_points_zero_constant (gp_pt 1) (gp_pt 0)
   rw [← G.comm i, gt_ev_ev' _ _ axis_GP hs, eval_pair_points, evP_pt _ axis_GP, evP_pt _ axis_GP]
-  simp only [Matrix.cons_val_zero, Matrix.cons_val_one]
-  exact G.unit i
+  simpa only [Matrix.cons_val_zero, Matrix.cons_val_one] using G.unit i
 
 theorem dof_hom (G G' : FGLaw k d) (α : Pt k 1 d) (hα : ∀ i, constantCoeff (α i) = 0)
     (hom : comp1 α (G.add (pt k (n := 2) d 0) (pt k (n := 2) d 1)) =
@@ -91,8 +90,7 @@ theorem dof_hom (G G' : FGLaw k d) (α : Pt k 1 d) (hα : ∀ i, constantCoeff (
       ev ![comp1 α (pt k (n := 2) d 0), comp1 α (pt k (n := 2) d 1)] (ev (n := 2) ![G'.F] g) := by
     rw [gt_ev_ev' _ _ (single_point_zero_constant hF) (single_point_zero_constant hφ), vec1, gt_ev_ev' _ _ hΦ (single_point_zero_constant hF'), vec1]
     have : evP ![G.F] α = evP ![comp1 α (pt k (n := 2) d 0), comp1 α (pt k (n := 2) d 1)] G'.F := by
-      rw [eF] at hom
-      exact hom
+      rwa [eF] at hom
     rw [this]
   have pderiv_ev {m n : ℕ} (V : Fin m → Pt k n d) (hV : ∀ j, GP (V j))
       (f : PS k m d) (v : Fin n × Fin d) :

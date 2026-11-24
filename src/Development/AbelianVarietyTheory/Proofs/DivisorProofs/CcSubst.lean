@@ -149,8 +149,7 @@ theorem deform : ∀ (k J I : Type) [Field k] [Fintype J] [Fintype I] (N : ℕ) 
             = w (some (i, l)) := by
           simp only [hA]
           have := hvl i l.1 hl
-          rw [dite_eq_left l.2] at this
-          exact this
+          rwa [dite_eq_left l.2] at this
         have h2 : ∑ j, y₀ j * PowerSeries.coeff 1 (GlobalTheory.PicDiv.hasse l.1 (s i j)) = 0 := by
           simp only [hB]
           calc ∑ j, y₀ j * (((l.1 + 1 : ℕ) : k) * PowerSeries.coeff (l.1 + 1) (s i j))
@@ -173,8 +172,7 @@ theorem deform : ∀ (k J I : Type) [Field k] [Fintype J] [Fintype I] (N : ℕ) 
       have h' : ∀ j, PowerSeries.constantCoeff ((GlobalTheory.PicDiv.hasse l.1 (s i j)).subst
           (PowerSeries.C ((0 : I → k) i)) : PowerSeries k) = PowerSeries.coeff l.1 (s i j) := by
         intro j; rw [_root_.GlobalTheory.TaylorSubst.constantCoeff_subst_eq _ _ (by simp), hA]
-      simp only [h']
-      exact hlow i l.1 l.2
+      simpa only [h'] using hlow i l.1 l.2
   have htay : ∀ (x h : J ⊕ I → PowerSeries k) (m : ℕ), 1 ≤ m →
       (∀ i, PowerSeries.constantCoeff (x i) = Sum.elim y₀ 0 i) → ∀ e,
       (PowerSeries.X : PowerSeries k) ^ (m + 1) ∣ sys N ξ s (fun i => x i + PowerSeries.X ^ m * h i) e
@@ -230,7 +228,6 @@ theorem deform : ∀ (k J I : Type) [Field k] [Fintype J] [Fintype I] (N : ℕ) 
     (lin N ξ s y₀) hsur hbase htay
   refine ⟨fun j => x (Sum.inl j), fun i => x (Sum.inr i), fun j => by simpa using hx0 (Sum.inl j),
     fun i => by simpa using hx0 (Sum.inr i), hx none, ?_⟩
-  intro i l hl
-  exact hx (some (i, ⟨l, hl⟩))
+  exact fun i l hl => hx (some (i, ⟨l, hl⟩))
 
 end GlobalTheory.PicDiv.DeformZerosHasse

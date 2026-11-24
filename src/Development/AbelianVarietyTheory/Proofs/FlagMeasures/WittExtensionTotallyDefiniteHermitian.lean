@@ -133,8 +133,7 @@ theorem isCompl_perp [FiniteDimensional K V] (h : V →ₗ⋆[K] V →ₗ[K] K)
     (ha : ∀ x, h x x = 0 → x = 0) (U : Submodule K V) : IsCompl U (perp h U) := by
   have hdis : Disjoint U (perp h U) := by
     rw [Submodule.disjoint_def]
-    intro x hxU hxP
-    exact ha x (((mem_perp h U x).1 hxP) x hxU)
+    exact fun x hxU hxP => ha x (((mem_perp h U x).1 hxP) x hxU)
   let bU := Module.finBasis K U
   let T : V →ₗ[K] (Fin (Module.finrank K U) → K) := LinearMap.pi fun i => h (bU i : V)
   have hker : LinearMap.ker T ≤ perp h U := by
@@ -197,7 +196,6 @@ theorem witt_definite : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] 
     exact LinearMap.congr_fun hcomp x
   · exact ⟨fun x y => hs.eq x y⟩
   · intro τ x hx
-    show 0 < (τ (h x x)).re
     exact hpd τ x (fun h0 => hx (Subtype.ext h0))
 
 end GlobalTheory.Mass.Witt

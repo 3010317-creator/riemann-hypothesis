@@ -120,8 +120,7 @@ theorem exists_isHomogeneous_aeval_eq_zero {K Ω : Type} [Field K] [Field Ω] [A
   push Not at hdep
   obtain ⟨P, hP, hP0⟩ := hdep
   have hex : ∃ d, MvPolynomial.homogeneousComponent d P ≠ 0 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     apply hP0
     rw [← MvPolynomial.sum_homogeneousComponent P]
     exact Finset.sum_eq_zero fun d _ => hall d
@@ -319,8 +318,7 @@ theorem phi_le (X : Data E r) (th : ℝ) (x : Frame X.Ψ r) : phiFD X th x ≤ 2
   unfold phiFD
   split_ifs
   · rw [← div_div]
-    refine div_le_div_of_nonneg_right ?_ (by positivity)
-    exact div_le_self (by positivity) (one_le_pow₀ h1)
+    exact div_le_div_of_nonneg_right (div_le_self (by positivity) (one_le_pow₀ h1)) (by positivity)
   · positivity
 
 theorem phi_threshold (X : Data E r) (th : ℝ) {th' : ℝ} (h' : 0 < th') :
@@ -687,8 +685,7 @@ theorem archAt_nonempty : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj :
       refine GlobalTheory.Shares.margins_of_gaps _ _ _ Xa (by rw [hp0]; exact hq) (by rw [hp0]; exact hqr)
         (by obtain ⟨τ, hτ⟩ := Finset.card_pos.1 (hcard.symm ▸ hf); exact ⟨⟨τ, hτ⟩⟩) rfl hsL g1
         (5 * D.R.f * (D.R.r : ℝ) ^ 2) (19 / 5 * Tn) (19 / 10 * Tn) (by rw [hcard]; exact m1) g2 m2 ?_ m4
-      rw [hcard, hp0, hnd]
-      exact m3
+      rwa [hcard, hp0, hnd]
   choose Xa hN h1 h2 h3 h4 h5 h6 h7 using key
   exact ⟨⟨Xa, fun k => (GlobalTheory.Shares.WtDic.weights_dictionary D T h j hj k).2.2.2.2.1, hN, h1, h2, h3, h4, h5, h6, h7⟩⟩
 

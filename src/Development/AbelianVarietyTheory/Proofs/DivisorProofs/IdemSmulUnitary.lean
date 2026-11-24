@@ -77,16 +77,14 @@ def eInf (F : Type) [Field F] [NumberField F] : AF F := realAd F 1
 theorem eFin_idem (v : Pl F) : eFin v * eFin v = eFin v := by
   have h := GlobalTheory.LatVac.at_liftV v 1 (eFin v - 1) (by
     rw [eFin, map_sub, GlobalTheory.LatVac.evFin_liftV, map_one, sub_self])
-  rw [smul_eq_mul, sub_mul, one_mul, sub_eq_zero] at h
-  exact h
+  rwa [smul_eq_mul, sub_mul, one_mul, sub_eq_zero] at h
 
 theorem eInf_idem : eInf F * eInf F = eInf F := by
   have h := at_partInf (M := AF F) (1 : AF F) (eInf F - 1) (by
     rw [eInf, GlobalTheory.ArchUniq.evI_eq_evIHom, map_sub, map_one, ← GlobalTheory.ArchUniq.evI_eq_evIHom, evI_realAd_one, sub_self])
   simp only [partInf, smul_eq_mul, mul_one] at h
   unfold eInf at h ⊢
-  rw [sub_mul, one_mul, sub_eq_zero] at h
-  exact h
+  rwa [sub_mul, one_mul, sub_eq_zero] at h
 
 
 variable (E) in

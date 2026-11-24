@@ -126,8 +126,7 @@ theorem isLeftRegular_germ {R : Type} [CommRing R] [IsNoetherianRing R] [IsLocal
   have : Module.Flat Γ(X, U) (X.presheaf.stalk x) :=
     IsLocalization.flat _ (hU.primeIdealOf ⟨x, hxU⟩).asIdeal.primeCompl
   have h := Module.Flat.isSMulRegular_of_isRegular (M := X.presheaf.stalk x) reg
-  rw [← gs_res (𝟙 X) x hUV hxU, gs_eq _ x U hxU]
-  exact h
+  rwa [← gs_res (𝟙 X) x hUV hxU, gs_eq _ x U hxU]
 
 theorem exists_quotient (W : X.Opens) (f g : Γ(X, W))
     (hg : ∀ x ∈ W, IsLeftRegular (gs (𝟙 X) x W g))
@@ -372,8 +371,7 @@ theorem meetsFibres_transl {D : (B ⊗ G).left.Opens} (hD : MeetsFibres (fst B G
   refine ⟨z, ?_, ?_⟩
   · rw [h₂]
     show (v ▷ G).left (σ.left ((T ◁ f).left z)) ∈ D
-    rw [hz, show σ.left (τ.left z₁) = z₁ from congrArg (fun q => q.left z₁) h₁, hz₁']
-    exact hd
+    rwa [hz, show σ.left (τ.left z₁) = z₁ from congrArg (fun q => q.left z₁) h₁, hz₁']
   · have h₃ : (fst T G).left z = (fst T G).left ((T ◁ f).left z) :=
       congrArg (fun q => q.left z) (whiskerLeft_fst T f).symm
     have h₄ : (fst T G).left (τ.left z₁) = (fst T G).left z₁ :=
@@ -611,7 +609,6 @@ theorem eq_of_forall_value_eq : (∀ (X S : Scheme.{0}) (f : X ⟶ S), Smooth f 
   have e := congrArg (fun q => q.left)
     (eq_of_sameGerms θ P.isLB P.ktriv t ht hθ m _ _ v _ _ (hG.comp g))
   have e' : hU.fromSpec ≫ x.left = hU.fromSpec ≫ y.left := e
-  rw [← hU.isoSpec_inv_ι, Category.assoc, Category.assoc, cancel_epi] at e'
-  exact e'
+  rwa [← hU.isoSpec_inv_ι, Category.assoc, Category.assoc, cancel_epi] at e'
 
 end GlobalTheory.SepPoints

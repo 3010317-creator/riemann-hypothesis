@@ -107,9 +107,7 @@ theorem unfold : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype �
   letI : MeasurableSpace (κ → AF F) := borel _
   haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
   have hc := schA_continuous F hΦ
-  haveI : Countable F := by
-    have b := Module.finBasis ℚ F
-    exact Countable.of_equiv _ b.equivFun.toEquiv.symm
+  haveI : Countable F := Countable.of_equiv _ (Module.finBasis ℚ F).equivFun.toEquiv.symm
   haveI : Countable (GlobalTheory.ThetaParseval.ratVec F κ) := Countable.of_equiv _ (ratEquiv F κ)
   have hm : ∀ c : κ → AF F, Measurable fun x : κ → AF F => ‖Φ (c + x)‖ₑ ^ 2 := fun c =>
     ((hc.comp (continuous_const.add continuous_id)).measurable.enorm).pow_const 2

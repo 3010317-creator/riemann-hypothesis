@@ -152,8 +152,7 @@ theorem tanRel_iff_isPointOf (y : epsR R ⟶ G) (gm : GtPt D.toPre (epsR R)) :
     have h5 : FormalPoint.reduction I y e = l ≫ ye := by
       rw [← cancel_mono (fstG I e G).left, FormalPoint.reduction_fstG, Category.assoc, h1, ← hl]
       exact Category.assoc _ _ _
-    rw [h5, ← hl]
-    exact h4
+    rwa [h5, ← hl]
   · intro h e
     obtain ⟨ye, hy⟩ := FormalPoint.exists_hasCoords U e gm _ _ (dualMap_mk_struct I e)
     exact ⟨ye, h.comp_fstG_eq hy, hy⟩
@@ -809,8 +808,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (D : Deg
     rw [split]
     simp only [Equiv.apply_symm_apply, Sum.elim_inl, Sum.elim_inr]
     rw [← e, mul_comm w, mul_inv_cancel_left]
-  refine ⟨_, hw ▸ isLieComb_tanComb _ _, fun c hc => ?_⟩
-  exact uniq _ _ ((eq_tanComb' hc).symm.trans hw)
+  exact ⟨_, hw ▸ isLieComb_tanComb _ _, fun c hc => (uniq _ _ ((eq_tanComb' hc).symm.trans hw))⟩
 
 end GlobalTheory.GtBasis
 
@@ -1040,8 +1038,7 @@ theorem main : ∀ (V : Type) [CommRing V] [IsDomain V] (D : DegPre V) (C : Type
       have hc : (redE C) (cpt C) = cpt (DualNumber C) :=
         IsLocalRing.comap_closedPoint (TrivSqZeroExt.fstHom C C C).toRingHom
       have h2 : ψ ((redE C) (cpt C)) ∈ D.P.L.U (J' ψ) := h1
-      rw [hc] at h2
-      exact h2
+      rwa [hc] at h2
     have ht := (top_le_iff_cpt (𝟙 (Sp (DualNumber C))) _).2 (hJ'.mem (DegPre.gtφT D (TE V C) gm.b χ) (𝟙 _))
     apply toStkA_injective (A := DualNumber C)
     have toStkA_valR {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X)
@@ -1208,8 +1205,7 @@ theorem main : AllVC fun {V} _ _ _ {D} {A} {G} _ _ U {C} _ _ {N} ν => ∃ (vB :
     refine ⟨(hgmC _).2.2.1 (htv l).2.1, fun χ => ?_⟩
     refine ((hgmC _).2.2.2 (((bD.repr (ν.eX χ) l : ℤ) : V)) (ν.eX χ) fun Z q z J hJ => ?_).trans ?_
     · have hv := (htv l).2.2 (ν.eX χ) Z q z J hJ
-      rw [hco] at hv
-      exact hv
+      rwa [hco] at hv
     · have e : bD.repr (ν.eX χ) l = bX.repr χ l := by
         show (bX.map ν.eX.toIntLinearEquiv).repr (ν.eX χ) l = _
         rw [Module.Basis.map_repr]

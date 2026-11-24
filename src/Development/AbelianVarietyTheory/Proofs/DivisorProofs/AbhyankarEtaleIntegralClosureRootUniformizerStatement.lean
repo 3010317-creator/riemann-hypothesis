@@ -239,8 +239,7 @@ theorem exists_kummer_element (S K L : Type) [CommRing S] [IsDomain S] [IsDiscre
         algebraMap S (AdjoinRoot (Polynomial.X ^ e - Polynomial.C π : Polynomial S)) π := by
       rw [AdjoinRoot.algebraMap_eq]; exact sub_eq_zero.mp h0
     have := congrArg ψ.symm h1
-    rw [map_pow, AlgEquiv.commutes] at this
-    exact this
+    rwa [map_pow, AlgEquiv.commutes] at this
   obtain ⟨⟨a, s⟩, hs⟩ := IsLocalization.mk'_surjective (Q.comap (toNorm S L D)).primeCompl ϖ
   obtain ⟨⟨a', s'⟩, hs'⟩ := IsLocalization.mk'_surjective (Q.comap (toNorm S L D)).primeCompl
     U
@@ -313,14 +312,12 @@ theorem exists_kummer_element (S K L : Type) [CommRing S] [IsDomain S] [IsDiscre
   have hϖW : locHom Q ϖ * algebraMap _ (Localization.AtPrime Q) (toNorm S L D s) =
       algebraMap _ _ (toNorm S L D a) := by
     have := congrArg (locHom Q) hsA
-    rw [map_mul, locHom_algebraMap Q (s : integralClosure S L), locHom_algebraMap Q a] at this
-    exact this
+    rwa [map_mul, locHom_algebraMap Q (s : integralClosure S L), locHom_algebraMap Q a] at this
   have huW : locHom Q U *
       algebraMap _ (Localization.AtPrime Q) (toNorm S L D s') =
       algebraMap _ _ (toNorm S L D a') := by
     have := congrArg (locHom Q) hs'A
-    rw [map_mul, locHom_algebraMap Q (s' : integralClosure S L), locHom_algebraMap Q a'] at this
-    exact this
+    rwa [map_mul, locHom_algebraMap Q (s' : integralClosure S L), locHom_algebraMap Q a'] at this
   refine ⟨y, ?_, ?_⟩
   · rw [← (hu1.pow (n + 1)).mul_left_inj, ← mul_pow, hy, ← map_pow, hbm, pow_succ'
       (algebraMap _ (Localization.AtPrime Q) (toNorm S L D s')), ← mul_assoc, huW]
@@ -360,8 +357,7 @@ theorem root_not_isUnit (S : Type) [CommRing S] [IsLocalRing S] (π : S)
   intro hu
   have hev : (Polynomial.X ^ e - Polynomial.C π : Polynomial S).eval₂
       (algebraMap S (ResidueField S)) 0 = 0 := by
-    simp [Polynomial.eval₂_sub, zero_pow he.ne']
-    exact hπ
+    simpa [Polynomial.eval₂_sub, zero_pow he.ne'] using hπ
   have := hu.map (AdjoinRoot.lift (algebraMap S (ResidueField S)) 0 hev)
   rw [AdjoinRoot.lift_root] at this
   exact not_isUnit_zero this
@@ -392,8 +388,7 @@ theorem mem_maximalIdeal_and_mem_nonZeroDivisors_of_pow (S L : Type) [CommRing S
         (algebraMap D (integralClosure D (D ⊗[S] L)) t) :=
     IsScalarTower.algebraMap_apply D (integralClosure D (D ⊗[S] L)) _ t
   refine ⟨?_, ?_⟩
-  · rw [hsc, IsLocalization.AtPrime.to_map_mem_maximal_iff (Localization.AtPrime Q) Q]
-    exact htQ
+  · rwa [hsc, IsLocalization.AtPrime.to_map_mem_maximal_iff (Localization.AtPrime Q) Q]
   · rw [hsc]
     apply IsLocalization.nonZeroDivisors_le_comap Q.primeCompl (Localization.AtPrime Q)
     have hpow : (algebraMap D (D ⊗[S] L) t) ^ e =
@@ -429,8 +424,7 @@ theorem root_mem_maximalIdeal_and_mem_nonZeroDivisors : ∀ (S K L : Type) [Comm
     exact hπ.ne_zero h0
   refine mem_maximalIdeal_and_mem_nonZeroDivisors_of_pow S L π hπL e he D _ ?_ ?_ Q
   · rw [← map_pow, root_pow, AlgEquiv.commutes]
-  · intro h
-    exact root_not_isUnit S π hπm e he (by simpa using h.map ψ)
+  · exact fun h => root_not_isUnit S π hπm e he (by simpa using h.map ψ)
 
 end GlobalTheory.AbhyankarRootUnit
 end -- clump:auto
@@ -773,8 +767,7 @@ private lemma maximalIdeal_eq_span_of_kummer_tower (A W : Type) [CommRing A] [Is
   haveI hn : (Ideal.comap g (maximalIdeal W)).IsPrime := Ideal.comap_isPrime g (maximalIdeal W)
   have hTn : AdjoinRoot.root (X ^ k - C (AdjoinRoot.of (X ^ m - C (u : A)) ϖ *
       AdjoinRoot.root (X ^ m - C (u : A)))) ∈ Ideal.comap g (maximalIdeal W) := by
-    rw [Ideal.mem_comap, hg_root]
-    exact hτm
+    rwa [Ideal.mem_comap, hg_root]
   have hmaxV := _root_.GlobalTheory.maximalIdeal_localization_eq_span_of_reduced_artinian _ _ (_root_.GlobalTheory.kummerUnit_quotRoot_isReduced A ϖ u m k hϖ hm hk)
     (_root_.GlobalTheory.T.isArtinianRing_kummerAdjoinRoot_quotient_root A ϖ u m k hϖ hm hk) _ hTn
   haveI : IsNoetherianRing (AdjoinRoot (X ^ k - C (AdjoinRoot.of (X ^ m - C (u : A)) ϖ *
@@ -950,8 +943,7 @@ theorem adjoinRoot_uniformiser_isDVR : ∀ (R : Type) [CommRing R] [IsDomain R] 
   set x : AdjoinRoot f := AdjoinRoot.root f with hx
   have hxe : x ^ e = algebraMap R (AdjoinRoot f) π := by
     have h0 : AdjoinRoot.mk f f = 0 := AdjoinRoot.mk_self
-    rw [hf, map_sub, map_pow, AdjoinRoot.mk_X, AdjoinRoot.mk_C, sub_eq_zero] at h0
-    exact h0
+    rwa [hf, map_sub, map_pow, AdjoinRoot.mk_X, AdjoinRoot.mk_C, sub_eq_zero] at h0
   have hinj : Function.Injective (algebraMap R (AdjoinRoot f)) :=
     AdjoinRoot.of.injective_of_degree_ne_zero (by
       rw [degree_eq_natDegree hmon.ne_zero, hdeg]; exact_mod_cast he.ne')
@@ -1188,8 +1180,7 @@ theorem abhyankar_dvr_of_isSeparable : ∀ (S K L : Type) [CommRing S] [IsDomain
       | add u v hu hv => rw [smul_add, map_add (f := _), hu, hv]
     have h1 : (a : D) • (x : TensorProduct S D L) = 0 := congrArg Subtype.val hax
     rw [hsmul, ← map_zero (LinearMap.rTensor L (LinearMap.mulLeft S (a : D)))] at h1
-    simp only [Submodule.mem_bot]
-    exact Subtype.ext (hinj h1)
+    simpa only [Submodule.mem_bot] using Subtype.ext (hinj h1)
   haveI : Algebra.FinitePresentation D (integralClosure D (TensorProduct S D L)) :=
     Algebra.FinitePresentation.of_finiteType.mp inferInstance
   have hmax : ∀ (Q : Ideal (integralClosure D (TensorProduct S D L))) [Q.IsMaximal],
@@ -1283,8 +1274,7 @@ theorem etale_integralClosure_tensor_of_etale_of_isIntegral :
   let φ : T →ₐ[S₁] integralClosure S₁ (K₁ ⊗[S₁] T) := i.codRestrict _ hint
   have hφ : Function.Bijective φ := by
     constructor
-    · intro a b hab
-      exact hi (congrArg Subtype.val hab)
+    · exact fun a b hab => hi (congrArg Subtype.val hab)
     · rintro ⟨x, hx⟩
       obtain ⟨b, hb⟩ := exists_one_tmul_eq_of_isIntegral_smooth_fractionField S₁ K₁ T x hx
       exact ⟨b, Subtype.ext hb.symm⟩

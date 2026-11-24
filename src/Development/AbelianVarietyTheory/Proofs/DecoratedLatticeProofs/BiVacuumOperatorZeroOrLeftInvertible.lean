@@ -145,8 +145,7 @@ theorem latO_acts_by_signs : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] 
           · simp
           · intro j _ hj
             rw [ite_eq_right (fun h => hj (hP.inj h).symm), zero_mul]
-          · intro h
-            exact absurd (List.mem_toFinset.2 (hP.all i)) h
+          · exact fun h => absurd (List.mem_toFinset.2 (hP.all i)) h
         · rw [hsupp v hv]
           simp
       rw [hdec]
@@ -368,8 +367,7 @@ theorem biComb_sum {ι : Type} (s : Finset ι) (e : WO A S →₀ ℂ) (e' : WO 
 
   simp only [biComb_eq, map_sum, Finset.smul_sum]
   conv_rhs => rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun x _ => ?_
-  exact Finset.sum_comm
+  exact Finset.sum_congr rfl fun x _ => Finset.sum_comm
 
 theorem comp_part (P : Pl D → Prop) (op : BiOp A S A') (hop : OpAt P op) (e : WO A S →₀ ℂ) (e' : WO S A' →₀ ℂ)
     (he : CombAt P e) (he' : CombAt P e') :
@@ -390,8 +388,7 @@ theorem symplO_zero_left (T T' : HSp D) (w : WO T T') : symplO T T' 0 w = 0 := b
   rw [symplO_skew', show symplO T T' w 0 = 0 from (symplHom T T' w).map_zero, neg_zero]
 
 theorem psi_eq_one_of_neg {z : AF D.host.F} (h : ψ (-z) = 1) : ψ z = 1 := by
-  rw [AddChar.map_neg_eq_inv, inv_eq_one] at h
-  exact h
+  rwa [AddChar.map_neg_eq_inv, inv_eq_one] at h
 
 end GlobalTheory.ZeroOrInv
 

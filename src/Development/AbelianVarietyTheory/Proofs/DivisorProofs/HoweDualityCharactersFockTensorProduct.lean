@@ -425,8 +425,7 @@ theorem tensAll_sup_le {T : Type} [Fintype T] [DecidableEq T] {V : T → Type} [
     congr 1
     simp
   · obtain ⟨w, hw⟩ : ∃ w, w ∉ s := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hs (Finset.eq_univ_of_forall h)
     refine Submodule.mem_sup_right (Submodule.subset_span ⟨s.piecewise u c, ⟨w, ?_⟩, rfl⟩)
     rw [Finset.piecewise_eq_of_notMem _ _ _ hw]
@@ -455,8 +454,7 @@ theorem main : ∀ (T : Type) [Fintype T] [DecidableEq T] (V : T → Type) [∀ 
     ∀ U C : ∀ w, Submodule ℂ (V w), tensAll (fun w => U w ⊔ C w) ≤ tensAll U ⊔ tensAny C ∧
       ((∀ w, FiniteDimensional ℂ (U w)) → FiniteDimensional ℂ (tensAll U)) ∧
       ∀ v : ∀ w, V w, tensAll (fun w => Submodule.span ℂ {v w}) ≤ Submodule.span ℂ {PiTensorProduct.tprod ℂ v} := by
-  intro T _ _ V _ _ U C
-  exact ⟨tensAll_sup_le U C, tensAll_fin U, tensAll_span_le⟩
+  exact fun T _ _ V _ _ U C => ⟨tensAll_sup_le U C, tensAll_fin U, tensAll_span_le⟩
 
 end GlobalTheory.HoweR.TensSup
 end -- clump:auto
@@ -512,9 +510,7 @@ theorem tprod_cyclic_top : ∀ (T : Type) [Fintype T] [DecidableEq T] (V : T →
       have hCK : C w ≤ K := by
         intro c hc
         rw [hmem]
-        apply hC
-        apply Submodule.subset_span
-        exact ⟨Function.update f w c, ⟨w, by simpa using hc⟩, rfl⟩
+        exact hC (Submodule.subset_span ⟨Function.update f w c, ⟨w, by simpa using hc⟩, rfl⟩)
       have hgK : genSub (a w) {v w} ≤ K := by
         apply sInf_le
         refine ⟨?_, hstab⟩
@@ -523,8 +519,7 @@ theorem tprod_cyclic_top : ∀ (T : Type) [Fintype T] [DecidableEq T] (V : T →
         rw [eq_top_iff, ← hgen w]
         exact sup_le hgK hCK
       have : f w ∈ K := by rw [htop]; trivial
-      rw [hmem, Function.update_eq_self] at this
-      exact this
+      rwa [hmem, Function.update_eq_self] at this
   have hall : ∀ f : ∀ w, V w, PiTensorProduct.tprod ℂ f ∈ N :=
     fun f => key Finset.univ f (fun w hw => absurd (Finset.mem_univ w) hw)
   rw [eq_top_iff, ← PiTensorProduct.span_tprod_eq_top, Submodule.span_le]
@@ -588,11 +583,9 @@ theorem iInf_hwSub_le {R S : T → ℕ} (a : ∀ w, Mat (R w) (S w) →ₗ[ℂ] 
     rcases hl with ⟨c, rfl⟩ | ⟨c, d, hcd, rfl⟩
     · rw [atPl_sub_smul]
       have h1 := hyw.1 c
-      rw [LinearMap.sub_apply, LinearMap.smul_apply, LinearMap.id_apply, actAt_apply] at h1
-      exact h1
+      rwa [LinearMap.sub_apply, LinearMap.smul_apply, LinearMap.id_apply, actAt_apply] at h1
     · have h2 := hyw.2 c d hcd
-      rw [actAt_apply] at h2
-      exact h2
+      rwa [actAt_apply] at h2
 
 end GlobalTheory.HoweR.TensAlg
 
@@ -950,8 +943,7 @@ theorem genBy_of_isLift : ∀ (P Q R S : ℕ) (x t : ℚ) (M : Formalism.BasicNo
   have hf : fMap x t pr ≠ 0 := by
     obtain ⟨v, hv⟩ := exists_ne (0 : M.V)
     obtain ⟨f, rfl⟩ := hL.1 v
-    intro h
-    exact hv (fMap_eq_zero (LinearMap.congr_fun h f))
+    exact fun h => hv (fMap_eq_zero (LinearMap.congr_fun h f))
   have hmin : ∀ ν w, IsHW (chMod P Q x).act ν w →
       degW (cPair R S) (fun _ : Ix P Q => x) ≤ degW (cPair R S) ν := by
     intro ν w h
@@ -1346,21 +1338,18 @@ theorem genSub_stable {p q : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V] (ac
     (T : Set V) (Z : Mat p q) (y : V) (hy : y ∈ genSub act T) : act Z y ∈ genSub act T := by
   unfold genSub at hy ⊢
   rw [Submodule.mem_sInf] at hy ⊢
-  intro N hN
-  exact hN.2 Z y (hy N hN)
+  exact fun N hN => hN.2 Z y (hy N hN)
 
 theorem mem_genSub_self {p q : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V] (act : Mat p q →ₗ[ℂ] Module.End ℂ V)
     (v : V) : v ∈ genSub act {v} := by
   unfold genSub
   rw [Submodule.mem_sInf]
-  intro N hN
-  exact hN.1 rfl
+  exact fun N hN => hN.1 rfl
 
 theorem cycMod_rel (P Q R S : ℕ) (x : ℚ) (hne : GlobalTheory.FockQuot.rel P Q R S x ≠ ⊤) :
     CycMod (fockAct2 P Q R S) (GlobalTheory.FockQuot.rel P Q R S x) := by
   set C := GlobalTheory.FockQuot.rel P Q R S x with hC
   have hnt : Nontrivial (GlobalTheory.FockQuot.gkQ P Q R S x 0).V := by
-    show Nontrivial (Pol P Q R S ⧸ C)
     exact Submodule.Quotient.nontrivial_iff.2 hne
   have hlift : IsLift x 0 (GlobalTheory.FockQuot.gkQ P Q R S x 0) C.mkQ := by
     refine ⟨Submodule.mkQ_surjective _, fun X f => GlobalTheory.FockQuot.mk_fockFirstAction_eq_trace_smul P Q R S x X f, fun Y f => ?_⟩
@@ -1444,8 +1433,7 @@ theorem cycMod_rel (P Q R S : ℕ) (x : ℚ) (hne : GlobalTheory.FockQuot.rel P 
       exact Submodule.sub_mem _ (Submodule.mem_sup_left (Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self v)))
         (Submodule.mem_sup_right (C.smul_mem _ hc))
     refine hf₀.trans (sup_le ?_ le_sup_right)
-    rw [Submodule.span_le, Set.singleton_subset_iff]
-    exact hf₀mem
+    rwa [Submodule.span_le, Set.singleton_subset_iff]
 
 end GlobalTheory.HoweR.Cyc
 

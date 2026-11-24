@@ -89,9 +89,7 @@ theorem contDiff_tsum_of_locally_summable_bounds {k : ℕ} {ι : Type} (f : ι �
   let v : ℕ → ι → ℝ := fun m i =>
     ∑ j ∈ Finset.range (m + 1), (m.choose j : ℝ) * B j * u (m - j) R i
   have hv : ∀ m, Summable (v m) := fun m => by
-    apply summable_sum
-    intro j _
-    exact (hus (m - j) R).mul_left _
+    exact summable_sum (fun j _ => (hus (m - j) R).mul_left _)
   have hbound : ∀ m i x, ‖iteratedFDeriv ℝ m (fun y => ρc y * f i y) x‖ ≤ v m i := by
     intro m i x
     refine (norm_iteratedFDeriv_mul_le hρc (hf i) x (by exact_mod_cast le_top)).trans ?_

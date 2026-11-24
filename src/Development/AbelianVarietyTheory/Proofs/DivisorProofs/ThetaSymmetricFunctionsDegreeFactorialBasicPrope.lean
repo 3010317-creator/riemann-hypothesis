@@ -88,11 +88,9 @@ theorem exists_symTup_ne_zero {K : Type} [Field K] {N : ℕ} (c : Fin N → K) (
     intro k hk hkN
     have := hne ⟨k - 1, by omega⟩
     unfold symTup at this
-    have h2 := eq_zero_of_pow_eq_zero this
-    simpa [Nat.sub_add_cancel hk] using h2
+    simpa [Nat.sub_add_cancel hk] using eq_zero_of_pow_eq_zero this
   have hp : ((Finset.univ.val.map c).map fun t => Polynomial.X - Polynomial.C t).prod = Polynomial.X ^ N := by
-    rw [Multiset.prod_X_sub_X_eq_sum_esymm, hc, Finset.sum_range_succ']
-    rw [Finset.sum_eq_zero]
+    rw [Multiset.prod_X_sub_X_eq_sum_esymm, hc, Finset.sum_range_succ', Finset.sum_eq_zero]
     · simp [Multiset.esymm]
     · intro k hk
       rw [he (k + 1) (Nat.succ_pos _) (Finset.mem_range.1 hk)]
@@ -101,8 +99,7 @@ theorem exists_symTup_ne_zero {K : Type} [Field K] {N : ℕ} (c : Fin N → K) (
   rw [Polynomial.eval_multiset_prod, Multiset.prod_eq_zero] at hev
   · simp only [Polynomial.eval_pow, Polynomial.eval_X] at hev
     exact pow_ne_zero N ha hev.symm
-  · simp only [Multiset.mem_map]
-    exact ⟨_, ⟨c a, ⟨a, Finset.mem_univ_val a, rfl⟩, rfl⟩, by simp⟩
+  · simpa only [Multiset.mem_map] using ⟨_, ⟨c a, ⟨a, Finset.mem_univ_val a, rfl⟩, rfl⟩, by simp⟩
 
 theorem symTup_basic :
     (∀ (R : Type) [CommRing R] (N : ℕ) (c : Fin N → R) (a : R) (j : Fin N),

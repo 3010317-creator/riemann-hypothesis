@@ -175,8 +175,7 @@ theorem exists_padic_point_one_lt_norm (m : Ideal A) [m.IsMaximal] (hp : (p : A)
     (isUnit_val_comp_of_ne_zero y (left_ne_zero_of_mul h2))
   have e : v φ * (y (a ^ n) : K) = (y b : K) := by
     have := congrArg v hb
-    rw [map_mul, ← map_pow, IsLocalization.Away.lift_eq, IsLocalization.Away.lift_eq] at this
-    exact this
+    rwa [map_mul, ← map_pow, IsLocalization.Away.lift_eq, IsLocalization.Away.lift_eq] at this
   rw [← e, IntermediateField.coe_mul, norm_mul] at h3
   by_contra hn
   exact absurd h3 (not_lt.mpr (mul_le_of_le_one_left (norm_nonneg _) (not_lt.mp hn)))
@@ -234,8 +233,7 @@ theorem top_le_preimage_iff_genericPoint_mem {O K : Type} [CommRing O] [IsDomain
   refine ⟨fun h => ?_, fun h q _ => ?_⟩
   · rw [← key (⊥ : PrimeSpectrum K)]
     exact h (Set.mem_univ _)
-  · rw [← key q] at h
-    exact h
+  · rwa [← key q] at h
 
 theorem exists_germToFunctionField_eq_of_mem_range_stalk {Z : Scheme.{0}} [IsIntegral Z]
     {t : Z.functionField} {x : Z}
@@ -344,8 +342,7 @@ theorem exists_padic_point_scheme_one_lt_norm {p : ℕ} [Fact p.Prime] {x : Z}
       exact congrArg CommRingCat.Hom.hom (e2 _ hD _ e1)
     rw [e] at hlt
     have e3 := (genericPt(p, K, y')).map_appLE hD (homOfLE (hfU.trans inf_le_left)).op
-    rw [← e3]
-    exact hlt
+    rwa [← e3]
 
 theorem mem_range_stalk_of_forall_norm_le_one {p : ℕ} [Fact p.Prime] {x : Z}
     (hx : IsClosed ({x} : Set Z)) (hp : (p : Z.residueField x) = 0)

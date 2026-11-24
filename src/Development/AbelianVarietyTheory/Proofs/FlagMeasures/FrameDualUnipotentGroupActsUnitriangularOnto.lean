@@ -134,8 +134,7 @@ lemma eich_inv (hxx : H.h x x = 0) (hxv : H.h x v = 0)
     unfold eichF at e1 e2 ⊢
     rw [e1, e2, h_neg_right]
     module
-  rw [hc, zero_mul, zero_smul, sub_eq_zero] at key
-  exact key
+  rwa [hc, zero_mul, zero_smul, sub_eq_zero] at key
 
 def eichE (hxx : H.h x x = 0) (hxv : H.h x v = 0) (hc : 2 * algebraMap F E c + H.h v v = 0) :
     V ≃ₗ[E] V :=
@@ -231,10 +230,8 @@ lemma NU_step {g : V ≃ₗ[E] V} (hg : g ∈ NU H Fr.f) :
     have h2 := hg.2.1 a
     rw [span_fin_eq] at h2
     have ha' : a.val < j + 1 := ha
-    show g (Fr.f a.castSucc) - Fr.f a.castSucc ∈ Fr.Fj j
     exact Fj_mono Fr (by omega) h2
-  intro v hv
-  exact this hv
+  exact fun v hv => this hv
 
 lemma NU_flag {g : V ≃ₗ[E] V} (hg : g ∈ NU H Fr.f) : ∀ j, j ≤ r → ∀ v, g v ∈ Fr.Fj j ↔ v ∈ Fr.Fj j :=
   flag_iff Fr.Fj (Fj_zero Fr) (fun j => Fj_mono Fr (Nat.le_succ j)) r g (NU_step Fr hg)

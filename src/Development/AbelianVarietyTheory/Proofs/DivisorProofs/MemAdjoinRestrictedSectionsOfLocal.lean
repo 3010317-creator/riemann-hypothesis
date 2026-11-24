@@ -116,8 +116,7 @@ theorem mem_gen_of_local (X : Scheme.{0}) (F : X.Opensᵒᵖ ⥤ CommRingCat) (�
           (F.map (homOfLE (hfD.trans hDV)).op).hom '' T := by
         simp only [T', Set.image_image]
         exact Set.image_congr (fun y _ => comp hV (X.basicOpen_le f) y)
-      rw [e1, e2]
-      exact hres
+      rwa [e1, e2]
     obtain ⟨m, hm⟩ := adjoin_mem_of_away f T' b' hb''
     exact ⟨m, (hI _).mpr (by rw [map_pow]; exact hm)⟩
   have cover : W' ≤ ⨆ f : (I.radical : Set Γ(X, W')), X.basicOpen f.1 := by
@@ -131,7 +130,6 @@ theorem mem_gen_of_local (X : Scheme.{0}) (F : X.Opensᵒᵖ ⥤ CommRingCat) (�
     exact (hW'.self_le_iSup_basicOpen_iff).mp cover
   have h1 : (1 : Γ(X, W')) ∈ I := htop ▸ Submodule.mem_top
   rw [hI, map_one, one_mul] at h1
-  rw [gen_eq_adjoin]
-  exact h1
+  rwa [gen_eq_adjoin]
 
 end GlobalTheory.QcSub.Local

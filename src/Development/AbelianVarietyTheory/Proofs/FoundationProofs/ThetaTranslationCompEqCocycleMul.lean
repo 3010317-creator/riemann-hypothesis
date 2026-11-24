@@ -59,12 +59,10 @@ variable {p : ℕ} [Fact p.Prime]
 
 theorem integral_iff (F : PowerSeries ℂ_[p]) : IntegralMv F ↔ ∀ n, ‖coeff n F‖ ≤ 1 := by
   constructor
-  · intro h n
-    exact h (Finsupp.single () n)
+  · exact fun h n => h (Finsupp.single () n)
   · intro h α
     have := h (α ())
-    rw [Finsupp.unique_single α]
-    exact this
+    rwa [Finsupp.unique_single α]
 
 theorem integral_mul {F G : PowerSeries ℂ_[p]} (hF : IntegralMv F) (hG : IntegralMv G) :
     IntegralMv (F * G) := by
@@ -222,8 +220,7 @@ theorem norm_lamC_root (lam : Qbar →+* ℂ_[p]) {ζ : ℂ} {m : ℕ} (hm : 0 <
   have hζ := root_mem hm h
   have e : (⟨ζ, hζ⟩ : Qbar) ^ m = 1 := Subtype.ext (by simpa using h)
   have e2 : ‖lam ⟨ζ, hζ⟩‖ ^ m = 1 := by rw [← norm_pow, ← map_pow, e, map_one, norm_one]
-  simp only [lamC, dite_eq_left hζ]
-  exact (pow_eq_one_iff_of_nonneg (norm_nonneg _) hm.ne').1 e2
+  simpa only [lamC, dite_eq_left hζ] using (pow_eq_one_iff_of_nonneg (norm_nonneg _) hm.ne').1 e2
 
 theorem norm_lamC_inv (lam : Qbar →+* ℂ_[p]) {c : ℂ} (hc : c ∈ Qbar) (h : ‖lamC lam c‖ = 1) :
     ‖lamC lam c⁻¹‖ = 1 := by

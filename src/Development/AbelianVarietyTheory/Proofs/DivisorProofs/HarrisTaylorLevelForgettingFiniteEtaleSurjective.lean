@@ -192,14 +192,12 @@ theorem exists_liftScheme : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type
       obtain ⟨k', _, _, x', hx'⟩ := FinEt.exists_algClosed_point Z.left w
       obtain ⟨u', hu'⟩ : w ∈ Set.range x'.base := by rw [show Set.range x'.base = {w} from hx']; rfl
       refine ⟨k', inferInstance, inferInstance, x', ⟨u', hu'⟩, (hsp x' x u' u ?_).2 hG⟩
-      rw [hu, hu']
-      exact hzw
+      rwa [hu, hu']
     · rintro ⟨k, _, _, x, ⟨u, hu⟩, hG⟩
       obtain ⟨k', _, _, x', hx'⟩ := FinEt.exists_algClosed_point Z.left z
       obtain ⟨u', hu'⟩ : z ∈ Set.range x'.base := by rw [show Set.range x'.base = {z} from hx']; rfl
       refine ⟨k', inferInstance, inferInstance, x', ⟨u', hu'⟩, (hsp x x' u u' ?_).1 hG⟩
-      rw [hu, hu']
-      exact hzw
+      rwa [hu, hu']
   let U' : Z.left.Opens := ⟨U, hclo.isOpen⟩
   obtain ⟨V, i, hV1, hV2, hmono, Hi⟩ := exists_sub U' hclo.isClosed
   refine ⟨V, fun a => i ≫ et a, hV1, hV2, fun T lv => ⟨fun hL => ?_, fun hex => ?_⟩⟩
@@ -374,9 +372,7 @@ theorem ofLift : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing
   have hNp : N.Coprime p := Nat.Coprime.coprime_dvd_left hd hc
   have hgπ : g ≫ π = T.hom := by
     obtain ⟨f, -, hu⟩ := M.rep T.left (T.hom ≫ M.s) (o''.forget N hd hc)
-    have e1 := hu (g ≫ π) ⟨by rw [Category.assoc, hπ, hg], ⟨c⟩⟩
-    have e2 := hu T.hom ⟨rfl, ⟨mm⟩⟩
-    exact e1.trans e2.symm
+    exact (hu (g ≫ π) ⟨by rw [Category.assoc, hπ, hg], ⟨c⟩⟩).trans (hu T.hom ⟨rfl, ⟨mm⟩⟩).symm
   have hφ : c.φ = mm.φ := _root_.GlobalTheory.UPel.HT.Rigid.objMap_phi_unique p D R b N hN hNp M.X T.left M.s (T.hom ≫ M.s) M.univ (o''.forget N hd hc) _ _ c mm hgπ
   refine ⟨g, hgπ, fun a => ?_⟩
   rw [← hmm a, ← hφ, hcφ]

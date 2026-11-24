@@ -140,16 +140,14 @@ theorem basis_tanM_of_dim {R : Type} [CommRing R] [IsLocalRing R] (G : Over (Sp 
     exact ⟨C, (key C).1 hC, fun a ha => hCu a ((key a).2 ha)⟩
   refine ⟨Module.Basis.mk (v := b) ?_ ?_⟩
   · rw [Fintype.linearIndependent_iff]
-    intro g hg i
-    exact congrFun ((hb 0).unique hg.symm (y₂ := 0) (by simp)) i
+    exact fun g hg i => congrFun ((hb 0).unique hg.symm (y₂ := 0) (by simp)) i
   · intro m _
     obtain ⟨a, ha, -⟩ := hb m
     rw [ha]
     exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
 
 theorem basis_tanM_abelian : ∀ (R : Type) [CommRing R] [IsLocalRing R] [IsNoetherianRing R] (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G] (d : ℕ), IsAbelianScheme G → SmoothOfRelativeDimension d G.hom → Nonempty (Module.Basis (Fin d) R (TanM (𝟙 (Sp R)) G)) := by
-  intro R _ _ _ G _ _ d _ hG
-  exact basis_tanM_of_dim G d hG
+  exact fun R _ _ _ G _ _ d _ hG => basis_tanM_of_dim G d hG
 
 end GlobalTheory.TanBasisDim
 end -- clump:auto
@@ -329,8 +327,7 @@ theorem exists_subfamily_unique_repr_of_spanning_localRing
       simp [bk, v])
   let f : (Fin d → R) →ₗ[R] M := Fintype.linearCombination R (w ∘ a ∘ eq)
   have hf : Function.Surjective f := by
-    rw [← LinearMap.range_eq_top, Fintype.range_linearCombination]
-    exact hspR
+    rwa [← LinearMap.range_eq_top, Fintype.range_linearCombination]
   have hfi : Function.Injective f :=
     OrzechProperty.injective_of_surjective_of_injective b.equivFun.symm.toLinearMap f
       b.equivFun.symm.injective hf
@@ -732,8 +729,7 @@ theorem cech_free : ∀ (A : Type) [CommRing A] [IsLocalRing A] [IsNoetherianRin
         _root_.GlobalTheory.CechCmp.cechOneCochainToPosetCochain_mem_cocycles I B.left A B.hom U hU hinf _ (hb a)⟩ := by
       apply Subtype.ext
       rw [Submodule.coe_sum]
-      simp only [Submodule.coe_smul]
-      exact GlobalTheory.CechCmp.toPos_lc B.hom U hU hinf cc b
+      simpa only [Submodule.coe_smul] using GlobalTheory.CechCmp.toPos_lc B.hom U hU hinf cc b
 
     rw [this, map_sum]
     exact Finset.sum_congr rfl fun a _ => by rw [map_smul, hbP]

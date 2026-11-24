@@ -61,8 +61,7 @@ theorem locInt_le_gen {S G Y T : Scheme.{0}} (g : G ⟶ S) (α : Y ⟶ G) (t : Y
   have h1 : g (α y) ∈ U := hWU hy
   have h2 : (α ≫ g) y = (t ≫ e) y := by rw [hpb]
   show e (t y) ∈ U
-  rw [← Scheme.Hom.comp_apply, ← h2]
-  exact h1
+  rwa [← Scheme.Hom.comp_apply, ← h2]
 
 def LocInt {R : Type} [CommRing R] [IsDomain R] (M : Modif R) (G : Over M.S) (L : LB G.left) {Y : Scheme.{0}}
     (α : Y ⟶ G.left) (t : Y ⟶ Sp (FractionRing R)) (hpb : α ≫ G.hom = t ≫ M.gp) {k : ℕ} (s : SecK L α k) : Prop :=
@@ -77,7 +76,6 @@ theorem le_preimage_of_comp_eq {X X' S : Scheme.{0}} (g : X ⟶ S) (g' : X ⟶ X
     (U : S.Opens) : g ⁻¹ᵁ U ≤ g' ⁻¹ᵁ (h ⁻¹ᵁ U) := by
   intro x hx
   show h (g' x) ∈ U
-  rw [← Scheme.Hom.comp_apply, e]
-  exact hx
+  rwa [← Scheme.Hom.comp_apply, e]
 
 end GlobalTheory.Mum

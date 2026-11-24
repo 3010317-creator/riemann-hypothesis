@@ -172,14 +172,11 @@ theorem vp_main : ∀ (E : Type) [Field E] [NumberField E] [StarRing E] (P : Hei
     rw [conjP_conjP', ← FractionalIdeal.coe_mul, mul_assoc, inv_mul_cancel_left₀ (ne0 _), mul_inv_cancel₀ (ne0 _),
       FractionalIdeal.coe_one]
   · have := (maxV_self P).mul (maxV_inv one_ne_zero (maxV_ne P _ hP))
-    rw [inv_one, mul_one, ← FractionalIdeal.coe_mul] at this
-    exact this
+    rwa [inv_one, mul_one, ← FractionalIdeal.coe_mul] at this
   · have := (maxV_ne _ P hP.symm).mul (maxV_inv WithZero.exp_ne_zero (maxV_self (conjPrime₂ P)))
-    rw [one_mul, ← WithZero.exp_neg, neg_neg, ← FractionalIdeal.coe_mul] at this
-    exact this
+    rwa [one_mul, ← WithZero.exp_neg, neg_neg, ← FractionalIdeal.coe_mul] at this
   · have := (maxV_ne Q P h1).mul (maxV_inv one_ne_zero (maxV_ne Q _ h2))
-    rw [inv_one, mul_one, ← FractionalIdeal.coe_mul] at this
-    exact this
+    rwa [inv_one, mul_one, ← FractionalIdeal.coe_mul] at this
 
 end GlobalTheory.CharVal.Vp
 end -- clump:auto
@@ -273,8 +270,7 @@ theorem val_emb_le_one {φ : E →+* K} {w : HeightOneSpectrum (𝓞 K)} {Q : He
   obtain ⟨r, s, hs, hrs⟩ := (intAt_iff x).2 hx
   refine (intAt_iff _).1 ⟨RingOfIntegers.mapRingHom φ r, RingOfIntegers.mapRingHom φ s, fun h' => hs ((h s).2 h'), ?_⟩
   have := congrArg φ hrs
-  rw [map_mul] at this
-  exact this
+  rwa [map_mul] at this
 
 theorem val_emb_eq_one {φ : E →+* K} {w : HeightOneSpectrum (𝓞 K)} {Q : HeightOneSpectrum (𝓞 E)}
     (h : ∀ r : 𝓞 E, r ∈ Q.asIdeal ↔ RingOfIntegers.mapRingHom φ r ∈ w.asIdeal) {x : E} (hx : Q.valuation E x = 1) :
@@ -466,8 +462,7 @@ theorem splitOver_vT (hX : X.Ok) (hPr : Pr.Ok) (u : Pr.Word) {P : HeightOneSpect
   · intro e
     apply conj_piT_notMem hPr u ⟨P, hP⟩
     have := decoFin_mem_of_mem_divs hP
-    rw [e, mem_conjP] at this
-    exact this
+    rwa [e, mem_conjP] at this
 
 theorem val_q_vG (hX : X.Ok) (hPr : Pr.Ok) {P : HeightOneSpectrum (𝓞 X.E)} (hP : P ∈ Pr.vGs) :
     P.valuation X.E (Formalism.L2.Col.qOf P : X.E) = exp (-1 : ℤ) := by
@@ -621,12 +616,10 @@ theorem partBChi (hs : s.Ok) (hχ : TaylorLogMetric.IsChi D χ) (hK : ChiInK s �
     refine val_prod_unit w (fun τ => ?_) _
     obtain ⟨Q, hQ⟩ := exists_pull (s.iE.symm : D.host.E →+* Z.X.E) (pullW τ w)
     have hT : ((Z.Pr.T u : ℕ) : 𝓞 D.host.E) ∈ Q.asIdeal := by
-      rw [hQ, map_natCast, natCast_mem_pullW]
-      exact hw
+      rwa [hQ, map_natCast, natCast_mem_pullW]
     have h3 := (maxV_of_localization_eq (hloc Q hT)).pow h
     rw [← hp, ← hyI, t4, one_pow] at h3
-    have h4 := val_emb_eq_one hQ ((maxV_span_singleton _).unique h3)
-    simpa using h4
+    simpa using val_emb_eq_one hQ ((maxV_span_singleton _).unique h3)
   · have h1 : w.valuation _ _ = 1 := chiDet_unit hs hχ hK hw hN hS
     have h2 : w.valuation _ _ = 1 := chiDet_unit hs hχ hK hw hN' hS'
     rw [UnitAt, chiFK_eq hs hK a b hN hN', map_mul, map_zpow₀, map_zpow₀, h1, h2]
@@ -1050,8 +1043,7 @@ theorem muOff_vpLat (hZ : Z.Ok) (ht : Z.Ch.Tied Z.sig0 (fun j τ => (Z.W.row τ)
   have hno : ¬ ∃ Q ∈ rowSG Z.Pr sel mu, Q.asIdeal.under (𝓞 Z.X.F) = v₀.asIdeal := by
     rintro ⟨Q, hQ, e⟩
     apply T_notMem_rowSG hZ hsel hT hQ
-    rw [← e, Ideal.under_def, Ideal.mem_comap, map_natCast] at hTv
-    exact hTv
+    rwa [← e, Ideal.under_def, Ideal.mem_comap, map_natCast] at hTv
   have hsel0 : sel v₀ = P ∨ sel v₀ = conjPrime₂ P := eq_or_eq_conjP hZ.fields hS.ne (hsel v₀)
   obtain ⟨ε, hε, hord⟩ : ∃ ε : ℤ, ((sel v₀ = P ∧ ε = 1) ∨ (sel v₀ = conjPrime₂ P ∧ ε = -1)) ∧ ordDet (sel v₀) (vpLat P) = ε := by
     rcases hsel0 with h | h

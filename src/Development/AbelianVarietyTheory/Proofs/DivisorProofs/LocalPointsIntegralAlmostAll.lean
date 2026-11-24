@@ -80,8 +80,7 @@ theorem locPt_val (hU : Unr E) (w : Pl E) (γ : UE E n) :
 theorem eventually_valuation_le_one (x : E) :
     ∀ᶠ w in (cofinite : Filter (Pl E)), w.valuation E x ≤ 1 := by
   rw [Filter.eventually_cofinite]
-  refine (HeightOneSpectrum.Support.finite (𝓞 E) x).subset fun w hw => ?_
-  exact lt_of_not_ge hw
+  exact (HeightOneSpectrum.Support.finite (𝓞 E) x).subset fun w hw => lt_of_not_ge hw
 
 theorem algebraMap_mem_Ov {w : Pl E} {x : E} (h : w.valuation E x ≤ 1) :
     algebraMap E (w.adicCompletion E) x ∈ Ov E w := by
@@ -107,8 +106,7 @@ theorem eventually_mem_KL (hU : Unr E) (γ : UE E n) :
   have h1 : ∀ᶠ w in (cofinite : Filter (Pl E)), ∀ i j, w.valuation E ((γ.1 : GL (Fin n) E).1 i j) ≤ 1 ∧
       w.valuation E (((γ.1 : GL (Fin n) E)⁻¹).1 i j) ≤ 1 := by
     simp only [Filter.eventually_all]
-    intro i j
-    exact (eventually_valuation_le_one _).and (eventually_valuation_le_one _)
+    exact fun i j => (eventually_valuation_le_one _).and (eventually_valuation_le_one _)
   filter_upwards [h1] with w hw
   rw [KL, Subgroup.mem_subgroupOf, locPt_val hU]
   refine mem_GLint_of_entries (fun i j => algebraMap_mem_Ov (hw i j).1) (fun i j => ?_)

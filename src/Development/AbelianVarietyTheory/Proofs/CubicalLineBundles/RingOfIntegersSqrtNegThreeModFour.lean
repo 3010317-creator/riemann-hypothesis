@@ -142,8 +142,7 @@ private theorem exists_int_eq_of_squarefree_mul_sq_eq_int {d : ℕ} (hsq : Squar
     have hdvd : q.den ^ 2 ∣ d * q.num.natAbs ^ 2 := ⟨M.natAbs, by rw [key']; ring⟩
     have hcop : Nat.Coprime (q.den ^ 2) (q.num.natAbs ^ 2) := Nat.Coprime.pow 2 2 q.reduced.symm
     have h3 : q.den ^ 2 ∣ d := hcop.dvd_of_dvd_mul_right hdvd
-    have hu := hsq q.den (by simpa [sq] using h3)
-    simpa using hu
+    simpa using hsq q.den (by simpa [sq] using h3)
   exact ⟨q.num, (Rat.coe_int_num_of_den_eq_one hden).symm⟩
 
 theorem exists_integer_generator_of_sq_eq_neg {K : Type*} [Field K] [NumberField K] {d : ℕ}
@@ -174,16 +173,14 @@ theorem exists_integer_generator_of_sq_eq_neg {K : Type*} [Field K] [NumberField
       have e : ((2 * a : ℚ) : K) = ↑a + ↑b * r + (↑a - ↑b * r) := by
         push_cast
         ring
-      rw [e]
-      exact h
+      rwa [e]
     have hprod : IsIntegral ℤ (((a ^ 2 + d * b ^ 2 : ℚ)) : K) := by
       have h := hc.mul hc'
       rw [hτc, hab] at h
       have e : ((a ^ 2 + d * b ^ 2 : ℚ) : K) = (↑a + ↑b * r) * (↑a - ↑b * r) := by
         push_cast
         linear_combination ((b : K) ^ 2) * hr
-      rw [e]
-      exact h
+      rwa [e]
     obtain ⟨A, hA⟩ := exists_int_eq_of_isIntegral_rat _ hsum
     obtain ⟨N, hN⟩ := exists_int_eq_of_isIntegral_rat _ hprod
     obtain ⟨B, hB⟩ := exists_int_eq_of_squarefree_mul_sq_eq_int hsq (2 * b) (4 * N - A ^ 2) (by

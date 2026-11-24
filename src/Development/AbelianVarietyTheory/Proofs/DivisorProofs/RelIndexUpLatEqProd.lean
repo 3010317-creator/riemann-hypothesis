@@ -90,8 +90,7 @@ theorem relIndex_ordBall_succ {ϖ : L} (hϖ : Valued.v ϖ = WithZero.exp (-1 : �
   let O := (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).valuationSubring
   have hm : ∀ x : ordBall L k, x.1 * ϖ ^ (-k) ∈ O := fun x => by
     have := (hle x.1 k (-k)).2 x.2
-    rw [add_neg_cancel, neg_zero, WithZero.exp_zero] at this
-    exact this
+    rwa [add_neg_cancel, neg_zero, WithZero.exp_zero] at this
   let g : ordBall L k →+ O :=
     { toFun := fun x => ⟨x.1 * ϖ ^ (-k), hm x⟩
       map_zero' := by ext; simp
@@ -149,16 +148,13 @@ theorem relIndex_upLat_eq_prod {n : ℕ} (c C : Fin n → Fin n → ℤ) :
       fun i j h => ?_⟩, funext fun p => ?_⟩
     · simp only [dite_eq_left h]
       exact (y ⟨(i, j), h⟩).out.2
-    · refine Eq.trans ?_ (y p).out_eq
-      exact congrArg QuotientAddGroup.mk (Subtype.ext (dite_eq_left p.2))
+    · exact Eq.trans (congrArg QuotientAddGroup.mk (Subtype.ext (dite_eq_left p.2))) (y p).out_eq
   have hc : (upLat L C).addSubgroupOf (upLat L c) = f.ker := by
     ext x
     rw [AddMonoidHom.mem_ker, funext_iff, AddSubgroup.mem_addSubgroupOf, mem_upLat]
     constructor
-    · intro h p
-      exact (QuotientAddGroup.eq_zero_iff _).2 (h.2 _ _ p.2)
-    · intro h
-      exact ⟨x.2.1, fun i j e => (QuotientAddGroup.eq_zero_iff _).1 (h ⟨(i, j), e⟩)⟩
+    · exact fun h p => (QuotientAddGroup.eq_zero_iff _).2 (h.2 _ _ p.2)
+    · exact fun h => ⟨x.2.1, fun i j e => (QuotientAddGroup.eq_zero_iff _).1 (h ⟨(i, j), e⟩)⟩
   rw [AddSubgroup.relIndex, hc, AddSubgroup.index_ker, AddMonoidHom.range_eq_top.2 hf,
     AddSubgroup.card_top, Nat.card_pi]
   rfl

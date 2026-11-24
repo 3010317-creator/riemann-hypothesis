@@ -109,8 +109,7 @@ theorem isTangent_zero (v : epsR ℂ ⟶ (zeroPolAV (Sp ℂ)).A) : IsTangent v :
     (Category.comp_id _).symm.trans (Over.w η[(zeroPolAV (Sp ℂ)).A])
   unfold IsTangent
   rw [h, h']
-  refine (Spec.map_comp _ _).symm.trans ?_
-  exact Spec.map_id _
+  exact (Spec.map_comp _ _).symm.trans (Spec.map_id _)
 
 theorem isDiff_zero {O : Type} [CommRing O] [StarRing O] (A : AnArc O) [IsEmpty (Fin A.gB)] (w : Fin A.gB → ℂ)
     (v : epsR ℂ ⟶ (zeroPolAV (Sp ℂ)).A) : (zeroUnif A).IsDiff w v := by
@@ -199,8 +198,7 @@ theorem isScalarTower : IsScalarTower ℂ (FractionRing ℂ) ℂ := by
   have h : Out.jFK (R := ℂ) ℂ ≫ Out.jK ℂ = 𝟙 (Sp ℂ) :=
     (Over.w (Λ.ex0 0).b).symm.trans ((congrArg (· ≫ a.D₀.P.A.hom) (Λ.ex0_b 0)).trans (Over.w (Λ.u.ex _)))
   rw [← Spec.map_comp, ← Spec.map_id] at h
-  have h' := congrArg CommRingCat.Hom.hom (Spec.map_injective h)
-  exact IsScalarTower.of_algebraMap_eq' h'.symm
+  exact IsScalarTower.of_algebraMap_eq' (congrArg CommRingCat.Hom.hom (Spec.map_injective h)).symm
 
 theorem ex_zero : Λ.u.ex 0 = η[a.D₀.P.A] := by
   rw [(Λ.u.ker 0).2 (zero_mem _), Hom.one_def, toUnit_unit, Category.id_comp]
@@ -243,15 +241,12 @@ theorem corr_of_genVal {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g : ℕ} 
     if h : ∃ k, φ k = p then j h.choose else if h : ∃ k, φ' k = p then j' h.choose else chartAt hL p
   have i₁ : ∀ k, idx (φ k) = j k := fun k => by
     have e : ∃ k', φ k' = φ k := ⟨k, rfl⟩
-    simp only [idx, dite_eq_left e]
-    exact c₁ _ _ e.choose_spec
+    simpa only [idx, dite_eq_left e] using c₁ _ _ e.choose_spec
   have i₂ : ∀ k, idx (φ' k) = j' k := fun k => by
     have e : ∃ k', φ' k' = φ' k := ⟨k, rfl⟩
     by_cases e' : ∃ k', φ k' = φ' k
-    · simp only [idx, dite_eq_left e']
-      exact c₃ _ _ e'.choose_spec
-    · simp only [idx, dite_eq_right e', dite_eq_left e]
-      exact c₂ _ _ e.choose_spec
+    · simpa only [idx, dite_eq_left e'] using c₃ _ _ e'.choose_spec
+    · simpa only [idx, dite_eq_right e', dite_eq_left e] using c₂ _ _ e.choose_spec
   have hi : ∀ w, u.fr (idx (u.ex w).left) w ≠ 0 := fun w => u.fr_ne _ _ (by
     by_cases e : ∃ k, φ k = (u.ex w).left
     · obtain ⟨k, hk⟩ := e

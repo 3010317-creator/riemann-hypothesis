@@ -163,13 +163,11 @@ theorem glue_unitary : ∀ (D : D7) (𝔫 : Ideal (𝓞 D.host.E)) (a : ℕ) (Z 
     exact add_mem (add_mem (mul_mem hf (hPO i j)) (mul_mem hfO (hentO Zi hZiO i j))) (mul_mem hgO (h1O i j))
   refine ⟨k, ?_, ?_⟩
   · rw [mem_intG]
-    intro i j
-    exact ⟨hX'O i j, hXO i j⟩
+    exact fun i j => ⟨hX'O i j, hXO i j⟩
   · intro i l
     rw [hkinv]
     have hZ : Z.map (fun z : 𝓞 D.host.E => inc D (z : D.host.E)) = Zi := rfl
-    rw [hZ]
-    rw [Matrix.sub_apply]
+    rw [hZ, Matrix.sub_apply]
     simp only [X, Matrix.add_apply, Matrix.smul_apply, smul_eq_mul]
     rw [key_alg (Zi i l) (st P i l) ((1 : Matrix (Fin a) (Fin a) (AE D)) i l) f fb g hg hfbf]
     refine GlobalTheory.CongIdx.mul_mem_hatId ?_ h1f

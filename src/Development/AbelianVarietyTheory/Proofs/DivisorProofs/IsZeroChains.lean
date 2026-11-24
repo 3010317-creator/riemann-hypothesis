@@ -53,9 +53,7 @@ theorem free_ext {P : PSh} {G : Shv R} (a b : (free R).obj P ⟶ G)
     (h : ∀ U x, Sec.map a (freeGen R P U x) = Sec.map b (freeGen R P U x)) : a = b := by
   apply ((sheafificationAdjunction Scheme.etaleTopology.{0} (ModuleCat.{1} (ULift.{1} R))).homEquiv _ _).injective
   ext U : 2
-  apply ModuleCat.free_hom_ext
-  intro x
-  exact h U.unop x.down
+  exact ModuleCat.free_hom_ext (fun x => h U.unop x.down)
 
 theorem free_exists (P : PSh) (F : Shv R) (a : ∀ U : Scheme.{0}, P.obj (op U) → Sec F U)
     (ha : ∀ (V U : Scheme.{0}) (g : V ⟶ U) x, Sec.res g (a U x) = a V (P.map g.op x)) :
@@ -152,8 +150,7 @@ theorem ev_exists (a : ∀ (p : ℕ) (s : ℤ), -(p : ℤ) + n = s → ∀ U : S
   choose φ hφ using key
   refine ⟨Cochain.mk φ, fun p s h U x => ?_⟩
   have := hφ _ _ h p rfl U x
-  rw [eqToHom_refl, Category.id_comp] at this
-  exact this
+  rwa [eqToHom_refl, Category.id_comp] at this
 
 theorem ev_res (α : Cochain ((chains R).obj E) I n) (p : ℕ) (s : ℤ) (h : -(p : ℤ) + n = s) {V U : Scheme.{0}} (g : V ⟶ U)
     (x : Sx E p U) : Sec.res g (_root_.GlobalTheory.EtC.ev (R := R) α p s h U x) = _root_.GlobalTheory.EtC.ev (R := R) α p s h V (x.res g) := by

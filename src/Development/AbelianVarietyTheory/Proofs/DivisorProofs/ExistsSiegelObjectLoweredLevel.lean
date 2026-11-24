@@ -93,8 +93,7 @@ theorem weilIs_lower_field {K : Type} [Field K] [IsAlgClosed K] {A : Over (Sp K)
   obtain ⟨j, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hd
   have h₂ := CommPairing.weilIs_symm hL (hp j)
   rw [inv_pow, inv_inv, Nat.cast_mul] at h₂
-  rw [PairingLevels.weilIs_value_eq globalFns_holds hA hL ht h₂ h₁]
-  exact h₁
+  rwa [PairingLevels.weilIs_value_eq globalFns_holds hA hL ht h₂ h₁]
 
 variable {h N : ℕ} {B' : Type} [CommRing B'] {ζ' : B'} {S : Scheme.{0}} {s' : S ⟶ Sp B'}
 
@@ -118,8 +117,7 @@ theorem weilIs_lower (C : SiegPre h N ζ' s') {K : Type} [Field K] [IsAlgClosed 
     have H' := (tr _ _ _ _).1 (weilIs_lower_field c.ab (pull_isLB c.isLB _) hd hx' hy' ((tr _ _ _ _).2 H))
     rw [map_pow, map_pow] at H'
     have e' : unitOn (u ^ d) = unitOn u ^ d := map_pow _ _ _
-    rw [e']
-    exact H'
+    rwa [e']
   exact key p (Category.id_comp p).symm
 
 def lower (C : SiegPre h N ζ' s') {n d : ℕ} (hN : N = n * d) (h0 : N ≠ 0) {B : Type} [CommRing B] {ζ : B} (j : B →+* B')

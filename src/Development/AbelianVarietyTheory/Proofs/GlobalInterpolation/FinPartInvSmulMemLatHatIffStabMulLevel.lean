@@ -70,8 +70,7 @@ theorem mem_parts (g : GL (Fin M) (AF F ⊗[F] E)) :
       Formalism.UG.bc (Algebra.TensorProduct.map (sndA F) (AlgHom.id F E)).toRingHom g ∈ HR (Af F) σ J := by
   have := GlobalTheory.UnitarySplit.mem_iff _ _ (parts_inj (F := F) (E := E)) (sigR _ σ) (sigR _ σ) (sigR _ σ)
     (GlobalTheory.UnitarySplit.map_sig _ _) (GlobalTheory.UnitarySplit.map_sig _ _) (JR _ J) g
-  rw [GlobalTheory.UnitarySplit.map_JR, GlobalTheory.UnitarySplit.map_JR] at this
-  exact this
+  rwa [GlobalTheory.UnitarySplit.map_JR, GlobalTheory.UnitarySplit.map_JR] at this
 
 theorem exists_fin (h : HA (AF F) σ J) :
     ∃ k : HA (Af F) σ J, (HA.mat (Af F) σ J k).1 = finMat σ J h :=
@@ -117,8 +116,7 @@ theorem mem_latHat_iff : StabTransitive → ∀ (F E : Type) [Field F] [NumberFi
     obtain ⟨k', hk'⟩ := exists_fin σ J h⁻¹
     have h1 : k'⁻¹ ∈ {h : HA (Af F) σ J | actV (Af F) σ J h⁻¹ (fun i => inclR (F := F) (Af F) (x 0 i)) ∈
         latHat F E (L : Set (Fin M → E))} := by
-      rw [Set.mem_setOf_eq, inv_inv, actV_eq, hk', ← projFin_smul]
-      exact hm
+      rwa [Set.mem_setOf_eq, inv_inv, actV_eq, hk', ← projFin_smul]
     rw [hO] at h1
     obtain ⟨af, haf, kf, hkf, e⟩ := h1
     obtain ⟨a, ha1, ha2⟩ := exists_lift σ J af

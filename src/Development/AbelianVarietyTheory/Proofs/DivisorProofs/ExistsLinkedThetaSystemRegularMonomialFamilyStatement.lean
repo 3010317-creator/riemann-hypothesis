@@ -134,8 +134,7 @@ theorem exists_finite_union {X : Scheme.{0}} {T : Type} (N : T → Scheme.{0}) (
       have hm : y' (closedPoint K) ∈ Set.range (coprod.inl : N a ⟶ N a ⨿ Y) ∪
           Set.range (coprod.inr : Y ⟶ N a ⨿ Y) := by
         have h : y' (closedPoint K) ∈ (⊤ : Set (N a ⨿ Y : Scheme.{0})) := trivial
-        rw [← hc] at h
-        exact h
+        rwa [← hc] at h
       rcases hm with hm | hm
       · have hs : Set.range y' ⊆ Set.range (coprod.inl : N a ⟶ N a ⨿ Y) := by
           rintro _ ⟨x, rfl⟩; rw [hsub x]; exact hm
@@ -541,8 +540,7 @@ theorem exists_local_spread : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   have gen : ∀ P : PolAV (Sp (M.ringOn U)), UOver Xo c P (toRat (M.ringOn U)) u →
       UOver Xo c P (M.ringOn U).val.toRingHom uη := fun P hP => by
     have := hP.comp (ratHull (M.ringOn U)).val.toRingHom
-    rw [hu] at this
-    exact this
+    rwa [hu] at this
   haveI := RatModel.isFractionRing_ringOn hU hne
   haveI := GlobalTheory.Poinc.TorsExtend.isIntegrallyClosed_ringOn M ((isNormalScheme_iff_pred _).1 hM) hU hne
   have fg : (M.ringOn U).FG := GlobalTheory.Poinc.fg_ringOn_of_isAffineOpen _ _ M U hU hne

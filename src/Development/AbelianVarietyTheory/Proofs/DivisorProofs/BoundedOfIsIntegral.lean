@@ -200,8 +200,7 @@ theorem bounded_of_isIntegral_general {K Γ O : Type} [Field K] [LinearOrderedCo
   have hcomm : ∀ k, Commute g (B k) := by
     intro k
     rw [hc0, hBpow]
-    refine Commute.sum_left _ _ _ fun l _ => ?_
-    exact ((Commute.pow_pow_self N l k).smul_left _).smul_right _
+    exact Commute.sum_left _ _ _ fun l _ => ((Commute.pow_pow_self N l k).smul_left _).smul_right _
   have ht : ∀ j, v ((g * B j).trace) ≤ 1 := fun j =>
     hint _ (isIntegral_trace_of_isIntegral (g * B j)
       (isIntegral_mul_of_commute (hcomm j) hgi (hBint j)))

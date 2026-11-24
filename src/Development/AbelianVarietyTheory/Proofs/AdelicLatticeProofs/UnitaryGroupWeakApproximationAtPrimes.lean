@@ -160,8 +160,7 @@ theorem finite_det_one_add_smul_eq_zero {E K : Type} [Field E] [Field K] (φ : E
   refine (hfin.preimage φ.injective.injOn).subset fun l hl => ?_
   simp only [Set.mem_preimage, Polynomial.mem_rootSet]
   refine ⟨hp0, ?_⟩
-  rw [Polynomial.coe_aeval_eq_eval, hp]
-  exact hl
+  rwa [Polynomial.coe_aeval_eq_eval, hp]
 
 theorem finite_not_isUnit_det {E R : Type} [Field E] [CommRing R] (φ : E →+* R) {n : ℕ}
     (g : Matrix (Fin n) (Fin n) R) (ε : R) (hε : ε * ε = ε)
@@ -180,8 +179,7 @@ theorem finite_not_isUnit_det {E R : Type} [Field E] [CommRing R] (φ : E →+* 
     letI := Ideal.Quotient.field M
     refine (finite_det_one_add_smul_eq_zero ((Ideal.Quotient.mk M).comp φ)
       (G.map (Ideal.Quotient.mk M))).subset fun l hl => ?_
-    rw [Set.mem_setOf_eq, ← key, Ideal.Quotient.eq_zero_iff_mem]
-    exact hl
+    rwa [Set.mem_setOf_eq, ← key, Ideal.Quotient.eq_zero_iff_mem]
   refine ((hfin.biUnion h1).union (Set.finite_singleton (-1))).subset fun l hl => ?_
   obtain ⟨M, hM, hl⟩ := exists_max_ideal_of_mem_nonunits (mem_nonunits_iff.2 hl)
   have h0 : ε * (1 - ε) ∈ M := by
@@ -256,8 +254,7 @@ theorem exists_norm_one_isUnit_det : ∀ (F E : Type) [Field F] [NumberField F] 
     haveI := hM.isPrime
     refine Set.mem_biUnion (x := M.under (FiniteAdeleRing (𝓞 F) F)) ⟨inferInstance, ?_⟩
       ⟨inferInstance, inferInstance⟩
-    rw [← hsub] at h
-    exact h
+    rwa [← hsub] at h
   have hbad := finite_not_isUnit_det
     (Algebra.TensorProduct.includeRight : E →ₐ[F] RA F E).toRingHom g (e ⊗ₜ[F] (1 : E))
     (by rw [Algebra.TensorProduct.tmul_mul_tmul, he, mul_one]) hM
@@ -586,8 +583,7 @@ theorem weak_approximation : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     have hne : Ideal.span {(N : 𝓞 F)} ≠ 0 := by
       rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
       exact Nat.cast_ne_zero.2 hN.ne'
-    refine (Ideal.finite_factors hne).subset fun v hv => ?_
-    exact Ideal.dvd_span_singleton.2 hv
+    exact (Ideal.finite_factors hne).subset fun v hv => Ideal.dvd_span_singleton.2 hv
   obtain ⟨e, he1, he0⟩ := i1 hfin.toFinset
   have he1' : ∀ v : HeightOneSpectrum (𝓞 F), (N : 𝓞 F) ∈ v.asIdeal → e v = 1 :=
     fun v hv => he1 v (hfin.mem_toFinset.2 hv)

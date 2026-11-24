@@ -112,8 +112,7 @@ theorem exists_scale_integral_not_le_maximal :
   have key : ∀ P : Ideal (𝓞 E), P ≠ ⊤ →
       ∃ s ∈ F⁻¹, ∃ a ∈ I, ∃ o : 𝓞 E, (o : E) = s * a ∧ o ∉ P := by
     intro P hP
-    by_contra h
-    push Not at h
+    by_contra! h
     apply hP
     have hle : ((F * F⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) : Submodule (𝓞 E) E) ≤
         Submodule.map (Algebra.linearMap (𝓞 E) E) P := by
@@ -130,8 +129,7 @@ theorem exists_scale_integral_not_le_maximal :
   choose! sf hsf af haf of hof hof' using key
   have hc : ∀ P' P : Ideal (𝓞 E), P'.IsMaximal → P.IsMaximal → P' ≠ P → ∃ c ∈ P', c ∉ P := by
     intro P' P hP' hP hne'
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hne' (hP'.eq_of_le hP.ne_top h)
   choose! c hc1 hc2 using hc
   obtain ⟨M0, hM0⟩ := Ideal.exists_maximal (𝓞 E)
@@ -242,8 +240,7 @@ theorem GlobalTheory.adicEmbedding_integral_place (F E : Type) [Field F] [Number
   obtain ⟨π, hπ, hπ0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot v.ne_bot
   have hlt : Valued.v (algebraMap F (v.adicCompletion F) (π : F)) < 1 := by
     have := (HeightOneSpectrum.valuation_lt_one_iff_mem (K := F) v π).2 hπ
-    rw [← HeightOneSpectrum.valuedAdicCompletion_eq_valuation] at this
-    exact this
+    rwa [← HeightOneSpectrum.valuedAdicCompletion_eq_valuation] at this
   have hne : (algebraMap (𝓞 F) (𝓞 E) π) ≠ 0 := by
     intro h
     apply hπ0
@@ -254,8 +251,7 @@ theorem GlobalTheory.adicEmbedding_integral_place (F E : Type) [Field F] [Number
     rw [hmem]
     have e : ((algebraMap (𝓞 F) (𝓞 E) π : 𝓞 E) : E) = algebraMap F E (π : F) := by
       exact (IsScalarTower.algebraMap_apply (𝓞 F) (𝓞 E) E π).symm.trans (IsScalarTower.algebraMap_apply (𝓞 F) F E π)
-    rw [e, AlgHom.commutes]
-    exact hlt
+    rwa [e, AlgHom.commutes]
   rw [hbot] at this
   simpa using this
 end -- clump:auto
@@ -364,8 +360,7 @@ theorem exists_pair : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     have := hval v false _ hi
     simp only [Bool.false_eq_true, ↓reduceIte, map_mul] at this
     simp only [↓reduceIte, AlgHom.comp_apply] at hz1
-    rw [hz1, mul_one] at this
-    exact this
+    rwa [hz1, mul_one] at this
   · have hi := hint _ hc
     rw [form_smul_left, hyx', mul_one] at hi
     simpa using hval v false c hi
@@ -498,8 +493,7 @@ theorem exists_isotropic : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     have hne0 : τ (g 0) ≠ 0 := (map_ne_zero τ).2 (hz 0)
     by_cases hp : 0 < (τ (g 0)).re
     · obtain ⟨k, hk⟩ : ∃ k, ¬ 0 < (τ (g k)).re := by
-        by_contra hall
-        push Not at hall
+        by_contra! hall
         have h' : (Finset.univ.filter fun k => 0 < (τ (g k)).re) = Finset.univ :=
           Finset.filter_true_of_mem fun k _ => hall k
         rw [h', Finset.card_univ, Fintype.card_fin] at hcount
@@ -513,8 +507,7 @@ theorem exists_isotropic : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
         · exact h
         · exact absurd (Complex.ext (by simpa using h) (by simpa using him)) hne0
       obtain ⟨k, hk⟩ : ∃ k, 0 < (τ (g k)).re := by
-        by_contra hall
-        push Not at hall
+        by_contra! hall
         have h' : (Finset.univ.filter fun k => 0 < (τ (g k)).re) = ∅ :=
           Finset.filter_false_of_mem fun k _ => not_lt.2 (hall k)
         rw [h', Finset.card_empty] at hcount

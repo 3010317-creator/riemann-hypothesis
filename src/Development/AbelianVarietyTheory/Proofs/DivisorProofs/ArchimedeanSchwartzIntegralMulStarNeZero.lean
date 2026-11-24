@@ -69,15 +69,13 @@ theorem integral_mul_star_ne_zero (F : Type) [Field F] [NumberField F] (κ : Typ
     rw [Complex.star_def, RCLike.mul_conj]
     push_cast; rfl
   simp_rw [h1]
-  rw [integral_complex_ofReal]
-  rw [Complex.ofReal_ne_zero]
+  rw [integral_complex_ofReal, Complex.ofReal_ne_zero]
   apply ne_of_gt
   rw [MeasureTheory.integral_pos_iff_support_of_nonneg (fun x => by positivity) hint]
   have hopen : IsOpen (Function.support fun x => ‖f x‖ ^ 2) := by
     exact (continuous_norm.comp f.continuous).pow 2 |>.isOpen_support
   obtain ⟨x, hx⟩ : ∃ x, f x ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hf (SchwartzMap.ext h)
   exact IsOpen.measure_pos (MeasureTheory.volume : MeasureTheory.Measure (κ → mixedEmbedding.mixedSpace F)) hopen
     ⟨x, by simpa using hx⟩

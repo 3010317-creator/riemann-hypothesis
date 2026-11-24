@@ -146,8 +146,7 @@ theorem logInf_principal (x : Fˣ) :
   · refine Finset.sum_congr rfl fun w _ => ?_
     rw [Real.log_pow]
     rfl
-  · intro w _
-    exact pow_ne_zero _ (norm_ne_zero_iff.2 (inf_ne F (infPart F (diagUnits F x)) w))
+  · exact fun w _ => pow_ne_zero _ (norm_ne_zero_iff.2 (inf_ne F (infPart F (diagUnits F x)) w))
 
 theorem logNorm_principal (x : Fˣ) : logNorm F (diagUnits F x) = 0 := by
   have h1 : finPart F (diagUnits F x) = FiniteAdeleRing.unitEmbedding (𝓞 F) F x := Units.ext rfl
@@ -226,8 +225,7 @@ theorem infDiag_parts (k : Fˣ) : infPart F (infDiag k) = infPart F (diagUnits F
           (InfiniteAdeleRing F)ˣ) : InfiniteAdeleRing F) w := Finset.prod_apply _ _ _
     rw [e, Finset.prod_eq_single w]
     · exact Model.infIdele_fst_self F w _
-    · intro u _ hu
-      exact Model.infIdele_fst_ne F u w (Ne.symm hu) _
+    · exact fun u _ hu => Model.infIdele_fst_ne F u w (Ne.symm hu) _
     · simp
   · rw [infDiag, MonoidHom.finsetProd_apply, map_prod]
     exact Finset.prod_eq_one fun u _ => Units.ext rfl
@@ -345,9 +343,7 @@ theorem tendsto_prod_local (k : Fˣ) :
   rw [Units.isEmbedding_embedProduct.tendsto_nhds_iff]
   refine (h k).prodMk_nhds ?_
   refine (MulOpposite.continuous_op.tendsto _).comp ?_
-  have h2 := h k⁻¹
-  simp only [map_inv, Finset.prod_inv_distrib, ← mul_inv] at h2
-  exact h2
+  simpa only [map_inv, Finset.prod_inv_distrib, ← mul_inv] using h k⁻¹
 
 theorem locK_unr (χ : HChar F) {v : HeightOneSpectrum (𝓞 F)} (h : χ.UnrAt v) (k : Fˣ) :
     χ.locK v k = χ.val v ^ ordF v k := by
@@ -362,8 +358,7 @@ theorem locK_unr (χ : HChar F) {v : HeightOneSpectrum (𝓞 F)} (h : χ.UnrAt v
     simp only [smul_eq_mul, mul_neg, mul_one, neg_neg]
     rw [WithZero.exp_log h0, mul_inv_cancel₀ h0]
   have h3 : χ.locK v (k * (unif v ^ ordF v k)⁻¹) = 1 := h _ hu
-  rw [map_mul, map_inv, map_zpow, mul_inv_eq_one] at h3
-  exact h3
+  rwa [map_mul, map_inv, map_zpow, mul_inv_eq_one] at h3
 
 theorem finite_ordF (k : Fˣ) : {v : HeightOneSpectrum (𝓞 F) | ordF v k ≠ 0}.Finite := by
   have h := Filter.eventually_cofinite.1 (GlobalTheory.Idele.ord_vw_eventually_zero (FiniteAdeleRing.unitEmbedding (𝓞 F) F k))
@@ -371,8 +366,7 @@ theorem finite_ordF (k : Fˣ) : {v : HeightOneSpectrum (𝓞 F) | ordF v k ≠ 0
   have hk : Valued.v (((FiniteAdeleRing.unitEmbedding (𝓞 F) F k : (FiniteAdeleRing (𝓞 F) F)ˣ) :
       FiniteAdeleRing (𝓞 F) F) v) = v.valuation F (k : F) :=
     HeightOneSpectrum.valuedAdicCompletion_eq_valuation' v (k : F)
-  rw [GlobalTheory.Idele.ord_vw, hk] at h0
-  exact h0
+  rwa [GlobalTheory.Idele.ord_vw, hk] at h0
 
 theorem productRule (χ : HChar F) : χ.ProductRule := by
   classical
@@ -391,8 +385,7 @@ theorem productRule (χ : HChar F) : χ.ProductRule := by
     rw [Finset.mem_sdiff]
     refine ⟨fun h => ⟨hT (Finset.mem_union_right _ ?_), h⟩, fun h => h.2⟩
     rw [Set.Finite.mem_toFinset]
-    intro h0
-    exact hv (by rw [h0, zpow_zero])
+    exact fun h0 => hv (by rw [h0, zpow_zero])
 
 end Product
 

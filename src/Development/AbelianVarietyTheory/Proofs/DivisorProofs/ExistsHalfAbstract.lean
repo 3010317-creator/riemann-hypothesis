@@ -139,8 +139,7 @@ theorem sig_invol {σ : E →ₐ[F] E} (h : IsCMExt F E σ) (x : E) : σ (σ x) 
   rw [h.2.2.2, h.2.2.2, star_star]
 
 theorem sig_ne {σ : E →ₐ[F] E} (h : IsCMExt F E σ) : ∃ x, σ x ≠ x := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   obtain ⟨w⟩ : Nonempty (InfinitePlace E) := inferInstance
   have hw : w.IsComplex := h.2.1.isComplex w
   rw [InfinitePlace.isComplex_iff, ComplexEmbedding.isReal_iff] at hw
@@ -176,9 +175,7 @@ theorem exists_int_basis {σ : E →ₐ[F] E} (h : IsCMExt F E σ) :
   obtain ⟨δ0, b, hsq, hb0, hb1, hbb⟩ :=
     GlobalTheory.QuadNormBase.exists_basis F E σ h.2.2.1 (sig_invol h) (sig_ne h)
   obtain ⟨x, y, hy, hxy⟩ := IsFractionRing.div_surjective (A := 𝓞 F) δ0
-  have hy0 : (y : F) ≠ 0 := by
-    intro h0
-    exact nonZeroDivisors.coe_ne_zero ⟨y, hy⟩ (by exact_mod_cast h0)
+  have hy0 : (y : F) ≠ 0 := fun h0 => nonZeroDivisors.coe_ne_zero ⟨y, hy⟩ (by exact_mod_cast h0)
   have hδ0 : δ0 ≠ 0 := by
     rintro rfl
     exact hsq ⟨0, by simp⟩

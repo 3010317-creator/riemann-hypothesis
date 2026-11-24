@@ -137,8 +137,7 @@ theorem select {ρ : Formalism.AUTREP.GAf L n →* Module.End ℂ A} {J : Type} 
     intro t h y hy
     have hle : (⨆ j ∈ t, R j) ≤ (⨆ j ∈ t, R j).comap (ρ h) := by
       refine iSup₂_le fun j hj => ?_
-      intro z hz
-      exact (le_iSup₂ (f := fun j (_ : j ∈ t) => R j) j hj) (hst j h z hz)
+      exact fun z hz => (le_iSup₂ (f := fun j (_ : j ∈ t) => R j) j hj) (hst j h z hz)
     exact hle hy
   induction s using Finset.induction_on with
   | empty =>
@@ -218,8 +217,7 @@ theorem fix_sum_of_mem {ρ : Formalism.AUTREP.GAf L n →* Module.End ℂ A} {σ
   calc ∑ i, b i • ρ (lf i) x = ∑ j ∈ t, ∑ i, b i • ρ (lf i) (j.1 (ψ j)) := by
         rw [hx']
 
-        simp only [map_sum, Finset.smul_sum]
-        exact Finset.sum_comm
+        simpa only [map_sum, Finset.smul_sum] using Finset.sum_comm
     _ = x := by
         rw [Finset.sum_congr rfl hterm, ← hx']
 
@@ -237,7 +235,6 @@ theorem isotIn_conjT_fix_sum : ∀ (D : D7) (n : ℕ) (A : Type) [AddCommGroup A
   funext g
   have h2 := congrArg star (congrFun h1 g)
   simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, star_sum, star_mul', star_star, rt_apply] at h2
-  simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, rt_apply]
-  exact h2
+  simpa only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, rt_apply] using h2
 
 end GlobalTheory.IsotConjFix

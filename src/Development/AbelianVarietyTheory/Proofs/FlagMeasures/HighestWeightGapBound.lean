@@ -311,11 +311,9 @@ theorem ew_mem_pfil (hE : GlRel E) (x : V) (hx : x ∈ kSpan ε E u) (w : List (
   induction w with
   | nil =>
     simp only [ew, List.length_nil, Module.End.one_apply]
-    rw [hp.1]
-    exact hx
+    rwa [hp.1]
   | cons p w ih =>
-    simp only [ew, List.length_cons, Module.End.mul_apply]
-    exact hp.2.2.2.1 _ p.1 p.2 _ ih
+    simpa only [ew, List.length_cons, Module.End.mul_apply] using hp.2.2.2.1 _ p.1 p.2 _ ih
 
 end Transfer
 
@@ -350,11 +348,9 @@ theorem uniqAlg : ∀ (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V
         · simp [mapArr_apply, F]
         · intro b _ hb
           simp [mapArr_apply, F, hb]
-        · intro h
-          exact absurd (Finset.mem_univ _) h
+        · exact fun h => absurd (Finset.mem_univ _) h
       have h0 := hD _ (by simpa using hw) F hF
-      rw [hθ, ← hw0] at h0
-      exact h0
+      rwa [hθ, ← hw0] at h0
     exact hle hy
   have hD : ∀ m, ∀ F ∈ arrV0 ε E u m, ev (thetaA E' m (mapArr ι n m F)) = 0 := by
     intro m
@@ -371,8 +367,7 @@ theorem uniqAlg : ∀ (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V
           hPf j (fun m hm => ih m (Nat.lt_succ_of_le hm))
         refine _root_.GlobalTheory.Jet.jet_map_eq_zero V n ε E lam g u j hE hU hK hfd hgap hg
           (ev ∘ₗ thetaA E' (j + 1) ∘ₗ mapArr ι n (j + 1)) ?_ ?_ ?_ ?_ F hF
-        · intro G _
-          exact hev _
+        · exact fun G _ => hev _
         · intro c d hcd G hG
           simp only [LinearMap.comp_apply]
           rw [mapArr_arrE ε E E' ι u hι G hG c d hcd, jm_theta_equiv E' hE', hevE c d hcd]
@@ -652,8 +647,7 @@ theorem jets_vanish {ε : Fin n → Bool} {E : Fin n → Fin n → Module.End �
     (fun x hx => by rw [hev, hι x hx]; exact h0 _)
   intro x w
   have := key w x.1 x.2
-  rw [hev, ew_shift, List.nil_append, hι x.1 x.2] at this
-  exact this
+  rwa [hev, ew_shift, List.nil_append, hι x.1 x.2] at this
 
 end Alg
 
@@ -691,8 +685,7 @@ private theorem smoothOnG_sum_and_Eword_sum {ι : Type} (s : Finset ι) (c : ι 
       Eword ε w (fun x => ∑ i ∈ s, c i * φ i x) 1 = ∑ i ∈ s, c i * Eword ε w (φ i) 1 := by
   classical
   refine Finset.induction_on s ?_ ?_
-  · simp only [Finset.sum_empty]
-    exact ⟨smooth_zero, by rw [eword_zero]⟩
+  · simpa only [Finset.sum_empty] using ⟨smooth_zero, by rw [eword_zero]⟩
   · intro j s hj ih
     have e : (fun x => ∑ i ∈ insert j s, c i * φ i x) = fun x => (∑ i ∈ s, c i * φ i x) + c j * φ j x := by
       funext x; rw [Finset.sum_insert hj, add_comm]
@@ -763,9 +756,7 @@ end Main
 theorem germ_jet_zero : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (V : Submodule ℂ H) (E : Fin n → Fin n → Module.End ℂ V) (lam : Fin n → ℝ) (g₀ : ℝ) (u : V), IsURepOn (UJset ε) σ → IsDer ε σ V E → KHighest ε E (LamOf ε lam) u → FiniteDimensional ℂ (kSpan ε E u) → (∀ a b : Fin n, a < b → ε a ≠ ε b → g₀ ≤ lam a - lam b) → 2 * (n : ℝ) < g₀ → ∀ F : Matrix (Fin n) (Fin n) ℂ → (H →ₗ[ℂ] H), (∀ g ∈ UJset ε, ∀ x ∈ (kSpan ε E u).map V.subtype, F g x ∈ (kSpan ε E u).map V.subtype ∧ ∀ k₁ ∈ Kset ε, ∀ k₂ ∈ Kset ε, F (k₁ * g * k₂) x = σ k₁ (F g (σ k₂ x))) → (∀ x ∈ (kSpan ε E u).map V.subtype, ∀ y : H, SmoothOnG ε (fun g => ⟪y, F g x⟫_ℂ)) → (∀ G ∈ Vminus ε E (LamOf ε lam) u, ∀ y : H, ∀ᶠ g : UJ ε in nhds 1, ∑ a, ∑ b, Eab ε a b (fun z => ⟪y, F z (at1 G a b : V)⟫_ℂ) (umat g) = 0) → (∀ x ∈ (kSpan ε E u).map V.subtype, F 1 x = 0) → ∀ (w : List (Fin n × Fin n)), ∀ x ∈ (kSpan ε E u).map V.subtype, ∀ y : H, Eword ε w (fun g => ⟪y, F g x⟫_ℂ) 1 = 0 := by
   intro n ε H _ _ _ σ V E lam g₀ u hσ hD hK hfd hgap hg F hF hs hmin h1
   haveI : FiniteDimensional ℂ (kSpan ε E u) := hfd
-  have hK1 : (1 : Matrix (Fin n) (Fin n) ℂ) ∈ Kset ε := by
-    show (1 : Matrix (Fin n) (Fin n) ℂ) ∈ Matrix.unitaryGroup (Fin n) ℂ ∧ 1 * Jm ε = Jm ε * 1
-    exact ⟨one_mem _, by simp⟩
+  have hK1 : (1 : Matrix (Fin n) (Fin n) ℂ) ∈ Kset ε := ⟨one_mem _, by simp⟩
   have hmemS : ∀ x : kSpan ε E u, ((x : V) : H) ∈ (kSpan ε E u).map V.subtype :=
     fun x => Submodule.mem_map_of_mem x.2
   have hFW : ∀ g, inUJ ε g → ∀ x ∈ (kSpan ε E u).map V.subtype, F g x ∈ (kSpan ε E u).map V.subtype :=

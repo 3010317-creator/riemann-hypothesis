@@ -215,16 +215,14 @@ theorem exists_measurable_levMap (n n₀ a : ℕ) (j : Fin a → ℕ) (ε : Fin 
     have hU : inUJ ε (lev ε B B₀ (fun i => Matrix.of (z.1 i)) (uMat z.2)) := h.inUJ_lev _ _ hz z.2.2
     have hr : lev ε B B₀ (fun i => Matrix.of (z.1 i)) (uMat z.2) ∈
         Set.range (fun g : UJ ε => ((g : (Matrix (Fin n) (Fin n) ℂ)ˣ) : Matrix (Fin n) (Fin n) ℂ)) := by
-      rw [(isClosedEmbeddingMatrix n ε).2]
-      exact hU
+      rwa [(isClosedEmbeddingMatrix n ε).2]
     obtain ⟨g, hg⟩ := hr
     exact ⟨g, hg⟩
   let θ : (∀ i, Fin (j i) → Fin (j i) → ℂ) × UJ ε₀ → UJ ε := fun z =>
     if hz : z ∈ S then (hex z hz).choose else 1
   have hθ : ∀ z ∈ S, uMat (θ z) = lev ε B B₀ (fun i => Matrix.of (z.1 i)) (uMat z.2) := by
     intro z hz
-    simp only [θ, dite_eq_left hz]
-    exact (hex z hz).choose_spec
+    simpa only [θ, dite_eq_left hz] using (hex z hz).choose_spec
   refine ⟨θ, ?_, fun z hz => hθ z hz⟩
   have hdet : ∀ i, Measurable fun z : (∀ i, Fin (j i) → Fin (j i) → ℂ) × UJ ε₀ => (Matrix.of (z.1 i)).det :=
     fun i =>
@@ -319,8 +317,7 @@ theorem exists_hermitian_sqrt_mem_UJ (n : ℕ) (ε : Fin n → Bool) (C : Matrix
   have hu : IsUnit s := (Matrix.isUnit_iff_isUnit_det s).mpr hdet
   have hmem : hu.unit ∈ Formalism.REAL.UJ ε := by
     show (hu.unit : Matrix (Fin n) (Fin n) ℂ)ᴴ * Formalism.REAL.Jm ε * hu.unit = Formalism.REAL.Jm ε
-    rw [IsUnit.unit_spec, hsh]
-    exact hsJs
+    rwa [IsUnit.unit_spec, hsh]
   refine ⟨⟨hu.unit, hmem⟩, ?_, ?_⟩
   · show (hu.unit : Matrix (Fin n) (Fin n) ℂ)ᴴ = hu.unit
     rw [IsUnit.unit_spec, hsh]
@@ -538,8 +535,7 @@ theorem exists_isFrame : ∀ (n n₀ a : ℕ) (j : Fin a → ℕ) (ε : Fin n �
           _ = C * Jm ε₀ * Cᴴ * Jm ε := by
               rw [Matrix.mul_assoc (C * Jm ε₀), hCJ, ← Matrix.mul_assoc Cᴴ C, ← hss]
               simp only [Matrix.mul_assoc]
-      rw [hsum, hsumJ, hlast]
-      exact hres
+      rwa [hsum, hsumJ, hlast]
   · have hsum : ∑ k, B k * ((B k)ᴴ * A₀) = P * (Pᴴ * A₀) := (hPPX A₀).symm
     simp only [hsum, Matrix.mul_assoc]
     rw [← hS, hS'S, Matrix.mul_one, hC, sub_add_cancel]
@@ -1525,8 +1521,7 @@ theorem exists_leviChart : ∀ (n n₀ a : ℕ) (j : Fin a → ℕ) (ε : Fin n 
     rw [hθR z hz, hθR z' hz'] at e2
     obtain ⟨e3, e4⟩ := hF.lev_inj _ _ _ _ e2
     refine Prod.ext (funext fun i => twist_inj (τ := τ) (hp i) (congrFun e3 i)) ?_
-    have e5 := uMat_injective e4
-    exact C₀.injective (mul_left_cancel (mul_right_cancel e5))
+    exact C₀.injective (mul_left_cancel (mul_right_cancel (uMat_injective e4)))
   · rw [Function.comp_apply, Size.locSize_blocks n a j B W hB1 hB0 hspB _
       (fun i => Matrix.of (twist (p i i) τ (z.1 i))) (fun i => det_twist_ne (hp i) (hz i))
       (fun i => by rw [hθR z hz, hF.lev_mul_B]) i, det_twist (hp i), norm_tau hτ]

@@ -139,8 +139,7 @@ theorem isFrameMat_mono {W W₀ : (Y₀ TF.X Z).Opens} (hW : W ≤ W₀) {k : TF
   have h1 := h S z hz₀ hU hk hx σ i
   have e1 : (fun j => ev z W₀ hz₀ (C σ i j)) = fun j => ev z W hz (((C σ).map (resG (Y₀ TF.X Z) hW)) i j) :=
     funext fun j => (FlagMod.ev_res z hW hz hz₀ _).symm
-  rw [e1] at h1
-  exact h1
+  rwa [e1] at h1
 
 theorem isFrameMat_permE (p : ∀ τ : E →+* ℂ, Equiv.Perm (Fin (Dw.mult τ))) {W : (Y₀ TF.X Z).Opens} {k : TF.X.F.J}
     {C : ∀ σ : E →+* ℂ, Matrix (Fin (Dw.mult σ)) (Fin (Dw.mult σ)) Γ(Y₀ TF.X Z, W)}
@@ -274,8 +273,7 @@ theorem exists_lowInv_mul_upperUni_of_leadingMinors :
       have h3 : N = N.submatrix (Fin.castLE (le_refl (n+1))) (Fin.castLE (le_refl (n+1))) := by
         ext i j; rfl
       have := hN (n+1) le_rfl
-      rw [← h3, h1, h2, mul_one] at this
-      exact this
+      rwa [← h3, h1, h2, mul_one] at this
     have hdu : IsUnit d := by
       rw [Matrix.det_of_isLowerTriangular L (fun i j h => hLz i j h), Fin.prod_univ_castSucc] at hdet
       have := isUnit_of_mul_isUnit_right hdet
@@ -303,8 +301,7 @@ open Matrix
 theorem exists_isUnit_of_isUnit_sum_localRing {R : Type} [CommRing R] [IsLocalRing R]
     {ι : Type} (s : Finset ι) (f : ι → R) (h : IsUnit (∑ i ∈ s, f i)) :
     ∃ i ∈ s, IsUnit (f i) := by
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   apply (IsLocalRing.mem_maximalIdeal _).mp _ h
   exact Ideal.sum_mem _ fun i hi => (IsLocalRing.mem_maximalIdeal _).mpr (hne i hi)
 
@@ -363,8 +360,7 @@ theorem exists_perm_isUnit_leading_minors_localRing :
       rw [this, Matrix.submatrix_id_id, Matrix.det_permute']
       refine IsUnit.mul ?_ ?_
       · rcases Int.units_eq_one_or (Equiv.Perm.sign w) with h | h <;> simp [h]
-      · rw [Matrix.det_succ_row M (Fin.last n)]
-        exact hM
+      · rwa [Matrix.det_succ_row M (Fin.last n)]
 
 end GlobalTheory
 end -- clump:auto
@@ -536,8 +532,7 @@ theorem isUnit_det_of_isCombAtG_vecAt : ∀ (E : Type) [Field E] [NumberField E]
       have h3 : (if i = l then (1 : S) else 0) = (Pi.single i (1 : S) : Fin (Dw.mult σ) → S) l := by
         rw [Pi.single_apply]
         exact if_congr eq_comm rfl rfl
-      rw [Matrix.mul_apply, Matrix.one_apply, h3]
-      exact h2
+      rwa [Matrix.mul_apply, Matrix.one_apply, h3]
     exact IsUnit.of_mul_eq_one D.det (by rw [← Matrix.det_mul, hCD, Matrix.det_one])
 
 end GlobalTheory.LogPole
@@ -609,8 +604,7 @@ theorem exists_frameMat {E : Type} [Field E] [NumberField E] [IsCMField E] {H : 
       spMap (dualMap (ev z W₀ hz)) ≫ (tv (TF.X.F.vecAt k (FlagMod.tau hW₀ ≫ inc₀ TF.X Z) hk0 hx0 σ i)).left := by
     rw [← FlagMod.tanPull_left (ev z W₀ hz) eb, FlagMod.Frames.tanPull_vecAt TF.X.F k (ev z W₀ hz) _ hk0 hz' hx0 hx' eb,
       vecAt_congr TF k (by rw [← Category.assoc, hzφ]) hz' hk hx' hx]
-  rw [funext fun j => e1 (e ⟨σ, j⟩), e2]
-  exact hb
+  rwa [funext fun j => e1 (e ⟨σ, j⟩), e2]
 
 theorem isUnit_prod_univ {R ι : Type} [CommRing R] [Fintype ι] (f : ι → R) (h : ∀ i, IsUnit (f i)) :
     IsUnit (∏ i, f i) :=
@@ -674,16 +668,14 @@ theorem GlobalTheory.LogPole.exists_isCell_near : ∀ (E : Type) [Field E] [Numb
         ((C σ).map (resG (Y₀ TF.X Z) hWW₀)).submatrix id (p σ) = L * N := fun σ =>
     GlobalTheory.ShFam.Cell.exists_lowInv_mul_upperUni_of_leadingMinors _ _ fun m hm => by
       have := hrm σ ⟨m, Nat.lt_succ_of_le hm⟩
-      rw [hmap] at this
-      exact this
+      rwa [hmap] at this
   choose L N hL hN hNd hLN using hLU
   refine ⟨permE e p, (Y₀ TF.X Z).basicOpen f, k, L, N, isEigBasis_permE p hv, hyf, hWW₀.trans hW₀V,
     isCell_of_isFrameMat hWa (hWW₀.trans hW₀U) (hWW₀.trans hW₀k) (fun σ => (hL σ).1) (fun σ => (hL σ).2) hN hNd ?_⟩
   have h1 := isFrameMat_mono hWW₀ (isFrameMat_permE p hC)
   have e1 : (fun σ => ((C σ).submatrix id (p σ)).map (resG (Y₀ TF.X Z) hWW₀)) = fun σ => L σ * N σ :=
     funext fun σ => (Matrix.submatrix_map _ _ _ _).symm.trans (hLN σ)
-  rw [e1] at h1
-  exact h1
+  rwa [e1] at h1
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

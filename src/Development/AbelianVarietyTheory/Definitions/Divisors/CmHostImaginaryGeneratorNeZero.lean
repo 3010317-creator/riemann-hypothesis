@@ -305,8 +305,7 @@ theorem congLev_top : congLev hc J Λ ⊤ = UA hc J ⊓ Formalism.UG.stabGL (hat
 theorem congLev_mono {𝔪 𝔫 : Ideal (𝓞 E)} (h : 𝔪 ≤ 𝔫) : congLev hc J Λ 𝔪 ≤ congLev hc J Λ 𝔫 := by
   rintro g ⟨g1, g2, g3⟩
   refine ⟨g1, g2, fun x hx => ?_⟩
-  refine Submodule.span_mono ?_ (g3 x hx)
-  exact Set.image_mono (Submodule.smul_mono_left h)
+  exact Submodule.span_mono (Set.image_mono (Submodule.smul_mono_left h)) (g3 x hx)
 
 end Cong
 

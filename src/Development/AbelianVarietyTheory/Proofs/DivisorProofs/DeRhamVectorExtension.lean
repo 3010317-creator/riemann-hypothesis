@@ -237,8 +237,7 @@ theorem exists_smoothOfRelativeDimension_of_hodgeDeRham : GlobalTheory.Published
   have h3 : 2 * gk = G.height := by
     rw [← h1, ← h2]; exact (LinearEquiv.ofBijective L hbij).finrank_eq
   have h4 : G.height / 2 = gk := by omega
-  rw [h4]
-  exact hgk
+  rwa [h4]
 
 end GlobalTheory.TowerDim
 end -- clump:auto
@@ -398,8 +397,7 @@ theorem exists_canonical_family : GlobalTheory.Published.AbelianHodgeDeRham → 
     obtain ⟨g, hg⟩ := GlobalTheory.T.exists_relativeDimension_abelian_torsionTower hP p R hR A hA G t
     exact GlobalTheory.T.lie_image_iff_lie_correspondence_deRham_extension hP p R hR A g hA hg G t (canFamily hP p hR hA t)
       (isCan_canMap p hA t) h v
-  · intro R _ hR A _ hA G t c
-    exact isCan_canMap p hA t c
+  · exact fun R _ hR A _ hA G t c => isCan_canMap p hA t c
 
 end GlobalTheory.DeRhamExt
 end -- clump:auto

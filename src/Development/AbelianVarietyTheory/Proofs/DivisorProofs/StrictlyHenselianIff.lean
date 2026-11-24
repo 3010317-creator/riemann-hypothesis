@@ -81,8 +81,7 @@ theorem henselian_of_sections {R : Type} [CommRing R] [IsLocalRing R]
       residue_eq_zero_iff]
   obtain ⟨s, hs⟩ := H P.Ring (RingHom.ker ψ) hq
   refine ⟨s P.X, ?_, ?_⟩
-  · have h := (P.hasMap_X.map s).1
-    simpa [P, IsRoot, coe_aeval_eq_eval] using h
+  · simpa [P, IsRoot, coe_aeval_eq_eval] using (P.hasMap_X.map s).1
   · have hmem : P.X - algebraMap R P.Ring a₀ ∈ RingHom.ker ψ := by
       rw [RingHom.mem_ker, map_sub, AlgHom.commutes, ResidueField.algebraMap_eq]
       simp [ψ]
@@ -121,8 +120,7 @@ theorem isSepClosed_of_sections {R : Type} [CommRing R] [IsLocalRing R]
       ResidueField.algebraMap_eq, residue_eq_zero_iff]
   obtain ⟨s, -⟩ := H P.Ring (RingHom.ker ψ) hq
   have ha : f.eval (s P.X) = 0 := by
-    have h := (P.hasMap_X.map s).1
-    simpa [P, coe_aeval_eq_eval] using h
+    simpa [P, coe_aeval_eq_eval] using (P.hasMap_X.map s).1
   exact ⟨residue R (s P.X), by rw [← hf, eval_map, eval₂_hom, ha, map_zero]⟩
 
 end GlobalTheory.StrictHensel
@@ -171,7 +169,6 @@ theorem strictlyHenselian_iff : ∀ (R : Type) [CommRing R] [IsLocalRing R],
       (HenselianLocalRing R ∧ IsSepClosed (ResidueField R)) := by
   intro R _ _
   refine ⟨fun H => ⟨henselian_of_sections H, isSepClosed_of_sections H⟩, fun ⟨h₁, h₂⟩ => ?_⟩
-  intro A _ _ _ q _ hq
-  exact sections_of_henselian_sepClosed A q hq
+  exact fun A _ _ _ q _ hq => sections_of_henselian_sepClosed A q hq
 
 end GlobalTheory.StrictHensel

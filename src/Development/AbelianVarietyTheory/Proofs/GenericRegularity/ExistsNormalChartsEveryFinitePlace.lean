@@ -114,9 +114,7 @@ theorem adjoin_insert_union_image {K Ω : Type} [Field K] [Field Ω] [Algebra K 
   · apply Algebra.adjoin_le
     rintro z (hz | ⟨i, rfl⟩)
     · refine Algebra.adjoin_mono ?_ hz
-      apply Set.insert_subset_insert
-      intro g hg
-      exact Finset.mem_coe.2 (Finset.mem_union_left _ hg)
+      exact Set.insert_subset_insert (fun g hg => Finset.mem_coe.2 (Finset.mem_union_left _ hg))
     · exact Algebra.subset_adjoin (Or.inr (Finset.mem_coe.2 (Finset.mem_union_right _
         (Finset.mem_image.2 ⟨i, Finset.mem_univ _, rfl⟩))))
 
@@ -171,8 +169,7 @@ theorem PChart.exists_refine (hL : EvLaws Xo c) {O : Type} [CommRing O] {β : O 
     exact h2 (Subalgebra.inclusion (hle e he) g) (hG hg)
   · exact Subring.subset_closure (Or.inr (hGr i))
   · have := hinv e he
-    rw [hw e he k] at this
-    exact this
+    rwa [hw e he k] at this
   · intro L _ _ W y e he ψ z t h1 hz hb hψ hW
     obtain ⟨ψ', hc, hr⟩ := hext e he L ψ hψ
     refine ⟨e, he, ψ', z, t, fun g hg => ?_, ?_, hb⟩
@@ -181,14 +178,12 @@ theorem PChart.exists_refine (hL : EvLaws Xo c) {O : Type} [CommRing O] {β : O 
         have e2 := h1 ⟨g, Algebra.subset_adjoin (Or.inr h)⟩ h
         have e3 := DFunLike.congr_fun hc ⟨g, Algebra.subset_adjoin (Or.inr h)⟩
         rw [AlgHom.comp_apply] at e3
-        have e4 := (congrArg ψ' e1).trans e3
-        exact e4.symm ▸ e2
+        exact ((congrArg ψ' e1).trans e3).symm ▸ e2
       · obtain ⟨i, -, hi⟩ := Finset.mem_image.1 h
         rw [← hw e he i, ← hw e he k] at hi
         have e1 := hr i (hi.symm ▸ g.2)
         have e2 : g = ⟨_, hi.symm ▸ g.2⟩ := Subtype.ext hi.symm
-        have e4 := (congrArg ψ' e2).trans e1
-        exact e4.symm ▸ hW i
+        exact ((congrArg ψ' e2).trans e1).symm ▸ hW i
     · refine frMap_cancel _ _ _ (Subalgebra.inclusion (hle e he)) ψ' (P.y e he) _ _ (hy' e he) ?_
       exact hc.symm ▸ hz
 
@@ -207,8 +202,7 @@ theorem exists_covers_fam : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   intro L _ _ W hW y
   obtain ⟨j, e, he, ψ, z, t, h1, hz, hb⟩ := hP L W hW y
   have hex : ∃ i, ψ (evR Xo c (ws i) ((P j).y e he)) ≠ 0 := by
-    by_contra hn
-    push Not at hn
+    by_contra! hn
     have hle : Ideal.span (Set.range fun i => (evR Xo c (ws i) ((P j).y e he) : (P j).R e)) ≤ RingHom.ker ψ := by
       rw [Ideal.span_le]
       rintro _ ⟨i, rfl⟩

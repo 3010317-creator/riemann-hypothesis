@@ -253,8 +253,7 @@ theorem mul_norm_tval_le_fibNorm : ∀ (T : Type) [Fintype T] [DecidableEq T] (N
   refine (norm_sum_mul_le _ _).trans ?_
   calc _ ≤ Real.sqrt (∑ I, ‖(fibY la s X *ᵥ x) I‖ ^ 2) * 1 := by
         refine mul_le_mul_of_nonneg_left ?_ (Real.sqrt_nonneg _)
-        rw [Real.sqrt_le_one]
-        exact h3
+        rwa [Real.sqrt_le_one]
     _ = _ := mul_one _
 
 end GlobalTheory.TSup
@@ -433,8 +432,7 @@ theorem cabs_le_matNorm_conj (hpq : 1 ≤ Dw.p + Dw.q) {Z : Comp Xo c} (P : PtDa
   have hev := evR_frMap (GlobalTheory.Frames.algebraic_laws hB E H Dw l Xo c).2.2.1 f hf.1
     (GlobalTheory.FrameNorm.conjAlg σ) y (GlobalTheory.Frames.allTest_of_secBaseChange hB E H Dw l Xo c (CAt σ) y) y' hy'
   rw [hev] at hb
-  refine le_trans (le_of_eq ?_) hb
-  exact (Complex.norm_conj _).symm
+  exact le_trans (le_of_eq (Complex.norm_conj _).symm) hb
 
 theorem exists_ortho {σ : c.F →+* ℂ} {r : ℕ} {U : Unf Xo c σ r} {ξ : ℝ} (hσ : GoodEmb c σ) (hU : IsUnf U)
     (hξ : ∀ k (τ : E →+* ℂ), ‖τ (U.X k).ξ0‖ = ξ) (hpq : 1 ≤ Dw.p + Dw.q) {a : (E →+* ℂ) × ℕ → ℕ} {n : ℕ} (hd : Dom a n)
@@ -1627,8 +1625,7 @@ theorem norm_rule_of_isMetricAt {κ : KeyRule} (hκ : IsKeyRule κ) {g : ℕ} (e
     rw [eq_inv_of_mul_eq_one_left hvol, eq_inv_of_mul_eq_one_left hdet.symm]
     exact (div_self (inv_ne_zero (right_ne_zero_of_mul_eq_one hvol))).symm
   have key := hκ.2.2.2.2 (FibKey.key { Φ with v := _, basis := hv }) u Hm W' χ θ Fd N 1 hA hR hF (fun j => (h7 _ _).2) hD hN h1
-  rw [one_pow, mul_one] at key
-  exact key
+  rwa [one_pow, mul_one] at key
 
 theorem norm_rule_of_isMetric {κ : KeyRule} (hκ : IsKeyRule κ) {g : ℕ} (e : Fin g ≃ Σ τ : E →+* ℂ, Fin (Dw.mult τ))
     {σ : c.F →+* ℂ} (y : FrPt Xo c (CAt σ)) {N : ℝ} (h : IsMetric y N fun _ => 1) :

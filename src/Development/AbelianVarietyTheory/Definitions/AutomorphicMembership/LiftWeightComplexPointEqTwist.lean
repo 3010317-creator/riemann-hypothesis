@@ -182,10 +182,8 @@ theorem edgeSum_glCast (hr : r = n + 1) (h : GL (Fin (n + 1)) k) :
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [Finset.sum_eq_single i.succ]
   · simp
-  · intro j _ hj
-    exact ite_eq_right fun h => hj (Fin.ext (by simpa using h))
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun j _ hj => ite_eq_right fun h => hj (Fin.ext (by simpa using h))
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem exists_uni_supd (hn : 0 < n) (a : k) :
     ∃ u : GL (Fin (n + 1)) k, IsUniU (u : Matrix (Fin (n + 1)) (Fin (n + 1)) k) ∧
@@ -211,8 +209,7 @@ theorem exists_uni_supd (hn : 0 < n) (a : k) :
         Matrix.single_apply_of_ne, add_zero]
       rintro ⟨h1, -⟩
       exact hi (Fin.castSucc_injective _ h1).symm
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
 
 end Local
 
@@ -236,8 +233,7 @@ theorem exists_psiU_eq (hn : 0 < n) (v : ι) (a : kf v) :
   · rw [Pi.single_eq_same]
   · intro w _ hw
     rw [Pi.single_eq_of_ne hw, AddChar.map_zero_eq_one]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 end Product
 
@@ -354,8 +350,7 @@ theorem exists_isLevelChar (h : R.grp_levels F) : ∃ χ, IsLevelChar R F χ := 
     · rw [Pi.single_eq_same]
     · intro w _ hw
       rw [Pi.single_eq_of_ne hw, AddChar.map_zero_eq_one]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   choose z hz using hex
   have hinj : ∀ x y : 𝓞 D.what₂.LL, D.what₂.embLL (x : D.what₂.LL) = D.what₂.embLL (y : D.what₂.LL) → x = y :=
     fun x y hxy => Subtype.ext (D.what₂.embLL.injective hxy)
@@ -573,8 +568,7 @@ theorem range_coordMap (j : Fin D.R.m) : LinearMap.range (coordMap R F j) = R.WL
   unfold coordMap
   rw [Fintype.range_linearCombination]
   have h := congrArg (Submodule.map (R.WL F false j).subtype) (finBasis D.what₂.LL (R.WL F false j)).span_eq
-  rw [Submodule.map_span, Submodule.map_top, Submodule.range_subtype, ← Set.range_comp] at h
-  exact h
+  rwa [Submodule.map_span, Submodule.map_top, Submodule.range_subtype, ← Set.range_comp] at h
 
 variable {s : ℕ}
 

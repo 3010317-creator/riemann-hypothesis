@@ -117,8 +117,7 @@ theorem cancel (v : GlobalTheory.FinPl.Pl D) (x : D.host.E) (hx : x ≠ 0) (A : 
   have hs : incA D x⁻¹ * t ∈ idAt D (· = v) := Ideal.mul_mem_left _ _ ht
   have ha0 : incA D x * ε ∈ idAt D (· = v) := Ideal.mul_mem_left _ _ hεI.1
   have hA0 : A (incA D x * ε) := by
-    rw [hA _ ha0, ← mul_assoc, ← map_mul, inv_mul_cancel₀ hx, map_one, one_mul]
-    exact hεI
+    rwa [hA _ ha0, ← mul_assoc, ← map_mul, inv_mul_cancel₀ hx, map_one, one_mul]
   have hst : incA D x⁻¹ * t * (incA D x * ε) = t := by
     rw [show incA D x⁻¹ * t * (incA D x * ε) = (incA D x⁻¹ * incA D x) * (ε * t) by ring, ← map_mul,
       inv_mul_cancel₀ hx, map_one, one_mul, hε t ht]
@@ -155,8 +154,7 @@ theorem lastLine_match : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S S₀ :
   have hA : ∀ b ∈ idAt D (· = v), b • ratV z ∈ latV S₀ M (· = v) ↔ incA D x⁻¹ * b ∈ intAt D (· = v) :=
     fun b hb => (hline v b hb).trans ((hgen b).trans ⟨fun h => h.1, fun h => ⟨h, hb⟩⟩)
   have hent : ∀ b ∈ idAt D (· = v), ∀ k, (b • ratV z) k ∈ idAt D (· = v) := fun b hb k => by
-    simp only [Pi.smul_apply, smul_eq_mul]
-    exact Ideal.mul_mem_right _ _ hb
+    simpa only [Pi.smul_apply, smul_eq_mul] using Ideal.mul_mem_right _ _ hb
   have hmove : ∀ b ∈ idAt D (· = v),
       b • ratV z ∈ latV S₀ M (· = v) ↔ (c * b) • ratV z ∈ latV S₀ M' (· = v) := by
     intro b hb
@@ -288,8 +286,7 @@ theorem dualLine_match : ∀ (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypDec S 
     have h2 := h _ h1
     rw [map_mul, cA_cA] at h2
     have e2 : c * a * cA D b' = a * (c * cA D b') := by ring
-    rw [e2]
-    exact h2
+    rwa [e2]
   · intro h b hb
     have h1 := (hX i b (mem_idAt_of_colMul_jX d hL v i hb)).1 hb
     have h2 := h _ h1
@@ -357,8 +354,7 @@ theorem colMul_eq {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (j : Fin ρ
 theorem mem_idAt_of_colMul {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (j : Fin ρ) {L : Lat S}
     {P : GlobalTheory.FinPl.Pl D → Prop} {a : AE D} (h : colMul d.jX j a ∈ latV S L P) : a ∈ idAt D P := by
   obtain ⟨k, hk⟩ : ∃ k, d.e k j ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact col_ne_zero d j (funext hc)
   have h1 : a * incA D (d.e k j) ∈ idAt D P := GlobalTheory.FinPlLoc.latV_idAt h k
   have h2 := (idAt D P).mul_mem_right (incA D (d.e k j)⁻¹) h1
@@ -429,8 +425,7 @@ theorem GlobalTheory.Core.Mi.LatMatch.match_down_flag : ∀ (D : D7) (ψ : AddCh
       · intro H a ha
         have hid := mem_idAt_of_colMul d j ha
         exact H a hid ((hA a hid).1 ha)
-      · intro H a ha hx'
-        exact H a ((hA a ha).2 hx')
+      · exact fun H a ha hx' => H a ((hA a ha).2 hx')
     have l2 : (∀ a ∈ idAt D (· = v), incA D x⁻¹ * a ∈ intAt D (· = v) →
         colMul d.jX i (c * (s * a)) ∈ latV S L' (· = v)) ↔
         (∀ a' : AE D, colMul d.jX j a' ∈ latV S L' (· = v) → colMul d.jX i (s * a') ∈ latV S L' (· = v)) := by
@@ -492,8 +487,7 @@ theorem homothetic_of_monomial_primitive_selfDual_cores : ∀ (D : D7) (ψ : Add
       (colMul d.jX i a ∈ latV S L (· = v) ↔ colMul d.jX i (c * a) ∈ latV S L' (· = v)) := by
     suffices h : ∀ k : ℕ, ∀ i : Fin ρ, i.1 + k + 1 = ρ → ∀ a ∈ idAt D (· = v),
         (colMul d.jX i a ∈ latV S L (· = v) ↔ colMul d.jX i (c * a) ∈ latV S L' (· = v)) by
-      intro i
-      exact h (ρ - 1 - i.1) i (by omega)
+      exact fun i => h (ρ - 1 - i.1) i (by omega)
     intro k
     induction k with
     | zero =>
@@ -883,8 +877,7 @@ theorem mem_hermitianCoordinateLattice_iff (S : HSp D) (y : Fin S.rank → D.hos
   constructor
   · rintro ⟨w, hw, rfl⟩
     simpa [Formalism.L2.Herm.crd] using hw
-  · intro hy
-    exact ⟨_, hy, S.frame.equivFun.apply_symm_apply y⟩
+  · exact fun hy => ⟨_, hy, S.frame.equivFun.apply_symm_apply y⟩
 
 theorem mem_rowLatticeYZeroFrame_iff_basis_sum (I : Formalism.MainNotions.S.AutInst) (hI : I = Formalism.L2.SG.InstExistsPf.instOf D)
     (ιE : I.E ≃+* D.host.E) (hId : ∀ x : I.E, HEq (ιE x) x) (bas : Module.Basis (Fin I.n) D.host.E (VS D).V)
@@ -1202,8 +1195,7 @@ theorem selfDual_core_monoAt (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypDec S 
     have h2 := h1.map L.subtype
     rwa [Submodule.map_comap_subtype, inf_eq_right.mpr hle] at h2
   ·
-    intro s hs hli
-    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+    exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
   ·
     obtain ⟨b, hb⟩ := (hL.2 (d.i₀ *ᵥ y)).1 hy (d.i₀ *ᵥ x) hx
     refine ⟨b, ?_⟩
@@ -1452,8 +1444,7 @@ theorem line_loc {S : HSp D} {L : Lat S} {x : Fin S.rank → D.host.E} (hL : IsS
     ext t
     rw [← h1, h, FractionalIdeal.mem_singleton_mul]
     constructor
-    · intro ht
-      exact ⟨c * t, ht, by field_simp⟩
+    · exact fun ht => ⟨c * t, ht, by field_simp⟩
     · rintro ⟨y, hy, rfl⟩
       rwa [mul_inv_cancel_left₀ hc]
   intro a ha

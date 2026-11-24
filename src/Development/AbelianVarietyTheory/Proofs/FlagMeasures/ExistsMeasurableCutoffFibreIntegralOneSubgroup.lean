@@ -89,8 +89,7 @@ theorem exists_measurable_cutoff_fibre_integral_one (G : Type) [Group G] [Topolo
     obtain ⟨T, hTN, hTc, hTU⟩ := TopologicalSpace.isOpen_biUnion_countable (N : Set G) U hUo
     have hNsub : (N : Set G) ⊆ ⋃ n ∈ T, U n := by
       rw [hTU]
-      intro n hn
-      exact Set.mem_biUnion hn (by simpa [hU, mul_assoc] using hxO)
+      exact fun n hn => Set.mem_biUnion hn (by simpa [hU, mul_assoc] using hxO)
     have hN0 : ν (N : Set G) = 0 :=
       measure_mono_null hNsub ((measure_biUnion_null_iff hTc).2 fun n hn => hU0 n (hTN hn))
     rw [← Measure.measure_univ_eq_zero, ← Set.union_compl_self (N : Set G)]
@@ -114,8 +113,7 @@ theorem exists_measurable_cutoff_fibre_integral_one (G : Type) [Group G] [Topolo
     refine ne_of_lt (lt_of_le_of_lt (measure_mono ?_)
       (((E.isCompact k).image (f := fun u : G => y * u⁻¹)
         (continuous_const.mul continuous_inv)).measure_lt_top (μ := ν)))
-    intro m hm
-    exact ⟨m⁻¹ * y, hm, by simp⟩
+    exact fun m hm => ⟨m⁻¹ * y, hm, by simp⟩
   have hFpos : ∀ y, ∃ k, 0 < F k y := by
     intro y
     obtain ⟨k, hk⟩ := E.exists_mem_nhds y
@@ -160,8 +158,7 @@ theorem exists_measurable_cutoff_fibre_integral_one (G : Type) [Group G] [Topolo
           exact (measurable_one.indicator (E.isCompact k).isClosed.measurableSet).comp
             (measurable_inv.mul_const y)
   have hgeom : ∑' k : ℕ, (2⁻¹ : ENNReal) ^ k ≠ ⊤ := by
-    rw [ENNReal.tsum_geometric]
-    rw [ENNReal.one_sub_inv_two, inv_inv]
+    rw [ENNReal.tsum_geometric, ENNReal.one_sub_inv_two, inv_inv]
     exact ENNReal.ofNat_ne_top
   have hTtop : ∀ y, T y ≠ ⊤ := by
     intro y

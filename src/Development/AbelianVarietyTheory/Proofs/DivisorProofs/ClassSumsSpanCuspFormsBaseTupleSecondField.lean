@@ -353,8 +353,7 @@ theorem rawSeries_move_datum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     have e2 : (z⁻¹ • f) p y = v' := by
       change z⁻¹ • f p y = v'
       rw [e, Algebra.smul_def, ← mul_assoc, ← map_mul, inv_mul_cancel₀ hz0, map_one, one_mul]
-    rw [e2]
-    exact hv'
+    rwa [e2]
 
 end GlobalTheory.DatumMove
 end -- clump:auto
@@ -689,8 +688,7 @@ theorem exists_form {G Γ W X Y : Type} [Group G] [Group Γ] [NormedAddCommGroup
     rw [← finsum_comp_equiv (Equiv.mulLeft δ)]
     have hf : (Function.support (term x)).Finite := (hS x).toFinset.finite_toSet.subset (hsupp x)
     have := (((χ k : ℂˣ) : ℂ) • ρ δ).toAddMonoidHom.map_finsum hf
-    refine Eq.trans ?_ this.symm
-    exact finsum_congr fun γ => hterm δ x k γ
+    exact Eq.trans (finsum_congr fun γ => hterm δ x k γ) this.symm
   · show Φ x (∑ᶠ γ, term (p x) γ) = _
 
     rw [finsum_eq_sum_of_support_subset _ (hsupp _), map_sum, Nat.cast_smul_eq_nsmul, ← Finset.sum_const]
@@ -1053,8 +1051,7 @@ theorem lattice_scalar_value (hC : GlobalTheory.Hk3.Core R F) (hT : TieIn T R κ
     map_natCast, map_natCast, ← Nat.cast_pow]
   have hi' : (Λ.Ln.toAddSubgroup.addSubgroupOf Λ.La.toAddSubgroup).index =
       ((L ⊓ Formalism.L2.Pj.stdLat D.host.E (Vc D i).rank).toAddSubgroup.addSubgroupOf L.toAddSubgroup).index := hi
-  rw [← hi'] at this
-  exact this
+  rwa [← hi'] at this
 
 
 
@@ -1232,8 +1229,7 @@ theorem classSumsSpan_of_pins_core (hR : GlobalTheory.Hk3.Core R F) (ht : TieIn 
     (GlobalTheory.PtId.degW (T.Q.Dw ((i : ℕ) + 1)) (wtA (κ i)))
   have hl0 : (lieFac (T.Q.Dw ((i : ℕ) + 1)) (xiR D) (wtA (κ i)) : ℂ) ≠ 0 := by exact_mod_cast (lieFac_pos _ _ _).ne'
   refine mem_span_of_map_mem ((atDict O).comp (rdU (unfO O))) _ (atDict_indep hT O (κ i)) ?_ hf ?_
-  · intro g hg
-    exact hg.1
+  · exact fun g hg => hg.1
   ·
     have hraw := Submodule.apply_mem_span_image_of_mem_span (atDict O)
       (rdU_mem_span_raw hT O (κ i) hn (hrk ▸ hsz) nab hnab hb x1 hx1 hf)

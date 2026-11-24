@@ -260,8 +260,7 @@ theorem exponent_int (X : Tower Ω ε) (h : X.K) (hT : X.sl (ofSL ModularGroup.T
       simp only [d]
       rw [mul_add, mul_one, Complex.exp_add]
       ring
-    rw [e]
-    exact this
+    rwa [e]
   have hd : d = 0 := by
     refine GlobalTheory.KExp.uniq d ?_ {z | C < z.im ∧ φ z = φ (z + 1)} ?_ (Complex.I * (|C| + 1)) ?_ ?_
     · refine (X.exp h).isWF_support.mono ?_
@@ -332,8 +331,7 @@ theorem eq_const_of_nonneg (X : Tower Ω ε) (h : X.K) (hinv : ∀ γ : SL(2, �
       have h1 : Filter.Tendsto (fun s : ℝ => 2 * Real.pi * (s - t)) Filter.atTop Filter.atTop := by
         apply Filter.Tendsto.const_mul_atTop Real.two_pi_pos
         exact Filter.tendsto_atTop_add_const_right _ _ Filter.tendsto_id
-      have h2 := (Real.tendsto_exp_neg_atTop_nhds_zero.comp h1).const_mul B
-      simpa using h2
+      simpa using (Real.tendsto_exp_neg_atTop_nhds_zero.comp h1).const_mul B
     have h0 : ‖c - ε a0‖ ≤ 0 := ge_of_tendsto ht (Filter.eventually_gt_atTop (max t 0) |>.mono hle)
     have := norm_le_zero_iff.1 h0
     exact sub_eq_zero.1 this
@@ -439,8 +437,7 @@ theorem hol_of_isIntegral (X : Tower Ω ε) (y : X.K) (hy : IsIntegral (Algebra.
     rw [← hran i]; rfl
   obtain ⟨a, b, ha, hb, hb0, hab⟩ := X.an_mero y
   have hbz : ∃ z ∈ Hs, b z ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     apply hb0
     have := hcongr (φ := b) (ψ := fun _ => 0) hc
     rw [this]; rfl
@@ -494,8 +491,7 @@ theorem exists_eq_div (X : Tower Ω ε) (f : X.K) (hf : ∀ γ : SL(2, ℤ), X.s
   rw [hpf] at hpi
   have hrange : ∀ b ∈ Algebra.adjoin Ω {X.jK}, ∃ Q : Polynomial Ω, Polynomial.aeval X.jK Q = b := by
     intro b hb
-    rw [Algebra.adjoin_singleton_eq_range_aeval] at hb
-    exact hb
+    rwa [Algebra.adjoin_singleton_eq_range_aeval] at hb
   obtain ⟨Q, hQ⟩ := hrange _ p.2
   have hmem := mem_adjoin_j X ((p : X.K) * f) (fun γ => by rw [map_mul, hf, ← hQ, sl_aeval])
     (hol_of_isIntegral X _ hpi)

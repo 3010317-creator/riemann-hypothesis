@@ -123,11 +123,9 @@ theorem relDim_le_of_isClosedImmersion : ∀ (k : Type) [Field k] (N G : Over (S
   have h₁ := h' t ht
   have hψ : Function.Surjective (ν.left.appLE V V' le_rfl).hom := by
     have := ν.left.app_surjective V hV
-    rw [Scheme.Hom.app_eq_appLE] at this
-    exact this
+    rwa [Scheme.Hom.app_eq_appLE] at this
   refine relDim_le_of_surjective_away (L := Localization.Away t) t (G.hom.appLE U V e).hom
     (ν.left.appLE V V' le_rfl).hom hψ g g' h ?_
-  rw [← CommRingCat.hom_comp, Scheme.Hom.appLE_comp_appLE ν.left G.hom U V V' e le_rfl]
-  exact h₁
+  rwa [← CommRingCat.hom_comp, Scheme.Hom.appLE_comp_appLE ν.left G.hom U V V' e le_rfl]
 
 end GlobalTheory

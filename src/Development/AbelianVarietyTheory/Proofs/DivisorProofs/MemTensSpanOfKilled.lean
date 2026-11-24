@@ -660,16 +660,14 @@ theorem le_deg_of_hw {μ : Ix R S → ℚ} {f : Formalism.BasicNotions.TH.Pol P 
           (μ (.inl k) : ℂ) := by
         push_cast; rw [← h]; ring
       have h'' := Rat.cast_injective h'
-      simp only [shiftNu, cPair]
-      exact abs_le.2 ⟨by linarith, by linarith⟩
+      simpa only [shiftNu, cPair] using abs_le.2 ⟨by linarith, by linarith⟩
     · simp only [Fintype.sum_sum_type, lineSign, one_mul, neg_one_mul, Finset.sum_neg_distrib, Finset.sum_add_distrib,
         Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] at h
       have h' : ((∑ j' : Fin Q, (α (.inr j', .inr l) : ℚ) - ∑ i' : Fin P, (α (.inl i', .inr l) : ℚ) - P / 2 + Q / 2 : ℚ) : ℂ) =
           (μ (.inr l) : ℂ) := by
         push_cast; rw [← h]; ring
       have h'' := Rat.cast_injective h'
-      simp only [shiftNu, cPair]
-      exact abs_le.2 ⟨by linarith, by linarith⟩
+      simpa only [shiftNu, cPair] using abs_le.2 ⟨by linarith, by linarith⟩
   have tot : degW (cPair P Q) μ ≤ (f.totalDegree : ℚ) := by
     calc degW (cPair P Q) μ ≤ ∑ c, ∑ a, (α (a, c) : ℚ) := Finset.sum_le_sum fun c _ => col c
       _ = ((α.sum fun _ e => e : ℕ) : ℚ) := by

@@ -114,8 +114,7 @@ theorem charpoly_mulLeft_eq_of_gen {F A : Type} [Field F] [CommRing A] [Algebra 
     have h1 := LinearMap.aeval_self_charpoly (LinearMap.mulLeft F u)
     have h2 : (Algebra.lmul F A) u = LinearMap.mulLeft F u := by ext; simp
     rw [← hPdef, ← h2, Polynomial.aeval_algHom_apply] at h1
-    have h3 := congrArg (fun f : Module.End F A => f 1) h1
-    simpa using h3
+    simpa using congrArg (fun f : Module.End F A => f 1) h1
   by_contra hne
   have hR : P - Q ≠ 0 := sub_ne_zero.mpr hne
   have hdeg : (P - Q).degree < d := by
@@ -255,12 +254,10 @@ theorem models_conj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (w 
       have h2 : (if i = j then (1 : w.adicCompletion E) else 0) = ∑ k, M k i * cj w (M k j) := by
         simpa [Pi.single_apply, eq_comm] using h1
       rw [Matrix.mul_apply, Matrix.one_apply]
-      simp only [Matrix.transpose_apply, Matrix.map_apply]
-      exact h2.symm
+      simpa only [Matrix.transpose_apply, Matrix.map_apply] using h2.symm
     have key2 := congrArg Matrix.transpose key
     rw [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.transpose_one] at key2
-    rw [Matrix.mul_one]
-    exact key2
+    rwa [Matrix.mul_one]
   ·
     have hc : (y : Matrix (Fin n) (Fin n) (w.adicCompletion E)) * γ'.val = γ.val * y := by
       apply Matrix.toLin'.injective
@@ -326,8 +323,7 @@ theorem cj_cj {K : GlobalTheory.UnitLemma.UQ} {e : K.E ≃+* w.adicCompletion E}
 theorem stdH_symm {K : GlobalTheory.UnitLemma.UQ} {e : K.E ≃+* w.adicCompletion E} (hB : Bridge w K e)
     (a b : Fin n → w.adicCompletion E) : stdH w b a = cj w (stdH w a b) := by
 
-  simp only [stdH, map_sum, map_mul, cj_cj w hB]
-  exact Finset.sum_congr rfl fun k _ => mul_comm _ _
+  simpa only [stdH, map_sum, map_mul, cj_cj w hB] using Finset.sum_congr rfl fun k _ => mul_comm _ _
 
 theorem stdH_unitary (γ : GLw n w) (hγ : cT (cj w) γ.val * 1 * γ.val = 1)
     (a b : Fin n → w.adicCompletion E) : stdH w (γ.val *ᵥ a) (γ.val *ᵥ b) = stdH w a b := by
@@ -693,8 +689,7 @@ theorem UQ.norm_of_fixed_unit {F E : Type} [NontriviallyNormedField F] [Nontrivi
   have hprod : ‖w‖ * ‖w'‖ = 1 := by rw [← norm_mul, hww, norm_one]
   have hwn : ‖w‖ = 1 := by
     refine le_antisymm h1 ?_
-    by_contra h
-    push Not at h
+    by_contra! h
     have : ‖w‖ * ‖w'‖ < 1 :=
       calc ‖w‖ * ‖w'‖ ≤ ‖w‖ * 1 := by gcongr
         _ < 1 := by simpa using h
@@ -804,8 +799,7 @@ theorem selfDual_orthogonal_unit_step : ∀ (K : GlobalTheory.UnitLemma.UQ) (V :
         rw [div_mul_cancel₀ _ (hs j), sub_self]
       · intro i _ hij
         simp only [hg, hsmul, horth i j hij, mul_zero]
-      · intro hj
-        exact absurd (Finset.mem_univ j) hj
+      · exact fun hj => absurd (Finset.mem_univ j) hj
     · rw [hsub2, hsum2, Finset.sum_eq_zero, sub_zero]
       intro i _
       simp only [hg, hsmul2, hw i, mul_zero]
@@ -820,8 +814,7 @@ theorem selfDual_orthogonal_unit_step : ∀ (K : GlobalTheory.UnitLemma.UQ) (V :
     rw [Set.finrank, htop, finrank_top, Fintype.card_fin] at h1
     omega
   obtain ⟨l, hl, hlnot⟩ : ∃ l ∈ L, l ∉ Submodule.span K.E (Set.range f) := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hspan
     rw [eq_top_iff, ← hLspan]
     exact Submodule.span_le.2 (fun x hx => hcon x hx)
@@ -831,8 +824,7 @@ theorem selfDual_orthogonal_unit_step : ∀ (K : GlobalTheory.UnitLemma.UQ) (V :
     rw [hb] at hpM
     exact hp0 hlnot ((Submodule.mem_bot _).1 hpM)
 
-  by_contra hno
-  push Not at hno
+  by_contra! hno
   let Q : Submodule K.O K.E := Submodule.map (Algebra.linearMap K.O K.E) (IsLocalRing.maximalIdeal K.O)
   have hQsmul : ∀ (o : K.O) x, x ∈ Q → algebraMap K.O K.E o * x ∈ Q := by
     intro o x hx
@@ -956,8 +948,7 @@ theorem exists_orthonormal_of_selfDual (K : GlobalTheory.UnitLemma.UQ) (V : Type
           induction j using Fin.lastCases with
           | last => simp only [Fin.snoc_castSucc, Fin.snoc_last]; rw [hsym, hyo i, map_zero]
           | cast j =>
-            simp only [Fin.snoc_castSucc]
-            exact hfo i j fun e => hij (by rw [e])
+            simpa only [Fin.snoc_castSucc] using hfo i j fun e => hij (by rw [e])
       · intro i
         induction i using Fin.lastCases with
         | last => simpa using hyu
@@ -1302,8 +1293,7 @@ theorem kapSign_eq_eta_gramDet : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     have hz' : z = ∑ i, e.symm (v.repr ⟨ψ₁ z, hz⟩ i) • a' i := by
       apply hψ₁i
       rw [hsum]
-      simp only [RingEquiv.apply_symm_apply]
-      exact hrep.symm
+      simpa only [RingEquiv.apply_symm_apply] using hrep.symm
     rw [hz']
     exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
   let hb : Module.Basis (Fin m) K.E B₁.A := Module.Basis.mk hli hsp
@@ -1389,12 +1379,10 @@ theorem fits_prod : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (w : 
     obtain ⟨a, b, hab⟩ := hcop
     have e₁ : aeval u₁ b * aeval u₁ (Q₂.map e.symm.toRingHom) = 1 := by
       have := congrArg (aeval u₁) hab
-      rw [map_add (f := _), map_mul, map_mul, hr₁, mul_zero, zero_add, map_one] at this
-      exact this
+      rwa [map_add (f := _), map_mul, map_mul, hr₁, mul_zero, zero_add, map_one] at this
     have e₂ : aeval u₂ a * aeval u₂ (Q₁.map e.symm.toRingHom) = 1 := by
       have := congrArg (aeval u₂) hab
-      rw [map_add (f := _), map_mul, map_mul, hr₂, mul_zero, add_zero, map_one] at this
-      exact this
+      rwa [map_add (f := _), map_mul, map_mul, hr₂, mul_zero, add_zero, map_one] at this
     rw [eq_top_iff]
     rintro ⟨y, z⟩ -
     have hy : y ∈ (aeval u₁ : K.E[X] →ₐ[K.E] B₁.A).range := by

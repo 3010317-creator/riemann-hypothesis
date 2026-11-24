@@ -137,8 +137,7 @@ theorem _root_.GlobalTheory.Cris.ExpBij.dpFil_le {m : ℕ} (hm : 1 ≤ m) : _roo
   refine Ideal.span_le.2 ?_
   rintro x ⟨l, hl, hs, rfl⟩
   have hex : ∃ p ∈ l, p.1 ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     have hzero : (l.map Prod.fst).sum = 0 := by
       refine List.sum_eq_zero fun x hx => ?_
       obtain ⟨p, hp, rfl⟩ := List.mem_map.1 hx
@@ -193,8 +192,7 @@ theorem _root_.GlobalTheory.Cris.ExpBij.dpow_mem_dpFil_mul {m : ℕ} (hm : 1 ≤
             _root_.GlobalTheory.Cris.ExpBij.dpFil δ (n * p.1) :=
           Ideal.mul_mem_left _ _ (_root_.GlobalTheory.Cris.ExpBij.dpow_mem_dpFil δ hp _)
         have h3 := _root_.GlobalTheory.Cris.ExpBij.mul_mem_dpFil δ h1 h2
-        rw [show n * (p.1 + (l.map Prod.fst).sum) = n * (l.map Prod.fst).sum + n * p.1 by ring]
-        exact h3
+        rwa [show n * (p.1 + (l.map Prod.fst).sum) = n * (l.map Prod.fst).sum + n * p.1 by ring]
   have hJ : ∀ x ∈ _root_.GlobalTheory.Cris.ExpBij.dpFil δ m, x ∈ J :=
     fun x hx => _root_.GlobalTheory.Cris.ExpBij.dpFil_le δ hm hx
   revert n
@@ -238,8 +236,7 @@ theorem _root_.GlobalTheory.Cris.ExpBij.dpExp_bijOn : ∀ (B : Type) [CommRing B
   have hbot : _root_.GlobalTheory.Cris.ExpBij.dpFil δ N = ⊥ := by
     refine le_bot_iff.1 (Ideal.span_le.2 ?_)
     rintro x ⟨l, hl, hs, rfl⟩
-    simp only [SetLike.mem_coe, Submodule.mem_bot]
-    exact hN l hl hs
+    simpa only [SetLike.mem_coe, Submodule.mem_bot] using hN l hl hs
   have hvan : ∀ a ∈ J, ∀ n, N ≤ n → δ.dpow n a = 0 := fun a ha n hn => by
     simpa using hN [(n, a)] (by simpa using ha) (by simpa using hn)
   have hexp : ∀ a ∈ J, _root_.GlobalTheory.Cris.dpExp δ a = ∑ n ∈ Finset.range (N + 2), δ.dpow n a :=

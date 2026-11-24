@@ -183,8 +183,7 @@ theorem _root_.GlobalTheory.FlagBase.poisson_gaussV (E : Type) [Field E] [Number
         rw [← Finset.smul_sum, hz, zsmul_eq_mul]
         push_cast
         ring
-    · intro hy
-      exact Submodule.subset_span hy
+    · exact fun hy => Submodule.subset_span hy
   have hmem : ∀ y, y ∈ _root_.GlobalTheory.FlagBase.dualAt E j L ↔ ψ y ∈ _root_.GlobalTheory.dualLattice L' := by
     intro y
     rw [hdual, _root_.GlobalTheory.mem_dualLattice]
@@ -224,8 +223,7 @@ theorem _root_.GlobalTheory.FlagBase.poisson_gaussV (E : Type) [Field E] [Number
   have hP := _root_.GlobalTheory.tsum_gaussian_lattice_eq_dualLattice L' one_pos
   simp only [mul_one, Real.one_rpow, div_one] at hP
   refine ⟨hsL, hsD, ?_, ?_⟩
-  · rw [hT1, hT2, hcov]
-    exact hP
+  · rwa [hT1, hT2, hcov]
   · have hI : ∫ x, _root_.GlobalTheory.FlagBase.gaussV E j x = ∫ u, f u :=
       ((_root_.GlobalTheory.FlagBase.PoissonV.measurePreserving_coords (InfinitePlace E) (Fin j)).integral_comp
         e.toHomeomorph.measurableEmbedding (_root_.GlobalTheory.FlagBase.gaussV E j)).symm.trans

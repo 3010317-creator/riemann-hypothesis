@@ -91,10 +91,8 @@ theorem schemeFil_eq_liftFil (κ : DividedPowers I) {S : Scheme.{0}} {t : S ⟶ 
     rw [crysToDR_apply] at key
     have hpy : (liftMor κ h).pull ⟨c, hcp⟩ = y := by
       apply Subtype.ext
-      rw [GrpMor.coe_pull]
-      exact hcy
-    rw [hpy] at key
-    exact key
+      rwa [GrpMor.coe_pull]
+    rwa [hpy] at key
 
 def NilExp (κ : DividedPowers I) (N : ℕ) : Prop :=
   ∀ l : List (ℕ × R), (∀ p ∈ l, p.2 ∈ I) → N ≤ (l.map Prod.fst).sum → (l.map fun p ↦ κ.dpow p.1 p.2).prod = 0

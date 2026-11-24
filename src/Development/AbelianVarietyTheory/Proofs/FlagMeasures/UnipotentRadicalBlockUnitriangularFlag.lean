@@ -74,8 +74,7 @@ private lemma Hpk_mul_apply_eq_Hpk_apply_of_lt_val (k r : ℕ) (g : Matrix (Fin 
     rw [Matrix.mul_apply, Finset.sum_eq_single (⟨c, by omega⟩ : Fin (2 * r + k + 1))] at h1
     · have hd := hcol ⟨c, hcr⟩ ⟨c, by omega⟩ le_rfl
       rw [hE, ite_eq_left rfl] at hd
-      rw [Matrix.conjTranspose_apply, hd, star_one, one_mul] at h1
-      exact h1
+      rwa [Matrix.conjTranspose_apply, hd, star_one, one_mul] at h1
     · intro t _ htc
       rw [Matrix.conjTranspose_apply]
       have htc' : t.val ≠ c := fun h => htc (Fin.ext h)
@@ -86,8 +85,7 @@ private lemma Hpk_mul_apply_eq_Hpk_apply_of_lt_val (k r : ℕ) (g : Matrix (Fin 
       · have hz := hcol ⟨c, hcr⟩ t (by simp; omega)
         rw [hE, ite_eq_right htc] at hz
         rw [hz, star_zero, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem nset_block_unitriangular : ∀ (k r : ℕ), ∀ g ∈ Nset k r, ∀ i j : Fin (2 * r + k + 1),
     lev k r j ≤ lev k r i → g i j = (1 : Mat k r) i j := by
@@ -100,8 +98,7 @@ theorem nset_block_unitriangular : ∀ (k r : ℕ), ∀ g ∈ Nset k r, ∀ i j 
   · have hij : j.val ≤ i.val := by split_ifs at hlev <;> omega
     have h := hcol ⟨j.val, hj⟩ i hij
     have he : Formalism.QuantumDeterminants.eI k r ⟨j.val, hj⟩ = j := Fin.ext rfl
-    rw [he] at h
-    exact h
+    rwa [he] at h
   · by_cases hj2 : j.val ≤ r + k
     · have hi : r ≤ i.val := by split_ifs at hlev <;> omega
       exact hmid i j (by omega) hj2 hi
@@ -119,7 +116,6 @@ theorem nset_block_unitriangular : ∀ (k r : ℕ), ∀ g ∈ Nset k r, ∀ i j 
       · intro s _ hs
         have hv : s.val ≠ i.val := fun h => hs (Fin.ext h)
         rw [Hpk_apply_of_lt_eq_ite k r _ s hC, ite_eq_right (by simp; omega), zero_mul]
-      · intro h'
-        exact absurd (Finset.mem_univ _) h'
+      · exact fun h' => absurd (Finset.mem_univ _) h'
 
 end GlobalTheory.CellDens

@@ -142,8 +142,7 @@ theorem mem_cForms_split {r : ℕ} {SG0 : Finset (HeightOneSpectrum (𝓞 X.E))}
     · obtain ⟨hm, e⟩ := H.emb a⁻¹
       have h1 := (hφ d).2 1 ⟨_, hm⟩
       rw [e, map_one, map_inv] at h1
-      rw [← map_inv]
-      exact h1
+      rwa [← map_inv]
   · rintro ⟨h1, h2⟩ d
     refine ⟨(h1 d).1, fun γ h => ?_⟩
     obtain ⟨a, k, e1, e2⟩ := H.fac h
@@ -186,14 +185,12 @@ theorem frLaw_comp_iff (F : DecoSet (E := X.E) (n := n) (ST := ST) (SG := uSG SG
     obtain ⟨hm, -⟩ := hH.sub g.2.1
     have h1 := (h p).2 (g.1, ⟨_, hm⟩, g.2.2) ((hH.mem _).2 g.2.1.2)
     rw [key _ g.2.1.2] at h1
-    rw [← forgetFr_frm_smul]
-    exact h1
+    rwa [← forgetFr_frm_smul]
   · intro h p
     refine ⟨(h _).1, fun g hg => ?_⟩
     have h1 := (h (forgetFr p)).2 (redFG Λ' Θ (g.1, ⟨_, (hH.mem g).1 hg⟩, g.2.2))
     rw [← forgetFr_frm_smul] at h1
-    rw [key g ((hH.mem g).1 hg)]
-    exact h1
+    rwa [key g ((hH.mem g).1 hg)]
 
 theorem FrLaw.eq_of_forgetFr_eq {F : DecoF X.E n ST SG Q → Pol ℂ X.Tau n} (h : FrLaw σ lam Λ (levRedFam Θ) H F)
     {p q : DecoF X.E n ST SG Q} (e : forgetFr p = forgetFr q) : F p = F q := by
@@ -236,13 +233,11 @@ theorem mem_MtP_iff (F : RowPt Pr R sel mu → Pol ℂ X.Tau (R.N R.m - 1)) : F 
   · rintro ⟨h1, h2⟩
     refine ⟨h1, fun a => Subtype.ext (funext fun d => ?_)⟩
     have := h2 ⟨a.1, a.2⟩ d
-    rw [P.inv_chr a, inv_inv] at this
-    exact this
+    rwa [P.inv_chr a, inv_inv] at this
   · rintro ⟨h1, h2⟩
     refine ⟨h1, fun a d => ?_⟩
     have := congrFun (congrArg Subtype.val (h2 ⟨a.1, a.2⟩)) d
-    rw [P.inv_chr ⟨a.1, a.2⟩, inv_inv]
-    exact this
+    rwa [P.inv_chr ⟨a.1, a.2⟩, inv_inv]
 
 theorem MtP_le_MtC : MtP W Ch sel mu P σ ≤ MtC W Ch sel mu σ := fun F h => ((mem_MtP_iff W Ch sel mu P σ F).1 h).1
 

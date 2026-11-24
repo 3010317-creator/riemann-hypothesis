@@ -89,8 +89,7 @@ theorem exists_dot_ne_one {ψ : AddChar k Circle} {c : kˣ} (h : HasConductor ψ
     (s : kˣ) {y : n → k} (hy : y ∉ box n s) : ∃ b ∈ box n (c * s⁻¹), ψ (b ⬝ᵥ y) ≠ 1 := by
   classical
   obtain ⟨i, hi⟩ : ∃ i, y i ∉ cball s := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     exact hy fun i _ => hne i
   have hcs : c * (c * s⁻¹)⁻¹ = s := by
     rw [_root_.mul_inv_rev, inv_inv, mul_comm s, mul_inv_cancel_left]
@@ -237,8 +236,7 @@ theorem integral_eq_measureReal_box_mul_sum : ∀ (k : Type) [Field k] [Valuativ
       · intro b' hb'S hne
         have hnot : y - b' ∉ box n r := fun hmem => hne (huniq b' ⟨hb'S, hmem⟩)
         exact Set.indicator_of_notMem hnot _
-      · intro hbn
-        exact absurd hbS hbn
+      · exact fun hbn => absurd hbS hbn
     · rw [hF0 y hy]
       symm
       refine Finset.sum_eq_zero fun b _ => ?_
@@ -251,8 +249,7 @@ theorem integral_eq_measureReal_box_mul_sum : ∀ (k : Type) [Field k] [Valuativ
   have hint : ∀ b ∈ S, Integrable (fun y => (box n r).indicator (fun _ => F b) (y - b)) μ := by
     intro b _
     have h1 : Integrable ((box n r).indicator fun _ : n → k => F b) μ := by
-      refine (integrable_indicator_iff hmeas).2 ?_
-      exact integrableOn_const hfin.ne
+      exact (integrable_indicator_iff hmeas).2 (integrableOn_const hfin.ne)
     exact h1.comp_sub_right b
   calc ∫ y, F y ∂μ = ∫ y, ∑ b ∈ S, (box n r).indicator (fun _ => F b) (y - b) ∂μ := by
         congr 1
@@ -394,8 +391,7 @@ theorem kernel : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] 
     by_cases hx : x₁ ∈ box I₁ s
     · have e : ∀ a, D.1 (x₀, x₁, a) = D.1 (x₀, 0, a) := fun a => by
         simpa using hs x₁ hx (x₀, 0, a)
-      simp only [Set.indicator_of_mem hx, one_mul, e]
-      exact hD x₀
+      simpa only [Set.indicator_of_mem hx, one_mul, e] using hD x₀
     · simp [Set.indicator_of_notMem hx]
   rw [hl]
   exact _root_.GlobalTheory.SplitWeil.FourierPi.map_eq_zero_of_translation_invariant_of_fibre_integral_eq_zero k ν hν I₀ I₁ I₂ M l h2 Φ' hz

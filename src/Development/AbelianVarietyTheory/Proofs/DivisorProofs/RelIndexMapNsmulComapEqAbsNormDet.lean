@@ -97,8 +97,7 @@ theorem exists_basis_closure_eq_of_fg_of_nsmul_mem {Γ : Type} [AddCommGroup Γ]
     have := Submodule.smul_mem _ (N : ℚ)⁻¹ hmem
     rwa [smul_smul, inv_mul_cancel₀ hN', one_smul] at this
   refine ⟨Module.finrank ℤ A, Basis.mk hli hsp, ?_⟩
-  rw [Basis.coe_mk]
-  exact hcl
+  rwa [Basis.coe_mk]
 
 theorem relIndex_map_nsmul_comap_eq_abs_norm_det :
     ∀ (E Γ : Type) [Field E] [NumberField E] [AddCommGroup Γ] [Module E Γ] [FiniteDimensional E Γ] (A : AddSubgroup Γ), A.FG → (∀ x : Γ, ∃ N : ℕ, 0 < N ∧ N • x ∈ A) → ∀ (m : Module.End E Γ) (N : ℕ), N ≠ 0 → LinearMap.det m ≠ 0 → (∀ x ∈ A, N • m x ∈ A) → (((A.map (N • AddMonoidHom.id Γ)).relIndex (A.comap m.toAddMonoidHom) : ℕ) : ℚ) = |Algebra.norm ℚ ((N : E) ^ Module.finrank E Γ * LinearMap.det m)| := by
@@ -141,8 +140,7 @@ theorem relIndex_map_nsmul_comap_eq_abs_norm_det :
       exact ⟨m x, hx, by rw [← he]; exact e.symm_apply_apply x⟩
     · rintro ⟨a, ha, rfl⟩
       change m (e.symm a) ∈ A
-      rw [← he, e.apply_symm_apply]
-      exact ha
+      rwa [← he, e.apply_symm_apply]
   have hle : A.map (N • AddMonoidHom.id Γ) ≤ A.comap m.toAddMonoidHom := by
     rintro _ ⟨a, ha, rfl⟩
     change m (N • a) ∈ A

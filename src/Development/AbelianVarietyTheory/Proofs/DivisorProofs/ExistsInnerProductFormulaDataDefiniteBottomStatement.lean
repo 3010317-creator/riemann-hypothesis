@@ -364,11 +364,9 @@ private theorem UpperTheory.integral_unit_det_both {D : D7} {e : AE D} {Z : Fins
   have hB := UpperTheory.topL_integral _ hI'
   constructor
   · refine UpperTheory.idempotent_unit_det_integral he _ _ hB ?_ y' hy'
-    rw [UpperTheory.upperRows_mul_right, Matrix.mul_assoc, Units.inv_mul, Matrix.mul_one]
-    exact hA
+    rwa [UpperTheory.upperRows_mul_right, Matrix.mul_assoc, Units.inv_mul, Matrix.mul_one]
   · refine UpperTheory.idempotent_unit_det_integral he _ _ hA ?_ y hy
-    rw [← UpperTheory.upperRows_mul_right]
-    exact hB
+    rwa [← UpperTheory.upperRows_mul_right]
 
 
 theorem UpperTheory.finiteComponent_mem_stabilizer_of_standardSection_ne_zero :
@@ -579,9 +577,7 @@ private theorem isUnitDet_div {e : AE D} {S : Finset (Formalism.L2.DIV.Pl D.host
   · rw [Units.val_mul, map_mul]
     exact succ_mul_succ_sub_one_div_succ hε (hz.2.1.trans (by rw [Matrix.det_mul])) hy.2.1 hyy
   · have e0 : (z * y⁻¹)⁻¹ = y * z⁻¹ := by rw [_root_.mul_inv_rev, inv_inv]
-    rw [e0]
-    rw [Units.val_mul]
-    rw [map_mul]
+    rw [e0, Units.val_mul, map_mul]
     refine mul_mem ?_ hz.2.2
     rw [hy.2.1]
     exact add_mem (sub_mem (one_mem _) hE) (mul_mem hE (det_int hκ))
@@ -811,8 +807,7 @@ private theorem real_fix (hX : IsBottomTri W i j X) (t : T) (hr : A.rank ≤ WW.
     refine Finset.prod_eq_one fun τ _ => ?_
     have hne : (compAt W.θ τ (Formalism.L2.Theta.mt A k₀)).det ≠ 0 := (Matrix.isUnit_det_of_left_inverse (hu τ)).ne_zero
     rw [ck, c1, Matrix.det_one, _root_.one_zpow, mul_one, _root_.zpow_neg, zpow_natCast, inv_mul_cancel₀ (pow_ne_zero _ hne)]
-  rw [hone, one_smul] at key
-  exact key
+  rwa [hone, one_smul] at key
 
 private theorem exists_weights (hX : IsBottomTri W i j X) (t : T) {a b : D.what₂.Tau → ℚ}
     (h : ∀ τ, HasInfExp D (alphaB L i j t) τ (a τ) ∧ HasInfExp D (betaB G i j) τ (b τ) ∧

@@ -76,8 +76,7 @@ lemma flag_iff {E V : Type} [CommRing E] [AddCommGroup V] [Module E V] (A : ℕ 
   constructor
   · intro hv
     obtain ⟨w, hw, hgw⟩ := flag_iff_lemma A h0 hm r g hg j hj (g v) hv
-    rw [← g.injective hgw]
-    exact hw
+    rwa [← g.injective hgw]
   · intro hv
     cases j with
     | zero =>
@@ -131,8 +130,7 @@ lemma mem_Nof (S : Frames M.L r k) (f : Fin (r + 1) → S.V) (g : S.GLV) :
     · intro hv y hy
       have hy' : g.symm y ∈ S.spanTo f r := (hX _).1 (by simpa using hy)
       have := hv (g.symm y) hy'
-      rw [← hiso v (g.symm y), LinearEquiv.apply_symm_apply] at this
-      exact this
+      rwa [← hiso v (g.symm y), LinearEquiv.apply_symm_apply] at this
 
 section Frame
 
@@ -173,8 +171,7 @@ lemma mem_perp (he : ∀ x y, S.h (e x) (e y) = H.h x y) (hf : ∀ a, f a = e (F
   constructor
   · intro h y hy
     have := h (e.symm y) ((hX _).2 (by simpa using hy))
-    rw [← he, e.apply_symm_apply] at this
-    exact this
+    rwa [← he, e.apply_symm_apply] at this
   · intro h y hy
     rw [← he]
     exact h (e y) ((hX y).1 hy)

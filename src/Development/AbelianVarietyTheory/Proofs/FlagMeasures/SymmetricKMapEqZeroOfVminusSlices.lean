@@ -151,8 +151,7 @@ private theorem finiteDimensional_arrV0_of_finiteDimensional_kSpan (ε : Fin n �
   apply Subtype.ext
   apply indexArray_ext
   intro α
-  have h1 := congrArg Subtype.val (congrFun hFG α)
-  simpa [ψ, arrOf] using h1
+  simpa [ψ, arrOf] using congrArg Subtype.val (congrFun hFG α)
 
 private theorem permArr_inv_permArr (s : Equiv.Perm (Fin j)) (F : Arr V n j) : permArr V n s⁻¹ (permArr V n s F) = F := by
   apply indexArray_ext
@@ -213,15 +212,13 @@ theorem jet_map_eq_zero : ∀ (V : Type) [NormedAddCommGroup V] [InnerProductSpa
           · rw [slice_sliceIns, ite_eq_left rfl]
           · intro b _ hb
             rw [slice_sliceIns, ite_eq_right hb, inner_zero_left]
-          · intro h
-            exact absurd (Finset.mem_univ _) h
+          · exact fun h => absurd (Finset.mem_univ _) h
         rw [inner_eq_sum_firstPositionSlice, hsum, ← hpm, inner_add_right] at hin
         have hmp : ⟪m, p⟫_ℂ = 0 := by
           rw [← inner_conj_symm, hsplit.1 p hp m hm, map_zero]
         rw [hmp, zero_add] at hin
         have hm' : m = 0 := inner_self_eq_zero.mp hin
-        rw [← hpm, hm', add_zero]
-        exact hp
+        rwa [← hpm, hm', add_zero]
       · rw [slice_eq_zero_of_compact hf α' hα]
         exact Submodule.zero_mem _
     have hN : f ∈ Formalism.REAL.Nset ε E (LamOf ε lam) u j := by

@@ -191,8 +191,7 @@ theorem _root_.GlobalTheory.EtC.Pair.exists_isFlip (R : Type) [CommRing R]
     ∃ ν : _root_.GlobalTheory.EtC.Pair J I K, μ.IsFlip ν ∧ ν.IsFlip μ ∧
       (μ.IsTensor → ν.IsTensor) := by
   refine ⟨_root_.GlobalTheory.EtC.SwapTransfer.flipPair μ, ?_, ?_, ?_⟩
-  · intro U s t w h a b
-    exact flipPair_mul_eq_negOnePow_smul_mul μ U s t w h a b
+  · exact fun U s t w h a b => flipPair_mul_eq_negOnePow_smul_mul μ U s t w h a b
   · intro U t s w h b a
     rw [flipPair_mul_eq_negOnePow_smul_mul μ U s t w (by omega) a b, smul_smul, mul_comm t s, Int.units_mul_self, one_smul]
   · rintro ⟨hsurj, hinj⟩
@@ -204,8 +203,7 @@ theorem _root_.GlobalTheory.EtC.Pair.exists_isFlip (R : Type) [CommRing R]
       rw [← lift_comp_swapT_eq_flipPair_lift, LinearMap.comp_apply, ← LinearMap.comp_apply (_root_.GlobalTheory.EtC.SwapTransfer.swapT J I V w), swapT_comp_swapT, LinearMap.id_apply]
       exact hx
     · have hx' : μ.lift U w (_root_.GlobalTheory.EtC.SwapTransfer.swapT J I U w x) = 0 := by
-        rw [← LinearMap.comp_apply, lift_comp_swapT_eq_flipPair_lift]
-        exact hx
+        rwa [← LinearMap.comp_apply, lift_comp_swapT_eq_flipPair_lift]
       obtain ⟨S, hS, hP⟩ := hinj U w _ hx'
       refine ⟨S, hS, fun V g hg => ?_⟩
       have hV := congrArg (_root_.GlobalTheory.EtC.SwapTransfer.swapT I J V w) (hP V g hg)

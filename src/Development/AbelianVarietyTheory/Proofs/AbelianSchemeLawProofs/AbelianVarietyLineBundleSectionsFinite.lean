@@ -77,8 +77,7 @@ theorem finSec_eq_zero_of_cover {X : Scheme.{0}} {I : Type} (V : I → X.Opens) 
     {U : X.Opens} (x : Γ(X, U)) (hx : ∀ i, rs X (inf_le_left : U ⊓ V i ≤ U) x = 0) : x = 0 := by
   refine X.sheaf.eq_of_locally_eq' (fun i => U ⊓ V i) U (fun i => homOfLE inf_le_left) ?_ x 0 ?_
   · rw [← inf_iSup_eq, hV, inf_top_eq]
-  · intro i
-    exact (hx i).trans (map_zero (rs X (inf_le_left : U ⊓ V i ≤ U))).symm
+  · exact fun i => (hx i).trans (map_zero (rs X (inf_le_left : U ⊓ V i ≤ U))).symm
 
 theorem Perf.exists_relation {X : Scheme.{0}} {K : Type} [Field K] {f : X ⟶ Spec (CommRingCat.of K)}
     {M : LB X} (Q : Perf f M) (s : Fin (Q.a + 1) → LB.Sec M) :
@@ -92,8 +91,7 @@ theorem Perf.exists_relation {X : Scheme.{0}} {K : Type} [Field K] {f : X ⟶ Sp
     intro k j
     have h := hE (E.symm (finSecPullId (s k))) j
     rw [Equiv.apply_symm_apply] at h
-    refine Eq.trans ?_ h
-    exact (rs_rs _ _ _).symm
+    exact Eq.trans (rs_rs _ _ _).symm h
   have hdep : ¬ LinearIndependent K v := by
     intro h
     have := h.fintype_card_le_finrank

@@ -117,8 +117,7 @@ theorem exists_lower_one_add (w : ℂ) (hw : w.im ≠ 0) :
     simpa using this
   have h2 : |t| ≤ ‖w + (t : ℂ)‖ + ‖w‖ := by
     have := norm_sub_le (w + (t : ℂ)) w
-    simp only [add_sub_cancel_left, Complex.norm_real, Real.norm_eq_abs] at this
-    exact this
+    simpa only [add_sub_cancel_left, Complex.norm_real, Real.norm_eq_abs] using this
   have hn : 0 ≤ ‖w‖ := norm_nonneg _
   rw [div_mul_eq_mul_div, div_le_iff₀ (by positivity)]
   nlinarith
@@ -171,10 +170,8 @@ theorem summable_prod_wt (ι : Type) [Fintype ι] [DecidableEq ι] :
         apply Finset.sum_le_sum_of_subset_of_nonneg
         · intro n hn
           rw [Fintype.mem_piFinset]
-          intro i
-          exact Finset.mem_image_of_mem _ hn
-        · intro n _ _
-          exact Finset.prod_nonneg fun i _ => wt_nonneg _
+          exact fun i => Finset.mem_image_of_mem _ hn
+        · exact fun n _ _ => Finset.prod_nonneg fun i _ => wt_nonneg _
     _ = ∏ i, ∑ m ∈ u.image (fun n : ι → ℤ => n i), wt m := (Finset.prod_univ_sum _ _).symm
     _ ≤ ∏ _i : ι, ∑' m, wt m := by
         apply Finset.prod_le_prod₀

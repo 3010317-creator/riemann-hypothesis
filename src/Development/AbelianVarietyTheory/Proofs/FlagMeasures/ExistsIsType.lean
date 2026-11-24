@@ -171,8 +171,7 @@ theorem exists_isType : ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGroup Wp] [Inn
     have hUW := Formalism.FourierDecayAlt.P.lie_stabilizer Wp k r z π B hz hT hR hB S hstab
     rcases hirr S hUW with hbot | htop
     · exact absurd (by rw [hbot] at hv0S; exact (Submodule.mem_bot ℂ).1 hv0S) hv0
-    · intro v
-      exact (hmem v).1 (htop ▸ Submodule.mem_top)
+    · exact fun v => (hmem v).1 (htop ▸ Submodule.mem_top)
   refine ⟨fun i => if h : i - 1 < k then u₀ ⟨i - 1, h⟩ else 0, hU.1, ⟨h1, hmul⟩, continuousOn_clm_apply.2 hcont,
     hnorm, hirr, ?_⟩
   intro Bs hBs w v
@@ -184,10 +183,8 @@ theorem exists_isType : ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGroup Wp] [Inn
   · intro s _
     simp only [Finset.mem_Icc]
     omega
-  · intro i _
-    exact Finset.mem_univ _
-  · intro s _
-    exact Fin.ext (by simp)
+  · exact fun i _ => Finset.mem_univ _
+  · exact fun s _ => Fin.ext (by simp)
   · intro i hi
     simp only [Finset.mem_Icc] at hi
     show i - 1 + 1 = i

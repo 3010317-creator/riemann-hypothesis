@@ -206,8 +206,7 @@ theorem exists_affine_nhds_avoid : ∀ (X Y : Scheme.{0}) [IsIntegral X] (s : Y 
   obtain ⟨U₁, hyU₁, hU₁⟩ := hg.exists_nhds
   set C : Set X := ⋃ v ∈ T, s.base '' (closure {v} ∩ closure {σ}) with hC
   have hCc : IsClosed C := by
-    refine hT.isClosed_biUnion fun v _ => ?_
-    exact s.isClosedMap _ (isClosed_closure.inter isClosed_closure)
+    exact hT.isClosed_biUnion fun v _ => s.isClosedMap _ (isClosed_closure.inter isClosed_closure)
   have hyC : y ∉ C := by
     simp only [hC, Set.mem_iUnion, Set.mem_image, not_exists, not_and]
     intro v hv w hw hwy
@@ -1026,8 +1025,7 @@ theorem GlobalTheory.Discrepancy.neg_one_lt_discrep_add_ord_of_logRes : ∀ (X :
     push_cast
     field_simp
     ring
-  rw [← hd]
-  exact hcrit
+  rwa [← hd]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1114,8 +1112,7 @@ theorem span_pair_isPrime_and_height_eq_two : ∀ (R : Type) [CommRing R] [IsReg
       rw [bot_lt_iff_ne_bot]; simpa using ha0
     have h2 : Ideal.span {a} < Ideal.span {a, b} := by
       refine lt_of_le_of_ne (Ideal.span_mono (by simp)) ?_
-      intro he
-      exact hba (he ▸ Ideal.subset_span (by simp))
+      exact fun he => hba (he ▸ Ideal.subset_span (by simp))
     have hlt1 := Ideal.height_strict_mono_of_isPrime h1
     have hlt2 := Ideal.height_strict_mono_of_isPrime h2
     have hne : (Ideal.span {a}).height ≠ ⊤ := Ideal.height_ne_top_of_isPrime
@@ -1171,8 +1168,7 @@ theorem exists_stalk_equiv_of_fromSpecStalk (X : Scheme.{0}) (x : X)
       algebraMap _ (Localization.AtPrime p.asIdeal) ((X.presheaf.germ U _ hxU).hom s)
     rw [h3]
     exact he U _ hxU s
-  intro g
-  exact congrArg (fun f => f.hom g) hcomp
+  exact fun g => congrArg (fun f => f.hom g) hcomp
 
 theorem mem_asIdeal_iff (X : Scheme.{0}) (x : X) (p : PrimeSpectrum (X.presheaf.stalk x)) (y : X)
     (hy : y ⤳ x) (hp : X.fromSpecStalk x p = y) (g : X.presheaf.stalk x) :
@@ -1294,8 +1290,7 @@ theorem exists_meet_point : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoethe
     have hQ0 : Q ≠ ⊥ := fun h => hgne w hwU i hi (by rw [h] at hbQ; exact Ideal.mem_bot.1 hbQ)
     have hQh : Q.height = 1 := by
       refine le_antisymm hQh1 ?_
-      rw [ENat.one_le_iff_ne_zero, Ne, Ideal.height_eq_zero_iff_eq_bot]
-      exact hQ0
+      rwa [ENat.one_le_iff_ne_zero, Ne, Ideal.height_eq_zero_iff_eq_bot]
     let pQ : PrimeSpectrum (Y.presheaf.stalk w) := ⟨Q, hQp⟩
     obtain ⟨hQw, -, -⟩ := GlobalTheory.SncMeet.exists_stalk_equiv_of_fromSpecStalk Y w pQ
     have hcoh : Order.coheight (Y.fromSpecStalk w pQ) = 1 := by
@@ -1387,8 +1382,7 @@ theorem regAt_map {X Y : Scheme.{0}} [IsIntegral X] [IsIntegral Y] (s : Y ⟶ X)
   exact ⟨s.stalkMap z a, (functionFieldMap_algebraMap s z a).symm⟩
 
 theorem scheme_ord_zero {Y : Scheme.{0}} [IsIntegral Y] [IsLocallyNoetherian Y] (z : Y) :
-    Scheme.ord (0 : Y.functionField) z = 0 := by
-  exact congrFun Scheme.ord_zero z
+    Scheme.ord (0 : Y.functionField) z = 0 := congrFun Scheme.ord_zero z
 
 theorem place_ord_eq {k : Type} [Field k] {Y : Scheme.{0}} [IsIntegral Y] [IsLocallyNoetherian Y]
     {q : Y ⟶ Sp k} {E : DivOver q} {z : Y} (h : E.IsAt z) (f : Y.functionField) :
@@ -1549,8 +1543,7 @@ theorem inversion_of_adjunction_proj : GlobalTheory.Published.Principalisation �
     have h2 : E'.ord g' = E'.ord g := by
       rw [hE'.ord_eq, hE'.ord_eq, ← hg'.mult_eq, (CartierDiv.isEqn_principal g z').mult_eq]
     simp only [discrep] at h1 ⊢
-    rw [h2]
-    exact h1
+    rwa [h2]
   have hnb := _root_.GlobalTheory.FieldPair.mult_lt_of_adjKlt X p n hproj hdim x m g Y s K B y σ S S' hx hm hres hS' hS'σ hmult hadj
   have hlt := hconn y σ hnorm heff hmult hsσ hnb
   have hordσ : Scheme.ord ((fnPull s f : Y.functionFieldˣ) : Y.functionField) σ = 1 := by

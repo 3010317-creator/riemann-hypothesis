@@ -186,8 +186,7 @@ theorem eigRank_eq (h1 : ∑ τ, P τ = 1) (hl : ∀ τ a, A a * P τ = χ τ a 
       have h2 : ∑ τ, (P τ).map φ = 1 := by
         have := congrArg φ.mapMatrix h1
 
-        rw [map_sum, map_one] at this
-        exact this
+        rwa [map_sum, map_one] at this
       rw [Matrix.toLin'_apply, Matrix.mulVec_transpose]
       conv_rhs => rw [← Matrix.vecMul_one c, ← h2, Matrix.vecMul_sum]
       rw [Finset.sum_eq_single σ (fun τ _ h => h0 τ h) (by simp)]
@@ -325,8 +324,7 @@ theorem embR_sep {E : Type} [Field E] [NumberField E] (F : IntermediateField ℚ
   obtain ⟨a, ha⟩ := this
   refine ⟨a, ?_⟩
   rw [embR, embR, ← map_sub]
-  refine IsUnit.map iF (isUnit_iff_ne_zero.2 (sub_ne_zero.2 fun e => ha ?_))
-  exact congrArg Subtype.val e
+  exact IsUnit.map iF (isUnit_iff_ne_zero.2 (sub_ne_zero.2 fun e => ha (congrArg Subtype.val e)))
 
 theorem balanced_finite_projective_rank : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Host E) (F : IntermediateField ℚ ℂ) (hF : ∀ (τ : E →+* ℂ) (a : E), τ a ∈ F) (R : Type) [CommRing R] (iF : F →+* R) (n : ℕ) (A : 𝓞 E → Matrix (Fin n) (Fin n) R), A 1 = 1 → (∀ a b, A (a + b) = A a + A b) → (∀ a b, A (a * b) = A a * A b) → Module.Finite R (balanced H.bar A) ∧ Module.Projective R (balanced H.bar A) ∧ ∀ (m : Ideal R) [m.IsMaximal], 2 * Module.finrank (R ⧸ m) ((R ⧸ m) ⊗[R] balanced H.bar A) = ∑ τ : E →+* ℂ, GlobalTheory.BalProj.eigRank (algebraMap R m.ResidueField) A (GlobalTheory.BalProj.embR F hF iF τ) * GlobalTheory.BalProj.eigRank (algebraMap R m.ResidueField) A (GlobalTheory.BalProj.embR F hF iF (NumberField.ComplexEmbedding.conjugate τ)) := by
   intro E _ _ _ H F hF R _ iF n A h1 ha hm
@@ -718,8 +716,7 @@ theorem eigSp_eq_range {O k : Type} [Field k] {n : ℕ} (B : O → Matrix (Fin n
     eigSp B χ = LinearMap.range (Matrix.vecMulLinear P) := by
   ext c
   constructor
-  · intro hc
-    exact ⟨c, hfix c hc⟩
+  · exact fun hc => ⟨c, hfix c hc⟩
   · rintro ⟨d, rfl⟩ a
     show (d ᵥ* P) ᵥ* B a = χ a • (d ᵥ* P)
     rw [Matrix.vecMul_vecMul, hP a, Matrix.vecMul_smul]
@@ -793,8 +790,7 @@ theorem isOpen_eigRank_eq_of_datum {O R K : Type} [CommRing O] [CommRing R] [Fie
     simp only [Set.mem_setOf_eq, Set.mem_compl_iff, Set.mem_iUnion, Finset.mem_filter, Finset.mem_range,
       PrimeSpectrum.mem_zeroLocus, Set.singleton_subset_iff, SetLike.mem_coe, exists_prop, not_exists, not_and]
     constructor
-    · intro h M hM hM'
-      exact hM.2 (((key 𝔭 M).2 hM').symm.trans h)
+    · exact fun h M hM hM' => hM.2 (((key 𝔭 M).2 hM').symm.trans h)
     · intro h
       by_contra hne
       exact h _ ⟨Nat.lt_succ_of_le (hle 𝔭), hne⟩ ((key 𝔭 _).1 rfl)

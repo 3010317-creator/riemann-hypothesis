@@ -199,8 +199,7 @@ theorem card_norm_eq_one [Finite K] {q : ℕ} (hq : Nat.card K = q ^ 2) (hs : �
   have e2 : Nat.card (normHom K).ker = Nat.card {u : K // u * star u = 1} := by
     refine Nat.card_congr (Equiv.ofBijective (fun z => ⟨((z : Kˣ) : K), (mem_ker_normHom _).1 z.2⟩)
       ⟨?_, ?_⟩)
-    · intro z w h
-      exact Subtype.ext (Units.ext (congrArg Subtype.val h))
+    · exact fun z w h => Subtype.ext (Units.ext (congrArg Subtype.val h))
     · rintro ⟨u, hu⟩
       exact ⟨⟨Units.mk0 u (left_ne_zero_of_mul_eq_one hu), (mem_ker_normHom _).2 hu⟩, rfl⟩
   rw [e1, e2] at h2
@@ -375,8 +374,7 @@ private theorem finrank_perp [FiniteDimensional K V] {v : V} (hv : h v v = 1) {n
   have h1 := LinearMap.finrank_range_add_finrank_ker (h.flip v)
   have h2 : LinearMap.range (h.flip v) = ⊤ := by
     rw [LinearMap.range_eq_top]
-    intro c
-    exact ⟨c • v, by simp [hv]⟩
+    exact fun c => ⟨c • v, by simp [hv]⟩
   rw [h2, finrank_top, finrank_self, hn] at h1
   change finrank K (LinearMap.ker (h.flip v)) = n
   omega
@@ -586,8 +584,7 @@ theorem card_specialUnitaryGroup_mul [Finite K] {q : ℕ} (hq : Nat.card K = q ^
   rw [← card_ker_mul_card_range d, hd, Subgroup.card_top, ← card_norm_eq_one hq hs]
   congr 1
   · refine Nat.card_congr (Equiv.ofBijective (fun A => ⟨⟨A.1, A.2.1⟩, Subtype.ext A.2.2⟩) ⟨?_, ?_⟩)
-    · intro A B h
-      exact Subtype.ext (congrArg (fun x : d.ker => x.1.1) h)
+    · exact fun A B h => Subtype.ext (congrArg (fun x : d.ker => x.1.1) h)
     · rintro ⟨⟨A, hA⟩, h⟩
       exact ⟨⟨A, hA, congrArg Subtype.val h⟩, rfl⟩
   · exact Nat.card_congr (Equiv.subtypeEquivRight fun u => by

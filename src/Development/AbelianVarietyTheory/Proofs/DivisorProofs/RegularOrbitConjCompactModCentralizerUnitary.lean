@@ -159,9 +159,7 @@ theorem orbit_cpt_U : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Un
       (Units.continuous_val.comp continuous_subtype_val).continuousAt.preimage_mem_nhds (by simpa using hW), ?_⟩
     intro s hs hτs
     obtain ⟨r, hrr, hrc, hrs⟩ := hWs _ hs
-    have hsv : cT σ s.1.val = s.1.val := by
-      have h := congrArg (fun u : Z => u.1.val) hτs
-      exact h
+    have hsv : cT σ s.1.val = s.1.val := congrArg (fun u : Z => u.1.val) hτs
     have hrr' : r * r = s.1.val := hrr
     have hu : IsUnit r := isUnit_of_mul_isUnit_left (hrr'.symm ▸ s.1.isUnit)
     have hrZ : hu.unit ∈ Z := (hZ _).2 (hrc _ ((hZ _).1 s.2).symm).symm
@@ -189,9 +187,7 @@ theorem orbit_cpt_U : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Un
           simp only [Matrix.mul_assoc]
       _ = cT σ z.val * z.val := by rw [e1, Units.mul_inv, Matrix.one_mul, Matrix.mul_one]
   obtain ⟨t, ht, b, hb, hzt⟩ := hBz _ hN
-  have htU : t.1 ∈ UL n w := by
-    have h := congrArg (fun u : Z => u.1.val) ht
-    exact (hmemU _).2 h
+  have htU : t.1 ∈ UL n w := (hmemU _).2 (congrArg (fun u : Z => u.1.val) ht)
   have hgt : g.1 = t.1 * (b.1 * d) := by
     rw [hgd, ← mul_assoc]; exact congrArg (· * d) (congrArg Subtype.val hzt)
   have hωU : b.1 * d ∈ UL n w := by

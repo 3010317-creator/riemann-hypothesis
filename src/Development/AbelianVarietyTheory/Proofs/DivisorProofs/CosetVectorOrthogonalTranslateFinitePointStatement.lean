@@ -382,8 +382,7 @@ theorem exists_norm (D : D7) (x : 𝓞 D.host.E) :
     rw [← IsCMField.complexConj_eq_self_iff]
     change star ((x * cO D x : 𝓞 D.host.E) : D.host.E) = _
     rw [← cO_coe, map_mul, cO_cO, mul_comm]
-  refine ⟨⟨⟨_, hm⟩, ?_⟩, rfl⟩
-  exact (isIntegral_algebraMap_iff ).1 (x * cO D x).isIntegral_coe
+  exact ⟨⟨⟨_, hm⟩, (isIntegral_algebraMap_iff ).1 (x * cO D x).isIntegral_coe⟩, rfl⟩
 
 theorem cO_algebraMap (D : D7) (y : 𝓞 D.host.F) :
     cO D (algebraMap (𝓞 D.host.F) (𝓞 D.host.E) y) = algebraMap (𝓞 D.host.F) (𝓞 D.host.E) y := by
@@ -427,8 +426,7 @@ theorem conj_place : ∀ (D : D7), ∀ w : HeightOneSpectrum (𝓞 D.host.E), �
   have hc : w = GlobalTheory.CuspRep.conjSrc (D.host.conj : D.host.E ≃+* D.host.E) (cP w) :=
     GlobalTheory.CuspRep.eq_conjSrc fun y => by
       have := GlobalTheory.ConjVal.valuation_cP w y
-      rw [Formalism.BasicNotions.Examples₂.star_eq_conj] at this
-      exact this
+      rwa [Formalism.BasicNotions.Examples₂.star_eq_conj] at this
   rw [GlobalTheory.BotFormula.toFinE_sgA]
   refine ((GlobalTheory.CuspRep.conjLoc_spec (D.host.conj : D.host.E ≃+* D.host.E) (cP w)).2.2
     (GlobalTheory.BotFormula.toFinE D x (GlobalTheory.CuspRep.conjSrc (D.host.conj : D.host.E ≃+* D.host.E) (cP w)))).trans ?_
@@ -514,8 +512,7 @@ theorem isOpen_inHat_one : IsOpen {x : FiniteAdeleRing (𝓞 E) E | InHat 1 x} :
       {x : FiniteAdeleRing (𝓞 E) E | ∀ v, x v ∈ (v.adicCompletionIntegers E : Set (v.adicCompletion E))} := by
     ext x
     exact inHat_one_iff x
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem isOpen_inHat {I : FractionalIdeal (𝓞 E)⁰ E} (hI : I ≠ 0) : IsOpen {x : FiniteAdeleRing (𝓞 E) E | InHat I x} := by
   obtain ⟨c, hc0, hc⟩ := FractionalIdeal.exists_ne_zero_mem_isInteger hI
@@ -558,9 +555,7 @@ theorem lift_fe {x : AE D} (hx : infPart D x = 0) : lift D (fe D x) = x := by
 
 theorem lift_algebraMap (γ : D.host.E) :
     lift D (algebraMap D.host.E (FA D) γ) = pairA D.host.F 0 1 ⊗ₜ[D.host.F] γ := by
-  have h1 : infPart D (pairA D.host.F 0 1 ⊗ₜ[D.host.F] γ) = 0 := by
-    show (0 : Ainf D.host.F) ⊗ₜ[D.host.F] γ = 0
-    exact TensorProduct.zero_tmul _ _
+  have h1 : infPart D (pairA D.host.F 0 1 ⊗ₜ[D.host.F] γ) = 0 := TensorProduct.zero_tmul _ _
   have h2 : fe D (pairA D.host.F 0 1 ⊗ₜ[D.host.F] γ) = algebraMap D.host.E (FA D) γ := by
     show GlobalTheory.LFun.toFinAd D.host.F D.host.E ((1 : Af D.host.F) ⊗ₜ[D.host.F] γ) = _
     rw [GlobalTheory.LFun.toFinAd_tmul, map_one, one_mul]
@@ -601,8 +596,7 @@ theorem exists_finPt_sub_mem : ∀ {D : D7} (S T : HSp D) (r : D.host.E) (I : Fr
       show pairA D.host.F 0 1 ⊗ₜ[D.host.F] (-(r⁻¹ * -z i j)) =
         lift D (algebraMap D.host.E (FA D) r⁻¹ * algebraMap D.host.E (FA D) (z i j))
       rw [← map_mul, lift_algebraMap, mul_neg, neg_neg]
-    rw [e]
-    exact hz1
+    rwa [e]
 
 end GlobalTheory.CosetOrthDens
 end -- clump:auto
@@ -689,8 +683,7 @@ theorem homL_entry {D : D7} {N N' : ℕ} {A : Matrix (Fin N') (Fin N) D.host.E}
       · rw [Pi.single_eq_of_ne h]
         exact zero_mem _
     have h2 := hA _ h1 i trivial
-    rw [Matrix.mulVec_single_one] at h2
-    exact h2
+    rwa [Matrix.mulVec_single_one] at h2
   | zero => exact zero_mem _
   | add x y _ _ hx hy => exact add_mem hx hy
   | smul c x _ hx => exact Submodule.smul_mem _ c hx
@@ -878,12 +871,10 @@ theorem inHat_of_char_dual : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T 
         ring
       rw [e] at ht
       unfold symplO
-      rw [hO_single_of_gram_one hS hT]
-      exact ht
+      rwa [hO_single_of_gram_one hS hT]
   have h2 := (hL _ hmem).2 p q
   rw [Matrix.single_apply_same, fe_incA_mul, ← mul_assoc, ← map_mul] at h2
-  rw [mul_right_comm]
-  exact h2
+  rwa [mul_right_comm]
 
 end GlobalTheory.CosetOrth
 end -- clump:auto
@@ -1079,8 +1070,7 @@ theorem inv_apply {n : ℕ} (y : Formalism.MainNotions.StandardLatticesGL3.GA D 
   have hh : Formalism.UG.cT (Formalism.MainNotions.StandardLatticesGL3.sgA D) (y.1 : Matrix (Fin n) (Fin n) (Formalism.MainNotions.StandardLatticesGL3.AE D)) * y.1 = 1 := by
     have h2 := y.2
     change Formalism.UG.cT _ (y.1 : Matrix (Fin n) (Fin n) (Formalism.MainNotions.StandardLatticesGL3.AE D)) * _ * _ = _ at h2
-    rw [Matrix.map_one _ (map_zero _) (map_one _), mul_one] at h2
-    exact h2
+    rwa [Matrix.map_one _ (map_zero _) (map_one _), mul_one] at h2
   rw [Subgroup.coe_inv, Units.inv_eq_of_mul_eq_one_left hh]
   rfl
 
@@ -1307,8 +1297,7 @@ theorem valued_finMat_finStd_le_one (V : HSp D) (hG : V.gram = 1) (k : GA D V)
     rfl
   rw [e, GlobalTheory.LFun.finAdEquiv_apply rfl]
   refine valued_toCompl_le_one rfl ?_
-  have e2 := map_evalV_map_sndA (w.under (𝓞 D.host.F)) ((matHom V k).1 i j)
-  exact e2 ▸ h1
+  exact (map_evalV_map_sndA (w.under (𝓞 D.host.F)) ((matHom V k).1 i j)) ▸ h1
 
 end GlobalTheory.CosetOrth
 

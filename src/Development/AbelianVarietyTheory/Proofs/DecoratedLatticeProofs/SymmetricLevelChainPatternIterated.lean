@@ -57,8 +57,7 @@ theorem intM_submatrix_iff {a b : Type*} (e : a ≃ b) (M : Matrix b b k) :
   constructor
   · intro h i j
     simpa using h (e.symm i) (e.symm j)
-  · intro h i j
-    exact h (e i) (e j)
+  · exact fun h i j => h (e i) (e j)
 
 theorem symm_mem_KO_iff {a b : Type*} [Fintype a] [DecidableEq a] [Fintype b] [DecidableEq b] (e : a ≃ b)
     (g : GL b k) : (reGL e).symm g ∈ KO k a ↔ g ∈ KO k b := by
@@ -130,15 +129,13 @@ theorem step_iff (Q : GlobalTheory.StepData.TypeDatum k (Ix (Fin κ ⊕ Fin l) t
       simpa [Matrix.one_apply] using hold
     · exact absurd (free_lr x s') hab
     ·
-      have hlow := hC s y
-      simpa [Matrix.one_apply, reGL_symm_val, Matrix.toBlocks₂₁] using hlow
+      simpa [Matrix.one_apply, reGL_symm_val, Matrix.toBlocks₂₁] using hC s y
     · exact absurd (free_rr s s') hab
   · rintro ⟨hK, hfree⟩
     have hK' : (reGL (ixSucc _ t j)).symm g ∈ KO k _ := (symm_mem_KO_iff _ g).2 hK
     have hC : MaxM ((reGL (ixSucc _ t j)).symm g).val.toBlocks₂₁ := by
       intro s y
-      have hnf := hfree _ _ (not_free_rl s y)
-      simpa [Matrix.one_apply, reGL_symm_val, Matrix.toBlocks₂₁] using hnf
+      simpa [Matrix.one_apply, reGL_symm_val, Matrix.toBlocks₂₁] using hfree _ _ (not_free_rl s y)
     refine ⟨hK, ?_, hC⟩
     obtain ⟨⟨g', hg'K, hg'val⟩, -⟩ := exists_diag_blocks hK' hC
     refine ⟨g', (hQ g').2 ⟨hg'K, fun x y hxy => ?_⟩, hg'val⟩

@@ -123,8 +123,7 @@ lemma stage_of_pieces (F : Shv R) {J : Type} [SmallCategory J] [IsFiltered J]
         (((onRings F).map ((v i).app (k i))).hom (((onRings F).map (g i)).hom y)) := by
     have := congrArg (fun φ => ((onRings F).map φ).hom y) h2
     rw [← h1] at this
-    simp only [Functor.map_comp, ModuleCat.hom_comp, LinearMap.comp_apply] at this
-    exact this
+    simpa only [Functor.map_comp, ModuleCat.hom_comp, LinearMap.comp_apply] using this
   rw [h3, hk i, map_zero]
 
 lemma stage_of_eta (M : CommRingCat.{0} ⥤ ModuleCat.{1} (ULift.{1} R)) (F : Shv R)
@@ -168,8 +167,7 @@ lemma stage_of_eta (M : CommRingCat.{0} ⥤ ModuleCat.{1} (ULift.{1} R)) (F : Sh
     (fun i => (hsq i).1) hcov' D' u v (fun i k => (hpush i k).1) hk
   refine ⟨k, f0 ≫ f, ?_⟩
   rw [map_eta] at hf ⊢
-  rw [Functor.map_comp, Functor.map_comp, ModuleCat.hom_comp, LinearMap.comp_apply]
-  exact hf
+  rwa [Functor.map_comp, Functor.map_comp, ModuleCat.hom_comp, LinearMap.comp_apply]
 
 theorem eq_zero_at_stage_of_map_colimit_eq_zero : ∀ (R : Type) [CommRing R] (M : CommRingCat.{0} ⥤ ModuleCat.{1} (ULift.{1} R)) (F : Shv R) (η : M ⟶ onRings F), PreservesFilteredColimitsOfSize.{0, 0} M → (∀ (A : CommRingCat.{0}) (x : (onRings F).obj A), ∃ (ι : Type) (_ : Finite ι) (B : ι → CommRingCat.{0}) (g : ∀ i, A ⟶ B i) (m : ∀ i, M.obj (B i)), (∀ i, (g i).hom.Etale) ∧ (∀ p : Spec A, ∃ i v, Spec.map (g i) v = p) ∧ ∀ i, (η.app (B i)).hom (m i) = ((onRings F).map (g i)).hom x) → (∀ (A : CommRingCat.{0}) (m : M.obj A), (η.app A).hom m = 0 → ∃ (ι : Type) (_ : Finite ι) (B : ι → CommRingCat.{0}) (g : ∀ i, A ⟶ B i), (∀ i, (g i).hom.Etale) ∧ (∀ p : Spec A, ∃ i v, Spec.map (g i) v = p) ∧ ∀ i, (M.map (g i)).hom m = 0) → ∀ (J : Type) [SmallCategory J] [IsFiltered J] (D : J ⥤ CommRingCat.{0}) (c : Cocone D), IsColimit c → ∀ (j : J) (y : (onRings F).obj (D.obj j)), ((onRings F).map (c.ι.app j)).hom y = 0 → ∃ (k : J) (f : j ⟶ k), ((onRings F).map (D.map f)).hom y = 0 := by
   intro R _ M F η hM hloc hker J _ _ D c hc j y hy
@@ -428,8 +426,7 @@ theorem finitary_of_locally_bijective : ∀ (R : Type) [CommRing R] (M : CommRin
   have hinj := _root_.GlobalTheory.EtC.FilteredSections.eq_zero_at_stage_of_map_colimit_eq_zero R M F η hM hloc hker
   show PreservesFilteredColimitsOfSize.{0, 0} (onRings F)
   refine (GlobalTheory.EtC.FilteredElements.preservesFilteredColimits_modules_iff_elements _ (onRings F)).2.2 ?_
-  intro J _ _ D c hc
-  exact ⟨surj M F η hM hloc hinj J D c hc, hinj J D c hc⟩
+  exact fun J _ _ D c hc => ⟨surj M F η hM hloc hinj J D c hc, hinj J D c hc⟩
 
 end GlobalTheory.EtC.FinitaryOfLocBij
 end -- clump:auto

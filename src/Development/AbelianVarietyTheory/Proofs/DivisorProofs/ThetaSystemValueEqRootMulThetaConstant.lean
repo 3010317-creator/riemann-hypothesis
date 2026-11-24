@@ -112,16 +112,13 @@ theorem exists_root_stalk_pull (hG : GlobalFnsSt) (P : PolAV S) {T : Over S} {N 
         Category.id_comp]
     have orbitMap_conj_smul_one : val α (ptSecT P.A 1).left y J = val rig T.hom y J ^ (N : ℤ) * val rig T.hom y J ^ (-1 : ℤ) := by
       have := val_corr hJ hn (𝟙 _)
-      rw [val_pull hJ, val_mul hJ, val_rigT rig _ hJ, val_rigT rig _ hJ, Category.id_comp] at this
-      exact this
+      rwa [val_pull hJ, val_mul hJ, val_rigT rig _ hJ, val_rigT rig _ hJ, Category.id_comp] at this
     have eB1 : val β (T.hom ≫ eSec P.A) y J = val rig T.hom y J ^ ((M : ℤ) ^ 2) * (val rig T.hom y J)⁻¹ := by
       have := val_corr hJ hnβ T.hom
-      rw [val_pull hJ, val_mul hJ, val_inv, val_rigPow'] at this
-      exact this
+      rwa [val_pull hJ, val_mul hJ, val_inv, val_rigPow'] at this
     have eB1' : val β' (T.hom ≫ eSec P.A) y J = val rig T.hom y J ^ ((M : ℤ) ^ 2) * (val rig T.hom y J)⁻¹ := by
       have := val_corr hJ hnβ' T.hom
-      rw [val_pull hJ, val_mul hJ, val_inv, val_rigPow'] at this
-      exact this
+      rwa [val_pull hJ, val_mul hJ, val_inv, val_rigPow'] at this
     have rA := Reg.two (L := P.L) (y := y) (J := J) α hα (snd T P.A) (snd T P.A ^ m) rfl rfl
     have rB := Reg.two (L := P.L) (y := y) (J := J) (LB.pullGen P.L _ _ β (snd T P.A).left)
       (ReciprocityTheory.ChartRestriction.G.DVR.pullGen_isGen P.L _ _ β hβ _) (snd T P.A) (snd T P.A ^ M)

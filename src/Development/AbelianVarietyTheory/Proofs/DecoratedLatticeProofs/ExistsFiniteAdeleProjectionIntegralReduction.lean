@@ -165,8 +165,7 @@ theorem mem_intAf_iff (q : SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E} (he 
   obtain ⟨hint, -⟩ := GlobalTheory.IdemRes.resS_idem_eq_one D q.e PP he
   rw [q.prF_mem_iff he]
   constructor
-  · intro hz
-    exact ⟨mul_mem (sub_mem (one_mem _) hint) hz, mul_mem hint hz⟩
+  · exact fun hz => ⟨mul_mem (sub_mem (one_mem _) hint) hz, mul_mem hint hz⟩
   · rintro ⟨h1, h2⟩
     have : z = (1 - toEAf D q.e) * z + toEAf D q.e * z := by
       rw [sub_mul, one_mul, sub_add_cancel]
@@ -183,8 +182,7 @@ theorem resS_off (q : SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E} (he : For
     rw [h1, GlobalTheory.FunObj.Comparison₂.mk_eq_zero_iff]
     rw [GlobalTheory.FunObj.Comparison₂.cptO_apply PP' ⟨toEAf D q.e, hint⟩] at h2
     change Valued.v (GlobalTheory.StdFrames.cpt PP' (toEAf D q.e) - _) < 1 at h2
-    rw [(GlobalTheory.StdFrames.cpt_of_isIdemAt he).2 PP' hne, zero_sub, Valuation.map_neg] at h2
-    exact h2
+    rwa [(GlobalTheory.StdFrames.cpt_of_isIdemAt he).2 PP' hne, zero_sub, Valuation.map_neg] at h2
   have e1 : (⟨(1 - toEAf D q.e) * z, hz'⟩ : Formalism.L2.Herm.intAf D.host.F D.host.E) =
       (1 - ⟨toEAf D q.e, hint⟩) * ⟨z, hz⟩ :=
     Subtype.ext (by rw [Subring.coe_mul, AddSubgroupClass.coe_sub, OneMemClass.coe_one])

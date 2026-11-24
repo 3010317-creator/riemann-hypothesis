@@ -518,8 +518,7 @@ theorem mk_eq_iff_sign (h1 : ∀ y i, Ψ (sigR w.Completion (star' P) y) i = con
   · rintro ⟨c, hc⟩ i
     have hv : (c : w.Completion ⊗[F] Fld P) * sigR w.Completion (star' P) c =
         ((x.1⁻¹ : (w.Completion ⊗[F] Fld P)ˣ) : w.Completion ⊗[F] Fld P) * x'.1.1 := by
-      have h0 := congrArg Units.val hc
-      simpa using h0
+      simpa using congrArg Units.val hc
     have hv2 := congrArg (fun z => Ψ z i) hv
     simp only [map_mul, Pi.mul_apply, h1, Psi_inv_units_eq_inv] at hv2
     obtain ⟨hxr, hx0⟩ := plus_real h1 x i
@@ -533,10 +532,8 @@ theorem mk_eq_iff_sign (h1 : ∀ y i, Ψ (sigR w.Completion (star' P) y) i = con
     rcases mul_pos_iff.mp hpos with ⟨ha, hb⟩ | ⟨ha, hb⟩
     · exact ⟨fun _ => hb, fun _ => inv_pos.mp ha⟩
     · constructor
-      · intro h
-        exact absurd (inv_pos.mpr h) (not_lt.mpr ha.le)
-      · intro h
-        exact absurd h (not_lt.mpr hb.le)
+      · exact fun h => absurd (inv_pos.mpr h) (not_lt.mpr ha.le)
+      · exact fun h => absurd h (not_lt.mpr hb.le)
   · intro hs
     have hq : ∀ i, 0 < (Ψ x.1.1 i).re⁻¹ * (Ψ x'.1.1 i).re := by
       intro i
@@ -552,8 +549,7 @@ theorem mk_eq_iff_sign (h1 : ∀ y i, Ψ (sigR w.Completion (star' P) y) i = con
     set v : Fin r → ℂ := fun i => ((Real.sqrt ((Ψ x.1.1 i).re⁻¹ * (Ψ x'.1.1 i).re) : ℝ) : ℂ) with hvdef
     have hv0 : ∀ i, v i ≠ 0 := by
       intro i
-      simp only [hvdef, ne_eq, Complex.ofReal_eq_zero]
-      exact (Real.sqrt_pos.2 (hq i)).ne'
+      simpa only [hvdef, ne_eq, Complex.ofReal_eq_zero] using (Real.sqrt_pos.2 (hq i)).ne'
     refine ⟨Units.map (Ψ.symm : (Fin r → ℂ) →* w.Completion ⊗[F] Fld P) ⟨v, fun i => (v i)⁻¹, ?_, ?_⟩, Units.ext ?_⟩
     · funext i
       simp [hv0 i]

@@ -75,8 +75,7 @@ theorem initial_product_moment_le :
         ≤ ENNReal.ofReal (A ^ q) := by
     intro q hq
     have e : Fin.castLE hl (0 : Fin (s + 1)) = 0 := Fin.ext (by simp)
-    simp only [e]
-    exact hm0 q (hq' q hq)
+    simpa only [e] using hm0 q (hq' q hq)
   have h2 : ∀ a : Fin s, ∀ q ≤ (s + 1) ^ 2,
       ∫⁻ x, ENNReal.ofReal (((fun a : Fin (s + 1) => len (Fin.castLE hl a)) a.succ x /
         (fun a : Fin (s + 1) => len (Fin.castLE hl a)) a.castSucc x) ^ (2 * q) * Ph x) ∂ν
@@ -84,8 +83,7 @@ theorem initial_product_moment_le :
     intro a q hq
     have e1 : Fin.castLE hl a.succ = (⟨a, by omega⟩ : Fin r).succ := Fin.ext (by simp)
     have e2 : Fin.castLE hl a.castSucc = (⟨a, by omega⟩ : Fin r).castSucc := Fin.ext (by simp)
-    simp only [e1, e2]
-    exact hrat _ q (hq' q hq)
+    simpa only [e1, e2] using hrat _ q (hq' q hq)
   have key := product_moment_le Ω ν s (fun a => len (Fin.castLE hl a)) Ph A Rr
     (fun _ => hlen _) (fun _ => hpos _) hPh h0 hmass hA hR h1 h2
   refine key.trans (ENNReal.ofReal_le_ofReal ?_)

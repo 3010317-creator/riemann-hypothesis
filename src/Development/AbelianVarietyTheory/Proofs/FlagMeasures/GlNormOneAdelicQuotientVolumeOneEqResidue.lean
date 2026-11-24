@@ -316,8 +316,7 @@ private theorem exists_classGroupEquiv : Nonempty (Quot (carries (E := E)) ≃ C
     · rintro ⟨γ, hγ⟩
       refine ⟨_, ⟨Units.mk0 _ (gl_one_ne_zero γ), rfl⟩, (mul_principal_eq_iff _ _ _).2 fun t => ?_⟩
       have := hγ (fun _ => t)
-      rw [mulVec_one, hψ Λ' _, hψ Λ _] at this
-      exact this
+      rwa [mulVec_one, hψ Λ' _, hψ Λ _] at this
     · rintro ⟨_, ⟨c, rfl⟩, h⟩
       obtain ⟨γ, hγ⟩ := exists_gl_one c.ne_zero
       refine ⟨γ, fun y => ?_⟩
@@ -347,8 +346,7 @@ theorem mem_autGL_iff (Λ : Submodule (𝓞 E) (Fin 1 → E)) (h : Submodule.IsL
     have h1 : I * toPrincipalIdeal (𝓞 E) E (Units.mk0 _ (gl_one_ne_zero γ)) = I :=
       (mul_principal_eq_iff _ _ _).2 fun t => by
         have := hγ (fun _ => t)
-        rw [mulVec_one, hI, hI] at this
-        exact this
+        rwa [mulVec_one, hI, hI] at this
     rw [mul_eq_left, toPrincipalIdeal_eq_iff, Units.val_one, ← FractionalIdeal.spanSingleton_one,
       FractionalIdeal.spanSingleton_eq_spanSingleton] at h1
     obtain ⟨u, hu⟩ := h1
@@ -441,8 +439,7 @@ theorem measurePreserving_act (hE : IsTotallyComplex E) (u : (𝓞 E)ˣ) :
   have : (volume : Measure (InfinitePlace E → Fin 1 → Fin 1 → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have := Measure.map_linearMap_addHaar_eq_smul_addHaar
     (volume : Measure (InfinitePlace E → Fin 1 → Fin 1 → ℂ)) (f := L.restrictScalars ℝ) (by rw [hd]; norm_num)
-  rw [hd, inv_one, abs_one, ENNReal.ofReal_one, one_smul] at this
-  exact this
+  rwa [hd, inv_one, abs_one, ENNReal.ofReal_one, one_smul] at this
 
 open scoped Classical in
 theorem torsion_mul_covol (hE : IsTotallyComplex E) (Λ : Submodule (𝓞 E) (Fin 1 → E))
@@ -670,7 +667,6 @@ theorem glVol_one : ∀ (E : Type) [Field E] [NumberField E], IsTotallyComplex E
       ENNReal.ofReal_mul (Nat.cast_nonneg _), ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_natCast,
       ENNReal.ofReal_pow Real.pi_pos.le, hr, pow_zero, one_mul, nsmul_eq_mul, classNumber,
       ← NNReal.coe_real_pi, ENNReal.ofReal_coe_nnreal]
-  rw [← ENNReal.mul_right_inj hw (ENNReal.natCast_ne_top _), glVol, ← ENNReal.tsum_mul_left]
-  exact hsum
+  rwa [← ENNReal.mul_right_inj hw (ENNReal.natCast_ne_top _), glVol, ← ENNReal.tsum_mul_left]
 
 end GlobalTheory.NormOneVol

@@ -69,8 +69,7 @@ theorem extZero_toLin (χ : GL (Fin d) F → ℂ) (x : GL (Fin d) F) :
   have hs : {y : GL (Fin d) F | Matrix.toLin' (y : Matrix (Fin d) (Fin d) F) =
       Matrix.toLin' (x : Matrix (Fin d) (Fin d) F)} = {x} := by
     ext y
-    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
-    exact extZero_toLin_injective.eq_iff
+    simpa only [Set.mem_ofPred_eq, Set.mem_singleton_iff] using extZero_toLin_injective.eq_iff
   rw [hs, finsum_mem_singleton]
 
 theorem extZero_of_not_isUnit (χ : GL (Fin d) F → ℂ) (g : Module.End F (Fin d → F))
@@ -112,8 +111,7 @@ theorem isClassFn_extZero (χ : GL (Fin d) F → ℂ)
   have hconj : ∀ f : Module.End F (Fin d → F),
       e.conj f = (E : Module.End F (Fin d → F)) * f * ((E⁻¹ : (Module.End F (Fin d → F))ˣ) :
         Module.End F (Fin d → F)) := by
-    intro f
-    exact LinearMap.ext fun v => rfl
+    exact fun f => LinearMap.ext fun v => rfl
   by_cases hg : IsUnit g
   · obtain ⟨y, rfl⟩ := (extZero_isUnit_iff g).mp hg
     have hy : e.conj (Matrix.toLin' (y : Matrix (Fin d) (Fin d) F)) =
@@ -123,8 +121,7 @@ theorem isClassFn_extZero (χ : GL (Fin d) F → ℂ)
     rw [hy, extZero_toLin, extZero_toLin]
     simpa using hχ y (Φ.symm E)⁻¹
   · have hg' : ¬ IsUnit (e.conj g) := by
-      rw [hconj, Units.isUnit_mul_units, Units.isUnit_units_mul]
-      exact hg
+      rwa [hconj, Units.isUnit_mul_units, Units.isUnit_units_mul]
     rw [extZero_of_not_isUnit χ _ hg', extZero_of_not_isUnit χ _ hg]
 
 theorem extZero_spec : ∀ (F : Type) [Field F] [Finite F] (d : ℕ) (χ : GL (Fin d) F → ℂ), (∀ x : GL (Fin d) F, extZero χ (Matrix.toLin' (x : Matrix (Fin d) (Fin d) F)) = χ x) ∧ (∀ g, ¬ IsUnit g → extZero χ g = 0) ∧ (∀ φ φ' : Module.End F (Fin d → F) → ℂ, ipGL φ φ' = ∑ᶠ x : GL (Fin d) F, φ (Matrix.toLin' (x : Matrix (Fin d) (Fin d) F)) * star (φ' (Matrix.toLin' (x : Matrix (Fin d) (Fin d) F)))) ∧ ((∀ g x : GL (Fin d) F, χ (x⁻¹ * g * x) = χ g) → IsClassFn (extZero χ)) := by

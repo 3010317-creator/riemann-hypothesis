@@ -71,8 +71,7 @@ theorem iota_int_cofinite {D : D7} (Z : LocDat D) (x : D.host.E) :
     · have e : y • x = -((n : D.host.E) * x) := by
         rw [zsmul_eq_mul, h, Int.cast_neg, Int.cast_natCast, neg_mul]
       have := hint.neg
-      rw [e, neg_neg] at this
-      exact this
+      rwa [e, neg_neg] at this
   let w : 𝓞 D.host.E := ⟨(n : D.host.E) * x, hint'⟩
   have hfin : {p : PlF D | Loc.resChar p ∣ n}.Finite := by
     have hne : (Ideal.span {((n : ℕ) : 𝓞 D.host.F)} : Ideal (𝓞 D.host.F)) ≠ 0 := by
@@ -81,8 +80,7 @@ theorem iota_int_cofinite {D : D7} (Z : LocDat D) (x : D.host.E) :
     refine (Ideal.finite_factors hne).subset ?_
     intro p hp
     simp only [Set.mem_setOf_eq] at hp ⊢
-    rw [Ideal.dvd_span_singleton, bt_natCast_mem_iff]
-    exact hp
+    rwa [Ideal.dvd_span_singleton, bt_natCast_mem_iff]
   refine hfin.subset ?_
   intro p hp
   simp only [Set.mem_setOf_eq] at hp ⊢

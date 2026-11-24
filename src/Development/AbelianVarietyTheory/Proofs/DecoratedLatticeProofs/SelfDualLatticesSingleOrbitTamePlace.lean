@@ -259,8 +259,7 @@ theorem mem_int_of_integral (v : Pl D) (a : Fv D.host.F v)
     RingHom.injective _
   have hi : IsIntegral (v.adicCompletionIntegers D.host.F) a := by
     refine ⟨p, hp, hinj ?_⟩
-    rw [Polynomial.hom_eval₂, map_zero]
-    exact hpa
+    rwa [Polynomial.hom_eval₂, map_zero]
   obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.1 hi
   rw [← hy]
   exact y.2
@@ -344,8 +343,7 @@ theorem compAt_mem_intV_of_intAt : ∀ (D : D7) (v : Pl D) (a : AE D), a ∈ int
   induction h using AddSubgroup.closure_induction with
   | mem y hy =>
     obtain ⟨α, hα, x, rfl⟩ := hy
-    apply AddSubgroup.subset_closure
-    exact ⟨_, hα v, x, rfl⟩
+    exact AddSubgroup.subset_closure ⟨_, hα v, x, rfl⟩
   | zero => rw [RingHom.map_zero]; exact zero_mem _
   | add y z _ _ hy hz => rw [RingHom.map_add (f := _)]; exact add_mem hy hz
   | neg y _ hy => rw [RingHom.map_neg]; exact neg_mem hy
@@ -626,10 +624,8 @@ theorem exists_coords (h : IsCMExt F E σ) (w : E) (t n : 𝓞 F) (ht : w + σ w
       change σ (((x : E) - σ x) * (w - σ w)) = ((x : E) - σ x) * (w - σ w)
       simp only [map_mul, map_sub, hσ]
       ring)
-  have ha' : algebraMap F E a = (σ x * w - x * σ w) * (w - σ w) := by
-    exact congrArg (algebraMap (𝓞 E) E) ha
-  have hb' : algebraMap F E b = (x - σ x) * (w - σ w) := by
-    exact congrArg (algebraMap (𝓞 E) E) hb
+  have ha' : algebraMap F E a = (σ x * w - x * σ w) * (w - σ w) := congrArg (algebraMap (𝓞 E) E) ha
+  have hb' : algebraMap F E b = (x - σ x) * (w - σ w) := congrArg (algebraMap (𝓞 E) E) hb
   refine ⟨a, b, ?_⟩
   have hd : algebraMap F E ((t ^ 2 - 4 * n : 𝓞 F) : F) = (algebraMap F E t) ^ 2 - 4 * algebraMap F E n := by
     push_cast
@@ -672,8 +668,7 @@ theorem mem_intV_coords : ∀ (D : D7) (v : Pl D) (w : D.host.E) (t n : 𝓞 D.h
   set U : Fv D.host.F v := ((u : v.adicCompletionIntegers D.host.F) : Fv D.host.F v) with hU
   have hu' : U * algebraMap D.host.F (Fv D.host.F v) ((t ^ 2 - 4 * n : 𝓞 D.host.F) : D.host.F) = 1 := by
     have := congrArg (fun y : v.adicCompletionIntegers D.host.F => (y : Fv D.host.F v)) hu
-    rw [MulMemClass.coe_mul, hcoe, OneMemClass.coe_one] at this
-    exact this
+    rwa [MulMemClass.coe_mul, hcoe, OneMemClass.coe_one] at this
   induction hz using AddSubgroup.closure_induction with
   | mem y hy =>
     obtain ⟨c, hc, x, rfl⟩ := hy
@@ -698,12 +693,10 @@ theorem mem_intV_coords : ∀ (D : D7) (v : Pl D) (w : D.host.E) (t n : 𝓞 D.h
   | add y y' _ _ h h' =>
     obtain ⟨a, ha, b, hb, rfl⟩ := h
     obtain ⟨a', ha', b', hb', rfl⟩ := h'
-    refine ⟨a + a', add_mem ha ha', b + b', add_mem hb hb', ?_⟩
-    exact coords_add a b a' b' w
+    exact ⟨a + a', add_mem ha ha', b + b', add_mem hb hb', coords_add a b a' b' w⟩
   | neg y _ h =>
     obtain ⟨a, ha, b, hb, rfl⟩ := h
-    refine ⟨-a, neg_mem ha, -b, neg_mem hb, ?_⟩
-    exact coords_neg a b w
+    exact ⟨-a, neg_mem ha, -b, neg_mem hb, coords_neg a b w⟩
 
 end GlobalTheory.FixedUnitNorm.Coords
 end -- clump:auto
@@ -1042,8 +1035,7 @@ theorem adj_mem_idAt {P : Pl D → Prop} {ε : AE D} (hcε : cA D ε = ε) (hε 
     adj X i j ∈ idAt D P := by
   rw [hε]
   have h := congrArg (cA D) ((hε _).1 (hX j i))
-  rw [(cA D).map_mul, hcε] at h
-  exact h
+  rwa [(cA D).map_mul, hcε] at h
 
 theorem exists_onb (S : HSp D) (v : Pl D) (ε : AE D) (Λ : AddSubgroup (Fin S.rank → AE D)) (ht : Tame D v)
     (hεε : ε * ε = ε) (hcε : cA D ε = ε) (hεO : ε ∈ intAt D (· = v)) (hεI : ∀ a, a ∈ idAt D (· = v) ↔ ε * a = a)

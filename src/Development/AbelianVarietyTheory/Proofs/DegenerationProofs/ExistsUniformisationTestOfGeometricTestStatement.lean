@@ -368,13 +368,11 @@ theorem Mod.integral_of_weight_zero_dominates : ∀ (p : ℕ) [Fact p.Prime] (V 
     rw [QuadraticMap.comp_apply]
     exact congrArg q (m.xe.apply_symm_apply x)
   refine GlobalTheory.T.valuation_eq_polarForm_of_weightZero_max X q g N J cls p w ν ?_ ?_ hB.lll ?_ hν hi
-  · have h := m.good.pos.comp (m.xe.symm.injective.tendsto_cofinite)
-    exact h.congr hq
+  · exact (m.good.pos.comp (m.xe.symm.injective.tendsto_cofinite)).congr hq
   · exact e.finrank_eq.symm.le.trans ((Nat.le_add_left _ _).trans m.dim.le)
   · intro i n
     have h := m.good.short i (m.xe.symm n)
-    rw [← map_nsmul, ← map_add (f := _), hq, hq] at h
-    exact h
+    rwa [← map_nsmul, ← map_add (f := _), hq, hq] at h
 
 end GlobalTheory.ZH
 end -- clump:auto
@@ -487,8 +485,7 @@ theorem exists_lift : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [Fie
   have hmap : ∀ {R : Type} [CommRing R] (ψ : OO p →+* R), Crd (Q.O1.pull (Q.P.hom ⁻¹ᵁ Q.W tm.l).ι) (Q.σ tm.l)
       (spMap ψ ≫ b') ((tm.m.map (ψ.comp t.u.j)).mulVec fun i => ψ (w i)) := fun ψ => by
     have := CrdCalc.crd_map ψ hw'
-    refine (congrArg _ (funext fun i => ?_)).mp this
-    exact RingHom.map_mulVec ψ _ _ i
+    exact (congrArg _ (funext fun i => (RingHom.map_mulVec ψ _ _ i))).mp this
   obtain ⟨i₀, hi₀, hne⟩ := (GlobalTheory.T.le_preimage_openPart_iff_testCoordinates o Ω S ρ M U₀ EE hB Q p y y₀ t c tm hbig (rPt p ≫ b')
     (fun i => IsLocalRing.residue (OO p) (w i))
     (by rw [Category.assoc, ← Category.assoc b', hb', hb]) (hmap _)).1 (by
@@ -631,8 +628,7 @@ theorem isClosedImmersion_of_crd {k : Type} [Field k] [IsAlgClosed k] {X T : Sch
   refine isClosedImmersion_of_surjective _ ?_
   rw [morphismRestrict_appTop]
   have h₁ : Function.Surjective (h.app ((Out.nonzeroLocus (s i)).ι ''ᵁ ⊤)).hom := by
-    rw [Scheme.Opens.ι_image_top]
-    exact hsurj'
+    rwa [Scheme.Opens.ι_image_top]
   exact (ConcreteCategory.bijective_of_isIso (X.presheaf.map (eqToHom _).op)).2.comp h₁
 
 abbrev pullLB {X Y : Scheme.{0}} (f : Y ⟶ X) (L : LB X) : LB Y :=

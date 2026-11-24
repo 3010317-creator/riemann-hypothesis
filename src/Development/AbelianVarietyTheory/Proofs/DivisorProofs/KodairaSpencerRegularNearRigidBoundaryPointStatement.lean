@@ -159,8 +159,7 @@ theorem exists_basicOpen_chartHom_ne_zero : ∀ (E : Type) [Field E] [NumberFiel
     exact fun h => hprod ((Submodule.mem_bot _).1 h)
   have hgab : genι Y (ξ gp) ∈ interior Y := by
     have := (mem_genBd_iff (Y := Y) (x := ξ gp)).not.1 hgbd
-    rw [not_not, ← coe_interior] at this
-    exact this
+    rwa [not_not, ← coe_interior] at this
   have hsp : gp ⤳ closedPoint (ChartRing k m d) :=
     (PrimeSpectrum.le_iff_specializes _ _).1 (fun x hx => by
       rw [(Submodule.mem_bot _).1 hx]; exact Ideal.zero_mem _)
@@ -177,14 +176,12 @@ theorem exists_basicOpen_chartHom_ne_zero : ∀ (E : Type) [Field E] [NumberFiel
   have e := congrArg (fun q => q.hom (((genι Y).app U.1).hom h)) (Scheme.germ_stalkClosedPointTo ξ _ hx)
   simp only [chartHom, RingHom.comp_apply] at h0
   change (Scheme.stalkClosedPointTo ξ).hom (((gen Y).presheaf.germ _ _ hx).hom _) = 0 at h0
-  rw [← CommRingCat.comp_apply] at h0
-  rw [e] at h0
+  rw [← CommRingCat.comp_apply, e] at h0
   have h1 := h0
   rw [CommRingCat.comp_apply] at h1
   have hz : (ξ.app (genι Y ⁻¹ᵁ U.1)).hom (((genι Y).app U.1).hom h) = 0 :=
     (ConcreteCategory.bijective_of_isIso _).1 (h1.trans (map_zero _).symm)
-  rw [hz, Scheme.basicOpen_zero] at hg0
-  exact hg0
+  rwa [hz, Scheme.basicOpen_zero] at hg0
 
 end GlobalTheory.LocReg
 end -- clump:auto
@@ -698,8 +695,7 @@ theorem exists_derivation_away {A B : Type} [CommRing A] [CommRing B] (φ : A �
     have : (TrivSqZeroExt.fstHom ℤ B B).toRingHom.comp Λ = RingHom.id B := by
       refine IsLocalization.ringHom_ext (Submonoid.powers f) (RingHom.ext fun r => ?_)
       simp [RingHom.algebraMap_toAlgebra, hΛ, ψ]
-    intro x
-    exact congr($this x)
+    exact fun x => congr($this x)
   let L : B →+ B :=
     { toFun := fun x => (Λ x).snd
       map_zero' := by simp
@@ -1057,8 +1053,7 @@ theorem ks_chart_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     have hnp : ∏ i, bdParam k m d i ∉ p.asIdeal := by
       have := hp2
       simp only [V'] at this
-      rw [basicOpen_eq_of_affine] at this
-      exact this
+      rwa [basicOpen_eq_of_affine] at this
     have hnb : ξ p ∉ genBd Y := fun h' => hnp ((hbd p).1 h')
     obtain ⟨y, hy⟩ : ξ p ∈ Set.range Y.jQ := by
       by_contra h'
@@ -1128,8 +1123,7 @@ theorem ks_chart_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
   have hsx := congrArg (ev x0 (Y.X.basicOpen h) hx0h) hs
   rw [map_mul, r1, r2, r3, ← e1, hab, e2] at hsx
   apply hι0
-  rw [map_mul, map_pow]
-  exact hsx
+  rwa [map_mul, map_pow]
 
 end GlobalTheory.LocRegCmp
 end -- clump:auto
@@ -1230,8 +1224,7 @@ theorem exists_unit_mul_eq_of_flat {A R : Type} [CommRing A] [CommRing R] [IsLoc
     Module.Flat.isTrivialRelation_of_sum_smul_eq_zero hrel
   obtain ⟨k, a, y, hx, hf⟩ := ht
   obtain ⟨j, hj⟩ : ∃ j, IsUnit (ρ (a 0 j)) := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     have h1 : (1 : R) ∈ maximalIdeal R := by
       have := hx 0
       simp only [Matrix.cons_val_zero] at this

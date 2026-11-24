@@ -87,9 +87,7 @@ theorem commuting_map_eq_smul_multiplier :
     calc (T f₀ : B) = h * (h' * T f₀) := by rw [← mul_assoc, hhh, one_mul]
     _ = h * (a • (f₀ : B)) := by rw [hc]
     _ = a • (h * (f₀ : B)) := mul_smul_comm _ _ _
-  have hf0ne : (f₀ : B) ≠ 0 := by
-    intro hz
-    exact hf₀.2 (Subtype.ext hz)
+  have hf0ne : (f₀ : B) ≠ 0 := fun hz => hf₀.2 (Subtype.ext hz)
   have key : ∀ f : W, (T f : B) = a • (h * (f : B)) := by
     intro f
     have hx := hcomm f f₀
@@ -157,13 +155,11 @@ theorem commuting_multiplier_eq_const_smul_generator
   have eqV : ∀ f : V, (⟨rd f, hV _ f.2⟩ : R) = ∑ j, σ (bV.repr f j) • gV j := by
     intro f
     apply Subtype.ext
-    simp only [AddSubmonoidClass.coe_finsetSum, SetLike.val_smul, gV]
-    exact expand V f
+    simpa only [AddSubmonoidClass.coe_finsetSum, SetLike.val_smul, gV] using expand V f
   have eqV' : ∀ f : V', (⟨rd f, hV' _ f.2⟩ : R) = ∑ j, σ (bV'.repr f j) • gV' j := by
     intro f
     apply Subtype.ext
-    simp only [AddSubmonoidClass.coe_finsetSum, SetLike.val_smul, gV']
-    exact expand V' f
+    simpa only [AddSubmonoidClass.coe_finsetSum, SetLike.val_smul, gV'] using expand V' f
   have memW : ∀ f : V, (⟨rd f, hV _ f.2⟩ : R) ∈ W := by
     intro f
     rw [eqV f]
@@ -180,8 +176,7 @@ theorem commuting_multiplier_eq_const_smul_generator
     intro f
     have e1 : (⟨⟨rd f, hV _ f.2⟩, memW f⟩ : W) = ∑ j, σ (bV.repr f j) • bW j := by
       apply Subtype.ext
-      simp only [Submodule.coe_sum, Submodule.coe_smul, bW_apply]
-      exact eqV f
+      simpa only [Submodule.coe_sum, Submodule.coe_smul, bW_apply] using eqV f
 
     rw [e1, map_sum]
     simp only [map_smul, Tc, Module.Basis.constr_basis]
@@ -196,8 +191,7 @@ theorem commuting_multiplier_eq_const_smul_generator
   haveI : FiniteDimensional ℂ W := Module.Finite.of_basis bW
   have Tc_ne : Tc ≠ 0 := by
     obtain ⟨f, hf⟩ : ∃ f, T f ≠ 0 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hT (LinearMap.ext hc)
     have hfA : (T f : A) ≠ 0 := fun hz => hf (Subtype.ext hz)
     have li1 : LinearIndependent ℂ (fun _ : Fin 1 => rd (T f : A)) :=

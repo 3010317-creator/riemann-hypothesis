@@ -88,15 +88,13 @@ theorem isHolFam_relabel (l : ι ≃ ι) {ε : Fin n → Bool} {B : P →ₗ⋆[
     {ϖ : (ι → Matrix (Fin n) (Fin n) ℂ) → Module.End ℂ P} (h : IsHolFam (fun _ => ε) B ϖ) :
     IsHolFam (fun _ => ε) B fun u => ϖ fun ρ => u (l.symm ρ) := by
   refine ⟨h.1, h.2.1, fun a b ha hb => h.2.2.1 _ _ (fun _ => ha _) (fun _ => hb _), fun τ => ?_⟩
-  simp only [mulSingle_relabel]
-  exact h.2.2.2 (l τ)
+  simpa only [mulSingle_relabel] using h.2.2.2 (l τ)
 
 theorem isBotFam_relabel (l : ι ≃ ι) {ε : Fin n → Bool} {ϖ : (ι → Matrix (Fin n) (Fin n) ℂ) → Module.End ℂ P}
     {μ : ι → Fin n → ℝ} {x : P} (h : IsBotFam (fun _ => ε) ϖ μ x) :
     IsBotFam (fun _ => ε) (fun u => ϖ fun ρ => u (l.symm ρ)) (fun τ => μ (l τ)) x := by
   intro τ
-  simp only [mulSingle_relabel]
-  exact h (l τ)
+  simpa only [mulSingle_relabel] using h (l τ)
 
 end Relabel
 
@@ -497,8 +495,7 @@ theorem isIoW_of_fact {D : D7} {V W : HSp D} {S' : D.what₂.Tau → SPar} {θ :
     obtain ⟨a, b⟩ := hact u hu 1 (one_mem _) fun τ => by rw [congrFun e τ]; exact one_mem_K
     rw [← h1 u hu a x w]
     have := b (io x w)
-    rw [e] at this
-    exact this
+    rwa [e] at this
   · have hs := GlobalTheory.PointAtPlaceHom.atTau_spec hθ W τ (conj_mem_UH M τ hk)
     have e : (fun ρ => M.fr ρ * compAt θ ρ (Formalism.L2.Theta.mt W (atTau θ W τ ((M.fr τ)⁻¹ * k * M.fr τ))) *
         (M.fr ρ)⁻¹) = Pi.mulSingle τ k := by
@@ -520,8 +517,7 @@ theorem isIoW_of_fact {D : D7} {V W : HSp D} {S' : D.what₂.Tau → SPar} {θ :
       · rw [Pi.mulSingle_eq_of_ne h]; exact one_mem_K
     rw [← h2 τ k hk v u hu w]
     have := b (io (PiTensorProduct.tprod ℂ v) w)
-    rw [e, e'] at this
-    exact this
+    rwa [e, e'] at this
 
 theorem exists_isIoW (D : D7) (V W : HSp D) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (Sp : D.what₂.Tau → SPar)
     (M : DSModel W Sp) (c : CoefA V) (lam : D.what₂.Tau → DomWeight V.rank) (l : D.what₂.Tau ≃ D.what₂.Tau)

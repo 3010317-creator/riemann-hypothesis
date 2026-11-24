@@ -91,8 +91,7 @@ theorem top_le_of_fst (z : overAt x0 (DualNumber S) ⟶ G) (O : G.left.Opens)
     (h : ⊤ ≤ (spMap (TrivSqZeroExt.fstHom S S S).toRingHom ≫ z.left) ⁻¹ᵁ O) :
     ⊤ ≤ (show Sp (DualNumber S) ⟶ G.left from z.left) ⁻¹ᵁ O := by
   refine GlobalTheory.TanDeriv.top_le_of_comp (TrivSqZeroExt.fstHom S S S).toRingHom ?_ ?_ _ O h
-  · intro y
-    exact ⟨TrivSqZeroExt.inl y, rfl⟩
+  · exact fun y => ⟨TrivSqZeroExt.inl y, rfl⟩
   · intro x hx
     have h1 : x.fst = 0 := hx
     ext <;> simp [h1]
@@ -188,8 +187,7 @@ theorem top_le_of_smT_zero (g₀ : Sp S ⟶ G.left) (g' : overAt x0 (DualNumber 
     (z : overAt x0 (DualNumber S) ⟶ G) (hz : smT x0 0 z = g') :
     ⊤ ≤ (show Sp (DualNumber S) ⟶ G.left from z.left) ⁻¹ᵁ O := by
   refine top_le_of_fst z O ?_
-  rw [fst_comp_of_smT_zero g₀ g' hg z hz]
-  exact hO
+  rwa [fst_comp_of_smT_zero g₀ g' hg z hz]
 
 theorem snd_sectionValue_translate_list_prod_induction (g₀ : Sp S ⟶ G.left) (g' : overAt x0 (DualNumber S) ⟶ G)
     (hg : g'.left = spMap (algebraMap S (DualNumber S)) ≫ g₀) (O : G.left.Opens) (hO : ⊤ ≤ g₀ ⁻¹ᵁ O)

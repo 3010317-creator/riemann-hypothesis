@@ -408,8 +408,7 @@ theorem prodLev_inf_UA {V : HSp D} {β : GL (Fin V.rank) (Lev.EAf D)} {Λ : Subm
       ((redFn β PP x : GL (Fin V.rank) (kP PP)) : Matrix (Fin V.rank) (Fin V.rank) (kP PP)) i j = 0 ↔
         valuation (Kw PP) ((inBasis rfl β PP x).1 i j) < 1 := by
     intro x hx PP i j
-    have e := GlobalTheory.T.latticeStabilizer_reduction_eq_local_reduction β x PP hx i j 0
-    simpa using e
+    simpa using GlobalTheory.T.latticeStabilizer_reduction_eq_local_reduction β x PP hx i j 0
   have red1 : ∀ x ∈ St β, ∀ PP (i j : Fin V.rank),
       ((redFn β PP x : GL (Fin V.rank) (kP PP)) : Matrix (Fin V.rank) (Fin V.rank) (kP PP)) i j =
           (1 : Matrix (Fin V.rank) (Fin V.rank) (kP PP)) i j ↔
@@ -438,26 +437,22 @@ theorem prodLev_inf_UA {V : HSp D} {β : GL (Fin V.rank) (Lev.EAf D)} {Λ : Subm
         exact Subgroup.mem_iInf.1 (Subgroup.mem_iInf.1 h2 w) hw
     have hgP : ∀ PP ∈ Ld.Pg, redFn β PP x ∈ blockTri (blkOf Ld.r Ld.t) := fun PP hP => by
       rw [mem_blockTri]
-      intro a b hab
-      exact (red0 x hSt PP a b).2 (((hA ⟨PP, hPg hP⟩).2.1 hP).1 a b hab)
+      exact fun a b hab => (red0 x hSt PP a b).2 (((hA ⟨PP, hPg hP⟩).2.1 hP).1 a b hab)
     refine mem_lev.2 ⟨mem_parLev.2 ⟨hU, hSt, hgP, fun PP hP => ?_⟩, ?_⟩
     · rw [mem_blockTri]
-      intro a b hab
-      exact (red0 x hSt PP a b).2 ((hA ⟨PP, hQ hP⟩).2.2 hP a b hab)
+      exact fun a b hab => (red0 x hSt PP a b).2 ((hA ⟨PP, hQ hP⟩).2.2 hP a b hab)
     · rw [hH, Subgroup.mem_bot]
       funext PP
       show upperLeftBlock Ld.hr (redFn β PP.1 x) = 1
       rw [upperLeftBlock_eq_one_iff_of_mem_blockTri _ _ (blockTri_blkOf_le _ _ (hgP PP.1 PP.2))]
-      intro a b ha hb
-      exact (red1 x hSt PP.1 a b).2 (((hA ⟨PP.1, hPg PP.2⟩).2.1 PP.2).2 a b ha hb)
+      exact fun a b ha hb => (red1 x hSt PP.1 a b).2 (((hA ⟨PP.1, hPg PP.2⟩).2.1 PP.2).2 a b ha hb)
   · intro hx
     obtain ⟨hpar, hr⟩ := mem_lev.1 hx
     obtain ⟨hU, hSt, hg, hq⟩ := mem_parLev.1 hpar
     refine ⟨Subgroup.mem_inf.2 ⟨Subgroup.mem_iInf.2 fun w => (hloc w x).2 ⟨inBasis_mem_KO β x hSt w.1, fun hw => ⟨?_, ?_⟩,
       fun hw a b hab => (red0 x hSt w.1 a b).1 (mem_blockTri.1 (hq w.1 hw) a b hab)⟩,
       Subgroup.mem_iInf.2 fun w' => Subgroup.mem_iInf.2 fun _ => inBasis_mem_KO β x hSt w'⟩, hU⟩
-    · intro a b hab
-      exact (red0 x hSt w.1 a b).1 (mem_blockTri.1 (hg w.1 hw) a b hab)
+    · exact fun a b hab => (red0 x hSt w.1 a b).1 (mem_blockTri.1 (hg w.1 hw) a b hab)
     · intro a b ha hb
       rw [hH, Subgroup.mem_bot] at hr
       have e : upperLeftBlock Ld.hr (redFn β w.1 x) = 1 := congrFun hr ⟨w.1, hw⟩

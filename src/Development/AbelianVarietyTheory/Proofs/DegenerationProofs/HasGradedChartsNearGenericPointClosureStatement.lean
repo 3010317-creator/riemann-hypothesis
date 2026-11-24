@@ -240,8 +240,7 @@ theorem split_pull (C : Charts H'.left) [IsAffineHom e.hom.left] {d : ℕ} {c : 
     exact MorphismProperty.of_isPullback (P := @GeometricallyConnected)
       (IsPullback.of_horiz_isIso (fst := e.hom.left) (g := 𝟙 S) ⟨(Category.comp_id _).symm⟩) hc
   · have := hi.stable a Y t (g ≫ e.hom) k
-    rw [← mul_comp_hom] at this
-    exact this
+    rwa [← mul_comp_hom] at this
   · obtain ⟨a, j, hj, hx⟩ := hi.bpf k (e.hom.left x)
     exact ⟨a, j, hj, (Scheme.preimage_basicOpen e.hom.left _).le hx⟩
   · obtain ⟨u, rfl⟩ := (ConcreteCategory.bijective_of_isIso (e.hom.left.app (C.W a))).2 u
@@ -1011,8 +1010,7 @@ theorem isRatio_app {s t : Φ.N₀.Sec} {s' t' : (Φ.H 1).Sec}
   intro l
   have := congrArg (Φ.D.q.left.app _).hom (hr l)
   rw [map_mul, ← WtPart.rapp, ← WtPart.rapp, ← WtPart.rapp] at this
-  rw [hs, ht]
-  exact this
+  rwa [hs, ht]
 
 theorem gen {I : Type} {s : I → Φ.N₀.Sec} (hs : ImmBy Φ.E.B.hom Φ.N₀ s Set.univ) {s' : I → (Φ.H 1).Sec}
     (hf : ∀ i l, (s' i).f l = (Φ.D.q.left.app (Φ.N₀.U l)).hom ((s i).f l)) (a : I)

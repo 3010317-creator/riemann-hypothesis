@@ -104,8 +104,7 @@ theorem finite_places (d : 𝓞 F) (hd : d ≠ 0) : {v : HeightOneSpectrum (𝓞
   have h := Ideal.finite_factors (I := Ideal.span {d}) (by simpa using hd)
   refine h.subset fun v hv => ?_
   show v.asIdeal ∣ Ideal.span {d}
-  rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-  exact hv
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
 
 omit [NumberField E] in
 theorem prV_sum_IE [DecidableEq (HeightOneSpectrum (𝓞 F))] (S : Finset (HeightOneSpectrum (𝓞 F)))
@@ -114,10 +113,8 @@ theorem prV_sum_IE [DecidableEq (HeightOneSpectrum (𝓞 F))] (S : Finset (Heigh
 
   rw [map_sum, Finset.sum_eq_single w]
   · exact afsplit_prV_IE w (u w)
-  · intro v _ hvw
-    exact afsplit_prV_IE_ne v w (Ne.symm hvw) (u v)
-  · intro h
-    exact absurd hw h
+  · exact fun v _ hvw => afsplit_prV_IE_ne v w (Ne.symm hvw) (u v)
+  · exact fun h => absurd hw h
 
 omit [NumberField E] in
 theorem prV_sum_IE_not (S : Finset (HeightOneSpectrum (𝓞 F)))
@@ -165,7 +162,6 @@ theorem prVec_span (v : HeightOneSpectrum (𝓞 F)) {k : ℕ} (b : Fin k → Fin
   | smul c z _ hz =>
     have h0 : prVec v (c • z) = (⟨prV (E := E) v c, prV_mem_of_mem_OAd v c.2⟩ : intV E v) • prVec v z := by
       funext i
-      show prV (E := E) v ((c : E ⊗[F] Ad F) * z i) = prV (E := E) v c * prV (E := E) v (z i)
       exact map_mul _ _ _
     rw [h0]
     exact Submodule.smul_mem _ _ hz
@@ -216,7 +212,6 @@ theorem IE_span (v : HeightOneSpectrum (𝓞 F)) {k : ℕ} (b : Fin k → Fin n 
     have h0 : (fun i => afsplitIE v (prVec v (b j) i)) =
         (⟨afsplitEps E v, afsplitIE_mem_OAd' v (Subring.one_mem _)⟩ : OAd F E) • b j := by
       funext i
-      show afsplitIE v (prV (E := E) v (b j i)) = afsplitEps E v * b j i
       exact afsplit_decomp v (b j i)
     show (fun i => afsplitIE v (prVec v (b j) i)) ∈ _
     rw [h0]
@@ -238,7 +233,6 @@ theorem IE_span (v : HeightOneSpectrum (𝓞 F)) {k : ℕ} (b : Fin k → Fin n 
     have h0 : (fun i => afsplitIE v ((c • z) i)) =
         (⟨afsplitIE v c, afsplitIE_mem_OAd' v c.2⟩ : OAd F E) • (fun i => afsplitIE v (z i)) := by
       funext i
-      show afsplitIE v ((c : E ⊗[F] v.adicCompletion F) * z i) = afsplitIE v c * afsplitIE v (z i)
       exact map_mul _ _ _
     rw [h0]
     exact Submodule.smul_mem _ _ hz
@@ -292,8 +286,7 @@ theorem hat_glue (L : Submodule (𝓞 E) (Fin n → E)) (hL : IsLat L) {k : ℕ}
         have ei := congrFun e i
         simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul] at ei
         rw [ei, add_sub_cancel_left, ← mul_assoc, inv_mul_natCast _ g hg, one_mul]
-      rw [hz']
-      exact hz
+      rwa [hz']
     · have hz' : (fun i => algebraMap F (E ⊗[F] w.adicCompletion F) ((g : F)⁻¹) *
           (prVec w x i - (0 : Fin n → E ⊗[F] w.adicCompletion F) i)) =
           (⟨_, unit_mem w g (hS w hw)⟩ : intV E w) • prVec w x := by
@@ -370,8 +363,7 @@ theorem hR_mem (σ : E →ₐ[F] E) (J : Matrix (Fin n) (Fin n) E) (L : Submodul
       rw [Subring.smul_def, _root_.Formalism.UG.P.csDual_hform_smul_left]
       exact Subring.mul_mem _ (sigR_mem_intAE' σ c.2) h1
   | zero =>
-    simp only [hR, hform, Pi.zero_apply, mul_zero, Finset.sum_const_zero]
-    exact Subring.zero_mem _
+    simpa only [hR, hform, Pi.zero_apply, mul_zero, Finset.sum_const_zero] using Subring.zero_mem _
   | add b1 b2 _ _ h1 h2 =>
     simp only [hR] at h1 h2 ⊢
     rw [_root_.Formalism.UG.P.csScale_hform_add_right]
@@ -449,8 +441,7 @@ theorem cond_local (Fr : AdFrame σ J (hat F L) (gp 0 * gp 1) k) (hp : ∀ i, (g
       exact Submodule.sub_mem _ ((hy' (Fr.b i)).mp (Fr.b_mem i)) (Fr.b_mem i)
     have hfin := finite_places (F := F) _ (cast_ne_zero' _ hg0)
     refine hat_glue L hL Fr.b {j | j.1 < i.1} (gp 0 * gp 1) hg0 hbi hfin.toFinset ?_ ?_
-    · intro w hw h'
-      exact hw (hfin.mem_toFinset.mpr h')
+    · exact fun w hw h' => hw (hfin.mem_toFinset.mpr h')
     · intro v hv
       obtain ⟨i', hi'⟩ := (mem_prod_iff v).mp (hfin.mem_toFinset.mp hv)
       have hl := h i' v hi' i
@@ -528,8 +519,7 @@ theorem chi_local (Fr : AdFrame σ J (hat F L) (gp 0 * gp 1) k) (hp : ∀ i, (gp
     rcases hv' with h0' | h1'
     · exact absurd h0' h0n
     · exact h1'
-  · intro h1 h0
-    exact not_both hp hne v h0 h1
+  · exact fun h1 h0 => not_both hp hne v h0 h1
 
 end Frame
 
@@ -656,8 +646,7 @@ theorem idem_act {R : Type} [Ring R] {G : Type} [AddCommGroup G] [Module R G] {p
   rcases IsSimpleAddGroup.eq_bot_or_eq_top_of_normal (DistribSMul.toAddMonoidHom G e).range inferInstance
     with h | h
   · left
-    intro y
-    exact AddSubgroup.mem_bot.1 (h ▸ ⟨y, rfl⟩)
+    exact fun y => AddSubgroup.mem_bot.1 (h ▸ ⟨y, rfl⟩)
   · right
     intro y
     have hy : y ∈ (DistribSMul.toAddMonoidHom G e).range := by rw [h]; exact AddSubgroup.mem_top y
@@ -814,8 +803,7 @@ theorem finite_mem {p : ℕ} (hp : p ≠ 0) : {v : HeightOneSpectrum (𝓞 F) | 
   refine (Ideal.finite_factors hI).subset ?_
   intro v hv
   simp only [Set.mem_ofPred_eq] at hv ⊢
-  rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-  exact hv
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
 
 variable {E : Type} [Field E] [NumberField E] [Algebra F E] {n : ℕ}
 
@@ -1010,8 +998,7 @@ theorem level_conj_frame : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     constructor
     · rintro ⟨-, h⟩ v
       exact (hloc v).mp (h v)
-    · intro h
-      exact ⟨(κ⁻¹ * y * κ).2, fun v => (hloc v).mpr (h v)⟩
+    · exact fun h => ⟨(κ⁻¹ * y * κ).2, fun v => (hloc v).mpr (h v)⟩
   refine ⟨hK.trans hU.symm, ?_⟩
   intro hy
   have hall := hU.mp hy
@@ -1092,8 +1079,7 @@ theorem transport : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
         obtain ⟨z, hz, e⟩ := Fr.eps_full (M *ᵥ y) (hMΛ' y hy)
         refine ⟨Mi *ᵥ z, hMiΛ z hz, ?_⟩
         have := congrArg (Mi *ᵥ ·) e
-        simp only [mulVec_smul, hMiMv] at this
-        exact this
+        simpa only [mulVec_smul, hMiMv] using this
       b := fun i => Mi *ᵥ Fr.b i, bd := fun i => Mi *ᵥ Fr.bd i,
       b_mem := fun i => hMiΛ _ (Fr.b_mem i), bd_mem := fun i => hMiΛ _ (Fr.bd_mem i),
       b_eps := fun i => by

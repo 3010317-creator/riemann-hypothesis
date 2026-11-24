@@ -157,8 +157,7 @@ private theorem isGVal_of_linear_change {F : Type} [Field F] [NumberField F]
     simp only [_root_.GlobalTheory.HilbFam.cls, Set.mem_setOf_eq, hε]
     have hz : ε • T q.out ≠ 0 ↔ q.out ≠ 0 := by
       constructor
-      · intro h h0
-        exact h (by rw [h0, map_zero, smul_zero])
+      · exact fun h h0 => h (by rw [h0, map_zero, smul_zero])
       · intro h h0
         apply h
         apply T.injective
@@ -188,10 +187,8 @@ private theorem isGVal_of_linear_change {F : Type} [Field F] [NumberField F]
           ((fun q : _root_.GlobalTheory.HilbFam.cls L' ↦
             _root_.GlobalTheory.HilbFam.gTerm k σ b' a' q.1.out) ∘ e) q := by
       funext q
-      simp only [Function.comp_apply, hterm]
-      exact gTerm_eq_of_linear_change σ T hc _
-    rw [hfun]
-    exact h'
+      simpa only [Function.comp_apply, hterm] using gTerm_eq_of_linear_change σ T hc _
+    rwa [hfun]
   obtain ⟨h₁, h₂⟩ := hG
   refine ⟨fun hk2 => ?_, fun hk2 => ?_⟩
   · simpa using hsum 0 G (h₁ hk2)

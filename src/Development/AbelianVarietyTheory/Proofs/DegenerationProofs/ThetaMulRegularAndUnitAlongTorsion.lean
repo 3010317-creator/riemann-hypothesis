@@ -68,14 +68,12 @@ theorem valR_valueAt {B : Scheme.{0}} (A : Over B) (L : LB A.left) (a : ℤ) [Gr
     fun y _ => Set.mem_iInter.2 fun _ => hj ⟨y, rfl⟩
   have e := congrArg (valR x _) (H fun _ => j)
   rw [valR_res x _ hx, valR_mul x _ hx, valR_res x _ hx] at e
-  rw [valR_comp]
-  exact e
+  rwa [valR_comp]
 
 theorem range_subset {K : Type} [Field K] {X : Scheme.{0}} (x : Sp K ⟶ X) {U : X.Opens} (p : Sp K) (h : x p ∈ U) :
     Set.range x ⊆ U := by
   rintro _ ⟨y, rfl⟩
-  rw [Subsingleton.elim y p]
-  exact h
+  rwa [Subsingleton.elim y p]
 
 variable {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω]
 variable {S : ThetaSys o Ω} {ρ : S.Real} {M : RatModel o Ω} {U₀ : M.Z.Opens} (Q : ZHPre ρ M U₀)
@@ -90,8 +88,7 @@ theorem exists_eq_mul_unit (hne : (U₀ : Set M.Z).Nonempty) {N : M.Z.Opens} {σ
   have hwV : w ∈ V := by
     refine ⟨?_, Set.mem_iInter.2 fun _ => hj⟩
     change (h ≫ Q.G.hom) w ∈ N
-    rw [hE.1]
-    exact hw
+    rwa [hE.1]
   have hT : W.ι w ∈ W.ι ''ᵁ V := ⟨w, hwV, rfl⟩
   have hval : ∀ (K : Type) [Field K] (y : Sp K ⟶ W.toScheme), ⊤ ≤ y ⁻¹ᵁ V →
       valF (y ≫ W.ι) (W.ι ''ᵁ V) ((W.ι.appIso V).inv.hom ((h.app _).hom (σ fun _ => jL))) =
@@ -141,13 +138,11 @@ theorem exists_eq_mul_unit (hne : (U₀ : Set M.Z).Nonempty) {N : M.Z.Opens} {σ
     rw [e3] at e2
     rw [Fintype.sum_unique, zpow_one, RingHom.id_apply, valF_eq_valR, e2, ← h4, ← hval Ω x hxV, hx] at e
     have hn := (div_ne_zero_iff.1 he0).1
-    rw [inv_div, ← mul_div_assoc, eq_div_iff hn, _root_.mul_assoc, _root_.mul_comm (valF M.pt _ _)]
-    exact e
+    rwa [inv_div, ← mul_div_assoc, eq_div_iff hn, _root_.mul_assoc, _root_.mul_comm (valF M.pt _ _)]
   · have h5 : y p ∈ Set.range y := ⟨p, rfl⟩
     rw [hy] at h5
     change y p ∈ V
-    rw [show y p = w from h5]
-    exact hwV
+    rwa [show y p = w from h5]
 
 end GlobalTheory.ZH.TorsReg
 

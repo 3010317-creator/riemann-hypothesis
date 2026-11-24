@@ -99,8 +99,7 @@ theorem ptMat_monomial (p : Point K N) :
       ∀ j, j ≠ f i → ptEntry p.1 i j = 0 := by
     intro i
     have := hf i (by rw [p.2.2]; exact i.2)
-    rw [p.2.2] at this
-    exact this
+    rwa [p.2.2] at this
   let σ : Equiv.Perm (Fin N) :=
     { toFun := fun i => ⟨f i, (hf' i).1⟩
       invFun := fun i => ⟨f i, (hf' i).1⟩
@@ -250,13 +249,11 @@ theorem strLo_mul {A B x : Matrix (Fin N) (Fin N) K} (hA : A.BlockTriangular Ord
     (hB : B.BlockTriangular OrderDual.toDual) (hx : StrLo x) : StrLo (A * x * B) := strLo_mul_blockTriangular_toDual hB (strLo_mul_of_blockTriangular_toDual hA hx)
 
 theorem up_tri {U : Matrix (Fin N) (Fin N) K} (h : IsUpUni U) : U.BlockTriangular id := by
-  intro i j hij
-  exact (h i j).1 hij
+  exact fun i j hij => (h i j).1 hij
 
 theorem lo_tri {L : Matrix (Fin N) (Fin N) K} (h : IsLoUni L) :
     L.BlockTriangular OrderDual.toDual := by
-  intro i j hij
-  exact (h i j).1 (OrderDual.toDual_lt_toDual.mp hij)
+  exact fun i j hij => (h i j).1 (OrderDual.toDual_lt_toDual.mp hij)
 
 theorem up_det {U : Matrix (Fin N) (Fin N) K} (h : IsUpUni U) : IsUnit U.det := by
   rw [Matrix.det_of_isUpperTriangular (up_tri h), Finset.prod_eq_one (fun i _ => (h i i).2 rfl)]
@@ -281,8 +278,7 @@ theorem strUp_conj {U : Matrix (Fin N) (Fin N) K} (h : IsUpUni U) (x : Matrix (F
   · intro hx
     have := strUp_mul hUi hU hx
     rwa [conj_cancel hd] at this
-  · intro hx
-    exact strUp_mul hU hUi hx
+  · exact fun hx => strUp_mul hU hUi hx
 
 theorem strLo_conj {L : Matrix (Fin N) (Fin N) K} (h : IsLoUni L) (x : Matrix (Fin N) (Fin N) K) :
     StrLo (L * x * L⁻¹) ↔ StrLo x := by
@@ -294,8 +290,7 @@ theorem strLo_conj {L : Matrix (Fin N) (Fin N) K} (h : IsLoUni L) (x : Matrix (F
   · intro hx
     have := strLo_mul hLi hL hx
     rwa [conj_cancel hd] at this
-  · intro hx
-    exact strLo_mul hL hLi hx
+  · exact fun hx => strLo_mul hL hLi hx
 
 theorem ptMat_det (p : Point K N) : IsUnit (ptMat p).det := by
   obtain ⟨σ, d, hd, hw⟩ := ptMat_monomial p

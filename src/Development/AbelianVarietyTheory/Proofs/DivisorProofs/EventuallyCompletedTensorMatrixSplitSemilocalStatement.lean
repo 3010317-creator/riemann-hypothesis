@@ -272,8 +272,7 @@ theorem padicEquiv_symm_coe_mem (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : Aw
     (adicCompletion.padicEquiv v.1).symm (r : ℚ_[(primesEquiv v.1 : ℕ)]) ∈ v.1.adicCompletionIntegers ℚ := by
   obtain ⟨x, hx, hxr⟩ := (adicCompletion.padicEquiv_bijOn v.1).surjOn
     (show (r : ℚ_[(primesEquiv v.1 : ℕ)]) ∈ PadicInt.subring _ from r.2)
-  rw [← hxr, ContinuousAlgEquiv.symm_apply_apply]
-  exact hx
+  rwa [← hxr, ContinuousAlgEquiv.symm_apply_apply]
 
 end GlobalTheory.OrbFinAf.MatrixUnits₂
 
@@ -417,9 +416,7 @@ theorem intFCoord_injective (G : HTGroup p) (v : AwayP p) (h1 : IsIntV G v 1)
   intro a b hab
   apply Subtype.ext
   apply iotaF_injective G v
-  apply (basV G v).repr.injective
-  refine Finsupp.ext fun i => ?_
-  exact congrArg Subtype.val (congrFun hab i)
+  exact (basV G v).repr.injective (Finsupp.ext fun i => congrArg Subtype.val (congrFun hab i))
 
 theorem intF_finite (G : HTGroup p) (v : AwayP p) (h1 : IsIntV G v 1)
     (hm : ∀ y z : Qv v ⊗[ℚ] G.C, IsIntV G v y → IsIntV G v z → IsIntV G v (y * z)) :
@@ -648,12 +645,10 @@ theorem pow_indep_tensor : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (γ : G.
         simp only [Pi.smul_apply, RingHom.id_apply, Finset.smul_sum, smul_assoc] }
   have li : LinearIndependent G.F (fun i : Fin G.n => γ ^ (i : ℕ)) := by
     have := linearIndependent_pow (K := G.F) γ
-    rw [hn] at this
-    exact this
+    rwa [hn] at this
   have hψ : Function.Injective ψ := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-    intro f hf
-    exact funext ((Fintype.linearIndependent_iff.mp li) f hf)
+    exact fun f hf => funext ((Fintype.linearIndependent_iff.mp li) f hf)
   have hinj : Function.Injective (ψ.lTensor (Qv v)) :=
     Module.Flat.lTensor_preserves_injective_linearMap ψ hψ
   let e := TensorProduct.piRight ℚ ℚ (Qv v) (fun _ : Fin G.n => G.F)

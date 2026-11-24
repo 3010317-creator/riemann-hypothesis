@@ -161,8 +161,7 @@ lemma torEl_zero (h : ∀ τ, OrthFr (Hm τ) (q τ) (x₀ τ)) : torEl x₀ 0 = 
   funext τ
   have hx := (units_of_orth (h τ)).1
   show cd (x₀ τ) (fun a => Complex.exp ((((0 : ι → Fin n → ℝ) τ a : ℝ) : ℂ) * Complex.I)) = 1
-  simp only [Pi.zero_apply, Complex.ofReal_zero, zero_mul, Complex.exp_zero]
-  exact cd_one hx
+  simpa only [Pi.zero_apply, Complex.ofReal_zero, zero_mul, Complex.exp_zero] using cd_one hx
 
 omit [Fintype ι] [DecidableEq ι] in
 lemma mul_torEl_mem (h : ∀ τ, OrthFr (Hm τ) (q τ) (x₀ τ)) (s : ι → Fin n → ℝ) {u : ι → Mt n} (hu : u ∈ UG Hm) :
@@ -253,12 +252,10 @@ lemma law_single (h : ∀ τ, OrthFr (Hm τ) (q τ) (x₀ τ)) {f : (ι → Mt n
   have hS_add : ∀ r r', S (r + r') = S r * S r' := by
     intro r r'
     rw [hSdef]
-    simp only [Pi.single_add]
-    exact torEl_add h _ _
+    simpa only [Pi.single_add] using torEl_add h _ _
   have hS0 : S 0 = 1 := by
     rw [hSdef]
-    simp only [Pi.single_zero]
-    exact torEl_zero h
+    simpa only [Pi.single_zero] using torEl_zero h
   have hS_mem : ∀ v ∈ UG Hm, ∀ r, v * S r ∈ UG Hm := by
     intro v hv r
     rw [hSdef]
@@ -303,8 +300,7 @@ lemma law_single (h : ∀ τ, OrthFr (Hm τ) (q τ) (x₀ τ)) {f : (ι → Mt n
     have hkv := hk τ a a le_rfl v hv
     rw [ite_eq_left rfl, hZ] at hkv
     unfold derC at hkv
-    rw [hconj, add_neg_cancel, smul_zero, der_zero', zero_add, hcoef] at hkv
-    exact hkv
+    rwa [hconj, add_neg_cancel, smul_zero, der_zero', zero_add, hcoef] at hkv
   have hψ : ∀ v ∈ UG Hm,
       HasDerivAt (fun r : ℝ => f (v * S r)) (Complex.I * (w τ a : ℂ) * f v) 0 := by
     intro v hv
@@ -329,9 +325,7 @@ lemma law_single (h : ∀ τ, OrthFr (Hm τ) (q τ) (x₀ τ)) {f : (ι → Mt n
       have h2 : der τ Y f v = -deriv (fun r : ℝ => f (v * S r)) 0 := by
         unfold der
         simp only [hexp]
-        have h4 := deriv_comp_neg (fun r : ℝ => f (v * S r)) 0
-        simp only [neg_zero] at h4
-        exact h4
+        simpa only [neg_zero] using deriv_comp_neg (fun r : ℝ => f (v * S r)) 0
       rw [h2] at h1
       linear_combination Complex.I * h1 + deriv (fun r : ℝ => f (v * S r)) 0 * Complex.I_sq
     rw [← hder]
@@ -344,8 +338,7 @@ lemma law_single (h : ∀ τ, OrthFr (Hm τ) (q τ) (x₀ τ)) {f : (ι → Mt n
     have h2 : (fun x : ℝ => f (u * S r * S (x - r))) = fun x : ℝ => f (u * S x) := by
       funext x
       rw [mul_assoc, ← hS_add, show r + (x - r) = x by ring]
-    rw [h2] at h3
-    exact h3
+    rwa [h2] at h3
   have hg : ∀ r : ℝ, HasDerivAt (fun r : ℝ => Complex.exp (-(Complex.I * (w τ a : ℂ) * r)) * f (u * S r)) 0 r := by
     intro r
     have he : HasDerivAt (fun r : ℝ => Complex.exp (-(Complex.I * (w τ a : ℂ) * r)))

@@ -325,8 +325,7 @@ theorem trdeg_residueField_eq_of_mem_minimalPrimes (k : Type u) [Field k] [Algeb
     Algebra.trdeg k q.ResidueField = Algebra.trdeg O A := by
   have hle : RingHom.ker (algebraMap O k) ≤ RingHom.ker (algebraMap O (A ⧸ q)) := by
     rw [eq_maximalIdeal (RingHom.ker_isMaximal_of_surjective _ hk)]
-    intro x hx
-    exact Ideal.Quotient.eq_zero_iff_mem.mpr (hq.1.2 (Ideal.mem_map_of_mem _ hx))
+    exact fun x hx => Ideal.Quotient.eq_zero_iff_mem.mpr (hq.1.2 (Ideal.mem_map_of_mem _ hx))
   let := ((algebraMap O k).liftOfSurjective hk ⟨_, hle⟩).toAlgebra
   have : IsScalarTower O k (A ⧸ q) := IsScalarTower.of_algebraMap_eq fun x ↦
     (RingHom.liftOfSurjective_comp_apply _ hk ⟨_, hle⟩ x).symm
@@ -490,8 +489,7 @@ theorem exists_affine_chart_trdeg_eq (x : Y) :
     IsLocalization.isAlgebraic _ (nonZeroDivisors _)
   refine ⟨Γ(Y, U), inferInstance, inferInstance, inferInstance, hft, inferInstance, hU.fromSpec,
     inferInstance, ?_, hφ.symm, (trdeg_eq_of_isAlgebraic_top O Γ(Y, U) Y.functionField).symm⟩
-  rw [hU.range_fromSpec]
-  exact hxU
+  rwa [hU.range_fromSpec]
 
 end Scheme
 

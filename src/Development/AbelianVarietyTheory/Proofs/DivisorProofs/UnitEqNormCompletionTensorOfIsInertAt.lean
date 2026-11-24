@@ -85,8 +85,7 @@ open IsDedekindDomain.HeightOneSpectrum Polynomial
 
 theorem exists_ne_of_isCMExt {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) : ∃ x : E, σ x ≠ x := by
-  by_contra h
-  push Not at h
+  by_contra! h
   obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
   have hreal : NumberField.ComplexEmbedding.IsReal τ := by
     rw [NumberField.ComplexEmbedding.isReal_iff]
@@ -128,8 +127,7 @@ theorem exists_integral_gen {F E : Type} [Field F] [NumberField F] [Field E] [Nu
     exact this
   have hli : LinearIndependent F ![(1 : E), a] := by
     rw [LinearIndependent.pair_iff' one_ne_zero]
-    intro x hx
-    exact hnot ⟨x, by rw [Algebra.algebraMap_eq_smul_one, hx]⟩
+    exact fun x hx => hnot ⟨x, by rw [Algebra.algebraMap_eq_smul_one, hx]⟩
   let B := basisOfLinearIndependentOfCardEqFinrank hli (by simp [h2])
   have hB : ⇑B = ![(1 : E), a] := coe_basisOfLinearIndependentOfCardEqFinrank _ _
   have hσa : σ (a : E) ≠ a := by
@@ -209,8 +207,7 @@ theorem exists_approx_mod {F : Type} [Field F] [NumberField F] (v : HeightOneSpe
     simp only [map_sub, map_add (f := _), map_mul, map_pow, hr', ht']
     linear_combination h ^ 2 * hsρ' + (h * s * π b * ρ + h * π b ^ 2 * ρ ^ 2 - (π c * ρ ^ 2 - π u₀) * (1 + 2 * h)) * hh
   refine ⟨r, t, (hz _).1 hQ, ?_⟩
-  by_contra hboth
-  push Not at hboth
+  by_contra! hboth
   have e1 := (hz _).2 hboth.1
   have e2 := (hz _).2 hboth.2
   simp only [map_sub, map_mul, map_ofNat] at e1 e2
@@ -348,8 +345,7 @@ theorem unit_eq_mul_conj : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   have hq' : α ^ 2 + ι (algebraMap F (Fv F v) (b : F)) * α + ι (algebraMap F (Fv F v) (c : F)) = 0 := by
     have := congrArg (Algebra.TensorProduct.includeRight : E →ₐ[F] Fv F v ⊗[F] E) hq
     rw [map_add (f := _), map_add (f := _), map_mul, map_pow, map_zero] at this
-    rw [hιF, hιF]
-    exact this
+    rwa [hιF, hιF]
   have hσα : Algebra.TensorProduct.map (AlgHom.id (Fv F v) (Fv F v)) σ α =
       -ι (algebraMap F (Fv F v) (b : F)) - α := by
     rw [hα, Algebra.TensorProduct.map_tmul, AlgHom.id_apply, hconj, hιF,

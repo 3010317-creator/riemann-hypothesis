@@ -102,8 +102,7 @@ theorem GlobalTheory.WeilCont.schA_periodic_finite_cosets : ∀ (F : Type) [Fiel
       rw [(hmk x' x).2 hx']
     · dsimp only
       rw [ite_eq_right]
-      intro h
-      exact hw ((hmk w (y i)).1 (h.trans (hy i).symm))
+      exact fun h => hw ((hmk w (y i)).1 (h.trans (hy i).symm))
   · dsimp only
     rw [hy j]
     by_cases h : i = j
@@ -133,16 +132,14 @@ theorem GlobalTheory.WeilCont.schA_periodic_finite_cosets : ∀ (F : Type) [Fiel
           exact (add_sub_cancel _ _).symm
       · intro j _ hj
         rw [ite_eq_right (fun h => hj (he (h.symm.trans hi0.symm))), mul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     · have h0 : Ψ (GlobalTheory.WeilCont.adeleJoin F x w) = 0 := by
         by_contra h
         exact hw ⟨w, hsupp _ h, rfl⟩
       rw [h0]
       refine (Finset.sum_eq_zero fun i _ => ?_).symm
       rw [ite_eq_right, mul_zero]
-      intro h
-      exact hw (h ▸ (hS _).2 ⟨i, rfl⟩)
+      exact fun h => hw (h ▸ (hS _).2 ⟨i, rfl⟩)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodicAdelicSchwartzFiniteCosetDecomposition =====

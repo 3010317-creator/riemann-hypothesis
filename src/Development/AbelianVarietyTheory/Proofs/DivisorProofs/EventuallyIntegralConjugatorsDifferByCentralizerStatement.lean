@@ -271,8 +271,7 @@ theorem adicCompletion_tensor_matrixUnit_identity : ∀ (L : Type) [Field L] [Nu
       rw [Pi.single_add]; exact hadd _ _ hx hy
   have hall : P (∑ j, Pi.single j (β j)) :=
     Finset.sum_induction _ P hadd hzero (fun j _ => hsingle j (β j))
-  rw [Finset.univ_sum_single] at hall
-  exact hall
+  rwa [Finset.univ_sum_single] at hall
 
 end GlobalTheory
 end -- clump:auto
@@ -443,8 +442,7 @@ theorem isIntB_conj_map_of_isIntB_conj : ∀ (p : ℕ) [Fact p.Prime] (G : HTGro
   have hq : ∀ a, ∃ q : Polynomial G.F, Polynomial.aeval (γ : G.C) q = ι (ℓ a) := by
     intro a
     have h := mem_adjoin_of_centralizer G (γ : G.C) hdeg L ι.toRingHom hι hc (ℓ a)
-    rw [Algebra.adjoin_singleton_eq_range_aeval] at h
-    exact h
+    rwa [Algebra.adjoin_singleton_eq_range_aeval] at h
   choose q hq using hq
   have hev : ∀ᶠ v : HeightOneSpectrum ℤ in Filter.cofinite,
       (∀ i j, IsIntB v b ((1 : v.adicCompletion ℚ) ⊗ₜ[ℚ] (b i * b j))) ∧
@@ -560,8 +558,7 @@ theorem exists_left_basis_through_algHom : ∀ (L : Type) [Field L] [NumberField
   haveI : Module.Finite L C := Module.Finite.of_restrictScalars_finite ℚ L C
   let b := Module.finBasis L C
   refine ⟨Module.finrank L C, b, fun x => ⟨b.repr x, ?_, ?_⟩⟩
-  · simp only [← hsmul]
-    exact (b.sum_repr x).symm
+  · simpa only [← hsmul] using (b.sum_repr x).symm
   · intro c hc
     simp only [← hsmul] at hc
     rw [hc, b.repr_sum_self]

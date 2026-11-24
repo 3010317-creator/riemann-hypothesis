@@ -90,8 +90,7 @@ theorem exists_sys_of_mem_span {K V W I ι : Type} [Field K] [AddCommGroup V] [M
   have hin : u ∈ Submodule.span ℂ (j '' ((Z ⊓ Formalism.L2.Col.eigAt op s : Submodule K V) : Set V)) := by
     rw [← GlobalTheory.span_image_inf_of_linearIndependent σ j b hli]
     exact ⟨huZ, (key.1 s) ▸ hmem⟩
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   apply hu0
   have hle : Submodule.span ℂ (j '' ((Z ⊓ Formalism.L2.Col.eigAt op s : Submodule K V) : Set V)) ≤ ⊥ := by
     rw [Submodule.span_le]
@@ -106,8 +105,7 @@ theorem map_le_span_image {K V W H : Type} [Field K] [AddCommGroup V] [Module K 
     (A B : Submodule K V) (h : ∀ v ∈ E, Θ v ∈ Submodule.span ℂ (j '' (A : Set V))) (hAB : A ≤ B) :
     E.map Θ ≤ Submodule.span ℂ (j '' (B : Set V)) := by
   rw [Submodule.map_le_iff_le_comap]
-  intro v hv
-  exact Submodule.span_mono (Set.image_mono hAB) (h v hv)
+  exact fun v hv => Submodule.span_mono (Set.image_mono hAB) (h v hv)
 
 
 

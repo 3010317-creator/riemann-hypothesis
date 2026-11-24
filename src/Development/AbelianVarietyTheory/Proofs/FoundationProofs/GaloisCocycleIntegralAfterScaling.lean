@@ -192,8 +192,7 @@ theorem values_finExt [IsAlgClosure ℚ Ω] (W : R2 Ω l) (K₀ : IntermediateFi
   refine coc_finext l (G ℚ Ω) K₀ 2 (fun g v => mat W g *ᵥ v) z ?_ (coc_one hz) ((mem_Z1_iff_cocycle _ _).1 hz).1
     (fun g h => coc hz g h)
   intro L hL g v hv j
-  simp only [Matrix.mulVec, dotProduct]
-  exact sum_mem fun k _ => mul_mem (hL (hW _ _ _)) (hv k)
+  simpa only [Matrix.mulVec, dotProduct] using sum_mem fun k _ => mul_mem (hL (hW _ _ _)) (hv k)
 
 theorem norm_mulVec_le {c : Coef l} (M : Matrix (Fin 2) (Fin 2) (Qbar l)) (hM : ∀ i j, M i j ∈ c.O)
     (v : Fin 2 → Qbar l) (i : Fin 2) : ‖(M *ᵥ v) i‖ ≤ ‖v 0‖ + ‖v 1‖ := by
@@ -219,8 +218,7 @@ theorem integral_after_scaling : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field
   have hX : ∀ q (h : ((l : ℕ) : 𝓞 ℚ) ∉ q.asIdeal), ∀ s ∈ Ine (F := ℚ) (B q h), z s = mat W s *ᵥ X q - X q := by
     intro q h s hs
     by_cases hq : q ∈ S
-    · simp only [X, dite_eq_left h, ite_eq_left hq]
-      exact hx q h s hs
+    · simpa only [X, dite_eq_left h, ite_eq_left hq] using hx q h s hs
     · have h1 : W s = 1 := hWunr q hq (B q h) (hB q h) hs
       have hm : mat W s = 1 := by simp [mat, h1]
       simp only [X, dite_eq_left h, ite_eq_right hq]
@@ -304,16 +302,14 @@ theorem integral_after_scaling : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field
       rw [h, Matrix.mulVec_smul, smul_sub]
   · intro hT
     have hxT : ∀ s ∈ Dec (F := ℚ) A, z s = mat W s *ᵥ xT - xT := by
-      simp only [xT, dite_eq_left hT]
-      exact hT.choose_spec
+      simpa only [xT, dite_eq_left hT] using hT.choose_spec
     refine ⟨((l : ℕ) : Qbar l) ^ k • xT, fun i => ?_, fun s hs => ?_⟩
     · rw [Pi.smul_apply, smul_eq_mul]
       exact key _ (hfE (Sum.inl (Sum.inr i))) ((hfM (Sum.inl (Sum.inr i))).trans hMN)
     · rw [hxT s hs, Matrix.mulVec_smul, smul_sub]
   · intro hG
     have hxG : ∀ s ∈ Dec (F := ℚ) A, z s 1 = mat W s 1 1 * xG - xG := by
-      simp only [xG, dite_eq_left hG]
-      exact hG.choose_spec
+      simpa only [xG, dite_eq_left hG] using hG.choose_spec
     refine ⟨((l : ℕ) : Qbar l) ^ k * xG, key _ (hfE (Sum.inr ())) ((hfM (Sum.inr ())).trans hMN), fun s hs => ?_⟩
     rw [hxG s hs]
     ring

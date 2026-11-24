@@ -140,8 +140,7 @@ theorem factor_ker_iff {R : Type} [CommRing R] (A : Over (Sp R)) {T : Over (Sp R
         exact (Category.assoc _ _ _).trans
           ((congrArg (y.left ≫ ·) e.symm).trans (Category.assoc _ _ _).symm)
       · rw [lift_snd, Category.assoc]
-        apply Over.OverMorphism.ext
-        exact hc
+        exact Over.OverMorphism.ext hc
   · rintro ⟨z, hz⟩
     have h1 : z ≫ h ≫ fst A T = upa φ x := by rw [← Category.assoc, hz, lift_fst]
     have h2 : z ≫ h ≫ snd A T = upt φ Y := by rw [← Category.assoc, hz, lift_snd]
@@ -283,8 +282,7 @@ theorem pull_cls_twist {N : LB (A ⊗ T).left} (hN : N.IsLB) (h : (twist A φ N)
     show x.left ≫ (bc A φ).hom ≫ φ = Y.hom ≫ φ
     rw [← Category.assoc, Over.w x])
   have e := pull_evc hN u (pa A φ) (pt A φ)
-  rw [ha, ht] at e
-  exact e
+  rwa [ha, ht] at e
 
 
 variable (A) in
@@ -1032,8 +1030,7 @@ theorem cech_sliceFst_singleton_acyclic {𝔦 𝔧 : Type} [LinearOrder 𝔦] [L
   have h₅ : (cubeComplex (supp (slice (inlEmb 𝔦 𝔧) (({k} : Finset 𝔧).map (inrEmb 𝔦 𝔧).toEmbedding) A)
       {s | s.Nonempty} hQ)).Acyclic := fun n =>
     (exactAt_iff_isZero_homology _ _).2 ((h₄ (n + 1)).of_iso (suppSingletonHomologyIso hc hQ k A n).symm)
-  rw [← cubeComplex_trunc₁_acyclic_iff, trunc₁, sliceFst_eq_slice]
-  exact h₅
+  rwa [← cubeComplex_trunc₁_acyclic_iff, trunc₁, sliceFst_eq_slice]
 
 variable {K : Type} [Field K] {Z T X : Scheme.{0}} {p : Z ⟶ T} {g : T ⟶ Spec (CommRingCat.of K)}
   {q : Z ⟶ X} {h : X ⟶ Spec (CommRingCat.of K)} {F : LB Z}
@@ -1117,8 +1114,7 @@ theorem acyclic_over_affine_of_finite_closed : ∀ (K : Type) [Field K] (Z T : S
         hS x (Finset.mem_of_mem_erase hx)
     have hsC : s ∈ (⋃ x ∈ S.erase s, ({x} : Set T))ᶜ := by
       simp only [Set.mem_compl_iff, Set.mem_iUnion, Set.mem_singleton_iff, not_exists]
-      intro x hx hsx
-      exact Finset.ne_of_mem_erase hx hsx.symm
+      exact fun x hx hsx => Finset.ne_of_mem_erase hx hsx.symm
     obtain ⟨_, ⟨U, hUa, rfl⟩, hsU, hUC⟩ :=
       T.isBasis_affineOpens.exists_subset_of_mem_open hsC hC.isOpen_compl
     refine ⟨U, hUa, hsU, fun x hx hxU => by_contra fun hne => hUC hxU ?_⟩

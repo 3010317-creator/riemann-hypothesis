@@ -95,8 +95,7 @@ theorem inv_of_SS {la : Wt M.Ψ r} {F : C → Frame M.Ψ r → ℂ} (hF : F ∈ 
   have hx : castFrame (M.comp_Ψ c).symm z ∈ (M.comp c).dom := (mem_dom_iff M c _).1 (hxz ▸ hz)
   have h := (hF c).1.1.2.2 γ hγ _ hx
   dsimp only at h
-  rw [M.χ_one c _ γ hγ, one_mul, castFrame_lact, hxz] at h
-  exact h
+  rwa [M.χ_one c _ γ hγ, one_mul, castFrame_lact, hxz] at h
 
 theorem continuous_castFrame {Ψ Ψ' : Finset (E →+* ℂ)} (h : Ψ = Ψ') : Continuous (castFrame (r := r) h) := by
   subst h; exact continuous_id
@@ -165,8 +164,7 @@ theorem pull_one {la : Wt M.Ψ r} {F : C → Frame M.Ψ r → ℂ} (hF : F ∈ M
     have e : M.tr 1 c * (M.tr 1 c * M.tr 1 c)⁻¹ = (M.tr 1 c)⁻¹ := by group
     rwa [e] at h1
   have h3 : M.tr 1 c ∈ (M.comp c).Γ := by simpa using inv_mem h2
-  simp only [TwoLevels.pull, one_smul]
-  exact inv_of_SS M hF c h3 hz
+  simpa only [TwoLevels.pull, one_smul] using inv_of_SS M hF c h3 hz
 
 end GlobalTheory.ShareEig
 
@@ -270,8 +268,7 @@ theorem share_eig : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : 
       have hD : DifferentiableOn ℂ ((sub M H).detTr u0 c) M.dom := by
         show DifferentiableOn ℂ (fun y => (Matrix.of fun h h' : H => M.pull ((h : U) * h') u0 c y).det) M.dom
         simp only [Matrix.det_apply, Matrix.of_apply, Units.smul_def, zsmul_eq_mul]
-        refine DifferentiableOn.fun_sum fun σ _ => ?_
-        exact (diffOn_prod _ _ fun i _ => hent _ c).const_mul _
+        exact DifferentiableOn.fun_sum fun σ _ => (diffOn_prod _ _ fun i _ => hent _ c).const_mul _
       have hXc : ContinuousOn (X c) M.dom := (diff_of_comp M c _ (hX c).1.1.1).continuousOn
       refine eq_zero_of_det E r U C M c _ _ hD hXc (hdet c) ?_
       intro z hz hDz

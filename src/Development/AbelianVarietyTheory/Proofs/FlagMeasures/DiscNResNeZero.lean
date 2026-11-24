@@ -178,8 +178,7 @@ theorem fibre_count {R V W : Type} [CommRing R] [AddCommGroup V] [Module R V] [A
       have h8 := AddSubgroup.nsmul_index_mem (M.toAddSubgroup.addSubgroupOf K₀) ⟨_, h7⟩
       rw [AddSubgroup.mem_addSubgroupOf] at h8
       have h9 : (M.toAddSubgroup.addSubgroupOf K₀).index = m := hm
-      rw [h9] at h8
-      exact h8
+      rwa [h9] at h8
     have h10 := add_mem (hML h5) (add_mem (Submodule.sum_mem _ fun i (_ : i ∈ Finset.univ) =>
       Submodule.smul_mem _ (r i) (h1 i)) (add_mem (hML h6) (nsmul_mem hb' m)))
     convert h10 using 1
@@ -243,8 +242,7 @@ theorem sub_count {K W : Type} [Field K] [NumberField K] [AddCommGroup W] [Modul
       (fun N : Submodule (𝓞 K) C => N.map C.subtype) '' {N | N.toAddSubgroup.index = j} := by
     rintro N ⟨hN, hNj⟩
     refine ⟨N.comap C.subtype, hNj, ?_⟩
-    simp only [Submodule.map_comap_subtype]
-    exact inf_eq_right.2 hN
+    simpa only [Submodule.map_comap_subtype] using inf_eq_right.2 hN
   refine ⟨(h4.image _).subset hsub, ?_⟩
   have h7 := ((Set.ncard_le_ncard hsub (h4.image _)).trans (Set.ncard_image_le h4)).trans h5
   have hj1 : (1 : ℝ) ≤ j := by exact_mod_cast hj
@@ -859,8 +857,7 @@ theorem mass_le [StarRing E] (hs : ∀ x : E, star x = IsCMField.complexConj E x
     · rintro ⟨z, hz, e⟩
       rw [← e]
       exact (hm z).1 hz
-    · intro hx
-      exact ⟨x, (hm x).2 hx, rfl⟩
+    · exact fun hx => ⟨x, (hm x).2 hx, rfl⟩
   choose! f hf g hg hfg using key
   have hcard : s.card ≤ R.card := by
     refine Finset.card_le_card_of_injOn f (fun M hM => hf M hM) fun M hM N hN e => ?_
@@ -1100,8 +1097,7 @@ theorem mass_mul_mass_le : Formalism.HermitianLatticesTheory.SiegelMassRatio →
     (fun n hn => by
       rw [← hstd, ← hstd]; exact Formalism.HermitianLatticesTheory.massTelescope_step K hS hCM n hn)
     ?_ ?_ h1 h2 k s hk hs hsk
-  · rw [hDD, ← pow_mul, mul_comm f] at key
-    exact key
+  · rwa [hDD, ← pow_mul, mul_comm f] at key
   · intro i hi
     have a := pow_le_pow_left₀ (by norm_num) (low_base v hv i (by omega)) f
     have b := (hL i (by omega)).1
@@ -1371,14 +1367,11 @@ theorem encard_isDat_le : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K
       ⋃ La ∈ hfin.toFinset, {d | IsDat H g L₀ j x d ∧ fixLat d.2 = La} := by
     intro d hd
     simp only [Set.mem_iUnion, Set.Finite.mem_toFinset]
-    refine ⟨fixLat d.2, ⟨?_, hd.2.2.2.1⟩, hd, rfl⟩
-    intro y hy
-    exact (hd.2.2.1.1 hy).2
+    exact ⟨fixLat d.2, ⟨fun y hy => (hd.2.2.1.1 hy).2, hd.2.2.2.1⟩, hd, rfl⟩
   have h1 := (Set.encard_le_encard hsub).trans (Finset.set_encard_biUnion_le _ _)
   have h2 : ((({d | IsDat H g L₀ j x d}).encard : ℕ∞) : ℝ≥0∞) ≤
       ∑ La ∈ hfin.toFinset, ((({d | IsDat H g L₀ j x d ∧ fixLat d.2 = La}).encard : ℕ∞) : ℝ≥0∞) := by
-    refine (ENat.toENNReal_le.2 h1).trans (le_of_eq ?_)
-    exact map_sum ENat.toENNRealRingHom _ _
+    exact (ENat.toENNReal_le.2 h1).trans (le_of_eq (map_sum ENat.toENNRealRingHom _ _))
   refine h2.trans ((Finset.sum_le_card_nsmul _ _ _ fun La _ => hfib La x).trans ?_)
   rw [nsmul_eq_mul, ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_pow (by positivity),
     ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_natCast, ENNReal.ofReal_natCast]
@@ -1695,8 +1688,7 @@ theorem encard_cover_le {α ι : Type} (S A₁ A₂ : Set α) (I : Finset ι) (F
     (Set.encard_le_encard h).trans ((Set.encard_union_le _ _).trans (by
       gcongr; exact Set.encard_union_le _ _))
   have h2 : (((⋃ i ∈ I, F i).encard : ℕ∞) : ℝ≥0∞) ≤ ∑ i ∈ I, (((F i).encard : ℕ∞) : ℝ≥0∞) := by
-    simp only [← ENNReal.tsum_set_one]
-    exact ENNReal.tsum_biUnion_le (fun _ => 1) I F
+    simpa only [← ENNReal.tsum_set_one] using ENNReal.tsum_biUnion_le (fun _ => 1) I F
   calc ((S.encard : ℕ∞) : ℝ≥0∞) ≤ (A₁.encard : ℕ∞) + (A₂.encard : ℕ∞) + ((⋃ i ∈ I, F i).encard : ℕ∞) := by
         exact_mod_cast h1
     _ ≤ _ := by gcongr

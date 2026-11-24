@@ -150,16 +150,14 @@ theorem relIndex_globLev (hU : Unr E) (S : Set (Pl E)) (hS : IsSection S) (K' : 
     rw [relIndex_eq_prod (MonoidHom.pi fun i : T => comp hU n i.1) (globLev S (KL n)) (globLev S K')
       (fun i => KL n i.1) (fun i => K' i.1)]
     · push_cast; rfl
-    · intro g hg i
-      exact (mem_globLev hU S (KL n) g).1 hg i.1 (hTS _ i.2)
+    · exact fun g hg i => (mem_globLev hU S (KL n) g).1 hg i.1 (hTS _ i.2)
     · intro x hx
       obtain ⟨y, hyT, hyn⟩ : ∃ y : ∀ w : Pl E, UL n w, (∀ i : T, y i.1 = x i) ∧ ∀ w, w ∉ T → y w = 1 :=
         ⟨fun w => if h : w ∈ T then x ⟨w, h⟩ else 1, fun i => dite_eq_left i.2, fun w h => dite_eq_right h⟩
       have hy : ∀ w, y w ∈ KL n w := fun w => by
         by_cases h : w ∈ T
         · have := hx ⟨w, h⟩
-          rw [hyT ⟨w, h⟩]
-          exact this
+          rwa [hyT ⟨w, h⟩]
         · rw [hyn w h]; exact one_mem _
       obtain ⟨g, hg⟩ := exists_finU_of_loc E hU n S hS y (Filter.Eventually.of_forall hy)
       have hg' : ∀ w ∈ S, comp hU n w g = y w := fun w hw => by rw [comp_eq]; exact hg w hw

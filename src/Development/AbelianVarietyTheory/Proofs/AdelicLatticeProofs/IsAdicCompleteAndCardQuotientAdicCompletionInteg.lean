@@ -72,8 +72,7 @@ theorem mem_span_singleton_adicCompletionIntegers {F : Type} [Field F] [NumberFi
     have ht1 : (t : v.adicCompletion F) ≠ 0 := by
       intro h; rw [h] at ht; simp at ht
     have hm : (x : v.adicCompletion F) / t ∈ v.adicCompletionIntegers F := by
-      rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀, div_le_one₀ (zero_lt_iff.2 ht)]
-      exact hx
+      rwa [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀, div_le_one₀ (zero_lt_iff.2 ht)]
     refine ⟨⟨_, hm⟩, Subtype.ext ?_⟩
     change (x : v.adicCompletion F) / t * t = x
     rw [div_mul_cancel₀ _ ht1]
@@ -103,8 +102,7 @@ theorem isAdicComplete_and_card_quotient_adicCompletionIntegers :
       obtain ⟨s, hs⟩ := Idele.exists_valued_sub_le v (a := (y : v.adicCompletion F)) y.2 e
       refine ⟨s, ?_⟩
       change Ideal.Quotient.mk _ _ = _
-      rw [eq_comm, Ideal.Quotient.eq, mem_span_singleton_adicCompletionIntegers v ht0, ht]
-      exact hs
+      rwa [eq_comm, Ideal.Quotient.eq, mem_span_singleton_adicCompletionIntegers v ht0, ht]
     have hk : RingHom.ker f = v.asIdeal ^ e := by
       ext s
       rw [RingHom.mem_ker]

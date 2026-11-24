@@ -137,8 +137,7 @@ theorem witt_family {ι : Type} [Fintype ι] [DecidableEq ι] (v w : ι → (VS 
     intro i
     simp [f, Module.Basis.repr_self, Finsupp.linearCombination_single]
   have hbv : ∀ i, ((b i : U) : (VS D).V) = v i := by
-    intro i
-    exact congrArg Subtype.val (Module.Basis.span_apply hv i)
+    exact fun i => congrArg Subtype.val (Module.Basis.span_apply hv i)
   have hinj : Function.Injective f := by
     have h2 : Function.Injective (Finsupp.linearCombination D.host.E w) := hw
     exact h2.comp b.repr.injective
@@ -154,8 +153,7 @@ theorem witt_family {ι : Type} [Fintype ι] [DecidableEq ι] (v w : ι → (VS 
     (fun x y => (VS D).herm.eq x y) (fun x hx => (VS D).nondeg.1 x hx) U f hinj hiso
   refine ⟨g, hg, fun i => ?_⟩
   have h := hgf (b i)
-  rw [hbv, hfb] at h
-  exact h
+  rwa [hbv, hfb] at h
 
 theorem hypF_zmOf (u : D.what₂.Word) (a : Fin D.R.rS) : (VS D).hT (D.sp.hypF a) (D.zmOf u) = 0 := by
   unfold D7.zmOf

@@ -404,8 +404,7 @@ theorem GlobalTheory.AdForm.rd_trTo : ∀ {B : Base} {X : PreX B.toPre} (I : TC 
   have hFa : F af =
       bc (inclE (F := B.host.F) (FiniteAdeleRing (𝓞 B.host.F) B.host.F)) ((I.stp u a j).gam c.1 ((I.stp u a j).mv c.1 d)) := by
     have e : F α = _ := Units.ext hαf
-    rw [hα, map_mul, hFi, one_mul] at e
-    exact e
+    rwa [hα, map_mul, hFi, one_mul] at e
   have hFκ : F
       ((A.h j (A.chOf j ((I.stp u a j).cl c.1 d)) ⟨(I.stp u a j).cl c.1 d, rfl⟩)⁻¹ * af⁻¹ * x) = x₀.1 := by
     rw [map_mul, map_mul, map_inv, map_inv, hFx, hFh, hFa, hz]
@@ -660,8 +659,7 @@ theorem frame_trivial_off : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok
       have h1 : (((B.primes X).T u : ℕ) : 𝓞 B.host.F) ∈ (w.under (𝓞 B.host.F)).asIdeal := by
         rw [hwv]
         show algebraMap _ (𝓞 B.fields.E) _ ∈ v.1.asIdeal
-        rw [map_natCast]
-        exact hTv
+        rwa [map_natCast]
       have h2 : algebraMap _ (𝓞 B.fields.E) (((B.primes X).T u : ℕ) : 𝓞 B.host.F) ∈ w.asIdeal := h1
       rwa [map_natCast] at h2
     rcases hw with h | h | ⟨h, hwne⟩
@@ -769,8 +767,7 @@ theorem row_of_smul_eq {n : ℕ} (Q : GlobalTheory.LatPair.Pair k (Fin n)) (b b'
     simp only [y, Pi.single_apply]
     split_ifs <;> simp
   have hx2 : (g • Q).HasVal (b' *ᵥ Pi.single m 1) ((s : 𝓀[k]) * residue 𝒪[k] (sc * y r₀)) := by
-    rw [hg, GlobalTheory.LatPair.Pair.dia_hasVal, Units.inv_mul_cancel_left]
-    exact hx
+    rwa [hg, GlobalTheory.LatPair.Pair.dia_hasVal, Units.inv_mul_cancel_left]
   have hx3 := GlobalTheory.LatPair.Pair.smul_hasVal.1 hx2
   obtain ⟨y', hy', sc', hsc', h3⟩ := (hQ _ _).1 hx3
   have hss : sc' = sc := Subtype.ext (hsc'.trans hsc.symm)

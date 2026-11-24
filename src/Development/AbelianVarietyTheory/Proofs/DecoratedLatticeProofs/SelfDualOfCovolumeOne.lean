@@ -148,8 +148,7 @@ theorem poisson {f : G → ℂ} (hf : Continuous f) (hs : HasCompactSupport f)
       refine tsum_congr fun ξ => ?_
       simp [add_assoc])
     (by simp only [hcoef]; exact hsum)
-  simp only [hcoef, add_zero] at key
-  exact key
+  simpa only [hcoef, add_zero] using key
 
 theorem inversion_zero {Φ : G → ℂ} (hΦ : Continuous Φ) (hs : HasCompactSupport Φ)
     (hI : Integrable (fun y => ∫ x, Φ x * B x y ∂μ) μ) :
@@ -188,8 +187,7 @@ theorem inversion_zero {Φ : G → ℂ} (hΦ : Continuous Φ) (hs : HasCompactSu
   have horth : ∀ ξ : Γ, ξ ≠ 0 → ∫ y in 𝓕, B ξ y ∂μ = 0 := by
     intro ξ hξ
     obtain ⟨u, hu⟩ : ∃ u, B ξ u ≠ 1 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hξ (Subtype.ext (hinj ξ ξ.2 h))
     have key := GlobalTheory.CompactQuotientFourier.setIntegral_translate Γ μ 𝓕 hF (B ξ)
       (fun γ hγ w => by rw [hadd', (hker γ).2 hγ ξ ξ.2, one_mul]) u
@@ -225,7 +223,6 @@ theorem selfDual_of_covolume_one : ∀ (G : Type) [AddCommGroup G] [TopologicalS
     exact hI.mul_bdd (c := 1) (hc z).aestronglyMeasurable (Filter.Eventually.of_forall fun y => (hn y z).le)
   have key := inversion_zero Γ K hK hcov B hc hsy hadd hn hker hinj μ 𝓕 hF h1
     (Φ := fun x => Φ (x - z)) (by fun_prop) hs' hI'
-  simp only [he, zero_sub] at key
-  exact key
+  simpa only [he, zero_sub] using key
 
 end GlobalTheory.CovolumeOneSelfDual

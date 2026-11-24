@@ -114,14 +114,12 @@ theorem mt_jX_of_isTransv {w v : VA V} {u : GA D V} (hu : IsTransv V w v u)
   refine Matrix.ext_of_mulVec_single fun i => ?_
   have h : act V u (vecX d (Pi.single i 1)) = transv V w v (vecX d (Pi.single i 1)) := hu _
   rw [transv, hv, hw, zero_smul, zero_smul, mul_zero, zero_smul, add_zero, sub_zero, sub_zero] at h
-  rw [← Matrix.mulVec_mulVec]
-  exact h
+  rwa [← Matrix.mulVec_mulVec]
 
 theorem mt_of_isTransv {S : HSp D} {w v y : VA S} {u : GA D S} (hu : IsTransv S w v u) (hy : form S y w = 0) :
     mt S u *ᵥ y = y + form S y v • w := by
   have h : act S u y = transv S w v y := hu _
-  rw [transv, hy, zero_smul, mul_zero, zero_smul, sub_zero, sub_zero] at h
-  exact h
+  rwa [transv, hy, zero_smul, mul_zero, zero_smul, sub_zero, sub_zero] at h
 
 theorem simpleSum_of {z : Fin V₀.rank → D.host.E} {u : GA D V} {c : Fin ρ → AE D} (s : AE D)
     (hX : mt V u * d.jX = d.jX) (hy : mt V u *ᵥ (d.j0 *ᵥ ratV z) = d.j0 *ᵥ ratV z + s • (d.jX *ᵥ c)) :
@@ -145,8 +143,7 @@ theorem ell_dotProduct_last {j : Fin ρ} (hj : j.1 + 1 = ρ) {a : Fin ρ → D.h
   · intro i _ hij
     have : ¬ (i.1 + 1 = ρ) := fun h => hij (Fin.ext (Nat.add_right_cancel (h.trans hj.symm)))
     simp [ell, this]
-  · intro h
-    exact absurd (Finset.mem_univ j) h
+  · exact fun h => absurd (Finset.mem_univ j) h
 
 end Lemmas
 

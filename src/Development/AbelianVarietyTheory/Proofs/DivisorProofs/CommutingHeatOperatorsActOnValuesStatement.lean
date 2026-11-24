@@ -143,8 +143,7 @@ theorem gw_change (U : UnifPre I D A G) (e : ℕ) {Z : Scheme.{0}} (xe : Z ⟶ (
   subst hp hq
   have w := (isGen_iff _).1 (U.w_gen e) Z xe z j j' (fun _ => k) (fun _ => k') hj hj' (mem_pull.2 hk)
     (mem_pull.2 hk')
-  rw [gm_pull_g _ _ xe z _ _ (mem_pull.2 hk) (mem_pull.2 hk')] at w
-  exact w
+  rwa [gm_pull_g _ _ xe z _ _ (mem_pull.2 hk) (mem_pull.2 hk')] at w
 
 theorem exists_limit_unit (U : UnifPre I D A G) {W : Type} [CommRing W] [IsLocalRing W] (φ : R →+* W)
     [IsAdicComplete (I.map φ) W] (x : Sp W ⟶ G.left) (hx : x ≫ G.hom = spMap φ) (b : Sp W ⟶ D.toPre.P.A.left)
@@ -201,8 +200,7 @@ theorem exists_limit_unit (U : UnifPre I D A G) {W : Type} [CommRing W] [IsLocal
   refine congrArg (fun t => gs ρ z ⊤ ((Scheme.ΓSpecIso (CommRingCat.of (W ⧸ I.map φ ^ (e + 1)))).inv.hom t)) ?_
   have k := GlobalTheory.FormalValue.valR_spMap (Ideal.Quotient.mk (I.map φ ^ (e + 1))) (𝟙 (Sp W)) ⊤ le_top
     ((Scheme.ΓSpecIso (CommRingCat.of W)).inv.hom a.val)
-  rw [GlobalTheory.NormGen.valR_id, Category.comp_id] at k
-  exact k
+  rwa [GlobalTheory.NormGen.valR_id, Category.comp_id] at k
 
 theorem exists_frRel : ∀ (R : Type) [CommRing R] [IsDomain R] (I : Ideal R) (D : DegData R I) (A : PolAV (Sp (FractionRing R))) (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G] (U : UnifPre I D A G) (W : Type) [CommRing W] [IsLocalRing W] (φ : R →+* W) [IsAdicComplete (I.map φ) W] (x' : Sp W ⟶ G.left), x' ≫ G.hom = spMap φ → ∀ b : Sp W ⟶ D.toPre.P.A.left, Lies U x' b → ∃ (g' : Frame U.LG.L x') (g : Frame D.toPre.P.L b), g'.IsGen ∧ g.IsGen ∧ FrRel U x' b g' g := by
   intro R _ _ I D A G _ _ U W _ _ φ _ x' hx b hb
@@ -662,8 +660,7 @@ theorem core {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianR
     rw [e2] at e1
     rw [← gs_id_eq, GlobalTheory.NormGen.gs_valR (𝟙 _) x _ hW, Category.id_comp]
     erw [GlobalTheory.KS.DlogPol.gs_rsT x (cpt Ω) j0le hxW]
-    refine Eq.trans ?_ e1
-    exact (sval_of τ x (cpt Ω) JM _ fun _ => hJM0 PUnit.unit).symm
+    exact Eq.trans (sval_of τ x (cpt Ω) JM _ fun _ => hJM0 PUnit.unit).symm e1
   let RO : Ω → Ω := ringOp ⇑dΩ (fun a => ⇑(δ a)) (φ.mapMatrix h.Θ) (fun a => φ (h.u a))
     (valR x _ (h.p i0)) (valR x _ (h.p' i0)) k
   have huu : (uU : Ω) ^ k * ((uU⁻¹ : Ωˣ) : Ω) ^ k = 1 := by rw [← mul_pow, Units.mul_inv, one_pow]

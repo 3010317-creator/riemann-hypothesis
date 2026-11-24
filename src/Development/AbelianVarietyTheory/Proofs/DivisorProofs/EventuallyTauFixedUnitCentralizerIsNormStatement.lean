@@ -231,8 +231,7 @@ variable {p : ℕ} [Fact p.Prime]
 theorem exists_conj_neg (G : HTGroup p) : ∃ f : G.F, f ≠ 0 ∧ IsCMField.complexConj G.F f = -f := by
   have hne := IsCMField.complexConj_ne_one G.F
   obtain ⟨x, hx⟩ : ∃ x, IsCMField.complexConj G.F x ≠ x := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hne (AlgEquiv.ext h)
   refine ⟨x - IsCMField.complexConj G.F x, sub_ne_zero.2 (Ne.symm hx), ?_⟩
   simp [IsCMField.complexConj_apply_apply]
@@ -352,8 +351,7 @@ theorem intC_isIntegral : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), ∀ᶠ w
   set B := Algebra.TensorProduct.basis (w.1.adicCompletion ℚ) b with hB
   have hent : ∀ i j, Algebra.leftMulMatrix B x i j ∈ w.1.adicCompletionIntegers ℚ := by
     intro i j
-    rw [Algebra.leftMulMatrix_eq_repr_mul]
-    rw [← B.sum_repr x]
+    rw [Algebra.leftMulMatrix_eq_repr_mul, ← B.sum_repr x]
 
     rw [Finset.sum_mul, map_sum, Finsupp.finsetSum_apply]
     refine sum_mem fun k _ => ?_
@@ -494,8 +492,7 @@ theorem exists_eq_sq_sub_mul_sq : ∀ (L : Type) [CommRing L] [IsReduced L] [Alg
       (f := (v.adicCompletionIntegers ℚ).subtype)
       ((Polynomial.lifts_iff_coeff_lifts f).2 fun n => ⟨⟨_, hc n⟩, rfl⟩) hf
     refine ⟨g, hgm, ?_⟩
-    rw [← hg, Polynomial.aeval_def, Polynomial.eval₂_map] at hx
-    exact hx
+    rwa [← hg, Polynomial.aeval_def, Polynomial.eval₂_map] at hx
   have h2 : (2 : ℤ) ∉ v.asIdeal := fun h =>
     hv ((PrincipalIdealRing.isMaximal_of_irreducible Int.prime_two.irreducible).eq_of_le
       v.isPrime.ne_top ((Ideal.span_singleton_le_iff_mem _).2 h)).symm

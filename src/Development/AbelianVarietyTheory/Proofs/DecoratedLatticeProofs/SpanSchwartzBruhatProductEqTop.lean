@@ -185,8 +185,7 @@ theorem mem_S [T2Space X] [LocallyCompactSpace X] [TotallyDisconnectedSpace X]
     have := ht hq
     simp only [Set.mem_iUnion] at this
     obtain ⟨p, hp, hq'⟩ := this
-    simp only [U, Set.mem_iUnion]
-    exact ⟨R p, List.mem_map.2 ⟨p, Finset.mem_toList.2 hp, rfl⟩, hq'⟩
+    simpa only [U, Set.mem_iUnion] using ⟨R p, List.mem_map.2 ⟨p, Finset.mem_toList.2 hp, rfl⟩, hq'⟩
   have heq : (U (t.toList.map R)).indicator F = F :=
     Set.indicator_eq_self.2 ((subset_tsupport F).trans hsub)
   rw [← heq]

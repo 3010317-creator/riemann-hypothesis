@@ -236,8 +236,7 @@ theorem exists_orth (hc : CMData 𝔽 E) {G : Matrix (Fin n) (Fin n) E} (hG : �
   have h3 := congrArg Matrix.transpose (h1 v)
   rw [Matrix.transpose_mul, Matrix.transpose_mul, Matrix.transpose_transpose, ← Matrix.mul_assoc,
     Matrix.transpose_one] at h3
-  rw [Matrix.map_mul, Matrix.map_mul, e2, e, o]
-  exact h3
+  rwa [Matrix.map_mul, Matrix.map_mul, e2, e, o]
 
 theorem isLattice_of_commensurable (V : HSpace E) {Λ : Submodule (𝓞 E) (Fin V.rank → E)} {N : ℕ} (hN : 0 < N)
     (h1 : ∀ x : Fin V.rank → E, ∑ i, x i • V.frame i ∈ V.L0 → (N : E) • x ∈ Λ)

@@ -280,11 +280,9 @@ theorem jeq_bil_of_double [Algebra ℚ k] (m : ℕ) (g : PS k 2 d)
   by_cases hex : ∃ i j, e = Finsupp.single ((0 : Fin 2), i) 1 + Finsupp.single ((1 : Fin 2), j) 1
   · obtain ⟨i, j, rfl⟩ := hex
     rw [Finset.sum_eq_single i, Finset.sum_eq_single j, ite_eq_left rfl]
-    · intro b _ hb
-      exact ite_eq_right fun hh => hb (single_inj hh).2.symm
+    · exact fun b _ hb => ite_eq_right fun hh => hb (single_inj hh).2.symm
     · simp
-    · intro b _ hb
-      exact Finset.sum_eq_zero fun c _ => ite_eq_right fun hh => hb (single_inj hh).1.symm
+    · exact fun b _ hb => Finset.sum_eq_zero fun c _ => ite_eq_right fun hh => hb (single_inj hh).1.symm
     · simp
   · have hz : MvPowerSeries.coeff e g = 0 := by
       have : ∃ j, degIn j e ≠ 1 := by
@@ -579,8 +577,7 @@ theorem exists_biadd_jEq : ∀ (R : Type) [CommRing R] (d : ℕ) (O : Type) [Com
     intro n u v hu hv
     have h0 : comp1 ℓ (addOf (B.FK k) (pt k (n := 2) d 0) (pt k (n := 2) d 1)) =
       comp1 ℓ (pt k (n := 2) d 0) + comp1 ℓ (pt k (n := 2) d 1) := by
-      rw [← hFK]
-      exact hadd
+      rwa [← hFK]
     have hb := nc2 hu hv
     have h1 := congrArg (evP ![u, v]) h0
     rw [evalPoints_add hb, evalPoints_comp hb ℓ (nc_addOf hF (hp 0) (hp 1)), evalPoints_formalGroupAdd hb _ (hp 0) (hp 1),

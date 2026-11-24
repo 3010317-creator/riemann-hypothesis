@@ -202,8 +202,7 @@ theorem exists_scalar_of_model {U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r} {x : 
         exact (siegelSpaceAlgebra_holds (E := E) r ((U σ).X k') (laU (U σ) 0 (n + 8) k') (laU (U σ) 0 (n + 8) k') 0).1.1
     · by_cases h : k' = k
       · subst h
-        simp only [P₀, Pi.single_eq_same]
-        exact Set.indicator_of_notMem hy' _
+        simpa only [P₀, Pi.single_eq_same] using Set.indicator_of_notMem hy' _
       · simp only [P₀, Pi.single_eq_of_ne h, Pi.zero_apply]
   have hQy : P₀ k y ≠ 0 := by
     simp only [P₀, Pi.single_eq_same]
@@ -420,8 +419,7 @@ theorem exists_run_bound : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       push_cast
       constructor <;> linarith
     · unfold I2.th I2.omStar I2.RR
-      rw [Real.sq_sqrt (by positivity), ← mul_div_assoc, div_lt_one hq0, hsq, hd]
-      exact c1
+      rwa [Real.sq_sqrt (by positivity), ← mul_div_assoc, div_lt_one hq0, hsq, hd]
     · unfold I2.M1
       rw [hd]; exact c3
     · rw [Nat.cast_one, _root_.mul_one, _root_.mul_one, hd]
@@ -506,8 +504,7 @@ theorem exists_scalar_cusp_ne_zero : ∀ (E : Type) [Field E] [NumberField E] [I
         rw [(hU'.2.1 j).1]; omega
       exact GlobalTheory.BoundedCusp.mem_SS_of_definite _ _ τ0 hp0 _ ⟨hs, bdd_of_definite _ hp0 _ _ hs⟩
     · have e : rdU (U σ) f z.1 z.2 = toC (evR Xo c f ((U σ).un z.1 ⟨z.2, hz'.2⟩)) := dite_eq_left hz'.2
-      rw [e]
-      exact hne
+      rwa [e]
   · push Not at hdef
     have hp : 1 ≤ Dw.p := Nat.one_le_iff_ne_zero.2 hdef.1
     have hq : 1 ≤ Dw.q := Nat.one_le_iff_ne_zero.2 hdef.2

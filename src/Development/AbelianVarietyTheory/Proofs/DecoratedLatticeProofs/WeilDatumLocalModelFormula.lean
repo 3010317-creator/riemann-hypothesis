@@ -432,8 +432,7 @@ theorem mulRight_apply (G : Matrix Y' Y' K) (w : Matrix Y Y' K) : mulRight Y G w
 
 theorem det_mulRight (G : Matrix Y' Y' K) : LinearMap.det (mulRight Y G) = G.det ^ Fintype.card Y := by
   have := LinearMap.det_pi (R := K) (ι := Y) fun _ => Matrix.toLin' Gᵀ
-  rw [LinearMap.det_toLin', Matrix.det_transpose, Finset.prod_const, Finset.card_univ] at this
-  exact this
+  rwa [LinearMap.det_toLin', Matrix.det_transpose, Finset.prod_const, Finset.card_univ] at this
 
 theorem exists_mul_map (H : Matrix Y Y K) (G : Matrix Y' Y' K) :
     ∃ B : Matrix Y Y' K →ₗ[K] Matrix Y Y' K, (∀ w, B w = H * w * G) ∧
@@ -766,8 +765,7 @@ theorem vacuum_move : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolo
     rw [Finset.sum_congr rfl e1, ← map_sum]
     congr 1
     refine Subtype.ext (funext fun t => ?_)
-    rw [Submodule.coe_sum, Finset.sum_apply, hΦB]
-    rw [Finset.sum_congr rfl fun v _ => by rw [hΦv, hΦ₀]]
+    rw [Submodule.coe_sum, Finset.sum_apply, hΦB, Finset.sum_congr rfl fun v _ => by rw [hΦv, hΦ₀]]
     split_ifs with htB
     · have hnt : ∀ r q, (((hk⁻¹ : GL Y k) : Matrix Y Y k) * (-t) * (gk : Matrix Y' Y' k)) r q ∈ 𝒪[k] := fun r q => by
         rw [Matrix.mul_neg, Matrix.neg_mul, Matrix.neg_apply]; exact neg_mem (htB r q)
@@ -778,8 +776,7 @@ theorem vacuum_move : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolo
       rw [Finset.sum_eq_single_of_mem v hv, ite_eq_left ((iff1 v).1 hv2)]
       intro v' hv' hne
       rw [ite_eq_right]
-      intro h'
-      exact hne (hvu v' ⟨hv', (iff1 v').2 h'⟩)
+      exact fun h' => hne (hvu v' ⟨hv', (iff1 v').2 h'⟩)
     · refine Finset.sum_eq_zero fun v hv => ite_eq_right fun h' => htB fun r q => ?_
       have h2 := he _ h' r q
       have h3 := hsub _ _ (he _ h') (hR₀ v hv) r q

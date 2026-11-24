@@ -106,8 +106,7 @@ theorem exists_valAt (t : SecA A F k) {x} {e : FrAt x} (he : e.IsGen) : ∃ c, V
   obtain ⟨c, rfl⟩ := kon_surj w
   refine ⟨c, fun z J hJ => ?_⟩
   have := ThetaPtMove.sv_of_isValueAt hw (𝟙 _) z hJ
-  rw [Category.id_comp] at this
-  exact this
+  rwa [Category.id_comp] at this
 
 end
 
@@ -118,8 +117,7 @@ theorem lin_comb_value_act : ∀ (R : Type) [CommRing R] [IsDomain R] (A : PolAV
     exact ⟨a, ha, fun b hb => ValM.unique (σ := SecM.ofSec A.A t) hb ha⟩
   · exact ⟨SecM.toSec A.A (∑ l, kon R F (c l) • SecM.ofSec A.A (s l)), (isComb_iff _ _ _).2 rfl⟩
   · have h := valM_sum (Finset.univ : Finset I) fun l => ValM.smul (σ := SecM.ofSec A.A (s l)) (ha l) (c l)
-    rw [← (isComb_iff _ _ _).1 ht] at h
-    exact h
+    rwa [← (isComb_iff _ _ _).1 ht] at h
   · exact isTwistPull_sum _ (lift_fst _ _) _ _ _ _ _ (fun l => kon R F (c l)) ht ht' hs
 
 end GlobalTheory.ZH.SecComb

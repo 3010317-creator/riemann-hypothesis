@@ -83,15 +83,13 @@ theorem GlobalTheory.EtC.kum_surjective : ∀ (q : ℕ) [NeZero q] (A : Type) [C
   set y := HK.post ℤ ((chains ℤ).obj (sp A)) κ (0 + 1) (restrH (Int.castRingHom (ZMod q)) (sp A) (tw q 1) (0 + 1) x) with hy
   have hqy : (q : ℤ) • y = 0 := by
     have := (h3 y).2 ⟨x, rfl⟩
-    rw [hpc, hpid] at this
-    exact this
+    rwa [hpc, hpid] at this
   have hy0 : y = 0 := by
     obtain ⟨e⟩ := _root_.GlobalTheory.EtC.b6pic_holds A
     have h1 : (q : ℤ) • e y = 0 := by rw [← map_zsmul, hqy, map_zero]
     have h2' : (Additive.toMul (e y)) ^ q = 1 := by
       have := congrArg Additive.toMul h1
-      rw [natCast_zsmul, toMul_nsmul] at this
-      exact this
+      rwa [natCast_zsmul, toMul_nsmul] at this
     have := hp _ h2'
     apply e.injective
     rw [map_zero]

@@ -442,8 +442,7 @@ theorem centre_place : ∀ (k K : Type) [Field k] [IsAlgClosed k] [CharZero k] [
       have hd := GlobalTheory.LieSemineg.dim_curve (k := k) (C := C) hC.1
       have h1 := (Order.coheight_le_krullDim c).trans (Order.krullDim_eq_of_orderIso (irreducibleSetEquivPoints (α := C))).ge
       rw [topologicalKrullDim] at hd
-      rw [hd] at h1
-      exact h1
+      rwa [hd] at h1
     have hle' : Order.coheight c ≤ 1 := by exact_mod_cast hle
     exact le_antisymm hle' (ENat.one_le_iff_ne_zero.2 hne)
   haveI hdvr := GlobalTheory.IsNormalScheme.isDiscreteValuationRing_stalk hco
@@ -484,9 +483,7 @@ theorem centre_place : ∀ (k K : Type) [Field k] [IsAlgClosed k] [CharZero k] [
     have h1 : x ≫ strHom k C = spMap ((φ.comp (C.presheaf.germ ⊤ c trivial).hom).comp (algebraMap k Γ(C, ⊤))) := by
       rw [← hφ, Category.assoc, strHom, ← Category.assoc (C.fromSpecStalk c), Scheme.fromSpecStalk_toSpecΓ]
       simp only [spMap, CommRingCat.ofHom_comp, Spec.map_comp, CommRingCat.ofHom_hom, Category.assoc]
-    have h2 := Spec.map_injective (hstr.symm.trans h1)
-    intro t
-    exact congrArg (fun f => f.hom t) h2
+    exact fun t => congrArg (fun f => f.hom t) (Spec.map_injective (hstr.symm.trans h1))
   let vK : Valuation K (WithZero (Multiplicative ℤ)) := (P.valuation C.functionField).comap e.symm.toRingHom
   have hvφ : ∀ a, vK (φ a) = P.intValuation a := fun a => hval a
   have hunit : ∀ a : A, IsUnit a → P.intValuation a = 1 := by
@@ -516,8 +513,7 @@ theorem centre_place : ∀ (k K : Type) [Field k] [IsAlgClosed k] [CharZero k] [
     have h1 : φ a * (w : K) = 1 := by
       have := congrArg (fun z : v.O => (z : K)) u.mul_inv
       have e1 : φ a = ((u : v.O) : K) := by rw [hu]; rfl
-      rw [e1]
-      exact this
+      rwa [e1]
     have h2 := congrArg vK h1
     rw [map_mul, map_one] at h2
     have : vK (φ a) * vK (w : K) < 1 :=
@@ -811,8 +807,7 @@ theorem closedPoint_mem_nonzeroLocus {K : Type} [Field K] {C : Scheme.{0}} [IsIn
   obtain ⟨i, hi⟩ := h
   have hne : ((C.basicOpen (σ.f i) : C.Opens) : Set C).Nonempty := by
     rw [Set.nonempty_iff_ne_empty]
-    intro e
-    exact hi ((basicOpen_eq_bot_iff _).1 (Opens.ext e))
+    exact fun e => hi ((basicOpen_eq_bot_iff _).1 (Opens.ext e))
   obtain ⟨y, hy⟩ := x.denseRange.exists_mem_open (C.basicOpen (σ.f i)).isOpen hne
   obtain rfl : y = IsLocalRing.closedPoint K := Subsingleton.elim _ _
   exact Opens.mem_iSup.2 ⟨i, hy⟩
@@ -912,8 +907,7 @@ theorem locFrame_of_frames {k K : Type} [Field k] [Field K] [Algebra k K] {C : S
   · have := (ht.basis (inf_le_right : V₀ ⊓ V ≤ V)).sum_repr (hs.basis (inf_le_left : V₀ ⊓ V ≤ V₀) j)
     simp only [IsFrame.basis_apply] at this
     rw [hM]
-    simp only [Module.Basis.toMatrix_apply, IsFrame.basis_apply]
-    exact this.symm
+    simpa only [Module.Basis.toMatrix_apply, IsFrame.basis_apply] using this.symm
   · have hu : IsUnit M.det := by
       have := Module.Basis.toMatrix_mul_toMatrix_flip (ht.basis (inf_le_right : V₀ ⊓ V ≤ V))
         (hs.basis (inf_le_left : V₀ ⊓ V ≤ V₀))

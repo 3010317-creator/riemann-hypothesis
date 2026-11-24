@@ -88,16 +88,14 @@ theorem Charts.kerIs_of_torus : ∀ (K : Type) [Field K] (H : Over (Sp K)) [GrpO
   obtain ⟨B, _, q, -, hq, -, -, -, hP, hV⟩ := _root_.GlobalTheory.SplitChartsField.main K H C d c i hc hT
   obtain ⟨V, hW, hVa, hu⟩ := hV a
   have one_mem : ∀ Y : Over (Sp K), ⊤ ≤ (1 : Y ⟶ H).left ⁻¹ᵁ C.W a := by
-    intro Y y _
-    exact hB.1 (show (toUnit Y).left y ∈ (⊤ : (Sp K).Opens) from trivial)
+    exact fun Y y _ => hB.1 (show (toUnit Y).left y ∈ (⊤ : (Sp K).Opens) from trivial)
   refine ⟨⟨fun {Y} s t e => hP.hom_ext e (toUnit_unique _ _)⟩, fun Y k => ⟨?_, ?_⟩, ?_⟩
   · rintro ⟨h, h₁, hr⟩
     have key : k ≫ q = (1 : Y ⟶ H) ≫ q := by
       apply Over.OverMorphism.ext
       have m : ∀ g : Y ⟶ H, ⊤ ≤ g.left ⁻¹ᵁ C.W a → ⊤ ≤ (g ≫ q).left ⁻¹ᵁ V := by
         intro g hg
-        rw [hW] at hg
-        exact hg
+        rwa [hW] at hg
       refine KerCut.hom_ext_of_appLE V hVa _ _ (m k h) (m 1 h₁) ?_
       ext v
       have hv := hT.gen a _ ((hu _).2 ⟨v, rfl⟩)

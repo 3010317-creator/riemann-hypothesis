@@ -522,8 +522,7 @@ theorem bc_eq_one_of_isRed {S κ k : Type} [CommRing S] [CommRing κ] [Field k] 
 theorem bc_comp_eq_one {S A k : Type} [CommRing S] [CommRing A] [CommRing k] (ι : S →+* A) (π : A →+* k) {n : ℕ}
     (m : GL (Fin n) S) (β x : GL (Fin n) A) (hx : β * Formalism.UG.bc ι m * β⁻¹ = x) (h : Formalism.UG.bc π x = 1) :
     Formalism.UG.bc (π.comp ι) m = 1 := by
-  rw [← hx, map_mul, map_mul, map_inv, mul_inv_eq_one, mul_eq_left] at h
-  exact h
+  rwa [← hx, map_mul, map_mul, map_inv, mul_inv_eq_one, mul_eq_left] at h
 
 theorem redFn_eq_one_of_suppAt : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (q : GlobalTheory.FinPl.SplitPt D k) (PP : Pl D.host.E), Formalism.L2.NTheta.IsIdemAt q.e PP → ∀ (e : Formalism.L2.Theta.AE D), (e + cA D e) * (q.e + cA D q.e) = 0 → ∀ (V : HSp D) (β : GL (Fin V.rank) (Formalism.IndefR.Lev.EAf D)) (g : GA D V), Formalism.L2.Theta.SuppAt e V g → finE V g ∈ St β → redFn β PP (finE V g) = 1 := by
   intro D k _ _ _ _ q PP hq e he V β g hg hst
@@ -778,8 +777,7 @@ theorem GlobalTheory.LevZeroPlace.one_place : ∀ {D : D7} {c : Comm D} {v : VCo
     obtain ⟨ε', hε', hsum'⟩ := (G P').q.above
     have hvv : (G P).q.v ≠ (G P').q.v := by
       rw [hv P, hv P']
-      intro h
-      exact hne (Subtype.ext (GlobalTheory.LevelPlaces.injOn_under D cm hB.com P.2 P'.2 h))
+      exact fun h => hne (Subtype.ext (GlobalTheory.LevelPlaces.injOn_under D cm hB.com P.2 P'.2 h))
     rw [hsum, hsum', ← map_mul, GlobalTheory.SingleDatum.BasePair.placeIdem_mul_eq_zero hε' hε hvv, map_zero]
   have hoff : ∀ g : GA D (c.V 0), Formalism.L2.Theta.SuppAt (G PP).q.e (c.V 0) g → b⁻¹ * g * b ∈ levS (c.V 0) st.β st.L →
       ∀ PP' ∈ cm.Pg, PP' ≠ PP.1 → redFn st.β PP' (finE (c.V 0) (b⁻¹ * g * b)) = 1 :=
@@ -847,16 +845,14 @@ theorem redFn_mul {F E : Type} [Field F] [NumberField F] [Field E] [NumberField 
     (β : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (PP : Pl E) {x y : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)}
     (hx : x ∈ St β) (hy : y ∈ St β) : redFn β PP (x * y) = redFn β PP x * redFn β PP y := by
   unfold redFn ext1
-  rw [dite_eq_left (mul_mem hx hy), dite_eq_left hx, dite_eq_left hy]
-  rw [← map_mul]
+  rw [dite_eq_left (mul_mem hx hy), dite_eq_left hx, dite_eq_left hy, ← map_mul]
   congr 1
 
 theorem redFn_inv {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n : ℕ}
     (β : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (PP : Pl E) {x : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)}
     (hx : x ∈ St β) : redFn β PP x⁻¹ = (redFn β PP x)⁻¹ := by
   unfold redFn ext1
-  rw [dite_eq_left (inv_mem hx), dite_eq_left hx]
-  rw [← map_inv]
+  rw [dite_eq_left (inv_mem hx), dite_eq_left hx, ← map_inv]
   congr 1
 
 theorem reductionBlock_injective_of_eq {κ : Type} [CommRing κ] {n r : ℕ} (hr : r ≤ n) (hn : n = r) :
@@ -1039,8 +1035,7 @@ theorem GlobalTheory.LevZero.gen : ∀ {D : D7} {c : Comm D} {v : VCom c} (cm : 
       (∀ PP ∈ cm.Pg, PP ∉ s → redFn st.β PP (Lev.finE (c.V 0) k) = 1) → Q k := by
     intro s
     refine Finset.induction_on s ?_ ?_
-    · intro k hk h
-      exact hred k hk fun PP hPP => h PP hPP (Finset.notMem_empty _)
+    · exact fun k hk h => hred k hk fun PP hPP => h PP hPP (Finset.notMem_empty _)
     · intro a s ha ih k hk h
       by_cases haP : a ∈ cm.Pg
       · obtain ⟨z, hz⟩ := hRed k hk ⟨a, haP⟩
@@ -1063,8 +1058,7 @@ theorem GlobalTheory.LevZero.gen : ∀ {D : D7} {c : Comm D} {v : VCom c} (cm : 
       · exact ih k hk fun PP hPP hPs => h PP hPP (by
           simp only [Finset.mem_insert, not_or]
           exact ⟨fun e => haP (e ▸ hPP), hPs⟩)
-  intro k hk
-  exact claim cm.Pg k hk fun PP hPP h => absurd hPP h
+  exact fun k hk => claim cm.Pg k hk fun PP hPP h => absurd hPP h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IndexZeroLevelGeneratedByLocalUnipotents =====

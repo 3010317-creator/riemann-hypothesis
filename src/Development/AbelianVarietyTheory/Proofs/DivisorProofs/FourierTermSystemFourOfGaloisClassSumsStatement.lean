@@ -173,8 +173,7 @@ theorem exists_unit (q : Ideal B) [q.IsMaximal] :
     rw [one_smul]
     have hgi : g⁻¹ • q ≠ q := fun h => hg (by nth_rewrite 1 [← h]; exact smul_inv_smul g q)
     have := hyP' g⁻¹ hgi
-    rw [Ideal.mem_pointwise_smul_iff_inv_smul_mem, inv_inv] at this
-    exact this
+    rwa [Ideal.mem_pointwise_smul_iff_inv_smul_mem, inv_inv] at this
 
 end GlobalTheory.DecompFixed
 
@@ -420,8 +419,7 @@ theorem exists_approx [IsLocalRing A] [Algebra.IsInvariant A B G] (q : Ideal B) 
     intro y hy
     have : I ≤ q.comap (decompFixed A G q).val := by
       rw [hI, Ideal.map_le_iff_le_comap]
-      intro a ha
-      exact hm a ha
+      exact fun a ha => hm a ha
     exact this hy
   have hIpow : ∀ n, I ^ (n + 1) ≤ I := fun n => Ideal.pow_le_self (Nat.succ_ne_zero n)
 
@@ -635,13 +633,11 @@ theorem four_of_classSums : ∀ (O : Type) [CommRing O] (bar : O → O) (q s : �
     (fun i => S₀ (fun u => c' (i, u)) (c i))) with hT
   have hSfin : {mu : Fin l × Fin s → Φ.X y | mu ∈ orbit O N₁ N (k y) a ∧ ∀ i, (fun u => mu (i, u)) ∈ T}.Finite := by
     refine ((Set.Finite.pi' (fun _ : Fin l => T.finite_toSet)).image (fun x j => x j.1 j.2)).subset ?_
-    intro mu hmu
-    exact ⟨fun i u => mu (i, u), hmu.2, rfl⟩
+    exact fun mu hmu => ⟨fun i u => mu (i, u), hmu.2, rfl⟩
   refine ⟨hSfin.toFinset, fun mu hmu => (hSfin.mem_toFinset.1 hmu).1, fun mu hmu hmuS => ?_, ?_⟩
   · rw [hSfin.mem_toFinset] at hmuS
     obtain ⟨i, hi⟩ : ∃ i, (fun u => mu (i, u)) ∉ T := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       exact hmuS ⟨hmu, hcon⟩
     obtain ⟨gm, g1, g2, g3, g4⟩ := hmu
     obtain ⟨c', hc', hcc⟩ := hC3 (fun idx => gm (a idx)) ⟨gm, g1, g2, g3, fun idx => OrbTrace.cm_refl _⟩
@@ -672,8 +668,7 @@ theorem four_of_classSums : ∀ (O : Type) [CommRing O] (bar : O → O) (q s : �
       (fun i ν => Φ.u y ν (c i) * mono W (Φ.t y) (Φ.δ y) ν)
     have hF' : ev' F - io (∑ mu ∈ hSfin.toFinset, ∏ i, Φ.u y (fun v => mu (i, v)) (c i) *
         mono W (Φ.t y) (Φ.δ y) (fun v => mu (i, v))) ∈ maximalIdeal V' ^ j' := by
-      rw [hsum]
-      rw [← Ideal.Quotient.eq]
+      rw [hsum, ← Ideal.Quotient.eq]
 
       rw [hF, map_sum ev', map_sum io, map_sum (Ideal.Quotient.mk _), map_sum (Ideal.Quotient.mk _)]
       refine Finset.sum_congr rfl fun c' hc' => ?_

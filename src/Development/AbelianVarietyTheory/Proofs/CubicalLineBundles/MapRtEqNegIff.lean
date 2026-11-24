@@ -60,8 +60,7 @@ theorem map_rt_eq_neg_iff {E : Type} [Field E] [NumberField E] [IsCMField E] (H 
     have := H.d_prime.pos
     omega
   constructor
-  · intro h h'
-    exact h2 (h.symm.trans h')
+  · exact fun h h' => h2 (h.symm.trans h')
   · intro h
     rw [map_neg]
     exact (sq_eq_sq_iff_eq_or_eq_neg.mp h1).resolve_left h

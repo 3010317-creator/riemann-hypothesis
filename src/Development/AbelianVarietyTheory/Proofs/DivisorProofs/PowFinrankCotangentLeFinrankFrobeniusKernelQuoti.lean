@@ -105,8 +105,7 @@ theorem map_pow_eq (t : H ⊗[k] H) :
 theorem isHopfIdeal : (frobKerIdeal p k H).IsHopfIdeal k := by
   have : ((frobKerIdeal p k H).restrictScalars k).IsCoideal := by
     refine ⟨?_, ?_⟩
-    · intro x hx
-      exact frobKerIdeal_le_augIdeal hp.out.ne_zero k H hx
+    · exact fun x hx => frobKerIdeal_le_augIdeal hp.out.ne_zero k H hx
     · intro x hx
       have h : frobKerIdeal p k H ≤ RingHom.ker
           ((Algebra.TensorProduct.map (Ideal.Quotient.mkₐ k (frobKerIdeal p k H))

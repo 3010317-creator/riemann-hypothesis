@@ -69,8 +69,7 @@ namespace GlobalTheory.CondRescale
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem norm_le_one_of_pow_near (z : ℂ) (h : ∀ n : ℕ, ‖z ^ n - 1‖ < 1) : ‖z‖ ≤ 1 := by
-  by_contra hz
-  push Not at hz
+  by_contra! hz
   obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt (2 : ℝ) hz
   have h1 := h n
   have h2 : ‖z ^ n‖ ≤ ‖z ^ n - 1‖ + ‖(1 : ℂ)‖ := by
@@ -91,8 +90,7 @@ theorem exists_ball_trivial (ψ0 : AddChar k ℂ) (hψ : Continuous ψ0) :
     intro s hs n
     have h1 : n • s ∈ {t : k | ‖ψ0 t - 1‖ < 1} :=
       hsub (lt_of_le_of_lt (GlobalTheory.CharDualMat.valuation_nsmul_le s n) hs)
-    rw [Set.mem_setOf_eq, AddChar.map_nsmul_eq_pow] at h1
-    exact h1
+    rwa [Set.mem_setOf_eq, AddChar.map_nsmul_eq_pow] at h1
   have hneg : valuation k (-t) < γ := by rwa [Valuation.map_neg]
   have a1 := norm_le_one_of_pow_near _ (hp t ht)
   have a2 := norm_le_one_of_pow_near _ (hp (-t) hneg)
@@ -110,16 +108,14 @@ theorem exists_rescale_conductor_integers [CharZero k]
   classical
   let P : k → Prop := fun a => ∀ y ∈ 𝒪[k], ψ0 (a * y) = 1
   obtain ⟨t, ht⟩ : ∃ t : k, ψ0 t ≠ 1 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     exact hne (AddChar.ext _ _ fun s => by simpa using hall s)
   have ht0 : t ≠ 0 := by
     rintro rfl
     exact ht (AddChar.map_zero_eq_one _)
   have hbd : ∀ a, P a → a ≠ 0 → valuation k a < valuation k t := by
     intro a ha ha0
-    by_contra hle
-    push Not at hle
+    by_contra! hle
     apply ht
     have hmem : t / a ∈ 𝒪[k] := by
       rw [Valuation.mem_integer_iff, map_div₀]
@@ -165,8 +161,7 @@ theorem exists_rescale_conductor_integers [CharZero k]
     obtain ⟨n, hn⟩ := hex b hb0
     have h1 := hmax n ⟨b, hb, hb0, hn⟩
     have h2 : e (valuation k b) ≤ e (valuation k a0) := by
-      rw [hn, hn0, WithZero.coe_le_coe, Multiplicative.ofAdd_le]
-      exact h1
+      rwa [hn, hn0, WithZero.coe_le_coe, Multiplicative.ofAdd_le]
     exact (map_le_map_iff e).1 h2
   have hv0 : valuation k a0 ≠ 0 := (Valuation.ne_zero_iff _).2 ha0
   refine ⟨a0, ha0, fun x => ⟨fun hx => ?_, fun hx y hy => ha0P _ (mul_mem hx hy)⟩⟩

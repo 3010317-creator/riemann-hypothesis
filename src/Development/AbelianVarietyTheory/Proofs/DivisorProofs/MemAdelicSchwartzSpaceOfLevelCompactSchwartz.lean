@@ -129,8 +129,7 @@ theorem mem_schA_of_level : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ) (
   have hCK : C ⊆ K := by
     intro a ha
     have h1 : Φ (ι a + embR s0) ≠ 0 := by
-      rw [hinv _ _ ha, ← hg]
-      exact hs0
+      rwa [hinv _ _ ha, ← hg]
     simpa [hfin] using hKs _ h1
   have hmk : IsLocallyConstant (fun a : Fin N → Af F => (a : (Fin N → Af F) ⧸ W)) :=
     (IsLocallyConstant.iff_exists_open _).2 fun x => ⟨{b | -b + x ∈ W},

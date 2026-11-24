@@ -220,11 +220,9 @@ theorem mem_box_of_Phi_ne_zero (hpat : S.Pattern t) (j c : ℕ) (H : j + 1 + c =
     have hnf : ¬ FreeIx S.ρ i b ∧ i ≠ b := by
       rcases i with (e' | l) | ⟨q, u⟩
       · refine ⟨?_, by simp [b]⟩
-        simp only [FreeIx, FreeTop, b, not_lt]
-        exact hρ
+        simpa only [FreeIx, FreeTop, b, not_lt] using hρ
       · have hl : c + 1 ≤ l.val := by
-          by_contra hl
-          push Not at hl
+          by_contra! hl
           have h1 : o (.inl (.inr l)) = .inr ⟨l.val, hl⟩ :=
             standardOrderExtendedBasis_apply_low_block (Fin κ) t (j + 1) (c + 1) (by omega) (⟨l.val, hl⟩ : Fin (c + 1))
           have h2 : o (ixSucc _ t j (.inl (.inl (.inr l)))) = o (.inl (.inr l)) := rfl
@@ -240,8 +238,7 @@ theorem mem_box_of_Phi_ne_zero (hpat : S.Pattern t) (j c : ℕ) (H : j + 1 + c =
           omega
       · exact ⟨by simp [FreeIx, b], by simp [b]⟩
     have := hpg i b hnf.1
-    rw [Matrix.one_apply_ne hnf.2, sub_zero, hgi] at this
-    exact this
+    rwa [Matrix.one_apply_ne hnf.2, sub_zero, hgi] at this
   · exact hmax u b
 
 end Chain2
@@ -391,8 +388,7 @@ theorem val_row_le_of_Phi_ne_zero {k : Type} [Field k] [ValuativeRel k] [Topolog
 theorem flRow_eq_zero_of_not_mem_box : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ν : Measure k) (s κ : ℕ) (S : SymData k s κ) (t : Type) [Fintype t] [DecidableEq t], ∀ j c (H : j + 1 + c = s) (r : ℕ), c = 2 * r → ∀ x : Matrix (XIx (Fin κ) t (j + 1) ⊕ Unit) (XIx (Fin κ) t j) k, x (Sum.inr ()) ∉ box (XIx (Fin κ) t j) (S.ϖ ^ (r + 1)) → GlobalTheory.LocFlat.flRow S.ψ ν (r + 1) ((S.T t).Phi j (c + 1) (by omega)) x = 0 := by
   intro k _ _ _ _ _ _ ν s κ S t _ _ j c H r hc x hx
   obtain ⟨y, hy⟩ : ∃ y, ¬ valuation k (x (Sum.inr ()) y) ≤ valuation k (((S.ϖ ^ (r + 1) : kˣ)) : k) := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hx fun i => h i
   unfold flRow opE
   refine (integral_congr_ae (Filter.Eventually.of_forall fun e => ?_)).trans (integral_zero _ _)
@@ -449,8 +445,7 @@ theorem _root_.GlobalTheory.T.iteratedDepthOneLevel_char_of_one_row_first_block 
   intro k _ _ _ _ r t _ _ _ _ P μ hμ j r₀
   induction j with
   | zero =>
-    intro h _ _
-    exact ⟨⟨(reGL (ixZero r t)).symm h, h.2⟩, rfl, rfl⟩
+    exact fun h _ _ => ⟨⟨(reGL (ixZero r t)).symm h, h.2⟩, rfl, rfl⟩
   | succ j ih =>
     intro h h1 h2
     let Q := P.iter t μ hμ j
@@ -475,8 +470,7 @@ theorem _root_.GlobalTheory.T.iteratedDepthOneLevel_char_of_one_row_first_block 
       rw [ec, h1 _ _ (hne a ha), Matrix.one_apply, Matrix.one_apply]
       simp [(ixSucc r t j).injective.eq_iff]
     have c2 : (c : GL (Ix r t j) k).val (Sum.inl r₀) (Sum.inl r₀) = 1 := by
-      rw [ec]
-      exact h2
+      rwa [ec]
     obtain ⟨g, hg, hl⟩ := ih c c1 c2
     refine ⟨g, ?_, ?_⟩
     · rw [hg]

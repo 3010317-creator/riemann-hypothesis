@@ -129,10 +129,8 @@ theorem exists_hol_frame (Ψ : Finset (E →+* ℂ)) (q : ℕ) {B : Set W} (hB :
   have hN : ∀ τ i a, DifferentiableOn ℂ (fun b => N b τ i a) B := by
     intro τ i a
     by_cases hi : (i : ℕ) < q
-    · simp only [N, mixRows, Matrix.of_apply, ite_eq_left hi]
-      exact differentiableOn_const _
-    · simp only [N, mixRows, Matrix.of_apply, ite_eq_right hi]
-      exact hrow τ i a hi
+    · simpa only [N, mixRows, Matrix.of_apply, ite_eq_left hi] using differentiableOn_const _
+    · simpa only [N, mixRows, Matrix.of_apply, ite_eq_right hi] using hrow τ i a hi
   have hD : DifferentiableOn ℂ (fun b => ∏ τ, (N b τ).det) B :=
     differentiableOn_finset_prod _ (fun τ b => (N b τ).det) B fun τ => differentiableOn_det _ B (hN τ)
   have hdet : ∀ b ∈ B ∩ (fun b => ∏ τ, (N b τ).det) ⁻¹' {0}ᶜ, ∀ τ, (N b τ).det ≠ 0 := fun b hb τ =>
@@ -185,8 +183,7 @@ theorem exists_hol_chart (X : Data E r) {B : Set W} (hB : IsOpen B) (x : W → F
     hD.continuousOn.isOpen_inter_preimage hB isOpen_compl_singleton, ⟨hb₀, ?_⟩, Set.inter_subset_left,
     LUPf.zF_diffOn.comp (hd.mono Set.inter_subset_left) fun b hb => ⟨hx b hb.1, hb.2⟩, ?_, fun b hb => ?_⟩
   · change LUPf.DeltaF X (x b₀) (x b₀) ≠ 0
-    simp only [LUPf.DeltaF, hM, hl, Finset.prod_const_one]
-    exact one_ne_zero
+    simpa only [LUPf.DeltaF, hM, hl, Finset.prod_const_one] using one_ne_zero
   · ext k
     change LUPf.nF X (x b₀) (x b₀) _ _ _ = 0
     simp only [LUPf.nF, hM, hL, inv_one]
@@ -288,8 +285,7 @@ theorem exists_frames_of_holPeriods {H : ReciprocityTheory.ChartRestriction.G.Ge
       constructor
       · rintro ⟨a, rfl⟩
         exact (φ a).2
-      · intro hy
-        exact ⟨φ.symm ⟨y, hy⟩, by simp [φ']⟩
+      · exact fun hy => ⟨φ.symm ⟨y, hy⟩, by simp [φ']⟩
     rw [hrange]
     exact X.Λ_span
   choose! x hx hPx using fun b (hb : b ∈ B) => GlobalTheory.exists_frame_of_isPeriod E H D r (-X.ξ0) X.Gm φ' X.Ψ hty g idx _

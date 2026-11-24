@@ -117,8 +117,7 @@ theorem exists_bijective_stalkMap_of_dvr : ∀ (F : Type) [Field F] (Y : Scheme.
     exact bot_le
   have hKU : ⊤ ≤ (j ≫ i₂) ⁻¹ᵁ U := fun s _ => by
     show i₂ (j s) ∈ U
-    rw [hgen (j s) (hj s)]
-    exact hηU
+    rwa [hgen (j s) (hj s)]
   obtain ⟨i₁, hi₁, -⟩ := M.existsUnique_lift (j ≫ i₂) hKU
   have hE : ValuativeCriterion.Existence M.σ := by
     have h : UniversallyClosed M.σ := inferInstance
@@ -181,8 +180,7 @@ theorem exists_bijective_stalkMap_of_dvr : ∀ (F : Type) [Field F] (Y : Scheme.
     have i3 : Function.Injective (((Spec R).presheaf.stalkSpecializes hsp).hom ∘ (L.l.stalkMap c).hom) := by
       have h4 : Function.Injective (M.X.presheaf.stalkSpecializes (hsp.map L.l.continuous) ≫ L.l.stalkMap t).hom :=
         i1.comp i2
-      rw [nat] at h4
-      exact h4
+      rwa [nat] at h4
     exact i3.of_comp
   refine ⟨hb.1.of_comp, fun a => ?_⟩
   obtain ⟨b, hb'⟩ := hb.2 ((L.l.stalkMap c).hom a)

@@ -139,8 +139,7 @@ private theorem UpperTheory.Reformulated.B.AdmissibleSmoothRepresentations.mem_f
     v ∈ UpperTheory.Reformulated.B.AdmissibleSmoothRepresentations.fixed ρ K ↔ ∀ k ∈ K, ρ k v = v := by
   constructor
   · intro h k hk
-    have h' := (show ∀ h : ↥K, ρ (h : H) v = (↑((1 : ↥K →* ℂˣ) h) : ℂ) • v from h) ⟨k, hk⟩
-    simpa using h'
+    simpa using (show ∀ h : ↥K, ρ (h : H) v = (↑((1 : ↥K →* ℂˣ) h) : ℂ) • v from h) ⟨k, hk⟩
   · intro h
     show ∀ h : ↥K, ρ (h : H) v = (↑((1 : ↥K →* ℂˣ) h) : ℂ) • v
     intro k
@@ -240,8 +239,7 @@ theorem UpperTheory.Reformulated.B.AdmissibleSmoothRepresentations.isSemisimple 
     exact hv _ (W.apply_mem_toSubmodule g⁻¹ hw)
   refine ⟨⟨W.toSubmoduleᗮ, hinv⟩, ?_, ?_⟩
   · rw [disjoint_iff]
-    apply Subrepresentation.toSubmodule_injective
-    exact W.toSubmodule.inf_orthogonal_eq_bot
+    exact Subrepresentation.toSubmodule_injective W.toSubmodule.inf_orthogonal_eq_bot
   · rw [codisjoint_iff]
     apply Subrepresentation.toSubmodule_injective
     show W.toSubmodule ⊔ W.toSubmoduleᗮ = ⊤
@@ -426,8 +424,7 @@ theorem finiteDimensional_fixed (hP : GlobalTheory.Published.HarishChandraFinite
   have h := (GlobalTheory.MultMem.mem_mult_iff ..).1 hT.1
   refine ⟨h.aut, h.cusp, fun v k hk g => ?_, h.equiv, h.cont⟩
   have := congrArg (fun T : MMap M => T v g) (mem_fixed.1 hT.2 ⟨k, hk.2⟩ ((hmem ⟨k, hk.2⟩).1 hk.1))
-  rw [one_mul]
-  exact this
+  rwa [one_mul]
 
 theorem exists_compact_open (V : HSp D) : ∃ K : Subgroup (GfC V), IsOpen (K : Set (GfC V)) ∧ IsCompact (K : Set (GfC V)) := by
   obtain ⟨_, _, -⟩ := GlobalTheory.Ker.CongTop.adelicUnitary_top_cong D V

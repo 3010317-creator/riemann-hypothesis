@@ -87,8 +87,7 @@ theorem continuous_of_valuation_eq {A B Γ : Type} [Field A] [Field B]
   refine ⟨Units.mk0 _ ha0, trivial, fun x hx => ?_⟩
   simp only [Set.mem_ofPred_eq, Units.val_mk0, Valuation.restrict_lt_iff, ha] at hx
   show (Valued.v : Valuation B Γ).restrict (g x) < γ.1
-  rw [Valuation.restrict_lt_iff_lt_embedding, hg]
-  exact hx
+  rwa [Valuation.restrict_lt_iff_lt_embedding, hg]
 
 theorem valuation_eq_of_denseRange {A B Γ ι : Type} [Field A] [Field B]
     [LinearOrderedCommGroupWithZero Γ] [Valued A Γ] [Valued B Γ] (φ : A →+* B)
@@ -164,8 +163,7 @@ theorem continuous_of_valued_eq {A B Γ : Type*} [Ring A] [Ring B] [LinearOrdere
   refine ⟨Units.mk0 _ ha0, trivial, fun x hx => ?_⟩
   simp only [Set.mem_setOf_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hx
   simp only [Set.mem_setOf_eq, Valuation.restrict_lt_iff_lt_embedding]
-  rw [hf, ← ha]
-  exact hx
+  rwa [hf, ← ha]
 
 
 theorem exists_ringEquiv_splitPrime : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]

@@ -82,12 +82,10 @@ theorem relation_descends_along_functional (K A B : Type) [Field K] [CommRing A]
   have hcoef : ∀ j, ∑ s, c s * σ (α s j) = 0 := by
     have h' : ∑ j, (∑ s, c s * σ (α s j)) • rd (bW j : A) = 0 := by
       rw [← h]
-      simp only [hrdx, Finset.smul_sum, smul_smul, Finset.sum_smul]
-      exact Finset.sum_comm
+      simpa only [hrdx, Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
     exact fun j => Fintype.linearIndependent_iff.mp hli' _ h' j
   have hgoal : ∑ s, φ (c s) • x s = ∑ j, (∑ s, φ (c s) * α s j) • (bW j : A) := by
-    simp only [hα, Finset.smul_sum, smul_smul, Finset.sum_smul]
-    exact Finset.sum_comm
+    simpa only [hα, Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
   rw [hgoal]
   refine Finset.sum_eq_zero fun j _ => ?_
   have h5 : ∑ s, φ (c s) * α s j = φ (∑ s, c s * σ (α s j)) := by

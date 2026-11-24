@@ -134,8 +134,7 @@ theorem bijective_frob_twist (F k : Type) [Field F] [Finite F] [Field k] (p : �
     have := DFunLike.congr_fun hst x
     simp only [RingHom.comp_apply, iterateFrobenius_def, ← map_pow] at this
     have h2 := ψ.injective this
-    simp only [AlgHom.coe_pow, FiniteField.coe_frobeniusAlgHom, pow_iterate, ZMod.card]
-    exact h2
+    simpa only [AlgHom.coe_pow, FiniteField.coe_frobeniusAlgHom, pow_iterate, ZMod.card] using h2
   let e : (F →+* k) → (F →ₐ[ZMod p] k) := fun f =>
     { f with
       commutes' := fun r =>
@@ -269,14 +268,12 @@ theorem frob_rt {k : Type} [Field k] (p : ℕ) [Fact p.Prime] [CharP k p] (ψ : 
     · subst hp
       have e : ∀ τ : E →+* ℂ, 2 * τ (H.w0 : E) = 1 + τ (H.rt : E) := fun τ => by
         have := congrArg (τ.comp (algebraMap (𝓞 E) E)) H.two_weight_eq_one_add_root
-        rw [map_mul, map_add (f := _), map_one, map_ofNat] at this
-        exact this
+        rwa [map_mul, map_add (f := _), map_one, map_ofNat] at this
       have h1 : ψ σ' H.w0 = ψ σ (1 - H.w0) := by
         apply hψ
         have : σ ((1 - H.w0 : 𝓞 E) : E) = 1 - σ (H.w0 : E) := by
           have := map_sub (σ.comp (algebraMap (𝓞 E) E)) 1 H.w0
-          rw [map_one] at this
-          exact this
+          rwa [map_one] at this
         rw [this]
         linear_combination (1 / 2 : ℂ) * (e σ + e σ' + hneg)
       obtain ⟨m, hm⟩ := cm_generator_sq_quadratic_eq H
