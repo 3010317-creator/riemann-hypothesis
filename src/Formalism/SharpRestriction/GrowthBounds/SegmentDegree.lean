@@ -252,7 +252,7 @@ theorem beta_ratio_bound : BetaRatioBound 1088 := by
         2 * X.a / (p : ℝ) ^ X.Rj p K j * (1 / (p : ℝ) ^ X.F.dist j x) := by
       intro x hx
       obtain ⟨hx1, hx2⟩ := Finset.mem_filter.mp hx
-      have b1 := (TE.Bdeg_bounds hX hk h41 j b hA x hx1 hx2).2
+      have b1 := (TE.Bdeg_bounds hX j b hA x hx1 hx2).2
       have b2 := (TE.c_bounds hX h41 j x hx1).2.2
       refine le_trans b1 ?_
       rw [pow_add]
@@ -627,7 +627,7 @@ theorem m0_le_Bw_of_isW (hX : X.Hyp p K) (hLa : 1088 ≤ X.CLa) (hk : 1088 ≤ X
   have hV := hX.valid
   have h41 := (top_count_lower_bounds 1088 (by norm_num) p n' r K X hX hLa hk).1
   have hlt : x < X.F.fr j 0 := lt_of_le_of_lt (hW : x ≤ X.F.fr (j - 1) (r - 1)) (TE.fr_prev_lt hV j)
-  have hB := (TE.Bdeg_bounds hX hk h41 j b hA x hx hlt).1
+  have hB := (TE.Bdeg_bounds hX j b hA x hx hlt).1
   have hc := (TE.c_bounds hX h41 j x hx).1
   have B := basics hX
   have hp0 : (0 : ℝ) < p := by linarith [B.p1]
