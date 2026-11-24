@@ -5,7 +5,7 @@ public import Formalism.MahlerMeasure.MahlerMeasureProofs.WeightSpaceDimensionMo
 public import Formalism.MahlerMeasure.MahlerMeasureProofs.GamInt
 public import Formalism.MahlerMeasure.StatementT
 public import Mathlib.CategoryTheory.Category.Basic
-import Formalism.PolynomialDimension.MultinomialDepth.MonoCount
+public import Formalism.PolynomialDimension.MultinomialDepth.MonoCount
 import Formalism.MahlerMeasure.MahlerMeasureProofs.FreezeBij
 import Formalism.MahlerMeasure.MahlerMeasureProofs.FreezeInto
 public import Formalism.MahlerMeasure.MahlerMeasureProofs.LieMat
@@ -68,146 +68,6 @@ import Mathlib.Topology.Sheaves.Init
 namespace Formalism.CountingSumsFrames.TO
 
 open Formalism.GM.DimensionMonotonicity Finset
-
-namespace GlX
-
-variable {K V : Type} [Field K] [CharZero K] [AddCommGroup V] [Module K V] {r : ℕ} (G : GlW K V r)
-
-theorem cas_hw {μ : Fin r → ℤ} {x : V} (h : G.IsHW μ x) : G.Cas x = ((GlW.casI μ : ℤ) : K) • x :=
-  Formalism.CountingSumsFrames.GlX.cas_hw G h
-
-theorem cprod_kill {x : V} {e : ℤ} (hx : G.Cas x = ((e : ℤ) : K) • x) (cs : List ℤ) (he : e ∈ cs) :
-    G.cprod cs x = 0 :=
-  Formalism.CountingSumsFrames.GlX.cprod_kill G hx cs he
-
-noncomputable def qlist (S : Finset (Fin r → ℤ)) (c : ℤ) : List ℤ := ((S.image GlW.casI).erase c).toList
-
-theorem qlist_ne (S : Finset (Fin r → ℤ)) (c : ℤ) : ∀ x ∈ qlist S c, x ≠ c :=
-  Formalism.CountingSumsFrames.GlX.qlist_ne S c
-
-theorem mem_qlist {S : Finset (Fin r → ℤ)} {c : ℤ} {ν : Fin r → ℤ} (hν : ν ∈ S) (hne : GlW.casI ν ≠ c) :
-    GlW.casI ν ∈ qlist S c :=
-  Formalism.CountingSumsFrames.GlX.mem_qlist hν hne
-
-theorem cprod_mod {U : Submodule K V} (hU : G.Stable U) {μ : Fin r → ℤ} {v : V} (hv : G.IsWt μ v)
-    (hr : ∀ a b, a < b → G.E a b v ∈ U) (cs : List ℤ) :
-    G.cprod cs v - (cs.map (fun c => (((GlW.casI μ - c : ℤ)) : K))).prod • v ∈ U :=
-  Formalism.CountingSumsFrames.GlX.cprod_mod G hU hv hr cs
-
-theorem iSup_stable {ι : Sort*} {U : ι → Submodule K V} (hU : ∀ i, G.Stable (U i)) : G.Stable (⨆ i, U i) :=
-  Formalism.CountingSumsFrames.GlX.iSup_stable G hU
-
-theorem inf_stable {U U' : Submodule K V} (hU : G.Stable U) (hU' : G.Stable U') : G.Stable (U ⊓ U') :=
-  Formalism.CountingSumsFrames.GlX.inf_stable G hU hU'
-
-theorem gen_kill {W : Submodule K V} (hW : G.Stable W) {S : Finset (Fin r → ℤ)}
-    (hS : ∀ x ∈ W, ∀ μ ∉ S, G.comp μ x = 0) {la : Fin r → ℤ} {v : V} (hv : G.IsHW la v) (hvW : v ∈ W)
-    (hv0 : v ≠ 0) {μ ν : Fin r → ℤ} (hμ : DomW μ) (hle : Dle μ ν) (hne : Dle ν la → la ≠ μ) :
-    ∀ x ∈ G.gS {v}, G.cprod (qlist S (GlW.casI μ)) (G.comp ν x) = 0 :=
-  Formalism.CountingSumsFrames.GlX.gen_kill G hW hS hv hvW hv0 hμ hle hne
-
-end GlX
-
-end Formalism.CountingSumsFrames.TO
-
-namespace Formalism.CountingSumsFrames.TO
-
-open Formalism.GM.DimensionMonotonicity Finset
-
-namespace GlX
-
-variable {K V : Type} [Field K] [CharZero K] [AddCommGroup V] [Module K V] {r : ℕ} (G : GlW K V r)
-
-theorem span_hw {W : Submodule K V} (hW : G.Stable W) {S : Finset (Fin r → ℤ)}
-    (hS : ∀ x ∈ W, ∀ μ ∉ S, G.comp μ x = 0) {ι : Type*} (h : ι → V) (la : ι → Fin r → ℤ)
-    (hh : ∀ i, G.IsHW (la i) (h i)) (hhW : ∀ i, h i ∈ W) (hh0 : ∀ i, h i ≠ 0)
-    (hsp : ∀ μ v, v ∈ W → G.IsHW μ v → v ∈ Submodule.span K (Set.range h)) :
-    W ≤ ⨆ i, G.gS {h i} :=
-  Formalism.CountingSumsFrames.GlX.span_hw G hW hS h la hh hhW hh0 hsp
-
-theorem indep_hw {W : Submodule K V} (hW : G.Stable W) {S : Finset (Fin r → ℤ)}
-    (hS : ∀ x ∈ W, ∀ μ ∉ S, G.comp μ x = 0) {ι : Type*} (h : ι → V) (la : ι → Fin r → ℤ)
-    (hh : ∀ i, G.IsHW (la i) (h i)) (hhW : ∀ i, h i ∈ W) (hli : LinearIndependent K h) :
-    iSupIndep (fun i => G.gS {h i}) :=
-  Formalism.CountingSumsFrames.GlX.indep_hw G hW hS h la hh hhW hli
-
-end GlX
-
-end Formalism.CountingSumsFrames.TO
-
-namespace Formalism.CountingSumsFrames.TO
-
-open Formalism.GM.DimensionMonotonicity Finset
-
-namespace GlX
-
-variable {K V : Type} [Field K] [CharZero K] [AddCommGroup V] [Module K V] {r : ℕ} (G : GlW K V r)
-
-def act : List (Fin r × Fin r) → V →ₗ[K] V
-  | [] => LinearMap.id
-  | ab :: w => G.E ab.1 ab.2 ∘ₗ act w
-
-noncomputable def Lv (v : V) : (List (Fin r × Fin r) →₀ K) →ₗ[K] V :=
-  Finsupp.linearCombination K (fun w => act G w v)
-
-omit [CharZero K] in
-private theorem act_eq (w : List (Fin r × Fin r)) :
-    act G w = Formalism.CountingSumsFrames.GlX.act G w := by
-  induction w with
-  | nil => rfl
-  | cons ab w ih => exact congrArg (fun A => G.E ab.1 ab.2 ∘ₗ A) ih
-
-omit [CharZero K] in
-private theorem Lv_eq (v : V) : Lv G v = Formalism.CountingSumsFrames.GlX.Lv G v := by
-  simp only [Lv, Formalism.CountingSumsFrames.GlX.Lv, act_eq]
-
-theorem act_mem {U : Submodule K V} (hU : G.Stable U) (w : List (Fin r × Fin r)) {x : V} (hx : x ∈ U) :
-    act G w x ∈ U := by
-  simpa only [act_eq] using Formalism.CountingSumsFrames.GlX.act_mem G hU w hx
-
-theorem E_Lv (v : V) (a b : Fin r) (c : List (Fin r × Fin r) →₀ K) :
-    G.E a b (Lv G v c) = Lv G v (Finsupp.mapDomain (List.cons (a, b)) c) := by
-  simpa only [Lv_eq] using Formalism.CountingSumsFrames.GlX.E_Lv G v a b c
-
-theorem range_Lv (v : V) : LinearMap.range (Lv G v) = G.gS {v} := by
-  simpa only [Lv_eq] using Formalism.CountingSumsFrames.GlX.range_Lv G v
-
-theorem Lv_add (v v' : V) (c : List (Fin r × Fin r) →₀ K) : Lv G (v + v') c = Lv G v c + Lv G v' c := by
-  simp [Lv, Finsupp.linearCombination_apply, map_add (f := _), smul_add, Finsupp.sum_add]
-
-theorem Lv_smul (t : K) (v : V) (c : List (Fin r × Fin r) →₀ K) : Lv G (t • v) c = t • Lv G v c := by
-  simp only [Lv, Finsupp.linearCombination_apply, Finsupp.sum, map_smul, Finset.smul_sum, smul_comm t]
-
-theorem ker_le {W : Submodule K V} (hW : G.Stable W) (hWf : G.FinW W) {la : Fin r → ℤ} {h h' : V}
-    (hh : G.IsHW la h) (hh' : G.IsHW la h') (hhW : h ∈ W) (hh'W : h' ∈ W) (h0 : h ≠ 0) :
-    LinearMap.ker (Lv G h) ≤ LinearMap.ker (Lv G h') := by
-  simpa only [Lv_eq] using Formalism.CountingSumsFrames.GlX.ker_le G hW hWf hh hh' hhW hh'W h0
-
-noncomputable def tr {h h' : V} (hk : LinearMap.ker (Lv G h) ≤ LinearMap.ker (Lv G h')) :
-    LinearMap.range (Lv G h) →ₗ[K] V :=
-  (LinearMap.ker (Lv G h)).liftQ (Lv G h') hk ∘ₗ (Lv G h).quotKerEquivRange.symm.toLinearMap
-
-theorem tr_apply {h h' : V} (hk : LinearMap.ker (Lv G h) ≤ LinearMap.ker (Lv G h'))
-    (c : List (Fin r × Fin r) →₀ K) : tr G hk ⟨Lv G h c, LinearMap.mem_range_self _ c⟩ = Lv G h' c := by
-  simp only [tr, LinearMap.comp_apply, LinearEquiv.coe_coe, LinearMap.quotKerEquivRange_symm_apply_image,
-    Submodule.mkQ_apply, Submodule.liftQ_apply]
-
-end GlX
-
-end Formalism.CountingSumsFrames.TO
-
-namespace Formalism.CountingSumsFrames.TO
-
-open Formalism.GM.DimensionMonotonicity Finset
-
-namespace GlX
-
-variable {K V : Type} [Field K] [CharZero K] [AddCommGroup V] [Module K V] {r : ℕ} (G : GlW K V r)
-
-theorem isWt_of_eig {μ : Fin r → ℤ} {z : V} (hz : ∀ c, G.E c c z = ((μ c : ℤ) : K) • z) : G.IsWt μ z :=
-  Formalism.CountingSumsFrames.GlX.isWt_of_eig G hz
-
-end GlX
 
 section Proj
 
@@ -864,6 +724,8 @@ namespace Formalism.CountingSumsFrames.TO
 open Formalism.GM.DimensionMonotonicity Finset
 
 namespace GlX
+
+open Formalism.CountingSumsFrames.GlX
 
 variable {K V : Type} [Field K] [CharZero K] [AddCommGroup V] [Module K V] {r : ℕ} (G : GlW K V r)
 
