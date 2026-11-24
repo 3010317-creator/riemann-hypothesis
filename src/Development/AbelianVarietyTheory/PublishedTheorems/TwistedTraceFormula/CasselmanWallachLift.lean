@@ -47,6 +47,12 @@ namespace GlobalTheory.Published
 
 open GlobalTheory.SmoothGlob
 
+/-- **Wallach's globalization theorem**: the smooth globalization functor from admissible
+$(\mathfrak{g}, K)$-modules to smooth Frechet representations of moderate growth is an exact
+equivalence of categories.
+
+Proposed reference:
+[N. R. Wallach, *Real reductive groups. I*][wallach1988rrg]. -/
 def CasselmanWallachLift : Prop :=
   ∀ (n : ℕ) (ε : Fin n → Bool)
     (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
