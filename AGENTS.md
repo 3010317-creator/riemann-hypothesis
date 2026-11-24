@@ -82,8 +82,7 @@ Drop the part from `---` on if the pull request depends on no other.
 ## Mistakes we keep seeing
 
 These are changes agents often make that we don't want. Most of them hide a problem in one file
-instead of fixing it where it comes from. We add to this list as we find more. A speed-up that
-makes a proof a little longer or harder to read is still welcome, as long as it isn't one of these.
+instead of fixing it where it comes from. We add to this list as we find more.
 
 ### Keeping the old lemma next to a new one
 
