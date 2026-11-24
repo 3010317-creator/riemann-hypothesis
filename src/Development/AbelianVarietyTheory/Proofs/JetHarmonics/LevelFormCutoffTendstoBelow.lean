@@ -55,7 +55,7 @@ noncomputable section
 
 namespace GlobalTheory.GivenXi
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
+open scoped Matrix.Norms.Elementwise
 
 section sesq
 

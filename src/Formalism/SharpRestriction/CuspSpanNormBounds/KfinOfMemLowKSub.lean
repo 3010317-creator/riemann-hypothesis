@@ -12,7 +12,7 @@ open scoped InnerProductSpace ContDiff
 
 noncomputable section
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
+open scoped Matrix.Norms.Elementwise
 
 namespace Formalism.MainNotions.DoubleDerivativeSmoothness
 

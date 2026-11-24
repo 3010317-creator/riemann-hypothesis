@@ -16,7 +16,7 @@ noncomputable section
 
 namespace Formalism.REAL
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
+open scoped Matrix.Norms.Elementwise
 
 theorem vector_right_derivative_extends : RdExtV := by
   intro n ε E _ _ f F U g X hU hg hgJ hF hfF hX
