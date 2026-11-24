@@ -767,7 +767,7 @@ theorem isBlowupSeq_topMap {X : Scheme.{0}} (s : FunctorialResolution.BlowupSequ
   isBlowupSeq_structMap s s.length le_rfl
 
 theorem resolutionCharZero_of_top (h : TopRes) : GlobalTheory.CompanionTheory.Hypotheses₂.ResolutionCharZero := by
-  obtain ⟨R, hR, -, -⟩ := h
+  obtain ⟨R, hR, -⟩ := h
   intro k _ _ X g _ hqc _ hred
   have := hqc
   have := hred
