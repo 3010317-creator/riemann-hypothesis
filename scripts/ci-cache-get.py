@@ -8,7 +8,8 @@ each other. Then, at the same time, the map is registered with `lake cache add` 
 shards and the missing artifacts are downloaded by one 500-way curl process, each checked
 against the manifest's SHA-256 before it enters the cache (scripts/rh-buildq/fetch-artifacts.py).
 Then one stock leantar process unpacks every module (after path checks), and `lake build
---no-build` confirms that nothing would have to be compiled.
+--no-build` confirms that nothing would have to be compiled. Last, when the cache is the
+project's own .lake/cache, the archives in it that this map doesn't use are deleted.
 
 Exit 3 means no equivalent successful CI receipt was found. Other failures must
 not silently fall back: a matching receipt with corrupt bytes is an error.
@@ -23,6 +24,7 @@ import json
 import os
 from pathlib import Path
 import re
+import stat
 import subprocess
 import sys
 import tempfile
@@ -395,7 +397,37 @@ def download_failure(code, report):
     return f"{reason}. {advice[0].upper()}{advice[1:]}"
 
 
-def consume(root, cache, record, identity, workers=24, fetcher=fetch):
+def prune_archives(cache, keep):
+    """Delete the archives in cache/artifacts whose names are not in ``keep``; return (count, bytes).
+
+    A restore for a newer main downloads tens of thousands of new archives and nothing else
+    removes the old ones. Only names of the form this script downloads (16 hex digits, .ltar)
+    are touched; Lake's own files in the cache are left alone.
+    """
+    directory = cache / "artifacts"
+    if directory.is_symlink() or not directory.is_dir():
+        return 0, 0
+    count = size = 0
+    with os.scandir(directory) as entries:
+        for entry in entries:
+            if entry.name in keep or not ARTIFACT.fullmatch(entry.name) or not entry.is_file(follow_symlinks=False):
+                continue
+            try:
+                length = entry.stat(follow_symlinks=False).st_size
+                try:
+                    os.unlink(entry.path)
+                except PermissionError:
+                    # Windows won't delete a read-only file, and Lake makes the archives it caches read-only.
+                    os.chmod(entry.path, stat.S_IREAD | stat.S_IWRITE)
+                    os.unlink(entry.path)
+            except OSError:
+                continue
+            count += 1
+            size += length
+    return count, size
+
+
+def consume(root, cache, record, identity, workers=24, fetcher=fetch, prune=False):
     contents, shas, modules = validated_blobs(record, identity, fetcher)
     if current_identity(root) != identity:
         raise ValueError("project inputs changed during cache lookup")
@@ -461,6 +493,10 @@ def consume(root, cache, record, identity, workers=24, fetcher=fetch):
     if result.returncode:
         raise ValueError(f"lake build --no-build exited {result.returncode} after restoring the cache"
                          " (exit 3: some modules would need compiling)")
+    if prune:
+        count, size = prune_archives(cache, {artifact for _, artifact in entries})
+        if count:
+            print(f"Deleted {count} archives ({size / 1e9:.1f} GB) that this cache no longer uses.", flush=True)
 
 
 def baseline_record(identity, fetcher=fetch):
@@ -506,8 +542,11 @@ def main():
         print("No equivalent successful cache found for the current build inputs.", flush=True)
         return 3
     cache = (args.cache_dir or Path(os.environ.get("LAKE_CACHE_DIR", str(root / ".lake/cache")))).resolve()
+    # A cache directory outside the project may be shared with other checkouts, so only the
+    # project's own one is pruned.
     consume(root, cache, record, identity, args.jobs,
-            fetcher=lambda key, maximum=MAX_JSON: cached[key] if key in cached else fetch(key, maximum))
+            fetcher=lambda key, maximum=MAX_JSON: cached[key] if key in cached else fetch(key, maximum),
+            prune=cache == root / ".lake/cache")
     return 0
 
 

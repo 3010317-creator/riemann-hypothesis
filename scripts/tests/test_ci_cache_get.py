@@ -114,8 +114,17 @@ revisionEndpoint = "https://example.invalid/revisions"
         shutil.copy(archive, published)
         archive.chmod(0o644)
         archive.write_bytes(b"corrupt")
+        # Afterwards the archives that the map doesn't name are deleted, read-only ones too (Lake
+        # makes the archives it caches read-only). Other files in the cache stay.
+        unused = cache / "artifacts" / ("f" * 16 + ".ltar")
+        unused.write_bytes(b"archive of an older main")
+        unused.chmod(0o444)
+        others = [cache / "artifacts" / ("0" * 16 + ".olean"), cache / "artifacts" / "notes.txt"]
+        for path in others:
+            path.write_bytes(b"not an archive")
         with patch.object(client, "PUBLIC_BASE", public.as_uri()):
-            client.consume(root, cache, selected, identity, fetcher=fetch)
+            client.consume(root, cache, selected, identity, fetcher=fetch, prune=True)
+        assert not unused.exists() and all(path.exists() for path in others)
         assert client.digest(archive.read_bytes()) == row[3]
         # Lake's unpack clears them; any it writes afterwards describe the restored files.
         assert not any(path.exists() and path.read_text() == "0" * 16 for path in stale)
@@ -181,7 +190,7 @@ revisionEndpoint = "https://example.invalid/revisions"
         source.write_bytes(original)
         (root / "src/Untracked.lean").write_text("--untracked\n")
         rejects(lambda: client.current_identity(root))
-    print("PASS dynamic CI client: actual stock registration/unpack, SHA-256 checked downloads, docs ancestors, exact metadata, corrupt blobs, traversal and dirty sources")
+    print("PASS dynamic CI client: actual stock registration/unpack, SHA-256 checked downloads, pruning of unused archives, docs ancestors, exact metadata, corrupt blobs, traversal and dirty sources")
 
 
 if __name__ == "__main__":
