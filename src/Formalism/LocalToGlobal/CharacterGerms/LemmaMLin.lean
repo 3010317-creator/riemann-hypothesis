@@ -72,14 +72,6 @@ theorem ordGE_subst [Finite σ] {a : σ → MvPowerSeries τ C} (ha : ∀ s, Ord
   · rw [hF d hd, zero_smul]
   · rw [ordGE_finsupp_prod a ha d e (by omega), smul_zero]
 
-theorem dVar_eq_pderiv {C : Type} [Field C] {σ : Type} (w : σ) (F : MvPowerSeries σ C) :
-    dVar w F = pderiv (R := C) w F := by
-  ext μ
-  rw [coeff_pderiv]
-  show ((μ w + 1 : ℕ) : C) * coeff (μ + Finsupp.single w 1) F = _
-  push_cast
-  ring
-
 theorem ordGE_pderiv {F : MvPowerSeries σ C} {n : ℕ} (hF : OrdGE (n + 1) F) (w : σ) :
     OrdGE n (pderiv (R := C) w F) := by
   intro e he
@@ -167,31 +159,6 @@ variable {C : Type*} [Field C] {σ τ : Type*} [Fintype τ]
 
 def linS (M : τ → σ → C) : σ → MvPowerSeries τ C := fun w => ∑ c, M c w • (X c : MvPowerSeries τ C)
 
-theorem ordGE_linS (M : τ → σ → C) (w : σ) : OrdGE 1 (linS M w) := by
-  unfold linS
-  refine Formalism.BaseCaseIdentities.OrdGE.sum _ fun c _ => ?_
-  rw [smul_eq_C_mul]
-  exact Formalism.BaseCaseIdentities.OrdGE.C_mul _ (Formalism.BaseCaseIdentities.OrdGE.X c)
-
-theorem hasSubst_linS [Finite σ] (M : τ → σ → C) : HasSubst (linS M) :=
-  hasSubst_of_ordGE (ordGE_linS M)
-
-theorem pderiv_linS (M : τ → σ → C) (b : τ) (w : σ) :
-    pderiv (R := C) b (linS M w) = MvPowerSeries.C (M b w) := by
-  unfold linS
-
-  rw [map_sum, Finset.sum_eq_single b]
-  · rw [Derivation.map_smul, pderiv_X_self, smul_eq_C_mul, mul_one]
-  · intro c _ hc
-    rw [Derivation.map_smul, pderiv_X_of_ne hc, smul_zero]
-  · intro h; exact absurd (Finset.mem_univ b) h
-
-theorem pderiv_subst_linS [Fintype σ] (M : τ → σ → C) (b : τ) (H : MvPowerSeries σ C) :
-    pderiv (R := C) b (subst (linS M) H) = ∑ w, M b w • subst (linS M) (pderiv (R := C) w H) := by
-  rw [pderiv_subst (ordGE_linS M)]
-  refine Finset.sum_congr rfl fun w _ => ?_
-  rw [pderiv_linS, smul_eq_C_mul]
-
 end Lin
 
 section Rows
@@ -220,14 +187,6 @@ theorem hPullW_eq (H : MvPowerSeries (WV I) C) (g : Fin 2) (e : ι → I g → C
   unfold linS rowM
   rw [Fintype.sum_sum_type]
   rfl
-
-theorem rename_subst_linS {σ τ τ' : Type} [Fintype σ] [Fintype τ] (f : τ ↪ τ') (M : τ → σ → C)
-    (F : MvPowerSeries σ C) :
-    rename f (subst (linS M) F) = subst (fun x => rename f (linS M x)) F := by
-  rw [rename_eq_subst, subst_comp_subst_apply (hasSubst_linS M) (HasSubst.X_comp _)]
-  congr 1
-  funext x
-  rw [rename_eq_subst]
 
 end Rows
 
