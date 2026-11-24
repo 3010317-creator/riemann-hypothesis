@@ -163,6 +163,7 @@ theorem reprod {φ : G → ℂ} (hφ : Integrable φ μ) (hi : ∀ w, ∫ y, φ 
         funext w
         rw [integral_mul_const, hi]
 
+
 end
 
 theorem selTw : SelTw := by
