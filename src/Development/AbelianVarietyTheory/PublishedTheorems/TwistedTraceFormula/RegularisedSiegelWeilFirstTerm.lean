@@ -220,6 +220,12 @@ namespace GlobalTheory.Published
 open GlobalTheory.RegSW
 open GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero (swSec sZero IsKFinVec)
 
+/-- **Kudla–Rallis first term identity**: the leading coefficient in the Laurent expansion
+of a regularized Siegel Eisenstein series at the critical parameter equals the integrated theta
+function associated with the dual reductive pair.
+
+Proposed reference:
+[S. S. Kudla and S. Rallis, *Poles of Eisenstein series and L-functions*][kudlaRallis1990]. -/
 def RegularisedSiegelWeilFirstTerm : Prop :=
   ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V T T' : HSp D) (t : ℕ) (d : HypDec T T' t),
     T.rank + T'.rank = 2 * V.rank → T'.rank < T.rank → 0 < T'.rank →
