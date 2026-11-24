@@ -47,7 +47,7 @@ DECIDED = ("batch queue", "building", WAITING)
 # Labels that label-pr.yml keeps up to date from the files a pull request changes and its size.
 # Someone adding or removing one of these by hand has not responded to the pull request: they were
 # all put on by hand once, before that workflow existed.
-AUTOMATIC = ("CI", "changes-challenge", "changes-lake", "documentation",
+AUTOMATIC = ("CI", "changes-challenge", "changes-lake", "changes-solution", "documentation",
              "extra small", "small", "medium", "large", "extra large")
 PREFIX = "batch/"
 # Repository roles whose response takes a pull request out of the inbox. The REST API reports
