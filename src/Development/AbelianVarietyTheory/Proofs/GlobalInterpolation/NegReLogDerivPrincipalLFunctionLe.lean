@@ -2,6 +2,7 @@ module
 
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.NumberTheory.LSeries.DirichletContinuation
+import Mathlib.NumberTheory.Harmonic.ZetaAsymp
 public import Mathlib.Analysis.Analytic.Order
 public import Mathlib.NumberTheory.LSeries.RiemannZeta
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LogDerivRiemannZetaLocalZeroSum
@@ -201,5 +202,155 @@ theorem neg_re_logDeriv_le : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q] (σ
   rw [hLsplit, hlog]
   simp only [Complex.add_re, Complex.sub_re]
   nlinarith
+
+open Filter Topology
+
+private lemma deriv_dslope_zero {f : ℂ → ℂ} (hf : AnalyticAt ℂ f 0) :
+    deriv (dslope f 0) 0 = deriv (deriv f) 0 / 2 := by
+  let g := dslope f 0
+  have hg : AnalyticAt ℂ g 0 := hf.dslope 0
+  have he : f = fun z : ℂ => f 0 + z * g z := by
+    funext z
+    simpa only [sub_zero, smul_eq_mul, add_comm] using
+      (eq_add_of_sub_eq (sub_smul_dslope f 0 z).symm)
+  have hd : deriv f =ᶠ[𝓝 (0 : ℂ)] fun z => g z + z * deriv g z := by
+    filter_upwards [hg.eventually_analyticAt] with z hz
+    have h := ((hasDerivAt_id' z).fun_mul hz.differentiableAt.hasDerivAt).const_add (f 0)
+    rw [he]
+    simpa only [Pi.mul_apply, one_mul] using h.deriv
+  have h2 := (hg.differentiableAt.hasDerivAt.fun_add
+    ((hasDerivAt_id' (0 : ℂ)).fun_mul hg.deriv.differentiableAt.hasDerivAt)).deriv
+  rw [hd.deriv_eq, h2]
+  simp only [one_mul, zero_mul, add_zero]
+  change deriv g 0 = (deriv g 0 + deriv g 0) / 2
+  ring
+
+
+private lemma logDeriv_simple_zero {f : ℂ → ℂ} (hf : AnalyticAt ℂ f 0)
+    (hf0 : f 0 = 0) (hd0 : deriv f 0 ≠ 0) :
+    ∃ h : ℂ → ℂ, AnalyticAt ℂ h 0 ∧ h 0 = deriv (deriv f) 0 / (2 * deriv f 0) ∧
+      ∀ᶠ s in 𝓝[≠] (0 : ℂ), f s ≠ 0 ∧ deriv f s / f s = 1 / s + h s := by
+  let g := dslope f 0
+  have hg : AnalyticAt ℂ g 0 := hf.dslope 0
+  have hg0 : g 0 ≠ 0 := by simpa only [g, dslope_same] using hd0
+  have he : f = fun z : ℂ => z * g z := by
+    funext z
+    simpa only [sub_zero, smul_eq_mul, hf0] using (sub_smul_dslope f 0 z).symm
+  refine ⟨fun s => deriv g s / g s, hg.deriv.div hg hg0, ?_, ?_⟩
+  · simp only [g, dslope_same, deriv_dslope_zero hf, div_div]
+  · filter_upwards [hg.continuousAt.eventually_ne hg0 |>.filter_mono nhdsWithin_le_nhds,
+      hg.eventually_analyticAt.filter_mono nhdsWithin_le_nhds, self_mem_nhdsWithin] with s hgs hga hs
+    have hs0 : s ≠ 0 := hs
+    have hd : deriv f s = g s + s * deriv g s := by
+      rw [he]
+      simpa only [one_mul] using ((hasDerivAt_id' s).fun_mul hga.differentiableAt.hasDerivAt).deriv
+    constructor
+    · rw [congrFun he s]
+      exact mul_ne_zero hs0 hgs
+    · rw [hd, congrFun he s]
+      field_simp
+
+
+private lemma logDeriv_factor_origin {p : ℕ} (hp : p.Prime) :
+    ∃ h : ℂ → ℂ, AnalyticAt ℂ h 0 ∧ h 0 = -(Complex.log p) / 2 ∧
+      ∀ᶠ s in 𝓝[≠] (0 : ℂ), 1 - (p : ℂ) ^ (-s) ≠ 0 ∧
+        logDeriv (fun z : ℂ => 1 - (p : ℂ) ^ (-z)) s = 1 / s + h s := by
+  let f := fun z : ℂ => 1 - (p : ℂ) ^ (-z)
+  have hp0 : (p : ℂ) ≠ 0 := by exact_mod_cast hp.ne_zero
+  have hf : AnalyticAt ℂ f 0 := by
+    apply Differentiable.analyticAt
+    intro s
+    exact (hasDerivAt_factor hp s).differentiableAt
+  have hd : deriv f = fun z : ℂ => (p : ℂ) ^ (-z) * Complex.log p :=
+    funext fun z => (hasDerivAt_factor hp z).deriv
+  have hdz : deriv f 0 = Complex.log p := by simp [hd]
+  have hlog : Complex.log (p : ℂ) ≠ 0 := by
+    rw [← Complex.ofReal_natCast, ← Complex.ofReal_log (Nat.cast_nonneg p)]
+    exact Complex.ofReal_ne_zero.mpr (ne_of_gt (Real.log_pos (by exact_mod_cast hp.one_lt)))
+  have hdd : deriv (deriv f) 0 = -(Complex.log p) ^ 2 := by
+    rw [hd]
+    have h := ((((hasDerivAt_id' (0 : ℂ)).neg).const_cpow (Or.inl hp0)).mul_const (Complex.log p)).deriv
+    convert h using 1; simp; ring
+  obtain ⟨g, hg, hval, he⟩ := logDeriv_simple_zero hf (by simp [f]) (by rwa [hdz])
+  refine ⟨g, hg, ?_, he⟩
+  rw [hval, hdd, hdz]
+  field_simp
+
+
+private lemma logDeriv_product_origin (S : Finset ℕ) (hS : ∀ p ∈ S, p.Prime) :
+    ∃ h : ℂ → ℂ, AnalyticAt ℂ h 0 ∧ h 0 = -(∑ p ∈ S, Complex.log p) / 2 ∧
+      ∀ᶠ s in 𝓝[≠] (0 : ℂ), (∏ p ∈ S, (1 - (p : ℂ) ^ (-s))) ≠ 0 ∧
+        logDeriv (fun z : ℂ => ∏ p ∈ S, (1 - (p : ℂ) ^ (-z))) s =
+          (S.card : ℂ) / s + h s := by
+  classical
+  induction S using Finset.induction_on with
+  | empty =>
+    refine ⟨fun _ => 0, analyticAt_const, by simp, ?_⟩
+    exact Filter.Eventually.of_forall (by intro s; simp [logDeriv_apply])
+  | @insert p S hp ih =>
+    have hp' := hS p (Finset.mem_insert_self p S)
+    have hS' : ∀ r ∈ S, r.Prime := fun r hr => hS r (Finset.mem_insert_of_mem hr)
+    obtain ⟨g, hg, hgv, hge⟩ := logDeriv_factor_origin hp'
+    obtain ⟨h, hh, hhv, hhe⟩ := ih hS'
+    refine ⟨fun z => g z + h z, hg.add hh, ?_, ?_⟩
+    · dsimp only
+      rw [hgv, hhv, Finset.sum_insert hp]
+      ring
+    · filter_upwards [hge, hhe] with s hs₁ hs₂
+      have he : (fun z : ℂ => ∏ r ∈ insert p S, (1 - (r : ℂ) ^ (-z))) =
+          fun z => (1 - (p : ℂ) ^ (-z)) * ∏ r ∈ S, (1 - (r : ℂ) ^ (-z)) := by
+        funext z
+        rw [Finset.prod_insert hp]
+      constructor
+      · rw [Finset.prod_insert hp]
+        exact mul_ne_zero hs₁.1 hs₂.1
+      · rw [he, logDeriv_fun_mul s hs₁.1 hs₂.1
+          (hasDerivAt_factor hp' s).differentiableAt
+          (DifferentiableAt.fun_finsetProd fun r hr =>
+            (hasDerivAt_factor (hS' r hr) s).differentiableAt),
+          hs₁.2, hs₂.2, Finset.card_insert_of_notMem hp, Nat.cast_add, Nat.cast_one]
+        ring
+
+
+/-- The principal logarithmic derivative has residue equal to the number of distinct
+prime divisors at the origin. Its constant term includes one `-log p / 2` contribution
+from each removed Euler factor. The expansion holds on a punctured neighborhood. -/
+theorem logDeriv_LFunction_one_near_zero (q : ℕ) [NeZero q] :
+    ∃ h : ℂ → ℂ, AnalyticAt ℂ h 0 ∧
+      h 0 = Complex.log (2 * (Real.pi : ℂ)) - (∑ p ∈ q.primeFactors, Complex.log p) / 2 ∧
+      ∀ᶠ s in 𝓝[≠] (0 : ℂ),
+        deriv (DirichletCharacter.LFunction (1 : DirichletCharacter ℂ q)) s /
+          DirichletCharacter.LFunction (1 : DirichletCharacter ℂ q) s =
+          (q.primeFactors.card : ℂ) / s + h s := by
+  obtain ⟨g, hg, hgv, hge⟩ := logDeriv_product_origin q.primeFactors
+    (fun _ hp => Nat.prime_of_mem_primeFactors hp)
+  have hz : AnalyticAt ℂ riemannZeta 0 :=
+    DifferentiableOn.analyticAt (s := {z | z ≠ 1})
+      (fun z hz => (differentiableAt_riemannZeta hz).differentiableWithinAt)
+      (isOpen_ne.mem_nhds (by norm_num : (0 : ℂ) ≠ 1))
+  have hz0 : riemannZeta 0 ≠ 0 := by norm_num [riemannZeta_zero]
+  refine ⟨fun z => deriv riemannZeta z / riemannZeta z + g z,
+    (hz.deriv.div hz hz0).add hg, ?_, ?_⟩
+  · dsimp only
+    rw [hgv, deriv_riemannZeta_zero, riemannZeta_zero]
+    ring
+  · filter_upwards [hge, hz.continuousAt.eventually_ne hz0 |>.filter_mono nhdsWithin_le_nhds,
+      hz.eventually_analyticAt.filter_mono nhdsWithin_le_nhds,
+      eventually_ne_nhds (by norm_num : (0 : ℂ) ≠ 1) |>.filter_mono nhdsWithin_le_nhds]
+      with s hs hzs hza hs1
+    have he : DirichletCharacter.LFunction (1 : DirichletCharacter ℂ q) =ᶠ[𝓝 s]
+        fun z : ℂ => (∏ p ∈ q.primeFactors, (1 - (p : ℂ) ^ (-z))) * riemannZeta z := by
+      filter_upwards [eventually_ne_nhds hs1] with z hz
+      exact DirichletCharacter.LFunctionTrivChar_eq_mul_riemannZeta hz
+    have hds : DifferentiableAt ℂ (fun z : ℂ => ∏ p ∈ q.primeFactors,
+        (1 - (p : ℂ) ^ (-z))) s := DifferentiableAt.fun_finsetProd fun p hp =>
+      (hasDerivAt_factor (Nat.prime_of_mem_primeFactors hp) s).differentiableAt
+    have hl : deriv (DirichletCharacter.LFunction (1 : DirichletCharacter ℂ q)) s /
+        DirichletCharacter.LFunction (1 : DirichletCharacter ℂ q) s =
+        logDeriv (fun z : ℂ => (∏ p ∈ q.primeFactors, (1 - (p : ℂ) ^ (-z))) * riemannZeta z) s := by
+      rw [logDeriv_apply, he.deriv_eq, he.eq_of_nhds]
+    rw [hl, logDeriv_fun_mul s hs.1 hzs hds hza.differentiableAt, hs.2, logDeriv_apply]
+    ring
+
 
 end GlobalTheory.PrincipalLogDeriv
