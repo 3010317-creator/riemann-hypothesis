@@ -166,6 +166,108 @@ theorem compatibleJetsEquiv_coeff (p : CompatibleJets R κ) (m : ℕ) (e : JetEx
     coeff e.val ((compatibleJetsEquiv R κ p).val) = jetMonomialEquiv R κ m (p.val m) e :=
   seriesOfJets_coeff p m e
 
+/-- The algebra of compatible jets, with componentwise operations. -/
+def compatibleJetSubalgebra (R κ : Type) [CommRing R] : Subalgebra R (∀ m, JetR R κ m) where
+  carrier := {p | ∀ m, jetTruncR R κ m (p (m + 1)) = p m}
+  zero_mem' m := map_zero (jetTruncR R κ m)
+  one_mem' m := map_one (jetTruncR R κ m)
+  add_mem' hp hq m := by simp only [Pi.add_apply, map_add, hp m, hq m]
+  mul_mem' hp hq m := by simp only [Pi.mul_apply, map_mul, hp m, hq m]
+  algebraMap_mem' r m := (jetTruncR R κ m).commutes r
+
+private theorem seriesOfJets_coeff_of_mk (p : CompatibleJets R κ) {m : ℕ}
+    (P : MvPolynomial κ R) (hP : (Ideal.Quotient.mk _ P : JetR R κ m) = p.val m)
+    (d : κ →₀ ℕ) (hd : d.degree ≤ m) :
+    coeff d (seriesOfJets p) = P.coeff d := by
+  rw [seriesOfJets_coeff p m ⟨d, hd⟩, ← hP, jetMonomialEquiv_mk]
+
+private def seriesOfJetsAlgHom (R κ : Type) [CommRing R] :
+    compatibleJetSubalgebra R κ →ₐ[R] MvPowerSeries κ R where
+  toFun := seriesOfJets
+  map_zero' := by
+    ext d
+    rw [seriesOfJets_coeff_of_mk (0 : compatibleJetSubalgebra R κ) (0 : MvPolynomial κ R)
+      (map_zero _) d le_rfl]
+    simp
+  map_one' := by
+    classical
+    ext d
+    rw [seriesOfJets_coeff_of_mk (1 : compatibleJetSubalgebra R κ) (1 : MvPolynomial κ R)
+      (map_one _) d le_rfl]
+    simp only [MvPolynomial.coeff_one, MvPowerSeries.coeff_one, eq_comm]
+  map_add' p q := by
+    ext d
+    let e : JetExponent κ d.degree := ⟨d, le_rfl⟩
+    rw [map_add, seriesOfJets_coeff (p + q : compatibleJetSubalgebra R κ) d.degree e,
+      seriesOfJets_coeff p d.degree e, seriesOfJets_coeff q d.degree e]
+    exact congrArg (fun v : JetExponent κ d.degree →₀ R => v e)
+      (map_add (jetMonomialEquiv R κ d.degree) (p.val d.degree) (q.val d.degree))
+  map_mul' p q := by
+    classical
+    ext d
+    obtain ⟨P, hP⟩ := Ideal.Quotient.mk_surjective (p.val d.degree)
+    obtain ⟨Q, hQ⟩ := Ideal.Quotient.mk_surjective (q.val d.degree)
+    have hPQ : (Ideal.Quotient.mk _ (P * Q) : JetR R κ d.degree) = (p * q).val d.degree :=
+      (map_mul (Ideal.Quotient.mk _) P Q).trans (congrArg₂ (· * ·) hP hQ)
+    rw [seriesOfJets_coeff_of_mk (p * q : compatibleJetSubalgebra R κ) (P * Q) hPQ d le_rfl,
+      MvPolynomial.coeff_mul, MvPowerSeries.coeff_mul]
+    refine Finset.sum_congr rfl fun e he => ?_
+    have hdeg : e.1.degree + e.2.degree = d.degree := by
+      rw [← map_add, Finset.mem_antidiagonal.mp he]
+    rw [seriesOfJets_coeff_of_mk p P hP e.1 (by omega),
+      seriesOfJets_coeff_of_mk q Q hQ e.2 (by omega)]
+  commutes' r := by
+    classical
+    ext d
+    have h : (Ideal.Quotient.mk _ (MvPolynomial.C r) : JetR R κ d.degree) =
+        (algebraMap R (compatibleJetSubalgebra R κ) r).val d.degree :=
+      (Ideal.Quotient.mkₐ R _).commutes r
+    rw [seriesOfJets_coeff_of_mk (algebraMap R (compatibleJetSubalgebra R κ) r)
+      (MvPolynomial.C r) h d le_rfl, MvPowerSeries.algebraMap_apply]
+    simp only [MvPolynomial.coeff_C, MvPowerSeries.coeff_C, Algebra.algebraMap_self, RingHom.id_apply, eq_comm]
+
+/-- The subalgebra of power series whose coefficients have finite support in each bounded degree. -/
+@[no_expose]
+def finiteDegreeSeriesSubalgebra (R κ : Type) [CommRing R] : Subalgebra R (MvPowerSeries κ R) :=
+  (seriesOfJetsAlgHom R κ).range
+
+@[simp]
+theorem mem_finiteDegreeSeriesSubalgebra_iff (g : MvPowerSeries κ R) :
+    g ∈ finiteDegreeSeriesSubalgebra R κ ↔ HasFiniteDegreeSupport g := by
+  change (∃ p : compatibleJetSubalgebra R κ, seriesOfJets p = g) ↔ _
+  constructor
+  · rintro ⟨p, rfl⟩
+    exact (compatibleJetsEquiv R κ p).property
+  · intro hg
+    obtain ⟨p, hp⟩ := (compatibleJetsEquiv R κ).surjective ⟨g, hg⟩
+    exact ⟨p, congrArg Subtype.val hp⟩
+
+/-- The algebra of compatible jets is isomorphic to the power series of finite
+support in each bounded degree. -/
+@[no_expose]
+def compatibleJetsAlgEquiv (R κ : Type) [CommRing R] :
+    compatibleJetSubalgebra R κ ≃ₐ[R] finiteDegreeSeriesSubalgebra R κ :=
+  AlgEquiv.ofInjective (seriesOfJetsAlgHom R κ) (fun _ _ h =>
+    (compatibleJetsEquiv R κ).injective (Subtype.ext h))
+
+theorem compatibleJetsAlgEquiv_coeff (p : compatibleJetSubalgebra R κ) (m : ℕ) (e : JetExponent κ m) :
+    coeff e.val (compatibleJetsAlgEquiv R κ p).val = jetMonomialEquiv R κ m (p.val m) e :=
+  seriesOfJets_coeff p m e
+
+/-- A jet component vanishes exactly when the corresponding power series has order above it. -/
+theorem compatibleJetsAlgEquiv_order (p : compatibleJetSubalgebra R κ) (m : ℕ) :
+    p.val m = 0 ↔ (m + 1 : ℕ) ≤ (compatibleJetsAlgEquiv R κ p).val.order := by
+  constructor
+  · intro hp
+    apply MvPowerSeries.nat_le_order
+    intro d hd
+    rw [compatibleJetsAlgEquiv_coeff p m ⟨d, Nat.le_of_lt_succ hd⟩, hp, map_zero, Finsupp.zero_apply]
+  · intro h
+    apply (jetMonomialEquiv R κ m).injective
+    ext e
+    rw [← compatibleJetsAlgEquiv_coeff p m e, map_zero, Finsupp.zero_apply]
+    exact coeff_of_lt_order ((by exact_mod_cast Nat.lt_succ_of_le e.prop : (e.val.degree : ℕ∞) < m + 1).trans_le h)
+
 variable [Finite κ]
 
 @[simp]
@@ -210,18 +312,47 @@ theorem jetAug_toJet (m : ℕ) (g : MvPowerSeries κ R) :
   rw [MvPolynomial.aeval_zero', MvPolynomial.constantCoeff_eq, coeff_truncTotal_eq_ite, if_pos (by simp)]
   rfl
 
+private def toCompatibleJetHom (R κ : Type) [CommRing R] [Finite κ] :
+    MvPowerSeries κ R →ₐ[R] compatibleJetSubalgebra R κ :=
+  (AlgHom.pi fun m => toJetHom R κ m).codRestrict _ (fun g m => jetTruncR_toJet m g)
+
+private theorem compatibleJetsAlgEquiv_toCompatibleJetHom (g : MvPowerSeries κ R) :
+    (compatibleJetsAlgEquiv R κ (toCompatibleJetHom R κ g)).val = g := by
+  ext d
+  let e : JetExponent κ d.degree := ⟨d, le_rfl⟩
+  exact (compatibleJetsAlgEquiv_coeff (toCompatibleJetHom R κ g) d.degree e).trans
+    (jetMonomialEquiv_toJet d.degree g e)
+
+/-- For finitely many variables, all power series give compatible jet families, as algebras. -/
+@[no_expose]
+def finiteVariableJetAlgEquiv (R κ : Type) [CommRing R] [Finite κ] :
+    MvPowerSeries κ R ≃ₐ[R] compatibleJetSubalgebra R κ :=
+  AlgEquiv.ofBijective (toCompatibleJetHom R κ) ⟨by
+    intro g h hgh
+    simpa only [compatibleJetsAlgEquiv_toCompatibleJetHom] using
+      congrArg (fun p => (compatibleJetsAlgEquiv R κ p).val) hgh, by
+    intro p
+    refine ⟨(compatibleJetsAlgEquiv R κ p).val, (compatibleJetsAlgEquiv R κ).injective (Subtype.ext ?_)⟩
+    exact compatibleJetsAlgEquiv_toCompatibleJetHom _⟩
+
+@[simp]
+theorem finiteVariableJetAlgEquiv_apply (g : MvPowerSeries κ R) (m : ℕ) :
+    (finiteVariableJetAlgEquiv R κ g).val m = toJet m g := by
+  change (toCompatibleJetHom R κ g).val m = toJet m g
+  rfl
+
 theorem eq_of_toJet_eq {g g' : MvPowerSeries κ R} (h : ∀ m, toJet m g = toJet m g') : g = g' := by
-  ext e
-  exact (toJet_eq_iff _ g g').1 (h (Finsupp.degree e)) e (Nat.lt_succ_self _)
+  apply (finiteVariableJetAlgEquiv R κ).injective
+  apply Subtype.ext
+  funext m
+  simpa only [finiteVariableJetAlgEquiv_apply] using h m
 
 theorem exists_toJet_eq (p : ∀ m, JetR R κ m) (hp : ∀ m, jetTruncR R κ m (p (m + 1)) = p m) :
     ∃ g : MvPowerSeries κ R, ∀ m, toJet m g = p m := by
-  let family : CompatibleJets R κ := ⟨p, hp⟩
-  refine ⟨(compatibleJetsEquiv R κ family).val, fun m => ?_⟩
-  apply (jetMonomialEquiv R κ m).injective
-  ext e
-  rw [jetMonomialEquiv_toJet]
-  exact compatibleJetsEquiv_coeff family m e
+  let q : compatibleJetSubalgebra R κ := ⟨p, hp⟩
+  obtain ⟨g, hg⟩ := (finiteVariableJetAlgEquiv R κ).surjective q
+  exact ⟨g, fun m => (finiteVariableJetAlgEquiv_apply g m).symm.trans
+    (congrArg (fun p : compatibleJetSubalgebra R κ => p.val m) hg)⟩
 
 theorem exists_jetHom {σ : Type} (a : σ → MvPowerSeries κ R) (ha : ∀ j, constantCoeff (a j) = 0) (m : ℕ) :
     ∃ ψ : JetR R σ m →ₐ[R] JetR R κ m, ∀ j, ψ (zR m j) = toJet m (a j) :=
