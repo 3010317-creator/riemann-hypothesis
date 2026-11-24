@@ -8,3 +8,4 @@ Results say changed_roots_pass, changed_roots_fail or deferred; none attests a f
 Source-bound raw work remains private on the runner for possible later verified reuse; output paths are in the result artifact.
 Operators run `python3 scripts/quick-schedule.py --state /private/path` to queue open PRs, one per small host; priority134/150 stay on big machines.
 The scheduler uses one120second GitHub watcher per run, preserves known run IDs across restart and holds uncertain outcomes for review.
+A run that ends without a result, such as one stopped by a broken runner, puts its head back in the queue for a host that hasn't failed it, so a head runs at most once per host.

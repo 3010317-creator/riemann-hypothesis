@@ -3,6 +3,7 @@
 
 One logical `gh run watch --interval120` per host/run; no run-view polling.
 An uncertain POST or monitor outcome is held for operator recovery, never retried.
+When a run ends without a result, its head is queued again for the hosts that haven't failed it.
 """
 import argparse,concurrent.futures,fcntl,json,os,re,subprocess,threading,time
 from pathlib import Path
@@ -17,6 +18,13 @@ def save(path,value):
  temporary=path.with_suffix('.partial');temporary.write_text(json.dumps(value,indent=2)+'\n');temporary.replace(path)
 
 def key(pr):return str(pr['number'])+':'+pr['headRefOid']
+
+INFRA='infrastructure_or_outer_budget_failure'
+
+def failed_hosts(state):
+ """Hosts on which this head's runs ended without a result, or None if the head isn't to be run again."""
+ if state.get('phase')!='terminal'or state.get('result',{}).get('status')!=INFRA:return None
+ return state.get('failed_hosts',[state.get('host')])# older states name only the one host
 
 def eligible(pr):
  if pr['number']in PRIORITY:return False,'reserved priority pool'
@@ -39,7 +47,12 @@ def main():
   for pr in sorted(prs,key=lambda row:(row['changedFiles'],row['additions']+row['deletions'],row['number'])):
    okay,reason=eligible(pr)
    if not okay:deferred.append({'pr':pr['number'],'head':pr['headRefOid'],'reason':reason});continue
-   if not(a.state/(key(pr)+'.json')).exists():queue.append(pr)
+   path=a.state/(key(pr)+'.json')
+   if path.exists():
+    failed=failed_hosts(json.loads(path.read_text()))
+    if failed is None or{host['id']for host in hosts}<=set(failed):continue
+    pr['failed_hosts']=failed
+   queue.append(pr)
   save(a.state/'queue.json',{'observed_epoch':time.time(),'waiting':[{'pr':pr['number'],'head':pr['headRefOid']}for pr in queue],'deferred':deferred})
   inventory=gh('orgs/leanprover-community/actions/runner-groups/5/runners?per_page=100')['runners'];available={row['id']:row for row in inventory if row['status']=='online'and not row['busy']}
   selected=[]
@@ -52,15 +65,14 @@ def main():
    if not row or row['name']!=host['runner_name'] or host['label']not in {label['name']for label in row['labels']}:continue
    hostfile=a.state/('host-'+host['id']+'.json')
    if prior.get('phase')not in(None,'terminal'):continue
-   if queue:selected.append((host,queue.pop(0)))
+   pick=next((pr for pr in queue if host['id']not in pr.get('failed_hosts',[])),None)
+   if pick:queue.remove(pick);selected.append((host,pick))
   def worker(pair):
-   host,pr=pair;path=a.state/(key(pr)+'.json');hostfile=a.state/('host-'+host['id']+'.json');directory=a.state/key(pr);directory.mkdir(exist_ok=True);state=pr.get('resume',{'phase':'reserved','pr':pr['number'],'pr_head':pr['headRefOid'],'host':host['id']})
+   host,pr=pair;path=a.state/(key(pr)+'.json');hostfile=a.state/('host-'+host['id']+'.json');directory=a.state/key(pr);directory.mkdir(exist_ok=True);state=pr.get('resume',{'phase':'reserved','pr':pr['number'],'pr_head':pr['headRefOid'],'host':host['id'],'failed_hosts':pr.get('failed_hosts',[])})
    def persist():save(path,state);save(hostfile,state)
    persist()
    try:
     if state['phase']!='watching':
-     quota=gh('rate_limit')['resources']['core']
-     if quota['remaining']<200:raise RuntimeError('quota reserve reached; held before POST')
      state['phase']='dispatch_started';persist()
      r=subprocess.run(['gh','workflow','run','build-pr.yml','--repo',REPO,'--ref','main','-f','mode=quick-check','-f','pr_number='+str(pr['number']),'-f','quick_head='+pr['headRefOid'],'-f','quick_runner='+host['id']],capture_output=True,text=True,timeout=120)
      (directory/'dispatch.log').write_text(r.stdout+'\n'+r.stderr)
@@ -72,17 +84,18 @@ def main():
       offset=log.tell();watch=subprocess.run(['gh','run','watch',state['run_id'],'--repo',REPO,'--exit-status','--interval','120'],stdout=log,stderr=subprocess.STDOUT);log.flush();log.seek(offset);message=log.read(8192)
      if watch.returncode and 'HTTP 404: Not Found'in message and recovery<3:time.sleep(30);continue
      break
-    run=gh('repos/'+REPO+'/actions/runs/'+state['run_id']);save(directory/'run.json',run)
+    run=gh('repos/'+REPO+'/actions/runs/'+state['run_id']);files=directory/state['run_id'];files.mkdir(exist_ok=True);save(files/'run.json',run)
     if run['event']!='workflow_dispatch'or run['head_branch']!='main'or run['path']!='.github/workflows/build-pr.yml'or str(run['id'])!=state['run_id']or run['status']!='completed':raise RuntimeError('foreign/nonterminal run; preserve same run for recovery')
-    subprocess.run(['gh','run','download',state['run_id'],'--repo',REPO,'--name','quick-result-'+state['run_id']+'-'+str(run['run_attempt']),'--dir',str(directory/'result')],check=False)
-    subprocess.run(['gh','run','download',state['run_id'],'--repo',REPO,'--name','quick-input-'+state['run_id']+'-'+str(run['run_attempt']),'--dir',str(directory/'input')],check=True)
-    controls=json.loads((directory/'input/quick-request.json').read_text())
+    subprocess.run(['gh','run','download',state['run_id'],'--repo',REPO,'--name','quick-result-'+state['run_id']+'-'+str(run['run_attempt']),'--dir',str(files/'result')],check=False)
+    subprocess.run(['gh','run','download',state['run_id'],'--repo',REPO,'--name','quick-input-'+state['run_id']+'-'+str(run['run_attempt']),'--dir',str(files/'input')],check=True)
+    controls=json.loads((files/'input/quick-request.json').read_text())
     if controls['pr_number']!=pr['number']or controls.get('quick_runner')!=host:raise RuntimeError('foreign diagnostic control artifact')
-    result=directory/'result/result.json'
-    outcome=json.loads(result.read_text())if result.exists()else({'status':'deferred','reason':controls.get('reason',''),'full_build':False}if controls.get('quick_status')=='deferred'else{'status':'infrastructure_or_outer_budget_failure','full_build':False})
+    result=files/'result/result.json'
+    outcome=json.loads(result.read_text())if result.exists()else({'status':'deferred','reason':controls.get('reason',''),'full_build':False}if controls.get('quick_status')=='deferred'else{'status':INFRA,'full_build':False})
     if outcome.get('full_build')is not False:raise RuntimeError('diagnostic claims a full build')
     if controls.get('quick_status')=='resolved'and controls['pr_head']!=pr['headRefOid']:raise RuntimeError('PR head changed despite pinned dispatch')
     if result.exists()and outcome.get('candidate_head')!=controls['expected']['candidate_head']:raise RuntimeError('foreign diagnostic result identity')
+    if outcome.get('status')==INFRA:state['failed_hosts']=state.get('failed_hosts',[])+[host['id']]
     state.update(phase='terminal',conclusion=run['conclusion'],result=outcome);persist();print(json.dumps(state),flush=True)
    except Exception as error:
     state.update(phase='held',error=str(error));persist();print(json.dumps(state),flush=True)
