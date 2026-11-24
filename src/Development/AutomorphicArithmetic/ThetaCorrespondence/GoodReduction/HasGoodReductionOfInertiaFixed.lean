@@ -964,7 +964,7 @@ theorem isDiscreteValuationRing_fixedField_inertia : ∀ (R K Ω : Type) [CommRi
   have hdvd : ∀ w : W, ¬ IsUnit w → ∃ u : W, w = mk c hcK' hcV * u := by
     intro w hw
     have hnu : j w ∈ V.nonunits := by
-      rw [GlobalTheory.FixInertUnram.mem_nonunits_iff']
+      rw [ValuationSubring.mem_nonunits_iff_or]
       by_cases h0 : j w = 0
       · exact Or.inl h0
       · exact Or.inr fun h => hw (hunit w h0 h)
@@ -1015,7 +1015,7 @@ theorem isDiscreteValuationRing_fixedField_inertia : ∀ (R K Ω : Type) [CommRi
   have hyinv : (j x / c ^ m)⁻¹ ∈ V := by
     by_contra hyi
     have hq := GlobalTheory.FixInertUnram.div_uniformizer_mem R K Ω V hV π hπ (j x / c ^ m) hyK
-      ((GlobalTheory.FixInertUnram.mem_nonunits_iff' V _).2 (Or.inr hyi))
+      ((ValuationSubring.mem_nonunits_iff_or V).2 (Or.inr hyi))
     apply hn
     rw [pow_succ, ← div_div]
     exact hq
