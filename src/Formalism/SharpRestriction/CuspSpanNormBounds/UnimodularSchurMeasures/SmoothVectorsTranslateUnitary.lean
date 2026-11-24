@@ -52,7 +52,7 @@ open MeasureTheory Matrix Finset
 open scoped InnerProductSpace ENNReal ContDiff
 open Formalism.MainNotions.S Formalism.MainNotions.CayleySignature
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
+open scoped Matrix.Norms.Elementwise
 
 section Sm
 

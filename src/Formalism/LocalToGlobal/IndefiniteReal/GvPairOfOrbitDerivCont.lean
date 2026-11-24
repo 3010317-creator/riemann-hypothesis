@@ -25,7 +25,7 @@ namespace Formalism.IndefR.SchurOrthogonalityAlt
 
 section GenAdd
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
+open scoped Matrix.Norms.Elementwise
 
 open PI.UpqRep PI.KFinSmoothW
 open scoped InnerProductSpace
