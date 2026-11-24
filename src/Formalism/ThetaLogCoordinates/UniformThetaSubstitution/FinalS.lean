@@ -893,18 +893,6 @@ theorem embDomain_two (e : Fin 2 →₀ ℕ) : Finsupp.embDomain Fin.castSuccEmb
   simp at h1
   omega
 
-private theorem coeff_rename_map_lemma {σ τ : Type} (f : σ → τ) [Filter.TendstoCofinite f]
-    (hf : Function.Injective f) (g : MvPowerSeries σ K) (u : σ →₀ ℕ) :
-    MvPowerSeries.coeff (Finsupp.mapDomain f u) (MvPowerSeries.rename f g) = MvPowerSeries.coeff u g := by
-  classical
-  rw [MvPowerSeries.coeff_rename, Finset.sum_eq_single_of_mem u]
-  · simp
-  · intro b hb hne
-    exfalso
-    apply hne
-    simp only [Set.Finite.mem_toFinset, Set.mem_preimage, Set.mem_singleton_iff] at hb
-    exact Finsupp.mapDomain_injective hf hb
-
 theorem coeff_include_three_mul (g : MvPowerSeries (Fin 2) K) (e : Fin 2 →₀ ℕ) (m j : ℕ) :
     MvPowerSeries.coeff (ext3 e m) (in3 g * MvPowerSeries.X 2 ^ j) =
       if j = m then MvPowerSeries.coeff e g else 0 := by
@@ -912,9 +900,8 @@ theorem coeff_include_three_mul (g : MvPowerSeries (Fin 2) K) (e : Fin 2 →₀ 
   rw [include_three_eq_rename]
   by_cases h : j = m
   · subst h
-    rw [if_pos rfl, MvPowerSeries.X_pow_eq, ext3, MvPowerSeries.coeff_add_mul_monomial, mul_one,
-      Finsupp.embDomain_eq_mapDomain]
-    exact coeff_rename_map_lemma _ (Fin.castSuccEmb (n := 2)).injective g e
+    rw [if_pos rfl, MvPowerSeries.X_pow_eq, ext3, MvPowerSeries.coeff_add_mul_monomial, mul_one]
+    exact MvPowerSeries.coeff_embDomain_rename (Fin.castSuccEmb (n := 2)) g e
   · rw [if_neg h, MvPowerSeries.coeff_mul]
     apply Finset.sum_eq_zero
     rintro ⟨a, b⟩ hab
@@ -1056,7 +1043,7 @@ theorem coeff_swap2 (H : MvPowerSeries (Fin 2) K) (i k : ℕ) :
     rw [Finsupp.mapDomain_add, Finsupp.mapDomain_single, Finsupp.mapDomain_single]
     simp only [Equiv.coe_toEmbedding, Equiv.swap_apply_left, Equiv.swap_apply_right]
     exact add_comm _ _
-  rw [← hu, coeff_rename_map_lemma _ (Equiv.swap (0 : Fin 2) 1).toEmbedding.injective]
+  rw [← hu, ← Finsupp.embDomain_eq_mapDomain, MvPowerSeries.coeff_embDomain_rename]
 
 theorem pow_parity {p : ℕ} (hp : 2 ≤ p) (i j : ℕ) : p * (p ^ 2) ^ i ≠ (p ^ 2) ^ j := by
   intro h
