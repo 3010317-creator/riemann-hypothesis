@@ -23,6 +23,11 @@ Don't open a pull request until the change is finished and you have checked that
 If you open one before then, open it as a draft (`gh pr create --draft`) and mark it ready for
 review once it is done. A draft stays out of the maintainers' review queue.
 
+When a maintainer hands a pull request back to you, it gets the `awaiting-author` label and
+leaves the review queue. Once you have made the changes they asked for, or answered their
+question, comment `ready` on the pull request, with nothing else in the comment. That takes the
+label off and puts the pull request back in the queue.
+
 To check that it compiles, bring your branch up to date with `main`, fetch the cache and run
 `lake build`. Lake rebuilds the files you changed and every file that imports them, so this also
 catches a lemma you removed that is still used somewhere else. It must finish without errors.
