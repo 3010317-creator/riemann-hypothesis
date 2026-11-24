@@ -122,7 +122,7 @@ theorem prod_letters {n' : ℕ} (TT : Finset (Fin n')) (h2 : 2 ≤ numSeg TT) (f
 theorem seg_num {k Q a b' Y E0 N1 La m cm A0 mN e1 e2 : ℝ} (hk5 : 5 ≤ k) (hQ1 : 1 ≤ Q) (hb : 0 < b') (hba : b' ≤ a)
     (hY1 : 1 ≤ Y) (hE : 0 ≤ E0) (hN1 : 1 ≤ N1) (hLa1 : 1 ≤ La) (hkm : k = mN + 1) (hm4 : 1 ≤ mN)
     (hA0lo : a / (2 * Q) ≤ A0) (hkQ : k ^ 3 * Q ≤ b') (hm : 0 ≤ m) (hcm : cm < m + 1) (hcm0 : 0 ≤ cm) (t1 : 0 < e1)
-    (_he2 : 0 < e2) (he21 : e2 ≤ e1) (hB : e1 + k * Q * (m + N1 * k) / b' + 1 / Y + k * E0 / a < 1 / 6) :
+    (he21 : e2 ≤ e1) (hB : e1 + k * Q * (m + N1 * k) / b' + 1 / Y + k * E0 / a < 1 / 6) :
     cm ≤ A0 * N1 * La / k ∧ 0 ≤ mN * cm / A0 ∧ mN * cm / A0 ≤ 1 ∧ 0 ≤ mN * ((2 * a / (k * Y) + E0 + Q) / a) ∧
       (2 * a / (k * Y) + E0 + Q) / a ≤ 1 ∧ 0 ≤ (2 * a / (k * Y) + E0 + Q) / a ∧
       e1 + e2 + mN * cm / A0 + mN * ((2 * a / (k * Y) + E0 + Q) / a) ≤
@@ -313,7 +313,7 @@ theorem seg_step (h : Std C0 Cde CE1 CE2 1 X) {m : ℝ} (hm : 0 ≤ m) (hB : brk
   have he1 : Real.exp (-(X.La C0) / 8) ≤ 1 := Real.exp_le_one_iff.mpr (by have := h.La1; linarith)
   obtain ⟨hrange, hx0, hx1, hz0, hδ1, hδa0, hsum⟩ := seg_num (mN := (X.m : ℝ)) (cm := (⌈m⌉₊ : ℝ)) h.k5 h.Q1 h.bpos h.ba
     h.Y1 h.E0nn h.one_le_level_alt h.La1 rfl hm4 hA0lo (h.kQ le_rfl) hm (Nat.ceil_lt_add_one hm) (Nat.cast_nonneg _)
-    (Real.exp_pos (-(X.La C0) / 8)) (Real.exp_pos (-(X.La C0) / 3)) he21 hB
+    (Real.exp_pos (-(X.La C0) / 8)) he21 hB
   have hs := hseg hrange
   have hbern : 1 - (X.m : ℝ) * ((2 * (X.a : ℝ) / (X.k * X.Y) + X.E0 C0 CE1 CE2 + X.Q) / (X.a : ℝ)) ≤
       (1 + -((2 * (X.a : ℝ) / (X.k * X.Y) + X.E0 C0 CE1 CE2 + X.Q) / (X.a : ℝ))) ^ X.m := by
