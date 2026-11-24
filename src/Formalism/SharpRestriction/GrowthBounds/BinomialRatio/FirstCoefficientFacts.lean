@@ -120,8 +120,8 @@ theorem prod_letters {n' : ℕ} (TT : Finset (Fin n')) (h2 : 2 ≤ numSeg TT) (f
 
 
 theorem seg_num {k Q a b' Y E0 N1 La m cm A0 mN e1 e2 : ℝ} (hk5 : 5 ≤ k) (hQ1 : 1 ≤ Q) (hb : 0 < b') (hba : b' ≤ a)
-    (hY1 : 1 ≤ Y) (hE : 0 ≤ E0) (hN1 : 1 ≤ N1) (hLa1 : 1 ≤ La) (hkm : k = mN + 1) (hm4 : 1 ≤ mN)
-    (hA0lo : a / (2 * Q) ≤ A0) (hkQ : k ^ 3 * Q ≤ b') (hm : 0 ≤ m) (hcm : cm < m + 1) (hcm0 : 0 ≤ cm) (t1 : 0 < e1)
+    (hY1 : 1 ≤ Y) (hE : 0 ≤ E0) (hN1 : 1 ≤ N1) (hLa1 : 1 ≤ La) (hkm : k = mN + 1)
+    (hA0lo : a / (2 * Q) ≤ A0) (hm : 0 ≤ m) (hcm : cm < m + 1) (hcm0 : 0 ≤ cm) (t1 : 0 < e1)
     (he21 : e2 ≤ e1) (hB : e1 + k * Q * (m + N1 * k) / b' + 1 / Y + k * E0 / a < 1 / 6) :
     cm ≤ A0 * N1 * La / k ∧ 0 ≤ mN * cm / A0 ∧ mN * cm / A0 ≤ 1 ∧ 0 ≤ mN * ((2 * a / (k * Y) + E0 + Q) / a) ∧
       (2 * a / (k * Y) + E0 + Q) / a ≤ 1 ∧ 0 ≤ (2 * a / (k * Y) + E0 + Q) / a ∧
@@ -297,11 +297,6 @@ theorem seg_step (h : Std C0 Cde CE1 CE2 1 X) {m : ℝ} (hm : 0 ≤ m) (hB : brk
         ((∏ i, (sd X.m (X.bT (segPos X.TT j i)) : ℝ) * (sd X.m (X.aT (segPos X.TT j i)) : ℝ)) *
           (sd X.m (X.bT (segNext X.TT j)) : ℝ))) ≤ ((X.p ^ segG X.TT j : ℕ) : ℝ) ^ X.m * R := by
   have ha := h.apos
-  have hm4 : (1 : ℝ) ≤ (X.m : ℝ) := by
-    have := h.N1k
-    have h2 := h.one_le_level_alt
-    have hkm : X.k = (X.m : ℝ) + 1 := rfl
-    linarith
   obtain ⟨hQj1, hQjQ, hfl, hA0lo⟩ := first_coefficient_facts h j
   have hA0pos : (0 : ℝ) < ((X.seg C0 CE1 CE2 j).A0 X.p : ℝ) :=
     lt_of_lt_of_le (div_pos ha (by have := h.Q1; linarith)) hA0lo
@@ -312,7 +307,7 @@ theorem seg_step (h : Std C0 Cde CE1 CE2 1 X) {m : ℝ} (hm : 0 ≤ m) (hB : brk
     Real.exp_le_exp.mpr (by have := h.La1; linarith)
   have he1 : Real.exp (-(X.La C0) / 8) ≤ 1 := Real.exp_le_one_iff.mpr (by have := h.La1; linarith)
   obtain ⟨hrange, hx0, hx1, hz0, hδ1, hδa0, hsum⟩ := seg_num (mN := (X.m : ℝ)) (cm := (⌈m⌉₊ : ℝ)) h.k5 h.Q1 h.bpos h.ba
-    h.Y1 h.E0nn h.one_le_level_alt h.La1 rfl hm4 hA0lo (h.kQ le_rfl) hm (Nat.ceil_lt_add_one hm) (Nat.cast_nonneg _)
+    h.Y1 h.E0nn h.one_le_level_alt h.La1 rfl hA0lo hm (Nat.ceil_lt_add_one hm) (Nat.cast_nonneg _)
     (Real.exp_pos (-(X.La C0) / 8)) he21 hB
   have hs := hseg hrange
   have hbern : 1 - (X.m : ℝ) * ((2 * (X.a : ℝ) / (X.k * X.Y) + X.E0 C0 CE1 CE2 + X.Q) / (X.a : ℝ)) ≤

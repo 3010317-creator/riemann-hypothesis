@@ -215,7 +215,7 @@ theorem brk_core (s m : ℕ) (La p A lam0 : ℝ) (Ai Ci ρ u nn : Fin s → ℝ)
     (hkCi : ∀ i, ((m : ℝ) + 1) ^ 3 ≤ Ci i) (hC0 : cc 0 = A) (hCnn : ∀ l, 0 ≤ cc l)
     (hρ : ∀ i, 0 ≤ ρ i ∧ ρ i ≤ cc i ∧ ρ i ≤ Ai i * (1 + 4 / p ^ 2) ∧ -(4 * Ai i / p ^ 2) ≤ u i)
     (hrec : ∀ i : Fin s, cc (i + 1) = cc i + Ai i - u i - ρ i)
-    (hl0 : 0 ≤ lam0) (hls : lam0 ≤ cc s) (hn : ∀ i, 0 ≤ nn i ∧ nn i ≤ Ci i * (1 + 4 / p ^ 2))
+    (hls : lam0 ≤ cc s) (hn : ∀ i, 0 ≤ nn i ∧ nn i ≤ Ci i * (1 + 4 / p ^ 2))
     (hk : ∃ i0, ¬ (u i0 + 4 * (Ai i0 + m) / p ^ 2 ≤ La * max (cc i0) (Ai i0) / ((m : ℝ) + 1) ∧
       Ci i0 * (1 - La / ((m : ℝ) + 1)) ≤ nn i0)) :
     ∃ θ : ℝ, 0 ≤ θ ∧ θ ^ (m - 1) ≤ Real.exp (2 - La / 5) ∧
@@ -428,7 +428,7 @@ theorem bracket_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ} (hF : PairFactsAt C0 C
       obtain ⟨a, b, c, d⟩ := hρ i
       exact ⟨by exact_mod_cast a, by exact_mod_cast b, c, d⟩)
     (fun i => by simp only [pairO]; push_cast; ring)
-    (by exact_mod_cast hl0) (by exact_mod_cast hls)
+    (by exact_mod_cast hls)
     (fun i => by
       obtain ⟨a, b⟩ := hn i
       exact ⟨by exact_mod_cast a, b⟩) hk'
