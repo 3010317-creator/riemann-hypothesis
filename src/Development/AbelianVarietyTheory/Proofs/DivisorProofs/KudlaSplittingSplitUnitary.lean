@@ -765,7 +765,7 @@ theorem conj_e {e : X → X → ℂ} (he : IsPair e) (x y : X) : starRingEnd ℂ
   exact mul_right_cancel₀ hn (h2.trans h1.symm)
 
 theorem integral_four_mul (X : Type) [AddCommGroup X] [TopologicalSpace X] [MeasurableSpace X] [BorelSpace X]
-    (hG : Good X) (μ : Measure X) [μ.IsAddHaarMeasure] (e : X → X → ℂ) (he : IsPair e) (C : ℝ) (_hC : 0 < C)
+    (hG : Good X) (μ : Measure X) [μ.IsAddHaarMeasure] (e : X → X → ℂ) (he : IsPair e) (C : ℝ)
     (hinv : ∀ φ ∈ SB X, ∀ x, four μ e (four μ e φ) x = (C : ℂ) * φ (-x)) (φ : X → ℂ) (hφ : φ ∈ SB X) :
     ∫ x, four μ e φ x * starRingEnd ℂ (four μ e φ x) ∂μ = (C : ℂ) * ∫ y, φ y * starRingEnd ℂ (φ y) ∂μ := by
   haveI := hG.grp; haveI := hG.t2; haveI := hG.lc; haveI := hG.sc
@@ -830,7 +830,7 @@ theorem lintegral_four_sq : ∀ (X : Type) [AddCommGroup X] [TopologicalSpace X]
     congr 1; ext x
     rw [Complex.mul_conj']
     push_cast; rfl
-  have hk := integral_four_mul X hG μ e he C hC hinv φ hφ
+  have hk := integral_four_mul X hG μ e he C hinv φ hφ
   rw [hC', hC'] at hk
   have hk' : ∫ x, ‖four μ e φ x‖ ^ 2 ∂μ = C * ∫ x, ‖φ x‖ ^ 2 ∂μ := by exact_mod_cast hk
   rw [hL _ hΦ, hL _ hφ, hk', ENNReal.ofReal_mul hC.le]
