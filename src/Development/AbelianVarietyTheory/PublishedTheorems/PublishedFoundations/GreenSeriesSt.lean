@@ -46,6 +46,11 @@ import Mathlib.Topology.Sheaves.Init
 open Polynomial
 namespace GlobalTheory.Published
 
+/-- **Gross–Zagier Green's function theorem**: the Green's function between Heegner divisor pairs
+on modular curves has values given by the logarithm of algebraic numbers related to higher derivatives of $L$-series.
+
+Proposed reference:
+[B. H. Gross and D. B. Zagier, *Heegner points and derivatives of L-series*][grossZagier1986]. -/
 def GreenSeriesSt : Prop :=
   ∀ (g : ℕ) [Fact g.Prime] (N : ℕ), ∃ τ : (ZMod g)[X] → GlobalTheory.BadShare.GG g N → ℂ, 0 < N → GlobalTheory.BadShare.IsSeries τ
 
