@@ -156,8 +156,7 @@ set_option maxSynthPendingDepth 1
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.Model
 
 theorem MertensUpper.Iic_eq_range (n : ℕ) : Finset.Iic n = Finset.range (n + 1) := by
-  ext m
-  simp
+  exact (Nat.range_succ_eq_Iic n).symm
 
 theorem MertensUpper.equiv :
     GroundTheory.Heights₂.Heights.Model.MertensUpper.Statement ↔

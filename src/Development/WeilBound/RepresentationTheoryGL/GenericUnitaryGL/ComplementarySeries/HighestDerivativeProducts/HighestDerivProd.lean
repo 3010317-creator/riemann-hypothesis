@@ -568,27 +568,7 @@ theorem restr_periodic (ρ : Representation ℂ (LH k n) E) (f : cIndSpace (LH k
   exact congrFun (congrArg Subtype.val h1) (uv n v)
 
 theorem continuous_mvec (n : ℕ) : Continuous (mvec (k := k) (n := n)) := by
-  have hval : Continuous fun g : Mir k n =>
-      ((g : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k) :=
-    Units.continuous_val.comp continuous_subtype_val
-  have hblock : Continuous fun g : Mir k n =>
-      ((mirabolicProjection k n g : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) := by
-    refine continuous_pi fun i => continuous_pi fun j => ?_
-    exact (continuous_apply (Fin.castSucc j)).comp ((continuous_apply (Fin.castSucc i)).comp hval)
-  have h1 : Continuous fun g : Mir k n =>
-      (((mirabolicProjection k n g)⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) := by
-    have hinv : Continuous fun g : Mir k n => g⁻¹ := continuous_inv
-    have heq : (fun g : Mir k n =>
-        (((mirabolicProjection k n g)⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k)) =
-        fun g => ((mirabolicProjection k n g⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) := by
-      funext g
-      rw [map_inv]
-    rw [heq]
-    exact hblock.comp hinv
-  have h2 : Continuous (colv (k := k) (n := n)) := by
-    refine continuous_pi fun i => ?_
-    exact hval.matrix_elem _ _
-  exact h1.matrix_mulVec h2
+  exact GlobalTheory.CompanionTheory.MirLevi.Bump.continuous_mvec
 
 theorem exists_compact_polyBall (n : ℕ) {C : Set (Fin n → k)} (hC : IsCompact C) :
     ∃ S : kˣ, ∀ v ∈ C, Multiplicative.ofAdd v ∈ polyBall (k := k) n S := by
@@ -837,13 +817,7 @@ theorem smooth_gp {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W] 
   isSmooth_comp (isSmooth_extTensor ha hb) _ (GlobalTheory.CompanionTheory.BZMir.continuous_gpProj k m j)
 
 theorem continuous_pgProj (i t : ℕ) : Continuous (pgProj k i t) := by
-  have hincl : Continuous (hpgIncl k i t) :=
-    Continuous.subtype_mk (continuous_subtype_val.comp continuous_subtype_val) _
-  have hlevi : Continuous fun h : HPG k i t => leviProj k (ePG i t) (hpgIncl k i t h) :=
-    (GlobalTheory.SmGL.LeviInt.levi_integral_facts k Bool (Fin (i + t + 1)) (Two (Fin (i + 1)) (Fin t))
-      (ePG i t)).2.2.2.2.2.1.comp hincl
-  exact Continuous.prodMk (Continuous.subtype_mk ((continuous_apply false).comp hlevi) _)
-    ((continuous_apply true).comp hlevi)
+  exact GlobalTheory.CompanionTheory.BZPhiPG.Onto.continuous_pgProj k i t
 
 theorem smooth_pg {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W] (i t : ℕ)
     (a : Representation ℂ (Mir k i) V) (b : Representation ℂ (GL (Fin t) k) W) (ha : IsSmooth a) (hb : IsSmooth b) :

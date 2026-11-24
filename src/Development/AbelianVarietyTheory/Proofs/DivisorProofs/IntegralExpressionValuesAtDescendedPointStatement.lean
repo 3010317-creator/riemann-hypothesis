@@ -909,12 +909,7 @@ theorem eta_push {S S' : Scheme.{0}} {G' : Over S'} [GrpObj G'] {G : Over S} [Gr
 
 variable {V₁ : Type} [CommRing V₁] [IsDomain V₁]
 
-theorem famφB_one (D : DegPre V₁) : D.famφB 0 1 = 𝟙 _ := by
-  have h : padd D.P.A (𝟙 D.P.A) (toUnit D.P.A ≫ D.c 0) = 𝟙 D.P.A := by
-    rw [_root_.GlobalTheory.IndivisibleSection.c_zero_eq_one D, MonObj.comp_one]
-    exact mul_one (𝟙 D.P.A)
-  show (padd D.P.A (𝟙 D.P.A) (toUnit _ ≫ D.c 0)).left = _
-  rw [h]; rfl
+theorem famφB_one (D : DegPre V₁) : D.famφB 0 1 = 𝟙 _ := GlobalTheory.ThetaUnit.famφB_zero_one
 
 theorem famφB_two (D : DegPre V₁) : D.famφB 0 2 = D.famφB 0 3 := by
   show (toUnit D.P.A ≫ D.c 0).left = (toUnit D.P.A ≫ η[D.P.A]).left

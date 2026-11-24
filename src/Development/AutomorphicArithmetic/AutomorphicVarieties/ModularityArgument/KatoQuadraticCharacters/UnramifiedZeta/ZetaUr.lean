@@ -779,13 +779,7 @@ theorem cycMod_one_of {m : ℕ} (hm : 1 ≤ m) {s : G ℚ Ω} (hs : cycMod ℚ �
   rw [ha, e, map_add (f := _), map_one, map_mul, map_natCast, ZMod.natCast_self, zero_mul, add_zero]
 
 theorem cg_per {per : ℕ → Qbar l} (h : ∀ n, Cg n (per (n + 1)) (per n)) {m n : ℕ} (hmn : m ≤ n) : Cg m (per n) (per m) := by
-  induction n, hmn using Nat.le_induction with
-  | base => simp [Cg]
-  | succ n hn ih =>
-    have h1 : Cg m (per (n + 1)) (per n) := GlobalTheory.KummerEisensteinGalois.cg_mono hn (h n)
-    unfold Cg at *
-    rw [← sub_add_sub_cancel _ (per n)]
-    exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le h1 ih)
+  exact GlobalTheory.Ord2.cg_of_le h hmn
 
 theorem chain {Y P F pn pm E t a v u C lc μ ν : Qbar l} (hμ : ‖μ‖ < 1) (hlc : ‖lc‖ ≤ 1) (hP : ‖P‖ ≤ 1) (hC : ‖C‖ ≤ 1)
     (hv : ‖v‖ ≤ 1) (hu : ‖u‖ ≤ 1) (hpn : ‖pn‖ = 1) (hpm : ‖pm‖ = 1) (ht : t = a * (1 + μ * v) + ν * u)

@@ -68,21 +68,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
 theorem one_mem_del : (1 : W.Gam) ∈ W.DelF := (_root_.GlobalTheory.WachTie.mem_DelF_iff W 1).2 IsOfFinOrder.one
 
 theorem prod_del {M : Type} [CommMonoid M] (f : W.Gam → M) {d : W.Gam} (hd : d ∈ W.DelF) :
-    ∏ δ ∈ W.DelF, f (d * δ) = ∏ δ ∈ W.DelF, f δ := by
-  rw [_root_.GlobalTheory.WachTie.mem_DelF_iff] at hd
-  refine Finset.prod_nbij' (fun δ => d * δ) (fun δ => d⁻¹ * δ) ?_ ?_ ?_ ?_ ?_
-  · intro a ha
-    rw [_root_.GlobalTheory.WachTie.mem_DelF_iff] at ha ⊢
-    exact hd.mul ha
-  · intro a ha
-    rw [_root_.GlobalTheory.WachTie.mem_DelF_iff] at ha ⊢
-    exact hd.inv.mul ha
-  · intro a _
-    simp
-  · intro a _
-    simp
-  · intro a _
-    rfl
+    ∏ δ ∈ W.DelF, f (d * δ) = ∏ δ ∈ W.DelF, f δ := GlobalTheory.WachTie.prod_DelF_mul W f d hd
 
 theorem sum_del {M : Type} [AddCommMonoid M] (f : W.Gam → M) {d : W.Gam} (hd : d ∈ W.DelF) :
     ∑ δ ∈ W.DelF, f (d * δ) = ∑ δ ∈ W.DelF, f δ :=

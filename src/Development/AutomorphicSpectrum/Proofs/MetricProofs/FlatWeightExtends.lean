@@ -1150,21 +1150,7 @@ namespace GlobalTheory.CompanionTheory.SmoothGlue
 theorem continuousAt_of_smoothOn {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X)
     {N : Set X} {E : X → ℝ} (hN : IsOpen N) (hS : A.SmoothOn N E) {p : X} (hp : p ∈ N) :
     ContinuousAt E p := by
-  obtain ⟨j, hj⟩ := A.cover p
-  have hopen : IsOpen ((A.chart j).target ∩ (A.chart j).symm ⁻¹' N) :=
-    (A.chart j).isOpen_inter_preimage_symm hN
-  have hz : A.chart j p ∈ (A.chart j).target ∩ (A.chart j).symm ⁻¹' N := by
-    refine ⟨(A.chart j).map_source hj, ?_⟩
-    simpa [Set.mem_preimage, (A.chart j).left_inv hj] using hp
-  have h1 : ContinuousAt (E ∘ (A.chart j).symm) (A.chart j p) :=
-    ((hS j).continuousOn).continuousAt (hopen.mem_nhds hz)
-  have h2 : ContinuousAt (A.chart j) p := (A.chart j).continuousAt hj
-  have h1' : ContinuousAt (E ∘ (A.chart j).symm) ((A.chart j) p) := h1
-  have h3 : ContinuousAt ((E ∘ (A.chart j).symm) ∘ (A.chart j)) p :=
-    ContinuousAt.comp h1' h2
-  refine h3.congr ?_
-  filter_upwards [(A.chart j).open_source.mem_nhds hj] with y hy
-  simp [Function.comp, (A.chart j).left_inv hy]
+  apply ReciprocityTheory.AnForm.P.LeviFormBoundaryTopology.continuousAt_of_smoothOn <;> assumption
 
 theorem eq_of_dense_compl {X : Type} [TopologicalSpace X] {B W : Set X} {f g : X → ℝ}
     (hD : Dense Bᶜ) (hW : IsOpen W) (hf : ∀ p ∈ W, ContinuousAt f p)

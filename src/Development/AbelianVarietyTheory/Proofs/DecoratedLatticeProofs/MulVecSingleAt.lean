@@ -208,12 +208,7 @@ theorem exists_elem (d : HypDec S S₀ ρ) (y : Fin S₀.rank → AE D) {i j : F
   · rw [Decomp.mt_flag_jX, hu1]
   · rw [Matrix.mulVec_mulVec, Decomp.flag_unipotent_product_anisotropic_action, Matrix.mul_zero, Matrix.mul_zero, add_zero]
 
-theorem upSum_one : upSum (1 : Mx D ρ ρ) = 0 := by
-  unfold upSum
-  refine Finset.sum_eq_zero fun p _ => Finset.sum_eq_zero fun q _ => ?_
-  split_ifs with e
-  · exact Matrix.one_apply_ne fun e' => by subst e'; omega
-  · rfl
+theorem upSum_one : upSum (1 : Mx D ρ ρ) = 0 := GlobalTheory.MixPer.upSum_one ρ
 
 theorem entry_rat (d : HypDec S S₀ ρ) (d' : HypDec S S₁ ρ) (p q : Fin ρ) : (d'.pX ⬝ d.jX) p q ∈ (incA D).range := by
   rw [Matrix.mul_apply]

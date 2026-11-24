@@ -409,13 +409,7 @@ theorem mem_closure_AG (hG : GenA) (hDA : DecompAway) {θ : InfFam D} {τ : D.wh
   closure_triv hG hDA hθ hι x hx
 
 theorem exists_w (D : D7) (n : ℕ) : ∃ w : G D n, mat w = blk4 0 1 (-1) 0 := by
-  obtain ⟨g, hg⟩ := GlobalTheory.SiegelCells.exists_wPart (D := D) (n := n) n
-  refine ⟨g, hg.trans ?_⟩
-  have hL : GlobalTheory.SiegelCells.lastDiag (AE D) n n = 1 := by
-    unfold GlobalTheory.SiegelCells.lastDiag
-    rw [← Matrix.diagonal_one]
-    congr 1; funext i; simp
-  rw [GlobalTheory.SiegelCells.wMat, hL, sub_self]
+  exact GlobalTheory.StdUnn.Model.exists_weyl
 
 theorem compAt_b_zero {θ : InfFam D} {τ : D.what₂.Tau} {x : G D n} {b : Mx D n n} (hx : IsTrivAt θ τ x)
     (h : mat x = blk4 1 b 0 1) : compAt θ τ b = 0 := by

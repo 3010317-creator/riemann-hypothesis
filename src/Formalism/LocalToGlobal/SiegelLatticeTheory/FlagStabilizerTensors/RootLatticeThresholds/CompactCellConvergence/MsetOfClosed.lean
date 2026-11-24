@@ -56,15 +56,7 @@ open Formalism.QuantumDeterminants Formalism.MainNotions.S
 variable {k r : ℕ}
 
 theorem uh_isUnit {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hg : g ∈ UH (Hpk k r)) :
-    IsUnit g.det := by
-  have hg' : gᴴ * Hpk k r * g = Hpk k r := hg
-  have hH := Formalism.FourierDecayAlt.P.BetaSesquilinearity.Hdet k r
-  have h := congrArg Matrix.det hg'
-  rw [Matrix.det_mul, Matrix.det_mul] at h
-  rw [isUnit_iff_ne_zero]
-  intro h0
-  rw [h0, mul_zero] at h
-  exact hH.ne_zero h.symm
+    IsUnit g.det := Formalism.QuantumDeterminants.WeylGroupFacts.isUnit_of_uh hg
 
 theorem n_sub {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hg : g ∈ Nset k r) :
     g ∈ UH (Hpk k r) := hg.1

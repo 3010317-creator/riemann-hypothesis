@@ -245,19 +245,7 @@ theorem esymm_map_conj (s : Multiset ℂ) (j : ℕ) : (s.map (starRingEnd ℂ)).
 
 theorem conj_satEig (q n : ℕ) (B : Multiset ℂˣ) (j : ℕ) :
     conj (GlobalTheory.LFun.satEig q n B j) = GlobalTheory.LFun.satEig q n (B.map star) j := by
-  have hz : conj (((j : ℂ) * ((n : ℂ) - j)) / 2) = ((j : ℂ) * ((n : ℂ) - j)) / 2 := by
-    rw [map_div₀, map_mul, map_sub, Complex.conj_natCast, Complex.conj_natCast, map_ofNat]
-  have harg : (q : ℂ).arg ≠ Real.pi := by
-    rw [Complex.natCast_arg]; exact Real.pi_pos.ne
-  have hp : conj ((q : ℂ) ^ (((j : ℂ) * ((n : ℂ) - j)) / 2)) = (q : ℂ) ^ (((j : ℂ) * ((n : ℂ) - j)) / 2) := by
-    have := Complex.conj_cpow (q : ℂ) (((j : ℂ) * ((n : ℂ) - j)) / 2) harg
-    rw [hz, Complex.conj_natCast] at this
-    exact this.symm
-  have hm : ((B.map star).map fun b : ℂˣ => (b : ℂ)) = (B.map fun b : ℂˣ => (b : ℂ)).map (starRingEnd ℂ) := by
-    simp only [Multiset.map_map]
-    refine Multiset.map_congr rfl fun b _ => ?_
-    simp [Units.coe_star]
-  rw [GlobalTheory.LFun.satEig, GlobalTheory.LFun.satEig, map_mul, hp, hm, esymm_map_conj]
+  exact (GlobalTheory.LFun.UnitaryParam.satEig_map_star q n B j).symm
 
 theorem conj_Tj {L : Type} [Field L] (n : ℕ) (O : Subring L) (ϖ : L) (j : ℕ) (g : GL (Fin n) L) :
     conj (Formalism.UG.Tj ℂ n O ϖ j g) = Formalism.UG.Tj ℂ n O ϖ j g := by

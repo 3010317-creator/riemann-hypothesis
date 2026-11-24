@@ -162,16 +162,7 @@ open Chart (JetR zR jetAug_zR jet_ext jetLift jetLift_zR ker_jetAug_pow zR_mem_k
 
 theorem ker_aug_eq (κ : Type) (m : ℕ) : RingHom.ker (Chart.jetAug V κ m) =
     (Ideal.span (Set.range (MvPolynomial.X : κ → MvPolynomial κ V))).map (Ideal.Quotient.mk _) := by
-  apply le_antisymm
-  · intro x hx
-    obtain ⟨p, rfl⟩ := Ideal.Quotient.mk_surjective x
-    have hp : MvPolynomial.aeval (fun _ : κ => (0 : V)) p = 0 := hx
-    have := Chart.sub_const_mem_span_X (R := V) p
-    rw [hp, map_zero, sub_zero] at this
-    exact Ideal.mem_map_of_mem _ this
-  · rw [Ideal.map_span, Ideal.span_le]
-    rintro _ ⟨_, ⟨j, rfl⟩, rfl⟩
-    exact zR_mem_ker m j
+  exact ReciprocityTheory.ChartRestriction.G.Chart.ker_jetAug_eq_map_span_X κ m
 
 theorem ker_aug_le {κ : Type} {m : ℕ} {K : Ideal (JetR V κ m)} (h : ∀ j, zR m j ∈ K) :
     RingHom.ker (Chart.jetAug V κ m) ≤ K := by

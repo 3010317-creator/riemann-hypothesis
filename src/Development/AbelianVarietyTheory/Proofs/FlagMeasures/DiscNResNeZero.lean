@@ -1318,12 +1318,7 @@ namespace GlobalTheory.DegCnt
 theorem finrank_sub_le {K V : Type} [Field K] [NumberField K] [AddCommGroup V] [Module K V] [FiniteDimensional K V]
     [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (L : Submodule (𝓞 K) V) :
     Module.finrank (𝓞 K) L ≤ Module.finrank K V := by
-  apply Module.finrank_le_of_rank_le
-  apply rank_le
-  intro s hs
-  have h := hs.map' L.subtype (Submodule.ker_subtype L)
-  rw [LinearIndependent.iff_fractionRing (R := 𝓞 K) (K := K)] at h
-  simpa using h.fintype_card_le_finrank
+  apply GlobalTheory.DegCnt.FixedSpaceCount.finrank_le
 
 theorem sublat_count {K V : Type} [Field K] [NumberField K] [AddCommGroup V] [Module K V] [FiniteDimensional K V]
     [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (L : Submodule (𝓞 K) V) (hL : L.FG) (x : ℕ) (hx : 1 ≤ x) :

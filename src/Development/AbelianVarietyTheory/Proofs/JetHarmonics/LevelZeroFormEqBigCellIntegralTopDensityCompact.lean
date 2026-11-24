@@ -250,12 +250,7 @@ lemma levWeight_nonneg (P : M.Par) (j : ℕ) (t : ℂ) : 0 ≤ KB.levW P j t := 
 
 lemma isLocPt_ofFn_unit {j : ℕ} (c : Fin j → ℂ) (hc : ∀ i, c i ≠ 0) :
     D.IsLocPt (List.ofFn fun l : Fin j => ((1 : ℕ), c l)) j := by
-  refine ⟨?_, ?_⟩
-  · intro b hb
-    rw [List.mem_ofFn] at hb
-    obtain ⟨i, rfl⟩ := hb
-    exact ⟨le_rfl, hc i⟩
-  · simp [D.ptSize, List.map_ofFn, List.sum_ofFn]
+  exact GlobalTheory.LevelFormsReal.isLocPt_ofFn c hc
 
 theorem levelZero_eq_integral_topVector_of_cpt :
     P5.ThmPActualCpt → ∀ (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (P : M.Par) (p : KB.Pl P Wp Wq) (Cb : ℝ) (H : B.Mat P.k P.r → (Wq →L[ℂ] Wp)) (w : List C.Letter), KB.InDDplus2 P p.l0 p.T.base Cb p.Θ → KB.CptCoef p.T.base H → KB.CutWord P p.l0 w → MemLp (tv p H w) 2 volume ∧ B.beta p.T.base (List.foldr (fun (a : Bool × ℝ) G => M.sgn P p.l0 • Q.CV P.k P.r (a.2 : ℂ) G) (H) w) H = ((∫ c, ‖tv p H w c‖ ^ 2 : ℝ) : ℂ) := by

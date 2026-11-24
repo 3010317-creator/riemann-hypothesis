@@ -769,11 +769,7 @@ theorem tensorHom_dualToCartier_cartierPairing :
     (𝟙 (Rep.res ψ.toMonoidHom M) ⊗ₘ _root_.GroundTheory.ProfCoh.dualToCartierDual ψ D ρ M) ≫
         cartierPairing K L (Rep.res ψ.toMonoidHom M) =
       _root_.GroundTheory.ProfCoh.resEvalPairing ψ D M ≫ ρ := by
-  refine Rep.Hom.ext (Representation.IntertwiningMap.ext (LinearMap.ext fun x => ?_))
-  induction x using TensorProduct.induction_on with
-  | zero => simp only [map_zero]
-  | tmul a f => rfl
-  | add x y hx hy => simp only [map_add (f := _), hx, hy]
+  exact GroundTheory.ProfCoh.tensorHom_dualToCartierDual_cartierPairing ψ D ρ M
 
 theorem cupPairing_dualToCartier [Finite M] [IsDiscreteRep (galUnits.{0} K L)]
     [IsDiscreteRep (cartierDual K L (Rep.res ψ.toMonoidHom M))] {r s : ℕ} (h : r + s = 2)

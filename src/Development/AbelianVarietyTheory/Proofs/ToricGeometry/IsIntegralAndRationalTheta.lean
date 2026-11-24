@@ -372,13 +372,7 @@ theorem growth_root (s : Polynomial (MvPolynomial (Fin n) ℂ)) (hs : s.Monic) :
 
 theorem analyticAt_eval (r : Polynomial (MvPolynomial (Fin n) ℂ)) (w : (Fin n → ℂ) × ℂ) :
     AnalyticAt ℂ (fun w : (Fin n → ℂ) × ℂ => (r.map (MvPolynomial.eval w.1)).eval w.2) w := by
-  induction r using Polynomial.induction_on' with
-  | add p q hp hq => simpa only [Polynomial.map_add (f := _), Polynomial.eval_add] using hp.fun_add hq
-  | monomial k c =>
-    simp only [Polynomial.map_monomial, Polynomial.eval_monomial]
-    refine AnalyticAt.fun_mul ?_ (analyticAt_snd.fun_pow k)
-    exact AnalyticAt.aeval_mvPolynomial (A := ℂ) (f := fun w : (Fin n → ℂ) × ℂ => w.1)
-      (fun i => ((ContinuousLinearMap.proj i).comp (ContinuousLinearMap.fst ℂ (Fin n → ℂ) ℂ)).analyticAt w) c
+  exact GlobalTheory.SimpleRoots.analyticAt_eval_map r w
 
 end Growth
 

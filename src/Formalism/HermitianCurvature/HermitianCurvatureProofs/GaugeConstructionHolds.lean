@@ -531,12 +531,7 @@ theorem phase_star_mul (φ : ℝ) :
     ← Complex.exp_conj, ← Complex.exp_add]
   simp [Complex.conj_ofReal]
 
-theorem Hb_mul_self : Hb k * Hb k = 1 := by
-  unfold Hb
-  rw [diagonal_mul_diagonal, ← diagonal_one]
-  congr 1
-  funext j
-  split_ifs <;> norm_num
+theorem Hb_mul_self : Hb k * Hb k = 1 := Formalism.FourierDecayAlt.P.TwoByOneBlock.Hb_sq
 
 theorem inv_of_UH {g : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hg : g ∈ UH (Hb k)) :
     g⁻¹ * g = 1 ∧ g * g⁻¹ = 1 := by
@@ -548,13 +543,7 @@ theorem inv_of_UH {g : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hg : g ∈ UH (H
   exact ⟨hl, mul_eq_one_comm.1 hl⟩
 
 theorem UH_mul {g h : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hg : g ∈ UH (Hb k)) (hh : h ∈ UH (Hb k)) :
-    g * h ∈ UH (Hb k) := by
-  have e1 : gᴴ * Hb k * g = Hb k := hg
-  have e2 : hᴴ * Hb k * h = Hb k := hh
-  show (g * h)ᴴ * Hb k * (g * h) = Hb k
-  rw [conjTranspose_mul]
-  calc hᴴ * gᴴ * Hb k * (g * h) = hᴴ * (gᴴ * Hb k * g) * h := by simp only [Matrix.mul_assoc]
-    _ = Hb k := by rw [e1, e2]
+    g * h ∈ UH (Hb k) := Formalism.FourierDecayAlt.P.TwoByOneBlock.UHb_mul hg hh
 
 theorem UH_inv {g : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hg : g ∈ UH (Hb k)) : g⁻¹ ∈ UH (Hb k) := by
   have hg' : gᴴ * Hb k * g = Hb k := hg

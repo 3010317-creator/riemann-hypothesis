@@ -745,23 +745,10 @@ theorem ext_finQ {a b : AE D} (h1 : infPart D a = infPart D b) (h2 : finQ D a = 
     rwa [toAfE_finQ, toAfE_finQ] at this)
 
 theorem finPart_surjective (D : D7) : Function.Surjective (finPart D) := by
-  intro y
-  induction y using TensorProduct.induction_on with
-  | zero => exact ⟨0, (finPart D).map_zero⟩
-  | tmul a x => exact ⟨TensorProduct.tmul D.host.F (pairA D.host.F 0 a) x, rfl⟩
-  | add y z hy hz =>
-    obtain ⟨a, rfl⟩ := hy
-    obtain ⟨b, rfl⟩ := hz
-    exact ⟨a + b, (finPart D).map_add a b⟩
+  exact GlobalTheory.SplitDualLat.finPart_surjective
 
 theorem exists_finQ (q : Formalism.MainNotions.StandardLatticesGL3.AE D) : ∃ a : AE D, infPart D a = 0 ∧ finQ D a = q := by
-  obtain ⟨a, ha⟩ := finPart_surjective D (GlobalTheory.BotFormula.toAfE D q)
-  refine ⟨(1 - realIdem D) * a, ?_, ?_⟩
-  · rw [RingHom.map_mul, RingHom.map_sub, infPart_realIdem, RingHom.map_one, sub_self, zero_mul]
-  · apply (GlobalTheory.BotFormula.toAfE D).injective
-    rw [toAfE_finQ]
-    show finPart D _ = _
-    rw [RingHom.map_mul, RingHom.map_sub, finPart_realIdem, RingHom.map_one, sub_zero, one_mul, ha]
+  exact GlobalTheory.MovedTrChar.recon_ex q
 
 def back (S T : HSp D) (r : D.host.E) : XF S T →+ XA D S.rank T.rank where
   toFun x := (-Formalism.MainNotions.StandardLatticesGL3.inc D r) • (x : WO S T).map (finQ D)
@@ -925,14 +912,7 @@ theorem reads_latRep (hset : Setup ψ θ S T cc δ r) {w : 𝓞 D.host.E}
 
 theorem exists_prime_mem {R : Type} [CommRing R] {P : Ideal R} (hP : P.IsPrime) :
     ∀ n : ℕ, n ≠ 0 → (n : R) ∈ P → ∃ q : ℕ, q.Prime ∧ (q : R) ∈ P := by
-  intro n
-  induction n using induction_on_primes with
-  | zero => exact fun h => absurd rfl h
-  | one => exact fun _ h => absurd ((Ideal.eq_top_iff_one _).2 (by simpa using h)) hP.ne_top
-  | prime_mul p a hp ih =>
-    intro h0 h
-    rw [Nat.cast_mul] at h
-    exact (hP.mem_or_mem h).elim (fun h => ⟨p, hp, h⟩) (ih (right_ne_zero_of_mul h0))
+  exact GlobalTheory.InertTrivial.exists_prime_mem P hP
 
 theorem zeroAt_half {ε : AE D} (hε : GlobalTheory.RatAut.IsHalfIdem D ε) {q : ℕ} (hq : q.Prime) (hi : Formalism.MainNotions.StandardLatticesGL3.InertQ D q)
     (b : AE D) : Formalism.MainNotions.StandardLatticesGL3.ZeroAt D q (finQ D (ε * b)) :=

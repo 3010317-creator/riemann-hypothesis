@@ -526,17 +526,7 @@ namespace GlobalTheory.ShortConnIndep
 
 theorem starRing_eq {R : Type} [CommRing R] (s t : StarRing R)
     (h : ∀ a : R, @star R s.toStarMul.toInvolutiveStar.toStar a = @star R t.toStarMul.toInvolutiveStar.toStar a) :
-    s = t := by
-  cases s with | @mk s1 _ =>
-  cases t with | @mk t1 _ =>
-  cases s1 with | @mk s2 _ =>
-  cases t1 with | @mk t2 _ =>
-  cases s2 with | @mk s3 _ =>
-  cases t2 with | @mk t3 _ =>
-  have : s3 = t3 := by
-    cases s3; cases t3; congr; exact funext h
-  subst this
-  rfl
+    s = t := GlobalTheory.BigOn.starRing_eq s t h
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
   {Xo : Moduli Dw l} {c : Coeff l}

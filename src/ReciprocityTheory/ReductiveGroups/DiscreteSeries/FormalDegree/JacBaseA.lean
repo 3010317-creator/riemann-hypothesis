@@ -437,13 +437,7 @@ theorem trace_conj_mul_right (U S Z : Matrix (Fin n) (Fin n) ℂ) :
     _ = trace ((Sᴴ * Uᴴ * Z) * U) := Matrix.trace_mul_comm _ _
     _ = trace (Sᴴ * (Uᴴ * Z * U)) := by simp only [Matrix.mul_assoc]
 
-theorem shc_pos (u : ℝ) : 0 < shc u := by
-  unfold shc
-  split_ifs with h
-  · exact one_pos
-  · rcases lt_or_gt_of_ne h with hu | hu
-    · exact div_pos_of_neg_of_neg (Real.sinh_neg_iff.2 hu) hu
-    · exact div_pos (Real.sinh_pos_iff.2 hu) hu
+theorem shc_pos (u : ℝ) : 0 < shc u := ReciprocityTheory.ChartRestriction.DS.pb_shc_pos u
 
 theorem shc_neg (u : ℝ) : shc (-u) = shc u := by
   unfold shc

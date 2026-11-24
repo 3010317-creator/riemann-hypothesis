@@ -70,15 +70,7 @@ open PositivityTheory.Rg.BcB.SpectralAccumulation.AdmDiscPf
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {N : ℕ}
 
 theorem isoV_symm {V V' : Submodule ℂ (Sm E N)} (hV : _root_.GlobalTheory.CuspRep.IsStable V) (h : SpectralAccumulation.IsoV V V') : SpectralAccumulation.IsoV V' V := by
-  obtain ⟨T, hT⟩ := h
-  refine ⟨T.symm, fun o φ ψ hψ => ?_⟩
-  set a := T.symm φ with ha
-  let b : V := ⟨act o a.1, hV o a.1 a.2⟩
-  have hb : T b = ψ := by
-    apply Subtype.ext
-    rw [hT o a b rfl, ha, LinearEquiv.apply_symm_apply]
-    exact hψ.symm
-  rw [← hb, LinearEquiv.symm_apply_apply]
+  exact PositivityTheory.Rg.BcB.F.F5.Bo.isoV_symm' hV h
 
 theorem isoV_of_map {V V' : Submodule ℂ (Sm E N)} (hV : IsDiscrete V) (hV' : IsDiscrete V')
     (f : Sm E N →ₗ[ℂ] Sm E N) (hf : ∀ o, ∀ x ∈ V, f (act o x) = act o (f x)) (hfV : ∀ x ∈ V, f x ∈ V')

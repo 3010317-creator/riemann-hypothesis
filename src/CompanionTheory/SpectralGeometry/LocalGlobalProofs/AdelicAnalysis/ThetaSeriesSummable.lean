@@ -341,17 +341,7 @@ theorem sb_indN {gf : Matrix ι ι (A F)} (hu : IsUnit gf.det) {N : ℕ} (hN : 0
       rw [indN, Set.indicator_of_notMem hz, Set.indicator_of_notMem hy]⟩
 
 theorem natCast_mul_mem_Oh (n : ℕ) {z : A F} (hz : z ∈ Oh F) : (n : A F) * z ∈ Oh F := by
-  intro v
-  have h : ∀ m : ℕ, (m : A F) v = (m : v.adicCompletion F) := by
-    intro m
-    induction m with
-    | zero => rfl
-    | succ m ih =>
-      rw [Nat.cast_succ, Nat.cast_succ, ← ih]
-      rfl
-  show (n : A F) v * z v ∈ _
-  rw [h]
-  exact mul_mem (natCast_mem _ n) (hz v)
+  exact GlobalTheory.CompanionTheory.SW.Core.AfTop.natCast_mul_mem_Oh F n hz
 
 theorem vecN_subset (gf : Matrix ι ι (A F)) (n : ℕ) : vecN gf n ⊆ vecN gf 1 := by
   intro y hy i

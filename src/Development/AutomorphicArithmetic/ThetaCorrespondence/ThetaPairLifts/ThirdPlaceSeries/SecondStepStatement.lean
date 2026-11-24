@@ -916,13 +916,7 @@ noncomputable section
 namespace GlobalTheory.ChosenHalf
 
 theorem isConjPl_unique (D : D7) {P w w' : PlE D.host} (h : IsConjPl D.host P w) (h' : IsConjPl D.host P w') :
-    w = w' := by
-  apply HeightOneSpectrum.ext
-  ext y
-  obtain ⟨x, hx⟩ := (RingOfIntegers.mapRingEquiv D.host.conj.toRingEquiv).surjective y
-  have hy : (y : D.host.E) = D.host.conj (x : D.host.E) := by
-    rw [← hx]; rfl
-  rw [← h x y hy, ← h' x y hy]
+    w = w' := GlobalTheory.TwistDet.isConjPl_unique h h'
 
 theorem not_isConjPl_self (D : D7) {P : PlE D.host} (hs : IsSplitPl D.host P) : ¬ IsConjPl D.host P P := by
   intro hc

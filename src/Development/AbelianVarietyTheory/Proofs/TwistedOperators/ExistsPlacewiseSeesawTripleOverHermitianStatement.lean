@@ -618,36 +618,7 @@ theorem exists_placeIdem (D : D7) (v : HeightOneSpectrum (𝓞 D.host.F)) : ∃ 
 theorem exists_good_place (D : D7) (P₀ : Finset (HeightOneSpectrum (𝓞 D.host.F))) :
     ∃ v₁ : HeightOneSpectrum (𝓞 D.host.F), v₁ ∉ P₀ ∧ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SplitsFully D.host.E v₁ ∧
       Nonempty (D.host.E →ₐ[D.host.F] Fv D.host.F v₁) := by
-  classical
-  have hn : D.host.QS ≠ 0 := D.host.QS_pos.ne'
-  have hq : D.host.q ≠ 0 := D.host.hyp.1.ne_zero
-  have hd : D.host.d ≠ 0 := D.host.hyp.2.1.ne_zero
-  have hm : D.host.QS * D.host.q * D.host.d ≠ 0 := by positivity
-  obtain ⟨p, hp, hlt, hc⟩ := Nat.exists_prime_gt_modEq_one (∑ u ∈ P₀, Ideal.absNorm u.asIdeal) hm
-  obtain ⟨h1, -, -⟩ := GlobalTheory.HostSplit.split_completely_of_modEq_one D.R D.host p hp hc
-  have h : (Ideal.primesOver (Ideal.span {(p : ℤ)}) (𝓞 D.host.E)).ncard = Module.finrank ℚ D.host.E := by
-    rw [← GlobalTheory.HostSplit.ncard_placesOver _ hp]
-    exact h1
-  obtain ⟨v, hv⟩ := GlobalTheory.SplitChoice.exists_place_over D.host.F hp
-  have hnot : ∀ u ∈ P₀, u ≠ v := by
-    intro u hu e
-    refine GlobalTheory.SplitChoice.natCast_notMem_of_absNorm_lt u hp ?_ (e ▸ hv)
-    have := Finset.single_le_sum (f := fun u : HeightOneSpectrum (𝓞 D.host.F) => Ideal.absNorm u.asIdeal)
-      (fun _ _ => Nat.zero_le _) hu
-    omega
-  refine ⟨v, fun hv0 => hnot v hv0 rfl, ?_, ?_⟩
-  · have hmax : (Ideal.span {(p : ℤ)}).IsMaximal :=
-      PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.1 hp).irreducible
-    have hle : Ideal.span {(p : ℤ)} ≤ v.asIdeal.under ℤ := by
-      rw [Ideal.span_singleton_le_iff_mem, Ideal.under_def, Ideal.mem_comap]
-      simpa using hv
-    have hunder : v.asIdeal.under ℤ = Ideal.span {(p : ℤ)} :=
-      (hmax.eq_of_le (Ideal.IsPrime.under ℤ v.asIdeal).ne_top hle).symm
-    unfold GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SplitsFully
-    rw [hunder]
-    exact h
-  · rw [GlobalTheory.AdelicU.nonempty_split_iff (GlobalTheory.AdelicU.isCMExt_host D)]
-    exact GlobalTheory.GoodPlace.ncard_primesOver_eq_two (GlobalTheory.AdelicU.isCMExt_host D).2.2.1 hp h v hv
+  exact GlobalTheory.TripleDarboux.exists_good_place D P₀
 
 theorem exists_base_chars : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (W W₁ X : HSp D) (α β : (AE D)ˣ →* Circle), IsTriple W W₁ X α β →
     ∀ ωA : WRep W X, IsWeil ψ true W X β (β / α) ωA →

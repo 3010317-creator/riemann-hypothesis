@@ -314,38 +314,13 @@ variable {n' r : ℕ} [NeZero n'] (Fr : Frames n' r) {L₁ N₁ : ℕ}
 
 theorem dg_posOf_inj {y a b : ℤ} (ha : y ≤ a ∧ a < y + n') (hb : y ≤ b ∧ b < y + n') (h : posOf n' a = posOf n' b) :
     a = b := by
-  have hn : (0 : ℤ) < n' := by exact_mod_cast NeZero.pos n'
-  have hv := congrArg (fun t : Fin n' => (t.val : ℤ)) h
-  simp only [_root_.Formalism.MainNotions.G.WittFrameLocaliserOrders.residue_position_val] at hv
-  have e1 := Int.mul_ediv_add_emod a n'
-  have e2 := Int.mul_ediv_add_emod b n'
-  have hk : a - b = n' * (a / n' - b / n') := by
-    rw [hv] at e1
-    linear_combination e2 - e1
-  have hlt : a - b < n' := by linarith [ha.2, hb.1]
-  have hgt : -(n' : ℤ) < a - b := by linarith [ha.1, hb.2]
-  rw [hk] at hlt hgt
-  have h1 : a / n' - b / n' < 1 := by
-    by_contra! hc
-    nlinarith
-  have h2 : -1 < a / n' - b / n' := by
-    by_contra! hc
-    nlinarith
-  have h3 : a / n' - b / n' = 0 := by omega
-  rw [h3, mul_zero] at hk
-  linarith
+  exact Formalism.MainNotions.G.WittFrameLocaliserOrders.residue_position_injective_window n' y a b
+    ha hb h
 
 variable {Fr}
 
 theorem dg_fr_lt (hV : Fr.Valid L₁ N₁) (j : ℤ) (i : ℕ) : ∀ i', i < i' → i' < r → Fr.fr j i < Fr.fr j i' := by
-  intro i' hii' hi'
-  induction i' with
-  | zero => omega
-  | succ k ih =>
-    rcases Nat.lt_succ_iff_lt_or_eq.mp hii' with h | h
-    · exact lt_trans (ih h (by omega)) (hV.2.2.1 j k (by omega))
-    · subst h
-      exact hV.2.2.1 j i (by omega)
+  exact Formalism.MainNotions.G.WittFrameLocaliserOrders.frame_entries_strictMono Fr L₁ N₁ hV j i
 
 theorem dg_fr_le (hV : Fr.Valid L₁ N₁) (j : ℤ) {i i' : ℕ} (h : i ≤ i') (h' : i' < r) : Fr.fr j i ≤ Fr.fr j i' := by
   obtain h | rfl := h.lt_or_eq
@@ -464,19 +439,7 @@ theorem dg_inj (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hJ : J = Fr.J) (hnL : �
 
 theorem dg_frame (hV : Fr.Valid L₁ N₁) (j t : ℤ) (ht : posOf n' t ∈ Fr.TT) (h0 : Fr.fr j 0 ≤ t) :
     ∀ i, i < r → t ≤ Fr.fr j i → ∃ i' ≤ i, t = Fr.fr j i' := by
-  intro i
-  induction i with
-  | zero =>
-    exact fun _ ht0 => ⟨0, le_rfl, le_antisymm ht0 h0⟩
-  | succ k ih =>
-    intro hk htk
-    by_cases hle : t ≤ Fr.fr j k
-    · obtain ⟨i', hi', he⟩ := ih (by omega) hle
-      exact ⟨i', by omega, he⟩
-    · push Not at hle
-      rcases htk.lt_or_eq with hlt | heq
-      · exact absurd ht (hV.2.2.2.2.2.1 j k t (by omega) hle hlt)
-      · exact ⟨k + 1, le_rfl, heq⟩
+  exact Formalism.MainNotions.G.symbolGeneratorData.ge_frame Fr L₁ N₁ hV j t ht h0
 
 theorem dg_surj (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hJ : J = Fr.J) (hnL : ∀ j, nL j = (Fr.LLset (segZ j)).card) :
     ∀ s ∈ Fr.TT, ∃ x : TL J nL r, posOf n' (posTL Fr x) = s := by

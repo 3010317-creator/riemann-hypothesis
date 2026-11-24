@@ -465,12 +465,7 @@ section Triv
 variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
 
 theorem hermLine_ext {A B : HermLine ι} (ha : A.a = B.a) (hh : A.h = B.h) : A = B := by
-  cases A
-  cases B
-  simp only at ha hh
-  subst ha
-  subst hh
-  rfl
+  apply GroundTheory.Heights₂.Heights.Inter.hermLine_eq_of <;> assumption
 
 theorem fs_zero_tensor : (fsHerm ι (0 : K → ℤ)).tensor (fsHerm ι 0) = fsHerm ι 0 := by
   apply hermLine_ext

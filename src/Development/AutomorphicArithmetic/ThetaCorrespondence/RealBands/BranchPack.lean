@@ -338,13 +338,7 @@ theorem isEnum_cast' {S : SPar} {n k : ℕ} (h : k = n) {lam : Fin n → ℝ} {�
   simpa using hE
 
 theorem UH_mul' {n : ℕ} {H a b : Matrix (Fin n) (Fin n) ℂ} (ha : a ∈ Formalism.QuantumDeterminants.UH H) (hb : b ∈ Formalism.QuantumDeterminants.UH H) :
-    a * b ∈ Formalism.QuantumDeterminants.UH H := by
-  have ha' : aᴴ * H * a = H := ha
-  have hb' : bᴴ * H * b = H := hb
-  show (a * b)ᴴ * H * (a * b) = H
-  rw [Matrix.conjTranspose_mul]
-  calc bᴴ * aᴴ * H * (a * b) = bᴴ * (aᴴ * H * a) * b := by simp only [Matrix.mul_assoc]
-    _ = H := by rw [ha', hb']
+    a * b ∈ Formalism.QuantumDeterminants.UH H := GlobalTheory.PointAtPlaceHom.mul_mem_UH ha hb
 
 theorem conj_mul' {n : ℕ} {B : Matrix (Fin n) (Fin n) ℂ} (hB : IsUnit B) (x y : Matrix (Fin n) (Fin n) ℂ) :
     B * (x * y) * B⁻¹ = B * x * B⁻¹ * (B * y * B⁻¹) := by

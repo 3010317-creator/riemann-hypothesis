@@ -93,17 +93,7 @@ namespace GlobalTheory.CompanionTheory.Ar.PB.WSq.Sec.FrameReg
 open GlobalTheory.CompanionTheory.Ar.PB.CovMap.LocImg.FrameChange
 
 theorem stepCols_ne_empty {N j : ℕ} (i : Fin N) : stepCols N j i ≠ ∅ := by
-  intro e
-  have hi := i.2
-  by_cases h : (i : ℕ) + 1 ≤ j
-  · have : (⟨N - j, by omega⟩ : Fin N) ∈ stepCols N j i := by
-      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, ite_eq_left h]
-      omega
-    simp [e] at this
-  · have : (⟨0, by omega⟩ : Fin N) ∈ stepCols N j i := by
-      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, ite_eq_right h]
-      omega
-    simp [e] at this
+  exact GlobalTheory.CompanionTheory.Ar.PB.CovMap.LocImg.FV.stepCols_ne_empty i
 
 theorem minor_singleton {R : Type} [CommRing R] {N : ℕ} (h : Matrix (Fin N) (Fin N) R) (a b : Fin N) :
     minorIJ h {a} {b} = h a b := by

@@ -227,14 +227,7 @@ theorem isoLoc_twist_of_laws (hC : GlobalTheory.RowTie.CharLaws N A) (S : List (
 
 theorem isoLoc_append_one (S : List (Part A.CG)) (q : Part A.CG) (w : PlE H) :
     isoLoc N A (S ++ [q]) w = A.lpSum (isoLoc N A S w) (spehLoc N A q w) := by
-  induction S with
-  | nil =>
-    change A.lpSum (spehLoc N A q w) (A.lpZero w) = A.lpSum (A.lpZero w) (spehLoc N A q w)
-    exact A.lpSum_comm _ _
-  | cons p S ih =>
-    change A.lpSum (spehLoc N A p w) (isoLoc N A (S ++ [q]) w) =
-      A.lpSum (A.lpSum (spehLoc N A p w) (isoLoc N A S w)) (spehLoc N A q w)
-    rw [ih, A.lpSum_assoc]
+  exact GlobalTheory.LocCongrRoad.isoLoc_append_singleton N A S q w
 
 theorem heckePol_coeff (i : N.Loc) (x : N.X i) (w : PlE H) (k : ℕ) (hk1 : 1 ≤ k) (hk2 : k ≤ R.nV) :
     (heckePol N i x w).coeff (R.nV - k) =
@@ -739,16 +732,7 @@ theorem parIn_built_alt {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {D' : D7} 
     {tp' : TupTied D' cf' C'} (nt : _root_.GlobalTheory.HeightCounting.NormChoiceRealisation hL D' cf' C' tp') (rep' : D'.what₂.FT → NG.FinTyp D'.host.E D'.R.r)
     (hrep : HEq nt.rep rep') :
     ∃ Rw : RowSide D', HEq Rw.locR nt.A.row.locR ∧ Nonempty (_root_.GlobalTheory.HeightCounting.Up.ParityConditions hL D' cf' rep' Rw) := by
-  obtain ⟨⟨D, cf, jE, A, cg, au, rep, row, low, Pq, S, hk, eig, θ, Bs, M, C, tp, ch, mt, big, L, Sp, Au, ss, eq⟩, pack⟩ := nt
-  subst eq
-  obtain ⟨-, h2⟩ := Sigma.mk.inj_iff.mp pack
-  obtain ⟨hcf, -⟩ := Sigma.mk.inj_iff.mp (eq_of_heq h2)
-  subst hcf
-  have hr : rep = rep' := eq_of_heq hrep
-  subst hr
-  let T : GlobalTheory.RowTie.WDTie (withLoc L).nd (withLoc L).naut := { A.wdT with }
-  let Rw : RowSide (withLoc L) := { A.row with }
-  exact ⟨Rw, HEq.rfl, ⟨{ T := T, lab := A.lab, chr := { A.chr with }, cg := { cg with }, A := { A.au with }, au := au, row := row }⟩⟩
+  exact GlobalTheory.HeightCounting.Up.ParCopy.parIn_of_nTrue_alt nt rep' hrep
 end GlobalTheory.RowTriple.Lay.EigCopy
 end
 end

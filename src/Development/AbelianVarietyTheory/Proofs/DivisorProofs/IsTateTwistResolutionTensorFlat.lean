@@ -216,13 +216,7 @@ namespace GlobalTheory.EtC.TensZero
 variable {R : Type} [CommRing R]
 
 theorem sec_eq_zero_of_isZero {F : Shv R} (hF : IsZero F) {U : Scheme.{0}} (a : Sec F U) : a = 0 := by
-  have h : 𝟙 F = 0 := hF.eq_of_src _ _
-  have : Sec.map (𝟙 F) a = Sec.map (0 : F ⟶ F) a := by rw [h]
-  have h1 : Sec.map (𝟙 F) a = a := rfl
-  have h2 : Sec.map (0 : F ⟶ F) a = 0 := by
-    simp only [Sec.map]
-    rfl
-  rwa [h1, h2] at this
+  exact GlobalTheory.EtC.TensUniv.sec_zero_of_isZero hF a
 
 theorem isZero_of_sec {F : Shv R} (h : ∀ (U : Scheme.{0}) (a : Sec F U), a = 0) : IsZero F := by
   rw [IsZero.iff_id_eq_zero]
@@ -545,12 +539,7 @@ alias loc_mono := _root_.GlobalTheory.TwSec.loc_mono
 
 theorem loc_bind {U : Scheme.{0}} {P : ∀ V : Scheme.{0}, (V ⟶ U) → Prop} {P' : ∀ V : Scheme.{0}, (V ⟶ U) → Prop}
     (h : Loc U P) (h' : ∀ V g, P V g → Loc V fun W k => P' W (k ≫ g)) : Loc U P' := by
-  classical
-  obtain ⟨S, hS, hP⟩ := h
-  let Rs : ∀ ⦃V : Scheme.{0}⦄ ⦃g : V ⟶ U⦄, S.arrows g → Sieve V := fun V g hg => (h' V g (hP V g hg)).choose
-  refine ⟨Sieve.bind S.arrows Rs, Scheme.etaleTopology.bind_covering hS fun V g hg => (h' V g (hP V g hg)).choose_spec.1, ?_⟩
-  rintro W _ ⟨V, k, g, hg, hk, rfl⟩
-  exact (h' V g (hP V g hg)).choose_spec.2 W k hk
+  exact GlobalTheory.EtC.TwMulInj.loc_bind h h'
 
 theorem map_comp_apply {F G H : Shv R} (f : F ⟶ G) (g : G ⟶ H) {U : Scheme.{0}} (x : Sec F U) :
     Sec.map (f ≫ g) x = Sec.map g (Sec.map f x) := rfl

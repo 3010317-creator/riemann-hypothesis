@@ -718,17 +718,7 @@ variable {N : ℕ}
 def kdF (N : ℕ) (x : UCo N) : Fin N → Fin N → ℂ := Matrix.of.symm (NormedSpace.exp (skMat x))
 
 lemma kd_skMat_injective : Function.Injective (skMat (N := N)) := by
-  intro x y h
-  have hd : ∀ a b, skMat x a b = skMat y a b := fun a b => by rw [h]
-  refine Prod.ext (funext fun a => ?_) (funext fun ab => ?_)
-  · have := hd a a
-    simp only [skMat] at this
-    exact_mod_cast mul_left_cancel₀ Complex.I_ne_zero this
-  · obtain ⟨⟨a, b⟩, hab⟩ := ab
-    have hab' : b < a := hab
-    have := hd a b
-    simp only [skMat, ite_eq_right (ne_of_gt hab'), dite_eq_left hab'] at this
-    exact this
+  exact ReciprocityTheory.ChartRestriction.DS.volU_skMat_injective
 
 lemma kd_continuous_skMat : Continuous (skMat (N := N)) := by
   refine continuous_matrix fun a b => ?_

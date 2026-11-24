@@ -320,14 +320,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
 variable [FiniteDimensional Qp LL]
 
 theorem ArcLengthThreeDescent.letE_mem (W : LocWach PD LL O v n) (c : ZMod n) : (letE (O := O) c : LetA O n) ∈ W.AΔ := by
-  show ∀ δ ∈ W.DelF, W.γA δ (letE c) = letE c
-  intro δ _
-  funext i
-  show (W.γ₀ δ) ((letE c : LetA O n) i) = (letE c : LetA O n) i
-  by_cases h : i = c
-  · subst h
-    simp [Formalism.BasicNotions.letE]
-  · simp [Formalism.BasicNotions.letE, h]
+  apply Formalism.MainNotions.N.FrobeniusPowerSeries.NTB.letE_mem
 
 theorem ArcLengthThreeDescent.split [IsDomain O] [IsDiscreteValuationRing O] [IsAdicComplete (IsLocalRing.maximalIdeal O) O]
     (W : LocWach PD LL O v n) (hcase : Formalism.MainNotions.LiftingTheory.CaseA W) (hP9 : Formalism.MainNotions.DeltaInvariantLattices.P9W W)

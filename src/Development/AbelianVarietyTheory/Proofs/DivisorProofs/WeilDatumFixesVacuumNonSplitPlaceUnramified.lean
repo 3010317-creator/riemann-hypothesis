@@ -131,17 +131,7 @@ theorem tmul_trace {F E R : Type} [Field F] [Field E] [Algebra F E] [CommRing R]
   rw [← TensorProduct.tmul_add, ← ht, TensorProduct.smul_tmul, Algebra.algebraMap_eq_smul_one]
 
 theorem trace_mem (z : AE D) : ∃ a, z + cA D z = algebraMap (AF D.host.F) (AE D) a := by
-  induction z using TensorProduct.inductionOn with
-  | tmul a x =>
-    obtain ⟨t, ht⟩ : ∃ t : D.host.F, algebraMap _ _ t = x + D.sp.cm.sig x := by
-      apply (D.sp.cm.fixed _).1
-      change D.sp.cm.sig _ = _
-      rw [map_add (f := _), show D.sp.cm.sig (D.sp.cm.sig x) = x from star_star x, add_comm]
-    exact ⟨t • a, tmul_trace a x _ t ht⟩
-  | add a b ha hb =>
-    obtain ⟨s, hs⟩ := ha
-    obtain ⟨t, ht⟩ := hb
-    exact ⟨s + t, by rw [RingHom.map_add (f := _), RingHom.map_add (f := _), ← hs, ← ht, add_add_add_comm]⟩
+  exact GlobalTheory.IdemModTwo.exists_add_cA D z
 
 theorem one_int : (1 : Af D.host.F ⊗[D.host.F] D.host.E) ∈ intAE D :=
   AddSubgroup.subset_closure ⟨1, fun w => by rw [map_one]; exact one_mem _, 1, rfl⟩

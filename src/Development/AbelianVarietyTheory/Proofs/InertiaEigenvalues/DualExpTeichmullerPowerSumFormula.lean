@@ -978,14 +978,7 @@ open scoped Formalism.Per
 variable {l : ℕ} [Fact l.Prime]
 
 theorem oB_mem {P : LocPrime l} {AI : LocAinf l P} (T : LocTied l P AI) (α : Om l) :
-    oB P α ∈ FilB P 0 := by
-  have hα : IsIntegral ℚ_[l] α := Algebra.IsIntegral.isIntegral α
-  obtain ⟨K, hK⟩ : ∃ K : FinExt l, α ∈ K.1 :=
-    ⟨⟨IntermediateField.adjoin ℚ_[l] {α}, IntermediateField.adjoin.finiteDimensional hα⟩,
-      IntermediateField.mem_adjoin_simple_self _ α⟩
-  have h := ((P.PD K).Fil 0).smul_mem (⟨α, hK⟩ : ↥K.1) (P.PD K).one_mem
-  rw [Algebra.smul_def, mul_one, IsScalarTower.algebraMap_apply ↥K.1 (Om l) P.R.BdR] at h
-  exact (T.fil _ _ _).2 ((T.fil K _ _).1 h)
+    oB P α ∈ FilB P 0 := GlobalTheory.ExpImage.oB_mem_zero T α
 
 theorem act_qB (P : LocPrime l) (g : GQ l) (c : ℚ_[l]) : P.actQdR g (qB P c) = qB P c :=
   AlgEquiv.commutes _ c
@@ -1372,13 +1365,7 @@ theorem frob_mu : WittVector.frobenius AI.μ =
     rw [WittVector.frobenius_eq_map_frobenius, WittVector.map_teichmuller, frobenius_def, map_pow]
   rw [LocAinf.μ, map_sub, map_one, h, geom_sum_mul]
 
-theorem mu_not_isUnit : ¬ IsUnit AI.μ := by
-  intro h
-  obtain ⟨θ, hθ⟩ := exists_isTheta l P AI
-  have h0 : θ AI.μ = 0 := (hθ.2.2.2.1 _).2 ⟨AI.π₁, by rw [AI.μ_eq, mul_comm]⟩
-  have := h.map θ
-  rw [h0] at this
-  exact not_isUnit_zero this
+theorem mu_not_isUnit : ¬ IsUnit AI.μ := GlobalTheory.ExpImage.EpsSolve.μ_not_unit AI
 
 theorem main : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), (∀ q : Ainf l, ∃ y : Ainf l, AI.μ * y - WittVector.frobenius (AI.μ * y) = AI.μ * q) ∧ ∀ M n : ℕ, ∃ k₀ : ℕ, ∀ k ≥ k₀, (WittVector.frobenius : Ainf l →+* Ainf l)^[k] AI.μ ∈ Ideal.span {((l : ℕ) : Ainf l) ^ n, AI.ξ ^ M} := by
   intro l _ P AI
@@ -1477,13 +1464,7 @@ theorem taylor0 (hT : LocTied l P AI) (m M : ℕ) :
 
 theorem span_mem_Lat {M n : ℕ} {a : Ainf l}
     (ha : a ∈ Ideal.span {((l : ℕ) : Ainf l) ^ n, AI.ξ ^ M}) : io AI a ∈ Lat AI M n := by
-  obtain ⟨x, y, rfl⟩ := Ideal.mem_span_pair.mp ha
-  refine ⟨x, ?_⟩
-  have h := FilB_zero_mul (io_mem AI y) (FilB_pow (io_ξ_mem AI) M)
-  rw [mul_one] at h
-  convert h using 1
-  simp only [map_add (f := _), map_mul, map_pow]
-  ring
+  exact GlobalTheory.ExpImage.io_mem_Lat_of_mem_span AI ha
 
 theorem tail (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (hT : LocTied l P AI)
     (K : FinExt l) (ι : Type) (T : Finset ι) (w : ι → Ainf l) (c : ι → ↥(K0 K)) (m : ι → ℕ) (M : ℕ)

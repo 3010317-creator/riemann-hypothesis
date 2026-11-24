@@ -783,17 +783,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 theorem op_idem {G H : Type} [Group G] [Fintype G] [AddCommGroup H] [Module ℂ H] (ρ : Representation ℂ G H) {a : G → ℂ}
     (ha : GlobalTheory.IndefiniteRowSideFullHecke.GoodBasisCentralIdempotents.IsCentralIdem a) (u : H) :
     (∑ g, a g • ρ g : H →ₗ[ℂ] H) ((∑ g, a g • ρ g : H →ₗ[ℂ] H) u) = (∑ g, a g • ρ g : H →ₗ[ℂ] H) u := by
-  set E : H →ₗ[ℂ] H := ∑ g, a g • ρ g with hE
-  have h1 : E u = ∑ g, ∑ h, (a h * a (h⁻¹ * g)) • ρ g u := by
-    simp only [← Finset.sum_smul, ha.2, hE, LinearMap.sum_apply, LinearMap.smul_apply]
-  have h2 : E (E u) = ∑ h, ∑ g, (a h * a g) • ρ h (ρ g u) := by
-
-    simp only [hE, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, Finset.smul_sum, smul_smul]
-    rw [Finset.sum_comm]
-    simp only [mul_comm]
-  rw [h2, h1, Finset.sum_comm (f := fun g h => (a h * a (h⁻¹ * g)) • ρ g u)]
-  refine Finset.sum_congr rfl fun h _ => Fintype.sum_equiv (Equiv.mulLeft h) _ _ fun g => ?_
-  simp only [Equiv.coe_mulLeft, inv_mul_cancel_left, map_mul, Module.End.mul_apply]
+  exact GlobalTheory.LowTopBound.idem_apply ρ ha u
 
 theorem adjoint_eq_self {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [FiniteDimensional ℂ H] (E : H →ₗ[ℂ] H)
     (h1 : ∀ u, E (E u) = E u) (h2 : ∀ x, E x = x → ∀ y, ⟪x, E y⟫_ℂ = ⟪x, y⟫_ℂ) : LinearMap.adjoint E = E := by
@@ -1008,70 +998,21 @@ variable {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.w
   {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks)
 
 theorem g_mem_six {F : Face D A} (h : GlobalTheory.Hk3.Core R F) {PP : Pl D.host.E} (hP : PP ∈ R.Pg) : ∃ k, ((D.host.g k : ℕ) : 𝓞 D.host.E) ∈ PP.asIdeal := by
-  obtain ⟨k, hk⟩ := (h.lev.Pg PP).1 hP
-  refine ⟨k, ?_⟩
-  have h1 := R.C.P.pb_over k
-  rw [← hk] at h1
-  have h2 : algebraMap (𝓞 D.host.K) (𝓞 D.host.E) (D.host.g k : ℕ) ∈ PP.asIdeal := h1
-  simpa using h2
+  exact GlobalTheory.LowTopCore.g_mem_ofCore R h hP
 
 
 open Classical in
 theorem isConjChars_base_six {F : Face D A} (h : GlobalTheory.Hk3.Core R F) (i : Fin D.R.m) (t : T) :
     IsConjChars R i t (RingEquiv.refl ℂ) (R.toLevCh.mu t ((i : ℕ) + 1)) R.eta
       (fun PP => if PP ∈ R.Pg then (R.chi ((i : ℕ) + 1) PP)⁻¹ else R.xiR t PP) := by
-  refine ⟨_, _, isGalConj_refl _ _, isGalConj_refl _ _, ⟨(h.thP.ωP i t).hecS, ?_⟩, h.lev.eta, ?_⟩
-  · intro P e he k x hx
-    have a := (h.lev.mu0 i).2 P e he k x hx
-    have b := (h.lev.xi t).2 P e he k x hx
-    show (((R.mu0 ((i : ℕ) + 1) x * R.xi t x : Circle)) : ℂ) = (((R.C.mu0 i).locK P k * (R.xiH t).locK P k : ℂˣ) : ℂ)
-    rw [Circle.coe_mul, a, b, Units.val_mul]
-  · intro PP hPP a k u hk hu
-    have ha : a ∉ PP.asIdeal := fun ha => u.ne_zero (hu.trans (Ideal.Quotient.eq_zero_iff_mem.2 ha))
-    show _ = (R.C.mu0 i).locK PP k * (R.xiH t).locK PP k
-    by_cases hg : PP ∈ R.Pg
-    · obtain ⟨l, hl⟩ := g_mem_six R h hg
-      have hun : (R.xiH t).UnrAt PP := by
-        by_contra hn
-        rcases (h.lev.Q_ram t PP).1 hn with hq | ⟨PP', hq, hc⟩
-        · obtain ⟨⟨q, hq1, hq2, -, hq4⟩, -⟩ := h.lev.Q_pl t PP hq
-          exact not_both (D.host.g_prime l) hq1 (hq4 l) hl (q_mem hq2)
-        · obtain ⟨⟨q, hq1, hq2, -, hq4⟩, -⟩ := h.lev.Q_pl t PP' hq
-          obtain ⟨c', hc1, hc2⟩ := hc _ (q_mem hq2)
-          have : c' = (q : 𝓞 D.host.E) := by
-            apply NumberField.RingOfIntegers.coe_injective
-            rw [map_natCast]
-            have h3 : (c' : D.host.E) = (q : D.host.E) := by simpa using hc2
-            exact h3
-          exact not_both (D.host.g_prime l) hq1 (hq4 l) hl (this ▸ hc1)
-      simp only [ite_eq_left hg]
-      rw [locK_eq_one hun a k hk ha, mul_one]
-      exact h.lev.chi i PP hg a k u hk hu
-    · have hq : PP ∈ R.Q t := hPP.resolve_left hg
-      obtain ⟨⟨q, hq1, hq2, -, hq4⟩, -⟩ := h.lev.Q_pl t PP hq
-      have hun : (R.C.mu0 i).UnrAt PP := (R.C.isMu0 i).unr PP fun l hl =>
-        not_both (D.host.g_prime l) hq1 (hq4 l) hl (q_mem hq2)
-      simp only [ite_eq_right hg]
-      rw [locK_eq_one hun a k hk ha, one_mul]
-      exact h.lev.xiR t PP hq a k u hk hu
+  exact GlobalTheory.LowTopCore.isConjChars_base_ofCore R h i t
 
 
 open Classical in
 theorem chr_base_six {F : Face D A} (h : GlobalTheory.Hk3.Core R F) (i : Fin D.R.m) (t : T) :
     chrOf (Vc D i) (R.βV i) (datV i R.Pg (R.Q t) R.triv
       (fun PP => if PP ∈ R.Pg then (R.chi ((i : ℕ) + 1) PP)⁻¹ else R.xiR t PP)) = (levEnv _ (R.βV i) (R.datVt i t)).χ := by
-  ext1 x
-  refine levFn_congr (R.βV i) D.R.r (r_le_V i) D.R.t 1 R.Pg (R.Q t) R.triv
-    (fun _ PP => if PP ∈ R.Pg then (R.chi ((i : ℕ) + 1) PP)⁻¹ else R.xiR t PP) (fun _ PP => (R.chi ((i : ℕ) + 1) PP)⁻¹)
-    (fun PP => if PP ∈ R.Pg then (R.chi ((i : ℕ) + 1) PP)⁻¹ else R.xiR t PP) (R.xiR t) ?_ ?_ _
-  · intro c PP hP
-    simp only [ite_eq_left hP]
-  · intro PP hP
-    have hn : PP ∉ R.Pg := fun hg => by
-      obtain ⟨l, hl⟩ := g_mem_six R h hg
-      obtain ⟨⟨q, hq1, hq2, -, hq4⟩, -⟩ := h.lev.Q_pl t PP hP
-      exact not_both (D.host.g_prime l) hq1 (hq4 l) hl (q_mem hq2)
-    simp only [ite_eq_right hn]
+  exact GlobalTheory.LowTopCore.chr_base_ofCore R h i t
 
 end Survey
 

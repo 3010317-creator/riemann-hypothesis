@@ -765,32 +765,7 @@ theorem reix_symm (x : X.B.I.Ginf) (τ : D.what₂.Tau) : (reix X).symm x τ = x
 
 theorem trI_apply (x : X.B.I.Ginf) (τ : D.what₂.Tau) : trI C x τ = GlobalTheory.PullbackComparison.eM C τ (x (vOf X τ)) := rfl
 
-theorem trI_emb : MeasurableEmbedding (trI C) := by
-  choose g hg hgf using fun τ : D.what₂.Tau =>
-    (GlobalTheory.PullbackComparison.eM_emb C τ).exists_measurable_extend (g := id) measurable_id (fun _ => ⟨1⟩)
-  refine MeasurableEmbedding.of_measurable_inverse
-    (g := fun m => reix X (fun τ => g τ (m τ))) ?_ ?_ ?_ ?_
-  · exact Measurable.of_eval fun τ =>
-      (GlobalTheory.PullbackComparison.eM_emb C τ).measurable.comp (measurable_pi_apply (vOf X τ))
-  · have hR : Set.range (trI C) = Set.univ.pi fun τ => Set.range (GlobalTheory.PullbackComparison.eM C τ) := by
-      ext m
-      constructor
-      · rintro ⟨x, rfl⟩ τ _
-        exact ⟨x (vOf X τ), (trI_apply C x τ).symm⟩
-      · intro hm
-        choose a ha using fun τ => hm τ (Set.mem_univ τ)
-        refine ⟨reix X a, funext fun τ => ?_⟩
-        rw [trI_apply, reix_apply, ha]
-    rw [hR]
-    exact MeasurableSet.univ_pi fun τ => (GlobalTheory.PullbackComparison.eM_emb C τ).measurableSet_range
-  · exact (reix X).measurable.comp
-      (Measurable.of_eval fun τ => (hg τ).comp (measurable_pi_apply τ))
-  · intro x
-    have h1 : (fun τ => g τ (trI C x τ)) = (reix X).symm x := by
-      funext τ
-      rw [trI_apply, reix_symm]
-      exact congrFun (hgf τ) _
-    simp only [h1, MeasurableEquiv.apply_symm_apply]
+theorem trI_emb : MeasurableEmbedding (trI C) := GlobalTheory.TypeAsm.CovTrans.measEmb_trI C
 
 theorem trI_mul (q y : X.B.I.Ginf) : GlobalTheory.DegVol.mulP (trI C q) (trI C y) = trI C (q * y) := by
   funext τ
@@ -1196,14 +1171,7 @@ theorem prod_degBd_le_explicit (C' : ℝ) (ι : Type) [Fintype ι] (k r j q : �
 
 theorem frameExp_int (r l : ℕ) (hl : l ≤ r + 1) :
     ((frameExp r l : ℕ) : ℤ) = ∑ a ∈ Finset.range l, ((r : ℤ) - a) := by
-  induction l with
-  | zero => simp [frameExp]
-  | succ l ih =>
-    have h1 : frameExp r (l + 1) = frameExp r l + (r + 1 - (l + 1)) := by
-      unfold frameExp
-      rw [Finset.sum_Icc_succ_top (by omega)]
-    have h2 : ((r + 1 - (l + 1) : ℕ) : ℤ) = (r : ℤ) - l := by omega
-    rw [h1, Nat.cast_add, ih (by omega), Finset.sum_range_succ, h2]
+  exact GlobalTheory.TypeAsm.HasLabelling.frameExp_cast r l hl
 
 theorem nloc_norm (D : D7) (r l : ℕ) (x : D.host.E) :
     ((Nloc (ddS D) r l x : ℚ) : ℝ) =

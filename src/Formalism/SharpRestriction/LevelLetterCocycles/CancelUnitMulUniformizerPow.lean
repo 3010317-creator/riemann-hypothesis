@@ -299,13 +299,7 @@ theorem γD_lA (T : LocLat G Qp LL O) (g : W.Gam) (k : ℕ) (x : W.DD T) :
   simp only [Formalism.MainNotions.ArcLiftingSetup.lA, ← Nat.cast_pow, Nat.cast_smul_eq_nsmul, map_nsmul]
 
 theorem letE_of_Nl {T : LocLat G Qp LL O} {c : ZMod n} {x : W.DD T} (hx : x ∈ W.Nl T c) :
-    (letE c : LetA O n) • x = x := by
-  unfold Formalism.BasicNotions.LocWach.Nl at hx
-  obtain ⟨y, hy, rfl⟩ := Submodule.mem_map.mp hx
-  simp only [LinearMap.smul_apply, LinearMap.id_apply, smul_smul]
-  congr 1
-  unfold letE
-  rw [← Pi.single_mul, one_mul]
+    (letE c : LetA O n) • x = x := Formalism.MainNotions.LiftingTheory.frame_letE_fix W T c hx
 
 theorem N_of_Nl {T : LocLat G Qp LL O} {c : ZMod n} {x : W.DD T} (hx : x ∈ W.Nl T c) : x ∈ W.N T := by
   unfold Formalism.BasicNotions.LocWach.Nl at hx

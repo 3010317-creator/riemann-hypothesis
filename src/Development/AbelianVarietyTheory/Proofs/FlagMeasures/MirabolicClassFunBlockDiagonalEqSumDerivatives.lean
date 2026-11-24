@@ -1237,14 +1237,7 @@ def fU (ψ : AddChar (ZMod g) ℂ) {n : ℕ} (z : Gn g n) : ℂ :=
 
 theorem supFrom_eq (i n : ℕ) (M : Mt g n) :
     supFrom i M = ∑ j ∈ Finset.range (n - i - 1), entN (br i (n - i) M) j (j + 1) := by
-  unfold supFrom
-  rw [Finset.sum_Ico_eq_sum_range, show n - 1 - i = n - i - 1 by omega]
-  refine Finset.sum_congr rfl fun j hj => ?_
-  rw [Finset.mem_range] at hj
-  have h1 : j < n - i := by omega
-  have h2 : j + 1 < n - i := by omega
-  rw [show entN (br i (n - i) M) j (j + 1) = br i (n - i) M ⟨j, h1⟩ ⟨j + 1, h2⟩ from dite_eq_left ⟨h1, h2⟩]
-  simp only [br, Nat.add_assoc]
+  exact (GlobalTheory.GLm.DerFormula.sum_br i n M).symm
 
 theorem fR_eq (ψ : AddChar (ZMod g) ℂ) (i n : ℕ) (hi : i ≤ n) (ρ : Gn g i → ℂ) (z : Gn g n) :
     fR ψ i ρ z = if InPar i (z : Mt g n) then
@@ -1535,17 +1528,7 @@ theorem inR_iff_ent {i n : ℕ} (M : Mt g n) :
       exact (hB (i + a) (i + a) (by omega) (by omega)).2 rfl
 
 theorem inMir_of_inR {i n : ℕ} (hi : i < n) {M : Mt g n} (h : InR i M) : InMir M := by
-  rw [inR_iff_ent] at h
-  intro r c hr
-  have hM : M r c = entN M r c := by rw [entN, dite_eq_left ⟨r.2, c.2⟩]
-  rw [hM]
-  rcases lt_or_ge (c : ℕ) i with hc | hc
-  · rw [h.1 r c hc (by omega), Matrix.one_apply_ne (Fin.ne_of_val_ne (by omega))]
-  · rcases lt_or_eq_of_le (show (c : ℕ) ≤ r by omega) with hcr | hcr
-    · rw [(h.2 r c hc r.2).1 hcr, Matrix.one_apply_ne (Fin.ne_of_val_ne (by omega))]
-    · have e : c = r := Fin.ext hcr
-      rw [e, Matrix.one_apply_eq]
-      exact (h.2 r r (by omega) r.2).2 rfl
+  exact GlobalTheory.GLm.Stages.inMir_of_inR hi h
 
 private theorem entN_tl' {k n : ℕ} (M : Mt g n) (a b : ℕ) :
     entN (tl k M) a b = if a < k ∧ b < k then entN M a b else 0 := by

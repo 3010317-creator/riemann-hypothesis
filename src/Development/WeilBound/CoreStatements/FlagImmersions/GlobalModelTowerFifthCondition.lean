@@ -254,13 +254,7 @@ theorem aeval_chart (y : (Σ k, ι k) → Ω) (c : ∀ k, ι k) {g : MRing ι} {
   rw [zpow_neg, zpow_natCast]
 
 theorem aeval_eq_zero_of_mem (y : (Σ k, ι k) → Ω) {f : MRing ι} (hf : f ∈ mCoordIdeal y) : aeval y f = 0 := by
-  have h : (aeval (fun p : Σ k, ι k => C (y p) * X p.1) f : MvPolynomial K Ω) = 0 := RingHom.mem_ker.mp hf
-  have e := map_aeval_int (eval fun _ : K => (1 : Ω)) (fun p : Σ k, ι k => (C (y p) * X p.1 : MvPolynomial K Ω)) f
-  have e' : (fun p : Σ k, ι k => eval (fun _ : K => (1 : Ω)) (C (y p) * X p.1 : MvPolynomial K Ω)) = y := by
-    funext p
-    simp
-  rw [e', h, map_zero] at e
-  exact e.symm
+  exact GlobalTheory.CompanionTheory.Ar.JoinPts.aeval_eq_zero_of_mem y hf
 
 theorem coord_ne_zero (y : (Σ k, ι k) → Ω) {p : Σ k, ι k} (h : (X p : MRing ι) ∉ mCoordIdeal y) : y p ≠ 0 := by
   intro hy
@@ -269,14 +263,7 @@ theorem coord_ne_zero (y : (Σ k, ι k) → Ω) {p : Σ k, ι k} (h : (X p : MRi
   simp [mConeMap, hy]
 
 theorem charZero_of_horizontal (y : (Σ k, ι k) → Ω) (h : IsHorizontal (mCoordIdeal y)) : CharZero Ω := by
-  refine charZero_of_inj_zero fun n hn => ?_
-  have hm : (n : ℤ) ∈ (mCoordIdeal y).comap (C : ℤ →+* MRing ι) := by
-    rw [Ideal.mem_comap]
-    refine RingHom.mem_ker.mpr ?_
-    have e : ((n : MvPolynomial K Ω)) = C (n : Ω) := (map_natCast C n).symm
-    simp [mConeMap, e, hn]
-  rw [show (mCoordIdeal y).comap (C : ℤ →+* MRing ι) = ⊥ from h] at hm
-  simpa using hm
+  apply GlobalTheory.CompanionTheory.Ar.Ht.JoinFacts.charZero_of <;> assumption
 
 theorem ne_zero_of_genUnit {y : (Σ k, ι k) → Ω} {d : ℕ} (hA : IsArithVar (mCoordIdeal y) d) {a : K → ℤ} {u : Ω}
     (H : GenUnit y a u) : u ≠ 0 := by
@@ -1342,23 +1329,7 @@ theorem recR_map (e : ∀ k, ι k ≃ Fin (n k + 1)) {x : Cone n (AlgebraicClosu
 end Recursion
 
 theorem heightRecR : GroundTheory.Heights₂.Heights.HeightRecR.Statement := by
-  open GroundTheory.Heights₂.Heights in
-  have hM : OrbitChartMax.Statement := OrbitChartMax.proof
-  open GroundTheory.Heights₂.Heights in
-  have hQ : OrbitChartQuot.Statement := OrbitChartQuot.proof
-  open GroundTheory.Heights₂.Heights in
-  have hIff : OrbitCenterMemIff.Statement := OrbitCenterMemIff.proof
-  open GroundTheory.Heights₂.Heights in
-  exact HeightRecR.proof OrbitDivVertical.proof
-    (OrbitFiniteSum.proof OrbitDegreeRatio.proof
-      (OrbitLocalSum.proof OrbitChartRing.proof hM (OrbitChartResidue.proof hM hQ (OrbitChartDehom.proof hM hQ))
-        OrbitChartMult.proof
-        (LocalLengthPlaces.proof LocalQuotCard.proof CentredPlacesFinite.proof
-          (LocalQuotCentred.proof CentredRingNormal.proof LocalNormalIndex.proof) PlacesRingQuot.proof)
-        OrbitCenterChart.proof PlaceCentredSum.proof OrbitChartTerm.proof)
-      (OrbitCenterZero.proof OrbitCenterLe.proof hIff
-        (OrbitCenterDivSupp.proof hIff (OrbitCenterPrime.proof hIff) SubringPrimeMaximal.proof)))
-    (OrbitArchSum.of_conjSum OrbitConjSum.proof)
+  exact CoverDenseAlt.heightRecR_full
 
 theorem mem_mCoordIdeal_iff {Ω : Type} [Field Ω] (w : (Σ k, ι k) → Ω) (f : MRing ι) (a : K → ℕ)
     (hf : IsMultiHomog f a) : f ∈ mCoordIdeal w ↔ aeval w f = 0 := by
@@ -1687,11 +1658,7 @@ variable {X : Scheme.{0}} {Ω Ω' : Type} [Field Ω] [Field Ω']
 
 theorem spMap_genMap (ξ : Spec (CommRingCat.of Ω) ⟶ X) (p : Cpt ξ) :
     Spec.map (CommRingCat.ofHom (genMap ξ p)) ≫ X.fromSpecStalk p.1 = ξ := by
-  have h1 := Spec.map_comp (X.presheaf.stalkSpecializes p.2) (Scheme.stalkClosedPointTo ξ)
-  have h2 := Scheme.SpecMap_stalkSpecializes_fromSpecStalk (X := X) p.2
-  exact (congrArg (· ≫ X.fromSpecStalk p.1) h1).trans <| (Category.assoc _ _ _).trans <|
-    (congrArg (Spec.map (Scheme.stalkClosedPointTo ξ) ≫ ·) h2).trans
-      (Scheme.Spec_stalkClosedPointTo_fromSpecStalk ξ)
+  exact GlobalTheory.CompanionTheory.Ar.LieTangent.spec_genMap ξ p
 
 theorem eq_of_specializes_genPt {ξ : Spec (CommRingCat.of Ω) ⟶ X}
     (hb : Function.Bijective (Scheme.stalkClosedPointTo ξ).hom) (x' : X) (h : x' ⤳ genPt ξ) : x' = genPt ξ := by

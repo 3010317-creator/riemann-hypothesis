@@ -126,13 +126,7 @@ theorem isUnit_of_uh {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ
 
 theorem uh_mul {g h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (hg : g ∈ UH (Hpk k r)) (hh : h ∈ UH (Hpk k r)) : g * h ∈ UH (Hpk k r) := by
-  have hg' : gᴴ * Hpk k r * g = Hpk k r := hg
-  have hh' : hᴴ * Hpk k r * h = Hpk k r := hh
-  show (g * h)ᴴ * Hpk k r * (g * h) = Hpk k r
-  rw [conjTranspose_mul]
-  calc hᴴ * gᴴ * Hpk k r * (g * h) = hᴴ * (gᴴ * Hpk k r * g) * h := by
-        simp only [Matrix.mul_assoc]
-    _ = Hpk k r := by rw [hg', hh']
+  exact Formalism.QuantumDeterminants.WeylGroupFacts.uh_mul hg hh
 
 theorem uh_inv {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (hg : g ∈ UH (Hpk k r)) : g⁻¹ ∈ UH (Hpk k r) := by
@@ -181,19 +175,7 @@ theorem uw_fixed_col {z : Fin (2 * r + k + 1) → ℂ}
     {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hh : h ∈ UWset k r z)
     (c : Fin (2 * r + k + 1)) (hc : c.val < r ∨ r + k < c.val) (p : Fin (2 * r + k + 1)) :
     h p c = if p = c then 1 else 0 := by
-  by_cases hcr : c.val < r
-  · have e : eI k r ⟨c.val, hcr⟩ = c := Fin.ext rfl
-    have := (hh.2.1 ⟨c.val, hcr⟩).1
-    rw [e] at this
-    exact col_of_fix this p
-  · have ha : 2 * r + k - c.val < r := by omega
-    have e : esI k r ⟨2 * r + k - c.val, ha⟩ = c := by
-      apply Fin.ext
-      simp only [esI]
-      omega
-    have := (hh.2.1 ⟨2 * r + k - c.val, ha⟩).2
-    rw [e] at this
-    exact col_of_fix this p
+  exact Formalism.QuantumDeterminants.WeylGroupFacts.uw_fixed_col hh c hc p
 
 theorem tau_out (i : Fin (2 * r + k + 1)) (hi : i.val < r ∨ r + k < i.val) :
     (tau k r i).val < r ∨ r + k < (tau k r i).val := by
@@ -231,33 +213,17 @@ theorem uw_mul {z : Fin (2 * r + k + 1) → ℂ}
 theorem mul_apply_of_row {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (M : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (i j : Fin (2 * r + k + 1))
     (hrow : ∀ p, h i p = if i = p then 1 else 0) : (h * M) i j = M i j := by
-  rw [Matrix.mul_apply, Finset.sum_eq_single i]
-  · rw [hrow, ite_eq_left rfl, one_mul]
-  · intro p _ hp
-    rw [hrow, ite_eq_right (Ne.symm hp), zero_mul]
-  · intro h'
-    exact absurd (Finset.mem_univ _) h'
+  exact Formalism.QuantumDeterminants.WeylGroupFacts.mul_apply_of_row M i j hrow
 
 theorem mul_apply_of_col {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (M : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (i j : Fin (2 * r + k + 1))
     (hcol : ∀ q, h q j = if q = j then 1 else 0) : (M * h) i j = M i j := by
-  rw [Matrix.mul_apply, Finset.sum_eq_single j]
-  · rw [hcol, ite_eq_left rfl, mul_one]
-  · intro q _ hq
-    rw [hcol, ite_eq_right hq, mul_zero]
-  · intro h'
-    exact absurd (Finset.mem_univ _) h'
+  exact Formalism.QuantumDeterminants.WeylGroupFacts.mul_apply_of_col M i j hcol
 
 theorem mulVec_apply_of_row {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (v : Fin (2 * r + k + 1) → ℂ) (i : Fin (2 * r + k + 1))
     (hrow : ∀ p, h i p = if i = p then 1 else 0) : (h *ᵥ v) i = v i := by
-  simp only [Matrix.mulVec, dotProduct]
-  rw [Finset.sum_eq_single i]
-  · rw [hrow, ite_eq_left rfl, one_mul]
-  · intro p _ hp
-    rw [hrow, ite_eq_right (Ne.symm hp), zero_mul]
-  · intro h'
-    exact absurd (Finset.mem_univ _) h'
+  exact Formalism.QuantumDeterminants.WeylGroupFacts.mulVec_apply_of_row v i hrow
 
 theorem ell_conj (z : Fin (2 * r + k + 1) → ℂ)
     {h h' g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
@@ -366,11 +332,7 @@ lemma emb_one : embWb k r 1 = 1 := by
   rw [emb_eq, Matrix.mul_one, add_sub_cancel]
 
 lemma emb_mul (a b : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) : embWb k r (a * b) = embWb k r a * embWb k r b := by
-  have h := sandwich (r := r) a b 1 1 (by rw [Matrix.one_mul, Matrix.mul_one]) (by rw [Matrix.one_mul, Matrix.mul_one])
-  rw [Matrix.mul_one] at h
-  rw [h, emb_eq, Matrix.mul_one, Matrix.mul_one]
-  congr 1
-  rw [Matrix.mul_sub, Matrix.mul_one, ← Matrix.mul_assoc, Q_Em, Matrix.zero_mul, sub_zero]
+  exact Formalism.FourierDecayAlt.P.B2x3.emb_mul a b
 
 end ReciprocityTheory.ChartRestriction.DS.Mult1.SymA
 end -- clump:auto
@@ -419,12 +381,7 @@ variable (γ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (hE : IsUnit (embWb k r �
 include hE
 
 lemma gbar_mul (g h : Mat k r) : gbar k r γ (g * h) = gbar k r γ g * gbar k r γ h := by
-  unfold gbar
-  have e : (embWb k r γ)⁻¹ * (g * h) * embWb k r γ =
-      ((embWb k r γ)⁻¹ * g * embWb k r γ) * ((embWb k r γ)⁻¹ * h * embWb k r γ) := by
-    simp only [Matrix.mul_assoc, Matrix.mul_nonsing_inv_cancel_left _ _ hE]
-  rw [e, Matrix.map_mul]
-  simp only [Matrix.mul_assoc, Matrix.nonsing_inv_mul_cancel_left _ _ hE]
+  exact ReciprocityTheory.ChartRestriction.DS.Mult1.InvGrp.gbar_mul hE g h
 
 lemma gbar_one : gbar k r γ 1 = 1 := by
   unfold gbar

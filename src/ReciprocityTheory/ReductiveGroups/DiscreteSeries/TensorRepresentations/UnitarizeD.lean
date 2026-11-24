@@ -17,11 +17,7 @@ open ReciprocityTheory.ChartRestriction.DS
 variable {n : ℕ} {ε : Fin n → Bool}
 
 theorem inG_sub (Y : Matrix (Fin n) (Fin n) ℂ) : inG ε (Y - Jm ε * Yᴴ * Jm ε) := by
-  unfold inG
-  rw [Matrix.conjTranspose_sub, Matrix.conjTranspose_mul, Matrix.conjTranspose_mul, _root_.ReciprocityTheory.ChartRestriction.DS.S7.Jm_conjTranspose,
-    Matrix.conjTranspose_conjTranspose]
-  simp only [Matrix.sub_mul, Matrix.mul_sub, Matrix.mul_assoc, _root_.ReciprocityTheory.ChartRestriction.DS.S7.Jm_mul_self, _root_.ReciprocityTheory.ChartRestriction.DS.Jm_mul_Jm_mul, Matrix.mul_one]
-  abel
+  exact ReciprocityTheory.ChartRestriction.DS.inG_sub_theta ε Y
 
 theorem inG_add (Y : Matrix (Fin n) (Fin n) ℂ) : inG ε (Complex.I • (Y + Jm ε * Yᴴ * Jm ε)) := by
   have h := inG_sub (ε := ε) (Complex.I • Y)
@@ -50,11 +46,7 @@ theorem mat_decomp (Y Z : Matrix (Fin n) (Fin n) ℂ) :
 
 theorem single_conj (a b : Fin n) :
     Jm ε * (Matrix.single a b (1 : ℂ))ᴴ * Jm ε = adjSign ε a b • Matrix.single b a 1 := by
-  ext i j
-  rw [Jm_eq, Matrix.mul_diagonal, Matrix.diagonal_mul, Matrix.conjTranspose_single, Matrix.smul_apply,
-    Matrix.single_apply, Matrix.single_apply]
-  unfold adjSign sg
-  split_ifs <;> simp_all
+  exact ReciprocityTheory.ChartRestriction.DS.theta_single ε a b
 
 end Mx
 

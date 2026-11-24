@@ -102,11 +102,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ}
 
 theorem L_open_le (d : LocData E n) (hd : d.Ok) {a : ℕ} (ha : a ≤ n) {w : Pl E} (hw : w ∈ d.S₀ ∪ d.Bad) :
     IsOpen (d.L a w : Set (GLw a w × GLw (n - a) w)) ∧ d.L a w ≤ K2 a (n - a) w := by
-  obtain ⟨L₁, L₂, e, h₁, h₂⟩ := hd.L a ha w hw
-  rw [e]
-  refine ⟨?_, Subgroup.prod_mono h₁.2.1 h₂.2.1⟩
-  rw [Subgroup.coe_prod]
-  exact h₁.1.prod h₂.1
+  exact PositivityTheory.Rg.BcB.F.PSeen.L_ok d hd ha hw
 
 theorem stabilizerDilationWeights_dualIsotropicVector (d : LocData E n) (hd : d.Ok) {a : ℕ} (ha : a ≤ n) {w : Pl E} (hT : w ∉ d.T) (hw : w ∈ d.S₀ ∪ d.Bad)
     (m : ℕ) : (pw (d.betaL a ha) m).s w = idem (d.L a w) := by
@@ -636,11 +632,7 @@ theorem ms_hint_left (K : Subgroup H) (u : H → ℂ) (k : H) :
   PositivityTheory.Rg.BcB.F.FinConv.hint_left K u k
 
 theorem ms_exists_of_hint_ne_zero (K : Subgroup H) (u : H → ℂ) (h : hint K u ≠ 0) : ∃ z, u z ≠ 0 := by
-  by_contra hc
-  push Not at hc
-  apply h
-  unfold hint
-  simp [hc]
+  exact GlobalTheory.BCT.CtLevel.exists_ne_zero_of_hint_ne_zero K u h
 
 variable {E : Type} [Field E] [NumberField E] {n : ℕ}
 

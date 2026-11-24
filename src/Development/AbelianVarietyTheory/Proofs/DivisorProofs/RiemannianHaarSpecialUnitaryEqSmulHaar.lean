@@ -114,12 +114,7 @@ theorem gram_eq_mul (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (x : Matri
   ring
 
 theorem det_ne_zero_of_orth (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) (τ : X.Ψ) :
-    (mat x τ).det ≠ 0 := by
-  intro h
-  have h1 := congrArg Matrix.det (hx τ)
-  rw [gram_eq_mul, Matrix.det_mul, Matrix.det_transpose, h, zero_mul, Matrix.det_diagonal] at h1
-  refine (Finset.prod_ne_zero_iff.2 fun a _ => ?_) h1.symm
-  exact_mod_cast sgn_ne X.p0 (a : ℕ)
+    (mat x τ).det ≠ 0 := GlobalTheory.RiemConst.Jac.det_mat_ne X x hx τ
 
 theorem densF_orth (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) :
     densF X x = fun w => ∏ τ, ∏ i : Fin r, ‖lminor (Gw X w τ) i.castSucc‖ ^ (-2 : ℤ) := by
@@ -333,16 +328,7 @@ open scoped ComplexConjugate
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
 
 theorem torusDer_sum_angles (φ : Fin (r - 1) → ℝ) : ∑ a : Fin r, angles φ a = 0 := by
-  cases r with
-  | zero => simp
-  | succ n =>
-    rw [Fin.sum_univ_castSucc]
-    have h1 : ∀ i : Fin n, angles φ i.castSucc = φ ⟨i, by simp⟩ := by
-      intro i; unfold angles; rw [dite_eq_left (by simp)]; rfl
-    have h2 : angles φ (Fin.last n) = -∑ k, φ k := by
-      unfold angles; rw [dite_eq_right (by simp)]
-    rw [h2, Finset.sum_congr rfl fun i _ => h1 i, add_neg_eq_zero]
-    exact Fintype.sum_equiv (finCongr (by simp)) _ _ (fun i => rfl)
+  exact GlobalTheory.TorusFrame.sum_angles φ
 
 theorem torusDer_hermC_dot (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (u w : Fin r → ℂ) :
     hermC τ G u w = u ⬝ᵥ (G.map τ *ᵥ fun b => conj (w b)) := by

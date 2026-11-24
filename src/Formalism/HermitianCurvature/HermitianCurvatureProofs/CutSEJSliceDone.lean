@@ -819,14 +819,7 @@ theorem seven_derivatives_of_word_operator (X : ActualOps k r z z' π π') (l : 
 
 theorem wOp_lcJ (X : ActualOps k r z z' π π') (l : Fin r) (js : List (Fin 6)) :
     ∀ Ψ ∈ lcSub k r z z' π π', wOp X l js Ψ ∈ lcSub k r z z' π π' := by
-  induction js with
-  | nil => intro Ψ h; simpa [wOp] using h
-  | cons j js ih =>
-    intro Ψ h
-    have e : wOp X l (j :: js) Ψ = X.op l j (wOp X l js Ψ) := by
-      simp [wOp, List.map_cons, List.prod_cons]
-    rw [e]
-    exact op_lc X l j _ (ih Ψ h)
+  apply Formalism.FourierDecayAlt.P.CutSE.wOp_lc
 
 end Gen
 
@@ -890,26 +883,7 @@ private theorem opL_eq_zero_of_eventuallyEq_zero {m : ℕ} {E : Type*} [NormedAd
 
 theorem jsl_wOp_lc (X : ActualOps k r z z' π π') (l : Fin r) (js : List (Fin 6)) :
     ∀ Φ ∈ lcSub k r z z' π π', wOp X l js Φ ∈ lcSub k r z z' π π' := by
-  have hmem : ∀ Ψ : RadSp k r z z' π π', Ψ ∈ lcSub k r z z' π π' ↔ ∀ c ∈ OmX r, LCptAt Ψ c :=
-    fun Ψ => Iff.rfl
-  have hop : ∀ j, ∀ Ψ ∈ lcSub k r z z' π π', X.op l j Ψ ∈ lcSub k r z z' π π' := by
-    intro j Ψ hΨ
-    rw [hmem] at hΨ ⊢
-    intro c hc
-    obtain ⟨U', hU', hcU, K, hK, hKG, h0⟩ := hΨ c hc
-    refine ⟨U', hU', hcU, K, hK, hKG, fun c' hc' g hg hgK => ?_⟩
-    rw [X.op_apply]
-    show opL l j (fun c'' => (Ψ : Fn k r (Wq →L[ℂ] Wp)) c'' g) c' = 0
-    apply opL_eq_zero_of_eventuallyEq_zero
-    filter_upwards [hU'.mem_nhds hc'] with c'' hc''
-    exact h0 c'' hc'' g hg hgK
-  induction js with
-  | nil =>
-    intro Φ hΦ
-    simpa [wOp] using hΦ
-  | cons j js ih =>
-    intro Φ hΦ
-    exact hop j _ (ih Φ hΦ)
+  apply Formalism.FourierDecayAlt.P.CutSE.wOp_lc
 
 theorem jsl_hsInner_self_norm (C : Wq →L[ℂ] Wp) : ‖B.hsInner C C‖ = ‖B.hsVec C‖ ^ 2 := by
   rw [B.hsInner, inner_self_eq_norm_sq_to_K]

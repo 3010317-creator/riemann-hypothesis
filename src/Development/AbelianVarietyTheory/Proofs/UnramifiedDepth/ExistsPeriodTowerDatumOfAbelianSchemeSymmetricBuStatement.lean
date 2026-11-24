@@ -1320,34 +1320,12 @@ variable {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] {P : LB (G �
 theorem prod_law₁ {T : Over S} (x x' y : T ⟶ G) {U : Type} [CommGroup U] (h : (T.left ⟶ (G ⊗ G).left) → U) :
     ∏ k, h ((lift x (lift x' y)).left ≫ law1φ G (x3 G 0) (x3 G 1) (x3 G 2) k) ^ lawε k =
       h (lift (x * x') y).left * (h (lift x y).left)⁻¹ * (h (lift x' y).left)⁻¹ := by
-  have a₀ : lift x (lift x' y) ≫ x3 G 0 = x := by simp [x3]
-  have a₁ : lift x (lift x' y) ≫ x3 G 1 = x' := by simp [x3]
-  have a₂ : lift x (lift x' y) ≫ x3 G 2 = y := by simp [x3]
-  have b : lift x (lift x' y) ≫ padd G (x3 G 0) (x3 G 1) = x * x' := (MonObj.comp_mul _ _ _).trans (by rw [a₀, a₁])
-  refine (Fintype.prod_equiv (Equiv.ulift : ULift (Fin 3) ≃ Fin 3) _
-    (fun i => h ((lift x (lift x' y)).left ≫ law1φ G (x3 G 0) (x3 G 1) (x3 G 2) ⟨i⟩) ^ lawε ⟨i⟩) (fun _ => rfl)).trans ?_
-  rw [Fin.prod_univ_three]
-  show h (lift x (lift x' y) ≫ lift (padd G (x3 G 0) (x3 G 1)) (x3 G 2)).left ^ (1 : ℤ) *
-    h (lift x (lift x' y) ≫ lift (x3 G 0) (x3 G 2)).left ^ (-1 : ℤ) *
-    h (lift x (lift x' y) ≫ lift (x3 G 1) (x3 G 2)).left ^ (-1 : ℤ) = _
-  rw [comp_lift, comp_lift, comp_lift, b, a₀, a₁, a₂]
-  simp only [_root_.zpow_neg, _root_.zpow_one]
+  exact GlobalTheory.BiextSym.biextension_first_law_product x x' y h
 
 theorem prod_law₂ {T : Over S} (x y y' : T ⟶ G) {U : Type} [CommGroup U] (h : (T.left ⟶ (G ⊗ G).left) → U) :
     ∏ k, h ((lift x (lift y y')).left ≫ law2φ G (x3 G 0) (x3 G 1) (x3 G 2) k) ^ lawε k =
       h (lift x (y * y')).left * (h (lift x y).left)⁻¹ * (h (lift x y').left)⁻¹ := by
-  have a₀ : lift x (lift y y') ≫ x3 G 0 = x := by simp [x3]
-  have a₁ : lift x (lift y y') ≫ x3 G 1 = y := by simp [x3]
-  have a₂ : lift x (lift y y') ≫ x3 G 2 = y' := by simp [x3]
-  have b : lift x (lift y y') ≫ padd G (x3 G 1) (x3 G 2) = y * y' := (MonObj.comp_mul _ _ _).trans (by rw [a₁, a₂])
-  refine (Fintype.prod_equiv (Equiv.ulift : ULift (Fin 3) ≃ Fin 3) _
-    (fun i => h ((lift x (lift y y')).left ≫ law2φ G (x3 G 0) (x3 G 1) (x3 G 2) ⟨i⟩) ^ lawε ⟨i⟩) (fun _ => rfl)).trans ?_
-  rw [Fin.prod_univ_three]
-  show h (lift x (lift y y') ≫ lift (x3 G 0) (padd G (x3 G 1) (x3 G 2))).left ^ (1 : ℤ) *
-    h (lift x (lift y y') ≫ lift (x3 G 0) (x3 G 1)).left ^ (-1 : ℤ) *
-    h (lift x (lift y y') ≫ lift (x3 G 0) (x3 G 2)).left ^ (-1 : ℤ) = _
-  rw [comp_lift, comp_lift, comp_lift, b, a₀, a₁, a₂]
-  simp only [_root_.zpow_neg, _root_.zpow_one]
+  exact GlobalTheory.BiextSym.biextension_second_law_product x y y' h
 
 omit [IsCommMonObj G] in
 theorem comp_pow' {T T' : Over S} (ρ : T' ⟶ T) (a : T ⟶ G) (k : ℕ) : ρ ≫ a ^ k = (ρ ≫ a) ^ k := by

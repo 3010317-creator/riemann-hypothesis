@@ -58,13 +58,7 @@ variable {n : ℕ} {R : Type} [CommRing R] [StarRing R]
 
 omit [StarRing R] in
 theorem Phi_apply' (i j : Fin n) : Phi n R i j = if j = i.rev then (-1) ^ (i : ℕ) else 0 := by
-  simp only [Phi, Matrix.of_apply]
-  congr 1
-  apply propext
-  rw [Fin.ext_iff, Fin.val_rev]
-  have := i.2
-  have := j.2
-  omega
+  exact GlobalTheory.Tw.PhiConjugateTranspose.phi_apply i j
 
 omit [StarRing R] in
 theorem Phi_mul_transpose : Phi n R * (Phi n R)ᵀ = 1 := by

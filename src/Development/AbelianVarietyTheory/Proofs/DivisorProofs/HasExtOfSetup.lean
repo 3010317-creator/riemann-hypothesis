@@ -1274,15 +1274,7 @@ open GlobalTheory.Desc
 namespace GlobalTheory.Desc
 
 theorem gp_comp_eq_spMap_cst (X : Scheme.{0}) [IsIntegral X] (R : Type) [CommRing R] (p : X ⟶ Sp R) :
-    gp X ≫ p = spMap (cst p) := by
-  have h : p = X.toSpecΓ ≫ Spec.map ((Scheme.ΓSpecIso (CommRingCat.of R)).inv ≫ p.appTop) := by
-    rw [Spec.map_comp, ← Scheme.toSpecΓ_naturality_assoc]
-    simp [← SpecMap_ΓSpecIso_hom, ← Spec.map_comp]
-  conv_lhs => rw [h]
-  rw [gp]
-  erw [Scheme.fromSpecStalk_toSpecΓ_assoc]
-  erw [← Spec.map_comp]
-  rfl
+    gp X ≫ p = spMap (cst p) := GlobalTheory.Desc.ModPi.gp_comp_cst X R p
 
 end GlobalTheory.Desc
 end -- clump:auto
@@ -1307,11 +1299,7 @@ namespace GlobalTheory.Desc.StalkMap
 variable {X : Scheme.{0}}
 
 theorem top_le_fromSpecStalk (x : X) (U : X.Opens) (hx : x ∈ U) : ⊤ ≤ X.fromSpecStalk x ⁻¹ᵁ U := by
-  intro z _
-  have hz : X.fromSpecStalk x z ⤳ x := by
-    have : X.fromSpecStalk x z ∈ Set.range (X.fromSpecStalk x) := ⟨z, rfl⟩
-    rwa [Scheme.range_fromSpecStalk] at this
-  exact hz.mem_open U.2 hx
+  exact GlobalTheory.Desc.BCChart.fromSpecStalk_top' x U hx
 
 theorem appLE_fromSpecStalk (x : X) (U : X.Opens) (hx : x ∈ U) :
     (X.fromSpecStalk x).appLE U ⊤ (top_le_fromSpecStalk x U hx) =

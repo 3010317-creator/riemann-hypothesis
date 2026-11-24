@@ -256,13 +256,7 @@ variable {D : D7} {X : HidaSetting D} {u u' : D.what₂.Word} {F0 : FlagG (VS D)
   {F0' : FlagG (VS D) D.R.rS ((Tu D u' : ℕ) : D.host.E)} {Λ Λ' : Submodule (𝓞 D.host.E) (VS D).V}
 
 theorem grel_equiv : Equivalence (GRel X u u' F0 F0' Λ Λ') := by
-  refine ⟨?_, ?_, ?_⟩
-  · intro p
-    exact ⟨1, Formalism.L2.SG.TermDef.one_mem_NLam _ _, 1, Formalism.L2.SG.TermDef.one_mem_NLam _ _, by simp⟩
-  · rintro p q ⟨n, hn, n', hn', h⟩
-    exact ⟨n⁻¹, Formalism.L2.SG.Pf.nlamPf_inv hn, n'⁻¹, Formalism.L2.SG.Pf.nlamPf_inv hn', by rw [h]; group⟩
-  · rintro p q w ⟨n, hn, n', hn', h⟩ ⟨m, hm, m', hm', h'⟩
-    exact ⟨m * n, Formalism.L2.SG.Pf.nlamPf_mul hm hn, n' * m', Formalism.L2.SG.Pf.nlamPf_mul hn' hm', by rw [h', h]; group⟩
+  exact Formalism.L2.SG.Pf.SatGramRep.grel_equiv Λ Λ'
 
 theorem lin_of_cls {what₂ rows' : Finset (Submodule (𝓞 D.host.E) (VS D).V)} (s : GTerm X u u' F0 F0' what₂ rows')
     (p : GCar X u u' F0 F0' s.lam s.lam') (h : s.cls = Quot.mk _ p) :

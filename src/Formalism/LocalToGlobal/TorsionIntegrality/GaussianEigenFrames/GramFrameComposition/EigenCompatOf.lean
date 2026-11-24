@@ -25,13 +25,7 @@ section Norm
 variable {K : Type} [NormedField K] [IsUltrametricDist K]
 
 lemma nsum {α : Type} (s : Finset α) (f : α → K) (h : ∀ i ∈ s, ‖f i‖ ≤ 1) : ‖∑ i ∈ s, f i‖ ≤ 1 := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp
-  | insert a s ha ih =>
-    rw [Finset.sum_insert ha]
-    exact (IsUltrametricDist.norm_add_le_max _ _).trans
-      (max_le (h a (Finset.mem_insert_self a s)) (ih fun i hi => h i (Finset.mem_insert_of_mem hi)))
+  exact Formalism.L2.Th1.E.Ser.norm_sum_le_one s f h
 
 omit [IsUltrametricDist K] in
 lemma nmul {x y : K} (hx : ‖x‖ ≤ 1) (hy : ‖y‖ ≤ 1) : ‖x * y‖ ≤ 1 := by

@@ -1669,15 +1669,7 @@ theorem oneTh (hW : L.WMaj) {p : ℕ} (μ : Measure (Mx D 1 p)) (𝓕 : Set (Mx 
   rfl
 
 theorem hecke_mul_inv {χ ε : (AE D)ˣ →* Circle} (hχ : IsHeckeChar D χ) (hε : IsHeckeChar D ε) :
-    IsHeckeChar D (χ * ε⁻¹) := by
-  have e : ⇑(χ * ε⁻¹) = fun x => χ x * (ε x)⁻¹ := by
-    funext x
-    simp
-  refine ⟨?_, fun x => ?_⟩
-  · rw [e]
-    exact hχ.1.mul hε.1.inv
-  · rw [e]
-    simp only [hχ.2 x, hε.2 x, inv_one, mul_one]
+    IsHeckeChar D (χ * ε⁻¹) := GlobalTheory.WeilVacChar.hecke_mul_inv hχ hε
 
 theorem resEta_mul_inv {χ ε : (AE D)ˣ →* Circle} {k : ℕ} (hχ : ResEta D χ (k + 1)) (hε : ResEta D ε 1) :
     ResEta D (χ * ε⁻¹) k := by

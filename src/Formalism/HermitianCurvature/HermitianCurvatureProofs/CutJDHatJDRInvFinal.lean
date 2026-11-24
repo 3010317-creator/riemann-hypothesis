@@ -464,12 +464,7 @@ theorem det_Mr_lower (R0 R0' : Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → �
 
 theorem uh_mul' {a b : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (ha : a ∈ UH (Hpk k r))
     (hb : b ∈ UH (Hpk k r)) : a * b ∈ UH (Hpk k r) := by
-  have ha' : aᴴ * Hpk k r * a = Hpk k r := ha
-  have hb' : bᴴ * Hpk k r * b = Hpk k r := hb
-  show (a * b)ᴴ * Hpk k r * (a * b) = Hpk k r
-  rw [Matrix.conjTranspose_mul]
-  calc bᴴ * aᴴ * Hpk k r * (a * b) = bᴴ * (aᴴ * Hpk k r * a) * b := by simp only [Matrix.mul_assoc]
-    _ = Hpk k r := by rw [ha', hb']
+  exact Formalism.QuantumDeterminants.WeylGroupFacts.uh_mul ha hb
 
 theorem uh_inv_mem' {a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (ha : a ∈ UH (Hpk k r)) :
     a⁻¹ ∈ UH (Hpk k r) := by
@@ -721,13 +716,7 @@ theorem mw_XA (hw : w ∈ UWset k r z') (hm : m ∈ Nset k r) (i q : Fin (2 * r 
 
 theorem mw_zA (hz' : inWb k r z') (hw : w ∈ UWset k r z') (hm : m ∈ Nset k r) (i : Fin (2 * r + k + 1))
     (hi : r ≤ i.val) : ((m * w) *ᵥ z') i = z' i := by
-  rw [← Matrix.mulVec_mulVec, hw.2.2]
-  have e : ∀ j, m i j * z' j = (if i = j then 1 else 0) * z' j := by
-    intro j
-    by_cases hj : r ≤ j.val ∧ j.val ≤ r + k
-    · rw [hm.2.2 i j hj.1 hj.2 hi]
-    · rw [hz' j (by omega), mul_zero, mul_zero]
-  simp only [Matrix.mulVec, dotProduct, e, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
+  exact Formalism.FourierDecayAlt.P.CutMP.InvEig.nilpotent_unitary_fixes_tail hz' hw hm i hi
 
 theorem mw_GV (hw : w ∈ UWset k r z') (hm : m ∈ Nset k r) : m * w ∈ B.GV k r := WeylGroupFacts.uh_mul hm.1 hw.1
 

@@ -307,13 +307,7 @@ section
 open Formalism.L2.Th1.CM (HasCMBy omegaK jInv)
 open Formalism.L2.Th1.F (scalePair)
 
-theorem norm_three_padicComplex_two : ‖(3 : ℂ_[2])‖ = 1 := by
-  have h := PadicComplex.norm_extends' (p := 2) ((3:ℕ) : ℚ_[2])
-  rw [Padic.norm_natCast_eq_one_iff.2 (by norm_num)] at h
-  rw [← h]
-  congr 1
-  rw [map_natCast, PadicComplex.coe_natCast]
-  rfl
+theorem norm_three_padicComplex_two : ‖(3 : ℂ_[2])‖ = 1 := Formalism.L2.Th1.B.KFin.norm_three
 
 theorem disc_ne_zero (L : PeriodPair) : disc L ≠ 0 := Formalism.L2.Th1.F.discNeZero L
 

@@ -307,21 +307,13 @@ section Concrete
 
 variable {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAinf l P)
 
-theorem εroot_pow (s : ℕ) : AI.εroot s ^ l ^ s = AI.ε := by
-  induction s with
-  | zero => simp [LocAinf.εroot]
-  | succ s ih =>
-    rwa [pow_succ', pow_mul, LocAinf.εroot, Function.iterate_succ_apply', frobeniusEquiv_symm_pow_p]
+theorem εroot_pow (s : ℕ) : AI.εroot s ^ l ^ s = AI.ε := GlobalTheory.Cyc.εroot_pow AI s
 
 theorem εroot_ne_one (s : ℕ) : AI.εroot s ≠ 1 := fun h =>
   AI.ε_ne_one (by rw [← _root_.GlobalTheory.Cyc.εroot_pow AI s, h, one_pow])
 
 theorem εroot_sub_not_unit (s : ℕ) : ¬ IsUnit (AI.εroot s - 1) := by
-  intro h
-  have h1 := (h.pow (l ^ s)).map (PreTilt.coeff 0)
-  rw [sub_pow_char_pow, εroot_pow, one_pow, map_sub, AI.ε_coeff, AI.ζ_zero, map_one, map_one,
-    sub_self] at h1
-  exact not_isUnit_zero h1
+  exact GlobalTheory.Cyc.εroot_sub_one_not_unit AI s
 
 theorem coeff_εroot (s n : ℕ) : PreTilt.coeff n (AI.εroot s) =
     Ideal.Quotient.mk (Ideal.span {((l : ℕ) : OC l)}) (AI.ζ (n + s)) := by

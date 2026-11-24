@@ -130,12 +130,7 @@ theorem red_entB (k₀ : ℕ) {n : ℕ} (ex : ℕ → ℕ) (j : GLint E n P) (p 
   rfl
 
 theorem lamY_zero (n : ℕ) (ex : ℕ → ℕ) : LocE.lamY P (qOf P) n 0 ex = stdAt E n P := by
-  ext v
-  unfold LocE.lamY
-  rw [LastSteps.mem_sclLat, mem_stdAt]
-  refine forall_congr' fun l => ?_
-  have : LocE.scE n ex l.1 = 0 := ite_eq_left l.2
-  rw [this, zpow_zero, inv_one, one_mul]
+  exact GlobalTheory.LastSteps.lamY_zero ex
 
 theorem int_entB (k₀ : ℕ) {n : ℕ} (ex : ℕ → ℕ) (j : GLint E n P) :
     IntM P (n + 0) (n + 0) (LocE.entB (qOf P) k₀ 0 n 0 n ex ex (j.1.toLinearMap : HomE E (n + 0) (n + 0))) :=

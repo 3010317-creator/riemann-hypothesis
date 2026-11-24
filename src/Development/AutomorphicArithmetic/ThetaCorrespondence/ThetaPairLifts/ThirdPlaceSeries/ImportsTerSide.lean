@@ -976,24 +976,11 @@ namespace GlobalTheory.TwistLabel
 
 theorem teich_zero' {g : ℕ} [Fact g.Prime] (t : Formalism.CyclotomicNorms.Fbar g →* ℂ)
     (ht : ∀ x y, x ≠ 0 → y ≠ 0 → t x = t y → x = y) : t 0 = 0 := by
-  classical
-  obtain ⟨x, hx⟩ := Infinite.exists_notMem_finset ({0, 1} : Finset (Formalism.CyclotomicNorms.Fbar g))
-  simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hx
-  by_contra h0
-  have h1 : t 0 * t x = t 0 * t 1 := by rw [← map_mul, ← map_mul, zero_mul, zero_mul]
-  exact hx.2 (ht x 1 hx.1 one_ne_zero (mul_left_cancel₀ h0 h1))
+  exact GlobalTheory.TameLabels.teich_zero t ht
 
 theorem teich_injective' {g : ℕ} [Fact g.Prime] (t : Formalism.CyclotomicNorms.Fbar g →* ℂ)
     (ht : ∀ x y, x ≠ 0 → y ≠ 0 → t x = t y → x = y) : Function.Injective t := by
-  have h0 := teich_zero' t ht
-  have hne : ∀ x, x ≠ 0 → t x ≠ 0 := fun x hx => ((IsUnit.mk0 x hx).map t).ne_zero
-  intro x y h
-  by_cases hx : x = 0
-  · by_contra hxy
-    exact hne y (fun hy => hxy (hx.trans hy.symm)) (by rw [← h, hx, h0])
-  · by_cases hy : y = 0
-    · exact absurd (by rw [h, hy, h0]) (hne x hx)
-    · exact ht x y hx hy h
+  exact GlobalTheory.TameLabels.teich_injective t ht
 
 theorem prod_scaleRoots {α : Type*} (s : Multiset α) (f : α → ℂ) (c : ℂ) :
     ((s.map fun x => X - C (f x)).prod).scaleRoots c = (s.map fun x => X - C (f x * c)).prod := by

@@ -723,10 +723,7 @@ theorem coords_den {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
 
 theorem nhds_unif {ι Y : Type} [Finite ι] [TopologicalSpace Y] (y0 : Y) (W : Set (ι → Y))
     (hW : W ∈ 𝓝 (fun _ => y0)) : ∃ V ∈ 𝓝 y0, ∀ y : ι → Y, (∀ i, y i ∈ V) → y ∈ W := by
-  rw [nhds_pi, Filter.mem_pi'] at hW
-  obtain ⟨I, t, ht, hsub⟩ := hW
-  refine ⟨⋂ i, t i, Filter.iInter_mem.mpr ht, fun y hy => hsub ?_⟩
-  exact fun i _ => Set.mem_iInter.mp (hy i) i
+  exact GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.Dec.exists_nhds_of_pi hW
 
 end GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.Commens
 

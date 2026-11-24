@@ -65,12 +65,7 @@ variable {D : D7}
 
 alias upSum_add' := _root_.GlobalTheory.MixPer.upSum_add
 
-theorem upSum_one' {ρ : ℕ} : upSum (1 : Mx D ρ ρ) = 0 := by
-  refine Finset.sum_eq_zero fun i _ => Finset.sum_eq_zero fun j _ => ?_
-  split_ifs with h
-  · rw [Matrix.one_apply_ne]
-    intro hij; rw [hij] at h; omega
-  · rfl
+theorem upSum_one' {ρ : ℕ} : upSum (1 : Mx D ρ ρ) = 0 := GlobalTheory.MixPer.upSum_one ρ
 
 alias mt_one_ := _root_.GlobalTheory.BesselCompare.mt_one
 

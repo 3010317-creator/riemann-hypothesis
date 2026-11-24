@@ -1231,11 +1231,7 @@ namespace GlobalTheory.HeatConn.Comm
 
 theorem spMap_fst_alg (k : Type) [Field k] :
     spMap (TrivSqZeroExt.fstHom k k k).toRingHom ≫ spMap (algebraMap k (DualNumber k)) = 𝟙 _ := by
-  rw [← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
-  have : (TrivSqZeroExt.fstHom k k k).toRingHom.comp (algebraMap k (DualNumber k)) = RingHom.id k := by
-    ext; simp
-  rw [this, spMap]
-  exact Spec.map_id _
+  exact GlobalTheory.spMap_fstHom_comp_algebraMap
 
 theorem exists_sec {k : Type} [Field k] {S A A₀ B' : Scheme.{0}} (p : A ⟶ S) (s : Sp k ⟶ S) (q₀ : A₀ ⟶ Sp k)
     (q : B' ⟶ Sp (DualNumber k)) (m₀ : A₀ ⟶ A) (π₁ π₂ : B' ⟶ A) (pr : B' ⟶ A₀)

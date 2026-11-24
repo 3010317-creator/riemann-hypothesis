@@ -170,17 +170,7 @@ theorem mem_basisSet_one (σ : E →ₐ[F] E) {d : ℕ} (bs : Module.Basis (Fin 
 
 theorem two_of {σ : E →ₐ[F] E} {d : ℕ} {bs : Module.Basis (Fin d) F E} {v : HeightOneSpectrum (𝓞 F)}
     (hB : IntAt v (basisSet σ bs)) : ‖(2 : Fv F v)‖ = 1 := by
-  have h1 := hB _ (mem_basisSet_two σ bs)
-  rw [map_inv₀, map_ofNat, ← norm_le_one_iff_mem', norm_inv] at h1
-  have h2 : ‖(2 : Fv F v)‖ ≤ 1 := by
-    rw [norm_le_one_iff_mem', show (2 : Fv F v) = 1 + 1 by norm_num]
-    exact add_mem (one_mem _) (one_mem _)
-  have h0 : (2 : Fv F v) ≠ 0 := by
-    rw [← map_ofNat (algebraMap F (Fv F v)) 2]
-    exact (map_ne_zero_iff _ (algebraMap F (Fv F v)).injective).mpr two_ne_zero
-  have hpos : 0 < ‖(2 : Fv F v)‖ := norm_pos_iff.mpr h0
-  have h3 := (inv_le_one₀ hpos).mp h1
-  linarith
+  exact GlobalTheory.CompanionTheory.GunrInert.norm_two_eq hB
 
 theorem unif_mem_Rv {σ : E →ₐ[F] E} {d : ℕ} {bs : Module.Basis (Fin d) F E} {v : HeightOneSpectrum (𝓞 F)}
     (hB : IntAt v (basisSet σ bs)) {ϖ : Fv F v} (hϖ : ϖ ∈ v.adicCompletionIntegers F) :

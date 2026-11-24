@@ -1429,16 +1429,7 @@ theorem kEvc_sym (hA : IsAbelianScheme A) {P : LB (A ⊗ B).left} (hP : P.IsLB) 
     (L : LB ((Over.pullback s).obj A).left) (hL : L.IsLB)
     (e : LBIso ((ev P (fst A A) (snd A A ≫ l)).pull (sqToBase A s)) (abelian₂ ((Over.pullback s).obj A) L))
     {Y : Over (Sp Ω)} (x y : Over.mk (Y.hom ≫ s) ⟶ A) :
-    evc hP x (y ≫ l) = evc hP y (x ≫ l) := by
-  haveI := hA.comm
-  haveI : IsCommMonObj ((Over.pullback s).obj A) := inferInstance
-  have h1 := lam_cL_pt s hP l L hL e (kLiftPt s A x) (kLiftPt s A y)
-  have h2 := lam_cL_pt s hP l L hL e (kLiftPt s A y) (kLiftPt s A x)
-  rw [kToBase_liftPt, kToBase_liftPt] at h1 h2
-  rw [← h1, ← h2]
-  unfold lam
-  rw [mul_comm (kLiftPt s A x) (kLiftPt s A y)]
-  abel
+    evc hP x (y ≫ l) = evc hP y (x ≫ l) := PositivityTheory.PrwZar.Z2.ceEvc_sym hA hP l s L hL e x y
 
 private theorem evc_comp_left_eq_pull {S' : Scheme} {G H Y0 Y1 : Over S'} {P : LB (G ⊗ H).left} (hP : P.IsLB)
     (h : Y1 ⟶ Y0) (a : Y0 ⟶ G) (b : Y0 ⟶ H) : evc hP (h ≫ a) (h ≫ b) = pull h.left (evc hP a b) := by

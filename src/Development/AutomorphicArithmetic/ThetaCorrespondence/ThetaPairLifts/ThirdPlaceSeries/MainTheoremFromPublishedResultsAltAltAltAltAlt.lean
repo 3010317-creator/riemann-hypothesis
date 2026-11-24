@@ -481,21 +481,10 @@ theorem trc_smul {V : HSp D} (e : GA D V →₀ ℂ) (a : ℂ) (f : GA D V → �
 
 theorem perF_smul {c : Comm D} (t : Tup c) (j ρ : ℕ) (h : j + 2 * ρ + 2 = D.R.m) (φ : t.Ch j → GA D (c.X j) → ℂ)
     (a : ℂ) (f : GA D (c.V j) → ℂ) : t.perF j ρ h φ (a • f) = a * t.perF j ρ h φ f := by
-  simp only [Tup.perF, trc_smul, Finset.mul_sum]
-  refine Finset.sum_congr rfl fun α _ => ?_
-  have e := GlobalTheory.HandHom.per_smul (c.B j ρ h) c.ψ 1 a (φ α) (trc (t.e j α) f)
-  rwa [one_smul, one_mul] at e
+  exact GlobalTheory.SeeSawStep.perF_smul t j ρ h φ a f
 
 theorem contAut_trc {V : HSp D} (e : GA D V →₀ ℂ) {f : GA D V → ℂ} (hf : IsContAut V f) : IsContAut V (trc e f) := by
-  refine ⟨fun γ hγ g => ?_, ?_⟩
-  · simp only [trc, rTrans, Finset.sum_apply, Pi.smul_apply]
-    refine Finset.sum_congr rfl fun x _ => ?_
-    rw [mul_assoc, hf.1 γ hγ]
-  · have e : trc e f = fun x => ∑ g ∈ e.support, e g * f (x * g) := by
-      funext x
-      simp only [trc, rTrans, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
-    rw [e]
-    exact continuous_finsetSum _ fun g _ => continuous_const.mul (hf.2.comp (continuous_mul_const g))
+  exact GlobalTheory.SeeSawLastValue.contAut_trc e hf
 
 theorem contAut_emb {S A B : HSp D} (o : OrthDec S A B) {f : GA D S → ℂ} (hf : IsContAut S f) :
     Continuous (fun h : GA D A => f (o.emb (h, 1))) ∧ ∀ γ ∈ GQ A, ∀ g, f (o.emb (γ * g, 1)) = f (o.emb (g, 1)) := by

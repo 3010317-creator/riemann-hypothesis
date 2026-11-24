@@ -1120,12 +1120,7 @@ theorem sig_mem_map (α : Aug I π R₁) {B B₀ : Type} [CommRing B] [Algebra R
 theorem sig_unique (α : Aug I π R₁) {B B₀ : Type} [CommRing B] [Algebra R B] [CommRing B₀] [Algebra R₀ B₀]
     (p : B →+* B₀) (hp : Function.Surjective p) (σ σ' : R₁ ⊗[R₀] B₀ →+ B) (hσ : α.IsSig p σ)
     (hσ' : α.IsSig p σ') (y : R₁ ⊗[R₀] B₀) : σ y = σ' y := by
-  induction y using TensorProduct.induction_on with
-  | zero => simp
-  | tmul x b₀ =>
-    obtain ⟨b, rfl⟩ := hp b₀
-    rw [hσ, hσ']
-  | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
+  exact (GlobalTheory.LBObs.isSig_unique α p hp σ σ' hσ hσ' y).symm
 
 theorem sig_one_add_mul (hI : I ^ 2 = 0) (α : Aug I π R₁) {B B₀ : Type} [CommRing B] [Algebra R B] [CommRing B₀]
     [Algebra R₀ B₀] (p : B →+* B₀) (hp : Function.Surjective p) (σ : R₁ ⊗[R₀] B₀ →+ B) (hσ : α.IsSig p σ)

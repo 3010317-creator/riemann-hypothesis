@@ -134,18 +134,7 @@ end Generic
 
 variable {D : D7}
 
-theorem cA_cA (a : AE D) : cA D (cA D a) = a := by
-  have hs : ∀ x : D.host.E, D.sp.cm.sig (D.sp.cm.sig x) = x := by
-    intro x
-    unfold Formalism.BasicNotions.CMData.sig
-    exact star_star x
-  unfold cA sigR
-  induction a using TensorProduct.induction_on with
-  | zero => simp
-  | tmul a b => simp [Algebra.TensorProduct.map_tmul, hs]
-  | add x y hx hy =>
-    simp only [map_add (f := _)] at *
-    rw [hx, hy]
+theorem cA_cA (a : AE D) : cA D (cA D a) = a := GlobalTheory.SplitOnto.cA_cA a
 
 theorem mt_rel (V : HSp D) (g : GA D V) :
     ((mt V g).map (cA D))ᵀ * V.gram.map (incA D) * mt V g = V.gram.map (incA D) := by

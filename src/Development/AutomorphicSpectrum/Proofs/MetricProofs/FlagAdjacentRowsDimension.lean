@@ -138,18 +138,7 @@ variable {N j : ℕ} {ca cb : Fin N}
 theorem one_add_single_mul (hne : ca ≠ cb) (s t : ℂ) :
     (1 + Matrix.single cb ca s : Matrix (Fin N) (Fin N) ℂ) * (1 + Matrix.single cb ca t) =
       1 + Matrix.single cb ca (s + t) := by
-  have e : (Matrix.single cb ca s : Matrix (Fin N) (Fin N) ℂ) * Matrix.single cb ca t = 0 := by
-    ext r c
-    rw [Matrix.mul_apply, Matrix.zero_apply]
-    refine Finset.sum_eq_zero fun k _ => ?_
-    rw [Matrix.single_apply, Matrix.single_apply]
-    split_ifs with h1 h2
-    · exact absurd (h1.2.trans h2.1.symm) hne
-    · rw [mul_zero]
-    · rw [zero_mul]
-    · rw [zero_mul]
-  rw [mul_add, add_mul, add_mul, e, one_mul, one_mul, mul_one, Matrix.single_add]
-  abel
+  exact GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.LcFam.elem_mul_elem hne s t
 
 theorem det_transvection_ne (hne : ca ≠ cb) (t : ℂ) :
     (1 + Matrix.single cb ca t : Matrix (Fin N) (Fin N) ℂ).det ≠ 0 := by
@@ -576,17 +565,7 @@ theorem orbit_fstPt {k₀ : K} {z z' : (Σ o : Option K, ι (o.getD k₀)) → �
 
 theorem orbit_sndPt {k₀ : K} {z z' : (Σ o : Option K, ι (o.getD k₀)) → ℂ} (h : SameOrbit z z') :
     SameOrbit (sndPt k₀ z) (sndPt k₀ z') := by
-  obtain ⟨c, hc, rfl⟩ := h
-  refine ⟨fun k => if k = k₀ then c none else c (some k), fun k => ?_, ?_⟩
-  · dsimp only
-    split_ifs
-    exacts [hc _, hc _]
-  · funext p
-    obtain ⟨k, m⟩ := p
-    by_cases hk : k = k₀
-    · subst hk
-      simp only [sndPt, Function.comp, v₁_self, ite_true]
-    · simp only [sndPt, Function.comp, v₁_ne (p := ⟨k, m⟩) hk, ite_eq_right hk]
+  exact GlobalTheory.CompanionTheory.Ar.PB.WSq.FamCh.snd_orbit k₀ h
 
 end Orbits
 
@@ -754,13 +733,7 @@ theorem same_block {N j : ℕ} {a b ca cb : Fin N} (hj : j ≤ N) (hb : (b : ℕ
 
 theorem blockDiag_transv {N j : ℕ} {ca cb : Fin N} (h : (cb : ℕ) < N - j ↔ (ca : ℕ) < N - j) (t : ℂ) :
     IsBlockDiag j (1 + Matrix.single cb ca t) := by
-  intro r s hrs
-  have hne : r ≠ s := fun e => hrs (by rw [e])
-  rw [Matrix.add_apply, Matrix.one_apply_ne hne, zero_add, Matrix.single_apply]
-  split_ifs with e
-  · obtain ⟨rfl, rfl⟩ := e
-    exact absurd h hrs
-  · rfl
+  exact GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.LcFam.isBlockDiag_elem h t
 
 theorem lowerUni_transv {N : ℕ} {ca cb : Fin N} (h : ca < cb) (t : ℂ) :
     IsLowerUni (1 + Matrix.single cb ca t) := by
@@ -775,14 +748,7 @@ theorem lowerUni_transv {N : ℕ} {ca cb : Fin N} (h : ca < cb) (t : ℂ) :
 theorem minor_analytic {m N : ℕ} {V : Set (Fin m → ℂ)} {A : (Fin m → ℂ) → Matrix (Fin N) (Fin N) ℂ}
     (hA : ∀ r s, AnalyticOnNhd ℂ (fun u => A u r s) V) (I J : Finset (Fin N)) :
     AnalyticOnNhd ℂ (fun u => minorIJ (A u) I J) V := by
-  unfold minorIJ
-  by_cases e : I.card = J.card
-  · simp only [dite_eq_left e, Matrix.det_apply]
-    refine Finset.analyticOnNhd_fun_sum _ fun σ _ => ?_
-    simp only [Units.smul_def, zsmul_eq_mul]
-    exact analyticOnNhd_const.mul (Finset.analyticOnNhd_fun_prod _ fun i _ => hA _ _)
-  · simp only [dite_eq_right e]
-    exact analyticOnNhd_const
+  exact GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.DensR.analytic_minorIJ hA I J
 
 theorem mul_analytic {m N : ℕ} {V : Set (Fin m → ℂ)} {A : (Fin m → ℂ) → Matrix (Fin N) (Fin N) ℂ}
     (hA : ∀ r s, AnalyticOnNhd ℂ (fun u => A u r s) V) (C : Matrix (Fin N) (Fin N) ℂ) (r s : Fin N) :
@@ -920,29 +886,12 @@ namespace GlobalTheory.CompanionTheory.Ar.PB.WSq.FC
 theorem sameOrbit_fstPt {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] (k₀ : K)
     {z z' : (Σ o : Option K, ι (o.getD k₀)) → ℂ} (h : SameOrbit z z') :
     SameOrbit (fstPt k₀ z) (fstPt k₀ z') := by
-  obtain ⟨c, hc, e⟩ := h
-  refine ⟨fun k => c (some k), fun k => hc _, ?_⟩
-  funext p
-  show z (v₀ k₀ p) = c (some p.1) * z' (v₀ k₀ p)
-  rw [e]
-  rfl
+  exact GlobalTheory.CompanionTheory.Ar.PB.WSq.FamCh.fst_orbit k₀ h
 
 theorem sameOrbit_sndPt {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] (k₀ : K)
     {z z' : (Σ o : Option K, ι (o.getD k₀)) → ℂ} (h : SameOrbit z z') :
     SameOrbit (sndPt k₀ z) (sndPt k₀ z') := by
-  obtain ⟨c, hc, e⟩ := h
-  refine ⟨fun k => if k = k₀ then c none else c (some k), fun k => ?_, ?_⟩
-  · by_cases hk : k = k₀
-    · simpa [hk] using hc none
-    · simpa [hk] using hc (some k)
-  · funext p
-    show z (v₁ k₀ p) = (if p.1 = k₀ then c none else c (some p.1)) * z' (v₁ k₀ p)
-    rw [e]
-    by_cases hk : p.1 = k₀
-    · obtain ⟨k, m⟩ := p
-      obtain rfl : k = k₀ := hk
-      simp [v₁_self]
-    · rw [ite_eq_right hk, v₁_ne hk]
+  exact GlobalTheory.CompanionTheory.Ar.PB.WSq.FamCh.snd_orbit k₀ h
 
 theorem null_w : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (Φ : Type) [Field Φ] (y : (Σ k, ι k) → Φ) (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N j : ℕ) (M : FlagModel y Ψ N j) (n d : ℕ) (BM : BaseMetric M n) (FA : FlagAn BM d) (τ : Ψ) (a b : Fin N) (k₀ : K) (ca cb : Fin N), (b : ℕ) = a + 1 → ((b : ℕ) < j ∨ j ≤ (a : ℕ)) → M.blk (τ, a) = some k₀ → (ca : ℕ) = lastCol N j a → (cb : ℕ) = ca + 1 → ∀ (RW : AnLogRes (mCoordIdeal (M.wCo (τ, a) k₀ ca cb RatFunc.X)) ⊤ (d + 2)) (q : Fin 2 → RW.X → FA.S.X), (∀ i, HoloMap RW.A FA.S.A (q i)) → (∀ x x₀, FA.Re.π x₀ = q 0 x → SameOrbit (FA.Re.R.lift x₀ x₀) (fstPt k₀ (RW.lift x x))) → (∀ x x₀, FA.Re.π x₀ = q 1 x → SameOrbit (FA.Re.R.lift x₀ x₀) (sndPt k₀ (RW.lift x x))) → (Function.Injective fun w => (q 0 w, q 1 w)) → ∀ l : Fin BM.q, IsNull RW.A {x | FA.pr (q 0 x) ∈ BM.O l ∧ (FA.pr (q 0 x) ∈ bdry BM.s ∨ ∃ p, FC.plk M (BM.F l) (FC.bvec BM l (FA.pr (q 0 x))) (fstPt k₀ (RW.lift x x)) p = 0 ∨ FC.plk M (BM.F l) (FC.bvec BM l (FA.pr (q 0 x))) (sndPt k₀ (RW.lift x x)) p = 0)} := by
   intro K _ ι _ Φ _ y Ψ _ _ N j M n d BM FA τ a b k₀ ca cb hab hj hblk hca hcb RW q hq h0 h1 hinj l

@@ -643,18 +643,10 @@ section fock
 variable {σ : Type}
 
 theorem fockF_add_right (f g g' : MvPolynomial σ ℂ) : fockF f (g + g') = fockF f g + fockF f g' := by
-  unfold fockF
-  rw [← Finset.sum_add_distrib]
-  refine Finset.sum_congr rfl fun m _ => ?_
-  simp only [MvPolynomial.coeff_add, star_add]
-  ring
+  exact PI.WGL.Adj.fockF_add_right f g g'
 
 theorem fockF_smul_right (c : ℂ) (f g : MvPolynomial σ ℂ) : fockF f (c • g) = star c * fockF f g := by
-  unfold fockF
-  rw [Finset.mul_sum]
-  refine Finset.sum_congr rfl fun m _ => ?_
-  simp only [MvPolynomial.coeff_smul, smul_eq_mul, star_mul']
-  ring
+  exact PI.WHw.bC_smul_right c f g
 
 theorem fockF_zero_right (f : MvPolynomial σ ℂ) : fockF f 0 = 0 := by
   unfold fockF

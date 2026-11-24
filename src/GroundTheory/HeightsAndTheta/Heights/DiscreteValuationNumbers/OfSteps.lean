@@ -87,17 +87,7 @@ variable {O : Type*} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
 
 theorem vNum_vecCons_zero (W : Ideal (MRing ι O)) {d : ℕ} (L : Fin d → K → ℤ) :
     vNum W (Matrix.vecCons (0 : K → ℤ) L) = 0 := by
-  unfold vNum intNum
-  have hm : mixedDiff (Matrix.vecCons (0 : K → ℤ) L) (hilbFn (specialIdeal W)) = fun _ => 0 := by
-    funext m
-    simp [mixedDiff, List.ofFn_succ, diffStep]
-  rw [hm]
-  unfold eventualValue
-  have hex : ∃ c, ∀ᶠ m in Filter.atTop, (fun _ : K → ℤ => (0 : ℤ)) m = c :=
-    ⟨0, Filter.Eventually.of_forall fun _ => rfl⟩
-  rw [dite_eq_left hex]
-  obtain ⟨m, hm'⟩ := hex.choose_spec.exists
-  exact hm'.symm
+  exact GroundTheory.Heights₂.Heights.NumbersDVR.vNum_cons_zero W L
 
 end VNum
 

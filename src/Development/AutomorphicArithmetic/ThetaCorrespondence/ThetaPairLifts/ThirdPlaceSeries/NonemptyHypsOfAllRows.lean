@@ -1119,16 +1119,7 @@ theorem tupUsed (c : V4.Core K X f T) : DQ.TupUsedAt X.toD7 := by
       · exact .inr (.inl (c.mu.inj (h.symm.trans c.mu.star.symm)))
 
 theorem ev_imp {p q : Ctx → Prop} (hp : Ev p) (h : ∀ K, p K → q K) : Ev q := by
-  obtain ⟨ε0, h0, H⟩ := hp
-  refine ⟨ε0, h0, fun eps C8 a1 a2 a3 a4 => ?_⟩
-  obtain ⟨K0, H⟩ := H eps C8 a1 a2 a3 a4
-  refine ⟨K0, fun C b1 b2 b3 => ?_⟩
-  obtain ⟨c1, H⟩ := H C b1 b2 b3
-  refine ⟨c1, fun cD hcD => ?_⟩
-  obtain ⟨c2, H⟩ := H cD hcD
-  refine ⟨c2, fun ch hch => ?_⟩
-  obtain ⟨x0, H⟩ := H ch hch
-  exact ⟨x0, fun K d1 d2 d3 d4 d5 => h K (H K d1 d2 d3 d4 d5)⟩
+  apply GlobalTheory.Fc.eventuallyAllScaleContexts_mono_of_imp <;> assumption
 
 theorem lay_of_core : Ev fun K => ∀ (X : Stages) (f : Fr X.B.toPre) (T : TwDat X.B) (c : V4.Core K X f T),
     StandardLattice.VolumeEqMass₂ X.toD7 → ∃ Y : Lay X.toD7, layObj Y = c.O ∧ Over X.toD7 K.P K.Lv ∧ RecOK K.s K.C K.cD X.toD7 ∧

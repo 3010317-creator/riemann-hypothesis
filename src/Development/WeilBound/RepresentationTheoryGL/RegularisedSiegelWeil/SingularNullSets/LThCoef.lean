@@ -113,9 +113,7 @@ theorem pch_rat (ψ : AddChar (AF D.host.F) ℂ) {n : ℕ} (x : hermA D n) (T : 
     ψ (GlobalTheory.StdUnn.halfTr (Matrix.trace (rat T.1 * x.1)))
   rw [Matrix.trace_mul_comm]
 
-theorem conj_eq_inv {z : ℂ} (hz : ‖z‖ = 1) : conj z = z⁻¹ := by
-  rw [Complex.inv_def, Complex.normSq_eq_norm_sq, hz]
-  simp
+theorem conj_eq_inv {z : ℂ} (hz : ‖z‖ = 1) : conj z = z⁻¹ := (Complex.inv_eq_conj hz).symm
 
 variable {W : HSp D} {n : ℕ} {m : Measure (GA D W)} {𝓕 : Set (GA D W)} {Ψ : Mx D W.rank n → ℂ}
 

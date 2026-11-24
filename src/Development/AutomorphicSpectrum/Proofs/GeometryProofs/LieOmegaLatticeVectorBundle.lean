@@ -83,11 +83,7 @@ theorem exists_tr {A B : Type} [CommRing A] [CommRing B] (a : Sp A ⟶ X) (b : S
     (h : spMap c ≫ a = b) {E E' : Type} [AddCommGroup E] [AddCommGroup E'] [Module A E] [Module B E']
     (M : LieModel G a E) (M' : LieModel G b E') :
     ∃ j : E →ₛₗ[c] E', ∀ e, (M'.pt (j e)).left = spMap (dualMap c) ≫ (M.pt e).left := by
-  subst h
-  obtain ⟨j, hj, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieBaseChange.existsUnique_semilinear_lifts X G A B c a E E' M M'
-  refine ⟨j, fun e => ?_⟩
-  have := hj e
-  simpa [LieModel.Lifts] using this
+  exact GlobalTheory.CompanionTheory.Ar.LieFin.exists_tr a b c h M M'
 
 alias spMap_dual_comp := _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_dual_comp
 

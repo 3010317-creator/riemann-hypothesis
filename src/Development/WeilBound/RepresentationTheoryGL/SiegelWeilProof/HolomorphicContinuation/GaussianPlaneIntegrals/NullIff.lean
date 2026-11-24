@@ -726,14 +726,7 @@ theorem actZ_diagonal (a b : ι → ℂ) (z : (ι × A) ⊕ (ι × B) → ℂ) :
 theorem differentiable_eval' {σ : Type} (p : MvPolynomial σ ℂ) (f : ℂ → σ → ℂ)
     (hf : ∀ v, Differentiable ℂ (fun c => f c v)) :
     Differentiable ℂ (fun c => MvPolynomial.eval (f c) p) := by
-  induction p using MvPolynomial.induction_on with
-  | C a => simp
-  | add p q hp hq =>
-    simp only [map_add (f := _)]
-    exact hp.add hq
-  | mul_X p v hp =>
-    simp only [map_mul, MvPolynomial.eval_X]
-    exact hp.mul (hf v)
+  exact GlobalTheory.PairingInvariants.differentiable_eval p f hf
 
 theorem eval_inv (p : PV ι A B) (hp : IsInv p) (u : Matrix ι ι ℂ) (hu : u ∈ Matrix.unitaryGroup ι ℂ)
     (z : (ι × A) ⊕ (ι × B) → ℂ) : eval (actZ u (u.map star) z) p = eval z p := by
@@ -1126,11 +1119,7 @@ theorem gs_half (c : ℝ) (x : Fin m → Fin n → ℂ) : gs c x = gs (c / 2) x 
   ring
 
 theorem integrable_gauss1 {c : ℝ} (hc : 0 < c) : Integrable (fun z : ℂ => Real.exp (-(c * ‖z‖ ^ 2))) := by
-  have h := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add (V := ℂ) (b := (c : ℂ)) (by simpa using hc) 0 0
-  refine h.norm.congr (ae_of_all _ fun z => ?_)
-  simp only [zero_mul, add_zero, Complex.norm_exp]
-  norm_cast
-  rw [neg_mul]
+  exact PositivityTheory.Rg.Sw.FFTSteps.CA.integrable_gauss_plane hc
 
 theorem exp_sum_sum (c : ℝ) (x : Fin m → Fin n → ℂ) :
     Real.exp (-(c * ∑ a, ∑ i, ‖x a i‖ ^ 2)) = ∏ a, ∏ i, Real.exp (-(c * ‖x a i‖ ^ 2)) := by

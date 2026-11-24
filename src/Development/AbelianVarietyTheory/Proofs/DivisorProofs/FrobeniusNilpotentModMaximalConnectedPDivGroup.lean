@@ -594,18 +594,10 @@ theorem hasSubst_XR : HasSubst (fun i : Fin d => (X (Sum.inr i) : MvPowerSeries 
   hasSubst_of_constantCoeff_zero fun _ => constantCoeff_X _
 
 theorem map_inL (h : O →+* E) (f : MvPowerSeries (Fin d) O) : map h (inL f) = inL (map h f) := by
-  unfold inL
-  rw [map_subst hasSubst_XL]
-  congr 1
-  funext i
-  exact map_X h _
+  exact GlobalTheory.CobDefect.map_inL h f
 
 theorem map_inR (h : O →+* E) (f : MvPowerSeries (Fin d) O) : map h (inR f) = inR (map h f) := by
-  unfold inR
-  rw [map_subst hasSubst_XR]
-  congr 1
-  funext i
-  exact map_X h _
+  exact GlobalTheory.CobDefect.map_inR h f
 
 theorem map_formalGroupLawCoboundaryOne_eq (h : O →+* E) (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) O)
     (s : MvPowerSeries (Fin d) O) (hμ : ∀ i, constantCoeff (μ i) = 0) :

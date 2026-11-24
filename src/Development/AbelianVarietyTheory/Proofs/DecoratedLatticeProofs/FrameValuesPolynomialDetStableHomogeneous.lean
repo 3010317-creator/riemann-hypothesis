@@ -88,14 +88,7 @@ theorem fnOf_one_apply {G : ι → Matrix (Fin a) (Fin a) ℂ} (s : ι → ℤ) 
   simp only [fnOf, LinearMap.coe_mk, AddHom.coe_mk, Pi.one_apply, one_mul, evalAt]
 
 theorem evalAt_lft (g y : ι → Matrix (Fin a) (Fin a) ℂ) (F : PY ι a) :
-    evalAt y (lft g F) = evalAt (fun τ => g τ * y τ) F := by
-  induction F using MvPolynomial.induction_on with
-  | C c => simp [evalAt, lft]
-  | add p q hp hq => simp only [evalAt, map_add (f := _)] at *; rw [hp, hq]
-  | mul_X p v hp =>
-    simp only [evalAt, map_mul] at *
-    rw [hp]
-    simp [lft, Matrix.mul_apply]
+    evalAt y (lft g F) = evalAt (fun τ => g τ * y τ) F := by apply GlobalTheory.KJInf.evalAt_lft
 
 theorem shift_eq {G : ι → Matrix (Fin a) (Fin a) ℂ} (lam : ι → DomWeight a) {n : ι → ℕ} {s : ι → ℤ}
     (hns : ∀ τ, (n τ : ℤ) = shiftOf lam τ + s τ) (P : PY ι a) (y : Frames G) :

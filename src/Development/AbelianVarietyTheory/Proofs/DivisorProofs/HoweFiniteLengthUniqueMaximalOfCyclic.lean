@@ -122,14 +122,8 @@ theorem hwSub_stable_of_comm {p q : ℕ} {V : Type} [AddCommGroup V] [Module ℂ
     (act : Mat p q →ₗ[ℂ] Module.End ℂ V) (f : Module.End ℂ V)
     (hf : ∀ Z v, f (act Z v) = act Z (f v)) (μ : Ix p q → ℚ) :
     ∀ v ∈ hwSub act μ, f v ∈ hwSub act μ := by
-  intro v hv
-  simp only [hwSub, wtSub, Submodule.mem_inf, Submodule.mem_iInf, LinearMap.mem_ker,
-    LinearMap.sub_apply, LinearMap.smul_apply, LinearMap.id_apply] at hv ⊢
-  obtain ⟨h1, h2⟩ := hv
-  refine ⟨fun a => ?_, fun a b hab => ?_⟩
-  · have := congrArg f (h1 a)
-    simpa [hf, map_sub, map_smul] using this
-  · rw [← hf, h2 a b hab, map_zero]
+  intros
+  apply GlobalTheory.DegKeep.hw_of_comm <;> assumption
 
 theorem hw_joint_split : ∀ (T : Type) [Fintype T] [DecidableEq T] (R S : T → ℕ) (V : Type) [AddCommGroup V]
     [Module ℂ V] (a : ∀ w, Mat (R w) (S w) →ₗ[ℂ] Module.End ℂ V), (∀ w, Good (a w)) →

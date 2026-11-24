@@ -138,12 +138,7 @@ theorem block_two_apply {p s : ℕ} (A : Matrix (Fin p) (Fin p) ℂ) (B' : Matri
   split_ifs <;> rfl
 
 theorem mul_w_apply {d : ℕ} {ι : Type*} [Fintype ι] (M : Matrix ι (Fin d) ℂ) (a : ι) (b : Fin d) :
-    (M * G.wMat d) a b = M a b.rev := by
-  simp only [G.wMat, Matrix.mul_apply, Matrix.of_apply, mul_ite, mul_one, mul_zero]
-  rw [Finset.sum_eq_single b.rev]
-  · simp
-  · intro c _ hc; rw [ite_eq_right]; intro h; apply hc; rw [h, Fin.rev_rev]
-  · simp
+    (M * G.wMat d) a b = M a b.rev := by apply Formalism.FourierDecayAlt.P.Dx2.Split.mul_w_apply
 
 theorem xcongr {j : ℕ} (x : MJ j) {a a' b b' : Fin j} (ha : a.val = a'.val) (hb : b.val = b'.val) :
     x a b = x a' b' := by

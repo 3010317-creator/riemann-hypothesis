@@ -1143,12 +1143,7 @@ theorem sum_lw_e (p : ℕ) (hp : p.Prime) (S : Finset (HeightOneSpectrum (𝓞 K
 
 theorem finite_places_over (p : ℕ) (hp : p.Prime) :
     ∃ S : Finset (HeightOneSpectrum (𝓞 K)), ∀ w, w ∈ S ↔ (p : 𝓞 K) ∈ w.asIdeal := by
-  have hI : Ideal.span {(p : 𝓞 K)} ≠ 0 := by
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact_mod_cast hp.ne_zero
-  have hfin := Ideal.finite_factors hI
-  refine ⟨hfin.toFinset, fun w => ?_⟩
-  rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton]
+  exact Formalism.MainNotions.J.finite_places_over p hp
 
 end places
 

@@ -386,11 +386,7 @@ namespace GlobalTheory.TermScales
 variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc}
 
 theorem finE_toFin' (V : HSp D) (g : GA D V) : Lev.finE V (GlobalTheory.AutMult.toFin V g : GA D V) = Lev.finE V g := by
-  conv_rhs => rw [← GlobalTheory.AutMult.toInf_mul_toFin g]
-  have hx : Lev.finE V (GlobalTheory.AutMult.toInf V g : GA D V) = 1 := by
-    simp only [Lev.finE, MonoidHom.comp_apply]
-    rw [show finHom V (GlobalTheory.AutMult.toInf V g : GA D V) = 1 from (GlobalTheory.AutMult.toInf V g).2, map_one]
-  rw [map_mul, hx, one_mul]
+  exact GlobalTheory.ChainOnto.HaarInf.finE_toFin V g
 
 theorem isAt_congr (M : Vol G) (X : Node) {K K' : Subgroup (GL (Fin (G.V X).rank) (Lev.EAf D))}
     (hK : ∀ k : FinPt G X, finG (G.V X) k ∈ K ↔ finG (G.V X) k ∈ K') (h : M.IsAt X K) : M.IsAt X K' := by

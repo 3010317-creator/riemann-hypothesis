@@ -694,19 +694,7 @@ theorem _root_.GlobalTheory.T.theta_sum_invariant_unipotent_translate : ∀ (D :
   ∀ Φ : schwartzA θ V.rank n,
     ∑' ξ : Matrix (Fin V.rank) (Fin n) D.host.E, (ω g Φ).1 (ξ.map (incA D)) =
       ∑' ξ : Matrix (Fin V.rank) (Fin n) D.host.E, Φ.1 (ξ.map (incA D)) := by
-  intro D n V ψ χ θ μ ω hS g b hg Φ
-  obtain ⟨-, -, hψ, -, -, -, -, hW⟩ := hS
-  refine tsum_congr fun ξ => ?_
-  have hmul : (b.map (incA D) * inner V (ξ.map (incA D)) (ξ.map (incA D)) : Mx D n n) =
-      (b * (ξᴴ * (V.gram * ξ))).map (incA D) := by
-    change rat b * (adj (rat ξ) * (gA V * rat ξ)) = rat (b * (ξᴴ * (V.gram * ξ)))
-    rw [rat_mul, rat_mul, rat_mul, rat_conjTranspose, gA]
-  have htrace (M : Matrix (Fin n) (Fin n) D.host.E) :
-      Matrix.trace (M.map (incA D)) = incA D (Matrix.trace M) := by
-
-    simp only [Matrix.trace, Matrix.diag, Matrix.map_apply, map_sum]
-  rw [hW.unip g (b.map (incA D)) hg Φ (ξ.map (incA D)), hmul, htrace,
-    GlobalTheory.CompanionTheory.ThetaInv.halfTr_incA, hψ.2.2.1, one_mul]
+  exact GlobalTheory.CompanionTheory.ThetaInv.theta_unip
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaSumInvariantUnipotentTranslateStatement =====
@@ -827,26 +815,7 @@ namespace GlobalTheory.CompanionTheory.SiegelAssembly
 
 theorem two_mul_finrank_isotropic_le {E : Type} [Field E] [NumberField E] [StarRing E] (B : HSpace E)
     (W : Submodule E B.V) (hW : ∀ x ∈ W, ∀ y ∈ W, B.hT x y = 0) : 2 * Module.finrank E W ≤ B.rank := by
-  let b := Module.finBasis E W
-  have hl : LinearIndependent E fun i => B.hT (b i) := by
-    refine Fintype.linearIndependent_iff.2 fun c hc i => ?_
-    have h1 : B.hT ((∑ i, star (c i) • b i : W) : B.V) = 0 := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← hc]; simp [map_sum, LinearMap.map_smulₛₗ, starRingEnd_apply]
-    have h2 : (∑ i, star (c i) • b i : W) = 0 := Subtype.ext (B.nondeg.1 _ fun y => by rw [h1]; rfl)
-    simpa using Fintype.linearIndependent_iff.1 b.linearIndependent _ h2 i
-  have h3 := Subspace.finrank_add_finrank_dualCoannihilator_eq (Submodule.span E (Set.range fun i => B.hT (b i)))
-  rw [finrank_span_eq_card hl, Fintype.card_fin, B.rank_eq] at h3
-  have h4 : W ≤ (Submodule.span E (Set.range fun i => B.hT (b i))).dualCoannihilator := fun y hy => by
-    rw [Submodule.mem_dualCoannihilator]
-    intro φ hφ
-    induction hφ using Submodule.span_induction with
-    | mem _ h => obtain ⟨i, rfl⟩ := h; exact hW _ (b i).2 _ hy
-    | zero => rfl
-    | add _ _ _ _ h h' => rw [LinearMap.add_apply, h, h', add_zero]
-    | smul _ _ _ h => rw [LinearMap.smul_apply, h, smul_zero]
-  have := Submodule.finrank_mono h4
-  omega
+  exact GlobalTheory.SiegelFormula.Model.two_mul_finrank_le B W hW
 
 theorem bddAbove_isotropic_dims {E : Type} [Field E] [NumberField E] [StarRing E] (B : HSpace E) :
     BddAbove {k | ∃ W : Submodule E B.V, Module.finrank E W = k ∧ ∀ x ∈ W, ∀ y ∈ W, B.hT x y = 0} :=

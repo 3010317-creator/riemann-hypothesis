@@ -84,24 +84,11 @@ variable {X X' Z : Scheme.{0}} {R R' : Type} [CommRing R] [CommRing R']
 
 theorem eval₂_scale {σ A : Type} [CommRing A] (φ : R →+* A) (c : A) (x : σ → A) {F : MvPolynomial σ R}
     {e : ℕ} (hF : F.IsHomogeneous e) : eval₂ φ (fun j => c * x j) F = c ^ e * eval₂ φ x F := by
-  rw [eval₂_eq, eval₂_eq, Finset.mul_sum]
-  refine Finset.sum_congr rfl fun a ha => ?_
-  have hd : ∑ j ∈ a.support, a j = e := by
-    have := hF (mem_support_iff.1 ha)
-    rw [← this, Finsupp.weight_apply, Finsupp.sum]
-    simp
-  simp only [mul_pow, Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum, hd]
-  ring
+  exact GlobalTheory.Unif.PolyStep.eval₂_scale φ c x hF
 
 theorem exists_lift {σ : Type} (g : R →+* R') (hg : Function.Surjective g) {F : MvPolynomial σ R'} {t : ℕ}
     (hF : F.IsHomogeneous t) : ∃ G : MvPolynomial σ R, G.IsHomogeneous t ∧ map g G = F := by
-  obtain ⟨G, rfl⟩ := map_surjective g hg F
-  refine ⟨homogeneousComponent t G, homogeneousComponent_isHomogeneous t G, ?_⟩
-  ext d
-  rw [coeff_map, coeff_homogeneousComponent]
-  split_ifs with h
-  · rw [coeff_map]
-  · rw [map_zero, hF.coeff_eq_zero h]
+  exact GlobalTheory.Unif.PolyStep.exists_lift g hg hF
 
 def gsHom (r : Z ⟶ X) (z : Z) (U : X.Opens) (h : r z ∈ U) : Γ(X, U) →+* Z.presheaf.stalk z :=
   (Z.presheaf.germ (r ⁻¹ᵁ U) z h).hom.comp (r.app U).hom
@@ -125,11 +112,7 @@ theorem gs_eval {σ : Type} (p : X ⟶ Spec (CommRingCat.of R)) (r : Z ⟶ X) (z
 
 theorem cst_specMap (p : X ⟶ Spec (CommRingCat.of R')) (g : R →+* R') (U : X.Opens) :
     AbLaw.cst (p ≫ Spec.map (CommRingCat.ofHom g)) U = (AbLaw.cst p U).comp g := by
-  ext a
-  have := congrArg (fun q => q.hom a) (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom g))
-  simp only [CommRingCat.hom_comp, RingHom.comp_apply, CommRingCat.hom_ofHom] at this
-  simp only [AbLaw.cst, RingHom.comp_apply, Scheme.Hom.comp_appTop, CommRingCat.hom_comp]
-  rw [this]
+  exact GlobalTheory.Unif.PolyStep.cst_comp p g U
 
 alias gs_sec := _root_.GlobalTheory.SecPullIso.gs_sec_trans
 
@@ -779,15 +762,7 @@ end GlobalTheory.Degen.FormalEmb
 
 theorem GlobalTheory.Degen.isNilpotent_ker_factor_pow {R : Type} [CommRing R] (I : Ideal R) {n : ℕ}
     (h : I ^ n ≤ I ^ (0 + 1)) : IsNilpotent (RingHom.ker (Ideal.Quotient.factor h)) := by
-  have h₁ : RingHom.ker (Ideal.Quotient.factor h) ≤ I.map (Ideal.Quotient.mk (I ^ n)) := by
-    intro x hx
-    obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective x
-    rw [RingHom.mem_ker, Ideal.Quotient.factor_mk, Ideal.Quotient.eq_zero_iff_mem, zero_add, pow_one] at hx
-    exact Ideal.mem_map_of_mem _ hx
-  refine ⟨n, ?_⟩
-  rw [Ideal.zero_eq_bot, eq_bot_iff]
-  refine (Ideal.pow_right_mono h₁ n).trans ?_
-  rw [← Ideal.map_pow, Ideal.map_quotient_self]
+  exact GlobalTheory.Degen.PolyStepLocal.nilpotent_ker I h
 
 
 open GlobalTheory.Degen.FormalEmb in

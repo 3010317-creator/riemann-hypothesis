@@ -264,12 +264,7 @@ theorem bwE_locBasis_int (w : D.what₂.places.Pl) (hw : OverT D u w) (τ : D.wh
 theorem bwE_col_loc (w : D.what₂.places.Pl) (hw : OverT D u w) {n : ℕ} {L : Set (Fin n → D.host.E)}
     {B : GL (Fin n) D.host.E} (hB : IsLocBasis (D.mem u).A.T L B) (k : Fin n) :
     ∃ s : ℕ, ¬ (D.mem u).A.T ∣ s ∧ (s : D.host.E) • (fun r => (B : Matrix (Fin n) (Fin n) D.host.E) r k) ∈ L := by
-  refine (hB _).2 ⟨1, ?_, fun a => ?_⟩
-  · rw [← hw]; exact (D.what₂.places.resChar_prime w).not_dvd_one
-  · rw [Nat.cast_one, one_mul, bwE_mulVec_col, ← Units.val_mul, inv_mul_cancel, Units.val_one, Matrix.one_apply]
-    split_ifs
-    · exact ⟨1, map_one _⟩
-    · exact ⟨0, map_zero _⟩
+  exact Formalism.L2.GlobalTheoryTheory.LocalLatticeBases.bwD_col_loc D u w hw hB k
 
 end Spec
 

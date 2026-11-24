@@ -265,12 +265,7 @@ open GlobalTheory.TauTwist ReciprocityTheory.ChartRestriction.G.DVR
 variable {R : Type} [CommRing R] [IsDomain R] {D : DegPre R}
 
 theorem degenerationPointOfLattice_zsmul (T : Over (Spec (CommRingCat.of R))) (n : ℤ) (b : D.X) : cP D T (n • b) = cP D T b ^ n := by
-  let f : Multiplicative D.X →* (T ⟶ D.P.A) :=
-    { toFun := fun x => cP D T x.toAdd
-      map_one' := by simpa using cPoint_nsmul D T 0 0
-      map_mul' := fun x y => cPoint_add D T _ _ }
-  have := map_zpow f (Multiplicative.ofAdd b) n
-  simpa [f] using this
+  exact GlobalTheory.IntEnd.cPoint_zsmul D T n b
 
 theorem overSpec_comp_zpow_grpObj {T T' : Over (Spec (CommRingCat.of R))} (ρ : T' ⟶ T) (y : T ⟶ D.P.A) (n : ℤ) :
     ρ ≫ y ^ n = (ρ ≫ y) ^ n := by
@@ -779,11 +774,7 @@ namespace GlobalTheory.Mum.TensBal
 theorem transpose_mul_eq {r : ℕ} (W : Matrix (Fin r) (Fin r) ℤ) (h : IsUnit (W + W.transpose).det)
     (a : TensO (symUnitOf W h)) :
     (TensO.mat _ a).transpose * (W + W.transpose) = (W + W.transpose) * TensO.mat _ (star a) := by
-  have hb : ((symUnitOf W h).1 : Matrix (Fin r) (Fin r) ℤ) = W + W.transpose := rfl
-  rw [TensO.star_def]
-  show _ = (W + W.transpose) * (((((symUnitOf W h).1⁻¹ : (Matrix (Fin r) (Fin r) ℤ)ˣ) : Matrix (Fin r) (Fin r) ℤ) *
-    (TensO.mat _ a).transpose * ((symUnitOf W h).1 : Matrix (Fin r) (Fin r) ℤ)))
-  rw [hb.symm, ← Matrix.mul_assoc, ← Matrix.mul_assoc, Units.mul_inv, Matrix.one_mul]
+  exact (GlobalTheory.Mum.RosatiTens.symUnit_mul_star h a).symm
 
 theorem tauBal_tens : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (D D' : DegData R (maximalIdeal R)) {r : ℕ} (W : Matrix (Fin r) (Fin r) ℤ) (h : IsUnit (W + W.transpose).det), ((W + W.transpose).map (Int.cast : ℤ → ℝ)).PosDef → ∀ (T : Tens D.toPre D'.toPre W), letI := T.mod (symUnitOf W h); ∀ a : TensO (symUnitOf W h), D'.toPre.TauBal (T.act (TensO.mat _ a)) (T.act (TensO.mat _ (star a))) (fun y => a • y) (fun y => star a • y) := by
   intro R _ _ _ _ D D' r W h _ T a

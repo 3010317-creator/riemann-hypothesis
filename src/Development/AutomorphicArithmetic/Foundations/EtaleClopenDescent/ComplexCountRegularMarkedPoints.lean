@@ -373,16 +373,7 @@ theorem posV_val_ne_zero (z : PosV G v β) : z.1 ≠ 0 := by
   simp at hz
 
 theorem fixL_smul_vec_iff (y : grp G β) (z : Fin G.n → ℂ) {c : ℂ} (hc : c ≠ 0) :
-    FixL G v β y (c • z) ↔ FixL G v β y z := by
-  unfold FixL
-  simp only [Matrix.mulVec_smul]
-  constructor
-  · rintro ⟨e, he⟩
-    refine ⟨e, ?_⟩
-    rw [smul_comm e c z] at he
-    exact smul_right_injective _ hc he
-  · rintro ⟨e, he⟩
-    exact ⟨e, by rw [he, smul_comm]⟩
+    FixL G v β y (c • z) ↔ FixL G v β y z := GlobalTheory.CxUnfold.fixL_smul_iff G v β y z c hc
 
 variable (G v β x t hx Kf K')
 

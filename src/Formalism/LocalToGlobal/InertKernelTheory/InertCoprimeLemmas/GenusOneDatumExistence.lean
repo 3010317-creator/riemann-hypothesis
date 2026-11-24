@@ -84,13 +84,7 @@ theorem isWq_wU (W : WeierstrassCurve ℂ_[p]) : Formalism.MainNotions.TaylorLog
   linear_combination hF
 
 theorem norm_four (h5 : 5 ≤ p) : ‖(4 : ℂ_[p])‖ = 1 := by
-  have hp : p.Prime := Fact.out
-  have h := Formalism.DworkPowerSeriesWeights.norm_natCast_eq_one_of_not_dvd (K := ℂ_[p]) (m := 4) hp
-    (Formalism.L2.Th1.D.UnramifiedCompletion.normL_lt_one p) (by
-      intro hd
-      have := Nat.le_of_dvd (by norm_num) hd
-      omega)
-  exact_mod_cast h
+  exact Formalism.L2.Th1.E.ScaledModelNorms.norm_four p h5
 
 theorem datum_of_short (h5 : 5 ≤ p) (lam : Formalism.MainNotions.TaylorLogMetric.Qbar →+* ℂ_[p]) (Λ : AddSubgroup ℂ)
     (C : WeierstrassCurve.VariableChange ℂ_[p]) (g2 g3 : ℂ_[p])

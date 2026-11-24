@@ -70,10 +70,7 @@ variable {H : Type} [Group H]
 
 theorem mem_map_conj_iff (B : Subgroup H) (x y : H) :
     y ∈ B.map (MulAut.conj x).toMonoidHom ↔ x⁻¹ * y * x ∈ B := by
-  constructor
-  · rintro ⟨z, hz, rfl⟩
-    simpa [mul_assoc] using hz
-  · exact fun hy => ⟨x⁻¹ * y * x, hy, by simp [mul_assoc]⟩
+  exact GlobalTheory.LKCountPoint.mem_map_conj
 
 theorem map_conj_mul (B : Subgroup H) (x s : H) :
     (B.map (MulAut.conj s).toMonoidHom).map (MulAut.conj x).toMonoidHom =

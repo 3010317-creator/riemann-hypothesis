@@ -137,14 +137,7 @@ theorem exists_over {F K : Type} [Field F] [NumberField F] [Field K] [NumberFiel
 
 theorem finite_over {F K : Type} [Field F] [NumberField F] [Field K] [NumberField K] [Algebra F K]
     (v : HeightOneSpectrum (𝓞 F)) : {u : HeightOneSpectrum (𝓞 K) | u.under (𝓞 F) = v}.Finite := by
-  have h := IsDedekindDomain.primesOver_finite v.asIdeal (𝓞 K)
-  refine (h.preimage (f := fun u : HeightOneSpectrum (𝓞 K) => u.asIdeal)
-    (fun a _ b _ hab => HeightOneSpectrum.ext hab)).subset ?_
-  intro u hu
-  change u.under (𝓞 F) = v at hu
-  refine ⟨u.isPrime, ⟨?_⟩⟩
-  rw [← hu]
-  rfl
+  exact GlobalTheory.QNorm.finite_places_over F K v
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 

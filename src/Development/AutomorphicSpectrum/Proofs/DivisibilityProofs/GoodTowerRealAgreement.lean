@@ -94,14 +94,7 @@ open Filter Topology ReciprocityTheory.AnForm ReciprocityTheory.AnForm.M Recipro
 
 theorem contAt_of_holoOn {e : ℕ} {X : Type} [TopologicalSpace X] {A : FinHolAtlas e X} {U : Set X} {f : X → ℂ}
     (hf : A.HoloOn U f) {x : X} (hx : x ∈ U) : ContinuousAt f x := by
-  obtain ⟨j, hj⟩ := A.cover x
-  have h1 := (hf j (A.chart j x) ⟨(A.chart j).map_source hj, by
-    show (A.chart j).symm (A.chart j x) ∈ U
-    rwa [(A.chart j).left_inv hj]⟩).continuousAt
-  have h2 := h1.comp ((A.chart j).continuousAt hj)
-  refine h2.congr ?_
-  filter_upwards [(A.chart j).open_source.mem_nhds hj] with y hy
-  simp [(A.chart j).left_inv hy]
+  exact RootFieldNumerics.Desc.contAt_of_holoOn A hf hx
 
 theorem surj_of_degree {e : ℕ} {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y] [T2Space X] [CompactSpace Y]
     {A : FinHolAtlas e X} {B : FinHolAtlas e Y} {h : Y → X} {S : Set X} (hc : Continuous h) (hd : IsDegreeOff A B h 1 S) :

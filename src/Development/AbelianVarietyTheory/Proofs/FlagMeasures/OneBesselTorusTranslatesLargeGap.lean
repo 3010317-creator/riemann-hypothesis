@@ -751,12 +751,7 @@ open Formalism.FourierDecayAlt.P.TwoByOneBlock Formalism.FourierDecayAlt.P.BigCe
 
 variable {k r : ℕ}
 
-theorem hb_mul_self : Hb k * Hb k = 1 := by
-  unfold Hb
-  rw [Matrix.diagonal_mul_diagonal, ← Matrix.diagonal_one]
-  congr 1
-  funext j
-  split_ifs <;> norm_num
+theorem hb_mul_self : Hb k * Hb k = 1 := Formalism.FourierDecayAlt.P.TwoByOneBlock.Hb_sq
 
 theorem isUnit_det_of_hb {μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (h : μᴴ * Hb k * μ = Hb k) :
     IsUnit μ.det := by

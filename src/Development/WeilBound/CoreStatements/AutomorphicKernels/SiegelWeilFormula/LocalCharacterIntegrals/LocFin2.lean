@@ -754,14 +754,7 @@ variable {v : HeightOneSpectrum (𝓞 F)}
 
 theorem exists_entry_ge {p q : ℕ} {x : Fin p → Fin q → Fv F v ⊗[F] E} (h : 0 < nM v x) :
     ∃ i j, nM v x ≤ nA v (x i j) := by
-  by_contra hne
-  push Not at hne
-  have h' : ‖(fun i j => crd v (x i j))‖ < nM v x := by
-    rw [pi_norm_lt_iff h]
-    intro i
-    rw [pi_norm_lt_iff h]
-    exact fun j => hne i j
-  exact lt_irrefl _ h'
+  exact PositivityTheory.SiegelWeilFormula.SwLocFin.LatticeCovolumeGrowth.exists_entry_ge x h
 
 section Inv
 
@@ -781,13 +774,7 @@ theorem continuous_sigR (σ : E →ₐ[F] E) : Continuous (sigR (Fv F v) σ) := 
 
 theorem isClosed_HermR' (σ : E →ₐ[F] E) (n : ℕ) :
     IsClosed (HermR (Fv F v) σ n : Set (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))) := by
-  have : (HermR (Fv F v) σ n : Set (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))) =
-      ⋂ a, ⋂ b, {S | sigR (Fv F v) σ (S b a) = S a b} := by
-    ext S; simp only [Set.mem_iInter, Set.mem_ofPred_eq, SetLike.mem_coe]; exact Iff.rfl
-  rw [this]
-  exact isClosed_iInter fun a => isClosed_iInter fun b =>
-    isClosed_eq ((continuous_sigR σ).comp ((continuous_apply a).comp (continuous_apply b)))
-      ((continuous_apply b).comp (continuous_apply a))
+  exact PositivityTheory.SiegelWeilFormula.SwLocFin.isClosed_herm σ n
 
 theorem trace_sigR (σ : E →ₐ[F] E) (hσ : ∀ x, σ (σ x) = x) (x : Fv F v ⊗[F] E) :
     Algebra.trace (Fv F v) (Fv F v ⊗[F] E) (sigR (Fv F v) σ x) = Algebra.trace (Fv F v) (Fv F v ⊗[F] E) x := by

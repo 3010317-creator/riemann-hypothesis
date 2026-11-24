@@ -932,16 +932,7 @@ theorem dcos_eq (m : ℕ) (w : Pl E) (ϖ : (w.adicCompletion E)ˣ) (x : Fin m �
     exact h
 
 theorem dcos_right (m : ℕ) (w : Pl E) (t g : GLw m w) (i : GLw m w) (hi : i ∈ iwGL m w) :
-    dcos m w t (g * i) = dcos m w t g := by
-  have key : (∃ a ∈ iwGL m w, ∃ b ∈ iwGL m w, g * i = a * t * b) ↔
-      (∃ a ∈ iwGL m w, ∃ b ∈ iwGL m w, g = a * t * b) := by
-    constructor
-    · rintro ⟨a, ha, b, hb, e⟩
-      exact ⟨a, ha, b * i⁻¹, mul_mem hb (inv_mem hi), by rw [← mul_assoc, ← e]; group⟩
-    · rintro ⟨a, ha, b, hb, e⟩
-      exact ⟨a, ha, b * i, mul_mem hb hi, by rw [e]; group⟩
-  unfold dcos
-  simp only [key]
+    dcos m w t (g * i) = dcos m w t g := PositivityTheory.Rg.BcB.F.LocComm.dcos_mul_right t g i hi
 
 theorem smul_cancel {M : Type} [AddCommGroup M] [Module ℂ M] {δ dh c p d : ℂ} {J y : M} (hne : δ ≠ 0)
     (hd : d = δ * dh) (h : (c * (d * p)) • y = δ • J) : J = (c * p * dh) • y := by

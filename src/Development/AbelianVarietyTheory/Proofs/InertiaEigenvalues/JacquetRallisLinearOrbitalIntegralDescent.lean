@@ -337,18 +337,7 @@ noncomputable section
 namespace GlobalTheory.JR.LinDesc
 
 theorem norm_eq_of_sub_lt {F : Type} [NormedField F] [IsUltrametricDist F] {x y : F}
-    (h : ‖x - y‖ < ‖y‖) : ‖x‖ = ‖y‖ := by
-  have h1 : ‖x‖ ≤ max ‖x - y‖ ‖y‖ := by
-    simpa using IsUltrametricDist.norm_add_le_max (x - y) y
-  have h2 : ‖y‖ ≤ max ‖y - x‖ ‖x‖ := by
-    simpa using IsUltrametricDist.norm_add_le_max (y - x) x
-  rw [norm_sub_rev] at h2
-  rcases le_total ‖x - y‖ ‖y‖ with h3 | h3
-  · rw [max_eq_right h3] at h1
-    rcases le_total ‖x - y‖ ‖x‖ with h4 | h4
-    · rw [max_eq_right h4] at h2; exact le_antisymm h1 h2
-    · rw [max_eq_left h4] at h2; exact absurd h (not_lt.mpr h2)
-  · exact absurd h (not_lt.mpr h3)
+    (h : ‖x - y‖ < ‖y‖) : ‖x‖ = ‖y‖ := GlobalTheory.NormUnits.norm_eq_of_norm_sub_lt h
 
 theorem eta_det_isLocallyConstant {F : Type} [NontriviallyNormedField F] [IsUltrametricDist F] (r : ℕ) :
     IsLocallyConstant (fun g : GL (Fin r) F => eta ((g : Matrix (Fin r) (Fin r) F).det)) := by
@@ -645,17 +634,7 @@ noncomputable section
 namespace GlobalTheory.JR.LinDesc.Swap
 
 theorem norm_eq_of_sub_lt {K : Type} [NormedField K] [IsUltrametricDist K] {x y : K}
-    (h : ‖x - y‖ < ‖y‖) : ‖x‖ = ‖y‖ := by
-  have h1 : ‖x‖ ≤ max ‖x - y‖ ‖y‖ := by
-    simpa using IsUltrametricDist.norm_add_le_max (x - y) y
-  have h2 : ‖y‖ ≤ max ‖y - x‖ ‖x‖ := by
-    simpa using IsUltrametricDist.norm_add_le_max (y - x) x
-  rw [norm_sub_rev] at h2
-  apply le_antisymm
-  · exact h1.trans (max_le h.le le_rfl)
-  · rcases le_max_iff.mp h2 with h3 | h3
-    · exact absurd h3 (not_le.mpr h)
-    · exact h3
+    (h : ‖x - y‖ < ‖y‖) : ‖x‖ = ‖y‖ := GlobalTheory.NormUnits.norm_eq_of_norm_sub_lt h
 
 theorem eta_eventually {F : Type} [NormedField F] [IsUltrametricDist F] {x : F} (hx : x ≠ 0) :
     ∀ᶠ y in 𝓝 x, eta x = eta y := by

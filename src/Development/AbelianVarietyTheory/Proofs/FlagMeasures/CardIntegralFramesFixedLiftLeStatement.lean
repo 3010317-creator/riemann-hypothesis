@@ -344,13 +344,7 @@ theorem gram_eq (F F' : FlagG S r T) (b b' : Fin (r + 1)) :
 alias mem_orth_iff := _root_.Formalism.MainNotions.mem_orth_iff
 
 theorem hT_X_eq_zero (F : FlagG S r T) (v : S.V) (hv : ∀ a, S.hT (F.e a) v = 0) (x : S.V) (hx : x ∈ F.X) :
-    S.hT x v = 0 := by
-  unfold FlagG.X at hx
-  induction hx using Submodule.span_induction with
-  | mem y hy => obtain ⟨a, rfl⟩ := hy; exact hv a
-  | zero => simp
-  | add y y' _ _ h h' => simp [h, h']
-  | smul c y _ h => simp [h]
+    S.hT x v = 0 := Formalism.MainNotions.hT_zero_of_mem_X F hv x hx
 
 theorem frame_mem (Λ : Submodule (𝓞 E) S.V) (F : LFlag S r T) (h : IsLift Λ F) (he : ∀ a, F.fl.e a ∈ Λ)
     (b : Fin (r + 1)) : frame F b ∈ Λ := by
@@ -1120,18 +1114,7 @@ lemma mem_orth {U : Submodule E S.V} {y : S.V} : y ∈ orth S U ↔ ∀ x ∈ U,
   simp [orth, Submodule.mem_iInf]
 
 lemma X_iso {x y : S.V} (hx : x ∈ Xsp F) (hy : y ∈ Xsp F) : S.hT x y = 0 := by
-  have h1 : ∀ a, S.hT (F.fl.e a) y = 0 := by
-    intro a
-    have : Xsp F ≤ LinearMap.ker (S.hT (F.fl.e a)) := by
-      refine Submodule.span_le.2 ?_
-      rintro _ ⟨b, rfl⟩
-      exact F.fl.e_iso a b
-    exact this hy
-  have : Xsp F ≤ LinearMap.ker (S.hT y) := by
-    refine Submodule.span_le.2 ?_
-    rintro _ ⟨b, rfl⟩
-    exact _root_.Formalism.MainNotions.hT_swap_zero (h1 b)
-  exact _root_.Formalism.MainNotions.hT_swap_zero (this hx)
+  exact GlobalTheory.EichlerUnip.iso_X S F hx hy
 
 lemma NLam_one : LinearEquiv.refl E S.V ∈ NLam Λ F :=
   ⟨⟨fun _ _ => rfl, (gmap_iff _).2 fun _ => Iff.rfl⟩, fun j x _ => by simp, fun x _ => by simp⟩

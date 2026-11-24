@@ -851,25 +851,10 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem mem_abLocus_of_map {X Y : Scheme.{0}} {G : Over X} {G' : Over Y} {f : X ⟶ Y} {φ : G.left ⟶ G'.left}
     (h : IsPullback φ G.hom G'.hom f) {x : X} (hx : f x ∈ abLocus G') : x ∈ abLocus G := by
-  intro K _ _ t hxt
-  obtain ⟨u, rfl⟩ := hxt
-  have hp : IsProper (pullback.snd G'.hom (t ≫ f)) := hx K (t ≫ f) ⟨u, by simp⟩
-  have sq : IsPullback (pullback.fst G.hom t ≫ φ) (pullback.snd G.hom t) G'.hom (t ≫ f) :=
-    (IsPullback.of_hasPullback G.hom t).paste_horiz h
-  rw [← sq.isoPullback_hom_snd]
-  infer_instance
+  exact GlobalTheory.CompanionTheory.Ar.HodgeBasic.mem_abLocus_of_map h hx
 
 theorem genPt_max {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCat.of Ω) ⟶ X} (h : IsCptGen ξ) (z : X)
-    (hz : z ⤳ genPt ξ) : z = genPt ξ := by
-  have hF : IsField (X.presheaf.stalk (genPt ξ)) :=
-    (RingEquiv.ofBijective _ h.bij).toMulEquiv.isField (Field.toIsField Ω)
-  have h1 : z ∈ Set.range (X.fromSpecStalk (genPt ξ)) := by
-    rwa [Scheme.range_fromSpecStalk]
-  obtain ⟨w, rfl⟩ := h1
-  have h2 : w = IsLocalRing.closedPoint (X.presheaf.stalk (genPt ξ)) := by
-    letI := hF.toField
-    exact Subsingleton.elim (α := PrimeSpectrum (X.presheaf.stalk (genPt ξ))) _ _
-  rw [h2, Scheme.fromSpecStalk_closedPoint]
+    (hz : z ⤳ genPt ξ) : z = genPt ξ := GlobalTheory.CompanionTheory.Ar.CptInh.nogen ξ h z hz
 
 theorem eigSp_eq {E : Type} [Field E] [NumberField E] {Ω V : Type} [Field Ω] [AddCommGroup V] [Module Ω V]
     (ρ : 𝓞 E →+* Module.End Ω V) (s : E →+* Ω) (χ : 𝓞 E →+* Ω) (hχ : ∀ a : 𝓞 E, χ a = s (a : E)) :

@@ -1050,11 +1050,7 @@ theorem measurable_chartDens {J : Ideal (MvPolynomial (Fin n) ℂ)} {A : Matrix 
     (hdim : ringKrullDim (MvPolynomial (Fin n) ℂ ⧸ J) = d) (hA : IsFiniteProjection J A)
     (hf : ContinuousOn f (zeroSet J)) (hψ : ∀ i, SmoothNear (zeroSet J) (ψ i)) :
     Measurable (chartDens J A f ψ) := by
-  classical
-  rw [CutOffDominated.chartDens_congr_zeroSet (g := (zeroSet J).piecewise f 0)
-    (fun x hx => (Set.piecewise_eq_of_mem _ _ _ hx).symm)]
-  exact (SheetSumMeasurable.proof n d J A _ ψ hJ hdim hA
-    (hf.measurable_piecewise continuousOn_const (SheetSumMeasurable.isClosed_zeroSet J).measurableSet) hψ).1
+  apply GroundTheory.Heights₂.Heights.CutOffBoundaryBound.measurable_chartDens <;> assumption
 
 theorem abs_chartDens_le {J : Ideal (MvPolynomial (Fin n) ℂ)} {A : Matrix (Fin d) (Fin n) ℂ}
     (f : (Fin n → ℂ) → ℝ) (ψ : Fin d → (Fin n → ℂ) → ℝ) {y : Fin d → ℂ} (hfin : (fibre J A y).Finite) :

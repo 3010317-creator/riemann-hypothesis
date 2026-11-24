@@ -750,13 +750,7 @@ end Split
 theorem crd_int_smul {E : Type} [Field E] [NumberField E] {V : Type} [AddCommGroup V] [Module E V]
     [Module (𝓞 E) V] [IsScalarTower (𝓞 E) E V] {M : ℕ} (b : Module.Basis (Fin M) E V)
     (L0 : Submodule (𝓞 E) V) : ∀ e : E, IsIntegral ℤ e → ∀ x ∈ crdOf b L0, e • x ∈ crdOf b L0 := by
-  intro e he x hx
-  show ∑ i, (e • x) i • b i ∈ L0
-  have : ∑ i, (e • x) i • b i = e • ∑ i, x i • b i := by
-    rw [Finset.smul_sum]
-    simp [smul_smul]
-  rw [this]
-  exact int_smul_mem L0 he hx
+  apply PI.UnitaryGroupMassFormula.UJClassMass.crd_smul
 
 theorem equivFun_toLin {E : Type} [Field E] {V : Type} [AddCommGroup V] [Module E V] {M : ℕ}
     (b : Module.Basis (Fin M) E V) (A : Matrix (Fin M) (Fin M) E) (v : V) :

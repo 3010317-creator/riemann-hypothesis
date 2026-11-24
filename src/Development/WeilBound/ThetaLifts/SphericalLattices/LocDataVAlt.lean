@@ -194,16 +194,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem trace_tmul (R : Type) [CommRing R] [Algebra F R] [Module.Free F E] [Module.Finite F E] (c : R) (x : E) :
     Algebra.trace R (R ⊗[F] E) (c ⊗ₜ[F] x) = c * algebraMap F R (Algebra.trace F E x) := by
-  have h1 : c ⊗ₜ[F] x = c • ((1 : R) ⊗ₜ[F] x) := by rw [TensorProduct.smul_tmul', smul_eq_mul, mul_one]
-  rw [h1, LinearMap.map_smul, smul_eq_mul]
-  congr 1
-  rw [Algebra.trace_apply, Algebra.trace_apply, ← LinearMap.trace_baseChange]
-  congr 1
-  refine LinearMap.ext fun y => ?_
-  induction y using TensorProduct.induction_on with
-  | zero => simp
-  | tmul a e => simp [LinearMap.baseChange_tmul, Algebra.TensorProduct.tmul_mul_tmul]
-  | add a b ha hb => simp only [map_add (f := _), ha, hb]
+  apply GlobalTheory.InertLocField.trace_tmul_base
 
 theorem trace_singleTens (v : HeightOneSpectrum (𝓞 F)) (y : Fv F v ⊗[F] E) :
     Algebra.trace (AF F) (AF F ⊗[F] E) (Supp.singleTens E v y) =
@@ -1510,20 +1501,7 @@ theorem darboux_rho_zero {R : Type} [CommRing R] [Invertible (2 : R)] {W : Type}
 theorem eq_of_tens_eq {F : Type} [Field F] [NumberField F] (v : Pl (F := F)) {κ : Type} [Fintype κ] {r : (κ → AF F) → ℂ}
     (hr : ∀ x z, At (evFin F v) z → r (x + z) = r x) (h0 : r 0 ≠ 0) {φ₁ φ₂ : (κ → Fv F v) → ℂ}
     (h : tens (evFin F v) φ₁ r = tens (evFin F v) φ₂ r) : φ₁ = φ₂ := by
-  funext y
-  set z : κ → AF F := fun i => GlobalTheory.LatVac.liftV v (y i) with hz
-  have hza : At (evFin F v) z := by
-    intro u hu
-    funext i
-    exact GlobalTheory.LatVac.at_liftV v _ u hu
-  have hrx : r (0 + z) = r 0 := hr 0 z hza
-  have hy : (fun i => evFin F v ((0 + z) i)) = y := by
-    funext i
-    simp only [hz, zero_add, GlobalTheory.LatVac.evFin_liftV]
-  have e := congrFun h (0 + z)
-  simp only [tens] at e
-  rw [hrx, hy] at e
-  exact mul_right_cancel₀ h0 e
+  exact GlobalTheory.LocalWeilHom.tens_cancel v hr h0 h
 
 end GlobalTheory.InertRhoLaw
 
@@ -1607,17 +1585,7 @@ theorem acts_eq {F : Type} [Field F] [NumberField F] (v : Pl (F := F)) {κ : Typ
 
 theorem evFin_half_mem {F : Type} [Field F] [NumberField F] (v : Pl (F := F)) (h : (2 : 𝓞 F) ∉ v.asIdeal) :
     evFin F v (⅟(2 : AF F)) ∈ v.adicCompletionIntegers F := by
-  have e : evFin F v (⅟(2 : AF F)) = algebraMap F (Fv F v) (2 : F)⁻¹ := by
-    have h1 : evFin F v (⅟(2 : AF F)) * 2 = 1 := by
-      have := congrArg (evFin F v) (invOf_mul_self (2 : AF F))
-      rwa [map_mul, map_ofNat, map_one] at this
-    have h2 : algebraMap F (Fv F v) (2 : F)⁻¹ * 2 = 1 := by
-      rw [← map_ofNat (algebraMap F (Fv F v)) 2, ← map_mul, inv_mul_cancel₀ two_ne_zero, map_one]
-    have h20 : (2 : Fv F v) ≠ 0 := by
-      intro h0; rw [h0, mul_zero] at h1; exact zero_ne_one h1
-    exact mul_right_cancel₀ h20 (h1.trans h2.symm)
-  rw [e]
-  exact GlobalTheory.LatVac.half_mem_adicCompletionIntegers F v h
+  exact GlobalTheory.DblVacGauss.evFin_invOf_two_mem v h
 
 theorem vac_locVac : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E)
     (a a' : ℕ) (G : Geo σ a a') (X : Chars F E) (om : Rep σ G.V G.W) (om' : Rep σ G.V' G.W), IsTriple B G X om om' →

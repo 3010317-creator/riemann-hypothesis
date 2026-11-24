@@ -313,11 +313,7 @@ open GlobalTheory GlobalTheory.ArcPull GlobalTheory.TorusExt
 
 theorem qkExt_id' {R : Type} [CommRing R] [IsDomain R] {D : DegPre R} {C : Type} [Field C]
     [Algebra (FractionRing R) C] {k : ℕ} (p : QkPt D C k) : QkExt (RingHom.id C) p p := by
-  have e : spMap (RingHom.id C) = 𝟙 _ := Spec.map_id _
-  refine ⟨rfl, by rw [e, Category.id_comp], fun χ => ?_⟩
-  rw [e]
-  exact corr_of_val D.P.isLB fun y J hJ =>
-    ((val_pull hJ _ _ _).trans (congrArg (fun r => val (p.g.s χ) r y J) (Category.id_comp _))).symm
+  exact GlobalTheory.SeriesCompare.qkExt_id p
 
 theorem isAlgebraic_kb {R R₁ : Type} [CommRing R] [IsDomain R] [CommRing R₁] [IsDomain R₁] (ρ : R →+* R₁)
     (hρ : ρ.Finite) [Algebra (FractionRing R) (Kb R₁)]

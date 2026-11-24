@@ -103,14 +103,7 @@ variable {D : D7}
 
 theorem hT_eq_coords (S : HSp D) (x y : S.V) :
     S.hT x y = ∑ i, ∑ j, star (S.frame.repr x i) * S.gram i j * S.frame.repr y j := by
-  conv_lhs => rw [← S.frame.sum_repr x, ← S.frame.sum_repr y]
-
-  simp only [map_sum, LinearMap.map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul,
-  starRingEnd_apply, Finset.mul_sum, RingHom.id_apply]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  simp only [Formalism.BasicNotions.HSpace.gram]
-  ring
+  exact GlobalTheory.AutFunCounterexample.hT_coord S x y
 
 theorem hT_cols (S : HSp D) {k l : ℕ} (a : Matrix (Fin S.rank) (Fin k) D.host.E) (b : Matrix (Fin S.rank) (Fin l) D.host.E)
     (q : Fin k) (p : Fin l) :
@@ -411,22 +404,7 @@ namespace GlobalTheory.GridHC
 open GlobalTheory.SignedHC Finset
 
 theorem inCoset_weightX (D : D7) (τ : D.what₂.Tau) (j : ℕ) : InCoset (1 / 2) ((GlobalTheory.Grid.grid D τ).weightX j) := by
-  induction j with
-  | zero => exact GlobalTheory.ChiGrid.inCoset_weightX_zero (GlobalTheory.ChiGrid.odd_sLen D)
-  | succ j ih =>
-    rw [(GlobalTheory.Grid.grid D τ).weightX_succ]
-    intro x hx
-    rcases mem_union.1 hx with h | h
-    · exact ih x h
-    · obtain ⟨a, -, rfl⟩ := GlobalTheory.SignedHC.mem_block.1 h
-      obtain ⟨u, hu⟩ := D.R.t_odd
-      have e : ((GlobalTheory.Grid.grid D τ).t : ℚ) = 2 * u + 1 := by
-        have : ((GlobalTheory.Grid.grid D τ).t : ℚ) = D.R.t := rfl
-        rw [this, hu]; push_cast; ring
-      refine ⟨-(GlobalTheory.Grid.grid D τ).e (j + 1) + u - a, ?_⟩
-      push_cast
-      rw [e]
-      ring
+  exact GlobalTheory.ColParam.inCoset_weightX D τ j
 
 theorem even_rkX (D : D7) (j : ℕ) : Even (GlobalTheory.Grid.rkX D j) := GlobalTheory.ChiGrid.even_rankX D j
 

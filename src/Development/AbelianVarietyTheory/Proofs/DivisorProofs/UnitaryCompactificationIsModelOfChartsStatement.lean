@@ -225,11 +225,7 @@ namespace GlobalTheory.MemberEt
 theorem isEtaleCompletion_comp_bijective {B A R : Type} [CommRing B] [IsLocalRing B] [CommRing A] [IsLocalRing A]
     [CommRing R] [IsLocalRing R] (e : B →+* A) (he : Function.Bijective e) (φ : A →+* R)
     (h : IsEtaleCompletion φ) : IsEtaleCompletion (φ.comp e) := by
-  obtain ⟨h1, h2, h3⟩ := h
-  refine ⟨RingHom.Flat.comp (RingHom.Flat.of_bijective he) h1, ?_, ?_⟩
-  · rwa [← Ideal.map_map, IsLocalRing.map_maximalIdeal_of_surjective e he.2]
-  · rw [← RingHom.comp_assoc]
-    exact RingHom.Finite.comp h3 (RingHom.Finite.of_surjective e he.2)
+  exact GlobalTheory.TorRef.isEtaleCompletion_comp_bij e he φ h
 
 theorem isEtaleCompletion_comp_openImmersion : ∀ (A X : Scheme.{0}) (g : A ⟶ X) [IsOpenImmersion g] (R : Type) [CommRing R]
     [IsLocalRing R] (ξ : Sp R ⟶ A), IsEtaleCompletion (Scheme.stalkClosedPointTo ξ).hom →

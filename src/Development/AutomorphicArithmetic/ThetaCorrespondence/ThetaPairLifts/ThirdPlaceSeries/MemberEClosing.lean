@@ -254,14 +254,7 @@ variable {K : Type} [Field K] [NumberField K] [StarRing K]
 
 theorem j_eq_sum {σ : K →+* ℂ} {W : Type} [AddCommGroup W] [Module ℂ W] {n : ℕ}
     (j : (Fin n → K) →ₛₗ[σ] W) (x : Fin n → K) :
-    j x = ∑ i, σ (x i) • j (Pi.single i 1) := by
-  conv_lhs => rw [← Finset.univ_sum_single x]
-
-  rw [map_sum]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  have : (Pi.single i (x i) : Fin n → K) = x i • Pi.single i 1 := by
-    rw [← Pi.single_smul, smul_eq_mul, mul_one]
-  rw [this, LinearMap.map_smulₛₗ]
+    j x = ∑ i, σ (x i) • j (Pi.single i 1) := by apply GlobalTheory.Mem.LiftTheta.semi_expand
 
 theorem j_ne_zero {σ : K →+* ℂ} {W : Type} [AddCommGroup W] [Module ℂ W] {n : ℕ}
     (j : (Fin n → K) →ₛₗ[σ] W) (hli : LinearIndependent ℂ fun i => j (Pi.single i 1))

@@ -293,13 +293,7 @@ theorem conj_sigmaOf (g : D.R.GG) (x : D.host.E) :
   rw [← sigmaOf_mul', ← sigmaOf_mul', mul_comm]
 
 theorem conj_conj' (x : D.host.E) : D.host.conj (D.host.conj x) = x := by
-  rw [conj_eq']
-  change (D.host.sigmaOf (D.R.cc) * D.host.sigmaOf (D.R.cc)) x = x
-  rw [← sigmaOf_mul']
-  have : D.R.cc * D.R.cc = 1 := by
-    exact Prod.ext (by change c0 * c0 = 1; decide) (mul_one _)
-  rw [this, show D.host.sigmaOf 1 = 1 from map_one (D.host.gal).symm]
-  rfl
+  exact Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.CU.conj_conj D x
 
 def nPsi (D : D7) (z : D.host.E) : D.host.E := ∏ τ : D.what₂.Tau, D.host.sigmaOf (D.eTau τ : D.R.GG) z
 

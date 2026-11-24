@@ -182,11 +182,7 @@ open ReciprocityTheory.ChartRestriction.DS ReciprocityTheory.ChartRestriction.DS
 variable {n : ℕ}
 
 theorem gMat_add {ε : Fin n → Bool} (s t : GCo ε) : gMat (s + t) = gMat s + gMat t := by
-  ext a b
-  simp only [gMat, Matrix.add_apply]
-  simp only [kMat, pmat, Prod.fst_add, Prod.snd_add, Pi.add_apply]
-  split_ifs <;> (try simp only [Complex.ofReal_add, star_add, mul_add, neg_add, add_zero]) <;>
-    (try ring)
+  exact ReciprocityTheory.ChartRestriction.DS.OmegaPQAux.gMat_add s t
 
 theorem gMat_smul {ε : Fin n → Bool} (c : ℝ) (s : GCo ε) : gMat (c • s) = (RingHom.id ℝ c) • gMat s := by
   ext a b

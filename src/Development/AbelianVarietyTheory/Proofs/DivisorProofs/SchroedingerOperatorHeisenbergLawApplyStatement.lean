@@ -99,16 +99,7 @@ theorem norm_le_one (ψ0 : AddChar k ℂ) (hc : Continuous ψ0) (x : k) : ‖ψ0
   exact absurd (hpow m) (not_le.mpr hm)
 
 theorem norm_eq_one (ψ0 : AddChar k ℂ) (hc : Continuous ψ0) (x : k) : ‖ψ0 x‖ = 1 := by
-  have h1 := norm_le_one ψ0 hc x
-  have h2 := norm_le_one ψ0 hc (-x)
-  have hm : ψ0 x * ψ0 (-x) = 1 := by
-    rw [← AddChar.map_add_eq_mul, add_neg_cancel, AddChar.map_zero_eq_one]
-  have hn : ‖ψ0 x‖ * ‖ψ0 (-x)‖ = 1 := by rw [← norm_mul, hm, norm_one]
-  by_contra hne
-  have hlt : ‖ψ0 x‖ < 1 := lt_of_le_of_ne h1 hne
-  have : ‖ψ0 x‖ * ‖ψ0 (-x)‖ < 1 :=
-    lt_of_le_of_lt (mul_le_of_le_one_right (norm_nonneg _) h2) hlt
-  linarith
+  exact GlobalTheory.norm_addChar_nonarch ψ0 hc x
 
 def toCircle (ψ0 : AddChar k ℂ) (h : ∀ x, ‖ψ0 x‖ = 1) : AddChar k Circle where
   toFun x := ⟨ψ0 x, mem_sphere_zero_iff_norm.2 (h x)⟩

@@ -417,13 +417,7 @@ theorem dividedPowerFiltration_dividedPowersBot_of_one_le' {K : Type} [Field K] 
   exact (dividedPowersBot K).dpow_eval_zero h0
 
 theorem tfbase_K {K : Type} [Field K] [CharZero K] {s : ℕ} (hs : 1 ≤ s) : TFBase (dividedPowersBot K) 1 s := by
-  refine { nil := dividedPowerFiltration_dividedPowersBot_of_one_le' hs, tf := ?_, dv := ?_ }
-  · intro r x h
-    simpa using h
-  · intro n hn
-    exact ⟨0, (n : K)⁻¹, by
-      have : (n : K) ≠ 0 := Nat.cast_ne_zero.2 hn
-      simp [this]⟩
+  exact GlobalTheory.CompanionTheory.ConeLocal.tfBase_dpBot hs
 
 theorem tfbase_B {K B : Type} [Field K] [CharZero K] [CommRing B] [Algebra K B] {I : Ideal B} (γ : DividedPowers I) {s : ℕ}
     (h : pdP γ s = ⊥) : TFBase γ 1 s := by

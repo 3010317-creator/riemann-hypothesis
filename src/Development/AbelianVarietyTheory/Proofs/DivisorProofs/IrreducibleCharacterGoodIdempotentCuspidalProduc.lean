@@ -1083,11 +1083,7 @@ theorem eq_of_sum_ne_zero {χ ψ : H → ℂ} (hχ : IsIrrChar χ) (hψ : IsIrrC
     exact absurd ((mul_eq_zero.mp ho).resolve_left (inv_ne_zero hc)) h
 
 theorem sum_single (e : MonoidAlgebra ℂ H) : ∑ g : H, MonoidAlgebra.single g (e.coeff g) = e := by
-  classical
-  apply MonoidAlgebra.ext
-  ext t
-  rw [MonoidAlgebra.coeff_sum, Finset.sum_apply']
-  simp [Finsupp.single_apply]
+  exact (CompanionTheory.Member.TraceCoefficientSum.eq_sum_single e).symm
 
 theorem asAlg_eq {V : Type} [AddCommGroup V] [Module ℂ V] (ρ : Representation ℂ H V) (e : MonoidAlgebra ℂ H) :
     ρ.asAlgebraHom e = ∑ g : H, e.coeff g • ρ g := by

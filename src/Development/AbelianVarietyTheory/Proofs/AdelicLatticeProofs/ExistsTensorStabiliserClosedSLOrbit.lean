@@ -98,16 +98,7 @@ def vanC (S : Set (Matrix ι ι ℂ)) : Ideal (MvPolynomial (ι × ι) ℂ) wher
 
 omit [DecidableEq ι] in
 lemma evC_ltr (g y : Matrix ι ι ℂ) (f : MvPolynomial (ι × ι) ℂ) : evC (ltr g f) y = evC f (g * y) := by
-  induction f using MvPolynomial.induction_on with
-  | C a => simp [evC, ltr]
-  | add p q hp hq =>
-    simp only [evC] at hp hq ⊢
-    rw [map_add (f := _), map_add (f := _), map_add (f := _), hp, hq]
-  | mul_X p ij hp =>
-    simp only [evC] at hp ⊢
-    rw [map_mul, map_mul, map_mul, hp]
-    congr 1
-    simp [ltr, Matrix.mul_apply]
+  exact GlobalTheory.ClassFin.ReynoldsLtr.evC_ltr g y f
 
 omit [DecidableEq ι] in
 lemma exists_rtr (h : Matrix ι ι ℂ) (f : MvPolynomial (ι × ι) ℂ) :
@@ -243,15 +234,7 @@ theorem evC_ltr (g y : Matrix ι ι ℂ) (f : MvPolynomial (ι × ι) ℂ) :
 
 omit [DecidableEq ι] in
 theorem isInv_iff (Γ : Set (Matrix ι ι ℂ)) (f : MvPolynomial (ι × ι) ℂ) :
-    IsInv Γ f ↔ ∀ g ∈ Γ, ltr g f = f := by
-  constructor
-  · intro h g hg
-    apply MvPolynomial.funext
-    intro x
-    have := h g hg (Matrix.of fun i j => x (i, j))
-    rwa [← evC_ltr] at this
-  · intro h g hg y
-    rw [← evC_ltr, h g hg]
+    IsInv Γ f ↔ ∀ g ∈ Γ, ltr g f = f := GlobalTheory.ClassFin.ReynoldsLtr.isInv_iff Γ f
 
 omit [DecidableEq ι] in
 theorem ltr_homog (g : Matrix ι ι ℂ) {f : MvPolynomial (ι × ι) ℂ} {n : ℕ}

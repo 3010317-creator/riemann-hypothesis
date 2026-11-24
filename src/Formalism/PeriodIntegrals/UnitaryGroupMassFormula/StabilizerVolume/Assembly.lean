@@ -460,16 +460,7 @@ open MeasureTheory Complex Filter Topology
 alias char_real := _root_.Bl.FunctionAtZero.goal1
 
 theorem freq_unique {u v : ℝ} (h : ∀ s : ℝ, exp (↑(u * s) * I) = exp (↑(v * s) * I)) : u = v := by
-  by_contra huv
-  have hne : u - v ≠ 0 := sub_ne_zero.2 huv
-  have h1 := h (Real.pi / (u - v))
-  have h2 : exp (↑((u - v) * (Real.pi / (u - v))) * I) = 1 := by
-    have : (↑((u - v) * (Real.pi / (u - v))) : ℂ) * I =
-        ↑(u * (Real.pi / (u - v))) * I - ↑(v * (Real.pi / (u - v))) * I := by
-      push_cast; ring
-    rw [this, Complex.exp_sub, h1, div_self (Complex.exp_ne_zero _)]
-  rw [mul_div_cancel₀ _ hne, Complex.exp_pi_mul_I] at h2
-  norm_num at h2
+  exact PI.AprimeInfW.ST.freq_unique h
 
 section Bichar
 

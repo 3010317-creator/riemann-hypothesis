@@ -230,11 +230,7 @@ theorem hform_eq (s : A →+* A) (J : Matrix n n A) (y z : n → A) :
 
 theorem hform_mulVec (s : A →+* A) (J g : Matrix n n A) (y z : n → A) :
     Formalism.UG.hform s J (g *ᵥ y) (g *ᵥ z) = Formalism.UG.hform s (Formalism.UG.cT s g * J * g) y z := by
-  have h : s ∘ (g *ᵥ y) = (g.map s) *ᵥ (s ∘ y) := by
-    funext i
-    exact RingHom.map_mulVec s g y i
-  rw [hform_eq, hform_eq, h, Formalism.UG.cT, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
-    Matrix.dotProduct_mulVec (s ∘ y), Matrix.vecMul_transpose]
+  exact GlobalTheory.UnitVectorStabiliser.hf_mulVec s J g y z
 
 theorem hform_sub_smul (s : A →+* A) (J : Matrix n n A) (x y : n → A) (a : A) :
     Formalism.UG.hform s J x (y - a • x) = Formalism.UG.hform s J x y - a * Formalism.UG.hform s J x x := by
@@ -365,12 +361,7 @@ theorem h_sum_left {ι : Type} (s : Finset ι) (x : ι → Fin M → A) (z : Fin
 variable {c J}
 
 theorem h_conj (hc : ∀ a, c (c a) = a) (hJ : ∀ i j, c (J j i) = J i j) (x y : Fin M → A) :
-    c (hform c J x y) = hform c J y x := by
-
-  simp only [hform, map_sum, map_mul, hc]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  rw [hJ]; ring
+    c (hform c J x y) = hform c J y x := GlobalTheory.WittTransitivity.conj_hform c J hc hJ x y
 
 theorem h_mulVec (P Q : Matrix (Fin M) (Fin M) A) (x y : Fin M → A) :
     hform c J (P *ᵥ x) (Q *ᵥ y) = hform c (cT c P * J * Q) x y := by

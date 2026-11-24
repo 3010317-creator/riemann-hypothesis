@@ -755,12 +755,7 @@ variable {G1 G2 Y1 Y2 : Type} [Group G1] [Group G2] [Monoid Y1] [Monoid Y2]
   {P1 : Submodule ℂ (Y1 → ℂ)} {P2 : Submodule ℂ (Y2 → ℂ)}
 
 theorem mem_fixed_iff {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] (ρ : Representation ℂ G V) (U : Subgroup G)
-    (v : V) : v ∈ fixed ρ U ↔ ∀ u ∈ U, ρ u v = v := by
-  constructor
-  · intro h u hu
-    simpa using h ⟨u, hu⟩
-  · intro h u
-    simpa using h u.1 u.2
+    (v : V) : v ∈ fixed ρ U ↔ ∀ u ∈ U, ρ u v = v := GlobalTheory.LGrp.mem_fixed
 
 theorem decomp (e1 : G1 →* Y1) (e2 : G2 →* Y2) (ρ1 : Representation ℂ G1 P1) (ρ2 : Representation ℂ G2 P2)
     (hρ1 : ∀ g v y, (ρ1 g v).1 y = v.1 (y * e1 g)) (hρ2 : ∀ g v y, (ρ2 g v).1 y = v.1 (y * e2 g))

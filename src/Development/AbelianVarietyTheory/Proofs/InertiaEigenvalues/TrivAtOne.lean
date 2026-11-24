@@ -1065,12 +1065,7 @@ theorem actO_one_inv_half {D : D7} {S T : HSp D} {e f : AE D} (hef : e * f = e) 
     _ = y := by rw [Matrix.smul_mul, Matrix.one_mul, hy']
 
 theorem pureTensorL_one {ι X : Type} (A : ι → (X → ℂ) → (X → ℂ)) (f : X → ℂ) : pureTensorL A f 1 = f := by
-  have e : (1 : MvPolynomial ι ℂ) = MvPolynomial.basisMonomials ι ℂ 0 := by
-    rw [MvPolynomial.coe_basisMonomials]; rfl
-  rw [e]
-  unfold pureTensorL
-  rw [Module.Basis.constr_basis]
-  simp [opPow]
+  exact GlobalTheory.AdTh.VecFock.pureTensorL_one A f
 
 
 

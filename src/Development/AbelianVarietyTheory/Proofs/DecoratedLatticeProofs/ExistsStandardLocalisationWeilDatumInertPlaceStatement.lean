@@ -761,14 +761,7 @@ theorem incA_mul_secW (a : D.host.E) (z : w.adicCompletion D.host.E) :
 
 theorem cA_secW {c : w.adicCompletion D.host.E →+* w.adicCompletion D.host.E} (hc : GlobalTheory.LFun.IsConjAt D.sp.cm.sig h c)
     (z : w.adicCompletion D.host.E) : cA D (secW hw h z) = secW hw h (c z) := by
-  rw [secW_apply, secW_apply]
-  show Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR (AF D.host.F) D.sp.cm.sig (GlobalTheory.EmbChart.tensAt D.host.E v _) = GlobalTheory.EmbChart.tensAt D.host.E v _
-  rw [GlobalTheory.EmbChart.sigR_tensAt]
-  congr 1
-  apply (GlobalTheory.LFun.InertChart.complEquiv hw h).injective
-  rw [RingEquiv.apply_symm_apply]
-  have := hc ((GlobalTheory.LFun.InertChart.complEquiv hw h).symm z)
-  exact this.symm.trans (congrArg c ((GlobalTheory.LFun.InertChart.complEquiv hw h).apply_symm_apply z))
+  exact (GlobalTheory.InertFrameLoc.secW_cA D hw h c hc z).symm
 
 theorem hO_map_secW {S T : HSp D} {c : w.adicCompletion D.host.E →+* w.adicCompletion D.host.E}
     (hc : GlobalTheory.LFun.IsConjAt D.sp.cm.sig h c) (M N : Matrix (Fin T.rank) (Fin S.rank) (w.adicCompletion D.host.E)) :

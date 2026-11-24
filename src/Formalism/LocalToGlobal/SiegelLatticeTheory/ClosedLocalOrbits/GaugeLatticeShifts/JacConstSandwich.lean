@@ -1328,19 +1328,7 @@ theorem Log_sgI_val (i : Fin (2 * r + k + 1)) : ((sgI k r i).val = r + k ↔ i.v
   unfold sgI
   split_ifs <;> simp_all <;> omega
 
-theorem hpk_sq : Hpk k r * Hpk k r = 1 := by
-  ext i j
-  rw [Matrix.mul_apply, Finset.sum_eq_single (sgI k r i)]
-  · rw [Log_Hpk_eq, Log_Hpk_eq, ite_eq_left rfl, Log_sgI_sgI, Matrix.one_apply]
-    have hv := (Log_sgI_val (k := k) (r := r) i)
-    by_cases h : j = i
-    · subst h
-      by_cases h2 : j.val = r + k
-      · rw [ite_eq_left h2, ite_eq_left rfl, ite_eq_left (hv.2 h2), ite_eq_left rfl]; norm_num
-      · rw [ite_eq_right h2, ite_eq_left rfl, ite_eq_right (fun h' => h2 (hv.1 h')), ite_eq_left rfl]; norm_num
-    · rw [ite_eq_right h, ite_eq_right (Ne.symm h), mul_zero]
-  · intro l _ hl; rw [Log_Hpk_eq, ite_eq_right hl, zero_mul]
-  · simp
+theorem hpk_sq : Hpk k r * Hpk k r = 1 := PI.SwBig.GU.Hpk_sq
 
 theorem logG : LogG := by
   intro k r

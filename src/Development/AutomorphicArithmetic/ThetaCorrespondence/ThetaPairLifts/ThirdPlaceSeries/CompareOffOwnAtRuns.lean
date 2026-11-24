@@ -204,17 +204,7 @@ variable {E F : Type} [Field E] [Field F] (φ : E →+* F)
 
 theorem span_image_span (S : Set E) :
     Submodule.span (𝓞 F) (φ '' (Submodule.span (𝓞 E) S : Set E)) = Submodule.span (𝓞 F) (φ '' S) := by
-  refine le_antisymm (Submodule.span_le.2 ?_) (Submodule.span_mono (Set.image_mono Submodule.subset_span))
-  rintro _ ⟨x, hx, rfl⟩
-  induction hx using Submodule.span_induction with
-  | mem x hx => exact Submodule.subset_span ⟨x, hx, rfl⟩
-  | zero => simp
-  | add x y _ _ hx hy => rw [map_add (f := _)]; exact Submodule.add_mem _ hx hy
-  | smul b x _ hx =>
-    have : φ (b • x) = RingOfIntegers.mapRingHom φ b • φ x := by
-      change φ ((b : E) * x) = _
-      rw [map_mul]; rfl
-    rw [this]; exact Submodule.smul_mem _ _ hx
+  exact GlobalTheory.BetaEx.span_image_span φ S
 
 def extend : Submodule (𝓞 E) E →* Submodule (𝓞 F) F where
   toFun M := Submodule.span (𝓞 F) (φ '' M)
@@ -427,33 +417,10 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ}
 theorem form_adj (h : Matrix (Fin n) (Fin n) E) (v w : Fin n → E) :
     ∑ j, IsCMField.complexConj E (v j) * h.mulVec w j =
       ∑ j, IsCMField.complexConj E ((adjM h).mulVec v j) * w j := by
-
-  simp only [Matrix.mulVec, dotProduct, adjM, Matrix.of_apply, map_sum, map_mul,
-  IsCMField.complexConj_apply_apply, Finset.mul_sum, Finset.sum_mul]
-  rw [Finset.sum_comm]
-  exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
+  exact GlobalTheory.IsomLift.form_adj h v w
 
 theorem unimod_act {h : Matrix (Fin n) (Fin n) E} (hu : IsUnitaryM h) {Λ : GenLat E n} (hΛ : Λ.Unimod) :
-    (actLat h Λ).Unimod := by
-  have h1 : adjM h * h = 1 := hu
-  have h2 : h * adjM h = 1 := mul_eq_one_comm.1 h1
-  intro v
-  have e : v ∈ (actLat h Λ).La ↔ (adjM h).mulVec v ∈ Λ.La := by
-    constructor
-    · rintro ⟨u, hu, rfl⟩
-      change (adjM h).mulVec (h.mulVec u) ∈ _
-      rwa [Matrix.mulVec_mulVec, h1, Matrix.one_mulVec]
-    · intro hv
-      refine ⟨_, hv, ?_⟩
-      change h.mulVec _ = _
-      rw [Matrix.mulVec_mulVec, h2, Matrix.one_mulVec]
-  rw [e, hΛ]
-  constructor
-  · rintro hv _ ⟨u, hu, rfl⟩
-    exact (form_adj h v u).symm ▸ hv u hu
-  · intro hv w hw
-    rw [← form_adj]
-    exact hv _ ⟨w, hw, rfl⟩
+    (actLat h Λ).Unimod := GlobalTheory.RepCompare.unimod_act hu hΛ
 
 variable {H : Host E} (Dw : Datum H) {l : Geo.Tor.Level H} (c : Coeff l)
 
@@ -1065,11 +1032,7 @@ theorem exists_step_split_off (D : D7) (T : Full D) (hF : LawsFull T) (j : ℕ) 
 
 theorem splitOffBad_of_dvd (D : D7) (V : Formalism.BasicNotions.TH.HSp D) {a b : ℕ} (hab : a ∣ b) {h : Formalism.L2.Theta.GA D V}
     (hs : Formalism.IndefR.FWT.SplitOffBad V b h) : Formalism.IndefR.FWT.SplitOffBad V a h := by
-  obtain ⟨h1, e', Q, h3, h4, h5⟩ := hs
-  obtain ⟨c, rfl⟩ := hab
-  refine ⟨h1, e', Q, h3, fun PP hP hbd => h4 PP hP ?_, h5⟩
-  rw [Nat.cast_mul]
-  exact Ideal.mul_mem_right _ _ hbd
+  exact GlobalTheory.OneMapExact.splitOff_of_dvd hab hs
 
 end
 

@@ -1405,14 +1405,7 @@ theorem ξ_mul_ratio (X Y : Data E r) : Y.ξ0 * ratio X Y = X.ξ0 ∨ Y.ξ0 * ra
   · right; field_simp
   · left; field_simp
 
-theorem re_κ (X : Data E r) (τ : E →+* ℂ) : (τ X.κ0).re = 0 := by
-  have h := IsCMField.complexEmbedding_complexConj E τ X.κ0
-  have h' := cc_κ X
-  unfold cc at h'
-  rw [h', map_neg] at h
-  have := congrArg Complex.re h
-  simp at this
-  linarith
+theorem re_κ (X : Data E r) (τ : E →+* ℂ) : (τ X.κ0).re = 0 := GlobalTheory.SW.DblPoint.re_kappa X τ
 
 theorem exists_sq (X Y : Data E r) (hΨ : X.Ψ = Y.Ψ) {τ : E →+* ℂ} (hτ : τ ∈ X.Ψ) :
     ∃ t : ℝ, t ≠ 0 ∧ (t : ℂ) * t * τ (ratio X Y) = 1 := by

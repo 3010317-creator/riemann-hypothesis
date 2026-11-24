@@ -226,14 +226,7 @@ namespace GlobalTheory.CompanionTheory.BZPhiPG.Coc
 
 theorem continuous_levi_mir (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] (n : ℕ) : Continuous (levi k n) := by
-  have hval : Continuous fun g : GL (Fin n) k => GlobalTheory.BZMir.glEmbMat k n (g : Matrix (Fin n) (Fin n) k) :=
-    GlobalTheory.CompanionTheory.LeibPhi.continuous_glEmbMat_comp n Units.continuous_val
-  have hinv : Continuous fun g : GL (Fin n) k =>
-      GlobalTheory.BZMir.glEmbMat k n ((g⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) :=
-    GlobalTheory.CompanionTheory.LeibPhi.continuous_glEmbMat_comp n Units.continuous_coe_inv
-  refine continuous_induced_rng.2 (Units.continuous_iff.2 ⟨?_, ?_⟩)
-  · exact hval
-  · exact hinv
+  exact GlobalTheory.CompanionTheory.BZMirFun.continuous_levi k n
 
 theorem hgp_cocompact : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] (i t : ℕ), ∃ C : Set (Mir k ((i + 1) + t)), IsCompact C ∧

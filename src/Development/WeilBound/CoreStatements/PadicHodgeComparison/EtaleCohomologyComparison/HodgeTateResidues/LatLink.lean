@@ -286,13 +286,7 @@ section
 variable {W B : Type} [CommRing W] [CommRing B] [Algebra ℚ B] (f : W →+* B) (ξ : W) (l M : ℕ)
 
 theorem dpE_succ_mem_IB (i : ℕ) : Lat.dpE f ξ l M (i + 1) ∈ Lat.IB f ξ := by
-  have h1 : Lat.η f ξ l M ∈ Lat.IB f ξ := by
-    unfold Lat.η Lat.IB
-    rw [Algebra.smul_def]
-    exact Ideal.mul_mem_left _ _ (Ideal.mem_span_singleton_self _)
-  unfold Lat.dpE
-  rw [Algebra.smul_def, pow_succ]
-  exact Ideal.mul_mem_left _ _ (Ideal.mul_mem_left _ _ h1)
+  exact GlobalTheory.CompanionTheory.LatPrime.dpE_succ_mem_IB f ξ l M i
 
 theorem dpE_zero : Lat.dpE f ξ l M 0 = 1 := by
   unfold Lat.dpE

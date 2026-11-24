@@ -861,12 +861,7 @@ variable {E : Type} [Field E] [NumberField E] {I : Type} [Fintype I]
 
 theorem prodCpow {J : Type} (t : Finset J) (f : J → ℝ) (hf : ∀ j, 0 ≤ f j) (w : ℂ) :
     ∏ j ∈ t, ((f j : ℝ) : ℂ) ^ w = (((∏ j ∈ t, f j : ℝ)) : ℂ) ^ w := by
-  classical
-  induction t using Finset.induction_on with
-  | empty => simp
-  | insert a s ha ih =>
-    rw [Finset.prod_insert ha, Finset.prod_insert ha, ih, Complex.ofReal_mul,
-      Complex.mul_cpow_ofReal_nonneg (hf a) (Finset.prod_nonneg fun j _ => hf j)]
+  exact GlobalTheory.CMVal.TermUnit.prod_cpow t f hf w
 
 theorem norm_cpow_eq_exp {h : ℂ} (hh : h ≠ 0) (σ : ℂ) :
     ((‖h‖ : ℝ) : ℂ) ^ (-2 * σ) = Complex.exp (-σ * ((Real.log (Complex.normSq h) : ℝ) : ℂ)) := by

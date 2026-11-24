@@ -317,13 +317,7 @@ theorem eq_zero_of_mem_hatL_bot (z : Fin n → E ⊗[F] Formalism.L2.Herm.Af F)
   | add u v _ _ hu hv => rw [hu, hv, add_zero]
   | smul s u _ hu => rw [hu, smul_zero]
 
-theorem nontrivial_af : Nontrivial (Formalism.L2.Herm.Af F) := by
-  obtain ⟨p, hp0, hp⟩ := Ring.not_isField_iff_exists_prime.mp (NumberField.RingOfIntegers.not_isField F)
-  let v : HeightOneSpectrum (𝓞 F) := ⟨p, hp, hp0⟩
-  refine ⟨⟨0, 1, fun h => ?_⟩⟩
-  have h' := congrArg (fun b : Formalism.L2.Herm.Af F => b v) h
-  change (0 : _) = 1 at h'
-  exact zero_ne_one h'
+theorem nontrivial_af : Nontrivial (Formalism.L2.Herm.Af F) := Formalism.L2.DIV.af_nontrivial F
 
 theorem mem_smul_span (Λ : Submodule (𝓞 E) (Fin n → E)) (𝔪 : Ideal (𝓞 E)) (g : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F))
     (y : Fin n → E)

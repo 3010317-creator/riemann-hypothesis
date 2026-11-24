@@ -1313,12 +1313,7 @@ theorem rho_add_int (hP : GlobalTheory.Hk3.LocPair ϖ σ q δ JS JT ψ ρ ω) {s
 theorem rho_mem_of_mk_eq (hP : GlobalTheory.Hk3.LocPair ϖ σ q δ JS JT ψ ρ ω) {s : M} (hs : GlobalTheory.Hk3.LocVac ρ s)
     {x y : Matrix (Fin n') (Fin n) L}
     (hxy : (QuotientAddGroup.mk x : Matrix (Fin n') (Fin n) L ⧸ intMat L n' n) = QuotientAddGroup.mk y) :
-    ρ x s ∈ Submodule.span ℂ {ρ y s} := by
-  have hu : -y + x ∈ intMat L n' n := QuotientAddGroup.eq.1 hxy.symm
-  obtain ⟨c, -, hc⟩ := rho_add_int hP hs y (-y + x) hu
-  rw [add_neg_cancel_left] at hc
-  rw [hc]
-  exact Submodule.smul_mem _ _ (Submodule.subset_span rfl)
+    ρ x s ∈ Submodule.span ℂ {ρ y s} := GlobalTheory.Hk3.HoweFix.rho_mem_span_of_mk_eq hP hs hxy
 
 theorem step (hP : GlobalTheory.Hk3.LocPair ϖ σ q δ JS JT ψ ρ ω) (s : M) (hs0 : s ≠ 0) (hs : GlobalTheory.Hk3.LocVac ρ s)
     (hspan : Submodule.span ℂ (Set.range fun x => ρ x s) = ⊤) (x : Matrix (Fin n') (Fin n) L)

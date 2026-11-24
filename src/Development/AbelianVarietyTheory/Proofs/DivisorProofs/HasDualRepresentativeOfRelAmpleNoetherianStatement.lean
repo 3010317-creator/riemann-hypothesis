@@ -1385,16 +1385,7 @@ namespace GlobalTheory.DualCon
 
 theorem isPullback_prod_map {S : Scheme.{0}} (A : Over S) {V V' : Over S} (v : V ⟶ V') :
     IsPullback (lift (fst A V) (snd A V ≫ v)).left (snd A V).left (snd A V').left v.left := by
-  have hT : IsPullback (fst A V).left (snd A V).left A.hom V.hom := IsPullback.of_hasPullback _ _
-  have hY : IsPullback (fst A V').left (snd A V').left A.hom V'.hom := IsPullback.of_hasPullback _ _
-  have m₁ : (lift (fst A V) (snd A V ≫ v)).left ≫ (fst A V').left = (fst A V).left := by
-    rw [← Over.comp_left, lift_fst]
-  have m₂ : (lift (fst A V) (snd A V ≫ v)).left ≫ (snd A V').left = (snd A V).left ≫ v.left := by
-    rw [← Over.comp_left, lift_snd, Over.comp_left]
-  have hT' : IsPullback ((lift (fst A V) (snd A V ≫ v)).left ≫ (fst A V').left) (snd A V).left A.hom
-      (v.left ≫ V'.hom) := by
-    rw [m₁, Over.w v]; exact hT
-  exact IsPullback.of_right hT' m₂ hY
+  exact GlobalTheory.DualLocus.isPullback_lift A v
 
 theorem isPullback_prod_kernel {S : Scheme.{0}} (A Y Y' W : Over S) (c : Y' ⟶ Y) (w₁ w₂ : W ⟶ Y')
     (hK : IsPullback w₁.left w₂.left c.left c.left) :

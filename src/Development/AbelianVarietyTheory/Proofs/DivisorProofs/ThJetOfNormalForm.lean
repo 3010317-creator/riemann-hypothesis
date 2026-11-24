@@ -411,14 +411,7 @@ theorem Reads.act (hL : L.IsLB) (hx : p ≫ Θ.pt = u.ex x) (hr : Reads u p Θ.�
 
 theorem fnT_iff {P : PolAV (Sp ℂ)} (u : HolUnif P.A P.L g) (k : ℕ) (t : LB.Sec (LPow P.A P.L (k : ℤ) (baseOver (Sp ℂ))))
     (f : (Fin g → ℂ) → ℂ) : FnT u k t f ↔ IsFnAt u basePt k t f := by
-  constructor
-  · intro h j z hj
-    obtain ⟨i, rfl⟩ : ∃ i, j = fun _ => i := ⟨j 0, funext fun k => congrArg j (Subsingleton.elim _ _)⟩
-    rw [zpow_natCast]
-    exact h i z ((exAt_mem_chart_iff u basePt _ _ z).1 hj)
-  · intro h i z hi
-    have := h (fun _ => i) z ((exAt_mem_chart_iff u basePt _ _ z).2 hi)
-    rwa [zpow_natCast] at this
+  exact GlobalTheory.MBLow.Cl.MulFrame.fnT_iff u k t f
 
 variable {τ : Matrix (Fin g) (Fin g) ℂ} {a b : Fin g → ℂ}
 

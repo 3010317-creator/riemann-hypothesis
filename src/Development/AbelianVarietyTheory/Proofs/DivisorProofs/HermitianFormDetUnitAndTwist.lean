@@ -111,12 +111,7 @@ theorem sigBasis_repr {n : ℕ} (b : Module.Basis (Fin n) K.E B.A) (z : B.A) (k 
   rw [hz, Module.Basis.repr_sum_self]
 
 theorem trace_sig (y : B.A) : Algebra.trace K.E B.A (B.σ y) = K.c (Algebra.trace K.E B.A y) := by
-  let b := Module.finBasis K.E B.A
-  rw [Algebra.trace_eq_matrix_trace (sigBasis B b), Algebra.trace_eq_matrix_trace b]
-
-  simp only [Matrix.trace, Matrix.diag, Algebra.leftMulMatrix_eq_repr_mul, map_sum]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  rw [sigBasis_apply, ← map_mul, sigBasis_repr]
+  exact GlobalTheory.UnitLemma.PairClass.trace_σ K B y
 
 theorem core (a : ℕ) (β : B.A) (hβ : B.σ β = β * ((-1 : B.A) ^ (a - 1) * B.g))
     (b : Module.Basis (Fin a) K.E B.A) (i j : Fin a) :

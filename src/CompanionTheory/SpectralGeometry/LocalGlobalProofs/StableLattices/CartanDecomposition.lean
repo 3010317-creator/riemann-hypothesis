@@ -348,12 +348,7 @@ theorem dg_mem (k r : ℕ) (hk : 1 ≤ k) (u : ℝ) (hu : u ≠ 0) : dg (tor k r
     · simp [hHq, h1, h3]
 
 theorem UH_mul {m : ℕ} {H g h : Matrix (Fin m) (Fin m) ℂ} (hg : g ∈ UH H) (hh : h ∈ UH H) : g * h ∈ UH H := by
-  have hUH : ∀ {m : ℕ} (H g : Matrix (Fin m) (Fin m) ℂ), g ∈ UH H ↔ gᴴ * H * g = H := fun _ _ => Iff.rfl
-  rw [hUH] at hg hh ⊢
-  calc (g * h)ᴴ * H * (g * h) = hᴴ * (gᴴ * H * g) * h := by
-        rw [Matrix.conjTranspose_mul]
-        simp only [Matrix.mul_assoc]
-    _ = H := by rw [hg, hh]
+  exact GlobalTheory.CompanionTheory.BesselLevi.mul_mem hg hh
 
 theorem bvec_dot {m : ℕ} (i j : Fin m) : star (bvec i) ⬝ᵥ bvec j = if i = j then (1 : ℂ) else 0 := by
   have hbv : ∀ {m : ℕ} (i : Fin m), bvec i = Pi.single i (1 : ℂ) := fun _ => rfl

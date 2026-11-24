@@ -1742,13 +1742,7 @@ variable {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ]
 theorem schA_decomp {Φ : (κ → AdeleRing (𝓞 F) F) → ℂ} (hΦ : Φ ∈ GlobalTheory.WeilM.schA F κ) :
     ∃ (n : ℕ) (f : Fin n → SchwartzMap (κ → mixedEmbedding.mixedSpace F) ℂ) (g : Fin n → (κ → FiniteAdeleRing (𝓞 F) F) → ℂ),
       (∀ i, g i ∈ GlobalTheory.WeilM.SB (κ → FiniteAdeleRing (𝓞 F) F)) ∧ Φ = ∑ i, GlobalTheory.WeilM.pureA F (f i) (g i) := by
-  rw [GlobalTheory.WeilM.schA, Submodule.mem_span_set'] at hΦ
-  obtain ⟨n, c, s, rfl⟩ := hΦ
-  choose f g hg hfg using fun i => (s i).2
-  refine ⟨n, fun i => c i • f i, g, hg, Finset.sum_congr rfl fun i _ => ?_⟩
-  rw [hfg i]
-  ext a
-  simp [GlobalTheory.WeilM.pureA, mul_assoc]
+  exact GlobalTheory.WeilL2Words.schA_exists_sum F hΦ
 
 theorem list_sum_ne_top {l : List ENNReal} (h : ∀ a ∈ l, a ≠ ⊤) : l.sum ≠ ⊤ := by
   induction l with

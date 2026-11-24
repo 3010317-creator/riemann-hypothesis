@@ -834,18 +834,7 @@ variable {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field 
     {V : Type} [AddCommGroup V] [Module LL V] [Module Qp V] [IsScalarTower Qp LL V]
 
 theorem filV_succ_le (a : ℤ) : FilV PD (LL := LL) (V := V) (a + 1) ≤ FilV PD (LL := LL) (V := V) a := by
-  rintro x ⟨y, rfl⟩
-  have hle : (PD.Fil (a + 1)).restrictScalars Qp ≤ (PD.Fil a).restrictScalars Qp := PD.Fil_anti a
-  have hc : (TensorProduct.AlgebraTensorModule.map (LinearMap.id : V →ₗ[LL] V)
-      ((PD.Fil a).restrictScalars Qp).subtype).comp
-      (TensorProduct.AlgebraTensorModule.map (LinearMap.id : V →ₗ[LL] V) (Submodule.inclusion hle)) =
-      TensorProduct.AlgebraTensorModule.map (LinearMap.id : V →ₗ[LL] V)
-        ((PD.Fil (a + 1)).restrictScalars Qp).subtype := by
-    apply TensorProduct.AlgebraTensorModule.ext
-    intro v b
-    rfl
-  exact ⟨TensorProduct.AlgebraTensorModule.map (LinearMap.id : V →ₗ[LL] V) (Submodule.inclusion hle) y,
-    LinearMap.congr_fun hc y⟩
+  exact GlobalTheory.SubSumJumps.FilV_anti PD a
 
 theorem fildR_succ_le (ρ : Representation LL G V) (τ : K →ₐ[Qp] LL) (a : ℤ) :
     FildR PD ρ τ (a + 1) ≤ FildR PD ρ τ a :=
@@ -1077,12 +1066,7 @@ namespace GlobalTheory.FrobPeriod
 
 theorem norm_int_le_one {l : ℕ} [Fact l.Prime] {E : Type} [Field E] [NumberField E]
     (c : E →+* PadicAlgCl l) (x : 𝓞 E) : ‖c (x : E)‖ ≤ 1 := by
-  have hx : IsIntegral ℤ (c (x : E)) := map_isIntegral_int c x.isIntegral_coe
-  have h : c (x : E) ∈ (NormedField.valuation (K := PadicAlgCl l)).integer :=
-    (Valuation.integer.integers (NormedField.valuation (K := PadicAlgCl l))).mem_of_integral
-      hx.tower_top
-  rw [Valuation.mem_integer_iff, NormedField.valuation_apply] at h
-  exact_mod_cast h
+  exact GlobalTheory.LocPlace.norm_int_le_one l c x
 
 theorem exists_comp_of_normal {E L : Type} [Field E] [Field L] [CharZero E] [CharZero L]
     [Normal ℚ E] (φ ψ : E →+* L) : ∃ g : E ≃ₐ[ℚ] E, ∀ x, ψ x = φ (g x) := by

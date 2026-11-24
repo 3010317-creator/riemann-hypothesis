@@ -261,13 +261,7 @@ lemma isPreconnected_Hs : IsPreconnected Hs :=
 
 lemma eventually_of_germ_eq {φ ψ : ℂ → ℂ} (h : (φ : Mero) = (ψ : Mero)) {τ : ℂ} (hτ : τ ∈ Hs) :
     ∀ᶠ z in 𝓝[≠] τ, φ z = ψ z := by
-  have h' : ∀ᶠ z in codiscreteWithin Hs, φ z = ψ z := Filter.Germ.coe_eq.mp h
-  rw [Filter.eventually_iff, mem_codiscreteWithin] at h'
-  have hd := Filter.disjoint_principal_right.mp (h' τ hτ)
-  have hH : Hs ∈ 𝓝[≠] τ := mem_nhdsWithin_of_mem_nhds (isOpen_Hs.mem_nhds hτ)
-  filter_upwards [hH, hd] with z hz1 hz2
-  by_contra hne
-  exact hz2 ⟨hz1, hne⟩
+  apply GlobalTheory.KZ.Germ.eventually_of_germ_eq <;> assumption
 
 lemma eq_nhds_of_punctured {F G : ℂ → ℂ} {τ : ℂ} (hF : ContinuousAt F τ) (hG : ContinuousAt G τ)
     (h : ∀ᶠ z in 𝓝[≠] τ, F z = G z) : F =ᶠ[𝓝 τ] G := by
@@ -670,15 +664,7 @@ namespace GlobalTheory.KZ.H3
 namespace KumUniq
 
 theorem gamma_mem_of_dvd {M N : ℕ} (h : M ∣ N) {δ : SL(2, ℤ)} (hδ : δ ∈ CongruenceSubgroup.Gamma N) :
-    δ ∈ CongruenceSubgroup.Gamma M := by
-  rw [CongruenceSubgroup.Gamma_mem] at hδ ⊢
-  obtain ⟨h1, h2, h3, h4⟩ := hδ
-  have e : ∀ x : ℤ, ZMod.castHom h (ZMod M) (x : ZMod N) = (x : ZMod M) := fun x => map_intCast _ x
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · rw [← e, h1, map_one]
-  · rw [← e, h2, map_zero]
-  · rw [← e, h3, map_zero]
-  · rw [← e, h4, map_one]
+    δ ∈ CongruenceSubgroup.Gamma M := GlobalTheory.KZ.H3.KumAdd.gamma_of_dvd h hδ
 
 end KumUniq
 

@@ -205,21 +205,11 @@ noncomputable section
 namespace GlobalTheory.CompanionTheory.Ar.PB.FA.StepMap
 
 theorem orbit_symm {K : Type} {ι : K → Type} {z z' : (Σ k, ι k) → ℂ} (h : SameOrbit z z') :
-    SameOrbit z' z := by
-  obtain ⟨c, hc, rfl⟩ := h
-  refine ⟨fun k => (c k)⁻¹, fun k => inv_ne_zero (hc k), ?_⟩
-  funext q
-  show z' q = (c q.1)⁻¹ * (c q.1 * z' q)
-  rw [← mul_assoc, inv_mul_cancel₀ (hc q.1), one_mul]
+    SameOrbit z' z := GlobalTheory.CompanionTheory.Ar.PB.FA.Flat.sameOrbit_symm h
 
 theorem orbit_trans {K : Type} {ι : K → Type} {z z' z'' : (Σ k, ι k) → ℂ} (h : SameOrbit z z')
     (h' : SameOrbit z' z'') : SameOrbit z z'' := by
-  obtain ⟨c, hc, rfl⟩ := h
-  obtain ⟨c', hc', rfl⟩ := h'
-  refine ⟨fun k => c k * c' k, fun k => mul_ne_zero (hc k) (hc' k), ?_⟩
-  funext q
-  show c q.1 * (c' q.1 * z'' q) = c q.1 * c' q.1 * z'' q
-  rw [mul_assoc]
+  exact GlobalTheory.CompanionTheory.Ar.PB.FA.Flat.sameOrbit_trans h h'
 
 theorem not_mem_mcPts_top {K : Type} {ι : K → Type} [∀ k, Fintype (ι k)] (z : (Σ k, ι k) → ℂ) :
     z ∉ mcPts (⊤ : Ideal (MRing ι)) := by
@@ -1108,13 +1098,7 @@ theorem exists_base_const {L : Type} {μ : L → Type} {b₁ b₂ b : (Σ k, μ 
   field_simp
 
 theorem exists_coord {κ : Kk → K} {v : (Σ k, ιk k) → (Σ k, ι k)} (hbm : IsBlockMap κ v) (k : Kk) (i : ι (κ k)) :
-    ∃ m : ιk k, v ⟨k, m⟩ = ⟨κ k, i⟩ := by
-  obtain ⟨r, hr⟩ := hbm.2.2.2 ⟨κ k, i⟩ ⟨k, rfl⟩
-  have h1 : κ r.1 = κ k := by rw [← hbm.2.2.1 r, hr]
-  have h2 : r.1 = k := hbm.1 h1
-  obtain ⟨r1, m⟩ := r
-  obtain rfl : r1 = k := h2
-  exact ⟨m, hr⟩
+    ∃ m : ιk k, v ⟨k, m⟩ = ⟨κ k, i⟩ := GlobalTheory.CompanionTheory.Ar.PB.PFl.Fwd.exists_pre hbm k i
 
 theorem stepGap_eq {M : FlagModel y Ψ N j} [Fintype Ψ] [DecidableEq Ψ] {BM : BaseMetric M n} {p : Ψ × Fin N} {κ : Kk → K}
     {v : (Σ k, ιk k) → (Σ k, ι k)} {e : ℕ} {R : AnLogRes (mCoordIdeal (y ∘ v)) ⊤ e} {pr : R.X → BM.Rb.X}

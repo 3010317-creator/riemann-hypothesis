@@ -844,11 +844,7 @@ section Fin2
 variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {M : Lat S} {M' : Lat T}
 
 theorem comb_single_zero (f : WO S T → ℂ) : comb ψ S T (Finsupp.single 0 1) f = f := by
-  have h0 : ∀ w : WO S T, symplOH S T w 0 = 0 := fun w => by simp [symplOH, symplO, hO]
-  unfold comb
-  rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
-  funext w
-  simp only [heisO, add_zero, h0, AddChar.map_zero_eq_one, one_mul]
+  exact GlobalTheory.FinPl.OffTest.comb_single_zero ψ S T f
 
 noncomputable def oneLoc (P : LocPl ψ S T M M') : LocPl ψ S T M M' where
   k := P.k

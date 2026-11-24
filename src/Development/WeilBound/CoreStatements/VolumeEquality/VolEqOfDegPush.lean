@@ -1247,20 +1247,11 @@ theorem stdZ_sgU (τ : Ψ) {A A' : Matrix (Fin (j + j')) (Sg j j') ℂ} (hA : A�
   simp only [Matrix.conjTranspose_mul, Matrix.mul_assoc]
 
 theorem stdZ_eqvBy_symm {R R' : RiemLat E g Λ} (h : R.EqvBy R' 1) : R'.EqvBy R 1 := by
-  obtain ⟨k, hk⟩ := h
-  refine ⟨k.symm, fun x => ?_⟩
-  have := hk x
-  simp only [LinearEquiv.coe_one, id_eq] at this ⊢
-  rw [this, LinearEquiv.symm_apply_apply]
+  exact GlobalTheory.CompanionTheory.Ar.Cusp.Dict.eqvBy_symm h
 
 omit [Fintype Ψ] in
 theorem stdZ_zero_mem (q : Ψ × Fin j × Fin j' ≃ Fin n) : (0 : Fin n → ℂ) ∈ ballDom q := by
-  intro τ
-  have : ballMat q 0 τ = 0 := by
-    ext a b
-    simp [ballMat]
-  rw [this]
-  simpa using Matrix.PosDef.one
+  exact GlobalTheory.CompanionTheory.Ar.Cusp.BallConvex.zero_mem_ballDom q
 
 theorem stdZ_reach (A : Ψ → Matrix (Fin (j + j')) (Sg j j') ℂ) (hA : ∀ τ, (A τ)ᴴ * C.sgr τ * A τ = sgI j j') :
     ∃ t ∈ ballDom F.q, C.IsAdapted (F.R t) A := by

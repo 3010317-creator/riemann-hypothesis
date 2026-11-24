@@ -1189,12 +1189,7 @@ namespace PositivityTheory.Tls2.Pl
 open GroundTheory.Heights₂.Heights
 
 theorem stokesOnVariety : GroundTheory.Heights₂.Heights.StokesOnVariety.Statement := by
-  have hDeep : TubeDeepMass.Statement :=
-    TubeDeepMass.proof TubeDeepRankOne.proof
-      (TubeDeepAreaCount.proof AutoClose.IsolatedPointsCount)
-      HilbertSamuel.Closed.TubeDeepWeightMass
-  exact StokesOnVariety.of_open HilbertSamuel.Closed.SheetImageAreaSet
-    (TubeEuclMass.proof HilbertSamuel.Closed.TubeCollarMass hDeep)
+  exact GroundTheory.Heights₂.Heights.AutoClose.StokesOnVariety
 
 theorem lelongLimit (hBr : GroundTheory.Heights₂.Heights.DivisorGeneralPointBranches.Statement)
     (hLim : GroundTheory.Heights₂.Heights.LelongLimitAtBranches.Statement)

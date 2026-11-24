@@ -1755,12 +1755,7 @@ theorem locHom_eq_one_of_grpAt {D : D7} {k : Type} [Field k] [ValuativeRel k] [T
     {Y : Type} [Fintype Y] [DecidableEq Y] (q : GlobalTheory.FinPl.SplitPt D k) (S : HSp D) (F : GlobalTheory.LocMod.Frame k S.rank Y)
     {P : GlobalTheory.FinPl.Pl D → Prop} (hP : ¬ P q.v) {x : GA D S} (hx : x ∈ GlobalTheory.FinPl.grpAt S P) :
     GlobalTheory.LevIdx.locHom q S F x = 1 := by
-  have h1 : x ∈ GlobalTheory.FinPl.grpOff S (· = q.v) :=
-    GlobalTheory.FinPl.SetCut.grpAt_le_grpOff S P (· = q.v) (fun p hp e => hP (e ▸ hp)) hx
-  have h2 := GlobalTheory.LocMod.PinInhab.map_mt_eq_one_of_off q (P := (· = q.v)) rfl h1
-  symm
-  rw [← GlobalTheory.LevIdx.eq_locHom_iff, h2]
-  simp [F.βγ]
+  exact GlobalTheory.LevProd.locHom_eq_one_of_grpAt' q S F hP hx
 
 end GlobalTheory.LevProd
 end

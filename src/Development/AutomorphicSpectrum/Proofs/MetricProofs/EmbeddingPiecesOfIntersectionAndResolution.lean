@@ -275,10 +275,7 @@ theorem smooth_update {D : ℕ} {W : Fin D → HermLine ι} (hW : ∀ j, IsSmoot
 theorem smooth_snoc {D : ℕ} {W : Fin D → HermLine ι} (hW : ∀ j, IsSmoothHerm (W j)) {X : HermLine ι}
     (hX : IsSmoothHerm X) (j : Fin (D + 1)) :
     IsSmoothHerm ((Fin.snoc W X : Fin (D + 1) → HermLine ι) j) := by
-  refine Fin.lastCases ?_ (fun i => ?_) j
-  · rwa [Fin.snoc_last]
-  · rw [Fin.snoc_castSucc]
-    exact hW i
+  apply RootFieldNumerics.smooth_snoc <;> assumption
 
 theorem position_change (I : Ideal (MRing ι) → (n : ℕ) → (Fin n → HermLine ι) → ℝ)
     (hI : IsIntersectionFamily I) (P : Ideal (MRing ι)) {D : ℕ} (hP : IsArithVar P (D + 1))

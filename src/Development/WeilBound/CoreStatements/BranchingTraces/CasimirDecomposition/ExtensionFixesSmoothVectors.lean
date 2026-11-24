@@ -176,12 +176,7 @@ theorem act_coe (U : URep k r) {g : Mx k r} (hg : g ∈ GG k r) (x : M (vr k r t
 
 theorem act_one_coe (U : URep k r) {g : Mx k r} (hg : g ∈ GG k r) (x : M (one U)) :
     (CompanionTheory.Zuck.act (one U) g x () : U.R.H) = U.R.σ g (x ()) := by
-  simp only [CompanionTheory.Zuck.act, CompanionTheory.Zuck.mAct, CompanionTheory.Zuck.dOp, CompanionTheory.Zuck.one, CompanionTheory.Zuck.triv, CompanionTheory.Zuck.URep.sig, dite_eq_left hg,
-    LinearMap.comp_apply, LinearMap.pi_apply, LinearMap.compLeft_apply, LinearMap.sum_apply,
-    LinearMap.smul_apply, LinearMap.proj_apply, Function.comp_apply, Submodule.coe_sum,
-    Submodule.coe_smul]
-  simp only [Fintype.univ_unit, Finset.sum_singleton, Matrix.one_apply_eq, one_smul]
-  rfl
+  exact CompanionTheory.D.gk.FinalFormK.act_one_coe U hg x
 
 def dn (U : URep k r) (P : Mx k r) : M (vr k r true, U) →ₗ[ℂ] (Fin (2 * r + k + 1) → U.R.H) where
   toFun x := fun c => ∑ d, P⁻¹ d c • (x d : U.R.H)

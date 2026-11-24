@@ -304,14 +304,7 @@ theorem continuous_phe (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (hd : IsD
   exact (hph.comp continuous_fst).mul (he.comp continuous_snd)
 
 theorem one_le_of_isIsot (I : AutInst) (W : Submodule I.E (Fin I.n → I.E)) (hW : I.IsIsot W) : 1 ≤ I.n := by
-  rcases Nat.eq_zero_or_pos I.n with h0 | hpos
-  · exfalso
-    apply hW.1
-    rw [Submodule.eq_bot_iff]
-    intro x _
-    funext i
-    exact absurd i.isLt (by omega)
-  · exact hpos
+  exact GlobalTheory.Dec.one_le_rank_of_isIsot I W hW
 
 
 open Classical in

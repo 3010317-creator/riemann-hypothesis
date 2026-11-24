@@ -1327,16 +1327,7 @@ theorem map_inclA_mem_SU {F E : Type} [Field F] [NumberField F] [Field E] [Algeb
     (c : E ≃ₐ[F] E) {N : ℕ} (J : Matrix (Fin N) (Fin N) E) {γ : Matrix (Fin N) (Fin N) E}
     (hγ : γ ∈ SU c.toRingHom J) :
     γ.map (inclA F E) ∈ SU (sigA c) (J.map (inclA F E)) := by
-  obtain ⟨hdet, hform⟩ := hγ
-  have hsig : ∀ y : E, sigA c (inclA F E y) = inclA F E (c y) := by
-    intro y
-    simp [sigA, inclA, Algebra.TensorProduct.map_tmul]
-  have hmap : (γ.map (inclA F E)).map (sigA c) = (γ.map c.toRingHom).map (inclA F E) := by
-    ext i j
-    simp [hsig]
-  refine ⟨?_, ?_⟩
-  · rw [show (γ.map (inclA F E)).det = inclA F E γ.det from (RingHom.map_det _ _).symm, hdet, map_one]
-  · rw [hmap, ← transpose_map, ← Matrix.map_mul, ← Matrix.map_mul, hform]
+  exact GroundTheory.Heights₂.Heights.StrongApprox.map_mem_SU_AE c J hγ
 
 theorem SAOpenHolds.proof (hSA : SAHolds.Statement) (hTop : AETopologicalRing.Statement) :
     SAOpenHolds.Statement := by

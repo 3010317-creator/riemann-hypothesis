@@ -1666,11 +1666,7 @@ namespace GlobalTheory.DepthLow
 variable {C : Type} [Field C] {v : AddValuation C (WithTop ℝ)}
 
 theorem radius_nonneg {p : ℕ} (hp : 3 ≤ p) (k : ℤ) : 0 ≤ radius p k := by
-  have h3 : (3 : ℝ) ≤ p := by exact_mod_cast hp
-  unfold radius
-  refine div_nonneg ?_ (by linarith [pow_le_pow_left₀ (by norm_num : (0 : ℝ) ≤ 3) h3 2])
-  have : (0 : ℝ) < (p : ℝ) ^ (-(2 * k + 1)) := zpow_pos (by linarith) _
-  linarith
+  exact GlobalTheory.DepthRadii.radius_pos hp k
 
 theorem ordGe_mono {M : ℕ} {ρ : Fin M → ℝ} {g : MvPowerSeries (Fin M) C} {r r' : ℝ}
     (h : OrdGe v ρ g r) (hr : r' ≤ r) : OrdGe v ρ g r' := fun α =>
@@ -1713,14 +1709,7 @@ theorem ordGe_lin {M : ℕ} (ρ : Fin M → ℝ) (x : Fin M → C) (r : ℝ) (hx
   · rw [v.map_zero]; exact le_top
 
 theorem det_int {n : ℕ} (M : Matrix (Fin n) (Fin n) C) (hM : ∀ a b, IsIntV v (M a b)) :
-    IsIntV v M.det := by
-  let M' : Matrix (Fin n) (Fin n) (PTb.intRing v) := Matrix.of fun a b => ⟨M a b, hM a b⟩
-  have hMM : (PTb.intRing v).subtype.mapMatrix M' = M := by
-    ext a b; rfl
-  have := RingHom.map_det (PTb.intRing v).subtype M'
-  rw [hMM] at this
-  rw [← this]
-  exact (M'.det).2
+    IsIntV v M.det := GlobalTheory.GlueBlocks.isIntV_det v M hM
 
 theorem isSatFrame_of_mul {i d : ℕ} {x u : Fin i → Fin d → C} {T : Matrix (Fin d) (Fin d) C}
     (hx : ∀ a b, IsIntV v (x a b)) (hT : ∀ a b, IsIntV v (T a b))

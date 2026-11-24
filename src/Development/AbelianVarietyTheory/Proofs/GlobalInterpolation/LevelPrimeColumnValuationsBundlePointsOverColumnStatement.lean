@@ -625,15 +625,7 @@ theorem unramOver_of_mem {X : Fields} {S : Set ℕ} (mu : Tup X.F X.E X.K S) {p 
 
 theorem stdOver_of_stdAtT {X : Fields} {Pr : Primes X} (hPr : Pr.Ok) (u : Pr.Word) {n : ℕ}
     {SG : Finset (HeightOneSpectrum (𝓞 X.E))} (d : DecoSet (E := X.E) (n := n) (ST := Pr.vT u) (SG := SG)) (h : StdAtT d.1) : StdOver (Pr.T u) d.1.N := by
-  intro Q hQ
-  rw [← hPr.piT_norm u] at hQ
-  rcases Q.isPrime.mem_or_mem hQ with h1 | h1
-  · exact h ⟨Q, (Formalism.L2.Col.mem_divs (hPr.piT_ne_zero u) Q).2 h1⟩
-  · have h2 := h ⟨conjPrime₂ Q, (Formalism.L2.Col.mem_divs (hPr.piT_ne_zero u) _).2 h1⟩
-    have h3 := GlobalTheory.StdReps.localization_conj_le_of_le d.2.lat.fg d.2.uni stdLat_unimodular h2.le
-    have h4 := GlobalTheory.StdReps.localization_conj_le_of_le stdLat_lattice.fg stdLat_unimodular d.2.uni h2.ge
-    rw [GlobalTheory.CharVal.conjP_conjP'] at h3 h4
-    exact le_antisymm h4 h3
+  exact GlobalTheory.BarStd.stdOver hPr d h
 
 end Data
 
@@ -772,14 +764,7 @@ variable {E : Type} [Field E] [NumberField E] [StarRing E] {a b : ℕ}
 theorem mem_homAt_gmap (S : Finset (HeightOneSpectrum (𝓞 E))) (g : Sp E a ≃ₗ[E] Sp E a) (g' : Sp E b ≃ₗ[E] Sp E b)
     (N : Submodule (𝓞 E) (Sp E a)) (N' : Submodule (𝓞 E) (Sp E b)) (x : HomE E a b) :
     x ∈ homAt S (gmap g N) (gmap g' N') ↔ (g'.symm.toLinearMap ∘ₗ x ∘ₗ g.toLinearMap : HomE E a b) ∈ homAt S N N' := by
-  constructor
-  · intro h P hP y hy
-    have := h P hP (g y) ((mem_localization_gmap P g N _).2 (by simpa using hy))
-    exact (mem_localization_gmap P g' N' _).1 this
-  · intro h P hP y hy
-    have := h P hP (g.symm y) ((mem_localization_gmap P g N _).1 hy)
-    refine (mem_localization_gmap P g' N' _).2 ?_
-    simpa using this
+  exact GlobalTheory.KerT.Bar.mem_homAt_gmap S g g' N N' x
 
 omit [NumberField E] [StarRing E] in
 theorem conj_osmul (g : Sp E a ≃ₗ[E] Sp E a) (g' : Sp E b ≃ₗ[E] Sp E b) (c : 𝓞 E) (x : HomE E a b) :
@@ -791,16 +776,7 @@ theorem inBox_gmap {K : Type} [Field K] {S : Finset (HeightOneSpectrum (𝓞 E))
     {N : Submodule (𝓞 E) (Sp E a)} {N' : Submodule (𝓞 E) (Sp E b)} {Ξ : HomE E a b → K}
     (h : GlobalTheory.IndefiniteRowSideFullHecke.IndexExponentDegree.InBox S cA cB N N' Ξ) (g : Sp E a ≃ₗ[E] Sp E a) (g' : Sp E b ≃ₗ[E] Sp E b) :
     GlobalTheory.IndefiniteRowSideFullHecke.IndexExponentDegree.InBox S cA cB (gmap g N) (gmap g' N') fun x => Ξ (g'.symm.toLinearMap ∘ₗ x ∘ₗ g.toLinearMap) := by
-  refine ⟨fun x hx => ?_, fun x y hy => ?_⟩
-  · have h1 : ((cA : 𝓞 E) • (g'.symm.toLinearMap ∘ₗ x ∘ₗ g.toLinearMap : HomE E a b)) ∈ homAt S N N' := h.1 _ hx
-    change ((cA : 𝓞 E) • x) ∈ homAt S (gmap g N) (gmap g' N')
-    rwa [mem_homAt_gmap, conj_osmul]
-  · obtain ⟨z, hz, rfl⟩ := hy
-    have := h.2 (g'.symm.toLinearMap ∘ₗ x ∘ₗ g.toLinearMap) _ ⟨_, (mem_homAt_gmap S g g' N N' z).1 hz, rfl⟩
-    refine Eq.trans ?_ this
-    change Ξ (g'.symm.toLinearMap ∘ₗ (x + (cB : 𝓞 E) • z) ∘ₗ g.toLinearMap) =
-      Ξ (_ + (cB : 𝓞 E) • (g'.symm.toLinearMap ∘ₗ z ∘ₗ g.toLinearMap : HomE E a b))
-    rw [LinearMap.add_comp, LinearMap.comp_add, conj_osmul]
+  exact GlobalTheory.KerT.Bar.inBox_gmap h g g'
 
 end Hom
 

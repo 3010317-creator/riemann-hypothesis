@@ -113,10 +113,7 @@ variable {X H Z : Scheme.{0}} {L : LB X} {K : Type} [Fintype K]
 theorem sval_eq_secRatio_mul {φ : K → (H ⟶ X)} {ε : K → ℤ} (a b : LB.Sec (LB.LinComb L φ ε)) (r : Z ⟶ H) (z : Z)
     {J : (Z ⟶ X) → L.ι} (hJ : Good L z J) (ha : r z ∈ nonzeroLocus a) :
     sval b r z J = gs r z (nonzeroLocus a) (secRatio a b) * sval a r z J := by
-  have hc := hJ.mem φ r
-  have hm : r z ∈ nonzeroLocus a ⊓ (LB.LinComb L φ ε).U (fun k => J (r ≫ φ k)) := ⟨ha, hc⟩
-  have e := congrArg (gs r z _) (secRatio_spec a b (fun k => J (r ≫ φ k)))
-  rwa [gs_mul r z _ hm, gs_res r z _ hm, gs_res r z _ hm, gs_res r z _ hm] at e
+  exact GlobalTheory.Mum.TermWeight.sval_eq_secRatio_mul a b r z hJ ha
 
 theorem pullRatio_ι_comp {R : Type} [CommRing R] {M : ℕ} (P : H ⟶ PSpace R M) {U : H.Opens} {i : Fin (M + 1)}
     (hi : U ≤ P ⁻¹ᵁ chart R M i) (r : Z ⟶ H) (W : Z.Opens) (hW : W ≤ r ⁻¹ᵁ U)

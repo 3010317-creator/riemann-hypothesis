@@ -627,11 +627,7 @@ theorem locP_mvL_comm {E : Type} [Field E] [NumberField E] [StarRing E] {N : ℕ
   _root_.GlobalTheory.LatAway.locP_map_equiv ((toLE c).restrictScalars (𝓞 E)) q Λ
 
 theorem mvL_one' {E : Type} [Field E] [NumberField E] [StarRing E] {N : ℕ} (Λ : Submodule (𝓞 E) (Fin N → E)) : mvL 1 Λ = Λ := by
-  unfold mvL
-  convert Submodule.map_id _
-  refine LinearMap.ext fun z => ?_
-  show toLE 1 z = z
-  rw [toLE_apply, Units.val_one, Matrix.one_mulVec]
+  apply GlobalTheory.TwV.mvL_one_lat
 
 theorem span_mvL {E : Type} [Field E] [NumberField E] [StarRing E] {N : ℕ} (c : GL (Fin N) E) (Λ : Submodule (𝓞 E) (Fin N → E))
     (h : Submodule.span E (Λ : Set (Fin N → E)) = ⊤) : Submodule.span E ((mvL c Λ : Submodule (𝓞 E) (Fin N → E)) : Set (Fin N → E)) = ⊤ := by
@@ -725,12 +721,7 @@ theorem lev_mulVec_mem (S : StepLevel F E σ J T f bad) (g : GL (Fin n) (E ⊗[F
   rwa [e]
 
 theorem hatStab_lev (S : StepLevel F E σ J T f bad) (κ : S.U) : HatStab S.Lb κ.1 := by
-  intro z
-  constructor
-  · intro hz
-    have := lev_mulVec_mem S κ.1 κ.2 _ hz
-    rwa [Matrix.mulVec_mulVec, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.one_mulVec] at this
-  · exact fun hz => lev_mulVec_mem S κ.1⁻¹ (S.U.inv_mem κ.2) z hz
+  exact GlobalTheory.TwU.hatStab_of_lev S κ
 
 end HatS
 

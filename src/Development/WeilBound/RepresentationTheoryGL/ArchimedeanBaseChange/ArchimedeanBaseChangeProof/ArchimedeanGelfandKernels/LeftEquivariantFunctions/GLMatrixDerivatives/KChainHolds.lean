@@ -200,12 +200,7 @@ theorem partial_snd {A B Z : Type} [NormedAddCommGroup A] [NormedSpace ℝ A] [N
   simp
 
 theorem hOf_single (i : Fin n × Fin n) : hOf (Pi.single i (1 : ℝ)) = (hb i : Mat n) := by
-  unfold hOf
-  rw [Finset.sum_eq_single i]
-  · simp
-  · intro p _ hp
-    simp [hp]
-  · simp
+  exact GlobalTheory.CompanionTheory.ConeLin.hOf_single i
 
 theorem unit_of {y : Mat n} (hy : y ∈ GLs n) : IsUnit y.det := isUnit_iff_ne_zero.mpr hy
 
@@ -527,12 +522,7 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 variable {n : ℕ}
 
 theorem hOf_single (i : Fin n × Fin n) : hOf (Pi.single i (1 : ℝ)) = hb i := by
-  simp only [hOf]
-  rw [Finset.sum_eq_single i]
-  · simp
-  · intro p _ hp
-    simp [hp]
-  · simp
+  exact GlobalTheory.CompanionTheory.ConeLin.hOf_single i
 
 theorem herm_inv_conj {x H : Mat n} (hH : H.IsHermitian) : (x⁻¹ * H * xᴴ⁻¹).IsHermitian := by
   rw [← conjTranspose_nonsing_inv]

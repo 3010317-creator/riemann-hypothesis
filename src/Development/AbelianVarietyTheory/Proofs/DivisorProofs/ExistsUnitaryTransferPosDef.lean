@@ -96,11 +96,7 @@ theorem smul_conj_iff {A n : Type} [CommRing A] [Fintype n] [DecidableEq n] (f :
 variable {D : D7}
 
 theorem parts_ext {a b : Formalism.L2.Theta.AE D} (h1 : infPart D a = infPart D b) (h2 : finPart D a = finPart D b) :
-    a = b := by
-  obtain ⟨e, he, -⟩ := GlobalTheory.AdSplit.exists_adele_equiv D.host.F D.host.E
-  have he1 : ∀ z, (e z).1 = infPart D z := fun z => (he z).1
-  have he2 : ∀ z, (e z).2 = finPart D z := fun z => (he z).2
-  exact e.injective (Prod.ext (by rw [he1, he1, h1]) (by rw [he2, he2, h2]))
+    a = b := GlobalTheory.PlaceIdem.parts_inj D a b h1 h2
 
 theorem map_one_apply {A B n : Type} [CommRing A] [CommRing B] [DecidableEq n] (φ : A →+* B) (i j : n) :
     φ ((1 : Matrix n n A) i j) = (1 : Matrix n n B) i j := by

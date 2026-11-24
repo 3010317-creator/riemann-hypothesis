@@ -788,12 +788,7 @@ theorem cone_eq (y : (Σ k, ι k) → Ω) (g : MRing ι) : mConeMap y g =
 
 theorem aeval_ne_zero {y : (Σ k, ι k) → Ω} {g : MRing ι} {d : K → ℕ} (hg : IsMultiHomog g d)
     (hn : g ∉ mCoordIdeal y) : aeval y g ≠ 0 := by
-  intro h0
-  apply hn
-  have h := scale (S := MvPolynomial K Ω) (fun k => X k) (fun p => C (y p)) hg
-  rw [← map_aeval' (C : Ω →+* MvPolynomial K Ω) y g, h0, map_zero, mul_zero] at h
-  show mConeMap y g = 0
-  rw [cone_eq, h]
+  exact GlobalTheory.CompanionTheory.Ar.Flat.UnitChart.aeval_ne_zero hg hn
 
 theorem aeval_eq_zero {y : (Σ k, ι k) → Ω} (t : K → Ω) {f : MRing ι} (hf : f ∈ mCoordIdeal y) :
     aeval (fun p : Σ k, ι k => t p.1 * y p) f = 0 := by

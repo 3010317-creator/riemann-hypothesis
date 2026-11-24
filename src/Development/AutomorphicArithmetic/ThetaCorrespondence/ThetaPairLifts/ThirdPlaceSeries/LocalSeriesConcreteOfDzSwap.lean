@@ -396,18 +396,10 @@ variable {g : ℕ} [Fact g.Prime] {E : Type} [Field E] [NumberField E] {w : Heig
   (hw : ((g : ℕ) : 𝓞 E) ∈ w.asIdeal) (i : ℚ_[g] ≃+* w.adicCompletion E) (hi : Continuous i)
 
 theorem val_lt_iff (y : w.adicCompletion E) : valuation (w.adicCompletion E) y < 1 ↔ ‖y‖ < 1 := by
-  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
-    Valuation.Compatible.ofValuation _
-  have he := isEquiv (valuation (w.adicCompletion E))
-    (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ)))
-  rw [he.lt_one_iff_lt_one, Valued.toNormedField.norm_lt_one_iff]
+  exact GlobalTheory.DepthZeroRankOneLabel.val_lt_iff y
 
 theorem val_le_iff (y : w.adicCompletion E) : valuation (w.adicCompletion E) y ≤ 1 ↔ ‖y‖ ≤ 1 := by
-  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
-    Valuation.Compatible.ofValuation _
-  have he := isEquiv (valuation (w.adicCompletion E))
-    (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ)))
-  rw [he.le_one_iff_le_one, Valued.toNormedField.norm_le_one_iff]
+  exact GlobalTheory.DepthZeroRankOneLabel.val_le_iff y
 
 include hi in
 theorem val_int_le (z : ℤ_[g]) : valuation (w.adicCompletion E) (i (z : ℚ_[g])) ≤ 1 :=

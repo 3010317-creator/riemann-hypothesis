@@ -1072,14 +1072,7 @@ lemma E_right {R : Subalgebra C (Mat C N)} (hp : Sys p) (hM : MUnits R p E) (i j
 
 lemma expand (hp : Sys p) (a b : Mat C N) (i k : Fin n) :
     p i * (a * b) * p k = ∑ j, (p i * a * p j) * (p j * b * p k) := by
-  have h : ∀ j, (p i * a * p j) * (p j * b * p k) = p i * a * p j * b * p k := by
-    intro j
-    calc (p i * a * p j) * (p j * b * p k) = p i * a * (p j * p j) * b * p k := by
-          simp only [mul_assoc]
-      _ = _ := by rw [(hp.1.idem j).eq]
-  simp only [h]
-  rw [← Finset.sum_mul, ← Finset.sum_mul, ← Finset.mul_sum, hp.1.complete, mul_one]
-  simp only [mul_assoc]
+  exact LateralTheory.DivDb.AlgStruct₂.decomp hp a b i k
 
 lemma coef_mul {R : Subalgebra C (Mat C N)} (hp : Sys p) (hM : MUnits R p E) {a b : Mat C N}
     (ha : a ∈ R) (hb : b ∈ R) (i k : Fin n) :

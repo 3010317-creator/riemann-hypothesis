@@ -794,12 +794,7 @@ theorem primeFactors_sub (d : ℤ) (M : ℕ) :
   · exact Finset.mem_union_right _ (Nat.mem_primeFactors.2 ⟨hp, h, fun h' => h0 (by rw [h', mul_zero])⟩)
 
 theorem spread_nonneg {Ψ : Type} [Fintype Ψ] {N : ℕ} (hN : 0 < N) (u : Top.Wt Ψ N) : 0 ≤ Top.spread u := by
-  unfold Top.spread
-  refine Finset.sum_nonneg fun τ _ => ?_
-  have i0 : Fin N := ⟨0, hN⟩
-  have h1 := ciInf_le (Set.finite_range (fun i => u τ i)).bddBelow i0
-  have h2 := le_ciSup (Set.finite_range (fun i => u τ i)).bddAbove i0
-  linarith
+  exact GlobalTheory.CompanionTheory.Ar.Top.spread_nonneg hN u
 
 theorem errX_eq {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
     (s : ℝ) (u : GlobalTheory.AllWt.Weight Dw) (g : ℝ) :

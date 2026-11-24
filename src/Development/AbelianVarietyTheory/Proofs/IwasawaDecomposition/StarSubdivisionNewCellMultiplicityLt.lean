@@ -67,12 +67,7 @@ variable {X : Type} [AddCommGroup X]
 
 theorem inRCone_trans {m n : ℕ} {δ : Fin m → LinearMap.BilinForm ℤ X} {γ : Fin n → LinearMap.BilinForm ℤ X}
     {β : LinearMap.BilinForm ℤ X} (hγ : ∀ k, InRCone δ (γ k)) (hβ : InRCone γ β) : InRCone δ β := by
-  obtain ⟨c, hc, hβ⟩ := hβ
-  choose a ha hγ using hγ
-  refine ⟨fun i => ∑ k, c k * a k i, fun i => Finset.sum_nonneg fun k _ => mul_nonneg (hc k) (ha k i), ?_⟩
-  rw [hβ]
-  simp only [hγ, Finset.smul_sum, smul_smul, Finset.sum_smul]
-  exact Finset.sum_comm
+  apply GlobalTheory.PolFan.inRCone_trans <;> assumption
 
 theorem val_eq (h : LinearMap.BilinForm ℤ X →ₗ[ℤ] ℤ) {m : ℕ} {γ : Fin m → LinearMap.BilinForm ℤ X}
     {β : LinearMap.BilinForm ℤ X} {c : Fin m → ℝ} (e : toReal β = ∑ i, c i • toReal (γ i)) :

@@ -1625,14 +1625,7 @@ theorem dec_le_of_frob_mem {F Ω : Type} [Field F] [NumberField F] [Field Ω] [A
     {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 F)} (hA : IsPlaceOver A v) {σ : G F Ω}
     (hσ : IsFrob A (normV v) σ) {L : Subgroup (G F Ω)} (hL : IsOpen (L : Set (G F Ω))) (hI : Ine (F := F) A ≤ L)
     (hm : σ ∈ L) : Dec (F := F) A ≤ L := by
-  have h := GlobalTheory.TameQuot.closure_frob_sup_Ine F Ω A v hA ⟨σ, hσ.1⟩ hσ
-  have hc : IsClosed ((L.subgroupOf (Dec (F := F) A) : Subgroup (Dec (F := F) A)) : Set (Dec (F := F) A)) :=
-    (L.isClosed_of_isOpen hL).preimage continuous_subtype_val
-  have h2 := Subgroup.topologicalClosure_minimal
-    (Subgroup.zpowers (⟨σ, hσ.1⟩ : Dec (F := F) A) ⊔ (Ine (F := F) A).subgroupOf (Dec (F := F) A))
-    (sup_le ((Subgroup.zpowers_le).2 (Subgroup.mem_subgroupOf.2 hm)) (fun x hx => hI hx)) hc
-  rw [h] at h2
-  exact fun g hg => h2 (Subgroup.mem_top (⟨g, hg⟩ : Dec (F := F) A))
+  exact GlobalTheory.StepTwo.TwoBound.dec_le_of_frob_mem hA hσ hL hI hm
 
 theorem residual_bound_of_parts : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (bkP : BKPh X), (∀ i, StepAB X i) → (∀ i, ChooseH bkP i) → (∀ i s, GalHyp bkP i s → ResBound bkP i s) → ResidualBoundOddPrimes bkP := by
   intro D N X bkP hAB hCh hRB i hl T hT

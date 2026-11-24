@@ -1738,15 +1738,7 @@ open scoped ValuativeRel
 namespace GlobalTheory.CompanionTheory.SatakeBound
 
 theorem col_add {F : Type} [Field F] (n k : ℕ) (x y : Fin (k + 1) → F) :
-    col n k (x + y) = col n k x * col n k y := by
-  apply Units.ext
-  show 1 + cM n k (x + y) = (1 + cM n k x) * (1 + cM n k y)
-  have h : cM n k (x + y) = cM n k x + cM n k y := by
-    ext i j
-    simp only [cM, Matrix.of_apply, Matrix.add_apply, Pi.add_apply]
-    split_ifs <;> simp
-  rw [h, mul_add, add_mul, add_mul, cM_mul]
-  simp [add_assoc]
+    col n k (x + y) = col n k x * col n k y := GlobalTheory.CompanionTheory.JSBound.col_add k x y
 
 theorem exists_weak_integral {X V : Type} [TopologicalSpace X] [T2Space X] [MeasurableSpace X] [BorelSpace X]
     [AddCommGroup V] [Module ℂ V] (ν : Measure X) [IsFiniteMeasureOnCompacts ν]

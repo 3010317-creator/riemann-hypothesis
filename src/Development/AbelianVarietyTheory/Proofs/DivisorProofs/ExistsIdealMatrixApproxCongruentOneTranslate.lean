@@ -68,14 +68,7 @@ theorem OhE_le_IhE_top (D : D7) (s : AE D) (hs : s ∈ OhE D) : s ∈ IhE D ⊤ 
 
 theorem mul_mem_hatId (D : D7) (𝔪 : Ideal (𝓞 D.host.E)) (x : AE D) (hx : x ∈ OhE D)
     (t : AE D) (ht : t ∈ hatId D 𝔪) : x * t ∈ hatId D 𝔪 := by
-  unfold hatId at ht ⊢
-  induction ht using AddSubgroup.closure_induction with
-  | mem y hy =>
-    obtain ⟨b, hb, s, hs, rfl⟩ := hy
-    exact AddSubgroup.subset_closure ⟨b, hb, x * s, mul_mem hx hs, by ring⟩
-  | zero => rw [mul_zero]; exact zero_mem _
-  | add y y' _ _ hy hy' => rw [mul_add]; exact add_mem hy hy'
-  | neg y _ hy => rw [mul_neg]; exact neg_mem hy
+  apply GlobalTheory.FunObj.StdDatum.mul_mem_hatId <;> assumption
 
 theorem exists_mem_approx (D : D7) (𝔪 : Ideal (𝓞 D.host.E)) (m : ℕ) (hm : 0 < m) (t : AE D)
     (ht : t ∈ hatId D 𝔪) :

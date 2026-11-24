@@ -521,10 +521,7 @@ theorem frobW_teichW (u : OCb l) : frobW l (teichW l u) = teichW l (u ^ l) := by
     WittVector.map_teichmuller, frobenius_def, ← map_pow]
 
 theorem εroot_pow {P : LocPrime l} (AI : LocAinf l P) (k : ℕ) : AI.εroot k ^ l ^ k = AI.ε := by
-  induction k with
-  | zero => simp [LocAinf.εroot]
-  | succ k ih =>
-    rwa [LocAinf.εroot, Function.iterate_succ_apply', pow_succ', pow_mul, frobeniusEquiv_symm_pow_p]
+  exact GlobalTheory.FlatInvariants.root_pow AI k
 
 def rightW (LL : FinExt l) : WCb l →+* RW LL :=
   (Algebra.TensorProduct.includeRight : WCb l →ₐ[ℤ_[l]] RW LL).toRingHom

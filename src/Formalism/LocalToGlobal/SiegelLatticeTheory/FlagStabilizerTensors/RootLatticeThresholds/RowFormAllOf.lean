@@ -576,16 +576,7 @@ theorem ff_det {x : Fin r → S.V} (hx : LinearIndependent E x) (hxe : ∀ b, x 
 
 theorem ff_gmap_latSpan (ν : S.V ≃ₗ[E] S.V) (aa : Fin r → FractionalIdeal (nonZeroDivisors (𝓞 E)) E)
     (v : Fin r → S.V) : Formalism.HermitianLatticesTheory.gmap ν (latSpan aa v) = latSpan aa (fun a => ν (v a)) := by
-  unfold Formalism.HermitianLatticesTheory.gmap Formalism.L2.SG.Saturated.latSpan
-  rw [Submodule.map_span]
-  congr 1
-  ext y
-  simp only [Set.mem_image, Set.mem_setOf_eq]
-  constructor
-  · rintro ⟨z, ⟨a, c, hc, rfl⟩, rfl⟩
-    exact ⟨a, c, hc, by simp⟩
-  · rintro ⟨a, c, hc, rfl⟩
-    exact ⟨c • v a, ⟨a, c, hc, rfl⟩, by simp⟩
+  exact Formalism.L2.SG.Pf.Act.latSpan_gmap ν aa v
 
 theorem ff_gmap_inf (ν : S.V ≃ₗ[E] S.V) (A : Submodule (𝓞 E) S.V) (U : Submodule E S.V) :
     Formalism.HermitianLatticesTheory.gmap ν (A ⊓ toO S U) = Formalism.HermitianLatticesTheory.gmap ν A ⊓ toO S (U.map (ν : S.V →ₗ[E] S.V)) := by

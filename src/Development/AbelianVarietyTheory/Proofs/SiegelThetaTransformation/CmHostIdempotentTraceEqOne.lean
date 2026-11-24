@@ -119,12 +119,7 @@ namespace GlobalTheory.ColumnSymplectic
 variable {n g : ℕ}
 
 theorem blk_eq (τ : Matrix (Fin g) (Fin g) ℂ) :
-    blk n τ = (1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ τ := by
-  ext p q
-  change (if p.1 = q.1 then τ p.2 q.2 else 0) =
-    (1 : Matrix (Fin n) (Fin n) ℂ) p.1 q.1 * τ p.2 q.2
-  rw [Matrix.one_apply]
-  split_ifs <;> simp
+    blk n τ = (1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ τ := GlobalTheory.Phase.Doubling.blk_eq τ
 
 theorem blk_mul (A B : Matrix (Fin g) (Fin g) ℂ) : blk n A * blk n B = blk n (A * B) := by
   rw [blk_eq, blk_eq, blk_eq, ← mul_kronecker_mul, one_mul]

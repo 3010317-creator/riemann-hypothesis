@@ -226,20 +226,7 @@ omit [_root_.NumberField.IsTotallyComplex K] in
 theorem le_of_subset_span (hX : ∀ v, IsUnit (X v).det) {L S N : Submodule (𝓞 K) V} (hL : L.FG)
     (hS : IsSat (Formalism.HermitianLatticesTheory.realize b X) L S) (hN : N ≤ L)
     (h : (N : Set V) ⊆ Submodule.span K (S : Set V)) : N ≤ S := by
-  have hle : S ⊔ N ≤ L := sup_le hS.1 hN
-  have hsp : Submodule.span K ((S ⊔ N : Submodule (𝓞 K) V) : Set V) = Submodule.span K (S : Set V) := by
-    apply le_antisymm
-    · rw [Submodule.span_le]
-      intro y hy
-      obtain ⟨s, hs, n, hn, rfl⟩ := Submodule.mem_sup.1 hy
-      exact Submodule.add_mem _ (Submodule.subset_span hs) (h hn)
-    · exact Submodule.span_mono (SetLike.coe_subset_coe.2 le_sup_left)
-  have h1 := (plLat K V ι b X hX _ (Submodule.FG.of_le hL hle)).2.1
-  have h2 := (plLat K V ι b X hX _ (Submodule.FG.of_le hL hS.1)).2.1
-  have h3 : rkK (S ⊔ N) = rkK S := by unfold rkK; rw [hsp]
-  have h4 := (satBasic _ _ _ (Formalism.HermitianLatticesTheory.realize b X) L (plLat K V ι b X hX L hL).1).2.2.1 S (S ⊔ N) hS
-    le_sup_left hle (by rw [h1, h2, h3])
-  exact sup_eq_left.1 h4
+  exact GlobalTheory.NearLower.le_of_le_span b X hX hL hS hN h
 
 theorem exists_frames_subspace (hX : ∀ v, IsUnit (X v).det) (U : Submodule K V) :
     ∃ (m : ℕ) (e : Module.Basis (Fin m) K U) (Y : InfinitePlace K → Matrix (Fin m) (Fin m) ℂ),

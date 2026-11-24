@@ -359,14 +359,7 @@ theorem weight_rowW_apply {r c : ℕ} (m : Fin r × Fin c →₀ ℕ) (a : Fin r
 
 theorem weight_colW_apply {r c : ℕ} (m : Fin r × Fin c →₀ ℕ) (j : Fin c) :
     Finsupp.weight (colW r c) m j = ∑ a, m (a, j) := by
-  rw [Finsupp.weight_apply, Finsupp.sum_fintype _ _ (by simp), Finset.sum_apply,
-    Fintype.sum_prod_type]
-  refine Finset.sum_congr rfl fun a _ => ?_
-  rw [Finset.sum_eq_single j]
-  · simp [colW]
-  · intro b _ hb
-    simp [colW, Ne.symm hb]
-  · simp
+  exact Formalism.GradedWeylDivisibility.lccomp_weight_colW_apply m j
 
 theorem weight_lastW {n : ℕ} (m : Fin (n + 1) × Fin (n + 1) →₀ ℕ) :
     Finsupp.weight (lastW (n + 1)) m = rowDeg m (Fin.last n) := by

@@ -199,14 +199,7 @@ namespace GlobalTheory.CompanionTheory.AbFibre
 
 theorem isPullback_baseChange {S T : Scheme.{0}} (s : T ⟶ S) {X Y : Over S} (f : X ⟶ Y) :
     IsPullback ((Over.pullback s).map f).left (pullback.fst X.hom s) (pullback.fst Y.hom s) f.left := by
-  have h1 : ((Over.pullback s).map f).left ≫ pullback.snd Y.hom s = pullback.snd X.hom s := by
-    simpa only [Over.pullback_map_left] using pullback.lift_snd _ _ _
-  have h2 : ((Over.pullback s).map f).left ≫ pullback.fst Y.hom s = pullback.fst X.hom s ≫ f.left := by
-    simpa only [Over.pullback_map_left] using pullback.lift_fst _ _ _
-  have hX : f.left ≫ Y.hom = X.hom := Over.w f
-  refine IsPullback.of_right ?_ h2 (IsPullback.of_hasPullback Y.hom s).flip
-  rw [h1, hX]
-  exact (IsPullback.of_hasPullback X.hom s).flip
+  exact GlobalTheory.isPullback_overPullback_map_left s f
 
 theorem exists_geometric_point {S : Scheme.{0}} (Y : Over S) (y : Y.left) :
     ∃ (Ω : Type) (_ : Field Ω) (_ : IsAlgClosed Ω) (s : Spec (.of Ω) ⟶ S) (w : ↥(pullback Y.hom s)),

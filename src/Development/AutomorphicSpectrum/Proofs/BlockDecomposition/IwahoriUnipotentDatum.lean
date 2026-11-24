@@ -118,20 +118,10 @@ theorem antiJ_ne' {j k : Fin n} (h : k ≠ Fin.rev j) : antiJ L n k j = 0 :=
   ite_eq_right fun e => h (Fin.ext (by have := j.2; rw [Fin.val_rev]; omega))
 
 theorem antiJ_mul (M : Matrix (Fin n) (Fin n) L) (i j : Fin n) :
-    (antiJ L n * M) i j = M (Fin.rev i) j := by
-  rw [Matrix.mul_apply, Finset.sum_eq_single (Fin.rev i)]
-  · rw [antiJ_self_rev, one_mul]
-  · intro k _ hk
-    rw [antiJ_ne hk, zero_mul]
-  · simp
+    (antiJ L n * M) i j = M (Fin.rev i) j := GlobalTheory.LGrp.antiJ_mul_apply n M i j
 
 theorem mul_antiJ (M : Matrix (Fin n) (Fin n) L) (i j : Fin n) :
-    (M * antiJ L n) i j = M i (Fin.rev j) := by
-  rw [Matrix.mul_apply, Finset.sum_eq_single (Fin.rev j)]
-  · rw [antiJ_rev_self, mul_one]
-  · intro k _ hk
-    rw [antiJ_ne' hk, mul_zero]
-  · simp
+    (M * antiJ L n) i j = M i (Fin.rev j) := GlobalTheory.LGrp.mul_antiJ_apply n M i j
 
 theorem tau_eq (σ : L →+* L) (M : Matrix (Fin n) (Fin n) L) :
     tau σ M = antiJ L n * cT σ M * antiJ L n := by

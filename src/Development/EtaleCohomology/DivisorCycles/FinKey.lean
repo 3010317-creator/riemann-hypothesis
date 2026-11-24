@@ -773,12 +773,7 @@ theorem powv (y : Mat C N) (l : C) (v : Fin N → C) (h : y *ᵥ v = l • v) (m
   | succ m ih => rw [pow_succ, ← mulVec_mulVec, h, mulVec_smul, ih, smul_smul, pow_succ']
 
 theorem root_of (M : Mat C N) (β : C) (v : Fin N → C) (hv : v ≠ 0) (h : M *ᵥ v = β • v) :
-    M.charpoly.IsRoot β := by
-  rw [Polynomial.IsRoot.def, eval_charpoly, ← exists_mulVec_eq_zero_iff]
-  refine ⟨v, hv, ?_⟩
-  rw [sub_mulVec, h]
-  ext a
-  simp [Matrix.scalar_apply]
+    M.charpoly.IsRoot β := LateralTheory.DivDb.CycleCount₂.eig_root M β v hv h
 
 theorem eig {p : Fin n → Mat C N} {x : Mat C N} {π : Equiv.Perm (Fin n)} (hp : Sys p)
     (hxu : IsUnit x) (hx : ∀ j, x * p j = p (π j) * x) (τ : Fin n → C) (hτ : ∀ j, τ j ≠ 0)
@@ -1059,12 +1054,7 @@ theorem ev_prod {ι : Type} (s : Finset ι) (x : Mat C N) (q : ι → MP C N) :
 
 theorem dAt_mul (f g : MP C N) (x Y : Mat C N) :
     dAt (f * g) x Y = ev x f * dAt g x Y + ev x g * dAt f x Y := by
-  unfold dAt
-  rw [Finset.mul_sum, Finset.mul_sum, ← Finset.sum_add_distrib]
-  refine Finset.sum_congr rfl fun p _ => ?_
-  rw [Derivation.leibniz]
-  simp only [ev, smul_eq_mul, map_add (f := _), map_mul]
-  ring
+  exact LateralTheory.DivDb.ChainPf.dAt_mul f g x Y
 
 theorem mem_img {Γ : Type} [Group Γ] (ρ : Γ →* GL (Fin N) C) (U : Subgroup Γ) (x : Mat C N) :
     x ∈ img ρ U ↔ ∃ u ∈ U, ((ρ u : GL (Fin N) C) : Mat C N) = x := by

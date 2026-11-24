@@ -421,25 +421,7 @@ theorem mul_mem {L L' : Module.End ℂ (MvPolynomial σ ℂ)} (h : L ∈ nonRais
 
 theorem totalDegree_X_mul_pderiv (x y : σ) (P : MvPolynomial σ ℂ) :
     (X x * pderiv y P).totalDegree ≤ P.totalDegree := by
-  classical
-
-  conv_lhs => rw [P.as_sum, map_sum, Finset.mul_sum]
-  refine totalDegree_finsetSum_le fun s hs => ?_
-  rw [pderiv_monomial]
-  by_cases h0 : s y = 0
-  · simp [h0]
-  · have hs' : (Finsupp.single y 1) + (s - Finsupp.single y 1) = s := by
-      rw [add_tsub_cancel_of_le]
-      rw [Finsupp.single_le_iff]; omega
-    refine (totalDegree_mul _ _).trans ?_
-    rw [totalDegree_X]
-    refine le_trans ?_ (le_totalDegree hs)
-    have h1 := totalDegree_monomial_le (s - Finsupp.single y 1) (AddMonoidAlgebra.coeff P s * (s y : ℂ))
-    have h2 : (s.sum fun _ e => e) = 1 + (s - Finsupp.single y 1).sum fun _ e => e := by
-      conv_lhs => rw [← hs']
-      rw [Finsupp.sum_add_index' (fun _ => rfl) (fun _ _ _ => rfl), Finsupp.sum_single_index rfl]
-    rw [h2]
-    exact Nat.add_le_add_left h1 1
+  exact GlobalTheory.Chain.RealIt.FockSrcDec.deg_X_pderiv x y P
 
 theorem pderiv_mem (y : σ) : (pderiv y).toLinearMap ∈ nonRaising σ := by
   intro P

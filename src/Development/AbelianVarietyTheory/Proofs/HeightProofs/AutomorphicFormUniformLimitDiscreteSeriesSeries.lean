@@ -580,13 +580,7 @@ theorem sobCont_add_form {ℓ ℓ' : H →ₗ[ℂ] ℂ} (h : Sobolev₂ (lieSet 
     _ ≤ _ := by nlinarith
 
 theorem sobCont_smul_form (c : ℂ) {ℓ : H →ₗ[ℂ] ℂ} (h : Sobolev₂ (lieSet ε) σ ℓ) :
-    Sobolev₂ (lieSet ε) σ (c • ℓ) := by
-  obtain ⟨S, C, hS, hC⟩ := h
-  refine ⟨S, ‖c‖ * C, hS, fun w hw => ?_⟩
-  have b : ‖ℓ w‖ ≤ C * sobNorm σ S w := hC w hw
-  show ‖c • ℓ w‖ ≤ ‖c‖ * C * sobNorm σ S w
-  rw [norm_smul, mul_assoc]
-  exact mul_le_mul_of_nonneg_left b (norm_nonneg c)
+    Sobolev₂ (lieSet ε) σ (c • ℓ) := GlobalTheory.TypeSum.CoefLow.sob_smul c h
 
 theorem sobCont_sum_form {ι : Type} (s : Finset ι) (f : ι → H →ₗ[ℂ] ℂ) (h : ∀ i, Sobolev₂ (lieSet ε) σ (f i)) :
     Sobolev₂ (lieSet ε) σ (∑ i ∈ s, f i) := by
@@ -1218,33 +1212,10 @@ variable {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAddCommGroup H] [Inne
 theorem sobCont_zero' : Sobolev₂ (lieSet ε) σ (0 : H →ₗ[ℂ] ℂ) := ⟨[], 0, by simp, fun w _ => by simp⟩
 
 theorem sobCont_add' {ℓ ℓ' : H →ₗ[ℂ] ℂ} (h : Sobolev₂ (lieSet ε) σ ℓ) (h' : Sobolev₂ (lieSet ε) σ ℓ') :
-    Sobolev₂ (lieSet ε) σ (ℓ + ℓ') := by
-  obtain ⟨S, C, hS, hC⟩ := h
-  obtain ⟨S', C', hS', hC'⟩ := h'
-  refine ⟨S ++ S', max (max C C') 0, words_append hS hS', fun w hw => ?_⟩
-  have e1 := hC w hw
-  have e2 := hC' w hw
-  have s1 : 0 ≤ sobNorm σ S w := sobNorm_nonneg σ S w
-  have s2 : 0 ≤ sobNorm σ S' w := sobNorm_nonneg σ S' w
-  have h3 : sobNorm σ (S ++ S') w = sobNorm σ S w + sobNorm σ S' w := sobNorm_append σ S S' w
-  change ‖ℓ w + ℓ' w‖ ≤ max (max C C') 0 * sobNorm σ (S ++ S') w
-  change ‖ℓ w‖ ≤ C * sobNorm σ S w at e1
-  change ‖ℓ' w‖ ≤ C' * sobNorm σ S' w at e2
-  rw [h3]
-  have a1 : C * sobNorm σ S w ≤ max (max C C') 0 * sobNorm σ S w :=
-    mul_le_mul_of_nonneg_right (le_max_of_le_left (le_max_left _ _)) s1
-  have a2 : C' * sobNorm σ S' w ≤ max (max C C') 0 * sobNorm σ S' w :=
-    mul_le_mul_of_nonneg_right (le_max_of_le_left (le_max_right _ _)) s2
-  calc ‖ℓ w + ℓ' w‖ ≤ ‖ℓ w‖ + ‖ℓ' w‖ := norm_add_le _ _
-    _ ≤ _ := by nlinarith
+    Sobolev₂ (lieSet ε) σ (ℓ + ℓ') := GlobalTheory.TypeSum.sobCont_add_form h h'
 
 theorem sobCont_smul' (c : ℂ) {ℓ : H →ₗ[ℂ] ℂ} (h : Sobolev₂ (lieSet ε) σ ℓ) : Sobolev₂ (lieSet ε) σ (c • ℓ) := by
-  obtain ⟨S, C, hS, hC⟩ := h
-  refine ⟨S, ‖c‖ * C, hS, fun w hw => ?_⟩
-  have e1 := hC w hw
-  change ‖c * ℓ w‖ ≤ ‖c‖ * C * (S.map fun l => ‖l.foldr (dRep σ) w‖).sum
-  rw [norm_mul, mul_assoc]
-  exact mul_le_mul_of_nonneg_left e1 (norm_nonneg c)
+  exact GlobalTheory.TypeSum.sobCont_smul_form c h
 
 theorem sobCont_sum {ι : Type} (s : Finset ι) (ℓ : ι → (H →ₗ[ℂ] ℂ)) (h : ∀ i, Sobolev₂ (lieSet ε) σ (ℓ i)) :
     Sobolev₂ (lieSet ε) σ (∑ i ∈ s, ℓ i) :=

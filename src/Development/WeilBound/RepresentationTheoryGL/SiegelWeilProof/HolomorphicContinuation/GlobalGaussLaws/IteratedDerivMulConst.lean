@@ -97,11 +97,7 @@ variable {m n : ℕ}
 theorem mR_one : mR (1 : GR n) = 1 := rfl
 
 theorem cnt_add (ε : Fin m → Bool) : cnt ε true + cnt ε false = m := by
-  unfold cnt
-  rw [Finset.card_filter, Finset.card_filter, ← Finset.sum_add_distrib]
-  have h : ∀ a : Fin m, ((if ε a = true then 1 else 0) + (if ε a = false then 1 else 0) : ℕ) = 1 := by
-    intro a; cases ε a <;> simp
-  simp [h]
+  exact PositivityTheory.Rg.Sw.Glob.GaussH.cnt_add ε
 
 theorem det_diag_exp (X : Fin n → ℝ) (z : ℂ) :
     (diagonal fun j => Complex.exp (-(z * X j))).det = Complex.exp (-(z * ∑ j, (X j : ℂ))) := by

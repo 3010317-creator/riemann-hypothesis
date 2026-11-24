@@ -156,10 +156,7 @@ theorem numStandardTable_zero (m : ℕ) : numStandardTable (fun _ : Fin m => (0 
     ⟨⟨Equiv.equivOfIsEmpty _ _, fun p => isEmptyElim p⟩⟩⟩
 
 theorem prod_range_sub_eq_descFactorial (n l : ℕ) :
-    ∏ j ∈ Finset.range l, (n - j) = n.descFactorial l := by
-  induction l with
-  | zero => simp
-  | succ l ih => rw [Finset.prod_range_succ, ih, Nat.descFactorial_succ, mul_comm]
+    ∏ j ∈ Finset.range l, (n - j) = n.descFactorial l := (Nat.descFactorial_eq_prod_range n l).symm
 
 theorem prod_fin_sub_eq_factorial (l : ℕ) : ∏ j : Fin l, (l - (j : ℕ)) = l.factorial := by
   rw [Fin.prod_univ_eq_prod_range (fun j => l - j) l,

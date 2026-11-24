@@ -85,16 +85,7 @@ open IsDedekindDomain.HeightOneSpectrum Polynomial
 
 theorem exists_ne_of_isCMExt {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) : ∃ x : E, σ x ≠ x := by
-  by_contra! h
-  obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
-  have hreal : NumberField.ComplexEmbedding.IsReal τ := by
-    rw [NumberField.ComplexEmbedding.isReal_iff]
-    ext x
-    have h1 := hσ.2.2.2 τ x
-    rw [h x] at h1
-    rw [NumberField.ComplexEmbedding.conjugate_coe_eq, starRingEnd_apply]
-    exact h1.symm
-  exact (NumberField.InfinitePlace.not_isReal_iff_isComplex.2 (hσ.2.1.isComplex (NumberField.InfinitePlace.mk τ))) ⟨τ, hreal, rfl⟩
+  exact GlobalTheory.AdelicU.exists_cm_conj_ne hσ
 
 theorem exists_integral_gen {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) (v : HeightOneSpectrum (𝓞 F))
@@ -225,12 +216,7 @@ open IsDedekindDomain.HeightOneSpectrum Polynomial
 theorem mem_maximalIdeal_iff_valued_lt_one {F : Type} [Field F] [NumberField F]
     (v : HeightOneSpectrum (𝓞 F)) (x : v.adicCompletionIntegers F) :
     x ∈ IsLocalRing.maximalIdeal (v.adicCompletionIntegers F) ↔
-      Valued.v (x : v.adicCompletion F) < 1 := by
-  rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, adicCompletionIntegers.isUnit_iff_valued_eq_one]
-  have : Valued.v (x : v.adicCompletion F) ≤ 1 := x.2
-  constructor
-  · intro h; exact lt_of_le_of_ne this h
-  · intro h; exact h.ne
+      Valued.v (x : v.adicCompletion F) < 1 := GlobalTheory.AdelicU.mem_maximalIdeal_iff_valued
 
 theorem algebraMap_mem_maximalIdeal_iff {F : Type} [Field F] [NumberField F]
     (v : HeightOneSpectrum (𝓞 F)) (e : 𝓞 F) :

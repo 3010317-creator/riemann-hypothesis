@@ -84,14 +84,7 @@ theorem inv_bijective (S : Type) [CommRing S] :
 
 theorem fn_ext_levels [IsHausdorff J B] {a b : Γ(Spec (CommRingCat.of B), ⊤)}
     (h : ∀ e, (adicLevelι J (e + 1)).appTop.hom a = (adicLevelι J (e + 1)).appTop.hom b) : a = b := by
-  obtain ⟨a, rfl⟩ := (inv_bijective B).2 a
-  obtain ⟨b, rfl⟩ := (inv_bijective B).2 b
-  congr 1
-  refine congrFun (IsHausdorff.StrictMono.funext' J (a := fun n => n + 1) (strictMono_id.add_const 1)
-    (f := fun _ : Unit => a) (g := fun _ => b) fun n _ => ?_) ()
-  have := h n
-  rw [appTop_spec, appTop_spec] at this
-  exact (inv_bijective _).1 this
+  exact GlobalTheory.RedTotal.fn_ext_levels J h
 
 theorem fn_ext_germs [IsHausdorff J B] {a b : Γ(Spec (CommRingCat.of B), ⊤)}
     (h : ∀ e z, gs (adicLevelι J (e + 1)) z ⊤ a = gs (adicLevelι J (e + 1)) z ⊤ b) : a = b :=

@@ -74,12 +74,7 @@ theorem evW_X_eq : bk.evW X = WittVector.teichmuller l (algebraMap (OCb l) (Cb l
   simp [BK.evW, bk.ev_X, inclW, WittVector.map_teichmuller]
 
 theorem l_dvd_of_not_isUnit (a : ℕ) [NeZero a] (x : Wq l a) (h : ¬ IsUnit x) : (l : Wq l a) ∣ x := by
-  by_cases h0 : x = 0
-  · exact h0 ▸ dvd_zero _
-  obtain ⟨m, b, hb, rfl⟩ := WittVector.exists_eq_pow_p_mul x h0
-  cases m with
-  | zero => exact absurd (by simpa using WittVector.isUnit_of_coeff_zero_ne_zero b hb) h
-  | succ m => exact Dvd.intro _ (by rw [pow_succ', mul_assoc])
+  exact GlobalTheory.BKReal.dvd_of_not_isUnit l a h
 
 theorem exists_unit (s : bk.S) (hs : ψ bk s ≠ 0) :
     ∃ (k : ℕ) (s₁ : bk.S), IsUnit s₁ ∧ ψ bk s = ψ bk X ^ k * ψ bk s₁ := by

@@ -268,39 +268,13 @@ lemma exp_mem_UH {n : ℕ} (H Y : Matrix (Fin n) (Fin n) ℂ) (hH : H * H = 1) (
   apply QnYLeibnizW.exp_mem_UH <;> assumption
 
 lemma glev_mul {k r : ℕ} {i : Fin (r + 1)} {g h : Mx k r} (hg : g ∈ Glev k r i) (hh : h ∈ Glev k r i) :
-    g * h ∈ Glev k r i := by
-  simp only [Glev, UH, Set.mem_setOf_eq] at hg hh ⊢
-  obtain ⟨hg1, hg2⟩ := hg
-  obtain ⟨hh1, hh2⟩ := hh
-  refine ⟨?_, fun a ha => ⟨?_, ?_⟩⟩
-  · rw [Matrix.conjTranspose_mul]
-    calc hᴴ * gᴴ * Hpk k r * (g * h) = hᴴ * (gᴴ * Hpk k r * g) * h := by
-          simp only [Matrix.mul_assoc]
-      _ = Hpk k r := by rw [hg1, hh1]
-  · rw [← Matrix.mulVec_mulVec, (hh2 a ha).1, (hg2 a ha).1]
-  · rw [← Matrix.mulVec_mulVec, (hh2 a ha).2, (hg2 a ha).2]
+    g * h ∈ Glev k r i := Formalism.FourierDecayAlt.Q.TInvW.glev_mul' hg hh
 
 lemma exp_mem_glev {k r : ℕ} {i : Fin (r + 1)} {X : Mx k r} (hX : inLieLev k r i X) (t : ℝ) :
-    NormedSpace.exp ((t : ℂ) • X) ∈ Glev k r i := by
-  obtain ⟨hL, hF⟩ := hX
-  have hH : Hpk k r * Hpk k r = 1 := (hpkFacts k r).2.1
-  refine ⟨exp_mem_UH _ _ hH ?_, fun a ha => ?_⟩
-  · rw [Matrix.conjTranspose_smul, Complex.star_def, Complex.conj_ofReal, Matrix.smul_mul,
-      Matrix.mul_smul, ← smul_add, hL, smul_zero]
-  · obtain ⟨h1, h2⟩ := hF a ha
-    exact ⟨exp_mulVec_fix X _ h1 t, exp_mulVec_fix X _ h2 t⟩
+    NormedSpace.exp ((t : ℂ) • X) ∈ Glev k r i := QnRdSkewW.exp_mem_glev hX t
 
 lemma skew_minus {n : ℕ} (H Z : Matrix (Fin n) (Fin n) ℂ) (hh : Hᴴ = H) (hHH : H * H = 1) :
-    (Z - H * Zᴴ * H)ᴴ * H + H * (Z - H * Zᴴ * H) = 0 := by
-  have e1 : (Z - H * Zᴴ * H)ᴴ = Zᴴ - H * Z * H := by
-    rw [Matrix.conjTranspose_sub, Matrix.conjTranspose_mul, Matrix.conjTranspose_mul,
-      Matrix.conjTranspose_conjTranspose, hh, Matrix.mul_assoc H Z H]
-  rw [e1, Matrix.sub_mul, Matrix.mul_sub]
-  have e2 : H * Z * H * H = H * Z := by rw [Matrix.mul_assoc (H * Z) H H, hHH, Matrix.mul_one]
-  have e3 : H * (H * Zᴴ * H) = Zᴴ * H := by
-    rw [← Matrix.mul_assoc H (H * Zᴴ) H, ← Matrix.mul_assoc H H Zᴴ, hHH, Matrix.one_mul]
-  rw [e2, e3]
-  abel
+    (Z - H * Zᴴ * H)ᴴ * H + H * (Z - H * Zᴴ * H) = 0 := PI.QnHermHaar.tst_core1 H Z hh hHH
 
 lemma skew_plus {n : ℕ} (H Z : Matrix (Fin n) (Fin n) ℂ) (hh : Hᴴ = H) (hHH : H * H = 1) :
     H * (Z + H * Zᴴ * H) - (Z + H * Zᴴ * H)ᴴ * H = 0 := by

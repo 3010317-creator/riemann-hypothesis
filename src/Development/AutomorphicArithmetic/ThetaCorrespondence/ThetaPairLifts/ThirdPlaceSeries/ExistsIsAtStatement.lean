@@ -371,13 +371,7 @@ theorem Z_int {t : RA} (ht : ZMod' X.B.I X.B.g t) : t ∈ IntAf X.B.I.F X.B.I.E 
 
 theorem hA_ef (a b : Fin D.R.rS) :
     hA X.B.I (incl X.B.I (X.eR a)) (incl X.B.I (X.fR b)) = if a = b then 1 else 0 := by
-  rw [hA_incl]
-  have h := GlobalTheory.St.hform_crd_setting X (X.eX a) (X.fY b)
-  rw [X.ef] at h
-  have h' : Formalism.UG.hform (starRingEnd X.B.I.E) X.B.I.J (X.eR a) (X.fR b) = if a = b then 1 else 0 := by
-    apply X.ιE.injective
-    refine h.trans ?_; split_ifs <;> simp
-  rw [h']; split_ifs <;> simp
+  exact Formalism.L2.SG.Pf.Level.hA_e_f X a b
 
 theorem hA_fe (a b : Fin D.R.rS) :
     hA X.B.I (incl X.B.I (X.fR b)) (incl X.B.I (X.eR a)) = if a = b then 1 else 0 := by
@@ -555,21 +549,7 @@ variable {D : D7}
 
 theorem hA_fR_nxt_zero (X : HidaSetting D) (u : D.what₂.Word) (a : Fin D.R.rS) :
     hA X.B.I (incl X.B.I (X.fR a)) (incl X.B.I (nxt X.eR (X.zR u) a)) = 0 := by
-  rw [Formalism.L2.SG.Pf.unitaryCongruence.hA_incl]
-  have e1 : nxt X.eR (X.zR u) a = X.crd (nxt X.eX (X.zu u) a) := by
-    unfold nxt; split_ifs <;> rfl
-  have e2 : Formalism.UG.hform (starRingEnd X.B.I.E) X.B.I.J (X.fR a) (X.crd (nxt X.eX (X.zu u) a)) = 0 := by
-    apply X.ιE.injective
-    rw [show X.fR a = X.crd (X.fY a) from rfl, GlobalTheory.St.hform_crd_setting, map_zero]
-    unfold nxt
-    split_ifs with hh
-    · apply GlobalTheory.St.hT_symm_zero
-      rw [X.ef, ite_eq_right]
-      intro h'
-      have := congrArg Fin.val h'
-      simp at this
-    · exact (X.zu_orth u a).2
-  rw [e1, e2, map_zero]
+  exact Formalism.L2.SG.Pf.Level.hA_f_nxt a
 
 theorem smul_fact {R : Type} [CommRing R] {k : ℕ} (M : Matrix (Fin k) (Fin k) R) (ε : R)
     (h : ∀ i j, M i j = ε * M i j) (v : Fin k → R) : M *ᵥ v = ε • (M *ᵥ v) := by

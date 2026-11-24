@@ -1184,13 +1184,7 @@ variable {T : Type} {L : LevCh D T} {sc : GlobalTheory.ChiGrid.Consts} {G : Grid
 
 theorem locChar_nu {μ₀ : T} (hL : L.Is μ₀) (t : T) (i j : Fin D.R.m) (w : Pl D.host.E) :
     locChar (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.alpha G t i j / GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.beta G i j) w = (locGrid G t w).nu i j := by
-  have e1 : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.alpha G t i j / GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.beta G i j = G.nu t i (j + 1) :=
-    mul_div_mul_right_eq_div _ _ _
-  rw [e1, GlobalTheory.LFun.locChar_eq_of_chrEq (SqNum.chrEq_nu G t i j hL)]
-  have hj : (j : ℕ) < D.R.m := j.2
-  ext x
-  simp only [SqNum.nuH, Grid.nu, locGrid, muBase, dite_eq_left hj, div_eq_mul_inv]
-  rfl
+  exact GlobalTheory.TopFlip.StdLoc.locChar_nu hL t i j w
 
 theorem val_colX_ordX (t : T) (i j : Fin D.R.m) (w : Pl D.host.E)
     (s : Fin ((locGrid G t w).rank (i + 1, j + 1) + (locGrid G t w).rank (i, j))) :

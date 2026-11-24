@@ -186,13 +186,7 @@ theorem pspec_eq (p q : PrimeSpectrum ℂ) : p = q :=
   PrimeSpectrum.ext ((Ideal.eq_bot_of_prime p.asIdeal).trans (Ideal.eq_bot_of_prime q.asIdeal).symm)
 
 theorem chart_pt (L : LB X) (hL : L.IsLB) (y : Sp ℂ ⟶ X) : ∃ j, ⊤ ≤ y ⁻¹ᵁ L.U j := by
-  let p0 : Sp ℂ := (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum ℂ)
-  have hmem : y p0 ∈ (⨆ i, L.U i : X.Opens) := by rw [hL.cover]; trivial
-  obtain ⟨j, hj⟩ := TopologicalSpace.Opens.mem_iSup.mp hmem
-  refine ⟨j, fun q _ => ?_⟩
-  have : q = p0 := pspec_eq q p0
-  rw [this]
-  exact hj
+  exact GlobalTheory.TorusRM.ahFactor_im_int_chart L hL y
 
 theorem val_res_unit (x : Sp ℂ ⟶ X) {U V : X.Opens} (hVU : V ≤ U) (h : ⊤ ≤ x ⁻¹ᵁ V) (a : Γ(X, U)ˣ) :
     valAt' x V (res hVU a : Γ(X, V)) = valAt' x U (a : Γ(X, U)) :=

@@ -87,11 +87,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.LoopC.SizeQ
 
 theorem one_le_size (D : D7) (b C : ℝ) (Z : GramM D) : 1 ≤ sizeZ D b C Z := by
-  unfold sizeZ
-  refine Finset.prod_induction _ (fun x : ℝ => 1 ≤ x)
-    (fun x y hx hy => one_le_mul_of_one_le_of_one_le hx hy) le_rfl (fun τ _ => ?_)
-  exact Finset.prod_induction _ (fun x : ℝ => 1 ≤ x)
-    (fun x y hx hy => one_le_mul_of_one_le_of_one_le hx hy) le_rfl (fun l _ => le_max_left _ _)
+  exact GlobalTheory.LoopC.TermsOver.one_le_sizeZ D b C Z
 
 private lemma one_add_logb_two_mul_le_of_log_le_sqrt (f r : ℕ) (hf : 1 ≤ f) (hr : 1 ≤ r)
     (hlog : Real.log f ≤ Real.sqrt r) : 1 + Real.logb 2 (2 * (f : ℝ)) ≤ 2 * (r : ℝ) + 2 := by

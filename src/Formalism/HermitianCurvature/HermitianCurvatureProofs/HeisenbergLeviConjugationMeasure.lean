@@ -372,12 +372,7 @@ lemma heisG_zero (k r' : ℕ) : heisG k r' (liftVec k 1 r' 0) 0 = 1 := by
   refine mat_ext fun w => ?_
   simpa [lift_zero, herm_zero_right] using heis_act' k r' 0 w 0
 
-lemma Hherm (k r : ℕ) : (Hpk k r)ᴴ = Hpk k r := by
-  ext i j
-  have hi := i.isLt
-  have hj := j.isLt
-  simp only [conjTranspose_apply, Hpk, Fin.ext_iff]
-  split_ifs <;> first | omega | simp
+lemma Hherm (k r : ℕ) : (Hpk k r)ᴴ = Hpk k r := Formalism.FourierDecayAlt.P.B2x4.Hpk_herm k r
 
 lemma herm_self_im (k r : ℕ) (y : Fin (2 * r + k + 1) → ℂ) : (herm (Hpk k r) y y).im = 0 := by
   exact Complex.conj_eq_iff_im.mp (herm_conj _ (Hherm k r) y y)
@@ -542,11 +537,7 @@ lemma lev_lev_iL (k r' : ℕ) (g : Mat k r') (i : Fin (2 * r' + k + 1)) :
 
 lemma lev_lev_lev (k r' : ℕ) (g : Mat k r') (i j : Fin (2 * r' + k + 1)) :
     ιLev k 1 r' g (levPos k 1 r' i) (levPos k 1 r' j) = g i j := by
-  have hi := i.isLt
-  have hj := j.isLt
-  simp only [ιLev]
-  rw [dite_eq_left, dite_eq_left]
-  all_goals first | rfl | omega | (simp only [lev_val]; omega)
+  exact Formalism.FourierDecayAlt.P.B2x2.lev_mm k r' g i j
 
 lemma levi_action_first_coordinate (k r' : ℕ) (g : Mat k r') (u : Fin (2 * (1 + r') + k + 1) → ℂ) :
     (ιLev k 1 r' g *ᵥ u) (i0 k r') = u (i0 k r') := by
@@ -564,11 +555,7 @@ lemma lev_act_res (k r' : ℕ) (g : Mat k r') (u : Fin (2 * (1 + r') + k + 1) �
   simp [levi_entry_first_zero, lev_lev_iL, lev_lev_lev]
 
 lemma lev_mul (k r' : ℕ) (g h : Mat k r') : ιLev k 1 r' g * ιLev k 1 r' h = ιLev k 1 r' (g * h) := by
-  apply mat_ext
-  intro u
-  rw [← mulVec_mulVec]
-  apply vec_ext <;> simp only [levi_action_first_coordinate, lev_act_res, lev_act_iL]
-  rw [mulVec_mulVec]
+  exact (Formalism.FourierDecayAlt.P.B2x2.lev_mul k r' g h).symm
 
 lemma lev_one (k r' : ℕ) : ιLev k 1 r' (1 : Mat k r') = 1 := by
   apply mat_ext

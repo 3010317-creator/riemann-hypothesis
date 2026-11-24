@@ -325,27 +325,7 @@ theorem range_adjoint_le_span [FiniteDimensional ℂ H] [FiniteDimensional ℂ E
     (he : ∀ v w, inner ℂ (j (e v)) (j w) = inner ℂ (j v) (j (e w))) {Θ : H →ₗ[ℂ] E}
     (hΘ : ∀ v, Θ (j (e v)) = Θ (j v)) :
     LinearMap.range (LinearMap.adjoint Θ) ≤ Submodule.span ℂ (j '' (LinearMap.range e : Set V)) := by
-  obtain ⟨U, hU⟩ := exists_cx hli hsp e
-  have h1 : Θ ∘ₗ U = Θ := ext_of_span hsp fun v => by simp only [LinearMap.comp_apply, hU, hΘ]
-  have h2 : ∀ w y, inner ℂ (U y) (j w) = inner ℂ y (U (j w)) := fun w y => by
-    have : innerₛₗ ℂ (j w) ∘ₗ U = innerₛₗ ℂ (U (j w)) := ext_of_span hsp fun v => by
-      simp only [LinearMap.comp_apply, innerₛₗ_apply_apply, hU, he]
-    have h := LinearMap.congr_fun this y
-    simp only [LinearMap.comp_apply, innerₛₗ_apply_apply] at h
-    rw [← inner_conj_symm, h, inner_conj_symm]
-  have h3 : ∀ y, U y ∈ Submodule.span ℂ (j '' (LinearMap.range e : Set V)) := fun y => by
-    have hy : y ∈ Submodule.span ℂ (Set.range j) := hsp ▸ Submodule.mem_top
-    refine (Submodule.span_le (p := (Submodule.span ℂ (j '' (LinearMap.range e : Set V))).comap U)).2 ?_ hy
-    rintro _ ⟨v, rfl⟩
-    show U (j v) ∈ Submodule.span ℂ (j '' (LinearMap.range e : Set V))
-    rw [hU]
-    exact Submodule.subset_span ⟨e v, ⟨v, rfl⟩, rfl⟩
-  rintro _ ⟨u, rfl⟩
-  have h4 : innerₛₗ ℂ (U (LinearMap.adjoint Θ u)) = innerₛₗ ℂ (LinearMap.adjoint Θ u) := ext_of_span hsp fun w => by
-    simp only [innerₛₗ_apply_apply]
-    rw [h2, LinearMap.adjoint_inner_left, LinearMap.adjoint_inner_left, hU, hΘ]
-  rw [← (ext_inner_right ℂ fun w => LinearMap.congr_fun h4 w : U (LinearMap.adjoint Θ u) = LinearMap.adjoint Θ u)]
-  exact h3 _
+  exact GlobalTheory.AdjGood.range_adjoint_le_span hli hsp he hΘ
 
 end Linear
 
@@ -366,17 +346,7 @@ theorem model_good_span {G0 E : Type} [Group G0] [Fintype G0] [NormedAddCommGrou
     (he : ∀ y, ∑ g, σ ((idemOf X).coeff g) • gE g (Θ y) = Θ y) :
     LinearMap.range (LinearMap.adjoint Θ) ≤ Submodule.span ℂ
       (j '' (LinearMap.range (S.gaOp r (goodAt X (⊥ : Subgroup G0) 1)) : Set S.Forms)) := by
-  obtain ⟨h1, h2, h3⟩ := model_form P M hM hj
-  rw [goodAt, level_idempotent_bot, mul_one]
-  refine range_adjoint_le_span h1 h2 (sum_selfAdj r _ (fun g => ?_) fun g v w => ?_) fun v => ?_
-  · set_option synthInstance.maxHeartbeats 100000 in
-      simp only [coeff_idemOf, map_sum, map_mul, map_div₀, map_natCast, inv_inv]
-    refine Finset.sum_congr rfl fun c hc => ?_
-    rw [← (hX c hc).map_inv σ, ← (hX c hc).map_inv σ, inv_one, inv_inv]
-  · rw [h3, h3, hr.unitary]
-  · rw [← he (j v)]
-
-    simp only [LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smulₛₗ, hΘ, RingHom.id_apply]
+  exact GlobalTheory.AdjGood.model_good_span P M hM hj hr hX gE hΘ he
 
 end Pres
 

@@ -1073,36 +1073,14 @@ theorem exists_cocycle_of_h0_surjective (m : CxMap K K') (hm : Function.Surjecti
 
 theorem exists_primitive_of_h1_injective (m : CxMap K K') (hm : Function.Injective m.h1) (z : K.T1) (hz : z ∈ K.Z1)
     (g : K'.M0.c0) (h : m.p1 z = K'.D0 g) : ∃ g', K.D0 g' = z := by
-  have h0 : m.h1 (QuotientAddGroup.mk ⟨z, hz⟩ : K.H1) = 0 := by
-    change (QuotientAddGroup.mk (m.z1 ⟨z, hz⟩) : K'.H1) = 0
-    rw [QuotientAddGroup.eq_zero_iff]
-    exact ⟨g, h.symm⟩
-  have h1 := hm (h0.trans (map_zero m.h1).symm)
-  rwa [QuotientAddGroup.eq_zero_iff] at h1
+  exact GlobalTheory.CxTowerTwo.inj1 m hm z hz g h
 
 theorem exists_cocycle_of_h1_surjective (m : CxMap K K') (hm : Function.Surjective m.h1) (z' : K'.T1)
     (hz : z' ∈ K'.Z1) : ∃ z ∈ K.Z1, ∃ g, z' = m.p1 z + K'.D0 g := by
-  obtain ⟨x, hx⟩ := hm (QuotientAddGroup.mk ⟨z', hz⟩)
-  obtain ⟨⟨z, hz1⟩, rfl⟩ := QuotientAddGroup.mk_surjective x
-  change (QuotientAddGroup.mk (m.z1 ⟨z, hz1⟩) : K'.H1) = _ at hx
-  rw [QuotientAddGroup.eq] at hx
-  obtain ⟨g, hg⟩ := hx
-  refine ⟨z, hz1, g, ?_⟩
-  have e : K'.D0 g = -m.p1 z + z' := hg
-  rw [e]; abel
+  exact GlobalTheory.CxTowerTwo.surj1 m hm z' hz
 
 theorem cx_D1_D0_eq_zero (K : Cx C) (g : K.M0.c0) : K.D1 (K.D0 g) = 0 := by
-  refine Prod.ext ?_ (Prod.ext ?_ ?_)
-  · funext T T' T'' φ ψ
-    simp only [Cx.D1, Cx.D0, AddMonoidHom.coe_mk, ZeroHom.coe_mk, map_sub, K.M0.map_comp,
-      Prod.fst_zero, Pi.zero_apply]
-    abel
-  · funext T T' φ
-    simp only [Cx.D1, Cx.D0, AddMonoidHom.coe_mk, ZeroHom.coe_mk, map_sub, K.diffZero_natural,
-      Prod.snd_zero, Prod.fst_zero, Pi.zero_apply]
-    abel
-  · funext T
-    simp only [Cx.D1, Cx.D0, AddMonoidHom.coe_mk, ZeroHom.coe_mk, K.diffOne_diffZero, Prod.snd_zero, Pi.zero_apply]
+  exact GlobalTheory.CxTowerTwo.cx_D1_D0_eq_zero K g
 
 end GlobalTheory.CxCoh.TowerOne
 

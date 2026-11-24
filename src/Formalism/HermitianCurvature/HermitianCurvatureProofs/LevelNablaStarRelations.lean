@@ -61,22 +61,7 @@ namespace Formalism.FourierDecayAlt.P.Mx2
 theorem eulerLeibniz : EulerLeibniz := by
   apply Formalism.FourierDecayAlt.P.Mx4.eulerLeibniz
 
-theorem eulerCoord : EulerCoord := by
-  intro r v w z
-  constructor
-  · ext γ
-    simp only [euler, coord, LinearMap.coe_mk, AddHom.coe_mk]
-    by_cases h : γ = toLex (Pi.single w (1 : ℤ))
-    · subst h
-      by_cases hv : v = w
-      · subst hv; simp
-      · simp [hv]
-    · split_ifs <;> simp [HahnSeries.coeff_single_of_ne h]
-  · ext γ
-    simp only [euler, LinearMap.coe_mk, AddHom.coe_mk, HahnSeries.algebraMap_apply]
-    by_cases h : γ = 0
-    · subst h; simp; left; rfl
-    · simp [HahnSeries.coeff_single_of_ne h]
+theorem eulerCoord : EulerCoord := Formalism.FourierDecayAlt.P.Mx4.eulerCoord
 
 theorem eulerMul : EulerMul := by
   intro r v f
@@ -109,13 +94,7 @@ theorem multiplierPair_one : (fnP 1 1 : Pr r) = 1 := by
   · exact this
   · exact congrArg MulOpposite.op this
 theorem multiplierPair_neg (f fb : Fn r) : -fnP f fb = fnP (-f) (-fb) := by
-  rw [neg_eq_iff_add_eq_zero, multiplierPair_add]; simp
-  refine Prod.ext ?_ ?_
-  · show mulOp (0 : Fn r) = 0
-    ext h : 1; simp [mulOp]
-  · show MulOpposite.op (mulOp (0 : Fn r)) = 0
-    have : mulOp (0 : Fn r) = 0 := by ext h : 1; simp [mulOp]
-    rw [this]; rfl
+  exact Formalism.FourierDecayAlt.P.Mx4.multiplierPair_neg f fb
 theorem multiplierPair_comm (f fb g gb : Fn r) : fnP f fb * fnP g gb = fnP g gb * fnP f fb := by
   rw [multiplierPair_mul, multiplierPair_mul, mul_comm f, mul_comm fb]
 
@@ -129,12 +108,7 @@ theorem euler_one (v : Var r) : euler v (1 : Fn r) = 0 := by
   simpa using this
 
 theorem euler_inv (v : Var r) (f : Fn r) (hf : f ≠ 0) : euler v f⁻¹ = -(f⁻¹ * f⁻¹ * euler v f) := by
-  have h := eulerLeibniz r v f f⁻¹
-  rw [mul_inv_cancel₀ hf, euler_one] at h
-  have h2 : f * euler v f⁻¹ = -(euler v f * f⁻¹) := by
-    rw [eq_neg_iff_add_eq_zero, add_comm]; exact h.symm
-  have h3 : euler v f⁻¹ = f⁻¹ * (f * euler v f⁻¹) := by rw [← mul_assoc, inv_mul_cancel₀ hf, one_mul]
-  rw [h3, h2]; ring
+  exact Formalism.FourierDecayAlt.P.Mx4.euler_inv v f hf
 
 theorem vz_ne : (vz : Var r) ≠ vzb := by
   intro h; have := congrArg (fun p : Var r => (ofLex p).2) h; simp [vz, vzb] at this

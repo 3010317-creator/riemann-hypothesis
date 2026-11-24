@@ -705,30 +705,7 @@ theorem mem_glint_of_entries {K : Type} [inst : Field K] {n : ℕ} (O : Subring 
     (g : GL (Fin n) K)
     (h : ∀ (i j : Fin n), (↑g : Matrix (Fin n) (Fin n) K) i j ∈ O)
     (h' : ∀ (i j : Fin n), (↑g⁻¹ : Matrix (Fin n) (Fin n) K) i j ∈ O) :
-    g ∈ Formalism.UG.GLint (Fin n) O := by
-  let A : Matrix (Fin n) (Fin n) O := Matrix.of fun i j => ⟨_, h i j⟩
-  let B : Matrix (Fin n) (Fin n) O := Matrix.of fun i j => ⟨_, h' i j⟩
-  have hA : O.subtype.mapMatrix A = (↑g : Matrix (Fin n) (Fin n) K) := by
-    ext i j; rfl
-  have hB : O.subtype.mapMatrix B = (↑g⁻¹ : Matrix (Fin n) (Fin n) K) := by
-    ext i j; rfl
-  have hinj : Function.Injective
-      (O.subtype.mapMatrix : Matrix (Fin n) (Fin n) O → Matrix (Fin n) (Fin n) K) := by
-    intro X Y hXY
-    ext i j
-    exact congrFun (congrFun hXY i) j
-  have hAB : A * B = 1 := by
-    apply hinj
-    rw [map_mul, map_one, hA, hB]
-    exact Units.mul_inv g
-  have hBA : B * A = 1 := by
-    apply hinj
-    rw [map_mul, map_one, hA, hB]
-    exact Units.inv_mul g
-  refine ⟨⟨A, B, hAB, hBA⟩, ?_⟩
-  apply Units.ext
-  ext i j
-  rfl
+    g ∈ Formalism.UG.GLint (Fin n) O := GlobalTheory.TypeBlockFix.mem_GLint_of_entries O g h h'
 
 end GlobalTheory.MemGlintOfEntries
 end -- clump:auto
@@ -1590,13 +1567,7 @@ theorem side_read {V : HSp D} {n : ℕ} (hn : V.rank = n) {β : GL (Fin V.rank) 
 theorem rank_V (i : Fin D.R.m) : (Vc D i).rank = D.R.nV := D.sp.V_rank _ (Nat.le_add_left _ _) i.2
 
 theorem eq_resChar (w : D.what₂.places.Pl) {p : ℕ} (hp : p.Prime) (h : (p : 𝓞 D.what₂.LL) ∈ (D.plEq w).asIdeal) :
-    p = D.what₂.places.resChar w := by
-  by_contra hne
-  have hc := (Nat.coprime_primes hp (D.what₂.places.resChar_prime w)).2 hne
-  obtain ⟨a, b, hab⟩ := (Nat.isCoprime_iff_coprime.2 hc).map (Int.castRingHom (𝓞 D.what₂.LL))
-  refine (D.plEq w).isPrime.ne_top ((Ideal.eq_top_iff_one _).2 ?_)
-  rw [← hab]
-  exact add_mem (Ideal.mul_mem_left _ _ (by simpa using h)) (Ideal.mul_mem_left _ _ (by simpa using Formalism.BasicNotions.resChar_mem D w))
+    p = D.what₂.places.resChar w := (Formalism.MainNotions.Inhab.eq_resChar_of_mem D w p hp h).symm
 
 theorem tup_read {μ : D.what₂.Tup} {i : Fin D.R.m} {c : CoefA (Vc D i)} {T : Type} {L : LevCh D T} {μ0 : T} (hL : L.Is μ0)
     (hPg : ∀ PP, PP ∈ L.Pg ↔ ∃ k v, PP = D.naut.plGw k v) (hβ : L.βV i = 1) {t : T}

@@ -517,16 +517,7 @@ variable {D : ℕ} {Ω : Type} [Field Ω] [CharZero Ω] {κ : Type} [Fintype κ]
 
 theorem eval_smul_of_homog {ι : Type*} {F : MvPolynomial ι ℂ} {n : ℕ} (hF : F.IsHomogeneous n) (c : ℂ)
     (z : ι → ℂ) : eval (c • z) F = c ^ n * eval z F := by
-  classical
-  rw [eval_eq, eval_eq, Finset.mul_sum]
-  refine Finset.sum_congr rfl fun s hs => ?_
-  have hdeg : s.degree = n := by
-    by_contra h
-    exact (mem_support_iff.mp hs) (hF.coeff_eq_zero h)
-  simp only [Pi.smul_apply, smul_eq_mul, mul_pow, Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum]
-  have h : s.degree = ∑ i ∈ s.support, s i := rfl
-  rw [← hdeg, h]
-  ring
+  exact ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.eval_smul_of_isHomogeneous hF c z
 
 theorem resPt_ne_zero (d : HSMDatum D Ω κ) (y : d.R.X) : resPt d y ≠ 0 := by
   obtain ⟨i, hi⟩ := (d.R.mem y y (d.R.mem_U y)).1 ()

@@ -625,27 +625,7 @@ variable {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} {N N' : ℕ}
 
 theorem analytic_U (B : Base D cc δ) (t : TaylorLogMetric.VC D N N') {G : TaylorLogMetric.VC D N N' → ℂ} (hG : AnalyticOnNhd ℂ G Set.univ) :
     AnalyticOnNhd ℂ (TaylorLogMetric.U D B.tor t G) Set.univ := by
-  have hadd : AnalyticOnNhd ℂ (fun z : TaylorLogMetric.VC D N N' => z + t) Set.univ := fun z _ => by fun_prop
-  have h1 : AnalyticOnNhd ℂ (fun z : TaylorLogMetric.VC D N N' => G (z + t)) Set.univ :=
-    hG.comp hadd (fun _ _ => Set.mem_univ _)
-  let ℓ : TaylorLogMetric.VC D N N' →ₗ[ℂ] ℂ := (formV (TaylorLogMetric.area (TaylorLogMetric.lamOf D cc δ)) D.what₂.Tau N N').flip t
-  have h2 : AnalyticOnNhd ℂ (fun z : TaylorLogMetric.VC D N N' => ℓ z) Set.univ :=
-    (LinearMap.toContinuousLinearMap ℓ).analyticOnNhd _
-  have h3 : ∀ z : TaylorLogMetric.VC D N N', TaylorLogMetric.Hf D B.tor z t = ℓ z := fun z => by
-    show _ = formV (TaylorLogMetric.area (TaylorLogMetric.lamOf D cc δ)) D.what₂.Tau N N' z t
-    rw [formV_apply]; rfl
-  intro z hz
-  have h4 : AnalyticAt ℂ (fun z : TaylorLogMetric.VC D N N' => Complex.exp (-(Real.pi : ℂ) * ℓ z -
-      (Real.pi : ℂ) * TaylorLogMetric.Hf D B.tor t t / 2)) z := by
-    have := h2 z hz
-    fun_prop
-  have h5 := (h1 z hz).mul h4
-  have e : TaylorLogMetric.U D B.tor t G = (fun z => G (z + t)) * (fun z : TaylorLogMetric.VC D N N' => Complex.exp (-(Real.pi : ℂ) * ℓ z -
-      (Real.pi : ℂ) * TaylorLogMetric.Hf D B.tor t t / 2)) := by
-    funext z
-    simp only [TaylorLogMetric.U, h3, Pi.mul_apply]
-  rw [e]
-  exact h5
+  exact GlobalTheory.Proof.shape_normalisedThetaCombinations_dualBases_at_d.analytic_U B t hG
 
 end GlobalTheory.Proof.integralJets_normalisedThetaCombinations_away_d
 
@@ -1388,12 +1368,7 @@ theorem rhoVal_holds (D : D7) {u : D.what₂.Word} (C : ColumnChain D.R D.what�
     val_of D _ _ lam t h z hp a2 (fun k hk => by obtain ⟨n, hn, -, x⟩ := b k hk; exact ⟨n, hn, x⟩) (c z).2⟩
 
 theorem norm_le_one_of_int {K : Type} [NormedField K] [IsUltrametricDist K] (x : K)
-    (hx : IsIntegral ℤ x) : ‖x‖ ≤ 1 := by
-  have h1 : IsIntegral (NormedField.valuation (K := K)).integer x := hx.tower_top
-  have h2 := (Valuation.integer.integers (NormedField.valuation (K := K))).mem_of_integral h1
-  have h3 : NormedField.valuation x ≤ 1 := h2
-  rw [NormedField.valuation_apply] at h3
-  exact_mod_cast h3
+    (hx : IsIntegral ℤ x) : ‖x‖ ≤ 1 := GlobalTheory.HeckeVal.norm_le_one_of_isIntegral hx
 
 section Nu
 

@@ -314,13 +314,7 @@ theorem wittVector_coeff_add_pow_mul {l : ℕ} [hl : Fact l.Prime] {R : Type} [C
 
 theorem wittVector_dvd_of_coeff_zero {l : ℕ} [hl : Fact l.Prime] {R : Type} [CommRing R]
     [CharP R l] [PerfectRing R l] (x : WittVector l R) (hx : x.coeff 0 = 0) :
-    ∃ y, x = (l : WittVector l R) * y := by
-  by_cases h : x = 0
-  · exact ⟨0, by rw [h, mul_zero]⟩
-  obtain ⟨m, b, hb, hxb⟩ := exists_eq_pow_p_mul x h
-  cases m with
-  | zero => rw [pow_zero, one_mul] at hxb; exact absurd (hxb ▸ hx) hb
-  | succ m => exact ⟨(l : WittVector l R) ^ m * b, by rw [hxb]; ring⟩
+    ∃ y, x = (l : WittVector l R) * y := GlobalTheory.FrobInt.exists_p_mul x hx
 
 theorem wittVector_dvd_of_saturated_ideal : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R]
     [CharP R l] [PerfectRing R l] (J : Ideal (WittVector l R)) (μ : WittVector l R), μ ∈ J →

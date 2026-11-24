@@ -165,16 +165,7 @@ theorem int_eq_zero_of_forall_dvd {ϖ : L} {σ : L →+* L} {q : ℕ} (h : IsUnr
 
 theorem eq_zero_of_forall_mem_piPow {ϖ : L} {σ : L →+* L} {q : ℕ} (h : IsUnramInv ϖ σ q)
     (P : GlobalTheory.UTr.Csr (sigO σ h.2.1)) (a : GlobalTheory.UTr.Alg P) (ha : ∀ m, a ∈ piPow h P m) : a = 0 := by
-  refine (GlobalTheory.UTr.powBasis P).ext_elem fun i => ?_
-  rw [map_zero, Finsupp.zero_apply]
-  refine int_eq_zero_of_forall_dvd h fun m => ?_
-  obtain ⟨b, hb⟩ := Ideal.mem_span_singleton'.1 (ha m)
-  refine ⟨(GlobalTheory.UTr.powBasis P).repr b i, ?_⟩
-  have he : b * (algebraMap (intL L) (GlobalTheory.UTr.Alg P)) (piO h) ^ m =
-      (piO h ^ m) • b := by
-    rw [Algebra.smul_def, map_pow, mul_comm]
-  change b * (algebraMap (intL L) (GlobalTheory.UTr.Alg P)) (piO h) ^ m = a at hb
-  rw [← hb, he, map_smul, Finsupp.smul_apply, smul_eq_mul]
+  exact GlobalTheory.NormEq.Cmpl.eq_zero_of_forall_mem_piPow h P ha
 
 theorem sep : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicative ℤ))] (σ : L →+* L) (ϖ : L) (q : ℕ)
     (h : IsUnramInv ϖ σ q) (P : GlobalTheory.UTr.Csr (GlobalTheory.NormEq.sigO σ h.2.1)) (a : GlobalTheory.UTr.Alg P),

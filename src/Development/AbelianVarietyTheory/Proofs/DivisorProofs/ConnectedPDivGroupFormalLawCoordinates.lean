@@ -52,11 +52,7 @@ namespace GlobalTheory.LawCoord
 
 theorem evA_X {k : Type} [CommRing k] {σ : Type} [Finite σ] {A : Type} [CommRing A] [Algebra k A]
     (x : σ → A) (hx : ∀ i, IsNilpotent (x i)) (i : σ) : evA k x hx (X i) = x i := by
-  have ha : HasSubst (fun i => (C (x i) : MvPowerSeries Empty A)) :=
-    hasSubst_of_constantCoeff_nilpotent fun i => by simpa using hx i
-  change constantCoeff (substAlgHom (R := k) ha (X i : MvPowerSeries σ k)) = x i
-  rw [substAlgHom_apply, subst_X ha]
-  simp
+  exact GlobalTheory.Katz.evA_X k σ A x hx i
 
 theorem main : ∀ (p : ℕ) (k : Type) [CommRing k] (d : ℕ) (G : PDivGroup p k) (c : Chart G d),
     (∃ μ, c.IsLawOf μ) ∧ ∀ (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) k), c.IsLawOf μ →

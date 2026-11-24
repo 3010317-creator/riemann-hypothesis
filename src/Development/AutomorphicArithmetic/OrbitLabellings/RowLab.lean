@@ -512,33 +512,10 @@ theorem UpperTheory.G2.RowLab.exists_idempotent : ∀ (E : Type) [Field E] [Numb
 namespace UpperTheory.G2.RowLab
 
 lemma pos_add (N : NumDatum) (l : ℕ) (z : RPl N.R) (s t : ℕ) :
-    N.pos l (N.pos l z s) t = N.pos l z (s + t) := by
-  unfold NumDatum.pos
-  refine Prod.ext ?_ ?_
-  · dsimp only
-    by_cases h : N.cls l = PrimeClass.signal <;> by_cases hs : Odd s <;> by_cases ht : Odd t <;>
-      simp [h, hs, ht, Nat.odd_add, ← Nat.not_odd_iff_even]
-  · dsimp only
-    rw [add_smul, add_assoc]
+    N.pos l (N.pos l z s) t = N.pos l z (s + t) := GlobalTheory.LevelsOrbits.pos_add N l z s t
 
 lemma pos_mul_period (N : NumDatum) (l : ℕ) (z : RPl N.R) (c : ℕ) :
-    N.pos l z (N.ordP l * c) = z := by
-  unfold NumDatum.pos NumDatum.ordP
-  by_cases h : N.cls l = PrimeClass.signal
-  · rw [ite_eq_left h]
-    refine Prod.ext ?_ ?_
-    · have : ¬ Odd (2 * addOrderOf (2 • N.hP l) * c) := by
-        rw [Nat.not_odd_iff_even, mul_assoc]; exact even_two_mul _
-      dsimp only
-      rw [decide_eq_false (fun hh => this hh.2), Bool.xor_false]
-    · dsimp only
-      rw [show 2 * addOrderOf (2 • N.hP l) * c = c * addOrderOf (2 • N.hP l) * 2 by ring,
-        mul_smul, mul_smul, addOrderOf_nsmul_eq_zero, smul_zero, add_zero]
-  · rw [ite_eq_right h]
-    refine Prod.ext ?_ ?_
-    · simp [h]
-    · dsimp only
-      rw [mul_comm, mul_smul, addOrderOf_nsmul_eq_zero, smul_zero, add_zero]
+    N.pos l z (N.ordP l * c) = z := GlobalTheory.LevelsOrbits.pos_mul_period N l z c
 
 lemma pos_mod (N : NumDatum) (l : ℕ) (z : RPl N.R) (e : ℕ) :
     N.pos l z (e % N.ordP l) = N.pos l z e := by

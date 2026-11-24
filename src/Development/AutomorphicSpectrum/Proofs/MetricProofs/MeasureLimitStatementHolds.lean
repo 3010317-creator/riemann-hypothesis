@@ -89,18 +89,7 @@ variable {e : ℕ} {X : Type} [TopologicalSpace X]
 
 theorem holo_cont {A : FinHolAtlas e X} {V : Set X} (hV : IsOpen V) {g : X → ℂ} (h : A.HoloOn V g) :
     ContinuousOn g V := by
-  intro y hy
-  obtain ⟨k, hk⟩ := A.cover y
-  have hz : A.chart k y ∈ (A.chart k).target ∩ (A.chart k).symm ⁻¹' V :=
-    ⟨(A.chart k).map_source hk, by
-      show (A.chart k).symm (A.chart k y) ∈ V
-      rw [(A.chart k).left_inv hk]; exact hy⟩
-  have h1 : ContinuousAt (g ∘ (A.chart k).symm) (A.chart k y) := (h k _ hz).continuousAt
-  have h2 : ContinuousAt (A.chart k) y := (A.chart k).continuousAt hk
-  have h3 : ContinuousAt ((g ∘ (A.chart k).symm) ∘ (A.chart k)) y := ContinuousAt.comp h1 h2
-  refine (h3.congr ?_).continuousWithinAt
-  filter_upwards [(A.chart k).open_source.mem_nhds hk] with u hu
-  simp [(A.chart k).left_inv hu]
+  apply GlobalTheory.CompanionTheory.Ar.Giv.Push.DCont.holoOn_continuousOn <;> assumption
 
 theorem holo_mono {A : FinHolAtlas e X} {V W : Set X} {g : X → ℂ} (h : A.HoloOn V g) (hW : W ⊆ V) :
     A.HoloOn W g := fun j y hy => h j y ⟨hy.1, hW hy.2⟩

@@ -180,14 +180,7 @@ theorem cm_generator_sq_quadratic_eq (D : D7) : ∃ n : ℤ, w0 D * w0 D = w0 D 
 
 theorem lamOf_stable (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (a : 𝓞 D.host.K) :
     ∀ w ∈ lamOf D cc δ, D.host.φ₀ (((a : D.host.K) : D.host.E)) * w ∈ lamOf D cc δ := by
-  intro w hw
-  induction hw using AddSubgroup.closure_induction with
-  | mem x hx =>
-    obtain ⟨c, hc, rfl⟩ := hx
-    exact AddSubgroup.subset_closure ⟨a * c, cc.mul_mem_left a hc, by simp; ring⟩
-  | zero => simp
-  | add x y _ _ hx hy => rw [mul_add]; exact add_mem hx hy
-  | neg x _ hx => rw [mul_neg]; exact neg_mem hx
+  apply GlobalTheory.ThetaInter.lam_mul_mem
 
 theorem lamOf_eq_closure (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (hc : Crv D cc δ) :
     ∃ w₁ w₂ : ℂ, LinearIndependent ℝ ![w₁, w₂] ∧ lamOf D cc δ = AddSubgroup.closure {w₁, w₂} := by

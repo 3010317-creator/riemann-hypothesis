@@ -615,14 +615,7 @@ theorem br_eq {a b : ℕ} (M : Matrix (Fin (a + b)) (Fin (a + b)) K) :
   rfl
 
 theorem inPar_mul {a n : ℕ} {x y : GL (Fin n) K} (hx : InPar a x) (hy : InPar a y) :
-    InPar a (x * y) := by
-  intro i j hj hi
-  rw [Units.val_mul, Matrix.mul_apply]
-  apply Finset.sum_eq_zero
-  intro k _
-  by_cases hk : (k : ℕ) < a
-  · rw [hx i k hk hi, zero_mul]
-  · rw [hy k j hj (by omega), mul_zero]
+    InPar a (x * y) := GlobalTheory.Shin.FlagDesc.inPar_mul hx hy
 
 theorem inPar_one {a n : ℕ} : InPar a (1 : GL (Fin n) K) := by
   intro i j hj hi

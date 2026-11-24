@@ -179,18 +179,7 @@ theorem coeff_subst_eq_zero_of_degree {R : Type} [CommRing R] {σ τ : Type} [Fi
 
 theorem constantCoeff_nmul {R : Type} [CommRing R] {d : ℕ}
     {μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R} (hμ : ∀ i, constantCoeff (μ i) = 0) (k : ℕ) (i : Fin d) :
-    constantCoeff (nmul μ k i) = 0 := by
-  induction k generalizing i with
-  | zero => simp [nmul]
-  | succ k ih =>
-    have h : ∀ j, constantCoeff (Sum.elim (nmul μ k) (fun l => (X l : MvPowerSeries (Fin d) R)) j) = 0 := by
-      rintro (j | j)
-      · exact ih j
-      · exact constantCoeff_X _
-    have e : nmul μ (k + 1) i = at2 (μ i) (nmul μ k) (fun l => X l) := by
-      unfold nmul; rw [Function.iterate_succ_apply']; rfl
-    rw [e, at2]
-    exact constantCoeff_subst_eq_zero (hasSubst_of_constantCoeff_zero h) h (hμ i)
+    constantCoeff (nmul μ k i) = 0 := GlobalTheory.QLog.NmulSubst.constantCoeff_nmul μ hμ k i
 
 end GlobalTheory.EvMul
 

@@ -129,11 +129,7 @@ theorem coeff_single_linear_substitution_pair {τ : Type} (c : MvPowerSeries (Fi
 theorem constantCoeff_subst0 {σ τ : Type} [Finite σ] {a : σ → MvPowerSeries τ R}
     (ha : ∀ i, constantCoeff (a i) = 0) (f : MvPowerSeries σ R) :
     constantCoeff (subst a f) = constantCoeff f := by
-  have hs : HasSubst a := hasSubst_of_constantCoeff_zero ha
-  have h1 : f = (f - C (constantCoeff f)) + C (constantCoeff f) := by ring
-  conv_lhs => rw [h1]
-  rw [subst_add hs, map_add (f := _), constantCoeff_subst_eq_zero hs ha (by simp), subst_C, zero_add]
-  simp
+  exact GlobalTheory.Katz.SubstCalc.constantCoeff_subst_of_zero ha f
 
 theorem constantCoeff_op {τ : Type} {μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R}
     (hμ0 : ∀ i, constantCoeff (μ i) = 0) (u v : Fin d → MvPowerSeries τ R)
@@ -688,11 +684,7 @@ theorem subst_powerSeriesEvalTwoGroups {τ τ' : Type} [Finite τ] {u v : Fin d 
     {a : τ → MvPowerSeries τ' R} (ha : ∀ t, constantCoeff (a t) = 0)
     (c : MvPowerSeries (Fin d ⊕ Fin d) R) :
     subst a (at2 c u v) = at2 c (fun i => subst a (u i)) (fun i => subst a (v i)) := by
-  unfold at2
-  rw [subst_comp_subst_apply (hs2 hu hv) (hasSubst_of_constantCoeff_zero ha)]
-  congr 1
-  funext s
-  cases s <;> rfl
+  exact GlobalTheory.Katz.SubstCalc.subst_powerSeriesEvalTwoGroups hu hv ha c
 
 theorem op_addLaw {τ : Type} {u v : Fin d → MvPowerSeries τ R} (hu : ∀ i, constantCoeff (u i) = 0)
     (hv : ∀ i, constantCoeff (v i) = 0) : op (addLaw R d) u v = u + v := by
@@ -712,35 +704,7 @@ theorem coc_at {τ : Type} [Finite τ] {c : MvPowerSeries (Fin d ⊕ Fin d) R}
     (hu : ∀ i, constantCoeff (u i) = 0) (hv : ∀ i, constantCoeff (v i) = 0)
     (hw : ∀ i, constantCoeff (w i) = 0) :
     at2 c v w - at2 c (u + v) w + at2 c u (v + w) - at2 c u v = 0 := by
-  set a : Fin d ⊕ (Fin d ⊕ Fin d) → MvPowerSeries τ R := Sum.elim u (Sum.elim v w) with ha_def
-  have ha0 : ∀ t, constantCoeff (a t) = 0 := fun t => by
-    rcases t with t | t | t <;> simp [a, hu, hv, hw]
-  have ha : HasSubst a := hasSubst_of_constantCoeff_zero ha0
-  have h1 : ∀ i, constantCoeff ((x1 : Fin d → MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R) i) = 0 :=
-    fun i => by simp [x1]
-  have h2 : ∀ i, constantCoeff ((x2 : Fin d → MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R) i) = 0 :=
-    fun i => by simp [x2]
-  have h3 : ∀ i, constantCoeff ((x3 : Fin d → MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R) i) = 0 :=
-    fun i => by simp [x3]
-  have e1 : (fun i => subst a ((x1 : Fin d → MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R) i)) = u := by
-    funext i; simp only [x1]; rw [subst_X ha]; rfl
-  have e2 : (fun i => subst a ((x2 : Fin d → MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R) i)) = v := by
-    funext i; simp only [x2]; rw [subst_X ha]; rfl
-  have e3 : (fun i => subst a ((x3 : Fin d → MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R) i)) = w := by
-    funext i; simp only [x3]; rw [subst_X ha]; rfl
-  have hadd : ∀ p q : Fin d → MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R,
-      (fun i => subst a ((p + q) i)) = (fun i => subst a (p i)) + (fun i => subst a (q i)) := by
-    intro p q; funext i; simp only [Pi.add_apply]; rw [subst_add ha]
-  have h12 : ∀ i, constantCoeff ((x1 + x2 : Fin d → MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R) i) = 0 :=
-    fun i => by simp [h1, h2]
-  have h23 : ∀ i, constantCoeff ((x2 + x3 : Fin d → MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R) i) = 0 :=
-    fun i => by simp [h2, h3]
-  have key := congrArg (subst a) hc
-  unfold cob2 at key
-  rw [op_addLaw h1 h2, op_addLaw h2 h3] at key
-  rw [subst_sub ha, subst_add ha, subst_sub ha, subst_powerSeriesEvalTwoGroups h2 h3 ha0, subst_powerSeriesEvalTwoGroups h12 h3 ha0,
-    subst_powerSeriesEvalTwoGroups h1 h23 ha0, subst_powerSeriesEvalTwoGroups h1 h2 ha0, hadd, hadd, e1, e2, e3] at key
-  rw [key, ← coe_substAlgHom ha, map_zero]
+  apply GlobalTheory.Katz.CocRel.cocycle_at <;> assumption
 
 end GlobalTheory.SymCocAdd
 
@@ -1131,17 +1095,7 @@ theorem exists_pow_smul_mem {d N : ℕ} (e : MvPowerSeries (Fin d ⊕ Fin d) (Fr
 
 theorem lift_addLaw (d : ℕ) :
     (fun i => Katz.lift p (addLaw k d i)) = addLaw (Fr p k) d := by
-  funext i
-  ext γ
-  rw [coeff_lift]
-  simp only [addLaw, map_add (f := _), coeff_X]
-  by_cases h1 : γ = Finsupp.single (Sum.inl i) 1
-  · have h2 : γ ≠ Finsupp.single (Sum.inr i) 1 := by
-      rw [h1]; intro h; exact Sum.inl_ne_inr ((Finsupp.single_left_inj one_ne_zero).1 h)
-    simp only [ite_eq_left h1, ite_eq_right h2, add_zero, map_one, map_one]
-  · by_cases h2 : γ = Finsupp.single (Sum.inr i) 1
-    · simp only [ite_eq_right h1, ite_eq_left h2, zero_add, map_one, map_one]
-    · simp only [ite_eq_right h1, ite_eq_right h2, add_zero, WittVector.teichmuller_zero, map_zero]
+  apply GlobalTheory.LazardHomog.lift_addLaw
 
 end GlobalTheory.Katz.LazardModP
 
@@ -1602,14 +1556,7 @@ namespace GlobalTheory.Katz
 theorem exists_p_mul_of_constantCoeff_eq_zero (p : ℕ) [Fact p.Prime] {k : Type} [Field k]
     [CharP k p] [PerfectRing k p] (a : WittVector p k) (ha : WittVector.constantCoeff a = 0) :
     ∃ c : WittVector p k, a = (p : WittVector p k) * c := by
-  by_cases h0 : a = 0
-  · exact ⟨0, by simp [h0]⟩
-  obtain ⟨m, b, hb, rfl⟩ := WittVector.exists_eq_pow_p_mul a h0
-  cases m with
-  | zero =>
-    exfalso; apply hb
-    simpa using ha
-  | succ m => exact ⟨(p : WittVector p k) ^ m * b, by ring⟩
+  exact GlobalTheory.Katz.RedRules.exists_p_mul p k a ha
 
 theorem formalGroupLawCoboundaryOne_sub_eq {R : Type} [CommRing R] {d : ℕ} {μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R}
     (h : ∀ i, constantCoeff (μ i) = 0) (f g : MvPowerSeries (Fin d) R) :

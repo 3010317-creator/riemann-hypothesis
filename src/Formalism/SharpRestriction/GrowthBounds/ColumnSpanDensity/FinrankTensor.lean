@@ -86,15 +86,7 @@ theorem prodA (m A : ℕ) :
 
 theorem prodB (m B : ℕ) :
     ∏ j : Fin m, (((B : ℚ) + (m : ℚ) - ((j : ℕ) : ℚ)) / ((m : ℚ) - ((j : ℕ) : ℚ))) = ((B + m).choose m : ℚ) := by
-  rw [← prodA m B, ← Equiv.prod_comp Fin.revPerm]
-  refine Finset.prod_congr rfl fun j _ => ?_
-  have hj := j.isLt
-  have hr : (((Fin.revPerm j : Fin m) : ℕ) : ℚ) = (m : ℚ) - ((j : ℕ) : ℚ) - 1 := by
-    rw [Fin.revPerm_apply, Fin.val_rev, Nat.cast_sub (by omega)]
-    push_cast
-    ring
-  rw [hr]
-  congr 1 <;> ring
+  exact Formalism.MainNotions.ColumnSystems.Pf.prodDown m B
 
 theorem weylDim_const (m : ℕ) (d : ℤ) : weylDim m (fun _ => d) = 1 := by
   unfold weylDim

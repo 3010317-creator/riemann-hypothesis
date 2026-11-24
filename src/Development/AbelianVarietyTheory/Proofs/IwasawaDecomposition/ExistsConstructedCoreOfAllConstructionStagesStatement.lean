@@ -1216,13 +1216,7 @@ open Formalism.UG in
 theorem hform_basis {A : Type} [CommRing A] (σ : A →+* A) {n m : ℕ} (J : Matrix (Fin n) (Fin n) A)
     (P : Matrix (Fin n) (Fin m) A) (u w : Fin m → A) :
     hform σ (cT σ P * J * P) u w = hform σ J (P.mulVec u) (P.mulVec w) := by
-  rw [hform_eq, hform_eq]
-  have h1 : Matrix.vecMul (fun i => σ (u i)) (Formalism.UG.cT σ P) = fun i => σ (P.mulVec u i) := by
-    unfold Formalism.UG.cT
-    funext i
-    rw [Matrix.vecMul_transpose, RingHom.map_mulVec]
-    rfl
-  rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, h1]
+  exact (GlobalTheory.GaugeEx.GramPair.hform_mulVec σ J P u w).symm
 
 section
 

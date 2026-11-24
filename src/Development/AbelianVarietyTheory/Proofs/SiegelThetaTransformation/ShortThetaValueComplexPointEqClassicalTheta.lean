@@ -427,20 +427,7 @@ theorem isHomogeneous_of_rowDeg {T k : Type} [Fintype T] [Field k] {m : T → �
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r g n : ℕ}
 
-theorem stdLat_eq : stdLat E n = stdL E n := by
-  refine le_antisymm (fun v hv => ?_) (Submodule.span_le.2 ?_)
-  · have h : ∀ i, ∃ a : 𝓞 E, algebraMap (𝓞 E) E a = v i := fun i =>
-      Submodule.mem_one.1 (hv i (Set.mem_univ i))
-    choose a ha using h
-    have e : v = ∑ i, a i • (Pi.single i 1 : Fin n → E) := by
-      funext j
-      simp [Finset.sum_apply, Pi.single_apply, Algebra.smul_def, ha]
-    rw [e]
-    exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
-  · rintro _ ⟨i, rfl⟩ j -
-    by_cases h : j = i
-    · subst h; simpa using Submodule.mem_one.2 ⟨1, map_one _⟩
-    · simp [h]
+theorem stdLat_eq : stdLat E n = stdL E n := by apply GlobalTheory.Dict.ZLat.stdLat_eq
 
 theorem unimod_trivAt {M : ℕ} {Λ : Lt E n} (h : Λ ∈ Vset E n M) :
     (⟨Λ⟩ : GenLat E n).Unimod ∧ (⟨Λ⟩ : GenLat E n).TrivAt M := by

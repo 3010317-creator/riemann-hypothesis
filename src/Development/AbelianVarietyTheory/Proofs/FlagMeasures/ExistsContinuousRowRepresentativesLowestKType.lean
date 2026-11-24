@@ -257,12 +257,7 @@ theorem expU_zero {n : ℕ} {ε : Fin n → Bool} : expU (0 : gLie ε) = 1 := by
   exact Subtype.ext (Units.ext h)
 
 theorem expU_add {n : ℕ} {ε : Fin n → Bool} (X : gLie ε) (a b : ℝ) :
-    expU ((a + b) • X) = expU (a • X) * expU (b • X) := by
-  apply Subtype.ext
-  apply Units.ext
-  show uMat (expU ((a + b) • X)) = uMat (expU (a • X)) * uMat (expU (b • X))
-  rw [uMat_expU, uMat_expU, uMat_expU, Submodule.coe_smul, Submodule.coe_smul, Submodule.coe_smul, _root_.add_smul]
-  exact Matrix.exp_add_of_commute _ _ (((Commute.refl _).smul_left a).smul_right b)
+    expU ((a + b) • X) = expU (a • X) * expU (b • X) := GlobalTheory.SobolevBound.expU_add X a b
 
 theorem expU_inv {n : ℕ} {ε : Fin n → Bool} (X : gLie ε) (t : ℝ) : (expU (t • X))⁻¹ = expU (t • (-X)) := by
   have h := expU_add X t (-t)

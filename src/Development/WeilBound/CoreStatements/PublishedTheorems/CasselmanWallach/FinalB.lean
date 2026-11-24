@@ -859,13 +859,7 @@ namespace CompactGroupFacts
 variable {n : ℕ}
 
 theorem mul_mem (ε : Fin n → Bool) {g h : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ UJset ε) (hh : h ∈ UJset ε) :
-    g * h ∈ UJset ε := by
-  have hg' : gᴴ * Jm ε * g = Jm ε := hg
-  have hh' : hᴴ * Jm ε * h = Jm ε := hh
-  show (g * h)ᴴ * Jm ε * (g * h) = Jm ε
-  rw [Matrix.conjTranspose_mul]
-  calc hᴴ * gᴴ * Jm ε * (g * h) = hᴴ * (gᴴ * Jm ε * g) * h := by simp only [Matrix.mul_assoc]
-    _ = Jm ε := by rw [hg', hh']
+    g * h ∈ UJset ε := ReciprocityTheory.ChartRestriction.DS.rq_UJ_mul hg hh
 
 theorem hilbert_schmidt_continuous : Continuous (hs2 : Matrix (Fin n) (Fin n) ℂ → ℝ) := by
   unfold hs2

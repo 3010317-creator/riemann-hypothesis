@@ -367,13 +367,7 @@ theorem b'_pos (L : SizeData₂ D) : 0 < L.sc.b' := by
   unfold Scale.b' Scale.a Scale.X'
   positivity
 
-theorem one_le_n (D : D7) : (1 : ℝ) ≤ D.R.n := by
-  have : 1 ≤ D.R.n := by
-    have := D.R.two_le_m
-    have := D.R.m_le_f
-    unfold Ranks.n
-    omega
-  exact_mod_cast this
+theorem one_le_n (D : D7) : (1 : ℝ) ≤ D.R.n := PI.SzEatI.W.n_one_le
 
 theorem exists_top {τ : D.what₂.Tau} (h : (D.eTau τ : D.R.GG) ∈ D.host.topPlaces) :
     ∃ t : D.host.TT, (D.eTau τ : D.R.GG) = D.R.tau1 t := by

@@ -134,14 +134,7 @@ theorem liftT_xsp_mapLF {T : E} (γ : S.V ≃ₗ[E] S.V) (hγ : γ ∈ Formalism
   rfl
 
 theorem liftT_xsp_eq {T : E} (F : LFlag S r T) : Xsp F = Xflag F r := by
-  simp only [Xsp, Xflag, Formalism.MainNotions.S.FlagG.X, Formalism.MainNotions.S.FlagG.Xa]
-  congr 1
-  ext v
-  constructor
-  · rintro ⟨i, rfl⟩
-    exact ⟨i, i.2, rfl⟩
-  · rintro ⟨i, -, rfl⟩
-    exact ⟨i, rfl⟩
+  exact (PI.UnitaryGroupMassFormula.ScalEquivGen.XflagTopQ F).symm
 
 variable {Λ : Submodule (𝓞 E) S.V}
 

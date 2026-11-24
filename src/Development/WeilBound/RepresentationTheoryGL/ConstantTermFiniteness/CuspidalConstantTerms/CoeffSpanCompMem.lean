@@ -967,13 +967,7 @@ namespace GlobalTheory.CompanionTheory.WittCompl
 theorem hT_coords {D : D7} (V : HSp D) (a b : Fin V.rank → D.host.E) :
     V.hT (V.frame.equivFun.symm a) (V.frame.equivFun.symm b) =
       ∑ k, ∑ l, star (a k) * V.gram k l * b l := by
-  simp only [Module.Basis.equivFun_symm_apply]
-
-  simp only [map_sum, LinearMap.sum_apply, map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, HSpace.gram,
-  starRingEnd_apply, Finset.mul_sum, RingHom.id_apply]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun l _ => ?_
-  ring
+  exact GlobalTheory.CompanionTheory.Hypotheses₂.LeviPart.UCore.Slice.hT_frame V a b
 
 theorem hT_cols {D : D7} (V : HSp D) {m : ℕ} (A B : Matrix (Fin V.rank) (Fin m) D.host.E) (i j : Fin m) :
     V.hT (V.frame.equivFun.symm fun k => A k i) (V.frame.equivFun.symm fun k => B k j) =

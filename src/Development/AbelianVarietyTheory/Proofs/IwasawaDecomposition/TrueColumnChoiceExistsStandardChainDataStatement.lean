@@ -416,11 +416,7 @@ namespace GlobalTheory.Mem.Col2.TwLat
 open GlobalTheory.Mem.Col2.RowTie
 
 theorem natW_shW' {N : ℕ} (l : DomWeight N) (c : ℤ) : (GlobalTheory.Mem.Col2.shW l c).natW = l.natW := by
-  funext i
-  have hN : 0 < N := lt_of_le_of_lt (Nat.zero_le _) i.2
-  simp only [DomWeight.natW, DomWeight.detShift, dite_eq_left hN, GlobalTheory.Mem.Col2.shW]
-  congr 1
-  ring
+  exact GlobalTheory.Mem.Col2.RowTie.natW_shW l c
 
 theorem delStd_shW' {K ι : Type} [Field K] [NumberField K] [Fintype ι] {N : ℕ} (lam : ι → DomWeight N) (c : ℤ) :
     delStd K (fun τ => GlobalTheory.Mem.Col2.shW (lam τ) c) = delStd K lam := by

@@ -351,15 +351,7 @@ theorem lw_eta_le (hS : Formalism.MainNotions.SizesAt L) : 2 * L.etaSz ≤ L.sc.
   linarith
 
 theorem lw_aT_le (t : D.host.TT) : (L.aT t : ℝ) ≤ 6 / 5 * L.sc.a := by
-  have h := (L.aT_win t).2
-  have ha := nc_a_ge (L := L)
-  have hk := nd_k_ge (D := D)
-  have hx : (1 : ℝ) ≤ L.sc.x ^ (Scale.A / 2) :=
-    Real.one_le_rpow (nd_x_ge (L := L)) (by unfold Scale.A; norm_num)
-  have h5 : (5 : ℝ) ≤ (D.R.k : ℝ) * L.sc.x ^ (Scale.A / 2) := by nlinarith
-  have h1 : L.sc.a / ((D.R.k : ℝ) * L.sc.x ^ (Scale.A / 2)) ≤ L.sc.a / 5 :=
-    div_le_div_of_nonneg_left (by linarith) (by norm_num) h5
-  linarith
+  exact Formalism.BasicNotions.SizeData₂.aT_le' L t
 
 theorem lw_size (X : Formalism.MainNotions.G.Inst D L) (Y : Formalism.MainNotions.G.LatInst D) (hS : Formalism.MainNotions.SizesAt L) (hT : GatTies D)
     (hL : Formalism.MainNotions.G.LatTied hT X Y) (u : D.what₂.Word) (w : D.what₂.places.Pl)

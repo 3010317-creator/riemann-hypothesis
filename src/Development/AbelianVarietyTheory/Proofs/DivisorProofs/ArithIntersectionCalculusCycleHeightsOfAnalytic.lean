@@ -1524,12 +1524,7 @@ theorem extend_self {m : ℕ} {T : ∀ d : ℕ, (Fin d → HermLB p) → X → �
 theorem recVal_congr {Y : Scheme.{0}} [IsIntegral Y] [IsLocallyNoetherian Y] {q : Y ⟶ Sp k} {e : ℕ} {h h' : Y → ℝ}
     (H : ∀ z, Order.coheight z = 1 → h z = h' z) (L : Fin e → HermLB q) (M : HermLB q)
     {r : M.B.ι → Y.functionFieldˣ} (hr : IsRatSec M.B r) : recVal h L M hr = recVal h' L M hr := by
-  unfold recVal
-  congr 1
-  refine finsum_congr fun z => ?_
-  by_cases hz : (M.div hr).mult z = 0
-  · simp [hz]
-  · rw [H z (CartierDiv.coheight_eq_one_of_mult_ne_zero hz)]
+  exact GlobalTheory.MixHt.StepVal.recVal_congr H L M hr
 
 theorem isMix_succ : ArchInteg → ArchRecip → ∀ m : ℕ, (∀ (k : Type) [CommRing k] (Y : Scheme.{0}) (q : Y ⟶ Sp k), IsAmb q → ∃ T, IsMix q m T) → ∀ (k : Type) [CommRing k] (X : Scheme.{0}) (p : X ⟶ Sp k), IsAmb p → ∃ T, IsMix p (m + 1) T := by
   intro hI hR m hm k _ X p hp

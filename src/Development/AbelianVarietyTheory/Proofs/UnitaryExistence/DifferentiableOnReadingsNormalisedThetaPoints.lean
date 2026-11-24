@@ -274,12 +274,7 @@ namespace GlobalTheory.HolChart
 
 theorem isHolTo_congr {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] {B : Set V} {X : Scheme.{0}}
     {a a' : V → (Sp ℂ ⟶ X)} (h : IsHolTo B a) (he : ∀ b ∈ B, a' b = a b) : IsHolTo B a' := by
-  intro U f
-  have hs : {b ∈ B | ⊤ ≤ a' b ⁻¹ᵁ U} = {b ∈ B | ⊤ ≤ a b ⁻¹ᵁ U} := by
-    ext b
-    exact and_congr_right fun hb => by rw [he b hb]
-  rw [hs]
-  exact ⟨(h U f).1, (h U f).2.congr fun b hb => by rw [he b hb.1]⟩
+  exact GlobalTheory.HolTorsion.isHolTo_congr h he
 
 theorem valAt'_spMap {R : Type} [CommRing R] (ψ : R →+* ℂ) (t : R) :
     valAt' (spMap ψ) ⊤ ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom t) = ψ t := by

@@ -166,11 +166,7 @@ def lower (C : SiegPre h N ζ' s') {n d : ℕ} (hN : N = n * d) (h0 : N ≠ 0) {
       exact H
 
 theorem isGrpPullback_id (G : Over S) [GrpObj G] : IsGrpPullback G G (𝟙 S) (𝟙 G.left) := by
-  refine ⟨(IsPullback.of_horiz_isIso ⟨by simp⟩ : IsPullback (𝟙 G.left) G.hom G.hom (𝟙 S)),
-    fun T x y x₀ y₀ hx hy => ?_⟩
-  refine Eq.trans ?_ (Category.comp_id _).symm
-  exact mul_left_congr (b := T.hom) (Category.comp_id _) x₀ y₀ x y (hx.trans (Category.comp_id _))
-    (hy.trans (Category.comp_id _))
+  exact GlobalTheory.ObjComp.isGrpPullback_id G
 
 theorem lbIso_pull_id {X : Scheme.{0}} {L : LB X} (hL : L.IsLB) : LBIso L (L.pull (𝟙 X)) :=
   (LBIso.chartPull (Geo.Tor.chartPullPull L (𝟙 _) (𝟙 _) rfl) (chartPullId L) (lbIso_refl hL)).symm

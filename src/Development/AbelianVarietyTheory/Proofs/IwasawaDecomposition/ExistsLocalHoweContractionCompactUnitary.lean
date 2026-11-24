@@ -624,12 +624,7 @@ theorem exists_bilinear {G G' H H' P : Type} [AddCommGroup H] [Module ℂ H] [Ad
     rw [(Φ v').2 g hg v]
 
 theorem mem_K_iff {k : ℕ} (g : Matrix (Fin k) (Fin k) ℂ) :
-    g ∈ Formalism.REAL.Kset (allPos k) ↔ g ∈ UJset (allPos k) := by
-  have hJ : Formalism.REAL.Jm (allPos k) = 1 := by simp [Formalism.REAL.Jm, allPos]
-  show (g ∈ Matrix.unitaryGroup (Fin k) ℂ ∧ g * Formalism.REAL.Jm (allPos k) = Formalism.REAL.Jm (allPos k) * g) ↔
-    gᴴ * Formalism.REAL.Jm (allPos k) * g = Formalism.REAL.Jm (allPos k)
-  rw [hJ, Matrix.mul_one, Matrix.mul_one, Matrix.one_mul, Matrix.mem_unitaryGroup_iff']
-  simp [Matrix.star_eq_conjTranspose]
+    g ∈ Formalism.REAL.Kset (allPos k) ↔ g ∈ UJset (allPos k) := GlobalTheory.ConjTwist.mem_K_iff g
 
 open MvPolynomial in
 theorem subst2_one_right {N n : ℕ} (h : Matrix (Fin N) (Fin N) ℂ) (P : MvPolynomial (Fin N × Fin n) ℂ) :

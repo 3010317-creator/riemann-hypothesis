@@ -652,11 +652,7 @@ variable {L : LocE F E} {r k : ℕ} (S : Frames L r k)
 
 theorem mass_mono (d : S.Datum) (P Q : Submodule L.O S.V → Prop)
     (h : ∀ Λ, S.IsTerm d Λ → P Λ → Q Λ) : S.mass d P ≤ S.mass d Q := by
-  unfold Frames.mass
-  refine ENNReal.tsum_le_tsum fun o => ?_
-  by_cases ho : S.IsTerm d o.out ∧ P o.out
-  · rw [ite_eq_left ho, ite_eq_left ⟨ho.1, h _ ho.1 ho.2⟩]
-  · rw [ite_eq_right ho]; exact bot_le
+  exact GlobalTheory.HL.NoCancellation.mass_mono S d P Q h
 
 theorem mass_le_sum {ι : Type} (s : Finset ι) (d : S.Datum) (P : Submodule L.O S.V → Prop)
     (Q : ι → Submodule L.O S.V → Prop)

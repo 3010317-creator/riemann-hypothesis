@@ -731,22 +731,7 @@ theorem nb_neg {nb : hermA D n → G D n} (h : PositivityTheory.PfSWUS.IsNMap nb
 
 
 theorem nb_continuous {nb : hermA D n → G D n} (h : PositivityTheory.PfSWUS.IsNMap nb) : Continuous nb := by
-  obtain ⟨i1, -⟩ := lattice_Mx D n n
-  haveI : IsTopologicalAddGroup (Mx D n n) := i1
-  have he := GlobalTheory.AdelicU.isEmbedding_matHom (AF D.host.F) D.sp.cm.sig (Jst D n)
-  rw [he.continuous_iff, Units.continuous_iff]
-  have hc : Continuous fun b : hermA D n => blk4 (1 : Mx D n n) b.1 0 1 := by
-    unfold blk4
-    exact (continuous_const.matrix_fromBlocks continuous_subtype_val continuous_const continuous_const).matrix_submatrix _ _
-  refine ⟨?_, ?_⟩
-  · convert hc using 1
-    funext b
-    exact h b
-  · convert hc.comp continuous_neg using 1
-    funext b
-    simp only [Function.comp_apply]
-    rw [← map_inv, nb_neg h]
-    exact h (-b)
+  exact GlobalTheory.CompanionTheory.SiegelUnip.nb_continuous h
 
 end FZNH
 

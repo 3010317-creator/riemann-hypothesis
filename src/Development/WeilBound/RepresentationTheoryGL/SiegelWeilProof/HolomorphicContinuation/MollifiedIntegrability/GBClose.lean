@@ -656,13 +656,7 @@ variable {n : ℕ}
 
 theorem contDiffOn_cpart {F : Mc n → ℂ} {U : Set (Mc n)} (hU : IsOpen U)
     (hF : ContDiffOn ℂ (⊤ : ℕ∞) F U) (i j : Fin n) : ContDiffOn ℂ (⊤ : ℕ∞) (cpart i j F) U := by
-  letI : NormedAddCommGroup (Mc n →L[ℂ] ℂ) := ContinuousLinearMap.toNormedAddCommGroup
-  letI : NormedSpace ℂ (Mc n →L[ℂ] ℂ) := ContinuousLinearMap.toNormedSpace
-  have hle : ((⊤ : ℕ∞) : WithTop ℕ∞) + 1 ≤ ((⊤ : ℕ∞) : WithTop ℕ∞) := by
-    rw [← WithTop.coe_one, ← WithTop.coe_add, top_add]
-  have h1 : ContDiffOn ℂ (⊤ : ℕ∞) (fun b => fderiv ℂ F b) U :=
-    hF.fderiv_of_isOpen (m := ((⊤ : ℕ∞) : WithTop ℕ∞)) hU hle
-  exact h1.clm_apply contDiffOn_const
+  apply PositivityTheory.Rg.Sw.WR.K.GB.cpart_contDiffOn <;> assumption
 
 theorem contDiffOn_word {F : Mc n → ℂ} {U : Set (Mc n)} (hU : IsOpen U)
     (hF : ContDiffOn ℂ (⊤ : ℕ∞) F U) : ∀ L : List (Fin n × Fin n), ContDiffOn ℂ (⊤ : ℕ∞) (word L F) U
@@ -915,13 +909,7 @@ theorem herm_isHermitian (y : E n) : (herm y).IsHermitian := by
   simp only [conjTranspose_apply, herm]
   apply Complex.ext <;> simp <;> ring
 
-theorem dP_pos (y : E n) : 0 < dP y := by
-  have hH := herm_isHermitian y
-  have h1 : (1 + herm y * herm y).PosDef := by
-    have := (Matrix.PosDef.one (n := Fin n) (R := ℂ)).add_posSemidef
-      (posSemidef_conjTranspose_mul_self (herm y))
-    rwa [hH.eq] at this
-  exact (Complex.pos_iff.1 h1.det_pos).1
+theorem dP_pos (y : E n) : 0 < dP y := PositivityTheory.Rg.Sw.WR.K.GB.dP_pos y
 
 theorem contDiff_coord (a b : Fin n) : ContDiff ℝ (⊤ : ℕ∞) (fun y : E n => y a b) :=
   (contDiff_apply ℝ (fun _ => ℝ) b).comp (contDiff_apply ℝ (fun _ => (Fin n → ℝ)) a)

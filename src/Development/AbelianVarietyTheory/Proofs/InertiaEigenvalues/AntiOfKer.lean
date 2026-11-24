@@ -1052,13 +1052,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 namespace GlobalTheory.NewPrime.LocInv
 
 theorem tors_of_finite (A : Type) [CommRing A] [IsLocalRing A] [Finite A] (Y : Type) [AddCommGroup Y] [Module A Y] :
-    Tors A Y := by
-  intro b
-  obtain ⟨n, hn⟩ := IsArtinianRing.isNilpotent_jacobson_bot (R := A)
-  rw [IsLocalRing.jacobson_eq_maximalIdeal ⊥ bot_ne_top] at hn
-  refine ⟨n, fun x hx => ?_⟩
-  rw [hn] at hx
-  rw [(Submodule.mem_bot _).1 hx, zero_smul]
+    Tors A Y := GlobalTheory.NewPrime.tors_of_finite_local A Y
 
 theorem dual_eq_one {D : Formalism.BasicNotions.D7} {N : NData D.R D.host D.what₂} {X : NTw D.R D.host D.what₂ D.LL0 N} (bkP : BKPh X)
     (i : X.Tw) (s : X.Sig i) (h : IsotypicValuationAtRing bkP i s) {ρ : GE N →* GL (Fin D.R.r) (X.O0 i)} (hρ : IsDual i s ρ)

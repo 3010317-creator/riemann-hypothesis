@@ -427,11 +427,7 @@ theorem exists_fix_Kur (M : IntermediateField ℚ_[l] (Om l)) (g : GQ l)
   exact (IntermediateField.mem_fixingSubgroup_iff _ _).1 hmem
 
 theorem seq_add_pow {e : ℕ} (ϖ : PiSys l e) (m k : ℕ) : ϖ.seq (m + k) ^ l ^ k = ϖ.seq m := by
-  induction k with
-  | zero => simp
-  | succ k ih =>
-    show ϖ.seq (m + k + 1) ^ l ^ (k + 1) = _
-    rw [pow_succ', pow_mul, ϖ.seq_succ, ih]
+  exact GlobalTheory.KinfFin.seq_add_pow ϖ m k
 
 theorem mem_level {a e : ℕ} [NeZero a] (ϖ : PiSys l e) {x : Om l} (hx : x ∈ ϖ.fieldInf a) :
     ∃ n, x ∈ Kunr l a ⊔ IntermediateField.adjoin ℚ_[l] {ϖ.seq n} := by

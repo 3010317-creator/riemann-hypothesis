@@ -672,11 +672,7 @@ theorem mem_closedAt {v : V n} {F : V n → Ev n} : F ∈ closedAt v ↔
 
 theorem coeff_charpolyRev_map {R S r : Type} [CommRing R] [CommRing S] [Fintype r] [DecidableEq r] (f : R →+* S)
     (M : Matrix r r R) (j : ℕ) : (M.map f).charpolyRev.coeff j = f (M.charpolyRev.coeff j) := by
-  rw [← Polynomial.coeff_map]
-  rw [Matrix.charpolyRev, Matrix.charpolyRev, ← Polynomial.coe_mapRingHom, RingHom.map_det]
-  apply congrArg (fun A : Matrix r r (Polynomial S) => A.det.coeff j)
-  ext a b
-  simp [Matrix.one_apply, apply_ite (Polynomial.map f)]
+  exact GlobalTheory.CxForm.ChernDbar.coeff_charpolyRev_map f M j
 
 theorem mem_closedAt_of_symm {v : V n} {u : Fin n × Fin n → V n → ℂ} (hu : ∀ p, DifferentiableAt ℝ (u p) v)
     (hs : ∀ a b c, del (u (a, b)) v (coordVec c) = del (u (c, b)) v (coordVec a)) :
@@ -794,13 +790,7 @@ theorem chernAt_congr {n : ℕ} {r : Type} [Fintype r] [DecidableEq r] {H K : V 
   simp only [curv_congr h]
 
 theorem delAt_congr {n : ℕ} {α β : V n → Alt n} {v : V n} (h : α =ᶠ[𝓝 v] β) : delAt α v = delAt β v := by
-  unfold delAt coefwise
-  refine Finset.sum_congr rfl fun a _ => ?_
-  congr 1
-  refine Finset.sum_congr rfl fun S _ => ?_
-  exact congrArg (fun L => L (coordVec a) • bas n S)
-    (GlobalTheory.del_congr (f := fun x => (bas n).repr (α x) S) (g := fun x => (bas n).repr (β x) S)
-      (h.mono fun x hx => congrArg (fun y => (bas n).repr y S) hx))
+  exact GlobalTheory.CxForm.ChernDel.delAt_congr h
 
 theorem dbarAt_congr {n : ℕ} {α β : V n → Alt n} {v : V n} (h : α =ᶠ[𝓝 v] β) : dbarAt α v = dbarAt β v := by
   unfold dbarAt coefwise

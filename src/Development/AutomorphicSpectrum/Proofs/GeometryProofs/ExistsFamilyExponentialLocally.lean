@@ -681,18 +681,7 @@ theorem isHolTo_precomp {X : Scheme.{0}} {B : Set E} {y : E → (Sp ℂ ⟶ X)} 
   apply GlobalTheory.LocLift.isHolTo_comp <;> assumption
 
 theorem isHolTo_congr {X : Scheme.{0}} {B : Set E} {y y' : E → (Sp ℂ ⟶ X)} (hy : IsHolTo B y)
-    (h : ∀ b ∈ B, y' b = y b) : IsHolTo B y' := by
-  intro U f
-  have hset : {b ∈ B | ⊤ ≤ y' b ⁻¹ᵁ U} = {b ∈ B | ⊤ ≤ y b ⁻¹ᵁ U} := by
-    ext b
-    constructor
-    · rintro ⟨h1, h2⟩
-      exact ⟨h1, by rwa [← h b h1]⟩
-    · rintro ⟨h1, h2⟩
-      exact ⟨h1, by rwa [h b h1]⟩
-  rw [hset]
-  refine ⟨(hy U f).1, (hy U f).2.congr fun b hb => ?_⟩
-  simp only [h b hb.1]
+    (h : ∀ b ∈ B, y' b = y b) : IsHolTo B y' := GlobalTheory.LocLift.isHolTo_congr hy h
 
 variable {R : Type} [CommRing R] {G : Over (Sp R)} [GrpObj G]
 

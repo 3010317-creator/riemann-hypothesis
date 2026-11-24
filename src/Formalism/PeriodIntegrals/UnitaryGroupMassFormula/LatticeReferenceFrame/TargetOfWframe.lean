@@ -84,22 +84,10 @@ section Lemmas
 variable (I : Formalism.MainNotions.S.AutInst)
 
 theorem hG_add_left (x y z : Fin I.n → I.E) : hG I (x + y) z = hG I x z + hG I y z := by
-  unfold hG Formalism.UG.hform
-  rw [← Finset.sum_add_distrib]
-  refine Finset.sum_congr rfl (fun i _ => ?_)
-  rw [← Finset.sum_add_distrib]
-  refine Finset.sum_congr rfl (fun j _ => ?_)
-  simp only [Pi.add_apply, map_add (f := _)]
-  ring
+  exact PI.ScRefExists.PPA.hG_add_left I x y z
 
 theorem hG_add_right (x y z : Fin I.n → I.E) : hG I x (y + z) = hG I x y + hG I x z := by
-  unfold hG Formalism.UG.hform
-  rw [← Finset.sum_add_distrib]
-  refine Finset.sum_congr rfl (fun i _ => ?_)
-  rw [← Finset.sum_add_distrib]
-  refine Finset.sum_congr rfl (fun j _ => ?_)
-  simp only [Pi.add_apply]
-  ring
+  exact PI.ScRefExists.PPA.hG_add_right I x y z
 
 theorem hG_zsmul_left (q : ℤ) (x y : Fin I.n → I.E) : hG I (q • x) y = (q : I.E) * hG I x y := by
   unfold hG Formalism.UG.hform

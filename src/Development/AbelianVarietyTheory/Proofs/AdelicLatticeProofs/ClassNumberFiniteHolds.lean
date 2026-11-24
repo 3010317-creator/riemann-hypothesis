@@ -1470,15 +1470,7 @@ theorem res_mul' {R A β κ : Type} [CommRing R] [CommRing A] [Algebra R A] [Fin
 
 theorem res_one' {R A β κ : Type} [CommRing R] [CommRing A] [Algebra R A] [Fintype β] [DecidableEq β]
     [Fintype κ] [DecidableEq κ] (b : Module.Basis β R A) :
-    res b (1 : Matrix κ κ A) = 1 := by
-  ext p q
-  simp only [res, Matrix.of_apply, Matrix.one_apply]
-  by_cases h : p.1 = q.1
-  · rw [ite_eq_left h, map_one, Matrix.one_apply]
-    by_cases h' : p.2 = q.2
-    · rw [ite_eq_left h', ite_eq_left (Prod.ext h h')]
-    · rw [ite_eq_right h', ite_eq_right (fun e => h' (congrArg Prod.snd e))]
-  · rw [ite_eq_right h, map_zero, Matrix.zero_apply, ite_eq_right (fun e => h (congrArg Prod.fst e))]
+    res b (1 : Matrix κ κ A) = 1 := GlobalTheory.ClassFin.EmbHom.res_one' b
 
 theorem repr_mem {R A β : Type} [CommRing R] [CommRing A] [Algebra R A] [Fintype β] [DecidableEq β]
     (b : Module.Basis β R A) (R₀ : Subring R) (h1 : ∀ i, b.repr 1 i ∈ R₀) (x : A)

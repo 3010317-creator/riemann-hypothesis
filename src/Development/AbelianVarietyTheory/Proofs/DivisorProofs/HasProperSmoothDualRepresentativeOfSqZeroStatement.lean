@@ -1395,15 +1395,7 @@ variable {R : Type} [CommRing R] {I : Ideal R} {X X₀ : Scheme.{0}} {s : X ⟶ 
 theorem isUnit_of_sqZero {A A₀ : Type} [CommRing A] [CommRing A₀] (p : A →+* A₀)
     (hp : Function.Surjective p) (K : Ideal A) (hK : K ^ 2 = ⊥) (hker : ∀ a, p a = 0 → a ∈ K)
     (x : A) (hx : IsUnit (p x)) : IsUnit x := by
-  obtain ⟨v, hv⟩ := hx.exists_right_inv
-  obtain ⟨y, rfl⟩ := hp v
-  have hn : x * y - 1 ∈ K := hker _ (by simp [hv])
-  have hsq : (x * y - 1) * (x * y - 1) = 0 := by
-    have : (x * y - 1) * (x * y - 1) ∈ K ^ 2 := by rw [pow_two]; exact Ideal.mul_mem_mul hn hn
-    rw [hK] at this; simpa using this
-  have hnil : IsNilpotent (x * y - 1) := ⟨2, by rw [pow_two, hsq]⟩
-  have : IsUnit (x * y) := by simpa using hnil.isUnit_one_add
-  exact isUnit_of_mul_isUnit_left this
+  exact GlobalTheory.LBLift.IsoRel.isUnit_of_sqZero p hp K hK hker x hx
 
 theorem lift_isUnit (hI : I ^ 2 = ⊥) (hi : IsThick I s i) {u : C1 (smallG i L ⋙ OAff s)} (hu : IsLift s i L u)
     (p q : (Small i L)ᵒᵖ) (a : p ⟶ q) : IsUnit (u p q a) := by

@@ -654,11 +654,7 @@ theorem J_entry (i j : Fin I.n) : star (I.J j i) = I.J i j := by
   simpa only [Formalism.UG.cT, Matrix.transpose_apply, Matrix.map_apply, starRingEnd_apply] using h
 
 theorem hG_symm (x y : Fin I.n → I.E) : hG I y x = star (hG I x y) := by
-  simp only [hG_def, star_sum, star_mul', star_star]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  rw [J_entry]
-  ring
+  exact PI.ScRefExists.WF.hG_symm I x y
 
 variable {I}
 

@@ -136,12 +136,7 @@ theorem dv_sum (T : LocLat G Qp LL O) (e : ℕ) {d : ℕ} (b : Fin d → W.DD T)
 
 theorem dv_eq_sum (T : LocLat G Qp LL O) (e : ℕ) {d : ℕ} (b : Fin d → W.DD T) (c₀ : Fin d → LL) :
     dv W T e b c₀ = ∑ m, c₀ m • dv W T e b (Pi.single m 1) := by
-  have h : c₀ = ∑ m, c₀ m • (Pi.single m 1 : Fin d → LL) := by
-    ext k
-    simp [Finset.sum_apply, Pi.single_apply]
-  conv_lhs => rw [h]
-  rw [dv_sum]
-  simp only [dv_smul]
+  exact Formalism.MainNotions.N.FrobeniusPowerSeries.TC.dv_eq_sum W T e b c₀
 
 theorem dvO_eq (T : LocLat G Qp LL O) (e : ℕ) {d : ℕ} (b : Fin d → W.DD T) (c₀ : Fin d → O) :
     dvO W T e b c₀ = ∑ m, algebraMap O LL (c₀ m) • dv W T e b (Pi.single m 1) := by

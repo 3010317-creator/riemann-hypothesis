@@ -254,12 +254,7 @@ namespace GlobalTheory
 theorem isAffineOpen_inf_preimage_of_isPullback {S X Y Z : Scheme.{0}} {p : Z ⟶ X} {q : Z ⟶ Y}
     {iX : X ⟶ S} {iY : Y ⟶ S} (H : IsPullback p q iX iY) [IsAffine S] {U : X.Opens}
     {V : Y.Opens} (hU : IsAffineOpen U) (hV : IsAffineOpen V) :
-    IsAffineOpen (p ⁻¹ᵁ U ⊓ q ⁻¹ᵁ V) := by
-  have : IsAffine _ := isAffineOpen_top S
-  have : IsAffine _ := hU
-  have : IsAffine _ := hV
-  exact .of_isIso (Scheme.Hom.isPullback_resLE H (US := ⊤) (UT := V) (UX := U) le_top le_top
-    rfl).isoPullback.hom
+    IsAffineOpen (p ⁻¹ᵁ U ⊓ q ⁻¹ᵁ V) := GlobalTheory.KuennethOne.isAffineOpen_prod H hU hV
 
 theorem appLE_appLE_of_comp {T X Y : Scheme.{0}} (f : T ⟶ X) (g : X ⟶ Y) (h : T ⟶ Y)
     (e : f ≫ g = h) {W : Y.Opens} {U : X.Opens} {N : T.Opens} (h1 : U ≤ g ⁻¹ᵁ W)

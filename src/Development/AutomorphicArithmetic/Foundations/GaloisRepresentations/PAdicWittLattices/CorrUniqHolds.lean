@@ -1012,12 +1012,7 @@ theorem eqv_trans {E E' E'' : Spc} {f : E ⟶ E'} {g : E' ⟶ E''} (hf : Eqv R f
   exact (hf n).comp (hg n)
 
 theorem eqv_of_eqv_comp {E E' E'' : Spc} {f : E ⟶ E'} {g : E' ⟶ E''} (hf : Eqv R f F) (hfg : Eqv R (f ≫ g) F) :
-    Eqv R g F := by
-  intro n
-  have h : ∀ x, pull R (f ≫ g) F n x = pull R f F n (pull R g F n x) := pull_comp R f g F n
-  refine ⟨fun x y hxy => (hfg n).1 (by rw [h, h, hxy]), fun y => ?_⟩
-  obtain ⟨x, hx⟩ := (hfg n).2 (pull R f F n y)
-  exact ⟨x, (hf n).1 (by rw [← h, hx])⟩
+    Eqv R g F := LateralTheory.E.CechSigmaProof.eqv_of_comp_left hf hfg
 
 variable {X Y W S : Scheme.{0}} (p : X ⟶ S) (d : Y ⟶ S) (g : W ⟶ Y)
 

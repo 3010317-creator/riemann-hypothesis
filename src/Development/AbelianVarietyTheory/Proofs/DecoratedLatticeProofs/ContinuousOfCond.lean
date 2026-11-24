@@ -139,11 +139,7 @@ namespace GlobalTheory.TwNormalReps
 
 theorem val_unif_of {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     {ϖ : kˣ} (hϖ : GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum.IsUnif ϖ) : valuation k (ϖ : k) = uniformizer k := by
-  apply le_antisymm
-  · rw [le_uniformizer_iff]; exact (hϖ _).2 le_rfl
-  · obtain ⟨x, hx⟩ := ValuativeRel.valuation_surjective (uniformizer k)
-    rw [← hx]
-    exact (hϖ x).1 (by rw [hx]; exact uniformizer_lt_one)
+  exact GlobalTheory.TwBridge.PsiRat.val_unif' hϖ
 
 theorem isGL_one {X : Fields} {R : Ranks} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] {ι : X.E →+* k} {j c : ℕ} {g : GL (XIx (Fin R.k) (Fin R.t) j ⊕ Fin c) k}
@@ -292,11 +288,7 @@ open GlobalTheory.SymBridge GlobalTheory.TwBridge.MatGL
 
 theorem val_unif {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     {ϖ : kˣ} (hϖ : GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum.IsUnif ϖ) : valuation k (ϖ : k) = uniformizer k := by
-  apply le_antisymm
-  · rw [le_uniformizer_iff]; exact (hϖ _).2 le_rfl
-  · obtain ⟨x, hx⟩ := ValuativeRel.valuation_surjective (uniformizer k)
-    rw [← hx]
-    exact (hϖ x).1 (by rw [hx]; exact uniformizer_lt_one)
+  exact GlobalTheory.TwBridge.PsiRat.val_unif' hϖ
 
 theorem denseRange_toLoc {E k : Type} [Field E] [Field k] [TopologicalSpace k] {ι : E →+* k} (hι : DenseRange ι)
     {A B : Type} {a b : ℕ} (e : A ≃ Fin a) (e' : B ≃ Fin b) : DenseRange (toLoc ι e e') := by

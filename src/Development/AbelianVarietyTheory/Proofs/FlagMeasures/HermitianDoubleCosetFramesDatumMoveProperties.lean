@@ -61,14 +61,7 @@ variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E]
 
 theorem conj_form {L : LocE F E} {n : ℕ} {Hm : Matrix (Fin n) (Fin n) E} (h : IsHerm L Hm)
     (x y : Fin n → E) : hf L Hm y x = L.cj (hf L Hm x y) := by
-  have h' : cT L Hm = Hm := h
-  have hH : ∀ i j, L.cj (Hm i j) = Hm j i := fun i j => congrFun (congrFun h' j) i
-  unfold hf
-
-  simp_rw [map_sum, map_mul, L.cj_cj, hH]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  ring
+  exact (GlobalTheory.HL.Eichler.hf_cj L h x y).symm
 
 theorem form_zero_of_span {L : LocE F E} {n : ℕ} {Hm : Matrix (Fin n) (Fin n) E} (h : IsHerm L Hm)
     (A : Set (Fin n → E)) (hA : ∀ a ∈ A, ∀ b ∈ A, hf L Hm a b = 0) :

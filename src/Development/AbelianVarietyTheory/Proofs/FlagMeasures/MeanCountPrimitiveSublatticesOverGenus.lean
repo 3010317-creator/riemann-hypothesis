@@ -327,16 +327,7 @@ theorem idxN_span (x : V) (S : Submodule (𝓞 K) V) :
 
 omit [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] in
 theorem nondeg (h : V →ₗ⋆[K] V →ₗ[K] K) (hp : PD h) : h.Nondegenerate := by
-  obtain ⟨τ⟩ : Nonempty (K →+* ℂ) := inferInstance
-  refine And.intro (fun x hx => ?_) (fun y hy => ?_)
-  · by_contra h0
-    have hpos := hp τ x h0
-    rw [hx x, map_zero, Complex.zero_re] at hpos
-    exact lt_irrefl _ hpos
-  · by_contra h0
-    have hpos := hp τ y h0
-    rw [hy y, map_zero, Complex.zero_re] at hpos
-    exact lt_irrefl _ hpos
+  exact GlobalTheory.Mass.SameBad.nondeg_of_PD h hp
 
 omit [StarRing K] in
 theorem span_isLattice (h1 : Module.finrank K V = 1) {x : V} (hx : x ≠ 0) :

@@ -549,17 +549,7 @@ theorem exists_pow_smul_matrix {ϖ : W} (hp : Irreducible ϖ) {m n : Type} [Fint
 
 theorem mem_colSpan_iff_mulVec {k : ℕ} (g : Matrix (Fin k) (Fin k) Qq) (z : Fin k → Qq) :
     z ∈ colSpan W g ↔ ∃ v : Fin k → W, z = g *ᵥ (fun i => algebraMap W Qq (v i)) := by
-  unfold colSpan
-  rw [Submodule.mem_span_range_iff_exists_fun]
-  constructor
-  · rintro ⟨c, rfl⟩
-    refine ⟨c, ?_⟩
-    ext i
-    simp [Matrix.mulVec, dotProduct, Finset.sum_apply, Algebra.smul_def, mul_comm]
-  · rintro ⟨c, rfl⟩
-    refine ⟨c, ?_⟩
-    ext i
-    simp [Matrix.mulVec, dotProduct, Finset.sum_apply, Algebra.smul_def, mul_comm]
+  exact GlobalTheory.VolOnto.mem_colSpan_iff g z
 
 theorem exists_pow_smul_mem_homLat {ϖ : W} (hp : Irreducible ϖ) {k k' : ℕ}
     (a : Matrix (Fin k) (Fin k) Qq) (b : Matrix (Fin k') (Fin k') Qq) (hb : IsUnit b.det) :

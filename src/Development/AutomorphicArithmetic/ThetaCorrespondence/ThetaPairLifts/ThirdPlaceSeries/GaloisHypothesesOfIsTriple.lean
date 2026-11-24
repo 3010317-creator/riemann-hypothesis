@@ -115,43 +115,16 @@ namespace GlobalTheory.AdmFrobTriple
 
 theorem not_mem_placesOver_of_ne (E : Type) [Field E] [NumberField E] {p q : ℕ} (hp : p.Prime) (hq : q.Prime)
     (h : p ≠ q) {v : HeightOneSpectrum (𝓞 E)} (h1 : v ∈ placesOver E p) : v ∉ placesOver E q := by
-  intro h2
-  have hc : IsCoprime (p : ℤ) (q : ℤ) := Nat.isCoprime_iff_coprime.2 ((Nat.coprime_primes hp hq).2 h)
-  obtain ⟨a, b, hab⟩ := hc.map (Int.castRingHom (𝓞 E))
-  have h1' : ((p : ℕ) : 𝓞 E) ∈ v.asIdeal := h1
-  have h2' : ((q : ℕ) : 𝓞 E) ∈ v.asIdeal := h2
-  apply v.isPrime.ne_top
-  rw [Ideal.eq_top_iff_one, ← hab]
-  simp only [eq_intCast, Int.cast_natCast]
-  exact Ideal.add_mem _ (Ideal.mul_mem_left _ _ h1') (Ideal.mul_mem_left _ _ h2')
+  exact Formalism.MainNotions.SumRepresentations.not_over_of_ne hp hq h h1
 
 theorem continuous_algebraMap_padicInt {O : Type} [CommRing O] [TopologicalSpace O] [IsTopologicalRing O]
     {l : ℕ} [Fact l.Prime] [Algebra ℤ_[l] O] (I : Ideal O) (hI : IsAdic I) (hO : (l : O) ∈ I) :
     Continuous (algebraMap ℤ_[l] O) := by
-  refine continuous_of_continuousAt_zero (algebraMap ℤ_[l] O) ?_
-  rw [ContinuousAt, map_zero, hI.hasBasis_nhds_zero.tendsto_right_iff]
-  intro n _
-  have hl : (0 : ℝ) < (l : ℝ) ^ (-(n : ℤ)) := zpow_pos (by exact_mod_cast (Fact.out : l.Prime).pos) _
-  filter_upwards [Metric.closedBall_mem_nhds (0 : ℤ_[l]) hl] with x hx
-  rw [mem_closedBall_zero_iff, PadicInt.norm_le_pow_iff_mem_span_pow, Ideal.mem_span_singleton] at hx
-  obtain ⟨y, rfl⟩ := hx
-  rw [map_mul, map_pow, map_natCast]
-  exact Ideal.mul_mem_right _ _ (Ideal.pow_mem_pow hO n)
+  exact GlobalTheory.PrimeToInertia.continuous_algebraMap_padicInt I hI hO
 
 theorem sum_coeff_charpolyRev {R : Type} [CommRing R] [Nontrivial R] {n : ℕ} (M : Matrix (Fin n) (Fin n) R) :
     ∑ k ∈ Finset.range (n + 1), M.charpolyRev.coeff k = (1 - M).det := by
-  have hdeg : M.charpolyRev.natDegree < n + 1 := by
-    rw [← Matrix.reverse_charpoly]
-    have := Polynomial.reverse_natDegree_le M.charpoly
-    rw [Matrix.charpoly_natDegree_eq_dim, Fintype.card_fin] at this
-    omega
-  have h1 := Polynomial.eval_eq_sum_range' hdeg (1 : R)
-  simp only [one_pow, mul_one] at h1
-  rw [← h1, Matrix.charpolyRev, ← Polynomial.coe_evalRingHom, RingHom.map_det]
-  congr 1
-  ext i j
-  simp only [Matrix.map_apply, Matrix.sub_apply, Matrix.one_apply, Matrix.smul_apply, RingHom.mapMatrix_apply]
-  split_ifs <;> simp
+  exact GlobalTheory.Triple.sum_coeff_charpolyRev M
 
 variable {D : D7}
 

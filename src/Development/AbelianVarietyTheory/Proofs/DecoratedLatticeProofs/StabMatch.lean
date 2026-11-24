@@ -1452,11 +1452,7 @@ theorem line_loc {S : HSp D} {L : Lat S} {x : Fin S.rank → D.host.E} (hL : IsS
   exact and_iff_left ha
 
 theorem col_e_ne {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (i : Fin ρ) : (fun r => d.e r i) ≠ 0 := by
-  intro h
-  have h1 := congrFun (congrFun d.e'e i) i
-  rw [Matrix.mul_apply, Matrix.one_apply_eq] at h1
-  have : ∀ r, d.e r i = 0 := fun r => congrFun h r
-  simp [this] at h1
+  exact GlobalTheory.Core.Mi.LatMatch.FlagDown.col_ne_zero d i
 
 theorem col_e'_ne {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (i : Fin ρ) : (fun r => d.e' r i) ≠ 0 := by
   intro h

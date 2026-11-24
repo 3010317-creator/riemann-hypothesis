@@ -190,13 +190,7 @@ open scoped Formalism.Per
 namespace GlobalTheory.PSer
 
 theorem pw_natCast_eq_pow (l : ℕ) [Fact l.Prime] (n : ℕ) (x : Fl l) : pw (n : ℤ) x = x ^ l ^ n := by
-  unfold pw
-  rw [zpow_natCast]
-  induction n generalizing x with
-  | zero => simp
-  | succ k ih =>
-    rw [pow_succ, RingAut.mul_apply, ih, frobeniusEquiv_apply, frobenius_def, ← pow_mul, pow_succ,
-      mul_comm]
+  exact GlobalTheory.PSer.PwLaws.pw_nat n x
 
 theorem two_mul_succ_le_pow (l k h : ℕ) (hl : 2 ≤ l) (hh : 2 ≤ h) :
     2 * (k + 1) ≤ l ^ ((k + 1) * h - 1) := by

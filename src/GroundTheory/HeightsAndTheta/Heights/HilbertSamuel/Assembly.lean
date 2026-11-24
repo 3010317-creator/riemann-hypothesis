@@ -298,19 +298,7 @@ theorem eval_fwd (h : IsBlockImage y k₀ M N x) {f : MRing ι} {n : ℕ} (hf : 
 
 theorem secM_eq (h : IsBlockImage y k₀ M N x) (n : ℕ) :
     secM y (blockDeg k₀ n) = (sec ℤ x n).toAddSubgroup := by
-  unfold secM
-  congr 1
-  have hset : {s | ∃ g : MRing ι, IsMultiHomog g (blockDeg k₀ n) ∧ aeval y g = s} =
-      ((sec ℤ x n : Submodule ℤ Ω) : Set Ω) := by
-    ext s
-    simp only [Set.mem_ofPred_eq, sec, Submodule.map_coe, Set.mem_image, SetLike.mem_coe,
-      mem_homogeneousSubmodule, AlgHom.toLinearMap_apply]
-    constructor
-    · rintro ⟨g, hg, rfl⟩
-      exact ⟨fwd k₀ N g, isHomogeneous_fwd k₀ N hg, aeval_fwd h hg⟩
-    · rintro ⟨g, hg, rfl⟩
-      exact ⟨back k₀ M g, isMultiHomog_back k₀ M hg, aeval_back h g⟩
-  rw [hset, Submodule.span_eq]
+  apply GroundTheory.Heights₂.Heights.HilbertSamuel.BlockSectionsRank.secM_eq <;> assumption
 
 theorem isSecBasis_fwd (h : IsBlockImage y k₀ M N x) {n s : ℕ} {b : Fin s → MvPolynomial (Σ k, ι k) ℚ}
     (hb : IsSecBasisM y k₀ n b) : IsSecBasis x n fun j => fwdQ k₀ N (b j) := by

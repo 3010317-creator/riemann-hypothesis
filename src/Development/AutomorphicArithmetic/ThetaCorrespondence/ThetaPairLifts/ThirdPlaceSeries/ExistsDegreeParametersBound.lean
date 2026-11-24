@@ -165,24 +165,7 @@ theorem gap_add {N : ℕ} (v w : Fin N → ℤ) (k : ℕ) : gap (v + w) k = gap 
   · simp
 
 theorem antitone_of_gap_nonneg {N : ℕ} {v : Fin N → ℤ} (h : ∀ k, k + 1 < N → 0 ≤ gap v k) : Antitone v := by
-  have key : ∀ d (a b : Fin N), (b : ℕ) = a + d → v b ≤ v a := by
-    intro d
-    induction d with
-    | zero =>
-      intro a b hab
-      have e : b = a := Fin.ext (by simpa using hab)
-      rw [e]
-    | succ d ih =>
-      intro a b hab
-      have hc : (a : ℕ) + d < N := by omega
-      have h1 := ih a ⟨(a : ℕ) + d, hc⟩ rfl
-      have h2 := h ((a : ℕ) + d) (by omega)
-      rw [gap, dite_eq_left (by omega)] at h2
-      have e : b = ⟨(a : ℕ) + d + 1, by omega⟩ := Fin.ext (by simp only; omega)
-      rw [e]
-      linarith
-  intro a b hab
-  exact key ((b : ℕ) - a) a b (by have : (a : ℕ) ≤ b := hab; omega)
+  exact GlobalTheory.CompHS.WeightGapAntitone.antitone_of_gap_nonneg v h
 
 end GlobalTheory.FrameBerg
 

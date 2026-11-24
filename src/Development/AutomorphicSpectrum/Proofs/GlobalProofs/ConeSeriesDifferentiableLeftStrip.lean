@@ -73,19 +73,12 @@ variable {r : ℕ}
 
 theorem update_add_single (i : Fin r) (m : Fin r → ℕ) (n k : ℕ) :
     Function.update (m + (Pi.single i n : Fin r → ℕ)) i k = Function.update m i k := by
-  funext j
-  by_cases hj : j = i
-  · subst hj
-    simp
-  · simp [hj]
+  exact GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.Abel.AopProps.update_add_single i m n k
 
 theorem update_self_add (i : Fin r) (m : Fin r → ℕ) (e : ℕ) :
     Function.update m i (m i + e) = m + (Pi.single i e : Fin r → ℕ) := by
-  funext j
-  by_cases hj : j = i
-  · subst hj
-    simp
-  · simp [hj]
+  exact (GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.Abel.AopProps.add_single_eq_update i m
+    e).symm
 
 theorem partialSum_succ (i : Fin r) (v : (Fin r → ℕ) → ℚ) (m : Fin r → ℕ) :
     partialSum i v (m + Pi.single i 1) = partialSum i v m + v m := by

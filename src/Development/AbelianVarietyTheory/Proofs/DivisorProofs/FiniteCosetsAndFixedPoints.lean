@@ -1324,12 +1324,7 @@ theorem basV_repr_map {p : ℕ} [Fact p.Prime] (G : HTGroup p) (v : AwayP p) (x 
     (i : Fin (Module.finrank ℚ G.C)) :
     (basV G v).repr (Algebra.TensorProduct.map (AfP.eval v) (AlgHom.id ℚ G.C) x) i =
       AfP.eval v ((Algebra.TensorProduct.basis (AfP p) (Module.finBasis ℚ G.C)).repr x i) := by
-  induction x using TensorProduct.induction_on with
-  | zero => simp
-  | tmul a c =>
-    simp only [basV, Algebra.TensorProduct.map_tmul, AlgHom.id_apply, Algebra.TensorProduct.basis_repr_tmul,
-      Finsupp.smul_apply, Finsupp.mapRange_apply, smul_eq_mul, map_mul, AlgHom.commutes]
-  | add x y hx hy => simp only [map_add (f := _), Finsupp.add_apply, hx, hy]
+  exact GlobalTheory.OrbFinAf.repr_map_eval G v x i
 
 theorem ext_of_piV : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (g g' : G.GAf),
     (∀ v : AwayP p, piV G v g = piV G v g') → g = g' := by

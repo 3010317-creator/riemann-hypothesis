@@ -1047,13 +1047,7 @@ theorem prod_smul_mem (F F' : FlagD H r) (Λ : Submodule (𝓞 K) V) (aa : Fin r
 
 omit [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] in
 theorem Dl_ne (N : NF H r) : Dl N.F N.F' N.j (N.j_le.trans (Nat.le_succ r)) ≠ 0 := by
-  have : (Zhat N.F N.F').submatrix (Fin.castLE (N.j_le.trans (Nat.le_succ r)))
-      (Fin.castLE (N.j_le.trans (Nat.le_succ r))) = N.w.mat * Matrix.diagonal fun b => ((N.sgn b : ℤ) : K) := by
-    ext a b
-    simp [Zhat, N.pair, Matrix.mul_diagonal]
-  rw [Dl, this, Matrix.det_mul, Matrix.det_diagonal]
-  refine mul_ne_zero (GlobalTheory.SgLoc.PtAlg.isUnit_det N.w).ne_zero (Finset.prod_ne_zero_iff.2 fun b _ => ?_)
-  exact_mod_cast (N.sgn b).ne_zero
+  exact GlobalTheory.DegCnt.Kill.Dj_ne N
 
 theorem smul_mem_of_pairing (N : NF H r) (Λ : Submodule (𝓞 K) V) (hΛ : IsFramed N.F N.F' Λ N.aa) (γ : K)
     (hγ : ∀ y ∈ ipow N.𝔡 (2 * ∑ a ∈ Finset.range N.j, ((r : ℤ) - a)),

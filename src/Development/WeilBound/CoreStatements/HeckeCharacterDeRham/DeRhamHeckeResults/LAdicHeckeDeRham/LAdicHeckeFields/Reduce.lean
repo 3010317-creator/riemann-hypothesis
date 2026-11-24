@@ -894,17 +894,7 @@ theorem mem_filV_coord (hOm : ∀ x : Om, algebraMap Om BdR x ∈ PD.Fil 0) (a :
     exact ⟨(fun _ => embBasis Qp Om LL i) ⊗ₜ[Qp] ⟨_, hr⟩, rfl⟩
 
 theorem one_notMem_fil_one [Nontrivial BdR] : (1 : BdR) ∉ PD.Fil 1 := by
-  intro h
-  have hn : ∀ n : ℕ, (1 : BdR) ∈ PD.Fil n := fun n => by
-    induction n with
-    | zero => simpa using PD.one_mem
-    | succ n ih =>
-      have := PD.Fil_mul n 1 1 1 ih h
-      simpa using this
-  have hA : Antitone PD.Fil := antitone_int_of_succ_le PD.Fil_anti
-  refine one_ne_zero (PD.Fil_sep 1 fun a => ?_)
-  have h2 : a ≤ (a.toNat : ℤ) := Int.self_le_toNat a
-  exact hA h2 (hn _)
+  apply GlobalTheory.DRFil.one_notMem_fil_one
 
 theorem block_of_ne [IsDomain BdR] {τ : K →ₐ[Qp] LL} {κ : K →ₐ[Qp] Om}
     (hK : ∀ c : K, algebraMap K BdR c = algebraMap Om BdR (κ c))

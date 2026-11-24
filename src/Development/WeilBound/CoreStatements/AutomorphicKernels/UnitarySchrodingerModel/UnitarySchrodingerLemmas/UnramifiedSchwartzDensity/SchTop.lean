@@ -705,14 +705,7 @@ theorem continuousOn_ringInverse_of_isOpenEmbedding_units
     (A : Type) [CommRing A] [TopologicalSpace A] [IsTopologicalRing A]
     (hA : IsOpenEmbedding (Units.val : Aˣ → A)) :
     ContinuousOn (Ring.inverse : A → A) {x | IsUnit x} := by
-  rintro _ ⟨u, rfl⟩
-  refine ContinuousAt.continuousWithinAt ?_
-  rw [← hA.continuousAt_iff]
-  have h : (Ring.inverse ∘ Units.val : Aˣ → A) = fun v => ((v⁻¹ : Aˣ) : A) := by
-    funext v
-    exact Ring.inverse_unit v
-  rw [h]
-  exact Units.continuous_coe_inv.continuousAt
+  exact GlobalTheory.CompanionTheory.SW.KUnits.continuousOn_ringInverse hA
 
 theorem isOpenEmbedding_val_GL
     (A : Type) [CommRing A] [TopologicalSpace A] [IsTopologicalRing A]

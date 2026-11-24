@@ -509,13 +509,7 @@ theorem intw_smul' (c : ℂ) {X : Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π')
 theorem intw_sum' {ι : Type} (s : Finset ι) (X : ι → Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π'))
     (X' : ι → MA.A P (MA.DQ P)) (h : ∀ i ∈ s, Gauge.GC.Intw P Bs e (X i) (X' i)) :
     Gauge.GC.Intw P Bs e (∑ i ∈ s, X i) (∑ i ∈ s, X' i) := by
-  classical
-  revert h
-  refine Finset.induction_on s (fun _ => ?_) (fun a t hat ih h => ?_)
-  · rw [Finset.sum_empty, Finset.sum_empty]
-    exact intw_zero hsm
-  · rw [Finset.sum_insert hat, Finset.sum_insert hat]
-    exact _root_.Formalism.FourierDecayAlt.P.CutMP.Gauge.GC.intw_add hsm (h a (Finset.mem_insert_self a t)) (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
+  exact Formalism.FourierDecayAlt.P.CutMP.Gauge.GC.intw_sum hsm s h
 
 theorem intw_ite' (c : Prop) [Decidable c] {X : Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π')} {X' : MA.A P (MA.DQ P)}
     (h : c → Gauge.GC.Intw P Bs e X X') : Gauge.GC.Intw P Bs e (if c then X else 0) (if c then X' else 0) := by

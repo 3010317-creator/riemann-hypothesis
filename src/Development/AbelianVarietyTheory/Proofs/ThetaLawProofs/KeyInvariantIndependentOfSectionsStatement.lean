@@ -1622,14 +1622,7 @@ theorem eq_of_coords {R : Type} [CommRing R] {x : KeyIn R} {l N : ℕ} {b : Fin 
   rfl
 
 theorem degProd_ne_zero {g n l l' : ℕ} {al : ℕ → Matrix (Fin 4) (Fin 4) ℤ} (h : admitted g n l l' al) :
-    degProd g n l l' ≠ 0 := by
-  obtain ⟨-, hl, hl', -⟩ := h
-  unfold degProd
-  rw [Finset.prod_ne_zero_iff]
-  intro j hj
-  have hj' : j ≤ g := Nat.lt_succ_iff.mp (Finset.mem_range.mp hj)
-  have hjn : j * n ≤ g * n := Nat.mul_le_mul_right n hj'
-  apply mul_ne_zero <;> omega
+    degProd g n l l' ≠ 0 := GlobalTheory.KeyGeneric.degProd_ne_zero h
 
 variable {K : Type} [Field K] {x : KeyIn K} {n : ℕ}
 

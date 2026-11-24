@@ -269,34 +269,11 @@ lemma herm_jV (u u' : Fin (k + 1) → ℂ) : herm (Hpk k r) (jV k r u) (jV k r u
   simp only [Pi.star_apply, jV_wI, Hpk_wI]
 
 lemma emb_mul (a b : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) : embWb k r (a * b) = embWb k r a * embWb k r b := by
-  ext i j
-  by_cases hi : mid k r i
-  · by_cases hj : mid k r j
-    · obtain ⟨x, rfl⟩ := mid_exists hi
-      obtain ⟨y, rfl⟩ := mid_exists hj
-      rw [mul_emb_mid, emb_wI, Matrix.mul_apply]
-      simp only [emb_wI]
-    · rw [mul_emb_out _ _ _ _ hj, emb_out_col _ _ _ hj, emb_out_col _ _ _ hj]
-  · rw [emb_mul_out _ _ _ _ hi, emb_out_row _ _ _ hi, emb_out_row _ _ _ hi]
+  exact Formalism.FourierDecayAlt.P.B2x3.emb_mul a b
 
-lemma emb_one : embWb k r 1 = 1 := by
-  ext i j
-  rw [Matrix.one_apply]
-  by_cases hi : mid k r i
-  · by_cases hj : mid k r j
-    · obtain ⟨x, rfl⟩ := mid_exists hi
-      obtain ⟨y, rfl⟩ := mid_exists hj
-      rw [emb_wI, Matrix.one_apply]
-      simp only [wI_inj.eq_iff]
-    · rw [emb_out_col _ _ _ hj]
-  · rw [emb_out_row _ _ _ hi]
+lemma emb_one : embWb k r 1 = 1 := Formalism.FourierDecayAlt.P.B2x3.emb_one
 
-lemma Hb_herm : (Hb k)ᴴ = Hb k := by
-  unfold Hb
-  rw [Matrix.diagonal_conjTranspose]
-  congr 1
-  funext j
-  by_cases h : j = Fin.last k <;> simp [h]
+lemma Hb_herm : (Hb k)ᴴ = Hb k := Formalism.FourierDecayAlt.P.B2x3.Hb_conjT
 
 lemma Hb_sq : Hb k * Hb k = 1 := by
   unfold Hb
@@ -340,19 +317,7 @@ lemma emb_inv {μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hμ : μ ∈ UH (Hb
   rw [← emb_mul, Matrix.mul_nonsing_inv _ (UHb_inv hμ).1, emb_one]
 
 lemma emb_conjTranspose (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) : (embWb k r μ)ᴴ = embWb k r μᴴ := by
-  ext i j
-  rw [Matrix.conjTranspose_apply]
-  by_cases hi : mid k r i
-  · by_cases hj : mid k r j
-    · obtain ⟨x, rfl⟩ := mid_exists hi
-      obtain ⟨y, rfl⟩ := mid_exists hj
-      rw [emb_wI, emb_wI, Matrix.conjTranspose_apply]
-    · rw [emb_out_row _ _ _ hj, emb_out_col _ _ _ hj]
-      simp only [show i = j ↔ j = i from eq_comm]
-      by_cases h : j = i <;> simp [h]
-  · rw [emb_out_col _ _ _ hi, emb_out_row _ _ _ hi]
-    simp only [show i = j ↔ j = i from eq_comm]
-    by_cases h : j = i <;> simp [h]
+  exact Formalism.FourierDecayAlt.P.B2x3.emb_conjT μ
 
 lemma emb_form_mid (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (a b : Fin (k + 1)) :
     ((embWb k r μ)ᴴ * Hpk k r * embWb k r μ) (wI k r a) (wI k r b) = (μᴴ * Hb k * μ) a b := by
@@ -548,12 +513,7 @@ theorem herm_UH {m : ℕ} {H g : Matrix (Fin m) (Fin m) ℂ} (hg : g ∈ UH H) (
 
 theorem mem_UH_of_herm {m : ℕ} {H g : Matrix (Fin m) (Fin m) ℂ}
     (h : ∀ x y : Fin m → ℂ, herm H (g *ᵥ x) (g *ᵥ y) = herm H x y) : g ∈ UH H := by
-  show gᴴ * H * g = H
-  ext i j
-  have h1 := h (Pi.single j 1) (Pi.single i 1)
-  unfold herm at h1
-  rw [Matrix.star_mulVec, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec, Matrix.mulVec_mulVec] at h1
-  simpa [Pi.star_single] using h1
+  exact Formalism.FourierDecayAlt.P.B2x4.mem_UH_of_herm H g h
 
 def qrefl {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (d : Fin m → ℂ) (c : ℂ) : Matrix (Fin m) (Fin m) ℂ :=
   1 + c • Matrix.vecMulVec d (star d ᵥ* H)

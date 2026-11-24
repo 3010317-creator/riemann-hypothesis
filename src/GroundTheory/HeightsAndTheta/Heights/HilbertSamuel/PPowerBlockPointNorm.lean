@@ -78,11 +78,7 @@ theorem pn_zero (a : K → ℕ) : IsMultiHomog (0 : MRing ι) a := fun m hm => b
 
 theorem pn_add {f g : MRing ι} {a : K → ℕ} (hf : IsMultiHomog f a) (hg : IsMultiHomog g a) :
     IsMultiHomog (f + g) a := by
-  classical
-  intro m hm
-  rcases Finset.mem_union.mp (support_add hm) with hm | hm
-  · exact hf m hm
-  · exact hg m hm
+  exact GroundTheory.Heights₂.Heights.HilbertSamuel.BlockImageInverse.isMultiHomog_add hf hg
 
 theorem pn_sum {J : Type} (s : Finset J) {f : J → MRing ι} {a : K → ℕ}
     (h : ∀ j ∈ s, IsMultiHomog (f j) a) : IsMultiHomog (∑ j ∈ s, f j) a := by
@@ -94,11 +90,7 @@ theorem pn_sum {J : Type} (s : Finset J) {f : J → MRing ι} {a : K → ℕ}
     exact pn_add (h j (Finset.mem_insert_self _ _)) (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
 
 theorem pn_one : IsMultiHomog (1 : MRing ι) 0 := by
-  classical
-  intro m hm k
-  rw [MvPolynomial.support_one, Finset.mem_singleton] at hm
-  subst hm
-  simp
+  exact GroundTheory.Heights₂.Heights.HilbertSamuel.BlockImageInverse.isMultiHomog_one
 
 theorem pn_C (r : ℤ) : IsMultiHomog (C r : MRing ι) 0 := by
   classical
@@ -118,11 +110,7 @@ theorem pn_mul {f g : MRing ι} {a b : K → ℕ} (hf : IsMultiHomog f a) (hg : 
 
 theorem pn_pow {f : MRing ι} {a : K → ℕ} (hf : IsMultiHomog f a) (n : ℕ) :
     IsMultiHomog (f ^ n) (n • a) := by
-  induction n with
-  | zero => simpa using (pn_one (ι := ι))
-  | succ n ih =>
-    rw [pow_succ, succ_nsmul]
-    exact pn_mul ih hf
+  exact GroundTheory.Heights₂.Heights.HilbertSamuel.BlockImageInverse.isMultiHomog_pow hf n
 
 theorem pn_prod {J : Type} (s : Finset J) (f : J → MRing ι) (d : J → K → ℕ)
     (h : ∀ j ∈ s, IsMultiHomog (f j) (d j)) : IsMultiHomog (∏ j ∈ s, f j) (∑ j ∈ s, d j) := by
@@ -159,12 +147,7 @@ variable {Ω : Type} [Field Ω]
 
 theorem pn_mConeMap_homog (y : (Σ k, ι k) → Ω) {f : MRing ι} {a : K → ℕ} (hf : IsMultiHomog f a) :
     mConeMap y f = (∏ k, (X k : MvPolynomial K Ω) ^ a k) * C (aeval y f) := by
-  have h1 : mConeMap y f = aeval (fun p => (X p.1 : MvPolynomial K Ω) * C (y p)) f := by
-    rw [mConeMap]
-    exact congrArg (fun φ => aeval φ f) (funext fun p => mul_comm _ _)
-  rw [h1, GroundTheory.Heights₂.Heights.HilbertSamuel.BlockImageInverse.aeval_smul hf (fun k => (X k : MvPolynomial K Ω)) (fun p => C (y p))]
-  have h2 : aeval (fun p => (C (y p) : MvPolynomial K Ω)) f = C (aeval y f) := aeval_C_comp_left y f
-  rw [h2]
+  exact GroundTheory.Heights₂.Heights.HilbertSamuel.BlockImageInverse.mConeMap_of_isMultiHomog y hf
 
 end Generic
 

@@ -314,14 +314,7 @@ open scoped Pointwise
 
 theorem liesOver_span {E : Type} [Field E] [NumberField E] {p : ℕ} (hp : p.Prime)
     {v : HeightOneSpectrum (𝓞 E)} (hv : v ∈ placesOver E p) :
-    v.asIdeal.LiesOver (Ideal.span {(p : ℤ)}) := by
-  constructor
-  have hmax : (Ideal.span {(p : ℤ)}).IsMaximal :=
-    PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp hp).irreducible
-  have hle : Ideal.span {(p : ℤ)} ≤ Ideal.comap (algebraMap ℤ (𝓞 E)) v.asIdeal := by
-    rw [Ideal.span_singleton_le_iff_mem, Ideal.mem_comap]
-    simpa [placesOver] using hv
-  exact hmax.eq_of_le (Ideal.comap_ne_top _ v.isPrime.ne_top) hle
+    v.asIdeal.LiesOver (Ideal.span {(p : ℤ)}) := GlobalTheory.HubLoc.liesOver_of_mem hp hv
 
 theorem ramIdx_eq_two (D : D7) {l : ℕ} (hl : l.Prime) (v : HeightOneSpectrum (𝓞 D.host.E))
     (hv : v ∈ placesOver D.host.E l) (g : D.R.GG) (hg : g ≠ 1)

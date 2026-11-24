@@ -1247,11 +1247,7 @@ theorem pow_eq_one_of {k : ℕ} (p : N.QT k) (h : p.1.1 = 1) : p.1.2 ^ k = 1 := 
   rw [this, h]; exact N.io_zero
 
 theorem exists_rep {k : ℕ} {p : N.QT k} (h : N.InG p) : ∃ q, N.QEq p q ∧ q.1.1 = 1 := by
-  obtain ⟨z, hz⟩ := h
-  refine ⟨p * N.qTriv k (-z), (N.qEq_iff _ _).2 ⟨_, rfl⟩, ?_⟩
-  apply Multiplicative.toAdd.injective
-  change p.1.1.toAdd + k • (-z) = 0
-  rw [hz, smul_neg, add_neg_cancel]
+  exact GlobalTheory.MatchTerm.exists_one_of_inG h
 
 theorem y_pow {k : ℕ} (p : N.QT k) (a : ℕ) : (p ^ a).1.1.toAdd = a • p.1.1.toAdd := by simp
 

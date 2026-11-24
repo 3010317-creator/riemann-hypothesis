@@ -303,27 +303,11 @@ theorem pe_pt (m : ℕ) {n : ℕ} (σ : Jet S (Fin 2 × Fin d) m →ₐ[S] Jet S
 
 theorem wl_pt {T : Over X0} (a b : T ⟶ t.G) (c : 𝓞 E) (I : ULift.{0} (Finset (Fin 2))) :
     (lift a b).left ≫ cφG t ![fst t.G t.G, snd t.G t.G ≫ t.act.act c] I =
-      (psum t.G ![a, b ≫ t.act.act c] I.down).left := by
-  simp only [cφG, ← Over.comp_left]
-  refine congrArg Over.Hom.left ((psum_hom (preHom _) _ I.down).trans ?_)
-  refine congrArg (fun f => psum t.G f I.down) (funext fun i => ?_)
-  fin_cases i
-  · show lift a b ≫ fst t.G t.G = a
-    exact lift_fst _ _
-  · show lift a b ≫ (snd t.G t.G ≫ t.act.act c) = b ≫ t.act.act c
-    exact lift_snd_assoc _ _ _
+      (psum t.G ![a, b ≫ t.act.act c] I.down).left := GlobalTheory.FrameAdjSeries.wl_pt a b c I
 
 theorem wl_pt' {T : Over X0} (a b : T ⟶ t.G) (c : 𝓞 E) (I : ULift.{0} (Finset (Fin 2))) :
     (lift a b).left ≫ cφG t ![fst t.G t.G ≫ t.act.act c, snd t.G t.G] I =
-      (psum t.G ![a ≫ t.act.act c, b] I.down).left := by
-  simp only [cφG, ← Over.comp_left]
-  refine congrArg Over.Hom.left ((psum_hom (preHom _) _ I.down).trans ?_)
-  refine congrArg (fun f => psum t.G f I.down) (funext fun i => ?_)
-  fin_cases i
-  · show lift a b ≫ (fst t.G t.G ≫ t.act.act c) = a ≫ t.act.act c
-    exact lift_fst_assoc _ _ _
-  · show lift a b ≫ snd t.G t.G = b
-    exact lift_snd _ _
+      (psum t.G ![a ≫ t.act.act c, b] I.down).left := GlobalTheory.FrameAdjSeries.wl_pt' a b c I
 
 end Chart
 
@@ -980,13 +964,7 @@ theorem corr_trans {Z Y : Scheme.{0}} {L : LB Z} (hL : L.IsLB) {K K' K'' : Type}
   corr_of_val hL fun _ _ hJ => (val_corr hJ h _).trans (val_corr hJ h' _)
 
 theorem ad_const {R : Type} [CommRing R] {d : ℕ} {O : Type} [CommRing O] [StarRing O] (B : Germ.FB R d O) (a : O) :
-    MvPowerSeries.constantCoeff (B.ad a) = 1 := by
-  have h := GlobalTheory.GaugeAdjoint.constantCoeff_ev (a := (![0, pt R d 0] : Fin 2 → Pt R 1 d)) (fun j i => by
-    fin_cases j
-    · simp
-    · simp [pt]) (B.ad a)
-  rw [B.adjoint_zero_fst a, map_one] at h
-  exact h.symm
+    MvPowerSeries.constantCoeff (B.ad a) = 1 := GlobalTheory.ActionGauge.ad_const B a
 
 theorem isFrame_pull_iff {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {X0 : Scheme.{0}}
     (t : SAB H X0) {S : Type} [CommRing S] (x0 : Sp S ⟶ X0) (t' : SAB H (Sp S)) (mp : SABMap t' t x0)

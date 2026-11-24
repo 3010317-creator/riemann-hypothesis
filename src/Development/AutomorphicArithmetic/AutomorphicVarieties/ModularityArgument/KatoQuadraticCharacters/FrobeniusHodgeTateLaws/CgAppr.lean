@@ -1385,11 +1385,7 @@ theorem eval_kmap {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ} (X
     (σ : X.K ≃+* X.K) (x : X.Khat l) (f : X.Kˣ)
     (h : AdicCompletion.eval (idl l) (X.Kl l) n x = X.cls l n f) :
     AdicCompletion.eval (idl l) (X.Kl l) n (X.kmap l σ x) = X.cls l n (Units.map σ.toMonoidHom f) := by
-  rw [AdicCompletion.eval_apply]
-  change (AdicCompletion.map _ _ x).val n = _
-  rw [AdicCompletion.map_val_apply, ← AdicCompletion.eval_apply, h]
-  rw [Tower.cls, Tower.cls, LinearMap.reduceModIdeal_apply, LinearMap.baseChange_tmul]
-  rfl
+  exact GlobalTheory.HeckeTh.eval_kmap X l n σ x f h
 
 theorem cls_mul {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ} (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (n : ℕ)
     (f g : X.Kˣ) : X.cls l n (f * g) = X.cls l n f + X.cls l n g := by

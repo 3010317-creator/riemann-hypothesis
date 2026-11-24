@@ -57,15 +57,7 @@ section
 variable {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem card_frame {N : ℕ} {Y : Type} [Fintype Y] [DecidableEq Y] (F : Frame k N Y) : Fintype.card Y = N := by
-  apply le_antisymm
-  · calc Fintype.card Y = (F.γ * F.β).rank := by rw [F.γβ, Matrix.rank_one]
-      _ ≤ F.β.rank := Matrix.rank_mul_le_right _ _
-      _ ≤ Fintype.card (Fin N) := Matrix.rank_le_card_height _
-      _ = N := Fintype.card_fin N
-  · calc N = Fintype.card (Fin N) := (Fintype.card_fin N).symm
-      _ = (F.β * F.γ).rank := by rw [F.βγ, Matrix.rank_one]
-      _ ≤ F.γ.rank := Matrix.rank_mul_le_right _ _
-      _ ≤ Fintype.card Y := Matrix.rank_le_card_height _
+  exact (GlobalTheory.LocMod.Witness.card_frame F).symm
 
 theorem core_of_bes (p : Place D k) {ρ : ℕ} (B : BesLev D ρ) (s : k) {n : Type} [Fintype n] [DecidableEq n] {c : ℕ}
     (FA : Frame k B.A.rank n) (G : Frame k B.V.rank (n ⊕ Fin c)) (h : p.IsBesFrame B s FA G) :

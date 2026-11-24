@@ -539,28 +539,7 @@ theorem addChar_extend_subring {K : Type} [Ring K] (S : Subring K) (ψ : AddChar
 theorem red_eq_zero_of_lt_one {K : Type} [Field K] [NumberField K] (v : HeightOneSpectrum (𝓞 K)) (p : ℕ) [Fact p.Prime]
     (red : v.adicCompletionIntegers K →+* ZMod p) (y : v.adicCompletionIntegers K)
     (hy : Valued.v (y : v.adicCompletion K) < 1) : red y = 0 := by
-  by_contra h
-  set n : ℕ := (-(red y)⁻¹ : ZMod p).val with hn
-  have hnc : ((n : ℕ) : ZMod p) = -(red y)⁻¹ := ZMod.natCast_zmod_val _
-  set z : v.adicCompletionIntegers K := 1 + y * (n : v.adicCompletionIntegers K) with hz
-  have hred : red z = 0 := by
-    rw [hz, map_add (f := _), map_one, map_mul, map_natCast, hnc, mul_neg, mul_inv_cancel₀ h, add_neg_cancel]
-  have hlt : Valued.v ((y * (n : v.adicCompletionIntegers K) : v.adicCompletionIntegers K) : v.adicCompletion K) < 1 := by
-    have hn1 : Valued.v (((n : v.adicCompletionIntegers K)) : v.adicCompletion K) ≤ 1 :=
-      (HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).1 (n : v.adicCompletionIntegers K).2
-    rw [Subring.coe_mul, map_mul]
-    calc Valued.v (y : v.adicCompletion K) * Valued.v (((n : v.adicCompletionIntegers K)) : v.adicCompletion K)
-        ≤ Valued.v (y : v.adicCompletion K) * 1 := by gcongr
-      _ = Valued.v (y : v.adicCompletion K) := mul_one _
-      _ < 1 := hy
-  have hz1 : Valued.v ((z : v.adicCompletionIntegers K) : v.adicCompletion K) = 1 := by
-    rw [hz, Subring.coe_add, Subring.coe_one, Valuation.map_add_eq_of_lt_left]
-    · exact map_one _
-    · rw [map_one]; exact hlt
-  have hu : IsUnit z := (HeightOneSpectrum.adicCompletionIntegers.isUnit_iff_valued_eq_one).2 hz1
-  have hu' : IsUnit (red z) := hu.map red
-  rw [hred] at hu'
-  exact not_isUnit_zero hu'
+  exact GlobalTheory.TypeCharRead.red_eq_zero_of_val_lt_one v red y hy
 
 theorem exists_addChar_completion_lift_residue : ∀ (K : Type) [Field K] [NumberField K] (v : HeightOneSpectrum (𝓞 K)) (p : ℕ) [Fact p.Prime]
     (red : v.adicCompletionIntegers K →+* ZMod p) (ψ' : AddChar (ZMod p) ℂ), ψ' ≠ 1 →

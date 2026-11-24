@@ -580,11 +580,7 @@ theorem exists_prime_dvd_card (P : HeightOneSpectrum (𝓞 E)) :
 
 theorem prime_eq_of_mem (P : HeightOneSpectrum (𝓞 E)) {p q : ℕ} (hp : p.Prime) (hq : q.Prime)
     (hpP : (p : 𝓞 E) ∈ P.asIdeal) (hqP : (q : 𝓞 E) ∈ P.asIdeal) : p = q := by
-  by_contra hne
-  have hco : IsCoprime (p : 𝓞 E) (q : 𝓞 E) := ((Nat.coprime_primes hp hq).2 hne).cast
-  obtain ⟨u, v, huv⟩ := hco
-  exact P.isPrime.ne_top ((Ideal.eq_top_iff_one _).2
-    (huv ▸ P.asIdeal.add_mem (P.asIdeal.mul_mem_left _ hpP) (P.asIdeal.mul_mem_left _ hqP)))
+  exact GlobalTheory.StepLifts.prime_eq_of_mem P hp hq hpP hqP
 
 end Prime
 

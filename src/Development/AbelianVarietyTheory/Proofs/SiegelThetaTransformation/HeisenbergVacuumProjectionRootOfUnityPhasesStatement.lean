@@ -167,16 +167,7 @@ theorem ip_smul_smul {φ ψ : Matrix α β ℚ → ℂ} (hφ : IsSB φ) (hψ : I
   rw [hfun, hlin]
 
 theorem ip_conj {φ ψ : Matrix α β ℚ → ℂ} (hφ : IsSB φ) (hψ : IsSB ψ) :
-    ip ψ φ = conj (ip φ ψ) := by
-  have hψc : IsSB (fun x => conj (ψ x)) := (_root_.GlobalTheory.SW.isSB_algebra_haar_linear ℚ α β ψ ψ hψ hψ).2.2.2.1
-  have hpr : IsSB (φ * fun x => conj (ψ x)) := (_root_.GlobalTheory.SW.isSB_algebra_haar_linear ℚ α β φ _ hφ hψc).2.2.1
-  have hc := (_root_.GlobalTheory.SW.isSB_algebra_haar_linear ℚ α β _ _ hpr hpr).2.2.2.2.2.2.1
-  have hfun : (fun x => ψ x * conj (φ x)) = fun x => conj ((φ * fun x => conj (ψ x)) x) := by
-    funext x
-    simp only [Pi.mul_apply, map_mul, Complex.conj_conj]
-    ring
-  show haar (fun x => ψ x * conj (φ x)) = conj (haar (φ * fun x => conj (ψ x)))
-  rw [hfun, hc]
+    ip ψ φ = conj (ip φ ψ) := GlobalTheory.SW.TensVac.ip_conj hφ hψ
 
 theorem ph_ip [DecidableEq β] {φ ψ : Matrix α β ℚ → ℂ} (hφ : PV φ) (hψ : PV ψ) : Ph (ip φ ψ) := by
   have sφ : Shape φ := (_root_.GlobalTheory.Phase.VacShape.vacuum_shape α β φ).2.1 hφ

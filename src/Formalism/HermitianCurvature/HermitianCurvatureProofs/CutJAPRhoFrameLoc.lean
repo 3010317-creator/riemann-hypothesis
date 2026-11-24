@@ -68,13 +68,7 @@ variable {k r : ℕ}
 def InW (k r : ℕ) (z x : Fin (2 * r + k + 1) → ℂ) : Prop := inWb k r x ∧ herm (Hpk k r) x z = 0
 
 theorem herm_alt {z : Fin (2 * r + k + 1) → ℂ} : herm (Hpk k r) z z = ((-(Tz k r z) : ℝ) : ℂ) := by
-  have h := P.Qx2.herm_star (k := k) (r := r) z z
-  apply Complex.ext
-  · simp [Tz]
-  · have := congrArg Complex.im h
-    simp only [Complex.star_def, Complex.conj_im] at this
-    simp only [Complex.ofReal_im]
-    linarith
+  exact Formalism.FourierDecayAlt.P.C2x5.hzz_real z
 
 theorem blockProjection_add (x y : Fin (2 * r + k + 1) → ℂ) : SSn.wbP k r (x + y) = SSn.wbP k r x + SSn.wbP k r y := by
   funext i; simp only [SSn.wbP, Pi.add_apply]; split_ifs <;> simp

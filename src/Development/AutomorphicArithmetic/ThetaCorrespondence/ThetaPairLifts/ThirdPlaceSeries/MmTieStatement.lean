@@ -218,11 +218,7 @@ namespace GlobalTheory.TestLat
 
 theorem star_mem_one_of_mem_one {K : Type} [Field K] [NumberField K] [StarRing K] {z : K}
     (hz : z ∈ (1 : Submodule (𝓞 K) K)) : star z ∈ (1 : Submodule (𝓞 K) K) := by
-  obtain ⟨a, rfl⟩ := Submodule.mem_one.mp hz
-  have ha : IsIntegral ℤ (algebraMap (𝓞 K) K a) := a.isIntegral_coe
-  have hb : IsIntegral ℤ (star (algebraMap (𝓞 K) K a)) :=
-    ha.map (starRingEnd K).toIntAlgHom
-  exact Submodule.mem_one.mpr ⟨⟨_, hb⟩, rfl⟩
+  exact GlobalTheory.DualLat.star_mem_one hz
 
 theorem inv_mulVec_star_mem_hdualFr {K : Type} [Field K] [NumberField K] [StarRing K] {N : ℕ}
     {H : Matrix (Fin N) (Fin N) K} (hd : IsUnit H.det) {M : Submodule (𝓞 K) (Fin N → K)} {x : Fin N → K}

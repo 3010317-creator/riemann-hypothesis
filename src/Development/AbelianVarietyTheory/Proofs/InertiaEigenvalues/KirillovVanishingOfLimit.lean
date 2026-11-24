@@ -85,13 +85,7 @@ namespace GlobalTheory.PlancherelZero
 variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E]
 
 theorem continuous_char (ψ : AddChar F ℂ) (hψ : IsStdChar ψ) : Continuous ψ := by
-  rw [continuous_iff_continuousAt]
-  intro x
-  refine (continuousAt_const (y := ψ x)).congr ?_
-  filter_upwards [Metric.closedBall_mem_nhds x one_pos] with z hz
-  have h1 : ψ (z - x) = 1 := hψ.1 _ (by simpa [dist_eq_norm] using hz)
-  calc ψ x = ψ x * ψ (z - x) := by rw [h1, mul_one]
-    _ = ψ z := by rw [← AddChar.map_add_eq_mul]; congr 1; abel
+  exact GlobalTheory.JR.DualLattice.stdChar_continuous hψ
 
 theorem kerK_eq (A : Et F E) (ψ : AddChar F ℂ) :
     A.kerK ψ = fun x y => ψ (Algebra.traceForm F A.K x y) := by

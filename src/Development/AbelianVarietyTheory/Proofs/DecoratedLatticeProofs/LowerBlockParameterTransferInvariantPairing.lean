@@ -585,56 +585,14 @@ theorem exists_equiv_map_eq {F V : Type} [Field F] [AddCommGroup V]
     [Module F V] [FiniteDimensional F V] (W W' : Submodule F V)
     (h : Module.finrank F W = Module.finrank F W') :
     ∃ e : V ≃ₗ[F] V, W.map e.toLinearMap = W' := by
-  obtain ⟨U, hU⟩ := W.exists_isCompl
-  obtain ⟨U', hU'⟩ := W'.exists_isCompl
-  have h1 := Submodule.finrank_add_eq_of_isCompl hU
-  have h2 := Submodule.finrank_add_eq_of_isCompl hU'
-  have h3 : Module.finrank F U = Module.finrank F U' := by omega
-  let a : W ≃ₗ[F] W' := LinearEquiv.ofFinrankEq _ _ h
-  let b : U ≃ₗ[F] U' := LinearEquiv.ofFinrankEq _ _ h3
-  let e : V ≃ₗ[F] V := (Submodule.prodEquivOfIsCompl W U hU).symm ≪≫ₗ (a.prodCongr b) ≪≫ₗ
-    Submodule.prodEquivOfIsCompl W' U' hU'
-  have he : ∀ w : W, e w = a w := by
-    intro w
-    simp [e]
-  refine ⟨e, ?_⟩
-  apply le_antisymm
-  · rintro _ ⟨w, hw, rfl⟩
-    have := he ⟨w, hw⟩
-    change e w ∈ W'
-    simp only at this
-    rw [this]
-    exact (a ⟨w, hw⟩).2
-  · intro w hw
-    refine ⟨a.symm ⟨w, hw⟩, (a.symm ⟨w, hw⟩).2, ?_⟩
-    change e _ = w
-    rw [he]
-    simp
+  exact GlobalTheory.ParHecke.CosetSub.exists_equiv_map_eq W W' h
 
 theorem exists_gl_map_eq (O : Type) [CommRing O] [IsLocalRing O] (n : Type) [Fintype n] [DecidableEq n]
     (W W' : Submodule (IsLocalRing.ResidueField O) (n → IsLocalRing.ResidueField O))
     (h : Module.finrank (IsLocalRing.ResidueField O) W =
       Module.finrank (IsLocalRing.ResidueField O) W') :
     ∃ g : GL n O, W.map (g.1.map (IsLocalRing.residue O)).mulVecLin = W' := by
-  obtain ⟨e, he⟩ := exists_equiv_map_eq W W' h
-  let M : Matrix n n (IsLocalRing.ResidueField O) := LinearMap.toMatrix' e.toLinearMap
-  choose A hA using fun i j => IsLocalRing.residue_surjective (R := O) (M i j)
-  have hAM : (Matrix.of A).map (IsLocalRing.residue O) = M := by
-    ext i j
-    exact hA i j
-  have hM : M.det ≠ 0 := by
-    have : M.det = LinearMap.det e.toLinearMap := LinearMap.det_toMatrix' _
-    rw [this]
-    exact (LinearEquiv.isUnit_det' e).ne_zero
-  have hu : IsUnit (Matrix.of A).det := by
-    rw [← IsLocalRing.residue_ne_zero_iff_isUnit, RingHom.map_det]
-    change ((Matrix.of A).map (IsLocalRing.residue O)).det ≠ 0
-    rwa [hAM]
-  obtain ⟨g, hg⟩ := (Matrix.isUnit_iff_isUnit_det _).2 hu
-  refine ⟨g, ?_⟩
-  rw [hg, hAM, ← he]
-  congr 1
-  exact Matrix.toLin'_toMatrix' e.toLinearMap
+  exact GlobalTheory.ParHecke.CosetSub.exists_gl_map_eq O n W W' h
 
 theorem exists_range_eq (F : Type) [Field F] (n : Type) [Fintype n] [DecidableEq n] (U : Submodule F (n → F)) :
     ∃ M : Matrix n n F, LinearMap.range M.mulVecLin = U := by
@@ -1296,13 +1254,7 @@ namespace GlobalTheory.TorusRightScalar
 theorem det_mtor' {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     {A D : Type} [Fintype A] [DecidableEq A] [Fintype D] [DecidableEq D] (ϖ : kˣ) (e : D → ℤ) :
     GeneralLinearGroup.det (mtor ϖ e : GL (A ⊕ D) k) = ϖ ^ ∑ i, e i := by
-  ext
-  rw [GeneralLinearGroup.val_det_apply, mtor, val_torusElt, det_diagonal, Units.val_zpow_eq_zpow_val,
-    Fintype.prod_sum_type]
-  simp only [Sum.elim_inl, Sum.elim_inr, Pi.zero_apply, zpow_zero, Finset.prod_const_one, one_mul]
-  induction (Finset.univ : Finset D) using Finset.induction_on with
-  | empty => simp
-  | insert i t hi ih => rw [Finset.prod_insert hi, Finset.sum_insert hi, zpow_add₀ (Units.ne_zero ϖ), ih]
+  exact GlobalTheory.ChainStepCoef.det_mtor ϖ e
 
 theorem sum_neg_indic {D : Type} [Fintype D] [DecidableEq D] (s : Finset D) :
     ∑ i, (-indic s) i = -(s.card : ℤ) := by
@@ -1642,41 +1594,11 @@ variable {A D D' : Type} [Fintype A] [DecidableEq A] [Fintype D] [DecidableEq D]
 theorem inSupp_mul_left {y : Matrix (A ⊕ D') (A ⊕ D) k} (hy : InSupp y) {u : GL (A ⊕ D') k}
     (hu : u ∈ parahoric k A D') : InSupp (u.val * y) ∧
       valuation k ((u.val * y).toBlocks₁₁.det - u.val.toBlocks₁₁.det * y.toBlocks₁₁.det) < 1 := by
-  have hJ := GlobalTheory.DatumEigen.int_of_mem hu
-  have hl := (mem_parahoric.1 hu).2
-  obtain ⟨hyi, hyd, hyl⟩ := hy
-  have hprod : ∀ i l, (u.val * y) i l ∈ 𝒪[k] := fun i l => by
-    rw [Matrix.mul_apply]; exact sum_mem fun m _ => mul_mem (hJ i m) (hyi m l)
-  have hcong : valuation k ((u.val * y).toBlocks₁₁.det - u.val.toBlocks₁₁.det * y.toBlocks₁₁.det) < 1 := by
-    rw [← det_mul]
-    refine GlobalTheory.DatumEigen.val_det_sub_lt (fun i l => hprod _ _) (fun i l => ?_) (fun i l => ?_)
-    · rw [Matrix.mul_apply]; exact sum_mem fun m _ => mul_mem (hJ _ _) (hyi _ _)
-    · simp only [toBlocks₁₁, of_apply, Matrix.mul_apply, Fintype.sum_sum_type, add_sub_cancel_left]
-      exact Valuation.map_sum_lt _ one_ne_zero fun m _ => GlobalTheory.DatumEigen.val_mul_lt (hJ _ _) (hyl _ _)
-  have hd1 : valuation k (u.val.toBlocks₁₁.det * y.toBlocks₁₁.det) = 1 := by
-    rw [map_mul, hyd, mul_one, (GlobalTheory.DatumEigen.val_det_blocks hu).1]
-  refine ⟨⟨hprod, ?_, ?_⟩, hcong⟩
-  · rw [← hd1]
-    refine Valuation.map_eq_of_sub_lt _ ?_
-    rw [hd1]; exact hcong
-  · intro e a
-    rw [Matrix.mul_apply, Fintype.sum_sum_type]
-    refine Valuation.map_add_lt _ (Valuation.map_sum_lt _ one_ne_zero fun m _ => ?_)
-      (Valuation.map_sum_lt _ one_ne_zero fun m _ => ?_)
-    · rw [mul_comm]; exact GlobalTheory.DatumEigen.val_mul_lt (hyi _ _) (hl _ _)
-    · exact GlobalTheory.DatumEigen.val_mul_lt (hJ _ _) (hyl _ _)
+  apply GlobalTheory.DatumEigenLeft.inSupp_mul_left <;> assumption
 
 omit [Fintype A] [DecidableEq A] [Fintype D] [DecidableEq D] in
 theorem torusElt_indic_int {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformizer k) (s : Finset D') :
-    IsIntM (torusElt k D' ϖ (indic s)).val := by
-  have hlt : valuation k (ϖ : k) < 1 := hϖ ▸ uniformizer_lt_one
-  rw [val_torusElt]
-  intro i j
-  rw [diagonal_apply]; split_ifs
-  · show valuation k _ ≤ 1
-    rw [map_zpow₀]
-    exact zpow_le_one₀ (zero_lt_iff.2 (by simp)) hlt.le (by unfold indic; split_ifs <;> norm_num)
-  · exact zero_mem _
+    IsIntM (torusElt k D' ϖ (indic s)).val := GlobalTheory.ParHeckeTarget.torus_int hϖ s
 
 theorem inSupp_diag_mul {y : Matrix (A ⊕ D') (A ⊕ D) k} (hy : InSupp y) {t : Matrix D' D' k} (ht : IsIntM t) :
     InSupp ((fromBlocks (1 : Matrix A A k) 0 0 t : Matrix (A ⊕ D') (A ⊕ D') k) * y) ∧

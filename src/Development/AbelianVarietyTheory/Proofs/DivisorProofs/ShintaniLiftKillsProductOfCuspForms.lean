@@ -641,17 +641,7 @@ theorem torusPair_finite_torus {F : Type} [Field F] [Finite F] (n : ℕ) (hn : 0
 
 theorem torusPair_mangoldt_pow {F : Type} [Field F] (s : F[X] → ℂ) (f : F[X]) (hf : f.Monic)
     (hirr : Irreducible f) (r : ℕ) (hr : 0 < r) : mangoldt s (f ^ r) = s f := by
-  have hset : {g : F[X] | g.Monic ∧ Irreducible g ∧ ∃ r' : ℕ, 0 < r' ∧ f ^ r = g ^ r'} = {f} := by
-    ext g
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
-    constructor
-    · rintro ⟨hg, hgi, r', hr', he⟩
-      have h1 : g ∣ f ^ r := he ▸ dvd_pow_self g hr'.ne'
-      have h2 : g ∣ f := hgi.prime.dvd_of_dvd_pow h1
-      exact eq_of_monic_of_associated hg hf (hgi.associated_of_dvd hirr h2)
-    · rintro rfl
-      exact ⟨hf, hirr, r, hr, rfl⟩
-  rw [mangoldt, hset, finsum_mem_singleton]
+  apply GlobalTheory.CuspGL.mangoldt_pow <;> assumption
 
 theorem torusPair_mangoldt_sum (F : Type) [Field F] [Finite F] (θ : AlgebraicClosure F →* ℂ) (n k : ℕ)
     (S : F[X] → ℂ) (hn : 0 < n) :

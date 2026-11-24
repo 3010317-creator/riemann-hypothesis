@@ -90,11 +90,7 @@ theorem mem_dom_iff (c : C) (x : Frame (M.comp c).Ψ r) :
 
 theorem inv_of_SS {la : Wt M.Ψ r} {F : C → Frame M.Ψ r → ℂ} (hF : F ∈ M.SS la) (c : C) {γ : GL (Fin r) E}
     (hγ : γ ∈ (M.comp c).Γ) {z : Frame M.Ψ r} (hz : z ∈ M.dom) : F c (lact γ z) = F c z := by
-  have hxz : castFrame (M.comp_Ψ c) (castFrame (M.comp_Ψ c).symm z) = z := castFrame_castFrame _ _
-  have hx : castFrame (M.comp_Ψ c).symm z ∈ (M.comp c).dom := (mem_dom_iff M c _).1 (hxz ▸ hz)
-  have h := (hF c).1.1.2.2 γ hγ _ hx
-  dsimp only at h
-  rwa [M.χ_one c _ γ hγ, one_mul, castFrame_lact, hxz] at h
+  exact GlobalTheory.TranslatesDet.ssLact M hF c hγ hz
 
 theorem continuous_castFrame {Ψ Ψ' : Finset (E →+* ℂ)} (h : Ψ = Ψ') : Continuous (castFrame (r := r) h) := by
   subst h; exact continuous_id

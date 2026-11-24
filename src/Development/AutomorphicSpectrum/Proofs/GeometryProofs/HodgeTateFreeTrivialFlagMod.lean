@@ -332,14 +332,7 @@ namespace GlobalTheory.CompanionTheory.Ar.IntEmb
 theorem ringOfIntegers_embedding_mem_range
     (A Ω : Type) [CommRing A] [IsDomain A] [Field Ω] [Algebra A Ω] [IsFractionRing A Ω]
     [IsIntegrallyClosed A] (E : Type) [Field E] [NumberField E] (σ : E →+* Ω) (a : 𝓞 E) :
-    σ (a : E) ∈ (algebraMap A Ω).range := by
-  have hℤ : IsIntegral ℤ (σ (a : E)) :=
-    IsIntegral.map_of_comp_eq (Int.castRingHom ℤ) σ (RingHom.ext_int _ _)
-      (NumberField.RingOfIntegers.isIntegral_coe a)
-  have hA : IsIntegral A (σ (a : E)) :=
-    IsIntegral.map_of_comp_eq (Int.castRingHom A) (RingHom.id Ω) (RingHom.ext_int _ _) hℤ
-  obtain ⟨y, hy⟩ := (IsIntegrallyClosed.isIntegral_iff (R := A) (K := Ω)).mp hA
-  exact ⟨y, hy⟩
+    σ (a : E) ∈ (algebraMap A Ω).range := by apply PositivityTheory.HtPt.Ge.ringOfIntegers_mem_range
 
 end GlobalTheory.CompanionTheory.Ar.IntEmb
 end -- clump:auto
@@ -462,28 +455,7 @@ theorem exists_basis (hinj : Function.Injective (algebraMap A Ω)) (N : Submodul
 theorem exists_smul_mem (m : Ideal A) [hm : m.IsPrime] (R : Subring Ω)
     (hR : ∀ x ∈ R, ∃ s ∉ m, ∃ a : A, algebraMap A Ω s * x = algebraMap A Ω a) (N : Submodule A W) (w : W)
     (hw : w ∈ Submodule.span R (N : Set W)) : ∃ s ∉ m, s • w ∈ N := by
-  have h1 : (1 : A) ∉ m := (Ideal.ne_top_iff_one m).1 hm.ne_top
-  induction hw using Submodule.span_induction with
-  | mem x hx => exact ⟨1, h1, by rwa [one_smul]⟩
-  | zero => exact ⟨1, h1, by simp⟩
-  | add x y _ _ hx hy =>
-    obtain ⟨s, hs, hx⟩ := hx
-    obtain ⟨u, hu, hy⟩ := hy
-    refine ⟨s * u, fun h => (hm.mem_or_mem h).elim hs hu, ?_⟩
-    rw [smul_add]
-    refine N.add_mem ?_ ?_
-    · rw [mul_comm, mul_smul]; exact N.smul_mem _ hx
-    · rw [mul_smul]; exact N.smul_mem _ hy
-  | smul c x _ hx =>
-    obtain ⟨s, hs, hx⟩ := hx
-    obtain ⟨u, hu, a, ha⟩ := hR c c.2
-    refine ⟨u * s, fun h => (hm.mem_or_mem h).elim hu hs, ?_⟩
-    have : (u * s) • c • x = a • s • x := by
-      show (u * s) • (c : Ω) • x = _
-      rw [← algebraMap_smul Ω (u * s), ← algebraMap_smul Ω a, ← algebraMap_smul Ω s, smul_smul, smul_smul, ← ha,
-        map_mul]
-      congr 1; ring
-    rw [this]; exact N.smul_mem _ hx
+  exact PositivityTheory.HtPt.Famproj.exists_smul_mem m R hR N hw
 
 end Glue
 

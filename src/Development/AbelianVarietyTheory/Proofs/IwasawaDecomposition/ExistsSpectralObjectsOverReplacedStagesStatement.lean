@@ -1513,19 +1513,7 @@ open MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S Fo
 
 namespace GlobalTheory.DegreeRankEquations
 
-theorem f_eq (D : D7) (X : HidaSetting D) : X.B.I.f = D.R.f := by
-  have e1 : Module.finrank ℚ X.B.I.E = Module.finrank ℚ D.host.E :=
-    (X.ιE.toRatAlgEquiv).toLinearEquiv.finrank_eq
-  have e2 : Module.finrank ℚ X.B.I.F * Module.finrank X.B.I.F X.B.I.E = Module.finrank ℚ X.B.I.E :=
-    Module.finrank_mul_finrank ℚ X.B.I.F X.B.I.E
-  have e3 : Module.finrank X.B.I.F X.B.I.E = 2 := X.B.I.cm.deg2
-  have e4 : Module.finrank ℚ D.host.E = 2 * D.R.f := by
-    rw [D.host.finrank_cmField]
-    unfold Ranks.f Ranks.n
-    ring_nf
-  rw [e3] at e2
-  unfold AutInst.f
-  omega
+theorem f_eq (D : D7) (X : HidaSetting D) : X.B.I.f = D.R.f := Formalism.L2.SG.Pf.RowDictPf.f_eq X
 
 theorem rd_eq (D : D7) (X : HidaSetting D) : X.B.I.rd = D.host.rdE := by
   have hd : discr X.B.I.E = discr D.host.E := NumberField.discr_eq_discr_of_algEquiv X.B.I.E X.ιE.toRatAlgEquiv

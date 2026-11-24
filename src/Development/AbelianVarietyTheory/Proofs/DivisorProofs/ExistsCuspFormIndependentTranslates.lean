@@ -187,15 +187,7 @@ theorem detPow_diff (X : Data E r) (a : ℤ) : DifferentiableOn ℂ (detPow X.Ψ
   fun_prop
 
 theorem chi_one (X : Data E r) (la : Wt X.Ψ r) : X.χ la 1 = 1 := by
-  have h1 : (1 : GL (Fin r) E) ∈ X.Γ := X.Γ.one_mem
-  have hm := X.χ_mul la 1 h1 1 h1
-  rw [mul_one] at hm
-  obtain ⟨n, hn, hf⟩ := X.χ_fin la
-  have hne : X.χ la 1 ≠ 0 := fun h0 => by
-    have := hf 1 h1
-    rw [h0, zero_pow hn.ne'] at this
-    exact zero_ne_one this
-  exact mul_left_cancel₀ hne (hm.symm.trans (mul_one _).symm)
+  exact GlobalTheory.Up.OrbitInterpolation.chi_one X la
 
 theorem hermC_mulVec (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (P : Matrix (Fin r) (Fin r) ℂ)
     (v w : Fin r → ℂ) :

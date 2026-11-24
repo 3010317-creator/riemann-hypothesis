@@ -72,15 +72,7 @@ variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E]
 variable {L : LocE F E} {r k : ℕ} (S : Frames L r k)
 
 theorem spanTo_top (g : Fin (r + 1) → S.V) :
-    S.spanTo g (r + 1) = Submodule.span E (Set.range g) := by
-  unfold Frames.spanTo
-  congr 1
-  ext x
-  constructor
-  · rintro ⟨i, -, rfl⟩
-    exact ⟨i, rfl⟩
-  · rintro ⟨i, rfl⟩
-    exact ⟨i, i.2, rfl⟩
+    S.spanTo g (r + 1) = Submodule.span E (Set.range g) := GlobalTheory.HL.TermBasic.spanTo_top S g
 
 theorem left_mem (g g' : Fin (r + 1) → S.V) (b : Fin (r + 1)) : g b ∈ S.Mof g g' :=
   Submodule.subset_span (Or.inl ⟨b, rfl⟩)

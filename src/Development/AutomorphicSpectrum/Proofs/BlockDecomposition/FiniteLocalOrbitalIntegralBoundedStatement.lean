@@ -1021,11 +1021,7 @@ end Fin
 
 theorem psiFin_add {F : Type} [Field F] [NumberField F] (ψ : AddChar (AF F) ℂ) (u v : Af F) :
     psiFin F ψ (u + v) = psiFin F ψ u * psiFin F ψ v := by
-  have h : pairA F 0 (u + v) = pairA F 0 u + pairA F 0 v := by
-    have h0 : (0 : Ainf F) = 0 + 0 := (add_zero 0).symm
-    exact congrArg (fun t => pairA F t (u + v)) h0
-  simp only [psiFin]
-  rw [h, AddChar.map_add_eq_mul]
+  exact GlobalTheory.CompanionTheory.SiegelND.Integ.Weyl.PairAdd.psiFin_add' F ψ u v
 
 theorem phaseB_add : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J →
@@ -1306,27 +1302,7 @@ section -- clump:auto
 theorem UpperTheory.Reformulated.B.ExistsNatMulMem.exists_nat_mul_mem :
     ∀ (F : Type) [inst : Field F] [NumberField F] (x : F),
     ∃ (m : ℕ), (0 : ℕ) < m ∧ ∃ (r : NumberField.RingOfIntegers F), (↑r : F) = (↑m : F) * x := by
-  intro F _ _ x
-  have hx : IsAlgebraic ℤ x :=
-    (IsFractionRing.isAlgebraic_iff ℤ ℚ F).mpr (Algebra.IsAlgebraic.isAlgebraic x)
-  obtain ⟨y, hy, hint⟩ := hx.exists_integral_multiple
-  have h2 : IsIntegral ℤ (((y.natAbs : ℕ) : F) * x) := by
-    rcases Int.natAbs_eq y with h | h
-    · have e : ((y.natAbs : ℕ) : F) * x = y • x := by
-        rw [zsmul_eq_mul]
-        congr 1
-        have := congrArg (Int.cast : ℤ → F) h
-        rw [Int.cast_natCast] at this
-        exact this.symm
-      rw [e]; exact hint
-    · have e : ((y.natAbs : ℕ) : F) * x = -(y • x) := by
-        rw [zsmul_eq_mul, ← neg_mul]
-        congr 1
-        have := congrArg (Int.cast : ℤ → F) h
-        rw [Int.cast_neg, Int.cast_natCast] at this
-        rw [this, neg_neg]
-      rw [e]; exact hint.neg
-  exact ⟨y.natAbs, Int.natAbs_pos.mpr hy, ⟨_, h2⟩, rfl⟩
+  apply GlobalTheory.NatMulMemUnitaryExistence.exists_nat_mul_mem
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExistsNatMulMem =====

@@ -173,20 +173,7 @@ theorem exists_point_norm_valF_eq {X : Scheme.{0}} {p : ℕ} [Fact p.Prime]
       valF (gPt p ≫ y') U φ = (((Scheme.ΓSpecIso (.of K)).hom
         ((Spec.map (CommRingCat.ofHom (algebraMap (integralClosure ℤ_[p] K) K)) ≫ y).appLE
           U ⊤ hy φ) : K) : PadicAlgCl p) := by
-  haveI := isLocalHom_integralClosureToPadicAlgClIntegers K
-  have e : gPt p ≫ spMap (integralClosureToPadicAlgClIntegers K) ≫ y =
-      spMap K.val.toRingHom ≫
-        Spec.map (CommRingCat.ofHom (algebraMap (integralClosure ℤ_[p] K) K)) ≫ y := by
-    rw [← Category.assoc, ← Category.assoc, ← Spec.map_comp, ← Spec.map_comp]
-    rfl
-  refine ⟨spMap (integralClosureToPadicAlgClIntegers K) ≫ y, ?_, ?_, ?_⟩
-  · refine (Scheme.Hom.comp_apply _ _ _).trans (congrArg y ?_)
-    exact IsLocalRing.comap_closedPoint (integralClosureToPadicAlgClIntegers K)
-  · rw [e]
-    rintro _ ⟨q, rfl⟩
-    exact hy (Set.mem_univ (spMap K.val.toRingHom q))
-  · rw [e, BoundedRegular.valF_spMap_comp_eq _ _ U hy]
-    rfl
+  exact GlobalTheory.NormGlue.RegularSupport.BoundedRegular.exists_point_norm_valF_eq K y U hy φ
 
 theorem existsUnique_resG_eq {X : Scheme.{0}} [IsIntegral X] (π : X ⟶ Sp ℤ) [Flat π]
     [LocallyOfFiniteType π] (hX : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme X) {U W : X.Opens}
@@ -194,16 +181,7 @@ theorem existsUnique_resG_eq {X : Scheme.{0}} [IsIntegral X] (π : X ⟶ Sp ℤ)
     (H : ∀ (p : ℕ) [Fact p.Prime] (y : Sp (OO p) ⟶ X), y (cPt p) ∈ W →
       Set.range (gPt p ≫ y) ⊆ U → ‖valF (gPt p ≫ y) U φ‖ ≤ 1) :
     ∃! ψ : Γ(X, W), resG X h ψ = φ := by
-  haveI : Nonempty U := hU.to_subtype
-  haveI : Nonempty W := (hU.mono h).to_subtype
-  obtain ⟨ψ, hψ⟩ := exists_germToFunctionField_eq_of_frequently_norm_le_one π U W
-    (fun x _ _ _ => (hX x).2) (φ := φ) fun p _ K hK => ⟨K, hK, le_rfl, fun y hy hW _ _ => by
-      obtain ⟨y', h1, h2, h3⟩ := exists_point_norm_valF_eq K y U hy φ
-      rw [← h3]
-      exact H p y' (h1 ▸ hW) h2⟩
-  have e : resG X h ψ = φ :=
-    X.germToFunctionField_injective U ((X.presheaf.germ_res_apply (homOfLE h) _ _ ψ).trans hψ)
-  exact ⟨ψ, e, fun ψ' h' => map_injective_of_isIntegral X (homOfLE h) (h'.trans e.symm)⟩
+  exact GlobalTheory.NormGlue.RegularSupport.BoundedRegular.existsUnique_resG_eq π hX h φ hU H
 
 
 theorem regular (X : Scheme.{0}) [IsIntegral X] (π : X ⟶ Sp ℤ) [Flat π]
@@ -1601,13 +1579,7 @@ theorem exists_sec_of_lbIso_pull {X X' : Scheme.{0}} {L : LB X} {L' : LB X'} {F 
 theorem mulN_comm_of_isGrpPullback {S S' : Scheme.{0}} {G : Over S} {G' : Over S'} [GrpObj G] [IsCommMonObj G]
     [GrpObj G'] [IsCommMonObj G'] {f : S' ⟶ S} {φ : G'.left ⟶ G.left} (h : IsGrpPullback G' G f φ) (n : ℕ) :
     (mulN G' n).left ≫ φ = φ ≫ (mulN G n).left := by
-  have e := congrArg (fun q => q.left) (map_pow (pushHom h G') (𝟙 G') n)
-  have e₂ : pushHom h G' (𝟙 G') ≫ mulN G n = pushHom h G' (𝟙 G') ^ n := by
-    rw [_root_.GlobalTheory.GrpTangent.mulN_eq_pow, MonObj.comp_pow, Category.comp_id]
-  rw [← e₂, ← _root_.GlobalTheory.GrpTangent.mulN_eq_pow] at e
-  refine Eq.trans e ?_
-  change (𝟙 _ ≫ φ) ≫ _ = _
-  rw [Category.id_comp]
+  apply GlobalTheory.ZJ.OmTest.mulN_comm <;> assumption
 
 theorem exists_sec_fibres {H S : Scheme.{0}} (p : H ⟶ S) {L M : LB H} (hL : L.IsLB) (hM : M.IsLB) (z : S)
     (h₁ : ∃ N : S.Opens, z ∈ N ∧ LBIso (L.pull (p ⁻¹ᵁ N).ι) (M.pull (p ⁻¹ᵁ N).ι))

@@ -223,11 +223,7 @@ variable {r : Type} [Fintype r] [DecidableEq r]
 
 theorem charpolyRev_map {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) (M : Matrix r r A) :
     (M.map f).charpolyRev = M.charpolyRev.map f := by
-  unfold Matrix.charpolyRev
-  rw [← Polynomial.coe_mapRingHom, RingHom.map_det]
-  congr 1
-  ext i j : 1
-  by_cases h : i = j <;> simp [h]
+  exact GlobalTheory.ChernCalc.HoloPull.charpolyRev_map f M
 
 theorem charpolyRev_smul {A : Type} [CommRing A] (c : A) (M : Matrix r r A) :
     (c • M).charpolyRev = M.charpolyRev.comp (Polynomial.C c * Polynomial.X) := by

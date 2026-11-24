@@ -562,16 +562,7 @@ namespace GlobalTheory.FamTrace.LatFwd
 
 theorem finM_inv_eq {D : D7} (V : HSp D) {n : ℕ} (hn : V.rank = n) (κ : GA D V) (x : GL (Fin n) (GlobalTheory.AdForm.EF D))
     (h : GlobalTheory.AdForm.finM V hn κ = x.1) : GlobalTheory.AdForm.finM V hn κ⁻¹ = (x⁻¹).1 := by
-  subst hn
-  have e : GlobalTheory.AdForm.finM V rfl κ * GlobalTheory.AdForm.finM V rfl κ⁻¹ = 1 := by
-    have e1 : ∀ g, GlobalTheory.AdForm.finM V rfl g = (mt V g).map (toEAf D) := fun g => rfl
-    have e2 : mt V κ * mt V κ⁻¹ = 1 := by
-      simp only [Formalism.L2.Theta.mt]
-      rw [← Units.val_mul, ← map_mul, mul_inv_cancel, map_one, Units.val_one]
-    rw [e1, e1, ← Matrix.map_mul, e2]
-    exact Matrix.map_one _ (map_zero _) (map_one _)
-  rw [h] at e
-  exact (Units.inv_eq_of_mul_eq_one_right e).symm
+  exact GlobalTheory.FamTrace.PairsFwd.finM_inv V hn κ x h
 
 theorem proj_mem_stabLoc_std {D : D7} (V : HSp D) (g : GA D V) (v : HeightOneSpectrum (𝓞 D.host.F))
     (hM : ∀ i j, (GlobalTheory.AdelicU.matHom _ D.sp.cm.sig V.gram (GlobalTheory.AdelicU.proj D.sp.cm.sig V.gram v g)).1 i j ∈ GlobalTheory.AdelicU.intLoc D.host.F D.host.E v)

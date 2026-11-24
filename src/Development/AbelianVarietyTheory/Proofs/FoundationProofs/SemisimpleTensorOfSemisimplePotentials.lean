@@ -545,12 +545,7 @@ namespace GlobalTheory.KZ.H3.LamStab
 
 theorem polySlash_map {R S : Type} [CommRing R] [CommRing S] (φ : R →+* S) (m : Matrix (Fin 2) (Fin 2) ℤ)
     (p : MvPolynomial (Fin 2) R) : slP m (MvPolynomial.map φ p) = MvPolynomial.map φ (slP m p) := by
-  induction p using MvPolynomial.induction_on with
-  | C a => simp [slP]
-  | add p q hp hq => simp [hp, hq]
-  | mul_X p i hp =>
-    simp only [map_mul, hp, MvPolynomial.map_X, Betti.slP_X, map_add (f := _)]
-    simp [MvPolynomial.smul_eq_C_mul]
+  exact GlobalTheory.KZ.H3.polySlash_map φ m p
 
 theorem opP_map {R S : Type} [CommRing R] [CommRing S] (φ : R →+* S) (m : Matrix (Fin 2) (Fin 2) ℤ)
     (F : ℂ → MvPolynomial (Fin 2) R) :
@@ -729,15 +724,7 @@ open scoped MatrixGroups TensorProduct
 namespace GlobalTheory.KZ.H3
 
 theorem relTriv_gamma_of_dvd {N M : ℕ} (h : N ∣ M) {δ : SL(2, ℤ)} (hδ : δ ∈ CongruenceSubgroup.Gamma M) :
-    δ ∈ CongruenceSubgroup.Gamma N := by
-  rw [CongruenceSubgroup.Gamma_mem] at hδ ⊢
-  obtain ⟨a, b, c, d⟩ := hδ
-  have e : ∀ x : ℤ, ((x : ZMod M).cast : ZMod N) = (x : ZMod N) := fun x => ZMod.cast_intCast h x
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · rw [← e, a]; simp [ZMod.cast_one h]
-  · rw [← e, b]; simp
-  · rw [← e, c]; simp
-  · rw [← e, d]; simp [ZMod.cast_one h]
+    δ ∈ CongruenceSubgroup.Gamma N := GlobalTheory.KZ.H3.KumAdd.gamma_of_dvd h hδ
 
 theorem toZModPow_eval_mulVec {l : ℕ} [Fact l.Prime] (n : ℕ) {δ : SL(2, ℤ)}
     (hδ : δ ∈ CongruenceSubgroup.Gamma (l ^ n)) (u : Fin 2 → ℤ_[l]) (q : MvPolynomial (Fin 2) ℤ_[l]) :
@@ -1055,11 +1042,7 @@ theorem map_smul' (φ : R →+* S) (c : R) (p : MvPolynomial (Fin 2) R) :
 
 theorem map_slP (φ : R →+* S) (m : Matrix (Fin 2) (Fin 2) ℤ) (p : MvPolynomial (Fin 2) R) :
     MvPolynomial.map φ (slP m p) = slP m (MvPolynomial.map φ p) := by
-  induction p using MvPolynomial.induction_on with
-  | C a => simp [slP]
-  | add p q hp hq => simp [hp, hq]
-  | mul_X p i hp =>
-    simp only [map_mul, hp, Betti.slP_X, MvPolynomial.map_X, map_add (f := _), map_smul', map_intCast]
+  exact GlobalTheory.KZ.H3.LamZero.map_slP φ m p
 
 theorem mapF_add (φ : R →+* S) (F G : ℂ → MvPolynomial (Fin 2) R) : mapF φ (F + G) = mapF φ F + mapF φ G := by
   funext z; simp [mapF]

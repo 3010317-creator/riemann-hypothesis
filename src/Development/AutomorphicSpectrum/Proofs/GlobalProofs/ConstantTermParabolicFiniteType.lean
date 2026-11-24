@@ -397,14 +397,7 @@ variable {D : D7}
 theorem pair_vec (V : HSp D) {p : ℕ} (U : Matrix (Fin V.rank) (Fin p) D.host.E) (w : Fin V.rank → D.host.E) (i : Fin p) :
     ((Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) U * V.gram) *ᵥ w) i =
       V.hT (V.frame.equivFun.symm fun k => U k i) (V.frame.equivFun.symm w) := by
-  have hsig : ∀ x : D.host.E, (D.sp.cm.sig : D.host.E →+* D.host.E) x = starRingEnd D.host.E x :=
-    fun _ => rfl
-
-  simp only [Module.Basis.equivFun_symm_apply, map_sum, LinearMap.map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul, Matrix.mulVec,
-  dotProduct, Matrix.mul_apply, Formalism.UG.cT, Matrix.transpose_apply, Matrix.map_apply, hsig,
-  Formalism.BasicNotions.HSpace.gram, Finset.mul_sum, Finset.sum_mul, RingHom.id_apply]
-  first
-    | (refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun l _ => ?_; ring)
+  exact (GlobalTheory.CompanionTheory.Hypotheses₂.LeviPart.UEmb.hT_col V U w i).symm
 
 theorem pair_frame (V V' : HSp D) (ι : V'.V →ₗ[D.host.E] V.V) {p : ℕ} (U : Matrix (Fin V.rank) (Fin p) D.host.E) (i : Fin p)
     (j : Fin V'.rank) :
@@ -598,16 +591,7 @@ namespace GlobalTheory.CompanionTheory.IsometricMatrix
 
 theorem exp_mulVec_of_mulVec_eq_zero {m : ℕ} (N : Matrix (Fin m) (Fin m) ℂ) (x : Fin m → ℂ)
     (hx : N *ᵥ x = 0) : NormedSpace.exp N *ᵥ x = x := by
-  have hC : N * Matrix.replicateCol (Fin 1) x = Matrix.replicateCol (Fin 1) x * (0 : Matrix (Fin 1) (Fin 1) ℂ) := by
-    ext i j
-    have hi := congrFun hx i
-    simp only [Matrix.mulVec, dotProduct, Pi.zero_apply] at hi
-    simpa [Matrix.mul_apply, Matrix.replicateCol] using hi
-  have hE := matrix_exp_mul_eq_mul_exp_of_intertwine N _ 0 hC
-  simp only [NormedSpace.exp_zero, Matrix.mul_one] at hE
-  ext i
-  have hi := congrFun (congrFun hE i) 0
-  simpa [Matrix.mulVec, dotProduct, Matrix.mul_apply, Matrix.replicateCol] using hi
+  exact PI.QnHermHaar.HermitianAdjointLemmas.exp_mulVec_fix N x hx
 
 theorem main {n n' : ℕ} (H : Matrix (Fin n) (Fin n) ℂ) (H' : Matrix (Fin n') (Fin n') ℂ)
     (J : Matrix (Fin n) (Fin n') ℂ)

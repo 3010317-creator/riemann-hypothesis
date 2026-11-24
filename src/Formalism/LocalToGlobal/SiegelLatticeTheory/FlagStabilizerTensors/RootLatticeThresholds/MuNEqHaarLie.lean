@@ -30,16 +30,7 @@ variable {k r : ℕ} {κ τ : ℝ}
 
 theorem phiP_stabAct (hκ : 0 < κ) (hτ : 0 < τ) (g a : Mx k r) (x : PairSp k r) :
     phiP k r κ τ (stabAct g a x) = stabAct (cj k r κ τ g) (cj k r κ τ a) (phiP k r κ τ x) := by
-  obtain ⟨⟨x1, x2⟩, ⟨x3, x4⟩⟩ := x
-  refine Prod.ext (Prod.ext rfl ?_) (Prod.ext rfl ?_)
-  · show (fun i j => cj k r κ τ (a * Matrix.of x2) i j) =
-      fun i j => (cj k r κ τ a * Matrix.of (cjT k r κ τ x2)) i j
-    rw [cj_mul hκ hτ]
-    rfl
-  · show (fun i j => cj k r κ τ (g⁻¹ * a * g * Matrix.of x4) i j) =
-      fun i j => ((cj k r κ τ g)⁻¹ * cj k r κ τ a * cj k r κ τ g * Matrix.of (cjT k r κ τ x4)) i j
-    rw [cj_mul hκ hτ, cj_mul hκ hτ, cj_mul hκ hτ, cj_inv hκ hτ]
-    rfl
+  exact (Formalism.MainNotions.FrameBoundFromBesselTorus.stabAct_phiP hκ hτ g a x).symm
 
 theorem isOrbQuot_trD (hκ : 0 < κ) (hτ : 0 < τ) (L : LocBessel k r)
     (hz : inWb k r ((τ : ℂ) • L.z) ∧ 0 < Tz k r ((τ : ℂ) • L.z))

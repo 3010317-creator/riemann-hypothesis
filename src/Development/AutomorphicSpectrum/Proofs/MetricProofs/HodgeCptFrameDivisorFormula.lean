@@ -1171,20 +1171,7 @@ theorem flagStep_colFrame {G M : Type} [Field G] [AddCommGroup M] [Module G M] {
 theorem linearIndependent_colFrame {G M : Type} [Field G] [AddCommGroup M] [Module G M] {r : ℕ} {e : Fin r → M}
     (he : LinearIndependent G e) (B : Matrix (Fin r) (Fin r) G) (hu : IsUnit B.det) :
     LinearIndependent G (colFrame e B) := by
-  rw [Fintype.linearIndependent_iff] at he ⊢
-  intro g hg
-  have h0 : B.mulVec g = 0 := by
-    funext l
-    refine he (fun l => B.mulVec g l) ?_ l
-    rw [← hg]
-    simp only [colFrame, Matrix.mulVec, dotProduct, Finset.sum_smul, Finset.smul_sum, smul_smul]
-    rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun l _ => ?_
-    rw [mul_comm]
-  have := Matrix.eq_zero_of_mulVec_eq_zero (hu.ne_zero) h0
-  intro k
-  rw [this]
-  rfl
+  exact PositivityTheory.Xgp.c_fm_exists_flags_dualflag.indep_colFrame he hu
 
 theorem exists_mat {Ω M : Type} [Field Ω] [AddCommGroup M] [Module Ω M] (W : Submodule Ω M) {r : ℕ} (C e : Fin r → M)
     (hC : LinearIndependent Ω C) (he : LinearIndependent Ω e) (hCm : ∀ k, C k ∈ W) (hem : ∀ k, e k ∈ W)

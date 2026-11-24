@@ -90,11 +90,7 @@ variable {S : Scheme.{0}} {A : Over S} [GrpObj A] {L : RigLB A}
 omit [GrpObj A] in
 theorem isPullback_whisk {T T' : Over S} (σ : T' ⟶ T) :
     IsPullback (σ ▷ A).left (fst T' A).left (fst T A).left σ.left := by
-  refine IsPullback.of_right (h₁₂ := (snd T A).left) (v₁₃ := A.hom) (h₂₂ := T.hom) ?_ ?_
-    (IsPullback.of_hasPullback T.hom A.hom).flip
-  · rw [← Over.comp_left, whiskerRight_snd, Over.w]
-    exact (IsPullback.of_hasPullback T'.hom A.hom).flip
-  · rw [← Over.comp_left, whiskerRight_fst, Over.comp_left]
+  exact GlobalTheory.AbLaw.SecBC.isPullback_whisker A σ
 
 theorem sv_of_pullRel {a : ℤ} {T T' : Over S} {σ : T' ⟶ T} {s : LB.Sec (LPow A L.L a T)}
     {s' : LB.Sec (LPow A L.L a T')} (h : PullRel L.L a (σ ▷ A) s s') {Z : Scheme.{0}} (r : Z ⟶ (T' ⊗ A).left) (z : Z)

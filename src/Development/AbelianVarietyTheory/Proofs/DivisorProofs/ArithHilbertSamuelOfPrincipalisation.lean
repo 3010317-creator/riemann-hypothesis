@@ -393,12 +393,7 @@ namespace GlobalTheory.HSNef
 theorem nu_shiftA {k : Type} [CommRing k] {X : Scheme.{0}} [IsIntegral X] {p : X ⟶ Sp k} (P : Pair p) (u : ℝ)
     (a b : ℤ) (σ : k →+* ℂ) (y : CxPts p σ) (f : X.functionField) :
     (shiftA P u).nu a b σ y f = P.nu a b σ y f * Real.exp (-(b * u)) := by
-  change ‖ratVal (P.loc a b f (pick (P.L.φ σ).isLB y) (pick (P.A.φ σ).isLB y)) y‖ *
-      Real.exp (-(a * (P.L.φ σ).φ (pick (P.L.φ σ).isLB y) y +
-        b * ((P.A.φ σ).φ (pick (P.A.φ σ).isLB y) y + 2 * u)) / 2) = _
-  rw [Pair.nu, mul_assoc, ← Real.exp_add]
-  congr 2
-  ring
+  exact GlobalTheory.HSNef.shiftA_nu P u a b σ y f
 
 theorem Bl_subset_shiftA {k : Type} [CommRing k] {X : Scheme.{0}} [IsIntegral X] {p : X ⟶ Sp k} (P : Pair p) {u : ℝ}
     (hu : 0 ≤ u) (a b : ℤ) (hb : 0 ≤ b) {R : ℝ} {f : X.functionField} (hf : f ∈ P.Bl a b R) :

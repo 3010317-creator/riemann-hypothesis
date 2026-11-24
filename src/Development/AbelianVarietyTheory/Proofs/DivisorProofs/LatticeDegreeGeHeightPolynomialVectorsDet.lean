@@ -1117,14 +1117,7 @@ namespace GlobalTheory.HSShort.DetTop
 
 theorem exists_rightInv {F : Type} [Field F] {N n : ℕ} (w : Matrix (Fin N) (Fin n) F)
     (hw : Submodule.span F (Set.range w.col) = ⊤) : ∃ w' : Matrix (Fin n) (Fin N) F, w * w' = 1 := by
-  have hr : LinearMap.range w.mulVecLin = ⊤ := by
-    rw [Matrix.range_mulVecLin]; exact hw
-  obtain ⟨g', hg'⟩ := w.mulVecLin.exists_rightInverse_of_surjective hr
-  refine ⟨LinearMap.toMatrix' g', ?_⟩
-  have := congrArg LinearMap.toMatrix' hg'
-  rw [LinearMap.toMatrix'_comp, LinearMap.toMatrix'_id] at this
-  have e : LinearMap.toMatrix' w.mulVecLin = w := LinearMap.toMatrix'_toLin' w
-  rwa [e] at this
+  exact GlobalTheory.HeightUnique.exists_right_inv hw
 
 theorem linSubst_det {F : Type} [Field F] {B N n d : ℕ} (w : Matrix (Fin N) (Fin n) F)
     (P : Matrix (Fin d) (Fin d) (MvPolynomial (Fin B × Fin N) F)) :

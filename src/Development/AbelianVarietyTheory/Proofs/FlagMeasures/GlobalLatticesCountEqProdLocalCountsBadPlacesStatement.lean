@@ -124,19 +124,8 @@ lemma h_symm_mem (H : HermSp M V) {x y : V} (h : H.h x y ∈ M.L.O) : H.h y x �
 
 lemma span_left (H : HermSp M V) (S : Set V) (y : V) (h : ∀ x ∈ S, H.h x y ∈ M.L.O) :
     ∀ x ∈ Submodule.span M.L.O S, H.h x y ∈ M.L.O := by
-  intro x hx
-  induction hx using Submodule.span_induction with
-  | mem x hx => exact h x hx
-  | zero =>
-    have h0 : H.h 0 y = 0 := (hl H y).map_zero
-    rw [h0]
-    exact zero_mem _
-  | add x x' _ _ hx hx' =>
-    rw [H.h_add_left]
-    exact add_mem hx hx'
-  | smul c x _ hx =>
-    rw [Subring.smul_def, H.h_smul_left]
-    exact mul_mem c.2 hx
+  intros
+  apply GlobalTheory.LocOver.ZStep.span_h_left <;> assumption
 
 private lemma form_mem_O_of_frame_coords_mem_O (H : HermSp M V) {r : ℕ} (Fr : FrameD H r) (L : Submodule M.L.O (H.Wb Fr.f))
     (hL : Fr.IsInner L) {u v : V}
@@ -411,17 +400,7 @@ lemma Fj_le_flag {H : HermSp M V} {r : ℕ} (Fr : FrameD H r) (j : ℕ) : Fr.Fj 
   exact ⟨a.castSucc, ha, rfl⟩
 
 lemma last_mem_perp {H : HermSp M V} {r : ℕ} (Fr : FrameD H r) :
-    Fr.f (Fin.last r) ∈ H.perp (H.X Fr.f) := by
-  intro x hx
-  have : H.h x (Fr.f (Fin.last r)) = 0 := by
-    induction hx using Submodule.span_induction with
-    | mem x hx =>
-      obtain ⟨a, rfl⟩ := hx
-      exact Fr.h_iso _ _ (Or.inl (Fin.castSucc_lt_last a).ne)
-    | zero => exact H.h_zero_left _
-    | add x y _ _ hx hy => rw [H.h_add_left, hx, hy, add_zero]
-    | smul c x _ hx => rw [H.h_smul_left, hx, mul_zero]
-  rw [H.h_herm, this, map_zero]
+    Fr.f (Fin.last r) ∈ H.perp (H.X Fr.f) := GlobalTheory.LocOver.UnipOnto.z_perp Fr
 
 lemma lowers_of_mem_NSet {H : HermSp M V} {r : ℕ} (Fr : FrameD H r) {n : V ≃ₗ[E] V} (hn : n ∈ Fr.NSet) :
     Lowers Fr.f n := by

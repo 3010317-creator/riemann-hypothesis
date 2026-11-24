@@ -162,11 +162,7 @@ open PowerSeries
 variable {K : Type*} [NormedField K] [IsUltrametricDist K]
 
 theorem intSer_mul {f g : K⟦X⟧} (hf : IntSer f) (hg : IntSer g) : IntSer (f * g) := by
-  intro n
-  rw [coeff_mul]
-  refine IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg zero_le_one fun x _ => ?_
-  rw [norm_mul]
-  exact mul_le_one₀ (hf _) (norm_nonneg _) (hg _)
+  exact GlobalTheory.EvenTheta.SerRing.intSer_mul hf hg
 
 omit [IsUltrametricDist K] in
 theorem intSer_C {c : K} (hc : ‖c‖ ≤ 1) : IntSer (C c : K⟦X⟧) := by

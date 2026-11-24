@@ -444,17 +444,7 @@ namespace GlobalTheory.Square
 variable {K : Type} [Field K] [NumberField K] [StarRing K]
 
 theorem stepRatio_vw_pow (w : Pl K) {x : K} (hx : x ≠ 0) (c : ℕ) : vw w (x ^ c) = c * vw w x := by
-  induction c with
-  | zero =>
-    have h := Formalism.DivisionValues.ValuationRepresentative.vw_mul w (1 : K) 1 one_ne_zero one_ne_zero
-    rw [mul_one] at h
-    rw [pow_zero]
-    push_cast
-    omega
-  | succ c ih =>
-    rw [pow_succ, Formalism.DivisionValues.ValuationRepresentative.vw_mul w _ _ (pow_ne_zero c hx) hx, ih]
-    push_cast
-    ring
+  exact Formalism.PairingDivisionLocalBalance.vw_pow w x hx c
 
 theorem stepRatio_vw_of_dvd (w : Pl K) {q c : ℕ} (hq : 0 < q) {g : 𝓞 K} (hg : g ∣ (q : 𝓞 K) ^ c) :
     (g : K) ≠ 0 ∧ 0 ≤ vw w (g : K) ∧ vw w (g : K) ≤ c * vw w (q : K) := by

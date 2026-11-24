@@ -596,13 +596,7 @@ private lemma toMK_conjTranspose_mul_self (k : KG ε) : (toMK k)ᴴ * toMK k = 1
   | exact Unitary.star_mul_self_of_mem hU
 
 lemma toMK_inv_eq (k : KG ε) : toMK k⁻¹ = (toMK k)ᴴ := by
-  have hu : star (toMK k) * toMK k = 1 := toMK_conjTranspose_mul_self k
-  have hv : toMK k * toMK k⁻¹ = 1 := by
-    first
-    | exact Units.mul_inv _
-  calc toMK k⁻¹ = (star (toMK k) * toMK k) * toMK k⁻¹ := by rw [hu, Matrix.one_mul]
-    _ = star (toMK k) * (toMK k * toMK k⁻¹) := by rw [Matrix.mul_assoc]
-    _ = (toMK k)ᴴ := by rw [hv, Matrix.mul_one]; rfl
+  exact ReciprocityTheory.ChartRestriction.DS.S7.Ps1.toMK_inv_eq k
 
 lemma conj_mem_omega {x : Matrix (Fin n) (Fin n) ℂ} (hx : x.PosDef) (k : KG ε) :
     toMK k⁻¹ * x * toMK k ∈ OmegaSet n := by

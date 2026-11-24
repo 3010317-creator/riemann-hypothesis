@@ -1289,13 +1289,7 @@ theorem iteratedDeriv_cexp_mul (a : ℂ) (n : ℕ) :
     rw [h.deriv]; ring
 
 theorem hasTemperateGrowth_expI : Function.HasTemperateGrowth (fun t : ℝ => Complex.exp (Complex.I * t)) := by
-  have hc : ContDiff ℝ (⊤ : ℕ∞) (fun y : ℝ => Complex.exp (Complex.I * y)) :=
-    (contDiff_const.mul Complex.ofRealCLM.contDiff).cexp
-  refine ⟨hc, fun n => ⟨0, ‖Complex.I‖ ^ n, fun x => ?_⟩⟩
-  rw [norm_iteratedFDeriv_eq_norm_iteratedDeriv, iteratedDeriv_cexp_mul, pow_zero, mul_one, norm_mul, norm_pow]
-  have h1 : ‖Complex.exp (Complex.I * x)‖ = 1 := by
-    rw [mul_comm, Complex.norm_exp_ofReal_mul_I]
-  rw [h1, mul_one]
+  exact GlobalTheory.CompanionTheory.AdelicHeis.temperate_exp_I
 
 theorem hasTemperateGrowth_chirp {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (Q : V →L[ℝ] V →L[ℝ] ℂ) (s : ℝ) :

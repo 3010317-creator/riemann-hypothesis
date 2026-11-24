@@ -861,11 +861,7 @@ open scoped NNReal
 namespace GlobalTheory.AlmostEt
 
 theorem valuation_nnreal_natCast_le_one {L : Type} [Field L] (v : Valuation L ℝ≥0) (n : ℕ) : v (n : L) ≤ 1 := by
-  induction n with
-  | zero => simp
-  | succ k ih =>
-    push_cast
-    exact le_trans (v.map_add _ _) (max_le ih (by simp))
+  exact GlobalTheory.AlmostEt.valuation_natCast_le_one v n
 
 theorem valuation_nnreal_intCast_le_one {L : Type} [Field L] (v : Valuation L ℝ≥0) (z : ℤ) : v (z : L) ≤ 1 := by
   cases z with

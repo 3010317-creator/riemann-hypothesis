@@ -94,13 +94,7 @@ namespace GlobalTheory.BKGal.StableFix
 
 theorem SemiBC.span_eq {A B M N : Type} [CommRing A] [CommRing B] [AddCommGroup M] [Module A M]
     [AddCommGroup N] [Module B N] {f : A →+* B} {u : M →ₛₗ[f] N} (h : SemiBC u) :
-    Submodule.span B (Set.range u) = ⊤ := by
-  have h1 : (Submodule.span B (Set.range u)).mkQ = 0 := h.hom_ext fun x => by
-    rw [LinearMap.zero_apply, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-    exact Submodule.subset_span ⟨x, rfl⟩
-  exact Submodule.eq_top_iff'.2 fun y => by
-    have := LinearMap.congr_fun h1 y
-    rwa [LinearMap.zero_apply, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at this
+    Submodule.span B (Set.range u) = ⊤ := GlobalTheory.CrysGalValue.span_range_eq_top h
 
 variable {l : ℕ} [hl : Fact l.Prime] {a : ℕ} [NeZero a] {e : ℕ} [NeZero e]
   {O K : Type} [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O]

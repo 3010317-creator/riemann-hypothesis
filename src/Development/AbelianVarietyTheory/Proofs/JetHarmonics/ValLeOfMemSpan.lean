@@ -328,14 +328,7 @@ namespace GlobalTheory.DirScale
 variable {R : Type} [CommRing R] {d : ℕ}
 
 theorem dof_smul_dir (F : Fin d → PS R 2 d) (c : R) (u : Fin d → R) (f : PS R 1 d) :
-    Dof F (c • u) f = C c * Dof F u f := by
-  unfold Dof
-  rw [Finset.mul_sum]
-  refine Finset.sum_congr rfl fun j _ => ?_
-  rw [← mul_assoc, Finset.mul_sum]
-  congr 1
-  refine Finset.sum_congr rfl fun i _ => ?_
-  rw [Pi.smul_apply, smul_eq_mul, map_mul, mul_assoc]
+    Dof F (c • u) f = C c * Dof F u f := GlobalTheory.DerivEndo.dof_smul_dir F c u f
 
 theorem dof_iter_C_mul (F : Fin d → PS R 2 d) (u : Fin d → R) (n : ℕ) (r : R) (f : PS R 1 d) :
     (Dof F u)^[n] (C r * f) = C r * (Dof F u)^[n] f := by

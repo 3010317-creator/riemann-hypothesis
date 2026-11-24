@@ -284,11 +284,7 @@ theorem mem_zeroSet_iff_le_ker (J : Ideal (MvPolynomial (Fin n) ℂ)) (x : Fin n
   simp only [zeroSet, Set.mem_ofPred_eq, SetLike.le_def, RingHom.mem_ker]
 
 theorem isClosed_zeroSet (J : Ideal (MvPolynomial (Fin n) ℂ)) : IsClosed (zeroSet J) := by
-  have h : zeroSet J = ⋂ f ∈ J, {x : Fin n → ℂ | eval x f = 0} := by
-    ext x
-    simp [zeroSet]
-  rw [h]
-  exact isClosed_biInter fun f _ => isClosed_eq (MvPolynomial.continuous_eval f) continuous_const
+  exact GroundTheory.Heights₂.Heights.SheetSumMeasurable.isClosed_zeroSet J
 
 theorem exists_minimalPrime_mem_zeroSet {I : Ideal (MvPolynomial (Fin n) ℂ)} {x : Fin n → ℂ}
     (hx : x ∈ zeroSet I) : ∃ W ∈ I.minimalPrimes, x ∈ zeroSet W := by

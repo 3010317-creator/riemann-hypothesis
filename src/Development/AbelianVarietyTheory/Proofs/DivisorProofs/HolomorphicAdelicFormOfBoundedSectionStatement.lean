@@ -116,11 +116,7 @@ theorem archM_of_fin (V : HSp D) (θ : Ainf D.host.F ⊗[D.host.F] D.host.E →+
   rw [archM, hk', Units.val_one, Matrix.map_one _ (map_zero _) (map_one _)]
 
 theorem topGroup (V : HSp D) : IsTopologicalGroup (GA D V) := by
-  have : IsModuleTopology (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  have : IsTopologicalRing (AF D.host.F ⊗[D.host.F] D.host.E) :=
-    IsModuleTopology.isTopologicalRing (AF D.host.F) _
-  exact inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
+  exact GlobalTheory.AutFunCounterexample.topGroup_GA D V
 
 theorem continuous_of_holAd {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {S : D.what₂.Tau → SPar} {M : DSModel V S}
     (hM : HolShape M) {w : D.what₂.Tau → Fin V.rank → ℤ} {φ : GA D V → ℂ} (hφ : HolAd θ M w φ)

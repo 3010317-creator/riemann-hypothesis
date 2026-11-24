@@ -485,14 +485,7 @@ theorem tl_one {r t : ℕ} : tl r (1 : Mt g (r + t)) = 1 := by
   have hj : (j : ℕ) < r + t := by omega
   simp only [tl, Formalism.MainNotions.ArithmeticCylinders.entN, dite_eq_left (And.intro hi hj), Matrix.one_apply, Fin.ext_iff]
 
-theorem br_one {r t : ℕ} : br r t (1 : Mt g (r + t)) = 1 := by
-  ext i j
-  have hi : r + (i : ℕ) < r + t := by omega
-  have hj : r + (j : ℕ) < r + t := by omega
-  simp only [br, Formalism.MainNotions.ArithmeticCylinders.entN, dite_eq_left (And.intro hi hj), Matrix.one_apply, Fin.ext_iff]
-  by_cases h : (i : ℕ) = j
-  · simp [h]
-  · rw [ite_eq_right (by omega), ite_eq_right h]
+theorem br_one {r t : ℕ} : br r t (1 : Mt g (r + t)) = 1 := GlobalTheory.GLq.FrobRecHC.br_one
 
 theorem blk_parts {r t : ℕ} (y : Gn g t) :
     InPar r (blk r t (r + t) 1 y : Mt g (r + t)) ∧ tl r (blk r t (r + t) 1 y : Mt g (r + t)) = 1 ∧
@@ -1148,48 +1141,11 @@ open GlobalTheory.GLq.Opp
 variable {g : ℕ} [Fact g.Prime] {k l n : ℕ}
 
 theorem blk_eq (x : Gn g k) (y : Gn g l) : blk k l (k + l) x y = par finSumFinEquiv x 0 y := by
-  have h : (fun i j : Fin (k + l) => if (i : ℕ) < k ∧ (j : ℕ) < k then entN (x : Mt g k) i j
-      else if k ≤ (i : ℕ) ∧ k ≤ (j : ℕ) then entN (y : Mt g l) (i - k) (j - k) else 0) =
-      ((par finSumFinEquiv x 0 y : Gn g (k + l)) : Mt g (k + l)) := by
-    funext i j
-    obtain ⟨i, rfl⟩ := finSumFinEquiv.surjective i
-    obtain ⟨j, rfl⟩ := finSumFinEquiv.surjective j
-    rw [par_apply]
-    rcases i with i | i <;> rcases j with j | j
-    · simp [entN]
-    · have := i.2
-      simp [entN]
-    · have := j.2
-      simp [entN]
-    · simp [entN]
-  unfold blk
-  rw [h, toG, dite_eq_left (Units.isUnit _), IsUnit.unit_of_val_units]
+  exact GlobalTheory.SerSys.OfLabel.blk_eq_par x y
 
 theorem eq_par (z : Gn g (k + l)) (h0 : InPar k (z : Mt g (k + l))) (h1 : tl k (z : Mt g (k + l)) = 1)
     (h2 : br k l (z : Mt g (k + l)) = 1) : ∃ B, z = par finSumFinEquiv 1 B 1 := by
-  have e1 : ∀ (M : Mt g (k + l)) (i j : Fin k), tl k M i j = M (finSumFinEquiv (.inl i)) (finSumFinEquiv (.inl j)) := by
-    intro M i j
-    have hi := i.2
-    have hj := j.2
-    rw [tl, entN, dite_eq_left ⟨by omega, by omega⟩]
-    rfl
-  have e2 : ∀ (M : Mt g (k + l)) (i j : Fin l), br k l M i j = M (finSumFinEquiv (.inr i)) (finSumFinEquiv (.inr j)) := by
-    intro M i j
-    have hi := i.2
-    have hj := j.2
-    rw [br, entN, dite_eq_left ⟨by omega, by omega⟩]
-    rfl
-  refine ⟨Matrix.of fun i j => (z : Mt g (k + l)) (finSumFinEquiv (.inl i)) (finSumFinEquiv (.inr j)), ?_⟩
-  apply Units.ext
-  ext i j
-  obtain ⟨i, rfl⟩ := finSumFinEquiv.surjective i
-  obtain ⟨j, rfl⟩ := finSumFinEquiv.surjective j
-  rw [par_apply]
-  rcases i with i | i <;> rcases j with j | j
-  · rw [← e1 (z : Mt g (k + l)) i j, h1]; simp
-  · simp
-  · rw [h0 _ _ (by simp) (by simp)]; simp
-  · rw [← e2 (z : Mt g (k + l)) i j, h2]; simp
+  exact GlobalTheory.SerSys.Prod.exists_eq_par z h0 h1 h2
 
 end GlobalTheory.SerSys.Opp
 end -- clump:auto

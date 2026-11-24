@@ -237,12 +237,7 @@ end General
 variable {D : D7} {T : Type}
 
 theorem g_mem {P : Formalism.L2.Host.PiBar D.host} {k : Fin 2} {PP : Pl D.host.E} (h : P.Div k PP) :
-    ((D.host.g k : ℕ) : 𝓞 D.host.E) ∈ PP.asIdeal := by
-  have h1 := P.pb_over k
-  have h2 : PP.under (𝓞 D.host.K) = P.pb k := h
-  rw [← h2] at h1
-  have h3 : algebraMap (𝓞 D.host.K) (𝓞 D.host.E) ((D.host.g k : ℕ) : 𝓞 D.host.K) ∈ PP.asIdeal := h1
-  rwa [map_natCast] at h3
+    ((D.host.g k : ℕ) : 𝓞 D.host.E) ∈ PP.asIdeal := GlobalTheory.StepLaw.typePrime_mem_of_div h
 
 theorem levRow_sub {L : LevCh D T} {μ0 : T} (hL : L.Is μ0) :
     (levRow L : Set (GA D (Yc D 0))) ⊆ levS _ (L.βY 0) (L.dat0 L.triv) := by
@@ -465,11 +460,7 @@ namespace GlobalTheory.RowConvAll
 
 theorem multT_le_empty {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (θ : InfFam D) (M : DSModel V S) (J : Set (GA D V))
     (χ : GA D V → ℂ) : MultT θ M J χ ≤ MultT θ M ∅ 1 := by
-  intro x hx
-  rw [mem_multT] at hx ⊢
-  refine Submodule.span_mono ?_ hx
-  intro T hT
-  exact ⟨hT.aut, hT.cusp, fun v k hk => absurd hk (Set.notMem_empty k), hT.equiv, hT.cont⟩
+  exact GlobalTheory.ChainOnto.multT_le_noLevel θ M J χ
 
 end GlobalTheory.RowConvAll
 
@@ -700,36 +691,14 @@ namespace GlobalTheory.RowArrow
 variable {D : D7}
 
 theorem unit_of_gram {n : ℕ} {G b : Matrix (Fin n) (Fin n) ℂ} {ε : Fin n → Bool} (h : bᴴ * G * b = Formalism.REAL.Jm ε) :
-    IsUnit b.det := by
-  have hJ : IsUnit (Formalism.REAL.Jm ε).det := by
-    unfold Formalism.REAL.Jm
-    rw [det_diagonal, isUnit_iff_ne_zero]
-    exact Finset.prod_ne_zero_iff.2 fun a _ => by split_ifs <;> norm_num
-  rw [← h, det_mul] at hJ
-  exact isUnit_of_mul_isUnit_right hJ
+    IsUnit b.det := GlobalTheory.ConjFock.unit_of_gram h
 
 theorem inv_gram {n : ℕ} {G b : Matrix (Fin n) (Fin n) ℂ} {ε : Fin n → Bool} (h : bᴴ * G * b = Formalism.REAL.Jm ε) :
-    (b⁻¹)ᴴ * Formalism.REAL.Jm ε * b⁻¹ = G := by
-  have hb := unit_of_gram h
-  have h1 : (bᴴ)⁻¹ * bᴴ = 1 := nonsing_inv_mul _ (by rw [det_conjTranspose]; exact hb.star)
-  have h2 : b * b⁻¹ = 1 := mul_nonsing_inv _ hb
-  rw [← h, conjTranspose_nonsing_inv]
-  calc (bᴴ)⁻¹ * (bᴴ * G * b) * b⁻¹ = ((bᴴ)⁻¹ * bᴴ) * G * (b * b⁻¹) := by simp only [Matrix.mul_assoc]
-    _ = G := by rw [h1, h2, Matrix.one_mul, Matrix.mul_one]
+    (b⁻¹)ᴴ * Formalism.REAL.Jm ε * b⁻¹ = G := GlobalTheory.ConjFock.inv_gram h
 
 theorem exists_frame (V : HSp D) (c b : D.what₂.Tau → Matrix (Fin V.rank) (Fin V.rank) ℂ)
     (h : ∀ τ, ∃ ε : Fin V.rank → Bool, (b τ)ᴴ * gramAt D V τ * b τ = Formalism.REAL.Jm ε ∧ c τ * b τ = b τ * Formalism.REAL.Jm ε) :
-    ∃ A : Fr V, A.cart = c ∧ A.onb = b := by
-  choose ε hε using h
-  refine ⟨⟨ε, fun τ => (b τ)⁻¹, fun τ => isUnit_nonsing_inv_iff.2 ((isUnit_iff_isUnit_det _).2 (unit_of_gram (hε τ).1)),
-    fun τ => inv_gram (hε τ).1⟩, ?_, ?_⟩
-  · funext τ
-    simp only [Fr.cart]
-    rw [nonsing_inv_nonsing_inv _ (unit_of_gram (hε τ).1), ← (hε τ).2, Matrix.mul_assoc,
-      mul_nonsing_inv _ (unit_of_gram (hε τ).1), Matrix.mul_one]
-  · funext τ
-    simp only [Fr.onb]
-    rw [nonsing_inv_nonsing_inv _ (unit_of_gram (hε τ).1)]
+    ∃ A : Fr V, A.cart = c ∧ A.onb = b := GlobalTheory.ConjFock.frame_pos V c b h
 
 theorem lifts_neg {X : ProvA} (h3 : Formalism.MainNotions.SchurIrreducible.ArchimedeanRallisUpDownLine X) (h4 : Formalism.MainNotions.SchurIrreducible.ArchimedeanRallisFourth X) (h5 : Formalism.MainNotions.SchurIrreducible.ArchimedeanRallisFifth X)
     (hP : PairLifts D X) (hE : PairEx) {θ : InfFam D} (hθ : IsInfFam θ) {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1))
@@ -1309,26 +1278,7 @@ namespace GlobalTheory.CoreOnto
 variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts}
 
 theorem coefPlus_is (G : GridData L sc) (θ : InfFam D) (hθ : IsInfFam θ) : (coefPlus G θ).Is := by
-  obtain ⟨hc, hs⟩ := GlobalTheory.CoefModel.realGL_laws hθ (Xp G)
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig (Xp G).gram
-  refine GlobalTheory.CoefModel.coefOf_is _ _ _ (fun h hh => ?_) (fun h τ => ?_) (fun τ => ?_) (fun g hg => ?_)
-  · have : GlobalTheory.CoefModel.realGL θ (Xp G) h = 1 := funext fun τ => by
-      show Formalism.UG.bc (θ τ) (infHom (Xp G) h) = 1
-      rw [show infHom (Xp G) h = 1 from hh, map_one]
-    rw [MonoidHom.comp_apply, this, map_one]
-  · exact GlobalTheory.CoefModel.invTr_unitary (g := GlobalTheory.CoefModel.realGL θ (Xp G) h τ)
-      (GlobalTheory.RecDictModel.archM_unitary _ (hθ τ) h)
-  · refine ((hc τ).comp continuous_inv).matrix_transpose.congr fun h => ?_
-    show Matrix.transpose (GlobalTheory.CoefModel.realGL θ (Xp G) h⁻¹ τ : Matrix (Fin (Xp G).rank) (Fin (Xp G).rank) ℂ) = _
-    rw [map_inv]
-    rfl
-  · obtain ⟨h, e⟩ := hs (invTrK g) fun τ => by
-      have := GlobalTheory.CoefModel.invTr_unitary (hg τ)
-      rwa [← Matrix.transpose_nonsing_inv, Matrix.nonsing_inv_nonsing_inv _
-        ((Matrix.isUnit_iff_isUnit_det _).1 (posDef_Xp G _).isUnit), Matrix.transpose_transpose] at this
-    refine ⟨h, ?_⟩
-    rw [MonoidHom.comp_apply, e]
-    exact funext fun τ => GlobalTheory.CoefModel.invTr_invTr _
+  exact GlobalTheory.TopLineProof.coefPlus_is G hθ
 
 theorem eps_core_m (G : GridData L sc) (M : DSModel (G.V (.core D.R.m)) (Node.par D sc.cGap (.core D.R.m))) :
     ∀ τ a, M.ε τ a = true := by

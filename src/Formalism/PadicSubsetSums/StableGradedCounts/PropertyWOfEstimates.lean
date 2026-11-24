@@ -760,15 +760,7 @@ theorem primeToPart_eq_self_of_not_dvd {M : Type} [Monoid M] {l n : ℕ} (hl : l
 
 theorem sqWeight_irreducible {K : Type} [Field K] [Fintype K] (P : K[X]) (hP : Irreducible P)
     (hm : P.Monic) : sqWeight P = ((Fintype.card K : ℝ) ^ P.natDegree - 1)⁻¹ := by
-  unfold sqWeight
-  classical
-  have h1 := UniqueFactorizationMonoid.normalizedFactors_irreducible hP
-  rw [hm.normalize_eq_self] at h1
-  have h2 : (Multiset.map (fun P : K[X] => ((Fintype.card K : ℝ) ^ P.natDegree - 1)⁻¹)
-      (UniqueFactorizationMonoid.normalizedFactors P)).prod =
-      ((Fintype.card K : ℝ) ^ P.natDegree - 1)⁻¹ := by
-    rw [h1]; simp
-  convert h2
+  exact Formalism.IrreducibleCountingLemmas.GaloisIrreducibility.E4.sqWeight_irred P hP hm
 
 section sets
 

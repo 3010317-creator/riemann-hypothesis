@@ -321,15 +321,7 @@ theorem cK_continuous {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε �
   (continuous_const.inner ((CompactHaarProbability.cont_op T).clm_apply continuous_const)).norm
 
 theorem op_norm {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (k : KG ε) (v : T.V) : ‖T.op k v‖ = ‖v‖ := by
-  have h : T.op k⁻¹ * T.op k = 1 := CompactHaarProbability.op_inv_mul T k
-  have hs : star (T.op k) * T.op k = 1 := Unitary.star_mul_self_of_mem (T.τ k).prop
-  have h2 : ‖T.op k v‖ ^ 2 = ‖v‖ ^ 2 := by
-    rw [← @inner_self_eq_norm_sq ℂ, ← @inner_self_eq_norm_sq ℂ]
-    congr 1
-    rw [← ContinuousLinearMap.adjoint_inner_right, ← ContinuousLinearMap.star_eq_adjoint,
-      ← ContinuousLinearMap.mul_apply, hs, ContinuousLinearMap.one_apply]
-  have := h
-  nlinarith [norm_nonneg (T.op k v), norm_nonneg v, sq_nonneg (‖T.op k v‖ - ‖v‖), sq_nonneg (‖T.op k v‖ + ‖v‖)]
+  exact ReciprocityTheory.ChartRestriction.DS.KType_norm_op_apply T k v
 
 theorem cK_le_one {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (k : KG ε) : cK T k ≤ 1 := by
   unfold cK
@@ -658,19 +650,7 @@ theorem mom_step {Ω Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω'] {ν 
 
 theorem mom_sum {A : Type} [MeasurableSpace A] (m : Measure A) {W : A → ℝ} (hW : Measurable W) (h : ∀ x, 0 ≤ W x ∧ W x ≤ 1) :
     m {x | 0 < W x} = ∑' M : ℕ, ∫⁻ x, ENNReal.ofReal (W x ^ 1 * (1 - W x) ^ M) ∂m := by
-  rw [← lintegral_tsum fun M => (by fun_prop : Measurable fun x => ENNReal.ofReal (W x ^ 1 * (1 - W x) ^ M)).aemeasurable,
-    ← lintegral_indicator_one (measurableSet_lt measurable_const hW)]
-  refine lintegral_congr fun x => ?_
-  have a := (h x).1
-  have b := sub_nonneg.2 (h x).2
-  by_cases hx : 0 < W x
-  · have hs : HasSum (fun M : ℕ => W x ^ 1 * (1 - W x) ^ M) (W x ^ 1 * (1 - (1 - W x))⁻¹) :=
-      (hasSum_geometric_of_lt_one b (by linarith)).mul_left _
-    rw [← ENNReal.ofReal_tsum_of_nonneg (fun M => by positivity) hs.summable, hs.tsum_eq,
-      indicator_of_mem (show x ∈ {x | 0 < W x} from hx)]
-    simp [mul_inv_cancel₀ hx.ne']
-  · rw [indicator_of_notMem (show x ∉ {x | 0 < W x} from hx), show W x = 0 from le_antisymm (not_lt.1 hx) a]
-    simp
+  exact CompanionTheory.RgFd.mom_sum m hW h
 
 theorem momA : MomA := by
   intro Ω Ω' _ _ ν ν' U U' t0 hU hU' h h' ht he hf

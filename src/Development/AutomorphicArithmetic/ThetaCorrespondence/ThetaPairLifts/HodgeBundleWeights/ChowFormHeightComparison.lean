@@ -959,20 +959,7 @@ namespace PositivityTheory.UnitarySelfGeneration.UnitProductCombination
 
 theorem valF_fromSpecStalk (X : Scheme.{0}) [IsIntegral X] (U : X.Opens) (h : genericPoint X ∈ U) (f : Γ(X, U)) :
     valF (F := X.functionField) (X.fromSpecStalk (genericPoint X)) U f = fnOf U h f := by
-  have hsp : ∀ w, (X.fromSpecStalk (genericPoint X)).base w ⤳ genericPoint X := by
-    intro w
-    have hw : (X.fromSpecStalk (genericPoint X)).base w ∈ Set.range (X.fromSpecStalk (genericPoint X)).base := ⟨w, rfl⟩
-    rwa [Scheme.range_fromSpecStalk] at hw
-  have hU : ⊤ ≤ (Opens.map (X.fromSpecStalk (genericPoint X)).base).obj U := by
-    exact fun w _ => (hsp w).mem_open U.isOpen h
-  have key : Scheme.Hom.appLE (X.fromSpecStalk (genericPoint X)) U ⊤ hU ≫
-      (Scheme.ΓSpecIso (X.presheaf.stalk (genericPoint X))).hom = X.presheaf.germ U (genericPoint X) h := by
-    rw [Scheme.Hom.appLE, Scheme.fromSpecStalk_app h]
-    simp only [Category.assoc, ← Functor.map_comp_assoc, ← op_comp, homOfLE_comp, homOfLE_refl, op_id]
-    simp
-  unfold valF
-  rw [dite_eq_left hU]
-  exact congrArg (fun φ => CommRingCat.Hom.hom φ f) key
+  exact GlobalTheory.FlagBundle.valF_fromSpecStalk h f
 
 private theorem top_le_map_fromSpecStalk_genericPoint (X : Scheme.{0}) [IsIntegral X] (U : X.Opens)
     (h : genericPoint X ∈ U) : ⊤ ≤ (Opens.map (X.fromSpecStalk (genericPoint X)).base).obj U := by

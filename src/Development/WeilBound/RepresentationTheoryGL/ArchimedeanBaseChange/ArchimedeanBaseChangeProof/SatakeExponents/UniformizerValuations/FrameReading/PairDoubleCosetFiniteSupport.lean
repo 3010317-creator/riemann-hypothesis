@@ -947,15 +947,7 @@ namespace GlobalTheory.CompanionTheory.GroupIndex.RelProd
 theorem relIndex_prod_eq_mul {G₁ G₂ : Type} [Group G₁] [Group G₂]
     (I₁ K₁ : Subgroup G₁) (I₂ K₂ : Subgroup G₂) :
     (I₁.prod I₂).relIndex (K₁.prod K₂) = I₁.relIndex K₁ * I₂.relIndex K₂ := by
-  have hmap : ((I₁.prod I₂).subgroupOf (K₁.prod K₂)) =
-      ((I₁.subgroupOf K₁).prod (I₂.subgroupOf K₂)).comap
-        (Subgroup.prodEquiv K₁ K₂).toMonoidHom := by
-    ext x
-    simp only [Subgroup.mem_subgroupOf, Subgroup.mem_prod, Subgroup.mem_comap]
-    exact Iff.rfl
-  unfold Subgroup.relIndex
-  rw [hmap, Subgroup.index_comap_of_surjective _ (Subgroup.prodEquiv K₁ K₂).surjective,
-    Subgroup.index_prod]
+  exact GlobalTheory.BCT.OrbProd.relIndex_prod_prod I₁ K₁ I₂ K₂
 
 theorem relIndex_prod_ne_zero_of_ne_zero :
     ∀ (G₁ G₂ : Type) [Group G₁] [Group G₂] (I₁ K₁ : Subgroup G₁) (I₂ K₂ : Subgroup G₂),

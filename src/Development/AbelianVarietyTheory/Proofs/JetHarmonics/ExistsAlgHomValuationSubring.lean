@@ -79,12 +79,7 @@ noncomputable def divisibleUnits (F : Type) [Field F] [IsAlgClosed F] :
 theorem exists_extension {H M F : Type} [CommGroup H] [CommGroup M] [Field F] [IsAlgClosed F]
     (Φ : H →* M) (hΦ : Function.Injective Φ) (χ : H →* Fˣ) :
     ∃ κ : M →* Fˣ, ∀ x : H, κ (Φ x) = χ x := by
-  letI := divisibleUnits F
-  obtain ⟨h, hh⟩ := (Module.Baer.of_divisible (Additive Fˣ)).extension_property_addMonoidHom
-    (MonoidHom.toAdditive Φ) hΦ (MonoidHom.toAdditive χ)
-  refine ⟨MonoidHom.toAdditive.symm h, fun x => ?_⟩
-  have := DFunLike.congr_fun hh (Additive.ofMul x)
-  exact this
+  exact GlobalTheory.ExtensionCharacter.exists_extension_character Φ hΦ χ
 
 alias target := _root_.GlobalTheory.DivisibleUnits.exists_extension
 

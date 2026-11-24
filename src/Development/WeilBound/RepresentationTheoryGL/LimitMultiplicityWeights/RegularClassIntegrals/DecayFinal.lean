@@ -210,13 +210,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem exp_entry (Z : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n) :
     ContDiff ℝ ∞ fun t : ℝ => (NormedSpace.exp (t • Z)) i j := by
-  open scoped Matrix.Norms.Operator in
-  have h1 : ContDiff ℝ ∞ fun t : ℝ => (NormedSpace.exp (t • Z) : Matrix (Fin n) (Fin n) ℂ) := by
-    have : ContDiff ℝ ∞ (NormedSpace.exp : Matrix (Fin n) (Fin n) ℂ → Matrix (Fin n) (Fin n) ℂ) :=
-      contDiff_iff_contDiffAt.2 fun x => (NormedSpace.exp_analytic (𝕂 := ℝ) x).contDiffAt
-    exact this.comp (contDiff_id.smul contDiff_const)
-  open scoped Matrix.Norms.Operator in
-  exact (LinearMap.toContinuousLinearMap (Matrix.entryLinearMap ℝ ℂ i j)).contDiff.comp h1
+  exact GlobalTheory.Orb.contDiff_exp_smul_entry Z i j
 
 theorem lineSm (h : IsCMExt F E σ) {b : ℝ → GAd σ J} (hb : IsRealLine σ J b) :
     ContDiff ℝ ∞ fun t => infCoord σ J (projInf σ J (b t)) := by

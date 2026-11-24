@@ -1132,12 +1132,7 @@ def levSub (X : Tower Ω ε) (M : ℕ) : Subfield X.K where
   inv_mem' := fun a ha γ hγ => by rw [map_inv₀, ha γ hγ]
 
 theorem lev_sl (X : Tower Ω ε) {M : ℕ} {f : X.K} (hf : Lev X M f) (γ : SL(2, ℤ)) :
-    Lev X M (X.sl (ofSL γ) f) := by
-  intro δ hδ
-  have h := hf _ ((CongruenceSubgroup.Gamma_normal M).conj_mem δ hδ γ)
-  rw [← X.sl_mul, ← map_mul]
-  conv_rhs => rw [← h]
-  rw [← X.sl_mul, ← map_mul, inv_mul_cancel_right]
+    Lev X M (X.sl (ofSL γ) f) := GlobalTheory.KZ.ES.RootGal.lev_sl X hf γ
 
 noncomputable def levAct (X : Tower Ω ε) (M : ℕ) (γ : SL(2, ℤ)) : levSub X M →+* levSub X M :=
   RingHom.codRestrict ((X.sl (ofSL γ) : X.K →+* X.K).comp (levSub X M).subtype) (levSub X M)

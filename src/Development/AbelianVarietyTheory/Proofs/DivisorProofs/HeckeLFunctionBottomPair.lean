@@ -800,13 +800,7 @@ variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D}
 
 theorem heisO_comm (x y : WO S T) (f : WO S T → ℂ) :
     heisO ψ S T x (heisO ψ S T y f) = ψ (symplO S T x y) • heisO ψ S T y (heisO ψ S T x f) := by
-  have e : symplO S T x y + symplOH S T y x = symplOH S T x y := by
-    have h2 : algebraMap D.host.F (AF D.host.F) (1 / 2) * 2 = 1 := by
-      rw [← map_ofNat (algebraMap D.host.F (AF D.host.F)) 2, ← map_mul]; norm_num
-    unfold symplOH
-    rw [GlobalTheory.OrientedHeis.symplO_skew x y]
-    linear_combination (-symplO S T x y) * h2
-  rw [GlobalTheory.OrientedHeis.heisO_heisO, GlobalTheory.OrientedHeis.heisO_heisO, smul_smul, ← AddChar.map_add_eq_mul, e, add_comm]
+  exact GlobalTheory.ThetaStalk.heisO_comm x y f
 
 theorem ip_heisO_eq_zero {ΛS : Lat S} {ΛT : Lat T} (hψ : IsStdChar D ψ (-1)) (hS : IsSelfDualC S ΛS) (hT : IsSelfDualC T ΛT)
     {f : WO S T → ℂ} (hf : IsThetaFunO ψ S T f) (hv : IsLatVac (heisO ψ S T) (latO S T ΛS ΛT fun _ => True) f)

@@ -694,16 +694,7 @@ theorem Jg_ne (hB : B1b) (k : InfinitePlace F → ℕ) (g : GL (Fin 2) (TR.Rinf 
 
 theorem pInf_alg (x : F) (v : InfinitePlace F) :
     TR.pInf F (algebraMap F (Ad F) x) v = InfinitePlace.embedding_of_isReal (IsTotallyReal.isReal v) x := by
-  have h : algebraMap F (InfiniteAdeleRing F) x = TR.infEq F (fun w => InfinitePlace.embedding_of_isReal (IsTotallyReal.isReal w) x) := by
-    funext w
-    apply (InfinitePlace.Completion.ringEquivRealOfIsReal (IsTotallyReal.isReal w)).injective
-    show _ = (InfinitePlace.Completion.ringEquivRealOfIsReal (IsTotallyReal.isReal w))
-      ((InfinitePlace.Completion.ringEquivRealOfIsReal (IsTotallyReal.isReal w)).symm
-        (InfinitePlace.embedding_of_isReal (IsTotallyReal.isReal w) x))
-    rw [RingEquiv.apply_symm_apply]
-    simp
-  change (TR.infEq F).symm (algebraMap F (InfiniteAdeleRing F) x) v = _
-  rw [h, RingEquiv.symm_apply_apply]
+  exact UpperTheory.Esk.HyperbolicSetupLemmas.pInf_alg x v
 
 theorem gv_rat (γ : GL (Fin 2) F) (v : InfinitePlace F) :
     gv v (Matrix.GeneralLinearGroup.map (TR.pInf F) (ratGL F 2 γ)) =

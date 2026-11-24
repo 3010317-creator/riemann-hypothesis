@@ -137,15 +137,7 @@ theorem trc_smul_left {V : HSp D} (a : ℂ) (e : GA D V →₀ ℂ) (f : GA D V 
 
 theorem biComb_smul2 (ψ : AddChar (AF D.host.F) ℂ) (A S A' : HSp D) (a b : ℂ) (e : WO A S →₀ ℂ) (e' : WO S A' →₀ ℂ)
     (C : WO A S → WO S A' → ℂ) : biComb ψ A S A' (a • e) (b • e') C = (a * b) • biComb ψ A S A' e e' C := by
-  funext u x
-  simp only [biComb, comb_smul_left, Pi.smul_apply, smul_eq_mul]
-  have : (fun u' => b * comb ψ S A' e' (C u') x) = b • fun u' => comb ψ S A' e' (C u') x := rfl
-  rw [this]
-  have h2 : ∀ f : WO A S → ℂ, comb ψ A S e (b • f) = b • comb ψ A S e f := fun f => by
-    funext y
-    simp only [comb, heisO, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Finset.mul_sum]
-    exact Finset.sum_congr rfl fun _ _ => by ring
-  rw [h2, Pi.smul_apply, smul_eq_mul, mul_assoc]
+  exact GlobalTheory.QLastPf.biComb_smul ψ A S A' a b e e' C
 
 theorem biLift_move {A S A' : HSp D} (oma : Om A S) (omb : Om S A') (vA : Vol A) (vS : Vol S) (φ : GA D A → ℂ) (a : ℂ)
     (C : WO A S → WO S A' → ℂ) : biLift oma omb vA vS (a • φ) C = a • biLift oma omb vA vS φ C := by
@@ -277,24 +269,7 @@ namespace GlobalTheory.QSuppTwo
 
 theorem prod_mul_inv_mem {G : Type} [Group G] (H : Subgroup G) : ∀ (n : ℕ) (f : Fin n → G) (i : Fin n),
     (∀ i', i' ≠ i → f i' ∈ H) → (∀ y ∈ H, f i * y = y * f i) → (List.ofFn f).prod * (f i)⁻¹ ∈ H := by
-  intro n
-  induction n with
-  | zero => intro f i; exact i.elim0
-  | succ n ih =>
-    intro f i
-    refine Fin.cases ?_ (fun k => ?_) i
-    · intro hf0 hc0
-      have hP : (List.ofFn fun k : Fin n => f k.succ).prod ∈ H := by
-        apply Subgroup.list_prod_mem
-        intro x hx
-        obtain ⟨k, rfl⟩ := List.mem_ofFn.1 hx
-        exact hf0 _ (Fin.succ_ne_zero k)
-      rw [List.ofFn_succ, List.prod_cons, hc0 _ hP, mul_assoc, mul_inv_cancel, mul_one]
-      exact hP
-    · intro hfk hck
-      rw [List.ofFn_succ, List.prod_cons, mul_assoc]
-      exact mul_mem (hfk 0 (Fin.succ_ne_zero k).symm)
-        (ih (fun k => f k.succ) k (fun k' hk' => hfk _ (fun e => hk' (Fin.succ_injective _ e))) hck)
+  apply GlobalTheory.QCells.prod_mul_inv_mem
 
 theorem mem_support_conv {G : Type} [Monoid G] : ∀ (n : ℕ) (f : Fin n → (G →₀ ℂ)) (g : G),
     g ∈ (conv (List.ofFn f)).support → ∃ x : Fin n → G, (∀ i, x i ∈ (f i).support) ∧ g = (List.ofFn x).prod := by

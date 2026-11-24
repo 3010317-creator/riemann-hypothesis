@@ -915,14 +915,7 @@ theorem mem_weightSpace_iff_diagonal (E : GLOps n K V) (mu : Fin n → ℤ) (x :
 
 theorem weightSpace_disjoint [CharZero K] (E : GLOps n K V) {mu ka : Fin n → ℤ} (h : mu ≠ ka) {x : V}
     (h1 : x ∈ weightSp E mu) (h2 : x ∈ weightSp E ka) : x = 0 := by
-  obtain ⟨a, ha⟩ := Function.ne_iff.1 h
-  have e1 := (mem_weightSpace_iff_diagonal E mu x).1 h1 a
-  have e2 := (mem_weightSpace_iff_diagonal E ka x).1 h2 a
-  rw [e1] at e2
-  have e3 : ((mu a : K) - (ka a : K)) • x = 0 := by rw [sub_smul, e2, sub_self]
-  rcases smul_eq_zero.1 e3 with h0 | h0
-  · exact absurd (by exact_mod_cast sub_eq_zero.1 h0) ha
-  · exact h0
+  exact Formalism.MainNotions.G.GLWeightTheory.cr_wt_disj E h h1 h2
 
 
 open Classical in

@@ -1514,14 +1514,7 @@ variable {ι : Type} [Fintype ι] [DecidableEq ι] {V : ι → Type} [∀ i, Add
 
 theorem coinv_atPl_tprod (w : ι) (L : Module.End ℂ (V w)) (f : ∀ i, V i) :
     atPl w L (PiTensorProduct.tprod ℂ f) = PiTensorProduct.tprod ℂ (Function.update f w (L (f w))) := by
-  unfold atPl
-  rw [PiTensorProduct.map_tprod]
-  congr 1
-  funext i
-  by_cases h : i = w
-  · subst h
-    simp
-  · simp [Function.update_of_ne h]
+  exact GlobalTheory.RealLift.atPl_tprod w L f
 
 theorem coinv_sumPl_tprod (w : ι) (L : ∀ i, Module.End ℂ (V i)) (hL : ∀ i, i ≠ w → L i = 0) (f : ∀ i, V i) :
     sumPl L (PiTensorProduct.tprod ℂ f) = PiTensorProduct.tprod ℂ (Function.update f w (L w (f w))) := by

@@ -85,14 +85,7 @@ namespace PositivityTheory.HtPt.Mk
 
 theorem gen_stalk {X : Scheme.{0}} {Ω : Type} [Field Ω] (ξ : Spec (CommRingCat.of Ω) ⟶ X) (p : Cpt ξ) :
     Spec.map (CommRingCat.ofHom (genMap ξ p)) ≫ X.fromSpecStalk p.1 = ξ := by
-  obtain ⟨q, hq⟩ := p
-  have a := Scheme.SpecMap_stalkSpecializes_fromSpecStalk hq
-  have b := Scheme.Spec_stalkClosedPointTo_fromSpecStalk ξ
-  have c : Spec.map (CommRingCat.ofHom (genMap ξ ⟨q, hq⟩)) =
-      Spec.map (Scheme.stalkClosedPointTo ξ) ≫ Spec.map (X.presheaf.stalkSpecializes hq) :=
-    Spec.map_comp _ _
-  rw [c, Category.assoc]
-  exact (congrArg (fun m => Spec.map (Scheme.stalkClosedPointTo ξ) ≫ m) a).trans b
+  exact GlobalTheory.CompanionTheory.Ar.LieTangent.spec_genMap ξ p
 
 theorem stalk_normal₀ {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCat.of Ω) ⟶ X} (hξ : IsCptGen ξ)
     (hN : Flat.NormalCpt ξ) (q : Cpt ξ) : ∃ (_ : IsDomain (X.presheaf.stalk q.1)),

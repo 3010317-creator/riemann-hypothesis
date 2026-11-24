@@ -1110,14 +1110,7 @@ theorem cls_inner {n : ℕ} [MeasurableSpace (G n)] (μ : Measure (G n)) {V : Ty
     [InnerProductSpace ℂ V] {f f' : Mat n → V} (hf : MemLp (fun y : G n => f y.val) 2 μ)
     (hf' : MemLp (fun y : G n => f' y.val) 2 μ) :
     ⟪cls μ f, cls μ f'⟫_ℂ = ∫ y : G n, ⟪f y.val, f' y.val⟫_ℂ ∂μ := by
-  have e1 : cls μ f = hf.toLp _ := by
-    unfold cls; exact dite_eq_left hf
-  have e2 : cls μ f' = hf'.toLp _ := by
-    unfold cls; exact dite_eq_left hf'
-  rw [e1, e2, L2.inner_def]
-  apply integral_congr_ae
-  filter_upwards [hf.coeFn_toLp, hf'.coeFn_toLp] with y h1 h2
-  rw [h1, h2]
+  exact GlobalTheory.CompanionTheory.KerFc.inner_cls_eq μ hf hf'
 
 theorem bump_complex {g : ℝ → ℝ} {T₀ : ℝ} (hg : IsBump g T₀) :
     Continuous (fun t => (g t : ℂ)) ∧ HasCompactSupport (fun t => (g t : ℂ)) := by

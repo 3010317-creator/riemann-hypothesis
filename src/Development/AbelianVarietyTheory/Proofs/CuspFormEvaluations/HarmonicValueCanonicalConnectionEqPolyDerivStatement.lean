@@ -994,20 +994,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 theorem jetN_coord {n g : ℕ} (m : ℕ) (a : ℂ) (i : Fin n) (j : Fin g) :
     jetN m (fun w : Fin n → Fin g → ℂ => a * w i j) =
       Ideal.Quotient.mk _ (MvPolynomial.C a * MvPolynomial.X (i, j)) := by
-  have h1 : jetOf m (fun v : Fin (n * g) → ℂ => v (finProdFinEquiv (i, j))) =
-      Ideal.Quotient.mk _ (MvPolynomial.X ((0 : Fin 1), finProdFinEquiv (i, j))) := by
-    rw [jetOf, _root_.GlobalTheory.JetLinSub.tay_coord, psJet, FBIdJet.psTrunc_eq, ← MvPolynomial.coe_X, FBIdJet.mk_trunc_coe]
-  have h2 := jetOf_mul m (f := fun _ : Fin (n * g) → ℂ => a) (h := fun v => v (finProdFinEquiv (i, j)))
-    contDiffAt_const (contDiff_apply ℂ (fun _ => ℂ) _).contDiffAt
-  rw [jetOf_const, h1] at h2
-  have h3 : jetN m (fun w : Fin n → Fin g → ℂ => a * w i j) = renN n g m (jetOf m
-    ((fun _ : Fin (n * g) → ℂ => a) * fun v => v (finProdFinEquiv (i, j)))) := rfl
-  have h4 : renN n g m (Ideal.Quotient.mk _ (MvPolynomial.X ((0 : Fin 1), finProdFinEquiv (i, j)))) =
-      Ideal.Quotient.mk _ (MvPolynomial.X (i, j)) := by
-    show Ideal.Quotient.mk _ (MvPolynomial.aeval _ _) = _
-    rw [MvPolynomial.aeval_X, Equiv.symm_apply_apply]
-  rw [h3, h2, map_mul, AlgHom.commutes, map_mul, h4, ← MvPolynomial.algebraMap_eq]
-  rfl
+  exact GlobalTheory.AnValAd.jetN_coord m a i j
 
 theorem jetSubstP_X {κ κ' : Type} [Fintype κ] [DecidableEq κ] (m : ℕ) (sb : κ → MvPolynomial κ' ℂ) (p : κ) :
     (jetSubstP m sb : Jet ℂ κ m →ₐ[ℂ] Jet ℂ κ' m) (psJet m (MvPowerSeries.X p)) =

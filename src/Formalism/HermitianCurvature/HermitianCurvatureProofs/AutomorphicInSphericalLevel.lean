@@ -89,11 +89,7 @@ namespace Formalism.FourierDecayAlt.P.SmoothExtensionClosedSet
 open Formalism.QuantumDeterminants Formalism.FourierDecayAlt
 
 theorem isClosed_GVt (k r : ℕ) : IsClosed {x : Mt k r | Matrix.of x ∈ B.GV k r} := by
-  have h0 : Continuous (fun x : Mt k r => (Matrix.of x : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ)) :=
-    continuous_id
-  have hc : Continuous (fun x : Mt k r => (Matrix.of x)ᴴ * Hpk k r * Matrix.of x) :=
-    ((h0.matrix_conjTranspose).matrix_mul continuous_const).matrix_mul h0
-  exact isClosed_eq hc continuous_const
+  exact Formalism.FourierDecayAlt.P.B7.isClosed_GV
 
 theorem exists_smoothExt {k r : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     (F : B.Mat k r → E) (hF : B.CkOn (⊤ : ℕ∞) (B.GV k r) F) :

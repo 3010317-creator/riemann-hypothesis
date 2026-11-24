@@ -112,12 +112,7 @@ theorem cj_mem_mcPts {P : Ideal (MRing ι)} {z : (Σ k, ι k) → ℂ} (hz : z �
 theorem log_sub_orbit (A B : HermLine ι) (hab : A.a = B.a) {z z' : (Σ k, ι k) → ℂ}
     (hz : ∀ k, ∃ i, z' ⟨k, i⟩ ≠ 0) (h : SameOrbit z z') :
     Real.log (A.h z) - Real.log (B.h z) = Real.log (A.h z') - Real.log (B.h z') := by
-  obtain ⟨c, hc, rfl⟩ := h
-  have hP : 0 < ∏ k, ‖c k‖ ^ A.a k :=
-    Finset.prod_pos fun k _ => zpow_pos (norm_pos_iff.mpr (hc k)) _
-  rw [A.smul c z' hc, B.smul c z' hc, ← hab,
-    Real.log_mul hP.ne' (A.pos z' hz).ne', Real.log_mul hP.ne' (B.pos z' hz).ne']
-  ring
+  apply GlobalTheory.CompanionTheory.Ar.Chg.log_sub_orbit <;> assumption
 
 def conjAvg (A : HermLine ι) : HermLine ι where
   a := A.a

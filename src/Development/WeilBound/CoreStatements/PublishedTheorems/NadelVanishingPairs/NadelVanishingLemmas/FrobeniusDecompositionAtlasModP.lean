@@ -177,16 +177,7 @@ theorem fromSpec_str {R : Type} [CommRing R] {X : Scheme.{0}} (q : X ⟶ Sp R) {
   rfl
 
 theorem charZero {X : Scheme.{0}} (q : X ⟶ Sp ℤ) [Flat q] {U : X.Opens} (hU : IsAffineOpen U)
-    [Nontrivial Γ(X, U)] : CharZero Γ(X, U) := by
-  have h₁ : (q.appLE ⊤ U le_top).hom.Flat :=
-    HasRingHomProperty.appLE @Flat q inferInstance ⟨⊤, isAffineOpen_top _⟩ ⟨U, hU⟩ le_top
-  have h₂ : (strHom q U).hom.Flat :=
-    RingHom.Flat.comp (RingHom.Flat.of_bijective
-      (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of ℤ)).inv)) h₁
-  have h₃ : (algebraMap ℤ Γ(X, U)).Flat := by
-    rwa [Subsingleton.elim (algebraMap ℤ Γ(X, U)) (strHom q U).hom]
-  have := RingHom.flat_algebraMap_iff.1 h₃
-  exact charZero_of_injective_algebraMap (FaithfulSMul.algebraMap_injective ℤ Γ(X, U))
+    [Nontrivial Γ(X, U)] : CharZero Γ(X, U) := GlobalTheory.FrameCmp.charZero_chart q hU
 
 theorem main : ∀ (F : Type) [Field F] [NumberField F] (Y : Var F) (N : TrueGeo.Model Y) (W : N.X.Opens) (z : N.X) (g : Γ(N.X, W)), z ∈ W → g ≠ 0 → z ∉ N.X.basicOpen g → ∃ (v : HeightOneSpectrum (𝓞 F)) (e : Ext v) (y : AlgPt Y) (yt : Sp e.O ⟶ N.X), spMap e.O.subtype ≫ yt = y.1 ≫ N.j ∧ ⊤ ≤ yt ⁻¹ᵁ W ∧ yt (IsLocalRing.closedPoint e.O) ∉ N.X.basicOpen g ∧ N.j (below y.1) ∈ N.X.basicOpen g := by
   intro F _ _ Y N W z g hz hg hzg

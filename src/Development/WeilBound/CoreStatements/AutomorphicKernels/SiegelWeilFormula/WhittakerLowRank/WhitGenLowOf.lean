@@ -861,12 +861,7 @@ variable {F E : Type} [Field F] [Field E] [Algebra F E] [FiniteDimensional F E]
 
 theorem trace_tmul (r : R) (x : E) : Algebra.trace R (R ⊗[F] E) (r ⊗ₜ[F] x) =
     r * algebraMap F R (Algebra.trace F E x) := by
-  have h : Algebra.lmul R (R ⊗[F] E) (r ⊗ₜ[F] x) =
-      r • (Algebra.lmul F E x).baseChange R := by
-    refine TensorProduct.AlgebraTensorModule.curry_injective ?_
-    ext y
-    simp [Algebra.TensorProduct.tmul_mul_tmul, TensorProduct.smul_tmul']
-  rw [Algebra.trace_apply, h, map_smul, LinearMap.trace_baseChange, smul_eq_mul, Algebra.trace_apply]
+  apply GlobalTheory.CompanionTheory.SdFin.trace_tmul
 
 theorem sigR_tmul (r : R) (x : E) : sigR R σ (r ⊗ₜ[F] x) = r ⊗ₜ[F] σ x := rfl
 

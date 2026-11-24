@@ -595,23 +595,10 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} (X : Data 
 
 theorem cont_dmin (τ : X.Ψ) (i : Fin (r + 1)) :
     Continuous fun x : Frame X.Ψ r => dmin X.Gm x τ i := by
-  have h : Continuous fun x : Frame X.Ψ r => FD.gram τ.1 X.Gm (mat x τ) := by
-    refine continuous_pi fun a => continuous_pi fun b => ?_
-    simp only [FD.gram, hermC, FD.col, mat, Matrix.of_apply]
-    fun_prop
-  exact (h.matrix_submatrix _ _).matrix_det
+  exact ReciprocityTheory.ChartRestriction.G.AR.Up.ExtFPf.cont_dmin X τ i
 
 theorem isOpen_frames : IsOpen X.dom := by
-  have h : X.dom = ⋂ τ : X.Ψ, ({x : Frame X.Ψ r | (mat x τ).det ≠ 0} ∩
-      ⋂ i : Fin (r + 1), {x | 0 < psgn X.p0 i * (dmin X.Gm x τ i).re}) := by
-    ext x; simp [Data.dom, GG]
-  rw [h]
-  refine isOpen_iInter_of_finite fun τ => IsOpen.inter ?_ (isOpen_iInter_of_finite fun i => ?_)
-  · exact isOpen_ne_fun
-      (show Continuous fun x : Frame X.Ψ r => mat x τ from continuous_apply τ).matrix_det
-      continuous_const
-  · exact isOpen_lt continuous_const (continuous_const.mul (Complex.continuous_re.comp
-      (cont_dmin X τ i)))
+  exact ReciprocityTheory.ChartRestriction.G.FD.FourierCoefficientDomain.isOpen_dom X
 
 theorem dmin_ne {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) (i : Fin (r + 1)) :
     dmin X.Gm x τ i ≠ 0 := by
@@ -829,20 +816,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ}
 
 theorem ip_smul_smul {K κ ι : Type} [Field K] [NumberField K] [Fintype κ] [Fintype ι]
     {φ ψ : Matrix κ ι K → ℂ} (hφ : IsSB φ) (hψ : IsSB ψ) (a b : ℂ) :
-    ip (a • φ) (b • ψ) = a * conj b * ip φ ψ := by
-  have hc : IsSB fun x => conj (ψ x) :=
-    (isSB_algebra_haar_linear K κ ι ψ ψ hψ hψ).2.2.2.1
-  have hp : IsSB (φ * fun x => conj (ψ x)) :=
-    (isSB_algebra_haar_linear K κ ι φ _ hφ hc).2.2.1
-  have hs := (isSB_algebra_haar_linear K κ ι _ _ hp hp).2.2.2.2.2.1 (a * conj b)
-  have key : (fun x => (a • φ) x * conj ((b • ψ) x)) =
-      (a * conj b) • (φ * fun x => conj (ψ x)) := by
-    funext x
-    simp only [Pi.smul_apply, smul_eq_mul, Pi.mul_apply, map_mul]
-    ring
-  unfold ip
-  rw [key, hs]
-  rfl
+    ip (a • φ) (b • ψ) = a * conj b * ip φ ψ := GlobalTheory.SW.DblZero.ip_smul hφ hψ a b
 
 theorem classSum_eq_sum {M : ℕ} [Fintype (Cls E n M)] (f : Lt E n → ℂ) :
     classSum M f = ∑ c : Cls E n M, (wt M (Quot.out c).1 : ℂ) * f (Quot.out c).1 := by

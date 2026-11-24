@@ -560,30 +560,13 @@ theorem sb_smul (c : ℂ) (h : IsSB φ) : IsSB (c • φ) := by
   exact (_root_.GlobalTheory.SW.isSB_algebra_haar_linear K κ ι φ φ h h).2.1 c
 
 theorem ip_add_left (h : IsSB φ) (h' : IsSB φ') (k : IsSB ψ) :
-    ip (φ + φ') ψ = ip φ ψ + ip φ' ψ := by
-  have e : (fun x => (φ + φ') x * conj (ψ x)) =
-      (fun x => φ x * conj (ψ x)) + fun x => φ' x * conj (ψ x) := by
-    funext x; simp only [Pi.add_apply, add_mul]
-  unfold GlobalTheory.SW.ip
-  rw [e]
-  exact (_root_.GlobalTheory.SW.isSB_algebra_haar_linear K κ ι _ _ (sb_mul_conj h k) (sb_mul_conj h' k)).2.2.2.2.1
+    ip (φ + φ') ψ = ip φ ψ + ip φ' ψ := GlobalTheory.SW.DblZero.ip_add_left h h' k
 
 theorem ip_add_right (h : IsSB φ) (k : IsSB ψ) (k' : IsSB ψ') :
-    ip φ (ψ + ψ') = ip φ ψ + ip φ ψ' := by
-  have e : (fun x => φ x * conj ((ψ + ψ') x)) =
-      (fun x => φ x * conj (ψ x)) + fun x => φ x * conj (ψ' x) := by
-    funext x; simp only [Pi.add_apply, map_add (f := _), mul_add]
-  unfold GlobalTheory.SW.ip
-  rw [e]
-  exact (_root_.GlobalTheory.SW.isSB_algebra_haar_linear K κ ι _ _ (sb_mul_conj h k) (sb_mul_conj h k')).2.2.2.2.1
+    ip φ (ψ + ψ') = ip φ ψ + ip φ ψ' := GlobalTheory.SW.DblZero.ip_add_right h k k'
 
 theorem ip_smul (h : IsSB φ) (k : IsSB ψ) (a b : ℂ) :
-    ip (a • φ) (b • ψ) = a * conj b * ip φ ψ := by
-  have e : (fun x => (a • φ) x * conj ((b • ψ) x)) = (a * conj b) • fun x => φ x * conj (ψ x) := by
-    funext x; simp only [Pi.smul_apply, smul_eq_mul, map_mul]; ring
-  unfold GlobalTheory.SW.ip
-  rw [e]
-  exact (_root_.GlobalTheory.SW.isSB_algebra_haar_linear K κ ι _ _ (sb_mul_conj h k) (sb_mul_conj h k)).2.2.2.2.2.1 _
+    ip (a • φ) (b • ψ) = a * conj b * ip φ ψ := GlobalTheory.SW.DblZero.ip_smul h k a b
 
 private lemma finsum_ofReal {α : Type} (f : α → ℝ) :
     ∑ᶠ a, (f a : ℂ) = ((∑ᶠ a, f a : ℝ) : ℂ) := by

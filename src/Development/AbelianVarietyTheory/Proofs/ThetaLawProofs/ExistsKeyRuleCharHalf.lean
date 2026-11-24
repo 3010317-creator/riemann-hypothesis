@@ -469,11 +469,7 @@ namespace GlobalTheory.UnifJac
 
 theorem valT_comp {T : Type} [CommRing T] {X Y : Scheme.{0}} (w : Sp T ⟶ X) (φ : X ⟶ Y) (U : Y.Opens)
     (f : Γ(Y, U)) : valT (w ≫ φ) U f = valT w (φ ⁻¹ᵁ U) ((φ.app U).hom f) := by
-  unfold valT
-  by_cases h : ⊤ ≤ w ⁻¹ᵁ (φ ⁻¹ᵁ U)
-  · rw [dite_eq_left h, dite_eq_left (show ⊤ ≤ (w ≫ φ) ⁻¹ᵁ U from h)]
-    rfl
-  · rw [dite_eq_right h, dite_eq_right (show ¬ ⊤ ≤ (w ≫ φ) ⁻¹ᵁ U from h)]
+  exact GlobalTheory.KaScale.valT_comp w φ U f
 
 variable {A : Over (Sp ℂ)} [GrpObj A]
 
@@ -920,12 +916,7 @@ variable {g : ℕ}
 
 theorem differentiableOn_prod {E I : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] {W : Set E} {s : Finset I}
     {f : I → E → ℂ} (h : ∀ i ∈ s, DifferentiableOn ℂ (f i) W) : DifferentiableOn ℂ (fun p => ∏ i ∈ s, f i p) W := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simpa using differentiableOn_const (1 : ℂ)
-  | insert i s hi ih =>
-    simp only [Finset.prod_insert hi]
-    exact (h i (Finset.mem_insert_self _ _)).mul (ih fun j hj => h j (Finset.mem_insert_of_mem hj))
+  exact GlobalTheory.SimilTheta.differentiableOn_prod s h
 
 theorem isLevel_sum {N l : ℕ} {τ : Matrix (Fin g) (Fin g) ℂ} {a b : Fin g → ℂ} {Th : Fin N → (Fin g → ℂ) → ℂ}
     (h : ∀ k, IsLevel τ a b l (Th k)) (c : Fin N → ℂ) : IsLevel τ a b l (fun z => ∑ k, c k * Th k z) := by

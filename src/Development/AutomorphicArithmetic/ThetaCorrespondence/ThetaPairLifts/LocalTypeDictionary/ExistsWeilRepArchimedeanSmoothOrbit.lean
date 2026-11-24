@@ -196,11 +196,7 @@ theorem fst_eq_zero_of_ev {a : AF F} (h : evI F a = 0) : a.1 = 0 :=
   (InfiniteAdeleRing.ringEquiv_mixedSpace F).map_eq_zero_iff.mp h
 
 theorem snd_eq_zero_of_at {κ : Type} {z : κ → AF F} (hz : At (evI F) z) (i : κ) : (z i).2 = 0 := by
-  have h0 : evI F ((0, 1) : AF F) = 0 := map_zero (InfiniteAdeleRing.ringEquiv_mixedSpace F)
-  have := congrArg Prod.snd (congrFun (hz (0, 1) h0) i)
-  change (((0, 1) : InfiniteAdeleRing F × FiniteAdeleRing (𝓞 F) F).2 * (z i).2) = (0 : AF F).2 at this
-  rw [one_mul] at this
-  exact this
+  exact GlobalTheory.ArchLocality.snd_eq_zero_of_at hz i
 
 theorem refFin_of_zero (κ : Type) (x : κ → AF F) (hx : ∀ i, (x i).2 = 0) : refFin κ x = 1 := by
   have : (fun i => (x i).2) = 0 := funext hx
@@ -386,12 +382,7 @@ theorem intInd_mem (κ : Type) [Fintype κ] :
     fun x hx => Set.indicator_of_notMem hx _
 
 theorem snd_eq_zero_of_at {κ : Type} {z : κ → AF F} (hz : At (evI F) z) (i : κ) : (z i).2 = 0 := by
-  let u : AF F := ((0 : InfiniteAdeleRing F), (1 : FiniteAdeleRing (𝓞 F) F))
-  have hu : evI F u = 0 := map_zero (InfiniteAdeleRing.ringEquiv_mixedSpace F)
-  have h0 : u * z i = 0 := congrFun (hz u hu) i
-  have h1 : (u * z i).2 = (1 : FiniteAdeleRing (𝓞 F) F) * (z i).2 := rfl
-  rw [h0, one_mul] at h1
-  exact h1.symm
+  exact GlobalTheory.ArchLocality.snd_eq_zero_of_at hz i
 
 def refFun (κ : Type) : (κ → AF F) → ℂ := fun x => intInd κ (fun i => (x i).2)
 

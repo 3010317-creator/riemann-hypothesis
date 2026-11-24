@@ -950,13 +950,7 @@ theorem applyAt0_add_left (T T' : MvPowerSeries (Lt × Fin N0 × Fin N1) ℂ_[l]
 
 theorem applyAt0_smul_left (c : ℂ_[l]) (T : MvPowerSeries (Lt × Fin N0 × Fin N1) ℂ_[l])
     (P : MvPolynomial (XZ Lt N0 N1) ℤ) :
-    applyAt0 N0 N1 l (c • T) P = c • applyAt0 N0 N1 l T P := by
-  unfold OJ.applyAt0
-  rw [Finset.smul_sum]
-  refine Finset.sum_congr rfl fun μ _ => ?_
-  rw [MvPowerSeries.coeff_smul, MvPolynomial.smul_monomial, smul_eq_mul]
-  congr 1
-  ring
+    applyAt0 N0 N1 l (c • T) P = c • applyAt0 N0 N1 l T P := PI.OrbJet.OJ.applyAt0_smulT l c T P
 
 theorem applyAt0_sum_left {ι : Type*} (S : Finset ι) (c : ι → ℂ_[l]) (T : ι → MvPowerSeries (Lt × Fin N0 × Fin N1) ℂ_[l])
     (P : MvPolynomial (XZ Lt N0 N1) ℤ) :

@@ -548,11 +548,7 @@ theorem ck_cast {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
 omit [Fintype K] [∀ k, Fintype (ι k)] in
 theorem length_classList {σ : Type} (cls : σ → K → ℤ) {H : MvPolynomial σ ℝ} {e : ℕ}
     (hH : H.IsHomogeneous e) {μ : σ →₀ ℕ} (hμ : μ ∈ H.support) : (classList cls μ).length = e := by
-  have h := hH (mem_support_iff.mp hμ)
-  unfold classList
-  simp [Finsupp.card_toMultiset]
-  rw [← h, Finsupp.weight_apply]
-  simp [Finsupp.sum]
+  apply GlobalTheory.CompanionTheory.Ar.Num.ConsPoly.length_classList <;> assumption
 
 
 omit [∀ k, Fintype (ι k)] in
@@ -1879,13 +1875,7 @@ variable {Ψ : Type} {N : ℕ}
 
 theorem liePs_isHomogeneous (j m : ℕ) (l : Ψ ⊕ Ψ) :
     (liePs j m l : MvPolynomial (Ψ × Fin N) ℝ).IsHomogeneous m := by
-  cases l with
-  | inl τ =>
-    refine IsHomogeneous.sum _ _ _ fun i _ => ?_
-    simpa using (isHomogeneous_X ℝ (τ, i)).pow m
-  | inr τ =>
-    refine IsHomogeneous.sum _ _ _ fun i _ => ?_
-    simpa using ((isHomogeneous_X ℝ (τ, i)).neg).pow m
+  exact GlobalTheory.CompanionTheory.Ar.Num.ModelDescentAlt.isHomogeneous_liePs j m l
 
 theorem bracket_isHomogeneous [Fintype Ψ] [DecidableEq Ψ] (j : ℕ) (φ : Equiv.Perm (Ψ ⊕ Ψ)) (p k : ℕ) (τ : Ψ) :
     (bracket j φ p k τ : MvPolynomial (Ψ × Fin N) ℝ).IsHomogeneous (k - 1) := by

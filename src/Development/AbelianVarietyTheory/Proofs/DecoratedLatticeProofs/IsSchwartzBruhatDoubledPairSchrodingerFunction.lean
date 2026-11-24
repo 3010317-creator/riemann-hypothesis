@@ -190,15 +190,7 @@ variable {D : D7}
 def volOf {A B : HSp D} (ν : Measure (WO A B)) (𝓨 : Set (WO A B)) (h : IsCovolOne (ratL B A) ν 𝓨) :
     GlobalTheory.Unf.VolM D B.rank A.rank := ⟨ν, 𝓨, h⟩
 
-theorem continuous_finPart' : Continuous (finPart D) := by
-  letI ti : TopologicalSpace (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
-    moduleTopology (Ainf D.host.F) (Ainf D.host.F ⊗[D.host.F] D.host.E)
-  obtain ⟨e, he, hec, -⟩ : ∃ e : AE D ≃+* (Ainf D.host.F ⊗[D.host.F] D.host.E) × (Af D.host.F ⊗[D.host.F] D.host.E),
-      (∀ z, (e z).1 = infPart D z ∧ (e z).2 = finPart D z) ∧ Continuous e ∧ Continuous e.symm :=
-    GlobalTheory.AdSplit.exists_adele_equiv D.host.F D.host.E
-  have : (finPart D : AE D → _) = fun z => (e z).2 := funext fun z => (he z).2.symm
-  rw [this]
-  exact continuous_snd.comp hec
+theorem continuous_finPart' : Continuous (finPart D) := GlobalTheory.Member.continuous_finPart D
 
 variable {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {A B : HSp D} {ν : Measure (WO A B)}
   {𝓨 : Set (WO A B)} (hν : IsCovolOne (ratL B A) ν 𝓨) {f : WO (dblSp A) B → ℂ} (hf : IsThetaFunO ψ (dblSp A) B f)

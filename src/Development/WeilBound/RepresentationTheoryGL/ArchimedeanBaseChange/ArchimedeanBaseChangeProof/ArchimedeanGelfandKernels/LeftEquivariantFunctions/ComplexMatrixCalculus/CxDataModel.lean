@@ -1113,13 +1113,7 @@ theorem adjugate_smooth : ContDiff ℝ ∞ (fun x : Mat n => x.adjugate) := by
   exact Cxc.det_smooth.comp (updateRow_smooth j _)
 
 theorem inv_smooth : ContDiffOn ℝ ∞ (fun x : Mat n => x⁻¹) (GLs n) := by
-  have h : ContDiffOn ℝ ∞ (fun x : Mat n => Matrix.of fun i j => x.det ^ (-1 : ℤ) * x.adjugate i j) (GLs n) := by
-    refine contDiffOn_pi.2 fun i => contDiffOn_pi.2 fun j => ?_
-    exact (Cxc.detPow_smooth (-1)).mul ((contDiff_apply_apply ℝ i j).comp adjugate_smooth).contDiffOn
-  refine h.congr fun x hx => ?_
-  ext i j
-  rw [Matrix.inv_def, Ring.inverse_eq_inv]
-  simp
+  exact GlobalTheory.CompanionTheory.WaveCp.Rep.Mol.HfSmooth.contDiffOn_inv
 
 def cTL : Mat n →L[ℝ] Mat n :=
   LinearMap.toContinuousLinearMap

@@ -87,11 +87,7 @@ theorem mem_genSet_iff {D : D7} {X : HidaSetting D} (Y : Full X) (u u' : D.what�
 
 theorem finrank_Vp_eq (D : D7) (p : PlF D) :
     Module.finrank (D.s.atP p).Ep (Vp D p) = D.R.k + 2 * D.R.rS + 1 := by
-  rw [finrank_Vp]
-  have h2 := D.R.two_le_m
-  obtain ⟨j, hj⟩ := D.R.m_even
-  simp only [Ranks.r, Ranks.rS]
-  omega
+  exact GlobalTheory.Unfold.GenLoc.rank_loc p
 
 theorem img_inv_img {D : D7} (Z : LocDat D) (p : PlF D) (h : Vp D p ≃ₗ[(D.s.atP p).Ep] Vp D p)
     (A : Submodule (Z.M p).L.O (Vp D p)) : LocNG.img h⁻¹ (LocNG.img h A) = A := by

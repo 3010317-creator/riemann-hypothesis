@@ -143,11 +143,8 @@ theorem chartLength_localizedModule_quotient {A : Type*} [CommRing A] (K W : Ide
 
 theorem chartLength_self_eq_of_ringEquiv {Q Q' : Type*} [CommRing Q] [CommRing Q'] (τ : Q ≃+* Q') :
     Module.length Q Q = Module.length Q' Q' := by
-  let _ := RingHomInvPair.of_ringEquiv τ
-  let _ := RingHomInvPair.symm (↑τ : Q →+* Q') (τ.symm : Q' →+* Q)
-  apply WithBot.coe_injective
-  rw [Module.coe_length, Module.coe_length,
-    Order.krullDim_eq_of_orderIso (Submodule.orderIsoMapComap τ.toSemilinearEquiv)]
+  exact
+    GroundTheory.Heights₂.Heights.ObjectsChow.VerticalPartMultiplicity.length_self_eq_of_ringEquiv τ
 
 theorem chartLength_quotient_self {A : Type*} [CommRing A] (I : Ideal A) :
     Module.length A (A ⧸ I) = Module.length (A ⧸ I) (A ⧸ I) :=

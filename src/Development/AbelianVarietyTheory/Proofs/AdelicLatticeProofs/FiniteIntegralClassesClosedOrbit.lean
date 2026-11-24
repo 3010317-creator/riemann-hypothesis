@@ -470,11 +470,7 @@ variable {ι : Type} [Fintype ι] [DecidableEq ι]
 
 omit [DecidableEq ι] in
 lemma tpow_mul' (n : ℕ) (y z : Matrix ι ι ℂ) : tpow n (y * z) = tpow n y * tpow n z := by
-  classical
-  ext a b
-  simp only [tpow, Matrix.mul_apply, Matrix.of_apply]
-  rw [Finset.prod_univ_sum]
-  simp [Finset.prod_mul_distrib]
+  exact GlobalTheory.ClassFin.MinVec.tpow_mul' n y z
 
 lemma tpow_one' (n : ℕ) : tpow n (1 : Matrix ι ι ℂ) = 1 := by
   ext a b

@@ -427,19 +427,8 @@ theorem over_id : Over₀ U₁ U₁ (𝟙 _) (𝟙 _) := fun e => by
   rw [CategoryTheory.Functor.map_id, CategoryTheory.Functor.map_id, Category.id_comp, Category.comp_id]
 
 theorem onTorus_comp {h : D₂.toPre.X → D₁.toPre.X} {h' : D₃.toPre.X → D₂.toPre.X} (H : OnTorus U₁ U₂ a h)
-    (H' : OnTorus U₂ U₃ a' h') : OnTorus U₁ U₃ (a ≫ a') (h ∘ h') := fun e => by
-  obtain ⟨t, ht, et⟩ := H e
-  obtain ⟨t', ht', et'⟩ := H' e
-  refine ⟨t ≫ t', fun χ => unit_ext fun z _ => ?_, by
-    rw [Functor.map_comp, ← Category.assoc, et, Category.assoc, et', Category.assoc]⟩
-  have e₁ := congrArg (gm (𝟙 _) z ⊤) (ht (h' χ))
-  have e₂ := congrArg (gm (𝟙 _ ≫ t.left) z ⊤) (ht' χ)
-  refine Eq.trans ?_ e₁
-  refine ((gm_res (𝟙 _) z (V := ⊤) _ trivial _).trans (gm_pull (𝟙 _) (t ≫ t').left z ⊤ trivial _)).trans
-    (Eq.trans ?_ ((gm_res (𝟙 _) z (V := ⊤) _ trivial _).trans (gm_pull (𝟙 _) t.left z ⊤ trivial _)).symm)
-  refine Eq.trans ?_ e₂
-  refine Eq.trans ?_ ((gm_res _ z (V := ⊤) _ trivial _).trans (gm_pull (𝟙 _ ≫ t.left) t'.left z ⊤ trivial _)).symm
-  rw [Over.comp_left, Category.assoc]
+    (H' : OnTorus U₂ U₃ a' h') : OnTorus U₁ U₃ (a ≫ a') (h ∘ h') :=
+  GlobalTheory.Mum.FactorPol.onTorus_comp H H'
 
 theorem onTorus_id : OnTorus U₁ U₁ (𝟙 _) id := fun e =>
   ⟨𝟙 _, fun χ => unit_ext fun z _ => ((gm_res (𝟙 _) z (V := ⊤) _ trivial _).trans
@@ -1117,12 +1106,7 @@ namespace GlobalTheory.Mum.Two
 theorem torusHomOf_iff_appTop {S : Scheme.{0}} {X X' : Type} [AddCommGroup X] [AddCommGroup X'] (h : X' → X)
     (t : splitTorus S X ⟶ splitTorus S X') : TorusHomOf h t ↔
       ∀ χ, t.left.appTop.hom (charUnit S X' χ).val = (charUnit S X (h χ)).val := by
-  refine forall_congr' fun χ => ?_
-  have : (res (fun x _ => show t.left.base x ∈ (⊤ : TopologicalSpace.Opens _) from trivial)
-      (pullU t.left ⊤ (charUnit S X' χ)) : Γ((splitTorus S X).left, ⊤)ˣ).val =
-      t.left.appTop.hom (charUnit S X' χ).val := by
-    rw [Scheme.Hom.appTop, Scheme.Hom.app_eq_appLE]; rfl
-  rw [← this, Units.ext_iff]
+  exact GlobalTheory.Mum.Two.HomConst.torusHomOf_iff_appTop h t
 
 theorem torusHomOf_unique {S : Scheme.{0}} {X X' : Type} [AddCommGroup X] [AddCommGroup X'] {h : X' → X}
     {t t' : splitTorus S X ⟶ splitTorus S X'} (ht : TorusHomOf h t) (ht' : TorusHomOf h t') : t = t' := by
@@ -1273,13 +1257,7 @@ namespace GlobalTheory.UChart
 
 theorem w_zero_mul_conj_eq_norm {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Host E) :
     H.w0 * H.bar H.w0 = (((H.d + 1) / 4 : ℕ) : 𝓞 E) := by
-  obtain ⟨m, hm⟩ : ∃ m, H.d + 1 = 4 * m := ⟨(H.d + 1) / 4, by have := H.d_mod; omega⟩
-  have e : (H.d + 1) / 4 = m := by omega
-  have hm' : (H.d : 𝓞 E) + 1 = 4 * m := by exact_mod_cast hm
-  rw [e, GlobalTheory.HostModel.cmHost_bar_halfIntegerGenerator]
-  have h4 : (4 : 𝓞 E) ≠ 0 := by norm_num
-  apply mul_left_cancel₀ h4
-  linear_combination (-(2 * H.w0 + H.rt - 1)) * H.two_weight_eq_one_add_root - H.rt_sq + hm'
+  exact GlobalTheory.PELOfUnif.w0_mul_bar_w0_eq_d_add_one_div_four H
 
 theorem exists_sab_pelUnif_of_norm {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Host E) (R : Type)
     [CommRing R] [IsDomain R] [IsLocalRing R] (hR : Base R) (D : DegData R (maximalIdeal R))

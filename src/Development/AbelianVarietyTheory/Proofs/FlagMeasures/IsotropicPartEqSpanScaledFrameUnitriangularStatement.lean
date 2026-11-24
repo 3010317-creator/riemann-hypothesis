@@ -258,15 +258,7 @@ lemma Xa_le_X (F : FlagG S r T) (j : ℕ) : F.Xa j ≤ F.X := by
   unfold FlagG.Xa FlagG.X
   exact Submodule.span_mono (Set.image_subset_range _ _)
 
-lemma X_eq_Xa (F : FlagG S r T) : F.X = F.Xa r := by
-  unfold FlagG.Xa FlagG.X
-  congr 1
-  ext v
-  constructor
-  · rintro ⟨i, rfl⟩
-    exact ⟨i, i.isLt, rfl⟩
-  · rintro ⟨i, -, rfl⟩
-    exact ⟨i, rfl⟩
+lemma X_eq_Xa (F : FlagG S r T) : F.X = F.Xa r := (Formalism.L2.SG.Pf.Xa_r' F).symm
 
 lemma e_mem (F : FlagG S r T) (a : Fin r) : F.e a ∈ F.Xa (a.val + 1) := by
   unfold FlagG.Xa

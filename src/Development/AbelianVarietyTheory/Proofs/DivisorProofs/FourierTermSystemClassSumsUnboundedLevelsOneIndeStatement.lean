@@ -998,17 +998,7 @@ theorem injective_of_ker_le {X Y : Type} [AddCommGroup X] [Module.Free ℤ X] [M
 
 theorem isPrimitiveRoot_map_of_isUnit_order {o K : Type} [CommRing o] [IsDomain o] [CommRing K] [IsDomain K] (φ : o →+* K)
     {m : ℕ} (hm : 0 < m) {q : o} (hq : IsPrimitiveRoot q m) (hu : IsUnit (m : o)) : IsPrimitiveRoot (φ q) m := by
-  obtain ⟨n, rfl⟩ : ∃ n, m = n + 1 := ⟨m - 1, by omega⟩
-  refine IsPrimitiveRoot.mk_of_lt _ hm (by rw [← map_pow, hq.pow_eq_one, map_one]) fun l hl hlt h1 => ?_
-  have hp := congrArg φ hq.prod_one_sub_pow_eq_order
-  rw [map_prod] at hp
-  have hz : ∏ k ∈ Finset.range n, φ (1 - q ^ (k + 1)) = 0 := by
-    refine Finset.prod_eq_zero (i := l - 1) (Finset.mem_range.2 (by omega)) ?_
-    rw [map_sub, map_one, map_pow, Nat.sub_add_cancel hl, h1, sub_self]
-  rw [hz] at hp
-  have hu' : IsUnit (φ ((n : o) + 1)) := by
-    have := hu.map φ; simpa using this
-  exact hu'.ne_zero hp.symm
+  exact GlobalTheory.GSep.ClassSumFun.isPrimitiveRoot_map φ hm hq hu
 
 theorem intCast_eq_of_zpow_eq {K : Type} [Field K] {m : ℕ} [NeZero m] {z : K} (hz : IsPrimitiveRoot z m) {a : ℤ}
     {b : ZMod m} (h : z ^ a = z ^ (b.val : ℤ)) : (a : ZMod m) = b := by

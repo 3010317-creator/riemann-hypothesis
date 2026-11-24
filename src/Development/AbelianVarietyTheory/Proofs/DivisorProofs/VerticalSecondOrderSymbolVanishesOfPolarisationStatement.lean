@@ -1112,12 +1112,7 @@ theorem valR_sum' {F : Type} [CommRing F] {Z : Scheme.{0}} (ξ : Sp F ⟶ Z) {O 
     simp only [WtAlg.valR_eq' _ _ h, map_sum]
 
 theorem valR_unit_ne {F : Type} [Field F] {Z : Scheme.{0}} (ξ : Sp F ⟶ Z) {O : Z.Opens} (h : ⊤ ≤ ξ ⁻¹ᵁ O)
-    (u : Γ(Z, O)ˣ) : valR ξ O (u : Γ(Z, O)) ≠ 0 := by
-  intro h0
-  have e : valR ξ O (u : Γ(Z, O)) * valR ξ O (↑u⁻¹ : Γ(Z, O)) = 1 := by
-    rw [← WtAlg.valR_mul'' _ _ h, Units.mul_inv, WtAlg.valR_eq' _ _ h, map_one, map_one]
-  rw [h0, zero_mul] at e
-  exact zero_ne_one e
+    (u : Γ(Z, O)ˣ) : valR ξ O (u : Γ(Z, O)) ≠ 0 := GlobalTheory.ZH.FrameNorm.val_unit_ne_zero ξ h u
 
 theorem alg_val {F : Type} [Field F] {n : ℕ} (δ : Fin n → Derivation ℤ F F) (lam' : Fin n → Fin n → F) (k : ℕ)
     (hk : (k : F) ≠ 0) (G S : F) (hG : G ≠ 0) (hS : S ≠ 0) (y0 x : F) :

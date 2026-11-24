@@ -93,14 +93,7 @@ theorem exists_dp (D : Data) (U : D.X.affineOpens) :
 theorem thick_hom_ext {R : Type} [CommRing R] {I : Ideal R}
     {X : Scheme} {γ : DividedPowers I} {s : X ⟶ Sp R}
     {T T' : Thick γ s} {f g : T ⟶ T'}
-    (h : ∀ b, f.φ b = g.φ b) : f = g := by
-  rcases f with ⟨φ, φ₀, comm, dp, pt⟩
-  rcases g with ⟨ψ, ψ₀, comm', dp', pt'⟩
-  obtain rfl : φ = ψ := AlgHom.ext h
-  obtain rfl : φ₀ = ψ₀ := RingHom.ext fun c ↦ by
-    obtain ⟨b, rfl⟩ := T.surj c
-    rw [comm, comm']
-  rfl
+    (h : ∀ b, f.φ b = g.φ b) : f = g := GlobalTheory.Cris.Thick.hom_ext h
 
 theorem nonempty_lift : ∀ D : Data, Nonempty (Lift D) := by
   intro D

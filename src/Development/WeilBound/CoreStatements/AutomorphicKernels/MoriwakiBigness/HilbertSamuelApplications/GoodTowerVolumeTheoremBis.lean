@@ -226,11 +226,7 @@ theorem mem_mulLat_iff {Ω V : Type} [Field Ω] [AddCommGroup V] [Module Ω V] {
 
 theorem smul_mem_stdLat {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (R : Subalgebra o Ω)
     (ι : Type) {a : Ω} (ha : a ∈ R) {v : ι → Ω} (hv : v ∈ stdLat R ι) : a • v ∈ stdLat R ι := by
-  unfold GlobalTheory.CompanionTheory.Ar.Num.stdLat at hv ⊢
-  rw [AddSubgroup.mem_pi] at hv ⊢
-  intro j hj
-  have hvj : v j ∈ R := by simpa using hv j hj
-  simpa [smul_eq_mul] using R.mul_mem ha hvj
+  exact PositivityTheory.Xgn.TestLift.std_smul ha hv
 
 def graphLat {Ω V V' : Type} [Field Ω] [AddCommGroup V] [Module Ω V] [AddCommGroup V']
     [Module Ω V'] (w : Ω) (A : AddSubgroup V) (B : AddSubgroup V') (f : V →ₗ[Ω] V') :
@@ -660,35 +656,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Da
   {Ω : Type} [Field Ω] {K : Type} [Fintype K] {J : K → Type} {y : (Σ k, J k) → Ω}
 
 theorem exists_point (A : HodgeCpt Y S y) : ∃ x : Sp Ω ⟶ Xo.XF c, A.ξ ≫ A.f = x ≫ Y.j := by
-  have : IsProper Y.s := projProper O₀ Y.X Y.s Y.proj
-  have : IsLocallyNoetherian (pullback Y.s (spMap β)) :=
-    LocallyOfFiniteType.isLocallyNoetherian (pullback.snd Y.s (spMap β))
-  have : CompactSpace ↥(pullback Y.s (spMap β)) :=
-    QuasiCompact.compactSpace_of_compactSpace (pullback.snd Y.s (spMap β))
-  have : IsNoetherian (pullback Y.s (spMap β)) := {}
-  have := Y.jQ_open
-  let pt₀ : Sp Ω ⟶ pullback Y.s (spMap β) := pullback.lift (A.ξ ≫ A.f) (spMap A.cst) (by
-    rw [Category.assoc, A.cst_over]; exact Spec.map_comp (CommRingCat.ofHom β) (CommRingCat.ofHom A.cst))
-  have hpt₀ : pt₀ ≫ pullback.fst _ _ = A.ξ ≫ A.f := pullback.lift_fst _ _ _
-  have hpt : pullback.fst Y.s (spMap β) (pt₀ (IsLocalRing.closedPoint Ω)) = genPt A.ξ₀ := by
-    have : Subsingleton (Spec (CommRingCat.of A.Ω₀)) := inferInstanceAs (Subsingleton (PrimeSpectrum A.Ω₀))
-    have h0 : pt₀ ≫ pullback.fst _ _ = Spec.map (CommRingCat.ofHom A.fn) ≫ A.ξ₀ := hpt₀.trans A.fn_over
-    refine (Scheme.Hom.comp_apply _ _ _).symm.trans ?_
-    rw [h0]
-    exact (Scheme.Hom.comp_apply _ _ _).trans (congrArg A.ξ₀ (Subsingleton.elim _ _))
-  obtain ⟨q, hqU, hq⟩ := GlobalTheory.CompanionTheory.Ar.CmpHodgeDiag.exists_gen Y.jQ.isOpenEmbedding.isOpen_range Y.jQ_dense
-    (pt₀ (IsLocalRing.closedPoint Ω))
-  have h1 := hq.map (pullback.fst Y.s (spMap β)).continuous
-  rw [hpt] at h1
-  have h2 := GlobalTheory.CompanionTheory.Ar.CmpHodgeDiag.eq_of_specializes A.gen₀ h1
-  have hr : Set.range pt₀ ⊆ Set.range Y.jQ := by
-    rintro _ ⟨a, rfl⟩
-    have : Subsingleton (Sp Ω) := inferInstanceAs (Subsingleton (PrimeSpectrum Ω))
-    rw [Subsingleton.elim a (IsLocalRing.closedPoint Ω), ← Y.ab_gen, Set.mem_preimage, hpt, ← h2]
-    have h3 : q ∈ pullback.fst Y.s (spMap β) ⁻¹' abLocus Y.t.G := by rw [Y.ab_gen]; exact hqU
-    exact h3
-  refine ⟨IsOpenImmersion.lift Y.jQ pt₀ hr, ?_⟩
-  rw [Model.j, ← Category.assoc, IsOpenImmersion.lift_fac, hpt₀]
+  exact PositivityTheory.HtPt.Hcptgen.exists_lift A
 
 theorem exists_root (A : HodgeCpt Y S y) (hpq : 0 < D.p + D.q) {p : ℕ} (hp : p.Prime) (hpS : p ∈ S) :
     ∃ ζ : Ω, IsPrimitiveRoot ζ p := by
@@ -1067,11 +1035,7 @@ theorem isIso_spMap_fracToField {Ω : Type} [Field Ω] {O : Type} [CommRing O] [
   infer_instance
 
 theorem finite_torsT (E : Type) [Field E] [NumberField E] (N n : ℕ) (hn : n ≠ 0) : Finite (TorsT E N n) := by
-  have hI : Ideal.span {(n : 𝓞 E)} ≠ ⊥ := by
-    rw [Ne, Ideal.span_singleton_eq_bot]
-    exact_mod_cast hn
-  haveI : Finite (𝓞 E ⧸ Ideal.span {(n : 𝓞 E)}) := Ideal.finiteQuotientOfFreeOfNeBot _ hI
-  exact inferInstanceAs (Finite (Fin N → (𝓞 E ⧸ Ideal.span {(n : 𝓞 E)})))
+  exact PositivityTheory.Xgn.FunctionFamilyIdempotent.finite_tors N hn
 
 theorem qhom_surjective (E : Type) [Field E] [NumberField E] (N n : ℕ) : Function.Surjective (qhom (E := E) N n) := fun t => by
   choose f hf using fun i => Ideal.Quotient.mk_surjective (Multiplicative.toAdd t i)
@@ -1082,22 +1046,7 @@ theorem qhom_surjective (E : Type) [Field E] [NumberField E] (N n : ℕ) : Funct
 
 theorem qhom_eq_one_iff (E : Type) [Field E] [NumberField E] (N n : ℕ) (y : Fin N → 𝓞 E) :
     qhom (E := E) N n (Multiplicative.ofAdd y) = 1 ↔ ∃ y', y = n • y' := by
-  have h1 : qhom (E := E) N n (Multiplicative.ofAdd y) = 1 ↔ ∀ i, (n : 𝓞 E) ∣ y i := by
-    constructor
-    · intro h i
-      have h2 := congrFun (congrArg Multiplicative.toAdd h) i
-      exact Ideal.mem_span_singleton.1 (Ideal.Quotient.eq_zero_iff_mem.1 h2)
-    · intro h
-      apply Multiplicative.toAdd.injective
-      funext i
-      exact Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.mem_span_singleton.2 (h i))
-  rw [h1]
-  constructor
-  · intro h
-    choose f hf using h
-    exact ⟨f, by funext i; simp [hf i, nsmul_eq_mul]⟩
-  · rintro ⟨y', rfl⟩ i
-    exact ⟨y' i, by simp [nsmul_eq_mul]⟩
+  exact PositivityTheory.Xgn.TestGroupPoint.qhom_eq_one N n y
 
 theorem chartPack_exists : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O₀ : Type) [CommRing O₀] (β : O₀ →+* c.F) (Y : Model Xo c β) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] [DecidableEq K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (d : ℕ), ReciprocityTheory.ChartRestriction.G.Geo.IsArithVar (mCoordIdeal y) (d + 1) → 0 < D.p + D.q → ∀ (p : ℕ) [Fact p.Prime], p ∈ S → HT.HTFree 𝔐 p → p ≠ 2 → ¬ (p : ℤ) ∣ NumberField.discr E → ∀ (A : Type) [CommRing A] [Algebra A Ω] [IsIntegralClosure A ℤ Ω] (m : Ideal A) [m.IsPrime], (p : A) ∈ m → ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra A O] [IsLocalization.AtPrime O m] [Algebra O Ω] [IsScalarTower A O Ω], ∀ (G : GenTors 𝔐 p) (c' : ∀ k, J k), mseg y c' ≠ 0 → Nonempty (ChartPack G O c') := by
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ _ J _ y 𝔐 d hv hpq p _ hpS hHT hp2 hdisc A _ _ _ m _ hm O _ _ _ _ _ _ _ G c' hc

@@ -401,11 +401,8 @@ theorem mul_int {n : ℕ} {A B : Matrix (Fin n) (Fin n) L} (hA : ∀ i j, A i j 
   exact Subring.sum_mem _ fun k _ => Subring.mul_mem _ (hA i k) (hB k j)
 
 theorem cT_int {σ : L →+* L} (hv : ∀ x, Valued.v (σ x) = Valued.v x) {n : ℕ} {A : Matrix (Fin n) (Fin n) L}
-    (hA : ∀ i j, A i j ∈ intL L) : ∀ i j, cT σ A i j ∈ intL L := fun i j => by
-  have h := hA j i
-  simp only [cT, Matrix.transpose_apply, Matrix.map_apply]
-  rw [intL, Valuation.mem_integer_iff] at h ⊢
-  rw [hv]; exact h
+    (hA : ∀ i j, A i j ∈ intL L) : ∀ i j, cT σ A i j ∈ intL L :=
+  GlobalTheory.UsideLeaf.hermitian_local_global_existence.int_cT σ hv hA
 
 theorem cT_cT {σ : L →+* L} (hs : ∀ x, σ (σ x) = x) {n : ℕ} (A : Matrix (Fin n) (Fin n) L) : cT σ (cT σ A) = A := by
   ext i j; simp [cT, hs]

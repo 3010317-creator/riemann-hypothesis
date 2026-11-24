@@ -136,11 +136,7 @@ theorem md_pr_mul (t : Fˣ) (a : (AF F)ˣ) : md (pr t * a) = md a := by
   rw [md_mul, md_pr, one_mul]
 
 theorem th_pr_mul (f : (AF F)ˣ → ℝ≥0∞) (t : Fˣ) (a : (AF F)ˣ) : th f (pr t * a) = th f a := by
-  unfold th
-  have h : ∀ u : Fˣ, pr u * (pr t * a) = pr (u * t) * a := fun u => by
-    rw [← mul_assoc]; congr 1; exact (map_mul (Units.map (algebraMap F (AF F)).toMonoidHom) u t).symm
-  simp_rw [h]
-  exact (Equiv.mulRight t).tsum_eq (fun u => f (pr u * a))
+  exact GlobalTheory.CompanionTheory.BasePsi.th_pr f t a
 
 def ray (θ : ℝ →+* Ainf F) (δ : ℝ) : (AF F)ˣ :=
   if h : δ = 0 then 1 else

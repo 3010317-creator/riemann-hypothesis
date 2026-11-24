@@ -468,12 +468,7 @@ theorem hasSubst_tanPair (d : ℕ) (v : Fin d → R) : HasSubst (tanPair d v) :=
   · simpa [tanPair] using inr_nilpotent (v i)
 
 theorem ev_pt_pt {d : ℕ} (g : PS R 2 d) : ev (n := 2) ![pt R d 0, pt R d 1] g = g := by
-  have : (fun p : Fin 2 × Fin d => (![pt R d 0, pt R d 1] : Fin 2 → Pt R 2 d) p.1 p.2) = X := by
-    funext p
-    obtain ⟨j, i⟩ := p
-    fin_cases j <;> rfl
-  unfold ev
-  rw [this, subst_self, id]
+  exact GlobalTheory.ChartBaseChange.eval_standard_points_two g
 
 theorem subst_tanPair_fst {d : ℕ} (v : Fin d → R) (f : PS R 1 d) :
     subst (tanPair d v) (ev (n := 2) ![pt R d 0] f) = MvPowerSeries.map (algebraMap R (DualNumber R)) f := by

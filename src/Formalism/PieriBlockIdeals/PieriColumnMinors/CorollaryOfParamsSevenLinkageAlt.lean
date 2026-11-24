@@ -556,14 +556,7 @@ open ArithmeticFunction hiding log id
 open scoped Nat Chebyshev ArithmeticFunction.zeta
 
 theorem log_factorial_eq_sum_log (N : ℕ) : log ((N ! : ℕ) : ℝ) = ∑ m ∈ Ioc 0 N, log (m : ℝ) := by
-  induction N with
-  | zero => simp
-  | succ n ih =>
-    rw [Finset.sum_Ioc_succ_top (Nat.zero_le n), ← ih, Nat.factorial_succ, Nat.cast_mul,
-      Real.log_mul (Nat.cast_ne_zero.mpr (Nat.succ_ne_zero n))
-        (Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero n))]
-    push_cast
-    ring
+  exact PI.PrimeLogOverPWork.log_factorial_eq_sum_log N
 
 theorem log_factorial_eq_sum (N : ℕ) :
     log ((N ! : ℕ) : ℝ) = ∑ d ∈ Ioc 0 N, Λ d * ((N / d : ℕ) : ℝ) := by

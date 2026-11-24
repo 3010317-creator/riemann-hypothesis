@@ -971,13 +971,7 @@ theorem schr_comp_apply {R : Type} [CommRing R] [Invertible (2 : R)] (ψ : AddCh
     (w w' : (κ → R) × (κ → R)) (Φ : (κ → R) → ℂ) (x : κ → R) :
     GlobalTheory.WeilM.schr ψ w (GlobalTheory.WeilM.schr ψ w' Φ) x =
       ψ (⅟(2 : R) * (w.1 ⬝ᵥ w'.2 - w'.1 ⬝ᵥ w.2)) * GlobalTheory.WeilM.schr ψ (w + w') Φ x := by
-  simp only [GlobalTheory.WeilM.schr, ← mul_assoc, ← AddChar.map_add_eq_mul, add_assoc]
-  congr 2
-  simp only [Prod.fst_add, Prod.snd_add, add_dotProduct, dotProduct_add]
-  rw [dotProduct_comm w'.1 w.2]
-  first
-    | linear_combination (w.1 ⬝ᵥ w'.2) * invOf_mul_self (2 : R)
-    | linear_combination (-(w.1 ⬝ᵥ w'.2)) * invOf_mul_self (2 : R)
+  exact GlobalTheory.ThetaDer.schr_comp_apply ψ w w' Φ x
 
 theorem exists_transpose_mul_equiv {A : Type} [CommRing A] {α β γ : Type} [Fintype β] [DecidableEq β] (e : γ ≃ α)
     {G H : Matrix β β A} (hHG : H * G = 1) :

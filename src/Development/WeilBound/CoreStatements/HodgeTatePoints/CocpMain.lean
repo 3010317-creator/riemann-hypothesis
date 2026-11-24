@@ -129,24 +129,12 @@ theorem pderiv_ev_local {m n : ℕ} {a : Fin m → Pt R n d} (ha : NoConst a)
 
 theorem pderiv_second_of_ev_first_point_local (h : PS R 1 d) (i : Fin d) :
     pderiv (R := R) ((1 : Fin 2), i) (ev (n := 2) ![pt R d 0] h) = 0 := by
-  have hx : NoConst (![pt R (n := 2) d 0] : Fin 1 → Pt R 2 d) := noConst_one (cc_pt 0)
-  rw [pderiv_ev_local hx]
-  refine Finset.sum_eq_zero fun j _ => Finset.sum_eq_zero fun k _ => ?_
-  rw [Fin.fin_one_eq_zero j]
-  show _ * pderiv (R := R) ((1 : Fin 2), i) (X ((0 : Fin 2), k)) = 0
-  rw [pderiv_X_of_ne (by simp), mul_zero]
+  exact GlobalTheory.DerivEndo.pderiv_second_of_ev_first_point h i
 
 theorem dy_y_local (h : PS R 1 d) (i : Fin d) :
     pderiv (R := R) ((1 : Fin 2), i) (ev (n := 2) ![pt R d 1] h) =
       ev (n := 2) ![pt R d 1] (pderiv (R := R) ((0 : Fin 1), i) h) := by
-  have hy : NoConst (![pt R (n := 2) d 1] : Fin 1 → Pt R 2 d) := noConst_one (cc_pt 1)
-  rw [pderiv_ev_local hy, Fin.sum_univ_one, Finset.sum_eq_single i]
-  · show _ * pderiv (R := R) ((1 : Fin 2), i) (X ((1 : Fin 2), i)) = _
-    simp [pderiv_X_self]
-  · intro k _ hk
-    show _ * pderiv (R := R) ((1 : Fin 2), i) (X ((1 : Fin 2), k)) = 0
-    rw [pderiv_X_of_ne (by simp [hk]), mul_zero]
-  · exact fun h => absurd (Finset.mem_univ i) h
+  exact GlobalTheory.DerivEndo.dy_y h i
 
 theorem cc_ptPow {n p : ℕ} (hp : p ≠ 0) (j : Fin n) (i : Fin d) :
     constantCoeff (ptPow R d p j i : PS R n d) = 0 := by

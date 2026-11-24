@@ -596,12 +596,7 @@ theorem mh_mul {f g : MRing ι} {a b : K → ℕ} (hf : IsMultiHomog f a) (hg : 
   simp only [Finsupp.add_apply, Finset.sum_add_distrib, Pi.add_apply, hf m1 hm1 k, hg m2 hm2 k]
 
 theorem mh_add {f g : MRing ι} {a : K → ℕ} (hf : IsMultiHomog f a) (hg : IsMultiHomog g a) :
-    IsMultiHomog (f + g) a := by
-  classical
-  intro m hm k
-  rcases Finset.mem_union.mp (MvPolynomial.support_add hm) with h | h
-  · exact hf m h k
-  · exact hg m h k
+    IsMultiHomog (f + g) a := GlobalTheory.CompanionTheory.Ar.AlgPoly.form_add hf hg
 
 theorem mh_neg {f : MRing ι} {a : K → ℕ} (hf : IsMultiHomog f a) : IsMultiHomog (-f) a := by
   intro m hm k

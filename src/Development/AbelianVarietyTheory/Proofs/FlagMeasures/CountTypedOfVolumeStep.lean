@@ -375,12 +375,7 @@ namespace GlobalTheory.DeepRegion
 
 theorem one_le_f (I : AutInst) : 1 ≤ I.f := Module.finrank_pos
 
-theorem one_le_rd (I : AutInst) : 1 ≤ I.rd := by
-  have hd : (1 : ℝ) ≤ |(discr I.E : ℝ)| := by
-    have h0 : discr I.E ≠ 0 := discr_ne_zero I.E
-    have : (1 : ℤ) ≤ |discr I.E| := Int.one_le_abs h0
-    exact_mod_cast this
-  exact Real.one_le_rpow hd (by positivity)
+theorem one_le_rd (I : AutInst) : 1 ≤ I.rd := GlobalTheory.Dec.countHyp_one_le_rd I
 
 theorem deepBound (hV : GlobalTheory.FlagMeas.AbsoluteVolume) (hK : GlobalTheory.IndefiniteRowSideFullHecke.DeepKernelRadiusBound.DeepKernelBound) :
     GlobalTheory.IndefiniteRowSideFullHecke.DeepSet.DeepBound := by
@@ -1019,16 +1014,7 @@ namespace GlobalTheory.FlagMeas.AbsVol
 
 theorem fDeg_congr {K L : Type} [Field K] [NumberField K] [Field L] [NumberField L] (e : K ≃+* L) :
     Formalism.HermitianLatticesTheory.fDeg K = Formalism.HermitianLatticesTheory.fDeg L := by
-  unfold Formalism.HermitianLatticesTheory.fDeg
-  refine Fintype.card_congr
-    { toFun := fun w => w.comap (e.symm : L →+* K)
-      invFun := fun w => w.comap (e : K →+* L)
-      left_inv := fun w => ?_
-      right_inv := fun w => ?_ }
-  · ext x
-    simp
-  · ext x
-    simp
+  exact GlobalTheory.FlagMeas.VolRatio.fDeg_congr e
 
 theorem vInv_congr {K L : Type} [Field K] [NumberField K] [Field L] [NumberField L] (e : K ≃+* L) :
     Formalism.HermitianLatticesTheory.vInv K = Formalism.HermitianLatticesTheory.vInv L := by
@@ -1393,17 +1379,7 @@ theorem hasType_cast (I : AutInst) (x : I.GA) {a a' : ℕ} (h : a' = a) (j : Fin
 
 theorem sum_diff (a : ℕ) (r : Fin (a + 1) → ℕ) (j : Fin a → ℕ)
     (h : ∀ i, r i.succ = r i.castSucc + j i) : r (Fin.last a) = r 0 + ∑ i, j i := by
-  induction a with
-  | zero => simp
-  | succ a ih =>
-    have key := ih (fun i => r i.castSucc) (fun i => j i.castSucc) (fun i => by
-      have := h i.castSucc
-      rwa [Fin.succ_castSucc] at this)
-    have hl := h (Fin.last a)
-    rw [Fin.succ_last] at hl
-    simp only [Fin.castSucc_zero] at key
-    rw [Fin.sum_univ_castSucc, hl, key]
-    ring
+  exact GlobalTheory.NonzeroFlag.telescope a r j h
 
 theorem exists_type (B : RowsAut) (p q : ℕ) (hs : SigIs B p q) (hn : 1 ≤ B.I.n) (x : B.I.GA)
     (hx : least B.I x < 1 / 2) :
@@ -1798,12 +1774,7 @@ theorem fdegOf_eq_of_isFdeg {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAd
   rw [h4, hw]
   simp
 
-theorem one_le_rd (I : AutInst) : 1 ≤ I.rd := by
-  unfold AutInst.rd
-  apply Real.one_le_rpow
-  · have h : (1 : ℤ) ≤ |discr I.E| := Int.one_le_abs (discr_ne_zero I.E)
-    exact_mod_cast h
-  · positivity
+theorem one_le_rd (I : AutInst) : 1 ≤ I.rd := GlobalTheory.Dec.countHyp_one_le_rd I
 
 theorem count_unbundled : GlobalTheory.IndefiniteRowSideFullHecke.LatticeCountingTheorem.CountingTheorem → ∀ A : ℝ, ∃ (n₀ : ℕ) (C₀ : ℝ), 0 ≤ C₀ ∧ ∀ n₁ ≥ n₀, ∀ C ≥ C₀, ∀ (I : AutInst) (b : ℝ) (lam : InfinitePlace I.F → Fin I.n → ℝ) (g g₀ : ℕ) (e : I.Gf → ℂ) (H : InfinitePlace I.F → Type) [∀ v, NormedAddCommGroup (H v)] [∀ v, InnerProductSpace ℂ (H v)] [∀ v, CompleteSpace (H v)] (σ : ∀ v, Matrix (Fin I.n) (Fin I.n) ℂ → (H v →L[ℂ] H v)) (w : ∀ v, H v) (Hs : Type) [NormedAddCommGroup Hs] [InnerProductSpace ℂ Hs] [CompleteSpace Hs] (σs : I.Ginf → (Hs →L[ℂ] Hs)) (tens : (∀ v, H v) → Hs) (μf : Measure I.Gf) [SigmaFinite μf] (fund : Set I.GA) (R : I.GA → (I.L2 μf fund →L[ℂ] I.L2 μf fund)) (Re : I.L2 μf fund →L[ℂ] I.L2 μf fund) (h : ℝ), (n₁ ≤ I.n ∧ (∃ p q : ℕ, (∀ v, I.pAt v = p ∧ I.qAt v = q) ∧ q ^ 2 ≤ I.n) ∧ 2 ≤ b ∧ Real.log (Real.log I.rd) ≤ I.n ∧ (∀ v, Formalism.QuantumDeterminants.IsHCParam (lam v)) ∧ (∀ v a, |lam v a| ≤ b ^ 2) ∧ I.IsAdmIdem μf g g₀ e ∧ 1 ≤ g ∧ (g : ℝ) ≤ b ^ A ∧ g₀.Prime ∧ 4 * I.n < g₀ ∧ ∀ P : Ideal (𝓞 I.E), P.IsMaximal → ((g₀ : 𝓞 I.E) ∈ P) → Ideal.absNorm P = g₀ ∧ (g₀ : 𝓞 I.E) ∉ P ^ 2) → ((∀ v, IsDS (I.ε v) (lam v) (σ v)) ∧ (∀ v, IsLowUnit (I.ε v) (lam v) (σ v) (w v)) ∧ I.IsHilbTensor σ σs tens ∧ μf.IsHaarMeasure ∧ I.IsFundDom (I.muA μf) fund ∧ I.IsRightReg μf fund R ∧ I.IsRConvF μf fund R e Re) → (∀ v, Formalism.QuantumDeterminants.GapAtLeast (I.ε v) (lam v) h) → C * (I.n : ℝ) ^ 19 * (I.f : ℝ) ^ 5 * Real.log (b * I.rd) ≤ h → Real.log (I.f : ℝ) ≤ Real.sqrt (I.n : ℝ) → Real.log (Real.log b) ≤ 1 / 16 * (I.n : ℝ) * (I.f : ℝ) * Real.log (I.n : ℝ) → |(I.Dcount σs μf fund R Re : ℝ) - I.Dstar (∏ v, fdegOf (Formalism.REAL.muG (I.ε v)) (σ v) (w v)) μf fund e| ≤ Real.exp (-(1 / 16) * (I.n : ℝ) * (I.f : ℝ) * Real.log (I.n : ℝ)) * I.Dstar (∏ v, fdegOf (Formalism.REAL.muG (I.ε v)) (σ v) (w v)) μf fund e := by
   intro hT A

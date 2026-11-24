@@ -83,15 +83,7 @@ end Maps
 
 theorem t2_tensor_product {F E : Type} [Field F] [Field E] [Algebra F E] [FiniteDimensional F E] (R : Type)
     [CommRing R] [Algebra F R] [TopologicalSpace R] [IsTopologicalRing R] [T2Space R] :
-    T2Space (R ⊗[F] E) := by
-  let b := Module.finBasis F E
-  refine T2Space.of_injective_continuous
-    (f := fun y : R ⊗[F] E => fun k => PositiveNearLattice.crd b R y k) ?_
-    (continuous_pi fun k => PositiveNearLattice.continuous_crd b R k)
-  intro y y' h
-  have h' : ∀ k, PositiveNearLattice.crd b R y k = PositiveNearLattice.crd b R y' k := fun k => congrFun h k
-  rw [PositiveNearLattice.eq_sum_crd b R y, PositiveNearLattice.eq_sum_crd b R y']
-  simp only [h']
+    T2Space (R ⊗[F] E) := PI.AdicCompletionValuation.t2Space_tensorProduct_finiteExtension R
 
 theorem rpGram_holds : RPGram := by
   intro F E _ _ _ _ _ σ M J a T

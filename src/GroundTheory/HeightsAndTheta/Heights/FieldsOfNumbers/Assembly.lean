@@ -104,12 +104,7 @@ theorem isMultiHomogIdeal_colon_X {I : Ideal (MRing ι F)} (hI : IsMultiHomogIde
 theorem isMultiHomogIdeal_sup_span {I : Ideal (MRing ι F)} (hI : IsMultiHomogIdeal I)
     {s : MRing ι F} {c : K → ℕ} (hs : IsMultiHomog s c) :
     IsMultiHomogIdeal (I ⊔ Ideal.span {s}) := by
-  rw [isMultiHomogIdeal_iff_isHomogeneous] at hI ⊢
-  refine hI.sup (Ideal.homogeneous_span _ _ ?_)
-  intro x hx
-  rw [Set.mem_singleton_iff] at hx
-  subst hx
-  exact ⟨c, hs⟩
+  exact GroundTheory.Heights₂.Heights.FieldNumbers.isMultiHomogIdeal_sup_span hI hs
 
 theorem hilbFn_eq_zero_of_block {I : Ideal (MRing ι F)} (k : K)
     (hk : ∀ i, (X ⟨k, i⟩ : MRing ι F) ∈ I) (m : K → ℤ) (hm : 1 ≤ m k) : hilbFn I m = 0 := by
@@ -725,11 +720,7 @@ theorem mixedDiff_eventually_zero {n : ℕ} (bs : Fin n → K → ℤ) {h : (K �
 
 theorem eventualValue_eq_zero {f : (K → ℤ) → ℤ} (hf : ∀ᶠ m in atTop, f m = 0) :
     eventualValue f = 0 := by
-  unfold eventualValue
-  have hex : ∃ c, ∀ᶠ m in atTop, f m = c := ⟨0, hf⟩
-  rw [dite_eq_left hex]
-  obtain ⟨m, h1, h2⟩ := (hex.choose_spec.and hf).exists
-  rw [← h1, h2]
+  exact GroundTheory.Heights₂.Heights.FieldNumbers.PFContracted.eventualValue_eq_zero hf
 
 end
 

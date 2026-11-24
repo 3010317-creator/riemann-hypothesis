@@ -678,31 +678,7 @@ namespace GlobalTheory.QPl.EpsSupp
 
 theorem exists_prod_of_mem_support_conv {G : Type} [Monoid G] : ∀ (n : ℕ) (f : Fin n → (G →₀ ℂ)) (g : G),
     g ∈ (conv (List.ofFn f)).support → ∃ x : Fin n → G, (∀ i, x i ∈ (f i).support) ∧ g = (List.ofFn x).prod := by
-  classical
-  intro n
-  induction n with
-  | zero =>
-    intro f g hg
-    simp only [List.ofFn_zero, conv, List.foldr_nil] at hg
-    have := Finsupp.support_single_subset hg
-    rw [Finset.mem_singleton] at this
-    exact ⟨Fin.elim0, fun i => i.elim0, by simp [this]⟩
-  | succ n ih =>
-    intro f g hg
-    rw [List.ofFn_succ] at hg
-    simp only [conv, List.foldr_cons] at hg
-    have h1 := Finsupp.support_sum hg
-    rw [Finset.mem_biUnion] at h1
-    obtain ⟨g₀, hg₀, h2⟩ := h1
-    have h3 := Finsupp.support_sum h2
-    rw [Finset.mem_biUnion] at h3
-    obtain ⟨g', hg', h4⟩ := h3
-    have h5 := Finsupp.support_single_subset h4
-    rw [Finset.mem_singleton] at h5
-    obtain ⟨x, hx, hxe⟩ := ih (fun k => f k.succ) g' hg'
-    refine ⟨Fin.cons g₀ x, fun i => Fin.cases hg₀ (fun k => hx k) i, ?_⟩
-    rw [List.ofFn_succ, List.prod_cons, h5, hxe]
-    simp
+  exact GlobalTheory.QSuppTwo.mem_support_conv
 
 theorem eps_mem_grpAt {D : D7} {c : Comm D} {v : VCom c} {t : Tup c} (F : QFam v t) (sc cT : ℕ → ℂ)
     (h0 : ∀ i β, (F.Q i).εL 0 β = Finsupp.single 1 1) (j : ℕ) (α : t.Ch j) :
@@ -1358,14 +1334,7 @@ namespace GlobalTheory.TwLevRed
 theorem reGL_symm_mem_KO_iff {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     {a b : Type} [Fintype a] [DecidableEq a] [Fintype b] [DecidableEq b] (e : a ≃ b)
     {x : GL b k} : (reGL e).symm x ∈ KO k a ↔ x ∈ KO k b := by
-  rw [mem_KO, mem_KO, ← map_inv, reGL_symm_val, reGL_symm_val]
-  constructor
-  · rintro ⟨h1, h2⟩
-    refine ⟨fun i j => ?_, fun i j => ?_⟩
-    · simpa using h1 (e.symm i) (e.symm j)
-    · simpa using h2 (e.symm i) (e.symm j)
-  · rintro ⟨h1, h2⟩
-    exact ⟨fun i j => h1 _ _, fun i j => h2 _ _⟩
+  exact GlobalTheory.BottomWt.reGL_symm_mem_KO_iff e
 
 theorem blockTri_iff_mem_lev : ∀ (E : Type) [Field E] [NumberField E] (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (PP : HeightOneSpectrum (𝓞 E)) (ι : E →+* k), (∀ z : 𝓞 E, valuation k (ι z) < 1 → z ∈ PP.asIdeal) → ∀ (K T s j d : ℕ) (hd : j + d = s + 1) (δ : kˣ →* ℂˣ) (hδ : IsTame δ) (η : ℕ → kˣ →* ℂˣ) (n : ℕ) (e : Ix (Fin K ⊕ Fin (s + 1)) (Fin T) j ≃ Fin n), GlobalTheory.SymBridge.IsOrd GlobalTheory.SymBridge.zPos e → ∀ (x : GL (XIx (Fin K) (Fin T) j ⊕ Fin d) k), x ∈ KO k _ → ∀ (R : GL (Fin n) (𝓞 E ⧸ PP.asIdeal)), (∀ (a a' : Fin n) (z : 𝓞 E), R.val a a' = Ideal.Quotient.mk PP.asIdeal z → valuation k (x.val (stdOrd (Fin K) (Fin T) j d hd (e.symm a)) (stdOrd (Fin K) (Fin T) j d hd (e.symm a')) - ι z) < 1) → (R ∈ Formalism.L2.DIV.blockTri (Formalism.L2.DIV.blk2 (K + (s + 1))) ↔ x ∈ ((twistChain s (Fin T) (Fin K) δ hδ η).lev j d hd).J) := by
   intro E _ _ k _ _ _ _ PP ι hPP K T s j d hd δ hδ η n e he x hx R hR

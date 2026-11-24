@@ -845,22 +845,7 @@ theorem cop_local (σ : E →ₐ[F] E) (v : HeightOneSpectrum (𝓞 F)) (t t' ca
   rwa [← ht']
 
 theorem sigR_mem_intV (σ : E →ₐ[F] E) (v : HeightOneSpectrum (𝓞 F)) (x : E ⊗[F] v.adicCompletion F) (hx : x ∈ intV E v) :
-    sigR σ (v.adicCompletion F) x ∈ intV E v := by
-  have hle : intV E v ≤ (intV E v).comap (sigR σ (v.adicCompletion F)) := by
-    show tensInt (F := F) (v.adicCompletion F) (intOE E) (v.adicCompletionIntegers F).toSubring ≤ _
-    unfold tensInt
-    rw [Subring.closure_le]
-    rintro _ (⟨⟨s, c, rfl⟩, rfl⟩ | ⟨⟨s, hs⟩, rfl⟩)
-    · show sigR σ (v.adicCompletion F) (((algebraMap (𝓞 E) E) c) ⊗ₜ[F] (1 : v.adicCompletion F)) ∈ intV E v
-      have e : sigR σ (v.adicCompletion F) (((algebraMap (𝓞 E) E) c) ⊗ₜ[F] (1 : v.adicCompletion F)) =
-          inclE (F := F) (v.adicCompletion F) ((RingOfIntegers.mapRingHom (σ : E →+* E) c : 𝓞 E) : E) := rfl
-      rw [e]; exact Formalism.MainNotions.Gaps.LG.fm_incl_mem v _
-    · show sigR σ (v.adicCompletion F) ((1 : E) ⊗ₜ[F] s) ∈ intV E v
-      have e : sigR σ (v.adicCompletion F) ((1 : E) ⊗ₜ[F] s) = (1 : E) ⊗ₜ[F] s := by
-        show (Algebra.TensorProduct.map σ (AlgHom.id F (v.adicCompletion F))) ((1 : E) ⊗ₜ[F] s) = _
-        rw [Algebra.TensorProduct.map_tmul, map_one]; rfl
-      rw [e]; exact Formalism.MainNotions.Gaps.LG.fm_one_tmul_mem v ⟨s, hs⟩
-  exact hle hx
+    sigR σ (v.adicCompletion F) x ∈ intV E v := GlobalTheory.sigR_mem_intV_adic σ v hx
 
 end Lat
 

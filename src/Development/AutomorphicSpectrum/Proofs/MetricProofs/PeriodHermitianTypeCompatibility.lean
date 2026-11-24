@@ -77,21 +77,11 @@ variable {A : Type} [CommRing A] {K : Type} [Field K] [Algebra A K]
 
 theorem trace_dualInt (k j) :
     Algebra.trace ℚ E (dualInt E k * integralBasis E j) = if j = k then 1 else 0 := by
-  classical
-  have := LinearMap.BilinForm.apply_dualBasis_left (B := Algebra.traceForm ℚ E)
-    (traceForm_nondegenerate ℚ E) (integralBasis E) k j
-  rw [Algebra.traceForm_apply] at this
-  convert this using 1
-  rfl
+  exact GlobalTheory.CompanionTheory.Ar.HT.LatBasic.trace_dualInt k j
 
 theorem repr_eq_trace (a : 𝓞 E) (k) :
     (((RingOfIntegers.basis E).repr a k : ℤ) : ℚ) = Algebra.trace ℚ E (dualInt E k * (a : E)) := by
-  classical
-  conv_rhs => rw [← (RingOfIntegers.basis E).sum_repr a]
-
-  simp only [map_sum, Finset.mul_sum, map_zsmul, mul_smul_comm,
-  ← integralBasis_apply, trace_dualInt]
-  simp
+  exact GlobalTheory.CompanionTheory.Ar.HT.LatBasic.repr_eq_trace a k
 
 end Eigen
 

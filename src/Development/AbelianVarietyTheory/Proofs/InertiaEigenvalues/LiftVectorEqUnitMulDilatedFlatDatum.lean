@@ -414,14 +414,7 @@ def chiA (D : D7) (ψ : AddChar (AF D.host.F) ℂ) : AddChar (AE D) ℂ :=
   ψ.compAddMonoidHom ((Algebra.trace (AF D.host.F) (AE D)).toAddMonoidHom.comp (AddMonoidHom.mulLeft (incA D D.host.xi0)))
 
 theorem toEAf_surj (D : D7) : Function.Surjective (toEAf D) := by
-  intro z
-  induction z using TensorProduct.induction_on with
-  | zero => exact ⟨0, RingHom.map_zero _⟩
-  | add x y hx hy =>
-    obtain ⟨a, rfl⟩ := hx
-    obtain ⟨b, rfl⟩ := hy
-    exact ⟨a + b, RingHom.map_add _ _ _⟩
-  | tmul x a => exact ⟨pairA D.host.F 0 a ⊗ₜ[D.host.F] x, rfl⟩
+  exact GlobalTheory.InnerSteps.toEAf_surjective
 
 end GlobalTheory.IdemCharLift
 

@@ -464,13 +464,7 @@ variable {G : Type} [Group G] {Qp K₀ K K₀' K' : Type} [Field Qp] [Field K₀
 
 theorem subIner_mem_Dpcris (ρ : Representation LL G V) (x : V ⊗[Qp] B) :
     x ∈ PC.Dpcris ρ ↔ ∀ h ∈ PC.H, actVB PC.PD ρ h x = x := by
-  have h1 : ∀ (h : PC.H) (z : V ⊗[Qp] B), actVB PC.PD' (PC.resH ρ) h z = actVB PC.PD ρ h z := by
-    intro h z
-    induction z using TensorProduct.induction_on with
-    | zero => simp
-    | tmul v b => simp [actVB, PotCrysData.resH, PC.actB_eq]
-    | add z w hz hw => simp only [map_add (f := _), hz, hw]
-  simp [PotCrysData.Dpcris, Dcris, Submodule.mem_iInf, sub_eq_zero, h1]
+  exact GlobalTheory.PassPoly.mem_Dpcris_iff PC ρ x
 
 theorem subIner_actVB_mul (ρ : Representation LL G V) (g h : G) (z : V ⊗[Qp] B) :
     actVB PC.PD ρ g (actVB PC.PD ρ h z) = actVB PC.PD ρ (g * h) z := by
@@ -481,13 +475,7 @@ theorem subIner_actVB_mul (ρ : Representation LL G V) (g h : G) (z : V ⊗[Qp] 
 
 theorem subIner_Dpcris_stable (ρ : Representation LL G V) (g : G) (x : V ⊗[Qp] B)
     (hx : x ∈ PC.Dpcris ρ) : actVB PC.PD ρ g x ∈ PC.Dpcris ρ := by
-  rw [subIner_mem_Dpcris] at hx ⊢
-  intro h hh
-  have h1 := hx (g⁻¹ * h * g⁻¹⁻¹) (PC.normal.conj_mem h hh g⁻¹)
-  conv_rhs => rw [← h1]
-  rw [subIner_actVB_mul, subIner_actVB_mul]
-  congr 2
-  group
+  exact GlobalTheory.PassPoly.Dpcris_stable PC ρ g x hx
 
 theorem subIner_rTensor_actVB (ρ : Representation LL G V) (σ : Representation LL G U)
     (f : V →ₗ[LL] U) (hf : ∀ g v, f (ρ g v) = σ g (f v)) (g : G) (z : V ⊗[Qp] B) :

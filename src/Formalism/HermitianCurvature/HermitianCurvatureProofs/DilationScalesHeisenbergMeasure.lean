@@ -161,25 +161,11 @@ lemma herm_smul_right {ι : Type*} [Fintype ι] (H : Matrix ι ι ℂ) (c : ℂ)
   rw [star_smul, smul_dotProduct, smul_eq_mul]; rfl
 
 lemma herm_sum {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (u v : Fin m → ℂ) :
-    ∑ j, herm H (bvec j) v * u j = herm H u v := by
-  simp only [herm, dotProduct, mulVec, bvec, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, ite_true, Finset.sum_mul, Finset.mul_sum]
-  rw [Finset.sum_comm]
-  apply Finset.sum_congr rfl; intro i _
-  apply Finset.sum_congr rfl; intro j _
-  ring
+    ∑ j, herm H (bvec j) v * u j = herm H u v := Formalism.FourierDecayAlt.P.B2x6.herm_sum H u v
 
 lemma heisAct (v u : Fin (2 * (1 + r') + k + 1) → ℂ) (b : ℂ) :
     heisG k r' v b *ᵥ u = u - herm (Hpk k (1 + r')) u v • e0 k r' + herm (Hpk k (1 + r')) u (e0 k r') • (v + b • e0 k r') := by
-  ext i
-  simp only [heisG, Matrix.add_mulVec, Matrix.sub_mulVec, Matrix.one_mulVec, Pi.add_apply, Pi.sub_apply, Pi.smul_apply,
-    smul_eq_mul]
-  have h1 : ∀ (w φ : Fin (2 * (1 + r') + k + 1) → ℂ), (Matrix.vecMulVec w φ *ᵥ u) i = (∑ j, φ j * u j) * w i := by
-    intro w φ
-    simp only [mulVec, dotProduct, vecMulVec_apply, Finset.sum_mul]
-    apply Finset.sum_congr rfl; intro j _; ring
-  rw [h1, h1, herm_sum, herm_sum]
-  simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+  exact Formalism.FourierDecayAlt.P.B2x6.heisAct v u b
 
 lemma heisG_comm (g : Mat k (1 + r')) (hg : g ∈ GV k (1 + r')) (c : ℝ) (hc : g *ᵥ e0 k r' = (c : ℂ) • e0 k r')
     (v : Fin (2 * (1 + r') + k + 1) → ℂ) (b : ℂ) :
@@ -386,18 +372,7 @@ lemma mulM_cont {k r : ℕ} : Continuous (mulM : Mt k r × Mt k r → Mt k r) :=
   unfold mulM
   exact (continuous_fst (X := Mat k r) (Y := Mat k r)).matrix_mul continuous_snd
 
-lemma levM_cont : Continuous (levM k r') := by
-  apply continuous_pi; intro p
-  apply continuous_pi; intro q
-  show Continuous fun x : Mt k r' => ιLev k 1 r' (Matrix.of x) p q
-  unfold ιLev
-  by_cases hp : 1 ≤ p.val ∧ p.val < 2 * r' + k + 1 + 1
-  · simp only [dite_eq_left hp]
-    by_cases hq : 1 ≤ q.val ∧ q.val < 2 * r' + k + 1 + 1
-    · simp only [dite_eq_left hq]
-      exact (continuous_apply _).comp (continuous_apply _)
-    · simp only [dite_eq_right hq]; exact continuous_const
-  · simp only [dite_eq_right hp]; exact continuous_const
+lemma levM_cont : Continuous (levM k r') := Formalism.FourierDecayAlt.P.B2x2.levM_cont k r'
 
 lemma conjM_mulM {k r : ℕ} (a : Mat k r) (ha : a⁻¹ * a = 1) :
     (conjM a : Mt k r → Mt k r) ∘ mulM = mulM ∘ Prod.map (conjM a) (conjM a) := by

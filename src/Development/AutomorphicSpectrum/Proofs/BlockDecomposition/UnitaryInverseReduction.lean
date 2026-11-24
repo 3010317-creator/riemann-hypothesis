@@ -880,11 +880,7 @@ theorem isBorelU_one (σ : L →+* L) (n : ℕ) : IsBorelU (1 : GU σ n) := by
   simp [ne_of_gt h]
 
 theorem chiDeltaU_one (σ : L →+* L) (n m q : ℕ) (α : Fin m → ℂ) : chiDeltaU q α (1 : GU σ n) = 1 := by
-  unfold chiDeltaU
-  refine Finset.prod_eq_one fun i _ => ?_
-  split_ifs
-  · simp [_root_.Formalism.UG.P.fSatake_ord_one]
-  · rfl
+  exact GlobalTheory.LFun.chiDeltaU_one q α
 
 end GlobalTheory.GKUnitaryRankOne
 
@@ -1195,11 +1191,7 @@ theorem isBorelU_one (σ : L →+* L) (n : ℕ) : IsBorelU (1 : GU σ n) := by
   simp [ne_of_gt h]
 
 theorem chiDeltaU_one (σ : L →+* L) (n m q : ℕ) (α : Fin m → ℂ) : chiDeltaU q α (1 : GU σ n) = 1 := by
-  unfold chiDeltaU
-  refine Finset.prod_eq_one fun i _ => ?_
-  split_ifs
-  · simp [_root_.Formalism.UG.P.fSatake_ord_one]
-  · rfl
+  exact GlobalTheory.GKUnitaryRankOne.chiDeltaU_one σ n m q α
 
 theorem v_sq_le {σ : L →+* L} (hσ : ∀ x, Valued.v (σ x) = Valued.v x) {b d c : L} (hb : σ b = -d)
     (hc : σ c = b * d - c) : Valued.v d = Valued.v b ∧ Valued.v b * Valued.v b ≤ Valued.v c := by

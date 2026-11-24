@@ -156,14 +156,7 @@ theorem tr_re_symm {m n : ℕ} {A : Matrix (Fin m) (Fin m) ℂ} (hA : A.IsHermit
 
 theorem tr_im_zero {m n : ℕ} {A : Matrix (Fin m) (Fin m) ℂ} (hA : A.IsHermitian) (M : Matrix (Fin m) (Fin n) ℂ) :
     trace (Mᴴ * A * M) = ((trace (Mᴴ * A * M)).re : ℂ) := by
-  have h : star (trace (Mᴴ * A * M)) = trace (Mᴴ * A * M) := by
-    rw [← Matrix.trace_conjTranspose]
-    simp only [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, hA.eq, Matrix.mul_assoc]
-  have him : (trace (Mᴴ * A * M)).im = 0 := by
-    have := congrArg Complex.im h
-    simp at this
-    linarith
-  apply Complex.ext <;> simp [him]
+  exact (GlobalTheory.GaussSchwartz.trace_conjTranspose_mul_mul_real hA M).symm
 
 section
 variable {T : Type} [Fintype T] [DecidableEq T] {m n : ℕ} (τ : T)

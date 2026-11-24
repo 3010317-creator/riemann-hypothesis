@@ -115,13 +115,7 @@ theorem exists_cover_point (X : Scheme.{0}) [CompactSpace X] (o : X) (ho : IsClo
 
 theorem isAffineOpen_preimage_inf {X Y : Scheme.{0}} [X.IsSeparated] (g : Y ⟶ X) {D : X.Opens}
     (hD : IsAffineOpen D) {V : Y.Opens} (hV : IsAffineOpen V) : IsAffineOpen (g ⁻¹ᵁ D ⊓ V) := by
-  have : IsAffine V := hV
-  have : IsAffineHom (V.ι ≫ g) :=
-    haveI : IsAffineHom ((V.ι ≫ g) ≫ terminal.from X) := inferInstance
-    IsAffineHom.of_comp _ (terminal.from X)
-  have h := (hD.preimage (V.ι ≫ g)).image_of_isOpenImmersion V.ι
-  rwa [Scheme.Hom.comp_preimage, Scheme.Hom.image_preimage_eq_opensRange_inf,
-    Scheme.Opens.opensRange_ι, inf_comm] at h
+  exact GlobalTheory.AbLaw.isAffineOpen_preimage_inf_of_isSeparated g hD hV
 
 theorem acyclic_cechLB_of_acyclic {R R' : Type} [CommRing R] [CommRing R'] {Y : Scheme.{0}}
     (f : Y ⟶ Spec (CommRingCat.of R)) (f' : Y ⟶ Spec (CommRingCat.of R')) (M : LB Y) {κ : Type}

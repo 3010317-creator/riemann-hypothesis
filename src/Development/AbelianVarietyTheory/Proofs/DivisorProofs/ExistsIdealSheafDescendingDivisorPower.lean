@@ -603,13 +603,7 @@ theorem exists_shortest {X : Type} [AddCommGroup X] (q : QuadraticMap ℤ X ℝ)
 
 theorem pos_of_tendsto {X : Type} [AddCommGroup X] [Module.Free ℤ X] (q : QuadraticMap ℤ X ℝ)
     (hq : Filter.Tendsto q Filter.cofinite Filter.atTop) (a : X) (ha : a ≠ 0) : 0 < q a := by
-  by_contra h
-  have h : q a ≤ 0 := not_lt.1 h
-  have hfin : {x | ¬ (0 : ℝ) < q x}.Finite := Filter.eventually_cofinite.1 (hq.eventually_gt_atTop 0)
-  refine Set.infinite_of_injective_forall_mem (f := fun n : ℤ => n • a) (smul_left_injective ℤ ha) (fun n => ?_) hfin
-  simp only [Set.mem_setOf_eq, not_lt, QuadraticMap.map_smul, zsmul_eq_mul]
-  push_cast
-  exact mul_nonpos_of_nonneg_of_nonpos (mul_self_nonneg _) h
+  apply GlobalTheory.ZH.ClosedImm.pos_of_tendsto <;> assumption
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H}
   {Xo : Moduli Dw l} {c : Coeff l}
@@ -620,22 +614,7 @@ theorem be_pos (T : UTrait Xo c) (x : T.P.D.toPre.X) (hx : x ≠ 0) : 0 < T.be x
   simpa using hj
 
 theorem sc_pos {C : UCompact Xo c} {X₁ : USetup C} {p : ℕ} [Fact p.Prime] {z₁ : X₁.M.Z} (t : UCTrait X₁ p z₁) :
-    0 < t.sc := by
-  have hϖ0 : algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ ≠ 0 :=
-    (map_ne_zero_iff _ (IsFractionRing.injective _ _)).2 t.T.irr.ne_zero
-  have h0 : t.ι (algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ) ≠ 0 := (map_ne_zero _).2 hϖ0
-  have hlt : ‖t.ι (algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ)‖ < 1 := by
-    by_contra hge
-    have hinv : ‖t.ι (algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ)⁻¹‖ ≤ 1 := by
-      rw [map_inv₀, norm_inv]
-      exact inv_le_one_of_one_le₀ (not_lt.1 hge)
-    obtain ⟨w, hw⟩ := (t.int _).1 hinv
-    apply t.T.irr.not_isUnit
-    refine isUnit_iff_exists_inv.2 ⟨w, IsFractionRing.injective t.T.V (FractionRing t.T.V) ?_⟩
-    rw [map_mul, hw, map_one, mul_inv_cancel₀ hϖ0]
-  unfold UCTrait.sc
-  have := Real.log_neg (norm_pos_iff.2 h0) hlt
-  linarith
+    0 < t.sc := GlobalTheory.UPoinc.USum.sc_pos t
 
 theorem one_le_of_ne_zero (T : UTrait Xo c) {x : T.P.D.toPre.X} (hx : x ≠ 0) : 1 ≤ Dw.p + Dw.q := by
   haveI : Module.Projective (𝓞 E) T.P.D.toPre.X := GlobalTheory.Forms.projective_of_int (𝓞 E) _

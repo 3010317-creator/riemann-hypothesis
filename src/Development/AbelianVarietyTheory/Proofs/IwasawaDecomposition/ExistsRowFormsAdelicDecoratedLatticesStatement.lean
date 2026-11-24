@@ -189,11 +189,7 @@ theorem chi_eq_one {D : D7} (V : HSp D) (β : GL (Fin V.rank) (Formalism.IndefR.
     rw [hred PP (Or.inl hPP), Formalism.L2.DIV.dBlk, Formalism.L2.DIV.blockDiagonalExtendByOnePrimeField_one, map_one]
 
 theorem gram_eq_one (X : Stages) {px : PreX X.B.toPre} (I : ColIn X.B px) (hI : I.Ok) : X.toD7.sp.X'.gram = 1 := by
-  obtain ⟨hs, -, h2, -⟩ := hI.spaces
-  change X.B.sp.X'.gram = 1
-  rw [h2]
-  refine Matrix.ext fun i i' => (Formalism.BasicNotions.Examples₂.stdSpace_gram_apply hs _ _ _ _ i i').trans ?_
-  simp [Matrix.one_apply, Formalism.BasicNotions.Examples₂.sgn]
+  exact GlobalTheory.Mem.R3.RowDeco.gram_X'_eq_one X I hI
 
 theorem off_level (X : Stages) {px : PreX X.B.toPre} (I : ColIn X.B px) {U : Set I.ι}
     {L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)} (hL : LevOf X I U L) (t : TupU I U) (Q : PlI X.B px) :
@@ -726,11 +722,7 @@ theorem loc_data (hG : V.gram = 1) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank �
 end Gen
 
 theorem gramX'_one (X : Stages) {px : PreX X.B.toPre} (I : Col2.ColIn X.B px) (hI : I.Ok) : X.toD7.sp.X'.gram = 1 := by
-  obtain ⟨hs, -, h2, -⟩ := hI.spaces
-  change X.B.sp.X'.gram = 1
-  rw [h2]
-  refine Matrix.ext fun i i' => (Formalism.BasicNotions.Examples₂.stdSpace_gram_apply hs _ _ _ _ i i').trans ?_
-  simp [Matrix.one_apply, Formalism.BasicNotions.Examples₂.sgn]
+  exact GlobalTheory.Mem.R3.RowDeco.gram_X'_eq_one X I hI
 
 theorem datX_sub (X : Stages) {px : PreX X.B.toPre} (I : Col2.ColIn X.B px) (U : Set I.ι)
     (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (hL : LevOf X I U L) (t : TupU I U) :

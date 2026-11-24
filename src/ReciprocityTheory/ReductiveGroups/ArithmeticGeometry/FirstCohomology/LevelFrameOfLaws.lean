@@ -74,60 +74,7 @@ theorem sval_scal {X Y Y' Z : Scheme.{0}} {L : LB X} {K K' : Type} [Fintype K] [
     {ε₁ : K → ℤ} {s₁ : LB.Sec (LB.LinComb L φ₁ ε₁)} {φ₂ : K' → (Y ⟶ X)} {ε₂ : K' → ℤ} {s₂ : LB.Sec (LB.LinComb L φ₂ ε₂)}
     {h : Y' ⟶ Y} (H : GeneratorPullback.SecScal L φ₁ ε₁ s₁ φ₂ ε₂ s₂ h 1) (r : Z ⟶ Y') (z : Z) {J} (hJ : Good L z J) :
     sval s₁ r z J = sval s₂ (r ≫ h) z J := by
-  have hψ : ∀ k, (Sum.elim (fun k => J (r ≫ φ₁ k)) (fun k => J ((r ≫ h) ≫ φ₂ k)) : K ⊕ K' → L.ι) k =
-      J (r ≫ (Sum.elim φ₁ (fun k => h ≫ φ₂ k)) k) := by
-    intro k
-    cases k <;> simp [Category.assoc]
-  have hcoh : LB.Coh L (Sum.elim φ₁ (fun k => h ≫ φ₂ k))
-      (Sum.elim (fun k => J (r ≫ φ₁ k)) (fun k => J ((r ≫ h) ≫ φ₂ k))) := by
-    intro k₁ k₂ he
-    rw [hψ, hψ, he]
-  have key := H (fun k => J (r ≫ φ₁ k)) (fun k => J ((r ≫ h) ≫ φ₂ k)) hcoh
-  simp only [resTop, map_one] at key
-  have hz1 : r z ∈ LB.wchart L φ₁ (fun k => J (r ≫ φ₁ k)) := by
-    show r z ∈ (⋂ k, _ : Set _)
-    simp only [Set.mem_iInter, Set.mem_preimage]
-    intro k
-    exact hJ (r ≫ φ₁ k)
-  have hz2 : r z ∈ LB.wchart L (fun k => h ≫ φ₂ k) (fun k => J ((r ≫ h) ≫ φ₂ k)) := by
-    show r z ∈ (⋂ k, _ : Set _)
-    simp only [Set.mem_iInter, Set.mem_preimage]
-    intro k
-    exact hJ ((r ≫ h) ≫ φ₂ k)
-  have hz3 : (r ≫ h) z ∈ LB.wchart L φ₂ (fun k => J ((r ≫ h) ≫ φ₂ k)) := by
-    show (r ≫ h) z ∈ (⋂ k, _ : Set _)
-    simp only [Set.mem_iInter, Set.mem_preimage]
-    intro k
-    exact hJ ((r ≫ h) ≫ φ₂ k)
-  unfold sval
-  have hz3' : h (r z) ∈ LB.wchart L φ₂ (fun k => J ((r ≫ h) ≫ φ₂ k)) := hz3
-  have hg : Y'.presheaf.germ _ (r z) hz1 (s₁.f (fun k => J (r ≫ φ₁ k))) =
-      (h.stalkMap (r z)).hom (Y.presheaf.germ _ (h (r z)) hz3' (s₂.f (fun k => J ((r ≫ h) ≫ φ₂ k)))) := by
-    erw [Scheme.Hom.germ_stalkMap_apply]
-    have e1 := TopCat.Presheaf.germ_res_apply Y'.presheaf
-      (homOfLE (inf_le_left : LB.wchart L φ₁ (fun k => J (r ≫ φ₁ k)) ⊓
-        LB.wchart L (fun k => h ≫ φ₂ k) (fun k => J ((r ≫ h) ≫ φ₂ k)) ≤ LB.wchart L φ₁ (fun k => J (r ≫ φ₁ k))))
-      (r z) ⟨hz1, hz2⟩ (s₁.f (fun k => J (r ≫ φ₁ k)))
-    have e2 := TopCat.Presheaf.germ_res_apply Y'.presheaf
-      (homOfLE (inf_le_right.trans (fun _ hy => Set.mem_iInter.2 fun k => Set.mem_iInter.1 hy k) :
-        LB.wchart L φ₁ (fun k => J (r ≫ φ₁ k)) ⊓
-          LB.wchart L (fun k => h ≫ φ₂ k) (fun k => J ((r ≫ h) ≫ φ₂ k)) ≤
-            h ⁻¹ᵁ LB.wchart L φ₂ (fun k => J ((r ≫ h) ≫ φ₂ k))))
-      (r z) ⟨hz1, hz2⟩ ((h.app (LB.wchart L φ₂ (fun k => J ((r ≫ h) ≫ φ₂ k)))).hom
-        (s₂.f (fun k => J ((r ≫ h) ≫ φ₂ k))))
-    rw [← e1]
-    erw [← e2]
-    first
-      | (rw [key]; done)
-      | (erw [key]; done)
-      | (simp only [key]; done)
-      | (rw [key]; erw [map_one, one_mul])
-      | (rw [key]; simp)
-  erw [gs_eq_stalkMap_germ r z _ hz1, gs_eq_stalkMap_germ (r ≫ h) z _ hz3, hg]
-  first
-    | rw [Scheme.Hom.stalkMap_comp]
-  first
-    | rfl
+  exact (ReciprocityTheory.ChartRestriction.G.DVR.SectionScalarValuation.secScal_sval H r z hJ).symm
 
 theorem cst_mul {V : Type} [CommRing V] {Z : Scheme.{0}} (q : Z ⟶ Sp V) (z : Z) (a b : V) :
     cst q z (a * b) = cst q z a * cst q z b := by

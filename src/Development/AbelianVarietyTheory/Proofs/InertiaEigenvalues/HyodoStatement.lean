@@ -516,11 +516,7 @@ theorem ιV_injective : Function.Injective (ιV PD (LL := LL) (V := V)) := by
 
 theorem ιV_actVB (ρ : Representation LL G V) (g : G) (x : V ⊗[Qp] B) :
     ιV PD (LL := LL) (V := V) (actVB PD ρ g x) = actVdR PD ρ g (ιV PD (LL := LL) (V := V) x) := by
-  induction x using TensorProduct.induction_on with
-  | zero => simp
-  | tmul v b =>
-    simp [ιV, actVB, actVdR, PD.ι_comm]
-  | add x y hx hy => simp only [map_add (f := _), hx, hy]
+  exact GlobalTheory.CobCrisLift.ιV_act PD ρ g x
 
 theorem map_Dcris_le (ρ : Representation LL G V) :
     (Dcris PD ρ).map (ιV PD (LL := LL) (V := V)) ≤ DdR PD ρ := by

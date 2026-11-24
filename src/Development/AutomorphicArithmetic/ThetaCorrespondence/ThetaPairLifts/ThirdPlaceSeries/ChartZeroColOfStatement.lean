@@ -538,26 +538,7 @@ namespace GlobalTheory.LevelApprox
 open GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.ColAd
 
 theorem eq_zero_of_le_pow {γ t : WithZero (Multiplicative ℤ)} (hγ : γ < 1) (h : ∀ m : ℕ, t ≤ γ ^ m) : t = 0 := by
-  by_contra ht
-  by_cases hγ0 : γ = 0
-  · have := h 1
-    rw [hγ0, pow_one] at this
-    exact ht (le_antisymm this zero_le')
-  have hg : γ.log < 0 := by
-    rw [← WithZero.exp_lt_exp, WithZero.exp_log hγ0]
-    simpa using hγ
-  set N : ℕ := (-t.log).toNat + 1 with hN
-  have hm : t.log ≤ (N : ℤ) * γ.log := by
-    have h3 : WithZero.exp t.log ≤ WithZero.exp (N • γ.log) := by
-      rw [WithZero.exp_nsmul, WithZero.exp_log ht, WithZero.exp_log hγ0]
-      exact h N
-    rwa [WithZero.exp_le_exp, nsmul_eq_mul] at h3
-  have h1 : (N : ℤ) * γ.log ≤ -(N : ℤ) := by
-    have : (0 : ℤ) ≤ (N : ℤ) := by positivity
-    nlinarith
-  have h2 := Int.self_le_toNat (-t.log)
-  have h4 : (N : ℤ) = ((-t.log).toNat : ℤ) + 1 := by rw [hN]; push_cast; ring
-  omega
+  exact Formalism.L2.SG.Pf.wz_lemma γ t hγ h
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 

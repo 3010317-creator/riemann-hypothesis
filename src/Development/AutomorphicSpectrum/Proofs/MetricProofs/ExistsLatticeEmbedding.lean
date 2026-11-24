@@ -364,13 +364,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Cusp.CMRank
 
 theorem restrict_bijective (E : Type) [Field E] [NumberField E] :
     Function.Bijective (fun φ : E →+* ℂ => φ.comp (algebraMap (𝓞 E) E)) := by
-  constructor
-  · intro φ ψ h
-    exact IsFractionRing.ringHom_ext (A := 𝓞 E) (K := E) (fun a => DFunLike.congr_fun h a)
-  · intro s
-    refine ⟨embOf s, ?_⟩
-    ext a
-    exact IsFractionRing.lift_algebraMap (intEmb_injective s) a
+  exact GlobalTheory.CompanionTheory.Ar.Cusp.Dict.TangentDim.restrict_bijective E
 
 theorem natCard_intEmb (E : Type) [Field E] [NumberField E] :
     Nat.card (𝓞 E →+* ℂ) = Module.finrank ℚ E := by

@@ -180,17 +180,7 @@ private theorem mem_map_of_ev (n : ℕ) (w : Per.BdRp l) (h : Per.ev l n w = 0) 
 theorem ev_σDp (g : Per.Gq l) (n : ℕ) (w : Per.BdRp l) (y : Per.AinfP l)
     (h : Per.ev l n w = Ideal.Quotient.mk _ y) :
     Per.ev l n (Per.σDp g w) = Ideal.Quotient.mk _ (Per.extP (Per.σA g) y) := by
-  have h0 : Per.ev l n (w - algebraMap (Per.AinfP l) (Per.BdRp l) y) = 0 := by
-    rw [map_sub, h, ev_alg, sub_self]
-  have h1 := mem_map_of_ev n _ h0
-  have h2 : (Per.kerP l ^ n).map (algebraMap (Per.AinfP l) (Per.BdRp l)) ≤
-      (RingHom.ker (Per.ev l n)).comap (Per.σDp g) := by
-    rw [Ideal.map_le_iff_le_comap]
-    intro a ha
-    rw [Ideal.mem_comap, Ideal.mem_comap, RingHom.mem_ker, σDp_alg, ev_alg, Ideal.Quotient.eq_zero_iff_mem]
-    exact ((Ideal.pow_right_mono (GlobalTheory.RingBasics.ker_σ g) n).trans (Ideal.le_comap_pow _ n)) ha
-  have h3 := h2 h1
-  rwa [Ideal.mem_comap, RingHom.mem_ker, map_sub, map_sub, σDp_alg, ev_alg, sub_eq_zero] at h3
+  exact GlobalTheory.RingIface.ev_sigDp l g n w y h
 
 theorem sigA_alg (g : Per.Gq l) (s : Per.Acris0 l) :
     sigA g (algebraMap (Per.Acris0 l) (Per.Acris l) s) =

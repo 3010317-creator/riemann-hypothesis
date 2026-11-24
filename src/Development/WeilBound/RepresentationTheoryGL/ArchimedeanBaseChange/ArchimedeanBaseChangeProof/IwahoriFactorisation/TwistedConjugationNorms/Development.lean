@@ -199,18 +199,7 @@ theorem thetaGL_diagT (n : ℕ) (c : R →+* R) (t : Fin n → Rˣ) :
   · rw [ite_eq_right (fun h' => h (Fin.rev_injective h').symm), ite_eq_right h, map_zero, mul_zero]
 
 theorem thetaGL_thetaGL' (n : ℕ) (c : R →+* R) (hc : ∀ x, c (c x) = x) (g : GL (Fin n) R) :
-    thetaGL n c (thetaGL n c g) = g := by
-  apply Units.ext
-  ext i j
-  rw [thetaGL_val', ← map_inv (thetaGL n c) g, Phi_conj_apply, Matrix.transpose_apply, Matrix.map_apply, thetaGL_val',
-    inv_inv, Phi_conj_apply, Matrix.transpose_apply, Matrix.map_apply, Fin.rev_rev, Fin.rev_rev, map_mul, map_mul, hc,
-    map_pow, map_pow, map_neg, map_one]
-  have key : ((-1 : R) ^ (i : ℕ) * (-1) ^ (j : ℕ)) * ((-1) ^ (j.rev : ℕ) * (-1) ^ (i.rev : ℕ)) = 1 := by
-    rw [show ((-1 : R) ^ (i : ℕ) * (-1) ^ (j : ℕ)) * ((-1) ^ (j.rev : ℕ) * (-1) ^ (i.rev : ℕ)) =
-        ((-1) ^ (i : ℕ) * (-1) ^ (i.rev : ℕ)) * ((-1) ^ (j : ℕ) * (-1) ^ (j.rev : ℕ)) by ring,
-      neg_one_pow_mul_rev, neg_one_pow_mul_rev, ← pow_add, ← two_mul, pow_mul]
-    simp
-  linear_combination (g.val i j) * key
+    thetaGL n c (thetaGL n c g) = g := GlobalTheory.ThetaPull.thetaGL_thetaGL c hc g
 
 theorem exists_diagT {L : Type} [Field L] {n : ℕ} (h : GL (Fin n) L) (hoff : ∀ i j, i ≠ j → h.val i j = 0) :
     ∃ η : Fin n → Lˣ, h = GlobalTheory.SmGL.diagT L (Fin n) η := by
@@ -285,11 +274,7 @@ theorem tdiag_mul_diagT {w : Pl E} {a : ℕ} (ϖ : (w.adicCompletion E)ˣ) (x : 
   rw [tdiag, ← map_mul]; rfl
 
 theorem nv_strictAnti {a : ℕ} {x : Fin a → ℤ} (hx : StrictAnti x) : StrictAnti (nv x) := by
-  intro i j hij
-  have h1 := hx hij
-  have h2 := hx (Fin.rev_lt_rev.mpr hij)
-  unfold nv
-  omega
+  exact PositivityTheory.Rg.Bc.ArchbcB.B.M4.nv_strictAnti hx
 
 theorem twisted_conj_diagonal_valuation_units (hU : Unr E) (w : Pl E) (hw : ¬ IsSplitAt w) (a : ℕ) (x : Fin a → ℤ) (hx : StrictAnti x)
     (D D' : Fin a → (w.adicCompletion E)ˣ) (hD : ∀ i, WithZero.log (Valued.v (D i : w.adicCompletion E)) = -x i)

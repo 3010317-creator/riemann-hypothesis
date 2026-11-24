@@ -154,11 +154,7 @@ theorem eval_chartMonomial {F : Type} [CommRing F] (f : (Σ k, J k) → F) (j : 
   simp [chartMonomial, MvPolynomial.eval₂_prod, MvPolynomial.eval₂_pow, MvPolynomial.eval₂_X, hf]
 
 theorem C_homog (n : ℤ) : IsMultiHomog (MvPolynomial.C n : MRing J) (0 : K → ℕ) := by
-  intro m hm k
-  have hm' : m = 0 := by
-    rw [← MvPolynomial.monomial_zero'] at hm
-    exact Finset.mem_singleton.mp (MvPolynomial.support_monomial_subset hm)
-  simp [hm']
+  apply GroundTheory.Heights₂.Heights.LowerBoundFree.isMultiHomog_C_zero
 
 variable {Ω : Type} [Field Ω]
 

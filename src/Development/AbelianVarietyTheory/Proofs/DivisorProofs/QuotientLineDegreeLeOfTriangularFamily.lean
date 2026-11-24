@@ -1127,12 +1127,7 @@ theorem val_comb_le (v : Place k F) {m : ℕ} (f : Fin m → F) (c : Fin m → k
 theorem val_mulVec_le_one (v : Place k F) {n : ℕ} (M : Matrix (Fin n) (Fin n) F)
     (hM : ∀ i j, v.1 (M i j) ≤ 1) (p : Fin n → F) (hp : ∀ i, v.1 (p i) ≤ 1) (i : Fin n) :
     v.1 (M.mulVec p i) ≤ 1 := by
-  simp only [Matrix.mulVec, dotProduct]
-  apply v.1.map_sum_le
-  intro j _
-  rw [map_mul]
-  calc v.1 (M i j) * v.1 (p j) ≤ 1 * 1 := mul_le_mul' (hM i j) (hp j)
-    _ = 1 := one_mul 1
+  apply GlobalTheory.Nef.LocalIndex.mulVec_int <;> assumption
 
 theorem exists_exp_bound (v : Place k F) {n : ℕ} (M : Matrix (Fin n) (Fin n) F) :
     ∃ d : ℕ, ∀ i j, v.1 (M i j) ≤ WithZero.exp (d : ℤ) := by

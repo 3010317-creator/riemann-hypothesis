@@ -1154,13 +1154,7 @@ namespace GlobalTheory.PolarFormula
 
 theorem weight_rowW_le_colSum {N : ℕ} (d : Fin N × Fin N →₀ ℕ) (c : Fin N) :
     Finsupp.weight (rowW N N) d c ≤ ∑ s, Finsupp.weight (colW N N) d s := by
-  classical
-  have h2 : ∑ c', Finsupp.weight (rowW N N) d c' = ∑ s, Finsupp.weight (colW N N) d s := by
-    induction d using Finsupp.induction_linear with
-    | zero => simp
-    | add f g hf hg => simp only [map_add (f := _), Pi.add_apply, Finset.sum_add_distrib, hf, hg]
-    | single v k => simp [Finsupp.weight_apply, rowW, colW, Finsupp.sum_single_index, Pi.single_apply]
-  exact (Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ c)).trans h2.le
+  exact GlobalTheory.RowDivMem.rowW_le_total d c
 
 theorem sum_rowComp {O : Type} [CommRing O] {N : ℕ} (ν : Fin N → ℕ) (M : ℕ) (hM : ∑ s, ν s ≤ M)
     (f : MvPolynomial (Fin N × Fin N) O) (hf : IsWeightedHomogeneous (colW N N) f ν) :

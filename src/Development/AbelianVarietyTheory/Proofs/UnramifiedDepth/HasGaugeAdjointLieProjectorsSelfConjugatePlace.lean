@@ -472,17 +472,7 @@ theorem pow_sub_pow_factor {a b : C} (ha : V.Ge 0 a) (hb : V.Ge 0 b) (hab : V.MM
     push_cast; ring
 
 theorem eq_zero_of_ge_all {a : C} (h : ∀ n : ℕ, V.Ge n a) : a = 0 := by
-  apply (AddValuation.top_iff V.v).1
-  induction hv : V.v a using WithTop.recTopCoe with
-  | top => rfl
-  | coe t =>
-    exfalso
-    obtain ⟨n, hn⟩ := exists_nat_gt t
-    have := h n
-    unfold VF.Ge at this
-    rw [hv] at this
-    have h' : (n : ℝ) ≤ t := WithTop.coe_le_coe.1 this
-    linarith
+  exact GlobalTheory.ActionLimit.eq_zero_of_forall_ge V a h
 
 theorem eq_of_congruent : ∀ (C : Type) [Field C] (V : VF C) (O : Type) [CommRing O] (d : ℕ), 0 < d → ∀ ε : O, (∃ y, ε * ε - ε = (V.l : O) * y) → (∀ x : O, ∃ y, ε * (x ^ (V.l ^ d) - x) = (V.l : O) * y) → ∀ ψ φ : O →+* C, (∀ x, V.Ge 0 (ψ x)) → (∀ x, V.Ge 0 (φ x)) → V.MM (ψ ε - 1) → (∀ x, V.MM (ψ x - φ x)) → ψ = φ := by
   intro C _ V O _ d hd ε ⟨y, hy⟩ hx ψ φ hψ hφ hε hc
@@ -574,14 +564,7 @@ theorem mm_pow_sub {a b : C} (h : V.MM (a - b)) (ha : V.Ge 0 a) (hb : V.Ge 0 b) 
     exact _root_.GlobalTheory.CongruentCharacters.mm_add (mm_mul ih ha) (mm_mul h (hb.pow n))
 
 theorem exists_lower (a : C) : ∃ b : ℕ, V.Ge (-(b : ℝ)) a := by
-  unfold VF.Ge
-  induction hv : V.v a using WithTop.recTopCoe with
-  | top => exact ⟨0, le_top⟩
-  | coe t =>
-    obtain ⟨N, hN⟩ := exists_nat_gt (-t)
-    refine ⟨N, ?_⟩
-    have : -(N : ℝ) ≤ t := by linarith
-    exact_mod_cast this
+  exact GlobalTheory.ActionLimit.exists_nat_ge_neg V a
 
 theorem ge_l_pow (n : ℕ) : V.Ge n ((V.l : C) ^ n) := by
   induction n with
@@ -1081,12 +1064,7 @@ theorem subst_hAt {τ ρ : Type} [Finite τ] {a b : κ → MvPowerSeries τ C}
     (ha : ∀ s, constantCoeff (a s) = 0) (hb : ∀ s, constantCoeff (b s) = 0)
     {c : τ → MvPowerSeries ρ C} (hc : ∀ s, constantCoeff (c s) = 0) :
     subst c (hAt X a b) = hAt X (fun y => subst c (a y)) (fun y => subst c (b y)) := by
-  have hS := hasSubst_of_constantCoeff_zero hc
-  unfold hAt
-  rw [subst_comp_subst_apply (hasSubst_of_constantCoeff_zero (pair_cc ha hb)) hS]
-  congr 1
-  funext p
-  split_ifs <;> rfl
+  exact GlobalTheory.RowLaw.EndBlock.subst_hAt X ha hb hc
 
 theorem subst_endP_X (h : RLaw X V) (M : Matrix κ κ C) {ρ : Type}
     {c : κ → MvPowerSeries ρ C} (hc : ∀ s, constantCoeff (c s) = 0) (x : κ) :

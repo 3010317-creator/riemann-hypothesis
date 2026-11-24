@@ -253,22 +253,12 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
 include hπ0 hΔπ γ0 in
 theorem framepf_hhx_ι_Δ (i : ZMod n) (g : PowerSeries O) (δ : W.Gam) (hδ : δ ∈ W.DelF) :
     W.γA δ (framepf_ι π' i g) = framepf_ι π' i g := by
-  have h := framepf_ι_letγ π' i (hπ0 i) (W.γ₀ δ) (γ0 δ hδ) PowerSeries.X (by simp)
-    (by rw [PowerSeries.subst_X (PowerSeries.HasSubst.of_constantCoeff_zero' (hπ0 i))];
-        exact congrFun (hΔπ δ hδ) i) g
-  rw [PowerSeries.X_subst] at h
-  exact h
+  exact Formalism.MainNotions.N.Ln34.framepf_ι_Δ π' hπ0 hΔπ γ0 i g δ hδ
 
 include hπ0 hΔπ γ0 in
 theorem framepf_hhx_vec_mem (H : Matrix (Fin Bs.r) (Fin Bs.r) (PowerSeries O)) (k : Fin Bs.r) :
     framepf_vec Bs π' (c - 1) H k ∈ NcS W T (c - 1) := by
-  unfold framepf_vec
-  refine Submodule.sum_mem _ fun m _ => ?_
-  rw [mem_NcS]
-  obtain ⟨hN, hΔ⟩ := Bs.mem m
-  refine ⟨(W.N T).smul_mem _ hN, fun δ hδ => ?_, ?_⟩
-  · rw [_root_.Formalism.MainNotions.LiftingTheory.gammaD_semilinear, framepf_hhx_ι_Δ π' hπ0 hΔπ γ0 _ _ δ hδ, hΔ δ hδ]
-  · rw [smul_smul, framepf_letE_ι π' (c - 1) hπ0]
+  exact Formalism.MainNotions.N.Ln34.framepf_vec_mem Bs π' c hπ0 hΔπ γ0 H k
 
 theorem framepf_hhx_mem (H : Matrix (Fin Bs.r) (Fin Bs.r) (PowerSeries O)) (ℓ : LcQ W T π' c) :
     framepf_hh Bs π' c hπ0 hΔπ hR2 γ0 hu H ℓ ∈ NcS W T (c - 1) := by

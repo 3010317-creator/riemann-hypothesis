@@ -113,11 +113,7 @@ section Lines
 variable {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)]
 
 theorem herm_ext {A B : HermLine J} (ha : A.a = B.a) (hh : A.h = B.h) : A = B := by
-  cases A
-  cases B
-  cases ha
-  cases hh
-  rfl
+  exact GlobalTheory.CompanionTheory.Ar.Cmp.OneSlot.hermLine_ext ha hh
 
 theorem comb_some {σ : Type} [Fintype σ] (c₀ : HermLine J) (l : σ → HermLine J) (n : σ → ℤ) :
     combLine (fun o : Option σ => o.elim c₀ l) (fun o => o.elim 0 n) = combLine l n :=
@@ -328,20 +324,7 @@ theorem sum_mapDomain {κ : K → K'} {v : (Σ k, ι k) → Σ k, ι' k} (hv : �
 
 theorem isMultiHomog_rename {κ : K → K'} {v : (Σ k, ι k) → Σ k, ι' k} (hb : IsBlockMap κ v) {f : MRing ι}
     {b : K → ℕ} (hf : IsMultiHomog f b) : IsMultiHomog (rename v f) (Function.extend κ b 0) := by
-  classical
-  intro m hm k'
-  rw [support_rename_of_injective hb.2.1, Finset.mem_image] at hm
-  obtain ⟨m₀, hm₀, rfl⟩ := hm
-  rw [sum_mapDomain hb.2.2.1, Fintype.sum_sigma]
-  by_cases hk : ∃ k, κ k = k'
-  · obtain ⟨k, rfl⟩ := hk
-    rw [hb.1.extend_apply, Finset.sum_eq_single k]
-    · simpa using hf m₀ hm₀ k
-    · intro k₂ _ hne
-      exact Finset.sum_eq_zero fun i _ => ite_eq_right (hb.1.ne hne)
-    · simp
-  · rw [Function.extend_apply' _ _ _ hk]
-    exact Finset.sum_eq_zero fun k _ => Finset.sum_eq_zero fun i _ => ite_eq_right fun h => hk ⟨k, h⟩
+  exact GroundTheory.Heights₂.Heights.Inter.rename_isMultiHomog hb hf
 
 theorem isMultiHomog_mul {f g : MRing ι} {a b : K → ℕ} (hf : IsMultiHomog f a) (hg : IsMultiHomog g b) :
     IsMultiHomog (f * g) (a + b) := by

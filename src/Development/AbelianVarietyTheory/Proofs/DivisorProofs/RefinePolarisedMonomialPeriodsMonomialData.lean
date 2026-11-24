@@ -890,15 +890,7 @@ theorem alg {X U : Type} [AddCommGroup X] [CommGroup U] (F t P : X → X → U) 
 
 theorem exists_genPtMap {R R' : Type} [CommRing R] [IsDomain R] [CommRing R'] [IsDomain R'] (ρ : R →+* R')
     (hρ : Function.Injective ρ) : ∃ κ : (TK R').left ⟶ (TK R).left, κ ≫ jK R = jK R' ≫ spMap ρ := by
-  have hu : ∀ y : nonZeroDivisors R, IsUnit ((algebraMap R' (FractionRing R')).comp ρ y) := fun y => by
-    refine IsUnit.mk0 _ ?_
-    rw [RingHom.comp_apply, ne_eq, IsFractionRing.to_map_eq_zero_iff]
-    exact (map_ne_zero_iff ρ hρ).2 (nonZeroDivisors.ne_zero y.2)
-  refine ⟨Spec.map (CommRingCat.ofHom (IsLocalization.lift (M := nonZeroDivisors R) (S := FractionRing R) hu)), ?_⟩
-  simp only [jK, spMap, ← Spec.map_comp]
-  congr 1
-  ext x
-  simp
+  exact GlobalTheory.PsiRing.exists_generic_map hρ
 
 end GlobalTheory.PolDeg.SymCoc
 
@@ -1234,15 +1226,7 @@ namespace GlobalTheory.PolDeg
 
 theorem exists_fracSpec {R R' : Type} [CommRing R] [IsDomain R] [CommRing R'] [IsDomain R'] (ρ : R →+* R')
     (hρ : Function.Injective ρ) : ∃ κ : (TK R').left ⟶ (TK R).left, κ ≫ jK R = jK R' ≫ spMap ρ := by
-  have hu : ∀ y : nonZeroDivisors R, IsUnit ((algebraMap R' (FractionRing R')).comp ρ y) := fun y => by
-    refine IsUnit.mk0 _ ?_
-    rw [RingHom.comp_apply, ne_eq, IsFractionRing.to_map_eq_zero_iff]
-    exact (map_ne_zero_iff ρ hρ).2 (nonZeroDivisors.ne_zero y.2)
-  refine ⟨Spec.map (CommRingCat.ofHom (IsLocalization.lift (M := nonZeroDivisors R) (S := FractionRing R) hu)), ?_⟩
-  simp only [jK, spMap, ← Spec.map_comp]
-  congr 1
-  ext x
-  simp
+  exact GlobalTheory.PolDeg.SymCoc.exists_genPtMap ρ hρ
 
 alias toUnit_left := _root_.GlobalTheory.ObjPull.toUnit_left'
 

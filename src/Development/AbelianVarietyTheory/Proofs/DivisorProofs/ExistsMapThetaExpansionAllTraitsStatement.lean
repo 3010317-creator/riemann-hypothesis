@@ -335,13 +335,7 @@ variable {R : Type} [CommRing R] [IsDomain R] (A : PolAV (Sp (FractionRing R)))
 
 theorem noetherianSpace_prod_field (F : Type) [Field F] [Algebra (FractionRing R) F] :
     TopologicalSpace.NoetherianSpace (TFK (R := R) F ⊗ A.A).left := by
-  have := A.isAb.proper
-  let b : (TFK (R := R) F ⊗ A.A).left ⟶ Spec (CommRingCat.of F) := (fst (TFK (R := R) F) A.A).left
-  have : IsProper b := inferInstanceAs (IsProper (pullback.fst _ _))
-  have : IsLocallyNoetherian (TFK (R := R) F ⊗ A.A).left := LocallyOfFiniteType.isLocallyNoetherian b
-  have : CompactSpace (TFK (R := R) F ⊗ A.A).left := QuasiCompact.compactSpace_of_compactSpace b
-  have : IsNoetherian (TFK (R := R) F ⊗ A.A).left := {}
-  infer_instance
+  apply GlobalTheory.Mum.UpExt.noeth
 
 theorem isPullback_baseEm_whiskerRight {F : Type} [Field F] [Algebra (FractionRing R) F]
     (em : Kb R →ₐ[FractionRing R] F) :

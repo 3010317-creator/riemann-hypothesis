@@ -158,17 +158,7 @@ variable {k r : ℕ}
 private theorem gN_nonneg_lemma_2 (g : B.Mat k r) : 0 ≤ B.gN g := Real.sqrt_nonneg _
 
 theorem entry_le_gN (g : B.Mat k r) (i j : Fin (2 * r + k + 1)) : ‖g i j‖ ≤ B.gN g := by
-  have h1 : Complex.normSq (g i j) ≤ ∑ j', Complex.normSq (g i j') :=
-    Finset.single_le_sum (f := fun j' => Complex.normSq (g i j')) (fun j' _ => Complex.normSq_nonneg _)
-      (Finset.mem_univ j)
-  have h2 : ∑ j', Complex.normSq (g i j') ≤ ∑ i', ∑ j', Complex.normSq (g i' j') :=
-    Finset.single_le_sum (f := fun i' => ∑ j', Complex.normSq (g i' j'))
-      (fun i' _ => Finset.sum_nonneg fun j' _ => Complex.normSq_nonneg _) (Finset.mem_univ i)
-  have h3 : ‖g i j‖ ^ 2 ≤ ∑ i', ∑ j', Complex.normSq (g i' j') := by
-    rw [← Complex.normSq_eq_norm_sq]; exact h1.trans h2
-  unfold B.gN
-  rw [← abs_of_nonneg (norm_nonneg (g i j))]
-  exact Real.abs_le_sqrt h3
+  exact PI.PolynomialProperness.GN.entry_le_gN g i j
 
 theorem a_mv_le {m : ℕ} (M : Matrix (Fin m) (Fin m) ℂ) (u : Fin m → ℂ) (i : Fin m) :
     ‖(M *ᵥ u) i‖ ≤ ∑ j, ‖M i j‖ * ‖u j‖ := by

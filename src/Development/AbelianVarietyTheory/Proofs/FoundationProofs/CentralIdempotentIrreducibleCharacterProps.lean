@@ -91,12 +91,7 @@ theorem conv_zc_of_scalar (χ : G → ℂ) (W : FDRep ℂ G) (c : ℂ) (h : op W
 
 theorem rk_eq_trace {M : Type} [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M] (ρ : Representation ℂ G M)
     (e : G → ℂ) (he : conv e e = e) : (rk ρ e : ℂ) = ∑ γ, e γ * LinearMap.trace ℂ M (ρ γ) := by
-  have hi : IsIdempotentElem (op ρ e) := by
-    rw [IsIdempotentElem, ← _root_.GlobalTheory.BadShare.Basic.op_conv, he]
-  have hp := (LinearMap.IsIdempotentElem.isProj_range _ hi).trace
-
-  rw [rk, ← hp, op, map_sum]
-  simp only [map_smul, smul_eq_mul]
+  exact GlobalTheory.BadShare.Basic.rk_eq_sum_trace ρ he
 
 theorem zc_calc : ∀ (G : Type) [Group G] [Fintype G], ∀ (V : FDRep ℂ G) [CategoryTheory.Simple V], IsProj (zc V.character) ∧ (∀ a : G → ℂ, conv (zc V.character) a = conv a (zc V.character)) ∧ (∀ (W : FDRep ℂ G) [CategoryTheory.Simple W], V.character ≠ W.character → conv (zc V.character) (zc W.character) = 0) ∧ ∀ e : G → ℂ, conv e e = e → conv (zc V.character) e 1 = (Module.finrank ℂ V : ℂ) * (rk V.ρ e : ℂ) / (Fintype.card G : ℂ) := by
   intro G _ _ V hV

@@ -986,14 +986,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem hasRes_add {P : HeightOneSpectrum (𝓞 E)} {a b : P.adicCompletion E} {c d : 𝓞 E ⧸ P.asIdeal}
     (ha : HasRes P a c) (hb : HasRes P b d) : HasRes P (a + b) (c + d) := by
-  obtain ⟨r, rfl, hr⟩ := ha
-  obtain ⟨r', rfl, hr'⟩ := hb
-  refine ⟨r + r', by rw [map_add (f := _)], ?_⟩
-  have e : a + b - algebraMap E (P.adicCompletion E) (algebraMap (𝓞 E) E (r + r')) =
-      (a - algebraMap E _ (algebraMap (𝓞 E) E r)) + (b - algebraMap E _ (algebraMap (𝓞 E) E r')) := by
-    simp only [map_add (f := _)]; ring
-  rw [e]
-  exact Valuation.map_add_lt _ hr hr'
+  exact GlobalTheory.Mem.Col2.LevRead.hasRes_add ha hb
 
 theorem hasRes_mul {P : HeightOneSpectrum (𝓞 E)} {a b : P.adicCompletion E} {c d : 𝓞 E ⧸ P.asIdeal}
     (ha : HasRes P a c) (hb : HasRes P b d) : HasRes P (a * b) (c * d) := by

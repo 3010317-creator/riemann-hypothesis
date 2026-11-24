@@ -109,11 +109,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Top.GeoMix
 variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
 
 theorem line_ext {A B : HermLine ι} (ha : A.a = B.a) (hh : A.h = B.h) : A = B := by
-  cases A
-  cases B
-  cases ha
-  cases hh
-  rfl
+  apply RootFieldNumerics.Ii.hermLine_ext <;> assumption
 
 def oneLine (ι : K → Type) [∀ k, Fintype (ι k)] : HermLine ι :=
   HermLine.ofWeight (fun _ => (-1 : ℝ)) (fun _ _ _ => rfl)

@@ -406,13 +406,7 @@ namespace GlobalTheory.JR.WeilQuad
 
 theorem NL_smul {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [hU : Unram F E] (A : Et F E) (s : A.K) (y : A.L) :
-    A.NL (s • y) = s ^ 2 * A.NL y := by
-  have hfin : Module.Finite F E := Module.finite_of_finrank_eq_succ hU.finrank_eq
-  let b : Module.Basis (Fin 2) F E := Module.finBasisOfFinrankEq F E hU.finrank_eq
-  have hp := ((Algebra.IsPushout.comm F E A.K A.L).1 A.push).out
-  let c := hp.basis b
-  unfold Et.NL
-  rw [Algebra.smul_def, map_mul, Algebra.norm_algebraMap_of_basis c, Fintype.card_fin]
+    A.NL (s • y) = s ^ 2 * A.NL y := GlobalTheory.JR.WeilQuad.Fnf.NL_smul A s y
 
 theorem mOp_nOp : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ) (x : A.Kˣ) (μ : Measure A.L) (ω : A.K → ℂ),

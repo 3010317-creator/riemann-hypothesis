@@ -91,15 +91,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.FinZeta.AbsZeta
 
 theorem trivial_isUnitarisable (G : Type) [Group G] : IsUnitarisable (Representation.trivial ℂ G ℂ) := by
-  refine ⟨LinearMap.mk₂'ₛₗ (RingHom.id ℂ) (starRingEnd ℂ) (fun a b => a * starRingEnd ℂ b)
-    (fun a a' b => add_mul a a' _) (fun c a b => by simp [smul_eq_mul, mul_assoc])
-    (fun a b b' => by simp [mul_add]) (fun c a b => by simp [smul_eq_mul]; ring), ?_, ?_, ?_⟩
-  · intro a b
-    simp [mul_comm]
-  · intro a ha
-    simpa [Complex.mul_conj, Complex.normSq_pos] using ha
-  · intro g a b
-    simp
+  exact GlobalTheory.FinZeta.TrivCount.trivial_isUnitarisable
 
 theorem kerGL_norm {E : Type} [Field E] [NumberField E] {w : HeightOneSpectrum (𝓞 E)} {r N : ℕ} {z : ℂˣ}
     {φ : GL (Fin r) (w.adicCompletion E) → ℂ} (hz : ‖(z : ℂ)‖ = 1) (hφ : KerGL w N z φ) :
@@ -441,20 +433,7 @@ theorem norm_prod_sub_one_le (c : ℝ) (M : Multiset ℂ) (h : ∀ z ∈ M, ‖z
     nlinarith
 
 theorem norm_inv_one_sub_sub_one_le {y : ℂ} (hy : ‖y‖ ≤ 1 / 2) : ‖(1 - y)⁻¹ - 1‖ ≤ 2 * ‖y‖ := by
-  have h1 : 1 / 2 ≤ ‖1 - y‖ := by
-    have := norm_sub_norm_le (1 : ℂ) y
-    rw [norm_one] at this
-    linarith
-  have hne : (1 - y) ≠ 0 := by
-    intro h0
-    rw [h0, norm_zero] at h1
-    norm_num at h1
-  have hm : (1 - y) * (1 - y)⁻¹ = 1 := mul_inv_cancel₀ hne
-  have e : (1 - y)⁻¹ - 1 = y * (1 - y)⁻¹ := by linear_combination hm
-  rw [e, norm_mul, norm_inv]
-  have hpos : 0 < ‖1 - y‖ := by linarith
-  rw [mul_inv_le_iff₀ hpos]
-  nlinarith [norm_nonneg y]
+  exact GlobalTheory.GLZetaBound.norm_inv_one_sub_sub_one_le hy
 
 theorem one_add_pow_sub_one_le {c : ℝ} (hc0 : 0 ≤ c) (hc1 : c ≤ 1) (n : ℕ) :
     (1 + c) ^ n - 1 ≤ (2 ^ n - 1) * c := by

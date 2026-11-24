@@ -500,12 +500,7 @@ theorem vl_nat_coprime {D : D7} {q m : ℕ} (hm : Nat.Coprime m q) {v : HeightOn
   exact lt_irrefl _ h4
 
 theorem le_exp_neg_one {x : WithZero (Multiplicative ℤ)} (h : x < 1) : x ≤ WithZero.exp (-1 : ℤ) := by
-  rcases eq_or_ne x 0 with rfl | h0
-  · exact zero_le'
-  · rw [← WithZero.exp_log h0] at h ⊢
-    rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h
-    rw [WithZero.exp_le_exp]
-    omega
+  exact GlobalTheory.HeckeCont.le_exp_neg_one_of_lt_one h
 
 theorem vl_le_of_zeroAt {D : D7} {q : ℕ} {x : AE D} (h : ZeroAt D q x) {v : HeightOneSpectrum (𝓞 D.host.E)}
     (hv : Formalism.L2.Host.OverP D.host q v) (k : ℕ) : vl D v x ≤ WithZero.exp (-(k : ℤ)) := by

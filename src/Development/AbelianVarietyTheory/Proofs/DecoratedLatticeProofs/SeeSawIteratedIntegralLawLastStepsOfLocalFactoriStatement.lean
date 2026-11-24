@@ -850,26 +850,7 @@ noncomputable section
 namespace GlobalTheory.QLastCore
 
 theorem symplO_eq_zero_of_disj : ∀ (D : D7) (S T : HSp D) (P P' : GlobalTheory.FinPl.Pl D → Prop), (∀ x, P x → ¬ P' x) → ∀ x y : WO S T, GlobalTheory.FinPl.MxAt P x → GlobalTheory.FinPl.MxAt P' y → symplO S T x y = 0 := by
-  intro D S T P P' hPP x y hx hy
-  have hz : ∀ a b : AE D, a ∈ GlobalTheory.FinPl.idAt D P → b ∈ GlobalTheory.FinPl.idAt D P' → b * a = 0 := by
-    intro a b ha hb
-    have m1 : b * a ∈ GlobalTheory.FinPl.idAt D P := Ideal.mul_mem_left _ _ ha
-    have m2 : b * a ∈ GlobalTheory.FinPl.idAt D P' := Ideal.mul_mem_right _ _ hb
-    rw [GlobalTheory.FinPl.mem_supportedOnPlacesIdeal_iff_components_zero_elsewhere] at m1 m2
-    refine GlobalTheory.FinPl.CMAdele_eq_zero_of_infinite_and_finite_components_zero D _ m1.1 fun w => ?_
-    by_cases hw : P w
-    · exact m2.2 w (hPP w hw)
-    · exact m1.2 w hw
-  have hh : hO S T x y = 0 := by
-    unfold hO
-    refine Finset.sum_eq_zero fun a _ => Finset.sum_eq_zero fun b _ => Finset.sum_eq_zero fun c _ =>
-      Finset.sum_eq_zero fun d _ => ?_
-    have h0 : cA D (y c b) * x d a = 0 := hz _ _ (hx d a) (GlobalTheory.LastOpPf.cA_mem_idAt (hy c b))
-    calc incA D (S.gram⁻¹ a b) * cA D (y c b) * incA D (T.gram c d) * x d a
-        = incA D (S.gram⁻¹ a b) * incA D (T.gram c d) * (cA D (y c b) * x d a) := by ring
-      _ = 0 := by rw [h0, mul_zero]
-  unfold symplO
-  rw [hh, mul_zero, map_zero]
+  apply GlobalTheory.DisjComb.symplO_disj
 
 theorem half_one_sub_of_ne : ∀ (D : D7) (k k' : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [Field k'] [ValuativeRel k'] [TopologicalSpace k'] [IsNonarchimedeanLocalField k'] (q : GlobalTheory.FinPl.SplitPt D k) (q' : GlobalTheory.FinPl.SplitPt D k'), q.v ≠ q'.v → ∀ (m n : ℕ) (u : Mx D m n), IsHalf (q'.e + cA D q'.e) u → IsHalf (1 - (q.e + cA D q.e)) u := by
   intro D k k' _ _ _ _ _ _ _ _ q q' hne m n u hu i j
@@ -882,12 +863,7 @@ theorem half_one_sub_of_ne : ∀ (D : D7) (k k' : Type) [Field k] [ValuativeRel 
   rw [sub_mul, one_mul, hs, h3, sub_zero]
 
 theorem comb_single_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (f : WO S T → ℂ), comb ψ S T (Finsupp.single 0 1) f = f := by
-  intro D ψ S T f
-  unfold comb
-  rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
-  funext w
-  have hh : hO S T w 0 = 0 := by simp [hO]
-  simp [heisO, symplOH, symplO, hh]
+  apply GlobalTheory.FinPl.OffTest.comb_single_zero
 
 theorem conv_alg : (∀ (G : Type) [AddCommMonoid G] (c d : G →₀ ℂ) (l : List (G →₀ ℂ)), aconv (aconv [c, d] :: l) = aconv (c :: d :: l)) ∧ (∀ (G : Type) [AddMonoid G] (c : G →₀ ℂ), aconv [c] = c) ∧ (∀ (G : Type) [AddMonoid G] (l : List (G →₀ ℂ)), aconv (Finsupp.single 0 1 :: l) = aconv l) ∧ (∀ (G : Type) [AddMonoid G] (l : List (G →₀ ℂ)) (H : AddSubmonoid G), (∀ x ∈ l, ∀ g ∈ x.support, g ∈ H) → ∀ g ∈ (aconv l).support, g ∈ H) ∧ (∀ (G : Type) [Monoid G] (l : List (G →₀ ℂ)) (H : Submonoid G), (∀ x ∈ l, ∀ g ∈ x.support, g ∈ H) → ∀ g ∈ (conv l).support, g ∈ H) := by
   classical

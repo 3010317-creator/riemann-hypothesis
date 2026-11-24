@@ -503,14 +503,7 @@ private theorem exists_level (c : HeightOneSpectrum (𝓞 F) → ℕ) (hc : {w |
 
 theorem finite_support {ω : HChar F} {c : HeightOneSpectrum (𝓞 F) → ℕ} (hH : Hyp ω c) :
     {w | c w ≠ 0}.Finite := by
-  obtain ⟨m, hm, hω⟩ := isOfFinOrder_iff_pow_eq_one.1 hH.fin
-  have ho := GlobalTheory.HeckeGal.isOpen_ker_of_pow ω.1 ω.2.1 hm fun x => by
-    have := congrArg (fun ξ : HChar F => ξ.1 x) hω
-    simpa using this
-  obtain ⟨S, M, hS, key⟩ := GlobalTheory.OpenIdeleCongr.localIdele_mem_of_isOpen ω.1.ker ho
-  refine hS.subset fun w hw => ?_
-  by_contra hwS
-  exact hw (Nat.le_zero.1 ((hH.cond w).2 fun x hu _ => MonoidHom.mem_ker.1 (key w x hu fun h => absurd h hwS)))
+  exact UpperTheory.HilbertEisensteinWeightOne.FourierExpansionEisenstein.L2.finite_support hH
 
 
 variable (F) in

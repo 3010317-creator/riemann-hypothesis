@@ -1204,16 +1204,7 @@ theorem genPt_eq_of_factor {X : Scheme.{0}} {Ω Ω₁ Ω₂ : Type} [Field Ω] [
     {a : Spec (CommRingCat.of Ω) ⟶ X} {ξ₁ : Spec (CommRingCat.of Ω₁) ⟶ X} {ξ₂ : Spec (CommRingCat.of Ω₂) ⟶ X}
     {g₁ : Ω₁ →+* Ω} {g₂ : Ω₂ →+* Ω}
     (h₁ : a = Spec.map (CommRingCat.ofHom g₁) ≫ ξ₁) (h₂ : a = Spec.map (CommRingCat.ofHom g₂) ≫ ξ₂) :
-    genPt ξ₁ = genPt ξ₂ := by
-  have e₁ : ∀ w : Spec (CommRingCat.of Ω), genPt ξ₁ = a w := by
-    intro w
-    rw [h₁, Scheme.Hom.comp_apply]
-    exact congrArg ξ₁ (Subsingleton.elim (α := PrimeSpectrum Ω₁) _ _)
-  have e₂ : ∀ w : Spec (CommRingCat.of Ω), genPt ξ₂ = a w := by
-    intro w
-    rw [h₂, Scheme.Hom.comp_apply]
-    exact congrArg ξ₂ (Subsingleton.elim (α := PrimeSpectrum Ω₂) _ _)
-  exact (e₁ (IsLocalRing.closedPoint Ω)).trans (e₂ (IsLocalRing.closedPoint Ω)).symm
+    genPt ξ₁ = genPt ξ₂ := GlobalTheory.CompanionTheory.Ar.TowerPropA.genPt_eq_of_factor h₁ h₂
 
 theorem base_setting_of_good_origin : ∀ Ch Cu : ℝ, NineGeoU Ch Cu → Out.WeilSt → PB.AgreementPos → PB.Proportional → Cmp.CmpSt → Top.Given → PtsIntegrableStatement → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsAbelianGalois ℚ E] (H : Host E) (D : Datum H) (Xo : ∀ l : Tor.Level H, Moduli D l) (l : Tor.Level H) (c : Coeff l) (Y : Model (Xo l) c (algebraMap (𝓞 c.F) c.F)) [DecidableEq (CMType H)] (T : Top.RootTower (CMType H) (D.p + D.q)) (o : Top.GoodOrigin Y T) (II : IntersectionSystem), Top.IsGlobal Xo l c Y → o.Extra → IsFullIntersectionSystem II → 1 ≤ D.p → 1 ≤ D.q → D.q ≤ D.p → T.bad.card ≤ 4 * Fintype.card (CMType H) * (D.p + D.q) ^ 2 → ∀ B : ℕ, 4 * Fintype.card (CMType H) * (D.p + D.q) ^ 2 ≤ B → ∀ a, T.HasBaseDegreeSettingStrict II Ch Cu (hostRd E) (hostLval H) B a := by
   intro Ch Cu hNine hWeil hAgr hProp hCmp hGiven hPts E _ _ _ _ H D Xo l c Y _ T o II hGlob hExtra hFull hp hq hqp
@@ -1295,11 +1286,7 @@ namespace PositivityTheory.Xgp.vert_deg
 
 theorem isC2At_of_isPotential {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X) {Q : LocPot X}
     (h : IsPotential A Q) (x : X) : IsTwiceDifferentiableAt A Q x := by
-  intro j hj
-  refine potSmoothAt A Q h x j ⟨(A.chart j).map_source hj, ?_⟩
-  show (A.chart j).symm (A.chart j x) ∈ Q.U x
-  rw [(A.chart j).left_inv hj]
-  exact Q.mem_U x
+  exact PositivityTheory.Xgp.re_pot.isC2At_of_isPotential A h x
 
 theorem isNull_zeros {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] {P J : Ideal (MRing ι)} {D : ℕ}
     (R : AnLogRes P J D) (hP : ReciprocityTheory.ChartRestriction.G.Geo.IsArithVar P (D + 1)) {s : MRing ι} {a : K → ℕ} (hs : IsMultiHomog s a)

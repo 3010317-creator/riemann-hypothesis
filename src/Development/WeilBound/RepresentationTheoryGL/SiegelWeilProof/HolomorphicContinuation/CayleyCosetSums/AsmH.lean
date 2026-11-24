@@ -1089,13 +1089,7 @@ variable {n : ℕ}
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 theorem lift_mR (φ : GR n → ℂ) (w : GR n) : lift φ (mR w) = φ w := by
-  have h : IsUnit (mR w) ∧ InG (mR w) := ⟨⟨w.1, rfl⟩, w.2⟩
-  unfold lift
-  rw [dite_eq_left h]
-  congr 1
-  apply Subtype.ext
-  apply Units.ext
-  simp [mR]
+  exact PositivityTheory.Rg.Sw.HSt.FarP.lift_mR φ w
 
 theorem ιK_apply (k : KR n) : ιK n k = mR (k : GR n) := rfl
 

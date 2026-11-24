@@ -98,11 +98,7 @@ theorem coeff_single_frob {Q : Type} [CommRing Q] (p : ℕ) (hp : p ≠ 0) (s : 
 theorem coeff_comb {B Q : Type} [CommRing B] [CommRing Q] [Algebra B Q] {σ ι : Type} [Fintype ι]
     (b : ι → B) (e : ι → MvPowerSeries σ Q) (α : σ →₀ ℕ) :
     coeff α (comb b e) = ∑ l, algebraMap B Q (b l) * coeff α (e l) := by
-  unfold comb
-
-  rw [map_sum]
-  refine Finset.sum_congr rfl fun l _ => ?_
-  rw [MvPowerSeries.coeff_smul]
+  exact GlobalTheory.BasisLift.coeff_comb b e α
 
 end GlobalTheory.QLog.SmallFirst
 
@@ -709,11 +705,7 @@ theorem hasSubst_yZero : HasSubst (yZero (O := O) (d := d)) :=
 theorem constantCoeff_subst_of {σ τ : Type} [Finite σ] {a : σ → MvPowerSeries τ O}
     (ha : ∀ i, constantCoeff (a i) = 0) (f : MvPowerSeries σ O) :
     constantCoeff (subst a f) = constantCoeff f := by
-  have hs : HasSubst a := hasSubst_of_constantCoeff_zero ha
-  have h1 : f = (f - C (constantCoeff f)) + C (constantCoeff f) := by ring
-  conv_lhs => rw [h1]
-  rw [subst_add hs, map_add (f := _), constantCoeff_subst_eq_zero hs ha (by simp), subst_C, zero_add]
-  simp
+  exact GlobalTheory.Katz.SubstCalc.constantCoeff_subst_of_zero ha f
 
 theorem constantCoeff_pderiv {σ : Type} (i : σ) (f : MvPowerSeries σ O) :
     constantCoeff (MvPowerSeries.pderiv i f) = coeff (Finsupp.single i 1) f := by
@@ -1047,34 +1039,11 @@ theorem in_top_add_smul {O Q σ : Type} [CommRing O] [CommRing Q] [Algebra O Q]
 theorem ql_add_smul {O Q : Type} [CommRing O] [CommRing Q] [Algebra O Q] {d : ℕ}
     {μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) O} (hμ : ∀ i, constantCoeff (μ i) = 0)
     {f g : MvPowerSeries (Fin d) Q} (hf : QL μ ⊤ f) (hg : QL μ ⊤ g) (a : O) :
-    QL μ ⊤ (f + algebraMap O Q a • g) := by
-  have hμ' : ∀ i, constantCoeff (up Q μ i) = 0 := fun i => by
-    rw [up, ← coeff_zero_eq_constantCoeff_apply, coeff_map, coeff_zero_eq_constantCoeff_apply,
-      hμ, map_zero]
-  refine ⟨?_, fun i => ?_, ?_⟩
-  · rw [← coeff_zero_eq_constantCoeff_apply, map_add (f := _), map_smul, coeff_zero_eq_constantCoeff_apply,
-      coeff_zero_eq_constantCoeff_apply, hf.1, hg.1, smul_zero, add_zero]
-  · obtain ⟨b, -, hb⟩ := hf.2.1 i
-    obtain ⟨b', -, hb'⟩ := hg.2.1 i
-    refine ⟨b + a * b', trivial, ?_⟩
-    simp only [lin] at hb hb' ⊢
-    rw [map_add (f := _), map_smul, hb, hb', map_add (f := _), map_mul, smul_eq_mul]
-  · rw [formalCoboundary_add hμ', formalCoboundary_smul hμ']
-    exact in_top_add_smul hf.2.2 hg.2.2 a
+    QL μ ⊤ (f + algebraMap O Q a • g) := GlobalTheory.QLogBasis.ql_add_smul hμ hf hg a
 
 theorem ql_zero {O Q : Type} [CommRing O] [CommRing Q] [Algebra O Q] {d : ℕ}
     {μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) O} (hμ : ∀ i, constantCoeff (μ i) = 0) :
-    QL μ ⊤ (0 : MvPowerSeries (Fin d) Q) := by
-  have hμ' : ∀ i, constantCoeff (up Q μ i) = 0 := fun i => by
-    rw [up, ← coeff_zero_eq_constantCoeff_apply, coeff_map, coeff_zero_eq_constantCoeff_apply,
-      hμ, map_zero]
-  have h0 : cob1 (up Q μ) (0 : MvPowerSeries (Fin d) Q) = 0 := by
-    have := formalCoboundary_smul hμ' (0 : Q) (0 : MvPowerSeries (Fin d) Q)
-    rwa [zero_smul, zero_smul] at this
-  refine ⟨map_zero _, fun i => ⟨0, trivial, ?_⟩, ?_⟩
-  · simp [lin]
-  · rw [h0]
-    exact In.top_iff.2 ⟨0, map_zero _⟩
+    QL μ ⊤ (0 : MvPowerSeries (Fin d) Q) := GlobalTheory.QLogBasis.ql_zero hμ
 
 end GlobalTheory.TangentComb
 
@@ -1260,14 +1229,7 @@ theorem isUnit_of_isUnit_map {p : ℕ} {B O Q : Type} [CommRing B] [CommRing Q] 
 
 theorem exists_pow_eq {p : ℕ} [Fact p.Prime] {C : Type} [Field C] [IsAlgClosed C]
     {v : Valuation C NNReal} {O : Type} [CommRing O] [Algebra O C] (hv : v.Integers O) (a : O) :
-    ∃ r : O, r ^ p = a := by
-  obtain ⟨z, hz⟩ := IsAlgClosed.exists_pow_nat_eq (algebraMap O C a) (Fact.out : p.Prime).pos
-  have h1 : v z ≤ 1 := by
-    have := hv.map_le_one a
-    rw [← hz, map_pow] at this
-    exact (pow_le_one_iff_of_nonneg zero_le' (Fact.out : p.Prime).ne_zero).1 this
-  obtain ⟨r, hr⟩ := hv.exists_of_le_one h1
-  exact ⟨r, hv.hom_inj (by rw [map_pow, hr, hz])⟩
+    ∃ r : O, r ^ p = a := ReciprocityTheory.PGsh.exists_root C v O hv a
 
 theorem frob_matrix_isUnit : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ (ε : PreTilt O p) (hε : IsPrimitiveSystem ε), ∀ F : BFrame ε, ∀ (G : PDivGroup p O) (d : ℕ) (c : QLog.Chart G d) (μ' : Fin d → MvPowerSeries (Fin d ⊕ Fin d) F.B), IsLift F.θ μ' → (∀ i, map F.θ (μ' i) = c.μ i) → ∀ (k : ℕ) (e : Fin d ⊕ Fin k → MvPowerSeries (Fin d) F.Q), IsBasis μ' e → IsAdapted F.θ μ' e → ∀ U : Matrix (Fin d ⊕ Fin k) (Fin d ⊕ Fin k) F.B, (∀ i, In (⊤ : Ideal F.B) (frob p F.s (e i) - comb (fun l => (U * blk d k (p : F.B) 1) l i) e) ∧ ∀ i', i = Sum.inl i' → In (Ideal.span {(p : F.B)}) (frob p F.s (e i) - comb (fun l => (U * blk d k (p : F.B) 1) l i) e)) → IsUnit U := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε hε F G d c μ' hL hμ k e hB hA U hU

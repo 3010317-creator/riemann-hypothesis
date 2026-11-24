@@ -1161,14 +1161,7 @@ namespace GlobalTheory.HSShort.GlobWord
 
 theorem shift_single {K : Type} [Field K] [NumberField K] (G : Geo K) (j : ℕ) (u : Fin G.N → K) (m : G.Sec j) :
     shift G u (Pi.single j m) = Pi.single (j + 1) (G.mulW j u m) := by
-  funext i
-  cases i with
-  | zero => rw [Pi.single_eq_of_ne (Nat.succ_ne_zero j).symm]; rfl
-  | succ i =>
-    show G.mulW i u ((Pi.single j m : Tot G) i) = _
-    by_cases h : i = j
-    · subst h; rw [Pi.single_eq_same, Pi.single_eq_same]
-    · rw [Pi.single_eq_of_ne h, Pi.single_eq_of_ne (fun h' => h (Nat.succ_injective h')), map_zero]
+  exact GlobalTheory.HSShort.ShiftMono.shift_single G j u m
 
 theorem word_global : ∀ (K : Type) [Field K] [NumberField K] (G : Geo K) (t j : ℕ) (u : Fin t → Fin G.N → K), ∀ x ∈ G.global j, ∃ x' ∈ G.global (j + t), word (shift G) u (Pi.single j x) = Pi.single (j + t) x' ∧ ∀ (s : Fin G.D → Fin G.N → K) (hs : G.IsGood s) (δ : ℕ) (Co : Coord G hs δ) (p : Fin δ), Co.ev (j + t) (hs.res (j + t) x') p = (∏ q, ∑ k, u q k * Co.y p k) * Co.ev j (hs.res j x) p := by
   intro K _ _ G t j

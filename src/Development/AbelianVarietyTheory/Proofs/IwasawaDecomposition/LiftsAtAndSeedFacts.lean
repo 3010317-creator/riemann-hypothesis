@@ -91,13 +91,7 @@ theorem resEta_even (hL : L.Is μ0) (t : T) (j : Fin D.R.m) {n : ℕ} (hn : Even
     ResEta D (L.mu t ((j : ℕ) + 1)) n :=
   resEta_parity (resEta_mu hL t j) (by obtain ⟨c, rfl⟩ := hn; omega)
 
-theorem odd_r : Odd D.R.r := by
-  obtain ⟨a, ha⟩ := D.R.k_even
-  obtain ⟨b, hb⟩ := D.R.m_even
-  have := D.R.two_le_m
-  refine ⟨a + b - 1, ?_⟩
-  unfold Ranks.r
-  omega
+theorem odd_r : Odd D.R.r := Formalism.L2.Theta.r_odd D
 
 theorem even_rankY (j : ℕ) : Even (D.R.rankY j) ↔ ¬ Even j := by
   have h1 : ¬ Even D.R.r := Nat.not_even_iff_odd.2 odd_r

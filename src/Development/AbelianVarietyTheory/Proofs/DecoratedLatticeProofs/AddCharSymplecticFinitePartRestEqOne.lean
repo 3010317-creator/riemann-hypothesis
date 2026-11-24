@@ -212,14 +212,7 @@ theorem finPart_finRat_sub {S T : HSp D} (M : Matrix (Fin T.rank) (Fin S.rank) D
   exact sub_eq_zero.2 ((GlobalTheory.LatVac.finPart_pair 1 (M i j)).trans (GlobalTheory.LatVac.finPart_incA (M i j)).symm)
 
 theorem infPart_of_idemSum {e : AE D} {SS : Finset (Formalism.L2.DIV.Pl D.host.E)} (hI : IsIdemSum e SS) :
-    infPart D e = 0 := by
-  obtain ⟨⟨es, hes, he⟩, -⟩ := hI
-  subst he
-  induction SS using Finset.induction_on with
-  | empty => rw [Finset.sum_empty, RingHom.map_zero]
-  | insert a s ha ih =>
-    rw [Finset.sum_insert ha, RingHom.map_add (f := _), GlobalTheory.SplitScalar.infPart_splitIdem (hes a (Finset.mem_insert_self a s)).1,
-      ih fun PP hPP => hes PP (Finset.mem_insert_of_mem hPP), add_zero]
+    infPart D e = 0 := GlobalTheory.PlaceDatum.infPart_idemSum hI
 
 theorem smul_rest_eq_zero {S T : HSp D} {e : AE D} (hee : e * e = e) (hinf : infPart D e = 0)
     (M : Matrix (Fin T.rank) (Fin S.rank) D.host.E) :

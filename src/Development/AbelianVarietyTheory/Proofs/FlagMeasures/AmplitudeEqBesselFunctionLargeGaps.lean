@@ -156,14 +156,7 @@ theorem rootCoords_eq (z : Fin (2 * r + k + 1) → ℂ) (p : Point ℂ (r + 1)) 
   rfl
 
 theorem measurable_rootCoords (z : Fin (2 * r + k + 1) → ℂ) (p : Point ℂ (r + 1)) :
-    Measurable (rootCoords k r z p) := by
-  refine Continuous.measurable (continuous_pi fun q => ?_)
-  unfold rootCoords flagMat
-  split_ifs
-  · exact (continuous_apply (eI k r _)).comp
-      ((continuous_id (X := MatKR k r)).matrix_mulVec (continuous_const (y := fvec k r z q.1.2)))
-  · exact continuous_const
-  · exact continuous_const
+    Measurable (rootCoords k r z p) := GlobalTheory.Amp.RootMove.measurable_rootCoords z p
 
 theorem root_conj {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hz' : inWb k r z') {g : MatKR k r}
     (hg : g ∈ UH (Hpk k r)) {p : Point ℂ (r + 1)} (hZ : ZhatO k r z z' g = ptMat p) {μ : Measure (Mt k r)}

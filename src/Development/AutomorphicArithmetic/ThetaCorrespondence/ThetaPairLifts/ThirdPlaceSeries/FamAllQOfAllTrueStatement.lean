@@ -568,11 +568,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 theorem GlobalTheory.BaseChain.thetaKO_sum_smul_act {D : D7} {S T : HSp D} {ι : Type} (s : Finset ι) (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ))
     (g : GA D S) (h : GA D T) (c : ι → ℂ) (κ : ι → GA D S) (f : WO S T → ℂ) :
     thetaKO om g h (∑ p ∈ s, c p • om (κ p, 1) f) = ∑ p ∈ s, c p * thetaKO om (g * κ p) h f := by
-
-  simp only [thetaKO, map_sum, map_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
-  refine Finset.sum_congr rfl fun p _ => ?_
-  congr 1
-  rw [← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, mul_one]
+  exact GlobalTheory.Fam.LiftVol.thetaKO_sum_translates s om g h c κ f
 
 
 end -- clump:auto
@@ -802,15 +798,7 @@ theorem comb_pureTensorO {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T :
     (hθ : IsInfFam θ) (sS sT BS BT) {e : WO S T →₀ ℂ} (he : IsFinComb e) {f₀ : WO S T → ℂ}
     (hf₀ : IsThetaFunO ψ S T f₀) (P) :
     comb ψ S T e (pureTensorO ψ θ S T sS sT BS BT f₀ P) = pureTensorO ψ θ S T sS sT BS BT (comb ψ S T e f₀) P := by
-  let q := e.support.equivFin
-  have key := (GlobalTheory.FockFiniteHeis.heis_comb_pureTensorO D ψ θ S T hψ hθ sS sT BS BT f₀ hf₀ e.support.card
-    (fun i => e (q.symm i).1) (fun i => (q.symm i).1) (fun i => he _ (q.symm i).2) P).1
-  have h1 : ∀ g : WO S T → (WO S T → ℂ), ∑ u ∈ e.support, e u • g u = ∑ i, e (q.symm i).1 • g (q.symm i).1 := by
-    intro g
-    rw [← Finset.sum_coe_sort e.support]
-    exact (Equiv.sum_comp q.symm (fun u : e.support => e u.1 • g u.1)).symm
-  simp only [comb]
-  rwa [h1, h1]
+  exact GlobalTheory.GVecAt.comb_pureTensorO hψ hθ sS sT BS BT he hf₀ P
 
 theorem isItW_of_comb {V W : HSp D} {S S' : D.what₂.Tau → SPar} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D}
     {M : DSModel V S} {M' : DSModel W S'} {χS χT : (AE D)ˣ →* Circle}

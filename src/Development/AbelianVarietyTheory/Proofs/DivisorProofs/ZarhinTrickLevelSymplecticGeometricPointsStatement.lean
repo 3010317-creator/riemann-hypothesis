@@ -456,13 +456,7 @@ theorem mkZ_pb {T : Over S} (u : Fin 4 → (T ⟶ A)) (v : Fin 4 → (T ⟶ B)) 
 
 theorem zob_hom_ext {T : Over S} (f g : T ⟶ Zob A B) (ha : ∀ i, f ≫ pa A B i = g ≫ pa A B i)
     (hb : ∀ j, f ≫ pb A B j = g ≫ pb A B j) : f = g := by
-  apply CartesianMonoidalCategory.hom_ext
-  · apply (Out.powIsLimit A 4).hom_ext
-    rintro ⟨i⟩
-    simpa [pa] using ha i
-  · apply (Out.powIsLimit B 4).hom_ext
-    rintro ⟨j⟩
-    simpa [pb] using hb j
+  exact GlobalTheory.ZarhinFam.LevAlg.zob_ext A B f g ha hb
 
 instance pa_isMonHom (i : Fin 4) : IsMonHom (pa A B i) := by
   unfold pa; infer_instance

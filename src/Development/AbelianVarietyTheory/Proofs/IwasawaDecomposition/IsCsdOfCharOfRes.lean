@@ -66,11 +66,7 @@ abbrev cU (c : L ≃+* L) : Lˣ →* Lˣ := Units.map c.toMonoidHom
 
 theorem finId_finSingle (v : HeightOneSpectrum (𝓞 L)) (x : (v.adicCompletion L)ˣ) :
     finId L (Units.map (Neutral.B1.finiteSingle L v) x) = localIdele L v x := by
-  refine Units.ext (Prod.ext ?_ ?_)
-  · change (1 : InfiniteAdeleRing L) - 0 + 0 = 1
-    simp
-  · change (1 : Af L) - 1 + Neutral.B1.finiteSingle L v x = Neutral.B1.finiteSingle L v x
-    simp
+  exact GlobalTheory.CsdTriv.finId_finSingle v x
 
 theorem conjFin_finSingle (c : L ≃+* L) {v v' : HeightOneSpectrum (𝓞 L)} (h : ConjPl c v v') (k : Lˣ) :
     Units.map (conjFin c).toMonoidHom (Units.map (Neutral.B1.finiteSingle L v) (atFin v k)) =

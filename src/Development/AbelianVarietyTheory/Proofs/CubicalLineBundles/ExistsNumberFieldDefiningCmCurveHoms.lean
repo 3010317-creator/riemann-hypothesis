@@ -71,13 +71,7 @@ variable {R R' : Type} [CommRing R] [CommRing R']
 
 theorem isLieComb_one_iff {G : Over (Sp R)} [GrpObj G] (a : R) (t w : epsR R ⟶ G) :
     IsLieComb ![a] ![t] w ↔ w.left = spMap (epsScaleR a) ≫ t.left := by
-  constructor
-  · rintro ⟨u, hu, rfl⟩
-    simpa using hu 0
-  · intro h
-    refine ⟨![w], fun i => ?_, by simp⟩
-    fin_cases i
-    exact h
+  exact GlobalTheory.LieMultiple.isLieComb_one_iff a t w
 
 theorem epsScaleR_comp_dualMapR (g : R →+* R') (a : R) :
     (epsScaleR (g a)).comp (Chart.dualMapR g) = (Chart.dualMapR g).comp (epsScaleR a) := by

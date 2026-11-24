@@ -79,19 +79,10 @@ theorem homog_mul {a b : MRing J} {da db : K → ℕ} (ha : IsMultiHomog a da) (
 
 theorem homog_add {a b : MRing J} {d : K → ℕ} (ha : IsMultiHomog a d) (hb : IsMultiHomog b d) :
     IsMultiHomog (a + b) d := by
-  classical
-  intro m hm k
-  rcases Finset.mem_union.1 (MvPolynomial.support_add hm) with h | h
-  · exact ha m h k
-  · exact hb m h k
+  exact GroundTheory.Heights₂.Heights.HilbertSamuel.SectionBounded.homog_add ha hb
 
 theorem homog_C (n : ℤ) : IsMultiHomog (C n : MRing J) (0 : K → ℕ) := by
-  classical
-  intro m hm k
-  have : m = 0 := by
-    have h := MvPolynomial.support_monomial_subset (by rwa [C_apply] at hm)
-    simpa using h
-  simp [this]
+  apply GroundTheory.Heights₂.Heights.LowerBoundFree.isMultiHomog_C_zero
 
 theorem homog_X [DecidableEq K] (p : Σ k, J k) : IsMultiHomog (X p : MRing J) (Pi.single p.1 1) := by
   apply GroundTheory.Heights₂.Heights.HilbertSamuel.SectionBounded.homog_X
@@ -100,12 +91,7 @@ def cMon (c : ∀ k, J k) (d : K → ℕ) : MRing J := ∏ k, X ⟨k, c k⟩ ^ d
 
 theorem homog_pow {a : MRing J} {d : K → ℕ} (ha : IsMultiHomog a d) (n : ℕ) :
     IsMultiHomog (a ^ n) (n • d) := by
-  induction n with
-  | zero =>
-    simpa using homog_C (J := J) 1
-  | succ n ih =>
-    rw [pow_succ, succ_nsmul]
-    exact homog_mul ih ha
+  exact GroundTheory.Heights₂.Heights.HilbertSamuel.SectionBounded.homog_pow ha n
 
 theorem homog_cMon (c : ∀ k, J k) (d : K → ℕ) : IsMultiHomog (cMon c d) d := by
   classical

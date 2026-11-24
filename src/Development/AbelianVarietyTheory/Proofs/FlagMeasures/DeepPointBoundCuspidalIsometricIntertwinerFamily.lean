@@ -875,12 +875,7 @@ theorem uMat_inj {n : ℕ} {ε : Fin n → Bool} {a b : Formalism.REAL.UJ ε} (h
 theorem uMat_mul' {n : ℕ} {ε : Fin n → Bool} (a b : Formalism.REAL.UJ ε) : uMat (a * b) = uMat a * uMat b := rfl
 
 theorem expU_add {n : ℕ} {ε : Fin n → Bool} (X : gLie ε) (s t : ℝ) :
-    expU ((s + t) • X) = expU (s • X) * expU (t • X) := by
-  apply uMat_inj
-  rw [uMat_mul', uMat_expU, uMat_expU, uMat_expU, add_smul, Submodule.coe_add]
-  apply Matrix.exp_add_of_commute
-  simp only [Submodule.coe_smul]
-  exact ((Commute.refl (X : Matrix (Fin n) (Fin n) ℂ)).smul_left s).smul_right t
+    expU ((s + t) • X) = expU (s • X) * expU (t • X) := GlobalTheory.SobolevBound.expU_add X s t
 
 theorem expU_zero {n : ℕ} {ε : Fin n → Bool} (X : gLie ε) : expU ((0 : ℝ) • X) = 1 := by
   apply uMat_inj

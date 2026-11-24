@@ -870,32 +870,12 @@ variable {D : D7}
 theorem hO_eq_trace (S T : HSp D) (x y : WO S T) :
     hO S T x y = Matrix.trace (HMul.hMul ((S.gram⁻¹).map (incA D))
       (HMul.hMul (HMul.hMul (cT (cA D) y) (T.gram.map (incA D))) x)) := by
-  calc hO S T x y = ∑ a, ∑ b, incA D (S.gram⁻¹ a b) *
-        (HMul.hMul (HMul.hMul (cT (cA D) y) (T.gram.map (incA D))) x : Matrix (Fin S.rank) (Fin S.rank) (AE D)) b a := by
-        unfold hO
-        refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
-        exact sum_form (cA D) (T.gram.map (incA D)) x y (incA D (S.gram⁻¹ a b)) a b
-    _ = _ := by
-        rw [Matrix.trace]
-        refine Finset.sum_congr rfl fun a _ => ?_
-        rw [Matrix.diag_apply, Matrix.mul_apply]
-        rfl
+  exact GlobalTheory.VacMove.hO_eq_trace S T x y
 
 variable {A A' : HSp D} (J : IsoMat A A')
 
 theorem gram_inv_conj : J.Q * A'.gram⁻¹ * cT (D.sp.cm.sig : D.host.E →+* D.host.E) J.Q = A.gram⁻¹ := by
-  symm
-  apply Matrix.inv_eq_left_inv
-  have hu : IsUnit A'.gram.det := isUnit_iff_ne_zero.2 (gram_det_ne A')
-  have h1 : cT (D.sp.cm.sig : D.host.E →+* D.host.E) J.Q * cT (D.sp.cm.sig : D.host.E →+* D.host.E) J.P = 1 := by
-    rw [← cT_mul, J.PQ, cT_one]
-  rw [← J.gram]
-  calc J.Q * A'.gram⁻¹ * cT (D.sp.cm.sig : D.host.E →+* D.host.E) J.Q *
-        (cT (D.sp.cm.sig : D.host.E →+* D.host.E) J.P * A'.gram * J.P)
-      = J.Q * A'.gram⁻¹ * (cT (D.sp.cm.sig : D.host.E →+* D.host.E) J.Q * cT (D.sp.cm.sig : D.host.E →+* D.host.E) J.P) *
-          A'.gram * J.P := by simp only [Matrix.mul_assoc]
-    _ = J.Q * (A'.gram⁻¹ * A'.gram) * J.P := by rw [h1, Matrix.mul_one]; simp only [Matrix.mul_assoc]
-    _ = 1 := by rw [Matrix.nonsing_inv_mul _ hu, Matrix.mul_one, J.QP]
+  exact GlobalTheory.VacMove.gramInv_conj J
 
 variable (T : HSp D)
 

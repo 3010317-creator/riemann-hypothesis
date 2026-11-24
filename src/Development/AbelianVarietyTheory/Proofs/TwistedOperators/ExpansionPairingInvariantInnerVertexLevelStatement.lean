@@ -442,15 +442,7 @@ namespace GlobalTheory.VacMoveLow
 variable {D : D7}
 
 theorem compAt_fin {θ : InfFam D} {V : HSp D} {h : GA D V} (hh : h ∈ GfC V) (τ : D.what₂.Tau) :
-    compAt θ τ (Formalism.L2.Theta.mt V h) = 1 := by
-  have h1 : Formalism.UG.bc (infPart D) (matHom V h) = 1 := (GlobalTheory.UnitaryIdemCut.mem_GfC_iff V h).1 hh
-  have h2 := congrArg Units.val h1
-  ext i j
-  have h3 := congrFun (congrFun h2 i) j
-  simp only [compAt, Matrix.map_apply]
-  have h4 : infPart D (Formalism.L2.Theta.mt V h i j) = (1 : Matrix (Fin V.rank) (Fin V.rank) _) i j := h3
-  rw [h4, Matrix.one_apply, Matrix.one_apply]
-  split_ifs <;> simp
+    compAt θ τ (Formalism.L2.Theta.mt V h) = 1 := GlobalTheory.RealWeil.compAt_fin hh τ
 
 theorem actO_one_one {S T : HSp D} (u : WO S T) : actO S T 1 1 u = u := by
   simp [actO]
@@ -973,12 +965,7 @@ namespace GlobalTheory.FockTranslate
 
 theorem compAt_fin {D : D7} (θ : InfFam D) (τ : D.what₂.Tau) {V : HSp D} (g : GA D V) (hg : g ∈ Formalism.L2.Theta.GfC V) :
     Formalism.IndefR.Datum.compAt θ τ (Formalism.L2.Theta.mt V g) = 1 := by
-  have h6 : (Formalism.L2.Theta.mt V g).map (Formalism.L2.Theta.infPart D) = 1 :=
-    congrArg Units.val (show Formalism.L2.Theta.infHom V g = 1 from hg)
-  unfold Formalism.IndefR.Datum.compAt
-  rw [show (Formalism.L2.Theta.mt V g).map (fun a => θ τ (Formalism.L2.Theta.infPart D a)) =
-    ((Formalism.L2.Theta.mt V g).map (Formalism.L2.Theta.infPart D)).map (θ τ) from (Matrix.map_map).symm, h6]
-  exact Matrix.map_one _ (θ τ).map_zero (θ τ).map_one
+  exact GlobalTheory.FiniteFock.compAt_mt_of_finite θ τ hg
 
 theorem fockComp_translate : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} (W : G.Weil) (B : VertexFrames G) (t : T) (j : ℕ),
     j + 1 ≤ D.R.m → ∀ (f : WO (G.pS (.top t j : Pair T)) (G.pT (.top t j : Pair T)) → ℂ),

@@ -64,15 +64,7 @@ theorem orthAntiQ {U U' : Submodule E S.V} (h : U ≤ U') : orth S U' ≤ orth S
   rw [memOrthQ] at hv ⊢
   exact fun x hx => hv x (h hx)
 
-theorem orthOrthQ (U : Submodule E S.V) : orth S (orth S U) = U := by
-  symm
-  apply Submodule.eq_of_le_of_finrank_le
-  · intro u hu
-    rw [memOrthQ]
-    exact fun x hx => hTCommQ.mp ((memOrthQ.mp hx) u hu)
-  · have h1 := PI.UnitaryGroupMassFormula.BetaLUniq.finrank_orth_add S U
-    have h2 := PI.UnitaryGroupMassFormula.BetaLUniq.finrank_orth_add S (orth S U)
-    omega
+theorem orthOrthQ (U : Submodule E S.V) : orth S (orth S U) = U := PI.ScalarPairDr.W.orth_orth S U
 
 theorem XflagTopQ {r : ℕ} {T : E} (F : LFlag S r T) : Xflag F r = Xsp F := by
   show Submodule.span E (F.fl.e '' {i | i.1 < r}) = Submodule.span E (Set.range F.fl.e)

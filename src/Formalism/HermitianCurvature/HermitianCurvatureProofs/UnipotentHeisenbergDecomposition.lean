@@ -283,13 +283,7 @@ lemma lev_n {g : Mat k r'} (hg : g ∈ Nset k r') : ιLev k 1 r' g ∈ Nset k (1
       simp only [lv_inj]
 
 lemma herm_sum {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (u v : Fin m → ℂ) :
-    ∑ j, herm H (bvec j) v * u j = herm H u v := by
-  simp only [herm, dotProduct, mulVec, bvec, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, ite_true, Finset.sum_mul, Finset.mul_sum]
-  rw [Finset.sum_comm]
-  apply Finset.sum_congr rfl; intro i _
-  apply Finset.sum_congr rfl; intro j _
-  ring
+    ∑ j, herm H (bvec j) v * u j = herm H u v := Formalism.FourierDecayAlt.P.B2x5.herm_sum H u v
 
 lemma heisAct (v u : Fin (2 * (1 + r') + k + 1) → ℂ) (b : ℂ) :
     heisG k r' v b *ᵥ u = u - herm (Hpk k (1 + r')) u v • e0 k r' + herm (Hpk k (1 + r')) u (e0 k r') • (v + b • e0 k r') := by

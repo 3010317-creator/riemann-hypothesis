@@ -93,13 +93,7 @@ lemma mem_dom_of_ok {r : ℕ} (X : Data E r) (P : X.Ψ → Matrix (Fin r) (Fin r
 
 lemma rmul_mem {r : ℕ} (X : Data E r) {x : Frame X.Ψ r} (hx : x ∈ X.dom) {b : Frame X.Ψ r}
     (hb : b ∈ Bor X.Ψ r) : rmul x b ∈ X.dom := by
-  intro τ
-  refine ⟨?_, fun i => ?_⟩
-  · show (mat x τ * mat b τ).det ≠ 0
-    rw [det_mul]
-    exact mul_ne_zero (hx τ).1 (hb τ).1
-  · rw [FrameDegreeData.dmin_rmul X x hb τ i]
-    exact pos_conj_mul (Finset.prod_ne_zero_iff.2 fun j _ => FrameDegreeData.bdiag_ne X hb τ _) ((hx τ).2 i)
+  apply ReciprocityTheory.ChartRestriction.G.FD.OrthogonalFrameDomain.rmul_mem_dom <;> assumption
 
 theorem flag_domain_frames_connected : GGConnStatement (E := E) := by
   apply GlobalTheory.frames_isConnected

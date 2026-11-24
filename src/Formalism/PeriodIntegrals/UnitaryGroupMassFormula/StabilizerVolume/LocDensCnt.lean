@@ -243,11 +243,7 @@ theorem lt_one_iff_unif (x : Fv F v) :
 
 theorem ev_int (x : F) : ∀ᶠ v in cofinite,
     algebraMap F (Fv F v) x ∈ v.adicCompletionIntegers F := by
-  have hfin := IsDedekindDomain.HeightOneSpectrum.Support.finite (𝓞 F) x
-  refine Filter.eventually_cofinite.mpr (hfin.subset ?_)
-  intro w hw
-  simp only [Set.mem_setOf_eq] at hw
-  rwa [IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers (𝓞 F) F w, vcoe, not_le] at hw
+  apply GlobalTheory.GaugeDensity.eventually_mem
 
 theorem ev_unit {x : F} (hx : x ≠ 0) : ∀ᶠ v in cofinite,
     Valued.v (algebraMap F (Fv F v) x) = 1 := by

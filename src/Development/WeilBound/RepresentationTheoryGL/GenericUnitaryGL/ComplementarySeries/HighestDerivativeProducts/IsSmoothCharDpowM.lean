@@ -1026,13 +1026,7 @@ theorem fibInt_levi (τ : Representation ℂ (Mir k i) V) (σ : Representation �
     [MeasurableSpace (Fin t → k)] (μ : MeasureTheory.Measure (Fin t → k))
     (f : cIndSpace (HPG k i t) (hRep τ σ)) (g' g : GL (Fin (i + t)) k) :
     fibInt μ (prodPG τ σ (levi k (i + t) g') f) g = fibInt μ f (g * g') := by
-  have : fibV (prodPG τ σ (levi k (i + t) g') f) g = fibV f (g * g') := by
-    funext v
-    have e : uM k (i + t) (midV k i t v) * levi k (i + t) (g * g') =
-        uM k (i + t) (midV k i t v) * levi k (i + t) g * levi k (i + t) g' := by
-      rw [map_mul, mul_assoc]
-    exact (congrArg f.1.1.1 e).symm
-  exact congrArg (fun x => clT τ W (smInt μ x)) this
+  exact GlobalTheory.CompanionTheory.BZPsiPG.FibOnto.fibInt_translate k i t τ σ μ f g' g
 
 theorem isOpen_stab_of {G Z : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [AddCommGroup Z] [Module ℂ Z]
     (ρ : Representation ℂ G Z) (z : Z) (S : Set G) (hS : IsOpen S) (h1 : (1 : G) ∈ S) (h : ∀ s ∈ S, ρ s z = z) :

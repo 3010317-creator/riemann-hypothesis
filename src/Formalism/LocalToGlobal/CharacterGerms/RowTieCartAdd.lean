@@ -25,10 +25,7 @@ section IntSec
 variable {V : VF C} {τ : Type}
 
 theorem IntS.mul {f g : MvPowerSeries τ C} (hf : IntS V f) (hg : IntS V g) : IntS V (f * g) := by
-  intro μ
-  rw [MvPowerSeries.coeff_mul]
-  refine VF.Ge.sum fun p _ => ?_
-  simpa using (hf p.1).mul (hg p.2)
+  exact Formalism.L2.FormalSeriesBounds.PartialDerivEval.intS_mul hf hg
 
 theorem IntS.one : IntS V (1 : MvPowerSeries τ C) := by
   intro μ

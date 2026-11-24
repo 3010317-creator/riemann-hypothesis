@@ -906,9 +906,7 @@ theorem exists_diag_unitary (z : Fin n → ℂ) (hz : ∀ a, ‖z a‖ = 1) :
   rw [← hc, ← Matrix.star_eq_conjTranspose]
   rfl
 
-theorem conj_eq_inv {w : ℂ} (hw : ‖w‖ = 1) : conj w = w⁻¹ := by
-  rw [Complex.inv_def, Complex.normSq_eq_norm_sq, hw]
-  simp
+theorem conj_eq_inv {w : ℂ} (hw : ‖w‖ = 1) : conj w = w⁻¹ := (Complex.inv_eq_conj hw).symm
 
 theorem prod_conj (z : Fin n → ℂˣ) (hz : ∀ a, ‖(z a : ℂ)‖ = 1) :
     ∏ a, ∏ b, (1 + conj (z a : ℂ) / conj (z b : ℂ)) = ∏ a, ∏ b, (1 + (z a : ℂ) / z b) := by

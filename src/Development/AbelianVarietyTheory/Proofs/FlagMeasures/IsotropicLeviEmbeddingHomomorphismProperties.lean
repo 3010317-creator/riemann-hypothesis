@@ -256,34 +256,9 @@ theorem mI_ne_esI : mI k r m ≠ esI k r b := by
   have h' := congrArg Fin.val h
   rw [vm, vsb] at h'
   omega
-theorem mI_ne_eI : mI k r m ≠ eI k r a := by
-  have vm : (mI k r m).val = r + m.val := rfl
-  have ha := a.2
-  have va : (eI k r a).val = a.val := rfl
-  intro h
-  have h' := congrArg Fin.val h
-  rw [vm, va] at h'
-  omega
-theorem esI_ne_eI : esI k r b ≠ eI k r a := by
-  have hb := b.2
-  have vb : (eI k r b).val = b.val := rfl
-  have vsb : (esI k r b).val = 2 * r + k - b.val := rfl
-  have ha := a.2
-  have va : (eI k r a).val = a.val := rfl
-  intro h
-  have h' := congrArg Fin.val h
-  rw [vsb, va] at h'
-  omega
-theorem esI_ne_mI : esI k r b ≠ mI k r m := by
-  have hb := b.2
-  have vb : (eI k r b).val = b.val := rfl
-  have vsb : (esI k r b).val = 2 * r + k - b.val := rfl
-  have hm := m.2
-  have vm : (mI k r m).val = r + m.val := rfl
-  intro h
-  have h' := congrArg Fin.val h
-  rw [vsb, vm] at h'
-  omega
+theorem mI_ne_eI : mI k r m ≠ eI k r a := (GlobalTheory.Amp.UEmb.eI_ne_mI a m).symm
+theorem esI_ne_eI : esI k r b ≠ eI k r a := (GlobalTheory.Amp.UEmb.eI_ne_esI a b).symm
+theorem esI_ne_mI : esI k r b ≠ mI k r m := (GlobalTheory.Amp.UEmb.mI_ne_esI b m).symm
 
 theorem uEmb_mul (u u' : Matrix (Fin r) (Fin r) ℂ) : uEmb k r (u * u') = uEmb k r u * uEmb k r u' := by
   ext i j

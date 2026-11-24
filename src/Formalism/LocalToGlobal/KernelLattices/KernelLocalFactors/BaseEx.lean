@@ -232,12 +232,7 @@ namespace PI.KerDetFinW
 open PI.KerIso
 
 lemma det_mem_of_entries {K : Type} [Field K] (R : Subring K) {ι : Type} [Fintype ι] [DecidableEq ι]
-    (A : Matrix ι ι K) (h : ∀ i j, A i j ∈ R) : A.det ∈ R := by
-  have hB : R.subtype.mapMatrix (Matrix.of fun i j => (⟨A i j, h i j⟩ : R)) = A := by
-    ext i j
-    rfl
-  rw [← hB, ← RingHom.map_det]
-  exact SetLike.coe_mem _
+    (A : Matrix ι ι K) (h : ∀ i j, A i j ∈ R) : A.det ∈ R := Formalism.UG.P.cartan_det_mem R A h
 
 lemma det_denom {K : Type} [Field K] [NumberField K] {ι : Type} [Fintype ι] [DecidableEq ι]
     (p : ℕ) (A : Matrix ι ι K) (u : ι → ℕ) (hu : ∀ j, Nat.Coprime (u j) p)

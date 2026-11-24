@@ -702,14 +702,7 @@ theorem IsMapOf.twoChart_rep_of_id {R : Type} [CommRing R] {G : Over (Spec (Comm
   simpa only [Category.comp_id] using h.2 n a y hy
 
 theorem twoChart_addOf_pt_pt {R : Type} [CommRing R] {d : ℕ} (F : Fin d → PS R 2 d) :
-    addOf F (pt R (n := 2) d 0) (pt R (n := 2) d 1) = F := by
-  funext l
-  have : (![pt R d 0, pt R d 1] : Fin 2 → Pt R 2 d) = fun j => pt R d j := by
-    funext j; fin_cases j <;> rfl
-  unfold addOf
-  rw [this]
-  unfold ev
-  exact congrFun MvPowerSeries.subst_self (F l)
+    addOf F (pt R (n := 2) d 0) (pt R (n := 2) d 1) = F := GlobalTheory.JetSer.addOf_pt_pt F
 
 theorem twoChart_of_rep_map : JetAlgSt → RepSt → MapSt → TwoChartSt := by
   intro _ hR hM R _ G _ d x x' hx hx'

@@ -200,12 +200,7 @@ variable {n : ℕ}
 theorem hsn_nonneg (X : Matrix (Fin n) (Fin n) ℂ) : 0 ≤ hsn X := Real.sqrt_nonneg _
 
 theorem hsn_mul_le (A B : Matrix (Fin n) (Fin n) ℂ) : hsn (A * B) ≤ hsn A * hsn B := by
-  letI : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ) := Matrix.frobeniusNormedAddCommGroup
-  have e : ∀ X : Matrix (Fin n) (Fin n) ℂ, hsn X = ‖X‖ := fun X => by
-    rw [Matrix.frobenius_norm_def, hsn, Real.sqrt_eq_rpow]
-    norm_cast
-  rw [e, e, e]
-  exact Matrix.frobenius_norm_mul A B
+  exact GlobalTheory.OnePDecay.hsn_mul_le A B
 
 theorem decay_shift {N : ℕ} {C B : ℝ} {f : Matrix (Fin n) (Fin n) ℂ → ℂ} {g h h' : Matrix (Fin n) (Fin n) ℂ}
     (hC : ‖f (g * h)‖ * (1 + hsn (g * h)) ^ N ≤ C) (hh : h * h' = 1) (hB : hsn h' ≤ B) :
@@ -791,19 +786,8 @@ theorem map_hatL {m n : ℕ} (M : Matrix (Fin m) (Fin n) E) {Λ : Submodule (�
     {Λ' : Submodule (𝓞 E) (Fin m → E)} (hM : ∀ y ∈ Λ, M *ᵥ y ∈ Λ') :
     ∀ x ∈ Formalism.L2.Herm.hatL (F := F) Λ,
       (M.map (Formalism.UG.inclE (F := F) (Formalism.L2.Herm.Af F))) *ᵥ x ∈ Formalism.L2.Herm.hatL (F := F) Λ' := by
-  intro x hx
-  induction hx using Submodule.span_induction with
-  | mem x hx =>
-    obtain ⟨y, hy, rfl⟩ := hx
-    refine Submodule.subset_span ⟨M *ᵥ y, hM y hy, ?_⟩
-    funext i
-    exact RingHom.map_mulVec _ M y i
-  | zero => rw [mulVec_zero]; exact zero_mem _
-  | add x y _ _ hx hy => rw [mulVec_add]; exact add_mem hx hy
-  | smul s x _ hx =>
-    have := Submodule.smul_mem _ s hx
-    rw [Subring.smul_def, ← mulVec_smul] at this
-    rwa [Subring.smul_def]
+  intros
+  apply GlobalTheory.TopExt.hat_mulVec <;> assumption
 
 theorem map_smul {m n : ℕ} (M : Matrix (Fin m) (Fin n) E) {Λ : Submodule (𝓞 E) (Fin n → E)}
     {Λ' : Submodule (𝓞 E) (Fin m → E)} (hM : ∀ y ∈ Λ, M *ᵥ y ∈ Λ') (𝔪 : Ideal (𝓞 E)) :

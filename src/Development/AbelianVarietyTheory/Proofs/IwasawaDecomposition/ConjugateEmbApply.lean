@@ -92,14 +92,7 @@ variable {R : Ranks} (H : Host R)
 
 theorem conjugate_emb (g : R.GG) :
     ComplexEmbedding.conjugate (H.emb g) = H.emb (g * R.cc) := by
-  rw [Formalism.L2.Geo.emb_mul_cc_comp]
-  refine RingHom.ext fun x => ?_
-  have hcm := H.isCMField_hostE
-  have h : IsCMField.complexConj H.E x = H.conj x := by
-    apply H.φ₀.injective
-    rw [IsCMField.complexEmbedding_complexConj, H.conjE_apply]
-  show starRingEnd ℂ (H.emb g x) = H.emb g (H.conj x)
-  rw [← h, IsCMField.complexEmbedding_complexConj]
+  exact GlobalTheory.Mem.BaseEx.conjugate_emb H g
 
 theorem conjugate_emb_apply (g : R.GG) (x : H.E) :
     ComplexEmbedding.conjugate (H.emb g) x = H.emb g (H.conj x) := by

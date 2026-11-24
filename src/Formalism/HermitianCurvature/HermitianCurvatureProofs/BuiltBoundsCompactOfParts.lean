@@ -99,12 +99,7 @@ noncomputable section
 open Classical
 
 theorem integrable_decay3 : Integrable (fun c : ℂ => ((1 + ‖c‖) ^ 3)⁻¹) := by
-  have hi : Integrable (fun c : ℂ => (1 + ‖c‖) ^ (-(3 : ℝ))) :=
-    integrable_one_add_norm (by rw [Complex.finrank_real_complex]; norm_num)
-  refine hi.congr (Eventually.of_forall fun c => ?_)
-  simp only
-  rw [Real.rpow_neg (by positivity)]
-  norm_cast
+  exact Formalism.FourierDecayAlt.P.PBC.integrable_inv_cube
 
 section limB
 

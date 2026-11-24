@@ -754,13 +754,7 @@ theorem sw_sigR (hc : CMData (maximalRealSubfield E) E)
   | tmul a e => rfl
 
 theorem unramified (hc : CMData (maximalRealSubfield E) E) :
-    Algebra.Unramified (𝓞 (maximalRealSubfield E)) (𝓞 E) :=
-  Formalism.L2.Pj.unramBridge_holds E fun P hP => by
-    obtain ⟨θ, t, e1, e2⟩ := hc.cmUnram.2.2 P hP
-    refine ⟨θ, ?_⟩
-    have : RingOfIntegers.mapRingEquiv (IsCMField.complexConj E : E ≃+* E) θ = t :=
-      RingOfIntegers.ext e1.symm
-    rwa [this]
+    Algebra.Unramified (𝓞 (maximalRealSubfield E)) (𝓞 E) := GlobalTheory.PlaceComp.unramified hc
 
 theorem exists_frame_cm (hc : CMData (maximalRealSubfield E) E) {r : ℕ}
     (J : Matrix (Fin r) (Fin r) E) (hJ : IsHerm (hc.sig : E →+* E) J) (hd : IsUnit J.det)

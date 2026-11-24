@@ -510,15 +510,7 @@ theorem isHalf_mul_left' (M : Mx D k m) {x : Mx D m n} (hx : IsHalf e x) : IsHal
   exact Finset.sum_congr rfl fun l _ => by rw [mul_left_comm, hx l j]
 
 theorem symplOH_half (he : e * cA D e = 0) {x y : WO S T} (hx : IsHalf e x) (hy : IsHalf e y) :
-    symplOH S T x y = 0 := by
-  have h0 : hO S T x y = 0 := by
-    unfold hO
-    refine Finset.sum_eq_zero fun a _ => Finset.sum_eq_zero fun b _ => Finset.sum_eq_zero fun c _ =>
-      Finset.sum_eq_zero fun d _ => ?_
-    rw [← hx d a, ← hy c b, map_mul]
-    linear_combination (incA D (S.gram⁻¹ a b) * cA D (y c b) * incA D (T.gram c d) * x d a) * he
-  unfold symplOH symplO
-  rw [h0, mul_zero, map_zero, mul_zero]
+    symplOH S T x y = 0 := Formalism.IndefR.Fin.LevelGroupLemmas.Lat.symplOH_half_zero he hx hy
 
 end GlobalTheory.AscFin.SplitVac
 
@@ -1177,16 +1169,7 @@ theorem hatL_mono {n : ℕ} {Λ Λ' : Submodule (𝓞 D.host.E) (Fin n → D.hos
   Submodule.span_mono (Set.image_mono h)
 
 theorem mem_GfC_of_grpAt {S : HSp D} {P : GlobalTheory.FinPl.Pl D → Prop} {κ : GA D S} (h : κ ∈ grpAt S P) : κ ∈ GfC S := by
-  unfold GlobalTheory.FinPl.grpAt at h
-  rw [GlobalTheory.FinPlLoc.mem_congGrp] at h
-  show infHom S κ = 1
-  apply Units.ext
-  ext i j
-  have h1 := GlobalTheory.FinPlLoc.infPart_of_idAt (h i j)
-  rw [map_sub, sub_eq_zero] at h1
-  change infPart D (mt S κ i j) = (1 : Matrix (Fin S.rank) (Fin S.rank) (Ainf D.host.F ⊗[D.host.F] D.host.E)) i j
-  rw [h1, Matrix.one_apply, Matrix.one_apply]
-  split_ifs <;> simp
+  exact GlobalTheory.DStepSuppSecond.grpAt_fin h
 
 theorem finE_coe {S : HSp D} (κ : GA D S) :
     ((Lev.finE S κ : GL (Fin S.rank) (Lev.EAf D)) : Matrix (Fin S.rank) (Fin S.rank) (Lev.EAf D)) =

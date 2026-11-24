@@ -514,16 +514,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem isOpen_fix {G V : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [AddCommGroup V]
     [Module ℂ V] (ρ : Representation ℂ G V) (v : V) (U : Set G) (hU : IsOpen U) (h1 : (1 : G) ∈ U)
     (hfix : ∀ u ∈ U, ρ u v = v) : IsOpen {g : G | ρ g v = v} := by
-  rw [isOpen_iff_mem_nhds]
-  intro g hg
-  have hgU : (fun x => g * x) '' U ∈ nhds g := by
-    have ho : IsOpen ((fun x => g * x) '' U) := (Homeomorph.mulLeft g).isOpenMap U hU
-    exact ho.mem_nhds ⟨1, h1, mul_one g⟩
-  refine Filter.mem_of_superset hgU ?_
-  rintro _ ⟨u, hu, rfl⟩
-  show ρ (g * u) v = v
-  rw [map_mul, Module.End.mul_apply, hfix u hu]
-  exact hg
+  exact CompanionTheory.RgGu.NR.Compact.isOpen_fix ρ v U hU h1 hfix
 
 def rc (m : Levi k fun _ : Fin 2 => Fin d) : ℝ :=
   (nabs k (Matrix.GeneralLinearGroup.det (m 0)))⁻¹ * nabs k (Matrix.GeneralLinearGroup.det (m 1))

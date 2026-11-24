@@ -155,15 +155,7 @@ theorem pure_sub' {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ] 
 
 theorem isHecke_quot {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     {χ χ' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chr F E} (h : GlobalTheory.LFun.IsHecke F E χ) (h' : GlobalTheory.LFun.IsHecke F E χ') :
-    GlobalTheory.LFun.IsHecke F E (χ / χ') := by
-  unfold GlobalTheory.LFun.IsHecke at h h' ⊢
-  obtain ⟨hc, hx⟩ := h
-  obtain ⟨hc', hx'⟩ := h'
-  refine ⟨?_, fun x => ?_⟩
-  · have hfun : (⇑(χ / χ')) = fun z => χ z / χ' z := funext (MonoidHom.div_apply χ χ')
-    rw [hfun]
-    exact hc.div' hc'
-  · rw [MonoidHom.div_apply, hx x, hx' x, div_one]
+    GlobalTheory.LFun.IsHecke F E (χ / χ') := GlobalTheory.ThK.RealUniq.isHecke_div' h h'
 
 theorem resEtaPow_quot {R A : Type} [CommRing R] [CommRing A] [Algebra R A] {K : Subgroup Rˣ}
     {χ χ' : Aˣ →* Circle} {n m k : ℕ} (h : GlobalTheory.WeilM.ResEtaPow K χ n) (h' : GlobalTheory.WeilM.ResEtaPow K χ' m) (hk : k = n + m) :
@@ -179,15 +171,7 @@ theorem isPair_small {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
     {B : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base F E} {a a' : ℕ} {G : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo σ a a'} {X : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars F E}
     {om : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ G.V G.W} {om' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ G.V' G.W} (h : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsTriple B G X om om') :
     GlobalTheory.ThK.IsPair B G.M' X.α (X.α / X.β) om' G.q (a' - G.q) (a + a' - (G.p + G.q)) (G.p + G.q) :=
-  { base := h.base
-    herm := h.geo.hV'
-    skew := h.geo.hW
-    good := h.geo.hM'
-    hX := h.chars.heckeα
-    hW := isHecke_quot h.chars.heckeα h.chars.heckeβ
-    resX := h.chars.resα
-    resW := resEtaPow_quot h.chars.resα h.chars.resβ (by omega)
-    weil := h.weil' }
+  GlobalTheory.ThK.RealUniq.isPair_V' h
 
 end GlobalTheory.SquareAgree.KerPCpt
 

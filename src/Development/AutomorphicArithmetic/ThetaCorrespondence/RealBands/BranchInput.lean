@@ -878,11 +878,7 @@ theorem const_le (C₀ : ℝ) (hC₀ : 0 < C₀) (m L R : ℝ) (hm : 4 ≤ m) (h
         linarith
 
 theorem mem_mul {m : ℕ} {ε : Fin m → Bool} {g g' : Mat m} (hg : g ∈ UJset ε) (hg' : g' ∈ UJset ε) : g * g' ∈ UJset ε := by
-  have h1 : gᴴ * Jm ε * g = Jm ε := hg
-  have h2 : g'ᴴ * Jm ε * g' = Jm ε := hg'
-  show (g * g')ᴴ * Jm ε * (g * g') = Jm ε
-  have : g'ᴴ * (gᴴ * Jm ε * g) * g' = Jm ε := by rw [h1, h2]
-  simpa [Matrix.mul_assoc, conjTranspose_mul] using this
+  exact GlobalTheory.SepReal.ProjSm.mul_mem' hg hg'
 
 theorem mem_inv {m : ℕ} {ε : Fin m → Bool} {g : Mat m} (hg : g ∈ UJset ε) : g⁻¹ ∈ UJset ε := by
   have hJ : IsUnit (Jm ε) := ⟨⟨Jm ε, Jm ε, Jm_mul_self ε, Jm_mul_self ε⟩, rfl⟩
@@ -1133,13 +1129,7 @@ theorem exists_umat {x : Mat m} (hx : x ∈ UJset ε) : ∃ u : Formalism.REAL.U
   ⟨⟨(isUnit_of_mem hx).unit, hx⟩, rfl⟩
 
 theorem mul_mem {x y : Mat m} (hx : x ∈ UJset ε) (hy : y ∈ UJset ε) : x * y ∈ UJset ε := by
-  have hx' : xᴴ * Formalism.REAL.Jm ε * x = Formalism.REAL.Jm ε := hx
-  have hy' : yᴴ * Formalism.REAL.Jm ε * y = Formalism.REAL.Jm ε := hy
-  show (x * y)ᴴ * Formalism.REAL.Jm ε * (x * y) = Formalism.REAL.Jm ε
-  rw [Matrix.conjTranspose_mul]
-  calc yᴴ * xᴴ * Formalism.REAL.Jm ε * (x * y) = yᴴ * (xᴴ * Formalism.REAL.Jm ε * x) * y := by
-        simp only [Matrix.mul_assoc]
-    _ = _ := by rw [hx', hy']
+  exact GlobalTheory.SepReal.DerInt.mem_mul hx hy
 
 theorem inv_facts {x : Mat m} (hx : x ∈ UJset ε) :
     x⁻¹ ∈ UJset ε ∧ x * x⁻¹ = 1 ∧ x⁻¹ * x = 1 ∧ x⁻¹⁻¹ = x := by

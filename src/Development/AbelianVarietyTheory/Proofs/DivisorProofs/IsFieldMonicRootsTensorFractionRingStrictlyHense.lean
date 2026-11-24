@@ -66,16 +66,7 @@ theorem isIntegrallyClosed_of_aic {A : Type} [CommRing A] [IsDomain A] (h : Glob
   apply LateralTheory.E.LocalIntegralClosureRoots.isIntegrallyClosed_of_aic <;> assumption
 
 theorem aic_of_ringEquiv {R S : Type} [CommRing R] [CommRing S] (e : R ≃+* S) (h : GlobalTheory.EtC.AIC R) :
-    GlobalTheory.EtC.AIC S := by
-  intro p hpm hdeg
-  have hm : (p.map (e.symm : S →+* R)).Monic := hpm.map _
-  have hd : (p.map (e.symm : S →+* R)).natDegree = p.natDegree :=
-    natDegree_map_eq_of_injective e.symm.injective p
-  obtain ⟨a, ha⟩ := h _ hm (hd ▸ hdeg)
-  refine ⟨e a, ?_⟩
-  have hp : p = (p.map (e.symm : S →+* R)).map (e : R →+* S) := by
-    rw [Polynomial.map_map]; ext n; simp
-  rw [hp, Polynomial.eval_map, show e a = (e : R →+* S) a from rfl, Polynomial.eval₂_at_apply, ha, map_zero]
+    GlobalTheory.EtC.AIC S := LateralTheory.E.NormPf.OpenPf.aic_of_equiv e h
 
 theorem aic_of_isAlgClosed (K : Type) [Field K] [IsAlgClosed K] : GlobalTheory.EtC.AIC K := by
   intro p _ hdeg

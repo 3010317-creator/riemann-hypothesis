@@ -495,13 +495,7 @@ theorem loc_and {P Q : ∀ V : Scheme.{0}, (V ⟶ U) → Prop} (hP : Loc U P) (h
   exact ⟨S ⊓ T, Scheme.etaleTopology.intersection_covering hS hT, fun V g hg => ⟨hP V g hg.1, hQ V g hg.2⟩⟩
 
 theorem loc_trans {P : ∀ V : Scheme.{0}, (V ⟶ U) → Prop}
-    (h : Loc U fun V g => Loc V fun W k => P W (k ≫ g)) : Loc U P := by
-  obtain ⟨S, hS, hP⟩ := h
-  choose T hT hTP using hP
-  refine ⟨Sieve.bind S.arrows (fun V g hg => T V g hg),
-    Scheme.etaleTopology.bind_covering hS (fun V g hg => hT V g hg), ?_⟩
-  rintro W f ⟨V, k, g, hg, hk, rfl⟩
-  exact hTP V g hg W k hk
+    (h : Loc U fun V g => Loc V fun W k => P W (k ≫ g)) : Loc U P := GlobalTheory.TwSec.loc_trans h
 
 theorem loc_finset {ι : Type*} (s : Finset ι) {P : ι → ∀ V : Scheme.{0}, (V ⟶ U) → Prop}
     (h : ∀ i ∈ s, Loc U (P i)) : Loc U fun V g => ∀ i ∈ s, P i V g := by
@@ -861,13 +855,7 @@ namespace GlobalTheory.EtC.RedQis
 
 theorem quasiIso_of_cone_acyclic {𝒜 : Type*} [Category 𝒜] [Abelian 𝒜]
     {K L : CochainComplex 𝒜 ℤ} (u : K ⟶ L) (h : (CochainComplex.mappingCone u).Acyclic) : QuasiIso u := by
-  rw [← HomotopyCategory.quotient_obj_mem_subcategoryAcyclic_iff_acyclic] at h
-  have hu : HomotopyCategory.quasiIso 𝒜 (ComplexShape.up ℤ)
-      ((HomotopyCategory.quotient 𝒜 (ComplexShape.up ℤ)).map u) := by
-    rw [HomotopyCategory.quasiIso_eq_trW_subcategoryAcyclic]
-    exact ((HomotopyCategory.subcategoryAcyclic 𝒜).trW_iff_of_distinguished _
-      (HomotopyCategory.mappingCone_triangleh_distinguished u)).2 h
-  rwa [HomotopyCategory.quotient_map_mem_quasiIso_iff] at hu
+  exact GlobalTheory.EtC.TensQis.quasiIso_of_cone_acyclic u h
 
 theorem flatS_cone {R : Type} [CommRing R] (F : Shv R) (hF : FlatS F) (T : Cx R) (hT : ∀ t, FlatS (T.X t))
     (ε : sgl F ⟶ T) (n : ℤ) : FlatS ((mappingCone ε).X n) := by
@@ -1110,14 +1098,7 @@ theorem val_one_smul {q : ℕ} [NeZero q] {M : Type*} [AddCommGroup M] [Module (
     rw [ZMod.val_one, one_smul]
 
 theorem resGen_zero_eq {q : ℕ} [NeZero q] {U : Scheme.{0}} (ζ ξ : Prim q Γ(U, ⊤)) : resGen 0 ζ = resGen 0 ξ := by
-  apply (_root_.GlobalTheory.EtC.sec_ext_glue _ _ U).1
-  obtain ⟨S, hS, hP⟩ := (GlobalTheory.T.etaleLocal_primitiveRoot_and_roots_of_unity q U).2.1 ζ ξ
-  refine ⟨S, hS, fun W h hh => ?_⟩
-  obtain ⟨a, ha⟩ := hP W h hh
-  rw [res_resGen, res_resGen]
-  have := (_root_.GlobalTheory.EtC.twist_sections q 0).2.2.2.2.1 W (ζ.map h.appTop.hom) (ξ.map h.appTop.hom) a ha
-  unfold resGen
-  rw [this, zpow_zero, Units.val_one, val_one_smul]
+  exact (GlobalTheory.EtC.ClsSpec.resGen_zero_eq ζ ξ).symm
 
 end GlobalTheory.EtC.RedUnit
 
@@ -1185,14 +1166,7 @@ theorem secMap_zero' {F G : Shv R} (f : F ⟶ G) {U : Scheme.{0}} :
 
 theorem extSh_hom_ext (φ : R →+* S) {F : Shv R} {M : Shv S} (a b : (extSh φ).obj F ⟶ M)
     (h : ∀ (U : Scheme.{0}) (y : Sec F U), Sec.map a (extSh.sec φ F U y) = Sec.map b (extSh.sec φ F U y)) : a = b := by
-  apply Sheaf.hom_ext
-  refine sheafify_hom_ext (J := Scheme.etaleTopology) (P := F.obj ⋙ ModuleCat.extendScalars.{1, 1, 1} (uliftHom φ))
-    a.hom b.hom M.property ?_
-  ext U : 2
-  apply ((ModuleCat.extendRestrictScalarsAdj.{1, 1, 1} (uliftHom φ)).homEquiv _ _).injective
-  rw [Adjunction.homEquiv_unit, Adjunction.homEquiv_unit]
-  ext y
-  exact h (unop U) y
+  exact GlobalTheory.EtC.FactorExt.extSh_hom_ext φ a b h
 
 end
 

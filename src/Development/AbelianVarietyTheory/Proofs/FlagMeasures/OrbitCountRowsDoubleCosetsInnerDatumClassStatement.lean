@@ -159,13 +159,7 @@ theorem Hom.of_mapLF {T : E} {γ : S.V ≃ₗ[E] S.V} (hγ : γ ∈ Formalism.He
 
 theorem gmap_mul (φ ψ : S.V ≃ₗ[E] S.V) (Λ : Submodule (𝓞 E) S.V) :
     Formalism.HermitianLatticesTheory.gmap (φ * ψ) Λ = Formalism.HermitianLatticesTheory.gmap φ (Formalism.HermitianLatticesTheory.gmap ψ Λ) := by
-  ext x
-  simp only [Formalism.HermitianLatticesTheory.gmap, Submodule.mem_map]
-  constructor
-  · rintro ⟨y, hy, rfl⟩
-    exact ⟨ψ y, ⟨y, hy, rfl⟩, rfl⟩
-  · rintro ⟨_, ⟨y, hy, rfl⟩, rfl⟩
-    exact ⟨y, hy, rfl⟩
+  exact Formalism.L2.SG.Pf.gmap_mul_sat φ ψ Λ
 
 theorem gmap_inv {φ : S.V ≃ₗ[E] S.V} {Λ : Submodule (𝓞 E) S.V} (h : Formalism.HermitianLatticesTheory.gmap φ Λ = Λ) :
     Formalism.HermitianLatticesTheory.gmap φ⁻¹ Λ = Λ := by
@@ -301,21 +295,10 @@ variable {D : D7}
 
 theorem onto_gmap_mul (a b : GV D) (M : LV D) :
     Formalism.HermitianLatticesTheory.gmap (a * b) M = Formalism.HermitianLatticesTheory.gmap a (Formalism.HermitianLatticesTheory.gmap b M) := by
-  ext x
-  simp only [Formalism.HermitianLatticesTheory.gmap, Submodule.mem_map]
-  constructor
-  · rintro ⟨y, hy, rfl⟩
-    exact ⟨b y, ⟨y, hy, rfl⟩, rfl⟩
-  · rintro ⟨_, ⟨y, hy, rfl⟩, rfl⟩
-    exact ⟨y, hy, rfl⟩
+  exact GlobalTheory.Unfold.Model.gmap_mul a b M
 
 theorem onto_gmap_one (M : LV D) : Formalism.HermitianLatticesTheory.gmap (1 : GV D) M = M := by
-  ext x
-  simp only [Formalism.HermitianLatticesTheory.gmap, Submodule.mem_map]
-  constructor
-  · rintro ⟨y, hy, rfl⟩
-    exact hy
-  · exact fun hx => ⟨x, hx, rfl⟩
+  exact GlobalTheory.Unfold.Model.gmap_one M
 
 theorem onto_side {T : D.host.E} {A B : LFlag (D.sp.Y 0) D.R.rS T} {M : LV D} {G h : GV D}
     (hG : Adapt G A B) (hh : Adapt h B B)

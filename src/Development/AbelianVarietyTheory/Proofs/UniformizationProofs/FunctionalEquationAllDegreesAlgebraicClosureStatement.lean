@@ -356,13 +356,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 namespace GlobalTheory
 
 theorem levelff_stalkMap_injective {X Y : Scheme.{0}} (f : X ⟶ Y) [Flat f] (x : X) :
-    Function.Injective (f.stalkMap x).hom := by
-  have h := Flat.stalkMap f x
-  have hl : IsLocalHom (f.stalkMap x).hom := inferInstance
-  algebraize [(f.stalkMap x).hom]
-  have : IsLocalHom (algebraMap (Y.presheaf.stalk (f x)) (X.presheaf.stalk x)) := hl
-  have := Module.FaithfullyFlat.of_flat_of_isLocalHom (A := Y.presheaf.stalk (f x)) (B := X.presheaf.stalk x)
-  exact FaithfulSMul.algebraMap_injective (Y.presheaf.stalk (f x)) (X.presheaf.stalk x)
+    Function.Injective (f.stalkMap x).hom := GlobalTheory.LiftTest.stalkMap_injective_of_flat f x
 
 theorem levelff_gs_comp {X Y Z : Scheme.{0}} (p : Z ⟶ Y) (r : Y ⟶ X) (z : Z) (U : X.Opens) (h : r (p z) ∈ U)
     (a : Γ(X, U)) : gs (p ≫ r) z U a = (p.stalkMap z).hom (gs r (p z) U a) := by

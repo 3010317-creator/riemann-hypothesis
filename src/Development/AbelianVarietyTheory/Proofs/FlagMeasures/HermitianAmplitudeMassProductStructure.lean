@@ -422,17 +422,7 @@ theorem graph_sub {h : S.GLV} (hh : h ∈ S.H0) (Λ : Submodule L.O S.V) (p : S.
   · rw [← map_sub, inTh_iff]; exact c
 
 theorem graph_move {h : S.GLV} (hh : h ∈ S.H0) (Λ : Submodule L.O S.V) :
-    S.graphOf (h • Λ) = h • S.graphOf Λ := by
-  have hh' : h⁻¹ ∈ S.H0 := S.H0.inv_mem hh
-  ext p
-  rw [Set.mem_smul_set_iff_inv_smul_mem]
-  constructor
-  · intro H
-    have := graph_sub S hh' (h • Λ) p H
-    rwa [inv_smul_smul] at this
-  · intro H
-    have := graph_sub S hh Λ _ H
-    simpa [LinearEquiv.smul_def] using this
+    S.graphOf (h • Λ) = h • S.graphOf Λ := (GlobalTheory.HL.ComplAct.graph_smul S hh Λ).symm
 
 theorem conj_stab (h x : S.GLV) (P : Submodule L.O S.V) :
     h⁻¹ * x * h ∈ MulAction.stabilizer S.GLV P ↔ x ∈ MulAction.stabilizer S.GLV (h • P) := by

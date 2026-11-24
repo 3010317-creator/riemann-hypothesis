@@ -123,12 +123,7 @@ lemma hpk_symm (i j : Fin (2 * r + k + 1)) : Hpk k r i j = Hpk k r j i := by
     split_ifs <;> first | rfl | (exfalso; omega)
 
 lemma star_hpk_dot (v y : Fin (2 * r + k + 1) → ℂ) : star (Hpk k r *ᵥ v) ⬝ᵥ y = herm (Hpk k r) y v := by
-  simp only [herm, dotProduct, mulVec, star_sum, star_mul', Pi.star_apply, hpk_star, Finset.sum_mul,
-    Finset.mul_sum]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  rw [hpk_symm j i]
-  ring
+  exact PI.PolynomialProperness.TauN.star_H_dot k r v y
 
 theorem xuv_mulVec (u v y : Fin (2 * r + k + 1) → ℂ) :
     Xuv k r u v *ᵥ y = herm (Hpk k r) y v • u - herm (Hpk k r) y u • v := by

@@ -360,12 +360,7 @@ theorem tw_sub_injective (s : Bool) {V W : Submodule ℂ E} (h : Tw.sub s V = Tw
 
 theorem tw_span_image (s : Bool) (S : Set E) :
     Submodule.span ℂ ((Tw.mk s : E → Tw s E) '' S) = Tw.sub s (Submodule.span ℂ S) := by
-  have h1 : Tw.sub s (Submodule.span ℂ S) = (Submodule.span ℂ S).map (Tw.mkL s E) := by
-    ext x
-    constructor
-    · intro hx; exact ⟨Tw.out x, hx, rfl⟩
-    · rintro ⟨y, hy, rfl⟩; exact hy
-  rw [h1, Submodule.map_span]; rfl
+  exact GlobalTheory.QPosCompare.tw_span s S
 
 theorem tw_commute (s : Bool) {a b : Module.End ℂ E} (h : Commute a b) : Commute (Tw.map s a) (Tw.map s b) := by
   show Tw.map s a * Tw.map s b = Tw.map s b * Tw.map s a

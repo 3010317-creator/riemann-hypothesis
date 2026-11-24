@@ -67,11 +67,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.HeckeConj
 
 theorem continuous_cA (D : D7) : Continuous (cA D) := by
-  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
-  have := IsModuleTopology.continuous_of_linearMap
-    (Algebra.TensorProduct.map (AlgHom.id (AF D.host.F) (AF D.host.F)) D.sp.cm.sig).toLinearMap
-  exact this
+  exact GlobalTheory.FockCompare.ThetaCont.continuous_conj
 
 end GlobalTheory.HeckeConj
 end -- clump:auto

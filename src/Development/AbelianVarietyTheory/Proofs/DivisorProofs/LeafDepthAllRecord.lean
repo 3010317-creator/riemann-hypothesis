@@ -129,15 +129,7 @@ namespace GlobalTheory.InertPackage
 
 theorem not_inPsi_conjugate {E : Type} [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E)
     (τ : E →+* ℂ) (h1 : InPsi H τ) : ¬ InPsi H (ComplexEmbedding.conjugate τ) := by
-  intro h2
-  unfold InPsi at h1 h2
-  rw [ComplexEmbedding.conjugate_coe_eq, h1] at h2
-  obtain ⟨r, hr⟩ := Complex.conj_eq_iff_real.1 h2
-  have e3 := H.sqrt_neg_disc_sq
-  rw [hr] at e3
-  have e4 : r ^ 2 = -(H.d : ℝ) := by exact_mod_cast e3
-  have : (0 : ℝ) < H.d := by exact_mod_cast H.d_prime.pos
-  linarith [sq_nonneg r]
+  exact GlobalTheory.LabSelf.not_inPsi_conj H h1
 
 theorem zero_eq_bg_iff {d : ℕ} [NeZero d] (s : ZMod d) : (0 : Fin 2) = RF.bg s ↔ Even s.val := by
   unfold RF.bg
@@ -247,15 +239,7 @@ namespace GlobalTheory.LargePkg
 
 theorem not_inPsi_conj {E : Type} [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E)
     {τ : E →+* ℂ} (h : InPsi H τ) : ¬ InPsi H (ComplexEmbedding.conjugate τ) := by
-  intro h'
-  unfold InPsi at h h'
-  rw [ComplexEmbedding.conjugate_coe_eq, h] at h'
-  obtain ⟨r, hr⟩ := Complex.conj_eq_iff_real.1 h'
-  have e := H.sqrt_neg_disc_sq
-  rw [hr] at e
-  have e4 : r ^ 2 = -(H.d : ℝ) := by exact_mod_cast e
-  have : (0 : ℝ) < H.d := by exact_mod_cast H.d_prime.pos
-  linarith [sq_nonneg r]
+  exact GlobalTheory.LabSelf.not_inPsi_conj H h
 
 theorem pkg_of_supply (P : RF.Par) (l : ℕ) {C : Type} [Field C] (V : VF C) (hV : V.l = l) (Z : Finset P.Pl)
     (hZ : RF.IsReps P Z) (hw : ∀ z, 0 ≤ P.w z) (big : P.Pl → Fin 2 → ZMod P.d → Prop)
@@ -396,20 +380,7 @@ namespace GlobalTheory.SplitPackage
 
 theorem not_inPsi_conjugate {E : Type} [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E)
     {τ : E →+* ℂ} (h : InPsi H τ) : ¬ InPsi H (ComplexEmbedding.conjugate τ) := by
-  intro h'
-  have hd : 0 < H.d := H.d_prime.pos
-  have e2 : starRingEnd ℂ (τ (H.rt : E)) = τ (H.rt : E) := by
-    have h1 : τ (H.rt : E) = H.rt0 := h
-    have h2 : starRingEnd ℂ (τ (H.rt : E)) = H.rt0 := h'
-    rw [h2, h1]
-  have e3 : τ (H.rt : E) ^ 2 = -(H.d : ℂ) := by
-    have := congrArg (fun z : 𝓞 E => τ (z : E)) H.rt_sq
-    simpa using this
-  obtain ⟨r, hr⟩ := Complex.conj_eq_iff_real.1 e2
-  rw [hr] at e3
-  have e4 : r ^ 2 = -(H.d : ℝ) := by exact_mod_cast e3
-  have : (0 : ℝ) < H.d := by exact_mod_cast hd
-  linarith [sq_nonneg r]
+  exact GlobalTheory.LabSelf.not_inPsi_conj H h
 
 theorem pkgSplit : (∀ (p : ℕ) [Fact p.Prime], ReciprocityTheory.ChartRestriction.G.Pdiv.ChartF.UpFSt p) → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (lv : Level H) (Xo : Moduli Dw lv) (c : Coeff lv) [StarRing (𝓞 E)], PkgSplitSt Xo c := by
   intro hU E _ _ _ H Dw lv Xo c _ hstar N j pl a hj1 hjm hpl hp hq hdom la h2 hq' hd' hM _ T io e hov y hy C3 nW ν hν
@@ -771,11 +742,7 @@ theorem step {p : ℕ} (T : ℕ) (g κ : Fin p → ℕ) (h : ∀ i, (T : ℤ) * 
     simp [dite_eq_right hi, dite_eq_right hi']
 
 theorem gap_nonneg {p : ℕ} {κ : Fin p → ℕ} (h : Antitone κ) (i : Fin p) : 0 ≤ WeightAlgebra.gapZ κ i := by
-  unfold WeightAlgebra.gapZ
-  split_ifs with hi
-  · have : κ ⟨i.1 + 1, hi⟩ ≤ κ i := h (by simp [Fin.le_def])
-    omega
-  · positivity
+  exact GlobalTheory.RunDepth.gapZ_nonneg_of_antitone h i
 
 theorem entry_le {p : ℕ} (T : ℕ) (g κ : Fin p → ℕ) (h : ∀ i, (T : ℤ) * g i ≤ WeightAlgebra.gapZ κ i + 2) (i : ℕ) (hi : i ≤ p) :
     (T : ℝ) * (ext0 (ofGaps g) i : ℝ) ≤ (ext0 κ i : ℝ) + 2 * p := by

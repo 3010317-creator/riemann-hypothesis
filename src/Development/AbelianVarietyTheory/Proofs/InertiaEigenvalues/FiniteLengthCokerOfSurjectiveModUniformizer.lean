@@ -708,17 +708,7 @@ theorem norm_coeff_sum_le {s : Type} (t : Finset s) (f : s → K⟦X⟧) {C : �
 
 theorem bdd_matMul {μ ν ρ : Type} [Fintype ν] {Y : Matrix μ ν K⟦X⟧} {Z : Matrix ν ρ K⟦X⟧}
     (hY : ∃ c : ℝ, ∀ i j n, ‖coeff n (Y i j)‖ ≤ c) (hZ : ∃ c : ℝ, ∀ i j n, ‖coeff n (Z i j)‖ ≤ c) :
-    ∃ c : ℝ, ∀ i j n, ‖coeff n ((Y * Z) i j)‖ ≤ c := by
-  obtain ⟨a, ha⟩ := hY
-  obtain ⟨b, hb⟩ := hZ
-  refine ⟨max a 0 * max b 0, fun i j n => ?_⟩
-  rw [Matrix.mul_apply]
-  refine norm_coeff_sum_le _ (fun k => Y i k * Z k j)
-    (mul_nonneg (le_max_right _ _) (le_max_right _ _)) (fun k m => ?_) n
-  simpa using norm_coeff_mul_le (w := fun _ => 1) (fun _ => zero_le_one) (fun _ _ => by simp)
-    (le_max_right a 0) (le_max_right b 0) (f := Y i k) (g := Z k j)
-    (fun p => by rw [mul_one]; exact (ha i k p).trans (le_max_left _ _))
-    (fun p => by rw [mul_one]; exact (hb k j p).trans (le_max_left _ _)) m
+    ∃ c : ℝ, ∀ i j n, ‖coeff n ((Y * Z) i j)‖ ≤ c := GlobalTheory.BK.RdivSlice.bdd_matrix_mul hY hZ
 
 theorem bdd_frob (l : ℕ) [Fact l.Prime] {f : K⟦X⟧} (hf : ∃ c : ℝ, ∀ n, ‖coeff n f‖ ≤ c) :
     ∃ c : ℝ, ∀ n, ‖coeff n (frob K l f)‖ ≤ c := by

@@ -272,12 +272,7 @@ namespace GlobalTheory.AscFinBumpAdj
 variable {D : D7}
 
 theorem infPart_conj_eq_zero {a : AE D} (h : infPart D a = 0) : infPart D (cA D a) = 0 := by
-  have e : ∀ z : AE D, infPart D (cA D z) = sigR (Ainf D.host.F) D.sp.cm.sig (infPart D z) := fun z => by
-    induction z using TensorProduct.induction_on with
-    | zero => simp only [map_zero]
-    | tmul a x => rfl
-    | add a b ha hb => rw [RingHom.map_add (f := _), RingHom.map_add (f := _), RingHom.map_add (f := _), RingHom.map_add (f := _), ha, hb]
-  rw [e, h, map_zero]
+  exact GlobalTheory.PlaceVec.infPart_cA h
 
 theorem adj_fin {m n : ℕ} {x : Mx D m n} (h : x.map (infPart D) = 0) : (adj x).map (infPart D) = 0 := by
   funext i j
@@ -1053,13 +1048,7 @@ variable {D : D7}
 
 theorem left_inv_of_li {n ρ : ℕ} (x₀ : Matrix (Fin n) (Fin ρ) D.host.E) (h : LinearIndependent D.host.E x₀.transpose) :
     ∃ L : Matrix (Fin ρ) (Fin n) D.host.E, L * x₀ = 1 := by
-  have hinj : Function.Injective (Matrix.toLin' x₀) := by
-    show Function.Injective x₀.mulVec
-    exact mulVec_injective_iff.mpr h
-  obtain ⟨g, hg⟩ := LinearMap.exists_leftInverse_of_injective (Matrix.toLin' x₀) (LinearMap.ker_eq_bot.2 hinj)
-  refine ⟨LinearMap.toMatrix' g, ?_⟩
-  conv_lhs => rw [← LinearMap.toMatrix'_toLin' x₀]
-  rw [← LinearMap.toMatrix'_comp, hg, LinearMap.toMatrix'_id]
+  exact GlobalTheory.Unf.MajMeas.exists_leftInv x₀ h
 
 theorem flat_ne_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (V V₀ W W₀ : HSp D) (ρ σ : ℕ) (dV : HypDec V V₀ ρ) (dW : HypDec W W₀ σ) (s : Step ψ V V₀ W W₀ ρ σ) (x₀ : Matrix (Fin W.rank) (Fin ρ) D.host.E) (y : Mx D V₀.rank σ), LinearIndependent D.host.E x₀.transpose → ∀ p : Pieces V₀ W W₀ ρ σ, p.Is dV dW (rat x₀) ψ → ∃ Φ ∈ cls dV dW p (rat x₀) y ψ, flatS dV dW s (rat x₀) y Φ ≠ 0 := by
   intro D ψ hψ V V₀ W W₀ ρ σ dV dW s x₀ y hx₀ p hp
