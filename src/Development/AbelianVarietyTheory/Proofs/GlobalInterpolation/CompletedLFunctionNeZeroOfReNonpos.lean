@@ -78,23 +78,133 @@ private lemma deriv_inv_Gammaℝ_eq_shift (x : ℂ) :
   conv_lhs => rw [hF]
   exact (h1.mul h2).deriv
 
-theorem deriv_inv_Gammaℝ_ne_zero (n : ℕ) :
-    deriv (fun s : ℂ => (Gammaℝ s)⁻¹) (-(2 * n)) ≠ 0 := by
-  have hπ : (2 * (Real.pi : ℂ)) ≠ 0 :=
-    mul_ne_zero two_ne_zero (ofReal_ne_zero.mpr Real.pi_ne_zero)
+/-- The derivative of the reciprocal real gamma factor at each of its simple zeros. -/
+theorem deriv_inv_Gammaℝ_neg_two_mul_nat (n : ℕ) :
+    deriv (fun s : ℂ => (Gammaℝ s)⁻¹) (-(2 * n)) =
+      (-1 : ℂ) ^ n * n.factorial / (2 * (Real.pi : ℂ) ^ n) := by
+  have hπ : (Real.pi : ℂ) ≠ 0 := ofReal_ne_zero.mpr Real.pi_ne_zero
   induction n with
   | zero =>
     rw [deriv_inv_Gammaℝ_eq_shift]
-    have h2 : Gammaℝ 2 ≠ 0 := Gammaℝ_ne_zero_of_re_pos (by norm_num)
-    simp [h2, Real.pi_ne_zero]
+    norm_num [Gammaℝ_def, Complex.Gamma_one, Complex.cpow_neg_one, hπ]
+    <;> field_simp
   | succ n ih =>
     rw [deriv_inv_Gammaℝ_eq_shift]
     have e : (-(2 * ((n + 1 : ℕ) : ℂ))) + 2 = -(2 * (n : ℂ)) := by push_cast; ring
-    rw [e, inv_eq_zero.mpr (Gammaℝ_eq_zero_iff.mpr ⟨n, rfl⟩), mul_zero, zero_add]
-    refine mul_ne_zero (div_ne_zero ?_ hπ) ih
-    have : (n : ℂ) + 1 ≠ 0 := by exact_mod_cast Nat.succ_ne_zero n
+    rw [e, inv_eq_zero.mpr (Gammaℝ_eq_zero_iff.mpr ⟨n, rfl⟩), mul_zero, zero_add, ih,
+      Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one, pow_succ, pow_succ]
+    field_simp
+    <;> ring
+
+theorem deriv_inv_Gammaℝ_ne_zero (n : ℕ) :
+    deriv (fun s : ℂ => (Gammaℝ s)⁻¹) (-(2 * n)) ≠ 0 := by
+  rw [deriv_inv_Gammaℝ_neg_two_mul_nat]
+  exact div_ne_zero (mul_ne_zero (pow_ne_zero _ (by norm_num))
+    (Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero n)))
+    (mul_ne_zero two_ne_zero (pow_ne_zero _ (ofReal_ne_zero.mpr Real.pi_ne_zero)))
+
+private theorem deriv_LFunction_eq_of_gamma_shift {q : ℕ} [NeZero q]
+    (χ : DirichletCharacter ℂ q) {s : ℂ} (a : ℂ) (n : ℕ)
+    (ha : ∀ w, gammaFactor χ w = Gammaℝ (w + a)) (hn : s + a = -(2 * n))
+    (h0 : s ≠ 0 ∨ q ≠ 1) (h1 : s ≠ 1) :
+    deriv (LFunction χ) s = completedLFunction χ s *
+      ((-1 : ℂ) ^ n * n.factorial / (2 * (Real.pi : ℂ) ^ n)) := by
+  have hCd := differentiableAt_completedLFunction χ s h0 (Or.inl h1)
+  have hev : LFunction χ =ᶠ[nhds s] fun w => completedLFunction χ w * (Gammaℝ (w + a))⁻¹ := by
+    have : ∀ᶠ w in nhds s, w ≠ 0 ∨ q ≠ 1 := by
+      rcases h0 with h | h
+      · exact (eventually_ne_nhds h).mono fun w hw => Or.inl hw
+      · exact Filter.Eventually.of_forall fun _ => Or.inr h
+    exact this.mono fun w hw => by
+      rw [LFunction_eq_completed_div_gammaFactor χ w hw, div_eq_mul_inv, ha]
+  have hh : HasDerivAt (fun w : ℂ => (Gammaℝ (w + a))⁻¹)
+      (deriv (fun w : ℂ => (Gammaℝ w)⁻¹) (s + a)) s :=
+    HasDerivAt.comp_add_const s a (differentiable_Gammaℝ_inv (s + a)).hasDerivAt
+  have hG : Gammaℝ (s + a) = 0 := Gammaℝ_eq_zero_iff.mpr ⟨n, hn⟩
+  rw [hev.deriv_eq, (hCd.hasDerivAt.fun_mul hh).deriv, inv_eq_zero.mpr hG,
+    mul_zero, zero_add, hn, deriv_inv_Gammaℝ_neg_two_mul_nat]
+
+/-- The derivative at an even character's trivial zero, including the origin when the
+modulus is not one. Primitivity is not required. -/
+theorem deriv_LFunction_even_neg_two_mul_nat {q : ℕ} [NeZero q]
+    {χ : DirichletCharacter ℂ q} (hχ : χ.Even) (n : ℕ) (h0 : n ≠ 0 ∨ q ≠ 1) :
+    deriv (LFunction χ) (-(2 * n)) = completedLFunction χ (-(2 * n)) *
+      ((-1 : ℂ) ^ n * n.factorial / (2 * (Real.pi : ℂ) ^ n)) := by
+  apply deriv_LFunction_eq_of_gamma_shift χ 0 n
+  · intro w
+    simpa using hχ.gammaFactor_def w
+  · simp
+  · exact h0.imp (fun hn => neg_ne_zero.mpr (mul_ne_zero two_ne_zero
+      (Nat.cast_ne_zero.mpr hn))) id
+  · intro h
+    have := congrArg Complex.re h
+    simp at this
+    have : (0 : ℝ) ≤ n := Nat.cast_nonneg n
+    linarith
+
+/-- The derivative at an odd character's trivial zero. Primitivity is not required. -/
+theorem deriv_LFunction_odd_neg_two_mul_nat_sub_one {q : ℕ} [NeZero q]
+    {χ : DirichletCharacter ℂ q} (hχ : χ.Odd) (n : ℕ) :
+    deriv (LFunction χ) (-(2 * n) - 1) = completedLFunction χ (-(2 * n) - 1) *
+      ((-1 : ℂ) ^ n * n.factorial / (2 * (Real.pi : ℂ) ^ n)) := by
+  apply deriv_LFunction_eq_of_gamma_shift χ 1 n
+  · exact hχ.gammaFactor_def
+  · ring
+  · left
+    intro h
+    have := congrArg Complex.re h
+    simp at this
+    have : (0 : ℝ) ≤ n := Nat.cast_nonneg n
+    linarith
+  · intro h
+    have := congrArg Complex.re h
+    simp at this
+    have : (0 : ℝ) ≤ n := Nat.cast_nonneg n
+    linarith
+
+private theorem Gammaℝ_two_mul_nat_add_one (n : ℕ) :
+    Gammaℝ (2 * n + 1) = (2 * n).factorial /
+      ((4 : ℂ) ^ n * n.factorial * (Real.pi : ℂ) ^ n) := by
+  have hπ : (Real.pi : ℂ) ≠ 0 := ofReal_ne_zero.mpr Real.pi_ne_zero
+  induction n with
+  | zero => norm_num
+  | succ n ih =>
+    have hs : (2 * (n : ℂ) + 1) ≠ 0 := by
+      have h : (0 : ℝ) < 2 * n + 1 := by positivity
+      exact_mod_cast h.ne'
+    rw [show (2 * ((n + 1 : ℕ) : ℂ) + 1) = (2 * (n : ℂ) + 1) + 2 by push_cast; ring,
+      Gammaℝ_add_two hs, ih]
+    rw [show 2 * (n + 1) = (2 * n + 1) + 1 by omega,
+      Nat.factorial_succ, Nat.factorial_succ, Nat.factorial_succ, pow_succ, pow_succ]
     push_cast
-    exact neg_ne_zero.mpr (mul_ne_zero two_ne_zero this)
+    field_simp
+    <;> ring
+
+/-- The derivatives at the negative even zeros are positive-odd zeta values with the
+standard factorial and power-of-pi factor. The origin is excluded. -/
+theorem deriv_riemannZeta_neg_two_mul_nat (n : ℕ) (hn : n ≠ 0) :
+    deriv riemannZeta (-(2 * n)) =
+      ((-1 : ℂ) ^ n * (2 * n).factorial / (2 * (2 * (Real.pi : ℂ)) ^ (2 * n))) *
+        riemannZeta (2 * n + 1) := by
+  have h := deriv_LFunction_even_neg_two_mul_nat
+    (χ := (1 : DirichletCharacter ℂ 1)) even_one n (.inl hn)
+  rw [LFunction_modOne_eq, completedLFunction_modOne_eq] at h
+  rw [h]
+  have hFE : completedRiemannZeta (-(2 * n)) = completedRiemannZeta (2 * n + 1) := by
+    have h := completedRiemannZeta_one_sub (2 * n + 1)
+    rw [show (1 : ℂ) - (2 * n + 1) = -(2 * n) by ring] at h
+    exact h
+  have hs : (2 * (n : ℂ) + 1) ≠ 0 := by
+    have h : (0 : ℝ) < 2 * n + 1 := by positivity
+    exact_mod_cast h.ne'
+  rw [hFE, riemannZeta_def_of_ne_zero hs, Gammaℝ_two_mul_nat_add_one]
+  have hπ : (Real.pi : ℂ) ≠ 0 := ofReal_ne_zero.mpr Real.pi_ne_zero
+  have hnfac : (n.factorial : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero n)
+  have h2nfac : ((2 * n).factorial : ℂ) ≠ 0 :=
+    Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero (2 * n))
+  rw [mul_pow, pow_mul, show (2 : ℂ) ^ 2 = 4 by norm_num, pow_mul]
+  field_simp
+  <;> ring
 
 theorem rootNumber_ne_zero_of_isPrimitive {q : ℕ} [NeZero q] {χ : DirichletCharacter ℂ q}
     (hχ : χ.IsPrimitive) : rootNumber χ ≠ 0 := by
