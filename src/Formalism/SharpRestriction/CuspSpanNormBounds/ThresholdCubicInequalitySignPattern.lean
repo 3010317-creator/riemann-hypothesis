@@ -287,7 +287,7 @@ theorem NonGenericAndKTwoTheorems.Hyp_of (D : D7) (large₂ : SizeData₂ D) (C'
 
 theorem lambda_low_index_eq_neg (k r : ℕ) (v : Fin (k - 1) → ℝ) (b : Fin (2 * r + 2) → ℝ) (j : ℕ) (hj : j < 2 * r + 2)
     (h' : k - 1 + j < 2 * r + k + 1) : CayleySignature.lam48 k r v b ⟨k - 1 + j, h'⟩ = -b ⟨j, hj⟩ := by
-  simp only [CayleySignature.lam48, Fin.val_mk]
+  simp only [CayleySignature.lam48]
   split_ifs with hh
   · omega
   · exact congrArg (fun x => -b x) (Fin.ext (by show k - 1 + j - (k - 1) = j; omega))
@@ -415,9 +415,7 @@ theorem vand_uS_pos (D : D7) (u : D.what₂.Word) (τ : D.what₂.Tau) : 0 < van
   unfold vand
   exact Finset.prod_pos (fun a _ => Finset.prod_pos (fun b hb => sub_pos.mpr (hdec a b (Finset.mem_filter.mp hb).2)))
 
-theorem rdE_pos (D : D7) : 0 < D.host.rdE := by
-  unfold Formalism.BasicNotions.Host.rdE
-  exact Real.rpow_pos_of_pos (abs_pos.mpr (by exact_mod_cast NumberField.discr_ne_zero D.host.E)) _
+alias rdE_pos := _root_.Formalism.MainNotions.S.rdE_pos
 
 theorem vand_ratio_of (D : D7) (C1 : ℝ) (h : LocalBesselAndTopKernel.MassRatio₂ D C1) (u u' : D.what₂.Word) (τ : D.what₂.Tau) :
     vand (uS D u' τ) ≤ C1 ^ D.R.k * vand (uS D u τ) := by

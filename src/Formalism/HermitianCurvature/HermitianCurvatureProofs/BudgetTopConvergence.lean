@@ -66,7 +66,6 @@ theorem decayMin : DecayMin := by
     have h2 : x ^ A ≤ (1 + x) ^ A := Real.rpow_le_rpow hx.le (by linarith) hA
     first
       | exact inv_anti₀ h1 h2
-      | exact inv_le_inv_of_le h1 h2
 
 theorem scaleMatch : ScaleMatch := by
   have e1 : ∀ x : ℂ, (cStd * (starRingEnd ℂ) x).re = (betaU * x).re := by
@@ -193,20 +192,5 @@ end Formalism.FourierDecayAlt.P.Ux7
 open Formalism.FourierDecayAlt.P.Ux7 in
 open Formalism.FourierDecayAlt.P.Ux7 in
 open Formalism.FourierDecayAlt.P.Ux7 in
-theorem Formalism.FourierDecayAlt.P.budget_second_corollary : Formalism.FourierDecayAlt.U.DerivativeBudgetCount := by
-  exact budget_second_corollary_holds
 open Formalism.FourierDecayAlt.P.Ux7 in
-theorem Formalism.FourierDecayAlt.P.thresholds_second_corollary : Formalism.FourierDecayAlt.U.GermThresholds := by
-  exact thresholds_second_corollary_holds
-open Formalism.FourierDecayAlt.P.Ux7 in
-open Formalism.FourierDecayAlt.P.Ux7 in
-open Formalism.FourierDecayAlt.P.Ux7 in
-open Formalism.FourierDecayAlt.P.Ux7 in
-theorem Formalism.FourierDecayAlt.P.scale_matching : Formalism.FourierDecayAlt.U.ScaleMatch := by
-  exact scaleMatch
-open Formalism.FourierDecayAlt.P.Ux7 in
-theorem Formalism.FourierDecayAlt.P.power_matching : Formalism.FourierDecayAlt.U.PowerMatch := by
-  exact powerMatch
-open Formalism.FourierDecayAlt.P.Ux7 in
-theorem Formalism.FourierDecayAlt.P.derivative_bound_of_decay : Formalism.FourierDecayAlt.U.DerivBoundOfDecay := by
-  exact derivBoundOfDecay
+alias Formalism.FourierDecayAlt.P.scale_matching := _root_.Formalism.FourierDecayAlt.P.Ux7.scaleMatch

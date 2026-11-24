@@ -1,13 +1,12 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingTrRep
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjLinApply
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdaptedPlanePairRestrictionFirst
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzConjMem
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjLocalOperator
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasurableThetaSumOfSchrodinger
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingTrRep
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDblCoordDblD
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialFourierPreservesSchwartzL2Statement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialRightPreservesL2NormStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialRightPreservesL2Norm
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -29,7 +28,6 @@ import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
 import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.NormNum.Irrational
 import Mathlib.Tactic.NormNum.IsCoprime
 import Mathlib.Tactic.NormNum.IsSquare
@@ -42,7 +40,82 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzConjMem
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjLocalOperator
+import Mathlib.Tactic.Linter.Style
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialFourierPreservesSchwartzL2, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjLinEqOfEqOn
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialFourierPreservesSchwartzL2 =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialFourierPreservesSchwartzL2", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjLinApply\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdaptedPlanePairRestrictionFirst\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasurableThetaSumOfSchrodinger\nimport Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open scoped TensorProduct NNReal Matrix ENNReal
+open NumberField IsDedekindDomain MeasureTheory Filter Topology Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
+open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.ThK GlobalTheory.DblEval
+
+noncomputable section
+
+namespace GlobalTheory.DblEval
+
+theorem lintegral_partL_eq : ∀ {F : Type} [Field F] [NumberField F] {κ κ' : Type} [Fintype κ] [Fintype κ']
+    (T : ((κ → AF F) → ℂ) →ₗ[ℂ] ((κ → AF F) → ℂ)),
+    (∀ μ : @Measure (κ → AF F) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
+      ∃ C : ℝ≥0∞, ∀ φ ∈ schA F κ, ∫⁻ x, ‖T φ x‖ₑ ^ 2 ∂μ = C * ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂μ) →
+    (∀ Φ ∈ schA F (κ ⊕ κ'), partL T Φ ∈ schA F (κ ⊕ κ')) →
+    ∀ μ : @Measure (κ ⊕ κ' → AF F) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
+      ∃ C : ℝ≥0∞, ∀ Φ ∈ schA F (κ ⊕ κ'), ∫⁻ x, ‖partL T Φ x‖ₑ ^ 2 ∂μ = C * ∫⁻ x, ‖Φ x‖ₑ ^ 2 ∂μ := by
+  intro F _ _ κ κ' _ _ T hT hmem μ hμ
+  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  letI mX : MeasurableSpace (κ → AF F) := borel _
+  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
+  letI mY : MeasurableSpace (κ' → AF F) := borel _
+  haveI : BorelSpace (κ' → AF F) := ⟨rfl⟩
+  letI mZ : MeasurableSpace (κ ⊕ κ' → AF F) := borel _
+  haveI : BorelSpace (κ ⊕ κ' → AF F) := ⟨rfl⟩
+  let μ₁ : Measure (κ → AF F) := Measure.addHaar
+  let μ₂ : Measure (κ' → AF F) := Measure.addHaar
+  obtain ⟨C₁, hC₁⟩ := hT μ₁ inferInstance
+  refine ⟨C₁, fun Φ hΦ => ?_⟩
+  let e : (κ ⊕ κ' → AF F) ≃ₜ (κ → AF F) × (κ' → AF F) := Homeomorph.sumArrowHomeomorphProdArrow
+  let eA : ((κ → AF F) × (κ' → AF F)) ≃ₜ+ (κ ⊕ κ' → AF F) :=
+    { e.symm with map_add' := fun a b => by funext i; cases i <;> rfl }
+  let ν : Measure (κ ⊕ κ' → AF F) := (μ₁.prod μ₂).map eA
+  haveI : ν.IsAddHaarMeasure := eA.isAddHaarMeasure_map _
+  obtain ⟨c, hμν⟩ : ∃ c : ℝ≥0, μ = c • ν := ⟨_, Measure.isAddLeftInvariant_eq_smul μ ν⟩
+  have key : ∀ f : (κ ⊕ κ' → AF F) → ℝ≥0∞, Measurable f →
+      ∫⁻ z, f z ∂μ = c * ∫⁻ y, ∫⁻ x, f (Sum.elim x y) ∂μ₁ ∂μ₂ := by
+    intro f hf
+    have hmeas : Measurable (⇑eA) := eA.continuous.measurable
+    rw [hμν, lintegral_smul_measure]
+    simp only [ν]
+    rw [lintegral_map hf hmeas, lintegral_prod_symm (fun p => f (eA p)) (hf.comp hmeas).aemeasurable]
+    rfl
+  have hc1 := GlobalTheory.ThetaTransformMeas.continuous_of_mem_schA F (hmem Φ hΦ)
+  have hc2 := GlobalTheory.ThetaTransformMeas.continuous_of_mem_schA F hΦ
+  rw [key _ (hc1.measurable.enorm.pow_const 2), key _ (hc2.measurable.enorm.pow_const 2)]
+  have inner : ∀ y, ∫⁻ x, ‖partL T Φ (Sum.elim x y)‖ₑ ^ 2 ∂μ₁ = C₁ * ∫⁻ x, ‖Φ (Sum.elim x y)‖ₑ ^ 2 ∂μ₁ :=
+    fun y => hC₁ _ (sliceL_mem hΦ y)
+  have hm : Measurable fun y => ∫⁻ x, ‖Φ (Sum.elim x y)‖ₑ ^ 2 ∂μ₁ :=
+    Measurable.lintegral_prod_left' (f := fun p : (κ → AF F) × (κ' → AF F) => ‖Φ (eA p)‖ₑ ^ 2)
+      ((hc2.comp eA.continuous).measurable.enorm.pow_const 2)
+  simp_rw [inner]
+  rw [lintegral_const_mul _ hm]
+  ring
+
+end GlobalTheory.DblEval
+
+end
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialFourierPreservesSchwartzL2 =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjLinEqOfEqOn =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjLinEqOfEqOn", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingTrRep\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjLinApply\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdaptedPlanePairRestrictionFirst\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDblCoordDblD\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialFourierPreservesSchwartzL2\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialRightPreservesL2Norm\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzConjMem\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjLocalOperator\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts\n\n"}
+section -- clump:auto
 @[expose] public section
 
 open scoped TensorProduct NNReal Matrix ENNReal
@@ -256,8 +329,8 @@ theorem hasDbl_of_loc {E' : Type} [CommRing E'] [Algebra (AF F) E'] (c : E' →�
         (partR_adm (conjLin e') (GlobalTheory.DblEval.ConjLoc.isLocOp_conjLin e' hL') _ (partL_adm e' hL' _ hl))
       simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, partLₗ_apply, partRₗ_apply]
       rw [← (hTeq' Φ hΦ).1, LinearEquiv.apply_symm_apply]
-  · obtain ⟨C₁, hC₁⟩ := GlobalTheory.T.partial_fourier_preserves_schwartz_L2 T.toLinearMap hunit hLmem μ hμ
-    obtain ⟨C₂, hC₂⟩ := GlobalTheory.T.partial_right_preserves_l2_norm (κ := κ) (conjE T).toLinearMap hunitS hRmem μ hμ
+  · obtain ⟨C₁, hC₁⟩ := _root_.GlobalTheory.DblEval.lintegral_partL_eq T.toLinearMap hunit hLmem μ hμ
+    obtain ⟨C₂, hC₂⟩ := _root_.GlobalTheory.DblEval.L2RightPartial.partR_lintegral_sq_eq_const_mul_of_mem_schA (κ := κ) (conjE T).toLinearMap hunitS hRmem μ hμ
     refine ⟨C₂ * C₁, fun φ hφ => ?_⟩
     rw [hTd_apply]
     have h2 := hC₂ _ (hLmem φ hφ)
@@ -276,3 +349,7 @@ theorem hasDbl_of_loc {E' : Type} [CommRing E'] [Algebra (AF F) E'] (c : E' →�
 end Main
 
 end GlobalTheory.DblTr
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjLinEqOfEqOn =====

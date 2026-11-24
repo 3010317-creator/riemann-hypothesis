@@ -128,7 +128,7 @@ lemma tsact_coeff_zero (G : Matrix (Fin r) (Fin r) R) (h : MvPolynomial (Fin r �
   induction h using MvPolynomial.induction_on
   next a => simp [rowAct]
   next p q hp hq => simp only [map_add (f := _), hp, hq]
-  next p v hp => simp [hp, rowAct]
+  next p v hp => simp [rowAct]
 
 lemma tsact_chain (G : Matrix (Fin r) (Fin r) R) (b : Fin r) (s : Fin n) (h : MvPolynomial (Fin r × Fin n) R) :
     pderiv (b, s) (rowAct R G h) = ∑ a : Fin r, G a b • rowAct R G (pderiv (a, s) h) := by

@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdelicPlaceDecomposition
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeStableAlmostAllPlacesLeftStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeStableAlmostAllPlacesRightStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeStableAlmostAllPlacesLeft
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeStableAlmostAllPlacesRight
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -213,9 +214,9 @@ theorem finite_bad {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
     Set.Finite {w : Pl (F := F) | ¬ ∀ γ ∈ latAtV X Y w, M * γ * Matrix.transpose N ∈ latAtV X Y w} := by
   have hr : Set.Finite {w : Pl (F := F) | ¬ ∀ γ ∈ latAtV X Y w, γ * Matrix.transpose N ∈ latAtV X Y w} := by
     first
-    | exact GlobalTheory.T.lattice_stable_almost_all_places_right F E n d X Y hY N
-    | exact GlobalTheory.T.lattice_stable_almost_all_places_right F E n d X Y hY.toIsLattice N
-  refine (((GlobalTheory.T.lattice_stable_almost_all_places_left) F E n d X Y hX M).union hr).subset ?_
+    | exact _root_.GlobalTheory.AdelMatLatRight.almost_all_stable_right F E n d X Y hY N
+    | exact _root_.GlobalTheory.AdelMatLatRight.almost_all_stable_right F E n d X Y hY.toIsLattice N
+  refine (((_root_.GlobalTheory.AdelMatLat.almost_all_stable) F E n d X Y hX M).union hr).subset ?_
   intro w hw
   by_contra hc
   simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
