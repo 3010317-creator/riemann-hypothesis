@@ -69,8 +69,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UU
-theorem _root_.GlobalTheory.T.existsUnique_thickTorus_level_weight_expansion : (∀ (R : Type) [CommRing R] [IsDomain R] (I : Ideal R) (D : DegPre R) (e : ℕ) (G : Over (Spec (CommRingCat.of R))) [GrpObj G] [IsCommMonObj G] (g : GtCoord I D e G) (k : ℕ) (σ : LB.Sec (LB.LinComb D.P.L (K := Fin 1) (fun _ => g.pG.left) (fun _ => (k : ℤ)))), ∃! f : ∀ α : D.X, LB.Sec (LB.LinComb D.P.L (fun i => (D.prBe I e).left ≫ D.famφB α i) (DegPre.famε k)), ∃ s : Finset D.X, (∀ α ∉ s, ∀ j, (f α).f j = 0) ∧ ∀ (z : (thickObj R I e G).left) (J), Good D.P.L z J → sval σ (𝟙 (thickObj R I e G).left) z J = ∑ α ∈ s, sval (f α) g.q.left z J * (val (g.t α) (𝟙 (thickObj R I e G).left) z J).val) := by
-  first | exact @GlobalTheory.existsUnique_level_expansion
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsUniqueThickTorusLevelWeightExpansionStatement =====
@@ -207,51 +205,62 @@ section Values
 
 variable {X Y Y' Y'' : Scheme.{0}} (L : LB X) {K K' K₃ : Type} [Fintype K] [Fintype K'] [Fintype K₃]
 
+/-- A `Y`-scheme point equipped with a good trivialization index for `L`. -/
+structure EvalPt (Y : Scheme.{0}) : Type 1 where
+  Z : Scheme.{0}
+  r : Z ⟶ Y
+  z : Z
+  J : {J // Good L z J}
+
 abbrev Vals (Y : Scheme.{0}) : Type 1 :=
-  ∀ (Z : Scheme.{0}) (_ : Z ⟶ Y) (z : Z) (_ : {J // Good L z J}), Z.presheaf.stalk z
+  ∀ p : EvalPt L Y, p.Z.presheaf.stalk p.z
+
+-- Ring homomorphisms in the abstract basis lemmas use the semiring projected from a
+-- commutative ring. Match that projection here to avoid reducing pointwise instances down to stalks.
+local instance (Y : Scheme.{0}) : NonAssocSemiring (Vals L Y) :=
+  (inferInstance : CommRing (Vals L Y)).toRing.toSemiring.toNonAssocSemiring
 
 def pull (h : Y' ⟶ Y) : Vals L Y →+* Vals L Y' where
-  toFun w Z r z J := w Z (r ≫ h) z J
+  toFun w p := w ⟨p.Z, p.r ≫ h, p.z, p.J⟩
   map_one' := rfl
   map_mul' _ _ := rfl
   map_zero' := rfl
   map_add' _ _ := rfl
 
 def fn (Y : Scheme.{0}) : Γ(Y, ⊤) →+* Vals L Y where
-  toFun a Z r z _ := gs r z ⊤ a
-  map_one' := by funext Z r z J; rw [gs_eq r z ⊤ trivial, map_one, map_one]; rfl
-  map_mul' _ _ := by funext Z r z J; exact gs_mul r z ⊤ trivial _ _
-  map_zero' := by funext Z r z J; rw [gs_eq r z ⊤ trivial, map_zero, map_zero]; rfl
-  map_add' _ _ := by funext Z r z J; exact gs_add r z ⊤ trivial _ _
+  toFun a p := gs p.r p.z ⊤ a
+  map_one' := funext fun p => by rw [gs_eq p.r p.z ⊤ trivial, map_one, map_one]; rfl
+  map_mul' _ _ := funext fun p => gs_mul p.r p.z ⊤ trivial _ _
+  map_zero' := funext fun p => by rw [gs_eq p.r p.z ⊤ trivial, map_zero, map_zero]; rfl
+  map_add' _ _ := funext fun p => gs_add p.r p.z ⊤ trivial _ _
 
 def cst {R : Type} [CommRing R] (f : Y ⟶ Spec (CommRingCat.of R)) : R →+* Vals L Y :=
   (fn L Y).comp (f.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom)
 
 variable {L}
 
-theorem pull_pull (h : Y' ⟶ Y) (h' : Y'' ⟶ Y') (w : Vals L Y) : pull L h' (pull L h w) = pull L (h' ≫ h) w := by
-  funext Z r z J
-  exact congrArg (fun q => w Z q z J) (Category.assoc _ _ _)
+theorem pull_pull (h : Y' ⟶ Y) (h' : Y'' ⟶ Y') (w : Vals L Y) : pull L h' (pull L h w) = pull L (h' ≫ h) w :=
+  funext fun ⟨Z, r, z, J⟩ => by change w ⟨Z, (r ≫ h') ≫ h, z, J⟩ = w ⟨Z, r ≫ h' ≫ h, z, J⟩; rw [Category.assoc]
 
-theorem pull_id (w : Vals L Y) : pull L (𝟙 Y) w = w := by
-  funext Z r z J
-  exact congrArg (fun q => w Z q z J) (Category.comp_id _)
+theorem pull_id (w : Vals L Y) : pull L (𝟙 Y) w = w :=
+  funext fun ⟨Z, r, z, J⟩ => by change w ⟨Z, r ≫ 𝟙 Y, z, J⟩ = w ⟨Z, r, z, J⟩; rw [Category.comp_id]
 
 theorem pull_cst {R R' : Type} [CommRing R] [CommRing R'] (g : R →+* R') {π : Y' ⟶ Y}
     {f : Y ⟶ Spec (CommRingCat.of R)} {f' : Y' ⟶ Spec (CommRingCat.of R')}
     (w : π ≫ f = f' ≫ Spec.map (CommRingCat.ofHom g)) (a : R) : pull L π (cst L f a) = cst L f' (g a) := by
   have e₁ := congrArg (fun Q => Q.hom a) (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom g))
   have e₂ := congrArg (fun q => q.appTop.hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom a)) w
-  funext Z r z J
-  exact (gs_pull r π z ⊤ trivial _).symm.trans (congrArg (gs r z ⊤) ((congrArg f'.appTop.hom e₁).trans e₂.symm).symm)
+  exact funext fun p =>
+    (gs_pull p.r π p.z ⊤ trivial _).symm.trans (congrArg (gs p.r p.z ⊤) ((congrArg f'.appTop.hom e₁).trans e₂.symm).symm)
 
-def ev {φ : K → (Y ⟶ X)} {ε : K → ℤ} (s : LB.Sec (LB.LinComb L φ ε)) : Vals L Y := fun _ r z J => sval s r z J.1
+def ev {φ : K → (Y ⟶ X)} {ε : K → ℤ} (s : LB.Sec (LB.LinComb L φ ε)) : Vals L Y :=
+  fun p => sval s p.r p.z p.J.1
 
 def evU {φ : K → (Y ⟶ X)} {ε : K → ℤ} (u : LB.Gen (LB.LinComb L φ ε)) : (Vals L Y)ˣ where
-  val _ r z J := (val u r z J.1).val
-  inv _ r z J := (val u r z J.1).inv
-  val_inv := by funext Z r z J; exact (val u r z J.1).val_inv
-  inv_val := by funext Z r z J; exact (val u r z J.1).inv_val
+  val p := (val u p.r p.z p.J.1).val
+  inv p := (val u p.r p.z p.J.1).inv
+  val_inv := funext fun p => (val u p.r p.z p.J.1).val_inv
+  inv_val := funext fun p => (val u p.r p.z p.J.1).inv_val
 
 
 variable (L) in
@@ -260,18 +269,17 @@ def secVals (φ : K → (Y ⟶ X)) (ε : K → ℤ) : Set (Vals L Y) := Set.rang
 variable {φ : K → (Y ⟶ X)} {ε : K → ℤ}
 
 theorem eq_of_val (hL : L.IsLB) {s s' : LB.Sec (LB.LinComb L φ ε)}
-    (h : ∀ y J, ev s Y (𝟙 Y) y J = ev s' Y (𝟙 Y) y J) : s = s' :=
+    (h : ∀ y J, ev s ⟨Y, 𝟙 Y, y, J⟩ = ev s' ⟨Y, 𝟙 Y, y, J⟩) : s = s' :=
   DVR.SecOps.sec_ext (sec_ext_val hL fun y J hJ => h y ⟨J, hJ⟩)
 
 theorem secVals_ext (hL : L.IsLB) {w w' : Vals L Y} (hw : w ∈ secVals L φ ε) (hw' : w' ∈ secVals L φ ε)
-    (h : ∀ y J, w Y (𝟙 Y) y J = w' Y (𝟙 Y) y J) : w = w' := by
+    (h : ∀ y J, w ⟨Y, 𝟙 Y, y, J⟩ = w' ⟨Y, 𝟙 Y, y, J⟩) : w = w' := by
   obtain ⟨s, rfl⟩ := hw
   obtain ⟨s', rfl⟩ := hw'
   rw [eq_of_val hL h]
 
-theorem ev_pullSec (s : LB.Sec (LB.LinComb L φ ε)) (h : Y' ⟶ Y) : ev (DVR.pullSec L φ ε s h) = pull L h (ev s) := by
-  funext Z r z J
-  exact DVR.SectionScalarValuation.sval_pullSec φ ε s h r z J.2
+theorem ev_pullSec (s : LB.Sec (LB.LinComb L φ ε)) (h : Y' ⟶ Y) : ev (DVR.pullSec L φ ε s h) = pull L h (ev s) :=
+  funext fun p => DVR.SectionScalarValuation.sval_pullSec φ ε s h p.r p.z p.J.2
 
 theorem pull_mem {w : Vals L Y} (hw : w ∈ secVals L φ ε) (h : Y' ⟶ Y) {ψ : K → (Y' ⟶ X)} (e : ∀ k, ψ k = h ≫ φ k) :
     pull L h w ∈ secVals L ψ ε := by
@@ -282,9 +290,9 @@ theorem pull_mem {w : Vals L Y} (hw : w ∈ secVals L φ ε) (h : Y' ⟶ Y) {ψ 
 theorem ev_comb {R : Type} [CommRing R] {m : ℕ} (g : R →+* Γ(Y, ⊤)) (a : Fin m → R)
     (b : Fin m → LB.Sec (LB.LinComb L φ ε)) {s : LB.Sec (LB.LinComb L φ ε)}
     (hs : ∀ j, s.f j = ∑ i, resTop _ (g (a i)) * (b i).f j) : ev s = comb ((fn L Y).comp g) (fun i => ev (b i)) a := by
-  funext Z r z J
+  funext p
   simp only [comb, Finset.sum_apply]
-  exact DVR.SectionScalarValuation.sval_lin (fun i => g (a i)) b hs r z J.2
+  exact DVR.SectionScalarValuation.sval_lin (fun i => g (a i)) b hs p.r p.z p.J.2
 
 theorem exists_comb {M : LB Y} {m : ℕ} (a : Fin m → Γ(Y, ⊤)) (b : Fin m → LB.Sec M) :
     ∃ s : LB.Sec M, ∀ j, s.f j = ∑ i, resTop _ (a i) * (b i).f j :=
@@ -309,7 +317,7 @@ theorem isBas_of_comb (hL : L.IsLB) {R : Type} [CommRing R] {m : ℕ} (g : R →
   refine (existsUnique_congr fun a => ⟨ev_comb g a b, fun H => ?_⟩).1 (hb s)
   obtain ⟨t, ht⟩ := exists_comb (fun i => g (a i)) b
   rw [← ev_comb g a b ht] at H
-  rw [eq_of_val hL fun y J => congrFun (congrFun (congrFun (congrFun H _) _) y) J]
+  rw [eq_of_val hL fun y J => congrFun H ⟨Y, 𝟙 Y, y, J⟩]
   exact ht
 
 theorem mul_mem_iff (hL : L.IsLB) {φ' : K' → (Y ⟶ X)} {ε' : K' → ℤ} {φ₃ : K₃ → (Y ⟶ X)} {ε₃ : K₃ → ℤ}
@@ -323,24 +331,21 @@ theorem mul_mem_iff (hL : L.IsLB) {φ' : K' → (Y ⟶ X)} {ε' : K' → ℤ} {�
       simp only [Fintype.prod_sum_type, Sum.elim_inl, Sum.elim_inr, Category.id_comp] at this ⊢
       rw [← this]
       simp only [zpow_neg, Finset.prod_inv_distrib, mul_inv_cancel_right]) (pullMulSec s (𝟙 Y) (LB.invGen L _ _ u) hu')
-    refine ⟨t, ?_⟩
-    funext Z r z J
-    refine (ht Z r z J.1 J.2).trans ?_
-    rw [sval_pullMulSec _ _ _ hu' _ z J.2, val_inv, Category.comp_id, Units.mul_inv_eq_iff_eq_mul]
-    exact congrFun (congrFun (congrFun (congrFun hs Z) r) z) J
+    refine ⟨t, funext fun p => ?_⟩
+    refine (ht p.Z p.r p.z p.J.1 p.J.2).trans ?_
+    rw [sval_pullMulSec _ _ _ hu' _ p.z p.J.2, val_inv, Category.comp_id, Units.mul_inv_eq_iff_eq_mul]
+    exact congrFun hs p
   · rintro ⟨s, rfl⟩
     obtain ⟨t, ht⟩ := exists_sec (φ' := φ') (ε' := ε') hL (fun U _ q => by
       simpa only [Category.id_comp] using h U q) (pullMulSec s (𝟙 Y) u hu)
-    refine ⟨t, ?_⟩
-    funext Z r z J
-    refine (ht Z r z J.1 J.2).trans ?_
-    rw [sval_pullMulSec _ _ _ hu _ z J.2, Category.comp_id]
+    refine ⟨t, funext fun p => ?_⟩
+    refine (ht p.Z p.r p.z p.J.1 p.J.2).trans ?_
+    rw [sval_pullMulSec _ _ _ hu _ p.z p.J.2, Category.comp_id]
     rfl
 
 theorem pull_evU (u : LB.Gen (LB.LinComb L φ ε)) (h : Y' ⟶ Y) :
-    (evU (LB.pullGen L φ ε u h)).val = pull L h (evU u).val := by
-  funext Z r z J
-  exact congrArg Units.val (val_pull J.2 u h r)
+    (evU (LB.pullGen L φ ε u h)).val = pull L h (evU u).val :=
+  funext fun p => congrArg Units.val (val_pull p.J.2 u h p.r)
 
 end Values
 
@@ -469,11 +474,6 @@ private theorem exists_isBas_famVals_of_isPullback [IsLocalRing V] (hT : SecTwis
 
 variable [IsLocalRing V]
 
-theorem exists_isBas (hT : SecTwistSt) (hk : 1 ≤ k) {R : Type} [CommRing R] [IsLocalRing R]
-    {t : Spec (CommRingCat.of R) ⟶ Spec (CommRingCat.of V)} {Y : Scheme.{0}} {π : Y ⟶ D.P.A.left}
-    {f : Y ⟶ Spec (CommRingCat.of R)} (H : IsPullback π f D.P.A.hom t) :
-    ∃ b : Fin (k ^ D.P.g) → Vals D.P.L Y, IsBas (cst D.P.L f) (famVals D k α π) b := exists_isBas_famVals_of_isPullback hT hk H
-
 abbrev resPt (V : Type) [CommRing V] [IsLocalRing V] : Over (Spec (CommRingCat.of V)) :=
   Over.mk (Spec.map (CommRingCat.ofHom (IsLocalRing.residue V)) ≫ 𝟙 _)
 
@@ -556,8 +556,8 @@ theorem isBas_thick (hT : SecTwistSt) (hk : 1 ≤ k) {b : Fin (k ^ D.P.g) → Va
       (Category.assoc _ _ _).symm)
   let m := pullback.lift (snd (resPt V) D.P.A).left
     ((fst (resPt V) D.P.A).left ≫ Spec.map (CommRingCat.ofHom g')) hm
-  obtain ⟨b', hb'⟩ := exists_isBas (α := α) hT hk H
-  obtain ⟨b'', hb''⟩ := exists_isBas (α := α) hT hk H'
+  obtain ⟨b', hb'⟩ := _root_.GlobalTheory.SecLimit.exists_isBas_famVals_of_isPullback (α := α) hT hk H
+  obtain ⟨b'', hb''⟩ := _root_.GlobalTheory.SecLimit.exists_isBas_famVals_of_isPullback (α := α) hT hk H'
   refine IsBas.reduce (ρ' := pull D.P.L m) (g' := g') (fun a => pull_cst _ H.w a)
     (fun a => pull_cst g' (pullback.lift_snd _ _ _) a) ?_ ?_ ?_ hb hb' hb''
   · intro s hs
@@ -583,10 +583,10 @@ private theorem pull_ev_eq_iff {X B Y : Scheme.{0}} {L : LB X} (hL : L.IsLB)
     (s : LB.Sec (LB.LinComb L φ ε)) (t : LB.Sec (LB.LinComb L ψ ε)) :
     pull L p (ev s) = ev t ↔ ∀ z J, Good L z J → sval s p z J = sval t (𝟙 Y) z J := by
   have hid z (J : {J // Good L z J}) :
-      (pull L p (ev s)) Y (𝟙 Y) z J = sval s p z J.1 :=
+      (pull L p (ev s)) ⟨Y, 𝟙 Y, z, J⟩ = sval s p z J.1 :=
     congrArg (fun r => sval s r z J.1) (Category.id_comp p)
   refine ⟨fun h z J hJ => (hid z ⟨J, hJ⟩).symm.trans
-    (congrArg (fun w : Vals L Y => w Y (𝟙 Y) z ⟨J, hJ⟩) h), fun h => ?_⟩
+    (congrFun h ⟨Y, 𝟙 Y, z, ⟨J, hJ⟩⟩), fun h => ?_⟩
   have hs : pull L p (ev s) ∈ secVals L ψ ε :=
     pull_mem (⟨s, rfl⟩ : ev s ∈ secVals L φ ε) p hp
   exact secVals_ext hL hs ⟨t, rfl⟩ fun z J => (hid z J).trans (h z J.1 J.2)
@@ -616,30 +616,19 @@ private theorem existsUnique_sec_of_isBas_lemma {X B : Scheme.{0}} {L : LB X} (h
     (fun z => comb_mem (p.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom) z hb₀.1) hb₀ hb'
     (fun e => ev (f e)) hmem hc
   have hevinj : Function.Injective (ev (L := L) (φ := φ) (ε := ε)) :=
-    fun s t h => eq_of_val hL fun z J => congrArg (fun w : Vals L B => w B (𝟙 B) z J) h
+    fun s t h => eq_of_val hL fun z J => congrFun h ⟨B, 𝟙 B, z, J⟩
   refine (existsUnique_congr (fun s => ?_)).1 (existsUnique_of_range hevinj hlim)
   exact forall_congr' (fun e => pull_ev_eq_iff hL (fun i => rfl) s (f e))
 
 end Twist
 
-theorem existsUnique_sec_of_isBas {X B : Scheme.{0}} {L : LB X} (hL : L.IsLB) {K : Type} [Fintype K]
-    {φ : K → (B ⟶ X)} {ε : K → ℤ} {R : Type} [CommRing R] (I : Ideal R) [IsAdicComplete I R]
-    {p : B ⟶ Spec (CommRingCat.of R)} {Y : ℕ → Scheme.{0}} {π : ∀ e, Y e ⟶ B}
-    {q : ∀ e, Y e ⟶ Spec (CommRingCat.of (R ⧸ I ^ (e + 1)))} {θ : ∀ e, Y e ⟶ Y (e + 1)}
-    (hθ : ∀ e, θ e ≫ π (e + 1) = π e) (hq : ∀ e, π e ≫ p = q e ≫ thick R I e) {m : ℕ} {b : Fin m → Vals L B}
-    (hb : IsBas (cst L p) (secVals L (fun i => 𝟙 B ≫ φ i) ε) b)
-    (hb' : ∀ e, IsBas (cst L (q e)) (secVals L (fun i => π e ≫ φ i) ε) (fun i => pull L (π e) (b i)))
-    (f : ∀ e, LB.Sec (LB.LinComb L (fun i => π e ≫ φ i) ε))
-    (hf : ∀ e z J, Good L z J → sval (f (e + 1)) (θ e) z J = sval (f e) (𝟙 _) z J) :
-    ∃! s : LB.Sec (LB.LinComb L φ ε), ∀ e z J, Good L z J → sval s (π e) z J = sval (f e) (𝟙 _) z J := existsUnique_sec_of_isBas_lemma hL I hθ hq hb hb' f hf
-
 theorem existsUnique_sec_of_compatible : Laws → Laws2 → (∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], CDVR V → ∀ (D : DegPre V) (k : ℕ), 1 ≤ k → ∀ (α : D.X) (f : ∀ e, LB.Sec (LB.LinComb D.P.L (fun i => (D.prBe (IsLocalRing.maximalIdeal V) e).left ≫ D.famφB α i) (DegPre.famε k))), (∀ e z J, Good D.P.L z J → sval (f (e + 1)) (thickMap V _ e D.P.A) z J = sval (f e) (𝟙 _) z J) → ∃! s : D.SecB k α, ∀ e z J, Good D.P.L z J → sval s (D.prBe (IsLocalRing.maximalIdeal V) e).left z J = sval (f e) (𝟙 _) z J) := by
   intro _ hL2 V _ _ _ hV D k hk α f hf
   have hT : SecTwistSt := hL2.secTwist
   have : IsAdicComplete (IsLocalRing.maximalIdeal V) V := hV.2.1
-  obtain ⟨b, hb⟩ := exists_isBas (α := α) (R := V) (t := 𝟙 _) hT hk
+  obtain ⟨b, hb⟩ := _root_.GlobalTheory.SecLimit.exists_isBas_famVals_of_isPullback (α := α) (R := V) (t := 𝟙 _) hT hk
     (IsPullback.of_id_fst (f := D.P.A.hom))
-  exact existsUnique_sec_of_isBas D.P.isLB (IsLocalRing.maximalIdeal V) (p := D.P.A.hom)
+  exact _root_.GlobalTheory.SecLimit.existsUnique_sec_of_isBas_lemma D.P.isLB (IsLocalRing.maximalIdeal V) (p := D.P.A.hom)
     (π := fun e => (D.prBe (IsLocalRing.maximalIdeal V) e).left)
     (q := fun e => (thickObj V (IsLocalRing.maximalIdeal V) e D.P.A).hom)
     (θ := fun e => thickMap V (IsLocalRing.maximalIdeal V) e D.P.A)
@@ -818,7 +807,7 @@ theorem main : Laws → Laws2 → (AllPre fun U => ∀ k, 1 ≤ k → ∀ σ, �
     refine ⟨τ, fun Z r z JG J hJG hJ => (hτ Z r z JG J hJG hJ).trans (congrArg _ ((hs Z r z JG hJG).trans ?_))⟩
     exact congrArg (fun p => sval σ p z JG) (Category.assoc _ _ _).symm
   choose τ hτ using lev
-  have ex := fun e => GlobalTheory.T.existsUnique_thickTorus_level_weight_expansion V _ D e G (U.gt e) k (τ e)
+  have ex := fun e => _root_.GlobalTheory.existsUnique_level_expansion V _ D e G (U.gt e) k (τ e)
   choose f hf hu using ex
   choose S hS hsum using hf
 

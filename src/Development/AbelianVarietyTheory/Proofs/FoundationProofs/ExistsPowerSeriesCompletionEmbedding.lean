@@ -248,31 +248,19 @@ noncomputable def serHom : A →ₐ[k] PowerSeries k where
 
 end Construction
 
-section Existence
-variable {k A : Type} [Field k] [CommRing A] [Algebra k A] {Q : Ideal A} {π : A}
-
-theorem exists_approx (hπ : π ∈ Q) (hres : ∀ c : A, ∃ a : k, c - algebraMap k A a ∈ Q)
-    (hsup : ∀ m : ℕ, Q ^ m ≤ Ideal.span {π ^ m} ⊔ Q ^ (m + 1)) :
-    ∀ (m : ℕ) (u : A), ∃ p : k[X], u - aeval π p ∈ Q ^ m := by
-  first
-  | (apply _root_.GlobalTheory.IntegralNormBound.target <;> assumption)
-  | (intros; exact _root_.GlobalTheory.IntegralNormBound.target ..)
-
-end Existence
-
-theorem exists_completion_embedding : ∀ (k A : Type) [Field k] [IsAlgClosed k] [CharZero k]
+theorem exists_completion_embedding : ∀ (k A : Type) [Field k] [IsAlgClosed k]
     [CommRing A] [IsDedekindDomain A] [Algebra k A] [Algebra.FiniteType k A] (Q : Ideal A),
     Q.IsMaximal → Q ≠ ⊥ → ∃ (σ : A →ₐ[k] PowerSeries k) (π : A), σ π = PowerSeries.X ∧
       Function.Injective σ ∧
       (∀ (m : ℕ) (u : A), u ∈ Q ^ m ↔ (PowerSeries.X : PowerSeries k) ^ m ∣ σ u) ∧
       ∀ (m : ℕ) (φ : PowerSeries k), ∃ u : A,
         (PowerSeries.X : PowerSeries k) ^ m ∣ φ - σ u := by
-  intro k A _ _ _ _ _ _ _ Q hQ hQ0
+  intro k A _ _ _ _ _ _ Q hQ hQ0
   haveI : Q.IsPrime := hQ.isPrime
   obtain ⟨π, hπ1, hπ2⟩ := SetLike.exists_of_lt (Ideal.pow_succ_lt_pow hQ0 1)
   have hπ : π ∈ Q := by simpa using hπ1
   have hnot := pow_not_mem hQ0 hπ hπ2
-  have hex := exists_approx (k := k) hπ (residue_exists k A Q hQ) (pow_le_span_sup hQ0 hπ hπ2)
+  have hex := _root_.GlobalTheory.IntegralNormBound.main (k := k) hπ (residue_exists k A Q hQ) (pow_le_span_sup hQ0 hπ hπ2)
   have hmem : ∀ (m : ℕ) (u : A),
       u ∈ Q ^ m ↔ (PowerSeries.X : PowerSeries k) ^ m ∣ serHom hex hπ hnot u := by
     intro m u

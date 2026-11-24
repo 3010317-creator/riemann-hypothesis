@@ -217,7 +217,7 @@ theorem ChowHeightRecursion.proof (hV : ChowFormSectionVertical.Statement) (hA :
           (fsLog (H.normAt σ) fun j => σ (u j)) := by
     intro σ
     obtain ⟨hprime, hcyc⟩ := hB K n (e + 1) I f σ hI hf
-    have hδσ : IsMultiHomog δ (MvPolynomial.map σ f) :=
+    have hδσ : Heights.IsMultiHomog δ (MvPolynomial.map σ f) :=
       (isMultiHomog_iff _ _).mpr fun i => IsWeightedHomogeneous.map' ((isMultiHomog_iff _ _).mp hδ i) σ
     have h := hA n e δ (H.normAt σ) _ _ (fun j => σ (u j)) hprime hcyc hδσ
       (fun W hW => hAv K n I u' σ hI hu W hW)
@@ -883,14 +883,11 @@ set_option maxSynthPendingDepth 1
 
 namespace GroundTheory.Heights₂.Heights
 
-theorem SphereMeanLinear.full : SphereMeanLinear.Statement := sphereMeanLinear
+alias SphereMeanLinear.full := _root_.GroundTheory.Heights₂.Heights.sphereMeanLinear
 
 theorem ChowHeightMul.full : ChowHeightMul.Statement := chowHeightMul_of_mahlerMul mahlerMul
 
-theorem ChowHeightRecursion.of_leaves (hV : ChowFormSectionVertical.Statement)
-    (hA : MahlerSection.Statement) (hB : ChowFormBaseChange.Statement)
-    (hAv : BaseChangeAvoid.Statement) : ChowHeightRecursion.Statement :=
-  ChowHeightRecursion.proof hV hA hB hAv
+alias ChowHeightRecursion.of_leaves := _root_.GroundTheory.Heights₂.Heights.ChowHeightRecursion.proof
 
 end GroundTheory.Heights₂.Heights
 end -- clump:auto

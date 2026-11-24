@@ -348,13 +348,7 @@ lemma ldiag_term (z : ℂ) (w : ℝ) (N : ℕ) :
 
 lemma ldiag_term0 (z : ℂ) (N : ℕ) :
     z * star z * (N : ℂ) = ((Complex.normSq z * N : ℝ) : ℂ) := by
-  have hs : ∀ x : ℂ, star x = (starRingEnd ℂ) x := fun _ => rfl
-  apply Complex.ext
-  all_goals
-    simp only [hs, Complex.mul_re, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-      Complex.natCast_re, Complex.natCast_im, Complex.conj_re, Complex.conj_im,
-      Complex.normSq_apply]
-    ring
+  simpa using ldiag_term z 1 N
 
 private theorem mul_sq_mul_le_sq_mul_mul_of_le {c N p q : ℝ} (hc : 0 ≤ c) (hN : 0 ≤ N) (hp : 0 ≤ p)
     (hpq : p ≤ q) : c * p ^ 2 * N ≤ q ^ 2 * (c * N) := by
@@ -650,16 +644,16 @@ section -- clump:auto
 
 namespace Formalism.GradedWeylDivisibility
 
-theorem bidetMem : BideterminantMem := bideterminantMem
-theorem hwMem : HWMem := highestWeightVectorMem
+alias bidetMem := _root_.Formalism.GradedWeylDivisibility.bideterminantMem
+alias hwMem := _root_.Formalism.GradedWeylDivisibility.highestWeightVectorMem
 theorem hwNe : HWNe := highestWeightVectorNeZero
 theorem hwRowWeight : HWRowWeight := highestWeightVectorRowWeight
 theorem dualWeylSat : DualWeylSat := dualWeylModuleSaturated
 theorem dualWeylPoint : DualWeylPoint := dualWeylModuleMemIff
 theorem dualWeylRowStable : DualWeylRowStable := dualWeylModuleRowActionStable
-theorem rowDivStable : RowDivStable := dualWeylModuleRowDividedPowerStable
+alias rowDivStable := _root_.Formalism.GradedWeylDivisibility.dualWeylModuleRowDividedPowerStable
 theorem dualWeylRowGraded : DualWeylRowGraded := dualWeylModuleRowGraded
-theorem dualWeylMap : DualWeylMap := dualWeylModuleMap
+alias dualWeylMap := _root_.Formalism.GradedWeylDivisibility.dualWeylModuleMap
 theorem dualWeylIntRat : DualWeylIntRat := dualWeylModuleIntRat
 theorem weylLeDual : WeylLeDual := by
   intro R _ r n hn ν hν
@@ -669,19 +663,17 @@ theorem weylLeDual : WeylLeDual := by
   induction w with
   | nil => exact hwMem R r n hn ν hν
   | cons x w ih => exact rowDivStable R r n ν x.1 x.2.1 x.2.2 _ ih
-theorem dualWeylNonDom : DualWeylNonDom := dualWeylModuleNonDominant
+alias dualWeylNonDom := _root_.Formalism.GradedWeylDivisibility.dualWeylModuleNonDominant
 theorem bidetDominance : BideterminantDominance := bideterminantDominance
-theorem dualWeylMul : DualWeylMul := dualWeylModuleMul
-theorem hwRaise : HWRaise := highestWeightVectorRaising
+alias dualWeylMul := _root_.Formalism.GradedWeylDivisibility.dualWeylModuleMul
+alias hwRaise := _root_.Formalism.GradedWeylDivisibility.highestWeightVectorRaising
 theorem weylRowDivStable : WeylRowDivStable := weylModuleRowDividedPowerStable
-theorem rowNuSum : RowNuSum := rowPartSum
+alias rowNuSum := _root_.Formalism.GradedWeylDivisibility.rowPartSum
 theorem fockHerm : FockHerm := fischerInnerConjSymm_holds
 theorem fockPos : FockPos := fischerInnerPos
 theorem fockWeightOrth : FockWeightOrth := fischerInnerWeightOrthogonal_holds
-theorem fockSubAdj : FockSubAdj := fischerInnerSubstitutionAdjoint
 theorem fockRowAdj : FockRowAdj := fischerInnerRowActionAdjoint
-theorem domPow : DomPow := dominancePowerProduct_holds
-theorem fockDiagBound : FockDiagBound := fockDiagBound_of domPow
+theorem fockDiagBound : FockDiagBound := fockDiagBound_of _root_.Formalism.GradedWeylDivisibility.dominancePowerProduct_holds
 
 end Formalism.GradedWeylDivisibility
 end -- clump:auto

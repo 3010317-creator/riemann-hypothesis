@@ -144,7 +144,7 @@ theorem move_at_point : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndep
   intro hci E _ _ _ H Dw l Xo c _ r g X bas idx e q0 n hr eL hs hrr hn hdir hty _ nab hnab Λ h hU hh hT hT'
   have hw := cmHost_idempotent_trace_eq_one H
   have hwi : IsIntegral ℤ (H.w0 : E) := H.w0.isIntegral_coe
-  obtain ⟨hU', hmv, hu, -⟩ := (GlobalTheory.T.pushforward_preserves_harmonic_polynomials_and_lattices E H Dw l c n 0 h hh).2 Λ
+  obtain ⟨hU', hmv, hu, -⟩ := (_root_.GlobalTheory.PushKeeps.push_keeps E H Dw l c n 0 h hh).2 Λ
   have hΛ := mem_vset Λ l.three_le hU hT
   have hΛ' := mem_vset (actLat h Λ) l.three_le (hU' hU) hT'
   have hΛ1 : Λ.La ∈ Vset E n 1 := (GenLatCmp.genLat_vset E n _).2.2.1 1 _ (one_dvd _) hΛ
@@ -176,7 +176,7 @@ theorem move_at_point : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndep
     (hN.2.2.trans inf_le_left)
   obtain ⟨-, -, -, hz2, -⟩ := ZLat.exists_reps_sum E r X g bas idx n hs hn _ hwi hw L hL _ hΛ1' N' hN'.1
     (hN'.2.2.trans inf_le_left)
-  haveI := finite_levQ Dw l
+  haveI := _root_.GlobalTheory.finite_levQ Dw l
   haveI := Fintype.ofFinite (Fin n → LevQ Dw l)
   generalize unitv (projA X bas (H.w0 : E) (tens Λ.La L) v₀) = u at hcol hu1 hp1
   generalize unitv (projA X bas (H.w0 : E) (tens (actLat h Λ).La L) v₀) = u' at hcol hu2 hp2
@@ -1266,7 +1266,9 @@ theorem classSumsSpan_of_pins_core (hR : GlobalTheory.Hk3.Core R F) (ht : TieIn 
     · refine (kernel_eq_shortVal hR ht O hP hio' hδ hcc _ hφ nab hnab h' Λ' N' d1 d2 d3 d4 w₀ hw₀ v g (dict_mem hT O g)
         (t g) (t1 g)).trans ?_
       have key : ∀ c a l m e t : ℂ, l ≠ 0 → c * a * m * e * t = c * l⁻¹ * e * (a * l * m) * t := fun c a l m e t hl => by
-        field_simp
+        calc
+          _ = (l⁻¹ * l) * (c * a * m * e * t) := by rw [inv_mul_cancel₀ hl, one_mul]
+          _ = _ := by ac_rfl
       exact key _ _ _ _ _ _ hl0
 
 end Main

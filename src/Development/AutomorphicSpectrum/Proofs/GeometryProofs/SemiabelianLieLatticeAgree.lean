@@ -139,7 +139,7 @@ end GlobalTheory.CompanionTheory.Ar.LieStalk.HeightOne
 
 namespace GlobalTheory.CompanionTheory.Ar.LieStalk.HeightOne
 
-theorem exists_generisation_of_height_eq_one : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X), IsCptGen ξ → IsLocallyNoetherian X → IsNormalScheme X → ∀ (p : Cpt ξ) (P : PrimeSpectrum (regAt ξ p)), P.asIdeal.height = 1 → ∃ (q : Cpt ξ) (hs : q.1 ⤳ p.1), (∃ _ : IsDomain (X.presheaf.stalk q.1), IsDiscreteValuationRing (X.presheaf.stalk q.1)) ∧ (∀ s : regAt ξ p, s ∉ P.asIdeal → (s : Ω)⁻¹ ∈ regAt ξ q) ∧ ∀ a ∈ regAt ξ q, ∃ s : regAt ξ p, s ∉ P.asIdeal ∧ (s : Ω) * a ∈ regAt ξ p := by
+theorem exists_generisation_of_height_eq_one : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X), IsCptGen ξ → IsLocallyNoetherian X → ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme X → ∀ (p : Cpt ξ) (P : PrimeSpectrum (regAt ξ p)), P.asIdeal.height = 1 → ∃ (q : Cpt ξ) (hs : q.1 ⤳ p.1), (∃ _ : IsDomain (X.presheaf.stalk q.1), IsDiscreteValuationRing (X.presheaf.stalk q.1)) ∧ (∀ s : regAt ξ p, s ∉ P.asIdeal → (s : Ω)⁻¹ ∈ regAt ξ q) ∧ ∀ a ∈ regAt ξ q, ∃ s : regAt ξ p, s ∉ P.asIdeal ∧ (s : Ω) * a ∈ regAt ξ p := by
   intro X Ω _ ξ hgen hN hnorm p P hP
   let P' : PrimeSpectrum (X.presheaf.stalk p.1) := ⟨Ideal.comap (regIso hgen p) P.asIdeal, inferInstance⟩
   have hP' : P'.asIdeal.height = 1 := ((regIso hgen p).height_comap P.asIdeal).trans hP
@@ -162,7 +162,7 @@ theorem exists_generisation_of_height_eq_one : ∀ (X : Scheme.{0}) (Ω : Type) 
     exact Ideal.zero_mem _
   let q : Cpt ξ := ⟨X.fromSpecStalk p.1 P', hgq⟩
   have hs' : q.1 ⤳ p.1 := hs
-  obtain ⟨hdom, hic⟩ := (_root_.GlobalTheory.isNormalScheme_iff X).1 hnorm q.1
+  obtain ⟨hdom, hic⟩ := hnorm q.1
   haveI := hN
   let f : X.presheaf.stalk p.1 →+* X.presheaf.stalk q.1 := (X.presheaf.stalkSpecializes hs').hom
   have hcomap : (IsLocalRing.maximalIdeal (X.presheaf.stalk q.1)).comap f = P'.asIdeal :=
@@ -324,18 +324,6 @@ open ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestrictio
 
 variable {S : Scheme.{0}} {R R' : Type} [CommRing R] [CommRing R']
 
-theorem dualMap_comp_algebraMap (c : R →+* R') :
-    (dualMap c).comp (algebraMap R (DualNumber R)) = (algebraMap R' (DualNumber R')).comp c := by
-  refine RingHom.ext fun r => TrivSqZeroExt.ext ?_ ?_
-  · simp [dualMap, TrivSqZeroExt.algebraMap_eq_inl]
-  · simp [dualMap, TrivSqZeroExt.algebraMap_eq_inl]
-
-theorem fst_comp_dualMap (c : R →+* R') :
-    (TrivSqZeroExt.fstHom R' R' R').toRingHom.comp (dualMap c) =
-      c.comp (TrivSqZeroExt.fstHom R R R).toRingHom := by
-  refine RingHom.ext fun a => ?_
-  simp [dualMap]
-
 theorem dualMap_comp_epsMul (c : R →+* R') (r : R) :
     (dualMap c).comp (epsMul r) = (epsMul (c r)).comp (dualMap c) := by
   refine RingHom.ext fun a => TrivSqZeroExt.ext ?_ ?_
@@ -347,7 +335,7 @@ def epsBase (c : R →+* R') (x : Sp R ⟶ S) : epsAt (spMap c ≫ x) ⟶ epsAt 
     change spMap (dualMap c) ≫ Spec.map _ ≫ x = Spec.map _ ≫ spMap c ≫ x
     simp only [spMap]
     rw [← Category.assoc, ← Category.assoc, ← Spec.map_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-      ← CommRingCat.ofHom_comp, dualMap_comp_algebraMap])
+      ← CommRingCat.ofHom_comp, _root_.GlobalTheory.CompanionTheory.Ar.SqAdd.dualMap_comp_algebraMap])
 
 def ptBase (c : R →+* R') (x : Sp R ⟶ S) : Over.mk (spMap c ≫ x) ⟶ Over.mk x :=
   Over.homMk (spMap c) rfl
@@ -362,7 +350,7 @@ theorem isTanAt_base (G : Over S) [GrpObj G] (c : R →+* R') (x : Sp R ⟶ S) (
   change Spec.map _ ≫ spMap (dualMap c) ≫ v.left = spMap c ≫ Spec.map _ ≫ v.left
   simp only [spMap]
   rw [← Category.assoc, ← Category.assoc, ← Spec.map_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-      ← CommRingCat.ofHom_comp, fst_comp_dualMap]
+      ← CommRingCat.ofHom_comp, _root_.GlobalTheory.CompanionTheory.Ar.SqAdd.fst_comp_dualMap]
 
 theorem exists_isBaseChange (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G] [Smooth G.hom] (R R' : Type)
     [CommRing R] [CommRing R'] [Algebra R R'] (x : Sp R ⟶ S) (E' : Type) [AddCommGroup E'] [Module R' E']
@@ -616,11 +604,7 @@ theorem lat_fin (h : IsCptGen ξ) (G : Over X) [GrpObj G] [IsCommMonObj G] [Smoo
     (fun s n hn => Submodule.smul_mem _ s hn) (fun a b ha hb => add_mem ha hb)
   exact Submodule.subset_span (by rw [hr]; exact ⟨m, rfl⟩)
 
-theorem dualMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    (dualMap g).comp (dualMap f) = dualMap (g.comp f) := by
-  apply RingHom.ext
-  intro a
-  ext <;> simp [dualMap]
+alias dualMap_comp := _root_.PositivityTheory.Xgn.NormalLatticeRange.dualMap_comp
 
 theorem lat_gen (h : IsCptGen ξ) (G : Over X) [GrpObj G] [IsCommMonObj G] [Smooth G.hom] {E : Type}
     [AddCommGroup E] [Module Ω E] (M : LieModel G ξ E) {p q : Cpt ξ} (hs : q.1 ⤳ p.1) :
@@ -716,7 +700,7 @@ theorem lat_eq_of_normal : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp 
   obtain ⟨f2, p2, s2⟩ := lat_fin hξ G' M' p
   refine GroundTheory.Heights₂.Heights.Model.LatticesAgree.proof GroundTheory.Heights₂.Heights.Model.HeightOneIntersection.proof (regAt ξ p) Ω E (M.lat p) (M'.lat p) f1 p1 f2 p2 s1 s2 ?_
   intro P hP1
-  obtain ⟨q, hs, hdvr, hu, hd⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieStalk.HeightOne.exists_generisation_of_height_eq_one X Ω ξ hξ hN (_root_.GlobalTheory.IsNormalScheme.of_pred hnorm) p P hP1
+  obtain ⟨q, hs, hdvr, hu, hd⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieStalk.HeightOne.exists_generisation_of_height_eq_one X Ω ξ hξ hN hnorm p P hP1
   have hq := _root_.GlobalTheory.CompanionTheory.Ar.DvrExtension.lat_eq_of_dvr X Ω ξ hξ G G' GΩ φ φ' hS hS' hP hP' E M M' hv q hdvr
   ext v
   rw [mem_localizedIn_iff hξ G M hs P hu hd, mem_localizedIn_iff hξ G' M' hs P hu hd, hq]

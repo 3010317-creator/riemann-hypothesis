@@ -1003,7 +1003,7 @@ theorem PrimaryVanishes.of_shortExact {S : ShortComplex (Rep.{0} k G)} [IsDiscre
   intro x k hx
   have hg : (cohomologyMap S.g p).hom x = 0 :=
     h₃ _ k (by rw [← map_nsmul, hx, map_zero])
-  obtain ⟨y, rfl⟩ := exists_cohomologyMap_f_eq_of_cohomologyMap_g_eq_zero hS p x hg
+  obtain ⟨y, rfl⟩ := _root_.GroundTheory.ProfCoh.exists_cohomologyMap_f_eq hS p x hg
   obtain ⟨y', ⟨j, hj⟩, hy'⟩ := exists_primary_map_eq (cohomologyMap S.f p).hom.toAddMonoidHom hℓ
     (isTorsion_cohomology _ hp y) (k := k) hx
   have : y' = 0 := h₁ y' j hj
@@ -1519,6 +1519,8 @@ theorem mem_primaryComponent_two_unitsLimitRep {r : ℕ} (hr : 4 ≤ r) (y : coh
     y ∈ AddCommGroup.primaryComponent (cohomology (unitsLimitRep K) r) 2 :=
   ⟨1, by rw [pow_one]; exact two_nsmul_cohomology_unitsLimitRep hr y⟩
 
+attribute [local irreducible] realLocalization sUnitsInfl
+
 theorem bijective_realLocalization_comp_primaryComponent {X : Type*} [AddCommGroup X] {r : ℕ} (hr : 4 ≤ r)
     (f : X →+ cohomology (unitsLimitRep K) r) (hf : IsIsoModCoprime 2 f) (hX : IsAddTorsion X) :
     Function.Bijective ((realLocalization ι (r := r) (by omega)).comp
@@ -1671,6 +1673,8 @@ theorem realLocalEquiv_realUnitsRes (ι : LocalEmbeddings K) {r : ℕ} (hr : 1 �
     (congrArg (realLocalEquiv w r) (congrArg (fun f => f.hom y) (realUnitsRes_eq S ιr r w).symm))
 
 
+
+attribute [local irreducible] realLocalization sUnitsInfl sUnitsRealPrimaryEquiv
 
 include h2S in
 theorem eq_zero_of_realUnitsRes_eq_zero {r : ℕ} (hr : 4 ≤ r) (y : cohomology (galSUnitsMax K.1 ℚ̄ S) r)

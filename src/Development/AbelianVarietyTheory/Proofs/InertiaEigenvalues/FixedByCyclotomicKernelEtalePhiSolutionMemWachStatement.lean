@@ -58,6 +58,23 @@ import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Polynomial.Basic
 
+attribute [-instance]
+  NormedSpace.toModule Submodule.normedSpace Submodule.seminormedAddCommGroup
+  Submodule.normedAddCommGroup SubalgebraClass.toNormedAlgebra
+  Subalgebra.isScalarTower_left Subalgebra.isScalarTower_mid
+  Submonoid.instIsScalarTowerSubtypeMem Submonoid.instSMulCommClassSubtypeMem_1
+  Subalgebra.smulCommClass_right Subalgebra.smulCommClass_left
+  MulSemiringAction.toDistribMulAction
+  RingHomClass.toLinearMapClassNNRat RingHomClass.toLinearMapClassRat
+  NonUnitalAlgHomClass.instLinearMapClass
+  NonUnitalAlgHomClass.instSemilinearMapClassOfNonUnitalAlgSemiHomClassOfClassRingHom
+  Algebra.TensorProduct.instNonUnitalSemiring Algebra.TensorProduct.instNonUnitalRing
+  TopologicalSpace.Compacts.instSetLike AddMonCat.addMonoidObj
+  IdemCommSemiring.toCommSemiring IdemSemiring.toSemiring
+  KleeneAlgebra.toIdemSemiring IdemCommSemiring.toIdemSemiring
+attribute [local instance high]
+  Submodule.module TensorProduct.leftModule Algebra.TensorProduct.leftAlgebra
+
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PadicClosed, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixedByCyclotomicKernelEtalePhiSolutionMemWach, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixedByCyclotomicKernelEtalePhiSolutionMemWachStatement
 
@@ -259,11 +276,6 @@ theorem near_series (ι : B →+* R) (io : LetA O n →+* B) (hu : IsUnit (ι (i
     refine ⟨s, letπ ^ m * (fun i => PowerSeries.C (c' i) : LetA O n) + a2, ?_⟩
     linear_combination h12 + letπ ^ m * hs + letπ ^ m * hC
 
-private theorem near_mono_lemma_2 {A : Type} [CommRing A] (ι : A →+* R) (τ : A) {m : ℕ} {x : R}
-    (h : Near ι p (ι τ) (m + 1) x) : Near ι p (ι τ) m x := by
-  obtain ⟨a, r, hx⟩ := h
-  exact ⟨τ * a, r, by rw [hx, map_mul, pow_succ]; ring⟩
-
 theorem near_closed (ι : B →+* R) (io : LetA O n →+* B) (al : LetA O n →+* E) (j : E →+* R)
     (hj : ∀ a, j (al a) = ι (io a)) (hu : IsUnit (ι (io letπ)))
     (hd : ∀ e, ∃ a m r, e * al (letπ ^ m) - al a = (p : E) * r)
@@ -298,7 +310,7 @@ theorem near_closed (ι : B →+* R) (io : LetA O n →+* B) (al : LetA O n →+
     have h2 : j (e (m + 1) - e m) = (x - j (e m)) + -(x - j (e (m + 1))) := by
       rw [map_sub]; ring
     rw [h2]
-    exact Near.add (he m) (Near.neg (near_mono_lemma_2 ι (io letπ) (he (m + 1))))
+    exact Near.add (he m) (Near.neg (_root_.GlobalTheory.HWL.Rational.near_mono_lemma ι (io letπ) (he (m + 1))))
   choose b r hbr using hstep
   obtain ⟨σ, hσ⟩ := exists_tail b
   obtain ⟨r0, hr0⟩ := hnear (x - j (e 0) - ι (io σ)) fun M => by
@@ -606,7 +618,6 @@ theorem tilt_mem (I : IoS AI R) (hW : IoW I) (c : Om l) (hc : c ∈ K0 K) (m : �
   have h1 := hW ⟨c, hc⟩ m hm hl hcm x ht (fun i => ⟨_, hint i⟩) fun _ => rfl
   exact ⟨_, (I.ioE_ext _).trans (congrArg (inclR LL) h1)⟩
 
-set_option synthInstance.maxHeartbeats 200000 in
 theorem eroot_mem (I : IoS AI R) (j : ℕ) : ∃ e,
     (φRW LL)^[j] (fW LL (WittVector.teichmuller l (AI.εroot j))) = I.ioE e ^ l ^ s := by
   obtain ⟨e, he⟩ := exists_succ I
@@ -618,8 +629,6 @@ theorem mem_perf {R E : Type} [CommRing R] [CommRing E] {j : E →+* R} {φ : R 
     x ∈ perf j φ hφ p := ⟨n, e ^ k, 0, by rw [h, map_pow, mul_zero, add_zero]⟩
 
 
-set_option synthInstance.maxHeartbeats 200000 in
-set_option maxHeartbeats 1000000 in
 theorem approx (hG : Good K s LL) (I : IoS AI R) (hW : IoW I) (y : RW LL) (hy : FixH AI K y) (m : ℕ) :
     ∃ (n : ℕ) (y0 : RW LL) (e : R.EE) (r : RW LL),
       (φRW LL)^[n] y0 = I.ioE e + (l : RW LL) * r ∧ NearPi AI LL s m (y - y0) := by

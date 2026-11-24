@@ -514,13 +514,7 @@ open CategoryTheory AlgebraicGeometry TensorProduct GlobalTheory.LogCris Divided
 
 namespace CrystallineSemistableComparison.Pb
 
-theorem zar2 : ∀ {O R : Type} [CommRing O] [CommRing R] {I : Ideal R} {γ : DividedPowers I} {p : ℕ} {X : Scheme.{0}}
-    {q : X ⟶ Spec (CommRingCat.of O)} {κ : O →+* R ⧸ I} (Q₀ : ObjectProperty (Thick (nlFun γ p X q κ))) (hQ : Used Q₀)
-    (𝒱 : Set X.Opens) (Q' : ObjectProperty (Thick (nlFun γ p X q κ))) (h : St Q₀ 𝒱 ≤ Q') (h' : Q' ≤ St Q₀ {sSup 𝒱})
-    (hc : ∀ T T' : Thick (nlFun γ p X q κ), (T ⟶ T') → Q' T → Q₀ T' → Q' T') (j : ℕ),
-    (∀ r r' : ℤ, Function.Bijective (((incl h).sq (incl_fil h r) (incl_fil h r')).pull j)) ∧
-    (∀ (r r' : Option ℤ) (c c' : R), Function.Bijective (((incl h).sq (incl_std h r c) (incl_std h r' c')).pull j)) ∧
-    Function.Bijective ((incl h).o.pull j) := @GlobalTheory.CompanionTheory.ZarCosieve.main
+alias zar2 := _root_.GlobalTheory.CompanionTheory.ZarCosieve.main
 
 end CrystallineSemistableComparison.Pb
 end -- clump:auto
@@ -830,7 +824,7 @@ theorem log_eq (Λ : E.Lift G D) (w : Cn (G ⋙ modF (AcrEl (PX q κ) n)) 2) (hw
     (y : (G.obj (s.obj (Fin.last 2))).1.obj.Acr n)
     (hy : y = B.dlog (B.DD false (G.obj (s.obj (Fin.last 2))).1.obj n) (l * n) ((GlobalTheory.CompanionTheory.FirstChernComparison.lam false n Λ).r s).val) :
     y = E.acrVal G n (s.obj (Fin.last 2)) (w s) :=
-  (E.Main.logEx l _ n).2.1 _ _ _ (GlobalTheory.CompanionTheory.FirstChernComparison.st2 false n Λ s y hy) (hw s)
+  (_root_.GlobalTheory.CompanionTheory.CrisLog.logEx l _ n).2.1 _ _ _ (GlobalTheory.CompanionTheory.FirstChernComparison.st2 false n Λ s y hy) (hw s)
 
 theorem tCo_eq (z : Cn (G ⋙ modF (AcrEl (PX q κ) n)) 2) : E.tCo G n 2 z = (tA l ^ 1 : Acris l) • z :=
   congrArg (fun a : Acris l => a • z) (pow_one (tA l : Acris l)).symm
@@ -892,7 +886,7 @@ theorem firstChern_family_exists (M : Model l K) (D : E.LineData M.X) (hD : sSup
 theorem h1_lift_of_firstChern (ht : TFil l) {e : E.EtFam l K} (he : EtP e) : ∀ (M : Model l K) (D : E.LineData M.X), Etale D.f →
     sSup (Pb.𝒱D D) = ⊤ → ∀ (r : E.Roots l) (v : M.T 2), IsEtaleFirstChernUntwisted r D v → ∃ x, IsFirstChernClassInFamily D x ∧ IsLift ht e 1 v x :=
   fun M D hf hD r v hv => (firstChern_family_exists M D hD).elim fun x hx =>
-    ((E.Main.liftEx l (R.forE l) _ M.X M.p (okToOC l K) _ (𝟭 _) D).2 hf).elim fun Λ =>
+    ((_root_.GlobalTheory.CompanionTheory.LineLift.liftEx l (R.forE l) _ M.X M.p (okToOC l K) _ (𝟭 _) D).2 hf).elim fun Λ =>
       ⟨x, hx.1, hx.2, fun n => (he.c1 M D r v hv _ (𝟭 _) Λ n).elim fun z h => h.elim fun hz h' =>
         firstChern_class_general ht M.p (okToOC l K) D n (x n) (hx.1 n) Λ (e M n 2 (v.lev n)) z hz h'.1 h'.2⟩
 
@@ -1079,28 +1073,25 @@ theorem zA_chi (σ : K.fixingSubgroup) (r : ℕ) :
   rw [Units.val_pow_eq_pow_val, map_pow]
   rfl
 
-variable (ht : TFil l) {e : E.EtFam l K} (he : EtP e)
-include he
-
-theorem h1_lift_add : ∀ {M : Model l K} {r j : ℕ} {v v' : M.T j} {x x' : Fam M r j},
+theorem h1_lift_add (ht : TFil l) {e : E.EtFam l K} (he : EtP e) : ∀ {M : Model l K} {r j : ℕ} {v v' : M.T j} {x x' : Fam M r j},
     IsLift ht e r v x → IsLift ht e r v' x' → IsLift ht e r (v + v') (x + x') :=
   fun {M r j v v' x x'} h h' => ⟨comp_add h.1 h'.1, fun n =>
     lin_add ((βMorF (B.schFn M.p) (okToOC l K) r n).pull j) ((tMor ht ((B.schFn M.p).pt (okToOC l K)) r n).pull j) (h.2 n) (h'.2 n)
       (map_add (e M n j) (v.lev n) (v'.lev n))⟩
 
-theorem h1_lift_smul : ∀ {M : Model l K} {r j : ℕ} {v : M.T j} {x : Fam M r j} (z : ℤ_[l]),
+theorem h1_lift_smul (ht : TFil l) {e : E.EtFam l K} (he : EtP e) : ∀ {M : Model l K} {r j : ℕ} {v : M.T j} {x : Fam M r j} (z : ℤ_[l]),
     IsLift ht e r v x → IsLift ht e r (z • v) (zA l z • x) :=
   fun {M r j v x} z h => ⟨comp_smul _ h.1, fun n =>
     lin_smul ((βMorF (B.schFn M.p) (okToOC l K) r n).pull j) ((tMor ht ((B.schFn M.p).pt (okToOC l K)) r n).pull j) (zA l z) (h.2 n)
       (e_smul e M j n z v)⟩
 
-theorem h1_lift_shift : ∀ {M : Model l K} {r r' j : ℕ} {v : M.T j} {x : Fam M r j} (k : ℕ) (h : r + k = r'),
+theorem h1_lift_shift (ht : TFil l) {e : E.EtFam l K} (he : EtP e) : ∀ {M : Model l K} {r r' j : ℕ} {v : M.T j} {x : Fam M r j} (k : ℕ) (h : r + k = r'),
     IsLift ht e r v x → IsLift ht e r' v (shS ht k h x) :=
   fun {M r r' j v x} k h hx => ⟨comp_sh ht k h hx.1, fun n =>
     (β_sh (B.schFn M.p) (okToOC l K) ht k h n j (x n)).trans
       ((congrArg ((shT ht ((B.schFn M.p).pt (okToOC l K)) k h n).pull j) (hx.2 n)).trans (shT_tMor ht _ k h n j _))⟩
 
-theorem h1_lift_galois : ∀ {M : Model l K} {r j : ℕ} {v : M.T j} {x : Fam M r j} (σ : K.fixingSubgroup), IsLift ht e r v x →
+theorem h1_lift_galois (ht : TFil l) {e : E.EtFam l K} (he : EtP e) : ∀ {M : Model l K} {r j : ℕ} {v : M.T j} {x : Fam M r j} (σ : K.fixingSubgroup), IsLift ht e r v x →
     IsLift ht e r (DeRhamTwist.Twist.chi0 l σ.1 ^ r • M.actT j σ v) (galS σ x) := by
   intro M r j v x σ hx
   refine ⟨comp_gal σ hx.1, fun n => ?_⟩
@@ -1119,7 +1110,7 @@ theorem h1_lift_galois : ∀ {M : Model l K} {r j : ℕ} {v : M.T j} {x : Fam M 
     hx.2 n, hgal, ← hz, ← hequi, ← LinearMap.map_smul,
     ← e_smul e M j n z (M.actT j σ v)]
 
-theorem h1_lift_naturality : ∀ {M N : Model l K} (u : M.X ⟶ N.X) (hu : u ≫ N.p = M.p) {r j : ℕ} {v : N.T j} {x : Fam N r j},
+theorem h1_lift_naturality (ht : TFil l) {e : E.EtFam l K} (he : EtP e) : ∀ {M N : Model l K} (u : M.X ⟶ N.X) (hu : u ≫ N.p = M.p) {r j : ℕ} {v : N.T j} {x : Fam N r j},
     IsLift ht e r v x → IsLift ht e r (Model.pullT u hu j v) (pullS u hu x) := by
   intro M N u hu r j v x hx
   refine ⟨comp_pull u hu hx.1, fun n => ?_⟩

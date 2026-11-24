@@ -486,7 +486,7 @@ theorem map_specRest {R S T : Type*} [CommRing R] [CommRing S] [CommRing T] (φ 
     induction i using Fin.cases <;> simp [eval₂_mul, hp]
 
 theorem constantCoeff_specRest {R S : Type*} [CommRing R] [CommRing S] (φ : R →+* S) {δ : ℕ}
-    (hδ : 1 ≤ δ) {f : MvPolynomial (Fin (e + 1) × Fin n) R} (hf : IsMultiHomog δ f)
+    (hδ : 1 ≤ δ) {f : MvPolynomial (Fin (e + 1) × Fin n) R} (hf : Heights.IsMultiHomog δ f)
     (y : Par e n → S) : constantCoeff (specRest φ f y) = 0 := by
   unfold specRest
   rw [← coe_eval₂Hom, ← RingHom.comp_apply, MvPolynomial.comp_eval₂Hom]
@@ -1765,7 +1765,7 @@ theorem GenSecDomain.full : GenSecDomain.Statement :=
 theorem SecAlgField.full : SecAlgField.Statement := SecAlgField.proof SecAlgFinite.full GenSecDomain.full
 theorem ChowSecDvd.full : ChowSecDvd.Statement := ChowSecDvd.proof IncidenceNull.full
 theorem NormFormIrreducible.full : NormFormIrreducible.Statement := NormFormIrreducible.proof
-theorem NormFormDvd.full : NormFormDvd.Statement := NormFormDvd.proof
+alias NormFormDvd.full := _root_.GroundTheory.Heights₂.Heights.Vertical.NormFormDvd.proof
 theorem SecAlgFieldChange.full : SecAlgFieldChange.Statement := SecAlgFieldChange.proof
 theorem GenChowIrreducible.full : GenChowIrreducible.Statement :=
   GenChowIrreducible.proof GroundTheory.Heights₂.Heights.IncIdealPrime.full
@@ -1786,7 +1786,7 @@ theorem GaussDVR.full : GaussDVR.Statement := GaussDVR.proof ParDVRIsDVR.full
 theorem VertSpec.full : VertSpec.Statement := VertSpec.proof
 theorem ResidueAlgIndep.full : ResidueAlgIndep.Statement := ResidueAlgIndep.proof
 
-theorem CodimOnePrimeAvoid.full : CodimOnePrimeAvoid.Statement := CodimOnePrimeAvoid.proof
+alias CodimOnePrimeAvoid.full := _root_.GroundTheory.Heights₂.Heights.Vertical.CodimOnePrimeAvoid.proof
 theorem FibreCut.full : FibreCut.Statement := FibreCut.proof CodimOnePrimeAvoid.full
 theorem GenericFibreDrop.full : GenericFibreDrop.Statement := GenericFibreDrop.proof
 

@@ -519,6 +519,14 @@ set_option autoImplicit false
 
 noncomputable section
 
+local instance (priority := high) instAlgebraTRing_CoverDesc {K : Type} [Field K] (p : Formalism.L2.Pj.TRing K) :
+    Algebra K p.R :=
+  Ideal.Quotient.algebra K
+
+local instance (priority := high) instCommRingTRing_CoverDesc {K : Type} [Field K] (p : Formalism.L2.Pj.TRing K) :
+    CommRing p.R :=
+  Ideal.Quotient.commRing p.I
+
 namespace GlobalTheory.CoverDesc
 
 open AlgebraicGeometry CategoryTheory Limits NumberField ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
@@ -780,6 +788,18 @@ open AlgebraicGeometry CategoryTheory Limits NumberField ReciprocityTheory.Chart
 
 namespace GlobalTheory.CuspFieldChange
 
+local instance (priority := high) instAlgebraTRing_CuspFieldChange {K : Type} [Field K] (p : Formalism.L2.Pj.TRing K) :
+    Algebra K p.R :=
+  Ideal.Quotient.algebra K
+
+local instance (priority := high) instCommRingTRing_CuspFieldChange {K : Type} [Field K] (p : Formalism.L2.Pj.TRing K) :
+    CommRing p.R :=
+  Ideal.Quotient.commRing p.I
+
+local instance (priority := high) instModuleTRing_CuspFieldChange {K : Type} [Field K] (p : Formalism.L2.Pj.TRing K) :
+    Module K p.R :=
+  Algebra.toModule
+
 open GlobalTheory.FieldBC GlobalTheory.SecFieldChange
 open GlobalTheory.CoefChangeCompare (ValueWD HasBC hasBC_of evR_of_map)
 
@@ -859,6 +879,75 @@ open scoped ENNReal
 set_option synthInstance.maxHeartbeats 400000
 
 noncomputable section
+
+section LevRingDescInsts
+variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
+  {l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H}
+
+local instance (priority := high) instAlgebraTRing_LevRingDesc {K : Type} [Field K] (p : TRing K) :
+    Algebra K p.R :=
+  Ideal.Quotient.algebra K
+
+local instance (priority := high) instCommRingTRing_LevRingDesc {K : Type} [Field K] (p : TRing K) :
+    CommRing p.R :=
+  Ideal.Quotient.commRing p.I
+
+local instance (priority := high) instSMulORul_LevRingDesc (Xo : Moduli Dw l) (c : Coeff l) :
+    SMul (𝓞 c.F) (Rul Xo c) :=
+  inferInstance
+
+local instance (priority := high) instModuleORul_LevRingDesc (Xo : Moduli Dw l) (c : Coeff l) :
+    Module (𝓞 c.F) (Rul Xo c) :=
+  inferInstance
+
+local instance (priority := high) instScalarTowerORul_LevRingDesc (Xo : Moduli Dw l) (c : Coeff l) :
+    IsScalarTower (𝓞 c.F) c.F (Rul Xo c) :=
+  inferInstance
+
+local instance (priority := high) instModuleCuspW_LevRingDesc (Xo : Moduli Dw l) (c : Coeff l) {r : ℕ}
+    (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (G : WTZ E) :
+    Module c.F ↥(cuspW Xo c U G) :=
+  Submodule.module _
+
+local instance (priority := high) instDistribMulActionCuspW_LevRingDesc (Xo : Moduli Dw l) (c : Coeff l) {r : ℕ}
+    (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (G : WTZ E) :
+    DistribMulAction c.F ↥(cuspW Xo c U G) :=
+  Module.toDistribMulAction
+
+local instance (priority := high) instMulActionCuspW_LevRingDesc (Xo : Moduli Dw l) (c : Coeff l) {r : ℕ}
+    (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (G : WTZ E) :
+    MulAction c.F ↥(cuspW Xo c U G) :=
+  DistribMulAction.toMulAction
+
+local instance (priority := high) instSMulCuspW_LevRingDesc (Xo : Moduli Dw l) (c : Coeff l) {r : ℕ}
+    (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (G : WTZ E) :
+    SMul c.F ↥(cuspW Xo c U G) :=
+  Submodule.smul _
+
+local instance (priority := high) instHSMulCuspW_LevRingDesc (Xo : Moduli Dw l) (c : Coeff l) {r : ℕ}
+    (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (G : WTZ E) :
+    HSMul c.F ↥(cuspW Xo c U G) ↥(cuspW Xo c U G) :=
+  instHSMul
+
+local instance (priority := high) instSMulOCuspW_LevRingDesc (Xo : Moduli Dw l) (c : Coeff l) {r : ℕ}
+    (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (G : WTZ E) :
+    SMul (𝓞 c.F) ↥(cuspW Xo c U G) :=
+  Submodule.smul _
+
+local instance (priority := high) instHSMulOCuspW_LevRingDesc (Xo : Moduli Dw l) (c : Coeff l) {r : ℕ}
+    (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (G : WTZ E) :
+    HSMul (𝓞 c.F) ↥(cuspW Xo c U G) ↥(cuspW Xo c U G) :=
+  instHSMul
+
+local instance (priority := high) instModuleOCuspW_LevRingDesc (Xo : Moduli Dw l) (c : Coeff l) {r : ℕ}
+    (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (G : WTZ E) :
+    Module (𝓞 c.F) ↥(cuspW Xo c U G) :=
+  inferInstance
+
+local instance (priority := high) instScalarTowerOCuspW_LevRingDesc (Xo : Moduli Dw l) (c : Coeff l) {r : ℕ}
+    (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (G : WTZ E) :
+    IsScalarTower (𝓞 c.F) c.F ↥(cuspW Xo c U G) :=
+  inferInstance
 
 namespace GlobalTheory.LevRingDesc
 
@@ -1137,6 +1226,7 @@ theorem levRing_descent : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.ChartRes
       exact hg'
 
 end GlobalTheory.LevRingDesc
+end LevRingDescInsts
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

@@ -435,7 +435,6 @@ theorem UpperTheory.Reformulated.B.CoPoint.coPt :
     have h1 : Polynomial.aeval (y x) P = 0 := h0
     rw [Polynomial.aeval_algHom_apply] at h1
     exact h1
-  haveI hlocR : IsLocalHom (algebraMap c.O R) := UpperTheory.V.Alg.IsCO.isLocalHom
   have hfin := UpperTheory.monic_ideal_completion hres (RingHom.ker y) hJ ϖ hϖ
   have hlt : ‖algebraMap c.O (Formalism.ConjugateSelfDual.Qbar l) ϖ‖ < 1 :=
     hm ϖ hϖ.not_isUnit
@@ -480,10 +479,7 @@ namespace UpperTheory.V.J
 
 end UpperTheory.V.J
 
-theorem UpperTheory.V.J.coPt :
-    ∀ (l : ℕ) [Fact l.Prime] (c : Coef l) [Fr.IsCoef l c.O] (R : Type) [CommRing R] [Algebra c.O R] [IsCO c.O R] (y : R →ₐ[c.O] Qbar l),
-        Module.Finite c.O y.range ∧ (∀ a, ‖y a‖ ≤ 1) ∧ ∀ a ∈ maximalIdeal R, ‖y a‖ < 1 :=
-  _root_.UpperTheory.Reformulated.B.CoPoint.coPt
+alias UpperTheory.V.J.coPt := _root_.UpperTheory.Reformulated.B.CoPoint.coPt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LinkedUnramifiedChains.ScalarIrreducibility.NormLeOneOfInt =====

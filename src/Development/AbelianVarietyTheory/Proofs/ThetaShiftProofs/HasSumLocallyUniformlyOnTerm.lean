@@ -53,6 +53,7 @@ import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.TorusProjPeriodZeroEqReal
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.SummableExpNegSumAbs, Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HasSumLocallyUniformlyOnTerm
@@ -117,11 +118,7 @@ namespace GlobalTheory
 
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (hermForm eTwoPi)
 
-theorem summable_exp_neg_sum_abs_int {ι : Type} [Fintype ι] :
-    Summable fun m : ι → ℤ => Real.exp (-∑ i, |(m i : ℝ)|) := by
-  first
-  | exact _root_.GlobalTheory.SummableExpNegAbsSum.summable_exp_neg_sum_abs
-  | (intros; exact _root_.GlobalTheory.SummableExpNegAbsSum.summable_exp_neg_sum_abs ..)
+alias summable_exp_neg_sum_abs_int := _root_.GlobalTheory.SummableExpNegAbsSum.summable_exp_neg_sum_abs
 
 namespace AnArc
 
@@ -218,9 +215,6 @@ theorem exists_norm_H_le : ∃ C, 0 ≤ C ∧ ∀ z w, ‖A.H z w‖ ≤ C * ‖
 theorem continuous_H : Continuous fun p : (Fin A.gB → ℂ) × (Fin A.gB → ℂ) => A.H p.1 p.2 := by
   simp only [H, hermForm, dotProduct, Matrix.mulVec]
   fun_prop
-
-theorem H_re_symm (z w : Fin A.gB → ℂ) : (A.H z w).re = (A.H w z).re := by
-  rw [← A.H_conj z w, Complex.conj_re]
 
 theorem H_add_self_re (z w : Fin A.gB → ℂ) :
     (A.H (z + w) (z + w)).re = (A.H z z).re + 2 * (A.H z w).re + (A.H w w).re := by

@@ -229,7 +229,7 @@ theorem isotropicLPart_shortSeries_bound_mul (Xo : Moduli Dw l) (c : Coeff l) [S
     ((-ρ : ℝ) : EReal) ≤ nval T.V e (io (s * (((Λ.mIdx N (Dw.p + Dw.q) : c.F))⁻¹ * ((N : c.F) ^ P.totalDegree)⁻¹)) *
       ∑ i, hv Xo c nab y.1 (N ^ 2) (F i) P) := by
   letI := io.toAlgebra
-  obtain ⟨A, hsim⟩ := GlobalTheory.T.exists_adapted_similitude_data_at_prime E H n Λ N M ℓ hU hL hp
+  obtain ⟨A, hsim⟩ := _root_.GlobalTheory.PlaceInt.AdaptExists.exists_adapt E H n Λ N M ℓ hU hL hp
   have hN : Odd N := hL.1
   have hkN : Odd (A.k * N) := A.odd.mul hN
   have hlev : (A.k * N) ^ 2 = N ^ 2 * A.k ^ 2 := by ring
@@ -256,7 +256,7 @@ theorem isotropicLPart_shortSeries_bound_mul (Xo : Moduli Dw l) (c : Coeff l) [S
   obtain ⟨hff, -, hhom⟩ := GlobalTheory.PushIntegral.map_pushL_mem_FFV E H Dw l c n Λ w P hP T io A.k A.ga
     (isUnit_of_coprime hl A.cop) A.unitary A.into
   have hkN0 : ((A.k * N : ℕ) : c.F) ^ P.totalDegree ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.2 hkN.pos.ne')
-  obtain ⟨z, hz1, hz2⟩ := GlobalTheory.T.sum_hv_primary_kernel_alt E H Dw l Xo c hst T io y C hC nab hnab e ρ w n he hB ℓ hp hl (A.k * N)
+  obtain ⟨z, hz1, hz2⟩ := _root_.GlobalTheory.sum_hv_primary_kernel E H Dw l Xo c hst T io y C hC nab hnab e ρ w n he hB ℓ hp hl (A.k * N)
     (A.k ^ 2) (N ^ 2) A.k₁ A.p A.q ((A.k : 𝓞 E) • A.g) hkN hsim (mul_pow _ _ _) (A.cop.pow_left 2) hR A.cop₁
     (by rw [Matrix.smul_mul, A.gq, smul_smul]; congr 1; push_cast; ring) J a hinj ha'
     (fun i i' ε hε => hiso (a i) (a i') ε (hZ i) (hZ i') fun b => by rw [← Nat.cast_pow]; exact hε b)
@@ -342,8 +342,6 @@ set_option autoImplicit false
 noncomputable section
 
 
-theorem _root_.GlobalTheory.T.shortSeries_bound_coprime_torsion_mul : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), Good3 C → ∀ nab : NabV Xo c, IsNab Xo c nab → ∀ (e : ℕ) (ρ : ℝ) (w : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), 0 < e → ChBound C e ρ w n → ∀ (ℓ : ℕ), ℓ.Prime → ¬ IsUnit (ℓ : T.V) → ∀ (Λ : GenLat E n) (N M : ℕ), Λ.Unimod → Λ.LevOK N M → ∀ P : MvPolynomial (LtN Dw n) c.F, P ∈ harmL c Λ w → ∀ (z : Fin (Λ.zCard N (Dw.p + Dw.q)) → Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G)) (tp : Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G)) (F : Fin (Λ.zCard N (Dw.p + Dw.q)) → Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((N : ℤ) ^ 2) (ptO Xo (xOf y)))), (∀ i, InZh Xo Λ N (z i)) → GeoInj Xo (xOf y) z → (∀ b, tp b ^ (N ^ 2) = 1) → (∀ i b, IsUUOver Xo.univ.t.G Xo.univ.t.PP N (sOf1 y) (z i b) (tp b) (F i b)) → AllRat Xo (xOf y) (N ^ 2) → (∃ m : ℕ, Nat.Coprime m ℓ ∧ ∀ b, tp b ^ m = 1) → ∀ s : c.F, (∀ A : GlobalTheory.PlaceInt.Adapt Λ N ℓ, 0 ≤ nval T.V e (io (s * ∏ τ : E →+* ℂ, embK c τ A.p.det ^ Dw.mult τ))) → letI := io.toAlgebra; ((-ρ : ℝ) : EReal) ≤ nval T.V e (io (s * (((Λ.mIdx N (Dw.p + Dw.q) : c.F))⁻¹ * ((N : c.F) ^ P.totalDegree)⁻¹)) * ∑ i, hv Xo c nab y.1 (N ^ 2) (fun b => sqN Xo N (F i b)) P) := by
-  first | exact @GlobalTheory.SupFull.bound_of_coprime_mul
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -374,7 +372,41 @@ noncomputable section
 
 namespace GlobalTheory.CovInt
 
+section CovIntInsts1
+local instance (priority := high) instAlgebraTRing_CovInt1 {K : Type} [Field K] (p : TRing K) :
+    Algebra K p.R :=
+  Ideal.Quotient.algebra K
 
+local instance (priority := high) instCommRingTRing_CovInt1 {K : Type} [Field K] (p : TRing K) :
+    CommRing p.R :=
+  Ideal.Quotient.commRing p.I
+
+local instance (priority := high) instModuleTRing_CovInt1 {K : Type} [Field K] (p : TRing K) :
+    Module K p.R :=
+  Algebra.toModule
+
+variable {E : Type} [Field E] [NumberField E] [IsCMField E]
+  {H : Host E} {Dw : Datum H} {l : Level H}
+
+local instance (priority := high) instModuleRul_CovInt1 (Xo : Moduli Dw l) (c : Coeff l) :
+    Module c.F (Rul Xo c) :=
+  inferInstance
+
+local instance (priority := high) instDistribMulActionRul_CovInt1 (Xo : Moduli Dw l) (c : Coeff l) :
+    DistribMulAction c.F (Rul Xo c) :=
+  Module.toDistribMulAction
+
+local instance (priority := high) instMulActionRul_CovInt1 (Xo : Moduli Dw l) (c : Coeff l) :
+    MulAction c.F (Rul Xo c) :=
+  DistribMulAction.toMulAction
+
+local instance (priority := high) instSMulRul_CovInt1 (Xo : Moduli Dw l) (c : Coeff l) :
+    SMul c.F (Rul Xo c) :=
+  Module.toDistribMulAction.toDistribSMul.toSMul
+
+local instance (priority := high) instHSMulRul_CovInt1 (Xo : Moduli Dw l) (c : Coeff l) :
+    HSMul c.F (Rul Xo c) (Rul Xo c) :=
+  instHSMul
 
 theorem smul_intZ_nonneg_coprime : ∀ (D : D7) (H : Host D.host.E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (n : ℕ)
     (d : DeltaDat Xo c n) [StarRing (𝓞 D.host.E)], d.IsLev → IsNab d.Xo₂ d.c₂ d.nab₂ →
@@ -459,7 +491,7 @@ theorem smul_intZ_nonneg_coprime : ∀ (D : D7) (H : Host D.host.E) (Dw : Datum 
   have hN2 : ∀ q b, tp q b ^ (N ^ 2) = 1 := fun q b => by
     have hk : KilledBy d.Xo₂ d.l₂.Mb (tp q b ^ N) := by rw [(htp q b).1]; exact levPt_killed d.Xo₂ _ _
     exact (h5 _ _ hk (htp q b).2).1
-  have hterm := fun q => GlobalTheory.T.shortSeries_bound_coprime_torsion_mul D.host.E H Dw d.l₂ d.Xo₂ d.c₂ hnab.1 T' io₂ y₂ C hC _ hnab (r * e) _ w n he'
+  have hterm := fun q => _root_.GlobalTheory.SupFull.bound_of_coprime_mul D.host.E H Dw d.l₂ d.Xo₂ d.c₂ hnab.1 T' io₂ y₂ C hC _ hnab (r * e) _ w n he'
     hch ℓ hℓ hu Λ N d.l₂.M hU hN _ (ef2 _ P hP).1 z (tp q) (F q) hz hgi (hN2 q) (hF q) hrat (hcop q) (d.eF s) hsA
   have hX1 : ∀ {J : Type} (bb : T'.Fr) (X : J → T'.Fr) (ρ : ℝ),
       (∀ q, ((-ρ : ℝ) : EReal) ≤ nval T'.V (r * e) (bb * X q)) →
@@ -507,6 +539,7 @@ theorem smul_intZ_nonneg_coprime : ∀ (D : D7) (H : Host D.host.E) (Dw : Datum 
     simp only [map_mul, map_inv₀, map_natCast]
     field_simp
 
+end CovIntInsts1
 end GlobalTheory.CovInt
 end -- clump:auto
 end -- clump:auto
@@ -537,8 +570,6 @@ set_option autoImplicit false
 noncomputable section
 
 
-theorem _root_.GlobalTheory.T.clearingInteger_shortSeries_integral_coprimeLevel : ∀ (D : D7) (H : Host D.host.E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (n : ℕ) (d : DeltaDat Xo c n) [StarRing (𝓞 D.host.E)], d.IsLev → IsNab d.Xo₂ d.c₂ d.nab₂ → (∀ (k : Type) [Field k] [Algebra d.c₂.F k] (y₂ : FrPt d.Xo₂ d.c₂ k), evR d.Xo₂ d.c₂ d.cδ y₂ = 1) → (∀ (x0 : Fin n → Dw.La) (q : Fin n → LevQ Dw d.l₂), IsIntegral ℤ (d.w x0 q)) → d.l₂.M ≠ 0 → ∀ (Λ : GenLat D.host.E n) (N : ℕ), Λ.Unimod → Λ.TrivAt d.l₂.M → Λ.LevOK N d.l₂.M → ∀ (w : (D.host.E →+* ℂ) × ℕ → ℕ) (P : MvPolynomial (LtN Dw n) c.F), P ∈ harmL c Λ w → ∀ (x0 : Fin n → Dw.La) (g : Rul Xo c), g ∈ sec Xo c w n → IsShortRule Xo c d Λ N x0 P g → ∀ la : HeightOneSpectrum (𝓞 c.F), (∀ ℓ : ℕ, ℓ.Prime → (ℓ : 𝓞 c.F) ∈ la.asIdeal → ¬ ℓ ∣ d.l₂.M) → ∀ s : c.F, Submodule.span (𝓞 c.F) {s} * ∏ τ : D.host.E →+* ℂ, idealAt c Λ.Ln τ ^ Dw.mult τ ≤ ∏ τ : D.host.E →+* ℂ, idealAt c Λ.La τ ^ Dw.mult τ → ∀ v ∈ valSet Xo c (algCls Xo c) la, 0 ≤ v ((s * betaH (Dw := Dw) c Λ * (intZ D Dw d.l₂ n w : c.F)) • g) := by
-  first | exact @GlobalTheory.CovInt.smul_intZ_nonneg_coprime
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -660,6 +691,14 @@ set_option autoImplicit false
 attribute [local instance] CategoryTheory.Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.RawSpan
+
+noncomputable local instance (priority := high) instAlgebraTRing_RawSpan {K : Type} [Field K] (p : TRing K) :
+    Algebra K p.R :=
+  Ideal.Quotient.algebra K
+
+noncomputable local instance (priority := high) instCommRingTRing_RawSpan {K : Type} [Field K] (p : TRing K) :
+    CommRing p.R :=
+  Ideal.Quotient.commRing p.I
 
 theorem isShortRule_of_raw : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
     {Xo : Moduli Dw l} {c : Coeff l} [StarRing (𝓞 E)] (nab : NabV Xo c), IsNab Xo c nab → ∀ {n : ℕ} {Λ : GenLat E n} {N : ℕ},
@@ -910,7 +949,41 @@ noncomputable section
 
 namespace GlobalTheory.CovInt
 
+local instance (priority := high) instAlgebraTRing_CovInt2 {K : Type} [Field K] (p : TRing K) :
+    Algebra K p.R :=
+  Ideal.Quotient.algebra K
 
+local instance (priority := high) instCommRingTRing_CovInt2 {K : Type} [Field K] (p : TRing K) :
+    CommRing p.R :=
+  Ideal.Quotient.commRing p.I
+
+local instance (priority := high) instModuleTRing_CovInt2 {K : Type} [Field K] (p : TRing K) :
+    Module K p.R :=
+  Algebra.toModule
+
+section RulInsts2
+variable {E : Type} [Field E] [NumberField E] [IsCMField E]
+  {H : Host E} {Dw : Datum H} {l : Level H}
+
+local instance (priority := high) instModuleRul_CovInt2 (Xo : Moduli Dw l) (c : Coeff l) :
+    Module c.F (Rul Xo c) :=
+  inferInstance
+
+local instance (priority := high) instDistribMulActionRul_CovInt2 (Xo : Moduli Dw l) (c : Coeff l) :
+    DistribMulAction c.F (Rul Xo c) :=
+  Module.toDistribMulAction
+
+local instance (priority := high) instMulActionRul_CovInt2 (Xo : Moduli Dw l) (c : Coeff l) :
+    MulAction c.F (Rul Xo c) :=
+  DistribMulAction.toMulAction
+
+local instance (priority := high) instSMulRul_CovInt2 (Xo : Moduli Dw l) (c : Coeff l) :
+    SMul c.F (Rul Xo c) :=
+  Module.toDistribMulAction.toDistribSMul.toSMul
+
+local instance (priority := high) instHSMulRul_CovInt2 (Xo : Moduli Dw l) (c : Coeff l) :
+    HSMul c.F (Rul Xo c) (Rul Xo c) :=
+  instHSMul
 
 theorem smul_intZ_nonneg_away : ∀ (D : D7) (H : Host D.host.E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (n : ℕ)
     (d : DeltaDat Xo c n) [StarRing (𝓞 D.host.E)], d.IsLev → IsNab d.Xo₂ d.c₂ d.nab₂ →
@@ -1022,6 +1095,7 @@ theorem smul_intZ_nonneg_away : ∀ (D : D7) (H : Host D.host.E) (Dw : Datum H) 
     simp only [map_mul, map_inv₀, map_natCast]
     field_simp
 
+end RulInsts2
 end GlobalTheory.CovInt
 end -- clump:auto
 end -- clump:auto
@@ -1048,6 +1122,42 @@ set_option autoImplicit false
 set_option synthInstance.maxHeartbeats 400000
 
 noncomputable section
+
+local instance (priority := high) instAlgebraTRing_SqLev {K : Type} [Field K] (p : TRing K) :
+    Algebra K p.R :=
+  Ideal.Quotient.algebra K
+
+local instance (priority := high) instCommRingTRing_SqLev {K : Type} [Field K] (p : TRing K) :
+    CommRing p.R :=
+  Ideal.Quotient.commRing p.I
+
+local instance (priority := high) instModuleTRing_SqLev {K : Type} [Field K] (p : TRing K) :
+    Module K p.R :=
+  Algebra.toModule
+
+section RulInsts3
+variable {E : Type} [Field E] [NumberField E] [IsCMField E]
+  {H : Host E} {Dw : Datum H} {l : Level H}
+
+local instance (priority := high) instModuleRul_SqLev (Xo : Moduli Dw l) (c : Coeff l) :
+    Module c.F (Rul Xo c) :=
+  inferInstance
+
+local instance (priority := high) instDistribMulActionRul_SqLev (Xo : Moduli Dw l) (c : Coeff l) :
+    DistribMulAction c.F (Rul Xo c) :=
+  Module.toDistribMulAction
+
+local instance (priority := high) instMulActionRul_SqLev (Xo : Moduli Dw l) (c : Coeff l) :
+    MulAction c.F (Rul Xo c) :=
+  DistribMulAction.toMulAction
+
+local instance (priority := high) instSMulRul_SqLev (Xo : Moduli Dw l) (c : Coeff l) :
+    SMul c.F (Rul Xo c) :=
+  Module.toDistribMulAction.toDistribSMul.toSMul
+
+local instance (priority := high) instHSMulRul_SqLev (Xo : Moduli Dw l) (c : Coeff l) :
+    HSMul c.F (Rul Xo c) (Rul Xo c) :=
+  instHSMul
 
 section SqLevPoint
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField IsLocalRing
@@ -1252,6 +1362,7 @@ theorem smul_intZ_sq_nonneg_of_sq_dvd : ∀ (D : D7) (H : Host D.host.E) (Dw : D
   exact hns _
 
 end GlobalTheory.CovInt.SqLev
+end RulInsts3
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1280,6 +1391,69 @@ noncomputable section
 
 namespace GlobalTheory.CovInt
 
+local instance (priority := high) instAlgebraTRing_CovInt4 {K : Type} [Field K] (p : TRing K) :
+    Algebra K p.R :=
+  Ideal.Quotient.algebra K
+
+local instance (priority := high) instCommRingTRing_CovInt4 {K : Type} [Field K] (p : TRing K) :
+    CommRing p.R :=
+  Ideal.Quotient.commRing p.I
+
+local instance (priority := high) instModuleTRing_CovInt4 {K : Type} [Field K] (p : TRing K) :
+    Module K p.R :=
+  Algebra.toModule
+
+section RulInsts4
+variable {E : Type} [Field E] [NumberField E] [IsCMField E]
+  {H : Host E} {Dw : Datum H} {l : Level H}
+
+local instance (priority := high) instModuleRul_CovInt4 (Xo : Moduli Dw l) (c : Coeff l) :
+    Module c.F (Rul Xo c) :=
+  inferInstance
+
+local instance (priority := high) instDistribMulActionRul_CovInt4 (Xo : Moduli Dw l) (c : Coeff l) :
+    DistribMulAction c.F (Rul Xo c) :=
+  Module.toDistribMulAction
+
+local instance (priority := high) instMulActionRul_CovInt4 (Xo : Moduli Dw l) (c : Coeff l) :
+    MulAction c.F (Rul Xo c) :=
+  DistribMulAction.toMulAction
+
+local instance (priority := high) instSMulRul_CovInt4 (Xo : Moduli Dw l) (c : Coeff l) :
+    SMul c.F (Rul Xo c) :=
+  Module.toDistribMulAction.toDistribSMul.toSMul
+
+local instance (priority := high) instHSMulRul_CovInt4 (Xo : Moduli Dw l) (c : Coeff l) :
+    HSMul c.F (Rul Xo c) (Rul Xo c) :=
+  instHSMul
+
+local instance (priority := high) instAddCommGroupRul_CovInt4 (Xo : Moduli Dw l) (c : Coeff l) :
+    AddCommGroup (Rul Xo c) :=
+  inferInstance
+
+local instance (priority := high) instSMulCommClassRul_CovInt4 (Xo : Moduli Dw l) (c : Coeff l) :
+    SMulCommClass c.F c.F (Rul Xo c) :=
+  inferInstance
+
+local instance (priority := high) instAddCommGroupCuspW_CovInt4 (Xo : Moduli Dw l) (c : Coeff l) {r : ℕ}
+    (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (G : WTZ E) :
+    AddCommGroup ↥(cuspW Xo c U G) :=
+  Submodule.addCommGroup _
+
+local instance (priority := high) instModuleCuspW_CovInt4 (Xo : Moduli Dw l) (c : Coeff l) {r : ℕ}
+    (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (G : WTZ E) :
+    Module c.F ↥(cuspW Xo c U G) :=
+  Submodule.module _
+
+local instance (priority := high) instAddCommGroupDeepV_CovInt4 {D : D7} {T : Core D} {j : ℕ}
+    (Y : Deep T j) (G : WTZ D.host.E) :
+    AddCommGroup ↥(Y.V G) :=
+  Submodule.addCommGroup _
+
+local instance (priority := high) instModuleDeepV_CovInt4 {D : D7} {T : Core D} {j : ℕ}
+    (Y : Deep T j) (G : WTZ D.host.E) :
+    Module Y.d.c₂.F ↥(Y.V G) :=
+  Submodule.module _
 
 set_option maxHeartbeats 1000000 in
 theorem integral_smul_thLa : ∃ C : ℝ, 0 ≤ C ∧ ∀ (D : D7) (T : CoreJ D) (j : ℕ) (Y : Deep T.toCore j) (e : ℕ) (o Lb : ℝ) (a : (D.host.E →+* ℂ) × ℕ → ℕ) (n : ℕ), GlobalTheory.CovGmin.Hyp D T j Y e o Lb a n → ∀ [StarRing (𝓞 D.host.E)] (nab : NabV Y.d.Xo₂ Y.d.c₂), IsNab Y.d.Xo₂ Y.d.c₂ nab → ∃ Na : ℕ, 0 < Na ∧ Real.log Na ≤ C * ((D.R.f : ℝ) * D.R.r * Lb) ^ 2 * sizeK (T.Q.Dw j) a n ∧ ∀ (x0 : Fin n → LevQc (T.Q.Dw j) Y.d.l₂) (La : GenLat D.host.E n) (N : ℕ) (P : MvPolynomial (LtN (T.Q.Dw j) n) Y.d.c₂.F), La.Unimod → La.TrivAt (GlobalTheory.CovGmin.badC Y) → La.TrivAt Y.d.l₂.M → La.LevOK N Y.d.l₂.M → P ∈ harmL Y.d.c₂ La a → ∀ y : Y.V (wtZ a n), (∀ (p : TRing Y.d.c₂.F) (y' : FrPt Y.d.Xo₂ Y.d.c₂ p.R), thLaValAt Y.d.Xo₂ Y.d.c₂ nab (phiHat Y.d.c₂ (indPhi Y.d.c₂ x0)) La N P y' ((y : Rul Y.d.Xo₂ Y.d.c₂) p y')) → ∀ s : Y.d.c₂.F, Submodule.span (𝓞 Y.d.c₂.F) {s} * ∏ τ : D.host.E →+* ℂ, idealAt Y.d.c₂ La.Ln τ ^ (T.Q.Dw j).mult τ ≤ ∏ τ : D.host.E →+* ℂ, idealAt Y.d.c₂ La.La τ ^ (T.Q.Dw j).mult τ → ∀ y₁ : Y.V (wtZ a n), (y₁ : Rul Y.d.Xo₂ Y.d.c₂) = s • (y : Rul Y.d.Xo₂ Y.d.c₂) → Na • y₁ ∈ AllWt.latW Y.U (wtZ a n) := by
@@ -1367,10 +1541,11 @@ theorem integral_smul_thLa : ∃ C : ℝ, 0 ≤ C ∧ ∀ (D : D7) (T : CoreJ D)
       have h1 := vAdd_int_nonneg la (a := (Z : 𝓞 Y.d.c₂.F)) (by exact_mod_cast hZ0)
       refine add_nonneg (by exact_mod_cast h1) ?_
       rw [hZ]
-      exact GlobalTheory.T.clearingInteger_shortSeries_integral_coprimeLevel D _ _ _ _ _ n (GlobalTheory.RawSpan.idCover nab n) hlevI hnab (fun k _ _ y₂ => GlobalTheory.RawSpan.evR_one_field k y₂)
+      exact _root_.GlobalTheory.CovInt.smul_intZ_nonneg_coprime D _ _ _ _ _ n (GlobalTheory.RawSpan.idCover nab n) hlevI hnab (fun k _ _ y₂ => GlobalTheory.RawSpan.evR_one_field k y₂)
         (fun x0 q => by rw [GlobalTheory.LevelCoverDatum.noDelta_w]; exact isIntegral_fourierCoeff_classIndicator_levelPoint _ hM0 x0 q) hM0 La N hU hTM hN a P hP x0' _ hg hR
         la hb s hs v hv
 
+end RulInsts4
 end GlobalTheory.CovInt
 end -- clump:auto
 end -- clump:auto

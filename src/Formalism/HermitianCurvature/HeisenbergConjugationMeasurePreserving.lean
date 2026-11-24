@@ -328,7 +328,7 @@ theorem gP_mul_le_gP_add (π : ι → V →L[ℝ] ℂ) (c u : V) : gP π c * gP 
   apply pow_le_pow_left₀ (by positivity)
   have := norm_add_le (π v c) (π v u)
   rw [map_add (f := _)]
-  nlinarith [norm_nonneg (π v c), norm_nonneg (π v u), mul_nonneg (norm_nonneg (π v c)) (norm_nonneg (π v u))]
+  linarith [norm_nonneg (π v c), norm_nonneg (π v u), mul_nonneg (norm_nonneg (π v c)) (norm_nonneg (π v u))]
 
 theorem le_gP_of_norm_le (π : ι → V →L[ℝ] ℂ) (R : ℝ) (x : V) (hx : ‖x‖ ≤ R) :
     ∏ v, ((1 + ‖π v‖ * R)^3)⁻¹ ≤ gP π x := by
@@ -548,7 +548,7 @@ private lemma vthp_le_one_tenth_of_small (c : Cfg) (h : c.Ok) (bb : ℝ) (hs : c
     rw [div_le_iff₀ (by linarith)] at hv
     rw [div_le_iff₀ hbp]
     have hkD : 0 ≤ (c.k:ℝ) * c.Del := mul_nonneg hk (by linarith)
-    nlinarith [mul_le_mul_of_nonneg_left hm hkD]
+    linarith [mul_le_mul_of_nonneg_left hm hkD]
   · norm_num
 
 theorem aZeroBound : AZeroBound := by
@@ -564,9 +564,9 @@ theorem aZeroBound : AZeroBound := by
     have h2 : Real.exp c.vth * Real.exp (-c.vth) = 1 := by rw [← Real.exp_add]; simp
     have h3 := Real.exp_pos c.vth
     have h4 := hs.hvth
-    nlinarith [mul_le_mul_of_nonneg_left h1 h3.le, mul_nonneg h3.le (by linarith : (0:ℝ) ≤ 1 / 10 - c.vth)]
+    linarith [mul_le_mul_of_nonneg_left h1 h3.le, mul_nonneg h3.le (by linarith : (0:ℝ) ≤ 1 / 10 - c.vth)]
   have hS : Real.sqrt (14 / 5) ≤ 1.6734 := by
-    nlinarith [Real.sq_sqrt (show (0:ℝ) ≤ 14 / 5 by norm_num), Real.sqrt_nonneg (14 / 5)]
+    exact (Real.sqrt_le_left (by norm_num)).2 (by norm_num)
   have hSE : Real.sqrt (14 / 5) * Real.exp c.vth ≤ 1.6734 * (10 / 9) :=
     mul_le_mul hS hE1 (Real.exp_pos _).le (by norm_num)
   have hcOne : 0 < cOne c bb := by
@@ -577,14 +577,14 @@ theorem aZeroBound : AZeroBound := by
     rw [le_div_iff₀ hW]
     have : 0.38 * (9 / 10) / (11 / 10) * (1 + c.vthp) ≤ 0.38 * (9 / 10) := by
       have : (1 + c.vthp) ≤ 11 / 10 := by linarith
-      nlinarith
+      linarith
     linarith
   refine ⟨?_, ?_⟩
   · unfold AZero
     exact div_pos (by positivity) hcOne
   · unfold AZero
     rw [div_le_iff₀ hcOne]
-    nlinarith [hSE, hcLow]
+    linarith [hSE, hcLow]
 
 lemma rho_nonneg (c : Cfg) (de de' : ℕ → ℝ) (Y : ℝ) (l i : ℕ) (h : c.Ok)
     (hlk : l + 2 ≤ c.k) (hY : Y ∈ c.cutI l) : 0 ≤ c.rho de de' (-Y) i := by
@@ -595,28 +595,15 @@ lemma rho_nonneg (c : Cfg) (de de' : ℕ → ℝ) (Y : ℝ) (l i : ℕ) (h : c.O
     have hv : 4 * c.Del ≤ c.v l := by
       unfold Cfg.v
       have hkl : (l:ℝ) + 2 ≤ c.k := by exact_mod_cast hlk
-      nlinarith [h.hv0, mul_nonneg (by linarith : (0:ℝ) ≤ c.Del) (by linarith : (0:ℝ) ≤ (c.k:ℝ) - 2 - l)]
+      linarith [h.hv0, mul_nonneg (by linarith : (0:ℝ) ≤ c.Del) (by linarith : (0:ℝ) ≤ (c.k:ℝ) - 2 - l)]
     exact div_nonneg (Real.sqrt_nonneg _) (by linarith [hY'.2])
   · exact div_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
-
-private lemma one_le_b_of_ok (c : Cfg) (h : c.Ok) : ∀ j : ℕ, 1 ≤ j → j ≤ c.m → 1 ≤ c.b j := by
-  intro j
-  induction j with
-  | zero => intro h1; omega
-  | succ n ih =>
-    intro h1 h2
-    rcases Nat.eq_zero_or_pos n with hn | hn
-    · subst hn
-      simpa using h.hb1
-    · have e1 := ih hn (by omega)
-      have e2 := h.hgap n hn (by omega)
-      linarith
 
 lemma prodb_pos (c : Cfg) (h : c.Ok) : 0 < c.prodb := by
   unfold Cfg.prodb
   exact Finset.prod_pos (fun j hj => by
     rw [Finset.mem_Icc] at hj
-    linarith [one_le_b_of_ok c h j hj.1 hj.2])
+    linarith [_root_.Formalism.FourierDecayAlt.P.Sz5.b_ge_one c h j hj.1 hj.2])
 
 lemma edge_bound (c : Cfg) (de de' : ℕ → ℝ) (Y : ℝ) (l : ℕ) (h : c.Ok) (hw : IsWord c.k de)
     (hw' : IsWord c.k de') (hl : 1 ≤ l) (hlk : l + 2 ≤ c.k) (hY : Y ∈ c.cutI l) :
@@ -628,7 +615,7 @@ lemma edge_bound (c : Cfg) (de de' : ℕ → ℝ) (Y : ℝ) (l : ℕ) (h : c.Ok)
   have hv1 : 0 ≤ c.v 1 := by
     unfold Cfg.v
     push_cast
-    nlinarith [h.hv0, mul_nonneg (by linarith : (0:ℝ) ≤ c.Del) (by linarith : (0:ℝ) ≤ (c.k:ℝ) - 2)]
+    linarith [h.hv0, mul_nonneg (by linarith : (0:ℝ) ≤ c.Del) (by linarith : (0:ℝ) ≤ (c.k:ℝ) - 2)]
   have ha : 4 * c.k * c.Del ≤ c.a - c.v 1 := h.ha
   have h4 : 0 < 4 * (c.k:ℝ) * c.Del := mul_pos (mul_pos (by norm_num) (by linarith)) (by linarith)
   have hapos : 0 < c.a - c.v 1 := by linarith
@@ -769,7 +756,7 @@ end Formalism.FourierDecayAlt.P.Sz7
 
 namespace Formalism.FourierDecayAlt.P
 
-theorem a_zero_le_one_sixty : Formalism.FourierDecayAlt.Sz.AZeroBound := Sz7.aZeroBound
+alias a_zero_le_one_sixty := _root_.Formalism.FourierDecayAlt.P.Sz7.aZeroBound
 
 theorem beta_bound_on_boundary : Formalism.FourierDecayAlt.Sz.BetaOnCut := Sz7.betaOnCut_of_tcritLower critical_threshold_lower_bound
 
@@ -819,7 +806,7 @@ lemma delLower (k f : ℕ) (lb CDel Del : ℝ) (hk : 1 ≤ k) (hf : 1 ≤ f) (hl
   have hk0 : (1:ℝ) ≤ k := by exact_mod_cast hk
   have hf0 : (1:ℝ) ≤ f := by exact_mod_cast hf
   have hkpos : (0:ℝ) < k := by linarith
-  have hfl : 1 ≤ (f:ℝ) * lb := by nlinarith
+  have hfl : 1 ≤ (f:ℝ) * lb := one_le_mul_of_one_le_of_one_le hf0 hlb
   have e1 : ((k : ℝ) * f * lb) ^ CDel = (k:ℝ) ^ CDel * ((f:ℝ) * lb) ^ CDel := by
     rw [mul_assoc, Real.mul_rpow hkpos.le (by positivity)]
   have e2 : (k : ℝ) ^ 4 * (k : ℝ) ^ (CDel - 4) = (k:ℝ) ^ CDel := by
@@ -828,7 +815,7 @@ lemma delLower (k f : ℕ) (lb CDel Del : ℝ) (hk : 1 ≤ k) (hf : 1 ≤ f) (hl
     rw [← this]; norm_cast
   have e3 : (f:ℝ) ^ 4 ≤ ((f:ℝ) * lb) ^ CDel := by
     calc (f:ℝ) ^ 4 ≤ ((f:ℝ) * lb) ^ 4 := by
-          apply pow_le_pow_left₀ (by linarith); nlinarith
+          apply pow_le_pow_left₀ (by linarith); exact le_mul_of_one_le_right (by linarith) hlb
       _ = ((f:ℝ) * lb) ^ (4:ℝ) := by norm_cast
       _ ≤ ((f:ℝ) * lb) ^ CDel := Real.rpow_le_rpow_of_exponent_le hfl hC.le
   have hkC : 0 ≤ (k:ℝ) ^ CDel := by positivity
@@ -855,7 +842,7 @@ lemma sqrtTTLower (x bb cT Cb mr TT : ℝ) (hx : 1 ≤ x) (hcT : 0 < cT) (hCb : 
   have h4 : x ^ (cT * Cb) ≤ x ^ (Cb / 2 * (cT * mr)) := by
     apply Real.rpow_le_rpow_of_exponent_le hx
     have : cT * Cb * 2 ≤ cT * Cb * mr := mul_le_mul_of_nonneg_left hm (by positivity)
-    nlinarith
+    linarith
   linarith
 
 lemma quantOne (x fr mr K P W Del : ℝ) (hx : 1 ≤ x) (hm : 0 < mr) (hmf : mr ≤ fr) (hf : 1 ≤ fr)
@@ -881,13 +868,13 @@ lemma quantOne (x fr mr K P W Del : ℝ) (hx : 1 ≤ x) (hm : 0 < mr) (hmf : mr 
   have B1 : P ^ 2 * (1000 * W ^ 2) * x * mr ^ 3 ≤ P ^ 2 * x * x * fr ^ 4 := by
     have := mul_le_mul hWx hm3 (by positivity) hx0.le
     have hp2 : 0 ≤ P ^ 2 := sq_nonneg P
-    nlinarith [mul_le_mul_of_nonneg_left this (mul_nonneg hp2 hx0.le)]
+    linarith [mul_le_mul_of_nonneg_left this (mul_nonneg hp2 hx0.le)]
   have B2 : P ^ 2 * x * x * fr ^ 4 ≤ x ^ 4 * fr ^ 4 * K := by
-    have hxx : x * x ≤ x ^ 4 := by nlinarith
+    have hxx : x * x ≤ x ^ 4 := by rw [← sq]; exact pow_le_pow_right₀ hx (by norm_num)
     have : P ^ 2 * (x * x) * fr ^ 4 ≤ K * x ^ 4 * fr ^ 4 := by
       apply mul_le_mul_of_nonneg_right _ (by positivity)
       exact mul_le_mul hPK hxx (by positivity) hK
-    nlinarith
+    linarith
   linarith
 
 lemma quantitative_fourth_power_bound (x fr mr K P V s Del : ℝ) (hx : 1 ≤ x) (hm : 0 < mr) (hmf : mr ≤ fr)
@@ -908,7 +895,7 @@ lemma quantitative_fourth_power_bound (x fr mr K P V s Del : ℝ) (hx : 1 ≤ x)
   have h4 : K * (x / 40 * x * (10 * fr)) ≤ x ^ 4 * fr ^ 4 * K / 4 := by
     have : x ^ 2 * fr ≤ x ^ 4 * fr ^ 4 := mul_le_mul hx2 hf1 (by linarith) (by positivity)
     have := mul_le_mul_of_nonneg_left this hK
-    nlinarith
+    linarith
   linarith
 
 lemma quantThree (x E P M sT : ℝ) (hx : 1 ≤ x) (hPE : P ^ 2 ≤ E) (hM : 0 < M)
@@ -927,7 +914,7 @@ lemma quantThree (x E P M sT : ℝ) (hx : 1 ≤ x) (hPE : P ^ 2 ≤ E) (hM : 0 <
       _ = x := Real.mul_self_sqrt hx0.le
   have hE : 0 ≤ E := le_trans (sq_nonneg P) hPE
   have := mul_le_mul hPE hMsx (by positivity) hE
-  nlinarith
+  linarith
 
 end Sz8
 
@@ -972,7 +959,7 @@ theorem threshold_products : ThresholdProducts := by
         refine ⟨mul_nonneg hCB0 (pow_nonneg hbase0 _), ?_⟩
         calc C * B w * (C * ka * N / (g * I)) ^ (2 * i - 2)
             ≤ (C * A0 * Real.sqrt k * t w) * (C * Real.pi * N / I) ^ 2 :=
-              mul_le_mul (hCB w) (le_trans hp1 hp2) (pow_nonneg hbase0 _) (by nlinarith [hCB w])
+              mul_le_mul (hCB w) (le_trans hp1 hp2) (pow_nonneg hbase0 _) (hCB0.trans (hCB w))
           _ = _ := by ring) htp
     calc _ ≤ _ := this
       _ = _ := by rw [mul_pow, ← pow_mul]; ring
@@ -988,7 +975,7 @@ theorem threshold_products : ThresholdProducts := by
         refine ⟨mul_nonneg hCB0 (pow_nonneg hbase0 _), ?_⟩
         calc C * B w * (C * ka * N / (g * I)) ^ (2 * (i - 1) + s - 1)
             ≤ (C * A0 * Real.sqrt k * t w) * (C * Real.pi * N / I) :=
-              mul_le_mul (hCB w) (le_trans hp1 hbase) (pow_nonneg hbase0 _) (by nlinarith [hCB w])
+              mul_le_mul (hCB w) (le_trans hp1 hbase) (pow_nonneg hbase0 _) (hCB0.trans (hCB w))
           _ = _ := by ring) htp
     calc _ ≤ _ := this
       _ = _ := by rw [mul_pow]; ring
@@ -1015,7 +1002,7 @@ theorem threshold_products : ThresholdProducts := by
         have hp : (C * ka * N / (g * I)) ^ (2 * (i - 1)) ≤ 1 := pow_le_one₀ hbase0 hbase1
         have h1 : C * B w * ka * (Real.sqrt TT)⁻¹ ≤ (C * A0 * Real.sqrt k * t w) * Real.pi * (Real.sqrt TT)⁻¹ := by
           apply mul_le_mul_of_nonneg_right _ (inv_nonneg.mpr hsT.le)
-          exact mul_le_mul (hCB w) hkapi hka.le (by nlinarith [hCB w])
+          exact mul_le_mul (hCB w) hkapi hka.le (hCB0.trans (hCB w))
         calc (C * B w * ka * (Real.sqrt TT)⁻¹) * (C * ka * N / (g * I)) ^ (2 * (i - 1))
             ≤ (C * B w * ka * (Real.sqrt TT)⁻¹) * 1 := mul_le_mul_of_nonneg_left hp hX0
           _ ≤ (C * A0 * Real.sqrt k * t w) * Real.pi * (Real.sqrt TT)⁻¹ := by rw [mul_one]; exact h1
@@ -1105,7 +1092,9 @@ theorem theta_power_bound : ThetaPower := by
   have hkM : (Real.pi * Ct * C * A0) ^ 2 ≤ k := by linarith
   have hkC : 40 * C * Real.pi ≤ k := by linarith
   have hke : Real.exp (2 / Cb) ≤ k := by linarith
-  have hk4 : (4:ℝ) ≤ k := by nlinarith [sq_nonneg (Ct * C * A0)]
+  have hk4 : (4:ℝ) ≤ k := by
+    have := mul_le_mul hC Real.pi_gt_three.le (by norm_num) (by linarith)
+    linarith
   have hk1 : (1:ℝ) ≤ k := by linarith
   have hkpos : (0:ℝ) < k := by linarith
   have hk1N : 1 ≤ k := by exact_mod_cast hk1
@@ -1132,7 +1121,7 @@ theorem theta_power_bound : ThetaPower := by
     have e : (k:ℝ) ^ 4 * ((f:ℝ) ^ 4 * (k:ℝ) ^ (CDel - 4)) = (k:ℝ) ^ 4 * (f:ℝ) ^ 4 * (k:ℝ) ^ (CDel - 4) := by ring
     linarith
   have hk2 : 16 * (k:ℝ) ^ 2 ≤ (k:ℝ) ^ 4 := by
-    have h16 : (16:ℝ) ≤ (k:ℝ) ^ 2 := by nlinarith
+    have h16 : (16:ℝ) ≤ (k:ℝ) ^ 2 := by have := mul_le_mul hk4 hk4 (by norm_num) hkpos.le; linarith
     calc 16 * (k:ℝ) ^ 2 ≤ (k:ℝ) ^ 2 * (k:ℝ) ^ 2 := mul_le_mul_of_nonneg_right h16 (sq_nonneg _)
       _ = (k:ℝ) ^ 4 := by ring
   have hk256 : (256:ℝ) ≤ (k:ℝ) ^ 4 := by
@@ -1156,7 +1145,7 @@ theorem theta_power_bound : ThetaPower := by
         (by positivity) hkW hD
       rw [hN]; exact this
     · have hsk : Real.sqrt k ≤ k := by
-        calc Real.sqrt k ≤ Real.sqrt ((k:ℝ) ^ 2) := Real.sqrt_le_sqrt (by nlinarith)
+        calc Real.sqrt k ≤ Real.sqrt ((k:ℝ) ^ 2) := Real.sqrt_le_sqrt (le_self_pow₀ hk1 (by norm_num))
           _ = k := Real.sqrt_sq hkpos.le
       have := Sz8.quantitative_fourth_power_bound k f m ((k:ℝ) ^ (CDel - 4)) ((k:ℝ) ^ cExp CDel cT Cb)
         (Real.pi * Ct * C ^ 2 * A0) (Real.sqrt k) Del hk1 (by linarith) hmf' hf1 (by positivity)
@@ -1202,7 +1191,7 @@ theorem final_smallness : FinalSmall := by
     have hlb0 : 0 ≤ Real.log bb := Real.log_nonneg hbb
     have h1 : 16 * Real.log bb ≤ c * Cf * Real.log bb := mul_le_mul_of_nonneg_right hcf hlb0
     have h2 : c * (Cf * Real.log bb) ≤ c * (f * Real.log k) := mul_le_mul_of_nonneg_left hlog hc.le
-    nlinarith
+    linarith
   have hbbT : bb ≤ T ^ f := by
     have : Real.log bb ≤ Real.log (T ^ f) := by rw [Real.log_pow]; exact hlogbb
     exact (Real.log_le_log_iff (by linarith) (by positivity)).mp this
@@ -1226,7 +1215,7 @@ theorem final_smallness : FinalSmall := by
   have h1 : (bb ^ 7)⁻¹ ≤ 1 := inv_le_one_of_one_le₀ (one_le_pow₀ hbb)
   have h2 : (r:ℝ) * (C / Th) ^ f ≤ C * ((r:ℝ) + 1) * (C / Th) ^ f := by
     apply mul_le_mul_of_nonneg_right _ (by positivity)
-    nlinarith
+    exact le_trans (by linarith) (le_mul_of_one_le_left (by positivity) hC)
   linarith
 
 end Formalism.FourierDecayAlt.P
@@ -1281,14 +1270,16 @@ theorem interlacing : Formalism.FourierDecayAlt.Sz.Interlacing := by
     · by_cases h1 : i = 1
       · subst h1
         have : c.u de 1 = c.a := by simp [Cfg.u]
-        rw [this]; nlinarith
+        have h4 : (16 : ℝ) ≤ 4 * (c.k : ℝ) * c.Del := by
+          have := mul_le_mul hkR hDel (by norm_num) (by linarith); linarith
+        rw [this]; linarith [ha, h4]
       · have hne : i ≠ c.k := by omega
         have : c.u de i = c.v (i - 1) - 1 / 2 - de (i - 1) * c.Del := by simp [Cfg.u, h1, hne]
         rw [this]
         have hc1 : ((i - 1 : ℕ) : ℝ) = (i : ℝ) - 1 := by
           rw [Nat.cast_sub hi1]; simp
         unfold Cfg.v; rw [hc1]
-        rcases hw.1 (i - 1) with h | h <;> rw [h] <;> nlinarith
+        rcases hw.1 (i - 1) with h | h <;> rw [h] <;> linarith [hDel]
     · have h1 : i + 1 ≠ 1 := by omega
       by_cases hlast : i + 1 = c.k
       · have : c.u de (i + 1) = c.ulast := by
@@ -1303,7 +1294,7 @@ theorem interlacing : Formalism.FourierDecayAlt.Sz.Interlacing := by
       · have : c.u de (i + 1) = c.v i - 1 / 2 - de i * c.Del := by
           unfold Cfg.u; rw [if_neg h1, if_neg hlast]; simp
         rw [this]
-        rcases hw.1 i with h | h <;> rw [h] <;> nlinarith
+        rcases hw.1 i with h | h <;> rw [h] <;> linarith [hDel]
   · have hl : c.lam c.k = -c.b 1 := by simp [Cfg.lam]
     have hu : c.u de c.k = c.ulast := by
       have : c.k ≠ 1 := by omega
@@ -1322,7 +1313,7 @@ theorem lamStrictAnti : Formalism.FourierDecayAlt.Sz.LamAnti := by
     have h1 : c.lam t = c.v t := by simp [Cfg.lam, htk]
     have h2 : c.lam s = c.v s := by simp [Cfg.lam, hsk]
     rw [h1, h2]; unfold Cfg.v
-    nlinarith
+    have := mul_le_mul_of_nonneg_right hstR (by linarith [hc.hDel] : (0:ℝ) ≤ 2 * c.Del); linarith
   · have h1 : c.lam t = -c.b (t + 1 - c.k) := by simp [Cfg.lam, htk]
     rw [h1]
     by_cases hsk : s < c.k
@@ -1332,7 +1323,7 @@ theorem lamStrictAnti : Formalism.FourierDecayAlt.Sz.LamAnti := by
       have hskR : (s : ℝ) + 1 ≤ (c.k : ℝ) := by exact_mod_cast hsk
       have hv0 := hc.hv0
       unfold Cfg.v
-      nlinarith
+      have := mul_nonneg (by linarith [hc.hDel] : (0:ℝ) ≤ c.Del) (by linarith : (0:ℝ) ≤ (c.k : ℝ) - 1 - s); linarith
     · have h2 : c.lam s = -c.b (s + 1 - c.k) := by simp [Cfg.lam, hsk]
       rw [h2]
       have := Sz3.b_lt c hc (s + 1 - c.k) (by omega) (t + 1 - c.k) (by omega) (by omega)
@@ -1386,19 +1377,9 @@ lemma small_f (f k : ℕ) (hfk : f ≤ k) (hk : 7 ≤ k) : (f : ℝ) * (8 / 2 ^ 
   have hf : (f : ℝ) ≤ k := by exact_mod_cast hfk
   have hlog := Real.log_two_gt_d9
   rw [mul_div_assoc', div_le_iff₀ hpos]
-  nlinarith [mul_lt_mul_of_pos_right hlog hpos]
+  linarith [mul_lt_mul_of_pos_right hlog hpos]
 
-lemma vand_pos (p : ℕ) (x : ℕ → ℝ) (h : ∀ s t, 1 ≤ s → s < t → t ≤ p → x t < x s) :
-    0 < Vand p x := by
-  unfold Vand
-  apply Finset.prod_pos
-  intro i hi
-  apply Finset.prod_pos
-  intro j hj
-  rw [Finset.mem_Icc] at hi
-  rw [Finset.mem_Ioc] at hj
-  have hx := h i j hi.1 hj.1 hj.2
-  linarith
+alias vand_pos := _root_.Formalism.FourierDecayAlt.P.Sz4.vand_pos
 
 lemma anti_of_step (p : ℕ) (x : ℕ → ℝ) (h : ∀ i, 1 ≤ i → i < p → x (i + 1) < x i) :
     ∀ s t, 1 ≤ s → s < t → t ≤ p → x t < x s := by
@@ -1482,7 +1463,7 @@ theorem sz_sizesMain_of (hCorA : CorA) (hBeta : BetaOnCut) (hAZ : AZeroBound)
   obtain ⟨Ct, hCt⟩ : ∃ Ct : ℝ, Ct = 2 * C0 * Real.exp (1 / 4) := ⟨_, rfl⟩
   have hCt1 : 1 ≤ Ct := by
     have : 1 ≤ Real.exp (1 / 4) := Real.one_le_exp (by norm_num)
-    rw [hCt]; nlinarith
+    rw [hCt]; exact le_trans (by linarith) (le_mul_of_one_le_right (by linarith) this)
   obtain ⟨k1, hk1⟩ := hThP CA 160 Ct CDel cT Cb hCA (by norm_num) hCt1 hCDel hcT hCb hcTCb
   obtain ⟨k2, hk2⟩ := hFS CA (cExp CDel cT Cb) hCA hc
   refine ⟨max 7 (max k1 k2), ?_⟩
@@ -1709,25 +1690,9 @@ section -- clump:auto
 
 namespace Formalism.FourierDecayAlt.Final
 
-theorem field_extension_degree_facts : Formalism.FourierDecayAlt.S6.DegreeFacts := Formalism.FourierDecayAlt.P.degreeFacts_statement
-theorem ideal_norm_formula : Formalism.FourierDecayAlt.S6.NormIdl := Formalism.FourierDecayAlt.P.scaledIdealNorm
-theorem ideals_match : Formalism.FourierDecayAlt.S6.IdealsMatch := Formalism.FourierDecayAlt.P.dualIdealEqLiftIdeal
-theorem parahoric_gram_matrix : Formalism.FourierDecayAlt.A5.KpGram := Formalism.FourierDecayAlt.P.kernel_gram_property
-theorem ns_support : Formalism.FourierDecayAlt.A5.NsSupport := Formalism.FourierDecayAlt.P.added_block_kernel_support
-theorem zero_level_ones_vector : Formalism.FourierDecayAlt.A5.BaseKernelOne := Formalism.FourierDecayAlt.P.zero_kernel_all_ones
-theorem latticeAverage_of_gram : Formalism.FourierDecayAlt.A5.LemmaAAssemble := Formalism.FourierDecayAlt.P.lattice_average_lemma_from_parts
-theorem poisson_summation_text : Formalism.FourierDecayAlt.F7.PoissonStepText := Formalism.FourierDecayAlt.P.poisson_summation_level_statement
-theorem ns_block_diagonal : Formalism.FourierDecayAlt.A5.NsBlockDiag := Formalism.FourierDecayAlt.P.added_block_kernel_block_diagonal
-theorem lattices_general_position_bound : Formalism.FourierDecayAlt.S6.LatticesGeneral := Formalism.FourierDecayAlt.P.lattice_facts_general
-theorem counting_theorem : Formalism.FourierDecayAlt.S3.MainTheorem := Formalism.FourierDecayAlt.P.mass_formula_constant_one
-theorem singleBlockParseval_true : Formalism.FourierDecayAlt.A5.SingleBlockParseval := Formalism.FourierDecayAlt.P.first_kernel_parseval
-theorem theta_equality_first : Formalism.FourierDecayAlt.A5.Th1Eq := Formalism.FourierDecayAlt.P.first_theta_kernel_equality
-theorem singleBlockThetaProps_true : Formalism.FourierDecayAlt.A5.SingleBlockThetaProps := Formalism.FourierDecayAlt.P.first_theta_equals_first_kernel
-theorem sz_propA : Formalism.FourierDecayAlt.Sz.PropA := Formalism.FourierDecayAlt.P.massRatioFormula
-theorem sz_eaSize : Formalism.FourierDecayAlt.Sz.EaSize := Formalism.FourierDecayAlt.P.exponent_sizes
-theorem gram_determinant_dual_bound_a : Formalism.FourierDecayAlt.A5.A2 := Formalism.FourierDecayAlt.P.second_gram_and_vanishing
-theorem sz_sizesMain : Formalism.FourierDecayAlt.Sz.SizesMain := Formalism.FourierDecayAlt.P.size_bounds_conclusion
-theorem sz_tcritLower : Formalism.FourierDecayAlt.Sz.TcritLower := Formalism.FourierDecayAlt.P.critical_threshold_lower_bound
+alias sz_propA := _root_.Formalism.FourierDecayAlt.P.massRatioFormula
+alias sz_eaSize := _root_.Formalism.FourierDecayAlt.P.Sz2.eaSize
+alias sz_tcritLower := _root_.Formalism.FourierDecayAlt.P.critical_threshold_lower_bound
 theorem lemma_b_norm_of_parts : Formalism.FourierDecayAlt.B2.LemmaBNormFromParts := Formalism.FourierDecayAlt.P.lemma_b_normalised_of_parts
 theorem lemma_b_from_norm_bound : Formalism.FourierDecayAlt.B2.LemmaBAnyFromNorm := Formalism.FourierDecayAlt.P.lemma_b_any_measure_from_normalised
 theorem compact_conjugation : Formalism.FourierDecayAlt.B2.CompactConj := Formalism.FourierDecayAlt.P.compact_subgroup_conjugation
@@ -1736,76 +1701,10 @@ theorem dilation_jacobian_all : Formalism.FourierDecayAlt.B2.DilJacAll := Formal
 theorem closed_subgroup_general_linear : Formalism.FourierDecayAlt.B2.ClosedG := Formalism.FourierDecayAlt.P.unitary_group_closed
 theorem closed_subgroup_unipotent_radical : Formalism.FourierDecayAlt.B2.ClosedN := Formalism.FourierDecayAlt.P.unipotent_radical_closed
 theorem conjugation_invariance_all : Formalism.FourierDecayAlt.B2.ConjInvAll := Formalism.FourierDecayAlt.P.conjugation_invariance_every_setting
-theorem tc_domMinOfText : Formalism.FourierDecayAlt.TC.DomMinOfText := Formalism.FourierDecayAlt.P.domination_minimum_of_text
-theorem tc_theoremAAfter : Formalism.FourierDecayAlt.TC.TheoremAAfter := Formalism.FourierDecayAlt.P.theorem_a_after
-theorem tc_densLeTwo : Formalism.FourierDecayAlt.TC.DensLeTwo := Formalism.FourierDecayAlt.P.density_le_two
-theorem tc_densSize : Formalism.FourierDecayAlt.TC.DensSize := Formalism.FourierDecayAlt.P.density_size
-theorem tc_sumBoundMax : Formalism.FourierDecayAlt.TC.SumBoundMax := Formalism.FourierDecayAlt.P.sum_bound_max
-theorem tc_recursionWithDens : Formalism.FourierDecayAlt.TC.RecursionWithDens := Formalism.FourierDecayAlt.P.recursion_with_densities
-theorem tc_domScaleTop : Formalism.FourierDecayAlt.TC.DomScaleTop := Formalism.FourierDecayAlt.P.domination_scale_top
-theorem tc_recHypScaleTop : Formalism.FourierDecayAlt.TC.RecHypScaleTop := Formalism.FourierDecayAlt.P.recursion_hypothesis_scale_top
-theorem tc_domAfterOfLocal : Formalism.FourierDecayAlt.TC.DomAfterOfLocal := Formalism.FourierDecayAlt.P.domination_after_of_local
-theorem tc_densSum : Formalism.FourierDecayAlt.TC.DensSum := Formalism.FourierDecayAlt.P.density_sum
-theorem tc_densChain : Formalism.FourierDecayAlt.TC.DensChain := Formalism.FourierDecayAlt.P.density_chain
-theorem jx_pSDAgree : Formalism.FourierDecayAlt.J.PSDAgree := Formalism.FourierDecayAlt.P.psd_agree
-theorem jx_instSizes : Formalism.FourierDecayAlt.J.InstSizes := Formalism.FourierDecayAlt.P.instance_sizes
-theorem jx_instLatticeSums : Formalism.FourierDecayAlt.J.InstLatticeSums := Formalism.FourierDecayAlt.P.instance_lattice_sums
-theorem jx_sizesToRecursion : Formalism.FourierDecayAlt.J.SizesToRecursion := Formalism.FourierDecayAlt.P.sizes_to_recursion
-theorem jx_globPositive : Formalism.FourierDecayAlt.J.GlobPositive := Formalism.FourierDecayAlt.P.global_positive
-theorem jx_latticeSumsJoint : Formalism.FourierDecayAlt.J.LatticeSumsJoint := Formalism.FourierDecayAlt.P.lattice_sums_joint
-theorem jx_scaleOk : Formalism.FourierDecayAlt.J.ScaleOk := Formalism.FourierDecayAlt.P.scaling_bound
-theorem jx_phaseOk : Formalism.FourierDecayAlt.J.PhaseOk := Formalism.FourierDecayAlt.P.phaseOk_statement
-theorem jx_outsideSysOk : Formalism.FourierDecayAlt.J.OutsideSysOk := Formalism.FourierDecayAlt.P.outside_systems_bound
-theorem jx_outsideDomination : Formalism.FourierDecayAlt.J.OutsideDomination := Formalism.FourierDecayAlt.P.outside_domination
-theorem jx_uniformMajorantOn : Formalism.FourierDecayAlt.J.UniformMajorantOn := Formalism.FourierDecayAlt.P.uniform_majorant_on
-theorem jx_poissonJoint : Formalism.FourierDecayAlt.J.PoissonJoint := Formalism.FourierDecayAlt.P.poisson_joint
-theorem jx_localPullback : Formalism.FourierDecayAlt.J.LocalPullback := Formalism.FourierDecayAlt.P.local_pullback
-theorem jx_localUnitHeads : Formalism.FourierDecayAlt.J.LocalUnitHeads := Formalism.FourierDecayAlt.P.local_unit_heads
-theorem jx_topPullback : Formalism.FourierDecayAlt.J.TopPullback := Formalism.FourierDecayAlt.P.top_pullback
-theorem jx_axiomsFromSystems : Formalism.FourierDecayAlt.J.AxiomsFromSystems := Formalism.FourierDecayAlt.P.axioms_from_systems
-theorem jx_globalOfLocal : Formalism.FourierDecayAlt.J.GlobalOfLocal := Formalism.FourierDecayAlt.P.global_of_local
-theorem jx_axiomsFromFamilies : Formalism.FourierDecayAlt.J.AxiomsFromFamilies := Formalism.FourierDecayAlt.P.axioms_from_families
-theorem jx_kernelOfLocal : Formalism.FourierDecayAlt.J.KernelOfLocal := Formalism.FourierDecayAlt.P.kernel_of_local
-theorem jx_poissonStepJoint : Formalism.FourierDecayAlt.J.PoissonStepJoint := Formalism.FourierDecayAlt.P.poisson_level_joint
-theorem jx_xIsLamOne : Formalism.FourierDecayAlt.J.XIsLamOne := Formalism.FourierDecayAlt.P.lattice_x_eq_lambda_one
-theorem jx_frameProducts : Formalism.FourierDecayAlt.J.FrameProducts := Formalism.FourierDecayAlt.P.frame_product_identities
-theorem jx_schurProduct : Formalism.FourierDecayAlt.J.SchurProduct := Formalism.FourierDecayAlt.P.schur_product
-theorem jx_productDomination : Formalism.FourierDecayAlt.J.ProductDomination := Formalism.FourierDecayAlt.P.product_domination
-theorem jx_diagScale : Formalism.FourierDecayAlt.J.DiagScale := Formalism.FourierDecayAlt.P.diagonal_scaling
-theorem jx_productLemma : Formalism.FourierDecayAlt.J.ProductLemma := Formalism.FourierDecayAlt.P.product_lemma
-theorem jx_localKernelPSD : Formalism.FourierDecayAlt.J.LocalKernelPSD := Formalism.FourierDecayAlt.P.local_kernel_psd
-theorem jx_formGivesMain : Formalism.FourierDecayAlt.J.FormGivesMain := Formalism.FourierDecayAlt.P.form_gives_theorem_A
 theorem integral_norm_bound_variant_b : Formalism.FourierDecayAlt.B2.IntNormB := Formalism.FourierDecayAlt.P.normalisation_unique_every_setting
 theorem integral_bound_all : Formalism.FourierDecayAlt.B2.CCIntAll := Formalism.FourierDecayAlt.P.matrix_coefficient_integrable_all
-theorem jx_topUnitHeads : Formalism.FourierDecayAlt.J.TopUnitHeads := Formalism.FourierDecayAlt.P.top_unit_heads
-theorem jx_diagPhase : Formalism.FourierDecayAlt.J.DiagPhase := Formalism.FourierDecayAlt.P.diagonal_phase_conj
-theorem jx_blockDiagPSD : Formalism.FourierDecayAlt.J.BlockDiagPSD := Formalism.FourierDecayAlt.P.block_diagonal_psd
-theorem pb_loopsGiveRows : Formalism.FourierDecayAlt.PB.LoopsGiveRows := Formalism.FourierDecayAlt.P.loops_give_series
-theorem pb_loopsJoint : Formalism.FourierDecayAlt.PB.LoopsJoint := Formalism.FourierDecayAlt.P.loops_joint
-theorem pn_normBound : Formalism.FourierDecayAlt.PN.NormBound := Formalism.FourierDecayAlt.P.pn_norm_bound
-theorem pn_framePassage : Formalism.FourierDecayAlt.PN.FramePassage := Formalism.FourierDecayAlt.P.frame_passage
-theorem pn_normRe : Formalism.FourierDecayAlt.PN.NormRe := Formalism.FourierDecayAlt.P.norm_real_part
-theorem pn_meanAmpJoint : Formalism.FourierDecayAlt.PN.MeanAmpJoint := Formalism.FourierDecayAlt.P.mean_amplitude_joint
-theorem pn_classSquaresSum : Formalism.FourierDecayAlt.PN.ClassSquaresSum := Formalism.FourierDecayAlt.P.class_squares_sum
-theorem pn_classCS : Formalism.FourierDecayAlt.PN.ClassCS := Formalism.FourierDecayAlt.P.class_cauchy_schwarz
-theorem pn_firstBracket : Formalism.FourierDecayAlt.PN.FirstBracket := Formalism.FourierDecayAlt.P.first_bracket
-theorem pn_secondBracket : Formalism.FourierDecayAlt.PN.SecondBracket := Formalism.FourierDecayAlt.P.second_bracket
-theorem pn_rowFromClasses : Formalism.FourierDecayAlt.PN.RowFromClasses := Formalism.FourierDecayAlt.P.line_from_classes
-theorem pn_rowNGAbstract : Formalism.FourierDecayAlt.PN.RowNGAbstract := Formalism.FourierDecayAlt.P.line_norm_abstract
-theorem pn_exponentSum : Formalism.FourierDecayAlt.PN.ExponentSum := Formalism.FourierDecayAlt.P.exponent_sum
-theorem pn_nGNumbers : Formalism.FourierDecayAlt.PN.NGNumbers := Formalism.FourierDecayAlt.P.norm_numbers
-theorem pn_rowNGJoint : Formalism.FourierDecayAlt.PN.RowNGJoint := Formalism.FourierDecayAlt.P.line_norm_joint
-theorem jf_psiOnto : Formalism.FourierDecayAlt.JF.PsiOnto := Formalism.FourierDecayAlt.P.psiOnto_true
 theorem jf_jqSmooth : Formalism.FourierDecayAlt.JF.JqSmooth := Formalism.FourierDecayAlt.P.jacquet_smooth_coordinates
-theorem d_ptPermSpec : Formalism.FourierDecayAlt.D.PtPermSpec := Formalism.FourierDecayAlt.P.ptPerm_spec
-theorem d_ptGSpec : Formalism.FourierDecayAlt.D.PtGSpec := Formalism.FourierDecayAlt.P.ptG_spec
 theorem d_ptRelevant : Formalism.FourierDecayAlt.D.PtRelevant := Formalism.FourierDecayAlt.P.relevant_points_holds
-theorem d_muNHaar : Formalism.FourierDecayAlt.D.MuNHaar := Formalism.FourierDecayAlt.P.nilpotent_measure_is_haar
-theorem ma_modelFrameAn : Formalism.FourierDecayAlt.MA.ModelFrameAn := Formalism.FourierDecayAlt.P.model_frame_analytic
-theorem jc_propGramOfPlaces : Formalism.FourierDecayAlt.JC.PropGramOfPlaces := Formalism.FourierDecayAlt.P.gram_proposition_of_places
-theorem jc_gramPlaceBuilt : Formalism.FourierDecayAlt.JC.GramPlaceBuilt := Formalism.FourierDecayAlt.P.gram_at_built_place
-theorem jc_orbJCutScalar : Formalism.FourierDecayAlt.JC.OrbJCutScalar := Formalism.FourierDecayAlt.P.orbital_integral_cutoff_scalar
-theorem d_muRHaar : Formalism.FourierDecayAlt.D.MuRHaar := Formalism.FourierDecayAlt.P.radial_measure_is_haar
 theorem tbb_stepOne : Formalism.FourierDecayAlt.TBB.StepOne := Formalism.FourierDecayAlt.P.lemma_s_induction_base
 theorem tbb_stepUp : Formalism.FourierDecayAlt.TBB.StepUp := Formalism.FourierDecayAlt.P.lemma_s_induction_up
 theorem tbb_lemmaSOfSteps : Formalism.FourierDecayAlt.TBB.LemmaSOfSteps := Formalism.FourierDecayAlt.P.lemma_s_of_parts

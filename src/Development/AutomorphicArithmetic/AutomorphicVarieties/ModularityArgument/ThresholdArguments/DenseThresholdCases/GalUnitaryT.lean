@@ -881,7 +881,7 @@ theorem UpperTheory.V.Z.Win.Gu.spehT_alt :
   intro H _ E Ω _ _ _ _ _ _ a d P w ρ σ _ _ hP hu hS A h rc hrc
   have L := H.litN.loc
   have hd : ∑ _ : Fin d, a = d * a := by simp
-  exact rec_spehQuotT hrc (_root_.PositivityTheory.Gud.generic_unitary_dual_GL trivial L.sq L.gen L.multi L.cos) L.cos a d _ hd ρ σ hu
+  exact rec_spehQuotT hrc _root_.PositivityTheory.Gud.Fin.genericUnitaryDualGL_holds L.cos a d _ hd ρ σ hu
     (GlobalTheory.CuspRep.Generic.isGeneric_of_isLocComp E a P w ρ hP)
     (GlobalTheory.DiscreteSpectrumCM.isSpehQuot_of_isSpeh hd ρ σ hS)
 end
@@ -1026,7 +1026,7 @@ theorem UpperTheory.V.Z.Win.Gu.sumTwoG_of_printsH_gdLaws_sumAway_sumHTAt :
         rfl
       have p3 := isPstAt_sum Bw T p1 p2
       rw [e]
-      exact ⟨p3, by rw [GlobalTheory.T.weilDeligneParamAboveL_directSum_potSemistable l _ _ ⟨T⟩ ι E Ω A w O Bw h hj a b _ _ p1 p2 p3, e1, e2]⟩
+      exact ⟨p3, by rw [_root_.GlobalTheory.Pst.SumParam.wdAt_sumRep l _ _ ⟨T⟩ ι E Ω A w O Bw h hj a b _ _ p1 p2 p3, e1, e2]⟩
 end
 end -- clump:auto
 end -- clump:auto

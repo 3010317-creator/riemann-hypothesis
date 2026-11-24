@@ -112,12 +112,6 @@ import Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.
 section -- clump:auto
 @[expose] public section
 
-attribute [-instance] UpperTheory.V.Pr.IsCD.toIsDiscreteValuationRing
-
-open IsLocalRing in
-private theorem fpd_prec_finite {O M : Type} [CommRing O] [IsNoetherianRing O] (I : Ideal O)
-    [IsAdicComplete I O] [AddCommGroup M] [Module O M] [Module.Finite O M] : IsPrecomplete I M :=
-  _root_.UpperTheory.Reformulated.B.PrecompleteOfFiniteOverAdicComplete.curveDVR_prec_finite I
 
 private theorem fpd_prec_cofinal {R : Type} [CommRing R] {I J : Ideal R} (hJI : J ≤ I) {e : ℕ}
     (he : I ^ e ≤ J) (hJ : IsPrecomplete J R) : IsPrecomplete I R := ⟨fun f hf => by
@@ -157,7 +151,7 @@ private theorem fpd_complete {R R' : Type} [CommRing R] [IsLocalRing R] [IsNoeth
     exact (eq_maximalIdeal h4).ge
   obtain ⟨e, he⟩ := Ideal.exists_pow_le_of_le_radical_of_fg hrad (IsNoetherian.noetherian _)
   have hP : IsPrecomplete (maximalIdeal R') R' :=
-    fpd_prec_cofinal hle he (IsPrecomplete.map_algebraMap_iff.2 (fpd_prec_finite _))
+    fpd_prec_cofinal hle he (IsPrecomplete.map_algebraMap_iff.2 (_root_.UpperTheory.Reformulated.B.PrecompleteOfFiniteOverAdicComplete.curveDVR_prec_finite _))
   exact { toIsHausdorff := inferInstance, toIsPrecomplete := hP }
 
 open IsLocalRing in
@@ -695,7 +689,6 @@ set_option maxHeartbeats 800000
 set_option synthInstance.maxHeartbeats 200000
 
 section
-attribute [-instance] UpperTheory.V.Pr.IsCD.toIsDiscreteValuationRing
 open NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.GalOfCusp IsLocalRing UpperTheory.V UpperTheory.V.HV UpperTheory.V.U3 UpperTheory.V.Base UpperTheory.V.Af UpperTheory.V.Pr
 def UpperTheory.Gal.projectedFormsSystemPart.AutPtOAlt {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l}
     {η : G ℚ Ω →* ℤˣ} {Ψ : G ℚ Ω →* c.Oˣ} {σ g₁ : G ℚ Ω} {B : ValuationSubring Ω} {M : ℕ}

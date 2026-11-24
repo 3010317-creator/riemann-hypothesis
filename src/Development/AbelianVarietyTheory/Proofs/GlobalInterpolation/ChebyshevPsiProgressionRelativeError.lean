@@ -313,70 +313,92 @@ noncomputable section
 
 namespace GlobalTheory.MangoldtSeries
 
+/-- Prime powers are the entire non-coprime contribution to the Mangoldt sum. -/
+theorem sum_not_coprime_eq (q N : ℕ) (hq : q ≠ 0) :
+    ∑ n ∈ (Icc 1 N).filter (fun n => ¬ n.Coprime q), Λ n =
+      ∑ p ∈ q.primeFactors, (Nat.log p N : ℝ) * Real.log p := by
+  classical
+  rcases eq_or_ne N 0 with rfl | hN
+  · simp
+  calc _ = ∑ n ∈ q.primeFactors.biUnion (fun p => (Icc 1 (p.log N)).image (p ^ ·)), Λ n := by
+        symm
+        apply Finset.sum_subset
+        · intro n hn
+          obtain ⟨p, hp, k, hk, rfl⟩ := by
+            simpa only [mem_biUnion, mem_image, exists_prop, exists_and_left] using hn
+          obtain ⟨hprime, hpq, _⟩ := Nat.mem_primeFactors.mp hp
+          have hk0 : k ≠ 0 := by have := (mem_Icc.mp hk).1; omega
+          refine mem_filter.mpr ⟨mem_Icc.mpr ⟨Nat.one_le_iff_ne_zero.mpr (pow_ne_zero k hprime.ne_zero), Nat.pow_le_of_le_log hN (mem_Icc.mp hk).2⟩, ?_⟩
+          intro hc
+          have hd := Nat.dvd_gcd (dvd_pow_self p hk0) hpq
+          rw [hc.gcd_eq_one] at hd
+          exact hprime.not_dvd_one hd
+        · intro n hn hnot
+          rw [vonMangoldt_eq_zero_iff, isPrimePow_nat_iff]
+          rintro ⟨p, k, hp, hk, rfl⟩
+          have hn' := mem_filter.mp hn
+          have hpq : p ∣ q := by
+            by_contra h
+            exact hn'.2 (Nat.Coprime.pow_left k ((Nat.Prime.coprime_iff_not_dvd hp).2 h))
+          apply hnot
+          exact mem_biUnion.mpr ⟨p, Nat.mem_primeFactors.mpr ⟨hp, hpq, hq⟩,
+            mem_image.mpr ⟨k, mem_Icc.mpr ⟨hk, Nat.le_log_of_pow_le hp.one_lt (mem_Icc.mp hn'.1).2⟩, rfl⟩⟩
+    _ = ∑ p ∈ q.primeFactors, ∑ n ∈ (Icc 1 (p.log N)).image (p ^ ·), Λ n := by
+        rw [sum_biUnion]
+        rw [pairwiseDisjoint_iff]
+        intro p hp r hr hn
+        obtain ⟨n, hn⟩ := hn
+        obtain ⟨a, ha, rfl⟩ := mem_image.mp (mem_inter.mp hn).1
+        obtain ⟨c, hc, heq⟩ := mem_image.mp (mem_inter.mp hn).2
+        exact ((Nat.prime_of_mem_primeFactors hp).pow_inj'
+          (Nat.prime_of_mem_primeFactors hr) (by have := (mem_Icc.mp ha).1; omega)
+          (by have := (mem_Icc.mp hc).1; omega) heq.symm).1
+    _ = _ := by
+        apply sum_congr rfl
+        intro p hp
+        rw [sum_image (fun a _ c _ h => Nat.pow_right_injective (Nat.prime_of_mem_primeFactors hp).two_le h)]
+        calc ∑ k ∈ Icc 1 (p.log N), Λ (p ^ k) = ∑ k ∈ Icc 1 (p.log N), Real.log p := by
+                apply sum_congr rfl
+                intro k hk
+                rw [vonMangoldt_apply_pow (by have := (mem_Icc.mp hk).1; omega), vonMangoldt_apply_prime (Nat.prime_of_mem_primeFactors hp)]
+          _ = _ := by simp
+
 theorem sum_not_coprime_le (q N : ℕ) (hq : q ≠ 0) :
     ∑ n ∈ (Icc 1 N).filter (fun n => ¬ n.Coprime q), Λ n ≤ Nat.log 2 N * Real.log q := by
-  classical
-  set S := (Icc 1 N).filter (fun n => ¬ n.Coprime q) with hS
-  set L := Nat.log 2 N with hL
-  have hT0 : ∀ p n : ℕ, 0 ≤ (if n ∈ (Icc 1 L).image (p ^ ·) then Real.log p else 0) := by
-    intro p n; split_ifs
-    · exact Real.log_natCast_nonneg p
-    · exact le_rfl
-  have hpt : ∀ n ∈ S, Λ n ≤ ∑ p ∈ q.primeFactors,
-      (if n ∈ (Icc 1 L).image (p ^ ·) then Real.log p else 0) := by
-    intro n hn
-    rw [hS, Finset.mem_filter, Finset.mem_Icc] at hn
-    obtain ⟨⟨hn1, hnN⟩, hnc⟩ := hn
-    rw [ArithmeticFunction.vonMangoldt_apply]
-    split_ifs with hpp
-    · obtain ⟨p, k, hp, hk, rfl⟩ := (isPrimePow_nat_iff _).1 hpp
-      have hmin : (p ^ k).minFac = p := by rw [Nat.pow_minFac hk.ne', hp.minFac_eq]
-      have hpq : p ∣ q := by
-        by_contra h
-        exact hnc (Nat.Coprime.pow_left k ((Nat.Prime.coprime_iff_not_dvd hp).2 h))
-      have hpmem : p ∈ q.primeFactors := Nat.mem_primeFactors.2 ⟨hp, hpq, hq⟩
-      have hkL : k ∈ Icc 1 L := by
-        rw [Finset.mem_Icc]
-        refine ⟨hk, Nat.le_log_of_pow_le (by norm_num) ?_⟩
-        exact (Nat.pow_le_pow_left hp.two_le k).trans hnN
-      have hTp : (if p ^ k ∈ (Icc 1 L).image (p ^ ·) then Real.log p else 0) = Real.log p :=
-        if_pos (Finset.mem_image.2 ⟨k, hkL, rfl⟩)
-      rw [hmin, ← hTp]
-      exact Finset.single_le_sum (f := fun p' : ℕ => if p ^ k ∈ (Icc 1 L).image (p' ^ ·) then Real.log p' else 0)
-        (fun p' _ => hT0 p' (p ^ k)) hpmem
-    · exact Finset.sum_nonneg (fun p _ => hT0 p n)
-  have hcard : ∀ p : ℕ, ((S ∩ (Icc 1 L).image (p ^ ·)).card : ℝ) ≤ L := by
-    intro p
-    have h1 := Finset.card_le_card (Finset.inter_subset_right (s₁ := S) (s₂ := (Icc 1 L).image (p ^ ·)))
-    have h2 := Finset.card_image_le (s := Icc 1 L) (f := (p ^ ·))
-    have h3 : (Icc 1 L).card = L := by simp
-    exact_mod_cast (h1.trans h2).trans h3.le
-  calc ∑ n ∈ S, Λ n ≤ ∑ n ∈ S, ∑ p ∈ q.primeFactors,
-        (if n ∈ (Icc 1 L).image (p ^ ·) then Real.log p else 0) := Finset.sum_le_sum hpt
-    _ = ∑ p ∈ q.primeFactors, ∑ n ∈ S,
-        (if n ∈ (Icc 1 L).image (p ^ ·) then Real.log p else 0) := Finset.sum_comm
-    _ ≤ ∑ p ∈ q.primeFactors, (L : ℝ) * Real.log p := by
+  have : NeZero q := ⟨hq⟩
+  refine (sum_not_coprime_eq q N hq).le.trans ?_
+  calc ∑ p ∈ q.primeFactors, (Nat.log p N : ℝ) * Real.log p
+      ≤ ∑ p ∈ q.primeFactors, (Nat.log 2 N : ℝ) * Real.log p := by
         apply Finset.sum_le_sum
-        intro p _
-        rw [Finset.sum_ite_mem, Finset.sum_const, nsmul_eq_mul]
-        exact mul_le_mul_of_nonneg_right (hcard p) (Real.log_natCast_nonneg p)
-    _ = (L : ℝ) * Real.log (∏ p ∈ q.primeFactors, (p : ℝ)) := by
-        rw [← Finset.mul_sum, Real.log_prod]
         intro p hp
-        exact_mod_cast (Nat.prime_of_mem_primeFactors hp).ne_zero
-    _ ≤ (L : ℝ) * Real.log q := by
-        apply mul_le_mul_of_nonneg_left _ (Nat.cast_nonneg _)
-        apply Real.log_le_log
-        · apply Finset.prod_pos
-          intro p hp
-          exact_mod_cast (Nat.prime_of_mem_primeFactors hp).pos
-        · rw [← Nat.cast_prod]
-          exact Nat.cast_le.2 (Nat.le_of_dvd (Nat.pos_of_ne_zero hq) (Nat.prod_primeFactors_dvd q))
+        apply mul_le_mul_of_nonneg_right _ (Real.log_natCast_nonneg p)
+        exact_mod_cast Nat.log_antitone_left (by norm_num : 1 < 2)
+          (Nat.prime_of_mem_primeFactors hp).one_lt (Nat.prime_of_mem_primeFactors hp).two_le
+    _ = (Nat.log 2 N : ℝ) * ∑ p ∈ q.primeFactors, Real.log p := by rw [Finset.mul_sum]
+    _ ≤ (Nat.log 2 N : ℝ) * Real.log q := mul_le_mul_of_nonneg_left
+      (GlobalTheory.PrincipalLogDeriv.sum_log_primeFactors_le q) (Nat.cast_nonneg _)
 
-theorem norm_sub_primitive_le {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) (N : ℕ) :
+/-- The non-coprime contribution depends only on the distinct prime factors of the level. -/
+theorem sum_not_coprime_le_card_log (q N : ℕ) (hq : q ≠ 0) :
+    ∑ n ∈ (Icc 1 N).filter (fun n => ¬ n.Coprime q), Λ n ≤
+      (q.primeFactors.card : ℝ) * Real.log N := by
+  rcases eq_or_ne N 0 with rfl | hN
+  · simp
+  refine (sum_not_coprime_eq q N hq).le.trans ?_
+  calc ∑ p ∈ q.primeFactors, (Nat.log p N : ℝ) * Real.log p
+      ≤ ∑ p ∈ q.primeFactors, Real.log N := by
+        apply Finset.sum_le_sum
+        intro p hp
+        have hp' := Nat.prime_of_mem_primeFactors hp
+        have h := Real.log_le_log (pow_pos (show (0 : ℝ) < p by exact_mod_cast hp'.pos) (Nat.log p N))
+          (show (p : ℝ) ^ Nat.log p N ≤ (N : ℝ) by exact_mod_cast Nat.pow_log_le_self p hN)
+        simpa only [Real.log_pow] using h
+    _ = (q.primeFactors.card : ℝ) * Real.log N := by rw [Finset.sum_const, nsmul_eq_mul]
+
+private theorem norm_sub_primitive_le_sum {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) (N : ℕ) :
     ‖∑ n ∈ Icc 1 N, ((Λ n : ℝ) : ℂ) * χ (n : ZMod q) -
       ∑ n ∈ Icc 1 N, ((Λ n : ℝ) : ℂ) * χ.primitiveCharacter (n : ZMod χ.conductor)‖ ≤
-      Nat.log 2 N * Real.log q := by
+      ∑ n ∈ (Icc 1 N).filter (fun n => ¬ n.Coprime q), Λ n := by
   rw [← Finset.sum_sub_distrib,
     ← Finset.sum_filter_add_sum_filter_not (Icc 1 N) (fun n => ¬ n.Coprime q)]
   rw [Finset.sum_eq_zero (s := (Icc 1 N).filter (fun n => ¬¬ n.Coprime q)) ?_, add_zero]
@@ -397,12 +419,30 @@ theorem norm_sub_primitive_le {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ 
                 mul_le_mul_of_nonneg_left (DirichletCharacter.norm_le_one _ _)
                   ArithmeticFunction.vonMangoldt_nonneg
             _ = Λ n := mul_one _
-      _ ≤ _ := sum_not_coprime_le q N (NeZero.ne q)
   · intro n hn
     rw [Finset.mem_filter, not_not] at hn
     have h := χ.primitiveCharacter_apply_of_isCoprime (a := (n : ℤ)) (Nat.isCoprime_iff_coprime.2 hn.2)
     push_cast at h
     rw [h, sub_self]
+
+theorem norm_sub_primitive_le_prime_logs {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) (N : ℕ) :
+    ‖∑ n ∈ Icc 1 N, ((Λ n : ℝ) : ℂ) * χ (n : ZMod q) -
+      ∑ n ∈ Icc 1 N, ((Λ n : ℝ) : ℂ) * χ.primitiveCharacter (n : ZMod χ.conductor)‖ ≤
+      ∑ p ∈ q.primeFactors, (Nat.log p N : ℝ) * Real.log p := by
+  exact (norm_sub_primitive_le_sum χ N).trans (sum_not_coprime_eq q N (NeZero.ne q)).le
+
+theorem norm_sub_primitive_le_card_log {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) (N : ℕ) :
+    ‖∑ n ∈ Icc 1 N, ((Λ n : ℝ) : ℂ) * χ (n : ZMod q) -
+      ∑ n ∈ Icc 1 N, ((Λ n : ℝ) : ℂ) * χ.primitiveCharacter (n : ZMod χ.conductor)‖ ≤
+      (q.primeFactors.card : ℝ) * Real.log N := by
+  exact (norm_sub_primitive_le_sum χ N).trans (sum_not_coprime_le_card_log q N (NeZero.ne q))
+
+theorem norm_sub_primitive_le {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) (N : ℕ) :
+    ‖∑ n ∈ Icc 1 N, ((Λ n : ℝ) : ℂ) * χ (n : ZMod q) -
+      ∑ n ∈ Icc 1 N, ((Λ n : ℝ) : ℂ) * χ.primitiveCharacter (n : ZMod χ.conductor)‖ ≤
+      Nat.log 2 N * Real.log q := by
+  exact (norm_sub_primitive_le_sum χ N).trans (sum_not_coprime_le q N (NeZero.ne q))
+
 
 end GlobalTheory.MangoldtSeries
 end -- clump:auto
@@ -604,11 +644,8 @@ namespace GlobalTheory.ExplicitFormulaRight
 
 open GlobalTheory.Mem.An
 
-theorem zfin {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) (t T : ℝ) :
-    (zerosIn χ t T).Finite := (ZeroWindow.finite_and_one_le_zmult q χ t T).1
-
 theorem zsumR_eq {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) (t T : ℝ) (f : ℂ → ℝ) :
-    zsumR χ t T f = ∑ ρ ∈ (zfin χ t T).toFinset, (zmult χ ρ : ℝ) * f ρ :=
+    zsumR χ t T f = ∑ ρ ∈ (_root_.GlobalTheory.Mem.An.ZeroWindow.finite_zeros χ t T).toFinset, (zmult χ ρ : ℝ) * f ρ :=
   finsum_mem_eq_finite_toFinset_sum _ _
 
 theorem recip_bound : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q),
@@ -629,7 +666,7 @@ theorem recip_bound : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q] (χ : Diri
         ((q : ℝ) ^ 2 * Real.log (3 * q) / c) * zsumR χ 0 1 (fun _ => 1) := by
       rw [zsumR_eq, zsumR_eq, Finset.mul_sum]
       refine Finset.sum_le_sum fun ρ hρ => ?_
-      obtain ⟨r0, r1, ri, rz⟩ := (zfin χ 0 1).mem_toFinset.mp hρ
+      obtain ⟨r0, r1, ri, rz⟩ := (_root_.GlobalTheory.Mem.An.ZeroWindow.finite_zeros χ 0 1).mem_toFinset.mp hρ
       have hz := ((zeros_symm_one_sub q χ hχ ρ r0 r1).1).mp rz
       have hne : (1 - ρ) ≠ 1 := by
         intro h
@@ -657,7 +694,7 @@ theorem recip_bound : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q] (χ : Diri
   have hB : zsumR χ 0 T (fun ρ => 1 / ‖ρ‖) ≤ zsumR χ 0 1 (fun ρ => 1 / ‖ρ‖) +
       zsumR χ 0 T (fun ρ => if 1 < |ρ.im| then 1 / ‖ρ‖ else 0) := by
     rw [zsumR_eq, zsumR_eq, zsumR_eq]
-    have e : (zfin χ 0 1).toFinset = (zfin χ 0 T).toFinset.filter (fun ρ => ¬ 1 < |ρ.im|) := by
+    have e : (_root_.GlobalTheory.Mem.An.ZeroWindow.finite_zeros χ 0 1).toFinset = (_root_.GlobalTheory.Mem.An.ZeroWindow.finite_zeros χ 0 T).toFinset.filter (fun ρ => ¬ 1 < |ρ.im|) := by
       ext ρ
       simp only [Set.Finite.mem_toFinset, Finset.mem_filter, zerosIn, Set.mem_setOf_eq, sub_zero,
         not_lt]
@@ -684,8 +721,8 @@ theorem left_zeros {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) (u T : �
     ‖zsum χ 0 T (fun ρ => (u : ℂ) ^ ρ / ρ) -
       ∑ᶠ ρ ∈ zerosBox χ (1 / 2) T, (ord χ ρ : ℂ) * ((u : ℂ) ^ ρ / ρ)‖ ≤
       Real.sqrt u * zsumR χ 0 T (fun ρ => 1 / ‖ρ‖) := by
-  have hf := (zfin χ 0 T).subset (box_subset χ T)
-  have e : hf.toFinset = (zfin χ 0 T).toFinset.filter (fun ρ => 1 / 2 ≤ ρ.re) := by
+  have hf := (_root_.GlobalTheory.Mem.An.ZeroWindow.finite_zeros χ 0 T).subset (box_subset χ T)
+  have e : hf.toFinset = (_root_.GlobalTheory.Mem.An.ZeroWindow.finite_zeros χ 0 T).toFinset.filter (fun ρ => 1 / 2 ≤ ρ.re) := by
     ext ρ
     simp only [Set.Finite.mem_toFinset, Finset.mem_filter]
     constructor
@@ -693,7 +730,7 @@ theorem left_zeros {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) (u T : �
       exact ⟨box_subset χ T h, h.1⟩
     · rintro ⟨⟨_, b, c, d⟩, a⟩
       exact ⟨a, b, by simpa using c, d⟩
-  rw [zsumR_eq, zsum, finsum_mem_eq_finite_toFinset_sum _ (zfin χ 0 T),
+  rw [zsumR_eq, zsum, finsum_mem_eq_finite_toFinset_sum _ (_root_.GlobalTheory.Mem.An.ZeroWindow.finite_zeros χ 0 T),
     finsum_mem_eq_finite_toFinset_sum _ hf, e, Finset.sum_filter, ← Finset.sum_sub_distrib,
     Finset.mul_sum]
   refine norm_sum_le_of_le _ fun ρ _ => ?_
@@ -792,7 +829,7 @@ theorem explicit_formula_right : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q]
   obtain ⟨A, HA⟩ := _root_.GlobalTheory.ExplicitFormulaClosed.explicit_formula_closed
   obtain ⟨B, hB, HB⟩ := recip_bound
   refine ⟨2 + |A| * (2 + B) + 2 * B, by positivity, fun q _ χ u T hT hu => ?_⟩
-  refine ⟨(zfin χ 0 T).subset (box_subset χ T), ?_⟩
+  refine ⟨(_root_.GlobalTheory.Mem.An.ZeroWindow.finite_zeros χ 0 T).subset (box_subset χ T), ?_⟩
   haveI : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
   have hprim := χ.primitiveCharacter_isPrimitive
   have hN : (1 : ℝ) ≤ χ.conductor := by
