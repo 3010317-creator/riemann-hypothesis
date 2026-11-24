@@ -97,13 +97,15 @@ available in the versions pinned in `lean-toolchain` and `lake-manifest.json`. I
 use `lia` for linear arithmetic over `ℕ` and `ℤ` rather than `omega`, and try `grind` before
 writing a long proof by hand. Don't open a pull request that only swaps one tactic for another.
 
-### Switching off instances
+### Working around a slow instance search
 
-Don't speed up a file by switching instances off with `attribute [-instance]` or promoting
-others with `attribute [local instance high]`. That hides a slow instance search instead of
-fixing it, and it ties the file to instances declared elsewhere, so it is hard to undo later.
-Find the instance that sends the search the wrong way, for example with
-`set_option trace.Meta.synthInstance true in` on the slow declaration, and fix it there.
+Don't speed up a file by steering Lean around a slow instance search, however it is done.
+Switching instances off with `attribute [-instance]`, adding a `local instance` or a shortcut such
+as `instance : CommRing (LocAlg v) := inferInstance`, and proving private copies of `map_add` so
+that the search never runs all make one file faster and leave the search as slow as before
+everywhere else. Put `set_option trace.Meta.synthInstance true in` and
+`set_option trace.profiler true in` in front of the slow declaration, follow the time to the
+instance that sends the search the wrong way, and fix it where it is declared.
 
 ### Turning on old behaviour with `set_option backward`
 
