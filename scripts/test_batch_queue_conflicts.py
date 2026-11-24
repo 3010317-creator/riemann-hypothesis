@@ -187,6 +187,8 @@ class DeletedImports(unittest.TestCase):
             (root / "src" / "Sub₂" / "Gone.lean").write_text("theorem gone : True := trivial\n")
             (root / "src" / "Kept.lean").write_text("theorem kept : True := trivial\n")
             (root / "src" / "User.lean").write_text("import Sub₂.Gone\nimport Kept\n\ntheorem user : True := gone\n")
+            (root / "src" / "Long.lean").write_text("import Kept\n\n" + "".join(
+                f"theorem long{number} : True := kept\n" for number in range(8)))
             (root / "src" / "notes.txt").write_text("import Sub₂.Gone\n")
         cls.fork = cls.repo.branch("lean-main", lean)
 
@@ -234,6 +236,39 @@ class DeletedImports(unittest.TestCase):
         result = self.check(self.branch("old-import", self.write(
             "User.lean", "import Sub₂.Gone\nimport Kept\n\ntheorem user : True := gone\n\ntheorem more : True := kept\n")))
         self.assertEqual((result.stale, result.unread), ([], False))
+
+    @staticmethod
+    def rename(old, new, header="", footer=""):
+        def change(root):
+            text = (root / "src" / old).read_text()
+            (root / "src" / old).unlink()
+            (root / "src" / new).write_text(header + text + footer)
+        return change
+
+    def test_a_renamed_file_does_not_start_to_import_what_it_already_imported(self):
+        # The deleting side drops the import from User.lean; git carries that edit over to the
+        # new name when it merges, so the result builds.
+        result = self.check(self.branch("renamed", self.rename("User.lean", "Moved.lean")))
+        self.assertEqual((result.kind, result.stale), ("clean", []))
+
+    def test_a_renamed_and_edited_file_is_matched_with_its_old_name(self):
+        result = self.check(self.branch("renamed-edited", self.rename(
+            "User.lean", "Edited.lean", footer="\ntheorem more : True := kept\n")))
+        self.assertEqual(result.stale, [])
+
+    def test_a_renamed_file_that_starts_to_import_a_deleted_file_is_reported(self):
+        result = self.check(self.branch("renamed-import", self.rename(
+            "Long.lean", "Longer.lean", header="import Sub₂.Gone\n")))
+        self.assertEqual(result.stale, [("ours", self.GONE, b"src/Longer.lean")])
+
+    def test_prefetch_asks_for_what_a_pull_request_renames_from(self):
+        theirs = self.branch("prefetch-rename", self.rename("Long.lean", "Moved2.lean", footer="-- moved\n"))
+        asked = []
+        with patch.object(conflicts, "fetch_ids", lambda repo, wanted: asked.append(set(wanted))):
+            conflicts.prefetch_imports(self.repo.root, (self.fork, self.ours), [(self.fork, theirs)])
+        # Matching Moved2.lean with Long.lean, which it was renamed from, reads both.
+        for commit, path in ((theirs, "Moved2.lean"), (self.fork, "Long.lean")):
+            self.assertIn(self.repo.git("rev-parse", f"{commit}:src/{path}").encode(), asked[0])
 
     def test_import_of_a_file_that_stays_is_not_reported(self):
         result = self.check(self.branch("fine", self.write("New.lean", "import Kept\n")))
@@ -302,13 +337,34 @@ class Reports(unittest.TestCase):
         self.assertIn("#7 deletes `src/G09.lean`, which #11 starts to import in `src/New.lean`; and 3 more\n", body)
         self.assertNotIn("src/G10.lean", body)
 
-    def test_unread_import_lines_need_a_comment(self):
+    def test_a_finding_is_not_listed_again_as_fine(self):
+        stale_apart, stale_clean = conflicts.Comparison("apart"), conflicts.Comparison("clean", [b"a.txt"])
+        stale_apart.stale = [("ours", b"src/Gone.lean", b"src/New.lean")]
+        stale_clean.stale = [("theirs", b"src/Old.lean", b"src/F.lean")]
+        fine_apart, fine_clean = conflicts.Comparison("apart"), conflicts.Comparison("clean", [b"b.txt"])
+        others = {11: "batch queue", 12: "building", 13: "batch queue", 14: "building"}
+        body, needed = conflicts.report(7, "0" * 40, others,
+                                        {11: stale_apart, 12: stale_clean, 13: fine_apart, 14: fine_clean})
+        self.assertTrue(needed)
+        self.assertIn("It has no file in common with #13.\n", body)
+        self.assertIn("git merges them without conflict:\n\n- #14 (`building`): 1 file\n", body)
+        self.assertNotIn("- #12 (`building`): 1 file", body)
+
+    def test_unread_import_lines_are_reported_without_a_comment(self):
         result = conflicts.Comparison("apart")
         result.unread = True
         body, needed = conflicts.report(7, "0" * 40, {11: "batch queue"}, {11: result})
-        self.assertTrue(needed)
+        self.assertFalse(needed)
         self.assertIn("Import lines were not read for these", body)
         self.assertIn("- #11 (`batch queue`)", body)
+
+    def test_unread_import_lines_do_not_hide_a_finding(self):
+        unread, stale = conflicts.Comparison("apart"), conflicts.Comparison("apart")
+        unread.unread = True
+        stale.stale = [("ours", b"src/Gone.lean", b"src/New.lean")]
+        body, needed = conflicts.report(7, "0" * 40, {11: "batch queue", 12: "building"}, {11: unread, 12: stale})
+        self.assertTrue(needed)
+        self.assertIn("Import lines were not read for these", body)
 
     def test_nothing_to_compare(self):
         body, needed = conflicts.report(7, "0" * 40, {}, {})
