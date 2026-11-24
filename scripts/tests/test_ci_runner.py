@@ -272,6 +272,14 @@ class RunnerChecks(unittest.TestCase):
         self.assertEqual((report["failed"], report["ready"], error), ([], True, None))
         self.assertNotIn("bwrap_error", report)
 
+        # Quick checks run doctor before executing candidate code. Only runner installation needs the tarfile data filter.
+        for filters, module in ((True, SimpleNamespace(data_filter=None)), (False, SimpleNamespace())):
+            with patch.object(runner, "tarfile", module):
+                report, error, _ = doctor()
+            self.assertEqual((report["python"], report["tarfile_data_filter"]),
+                             (runner.platform.python_version(), filters))
+            self.assertEqual((report["failed"], report["ready"], error), ([], True, None))
+
         # The probe prints nothing when its connection is not refused as unreachable, so the report must
         # not point at "".
         report, error, _ = doctor(probe=(runner.PROBE_NOT_OFFLINE, ""))
