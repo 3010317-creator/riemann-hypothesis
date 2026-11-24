@@ -153,36 +153,6 @@ theorem isWeightedHomogeneous_smul {R σ B : Type*} [CommRing R] [AddCommMonoid 
   apply hd
   rw [MvPolynomial.coeff_smul, h0, smul_zero]
 
-private theorem bm_whcSame_lemma {R σ B : Type*} [CommRing R] [AddCommMonoid B] {w : σ → B} {m : B}
-    {φ : MvPolynomial σ R} (h : IsWeightedHomogeneous w φ m) : weightedHomogeneousComponent w m φ = φ := by
-  classical
-  ext d
-  rw [coeff_weightedHomogeneousComponent]
-  split_ifs with hd
-  · rfl
-  · by_contra hc
-    exact hd (h (Ne.symm hc))
-
-private theorem bm_whcNe_lemma_2 {R σ B : Type*} [CommRing R] [AddCommMonoid B] {w : σ → B} {m : B}
-    {φ : MvPolynomial σ R} (h : IsWeightedHomogeneous w φ m) {k : B} (hk : k ≠ m) :
-    weightedHomogeneousComponent w k φ = 0 := by
-  classical
-  ext d
-  rw [coeff_weightedHomogeneousComponent, AddMonoidAlgebra.coeff_zero]
-  split_ifs with hd
-  · by_contra hc
-    exact hk (hd.symm.trans (h hc))
-  · rfl
-
-private theorem bm_whcWH_lemma_3 {R σ B : Type*} [CommRing R] [AddCommMonoid B] (w : σ → B) (m : B)
-    (φ : MvPolynomial σ R) : IsWeightedHomogeneous w (weightedHomogeneousComponent w m φ) m := by
-  classical
-  intro d hd
-  rw [coeff_weightedHomogeneousComponent] at hd
-  split_ifs at hd with h
-  · exact h
-  · exact absurd rfl hd
-
 theorem bm_whc_shift {R σ B : Type*} [CommRing R] [AddCommMonoid B] [IsRightCancelAdd B] (w : σ → B) (δ : B)
     (D : MvPolynomial σ R →ₗ[R] MvPolynomial σ R)
     (hD : ∀ m, IsWeightedHomogeneous w (D (monomial m 1)) (Finsupp.weight w m + δ)) (β : B)
@@ -199,8 +169,8 @@ theorem bm_whc_shift {R σ B : Type*} [CommRing R] [AddCommMonoid B] [IsRightCan
       isWeightedHomogeneous_monomial w u a rfl
     by_cases h : Finsupp.weight w u = β
     · subst h
-      rw [bm_whcSame_lemma hDa, bm_whcSame_lemma hma]
-    · rw [bm_whcNe_lemma_2 hDa (fun h' => h (add_right_cancel h').symm), bm_whcNe_lemma_2 hma (Ne.symm h),
+      rw [hDa.weightedHomogeneousComponent_same, hma.weightedHomogeneousComponent_same]
+    · rw [hDa.weightedHomogeneousComponent_ne _ (fun h' => h (add_right_cancel h').symm), hma.weightedHomogeneousComponent_ne _ (Ne.symm h),
         map_zero]
   | add p q hp hq => simp only [map_add (f := _), hp, hq]
 
@@ -209,10 +179,10 @@ theorem bm_isWH_of_comm {R σ B : Type*} [CommRing R] [AddCommMonoid B] (w : σ 
     (hx : Commute (weightedHomogeneousComponent w β : Module.End R (MvPolynomial σ R)) x)
     (F : MvPolynomial σ R) (hF : IsWeightedHomogeneous w F β) : IsWeightedHomogeneous w (x F) β := by
   have h1 : x F = weightedHomogeneousComponent w β (x F) := by
-    conv_lhs => rw [← bm_whcSame_lemma hF]
+    conv_lhs => rw [← hF.weightedHomogeneousComponent_same]
     exact (LinearMap.congr_fun hx.eq F).symm
   rw [h1]
-  exact bm_whcWH_lemma_3 w β (x F)
+  exact weightedHomogeneousComponent_isWeightedHomogeneous β (x F)
 
 theorem bm_deriv_monomial_WH {R σ B : Type*} [CommRing R] [AddCommMonoid B] (w : σ → B) (δ : B)
     (f : σ → MvPolynomial σ R) (hf : ∀ v, IsWeightedHomogeneous w (f v) (w v + δ)) (m : σ →₀ ℕ) :
@@ -259,21 +229,7 @@ theorem commute_weightedComponent_of_monomial {R σ B : Type*} [CommRing R] [Add
     (hD : ∀ m, IsWeightedHomogeneous w (D (monomial m 1)) (Finsupp.weight w m)) (β : B) :
     Commute (weightedHomogeneousComponent w β : Module.End R (MvPolynomial σ R)) D := by
   refine LinearMap.ext fun F => ?_
-  show weightedHomogeneousComponent w β (D F) = D (weightedHomogeneousComponent w β F)
-  induction F using MvPolynomial.induction_on' with
-  | monomial u a =>
-    have hm : monomial u a = a • monomial u (1 : R) := by
-      rw [smul_monomial, smul_eq_mul, mul_one]
-    have hDa : IsWeightedHomogeneous w (D (monomial u a)) (Finsupp.weight w u) := by
-      rw [hm, map_smul]
-      exact isWeightedHomogeneous_smul (hD u) a
-    have hma : IsWeightedHomogeneous w (monomial u a) (Finsupp.weight w u) :=
-      isWeightedHomogeneous_monomial w u a rfl
-    by_cases h : Finsupp.weight w u = β
-    · subst h
-      rw [bm_whcSame_lemma hDa, bm_whcSame_lemma hma]
-    · rw [bm_whcNe_lemma_2 hDa (Ne.symm h), bm_whcNe_lemma_2 hma (Ne.symm h), map_zero]
-  | add p q hp hq => simp only [map_add (f := _), hp, hq]
+  simpa using bm_whc_shift w 0 D (by simpa using hD) β F
 
 theorem elemDeriv_monomial_weighted (R : Type*) [CommRing R] (n : ℕ) {B : Type*} [AddCommMonoid B]
     (w : Fin (n + 1) × Fin n → B) (hw : ∀ (a : Fin (n + 1)) (s t : Fin n), a ≠ Fin.last n → w (a, s) = w (a, t))
@@ -503,9 +459,9 @@ theorem lastRowDeriv_weighted_homogeneous (R : Type*) [CommRing R] (n : ℕ) (l 
     IsWeightedHomogeneous (zW n) (bmZ R n l j F) (β + (Pi.single l 1 - Pi.single j 1)) := by
   have h := bm_zcomp_bmZ R n β l j F
   simp only [zcomp] at h
-  rw [bm_whcSame_lemma hF] at h
+  rw [hF.weightedHomogeneousComponent_same] at h
   rw [← h]
-  exact bm_whcWH_lemma_3 _ _ _
+  exact weightedHomogeneousComponent_isWeightedHomogeneous _ _
 
 theorem lastRowDeriv_injective_weighted (R : Type*) [CommRing R] [IsDomain R] [CharZero R] (n : ℕ) (j l : Fin n)
     (β : Fin n → ℤ) (F : BP R n) (hF : IsWeightedHomogeneous (zW n) F β) (hk : 1 ≤ β l)
@@ -1458,7 +1414,7 @@ theorem bmD_omg_single {n : ℕ} (s : Fin n) :
 
 theorem bmD_zcomp_isWH {R : Type*} [CommRing R] {n : ℕ} (β : Fin n → ℤ) (Y : BP R n) :
     IsWeightedHomogeneous (zW n) (zcomp R n β Y) β := by
-  exact bm_whcWH_lemma_3 (zW n) β Y
+  exact weightedHomogeneousComponent_isWeightedHomogeneous (w := zW n) β Y
 
 theorem bmD_zcomp_bmE {R : Type*} [CommRing R] {n : ℕ} (β : Fin n → ℤ) (s t : Fin n) (Y : BP R n) :
     zcomp R n β (bmE R n s t Y) = bmE R n s t (zcomp R n β Y) := by
