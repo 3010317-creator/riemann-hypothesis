@@ -109,12 +109,7 @@ theorem bijective_of_injective (n : ℕ) [NeZero n] (X Y : Type) [AddCommGroup X
     [Module (ZMod n) X] [Finite X] [AddCommGroup Y] [Module (ZMod n) Y] [Finite Y]
     (B : Y →ₗ[ZMod n] X →ₗ[ZMod n] ZMod n) (hB : Function.Injective B)
     (hB' : Function.Injective B.flip) : Function.Bijective B := by
-  have : Finite (X →ₗ[ZMod n] ZMod n) := Finite.of_injective _ DFunLike.coe_injective
-  have hd : Nat.card (X →ₗ[ZMod n] ZMod n) = Nat.card X := GlobalTheory.ZModDual.card_dual_eq n X
-  have hd' : Nat.card (Y →ₗ[ZMod n] ZMod n) = Nat.card Y := GlobalTheory.ZModDual.card_dual_eq n Y
-  have : Finite (Y →ₗ[ZMod n] ZMod n) := Finite.of_injective _ DFunLike.coe_injective
-  have h1 : Nat.card X ≤ Nat.card Y := hd' ▸ Nat.card_le_card_of_injective _ hB'
-  exact hB.bijective_of_nat_card_le (hd ▸ h1)
+  exact (GlobalTheory.ZModDual.bijective_of_mutual_dual_injections n X Y B B.flip hB hB').1
 
 theorem card_annihilator_mul_card (n : ℕ) [NeZero n] (X Y : Type) [AddCommGroup X]
     [Module (ZMod n) X] [Finite X] [AddCommGroup Y] [Module (ZMod n) Y] [Finite Y]
@@ -227,9 +222,7 @@ theorem double_annihilator (n : ℕ) [NeZero n] (X Y : Type) [AddCommGroup X] [M
   rw [LinearMap.flip_flip] at hWA
   change Nat.card W * Nat.card A = Nat.card Y at hWA
   have hYX : Nat.card Y = Nat.card X :=
-    (Nat.card_congr (Equiv.ofBijective B
-      (GlobalTheory.CompanionTheory.PairCount.bijective_of_injective n X Y B hB hB'))).trans
-      (GlobalTheory.ZModDual.card_dual_eq n X)
+    (GlobalTheory.ZModDual.bijective_of_mutual_dual_injections n X Y B B.flip hB hB').2.symm
   -- The annihilator has positive cardinality, so the two cardinality identities cancel.
   have hApos : 0 < Nat.card A := Nat.card_pos
   have hcard : Nat.card W = Nat.card U := by
