@@ -63,7 +63,6 @@ open MeasureTheory Measure GroundTheory GroundTheory.Automorphic GroundTheory.Au
 open GroundTheory.Automorphic.GodementJacquet
 open scoped NNReal ENNReal Classical ValuativeRel
 
-attribute [-instance] Formalism.DoubleCosetMeasures.instMeasGL
 
 set_option linter.unusedSectionVars false
 
