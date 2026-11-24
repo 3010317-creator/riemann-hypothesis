@@ -50,6 +50,12 @@ open GlobalTheory.PRep GlobalTheory.SmGL
 
 namespace GlobalTheory.Published
 
+/-- **Bernstein's theorem on unitary parabolic induction**: the normalized parabolic
+induction of irreducible unitary representations of general linear groups over a local field
+remains irreducible.
+
+Proposed reference:
+[J. N. Bernstein, *All subquotients of NP-induced representations are irreducible*][bernstein1984]. -/
 def BernsteinUnitaryProductIrreducible : Prop :=
   ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     (r t : ℕ) (V W : Type) [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W]
