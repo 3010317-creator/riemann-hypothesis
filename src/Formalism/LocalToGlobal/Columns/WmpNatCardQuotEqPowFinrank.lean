@@ -677,7 +677,6 @@ end WmPSym
 
 open NumberField IsDedekindDomain Formalism.HermitianLatticesTheory Module Pointwise
 
-open NumberField IsDedekindDomain Formalism.HermitianLatticesTheory Module Pointwise
 
 section WmPK
 variable {E : Type} [Field E] [NumberField E] [StarRing E]
@@ -700,11 +699,8 @@ theorem card_wmpToK (p : Submodule (𝓞 E) V) : Nat.card (wmpToK P p) = Nat.car
 
 end WmPK
 
-open NumberField IsDedekindDomain Formalism.HermitianLatticesTheory Module Pointwise
 
-open NumberField IsDedekindDomain Formalism.HermitianLatticesTheory Module Pointwise
 
-open NumberField IsDedekindDomain Formalism.HermitianLatticesTheory Module
 
 end Formalism.L2.Col
 end -- clump:auto

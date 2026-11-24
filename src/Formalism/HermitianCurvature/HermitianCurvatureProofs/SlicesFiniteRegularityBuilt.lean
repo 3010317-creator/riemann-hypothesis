@@ -1188,7 +1188,6 @@ end Formalism.FourierDecayAlt.P.JCTx6.Int
 
 noncomputable section
 
-open Matrix MeasureTheory Formalism.QuantumDeterminants Formalism.FourierDecayAlt
 
 namespace Formalism.FourierDecayAlt.P.JCTx6.Int
 
@@ -1236,7 +1235,6 @@ end Formalism.FourierDecayAlt.P.JCTx6.Int
 
 noncomputable section
 
-open Matrix MeasureTheory Formalism.QuantumDeterminants Formalism.FourierDecayAlt
 
 namespace Formalism.FourierDecayAlt.P.JCTx6.Int
 
@@ -1292,7 +1290,6 @@ end Formalism.FourierDecayAlt.P.JCTx6.Int
 
 noncomputable section
 
-open Matrix MeasureTheory Formalism.QuantumDeterminants Formalism.FourierDecayAlt
 
 namespace Formalism.FourierDecayAlt.P.JCTx6.Int
 
@@ -1620,7 +1617,6 @@ theorem bump_exists {c₀ : ℂ} (hc : c₀ ≠ 0) :
 
 end Formalism.FourierDecayAlt.P.JCTx6.Pos
 
-open Matrix MeasureTheory Filter Topology
 
 noncomputable section
 
@@ -1677,7 +1673,6 @@ theorem Zv_decay (n : ℕ) {t : ℂ} (ht : t ≠ 0) (u : G.UT (n + 1) → ℂ) {
 
 end Formalism.FourierDecayAlt.P.JCTx6.Pos
 
-open Matrix MeasureTheory Filter Topology
 
 noncomputable section
 
