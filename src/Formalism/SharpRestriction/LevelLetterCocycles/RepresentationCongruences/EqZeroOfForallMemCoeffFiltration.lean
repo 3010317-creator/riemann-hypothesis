@@ -177,7 +177,7 @@ theorem subst_mul (hg : constantCoeff g ∈ IsLocalRing.maximalIdeal O) (f f' : 
     unfold S
     rw [← map_mul (Polynomial.aeval (R := O) g), ← map_sub (Polynomial.aeval (R := O) g)]
     refine aeval_mem_coeffFiltration hg fun d hd => ?_
-    rw [Polynomial.coeff_sub, coeff_trunc, if_pos hd, sub_eq_zero,
+    rw [Polynomial.coeff_sub, coeff_trunc, ite_eq_left hd, sub_eq_zero,
       ← Polynomial.coeff_coe, Polynomial.coe_mul]
     exact (coeff_mul_eq_coeff_trunc_mul_trunc f f' hd).symm
   have key : subst hg f * subst hg f' - S g N (f * f') =
