@@ -624,9 +624,6 @@ private theorem trace_pi_eq_sum_trace_blocks {J : Type} [Fintype J] [DecidableEq
   conv_lhs => rw [hf]
 
   simp only [map_sum]
-  haveI hFr : ∀ j, Module.Free ℂ (N j) := fun j => Module.Free.of_divisionRing ℂ (N j)
-  haveI : Module.Free ℂ (∀ j, N j) := Module.Free.pi ℂ N
-  haveI : Module.Finite ℂ (∀ j, N j) := Module.Finite.pi
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [Finset.sum_eq_single i]
   · rw [LinearMap.trace_comp_comm', LinearMap.comp_assoc, LinearMap.proj_comp_single_same,
