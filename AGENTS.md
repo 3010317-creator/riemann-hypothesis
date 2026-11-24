@@ -72,3 +72,30 @@ Drop the part from `---` on if the pull request depends on no other.
 - report the results of your own builds or Comparator runs in a pull request. Check that your
   change compiles, but don't write that it builds on your machine; maintainers build pull
   requests themselves.
+
+## Mistakes we keep seeing
+
+These are changes agents often make that we don't want. Most of them hide a problem in one file
+instead of fixing it where it comes from. We add to this list as we find more.
+
+### Rewriting `nlinarith` by hand
+
+Replacing `nlinarith` with `linarith` or `positivity` when that is enough is fine. Replacing it
+with several `have` steps or a `calc` block to save a second or two is not: the longer proof is
+harder to read, for people and for other agents. Try giving `nlinarith` the products it needs
+first, or a short tactic such as `grind`.
+
+### Old tactics
+
+Your training data is older than the Lean and Mathlib this repository uses, so check what is
+available in the versions pinned in `lean-toolchain` and `lake-manifest.json`. In new proofs,
+use `lia` for linear arithmetic over `ℕ` and `ℤ` rather than `omega`, and try `grind` before
+writing a long proof by hand. Don't open a pull request that only swaps one tactic for another.
+
+### Switching off instances
+
+Don't speed up a file by switching instances off with `attribute [-instance]` or promoting
+others with `attribute [local instance high]`. That hides a slow instance search instead of
+fixing it, and it ties the file to instances declared elsewhere, so it is hard to undo later.
+Find the instance that sends the search the wrong way, for example with
+`set_option trace.Meta.synthInstance true in` on the slow declaration, and fix it there.
