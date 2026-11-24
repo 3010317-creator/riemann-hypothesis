@@ -181,8 +181,7 @@ theorem thetaInt_wop_intg {D : D7} {M X : HSp D} {ω : GlobalTheory.Grid.WRep M 
   have hi : ∀ k, Intg ω ν 𝓕 (ω (k, 1) Φ) := fun k h => by simpa only [thetaKO_right] using (key h k).1
   have he : ∀ k, thetaInt ω ν 𝓕 (ω (k, 1) Φ) = thetaInt ω ν 𝓕 Φ := fun k => by
     funext h
-    simp only [thetaInt, thetaKO_right]
-    exact (key h k).2
+    simpa only [thetaInt, thetaKO_right] using (key h k).2
   rw [wop_apply, thetaInt_sum _ fun k _ => (hi k).smul _]
   simp only [thetaInt_smul, he, zdeg, Finsupp.sum, Finset.sum_smul]
 
@@ -393,8 +392,7 @@ theorem vol_mul_relIndex [MeasurableSpace k] [BorelSpace k] {n : Type} [Fintype 
   have h := GlobalTheory.IndexVolume.relIndex_mul_measure_subgroup _ (KO k n) hle' ho'.measurableSet (haarVol (KO k n))
   rw [haarVol_self GlobalTheory.SplitFlip.isOpen_KO le_rfl, hi] at h
   have h2 := congrArg ENNReal.toReal h
-  rw [ENNReal.toReal_mul, ENNReal.toReal_natCast, ENNReal.toReal_one, mul_comm] at h2
-  exact h2
+  rwa [ENNReal.toReal_mul, ENNReal.toReal_natCast, ENNReal.toReal_one, mul_comm] at h2
 
 theorem gl_residue_surjective (O : Type) [CommRing O] [IsLocalRing O] (n : ℕ) :
     Function.Surjective (GeneralLinearGroup.map (n := Fin n) (IsLocalRing.residue O)) := by
@@ -477,8 +475,7 @@ theorem relIndex_lev (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (Λ : Submod
     constructor
     · rintro ⟨-, h⟩ PP -
       exact h PP.1 PP.2
-    · intro h
-      exact ⟨x.2, fun PP hP => h ⟨PP, hP⟩ (Set.mem_univ _)⟩
+    · exact fun h => ⟨x.2, fun PP hP => h ⟨PP, hP⟩ (Set.mem_univ _)⟩
   have hsurj : Function.Surjective φ := by
     intro g
     let L' : LevDat D.host.E ℂ V.rank := Lev.datW V.rank (Pg ∪ Q) (LevelP.triv (Pg ∪ Q) V.rank ℂ) Lev.Frm.B
@@ -498,7 +495,6 @@ theorem relIndex_lev (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (Λ : Submod
       intro PP hP
       rw [hred PP (Finset.mem_union_left _ hP)]
       have hq : PP ∉ Q := Finset.disjoint_left.1 hd hP
-      show (if h : PP ∈ Q then g ⟨PP, h⟩ else (1 : GL (Fin V.rank) (kP PP))) = 1
       exact dite_eq_right hq
     have hSt' := parLev_St hκ1
     have hxbig : Lev.finE V κ ∈
@@ -580,8 +576,7 @@ theorem levVol_of_KO {t : T} {i j : Fin D.R.m} {w : Pl D.host.E} (h : givenLevel
     levVol G t i j w = 1 := by
   have := vol_mul_relIndex (KO (Kw w) (Fin ((locGrid G t w).rank (i, j)))) GlobalTheory.SplitFlip.isOpen_KO le_rfl
   rw [Subgroup.relIndex_self, Nat.cast_one, mul_one] at this
-  rw [levVol, h]
-  exact this
+  rwa [levVol, h]
 
 theorem levVol_ne_zero (hL : L.Is μ₀) {t : T} (i j : Fin D.R.m) {w : Pl D.host.E} (hw : w ∈ locPl G t) :
     levVol G t i j w ≠ 0 := by
@@ -656,8 +651,7 @@ theorem exists_factors (hL : L.Is μ₀) (i j : Fin D.R.m) (t : T) {M M₀ : Vol
       index_residue w (s := (j + 1) * D.R.t) (n' := (Yc D (j + 1)).rank)
         (by change D.R.r + (j + 1) * D.R.t + 0 * sLen D = _; rw [zero_mul, add_zero])
         ((D.sp.Y_rank _ (min_le_right _ _)).trans (by rw [min_eq_left hj.le]; rfl))] at hv
-    rw [levVol_of_KO (t := μ₀) (givenLevel_base hL j hP)]
-    exact hv
+    rwa [levVol_of_KO (t := μ₀) (givenLevel_base hL j hP)]
   · exact levVol_col hL t hi hj hw
 
 theorem measure_mul_levVol : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : GlobalTheory.ChiGrid.Consts} {G : GridData L sc} {μ₀ : T}, L.Is μ₀ → (∀ t, SquareStanding G t) → ∀ (i j : Fin D.R.m) (m : Measure (GA D (spW₁ G i j))), m.IsHaarMeasure →
@@ -681,8 +675,7 @@ theorem measure_mul_levVol : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Globa
     have h := congrArg (fun μ : Measure (GA D (spW₁ G i j)) => μ C) (hs.symm.trans h1)
     rw [e₀] at h
     simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, ← mul_assoc] at h
-    have h' := congrArg ENNReal.toReal ((ENNReal.mul_left_inj h0 hC.measure_lt_top.ne).1 h)
-    simpa using h'
+    simpa using congrArg ENNReal.toReal ((ENNReal.mul_left_inj h0 hC.measure_lt_top.ne).1 h)
   have hsub : locPl G μ₀ ⊆ locPl G t := by
     unfold locPl
     rw [Q_base hL]
@@ -746,8 +739,7 @@ theorem exists_ratio : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : GlobalTheor
       exact (isOpen_univ.measure_pos (0 : Measure (GA D (spW G i j))) Set.univ_nonempty).ne' rfl
     · have e1 : s • m = s₀ • m := e.symm.trans ((nu_eq hM hM₀ i j).trans e₀)
       have e2 : (s : ENNReal) * m K = (s₀ : ENNReal) * m K := by
-        have e3 := congrArg (fun μ : Measure (GA D (spW G i j)) => μ K) e1
-        exact e3
+        exact congrArg (fun μ : Measure (GA D (spW G i j)) => μ K) e1
       exact_mod_cast (ENNReal.mul_left_inj hK0 hK1).1 e2
   · exact ⟨1, one_ne_zero, fun t M hM s e => absurd ⟨t, M, s, hM, e⟩ h⟩
 
@@ -824,14 +816,12 @@ theorem mem_latO_iff_at {D : D7} {S T : HSp D} {ΛS : Submodule (𝓞 D.host.E) 
   unfold IsIntM
   refine ⟨fun h a b => ?_, fun h a b => ?_⟩
   · have := (mem_OA_iff _).1 (h a b) w
-    rw [← hmap, Valuation.mem_integer_iff, (Good.isEquiv_Kw w).le_one_iff_le_one]
-    exact this
+    rwa [← hmap, Valuation.mem_integer_iff, (Good.isEquiv_Kw w).le_one_iff_le_one]
   · refine (mem_OA_iff _).2 fun Q => ?_
     by_cases hQ : Q = w
     · subst hQ
       have := h a b
-      rw [← hmap, Valuation.mem_integer_iff, (Good.isEquiv_Kw Q).le_one_iff_le_one] at this
-      exact this
+      rwa [← hmap, Valuation.mem_integer_iff, (Good.isEquiv_Kw Q).le_one_iff_le_one] at this
     · have h0 : (x : Matrix (Fin T.rank) (Fin S.rank) (AE D)).map (atW Q) = 0 := by
         refine Matrix.ext fun a b => ?_
         calc atW Q (x a b) = atW Q (atPl w 1 * x a b) := congrArg _ (hx a b).symm
@@ -1083,8 +1073,7 @@ theorem mixglobA : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : Gr
     have := sub_mem hR.2 hτ
     rwa [← Prod.mk.eta (p := Finset.sum _ _), Prod.mk_sub_mk, ← hfst, sub_self] at this)
   have := congrFun (sub_eq_zero.1 this) u
-  rw [Prod.snd_sum, Finset.sum_apply] at this
-  exact this
+  rwa [Prod.snd_sum, Finset.sum_apply] at this
 
 end GlobalTheory.TopFlip
 end
@@ -1231,8 +1220,7 @@ theorem mixglobB : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : Gr
     have := sub_mem hR.2 hτ
     rwa [← Prod.mk.eta (p := Finset.sum _ _), Prod.mk_sub_mk, ← hfst, sub_self] at this)
   have := congrFun (sub_eq_zero.1 this) u
-  rw [Prod.snd_sum, Finset.sum_apply] at this
-  exact this
+  rwa [Prod.snd_sum, Finset.sum_apply] at this
 
 end GlobalTheory.TopFlip
 end
@@ -1447,8 +1435,7 @@ theorem thetaFlip_tensor_match (hH : GlobalTheory.Published.HoweDualityReal) (hP
       (vacIm Γ Rf) (Filter.Eventually.of_forall fun _ => rfl) hf p1.1 p2
     have eA := eq_thO Γ.M Bs.ψ e (GlobalTheory.RouteCoords.gram_det_ne (sgn true W)) cA hcA' (hPf φ p1.1 p2 _ kA)
     refine ⟨a1 φ p1.1 p2 _ kA, ?_⟩
-    rw [eA]
-    exact mA
+    rwa [eA]
   · obtain ⟨b1, b2, -⟩ := fock_datum hθ false A₁ B e.symm Bs hT₀.base hR.JW₁ hR.JX hg.hV' hg.hW
       (fun w => by
         obtain ⟨τ, a, -, c, d⟩ := hR.cart w
@@ -1463,8 +1450,7 @@ theorem thetaFlip_tensor_match (hH : GlobalTheory.Published.HoweDualityReal) (hP
       (vacIm Γ Rf) (Xc.T.eventually_cofinite_notMem.mono fun v hv => (hm.fin.sph v hv).1.symm) hf' q1.1 q2
     have eB := eq_thO Γ.M' Bs.ψ e (GlobalTheory.RouteCoords.gram_det_ne W₁) cB hcB' (hP' φ' q1.1 q2 _ kB)
     refine ⟨b1 φ' q1.1 q2 _ kB, ?_⟩
-    rw [eB]
-    exact mB
+    rwa [eB]
 end GlobalTheory.TopFlip
 end
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta Formalism.L2.DIV IsDedekindDomain NumberField MeasureTheory Matrix
@@ -1676,8 +1662,7 @@ theorem _root_.GlobalTheory.T.thetaFlip_involutive_correspondence : _root_.Globa
     rw [← hrk]; rfl
   have hI : X.Is W.ψ W.θ (fun t => GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.alpha G t i j) (fun _ => GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.beta G i j) (fun t => nuH G t i j)
       (locPl G) := by
-    simp only [eα, eβ]
-    exact hIs
+    simpa only [eα, eβ] using hIs
   obtain ⟨h, hh, cA, cB, y, hcA, hcB, hmv⟩ := GlobalTheory.TopFlip.exists_move hL hst S.B ρ hTG hI hV hV₁
   obtain ⟨x, hx⟩ := GlobalTheory.TopFlip.zeta_std hL W S.B X hst (hTG.1 ▸ hI.rigA.2.1) (hTG.2.1 ▸ hI.rigA'.2.1)
     (by have := hI.rigW.2.1; rwa [hTG.2.2.1] at this)

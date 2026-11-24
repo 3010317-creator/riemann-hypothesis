@@ -216,8 +216,7 @@ theorem UpperTheory.finiteDimensional_eigenspace_inf_fixed_compactOpen :
       intro j e
       obtain rfl := hw e
       rfl
-    simp only [U', dite_eq_left h]
-    exact key _ _
+    simpa only [U', dite_eq_left h] using key _ _
   have hCO' : ∀ v ∈ Finset.univ.image w, CO (U' v) := by
     intro v hv
     obtain ⟨i, -, rfl⟩ := Finset.mem_image.1 hv
@@ -309,8 +308,7 @@ private theorem iw_scale {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : Me
   refine ext_inner_left ℂ fun u => ?_
   have e1 : ⟪u, Uiw μ w ν v⟫_ℂ = d.toReal • ∫ g, (iwCoset w ν).indicator 1 g * ⟪u, rhoL μ w g v⟫_ℂ ∂m := by
     have := hop u v
-    rw [integral_smul_measure] at this
-    exact this
+    rwa [integral_smul_measure] at this
   rw [ContinuousLinearMap.smul_apply, inner_smul_right, e1, hT u v, hdc, Complex.real_smul, ← mul_assoc,
     Complex.ofReal_inv, mul_inv_cancel₀ (Complex.ofReal_ne_zero.2 hc), one_mul]
 
@@ -322,8 +320,7 @@ theorem UpperTheory.Uiw_pow_comp_eq_of_antitone :
   intro K _ _ n μ _ w _ _ m _ e j T T' he hT hT'
   have h0 : prj (fixL μ w (GLnLocal.iwahori (w.adicCompletion K) n)) = Uiw μ w 0 := by
     have := UpperTheory.ConvolutionTheory.C.uiwPow K n μ w e he 0
-    rw [pow_zero, zero_smul] at this
-    exact this
+    rwa [pow_zero, zero_smul] at this
   have h1 := UpperTheory.ConvolutionTheory.C.uiwPow K n μ w e he j
   rw [iw_scale μ w m 0 T hT, iw_scale μ w m _ T' hT', ← h0, ← h1]
   ext1 v
@@ -348,8 +345,7 @@ private theorem exists_enum {α : Type} (q : α) (S : Finset α) (hq : q ∉ S) 
   · refine Fin.cons_injective_iff.2 ⟨?_, ?_⟩
     · rintro ⟨i, hi⟩
       exact hq (hi ▸ (S.equivFin.symm i).2)
-    · intro i j h
-      exact S.equivFin.symm.injective (Subtype.ext h)
+    · exact fun i j h => S.equivFin.symm.injective (Subtype.ext h)
   · ext v
     simp only [Finset.mem_image, Finset.mem_univ, true_and, Finset.mem_insert, Fin.exists_fin_succ, Fin.cons_zero,
       Fin.cons_succ]

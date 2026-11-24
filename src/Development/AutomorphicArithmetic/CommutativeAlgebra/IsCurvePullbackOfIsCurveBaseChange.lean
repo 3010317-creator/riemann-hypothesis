@@ -79,8 +79,7 @@ private theorem dom_fg {k R A ι : Type} [Field k] [IsAlgClosed k] [CommRing R] 
     (h : (∑ i ∈ s, a i ⊗ₜ[k] e i) * (∑ j ∈ t, b j ⊗ₜ[k] e j) = 0) :
     (∀ i ∈ s, a i = 0) ∨ (∀ j ∈ t, b j = 0) := by
   classical
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   obtain ⟨⟨i0, hi0, ha⟩, ⟨j0, hj0, hb⟩⟩ := hcon
   haveI : IsJacobsonRing R := isJacobsonRing_of_finiteType (A := k)
   have hab : a i0 * b j0 ≠ 0 := mul_ne_zero ha hb
@@ -90,8 +89,7 @@ private theorem dom_fg {k R A ι : Type} [Field k] [IsAlgClosed k] [CommRing R] 
     rw [hjac]
     simpa using hab
   obtain ⟨m, hm, hnm⟩ : ∃ m : Ideal R, m.IsMaximal ∧ a i0 * b j0 ∉ m := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     apply hnot
     rw [Ideal.jacobson, Submodule.mem_sInf]
     rintro J ⟨-, hJ⟩
@@ -205,8 +203,7 @@ theorem UpperTheory.isCurve_pullback_of_isCurve_baseChange :
     have h0 : η ⤳ p q := genericPoint_specializes _
     obtain ⟨q', hq', hpq'⟩ := hgen h0
     have hmem : q' ∈ Set.range (p.fiberι η) := by
-      rw [p.range_fiberι]
-      exact hpq'
+      rwa [p.range_fiberι]
     obtain ⟨r, rfl⟩ := hmem
     exact ((genericPoint_specializes r).map (p.fiberι η).continuous).trans hq'
   haveI hirr : IrreducibleSpace ↥(pullback c g) := by

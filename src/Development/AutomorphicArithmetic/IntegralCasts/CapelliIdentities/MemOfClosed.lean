@@ -127,8 +127,7 @@ theorem aux8 : ∀ (K : Type) [inst : Field K] [inst_1 : ValuativeRel K]
   [inst_5 : CharP (IsLocalRing.ResidueField ↥(ValuativeRel.valuation K).integer) l]
   (i : Fin (fdim K l)),
   ∃ a, (IsLocalRing.residue ↥(ValuativeRel.valuation K).integer) a = (bb K l) i := by
-  intro K _ _ _ _ l _ _ i
-  exact IsLocalRing.residue_surjective _
+  exact fun K _ _ _ _ l _ _ i => IsLocalRing.residue_surjective _
 
 noncomputable def blift : (K : Type) →
   [inst : Field K] →
@@ -171,8 +170,7 @@ private theorem key {l : ℕ} [Fact l.Prime] {K : Type} [Field K] [Algebra ℚ_[
   have hpos : 0 < ‖g m‖ := (norm_pos_iff.mpr hi₀).trans_le (hm i₀ (Finset.mem_univ _))
   have hgm : g m ≠ 0 := norm_pos_iff.mp hpos
   let c : ι → ℤ_[l] := fun i => ⟨g i / g m, by
-    rw [PadicInt.mem_subring_iff]
-    rw [norm_div]
+    rw [PadicInt.mem_subring_iff, norm_div]
     exact (div_le_one hpos).mpr (hm i (Finset.mem_univ _))⟩
   have hsum : ∑ i, φ (c i) * x i = 0 := by
     apply Subtype.ext

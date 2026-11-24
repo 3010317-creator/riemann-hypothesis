@@ -88,8 +88,7 @@ private theorem cocycle_eq_zero (ρ : Representation R G M) {U' U : Subgroup G} 
     refine sup_le ?_ ?_
     · rw [Subgroup.zpowers_le]
       exact ⟨⟨γ, hγ⟩, h2, rfl⟩
-    · intro x hx
-      exact ⟨⟨x, h hx⟩, h1 ⟨x, h hx⟩ hx, rfl⟩
+    · exact fun x hx => ⟨⟨x, h hx⟩, h1 ⟨x, h hx⟩ hx, rfl⟩
   have hu := hU u.2
   rw [← SetLike.mem_coe, Subgroup.topologicalClosure_coe] at hu
   have hV : IsOpen (z.1 ⁻¹' {z.1 u}) := hcont.isOpen_preimage _ (isOpen_discrete _)
@@ -102,8 +101,7 @@ private theorem cocycle_eq_zero (ρ : Representation R G M) {U' U : Subgroup G} 
   have hmem : (⟨s', hs'U⟩ : U) ∈ Subtype.val ⁻¹' O := hsO
   rw [hOV] at hmem
   have e : z.1 ⟨s', hs'U⟩ = z.1 u := hmem
-  rw [← e]
-  exact hzs
+  rwa [← e]
 
 private noncomputable def cob (ρ : Representation R G M) (hρ : ContAction ρ) (U : Subgroup G) (m : M) : Z1U ρ U :=
   ⟨d0 (ρ.comp U.subtype : Representation R U M) m, coboundaries_le_cocycles (ρ.comp U.subtype : Representation R U M)

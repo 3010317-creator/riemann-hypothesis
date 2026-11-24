@@ -79,8 +79,7 @@ theorem rel_frame_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (ε 
     split_ifs <;> simp
   have hM : (mat2 y)ᵀ * dbl (incM F d.Y.J) * (mat2 y).map (cA σ) = dbl (incM F d.Y.J) := y.2
   have := form_conj_in (cA σ).toRingHom (_root_.PositivityTheory.SiegelWeilFormula.KWhit.incM_mul_inv_k d) hM
-  rw [← hF]
-  exact this
+  rwa [← hF]
 theorem rel_nA_cond_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (ε : ℤˣ)
     (hε : d.b.1ᵀ * dbl d.Y.J * d.b.1.map σ = Matrix.fromBlocks 0 1 (((ε : ℤ) : E) • 1) 0) (β : nA σ d.Y d.b) :
     β.1ᵀ + ((ε : ℤ) : AE F E) • β.1.map (cA σ) = 0 := by
@@ -97,8 +96,7 @@ theorem rel_nA_cond_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (�
       Matrix.fromBlocks_inj] at h
     rw [add_comm]
     have h4 := h.2.2.2
-    rw [Matrix.smul_mul, Matrix.one_mul] at h4
-    exact h4
+    rwa [Matrix.smul_mul, Matrix.one_mul] at h4
   | zero => simp
   | add x y _ _ hx hy =>
     rw [Matrix.transpose_add, Matrix.map_add _ (map_add (cA σ)), smul_add]

@@ -57,12 +57,9 @@ theorem UpperTheory.smoothDual_exact :
   have hk : RingHom.ker ξ = p.asIdeal := Ideal.ker_algebraMap_residueField _
   have hz : ∀ c ∈ maximalIdeal O, ξ.comp (algebraMap O S.A) c = 0 := by
     intro c hc
-    have hm : algebraMap O S.B c ∈ S.mB := by
-      show algebraMap O S.R c ∈ maximalIdeal S.R
-      exact map_nonunit (algebraMap O S.R) c hc
+    have hm : algebraMap O S.B c ∈ S.mB := map_nonunit (algebraMap O S.R) c hc
     have : algebraMap O S.A c ∈ p.asIdeal := h1 hm
-    rw [← hk] at this
-    exact this
+    rwa [← hk] at this
   let φ : ResidueField O →+* p.asIdeal.ResidueField :=
     Ideal.Quotient.lift (maximalIdeal O) (ξ.comp (algebraMap O S.A)) hz
   refine ⟨p.asIdeal.ResidueField, inferInstance, φ.toAlgebra, ξ, hk, ?_, ?_⟩

@@ -246,8 +246,7 @@ theorem exists_type : ∀ (E : Type) [Field E] [NumberField E] (w : HeightOneSpe
     have hW'T : W' ≠ ⊤ := by
       intro htop; apply hWT; rw [eq_top_iff]; intro y _
       have : ((g⁻¹ : GL _ _) : Matrix _ _ _) *ᵥ y ∈ W' := htop ▸ Submodule.mem_top
-      rw [hmem, Matrix.mulVec_mulVec, hgg, Matrix.one_mulVec] at this
-      exact this
+      rwa [hmem, Matrix.mulVec_mulVec, hgg, Matrix.one_mulVec] at this
     obtain ⟨wv, f, hw, hf, hu⟩ := _root_.GlobalTheory.Cong.exists_integral_unit_pairing_of_irreducible_reduction (w.adicCompletionIntegers E) (w.adicCompletion E) a B
       (by rw [hB]; exact hB₀) W' hW'0 hW'T
     have hinj := IsFractionRing.injective (w.adicCompletionIntegers E) (w.adicCompletion E)
@@ -324,10 +323,8 @@ theorem UpperTheory.Gal.Gen.tower_pf :
   obtain ⟨J, hT, hp⟩ := hC E w a l hl hw
   obtain ⟨s, hs⟩ := hT.small _ (hJo.mem_nhds J'.one_mem)
   refine ⟨fun n => J (s + n), ⟨fun n => hT.isOpen _, fun n => hT.compact _, ?_, ?_, ?_⟩, ?_, ?_, ?_⟩
-  · intro i j hij
-    exact hT.anti (Nat.add_le_add_left hij s)
-  · intro n g hg x hx
-    exact hT.normal (s + n) g (hT.anti (Nat.zero_le (s + 0)) hg) x hx
+  · exact fun i j hij => hT.anti (Nat.add_le_add_left hij s)
+  · exact fun n g hg x hx => hT.normal (s + n) g (hT.anti (Nat.zero_le (s + 0)) hg) x hx
   · intro M hM
     obtain ⟨n, hn⟩ := hT.small M hM
     exact ⟨n, fun x hx => hn (hT.anti (Nat.le_add_left n s) hx)⟩

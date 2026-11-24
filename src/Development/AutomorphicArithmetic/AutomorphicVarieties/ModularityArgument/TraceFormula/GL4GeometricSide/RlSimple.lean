@@ -251,8 +251,7 @@ theorem UpperTheory.V.Z.GSp4Splitting.rlSimple :
   · refine Or.inl (eq_bot_iff.2 fun x hx => D.inj (Subtype.ext ?_))
     have : ι x ∈ M := Submodule.subset_span ⟨1, _, ⟨x, hx, rfl⟩, by simp⟩
     rw [h0] at this
-    rw [map_zero]
-    exact this
+    rwa [map_zero]
   right
 
   have key : ∀ φ ∈ M, ∀ hφ : φ ∈ π.V, ∃ x ∈ W, ∀ u, D.H (D.i u) ⟨φ, hφ⟩ = D.H (D.i u) (D.i x) := by
@@ -283,8 +282,7 @@ theorem UpperTheory.V.Z.GSp4Splitting.rlSimple :
         · simp only [Submodule.coe_smul, Submodule.coe_sum, Pi.smul_apply, Finset.sum_apply, smul_eq_mul]
           rfl
         · have := congrArg (fun ψ : Sm E n => ψ.1 (z * finGL E n y)) (hfix x k hk)
-          rw [map_mul, ← mul_assoc]
-          exact this
+          rwa [map_mul, ← mul_assoc]
       have e2 : ∀ u, ∀ a ∈ T, D.H (D.i u) (t (r a * g)) = D.H (D.i u) (t g) := fun u a ha =>
         D.pet.2.2.2.1 (finGL E n (r a)) _ _ _ _
           (fun z => (congrArg (fun ψ : Sm E n => ψ.1 z) (hfix u _ (hr a ha))).symm) (fun z => by

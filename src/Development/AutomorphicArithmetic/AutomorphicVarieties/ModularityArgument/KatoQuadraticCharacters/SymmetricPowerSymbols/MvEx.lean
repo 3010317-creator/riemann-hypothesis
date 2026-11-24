@@ -313,16 +313,14 @@ theorem UpperTheory.V.Z.Kato.Sym.kumUn :
     · rintro rfl
       exact hp0 ((Polynomial.map_eq_zero _).mp (by rw [← hq, Polynomial.map_zero]))
     · have h0 : Polynomial.eval₂ Λ.toRingHom g q = 0 := by
-        rw [Polynomial.eval₂_eq_eval_map, hq, ← Polynomial.eval₂_eq_eval_map]
-        exact hpg
+        rwa [Polynomial.eval₂_eq_eval_map, hq, ← Polynomial.eval₂_eq_eval_map]
       exact h0
   obtain ⟨B, hB⟩ := UnRoot.exists_comap_eq (io X) W
   have hf0 : (f : X.K) ≠ 0 := f.ne_zero
   have hTex : ∃ T : Finset X.K, ∀ φ' : Kb X →+* Kb X,
       (∀ x, B.valuation x ≤ 1 → B.valuation (φ' x - x) < 1) →
       (∀ t ∈ T, φ' (algebraMap X.K (Kb X) t) = algebraMap X.K (Kb X) t) → φ' θ = θ := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     choose φ' hin hfx hne using hcon
     obtain ⟨ψ, hψ⟩ := exists_limit φ' hfx
     let h : RingAut (Kb X) := ψ.toRingEquiv
@@ -331,8 +329,7 @@ theorem UpperTheory.V.Z.Kato.Sym.kumUn :
       intro z hz
       obtain ⟨T, hT⟩ := hψ z
       have hv := hin T z hz
-      rw [hT] at hv
-      exact hv
+      rwa [hT] at hv
     have hOver : X.OverY (B.comap (io X)) := hB ▸ hW
     have h0 : φ h = 0 := hU B h hOver hInD hiner
     have hk : lg X m (h θ) θ = 0 := by
@@ -363,8 +360,7 @@ theorem UpperTheory.V.Z.Kato.Sym.kumUn :
         exact W.add_mem _ _ hp hq
       · rw [pow_succ, ← mul_assoc, map_mul, Polynomial.aeval_X]
         exact W.mul_mem _ _ ih hW.2
-    rw [← hB] at hpW
-    exact hpW
+    rwa [← hB] at hpW
   obtain ⟨c, hc0, hcv⟩ := UnRoot.core (k := Ω) B hP hm (f : X.K) hf0 θ hθ T hT
   refine ⟨Units.mk0 c hc0, ?_⟩
   rw [← hB]
@@ -422,8 +418,7 @@ theorem UpperTheory.V.Z.Kato.Sym.mvEx :
     obtain ⟨f, hf⟩ := hK.1 _ hadd hlc
     exact ⟨f, hKU _ f hf hunr, σ, hσ, hf⟩
   · refine ⟨_, hP', σ, hσ, isKum_one_of_vanish_on_inD X m hm _ ?_⟩
-    intro h hh
-    exact (hD (τ u) (τ v) _ _ hP' hP').2.2.2.2.1 h hh
+    exact fun h hh => (hD (τ u) (τ v) _ _ hP' hP').2.2.2.2.1 h hh
   · refine ⟨1, hLift1, isKum_one_of_vanish_on_inD X m hm _ ?_⟩
     intro h hh
     rw [hcyc1]
@@ -439,8 +434,7 @@ theorem UpperTheory.V.Z.Kato.Sym.mvEx :
         rw [hσ₁ f, ← hσ₀ f, hInv]
       have hP1 : IsPt X m u v (Pt.mv (σ₀⁻¹ * σ₁) 1 P) := by
         have := hMv (RingEquiv.refl X.K) 1 hrefl (σ₀⁻¹ * σ₁) (fun f => hρ f) u v P hP
-        rw [hcyc1] at this
-        exact this
+        rwa [hcyc1] at this
       have hconj : InD X (σ₀⁻¹ * h * σ₀) := fun f => by
         show σ₀⁻¹ (h (σ₀ (io X f))) = io X f
         rw [hσ₀ f, hh (τ f), ← hσ₀ f, hInv]
@@ -452,8 +446,7 @@ theorem UpperTheory.V.Z.Kato.Sym.mvEx :
         rw [(hD u v _ P hP1 hP).2.2.2.2.2.2 τ s hadm σ₀ hσ₀ h hh,
           (hD u v P P hP hP).2.2.2.2.2.1 _ hρ _ hconj, mul_zero]
       rw [hsplit, hzero, zero_add]
-    · intro hc
-      exact ⟨σ₀, hσ₀, (hK.2 _ _ f f' hf₀ (fun _ _ => rfl)).mpr hc⟩
+    · exact fun hc => ⟨σ₀, hσ₀, (hK.2 _ _ f f' hf₀ (fun _ _ => rfl)).mpr hc⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.KatoQuadraticCharacters.SymmetricPowerSymbols.MvEx =====

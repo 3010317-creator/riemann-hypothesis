@@ -170,8 +170,7 @@ theorem UpperTheory.V.FW.homCyc :
     have := hcomm g u hu
     rw [← QuotientGroup.eq_one_iff] at this
     simp only [QuotientGroup.mk_mul, QuotientGroup.mk_inv] at this
-    rw [mul_inv_eq_one, mul_inv_eq_iff_eq_mul] at this
-    exact this
+    rwa [mul_inv_eq_one, mul_inv_eq_iff_eq_mul] at this
   obtain ⟨gU, hgen⟩ := IsCyclic.exists_generator (α := Γ ⧸ U)
   obtain ⟨g0, rfl⟩ := QuotientGroup.mk_surjective gU
   have hdecomp : ∀ x : Γ, ∃ i : ℤ, ∃ u ∈ U, x = g0 ^ i * u := by
@@ -222,8 +221,7 @@ private theorem aH_lc {H M : Type} [Group H] [TopologicalSpace H] [IsTopological
   have ho : IsOpen ((fun y => x⁻¹ * y) ⁻¹' N) := hN.preimage (by fun_prop)
   filter_upwards [ho.mem_nhds (show x ∈ (fun y => x⁻¹ * y) ⁻¹' N by simpa using h1)] with y hy
   have := h x (x⁻¹ * y)
-  rw [h0 _ hy, add_zero, mul_inv_cancel_left] at this
-  exact this
+  rwa [h0 _ hy, add_zero, mul_inv_cancel_left] at this
 
 private theorem aH_one {H M : Type} [Group H] [AddCommGroup M]
     (φ : H → M) (h : ∀ a b, φ (a * b) = φ a + φ b) : φ 1 = 0 := by
@@ -283,8 +281,7 @@ theorem UpperTheory.V.FW.ambHom :
         rintro a b ⟨ha, ha'⟩ ⟨hb, hb'⟩
         refine ⟨U.mul_mem ha hb, fun φ => ?_⟩
         have := ((hm _).1 φ.2).2.1 ⟨a, ha⟩ ⟨b, hb⟩
-        rw [ha', hb', add_zero] at this
-        exact this
+        rwa [ha', hb', add_zero] at this
       inv_mem' := by
         rintro a ⟨ha, ha'⟩
         refine ⟨U.inv_mem ha, fun φ => ?_⟩
@@ -307,8 +304,7 @@ theorem UpperTheory.V.FW.ambHom :
     refine ⟨U.mul_mem (hn.conj_mem u hu g) (U.inv_mem hu), fun φ => ?_⟩
     obtain ⟨-, h2, -, h4⟩ := (hm _).1 φ.2
     have := h2 ⟨g * u * g⁻¹, hn.conj_mem u hu g⟩ (⟨u, hu⟩ : U)⁻¹
-    rw [aH_inv φ.1 h2, h4 g ⟨u, hu⟩, add_neg_cancel] at this
-    exact this
+    rwa [aH_inv φ.1 h2, h4 g ⟨u, hu⟩, add_neg_cancel] at this
   have hIN : ∀ (A : ValuationSubring Ω) (u : U), u.1 ∈ Ine (F := F) A → u.1 ∈ N := fun A u hu =>
     ⟨u.2, fun φ => ((hm _).1 φ.2).2.2.1 A u hu⟩
   have key := homCyc l (G F Ω) U N (fun g h => h.1) hcyc hcomm
@@ -450,8 +446,7 @@ theorem UpperTheory.V.FW.amb :
     have h1 : c / clMap τ.toRingEquiv c ∈ H := le_sup_right (a := powR (Cl K) l) ⟨c, rfl⟩
     have h2 : (clMap τ.toRingEquiv c)⁻¹ * c = c / clMap τ.toRingEquiv c := by
       rw [div_eq_mul_inv, mul_comm]
-    rw [h2]
-    exact h1
+    rwa [h2]
   have hmulc : ∀ (a b : Gal(K/F)) (c : Cl K),
       clMap (a * b).toRingEquiv c = clMap a.toRingEquiv (clMap b.toRingEquiv c) :=
     fun a b c => clMap_trans b.toRingEquiv a.toRingEquiv c
@@ -525,8 +520,7 @@ theorem UpperTheory.V.FW.amb :
     apply MonoidHom.ext
     intro x
     obtain ⟨c, rfl⟩ := QuotientGroup.mk_surjective x
-    have h4 := congrFun (congrArg Subtype.val h) c
-    exact Multiplicative.toAdd.injective h4
+    exact Multiplicative.toAdd.injective (congrFun (congrArg Subtype.val h) c)
   calc H.index = Nat.card (Cl K ⧸ H →* Multiplicative (ZMod l)) := hcardQ
     _ ≤ Nat.card (ClEq K 1 ρ) := Nat.card_le_card_of_injective Φ hΦ
     _ = Nat.card (EqHom 1 (galOf F K Ω) ρ) := hcardEq.symm
@@ -623,8 +617,7 @@ theorem UpperTheory.V.FW.relCyc :
   · intro t ht
     refine ⟨{ (sg (f * l ^ n) L t).toRingEquiv with commutes' := fun y => ?_ }, rfl⟩
     have := relCyc_compat h F L i t y
-    rw [MonoidHom.mem_ker.1 ht, map_one] at this
-    exact this
+    rwa [MonoidHom.mem_ker.1 ht, map_one] at this
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.FerreroWashingtonIndex.RelCyc =====
@@ -754,8 +747,7 @@ theorem UpperTheory.V.FW.homLe :
       rw [← QuotientGroup.eq]
       simp
     simp only at e
-    rw [← hc _ φ.2.1 φ.2.2 _ _ hg, ← hc _ ψ.2.1 ψ.2.2 _ _ hg]
-    exact e
+    rwa [← hc _ φ.2.1 φ.2.2 _ _ hg, ← hc _ ψ.2.1 ψ.2.2 _ _ hg]
   haveI : Finite S := Finite.of_injective _ hinj
   change Finite S ∧ Nat.card S ≤ U.index
   refine ⟨inferInstance, ?_⟩
@@ -858,8 +850,7 @@ theorem UpperTheory.V.FW.desc :
     · intro a b
       simp [map_mul]
     · intro u hu
-      have h1 := congrFun φ.2 ⟨u, hu⟩
-      simpa [Ψ] using h1
+      simpa [Ψ] using congrFun φ.2 ⟨u, hu⟩
     · intro φ ψ h
       apply Subtype.ext
       ext c
@@ -900,8 +891,7 @@ theorem UpperTheory.V.FW.desc :
       apply Subtype.ext
       funext u
       have := congrFun (he y) u
-      rw [← h2, he x] at this
-      exact this
+      rwa [← h2, he x] at this
   rw [← Subgroup.card_mul_index Ψ.ker, Subgroup.index_ker]
   exact Nat.mul_le_mul hker hrange
 end -- clump:auto
@@ -953,8 +943,7 @@ private theorem UpperTheory.V.FW.card_range_inf_torsion_le_index_pow (l : ℕ) [
     have : v = Additive.ofMul (x : C ⧸ U) := by rw [hx]; rfl
     subst this
     have h := hT N x
-    rw [(QuotientGroup.eq_one_iff _).2 ((hU _).2 (hN x))] at h
-    exact h
+    rwa [(QuotientGroup.eq_one_iff _).2 ((hU _).2 (hN x))] at h
   have h2 := nilCard _ T N hT0
   have h3 : (AddMonoidHom.range T).index = S.range.index := rfl
   have h4 : S.range.index ∣ (powR (C := C) l ⊔ ψ.range).index := by
@@ -1177,8 +1166,7 @@ theorem UpperTheory.V.FW.embed :
     have hz := IsCyclotomicExtension.zeta_spec (l ^ n) K K'
     have h1 := Polynomial.cyclotomic_eq_minpoly_rat hz hlnpos
     have h2 := minpoly.natDegree_le (A := ℚ) (IsCyclotomicExtension.zeta (l ^ n) K K')
-    rw [← h1, Polynomial.natDegree_cyclotomic] at h2
-    exact h2
+    rwa [← h1, Polynomial.natDegree_cyclotomic] at h2
   have htow := Module.finrank_mul_finrank ℚ K' L
   have htot : M.totient ≤ f₀ * (l + 1) * l ^ e * l ^ n₀ * (l ^ n).totient := by
     have hco : (f₀ * (l + 1)).Coprime (l ^ m) := (Nat.Coprime.mul_left hf₀c hlc).pow_right m
@@ -1291,8 +1279,7 @@ theorem UpperTheory.V.FW.pTwo :
     have hpos : 0 < Nat.card (powR (C := C) 2) := Nat.card_pos
     have e3 : Nat.card (powR (C := C) 2) * (powR (C := C) 2).index =
         Nat.card (powR (C := C) 2) * Nat.card T := by
-      rw [e2, mul_comm]
-      exact e1
+      rwa [e2, mul_comm]
     exact Nat.eq_of_mul_eq_mul_left hpos e3
   let g : T →* C := (MonoidHom.id C / J).comp T.subtype
   have e4 := hcard g

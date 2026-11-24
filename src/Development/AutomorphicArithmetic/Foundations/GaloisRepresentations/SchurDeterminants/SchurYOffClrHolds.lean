@@ -178,8 +178,7 @@ theorem denseCoset_of : DenseSub → SpanTop → DenseOff → DenseCoset := by
     simp [pt, add_comm]
   refine hP x ⟨fun s => a s + N * β s, fun s => ?_, ?_, hxe⟩
   · simp
-  · rw [← hxe]
-    exact hxQ
+  · rwa [← hxe]
 
 end UpperTheory.Gal.Schur
 end -- clump:auto
@@ -241,8 +240,7 @@ theorem denseSub : DenseSub := by
     simp [p0, F]
   have hzero : bind₁ F Q = 0 := by
     refine MvPolynomial.funext_set (fun _ => Set.range (Int.cast : ℤ → K)) ?_ ?_
-    · intro _
-      exact Set.infinite_range_of_injective Int.cast_injective
+    · exact fun _ => Set.infinite_range_of_injective Int.cast_injective
     · intro t ht
       rw [hev, map_zero]
       choose m hm using fun i => ht i (Set.mem_univ i)
@@ -381,8 +379,7 @@ theorem extract : Extract := by
       rintro _ ⟨a, rfl⟩
       have h1 : φ (v a) = 0 := by
         have h2 := Submodule.mem_map_of_mem (f := φ) (Submodule.subset_span ⟨a, rfl⟩ : v a ∈ Submodule.span K (Set.range v))
-        rw [hmap, Submodule.mem_bot] at h2
-        exact h2
+        rwa [hmap, Submodule.mem_bot] at h2
       rw [hφv] at h1
       rw [← h1]
 
@@ -644,10 +641,8 @@ theorem interp_of : SpanProd → Expand → Extract → DenseCoset → Interp :=
     have hmd : ((c.mapDomain Subtype.val).sum fun α (r : K) => r • F α) =
         c.sum fun β (r : K) => r • F β.1 := by
       apply Finsupp.sum_mapDomain_index
-      · intro _
-        exact zero_smul K _
-      · intro _ r₁ r₂
-        exact add_smul r₁ r₂ _
+      · exact fun _ => zero_smul K _
+      · exact fun _ r₁ r₂ => add_smul r₁ r₂ _
     change ((c.mapDomain Subtype.val).sum fun α (r : K) => r • F α) = _
     rw [hmd]
     have hexp : ∀ β : A, F β.1 =
@@ -760,8 +755,7 @@ theorem interpNF_of : Interp → InterpNF := by
       have hR := hsum R g
       letI : IsScalarTower ℚ K R := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
       rw [hR]
-      refine Finset.prod_congr rfl fun τ _ => ?_
-      exact MvPolynomial.aeval_map_algebraMap _ _ _
+      exact Finset.prod_congr rfl fun τ _ => MvPolynomial.aeval_map_algebraMap _ _ _
 
 end UpperTheory.Gal.Schur
 end -- clump:auto
@@ -1038,8 +1032,7 @@ private theorem span_embeddings_mul_eq_univ_of_injective {O K ι : Type} [CommRi
       Submodule.subset_span ⟨x, rfl⟩
     have : φ (fun t => τ t (N * x)) = 0 := by
       have h2 := Submodule.mem_map_of_mem (f := φ) hx
-      rw [hmap, Submodule.mem_bot] at h2
-      exact h2
+      rwa [hmap, Submodule.mem_bot] at h2
     rw [hφv] at this
     rw [← this]
     refine Finset.sum_congr rfl fun t _ => ?_

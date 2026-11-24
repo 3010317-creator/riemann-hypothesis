@@ -137,8 +137,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.lt_basis :
     intro a b hab
     by_contra hn
     have h1 : X a a - X b b ∈ maximalIdeal R := by
-      rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-      exact hn
+      rwa [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
     rw [← hm, map_sub, hent, hent] at h1
     have ha := hred a a
     have hb := hred b b
@@ -213,9 +212,7 @@ private theorem UpperTheory.V.UnitaryThreeInertia.residual_cocycle_is_coboundary
     IsLocallyConstant.desc f (fun x : Gb (k := k) j => (x.val : Matrix (Fin 3) (Fin 3) k)) hc
       (fun x y hxy => Subtype.ext hxy)
   have hf : f ∈ Z2 (gRep η Ψ j) := by
-    refine (mem_cocycles2 _ _).2 ⟨hfl.continuous, fun g h l => ?_⟩
-    apply Subtype.ext
-    exact hκ g h l
+    exact (mem_cocycles2 _ _).2 ⟨hfl.continuous, fun g h l => (Subtype.ext (hκ g h l))⟩
   have h0 : (Submodule.Quotient.mk ⟨f, hf⟩ : H2 (gRep η Ψ j)) = 0 := Subsingleton.elim _ _
   have hB : f ∈ B2 (gRep η Ψ j) := by
     have := (Submodule.Quotient.mk_eq_zero ((B2 (gRep η Ψ j)).comap (Z2 (gRep η Ψ j)).subtype)
@@ -303,8 +300,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.lifting_obstruction_second_cohomology 
     simp [h0]
   · intro g
     unfold EntIn
-    intro a c
-    exact (∑ i, q i (bs i g a c)).2
+    exact fun a c => (∑ i, q i (bs i g a c)).2
   · intro g h
     ext a c
     have e : ∀ i, p i (κK (g, h) a c) = ((Ψ g ^ wt a c : Oˣ) : O) •
@@ -778,10 +774,8 @@ private theorem congOne_iff {C : Type} [CommRing C] (I : Ideal C) (h : GL (Fin 3
   unfold CongOne
   rw [entIn_sub_iff, Matrix.map_one _ (map_zero _) (map_one _)]
   constructor
-  · intro e
-    exact Units.ext e
-  · intro e
-    exact congrArg Units.val e
+  · exact fun e => Units.ext e
+  · exact fun e => congrArg Units.val e
 
 private theorem map_conjBy {C D : Type} [CommRing C] [Group D] (I : Ideal C) (h : GL (Fin 3) C)
     (hh : CongOne I h) (r : D →* GG (m := 3) (R := C)) (g : D) :
@@ -986,8 +980,7 @@ private theorem diag_unit (x : GG (m := 3) (R := R)) (hx : x.mat.IsDiag) (a : Fi
   · exact ⟨⟨_, _, h1, by rw [mul_comm]; exact h1⟩, rfl⟩
   · intro b _ hb
     rw [hx (Ne.symm hb), zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ a) h
+  · exact fun h => absurd (Finset.mem_univ a) h
 
 private theorem map_tor {S : Type} [CommRing S] (f : R →+* S) (t : Rˣ) :
     GG.map f (GG.ofGL (tor R t)) = GG.ofGL (tor S (Units.map f.toMonoidHom t)) := by
@@ -1096,8 +1089,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.lt_torus :
     obtain ⟨y, hyA, hyp⟩ := hlift φ a
     refine ⟨y, hyA, (isUnit_map_iff (p : R →+* R') y).1 ?_, hyp⟩
     have := diag_unit (u' φ) (hdiag φ) a
-    rw [← hyp] at this
-    exact this
+    rwa [← hyp] at this
   choose y hyA hyU hyp using hex
   let d : Fin 3 → Rˣ := fun a => (hyU a).unit * χ φ⁻¹ ^ wt1 a
   have hdA : ∀ a, ((d a : Rˣ) : R) ∈ A := by
@@ -1287,10 +1279,8 @@ private theorem lc_hom {R D : Type} [CommRing R] [Group D] [TopologicalSpace D] 
   intro x
   filter_upwards [hη x, hr x] with y h1 h2
   apply SemidirectProduct.ext
-  · apply Units.ext
-    exact h2
-  · rw [hm y, hm x]
-    exact h1
+  · exact Units.ext h2
+  · rwa [hm y, hm x]
 
 private theorem gg_ext {R : Type} [CommRing R] {x y : GG (m := 3) (R := R)} (h : x.mat = y.mat) (h' : x.right = y.right) : x = y :=
   SemidirectProduct.ext (Units.ext h) h'
@@ -1336,8 +1326,7 @@ private theorem lift_elt {O R R' : Type} [CommRing O] [CommRing R] [IsLocalRing 
     exact Matrix.isUnits_det_units y.left
   refine ⟨⟨Matrix.nonsingInvUnit M hdet, y.right⟩, ?_, ?_, ?_, ?_⟩
   · apply SemidirectProduct.ext
-    · apply Units.ext
-      exact hMp
+    · exact Units.ext hMp
     · rfl
   · intro a b
     show M a b ∈ _
@@ -1398,15 +1387,13 @@ private theorem psi_lc {O R D : Type} [CommRing O] [IsLocalRing O] [CommRing R] 
     rw [Ideal.map_pow]
     apply Ideal.pow_right_mono
     rw [Ideal.map_le_iff_le_comap]
-    intro x hx
-    exact map_nonunit (algebraMap O R) x hx
+    exact fun x hx => map_nonunit (algebraMap O R) x hx
   have hker : ∀ x ∈ maximalIdeal O ^ n, algebraMap O R x = 0 := by
     intro x hx
     have h := hle (Ideal.mem_map_of_mem _ hx)
     rw [hn] at h
     simpa using h
-  have h := (hf n).comp (Ideal.Quotient.lift (maximalIdeal O ^ n) (algebraMap O R) hker)
-  exact h
+  exact (hf n).comp (Ideal.Quotient.lift (maximalIdeal O ^ n) (algebraMap O R) hker)
 
 private theorem gg_mul_mat_of_right_eq_one {R : Type} [CommRing R] (z v : GG (m := 3) (R := R)) (h : z.right = 1) :
     (z * v).mat = z.mat * v.mat := by
@@ -1456,8 +1443,7 @@ private theorem tri_lift {O R R' D : Type} [CommRing O] [IsLocalRing O] [CommRin
     obtain ⟨X, hX, hXp⟩ := hgr g
     refine ⟨X a a, ?_, ?_⟩
     · have h := hX a a
-      rw [wt_self] at h
-      exact h
+      rwa [wt_self] at h
     · rw [hu'mat, Matrix.diagonal_apply_eq, ← hXp]
       rfl
   have hu'I : ∀ s ∈ I, ∀ a, (u' s).mat a a = algebraMap O R' (psi Ψ a s) := by
@@ -1477,14 +1463,11 @@ private theorem tri_lift {O R R' D : Type} [CommRing O] [IsLocalRing O] [CommRin
     intro g
     have h : ∃ x, P (r' g) (u g) x := by
       apply lift_elt 𝒜 p hp (r' g) (u g) (hup g) (hgr g)
-      · intro a
-        exact huA g a
+      · exact fun a => huA g a
       · intro a
         have h1 := congrFun (congrFun (hupm g) a) a
-        rw [hu'mat, Matrix.diagonal_apply_eq] at h1
-        exact h1
-    simp only [s, L, dite_eq_left h]
-    exact h.choose_spec
+        rwa [hu'mat, Matrix.diagonal_apply_eq] at h1
+    simpa only [s, L, dite_eq_left h] using h.choose_spec
   have hr'lc : IsLocallyConstant r' := lc_hom η r' hη hr.mult hlc
   have hulc' : IsLocallyConstant u := lc_hom η u hη hur hulc
   have hslc : IsLocallyConstant s := (hr'lc.prodMk hulc').comp (fun q => L q.1 q.2)
@@ -1580,8 +1563,7 @@ private theorem tri_lift {O R R' D : Type} [CommRing O] [IsLocalRing O] [CommRin
       refine ⟨r, hrlc, fun g => ⟨(hrg g).1, ?_⟩⟩
       obtain ⟨b, hb, hbK, hbe⟩ := (hrg g).2
       refine ⟨b, ?_, hbK, ?_, hbe⟩
-      · intro a c hac
-        exact hb a c (by omega)
+      · exact fun a c hac => hb a c (by omega)
       · intro a c
         by_cases hw : wt a c = j
         · rw [hw]
@@ -1651,8 +1633,7 @@ private theorem lift_gg {O R R' : Type} [CommRing O] [CommRing R] [IsLocalRing R
     exact Matrix.isUnits_det_units y.left
   refine ⟨⟨Matrix.nonsingInvUnit M hdet, y.right⟩, ?_, rfl⟩
   apply SemidirectProduct.ext
-  · apply Units.ext
-    exact hM
+  · exact Units.ext hM
   · rfl
 
 private theorem conjBy_app {C D : Type} [CommRing C] [Group D] (h : GL (Fin 3) C) (r : D →* GG (m := 3) (R := C)) (g : D) :
@@ -1726,11 +1707,9 @@ theorem UpperTheory.V.UnitaryThreeInertia.exists_graded_lift_unitary_local_tame 
   · unfold Frame.LocAt
     refine ⟨fun _ => ⟨h, hhin, ?_, ?_⟩, fun hSb => absurd hSb hF.vl_notMem, fun hT => absurd hvT hT⟩
     · rw [hback]
-      intro g _ a b hab
-      exact hup0 g a b hab
+      exact fun g _ a b hab => hup0 g a b hab
     · rw [hback]
-      intro s hs _ a
-      exact hI0 s hs a
+      exact fun s hs _ a => hI0 s hs a
   · have e : mats (conjBy h r0') = GG.mat ∘ (fun y => GG.ofGL h * y * (GG.ofGL h)⁻¹) ∘ r0' := by
       funext g
       show ((conjBy h r0') g).mat = (GG.ofGL h * r0' g * (GG.ofGL h)⁻¹).mat

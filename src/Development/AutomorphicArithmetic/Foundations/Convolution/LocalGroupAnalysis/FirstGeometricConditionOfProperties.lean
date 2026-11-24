@@ -329,8 +329,7 @@ private theorem coeff_zero_mem {K : Type} [Field K] (O : ValuationSubring K) {n 
     ext i j
     rfl
   have hd' : q ∣ (N'.charpoly).map (algebraMap O K) := by
-    rw [← Matrix.charpoly_map, hmap]
-    exact hd
+    rwa [← Matrix.charpoly_map, hmap]
   obtain ⟨g, hg⟩ := IsIntegrallyClosed.eq_map_mul_C_of_dvd K (Matrix.charpoly_monic N') hd'
   rw [hq.leadingCoeff, map_one, mul_one] at hg
   rw [← hg, coeff_map]
@@ -417,8 +416,7 @@ private lemma norm_root_charpoly_le {n : ℕ} (M : Matrix (Fin n) (Fin n) ℂ) (
     rw [← Matrix.eval_charpoly]; exact hz
   obtain ⟨v, hv, hMv⟩ := Matrix.exists_mulVec_eq_zero_iff.mpr hdet
   obtain ⟨i0, hi0⟩ : ∃ i, v i ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hv (funext h)
   obtain ⟨i, -, hi⟩ := Finset.exists_max_image Finset.univ (fun j => ‖v j‖) ⟨i0, Finset.mem_univ _⟩
   have hvi : 0 < ‖v i‖ := lt_of_lt_of_le (norm_pos_iff.mpr hi0) (hi i0 (Finset.mem_univ _))
@@ -452,8 +450,7 @@ private lemma norm_coeff_zero_le_complex {n : ℕ} (M : Matrix (Fin n) (Fin n) �
   refine (norm_multiset_prod_le_pow _ hB _ hroots).trans ?_
   rw [← hs.natDegree_eq_card_roots]
   refine pow_le_pow_right₀ hB ?_
-  have h := natDegree_le_of_dvd hd hc
-  simpa [Matrix.charpoly_natDegree_eq_dim] using h
+  simpa [Matrix.charpoly_natDegree_eq_dim] using natDegree_le_of_dvd hd hc
 
 theorem UpperTheory.norm_coeff_zero_dvd_charpoly_le_infinitePlace :
     ∀ (E : Type) [Field E] [NumberField E] (w : InfinitePlace E) (n : ℕ) (M : Matrix (Fin n) (Fin n) w.Completion) (R : ℝ), 1 ≤ R →
@@ -503,9 +500,7 @@ private lemma nrm_eq {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum
   · subst hy
     have hx : x = 0 := (Valuation.zero_iff _).1 (by rw [h, map_zero])
     rw [hx]
-  have hx : x ≠ 0 := by
-    intro hx
-    exact hy ((Valuation.zero_iff _).1 (by rw [← h, hx, map_zero]))
+  have hx : x ≠ 0 := fun hx => hy ((Valuation.zero_iff _).1 (by rw [← h, hx, map_zero]))
   exact le_antisymm (key x y hy h) (key y x hx h.symm)
 
 private lemma nrm_unif {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E)) :
@@ -778,8 +773,7 @@ theorem UpperTheory.one_le_mul_heightConst_heightOff_pow_of_small_at_place :
   have hbfin : (Function.mulSupport b).Finite := by
     refine (AutomorphicForm.finite_mulSupport_locHeight_finAt g).subset fun v hv => ?_
     simp only [Function.mem_mulSupport, hb] at hv ⊢
-    intro h1
-    exact hv (by simp [h1])
+    exact fun h1 => hv (by simp [h1])
   have hw₀ : below F w₀.1 = q := by
     have := w₀.2.over
     exact HeightOneSpectrum.ext this.symm
@@ -970,10 +964,8 @@ private theorem core [IsGalois F E] (hA : A1) (σ : E ≃ₐ[F] E) (hσ : ∀ τ
   have hinj : ∀ p : F[X], ((p.map (algebraMap F E)).map (algebraMap E (w₀.1.adicCompletion E))).natDegree =
       p.natDegree := fun p => by
     rw [natDegree_map_eq_of_injective (RingHom.injective _), natDegree_map_eq_of_injective (RingHom.injective _)]
-  have hp1 : 0 < p₁.natDegree := by
-    exact Nat.pos_of_ne_zero fun h => hcon (Or.inl h)
-  have hp2 : 0 < p₂.natDegree := by
-    exact Nat.pos_of_ne_zero fun h => hcon (Or.inr h)
+  have hp1 : 0 < p₁.natDegree := Nat.pos_of_ne_zero fun h => hcon (Or.inl h)
+  have hp2 : 0 < p₂.natDegree := Nat.pos_of_ne_zero fun h => hcon (Or.inr h)
   rcases UpperTheory.norm_coeff_zero_factor_charpoly_iwahori_diagPow_le hA E w₀.1 n ν hν hsum hJ j hj0 a ha (b * i) (mul_mem hb hi)
     ((p₁.map (algebraMap F E)).map (algebraMap E _)) ((p₂.map (algebraMap F E)).map (algebraMap E _))
     ((h₁.map _).map _) ((h₂.map _).map _) (by rw [hinj]; exact hp1) (by rw [hinj]; exact hp2)

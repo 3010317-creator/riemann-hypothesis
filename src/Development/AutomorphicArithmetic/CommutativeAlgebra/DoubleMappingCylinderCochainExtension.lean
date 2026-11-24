@@ -138,8 +138,7 @@ theorem UpperTheory.doubleMappingCylinder_cochain_extension :
   have hγ : ∀ p s h U z, ev γ p s h U z = φ p s U z := by
     intro p s h U z
     have he := hψ _ _ h p rfl U z
-    rw [eqToHom_refl, Category.id_comp] at he
-    exact he
+    rwa [eqToHom_refl, Category.id_comp] at he
   refine ⟨γ, fun p s h U z => ?_, fun p s h U z => ?_⟩
   · rw [hγ]
     exact ((hφ p (s + m) U s rfl z).1).symm

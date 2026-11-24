@@ -112,8 +112,7 @@ private lemma poly_zero {q : ℝ} (hq : 1 < q) (Q : ℂ[X]) (h : ∀ s : ℂ, Q.
     rw [Complex.ofReal_neg]
     field_simp
     ring
-  rw [e, Complex.exp_log hx'] at this
-  exact this
+  rwa [e, Complex.exp_log hx'] at this
 
 private lemma poly_fun_ne {β : ℂ[X]} (h : β ≠ 0) : (fun s : ℂ => β.eval s) ≠ 0 := fun h0 =>
   h (Polynomial.funext fun s => by simpa using congrFun h0 s)
@@ -135,8 +134,7 @@ theorem crossGOf : CrossGOf := by
   have dsh : ∀ {f : ℂ → ℂ}, Differentiable ℂ f → Differentiable ℂ fun s => f (s + 1) := fun hf =>
     hf.comp (differentiable_id.add_const 1)
   have eP : ∀ Q : ℂ[X], IsExp fun s : ℂ => Q.eval ((q : ℂ) ^ (-s)) := fun Q => by
-    simp only [cpow_eq hq]
-    exact hpe Q _ 0
+    simpa only [cpow_eq hq] using hpe Q _ 0
   have nP : ∀ Q : ℂ[X], Q.eval 0 ≠ 0 → (fun s : ℂ => Q.eval ((q : ℂ) ^ (-s))) ≠ 0 := fun Q hQ h =>
     hQ (by rw [poly_zero hq Q fun s => congrFun h s]; simp)
   have hR : (fun s => k₁ * β'.eval s * W₀ s * Z₁ s - k₀ * β.eval s * W₁ s * Z₀ s) = 0 := by

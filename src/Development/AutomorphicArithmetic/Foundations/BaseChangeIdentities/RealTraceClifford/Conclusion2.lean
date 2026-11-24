@@ -94,8 +94,7 @@ private theorem character_support_pairing_le_of_strict_anti {n : ℕ} (κ : Wt n
           Finset.sum_add_distrib, Finset.sum_sub_distrib] at h1
         exact hw (h2.2 hx hρ (by linarith [h2.1]))
       rw [hz, mul_zero]
-    · intro h1
-      exact absurd (Finset.mem_univ _) h1
+    · exact fun h1 => absurd (Finset.mem_univ _) h1
   rw [h] at hcoef
   obtain ⟨w, hw⟩ := (cfBasic n).2.2.2.2.2.2.2.2.2.2.1 (κ + rhoV n) (rhoV n + μ)
     (by rw [hcoef]; exact hμ')
@@ -123,8 +122,7 @@ private theorem character_support_pairing_le_of_antitone {n : ℕ} (κ : Wt n) (
     have := character_support_pairing_le_of_strict_anti κ χ hκ h _ hs ξ hξ
     simp only [add_mul, Finset.sum_add_distrib, mul_assoc, ← Finset.mul_sum] at this
     linarith
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   set A := ∑ a, x a * ξ a - ∑ a, x a * κ a with hA
   set B := ∑ a, rhoV n a * κ a - ∑ a, rhoV n a * ξ a with hB
   have hA0 : 0 < A := by rw [hA]; linarith
@@ -165,22 +163,19 @@ theorem UpperTheory.RealTr.divSupp :
             Finset.sum_add_distrib, Finset.sum_sub_distrib] at h1
           exact hw (h2.2 hρ hρ (by linarith [h2.1]))
         rw [hz, mul_zero]
-      · intro h1
-        exact absurd (Finset.mem_univ _) h1
+      · exact fun h1 => absurd (Finset.mem_univ _) h1
     rw [← hcoef, h]
     exact ((cfBasic n).2.2.2.2.2.2.2.2.2.2.2.1 _ hs).1
   · intro hS ξ hξ
     obtain ⟨w, hw⟩ := ((rearr n).2.1 ξ).2.1
     have hanti : Antitone (domC ξ) := ((rearr n).2.1 ξ).1
     have hc : cf χ (domC ξ) ≠ 0 := by
-      rw [hw, hS w ξ]
-      exact hξ
+      rwa [hw, hS w ξ]
     have h1 := character_support_pairing_le_of_antitone κ χ hκ h (domC ξ) hanti (domC ξ) hc
     have h2 := ((rearr n).2.2.2.2.2 (domC ξ) κ (by
       simp only [nsq, sq]
       exact h1)).1
-    rw [((rearr n).2.1 ξ).2.2.2.2] at h2
-    exact h2
+    rwa [((rearr n).2.1 ξ).2.2.2.2] at h2
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -213,8 +208,7 @@ theorem UpperTheory.RealTr.aux₃ :
   have hm : chR n * alt (domC (ν - rhoV n) + rhoV n) = alt ((2:ℝ) • rhoV n) * χ := by
     rw [← hχ, hD2]
     ring
-  rw [hm, hA]
-  rw [Finset.sum_eq_single 1]
+  rw [hm, hA, Finset.sum_eq_single 1]
   · have e1 : ν + rhoV n - ((2:ℝ) • rhoV n) ∘ ⇑(1 : Equiv.Perm (Fin n)) = ν - rhoV n := by
       funext a
       simp only [Pi.sub_apply, Pi.add_apply, Function.comp_apply, Equiv.Perm.coe_one, id_eq,
@@ -240,8 +234,7 @@ theorem UpperTheory.RealTr.aux₃ :
       ring
     rw [hsum] at hdiff
     linarith
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

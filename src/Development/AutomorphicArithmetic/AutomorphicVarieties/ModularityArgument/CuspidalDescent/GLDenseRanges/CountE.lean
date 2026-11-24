@@ -153,8 +153,7 @@ private theorem sep {ρ : Representation ℂ G W} (h : AbsIrr ρ) {v₁ v₂ : W
   have hφ : ∀ a, φ (e v₁ a) = e v₂ a := fun a => by
     have h0 : e v₁ (s (e v₁ a) - a) = 0 := by rw [map_sub, hsr', sub_self]
     have h2 := hc _ h0
-    rw [← he, map_sub, sub_eq_zero] at h2
-    exact h2
+    rwa [← he, map_sub, sub_eq_zero] at h2
   have key : ∀ g u a, e u (MonoidAlgebra.single g 1 * a) = ρ g (e u a) := fun g u a => by
     simp [he, map_mul]
   have hI : Intw ρ ρ φ := fun g v => by
@@ -212,8 +211,7 @@ private theorem exists_pure {ρ : Representation ℂ G W} (h : AbsIrr ρ) (U : S
         intro h0
         apply hi
         rw [hE, h0, map_zero]
-      · rw [Finsupp.mem_support_iff, not_not, hE]
-        exact ha1
+      · rwa [Finsupp.mem_support_iff, not_not, hE]
     exact absurd (hmin _ hyU hy0) (not_le.2 (Finset.card_lt_card hsub))
   choose c hc using hline
   let cf : _ →₀ ℂ := Finsupp.onFinset (E x).support c (fun j hj => by
@@ -300,15 +298,13 @@ theorem boxIrr : BoxIrr := by
       have h2 : (⊤ : Submodule ℂ W) ≤ S.toSubmodule.comap ((TensorProduct.mk ℂ W W').flip u) := by
         rw [← span_orbit hρ.1 hv, Submodule.span_le]
         rintro _ ⟨g, rfl⟩
-        have h3 := S.apply_mem_toSubmodule (g, 1) hm
-        simpa [box_apply] using h3
+        simpa [box_apply] using S.apply_mem_toSubmodule (g, 1) hm
       exact h2 Submodule.mem_top
     have h4 : ∀ w u', w ⊗ₜ[ℂ] u' ∈ S.toSubmodule := fun w u' => by
       have h2 : (⊤ : Submodule ℂ W') ≤ S.toSubmodule.comap (TensorProduct.mk ℂ W W' w) := by
         rw [← span_orbit hτ.1 hu, Submodule.span_le]
         rintro _ ⟨g, rfl⟩
-        have h3 := S.apply_mem_toSubmodule (1, g) (h1 w)
-        simpa [box_apply] using h3
+        simpa [box_apply] using S.apply_mem_toSubmodule (1, g) (h1 w)
       exact h2 Submodule.mem_top
     refine eq_top_iff.2 ?_
     rw [← TensorProduct.span_tmul_eq_top, Submodule.span_le]
@@ -329,8 +325,7 @@ theorem boxIrr : BoxIrr := by
       have h1 := hf (1, h) (w₀ ⊗ₜ[ℂ] u)
       simp only [box_apply, map_one, TensorProduct.map_tmul, Module.End.one_apply, hk] at h1
       rw [hγ, hγ]
-      have h2 := congrArg ct h1
-      simpa [hct₀] using h2
+      simpa [hct₀] using congrArg ct h1
     obtain ⟨a, ha⟩ := hτ.2 γ hI
     refine ⟨a, TensorProduct.ext' fun w u => ?_⟩
     rw [hk, ← hγ, ha]
@@ -365,8 +360,7 @@ private lemma isot_factor {G H W W' X Y : Type} [Group G] [Group H] [AddCommGrou
     Isot κ' τ := by
   obtain ⟨w0, hw0⟩ := _root_.exists_ne (0 : W)
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual ℂ W, φ w0 ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hw0 ((Module.forall_dual_apply_eq_zero_iff ℂ w0).1 hcon)
   let p : X →ₗ[ℂ] Y := (TensorProduct.lid ℂ Y).toLinearMap ∘ₗ
     (TensorProduct.map φ LinearMap.id) ∘ₗ f.symm.toLinearMap
@@ -397,8 +391,7 @@ private lemma isot_factor {G H W W' X Y : Type} [Group G] [Group H] [AddCommGrou
       ⟨a, rfl⟩
   intro y _
   have hy : p (f (w0 ⊗ₜ[ℂ] ((φ w0)⁻¹ • y))) ∈ S := hle (Submodule.mem_top)
-  rw [hp1, smul_smul, mul_inv_cancel₀ hφ, one_smul] at hy
-  exact hy
+  rwa [hp1, smul_smul, mul_inv_cancel₀ hφ, one_smul] at hy
 
 private lemma isot_tensor {G H W W' X Y : Type} [Group G] [Group H] [AddCommGroup W] [Module ℂ W]
     [AddCommGroup W'] [Module ℂ W'] [AddCommGroup X] [Module ℂ X] [AddCommGroup Y] [Module ℂ Y]
@@ -518,8 +511,7 @@ private lemma indep_fin {τ : Representation ℂ G W'} {ρ : Representation ℂ 
         rw [← hA, ← hsum, h0]
         simp
       funext i
-      refine Fin.cases h0 (fun j => ?_) i
-      exact congrFun h1 j
+      exact Fin.cases h0 (fun j => (congrFun h1 j)) i
     · exfalso
       have hall : ∀ v, ∃ y, A y = b 0 v := fun v => by
         have : v ∈ P := h ▸ Submodule.mem_top
@@ -960,8 +952,7 @@ private theorem mid {P D : Type} [Group P] [AddCommGroup D] [Module ℂ D] {d : 
     · have : (fun g => F (g * J k)) = F := hF.2 _ ⟨k, hk', rfl⟩
       rw [hk, this]
     · have := htr F v x
-      simp only [hJ x hx, mul_one] at this
-      exact this
+      simpa only [hJ x hx, mul_one] using this
     · obtain ⟨F, hF, hF'⟩ := hsur Ψ (fun ℓ => hσ.aut _ (a2 ℓ).1) fun ℓ x hx => a1 x hx ℓ
       refine ⟨F, ⟨⟨hF, Submodule.subset_span fun ℓ => (hF' ℓ).symm ▸ (a2 ℓ).1⟩, ?_⟩, LinearMap.ext hF'⟩
       rintro _ ⟨k, hk', rfl⟩

@@ -70,13 +70,11 @@ private theorem exists_monic_integral_unit_root {l : ℕ} [Fact l.Prime] (a : Om
     exact h2.symm
   have hl : minpoly ℚ_[l] a ∈ lifts (algebraMap ℤ_[l] ℚ_[l]) := by
     rw [lifts_iff_coeff_lifts]
-    intro n
-    exact ⟨⟨_, hc n⟩, rfl⟩
+    exact fun n => ⟨⟨_, hc n⟩, rfl⟩
   obtain ⟨Q, hQ, -, hQm⟩ := lifts_and_natDegree_eq_and_monic hl hm
   refine ⟨Q, hQm, ?_, ?_⟩
   · rw [PadicInt.isUnit_iff]
-    rw [← hQ, coeff_map] at h0
-    exact h0
+    rwa [← hQ, coeff_map] at h0
   · rw [← Polynomial.map_map, hQ, dvd_iff_isRoot, IsRoot.def, eval_map_algebraMap]
     exact minpoly.aeval _ _
 

@@ -465,8 +465,7 @@ private theorem form_unr
   have hS : ∀ v ∈ s.S, cLoc (s.w v) x = 1 := fun v hv =>
     GlobalTheory.DefU.LocRet.mem_locU_ne hx fun h => hw (h ▸ (under_w s v).symm ▸ hv)
   have hK : cLoc w x ∈ KO (w.adicCompletion L) (Fin n) := by
-    rw [GlobalTheory.SmGL.SphCompletion.KO_completion w n]
-    exact hk
+    rwa [GlobalTheory.SmGL.SphCompletion.KO_completion w n]
   have hm : (away l L n).rangeRestrict x ∈ KS n s := by
     refine mem_KS s (Prod.ext (funext fun u => (cmp_S s (Or.inl u.2) x).trans (hS _ (Or.inr (Or.inl u.2))))
       ((cmp_S s (Or.inr rfl) x).trans (hS _ (Or.inr (Or.inr rfl))))) fun u hu => ?_

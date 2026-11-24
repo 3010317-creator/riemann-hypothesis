@@ -269,8 +269,7 @@ theorem UpperTheory.Reformulated.B.RestrictAutomorphism.exists_alg :
       ext i j n
       simp only [Matrix.map_apply, ι, WittVector.map_coeff]
       rfl
-    rw [h1, h2, ← Matrix.map_mul]
-    exact h
+    rwa [h1, h2, ← Matrix.map_mul]
   · simp only [Matrix.map_apply, ι, WittVector.map_coeff]
     exact ((V i j).coeff n).2
 end -- clump:auto

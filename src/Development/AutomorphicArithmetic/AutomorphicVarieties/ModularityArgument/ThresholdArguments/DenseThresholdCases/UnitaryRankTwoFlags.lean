@@ -137,8 +137,7 @@ private theorem map_max_le (f : R →ₐ[O] C) :
     (maximalIdeal R).map (f : R →+* C) ≤ maximalIdeal C := by
   refine Ideal.map_le_iff_le_comap.2 fun a ha => ?_
   show f a ∈ maximalIdeal C
-  rw [← res_eq_zero_iff O C, res_map, res_eq_zero_iff]
-  exact ha
+  rwa [← res_eq_zero_iff O C, res_map, res_eq_zero_iff]
 
 private theorem adic_map {Γ : Type} [TopologicalSpace Γ] (f : R →ₐ[O] C) {u : Γ → R}
     (hu : AdicCont (maximalIdeal R) u) : AdicCont (maximalIdeal C) fun g => f (u g) := by
@@ -161,10 +160,8 @@ private theorem isLift_map (f : R →ₐ[O] C) {ρ : NRep F n R} (h : UpperTheor
   refine ⟨⟨fun i j => ?_, fun v i => ?_⟩, ?_, ?_⟩
   · exact adic_map f (hc.1 i j)
   · exact adic_map f (hc.2 v i)
-  · rw [NRep.map_map, hres]
-    exact hb
-  · rw [NRep.map_map, hres]
-    exact hd
+  · rwa [NRep.map_map, hres]
+  · rwa [NRep.map_map, hres]
 
 end Lift
 
@@ -181,11 +178,9 @@ theorem det : Det := by
   have hmap : NRep.map (y : S.R →+* TrivSqZeroExt O O) S.ρ =
       NRep.map (z : S.R →+* TrivSqZeroExt O O) S.ρ := by
     apply NRep.ext
-    · refine MonoidHom.ext fun g => Matrix.ext fun i j => ?_
-      exact key _ (hr g i j)
+    · exact MonoidHom.ext fun g => Matrix.ext fun i j => key _ (hr g i j)
     · funext v i
-      refine MonoidHom.ext fun g => Units.ext ?_
-      exact key _ (hψ v i g)
+      exact MonoidHom.ext fun g => Units.ext (key _ (hψ v i g))
   obtain ⟨f, _, huniq⟩ := S.univ (TrivSqZeroExt O O) _ (isLift_map z S.lift)
   have e : y = z := (huniq y hmap).trans (huniq z rfl).symm
   ext a
@@ -243,8 +238,7 @@ private theorem exists_mon (ρ : NRep F 3 K) (P : Ideal K) [hP : P.IsPrime] (h :
   obtain ⟨⟨hP', hM'⟩, hee⟩ := h
   have ex : ∀ {S : Set K}, ¬ Ideal.span S ≤ P → ∃ s ∈ S, s ∉ P := by
     intro S hS
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hS (Ideal.span_le.mpr hc)
   have hmul : ∀ {a b : K}, a ∉ P → b ∉ P → a * b ∉ P := fun ha hb hm =>
     (hP.mem_or_mem hm).elim ha hb
@@ -489,8 +483,7 @@ private theorem norm_lt_of_mem {l : ℕ} [Fact l.Prime] (c : Coef l) (x : c.O) (
     rw [h2, hcast]
     calc _ ≤ ‖((l : ℕ) : Qbar l)‖ * 1 := by gcongr
       _ < 1 := by simpa using hlt
-  by_contra hge
-  push Not at hge
+  by_contra! hge
   exact absurd h4 (not_lt.mpr (one_le_pow₀ hge))
 
 private theorem map_mem_max {O R : Type} [CommRing O] [IsLocalRing O] [CommRing R] [IsLocalRing R] [Algebra O R]
@@ -619,8 +612,7 @@ private theorem xi_key {O A O₁ : Type} [CommRing O] [IsLocalRing O] [CommRing 
     rw [← map_sub]
     exact map_nonunit j _ h1
   have h3 : residue O₁ (j x) = residue O₁ (j (algebraMap O A a)) := by
-    rw [← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
-    exact h2
+    rwa [← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
   rw [hf, ← h3]
   simp only [res]
   simp
@@ -923,8 +915,7 @@ theorem mod_l_open_existence
   intro Z hZ
   haveI : IsDiscreteValuationRing c₁.O := c₁.dvr
   have := dimOf c₁.O Λ.Λ R.B₀.B (Λ.toPair R.B₀.u : Λ.Λ →+* R.B₀.B) J _ hΛ hJ.ring.fin hJ.ring.tf Z hZ
-  rw [← hd] at this
-  exact this
+  rwa [← hd] at this
 end UpperTheory.V.J
 end
 end -- clump:auto

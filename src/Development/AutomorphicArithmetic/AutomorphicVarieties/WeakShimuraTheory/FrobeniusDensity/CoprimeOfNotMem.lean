@@ -205,8 +205,7 @@ theorem UpperTheory.V.Ws.Tw.extIdeal :
   · intro I J hI hJ _ _
     show F (ι (I * J)) = F (ι I) * F (ι J)
     rw [hι I J hI hJ, map_mul]
-  · intro a ha hca
-    exact hF ⟨a, ha, hca⟩
+  · exact fun a ha hca => hF ⟨a, ha, hca⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.FrobeniusDensity.ExtIdeal =====
@@ -431,8 +430,7 @@ theorem UpperTheory.V.Ws.Tw.kap0 :
         rw [IsFractionRing.ringEquivOfRingEquiv_algebraMap]
         exact hτc _ hci x
       unfold IsLift
-      intro x
-      exact RingHom.congr_fun hext x
+      exact fun x => RingHom.congr_fun hext x
     let Cg := conjGal hlift
     have hCg : ∀ s, resQ K (Cg s) = c * resQ K s * c⁻¹ := fun s => by
       ext x
@@ -452,8 +450,7 @@ theorem UpperTheory.V.Ws.Tw.kap0 :
           apply (Chr.clsFacts ℚ Ω M).2.2.1
           intro ζ hζ
           have h5 := Chr.cls_spec M x ζ hζ
-          rw [h3'] at h5
-          exact h5
+          rwa [h3'] at h5
         rw [hFx, h1', h2']
         unfold Chr.dirG
         rw [MonoidHom.comp_apply, h4, map_one, inv_one, mul_one, mul_one]
@@ -517,14 +514,11 @@ theorem UpperTheory.V.Ws.Tw.kap0 :
       rw [MonoidHom.comp_apply, MulChar.coe_toUnitHom, hcls, map_natCast]
     intro s s' hs'
     have hs'' : s' = Cg s := by
-      apply AlgEquiv.ext
-      intro x
-      exact congrArg (fun g : G ℚ Ω => g x) (hs'.trans (hCg s).symm)
+      exact AlgEquiv.ext (fun x => congrArg (fun g : G ℚ Ω => g x) (hs'.trans (hCg s).symm))
     subst hs''
     have hmem : s ∈ (κ0 * κ0.comp Cg * ((Chr.dirG ℚ Ω χ).comp (resQ K))⁻¹).ker :=
       closure_minimal hsub hclosed ((Tw.frobDense K Ω 𝔪 h𝔪).closure_eq ▸ Set.mem_univ s)
-    rw [MonoidHom.mem_ker, hFx, mul_inv_eq_one] at hmem
-    exact hmem
+    rwa [MonoidHom.mem_ker, hFx, mul_inv_eq_one] at hmem
   obtain ⟨j, m', hm', hκm, hj⟩ := primeTo κ0 hκopen (Fact.out : l.Prime) hm
   have kerle : κ0.ker ≤ (κ0 ^ j).ker := by
     intro x hx
@@ -536,8 +530,7 @@ theorem UpperTheory.V.Ws.Tw.kap0 :
     have hpow : ∀ x : G ℚ Ω, Chr.dirG ℚ Ω χ x ^ j = Chr.dirG ℚ Ω χ x := by
       intro x
       have hxm : Chr.dirG ℚ Ω χ x ^ m = 1 := by
-        have h1 := congrArg (fun φ : G ℚ Ω →* (PadicAlgCl l)ˣ => φ x) hηm
-        simpa using h1
+        simpa using congrArg (fun φ : G ℚ Ω →* (PadicAlgCl l)ˣ => φ x) hηm
       rw [pow_eq_pow_mod j hxm, show j % m = 1 % m from hj, ← pow_eq_pow_mod 1 hxm, pow_one]
     simp only [MonoidHom.pow_apply]
     rw [← mul_pow, h0, hpow]

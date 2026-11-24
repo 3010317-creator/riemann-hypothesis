@@ -107,8 +107,7 @@ private theorem qmap_bij {G G' : Type} [Group G] [Group G'] (e : G →* G') (he 
     obtain ⟨a, rfl⟩ := QuotientGroup.mk_surjective x
     obtain ⟨b, rfl⟩ := QuotientGroup.mk_surjective y
     rw [qmap_mk, qmap_mk, QuotientGroup.eq] at h
-    rw [QuotientGroup.eq, Subgroup.mem_comap, map_mul, map_inv]
-    exact h
+    rwa [QuotientGroup.eq, Subgroup.mem_comap, map_mul, map_inv]
   · intro z
     obtain ⟨c, rfl⟩ := QuotientGroup.mk_surjective z
     obtain ⟨a, rfl⟩ := he.2 c
@@ -179,11 +178,9 @@ theorem UpperTheory.V.Z.Sym.Sig.orbMap :
       refine ⟨t, E.symm s, Finset.mem_image_of_mem _ hs, E.symm u, ?_, ?_⟩
       · rw [Subgroup.mem_comap]
         show E (E.symm u) ∈ U'
-        rw [MulEquiv.apply_symm_apply]
-        exact hu
+        rwa [MulEquiv.apply_symm_apply]
       · apply E.injective
-        rw [map_mul, map_mul, MulEquiv.apply_symm_apply, MulEquiv.apply_symm_apply]
-        exact h
+        rwa [map_mul, map_mul, MulEquiv.apply_symm_apply, MulEquiv.apply_symm_apply]
   · intro y
     ext t
     simp only [Subgroup.mem_comap, mem_stabilizer_iff, MonoidHom.comp_apply,

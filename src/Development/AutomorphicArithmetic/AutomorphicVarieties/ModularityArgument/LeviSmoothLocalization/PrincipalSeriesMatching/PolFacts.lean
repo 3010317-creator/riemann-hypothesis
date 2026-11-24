@@ -108,8 +108,7 @@ private theorem eq_of_unram (ξ ξ' : kˣ →* ℂˣ) (h : IsUnram (ξ * ξ'⁻�
   have hx := h _ (val_of_ord_zero _ (ofAdd_eq_one.mp h0))
   have he : (ξ * ξ'⁻¹) (unif k) = 1 := by
     simp [e]
-  rw [_root_.map_div, map_zpow, he, one_zpow, div_one] at hx
-  exact hx
+  rwa [_root_.map_div, map_zpow, he, one_zpow, div_one] at hx
 
 private noncomputable def pfac (χ : kˣ →* ℂˣ) (y : IrrGL (k := k)) : ℂ[X] :=
   if h : ∃ ξ : kˣ →* ℂˣ, (∃ hξ, y = IrrGL.ofChar ξ hξ) ∧ IsUnram (ξ * χ) then
@@ -171,8 +170,7 @@ private theorem fac_root (χ : kˣ →* ℂˣ) (y : IrrGL (k := k)) (x : ℂ) : 
     rw [fac_pos χ ξ hξ hu]
     simp only [eval_sub, eval_one, eval_mul, eval_C, eval_X, sub_eq_zero]
     constructor
-    · intro h
-      exact ⟨ξ, hξ, rfl, hu, h.symm⟩
+    · exact fun h => ⟨ξ, hξ, rfl, hu, h.symm⟩
     · rintro ⟨ξ', hξ', e, _, h⟩
       have hq := IrrGL.ofChar_inj.1 e
       subst hq
@@ -214,8 +212,7 @@ private theorem fac_comp (χ μ : kˣ →* ℂˣ) (hμ : IsUnram μ) (y : IrrGL 
   by_cases hy : ∃ ξ hξ, y = IrrGL.ofChar ξ hξ ∧ IsUnram (ξ * χ)
   · obtain ⟨ξ, hξ, rfl, hu⟩ := hy
     have hu' : IsUnram (ξ * (χ * μ)) := by
-      rw [← mul_assoc ξ χ μ, unram_mul_iff _ _ hμ]
-      exact hu
+      rwa [← mul_assoc ξ χ μ, unram_mul_iff _ _ hμ]
     rw [fac_pos _ ξ hξ hu', fac_pos _ ξ hξ hu, ← mul_assoc ξ χ μ, MonoidHom.mul_apply (ξ * χ) μ,
       Units.val_mul, C_mul, sub_comp, one_comp, mul_comp, C_comp, X_comp, mul_assoc]
   · have hy' : ¬ ∃ ξ hξ, y = IrrGL.ofChar ξ hξ ∧ IsUnram (ξ * (χ * μ)) := by

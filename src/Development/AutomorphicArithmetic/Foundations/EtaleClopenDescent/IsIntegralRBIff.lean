@@ -105,10 +105,8 @@ theorem mem_rB_pull (hc : c ≫ p = p') [IsFinite c] [Etale c] (hK : instK = ffA
   obtain ⟨hi1, -, hi3, -⟩ := hff.2 (I.inf U) (hU.ne I) hV' (rB ℂ Z.functionField x I) (ringOn p' hL _ hV')
     (hU.affine I hI) (fun y => hU.ring I hI y) (fun y => Iff.rfl)
   constructor
-  · intro hy
-    exact hi3 y ((isIntegral_rB_iff x I y).1 hy)
-  · intro hy
-    exact (isIntegral_rB_iff x I y).2 (hi1 y hy)
+  · exact fun hy => hi3 y ((isIntegral_rB_iff x I y).1 hy)
+  · exact fun hy => (isIntegral_rB_iff x I y).2 (hi1 y hy)
 
 theorem isFinCover_pull (hc : c ≫ p = p') [IsFinite c] [Etale c] (hK : instK = ffAlg p) (hL : instL = ffAlg p')
     (hg : ∀ (V : Z.Opens) (hV : genericPoint Z ∈ V) (hV' : genericPoint Y ∈ c ⁻¹ᵁ V) (g : Γ(Z, V)),

@@ -168,10 +168,8 @@ theorem UpperTheory.HF.frob_h_order :
       rw [h0, hord]
       haveI : Subsingleton (ZMod (2 ^ 0)) := ZMod.subsingleton_iff.2 (by norm_num)
       constructor
-      · intro _
-        exact Or.inl (Subsingleton.elim _ _)
-      · intro _
-        exact Nat.pow_le_pow_right (by norm_num) (by omega)
+      · exact fun _ => Or.inl (Subsingleton.elim _ _)
+      · exact fun _ => Nat.pow_le_pow_right (by norm_num) (by omega)
   refine ⟨cl1, ⟨i, hi, hord⟩, ?_, ?_⟩
   · have h := (cl1 i).1 (le_of_eq hord)
     have hc := cast_eq_one_or_neg_one_iff_dvd (2 ^ (φ.e + 2 - i)) (p : ℤ)
@@ -241,8 +239,7 @@ theorem UpperTheory.two_pow_dvd_sub_or_add_one_of_odd_addOrderOf_hP :
       have : (((p : ℤ) + 1 : ℤ) : ZMod (2 ^ (D.R.e + 2))) = 0 := by
         push_cast; exact add_eq_zero_iff_eq_neg.2 h
       exact_mod_cast (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).1 this
-  · rw [h1, orderOf_one, mul_one] at h3
-    exact h3
+  · rwa [h1, orderOf_one, mul_one] at h3
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.OrbitLabellings.TwoPowDvdSubOrAddOneOfOddAddOrderOfHP =====

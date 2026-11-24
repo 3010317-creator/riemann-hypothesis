@@ -206,8 +206,7 @@ theorem exists_open_sub : ∀ (K Ω : Type) [Field Ω] [Field K] [NumberField K]
         rintro d1 d2 ⟨h1, h1'⟩ ⟨h2, h2'⟩
         refine ⟨(Ine (F := K) A).mul_mem h1 h2, fun hw => ?_⟩
         have e := map_mul a.ρ ⟨(d1 : G K Ω), Ine_le_Weil h h1⟩ ⟨(d2 : G K Ω), Ine_le_Weil h h2⟩
-        rw [h1', h2', one_mul] at e
-        exact e
+        rwa [h1', h2', one_mul] at e
       inv_mem' := by
         rintro d ⟨h1, h1'⟩
         refine ⟨(Ine (F := K) A).inv_mem h1, fun hw => ?_⟩
@@ -229,8 +228,7 @@ theorem exists_open_sub : ∀ (K Ω : Type) [Field Ω] [Field K] [NumberField K]
     intro d hd hI
     refine ⟨hI, fun hw => ?_⟩
     have : (⟨(d : G K Ω), hI⟩ : Ine (F := K) A) ∈ Subtype.val ⁻¹' O := hd
-    rw [hOS] at this
-    exact this
+    rwa [hOS] at this
   have hW0 : IsOpen (Subtype.val ⁻¹' O : Set (Dec (F := K) A)) := hO.preimage continuous_subtype_val
   obtain ⟨U0, hU0⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hW0 hO1
   haveI := U0.toSubgroup.quotient_finite_of_isOpen U0.isOpen
@@ -268,8 +266,7 @@ theorem exists_open_sub : ∀ (K Ω : Type) [Field Ω] [Field K] [NumberField K]
     exact ⟨w, (d⁻¹ * ι w)⁻¹, U.toSubgroup.inv_mem hxU, by group⟩
   have hJW : ∀ (w : Weil h) (j : Dec (F := K) A), j ∈ J → ι w * j * (ι w)⁻¹ ∈ J := by
     rintro w j ⟨hjI, hjρ⟩
-    refine ⟨conj_mem_Ine (Weil_le_Dec h w.2) hjI, fun hw => ?_⟩
-    exact hconj w ⟨j, Ine_le_Weil h hjI⟩ (hjρ _)
+    exact ⟨conj_mem_Ine (Weil_le_Dec h w.2) hjI, fun hw => (hconj w ⟨j, Ine_le_Weil h hjI⟩ (hjρ _))⟩
   have hU0J : ∀ d : Dec (F := K) A, d ∈ U0.toSubgroup → (d : G K Ω) ∈ Ine (F := K) A → d ∈ J :=
     fun d hd hI => hPW d (hU0 hd) hI
   have hUU0 : ∀ d : Dec (F := K) A, d ∈ U.toSubgroup → d ∈ U0.toSubgroup := fun d hd => (hU hd).1
@@ -550,8 +547,7 @@ theorem exists_normal_prime_index (Γ : Type) [Group Γ] [Finite Γ] [Nontrivial
       exact hp.one_lt.ne hg
   have h2 : Subgroup.zpowers g = ⊤ :=
     Subgroup.comap_injective (QuotientGroup.mk'_surjective H) (h1.trans (Subgroup.comap_top _).symm)
-  rw [Subgroup.index, ← Subgroup.card_top, ← h2, Nat.card_zpowers, hg]
-  exact hp
+  rwa [Subgroup.index, ← Subgroup.card_top, ← h2, Nat.card_zpowers, hg]
 
 theorem isCMField_of_ringEquiv {A B : Type} [Field A] [NumberField A] [Field B] [NumberField B] [IsCMField A]
     (e : A ≃+* B) : IsCMField B := by
@@ -650,8 +646,7 @@ theorem exists_galChar_of_finite_order : ∀ (Ω : Type) [Field Ω] (K : Type) [
     refine MonoidHom.ext fun x => ?_
     obtain ⟨σ, hσ⟩ := toAb_surjective (E := K) (Ω := Ω) (art x)
     have e := DFunLike.congr_fun h1 σ
-    rw [hχ, hσ, hηb, MonoidHom.one_apply, inv_eq_one] at e
-    exact e
+    rwa [hχ, hσ, hηb, MonoidHom.one_apply, inv_eq_one] at e
   · filter_upwards [(GlobalTheory.Mem.UnrAe.unr_ae_and_level K η).1.compl_mem_cofinite] with v hv
     have hv : η.UnrAt v := by simpa using hv
     intro A σ hA hσ
@@ -757,8 +752,7 @@ theorem trivial_on_ext_of_frob_eq_normChar : ∀ (Ω : Type) [Field Ω] (K : Typ
       haveI := hu w
       have h := Ideal.absNorm_pow_inertiaDeg (u w).asIdeal w.asIdeal
       have h1 := Nat.Prime.eq_one_of_pow (h ▸ hp)
-      rw [h1, pow_one] at h
-      exact h
+      rwa [h1, pow_one] at h
     have hnv : normV w = normV (u w) := by
       simp only [Ideal.absNorm_apply, Submodule.cardQuot_apply] at hn
       exact hn.symm
@@ -787,8 +781,7 @@ theorem trivial_on_ext_of_frob_eq_normChar : ∀ (Ω : Type) [Field Ω] (K : Typ
   have hτ : r τ = g := AlgEquiv.ext fun _ => rfl
   have := hall τ
   show χ g = 1
-  rw [← hτ]
-  exact this
+  rwa [← hτ]
 
 end GlobalTheory
 end -- clump:auto
@@ -879,8 +872,7 @@ theorem inv_moves {Ω K M : Type} [Field Ω] [Field K] [Algebra K Ω] [Field M] 
   obtain ⟨x, hx⟩ := hg
   refine ⟨x, fun h => hx ?_⟩
   have e : (g * g⁻¹) (algebraMap M Ω x) = algebraMap M Ω x := by rw [mul_inv_cancel]; rfl
-  rw [AlgEquiv.mul_apply, h] at e
-  exact e
+  rwa [AlgEquiv.mul_apply, h] at e
 
 theorem trace_eq_zero_of_selfTw : ∀ (Ω : Type) [Field Ω] (K : Type) [Field K] [NumberField K] [IsCMField K] [Algebra K Ω] [IsAlgClosure K Ω] (M : Type) [Field M] [NumberField M] [IsCMField M] [Algebra M Ω] [IsAlgClosure M Ω] [Algebra K M] [IsScalarTower K M Ω] [IsGalois K M], (Module.finrank K M).Prime → ∀ (l : ℕ) [Fact l.Prime] (ι : Qbar l ≃+* ℂ) (a : ℕ) (π : CuspSub K a) (r : G K Ω →* GL (Fin a) (Qbar l)), Weak π ι r → ∀ η : HChar K, UpperTheory.V.Published.IsNormChar M η → UpperTheory.V.Published.SelfTw (CG.mk π).HasSat η → ∀ g : G K Ω, (∃ x : M, g (algebraMap M Ω x) ≠ algebraMap M Ω x) → (r g).val.trace = 0 := by
   intro Ω _ K _ _ _ _ _ M _ _ _ _ _ _ _ _ hp l _ ι a π r hr η hη hst g hg
@@ -991,12 +983,10 @@ theorem isWeaklyAttached_of_cmBaseChange_of_finrank (hI : UpperTheory.Gal.ToralG
 
   have hmove : ∃ g : G K Ω, (∃ x : K₁, g (algebraMap K₁ Ω x) ≠ algebraMap K₁ Ω x) ∧ (r g).val.trace ≠ 0 := by
     obtain ⟨x, hx⟩ : ∃ x : K₁, x ∉ Set.range (algebraMap K K₁) := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       have hb : Function.Bijective (algebraMap K K₁) := ⟨(algebraMap K K₁).injective, fun y => hc y⟩
       exact hp.one_lt.ne' (hdeg ▸ Algebra.finrank_eq_one_iff_bijective_algebraMap.2 hb)
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have hfixN : ∀ n ∈ N, n (algebraMap K₁ Ω x) = algebraMap K₁ Ω x := by
       intro n hn
       by_contra hne
@@ -1011,8 +1001,7 @@ theorem isWeaklyAttached_of_cmBaseChange_of_finrank (hI : UpperTheory.Gal.ToralG
     have hmem : algebraMap K₁ Ω x ∈ (⊥ : IntermediateField K Ω) := by
       rw [← InfiniteGalois.fixedField_fixingSubgroup (⊥ : IntermediateField K Ω), IntermediateField.fixingSubgroup_bot,
         IntermediateField.mem_fixedField_iff]
-      intro g _
-      exact hfix g
+      exact fun g _ => hfix g
     obtain ⟨k, hk⟩ := IntermediateField.mem_bot.1 hmem
     apply hx
     refine ⟨k, (algebraMap K₁ Ω).injective ?_⟩
@@ -1046,8 +1035,7 @@ theorem isWeaklyAttached_of_cmBaseChange_of_finrank (hI : UpperTheory.Gal.ToralG
       ext w
       rfl
     · ext w
-      have h3 := DFunLike.congr_fun he w
-      exact h3
+      exact DFunLike.congr_fun he w
   obtain ⟨P, χ', hsc', hc'⟩ := ih _ hlt K₁ rfl P₁ χ₁ hχ₁ (resTo K₁ r) hr₁ N₁ (fun n hn => hN _ hn) hS₁
   exact ⟨P, χ', hsc', _root_.GlobalTheory.RoadU.charLift_trans K K₁ M a π P₁ P hc₁ hc'⟩
 

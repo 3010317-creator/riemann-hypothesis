@@ -225,8 +225,7 @@ theorem mem_span_equivValues (a : ι → Module.End ℂ P)
           intro p; obtain ⟨x, hx, hxe⟩ := hS p; exact ⟨⟨x, hx⟩, hxe⟩
         have key : ∀ v, J ((LinearEquiv.ofInjective J hJ).symm v) = v := fun v => by
           have h := congrArg Subtype.val ((LinearEquiv.ofInjective J hJ).apply_symm_apply v)
-          rw [LinearEquiv.ofInjective_apply] at h
-          exact h
+          rwa [LinearEquiv.ofInjective_apply] at h
         refine ⟨N.subtype ∘ₗ (LinearEquiv.ofInjective J hJ).symm.toLinearMap ∘ₗ
           S.codRestrict _ hS', fun p => Subtype.property _, fun p => ?_⟩
         exact key ⟨S p, hS' p⟩
@@ -480,7 +479,6 @@ theorem IsPartMult.eq_zero {A : Submodule ℂ (GA D V → ℂ)} {s : Finset D.wh
       · let B : Submodule ℂ (GlobalTheory.IndefiniteRowSideFullHecke.FinitePartTypes.kFin (M.ε τ) (M.σ τ)) :=
           { carrier := {w | F (Function.update u τ w) = 0}
             zero_mem' := by
-              show F (Function.update u τ 0) = 0
               exact F.map_coord_zero τ (by simp)
             add_mem' := by
               intro a b ha hb
@@ -607,8 +605,7 @@ theorem isPartMult_glue {A : Submodule ℂ (GA D V → ℂ)} {s : Finset D.what�
   · rw [glue_apply, glue_apply]
     by_cases e : τ' = τ
     · subst e
-      simp only [Function.update_self, Function.update_idem]
-      exact hK g hg hk _ _ hw _
+      simpa only [Function.update_self, Function.update_idem] using hK g hg hk _ _ hw _
     · have hs : τ' ∈ s := (Finset.mem_insert.1 hτ').resolve_left e
       rw [Function.update_of_ne (Ne.symm e), Function.update_comm e]
       refine (hT (u τ)).equivK τ' hs g hg hk _ w ?_
@@ -616,8 +613,7 @@ theorem isPartMult_glue {A : Submodule ℂ (GA D V → ℂ)} {s : Finset D.what�
   · rw [glue_apply, glue_apply]
     by_cases e : τ' = τ
     · subst e
-      simp only [Function.update_self, Function.update_idem]
-      exact hL X hX _ _ hw _
+      simpa only [Function.update_self, Function.update_idem] using hL X hX _ _ hw _
     · have hs : τ' ∈ s := (Finset.mem_insert.1 hτ').resolve_left e
       rw [Function.update_of_ne (Ne.symm e), Function.update_comm e]
       refine (hT (u τ)).equivLie τ' hs X hX _ w ?_
@@ -870,8 +866,7 @@ theorem finite_sum_of_gKModule_maps : _root_.GlobalTheory.FunPr.ThetaLocalInputs
 
     simp only [res_one hθ hP, sigma_one hσ.1, hQ, map_sum, map_smul, smul_eq_mul] at h1
     have h2 := h1.unique (hasSum_sum fun j _ => (Expn.summable_term (h x) (c j) (hσ.2.2.1 _ (ha j))).hasSum)
-    simp only [Finset.sum_apply, hTv]
-    exact h2
+    simpa only [Finset.sum_apply, hTv] using h2
   have hk : Continuous fun k : KG (M.ε τ) => atTau θ V τ ((M.fr τ)⁻¹ * toMK k * M.fr τ) :=
     (continuousOn_atTau hθ V τ).comp_continuous continuous_conjK
       fun k => conj_inv_mem hP hJ (K_le_UJ (toMK_mem_K k))
@@ -885,8 +880,7 @@ theorem finite_sum_of_gKModule_maps : _root_.GlobalTheory.FunPr.ThetaLocalInputs
     refine ⟨avg θ V τ (M.ε τ) (M.fr τ) e φ, ⟨hZ e he, avg_mem hθ hP hJ hWK hφ.cont hφW he⟩, fun x hxK => ?_⟩
     have h4 : φ (x * atTau θ V τ ((M.fr τ)⁻¹ * toMK (1 : KG (M.ε τ)) * M.fr τ)) = φ x := res_one hθ hP φ x
     have h3 := hap x hxK
-    rw [h4] at h3
-    exact h3
+    rwa [h4] at h3
   obtain ⟨m, T, p, hT, hsum⟩ := hmem.1
   exact ⟨m, T, p, hT, hsum⟩
 end GlobalTheory.FiniteGKSum
@@ -954,15 +948,13 @@ theorem model (h : GlobalTheory.Published.KFiniteVectorsUnitary) {lam : Fin n �
     calc _ = (P * P⁻¹)ᴴ * Jm ε * (P * P⁻¹) := by simp only [conjTranspose_mul, Matrix.mul_assoc]
       _ = _ := by rw [h2]; simp
   refine ⟨?_, fun X hX v => ?_, fun B hB hS => ?_⟩
-  · by_contra hne
-    push Not at hne
+  · by_contra! hne
     obtain ⟨x, hx⟩ := exists_ne (0 : H)
     obtain ⟨y, hy, hy'⟩ := hd.exists_mem_open isOpen_compl_singleton ⟨x, hx⟩
     exact hy' (congrArg Subtype.val (hne ⟨y, hy⟩))
   · have hY : inG ε (P * X * P⁻¹) := conj_lie' h1 hG' hX
     refine ⟨⟨dRep σ (P * X * P⁻¹) v, hst _ hY _ v.2⟩, ?_⟩
-    simp only [exp_smul_conj' hP]
-    exact h.hasDerivAt hσ.2.2.1 hσ.2.2.2.1 v.2 hY
+    simpa only [exp_smul_conj' hP] using h.hasDerivAt hσ.2.2.1 hσ.2.2.2.1 v.2 hY
   · have hle : B.map (kFinSub ε σ).subtype ≤ kFinSub ε σ := Submodule.map_subtype_le _ _
     have hs : IsLieStable ε σ (B.map (kFinSub ε σ).subtype) := by
       rintro Y hY _ ⟨v, hv, rfl⟩
@@ -970,8 +962,7 @@ theorem model (h : GlobalTheory.Published.KFiniteVectorsUnitary) {lam : Fin n �
       have e : P * (P⁻¹ * Y * P) * P⁻¹ = Y := by
         calc _ = (P * P⁻¹) * Y * (P * P⁻¹) := by simp only [Matrix.mul_assoc]
           _ = Y := by rw [h2]; simp
-      simp only [exp_smul_conj' hP, e]
-      exact h.hasDerivAt hσ.2.2.1 hσ.2.2.2.1 v.2 hY
+      simpa only [exp_smul_conj' hP, e] using h.hasDerivAt hσ.2.2.1 hσ.2.2.2.1 v.2 hY
     rcases hirr _ hle hs with e | e
     · exact absurd ((Submodule.map_injective_of_injective (kFinSub ε σ).injective_subtype)
         (e.trans (Submodule.map_bot _).symm)) hB
@@ -1064,8 +1055,7 @@ theorem cuspForm_local_sum_generates : _root_.GlobalTheory.FunPr.ThetaLocalInput
         have e : (fun t : ℝ => M.rep τ (NormedSpace.exp (t • X.1)) ((a + b : P) : M.H τ)) =
             fun t => M.rep τ (NormedSpace.exp (t • X.1)) (a : M.H τ) + M.rep τ (NormedSpace.exp (t • X.1)) (b : M.H τ) :=
           funext fun t => by rw [Submodule.coe_add, map_add (f := _)]
-        rw [e, Submodule.coe_add]
-        exact h
+        rwa [e, Submodule.coe_add]
       map_smul' := fun c a => by
         refine (hdu X.1 X.2 (c • a) _ _ (Classical.choose_spec (hder X.1 X.2 (c • a))) ?_)
         have h := (Classical.choose_spec (hder X.1 X.2 a)).const_smul c
@@ -1205,8 +1195,7 @@ theorem IsPartMult.partialMultiplicity_decomposition (hPr : _root_.GlobalTheory.
     rfl
   · refine hinj _ hF _ (Hs.sum_mem fun m _ => hT'mem m (p m)) ?_
     rw [MultilinearMap.sum_apply]
-    simp only [hT'ev]
-    exact hsum
+    simpa only [hT'ev] using hsum
 end GlobalTheory.CuspGKId
 noncomputable section
 namespace GlobalTheory.CuspGKId
@@ -1266,8 +1255,7 @@ theorem le_multiplicitySpan_cuspForm : _root_.GlobalTheory.FunPr.ThetaLocalInput
   have hl : ∀ τ, ∃ l : GlobalTheory.IndefiniteRowSideFullHecke.FinitePartTypes.kFin (M.ε τ) (M.σ τ) →ₗ[ℂ] ℂ, l (p0 τ) = 1 := by
     intro τ
     obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual ℂ (GlobalTheory.IndefiniteRowSideFullHecke.FinitePartTypes.kFin (M.ε τ) (M.σ τ)), φ (p0 τ) ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hp0 τ ((Module.forall_dual_apply_eq_zero_iff ℂ (p0 τ)).1 h)
     exact ⟨(φ (p0 τ))⁻¹ • φ, by simp [hφ]⟩
   choose lam hlam using hl

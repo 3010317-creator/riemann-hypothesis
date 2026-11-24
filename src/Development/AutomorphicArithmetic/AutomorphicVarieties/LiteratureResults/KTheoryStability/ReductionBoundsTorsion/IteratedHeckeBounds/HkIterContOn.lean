@@ -333,8 +333,7 @@ theorem intP_Hk {k : ℕ} (q : GK L N) {ω : Form (HS L N) k} (hω : ContinuousO
       ({ toFun := fun f : HS L N [⋀^Fin k]→L[ℝ] ℝ => f v
          map_add' := fun _ _ => by simp
          map_smul' := fun _ _ => by simp } : (HS L N [⋀^Fin k]→L[ℝ] ℝ) →ₗ[ℝ] ℝ) _
-  simp only [intP, intS_eq, key]
-  exact mn_integral (Sg q) _ fun c => intP_integ (pb_contOn _ hω) y
+  simpa only [intP, intS_eq, key] using mn_integral (Sg q) _ fun c => intP_integ (pb_contOn _ hω) y
 
 
 theorem Hk_good {k : ℕ} (q : GK L N) {ω : Form (HS L N) (k + 1)} (hω : Good ω) : Good (Hk q ω) := by

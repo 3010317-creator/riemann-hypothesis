@@ -56,8 +56,7 @@ namespace UpperTheory.Gal.crystallineComparison.Mod.IsoOfKernelFactorization
 variable {S : Scheme.{0}}
 
 private lemma pow_comp' {T A B : Over S} [GrpObj A] [GrpObj B] (x : T ⟶ A) (f : A ⟶ B) [IsMonHom f] (n : ℕ) :
-    (x ^ n) ≫ f = (x ≫ f) ^ n := by
-  exact (IsMonHom.monoidHom f T).map_pow x n
+    (x ^ n) ≫ f = (x ≫ f) ^ n := (IsMonHom.monoidHom f T).map_pow x n
 
 private lemma comp_pow' {T' T A : Over S} [GrpObj A] (t : T' ⟶ T) (x : T ⟶ A) (n : ℕ) :
     t ≫ (x ^ n) = (t ≫ x) ^ n := by

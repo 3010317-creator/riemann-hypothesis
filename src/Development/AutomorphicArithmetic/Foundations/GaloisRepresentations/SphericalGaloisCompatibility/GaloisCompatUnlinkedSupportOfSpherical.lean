@@ -267,8 +267,7 @@ private theorem chs_cons_some (ξ : kˣ →* ℂˣ) (hξ) (s : Multiset (IrrGL (
     obtain ⟨hη, he⟩ := h.choose_spec
     exact (IrrGL.ofChar_inj.mp he).symm
   unfold chs
-  rw [Multiset.filterMap_cons_some _ _ _ (by rw [dite_eq_left h])]
-  rw [hc]
+  rw [Multiset.filterMap_cons_some _ _ _ (by rw [dite_eq_left h]), hc]
 
 private theorem chs_cons_not {y : IrrGL (k := k)} (hy : ¬ ∃ ξ : kˣ →* ℂˣ, ∃ hξ, y = IrrGL.ofChar ξ hξ)
     (s : Multiset (IrrGL (k := k))) : chs (y ::ₘ s) = chs s := by
@@ -465,8 +464,7 @@ theorem gamOneOf : GamOneOf := by
     intro θ hθ
     have h := hS K L hp n hn π P hW v s (fun u => (hw u).symm ▸ s') hs
       (fun u => key u (hw u).symm) θ hθ
-    rw [Fintype.sum_subsingleton _ w, Fintype.sum_subsingleton _ w] at h
-    exact h
+    rwa [Fintype.sum_subsingleton _ w, Fintype.sum_subsingleton _ w] at h
   refine Multiset.ext.2 fun ζ => ?_
   by_cases hT : Thru w ζ
   · obtain ⟨χ, hχ, hu⟩ := id hT
@@ -474,8 +472,7 @@ theorem gamOneOf : GamOneOf := by
     have hc := congrArg (Multiset.count ζ) hf
     rw [Multiset.count_filter_of_pos (p := fun ξ => IsUnram (ξ * χ.comp (nm w))) hu,
       Multiset.count_filter_of_pos (p := fun ξ => IsUnram (ξ * χ.comp (nm w))) hu] at hc
-    rw [Multiset.count_filter_of_pos hT]
-    exact hc
+    rwa [Multiset.count_filter_of_pos hT]
   · rw [Multiset.count_filter_of_neg hT, eq_comm, Multiset.count_eq_zero]
     intro hm
     obtain ⟨ξ, hξ, rfl⟩ := Multiset.mem_map.1 hm
@@ -741,8 +738,7 @@ theorem rankOne_algNorm_locComp (E : Type) [Field E] [NumberField E] [_root_.Num
   refine (clTwist_eq_self_of_eq_one _ _ _ ?_).trans ?_
   · ext g
     simp [GlobalTheory.SmGL.detChar, GlobalTheory.SmGL.absPow]
-  apply Quotient.sound
-  exact ⟨e.trans (Representation.Equiv.refl _)⟩
+  exact Quotient.sound ⟨e.trans (Representation.Equiv.refl _)⟩
 
 end GlobalTheory
 end -- clump:auto
@@ -912,8 +908,7 @@ theorem UpperTheory.Gal.GamX.twValsOf :
             have := congrArg (fun φ => φ (unif (HeightOneSpectrum.adicCompletion L
               (w : HeightOneSpectrum (𝓞 L))))) (he j w)
             simpa using this
-          rw [MonoidHom.mul_apply, h2, mul_one, hf w] at h1
-          exact h1
+          rwa [MonoidHom.mul_apply, h2, mul_one, hf w] at h1
         have hpos : 0 < (Finset.filter (fun j => IsUnram (μ * e j)) (Finset.range d)).card := by
           rw [hcard, hsumf]
           exact Nat.mul_pos (Fintype.card_pos_iff.mpr hne) hfpos
@@ -1009,9 +1004,7 @@ private theorem map_eq_of_injOn {α β : Type*} (S : Set α) (g : α → β) (hg
     intro C hC ξ hξ
     rw [Multiset.count_map, Multiset.count_eq_card_filter_eq]
     congr 1
-    apply Multiset.filter_congr
-    intro x hx
-    exact ⟨fun e => congrArg g e, fun e => hg hξ (hC x hx) e⟩
+    exact Multiset.filter_congr (fun x hx => ⟨fun e => congrArg g e, fun e => hg hξ (hC x hx) e⟩)
   ext ξ
   by_cases hξ : ξ ∈ S
   · rw [key A hA ξ hξ, key B hB ξ hξ, h]

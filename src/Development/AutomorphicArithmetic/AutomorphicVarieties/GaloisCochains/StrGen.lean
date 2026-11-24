@@ -91,8 +91,7 @@ private theorem cocycle_coboundary_of_vanishing_finite_index {k Γ : Type} [Fiel
     exact Equiv.sum_comp (MulAction.toPerm s) (fun q : Γ ⧸ N => c q.out)
   set S := ∑ q : Γ ⧸ N, c q.out
   have hS : (κ s : k) * S = S - N.index * c s := by
-    rw [Finset.mul_sum]
-    exact key
+    rwa [Finset.mul_sum]
   have e : (κ s : k) * (-(N.index : k)⁻¹ * S) - -(N.index : k)⁻¹ * S
       = -(N.index : k)⁻¹ * ((κ s : k) * S - S) := by ring
   rw [e, hS]
@@ -206,8 +205,7 @@ theorem UpperTheory.V.GC.strGen :
     intro z v s
     obtain ⟨_, _, h3⟩ := z.2
     have := h3 v s
-    rw [Submodule.mem_bot, sub_eq_zero, hρ] at this
-    exact this
+    rwa [Submodule.mem_bot, sub_eq_zero, hρ] at this
   let Φ : Zs →ₗ[k] (K₁ → k) :=
     { toFun := fun z u => z.1.1 (π ⟨u.1, hKU u.2⟩)
       map_add' := fun _ _ => rfl
@@ -292,8 +290,7 @@ theorem UpperTheory.V.GC.strGen :
     have hN0 : N.index ≠ 0 := fun h => hNl (h ▸ dvd_zero l)
     haveI : N.FiniteIndex := ⟨hN0⟩
     have hNk : (N.index : k) ≠ 0 := by
-      rw [Ne, CharP.cast_eq_zero_iff k l]
-      exact hNl
+      rwa [Ne, CharP.cast_eq_zero_iff k l]
     have hNc : ∀ n ∈ N, z.1.1 n = 0 := by
       rintro _ ⟨u, hu, rfl⟩
       exact hc0 ⟨u.1, Subgroup.mem_subgroupOf.mp hu⟩

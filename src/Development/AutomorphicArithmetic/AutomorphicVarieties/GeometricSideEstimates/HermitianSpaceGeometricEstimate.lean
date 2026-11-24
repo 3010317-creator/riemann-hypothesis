@@ -59,11 +59,9 @@ theorem UpperTheory.hermitian_space_geometric_estimate :
     have h := (hsum g).le_tsum (0 : lat L g) (fun j _ => (Real.exp_pos _).le)
     have h0 : gauss (pt (rt g) (0 : lat L g).1) = 1 := by
       simp [gauss, qf]
-    rw [h0] at h
-    exact h
+    rwa [h0] at h
   refine ⟨fun g => ⟨h1 g, ?_⟩, fun P hP => ?_⟩
-  · simp only [Th, gsum, pg, Pi.one_apply, one_mul]
-    exact (Complex.ofReal_tsum _).symm
+  · simpa only [Th, gsum, pg, Pi.one_apply, one_mul] using (Complex.ofReal_tsum _).symm
   · obtain ⟨-, ⟨C, k, hC⟩, -⟩ := UpperTheory.admissibleFunctionClass_closure_properties E a P hP
     obtain ⟨D, hD0, hD⟩ := UpperTheory.moment_bound_of_pointwise_moments N k
     have hb : ∀ x, ‖pg P x‖ ≤ |C| * ((1 + qf x) ^ k * Real.exp (-Real.pi * qf x)) := by

@@ -66,12 +66,10 @@ theorem char_pow_ine {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra
     ξ t ^ (normV w - 1) = 1 := by
   have h1 : ξ ((frob h : G E Ω) * t * (frob h : G E Ω)⁻¹ * (t ^ normV w)⁻¹) = 1 := hW _ fun y hy => by
     have k := (DiscreteGroups.sglob.DzType.isWild_frob (isFrob_frob (h := h)) ⟨t, ht⟩).2 y hy
-    rw [div_sub_one hy, map_div₀, div_lt_one₀ (zero_lt_iff.2 ((_root_.map_ne_zero _).2 hy))]
-    exact k
+    rwa [div_sub_one hy, map_div₀, div_lt_one₀ (zero_lt_iff.2 ((_root_.map_ne_zero _).2 hy))]
   simp only [map_mul, map_inv, map_pow] at h1
   have h3 : ξ t = ξ t ^ normV w := by
-    rw [mul_inv_eq_one, mul_comm (ξ _), mul_inv_cancel_right] at h1
-    exact h1
+    rwa [mul_inv_eq_one, mul_comm (ξ _), mul_inv_cancel_right] at h1
   have hq : 1 ≤ normV w := Nat.pos_of_ne_zero fun h0 => by
     have : Finite (𝓞 E ⧸ w.asIdeal) := w.asIdeal.finiteQuotientOfFreeOfNeBot w.ne_bot
     exact (Nat.card_pos (α := 𝓞 E ⧸ w.asIdeal)).ne' h0

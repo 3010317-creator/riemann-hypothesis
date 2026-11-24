@@ -391,8 +391,7 @@ theorem splits_completely_of_intermediate :
       Nat.card_coe_set_eq]
   have hall : ∀ Q ∈ P.primesOver (𝓞 L), Q.ramificationIdx ℤ * Q.inertiaDeg ℤ = 1 := by
     rw [← hsum, h1, Finset.sum_eq_sum_iff_of_le] at hcount
-    · intro Q hQ
-      exact (hcount ⟨Q, hQ⟩ (Finset.mem_univ _)).symm
+    · exact fun Q hQ => (hcount ⟨Q, hQ⟩ (Finset.mem_univ _)).symm
     · rintro ⟨Q, hQ, _⟩ -
       exact Nat.mul_pos (Ideal.ramificationIdx_pos (R := _) Q) (Ideal.inertiaDeg_pos Q _)
   intro Q hQ
@@ -624,8 +623,7 @@ theorem exists_bridges (l : ℕ) [Fact l.Prime] (E Ω : Type) [Field E] [NumberF
   have hfin : (placesOver E l).Finite := by
     have h0 : Ideal.span {((l : ℕ) : 𝓞 E)} ≠ 0 := by
       simpa using (Fact.out : l.Prime).ne_zero
-    refine (Ideal.finite_factors h0).subset fun v hv => ?_
-    exact Ideal.dvd_span_singleton.mpr hv
+    exact (Ideal.finite_factors h0).subset fun v hv => Ideal.dvd_span_singleton.mpr hv
   have := hfin.to_subtype
   choose j L0 hj hL using fun w : placesOver E l => GlobalTheory.PlaceBridge.exists_locBridge l E Ω w.1 (pl w.1) w.2 (hpl w.1)
   have := fun w => (L0 w).2
@@ -795,12 +793,10 @@ theorem exists_grp_setTy (D : D7) (hE : IsEmpty D.nd.Loc) (X : NTypes D.naut) (h
   refine ⟨{ tA := Γ.tA, tκ := Γ.tκ, teichC_def := fun k => ?_, ζ := Γ.ζ, ζ_gen := Γ.ζ_gen, O := O, eSer_def := fun k f => ?_
             kv := Γ.kv, tg_tame := fun k v => ?_, O_equiv := hO1, O_tw := hO2 }, rfl⟩
   · have := Γ.teichC_def k
-    rw [← e2] at this
-    exact this
+    rwa [← e2] at this
   · exact ((congrFun (congrFun e3 k) f).trans (Γ.eSer_def k f)).trans (hO3 k _ f).symm
   · have := Γ.tg_tame k v
-    rw [← e1] at this
-    exact this
+    rwa [← e1] at this
 
 
 
@@ -951,8 +947,7 @@ theorem cl_eq_of_isLocS {L : Type} [Field L] [NumberField L] [IsCMField L] {n : 
     intro τ₀ T₀ hT₀ hS₀ he₀
     refine ⟨⟨LinearMap.codRestrict π.S T₀ hS₀, fun A => LinearMap.ext fun a => Subtype.ext ?_⟩, fun h0 => ?_⟩
     · have h1 := he₀ (sec A) (hsec A).1 a
-      rw [(hsec A).2] at h1
-      exact h1
+      rwa [(hsec A).2] at h1
     · haveI := hnt τ₀
       obtain ⟨a, ha⟩ := exists_ne (0 : τ₀.V)
       refine ha (hT₀ ?_)
@@ -1255,18 +1250,15 @@ theorem conclusion_of_automorphic_side_true (hL : _root_.UpperTheory.Zero.LLC.Re
   have hlab' : LabTrue (setTy D hE X h1 h0) T := by
     intro k v a
     have := hlab k v a
-    rw [← e1, ← e2] at this
-    exact this
+    rwa [← e1, ← e2] at this
   have hconj' : LabConj (setTy D hE X h1 h0) T := by
     intro k v w hw
     have := hconj k v w hw
-    rw [← e1, ← e2] at this
-    exact this
+    rwa [← e1, ← e2] at this
   have hχ' : ChiTOk (setTy D hE X h1 h0) cf' := by
     intro k v j u hu
     have := hχ k v j u hu
-    rw [← e1, ← e2] at this
-    exact this
+    rwa [← e1, ← e2] at this
   have hT' : GlobalTheory.Mem.Top.TypesTrue X cf.P cf.W :=
     ⟨hT.pl, fun k => (congrFun e2 k).trans (hT.teich k), hT.chi, fun k p => (congrFun (congrFun e3 k) p).trans (hT.ser k p)⟩
   have H : _root_.GlobalTheory.HeightCounting.TopA.ConclAlt hL (setTy D hE X h1 h0) cf' jE rep :=
@@ -1336,13 +1328,11 @@ theorem conclusion_of_group_side (hA : GlobalTheory.Published.AutomorphicFormsFi
   have hχ' : ChiTOk (setAut D hE lab h A C tm tg hl) cf' := by
     intro k v j u hu
     have := hχ k v j u hu
-    rw [← hpl k v] at this
-    exact this
+    rwa [← hpl k v] at this
   have hrow : _root_.GlobalTheory.HeightCounting.RepresentationParametersHold hL (setAut D hE lab h A C tm tg hl) rep (fun σ w => T.e w (Rs.locR σ w)) Rs.satR := by
     have e1 : (fun σ w => T.e w (Rs.locR σ w)) = Rw.par := funext fun σ => funext fun w => hp σ w
     have e2 : Rs.satR = Rw.sat := funext fun σ => funext fun w => hs σ w
-    rw [e1, e2]
-    exact hRw
+    rwa [e1, e2]
   have hT' : GlobalTheory.Mem.Top.TypesTrue (setAut D hE lab h A C tm tg hl).ntypes cf.P cf.W :=
     ⟨fun k v => (hpl k v).symm ▸ hT.pl k v, hT.teich, hT.chi, hT.ser⟩
   have H : _root_.GlobalTheory.HeightCounting.TopA.ConclAlt hL (setAut D hE lab h A C tm tg hl) cf' jE rep :=

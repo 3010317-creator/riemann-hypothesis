@@ -68,13 +68,11 @@ theorem UpperTheory.V.AlgebraTools.Det.chiApi :
     ring
   have h0 : D.lam 0 y = 1 := by
     have key := UpperTheory.V.AlgebraTools.Det.expand D y A 1 0
-    rw [zero_smul, add_zero, ← MonoidAlgebra.one_def, map_one] at key
-    rw [Finset.sum_eq_single 0] at key
+    rw [zero_smul, add_zero, ← MonoidAlgebra.one_def, map_one, Finset.sum_eq_single 0] at key
     · simpa using key.symm
     · intro b _ hb
       simp [zero_pow hb]
-    · intro h
-      exact absurd (Finset.mem_range.mpr (Nat.succ_pos n)) h
+    · exact fun h => absurd (Finset.mem_range.mpr (Nat.succ_pos n)) h
   have hn : D.lam n y = D.D A y := by
     have key := UpperTheory.V.AlgebraTools.Det.expand D y A 0 1
     rw [Finset.sum_eq_single n] at key
@@ -89,8 +87,7 @@ theorem UpperTheory.V.AlgebraTools.Det.chiApi :
         have := Finset.mem_range.mp hb
         omega
       simp [zero_pow this]
-    · intro h
-      exact absurd (Finset.mem_range.mpr (Nat.lt_succ_self n)) h
+    · exact fun h => absurd (Finset.mem_range.mpr (Nat.lt_succ_self n)) h
   have hdeg : (D.chi y).natDegree ≤ n := by
     rw [hsum]
     refine Polynomial.natDegree_sum_le_of_forall_le _ _ fun i _ => ?_
@@ -104,6 +101,5 @@ theorem UpperTheory.V.AlgebraTools.Det.chiApi :
         have := Finset.mem_range.mp hb
         omega
       rw [Polynomial.coeff_C_mul_X_pow, ite_eq_right this]
-    · intro h
-      exact absurd (Finset.mem_range.mpr (Nat.succ_pos n)) h
+    · exact fun h => absurd (Finset.mem_range.mpr (Nat.succ_pos n)) h
   exact ⟨h0, hn, Polynomial.monic_of_natDegree_le_of_coeff_eq_one n hdeg hcoeff, hdeg, hsum⟩

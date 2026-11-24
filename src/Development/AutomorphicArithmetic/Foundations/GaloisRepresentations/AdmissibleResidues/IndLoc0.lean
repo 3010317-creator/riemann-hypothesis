@@ -486,8 +486,7 @@ theorem UpperTheory.induced_flag_condition :
     intro i
     fin_cases i <;> simp <;> omega
   have hA' : (A.comap (resQ T.F T.g0 : Ω →+* Ω)).valuation (l : Ω) < 1 := by
-    rw [val_comap, map_natCast]
-    exact hA
+    rwa [val_comap, map_natCast]
   have hD : ∀ s : Dec (F := T.F) A, resQ T.F s ∈ Dec (F := ℚ) A := fun s => s.2
   choose h hh using fun s : Dec (F := T.F) A => ex_lift k₀ (H.hyp.spl A hA (hD s))
   choose h' hh' using fun s : Dec (F := T.F) A => ex_lift k₀ (H.hyp.spl _ hA' (dec_conj (resQ T.F T.g0) (hD s)))

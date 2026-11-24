@@ -70,8 +70,7 @@ private theorem algebraMap_coe_ringOfIntegers_tower {L F : Type} [Field L] [Numb
 
 private theorem valuation_eq_one_of_not_mem_asIdeal {F : Type} [Field F] [NumberField F] (P : HeightOneSpectrum (𝓞 F)) (β : 𝓞 F)
     (h : β ∉ P.asIdeal) : HeightOneSpectrum.valuation F P (algebraMap (𝓞 F) F β) = 1 := by
-  rw [HeightOneSpectrum.valuation_of_algebraMap, P.intValuation_eq_one_iff_mem_primeCompl]
-  exact h
+  rwa [HeightOneSpectrum.valuation_of_algebraMap, P.intValuation_eq_one_iff_mem_primeCompl]
 
 private theorem valuation_le_exp_neg_one_of_mem_asIdeal {F : Type} [Field F] [NumberField F] (P : HeightOneSpectrum (𝓞 F)) (β : 𝓞 F)
     (h : β ∈ P.asIdeal) : HeightOneSpectrum.valuation F P (algebraMap (𝓞 F) F β) ≤ WithZero.exp (-1) := by
@@ -148,5 +147,4 @@ theorem UpperTheory.V.ZK.Cl.cLatLoc :
   · intro hx
     obtain ⟨n, hn⟩ := exists_inLat_pow_smul_of_inLoc b hb 𝔟 h𝔟 (g x) hx
     apply inLoc_of_inLat_pow_smul b 𝔞 h𝔞 n
-    rw [hg, map_smul]
-    exact hn
+    rwa [hg, map_smul]

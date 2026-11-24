@@ -659,8 +659,7 @@ theorem halfCoset_reps_card : ∀ {D : D7} (S T : HSp D) (ΛS : Submodule (𝓞 
     obtain ⟨r, ⟨hr, hyr⟩, huniq⟩ := hRu y hyY
     refine ⟨r, ⟨hr, (AddSubgroup.mem_inf.1 hyr).1⟩, fun r' hr' => huniq r' ⟨hr'.1, AddSubgroup.mem_inf.2 ⟨hr'.2, ?_⟩⟩⟩
     exact sub_mem ((GlobalTheory.PlaceModel.isHalf_iff S T).1 hy1) (AddSubgroup.mem_inf.1 (hRY r' hr'.1)).2
-  · rw [hRc, hMY]
-    exact hdvd
+  · rwa [hRc, hMY]
 
 end GlobalTheory.HalfCosetCount
 end -- clump:auto
@@ -727,8 +726,7 @@ theorem charSum_detects_multiple : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ)
     rw [Finset.sum_congr rfl h1]; simp
   · intro hnot
     have hex : ∃ r₀ ∈ R, ψ (symplO S T t r₀) ≠ 1 := by
-      by_contra hall
-      push Not at hall
+      by_contra! hall
       apply hnot
       set a : AE D := algebraMap D.host.F (AE D) ((k : D.host.F)⁻¹) with ha
       have hka : k • a = 1 := by
@@ -859,15 +857,12 @@ theorem mem_pairLat_iff_std : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Glob
       ?_ ?_ hT1 hT2 ha hb ?_ hhb hx).symm
     · intro v hv
       have h := hS1 v hv
-      rw [← mt_negGA] at h
-      exact h
+      rwa [← mt_negGA] at h
     · intro v hv
       have h := hS2 v hv
-      rw [← mt_negGA, map_inv] at h
-      exact h
+      rwa [← mt_negGA, map_inv] at h
     · unfold SuppAt at hga ⊢
-      rw [← mt_negGA] at hga
-      exact hga
+      rwa [← mt_negGA] at hga
   | top t' j =>
     have hXS : DefNode D.R.m (.top j) := by simp only [DefPair] at hp; show j ≤ D.R.m; omega
     have hXT : DefNode D.R.m (.top (j + 1)) := hp
@@ -1305,8 +1300,7 @@ namespace GlobalTheory.MovedDict
 theorem negGA_mem_GfC' {D : D7} (V : HSp D) {g : Formalism.L2.Theta.GA D V} (hg : g ∈ GfC V) : negGA V g ∈ GfC (negSp V) := by
   have e : matHom (negSp V) (negGA V g) = matHom V g := Units.ext (mt_negGA V g)
   simp only [GfC, MonoidHom.mem_ker, infHom, MonoidHom.comp_apply] at hg ⊢
-  rw [e]
-  exact hg
+  rwa [e]
 
 theorem jetTab_heisO : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : GlobalTheory.ChiGrid.Consts} {G : GlobalTheory.ChiGrid.GridData L sc}
     (W : G.Weil) (B : VertexFrames G) (p : GlobalTheory.ChiGrid.Pair T), DefPair D.R.m p → ∀ f : WO (G.pS p) (G.pT p) → ℂ,

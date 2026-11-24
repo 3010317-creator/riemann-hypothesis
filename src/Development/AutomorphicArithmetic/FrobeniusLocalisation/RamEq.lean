@@ -65,8 +65,7 @@ private theorem tower_le {φ : Frame} (H : HostRaw φ) : φ.e + 2 ≤ H.condE.fa
   have hodd : ¬ 2 ∣ H.condN / 2 ^ H.condN.factorization 2 := Nat.not_dvd_ordCompl h2 hN
   have haN : H.condN / 2 ^ H.condN.factorization 2 * 2 ^ H.condN.factorization 2 = H.condN :=
     Nat.div_mul_cancel (Nat.ordProj_dvd _ _)
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have hbot := ((layer_bot H h2 (j := φ.e + 1) (by omega)).1).2 (by omega)
   generalize ha : H.condN / 2 ^ H.condN.factorization 2 = a at hbot hodd haN
   have hf : a * 2 ^ (φ.e + 1) ∣ H.condN := by
@@ -147,22 +146,18 @@ theorem UpperTheory.HF.ram_eq :
     ext l
     rw [Nat.mem_primeFactors]
     constructor
-    · intro hl
-      exact ⟨hprime l hl, (mem_ram H (hprime l hl)).2.1.1 hl, hEpos.ne'⟩
+    · exact fun hl => ⟨hprime l hl, (mem_ram H (hprime l hl)).2.1.1 hl, hEpos.ne'⟩
     · rintro ⟨hp, hdv, -⟩
       exact (mem_ram H hp).2.1.2 hdv
   have hG : ∀ l ∈ H.smallR, H.sl l = H.condE.factorization l := by
     intro l hl
     have hr := ((hS l).1 hl).2
     have hdv := (mem_ram H (hprime l hr)).2.1.1 hr
-    have h1 := ((hprime l hr).dvd_iff_one_le_factorization hEpos.ne').1 hdv
-    show max 1 (H.condE.factorization l) = H.condE.factorization l
-    exact max_eq_right h1
+    exact max_eq_right (((hprime l hr).dvd_iff_one_le_factorization hEpos.ne').1 hdv)
   have hprod : H.condE = ∏ l ∈ H.ram, l ^ H.condE.factorization l := by
     nth_rewrite 1 [← Nat.prod_factorization_pow_eq_self hEpos.ne']
     rw [Finsupp.prod, Nat.support_factorization, hC]
   have hQSc : H.QSc = ∏ l ∈ H.smallR, l ^ H.condE.factorization l := by
-    show ∏ l ∈ H.smallR, l ^ H.sl l = _
     exact Finset.prod_congr rfl (fun l hl => by rw [hG l hl])
   have hdS : H.d ∉ H.smallR := fun h => H.d_notMem_small ((hS _).1 h).1
   have hqS : H.q ∉ H.smallR := fun h => H.q_notMem_small ((hS _).1 h).1
@@ -204,8 +199,7 @@ theorem UpperTheory.HF.ram_eq :
   have hQN : H.QSc ∣ H.QS * (H.q * H.d) := by
     have h1 : H.QSc ∣ H.condE := ⟨(if H.q ∈ H.ram then H.q else 1) * H.d, by rw [hD]; ring⟩
     have h2 := h1.trans hEN
-    rw [← mul_assoc]
-    exact h2
+    rwa [← mul_assoc]
   refine ⟨hA, h2S, hC, hD, hcopQ.dvd_of_dvd_mul_right hQN, ?_, hG, ?_⟩
   · have hle : φ.e + 2 ≤ H.sl 2 := by
       rw [hG 2 h2S]

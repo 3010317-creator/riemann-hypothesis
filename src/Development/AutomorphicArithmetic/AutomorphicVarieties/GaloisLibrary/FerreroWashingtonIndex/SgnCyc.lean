@@ -101,8 +101,7 @@ private theorem quotient_mem_of_norm_eq_involution {M C : Type} [CommMonoidWithZ
     I ≠ 0 → ∀ J : M, J ≠ 0 → I * σ I = J * σ J → f I / f J ∈ H := by
   refine UniqueFactorizationMonoid.induction_on_prime
     (P := fun I => I ≠ 0 → ∀ J : M, J ≠ 0 → I * σ I = J * σ J → f I / f J ∈ H) I ?_ ?_ ?_
-  · intro h
-    exact absurd rfl h
+  · exact fun h => absurd rfl h
   · intro x hx _ J _ hxJ
     rw [isUnit_iff_eq_one] at hx
     subst hx
@@ -143,8 +142,7 @@ private theorem quotient_mem_of_norm_eq_involution {M C : Type} [CommMonoidWithZ
       have e2 := mul_left_cancel₀ (mul_ne_zero hp0 hsp0) e1
       have key := H.mul_mem (hH p hp0) (H.mul_mem (ih ha K₀ hK0 e2) (hH K₀ hK0))
       rw [div_mul_div_cancel, div_mul_div_comm] at key
-      rw [hJ', hf p a hp0 ha, hf (σ p) (σ K₀) hsp0 hsK0]
-      exact key
+      rwa [hJ', hf p a hp0 ha, hf (σ p) (σ K₀) hsp0 hsK0]
 
 theorem UpperTheory.V.FW.classGroup_div_mem_of_mul_conj_eq :
     ∀ (K : Type) [Field K] [NumberField K] (τ : K ≃+* K) (I J : (Ideal (𝓞 K))⁰), (∀ x, τ (τ x) = x) → I * idMap τ I = J * idMap τ J → ClassGroup.mk0 I / ClassGroup.mk0 J ∈ difR (clMap τ) := by
@@ -386,8 +384,7 @@ theorem UpperTheory.Reformulated.B.Qh29.norm_eq_mul_cE :
     apply Finset.eq_univ_of_card
     rw [Finset.card_pair hne.symm, ← Nat.card_eq_fintype_card, hcard]
   have h := Algebra.norm_eq_prod_automorphisms (NumberField.maximalRealSubfield K) y
-  rw [huniv, Finset.prod_pair hne.symm] at h
-  exact h
+  rwa [huniv, Finset.prod_pair hne.symm] at h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.NormEqMulCE =====
@@ -496,8 +493,7 @@ theorem UpperTheory.V.FW.realGen :
     rw [← ClassGroup.mk0_eq_one_iff (I * J).2]
     have := hx
     simp only [minK, MonoidHom.mem_ker, MonoidHom.mul_apply, class_map_mk0, MonoidHom.id_apply] at this
-    rw [← map_mul, mul_comm] at this
-    exact this
+    rwa [← map_mul, mul_comm] at this
   obtain ⟨b, hb⟩ := hprin
   have hb' : ((I * J : (Ideal (𝓞 K))⁰) : Ideal (𝓞 K)) = Ideal.span {b} := hb
   have hb0 : b ≠ 0 := by
@@ -527,13 +523,11 @@ theorem UpperTheory.V.FW.realGen :
   obtain ⟨v, hv⟩ := hsurj ⟨t⁻¹, htor⟩
   have hv2 : v * ((IsCMField.unitsComplexConj K) v)⁻¹ = t⁻¹ := by
     have hv1 := congrArg Subtype.val hv
-    rw [IsCMField.unitsMulComplexConjInv_apply] at hv1
-    exact hv1
+    rwa [IsCMField.unitsMulComplexConjInv_apply] at hv1
   rw [mul_inv_eq_iff_eq_mul] at hv2
   have hv' : (v : 𝓞 K) = ((t⁻¹ : (𝓞 K)ˣ) : 𝓞 K) * σ v := by
     have h3 := congrArg Units.val hv2
-    rw [Units.val_mul] at h3
-    exact h3
+    rwa [Units.val_mul] at h3
   have hσb : σ b = b * ((t⁻¹ : (𝓞 K)ˣ) : 𝓞 K) := by
     calc σ b = σ b * t * ((t⁻¹ : (𝓞 K)ˣ) : 𝓞 K) := by rw [mul_assoc, Units.mul_inv, mul_one]
       _ = b * ((t⁻¹ : (𝓞 K)ˣ) : 𝓞 K) := by rw [ht]
@@ -541,8 +535,7 @@ theorem UpperTheory.V.FW.realGen :
   · rw [← hσK]
     congr 1
     rw [map_mul, hσb, mul_assoc, ← hv']
-  · rw [Ideal.span_singleton_mul_right_unit v.isUnit]
-    exact hb'
+  · rwa [Ideal.span_singleton_mul_right_unit v.isUnit]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.FerreroWashingtonIndex.RealGen =====
@@ -593,9 +586,7 @@ private theorem hMinus_neg (f : ι → ZMod 2) : -f = f := by
   exact ZMod.neg_eq_self_mod_two _
 
 private theorem hMinus_ne (u : (𝓞 K)ˣ) : ((u : 𝓞 K) : K) ≠ 0 := by
-  intro h
-  apply u.ne_zero
-  exact RingOfIntegers.ext (h.trans (by simp))
+  exact fun h => u.ne_zero (RingOfIntegers.ext (h.trans (by simp)))
 
 private theorem hMinus_unit (e : ι → K →+* ℂ) {f : ι → ZMod 2} (hf : f ∈ sgnE e) :
     ∃ u : (𝓞 K)ˣ, cE K ((u : 𝓞 K) : K) = ((u : 𝓞 K) : K) ∧ f = sgn e ((u : 𝓞 K) : K) := by
@@ -639,8 +630,7 @@ private theorem idMap_complexConj_involutive {K : Type} [Field K] [NumberField K
     simp
     rw [AlgEquiv.symm_apply_eq, IsCMField.complexConj_apply_apply]
   have h := Ideal.map_of_equiv (I := (I : Ideal (𝓞 K))) (RingOfIntegers.mapRingEquiv (cE K))
-  rw [hs] at h
-  exact h
+  rwa [hs] at h
 
 private theorem classGroup_inv_mul_mem_difR_of_sign {K : Type} [Field K] [NumberField K] [IsCMField K] {ι : Type} (e : ι → K →+* ℂ)
     (hU : UnrFin K) (he : Function.Surjective e) (I J : ↥(Ideal (𝓞 K))⁰) (a b : 𝓞 K) (ha0 : a ≠ 0) (hb0 : b ≠ 0)
@@ -700,8 +690,7 @@ theorem UpperTheory.V.FW.hMinus :
     rw [AddSubgroup.mem_addSubgroupOf] at h1
     have h2 : sgn e (a c.out : K) + sgn e (a d.out : K) ∈ sgnE e := by
       have e2 : ((-g c.out + g d.out : V) : ι → ZMod 2) = -sgn e (a c.out : K) + sgn e (a d.out : K) := rfl
-      rw [e2, hMinus_neg] at h1
-      exact h1
+      rwa [e2, hMinus_neg] at h1
     have hm : ClassGroup.mk0 (I c.out) ∈ minK (clMap (cE K)) := by
       rw [hI c.out]
       exact c.out.2
@@ -709,7 +698,6 @@ theorem UpperTheory.V.FW.hMinus :
       (hIa _) (hIa _) hm h2
     rw [hI, hI] at key
     simpa using key
-  show ((difR (clMap (cE K))).subgroupOf (minK (clMap (cE K)))).index ≤ ((sgnE e).addSubgroupOf V).index
   exact Nat.card_le_card_of_injective F hinj
 end -- clump:auto
 end -- clump:auto
@@ -876,8 +864,7 @@ theorem UpperTheory.V.FW.sgnStab :
   intro M _ L _ _ _ _ φ
   have : IsGalois ℚ L := IsCyclotomicExtension.isGalois {M} ℚ L
   have hc : ∀ a : L, sg M L (-1) a = cE L a := fun a => by
-    have h := congrArg (fun e : L ≃+* L => e a) (conjEq M L).1
-    exact h
+    exact congrArg (fun e : L ≃+* L => e a) (conjEq M L).1
   have hcomm : ∀ (g : (ZMod M)ˣ) (a : L), cE L (sg M L g a) = sg M L g (cE L a) := by
     intro g a
     rw [← hc, ← hc, ← AlgEquiv.mul_apply, ← AlgEquiv.mul_apply, ← map_mul, ← map_mul, mul_comm]

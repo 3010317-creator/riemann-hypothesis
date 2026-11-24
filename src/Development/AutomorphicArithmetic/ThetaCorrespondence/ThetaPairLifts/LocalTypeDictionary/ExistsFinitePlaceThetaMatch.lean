@@ -492,8 +492,7 @@ theorem UpperTheory.exists_gl_stdFst_eq_product_local :
       unfold frMapO
       rw [Matrix.map_mul, Matrix.map_mul]
       congr 2
-      refine Matrix.ext fun i j => ?_
-      exact piF_toEAf (t v) (x i j)
+      exact Matrix.ext fun i j => piF_toEAf (t v) (x i j)
     rw [← hG, IsUnit.unit_spec, e1, e2]
     refine fmFst_mat (finCongr hr) _ _ _ (hGi v) (βW.1.map (piF (t v))) _ ?_ (m v) (hm v) _
     rw [← Matrix.map_mul, Units.inv_mul, Matrix.map_one _ (map_zero _) (map_one _)]
@@ -596,8 +595,7 @@ private theorem coord_eq {D : D7} {v : GlobalTheory.IndefiniteRowSideFullHecke.W
   have hG : (A'.gram⁻¹)ᴴ = A'.gram⁻¹ := by
     rw [Matrix.conjTranspose_nonsing_inv]
     congr 1
-    refine Matrix.ext fun i j => ?_
-    exact GlobalTheory.DualPairCheck.gram_star A' j i
+    exact Matrix.ext fun i j => GlobalTheory.DualPairCheck.gram_star A' j i
   have h0 : ((GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.incM (A'.gram⁻¹))ᵀ).map (piW (t.comp D.sp.cm.sig)) = (A'.gram⁻¹).map t := by
     refine Matrix.ext fun i j => ?_
     have h := congrFun (congrFun hG i) j
@@ -628,8 +626,7 @@ private theorem coord_eq {D : D7} {v : GlobalTheory.IndefiniteRowSideFullHecke.W
         ((y : Matrix _ _ (AE D))ᵀ).map (piW (t.comp D.sp.cm.sig)) * WW.gram.map t) * βW.1.map (piF t)) := by
     rw [← hxi, ← hinc, ← hinc, ← hy, ← Matrix.map_mul, ← Matrix.map_mul, ← Matrix.map_mul, ← Matrix.map_mul,
       ← Matrix.map_mul, ← Matrix.map_mul]
-    refine Matrix.ext fun i j => ?_
-    exact map_mul (piF t) _ _
+    exact Matrix.ext fun i j => map_mul (piF t) _ _
   rw [h1, h2, h3, Matrix.mul_smul, Matrix.smul_mul, Matrix.submatrix_smul]
   simp only [Pi.smul_apply]
   congr 1
@@ -650,8 +647,7 @@ private theorem half_dual {D : D7} (e₀ : AE D) (A' WW : HSp D)
     conv_rhs => rw [← h1, Matrix.mul_smul, Matrix.smul_mul]
     rw [← Matrix.smul_mul, ← Matrix.mul_smul]
     congr 2
-    refine Matrix.ext fun i j => ?_
-    exact (map_mul (toEAf D) _ _).symm
+    exact Matrix.ext fun i j => (map_mul (toEAf D) _ _).symm
   have h3 : toEAf D e₀ • GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle.dualCoord A' WW βA' βW y = GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle.dualCoord A' WW βA' βW y := by
     unfold GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle.dualCoord
     rw [smul_comm, h2]
@@ -1150,8 +1146,7 @@ private theorem eq_sum_of_halfEl {P : Finset (HeightOneSpectrum (𝓞 F))} {t : 
 
     rw [map_sub, map_one, map_sum, Finset.sum_eq_single (⟨w, hw⟩ : P) (fun v _ hv => evFin_liftV_ne
     (fun e => hv (Subtype.ext e.symm)) 1) (fun h => absurd (Finset.mem_univ _) h), evFin_liftV, sub_self]
-  rw [sub_smul, one_smul, sub_eq_zero, Finset.sum_smul] at h
-  exact h
+  rwa [sub_smul, one_smul, sub_eq_zero, Finset.sum_smul] at h
 
 private theorem at_mul_smul {n d : ℕ} {v : HeightOneSpectrum (𝓞 F)} {a : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)} (ha : At (evFin F v) a)
     (x : Matrix (Fin n) (Fin d) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) : At (evFin F v) (a • x) := fun u hu => by
@@ -1363,8 +1358,7 @@ theorem UpperTheory.isSBHalf_thetaFun_of_halfIdempotent_places :
         (GlobalTheory.PlaceVec.selfDual_isFullLattice _ _ sdS) (GlobalTheory.PlaceVec.selfDual_isFullLattice _ _ sdX) y
         (Matrix.ext fun i j => infPart_halfEl ((h₀ _).1 (hy i j)))
       refine ⟨GlobalTheory.HeisSchA.rho_mem_schA M _ hstd _ _ hp.1, ?_, ?_⟩
-      · simp only [← ptO_add]
-        exact sb_trans hp.2.1 hy hk hky
+      · simpa only [← ptO_add] using sb_trans hp.2.1 hy hk hky
       · simp only [← ptO_add]
         rw [lrho, ← hp.2.2]
         exact hT.trans _ hp.2.1 y hy)
@@ -1479,8 +1473,7 @@ private theorem local_matching_decomposition {B : Base F E} {a a' : ℕ} {G : Ge
       have e2 : c'.1 = (G.W.J.map (B.τ v))ᵀ * c.1 := rfl
       rw [e1, e2]
       simp only [Matrix.neg_mul, Matrix.mul_assoc]
-    rw [e]
-    exact hι'
+    rwa [e]
   · rw [eφ]
     beta_reduce
     refine congrArg _ ?_
@@ -1498,8 +1491,7 @@ private theorem local_matching_decomposition {B : Base F E} {a a' : ℕ} {G : Ge
     rw [Matrix.mul_assoc (g'.1 * U), ← e1, ← e2]
     simp only [Matrix.mul_assoc]
   · have := (hz φ hφ 0 (zero_mem _)).1 (by rw [h0, map_zero])
-    rw [eφ, map_zero, s0] at this
-    exact this
+    rwa [eφ, map_zero, s0] at this
 end Local
 section Pair
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S IsDedekindDomain NumberField Matrix

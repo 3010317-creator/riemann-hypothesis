@@ -102,9 +102,7 @@ variable {P : Type} [Group P]
 
 theorem dc_inv (S : Set P) {m : ℕ} (F : (Fin (m + 1) → P) → ℝ) (hF : InvS S F) : InvS S (dc F) := by
   intro g hg y
-  simp only [dc]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  exact congrArg _ (hF g hg _)
+  simpa only [dc] using Finset.sum_congr rfl fun i _ => congrArg _ (hF g hg _)
 
 def tcup (l : Additive P →+ ℝ) {n : ℕ} (e : (Fin (n + 1) → P) → ℝ) : (Fin (n + 2) → P) → ℝ :=
   fun y => l (Additive.ofMul ((y 0)⁻¹ * y 1)) * e (Fin.tail y)

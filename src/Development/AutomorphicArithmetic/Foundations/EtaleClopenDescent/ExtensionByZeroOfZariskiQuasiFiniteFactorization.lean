@@ -224,8 +224,7 @@ private lemma aux {W S T U : Scheme.{0}} (w : W ⟶ S) (i : T ⟶ S) (j : U ⟶ 
 private lemma spec_bot {A B : Type} [CommRing A] [IsDomain A] [CommRing B] [IsDomain B]
     (f : A →+* B) (hf : Function.Injective f) :
     Spec.map (CommRingCat.ofHom f) (⊥ : PrimeSpectrum B) = (⊥ : PrimeSpectrum A) := by
-  apply PrimeSpectrum.ext
-  exact Ideal.comap_bot_of_injective f hf
+  exact PrimeSpectrum.ext (Ideal.comap_bot_of_injective f hf)
 
 private lemma spec_field {F : Type} [Field F] (z : PrimeSpectrum F) : z = ⊥ :=
   PrimeSpectrum.ext (Ideal.eq_bot_of_prime _)
@@ -316,8 +315,7 @@ theorem UpperTheory.mem_range_of_proper_generic_fibre_separated :
     intro z hz
     have e := IsOpenImmersion.range_pullbackFst jU (pullback.fst w g)
     have hz' : z ∈ Set.range (pullback.fst (pullback.fst w g) jU) := by
-      rw [e]
-      exact hz
+      rwa [e]
     obtain ⟨t, rfl⟩ := hz'
     refine ⟨hleft.isoPullback.inv t, ?_⟩
     rw [← Scheme.Hom.comp_apply, hI]
@@ -465,8 +463,7 @@ private theorem pull_of {B D Y C S T : Scheme.{0}} (j : D ⟶ Y) [IsOpenImmersio
   · rw [IsPullback.lift_fst_assoc, IsOpenImmersion.lift_fac]
   · rw [IsPullback.lift_snd]
   · refine hP.hom_ext ?_ ?_
-    · rw [IsPullback.lift_fst, ← cancel_mono j, IsOpenImmersion.lift_fac, Category.assoc]
-      exact h1
+    · rwa [IsPullback.lift_fst, ← cancel_mono j, IsOpenImmersion.lift_fac, Category.assoc]
     · rw [IsPullback.lift_snd]; exact h2
 
 private theorem smooth_of {B D Y S : Scheme.{0}} (j : D ⟶ Y) [IsOpenImmersion j] (π : Y ⟶ B)
@@ -474,8 +471,7 @@ private theorem smooth_of {B D Y S : Scheme.{0}} (j : D ⟶ Y) [IsOpenImmersion 
     (h : ∀ y, π y ∈ V → y ∈ Set.range j) : Smooth (π ∣_ V) := by
   have hr : Set.range (π ⁻¹ᵁ V).ι ⊆ Set.range j := by
     rw [Scheme.Opens.range_ι]
-    intro y hy
-    exact h y hy
+    exact fun y hy => h y hy
   have e : (π ⁻¹ᵁ V).ι ≫ π = IsOpenImmersion.lift j _ hr ≫ q ≫ ι := by
     rw [← w, ← Category.assoc, IsOpenImmersion.lift_fac]
   have hs : Smooth ((π ∣_ V) ≫ V.ι) := by

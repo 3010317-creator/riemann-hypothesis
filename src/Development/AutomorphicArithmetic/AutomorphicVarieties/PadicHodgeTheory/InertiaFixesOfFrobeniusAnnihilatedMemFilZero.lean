@@ -112,8 +112,7 @@ theorem UpperTheory.inertia_fixes_of_frobenius_annihilated_mem_fil_zero :
       funext hV
     have h3 : N'.map (PP l).φB * N.map (PP l).φB = 1 := by
       have := congrArg ((PP l).φB : Bcr l →+* Bcr l).mapMatrix hN'N
-      rw [map_mul, map_one] at this
-      exact this
+      rwa [map_mul, map_one] at this
     rw [h1, h2, ← hVY, Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, Matrix.mul_assoc, ← hφ, h3,
       Matrix.one_mulVec]
   have hYF : ∀ i, (PP l).ιB (Y i) ∈ ((PP l).PD (botExt l)).Fil 0 := fun i => by
@@ -131,5 +130,4 @@ theorem UpperTheory.inertia_fixes_of_frobenius_annihilated_mem_fil_zero :
   have h1 : (PP l).actQ g (N.mulVec Y ⟨0, hd⟩) =
       ((N.map ((PP l).actQ g)).mulVec ((PP l).actQ g ∘ Y)) ⟨0, hd⟩ :=
     RingHom.map_mulVec (((PP l).actQ g : Bcr l ≃ₐ[ℚ_[l]] Bcr l) : Bcr l →+* Bcr l) N Y _
-  rw [hI g hg, hgY, hVY] at h1
-  exact h1
+  rwa [hI g hg, hgY, hVY] at h1

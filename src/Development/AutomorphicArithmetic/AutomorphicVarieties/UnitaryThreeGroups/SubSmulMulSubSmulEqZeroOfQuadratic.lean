@@ -220,15 +220,13 @@ private theorem sub_smul_mul_sub_smul_eq_zero_of_quadratic {K : Type} [Field K] 
     rw [← Nat.card_eq_fintype_card]
     exact (IsGalois.card_aut_eq_finrank ℚ K).trans hK
   obtain ⟨σ, hσ1⟩ : ∃ σ : K ≃ₐ[ℚ] K, σ ≠ 1 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have h1 : Fintype.card (K ≃ₐ[ℚ] K) ≤ 1 :=
       Fintype.card_le_one_iff.mpr (fun a b => by rw [hcon a, hcon b])
     omega
   have hall : ∀ τ : K ≃ₐ[ℚ] K, τ = 1 ∨ τ = σ := by
     intro τ
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have h3 : ({1, σ, τ} : Finset (K ≃ₐ[ℚ] K)).card = 3 :=
       Finset.card_eq_three.mpr ⟨1, σ, τ, hσ1.symm, hcon.1.symm, hcon.2.symm, rfl⟩
     have h4 := Finset.card_le_univ ({1, σ, τ} : Finset (K ≃ₐ[ℚ] K))
@@ -293,12 +291,10 @@ private theorem sub_smul_mul_sub_smul_eq_zero_of_quadratic {K : Type} [Field K] 
     ring
   have hα' : (α : K) = u * σ v + σ u * v := by
     have h := htr (u * σ v)
-    rw [← hα, map_intCast, map_mul, hσσ] at h
-    exact h
+    rwa [← hα, map_intCast, map_mul, hσσ] at h
   have hβ' : (β : K) = u * σ v * (σ u * v) := by
     have h := hnm (u * σ v)
-    rw [← hβ, map_intCast, map_mul, hσσ] at h
-    exact h
+    rwa [← hβ, map_intCast, map_mul, hσσ] at h
   have hDK2 : ((discr K : ℤ) : K) = (α : K) ^ 2 - 4 * (β : K) := by
     rw [← hδ2, hα', hβ', hδ_def]
     ring
@@ -384,8 +380,7 @@ theorem UpperTheory.V.U3.eta_killsMu :
       · exact sub_eq_zero.mp h
       · exfalso
         exact hδne (by linear_combination (1 / 2 : Ω) * h)
-    rw [← MonoidHom.mem_ker, D.η_ker]
-    exact hmem
+    rwa [← MonoidHom.mem_ker, D.η_ker]
   · exact Int.natAbs_pos.mpr hd0
   · intro s hs
     simp only [Chr.dirG, MonoidHom.comp_apply, cls_eq_one s hs, map_one]

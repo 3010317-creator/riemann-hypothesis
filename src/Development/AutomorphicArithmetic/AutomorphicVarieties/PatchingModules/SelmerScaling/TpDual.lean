@@ -91,8 +91,7 @@ private theorem tp_abs {O R F : Type} [CommRing O] [IsLocalRing O] [CommRing R] 
   have hm : ∀ b, b ∈ maximalIdeal R ↔ r b = 0 := fun b => by rw [← hk, RingHom.mem_ker]
   have hO : ∀ o : O, algebraMap O R o ∈ maximalIdeal R → algebraMap O R o ∈ J := fun o ho => by
     rw [hJ]
-    refine Ideal.mem_sup_left (Ideal.mem_sup_left (Ideal.mem_map_of_mem _ ?_))
-    exact fun hu => ho (hu.map _)
+    exact Ideal.mem_sup_left (Ideal.mem_sup_left (Ideal.mem_map_of_mem _ (fun hu => ho (hu.map _))))
   have hsq : ∀ x ∈ maximalIdeal R, ∀ y ∈ maximalIdeal R, x * y ∈ J := fun x hx y hy => by
     rw [hJ, pow_two]
     exact Ideal.mem_sup_left (Ideal.mem_sup_right (Ideal.mul_mem_mul hx hy))
@@ -115,8 +114,7 @@ private theorem tp_abs {O R F : Type} [CommRing O] [IsLocalRing O] [CommRing R] 
     rw [← sub_eq_zero, ← sub_smul]
     refine hkill _ ?_ w
     have := Function.surjInv_eq hs ((r.comp (algebraMap O R)) o)
-    rw [map_sub, map_sub, sub_eq_zero]
-    exact this
+    rwa [map_sub, map_sub, sub_eq_zero]
   letI : Module F (R ⧸ N) := Function.Surjective.moduleLeft (r.comp (algebraMap O R)) hs hsm
   have hder : ∀ b b' : R, N.mkQ (b * b') = r b • N.mkQ b' + r b' • N.mkQ b := fun b b' => by
     obtain ⟨o, x, hx, rfl⟩ := hdec b
@@ -201,8 +199,7 @@ theorem UpperTheory.V.Pa.tpDual :
     rintro b ⟨x, hx, y, hy, e⟩
     obtain ⟨c, hc, e'⟩ := S.U.mul_mem x hx y hy
     have : b = c := S.U.inj (e.symm.trans e')
-    rw [this]
-    exact hc
+    rwa [this]
   have hJ : S.J2 ≤ maximalIdeal S.Bh := by
     refine sup_le (sup_le ?_ (Ideal.pow_le_self two_ne_zero)) hI
     exact ((IsLocalRing.local_hom_tfae (algebraMap S.OO S.Bh)).out 1 3).1

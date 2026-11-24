@@ -144,8 +144,7 @@ set_option synthInstance.maxHeartbeats 200000
 private theorem ls_le {A T K : Type} [CommRing A] [CommRing T] [Algebra A T] [Algebra.IsIntegral A T] [NormedField K]
     [IsUltrametricDist K] (z : T →+* K) (h1 : ∀ b, ‖z (algebraMap A T b)‖ ≤ 1) (s : T) : ‖z s‖ ≤ 1 := by
   obtain ⟨p, hpm, hp⟩ := Algebra.IsIntegral.isIntegral (R := A) s
-  by_contra hgt
-  push Not at hgt
+  by_contra! hgt
   have hev := congrArg z hp
   rw [Polynomial.hom_eval₂, map_zero, Polynomial.eval₂_eq_sum_range, Finset.sum_range_succ,
     ← Polynomial.leadingCoeff, hpm.leadingCoeff, map_one, one_mul] at hev
@@ -360,8 +359,7 @@ private theorem ls_mem {A M ι : Type} [CommRing A] [IsLocalRing A] [AddCommGrou
       rw [Submodule.map_smul'', Submodule.map_subtype_top]
     rw [← hmap]
     constructor
-    · intro hz
-      exact Submodule.mem_map_of_mem hz
+    · exact fun hz => Submodule.mem_map_of_mem hz
     · rintro ⟨w, hw, hwz⟩
       have hwz' : w = z := Subtype.ext hwz
       rwa [← hwz']
@@ -371,8 +369,7 @@ private theorem ls_mem {A M ι : Type} [CommRing A] [IsLocalRing A] [AddCommGrou
   · rintro ⟨-, h⟩ i k
     obtain ⟨n, hn⟩ := (Submodule.mem_iSup_of_directed _ (hdir i k)).1 (h i k)
     refine ⟨n, (hsm k _).2 ?_⟩
-    rw [ls_restr_pow (hu i) n y]
-    exact hn
+    rwa [ls_restr_pow (hu i) n y]
   · intro h
     refine ⟨y.2, fun i k => ?_⟩
     obtain ⟨n, hn⟩ := h i k

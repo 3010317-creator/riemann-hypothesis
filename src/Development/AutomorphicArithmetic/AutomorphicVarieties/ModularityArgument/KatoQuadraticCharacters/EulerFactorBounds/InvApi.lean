@@ -184,8 +184,7 @@ private theorem pm_down (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (w n : ℕ) (
   refine ⟨f, fun W hW => ?_, h _ _ hr⟩
   obtain ⟨g, hg⟩ := hf W hW
   refine ⟨g ^ l, ?_⟩
-  rw [Units.val_pow_eq_pow_val, ← pow_mul, ← pow_succ']
-  exact hg
+  rwa [Units.val_pow_eq_pow_val, ← pow_mul, ← pow_succ']
 
 private def Im (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (N w n : ℕ) : Submodule ℤ_[l] (X.Fn l) where
   carrier := {a | InvM X l N w n a}

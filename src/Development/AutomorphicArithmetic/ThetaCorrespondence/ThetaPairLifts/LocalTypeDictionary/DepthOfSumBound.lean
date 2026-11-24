@@ -250,8 +250,7 @@ theorem exists_cosetExpansion_of_depthOK : ∀ {D : D7} {T : Type} {L : LevCh D 
           ∏ j : Fin D.R.m, (halfCoset e (pairLat G (.top t j)) K (ρ j)).indicator 1 (x j) = (0 : ℂ) := by
         intro ρ hρ hne
         obtain ⟨j, hj⟩ : ∃ j, ρ j ≠ ρ0 j := by
-          by_contra hc
-          push Not at hc
+          by_contra! hc
           exact hne (funext hc)
         refine Finset.prod_eq_zero (Finset.mem_univ j) (Set.indicator_of_notMem (fun hm => hj ?_) _)
         exact eq_of_mem_halfCoset_reps (hR1 j).2.2 (Fintype.mem_piFinset.1 hρ j) (hρ0 j) hm (hxρ0 j)
@@ -259,8 +258,7 @@ theorem exists_cosetExpansion_of_depthOK : ∀ {D : D7} {T : Type} {L : LevCh D 
           ∏ i : Fin D.R.m, (halfCoset e (pairLat G (.chi i D.R.m)) K (ρ' i)).indicator 1 (y i) = (0 : ℂ) := by
         intro ρ' hρ' hne
         obtain ⟨i, hi⟩ : ∃ i, ρ' i ≠ ρ0' i := by
-          by_contra hc
-          push Not at hc
+          by_contra! hc
           exact hne (funext hc)
         refine Finset.prod_eq_zero (Finset.mem_univ i) (Set.indicator_of_notMem (fun hm => hi ?_) _)
         exact eq_of_mem_halfCoset_reps (hR2 i).2.2 (Fintype.mem_piFinset.1 hρ' i) (hρ0' i) hm (hyρ0' i)
@@ -638,8 +636,7 @@ theorem shift_wt_le {ϖ : kˣ} (hϖ : IsUnif ϖ) (e : ℕ) (x : ColArgs G) (y : 
   have key : ∀ (r : Fin (G.rank c.tgt)) (s : Fin (G.rank c.src)),
       (fill hs x y (u + FlatLast.shiftVar j₀ q t) - fill hs x y u) c r s ≠ 0 → wt G ϖ e c.src s = 1 := by
     rcases FlatDep.mem_opp hc with ⟨i, hi, rfl⟩ | ⟨j, hj, rfl⟩
-    · intro r s _
-      exact wt_end (G := G) ϖ e (i := i) (j := G.m) (by omega) _
+    · exact fun r s _ => wt_end (G := G) ϖ e (i := i) (j := G.m) (by omega) _
     · by_cases hjm : j < G.m - 1
       · show ∀ (r : Fin (G.rank (G.m, j))) (s : Fin (G.rank (G.m, j + 1))),
           (fill hs x y (u + FlatLast.shiftVar j₀ q t) - fill hs x y u) (Edge.theta G.m j) r s ≠ 0 →
@@ -653,8 +650,7 @@ theorem shift_wt_le {ϖ : kˣ} (hϖ : IsUnif ϖ) (e : ℕ) (x : ColArgs G) (y : 
           intro l col
           simp [stepPt, basePt, FlatLast.shiftVar]) hne
         exact wt_core ϖ e (G.m, j + 1) hlt
-      · intro r s _
-        exact wt_end (G := G) ϖ e (i := G.m) (j := j + 1) (by omega) _
+      · exact fun r s _ => wt_end (G := G) ϖ e (i := G.m) (j := j + 1) (by omega) _
   by_cases hD : (fill hs x y (u + FlatLast.shiftVar j₀ q t) - fill hs x y u) c r s = 0
   · rw [hD, mul_zero, zero_mul, map_zero]
     exact zero_le'
@@ -723,8 +719,7 @@ theorem flat_supp {ϖ : kˣ} {e : ℕ} {T : G.Args → ℂ} (hT : G.IsTensor ϖ 
     (∀ j, j < G.m → ∀ r s, (j + 1 = G.m → r ≠ topLast G (j + 1)) → valuation k (x j r s) ≤ 1) ∧
       ∀ i, i < G.m → ∀ r s, valuation k (y i r s) ≤ 1 := by
   have hex : ∃ u, moved G keep (dg G ϖ e) T (fill hs x y u) ≠ 0 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     apply hne
     unfold flatTensor
     simp [flatIntegrand, hall]
@@ -779,16 +774,13 @@ theorem flat_last [ν.IsAddHaarMeasure] {ϖ : kˣ} {e : ℕ} {T : G.Args → ℂ
   haveI hinv : (varsVol G ν).IsAddRightInvariant := by
     unfold varsVol
     infer_instance
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   set X := x ((j₀ : ℕ) + 1) (topLast G ((j₀ : ℕ) + 1 + 1)) r with hX
   have hnot : X ∉ cball ((1 : kˣ) * (ϖ ^ e)⁻¹) := by
-    simp only [cball, Set.mem_setOf_eq, one_mul, not_le]
-    exact hlt
+    simpa only [cball, Set.mem_setOf_eq, one_mul, not_le] using hlt
   obtain ⟨t, ht, hψt⟩ := hψ.exists_ne_one (ϖ ^ e) hnot
   have hneg : valuation k (-t) ≤ valuation k ((ϖ ^ e : kˣ) : k) := by
-    rw [Valuation.map_neg]
-    exact ht
+    rwa [Valuation.map_neg]
   have hshift : flatTensor hs ψ ν (moved G keep (dg G ϖ e) T) x y =
       ((ψ (-(X * -t)) : Circle) : ℂ) * flatTensor hs ψ ν (moved G keep (dg G ϖ e) T) x y := by
     unfold flatTensor
@@ -957,12 +949,10 @@ private theorem isSBArgs_of_mem_good_places {μ₀ : T} (hL : L.Is μ₀) (S : G
   have hb' : β ⟨P, hl⟩ ∈ unfSupport (psiAt W P) (unitVol P) false
       (Reps.through hs (givenLevel G t P) (stair (locGrid G t P) (unifAt P) (cosExp G P))) (Tflip W S.B t Φ P) := by
     have : keepAt G (⟨P, hl⟩ : locPl G t).1 = false := hkeep
-    rw [this] at hb
-    exact hb
+    rwa [this] at hb
   have hβ' := funext (hO _ hb')
   have h := GlobalTheory.StairDepth.isSBArgs_stair hs (psiAt W P) (unitVol P) hm2 (isUnif_unifAt P) h00.cond hT (keepAt G P)
-  rw [← GlobalTheory.StairDepth.elt_eq hs (givenLevel G t P) _ _ hm2, ← hβ'] at h
-  exact h
+  rwa [← GlobalTheory.StairDepth.elt_eq hs (givenLevel G t P) _ _ hm2, ← hβ'] at h
 
 private theorem depthOK_of {μ₀ : T} (hL : L.Is μ₀) (S : GridChoice W U) (t : T) (Φ : G.Datum)
     (hde : Nat.Coprime D.host.pde (D.host.QS * D.host.q) ∧ Nat.Coprime D.host.pde' (D.host.QS * D.host.q))
@@ -994,13 +984,11 @@ private theorem depthOK_of {μ₀ : T} (hL : L.Is μ₀) (S : GridChoice W U) (t
         (fun w hw => (hAA w hw).2) hK (hy i) fun w hwP r s => ?_⟩
     · have := ((hF ⟨w, hwP⟩).supp _ _ (hw ⟨w, hwP⟩)).1 j j.2 (Fin.cast (topRank_eq G t w j.2).symm r)
         (Fin.cast (topRank_eq G t w j.2.le).symm s)
-      rw [colAt_eq S t w x j.2] at this
-      exact this
+      rwa [colAt_eq S t w x j.2] at this
     · have := ((hF ⟨w, hwP⟩).supp _ _ (hw ⟨w, hwP⟩)).2 i i.2
         (Fin.cast (rank_vertex G t w (X := (i, D.R.m)) ⟨i.2.le, le_rfl⟩).symm r)
         (Fin.cast (rank_vertex G t w (X := (i + 1, D.R.m)) ⟨i.2, le_rfl⟩).symm s)
-      rw [rowAt_eq S t w y i.2] at this
-      exact this
+      rwa [rowAt_eq S t w y i.2] at this
   · refine Finset.prod_congr rfl fun w _ => ?_
     rw [colAt_add, rowAt_add]
     refine (hF w).per _ _ _ _ (fun j hj r s => ?_) (fun i hi r s => ?_)

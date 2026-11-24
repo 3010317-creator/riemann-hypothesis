@@ -285,8 +285,7 @@ theorem topIso_inv_restrict_appTop {X Y : Scheme.{0}} (π : X ⟶ Y) (U : Y.Open
 theorem evU_val_restrict {X Z : Scheme.{0}} (W : X.Opens) (y : Z ⟶ W.toScheme)
     (h : ∀ z, (y ≫ W.ι) z ∈ W) (r : Γ(X, W)ˣ) :
     (evU (y ≫ W.ι) h r).val = y.appTop.hom (W.topIso.inv.hom r.val) := by
-  have e := congrArg (fun φ => φ.hom r.val) (topIso_inv_appTop W y (fun z _ => h z))
-  exact e.symm
+  exact (congrArg (fun φ => φ.hom r.val) (topIso_inv_appTop W y (fun z _ => h z))).symm
 
 theorem unit_descends : ∀ {X Y : Scheme.{0}} (π : X ⟶ Y) [Flat π] [Surjective π] [IsAffineHom π] (U : Y.Opens) (r : Γ(X, π ⁻¹ᵁ U)ˣ),
     (∀ (Z : Scheme.{0}) (g₁ g₂ : Z ⟶ X) (h₁ : ∀ z, g₁ z ∈ π ⁻¹ᵁ U) (h₂ : ∀ z, g₂ z ∈ π ⁻¹ᵁ U),
@@ -771,8 +770,7 @@ theorem exists_pairing {s : S ⟶ Sp R} {c : ℕ} {o o' : Obj b N s} {ψ : o.A �
 theorem bar_bar (D : Datum p) (a : 𝓞 D.F) : D.bar (D.bar a) = a := by
   apply Subtype.ext
   have h1 := D.bar_eq (D.bar a)
-  rw [D.bar_eq a, IsCMField.complexConj_apply_apply] at h1
-  exact h1
+  rwa [D.bar_eq a, IsCMField.complexConj_apply_apply] at h1
 
 theorem uIdeal_conj (D : Datum p) (r : ℤ) : uIdeal D (D.tr - r) = (uIdeal D r).map (D.bar : 𝓞 D.F →+* 𝓞 D.F) := by
   rw [uIdeal, uIdeal, Ideal.map_span, Set.image_pair]
@@ -1221,8 +1219,7 @@ private theorem opensRange_πp :
   have h := basicOpen_eq_of_affine (R := CommRingCat.of R) ((p : ℕ) : R)
   rw [map_natCast] at h
   rw [h]
-  apply SetLike.coe_injective
-  exact PrimeSpectrum.localization_away_comap_range (Rp p R) ((p : ℕ) : R)
+  exact SetLike.coe_injective (PrimeSpectrum.localization_away_comap_range (Rp p R) ((p : ℕ) : R))
 
 private theorem preimage_bo {X : Scheme.{0}} (s : X ⟶ Sp R) :
     s ⁻¹ᵁ (Sp R).basicOpen ((p : ℕ) : Γ(Sp R, ⊤)) = X.basicOpen ((p : ℕ) : Γ(X, ⊤)) := by
@@ -1241,8 +1238,7 @@ private theorem range_sU {b : Base D R} (M : Model b N) :
     have h2 : (Uo M).ι z ∈ Set.range (Uo M).ι := ⟨z, rfl⟩
     rwa [Scheme.Opens.range_ι] at h2
   have h3 : M.s ((Uo M).ι z) ∈ (πp p R).opensRange := by
-    rw [opensRange_πp]
-    exact h1
+    rwa [opensRange_πp]
   simpa using h3
 
 private def sU {b : Base D R} (M : Model b N) : (Uo M).toScheme ⟶ Sp (Rp p R) :=

@@ -114,8 +114,7 @@ theorem UpperTheory.V.Lit.Bor.cxGrp :
           simp only [hv]
           rw [← e, sub_eq_zero, Units.val_one, mul_one]
           rfl) g
-    rw [sub_eq_zero, Units.val_one, mul_one] at key
-    exact key
+    rwa [sub_eq_zero, Units.val_one, mul_one] at key
   have h2 : ∀ k l (g h : GL (Fin a) ((E →+* ℂ) → ℂ)),
       Φ k l (fun i j => (g * h).val i j) =
         ∑ m, Φ k m (fun i j => g.val i j) * Φ m l (fun i j => h.val i j) := by
@@ -129,15 +128,13 @@ theorem UpperTheory.V.Lit.Bor.cxGrp :
           simp only [hv]
           rw [← e, sub_eq_zero, Units.val_one, one_mul]
           rfl) g
-    rw [sub_eq_zero, Units.val_one, one_mul] at key
-    exact key
+    rwa [sub_eq_zero, Units.val_one, one_mul] at key
   refine ⟨{ toFun := fun g => Matrix.of fun k l => Φ k l (fun i j => g.val i j)
             map_one' := ?_
             map_mul' := fun g h => ?_ }, Φ, hΦ, fun _ _ _ => rfl, fun y => ?_⟩
   · ext k l
     have e := hv' k l 1
-    rw [map_one, map_one] at e
-    exact e
+    rwa [map_one, map_one] at e
   · ext k l
     rw [Matrix.mul_apply]
     exact h2 k l g h

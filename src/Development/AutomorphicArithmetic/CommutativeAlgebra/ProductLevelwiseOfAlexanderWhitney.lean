@@ -124,8 +124,7 @@ private theorem tot_D {C C' : DC} {Φ : C.Hom C'} (h : Φ.Ok) (n : ℤ) (x : C.T
     Φ.tot (C.D n x) = C'.D n (Φ.tot x) := by
   funext p t
   rcases p with _ | p
-  · simp only [DC.D, DC.Hom.tot]
-    exact hom_d h 0 (t - 1) t (by ring) _
+  · simpa only [DC.D, DC.Hom.tot] using hom_d h 0 (t - 1) t (by ring) _
   · simp only [DC.D, DC.Hom.tot, map_add (f := _), Units.smul_def, map_zsmul]
     rw [hom_d h (p + 1) (t - 1) t (by ring), h.2]
 
@@ -278,8 +277,7 @@ theorem UpperTheory.exists_cupProduct_hom_of_cocycle_vanishing_on_open :
     have e : ∀ (u : ℤˣ) (i : Fin (p + 2)) (y : Sec (K.X (s + m)) W),
         (-1 : ℤ) ^ (i : ℕ) • (u • y) = u • ((-1 : ℤ) ^ (i : ℕ) • y) := by
       intro u i y
-      simp only [Units.smul_def]
-      exact smul_comm _ _ _
+      simpa only [Units.smul_def] using smul_comm _ _ _
     simp only [e]
 
     rw [← Finset.smul_sum, hsign, mul_smul, Int.negOnePow_zero, one_smul, map_sum]
@@ -399,22 +397,19 @@ private theorem fam_split (Z : Sub (sch.obj X)) (hZ : ∀ (p q : ℕ) (W : Schem
     funext W (t : W ⟶ X)
     have e := delta_apply Z p (K.X (s + 0)) a W t
     have : Even (p + 2) := by rw [Nat.even_add]; simp [hp]
-    rw [ite_eq_left this] at e
-    exact e
+    rwa [ite_eq_left this] at e
   · intro p s hp (a : Fam Z (p + 1) (K.X (s + 0)))
     apply Subtype.ext
     funext W (t : W ⟶ X)
     have e := delta_apply Z p (K.X (s + 0)) (rdF Z hZ p (K.X (s + 0)) a) W t
     have : ¬ Even (p + 2) := by rw [Nat.even_add]; simp [Nat.not_even_iff_odd.mpr hp]
-    rw [ite_eq_right this] at e
-    exact e
+    rwa [ite_eq_right this] at e
   · intro p s hp (a : Fam Z p (K.X (s + 0)))
     apply Subtype.ext
     funext W (t : W ⟶ X)
     have e := delta_apply Z p (K.X (s + 0)) a W t
     have : ¬ Even (p + 2) := by rw [Nat.even_add]; simp [Nat.not_even_iff_odd.mpr hp]
-    rw [ite_eq_right this] at e
-    exact e
+    rwa [ite_eq_right this] at e
   · intro p s t a
     rfl
 
@@ -533,8 +528,7 @@ theorem UpperTheory.columnExact_zero_of_totalExact_of_vertical_zero :
     · change C.d 0 (t - 1) t (ext0 C (s + 1) a 0 (t - 1)) = 0
       by_cases h : t - 1 = s + 1
       · obtain rfl : t = s + 1 + 1 := by omega
-        rw [d_idx C (ext0 C (s + 1) a 0) _ h, extByZero_same]
-        exact hda
+        rwa [d_idx C (ext0 C (s + 1) a 0) _ h, extByZero_same]
       · rw [unitCharacterExtendByZero_ne_zero_of_isUnit C _ a h, map_zero]
     · change C.d (p + 1) (t - 1) t (ext0 C (s + 1) a (p + 1) (t - 1)) +
         (s + 1 + 1).negOnePow • C.δ p t (ext0 C (s + 1) a p t) = 0
@@ -548,8 +542,7 @@ theorem UpperTheory.columnExact_zero_of_totalExact_of_vertical_zero :
     · change Φ 0 t (ext0 C (s + 1) a 0 t) = C'.d 0 (t - 1) t (ext0 C' s y 0 (t - 1))
       by_cases h : t = s + 1
       · subst h
-        rw [d_idx C' (ext0 C' s y 0) _ (by omega : s + 1 - 1 = s), extByZero_same, extByZero_same]
-        exact hΦ
+        rwa [d_idx C' (ext0 C' s y 0) _ (by omega : s + 1 - 1 = s), extByZero_same, extByZero_same]
       · rw [unitCharacterExtendByZero_ne_zero_of_isUnit C _ a h, unitCharacterExtendByZero_ne_zero_of_isUnit C' _ y (fun e => h (by omega)), map_zero, map_zero]
     · change Φ (p + 1) t (ext0 C (s + 1) a (p + 1) t) =
         C'.d (p + 1) (t - 1) t (ext0 C' s y (p + 1) (t - 1)) +
@@ -563,11 +556,9 @@ theorem UpperTheory.columnExact_zero_of_totalExact_of_vertical_zero :
   refine ⟨a' 0 s, y' 0 (s - 1), ?_, ?_⟩
   · have h := congrFun (congrFun h1 0) (s + 1)
     change C.d 0 (s + 1 - 1) (s + 1) (a' 0 (s + 1 - 1)) = ext0 C (s + 1) a 0 (s + 1) at h
-    rw [d_idx C (a' 0) _ (by omega : s + 1 - 1 = s), extByZero_same] at h
-    exact h
+    rwa [d_idx C (a' 0) _ (by omega : s + 1 - 1 = s), extByZero_same] at h
   · have h := congrFun (congrFun h2 0) s
-    rw [show ext0 C' s y 0 s = y from extByZero_same C' s y] at h
-    exact h
+    rwa [show ext0 C' s y 0 s = y from extByZero_same C' s y] at h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.ColumnExactZeroOfTotalExactOfVerticalZero =====
@@ -833,8 +824,7 @@ private theorem exists_cochain (n : ℤ) (x : (famDC (Sub.bot E) K 0).Tot) :
   have hγ : ∀ p s h U z, ev γ p s h U z = a p s h U z := by
     intro p s h U z
     have he := hφ _ _ h p rfl U z
-    rw [eqToHom_refl, Category.id_comp] at he
-    exact he
+    rwa [eqToHom_refl, Category.id_comp] at he
   refine ⟨γ, ?_⟩
   intro p s h U z
   rw [map_id', hγ]
@@ -1095,12 +1085,10 @@ private theorem cl_zero {C C' : DC} {Φ : C.Hom C'} {n : ℤ} {a : C.Tot} {y : C
   refine ⟨fun s hs => ha 0 s hs, fun s hs => hy 0 s hs, ?_, ?_⟩
   · intro s t e
     have h1 := congrFun (congrFun hD 0) t
-    rw [D_zero C (n + 1) a s t e] at h1
-    exact h1
+    rwa [D_zero C (n + 1) a s t e] at h1
   · intro s t e
     have h1 := congrFun (congrFun hP 0) t
-    rw [D_zero C' n y s t e] at h1
-    exact h1
+    rwa [D_zero C' n y s t e] at h1
 
 private theorem cl_next {C C' : DC} {Φ : C.Hom C'} {n : ℤ} {a : C.Tot} {y : C'.Tot} {p : ℕ}
     (hC : C.Ok) (hC' : C'.Ok) (hΦ : Φ.Ok)
@@ -1151,10 +1139,8 @@ theorem UpperTheory.totalExact_of_columnExact :
       hz := fun s => by simp only [map_add (f := _), map_us, hC'.δδ, smul_zero, add_zero] }
   let S : ∀ p, St Φ n a y p := fun p => Nat.rec (motive := fun p => St Φ n a y p) S0 step p
   refine ⟨fun p s => (S p).u s, fun p s => (S p).v s, ?_, ?_, ?_, ?_⟩
-  · intro p s hps
-    exact (S p).sv.su s hps
-  · intro p s hps
-    exact (S p).sv.sv s hps
+  · exact fun p s hps => (S p).sv.su s hps
+  · exact fun p s hps => (S p).sv.sv s hps
   · funext p t
     rcases p with _ | p
     · rw [D_zero C n _ (t - 1) t (by ring)]

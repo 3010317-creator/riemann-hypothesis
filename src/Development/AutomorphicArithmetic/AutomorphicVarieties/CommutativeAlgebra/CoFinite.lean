@@ -104,8 +104,7 @@ private theorem isPrecomplete_finite {R M : Type} [CommRing R] [AddCommGroup M] 
   have hd : ∀ n, ∃ d : Fin r → R, d ∈ (I ^ n • ⊤ : Submodule R (Fin r → R)) ∧ φ d = f (n + 1) - f n := by
     intro n
     have := hmem n
-    rw [himg n, Submodule.mem_map] at this
-    exact this
+    rwa [himg n, Submodule.mem_map] at this
   choose d hdmem hdφ using hd
   obtain ⟨y0, hy0⟩ := hφ (f 0)
   set g : ℕ → (Fin r → R) := fun n => y0 + ∑ k ∈ Finset.range n, d k with hg
@@ -128,8 +127,7 @@ private theorem isPrecomplete_finite {R M : Type} [CommRing R] [AddCommGroup M] 
   obtain ⟨L, hL⟩ := IsPrecomplete.prec' g hgc
   refine ⟨φ L, fun n => ?_⟩
   have h1 := (hL n).map φ
-  rw [hgφ, ← himg n] at h1
-  exact h1
+  rwa [hgφ, ← himg n] at h1
 
 private theorem prec_cofinal {R : Type*} [CommRing R] {I J : Ideal R} (hJI : J ≤ I) {e : ℕ}
     (he : I ^ e ≤ J) (hJ : IsPrecomplete J R) : IsPrecomplete I R := by

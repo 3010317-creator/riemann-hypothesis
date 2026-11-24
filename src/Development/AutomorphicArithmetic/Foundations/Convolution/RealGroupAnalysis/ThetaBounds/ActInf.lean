@@ -182,8 +182,7 @@ private theorem fin_part (y : GL (Fin 2) (Cinf E)) (v : V4 F) :
       _ = am E eF • D.herm v := by rw [L]; simp [he])
   rw [D.act_smul] at main
   funext i
-  have h := congrArg (fun x : V4 F => (x i).2) main
-  exact (one_mul _).symm.trans (h.trans (one_mul _))
+  exact (one_mul _).symm.trans ((congrArg (fun x : V4 F => (x i).2) main).trans (one_mul _))
 
 end SlopeTestRemainingChoices
 
@@ -199,5 +198,4 @@ theorem UpperTheory.ConvolutionTheory.R2.Ff.actInf :
     ext1 i j
     exact r_bar D τ _
   have h := congrArg (fun X => X.map ((coord τ).comp (pInf E))) (D.herm_act (infGL E 2 y) v)
-  simp only [Matrix.map_mul, map_herm, hy, hs] at h
-  exact h
+  simpa only [Matrix.map_mul, map_herm, hy, hs] using h

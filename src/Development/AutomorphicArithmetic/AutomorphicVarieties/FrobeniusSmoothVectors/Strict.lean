@@ -89,8 +89,7 @@ private theorem exists_place_rat {w : ℕ} (hw : w.Prime) :
     exact Nat.prime_iff_prime_int.mp hw
   have hP : (Ideal.span {((w : ℕ) : 𝓞 ℚ)}).IsPrime := (Ideal.span_singleton_prime hne).mpr hprime
   have hbot : Ideal.span {((w : ℕ) : 𝓞 ℚ)} ≠ ⊥ := by
-    rw [Ne, Ideal.span_singleton_eq_bot]
-    exact hne
+    rwa [Ne, Ideal.span_singleton_eq_bot]
   have hmax := hP.isMaximal hbot
   let v₀ : HeightOneSpectrum (𝓞 ℚ) := ⟨Ideal.span {((w : ℕ) : 𝓞 ℚ)}, hP, hbot⟩
   refine ⟨v₀, fun v => ⟨fun hv => ?_, fun hv => ?_⟩⟩
@@ -105,8 +104,7 @@ private theorem finite_above {n : ℕ} (hn : n ≠ 0) :
   have h0 : Ideal.span {(n : 𝓞 ℚ)} ≠ 0 := by
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact Nat.cast_ne_zero.2 hn
-  refine (Ideal.finite_factors h0).subset fun v hv => ?_
-  exact Ideal.dvd_span_singleton.2 hv
+  exact (Ideal.finite_factors h0).subset fun v hv => Ideal.dvd_span_singleton.2 hv
 
 theorem UpperTheory.V.Fr.st_set :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l w N : ℕ), l.Prime → w.Prime → N ≠ 0 → ∀ (C : Type) [Group C] (κ : G ℚ Ω →* C), (∀ A : ValuationSubring Ω, ¬ A.valuation (N : Ω) < 1 → Ine (F := ℚ) A ≤ κ.ker) → ∃ (S : Finset (HeightOneSpectrum (𝓞 ℚ))) (v₀ : HeightOneSpectrum (𝓞 ℚ)), (∀ v : HeightOneSpectrum (𝓞 ℚ), ((w : ℕ) : 𝓞 ℚ) ∈ v.asIdeal ↔ v = v₀) ∧ ∀ (v : HeightOneSpectrum (𝓞 ℚ)) (A : ValuationSubring Ω), IsPlaceOver A v → (v ∈ S ↔ ((l : ℕ) : 𝓞 ℚ) ∈ v.asIdeal ∨ v = v₀ ∨ ¬ Ine (F := ℚ) A ≤ κ.ker) := by
@@ -119,8 +117,7 @@ theorem UpperTheory.V.Fr.st_set :
     intro A A' v hA hA' hle τ hτ
     obtain ⟨σ, rfl⟩ := exists_smul_eq_of_isPlaceOver hA hA'
     have h1 := hle (GlobalTheory.Cut.ShaBound.conj_mem_Ine' hτ)
-    have h2 := κ.normal_ker.conj_mem _ h1 σ
-    simpa [mul_assoc] using h2
+    simpa [mul_assoc] using κ.normal_ker.conj_mem _ h1 σ
   have hN' : ∀ (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 ℚ)), IsPlaceOver A v →
       ¬ Ine (F := ℚ) A ≤ κ.ker → ((N : ℕ) : 𝓞 ℚ) ∈ v.asIdeal := by
     intro A v hA hne
@@ -129,8 +126,7 @@ theorem UpperTheory.V.Fr.st_set :
       exact hne (hκ A h)
     rw [← hA (N : 𝓞 ℚ)]
     have e : algebraMap ℚ Ω (((N : 𝓞 ℚ) : ℚ)) = (N : Ω) := by simp
-    rw [e]
-    exact h1
+    rwa [e]
   refine ⟨hT.toFinset.filter (fun v => ((l : ℕ) : 𝓞 ℚ) ∈ v.asIdeal ∨ v = v₀ ∨
     ∃ A : ValuationSubring Ω, IsPlaceOver A v ∧ ¬ Ine (F := ℚ) A ≤ κ.ker), v₀, hv₀, ?_⟩
   intro v A hA
@@ -264,8 +260,7 @@ theorem UpperTheory.V.Fr.st_res :
   have hc : s * u * s⁻¹ * u⁻¹ ∈ U := by
     apply hU
     have := Subgroup.commutator_mem_commutator (Subgroup.mem_top s) (Subgroup.mem_top u)
-    rw [commutatorElement_def] at this
-    exact this
+    rwa [commutatorElement_def] at this
   have hv : s * u * s⁻¹ ∈ U := by
     have := U.mul_mem hc huU
     simpa using this
@@ -308,8 +303,7 @@ theorem UpperTheory.V.Fr.st_loc :
   haveI : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact hl.out⟩
   have hcont : ReciprocityTheory.Gal.ContAction ρ := by
     show Continuous fun p : Dec (F := ℚ) A × M => ρ p.1 p.2
-    simp only [htriv]
-    exact continuous_snd
+    simpa only [htriv] using continuous_snd
   have hF := hFin ℚ Ω l 1 M A ρ v one_pos hv hcont
   have hE := (hEuler ℚ Ω l 1 M A ρ v one_pos hv hcont).2 hlv
   obtain ⟨⟨e⟩, -, -, -, hbij⟩ := hTate ℚ Ω l 1 M A ρ v one_pos hv hcont
@@ -328,8 +322,7 @@ theorem UpperTheory.V.Fr.st_loc :
   set X := H0 ((twDual ((cycMod ℚ Ω l 1).comp (Dec (F := ℚ) A).subtype) ρ).comp (MonoidHom.id _))
   have hx0 : (⟨φ0, hinv φ0⟩ : X) ≠ 0 := fun h => hφ0 (congrArg Subtype.val h)
   obtain ⟨f, hf⟩ : ∃ f : Module.Dual (ZMod (l ^ 1)) X, f ⟨φ0, hinv φ0⟩ ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hx0 ((Module.forall_dual_apply_eq_zero_iff (ZMod (l ^ 1)) _).mp h)
   let ψ : X →ₗ[ZMod (l ^ 1)] H2 ((charRep ((cycMod ℚ Ω l 1).comp (Dec (F := ℚ) A).subtype)).comp
       (MonoidHom.id _)) := e.symm.toLinearMap ∘ₗ f
@@ -356,8 +349,7 @@ section -- clump:auto
 open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.Gal IsLocalRing UpperTheory.V.HV UpperTheory.V.U3 UpperTheory.V.Base UpperTheory.V.Pr UpperTheory.V.Fr UpperTheory.V
 
 private theorem card_bot' {R N : Type} [Ring R] [AddCommGroup N] [Module R N] :
-    Nat.card (⊥ : Submodule R N) = 1 := by
-  exact Nat.card_unique
+    Nat.card (⊥ : Submodule R N) = 1 := Nat.card_unique
 
 theorem UpperTheory.V.Fr.st_count :
     GlobalFiniteness → GreenbergWiles → ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime], l ≠ 2 → ∀ (M : Type) [AddCommGroup M] [Module (ZMod (l ^ 1)) M] [Finite M] [TopologicalSpace M] [DiscreteTopology M] (S : Finset (HeightOneSpectrum (𝓞 ℚ))) (ρ : Representation (ZMod (l ^ 1)) (GS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ)))) M), ContainsAbove S l → ContAction ρ → ∀ μ : GS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ))) →* (ZMod (l ^ 1))ˣ, μ.comp (toGS Ω _) = cycMod ℚ Ω l 1 → ∀ Av : S → ValuationSubring Ω, (∀ v, IsPlaceOver (Av v) v.1) → ∀ σ : G ℚ Ω, IsCC σ → (∀ m, ρ (toGS Ω _ σ) m = m → m = 0) → H0 (twDual μ ρ) = ⊥ → ∀ v₀ : S, (∀ v, v ≠ v₀ → H0 (ρ.comp (locFam S Av v)) = ⊥) → Nat.card (H0 (ρ.comp (locFam S Av v₀))) < Nat.card (H1 (ρ.comp (locFam S Av v₀))) → ∃ z ∈ Z1 ρ, z ∉ B1 ρ ∧ ∀ v, v ≠ v₀ → ∃ m, ∀ g ∈ Dec (F := ℚ) (Av v), z (toGS Ω _ g) = ρ (toGS Ω _ g) m - m := by
@@ -509,8 +501,7 @@ private theorem toGS_eq_one_of_mem_inertia_of_notMem (Ω : Type) [Field Ω] [Cha
   unfold ReciprocityTheory.Gal.NS
   apply Subgroup.le_topologicalClosure
   apply Subgroup.subset_normalClosure
-  simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_compl_iff]
-  exact ⟨v, hv, A, hA, hs⟩
+  simpa only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_compl_iff] using ⟨v, hv, A, hA, hs⟩
 
 private theorem continuous_toGS' (Ω : Type) [Field Ω] [CharZero Ω] (S : Set (HeightOneSpectrum (𝓞 ℚ))) :
     Continuous (toGS Ω S) := by
@@ -586,8 +577,7 @@ theorem UpperTheory.V.Fr.st_sel :
       apply Units.ext
       apply (ZMod.castHom hdvd k).injective
       have h2 := congrArg Units.val h1
-      rw [Units.val_one, map_one]
-      exact h2
+      rwa [Units.val_one, map_one]
     · intro g m
       change (κS (toGS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ))) g.1) : k) * m = m
       have h1 : κ g.1 = 1 := (hD0 (Av ⟨v₀, hv₀⟩) (hAv ⟨v₀, hv₀⟩) g.2).1
@@ -640,8 +630,7 @@ private theorem exists_char_of_index {Γ : Type} [Group Γ] [TopologicalSpace Γ
     refine ⟨fun a ha g => ?_⟩
     have hc' : g * a * g⁻¹ * a⁻¹ ∈ H :=
       hc (Subgroup.commutator_mem_commutator (Subgroup.mem_top g) (Subgroup.mem_top a))
-    have h2 := H.mul_mem hc' ha
-    simpa using h2
+    simpa using H.mul_mem hc' ha
   have hQ : Nat.card (Γ ⧸ H) = l := hi
   have hM : Nat.card (Multiplicative (ZMod l)) = l := by
     rw [Nat.card_eq_fintype_card]
@@ -657,8 +646,7 @@ private theorem exists_char_of_index {Γ : Type} [Group Γ] [TopologicalSpace Γ
     intro a
     have h1 : Multiplicative.toAdd (f a) = 0 ↔ f a = 1 := by
       constructor
-      · intro h
-        exact Multiplicative.toAdd.injective (by simpa using h)
+      · exact fun h => Multiplicative.toAdd.injective (by simpa using h)
       · intro h
         rw [h]
         rfl
@@ -704,8 +692,7 @@ theorem UpperTheory.V.Fr.st_tame :
   have h := hγ ψ hψc hψa hψγ ⟨s, hs.1⟩
   have h0 : φI ⟨s, hs.1⟩ = 0 := (hφk s).2 hs.2
   simp only [ψ] at h
-  rw [h0, mul_zero, sub_zero] at h
-  exact h
+  rwa [h0, mul_zero, sub_zero] at h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.StTame =====
@@ -777,9 +764,7 @@ private theorem st_char : GC.Hypotheses₂ → ∀ (Ω : Type) [Field Ω] [CharZ
       simpa using h
     obtain ⟨v, hv⟩ := hex A htop
     by_cases hvS : v ∈ S
-    · have hvne : v ≠ v₀ := by
-        intro h
-        exact hA ((hmem A v w hv).2 (h ▸ hw0))
+    · have hvne : v ≠ v₀ := fun h => hA ((hmem A v w hv).2 (h ▸ hw0))
       obtain ⟨b, hb⟩ := hcob v hvS hvne A hv
       rw [hb s (Ine_le_Dec A hs), hκs, Units.val_one, one_mul, sub_self]
     · exact hyout v hvS A hv s hs
@@ -832,8 +817,7 @@ theorem UpperTheory.V.Fr.strict :
     rw [hκ, hG.even, inv_one, one_pow, one_mul]
     intro h
     apply hne1
-    have h' := congrArg (fun u : (ResidueField O)ˣ => (u : ResidueField O)) h
-    simpa [etaO, hησ] using h'
+    simpa [etaO, hησ] using congrArg (fun u : (ResidueField O)ˣ => (u : ResidueField O)) h
   have hcyc : ∃ s, κ s ≠ GC.cycF ℚ Ω l (ResidueField O) s := by
     have hex : ∃ s ∈ U ⊓ η.ker, (omO Ω l O) s * (barChar O Ψ) s ^ (a : ℤ) ≠ 1 := by
       rcases ha with rfl | rfl

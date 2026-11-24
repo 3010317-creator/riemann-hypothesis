@@ -80,10 +80,8 @@ private theorem exists_reps {G ι : Type} [Group G] (H U : Subgroup G) (R : Fins
   have hf : ∀ g, S.r g (f (Quotient.mk S g)) := by
     intro g
     by_cases hq : ∃ i ∈ R, Quotient.mk S (x i) = Quotient.mk S g
-    · simp only [f, dite_eq_left hq]
-      exact Quotient.exact (hq.choose_spec.2.symm)
-    · simp only [f, dite_eq_right hq]
-      exact Quotient.exact (Quotient.out_eq (Quotient.mk S g)).symm
+    · simpa only [f, dite_eq_left hq] using Quotient.exact (hq.choose_spec.2.symm)
+    · simpa only [f, dite_eq_right hq] using Quotient.exact (Quotient.out_eq (Quotient.mk S g)).symm
   refine ⟨fun g => f (Quotient.mk S g), hf, ?_, ?_⟩
   · intro g h hh u hu
     have : Quotient.mk S (h * g * u) = Quotient.mk S g := Quotient.sound ⟨h, hh, u, hu, rfl⟩
@@ -116,13 +114,11 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.cosetSum :
         ext h
         simp only [W, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_image]
         constructor
-        · intro hk
-          exact ⟨_, hk, by group⟩
+        · exact fun hk => ⟨_, hk, by group⟩
         · rintro ⟨k, hk, hk'⟩
           rw [← hk']
           have e2 : y⁻¹ * (y * k * y⁻¹) * y = k := by group
-          rw [e2]
-          exact hk
+          rwa [e2]
       rw [e]
       exact hHc.isClosedEmbedding_subtypeVal.isCompact_preimage (hKc.image (by fun_prop))
     exact hc.measure_lt_top.ne
@@ -223,9 +219,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.cosetSum :
       apply Finset.sum_eq_zero
       intro i hi
       rw [Set.indicator_of_notMem]
-      intro hm
-      apply hg
-      exact (hS _).2 ⟨i, hi, 1, H.one_mem, (x i)⁻¹ * g, hm, by group⟩
+      exact fun hm => hg ((hS _).2 ⟨i, hi, 1, H.one_mem, (x i)⁻¹ * g, hm, by group⟩)
   have hcomp : ∫⁻ g, F g * ρ g ∂μ = R.card * ((ν V)⁻¹ * μ K) := by
     rw [lintegral_congr (fun g => hpt g), lintegral_finsetSum]
     · simp_rw [lintegral_indicator_const (hKo.measurableSet.preimage (measurable_const_mul _)),
@@ -277,8 +271,7 @@ private theorem sg_cont {σ : E ≃+* E} (hσ : Isom σ) : Continuous (sg σ : G
     intro γ _
     refine ⟨γ, trivial, fun z hz => ?_⟩
     simp only [Set.mem_setOf_eq] at hz ⊢
-    rw [← map_sub, hσ]
-    exact hz
+    rwa [← map_sub, hσ]
   exact Continuous.units_map _ (continuous_id.matrix_map hc)
 
 omit [ValuativeRel E] [TopologicalSpace E] [IsNonarchimedeanLocalField E] in
@@ -302,8 +295,7 @@ private theorem diag_inj {u v : Fin n → Eˣ} (h : diagT E (Fin n) u = diagT E 
 
 omit [ValuativeRel E] [TopologicalSpace E] [IsNonarchimedeanLocalField E] in
 private theorem sg_diag (σ : E ≃+* E) (p : Fin n → Eˣ) :
-    sg σ (diagT E (Fin n) p) = diagT E (Fin n) (sgT σ p) := by
-  exact map_diag (σ : E →+* E) p
+    sg σ (diagT E (Fin n) p) = diagT E (Fin n) (sgT σ p) := map_diag (σ : E →+* E) p
 
 private theorem cent_diag {σ : E ≃+* E} {q : ℕ} (hσ : Cyc σ q) {d : Fin n → Eˣ} (hd : Strict d) {δ y c : GL (Fin n) E}
     (hy : y⁻¹ * δ * sg σ y = diagT E (Fin n) d) (hc : c⁻¹ * δ * sg σ c = δ) : ∃ u, y⁻¹ * c * y = diagT E (Fin n) u := by
@@ -327,8 +319,7 @@ private theorem diag_ball {r : ValueGroupWithZero E} {s : Fin n → Eˣ} (h : Ne
 
 private theorem near_of_ball {r : ValueGroupWithZero E} {s : Fin n → Eˣ} (h : diagT E (Fin n) s ∈ ball n r) : Near r s := by
   intro i
-  have h1 := h i i
-  simpa [val_diagT, Matrix.diagonal_apply_eq] using h1
+  simpa [val_diagT, Matrix.diagonal_apply_eq] using h i i
 
 end
 
@@ -410,16 +401,14 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.oneField :
       · refine K.mul_mem ?_ ?_
         · rw [← SetLike.mem_coe, hK]
           exact diag_ball hs
-        · rw [← SetLike.mem_coe, hK]
-          exact hκ
+        · rwa [← SetLike.mem_coe, hK]
       · rw [map_mul, map_mul, diag_comm ρ p]
         group
     · rintro ⟨ρ, hρR, h, hh, κ, hκ, rfl⟩
       obtain ⟨w, hw⟩ := hcen h hh
       have hw' := hfixH h hh w hw
       refine ⟨w * ρ, (hR _).2 ⟨ρ, hρR, w, 1, hw', fun i => by simp, by rw [mul_one, mul_comm]⟩, κ, ?_, ?_⟩
-      · rw [← hK]
-        exact hκ
+      · rwa [← hK]
       · rw [map_mul, hback h w hw]
         group
   have hD : ∀ i ∈ R, ∀ j ∈ R, (∃ h ∈ H, ∃ κ ∈ K, y * diagT E (Fin n) i = h * (y * diagT E (Fin n) j) * κ) →
@@ -436,13 +425,11 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.oneField :
           simp only [map_mul, map_inv]
           group
     refine hRd i hi j hj ⟨w, w⁻¹ * j⁻¹ * i, hw', near_of_ball ?_, by group⟩
-    rw [← hk, ← hK]
-    exact hκ
+    rwa [← hk, ← hK]
   have key := cosetSum (GL (Fin n) E) μ hμ K H hKo hKc hclosed hcomm ν hν (Fin n → Eˣ) R
     (fun ρ => y * diagT E (Fin n) ρ) {h : H | y⁻¹ * ↑h * y ∈ ball n r}
     {g : GL (Fin n) E | g⁻¹ * δ * sg σ g ∈ elemSet r A} hV hS hD
-  rw [hK] at key
-  exact key
+  rwa [hK] at key
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.FrobeniusLocalPairs.OneField =====

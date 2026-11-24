@@ -97,12 +97,10 @@ theorem UpperTheory.V.Alg.univ_cond :
       exact hle hx
     refine ⟨Ideal.Quotient.liftₐ J f' hf'J, ?_, ?_⟩
     · show Lift.map _ (Lift.map _ r) = r'
-      rw [lift_map_map', Ideal.Quotient.liftₐ_comp]
-      exact hf'
+      rwa [lift_map_map', Ideal.Quotient.liftₐ_comp]
     · intro g hg
       apply Ideal.Quotient.algHom_ext O
       rw [Ideal.Quotient.liftₐ_comp]
       apply huniq
       show Lift.map _ r = r'
-      rw [← lift_map_map']
-      exact hg
+      rwa [← lift_map_map']

@@ -66,9 +66,7 @@ private theorem hecke_eq_sum {G : Type} [Group G] (K : Subgroup G) (h : G → �
     rw [Finset.sum_image (fun a _ b _ e => Quotient.out_injective e)]
     have hsupp : (Function.support fun q : G ⧸ K => h q.out • ρ q.out x) ⊆ hfin.toFinset := by
       intro q hq
-      simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
-      intro h0
-      exact hq (by simp [h0])
+      simpa only [Set.Finite.coe_toFinset, Set.mem_setOf_eq] using fun h0 => hq (by simp [h0])
     have hsum : heckeVec ρ K h x = ∑ q ∈ hfin.toFinset, h q.out • ρ q.out x :=
       finsum_eq_sum_of_support_subset _ hsupp
     rw [hsum]
@@ -118,8 +116,7 @@ private theorem satVec_of_mem {σ : Submodule ℂ (UA E n → ℂ)} (hσ : IsAut
     rw [map_mul]; rfl
   have hfg : ∀ g v, f (τ.ρ g v) = repG e g (f v) := fun g v => by
     have h1 := hfe (e.symm g) v
-    rw [MonoidHom.comp_apply, Subgroup.subtype_apply, hpe] at h1
-    exact h1
+    rwa [MonoidHom.comp_apply, Subgroup.subtype_apply, hpe] at h1
   have hFe : ∀ c g v, F c (τ.ρ g v) = repG e g (F c v) := by
     intro c g v
     rw [hF, hF, hfg, hrep, hRm, hRm]
@@ -159,8 +156,7 @@ private theorem satVec_of_mem {σ : Submodule ℂ (UA E n → ℂ)} (hσ : IsAut
   refine GlobalTheory.HeightCounting.Blocks.isSatVecGL_of_mem_iSup hirr hB F hFe hφS
     (GlobalTheory.LGrp.mem_fixed.2 fun k hk => hK _ (e.symm k).2 ?_) h0
   show cLoc w ((e.symm k : locU n w) : UA E n) ∈ KGL w (n := n)
-  rw [hpe]
-  exact hk
+  rwa [hpe]
 
 end SlopeTestRemainingChoices
 
@@ -183,8 +179,7 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pSatVal_of :
     satVec_of_mem π.isAut hw (locE hw) (locE_apply hw) τ hc hS (hmem v) (hfix v) h0
   have hrep : ∀ g v, repG (locE hw) g (f.1 v) = (((algRep W).comp (locF hw)) g f).1 v := fun _ _ => rfl
   obtain ⟨v₀, hv₀⟩ : ∃ v, f.1 v ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hf0 (Subtype.ext (LinearMap.ext h))
   refine ⟨hf0, GlobalTheory.LGrp.mem_fixed.2 fun k hk => hK k hk, (hsat v₀ hv₀).2.2.1, fun ϖ hϖ j hj => ?_⟩
   have hcm := Formalism.UG.Final.GLintComm E w n

@@ -179,11 +179,9 @@ private theorem exists_ne_zero_act_eq_mul_of_cocycle {K : Type} [Field K] {Q : T
   let tt : (E →* K) → K := fun s => if h : ∃ p, res p = s then t h.choose else 0
   have htt : ∀ q, tt (res q) = t q := fun q => by
     have h : ∃ p, res p = res q := ⟨q, rfl⟩
-    simp only [tt, dite_eq_left h]
-    exact hwd _ _ h.choose_spec
+    simpa only [tt, dite_eq_left h] using hwd _ _ h.choose_spec
   obtain ⟨y, hy⟩ : ∃ y : E, ∑ s ∈ S, tt s * s y ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hli := linearIndependent_iff'.1 (linearIndependent_monoidHom E K) S (fun s => tt s) (by
       funext y
       simpa [Finset.sum_apply, smul_eq_mul] using hcon y)
@@ -447,8 +445,7 @@ private theorem near_one {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* 
         congr 2
         push_cast
         ring
-      rw [e]
-      exact h2
+      rwa [e]
     · intro r hr
       have : (X.exp X.jK).coeff r = 0 := by
         by_contra hne
@@ -466,8 +463,7 @@ private theorem near_one {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* 
   simp only [Nat.cast_zero, zero_sub, X.j_exp.1, map_one] at hB
   have ht : Tendsto (fun s : ℝ => B * Real.exp (-(2 * Real.pi * (s - t)))) atTop (𝓝 0) := by
     have h1 : Tendsto (fun s : ℝ => 2 * Real.pi * (s - t)) atTop atTop := by
-      apply Tendsto.const_mul_atTop Real.two_pi_pos
-      exact tendsto_atTop_add_const_right _ _ tendsto_id
+      exact Tendsto.const_mul_atTop Real.two_pi_pos (tendsto_atTop_add_const_right _ _ tendsto_id)
     simpa using (Real.tendsto_exp_neg_atTop_nhds_zero.comp h1).const_mul B
   obtain ⟨s, hs⟩ := eventually_atTop.1 (ht.eventually (ge_mem_nhds (show (0 : ℝ) < 1 / 2 by norm_num)))
   refine ⟨max (max s t) 1, lt_max_of_lt_right one_pos, fun z hz => ?_⟩
@@ -1070,9 +1066,7 @@ theorem UpperTheory.Kd.K4.eb :
       rwa [h'] at h
     obtain ⟨ne, he⟩ := ENat.ne_top_iff_exists.1 (ne_top_of_le_ne_top (ENat.coe_ne_top E0) hgle)
     have hne0 : ne ≠ 0 := by
-      intro h0
-      apply (hg'.analyticOrderAt_eq_zero).1 (by rw [← he, h0, Nat.cast_zero])
-      exact hgτ
+      exact fun h0 => (hg'.analyticOrderAt_eq_zero).1 (by rw [← he, h0, Nat.cast_zero]) hgτ
     have hnele : ne ≤ E0 := by
       rw [← he] at hgle
       exact_mod_cast hgle
@@ -1119,13 +1113,11 @@ theorem UpperTheory.Kd.K4.eb :
     apply valuation_eq_one_of_mem_of_inv_mem W (div_ne_zero (pow_ne_zero _ hx) (div_ne_zero (pow_ne_zero _ htne) (pow_ne_zero _ htne)))
     · rw [← huv]
       have h0 : ((σ u : lev X (CongruenceSubgroup.Gamma M)) : X.K) ∈ Wτ := by
-        rw [hσu]
-        exact hz1
+        rwa [hσu]
       exact ValuationSubring.mem_comap.1 ((hσ u).1 (ValuationSubring.mem_comap.2 h0))
     · rw [← huv, ← Subfield.coe_inv]
       have h0 : ((σ u⁻¹ : lev X (CongruenceSubgroup.Gamma M)) : X.K) ∈ Wτ := by
-        rw [map_inv₀, Subfield.coe_inv, hσu]
-        exact hz2
+        rwa [map_inv₀, Subfield.coe_inv, hσu]
       exact ValuationSubring.mem_comap.1 ((hσ u⁻¹).1 (ValuationSubring.mem_comap.2 h0))
   · push Not at hcase
     have hall : ∀ a : RatFunc Ω,
@@ -1217,8 +1209,7 @@ private theorem isTransversal_left_mul (H Γ : Subgroup SL(2, ℤ)) {ι : Type} 
     have e : z⁻¹ * δ * (γ i)⁻¹ = ((z⁻¹ * δ * (γ i)⁻¹) * z * (z⁻¹ * δ * (γ i)⁻¹)⁻¹ * z⁻¹) * (δ * (z * γ i)⁻¹) := by
       group
     rw [e, H.mul_mem_cancel_left h1]
-  simp only [key]
-  exact h.2 _ (Γ.mul_mem (Γ.inv_mem hz) hδ)
+  simpa only [key] using h.2 _ (Γ.mul_mem (Γ.inv_mem hz) hδ)
 
 private theorem overY_comap (X : Tower Ω ε) (z : SL(2, ℤ)) (W : ValuationSubring X.K) (hW : X.OverY W) :
     X.OverY (W.comap (X.sl (ofSL z)).toRingEquiv.toRingHom) := by

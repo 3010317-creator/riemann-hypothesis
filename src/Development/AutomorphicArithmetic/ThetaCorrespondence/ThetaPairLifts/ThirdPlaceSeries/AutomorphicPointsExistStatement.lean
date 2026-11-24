@@ -162,8 +162,7 @@ theorem jointKer_fin_finrank {K C : Type} [Field K] [Field C] (φ : K →+* C) {
       N.rank + Module.finrank F (LinearMap.ker N.mulVecLin) = Fintype.card ι := by
     intro F _ N
     have := LinearMap.finrank_range_add_finrank_ker N.mulVecLin
-    rw [Module.finrank_fintype_fun_eq_card, Matrix.finrank_range_mulVecLin N] at this
-    exact this
+    rwa [Module.finrank_fintype_fun_eq_card, Matrix.finrank_range_mulVecLin N] at this
   have h1 := rn R
   have h2 := rn (R.map φ)
   rw [GlobalTheory.Core.Rk.rank_map_field] at h2
@@ -265,8 +264,7 @@ theorem eig_dim : ∀ (D : D7) (M : MtFam D) (B : NLocBase D M) (j : ℕ) (w : D
     constructor
     · rintro h ⟨⟨v, k⟩, hvk⟩
       exact (hV v k hvk c).1 (h v k hvk)
-    · intro h v k hvk
-      exact (hV v k hvk c).2 (h ⟨⟨v, k⟩, hvk⟩)
+    · exact fun h v k hvk => (hV v k hvk c).2 (h ⟨⟨v, k⟩, hvk⟩)
 
   have hCk : ∀ v k (hvk : Formalism.L2.GenAt D (D.what₂.places.resChar w) (B.Qc j w) v k) (y : D.what₂.Mt (D.what₂.muTw w) j),
       (∀ (s : ReciprocityTheory.Aut.SplitPlace D.host.E) (ϖ : s.v.adicCompletion (maximalRealSubfield D.host.E)),
@@ -291,8 +289,7 @@ theorem eig_dim : ∀ (D : D7) (M : MtFam D) (B : NLocBase D M) (j : ℕ) (w : D
           map_add' := fun y y' => by
             have := hadd' 1 (Mw.real y) (Mw.real y')
             rw [one_smul, one_smul] at this
-            simp only [map_add (f := _)]
-            exact this
+            simpa only [map_add (f := _)] using this
           map_smul' := fun c y => by
             have := hadd' c (Mw.real y) 0
             rw [add_zero, htN0, add_zero] at this
@@ -304,8 +301,7 @@ theorem eig_dim : ∀ (D : D7) (M : MtFam D) (B : NLocBase D M) (j : ℕ) (w : D
           Mw.real ((bC.constr ℂ fun a => D.what₂.jMt (D.what₂.muTw w) j (B.hL j w v k (b a))) (bC a))
         rw [e, hbC a]
         exact (B.hL_def j w h1 h2 v k s ϖ hvk hc hu (b a)).symm
-      intro x
-      exact LinearMap.congr_fun hLt x
+      exact fun x => LinearMap.congr_fun hLt x
     have hmat : LinearMap.toMatrix bC bC tC = (A v k).map D.what₂.embLL := by
       ext r c
       rw [LinearMap.toMatrix_apply, Matrix.map_apply]
@@ -371,8 +367,7 @@ theorem heckeEig_mem_iff_gens (N : NData R H what₂) (i : N.Loc) (x : N.X i)
       ((N.act i (N.hT i v k)).baseChange (FractionRing (N.O i))) y =
         algebraMap (N.O i) (FractionRing (N.O i)) ((N.hT i v k : N.X i → N.O i) x) • y := by
   constructor
-  · intro hy v k _ _ _
-    exact mem_eigenspace_iff.1 ((Submodule.mem_iInf _).1 hy (N.hT i v k))
+  · exact fun hy v k _ _ _ => mem_eigenspace_iff.1 ((Submodule.mem_iInf _).1 hy (N.hT i v k))
   · intro hy
     refine (Submodule.mem_iInf _).2 fun f => mem_eigenspace_iff.2 ?_
     obtain ⟨f, hf⟩ := f
@@ -481,8 +476,7 @@ theorem mult_eq_finrank_jointEig (D : D7) (Pl : PlSide D) (M : MtFam D) (C : NCh
     (Sp.Psi j w i h).comp (heckeEig (X.nd.T i) (X.nd.act i) x).subtype
   change Module.finrank _ ↥(heckeEig (X.nd.T i) (X.nd.act i) x) = _
   refine finrank_eq_of_semilinear (Sp.phK j w i h) f Fam ?_ ?_
-  · intro a b hab
-    exact Subtype.ext (Sp.Psi_inj j w i h hab)
+  · exact fun a b hab => Subtype.ext (Sp.Psi_inj j w i h hab)
   · intro e
     constructor
     · intro he
@@ -718,8 +712,7 @@ theorem mem_iSup_iff {V Wf : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup
   constructor
   · intro hy
     refine (iSup₂_le fun P hP => ?_ : (⨆ P ∈ {P | Q P}, typ P) ≤ Es) hy
-    intro z hz p hp
-    exact (hQ P).1 hP p hp z hz
+    exact fun z hz p hp => (hQ P).1 hP p hp z hz
   · intro hy
     have hy' : y ∈ ⨆ P, typ P := by rw [htop]; trivial
     obtain ⟨f, hf, hsum⟩ := (Submodule.mem_iSup_iff_exists_finsupp typ y).1 hy'
@@ -854,8 +847,7 @@ theorem automorphic_points_exist : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.
     rw [_root_.GlobalTheory.HeightCounting.mult_eq_finrank_jointEig D A.pl M C big X T Sp (X.nd.j i) (X.nd.w i) i hmem x]
     refine _root_.GlobalTheory.PtLocalEig.eig_dim D M Sp.B (X.nd.j i) (X.nd.w i) (X.nd.mu i) (X.nd.j_range i).1 (X.nd.j_range i).2 (X.nd.mu_w i) φ hφ
       (fun v k => algebraMap _ _ (Sp.phO _ _ i hmem ((X.nd.hT i v k : X.nd.X i → X.nd.O i) x))) _ ?_ ?_ ?_
-    · intro v k hvk
-      exact _root_.GlobalTheory.SplitConjPlace.splitEx_all D v hvk.1
+    · exact fun v k hvk => _root_.GlobalTheory.SplitConjPlace.splitEx_all D v hvk.1
     · intro v k s ϖ hvk hc hu c f f'
       exact hlin v k s ϖ ((genAt_iff' Sp i v k).1 hvk).1 hc hu c f f'
     · intro y
@@ -864,15 +856,12 @@ theorem automorphic_points_exist : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.
       · intro h v k s ϖ hvk hc hu
         obtain ⟨hv, hk1, hk2⟩ := (genAt_iff' Sp i v k).1 hvk
         have e := h ⟨v, k, s, ϖ⟩ ⟨hv, hc, hu, hk1, hk2⟩
-        rw [hφalg, ← Sp.iotaC_coh]
-        exact e
+        rwa [hφalg, ← Sp.iotaC_coh]
       · rintro h ⟨v, k, s, ϖ⟩ ⟨hv, hc, hu, hk1, hk2⟩
         have e := h v k s ϖ ((genAt_iff' Sp i v k).2 ⟨hv, hk1, hk2⟩) hc hu
-        rw [hφalg, ← Sp.iotaC_coh] at e
-        exact e
+        rwa [hφalg, ← Sp.iotaC_coh] at e
   refine ⟨fun x => ?_, hdim⟩
-  by_contra hno
-  push Not at hno
+  by_contra! hno
   have hbot : (⨆ P ∈ {P | ptV P = some x}, (NG.isoTyp (mlX M X i).wt.ρ (F P)).comap (mlX M X i).real) = ⊥ :=
     eq_bot_iff.2 (iSup₂_le fun P hP => absurd hP (hno P))
   have h0 := hdim x

@@ -388,8 +388,7 @@ theorem mu_charUnramAt_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {
       show algebraMap _ _ a ∈ w'.asIdeal ↔ algebraMap _ _ a ∈ w.asIdeal
       rw [hc, Formalism.L2.Col.mem_conjIdeal]
       have : Formalism.L2.Col.cO D.host.E (algebraMap (𝓞 D.host.F) (𝓞 D.host.E) a) = algebraMap _ _ a := by
-        apply RingOfIntegers.ext
-        exact (D.sp.cm.fixed _).2 ⟨a, rfl⟩
+        exact RingOfIntegers.ext ((D.sp.cm.fixed _).2 ⟨a, rfl⟩)
       rw [this]
   · refine (GlobalTheory.LFun.unrAt_iff_of_chrEq (hL.xi t) w).2 ?_
     by_contra hu
@@ -479,8 +478,7 @@ theorem weilOK_fam_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi :
     have hμR : ResEta D ((_root_.GlobalTheory.Fam.pk_z W).toLevCh.mu t D.R.m) (D.sp.X'.rank + 1) := by
       have h1 : ResEta D ((_root_.GlobalTheory.Fam.pk_z W).toLevCh.mu t (j' + 1 + 1)) (D.sp.X (j' + 1 + 1)).rank := hk.resT
       have h2 : D.sp.X'.rank + f.c.Lz.rank = (D.sp.X (j' + 1 + 1)).rank := (f.c.oT (j' + 1 + 1) e).rank_add
-      rw [← h2, (hτ j' h').1, e] at h1
-      exact h1
+      rwa [← h2, (hτ j' h').1, e] at h1
     have hH : IsHeckeChar D (_root_.GlobalTheory.Fam.pk_z W).eta := by
       have h1 := _root_.GlobalTheory.WeilChange.hecke_mul (_root_.GlobalTheory.WeilChange.hecke_inv hX.hecT) hμH
       rwa [_root_.mul_inv_rev, inv_inv, inv_mul_cancel_right] at h1
@@ -529,8 +527,7 @@ theorem weilOK_fam_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi :
         (Eq.rec (motive := fun n _ => Om (Yc D n) D.sp.X') ((_root_.GlobalTheory.Fam.pk_z W).ωX t) e') := by
       intro n e'
       subst e'
-      rw [e]
-      exact hX
+      rwa [e]
     refine ⟨(_root_.GlobalTheory.Fam.pk_z W).toLevCh.mu t (j + 1), (_root_.GlobalTheory.Fam.pk_z W).eta⁻¹, (_root_.GlobalTheory.Fam.pk_z W).toLevCh.mu t (j + 1 + 1),
       (_root_.GlobalTheory.Fam.pk_z W).toLevCh.mu t (j + 1 + 1) * (_root_.GlobalTheory.Fam.pk_z W).eta⁻¹, omz, omT', omz'', bV, ?_, ?_, ?_, homT, key (j + 1) (idx_top h), homz''⟩
     · rw [bW]; exact hk0
@@ -597,8 +594,7 @@ theorem weilOK_of_rank_one_gram : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies
     have hT : (((D.mem u).A.T : ℕ) : 𝓞 D.host.E) ∈ PP.asIdeal := (mem_under PP _).1 (e ▸ (hV.tP x).1 hx)
     exact not_both PP ((Nat.coprime_primes (D.mem u).A.T_prime (D.host.g_prime k)).2 (D.T_ne_g u k)) hT hk
   have tQ : ∀ x ∈ v.tP, ∀ PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Q t, (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) ≠ x := by
-    intro x hx PP hPP e
-    exact (hL.Q_off t PP hPP).2 u ((mem_under PP _).1 (e ▸ (hV.tP x).1 hx))
+    exact fun x hx PP hPP e => (hL.Q_off t PP hPP).2 u ((mem_under PP _).1 (e ▸ (hV.tP x).1 hx))
   have muU := fun n x h1 h2 hg hq => _root_.GlobalTheory.MuUnrOff.mu_charUnramAt_alt W hP t n x h1 h2 hg hq
   have unr : ∀ P : HeightOneSpectrum (𝓞 D.host.F) → Prop,
       (∀ x, P x → ∀ PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg, (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) ≠ x) →

@@ -111,8 +111,7 @@ private theorem pow_eq (s : Finset ℂ) (j : ℕ) :
   have h : Lagrange.nodal s id ∣ X ^ j - ∑ z ∈ s, C (z ^ j) * Lagrange.basis s id z := by
     unfold Lagrange.nodal
     refine Finset.prod_dvd_of_coprime ?_ ?_
-    · intro a _ b _ hab
-      exact isCoprime_X_sub_C_of_isUnit_sub (sub_ne_zero.2 hab).isUnit
+    · exact fun a _ b _ hab => isCoprime_X_sub_C_of_isUnit_sub (sub_ne_zero.2 hab).isUnit
     · intro a ha
       rw [dvd_iff_isRoot, IsRoot.def, eval_sub]
       have := Lagrange.eval_interpolate_at_node (s := s) (v := id) (fun z : ℂ => z ^ j) (Set.injOn_id _) ha
@@ -136,8 +135,7 @@ private theorem trace_eq {W : Type} [AddCommGroup W] [Module ℂ W] [FiniteDimen
     refine nil_mul l hl (fun i => aeval (U i) (r * q)) B (fun i k => ?_) (fun i => semiconj_aeval (hB i) _) ?_
     · exact Commute.symm (semiconj_aeval (Commute.symm (semiconj_aeval (hc i k) _)) _)
     · have : Commute (aeval (U 0) r) (aeval (U 0) q) := (Commute.all r q).map _
-      simp only [map_mul]
-      exact this.isNilpotent_mul_right hn
+      simpa only [map_mul] using this.isNilpotent_mul_right hn
   have h2 : LinearMap.trace ℂ W (aeval (U 0) (r * q) * B) = 0 :=
     (LinearMap.isNilpotent_trace_of_isNilpotent h1).eq_zero
   have h3 : U 0 ^ j = aeval (U 0) (X ^ j : ℂ[X]) := by simp

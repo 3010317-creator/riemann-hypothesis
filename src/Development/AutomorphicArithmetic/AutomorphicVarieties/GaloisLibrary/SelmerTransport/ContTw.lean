@@ -88,13 +88,11 @@ private theorem cont_smul (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [Alge
     have h1 : Continuous fun g => ((χ g : ℤ_[l]ˣ) : ℤ_[l]) • x :=
       Continuous.comp (LDataCardLeFinrank.contScal l Γ χ hχ) (Continuous.prodMk_left x)
     have h2 : Continuous (QO.incl l O) := continuous_of_discreteTopology
-    refine (h2.comp h1).congr fun g => ?_
-    exact map_smul (QO.incl l O) _ x
+    exact (h2.comp h1).congr fun g => map_smul (QO.incl l O) _ x
   · intro s x hx
     have h2 : Continuous fun y : QO l O => s • y := continuous_of_discreteTopology
     exact (h2.comp hx).congr fun g => smul_comm _ _ _
-  · intro x y hx hy
-    exact (hx.add hy).congr fun g => (smul_add _ _ _).symm
+  · exact fun x y hx hy => (hx.add hy).congr fun g => (smul_add _ _ _).symm
 
 private alias locConst := _root_.UpperTheory.Reformulated.B.LocallyConstantFunctions.locConst
 

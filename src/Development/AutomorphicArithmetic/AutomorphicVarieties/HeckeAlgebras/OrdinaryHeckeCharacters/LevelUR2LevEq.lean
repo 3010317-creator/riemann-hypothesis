@@ -56,8 +56,7 @@ private theorem le_cmp_same {l : ℕ} [Fact l.Prime] {L : Type} [Field L] [Numbe
     (hg : cmp n w g ∈ KO (w.adicCompletion L) (Fin n)) : cmp n w' g ∈ KO (w'.adicCompletion L) (Fin n) := by
   by_cases h' : ((l : ℕ) : 𝓞 L) ∉ w'.asIdeal
   · have h0 : ((l : ℕ) : 𝓞 L) ∉ w.asIdeal := by
-      rw [le_mem_under, ← h, ← le_mem_under]
-      exact h'
+      rwa [le_mem_under, ← h, ← le_mem_under]
     obtain ⟨_, x, rfl⟩ := g
     unfold CaseU.cmp at hg ⊢
     rw [dite_eq_left h0] at hg
@@ -84,8 +83,7 @@ theorem UpperTheory.V.Hi.levelUR2LevEq :
       · exact (hw (h0 ▸ hw')).elim
       · refine le_cmp_same (w := Q.wq q) hq.symm _ ?_
         have h3 := h2 q
-        rw [hK q] at h3
-        exact h3
+        rwa [hK q] at h3
     · exact h1 w hw'
   · intro hu
     obtain ⟨h1, _⟩ := levelUR2LevOut l L Ω s n hn V₀ Q₀ c m τ₀ K₀ u hu

@@ -144,8 +144,7 @@ theorem factor_of_parts (X : Tri T A A' WW) (ψ : AddChar (AF D.host.F) ℂ) (θ
   · let K : Submodule ℂ (PolF D WW.rank A.rank) := LinearMap.ker (linI X ψ θ t₀ (hint t₀))
     have hK : ∀ t, LinearMap.ker (linI X ψ θ t (hint t)) = K := fun t => by
       ext P
-      simp only [K, LinearMap.mem_ker, linI_apply]
-      exact ⟨hker t t₀ P, hker t₀ t P⟩
+      simpa only [K, LinearMap.mem_ker, linI_apply] using ⟨hker t t₀ P, hker t₀ t P⟩
     let Jb : T → ((PolF D WW.rank A.rank ⧸ K) →ₗ[ℂ] (GA D WW → ℂ)) := fun t =>
       K.liftQ (linI X ψ θ t (hint t)) (hK t).ge
     have hJb : ∀ t, Function.Injective (Jb t) := fun t => by
@@ -153,8 +152,7 @@ theorem factor_of_parts (X : Tri T A A' WW) (ψ : AddChar (AF D.host.F) ℂ) (θ
       exact Submodule.ker_liftQ_eq_bot _ _ _ (hK t).le
     refine ⟨hlam, ModuleCat.of ℂ (PolF D WW.rank A.rank ⧸ K), K.mkQ, K.mkQ ∘ₗ s, fun t => (lam t)⁻¹ • Jb t,
       K.mkQ_surjective, fun t => ?_, hint, fun t P => ?_, fun t P' hP' => ?_, ?_⟩
-    · intro x y hxy
-      exact hJb t (smul_right_injective _ (inv_ne_zero (hlam t)) hxy)
+    · exact fun x y hxy => hJb t (smul_right_injective _ (inv_ne_zero (hlam t)) hxy)
     · show X.I ψ θ t P = lam t • ((lam t)⁻¹ • Jb t (K.mkQ P))
       rw [smul_smul, mul_inv_cancel₀ (hlam t), one_smul]
       rfl
@@ -199,8 +197,7 @@ theorem m_le_of_size {D : D7} {large₂ : SizeData₂ D} (h : GlobalTheory.Indef
   have h4 : D.R.m ^ 4 ≤ D.R.f := h.2.2.1
   have hm : 44 ≤ D.R.m := h.2.2.2.1
   have hfm : D.R.f * D.R.m ≤ (D.R.r + 1) ^ 3 := h.2.2.2.2.2.2.1
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   have h1 : (D.R.r + 1) ^ 3 < D.R.m ^ 3 := Nat.pow_lt_pow_left hc (by norm_num)
   have h2 : D.R.m ^ 3 ≤ D.R.m ^ 4 * D.R.m := by
     calc D.R.m ^ 3 ≤ D.R.m ^ 5 := Nat.pow_le_pow_right (by omega) (by norm_num)
@@ -422,8 +419,7 @@ theorem GlobalTheory.StageKer.theta_stage_kernel_eq : _root_.GlobalTheory.FunPr.
     constructor
     · intro h0; by_contra hq0; exact _root_.GlobalTheory.PolKer.tmul_ne_zero_of_ne hq0 hy h0
     · intro h0; rw [h0, TensorProduct.zero_tmul]
-  intro t t' P h0
-  exact (key t' P).2 ((key t P).1 h0)
+  exact fun t t' P h0 => (key t' P).2 ((key t P).1 h0)
 end
 end
 

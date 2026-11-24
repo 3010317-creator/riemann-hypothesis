@@ -105,8 +105,7 @@ private theorem hol_int {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
     refine ⟨Matrix.SpecialLinearGroup.map (Int.castRingHom (ZMod M)) γ, ?_⟩
     have h : ∃ γ', Matrix.SpecialLinearGroup.map (Int.castRingHom (ZMod M)) γ'
         = Matrix.SpecialLinearGroup.map (Int.castRingHom (ZMod M)) γ := ⟨γ, rfl⟩
-    simp only [g', dite_eq_left h]
-    exact hfac γ h.choose h.choose_spec
+    simpa only [g', dite_eq_left h] using hfac γ h.choose h.choose_spec
   set S := hfin.toFinset with hSdef
   have hmemS : ∀ s, s ∈ S ↔ ∃ γ, orb γ = s := by
     intro s
@@ -148,8 +147,7 @@ private theorem hol_int {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
   have hhol : ∀ n, P.coeff n ∈ holR Tw := by
     have hl : P ∈ lifts (holR Tw).subtype := by
       rw [hPdef]
-      refine Subsemiring.prod_mem _ (fun s hs => ?_)
-      exact ⟨X - C ⟨s, hS s hs⟩, by simp⟩
+      exact Subsemiring.prod_mem _ (fun s hs => ⟨X - C ⟨s, hS s hs⟩, by simp⟩)
     intro n
     obtain ⟨c, hc⟩ := (lifts_iff_coeff_lifts P).1 hl n
     rw [← hc]
@@ -159,8 +157,7 @@ private theorem hol_int {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
       (by obtain ⟨ψ, h1, h2⟩ := Tw.j_hol; exact ⟨ψ, h2, h1⟩) _ (fun γ => hinv γ n) (hhol n)
   have hl2 : P ∈ lifts (algebraMap (Algebra.adjoin Ω {Tw.jK}) Tw.K) := by
     rw [lifts_iff_coeff_lifts]
-    intro n
-    exact ⟨⟨_, hadj n⟩, rfl⟩
+    exact fun n => ⟨⟨_, hadj n⟩, rfl⟩
   obtain ⟨q, hq, -, hqm⟩ := lifts_and_degree_eq_and_monic hl2 hPmon
   refine ⟨q, hqm, ?_⟩
   rw [← eval_map, hq, hroot]
@@ -177,8 +174,7 @@ theorem UpperTheory.V.Z.Kato.Sym.KU.hol :
       map_zero' := rfl
       map_add' := fun _ _ => rfl }
   refine ⟨q.map ι, hqm.map ι, ?_⟩
-  rw [Polynomial.eval₂_map]
-  exact hq
+  rwa [Polynomial.eval₂_map]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.KatoQuadraticCharacters.SymmetricPowerSymbols.HolomorphicIntegrality.HolInt =====
@@ -202,8 +198,7 @@ theorem UpperTheory.V.Z.Kato.Sym.KU.sgU :
   have a3 : W.valuation (siegel X c x) * W.valuation (siegel X c x)⁻¹ = 1 := by
     rw [← map_mul, mul_inv_cancel₀ hne, map_one]
   refine le_antisymm a1 ?_
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have := mul_lt_one_of_lt_of_le hlt a2
   rw [a3] at this
   exact lt_irrefl _ this

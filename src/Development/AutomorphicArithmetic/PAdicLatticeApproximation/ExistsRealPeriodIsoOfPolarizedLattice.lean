@@ -130,24 +130,21 @@ theorem UpperTheory.exists_sum_baseChange_of_commute_baseChange :
       rw [← h1]
       refine Finset.sum_congr rfl fun l _ => ?_
       rw [Algebra.smul_def, mul_comm]
-    have h3 := Fintype.linearIndependent_iff.1 hr (fun l => bV.repr (w l) i) h2 l
-    simpa using h3
+    simpa using Fintype.linearIndependent_iff.1 hr (fun l => bV.repr (w l) i) h2 l
   have hT1 : ∀ x : V', T (1 ⊗ₜ x) = ∑ l, r l ⊗ₜ[ℚ] h l x := by
     have e : (T.restrictScalars ℚ).comp (TensorProduct.mk ℚ R V' 1) =
         ∑ l, (TensorProduct.mk ℚ R V (r l)).comp (h l) := by
       refine bV'.ext fun j => ?_
       have hs : T (1 ⊗ₜ bV' j) = ∑ i, M (j, i) ⊗ₜ[ℚ] bV i := by
         conv_lhs => rw [← B.sum_repr (T (1 ⊗ₜ bV' j))]
-        refine Finset.sum_congr rfl fun i _ => ?_
-        exact Algebra.TensorProduct.basis_repr_symm_apply' bV _ i
+        exact Finset.sum_congr rfl fun i _ => Algebra.TensorProduct.basis_repr_symm_apply' bV _ i
       simp only [LinearMap.comp_apply, LinearMap.restrictScalars_apply, TensorProduct.mk_apply,
         LinearMap.sum_apply, h, Module.Basis.constr_basis]
       rw [hs]
       simp only [hM, TensorProduct.sum_tmul, TensorProduct.tmul_sum, TensorProduct.smul_tmul]
       exact Finset.sum_comm
     intro x
-    have e2 := LinearMap.congr_fun e x
-    simpa using e2
+    simpa using LinearMap.congr_fun e x
   refine ⟨Module.finrank ℚ S, r, h, ?_, ?_⟩
   · intro l i
     have hw : ∀ v : V', ∑ l, r l ⊗ₜ[ℚ] (h l (a' i v) - a i (h l v)) = 0 := by
@@ -159,8 +156,7 @@ theorem UpperTheory.exists_sum_baseChange_of_commute_baseChange :
       simp only [LinearMap.baseChange_tmul] at e
       simp only [TensorProduct.tmul_sub, Finset.sum_sub_distrib, e, sub_self]
     ext v
-    have h4 := key _ (hw v) l
-    simpa [sub_eq_zero] using h4
+    simpa [sub_eq_zero] using key _ (hw v) l
   · ext m
     simp only [TensorProduct.AlgebraTensorModule.curry_apply, TensorProduct.curry_apply,
       LinearMap.restrictScalars_apply]

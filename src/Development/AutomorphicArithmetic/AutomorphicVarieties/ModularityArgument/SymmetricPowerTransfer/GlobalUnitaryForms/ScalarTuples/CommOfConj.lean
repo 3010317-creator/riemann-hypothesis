@@ -91,8 +91,7 @@ private theorem index_range_mulLeft_eq_natAbs_det_and_det_ne_zero {B : Type} [Ri
       _ = _ := h.symm
       _ = _ := by
         congr 2
-  · rw [Ne, LinearMap.det_eq_zero_iff_ker_ne_bot, not_not, LinearMap.ker_eq_bot]
-    exact hinj
+  · rwa [Ne, LinearMap.det_eq_zero_iff_ker_ne_bot, not_not, LinearMap.ker_eq_bot]
 
 private theorem exists_natAbs_det_mulLeft_sum_le_mul_pow_card {B : Type} [Ring B] {ι : Type} [Fintype ι] [DecidableEq ι] (b : Module.Basis ι ℤ B) :
     ∃ C : ℕ, ∀ (c : ι → ℤ) (m : ℕ), (∀ i, |c i| ≤ m) →
@@ -154,8 +153,7 @@ private theorem exists_nat_mul_mem_principal_of_rightIdeal_index_ne_zero {B : Ty
   have hm1 : m ^ k ≤ D := Nat.findGreatest_spec (P := fun m => m ^ k ≤ D) (Nat.zero_le D)
     (by rw [zero_pow hk.ne']; exact Nat.zero_le _)
   have hm2 : D < (m + 1) ^ k := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hle : m + 1 ≤ D := le_trans (Nat.le_self_pow hk.ne' _) hcon
     exact Nat.findGreatest_is_greatest (P := fun m => m ^ k ≤ D) (Nat.lt_succ_self m) hle hcon
   haveI : I.FiniteIndex := ⟨hD⟩
@@ -164,8 +162,7 @@ private theorem exists_nat_mul_mem_principal_of_rightIdeal_index_ne_zero {B : Ty
   let f : (Module.Free.ChooseBasisIndex ℤ B → Fin (m + 1)) → B ⧸ I :=
     fun c => QuotientAddGroup.mk (∑ i, ((c i : ℕ) : ℤ) • b i)
   have hcard : Fintype.card (B ⧸ I) < Fintype.card (Module.Free.ChooseBasisIndex ℤ B → Fin (m + 1)) := by
-    rw [Fintype.card_fun, Fintype.card_fin, ← Nat.card_eq_fintype_card]
-    exact hm2
+    rwa [Fintype.card_fun, Fintype.card_fin, ← Nat.card_eq_fintype_card]
   obtain ⟨c, c', hne, hcc⟩ := Fintype.exists_ne_map_eq_of_card_lt f hcard
   let d : Module.Free.ChooseBasisIndex ℤ B → ℤ := fun i => ((c i : ℕ) : ℤ) - ((c' i : ℕ) : ℤ)
   have hxeq : ∑ i, d i • b i = (∑ i, ((c i : ℕ) : ℤ) • b i) - ∑ i, ((c' i : ℕ) : ℤ) • b i := by
@@ -173,8 +170,7 @@ private theorem exists_nat_mul_mem_principal_of_rightIdeal_index_ne_zero {B : Ty
   have hxI : ∑ i, d i • b i ∈ I := by
     have h0 := (QuotientAddGroup.eq (s := I)).1 hcc
     rw [hxeq]
-    have h1 := I.neg_mem h0
-    simpa [sub_eq_add_neg, add_comm] using h1
+    simpa [sub_eq_add_neg, add_comm] using I.neg_mem h0
   have hx0 : ∑ i, d i • b i ≠ 0 := by
     intro h0
     apply hne
@@ -239,13 +235,11 @@ theorem cls_abs {A M Γ G : Type} [Ring A] [CharZero A] [Ring M] [Group Γ] [Gro
     calc z = σ γ⁻¹ * (σ γ * z) := by rw [← mul_assoc, (hunit γ).2, one_mul]
       _ = z' := by rw [h, ← mul_assoc, (hunit γ).2, one_mul]
   haveI : NoZeroSMulDivisors ℤ (R.comap j) := ⟨fun {c x} h => by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     obtain ⟨hc0, hx0⟩ := hc
     have hx0' : (x : A) ≠ 0 := fun h' => hx0 (Subtype.ext h')
     have h1 : (c : A) * (x : A) = 0 := by
-      have h2 := congrArg Subtype.val h
-      simpa [zsmul_eq_mul] using h2
+      simpa [zsmul_eq_mul] using congrArg Subtype.val h
     obtain ⟨γ, hγ⟩ := hσ x x.2 hx0'
     have h3 : (c : A) = 0 := by
       calc (c : A) = (c : A) * (σ γ * σ γ⁻¹) := by rw [(hunit γ).1, mul_one]
@@ -265,16 +259,14 @@ theorem cls_abs {A M Γ G : Type} [Ring A] [CharZero A] [Ring M] [Group Γ] [Gro
       exact natCast_mem R n
     obtain ⟨γ1, hγ1⟩ := hσ (n : A) hnB (Nat.cast_ne_zero.2 hn0)
     have ha : ρ (ι γ1 * g) ∈ R := by
-      rw [map_mul, hι, hγ1, map_natCast]
-      exact hnR
+      rwa [map_mul, hι, hγ1, map_natCast]
     obtain ⟨n', hn'0, hn'R⟩ := hden (ι γ1 * g)⁻¹
     set a := ρ (ι γ1 * g)
     set a' := ρ (ι γ1 * g)⁻¹
     have haa' : a * a' = 1 := (hρinv _).1
     have ha'a : a' * a = 1 := (hρinv _).2
     have hn'R2 : a' * (n' : M) ∈ R := by
-      rw [← Nat.cast_comm]
-      exact hn'R
+      rwa [← Nat.cast_comm]
     let I : AddSubgroup (R.comap j) :=
       { carrier := {y | ∃ r ∈ R, j (y : A) = a * r}
         add_mem' := by
@@ -292,8 +284,7 @@ theorem cls_abs {A M Γ G : Type} [Ring A] [CharZero A] [Ring M] [Group Γ] [Gro
     have hn'0B : ((n' : R.comap j)) ≠ 0 := by
       intro h
       apply hn'0
-      have h2 := congrArg Subtype.val h
-      simpa using h2
+      simpa using congrArg Subtype.val h
     obtain ⟨hidx, hdet⟩ := index_range_mulLeft_eq_natAbs_det_and_det_ne_zero (n' : R.comap j) (fun z z' h =>
       Subtype.ext (hinjA _ (n' : R.comap j).2 (fun h' => hn'0B (Subtype.ext h')) _ _ (congrArg Subtype.val h)))
     have hle : (LinearMap.range (LinearMap.mulLeft ℤ (n' : R.comap j))).toAddSubgroup ≤ I := by
@@ -316,16 +307,13 @@ theorem cls_abs {A M Γ G : Type} [Ring A] [CharZero A] [Ring M] [Group Γ] [Gro
     have hz1 : (N : M) * j y = j (σ γx) * j (z : A) := by
       have h2 := congrArg (fun w : R.comap j => j (w : A)) hz
       simp only [Subring.coe_mul, Subring.coe_natCast, map_mul, map_natCast] at h2
-      rw [hγx]
-      exact h2
+      rwa [hγx]
     have hz2 : (N : M) * (n' : M) = j (σ γx) * j (z' : A) := by
       have h2 := congrArg (fun w : R.comap j => j (w : A)) hz'
       simp only [Subring.coe_mul, Subring.coe_natCast, map_mul, map_natCast] at h2
-      rw [hγx]
-      exact h2
+      rwa [hγx]
     refine ⟨γ1⁻¹ * γx, ι γx⁻¹ * (ι γ1 * g), ⟨?_, ?_⟩, ?_⟩
-    · rw [mul_inv_rev, map_inv ι, inv_inv, map_mul, hι, hγx, hr0, ← mul_assoc, ha'a, one_mul]
-      exact hr0R
+    · rwa [mul_inv_rev, map_inv ι, inv_inv, map_mul, hι, hγx, hr0, ← mul_assoc, ha'a, one_mul]
     · rw [map_mul, hι]
       have h3 : (N : M) * (j (σ γx⁻¹) * a) = j (z : A) + j (z' : A) * r := by
         calc (N : M) * (j (σ γx⁻¹) * a) = j (σ γx⁻¹) * ((N : M) * a) := by
@@ -341,8 +329,7 @@ theorem cls_abs {A M Γ G : Type} [Ring A] [CharZero A] [Ring M] [Group Γ] [Gro
   have hN0B : ((N : R.comap j)) ≠ 0 := by
     intro h
     apply hN0
-    have h2 := congrArg Subtype.val h
-    simpa using h2
+    simpa using congrArg Subtype.val h
   obtain ⟨hKidx, hKdet⟩ := index_range_mulLeft_eq_natAbs_det_and_det_ne_zero (N : R.comap j) (fun z z' h =>
     Subtype.ext (hinjA _ (N : R.comap j).2 (fun h' => hN0B (Subtype.ext h')) _ _ (congrArg Subtype.val h)))
   set K := (LinearMap.range (LinearMap.mulLeft ℤ (N : R.comap j))).toAddSubgroup with hKd
@@ -580,8 +567,7 @@ theorem conj_mem {u : DX Δ} (hu : u ∈ ZD Δ ⊔ KD Δ O) {r : Matrix (Fin 2) 
         show Commute ((w : GL (Fin 2) (Lsq K Δ)) : Matrix (Fin 2) (Fin 2) (Lsq K Δ)) s
         rw [← ht]
         exact Matrix.scalar_commute _ (fun _ => Commute.all _ _) s
-      rw [hc.eq, mul_assoc, ← mt_mul, mul_inv_cancel, mt1, mul_one]
-      exact hs
+      rwa [hc.eq, mul_assoc, ← mt_mul, mul_inv_cancel, mt1, mul_one]
     · obtain ⟨h1, h2⟩ := (mem_KD O w).1 hw
       exact (RL Δ O).mul_mem ((RL Δ O).mul_mem h1 hs) h2
   rw [Subgroup.sup_eq_closure] at hu
@@ -1040,8 +1026,7 @@ private theorem stab_F {F G : Type} [Field F] [CharZero F] [Group G] {Δ : F} (h
   have hcan : ∀ x y : Matrix (Fin 2) (Fin 2) (Lsq F Δ), N • x = N • y → x = y := by
     intro x y h
     have h' : (N : F) • x = (N : F) • y := by
-      rw [Nat.cast_smul_eq_nsmul, Nat.cast_smul_eq_nsmul]
-      exact h
+      rwa [Nat.cast_smul_eq_nsmul, Nat.cast_smul_eq_nsmul]
     exact smul_right_injective _ (Nat.cast_ne_zero.2 hN) h'
   have hdet : ∀ (γ : DX Δ) (b : Matrix (Fin 2) (Fin 2) (Lsq F Δ)),
       (N • (sg Δ γ * b * sg Δ γ⁻¹)).det = (N • b).det := by
@@ -1060,8 +1045,7 @@ private theorem stab_F {F G : Type} [Field F] [CharZero F] [Group G] {Δ : F} (h
   · intro γ δ h
     obtain ⟨e1, e2⟩ := Prod.mk.inj h
     have c1 := comm_of_conj (sg Δ) _ γ δ (hcan _ _ e1)
-    have c2 := comm_of_conj (sg Δ) _ γ δ (hcan _ _ e2)
-    exact FK.mem_ZD hΔ hc (γ⁻¹ * δ) c1 c2
+    exact FK.mem_ZD hΔ hc (γ⁻¹ * δ) c1 (comm_of_conj (sg Δ) _ γ δ (hcan _ _ e2))
 
 private theorem mem_box {I G : Type} [Group G] {Gv : I → Type} [∀ v, Group (Gv v)] {K : ∀ v, Subgroup (Gv v)} (P : RPG G Gv K)
     (U : ∀ v, Subgroup (Gv v)) (g : G) : g ∈ P.box U ↔ ∀ v, P.p v g ∈ U v := Subgroup.mem_iInf
@@ -1143,8 +1127,7 @@ theorem UpperTheory.V.Z.Sym.Glob.finK :
   refine ⟨?_, finK_test F Δ D hD V ch B hB⟩
   obtain ⟨hcls, hstab⟩ := finK_fin F Δ D hD B.ι hB.ι
   refine ⟨?_, ?_⟩
-  · rw [hB.U]
-    exact hcls
+  · rwa [hB.U]
   · intro g
     rw [hB.U, hB.Γ₀]
     exact hstab g

@@ -230,13 +230,11 @@ theorem unfolding_cover_bound (G H : Type) [Group G] [Group H] [MeasurableSpace 
     subst hq
     have h2 : ι ((δ₁:H)⁻¹) = ι ((δ₂:H)⁻¹) := mul_left_cancel hv
     have h3 : (δ₁:H)⁻¹ = (δ₂:H)⁻¹ := hι h2
-    simp only [Prod.mk.injEq, true_and]
-    exact Subtype.ext (inv_injective h3)
+    simpa only [Prod.mk.injEq, true_and] using Subtype.ext (inv_injective h3)
   calc ∑' q : Γ ⧸ ι.range.subgroupOf Γ, ∫⁻ h, F ((q.out : Γ) * ι h) ∂μ
       ≤ ∑' q : Γ ⧸ ι.range.subgroupOf Γ, ∑' δ : Γ.comap ι,
           ∫⁻ k in Kc, F (((φ (q, δ)) : G) * ι k) ∂μ := by
-        refine ENNReal.tsum_le_tsum fun q => ?_
-        exact step _
+        exact ENNReal.tsum_le_tsum fun q => step _
     _ = ∑' p, ∫⁻ k in Kc, F ((φ p : G) * ι k) ∂μ := ENNReal.tsum_prod.symm
     _ = ∫⁻ k in Kc, ∑' p, F ((φ p : G) * ι k) ∂μ :=
         (lintegral_tsum fun p => (hF _).aemeasurable).symm
@@ -393,8 +391,7 @@ theorem poincare_sum_bound : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (
   have hP : ∀ x : GA D V, 0 < ∏ τ, ((1 + hsn (cmp θ τ x)) ^ (2 * V.rank ^ 2 + 1))⁻¹ := fun x =>
     Finset.prod_pos fun τ _ => inv_pos.2 (pow_pos (add_pos_of_pos_of_nonneg zero_lt_one (Real.sqrt_nonneg _)) _)
   have hC0 : 0 ≤ C := by
-    by_contra h
-    push Not at h
+    by_contra! h
     have := hle 1
     have := hu 1
     have := mul_neg_of_neg_of_pos h (hP 1)
@@ -468,8 +465,7 @@ attribute [local instance] Matrix.frobeniusNormedAddCommGroup Matrix.frobeniusNo
 theorem hsn_eq_norm {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) : hsn A = ‖A‖ := by
   rw [hsn, Matrix.frobenius_norm_def, Real.sqrt_eq_rpow]
   congr 1
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  exact (Real.rpow_natCast _ 2).symm
+  exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => (Real.rpow_natCast _ 2).symm
 
 theorem hsn_mul_le {n : ℕ} (A B : Matrix (Fin n) (Fin n) ℂ) : hsn (A * B) ≤ hsn A * hsn B := by
   rw [hsn_eq_norm, hsn_eq_norm, hsn_eq_norm]

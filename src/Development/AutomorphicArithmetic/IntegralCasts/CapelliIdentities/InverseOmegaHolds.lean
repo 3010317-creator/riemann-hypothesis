@@ -248,8 +248,7 @@ theorem UpperTheory.Reformulated.B.Gwa1.inverse_omega_holds :
       (mul_mem (ofNat_mem _ 3) (mul_mem (mul_mem c₆ (pow_mem hX _)) (pow_mem ih _))) :
         _ ∈ lowIn (ball p) (n + 1)) n (Nat.lt_succ_self n)
   · have h0 : constantCoeff w = 1 := by
-      have h := congrArg constantCoeff hw'
-      simpa using h
+      simpa using congrArg constantCoeff hw'
     have hu : constantCoeff (w * (C W.a₁ * X + C W.a₃ * X ^ 3 * w - 2)) ≠ 0 := by
       simp [h0, map_ofNat]
     have ho : omegaW W w = (-2 * w - X * dX w) * (w * (C W.a₁ * X + C W.a₃ * X ^ 3 * w - 2))⁻¹ :=

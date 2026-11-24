@@ -70,8 +70,7 @@ theorem evalₐ_eq_zero_iff_dvd (a : A) (n : ℕ) (x : AdicCompletion (span {a})
     have h1 : AdicCompletion.eval (span {a}) A n x = 0 := by
       rw [← AdicCompletion.factor_evalₐ_eq_eval (span {a}) x (by simp), h, map_zero]
     have h2 : x ∈ (span {a} ^ n • ⊤ : Submodule A (AdicCompletion (span {a}) A)) := by
-      rw [AdicCompletion.pow_smul_top_eq_ker_eval (Submodule.fg_span_singleton a)]
-      exact h1
+      rwa [AdicCompletion.pow_smul_top_eq_ker_eval (Submodule.fg_span_singleton a)]
     rw [Ideal.span_singleton_pow, Submodule.ideal_span_singleton_smul,
       Submodule.mem_smul_pointwise_iff_exists] at h2
     obtain ⟨y, -, rfl⟩ := h2
@@ -148,8 +147,7 @@ theorem factorPow_eval {m n : ℕ} (hle : m ≤ n) (x : Acris p R) :
 
 theorem eval_eq_zero_iff (n : ℕ) (x : Acris p R) : eval p R n x = 0 ↔ (p : Acris p R) ^ n ∣ x := by
   have := evalₐ_eq_zero_iff_dvd (p : AcrisZero p R) n x
-  rw [map_natCast] at this
-  exact this
+  rwa [map_natCast] at this
 
 theorem exists_eq_add (n : ℕ) (x : Acris p R) :
     ∃ (a : AcrisZero p R) (y : Acris p R), x = algebraMap _ _ a + (p : Acris p R) ^ n * y := by

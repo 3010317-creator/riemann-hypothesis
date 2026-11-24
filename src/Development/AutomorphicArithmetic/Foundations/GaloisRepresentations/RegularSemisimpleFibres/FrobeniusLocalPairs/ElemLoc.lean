@@ -295,8 +295,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.normOpen :
   refine ⟨r₂ * δ, mul_pos hr₂0 (zero_lt_iff.mpr hδ0), hr₀r₂.trans_lt (hr₂δ.trans_le hδ1), ?_⟩
   intro x hx
   have hmem : ∀ y : k, valuation k (y - 1) ≤ r₂ → valuation E (algebraMap k E y - 1) ≤ r := by
-    intro y hy
-    exact le_of_lt (hγ (lt_of_le_of_lt hy hr₂γ))
+    exact fun y hy => le_of_lt (hγ (lt_of_le_of_lt hy hr₂γ))
   refine ⟨hmem x (hx.trans hr₀r₂), ?_⟩
   have hg : Matrix.GeneralLinearGroup.scalar (Fin 1) x ∈ UpperTheory.ConvolutionTheory.Loc.ball 1 (r₂ * δ) := by
     intro i j
@@ -414,8 +413,7 @@ private theorem scalar_cover {σ : E ≃+* E} {q : ℕ} (hσ : Cyc σ q) (r : Va
   have hqe : (Units.map (σ : E →* E))^[q] πu = πu := Units.ext (by rw [iter_val, hπu, hσ.ord])
   have hPfix : Units.map (σ : E →* E) P = P := by
     rw [hP, map_prod]
-    simp only [← Function.iterate_succ_apply']
-    exact mul_right_cancel (key.trans (by rw [hqe]))
+    simpa only [← Function.iterate_succ_apply'] using mul_right_cancel (key.trans (by rw [hqe]))
   refine ⟨(Finset.range q ×ˢ W).image (fun it => πu ^ it.1 * it.2), fun x => ?_⟩
   obtain ⟨m, hm⟩ := Subgroup.mem_zpowers_iff.mp (hg (V x))
   have hq0 : (0 : ℤ) < q := by exact_mod_cast hq
@@ -456,14 +454,12 @@ private theorem near_scalar {r : ValueGroupWithZero E} (h1 : r < 1) {a b : Eˣ} 
       ring
     rw [e]
     refine (valuation E).map_add_le ?_ ha
-    rw [map_mul, hva, one_mul]
-    exact hb
+    rwa [map_mul, hva, one_mul]
   · have e : ((a⁻¹ : Eˣ) : E) - 1 = ((a⁻¹ : Eˣ) : E) * (1 - (a : E)) := by
       rw [mul_sub, mul_one, Units.inv_mul]
     have hvi : valuation E ((a⁻¹ : Eˣ) : E) = 1 := by
       rw [Units.val_inv_eq_inv_val, map_inv₀, hva, inv_one]
-    rw [e, map_mul, Valuation.map_sub_swap, hvi, one_mul]
-    exact ha
+    rwa [e, map_mul, Valuation.map_sub_swap, hvi, one_mul]
 
 private theorem near_mul {r : ValueGroupWithZero E} (h1 : r < 1) {a b : Fin n → Eˣ} (ha : Near r a) (hb : Near r b) :
     Near r (a * b) := fun i => (near_scalar h1 (ha i) (hb i)).1
@@ -558,8 +554,7 @@ theorem reps : Reps := by
       Near r (sgT σ (Quotient.out (QuotientGroup.mk u : (Fin n → Eˣ) ⧸ fixNear σ r h1)) /
         Quotient.out (QuotientGroup.mk u : (Fin n → Eˣ) ⧸ fixNear σ r h1)) := fun u hu => by
     have h := hS1 hu (hout u)
-    rw [mul_inv_cancel_left] at h
-    exact h
+    rwa [mul_inv_cancel_left] at h
   refine ⟨hfin.toFinset, ?_, ?_, ?_, ?_, ?_⟩
   · refine ⟨Quotient.out (QuotientGroup.mk 1 : (Fin n → Eˣ) ⧸ fixNear σ r h1),
       hfin.mem_toFinset.mpr ⟨⟨_, rfl⟩, hS_out 1 ?_⟩⟩
@@ -567,20 +562,17 @@ theorem reps : Reps := by
     exact near_one r
   · intro u
     constructor
-    · intro hu
-      exact ⟨_, hfin.mem_toFinset.mpr ⟨⟨_, rfl⟩, hS_out u hu⟩, (rel_iff h1).mpr (hout' u)⟩
+    · exact fun hu => ⟨_, hfin.mem_toFinset.mpr ⟨⟨_, rfl⟩, hS_out u hu⟩, (rel_iff h1).mpr (hout' u)⟩
     · rintro ⟨ρ, hρ, hr⟩
       have h := hS1 (hfin.mem_toFinset.mp hρ).2 ((rel_iff h1).mp hr)
-      rw [mul_inv_cancel_left] at h
-      exact h
+      rwa [mul_inv_cancel_left] at h
   · intro ρ hρ ρ' hρ' hr
     obtain ⟨⟨c, rfl⟩, -⟩ := hfin.mem_toFinset.mp hρ
     obtain ⟨⟨c', rfl⟩, -⟩ := hfin.mem_toFinset.mp hρ'
     have h := QuotientGroup.eq.mpr ((rel_iff h1).mp hr)
     rw [QuotientGroup.out_eq', QuotientGroup.out_eq'] at h
     rw [h]
-  · intro a b ha hb
-    exact ⟨near_mul h1 ha hb, near_inv h1 ha⟩
+  · exact fun a b ha hb => ⟨near_mul h1 ha hb, near_inv h1 ha⟩
   · intro z u ρ
     rw [rel_iff h1, rel_iff h1]
     have e : (z * ρ)⁻¹ * (z * u) = ρ⁻¹ * u := by group
@@ -620,8 +612,7 @@ private theorem strict_map {k E : Type} [Field k] [ValuativeRel k] [TopologicalS
   rw [← (valuation k).vlt_iff_lt] at h
   rw [← (valuation E).vlt_iff_lt]
   simp only [Units.coe_map, MonoidHom.coe_coe]
-  intro hle
-  exact h (ValuativeExtension.vle_iff_vle.mp hle)
+  exact fun hle => h (ValuativeExtension.vle_iff_vle.mp hle)
 
 theorem UpperTheory.Gal.InertialTypesAlt.L.align :
     UpperTheory.Gal.InertialTypesAlt.L.Align := by
@@ -721,8 +712,7 @@ private theorem mem_diag (g : GL (Fin n) k) :
     refine ⟨fun i => Units.mk0 _ (hne i), ?_⟩
     ext : 1
     rw [val_diagT]
-    simp only [Units.val_mk0]
-    exact hd.symm
+    simpa only [Units.val_mk0] using hd.symm
 
 private theorem isClosed_diag : IsClosed ((diagT k (Fin n)).range : Set (GL (Fin n) k)) := by
   haveI := GroundTheory.LocalField.t2Space_of_isNonarchimedeanLocalField k
@@ -775,8 +765,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.volRatio :
     rintro d ⟨⟨s, rfl⟩, hd⟩
     refine ⟨⟨s, rfl⟩, ?_⟩
     have hd' : diagT k (Fin n) s ∈ ball n r' := by
-      rw [← hKk]
-      exact hd
+      rwa [← hKk]
     show incl (diagT k (Fin n) s) ∈ KE
     rw [← SetLike.mem_coe, hKE]
     intro i j

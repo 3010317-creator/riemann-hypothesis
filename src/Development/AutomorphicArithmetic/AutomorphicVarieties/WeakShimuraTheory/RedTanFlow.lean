@@ -88,8 +88,7 @@ theorem rank_le_of_lowest : ∀ {k V : Type} [Field k] [AddCommGroup V] [Module 
     | zero =>
       have : T ⊓ K (max hi lo) = ⊥ := by
         rw [eq_bot_iff]
-        intro x hx
-        exact hhi x fun q hq => (hK _ _).1 hx.2 q (lt_max_of_lt_left hq)
+        exact fun x hx => hhi x fun q hq => (hK _ _).1 hx.2 q (lt_max_of_lt_left hq)
       rw [this]; simp
     | succ n hn ih => omega
     | pred n hn ih =>
@@ -101,8 +100,7 @@ theorem rank_le_of_lowest : ∀ {k V : Type} [Field k] [AddCommGroup V] [Module 
       · rw [h, ite_eq_left rfl]
   have top : K lo = ⊤ := by
     rw [eq_top_iff]
-    intro x _
-    exact (hK _ _).2 fun q hq => by simp [hlo q hq]
+    exact fun x _ => (hK _ _).2 fun q hq => by simp [hlo q hq]
   have := main lo (le_max_right _ _)
   rwa [top, inf_top_eq, inf_top_eq] at this
 

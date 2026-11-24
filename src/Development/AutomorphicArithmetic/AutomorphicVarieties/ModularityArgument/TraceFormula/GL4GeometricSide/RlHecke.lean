@@ -109,8 +109,7 @@ theorem exists_integral_eq_sum {G : Type} [Group G] [TopologicalSpace G] [Contin
       rw [← QuotientGroup.eq]
       simp
     have e := hF (Quotient.out (QuotientGroup.mk g : G ⧸ K)) _ hm
-    rw [mul_inv_cancel_left] at e
-    exact e
+    rwa [mul_inv_cancel_left] at e
   have hsum : ∀ g, F g = ∑ q ∈ Q,
       ({g : G | (QuotientGroup.mk g : G ⧸ K) = q}).indicator (fun _ => F (Quotient.out q)) g := by
     intro g
@@ -122,8 +121,7 @@ theorem exists_integral_eq_sum {G : Type} [Group G] [TopologicalSpace G] [Contin
       by_contra hne
       have hg : g ∈ tsupport h := subset_tsupport h hne
       obtain ⟨g₀, hg₀, hm⟩ := Set.mem_iUnion₂.1 (ht hg)
-      refine hq (Finset.mem_image.2 ⟨g₀, hg₀, ?_⟩)
-      exact QuotientGroup.eq.2 hm
+      exact hq (Finset.mem_image.2 ⟨g₀, hg₀, QuotientGroup.eq.2 hm⟩)
   have hint : ∀ q ∈ Q, Integrable
       (({g : G | (QuotientGroup.mk g : G ⧸ K) = q}).indicator (fun _ => F (Quotient.out q))) μ := fun q _ =>
     (integrable_indicator_iff (hmeas q)).2 (integrableOn_const (by rw [hvol]; exact hfin))
@@ -357,8 +355,7 @@ private theorem thetaF_thetaF (g : GL (Fin n) (Af E)) : thetaF E n (thetaF E n g
       _ = thetaA E n (thetaA E n (finGL E n g)) :=
         congrArg (thetaA E n) (hfin g).symm
       _ = finGL E n g := GlobalTheory.CompanionTheory.OnlyStab.thetaA_invol _
-  have h2 := congrArg (GeneralLinearGroup.map (pFin E)) h
-  simpa only [pFin_finGL] using h2
+  simpa only [pFin_finGL] using congrArg (GeneralLinearGroup.map (pFin E)) h
 
 private theorem continuous_thetaF : Continuous (thetaF E n) := by
   rw [funext (thetaF_eq (E := E) (n := n))]
@@ -435,8 +432,7 @@ theorem rlHecke :
   · have hh' : IsHeckeF K (fun g => h.1 (thetaF E n g)) := by
       refine ⟨h.2.1.comp_homeomorph ⟨⟨thetaF E n, thetaF E n, thetaF_thetaF, thetaF_thetaF⟩,
         continuous_thetaF, continuous_thetaF⟩, fun k₁ h₁ k₂ h₂ g => ?_⟩
-      have e := h.2.2 _ (hKθ _ h₁) _ (hKθ _ h₂) (thetaF E n g)
-      simpa only [thetaF_eq, map_mul] using e
+      simpa only [thetaF_eq, map_mul] using h.2.2 _ (hKθ _ h₁) _ (hKθ _ h₂) (thetaF E n g)
     refine ⟨⟨_, hh'⟩, rfl, LinearMap.ext fun u => D.inj (Subtype.ext (Subtype.ext (funext fun x => ?_)))⟩
     rw [Module.End.mul_apply, Module.End.mul_apply, D.hΘ, D.hR, D.hR]
     unfold heckeOp

@@ -110,16 +110,14 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.levLaws 
         exact Subgroup.mem_inf.2 ⟨a, b⟩
       · rw [ite_eq_right hv] at a b ⊢
         exact a
-  · intro k h
-    exact (MultiplicityOne.finProj_mul_archProj_comm h _).symm
+  · exact fun k h => (MultiplicityOne.finProj_mul_archProj_comm h _).symm
   · exact continuous_archP.comp continuous_subtype_val
   · have hcl : IsClosed (archCompact K n : Set (archGroup K n)) :=
       (isCompact_maxCompact (K := K) (n := n)).isClosed.preimage continuous_infEmb
     have hg : Continuous fun z : AdelicGLn.AdelicGL K n => archEquiv K n (AdelicGLn.prodEquiv K n z).1 :=
       (archEquiv K n).continuous.comp (continuous_fst.comp (AdelicGLn.prodEquiv K n).continuous)
     refine isCompact_iff_compactSpace.1 (((isCompact_maxCompact (K := K) (n := n)).image hg).of_isClosed_subset hcl ?_)
-    intro x hx
-    exact ⟨infEmb K n x, hx, by simp [prodEquiv_infEmb]⟩
+    exact fun x hx => ⟨infEmb K n x, hx, by simp [prodEquiv_infEmb]⟩
   · intro r w ι hinj hι hS U hU g
     obtain ⟨-, -, hout, -⟩ := (embEx n w hinj).2 ι hι
     refine ⟨fun v => U v ⊓ cj (GM.cf v (ι g)) (U v), fun v => ?_, fun u hu => ?_⟩

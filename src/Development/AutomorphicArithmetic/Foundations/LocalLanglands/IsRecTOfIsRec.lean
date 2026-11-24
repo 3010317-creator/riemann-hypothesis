@@ -185,9 +185,7 @@ theorem lawsT_of_laws {a : Weil h →* (w.adicCompletion E)ˣ} {ha : IsLocalArti
 
 theorem isRecT_of_isRec (hD : GlobalTheory.Published.DepthZeroTypeInertia) {rc : IrrGL (k := w.adicCompletion E) → WD h}
     (H : IsRec h rc) : IsRecT h rc := by
-  have hT : TypeLaw h rc := by
-    intro E' _ _ _ _ _ _ g _ w' h'
-    exact hD E E' Ω g A w h w' h' rc H
+  have hT : TypeLaw h rc := fun E' _ _ _ _ _ _ g _ w' h' => hD E E' Ω g A w h w' h' rc H
   obtain ⟨a, ha, ε, -, H⟩ := H
   exact ⟨a, ha, lawsT_of_laws H hT⟩
 

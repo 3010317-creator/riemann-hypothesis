@@ -76,8 +76,7 @@ private theorem exists_field {v : ℕ} [Fact v.Prime] {Ω : Type} [Field Ω] [Al
     have : (1 : ↥(Dec (F := ℚ) A)) ∈ ψ ⁻¹' (U : Set (GQ v)) := by
       show ψ 1 ∈ U
       rw [map_one]; exact U.one_mem
-    rw [← hWe] at this
-    exact this
+    rwa [← hWe] at this
   haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
   obtain ⟨N, hN⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hW hW1
   let H : Subgroup (Ω ≃ₐ[ℚ] Ω) := (U.comap ψ).map (Dec (F := ℚ) A).subtype ⊔ N.toSubgroup
@@ -107,8 +106,7 @@ private theorem exists_field {v : ℕ} [Fact v.Prime] {Ω : Type} [Field Ω] [Al
     rw [← hτ, ← hmem, hτ]
     conv_lhs => rw [← hfix]
     rw [IntermediateField.mem_fixingSubgroup_iff]
-    simp only [hc, j.injective.eq_iff]
-    exact ⟨fun h x => h x x.2, fun h x hx => h ⟨x, hx⟩⟩
+    simpa only [hc, j.injective.eq_iff] using ⟨fun h x => h x x.2, fun h x hx => h ⟨x, hx⟩⟩
 
 theorem UpperTheory.V.Loc.exists_dec {v : ℕ} [Fact v.Prime] {G : Type} [Group G] [TopologicalSpace G]
     (φ : G →* GQ v) (hφ : IsOpenEmbedding φ) (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] :
@@ -227,8 +225,7 @@ private theorem second_cohomology_equiv : Nonempty (H2 ρ ≃ H2 ρ') := by
     refine ⟨fun g => c (e g), hc.comp he, funext fun ⟨g, g'⟩ => ?_⟩
     have := congrFun hd (e g, e g')
     rw [d1_apply] at this ⊢
-    rw [h, map_mul]
-    exact this
+    rwa [h, map_mul]
   · rintro ⟨c, hc, hd⟩
     refine ⟨fun g => c (e.symm g), hc.comp he', funext fun ⟨g, g'⟩ => ?_⟩
     have := congrFun hd (e.symm g, e.symm g')

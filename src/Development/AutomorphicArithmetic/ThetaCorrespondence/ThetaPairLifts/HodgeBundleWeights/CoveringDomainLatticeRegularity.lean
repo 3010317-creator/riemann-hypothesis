@@ -784,8 +784,7 @@ theorem exists_cmPoint_frame_ne_zero_of_dominant : _root_.GlobalTheory.CovTop.Pu
     intro h0
     apply hne
     change (if h : x ∈ ((Y.U _).X k).dom then toC (evR Y.d.Xo₂ Y.d.c₂ F ((Y.U _).un k ⟨x, h⟩)) else 0) = 0
-    rw [dite_eq_left hx]
-    exact h0
+    rwa [dite_eq_left hx]
   obtain ⟨y, hy, hyne⟩ := GlobalTheory.FrameDenseZ.exists_frame_evR_ne_zero_of_complex _ _ _ _ _ _ z.K z.y _ F hFm.1 _ σ₁ _ hzx hev
   exact ⟨z, La, y, hz, hy.trans hz.2.2.2.1, hyne⟩
 end GlobalTheory.CovDetectDom
@@ -903,8 +902,7 @@ theorem exists_dom_exponents_bar : ∀ (E : Type) [Field E] [NumberField E] [IsC
     · simp [ex, exOf, exZ, wtOf]
     · have hi : (i : ℕ) < Dw.mult τ := i.2
       show (((if (i : ℕ) < Dw.mult τ then (val (τ, (i : ℕ))).toNat else 0 : ℕ)) : ℤ) = _
-      rw [ite_eq_left hi, Int.toNat_of_nonneg (nonneg τ i hi)]
-      rw [Pi.add_apply, Pi.smul_apply]
+      rw [ite_eq_left hi, Int.toNat_of_nonneg (nonneg τ i hi), Pi.add_apply, Pi.smul_apply]
       show _ = (k + 1) • (wtOf Dw la 0).1 (τ, (i : ℕ)) +
         (wtOf Dw (GlobalTheory.FlatLine.parWt Dw fun τ => (N : ℤ) * w τ) (M : ℤ)).1 (τ, (i : ℕ))
       rw [nsmul_eq_mul]
@@ -1031,8 +1029,7 @@ theorem exists_idem_zero {w : HeightOneSpectrum (𝓞 c.F)} {v : Rul Xo c → ER
       exact evalAt_one _ _ y.1 y.2.1
     rw [h1, nval_of_ne one_ne_zero]
     simp [vV]
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have htop : ∀ Z, vAtV y (GlobalTheory.FlatLine.idem Z) = ⊤ := fun Z => by
     have hd := vAtV_mul y (GlobalTheory.FlatLine.idem Z) (GlobalTheory.FlatLine.idem Z)
     rw [GlobalTheory.FlatLine.idem_mul_idem] at hd
@@ -1078,8 +1075,7 @@ theorem exists_smul_nonneg : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   rw [h4, vAtV_mul, vAtV_mul, vAtV_mul, vAtV_mul, vAtV_smul _ _ _ hb0, vAtV_mul, hZ, zero_add, zero_add] at e
   refine nonneg_of_four (vAtV_ne_bot _ _) ?_
   rw [e]
-  refine add_nonneg ?_ hKv
-  exact EReal.coe_nonneg.2 (by exact_mod_cast vLa_int_nonneg w hb0)
+  exact add_nonneg (EReal.coe_nonneg.2 (by exact_mod_cast vLa_int_nonneg w hb0)) hKv
 
 end GlobalTheory.RuleIntegral
 end -- clump:auto
@@ -1559,8 +1555,7 @@ theorem exists_inverse_integral_invariant : _root_.GlobalTheory.CovTop.Published
     funext i
     rcases i with _ | ⟨τ, i⟩
     · rfl
-    · simp only [GlobalTheory.AllWt.exOf, exZ, keyEx, Pi.neg_apply]
-      exact hwt 1 τ i i.2
+    · simpa only [GlobalTheory.AllWt.exOf, exZ, keyEx, Pi.neg_apply] using hwt 1 τ i i.2
   refine ⟨((ρ.ρ⁻¹ : (Rul Y.d.Xo₂ Y.d.c₂)ˣ) : Rul Y.d.Xo₂ Y.d.c₂), t • (ρ.ρ : Rul Y.d.Xo₂ Y.d.c₂), t, ?_, ht, ?_, hint⟩
   · rw [hex]
     exact GlobalTheory.AllWt.inv_mem_secZ ρ.mem
@@ -1713,8 +1708,7 @@ theorem pow_mul_mem_cusp_of_unit : _root_.GlobalTheory.CovTop.PublishedHodgeBund
   have hdec : ∀ (τ : D.host.E →+* ℂ) (i j' : ℕ), i ≤ j' → j' < (T.Q.Dw j).mult τ → G.1 (τ, j') ≤ G.1 (τ, i) := by
     have hne : ∀ (τ : D.host.E →+* ℂ) (m : ℕ) (hm : m + 1 < (T.Q.Dw j).mult τ), G.1 (τ, m + 1) ≤ G.1 (τ, m) := by
       intro τ m hm
-      by_contra hlt
-      push Not at hlt
+      by_contra! hlt
       exact hR0 (GlobalTheory.NonDomVanish.eq_zero_of_lt hRG τ ⟨m, by omega⟩ ⟨m + 1, hm⟩ rfl hlt)
     intro τ i j' hij hj'
     revert hj'
@@ -1799,8 +1793,7 @@ theorem exists_pow_mul_mem_cuspForms_of_weight_match : _root_.GlobalTheory.CovTo
   · rw [mul_mul_mul_comm, ← mul_pow, huu, hφφ, smul_pow, one_pow, smul_mul_smul_comm, one_mul]
   · intro la' v hv
     have hV := isVal_valSet la' v hv
-    rw [hV.mul]
-    rw [hM]
+    rw [hV.mul, hM]
     exact add_nonneg (val_pow_succ_nonneg hV (hu' la' v hv) _) (hφ' la' v hv)
 end GlobalTheory.WtMatchBar
 end

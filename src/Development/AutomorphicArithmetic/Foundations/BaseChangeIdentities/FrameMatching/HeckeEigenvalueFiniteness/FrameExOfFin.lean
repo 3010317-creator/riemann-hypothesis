@@ -411,8 +411,7 @@ theorem peakCone : PeakCone := by
     refine ⟨Finsupp.single (fun i : Fin n => |M| * ((n : ℤ) - (i : ℕ)))
       (((∏ i, α i ^ (|M| * ((n : ℤ) - (i : ℕ))) : ℂˣ)⁻¹ : ℂˣ) : ℂ), ?_, ?_, by simp⟩
     · intro z hz
-      rw [Finset.mem_singleton.1 (Finsupp.support_single_subset hz)]
-      exact hx0
+      rwa [Finset.mem_singleton.1 (Finsupp.support_single_subset hz)]
     · unfold evalGL
       rw [Finsupp.sum_single_index (by simp)]
       exact Units.inv_mul _
@@ -522,13 +521,11 @@ private theorem exists_ex (hE : ShufEx) (n a : ℕ) (s : Finset (Fin (n / 2))) (
       have hk : k ∈ symIdx n (a % 2 = 1) s ∪ symIdx n ((n - a) % 2 = 1) sᶜ := hcov ▸ Finset.mem_univ k
       rcases Finset.mem_union.1 hk with hk | hk
       · have hr : k ∈ Set.range ((symIdx n (a % 2 = 1) s).orderEmbOfFin h.2.1) := by
-          rw [Finset.range_orderEmbOfFin]
-          exact hk
+          rwa [Finset.range_orderEmbOfFin]
         obtain ⟨i, hi⟩ := hr
         exact ⟨.inl i, hi⟩
       · have hr : k ∈ Set.range ((symIdx n ((n - a) % 2 = 1) sᶜ).orderEmbOfFin h.2.2) := by
-          rw [Finset.range_orderEmbOfFin]
-          exact hk
+          rwa [Finset.range_orderEmbOfFin]
         obtain ⟨j, hj⟩ := hr
         exact ⟨.inr j, hj⟩
   exact ⟨Equiv.ofBijective f hf, fun i => rfl, fun j => rfl⟩
@@ -765,8 +762,7 @@ theorem specTrace : UModel → LocAlg → SpecTrace := by
       show twTr (σ i w).ρ (KL n w) (K' w) (f w) LinearMap.id =
         twTr (σ i w).ρ (KL n w) (KL n w) (f w) LinearMap.id
       rw [hKB w hwS hwB]
-  · intro i₀ hi
-    exact h3 i₀ fun w => hi w.1 w.2
+  · exact fun i₀ hi => h3 i₀ fun w => hi w.1 w.2
 
 end GlobalTheory.CompanionTheory.SpecModel
 
@@ -988,8 +984,7 @@ theorem uModel : UModel := by
       rw [LinearMap.toMatrix_mulVec_repr, (hy i₀ w rfl).2]
     have hne : ∀ w, ∃ x, a i₀ w x ≠ 0 := by
       intro w
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       apply (hy i₀ w rfl).1
       apply (bs i₀ w).repr.map_eq_zero_iff.mp
       ext x
@@ -1090,11 +1085,9 @@ theorem monoRes : MonoRes := by
     rw [Units.val_mul, norm_mul, Units.val_inv_eq_inv_val, norm_inv, hsg k, inv_one, mul_one]
   constructor
   · intro i j hij
-    simp only [hn]
-    exact hξ _ _ (s.monoL.monotone hij)
+    simpa only [hn] using hξ _ _ (s.monoL.monotone hij)
   · intro i j hij
-    simp only [hn]
-    exact hξ _ _ (s.monoR.monotone hij)
+    simpa only [hn] using hξ _ _ (s.monoR.monotone hij)
 
 end PositivityTheory.Rg.BcB.F.Tail
 
@@ -1125,10 +1118,8 @@ open PositivityTheory.Rg.BcB.F
 theorem candIndep : CandIndep := by
   intro hR E _ _ _ n π S F₀ T' c c' e e' b b' i s₁ s₂ Pa Pb D
   constructor
-  · intro h
-    exact ⟨h.ctx, h.leaves₁, h.leaves₂, h.inf₁, h.inf₂, h.vec⟩
-  · intro h
-    exact ⟨h.ctx, h.leaves₁, h.leaves₂, h.inf₁, h.inf₂, h.vec⟩
+  · exact fun h => ⟨h.ctx, h.leaves₁, h.leaves₂, h.inf₁, h.inf₂, h.vec⟩
+  · exact fun h => ⟨h.ctx, h.leaves₁, h.leaves₂, h.inf₁, h.inf₂, h.vec⟩
 
 end PositivityTheory.Rg.BcB.F.FX
 
@@ -1178,8 +1169,7 @@ theorem exTbOf : ExTbOf := by
   · intro w hw
     dsimp only
     rw [dite_eq_right (fun h => hw h.1)]
-  · intro w hw hu hs
-    exact Finset.mem_insert_of_mem (Finset.mem_filter.2 ⟨hw, hu, hs⟩)
+  · exact fun w hw hu hs => Finset.mem_insert_of_mem (Finset.mem_filter.2 ⟨hw, hu, hs⟩)
 
 end PositivityTheory.Rg.BcB.F.FX
 
@@ -1423,8 +1413,7 @@ theorem xi_map (β : Fin (n / 2) → ℂˣ) : Finset.univ.val.map (xiOf n β) = 
     ext k
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_map]
     constructor
-    · intro h
-      exact ⟨⟨k.val, h⟩, Fin.ext rfl⟩
+    · exact fun h => ⟨⟨k.val, h⟩, Fin.ext rfl⟩
     · rintro ⟨i, rfl⟩
       exact i.isLt
   have e2 : ((Finset.univ : Finset (Fin n)).filter (fun k => ¬ k.val < n / 2)).filter
@@ -1701,8 +1690,7 @@ theorem satCompAt : SatCompAt := by
     have h1 : p (e.symm ⟨g.1, (hUL _).1 g.2⟩) = f g := by rw [hpf, hu]
     have h0 : p0 (e.symm ⟨g.1, (hUL _).1 g.2⟩) = g := by rw [hp0u, hu]
     have := T.isIntertwining' (e.symm ⟨g.1, (hUL _).1 g.2⟩)
-    rw [MonoidHom.comp_apply, MonoidHom.comp_apply, h1, h0] at this
-    exact this
+    rwa [MonoidHom.comp_apply, MonoidHom.comp_apply, h1, h0] at this
 
   have hne : (ϖ : w.adicCompletion E) ≠ 0 := ϖ.ne_zero
   have hunif : IsUnifAt ϖ := by

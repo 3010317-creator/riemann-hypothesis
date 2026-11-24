@@ -200,8 +200,7 @@ theorem UpperTheory.V.Z.Desc.W.satTw :
     rw [h2, GlobalTheory.WeilDeligne.coe_qPow]
     simp only [Formalism.ConjugateSelfDual.normV, Complex.ofReal_neg]
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  rw [h3]
-  exact h1
+  rwa [h3]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CuspidalDescent.SphericalTwists.UnramifiedTwists.SatTw =====
@@ -372,9 +371,7 @@ private theorem rc_chars (hE : GlobalTheory.Published.LanglandsExhaustionGL) (hZ
       intro L
       induction L with
       | nil =>
-        intro _
-        show (WD.lpZero (h := h)).mono0
-        exact (WD.monodromyZero_ofWeilDeligneRepClass_iff _).2 rfl
+        exact fun _ => (WD.monodromyZero_ofWeilDeligneRepClass_iff _).2 rfl
       | cons Δ L ih =>
         intro hL'
         obtain ⟨j, hj⟩ := hfirst Δ (hL' Δ List.mem_cons_self)
@@ -431,8 +428,7 @@ private theorem unlinked_of_sat (hJ : GlobalTheory.Published.JacquetShalikaBound
   have hss : s * s = q := by
     rw [← Real.rpow_add hq0]; norm_num
   have hsn : q ^ (-(1 / 2) : ℝ) = s⁻¹ := Real.rpow_neg hq0.le _
-  rw [hsn] at hi
-  rw [hnorm] at hi
+  rw [hsn, hnorm] at hi
   set b := ‖((ξ j ϖ : ℂˣ) : ℂ)‖
   set C := ‖((c : ℂˣ) : ℂ)‖
   have key : b * C = q * (b * q⁻¹ * C) := by field_simp

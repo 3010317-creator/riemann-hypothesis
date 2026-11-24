@@ -256,8 +256,7 @@ theorem UpperTheory.V.Alg.cot_fg :
   · rintro _ ⟨x, ⟨⟨f, hf, hfx⟩, hx⟩, rfl⟩
     have hfx' : W.π f = (x : R) := hfx
     have h0 : constantCoeff f = 0 := by
-      rw [← W.origin_π h, hfx']
-      exact hx
+      rwa [← W.origin_π h, hfx']
     have key : x - ∑ s : {s // W.wt s = j}, coeff (Finsupp.single s.1 1) f • W.zA s ∈
         RingHom.ker (W.originA h) ^ 2 := by
       refine sq_mem W h j (f - ∑ s : {s // W.wt s = j}, coeff (Finsupp.single s.1 1) f • MvPowerSeries.X s.1)
@@ -273,8 +272,7 @@ theorem UpperTheory.V.Alg.cot_fg :
           rw [Finset.sum_eq_single (⟨s, hs⟩ : {s // W.wt s = j}), ite_eq_left rfl, sub_self]
           · intro t _ ht
             rw [ite_eq_right]
-            intro h2
-            exact ht (Subtype.ext (Finsupp.single_left_injective one_ne_zero h2).symm)
+            exact fun h2 => ht (Subtype.ext (Finsupp.single_left_injective one_ne_zero h2).symm)
           · simp
       · rw [hf m hw, Finset.sum_eq_zero, sub_self]
         intro s _
@@ -311,8 +309,7 @@ private theorem UpperTheory.V.Alg.exists_form_of_not_torsion {O L : Type} [CommR
     rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at h
     obtain ⟨⟨c, hc⟩, hcp⟩ := h
     refine hp c (nonZeroDivisors.ne_zero hc) ?_
-    rw [← Submodule.Quotient.mk_eq_zero]
-    exact hcp
+    rwa [← Submodule.Quotient.mk_eq_zero]
   obtain ⟨ψ, hψ⟩ := Module.Projective.exists_dual_ne_zero O hne
   refine ⟨ψ ∘ₗ (Submodule.torsion O (L ⧸ S)).mkQ ∘ₗ S.mkQ, fun s hs => ?_, hψ⟩
   have : S.mkQ s = 0 := (Submodule.Quotient.mk_eq_zero S).2 hs
@@ -474,8 +471,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.tanLz :
     rw [Finset.prod_ne_zero_iff]
     intro j hj
     rw [sub_ne_zero]
-    intro h
-    exact (Finset.mem_erase.1 hj).1 (hinj h).symm
+    exact fun h => (Finset.mem_erase.1 hj).1 (hinj h).symm
   refine ⟨?_, ?_⟩
   · intro z hz
     obtain ⟨hzw, -, ρ, ⟨-, hord⟩, hρ⟩ := hz
@@ -962,8 +958,7 @@ private theorem spans_cotangent_transfer_equal_rank {A' X' : Type} [CommRing A']
         show x' (ι y) = 0
         rw [hx]; exact hy) 2) (Ideal.le_comap_pow _ 2)
     have := hle ha
-    rw [Ideal.mem_comap, RingHom.coe_coe, map_smul] at this
-    exact this
+    rwa [Ideal.mem_comap, RingHom.coe_coe, map_smul] at this
   let P : (A ⧸ satSq x) →ₗ[O] (A' ⧸ satSq x') := Submodule.mapQ _ _ ι.toLinearMap hsat
   have hP : ∀ a, P ((satSq x).mkQ a) = (satSq x').mkQ (ι a) := fun a => rfl
   have hPL : ∀ q ∈ cotLat x 𝒜 j, P q ∈ cotLat x' 𝒜' j' := by
@@ -997,8 +992,7 @@ private theorem spans_cotangent_transfer_equal_rank {A' X' : Type} [CommRing A']
   obtain ⟨s, hs, h⟩ := h
   refine ⟨c, hc, ?_⟩
   have := hinj (c • q - s) (sub_mem (Submodule.smul_mem _ _ hq) (hle hs)) (by rw [map_sub, map_smul, h, sub_self])
-  rw [sub_eq_zero.1 this]
-  exact hs
+  rwa [sub_eq_zero.1 this]
 
 end
 

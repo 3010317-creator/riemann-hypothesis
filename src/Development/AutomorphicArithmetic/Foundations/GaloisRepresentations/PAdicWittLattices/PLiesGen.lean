@@ -79,8 +79,7 @@ theorem UpperTheory.Gal.G3.pLiesGen :
   · apply pullback.hom_ext
     · simp only [piK, bcMap, κ, Category.assoc, pullback.lift_fst, pullback.lift_fst_assoc]
       exact h1
-    · simp only [piK, bcMap, κ, Category.assoc, pullback.lift_snd]
-      exact (H.comm g).symm
+    · simpa only [piK, bcMap, κ, Category.assoc, pullback.lift_snd] using (H.comm g).symm
   · have w1 : pullback.snd C.π s ≫ s ≫ C.p = (pullback.fst C.π s ≫ H.q) ≫ gen O k := by
       rw [← Category.assoc, ← pullback.condition, Category.assoc, C.ov, Category.assoc]
     let i0 : pullback C.π s ⟶ pullback (s ≫ C.p) (gen O k) :=
@@ -98,8 +97,7 @@ theorem UpperTheory.Gal.G3.pLiesGen :
     simp only [piK, bcMap, Category.assoc, pullback.lift_fst, pullback.lift_snd] at c1 c2
     have w3 : pullback.fst (piK C) (bcMap (gen O k) s rfl) ≫ C.π
         = (pullback.snd (piK C) (bcMap (gen O k) s rfl) ≫ pullback.fst (s ≫ C.p) (gen O k)) ≫ s := by
-      rw [Category.assoc]
-      exact c1
+      rwa [Category.assoc]
     let j : pullback (piK C) (bcMap (gen O k) s rfl) ⟶ pullback C.π s :=
       pullback.lift _ _ w3
     haveI : IsIso i := by

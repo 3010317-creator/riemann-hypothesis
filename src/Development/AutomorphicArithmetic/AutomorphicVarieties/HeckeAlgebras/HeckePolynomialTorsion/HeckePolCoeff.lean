@@ -111,8 +111,7 @@ theorem rels {l : ℕ} [Fact l.Prime] (F : GFrame l) (O : Type) [CommRing O] [Al
   refine ⟨polarInj F O R n D (fun _ : X => K) f hsep fun x => ?_, fun v g => kt _ fun x => ?_, fun g hg => kt _ fun x => ?_⟩
   · obtain ⟨P, hP⟩ := hP x
     rw [hD]
-    intro B _ _ _ _ y
-    exact (formRep F O K n (ρ x) P hP).2.2 B y
+    exact fun B _ _ _ _ y => (formRep F O K n (ρ x) P hP).2.2 B y
   · rw [← oElRep F O K n (ρ x) v _ (hfl x v) g]
     congr 1
     simp [GFrame.oEl, map_list_prod, List.map_ofFn, Function.comp_def]
@@ -124,8 +123,7 @@ theorem teich {l : ℕ} [hl : Fact l.Prime] {F : GFrame l} (c : Coef l) {n : ℕ
   haveI : Finite (ResidueField c.O) := hfin
   haveI : CharP (ResidueField c.O) l := by
     refine (CharP.charP_iff_prime_eq_zero hl.out).2 ?_
-    rw [← map_natCast (residue c.O), residue_eq_zero_iff]
-    exact hlm
+    rwa [← map_natCast (residue c.O), residue_eq_zero_iff]
   haveI : CharP (c.O ⧸ maximalIdeal c.O) l := inferInstanceAs (CharP (ResidueField c.O) l)
   let j : ResidueField c.O →+* Perfection (c.O ⧸ maximalIdeal c.O) l :=
     Perfection.lift l (ResidueField c.O) (c.O ⧸ maximalIdeal c.O) (RingHom.id (ResidueField c.O))
@@ -183,8 +181,7 @@ theorem heckePol_coeff {A : Type} [CommRing A] (n q : ℕ) (a : ℕ → A) (j : 
     rw [coeff_C_mul, coeff_X_pow, ite_eq_right, mul_zero]
     have := Finset.mem_range.1 hi
     omega
-  · intro h
-    exact absurd (Finset.mem_range.2 (by omega)) h
+  · exact fun h => absurd (Finset.mem_range.2 (by omega)) h
 
 theorem eq_of_prod {C : Type} [CommGroup C] {n : ℕ} (x y : Fin n → C)
     (h : ∀ j, ∏ i with i ≤ j, x i = ∏ i with i ≤ j, y i) (j : Fin n) : x j = y j := by

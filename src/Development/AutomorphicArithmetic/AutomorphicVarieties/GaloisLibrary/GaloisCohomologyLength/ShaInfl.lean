@@ -58,8 +58,7 @@ theorem UpperTheory.V.LDataCardLeFinrank.shaInfl :
       τ ∈ NS Ω S := by
     apply Subgroup.le_topologicalClosure
     apply Subgroup.subset_normalClosure
-    simp only [Set.mem_iUnion]
-    exact ⟨v, hv, A, hA, hτ⟩
+    simpa only [Set.mem_iUnion] using ⟨v, hv, A, hA, hτ⟩
 
   have vanishAll {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω]
       {S : Set (HeightOneSpectrum (𝓞 F))} {R : Type} [CommRing R] {M : Type}
@@ -124,8 +123,7 @@ theorem UpperTheory.V.LDataCardLeFinrank.shaInfl :
     have h1 : (σ : G F Ω) ∈ Dec (F := F) (g • A ⟨v, hv⟩) := by rw [hg]; exact σ.2
     have h2 := GlobalTheory.Cut.ShaBound.coc_conj _ _ w.2.2 g _ m (hm _ (GlobalTheory.Cut.ShaBound.conj_mem_Dec h1))
     have h3 : g * (g⁻¹ * σ * g) * g⁻¹ = σ := by group
-    rw [h3] at h2
-    exact h2
+    rwa [h3] at h2
   · intro hx
     obtain ⟨h1, h2⟩ := (mem_ShaAbs _ _ _).1 hx
     obtain ⟨y, rfl⟩ := (hI x).2 h2

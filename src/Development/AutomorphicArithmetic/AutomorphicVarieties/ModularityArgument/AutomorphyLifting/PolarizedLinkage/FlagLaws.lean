@@ -236,8 +236,7 @@ private theorem pow_up {A : ValuationSubring Ω} {N : ℕ} (hN : ∀ s : G K Ω,
   simp only [MonoidHom.pow_apply, MonoidHom.mul_apply, MonoidHom.comp_apply, Subgroup.coe_subtype, hd] at e1 ⊢
   have hc : cycBar L Ω l u = cycBar K Ω l (s : G K Ω) ^ N := by
     rw [← cyc_res (K := K), hu, map_pow]
-  rw [hc, map_pow, map_pow, ← mul_pow, ← pow_mul, ← pow_mul] at e1
-  exact e1
+  rwa [hc, map_pow, map_pow, ← mul_pow, ← pow_mul, ← pow_mul] at e1
 
 private theorem charpoly_conj' {k : Type} [Field k] {n : ℕ} (y x : GL (Fin n) k) :
     ((y * x * y⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k).charpoly = (x : Matrix (Fin n) (Fin n) k).charpoly := by
@@ -341,8 +340,7 @@ private theorem cont_kills [IsAlgClosure K Ω] {M : ℕ} (hM : 0 < M) {φ : G K 
   refine continuous_of_continuousAt_one φ ?_
   have he : φ =ᶠ[nhds 1] fun _ => φ 1 := by
     filter_upwards [hmem] with s hs
-    rw [map_one]
-    exact hs
+    rwa [map_one]
   exact continuousAt_const.congr he.symm
 
 private theorem flagged_level [IsAlgClosure K Ω] {r : G K Ω →* GL (Fin n) (Qbar l)} {M : ℕ} {m : Fin n → ℤ}

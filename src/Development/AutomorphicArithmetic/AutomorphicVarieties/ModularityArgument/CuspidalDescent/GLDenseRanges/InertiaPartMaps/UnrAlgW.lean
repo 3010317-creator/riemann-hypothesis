@@ -267,8 +267,7 @@ private theorem eval_derivative_ne_zero_of_rootMultiplicity_eq_one {K : Type} [F
   rw [h, pow_one] at hq
   rw [hq, derivative_mul, derivative_sub, derivative_X, derivative_C, sub_zero, one_mul, eval_add,
     eval_mul, eval_sub, eval_X, eval_C, sub_self, zero_mul, add_zero]
-  rw [dvd_iff_isRoot] at hnd
-  exact hnd
+  rwa [dvd_iff_isRoot] at hnd
 
 theorem UpperTheory.V.J.derZero :
     UpperTheory.V.J.DerZero := by
@@ -308,8 +307,7 @@ theorem UpperTheory.V.J.derZero :
     intro b hb
     have hxb : x b = 0 := RingHom.mem_ker.mp (hker hb)
     have hbe : b * eval₂ (lam : Λ →+* B) t (∏ j ∈ Finset.univ.erase i, g j) ∈ J := by
-      rw [UpperTheory.V.J.cmp, Submodule.mem_colon_singleton] at hb
-      exact hb
+      rwa [UpperTheory.V.J.cmp, Submodule.mem_colon_singleton] at hb
     have h1 := hL b (eval₂ (lam : Λ →+* B) t (∏ j ∈ Finset.univ.erase i, g j))
     rw [hJ _ hbe, hxb, zero_mul, zero_add] at h1
     exact (mul_eq_zero.mp h1.symm).resolve_left hEn
@@ -449,8 +447,7 @@ variable {K V : Type} [Field K] [AddCommGroup V] [Module K V]
 private lemma ev_uniq (f : Module.End K V) {μ ν : K} {v : V} (hv : v ≠ 0)
     (h1 : v ∈ f.maxGenEigenspace μ) (h2 : v ∈ f.maxGenEigenspace ν) : μ = ν := by
   by_contra hne
-  have hd := Module.End.disjoint_genEigenspace f hne ⊤ ⊤
-  exact hv ((Submodule.disjoint_def.1 hd) v h1 h2)
+  exact hv ((Submodule.disjoint_def.1 (Module.End.disjoint_genEigenspace f hne ⊤ ⊤)) v h1 h2)
 
 private theorem ev_add_lemma {X Y : Module.End K V} (hc : Commute X Y) {v : V} {k l : ℕ}
     (hk : (X ^ k) v = 0) (hl : (Y ^ l) v = 0) : ((X + Y) ^ (k + l)) v = 0 := by
@@ -875,8 +872,7 @@ private theorem finite_setOf_roots_of_monic_family {Λ F : Type*} [CommRing Λ] 
     refine (Polynomial.finite_setOf_isRoot h0).subset ?_
     intro y hy
     simpa [Polynomial.IsRoot, Polynomial.eval_map] using hy
-  · intro v hv i _
-    exact hv i
+  · exact fun v hv i _ => hv i
 
 private theorem finite_setOf_nat_polynomial_collision {F : Type*} [Field F] [CharZero F] {r : ℕ} (T : Set (Fin r → F))
     (hT : T.Finite) :
@@ -918,8 +914,7 @@ private theorem finite_setOf_nat_polynomial_collision {F : Type*} [Field F] [Cha
       exact sub_eq_zero.mp this.symm
     refine (Set.Finite.preimage (Nat.cast_injective.injOn)
       (Polynomial.finite_setOf_isRoot h0)).subset ?_
-    intro s hs
-    exact hs.2
+    exact fun s hs => hs.2
 
 private theorem adjoin_singleton_eq_whole_of_separates_homs {L A Ω : Type*} [Field L] [CharZero L] [CommRing A] [Algebra L A]
     [FiniteDimensional L A] [IsReduced A] [Field Ω] [IsAlgClosed Ω] [Algebra L Ω] (t : A)
@@ -1196,8 +1191,7 @@ theorem UpperTheory.V.J.primEx :
         RingHom.mem_ker.mp (hχ (hfJ i))
       have hρ : (χ : B →+* K).comp (lam : Λ →+* B) = ρK :=
         RingHom.ext fun c => AlgHom.congr_fun hχc c
-      rw [Polynomial.hom_eval₂, hρ] at h0
-      exact h0
+      rwa [Polynomial.hom_eval₂, hρ] at h0
     have hsum : ∀ χ : B →ₐ[O] K,
         χ (∑ i : Fin r, (s : B) ^ (i : ℕ) * b i) = ∑ i, χ (b i) * (s : K) ^ (i : ℕ) := by
       intro χ
@@ -1281,8 +1275,7 @@ private lemma num_core {s : ℕ} (k m : Fin s → ℕ) (N : ℕ) (hm : ∀ i, 1 
     · simp [h0]
     · exact Nat.mul_le_mul_right _ (hle i hp)
   have h2 : ∑ i, k i ≤ 1 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have : N * 2 ≤ N * ∑ i, k i := Nat.mul_le_mul_left _ hc
     omega
   have h3 : k i0 ≤ ∑ i, k i := Finset.single_le_sum (fun i _ => Nat.zero_le _) (Finset.mem_univ i0)
@@ -1317,13 +1310,11 @@ private lemma comp_bound {O Λ B K : Type} [CommRing O] [CommRing Λ] [IsDomain 
   have hne : (g i).map (x.comp lam : Λ →+* K) ≠ 0 := ((hC.monic i).map _).ne_zero
   have hroot := (rootMultiplicity_pos hne).1 hk
   have hev : eval₂ ((x.comp lam : Λ →ₐ[O] K) : Λ →+* K) (x t) (g i) = 0 := by
-    rw [← eval_map]
-    exact hroot
+    rwa [← eval_map]
   obtain ⟨x', hx', hc, ht⟩ := lyOver O Λ B K lam J t s g hC (x.comp lam) (x t) i hev
   have hJc : J ≤ cmp lam J t g i := fun a ha => (mem_cmp lam J t g i a).2 (J.mul_mem_right _ ha)
   have hxx := hS x' (le_trans hJc hx') hc ht
-  rw [← hxx]
-  exact hx'
+  rwa [← hxx]
 
 private lemma good_point {O Λ B K : Type} [CommRing O] [CommRing Λ] [IsDomain Λ] [CommRing B] [Field K]
     [Algebra O Λ] [Algebra O B] [Algebra O K] (lam : Λ →ₐ[O] B) (J : Ideal B) (t : B) {s : ℕ} (g : Fin s → Λ[X])
@@ -1345,8 +1336,7 @@ private lemma good_point {O Λ B K : Type} [CommRing O] [CommRing Λ] [IsDomain 
       rw [one_lt_rootMultiplicity_iff_isRoot (hne i)]
       rintro ⟨_, h2⟩
       apply hd
-      rw [Polynomial.derivative_map] at h2
-      exact h2
+      rwa [Polynomial.derivative_map] at h2
     have h1 : rootMultiplicity (y t) ((g i).map φ) = 1 := by omega
     rw [h1, mul_one]
   · intro j _ hji
@@ -1355,8 +1345,7 @@ private lemma good_point {O Λ B K : Type} [CommRing O] [CommRing Λ] [IsDomain 
     apply he
     exact eval_eq_zero_of_dvd_of_eval_eq_zero
       (Polynomial.map_dvd φ (Finset.dvd_prod_of_mem g (Finset.mem_erase.2 ⟨hji, Finset.mem_univ j⟩))) hr
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 end UpperTheory.V.J
 
@@ -1396,8 +1385,7 @@ theorem UpperTheory.V.Z.Desc.V0.unrAlgW :
     obtain ⟨y, hy𝒢, hyd, hye⟩ : ∃ y ∈ 𝒢,
         y ((derivative (g i)).eval₂ (lam : Λ →+* B) t) ≠ 0 ∧
           y ((∏ j ∈ Finset.univ.erase i, g j).eval₂ (lam : Λ →+* B) t) ≠ 0 := by
-      by_contra hno
-      push Not at hno
+      by_contra! hno
       have hmem : (derivative (g i)).eval₂ (lam : Λ →+* B) t * b₀ ∈ UpperTheory.V.J.cmp lam J t g i := by
         rw [UpperTheory.V.J.mem_cmp, mul_right_comm]
         apply hG0
@@ -1419,8 +1407,7 @@ theorem UpperTheory.V.Z.Desc.V0.unrAlgW :
   have hprod1 : rootMultiplicity (x t) ((∏ j, g j).map (x.comp lam : Λ →+* K)) = 1 := by
     have e := UpperTheory.V.J.rm_map_prod (x.comp lam : Λ →+* K) g hF.monic (fun _ => 1) (x t)
     simp only [pow_one, one_mul] at e
-    rw [e]
-    exact hsum1
+    rwa [e]
   obtain ⟨i, hi⟩ := hex
   exact UpperTheory.V.J.derZero O Λ B K lam J t s g hC x i (UpperTheory.V.J.comp_bound lam J t g hC x hS i hi) hprod1
     δ hδ hδJ hδl

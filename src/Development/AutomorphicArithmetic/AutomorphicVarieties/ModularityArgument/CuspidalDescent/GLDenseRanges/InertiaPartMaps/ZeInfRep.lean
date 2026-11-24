@@ -76,8 +76,7 @@ private theorem zd_zero (Y : J → Submodule ℂ M) (hY : iSupIndep Y) (x : J �
     (h : ∑ i, x i = 0) (i : J) : x i = 0 := by
   classical
   have h1 : x i = - ∑ j ∈ Finset.univ.erase i, x j := by
-    rw [eq_neg_iff_add_eq_zero, Finset.add_sum_erase _ _ (Finset.mem_univ i)]
-    exact h
+    rwa [eq_neg_iff_add_eq_zero, Finset.add_sum_erase _ _ (Finset.mem_univ i)]
   have h2 : x i ∈ ⨆ (j) (_ : j ≠ i), Y j := by
     rw [h1]
     refine neg_mem (sum_mem fun j hj => ?_)
@@ -139,8 +138,7 @@ private theorem zd_rank (E : J → Submodule ℂ M) (hE : iSupIndep E) (Z : Subm
         exact hE.disjoint_biSup (y := (s : Set J)) (Finset.mem_coe.not.2 ha)
       have h := Submodule.finrank_sup_add_finrank_inf_eq (E a) (⨆ i ∈ s, E i)
       rw [hd.eq_bot, finrank_bot, add_zero, ih] at h
-      rw [Finset.iSup_insert, Finset.sum_insert ha]
-      exact h
+      rwa [Finset.iSup_insert, Finset.sum_insert ha]
   have h1 : (⨆ i ∈ (Finset.univ : Finset J), E i) = ⨆ i, E i :=
     iSup_congr fun i => iSup_pos (Finset.mem_univ i)
   rw [← h1]
@@ -173,8 +171,7 @@ private theorem zd_main (Y D : J → Submodule ℂ M) (C : Submodule ℂ M) [Fin
   haveI : FiniteDimensional ℂ ↥Z := Submodule.finiteDimensional_of_le (inf_le_left.trans hOC)
   have hs : (⨆ i, Y i ⊓ Z) = Z := le_antisymm (iSup_le fun _ => inf_le_right) hB
   have h := zd_rank (fun i => Y i ⊓ Z) hE Z fun _ => inf_le_right
-  rw [hs] at h
-  exact h
+  rwa [hs] at h
 
 private theorem zd_uOp {G : Type} [Group G] (I : Iwa G) (π : Representation ℂ G M) (a : G) (Y : Submodule ℂ M)
     (hY : ∀ g, ∀ y ∈ Y, π g y ∈ Y) : ∀ y ∈ Y, I.uOp π a y ∈ Y := by
@@ -250,8 +247,7 @@ private theorem zero_dim_mem_iwahori_fixed
   refine Subgroup.list_prod_mem _ fun g hg => ?_
   obtain ⟨i, rfl⟩ := List.mem_ofFn.1 hg
   have := h3 v i (y i)
-  rw [triv v i (y i) (hy' e htv i), map_one, inv_one, one_smul] at this
-  exact this
+  rwa [triv v i (y i) (hy' e htv i), map_one, inv_one, one_smul] at this
 
 private theorem zd_comm (u : H.X.Ub) (b : GV n H.Sl) (F : Fin H.m → H.X.Fn ℂ d) :
     H.X.raF d (H.τC ι) u (H.X.rpF ℂ d H.m b F) = H.X.rpF ℂ d H.m b (H.X.raF d (H.τC ι) u F) := by
@@ -429,8 +425,7 @@ private theorem ze_zero (Y : J → Submodule ℂ M) (hY : iSupIndep Y) (x : J �
     (h : ∑ i, x i = 0) (i : J) : x i = 0 := by
   classical
   have h1 : x i = - ∑ j ∈ Finset.univ.erase i, x j := by
-    rw [eq_neg_iff_add_eq_zero, Finset.add_sum_erase _ _ (Finset.mem_univ i)]
-    exact h
+    rwa [eq_neg_iff_add_eq_zero, Finset.add_sum_erase _ _ (Finset.mem_univ i)]
   have h2 : x i ∈ ⨆ (j) (_ : j ≠ i), Y j := by
     rw [h1]
     refine neg_mem (sum_mem fun j hj => ?_)
@@ -445,8 +440,7 @@ private theorem ze_dec (D : J → Submodule ℂ M) {F : M} (h : F ∈ ⨆ i, D i
     refine ⟨Pi.single i y, fun j => ?_, ?_⟩
     · by_cases hj : j = i
       · subst hj
-        rw [Pi.single_eq_same]
-        exact hy
+        rwa [Pi.single_eq_same]
       · rw [Pi.single_eq_of_ne hj]
         exact zero_mem _
     · rw [Finset.sum_eq_single i (fun j _ hj => Pi.single_eq_of_ne hj _) (fun h => absurd (Finset.mem_univ i) h),
@@ -475,8 +469,7 @@ private theorem ze_rank (E : J → Submodule ℂ M) (hE : iSupIndep E) (Z : Subm
         hE.disjoint_biSup (y := (s : Set J)) fun h => ha (Finset.mem_coe.1 h)
       have h := Submodule.finrank_sup_add_finrank_inf_eq (E a) (⨆ i ∈ s, E i)
       rw [hd.eq_bot, finrank_bot, add_zero, ih] at h
-      rw [Finset.iSup_insert, Finset.sum_insert ha]
-      exact h
+      rwa [Finset.iSup_insert, Finset.sum_insert ha]
   have h1 : (⨆ i ∈ (Finset.univ : Finset J), E i) = ⨆ i, E i := iSup_congr fun i => iSup_pos (Finset.mem_univ i)
   rw [← h1]
   exact key Finset.univ

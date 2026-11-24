@@ -131,8 +131,7 @@ theorem UpperTheory.V.Th.Coc.flagA :
   have hk : ∀ a, kEl (r s) (fun i => ψ i s) a = φ (∏ j ∈ Finset.univ.erase a, p j) := fun a => rfl
   have hfull : φ (∏ j, p j) = 0 := by
     rw [← flagA_full φ p]
-    simp only [hp]
-    exact hrel fun _ => s
+    simpa only [hp] using hrel fun _ => s
   have h0 : ∀ a b, a ≠ b → kEl (r s) (fun i => ψ i s) a * kEl (r s) (fun i => ψ i s) b = 0 := by
     intro a b hab
     obtain ⟨q, hq⟩ : p a ∣ ∏ j ∈ Finset.univ.erase b, p j := Finset.dvd_prod_of_mem _ (by simp [hab])
@@ -157,8 +156,7 @@ theorem UpperTheory.V.Th.Coc.flagA :
       calc _ = φ q * (φ (∏ j ∈ Finset.univ.filter (· < a), p j) * (r g - ψ a g • (1 : Matrix (Fin n) (Fin n) A)) *
             φ (∏ j ∈ Finset.univ.filter (a < ·), p j)) * φ q' := by simp only [mul_assoc]
         _ = 0 := by rw [h, mul_zero, zero_mul]
-    rw [mul_sub, sub_mul, sub_eq_zero, mul_smul_comm, mul_one, smul_mul_assoc] at h2
-    exact h2
+    rwa [mul_sub, sub_mul, sub_eq_zero, mul_smul_comm, mul_one, smul_mul_assoc] at h2
   have he : ∀ a b, (kS (r s) (fun i => ψ i s) * kT (r s) (fun i => ψ i s)) a b =
       (kEl (r s) (fun i => ψ i s) a * kEl (r s) (fun i => ψ i s) b) a b := by
     intro a b
@@ -309,8 +307,7 @@ private theorem tri_pow {O : Type} [CommRing O] {n : ℕ} (u : Matrix (Fin n) (F
         rcases lt_or_gt_of_ne hc with hc | hc
         · rw [ih.1 i c hc, zero_mul]
         · rw [h c i hc, mul_zero]
-      · intro hi
-        exact absurd (Finset.mem_univ i) hi
+      · exact fun hi => absurd (Finset.mem_univ i) hi
 
 private theorem tri_aeval {O : Type} [CommRing O] {n : ℕ} (u : Matrix (Fin n) (Fin n) O) (α : Fin n → O)
     (h : ∀ a b, b < a → u a b = 0) (hd : ∀ i, u i i = α i) (p : Polynomial O) :
@@ -489,8 +486,7 @@ theorem UpperTheory.V.Th.Coc.flag :
     have : (S' * T').map TrivSqZeroExt.fst = bar X (S * T) := by
       rw [fst_mul', fS, fT, bar, bar, bar, Matrix.map_mul]
     have h := congrFun (congrFun this i) i
-    rw [← hST]
-    exact h
+    rwa [← hST]
   obtain ⟨Y, hY⟩ := hC X (S'.map TrivSqZeroExt.snd) (T'.map TrivSqZeroExt.snd) (by
     intro a b hab
     rw [← e1, Matrix.map_apply, h1 a b hab, TrivSqZeroExt.snd_zero])
@@ -705,8 +701,7 @@ theorem UpperTheory.V.Th.Coc.idemDiag :
     split_ifs <;> simp
   have hc : ∀ i, ∃ c, IsUnit (e i c c) := by
     intro i
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     have hmem : (e i).trace ∈ IsLocalRing.maximalIdeal O :=
       Ideal.sum_mem _ (fun c _ => (IsLocalRing.mem_maximalIdeal _).mpr (hne c))
     rw [htr i] at hmem
@@ -810,8 +805,7 @@ theorem UpperTheory.V.Th.Coc.chQuot :
   refine eq_bot_iff.2 fun y hy => ?_
   obtain ⟨x, hx, rfl⟩ := ((UpperTheory.V.CA.d_pull D' π).2.2.2 hsurj).2 y hy
   rw [hD'] at hx
-  rw [TwoSidedIdeal.mem_bot, hmem]
-  exact hx
+  rwa [TwoSidedIdeal.mem_bot, hmem]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.TheoremsMuLinked.DualModuleCocycles.ChQuot =====
@@ -948,12 +942,10 @@ theorem UpperTheory.V.Th.Coc.smat :
   obtain ⟨q, hq⟩ : ∃ q : Fin n → E, ∀ j, q j = e j * kk j * e o := ⟨_, fun _ => rfl⟩
   have ρp : ∀ i, ρ (p i) = c • Matrix.single o i (1 : O) := by
     intro i
-    simp only [hp, map_mul, hρe, hhρ]
-    exact hρE o i c
+    simpa only [hp, map_mul, hρe, hhρ] using hρE o i c
   have ρq : ∀ j, ρ (q j) = c • Matrix.single j o (1 : O) := by
     intro j
-    simp only [hq, map_mul, hρe, kkρ]
-    exact hρE j o c
+    simpa only [hq, map_mul, hρe, kkρ] using hρE j o c
   have hpl : ∀ i, e o * p i = p i := by
     intro i
     simp only [hp, ← mul_assoc, hidem]
@@ -977,8 +969,7 @@ theorem UpperTheory.V.Th.Coc.smat :
     intro j
     rw [hγ, ← htr, map_mul, ρq, ρp]
     have h := tr_single j o o c (1 : Matrix (Fin n) (Fin n) O)
-    rw [Matrix.mul_one, Matrix.one_apply_eq, mul_one] at h
-    exact h
+    rwa [Matrix.mul_one, Matrix.one_apply_eq, mul_one] at h
   have hρs : ∀ r : R, ρ (r • e o) = Matrix.single o o (x r) := by
     intro r
     have hz : e o * (r • e o) * e o = r • e o := by
@@ -1097,8 +1088,7 @@ theorem UpperTheory.V.Th.Coc.liftG :
     have hy' : π y = 0 := hy
     refine k1 _ fun g => ?_
     have h := htr (MonoidAlgebra.single g 1 * y)
-    rw [map_mul, hs, ← hτ, map_mul, hy', mul_zero, map_zero, map_zero] at h
-    exact h
+    rwa [map_mul, hs, ← hτ, map_mul, hy', mul_zero, map_zero, map_zero] at h
   obtain ⟨ρE, hρE⟩ : ∃ ρE : E →+* Matrix (Fin n) (Fin n) O, ∀ y, ρE (π y) = repR x ρ y :=
     ⟨π.toRingHom.liftOfSurjective hπ ⟨repR x ρ, hker⟩, fun y =>
       π.toRingHom.liftOfRightInverse_comp_apply _ _ ⟨repR x ρ, hker⟩ y⟩
@@ -1147,16 +1137,13 @@ theorem UpperTheory.V.Th.Coc.liftG :
   refine ⟨d'.comp π.toRingHom.toAddMonoidHom, ?_, ?_, ?_⟩
   · intro a b
     have h := hd'.mul (π a) (π b)
-    rw [← map_mul, hρE, hρE] at h
-    exact h
+    rwa [← map_mul, hρE, hρE] at h
   · intro r a
     have h := hd'.smul r (π a)
-    rw [← map_smul π, hρE] at h
-    exact h
+    rwa [← map_smul π, hρE] at h
   · intro a
     have h := hd'.tr (π a)
-    rw [hτ] at h
-    exact h
+    rwa [hτ] at h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.TheoremsMuLinked.DualModuleCocycles.ConjHom =====
@@ -1426,8 +1413,7 @@ theorem UpperTheory.V.Th.Coc.zOf :
     have h4 : (bar X (mat ρ g⁻¹))ᵀ * (bar X (mat ρ g))ᵀ = 1 := by
       rw [← transpose_mul, rinv', transpose_one]
     have h5 := congrArg ((bar X (mat ρ g⁻¹))ᵀ * ·) h3
-    simp only [← mul_assoc _ (bar X (mat ρ g))ᵀ, h4, one_mul] at h5
-    exact h5
+    simpa only [← mul_assoc _ (bar X (mat ρ g))ᵀ, h4, one_mul] using h5
   · intro g
     rw [← hd, hL.tr]
 end -- clump:auto
@@ -1500,8 +1486,7 @@ theorem UpperTheory.V.Th.coc :
       change Units.map _ (G.ε g) = Units.map _ (G0.ε (h.p g))
       rw [h.ε]
     have := y.form (h.p₀ g)
-    rw [← e1, ← e2] at this
-    exact this
+    rwa [← e1, ← e2] at this
   obtain ⟨htr, -, t, ht⟩ := trRep p.D x _ hn hp.1
   have ht' : (t : _ → R) = p.D.tr := funext ht
   obtain ⟨d1, hd1⟩ := liftG p.D rN.chib x δ _ c₀ hn rN.chib_inj p.red hp.1 hc₀ hsp' hδ

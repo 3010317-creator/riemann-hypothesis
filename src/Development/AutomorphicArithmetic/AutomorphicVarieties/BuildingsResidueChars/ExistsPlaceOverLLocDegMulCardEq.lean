@@ -78,9 +78,7 @@ private theorem td_count (l : ℕ) [hl : Fact l.Prime] (F : Type) [Field F] [Num
     ⟨(pl u).asIdeal, (pl u).isPrime, hlo _ (pl u).isPrime (hm u)⟩
   have hf : Function.Bijective f := by
     constructor
-    · intro a b h
-      apply hi
-      exact HeightOneSpectrum.ext (congrArg Subtype.val h)
+    · exact fun a b h => hi (HeightOneSpectrum.ext (congrArg Subtype.val h))
     · rintro ⟨P, hP, hPl⟩
       have hlP : ((l : ℕ) : 𝓞 F) ∈ P := by
         have hm' : ((l : ℕ) : ℤ) ∈ p := Ideal.subset_span (Set.mem_singleton _)

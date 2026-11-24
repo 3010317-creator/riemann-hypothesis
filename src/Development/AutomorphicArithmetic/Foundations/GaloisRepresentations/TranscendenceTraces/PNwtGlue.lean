@@ -49,8 +49,7 @@ private theorem lift_ex {Z S : Scheme.{0}} {p : Z ⟶ S} (A : Sq p) [IsOpenImmer
     (z : gp Ω ⟶ Z) (hz : pt (z ≫ p) ∈ Set.range A.u) : ∃ l : gp Ω ⟶ A.V, l ≫ A.v = z := by
   have hr : Set.range (z ≫ p) ⊆ Set.range A.u := by
     rintro _ ⟨t, rfl⟩
-    rw [pt_eq]
-    exact hz
+    rwa [pt_eq]
   exact ⟨A.pb.lift z (IsOpenImmersion.lift A.u (z ≫ p) hr) (IsOpenImmersion.lift_fac _ _ _).symm,
     A.pb.lift_fst _ _ _⟩
 
@@ -77,8 +76,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.nwtGlue_of :
     set s := pt (z ≫ p) with hs
     haveI := hopen s
     have hz' : GenPt (pt (l Ω z ≫ (A s).r)) := by
-      rw [← hGen.2.1 (A s).u, ← pt_comp, Category.assoc, ← (A s).pb.w, ← Category.assoc, hlv Ω z]
-      exact hz
+      rwa [← hGen.2.1 (A s).u, ← pt_comp, Category.assoc, ← (A s).pb.w, ← Category.assoc, hlv Ω z]
     have h1 := (hw s).2 Ω (l Ω z) hz'
     have h2 := hBC (A s).v (A s).r p (A s).u (A s).pb
     change w s Ω (l Ω z) = _

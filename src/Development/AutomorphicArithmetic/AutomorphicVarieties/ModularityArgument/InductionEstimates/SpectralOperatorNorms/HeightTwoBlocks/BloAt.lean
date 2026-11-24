@@ -65,8 +65,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.KX.bloAt :
       Subtype.ext (Real.exp_log s.2)
     have h := b.cen (Real.log s.1) x
     unfold zt at h
-    rw [hs] at h
-    exact h
+    rwa [hs] at h
   have hm : b.f ∈ π.V := by
     have : (⟨b.f.1, b.cusp⟩ : AutomorphicForm.cuspForms E r) ∈ UpperTheory.V.Cm.carrier π := by
       rw [hπ.carrier_eq]; exact ⟨hc, hf⟩
@@ -81,8 +80,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.KX.bloAt :
       · obtain ⟨c, rfl⟩ := Submodule.mem_span_singleton.1 hφ
         rw [map_smul, b.inf, smul_comm, Multiset.map_map]
         rfl
-    rw [e] at h1
-    exact h1
+    rwa [e] at h1
   · have h0 := b.isSat w hw
     have hx : (⟨b.f, hm⟩ : π.V) ∈ GlobalTheory.PRep.fixed (π.locRep w) (GlobalTheory.LFun.KGL w (n := r)) :=
       GlobalTheory.LGrp.mem_fixed.2 fun k hk => Subtype.ext (GlobalTheory.LGrp.mem_fixed.1 h0.2.1 k hk)

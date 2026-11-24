@@ -123,7 +123,6 @@ theorem intFact_k : _root_.PositivityTheory.SiegelWeilFormula.KFock.IntFact_k :=
     rw [hs1, ite_eq_right h]
   have fin_sW : ∀ u, finOne F • sW u = 0 := fun u => by
     ext i j
-    show finOne F • s _ = 0
     exact hs2 _
   have inv_fr : ((R.fr w)⁻¹).1 * fr = 1 := Units.inv_mul (R.fr w)
   have fr_inv : fr * ((R.fr w)⁻¹).1 = 1 := Units.mul_inv (R.fr w)

@@ -208,8 +208,7 @@ theorem integral_const_coef : ∀ {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ t0 :
     · intro g hg
       obtain ⟨x, k, hk, rfl⟩ := hdec g
       rw [hKeq, SetLike.mem_coe, Subgroup.mem_comap, map_mul, hfin k hk, mul_one] at hg
-      refine Set.mul_mem_mul ?_ hk
-      exact Formalism.IndefR.Lev.mem_levA.2 ⟨hF.rangeA ▸ ⟨x, rfl⟩, hg⟩
+      exact Set.mul_mem_mul (Formalism.IndefR.Lev.mem_levA.2 ⟨hF.rangeA ▸ ⟨x, rfl⟩, hg⟩) hk
   obtain ⟨hcont, hpos, -⟩ := GlobalTheory.Core.Rk.IP.hgtL_props D X.A (stdLat X.A) a hL ha
   refine ⟨fun s => ?_, ?_⟩
   · let F : GA D X.A → ℂ := fun g => c * GlobalTheory.Doubling.npow (GlobalTheory.Core.Rk.IP.hgtL X.A (stdLat X.A) a g)
@@ -717,8 +716,7 @@ theorem main : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {μ₀ : T}
         · exfalso
           obtain ⟨v, hv, rfl⟩ := Finset.mem_image.1 h
           apply h0
-          rw [← hPw, G.pl.under_w hv]
-          exact hv
+          rwa [← hPw, G.pl.under_w hv]
         · exact h
       have := GlobalTheory.TwistRam.not_unrAt_alpha_div_beta hL t i j w P hP' hPw h0
       have e0 : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.alpha G t i j / GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.beta G i j = G.nu t i (j + 1) :=
@@ -728,8 +726,7 @@ theorem main : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {μ₀ : T}
   · exact hw
   have hT : GlobalTheory.CMVal.TrivOnF (nuH G t i j) := by
     have h := ((L.C.isMu0 j).triv.mul (hL.xi_triv t)).mul (G.ch.triv _ hm.1 hm.2).inv
-    rw [nuH, div_eq_mul_inv]
-    exact h
+    rwa [nuH, div_eq_mul_inv]
   have hu : ∀ w, GlobalTheory.LFun.UnrAt χ⁻¹ w ↔ (nuH G t i j)⁻¹.UnrAt w := fun w => by
     rw [GlobalTheory.UnrCharZeta.unrAt_inv, ← GlobalTheory.LFun.unrAt_iff_of_chrEq hχ w]
     exact ⟨fun h => inv_inv χ ▸ h.inv, fun h => h.inv⟩
@@ -931,8 +928,7 @@ theorem rallis_inner_product_bottom_norm_eq (hP : _root_.GlobalTheory.FunPr.Thet
     refine HolValueAt.congr (holValueAt_prod (Finset.range A.rank) fun i hi => ?_) (GlobalTheory.T.partial_L_trivial_rep_twist_eq_prod_hecke_L χB Sf A.rank hU.unr)
     have h2 := hl i (Finset.mem_range.1 hi)
     rw [show (t : ℂ) / 2 + (A.rank : ℂ) / 2 - i = (t : ℂ) / 2 + ((A.rank : ℂ) / 2 - i) by ring] at h2
-    have h3 := h2.comp_add
-    simpa only [add_sub_assoc] using h3
+    simpa only [add_sub_assoc] using h2.comp_add
   rw [hfin _ hL]
   simp only [rcoef_one]
   rw [integral_mul_const]

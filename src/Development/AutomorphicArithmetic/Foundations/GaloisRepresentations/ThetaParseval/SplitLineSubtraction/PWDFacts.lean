@@ -75,12 +75,10 @@ theorem UpperTheory.Gal.TP.Sub.wDFacts_holds :
     refine ⟨?_, fun σ => ?_⟩
     · apply LinearMap.ext
       intro v
-      have hv := congrArg (fun f => (f (v, 0)).1) hN
-      simpa using hv
+      simpa using congrArg (fun f => (f (v, 0)).1) hN
     · apply LinearMap.ext
       intro v
-      have hv := congrArg (fun f => (f (v, 0)).1) (hρ σ)
-      simpa [Representation.prod] using hv
+      simpa [Representation.prod] using congrArg (fun f => (f (v, 0)).1) (hρ σ)
   · rw [WD.lpChar_mk, WD.unr_mk, WD.unr_mk, WD.unr_mk]
     unfold WDRep.Unr
     simp only [WDRep.tensor]

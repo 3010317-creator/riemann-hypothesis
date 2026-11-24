@@ -272,9 +272,7 @@ theorem selRep_of_mem (ρ : Representation R G M) (U : Subgroup G) [U.Normal] {�
 theorem selRes_selRep (ρ : Representation R G M) {U' U : Subgroup G} [U.Normal] [U'.Normal] (h : U' ≤ U)
     {𝒟 : Set (Subgroup G)} (h𝒟 : ConjStable 𝒟) (g : G) (x : LocSel ρ U 𝒟) :
     selRes ρ h 𝒟 (selRep ρ U h𝒟 g x) = selRep ρ U' h𝒟 g (selRes ρ h 𝒟 x) := by
-  apply Subtype.ext
-  show resU ρ h (conjRep ρ U g x) = conjRep ρ U' g (resU ρ h x)
-  exact resU_conjRep ρ h g x
+  exact Subtype.ext (resU_conjRep ρ h g x)
 
 abbrev invariantsUnderSubgroupH1 (ρ : Representation R G M) (U U' : Subgroup G) [U'.Normal] : Submodule R (H1U ρ U') :=
   Representation.invariants ((conjRep ρ U').comp U.subtype : Representation R U (H1U ρ U'))
@@ -300,8 +298,7 @@ theorem restriction_mem_invariant_H1 (ρ : Representation R G M) {U' U : Subgrou
       u⁻¹ * (⟨v.1, h v.2⟩ * u) := Subtype.ext (by simp [conjHom, mul_assoc])
   have key := cocycle_conj_identity ρ U z u ⟨v.1, h v.2⟩
   rw [← hc] at key
-  rw [f₂ v, f₁, f₁ v]
-  exact key
+  rwa [f₂ v, f₁, f₁ v]
 
 end Conj
 

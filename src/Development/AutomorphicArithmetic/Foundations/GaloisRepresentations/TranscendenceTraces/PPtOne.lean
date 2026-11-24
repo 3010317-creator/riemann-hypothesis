@@ -59,17 +59,14 @@ private lemma ring_eq {Ω B L : Type} [Field Ω] [IsAlgClosed Ω] [CommRing B] [
   ext b
   obtain ⟨c, hc⟩ := hb.2 (Ideal.Quotient.mk _ b)
   have hm : b - algebraMap Ω B c ∈ RingHom.ker f := by
-    rw [← Ideal.Quotient.eq]
-    rw [← hc]
+    rw [← Ideal.Quotient.eq, ← hc]
     rfl
   have h1 : f b = f (algebraMap Ω B c) := by
     have := RingHom.mem_ker.mp hm
-    rw [map_sub, sub_eq_zero] at this
-    exact this
+    rwa [map_sub, sub_eq_zero] at this
   have h2 : f' b = f' (algebraMap Ω B c) := by
     have := RingHom.mem_ker.mp (hk ▸ hm)
-    rw [map_sub, sub_eq_zero] at this
-    exact this
+    rwa [map_sub, sub_eq_zero] at this
   rw [h1, h2]
   exact congrArg (fun g : Ω →+* L => g c) h
 

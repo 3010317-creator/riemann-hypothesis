@@ -56,8 +56,7 @@ private theorem pow_cyc_char_iff_toZModPow_eq {Ω : Type} [Field Ω] (l : ℕ) [
     obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ k)
     have h1 := cyclotomicCharacter.spec l g ζ hζ.pow_eq_one
     rw [h ζ hζ.pow_eq_one] at h1
-    have h2 := hζ.pow_inj (ZMod.val_lt _) (ZMod.val_lt _) h1
-    exact (ZMod.val_injective _ h2).symm
+    exact (ZMod.val_injective _ (hζ.pow_inj (ZMod.val_lt _) (ZMod.val_lt _) h1)).symm
   · rintro h t ht
     rw [cyclotomicCharacter.spec l g t ht, h]
 
@@ -129,5 +128,4 @@ theorem UpperTheory.V.Odd.fixLev :
     have hmem : ((cyclotomicCharacter Ω l σ : ℤ_[l]ˣ) : ℤ_[l]) - (((b : ZMod M).val : ℕ) : ℤ_[l]) ∈
         RingHom.ker (PadicInt.toZModPow m) := by
       rw [RingHom.mem_ker, map_sub, hc, map_natCast, sub_self]
-    rw [PadicInt.ker_toZModPow, Ideal.mem_span_singleton] at hmem
-    exact hmem
+    rwa [PadicInt.ker_toZModPow, Ideal.mem_span_singleton] at hmem

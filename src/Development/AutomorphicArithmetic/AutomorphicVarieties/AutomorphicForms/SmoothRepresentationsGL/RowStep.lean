@@ -68,8 +68,7 @@ private theorem mul_rowM_apply {R : Type} [CommRing R] {n : ℕ} (m : Fin n) (ξ
       · simp
       · intro b _ hb
         rw [Matrix.one_apply_ne hb, mul_zero]
-      · intro hj
-        exact absurd (Finset.mem_erase.mpr ⟨hjm, Finset.mem_univ j⟩) hj
+      · exact fun hj => absurd (Finset.mem_erase.mpr ⟨hjm, Finset.mem_univ j⟩) hj
   rw [hs, add_comm]
   congr 1
   by_cases hjm : j ≤ m
@@ -88,8 +87,7 @@ theorem UpperTheory.V.Af.Smo.rowStep :
     intro i j
     have h := mul_rowM_apply m ((p : Matrix (Fin n) (Fin n) R) m)
       ((p * s⁻¹ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) i j
-    rw [← hs, ← Units.val_mul, inv_mul_cancel_right] at h
-    exact h
+    rwa [← hs, ← Units.val_mul, inv_mul_cancel_right] at h
   have hu : ((s⁻¹ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) m m
       * (p : Matrix (Fin n) (Fin n) R) m m = 1 := by
     have h := mul_rowM_apply m ((p : Matrix (Fin n) (Fin n) R) m)
@@ -124,7 +122,6 @@ theorem UpperTheory.V.Af.Smo.rowStep :
       have k2 := key i j
       rw [hpj j hj] at k2
       by_cases hjm : j = m
-      · rw [hjm]
-        exact hQm
+      · rwa [hjm]
       · rw [ite_eq_right hjm, hQm, zero_mul, add_zero] at k2
         exact k2.symm

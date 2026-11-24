@@ -146,9 +146,7 @@ theorem UpperTheory.V.AlgebraTools.jqInj :
   obtain ⟨m, hm⟩ := (h2 _ h1).exists
   have hd := jqInj_dom (n := n) hx m
   obtain ⟨s, hs, -, hsum⟩ := domSum k n _ hd
-  have hq : IsUnit (resCard k : ℂ) := by
-    refine Ne.isUnit (Nat.cast_ne_zero.2 ?_)
-    exact Nat.card_pos.ne'
+  have hq : IsUnit (resCard k : ℂ) := Ne.isUnit (Nat.cast_ne_zero.2 Nat.card_pos.ne')
   have hu := (domMul k n C ℂ V π).2.1 hq _ hd
   have h0 : hk π (iwC k n C) (diagT k (Fin n) (fun i : Fin n => x ^ (-((m : ℤ) * (i : ℕ))))) v = 0 := by
     refine Subtype.ext (GlobalTheory.IwahoriInj.eq_zero_of_fixed hπ (jqInj_compact C)

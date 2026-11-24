@@ -144,8 +144,7 @@ private theorem valuation_power_identity {R : Type} [CommRing R] {N p : ℕ} (χ
       (Nat.Prime.coprime_iff_not_dvd hp).1 (Nat.Coprime.coprime_mul_left_right hc).symm h
     rw [ite_eq_right hpa, sub_zero]
     have := DirichletCharacter.changeLevel_eq_cast_of_dvd χ (dvd_mul_right N p) (ZMod.unitOfCoprime a hc)
-    rw [ZMod.coe_unitOfCoprime, ZMod.cast_natCast (dvd_mul_right N p)] at this
-    exact this
+    rwa [ZMod.coe_unitOfCoprime, ZMod.cast_natCast (dvd_mul_right N p)] at this
   · rw [MulChar.map_nonunit _ (by rwa [ZMod.isUnit_iff_coprime])]
     split_ifs with h
     · simp
@@ -161,8 +160,7 @@ private theorem sum_divisible_eq_sum_mul {R : Type} [AddCommMonoid R] {N p : ℕ
     simp only [mem_Icc, mem_filter] at hb ⊢
     refine ⟨⟨Nat.mul_pos hp hb.1, ?_⟩, dvd_mul_right _ _⟩
     rw [mul_comm]; exact Nat.mul_le_mul_right _ hb.2
-  · intro a _ b _ h
-    exact Nat.eq_of_mul_eq_mul_left hp h
+  · exact fun a _ b _ h => Nat.eq_of_mul_eq_mul_left hp h
   · intro a ha
     simp only [mem_Icc, mem_filter] at ha
     obtain ⟨⟨h1, h2⟩, b, rfl⟩ := ha
@@ -204,16 +202,14 @@ private theorem UpperTheory.V.Bern.level_zero {R : Type} [CommRing R] {N p : ℕ
     (hp : p.Prime) (hpN : p ∣ N) : χ (p : ZMod N) = 0 := by
   apply MulChar.map_nonunit
   rw [ZMod.isUnit_iff_coprime]
-  intro hc
-  exact hp.one_lt.ne' (Nat.Coprime.eq_one_of_dvd hc hpN)
+  exact fun hc => hp.one_lt.ne' (Nat.Coprime.eq_one_of_dvd hc hpN)
 
 private theorem UpperTheory.V.Bern.level_val {R : Type} [CommRing R] {N M p : ℕ} (h : N ∣ M)
     (χ : DirichletCharacter R N) (hp : p.Prime) (hpM : ¬ p ∣ M) :
     DirichletCharacter.changeLevel h χ (p : ZMod M) = χ (p : ZMod N) := by
   have hc : p.Coprime M := (Nat.Prime.coprime_iff_not_dvd hp).2 hpM
   have := DirichletCharacter.changeLevel_eq_cast_of_dvd χ h (ZMod.unitOfCoprime p hc)
-  rw [ZMod.coe_unitOfCoprime, ZMod.cast_natCast h] at this
-  exact this
+  rwa [ZMod.coe_unitOfCoprime, ZMod.cast_natCast h] at this
 
 private theorem UpperTheory.V.Bern.generalized_bernoulli_change_level {R : Type} [CommRing R] [Algebra ℚ R] {N : ℕ} (k : ℕ)
     (χ : DirichletCharacter R N) (hN : 0 < N) (hk : 1 ≤ k) (m : ℕ) :

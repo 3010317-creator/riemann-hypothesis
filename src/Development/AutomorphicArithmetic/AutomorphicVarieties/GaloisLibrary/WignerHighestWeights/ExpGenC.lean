@@ -98,14 +98,12 @@ theorem UpperTheory.V.AlgRepEndIrreducible.expGenC :
     convert this using 2
     funext i
     rw [Pi.exp_def]
-    simp only [← Complex.exp_eq_exp_ℂ]
-    exact (Complex.exp_log (hD' i)).symm
+    simpa only [← Complex.exp_eq_exp_ℂ] using (Complex.exp_log (hD' i)).symm
   · intro t
     have := hH (Matrix.single t.i t.j t.c)
     rw [_root_.UpperTheory.Reformulated.B.Qf11.expSq _ (Matrix.single_mul_single_of_ne _ _ _ _ t.hij.symm _)] at this
     exact this
-  · intro A B _ _ hA hB
-    exact H.mul_mem hA hB
+  · exact fun A B _ _ hA hB => H.mul_mem hA hB
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.WignerHighestWeights.ExpGenC =====

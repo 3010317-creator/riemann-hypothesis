@@ -174,8 +174,7 @@ private theorem UpperTheory.Kd.K4.exists_adic_limit_of_sub_mem_pow_smul (l : ℕ
       exact Submodule.add_mem _ (Submodule.smul_mono_left (Ideal.pow_le_pow_right hn) (h n)) ih
   obtain ⟨L, hL⟩ := (IsAdicComplete.toIsPrecomplete : IsPrecomplete (idl l) B).prec (f := u)
     (fun {m n} hmn => SModEq.symm (SModEq.sub_mem.2 (hm m n hmn)))
-  refine ⟨L, fun n => ?_⟩
-  exact SModEq.sub_mem.1 (hL n).symm
+  exact ⟨L, fun n => (SModEq.sub_mem.1 (hL n).symm)⟩
 
 private theorem UpperTheory.Kd.K4.adic_eq_zero_of_mem_all (l : ℕ) [Fact l.Prime] {B : Type} [AddCommGroup B] [Module ℤ_[l] B]
     [IsAdicComplete (idl l) B] (a : B) (h : ∀ n, a ∈ ((idl l) ^ n • ⊤ : Submodule ℤ_[l] B)) : a = 0 :=
@@ -242,14 +241,12 @@ theorem UpperTheory.Kd.K4.ml3 :
     · simp [hτ]
     · intro y hy hne
       rw [(Finset.mem_filter.1 hy).2, ite_eq_right (Ne.symm hne)]
-    · intro h
-      exact absurd (by simp [hτ]) h
+    · exact fun h => absurd (by simp [hτ]) h
   have hd : ∀ r b, P r (d (r + 1) b) = d r (p r b) := by
     intro r b
     funext s x
     have := UpperTheory.Kd.K4.fiberSum_push_hecke (π r) (κ (r + 1) s) (σ s) b x
-    rw [hκ] at this
-    exact this
+    rwa [hκ] at this
   have hN : ∀ r m n, m ≤ n → N r n ≤ N r m := fun r m n h f hf s x => hDmono h (hf s x)
   have hP : ∀ r n a, a ∈ N (r + 1) n → P r a ∈ N r n := by
     intro r n a ha s x
@@ -520,16 +517,14 @@ private theorem UpperTheory.Kd.K4.galoisAction_adic_close {Ω : Type} [Field Ω]
         (X.galB l s a - a) u + (X.galB l s b - b) u := by
       simp only [map_add (f := _), Pi.add_apply, Pi.sub_apply]
       abel
-    rw [e]
-    exact h
+    rwa [e]
   | smul r a _ ha =>
     obtain ⟨E, hE⟩ := ha
     refine ⟨E, fun s hs u => ?_⟩
     have h := Submodule.smul_mem _ r (hE s hs u)
     have e : (X.galB l s (r • a) - r • a) u = r • (X.galB l s a - a) u := by
       simp only [map_smul, Pi.smul_apply, Pi.sub_apply, smul_sub]
-    rw [e]
-    exact h
+    rwa [e]
 
 theorem UpperTheory.Kd.K4.galc :
     ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (N w : ℕ), ∀ b ∈ X.B N l w, ∀ n : ℕ, ∃ E0 : Finset Ω, ∀ s : Ω ≃ₐ[ℚ] Ω, (∀ x ∈ E0, s x = x) → CgF X l n (X.galB l s b) b := by
@@ -585,8 +580,7 @@ private theorem sh_coc (g : G → V →ₗ[R] V) (hg : ∀ s t v, g (s * t) v = 
     group
   simp only [sh]
   rw [e1]
-  rw [map_sub, map_add (f := _), e2] at h
-  exact h
+  rwa [map_sub, map_add (f := _), e2] at h
 
 private theorem push_coc (g : G → V →ₗ[R] V) (hg : ∀ s t v, g (s * t) v = g s (g t v)) (c : G →* U) (rep : U → G)
     (hr : ∀ y, c (rep y) = y) (P : AddSubgroup V) (hP : ∀ s, ∀ v ∈ P, g s v ∈ P) (z : G → V)
@@ -812,8 +806,7 @@ private theorem tf {k : ℕ} {f g : X.Fn l} (h : (l : ℤ_[l]) ^ k • f = (l : 
     | succ k ih =>
       intro x hx
       refine ih x (_root_.GlobalTheory.KZ.BettiB.khat_no_l_torsion X l _ ?_)
-      rw [smul_smul, ← pow_succ']
-      exact hx
+      rwa [smul_smul, ← pow_succ']
   funext u
   have h1 := congrFun h u
   simp only [Pi.smul_apply] at h1
@@ -892,8 +885,7 @@ theorem UpperTheory.Kd.K4.mlB :
     rw [shE] at h
     have e : x * κ r s * t n r = x * t n r * κ r s := mul_right_comm _ _ _
     simp only [F]
-    rw [e]
-    exact h
+    rwa [e]
   have hloc : ∀ r n s x, ∀ᶠ s' in 𝓝 s, F r n s' x - F r n s x ∈ Pn X l N w n := by
     intro r n s x
     obtain ⟨T, hT'⟩ := (hT n r).loc
@@ -902,8 +894,7 @@ theorem UpperTheory.Kd.K4.mlB :
       Gd.diff hA hj hpur (hbB n r σ m₁) (hbB n r τ m₂) (hT' σ m₁ τ m₂ h)
     have h := push_loc (X.galB l) (M n r) (hmul (M n r)) (hrep (M n r)) (hfix (M n r)) (Pn X l N w n) (hPg n)
       (bB n r) T H (red n r) s (x * t n r)
-    rw [shE] at h
-    exact h
+    rwa [shE] at h
   haveI hcompl : IsAdicComplete (idl l) (X.B N l w) := bcompl ε X l N w
   let σB : (Ω ≃ₐ[ℚ] Ω) →* Module.End ℤ_[l] (X.B N l w) :=
     { toFun := fun s => (X.galB l s).restrict (hstab s)
@@ -968,12 +959,10 @@ theorem UpperTheory.Kd.K4.mlB :
       rw [AddSubmonoidClass.coe_finsetSum]
     change ((GlobalTheory.KA.push (π r) (Fs (r + 1) n) s x : X.B N l w) : X.Fn l) -
       (F r n s x + (X.galB l s (b (x * κ r s)) - b x)) = (l : ℤ_[l]) ^ n • d
-    rw [ec]
-    exact e
+    rwa [ec]
   obtain ⟨Y, hY1, hY2, hY3, hY4⟩ := ml3 l (X.B N l w) (Ω ≃ₐ[ℚ] Ω) A π κ σB Fs hπ hπκ hκl hσc h1 h2 h3 h4
   refine ⟨fun r s y => (Y r s y : X.Fn l), fun r s y => (Y r s y).2, ?_, ?_, ?_, ?_⟩
-  · intro r s s' y
-    exact congrArg Subtype.val (hY1 r s s' y)
+  · exact fun r s s' y => congrArg Subtype.val (hY1 r s s' y)
   · intro r n s y
     filter_upwards [hY2 r n s y] with s' h
     obtain ⟨d, e⟩ := h

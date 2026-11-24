@@ -88,8 +88,7 @@ private theorem open_index {v : ℕ} [Fact v.Prime] (H : Subgroup (GQ v)) (hH : 
 
 private theorem open_fin {v : ℕ} [Fact v.Prime] (H : Subgroup (GQ v)) (hH : IsOpen (H : Set (GQ v))) :
     FiniteDimensional ℚ_[v] ↥(IntermediateField.fixedField H) := by
-  rw [← InfiniteGalois.isOpen_iff_finite, open_fix H hH]
-  exact hH
+  rwa [← InfiniteGalois.isOpen_iff_finite, open_fix H hH]
 
 private theorem fixed_sup {v : ℕ} [Fact v.Prime] (H : Subgroup (GQ v)) :
     IntermediateField.fixedField (H ⊔ Iq v) = IntermediateField.fixedField H ⊓ MaximalUnramifiedExtension v := by

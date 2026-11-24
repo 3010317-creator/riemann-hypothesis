@@ -192,9 +192,7 @@ theorem UpperTheory.V.KT.hnf :
         ∃ g : Gm L N, (g : Matrix (Fin N) (Fin N) (𝓞 L)) * A ∈ S := by
     intro I
     rcases Nat.eq_zero_or_pos I with rfl | hI
-    · refine ⟨∅, by simp, ?_⟩
-      intro A hA hn
-      exact absurd hn (hpos A hA).ne'
+    · exact ⟨∅, by simp, fun A hA hn => absurd hn (hpos A hA).ne'⟩
     · exact hnfone L N I hI
   choose S hScard hS using hex
   refine ⟨(Finset.Icc 1 J).biUnion S, ?_, ?_⟩
@@ -202,15 +200,13 @@ theorem UpperTheory.V.KT.hnf :
         ≤ ∑ I ∈ Finset.Icc 1 J, (S I).card := Finset.card_biUnion_le
       _ ≤ ∑ I ∈ Finset.Icc 1 J, J ^ (dd L N * N) := by
         apply Finset.sum_le_sum
-        intro I hI
-        exact (hScard I).trans (Nat.pow_le_pow_left (Finset.mem_Icc.mp hI).2 _)
+        exact fun I hI => (hScard I).trans (Nat.pow_le_pow_left (Finset.mem_Icc.mp hI).2 _)
       _ = J ^ (1 + dd L N * N) := by
         rw [Finset.sum_const, Nat.card_Icc, smul_eq_mul, pow_add, pow_one]
         simp
   · intro A hA hJ
     obtain ⟨g, hg⟩ := hS (nrmDet A) A hA rfl
-    refine ⟨g, Finset.mem_biUnion.mpr ⟨nrmDet A, ?_, hg⟩⟩
-    exact Finset.mem_Icc.mpr ⟨hpos A hA, hJ⟩
+    exact ⟨g, Finset.mem_biUnion.mpr ⟨nrmDet A, (Finset.mem_Icc.mpr ⟨hpos A hA, hJ⟩), hg⟩⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.HermiteNormalForms.Hnf =====

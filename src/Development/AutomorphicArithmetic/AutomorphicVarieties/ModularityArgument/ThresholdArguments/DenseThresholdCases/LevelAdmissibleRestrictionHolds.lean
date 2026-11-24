@@ -126,8 +126,7 @@ theorem UpperTheory.V.Lev.levelFRes :
     refine ⟨B, hB, fun i => (χ i).comp (res F Ω K), fun i => hK _ (hχ i), P * r g, fun s hs => ?_⟩
     have h := hP _ (hI s hs)
     simp only [char_conj] at h
-    rw [MonoidHom.comp_apply, rep_conj]
-    exact h
+    rwa [MonoidHom.comp_apply, rep_conj]
   · obtain ⟨A, hA, κ, χ, hχ, ⟨P, hP⟩, hκ⟩ := H.above (w.under (𝓞 F)) ((nat_mem_under l w).2 hw)
     obtain ⟨B, g, hB, -, hD, hI⟩ := move w hA
     let d : ↥(Dec (F := K) B) →* ↥(Dec (F := F) A) :=
@@ -139,8 +138,7 @@ theorem UpperTheory.V.Lev.levelFRes :
     · rw [MonoidHom.comp_apply, rep_conj]
       exact hP (d s)
     · have h := hκ i (d s) (hI s hs)
-      rw [hd, char_conj, char_conj] at h
-      exact h
+      rwa [hd, char_conj, char_conj] at h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SemisimpleLevels.LevelFRes =====
@@ -172,8 +170,7 @@ private theorem exists_over (K : Type) [Field K] [NumberField K] (v : HeightOneS
     intro x hx
     have h1 : algebraMap ℚ K (algebraMap (𝓞 ℚ) ℚ x) = 0 := by
       have := congrArg (algebraMap (𝓞 K) K) (RingHom.mem_ker.1 hx)
-      rw [map_zero] at this
-      exact this
+      rwa [map_zero] at this
     have hx0 : x = 0 := RingOfIntegers.coe_eq_zero_iff.1 ((map_eq_zero _).1 h1)
     rw [hx0]
     exact zero_mem _
@@ -195,8 +192,7 @@ private theorem resD_surj {A : ValuationSubring Ω}
     rfl
   have hm : t ∈ Dec (F := K) A := by
     have := s.2
-    rw [← ht] at this
-    exact this
+    rwa [← ht] at this
   exact ⟨⟨t, hm⟩, Subtype.ext ht⟩
 
 private theorem unl_res (r : G ℚ Ω →* GL (Fin n) (Qbar l))

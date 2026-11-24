@@ -372,8 +372,7 @@ theorem jet_bound_fix (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (t0 : ℂ
     positivity
   · have := GlobalTheory.ConjJet.sup_perm D hg1 cc' δ' hc' (torConj D (tor0 D cc δ) Qbar ρ) π hΛ hπ a d L L' h1 h2 _
       hTh y' z
-    rw [GlobalTheory.ConjJet.Hf_re, ← mul_div_assoc] at this
-    exact this
+    rwa [GlobalTheory.ConjJet.Hf_re, ← mul_div_assoc] at this
 
 theorem vacuum_mem_thetaSpace_pair (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (t0 : ℂ)
     (hc : Crv D cc δ) (ht : GL3Theta.IsTwoTorsionPointUnkilled D (lamOf D cc δ) t0) (a d : ℕ) (L L')
@@ -1096,8 +1095,7 @@ theorem GlobalTheory.BigTop.Fun.arch_tie_of_logDeriv_bound (hS : _root_.GlobalTh
       C * (GlobalTheory.ChiGrid.bigN D : ℝ) ^ 2 * Real.log (GlobalTheory.FunObj.SqNum.levQ d.G.pl) := by
     unfold FunData.bArch
     rw [eN, eB, eS, ef]
-  rw [e1]
-  exact hA
+  rwa [e1]
 end
 end
 end -- clump:auto

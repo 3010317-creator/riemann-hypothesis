@@ -150,10 +150,8 @@ theorem UpperTheory.V.Hi.propCker :
       have h1 : ρ q.out (π (I.z ^ j) v) - π (I.z ^ j) v ∈ J := Submodule.subset_span ⟨_, _, rfl⟩
       have h2 := add_mem h1 hj
       rw [sub_add_cancel] at h2
-      rw [← mul]
-      exact h2
-    · intro x
-      exact (uOpMul G I k M π _ 1 (hz j) (one_mem _) v hv).1 x x.2
+      rwa [← mul]
+    · exact fun x => (uOpMul G I k M π _ 1 (hz j) (one_mem _) v hv).1 x x.2
   · rintro ⟨j, hj⟩
     have h1 := propCp G I k M π _ (hz j) v hv
     rw [hj, zero_sub, neg_mem_iff, Submodule.smul_mem_iff _ (Nat.cast_ne_zero.2 (I.fin_N _ (hz j)))] at h1

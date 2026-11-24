@@ -530,13 +530,11 @@ theorem isParVec_of_isBlockVec : ∀ (g : ℕ) [Fact g.Prime] (F : Type) [Field 
     intro k hk
     have := act_inc he hT hu k (by rw [hk, Units.val_one]; exact inPar_one) (by rw [hk, Units.val_one]; exact tl_one) 1
       (by rw [hk, Units.val_one, Units.val_one, br_one, Matrix.det_one])
-    rw [map_one, Units.val_one, one_smul] at this
-    exact this
+    rwa [map_one, Units.val_one, one_smul] at this
   · intro x h0 h1 h2
     have := act_inc he hT hu (Function.invFun (red g (r + t)) x) (by rw [hsurj]; exact h0) (by rw [hsurj]; exact h1) 1
       (by rw [hsurj, h2, Matrix.det_one, Units.val_one])
-    rw [map_one, Units.val_one, one_smul] at this
-    exact this
+    rwa [map_one, Units.val_one, one_smul] at this
   · intro y
     obtain ⟨h0, h1, h2⟩ := blk_parts (r := r) y
     have := act_inc he hT hu (Function.invFun (red g (r + t)) (blk r t (r + t) 1 y)) (by rw [hsurj]; exact h0)
@@ -593,8 +591,7 @@ theorem exists_intertwining_functional {K : Type u_1} {F : Type u_2} {V : Type u
       rintro _ ⟨v, rfl⟩
       rw [Subsingleton.elim v 0, map_zero]
       exact Submodule.zero_mem _
-    rw [hS, Submodule.mem_bot] at hf
-    exact hf
+    rwa [hS, Submodule.mem_bot] at hf
 
   let A := FreeAlgebra ℂ K
   let rA : A →ₐ[ℂ] Module.End ℂ F := FreeAlgebra.lift ℂ r
@@ -681,13 +678,11 @@ theorem exists_intertwining_functional {K : Type u_1} {F : Type u_2} {V : Type u
   have hπf : π f₀ ≠ 0 := by
     intro h0
     have hNk : Submodule.span A {f₀} ≤ LinearMap.ker π := by
-      rw [Submodule.span_le, Set.singleton_subset_iff]
-      exact h0
+      rwa [Submodule.span_le, Set.singleton_subset_iff]
     obtain ⟨y, hy0⟩ := exists_ne (0 : m)
     apply hy0
     have hyk : (y : SA) ∈ LinearMap.ker π := hNk (hmN y.2)
-    rw [LinearMap.mem_ker, hπleft] at hyk
-    exact hyk
+    rwa [LinearMap.mem_ker, hπleft] at hyk
 
   have hmemT : ∀ T (hT : T ∈ s) (v : V), mkA T (hP T hT) v ∈ SA := fun T hT v =>
     hpSA T hT (by rw [hpT T hT]; exact ⟨v, rfl⟩)
@@ -704,8 +699,7 @@ theorem exists_intertwining_functional {K : Type u_1} {F : Type u_2} {V : Type u
       rw [SetLike.mem_coe, LinearMap.mem_ker, ← LinearMap.comp_apply, hne T hT, LinearMap.zero_apply]
     obtain ⟨y, hy, hyf⟩ := hle f₀.2
     have hyeq : y = f₀ := Subtype.ext hyf
-    rw [← hyeq]
-    exact hy
+    rwa [← hyeq]
   let e : V ≃ₗ[A] m := LinearEquiv.ofBijective _ (LinearMap.bijective_of_ne_zero hg)
   let φ₀ : SA →ₗ[A] V := e.symm.toLinearMap ∘ₗ π
   have hφ₀f : φ₀ f₀ ≠ 0 := by
@@ -729,8 +723,7 @@ theorem exists_intertwining_functional {K : Type u_1} {F : Type u_2} {V : Type u
   have hφ : ∀ (x : F) (hx : x ∈ S), φ x = φ₀ ⟨x, (memSA x).mp hx⟩ := fun x hx =>
     LinearMap.congr_fun hφext ⟨x, hx⟩
   refine ⟨φ, ?_, ?_⟩
-  · rw [hφ f hf]
-    exact hφ₀f
+  · rwa [hφ f hf]
   · intro k x hx
     have hrk : r k x = (FreeAlgebra.ι ℂ k : A) • x := (hιF k x).symm
     have hmem : r k x ∈ S := by
@@ -817,9 +810,7 @@ theorem rt_mem_isoTyp {L : Type} [Field L] [NumberField L] [IsCMField L] {n : �
     (S : Submodule ℂ (GAf L n → a.W)) (h : GAf L n) {f : GAf L n → a.W}
     (hf : f ∈ NG.isoTyp a.ρ S) : NG.rt L n h f ∈ NG.isoTyp a.ρ S := by
   have : NG.isoTyp a.ρ S ≤ (NG.isoTyp a.ρ S).comap (NG.rt L n h) := by
-    refine sSup_le fun S' hS' => ?_
-    intro y hy
-    exact le_sSup hS' (hS'.1.1.stable h y hy)
+    exact sSup_le fun S' hS' => fun y hy => le_sSup hS' (hS'.1.1.stable h y hy)
   exact this hf
 
 
@@ -1314,8 +1305,7 @@ theorem has_mul_of_isParVec : ∀ (g : ℕ) [Fact g.Prime] (S : Sys g) (n : ℕ)
           (commute_AB finSumFinEquiv (S.e a f) (S.e b h)).eq]
       rw [hc, hv1]
   refine ⟨(u : V), u.2, ?_⟩
-  rw [← repK_alg, key, hu]
-  exact hne
+  rwa [← repK_alg, key, hu]
 
 end GlobalTheory.SerSys.ParVec
 end -- clump:auto

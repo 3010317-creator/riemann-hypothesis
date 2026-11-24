@@ -168,8 +168,7 @@ theorem UpperTheory.V.Pr.niceIrr :
   haveI : T.G.G'.Normal := MonoidHom.normal_ker _
   have key := irrNormal T.G.G₀ y.Fb y.K y.A n hn (pushRep (algebraMap y.Fr y.Fb) y.ρF) hirr φ _ _ hφ hred
     (T.G.Gv v) (T.G.φ v) (fun i => pushCh φ (y.ψ v i)) (fun g => ?_) (U.normalCore ⊓ T.G.G') (fun a b hab => ?_) ?_
-  · intro W hW
-    exact key W fun g hg => hW g ⟨U.normalCore_le hg.1, hg.2⟩
+  · exact fun W hW => key W fun g hg => hW g ⟨U.normalCore_le hg.1, hg.2⟩
   · have h := congrArg (Polynomial.map (algebraMap y.Fr y.Fb)) (charpoly_flag _ _ (y.flag v) g)
     rw [← Matrix.charpoly_map, chPoly, Polynomial.map_prod] at h
     simp only [Polynomial.map_sub, Polynomial.map_X, Polynomial.map_C] at h

@@ -136,8 +136,7 @@ private theorem bridge [IsIso f] (n : QMap o u₁ f c) (n' : QMap o u₂ (f ≫ 
     constructor <;> simp
   have hψn : ψ₂ ≫ n.φ₂ = 𝟙 _ := by
     apply MapComp.isSquare_unique (MapComp.isSquare_comp hψ n.sq)
-    rw [IsIso.inv_hom_id]
-    exact hid
+    rwa [IsIso.inv_hom_id]
   refine ⟨⟨inv n.φ ≫ n'.φ, ψ₂ ≫ n'.φ₂, hcart, MapComp.isSquare_comp hψ n'.sq, ?_, ?_, ?_⟩, ?_⟩
   · intro x
     have hx : Over.Hom.left (u₁.act.act x) ≫ inv n.φ = inv n.φ ≫ Over.Hom.left (o.act.act x) := by
@@ -161,5 +160,4 @@ open UpperTheory.Gal.Int.Geo.QCompPf in
 theorem UpperTheory.quotient_map_comp : QComp := by
   intro q _ D R R' _ _ _ b gb N N₀ c X X₁ X₂ s s₁ s₂ o u₁ u₂ f g
   refine ⟨fun n m => ⟨after n m, rfl⟩, fun n' m => factor n' m, fun hf n n' => bridge n n', ?_⟩
-  intro X' s' o' e m n
-  exact ⟨before m n, rfl⟩
+  exact fun X' s' o' e m n => ⟨before m n, rfl⟩

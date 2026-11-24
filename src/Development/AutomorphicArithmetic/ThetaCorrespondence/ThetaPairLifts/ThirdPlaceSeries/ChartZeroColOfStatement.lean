@@ -115,8 +115,7 @@ theorem prodN_mul_apply {p : ℕ} {h : Matrix (n ⊕ Fin c) (n ⊕ Fin c) k} {g 
     by_cases hlt : lev p t < lev p r
     · rw [hh hlt, zero_mul]
     · rw [hg t s (hrs.trans (not_lt.mp hlt)), Matrix.one_apply_ne hts, mul_zero]
-  · intro hs
-    exact absurd (Finset.mem_univ s) hs
+  · exact fun hs => absurd (Finset.mem_univ s) hs
 
 theorem prodN_blockTriangular {p : ℕ} {g : GL (n ⊕ Fin c) k} (hg : InN p g) :
     g.val.BlockTriangular (lev p) := by
@@ -252,8 +251,7 @@ theorem QExt.bottom_one : ∀ (D : D7) (c : Comm D) (v : VCom c) (B : GlobalTheo
   have hz : E.A 0 G.s (zero_add _) = {1} := E.reps.zero _ _
   have hrep : ∀ α, E.rep 0 G.s (zero_add _) α = 1 := fun α => by
     have := (E.rep_bij 0 G.s (zero_add _)).mapsTo (Set.mem_univ α)
-    rw [hz] at this
-    exact this
+    rwa [hz] at this
   have hJ0 : ∀ c h, ((G.T E.δ E.tame E.η).lev 0 c h).J = KO G.k _ := fun c h =>
     twistChain_lev_zero E.δ E.tame E.η c h
   refine ⟨?_, ?_, ?_, ?_⟩
@@ -448,8 +446,7 @@ theorem stepZeroColumnLevelType_eq_of_congruent_typePrimes (u : B.Word) (x x' : 
   have e2 : typ0 I u (x⁻¹ * x') = 1 := by
     show (((Units.map B.embLL.toMonoidHom).comp (colLev I.Ch 0).chr) (Formalism.L2.Col.levRed B.sp.cm (B.R.N 0) _ _ _ (x⁻¹ * x')))⁻¹ = 1
     rw [e, map_one, inv_one]
-  rw [map_mul, map_inv, inv_mul_eq_one] at e2
-  exact e2
+  rwa [map_mul, map_inv, inv_mul_eq_one] at e2
 
 end GlobalTheory.Fam.ChiZero
 end
@@ -554,8 +551,7 @@ theorem eq_zero_of_le_pow {γ t : WithZero (Multiplicative ℤ)} (hγ : γ < 1) 
     have h3 : WithZero.exp t.log ≤ WithZero.exp (N • γ.log) := by
       rw [WithZero.exp_nsmul, WithZero.exp_log ht, WithZero.exp_log hγ0]
       exact h N
-    rw [WithZero.exp_le_exp, nsmul_eq_mul] at h3
-    exact h3
+    rwa [WithZero.exp_le_exp, nsmul_eq_mul] at h3
   have h1 : (N : ℤ) * γ.log ≤ -(N : ℤ) := by
     have : (0 : ℤ) ≤ (N : ℤ) := by positivity
     nlinarith
@@ -588,8 +584,7 @@ theorem exists_smallAt_subset (Q : Finset (HeightOneSpectrum (𝓞 E))) {V : Set
     intro w
 
     rw [he_def, map_sum]
-    simp only [PtExist.adAt_idem]
-    exact Finset.sum_ite_eq Q w (fun _ => (1 : w.adicCompletion E))
+    simpa only [PtExist.adAt_idem] using Finset.sum_ite_eq Q w (fun _ => (1 : w.adicCompletion E))
   have hint : ∀ y ∈ Formalism.L2.Herm.intAf F E, ∀ w, Valued.v (adAt F w y) ≤ 1 := fun y hy w =>
     (mem_rInt_iff F E y).1 hy w
   have hbw : ∀ w ∈ Q, Valued.v (adAt F w (ι b)) < 1 := fun w hw => by
@@ -837,8 +832,7 @@ theorem conj_small {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
     rw [map_sub, Matrix.sub_apply]
     simp [locM, Matrix.one_apply]
   rw [key, valued_sigR, hcc]
-  rw [key2] at h1
-  exact h1
+  rwa [key2] at h1
 
 end Conj
 
@@ -937,8 +931,7 @@ theorem approx_zero : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC
   have hzU : z ∈ Formalism.L2.Col.UAd B.sp.cm (B.R.N 0) := mem_unitaryAdelic_of_mem_principalCongruence hz
   have hcomm : z * k = k * z := comm_of_support (I.Q a) hkT hsupp
   refine ⟨z, hd z ?_ ?_ ?_, Formalism.L2.Col.kOne_le_unipotentLevel _ _ _ _ _ hz, p, ?_⟩
-  · rw [hsp.1]
-    exact hzU
+  · rwa [hsp.1]
   · intro w hw
     exact hsupp w (fun h => hw (Finset.mem_union_left _ h))
       (fun h => hw (Finset.mem_union_right _ (Finset.mem_image.2 ⟨_, h, hcc w⟩)))
@@ -951,8 +944,7 @@ theorem approx_zero : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC
       (mul_assoc (show TC.GA B (B.R.N 0) from ((A.K 0 (Nat.zero_le _) (A.chOf 0 c)).y ⟨c, rfl⟩).1) (x * z) k).trans ((congrArg ((show TC.GA B (B.R.N 0) from ((A.K 0 (Nat.zero_le _) (A.chOf 0 c)).y ⟨c, rfl⟩).1) * ·) ((mul_assoc x z k).trans ((congrArg (x * ·) hcomm).trans
         (mul_assoc x k z).symm))).trans ((mul_assoc (show TC.GA B (B.R.N 0) from ((A.K 0 (Nat.zero_le _) (A.chOf 0 c)).y ⟨c, rfl⟩).1) (x * k) z).symm.trans (congrArg (· * z) (mul_assoc (show TC.GA B (B.R.N 0) from ((A.K 0 (Nat.zero_le _) (A.chOf 0 c)).y ⟨c, rfl⟩).1) x k).symm)))
     show TC.PtOf ((show TC.GA B (B.R.N 0) from ((A.K 0 (Nat.zero_le _) (A.chOf 0 c)).y ⟨c, rfl⟩).1) * (x * z) * k) p
-    rw [e]
-    exact hp
+    rwa [e]
 
 end GlobalTheory.ApproxZero
 
@@ -1087,10 +1079,8 @@ theorem right_lev (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I
     have a1 := hR.lev c x q (by rw [hyE c]; exact hq)
     exact a1.trans (Chart0.lev0 I hI hPr u I.mu0 c x q hq').symm
   constructor
-  · intro hx
-    exact (key (GlobalTheory.Mem.SRe.StdUnique.lev_le I l hI hP Z u 0 _ _ hx)).1 hx
-  · intro hx
-    exact (key (levU_le_UAd _ _ _ _ _ hx)).2 hx
+  · exact fun hx => (key (GlobalTheory.Mem.SRe.StdUnique.lev_le I l hI hP Z u 0 _ _ hx)).1 hx
+  · exact fun hx => (key (levU_le_UAd _ _ _ _ _ hx)).2 hx
 
 
 
@@ -1104,8 +1094,7 @@ theorem left_lev (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I.
   have hy : TC.PtOf ((show TC.GA B (B.R.N 0) from ((A.K 0 (Nat.zero_le _) (A.chOf 0 c)).y ⟨c, rfl⟩).1) * TC.kStd X u (B.R.N 0))
       (extTo I.SQ ((I.stp u a 0).rep c).1.1) := by
     have := hR.pt c
-    rw [hβ] at this
-    exact this
+    rwa [hβ] at this
   have rat : ∀ (x : TC.GA B (B.R.N 0)) (q : Formalism.L2.Col.ChPt (Pr := B.primes X) (R := B.R) I.sel (I.tup a) u 0), TC.PtOf ((show TC.GA B (B.R.N 0) from ((A.K 0 (Nat.zero_le _) (A.chOf 0 c)).y ⟨c, rfl⟩).1) * x * TC.kStd X u (B.R.N 0)) q →
       (x ∈ (A.K 0 (Nat.zero_le _) (A.chOf 0 c)).lev.U ↔
         x ∈ levU (F := B.host.F) B.sp.cm (B.R.N 0) ((B.primes X).vT u) (B.primes X).vGs (colLev I.Ch 0).grp) := fun x q h =>
@@ -1125,8 +1114,7 @@ theorem left_lev (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I.
     obtain ⟨h, h1, h2, q, hq⟩ := _root_.GlobalTheory.ApproxZero.approx_zero I hI hP l Z u a Ch A hA (A.chOf 0 c) hβ ⟨c, rfl⟩ x (levU_le_UAd _ _ _ _ _ hx)
     have e := (rat _ q hq).2 (mul_mem hx h2)
     have e2 := mul_mem e (inv_mem h1)
-    rw [show x = x * h * h⁻¹ from (mul_inv_cancel_right x h).symm]
-    exact e2
+    rwa [show x = x * h * h⁻¹ from (mul_inv_cancel_right x h).symm]
 
 
 
@@ -1399,11 +1387,9 @@ theorem mram_iff_ramT : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : 
     refine e1.trans (Iff.trans ⟨fun h c' => ?_, fun h c => ?_⟩ e2.symm)
     · obtain ⟨c, rfl⟩ := (I.eCls0 l u a).surjective c'
       have := h c
-      rw [← hval c] at this
-      exact this
+      rwa [← hval c] at this
     · have := h (I.eCls0 l u a c)
-      rw [hval c] at this
-      exact this
+      rwa [hval c] at this
   have hN : ∀ (v : ((I.rec7 l Z).mem u).A.vT) (c : (I.stp u I.mu0 0).Cl),
       ∑ᶠ s : ((I.atT l u a).Fv v)ˣ, (I.fm l u a).dilT 0 v s (I.eCls0 l u a c)
         ((I.rec7 l Z).e0Tw u a ψ₀ ((I.fm l u a).dil 0 v s (I.eCls0 l u a c))) = ((I.rec7 l Z).mem u).A.Nm v ψ₀ c := by
@@ -1428,8 +1414,7 @@ theorem mram_iff_ramT : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : 
   · rintro ⟨h1, h2⟩
     refine ⟨hFi.1 h1, fun v c' => ?_⟩
     obtain ⟨c, rfl⟩ := (I.eCls0 l u a).surjective c'
-    refine (hN v c).trans ?_
-    exact congrFun (LinearMap.mem_ker.1 (h2 v)) c
+    exact (hN v c).trans (congrFun (LinearMap.mem_ker.1 (h2 v)) c)
   · rintro ⟨h1, h2⟩
     exact ⟨hFi.2 h1, fun v => LinearMap.mem_ker.2 (funext fun c => (hN v c).symm.trans (h2 v (I.eCls0 l u a c)))⟩
 

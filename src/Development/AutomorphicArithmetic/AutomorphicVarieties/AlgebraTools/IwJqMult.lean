@@ -77,8 +77,7 @@ private theorem Tri.sq {ρ : Representation ℂ G V} {σ : Representation ℂ G 
   refine ⟨fun i => ((S i).comap U.toSubmodule.subtype).map f.toLinearMap,
     fun i j hij => Submodule.map_mono (Submodule.comap_mono (h1 hij)), ?_, ?_, fun t => ⟨?_, ?_⟩⟩
   · simp [h2]
-  · simp only [h3, Submodule.comap_top, Submodule.map_top]
-    exact LinearMap.range_eq_top.2 hf
+  · simpa only [h3, Submodule.comap_top, Submodule.map_top] using LinearMap.range_eq_top.2 hf
   · rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
     rcases (h4 t).1 _ hx _ hy with h | ⟨a, h⟩
     · exact Or.inl ⟨y, h, rfl⟩
@@ -257,8 +256,7 @@ private theorem col {n : ℕ} {c : Fin n → Fin n → Type} [∀ i j, Fintype (
     rcases hY (x.1.1 1) (y.1.1 1) with h | ⟨a, h⟩
     · refine Or.inl (Subtype.ext (Subtype.ext (funext fun s => ?_)))
       have := h2 s
-      rw [h, smul_zero] at this
-      exact this
+      rwa [h, smul_zero] at this
     · refine Or.inr ⟨a, Subtype.ext (Subtype.ext (funext fun s => ?_))⟩
       show x.1.1 s = a • y.1.1 s
       rw [h1 s, h2 s, h, smul_comm]

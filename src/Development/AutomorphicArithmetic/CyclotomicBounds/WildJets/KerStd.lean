@@ -97,8 +97,7 @@ theorem UpperTheory.WildA.bdLoss :
   · right
     have key := GlobalTheory.PadicPlaceBound.neg_mul_vw_le_vw D.what₂.LL D.what₂.embLL y l w B hy hl
       (fun lam => (hB lam).2)
-    rw [mul_comm] at key
-    exact key
+    rwa [mul_comm] at key
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CyclotomicBounds.WildJets.BdLoss =====
@@ -204,8 +203,7 @@ private theorem jetLin_split (p : MvPolynomial ((ι × Fin b × Fin b) ⊕ DVar 
   · simp [smul_monomial, mul_comm]
   · intro k _ hk
     simp [Ne.symm hk]
-  · intro h
-    exact absurd (Finset.mem_image_of_mem _ hμ) h
+  · exact fun h => absurd (Finset.mem_image_of_mem _ hμ) h
 
 end
 
@@ -257,8 +255,7 @@ theorem UpperTheory.WildA.jetInt :
       ∑ k ∈ S, J k • (⟨Formalism.L2.Ker.jetMap (fun m => if m = k then (1 : ℂ) else 0) n P, hV _ P hPmem⟩ : VV ℂ lam') := by
     apply Subtype.ext
     rw [Submodule.coe_sum]
-    simp only [Submodule.coe_smul, hJQ]
-    exact hS J
+    simpa only [Submodule.coe_smul, hJQ] using hS J
 
   rw [hop, hsum, map_sum, Finsupp.finsetSum_apply]
   simp only [map_smul, Finsupp.smul_apply, smul_eq_mul, hz]
@@ -575,8 +572,7 @@ theorem UpperTheory.WildA.cmbJet :
   refine (Bd.coe (hr i)).mul ?_
   have := _root_.GlobalTheory.ProductJets.jets_translate_product D hI l lam ⊤ δ hC (by simp) t0 ht a b _ β hb hloc (s i) n
     hn (hs i) hsp _ y hy
-  rw [hN] at this
-  exact this
+  rwa [hN] at this
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CyclotomicBounds.WildJets.CmbJet =====
@@ -633,8 +629,7 @@ theorem UpperTheory.WildA.tabBd :
     (KernelAt.Cmb.sum fun i => KernelAt.Cmb.smul (hrb i) (hcmb (s i) (hs i)))
   have h := UpperTheory.WildA.cmbJet D hI S dl hL cc hcc δ t0 hC ht a b _ l lam β hβ hloc (M * k)
     (Nat.mul_pos hM hk) hsp' _ (by positivity) _ hall mon
-  rw [hv, one_mul, mul_one, ← Real.rpow_add hp0, add_comm] at h
-  exact h
+  rwa [hv, one_mul, mul_one, ← Real.rpow_add hp0, add_comm] at h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CyclotomicBounds.WildJets.TabBd =====

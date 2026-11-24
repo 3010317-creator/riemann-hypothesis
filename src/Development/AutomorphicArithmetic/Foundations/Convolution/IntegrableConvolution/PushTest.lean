@@ -114,5 +114,4 @@ theorem UpperTheory.ConvolutionTheory.L1.pushTest :
   · intro Ψ hc' hs'
     obtain ⟨_, _, _, hint'⟩ := integrable_fib μ m Ψ hc' hs'
     funext x
-    simp only [push, Pi.add_apply]
-    exact integral_add (hint x) (hint' x)
+    simpa only [push, Pi.add_apply] using integral_add (hint x) (hint' x)

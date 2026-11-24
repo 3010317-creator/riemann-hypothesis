@@ -410,8 +410,7 @@ theorem UpperTheory.Gal.Int.Core.downDR_holds :
   obtain ⟨τK, τ'', hτK, hind⟩ := GlobalTheory.induced_embedding_extends E Ω Q.K l A O Bw Bw' e1 e2 τ LL' τ' hτ
   have hJK : J.map (fun n : ℤ => (n : ℂ)) =
       ((CG.mk P).infChar (ι.toRingHom.comp τK)).map (fun z => ((a : ℂ) - 1) / 2 - z) := by
-    rw [hP.inf, RingHom.comp_assoc, hτK]
-    exact hJ
+    rwa [hP.inf, RingHom.comp_assoc, hτK]
   have hres := D.2.2.2.2 τK J (hc'.2 τK LL' τ'' hind J hJK)
   rwa [hτK] at hres
 end -- clump:auto
@@ -465,8 +464,7 @@ theorem UpperTheory.Gal.Int.Core.downPhi_holds : SphDown .phi := by
     rw [hS, hTw, (hS _ _).mp h0]
   have hgc : WeilRel (RingEquiv.refl Ω) g (c g) := (hc g (c g)).2 rfl
   have hcl := hyp w' hunder hB' Pr AI hT A h' O Bw' hj' (c g)
-  rw [charPol_eq hrel hgc, charPol_eq hsat hgc]
-  exact hcl
+  rwa [charPol_eq hrel hgc, charPol_eq hsat hgc]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.CrystallineDescent.DownPhi =====
@@ -489,8 +487,7 @@ theorem UpperTheory.Gal.Int.Core.downUnr_holds :
   intro E Ω _ _ _ _ _ _ l _ ι a π Q P hP ρ w B hB hQdec hyp hl A h
   obtain ⟨w', hunder, h', hN⟩ := GlobalTheory.PlaceNormDec.exists_place_normV_eq E Ω Q w A h (hQdec A h)
   have hB' : (CG.mk P).HasSat w' B := by
-    have e := hP.sat w' 1 B (by rw [pow_one, hunder, hN]) (hunder ▸ hB)
-    simpa using e
+    simpa using hP.sat w' 1 B (by rw [pow_one, hunder, hN]) (hunder ▸ hB)
   have hlw : ((l : ℕ) : 𝓞 Q.K) ∉ w'.asIdeal := by
     intro hw
     apply hl
@@ -505,8 +502,7 @@ theorem UpperTheory.Gal.Int.Core.downUnr_holds :
     exact hcl.1 s' hs
   · obtain ⟨σ', rfl⟩ := hQdec A h hσ.1
     have e := hcl.2 σ' hσ
-    rw [← map_inv]
-    exact e
+    rwa [← map_inv]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.CrystallineDescent.DownUnr =====
@@ -657,8 +653,7 @@ theorem joinGL_holds : JoinGL := by
   | dR =>
     intro P AI ht A hA O _ _ _ Bw hj
     refine ⟨(h P AI ht A hA O Bw hj).1, fun τ LL' τ' hi J hJ => (h P AI ht A hA O Bw hj).2 τ LL' τ' hi J ?_⟩
-    rw [hM.inf _ _ (hlam _)] at hJ
-    exact hJ
+    rwa [hM.inf _ _ (hlam _)] at hJ
   | crys => exact fun P AI ht A hA O _ _ _ Bw hj _ _ _ => h P AI ht A hA O Bw hj
   | phi => exact h
 
@@ -797,8 +792,7 @@ theorem UpperTheory.Gal.Int.Core.oneConj_holds :
   obtain ⟨hI, hF⟩ := hE (g • A) (hPplace w A hA)
   refine ⟨fun s hs => hI (c s) (ine_conj g c hc A s hs), fun σ hσ => ?_⟩
   have h5 := hF (c σ) (by rw [hPnorm]; exact frob_conj g c hc A _ σ hσ)
-  rw [MonoidHom.comp_apply, map_inv]
-  exact h5
+  rwa [MonoidHom.comp_apply, map_inv]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.CrystallineDescent.OneConj =====
@@ -827,8 +821,7 @@ private theorem normV_under_eq_of_normV_prime {K M : Type} [Field K] [NumberFiel
   rcases (Nat.dvd_prime hp).1 hd with h | h
   · exfalso
     haveI : (w.under (𝓞 K)).asIdeal.IsPrime := (w.under (𝓞 K)).isPrime
-    have h2 := (Nat.card_eq_one_iff_unique.1 h).1
-    exact not_subsingleton (𝓞 K ⧸ (w.under (𝓞 K)).asIdeal) h2
+    exact not_subsingleton (𝓞 K ⧸ (w.under (𝓞 K)).asIdeal) ((Nat.card_eq_one_iff_unique.1 h).1)
   · exact h
 
 theorem UpperTheory.Gal.Int.Core.oneTower_holds :
@@ -867,8 +860,7 @@ theorem UpperTheory.Gal.Int.Core.oneTower_holds :
     · obtain ⟨hs1, hs2⟩ := hs
       exact ⟨hs1, fun x hx => hs2 x hx⟩
     · have h3 := hFr (res K Ω M σ) ⟨hσ.1, fun x hx => by rw [hn]; exact hσ.2 x hx⟩
-      rw [MonoidHom.comp_apply, map_inv]
-      exact h3
+      rwa [MonoidHom.comp_apply, map_inv]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.CrystallineDescent.OneTower =====
@@ -1288,8 +1280,7 @@ theorem UpperTheory.Gal.TP.Sub.clAway_holds :
     ClAway := by
   intro E Ω _ _ _ _ _ l _ ι a r w hl S J
   refine ⟨fun h => h.1 hl, fun h => ⟨fun _ => h, ?_⟩⟩
-  intro P AI _ A hA O _ _ _ Bw hj
-  exact absurd (hj.mem_placesOver hA) hl
+  exact fun P AI _ A hA O _ _ _ Bw hj => absurd (hj.mem_placesOver hA) hl
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.SplitLineSubtraction.PClAway =====
@@ -1328,8 +1319,7 @@ theorem denseId_holds : CpFacts → DgFacts → DenseId := by
       rw [← Polynomial.eval_mul, ← Polynomial.eval_mul, hEq g hg])
   have hg := congrFun h g
   simp only [Pi.mul_apply] at hg
-  rw [Polynomial.eval_mul, Polynomial.eval_mul]
-  exact hg
+  rwa [Polynomial.eval_mul, Polynomial.eval_mul]
 
 end UpperTheory.Gal.TP.Sub
 

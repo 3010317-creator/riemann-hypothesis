@@ -82,8 +82,7 @@ private theorem isPlaceOver_vQ [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (A : Valua
     change x ∈ Ideal.span {((l : ℕ) : 𝓞 ℚ)} ↔ _
     rw [Ideal.mem_span_singleton, ← map_dvd_iff Rat.ringOfIntegersEquiv, map_natCast]
   have hA' : A.valuation ((l : ℤ) : Ω) < 1 := by
-    rw [Int.cast_natCast]
-    exact hA
+    rwa [Int.cast_natCast]
   have hint : ∀ k : ℤ, A.valuation (k : Ω) ≤ 1 := fun k =>
     (ValuationSubring.valuation_le_one_iff A _).mpr (intCast_mem A k)
   rw [hx, hmem]
@@ -130,8 +129,7 @@ private theorem val_lt_one_iff (A : ValuationSubring Ω) (n : ℕ) (hn : n ≠ 0
         A.valuation (a : Ω) < 1 ∨ A.valuation (b : Ω) < 1 := by
       constructor
       · intro h
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         have e1 : A.valuation (a : Ω) = 1 := le_antisymm (val_natCast_le_one A a) hc.1
         have e2 : A.valuation (b : Ω) = 1 := le_antisymm (val_natCast_le_one A b) hc.2
         rw [e1, e2, one_mul] at h
@@ -158,8 +156,7 @@ private theorem exists_place [CharZero Ω] (p : ℕ) (hp : p.Prime) :
     have h1 : (((p : ℤ) * m : ℤ) : Ω) = ((1 : ℤ) : Ω) := by
       have hv := congrArg Subtype.val hy
       push_cast
-      rw [hm]
-      exact hv
+      rwa [hm]
     have h2 : (p : ℤ) * m = 1 := Int.cast_injective h1
     have h3 : IsUnit (p : ℤ) := isUnit_iff_exists_inv.mpr ⟨m, h2⟩
     rw [Int.isUnit_iff_natAbs_eq, Int.natAbs_natCast] at h3

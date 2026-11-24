@@ -161,8 +161,7 @@ theorem UpperTheory.exists_integralClosure_preimage_of_isIntegral :
     intro a _
     simp
   have h0 : (p.map (algebraMap ℤ k)).eval x = 0 := by
-    rw [eval_map]
-    exact hpx
+    rwa [eval_map]
   rw [hk, eval_multiset_prod, Multiset.map_map, Multiset.prod_eq_zero_iff] at h0
   obtain ⟨a, _, ha⟩ := Multiset.mem_map.1 h0
   refine ⟨lift a, ?_⟩
@@ -289,8 +288,7 @@ theorem UpperTheory.residue_isIntegral_of_algebraic_over_dvr :
       intro i
       have hi : IsLocalRing.residue A (q.coeff i) = 0 := by
         rw [← Polynomial.coeff_map, h0, Polynomial.coeff_zero]
-      rw [IsLocalRing.residue_eq_zero_iff, hπ.maximalIdeal_eq, Ideal.mem_span_singleton] at hi
-      exact hi
+      rwa [IsLocalRing.residue_eq_zero_iff, hπ.maximalIdeal_eq, Ideal.mem_span_singleton] at hi
     exact hπ.not_isUnit (Polynomial.isPrimitive_primPart p π hdvd)
   letI : Algebra (IsLocalRing.ResidueField A) (IsLocalRing.ResidueField V) :=
     (IsLocalRing.ResidueField.map f).toAlgebra
@@ -408,12 +406,10 @@ theorem UpperTheory.V.Ws.Po.dimOne :
   haveI : IsLocalHom (algebraMap O B) := IsCO.isLocalHom
   have hIm : (maximalIdeal O).map (algebraMap O B) ≤ maximalIdeal B := by
     rw [Ideal.map_le_iff_le_comap]
-    intro x hx
-    exact map_nonunit (algebraMap O B) x hx
+    exact fun x hx => map_nonunit (algebraMap O B) x hx
   have hex : ∃ Q : Ideal B, Q.IsPrime ∧ (maximalIdeal O).map (algebraMap O B) ≤ Q ∧
       Q ≠ maximalIdeal B := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     obtain ⟨n, hn⟩ := pow_le_of_primes _ (fun Q hQ hIQ => hcon Q hQ hIQ)
     exact hnf (UpperTheory.V.Ws.Po.finPow hIm IsCO.res_surj n hn)
   obtain ⟨P, ⟨hP, hIP, hPm⟩, hmax⟩ :=
@@ -551,13 +547,11 @@ theorem UpperTheory.V.Ws.Po.psFin :
         RingHom.algebraMap_toAlgebra, hφX]
     show Module.Finite _ _
     refine UpperTheory.V.Ws.Po.finPow ?_ ?_ n ?_
-    · rw [hmap, Ideal.span_le, Set.singleton_subset_iff]
-      exact ht
+    · rwa [hmap, Ideal.span_le, Set.singleton_subset_iff]
     · intro x
       obtain ⟨a, ha⟩ := IsCO.res_surj (O := O) x
       exact ⟨PowerSeries.C (residue O a), by rw [RingHom.algebraMap_toAlgebra, hφC]; exact ha⟩
-    · rw [hmap]
-      exact hn
+    · rwa [hmap]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.PolynomialTori.PsFinEv =====
@@ -712,8 +706,7 @@ theorem UpperTheory.V.Ws.Po.ambAbs :
     if h : γ = 0 then 0 else Real.exp (φ (Additive.ofMul (Units.mk0 γ h)))
   have g0 : gg 0 = 0 := by simp [gg]
   have gpos : ∀ γ, γ ≠ 0 → 0 < gg γ := fun γ h => by
-    simp only [gg, dite_eq_right h]
-    exact Real.exp_pos _
+    simpa only [gg, dite_eq_right h] using Real.exp_pos _
   have gmono : StrictMono gg := by
     intro γ δ h
     have hδ : δ ≠ 0 := ne_of_gt (lt_of_le_of_lt zero_le' h)
@@ -721,9 +714,7 @@ theorem UpperTheory.V.Ws.Po.ambAbs :
     · rw [hγ, g0]
       exact gpos δ hδ
     · simp only [gg, dite_eq_right hγ, dite_eq_right hδ]
-      apply Real.exp_lt_exp.2
-      apply hφm
-      exact (show Units.mk0 γ hγ < Units.mk0 δ hδ from h)
+      exact Real.exp_lt_exp.2 (hφm (show Units.mk0 γ hγ < Units.mk0 δ hδ from h))
   have gnn : ∀ γ, 0 ≤ gg γ := fun γ => by
     rw [← g0]
     exact gmono.monotone zero_le'
@@ -842,8 +833,7 @@ private theorem ext_graded {O A X K : Type} [CommRing O] [CommRing A] [Algebra O
     intro r a
     apply Subtype.ext
     have := DirectSum.coe_decompose_mul_add_of_left_mem 𝒜 (i := 0) (j := 0) (b := a) r.2
-    rw [add_zero] at this
-    exact this
+    rwa [add_zero] at this
   let ρ : A →ₗ[𝒜 0] K :=
     { toFun := fun a => y (DirectSum.decompose 𝒜 a 0)
       map_add' := fun a b => by rw [DirectSum.decompose_add, DirectSum.add_apply, map_add (f := _)]
@@ -993,8 +983,7 @@ private theorem xr_agree {O R X K : Type} [CommRing O] [CommRing R] [Algebra O R
   refine Ideal.mul_mem_left _ _ ?_
   obtain ⟨-, hm2⟩ := hμ (Finset.mem_coe.2 hm)
   have hex : ∃ s0, k < m s0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hm2 (Finsupp.le_def.2 fun s => by simpa [n'] using hcon s)
   obtain ⟨s0, hs0⟩ := hex
   exact prod_pow_mem_ideal_pow_of_mem_of_le_exponent I _ hz m k s0 hs0.le
@@ -1248,8 +1237,7 @@ theorem UpperTheory.V.Ws.Po.nonAlg :
       ∀ u ∈ Algebra.adjoin O (mono ρ 0), y u ∈ maximalIdeal V → y u ≠ 0 →
       ∃ x ∈ mono (mapRep y ρ) 0, ∀ n : ℕ, 0 < n → x ^ l ^ n ≠ x := by
   intro l _ O _ _ _ Γ _ R _ _ ρ V _ _ _ y hy u hu hum hu0
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have key : ∀ v ∈ Algebra.adjoin O (mono ρ 0), ∃ n : ℕ, 0 < n ∧ (y v) ^ l ^ n = y v := by
     intro v hv
     induction hv using Algebra.adjoin_induction with
@@ -1375,8 +1363,7 @@ theorem UpperTheory.V.Ws.Po.onCompClosed :
       · intro hJk x hx
         have hle : J.map u ≤ RingHom.ker g := by
           rw [Ideal.map_le_iff_le_comap]
-          intro z hz
-          exact hJk hz
+          exact fun z hz => hJk hz
         have hsup : I0 ⊔ (J.map u).comap (Ideal.Quotient.mkₐ O I0) ≤ RingHom.ker f := by
           refine sup_le (fun a ha => RingHom.mem_ker.2 (hf a ha)) ?_
           intro y hy
@@ -1392,13 +1379,10 @@ theorem UpperTheory.V.Ws.Po.onCompClosed :
           rw [hx]
           exact Ideal.mem_map_of_mem _ hy
         have := h x (Ideal.mem_sup_right hxm)
-        rw [RingHom.mem_ker, AlgHom.comp_apply, ← hx, hgπ]
-        exact this
+        rwa [RingHom.mem_ker, AlgHom.comp_apply, ← hx, hgπ]
     constructor
-    · intro h
-      exact (key fun x hx => (hI0 R' f).1 (onP _ _ h) x hx).1 h
-    · intro h
-      exact (key fun a ha => h a (Ideal.mem_sup_left ha)).2 h
+    · exact fun h => (key fun x hx => (hI0 R' f).1 (onP _ _ h) x hx).1 h
+    · exact fun h => (key fun a ha => h a (Ideal.mem_sup_left ha)).2 h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.PolynomialTori.OnCompClosed =====
@@ -1588,10 +1572,8 @@ theorem UpperTheory.V.Ws.Po.ptTorus :
   · intro i j hij
     rw [hc, hent]
     exact hb i j hij
-  · rw [hEl', hent]
-    exact h02
-  · rw [hEl', hent]
-    exact h20
+  · rwa [hEl', hent]
+  · rwa [hEl', hent]
   · exact UpperTheory.V.Ws.Po.onCompTorus c.O _ (D.rbarAt l) D.condL (D.r0At l)
       (fun R _ _ _ R' _ _ _ f ρ h => UpperTheory.V.GradeZeroInterpolatingElement.Ex.condL_map D f ρ h)
       (fun R _ _ _ ρ ρ' t h hq => UpperTheory.V.Ws.Po.torusL D ρ ρ' t h hq)
@@ -1651,8 +1633,7 @@ theorem UpperTheory.V.Ws.Po.univOf :
   have hlb : IsLocallyConstant rb := fun s => by
     rw [← hq.isOpen_preimage]
     have := hlc s
-    rw [← hb] at this
-    exact this
+    rwa [← hb] at this
   obtain ⟨R, _, _, _, r, hr⟩ := univ_lift l c.O D.Gam (Fin 4) rb (phiGam D hD hP) hlb
   obtain ⟨ρ, hρ, -⟩ := (H R).1 r
   let P₀ : Cond c.O D.rbar := fun C _ _ _ s => ∃ t : Lift c.O rb C, s.hom = t.hom.comp (toGS Ω D.SP)

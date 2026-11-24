@@ -165,8 +165,7 @@ theorem exists_teich (h : Nat.card (ResidueField ↥(OL K)) = l ^ a) (x : ↥(OL
       have : ((l : ResidueField ↥(OL K))) ^ a = 0 := by rw [l_res, zero_pow (NeZero.ne a)]
       simp [derivative_X_pow, this])
   refine ⟨w, by simpa [sub_eq_zero] using hw, ?_⟩
-  rw [← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
-  exact hx
+  rwa [← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
 
 theorem exists_toOm (h : Nat.card (ResidueField ↥(OL K)) = l ^ a) (x : Om l) (hx : x ^ l ^ a = x) :
     ∃ w : ↥(OL K), toOm K w = x := by
@@ -373,10 +372,8 @@ theorem UpperTheory.Gal.crystallineComparison.corrPull_of :
       simp only [Category.assoc, pullback.condition, e1, morphismRestrict_ι_assoc]
     have outer' : IsPullback (R.lift _ _ hw2 ≫ (T.p ⁻¹ᵁ Y.basicOpen (l : Γ(Y, ⊤))).ι)
         (pullback.snd T.p h ∣_ Y'.basicOpen (l : Γ(Y', ⊤))) T.p (k ≫ (Y.basicOpen (l : Γ(Y, ⊤))).ι) := by
-      rw [R.lift_fst, e1]
-      exact outer
-    have L := IsPullback.of_right outer' (R.lift_snd _ _ _) R
-    exact MorphismProperty.of_isPullback L T.et
+      rwa [R.lift_fst, e1]
+    exact MorphismProperty.of_isPullback (IsPullback.of_right outer' (R.lift_snd _ _ _) R) T.et
   have hdeg : ∀ (K : Type) [Field K] [IsAlgClosed K], (l : K) ≠ 0 →
       ∀ (y : Spec (CommRingCat.of K) ⟶ Y'),
         Nat.card { z // z ≫ pullback.snd T.p h = y } = T.d := by
@@ -488,8 +485,7 @@ private lemma closed_mem {O' V : Type} [CommRing O'] [CommRing V] [IsLocalRing V
   rw [mem_basicOpen_fn, not_not] at hx
   have e : f' (y (IsLocalRing.closedPoint V)) = (Spec.map c) (IsLocalRing.closedPoint V) := by
     rw [← hc]; rfl
-  rw [e] at hx
-  exact hx
+  rwa [e] at hx
 
 theorem UpperTheory.Gal.crystallineComparison.ptIdBC_of :
     PtIdBC := by
@@ -517,8 +513,7 @@ theorem UpperTheory.Gal.crystallineComparison.ptIdBC_of :
   have hmem := closed_mem ϖ' f' y c hc hG.1
   let β : Spec (CommRingCat.of (IsLocalRing.ResidueField V)) ⟶ Spec (CommRingCat.of O') := resPt V ≫ y ≫ f'
   have hβ : Spec.map (CommRingCat.ofHom φ) ≫ β = β := by
-    simp only [β, hc]
-    exact beta_fix q ϖ' hq φ hφ c hmem
+    simpa only [β, hc] using beta_fix q ϖ' hq φ hφ c hmem
   let Λ : (Spec (CommRingCat.of (IsLocalRing.ResidueField V)) ⟶ Y) → (Spec (CommRingCat.of (IsLocalRing.ResidueField V)) ⟶ Y') :=
     fun x => if hx : x ≫ f = β ≫ Spec.map (CommRingCat.ofHom σ) then hp.lift x β hx else resPt V ≫ y
   have hΛ : ∀ x' : Spec (CommRingCat.of (IsLocalRing.ResidueField V)) ⟶ Y', x' ≫ f' = β → Λ (x' ≫ h) = x' := by
@@ -884,8 +879,7 @@ theorem UpperTheory.Ru.crystallineComparison.crysCopy :
       (r g : Matrix (Fin a) (Fin a) ℚ_[l]) = LinearMap.toMatrix b b (M.act j g) := exists_glRep b (actRep M j)
   have hadm' : UpperTheory.Gal.Seam.IsAdmP P (GK K) (fun σ => (r σ : Matrix (Fin a) (Fin a) ℚ_[l])) := by
     have h0 : (fun σ : ↥(GK K) => (r σ : Matrix (Fin a) (Fin a) ℚ_[l])) = (M.mat j b : ↥(GK K) → _) := funext hr
-    rw [h0]
-    exact hadm
+    rwa [h0]
   let r' : ↥(GK K) →* GL (Fin a) ↥K.1 :=
     (Units.map (RingHom.mapMatrix (algebraMap ℚ_[l] ↥K.1)).toMonoidHom).comp r
   have hr' : ∀ σ i j, (r' σ).val i j = algebraMap ℚ_[l] ↥K.1 ((r σ).val i j) := fun σ i j => rfl
@@ -1120,10 +1114,8 @@ private theorem transport_locFacts {A C : Type} [CommRing A] [CommRing C] {a t :
   · intro x
     obtain ⟨r, y, hy⟩ := hloc (e x)
     refine ⟨r, y, e.injective ?_⟩
-    simp only [map_mul, map_pow, hc]
-    exact hy
-  · intro y hy
-    exact hker y ((hc y).symm.trans ((congrArg e hy).trans e.map_zero))
+    simpa only [map_mul, map_pow, hc] using hy
+  · exact fun y hy => hker y ((hc y).symm.trans ((congrArg e hy).trans e.map_zero))
 
 private theorem cT_locFacts {P : LocPrime l} {AI : LocAinf l P} (T : LocTied6 l P AI) :
     (∀ x : P.R.B, ∃ (r : ℕ) (a : Acris l), cT T (tA l) ^ r * x = cT T a) ∧
@@ -1335,8 +1327,7 @@ theorem hkOfPush : UpperTheory.Ru.crystallineComparison.HkOfPush := by
     have e1 : G (M := W) (N := M) w hw ≫ gX M = gX W ≫ w := G_gX (M := W) (N := M) w hw
     have e2 : (fun i => G (M := W) (N := corrM M T) (z i) (hzp i) ≫ gX (corrM M T)) = fun i => gX W ≫ z i :=
       funext fun i => G_gX (M := W) (N := corrM M T) (z i) (hzp i)
-    rw [e1, e2]
-    exact H
+    rwa [e1, e2]
   have hI := desc_iso_of_pb (corr_pb M T) (G (M := W) (N := M) w hw) (fun i => G (M := W) (N := corrM M T) (z i) (hzp i)) hs hsplit
   have key := hP (E.gb W) (G (M := W) (N := M) w hw) T.d (fun i => G (M := W) (N := corrM M T) (z i) (hzp i)) hs hI (Model.pullV (M := corrM M T) (N := M) T.r hr j v)
   refine key.trans (Finset.sum_congr rfl fun i _ => ?_)
@@ -1394,8 +1385,7 @@ private theorem range_subset_basicOpen (l : ℕ) {k : Type} [Field k] (hl : (l :
     have := h1.map (c.app ⊤).hom
     rwa [map_natCast] at this
   have hu : IsUnit (a.app ⊤ (l : Γ(Y, ⊤))) := by
-    rw [map_natCast]
-    exact h2
+    rwa [map_natCast]
   have hx : x ∈ a ⁻¹ᵁ Y.basicOpen (l : Γ(Y, ⊤)) := by
     rw [Scheme.preimage_basicOpen, Scheme.basicOpen_of_isUnit _ hu]
     trivial
@@ -1430,16 +1420,14 @@ theorem genFEt : GenFEt := by
         (T.p ∣_ Y.basicOpen (l : Γ(Y, ⊤))) φ := by
       refine IsPullback.of_right (h₁₂ := (T.p ⁻¹ᵁ Y.basicOpen (l : Γ(Y, ⊤))).ι)
         (h₂₂ := (Y.basicOpen (l : Γ(Y, ⊤))).ι) (v₁₃ := T.p) ?_ (t.lift_snd _ _ w) t
-      rw [t.lift_fst, hφ]
-      exact hsq
+      rwa [t.lift_fst, hφ]
     exact MorphismProperty.of_isPullback (P := @Etale) sq2 T.et
   · intro K _ _ x
     have hlK : (l : K) ≠ 0 := by
       intro h
       apply hl
       apply (Spec.preimage (x ≫ pullback.snd p (gen O k))).hom.injective
-      rw [map_natCast, map_zero]
-      exact h
+      rwa [map_natCast, map_zero]
     rw [← T.deg K hlK (x ≫ pullback.fst p (gen O k))]
     exact Nat.card_congr
       { toFun := fun y => ⟨y.1 ≫ pullback.fst (T.p ≫ p) (gen O k), by
@@ -1646,8 +1634,7 @@ private theorem deg_bound {F L : Type*} [Field F] [Field L] [Algebra F L] {A : �
         rw [Subsingleton.elim z 0, map_zero]
         exact zero_mem _
       · obtain ⟨k, rfl⟩ := Int.eq_ofNat_of_zero_le hi
-        refine ⟨k + 1, fun N' hN' => ?_⟩
-        exact Submodule.mem_iSup_of_mem (⟨k, by omega⟩ : Fin N') ⟨z, rfl⟩
+        exact ⟨k + 1, fun N' hN' => (Submodule.mem_iSup_of_mem (⟨k, by omega⟩ : Fin N') ⟨z, rfl⟩)⟩
     | add a b ha hb =>
       obtain ⟨Na, ha⟩ := ha
       obtain ⟨Nb, hb⟩ := hb
@@ -1711,8 +1698,7 @@ private theorem lin_eig {F L : Type*} [Field F] [Field L] [Algebra F L] [CharZer
   have h2 : h.baseChange L (Φ.baseChange L (b x)) = θ • Φ.baseChange L (b x) := by
 
     rw [hb, map_sum]
-    simp only [map_smul, hy, Finset.smul_sum]
-    exact Finset.sum_congr rfl fun i _ => smul_comm _ _ _
+    simpa only [map_smul, hy, Finset.smul_sum] using Finset.sum_congr rfl fun i _ => smul_comm _ _ _
   rw [h2, hθ, mul_smul] at h1
   have hm' : (m : L) ≠ 0 := Nat.cast_ne_zero.2 hm
   rw [map_smul]
@@ -1763,9 +1749,7 @@ private theorem e_facts {F : Type*} [Field F] {A : ℤ → Type*} [∀ n, AddCom
       · simp [DirectSum.component.lof_self]
       · intro k _ hk
         have hne : ((i : ℕ) : ℤ) ≠ ((k : ℕ) : ℤ) := fun h => hk (Fin.ext (by exact_mod_cast h.symm))
-        simp [DirectSum.component.of]
-        intro h
-        exact absurd (Fin.ext h) hk
+        simpa [DirectSum.component.of] using fun h => absurd (Fin.ext h) hk
       · simp
     rw [hx, map_zero] at h1
     have := (β i).equivFun.symm.injective (h1.symm.trans (map_zero _).symm)
@@ -1852,14 +1836,12 @@ private theorem core {F L : Type*} [Field F] [Field L] [Algebra F L] [CharZero L
   · have hc : g ∘ₗ (p ∘ₗ e) = (p ∘ₗ e) ∘ₗ r' := by
       have := sum_comp φ g (1 : F) r r' hr (fun i => LinearMap.ext fun u => by
         simpa [φ] using hg i u)
-      rw [one_smul, ← hφ] at this
-      exact this
+      rwa [one_smul, ← hφ] at this
     exact lin_equiv (p ∘ₗ e) hΦ y b hb r' g hc R hRg x
   · have hc : h ∘ₗ (p ∘ₗ e) = (m : F) • ((p ∘ₗ e) ∘ₗ t') := by
       have := sum_comp φ h (m : F) t t' ht (fun i => LinearMap.ext fun u => by
         simpa [φ] using hh i u)
-      rw [← hφ] at this
-      exact this
+      rwa [← hφ] at this
     exact lin_eig (p ∘ₗ e) hΦ y b hb t' h m hm hc θ ϑ hθ hyh x
 
 end Core
@@ -1929,8 +1911,7 @@ theorem UpperTheory.Ru.crystallineComparison.geoLoc :
       (fun i u => ?_) (θ (γ ⟨j, hk⟩)) (ϑ j) (hTc ⟨j, hk⟩).2.2 (fun i => ?_) x
     · have h2 := basis_rel (β i) (Tk i j) (A ⟨j, hk⟩ i) (hTv i ⟨j, hk⟩) u
       have h1 := (hAk ⟨j, hk⟩ i).2 ((β i).equivFun.symm u)
-      rw [h2] at h1
-      exact h1
+      rwa [h2] at h1
     · exact Module.End.mem_eigenspace_iff.1 ((Submodule.mem_iInf _).1 (b₀ i).2 (γ ⟨j, hk⟩))
 end -- clump:auto
 end -- clump:auto

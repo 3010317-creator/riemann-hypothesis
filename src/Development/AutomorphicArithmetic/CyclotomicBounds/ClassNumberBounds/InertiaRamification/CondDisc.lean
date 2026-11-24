@@ -135,8 +135,7 @@ theorem localUnits_spec :
   constructor
   · rintro ⟨u, rfl⟩
     exact compl_localUnits l u
-  · intro hx
-    exact ⟨_, localUnits_proj l x hx⟩
+  · exact fun hx => ⟨_, localUnits_proj l x hx⟩
 
 private lemma localPart_toUnitHom (ψ : DirichletCharacter ℂ N) :
     MulChar.toUnitHom (localPart N l ψ) = (MulChar.toUnitHom ψ).comp (localUnits N l) := by
@@ -163,8 +162,7 @@ private lemma conductor_localPart_dvd_iff (ψ : DirichletCharacter ℂ N) (t : �
       ZMod.unitsMap (h1.trans (Nat.ordProj_dvd N l)) x = 1 ∧
         ZMod.unitsMap (Nat.ordCompl_dvd N l) x = 1 := by
     intro x
-    simp only [unitsMap_eq_one_iff_modEq]
-    exact (Nat.modEq_and_modEq_iff_modEq_mul hcop).symm
+    simpa only [unitsMap_eq_one_iff_modEq] using (Nat.modEq_and_modEq_iff_modEq_mul hcop).symm
   have key : (localPart N l ψ).conductor ∣ l ^ t ↔ ψ.conductor ∣ l ^ t * ordCompl[l] N := by
     rw [← mem_conductorSet_iff_conductor_dvd _ h1, ← mem_conductorSet_iff_conductor_dvd _ h2,
       mem_conductorSet_iff, mem_conductorSet_iff, factorsThrough_iff_ker_unitsMap h1,
@@ -373,8 +371,7 @@ theorem relDifferent_eq_span_prod (E : IntermediateField ℚ K) {ζ : K} (hζ : 
     simp only [Finset.mem_filter, Finset.mem_univ, true_and]
     refine ⟨?_, ?_⟩
     · rw [IntermediateField.mem_fixingSubgroup_iff]
-      intro x hx
-      exact σ.commutes ⟨x, hx⟩
+      exact fun x hx => σ.commutes ⟨x, hx⟩
     · intro h
       apply (Finset.mem_erase.mp hσ).1
       ext x

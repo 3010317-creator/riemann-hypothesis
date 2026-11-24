@@ -334,8 +334,7 @@ theorem endSpanned_of_endSpanned_map {Γ L E : Type} [Group Γ] [Field L] [Field
     funext i
     exact congrFun hXt' (i, k)
   have hext : (Matrix.mulVecLin X) ∘ₗ U.subtype = U.subtype ∘ₗ φ := b.ext fun k => by
-    simp only [LinearMap.comp_apply, Matrix.mulVecLin_apply, Submodule.subtype_apply]
-    exact hb k
+    simpa only [LinearMap.comp_apply, Matrix.mulVecLin_apply, Submodule.subtype_apply] using hb k
   exact LinearMap.congr_fun hext w
 
 end GlobalTheory.SplitField
@@ -534,8 +533,7 @@ theorem isoSub_summand_of_isInternal {Γ L : Type} [Group Γ] [Field L] {a n : �
       simp [DirectSum.coeLinearMap_of, φ]
       rw [show (DFinsupp.single k x : DirectSum (Fin n) fun i => Us i) = DirectSum.of (fun i => Us i) k x from rfl,
         DirectSum.coeLinearMap_of]
-    intro d
-    exact LinearMap.congr_fun this d
+    exact fun d => LinearMap.congr_fun this d
   have hequiv : ∀ g m v, (P m (T g v) : Fin a → L) = T g (P m v) := by
     intro g m v
     have h1 : e.symm (T g v) = DFinsupp.mapRange.linearMap (φ g) (e.symm v) := by
@@ -550,8 +548,7 @@ theorem isoSub_summand_of_isInternal {Γ L : Type} [Group Γ] [Field L] {a n : �
     rfl
   obtain ⟨w, hwW, hw0⟩ := (Submodule.ne_bot_iff W).1 hW.1
   obtain ⟨m, hm⟩ : ∃ m, P m w ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     apply hw0
     have h0 : e.symm w = 0 := by
       ext k : 1
@@ -603,8 +600,7 @@ theorem isoSub_summand_of_isInternal {Γ L : Type} [Group Γ] [Field L] {a n : �
   refine ⟨LinearEquiv.ofBijective f ⟨hinj, hsurj⟩, fun g v h => ?_⟩
   simp only [f]
   have := hequiv g m (v : Fin a → L)
-  rw [hTv, hTv] at this
-  exact this
+  rwa [hTv, hTv] at this
 
 end GlobalTheory.SplitField
 end -- clump:auto
@@ -757,8 +753,7 @@ theorem crys_unram_of_lgc : ∀ D : D7, SumRepresentations.tie0 D → SumReprese
     simp only [mapRep, MonoidHom.comp_apply, Units.coe_map, Units.val_one] at h4
     refine Matrix.map_injective (SumRepresentations.iotaOQ_injective D.nd D.naut i) ?_
     show (r x σ).val.map (iotaOQ D.nd D.naut i) = (1 : Matrix (Fin D.R.nV) (Fin D.R.nV) (D.nd.O i)).map (iotaOQ D.nd D.naut i)
-    rw [Matrix.map_one _ (map_zero _) (map_one _)]
-    exact h4
+    rwa [Matrix.map_one _ (map_zero _) (map_one _)]
 
 end GlobalTheory.NRows
 end -- clump:auto
@@ -1113,8 +1108,7 @@ theorem core {O K k Γ : Type} [CommRing O] [Field K] [Field k] [Monoid Γ] (f :
     ext i j
     have := (hS _ (hpow ((i : ℕ) + j))).2
     simp only [Prod.pow_snd, Prod.pow_fst, e, diagonal_pow, trace_diagonal, Pi.pow_apply] at this
-    rw [of_apply, Fin.sum_univ_add]
-    exact this
+    rwa [of_apply, Fin.sum_univ_add]
   have z : Hm.det = 0 := hf (by rw [RingHom.map_det, e1, hankel_zero hdu, map_zero])
   exact hankel_ne ν hν (by rw [← e2, ← RingHom.map_det, z, map_zero])
 
@@ -1150,8 +1144,7 @@ theorem cyc_onto (D : D7) (i : D.nd.Loc) (k : Fin 2) (hl : D.nd.l i = D.host.g k
     obtain ⟨q, hq⟩ := hx
     rw [← hq]; exact σ.commutes q
   refine ⟨((D.nbr i w hw).e.symm ⟨σ, hσ⟩).1, ?_⟩
-  rw [GlobalTheory.EpsInertia.cycZ_bridge (D.nbr i w hw), MulEquiv.apply_symm_apply]
-  exact hσu
+  rwa [GlobalTheory.EpsInertia.cycZ_bridge (D.nbr i w hw), MulEquiv.apply_symm_apply]
 
 theorem charP_res (D : D7) (i : D.nd.Loc) : CharP (IsLocalRing.ResidueField (D.nd.O i)) (D.nd.l i) := by
   have hm := Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := ℤ_[D.nd.l i]) (IsLocalRing.maximalIdeal (D.nd.O i))
@@ -1283,8 +1276,7 @@ theorem placesOver_finite (D : D7) (i : D.nd.Loc) : (placesOver D.host.E (D.nd.l
   have hne : Ideal.span {((D.nd.l i : ℕ) : 𝓞 D.host.E)} ≠ ⊥ := by
     rw [Ne, Ideal.span_singleton_eq_bot]
     exact_mod_cast (Fact.out : (D.nd.l i).Prime).ne_zero
-  refine (Ideal.finite_factors hne).subset fun v hv => ?_
-  exact Ideal.dvd_span_singleton.mpr hv
+  exact (Ideal.finite_factors hne).subset fun v hv => Ideal.dvd_span_singleton.mpr hv
 
 theorem isoLoc_perm (D : D7) {Pa Pa' : List (Part D.naut.CG)} (h : Pa.Perm Pa') (w : PlE D.host) :
     isoLoc D.nd D.naut Pa w = isoLoc D.nd D.naut Pa' w := by
@@ -1388,8 +1380,7 @@ theorem crys_unram_of_lgc (D : D7) (htie : SumRepresentations.tie0 D) (hadm : Su
     simp only [mapRep, MonoidHom.comp_apply, Units.coe_map, Units.val_one] at h4
     refine Matrix.map_injective (SumRepresentations.iotaOQ_injective D.nd D.naut i) ?_
     show (r x σ).val.map (iotaOQ D.nd D.naut i) = (1 : Matrix (Fin D.R.nV) (Fin D.R.nV) (D.nd.O i)).map (iotaOQ D.nd D.naut i)
-    rw [Matrix.map_one _ (map_zero _) (map_one _)]
-    exact h4
+    rwa [Matrix.map_one _ (map_zero _) (map_one _)]
 
 theorem constituentCondition_of_noRepeatedFactor (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (Formalism.ConjugateSelfDual.G D.host.E D.nd.Om →* GL (Fin D.R.nV) (D.nd.O i)))
     (hr : ∀ x, SumRepresentations.At.IsHeckeGaloisQ D.nd D.naut i x (mapRep (iotaOQ D.nd D.naut i) (r x)))

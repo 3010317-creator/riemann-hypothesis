@@ -140,8 +140,7 @@ private theorem isCrys_of_mats {l : ℕ} [Fact l.Prime] (P : LocPrime l) (K L : 
     have e2 : (A'.map (P.actQ (g : GQ l))).map P.ιB = A.map (P.actQdR (g : GQ l)) := by
       rw [← hA']
       ext i j
-      simp only [Matrix.map_apply]
-      exact GlobalTheory.PMon.iota_act P _ _
+      simpa only [Matrix.map_apply] using GlobalTheory.PMon.iota_act P _ _
     rw [e1, e2]
     exact hσ g))
   haveI := L.2

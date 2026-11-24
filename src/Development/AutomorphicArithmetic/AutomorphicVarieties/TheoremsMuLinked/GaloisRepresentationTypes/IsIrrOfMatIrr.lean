@@ -804,10 +804,8 @@ private theorem charpoly_pow {K : Type} [Field K] {n : ℕ} (M : Matrix (Fin n) 
     exact Finset.prod_eq_zero (Finset.mem_univ i) (by simp)
   have hdvd : (∏ i, (X - C ((a i : K) ^ d))) ∣ (M ^ d).charpoly := by
     apply Finset.prod_dvd_of_coprime
-    · intro i _ j _ hij
-      exact Polynomial.pairwise_coprime_X_sub_C hinj hij
-    · intro i _
-      exact Polynomial.dvd_iff_isRoot.2 (hroot i)
+    · exact fun i _ j _ hij => Polynomial.pairwise_coprime_X_sub_C hinj hij
+    · exact fun i _ => Polynomial.dvd_iff_isRoot.2 (hroot i)
   have hmon : (∏ i, (X - C ((a i : K) ^ d))).Monic :=
     Polynomial.monic_prod_of_monic _ _ (fun i _ => Polynomial.monic_X_sub_C _)
   apply Polynomial.eq_of_monic_of_dvd_of_natDegree_le hmon (Matrix.charpoly_monic _) hdvd
@@ -824,8 +822,7 @@ theorem freeAt_res {F L Ω : Type} [Field F] [NumberField F] [Field L] [NumberFi
   obtain ⟨t, ht⟩ := hm
   refine ⟨t, ?_, ?_, fun i => α i ^ d, fun i j hij m hm => ?_, ?_⟩
   · have := pow_mem hg d
-    rw [← ht] at this
-    exact this
+    rwa [← ht] at this
   · show cycZ F Ω l (galEmb F L Ω t) = 1
     rw [ht, map_pow, h1, one_pow]
   · rw [← pow_mul, ← pow_mul]

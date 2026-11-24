@@ -80,8 +80,7 @@ theorem UpperTheory.V.Fr.flag :
   · have hu : IsUnit (S.ψB v i g - S.ψB v j g) := by
       by_contra hu
       have h1 : S.ψB v i g - S.ψB v j g ∈ S.mB := by
-        rw [← hm]
-        exact hu
+        rwa [← hm]
       have h2 : (S.ρ.ψ v i g : S.R) - S.ρ.ψ v j g ∈ maximalIdeal S.R := h1
       have h3 := (res_eq_zero_iff O S.R _).2 h2
       have h4 : ∀ i, res O S.R (S.ρ.ψ v i g) = ((F.Ψ (F.loc v g) ^ w n i : (ResidueField O)ˣ) : ResidueField O) :=
@@ -89,8 +88,7 @@ theorem UpperTheory.V.Fr.flag :
       rw [map_sub, h4, h4, sub_eq_zero] at h3
       exact zpow_w_ne hn _ hg i j hij (Units.ext h3)
     have h5 := (hu.map S.inc).map f
-    rw [map_sub, map_sub] at h5
-    exact h5
+    rwa [map_sub, map_sub] at h5
   · have h := congrArg (Polynomial.map ((residue C).comp f)) (o1 hF hn S v g)
     rw [← Matrix.charpoly_map, Polynomial.map_prod] at h
     simp only [Polynomial.map_sub, Polynomial.map_X, Polynomial.map_C] at h

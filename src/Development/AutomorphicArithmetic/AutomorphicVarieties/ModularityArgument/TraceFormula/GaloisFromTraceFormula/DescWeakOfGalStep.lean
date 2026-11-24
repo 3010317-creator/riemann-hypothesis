@@ -230,8 +230,7 @@ theorem UpperTheory.V.Z.Tf.GaloisFromTraceFormula.asmTh_of :
       simp only [C, Sum.elim_inr, Sum.elim_inl] at this
       rw [this]; norm_num)
     rw [(ht n 0 (Nat.add_zero n) T hT hTZ e₁ e₂).1 _ _ fun w ho => ⟨(hB w ho).1.card, rfl⟩, un0, hv1] at h1
-    have h2 := h1.add_const P
-    simpa [hPdef, Φ] using h2
+    simpa [hPdef, Φ] using h1.add_const P
   have hterm : ∀ i, Tendsto (fun k => ((sg i : ℤ) : ℂ) * geomSt2 S (l₁ i) (l₂ i) (Φ _ _ (hab i) k)) atTop
       (𝓝 (if 1 ≤ a i ∧ 1 ≤ n - a i then 0 else P)) := fun i => by
     split_ifs with hm
@@ -311,8 +310,7 @@ theorem UpperTheory.V.Z.Tf.GaloisFromTraceFormula.ctCaseJ :
         (m₂ (σ k) t).map (· + (((r : ℝ) / 2 : ℝ) : ℂ)) := by
       funext k t
       exact e₃ _ t
-    rw [this]
-    exact c₃
+    rwa [this]
   refine ⟨⟨⟨p, hp⟩, j₁, j₂⟩, fun k => σ (σ₁ (σ₂ k)), hσ.comp (hσ₁.comp hσ₂), fun τ => ?_, fun w hw => ?_⟩
   · rw [d₃ ⟨⟨p, hp⟩, j₁, j₂⟩ τ, h₀]
     have key : ∀ (n : ℕ) (D' : CD E n) (z : ℝ) (x : (E →+* ℂ) → Multiset ℂ), D'.Inf x →
@@ -493,8 +491,7 @@ private theorem readJ_all (hC : CuspCaseJ) (hT : CtCaseJ) {E : Type} [Field E] [
       rw [e0]
       exact fun _ => rfl
     · have e : ∀ k, B k w = 0 := fun k => Multiset.card_eq_zero.1 ((h k).1.sat w hw).2.2.1
-      simp only [e]
-      exact tendsto_const_nhds
+      simpa only [e] using tendsto_const_nhds
   have ih' : ∀ M < N, ∀ K (W : Submodule ℂ (Kinf E M → ℂ)) m₀, Lev bad K → FiniteDimensional ℂ W →
       ReadJ (N := M) bad K W m₀ ∅ fun _ => True := fun M hM K W m₀ hK hW =>
     readJ_or (ι := Unit) (fun _ => ih M hM K W m₀ ∅ hK hW fun _ h => h.elim) fun _ _ _ => ⟨(), fun _ h => h.elim⟩
@@ -663,8 +660,7 @@ theorem UpperTheory.V.Z.Tf.GaloisFromTraceFormula.stableS :
     · rw [hvj j hj]
       exact hlt ⟨j, hj⟩
     · have h0 : val T' e₁' e₂' (B₁ j) 0 = 0 := hzero ⟨j, hj⟩
-      rw [h0, norm_zero]
-      exact hρ
+      rwa [h0, norm_zero]
   simpa only [hgeom, hvB] using hsm
 end -- clump:auto
 end -- clump:auto
@@ -761,8 +757,7 @@ private theorem proj_rep {C V D : Submodule ℂ (Sm E a)} (hC : _root_.GlobalThe
     (g : GL (Fin a) (Af E)) (y : C) : p (stRep C hC g y) = stRep V hV g (p y) := by
   refine p2 _ _ ?_
   have := hD (.fin g) _ (p1 y)
-  rw [map_sub] at this
-  exact this
+  rwa [map_sub] at this
 
 private theorem hasSat_of_map {C : Submodule ℂ (Sm E a)} (hC : _root_.GlobalTheory.CuspRep.IsStable C) (π : CuspSub E a) (f : C →ₗ[ℂ] π.V)
     (hf : ∀ g (y : C), f (stRep C hC g y) = π.finPart g (f y)) (w : Pl E) (B : Multiset ℂˣ) {x : C}
@@ -997,8 +992,7 @@ private theorem logFin_eq (t : (Af E)ˣ) : logFin E t = -∑ᶠ w, Real.log ‖(
   have h1 : GlobalTheory.Idele.idealOf t = ∏ v ∈ hfin.toFinset, (v.asIdeal : FractionalIdeal (𝓞 E)⁰ E) ^ GlobalTheory.Idele.ord_vw t v := by
     refine finprod_eq_prod_of_mulSupport_subset _ fun v hv => ?_
     simp only [Finset.mem_coe, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
-    intro h0
-    exact hv (by simp [h0])
+    exact fun h0 => hv (by simp [h0])
   have h2 : ∑ᶠ w, Real.log ‖(t : Af E) w‖ = ∑ w ∈ hfin.toFinset, Real.log ‖(t : Af E) w‖ := by
     refine finsum_eq_sum_of_support_subset _ fun v hv => ?_
     simp only [Finset.mem_coe, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
@@ -1242,8 +1236,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Cusp.iwaT :
   refine ⟨_, rt_eig hle hn hT h hk, m₁, m₂, ?_⟩
   have hl : IsLeftInvariant φ.1 := h.aut.left
   rw [mul_assoc, UpperTheory.constantTerm_unipotent_left_invariant E (r + s) r φ.1 hl] at hg
-  rw [← constantTerm_rightTranslate] at hg
-  exact hg
+  rwa [← constantTerm_rightTranslate] at hg
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.CuspidalContribution.RtEig =====
@@ -1280,8 +1273,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Cusp.satComb :
     SatComb := by
   refine ⟨fun q n B c c₀ hc i => ?_, fun q r s B₁ B₂ C₁ C₂ α β hq h₁ h₂ j => ?_⟩
   · obtain ⟨a, -, e⟩ := sc_const q n i
-    simp only [e, sc_scale]
-    exact ((hc.pow i).mul_const _).const_mul a
+    simpa only [e, sc_scale] using ((hc.pow i).mul_const _).const_mul a
   · obtain ⟨a, -, e⟩ := sc_const q (r + s) j
     simp only [e, Multiset.map_add (f := _), GlobalTheory.ResW.SatWordAt.esymm_add, sc_scale]
     exact (tendsto_finsetSum _ fun p _ =>
@@ -1473,8 +1465,7 @@ private theorem rel_shift {s c : Multiset ℂ} {ε : ℝ} (α : ℂ)
   rw [Multiset.rel_map_right]
   refine h.mono fun x _ y _ hxy => ?_
   have : x - (y - α) = x + α - y := by ring
-  rw [this]
-  exact hxy
+  rwa [this]
 
 theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Cusp.splitLim :
     SplitLim := by
@@ -1521,9 +1512,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Cusp.splitLim :
       intro σ
       by_cases hσ : σ ∈ Set.pi Set.univ A
       · by_contra hno
-        refine hcon ⟨σ, hσ, fun j => ?_⟩
-        intro hev
-        exact hno ⟨j, fun _ => hev⟩
+        exact hcon ⟨σ, hσ, fun j => (fun hev => hno ⟨j, fun _ => hev⟩)⟩
       · exact ⟨0, fun h => absurd h hσ⟩
     choose J hJ using hJ
     let N := hS.toFinset.sup J
@@ -1782,9 +1771,7 @@ private theorem trc_ind_ne (ρ : Representation ℂ G V) (K K' : Subgroup G) (hl
     simp [LinearMap.restrict_apply, levOp_ind ρ K K' v v.2]
   unfold twTr
   rw [dite_eq_left hc, hr, map_smul, LinearMap.trace_id, smul_eq_mul]
-  have hpos : Module.finrank ℂ (fixed ρ K') ≠ 0 := by
-    intro h0
-    exact hne (Submodule.finrank_eq_zero.1 h0)
+  have hpos : Module.finrank ℂ (fixed ρ K') ≠ 0 := fun h0 => hne (Submodule.finrank_eq_zero.1 h0)
   exact mul_ne_zero (inv_ne_zero (by exact_mod_cast hi)) (by exact_mod_cast hpos)
 
 end Generic

@@ -296,8 +296,7 @@ private theorem pl_normal (l : ℕ) {Γ : Type} [Group Γ] [TopologicalSpace Γ]
     (PL l H).Normal := by
   refine ⟨fun a ha g => ?_⟩
   simp only [PL, Subgroup.mem_iInf] at ha ⊢
-  intro U hU
-  exact U.isNormal'.conj_mem a (ha U hU) g
+  exact fun U hU => U.isNormal'.conj_mem a (ha U hU) g
 
 private theorem pl_le (l : ℕ) {Γ : Type} [Group Γ] [TopologicalSpace Γ] (H : OpenNormalSubgroup Γ) :
     PL l H.toSubgroup ≤ H.toSubgroup := by
@@ -501,8 +500,7 @@ private theorem surj_of_gen {O : Type} [CommRing O] [IsLocalRing O] {R C : Type}
     rw [h2]
     exact sub_mem hx (hsq hxa)
   have hyM : y ∈ maximalIdeal R := by
-    rw [← mem_iff f y, hy']
-    exact haM
+    rwa [← mem_iff f y, hy']
   have hx' : x = f y + (x - a) := by rw [hy']; ring
   rw [hx']
   exact add_mem (Ideal.mem_sup_left (Ideal.mem_map_of_mem f hyM)) (Ideal.mem_sup_right hxa)
@@ -522,8 +520,7 @@ private theorem surjective_levelChangeBaseGroupHom {l : ℕ} [Fact l.Prime] {L :
   rintro ⟨x, hx⟩
   obtain ⟨y, rfl⟩ := h.surj x
   refine ⟨⟨y, ?_⟩, rfl⟩
-  rw [MonoidHom.mem_ker, ← h.η y]
-  exact hx
+  rwa [MonoidHom.mem_ker, ← h.η y]
 
 theorem UpperTheory.V.Th.Sp.betaSurj :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 G : Glob l L) (h : G.Hom G0) (n : ℕ) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (r : Resid G0.frame O n) (B : Type) [CommRing B] [Algebra O B] [IsCO O B] (u : Pair r B) (J : Ideal B) (D : ℕ) (b : TWBase u J Empty D) (q N : ℕ) (A : OpMod b h q N), GenBy O (pairVals u) → Function.Surjective A.β := by
@@ -667,8 +664,7 @@ theorem UpperTheory.V.Th.Sp.msp :
       linear_combination (ψ (MvPolynomial.X v)) * hp +
         h (MvPolynomial.eval₂ (x : B →+* O) (fun p => α p.1 p.2) p) * hδX v
   have hk := key a
-  rw [ha, map_zero, sub_zero] at hk
-  exact hk
+  rwa [ha, map_zero, sub_zero] at hk
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.TheoremsMuLinked.SpectralEigenvalues.Msp =====
@@ -1203,8 +1199,7 @@ theorem UpperTheory.Reformulated.B.Qf1.lam0 :
       refine ⟨z, ?_⟩
       change algebraMap _ _ z = c * g y
       rw [hz, Algebra.smul_def]
-    intro m
-    exact hle (hS ▸ Submodule.mem_top)
+    exact fun m => hle (hS ▸ Submodule.mem_top)
   let h : M →ₗ[B] (B ⧸ p) := LinearMap.codRestrictOfInjective g' i hi hr
   have hh : ∀ m, i (h m) = g' m := fun m =>
     LinearMap.codRestrictOfInjective_comp_apply g' i hi hr m

@@ -81,8 +81,7 @@ private lemma cayley_hamilton_rank_three_factored {K : Type} [Field K] (τ : K) 
   rw [hM] at h
   simp only [map_mul, map_sub, map_add (f := _), map_one, map_pow, Polynomial.aeval_X,
     Polynomial.aeval_C] at h
-  rw [Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul, sq] at h
-  exact h
+  rwa [Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul, sq] at h
 
 private lemma trace_inverseGram_conj_smul_eq {K : Type} [Field K] [CharZero K] (τ : K) (M : Matrix (Fin 3) (Fin 3) K)
     (hM : M.charpoly = (Polynomial.X - 1) * (Polynomial.X ^ 2 - Polynomial.C τ * Polynomial.X + 1)) :
@@ -119,8 +118,7 @@ theorem UpperTheory.exists_fixed_rotation_basis_of_charpoly :
   obtain ⟨Q, hQdef⟩ : ∃ Q : Matrix (Fin 3) (Fin 3) K, Q = M * M - τ • M + 1 := ⟨_, rfl⟩
   rw [← hQdef] at hPQ
   have hMQ : M * Q = Q := by
-    rw [sub_mul, one_mul, sub_eq_zero] at hPQ
-    exact hPQ
+    rwa [sub_mul, one_mul, sub_eq_zero] at hPQ
   have hQM : Q * M = Q := by
     have hc' : Q * M = M * Q := by
       rw [hQdef]
@@ -181,8 +179,7 @@ theorem UpperTheory.exists_fixed_rotation_basis_of_charpoly :
     simp only [Matrix.toLin'_apply, Matrix.mulVec_mulVec, hMF]
   let g : W →ₗ[K] W := (Matrix.toLin' M).restrict hW
   obtain ⟨v0, hv0⟩ : ∃ v : W, LinearIndependent K ![v, g v] := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     obtain ⟨a, ha⟩ := LinearMap.exists_eq_smul_id_of_forall_notLinearIndependent hno
     have hMFx : ∀ x : Fin 3 → K, M *ᵥ (F *ᵥ x) = a • (F *ᵥ x) := by
       intro x
@@ -199,8 +196,7 @@ theorem UpperTheory.exists_fixed_rotation_basis_of_charpoly :
       rw [hsplit, Matrix.trace_add, hME, hMFm, Matrix.trace_smul, htrE, htrF, smul_eq_mul]
       ring
     have hF0 : ∃ x : Fin 3 → K, F *ᵥ x ≠ 0 := by
-      by_contra hall
-      push Not at hall
+      by_contra! hall
       have hF00 : F = 0 := by
         apply Matrix.toLin'.injective
         apply LinearMap.ext
@@ -229,8 +225,7 @@ theorem UpperTheory.exists_fixed_rotation_basis_of_charpoly :
     have hfun : (W.subtype ∘ ![v0, g v0]) = ![v, M *ᵥ v] := by
       ext i : 1
       fin_cases i <;> simp [g, LinearMap.restrict_apply, Matrix.toLin'_apply, hvdef]
-    rw [hfun] at h
-    exact h
+    rwa [hfun] at h
   have hQv0 : Q *ᵥ v = 0 := by rw [hvF, Matrix.mulVec_mulVec, hQF, Matrix.zero_mulVec]
   refine ⟨e, v, hMe, ?_, ?_⟩
   · have h := hQv v

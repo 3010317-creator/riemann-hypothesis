@@ -62,7 +62,6 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 private theorem mem_gradedSub {O S X : Type} [CommRing O] [CommRing S] [Algebra O S] [AddCommGroup X]
     (𝒜 : X → Submodule O S) [SetLike.GradedMonoid 𝒜] {j : X} {f : S} (hf : f ∈ 𝒜 j) : f ∈ gradedSub 𝒜 := by
-  show f ∈ ⨆ i, 𝒜 i
   exact Submodule.mem_iSup_of_mem j hf
 
 private theorem limit_graded {O S X K : Type} [CommRing O] [CommRing S] [Algebra O S] [AddCommGroup X]
@@ -80,8 +79,7 @@ private theorem limit_graded {O S X K : Type} [CommRing O] [CommRing S] [Algebra
   have hc : IsCompl P0 P1 := by
     constructor
     · rw [Submodule.disjoint_def]
-      intro x h0 h1
-      exact Subtype.ext (Submodule.disjoint_def.mp hdisj _ h0 h1)
+      exact fun x h0 h1 => Subtype.ext (Submodule.disjoint_def.mp hdisj _ h0 h1)
     · rw [codisjoint_iff, eq_top_iff]
       rintro ⟨x, hx⟩ -
       have hle : (⨆ j, 𝒜 j) ≤ (⨆ j ∈ Z, 𝒜 j) ⊔ (⨆ j ∈ Zᶜ, 𝒜 j) := by
@@ -152,11 +150,8 @@ private theorem limit_graded {O S X K : Type} [CommRing O] [CommRing S] [Algebra
   have hone : L 1 = 1 := by
     have h1 : (1 : S) ∈ 𝒜 0 := SetLike.GradedOne.one_mem
     have e : (1 : B) = ⟨1, mem_gradedSub 𝒜 h1⟩ := rfl
-    rw [e, hform _ _ h1, ite_eq_left (map_zero p)]
-    rw [← e, map_one]
-  refine ⟨AlgHom.ofLinearMap L hone (fun x y => hmul x.1 x.2 y.1 y.2), ?_⟩
-  intro j f hf
-  exact hform j f hf
+    rw [e, hform _ _ h1, ite_eq_left (map_zero p), ← e, map_one]
+  exact ⟨AlgHom.ofLinearMap L hone (fun x y => hmul x.1 x.2 y.1 y.2), fun j f hf => hform j f hf⟩
 
 private theorem vanish_mono {O S K H : Type} [CommRing O] [CommRing S] [Algebra O S] [CommRing K] [Algebra O K]
     [Group H] (A : Subalgebra O S) (r : H →* M4 S) (hr : ∀ g i j, r g i j ∈ A) (ξ : A →ₐ[O] K)
@@ -197,8 +192,7 @@ private theorem vanish_mono {O S K H : Type} [CommRing O] [CommRing S] [Algebra 
     by_contra hne
     have hall : ∀ a ∈ L, 0 ≤ p (wt a.2.1 a.2.2) := by
       intro a ha
-      by_contra hlt
-      push Not at hlt
+      by_contra! hlt
       exact hne (List.mem_map.mpr ⟨a, ha, h a.1 a.2.1 a.2.2 hlt⟩)
     have hnn : 0 ≤ p w := by
       rw [← hL, map_list_sum, List.map_map]
@@ -256,8 +250,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.ptLimit :
   have hvan : ∀ j f (hf : f ∈ M.sPart j), p j < 0 → ξ ⟨f, mem_gradedSub M.sPart hf⟩ = 0 := by
     intro j f hf hj
     have hf' : f ∈ Submodule.span c.O (mono M.ru.hom j) := by
-      rw [← spanMono D hD M hF j]
-      exact hf
+      rwa [← spanMono D hD M hF j]
     exact vanish_mono M.SS M.ru.hom (fun g i j => M.sPart_le (M.entry_mem g i j)) ξ p
       (fun g i j hlt => (hrep ξ g i j).symm.trans (hp g i j hlt)) j hj f hf' _
   obtain ⟨ξ₀, hξ₀⟩ : ∃ ξ₀ : M.SS →ₐ[c.O] PadicAlgCl l, ∀ j f (hf : f ∈ M.sPart j),

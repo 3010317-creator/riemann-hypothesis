@@ -87,11 +87,9 @@ private theorem box_inner (r t : ℝ) (c : V →L[ℂ] V) (e' e : V) :
       · rw [Set.indicator_of_mem a, Set.indicator_of_mem b, Set.indicator_of_mem]
         exact ⟨max_lt a.1 (by linarith [b.1]), le_min a.2 (by linarith [b.2])⟩
       · rw [Set.indicator_of_notMem b, map_zero, inner_zero_right, Set.indicator_of_notMem]
-        intro h
-        exact b ⟨by linarith [(max_lt_iff.1 h.1).2], by linarith [(le_min_iff.1 h.2).2]⟩
+        exact fun h => b ⟨by linarith [(max_lt_iff.1 h.1).2], by linarith [(le_min_iff.1 h.2).2]⟩
     · rw [Set.indicator_of_notMem a, inner_zero_left, Set.indicator_of_notMem]
-      intro h
-      exact a ⟨(max_lt_iff.1 h.1).1, (le_min_iff.1 h.2).1⟩
+      exact fun h => a ⟨(max_lt_iff.1 h.1).1, (le_min_iff.1 h.2).1⟩
   rw [integral_congr_ae h, integral_indicator_const _ measurableSet_Ioc, Real.volume_real_Ioc, Complex.real_smul, ov]
 
 private theorem box_norm (r : ℝ) (hr : 0 ≤ r) (e : V) : ‖box r e‖ = ‖e‖ * Real.sqrt r := by

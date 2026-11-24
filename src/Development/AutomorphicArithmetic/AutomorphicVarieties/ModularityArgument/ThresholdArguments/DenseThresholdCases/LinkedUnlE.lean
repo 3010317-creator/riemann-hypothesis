@@ -209,8 +209,7 @@ private theorem flag_match {H k : Type} [Field k] (T : H → Matrix (Fin 3) (Fin
     (tri : ∀ g, (Q.val * T g * (Q⁻¹).val).BlockTriangular id)
     (dg : ∀ g i, (Q.val * T g * (Q⁻¹).val) i i = D i g)
     (ord : ∀ g, Fr.ordProd T ψ g = 0) (b : Fin 3) : ∃ a, ∀ g, D b g = ψ a g := by
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   choose g hg using hne
   let U : Fin 3 → Matrix (Fin 3) (Fin 3) k := fun a => Q.val * (T (g a) - ψ a (g a) • 1) * (Q⁻¹).val
   have hQ : (Q⁻¹).val * Q.val = 1 := Units.inv_mul Q
@@ -561,8 +560,7 @@ theorem UpperTheory.V.Z.J.unlEnd3E :
     Subtype.ext ((k.j_loc v g).trans (congrArg k.p (Subtype.ext (ht g).symm)))
   have hdm : ∀ g, galEmb K L Ω (t g) ∈ Dec (F := K) (k.pl v) := fun g => by
     have := hdec g
-    rw [← ht] at this
-    exact this
+    rwa [← ht] at this
   let d : Φ.Gv v → ↥(Dec (F := K) (k.pl v)) := fun g => ⟨galEmb K L Ω (t g), hdm g⟩
   let f : A →+* Qbar l := (A.val : A →+* PadicAlgCl l)
   have hT : ∀ g, f.mapMatrix (ν.r (Φ.loc0 v g)) = (ρ' (d g).1).val := fun g => by
@@ -587,8 +585,7 @@ theorem UpperTheory.V.Z.J.unlEnd3E :
     rw [← ht]
     rfl
   simp only [MonoidHom.mul_apply, MonoidHom.comp_apply, Units.val_mul, Subgroup.subtype_apply] at e1
-  rw [ha, hb, e2] at e1
-  exact e1
+  rwa [ha, hb, e2] at e1
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LinkedUnramifiedChains.LogarithmicNormBounds.BlockValuationRep =====
@@ -662,8 +659,7 @@ theorem UpperTheory.V.Z.J.rigIUE_alt :
   haveI : CharP (ResidueField c.O) l := by
     rw [CharP.charP_iff_prime_eq_zero hl.out, ← map_natCast (residue c.O), residue_eq_zero_iff,
       mem_maximalIdeal, mem_nonunits_iff, ← map_natCast (algebraMap ℤ_[l] c.O)]
-    intro hu
-    exact PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
+    exact fun hu => PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
   haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
   obtain ⟨B, hB, -, -, -, hB', -⟩ := U3.dat_loc D
   have hF := Fr.gd_ex ⟨⟨hN.coh.lf, hN.coh.lt, hN.coh.le, hN.coh.gf, hN.coh.ge, hN.coh.pt⟩, hN.coh.uo, hN.coh.gw⟩
@@ -918,8 +914,7 @@ private theorem orb_equiv {l : ℕ} [Fact l.Prime] (c : Coef l) {N : ℕ} [NeZer
     ∃ E : orb c H ≃ {χ : DirichletCharacter ℂ N // χ.toUnitHom.ker = H}, ∀ ψ, (E ψ).1 = ψ.1.ringHomComp f := by
   refine ⟨Equiv.ofBijective (fun ψ => ⟨ψ.1.ringHomComp f, (ker_comp f hf _).trans ((mem_orb c).1 ψ.2)⟩) ⟨?_, ?_⟩,
     fun _ => rfl⟩
-  · intro a b h
-    exact Subtype.ext (comp_inj f hf (congrArg Subtype.val h))
+  · exact fun a b h => Subtype.ext (comp_inj f hf (congrArg Subtype.val h))
   · rintro ⟨χ, hχ⟩
     have h1 := (ker_comp f hf ψ₀).trans ((mem_orb c).1 h₀)
     obtain ⟨j, -, hj⟩ := ((orbFacts ℂ N (ψ₀.ringHomComp f)).2.2.1 χ).1 (hχ.trans h1.symm)
@@ -1368,8 +1363,7 @@ private theorem totient_le_card_ker {Γ : Type} [CommGroup Γ] [Finite Γ] [Fint
     simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hχ ⊢
     have := ker_eq_bot_of_orderOf χ hχ
     rw [← MonoidHom.comap_ker, this, MonoidHom.comap_bot, QuotientGroup.ker_mk']
-  · intro a _ b _ hab
-    exact QuotientGroup.monoidHom_ext _ hab
+  · exact fun a _ b _ hab => QuotientGroup.monoidHom_ext _ hab
 
 theorem UpperTheory.V.HV.orbSum :
     ∀ (Γ : Type) [CommGroup Γ] [Finite Γ] (T : Finset (Subgroup Γ)), (∀ H ∈ T, IsCyclic (Γ ⧸ H)) → ∑ H ∈ T, Nat.totient H.index ≤ Nat.card Γ := by

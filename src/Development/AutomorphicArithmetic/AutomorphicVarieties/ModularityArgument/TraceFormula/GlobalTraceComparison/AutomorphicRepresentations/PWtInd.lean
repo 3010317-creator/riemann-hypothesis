@@ -89,10 +89,8 @@ theorem lg_splitCentre (s : ℝ) : lg (splitCentre E n s) = s * lg (splitCentre 
       map_zero' := by simp only [splitCentre_zero, lg_one_eq_zero]
       map_add' := fun s t => by simp only [splitCentre_add, lg_mul] }
   have hf : Continuous f := by
-    show Continuous fun s => logAbs (splitCentre E n s).val.det
     exact continuous_logAbs_det.comp GlobalTheory.OneRep.SplitTwist.continuous_splitCentre
-  have h := map_real_smul f hf s 1
-  simpa [f, smul_eq_mul] using h
+  simpa [f, smul_eq_mul] using map_real_smul f hf s 1
 
 theorem ldet_mul_aS (x : H E n 0) (s : ℝ) : ldet (x * aS E n s) = ldet x + s * ldet (aS E n 1) := by
   show lg (x.1 * splitCentre E n s) = lg x.1 + s * lg (splitCentre E n 1)

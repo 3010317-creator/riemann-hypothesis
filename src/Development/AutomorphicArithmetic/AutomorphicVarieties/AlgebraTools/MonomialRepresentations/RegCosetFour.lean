@@ -213,8 +213,7 @@ private theorem separable_quartic_of_dsc_ne_zero {F : Type} [Field F] (b c d e :
     simp at hdeg
   have hsplit : (f.map (algebraMap F (AlgebraicClosure F))).Splits := IsAlgClosed.splits _
   have hnd : ¬ (f.map (algebraMap F (AlgebraicClosure F))).roots.Nodup := by
-    rw [nodup_roots_iff_of_splits (Polynomial.map_ne_zero hf0) hsplit, separable_map]
-    exact hns
+    rwa [nodup_roots_iff_of_splits (Polynomial.map_ne_zero hf0) hsplit, separable_map]
   rw [Multiset.nodup_iff_count_le_one] at hnd
   push Not at hnd
   obtain ⟨r, hr⟩ := hnd
@@ -535,12 +534,9 @@ open Polynomial Matrix
 private theorem comp_image {G : Type} [TopologicalSpace G] (e : G ≃ₜ G) {Z : Set G}
     (hZ : Z ∈ irreducibleComponents G) : e '' Z ∈ irreducibleComponents G := by
   refine ⟨hZ.1.image e e.continuous.continuousOn, fun y hy hsub => ?_⟩
-  have h1 : Z ⊆ e.symm '' y := by
-    intro z hz
-    exact ⟨e z, hsub ⟨z, hz, rfl⟩, e.symm_apply_apply z⟩
+  have h1 : Z ⊆ e.symm '' y := fun z hz => ⟨e z, hsub ⟨z, hz, rfl⟩, e.symm_apply_apply z⟩
   have h2 := hZ.2 (hy.image e.symm e.symm.continuous.continuousOn) h1
-  intro w hw
-  exact ⟨e.symm w, h2 ⟨w, hw, rfl⟩, e.apply_symm_apply w⟩
+  exact fun w hw => ⟨e.symm w, h2 ⟨w, hw, rfl⟩, e.apply_symm_apply w⟩
 
 private theorem exists_unique_pt {G : Type} [TopologicalSpace G] [TopologicalSpace.NoetherianSpace G]
     (a : G) : ∃ x : G, ∀ Z ∈ irreducibleComponents G, ∀ W ∈ irreducibleComponents G,
@@ -627,8 +623,7 @@ theorem UpperTheory.V.AlgebraTools.idComp :
       obtain ⟨c, hc, hcb⟩ := hb
       change a * c = b at hcb
       apply QuotientGroup.eq.2
-      rw [← hcb, inv_mul_cancel_left]
-      exact hc
+      rwa [← hcb, inv_mul_cancel_left]
     haveI : Finite (irreducibleComponents G) :=
       TopologicalSpace.NoetherianSpace.finite_irreducibleComponents.to_subtype
     exact Finite.of_injective F hFinj
@@ -637,8 +632,7 @@ theorem UpperTheory.V.AlgebraTools.idComp :
   · have e1 : ((hl g).trans (hr g⁻¹)) '' C = C := uniq 1 _ (comp_image _ hC) _ hC
       ⟨1, h1C, by show g * 1 * g⁻¹ = 1; simp⟩ h1C
     have h2 : g * n * g⁻¹ ∈ ((hl g).trans (hr g⁻¹)) '' C := ⟨n, hn, rfl⟩
-    rw [e1] at h2
-    exact h2
+    rwa [e1] at h2
   · haveI : Finite (G ⧸ U) := Subgroup.finite_quotient_of_finiteIndex
     haveI := Fintype.ofFinite (G ⧸ U)
     let S : G ⧸ U → Set G := fun q => {y | y ∈ C ∧ (y : G ⧸ U) = q}
@@ -737,8 +731,7 @@ theorem UpperTheory.V.AlgebraTools.idCompMat :
     refine continuous_induced_rng.2 ?_
     have : (f ∘ fun x => g * x) = PrimeSpectrum.comap ψ ∘ f := by
       funext x
-      simp only [Function.comp_apply, f, map_mul]
-      exact hψ (r x)
+      simpa only [Function.comp_apply, f, map_mul] using hψ (r x)
     rw [this]
     exact (PrimeSpectrum.continuous_comap ψ).comp hf
   have hR : ∀ g : G, Continuous fun x => x * g := by
@@ -747,8 +740,7 @@ theorem UpperTheory.V.AlgebraTools.idCompMat :
     refine continuous_induced_rng.2 ?_
     have : (f ∘ fun x => x * g) = PrimeSpectrum.comap ψ ∘ f := by
       funext x
-      simp only [Function.comp_apply, f, map_mul]
-      exact hψ (r x)
+      simpa only [Function.comp_apply, f, map_mul] using hψ (r x)
     rw [this]
     exact (PrimeSpectrum.continuous_comap ψ).comp hf
   obtain ⟨N, hNn, hNf, hNc, hNi, hNd⟩ := UpperTheory.V.AlgebraTools.idComp G hL hR
@@ -757,10 +749,8 @@ theorem UpperTheory.V.AlgebraTools.idCompMat :
     intro S g
     rw [PrimeSpectrum.mem_zeroLocus]
     constructor
-    · intro h q hq
-      exact (RingHom.mem_ker).1 (h hq)
-    · intro h q hq
-      exact (RingHom.mem_ker).2 (h q hq)
+    · exact fun h q hq => (RingHom.mem_ker).1 (h hq)
+    · exact fun h q hq => (RingHom.mem_ker).2 (h q hq)
   refine ⟨N, hNn, hNf, ?_, ?_⟩
   · obtain ⟨t, ht, hNt⟩ := isClosed_induced_iff.1 hNc
     obtain ⟨S, rfl⟩ := (PrimeSpectrum.isClosed_iff_zeroLocus t).1 ht
@@ -769,12 +759,10 @@ theorem UpperTheory.V.AlgebraTools.idCompMat :
     constructor
     · intro hg
       have h' : g ∈ (N : Set G) := hg
-      rw [← hNt] at h'
-      exact h'
+      rwa [← hNt] at h'
     · intro hg
       have h' : g ∈ f ⁻¹' PrimeSpectrum.zeroLocus S := hg
-      rw [hNt] at h'
-      exact h'
+      rwa [hNt] at h'
   · intro U hU σ s hs
     let W : MvPolynomial (ι × ι) K → Set G :=
       fun q => {g | MvPolynomial.eval (fun p => r (σ * g) p.1 p.2) q ≠ 0}
@@ -867,8 +855,7 @@ theorem UpperTheory.V.AlgebraTools.relWeight :
     refine ha i j hij (isOfFinOrder_iff_zpow_eq_one.mpr ⟨k, hk, ?_⟩)
     simpa only [hPsmul, hPsub, hPe] using hk1
   have hex : ∃ f : Module.Dual ℤ ((ι → ℤ) ⧸ L), ∀ i j, i ≠ j → f (q i) ≠ f (q j) := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     let s : Finset (ι × ι) := Finset.univ.filter fun x => x.1 ≠ x.2
     let p : ι × ι → Submodule ℤ (Module.Dual ℤ ((ι → ℤ) ⧸ L)) :=
       fun x => LinearMap.ker (Module.Dual.eval ℤ _ (q x.1 - q x.2))
@@ -923,8 +910,7 @@ private lemma torusTransfer_sep_iff {L : Type*} [Field L] (p : L[X]) (hp : p.Mon
       (q.roots.map fun x => (derivative q).eval x).prod := by
     rw [← resultant_map_map, ← derivative_map, ← hq]
     have h := resultant_eq_prod_eval q (derivative q) n hdeg hspl
-    rw [hqd, hqm.leadingCoeff, one_pow, one_mul] at h
-    exact h
+    rwa [hqd, hqm.leadingCoeff, one_pow, one_mul] at h
   rw [← separable_map (algebraMap L p.SplittingField), ← hq, ← nodup_roots_iff_of_splits hq0 hspl,
     ne_eq, ← map_eq_zero (algebraMap L p.SplittingField), hres, Multiset.prod_eq_zero_iff]
   constructor
@@ -939,8 +925,7 @@ private lemma torusTransfer_sep_iff {L : Type*} [Field L] (p : L[X]) (hp : p.Mon
     rw [Multiset.nodup_iff_count_le_one]
     intro α
     rw [count_roots]
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     obtain ⟨hr, hr'⟩ := (one_lt_rootMultiplicity_iff_isRoot hq0).1 hlt
     exact hne (Multiset.mem_map.2 ⟨α, (mem_roots hq0).2 hr, hr'⟩)
 
@@ -1062,8 +1047,7 @@ theorem UpperTheory.V.AlgebraTools.torusTransfer :
   intro K _ ι _ _ x a w hw hsep
   have hne := (torusTransfer_spec x (algebraMap K (RatFunc K))
     (fun i => (RatFunc.X : RatFunc K) ^ w i)).1 hsep
-  by_contra hall
-  push Not at hall
+  by_contra! hall
   apply hne
   apply torusTransfer_key a w hw
   intro m
@@ -1106,8 +1090,7 @@ theorem UpperTheory.Reformulated.B.Qh2.diagz :
     ext r c
     have h := congrFun (hv c).apply_eq_smul r
     rw [Matrix.toLin'_apply] at h
-    rw [Matrix.mul_diagonal, mul_comm]
-    exact h
+    rwa [Matrix.mul_diagonal, mul_comm]
   refine ⟨P, P⁻¹, Matrix.mul_nonsing_inv P hdet, Matrix.nonsing_inv_mul P hdet, ?_⟩
   rw [Matrix.mul_assoc, hMP, ← Matrix.mul_assoc, Matrix.nonsing_inv_mul P hdet, Matrix.one_mul]
 end -- clump:auto
@@ -1200,9 +1183,7 @@ private theorem comb (E S : Fin 4 → Fin 4 → Prop) (rf : ∀ i, E i i) (sy : 
     intro a; fin_cases a
     · exact rf _
     · exact ej
-  have hlr : ∀ a b, f (.inl a) ≠ f (.inr b) := by
-    intro a b h
-    exact hn (tr (fl a) (h ▸ sy (fr b)))
+  have hlr : ∀ a b, f (.inl a) ≠ f (.inr b) := fun a b h => hn (tr (fl a) (h ▸ sy (fr b)))
   have finj : Function.Injective f := by
     rintro (a | a) (b | b) h
     · fin_cases a <;> fin_cases b <;> simp_all [f]
@@ -1370,8 +1351,7 @@ private theorem eval_adj {K : Type} [Field K] (x : Matrix (Fin 4) (Fin 4) K) (i 
       ((Matrix.mvPolynomialX (Fin 4) (Fin 4) K).adjugate i i) = x.adjugate i i := by
   have h := congrFun (congrFun (RingHom.map_adjugate (MvPolynomial.eval (fun p : Fin 4 × Fin 4 => x p.1 p.2))
     (Matrix.mvPolynomialX (Fin 4) (Fin 4) K)) i) i
-  rw [Matrix.mvPolynomialX_mapMatrix_eval] at h
-  exact h
+  rwa [Matrix.mvPolynomialX_mapMatrix_eval] at h
 
 private theorem core (K G : Type) [Field K] [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (h2 : (2 : K) ≠ 0)
     (r : G →* Matrix (Fin 4) (Fin 4) K)
@@ -1437,8 +1417,7 @@ private theorem core (K G : Type) [Field K] [Group G] [TopologicalSpace G] [IsTo
   obtain ⟨g, hg, hsep⟩ := main
   obtain ⟨m, hm⟩ := UpperTheory.V.AlgebraTools.torusTransfer K (Fin 4) _ (fun i => a i ^ k) w hwr hsep
   refine ⟨g * (u ^ k) ^ m, U.mul_mem hg (U.pow_mem hk.1 m), ?_⟩
-  rw [← mul_assoc, map_mul, map_pow, htd, Matrix.diagonal_pow]
-  exact hm
+  rwa [← mul_assoc, map_mul, map_pow, htd, Matrix.diagonal_pow]
 
 end UpperTheory.V.AlgebraTools.RegFour
 

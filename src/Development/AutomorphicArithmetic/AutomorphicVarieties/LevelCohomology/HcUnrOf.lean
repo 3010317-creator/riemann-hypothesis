@@ -71,8 +71,7 @@ theorem UpperTheory.V.X.unrOf :
       subst hσ
       have hc : σ⁻¹ * g * σ ∈ Ine (F := ℚ) A' := GlobalTheory.Cut.ShaBound.conj_mem_Ine' hg
       have hcK : σ⁻¹ * g * σ ∈ K := by
-        have e := hKn.conj_mem g hgK σ⁻¹
-        simpa only [inv_inv] using e
+        simpa only [inv_inv] using hKn.conj_mem g hgK σ⁻¹
       have e0 := hz0 _ hc hcK
       have e1 := hz g σ
       have e2 := hz σ (σ⁻¹ * g * σ)
@@ -85,10 +84,8 @@ theorem UpperTheory.V.X.unrOf :
       unfold NS
       apply Subgroup.le_topologicalClosure
       apply Subgroup.subset_normalClosure
-      simp only [Set.mem_iUnion]
-      exact ⟨v, hvS, A, hv, hg⟩
+      simpa only [Set.mem_iUnion] using ⟨v, hvS, A, hv, hg⟩
     have e : toGS Ω SP g = toGS Ω SP 1 := by
       rw [map_one]
       exact (QuotientGroup.eq_one_iff g).mpr hN
-    rw [e]
-    exact h1
+    rwa [e]

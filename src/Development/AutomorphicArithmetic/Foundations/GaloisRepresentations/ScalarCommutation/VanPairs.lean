@@ -180,8 +180,7 @@ theorem norm_conj_le_one_of_bounded_coords :
     refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun i _ => ?_)
     rw [map_smul, hsmul, norm_mul, padicAlgCl_norm_ratCast]
     exact mul_le_mul_of_nonneg_right (hB k i) (norm_nonneg _)
-  by_contra h
-  push Not at h
+  by_contra! h
   obtain ⟨k, hk⟩ := pow_unbounded_of_one_lt (B * C) h
   exact (lt_irrefl _ ((hbound k).trans_lt hk))
 
@@ -272,8 +271,7 @@ theorem norm_eigen_le_one_of_conj_Kres : ∀ (p : ℕ) [Fact p.Prime] (Kw : Inte
   have hBv : B *ᵥ v' = c • v' := by
     have e1 : Ai *ᵥ (N.map (fun x => (x : PadicAlgCl p)) *ᵥ v) = c • v' := by
       rw [hev, mulVec_smul]
-    rw [hM, mulVec_mulVec, ← mul_assoc, ← mul_assoc, hAiA, one_mul, ← mulVec_mulVec] at e1
-    exact e1
+    rwa [hM, mulVec_mulVec, ← mul_assoc, ← mul_assoc, hAiA, one_mul, ← mulVec_mulVec] at e1
   have hB : ∀ i j, ‖B i j‖ ≤ 1 := by
     obtain ⟨k0, rfl⟩ := hk
     intro i j
@@ -430,8 +428,7 @@ theorem norm_le_one_at_u : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pai
     rw [map_pow, ha]; rfl
   have key : (z * g) * k * (z * g)⁻¹ = inclG G r (locC G ((w ^ m : P.cent) : G.Cˣ × ℚˣ)) := by
     have e : P.toQr r z (w ^ m) = z⁻¹ * inclG G r (locC G ((w ^ m : P.cent) : G.Cˣ × ℚˣ)) * z := rfl
-    rw [map_pow] at e
-    rw [← hkeq] at e
+    rw [map_pow, ← hkeq] at e
     simp only [MulEquiv.coe_toMonoidHom, MulAut.conj_apply] at e
     have e2 : inclG G r (locC G ((w ^ m : P.cent) : G.Cˣ × ℚˣ)) =
         z * (z⁻¹ * inclG G r (locC G ((w ^ m : P.cent) : G.Cˣ × ℚˣ)) * z) * z⁻¹ := by group
@@ -764,8 +761,7 @@ private theorem units_field {M L : Type} [CommRing M] [Algebra ℚ M] [Module.Fi
   have hcomp : ∀ a, π (c (s (π a))) = π (c a) := by
     intro a
     have h := hker (s (π a) - a) (by rw [map_sub, hs, sub_self])
-    rw [map_sub, map_sub, sub_eq_zero] at h
-    exact h
+    rwa [map_sub, map_sub, sub_eq_zero] at h
   let cL : L →ₐ[ℚ] L :=
     { toFun := fun y => π (c (s y))
       map_one' := by
@@ -826,8 +822,7 @@ private theorem units_finite {M : Type} [CommRing M] [Algebra ℚ M] [Module.Fin
     have hmem : ((x : M) - y) ∈ (⊥ : Ideal M).jacobson := by
       rw [Ideal.jacobson, Ideal.mem_sInf]
       rintro J ⟨-, hJ⟩
-      have h1 := congrArg Units.val (congrFun h ⟨J, hJ⟩)
-      exact Ideal.Quotient.eq.1 h1
+      exact Ideal.Quotient.eq.1 (congrArg Units.val (congrFun h ⟨J, hJ⟩))
     obtain ⟨n, hn⟩ := IsArtinianRing.isNilpotent_jacobson_bot (R := M)
     have h2 : ((x : M) - y) ^ n ∈ ((⊥ : Ideal M).jacobson) ^ n := Ideal.pow_mem_pow hmem n
     rw [hn] at h2
@@ -969,9 +964,7 @@ private theorem termAt_zero {p : ℕ} [Fact p.Prime] (G : HTGroup p) (ha : G.a =
     intro g
     rw [← map_mul, ← map_mul]
     congr 1
-    apply Subtype.ext
-    refine Prod.ext ?_ (mul_comm _ _)
-    exact g.2.1
+    exact Subtype.ext (Prod.ext g.2.1 (mul_comm _ _))
   have hc2 : ∀ g : Q.cent, Q.toQr 1 z g * δ = δ * sigG G 1 (Q.toQr 1 z g) := by
     intro g
     have hm : carry G 1 z (locC G g.1) ∈ GlobalTheory.BCT.twCent (sigG G 1) δ :=

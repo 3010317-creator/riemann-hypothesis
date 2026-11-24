@@ -297,16 +297,12 @@ theorem retract_step : ∀ (V : Type) (F : Set (List V)) (S : Set V), SubClosed 
       refine Submodule.add_mem _ ?_ (Submodule.sum_mem _ fun τ hτ => ?_)
       · refine bd_mem_supported_of_eraseIdx (A := {l | ∀ y ∈ l.drop k, y ∈ S}) ?_
           (Finsupp.supported_mono ?_ hCgmem)
-        · intro l hl i _
-          exact fun y hy => hl y ((drop_eraseIdx_sublist_drop l i k).subset hy)
-        · intro l hl
-          exact hl.1.2
+        · exact fun l hl i _ => fun y hy => hl y ((drop_eraseIdx_sublist_drop l i k).subset hy)
+        · exact fun l hl => hl.1.2
       · refine prepend_part_mem_supported τ (A := {w | ∀ x ∈ w, x ∈ S}) ?_
           (Finsupp.supported_mono ?_ (hysmem τ hτ))
-        · intro w hw i hi
-          exact hGood τ hτ w hw i hi
-        · intro w hw
-          exact hw.1.1
+        · exact fun w hw i hi => hGood τ hτ w hw i hi
+        · exact fun w hw => hw.1.1
     intro τ0 hτ0
     ext w
     have h0 := congrArg (fun f => f (τ0 ++ w)) hdec
@@ -326,8 +322,7 @@ theorem retract_step : ∀ (V : Type) (F : Set (List V)) (S : Set V), SubClosed 
     · intro τ hτ hne
       rw [Finsupp.smul_apply, mapDomain_prepend_apply', ite_eq_right, smul_zero]
       exact fun h => hne (huniq τ0 hτ0 τ hτ _ (List.prefix_append _ _) h)
-    · intro h
-      exact absurd hτ0 h
+    · exact fun h => absurd hτ0 h
   have hz : ∀ τ ∈ P, ∃ z, z ∈ chains (linkIn F S τ) (p - τ.length + 1) ∧ bd V z = ys τ := by
     intro τ hτ
     obtain ⟨hlen, hτF, hkp, hk, hkS, hlast⟩ := hP τ hτ
@@ -421,8 +416,7 @@ theorem exists_sub_bd_mem_chains_linkIn_nil :
       obtain ⟨b', hb', hcb'⟩ := ih (c - bd V b) hcb
         (by rw [map_sub, h0, _root_.GlobalTheory.SeqCx.bd_bd, sub_zero])
       refine ⟨b + b', Submodule.add_mem _ hb hb', ?_⟩
-      rw [map_add (f := _), ← sub_sub]
-      exact hcb'
+      rwa [map_add (f := _), ← sub_sub]
   intro c hc h0
   have hc' : c ∈ chains {l ∈ F | ∀ y ∈ l.drop p, y ∈ S} p := by
     refine Finsupp.supported_mono ?_ hc

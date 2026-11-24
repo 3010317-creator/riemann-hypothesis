@@ -58,8 +58,7 @@ private theorem exists_conj (K : Type) [Field K] [NumberField K] (h : Module.fin
   have hc : Fintype.card (K ≃ₐ[ℚ] K) = 2 := by
     rw [← Nat.card_eq_fintype_card, IsGalois.card_aut_eq_finrank, h]
   obtain ⟨t, ht⟩ : ∃ t : K ≃ₐ[ℚ] K, t ≠ 1 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     have : Fintype.card (K ≃ₐ[ℚ] K) ≤ 1 := Fintype.card_le_one_iff.mpr fun a b => by
       rw [hne a, hne b]
     omega
@@ -69,8 +68,7 @@ private theorem exists_conj (K : Type) [Field K] [NumberField K] (h : Module.fin
     classical
     have h3 : ({1, s, t} : Finset (K ≃ₐ[ℚ] K)).card = 3 := by
       rw [Finset.card_insert_of_notMem, Finset.card_pair hst]
-      simp only [Finset.mem_insert, Finset.mem_singleton, not_or]
-      exact ⟨Ne.symm hs, Ne.symm ht⟩
+      simpa only [Finset.mem_insert, Finset.mem_singleton, not_or] using ⟨Ne.symm hs, Ne.symm ht⟩
     have := Finset.card_le_univ ({1, s, t} : Finset (K ≃ₐ[ℚ] K))
     omega
   refine ⟨t, ht, huniq, fun x => ?_⟩
@@ -369,9 +367,7 @@ theorem UpperTheory.V.Ws.Tw.quadFacts :
     intro c hc A w hA x
     have e1 : algebraMap K Ω (x : K) = c (algebraMap K Ω ((τ.symm x : 𝓞 K) : K)) := by
       have h2 := hres c hc ((τ.symm x : 𝓞 K) : K)
-      have h3 : t ((τ.symm x : 𝓞 K) : K) = (x : K) := by
-        show t (t.symm (x : K)) = (x : K)
-        exact t.apply_symm_apply _
+      have h3 : t ((τ.symm x : 𝓞 K) : K) = (x : K) := t.apply_symm_apply _
       rw [h3] at h2
       exact h2.symm
     rw [e1, hval, hA (τ.symm x)]
@@ -383,8 +379,7 @@ theorem UpperTheory.V.Ws.Tw.quadFacts :
   have hfixσ : ∀ σ : G K Ω, resQ K σ ∈ K.fixingSubgroup := by
     intro σ
     rw [IntermediateField.mem_fixingSubgroup_iff]
-    intro x hx
-    exact σ.commutes ⟨x, hx⟩
+    exact fun x hx => σ.commutes ⟨x, hx⟩
   have hc0 : ∃ c : G ℚ Ω, c ∉ K.fixingSubgroup := by
     refine ⟨t.liftNormal Ω, fun hmem => ht ?_⟩
     apply AlgEquiv.ext
@@ -392,8 +387,7 @@ theorem UpperTheory.V.Ws.Tw.quadFacts :
     apply Subtype.ext
     have h1 := AlgEquiv.liftNormal_commutes t Ω y
     rw [IntermediateField.mem_fixingSubgroup_iff] at hmem
-    have h2 := hmem (y : Ω) y.2
-    exact h1.symm.trans h2
+    exact h1.symm.trans (hmem (y : Ω) y.2)
   have h4 : ∀ (p : ℕ) (A : ValuationSubring Ω), p.Prime → A.valuation (p : Ω) < 1 →
       Dec (F := ℚ) A ≤ K.fixingSubgroup → ∃ w : HeightOneSpectrum (𝓞 K), IsPlaceOver A w ∧
         Ideal.absNorm w.asIdeal = p ∧ IsCoprime w.asIdeal (w.asIdeal.map τ) ∧
@@ -425,16 +419,14 @@ theorem UpperTheory.V.Ws.Tw.quadFacts :
       rwa [mul_inv_cancel_left] at this
     exact ⟨w, hw, split_facts h τ hτI hp w hpw hne⟩
   refine ⟨τ, ?_, hτI, ?_, h4, ?_⟩
-  · intro c hc x
-    exact hres c hc (x : K)
+  · exact fun c hc x => hres c hc (x : K)
   · intro c hc s s' hss w A hA hF
     refine ⟨tw w, c • A, rfl, hplace c hc A w hA, ?_⟩
     rw [hnormV]
     have hpt : ∀ z : Ω, s' z = c (s (c⁻¹ z)) := fun z => DFunLike.congr_fun hss z
     refine ⟨?_, ?_⟩
     · show s' • (c • A) = c • A
-      rw [hsmulK, hss, mul_smul, mul_smul, inv_smul_smul, ← hsmulK]
-      rw [show s • A = A from hF.1]
+      rw [hsmulK, hss, mul_smul, mul_smul, inv_smul_smul, ← hsmulK, show s • A = A from hF.1]
     · intro x hx
       obtain ⟨y, rfl⟩ : ∃ y, c y = x := ⟨c⁻¹ x, c.apply_symm_apply x⟩
       rw [hle] at hx
@@ -461,8 +453,7 @@ theorem UpperTheory.V.Ws.Tw.quadFacts :
       have e2 : algebraMap K Ω ((2 : 𝓞 K) : K) = 2 := by
         rw [e1]
         exact map_ofNat (algebraMap K Ω) 2
-      rw [e2] at this
-      exact this
+      rwa [e2] at this
     obtain ⟨w, -, -, -, hφ⟩ := h4 2 A Nat.prime_two (by exact_mod_cast hA2) (hall A hA2)
     obtain ⟨φ, -⟩ := hφ 2
     exact units_pm h t hu hτ φ u

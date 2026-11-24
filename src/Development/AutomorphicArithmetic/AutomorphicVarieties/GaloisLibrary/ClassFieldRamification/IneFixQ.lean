@@ -94,8 +94,7 @@ theorem UpperTheory.V.CF.ineMap :
     intro x
     have h1 := hσ (algebraMap (𝓞 K) (𝓞 H) x)
     show _ ∈ Ideal.comap (algebraMap (𝓞 K) (𝓞 H)) P
-    rw [Ideal.mem_comap, map_sub, comm]
-    exact h1
+    rwa [Ideal.mem_comap, map_sub, comm]
   apply Subgroup.eq_of_le_of_card_ge hle
   have cG : Nat.card (P.inertia Gal(H/k)) = p.ramificationIdxIn (𝓞 H) :=
     Ideal.card_inertia_eq_ramificationIdxIn p P
@@ -140,8 +139,7 @@ theorem UpperTheory.V.CF.ineMap :
   have key := f.ker.card_mul_index
   rw [Subgroup.index_ker, hrange, cG, ← hmul] at key
   rw [cK]
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have hQpos : 0 < Q.ramificationIdxIn (𝓞 H) := by
     rw [← cH]
     exact Nat.card_pos
@@ -183,8 +181,7 @@ theorem UpperTheory.V.CF.ineFixQ :
     have hpQ : (p : 𝓞 H) ∈ Q := by
       have hc : (p : 𝓞 K) ∈ Q.comap (algebraMap (𝓞 K) (𝓞 H)) := by
         change (p : 𝓞 K) ∈ Ideal.under (𝓞 K) Q
-        rw [hQv]
-        exact hv
+        rwa [hQv]
       simpa [Ideal.mem_comap, map_natCast] using hc
     let w : HeightOneSpectrum (𝓞 H) := ⟨Q, hQ, fun hb => by
       rw [hb] at hpQ

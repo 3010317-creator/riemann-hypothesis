@@ -151,8 +151,7 @@ theorem UpperTheory.V.abelian₂.adicComplete :
     ext i
     apply eq_of_sub_mem_pow (maximalIdeal O)
     intro n
-    have h := (key x 0 (n + i)).1 (hx (n + i)) i
-    simpa using h
+    simpa using (key x 0 (n + i)).1 (hx (n + i)) i
   · intro f hf
     have hc : ∀ i, ∃ L : O, ∀ n, coeff i (f (n + i)) - L ∈ maximalIdeal O ^ n := by
       intro i
@@ -164,8 +163,7 @@ theorem UpperTheory.V.abelian₂.adicComplete :
           simpa using h)
       refine ⟨L, fun n => ?_⟩
       have h := hL n
-      rw [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top] at h
-      exact h
+      rwa [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top] at h
     choose L hL using hc
     refine ⟨PowerSeries.mk L, fun n => ?_⟩
     rw [key]

@@ -68,10 +68,8 @@ theorem UpperTheory.Zero.ConvolutionTheory.EB.lvEx :
         fun h' => absurd hw h', fun _ => ⟨hH.1, ?_⟩⟩
       · exact ho.preimage (continuous_id.prodMk continuous_const)
       · exact ho.preimage (continuous_const.prodMk continuous_id)
-      · intro x hx
-        exact (hle hx).1
-      · intro y hy
-        exact (hle hy).2
+      · exact fun x hx => (hle hx).1
+      · exact fun y hy => (hle hy).2
       · rintro ⟨x, y⟩ ⟨hx, hy⟩ g
         have hxy : ((x, y) : GLw a w × GLw b w) ∈ K' := by
           have := K'.mul_mem hx hy

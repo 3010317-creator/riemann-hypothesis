@@ -69,9 +69,7 @@ theorem SeqCx.exactAt_of_links : ∀ (V : Type) (F : Set (List V)) (S : Set V), 
       have : {l : List V | l ∈ F ∧ l.length = p} = ∅ := by
         ext l
         simp [hFe l]
-      have hc' := hc
-      simp only [chains, this, Finsupp.supported_empty, Submodule.mem_bot] at hc'
-      exact hc'
+      simpa only [chains, this, Finsupp.supported_empty, Submodule.mem_bot] using hc
     exact ⟨0, Submodule.zero_mem _, by simp [hc0]⟩
 
 end GlobalTheory

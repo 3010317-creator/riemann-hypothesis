@@ -196,8 +196,7 @@ theorem adj_le {A : Matrix (Fin N) (Fin N) ℂ} {M : ℝ} (hA : ∀ i j, ‖A i 
       · simp [hl]
     · rw [updateRow_ne hk]; exact (hA k l).trans (le_max_left _ _)
   have h := Matrix.det_le hb
-  rw [nsmul_eq_mul, Fintype.card_fin] at h
-  exact h
+  rwa [nsmul_eq_mul, Fintype.card_fin] at h
 
 theorem tri (M : ℝ) : ∃ R0 : ℝ, ∀ (h p p' u : Matrix (Fin N) (Fin N) ℂ) (s s' : Fin N → ℝ),
     (∀ i, |s i - s' i| ≤ 1) → h.BlockTriangular id → p.BlockTriangular id → p'.BlockTriangular id →
@@ -306,8 +305,7 @@ theorem gauss_fin (R0 : ℝ) : {z : GaussianInt | ‖(z : ℂ)‖ ≤ R0}.Finite
       exact_mod_cast this
   have hre : |(z.re : ℝ)| ≤ R0 := by rw [← gauss_re]; exact (Complex.abs_re_le_norm _).trans hz
   have him : |(z.im : ℝ)| ≤ R0 := by rw [← gauss_im]; exact (Complex.abs_im_le_norm _).trans hz
-  simp only [Set.mem_preimage, Set.mem_prod, Set.mem_Icc]
-  exact ⟨key _ hre, key _ him⟩
+  simpa only [Set.mem_preimage, Set.mem_prod, Set.mem_Icc] using ⟨key _ hre, key _ him⟩
 
 theorem fin_bdd (R0 : ℝ) : ∃ R : ℕ, ∀ F : Finset (SpecialLinearGroup (Fin N) GaussianInt),
     (∀ c ∈ F, ∀ c' ∈ F, ∀ i j,
@@ -324,10 +322,7 @@ theorem fin_bdd (R0 : ℝ) : ∃ R : ℕ, ∀ F : Finset (SpecialLinearGroup (Fi
     (fun c : SpecialLinearGroup (Fin N) GaussianInt =>
       (((c0⁻¹ * c : SpecialLinearGroup (Fin N) GaussianInt) : Matrix (Fin N) (Fin N) GaussianInt) :
         Fin N → Fin N → GaussianInt)) ?_ ?_
-  · intro c hc
-    refine Finset.mem_coe.mpr (h1.mem_toFinset.mpr ?_)
-    intro i _ j _
-    exact hF c0 hc0 c hc i j
+  · exact fun c hc => Finset.mem_coe.mpr (h1.mem_toFinset.mpr (fun i _ j _ => hF c0 hc0 c hc i j))
   · intro c _ c' _ h
     have h' : c0⁻¹ * c = c0⁻¹ * c' := Subtype.ext h
     exact mul_left_cancel h'
@@ -363,8 +358,7 @@ theorem count (s0 : Fin N → ℝ) : ∃ F : Finset (SpecialLinearGroup (Fin N) 
     if i < j then Finset.range (K i j) ×ˢ Finset.range (K i j) else {((0 : ℕ), (0 : ℕ))} with hS
   have hmem : ∀ x ∈ S, ∀ i j, x i j ∈
       (if i < j then Finset.range (K i j) ×ˢ Finset.range (K i j) else {((0 : ℕ), (0 : ℕ))}) := by
-    intro x hx i j
-    exact Fintype.mem_piFinset.mp (Fintype.mem_piFinset.mp hx i) j
+    exact fun x hx i j => Fintype.mem_piFinset.mp (Fintype.mem_piFinset.mp hx i) j
   have hsmall : ∀ i j (n : ℕ), n < K i j → (n : ℝ) ≤ Real.exp (s0 i - s0 j) := by
     intro i j n hn
     have h1 : (n : ℝ) + 1 ≤ (K i j : ℝ) := by exact_mod_cast hn
@@ -558,8 +552,7 @@ theorem pack [Fintype ι] [Nonempty ι] [MeasurableSpace (G ι N)] [BorelSpace (
     have := hR0 (mt (nu w0 (c⁻¹ * c')) w0) (mt p' w0) (mt p w0) (mt (k * k'⁻¹) w0) s' s (hclose _ _ hm' hm) hup
       (hP hp' w0).1 (hP hp w0).1 (hP hp' w0).2 (hP hp w0).2 (p' w0).2 (p w0).2
       (by rw [mt_mul']; exact mul_mem (hk w0) (mt_inv_unit (hk' w0))) (congrArg (fun y => mt y w0) hE) i j
-    rw [mt_nu_same] at this
-    exact this
+    rwa [mt_nu_same] at this
 
 end PositivityTheory.KB.TwSMInt2
 
@@ -733,8 +726,7 @@ theorem ineq (hN : 2 ≤ N) (T B : ℝ) (hB : B < 2 * ((N : ℝ) - 1)) : ∃ c �
     simpa using h1
   simp only [ht] at hs ⊢
   have hs' : ∑ k ∈ range (n + 1), t k = 0 := by
-    rw [Finset.sum_range]
-    exact hs
+    rwa [Finset.sum_range]
   have e1 : ∑ i : Fin (n + 1), |t i| = ∑ k ∈ range (n + 1), |t k| :=
     (Finset.sum_range fun k => |t k|).symm
   have e2 : (∑ i : Fin (n + 1), ∑ j : Fin (n + 1),
@@ -771,8 +763,7 @@ theorem ineq (hN : 2 ≤ N) (T B : ℝ) (hB : B < 2 * ((N : ℝ) - 1)) : ∃ c �
   exact hc t hchain hs'
 
 private theorem real_exp_neg_lt_one_of_pos (ε : ℝ) (hε : 0 < ε) : Real.exp (-ε) < 1 := by
-  have h := Real.exp_lt_exp.mpr (by linarith : -ε < 0)
-  simpa using h
+  simpa using Real.exp_lt_exp.mpr (by linarith : -ε < 0)
 
 theorem summ (ε : ℝ) (hε : 0 < ε) :
     ∑' m : Fin N → ℤ, ENNReal.ofReal (Real.exp (-(ε * ∑ i, |(m i : ℝ)|))) ≠ ⊤ := by
@@ -810,8 +801,7 @@ theorem summ (ε : ℝ) (hε : 0 < ε) :
   have hsub : F ⊆ Fintype.piFinset fun _ : Fin N => S := by
     intro m hm
     rw [Fintype.mem_piFinset]
-    intro i
-    exact mem_biUnion.2 ⟨m, hm, mem_image.2 ⟨i, mem_univ _, rfl⟩⟩
+    exact fun i => mem_biUnion.2 ⟨m, hm, mem_image.2 ⟨i, mem_univ _, rfl⟩⟩
   calc ∑ m ∈ F, ENNReal.ofReal (Real.exp (-(ε * ∑ i, |(m i : ℝ)|)))
       ≤ ∑ m ∈ Fintype.piFinset (fun _ : Fin N => S),
           ENNReal.ofReal (Real.exp (-(ε * ∑ i, |(m i : ℝ)|))) :=

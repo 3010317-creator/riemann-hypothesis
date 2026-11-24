@@ -408,8 +408,7 @@ private theorem unrPol_add (S : Multiset ℂ) (c : ℂ) (m : ℤ) :
   simp only [unrPol, Multiset.map_add (f := _), Multiset.prod_add]
 
 private theorem unrPol_single_ne (c : ℂ) (m : ℤ) : unrPol {c} m ≠ 0 := by
-  simp only [unrPol, Multiset.map_singleton, Multiset.prod_singleton]
-  exact X_sub_C_ne_zero _
+  simpa only [unrPol, Multiset.map_singleton, Multiset.prod_singleton] using X_sub_C_ne_zero _
 
 theorem UpperTheory.Gal.TP.Sub.clSub_holds :
     FrobSub → SumDR → PstOfDR → WDFacts → ClSub := by
@@ -503,8 +502,7 @@ theorem UpperTheory.Gal.TP.Sub.eigSum_holds :
     · exact h
     · exfalso
       obtain ⟨j, hj⟩ : ∃ j, v j ≠ 0 := by
-        by_contra hcon
-        push Not at hcon
+        by_contra! hcon
         exact hv0 (funext hcon)
       apply hne j
       ext g
@@ -532,8 +530,7 @@ theorem UpperTheory.Gal.TP.Sub.eigTransfer_holds :
     EigTransfer := by
   intro Γ k _ _ _ _ N N' ρ ρ' hρ hρ' hcp c ⟨v, hv0, hv⟩
   have hN : N = N' := by
-    have h := congrArg Polynomial.natDegree (hcp 1)
-    simpa [cp, Matrix.charpoly_natDegree_eq_dim] using h
+    simpa [cp, Matrix.charpoly_natDegree_eq_dim] using congrArg Polynomial.natDegree (hcp 1)
   subst hN
   obtain ⟨P, hP⟩ := Formalism.MainNotions.SumRepresentations.brauerNesbitt_matrix ρ ρ' hρ hρ' (fun g => hcp g)
   refine ⟨(P : Matrix (Fin N) (Fin N) k).mulVec v, ?_, ?_⟩

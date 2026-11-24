@@ -177,8 +177,7 @@ private theorem cont_map {O Γ R R' : Type} [CommRing O] [IsLocalRing O] [Topolo
     rw [Ideal.map_le_iff_le_comap]
     intro x hx
     show f x ∈ maximalIdeal R'
-    rw [← res_eq_zero_iff O R', res_map, res_eq_zero_iff]
-    exact hx
+    rwa [← res_eq_zero_iff O R', res_map, res_eq_zero_iff]
   intro N
   have hN : maximalIdeal R ^ N ≤ Ideal.comap f.toRingHom (maximalIdeal R' ^ N) := by
     rw [← Ideal.map_le_iff_le_comap, Ideal.map_pow]
@@ -283,8 +282,7 @@ private theorem coord {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsLocalR
         rw [eon, map_sub, map_sub, AlgHom.commutes, AlgHom.commutes] at h1
         exact sub_left_injective h1
       · have h1 := h (Sum.inl (g, i, j))
-        rw [eoff g i j hij] at h1
-        exact h1
+        rwa [eoff g i j hij] at h1
     · intro v i g
       have h1 := h (Sum.inr ⟨v, i, g⟩)
       rw [eψ, map_sub, map_sub, AlgHom.commutes, AlgHom.commutes] at h1
@@ -324,8 +322,7 @@ private theorem coord {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsLocalR
       rw [sub_self, ← sub_add_cancel (S.ρ.r g i i) (algebraMap O S.R (a (S.ρ.r g i i)))]
       exact add_mem hp (h1mem _)
     · have hp := hpart (Sum.inl (g, i, j))
-      rw [eoff g i j hij] at hp
-      exact hp
+      rwa [eoff g i j hij] at hp
   · intro v i g
     have hp : (S.ρ.ψ v i g : S.R) - algebraMap O S.R (a (S.ρ.ψ v i g)) ∈ W.part 0 :=
       hpart (Sum.inr ⟨v, i, g⟩)
@@ -439,8 +436,7 @@ theorem UpperTheory.V.Fr.wpres :
         rw [zero_add] at this
         have hbx : ((b • x : S.A) : S.R) = (b : S.R) * (x : S.R) := by
           first | rfl
-        rw [hbx]
-        exact this
+        rwa [hbx]
     · intro ha
       obtain ⟨μ, c, X, hc, hX, e⟩ := dec j _ ha
       have hXu : ∀ m ∈ μ, ∃ a' ∈ S.u.mon j, (a' : S.R) = X m := by

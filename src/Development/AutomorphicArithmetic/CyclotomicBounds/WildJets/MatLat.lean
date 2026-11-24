@@ -79,8 +79,7 @@ private theorem lca_span {K : Type} [Field K] [NumberField K] {ι : Type} [Finty
     (RingOfIntegers.mapRingHom (Rat.castHom K)) (fun r => rfl) n lam).1
   have h2 := (GlobalTheory.StdBaseChange.std_baseChange (𝓞 K) K K ι (RingHom.id K) (RingHom.id _) (fun r => rfl) n lam).1
   rw [h1, ← h2]
-  intro x hx
-  exact Submodule.subset_span ⟨x, hx, MvPolynomial.map_id x⟩
+  exact fun x hx => Submodule.subset_span ⟨x, hx, MvPolynomial.map_id x⟩
 
 private theorem lca_coord {K : Type} [Field K] [NumberField K] {ι : Type} [Fintype ι] {n : ℕ} (φ : K →+* ℂ)
     (lam : ι → DomWeight n) (x : Pol K ι n) (hx : x ∈ nabStd K lam) :
@@ -309,8 +308,7 @@ private theorem lcb_basisAt (emb : ι → E →+* K) (τ : ι) (Λ : Submodule (
       | smul c y _ hy => rw [smul_comm]; exact Submodule.smul_mem _ c hy
     have := lcb_dot ((lcb_mem_colLat_one _).1 hφ) ((lcb_mem_colLat_one _).1 hx')
     rw [dotProduct_smul] at this
-    rw [smul_dotProduct, Nat.cast_smul_eq_nsmul]
-    exact this
+    rwa [smul_dotProduct, Nat.cast_smul_eq_nsmul]
 
 private theorem lcb_isLattice (Λ : Submodule (𝓞 E) (Fin n → E)) (s : ℕ) (hs : s ≠ 0)
     (h1 : ∀ x ∈ Λ, ∀ a, (s • x) a ∈ (1 : Submodule (𝓞 E) E))
@@ -448,15 +446,13 @@ theorem UpperTheory.WildA.latCoordB :
   refine ⟨∑ i, y i • F i, algebraMap _ D.what₂.LL c * s₀, ?_, mul_ne_zero hc0 hs₀, ?_, ?_⟩
 
   · rw [map_sum]
-    simp only [LinearMap.map_smulₛₗ, hy, hF']
-    exact (bVV ℂ lam).sum_repr v
+    simpa only [LinearMap.map_smulₛₗ, hy, hF'] using (bVV ℂ lam).sum_repr v
   · have e : vw w (algebraMap _ D.what₂.LL c * s₀) = vw w (algebraMap _ D.what₂.LL c) + vw w s₀ :=
       Formalism.DivisionValues.idxChange_cnt_mul w hc0 hs₀
     have e0 : vw w (algebraMap _ D.what₂.LL c) = 0 := Formalism.DivisionValues.idxChange_cnt_unit w hc
     rw [e, e0, hv₀, zero_add]
     exact Int.floor_le a
-  · rw [mul_smul, algebraMap_smul]
-    exact hcx
+  · rwa [mul_smul, algebraMap_smul]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CyclotomicBounds.WildJets.LatCoordB =====

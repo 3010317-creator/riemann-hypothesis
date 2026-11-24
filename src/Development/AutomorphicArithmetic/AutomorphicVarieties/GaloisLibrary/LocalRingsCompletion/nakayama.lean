@@ -106,8 +106,7 @@ theorem UpperTheory.V.abelian₂.nakayama :
       simp only [LinearMap.coe_comp, Function.comp_apply, Submodule.mkQ_apply]
       rw [Submodule.Quotient.eq]
       simpa using Submodule.neg_mem _ hb
-    rw [← Fintype.range_linearCombination, LinearMap.range_eq_top]
-    exact hsurj
+    rwa [← Fintype.range_linearCombination, LinearMap.range_eq_top]
   refine ⟨part1, ?_⟩
   intro hfin
   obtain ⟨r, s, hs⟩ := Module.Finite.exists_fin (R := R) (M := M ⧸ I • (⊤ : Submodule R M))
@@ -116,5 +115,4 @@ theorem UpperTheory.V.abelian₂.nakayama :
     rw [sup_comm, ← Submodule.comap_map_mkQ, Submodule.map_span, ← Set.range_comp]
     have hcomp : (I • (⊤ : Submodule R M)).mkQ ∘ t = s := funext fun i => ht i
     rw [hcomp, hs, Submodule.comap_top]
-  have htop := part1 r t hsup
-  exact ⟨Submodule.fg_def.2 ⟨Set.range t, Set.finite_range t, htop⟩⟩
+  exact ⟨Submodule.fg_def.2 ⟨Set.range t, Set.finite_range t, (part1 r t hsup)⟩⟩

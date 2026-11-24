@@ -68,8 +68,7 @@ theorem UpperTheory.eq_one_of_trace_translation_invariant_semisimple :
   have hspan : ∀ a ∈ A, a ∈ Submodule.span k (Set.range σ) := by
     intro a ha
     have h1 : a ∈ Subalgebra.toSubmodule A := ha
-    rw [Algebra.adjoin_eq_span, ← MonoidHom.coe_mrange, Submonoid.closure_eq] at h1
-    exact h1
+    rwa [Algebra.adjoin_eq_span, ← MonoidHom.coe_mrange, Submonoid.closure_eq] at h1
   have hinv : ∀ W : Submodule k (Fin n → k), Formalism.MainNotions.N.IsInv ρ W →
       ∀ a ∈ A, ∀ v ∈ W, a v ∈ W := by
     intro W hW a ha v hv
@@ -98,8 +97,7 @@ theorem UpperTheory.eq_one_of_trace_translation_invariant_semisimple :
         smul_mem' := fun a v hv => hinv W' hW'inv a a.2 v hv }
     refine ⟨W'', ?_, ?_⟩
     · rw [Submodule.disjoint_def]
-      intro v hv hv'
-      exact (Submodule.disjoint_def.mp hc.disjoint) v hv hv'
+      exact fun v hv hv' => (Submodule.disjoint_def.mp hc.disjoint) v hv hv'
     · rw [codisjoint_iff, Submodule.eq_top_iff']
       intro v
       have hv : v ∈ W.restrictScalars k ⊔ W' := by rw [hc.sup_eq_top]; trivial

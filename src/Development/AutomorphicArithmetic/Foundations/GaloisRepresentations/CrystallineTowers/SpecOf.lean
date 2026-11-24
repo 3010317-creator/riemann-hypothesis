@@ -290,8 +290,7 @@ theorem phi_spec (P : CrystallineSemistableComparison.HT.HTPre l K.1) (e : IsoFa
   apply invM_spec
   apply exists_inv_of_inj _ _ (hm_inj P e hM hI F)
   rw [Fintype.card_sigma]
-  simp only [Fintype.card_fin]
-  exact sum_e e hM hr F
+  simpa only [Fintype.card_fin] using sum_e e hM hr F
 
 end Build
 
@@ -312,8 +311,7 @@ theorem equi_entry (P : CrystallineSemistableComparison.HT.HTPre l K.1) (e : Iso
     rfl
   rw [hexp]
   have h := P.equi M hM c.1 n σ (bV F i) ((hb e hM F c.1).coord c.2)
-  rw [sigma_eq] at h
-  exact h
+  rwa [sigma_eq] at h
 
 theorem isHT (P : CrystallineSemistableComparison.HT.HTPre l K.1) (e : IsoFam K) {M : CrystallineSemistableComparison.Model l K.1} (hM : M.Sm) {n : ℕ}
     (hr : Module.finrank ℚ_[l] (M.V n) = ∑ a ∈ Finset.range (n + 1), Module.finrank K.1 (CrystallineSemistableComparison.HT.Hdg M.q a n))
@@ -385,8 +383,7 @@ theorem nat_entry (P : CrystallineSemistableComparison.HT.HTPre l K.1) (e : IsoF
     intro j _
     simp only [Frame.hodgeMat, Matrix.map_apply, Matrix.blockDiagonal'_apply_ne _ _ _ (Ne.symm hb), map_zero,
       zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ a) h
+  · exact fun h => absurd (Finset.mem_univ a) h
 
 theorem frame_ex (P : CrystallineSemistableComparison.HT.HTPre l K.1) (e : IsoFam K) {M : CrystallineSemistableComparison.Model l K.1} (hM : M.Sm) {n : ℕ}
     (hfd : FiniteDimensional ℚ_[l] (M.V n))

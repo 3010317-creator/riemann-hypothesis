@@ -62,8 +62,7 @@ private theorem fin_supp {G : Type} [Group G] [TopologicalSpace G] [IsTopologica
   have hc : IsCompact ((QuotientGroup.mk : G → G ⧸ K) '' tsupport f) :=
     hf.1.isCompact.image continuous_quotient_mk'
   refine hc.finite_of_discrete.subset ?_
-  intro c hc'
-  exact ⟨c.out, subset_tsupport f hc', QuotientGroup.out_eq' c⟩
+  exact fun c hc' => ⟨c.out, subset_tsupport f hc', QuotientGroup.out_eq' c⟩
 
 private theorem lv_ind {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] (ρ : Representation ℂ G V)
     (K : Subgroup G) (f : G → ℂ) (hf : ∀ g, f g = if g ∈ K then 1 else 0) (y : V) (hy : y ∈ fixed ρ K) :
@@ -186,8 +185,7 @@ private theorem fam_rs {S : Set (Pl E)} {N : ∀ w : Pl E, Subgroup (GLw n w)} {
     have hne : (w, b) ≠ i := fun h => hi (h ▸ hk')
     have h := hF.1 (w, b) (List.mem_toFinset.2 (List.mem_cons_of_mem _ hk'))
     dsimp only
-    rw [rs_ne N F hne]
-    exact h
+    rwa [rs_ne N F hne]
   · rintro ⟨w, b⟩ hk hkL
     dsimp only
     by_cases h : (w, b) = i
@@ -250,8 +248,7 @@ private theorem tm_self {S : Set (Pl E)} (N : ∀ w : Pl E, Subgroup (GLw n w))
     have hsp : IsSplitAt w := hi.2 rfl
     have h1 := hoth ⟨hi.1, by simp⟩
     simp only [Bool.not_true] at h1 hr
-    simp only [tm, hind1, hsp, ite_true, h1, hr, mul_one]
-    exact mul_comm _ _
+    simpa only [tm, hind1, hsp, ite_true, h1, hr, mul_one] using mul_comm _ _
 
 private theorem pf_step {S : Set (Pl E)} (N : ∀ w : Pl E, Subgroup (GLw n w))
     (F : ∀ w : Pl E, Bool → GLw n w → ℂ)
@@ -293,8 +290,7 @@ private theorem prod_list (hS : SlotBasic) (hT : LevTop) (hA : AbsStep) (hH : Pf
       exact tm_unit hF g w (Finset.mem_filter.1 hw).2 (by simp) fun b hs => mem_lev.1 hg (w, b) hs
     · rw [ite_eq_right hg]
       obtain ⟨i, hi, hn⟩ : ∃ i, Sl S i ∧ qw n i.1 i.2 g ∉ N i.1 := by
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         exact hg (mem_lev.2 hc)
       refine pf_zero hP hi ?_
       rw [hF.2 i hi (by simp)]
@@ -312,8 +308,7 @@ private theorem prod_list (hS : SlotBasic) (hT : LevTop) (hA : AbsStep) (hH : Pf
       (fun a ha => mem_lev.2 fun k hk => by
         by_cases hki : i = k
         · subst hki
-          rw [hq]
-          exact ha
+          rwa [hq]
         · rw [hind i k hsl hk hki a]
           exact one_mem _)
       (fun k hk => mem_lev.1 hk i hsl)

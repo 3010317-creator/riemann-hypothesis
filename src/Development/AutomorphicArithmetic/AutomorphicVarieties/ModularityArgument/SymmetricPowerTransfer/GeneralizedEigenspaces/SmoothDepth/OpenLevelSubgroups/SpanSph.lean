@@ -110,8 +110,7 @@ private theorem finite_quot (w : Plc L) (U : Subgroup (UA L n))
   rw [← QuotientGroup.out_eq' q, ← QuotientGroup.out_eq' q']
   refine QuotientGroup.eq.2 ?_
   show f (_ * _) ∈ H
-  rw [map_mul, map_inv]
-  exact e''
+  rwa [map_mul, map_inv]
 
 private theorem sum_translate {G X : Type} [Group G] [AddCommMonoid X] (K : Subgroup G) (K' : Subgroup K)
     [Fintype (K ⧸ K')] (F : G → X) (hF : ∀ t, ∀ m ∈ K', F (t * ((m : K) : G)) = F t) (k : G) (hk : k ∈ K) (t : G) :
@@ -142,8 +141,7 @@ theorem UpperTheory.V.Z.Sym.Al.spanSph :
   obtain ⟨ψ, hψ, hψ0, hψK⟩ := hw
   obtain ⟨g0, hg0⟩ := Function.ne_iff.1 h0
   obtain ⟨f, hf⟩ : ∃ f : V →ₗ[ℂ] ℂ, f (φ g0) ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hg0 ((Module.forall_dual_apply_eq_zero_iff ℂ _).1 hcon)
   have hhπ : f ∘ φ ∈ π := hc f
   have hh0 : f ∘ φ ≠ 0 := fun e => hf (congrFun e g0)

@@ -146,8 +146,7 @@ theorem UpperTheory.congruence_subgroup_eventually :
   have h2 := tendsto_val L Prod.fst hc (fun p => p.2⁻¹) (hK.mono fun p hp => (K p.1).inv_mem hp)
   have h : Tendsto Prod.snd L (nhds (1 : GL (Fin n) k)) := by
     rw [Units.isInducing_embedProduct.tendsto_nhds_iff]
-    refine Tendsto.prodMk_nhds h1 ?_
-    exact (MulOpposite.continuous_op.tendsto _).comp h2
+    exact Tendsto.prodMk_nhds h1 ((MulOpposite.continuous_op.tendsto _).comp h2)
   have h3 : ∀ᶠ p in L, p.2 ∈ U := h hU
   rw [eventually_inf_principal, eventually_comap, eventually_atTop] at h3
   obtain ⟨c₀, h₀⟩ := h3
@@ -288,8 +287,7 @@ private theorem unif_lt (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace 
 
 private theorem diagT_val (k : Type) [Field k] (n : ℕ) (t : Fin n → kˣ) :
     ((GlobalTheory.SmGL.diagT k (Fin n) t : GL (Fin n) k) : Matrix (Fin n) (Fin n) k)
-      = Matrix.diagonal (fun i => (t i : k)) := by
-  exact GlobalTheory.SmGL.val_diagT k t
+      = Matrix.diagonal (fun i => (t i : k)) := GlobalTheory.SmGL.val_diagT k t
 
 private theorem unipB_spec (k : Type) [Field k] (n : ℕ) (g : GL (Fin n) k)
     (hg : g ∈ GlobalTheory.SmGL.unipB k (Fin n)) :
@@ -312,12 +310,8 @@ theorem UpperTheory.Reformulated.B.BranchingSmooth.br_smooth :
     rintro _ ⟨x, hx, rfl⟩
     obtain ⟨h1, h2⟩ := unipB_spec k n x hx.1
     exact hc c le_rfl _ (UpperTheory.diagonal_conjugate_mem (UpperTheory.V.Hi.unif k) (unif_lt k) c _ x (diagT_val k n _) hx.2 h1 h2)
-  · show v ∈ UpperTheory.Reformulated.B.SubgroupFixedSubmodule.fixd π _
-    intro g hg
-    exact hc (c + 1) (Nat.le_succ c) g hg.2
-  · show v ∈ UpperTheory.Reformulated.B.SubgroupFixedSubmodule.fixd π _
-    intro g hg
-    exact hc (c + 1) (Nat.le_succ c) g hg.2
+  · exact fun g hg => hc (c + 1) (Nat.le_succ c) g hg.2
+  · exact fun g hg => hc (c + 1) (Nat.le_succ c) g hg.2
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.BranchingSmooth =====

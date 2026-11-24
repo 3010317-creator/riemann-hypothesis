@@ -113,8 +113,7 @@ private theorem adic_map {Γ : Type} [TopologicalSpace Γ] {u : Γ → R} (hu : 
     intro x hx
     rw [Ideal.mem_comap, ← res_eq_zero_iff O R']
     change res O R' (f x) = 0
-    rw [res_map, res_eq_zero_iff O R]
-    exact hx
+    rwa [res_map, res_eq_zero_iff O R]
   have hN : maximalIdeal R ^ N ≤ (maximalIdeal R' ^ N).comap (f : R →+* R') := by
     rw [← Ideal.map_le_iff_le_comap, Ideal.map_pow]
     exact Ideal.pow_right_mono (Ideal.map_le_iff_le_comap.mpr hm) N
@@ -133,8 +132,7 @@ private theorem def_map {n : ℕ} {G : Type} [Group G] [TopologicalSpace G] {Dba
       intro g
       have := ((d_gmap D).2.2.1 (f : R →+* R') (MonoidAlgebra.single g 1)).2 i
       simpa [MonoidAlgebra.mapRingHom_single] using this
-    simp only [e]
-    exact adic_map f (hc i)
+    simpa only [e] using adic_map f (hc i)
   · rw [(d_gmap D).2.1]
     have e : ((res O R' : R' →ₐ[O] ResidueField O) : R' →+* ResidueField O).comp (f : R →+* R') = (res O R : R →+* ResidueField O) := by
       ext x
@@ -282,8 +280,7 @@ private theorem pre_univ {l : ℕ} [Fact l.Prime] {F : GFrame l} {O : Type} [Com
     rfl
   obtain ⟨g, ⟨hga, hgj⟩, hgu⟩ := hR R' fD (fun t => fv t)
   refine ⟨g, ⟨?_, fun v i => ?_⟩, ?_⟩
-  · rw [dmap, hga]
-    exact hfD
+  · rwa [dmap, hga]
   · rw [push (v, i), hgj (v, i)]
     exact (hfv (v, i)).1
   · rintro g' ⟨h1, h2⟩
@@ -317,8 +314,7 @@ theorem UpperTheory.V.CA.universalDeformationRing_nonempty_of_nonempty_pair :
   have hkill : ∀ (R' : Type) [CommRing R'] [Algebra O R'] [IsCO O R'] (p : Pair r R') (f : R →ₐ[O] R'),
       D.map (f : R →+* R') = p.D → (∀ v i, pushCh (f : R →+* R') (ψ v i) = p.ψ v i) →
         I ≤ RingHom.ker (f : R →+* R') := by
-    intro R' _ _ _ p f h1 h2
-    exact Ideal.span_le.mpr (fun x hx => kill R' p f h1 h2 x hx)
+    exact fun R' _ _ _ p f h1 h2 => Ideal.span_le.mpr (fun x hx => kill R' p f h1 h2 x hx)
   have hI : I ≠ ⊤ := by
     obtain ⟨f0, ⟨h1, h2⟩, -⟩ := hU R0 p0
     intro htop

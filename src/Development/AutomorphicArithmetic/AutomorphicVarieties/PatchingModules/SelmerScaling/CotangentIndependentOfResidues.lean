@@ -283,8 +283,7 @@ private theorem UpperTheory.V.AlgebraTools.generic_kernel_monotone
     have h3 : algebraMap (MvPolynomial ι P) L (MvPolynomial.C p) * y ∈ maximalIdeal L :=
       Ideal.mul_mem_right _ _ hL
     have h4 : (1 : L) ∈ maximalIdeal L := by
-      have h5 := Ideal.sub_mem _ h3 (hJle h1)
-      simpa using h5
+      simpa using Ideal.sub_mem _ h3 (hJle h1)
     exact (IsLocalRing.maximalIdeal.isMaximal L).ne_top ((Ideal.eq_top_iff_one _).2 h4)
   let l : ι → L ⧸ J := fun j => ψ (lam P d j)
   have hl : l d = 1 := by
@@ -295,8 +294,7 @@ private theorem UpperTheory.V.AlgebraTools.generic_kernel_monotone
     have hmem : (z.map MvPolynomial.C).mulVec (lam P d) i ∈ chartIdeal z m d :=
       Ideal.subset_span ⟨Sum.inl i, rfl⟩
     have h0 := hψ _ hmem
-    rw [RingHom.map_mulVec, Matrix.map_map] at h0
-    exact h0
+    rwa [RingHom.map_mulVec, Matrix.map_map] at h0
   have hm : ∀ j, φ (m j) = l j * φ (m d) := by
     intro j
     by_cases hj : j = d
@@ -305,8 +303,7 @@ private theorem UpperTheory.V.AlgebraTools.generic_kernel_monotone
     · have hmem : MvPolynomial.C (m j) - lam P d j * MvPolynomial.C (m d) ∈ chartIdeal z m d :=
         Ideal.subset_span ⟨Sum.inr ⟨j, hj⟩, rfl⟩
       have h0 := hψ _ hmem
-      rw [map_sub, map_mul, sub_eq_zero] at h0
-      exact h0
+      rwa [map_sub, map_mul, sub_eq_zero] at h0
   have hlamc : lam P d c ∉ Q := by
     rw [hQdef, MvPolynomial.mem_map_C_iff]
     intro hall
@@ -464,8 +461,7 @@ theorem UpperTheory.V.AlgebraTools.exists_least_prime_detIdeal :
   have h2 : (z.map f).det = 0 := by
     have hi : z.det ∈ Q := hle (Ideal.mem_sup_right (Ideal.subset_span rfl))
     have h3 := (hf _).2 hi
-    rw [RingHom.map_det] at h3
-    exact h3
+    rwa [RingHom.map_det] at h3
   obtain ⟨c, l, hc, hl, hz, hm⟩ := exists_kernel_vector _ V ι (z.map f) (fun j => f (m j)) h1 h2
   haveI : IsLocalRing V.toSubring := inferInstanceAs (IsLocalRing V)
   have hk := genKer_le_ker P ι z m h c V.toSubring (f.codRestrict V.toSubring hV)
@@ -907,8 +903,7 @@ theorem UpperTheory.V.Pa.presOut1 :
       ext i j
       exact hzζ i j
     rw [this]
-    rw [← hQQ] at hdetQ
-    exact hdetQ
+    rwa [← hQQ] at hdetQ
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.CotangentIndependentOfResidues =====

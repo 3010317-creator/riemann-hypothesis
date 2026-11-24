@@ -135,8 +135,7 @@ theorem mem_Gq_iff (N : ℕ) (π : 𝓞 L) (hπ : π ≠ 0) (γ : Gm L N) :
       ite_false, toK_coe, one_mul] at e
     rw [Ideal.mem_span_singleton']
     refine ⟨(δ : Matrix (Fin N) (Fin N) (𝓞 L)) i j, algebraMap_inj ?_⟩
-    rw [map_mul]
-    exact e
+    rwa [map_mul]
   · intro h
     have hd : ∀ i j : Fin N, (j : ℕ) = 0 ∧ (i : ℕ) ≠ 0 →
         ∃ a : 𝓞 L, a * π = (γ : Matrix (Fin N) (Fin N) (𝓞 L)) i j := fun i j hij =>
@@ -169,8 +168,7 @@ theorem mem_Gq_iff (N : ℕ) (π : 𝓞 L) (hπ : π ≠ 0) (γ : Gm L N) :
         · exact fun h0 => hπ (algebraMap_inj (by simpa using h0))
         · exact one_ne_zero
       have e' := mul_left_cancel₀ hne e
-      rw [RingHom.map_det, RingHom.map_det]
-      exact e'
+      rwa [RingHom.map_det, RingHom.map_det]
     have hu : IsUnit M.det := hdet ▸ Matrix.isUnits_det_units γ
     refine ⟨⟨M, M⁻¹, Matrix.mul_nonsing_inv M hu, Matrix.nonsing_inv_mul M hu⟩, ?_⟩
     apply Units.ext

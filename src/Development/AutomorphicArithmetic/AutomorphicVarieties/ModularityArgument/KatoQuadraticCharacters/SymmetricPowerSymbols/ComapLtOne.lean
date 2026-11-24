@@ -59,10 +59,8 @@ private theorem valuation_lt_one_iff_inv_not_mem {K : Type} [Field K] (A : Valua
   rw [← A.valuation_le_one_iff, map_inv₀, not_le]
   have h0 : A.valuation x ≠ 0 := by simpa using hx
   constructor
-  · intro h
-    exact one_lt_inv_iff₀.mpr ⟨zero_lt_iff.mpr h0, h⟩
-  · intro h
-    exact (one_lt_inv_iff₀.mp h).2
+  · exact fun h => one_lt_inv_iff₀.mpr ⟨zero_lt_iff.mpr h0, h⟩
+  · exact fun h => (one_lt_inv_iff₀.mp h).2
 
 private theorem comap_lt_one {K L : Type} [Field K] [Field L] (B : ValuationSubring L) (f : K →+* L) (x : K) :
     (B.comap f).valuation x < 1 ↔ B.valuation (f x) < 1 := by
@@ -116,5 +114,4 @@ theorem UpperTheory.V.Z.Kato.Sym.mvPt :
         rw [map_sub]
         congr 1
         exact σ.apply_symm_apply _
-      rw [e]
-      exact this
+      rwa [e]

@@ -104,8 +104,7 @@ theorem UpperTheory.V.Th.descendO :
   have hcoc : ∀ g g' : (T.GN N).G₀, z' ((g * g' : (T.GN N).G₀) : (T.GN N).Γ) =
       z' g + epsm O (T.GN N) m g • (y.ρm (T.h N) m g * z' g' * y.ρm (T.h N) m g⁻¹) := fun g g' => by
     have e := hz.2 g g'
-    rw [had.1 g] at e
-    exact e
+    rwa [had.1 g] at e
   have htriv : ∀ j, rep' (T.ta N j) = 1 := by
     intro j
     have h1 : (T.h N).p₀ (T.ta N j) = 1 := Subtype.ext (T.ta_ker N j)
@@ -156,8 +155,7 @@ theorem UpperTheory.V.Th.descendO :
     have e := hcoc g h
     rw [heps] at e
     simp only []
-    rw [← map_mul, z3, z3, z3, ← map_inv]
-    exact e
+    rwa [← map_mul, z3, z3, z3, ← map_inv]
   · obtain ⟨g, rfl⟩ := hs g0
     have hP : IsUnit (red m (y.P : Matrix (Fin n) (Fin n) O)) :=
       (Units.isUnit y.P).map (Ideal.Quotient.mk (maximalIdeal O ^ m)).mapMatrix

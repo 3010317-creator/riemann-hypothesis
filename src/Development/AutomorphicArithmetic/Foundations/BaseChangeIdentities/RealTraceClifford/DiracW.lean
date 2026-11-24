@@ -244,8 +244,7 @@ private theorem alH_mul (key : ι → ℕ) (i : ι) (M : Matrix (Finset ι) (Fin
       rw [ite_eq_right, star_zero, zero_mul]
       rintro ⟨h1, rfl⟩
       exact hA' (Finset.erase_insert h1).symm
-    · intro hm
-      exact absurd (Finset.mem_univ _) hm
+    · exact fun hm => absurd (Finset.mem_univ _) hm
   · apply Finset.sum_eq_zero
     intro A' _
     rw [ite_eq_right, star_zero, zero_mul]
@@ -466,8 +465,7 @@ private lemma Dlt (α : Io n → Mt n)
     cM α a d * cM α d a = Matrix.diagonal fun A => if pr a d ∈ A then 1 else 0 := by
   unfold cM
   rw [cs_lt h, cs_gt h, pr_comm d a]
-  simp only [zero_smul, one_smul, zero_add, add_zero]
-  exact h3 _
+  simpa only [zero_smul, one_smul, zero_add, add_zero] using h3 _
 
 private lemma Dall (α : Io n → Mt n) (hc : Clif (cM α))
     (h3 : ∀ i, (α i)ᴴ * α i = Matrix.diagonal fun A => if i ∈ A then 1 else 0)
@@ -484,8 +482,7 @@ private lemma Dall (α : Io n → Mt n) (hc : Clif (cM α))
     simp only [and_self, ite_true] at hcl
     have hX : cM α a a * cM α a a = (1 / 2 : ℂ) • (1 : Mt n) := by
       have h2 : (2 : ℂ) • (cM α a a * cM α a a) = 1 := by
-        rw [two_smul]
-        exact hcl
+        rwa [two_smul]
       calc cM α a a * cM α a a = (1 / 2 : ℂ) • ((2 : ℂ) • (cM α a a * cM α a a)) := by
             rw [smul_smul]
             norm_num
@@ -582,8 +579,7 @@ private lemma chrC : ∑ A : Finset (Io n), ex (eta A) = (2 : ℂ) ^ n • chR n
     refine Finset.prod_nbij' (fun i => i.1) (fun p => pr p.1 p.2) ?_ ?_ ?_ ?_ ?_
     · intro i hi
       have h := (Finset.mem_filter.mp hi).2
-      simp only [posP, Finset.mem_filter, Finset.mem_univ, true_and]
-      exact lt_of_le_of_ne i.2 h
+      simpa only [posP, Finset.mem_filter, Finset.mem_univ, true_and] using lt_of_le_of_ne i.2 h
     · intro p hp
       simp only [posP, Finset.mem_filter, Finset.mem_univ, true_and] at hp
       simp [pr, min_eq_left hp.le, max_eq_right hp.le, hp.ne]
@@ -951,9 +947,7 @@ private theorem hw_bot (c : Fin n → Fin n → Matrix J J ℂ) (η : J → Wt n
     (isCh_top c η h) μ hanti
   have hfin : FiniteDimensional ℂ (hw (Fm c) μ ⊓ ⊤ : Submodule ℂ (Ten J ℂ)) := inferInstance
   rw [(trAdd _ 1).2.2.2 _ hfin, inf_top_eq, h.chr, mul_smul_comm, ← (chRF n).1] at hm
-  have hpos : Module.finrank ℂ (hw (Fm c) μ) ≠ 0 := by
-    intro h0
-    exact hne (Submodule.finrank_eq_zero.1 h0)
+  have hpos : Module.finrank ℂ (hw (Fm c) μ) ≠ 0 := fun h0 => hne (Submodule.finrank_eq_zero.1 h0)
   have h2 : StrictAnti ((2 : ℝ) • rhoV n) := fun a b hab => by
     have := hρ hab
     simp only [Pi.smul_apply, smul_eq_mul]
@@ -1079,8 +1073,7 @@ private theorem gel_val {n : ℕ} (lam : Fin n → ℤ) (s : Bool) :
 
 private theorem lsq_eq {n : ℕ} (lam : Fin n → ℤ) :
     LSq lam = 4 * nsq fun a => (lam a : ℝ) + rhoV n a := by
-  simp only [LSq, nsq, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun a _ => by ring
+  simpa only [LSq, nsq, Finset.mul_sum] using Finset.sum_congr rfl fun a _ => by ring
 
 theorem UpperTheory.RealTr.diracHW :
     ∀ (n : ℕ) (lam : Fin n → ℤ) (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V] (E1 E2 : Fin n → Fin n → Module.End ℂ V),
@@ -1330,8 +1323,7 @@ theorem UpperTheory.RealTr.diracW :
   have hD : Dom ν := (irrCh n V (kF E1 E2) (uf_kF hP) hL ν hν').1
   have hR := rearr n
   have hx : StrictAnti (domC (ν - rhoV n) + rhoV n) := by
-    intro a b hab
-    exact add_lt_add_of_le_of_lt ((hR.2.1 (ν - rhoV n)).1 hab.le) (hR.2.2.1 hab)
+    exact fun a b hab => add_lt_add_of_le_of_lt ((hR.2.1 (ν - rhoV n)).1 hab.le) (hR.2.2.1 hab)
   have hc : cf (chR n * alt (ν + rhoV n)) (domC (ν - rhoV n) + rhoV n) ≠ 0 := by
     rw [mSymm, aux₃ n ν hD]
     exact one_ne_zero

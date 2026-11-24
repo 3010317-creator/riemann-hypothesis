@@ -92,8 +92,7 @@ private theorem meets_parab (hT : TensTr) {F : Type} [Field F] {s : ℕ} {d : Fi
     rw [(hT s _ W σ).2]
     exact Finset.prod_congr rfl fun a _ => hY a _
   unfold Meets
-  simp only [MonoidHom.comp_apply, Subgroup.coe_subtype, key]
-  exact h
+  simpa only [MonoidHom.comp_apply, Subgroup.coe_subtype, key] using h
 
 private theorem compose_map {G X U U' : Type} [Group G] [AddCommGroup X] [Module ℂ X] [AddCommGroup U] [Module ℂ U]
     [AddCommGroup U'] [Module ℂ U'] {ρ : Representation ℂ G U} {ρ' : Representation ℂ G U'}
@@ -127,8 +126,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.lblFull :
     simp [List.map_ofFn, Function.comp_def]
   have h1 : ∑ᶠ g, star (hcL (List.ofFn fun i => (⟨(x i).fst, cusp θ (x i).fst (c i)⟩ :
       (m : ℕ) × (GL (Fin m) 𝓀[k] → ℂ))) N g) * LinearMap.trace ℂ (Fin r → ℂ) (η g) ≠ 0 := by
-    rw [← hJ]
-    exact hP
+    rwa [← hJ]
   have h2 := frob_step hF (d := fun a => (x a).fst) hd (fun i => cusp θ (x i).fst (c i)) η h1
   haveI hfd : ∀ a, FiniteDimensional ℂ (fixed (x a).rep (KOne k (Fin (x a).fst))) :=
     fun a => fd_fixed _ (x a).snd.rep.smooth (x a).snd.rep.irr

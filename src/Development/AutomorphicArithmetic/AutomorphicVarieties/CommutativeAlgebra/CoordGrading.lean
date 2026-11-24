@@ -313,8 +313,7 @@ private theorem hos_art {O : Type} [CommRing O] [IsLocalRing O] {X : Type} [AddC
     apply Finset.sum_eq_zero
     intro d hd
     rw [ite_eq_right]
-    intro h
-    exact hj (h ▸ Finset.mem_image_of_mem _ hd)
+    exact fun h => hj (h ▸ Finset.mem_image_of_mem _ hd)
 
 theorem UpperTheory.V.Alg.homog_of_stable :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (σ : Type) [Finite σ] (wt : σ → X) (π : MvPowerSeries σ O →ₐ[O] R), (∀ s, π (MvPowerSeries.X s) ∈ maximalIdeal R) →
@@ -352,8 +351,7 @@ theorem UpperTheory.V.Alg.homog_of_stable :
       rw [← hu, Units.mul_inv]
     apply (maximalIdeal.isMaximal R).ne_top
     rw [Ideal.eq_top_iff_one]
-    have h1 := Ideal.sub_mem _ (Ideal.mul_mem_right v _ hr) (hIm hrv)
-    simpa using h1
+    simpa using Ideal.sub_mem _ (Ideal.mul_mem_right v _ hr) (hIm hrv)
   have hle : maximalIdeal (R ⧸ I) ≤ Ideal.map (Ideal.Quotient.mk I) (maximalIdeal R) := by
     intro y hy
     obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective y
@@ -373,8 +371,7 @@ theorem UpperTheory.V.Alg.homog_of_stable :
   have key := hos_art wt (q.comp π) (N + 1) hJ hp x
     (fun R' _ _ _ i t ht f' hf' =>
       hstab R' ((i.comp q).comp π) t ht (fun y hy => by simp [hy]) f' (fun s => (hf' s).trans rfl) x hx') j
-  rw [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk, Ideal.Quotient.eq_zero_iff_mem] at key
-  exact key
+  rwa [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk, Ideal.Quotient.eq_zero_iff_mem] at key
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.HomogOfStable =====
@@ -389,8 +386,7 @@ open IsLocalRing MvPowerSeries UpperTheory.V.Alg
 private theorem map_mem_max {O : Type} [CommRing O] [IsLocalRing O] {R : Type} [CommRing R] [Algebra O R]
     [IsCO O R] {R' : Type} [CommRing R'] [Algebra O R'] [IsCO O R'] (f : R →ₐ[O] R') {x : R}
     (hx : x ∈ maximalIdeal R) : f x ∈ maximalIdeal R' := by
-  rw [← res_eq_zero_iff O, res_map, res_eq_zero_iff]
-  exact hx
+  rwa [← res_eq_zero_iff O, res_map, res_eq_zero_iff]
 
 private theorem ext_X {O : Type} [CommRing O] [IsLocalRing O] [IsNoetherianRing O]
     [IsAdicComplete (maximalIdeal O) O] {σ : Type} [Finite σ] {R' : Type} [CommRing R'] [Algebra O R']
@@ -398,8 +394,7 @@ private theorem ext_X {O : Type} [CommRing O] [IsLocalRing O] [IsNoetherianRing 
     (h : ∀ s, F (X s) = G (X s)) : F = G := by
   have hC : ∀ (H : MvPowerSeries σ O →ₐ[O] R') (x : O), H (C x) = Algebra.ofId O R' x := fun H x => by
     have := H.commutes x
-    rw [MvPowerSeries.algebraMap_apply] at this
-    exact this
+    rwa [MvPowerSeries.algebraMap_apply] at this
   exact (co_ev O O R' σ (Algebra.ofId O R') (fun s => F (X s)) hm).unique ⟨hC F, fun _ => rfl⟩
     ⟨hC G, fun s => (h s).symm⟩
 

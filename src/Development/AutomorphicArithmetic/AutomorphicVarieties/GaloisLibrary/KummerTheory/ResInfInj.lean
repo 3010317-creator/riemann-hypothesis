@@ -85,8 +85,7 @@ private theorem natDegree_minpoly_le_of_cycZ_pow_eq_one (F Ω : Type) [Field F] 
     intro y hy
     rw [Multiset.mem_toFinset, Polynomial.mem_roots hne] at hy
     have hy' : Polynomial.aeval y (minpoly F ζ) = 0 := by
-      rw [← Polynomial.eval_map_algebraMap]
-      exact hy
+      rwa [← Polynomial.eval_map_algebraMap]
     have hmy : minpoly F ζ = minpoly F y :=
       minpoly.eq_of_irreducible_of_monic (minpoly.irreducible hint) hy' (minpoly.monic hint)
     obtain ⟨g, rfl⟩ := (Normal.minpoly_eq_iff_mem_orbit (F := F) (E := Ω)).mp hmy.symm
@@ -119,18 +118,15 @@ theorem UpperTheory.V.Kum.resInfInj :
     funext h
     exact hcomp h
   have hINF : ∃ g : G F Ω, cycZ F Ω l g ^ e ≠ 1 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
     have hk : 0 < e.natAbs := Int.natAbs_pos.mpr he
     have hall : ∀ g : G F Ω, cycZ F Ω l g ^ e.natAbs = 1 := by
       intro g
       have h0 := hcon g
       rcases Int.natAbs_eq e with h' | h'
-      · rw [h', zpow_natCast] at h0
-        exact h0
-      · rw [h', zpow_neg, inv_eq_one, zpow_natCast] at h0
-        exact h0
+      · rwa [h', zpow_natCast] at h0
+      · rwa [h', zpow_neg, inv_eq_one, zpow_natCast] at h0
     haveI : NeZero (l : Ω) := ⟨by exact_mod_cast (Fact.out : l.Prime).ne_zero⟩
     haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
     obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ (e.natAbs * Module.finrank ℚ F + 1))
@@ -185,8 +181,7 @@ theorem UpperTheory.V.Kum.resInfInj :
     intro h0
     have h1 : D.chi γ ^ (-e) = 1 := Units.ext (sub_eq_zero.mp h0)
     have h2 : D.chi γ ^ e = 1 := by
-      rw [zpow_neg, inv_eq_one] at h1
-      exact h1
+      rwa [zpow_neg, inv_eq_one] at h1
     obtain ⟨g, hg⟩ := hINF
     apply hg
     have hmem : D.chi (QuotientGroup.mk g) ∈ (Subgroup.zpowers (D.chi γ)).topologicalClosure :=
@@ -203,8 +198,7 @@ theorem UpperTheory.V.Kum.resInfInj :
   apply cobOfGen l _ D.chi ℤ_[l] (QZ l) (qzTw D e) γ hchi hcont
   · intro g hg m
     simp [qzTw, scalRep, hg]
-  · intro g
-    exact hu ⟨g, rfl⟩
+  · exact fun g => hu ⟨g, rfl⟩
   · intro m
     obtain ⟨m', hm'⟩ := hDIV _ hne m
     refine ⟨m', ?_⟩

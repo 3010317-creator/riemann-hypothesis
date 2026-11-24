@@ -98,8 +98,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.artRead :
   · have hxA : algebraMap E Ω x ∈ A := by
       have h1 : ((t : G E Ω) ϖ / ϖ - algebraMap E Ω x) ∈ A := (A.valuation_le_one_iff _).1 hx2.le
       have h2 := A.sub_mem z.2 h1
-      rw [hzdef, sub_sub_cancel] at h2
-      exact h2
+      rwa [hzdef, sub_sub_cancel] at h2
     have hyK : valuation (HeightOneSpectrum.adicCompletion E v)
         (algebraMap E (HeightOneSpectrum.adicCompletion E v) x) ≤ 1 :=
       hEq.le_one_iff_le_one.2 (DiscreteGroups.sglob.DzType.val_alg_le_one x)
@@ -117,8 +116,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.artRead :
     have h2 : IsLocalRing.residue A z = IsLocalRing.residue A zx := by
       apply residue_eq_of_valuation_sub_lt_one
       show A.valuation ((z : Ω) - algebraMap E Ω x) < 1
-      rw [hzdef]
-      exact hx2
+      rwa [hzdef]
     rw [h2, ← he x y zx rfl rfl, ← h1]
     rfl
   · have hzm : z ^ (normV v - 1) = 1 := by

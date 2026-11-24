@@ -299,8 +299,7 @@ private theorem cptConj_map {G H : Type} [Group G] [TopologicalSpace G] [IsTopol
   · rintro ⟨x, ⟨hxS, hxc⟩, rfl⟩
     obtain ⟨t, htT, hxt⟩ := (hST x).mp hxS
     refine ⟨t, ⟨htT, ?_⟩, ?_⟩
-    · rw [← cptConj_zpowers j hj, ← hxt, ← key, cptConj_zpowers _ hc]
-      exact hxc
+    · rwa [← cptConj_zpowers j hj, ← hxt, ← key, cptConj_zpowers _ hc]
     · rw [key, hxt]
   · rintro ⟨t, ⟨htT, htc⟩, rfl⟩
     refine ⟨h * j t * h⁻¹, ⟨(hST _).mpr ⟨t, htT, by group⟩, ?_⟩, ?_⟩
@@ -326,8 +325,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.cptConj :
     simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe]
     rw [← hmap, Subgroup.mem_map]
     constructor
-    · intro hx
-      exact ⟨x, hx, by simp⟩
+    · exact fun hx => ⟨x, hx, by simp⟩
     · rintro ⟨y, hy, hyx⟩
       have hyx' : y = (x : G) := by
         simpa [MulAut.conj_apply] using hyx
@@ -400,8 +398,7 @@ private theorem isIntegral_of_cpt {n : ℕ} (g : GL (Fin n) k)
     exact ⟨j, g ^ m, subset_closure (Subgroup.npow_mem_zpowers g m), rfl⟩
   have hle : valuation k (((g : Matrix (Fin n) (Fin n) k) ^ m) i j) ≤ (c : ValueGroupWithZero k) := by
     have h1 := hc hmem
-    rw [Units.val_pow_eq_pow_val] at h1
-    exact h1
+    rwa [Units.val_pow_eq_pow_val] at h1
   refine ⟨⟨a * ((g : Matrix (Fin n) (Fin n) k) ^ m) i j, ?_⟩, rfl⟩
   show valuation k (a * ((g : Matrix (Fin n) (Fin n) k) ^ m) i j) ≤ 1
   rw [map_mul, ha]
@@ -425,8 +422,7 @@ private theorem isCompact_entries (n : ℕ) (c : ValueGroupWithZero k) :
       (Set.univ.pi fun _ : Fin n => Set.univ.pi fun _ : Fin n => {x : k | valuation k x ≤ c}) := by
     ext M
     exact ⟨fun hM i _ j _ => hM i j, fun hM i j => hM i trivial j trivial⟩
-  rw [e]
-  exact h
+  rwa [e]
 
 end UpperTheory.Gal.InertialTypesAlt.L
 
@@ -540,8 +536,7 @@ theorem avgInt : AvgInt := by
     have hk' : (k : G) ∈ U := Subgroup.mem_subgroupOf.mp hk
     show ∀ x : K, u (x * k) = u x
     intro x
-    simp only [hu, Subgroup.coe_mul, ← mul_assoc]
-    exact hF _ hk' _
+    simpa only [hu, Subgroup.coe_mul, ← mul_assoc] using hF _ hk' _
   have hSo : IsOpen (S : Set K) := Subgroup.isOpen_mono hUS (Subgroup.subgroupOf_isOpen K U hUo)
   haveI : Finite (K ⧸ S) := Subgroup.quotient_finite_of_isOpen S hSo
   letI : Fintype (K ⧸ S) := Fintype.ofFinite _
@@ -550,8 +545,7 @@ theorem avgInt : AvgInt := by
     have hmem : (Quotient.out (QuotientGroup.mk y : K ⧸ S))⁻¹ * y ∈ S := by
       rw [← QuotientGroup.eq, QuotientGroup.out_eq']
     have h := hmem (Quotient.out (QuotientGroup.mk y : K ⧸ S))
-    rw [mul_inv_cancel_left] at h
-    exact h
+    rwa [mul_inv_cancel_left] at h
   set S' : Set G := ((↑) : K → G) '' (S : Set K) with hS'
   have hS'o : IsOpen S' := hKo.isOpenMap_subtype_val _ hSo
   set A : K ⧸ S → Set G := fun c => (fun y => ((Quotient.out c : K) : G)⁻¹ * y) ⁻¹' S' with hA
@@ -581,8 +575,7 @@ theorem avgInt : AvgInt := by
   have hAμ : ∀ c, μ (A c) = μ S' := fun c => measure_preimage_mul μ _ S'
   have hunion : (⋃ c, A c) = (K : Set G) := by
     apply Set.Subset.antisymm (Set.iUnion_subset hAK)
-    intro y hy
-    exact Set.mem_iUnion.mpr ⟨_, (hmemA _ y).mpr ⟨hy, rfl⟩⟩
+    exact fun y hy => Set.mem_iUnion.mpr ⟨_, (hmemA _ y).mpr ⟨hy, rfl⟩⟩
   have hdisj : Pairwise (Function.onFun Disjoint A) := by
     intro c c' hcc'
     refine Set.disjoint_left.mpr fun y h1 h2 => hcc' ?_
@@ -599,8 +592,7 @@ theorem avgInt : AvgInt := by
     have hne : (Fintype.card (K ⧸ S) : ℝ≥0∞) ≠ 0 := by
       simp
     have h1 : μ S' = ((Fintype.card (K ⧸ S) : ℝ≥0∞))⁻¹ := by
-      rw [← ENNReal.eq_div_iff hne (by simp), ENNReal.div_eq_inv_mul, mul_one] at hsum
-      exact hsum
+      rwa [← ENNReal.eq_div_iff hne (by simp), ENNReal.div_eq_inv_mul, mul_one] at hsum
     rw [Measure.real, hAμ, h1, ENNReal.toReal_inv, ENNReal.toReal_natCast, hcard]
   haveI : IsFiniteMeasure (μ.restrict (K : Set G)) :=
     ⟨by rw [Measure.restrict_apply_univ, hK1]; exact ENNReal.one_lt_top⟩
@@ -614,8 +606,7 @@ theorem avgInt : AvgInt := by
       refine Set.indicator_of_notMem (fun h => hc ?_) _
       obtain ⟨h', rfl⟩ := (hmemA c y).mp h
       rfl
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   rw [hint, integral_finsetSum _ fun c _ => (integrable_const _).indicator (hAm c)]
   unfold GlobalTheory.BCT.avg
   rw [finsum_eq_sum_of_fintype, Finset.mul_sum]
@@ -677,13 +668,11 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.oneCoset :
       ext t
       simp only [hHs, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_image, SetLike.mem_coe]
       constructor
-      · intro h
-        exact ⟨_, h, by group⟩
+      · exact fun h => ⟨_, h, by group⟩
       · rintro ⟨x, hx, hxt⟩
         have : q⁻¹ * (t : G) * q = x := by rw [← hxt]; group
         rwa [this]
-    rw [e]
-    exact hpc
+    rwa [e]
   have h1H : (1 : T) ∈ Hs := by
     simpa [hHs] using K.one_mem
   set v : ℝ≥0∞ := ν Hs with hv
@@ -799,8 +788,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.sumCoset :
     have e : Quotient.out (DoubleCoset.mk T K g) * y = t⁻¹ * g := by
       rw [eq_inv_mul_iff_mul_eq, ← mul_assoc]
       exact he.symm
-    rw [e, hFT t⁻¹ (T.inv_mem ht) g]
-    exact hg
+    rwa [e, hFT t⁻¹ (T.inv_mem ht) g]
   have hfin : Q.Finite := by
     obtain ⟨s, hs⟩ := hC.elim_finite_subcover (fun c : G => {z : G | c⁻¹ * z ∈ K})
       (fun c => hKo.preimage (continuous_const_mul c⁻¹))
@@ -873,8 +861,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.sumCoset :
     · intro b _ hb
       simp only [Set.indicator_apply, Set.mem_setOf_eq]
       rw [ite_eq_right (fun h => hb h.symm)]
-    · intro hn
-      exact absurd (hfin.mem_toFinset.2 (hkey g hg)) hn
+    · exact fun hn => absurd (hfin.mem_toFinset.2 (hkey g hg)) hn
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -904,8 +891,7 @@ private theorem continuous_of_rightInv {G : Type} [Group G] [TopologicalSpace G]
     have hx : x ∈ (fun y => x⁻¹ * y) ⁻¹' (U : Set G) := by
       simp [U.one_mem]
     filter_upwards [hop.mem_nhds hx] with y hy
-    have h1 := h (x⁻¹ * y) hy x
-    simpa using h1
+    simpa using h (x⁻¹ * y) hy x
   exact continuousAt_const.congr hev.symm
 
 private theorem cptPart_le {G : Type} [Group G] [TopologicalSpace G] (T : Subgroup G) :
@@ -920,7 +906,6 @@ theorem orbSum : OrbSum := by
   obtain ⟨hfc, hfi⟩ := hf
   set F : G → ℂ := fun x => f (x⁻¹ * δ * θ x) with hF
   have hTcl : IsClosed (GlobalTheory.BCT.twCent θ δ : Set G) := by
-    show IsClosed {g : G | g * δ = δ * θ g}
     exact isClosed_eq (continuous_id.mul continuous_const) (continuous_const.mul hθ)
   have hFU : ∀ u ∈ U, ∀ x : G, F (x * u) = F x := by
     intro u hu x
@@ -950,8 +935,7 @@ theorem orbSum : OrbSum := by
     constructor
     · rintro ⟨k, hk, rfl⟩
       simpa [mul_assoc] using hk
-    · intro hx
-      exact ⟨q⁻¹ * x * q, hx, by simp [mul_assoc]⟩
+    · exact fun hx => ⟨q⁻¹ * x * q, hx, by simp [mul_assoc]⟩
   have hset : ∀ q : G, {t : GlobalTheory.BCT.twCent θ δ | q⁻¹ * (t : G) * q ∈ K} =
       {t : GlobalTheory.BCT.twCent θ δ | (t : G) ∈ GlobalTheory.BCT.twCent θ δ ⊓
         Subgroup.map (MulEquiv.toMonoidHom (MulAut.conj q)) K} := by
@@ -975,9 +959,7 @@ theorem orbSum : OrbSum := by
         Subgroup.map (MulEquiv.toMonoidHom (MulAut.conj (1 : G))) K} ⊆
         {t : GlobalTheory.BCT.twCent θ δ | (t : G) ∈ GlobalTheory.BCT.cptPart (GlobalTheory.BCT.twCent θ δ)} :=
       fun t ht => GlobalTheory.LocFin.inf_le_cptPart _ _ (GlobalTheory.LocFin.isCompact_map_conj K hKc 1) ht
-    have h2 := measureReal_mono hsub hCfin
-    intro h0
-    exact h1 (le_antisymm (h0 ▸ h2) measureReal_nonneg)
+    exact fun h0 => h1 (le_antisymm (h0 ▸ (measureReal_mono hsub hCfin)) measureReal_nonneg)
   refine ⟨hCne, ?_⟩
   rw [hsum]
   unfold GlobalTheory.BCT.twOrb
@@ -987,8 +969,7 @@ theorem orbSum : OrbSum := by
   have hidx : ((GlobalTheory.BCT.twCent θ δ ⊓ Subgroup.map (MulEquiv.toMonoidHom (MulAut.conj (Quotient.out q))) K).relIndex
       (GlobalTheory.BCT.cptPart (GlobalTheory.BCT.twCent θ δ)) : ℝ) ≠ 0 := fun h0 => hCne (by rw [hCeq, h0, zero_mul])
   rw [oneCoset G μ hμ K hKo hKc hK1 _ hTcl hcomm ν hν F hFc hFT (Quotient.out q)]
-  rw [← avgInt G μ hμ K hKo hKc hK1 U hUo F hFU (Quotient.out q)]
-  rw [hset, hCeq]
+  rw [← avgInt G μ hμ K hKo hKc hK1 U hUo F hFU (Quotient.out q), hset, hCeq]
   rw [show (fun y : K => F (Quotient.out q * ↑y)) =
     fun k : K => f ((Quotient.out q * ↑k)⁻¹ * δ * θ (Quotient.out q * ↑k)) from rfl]
   have hidxC : ((GlobalTheory.BCT.twCent θ δ ⊓ Subgroup.map (MulEquiv.toMonoidHom (MulAut.conj (Quotient.out q))) K).relIndex
@@ -1045,7 +1026,6 @@ private theorem kSide (k : Type) [Field k] [CharZero k] [ValuativeRel k] [Topolo
     exact Iff.rfl
   have hTcl : IsClosed (Subgroup.centralizer {γ} : Set (GL (Fin n) k)) := by
     rw [hT]
-    show IsClosed {g : GL (Fin n) k | g * γ = γ * (MonoidHom.id (GL (Fin n) k)) g}
     exact isClosed_eq (continuous_id.mul continuous_const) (continuous_const.mul continuous_id)
   have hcommA : ∀ t ∈ Subgroup.centralizer {γ}, Commute t γ :=
     fun t ht => Subgroup.mem_centralizer_singleton_iff.1 ht
@@ -1102,8 +1082,7 @@ theorem matchOfSum : MatchOfSum := by
   have hθc : Continuous (GlobalTheory.LBC.galAct σ n) := by
     have h := (hcontE n).2 σ
     have he : (⇑(GlobalTheory.LBC.galAct σ n)) = ⇑(sigmaGL (n := Fin n) σ) := funext hgalg
-    rw [he]
-    exact h
+    rwa [he]
   have hpow : (sigmaGL (n := Fin n) σ) ^ Module.finrank k E = 1 := by
     rw [← sigmaGL_pow, ← IsGalois.card_aut_eq_finrank, pow_card_eq_one', sigmaGL_one]
   refine ⟨?_, ?_⟩
@@ -1121,8 +1100,7 @@ theorem matchOfSum : MatchOfSum := by
       obtain ⟨D, hD, hDp⟩ := orbProper_holds k E σ hgen n δ hTw (tsupport φ) hHE.1
       refine ⟨D, hD, fun g hg => ?_⟩
       have hg2 : φ (g⁻¹ * δ * (sigmaGL σ) g) ≠ 0 := by
-        rw [← hgalg]
-        exact hg
+        rwa [← hgalg]
       exact hDp g (subset_tsupport φ hg2)
     obtain ⟨-, heqE⟩ := orbSum (GL (Fin n) E) μE hμE (unitGL E) hKo hKc hE1 (GlobalTheory.LBC.galAct σ n) hθc δ _
       hT hcomm hCE μδ hδ UE φ hLE hHE hcm
@@ -1199,8 +1177,7 @@ private theorem op_mem_fixed {G V : Type} [Group G] [TopologicalSpace G] [IsTopo
   have h1 := (hB v (l ∘ₗ ρ u)).2
   have h2 := (hB v l).2
   rw [LinearMap.comp_apply] at h1
-  rw [h1, h2]
-  rw [← integral_mul_left_eq_self (μ := μ) (fun g => f g * l (ρ g v)) u]
+  rw [h1, h2, ← integral_mul_left_eq_self (μ := μ) (fun g => f g * l (ρ g v)) u]
   congr 1
   funext g
   rw [hf u hu g, map_mul, Module.End.mul_apply, LinearMap.comp_apply]
@@ -1270,8 +1247,7 @@ theorem trSum : TrSum := by
   rw [trace_range_eq (B ∘ₗ A) (fixed ρ U) hTF]
   congr 1
   ext v
-  simp only [LinearMap.restrict_coe_apply]
-  exact (hEq v v.2).symm
+  simpa only [LinearMap.restrict_coe_apply] using (hEq v v.2).symm
 
 end UpperTheory.Gal.InertialTypesAlt.L
 end -- clump:auto
@@ -1430,8 +1406,7 @@ private theorem cmp_onto {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
   letI : Unique (PlacesOver E v) := ⟨⟨w⟩, hw⟩
   let e := RingEquiv.piUnique (fun w : PlacesOver E v => w.1.adicCompletion E)
   refine ⟨mapGL n (e.symm : _ →+* _) g, ?_⟩
-  refine Units.ext (Matrix.ext fun i j => ?_)
-  exact e.apply_symm_apply (g i j)
+  exact Units.ext (Matrix.ext fun i j => (e.apply_symm_apply (g i j)))
 
 end UpperTheory.Gal.InertialTypesAlt.L.InflationTrace
 
@@ -1453,8 +1428,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.inflTrace :
     have e := hs' y
     change (s' : Gw n w.1 →* Gw n w.1) (GM.cmp w y) = _
     rw [← e]
-    refine Units.ext (Matrix.ext fun i j => ?_)
-    exact hσs (y i j)
+    exact Units.ext (Matrix.ext fun i j => (hσs (y i j)))
 
   obtain ⟨a, ha, hTw⟩ := UpperTheory.Gal.InertialTypesAlt.L.twScale _ _ s hgen n τ'.V τ'.ρ τ'.smooth τ'.irred I₀
     (fun g x => by rw [hI₀, hsg])

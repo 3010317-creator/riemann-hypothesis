@@ -73,9 +73,7 @@ theorem UpperTheory.integral_unipFundamentalDomain_comp_lattice_preserving :
   let e : unipLattice K n r → unipLattice K n r := fun g => ⟨α g, (hα g).2 g.2⟩
   have he : Function.Bijective e := by
     refine ⟨fun g h hgh => ?_, fun g => ⟨⟨α.symm g, (hα (α.symm g)).1 (by simpa using g.2)⟩, ?_⟩⟩
-    · apply Subtype.ext
-      apply α.injective
-      exact congrArg Subtype.val hgh
+    · exact Subtype.ext (α.injective (congrArg Subtype.val hgh))
     · apply Subtype.ext
       simp [e]
   have hfd' : IsAddFundamentalDomain (unipLattice K n r) (α.symm ⁻¹' unipFundamentalDomain K n r)

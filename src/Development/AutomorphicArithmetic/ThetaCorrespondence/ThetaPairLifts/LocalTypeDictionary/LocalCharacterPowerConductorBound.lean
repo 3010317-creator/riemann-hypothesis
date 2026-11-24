@@ -132,8 +132,7 @@ private theorem exists_global {L : Type} [Field L] [NumberField L] (χ : HChar L
     intro v hvw hva
     apply hvw
     have hle : w.asIdeal ^ h ≤ v.asIdeal := by
-      rw [hspan, Ideal.span_le, Set.singleton_subset_iff]
-      exact hva
+      rwa [hspan, Ideal.span_le, Set.singleton_subset_iff]
     have hwv := v.isPrime.le_of_pow_le hle
     exact (HeightOneSpectrum.ext (w.isMaximal.eq_of_le v.isPrime.ne_top hwv)).symm
   set k := GlobalTheory.Mem.ValAlg.uOf a ha0 with hk
@@ -172,8 +171,7 @@ private theorem exists_global {L : Type} [Field L] [NumberField L] (χ : HChar L
       obtain ⟨c, hc⟩ := Finset.dvd_prod_of_mem Nf hv
       rw [hc, pow_mul, hNa v a ha0 (hav v (Finset.ne_of_mem_erase hv)), one_pow]
     have hpow := congrArg (fun z => z ^ (∏ v ∈ S.erase w, Nf v)) hrule
-    rw [mul_pow, hrest, mul_one, one_pow] at hpow
-    exact hpow
+    rwa [mul_pow, hrest, mul_one, one_pow] at hpow
 
 private theorem exists_pow_inf {L : Type} [Field L] [NumberField L] (χ : HChar L) (w : HeightOneSpectrum (𝓞 L))
     (x : (w.adicCompletion L)ˣ) : ∃ (b : Lˣ) (M : ℕ), 0 < M ∧ χ.loc w x ^ M * χ.inf b = 1 := by
@@ -216,8 +214,7 @@ private theorem exists_pow_inf {L : Type} [Field L] [NumberField L] (χ : HChar 
   have hQ : q * m * N ≠ 0 := by positivity
   rcases Int.natAbs_eq (q * m * N) with h | h
   · refine ⟨k ^ (p * m * N), (q * m * N).natAbs, Int.natAbs_pos.2 hQ, ?_⟩
-    rw [← zpow_natCast, ← h]
-    exact key
+    rwa [← zpow_natCast, ← h]
   · refine ⟨(k ^ (p * m * N))⁻¹, (q * m * N).natAbs, Int.natAbs_pos.2 hQ, ?_⟩
     rw [h, zpow_neg, zpow_natCast] at key
     rw [map_inv, ← inv_mul_eq_one.1 key, mul_inv_cancel]
@@ -245,8 +242,7 @@ theorem UpperTheory.conjSize_heckeChar_local_of_mem_range_embedding :
   obtain ⟨b, M, hM, hb⟩ := exists_pow_inf χ w x
   have hz : ((χ.loc w x : ℂˣ) : ℂ) ^ M * ∏ i, ((φ i) (b : L) / (‖(φ i) (b : L)‖ : ℂ)) ^ n i = 1 := by
     rw [← hχ b]
-    have h1 := congrArg (fun u : ℂˣ => (u : ℂ)) hb
-    simpa using h1
+    simpa using congrArg (fun u : ℂˣ => (u : ℂ)) hb
   obtain ⟨hzQ, hψ⟩ := GlobalTheory.HeckeVal.root_value φ n b _ M hM hz
   obtain ⟨ψ, hyQ, hψy⟩ := exists_qbar_embedding_lift ι τ y
   refine ⟨y, hy, ?_⟩
@@ -507,8 +503,7 @@ theorem UpperTheory.haarVol_KO_le_resCard_pow_of_congruence_le :
     have hij := congrFun (congrFun hgh i) j
     simp only [red, dite_eq_left (hg'.1 i j), dite_eq_left (hh'.1 i j)] at hij
     rw [Ideal.Quotient.eq] at hij
-    have hv := (Model.val_le_iff_mem hϖ e _).1 hij
-    simpa [Matrix.sub_apply] using hv
+    simpa [Matrix.sub_apply] using (Model.val_le_iff_mem hϖ e _).1 hij
   haveI := isHaarMeasure_haarVol hJo hJK
   have hNJ : haarVol J (glLatCong (ϖ ^ e) (GlobalTheory.SplitFlip.stdLat k A) : Set (GL A k)) ≤ 1 := by
     rw [← haarVol_self hJo hJK]
@@ -527,9 +522,7 @@ theorem UpperTheory.haarVol_KO_le_resCard_pow_of_congruence_le :
             measure_preimage_mul _ _ _
         _ ≤ 1 := hNJ
     · calc haarVol J {g | g ∈ KO k A ∧ red g = M} ≤ haarVol J ∅ := by
-            apply measure_mono
-            intro g hg
-            exact absurd ⟨g, hg⟩ hne
+            exact measure_mono (fun g hg => absurd ⟨g, hg⟩ hne)
         _ = 0 := measure_empty
         _ ≤ 1 := zero_le_one
   have hKO : haarVol J (KO k A : Set (GL A k))
@@ -539,8 +532,7 @@ theorem UpperTheory.haarVol_KO_le_resCard_pow_of_congruence_le :
             {g | g ∈ KO k A ∧ red g = M}) := by
           apply measure_mono
           intro g hg
-          simp only [Set.mem_iUnion]
-          exact ⟨red g, Finset.mem_univ _, hg, rfl⟩
+          simpa only [Set.mem_iUnion] using ⟨red g, Finset.mem_univ _, hg, rfl⟩
       _ ≤ ∑ M ∈ (Finset.univ : Finset (Matrix A A (Res k e))),
             haarVol J {g | g ∈ KO k A ∧ red g = M} := measure_biUnion_finset_le _ _
       _ ≤ ∑ M ∈ (Finset.univ : Finset (Matrix A A (Res k e))), (1 : ENNReal) :=
@@ -605,8 +597,7 @@ theorem UpperTheory.Reformulated.B.SumRightInverse.sum_rightInv :
     ext g
     simp only [Set.mem_iUnion, exists_prop]
     constructor
-    · intro hg
-      exact ⟨_, hfin.mem_toFinset.2 ⟨g, hg, rfl⟩, (hC _ g).2 rfl⟩
+    · exact fun hg => ⟨_, hfin.mem_toFinset.2 ⟨g, hg, rfl⟩, (hC _ g).2 rfl⟩
     · rintro ⟨Q, hQ, hg⟩
       simpa using hSK _ (hout Q hQ) _ hg
   refine ⟨hfin.toFinset, hout, fun f hf => ?_⟩
@@ -860,8 +851,7 @@ private theorem exists_res_approx_of_entries_integral {A : Type} {ϖ : kˣ} (hϖ
   refine ⟨fun i j => Ideal.Quotient.mk _ ⟨x i j, hx i j⟩, fun i j => ?_⟩
   have h1 : (⟨x i j, hx i j⟩ : 𝒪[k]) - (Ideal.Quotient.mk (𝓂[k] ^ e) ⟨x i j, hx i j⟩ : Res k e).out ∈ 𝓂[k] ^ e := by
     rw [← Ideal.Quotient.eq, Ideal.Quotient.mk_out]
-  have h2 := (Model.val_le_iff_mem hϖ e _).mp h1
-  simpa [liftRes] using h2
+  simpa [liftRes] using (Model.val_le_iff_mem hϖ e _).mp h1
 
 attribute [local instance 10000] GlobalTheory.SplitWeil.matrixMeasurableSpace in
 theorem sz_zeta {A : Type} [Fintype A] [DecidableEq A] {J : Subgroup (GL A k)} (hJo : IsOpen (J : Set (GL A k)))
@@ -882,8 +872,7 @@ theorem sz_zeta {A : Type} [Fintype A] [DecidableEq A] {J : Subgroup (GL A k)} (
     intro T g hg
     have := hφ.2 (liftRes T) ((g : Matrix A A k) - liftRes T)
       (GlobalTheory.FunObj.GivenAdm.mem_matLat_smul.mpr (fun i j => hg i j))
-    rw [add_sub_cancel] at this
-    exact this
+    rwa [add_sub_cancel] at this
   have hzero : ∀ g : GL A k, ¬ (∀ i j, (g : Matrix A A k) i j ∈ 𝒪[k]) → φ (g : Matrix A A k) = 0 := by
     intro g hg
     apply hφ.1
@@ -905,8 +894,7 @@ theorem sz_zeta {A : Type} [Fintype A] [DecidableEq A] {J : Subgroup (GL A k)} (
         rw [show liftRes T i j - liftRes T0 i j =
           ((g : Matrix A A k) i j - liftRes T0 i j) + (liftRes T i j - (g : Matrix A A k) i j) by ring]
         exact Valuation.map_add_le _ (hT0 i j) (by rw [Valuation.map_sub_swap]; exact hgT i j)
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     · have h0 : φ g.val = 0 := hzero g hg
       simp [Set.indicator_apply, h0]
   by_cases hint : Integrable (fun g : GL A k => φ g.val * f g) (haarVol J)
@@ -992,11 +980,9 @@ theorem isNatDatum_comp {A A' D : Type} [Fintype A'] [DecidableEq A'] [Fintype D
     have hall : g * Y0 k σ * (κ : Matrix D D k) ∈ matLat A' (stdLat k D) := by
       intro i
       have hi := hm i
-      rw [← Matrix.mul_assoc, hrow (g * Y0 k σ) i 1 c (fun j => by simp)] at hi
-      exact hi
+      rwa [← Matrix.mul_assoc, hrow (g * Y0 k σ) i 1 c (fun j => by simp)] at hi
     have h1 : ((1 : GL A' k) : Matrix A' A' k) * (g * Y0 k σ) * (κ : Matrix D D k) ∈ matLat A' (stdLat k D) := by
-      rw [Units.val_one, Matrix.one_mul]
-      exact hall
+      rwa [Units.val_one, Matrix.one_mul]
     have h1' := (mul_mul_mem_matLat_iff (g := (1 : GL A' k)) (h := κ) (KO k A').one_mem hκ (g * Y0 k σ)).mp h1
     rw [mem_matLat_stdLat] at h1'
     rw [mem_matLat_stdLat]
@@ -1130,8 +1116,7 @@ theorem sz_flipTensor {G : Grid k} {ψ : AddChar k Circle} {ϖ : kˣ} {e : ℕ} 
   have hB0 : 0 ≤ B := (hB x).nonneg
   have hJ' := isOpen_map_invT hJ hK
   have hC' : glLatCong (ϖ ^ e) (SplitFlip.stdLat k (Fin (G.rank (i, j)))) ≤ Subgroup.map invT (J (i, j)) := by
-    intro g hg
-    exact ⟨invT g, hC (GlobalTheory.FunObj.GivenAdm.invT_mem_glLatCong hg), invT_invT g⟩
+    exact fun g hg => ⟨invT g, hC (GlobalTheory.FunObj.GivenAdm.invT_mem_glLatCong hg), invT_invT g⟩
   have hdep := (FourierDepth.fourier_exchange k (Fin (G.rank (i, j))) (G.Cols i j) ψ ϖ e
       (Assignment.one.block (Fin (G.rank (i, j + 1))) (Fin (G.rank (i + 1, j)))) hϖ hψc).1 _
       (GlobalTheory.FunObj.isNatDatum_sliceB hT h1 h2 x)
@@ -1142,8 +1127,7 @@ theorem sz_flipTensor {G : Grid k} {ψ : AddChar k Circle} {ϖ : kˣ} {e : ℕ} 
   apply mul_le_mul_of_nonneg_right _ hB0
   apply pow_le_pow_right₀ hq
   have hcard : Fintype.card (G.Cols i j) = G.rank (i + 1, j + 1) + G.rank (i, j) := by
-    simp only [Grid.Cols, Fintype.card_sum, Fintype.card_fin]
-    exact (G.rank_square i j).symm
+    simpa only [Grid.Cols, Fintype.card_sum, Fintype.card_fin] using (G.rank_square i j).symm
   have hc := Finset.card_le_univ (Assignment.one.block (Fin (G.rank (i, j + 1))) (Fin (G.rank (i + 1, j))))ᶜ
   have h00 : G.rank (i, j) ≤ G.rank (i + 1, j + 1) := by
     simp only [Grid.rank]
@@ -1199,8 +1183,7 @@ theorem sz_flips {G : Grid k} {ψ : AddChar k Circle} {ϖ : kˣ} {e : ℕ} (hϖ 
       have hlen : 6 * e * M ^ 2 * (x :: l).length = 6 * e * M ^ 2 * l.length + 6 * e * M ^ 2 := by
         simp only [List.length_cons]
         ring
-      rw [hlen, pow_add, mul_assoc]
-      exact key
+      rwa [hlen, pow_add, mul_assoc]
 
 end GlobalTheory.ConjSize
 

@@ -108,8 +108,7 @@ theorem UpperTheory.Reformulated.B.MemSpanMonomial.mem_span_X :
       rw [ite_eq_right]
       rintro ⟨_, h⟩
       exact hj h.symm
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.MemSpanX =====
@@ -189,8 +188,7 @@ private theorem exists_equiv {E : Type} [Field E] {n : ℕ} (y : Fin n → MvPow
         simpa using J.sub_mem h1 h2
       | zero => simp
       | add a b _ _ ha hb =>
-        simp only [Pi.add_apply, add_smul, Finset.sum_add_distrib]
-        exact J.add_mem ha hb
+        simpa only [Pi.add_apply, add_smul, Finset.sum_add_distrib] using J.add_mem ha hb
       | smul c a _ ha =>
         simp only [Pi.smul_apply, smul_eq_mul, mul_smul, ← Finset.smul_sum]
         rw [smul_eq_C_mul]

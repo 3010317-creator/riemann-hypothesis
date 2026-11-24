@@ -157,8 +157,7 @@ private theorem cmp_surj {v : Pl F} (w : PlacesOver E v) (h : ∀ u : PlacesOver
       rfl
   let e := RingEquiv.ofBijective _ hev
   intro y
-  refine ⟨mapGL n (e.symm : _ →+* _) y, ?_⟩
-  exact Units.ext (Matrix.ext fun a b => e.apply_symm_apply _)
+  exact ⟨mapGL n (e.symm : _ →+* _) y, Units.ext (Matrix.ext fun a b => e.apply_symm_apply _)⟩
 
 variable [IsGalois F E] {σ : E ≃ₐ[F] E} {q : Pl F} {w₀ : PlacesOver E q}
 
@@ -451,8 +450,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.G.normLoc :
     rw [hd, ← det_twNorm (galFin σ v) n _ (fun _ => rfl), h]
     simp [Matrix.GeneralLinearGroup.det, RingHom.map_det]
   have h3 := UpperTheory.Gal.InertialTypesAlt.G.normTriv F E η hη x
-  rw [hx, hy] at h3
-  exact h3
+  rwa [hx, hy] at h3
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.NormLoc =====
@@ -949,8 +947,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.G.core :
   have h := (main φ f c₁ z r hφ hf hmat hsup hz hr).2
   have : tb v / (L₁.c v * z₀) * c₁ * z = r := by
     rw [div_mul_eq_mul_div, div_mul_eq_mul_div, div_eq_iff hne0, h]; ring
-  rw [this]
-  exact hr
+  rwa [this]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.FdFixed =====
@@ -1102,8 +1099,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.G.varTrace :
     rw [mul_assoc, hcF, mul_one]
   have htr₁ : HasTrace mF τ₁.ρ (fun g => f g * chiAt n χ⁻¹ v g) z := by
     refine ((trTw _ mF _ τ τ₁ e heT _ z).1).1 ?_
-    rw [ef]
-    exact htr
+    rwa [ef]
   have hsupp₁ : ∀ g, f g * chiAt n χ⁻¹ v g ≠ 0 → g ∈ normSet E n v := fun g hg =>
     hsupp g (left_ne_zero_of_mul hg)
   have key := H (fun g => φ g * chiAt n χ'⁻¹ w.1 g) (fun g => f g * chiAt n χ⁻¹ v g) c₁ z

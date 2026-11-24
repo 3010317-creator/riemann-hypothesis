@@ -67,8 +67,7 @@ private theorem isAlgClosed_residueField_valuationSubring {Ω : Type} [Field Ω]
   refine IsAlgClosed.of_exists_root _ (fun P hP hirr => ?_)
   have hl : P ∈ Polynomial.lifts (IsLocalRing.residue A) := by
     rw [Polynomial.lifts_iff_coeff_lifts]
-    intro n
-    exact IsLocalRing.residue_surjective (P.coeff n)
+    exact fun n => IsLocalRing.residue_surjective (P.coeff n)
   obtain ⟨Q, hQ, hdeg, hQm⟩ := Polynomial.lifts_and_degree_eq_and_monic hl hP
   have hQdeg : (Q.map (algebraMap A Ω)).degree ≠ 0 := by
     rw [Polynomial.degree_map_eq_of_injective (IsFractionRing.injective A Ω), hdeg]
@@ -79,8 +78,7 @@ private theorem isAlgClosed_residueField_valuationSubring {Ω : Type} [Field Ω]
   refine ⟨IsLocalRing.residue A a, ?_⟩
   have h0 : Q.eval a = 0 := by
     apply IsFractionRing.injective A Ω
-    rw [map_zero, ← Polynomial.eval₂_at_apply, ← Polynomial.eval_map]
-    exact hr
+    rwa [map_zero, ← Polynomial.eval₂_at_apply, ← Polynomial.eval_map]
   rw [← hQ, Polynomial.eval_map, Polynomial.eval₂_at_apply, h0, map_zero]
 
 private theorem pow_prime_pow_mul_eq_self_of_pow_eq_self {K : Type} [Field K] (p m : ℕ) (y : K) (hy : y ^ (p ^ m) = y) :
@@ -276,8 +274,7 @@ theorem UpperTheory.V.Ws.Rq.powIne :
     rw [hit, key]
     have hI := hgn
     simp only [Ine] at hI
-    have h2 := hI.2 a (A.valuation_le_one a)
-    simpa [g'] using h2
+    simpa [g'] using hI.2 a (A.valuation_le_one a)
   have hfix : ∀ a : A, σ (IsLocalRing.residue A a) = IsLocalRing.residue A a := by
     intro a
     obtain ⟨m, hm, hy⟩ := exists_residue_pow_prime_pow_eq_self (F := F) p A hp a

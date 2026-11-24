@@ -103,16 +103,14 @@ theorem UpperTheory.Gal.W2.evIntegral_of :
     | smul r u _ hu => rw [Matrix.mulVec_smul, hu, smul_zero]
   have hq0 : aeval H f.charpoly = 0 := by
     ext j k
-    have hjk := congrFun (hall (Pi.single k 1)) j
-    simpa [Matrix.mulVec_single] using hjk
+    simpa [Matrix.mulVec_single] using congrFun (hall (Pi.single k 1)) j
   have hdiag := evI_diag H Sb ev hD.2.2 f.charpoly
   rw [hq0, zero_mul] at hdiag
   have hinv : IsUnit Sb := (Matrix.isUnit_iff_isUnit_det _).2 (isUnit_iff_ne_zero.2 hD.1)
   have hd : Matrix.diagonal (fun j => aeval (ev j) f.charpoly) = 0 :=
     hinv.mul_left_cancel (by rw [← hdiag, mul_zero])
   have hev0 : aeval (ev i) f.charpoly = 0 := by
-    have hii := congrFun (congrFun hd i) i
-    simpa using hii
+    simpa using congrFun (congrFun hd i) i
   have hint_ev : IsIntegral ℤ (ev i) := ⟨f.charpoly, LinearMap.charpoly_monic f, by rw [← aeval_def]; exact hev0⟩
   have hint_t : IsIntegral ℤ (ty i (x : F)) :=
     (NumberField.RingOfIntegers.isIntegral_coe x).map (ty i).toIntAlgHom

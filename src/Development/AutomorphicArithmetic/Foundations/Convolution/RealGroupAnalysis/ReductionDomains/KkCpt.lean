@@ -78,8 +78,7 @@ private theorem real_iff {n : ℕ} (M : Matrix (Fin n) (Fin n) ℝ) :
     simp [Pi.single_apply]
   · intro h z
     refine Reduction.euclidNorm_vecMul_unitary ?_ z
-    rw [mem_unitaryGroup_iff, star_eq_conjTranspose, conjTranspose_eq_transpose_of_trivial]
-    exact h
+    rwa [mem_unitaryGroup_iff, star_eq_conjTranspose, conjTranspose_eq_transpose_of_trivial]
 
 private theorem entry_mul {F : Type} [Field F] [NumberField F] (k : G1 F) (w : InfinitePlace F) (i j : Fin 2) :
     ((k.1 * k.1ᵀ) i j).1 w = ∑ l, (k i l).1 w * (k j l).1 w := by
@@ -208,14 +207,12 @@ theorem UpperTheory.ConvolutionTheory.R2.M.kkCpt :
     rw [h1]
     ext g
     constructor
-    · intro hg
-      exact ⟨gl g, hg, rfl⟩
+    · exact fun hg => ⟨gl g, hg, rfl⟩
     · rintro ⟨u, hu, huv⟩
       have : u = gl g := Units.ext huv
       subst this
       exact hu
-  rw [h3]
-  exact h2
+  rwa [h3]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.ReductionDomains.KkCpt =====

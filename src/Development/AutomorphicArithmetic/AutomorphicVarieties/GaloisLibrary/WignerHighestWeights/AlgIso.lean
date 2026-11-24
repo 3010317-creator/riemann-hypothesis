@@ -192,14 +192,12 @@ theorem UpperTheory.V.AlgRepEndIrreducible.lowStab :
   have hvlow : v ∈ low F v := by
     unfold UpperTheory.V.AlgRepEndIrreducible.low
     rw [Submodule.mem_sInf]
-    intro p hp
-    exact hp.1
+    exact fun p hp => hp.1
   have hlow : ∀ t (i j : Fin n), j < i → ∀ w ∈ low F v, F t i j w ∈ low F v := by
     intro t i j hji w hw
     unfold UpperTheory.V.AlgRepEndIrreducible.low at hw ⊢
     rw [Submodule.mem_sInf] at hw ⊢
-    intro p hp
-    exact hp.2 t i j hji w (hw p hp)
+    exact fun p hp => hp.2 t i j hji w (hw p hp)
   let W' : Submodule ℂ V := low F v ⊓ ⨅ t, ⨅ i, ⨅ j, (low F v).comap (F t i j)
   have hmem : ∀ w, w ∈ W' ↔ w ∈ low F v ∧ ∀ t i j, F t i j w ∈ low F v := by
     intro w
@@ -512,8 +510,7 @@ private theorem hw_prod {E : Type} [Field E] [NumberField E] {a : ℕ} (Ξ : Alg
   have h2 : Formalism.REAL.qdet (eL Ξ.dmat τ) u =
       (m.map (u - ((a : ℂ) - 1) / 2 + ·)).prod • (1 : Matrix (Fin Ξ.d) (Fin Ξ.d) ℂ) := by
     have h3 := h.2 (u - ((a : ℂ) - 1) / 2)
-    rw [sub_add_cancel] at h3
-    exact h3
+    rwa [sub_add_cancel] at h3
   rw [← map_qdet, h2, hf, Matrix.smul_mulVec, Matrix.one_mulVec] at h1
   exact (smul_left_injective ℂ hv h1).symm
 

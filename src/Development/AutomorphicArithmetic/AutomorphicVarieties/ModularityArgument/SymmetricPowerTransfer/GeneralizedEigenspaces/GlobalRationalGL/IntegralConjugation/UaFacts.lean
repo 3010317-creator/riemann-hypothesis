@@ -79,8 +79,7 @@ private theorem inf_of_cLoc {k : UA L n} (h : ∀ u : Plc L, cLoc u k = 1) : k �
   refine Units.ext (matAf_ext fun u => ?_)
   have := congrArg Units.val (h u)
   rw [Units.val_one] at this ⊢
-  rw [map_one]
-  exact this
+  rwa [map_one]
 
 private noncomputable def fp (x : UA L n) : UA L n :=
   ⟨finGL L n (GeneralLinearGroup.map (pFin L) x.1), finGL_mem_UA _ fun u => comp_eq x u⟩
@@ -188,5 +187,4 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.uaFacts :
   · rcases (under_iff w u).1 hu with rfl | rfl
     · exact hK
     · refine K_conj x _ ?_
-      rw [GlobalTheory.SplitPts.conjSrc_conjSrc_cm]
-      exact hK
+      rwa [GlobalTheory.SplitPts.conjSrc_conjSrc_cm]

@@ -77,8 +77,7 @@ private theorem ac_comp {D E R : Type} [TopologicalSpace D] [TopologicalSpace E]
 
 private theorem adic_continuous_sum_three {D R : Type} [TopologicalSpace D] [CommRing R] {I : Ideal R} {f : Fin 3 → D → R}
     (hf : ∀ a, AdicCont I (f a)) : AdicCont I fun s => ∑ a, f a s := by
-  simp only [Fin.sum_univ_three]
-  exact ac_add (ac_add (hf 0) (hf 1)) (hf 2)
+  simpa only [Fin.sum_univ_three] using ac_add (ac_add (hf 0) (hf 1)) (hf 2)
 
 variable {l : ℕ} [Fact l.Prime]
 
@@ -120,7 +119,6 @@ private theorem genI_of {D : Type} [Group D] [TopologicalSpace D] {I : Subgroup 
   have ho : IsOpen (χ.ker : Set D) := by
     have : (χ.ker : Set D) = a ⁻¹' {0} := by
       ext s
-      show χ s = 1 ↔ a s = 0
       exact Iff.rfl
     rw [this]
     exact hloc.isOpen_fiber 0

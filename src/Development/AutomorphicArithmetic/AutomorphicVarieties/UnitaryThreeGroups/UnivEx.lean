@@ -151,8 +151,7 @@ private theorem lc_gg {Γ : Type} [TopologicalSpace Γ] (x : Γ → GG (m := m) 
   refine (IsLocallyConstant.iff_eventually_eq _).mpr fun g => ?_
   have hr := h1.eventually_eq g
   have hm : ∀ᶠ g' in nhds g, ∀ a b, (x g').mat a b = (x g).mat a b := by
-    simp only [Filter.eventually_all]
-    exact fun a b => (h2 a b).eventually_eq g
+    simpa only [Filter.eventually_all] using fun a b => (h2 a b).eventually_eq g
   filter_upwards [hr, hm] with g' h1' h2'
   exact SemidirectProduct.ext (Units.ext (Matrix.ext h2')) h1'
 
@@ -172,8 +171,7 @@ private theorem lc_mod (hη : IsLocallyConstant η) {R : Type} [CommRing R] [Alg
       funext g
       rw [GG.map_right]
       exact s.hasMult g
-    rw [hfun]
-    exact hη
+    rwa [hfun]
   · intro a b
     have hfun : (fun g => (GG.map (Ideal.Quotient.mk (maximalIdeal R ^ n)) (s.hom g)).mat a b) =
         fun g => Ideal.Quotient.mk (maximalIdeal R ^ n) ((s.hom g).mat a b) := by
@@ -185,8 +183,7 @@ private theorem lc_mod (hη : IsLocallyConstant η) {R : Type} [CommRing R] [Alg
 
 omit [IsTopologicalGroup Γ] in
 private theorem ker_closed {G : Type*} [Group G] (φ : Γ →* G) (h : IsLocallyConstant φ) :
-    IsClosed (φ.ker : Set Γ) := by
-  exact (IsLocallyConstant.isClopen_fiber h 1).isClosed
+    IsClosed (φ.ker : Set Γ) := (IsLocallyConstant.isClopen_fiber h 1).isClosed
 
 private theorem le_ker {G : Type*} [Group G] (φ : Γ →* G) (h : IsLocallyConstant φ) (N : Set Γ)
     (hN : ∀ g ∈ N, φ g = 1) : (Subgroup.normalClosure N).topologicalClosure ≤ φ.ker := by
@@ -218,8 +215,7 @@ private theorem kills_closure (hη : IsLocallyConstant η) {R : Type} [CommRing 
     simp only [GG.map_mat, Matrix.map_apply] at e
     exact Ideal.Quotient.eq.mp e
   · have e := congrArg SemidirectProduct.right (hn 0)
-    rw [GG.map_right] at e
-    exact e
+    rwa [GG.map_right] at e
 
 omit [IsTopologicalGroup Γ] in
 private theorem lc_quot {X : Type} (M : Subgroup Γ) (f : Γ ⧸ M → X)
@@ -238,8 +234,7 @@ private theorem transfer (hη : IsLocallyConstant η) (N : Set Γ) (M : Subgroup
   have hid : Lift.map (AlgHom.id O R) r = r := Lift.ext (MonoidHom.ext fun q => Matrix.ext fun i j => rfl)
   have hP : ∀ g : Γ, eqs (η g) (r.hom (QuotientGroup.mk g)) = 0 := by
     have h0 := (hr R).1 (AlgHom.id O R)
-    rw [hid] at h0
-    exact h0
+    rwa [hid] at h0
   choose x hxr hxe using fun g => (eqs_iff (η g) _).mp (hP g)
   let hom : Γ →* GG (m := 3) (R := R) :=
     { toFun := x
@@ -258,8 +253,7 @@ private theorem transfer (hη : IsLocallyConstant η) (N : Set Γ) (M : Subgroup
     have hc := ((r.cont (Sum.inl a) (col (η g0) b) n).comp_continuous
       (QuotientGroup.isQuotientMap_mk M).continuous).eventually_eq g0
     filter_upwards [hη.eventually_eq g0, hc] with g h1 h2
-    rw [h1]
-    exact h2
+    rwa [h1]
   have hred : ∀ g, GG.map (res O R : R →+* ResidueField O) (hom g) = rbar O η Ψ g := by
     intro g
     refine emb_inj ?_ ?_
@@ -354,8 +348,7 @@ private theorem totDisc_quot {G : Type} [Group G] [TopologicalSpace G] [IsTopolo
     obtain ⟨k, hk, hkg⟩ := Subgroup.mem_map.mp hgH
     apply hgK
     have hkN : k⁻¹ * g ∈ N := QuotientGroup.eq.mp hkg
-    have hmul := K.mul_mem hk (hNK hkN)
-    simpa using hmul
+    simpa using K.mul_mem hk (hNK hkN)
 
 section Quot
 
@@ -418,8 +411,7 @@ theorem UpperTheory.V.U3.exists_univ :
       ⟨tor (ResidueField O) (barChar O Ψ g0), η g0⟩
     rw [h1, h2]
   have hηN : ∀ g ∈ N, η g = 1 := fun g hg => by
-    have h0 := congrArg SemidirectProduct.right (hN g hg)
-    exact h0
+    exact congrArg SemidirectProduct.right (hN g hg)
   have hkillM : M ≤ (rbar O η Ψ).ker := by
     rw [hMeq]
     exact le_ker (rbar O η Ψ) hrbar_lc N hN
@@ -444,15 +436,13 @@ theorem UpperTheory.V.U3.exists_univ :
       rw [Ideal.span_le]
       rintro y ⟨g, i, j, rfl⟩
       have he := congrFun (congrFun ((key g).symm.trans (h g)) i) j
-      rw [SetLike.mem_coe, RingHom.mem_ker]
-      exact he
+      rwa [SetLike.mem_coe, RingHom.mem_ker]
     · intro h g
       rw [key]
       ext i j
       have hy : eqs (η g) (r.hom (QuotientGroup.mk g)) i j ∈ J := Ideal.subset_span ⟨g, i, j, rfl⟩
       have he := h hy
-      rw [RingHom.mem_ker] at he
-      exact he
+      rwa [RingHom.mem_ker] at he
   have hJm : J ≤ maximalIdeal R := by
     rw [Ideal.span_le]
     rintro y ⟨g, i, j, rfl⟩

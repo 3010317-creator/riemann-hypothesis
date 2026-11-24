@@ -56,8 +56,7 @@ private theorem exists_crt_indicator {R : Type} [CommRing R] [IsDedekindDomain R
     ∃ t : R, ∀ P : Ideal R, P.IsMaximal → a ∈ P → (c P → t - 1 ∈ P) ∧ (¬ c P → t ∈ P) := by
   classical
   have hI : Ideal.span {a} ≠ 0 := by
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact ha
+    rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   obtain ⟨y, hy⟩ := IsDedekindDomain.exists_forall_sub_mem_ideal
     (s := (Ideal.finite_factors hI).toFinset)
     (fun v => v.asIdeal) (fun _ => 1)
@@ -108,8 +107,7 @@ theorem UpperTheory.V.KL.dedekindSR :
     have hl : r (Fin.last n) ∈ P := by
       have := hall ⟨0, by omega⟩
       simp only [one_mul] at this
-      rw [hz, zero_add] at this
-      exact this
+      rwa [hz, zero_add] at this
     intro i
     induction i using Fin.lastCases with
     | last => exact hl
@@ -149,8 +147,7 @@ theorem UpperTheory.V.KL.dedekindSR :
           | last => exact hrP
           | cast m =>
             by_cases hm : m = k
-            · rw [hm]
-              exact hc
+            · rwa [hm]
             · exact hother m hm
       · apply hc
         have := P.sub_mem hk (P.mul_mem_right (r (Fin.last n)) (h2 hc))

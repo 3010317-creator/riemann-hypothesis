@@ -291,8 +291,7 @@ theorem _root_.GlobalTheory.T.exists_finite_local_lift_of_saturated_ideal : ∀ 
     have hr : IsUnit (f (algebraMap O R (algebraMap ℤ_[l] O y))) := by
       rw [← hg]
       have := (isUnit_iff_ne_zero.2 hy0).map (algebraMap ℚ_[l] B)
-      rw [← hfψ y] at this
-      exact this
+      rwa [← hfψ y] at this
     exact (IsLocalization.AtPrime.isUnit_to_map_iff RM M0 _).2
       (Ideal.mem_primeCompl_iff.2 (fun h => ((IsLocalRing.mem_maximalIdeal _).1 h) hr))
   let φ : ℚ_[l] →+* RM := IsLocalization.lift (M := nonZeroDivisors ℤ_[l]) (S := ℚ_[l]) hψu
@@ -315,8 +314,7 @@ theorem _root_.GlobalTheory.T.exists_finite_local_lift_of_saturated_ideal : ∀ 
       have h2 : (M0.map f) ^ N0 ≤ IsLocalRing.maximalIdeal B ^ N0 :=
         Ideal.pow_right_mono Ideal.map_comap_le N0
       have h3 := h2 h1
-      rw [hN0, Submodule.zero_eq_bot, Ideal.mem_bot] at h3
-      exact h3
+      rwa [hN0, Submodule.zero_eq_bot, Ideal.mem_bot] at h3
     exact RingHom.mem_ker.1 (hle hx)
   let J' : Ideal RM := J.map (algebraMap R RM)
   have hJg : ∀ x ∈ J', g x = 0 := by
@@ -335,8 +333,7 @@ theorem _root_.GlobalTheory.T.exists_finite_local_lift_of_saturated_ideal : ∀ 
     obtain ⟨t, ht, htJ⟩ := ha
     rw [IsLocalization.mk'_mem_map_algebraMap_iff]
     refine ⟨t, ht, hreg _ ?_⟩
-    rw [mul_left_comm]
-    exact htJ
+    rwa [mul_left_comm]
   obtain ⟨k, hk⟩ := Ideal.exists_pow_inf_eq_pow_smul (IsLocalRing.maximalIdeal RM)
     (Submodule.span RM {Ideal.Quotient.mk J' (algebraMap R RM d)})
   have hkey : ∀ c : RM, algebraMap R RM d * c ∈ J' ⊔ IsLocalRing.maximalIdeal RM ^ (N0 + k) →
@@ -459,8 +456,7 @@ theorem _root_.GlobalTheory.T.exists_finite_local_lift_of_saturated_ideal : ∀ 
     show Ideal.Quotient.lift I g hIg (Ideal.Quotient.mk I c) = 0
     rw [Ideal.Quotient.lift_mk]
     apply hkey
-    rw [← Ideal.Quotient.eq_zero_iff_mem, map_mul]
-    exact hb
+    rwa [← Ideal.Quotient.eq_zero_iff_mem, map_mul]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.ExistsFiniteLocalLiftOfSaturatedIdealStatement =====
@@ -537,8 +533,7 @@ theorem GlobalTheory.LCrConj.main : ∀ {l : ℕ} [Fact l.Prime] {O : Type} [Com
       SemidirectProduct.left_inl, SemidirectProduct.left_inl, SemidirectProduct.right_inl, h1 g g.2, mul_one, sgnAct_one,
       sgnAct_one]
     rfl
-  rw [isLCr_iff' D r h1, isCr_conjGL _ _ h, ← he, ← isLCr_iff']
-  exact hc
+  rwa [isLCr_iff' D r h1, isCr_conjGL _ _ h, ← he, ← isLCr_iff']
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.IsLCrystallineConjByInvariant =====
@@ -565,8 +560,7 @@ theorem isUnit_det_sub_smul_one_of_forall_not_isUnit {C : Type} [CommRing C] [Is
     · subst h; simp [hq]
     · simp [hq, h]
   rw [hm, Matrix.det_smul, Matrix.det_one, mul_one]
-  refine pow_ne_zero _ (neg_ne_zero.2 ?_)
-  exact (IsLocalRing.residue_ne_zero_iff_isUnit _).2 hc
+  exact pow_ne_zero _ (neg_ne_zero.2 ((IsLocalRing.residue_ne_zero_iff_isUnit _).2 hc))
 
 theorem exists_GL_conj_eq_diagonal_of_charpoly_eq_prod :
     ∀ {C : Type} [CommRing C] [IsLocalRing C] (A : Matrix (Fin 3) (Fin 3) C) (p : Fin 3 → C),
@@ -610,8 +604,7 @@ theorem exists_GL_conj_eq_diagonal_of_charpoly_eq_prod :
     exact key (P a) b
   have hex : ∀ a, ∃ i j, IsUnit (aeval A (P a) i j) := by
     intro a
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     obtain ⟨u, hu⟩ := hq a
     set E := ((u⁻¹ : Cˣ) : C) • aeval A (P a) with hE
     have hEn : ∀ i j, ¬ IsUnit (E i j) := by
@@ -1042,10 +1035,8 @@ theorem GlobalTheory.cocycle_eq_crys_add_sub : LocalPublishedTheorems → ∀ {l
     simp only [L, LinearMap.mem_ker, LinearMap.comp_apply, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero,
       S, SW, Submodule.mem_comap, Submodule.subtype_apply]
     constructor
-    · intro h
-      exact (posExact hP φ hφ ρW ρ hcW hc hpW i hiρ).2 hi hp _ c'.2 h
-    · intro h
-      exact (z1fMap φ ρW ρ).2 (i.restrictScalars ℚ_[l]) (fun g x => hiρ g x) _ h
+    · exact fun h => (posExact hP φ hφ ρW ρ hcW hc hpW i hiρ).2 hi hp _ c'.2 h
+    · exact fun h => (z1fMap φ ρW ρ).2 (i.restrictScalars ℚ_[l]) (fun g x => hiρ g x) _ h
   have eW : SW ≃ₗ[E] finiteCocycles φ ρW := Submodule.comapSubtypeEquivOfLe (fun x hx => hx.1)
   have eV : S ≃ₗ[E] finiteCocycles φ ρ := Submodule.comapSubtypeEquivOfLe (fun x hx => hx.1)
   have h1 := LinearMap.finrank_range_add_finrank_ker L
@@ -1109,8 +1100,7 @@ theorem _root_.GlobalTheory.T.finrank_dualInvariants_scalarRep_eq_finrank_ker_sm
       rw [hgen]
       have hd : δ ∈ S := fun x => h _ ⟨x, rfl⟩
       have hle : Ideal.span {δ} ≤ S := by
-        rw [Ideal.span_le, Set.singleton_subset_iff]
-        exact hd
+        rwa [Ideal.span_le, Set.singleton_subset_iff]
       rw [← hδ] at hle
       exact hle (Ideal.subset_span ⟨g, rfl⟩)
   rw [key]
@@ -1319,8 +1309,7 @@ theorem exists_coefficientField_of_finite_local_padic : ∀ {l : ℕ} [Fact l.Pr
   refine ⟨ResidueField B, inferInstance, inferInstance, inferInstance, alg, tower, π, ?_⟩
   intro a ha
   have hmem : a ∈ maximalIdeal B := by
-    rw [← hker]
-    exact ha
+    rwa [← hker]
   exact Ring.KrullDimLE.isNilpotent_iff_mem_maximalIdeal.mpr hmem
 
 end GlobalTheory
@@ -1357,8 +1346,7 @@ private theorem exists_character_filtration_of_sub_smul_mem {G E V : Type} [Grou
       by_cases hin : i < n
       · have h1 : i ≠ n + 1 := by omega
         have h2 : i + 1 ≠ n + 1 := by omega
-        simp only [h1, h2, ite_false]
-        exact hs i hin
+        simpa only [h1, h2, ite_false] using hs i hin
       · have hi' : i = n := by omega
         subst hi'
         have h1 : i ≠ i + 1 := by omega
@@ -1376,8 +1364,7 @@ private theorem exists_character_filtration_of_sub_smul_mem {G E V : Type} [Grou
       rw [Finset.coe_insert] at hs ⊢
       have h1 := step (F' ⊔ Submodule.span E ↑s) le_sup_left
         (ih (fun z hz => hs (Set.mem_insert_of_mem a hz))) a (hs (Set.mem_insert a _))
-      rw [Submodule.span_insert, sup_comm (E ∙ a), ← sup_assoc]
-      exact h1
+      rwa [Submodule.span_insert, sup_comm (E ∙ a), ← sup_assoc]
   obtain ⟨s, hs⟩ := (IsNoetherian.noetherian F'' : F''.FG)
   obtain ⟨n, F, h0, hn, hst⟩ := key s (by rw [← hs]; exact Submodule.subset_span)
   refine ⟨n, F, h0, ?_, hst⟩
@@ -1394,13 +1381,11 @@ theorem _root_.GlobalTheory.T.filtBy_positiveWeight_of_two_character_extension :
     simp
   obtain ⟨M, hM⟩ : IsNilpotent (RingHom.ker (π : B →+* E)) := by
     rw [Ideal.FG.isNilpotent_iff_le_nilradical (IsNoetherian.noetherian _)]
-    intro c hc
-    exact mem_nilradical.mpr (hπ c (by simpa using hc))
+    exact fun c hc => mem_nilradical.mpr (hπ c (by simpa using hc))
   set I := RingHom.ker (π : B →+* E) with hIdef
   have hMz : ∀ c ∈ I ^ M, c = 0 := by
     intro c hc
-    rw [hM, Ideal.zero_eq_bot, Ideal.mem_bot] at hc
-    exact hc
+    rwa [hM, Ideal.zero_eq_bot, Ideal.mem_bot] at hc
   have hstep : ∀ (c : B) (k : ℕ) (y : B), y ∈ I ^ k →
       c * y - algebraMap E B (π c) * y ∈ I ^ (k + 1) := by
     intro c k y hy
@@ -1468,8 +1453,7 @@ theorem _root_.GlobalTheory.T.filtBy_positiveWeight_of_two_character_extension :
           refine ⟨?_, by simp [hy.2]⟩
           simpa [hy.2] using hstep (a g : B) _ y.1 hy.1
       · have e : M - (j + 1) = M - j := by omega
-        rw [e]
-        exact ih
+        rwa [e]
   have T12 : ∃ (n : ℕ) (F : ℕ → Submodule E (B × B)), F 0 = ⊥ ∧ F n = P2 M ∧
       ∀ i < n, F i ≤ F (i + 1) ∧ ∃ κ ∈ S, ∃ z, F (i + 1) = F i ⊔ E ∙ z ∧
         ∀ g : G, (ρ g) z - ((κ g : Eˣ) : E) • z ∈ F i := by
@@ -1491,8 +1475,7 @@ theorem _root_.GlobalTheory.T.filtBy_positiveWeight_of_two_character_extension :
     intro j
     induction j with
     | zero =>
-      rw [Nat.sub_zero]
-      exact T12
+      rwa [Nat.sub_zero]
     | succ j ih =>
       by_cases hj : j < M
       · have e : M - j = (M - (j + 1)) + 1 := by omega
@@ -1506,8 +1489,7 @@ theorem _root_.GlobalTheory.T.filtBy_positiveWeight_of_two_character_extension :
           rw [mP2, MonoidHom.comp_apply, hsm, hρ]
           simpa using hstep (b g : B) _ y.2 hy
       · have e : M - (j + 1) = M - j := by omega
-        rw [e]
-        exact ih
+        rwa [e]
   obtain ⟨n, F, h0, hn, hs⟩ := hQ2 M
   have htop : P2 (M - M) = ⊤ := by
     rw [eq_top_iff]

@@ -82,8 +82,7 @@ private theorem len_up {n : ℕ} (w : Equiv.Perm (Fin n)) (i j : Fin n) (h : (j 
     simp only [Finset.mem_univ, true_and, Prod.mk.injEq, Equiv.Perm.mul_apply]
     by_cases hxy : x = w⁻¹ i ∧ y = w⁻¹ j
     · obtain ⟨rfl, rfl⟩ := hxy
-      simp [hij]
-      exact hw
+      simpa [hij] using hw
     · rw [or_iff_right hxy]
       apply and_congr_right
       intro hlt
@@ -105,8 +104,7 @@ private theorem len_down {n : ℕ} (w : Equiv.Perm (Fin n)) (i j : Fin n) (h : (
 
 private theorem exists_desc {n : ℕ} (w : Equiv.Perm (Fin n)) (hw : w ≠ 1) :
     ∃ i j : Fin n, (j : ℕ) = i + 1 ∧ w⁻¹ j < w⁻¹ i := by
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   apply hw
   cases n with
   | zero => exact Subsingleton.elim _ _

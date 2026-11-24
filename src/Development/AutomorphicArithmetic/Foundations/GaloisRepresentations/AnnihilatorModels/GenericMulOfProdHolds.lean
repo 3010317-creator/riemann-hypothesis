@@ -193,8 +193,7 @@ theorem UpperTheory.Gal.crystallineComparison.ordDecomp_of :
       ∑ D ∈ (Finset.univ.filter fun D : Submodule k H => Module.finrank k D = (j : ℕ)).filter
         (fun D => ¬ C ≤ D), ({A' (D.map C.mkQ)} : Multiset P) := by
     intro j
-    rw [← Finset.sum_ite]
-    rw [val_map_sum, ← Equiv.sum_comp (e j).symm]
+    rw [← Finset.sum_ite, val_map_sum, ← Equiv.sum_comp (e j).symm]
     rw [Finset.sum_subtype (F := hG j)
       (Finset.univ.filter fun D : Submodule k H => Module.finrank k D = (j : ℕ))
       (p := fun D : Submodule k H => Module.finrank k D = (j : ℕ)) (by simp)]
@@ -319,8 +318,7 @@ theorem UpperTheory.Gal.crystallineComparison.telescope_of :
   have h0' : T' 0 = A 0 := by simpa [T'] using h0
   have hs' : ∀ j, j < n → T' (j + 1) = (A j).map F + q ^ (j + 1) • A (j + 1) := by
     intro j hj
-    have hh := hs ⟨j, hj⟩
-    simpa [T', hj, Fin.succ] using hh
+    simpa [T', hj, Fin.succ] using hs ⟨j, hj⟩
   have hE : ∑ j : Fin (n + 1), wEv q j • (T j).map F^[n - j] =
       ∑ j ∈ Finset.range (n + 1), (if Even j then q ^ (j.choose 2) else 0) • (T' j).map F^[n - j] := by
     rw [← Fin.sum_univ_eq_sum_range (fun j => (if Even j then q ^ (j.choose 2) else 0) • (T' j).map F^[n - j])]

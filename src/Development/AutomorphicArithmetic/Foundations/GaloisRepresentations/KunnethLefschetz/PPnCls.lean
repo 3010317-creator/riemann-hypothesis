@@ -137,9 +137,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.pnCls_holds :
   have one_ne : oneV l (S k) ≠ 0 := by
     intro h0
     obtain ⟨r, -, hr⟩ := Low.line hL 0
-    have h1 := hr 0 (by simp)
-    have h2 := hr 1 (by simp [h0])
-    exact one_ne_zero (h2.trans h1.symm)
+    exact one_ne_zero ((hr 1 (by simp [h0])).trans (hr 0 (by simp)).symm)
   have key : ∀ d : ℕ, ∃ t : Pt (PNto k d), IsClosedImmersion t.1 ∧
       ∃ U : (PN k d).Opens, Off t.1 U ∧
         ∃ z : V l (PN k d) (2 * (d : ℤ)), z ≠ 0 ∧ pb l U.ι (2 * (d : ℤ)) z = 0 := by

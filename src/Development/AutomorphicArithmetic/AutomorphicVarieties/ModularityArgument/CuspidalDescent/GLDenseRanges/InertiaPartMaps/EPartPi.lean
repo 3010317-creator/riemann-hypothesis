@@ -196,8 +196,7 @@ private theorem part_eqE (hS : SecS) (hn : 1 ≤ n) (hV : V.S' = s.S) (Q : QData
       · intro h u hu i g
         have h1 := congrFun (h u hu) i
         rw [UpperTheory.V.Hi.Pu.raF_eq] at h1
-        have h2 := congrFun h1 g
-        simpa only [Finset.sum_apply, Pi.smul_apply] using h2
+        simpa only [Finset.sum_apply, Pi.smul_apply] using congrFun h1 g
       · intro h u hu
         funext i
         rw [UpperTheory.V.Hi.Pu.raF_eq]
@@ -377,8 +376,7 @@ theorem UpperTheory.V.Z.Desc.V0.yDimE :
         have hu : (s.w (w.under (𝓞 (Lp L)))).under (𝓞 (Lp L)) = w.under (𝓞 (Lp L)) := hund _
         have hl' : k ∈ locU n (s.w (w.under (𝓞 (Lp L)))) := by
           unfold locU at hl ⊢
-          rw [hu]
-          exact hl
+          rwa [hu]
         have h2 : k = 1 := congrArg Subtype.val
           (GlobalTheory.SplitPts.eq_one_of_cLoc (hsplit _ (hu.symm ▸ hw)) ⟨k, hl'⟩ ((mem_kS.1 hk).2.2 _ hw))
         rw [h2, map_one]
@@ -406,8 +404,7 @@ theorem UpperTheory.V.Z.Desc.V0.yDimE :
           rcases hv with h' | h' | h'
           · exact absurd h' h
           · exact c1 ⟨v, h'⟩
-          · rw [h']
-            exact c2
+          · rwa [h']
     let tl (ℓ : Module.Dual ℂ (⨂[ℂ] y : Emb l (fun v : V.frame.Vl => s.w v.1), nablaSq ℂ n (lam y.res))) :
         (Ga l L n × GV n (fun v : V.frame.Vl => s.w v.1) → Fin d → ℂ) →ₗ[ℂ] (UA L n → ℂ) :=
       { toFun F := toForm ι e F ℓ

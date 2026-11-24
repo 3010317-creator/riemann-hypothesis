@@ -84,8 +84,7 @@ theorem UpperTheory.HF.loc_onto :
   have hl : ‖(l : PadicAlgCl l)‖ < 1 := by
     rw [← PadicAlgCl.valuation_coe, PadicAlgCl.valuation_p l]
     have h1 : (1 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).one_lt
-    simp only [one_div, NNReal.coe_inv, NNReal.coe_natCast]
-    exact inv_lt_one_of_one_lt₀ h1
+    simpa only [one_div, NNReal.coe_inv, NNReal.coe_natCast] using inv_lt_one_of_one_lt₀ h1
   let I : Ideal (𝓞 L) :=
     { carrier := {x : 𝓞 L | ‖J (x : L)‖ < 1}
       add_mem' := by
@@ -110,10 +109,8 @@ theorem UpperTheory.HF.loc_onto :
       rw [hmem] at hab
       rw [hmem, hmem]
       have hab' : ‖J (a : L)‖ * ‖J (b : L)‖ < 1 := by
-        rw [← norm_mul, ← map_mul]
-        exact hab
-      by_contra h
-      push Not at h
+        rwa [← norm_mul, ← map_mul]
+      by_contra! h
       nlinarith [h.1, h.2]
   have hlI : ((l : ℤ) : 𝓞 L) ∈ I := by
     rw [hmem]
@@ -133,8 +130,7 @@ theorem UpperTheory.HF.loc_onto :
     refine hmax.eq_of_le (Ideal.comap_ne_top _ hIp.ne_top) ?_
     rw [Ideal.span_le, Set.singleton_subset_iff]
     show algebraMap ℤ (𝓞 L) (l : ℤ) ∈ I
-    rw [eq_intCast]
-    exact hlI
+    rwa [eq_intCast]
   refine ⟨I, hIp, hlo, hmem, ?_, ?_, ?_⟩
   · intro τ
     rw [MulAction.mem_stabilizer_iff]
@@ -381,8 +377,7 @@ private theorem UpperTheory.V.Loc.ci_surj (l : ℕ) [Fact l.Prime] (a : ℤ_[l]�
     have h1 := cyclotomicCharacter.spec l (n := k)
       (MulSemiringAction.toRingAut (PadicAlgCl l ≃ₐ[ℚ_[l]] PadicAlgCl l) (PadicAlgCl l) σ) η hη.pow_eq_one
     have h2 := (hσ k).2 k le_rfl η hη.pow_eq_one
-    have h3 := h1.symm.trans h2
-    exact ZMod.val_injective _ (hη.pow_inj (ZMod.val_lt _) (ZMod.val_lt _) h3)
+    exact ZMod.val_injective _ (hη.pow_inj (ZMod.val_lt _) (ZMod.val_lt _) (h1.symm.trans h2))
 
 private theorem UpperTheory.V.Loc.ci_inf (l : ℕ) [Fact l.Prime] : ∃ u : ℤ_[l]ˣ, ¬ IsOfFinOrder u := by
   have hp : l.Prime := Fact.out

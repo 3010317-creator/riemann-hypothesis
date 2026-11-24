@@ -272,8 +272,7 @@ theorem Descent_of (hAC : LateralTheory.E.LCBijPf.TwGenNZAC) : LateralTheory.E.L
     rw [LateralTheory.E.LCBijPf.gam_map]
     rw [val_smul, val_smul] at e
     have hup : (ULift.up (c1 - c2) : ULift.{1} (ZMod q)) = ULift.up c1 - ULift.up c2 := rfl
-    rw [val_smul, hup, sub_smul, sub_eq_zero]
-    exact e
+    rwa [val_smul, hup, sub_smul, sub_eq_zero]
   obtain ⟨𝒰, h𝒰⟩ := (Scheme.mem_grothendieckTopology_iff (P := @Etale)).1 hS
   have hpiece : ∀ x : PrimeSpectrum B, ∃ (R : CommRingCat.{0}) (g : Spec R ⟶ Spec (CommRingCat.of B)),
       Etale g ∧ S.arrows g ∧ x ∈ Set.range g := by
@@ -437,8 +436,7 @@ theorem LateralTheory.E.t_E1Cut.EqvQA_of (hAcyc : AcycQA) (hQA : QAClosed) (hH0 
           (fun φ => lcMap (Ideal.Quotient.mk J) φ) ∘ (e S ζ).symm := by
       funext x
       obtain ⟨φ, rfl⟩ := (e S ζ).surjective x
-      simp only [Function.comp_apply, AddEquiv.symm_apply_apply]
-      exact key φ
+      simpa only [Function.comp_apply, AddEquiv.symm_apply_apply] using key φ
     rw [hcomp]
     exact (e _ _).bijective.comp ((hLC S J hJ (ZMod q)).comp (e S ζ).symm.bijective)
   · haveI := hAcyc h1 h9 hb1 hb2 q S hS hq n i hn
@@ -659,8 +657,7 @@ theorem orth {S : Type} [CommRing S] : ∀ (n : ℕ) (ε : Fin n → S), (∀ j,
     · intro i
       refine Fin.cases ?_ (fun j => ?_) i
       · simpa using ha
-      · simp only [Fin.cons_succ]
-        exact ha'.mul (ho.idem j)
+      · simpa only [Fin.cons_succ] using ha'.mul (ho.idem j)
     · intro i k hik
       induction i using Fin.cases with
       | zero =>
@@ -699,8 +696,7 @@ theorem glue : LateralTheory.E.FinEtSectionPf.Glue := by
     refine hidem.eq_zero_of_isNilpotent ((nilpotent_iff_mem_prime).2 fun J hJ => ?_)
     obtain ⟨q, hq⟩ := hsurj ⟨J, hJ⟩
     have : ∃ j, e j ∉ q.asIdeal := by
-      by_contra hall
-      push Not at hall
+      by_contra! hall
       exact q.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 (he.complete ▸ Ideal.sum_mem _ fun j _ => hall j))
     obtain ⟨j, hj⟩ := this
     have hq' : q ∈ Set.range (PrimeSpectrum.comap (algebraMap C (Localization.Away (e j)))) := by
@@ -778,8 +774,7 @@ theorem closed_empty {C : Type} [CommRing C] {J : Ideal C} (hJ : J ≤ Ideal.jac
     rw [← RingHom.ker_eq_comap_bot]; exact hker
   obtain ⟨z, hz⟩ := hp
   apply h z
-  rw [hz]
-  exact hIM
+  rwa [hz]
 
 theorem lcMap_apply {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) {Y : Type}
     (φ : LocallyConstant (PrimeSpectrum A) Y) (z : PrimeSpectrum B) :
@@ -830,8 +825,7 @@ theorem LCGood_of : LCGood := by
       by_contra hx
       push Not at hx
       have : x ∈ (⋃ y, U y)ᶜ := by simpa using hx
-      rw [hE] at this
-      exact this
+      rwa [hE] at this
     have huniq : ∀ x y y', x ∈ U y → x ∈ U y' → y = y' := by
       intro x y y' h1 h2
       by_contra hne
@@ -1302,8 +1296,7 @@ lemma sq1 {T S C' C : Type} [CommRing T] [CommRing S] [CommRing C'] [CommRing C]
     obtain ⟨t, rfl⟩ := hπ x
     have h1 := congrArg (fun f => f.hom t) s.condition
     simp only [CommRingCat.hom_comp, RingHom.comp_apply, CommRingCat.hom_ofHom] at h1 ⊢
-    rw [← RingHom.comp_apply b π, ← hcomm, RingHom.comp_apply, RingHom.liftOfSurjective_comp_apply]
-    exact h1
+    rwa [← RingHom.comp_apply b π, ← hcomm, RingHom.comp_apply, RingHom.liftOfSurjective_comp_apply]
   · intro s m hm _
     ext x
     obtain ⟨y, rfl⟩ := hρ x
@@ -1331,8 +1324,7 @@ theorem Pieces_of (hL : LateralTheory.E.t_E1Cut.EtLift) (hA : LateralTheory.E.t_
   have hj := hoi j
   rw [CommRingCat.ofHom_comp] at hj
   have := MorphismProperty.of_isPullback (P := @IsOpenImmersion) pb hj
-  rw [CommRingCat.ofHom_comp]
-  exact this
+  rwa [CommRingCat.ofHom_comp]
 
 end LateralTheory.E.PiecesPf
 end -- clump:auto
@@ -1359,8 +1351,7 @@ theorem exists_prim (q : ℕ) [NeZero q] (S : Type) [CommRing S] (hA : AIC S) (h
         rw [Polynomial.natDegree_cyclotomic]
         exact Nat.totient_pos.2 (Nat.pos_of_ne_zero (NeZero.ne q)))
   refine ⟨⟨z, hq, ?_⟩⟩
-  rw [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic]
-  exact hz
+  rwa [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic]
 
 theorem prim_map_comp {q : ℕ} {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C)
     (ζ : Prim q A) : (ζ.map f).map g = ζ.map (g.comp f) := rfl
@@ -1625,8 +1616,7 @@ theorem cover_mem {S : Type} [CommRing S] (f g : S) (hfg : Ideal.span {f, g} = �
   refine (Scheme.ofArrows_mem_precoverage_iff (P := @Etale) (f := ι f g)).2 ⟨fun pt => ?_, fun b => inferInstance⟩
   let p : PrimeSpectrum S := pt
   have hp : f ∉ p.asIdeal ∨ g ∉ p.asIdeal := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have : Ideal.span {f, g} ≤ p.asIdeal := by
       rw [Ideal.span_le]; intro z hz
       rcases hz with rfl | hz
@@ -1706,8 +1696,7 @@ end LateralTheory.E.StdCoverPf
 
 open LateralTheory.E.StdCoverPf in
 theorem LateralTheory.E.MVPf.StdCover_of : LateralTheory.E.MVPf.StdCover := by
-  intro R _ S _ f g hfg
-  exact ⟨mono_spMap _, mono_spMap _, epi_cover R S f g hfg⟩
+  exact fun R _ S _ f g hfg => ⟨mono_spMap _, mono_spMap _, epi_cover R S f g hfg⟩
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1920,8 +1909,7 @@ theorem TwGenNZAC_of : LateralTheory.E.LCBijPf.TwGenNZAC := by
   let m : P.obj (op U) := Submodule.Quotient.mk (Finsupp.single (gam ζ) 1)
   have h1 : ((toSheafify Scheme.etaleTopology P).app (op U)).hom (c.val • m) =
       ((toSheafify Scheme.etaleTopology P).app (op U)).hom 0 := by
-    rw [map_nsmul, map_zero]
-    exact h
+    rwa [map_nsmul, map_zero]
   have hS := Presheaf.equalizerSieve_mem Scheme.etaleTopology (toSheafify Scheme.etaleTopology P) (c.val • m) 0 h1
   obtain ⟨𝒰, hle⟩ := Scheme.exists_cover_of_mem_grothendieckTopology hS
   obtain ⟨p⟩ : Nonempty U := inferInstance

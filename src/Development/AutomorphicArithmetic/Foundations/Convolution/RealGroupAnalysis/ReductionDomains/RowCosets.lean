@@ -73,8 +73,7 @@ private theorem ratS_inj {F : Type} [Field F] [NumberField F] :
   refine Subtype.ext ?_
   ext i j
   apply hinj
-  have h2 := congrArg (fun g : G1 F => g.1 i j) h
-  simpa [M.val_ratS] using h2
+  simpa [M.val_ratS] using congrArg (fun g : G1 F => g.1 i j) h
 
 private theorem row_up {F : Type} [Field F] (ξ : F) (g : Matrix.SpecialLinearGroup (Fin 2) F) :
     (upS ξ * g).1 1 = g.1 1 := by
@@ -137,6 +136,5 @@ theorem UpperTheory.ConvolutionTheory.R2.M.rowCosets :
       subst hrr
       have hU : upS ξ = upS ξ' := mul_right_cancel (hγ.symm.trans hγ')
       have hξξ : ξ = ξ' := by
-        have h2 := congrArg (fun g : Matrix.SpecialLinearGroup (Fin 2) F => g.1 0 1) hU
-        simpa [upS_val] using h2
+        simpa [upS_val] using congrArg (fun g : Matrix.SpecialLinearGroup (Fin 2) F => g.1 0 1) hU
       rw [hξξ]

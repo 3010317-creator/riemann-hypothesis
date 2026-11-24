@@ -155,15 +155,12 @@ private theorem unitHk_coeff (hI : HeckePair I) (x : G) (p : G ⧸ I) :
     · simp
     · intro q _ hq
       rw [ite_eq_right]
-      intro e
-      exact hq (Subtype.ext e)
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+      exact fun e => hq (Subtype.ext e)
+    · exact fun h => absurd (Finset.mem_univ _) h
   · rw [ite_eq_right hp]
     refine Finset.sum_eq_zero fun q _ => ?_
     rw [ite_eq_right]
-    intro e
-    exact hp (e ▸ q.2)
+    exact fun e => hp (e ▸ q.2)
 
 private theorem unitHk_surj (hI : HeckePair I) (v : fixd (permRep A I) I) :
     ∃ T ∈ HkAlg A I, T (unitHk_e A I) = v := by

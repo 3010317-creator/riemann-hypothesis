@@ -73,8 +73,7 @@ private theorem exists_valuationSubring_isPlaceOver (K Ω : Type) [Field K] [Num
     have h1 : f y ∈ V.nonunits := hV ⟨e y, Ideal.mem_map_of_mem e hy, rfl⟩
     exact (ValuationSubring.mem_nonunits_iff V).1 h1
   have hle : ∀ y : 𝓞 K, V.valuation (f y) ≤ 1 := by
-    intro y
-    exact (ValuationSubring.valuation_le_one_iff V _).2 (hRV (RingHom.mem_range_self f y))
+    exact fun y => (ValuationSubring.valuation_le_one_iff V _).2 (hRV (RingHom.mem_range_self f y))
   refine ⟨V, fun x => ⟨fun hx => ?_, fun hx => hlt x hx⟩⟩
   by_contra hxv
   obtain ⟨r, y, hy, hry⟩ := v.isMaximal.exists_inv hxv
@@ -92,9 +91,7 @@ private theorem finite_above_of_ne_zero (K : Type) [Field K] [NumberField K] (N 
   have h0 : Ideal.span {((N : ℕ) : 𝓞 K)} ≠ 0 := by
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact_mod_cast hN
-  refine (Ideal.finite_factors h0).subset ?_
-  intro v hv
-  exact Ideal.dvd_span_singleton.2 hv
+  exact (Ideal.finite_factors h0).subset (fun v hv => Ideal.dvd_span_singleton.2 hv)
 
 theorem UpperTheory.V.Kum.finChar :
     ∀ (K Ω : Type) [Field K] [NumberField K] [Field Ω] [Algebra K Ω] [IsAlgClosure K Ω] (n N : ℕ) (ζ : K), n ≠ 0 → N ≠ 0 → IsPrimitiveRoot ζ n → {φ : G K Ω → ZMod n | IsLocallyConstant φ ∧ (∀ a b, φ (a * b) = φ a + φ b) ∧ ∀ A : ValuationSubring Ω, ¬ A.valuation (N : Ω) < 1 → ∀ g ∈ Ine (F := K) A, φ g = 0}.Finite := by

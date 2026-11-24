@@ -306,8 +306,7 @@ private theorem exists_lattice {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [To
       field_simp
     rw [this]
     exact N.smul_mem z (Submodule.subset_span ⟨k, rfl⟩)
-  · intro s hs hli
-    exact (LinearIndependent.iff_fractionRing ℤ_[l] ℚ_[l]).mp hli
+  · exact fun s hs hli => (LinearIndependent.iff_fractionRing ℤ_[l] ℚ_[l]).mp hli
   · intro g x hx
     induction hx using Submodule.span_induction with
     | mem x hx =>
@@ -353,8 +352,7 @@ theorem UpperTheory.exists_invariant_lattice_openEmbedding :
         field_simp
       rw [this]
       exact N.smul_mem z (Submodule.subset_span ⟨k, rfl⟩)
-    · intro s hs hli
-      exact (LinearIndependent.iff_fractionRing ℤ_[l] ℚ_[l]).mp hli
+    · exact fun s hs hli => (LinearIndependent.iff_fractionRing ℤ_[l] ℚ_[l]).mp hli
     · rw [eq_top_iff, ← b.span_eq]
       refine Submodule.span_mono ?_
       rintro _ ⟨i, rfl⟩
@@ -381,8 +379,7 @@ theorem UpperTheory.exists_invariant_lattice_openEmbedding :
 
     simp only [j, b, LinearMap.comp_apply, LinearEquiv.coe_coe, Basis.equivFun_symm_apply, map_sum, map_smul,
     Submodule.subtype_apply, Basis.extendOfIsFullLattice_apply]
-    refine Finset.sum_congr rfl fun i _ => ?_
-    exact (algebraMap_smul ℚ_[l] (x i) _).symm
+    exact Finset.sum_congr rfl fun i _ => (algebraMap_smul ℚ_[l] (x i) _).symm
   let e : (Fin (finrank ℚ_[l] V) → ℚ_[l]) ≃ₜ V :=
     { toEquiv := b.equivFun.symm.toEquiv
       continuous_toFun := IsModuleTopology.continuous_of_linearMap b.equivFun.symm.toLinearMap
@@ -445,8 +442,7 @@ private theorem numField {v : ℕ} [Fact v.Prime] (K : FinExt v) {Ω : Type} [Fi
     (e.symm.toMonoidHom.comp ((MonoidHom.id _).codRestrict _ h0))
   have hr : ∀ τ x, τ (j x) = j (r τ x) := fun τ x => by
     have := hec (e.symm ⟨τ, h0 τ⟩) x
-    rw [MulEquiv.apply_symm_apply] at this
-    exact this
+    rwa [MulEquiv.apply_symm_apply] at this
   have hrc : Continuous r := continuous_subtype_val.comp (he'.comp (continuous_id.subtype_mk _))
   have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
@@ -537,8 +533,7 @@ private theorem hn_transport {R Γ Γ' M : Type} [CommRing R] [Group Γ] [Topolo
   funext g
   have := GlobalTheory.dn_comp_monoidHom e.toMonoidHom ρ ρ' h n c g
   rw [hcf] at this
-  refine this.trans ?_
-  exact congrArg f (funext fun i => e.symm_apply_apply _)
+  exact this.trans (congrArg f (funext fun i => e.symm_apply_apply _))
 
 private theorem core {n : ℕ} [NeZero n] {G D M : Type} [Group G] [TopologicalSpace G] [Group D]
     [TopologicalSpace D] [AddCommGroup M] [Module (ZMod n) M] [Finite M] [TopologicalSpace M]
@@ -828,8 +823,7 @@ private theorem H0dual_eq {G A V : Type} [Group G] [CommRing A] [AddCommGroup V]
     exact fun w hw => this hw
   · intro hf g x
     have := hf _ (Submodule.subset_span ⟨g, x, rfl⟩)
-    rw [map_sub, map_smul, sub_eq_zero] at this
-    exact this
+    rwa [map_sub, map_smul, sub_eq_zero] at this
 
 private theorem card_co {G Q A V : Type} [Group G] [CommRing Q] [CommRing A] [Algebra Q A] [AddCommGroup V]
     [Module A V] [Module Q V] [IsScalarTower Q A V] (hs : Function.Surjective (algebraMap Q A)) (χ : G →* Qˣ)
@@ -998,7 +992,6 @@ private theorem lSub_le {X : Type} [AddCommGroup X] [Module ℤ_[l] X] (m : ℕ)
     lSub l X (m + 1) ≤ (lSub l X m).comap LinearMap.id := by
   intro x hx
   obtain ⟨y, rfl⟩ := mem_lSub.mp hx
-  show (l : ℤ_[l]) ^ (m + 1) • y ∈ lSub l X m
   exact mem_lSub.mpr ⟨(l : ℤ_[l]) • y, by rw [pow_succ, mul_smul]⟩
 
 private noncomputable def tauL (l : ℕ) [Fact l.Prime] (X : Type) [AddCommGroup X] [Module ℤ_[l] X] (m : ℕ) :
@@ -1069,8 +1062,7 @@ private theorem towerLim (ρ : Representation ℤ_[l] G (Fin n → ℤ_[l])) (h 
         exact ⟨x, hx⟩
       · exact isCompact_univ.of_isClosed_subset
           ((isClosed_singleton).preimage (piT ρ h 0).u_cont) (Set.subset_univ _)
-      · intro m
-        exact (isClosed_singleton).preimage (piT ρ h m).u_cont
+      · exact fun m => (isClosed_singleton).preimage (piT ρ h m).u_cont
     obtain ⟨x, hx⟩ := hS
     exact ⟨x, fun m => Set.mem_iInter.mp hx m⟩
 
@@ -1198,8 +1190,7 @@ private theorem latGrow_bound {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [Top
   have hl : (l : ℤ_[l]) ^ m ≠ 0 := pow_ne_zero _ PadicInt.irreducible_p.ne_zero
   have hA : admitted i p := by
     refine ⟨rfl, rfl, ?_, ?_, ?_⟩
-    · refine (hc.isClosedEmbedding ?_).isEmbedding
-      exact smul_right_injective (Fin n → ℤ_[l]) hl
+    · exact (hc.isClosedEmbedding (smul_right_injective (Fin n → ℤ_[l]) hl)).isEmbedding
     · exact LinearMap.exact_map_mkQ_range _
     · exact ⟨Function.surjInv (lSub l (Fin n → ℤ_[l]) m).mkQ_surjective,
         continuous_of_discreteTopology (α := (Fin n → ℤ_[l]) ⧸ lSub l (Fin n → ℤ_[l]) m),

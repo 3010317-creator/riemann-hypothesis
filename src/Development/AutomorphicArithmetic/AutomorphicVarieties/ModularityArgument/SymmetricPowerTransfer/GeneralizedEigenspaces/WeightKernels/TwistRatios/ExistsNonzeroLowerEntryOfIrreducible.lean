@@ -107,8 +107,7 @@ theorem UpperTheory.Reformulated.B.IrreducibleInvariantSubspaces.irr_conj :
     intro v hv
     have h2 : (↑g : Matrix (Fin n) (Fin n) k).mulVec v = 0 := by
       apply h0
-      rw [Submodule.mem_comap, Matrix.mulVecLin_apply, hgg]
-      exact hv
+      rwa [Submodule.mem_comap, Matrix.mulVecLin_apply, hgg]
     rw [← hgg v, h2, Matrix.mulVec_zero]
   · right
     rw [Submodule.eq_top_iff'] at h1 ⊢
@@ -205,8 +204,7 @@ private theorem eig_basis (A : Matrix (Fin 2) (Fin 2) k) (a b : k) (hab : a ≠ 
 
 private theorem exists_nonzero_lower_entry_of_irreducible {Γ : Type} [Group Γ] (r : Γ →* GL (Fin 2) k) (h : IsIrr r) :
     ∃ x, (r x : Matrix (Fin 2) (Fin 2) k) 1 0 ≠ 0 := by
-  by_contra hno
-  push Not at hno
+  by_contra! hno
   obtain ⟨-, -, hmin⟩ := h
   let W : Submodule k (Fin 2 → k) := LinearMap.ker (LinearMap.proj (1 : Fin 2))
   have hW : ∀ v, v ∈ W ↔ v 1 = 0 := fun v => by simp [W]
@@ -224,8 +222,7 @@ private theorem exists_nonzero_lower_entry_of_irreducible {Γ : Type} [Group Γ]
 
 private theorem exists_nonzero_upper_entry_of_irreducible {Γ : Type} [Group Γ] (r : Γ →* GL (Fin 2) k) (h : IsIrr r) :
     ∃ x, (r x : Matrix (Fin 2) (Fin 2) k) 0 1 ≠ 0 := by
-  by_contra hno
-  push Not at hno
+  by_contra! hno
   obtain ⟨-, -, hmin⟩ := h
   let W : Submodule k (Fin 2 → k) := LinearMap.ker (LinearMap.proj (0 : Fin 2))
   have hW : ∀ v, v ∈ W ↔ v 0 = 0 := fun v => by simp [W]
@@ -296,8 +293,7 @@ private theorem exists_full [TopologicalSpace H] [IsTopologicalGroup H] [Topolog
     (h10 : ∀ K : Subgroup H, IsOpen (K : Set H) → ∃ x ∈ K, (r x : Matrix (Fin 2) (Fin 2) k) 1 0 ≠ 0)
     (h01 : ∀ K : Subgroup H, IsOpen (K : Set H) → ∃ x ∈ K, (r x : Matrix (Fin 2) (Fin 2) k) 0 1 ≠ 0) :
     ∃ g, ∀ i j, (r g : Matrix (Fin 2) (Fin 2) k) i j ≠ 0 := by
-  by_contra hno
-  push Not at hno
+  by_contra! hno
   obtain ⟨h0, hh0⟩ : ∃ h0 : H, ∀ x, (r x : Matrix (Fin 2) (Fin 2) k) 0 0 = 0 → h0⁻¹ * x ∈ stabilizerLowerTriangular r := by
     by_cases h : ∃ y, (r y : Matrix (Fin 2) (Fin 2) k) 0 0 = 0
     · obtain ⟨y, hy⟩ := h
@@ -319,8 +315,7 @@ private theorem exists_full [TopologicalSpace H] [IsTopologicalGroup H] [Topolog
         x ∈ ⋃ i ∈ (Finset.univ : Finset (Fin 4)), (![1, 1, h0, h1] i : H) • ((![stabilizerLowerTriangular r, stabilizerUpperTriangular r, stabilizerLowerTriangular r, stabilizerUpperTriangular r] i : Subgroup H) : Set H) := by
       intro i x hx
       refine Set.mem_biUnion (Finset.mem_coe.2 (Finset.mem_univ i)) ?_
-      rw [Set.mem_smul_set_iff_inv_smul_mem]
-      exact hx
+      rwa [Set.mem_smul_set_iff_inv_smul_mem]
     refine Set.eq_univ_of_forall fun x => ?_
     obtain ⟨i, j, hij⟩ := hno x
     fin_cases i <;> fin_cases j

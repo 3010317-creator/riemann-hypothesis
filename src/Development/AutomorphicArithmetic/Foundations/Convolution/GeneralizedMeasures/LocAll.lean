@@ -274,8 +274,7 @@ private theorem haar_uniq {G : Type*} [Group G] [TopologicalSpace G] [IsTopologi
   have e2 : m K = (Measure.haarScalarFactor m m' • m') K := by rw [← e]
   rw [h, Measure.smul_apply, h', ENNReal.smul_def, smul_eq_mul, mul_one] at e2
   have e3 : Measure.haarScalarFactor m m' = 1 := by exact_mod_cast e2.symm
-  rw [e3, one_smul] at e
-  exact e
+  rwa [e3, one_smul] at e
 
 private theorem gl_sc (R : Type*) [CommRing R] [TopologicalSpace R] [IsTopologicalRing R]
     [SecondCountableTopology R] (n : ℕ) : SecondCountableTopology (GL (Fin n) R) := by
@@ -425,8 +424,7 @@ private theorem aeval_elemSymm_power {n : ℕ} (l : ℕ) (i : Fin n) :
     ⟨MvPolynomial.expand l (MvPolynomial.esymm (Fin n) ℂ (i + 1)), fun w => by
       rw [MvPolynomial.rename_expand, MvPolynomial.esymm_isSymmetric]⟩
   have h2 := congrArg Subtype.val h
-  rw [← MvPolynomial.esymmAlgHom_apply]
-  exact h2
+  rwa [← MvPolynomial.esymmAlgHom_apply]
 
 private theorem aeval_aeval_elemSymm_power {n : ℕ} (l : ℕ) (γ : MvPolynomial (Fin n) ℂ) :
     MvPolynomial.aeval (fun i : Fin n => MvPolynomial.esymm (Fin n) ℂ (i + 1))
@@ -653,8 +651,7 @@ private theorem sph_unique {K : Type} [Field K] [NumberField K] {n : ℕ} (w : P
       have : ((Measure.haarScalarFactor μ1 μ2 : NNReal) : ENNReal) = 1 := by
         rw [h3]; simp [ENNReal.smul_def]
       exact_mod_cast this
-    rw [h4, one_smul] at h
-    exact h
+    rwa [h4, one_smul] at h
   obtain rfl : H1 = H2 := satakeTransform_injective (s1.trans s2.symm)
   funext x
   rw [← e1, ← e2]
@@ -669,8 +666,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 private theorem over_iff (v : Pl F) (w : Pl E) : w.asIdeal.LiesOver v.asIdeal ↔ w.under (𝓞 F) = v := by
   constructor
-  · intro h
-    exact HeightOneSpectrum.ext h.over.symm
+  · exact fun h => HeightOneSpectrum.ext h.over.symm
   · rintro rfl
     exact ⟨rfl⟩
 
@@ -696,8 +692,7 @@ private theorem prod_filter {M : Type} [CommMonoid M] (κ : Finset (Pl E)) (v : 
   · intro w hw
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hw ⊢
     exact ⟨hw, (over_iff v w.1).1 w.2⟩
-  · intro w _ w' _ h
-    exact Subtype.ext h
+  · exact fun w _ w' _ h => Subtype.ext h
   · intro w hw
     simp only [Finset.mem_filter] at hw
     exact ⟨⟨w, (over_iff v w).2 hw.2⟩, by simp [hw.1], rfl⟩
@@ -737,8 +732,7 @@ theorem UpperTheory.ConvolutionTheory.GM.locAll :
       (fun w => h w.1) f (fun w => ?_) ?_
     · by_cases hw : w.1 ∈ κ
       · simpa only [ite_eq_left hw] using hh _ hw
-      · simp only [ite_eq_right hw, hh' _ hw]
-        exact (sphEx E n hn w.1).2.1
+      · simpa only [ite_eq_right hw, hh' _ hw] using (sphEx E n hn w.1).2.1
     · rw [finprod_eq_prod_of_fintype]
       convert hf using 2 with w
       have : (powE 1 : Fin n → MvPolynomial (Fin n) ℂ) = X := funext powE_one

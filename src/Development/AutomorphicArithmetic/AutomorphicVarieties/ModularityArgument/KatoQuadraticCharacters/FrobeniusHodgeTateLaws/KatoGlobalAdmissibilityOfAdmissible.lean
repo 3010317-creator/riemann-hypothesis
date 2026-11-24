@@ -348,8 +348,7 @@ theorem thP : ThP := by
       rw [Module.End.mul_apply, e', e'']
   have hP' : P ∈ Submodule.span (Qbar l)
       (Submonoid.closure (FreeAlgebra.ι (Qbar l) '' {T | GlobalTheory.KZ.admitted N l T}) : Set (FreeAlgebra (Qbar l) Letter)) := by
-    rw [← Algebra.adjoin_eq_span]
-    exact hP
+    rwa [← Algebra.adjoin_eq_span]
   clear hP
   induction hP' using Submodule.span_induction with
   | mem x hx =>
@@ -359,8 +358,7 @@ theorem thP : ThP := by
     exact cgp_trans (c' i) (cgp_symm (hΘ b' hb'.1 i))
   | zero =>
     refine ⟨0, fun n _ Θ hΘ b hb i => ?_⟩
-    simp only [map_zero, LinearMap.zero_apply]
-    exact cgp_refl _ _
+    simpa only [map_zero, LinearMap.zero_apply] using cgp_refl _ _
   | add x y _ _ hx hy =>
     obtain ⟨c, hc⟩ := hx
     obtain ⟨d, hd⟩ := hy
@@ -429,8 +427,7 @@ private theorem expo_eq {M a b : ℕ} [NeZero M] {ζ : Ω} (hζ : IsPrimitiveRoo
     (a : ZMod M) = b := by
   obtain ⟨u, rfl⟩ := hζ.isUnit (NeZero.ne M)
   rw [ZMod.natCast_eq_natCast_iff, hζ.eq_orderOf, orderOf_units]
-  apply pow_eq_pow_iff_modEq.mp
-  exact Units.ext (by simpa using h)
+  exact pow_eq_pow_iff_modEq.mp (Units.ext (by simpa using h))
 
 private theorem det_of_charpoly {K : Type} [Field K] (ι : K ≃+* ℂ) {A : Matrix (Fin 2) (Fin 2) K} {a d : ℂ}
     (h : A.charpoly.map ι.toRingHom = X ^ 2 - C a * X + C d) : ι A.det = d := by
@@ -574,12 +571,10 @@ theorem UpperTheory.V.Z.Kato.Joint.chiQuad :
   have hcop : c.Coprime (l * g.M) := by
     apply Nat.Coprime.mul_right
     · have := hc1.gcd_eq
-      rw [Nat.gcd_one_left] at this
-      exact this
+      rwa [Nat.gcd_one_left] at this
     · have := hcd.gcd_eq
       show c.gcd g.M = 1
-      rw [this]
-      exact hd
+      rwa [this]
   obtain ⟨s, hs⟩ := exists_aut_pow (Ω := Ω) hN0 hcop
   have hχs : χ s = 1 := by
     apply hK
@@ -638,8 +633,7 @@ private theorem mem_fixingSubgroup_of_fixes_finite_set (K Ω : Type) [Field K] [
       rw [SetLike.mem_coe, AlgHom.mem_equalizer]
       simpa using hg y hy)
   have hx1 : x ∈ Submodule.span K (t : Set Ω) := by
-    rw [ht]
-    exact hx
+    rwa [ht]
   have hx2 : x ∈ Algebra.adjoin K (t : Set Ω) := Algebra.span_le_adjoin K _ hx1
   have hx3 := hle hx2
   rw [AlgHom.mem_equalizer] at hx3

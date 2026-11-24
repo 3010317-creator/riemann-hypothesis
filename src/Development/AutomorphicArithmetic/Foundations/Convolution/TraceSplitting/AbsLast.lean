@@ -247,8 +247,7 @@ theorem twTr_linearIndependent : ∀ (G : Type) [Group G] [TopologicalSpace G] [
     have hxk := hx i _ (Finset.mem_image_of_mem _ (Finset.mem_univ k))
     rw [hact i _ (b i k).2]
     by_cases hi : i = i₀
-    · have e : (σ i).ρ.asAlgebraHom x (b i k : (σ i).V) = b i k := by
-        exact hxk.trans (ite_eq_left hi)
+    · have e : (σ i).ρ.asAlgebraHom x (b i k : (σ i).V) = b i k := hxk.trans (ite_eq_left hi)
       rw [ite_eq_left hi, e]
       have h2 : ∀ q : K' ⧸ U.subgroupOf K', (σ i).ρ ((q.out : K') : G) (b i k : (σ i).V) = b i k :=
         fun q => fixed_apply (b i k).2 q.out
@@ -264,8 +263,7 @@ theorem twTr_linearIndependent : ∀ (G : Type) [Group G] [TopologicalSpace G] [
       (f₂ := (if i = i₀ then r⁻¹ * N else 0) • (fixed (σ i).ρ K').subtype) (fun k => by
         rw [LinearMap.comp_apply, LinearMap.smul_apply, Submodule.subtype_apply]
         exact hbasis i k)) ⟨v, hv⟩
-    rw [LinearMap.comp_apply, LinearMap.smul_apply, Submodule.subtype_apply] at this
-    exact this
+    rwa [LinearMap.comp_apply, LinearMap.smul_apply, Submodule.subtype_apply] at this
   have htr : ∀ i, twTr (σ i).ρ K K' f LinearMap.id =
       (if i = i₀ then r⁻¹ * N else 0) * Module.finrank ℂ (fixed (σ i).ρ K') := by
     intro i
@@ -464,8 +462,7 @@ theorem UpperTheory.ConvolutionTheory.C.charIndep :
     ext i
     simp only [Set.mem_setOf_eq, Finset.coe_filter, Finset.mem_univ, true_and]
     exact ⟨fun h => Quotient.sound h, fun h => Quotient.exact h⟩
-  rw [hset, finsum_mem_coe_finset]
-  exact hfin
+  rwa [hset, finsum_mem_coe_finset]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -495,8 +492,7 @@ private theorem fixed_fd (U : Subgroup (Gw n v)) (hU : CO U) (σ : SmIrr (Gw n v
       simpa using hx ⟨g, hg⟩
     · intro hx g
       simpa using hx g g.2
-  rw [← e]
-  exact h2
+  rwa [← e]
 
 private theorem td : TotallyDisconnectedSpace (Gw n v) := by
   haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) (v.adicCompletion K)) :=

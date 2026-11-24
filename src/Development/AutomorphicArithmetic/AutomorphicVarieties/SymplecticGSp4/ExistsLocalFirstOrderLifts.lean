@@ -261,6 +261,4 @@ theorem UpperTheory.exists_local_first_order_lifts :
       show algebraMap c.O (DualNumber c.O) (ρ₀.hom g a b) = _
       rw [hhom]
       rfl
-    have key := dU_conj (Y v) (D.r0 g) _ hX a b
-    simp only [cjL_hom_eq_conj]
-    exact key
+    simpa only [cjL_hom_eq_conj] using dU_conj (Y v) (D.r0 g) _ hX a b

@@ -85,10 +85,8 @@ private theorem isPeriod_comp {O : Type} [Ring O] {bar : O → O} {g : ℕ} {ρ 
   · show P (w (a • x)) = _
     rw [map_smul, h1]
     rfl
-  · rw [hr]
-    exact h3
-  · rw [hs]
-    exact h4
+  · rwa [hr]
+  · rwa [hs]
   · show (hermForm Hm (P (w x)) (P (w y))).im = _
     rw [hEF, hw x y]
 

@@ -111,17 +111,14 @@ theorem exists_eq_pow_nuOf_mul_unit (h : ∃ g, ε g ^ n ≠ 1) :
   refine ⟨g, (isUnit_of_not_dvd l (c := c) ?_).unit, ?_⟩
   · rintro ⟨d, rfl⟩
     exact hg ⟨d, by rw [hc]; ring⟩
-  · rw [IsUnit.unit_spec]
-    exact hc
+  · rwa [IsUnit.unit_spec]
 
 theorem le_nuOf_iff (h : ∃ g, ε g ^ n ≠ 1) (k : ℕ) :
     k ≤ nuOf l ε n ↔ ∀ g, (l : ℤ_[l]) ^ k ∣ ((ε g : ℤ_[l]ˣ) : ℤ_[l]) ^ n - 1 := by
   constructor
-  · intro hk g
-    exact (pow_dvd_pow _ hk).trans (pow_nuOf_dvd l ε n g)
+  · exact fun hk g => (pow_dvd_pow _ hk).trans (pow_nuOf_dvd l ε n g)
   · intro hk
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     obtain ⟨g, hg⟩ := nuOf_mem l ε n h
     exact hg ((pow_dvd_pow _ hlt).trans (hk g))
 
@@ -193,14 +190,12 @@ private theorem totient_le_of_cyc_pow_eq_one (l : ℕ) [Fact l.Prime] (E Ω : Ty
     _ = Module.finrank ℚ E * Module.finrank E E⟮ζ⟯ := (Module.finrank_mul_finrank ℚ E E⟮ζ⟯).symm
     _ ≤ Module.finrank ℚ E * n := by
         apply Nat.mul_le_mul_left
-        rw [IntermediateField.adjoin.finrank hint]
-        exact hdeg
+        rwa [IntermediateField.adjoin.finrank hint]
 
 theorem exists_cyc_pow_ne_one (l : ℕ) [Fact l.Prime] (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω]
     [IsAlgClosure E Ω] (n : ℕ) (hn : n ≠ 0) : ∃ g : Ω ≃ₐ[E] Ω, cyc l E Ω g ^ n ≠ 1 := by
   have hl := (Fact.out : l.Prime)
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have key := totient_le_of_cyc_pow_eq_one l E Ω n hn hne (Module.finrank ℚ E * n + 1)
   rw [Nat.totient_prime_pow_succ hl] at key
   have h1 : Module.finrank ℚ E * n < l ^ (Module.finrank ℚ E * n) := Nat.lt_pow_self hl.one_lt
@@ -240,8 +235,7 @@ theorem exists_eps_eq_pow_nu :
     (exists_cycZ_pow_ne_one X i)
   refine ⟨g, Units.map (algebraMap ℤ_[X.l i] (X.O0 i)).toMonoidHom u, ?_⟩
   have h := congrArg (algebraMap ℤ_[X.l i] (X.O0 i)) hu
-  rw [RingHom.map_sub, map_pow, map_one, map_mul, map_pow, map_natCast] at h
-  exact h
+  rwa [RingHom.map_sub, map_pow, map_one, map_mul, map_pow, map_natCast] at h
 
 theorem nu_pos_of_res (K : Type) [CommRing K] [Nontrivial K] [Algebra (X.O0 i) K]
     (h : ∀ g : GE N, algebraMap (X.O0 i) K ((eps0 X i g : (X.O0 i)ˣ) : X.O0 i) ^ (D.R.t * D.R.r) = 1) : 0 < nu X i := by

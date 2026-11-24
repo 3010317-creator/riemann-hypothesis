@@ -112,8 +112,7 @@ open scoped TensorProduct
 theorem GlobalTheory.RealQuotBot.tmul_ne_zero {Pr Pf : Type} [AddCommGroup Pr] [Module ℂ Pr] [AddCommGroup Pf] [Module ℂ Pf] {x : Pr} {y : Pf}
     (hx : x ≠ 0) (hy : y ≠ 0) : x ⊗ₜ[ℂ] y ≠ 0 := by
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual ℂ Pf, φ y ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hy ((Module.forall_dual_apply_eq_zero_iff ℂ y).1 hc)
   intro h0
   have := congrArg ((TensorProduct.rid ℂ Pr).toLinearMap ∘ₗ LinearMap.lTensor Pr φ) h0
@@ -242,8 +241,7 @@ theorem colSub_exp_of_colDer : ∀ {ι : Type} [Fintype ι] [DecidableEq ι] (d 
     rw [← sub_self t] at h0
     have h1 := h0.comp_sub_const t t
     simp only [sub_add_cancel] at h1
-    rw [mul_comm]
-    exact h1
+    rwa [mul_comm]
   have hg : ∀ t : ℝ, HasDerivAt (fun s : ℝ => f s * Complex.exp (-(s * k))) 0 t := by
     intro t
     have h1 : HasDerivAt (fun s : ℝ => -((s : ℂ) * k)) (-k) t := by
@@ -373,8 +371,7 @@ theorem fockS_eq_colDer_of_same_signs : ∀ {D : D7} {a b : ℕ} (τ : D.what₂
   unfold GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.fockS GlobalTheory.ColLie.colDer
   simp only [hs, Finset.sum_add_distrib, smul_add, Finset.smul_sum]
   congr 1
-  · rw [Finset.sum_comm (s := (Finset.univ : Finset (Fin b)))]
-    rw [Finset.sum_comm]
+  · rw [Finset.sum_comm (s := (Finset.univ : Finset (Fin b))), Finset.sum_comm]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [Finset.sum_comm]
   · simp only [smul_ite, smul_zero, Finset.sum_const, Finset.card_univ, Fintype.card_fin, Finset.sum_ite_eq,
@@ -509,10 +506,8 @@ theorem hasDerivAt_coeff_colSub_exp {ι : Type} [Fintype ι] [DecidableEq ι] (d
   · intro σ i j
     by_cases h : σ = τ
     · subst h
-      simp only [atPl, Function.update_self, ite_true]
-      exact hasDerivAt_exp_ofReal_smul_entry S i j
-    · simp only [atPl, Function.update_of_ne h, ite_eq_right h]
-      exact hasDerivAt_const _ _
+      simpa only [atPl, Function.update_self, ite_true] using hasDerivAt_exp_ofReal_smul_entry S i j
+    · simpa only [atPl, Function.update_of_ne h, ite_eq_right h] using hasDerivAt_const _ _
 
 end GlobalTheory.ColLie
 
@@ -615,8 +610,7 @@ theorem act_eq (D : D7) (ε : Bool) (M X : HSp D) (A : GlobalTheory.ChainFr.Fr M
         ext i j
         simp [hZf]
       have hZt : Zf.trace = -S.trace := by
-        simp only [hZf, Bool.false_eq_true, ite_false]
-        exact trace_map_conj S hS
+        simpa only [hZf, Bool.false_eq_true, ite_false] using trace_map_conj S hS
       rw [hY, hZt, hn']
       simp only [Bool.false_eq_true, ite_false]
       push_cast
@@ -629,8 +623,7 @@ theorem act_eq (D : D7) (ε : Bool) (M X : HSp D) (A : GlobalTheory.ChainFr.Fr M
         ext i j
         simp [hZf, Matrix.conjTranspose_apply]
       have hYt : (Zf.map (starRingEnd ℂ)).trace = -S.trace := by
-        simp only [hZf, ite_true]
-        exact trace_map_conj S hS
+        simpa only [hZf, ite_true] using trace_map_conj S hS
       have hZt : Zf.trace = S.trace := by simp [hZf]
       rw [hY, hYt, hZt, hn', colDer_neg]
       simp only [ite_true]
@@ -842,8 +835,7 @@ theorem natSet_mul {S : ι → Matrix (Fin d) (Fin d) ℂ} {t : ℂ} {P R : Pol 
   obtain ⟨l, h3, h4⟩ := hR
   refine ⟨k + l, ?_, ?_⟩
   · rw [Derivation.leibniz, h1, h3]
-    simp only [smul_eq_mul, mul_smul_comm, Nat.cast_add, add_smul, mul_comm R P]
-    exact add_comm _ _
+    simpa only [smul_eq_mul, mul_smul_comm, Nat.cast_add, add_smul, mul_comm R P] using add_comm _ _
   · rw [map_mul, h2, h4, pow_add, smul_mul_smul_comm]
 
 theorem span_natSet (S : ι → Matrix (Fin d) (Fin d) ℂ) (hS : S * S = S) (t : ℂ) :
@@ -955,8 +947,7 @@ theorem idem_mem (hL : LieRel q q' n) (τ : ι) (S : Matrix (Fin d) (Fin d) ℂ)
     (rowSub (1 + (t - 1) • (Pi.single τ S : ι → Matrix (Fin d) (Fin d) ℂ))).toLinearMap t ?_ ?_ ?_ P P' h
   · intro P P' h
     have := hL τ S P P' h
-    rw [htr, mul_one] at this
-    exact this
+    rwa [htr, mul_one] at this
   · rw [eq_top_iff, ← span_natSet _ (single_idem τ hST) t⁻¹]
     refine Submodule.span_mono ?_
     rintro v ⟨k, h1, h2⟩
@@ -1205,9 +1196,7 @@ theorem row_transport : ∀ (D : D7) (M M' X : HSp D) (A : GlobalTheory.ChainFr.
     exact scalar_shift _ _ _ _ _ _ _ _ _ hc h
   have hdet : ∀ τ, (κ τ : Matrix (Fin X.rank) (Fin X.rank) ℂ).det ≠ 0 := fun τ =>
     (Matrix.UnitaryGroup.det_isUnit (κ τ)).ne_zero
-  have h := mem_good hrel _ hdet P P' hP
-  simp only [unitary_inv_transpose] at h
-  exact h
+  simpa only [unitary_inv_transpose] using mem_good hrel _ hdet P P' hP
 
 end GlobalTheory.RowTransport
 
@@ -1355,8 +1344,7 @@ theorem posSemidef_of_hasSignature {n : ℕ} {G : Matrix (Fin n) (Fin n) ℂ}
   obtain ⟨e, P, hP⟩ := h
   rw [_root_.Formalism.UG.P.cT_conj_eq, _root_.Formalism.UG.P.Jpq_zero] at hP
   set Q : Matrix (Fin n ⊕ Fin 0) (Fin n ⊕ Fin 0) ℂ := P.inv
-  have hPQ : P.val * Q = 1 := by
-    exact P.val_inv
+  have hPQ : P.val * Q = 1 := P.val_inv
   have hR : G.reindex e e = Q.conjTranspose * 1 * Q := by
     rw [← hP]
     calc G.reindex e e = (P.val * Q).conjTranspose * G.reindex e e * (P.val * Q) := by

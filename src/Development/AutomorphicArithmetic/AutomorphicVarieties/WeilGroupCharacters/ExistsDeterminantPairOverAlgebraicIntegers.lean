@@ -129,8 +129,7 @@ private theorem supp_map {R B G : Type} [CommRing R] [CommRing B] [Group G] (π 
     (MonoidAlgebra.mapRingHom G π y).coeff.support ⊆ y.coeff.support := by
   intro g hg
   rw [Finsupp.mem_support_iff] at hg ⊢
-  intro h0
-  exact hg (by rw [MonoidAlgebra.coeff_mapRingHom, h0, map_zero])
+  exact fun h0 => hg (by rw [MonoidAlgebra.coeff_mapRingHom, h0, map_zero])
 
 private theorem aeval_nat {A' B B' G : Type} [CommRing A'] [CommRing B] [CommRing B'] [Algebra A' B] [Algebra A' B']
     [Group G] (φ : B →ₐ[A'] B') (x : MonoidAlgebra B G) (Q : MvPolynomial G A') :
@@ -399,8 +398,7 @@ private theorem qb_adic (K : IntermediateField ℚ_[l] (PadicAlgCl l)) (A : Suba
     intro a ha
     have h1 : (a : PadicAlgCl l) / (l : PadicAlgCl l) ^ N ∈ A := by
       refine (hA _).2 ⟨div_mem ((hA _).1 a.2).1 (pow_mem (natCast_mem _ _) _), 0, ?_⟩
-      rw [map_zero, sub_zero, norm_div, div_lt_one (norm_pos_iff.2 (pow_ne_zero _ hl0))]
-      exact ha
+      rwa [map_zero, sub_zero, norm_div, div_lt_one (norm_pos_iff.2 (pow_ne_zero _ hl0))]
     have h2 : a = ⟨_, h1⟩ * (l : A) ^ N := Subtype.ext (by
       push_cast
       field_simp)
@@ -572,8 +570,7 @@ theorem UpperTheory.V.W.exists_determinantPair_over_algebraicIntegers :
         · have h := ((UpperTheory.V.CA.d_gmap p.D).2.2.1 (A.val : A →+* PadicAlgCl l) (MonoidAlgebra.single g 1)).2 i
           rw [MonoidAlgebra.mapRingHom_single, map_one, hD] at h
           exact ⟨_, h.symm⟩
-        · rw [(UpperTheory.V.CA.d_gmap B.u.D).2.1]
-          exact hf1'
+        · rwa [(UpperTheory.V.CA.d_gmap B.u.D).2.1]
       · refine MonoidHom.ext fun g => Units.ext (Subtype.ext ?_)
         exact congrArg Units.val (DFunLike.congr_fun ((hf2' v i).trans (hp v i).symm) g)
   haveI : Algebra.IsAlgebraic ℤ_[l] (PadicAlgCl l) :=

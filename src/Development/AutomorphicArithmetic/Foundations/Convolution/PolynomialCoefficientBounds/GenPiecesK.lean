@@ -360,8 +360,7 @@ private theorem gt_gen {σ ρ : Type} [DecidableEq σ] (f : σ → MvPolynomial 
     intro α hα
     have h := hsupp hα
     rw [hS, Finset.mem_filter] at h
-    refine le_trans ?_ h.2
-    exact Finset.sum_le_sum (fun i _ => Nat.le_mul_of_pos_left _ (hw i))
+    exact le_trans (Finset.sum_le_sum (fun i _ => Nat.le_mul_of_pos_left _ (hw i))) h.2
   · calc _ ≤ ∑ α ∈ (∑ α ∈ S, monomial α (G.coeff α)).support, ‖G.coeff α‖ := by
           refine Finset.sum_le_sum (fun α hα => ?_)
           rw [hc, ite_eq_left (hsupp hα)]
@@ -441,8 +440,7 @@ theorem UpperTheory.ConvolutionTheory.FX.generators0 :
 
     rw [hG α, map_sum]
 
-    simp only [map_mul, hF, map_sum, gen_inv, Finset.mul_sum]
-    exact Finset.sum_comm
+    simpa only [map_mul, hF, map_sum, gen_inv, Finset.mul_sum] using Finset.sum_comm
   have hP' : P = ∑ α ∈ P.support, C (P.coeff α) * monomial α (1 : ℂ) := by
     conv_lhs => rw [P.as_sum]
     simp only [C_mul_monomial, mul_one]
@@ -456,8 +454,7 @@ theorem UpperTheory.ConvolutionTheory.FX.generators0 :
       rw [← h1]
       conv_rhs => rw [hP']
 
-      simp only [map_sum, map_mul, rename_C, Finset.mul_sum]
-      exact Finset.sum_comm
+      simpa only [map_sum, map_mul, rename_C, Finset.mul_sum] using Finset.sum_comm
 
     rw [map_mul, map_sum]
     simp only [map_mul (aeval _) (C _), hmon, aeval_C, algebraMap_eq]

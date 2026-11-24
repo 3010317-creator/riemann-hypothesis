@@ -87,8 +87,7 @@ theorem UpperTheory.V.Pa.testVal :
       exact Submodule.mem_one.mpr ⟨_, rfl⟩
     have h4 := (Submodule.disjoint_def.mp S.U.compl.disjoint) _ h2 h1
     rw [← map_sub] at h4
-    have h5 := S.U.inj (h4.trans (map_zero _).symm)
-    exact (sub_eq_zero.mp h5).symm
+    exact (sub_eq_zero.mp (S.U.inj (h4.trans (map_zero _).symm))).symm
   refine ⟨hO, ?_, ?_, ?_, ?_⟩
   · intro g m
     rw [← map_zpow, ← map_zpow]
@@ -105,8 +104,7 @@ theorem UpperTheory.V.Pa.testVal :
     rw [hB, ← ho, hT.oo o, ho, S.rF_f, S.P.f_s]
   · intro v i g
     rw [hT.res, hB, hpr, S.rF_f]
-    have h := congrArg (fun χ => ((χ g : S.x.Aˣ) : S.x.A)) (S.P.maps.2 v i)
-    exact congrArg _ h
+    exact congrArg _ (congrArg (fun χ => ((χ g : S.x.Aˣ) : S.x.A)) (S.P.maps.2 v i))
   · intro v i g hg
     have hψ : ((S.u.ψ v i g : S.Bˣ) : S.B) = algebraMap S.O S.B ((S.r.th v i ⟨g, hg⟩ : S.Oˣ) : S.O) :=
       (S.u.psi v i).mu ⟨g, hg⟩

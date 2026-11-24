@@ -59,8 +59,7 @@ private theorem padic_pow_l {l : ℕ} [hl : Fact l.Prime] (h2 : l ≠ 2) (x : �
   have hodd : Odd l := hl.out.odd_of_ne_two h2
   have hc : PadicInt.toZMod x = 1 := by
     have h1 : PadicInt.toZMod x ^ l = 1 := by rw [← map_pow, hx, map_one]
-    rw [ZMod.pow_card] at h1
-    exact h1
+    rwa [ZMod.pow_card] at h1
   have hdvd : (l : ℤ_[l]) ∣ x - 1 := by
     have hs := PadicInt.toZMod_spec x
     rw [hc, PadicInt.maximalIdeal_eq_span_p, Ideal.mem_span_singleton, ZMod.cast_eq_val, ZMod.val_one,
@@ -85,8 +84,7 @@ private theorem padic_pow {l : ℕ} [Fact l.Prime] (h2 : l ≠ 2) (a : ℕ) (x :
   | succ a ih =>
     apply ih
     apply padic_pow_l h2
-    rw [← pow_mul, ← pow_succ]
-    exact hx
+    rwa [← pow_mul, ← pow_succ]
 
 theorem UpperTheory.V.Ws.Lk.kapMu :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} {D : Raw Ω c} {T : Tower D} (P : Pre T), D.Good → ∀ (g : G T.L Ω) (a : ℕ), g ^ l ^ a ∈ (commutator (G T.L Ω)).topologicalClosure → P.κ g = 1 ∧ P.tL g = 1 := by

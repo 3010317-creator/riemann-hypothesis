@@ -864,8 +864,7 @@ theorem formalDeg_div_volU_log_bound : ∀ (r n : ℕ) (d : ℝ) (lam : Fin r �
       _ = M ^ (r * r) := by rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin, ← pow_mul]
   have hVinv : V⁻¹ ≤ (r : ℝ) ^ (r * r) := by
     have h := inv_anti₀ (by positivity) hVlow
-    rw [inv_pow, inv_inv, ← pow_mul] at h
-    exact h
+    rwa [inv_pow, inv_inv, ← pow_mul] at h
   have hQpos : 0 < P / D / V := by positivity
   have hQle : P / D / V ≤ (M * r) ^ (r * r) := by
     calc P / D / V ≤ P / V := by
@@ -1093,8 +1092,7 @@ theorem lamAt_anti {Rk : Ranks} (h : HCParam Rk) {n n' : ℕ} (hnn : n ≤ n') (
     induction d with
     | zero => intro _; exact le_rfl
     | succ d ih =>
-      intro hd
-      exact (Formalism.L2.NTheta.lamAt_lt h (n + d) (by omega)).le.trans (ih (by omega))
+      exact fun hd => (Formalism.L2.NTheta.lamAt_lt h (n + d) (by omega)).le.trans (ih (by omega))
   have := mono (n' - n) (by omega)
   rwa [show n + (n' - n) = n' by omega] at this
 
@@ -1444,8 +1442,7 @@ theorem mem_lattice_of_rational_mem_completion (V : HSp D) (v : Fin V.rank → D
       rwa [V.frame.sum_equivFun]
     · intro hw
       refine ⟨V.frame.equivFun.symm w, ?_, V.frame.equivFun.apply_symm_apply w⟩
-      rw [Module.Basis.equivFun_symm_apply]
-      exact hw
+      rwa [Module.Basis.equivFun_symm_apply]
   have hfull : Submodule.span D.host.E (V.L0 : Set V.V) = ⊤ := by
     let W := Submodule.span D.host.E (V.L0 : Set V.V)
     change W = ⊤
@@ -1460,8 +1457,7 @@ theorem mem_lattice_of_rational_mem_completion (V : HSp D) (v : Fin V.rank → D
     obtain ⟨x, hx, hx₀⟩ :=
       Submodule.exists_mem_ne_zero_of_ne_bot (LinearMap.ker_ne_bot_of_finrank_lt (f := g) hdim)
     have hsmul (a : D.host.E) : a • e x ∈ V.L0 := by
-      rw [← V.baseLattice_isUnimodular]
-      rw [Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
+      rw [← V.baseLattice_isUnimodular, Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
       intro y hy
       have hxy : V.hT (e x) y = 0 :=
         congrArg (fun f : Module.Dual D.host.E W => f ⟨y, Submodule.subset_span hy⟩) (LinearMap.mem_ker.mp hx)
@@ -1483,8 +1479,7 @@ theorem mem_lattice_of_rational_mem_completion (V : HSp D) (v : Fin V.rank → D
     have hx : x ∈ Submodule.span D.host.E (V.L0 : Set V.V) := by
       rw [hfull]; trivial
     have := Submodule.mem_map_of_mem (f := f) hx
-    rw [Submodule.map_span] at this
-    exact this
+    rwa [Submodule.map_span] at this
   have hr := (GlobalTheory.AdLat.hat_rational_points_and_approx D.host.F D.host.E V.rank L (V.standardTuple_isLattice.fg.map _) hsp).1 v
   rw [← hL]
   refine hr.1 ?_

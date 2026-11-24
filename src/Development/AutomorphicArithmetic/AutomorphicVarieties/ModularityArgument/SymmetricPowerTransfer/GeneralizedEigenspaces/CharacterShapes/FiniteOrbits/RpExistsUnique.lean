@@ -67,8 +67,7 @@ private theorem rp_exists_unique {I : Type} {Gv Hv : I → Type} [∀ v, Group (
     exact hv (by simp [x, h, one_mem])
   refine ⟨⟨x, hx⟩, ⟨fun v h => ?_, fun v h => ?_⟩, ?_⟩
   · show e v h (x v) = w v
-    simp only [x, dite_eq_left h]
-    exact Function.surjInv_eq _ _
+    simpa only [x, dite_eq_left h] using Function.surjInv_eq _ _
   · show x v = 1
     simp [x, h]
   · rintro g ⟨h1, h2⟩
@@ -78,8 +77,7 @@ private theorem rp_exists_unique {I : Type} {Gv Hv : I → Type} [∀ v, Group (
     · apply (he v h).1
       rw [h1 v h]
       show w v = e v h (x v)
-      simp only [x, dite_eq_left h]
-      exact (Function.surjInv_eq _ _).symm
+      simpa only [x, dite_eq_left h] using (Function.surjInv_eq _ _).symm
     · rw [h2 v h]
       show 1 = x v
       simp [x, h]
@@ -94,8 +92,7 @@ private theorem mem_su_of_det_eq_one {K : Type} [Field K] {D : K} (x : DX D) (hx
     x ∈ SU D := by
   rw [SU, MonoidHom.mem_ker]
   refine Units.ext ?_
-  rw [MonoidHom.comp_apply, Matrix.GeneralLinearGroup.val_det_apply, Units.val_one]
-  exact hx
+  rwa [MonoidHom.comp_apply, Matrix.GeneralLinearGroup.val_det_apply, Units.val_one]
 
 theorem UpperTheory.V.Z.Sym.So.elEx :
     UpperTheory.V.Z.Sym.So.ElEx := by

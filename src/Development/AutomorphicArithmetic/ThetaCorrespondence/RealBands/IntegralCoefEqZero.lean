@@ -773,8 +773,7 @@ private lemma wt_le {n : ℕ} {ε : Fin n → Bool} (g : UJ ε) (x : MatrixCoord
     rw [pi_norm_le_iff_of_nonneg hρ0]
     intro j
     have := norm_entry_mul_near_one_le (g := coeMatrixAlt ε g) hR0 hg h i j
-    rw [← Matrix.mul_assoc, determinant_character_mul_inv, Matrix.one_mul] at this
-    exact this
+    rwa [← Matrix.mul_assoc, determinant_character_mul_inv, Matrix.one_mul] at this
   have h1 : 1 + ‖x‖ ≤ (Real.sqrt n + 1) * (1 + R) := by nlinarith
   have h2 : (1 + ‖x‖) ^ (2 * n ^ 2 + 1) ≤ (Real.sqrt n + 1) ^ (2 * n ^ 2 + 1) * wt g := by
     unfold wt
@@ -890,8 +889,7 @@ theorem UpperTheory.Lit.Cusp.integrable_wt :
     exact ENNReal.mul_lt_top hcW.lt_top hb
   have h4 : ∫⁻ g, w g ∂ν < ⊤ := ENNReal.lt_top_of_mul_ne_top_left h3.ne hO_pos.ne'
   refine ⟨hwc.aestronglyMeasurable, ?_⟩
-  rw [hasFiniteIntegral_iff_ofReal (Eventually.of_forall fun g => inv_nonneg.2 (hwpos g).le)]
-  exact h4
+  rwa [hasFiniteIntegral_iff_ofReal (Eventually.of_forall fun g => inv_nonneg.2 (hwpos g).le)]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.RealBands.Weight =====
@@ -1078,8 +1076,7 @@ theorem UpperTheory.Lit.Cusp.flagN_eq_NW :
     show Module.finrank ℂ W = Module.finrank ℂ (⊥ : Submodule ℂ (Fin n → ℂ)) + Module.finrank ℂ W
     rw [finrank_bot, zero_add]
   · rw [hl]
-    intro x hx y hy
-    exact (herm_eq_zero_iff ε x y).1 (hW.2 x hx y hy)
+    exact fun x hx y hy => (herm_eq_zero_iff ε x y).1 (hW.2 x hx y hy)
   · exact Submodule.one_le_finrank_iff.2 hW.1
   · ext g
     have e : ∀ y, (umat g - 1) *ᵥ y = uMat g *ᵥ y - y := fun y => by
@@ -1252,8 +1249,7 @@ theorem UpperTheory.Lit.Cusp.exists_isRay :
     exact (eq_inv_of_mul_eq_one_right h2).symm
   have hK : IsCompact (KG ε : Set (UJ ε)) := isCompact_iff_compactSpace.2 (instCompactKG n ε)
   have hkmem : ∀ k ∈ maxK ε, k ∈ KG ε := fun k hk => by
-    rw [← SetLike.mem_coe, KG_eq]
-    exact hk
+    rwa [← SetLike.mem_coe, KG_eq]
   have hshift : ∀ y g : UJ ε, ∃ k ∈ KG ε, h (y * g) = h y + h (k * g) := by
     intro y g
     obtain ⟨k, hkK, hk⟩ := GlobalTheory.RealIwasawa.exists_stab_mul_compact hW y
@@ -1271,8 +1267,7 @@ theorem UpperTheory.Lit.Cusp.exists_isRay :
       rwa [one_mul, hh1] at this
     rw [e1, hhP u hu m hm x t hs, e2, hhP u hu m hm x t hs, hk0, add_zero]
   refine ⟨a, fun g => -(h g⁻¹ 0), ha_cont, ha_add, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · intro t m hm
-    exact conj_mem (hsplit_par t) hm
+  · exact fun t m hm => conj_mem (hsplit_par t) hm
   · exact ((continuous_apply 0).comp (hh_cont.comp continuous_inv)).neg
   · intro g m hm
     show -(h (g * m)⁻¹ 0) = -(h g⁻¹ 0)
@@ -1298,8 +1293,7 @@ theorem UpperTheory.Lit.Cusp.exists_isRay :
     have e : -((h x⁻¹ + h (k * g)) 0) - -(h x⁻¹ 0) = -(h (k * g) 0) := by
       simp only [Pi.add_apply]
       ring
-    rw [e, abs_neg]
-    exact hb
+    rwa [e, abs_neg]
   · refine ⟨(KG ε : Set (UJ ε)), hK, fun x => ?_⟩
     obtain ⟨k, hkK, hk⟩ := GlobalTheory.RealIwasawa.exists_stab_mul_compact hW x⁻¹
     have hkG := hkmem k hkK
@@ -1345,8 +1339,7 @@ theorem UpperTheory.Lit.Cusp.integral_coef_eq_zero :
   rw [hNeq] at hr
   set k : ℂ := ((d / ‖v‖ ^ 2 : ℝ) : ℂ) with hk
   have hkc : k * ((‖v‖ ^ 2 / d : ℝ) : ℂ) = 1 := by
-    rw [hk, ← Complex.ofReal_mul]
-    rw [div_mul_div_comm, mul_comm d, div_self (mul_ne_zero hv2 hd0.ne')]
+    rw [hk, ← Complex.ofReal_mul, div_mul_div_comm, mul_comm d, div_self (mul_ne_zero hv2 hd0.ne')]
     simp
   have key := average_eq_zero (UJ ε) (muG ε) (NW ε W) r Hr ν hνN hνinv hr
     (fun g => k * coefOn σ v v g) (coefOn σ a v)

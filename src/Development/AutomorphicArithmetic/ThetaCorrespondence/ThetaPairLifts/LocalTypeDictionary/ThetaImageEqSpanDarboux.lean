@@ -101,8 +101,7 @@ private theorem hD_eq_mul_add_fderiv {G R : Type} [AddCommGroup G] [NormedAddCom
     have h0 : ((0 : ℝ) • u) = 0 := zero_smul ℝ u
     have hf' : DifferentiableAt ℝ (fun x : R => f (w + ι x)) ((0 : ℝ) • u) := by rwa [h0]
     have := hf'.hasFDerivAt.comp_hasDerivAt (0 : ℝ) hlin
-    rw [h0] at this
-    exact this
+    rwa [h0] at this
   have hP : HasDerivAt (fun t : ℝ => Complex.exp (-(Real.pi * Complex.I) * ((om (π w) (t • u) : ℝ) : ℂ)))
       (-(Real.pi * Complex.I) * ((om (π w) u : ℝ) : ℂ)) 0 := by
     have e : (fun t : ℝ => Complex.exp (-(Real.pi * Complex.I) * ((om (π w) (t • u) : ℝ) : ℂ))) =
@@ -430,8 +429,7 @@ theorem exists_darbouxAlgebra_theta_eq_fockFunction : GlobalTheory.Published.How
   obtain ⟨Φ, hΦ, hd⟩ := key (fockF ψ θ false A₁ B g P) (Submodule.subset_span ⟨g, P, hg, rfl⟩)
   refine ⟨Φ, hΦ, funext fun x => ?_⟩
   have h2 := hd.2 ((crd W₁.gram hG e).symm x)
-  rw [AddEquiv.apply_symm_apply] at h2
-  exact h2
+  rwa [AddEquiv.apply_symm_apply] at h2
 end GlobalTheory.DarbImageRevB
 end
 end
@@ -1004,7 +1002,6 @@ theorem exists_transpose_mul_equiv {A : Type} [CommRing A] {α β γ : Type} [Fi
 theorem finPart_realAd_smul (D : D7) (t : ℝ) (y : AE D) :
     finPart D (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.realAd D.host.F t • y) = 0 := by
   have h0 : finPart D (algebraMap (AF D.host.F) (AE D) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.realAd D.host.F t)) = 0 := by
-    show ((0 : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F) ⊗ₜ[D.host.F] (1 : D.host.E)) = 0
     exact TensorProduct.zero_tmul _ _
   rw [Algebra.smul_def, map_mul, h0, zero_mul]
 
@@ -1057,7 +1054,6 @@ theorem exists_line (D : D7) (S X : HSp D) {d : ℕ} (e : Fin d ≃ Fin X.rank)
   refine ⟨AddMonoidHom.mk' (fun t => GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.realAd D.host.F t • cS u₀) fun s t => by
     rw [GlobalTheory.ThetaLineDeriv.realAd_add, add_smul], ?_, fun t => ?_, funext fun x => ?_⟩
   · refine continuous_pi fun i => continuous_pi fun j => ?_
-    show Continuous fun t : ℝ => GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.realAd D.host.F t • cS u₀ i j
     exact (GlobalTheory.ThetaLineDeriv.continuous_realAd (F := D.host.F)).fun_smul continuous_const
   · ext i j
     exact finPart_realAd_smul D t (cS u₀ i j)

@@ -219,8 +219,7 @@ private theorem rig_above (hP : UpperTheory.V.Loc.LocalPublishedTheorems) (Ω : 
   · rw [hh.ine s (hI s hs') (hle hs) a, psi, hΨ s hs (hI s hs')]
     have := rig_char c (cycZ ℚ Ω l (s : G ℚ Ω)) e a
     rw [← hcy] at this
-    rw [UpperTheory.V.Base.chiO, MonoidHom.comp_apply, ← hcy]
-    exact this
+    rwa [UpperTheory.V.Base.chiO, MonoidHom.comp_apply, ← hcy]
   · have hf := rig_fst (r.comp (F.loc F.vl)) (fun g => y (F.loc F.vl g)) (r'.comp (F.loc F.vl)) (fun g => hd _) h g
     rw [hf, hf]
     refine rig_eig c F g₁ r hr (F.loc F.vl g) (hle hg) hu _ (fun a b hab => ?_) i j hij.ne _ ?_
@@ -235,8 +234,7 @@ private theorem rig_above (hP : UpperTheory.V.Loc.LocalPublishedTheorems) (Ω : 
             ((((cycZ ℚ Ω l (g : G ℚ Ω) : ℤ_[l]ˣ) : ℤ_[l]) - 1 : ℤ_[l]) : ℚ_[l]) := by
         rw [← hcy, PadicInt.coe_sub, map_sub, PadicInt.coe_one, map_one]
         rfl
-      rw [e1, norm_algebraMap']
-      exact hg1
+      rwa [e1, norm_algebraMap']
 end Local
 section Glob
 open NumberField IsLocalRing Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.GalOfCusp UpperTheory.V.HV UpperTheory.V.U3 UpperTheory.V.Aut UpperTheory.V.Pr UpperTheory.V
@@ -332,8 +330,7 @@ private theorem selmer_h1_vanishes_at_rigid_point (hH : _root_.UpperTheory.V.Af.
   haveI : CharP (ResidueField c.O) l := by
     rw [CharP.charP_iff_prime_eq_zero hl.out, ← map_natCast (residue c.O), residue_eq_zero_iff,
       mem_maximalIdeal, mem_nonunits_iff, ← map_natCast (algebraMap ℤ_[l] c.O)]
-    intro hu
-    exact PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
+    exact fun hu => PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
   obtain ⟨σ, hσ, hσc⟩ := hF.cc
   have hv : (A F.vl).valuation (l : Ω) < 1 := by simpa using (hF.isOver F.vl (l : 𝓞 ℚ)).2 hF.vl
   have hfr := Fr.host_ex ⟨⟨hN.coh.lf, hN.coh.lt, hN.coh.le, hN.coh.gf, hN.coh.ge, hN.coh.pt⟩, hN.coh.uo, hN.coh.gw⟩
@@ -454,8 +451,7 @@ theorem UpperTheory.V.Z.J.hostRigidUE_alt :
         rw [hF.π]
         refine (QuotientGroup.eq_one_iff s).2 ?_
         refine Subgroup.le_topologicalClosure _ (Subgroup.subset_normalClosure ?_)
-        simp only [Set.mem_iUnion]
-        exact ⟨w, hS, B, hB, hs⟩
+        simpa only [Set.mem_iUnion] using ⟨w, hS, B, hB, hs⟩
       have h2 := hy 1 1
       rw [mul_one, map_one, Module.End.one_apply, left_eq_add] at h2
       simp only [h1, h2, map_zero, sub_zero]

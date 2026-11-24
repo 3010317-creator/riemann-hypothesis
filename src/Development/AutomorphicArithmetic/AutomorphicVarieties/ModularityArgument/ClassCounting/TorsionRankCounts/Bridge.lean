@@ -70,8 +70,7 @@ private noncomputable def mk (A G : Type) [CommRing A] [Group G] (k : ℕ) :
 
 private theorem i_mk (A G : Type) [CommRing A] [Group G] (k : ℕ) (z : LinearMap.ker (bd A G k)) :
     groupHomology.iCycles (Rep.trivial A G A) (k + 1) (mk A G k z) = z.1 := by
-  simp only [_root_.mk, LinearMap.coe_mk, AddHom.coe_mk]
-  exact groupHomology.iCycles_mk _ _ _
+  simpa only [_root_.mk, LinearMap.coe_mk, AddHom.coe_mk] using groupHomology.iCycles_mk _ _ _
 
 private theorem pi_zero (A G : Type) [CommRing A] [Group G] (k : ℕ) (z : LinearMap.ker (bd A G k)) :
     groupHomology.π (Rep.trivial A G A) (k + 1) (mk A G k z) = 0 ↔ Bd z.1 := by
@@ -113,8 +112,7 @@ theorem UpperTheory.V.ZK.Up.bridge : UpperTheory.V.ZK.Up.Bridge := by
     refine ⟨⟨_, hc⟩, ?_⟩
     have hm : mk ℤ G k ⟨_, hc⟩ = c := i_inj ℤ G _ (by rw [i_mk])
     simp [hm]
-  · intro G _ z
-    exact pi_zero ℤ G k z
+  · exact fun G _ z => pi_zero ℤ G k z
   · intro G H _ _ f z z' hz
     simp only [LinearMap.toAddMonoidHom_coe, LinearMap.coe_comp, Function.comp_apply, grpHMap]
     rw [groupHomology.π_map_apply]

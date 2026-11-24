@@ -148,8 +148,7 @@ theorem UpperTheory.V.Keep.bigOm :
     rw [hg, hO.psi, map_pow, hM, mul_comm, pow_mul, ← dirG_pow, hψu, dirG_one, one_pow]
   have hξ₀1 : ξ₀ = 1 := orderOf_eq_one_iff.mp hξ₀
   have hndvd : ¬ l ∣ 2 ^ h.nII l ψ := by
-    intro hd
-    exact hl2 ((Nat.prime_dvd_prime_iff_eq hlp Nat.prime_two).mp (hlp.dvd_of_dvd_pow hd))
+    exact fun hd => hl2 ((Nat.prime_dvd_prime_iff_eq hlp Nat.prime_two).mp (hlp.dvd_of_dvd_pow hd))
   have hfr : (Chr.dirG ℚ Ω ξ' (D.sg l) : c.O) = ξ' (l : ZMod (2 ^ h.nII l ψ)) := by
     have hc := (Nat.Prime.coprime_iff_not_dvd hlp).2 hndvd
     have h1 := (ML.placeBasic Ω).2.2.2.2.2.2.1 (D.pl l) l (2 ^ h.nII l ψ) (D.sg l) hfrob
@@ -170,8 +169,7 @@ theorem UpperTheory.V.Keep.bigOm :
       rw [e3, e2] at h4
       have h5 := congrArg (fun x : (c.O)ˣ => (x : c.O)) h4
       simp only [Units.val_pow_eq_pow_val, Units.val_one] at h5
-      rw [hfr] at h5
-      exact h5
+      rwa [hfr] at h5
     have hlt := UpperTheory.two_pow_lt_sq_mul_of_primitive_char_pow_eq_one c.O (h.nII l ψ) ξ' hprim l (a + 2) (l ^ j * u)
       (hlp.odd_of_ne_two hl2) (by omega) ((hlp.odd_of_ne_two hl2).pow.mul hu) hval
     omega
@@ -182,8 +180,7 @@ theorem UpperTheory.V.Keep.bigOm :
     apply large₂.redOne c m hm
     · rw [← pow_mul, mul_comm, pow_mul, ← MonoidHom.pow_apply, hξm, MonoidHom.one_apply, one_pow]
     · simp only [Raw.bar] at h4
-      rw [Units.val_pow_eq_pow_val, map_pow]
-      exact h4
+      rwa [Units.val_pow_eq_pow_val, map_pow]
   obtain ⟨w, hw1, _⟩ := (Chr.placesQ Ω).2.2 l (D.pl l) A hlp (hD.pl_over l hlp) hA
   have conj : ∀ χ : G ℚ Ω →* (c.O)ˣ, χ (w⁻¹ * g * w) = χ g := by
     intro χ
@@ -193,8 +190,7 @@ theorem UpperTheory.V.Keep.bigOm :
   · rw [(barFacts D hD).2.2.2.2.1]
     simp only [Raw.bar, conj, hom, hψ, Units.val_one, map_one, one_pow, mul_one]
   · rw [conj, hκ]
-  · simp only [Raw.bar, conj]
-    exact hbarξ
+  · simpa only [Raw.bar, conj] using hbarξ
 
 theorem UpperTheory.V.Keep.loc2 {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c)
     (hC : Ctx2 D) (X : Set2 D) (T : Tower D) (hOn : X.On T) :
@@ -253,8 +249,7 @@ theorem UpperTheory.V.Keep.loc3 {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosu
   haveI := T.nF
   have hw : IsOmT c D.om := ⟨hD.om_pow, fun σ => Ideal.Quotient.eq.mp (hD.om_bar σ)⟩
   have key := ((omT Ω l c).2 D.om hw).2.2.2.2.2.2.1 A hA 2
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have hcop : l.Coprime (l - 1) := by
     rw [Nat.Prime.coprime_iff_not_dvd hl.out]
     exact Nat.not_dvd_of_pos_of_lt (by omega) (by omega)
@@ -272,7 +267,6 @@ theorem UpperTheory.V.Keep.loc3 {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosu
           rw [MonoidHom.pow_apply]
         rw [e, hD.om_pow, MonoidHom.one_apply]
       · exact h1
-    rw [MonoidHom.mem_ker, MonoidHom.pow_apply, ← map_pow]
-    exact h2
+    rwa [MonoidHom.mem_ker, MonoidHom.pow_apply, ← map_pow]
   have := Nat.le_of_dvd (by norm_num) (key hle)
   omega

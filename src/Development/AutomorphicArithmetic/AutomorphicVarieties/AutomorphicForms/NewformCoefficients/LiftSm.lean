@@ -158,8 +158,7 @@ theorem UpperTheory.V.Af.Nf.archSm :
       simp only [SignType.coe_neg, SignType.coe_one]
       linarith
     · rw [sign_pos hpos]
-      simp only [SignType.coe_one, one_mul]
-      exact div_pos hpos hn
+      simpa only [SignType.coe_one, one_mul] using div_pos hpos hn
   refine (archSm_eval_eq k f hf _ x0 hx0' hc him).congr_of_eventuallyEq ?_
   filter_upwards [hsign] with x hx
   unfold UpperTheory.V.Af.Nf.arch UpperTheory.V.Af.Nf.nsl

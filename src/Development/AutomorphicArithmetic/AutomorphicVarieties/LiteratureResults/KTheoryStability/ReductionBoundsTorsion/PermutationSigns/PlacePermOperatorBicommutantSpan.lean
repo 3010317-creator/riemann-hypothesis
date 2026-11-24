@@ -139,8 +139,7 @@ theorem bic (A : Submodule ℂ (Matrix Ω Ω ℂ)) (h1 : (1 : Matrix Ω Ω ℂ) 
         (embE (aᴴ * b)) (Submodule.mem_map_of_mem (hmul _ (hstar a ha) b hb))
       rw [← hPe, ← map_sub, inner_embE] at h0
       change inner ℂ (embE (a * y) - embE (a * P y)) (embE b) = 0
-      rw [← map_sub, inner_embE, ← mul_sub, conjTranspose_mul, Matrix.mul_assoc]
-      exact h0
+      rwa [← map_sub, inner_embE, ← mul_sub, conjTranspose_mul, Matrix.mul_assoc]
   have := comm_left A T hT P P3 1
   rw [P2 1 h1, Matrix.mul_one] at this
   rw [← this]
@@ -234,8 +233,7 @@ theorem sw1 : PlacePermOperatorBicommutantSpan := by
     | zero => simp
     | add x y _ _ hx hy => rw [conjTranspose_add]; exact Submodule.add_mem _ hx hy
     | smul c x _ hx => rw [conjTranspose_smul]; exact Submodule.smul_mem _ _ hx
-  · intro Z hZ
-    exact hT Z fun σ w => hZ _ (Submodule.subset_span ⟨(σ, w), rfl⟩)
+  · exact fun Z hZ => hT Z fun σ w => hZ _ (Submodule.subset_span ⟨(σ, w), rfl⟩)
 
 end PositivityTheory.KB.BlockInvariants
 

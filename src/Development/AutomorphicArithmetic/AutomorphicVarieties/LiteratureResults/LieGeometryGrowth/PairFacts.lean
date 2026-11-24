@@ -138,8 +138,7 @@ theorem UpperTheory.V.Lit.Geo.Pf.csTens :
     rw [this]
     exact Submodule.add_mem _ hA hB
   · rw [smAdj, adj_apply]
-    refine Submodule.sub_mem _ (Submodule.sub_mem _ hB hA) ?_
-    exact Submodule.smul_of_tower_mem _ _ hx
+    exact Submodule.sub_mem _ (Submodule.sub_mem _ hB hA) (Submodule.smul_of_tower_mem _ _ hx)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.LieGeometryGrowth.PfCsTens =====
@@ -220,8 +219,7 @@ theorem UpperTheory.V.Lit.Geo.Pf.adjInt :
   refine sub_eq_zero.1 ?_
   unfold Pf.qint at h0 ⊢
   rw [← MeasureTheory.integral_sub h1 h2]
-  simp only [← hd X]
-  exact h0 _
+  simpa only [← hd X] using h0 _
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.LieGeometryGrowth.PfAdjInt =====

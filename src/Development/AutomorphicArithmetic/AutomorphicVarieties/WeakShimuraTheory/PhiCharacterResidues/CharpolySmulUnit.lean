@@ -83,12 +83,10 @@ theorem UpperTheory.V.Ws.phiCpMap :
       Fintype.card_fin]
   have hmonT : (K.cpT X n g).Monic := by
     show ((X.cp (resLe T.F_le g)).scaleRoots _).leadingCoeff = 1
-    rw [leadingCoeff, natDegree_scaleRoots, coeff_scaleRoots_natDegree]
-    exact hmon
+    rwa [leadingCoeff, natDegree_scaleRoots, coeff_scaleRoots_natDegree]
   refine ⟨hmon, hdeg, hmonT, ?_⟩
   have hu : IsUnit (K.sc n g) := by
-    simp only [UpperTheory.V.Ws.Link.sc]
-    exact (Units.isUnit _).mul ((Units.isUnit _).pow n)
+    simpa only [UpperTheory.V.Ws.Link.sc] using (Units.isUnit _).mul ((Units.isUnit _).pow n)
   show ((X.cp (resLe T.F_le g)).scaleRoots _).map (algebraMap X.B X.A) = _
   rw [map_scaleRoots _ _ _ (by rw [hmon.leadingCoeff, map_one]; exact one_ne_zero), hmap,
     UpperTheory.V.Ws.Link.rho_apply, charpoly_smul_unit _ _ (hu.map _), ← IsScalarTower.algebraMap_apply]

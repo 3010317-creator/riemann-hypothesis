@@ -86,11 +86,9 @@ private theorem mul_zpow_pow_eq_one_of_pow_eqs {H : Type*} [CommGroup H] (P A C 
     (hP : P ^ (2 * N) = A ^ (2 * N) * C ^ (2 * (N : ℤ) * m)) (hA : A ^ k = C ^ (a * k)) :
     (P * C ^ (-(m + a))) ^ (2 * N * k) = 1 := by
   have hP' : P ^ ((2 * N : ℕ) : ℤ) = A ^ ((2 * N : ℕ) : ℤ) * C ^ (2 * (N : ℤ) * m) := by
-    rw [zpow_natCast, zpow_natCast]
-    exact hP
+    rwa [zpow_natCast, zpow_natCast]
   have hA' : A ^ (k : ℤ) = C ^ (a * k) := by
-    rw [zpow_natCast]
-    exact hA
+    rwa [zpow_natCast]
   rw [← zpow_natCast, mul_zpow]
   have e1 : P ^ ((2 * N * k : ℕ) : ℤ) = (P ^ ((2 * N : ℕ) : ℤ)) ^ (k : ℤ) := by
     rw [← zpow_mul]

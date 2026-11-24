@@ -399,8 +399,7 @@ theorem GlobalTheory.LevelUnip.unip_mod_half_alt : ∀ {D : D7} {L : SizeData₂
           Matrix (Fin D.R.r) (Fin D.R.r) (kP P)) (Fin.cast hr a) (Fin.cast hr c) =
         ((redFn (p.R.βW i) P (Lev.finE (Wc D i) κ) : GL (Fin (Wc D i).rank) (kP P)) :
           Matrix (Fin (Wc D i).rank) (Fin (Wc D i).rank) (kP P)) a c := by
-      intro a c
-      exact (congrFun (congrFun hv (Fin.cast hr a)) (Fin.cast hr c)).trans rfl
+      exact fun a c => (congrFun (congrFun hv (Fin.cast hr a)) (Fin.cast hr c)).trans rfl
     rw [← hr]
     apply sub_one_pow_eq_zero'
     · intro a c hca
@@ -810,8 +809,7 @@ theorem exists_cmLat_rankOne (H : Host E) {p q : ℕ} (Y : FD.Data E r) (x₀ : 
       rw [hlv']
       refine mul_ne_zero (by exact_mod_cast (Nat.mul_pos hN₀ hM).ne') fun h0 => ha₀ (hioinj ?_)
       funext i
-      rw [Subsingleton.elim i 0, map_zero]
-      exact h0
+      rwa [Subsingleton.elim i 0, map_zero]
     obtain ⟨S', hS'⟩ := D.fin.fg_top
     obtain ⟨n, hn, hc⟩ := GlobalTheory.LamT.CMBasis.exists_nsmul_mem (LinearMap.range lv') hR
       (fun i : S' × Fin r => B.repr (φ i.1 : Fin r → E) i.2)
@@ -900,8 +898,7 @@ theorem herm_self_ne (X : Data E r) (v : Fin r → Fin r → E) (hv : frm X.Ψ v
   have hf := Finset.prod_ne_zero_iff.mp hd ⟨j, by simp⟩ (Finset.mem_univ _)
   have he : (Fin.castLE (Nat.le_of_lt_succ j.succ.isLt) ⟨(j : ℕ), by simp⟩ : Fin r) = j := Fin.ext rfl
   rw [he] at hf
-  intro h0
-  exact hf (by rw [h0, map_zero])
+  exact fun h0 => hf (by rw [h0, map_zero])
 
 def gsMat (G : Matrix (Fin r) (Fin r) E) (v : Fin r → Fin r → E) (m : Fin r) :
     Matrix (Fin r) (Fin r) E :=
@@ -1072,8 +1069,7 @@ theorem exists_frm_mem_dom : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   rw [dist_pi_lt_iff hε]
   intro k
   rw [dist_pi_lt_iff hε]
-  intro a
-  exact hu a k τ
+  exact fun a => hu a k τ
 
 end GlobalTheory.OrthoFrame
 end -- clump:auto
@@ -1265,8 +1261,7 @@ theorem exists_cmPt_on_comp : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     change ptF ((U σ₀).un k x₀) s' ∈ _ at h7
     rw [key] at h7
     have hs : (spMap (algebraMap K₁ ℂ)) s' = s := Subsingleton.elim (α := PrimeSpectrum K₁) _ _
-    rw [← hs]
-    exact h7
+    rwa [← hs]
   · exact Subtype.ext (hρ.trans τ.2.symm)
 
 end GlobalTheory.FlatCore
@@ -1341,8 +1336,7 @@ theorem laws_core : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, InR D j → F
       exact ⟨Kf', th, hr', h1, hinf, h2, h3⟩
     · intro σ hσ
       have h := hT.modelW j hj σ hσ
-      rw [hT.spaceW j hj σ hσ] at h
-      exact h
+      rwa [hT.spaceW j hj σ hσ] at h
   exact (GlobalTheory.LevLaws.laws_of_level D j _ _ _ (T.Q.Xo j) T.Q.c (T.U j) _
     hLaws hF hg).1
 

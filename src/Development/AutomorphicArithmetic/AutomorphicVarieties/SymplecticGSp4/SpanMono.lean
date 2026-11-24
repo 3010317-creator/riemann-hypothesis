@@ -102,8 +102,7 @@ private theorem spanMono_prec {R M : Type} [CommRing R] [AddCommGroup M] [Module
   have hd : ∀ k, f (k + 1) - f k ∈ (I ^ k • ⊤ : Submodule R M) := by
     intro k
     have h := (hf (Nat.le_succ k)).symm
-    rw [SModEq.sub_mem] at h
-    exact h
+    rwa [SModEq.sub_mem] at h
   have hlift : ∀ k, ∃ e, e ∈ (I ^ k • ⊤ : Submodule R (Fin n → R)) ∧ π e = f (k + 1) - f k := by
     intro k
     have h := hd k
@@ -349,8 +348,7 @@ private theorem spanMono_parts {O X R : Type} [CommRing O] [IsLocalRing O] [IsNo
   have h0 : ∀ x ∈ W.part 0, x ∈ N 0 := by
     intro x hx
     have hxA := W.part_le_A hx
-    have h1 := hall ⟨⟨x, hxA⟩, (show (⟨x, hxA⟩ : W.A) ∈ W.gr 0 from hx)⟩
-    exact (hA x).1 h1
+    exact (hA x).1 (hall ⟨⟨x, hxA⟩, (show (⟨x, hxA⟩ : W.A) ∈ W.gr 0 from hx)⟩)
   intro x hx
   obtain ⟨f, hf, rfl⟩ := hx
   obtain ⟨μ, hμS, hμ⟩ := part_span O R X W {n | Finsupp.weight W.wt n = w} w (fun n hn => hn)
@@ -466,9 +464,7 @@ private theorem spanMono_lift {O R H : Type} [CommRing O] [IsLocalRing O] [IsNoe
     refine hcot'.trans (sup_le_sup_right (sup_le_sup_right ?_ _) _)
     change Submodule.span R (Set.range z') ≤ Submodule.span R (Set.range z'')
     rw [hUspan]
-    refine Submodule.span_mono ?_
-    intro x hx
-    exact ⟨⟨x, hx⟩, hidx' ⟨x, hx⟩⟩
+    exact Submodule.span_mono (fun x hx => ⟨⟨x, hx⟩, hidx' ⟨x, hx⟩⟩)
   obtain ⟨W', e, he⟩ := pres_new O (ℤ × ℤ) R W hz U wt'' z'' (fun s => ⟨hz'max _, hz'part _⟩) h2
   have hzW' : ∀ s, W'.z s ∈ maximalIdeal R := by
     intro s

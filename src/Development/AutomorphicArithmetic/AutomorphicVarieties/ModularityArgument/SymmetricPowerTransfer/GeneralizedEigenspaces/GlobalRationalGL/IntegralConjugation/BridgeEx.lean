@@ -189,8 +189,7 @@ private theorem exists_unr {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteVal
       (Units.map ((w.valuation K : Valuation K ℤᵐ⁰) : K →* ℤᵐ⁰))
   have hf : ∀ (x : Kˣ) (n : Multiplicative ℤ), w.valuation K (x : K) = (n : ℤᵐ⁰) → f x = n := by
     intro x n h
-    apply WithZero.coe_injective
-    exact (WithZero.coe_unitsWithZeroEquiv_eq_units_val _).trans h
+    exact WithZero.coe_injective ((WithZero.coe_unitsWithZeroEquiv_eq_units_val _).trans h)
   refine ⟨(zpowersHom ℂˣ c⁻¹).comp f, fun u => ?_, fun ϖ x hϖ hx => ?_⟩
   · have h1 : w.valuation K (Units.map (algebraMap O K : O →* K) u : K) = ((1 : Multiplicative ℤ) : ℤᵐ⁰) := by
       rw [Units.coe_map, MonoidHom.coe_coe, HeightOneSpectrum.valuation_of_algebraMap, WithZero.coe_one,
@@ -541,8 +540,7 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.integral_congr_of_forall_above :
         simp [Matrix.sub_apply, Matrix.one_apply, apply_ite (B.ρ _ w rfl)]
       have e3 : B.ρ _ w rfl (algebraMap (Kv (un w)) _ (m : Kv (un w))⁻¹) * (m : Kw w) = 1 := by
         rw [← map_natCast (B.ρ _ w rfl), ← map_mul, mul_comm, hinv, map_one]
-      rw [map_mul, e2, ← mul_assoc, e3, one_mul]
-      exact ha
+      rwa [map_mul, e2, ← mul_assoc, e3, one_mul]
     · rw [← mul_assoc, hinv, one_mul]
   choose E hE hE' using hE
   have hAB : mt ((y⁻¹ : DA B.Δ).1 v) * mt (y.1 v) = 1 := by
@@ -896,8 +894,7 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.okG :
         = B.ρ _ w rfl (star ((g.1 (un w) : Matrix (Fin 3) (Fin 3) _) j i)) := by
     intro g w i j
     have h := hm g⁻¹ w i j
-    rw [B.bG.map_inv, InvMemClass.coe_inv, map_inv] at h
-    exact h
+    rwa [B.bG.map_inv, InvMemClass.coe_inv, map_inv] at h
   refine ⟨fun g v => ?_, fun g v => ?_, fun w S g => ?_⟩
   · constructor
     · intro hK w h
@@ -922,8 +919,7 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.okG :
       apply Units.ext
       have := B.bG_loc g w
       rw [h1] at this
-      refine this.trans ?_
-      exact Matrix.map_one _ (map_zero _) (map_one _)
+      exact this.trans (Matrix.map_one _ (map_zero _) (map_one _))
     · intro H
       apply Subtype.ext
       refine Matrix.ext fun i j => ?_
@@ -937,10 +933,7 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.okG :
         congrFun (congrFun (Matrix.map_one (B.ρ _ w rfl) (map_zero _) (map_one _)) i) j
       rw [map_sub, ← e2]
       exact sub_eq_zero.2 e3.symm
-  · apply Units.ext
-    refine (B.bG_loc g w).trans ?_
-    refine Matrix.ext fun i j => ?_
-    exact S.ρ_eq _
+  · exact Units.ext ((B.bG_loc g w).trans (Matrix.ext fun i j => S.ρ_eq _))
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.GeneralizedEigenspaces.GlobalRationalGL.IntegralConjugation.MemKGLIff =====
@@ -1005,8 +998,7 @@ private theorem mem_KD {K O : Type} [Field K] [CommRing O] [Algebra O K] {Δ : K
   have hdet : M.det = 1 := by
     apply Subtype.ext
     have := RingHom.map_det ((integralClosure O (Lsq K Δ)).val : integralClosure O (Lsq K Δ) →+* Lsq K Δ) M
-    rw [hM, hd] at this
-    exact this
+    rwa [hM, hd] at this
   refine ⟨GeneralLinearGroup.mk'' M (by rw [hdet]; exact isUnit_one), ?_⟩
   ext i j <;> rfl
 
@@ -1063,8 +1055,7 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.bSEx :
       subst hw
       have h1 := (hf g w).symm.trans ((congrArg (fun b : ↥(finU (E := L) (n := 2) ⊓ SUA L) => mL w (b : UA L 2)) e).trans (hf h w))
       have h2 := congrFun (congrFun h1 i) j
-      rw [map_sub, sub_eq_zero]
-      exact h2
+      rwa [map_sub, sub_eq_zero]
     exact Subtype.ext (Subtype.ext (funext fun v => Subtype.ext (Units.ext (hv v))))
   have hsurj : Function.Surjective f := by
     rintro ⟨y, hyF, hyS⟩
@@ -1249,9 +1240,7 @@ private theorem mem_range (g : GL (Fin 2) (Lsq K Δ)) (h1 : ∀ i j, IsIntegral 
     Matrix.map_injective Subtype.val_injective e
   have hAB : A * B = 1 := inj (by rw [map_mul, hA, hB, g.val_inv, map_one])
   have hBA : B * A = 1 := inj (by rw [map_mul, hA, hB, g.inv_val, map_one])
-  refine MonoidHom.mem_range.mpr ⟨⟨A, B, hAB, hBA⟩, ?_⟩
-  apply Units.ext
-  exact hA
+  exact MonoidHom.mem_range.mpr ⟨⟨A, B, hAB, hBA⟩, Units.ext hA⟩
 
 private theorem conj_two {A : Type} [CommRing A] (m : Matrix (Fin 2) (Fin 2) A) :
     !![0, -1; 1, 0] * m * !![0, 1; -1, 0] = !![m 1 1, -m 1 0; -m 0 1, m 0 0] := by
@@ -1273,8 +1262,7 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.h90 :
     have e := congrArg Matrix.det hx
     rw [Matrix.det_mul, Matrix.det_one, Matrix.star_eq_conjTranspose,
       Matrix.det_conjTranspose] at e
-    rw [mul_comm]
-    exact e
+    rwa [mul_comm]
   obtain ⟨c, hc, hci⟩ := ex_c (O := O) h2 hΔ u hu
   set s : Lsq K Δ := ((c⁻¹ : (Lsq K Δ)ˣ) : Lsq K Δ) with hs_def
   have hsc : s * c = 1 := Units.inv_mul c
@@ -1287,8 +1275,7 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.h90 :
       _ = star x * (x * Matrix.adjugate x) := by rw [Matrix.mul_adjugate]
       _ = Matrix.adjugate x := by rw [← Matrix.mul_assoc, hx, Matrix.one_mul]
   have r : ∀ i j, u * star (x j i) = Matrix.adjugate x i j := fun i j => by
-    have e := congrFun (congrFun hM i) j
-    simpa [Matrix.star_apply] using e
+    simpa [Matrix.star_apply] using congrFun (congrFun hM i) j
   have r00 := r 0 0
   have r01 := r 0 1
   have r10 := r 1 0
@@ -1554,8 +1541,7 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.rGEx :
     have h1 : ratGL L 3 (phiG R a) = ratGL L 3 (phiG R b) := congrArg Subtype.val (congrArg Subtype.val hab)
     have h2 := (ratFacts L 3 1).2.1 h1
     have h3 : (phiG R a : Matrix (Fin 3) (Fin 3) L) = phiG R b := congrArg Units.val h2
-    apply Subtype.ext
-    exact Matrix.ext fun i j => R.e.injective (congrFun (congrFun h3 i) j)
+    exact Subtype.ext (Matrix.ext fun i j => R.e.injective (congrFun (congrFun h3 i) j))
   have hsurj : Function.Surjective f := by
     rintro ⟨⟨x, hx⟩, hr⟩
     obtain ⟨g, hg⟩ := Subgroup.mem_subgroupOf.mp hr
@@ -1634,11 +1620,9 @@ private theorem rho_coe (P : Pre L) (v : Pl (Lp L)) (w : Plc L) (h : un w = v) (
   simp
 
 private theorem exists_over (P : Pre L) (v : Pl (Lp L)) : ∃ w : Plc L, un w = v := by
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have hE : IsEmpty {w : Plc L // un w = v} := ⟨fun w => hne w.1 w.2⟩
-  have h01 := (rhoBij L P v).1 (a₁ := 0) (a₂ := 1) (funext fun w => (hE.false w).elim)
-  exact zero_ne_one h01
+  exact zero_ne_one ((rhoBij L P v).1 (a₁ := 0) (a₂ := 1) (funext fun w => (hE.false w).elim))
 
 private theorem conj_int (a : Af L) (hA : ∀ u : Plc L, pLoc L u a ∈ u.adicCompletionIntegers L) (w : Plc L) :
     pLoc L w (cjF a) ∈ w.adicCompletionIntegers L := by
@@ -1673,8 +1657,7 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.rhoInt :
         fun a => (rhoDiv L P v w h _).2 a.2
     have hc : (P.rho v w h).comp (algebraMap (Ov v) (Lsq (Kv v) (cv v P.Δ))) =
         (algebraMap (w.adicCompletionIntegers L) (Kw w)).comp f := by
-      refine RingHom.ext fun a => ?_
-      exact rho_coe P v w h _
+      exact RingHom.ext fun a => rho_coe P v w h _
     have hi : IsIntegral (w.adicCompletionIntegers L) (P.rho v w h x) := by
       refine ⟨p.map f, hp.map f, ?_⟩
       rw [Polynomial.eval₂_map, ← hc, ← Polynomial.hom_eval₂, he, map_zero]

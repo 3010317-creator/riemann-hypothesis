@@ -156,8 +156,7 @@ private theorem hasTrace_hk (m : Measure G) [IsFiniteMeasureOnCompacts m] [m.IsM
   let j := Submodule.inclusion hle
   let s : UpperTheory.V.Hi.fixd ρ I →ₗ[ℂ] LinearMap.range A := A.rangeRestrict ∘ₗ (UpperTheory.V.Hi.fixd ρ I).subtype
   have h1 : UpperTheory.V.AlgebraTools.hk ρ I x = j ∘ₗ s := by
-    refine LinearMap.ext fun w => Subtype.ext ?_
-    exact (hres w).symm
+    exact LinearMap.ext fun w => Subtype.ext (hres w).symm
   have h2 : A.restrict (p := LinearMap.range A) (q := LinearMap.range A)
       (fun v _ => LinearMap.mem_range_self A v) = s ∘ₗ j := by
     refine LinearMap.ext fun w => Subtype.ext ?_
@@ -249,8 +248,7 @@ private theorem iw_local [MeasurableSpace (GL (Fin n) F)] [BorelSpace (GL (Fin n
   obtain ⟨Z, hZ0, hZc, hZ⟩ := exists_powerSums T hTu
   refine ⟨Z, hZ0, hZc, fun j => ?_⟩
   have h := hasTrace_hk m hρ hIo hIc hm (diagT F (Fin n) (t (j • ν))) ((UpperTheory.V.AlgebraTools.heckePairIwC F n ⊤).1 _)
-  rw [hpow, hZ, ← hdiag] at h
-  exact h
+  rwa [hpow, hZ, ← hdiag] at h
 
 end Loc
 

@@ -127,8 +127,7 @@ private theorem comm_of_integral {k : Type} [Field k] {p : ℕ} (hp : p.Prime) (
     exact h3.symm
   have hzN : ((ζ : kˣ) : k) ^ N = 1 := by
     have h1 : (ζ : kˣ) ^ N = 1 := (mem_rootsOfUnity _ _).mp ζ.2
-    have h2 := congrArg Units.val h1
-    simpa using h2
+    simpa using congrArg Units.val h1
   obtain ⟨a, ha⟩ := mem (f ((ζ : kˣ) : k)) (by rw [← map_pow, hzN, map_one])
   obtain ⟨b, hb⟩ := mem (g ((ζ : kˣ) : k)) (by rw [← map_pow, hzN, map_one])
   obtain ⟨c, hc⟩ := mem x hN
@@ -168,8 +167,7 @@ private theorem comm_mem_Ine {p : ℕ} (hp : p.Prime) (hA : A.valuation (p : Ω)
       IsIntegral ℤ (IsLocalRing.residue A ⟨z, hz⟩) := by
     intro z hz hzA
     have h1 : IsIntegral ℤ (⟨z, hzA⟩ : A) := by
-      rw [← isIntegral_algHom_iff (A.toSubring.subtype.toIntAlgHom) Subtype.val_injective]
-      exact hz
+      rwa [← isIntegral_algHom_iff (A.toSubring.subtype.toIntAlgHom) Subtype.val_injective]
     exact h1.map_of_comp_eq (RingHom.id ℤ) (IsLocalRing.residue A) (RingHom.ext_int _ _)
   have comm : ∀ w : A,
       IsLocalRing.ResidueField.map (resA hg) (IsLocalRing.ResidueField.map (resA hh)
@@ -189,8 +187,7 @@ private theorem comm_mem_Ine {p : ℕ} (hp : p.Prime) (hA : A.valuation (p : Ω)
       congr 1
       apply Subtype.ext
       show (w : Ω) * s = t
-      rw [mul_comm]
-      exact hst
+      rwa [mul_comm]
     rw [hw, map_div₀, map_div₀, map_div₀, map_div₀,
       comm_of_integral hp hkp _ _ (hint t ht htA), comm_of_integral hp hkp _ _ (hint s hs hsA)]
   have key : ∀ y : Ω, y ∈ A → A.valuation (g (h y) - h (g y)) < 1 := by
@@ -201,8 +198,7 @@ private theorem comm_mem_Ine {p : ℕ} (hp : p.Prime) (hA : A.valuation (p : Ω)
     have c2 : IsLocalRing.residue A
         (resA hg (resA hh ⟨y, hy⟩) - resA hh (resA hg ⟨y, hy⟩)) = 0 := by
       rw [map_sub, c, sub_self]
-    rw [IsLocalRing.residue_eq_zero_iff, ValuationSubring.valuation_lt_one_iff] at c2
-    exact c2
+    rwa [IsLocalRing.residue_eq_zero_iff, ValuationSubring.valuation_lt_one_iff] at c2
   have hDec : g * h * g⁻¹ * h⁻¹ ∈ Dec (F := ℚ) A :=
     Subgroup.mul_mem _ (Subgroup.mul_mem _ (Subgroup.mul_mem _ hg hh) (Subgroup.inv_mem _ hg))
       (Subgroup.inv_mem _ hh)
@@ -1026,8 +1022,7 @@ private theorem dim_zero (χ : Fin 4 → H →* Eˣ) (I : H → Prop) (σ : H)
     · have h1 := (mem_sp4_iff.1 (hsp g)) a a
       have h2 : sgn a * sgn a = 1 := by
         fin_cases a <;> decide
-      rw [h2, one_smul] at h1
-      exact h1
+      rwa [h2, one_smul] at h1
   let L : S →ₗ[E] E × E :=
     { toFun := fun γ => ((γ : H → M4 E) σ 0 0, (γ : H → M4 E) σ 1 1)
       map_add' := fun x y => rfl
@@ -1045,14 +1040,12 @@ private theorem dim_zero (χ : Fin 4 → H →* Eˣ) (I : H → Prop) (σ : H)
       intro g
       have h := hrev g 1
       have e : Fin.rev (1 : Fin 4) = 2 := by decide
-      rw [e, d1 g, neg_zero] at h
-      exact h
+      rwa [e, d1 g, neg_zero] at h
     have d3 : ∀ g, (γ : H → M4 E) g 3 3 = 0 := by
       intro g
       have h := hrev g 0
       have e : Fin.rev (0 : Fin 4) = 3 := by decide
-      rw [e, d0 g, neg_zero] at h
-      exact h
+      rwa [e, d0 g, neg_zero] at h
     refine Subtype.ext (funext fun g => Matrix.ext fun a b => ?_)
     show (γ : H → M4 E) g a b = 0
     by_cases hab : a = b
@@ -1112,10 +1105,8 @@ private theorem dim_zero (χ : Fin 4 → H →* Eˣ) (I : H → Prop) (σ : H)
         exact hdI s hs a
       · show Continuous fun g => if a = b then d g a else 0
         by_cases hab : a = b
-        · simp only [ite_eq_left hab]
-          exact hdc a
-        · simp only [ite_eq_right hab]
-          exact continuous_const
+        · simpa only [ite_eq_left hab] using hdc a
+        · simpa only [ite_eq_right hab] using continuous_const
       · have hne : a ≠ b := fun h => hab (by rw [h]; exact (wt_eq_zero b b).2 rfl)
         rw [hγ, ite_eq_right hne]
     refine ⟨⟨γ, (hS γ).2 hQ⟩, ?_⟩

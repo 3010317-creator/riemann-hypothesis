@@ -57,8 +57,7 @@ theorem UpperTheory.Cb.existsUnique_complexPoint_lift_clopen_cover :
     exact TopologicalSpace.Opens.mem_iSup.mp h
   have hr : Set.range y.1 ⊆ Set.range (W m).ι := by
     rintro _ ⟨a, rfl⟩
-    rw [hone a, Scheme.Opens.range_ι]
-    exact hm
+    rwa [hone a, Scheme.Opens.range_ι]
   refine ⟨m, ?_, ?_⟩
   · refine ⟨⟨IsOpenImmersion.lift (W m).ι y.1 hr, ?_⟩, ?_, ?_⟩
     · rw [← Category.assoc, IsOpenImmersion.lift_fac]
@@ -75,5 +74,4 @@ theorem UpperTheory.Cb.existsUnique_complexPoint_lift_clopen_cover :
       rw [← hz', Scheme.Hom.comp_apply]
       exact (z.1 x0).2
     have h2 : y.1 x0 ∈ W m' ⊓ W m := ⟨h1, hm⟩
-    rw [hd m' m hne] at h2
-    exact h2
+    rwa [hd m' m hne] at h2

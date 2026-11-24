@@ -126,8 +126,7 @@ private theorem bs_intervalIntegrable_D (Z : ℝ) (q : ℕ) (κ : ℕ → ℂ) (
       ((bs_measurable_D Z q κ).norm.pow_const 2).aestronglyMeasurable ?_
     refine Eventually.of_forall (fun v => ?_)
     have := bs_norm_D_le Z v q κ
-    simp only [norm_pow, norm_norm]
-    exact pow_le_pow_left₀ (norm_nonneg _) this 2
+    simpa only [norm_pow, norm_norm] using pow_le_pow_left₀ (norm_nonneg _) this 2
 
 private theorem bs_hasDeriv_min (m x : ℝ) (hm : 0 < m) :
     HasDerivWithinAt (fun y : ℝ => min 1 (y / m)) (if x < m then 1 / m else 0) (Set.Ioi x) x := by
@@ -263,8 +262,7 @@ private theorem bs_block {C Z Y W : ℝ} {P : Finset ℕ} (hC : 0 ≤ C) (hY : 1
     have e : (fun v => ∑ q ∈ P, ‖bsD Z v q κ‖ ^ 2) = ∑ q ∈ P, fun v => ‖bsD Z v q κ‖ ^ 2 := by
       funext v
       simp [Finset.sum_apply]
-    rw [e]
-    exact this
+    rwa [e]
   rw [← intervalIntegral.integral_finsetSum
     (fun q _ => (bs_intervalIntegrable_D Z q κ Y W).2)] at h1
   set K := C * Real.log (2 * Y) * P.card with hK
@@ -624,8 +622,7 @@ theorem count_bad_core :
     obtain ⟨q, hq, rfl⟩ := Finset.mem_image.1 hp
     exact (hg q hq).2)
   rw [Finset.card_image_of_injOn hinj] at h1
-  refine h1.trans (mul_le_mul_of_nonneg_right (le_max_left _ _) ?_)
-  exact Real.rpow_nonneg (by linarith) _
+  exact h1.trans (mul_le_mul_of_nonneg_right (le_max_left _ _) (Real.rpow_nonneg (by linarith) _))
 
 end QH
 end -- clump:auto
@@ -1565,8 +1562,7 @@ theorem meanSqK :
       mul_le_mul_of_nonneg_left hRle (by positivity)
     have h2 : L * sq ≤ 2 * y := by
       have := mul_le_mul_of_nonneg_right hsz1 hsq0
-      rw [mul_assoc, hsq2] at this
-      exact this
+      rwa [mul_assoc, hsq2] at this
     have h3 : C1 * C2 * (L * sq) ≤ C1 * C2 * (2 * y) := mul_le_mul_of_nonneg_left h2 (by positivity)
     have h4 : C1 * C2 * y ≤ C1 * C2 * (y * L) := mul_le_mul_of_nonneg_left hyL (by positivity)
     have h5 : 2 * (C2 * L) * (5 * C1 * sq) = 10 * (C1 * C2 * (L * sq)) := by ring
@@ -1581,8 +1577,7 @@ theorem meanSqK :
     have h := hY2 Y hYb
     have h0 : 0 ≤ 400 * K * Real.log Y := by positivity
     have h' := pow_le_pow_left₀ h0 h 2
-    rw [← Real.sqrt_eq_rpow, Real.sq_sqrt hY0.le] at h'
-    exact h'
+    rwa [← Real.sqrt_eq_rpow, Real.sq_sqrt hY0.le] at h'
   have hS2 : (∑ n ∈ Finset.Icc 1 ⌊Z⌋₊, cN y n) ^ 2 ≤ C4 ^ 2 * y ^ 2 * Y := by
     have h := pow_le_pow_left₀ hS0 hS 2
     have h2 : (C4 * y * (400 * K * Real.log Y)) ^ 2 ≤ C4 ^ 2 * y ^ 2 * Y := by
@@ -1701,8 +1696,7 @@ theorem stage :
   have hPP : ∀ q ∈ B, q.Prime ∧ U ^ (1 / 2 : ℝ) < q ∧ (q : ℝ) ≤ U := by
     intro q hq
     have := Finset.mem_filter.1 (hB hq)
-    refine ⟨this.2.1, this.2.2.2, ?_⟩
-    exact (Nat.le_floor_iff hU0.le).1 (Finset.mem_Icc.1 this.1).2
+    exact ⟨this.2.1, this.2.2.2, (Nat.le_floor_iff hU0.le).1 (Finset.mem_Icc.1 this.1).2⟩
   set B₁ := B.filter (fun q => ∃ (f : ℕ) (_ : NeZero (f * q)) (ψ : DirichletCharacter ℂ (f * q)),
     (f : ℝ) ≤ F ∧ ((f * q : ℕ) : ℝ) ≤ F * U ∧ ψ.IsPrimitive ∧ ¬ ZeroFreeBox (F * U) ψ) with hB₁
   set B₂ : (Σ N : ℕ, DirichletCharacter ℂ (N + 1)) → Finset ℕ := fun ξ => B.filter (fun q =>

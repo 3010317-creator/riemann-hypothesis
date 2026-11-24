@@ -77,7 +77,5 @@ theorem UpperTheory.V.Hi.partUR2Mem :
     F ∈ YOf Q ι τ₀ e ξ σ ↔ F ∈ (hset Q τ₀).Big ι ξ ∧ ∀ i ℓ, toForm ι e (F i) ℓ ∈ σ := by
   intro l _ L Ω _ _ _ _ _ _ s n _ V Q c ι m τ₀ lam d e ξ σ F
   constructor
-  · intro h
-    exact ⟨h.1, UpperTheory.V.Hi.partUR2Mem_span ι m e σ F h.2⟩
-  · intro h
-    exact ⟨h.1, Submodule.subset_span h.2⟩
+  · exact fun h => ⟨h.1, UpperTheory.V.Hi.partUR2Mem_span ι m e σ F h.2⟩
+  · exact fun h => ⟨h.1, Submodule.subset_span h.2⟩

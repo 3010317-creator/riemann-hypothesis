@@ -309,14 +309,11 @@ private theorem main (D : Dat ℚ E) {P : CuspSub E 2} {ω χ : HChar ℚ} (hA :
     refine ⟨n₀ + (n₁ + n₂), Fin.append f₀ (Fin.append f₁ f₂), Fin.append q₀ (Fin.append q₁ q₂), ?_, fun s hs => ?_⟩
     · intro i
       refine Fin.addCases (fun i => ?_) (fun i => ?_) i
-      · simp only [Fin.append_left]
-        exact ⟨(c₀ i).1, ar k ▸ (c₀ i).2⟩
+      · simpa only [Fin.append_left] using ⟨(c₀ i).1, ar k ▸ (c₀ i).2⟩
       · simp only [Fin.append_right]
         refine Fin.addCases (fun i => ?_) (fun i => ?_) i
-        · simp only [Fin.append_left]
-          exact ⟨(c₁ i).1, ar k ▸ (c₁ i).2⟩
-        · simp only [Fin.append_right]
-          exact ⟨(c₂ i).1, ar k ▸ (c₂ i).2⟩
+        · simpa only [Fin.append_left] using ⟨(c₁ i).1, ar k ▸ (c₁ i).2⟩
+        · simpa only [Fin.append_right] using ⟨(c₂ i).1, ar k ▸ (c₂ i).2⟩
     · rw [merge (c := fun a b => Mk D χ 0 a b s), merge (c := fun a b => Mk D χ 0 a b s),
         step D hχ (hA _ g₀.mem) (hA _ g₁.mem) (hA _ g₂.mem) h k p hs, s₀ s hs, s₁ s hs, s₂ s hs]
 

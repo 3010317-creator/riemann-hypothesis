@@ -70,8 +70,7 @@ private theorem mn_sep {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalG
     (Subgroup.isClosed_topologicalClosure _).isOpen_compl.preimage (continuous_mul_const g)
   have h1 : (1 : G) ∈ {x : G | x * g ∉ ((commutator G).topologicalClosure : Set G)} := by
     show 1 * g ∉ ((commutator G).topologicalClosure : Set G)
-    rw [one_mul]
-    exact hg
+    rwa [one_mul]
   obtain ⟨W, hW⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hS h1
   refine ⟨(W : Subgroup G).map (QuotientGroup.mk' _), ?_, ?_⟩
   · rw [Subgroup.coe_map]
@@ -97,8 +96,7 @@ private theorem mn_core {A M : Type} [CommGroup A] [TopologicalSpace A] [IsTopol
   have haW : a ∈ o ∩ {y : A | y ^ q ∈ V} := ⟨hao, by show a ^ q ∈ V; rw [ha]; exact hV1⟩
   obtain ⟨x, hx1, hx2⟩ := hr.exists_mem_open hW ⟨a, haW⟩
   have hx3 : r (x ^ q) ∈ V := by
-    rw [map_pow]
-    exact hx2
+    rwa [map_pow]
   obtain ⟨z, hz⟩ := hV (x ^ q) hx3
   have hxz : x = z ^ n := by
     have h1 : (x * (z ^ n)⁻¹) ^ q = 1 := by
@@ -218,8 +216,7 @@ theorem UpperTheory.V.Loc.muNone :
       rw [hm, Nat.pow_dvd_pow_iff_le_right hp.one_lt] at h3
       omega
     have hz1 : (((y : L) : Om l)) ^ l = 1 := by
-      have h4 := congrArg (fun u : Lˣ => ((u : L) : Om l)) hy1
-      simpa using h4
+      simpa using congrArg (fun u : Lˣ => ((u : L) : Om l)) hy1
     have hz2 : (((y : L) : Om l)) ≠ 1 := by
       intro h
       apply hy2

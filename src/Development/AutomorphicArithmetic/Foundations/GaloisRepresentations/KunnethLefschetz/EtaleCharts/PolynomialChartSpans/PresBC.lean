@@ -144,8 +144,7 @@ private theorem presAlg {A B A' B' : CommRingCat.{0}} (f : A ⟶ B) (g : A ⟶ A
         simp [hΦ]
       simp [hd2, h0]
   have hed' : ∀ b, e (d.hom b) = b := fun b => by
-    have h := congrArg (fun k => k.hom b) hed
-    simpa using h
+    simpa using congrArg (fun k => k.hom b) hed
   refine ⟨fun b => ?_, ?_⟩
   · obtain ⟨p, hp⟩ := Ideal.Quotient.mk_surjective (d.hom b)
     exact ⟨p, by rw [← he, hp, hed']⟩
@@ -173,8 +172,7 @@ theorem presBC : PresBC := by
       ((isPullback_morphismRestrict c C).paste_vert H).flip
     have hs2 : IsPullback (π'.resLE (a ⁻¹ᵁ V) (c ⁻¹ᵁ C) h' ≫ (a ⁻¹ᵁ V).ι) (c ∣_ C) a
         (π.resLE V C h ≫ V.ι) := by
-      rw [Scheme.Hom.resLE_comp_ι, Scheme.Hom.resLE_comp_ι]
-      exact hs1
+      rwa [Scheme.Hom.resLE_comp_ι, Scheme.Hom.resLE_comp_ι]
     have hcomm : π'.resLE (a ⁻¹ᵁ V) (c ⁻¹ᵁ C) h' ≫ (a ∣_ V) = (c ∣_ C) ≫ π.resLE V C h := by
       rw [← cancel_mono V.ι]
       have e1 := (isPullback_morphismRestrict a V).w

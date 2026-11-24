@@ -270,8 +270,7 @@ private theorem mapGL_iter (σ : E ≃ₐ[F] E) (v : Pl F) {n : ℕ} (k : ℕ) (
     (mapGL n (galFin σ v))^[k] Y = mapGL n (galFin (σ ^ k) v) Y := by
   induction k with
   | zero =>
-    refine Units.ext (Matrix.ext fun a b => ?_)
-    exact (galOf_one (tensorEquiv' E v) _).symm
+    exact Units.ext (Matrix.ext fun a b => (galOf_one (tensorEquiv' E v) _).symm)
   | succ k ih =>
     rw [Function.iterate_succ_apply', ih]
     refine Units.ext (Matrix.ext fun a b => ?_)
@@ -404,8 +403,7 @@ private theorem single_mem (T : Ty σ n q w₀) {v : Pl F} (u₀ : PlacesOver E 
     GM.cmp u (UpperTheory.ConvolutionTheory.T4.pE E n v (finEmb E n (AdelicGLn.localEmbedding u₀.1 y))) ∈ T.J u.1 := by
   by_cases hu : u = u₀
   · subst hu
-    rw [cmp_pE, fin_local]
-    exact hy
+    rwa [cmp_pE, fin_local]
   · rw [cmp_pE, fin_local_ne (fun e => hu (Subtype.ext e))]
     exact one_mem _
 
@@ -429,8 +427,7 @@ private theorem exists_pre [FiniteDimensional F E] (T : Ty σ n q w₀) {v : Pl 
   refine ⟨_, h1, ?_, h2⟩
   rw [← Function.iterate_succ_apply' (mapGL n (galFin σ v)), mapGL_iter, ← hk,
     pow_orderOf_eq_one]
-  refine Units.ext (Matrix.ext fun a b => ?_)
-  exact galOf_one (tensorEquiv' E v) _
+  exact Units.ext (Matrix.ext fun a b => (galOf_one (tensorEquiv' E v) _))
 
 private theorem under_eq {v : Pl F} (u : PlacesOver E v) : u.1.under (𝓞 F) = v :=
   HeightOneSpectrum.ext u.2.over.symm

@@ -244,8 +244,7 @@ theorem jetLin_monomial (J : (DVar ι a b →₀ ℕ) → K) (m : (ι × Fin b �
       (J (m.comapDomain Sum.inr Sum.inr_injective.injOn)) := by
   have := (basisMonomials ((ι × Fin b × Fin b) ⊕ DVar ι a b) K).constr_basis K (fun m =>
     (monomial (m.comapDomain Sum.inl Sum.inl_injective.injOn) (J (m.comapDomain Sum.inr Sum.inr_injective.injOn)) : Pol K ι b)) m
-  rw [coe_basisMonomials] at this
-  exact this
+  rwa [coe_basisMonomials] at this
 
 theorem subD_scale (w : ι → K) (P : Pol K ι a) :
     scaleVar (Sum.elim (fun _ => 1) fun k => w k.1) (subD K ι a b P) =
@@ -483,12 +482,10 @@ theorem mapVV_rational_form_conj : ∀ {D : D7} {a b : ℕ} (lam : D.what₂.Tau
     rfl
   have h1 : Formalism.L2.Ker.jetMap J n (MvPolynomial.map D.what₂.embLL u.1) = MvPolynomial.map D.what₂.embLL (f u).1 := by
     have h := congrArg Subtype.val (hf u)
-    rw [Formalism.L2.Ker.jetOp_coe lam lam' n hV] at h
-    exact h
+    rwa [Formalism.L2.Ker.jetOp_coe lam lam' n hV] at h
   have h2 : Formalism.L2.Ker.jetMap Jq n (MvPolynomial.map e u.1) = MvPolynomial.map e (f u).1 := by
     apply MvPolynomial.map_injective i i.injective
-    rw [Formalism.L2.Ker.map_jetMap, MvPolynomial.map_map, MvPolynomial.map_map, hie, hJi]
-    exact h1
+    rwa [Formalism.L2.Ker.map_jetMap, MvPolynomial.map_map, MvPolynomial.map_map, hie, hJi]
   have h3 := congrArg (MvPolynomial.map r) h2
   rw [Formalism.L2.Ker.map_jetMap, MvPolynomial.map_map, MvPolynomial.map_map, hre, hJr] at h3
   apply Subtype.ext

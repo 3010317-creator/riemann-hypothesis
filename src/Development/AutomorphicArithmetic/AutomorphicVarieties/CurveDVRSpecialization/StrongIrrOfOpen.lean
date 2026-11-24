@@ -57,8 +57,7 @@ theorem UpperTheory.V.Pr.strongIrrOfOpen :
     constructor
     · intro h v hv φ hφ
       exact (Subspace.forall_mem_dualAnnihilator_apply_eq_zero_iff W _).mpr (h v hv) φ hφ
-    · intro h v hv
-      exact (Subspace.forall_mem_dualAnnihilator_apply_eq_zero_iff W _).mp (h v hv)
+    · exact fun h v hv => (Subspace.forall_mem_dualAnnihilator_apply_eq_zero_iff W _).mp (h v hv)
   have hclosed : IsClosed (S : Set G) := by
     rw [hset]
     refine isClosed_biInter fun v _ => isClosed_biInter fun φ _ => ?_
@@ -72,6 +71,4 @@ theorem UpperTheory.V.Pr.strongIrrOfOpen :
           simp [Matrix.smul_mulVec] }
     exact hlin f
   have hopen : IsOpen (S : Set G) := S.isOpen_of_isClosed_of_finiteIndex hclosed
-  apply hirr S hopen W
-  intro g hg v hv
-  exact (hiff g).mp hg v hv
+  exact hirr S hopen W (fun g hg v hv => (hiff g).mp hg v hv)

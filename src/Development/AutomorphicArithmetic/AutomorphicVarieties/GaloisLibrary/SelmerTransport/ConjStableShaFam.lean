@@ -148,8 +148,7 @@ private theorem valuation_lt_one_iff_mem_and_inv_not_mem {Ω : Type} [Field Ω] 
       rw [zero_lt_iff]
       simpa using hz
     rw [← A.valuation_le_one_iff, ← A.valuation_le_one_iff, map_inv₀, inv_le_one₀ h0]
-    simp only [hz, false_or, not_le]
-    exact ⟨fun h => ⟨h.le, h⟩, fun h => h.2⟩
+    simpa only [hz, false_or, not_le] using ⟨fun h => ⟨h.le, h⟩, fun h => h.2⟩
 
 private theorem comap_valuation_lt_one_iff_selmer_transport {Ω : Type} [Field Ω] (A : ValuationSubring Ω) (f : Ω →+* Ω) (z : Ω) :
     (A.comap f).valuation z < 1 ↔ A.valuation (f z) < 1 := by
@@ -168,8 +167,7 @@ private theorem mem_decompositionSubgroup_iff_selmer_transport {k Ω : Type} [Fi
     · rintro ⟨s, hs, hs'⟩
       rw [AlgEquiv.smul_def] at hs'
       rwa [← x.injective hs']
-    · intro hy
-      exact ⟨y, hy, rfl⟩
+    · exact fun hy => ⟨y, hy, rfl⟩
   · intro h
     ext y
     rw [ValuationSubring.mem_smul_pointwise_iff_exists]
@@ -192,8 +190,7 @@ theorem conjStable_shaFam : ConjStable (shaFam k Ω l) := by
       simpa using hl
     · simp only [Dec, mem_decompositionSubgroup_iff_selmer_transport, ValuationSubring.mem_comap, RingHom.coe_coe, key]
       constructor
-      · intro h y
-        exact h (g y)
+      · exact fun h y => h (g y)
       · intro h y
         simpa using h (g.symm y)
   · refine ⟨Ine (F := k) (A.comap (g : Ω →+* Ω)), Or.inr ⟨_, rfl⟩, fun x => ?_⟩

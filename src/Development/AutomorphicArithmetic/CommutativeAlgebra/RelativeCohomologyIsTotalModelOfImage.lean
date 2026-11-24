@@ -125,8 +125,7 @@ private theorem comp_eq {E E' : Spc} {j : E ⟶ E'} {Z : Sub E} {K : Cx R} {m N 
 
 private theorem comp_zero {E E' : Spc} (j : E ⟶ E') (Z : Sub E) (K : Cx R) (m N : ℤ) :
     Comp j (0 : Cochain ((chains R).obj E') K N) (0 : (famDC Z K m).Tot) := by
-  intro p s h U z
-  exact (ev_zero p _ h U (z.map j)).symm
+  exact fun p s h U z => (ev_zero p _ h U (z.map j)).symm
 
 private theorem pull_inr (q : ℕ) (P : Arrow Spc) (i N : ℤ) (g : Cocycle ((chains (ZMod q)).obj (dbl P)) (res _ (tw q i)) N)
     (h : ∀ (p : ℕ) (s : ℤ) (h : -(p : ℤ) + N = s) (U : Scheme.{0}) (z : Sx P.right p U),
@@ -183,8 +182,7 @@ theorem UpperTheory.relativeCohomology_isTotalModel_of_image :
     refine ⟨g - g', ?_, (C n N hN).2.2.2.1 _ _ _ _ hc hc', fun p s h U z => ?_⟩
     · rw [CohomologyClass.mk_sub, hg, hg']; rfl
     · have := ((GlobalTheory.T.etaleCochainEvalOnSimplex_basic_properties (ZMod q)).1 g.1 g'.1 p s h U (z.map (dbl.inr P))).2.1
-      rw [hv, hv', sub_zero] at this
-      exact this
+      rwa [hv, hv', sub_zero] at this
   · rintro x c hd ⟨g, hg, hc, hv⟩
     obtain ⟨n', rfl⟩ : ∃ n', n = n' + 1 := ⟨n - 1, by omega⟩
     obtain ⟨N', rfl⟩ : ∃ N', N = N' + 1 := ⟨N - 1, by omega⟩

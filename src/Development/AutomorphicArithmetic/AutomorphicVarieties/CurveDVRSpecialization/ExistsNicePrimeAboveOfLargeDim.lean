@@ -87,13 +87,11 @@ theorem UpperTheory.V.Pr.exists_nice_prime_above_of_large_dim :
         show ringKrullDim (L.R ⧸ (⊤ : Ideal L.R)) < _
         rw [ringKrullDim_eq_bot_of_subsingleton]
         exact WithBot.bot_lt_coe _
-      · simp only [a, hij, ite_false]
-        exact hC I hI v i j hij
+      · simpa only [a, hij, ite_false] using hC I hI v i j hij
   obtain ⟨p, hp, hPp, hp1, hwp, hnot⟩ :=
     UpperTheory.V.Pr.nicePrimeEx L.R (algebraMap O L.R w) hwR (n * F.d) hN _ a ha P hdim
   have hmap : Ideal.map (algebraMap O L.R) (IsLocalRing.maximalIdeal O) ≤ p := by
-    rw [hmax, Ideal.map_span, Set.image_singleton, Ideal.span_le, Set.singleton_subset_iff]
-    exact hwp
+    rwa [hmax, Ideal.map_span, Set.image_singleton, Ideal.span_le, Set.singleton_subset_iff]
   refine ⟨p, ⟨hp, hp1, ?_, ⟨?_, ?_⟩, ?_⟩, hPp⟩
   · have hl : ((l : ℕ) : O) ∈ IsLocalRing.maximalIdeal O := by
       rw [← IsLocalRing.residue_eq_zero_iff, map_natCast]
@@ -109,8 +107,7 @@ theorem UpperTheory.V.Pr.exists_nice_prime_above_of_large_dim :
     simp only [a, hij, ite_false]
     refine sup_le (sup_le ?_ hmap) ?_
     · rw [Ideal.map_le_iff_le_comap]
-      intro y hy
-      exact hPp (hIP hy)
+      exact fun y hy => hPp (hIP hy)
     · rw [Ideal.span_le]
       rintro y ⟨g, hg, rfl⟩
       exact hco g hg

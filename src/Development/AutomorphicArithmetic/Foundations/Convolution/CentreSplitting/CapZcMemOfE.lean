@@ -59,10 +59,8 @@ open GroundTheory.Automorphic.HarishChandra in
 private theorem UpperTheory.ConvolutionTheory.Dp.capHC_mem (n : ℕ) (u : ℂ) :
     Formalism.REAL.qdet (fun i j : Fin n => e (i, j)) u ∈ Subalgebra.center ℂ (U n) := by
   have hgl : Formalism.REAL.GlRel (fun i j : Fin n => e (i, j)) := by
-    intro i j k l
-    exact e_mul_sub_mul (i, j) (k, l)
-  refine mem_center_of_commute_e fun a => ?_
-  exact (Formalism.REAL.qDetCentral (U n) n _ hgl u a.1 a.2).symm
+    exact fun i j k l => e_mul_sub_mul (i, j) (k, l)
+  exact mem_center_of_commute_e fun a => (Formalism.REAL.qDetCentral (U n) n _ hgl u a.1 a.2).symm
 
 theorem UpperTheory.ConvolutionTheory.Dp.capHC :
     UpperTheory.ConvolutionTheory.Dp.CapHC := by

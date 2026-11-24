@@ -81,12 +81,9 @@ private theorem latCls_core {O K : Type} [CommRing O] [Field K] [Algebra O K] {�
     have : (star e₁ * e₂).im = e₁.re * e₂.im - e₁.im * e₂.re := by
       simp only [QuadraticAlgebra.im_mul, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star]
       ring
-    rw [this]
-    exact hd
-  · rw [hinv, smul_mul_assoc, map_smul, smul_eq_mul, mul_comm (star e₁), ← div_eq_inv_mul]
-    exact hb
-  · rw [map_mul, hnu, mul_comm, ← div_eq_mul_inv]
-    exact hc
+    rwa [this]
+  · rwa [hinv, smul_mul_assoc, map_smul, smul_eq_mul, mul_comm (star e₁), ← div_eq_inv_mul]
+  · rwa [map_mul, hnu, mul_comm, ← div_eq_mul_inv]
   · have key : ((↑hu.unit : Etau K τ) * ·) '' ((Submodule.span O {1, ↑hu.unit⁻¹ * e₂} :
         Submodule O (Etau K τ)) : Set (Etau K τ)) =
         (((Submodule.span O {1, ↑hu.unit⁻¹ * e₂} : Submodule O (Etau K τ)).map
@@ -118,8 +115,7 @@ private theorem latCls_basis {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteV
     rw [← hspan, Submodule.span_le]
     intro z hz
     have hz' : z ∈ ((Submodule.span O (Set.range f) : Submodule O (Etau K τ)) : Set (Etau K τ)) := by
-      rw [← hMf]
-      exact hz
+      rwa [← hMf]
     exact Submodule.span_subset_span O K _ hz'
   let bK := Module.Basis.mk hliK htop
   have hcard : Fintype.card (Module.Free.ChooseBasisIndex O M) = 2 := by
@@ -196,19 +192,15 @@ private theorem latCls_val {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteVal
     exact ⟨hc, (hdiv _ _ hc).2 hC.1, (hdiv _ _ hc).2 hC.2⟩
   right; right
   have hab : v a < v b := by
-    by_contra hba
-    push Not at hba
+    by_contra! hba
     have h1 : v a < v c := by
-      by_contra h1
-      push Not at h1
+      by_contra! h1
       exact hA ⟨hba, h1⟩
     exact hC ⟨hba.trans h1.le, h1.le⟩
   have hcb : v c < v b := by
-    by_contra hbc
-    push Not at hbc
+    by_contra! hbc
     have h1 : v c < v a := by
-      by_contra h1
-      push Not at h1
+      by_contra! h1
       exact hC ⟨hbc, h1⟩
     exact hA ⟨hbc.trans h1.le, h1.le⟩
   have hs : v (a + b + c) = v b := by
@@ -216,8 +208,7 @@ private theorem latCls_val {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteVal
     rw [e, v.map_add_eq_of_lt_right (v.map_add_lt hab hcb)]
   have hb0 : b ≠ 0 := (v.pos_iff).1 (lt_of_le_of_lt zero_le' hab)
   have hs0 : a + b + c ≠ 0 := by
-    rw [← v.ne_zero_iff, hs, v.ne_zero_iff]
-    exact hb0
+    rwa [← v.ne_zero_iff, hs, v.ne_zero_iff]
   refine ⟨hs0, (hdiv _ _ hs0).2 ?_, (hdiv _ _ hs0).2 (by rw [hs]; exact hcb.le)⟩
   rw [hs]
   apply v.map_add_le le_rfl

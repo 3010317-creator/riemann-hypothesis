@@ -246,8 +246,7 @@ theorem eval_det_one_sub (X : Matrix n n E) (t : E) :
 theorem lie_mem (hZ : ∀ g ∈ UJ σ J, (g : Matrix n n E) ∈ commSub φ Z) (hJ : IsUnit J.det)
     {X : Matrix n n E} (hX : cT σ X * J = -(J * X)) : X ∈ commSub φ Z := by
   obtain ⟨t, ht0, htp⟩ : ∃ t : ℕ, (t : E) ≠ 0 ∧ IsUnit (1 - (t : E) • X).det := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hq : X.charpolyRev ≠ 0 := by
       intro h
       have := eval_det_one_sub X 0
@@ -478,8 +477,7 @@ theorem exists_unit_gen (h : IsCMExt F E σ) (τ : E →ₐ[F] Fv F v) {k : ℕ}
     ∃ α : (Fv F v ⊗[F] E)ˣ, ∀ c : Fv F v ⊗[F] E,
       (∀ j, c * u j ∈ intLoc F E v) ↔ ((α⁻¹ : (Fv F v ⊗[F] E)ˣ) : Fv F v ⊗[F] E) * c ∈ intLoc F E v := by
   have hne : ∀ ρ : E →ₐ[F] Fv F v, ∃ j, splitProj ρ (u j) ≠ 0 := fun ρ => by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have := congrArg (splitProj ρ) hl
 
     rw [map_sum, map_one, Finset.sum_eq_zero fun j _ => by rw [map_mul, hc j, mul_zero]] at this
@@ -1224,8 +1222,7 @@ theorem centralRatio_stabLoc_atLevel_alt : ∀ {D : D7} {L : SizeData₂ D} {hT 
     have h := GlobalTheory.AdelicU.mem_stabLoc.1 (inv_mem hkSt)
     intro y
     have h2 := h y
-    rw [map_inv] at h2
-    exact h2
+    rwa [map_inv] at h2
   have key : ∀ c : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv D.host.F v ⊗[D.host.F] D.host.E, ((α⁻¹ : (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv D.host.F v ⊗[D.host.F] D.host.E)ˣ) : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv D.host.F v ⊗[D.host.F] D.host.E) * c ∈ GlobalTheory.AdelicU.intLoc D.host.F D.host.E v ↔
       ((α⁻¹ : (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv D.host.F v ⊗[D.host.F] D.host.E)ˣ) : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv D.host.F v ⊗[D.host.F] D.host.E) * (ι * c) ∈ GlobalTheory.AdelicU.intLoc D.host.F D.host.E v := by
     intro c
@@ -1320,8 +1317,7 @@ theorem comm_of_comm_cayley (g B V : Matrix n n A) (s : A) (h2s : IsUnit (2 * s)
     Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_one, Matrix.one_mul, sub_left_inj] at hg
   have hgV : g * V = V * g := by
     have := congrArg (fun M => (↑h2s.unit⁻¹ : A) • M) hg
-    simp only [smul_smul, IsUnit.val_inv_mul, one_smul] at this
-    exact this
+    simpa only [smul_smul, IsUnit.val_inv_mul, one_smul] using this
   have hU : (s • (1 : Matrix n n A) - B) * g = g * (s • (1 : Matrix n n A) - B) := by
     calc (s • (1 : Matrix n n A) - B) * g
         = (s • (1 : Matrix n n A) - B) * g * (V * (s • (1 : Matrix n n A) - B)) := by rw [hV2, Matrix.mul_one]
@@ -1356,8 +1352,7 @@ theorem comm_of_comm_skew (σ : A →+* A) (hσ : ∀ x, σ (σ x) = x) (J : Mat
     rw [e, Matrix.mul_add, Matrix.add_mul, Matrix.mul_smul, Matrix.smul_mul, h1, h2']
   rw [Matrix.mul_smul, Matrix.smul_mul] at h3
   have := congrArg (fun N => (↑h2.unit⁻¹ : A) • N) h3
-  simp only [smul_smul, IsUnit.val_inv_mul, one_smul] at this
-  exact this
+  simpa only [smul_smul, IsUnit.val_inv_mul, one_smul] using this
 
 theorem exists_nat_isUnit_sub (K : Type) [Field K] [CharZero K] [Algebra K A] [FiniteDimensional K A]
     (B : Matrix n n A) : ∃ m : ℕ, m ≠ 0 ∧ IsUnit ((m : A) • (1 : Matrix n n A) - B) := by
@@ -1435,8 +1430,7 @@ open Formalism.BasicNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVo
 
 theorem exists_anti (D : D7) : ∃ e : D.host.E, D.sp.cm.sig e = -e ∧ e ≠ 0 := by
   have hx : ∃ x : D.host.E, x ∉ Set.range (algebraMap D.host.F D.host.E) := by
-    by_contra h
-    push Not at h
+    by_contra! h
     have htop : (⊥ : Subalgebra D.host.F D.host.E) = ⊤ :=
       eq_top_iff.2 fun x _ => Algebra.mem_bot.2 (h x)
     have := Subalgebra.bot_eq_top_iff_finrank_eq_one.1 htop
@@ -1446,8 +1440,7 @@ theorem exists_anti (D : D7) : ∃ e : D.host.E, D.sp.cm.sig e = -e ∧ e ≠ 0 
   refine ⟨x - star x, ?_, ?_⟩
   · show star (x - star x) = -(x - star x)
     rw [star_sub, star_star, neg_sub]
-  · intro h0
-    exact hx (RingHom.mem_range.1 ((D.sp.cm.fixed x).1 (sub_eq_zero.1 h0).symm))
+  · exact fun h0 => hx (RingHom.mem_range.1 ((D.sp.cm.fixed x).1 (sub_eq_zero.1 h0).symm))
 
 theorem center_scalar_loc : ∀ (D : D7) (V : Formalism.BasicNotions.TH.HSp D) (v : IsDedekindDomain.HeightOneSpectrum (𝓞 D.host.F)) (g : GlobalTheory.AdelicU.GLoc D.sp.cm.sig V.gram v), g ∈ Subgroup.center (GlobalTheory.AdelicU.GLoc D.sp.cm.sig V.gram v) → ∃ c : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv D.host.F v ⊗[D.host.F] D.host.E, (GlobalTheory.AdelicU.matHom (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv D.host.F v) D.sp.cm.sig V.gram g).1 = c • (1 : Matrix (Fin V.rank) (Fin V.rank) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv D.host.F v ⊗[D.host.F] D.host.E)) := by
   intro D V v g hg
@@ -1540,15 +1533,13 @@ theorem scalar_keeps {R : Type} [CommRing R] {S : Subring R} {n : ℕ} (Λ : Sub
   intro y
   rw [Matrix.smul_mulVec, Matrix.one_mulVec]
   constructor
-  · intro hy
-    exact Λ.smul_mem ⟨c, hcI⟩ hy
+  · exact fun hy => Λ.smul_mem ⟨c, hcI⟩ hy
   · intro hy
     have h3 := Λ.smul_mem ⟨c', hc'I⟩ hy
     have e3 : (c' * c) • y = y := by
       have := congrArg (fun A => Matrix.mulVec A y) h2
       simpa only [Matrix.smul_mulVec, Matrix.one_mulVec] using this
-    rw [← e3, mul_smul]
-    exact h3
+    rwa [← e3, mul_smul]
 
 end GlobalTheory.CentralUnitGen
 
@@ -1762,8 +1753,7 @@ theorem centralRatio_unit_gen_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTi
     have h := congrArg (fun g => (GlobalTheory.AdelicU.matHom (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv D.host.F v) D.sp.cm.sig (D.sp.Y 0).gram
       (GlobalTheory.AdelicU.proj D.sp.cm.sig (D.sp.Y 0).gram v g)).1) (inv_mul_cancel z)
     simp only [map_mul, map_one, Units.val_mul, Units.val_one] at h
-    rw [hc, hc', Matrix.smul_mul, Matrix.one_mul, smul_smul] at h
-    exact h
+    rwa [hc, hc', Matrix.smul_mul, Matrix.one_mul, smul_smul] at h
   have h1 := congrArg (fun g => (GlobalTheory.AdelicU.matHom (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv D.host.F v) D.sp.cm.sig (D.sp.Y 0).gram
       (GlobalTheory.AdelicU.proj D.sp.cm.sig (D.sp.Y 0).gram v g)).1) he
   simp only [map_mul, Units.val_mul] at h1

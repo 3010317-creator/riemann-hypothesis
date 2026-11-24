@@ -262,7 +262,6 @@ private theorem ch_conj {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alge
     (B : ValuationSubring Ω) (g : G F Ω) (hg : g ∈ Ine (F := F) (v • B)) : v⁻¹ * g * v ∈ Ine (F := F) B := by
   have hl : IsLift (RingEquiv.refl F) v.toRingEquiv := fun y => v.commutes y
   have hA : ∀ x : Ω, v.toRingEquiv x ∈ v • B ↔ x ∈ B := fun x => by
-    show v • x ∈ v • B ↔ x ∈ B
     exact ValuationSubring.smul_mem_pointwise_smul_iff
   have e : v⁻¹ * g * v = conjGal hl g := AlgEquiv.ext fun _ => rfl
   rw [e]
@@ -429,10 +428,8 @@ theorem UpperTheory.V.GC.character_H1_galois_quotient :
   let A' : S' → ValuationSubring Ω := fun v => if hv : v.1 ∈ S then A ⟨v.1, hv⟩ else placeOf Ω v.1
   have hA' : ∀ v, IsPlaceOver (A' v) v.1 := fun v => by
     by_cases hv : v.1 ∈ S
-    · simp only [A', dite_eq_left hv]
-      exact hA ⟨v.1, hv⟩
-    · simp only [A', dite_eq_right hv]
-      exact isPlaceOver_placeOf Ω v.1
+    · simpa only [A', dite_eq_left hv] using hA ⟨v.1, hv⟩
+    · simpa only [A', dite_eq_right hv] using isPlaceOver_placeOf Ω v.1
   choose s hs using Submodule.Quotient.mk_surjective
     ((continuousCoboundaries1 (chRep κ) fun _ : V => (⊤ : Submodule k k)).comap (Z1C loc (chRep κ) fun _ => ⊤).subtype)
   let f : (H1C loc (chRep κ) fun _ => ⊤) → Z1 (twDual μ ρ) := fun x => ⟨fun g => τ ((s x).1.1 (p g)),
@@ -455,8 +452,7 @@ theorem UpperTheory.V.GC.character_H1_galois_quotient :
       have e : π g = 1 := by
         rw [← MonoidHom.mem_ker, h.ker]
         refine Subgroup.le_topologicalClosure _ (Subgroup.subset_normalClosure ?_)
-        simp only [Set.mem_iUnion]
-        exact ⟨q.1, hq, A' q, hA' q, hg.1, hg.2.1⟩
+        simpa only [Set.mem_iUnion] using ⟨q.1, hq, A' q, hA' q, hg.1, hg.2.1⟩
       have e1 : (s x).1.1 1 = 0 := by simpa using (s x).2.2.1 1 1
       rw [hπ', e, e1, map_zero])
   have b1 : Nat.card {y : H1 ρ // ∃ z : Z1 ρ, Submodule.Quotient.mk z = y ∧
@@ -484,8 +480,7 @@ theorem UpperTheory.V.GC.character_H1_galois_quotient :
       · have e : toGS Ω (S' : Set (HeightOneSpectrum (𝓞 F))) g = toGS Ω _ 1 := by
           rw [map_one]
           refine (QuotientGroup.eq_one_iff _).2 (Subgroup.le_topologicalClosure _ (Subgroup.subset_normalClosure ?_))
-          simp only [Set.mem_iUnion]
-          exact ⟨v, hvS, B, hv, hg.1⟩
+          simpa only [Set.mem_iUnion] using ⟨v, hvS, B, hv, hg.1⟩
         show y.2.choose.1 (toGS Ω _ g) = 0
         rw [e]
         exact h1.2

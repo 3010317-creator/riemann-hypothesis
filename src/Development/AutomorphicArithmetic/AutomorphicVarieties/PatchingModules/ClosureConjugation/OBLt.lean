@@ -394,18 +394,14 @@ theorem UpperTheory.V.AlgebraTools.st_coi_lift :
       intro j hj
       rw [Finset.sum_mul, Finset.sum_eq_single j]
       · exact (hid j hj).eq
-      · intro i hi hij
-        exact hor i hi j hj hij
-      · intro h
-        exact absurd hj h
+      · exact fun i hi hij => hor i hi j hj hij
+      · exact fun h => absurd hj h
     have hr : ∀ j ∈ s, ep j * (∑ i ∈ s, ep i) = ep j := by
       intro j hj
       rw [Finset.mul_sum, Finset.sum_eq_single j]
       · exact (hid j hj).eq
-      · intro i hi hij
-        exact hor j hj i hi (Ne.symm hij)
-      · intro h
-        exact absurd hj h
+      · exact fun i hi hij => hor j hj i hi (Ne.symm hij)
+      · exact fun h => absurd hj h
     refine ⟨?_, fun j hj => ⟨hl j hj, hr j hj⟩⟩
     show (∑ i ∈ s, ep i) * (∑ i ∈ s, ep i) = ∑ i ∈ s, ep i
     rw [Finset.mul_sum]
@@ -433,12 +429,10 @@ theorem UpperTheory.V.AlgebraTools.st_coi_lift :
         exact Finset.sum_congr rfl (fun i hi => (hp i hi).2.2)
       have hl : (1 - ∑ i ∈ s, Matrix.single i i (1 : F)) * Matrix.single a a 1 = Matrix.single a a 1 := by
         rw [sub_mul, one_mul, Finset.sum_mul, Finset.sum_eq_zero, sub_zero]
-        intro i hi
-        exact Matrix.single_mul_single_of_ne _ _ _ _ (hne i hi) _
+        exact fun i hi => Matrix.single_mul_single_of_ne _ _ _ _ (hne i hi) _
       have hr : Matrix.single a a (1 : F) * (1 - ∑ i ∈ s, Matrix.single i i (1 : F)) = Matrix.single a a 1 := by
         rw [mul_sub, mul_one, Finset.mul_sum, Finset.sum_eq_zero, sub_zero]
-        intro i hi
-        exact Matrix.single_mul_single_of_ne _ _ _ _ (hne i hi).symm _
+        exact fun i hi => Matrix.single_mul_single_of_ne _ _ _ _ (hne i hi).symm _
       have hey : r (1 - ∑ i ∈ s, ep i) * r (y a) * r (1 - ∑ i ∈ s, ep i) = r (y a) := by
         rw [hre, hy a, hl, hr]
       obtain ⟨f, hf, hsf, hef, hfe, hrf⟩ :=
@@ -557,8 +551,7 @@ theorem UpperTheory.V.AlgebraTools.units_exist :
     have h1 := hα1 i
     rw [RingHom.mem_ker, map_sub, map_one, sub_eq_zero] at h1
     have h := congrArg (algebraMap B F) (Units.inv_mul (α i))
-    rw [map_mul, map_one, h1, mul_one] at h
-    exact h
+    rwa [map_mul, map_one, h1, mul_one] at h
   have hinv : ∀ i, (↑(α i)⁻¹ : B) * ↑(α i)⁻¹ * b i = 1 := by
     intro i
     rw [← hα, sq, mul_assoc, ← mul_assoc (↑(α i)⁻¹ : B) (↑(α i)) (↑(α i)), Units.inv_mul, one_mul,

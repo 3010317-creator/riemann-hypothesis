@@ -74,12 +74,10 @@ variable {K : Type} [Field K] [NumberField K] {n : ℕ}
 
 private theorem rhoF_mul (μ : Measure (normOneGL (K := K) (n := n))) [μ.IsHaarMeasure] (a b : AdelicGLn.FiniteAdelicGL K n) (x : LL μ) :
     rhoF μ (a * b) x = rhoF μ a (rhoF μ b x) := by
-  simp only [rhoF, _root_.map_mul]
-  exact UnitaryRep.map_mul_apply _ _ _ _
+  simpa only [rhoF, _root_.map_mul] using UnitaryRep.map_mul_apply _ _ _ _
 
 private theorem rhoF_one (μ : Measure (normOneGL (K := K) (n := n))) [μ.IsHaarMeasure] (x : LL μ) : rhoF μ 1 x = x := by
-  simp only [rhoF, _root_.map_one]
-  exact UnitaryRep.map_one_apply _ _
+  simpa only [rhoF, _root_.map_one] using UnitaryRep.map_one_apply _ _
 
 private def stab (μ : Measure (normOneGL (K := K) (n := n))) [μ.IsHaarMeasure] (x : LL μ) : Subgroup (AdelicGLn.FiniteAdelicGL K n) where
   carrier := {g | rhoF μ g x = x}

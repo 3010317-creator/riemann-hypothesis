@@ -58,8 +58,7 @@ private theorem res_entry {R : Type} [CommRing R] [IsLocalRing R] {X X' : M4 R} 
     · rw [map_mul]
     · intro c _ hc
       rw [map_mul, hB c b hc, mul_zero]
-    · intro hb
-      exact absurd (Finset.mem_univ b) hb
+    · exact fun hb => absurd (Finset.mem_univ b) hb
   have kl : ∀ (A B : M4 R), (∀ a b, a ≠ b → residue R (A a b) = 0) →
       ∀ a b, residue R ((A * B) a b) = residue R (A a a) * residue R (B a b) := by
     intro A B hA a b
@@ -68,8 +67,7 @@ private theorem res_entry {R : Type} [CommRing R] [IsLocalRing R] {X X' : M4 R} 
     · rw [map_mul]
     · intro c _ hc
       rw [map_mul, hA a c (Ne.symm hc), zero_mul]
-    · intro ha
-      exact absurd (Finset.mem_univ a) ha
+    · exact fun ha => absurd (Finset.mem_univ a) ha
   have hdiag : ∀ j, residue R (X' j j) * residue R (X j j) = 1 := by
     intro j
     rw [← kr X' X hoff j j, h, Matrix.one_apply_eq, map_one]

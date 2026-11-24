@@ -287,8 +287,7 @@ theorem exists_testOp (K : Subgroup (UA E a)) {w : HeightOneSpectrum (𝓞 E)} (
         refine ⟨τ, h1, ?_⟩
         have hm : Finset.univ.val.map (z ∘ σ) = Finset.univ.val.map z := by
           rw [← Multiset.map_map, Multiset.map_univ_val_equiv]
-        rw [hm]
-        exact h2
+        rwa [hm]
       exact hgen _ hs
 
 
@@ -794,8 +793,7 @@ theorem exists_finite_fix {φ : UA E a → ℂ} (hφ : IsAutFormU φ) :
       ⋃ u, {k : finU (E := E) (n := a) | cLoc u k.1 ≠ 1} := by
     rintro k ⟨-, hk⟩
     simp only [Set.mem_iUnion, Set.mem_setOf_eq]
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     apply hk
     show RU E a k.1 φ = φ
     rw [eq_one_of_forall_cLoc k.2 hne, map_one]
@@ -814,8 +812,7 @@ theorem one_of_cLoc_eq_one {q : HeightOneSpectrum (𝓞 E)} {z : UA E a} (h : cL
   intro u hu
   by_cases hq : IsSplitAt q
   · exact GlobalTheory.Cong.LevelExt.one_of_cLoc hq z h u hu
-  · rw [eq_of_not_apart_of_not_split hq hu]
-    exact h
+  · rwa [eq_of_not_apart_of_not_split hq hu]
 
 theorem peel (φ : UA E a → ℂ) (S : Set (HeightOneSpectrum (𝓞 E)))
     (hS : ∀ k ∈ finU (E := E) (n := a), (∀ u, cLoc u k ∈ GlobalTheory.LFun.KGL u (n := a)) → (∀ u ∈ S, cLoc u k = 1) → RU E a k φ = φ)
@@ -825,8 +822,7 @@ theorem peel (φ : UA E a → ℂ) (S : Set (HeightOneSpectrum (𝓞 E)))
   classical
   induction Q using Finset.induction_on with
   | empty =>
-    intro x hx h1 _
-    exact hS x hx (fun u => (h1 u (by simp)).2) (fun u hu => (h1 u (by simp)).1 hu)
+    exact fun x hx h1 _ => hS x hx (fun u => (h1 u (by simp)).2) (fun u hu => (h1 u (by simp)).1 hu)
   | @insert q Q hqQ ih =>
     intro x hx h1 h2
     obtain ⟨y, hyl, hyφ, hyq⟩ := h2 q (Finset.mem_insert_self q Q)
@@ -1034,8 +1030,7 @@ theorem exists_compact_of_finset (H : HeightOneSpectrum (𝓞 E) → Subgroup (U
       have hxC : x ∈ C := by
         refine hsub x hx (fun u hu => hi u fun r'' hr'' => ?_) (fun r'' h => hH r'' (Finset.mem_insert_of_mem h))
         rcases Finset.mem_insert.1 hr'' with rfl | h
-        · intro hh
-          exact not_apart_trans (not_not.2 hh) (not_apart_symm hnr) (hu r' hr')
+        · exact fun hh => not_apart_trans (not_not.2 hh) (not_apart_symm hnr) (hu r' hr')
         · exact hu r'' h
       exact ⟨x, hxC, 1, one_mem _, mul_one x⟩
 
@@ -1255,11 +1250,9 @@ theorem exists_level {T : Finset (HeightOneSpectrum (𝓞 E))} {U : Submodule �
     rw [mem_levelOf_iff_of_locU hle' hfib' hap hx]
     show x ∈ H' w ↔ cLoc w x ∈ (H' w).map (cLoc w)
     constructor
-    · intro h
-      exact ⟨x, h, rfl⟩
+    · exact fun h => ⟨x, h, rfl⟩
     · rintro ⟨y, hy, e⟩
-      rw [← eq_of_cLoc_eq (hle' w hy) hx e]
-      exact hy
+      rwa [← eq_of_cLoc_eq (hle' w hy) hx e]
 
 theorem isLevelAway_inf {w₀ : HeightOneSpectrum (𝓞 E)} {K : Subgroup (UA E a)} (hK : IsLevelAway w₀ K)
     (v' : HeightOneSpectrum (𝓞 E)) {Kv : Subgroup (GL (Fin a) (v'.adicCompletion E))}
@@ -1551,8 +1544,7 @@ theorem congUWG_of (H : StepSt) (hFin : FinU) (D : ∀ a : ℕ, MvPolynomial (Fi
   obtain ⟨σ, hσ, hB⟩ := hB
   have := (hQ U' g3.aut hfix').1 hq z hz α ⟨σ, hσ, hα ▸ hB⟩
   rw [MvPolynomial.eval_map] at this
-  rw [MvPolynomial.aeval_def]
-  exact this
+  rwa [MvPolynomial.aeval_def]
 
 theorem CongUWG.congUW4 {Ty : UnitaryAutomorphicTypeClass} {Gen : ℕ → ℕ → Multiset ℂˣ → Prop} {Wt : SeedWtU} (h : CongUWG Ty Gen Wt)
     (Rk : ℕ → Prop) : CongUW4 Rk Ty Gen Wt := by

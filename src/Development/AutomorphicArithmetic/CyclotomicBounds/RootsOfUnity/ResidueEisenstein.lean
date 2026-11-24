@@ -72,13 +72,9 @@ theorem torsion_reduce_injective (L : Type) [Field L] [NumberField L] (v : Heigh
   intro ζ hζ
   by_contra hne
   have hmk : Ideal.Quotient.mk v.asIdeal (((ζ : NumberField.Units.torsion L) : (𝓞 L)ˣ) : 𝓞 L) = 1 := by
-    have h := congrArg (fun u : (𝓞 L ⧸ v.asIdeal)ˣ => (u : 𝓞 L ⧸ v.asIdeal)) hζ
-    simpa using h
+    simpa using congrArg (fun u : (𝓞 L ⧸ v.asIdeal)ˣ => (u : 𝓞 L ⧸ v.asIdeal)) hζ
   have hx1 : (((ζ : NumberField.Units.torsion L) : (𝓞 L)ˣ) : 𝓞 L) ≠ 1 := by
-    intro h
-    apply hne
-    apply Subtype.ext
-    exact Units.ext h
+    exact fun h => hne (Subtype.ext (Units.ext h))
   have hpow : (((ζ : NumberField.Units.torsion L) : (𝓞 L)ˣ) : 𝓞 L) ^ NumberField.Units.torsionOrder L = 1 := by
     have h : ζ ^ Nat.card (NumberField.Units.torsion L) = 1 := pow_card_eq_one'
     show (((ζ : NumberField.Units.torsion L) : (𝓞 L)ˣ) : 𝓞 L) ^ Nat.card (NumberField.Units.torsion L) = 1
@@ -125,17 +121,14 @@ theorem tame_ext : ∀ (L : Type) [Field L] [NumberField L] (v : HeightOneSpectr
   have hG : Nat.card (𝓞 L ⧸ v.asIdeal)ˣ = Ideal.absNorm v.asIdeal - 1 := by
     letI : Field (𝓞 L ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
     have h := Nat.card_units (𝓞 L ⧸ v.asIdeal)
-    rw [hcardk] at h
-    exact h
+    rwa [hcardk] at h
   have hq : 2 ≤ Nat.card ((𝓞 L ⧸ v.asIdeal)ˣ ⧸ f.range) := by
     have h := f.range.card_eq_card_quotient_mul_card_subgroup
     rw [hG, hS] at h
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     interval_cases hc : Nat.card ((𝓞 L ⧸ v.asIdeal)ˣ ⧸ f.range) <;> omega
   have hker : 2 ≤ Nat.card (MonoidHom.domRestrictHom f.range ℂˣ).ker := by
-    rw [CommGroup.card_domRestrictHom_ker]
-    exact hq
+    rwa [CommGroup.card_domRestrictHom_ker]
   haveI : Finite (MonoidHom.domRestrictHom f.range ℂˣ).ker := Nat.finite_of_card_ne_zero (by omega)
   haveI : Nontrivial (MonoidHom.domRestrictHom f.range ℂˣ).ker :=
     Finite.one_lt_card_iff_nontrivial.1 (by omega)
@@ -143,8 +136,7 @@ theorem tame_ext : ∀ (L : Type) [Field L] [NumberField L] (v : HeightOneSpectr
   by_cases h0 : θ0 = 1
   · refine ⟨θ0 * χ.1, ?_, ?_⟩
     · rw [h0, one_mul]
-      intro h
-      exact hχ (Subtype.ext h)
+      exact fun h => hχ (Subtype.ext h)
     · apply hext
       rw [map_mul, hθ0, MonoidHom.mem_ker.1 χ.2, mul_one]
   · exact ⟨θ0, h0, hext θ0 hθ0⟩

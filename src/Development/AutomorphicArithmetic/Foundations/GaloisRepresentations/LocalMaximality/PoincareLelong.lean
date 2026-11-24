@@ -92,8 +92,7 @@ theorem UpperTheory.Gal.productCup_of_system.localOne_of_gl1 :
   let yb : Finset β → Finset κ → E := fun b => if h : (b.card : ℤ) = n - d then (hy b h).choose else 0
   have hyb : ∀ b, (b.card : ℤ) = n - d → yb b ∈ (colA A w b).C (d - 1) ∧ (colA A w b).D (yb b) = col c b := by
     intro b hb
-    simp only [yb, dite_eq_left hb]
-    exact (hy b hb).choose_spec
+    simpa only [yb, dite_eq_left hb] using (hy b hb).choose_spec
   have hy0 : ∀ b, ¬ (b.card : ℤ) = n - d → yb b = 0 := by
     intro b hb
     simp only [yb, dite_eq_right hb]
@@ -165,8 +164,7 @@ theorem UpperTheory.Gal.productCup_of_system.localOne_of_gl1 :
         have : col c (lft s) (rgt s) = c s := by
           show c (uni (lft s) (rgt s)) = c s
           rw [e s]
-        rw [← this]
-        exact h4
+        rwa [← this]
       rw [h5]
       simp
     · rw [hy0 _ hb, hcC s (by rw [eC s]; push_cast; omega)]

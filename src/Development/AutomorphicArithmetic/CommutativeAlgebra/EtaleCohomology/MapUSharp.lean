@@ -118,8 +118,7 @@ private lemma chart_norm {l Q n : ℕ} {Y : Scheme.{0}} (T : Fin (n + 1) → Cor
         SameNorm (pts (wEv Q) fun j i k => ψ (α j i (x k)) ^ Q ^ (n - j))
           (pts (wOd Q) fun j i k => ψ (α j i (x k)) ^ Q ^ (n - j)) := by
   have hz : ∀ j i, ⊤ ≤ z j i ⁻¹ᵁ ((T j).p ⁻¹ᵁ U) := fun j i => by
-    rw [← Scheme.Hom.comp_preimage, hzy]
-    exact hy
+    rwa [← Scheme.Hom.comp_preimage, hzy]
   letI := fun j => (T j).alg U
   letI : Algebra Γ(Y, U) B := ((y.appLE U ⊤ hy ≫ (Scheme.ΓSpecIso (CommRingCat.of B)).hom).hom).toAlgebra
   have H := fun j => splitRules.2 l Y (T j) U hU B y hy (z j) (hz j) (hzy j) (hs j)
@@ -226,8 +225,7 @@ theorem UpperTheory.exists_finite_sections_determining_ringHom_of_smooth :
         ← Spec.map_comp]
       rfl
     rw [e, e] at hpt
-    have h1 := Spec.map_injective ((cancel_mono htop.fromSpec).1 hpt)
-    exact congrArg CommRingCat.Hom.hom h1
+    exact congrArg CommRingCat.Hom.hom (Spec.map_injective ((cancel_mono htop.fromSpec).1 hpt))
   have hO : ∀ a : O, f₁ (algebraMap O Γ(Y, V) a) = f₂ (algebraMap O Γ(Y, V) a) := fun a =>
     congrArg (fun g : Γ(Spec (CommRingCat.of O), ⊤) →+* R => g (ι a)) hcomp
   have hx : ∀ a ∈ s, f₁ a = f₂ a := fun a ha => by
@@ -333,8 +331,7 @@ private lemma key {R : Type} [CommRing R]
     refine ⟨fun p => ?_⟩
     obtain ⟨k, hk⟩ := hcov p
     have hp : p ∈ Set.range (PrimeSpectrum.comap (algebraMap R (Localization.Away (f k)))) := by
-      rw [PrimeSpectrum.localization_away_comap_range (Localization.Away (f k)) (f k)]
-      exact hk
+      rwa [PrimeSpectrum.localization_away_comap_range (Localization.Away (f k)) (f k)]
     obtain ⟨q, rfl⟩ := hp
     refine ⟨(Sigma.ι (fun k => Spec (A k)) k) q, ?_⟩
     have : Sigma.ι (fun k => Spec (A k)) k ≫ g = m k := Sigma.ι_desc _ _
@@ -454,8 +451,7 @@ theorem UpperTheory.Gal.crystallineComparison.baseSmooth_of :
     have key : ∀ x : R, (l : R) * x = 0 → x = 0 := by
       intro x hx
       apply hreg
-      simp only [Algebra.smul_def, map_natCast, mul_zero]
-      exact hx
+      simpa only [Algebra.smul_def, map_natCast, mul_zero] using hx
     rw [mem_nonZeroDivisors_iff]
     exact ⟨key, fun x hx => key x (by rw [mul_comm]; exact hx)⟩
   · rw [Ideal.isRadical_iff_quotient_reduced]
@@ -498,9 +494,7 @@ theorem UpperTheory.Gal.crystallineComparison.charts_of :
     show y ∈ (⋃ j, (T j).p '' ((T j).r ⁻¹ᵁ V : Set _)ᶜ)ᶜ
     rintro hy
     obtain ⟨j, z, hz, hzy⟩ := Set.mem_iUnion.mp hy
-    apply hz
-    show (T j).r z ∈ V
-    exact hSV' _ (Or.inr (Set.mem_iUnion.mpr ⟨j, z, hzy, rfl⟩))
+    exact hz (hSV' _ (Or.inr (Set.mem_iUnion.mpr ⟨j, z, hzy, rfl⟩)))
   obtain ⟨U, hU, hyU, hUO⟩ := exists_isAffineOpen_mem_and_subset hyO
   refine ⟨U, V, hU, hV, hyU, fun j z hz => ?_⟩
   by_contra h
@@ -671,8 +665,7 @@ private theorem appLE_step {Y Z : Scheme.{0}} (p : Z ⟶ Y) (D U' : Y.Opens) [Et
     have h2 : D.ι ((p ∣_ D) x) = p ((p ⁻¹ᵁ D).ι x) := by
       rw [← Scheme.Hom.comp_apply, morphismRestrict_ι, Scheme.Hom.comp_apply]
     change D.ι ((p ∣_ D) x) ∈ U'
-    rw [h2]
-    exact h1
+    rwa [h2]
   have H := HasRingHomProperty.appLE @Etale (p ∣_ D) ‹_›
     ⟨D.ι ⁻¹ᵁ U', hV⟩ ⟨(p ⁻¹ᵁ D).ι ⁻¹ᵁ W', hW⟩ e'
   rw [morphismRestrict_appLE] at H
@@ -751,8 +744,7 @@ theorem UpperTheory.Gal.crystallineComparison.genChart_of :
   have hinU : ∀ q : PrimeSpectrum Γ(Y, U), hU.fromSpec q ∈ U := by
     intro q
     have : hU.fromSpec q ∈ Set.range hU.fromSpec := ⟨q, rfl⟩
-    rw [hU.range_fromSpec] at this
-    exact this
+    rwa [hU.range_fromSpec] at this
   have hmem : ∀ q : PrimeSpectrum Γ(Y, U), hU.fromSpec q ∈ Y.basicOpen π ↔ πU ∉ q.asIdeal := by
     intro q
     have h1 : q ∈ PrimeSpectrum.basicOpen πU ↔ hU.fromSpec q ∈ Y.basicOpen πU := by
@@ -767,8 +759,7 @@ theorem UpperTheory.Gal.crystallineComparison.genChart_of :
   · intro x' hx' hsp
     have hx'U : x' ∈ U := hsp.mem_open U.isOpen (hinU P)
     obtain ⟨q, rfl⟩ : x' ∈ Set.range hU.fromSpec := by
-      rw [hU.range_fromSpec]
-      exact hx'U
+      rwa [hU.range_fromSpec]
     have hqp : q ⤳ P := hU.fromSpec.isOpenEmbedding.isInducing.specializes_iff.mp hsp
     have hqp' : q.asIdeal ≤ P.asIdeal := (PrimeSpectrum.le_iff_specializes (R := Γ(Y, U)) q P).mpr hqp
     have hπq : πU ∈ q.asIdeal := by
@@ -1099,8 +1090,7 @@ theorem UpperTheory.Gal.crystallineComparison.normPt_of :
     rw [Ideal.mem_comap, map_pow, map_natCast] at h1
     exact (IsLocalRing.maximalIdeal.isMaximal W).isPrime.mem_of_pow_mem m h1
   have hlκ : ((l : IsLocalRing.ResidueField W)) = 0 := by
-    rw [← map_natCast (IsLocalRing.residue W), IsLocalRing.residue_eq_zero_iff]
-    exact hlm
+    rwa [← map_natCast (IsLocalRing.residue W), IsLocalRing.residue_eq_zero_iff]
   haveI : Fact l.Prime := ⟨hl⟩
   haveI : CharP (IsLocalRing.ResidueField W) l := (CharP.charP_iff_prime_eq_zero hl).mpr hlκ
   let φ := iterateFrobenius (IsLocalRing.ResidueField W) l f
@@ -1632,8 +1622,7 @@ theorem valLift_of : ValLift := by
       have hkerle : RingHom.ker φ ≤ IsLocalRing.maximalIdeal _ :=
         IsLocalRing.le_maximalIdeal (RingHom.ker_ne_top φ)
       have h1m : (1 : Localization.AtPrime 𝔭) ∈ IsLocalRing.maximalIdeal _ := by
-        have hs := Ideal.sub_mem _ (Ideal.mul_mem_right w _ hxm) (hkerle hker)
-        simpa using hs
+        simpa using Ideal.sub_mem _ (Ideal.mul_mem_right w _ hxm) (hkerle hker)
       exact (IsLocalRing.maximalIdeal.isMaximal _).ne_top ((Ideal.eq_top_iff_one _).mpr h1m)
 
 end UpperTheory.Gal.crystallineComparison
@@ -1670,8 +1659,7 @@ theorem UpperTheory.Gal.crystallineComparison.valPts_of :
     let e := AlgEquiv.ofInjective (IsScalarTower.toAlgHom R V (FractionRing V)) hinj
     refine ⟨e.symm.toAlgHom.comp (φ.codRestrict _ hmem), ?_⟩
     ext s
-    have h := e.apply_symm_apply ⟨φ s, hmem s⟩
-    exact congrArg Subtype.val h
+    exact congrArg Subtype.val (e.apply_symm_apply ⟨φ s, hmem s⟩)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AnnihilatorModels.PValPts =====
@@ -1826,8 +1814,7 @@ private theorem wzCore (f n : ℕ) {O : Type} [CommRing O] {Y : Scheme.{0}} (q :
   let c : (Σ j, Fin (wEv (l ^ f) j) × Fin (d j)) → ι → Qb A.obj := fun e k => β e.1 e.2.2 (x k) ^ (l ^ f) ^ (n - e.1)
   let c' : (Σ j, Fin (wOd (l ^ f) j) × Fin (d j)) → ι → Qb A.obj := fun e k => β e.1 e.2.2 (x k) ^ (l ^ f) ^ (n - e.1)
   have hS' : SameNorm (Finset.univ.val.map c) (Finset.univ.val.map c') := by
-    rw [wzPts, wzPts] at hS
-    exact hS
+    rwa [wzPts, wzPts] at hS
   have hcI : Fintype.card (Σ j, Fin (wEv (l ^ f) j) × Fin (d j)) = ∑ j, wEv (l ^ f) j * d j := by
     simp [Fintype.card_sigma]
   have hcI' : Fintype.card (Σ j, Fin (wOd (l ^ f) j) × Fin (d j)) = ∑ j, wEv (l ^ f) j * d j := by
@@ -1838,8 +1825,7 @@ private theorem wzCore (f n : ℕ) {O : Type} [CommRing O] {Y : Scheme.{0}} (q :
   obtain ⟨e, he, hm⟩ := UpperTheory.exists_orthogonalIdempotents_matching_of_sameNorm l A.obj A.property (f * N) _ hcI hcI' (by rw [← hL]; exact hN) c c' hS'
   obtain ⟨B, fσ, hd, h1⟩ := decEx l A _ e he
   refine ⟨⟨_, B, fσ⟩, hd, fun σ => Or.inl ?_⟩
-  rw [wzPts, wzPts]
-  rw [← Multiset.map_univ_val_equiv σ, Multiset.map_map]
+  rw [wzPts, wzPts, ← Multiset.map_univ_val_equiv σ, Multiset.map_map]
   refine Multiset.map_congr rfl fun i _ => ?_
   have hi := hm σ i
   let f₀ := (fσ σ).hom
@@ -1861,8 +1847,7 @@ private theorem wzCore (f n : ℕ) {O : Type} [CommRing O] {Y : Scheme.{0}} (q :
     have := congrArg (PAlg.mapQ f₀ (pFlat l)) (hi k)
     rw [map_mul, map_mul, h1', one_mul, one_mul] at this
     simp only [RingHom.comp_apply]
-    rw [a, a]
-    exact this
+    rwa [a, a]
 
 private theorem wzChart {Y : Scheme.{0}} (hY : AffFin Y) {J : Type} [Finite J] (T : J → Corr l Y) (A : Test l)
     (y : Spec (CommRingCat.of A.obj.U) ⟶ Y) :
@@ -1878,8 +1863,7 @@ private theorem wzChart {Y : Scheme.{0}} (hY : AffFin Y) {J : Type} [Finite J] (
   obtain ⟨B, f, hd, h1⟩ := decEx l A I e₀ he₀
   refine ⟨⟨I, B, f⟩, hd, fun s => ⟨U (a s), V (a s), hU _, hV _, hUV _, fun p _ => ?_⟩⟩
   have h2 : PAlg.mapU (f s).hom (e s) = 1 := by
-    rw [← hs, _root_.GlobalTheory.CompanionTheory.PAlgNat.mapU_sharp]
-    rw [h1 s]
+    rw [← hs, _root_.GlobalTheory.CompanionTheory.PAlgNat.mapU_sharp, h1 s]
     simp [PAlg.sharp]
   have := hea s (PrimeSpectrum.comap (PAlg.mapU (f s).hom) p) (fun hmem => by
     have h3 : PAlg.mapU (f s).hom (e s) ∈ p.asIdeal := hmem
@@ -1908,9 +1892,7 @@ private theorem wzLocal {O : Type} [CommRing O] (f n : ℕ) {Y : Scheme.{0}} (q 
   have hc : ∀ x : O, ψ (A.obj.oC (κ x)) = qs A.obj (g x) := by
     have h1 := (ρ.app A.obj y').2
     rw [hρ A.obj ψ hψ y', Category.assoc, y'.2, ← Spec.map_comp, ← CommRingCat.ofHom_comp] at h1
-    have h2 := Spec.map_injective h1
-    intro x
-    exact RingHom.congr_fun (CommRingCat.hom_ext_iff.1 h2) x
+    exact fun x => RingHom.congr_fun (CommRingCat.hom_ext_iff.1 (Spec.map_injective h1)) x
   obtain ⟨α, hα, hnorm⟩ := UpperTheory.correspondence_norm_bound_of_affine_opens l q ϖ (l ^ f) n T κ D A y hU hV h hy hn ψ (by rw [hc, hg, map_zero])
   obtain ⟨k, x, hx⟩ := UpperTheory.exists_finite_sections_determining_ringHom_of_smooth q hq hV
   let u : ∀ j, Fin (T j).d → (PX (D.π ≫ q) κ ⟶ PQ q g) := fun j i =>
@@ -1936,9 +1918,7 @@ private theorem wzLocal {O : Type} [CommRing O] (f n : ℕ) {Y : Scheme.{0}} (q 
 
 theorem wZero : UpperTheory.Ru.crystallineComparison.WZero := by
   intro l _ f n O _ _ _ ϖ hϖ hl0 hlu Y q hq hqc hY hf T hr hpt κ g hg m F ρ hF hρ _ D
-  have hl2 : 2 ≤ l ^ f := by
-    have h2 := (Fact.out : l.Prime).two_le
-    exact h2.trans (Nat.le_self_pow hf.ne' l)
+  have hl2 : 2 ≤ l ^ f := ((Fact.out : l.Prime).two_le).trans (Nat.le_self_pow hf.ne' l)
   refine ⟨((∑ j, wEv (l ^ f) j * (T j).d) + 1) ^ (∑ j, wEv (l ^ f) j * (T j).d), ?_⟩
   intro A y
   obtain ⟨S, hS, hch⟩ := wzChart hY T A (y.1 ≫ D.π)
@@ -1959,8 +1939,7 @@ theorem wZero : UpperTheory.Ru.crystallineComparison.WZero := by
       (PX (D.π ≫ q) κ).map ((R s).f t).hom ((PX (D.π ≫ q) κ).map (S.f s).hom y) :=
     Functor.map_comp_apply _ _ _ _
   change (∑ i, _) = 0 ∨ _
-  simp only [e2]
-  exact e
+  simpa only [e2] using e
 
 end UpperTheory.Ru.crystallineComparison
 end -- clump:auto

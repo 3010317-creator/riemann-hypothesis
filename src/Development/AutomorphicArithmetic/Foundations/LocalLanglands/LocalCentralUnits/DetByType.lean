@@ -129,13 +129,11 @@ private theorem equiv_of_typeMaps [Nontrivial W] {T : Representation ℂ (GL (Fi
       have := (fixed P (KOne k (Fin n))).sub_mem hfx hrf
       simpa using this
     have ht0 : t = 0 := GlobalTheory.IwahoriInj.eq_zero_of_fixed hPs GlobalTheory.DepthZeroJac.isCompact_KOne htf ht
-    rw [ht0, add_zero]
-    exact hr
+    rwa [ht0, add_zero]
   have hJU : ∀ w, J w ∈ U := fun w => Submodule.subset_span ⟨1, w, by rw [map_one]; rfl⟩
   obtain ⟨w0, hw0⟩ := exists_ne (0 : W)
   have hinr : ∀ v' : π'.V, ((0 : π.V), v') ∈ U → v' = 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     obtain ⟨v', hv'U, hv'0⟩ := hcon
     have hB : U.comap (LinearMap.inr ℂ π.V π'.V) = ⊤ := top_of_stable π' _ (by
         intro γ y hy
@@ -157,8 +155,7 @@ private theorem equiv_of_typeMaps [Nontrivial W] {T : Representation ℂ (GL (Fi
     rw [this, map_zero] at h2
     exact hw0 (hj'.1 (by rw [← h2, map_zero]))
   have hinl : ∀ v : π.V, (v, (0 : π'.V)) ∈ U → v = 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     obtain ⟨v, hvU, hv0⟩ := hcon
     have hB : U.comap (LinearMap.inl ℂ π.V π'.V) = ⊤ := top_of_stable π _ (by
         intro γ y hy
@@ -217,8 +214,7 @@ private theorem equiv_of_typeMaps [Nontrivial W] {T : Representation ℂ (GL (Fi
   set u := (LinearEquiv.ofBijective Fst hFb).symm v with hu
   have hu1 : (u : π.V × π'.V).1 = v := by
     have := (LinearEquiv.ofBijective Fst hFb).apply_symm_apply v
-    rw [← hu] at this
-    exact this
+    rwa [← hu] at this
   have hsymm : (LinearEquiv.ofBijective Fst hFb).symm (π.ρ γ v) = ⟨P γ u, hUst γ _ u.2⟩ := by
     rw [LinearEquiv.symm_apply_eq]
     show π.ρ γ v = (P γ u).1

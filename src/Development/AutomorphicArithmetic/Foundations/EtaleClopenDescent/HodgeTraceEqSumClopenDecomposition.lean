@@ -175,8 +175,7 @@ private theorem secTrace_eq_sum {s : Z ⟶ Sp k} {s' : Y ⟶ Sp k} {c : Y ⟶ Z}
       change ((W m).ι.app (c ⁻¹ᵁ U)).hom x = _
       rw [Scheme.Opens.ι_app]
       rfl
-    rw [e]
-    exact hb
+    rwa [e]
   exact algTrace_eq_sum r hr b'
 
 private noncomputable def piece (s' : Y ⟶ Sp k) (c : Y ⟶ Z) (V : Y.Opens) (j : ℕ) :

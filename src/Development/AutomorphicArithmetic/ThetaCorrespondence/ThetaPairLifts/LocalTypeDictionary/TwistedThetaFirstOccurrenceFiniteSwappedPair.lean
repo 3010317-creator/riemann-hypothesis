@@ -383,8 +383,7 @@ theorem givenFn_down_eq_colFn (G : GridData L sc) (B : Frames G) {μ₀ : T} (hL
     simp [Matrix.map_apply, Matrix.smul_apply, RingHom.map_mul]
   have hint : IsIntM N ↔ ∀ w ∈ locPl G t, GlobalTheory.StepData.IntM (N.map (cpt (D := D) w)) := by
     constructor
-    · intro h w hw i l
-      exact (vEq w).le_one_iff_le_one.2 ((mem_OA_iff _).1 (h i l) w)
+    · exact fun h w hw i l => (vEq w).le_one_iff_le_one.2 ((mem_OA_iff _).1 (h i l) w)
     · intro h i l
       refine (mem_OA_iff _).2 fun w => ?_
       by_cases hw : w ∈ locPl G t
@@ -445,8 +444,7 @@ theorem map_sub_half {e e' : AE D} (h1 : e * e' = e') (h2 : e' * e' = e') {x : M
 
 theorem map_half {e' : AE D} {x : Mx D m n} (hx : IsHalf e' x) : x.map (e' * ·) = x := by
   ext i j
-  simp only [Matrix.map_apply]
-  exact hx i j
+  simpa only [Matrix.map_apply] using hx i j
 
 theorem map_sub_eq {e e' : AE D} {u : Mx D m n} (hu : IsHalf e u) :
     u.map ((e - e') * ·) = u - u.map (e' * ·) := by
@@ -505,8 +503,7 @@ theorem extDat_sb {e e' : AE D} (h1 : e * e' = e') (h2 : e' * e' = e') (Λ : Add
   refine ⟨fun t ht => ?_, k, hk, fun u hu hue t => ?_, fun t ht => ?_⟩
   · by_contra hn
     apply ht
-    simp only [GlobalTheory.ChainCol.extDat]
-    exact ite_eq_right fun hc => hn hc.1
+    simpa only [GlobalTheory.ChainCol.extDat] using ite_eq_right fun hc => hn hc.1
   · have hku : IsHalf e (k • u) := fun i j => by rw [Matrix.smul_apply, mul_nsmul_comm', hue i j]
     have hsu : u.map ((e - e') * ·) ∈ Λ := by
       rw [map_sub_eq hue]
@@ -521,8 +518,7 @@ theorem extDat_sb {e e' : AE D} (h1 : e * e' = e') (h2 : e' * e' = e') (Λ : Add
   · have hc : IsHalf e t ∧ t.map ((e - e') * ·) ∈ Λ := by
       by_contra hn
       apply ht
-      simp only [GlobalTheory.ChainCol.extDat]
-      exact ite_eq_right hn
+      simpa only [GlobalTheory.ChainCol.extDat] using ite_eq_right hn
     have hΦt : Φ (t.map (e' * ·)) ≠ 0 := by
       intro h0
       apply ht
@@ -619,8 +615,7 @@ theorem isThetaAt_extDat : ∀ {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {θ : I
         rw [extDat_modul ψ h1 h2 _ Φ hy]
         exact hmo _ (extDat_sb h1 h2 _ hstab hΦ) y (half_of_half hce hy)
       · simp only [LinearMap.comp_apply, extL_apply]
-        rw [extDat_halfInd h2 _ hstab]
-        exact hva
+        rwa [extDat_halfInd h2 _ hstab]
     rw [hall _ hT', LinearMap.comp_apply, extL_apply]
 
 end GlobalTheory.ExtDatTheta
@@ -738,8 +733,7 @@ theorem locVec_col {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type} {
   refine ⟨?_, ?_⟩
   · rw [Units.val_one, one_smul]
     exact GlobalTheory.FlipStart.ColSB.isSBHalf_givenFn_down ch.G ch.S.B hL t j j.2 Φ e he
-  · rw [Units.val_one, one_smul, h3, hw.ψ]
-    exact h1
+  · rwa [Units.val_one, one_smul, h3, hw.ψ]
 
 end GlobalTheory.ChainCol
 end -- clump:auto
@@ -763,8 +757,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 theorem chainColumn_inner_succ : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.RowClaim.Big fun {D} _ _ _ _ {T} _ _ _ _ _ {R} ch => ∀ (t : T) (j : Fin D.R.m) (g : Sch ch.G (.down t 0 j)), (j : ℕ) + 1 < D.R.m → HEq g (R.vY t j) → ∃ c : ℂˣ, c ∈ xiVals R.toLevCh t ∧ ∀ e : AE D, IsIdemSum e (locPl ch.G t) → ∀ Φ : ch.G.Datum, IsLocVec ch.W (.mu t 0 j) e (ch.rm.vT 0 j) ((c : ℂ) • GlobalTheory.FlipStart.givenFn ch.S.B t Φ e (.down t 0 j)) g := by
   intro _
   refine ⟨0, fun ε CF _ => ⟨0, fun D large₂ _ _ Γ _ _ Pl0 T A Ks _ _ _ R F s ch hch _ => ?_⟩⟩
-  intro t j g hj hg
-  exact ⟨1, one_mem _, fun e he Φ => locVec_col s ch hch t j g hj hg e he Φ⟩
+  exact fun t j g hj hg => ⟨1, one_mem _, fun e he Φ => locVec_col s ch hch t j g hj hg e he Φ⟩
 end GlobalTheory.ChainCol
 end
 end
@@ -934,8 +927,7 @@ theorem isHalf_add_right_iff {e : AE D} {t x : Mx D m n} (hx : IsHalf e x) :
 
 theorem smul_of_isHalf {e : AE D} {x : Mx D m n} (hx : IsHalf e x) : e • x = x := by
   ext i j
-  simp only [Matrix.smul_apply, smul_eq_mul]
-  exact hx i j
+  simpa only [Matrix.smul_apply, smul_eq_mul] using hx i j
 
 theorem smul_eq_zero_of_isHalf {e e' : AE D} (h : e' * e = 0) {x : Mx D m n} (hx : IsHalf e x) : e' • x = 0 := by
   ext i j

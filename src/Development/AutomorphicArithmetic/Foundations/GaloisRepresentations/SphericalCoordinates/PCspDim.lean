@@ -69,8 +69,7 @@ private theorem sep_kill {F : Type} [Field F] [NumberField F] {g : ℕ}
     rwa [h4] at h3
   · rw [aeval_map_algebraMap]
     have h := aeval_algHom_apply f.toIntAlgHom c (minpoly ℤ c)
-    rw [minpoly.aeval, map_zero] at h
-    exact h
+    rwa [minpoly.aeval, map_zero] at h
 
 private theorem diag_one {F : Type} [Field F] [NumberField F] {O : Type} [Ring O] {g : ℕ}
     (ρ : O →+* Matrix (Fin g) (Fin g) ℂ) (a : 𝓞 F →+* O) (hSim : SimDiag) (hExt : ExtendEmb) :
@@ -126,8 +125,7 @@ theorem UpperTheory.Gal.W2.cspDim_of :
   intro hSim hExt hTC _ hBall F _ _ O _ bar g ρ a n t₀ ε hS D P₀ M₀ hP hM
   obtain ⟨Sb, ty, hD⟩ := diag_one (F := F) ρ a hSim hExt
   have hcard : (evAt ty (fun _ => (1 : ℂ)) t₀).card = 1 := by
-    have h := (hTC F O bar g ρ a n t₀ ε hS 1 Sb ty (fun _ => 1) hD t₀).1
-    simpa [typeMult] using h
+    simpa [typeMult] using (hTC F O bar g ρ a n t₀ ε hS 1 Sb ty (fun _ => 1) hD t₀).1
   obtain ⟨mu, hmu⟩ := Multiset.card_eq_one.mp hcard
   let B := Module.finBasis ℂ (Csp bar ρ M₀)
   let co : (Fin (Module.finrank ℂ (Csp bar ρ M₀)) → ℂ) →ₗ[ℂ] Matrix (Fin g) (Fin g) ℂ :=

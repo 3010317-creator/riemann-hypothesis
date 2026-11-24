@@ -839,8 +839,7 @@ theorem facAt_s_succ_inv_of_moveAt (hW : _root_.GlobalTheory.Fam.AllFamilyCondit
       rw [map_pow]
       exact pow_pos ((Valuation.pos_iff _).2 (J.G i).ϖ.ne_zero) _
     rw [Units.val_inv_eq_inv_val, Units.val_pow_eq_pow_val, map_inv₀, ← mul_one (_⁻¹), le_inv_mul_iff₀ h7] at h6
-    rw [map_mul, map_pow, ← hcp.unif, Valuation.mem_integer_iff, map_mul]
-    exact h6
+    rwa [map_mul, map_pow, ← hcp.unif, Valuation.mem_integer_iff, map_mul]
 theorem sgnAt_mul_eq_one_of_even_add (hJ : J.Reads) (j : ℕ) (hj : j < B.R.m) (β : J.Ch₀ j) {n n' : ℕ} (h : Even (n + n')) :
     _root_.GlobalTheory.TwPlaces.sgnAt_alt J i j hj β n * _root_.GlobalTheory.TwPlaces.sgnAt_alt J i j hj β n' = 1 := by
   unfold _root_.GlobalTheory.TwPlaces.sgnAt_alt GlobalTheory.TwBridge.sgn
@@ -1135,8 +1134,7 @@ theorem QuadraticExtensionData.dat_exists : ∀ {B : GlobalTheory.Mem.Base} {X :
     have hcn : cc j ≠ 0 := datRoot_ne_zero (hcc j)
     beta_reduce
     rw [hsS j γ hjm]
-    have hx : ((J.A.chr (j + 1) (J.A.xr (j + 1) (J.ι (j + 1) γ)) : ℂ)) ≠ 0 := by
-      exact Circle.coe_ne_zero _
+    have hx : ((J.A.chr (j + 1) (J.A.xr (j + 1) (J.ι (j + 1) γ)) : ℂ)) ≠ 0 := Circle.coe_ne_zero _
     calc s j α * (cc j * Bf j γ)⁻¹ * (p j α * q j γ) * (J.A.chr (j + 1) (J.A.xr j (J.ι j α)) : ℂ) *
           ((J.A.chr (j + 1) (J.A.xr (j + 1) (J.ι (j + 1) γ)) : ℂ))⁻¹
         = (s j α * Af j α) * Bf j γ * (cc j * Bf j γ)⁻¹ := by simp only [hAf, hBf]; ring

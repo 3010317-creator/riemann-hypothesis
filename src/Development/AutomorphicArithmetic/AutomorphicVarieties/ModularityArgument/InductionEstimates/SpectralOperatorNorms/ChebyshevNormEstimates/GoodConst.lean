@@ -481,8 +481,7 @@ private theorem Loc.der {ψ : Sm E (2 + 2)} {a : ℂ} (h : Loc b b' ψ a) (j : F
   refine ⟨?_, fun t ht => der_loc ((dat2 b b').comp ψ.1) a h.2 j t ht _ ((BW.compShift E S _ (dat2 b b') ψ t h.1).2 j)⟩
   have : ∃ u, (dat2 b b').J j = uC E (2 + 2) u := by
 
-    simp only [BW.Dat.J, ← uC_genC, ← map_sum, ← map_smul]
-    exact ⟨_, rfl⟩
+    simpa only [BW.Dat.J, ← uC_genC, ← map_sum, ← map_smul] using ⟨_, rfl⟩
   obtain ⟨u, hu⟩ := this
   rw [hu]
   exact ((BW.umgOps E (2 + 2)).2 _ h.1).2.2.2.1 u
@@ -537,8 +536,7 @@ private theorem zop_X {n : ℕ} (y : Ix E n) : BW.zop (X y) = ∑ j : Fin (n + 1
 private theorem Loc.z {ψ : Sm E (2 + 2)} {a : ℂ} (h : Loc b b' ψ a) (y : Ix E (2 + 2)) :
     Loc b b' (BW.zop (X y) ψ) ((Finset.univ.val.map ((dat2 b b').lam y.1)).esymm (y.2 + 1) * a) := by
   rw [zop_X, ← coef (2 + 2) (y.2 + 1) y.2.2 _ (by simp), Finset.sum_mul, LinearMap.sum_apply]
-  simp only [LinearMap.smul_apply, mul_assoc]
-  exact Loc.sum _ _ _ _ fun j => h.capelli _ _
+  simpa only [LinearMap.smul_apply, mul_assoc] using Loc.sum _ _ _ _ fun j => h.capelli _ _
 
 private theorem rt_zop {n : ℕ} (y : Ix E n) (g : GA E n) (ψ : Sm E n) :
     rt E n g (BW.zop (X y) ψ) = BW.zop (X y) (rt E n g ψ) := by
@@ -677,8 +675,7 @@ private theorem proj_absorb {H V W : Type} [NormedAddCommGroup H] [InnerProductS
     refine ContinuousLinearMap.ext fun h => ?_
     have : P (e h - h) = 0 := (hP.2.2 _).2 ⟨fun u => by rw [inner_sub_right, hs, h1, sub_self],
       fun u => by rw [inner_sub_right, hs, h2, sub_self]⟩
-    rw [map_sub, sub_eq_zero] at this
-    exact this
+    rwa [map_sub, sub_eq_zero] at this
   refine ⟨a, ?_⟩
   have := congrArg star a
   rwa [star_mul, he.star_eq, hP.1.star_eq] at this
@@ -1118,8 +1115,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.evzEx :
     exact (actLaws 𝔵.A'.J).2.1 _ _ 𝔵.a_acts.1 𝔵.a_acts.2.1
   have hG : ∀ R, Good 𝔵.A'.J 𝔵.P 𝔵.a₀ ((ev.comp π) R) fun x => ((val x 𝔵.Λ 𝔵.t).comp π) R := by
     refine good_poly (ev.comp π) (fun x => (val x 𝔵.Λ 𝔵.t).comp π) (fun c => ?_) (fun t => ?_) (fun y => ?_)
-    · simp only [RingHom.comp_apply, hπC, hev.const, val, eval₂Hom_C, eval_C]
-      exact good_const c
+    · simpa only [RingHom.comp_apply, hπC, hev.const, val, eval₂Hom_C, eval_C] using good_const c
     · simp only [RingHom.comp_apply, hπC, val, eval₂Hom_C, eval_X]
       cases t with
       | none =>

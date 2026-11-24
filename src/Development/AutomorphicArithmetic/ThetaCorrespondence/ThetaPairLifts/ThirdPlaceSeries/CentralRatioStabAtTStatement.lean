@@ -271,8 +271,7 @@ theorem commute_all (σ : E →+* E) (hσ : ∀ x, σ (σ x) = x) (J : Matrix n 
     rw [Matrix.mul_smul, smul_smul, inv_mul_cancel₀ hξ0, one_smul, ← Matrix.mul_add, sub_add_add_cancel,
       ← two_smul E K, Matrix.mul_smul, smul_smul, inv_mul_cancel₀ h2, one_smul, ← Matrix.mul_assoc, hJiJ,
       Matrix.one_mul]
-  rw [e, map_smulE, map_addE, map_smulE]
-  exact c3
+  rwa [e, map_smulE, map_addE, map_smulE]
 
 theorem eq_smul_one (σ : E →+* E) (hσ : ∀ x, σ (σ x) = x) (J : Matrix n n E) (hJh : Formalism.UG.cT σ J = J)
     (hJ : J.det ≠ 0) (ξ : E) (hξ : σ ξ = -ξ) (hξ0 : ξ ≠ 0)
@@ -296,8 +295,7 @@ open Matrix Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
 theorem exists_skew (D : D7) : ∃ ξ : D.host.E,
     (D.sp.cm.sig : D.host.E →+* D.host.E) ξ = -ξ ∧ ξ ≠ 0 := by
   obtain ⟨e, he⟩ : ∃ e : D.host.E, e ∉ (algebraMap D.host.F D.host.E).range := by
-    by_contra h
-    push Not at h
+    by_contra! h
     have htop : (⊥ : Subalgebra D.host.F D.host.E) = ⊤ := by
       ext x
       simp only [Algebra.mem_bot, Algebra.mem_top, iff_true]
@@ -308,9 +306,7 @@ theorem exists_skew (D : D7) : ∃ ξ : D.host.E,
   refine ⟨e - star e, ?_, ?_⟩
   · change star (e - star e) = -(e - star e)
     rw [star_sub, star_star, neg_sub]
-  · intro h0
-    apply he
-    exact (D.sp.cm.fixed e).1 (sub_eq_zero.1 h0).symm
+  · exact fun h0 => he ((D.sp.cm.fixed e).1 (sub_eq_zero.1 h0).symm)
 
 theorem fixed_infinite (D : D7) :
     {t : D.host.E | (D.sp.cm.sig : D.host.E →+* D.host.E) t = t}.Infinite := by
@@ -756,8 +752,7 @@ theorem baseLat_line_offT_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D
   have hy : ∀ i, (Matrix.mulVec (Formalism.L2.Theta.mt (D.sp.Y 0) b⁻¹) w) i ∈ idAt D (· = x) := by
     intro i
     simp only [Matrix.mulVec, dotProduct]
-    refine Ideal.sum_mem _ fun j _ => Ideal.mul_mem_left _ _ ?_
-    exact Ideal.mul_mem_right _ _ hc
+    exact Ideal.sum_mem _ fun j _ => Ideal.mul_mem_left _ _ (Ideal.mul_mem_right _ _ hc)
   have key : (Matrix.mulVec (Formalism.L2.Theta.mt (D.sp.Y 0) b⁻¹) w ∈ latV (D.sp.Y 0) ((_root_.GlobalTheory.Fam.pk_z W).ΛY 0) (· = x) ↔
       Matrix.mulVec (Formalism.L2.Theta.mt (D.sp.Y 0) b) (Matrix.mulVec (Formalism.L2.Theta.mt (D.sp.Y 0) b⁻¹) w) ∈ latV (D.sp.Y 0) (v'.N 0) (· = x)) :=
     hmv _ hy
@@ -854,8 +849,7 @@ theorem psiE_triv {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) (
 
 theorem psiE_ne {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) (p : SplitPt D k) (hU : p.UnitAA)
     (q : GlobalTheory.LatPair.Unif k) : ∃ s, psiE ψ s ≠ 1 := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   have h := (psiE_triv hψ p hU (GlobalTheory.FinPl.FrameLat.sec_mem_idAt p q.inv)).1 fun o _ => hc _
   have h1 := GluedLine.pr_mem_of_intAt p h.2
   rw [p.pr_sec] at h1
@@ -1253,8 +1247,7 @@ theorem centralRatio_stab_atT_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTi
         Matrix.mulVec (Formalism.L2.Theta.mt (D.sp.Y 0) k) (Matrix.mulVec (Formalism.L2.Theta.mt (D.sp.Y 0) t⁻¹) w) := by
       rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, ← hmul, ← hmul, hkey]
     have s2 := hkM _ (GlobalTheory.FinPl.KOpen.supp_mulVec _ _ t⁻¹ hsupp)
-    rw [e1, s1, ← s2, h3b, h3b']
-    exact h4b
+    rwa [e1, s1, ← s2, h3b, h3b']
   have hM := GlobalTheory.StMoves.moves_inv hMinv
   rw [inv_inv] at hM
   exact (GlobalTheory.StMoves.moves_iff_stabLoc (D.sp.Y 0) _ hFG v z).1 hM

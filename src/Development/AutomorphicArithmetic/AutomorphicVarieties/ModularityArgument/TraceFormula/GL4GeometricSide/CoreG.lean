@@ -255,12 +255,10 @@ theorem card_fst (B : Finset (Fin n × Fin n)) (a : Fin n) :
   · intro p hp
     obtain ⟨h1, h2⟩ := Finset.mem_filter.1 hp
     refine Finset.mem_filter.2 ⟨Finset.mem_univ _, ?_⟩
-    rw [← h2]
-    exact h1
+    rwa [← h2]
   · intro p hp q hq h
     exact Prod.ext (((Finset.mem_filter.1 hp).2).trans ((Finset.mem_filter.1 hq).2).symm) h
-  · intro b hb
-    exact ⟨(a, b), Finset.mem_filter.2 ⟨(Finset.mem_filter.1 hb).2, rfl⟩, rfl⟩
+  · exact fun b hb => ⟨(a, b), Finset.mem_filter.2 ⟨(Finset.mem_filter.1 hb).2, rfl⟩, rfl⟩
 
 theorem card_snd (B : Finset (Fin n × Fin n)) (a : Fin n) :
     (B.filter fun p => p.2 = a).card = (univ.filter fun b => (b, a) ∈ B).card := by
@@ -268,12 +266,10 @@ theorem card_snd (B : Finset (Fin n × Fin n)) (a : Fin n) :
   · intro p hp
     obtain ⟨h1, h2⟩ := Finset.mem_filter.1 hp
     refine Finset.mem_filter.2 ⟨Finset.mem_univ _, ?_⟩
-    rw [← h2]
-    exact h1
+    rwa [← h2]
   · intro p hp q hq h
     exact Prod.ext h (((Finset.mem_filter.1 hp).2).trans ((Finset.mem_filter.1 hq).2).symm)
-  · intro b hb
-    exact ⟨(b, a), Finset.mem_filter.2 ⟨(Finset.mem_filter.1 hb).2, rfl⟩, rfl⟩
+  · exact fun b hb => ⟨(b, a), Finset.mem_filter.2 ⟨(Finset.mem_filter.1 hb).2, rfl⟩, rfl⟩
 
 theorem sum_sgnB (B : Finset (Fin n × Fin n)) (a : Fin n) :
     ∑ b, sgnB B a b = 2 * (rhoV n a - wtB B a) := by
@@ -385,8 +381,7 @@ theorem cone_weight_not_in_second : ConeWeightsNotSecondType := by
       · have hl := hcl a b h0
         have g1 := muQ_gap hlam hlev hl
         have g2 := rhoV_gap (lt_of_lev hlev hl)
-        simp only [Pi.add_apply]
-        exact mul_nonneg (Nat.cast_nonneg _) (by linarith)
+        simpa only [Pi.add_apply] using mul_nonneg (Nat.cast_nonneg _) (by linarith)
     have hq : 0 ≤ nsq (ν - muQ lam lev) := Finset.sum_nonneg fun a _ => sq_nonneg _
     linarith
 
@@ -704,8 +699,7 @@ theorem proj_highest {Kf : Fin n → Fin n → Module.End ℂ Y}
     rw [map_add (f := _), smul_add] at h
     have h1 : Kf a a p - (μ a : ℂ) • p ∈ S := S.sub_mem (hS a a p hp) (S.smul_mem _ hp)
     have h2 : Kf a a p - (μ a : ℂ) • p = -(Kf a a r - (μ a : ℂ) • r) := by
-      rw [eq_neg_iff_add_eq_zero]
-      rw [sub_add_sub_comm, h, sub_self]
+      rw [eq_neg_iff_add_eq_zero, sub_add_sub_comm, h, sub_self]
     have h3 : Kf a a p - (μ a : ℂ) • p ∈ Sᗮ := by
       rw [h2]
       exact Sᗮ.neg_mem (Sᗮ.sub_mem (orth_stable hK hS a a hr) (Sᗮ.smul_mem _ hr))
@@ -1058,8 +1052,7 @@ theorem first_summand_zero {E1 E2 : Fin n → Fin n → Module.End ℂ V} {F1 F2
     obtain ⟨c, hc⟩ := hmult p hph hpS.2.1
     have hp0 : p.ofLp.2 = 0 := hpS.2.2
     have hcf : c • f = 0 := by
-      rw [hc] at hp0
-      exact hp0
+      rwa [hc] at hp0
     have hc0 : c = 0 := (smul_eq_zero.1 hcf).resolve_right hf
     have hpz : p = 0 := by rw [hc, hc0, zero_smul]
     have hre : r = WithLp.toLp 2 (v, 0) := by rw [e, hpz, zero_add]
@@ -1072,8 +1065,7 @@ theorem first_summand_zero {E1 E2 : Fin n → Fin n → Module.End ℂ V} {F1 F2
   obtain ⟨q, hq, hadj⟩ := exists_adj hp hpA
   have hqu : (WithLp.toLp 2 (q.1 u, 0) : 𝐘) ∈ N := by
     have h := genN_stable (z := (WithLp.toLp 2 (v, f) : 𝐘)) hq (show (WithLp.toLp 2 (u, 0) : 𝐘) ∈ N from ⟨p, hpA, hpe⟩)
-    rw [dsum_mk, map_zero] at h
-    exact h
+    rwa [dsum_mk, map_zero] at h
   have h1 : ⟪u, u⟫_ℂ = 0 := by
     calc ⟪u, u⟫_ℂ = ⟪p.1 v, u⟫_ℂ := by rw [hpv]
       _ = ⟪v, q.1 u⟫_ℂ := hadj v u
@@ -1494,8 +1486,7 @@ theorem sum_sz (M : ℕ) (lev : Fin n → ℕ) (hM : ∀ a, lev a < M) (P : ℕ 
     ext a
     simp only [mem_filter, mem_univ, true_and, Fin.ext_iff]
     constructor
-    · intro h
-      exact ⟨h ▸ hb', h⟩
+    · exact fun h => ⟨h ▸ hb', h⟩
     · exact fun h => h.2
   · intro a ha
     simpa using ha
@@ -1687,8 +1678,7 @@ theorem dualCap_newton : DualCap := by
     rw [← mul_pow]; simp
   have h2 : ((-1 : ℂ) ^ n) • Formalism.REAL.qdet E (Y + ((n : ℂ) - 1) / 2) =
       ((-1 : ℂ) ^ n * Formalism.QuantumDeterminants.capP χ Y) • (1 : Module.End ℂ V) := by
-    rw [← hq', ← capelliPoly_neg]
-    exact h
+    rwa [← hq', ← capelliPoly_neg]
   calc Formalism.REAL.qdet E (Y + ((n : ℂ) - 1) / 2)
       = ((-1 : ℂ) ^ n) • (((-1 : ℂ) ^ n) • Formalism.REAL.qdet E (Y + ((n : ℂ) - 1) / 2)) := by
         rw [smul_smul, hne, one_smul]

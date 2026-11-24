@@ -58,10 +58,8 @@ private lemma exists_alg {κ B Λ : Type} [Field κ] [CommRing B] [Algebra κ B]
   have hφ : φ.hom.comp (algebraMap κ B) = algebraMap κ Λ := by
     have h' : Spec.map (CommRingCat.ofHom (algebraMap κ B) ≫ φ) =
         Spec.map (CommRingCat.ofHom (algebraMap κ Λ)) := by
-      rw [Spec.map_comp]
-      exact h
-    have h'' := Spec.map_injective h'
-    exact congrArg CommRingCat.Hom.hom h''
+      rwa [Spec.map_comp]
+    exact congrArg CommRingCat.Hom.hom (Spec.map_injective h')
   refine ⟨{ toRingHom := φ.hom, commutes' := fun r => RingHom.congr_fun hφ r }, ?_⟩
   rfl
 

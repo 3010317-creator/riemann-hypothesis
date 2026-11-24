@@ -266,8 +266,7 @@ private theorem card_pat (ty : Fin n → Bool) :
       left_inv := fun Z => Subtype.ext rfl
       right_inv := fun f => funext fun p => Subtype.ext rfl }
   rw [Nat.card_congr e, Nat.card_pi, ← Finset.prod_pow_eq_pow_sum]
-  refine Finset.prod_congr rfl fun p _ => ?_
-  exact card_cnd _ _
+  exact Finset.prod_congr rfl fun p _ => card_cnd _ _
 
 end SlopeTestRemainingChoices
 
@@ -579,12 +578,10 @@ private theorem card_pow_nu_le_card_skew_w1 (A X : Type) [CommRing A] [CommRing 
     intro s i j hij
     by_cases hi : (i : ℕ) < a
     · by_cases hj : (j : ℕ) < a
-      · simp [V, hi, hj, DD.C_eta]
-        exact ⟨funext (DD.C_ep' _), funext (DD.C_ep _)⟩
+      · simpa [V, hi, hj, DD.C_eta] using ⟨funext (DD.C_ep' _), funext (DD.C_ep _)⟩
       · simp [V, hi, hj]
     · have hj : ¬ (j : ℕ) < a := by omega
-      simp [V, hi, hj, DD.C_eta]
-      exact ⟨funext (DD.C_ep' _), funext (DD.C_ep _)⟩
+      simpa [V, hi, hj, DD.C_eta] using ⟨funext (DD.C_ep' _), funext (DD.C_ep _)⟩
   have memW : ∀ Z : Matrix (Fin n) (Fin n) (DD X g), (∀ i j, (Z i j).ep' = 0 ∧ (Z i j).eta = 0 ∧
       (((i : ℕ) < a ↔ (j : ℕ) < a) → (Z i j).ep = 0) ∧ (¬((i : ℕ) < a ↔ (j : ℕ) < a) → (Z i j).a = 0)) →
       Z ∈ W1 n A X g a := by
@@ -597,8 +594,7 @@ private theorem card_pow_nu_le_card_skew_w1 (A X : Type) [CommRing A] [CommRing 
       (¬((i : ℕ) < a ↔ (j : ℕ) < a) → (Mf s i j).a = 0) := by
     intro s i j
     by_cases hij : (i : ℕ) < j
-    · simp only [Mf, dite_eq_left hij]
-      exact hV s i j hij
+    · simpa only [Mf, dite_eq_left hij] using hV s i j hij
     · by_cases hji : (j : ℕ) < i
       · simp only [Mf, dite_eq_right hij, dite_eq_left hji]
         obtain ⟨h1, h2, h3, h4⟩ := hV s j i hji

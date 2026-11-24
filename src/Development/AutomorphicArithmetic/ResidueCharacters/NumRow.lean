@@ -154,16 +154,14 @@ theorem placesOver_finite (E : Type) [Field E] [NumberField E] {l : ℕ} (hl : l
     Set.toFinite _
   have hinj : Set.InjOn (fun v : HeightOneSpectrum (𝓞 E) => v.asIdeal)
       ((fun v : HeightOneSpectrum (𝓞 E) => v.asIdeal) ⁻¹' ((Ideal.span {(l : ℤ)}).primesOver (𝓞 E))) := by
-    intro a _ b _ hab
-    exact HeightOneSpectrum.ext hab
+    exact fun a _ b _ hab => HeightOneSpectrum.ext hab
   exact (hfin.preimage hinj).subset (fun v hv => mem_primesOver_of_mem hl hv)
 
 theorem nLam_pos (D : D7) (lam : HeightOneSpectrum (𝓞 D.host.E)) : 1 ≤ locDeg D.host.E lam := by
   unfold Formalism.MainNotions.N.locDeg
   have := lam.isPrime
   have h1 := Ideal.ramificationIdx_pos (R := ℤ) lam.asIdeal
-  have h2 := Ideal.inertiaDeg_pos lam.asIdeal ℤ
-  exact Nat.one_le_iff_ne_zero.2 (Nat.mul_ne_zero h1.ne' h2.ne')
+  exact Nat.one_le_iff_ne_zero.2 (Nat.mul_ne_zero h1.ne' (Ideal.inertiaDeg_pos lam.asIdeal ℤ).ne')
 
 theorem sum_nLam_le (D : D7) {l : ℕ} (hl : l.Prime) :
     ∑ lam ∈ (placesOver_finite D.host.E hl).toFinset, (locDeg D.host.E lam : ℝ) ≤ 2 * D.R.f := by
@@ -178,8 +176,7 @@ theorem sum_nLam_le (D : D7) {l : ℕ} (hl : l.Prime) :
   set G : Ideal (𝓞 D.host.E) → ℝ := fun q => ((q.ramificationIdx ℤ * q.inertiaDeg ℤ : ℕ) : ℝ) with hG
   set S := (placesOver_finite D.host.E hl).toFinset with hS
   have hinj : Set.InjOn (fun v : HeightOneSpectrum (𝓞 D.host.E) => v.asIdeal) (S : Set _) := by
-    intro a _ b _ hab
-    exact HeightOneSpectrum.ext hab
+    exact fun a _ b _ hab => HeightOneSpectrum.ext hab
   calc ∑ lam ∈ S, (locDeg D.host.E lam : ℝ) = ∑ lam ∈ S, G lam.asIdeal := by
         refine Finset.sum_congr rfl (fun lam _ => ?_)
         simp [hG, Formalism.MainNotions.N.locDeg]
@@ -207,8 +204,7 @@ theorem sum_locDeg_le (i : D.nd.Loc) (S : Finset (HeightOneSpectrum (𝓞 D.host
   have hl := (D.nd.lPrime i).out
   refine le_trans ?_ (sum_nLam_le D hl)
   apply Finset.sum_le_sum_of_subset_of_nonneg
-  · intro v hv
-    exact (Set.Finite.mem_toFinset _).2 (hS v hv)
+  · exact fun v hv => (Set.Finite.mem_toFinset _).2 (hS v hv)
   · intro v _ _
     positivity
 

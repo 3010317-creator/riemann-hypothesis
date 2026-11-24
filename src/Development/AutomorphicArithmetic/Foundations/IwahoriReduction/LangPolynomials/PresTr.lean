@@ -63,8 +63,7 @@ private theorem pt_mem {Ω : Type} [Field Ω] [Algebra ℚ Ω] {A : ValuationSub
     (hτ : τ ∈ Ine (F := ℚ) A) {x : Ω} (hx : x ∈ A) : τ x ∈ A := by
   have h := mem_Dec.mp (Ine_le_Dec A hτ)
   have h2 := ValuationSubring.smul_mem_pointwise_smul τ x A hx
-  rw [h] at h2
-  exact h2
+  rwa [h] at h2
 
 private theorem pt_cg {l : ℕ} [Fact l.Prime] {n : ℕ} {ι : Type} [Fintype ι] (o : ι → Qbar l) (ho : ∀ i, ‖o i‖ ≤ 1)
     (k : ι → ZMod (l ^ n)) (b : ℕ) (x : Qbar l) (h : Cg n x (∑ i, o i * ((k i).val : Qbar l))) :
@@ -132,8 +131,7 @@ theorem UpperTheory.Kd.C7.pPresTr :
     have hs := cyclotomicCharacter.spec l (MulSemiringAction.toRingAut (G ℚ Ω) Ω τ) t ht
     have e1 : cyclotomicCharacter Ω l (MulSemiringAction.toRingAut (G ℚ Ω) Ω τ) = hbu.unit := hτc
     rw [e1, IsUnit.unit_spec, map_natCast, ZMod.val_natCast] at hs
-    rw [hmodpow t (l ^ r) b ht]
-    exact hs
+    rwa [hmodpow t (l ^ r) b ht]
   have hcyc : cycMod ℚ Ω l m τ = un b hb m := by
     apply Units.ext
     show (PadicInt.toZModPow m) ((cycZ ℚ Ω l τ : ℤ_[l])) = _

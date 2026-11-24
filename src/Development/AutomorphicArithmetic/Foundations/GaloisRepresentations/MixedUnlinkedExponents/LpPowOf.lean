@@ -80,10 +80,8 @@ private lemma prod_factor {f : ℕ} (hf : 0 < f) (a : ℂ) :
     · intro u hu
       rw [mem] at hu ⊢
       rw [inv_pow, hu, inv_one]
-    · intro u _
-      exact inv_inv u
-    · intro u _
-      exact inv_inv u
+    · exact fun u _ => inv_inv u
+    · exact fun u _ => inv_inv u
     · intro u _
       rfl
   have h2 : ∀ w : ℂ[X], ∏ u ∈ S, (1 - C u * w) = (∏ u ∈ S, (-C u)) * (w ^ f - 1) := by

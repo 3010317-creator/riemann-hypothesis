@@ -181,8 +181,7 @@ theorem l_mem_max (N : NData R H what₂) (i : N.Loc) :
     intro x _
     have hx : x = ((N.l i : ℕ) : ℤ_[N.l i]) • (((hu.unit⁻¹ : (N.O i)ˣ) : N.O i) * x) := by
       rw [Algebra.smul_def, map_natCast, ← mul_assoc]
-      have : ((N.l i : ℕ) : N.O i) * ((hu.unit⁻¹ : (N.O i)ˣ) : N.O i) = 1 := by
-        exact hu.mul_val_inv
+      have : ((N.l i : ℕ) : N.O i) * ((hu.unit⁻¹ : (N.O i)ˣ) : N.O i) = 1 := hu.mul_val_inv
       rw [this, one_mul]
     rw [hx]; exact Submodule.smul_mem_smul hl trivial
   have hjac : IsLocalRing.maximalIdeal ℤ_[N.l i] ≤ Ideal.jacobson ⊥ :=
@@ -257,8 +256,7 @@ theorem chiEpsBar_open (N : NData R H what₂) (i : N.Loc) (e : ℤ) :
           (((cycZ H.E N.Om (N.l i) g : ℤ_[N.l i]ˣ) : ℤ_[N.l i]) - 1) ∈ IsLocalRing.maximalIdeal (N.O i) :=
         (IsLocalRing.mem_maximalIdeal _).2 fun hu =>
           (IsLocalRing.mem_maximalIdeal _).1 h2 (isUnit_of_map_unit _ _ hu)
-      rw [map_sub, map_one] at h3
-      exact h3
+      rwa [map_sub, map_one] at h3
     show Formalism.MainNotions.SumRepresentations.At.chiEpsBar N i e g = 1
     delta Formalism.MainNotions.SumRepresentations.At.chiEpsBar
     rw [MonoidHom.mul_apply, MonoidHom.inv_apply, MonoidHom.zpow_apply, MonoidHom.comp_apply,
@@ -458,8 +456,7 @@ theorem eigPd_holds_alt : _root_.GlobalTheory.TameEig.eigPd_holds_tyz := by
   have hcp := mul_right_cancel₀ (pow_ne_zero _ (X_sub_C_ne_zero _)) fac
   have h0 : ((X - 1 : Polynomial (IsLocalRing.ResidueField (D.nd.O i))) ^ D.R.r).eval
       (IsLocalRing.residue (D.nd.O i) (chi1 D.nd i (D.nd.gam0 i w))) = 0 := by
-    rw [← hcp]
-    exact hroot
+    rwa [← hcp]
   rw [eval_pow, eval_sub, eval_X, eval_one] at h0
   exact pow_ne_zero _ (sub_ne_zero.2 hne) h0
 end UpperTheory.GalS
@@ -622,8 +619,7 @@ theorem twist_dual_mult : ∀ (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (�
     refine Continuous.matrix_map (A := fun g => (χ g : Matrix (Fin 1) (Fin 1) (D.nd.O i))) ?_ hfc
     refine continuous_matrix fun a b => ?_
     rw [Subsingleton.elim a 0, Subsingleton.elim b 0]
-    simp only [hχ]
-    exact D.nd.chi_cont i 1
+    simpa only [hχ] using D.nd.chi_cont i 1
   have tr := tie.2.2 LL' h _ _ cr
   have tχ := tie.2.2 LL' h _ _ cχ
   rw [hmap] at tr tχ
@@ -636,8 +632,7 @@ theorem twist_dual_mult : ∀ (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (�
     haveI : FiniteDimensional ℚ_[D.nd.l i] ↥(D.nbr i w hw).Kw.1 := (D.nbr i w hw).Kw.2
     have := (GlobalTheory.splits_of_conjugates_mem _ (D.nbr i w hw).Kw LL'
       (fun σ y => h ((D.nbr i w hw).LL_split σ y)) inferInstance).2
-    rw [Nat.card_eq_fintype_card]
-    exact this
+    rwa [Nat.card_eq_fintype_card]
   let ι : Br.G D.nbr i w hw →* GE D.nd := (decS D.nd w).comp (Br.iota D.nbr i w hw)
   have hrep : matRep (mapM (IntermediateField.inclusion h).toRingHom (Br.loc D.nbr i w hw (rO D.nd i r x))) =
       (D.nbr i w hw).repE LL' ((mapRep f (r x)).comp (Dec (F := D.host.E) (D.nd.plOm.1 w)).subtype) := by
@@ -737,8 +732,7 @@ theorem main : ∀ D : D7, AdmissibleParameterJ.AdmRead D := by
       (D.locT _) (D.nbr i w hw).Kw C.LL (Fin k → ↥C.LL.1) (matRep (TruncatedSeriesCountingIdentities.locC C M)) τ a).2.2
   refine ⟨fun a => ⟨(tw.2.2 a).1, ?_⟩, fun M _ a => jm M a, ?_⟩
   · have h := (tw.2.2 a).2
-    rw [show c - a - 1 = c - 1 - a by ring] at h
-    exact h
+    rwa [show c - a - 1 = c - 1 - a by ring] at h
   · intro ρπ _ hd a
     have hd' := (_root_.GlobalTheory.DecompForms.main D i r ρπ x).1 hd
     have hw' := ((GlobalTheory.SummandJumps.main D i w hw (D.locT _) C.LL C.le r ρπ x hd').2 tw.1).2.2 τ a

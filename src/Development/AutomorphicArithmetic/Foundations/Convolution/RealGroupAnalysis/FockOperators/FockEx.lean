@@ -175,8 +175,7 @@ private theorem fin_level {F : Type} [Field F] [NumberField F] (δ : F)
         g q.2 = g p.2 :=
       (continuous_snd.tendsto p).eventually (hev _)
     filter_upwards [h1, h2] with q e1 e2
-    rw [e1, e2]
-    exact hp
+    rwa [e1, e2]
   have hχ : IsLocallyConstant fun x : FiniteAdeleRing (𝓞 F) F => (finiteAdelicChar F x : ℂ) := by
     have := isLocallyConstant_finiteAdelicChar_mul (K := F) (1 : FiniteAdeleRing (𝓞 F) F)
     simpa using this
@@ -369,10 +368,8 @@ theorem UpperTheory.ConvolutionTheory.R2.Fo.fockEx :
       convert this using 1
       ext v
       simp [mul_assoc]
-    · intro a b _ _ ha hb
-      exact ha.add hb
-    · intro c a _ ha
-      exact ha.smul c
+    · exact fun a b _ _ ha hb => ha.add hb
+    · exact fun c a _ ha => ha.smul c
   induction s, hs using Set.Finite.induction_on with
   | empty => exact fun _ => ⟨⊤, 0, fun φ h => absurd h (Set.notMem_empty φ)⟩
   | @insert a s _ _ ih =>

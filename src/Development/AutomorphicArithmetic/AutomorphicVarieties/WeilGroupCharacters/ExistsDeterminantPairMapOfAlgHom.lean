@@ -94,8 +94,7 @@ theorem UpperTheory.V.W.exists_determinantPair_map_of_algHom :
   have hle : ∀ N, maximalIdeal R ^ N ≤ (maximalIdeal R' ^ N).comap (f : R →+* R') := fun N => by
     refine le_trans (Ideal.pow_right_mono (fun y hy => ?_) N) (Ideal.le_comap_pow _ N)
     show f y ∈ maximalIdeal R'
-    rw [← res_eq_zero_iff O, res_map, res_eq_zero_iff]
-    exact hy
+    rwa [← res_eq_zero_iff O, res_map, res_eq_zero_iff]
   have heps : ∀ g, Units.map ((f : R →+* R') : R →* R') (F.eps O R g) = F.eps O R' g := fun g =>
     Units.ext (f.commutes _)
   refine ⟨

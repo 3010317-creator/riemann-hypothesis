@@ -147,8 +147,7 @@ theorem shaLen_eq_add (hl : l ≠ 2) (D : LData E Ω l) (e : ℕ) : shaLen D e =
   have key := length_eq_add_eigen h2 (Sha D e) (cAct D e) (fun x hx => cAct_mem_Sha D e hx)
     (cAct_cAct D e) _ hs
   have hneg : -((-1 : ℤ_[l]) ^ e) = (-1) ^ (e + 1) := by rw [pow_succ, mul_neg_one]
-  rw [hneg] at key
-  exact key
+  rwa [hneg] at key
 
 end Parts
 
@@ -203,8 +202,7 @@ theorem vvle_of_parts {E : Type} [Field E] [NumberField E] [IsCMField E] {t : �
               simp only [Finset.mem_filter] at hl
               simp only [Finset.mem_singleton]
               exact Subtype.ext hl.2
-            · intro l _ _
-              exact hnn l
+            · exact fun l _ _ => hnn l
         _ = g p2 := Finset.sum_singleton g p2
         _ = Real.log 2 * ∑ e ∈ Finset.Ico 1 t, ((shaLen (ld 2) (e : ℤ)).toNat : ℝ) := by
             simp only [hg, p2]

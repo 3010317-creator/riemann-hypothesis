@@ -122,8 +122,7 @@ private theorem half_ker (hRead : PulledRead) (hKer : PullKer) {p : ℕ} [Fact p
         (pointOfClosedPoint Ks.hom pt hpt ≫ Over.Hom.left (1 : Ks ⟶ P'.o'.A)) (IsLocalRing.closedPoint K) := by
       rw [← haK, ← Over.comp_left, ← Over.comp_left, ← Category.assoc, h0]
       simp
-    rw [hp1]
-    exact e1
+    rwa [hp1]
   · rw [Over.w, Over.w]
 
 private theorem charZero_of_pt {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] {p : ℕ}
@@ -137,8 +136,7 @@ private theorem charZero_of_pt {O : Type} [CommRing O] [IsDomain O] [IsDiscreteV
     have hmax : (RingHom.ker φ).IsMaximal := Ideal.IsPrime.isMaximal inferInstance hb
     have hm : RingHom.ker φ = IsLocalRing.maximalIdeal O := IsLocalRing.eq_maximalIdeal hmax
     apply hK
-    rw [← hφp, ← RingHom.mem_ker, hm]
-    exact hp
+    rwa [← hφp, ← RingHom.mem_ker, hm]
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.secInj_of :
     PulledEx → PulledRead → PullKer → KerFromU → IsoOfKer → SecInj := by

@@ -177,8 +177,7 @@ theorem fin_stable {s ξ₀ : ∀ i, N i} (h0 : Restr s ξ₀) (S : Finset ι) {
   have : fin s ξ₀ S ≤ (fin s ξ₀ S).comap T := by
     refine Submodule.span_le.mpr ?_
     rintro _ ⟨ξ, hξ, rfl⟩
-    rw [SetLike.mem_coe, Submodule.mem_comap]
-    rw [hT ξ (restr_of h0 S hξ)]
+    rw [SetLike.mem_coe, Submodule.mem_comap, hT ξ (restr_of h0 S hξ)]
     refine Submodule.subset_span ⟨_, fun k hk => ?_, rfl⟩
     rw [Function.update_of_ne (show k ≠ i by rintro rfl; exact hk hi)]
     exact hξ k hk
@@ -624,8 +623,7 @@ theorem toUX_surj (X : HSp D) {k : ℕ} (e : Fin k ≃ Fin X.rank) {J : Matrix (
       GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.incM X.gram
     have e2 : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.incM X.gram = ((GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.incM X.gram).submatrix e e).submatrix e.symm e.symm := by simp
     have e3 : ((h.1.1.submatrix e.symm e.symm).map (cA D))ᵀ = ((h.1.1.map (cA D))ᵀ).submatrix e.symm e.symm := rfl
-    rw [e2, e3, Matrix.submatrix_mul_equiv, Matrix.submatrix_mul_equiv, Matrix.mul_assoc]
-    exact h2
+    rwa [e2, e3, Matrix.submatrix_mul_equiv, Matrix.submatrix_mul_equiv, Matrix.mul_assoc]
   · apply Subtype.ext
     apply Units.ext
     show (h.1.1.submatrix e.symm e.symm).submatrix e e = h.1.1
@@ -759,8 +757,7 @@ theorem end_ext {U P ι : Type} [AddCommGroup U] [Module ℂ U] [AddCommGroup P]
     have h3 : ∀ᶠ v in Filter.cofinite, ξ v = pv v (m v) := hξ
     filter_upwards [h3] with v b using hφ2 v b.symm
   have := h f hf φ hφ h2
-  rw [funext hφ1] at this
-  exact this
+  rwa [funext hφ1] at this
 
 
 end Main
@@ -837,8 +834,7 @@ theorem kStable_of_lie_stable_subspace (hP : _root_.GlobalTheory.FunPr.ThetaLoca
   have hA2 : Acts (evI F) (om (1, k)) (Φ T) (Φ (U T)) :=
     (hAL F (Fin n × Fin d) (Φ T) (Φ (U T)) (Φ (U T))).2.1 _ (map_zero _) h1
   have he : f₁ = Φ (U T) := (hAL F (Fin n × Fin d) (Φ T) f₁ (Φ (U T))).2.2.2.1 _ hact1 hA2
-  rw [he]
-  exact hUT
+  rwa [he]
 theorem lie_stable_subspace_kStable : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E} {a a' : ℕ}
     (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base F E) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo σ a a') (Xc : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars F E)
     (om : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ Γ.V Γ.W) (om' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ Γ.V' Γ.W) (R : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.RealMaps F a a')

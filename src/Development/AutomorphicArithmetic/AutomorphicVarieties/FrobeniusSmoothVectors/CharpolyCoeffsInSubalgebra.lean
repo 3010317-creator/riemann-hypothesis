@@ -118,10 +118,7 @@ theorem UpperTheory.V.Fr.algebraMap_range_span_eq_top_of_finite_generators :
     · subst h
       simp
     · have h' : (⟨(y : M), hmem y⟩ : hli'.extend (Set.subset_univ b)) ≠ ⟨x, hmem x⟩ := by
-        intro e
-        apply h
-        apply Subtype.ext
-        exact Subtype.mk.inj e
+        exact fun e => h (Subtype.ext (Subtype.mk.inj e))
       simp [h, h']
   choose gx hgx using fun x : b => hbs x.2
   let φ : b → Y := fun x => ⟨fun g => B.coord ⟨x, hmem x⟩ (a g), ha (B.coord ⟨x, hmem x⟩)⟩
@@ -349,8 +346,7 @@ theorem UpperTheory.V.Fr.finrank_structMapY_range :
       have h1 : ((F.Ψ (F.loc v (gv v)) : k)) - 1 ≠ 0 := sub_ne_zero.mpr (ha v)
       have h2 : 1 - ((F.Ψ (F.loc v (gv v)) : k))⁻¹ ≠ 0 := by
         rw [sub_ne_zero]
-        intro h
-        exact ha v (inv_eq_one.mp h.symm)
+        exact fun h => ha v (inv_eq_one.mp h.symm)
       have := hne (F.loc v (gv v))
       have := hne (F.loc v s)
       cases b
@@ -513,8 +509,7 @@ theorem UpperTheory.V.Fr.framePoint_alg_coord_eq :
   have w2 : w 3 2 = -1 := by simp [w]
   have hq : ∀ x : Q, x ∈ U → (Subalgebra.toSubmodule U).mkQ x = 0 := by
     intro x hx
-    rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-    exact hx
+    rwa [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
   refine ⟨(hlc 2 0).comp _, ?_, ?_, ?_⟩
   · intro g h
     dsimp only
@@ -587,46 +582,36 @@ theorem UpperTheory.V.Fr.framePoint_y_coord_eq :
   intro l _ k _ _ F C₀ hF Q _ _ ρ hbar htri hlc
   have hd0 : ∀ g : F.G0, ρ.r g 0 0 = algebraMap k Q ((F.Ψ (g : F.Γ) : k)) := by
     intro g
-    have h := hbar.1 g 0
-    simpa [w] using h
+    simpa [w] using hbar.1 g 0
   have hd1 : ∀ g : F.G0, ρ.r g 1 1 = 1 := by
     intro g
-    have h := hbar.1 g 1
-    simpa [w] using h
+    simpa [w] using hbar.1 g 1
   have hd2 : ∀ g : F.G0, ρ.r g 2 2 = algebraMap k Q ((F.Ψ (g : F.Γ) : k))⁻¹ := by
     intro g
-    have h := hbar.1 g 2
-    simpa [w] using h
+    simpa [w] using hbar.1 g 2
   have hup : ∀ (g : F.G0) (i j : Fin 3), i < j → ρ.r g i j = 0 := by
     intro g i j hij
-    have h : ρ.r g i j ∈ ρ.triM := by
-      apply Ideal.subset_span
-      exact ⟨g, i, j, hij, rfl⟩
-    rw [htri, Ideal.mem_bot] at h
-    exact h
+    have h : ρ.r g i j ∈ ρ.triM := Ideal.subset_span ⟨g, i, j, hij, rfl⟩
+    rwa [htri, Ideal.mem_bot] at h
   have h01 := fun g => hup g 0 1 (by decide)
   have h02 := fun g => hup g 0 2 (by decide)
   have h12 := fun g => hup g 1 2 (by decide)
   have hψ0 : ∀ v (s : F.Gv v), ((ρ.ψ v 0 s : Qˣ) : Q) = algebraMap k Q ((F.Ψ (F.loc v s) : k)) := by
     intro v s
-    have h := hbar.2 v 0 s
-    simpa [w] using h
+    simpa [w] using hbar.2 v 0 s
   have hψ1 : ∀ v (s : F.Gv v), ((ρ.ψ v 1 s : Qˣ) : Q) = 1 := by
     intro v s
-    have h := hbar.2 v 1 s
-    simpa [w] using h
+    simpa [w] using hbar.2 v 1 s
   have hψ2 : ∀ v (s : F.Gv v), ((ρ.ψ v 2 s : Qˣ) : Q) = algebraMap k Q ((F.Ψ (F.loc v s) : k))⁻¹ := by
     intro v s
-    have h := hbar.2 v 2 s
-    simpa [w] using h
+    simpa [w] using hbar.2 v 2 s
   refine ⟨hlc 1 0, ?_, ?_, ?_, ?_⟩
   · intro g h
     simp only [map_mul, Matrix.mul_apply, Fin.sum_univ_three, Algebra.smul_def]
     rw [hd0, hd1, h12]
     ring
   · have h := ρ.diag 1 0 (by decide)
-    rw [Matrix.sub_apply, sub_eq_zero] at h
-    exact h
+    rwa [Matrix.sub_apply, sub_eq_zero] at h
   · intro v
     obtain ⟨t, ht⟩ := hF.f3 v
     have hne := Units.ne_zero (F.Ψ (F.loc v t))
@@ -682,8 +667,7 @@ theorem UpperTheory.V.Fr.framePoint_y_coord_eq :
     have hl : ∀ s, ((F.loc0 v s : F.G0) : F.Γ) = F.loc v s := fun _ => rfl
     have hg : 1 - ((F.Ψ (F.loc v t) : k))⁻¹ ≠ 0 := by
       rw [sub_ne_zero]
-      intro h
-      exact hf (by rw [← inv_eq_one.mp h.symm, sub_self])
+      exact fun h => hf (by rw [← inv_eq_one.mp h.symm, sub_self])
     refine ⟨algebraMap k Q (1 - ((F.Ψ (F.loc v t) : k))⁻¹)⁻¹ * ρ.r (F.loc0 v t) 2 1, fun s => ?_⟩
     have h21 := congrFun (congrFun (ρ.ord v ![t, s, t]) 2) 1
     simp [ordProd, Matrix.mul_apply, Fin.sum_univ_three, Matrix.one_apply, hd1, hd2, h01, h02, h12,
@@ -853,9 +837,7 @@ theorem UpperTheory.V.Fr.fib_dim :
     rw [Ideal.comap_comap]
     exact Ideal.map_le_iff_le_comap.mp hbP
   haveI hηp : (L.im P).IsPrime := Ideal.comap_isPrime _ P
-  have hπprime : (L.π P).IsPrime := by
-    show (Ideal.comap (S.inc : S.B →+* S.A) (L.im P)).IsPrime
-    exact Ideal.comap_isPrime _ _
+  have hπprime : (L.π P).IsPrime := Ideal.comap_isPrime _ _
   have hmBmax : S.mB.IsMaximal := by
     rw [← hmB]
     exact IsLocalRing.maximalIdeal.isMaximal _
@@ -888,8 +870,7 @@ theorem UpperTheory.V.Fr.fib_dim :
   have hd := (loc_dim hF hn S x L).1 P hP (2 * C₀) htd
   have hB0 : ringKrullDim (S.B ⧸ L.π P) = 0 :=
     ringKrullDim_eq_zero_of_isField ((Ideal.Quotient.maximal_ideal_iff_isField_quotient _).mp hπmax)
-  rw [hB0, zero_add] at hd
-  exact hd
+  rwa [hB0, zero_add] at hd
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.FibDim =====
@@ -992,17 +973,14 @@ theorem UpperTheory.V.Fr.adjoin_image_in_residue_range :
     intro v i g
     apply Algebra.subset_adjoin
     left
-    show _ ∈ adicClosure _
-    intro N
-    exact ⟨_, Algebra.subset_adjoin (Or.inr ⟨v, i, g, rfl⟩), by simp⟩
+    exact fun N => ⟨_, Algebra.subset_adjoin (Or.inr ⟨v, i, g, rfl⟩), by simp⟩
   have hr' : ∀ g i j, (S.u.map φ).r g i j = φ ⟨S.ρ.r g i j, hrA g i j⟩ := fun g i j => rfl
   have hψ' : ∀ v i g, (((S.u.map φ).ψ v i g : Qˣ) : Q) = φ ⟨_, hψA v i g⟩ := fun v i g => rfl
   have hzero : ∀ g i j, i < j → φ ⟨S.ρ.r g i j, hrA g i j⟩ = 0 := by
     intro g i j hij
     have hm : (S.u.map φ).r g i j ∈ (S.u.map φ).triM := Ideal.subset_span ⟨g, i, j, hij, rfl⟩
     rw [htri, Ideal.mem_bot] at hm
-    rw [← hr']
-    exact hm
+    rwa [← hr']
   have hdiag : ∀ g i j, i = j → φ ⟨S.ρ.r g i j, hrA g i j⟩ ∈ f.range := by
     rintro g i j rfl
     rw [← hr', hbar.1 g i]
@@ -1094,8 +1072,7 @@ theorem UpperTheory.V.Fr.maximal_ideal_image_kills :
   have hgr : S.inc (y - zB) ∈ S.gr 0 := by
     have h1 : (1 : S.A) ∈ S.gr 0 := Submodule.subset_span ⟨[], by simp, by simp⟩
     have h2 := Submodule.smul_mem _ (y - zB) h1
-    rw [Algebra.smul_def, mul_one] at h2
-    exact h2
+    rwa [Algebra.smul_def, mul_one] at h2
   have ha := hM _ hgr (Ideal.pow_le_pow_right (Nat.le_succ M) hyz)
   have hle : S.mB ^ N ≤ (maximalIdeal Q ^ N).comap (φ.comp (S.inc : S.B →+* S.A)) :=
     le_trans (Ideal.pow_right_mono (fun b hb => hm b hb) N) (Ideal.le_comap_pow _ N)
@@ -1273,8 +1250,7 @@ private theorem key {l : ℕ} [Fact l.Prime] {k : Type} [Field k] [CharP k l] {F
     · rw [← residue_eq_zero_iff, map_sub, map_one, sub_eq_zero, hχ, map_mul]
       have h2 : residue Q (ρ.r g i i) = residue Q (f ((F.Ψ g ^ w n i : kˣ) : k)) := hb.1 g i
       rw [h2, ← map_mul, mul_comm, hinv, map_one]
-    · intro g g' e1 e2
-      exact hh g g' (by rw [hχ, hχ, e1, e2])
+    · exact fun g g' e1 e2 => hh g g' (by rw [hχ, hχ, e1, e2])
   rw [hχ] at h1
   calc ρ.r g i i = ρ.r g i i * (f (((F.Ψ g ^ w n i)⁻¹ : kˣ) : k) * f ((F.Ψ g ^ w n i : kˣ) : k)) := by
         rw [hinv, mul_one]
@@ -1347,8 +1323,7 @@ private theorem localization_prime_generation {l : ℕ} [Fact l.Prime] {O : Type
   have hB := residually_diagonal_representation f _ hb ht hch hd
   have hm : ∀ y ∈ S.mB, L.b y ∈ maximalIdeal L.R := fun y hy => by
     have := (loc_flat hF hn S x L).2.2 hy
-    rw [← L.lies] at this
-    exact this
+    rwa [← L.lies] at this
   have := maximal_ideal_image_kills hF hn S f ((Ideal.Quotient.mk P).comp (L.ι : S.A →+* L.R))
     (fun a => by rw [← hf]; exact congrArg (Ideal.Quotient.mk P) (L.ι.commutes a))
     (fun y hy => hloc _ (hm y hy)) ht hB
@@ -1365,8 +1340,7 @@ theorem UpperTheory.V.Fr.l51 :
   obtain ⟨q1, q2, -⟩ := local_deformation_trace_mod_maximal hF hn S x L
   have hs1 : ∀ a, F.Ψ (s' a) = 1 := fun a => by
     obtain ⟨v, g, -, e, e'⟩ := hs' a
-    rw [e']
-    exact e
+    rwa [e']
   let i0 : Fin n := ⟨0, by omega⟩
   let t : Unit ⊕ Fin (1 + C₀ + F.d) ⊕ ({i : Fin n // w n i = 0} × Fin F.d) → L.R :=
     Sum.elim (fun _ => algebraMap O L.R ϖ)

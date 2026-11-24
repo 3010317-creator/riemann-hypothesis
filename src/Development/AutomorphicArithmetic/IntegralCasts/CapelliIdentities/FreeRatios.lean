@@ -180,14 +180,11 @@ theorem UpperTheory.Reformulated.B.FreeAtCompGaloisEmbedding.freeRes :
   obtain ⟨m, hm, g', hg'⟩ := UpperTheory.Reformulated.B.FreeAtCompGaloisEmbedding.exists_pow_fix L g
   refine ⟨g', ?_, ?_, fun i => α i ^ m, ?_, ?_⟩
   · have h1 : g ^ m ∈ UpperTheory.Reformulated.B.FreeAtCompGaloisEmbedding.Dec A := Subgroup.pow_mem _ hgD m
-    rw [← hg'] at h1
-    exact h1
+    rwa [← hg'] at h1
   · have h1 : UpperTheory.Reformulated.B.FreeAtCompGaloisEmbedding.cycZ ℚ Ω l (g ^ m) = 1 := by rw [map_pow, hgc, one_pow]
-    rw [← hg'] at h1
-    exact h1
+    rwa [← hg'] at h1
   · intro i j hij n hn
-    have h1 := hα i j hij (m * n) (Nat.mul_pos hm hn)
-    simpa only [pow_mul] using h1
+    simpa only [pow_mul] using hα i j hij (m * n) (Nat.mul_pos hm hn)
   · have h1 : UpperTheory.Reformulated.B.FreeAtCompGaloisEmbedding.mat (W.comp (UpperTheory.Reformulated.B.FreeAtCompGaloisEmbedding.galEmb ℚ L Ω)) g' = UpperTheory.Reformulated.B.FreeAtCompGaloisEmbedding.mat W g ^ m := by
       rw [← map_pow, ← hg']
       rfl

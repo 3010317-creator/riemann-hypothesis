@@ -296,8 +296,7 @@ private lemma art_tangent (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [CharP k
     have h2 : of (z.snd ^ q) * r ^ q = 0 := by
       rwa [zero_pow hq0, map_zero, zero_add] at hz
     have h3 : AdjoinRoot.mk P (C (z.snd ^ q) * X ^ q) = 0 := by
-      rw [map_mul, map_pow (AdjoinRoot.mk P) X q]
-      exact h2
+      rwa [map_mul, map_pow (AdjoinRoot.mk P) X q]
     rw [AdjoinRoot.mk_eq_zero, hP, X_pow_dvd_iff] at h3
     have h4 := h3 q (by omega)
     rw [coeff_C_mul, coeff_X_pow_self, _root_.mul_one] at h4
@@ -342,8 +341,7 @@ private lemma art_res [IsAlgClosed k] [Module.Finite k B] :
   let e : k ≃ₐ[k] K := AlgEquiv.ofBijective (Algebra.ofId k K) hbij
   refine ⟨(e.symm : K →ₐ[k] k).comp (Ideal.Quotient.mkₐ k _), fun b => ?_⟩
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_sub, sub_eq_zero]
-  have h := e.apply_symm_apply (Ideal.Quotient.mk (maximalIdeal B) b)
-  exact h.symm
+  exact (e.apply_symm_apply (Ideal.Quotient.mk (maximalIdeal B) b)).symm
 
 private lemma art_der (π : B →ₐ[k] k) (hπ : ∀ b, b - algebraMap k B (π b) ∈ maximalIdeal B)
     (φ : B →ₗ[k] k) (h1 : φ 1 = 0) (h2 : ∀ z ∈ maximalIdeal B * maximalIdeal B, φ z = 0) :
@@ -547,8 +545,7 @@ private lemma art_map [Module.Finite k B] (π : B →ₐ[k] k)
       rw [hQ]
       exact (pow_dvd_pow X hqe).mul_right Q
     show (aeval (AdjoinRoot.root (X ^ (q + 1) : k[X])) : k[X] →ₐ[k] _) P = 0
-    rw [AdjoinRoot.aeval_eq, AdjoinRoot.mk_eq_zero]
-    exact hdvd
+    rwa [AdjoinRoot.aeval_eq, AdjoinRoot.mk_eq_zero]
   refine ⟨AlgHom.liftOfSurjective ψ hsurj _ hker, ?_⟩
   have := AlgHom.liftOfSurjective_apply ψ hsurj (aeval (AdjoinRoot.root (X ^ (q + 1) : k[X]))) hker X
   have hX : ψ X = x := by simp [ψ]
@@ -646,8 +643,7 @@ private theorem exists_alg (K : Over (Sp k)) (x : K.left) {T : Type} [CommRing T
     exact (congrArg (· ≫ K.hom) hu).trans (Over.w g)
   refine ⟨{ u with commutes' := fun a => ?_ }, ?_⟩
   · exact congrArg (fun f => f.hom a) hc
-  · apply Over.OverMorphism.ext
-    exact hu
+  · exact Over.OverMorphism.ext hu
 
 private theorem closed_eps : (spMap (TrivSqZeroExt.fstHom k k k).toRingHom) (IsLocalRing.closedPoint k) =
     IsLocalRing.closedPoint (DualNumber k) := by
@@ -723,8 +719,7 @@ private theorem lie_line (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [Comm
   have stepC : ∀ h, ∃ l : k, T (UpperTheory.Gal.Ord.hom o π.ε h) = l • T (UpperTheory.Gal.Ord.hom o π.ε h₀) := fun h => by
     obtain ⟨l, hl⟩ := hspan h
     refine ⟨l, ?_⟩
-    rw [← map_smul, ← sub_eq_zero, ← map_sub, Tker]
-    exact hl
+    rwa [← map_smul, ← sub_eq_zero, ← map_sub, Tker]
   have ne0 : T (UpperTheory.Gal.Ord.hom o π.ε h₀) ≠ 0 := fun h => hne ((Tker _).mp h)
   refine ⟨⟨(T (UpperTheory.Gal.Ord.hom o π.ε h₀)).hom, (T (UpperTheory.Gal.Ord.hom o π.ε h₀)).isTangent,
     fun h => ne0 (GlobalTheory.Serre.Lie.ext (by rw [h, e3])), ?_⟩, ?_⟩
@@ -739,14 +734,12 @@ private theorem lie_line (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [Comm
       rintro rfl
       apply hne₁
       have := congrArg GlobalTheory.Serre.Lie.hom (hg₁.trans hl₁)
-      rw [zero_smul, e3] at this
-      exact this
+      rwa [zero_smul, e3] at this
     refine ⟨l₂ / l₁, ?_⟩
     have h3 : GlobalTheory.Serre.Lie.mk a v₂ hv₂ = (l₂ / l₁) • GlobalTheory.Serre.Lie.mk a v₁ hv₁ := by
       rw [hg₂, hl₂, hg₁, hl₁, smul_smul, div_mul_cancel₀ _ hl₁0]
     have := congrArg GlobalTheory.Serre.Lie.hom h3
-    rw [e2] at this
-    exact this
+    rwa [e2] at this
 
 end UpperTheory.Gal.Ord.CntLie
 
@@ -962,8 +955,7 @@ theorem UpperTheory.Gal.Ord.cnt :
       rw [mul_zero] at hIN
       exact pow_ne_zero _ hPne hIN
     have hjle : j' ≤ D.n := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       have h1 : (p ^ f) ^ D.n < (p ^ f) ^ j' := Nat.pow_lt_pow_right hP2 hcon
       have h2 : (p ^ f) ^ j' ≤ (p ^ f) ^ j' * L := Nat.le_mul_of_pos_right _ (Nat.pos_of_ne_zero hL0)
       rw [hIN, hMpow] at h1
@@ -985,8 +977,7 @@ theorem UpperTheory.Gal.Ord.cnt :
           rw [pow_two]
           nlinarith
         have h6 : (p ^ f) ^ (D.n - j') ≤ p ^ f := by
-          rw [← hLeq]
-          exact hLle
+          rwa [← hLeq]
         exact absurd (lt_of_lt_of_le h5 (h4.trans h6)) (lt_irrefl _)
     have hjn : j' = D.n - 1 := by omega
     refine ⟨inferInstance, hwP, hpw, ?_⟩
@@ -1099,8 +1090,7 @@ theorem UpperTheory.Gal.Ord.rel :
       have := congrArg (e.left ≫ ·) e3
       simpa only [← Category.assoc, e4, Category.id_comp] using this
     apply GlobalTheory.SchRing.spMap_inj
-    rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
-    exact e5
+    rwa [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
   rw [← hu]
   exact (congrArg m.pull (GrpMor.pull_pull gm u K1 (fun _ ↦ rfl) rfl y)).trans
     ((GrpMor.pull_pull K1 m K2 (fun r ↦ DFunLike.congr_fun hring r) hmor y).trans
@@ -1413,12 +1403,10 @@ private theorem cancel_sp {k T : Type} [Field k] [CommRing T] (j : DualNumber k 
   obtain ⟨U, hU, hy, -⟩ := exists_isAffineOpen_mem_and_subset (x := g₁ x) (U := ⊤) trivial
   have r1 : Set.range g₁ ⊆ Set.range U.ι := by
     rintro _ ⟨z, rfl⟩
-    rw [Subsingleton.elim z x, Scheme.Opens.range_ι]
-    exact hy
+    rwa [Subsingleton.elim z x, Scheme.Opens.range_ι]
   have r2 : Set.range g₂ ⊆ Set.range U.ι := by
     rintro _ ⟨z, rfl⟩
-    rw [Subsingleton.elim z x, ← hxy, Scheme.Opens.range_ι]
-    exact hy
+    rwa [Subsingleton.elim z x, ← hxy, Scheme.Opens.range_ι]
   haveI : IsAffine U.toScheme := hU
   have f₁ := IsOpenImmersion.lift_fac U.ι g₁ r1
   have f₂ := IsOpenImmersion.lift_fac U.ι g₂ r2
@@ -1582,8 +1570,7 @@ theorem UpperTheory.Gal.Ord.hasse :
     rw [e, MonObj.comp_mul, hkill _ π.one, Category.comp_id, _root_.one_mul]
   have hlE : IsLieImage (hom o π.ε h₁) v := by
     have := hl₁.push (o.act.act (algebraMap (𝓞 D.F) D.O π.ε))
-    rw [hvE] at this
-    exact this
+    rwa [hvE] at this
   have hd₁ : hom o π.ε h₁ - h₁ ∈ Fil o.A := hlE.sub_mem hl₁
   have hn₁ : h₁ ∉ Fil o.A := fun hh => hv1 ((HL.1 h₁).unique hl₁ (isLieImage_one_iff.2 hh))
   obtain ⟨-, ⟨h₀, -, hall⟩, -⟩ := UpperTheory.Gal.Ord.lie p D R b N hN hNp hm k hk β o i w f hw hnorm hf π
@@ -1901,8 +1888,7 @@ theorem UpperTheory.Gal.Ord.point :
     simp only [hk, zero_smul] at h3
     have h4 : coh o (p : 𝓞 D.F) x = primPull (dp0 k) (𝟙 (Sp k)) (o.act.act ((p : D.O))) x := by
       simp only [coh, h1]
-    rw [← h4]
-    exact h3
+    rwa [← h4]
   have mp : SMor o.A (RingHom.id k) (Over.Hom.left (o.act.act ((p : D.O)))) := by
     have := homMor (dp0 k) (𝟙 (Sp k)) (o.act.act ((p : D.O)))
     simpa [SMor, spMap_id] using this

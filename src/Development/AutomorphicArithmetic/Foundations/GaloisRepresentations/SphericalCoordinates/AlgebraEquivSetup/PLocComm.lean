@@ -66,8 +66,7 @@ theorem UpperTheory.Gal.W2.Seed.pLocComm :
         have h2 := congrArg (RingHom.mapMatrix (pLoc E w)) hmem
         have e1 : RingHom.mapMatrix (pLoc E w) (((mat g).val.map (conjFin (conjE E)))ᵀ) =
             ((comp (conjSrc (conjE E) w) g).val.map (conjLoc (conjE E) w))ᵀ := by
-          refine Matrix.ext fun i k => ?_
-          exact pLoc_conjFin (conjE E) _ w
+          exact Matrix.ext fun i k => pLoc_conjFin (conjE E) _ w
         have e2 : RingHom.mapMatrix (pLoc E w) (mat g).val = 1 := by
           have : (comp w g).val = 1 := by rw [hg]; rfl
           exact this
@@ -79,13 +78,11 @@ theorem UpperTheory.Gal.W2.Seed.pLocComm :
         have hM : RingHom.mapMatrix (conjLoc (conjE E) w) (comp (conjSrc (conjE E) w) g).val =
             pLoc E w (finiteAdeleMap ℚ E (sim g : AfQˣ)) • (1 : Matrix (Fin n) (Fin n) (w.adicCompletion E)) := by
           have := congrArg Matrix.transpose h2
-          rw [Matrix.transpose_transpose, Matrix.transpose_smul, Matrix.transpose_one] at this
-          exact this
+          rwa [Matrix.transpose_transpose, Matrix.transpose_smul, Matrix.transpose_one] at this
         have hinj : Function.Injective (RingHom.mapMatrix (conjLoc (conjE E) w) :
             Matrix (Fin n) (Fin n) _ →+* Matrix (Fin n) (Fin n) _) := by
           intro a b hab
-          refine Matrix.ext fun i k => ?_
-          exact (conjLoc (conjE E) w).injective (congrFun (congrFun hab i) k)
+          exact Matrix.ext fun i k => (conjLoc (conjE E) w).injective (congrFun (congrFun hab i) k)
         apply Units.ext
         apply hinj
         rw [Units.val_mul, Units.val_mul, map_mul, map_mul, hM, Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul, Matrix.mul_one]

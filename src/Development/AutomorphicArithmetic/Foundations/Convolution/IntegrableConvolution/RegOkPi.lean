@@ -73,8 +73,7 @@ private theorem regOk_field (k : Type) [Field k] [TopologicalSpace k] [IsTopolog
       rw [← Matrix.coe_units_inv, inv_inv] at h
       rw [Units.val_mul, Units.val_mul]
       exact congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p i) h
-    · intro h
-      exact GlobalTheory.BCT.ClsFin.conj_of_charpoly γ y hs (Polynomial.ext h).symm
+    · exact fun h => GlobalTheory.BCT.ClsFin.conj_of_charpoly γ y hs (Polynomial.ext h).symm
   rw [e]
   exact isClosed_iInter fun i => isClosed_eq
     ((GroundTheory.Automorphic.ContragredientTranspose.continuous_charpoly_coeff i).comp Units.continuous_val)
@@ -138,8 +137,7 @@ private theorem regOk_pi (I : Type) (k : I → Type) [∀ i, Field (k i)] [∀ i
       · intro h
         choose x hx using h
         refine ⟨asm x, ev_ext fun i => ?_⟩
-        simp only [map_mul, map_inv, ev_asm]
-        exact hx i
+        simpa only [map_mul, map_inv, ev_asm] using hx i
     rw [e]
     exact isClosed_iInter fun i => ((regOk_field (k i) n (ev i γ) (hsi i)).1).preimage (hc i)
   · rw [Subgroup.mem_centralizer_singleton_iff] at ha hb

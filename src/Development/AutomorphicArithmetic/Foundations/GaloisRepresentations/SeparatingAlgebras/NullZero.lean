@@ -133,9 +133,7 @@ theorem UpperTheory.Gal.Gen.nullZero_pf :
       have hs' : MvPolynomial.eval (fun i => (pt (e.symm (s, θ')) i : ℂ)) p = 0 := by
         by_contra h
         exact hs h
-      rw [hsymm, eval_cons_pt] at hs'
-      exact hs'
+      rwa [hsymm, eval_cons_pt] at hs'
     have := hmp.quasiMeasurePreserving.ae hprod
     filter_upwards [this] with θ hθ
-    rw [e.symm_apply_apply] at hθ
-    exact hθ
+    rwa [e.symm_apply_apply] at hθ

@@ -590,8 +590,7 @@ theorem exists_bound_half_lt : GlobalTheory.Published.CuspRapidDecay → ∀ (D 
   set φ := t (PiTensorProduct.tprod ℂ w) with hφ
   have hφ0 : φ ≠ 0 := fun h => ht0 (GlobalTheory.T.multiplicitySpace_eq_zero_of_apply_nonzero_tensor_zero θ M J 1 vol.μ vol.𝓕 hθ vol.haar vol.fund hS t ht _ hw' h)
   obtain ⟨x₀, hx₀⟩ : ∃ x₀, φ x₀ ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hφ0 (funext h)
   have hR := (GlobalTheory.ChainOnto.MultRapid.multT_apply_rapidDec hP D V S M θ hθ J 1 t ht
     (PiTensorProduct.tprod ℂ w)).2.2
@@ -714,8 +713,7 @@ theorem neg_card_eq_sig : ∀ {D : D7} (V : HSp D), V.SigOK → ∀ (A : Fr V) (
     (Equiv.sumCompl (fun i => ε i = true)).symm.trans
       (Equiv.sumCongr (Fintype.equivFinOfCardEq ha) (Fintype.equivFinOfCardEq hb))
   have hl : ∀ k : Fin a, ε (e0.symm (Sum.inl k)) = true := fun k => by
-    simp [e0]
-    exact ((Fintype.equivFinOfCardEq ha).symm k).2
+    simpa [e0] using ((Fintype.equivFinOfCardEq ha).symm k).2
   have hr : ∀ k : Fin b, ε (e0.symm (Sum.inr k)) = false := fun k => by
     simp [e0]
     simpa using ((Fintype.equivFinOfCardEq hb).symm k).2
@@ -805,8 +803,7 @@ theorem map_hatL {m n : ℕ} (M : Matrix (Fin m) (Fin n) E) {Λ : Submodule (�
   | smul s x _ hx =>
     have := Submodule.smul_mem _ s hx
     rw [Subring.smul_def, ← mulVec_smul] at this
-    rw [Subring.smul_def]
-    exact this
+    rwa [Subring.smul_def]
 
 theorem map_smul {m n : ℕ} (M : Matrix (Fin m) (Fin n) E) {Λ : Submodule (𝓞 E) (Fin n → E)}
     {Λ' : Submodule (𝓞 E) (Fin m → E)} (hM : ∀ y ∈ Λ, M *ᵥ y ∈ Λ') (𝔪 : Ideal (𝓞 E)) :
@@ -1150,12 +1147,9 @@ theorem conjI_eq (𝔪 : Ideal (𝓞 D.host.E)) : GlobalTheory.SW.conjI 𝔪 = D
     refine ⟨b, hb, ?_⟩
     apply RingOfIntegers.ext
     rw [hab]
-    show (D.host.conj (b : D.host.E)) = star (b : D.host.E)
     exact (Formalism.BasicNotions.Examples₂.star_eq_conj D.host _).symm
   · rintro ⟨b, hb, rfl⟩
-    refine ⟨b, hb, ?_⟩
-    show (D.host.conj (b : D.host.E)) = star (b : D.host.E)
-    exact (Formalism.BasicNotions.Examples₂.star_eq_conj D.host _).symm
+    exact ⟨b, hb, (Formalism.BasicNotions.Examples₂.star_eq_conj D.host _).symm⟩
 
 theorem inId_hform {V : HSp D} {Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)} (hsd : IsSelfDualC V Λ)
     {β : GL (Fin V.rank) (Lev.EAf D)} (hfr : Formalism.L2.DIV.IsFrame β Λ) {𝔪 : Ideal (𝓞 D.host.E)}
@@ -1266,16 +1260,14 @@ theorem bottom : All fun {D} _ {L} _ {G} _ _ => IsSelfDualC (Yc D 0) (L.ΛY 0) �
       have e : G.Λ (.core 0) = G.sp.dec0.lat (L.ΛY 0) (fun _ => 1) := G.sp.lat0
       have := hfin
       unfold GridData.levCong at this
-      rw [e] at this
-      exact this
+      rwa [e] at this
     have h2 := GlobalTheory.T.unitaryLatticeCongruence_mem_conjugateIdeal_inf (Yc D 0) (L.ΛY 0) hY.sd _ _ h1
     exact Subgroup.mem_inf.2 ⟨hk, congLev_mono (GlobalTheory.T.modulus_inf_conj_le_span_typePrimes_product G) h2⟩
   · simpa [Node.rank, rankV] using hY.rank
   · simpa [Node.rank, rankP, nRk] using hP.rank
   · intro A τ
     rw [GlobalTheory.T.card_negativeSigns_diagonalFrame_eq_signature _ hY.sigOK A τ, hY.sig]
-    simp only [Node.neg, Nat.sub_zero]
-    exact Nat.div_le_self _ _
+    simpa only [Node.neg, Nat.sub_zero] using Nat.div_le_self _ _
 end GlobalTheory.BottomGrid
 end -- clump:auto
 end -- clump:auto
@@ -1376,8 +1368,7 @@ theorem lip_value : GlobalTheory.Published.CuspRapidDecay → ∀ (D : D7) (θ :
     rw [← norm_mul, hdiff, ← integral_mul_const]
     refine (norm_integral_le_integral_norm _).trans (integral_mono_of_nonneg
       (Filter.Eventually.of_forall fun h => norm_nonneg _) (hint.mul_const b) (Filter.Eventually.of_forall fun h => ?_))
-    simp only [norm_mul]
-    exact mul_le_mul_of_nonneg_left (hb _) (norm_nonneg _)
+    simpa only [norm_mul] using mul_le_mul_of_nonneg_left (hb _) (norm_nonneg _)
   have hc0 : 0 < ‖c‖ := norm_pos_iff.2 hc.ne
   have hH : 0 ≤ hsn (p.A.fr τ * X * (p.A.fr τ)⁻¹) := Real.sqrt_nonneg _
   have key : ‖c‖ * ‖φ (x * k) - φ x‖ ≤ ‖c‖ * (Real.exp Q * b * |s| * hsn (p.A.fr τ * X * (p.A.fr τ)⁻¹)) := by
@@ -1513,13 +1504,11 @@ theorem exists_cusp_form_theta_period_ne_zero : GlobalTheory.Published.HarishCha
   have hmem : y ∈ CoreForms G W.θ 0 MP := by
     show y ∈ MultT W.θ MP (Lev.levA (G.V (.core 0)) (G.levCong (.core 0)) : Set (GA D (G.V (.core 0)))) 1
     unfold GridData.levCong
-    rw [hlam]
-    exact hy
+    rwa [hlam]
   have hper : per0 G M (y (PiTensorProduct.tprod ℂ a')) (t (PiTensorProduct.tprod ℂ p.w)) ≠ 0 := by
     unfold per0
     simp_rw [hyg]
-    rw [hvμ, hv𝓕] at hne
-    exact hne
+    rwa [hvμ, hv𝓕] at hne
   exact ⟨y, hmem, _, _, hper⟩
 
 end UpperTheory.Lit.Cusp

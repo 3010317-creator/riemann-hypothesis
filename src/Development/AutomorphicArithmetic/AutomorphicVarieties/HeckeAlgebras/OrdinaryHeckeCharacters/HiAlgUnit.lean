@@ -137,8 +137,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.finMax :
         rw [← Ideal.map_pow]
         exact Ideal.mem_map_of_mem _ hx
       rw [hn] at hx'
-      rw [← Ideal.Quotient.eq_zero_iff_mem]
-      exact hx'
+      rwa [← Ideal.Quotient.eq_zero_iff_mem]
     · rw [Ideal.jacobson]
       refine le_sInf ?_
       rintro m ⟨-, hm⟩
@@ -188,8 +187,7 @@ private theorem pow_mem_map {A N T : Type} [CommRing A] [IsNoetherianRing A] [Ad
     have h2 := hn (max n k) (le_max_left n k)
     change (J • (⊤ : Submodule A N)).comap (j u ^ n) = (J • (⊤ : Submodule A N)).comap (j u ^ (max n k)) at h2
     rw [← h2] at h1
-    rw [map_pow]
-    exact h1
+    rwa [map_pow]
   obtain ⟨p, hp, -, hc, h0⟩ :=
     LinearMap.exists_monic_and_natDegree_eq_and_coeff_mem_pow_and_aeval_eq_zero A (j (u ^ n)) J hr
   rw [Polynomial.aeval_algHom_apply] at h0
@@ -278,8 +276,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.heckeLocal :
         convert P.add_mem (P.mul_mem_right y (hc P hP))
           (P.mul_mem_left (algebraMap A T c) (hd P hP)) using 1
         rw [map_mul]; ring
-    intro s
-    exact key (j s) (hrange ▸ ⟨s, rfl⟩) s rfl
+    exact fun s => key (j s) (hrange ▸ ⟨s, rfl⟩) s rfl
   haveI hloc : IsLocalRing T := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal T
     refine IsLocalRing.of_unique_max_ideal ⟨P, hP, fun Q hQ => hQ.eq_of_le hP.ne_top fun s hs => ?_⟩
@@ -382,9 +379,7 @@ private theorem hiAlg_unit {A M ι : Type} [CommRing A] [AddCommGroup M] [Module
   let fY : Module.End A Y := (op i).restrict hYs
   have hfYb : Function.Bijective fY := by
     constructor
-    · intro x y hxy
-      apply Subtype.ext
-      exact hb.injOn x.2 y.2 (congrArg Subtype.val hxy)
+    · exact fun x y hxy => Subtype.ext (hb.injOn x.2 y.2 (congrArg Subtype.val hxy))
     · intro y
       obtain ⟨x, hx, hxy⟩ := hb.surjOn y.2
       exact ⟨⟨x, hx⟩, Subtype.ext hxy⟩
@@ -397,8 +392,7 @@ private theorem hiAlg_unit {A M ι : Type} [CommRing A] [AddCommGroup M] [Module
     | mem x hx =>
       rw [Set.mem_singleton_iff] at hx
       rw [hx]
-      intro y hy
-      exact h.out.1 i y hy
+      exact fun y hy => h.out.1 i y hy
     | algebraMap r =>
       intro y hy
       simpa using L.smul_mem r hy
@@ -406,13 +400,10 @@ private theorem hiAlg_unit {A M ι : Type} [CommRing A] [AddCommGroup M] [Module
       intro y hy
       simpa using L.add_mem (hx y hy) (hz y hy)
     | mul x z _ _ hx hz =>
-      intro y hy
-      exact hx _ (hz y hy)
+      exact fun y hy => hx _ (hz y hy)
   have hgL : Function.Bijective (heckeGen L op i : Module.End A L) := by
     constructor
-    · intro x y hxy
-      apply Subtype.ext
-      exact hb.injOn (hLY x.2) (hLY y.2) (congrArg Subtype.val hxy)
+    · exact fun x y hxy => Subtype.ext (hb.injOn (hLY x.2) (hLY y.2) (congrArg Subtype.val hxy))
     · intro y
       refine ⟨⟨(((u⁻¹ : (Module.End A Y)ˣ) : Module.End A Y) ⟨y, hLY y.2⟩ : M), hpres _ hinv _ y.2⟩, ?_⟩
       apply Subtype.ext
@@ -441,11 +432,7 @@ private theorem hiAlg_top {A M ι : Type} [CommRing A] [AddCommGroup M] [Module 
   | mem x hx =>
     obtain ⟨j, hj⟩ := hx
     have he : (⟨x, Algebra.subset_adjoin ⟨j, hj⟩⟩ : heckeAlg L op) = heckeGen L op j := by
-      apply Subtype.ext
-      apply LinearMap.ext
-      intro y
-      apply Subtype.ext
-      exact hj y
+      exact Subtype.ext (LinearMap.ext (fun y => Subtype.ext (hj y)))
     rw [he]
     exact Algebra.subset_adjoin ⟨j, rfl⟩
   | algebraMap r =>
@@ -476,15 +463,12 @@ private theorem hiAlg_abs {O A M ι : Type} [CommRing O] [IsLocalRing O] [Finite
     have h2 := map_nonunit (algebraMap A (heckeAlg (locPart Y op fun i => algebraMap O A (a i)) op)) _ hd
     rw [IsScalarTower.algebraMap_apply O A _ d]
     have h3 := Ideal.add_mem _ hc' h2
-    rw [map_sub, sub_add_sub_cancel] at h3
-    exact h3
+    rwa [map_sub, sub_add_sub_cancel] at h3
   refine ⟨hCO, RingHom.finite_algebraMap.2 hfin, ?_, ?_⟩
-  · intro b hb t ht
-    exact (mem_nonZeroDivisors_iff.1 (hnzd b hb)).1 t ht
+  · exact fun b hb t ht => (mem_nonZeroDivisors_iff.1 (hnzd b hb)).1 t ht
   · intro i
     have h5 := hgen i (heckeGen _ op i) (fun y => rfl)
-    rw [IsScalarTower.algebraMap_apply O A _ (a i)]
-    exact h5
+    rwa [IsScalarTower.algebraMap_apply O A _ (a i)]
 
 set_option maxHeartbeats 800000 in
 theorem UpperTheory.V.Hi.hiAlg :

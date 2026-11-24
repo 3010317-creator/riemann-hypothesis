@@ -314,8 +314,7 @@ theorem UpperTheory.Gal.Wt.dom_of :
     obtain ⟨K, sz, hsz, I, hshape, rfl⟩ := hx
     intro m hm k
     have h := (Formalism.GradedWeylDivisibility.bidetDominance ℂ a a K sz hsz I m hm).1 k
-    rw [hshape] at h
-    exact h
+    rwa [hshape] at h
   | zero =>
     intro m hm
     simp at hm
@@ -325,8 +324,7 @@ theorem UpperTheory.Gal.Wt.dom_of :
     · exact hx m h k
     · exact hy m h k
   | smul c x _ hx =>
-    intro m hm k
-    exact hx m (MvPolynomial.support_smul hm) k
+    exact fun m hm k => hx m (MvPolynomial.support_smul hm) k
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.WeightCharacters.DomOf =====
@@ -358,21 +356,18 @@ theorem UpperTheory.Gal.Wt.ellC_of :
     have hfd : GlobalTheory.EllU.finPart (d : UA E a) ∈ C := hDC d.2
     have e : γ * g = g * GlobalTheory.EllU.finPart (d : UA E a) * ((GlobalTheory.EllU.finPart (d : UA E a))⁻¹ * (d : UA E a)) := by
       rw [h]; group
-    have h1 := hneat g γ hγ _ hfd _ (GlobalTheory.EllU.inv_finPart_mul_mem (d : UA E a)) e
-    exact Subtype.ext h1
+    exact Subtype.ext (hneat g γ hγ _ hfd _ (GlobalTheory.EllU.inv_finPart_mul_mem (d : UA E a)) e)
   obtain ⟨ℓ, h1, h2⟩ := _root_.UpperTheory.Gal.Gen.ellGrp_pf (UA E a) C (ratU E a) D f hyp
   have hinf : ∀ x ∈ infU E a, ∀ g, ℓ (g * x) = ℓ g := by
     intro x hx g
     have e : f ⟨x, le_sup_right (a := C) hx⟩ = 1 := Subtype.ext (GlobalTheory.EllU.finPart_of_infU hx)
     have := h2 g ⟨x, le_sup_right (a := C) hx⟩
-    simp only [e, mul_one] at this
-    exact this
+    simpa only [e, mul_one] using this
   have hC' : ∀ (c : C) g, ℓ (g * c) = ℓ g * c := by
     intro c g
     have e : f ⟨c, le_sup_left (b := infU E a) c.2⟩ = c := Subtype.ext (GlobalTheory.EllU.finPart_of_finU (hC c.2))
     have := h2 g ⟨c, le_sup_left (b := infU E a) c.2⟩
-    simp only [e] at this
-    exact this
+    simpa only [e] using this
   exact ⟨ℓ, ⟨h1, hC', hinf⟩⟩
 end -- clump:auto
 end -- clump:auto
@@ -802,8 +797,7 @@ theorem famOff_holds : FamOff := by
   obtain ⟨y₁, y₂, v₀, hv₀⟩ := hne
   set v := InfinitePlace.mk τ' with hv
   obtain ⟨e, he⟩ : ∃ e, B y₁ y₂ (GlobalTheory.CoefIrred.tenMul W e) ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have h1 : B y₁ y₂ = 0 := by
       apply (Formalism.L2.DIV.bVV ℂ W).ext
       intro i
@@ -829,8 +823,7 @@ theorem famOff_holds : FamOff := by
       exact h2.symm
   rcases InfinitePlace.embedding_mk_eq τ' with e | e
   · have h' := h
-    rw [← Wt.at_embedding W v, e] at h'
-    exact h'
+    rwa [← Wt.at_embedding W v, e] at h'
   · have h2 := h.conjugate
     rw [← Wt.at_embedding W v, ← Wt.at_conjugate, e, ComplexEmbedding.involutive_conjugate E τ'] at h2
     exact h2
@@ -980,8 +973,7 @@ theorem famSum_of : ExpBasic → EvLem → TorFacts → QR → WtBd → EmbProj 
       rw [← (hx z).2, ← hp _ (hx z).1 _ (hBU _ _ _), hB.inf (x z)]
       rfl
   · obtain ⟨y, v', hv'⟩ : ∃ y v', B 1 y v' ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       obtain ⟨u, b, hb, rfl⟩ := hQR a y₁
       obtain ⟨x', -, h2⟩ := hxu u
       have e1 := hB.inf x' 1 ((cEmb τ x'.1)⁻¹ * y₂) (W.rep x'⁻¹ v)
@@ -1303,8 +1295,7 @@ private theorem pow_mem_expLe_expGe_of_mem (h : ExpBasic) (f : Circle → ℂ) (
   obtain ⟨hmulL, hmulG, _, _, hconst, _⟩ := h
   induction n with
   | zero =>
-    simp only [pow_zero, Nat.cast_zero]
-    exact hconst 1
+    simpa only [pow_zero, Nat.cast_zero] using hconst 1
   | succ n ih =>
     have e : (fun z => f z ^ (n + 1)) = fun z => (fun z => f z ^ n) z * f z := by
       funext z
@@ -1323,8 +1314,7 @@ private theorem prod_pow_mem_expLe_sum_expGe {ι : Type} [DecidableEq ι] (h : E
     (fun z => ∏ i ∈ S, e i z ^ d i) ∈ ExpGe 0 := by
   induction S using Finset.induction_on with
   | empty =>
-    simp only [Finset.prod_empty, Finset.sum_empty, Nat.cast_zero]
-    exact h.2.2.2.2.1 1
+    simpa only [Finset.prod_empty, Finset.sum_empty, Nat.cast_zero] using h.2.2.2.2.1 1
   | insert x S hx ih =>
     have hp := pow_mem_expLe_expGe_of_mem h (e x) (he x) (d x)
     have e1 : (fun z => ∏ i ∈ insert x S, e i z ^ d i) =
@@ -1334,8 +1324,7 @@ private theorem prod_pow_mem_expLe_sum_expGe {ι : Type} [DecidableEq ι] (h : E
     rw [e1]
     constructor
     · have := h.1 _ _ _ _ hp.1 ih.1
-      rw [Finset.sum_insert hx, Nat.cast_add]
-      exact this
+      rwa [Finset.sum_insert hx, Nat.cast_add]
     · have := h.2.1 _ _ _ _ hp.2 ih.2
       simpa using this
 
@@ -1416,10 +1405,7 @@ theorem pieces_of (hS : SepPoly) (hN : NearSub) : Pieces := by
     intro g g' hgg
     apply hkerK
     rw [MonoidHom.mem_ker, map_mul, map_inv, inv_mul_eq_one]
-    apply Units.ext
-    apply Matrix.ext
-    intro i j
-    exact ι.symm.injective (congrFun hgg (i, j))
+    exact Units.ext (Matrix.ext (fun i j => ι.symm.injective (congrFun hgg (i, j))))
   have hsep : ∀ q : Γ ⧸ K, ∃ P' : MvPolynomial (Fin a × Fin a) (Qbar l),
       (∀ z ∈ v '' {g | (c q)⁻¹ * g ∈ K}, ‖MvPolynomial.eval z P' - 1‖ ≤ ε) ∧
       (∀ z ∈ v '' {g | (c q)⁻¹ * g ∉ K}, ‖MvPolynomial.eval z P'‖ ≤ ε) := by
@@ -1432,8 +1418,7 @@ theorem pieces_of (hS : SepPoly) (hN : NearSub) : Pieces := by
       rw [Set.disjoint_left]
       rintro z ⟨g, hg, rfl⟩ ⟨g', hg', hgg⟩
       apply hg'
-      have hm := K.mul_mem hg (hinj g g' hgg.symm)
-      simpa [mul_assoc] using hm
+      simpa [mul_assoc] using K.mul_mem hg (hinj g g' hgg.symm)
     exact hS (Qbar l) (Fin a × Fin a) _ _ hc1 hc2 hd ε hε
   choose P' hP1 hP2 using hsep
   refine ⟨Γ ⧸ K, inferInstance, c, fun q => MvPolynomial.map ι.toRingHom (P' q), ?_⟩
@@ -1517,8 +1502,7 @@ private theorem rFin_mul {a : ℕ} {p q : GL (Fin a) ℂ → ℂ} (hp : RFin p) 
   · have h1 : A.FG := (Submodule.fg_iff_finiteDimensional A).2 fA
     have h2 : B.FG := (Submodule.fg_iff_finiteDimensional B).2 fB
     exact (Submodule.fg_iff_finiteDimensional _).1 (h1.mul h2)
-  · have h := Submodule.mul_mem_mul (mA y) (mB y)
-    exact h
+  · exact Submodule.mul_mem_mul (mA y) (mB y)
 
 private theorem rFin_entry {a : ℕ} (i j : Fin a) :
     RFin (fun h : GL (Fin a) ℂ => (h : Matrix (Fin a) (Fin a) ℂ) i j) := by
@@ -1667,16 +1651,14 @@ theorem UpperTheory.Gal.Wt.topUp_of :
     rw [hucoe, Matrix.diagonal_mul]
     simp [t, hdiag i]
   have hfix : (sqRep ℂ a κ u) (top κ) = top κ := by
-    apply Subtype.ext
-    exact (factSqHighestWeight ℂ a κ).2 u hut hu1
+    exact Subtype.ext ((factSqHighestWeight ℂ a κ).2 u hut hu1)
   have hscal : (sqRep ℂ a κ D) (top κ) = chi κ b • top κ := by
     apply Subtype.ext
     have h := (factSqHighestWeight ℂ a κ).1 t
     have hc : (((∏ i, t i ^ κ.w i : ℂˣ)) : ℂ) = chi κ b := by
       rw [Units.coe_prod]
       simp only [Units.val_zpow_eq_zpow_val, chi, t, Units.val_mk0]
-    rw [hc] at h
-    exact h
+    rwa [hc] at h
   calc (sqRep ℂ a κ b) (top κ) = (sqRep ℂ a κ D) ((sqRep ℂ a κ u) (top κ)) := by
         rw [hbu, map_mul, Module.End.mul_apply]
     _ = chi κ b • top κ := by rw [hfix, hscal]
@@ -1780,8 +1762,7 @@ private theorem isOpen_subgroupOf {E : Type} [Field E] [NumberField E] [IsCMFiel
   refine Subgroup.isOpen_of_mem_nhds (g := 1) _ ?_
   refine Filter.mem_of_superset
     ((hNo.preimage continuous_subtype_val).mem_nhds (show ((1 : C) : UA E a) ∈ N from h1N)) ?_
-  intro x hx
-  exact Subgroup.mem_subgroupOf.2 (hNC ⟨hx, hC.fin x.2⟩)
+  exact fun x hx => Subgroup.mem_subgroupOf.2 (hNC ⟨hx, hC.fin x.2⟩)
 
 theorem twistBd_of : Twist → TwistBd := by
   intro hT E _ _ _ l _ ι a C hC ℓ hℓ W f X b hb
@@ -1909,8 +1890,7 @@ theorem UpperTheory.Gal.Wt.wExp_h : ExpBasic → SqExp → TorFacts → WExp := 
     rcases InfinitePlace.embedding_mk_eq τ with e | e
     · rw [hv₀, e]
       refine ⟨fun z => (hx z).1, fun w L => ?_⟩
-      simp only [(hx _).2]
-      exact h1 k w L
+      simpa only [(hx _).2] using h1 k w L
     · rw [hv₀, e]
       refine ⟨fun z => by rw [GlobalTheory.DefiniteBC.embU_conjugate]; exact (hx z).1, fun w L => ?_⟩
       have e2 : ∀ z, cEmb (ComplexEmbedding.conjugate τ) (x z).1 = tor a k z⁻¹ := fun z => by
@@ -1932,8 +1912,7 @@ theorem UpperTheory.Gal.Wt.wExp_h : ExpBasic → SqExp → TorFacts → WExp := 
       rw [Function.update_eq_self] at this
       exact congrArg L this
     change Φ _ ∈ ExpLe d ⊓ ExpGe (-d)
-    rw [e3]
-    exact h
+    rwa [e3]
   have h0 := (GlobalTheory.T.dualWeylModule_tensor_coefficient_universal (InfinitePlace E) a W (W.Sp ⧸ N) 0).unique (y₁ := N.mkQ) (y₂ := 0)
     (fun u => (Submodule.Quotient.mk_eq_zero N).2 (hN u)) (fun u => rfl)
   exact (Submodule.Quotient.mk_eq_zero N).1 (LinearMap.congr_fun h0 v)

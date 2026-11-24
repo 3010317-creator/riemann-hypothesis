@@ -327,8 +327,7 @@ private theorem trace_one (σ : F₁ ≃ₐ[F₀] F₁) (d : ℕ) (hG : UpperThe
     rw [Finset.sum_comm, Finset.sum_congr rfl fun j hj => h j (Finset.mem_range.1 hj)]
     simp [hG.pos]
   obtain ⟨i, hi⟩ : ∃ i, T (y i) ≠ 0 := by
-    by_contra hn
-    push Not at hn
+    by_contra! hn
     simp [hn] at hs
   refine ⟨y i * (T (y i))⁻¹, ?_⟩
   simp only [map_mul, map_inv₀, hTj]
@@ -555,8 +554,7 @@ private theorem lat_main [IsGalois k K] {F₀ F₁ : Type} [Field F₀] [Fintype
   refine ⟨GeneralLinearGroup.mk'' Mm hMu,
     (GeneralLinearGroup.map ι (GeneralLinearGroup.mk'' B hBu))⁻¹, (KO K n).inv_mem ⟨_, rfl⟩, ?_⟩
   rw [eq_mul_inv_iff_mul_eq]
-  apply Units.ext
-  exact hMH.symm
+  exact Units.ext hMH.symm
 
 end Loc
 
@@ -599,8 +597,7 @@ private theorem conj_self {G : Type} [Group G] (S : Subgroup G) {s : G} (hs : s 
   constructor
   · rintro ⟨z, hz, rfl⟩
     exact S.mul_mem (S.mul_mem hs hz) (S.inv_mem hs)
-  · intro hy
-    exact ⟨s⁻¹ * y * s, S.mul_mem (S.mul_mem (S.inv_mem hs) hy) hs, by group⟩
+  · exact fun hy => ⟨s⁻¹ * y * s, S.mul_mem (S.mul_mem (S.inv_mem hs) hy) hs, by group⟩
 
 private theorem zpowers_closed {G H : Type} [Group G] [TopologicalSpace G] [Group H] [TopologicalSpace H]
     (j : H →* G) (hj : Topology.IsClosedEmbedding j) (t : H) :
@@ -718,8 +715,7 @@ private theorem sum_transfer {G H : Type} [Group G] [Group H] (j : H →* G) (hj
       rw [map_mul, map_inv, map_mul, hab]
       group
     refine ⟨a₀, ha₀, (a₀ * Quotient.out p)⁻¹ * Quotient.out p', ?_, by group⟩
-    rw [← hK, hjb]
-    exact hb
+    rwa [← hK, hjb]
   have hsub : Function.support
       (fun q : DoubleCoset.Quotient ((T₀.map j : Subgroup G) : Set G) (K : Set G) =>
         F (Quotient.out q)) ⊆ Set.range e := by
@@ -1227,8 +1223,7 @@ theorem inflMatch : GlobalTheory.DZA.InflMatching := by
         change x⁻¹ * (h * incl K n γ * h⁻¹) * x ∈ KO K n at hNβ
         apply hR4 γ (h⁻¹ * x)
         have e4 : (h⁻¹ * x)⁻¹ * incl K n γ * (h⁻¹ * x) = x⁻¹ * (h * incl K n γ * h⁻¹) * x := by group
-        rw [e4]
-        exact hNβ
+        rwa [e4]
       have hR : GlobalTheory.BCT.twOrb (MonoidHom.id (GL (Fin n) k)) (KO k n) γ (infl rk fb) = 0 :=
         GlobalTheory.DZA.OrbSupp.twOrb_id_eq_zero_of_forall _ _ _ fun x => by
           by_contra hc

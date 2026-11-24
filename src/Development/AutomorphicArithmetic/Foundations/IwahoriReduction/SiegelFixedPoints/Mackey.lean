@@ -195,10 +195,8 @@ private theorem eisF_mul_scale_eq_ite_dvd {K : Type*} [Field K] (D M : ℕ) (ζ'
         have hx' : x ∣ D * k := Nat.dvd_of_mem_divisors hx
         have hnot : ¬ x ∣ k := fun h => hxn (Nat.mem_divisors.mpr ⟨h, hk⟩)
         rw [ite_eq_right, ite_eq_right, sub_zero]
-        · intro h
-          exact hnot (hout x hx' (by simpa using key _ h))
-        · intro h
-          exact hnot (hout x hx' (key _ h))
+        · exact fun h => hnot (hout x hx' (by simpa using key _ h))
+        · exact fun h => hnot (hout x hx' (key _ h))
     · rw [ite_eq_right hDn]
       apply Finset.sum_eq_zero
       intro x hx
@@ -208,10 +206,8 @@ private theorem eisF_mul_scale_eq_ite_dvd {K : Type*} [Field K] (D M : ℕ) (ζ'
         rw [Int.natCast_dvd_natCast] at hdx
         exact hDn (hdx.trans (Nat.div_dvd_of_dvd hx'))
       rw [ite_eq_right, ite_eq_right, sub_zero]
-      · intro h
-        exact hout (by simpa using key _ h)
-      · intro h
-        exact hout (key _ h)
+      · exact fun h => hout (by simpa using key _ h)
+      · exact fun h => hout (key _ h)
 
 private theorem smF_mul_scale_eq_ite_dvd {K : Type*} [Field K] (c : ℤ) (D M : ℕ) (ζ' ζ : K) (hζ : ζ' ^ D = ζ) (A a : ℤ) (hD : 0 < D) (hA : ¬ (M:ℤ) ∣ A) (hcA : ¬ (M:ℤ) ∣ c * A) (n : ℕ) :
     smF c 1 (D * M) ζ' ((D:ℤ) * A) ((D:ℤ) * a) n = if D ∣ n then smF c 1 M ζ A a (n / D) else 0 := by
@@ -237,8 +233,7 @@ private theorem cmul_dilate_eq_ite_dvd {K : Type*} [Field K] (D : ℕ) (hD : 0 <
       intro k hk
       have e : D * K0 - D * k = D * (K0 - k) := (Nat.mul_sub D K0 k).symm
       rw [hf, hg, ite_eq_left (dvd_mul_right D k), e, ite_eq_left (dvd_mul_right _ _), Nat.mul_div_cancel_left _ hD, Nat.mul_div_cancel_left _ hD]
-    · intro x _ y _ hxy
-      exact Nat.eq_of_mul_eq_mul_left hD hxy
+    · exact fun x _ y _ hxy => Nat.eq_of_mul_eq_mul_left hD hxy
     · intro i hi hni
       rw [hf]
       split_ifs with hDi
@@ -384,8 +379,7 @@ private theorem gal_sl_diag (X : Tower Ω ε) {D : ℕ} (hD : 0 < D) (s : Ω ≃
     have := X.exp_upper (toGQ !![(D : ℤ), 0; 0, 1]) (by rw [ent_diag hD]; simp) h (r / D)
     simp only [ent_diag hD] at this
     simp at this
-    rw [div_mul_cancel₀ _ hD', eOm_zero', one_mul] at this
-    exact this
+    rwa [div_mul_cancel₀ _ hD', eOm_zero', one_mul] at this
   rw [X.gal_exp, key, key, X.gal_exp]
 
 private theorem rescale_series (φ : HahnSeries ℚ Ω) {D : ℚ} (hD : 0 < D) :
@@ -393,9 +387,7 @@ private theorem rescale_series (φ : HahnSeries ℚ Ω) {D : ℚ} (hD : 0 < D) :
   refine ⟨⟨fun r => φ.coeff (r / D), ?_⟩, fun r => rfl⟩
   have h := φ.isPWO_support.image_of_monotone (f := fun r : ℚ => r * D)
     (fun a b hab => mul_le_mul_of_nonneg_right hab hD.le)
-  refine h.mono ?_
-  intro r hr
-  exact ⟨r / D, hr, div_mul_cancel₀ _ hD.ne'⟩
+  exact h.mono (fun r hr => ⟨r / D, hr, div_mul_cancel₀ _ hD.ne'⟩)
 
 private theorem diag_mul_T_pow_eq_T_pow_mul_mul_diag (D L : ℕ) (hD : 0 < D) :
     toGQ !![(D : ℤ), 0; 0, 1] * ofSL (ModularGroup.T ^ L) = ofSL (ModularGroup.T ^ (D * L)) * toGQ !![(D : ℤ), 0; 0, 1] := by
@@ -464,8 +456,7 @@ private theorem coefQ_cmul_mem (A : ValuationSubring Ω) {f g : ℕ → Ω} (hf 
 
 private theorem zt_pow [IsAlgClosed Ω] (ε : Ω →+* ℂ) {l : ℕ} (hl : l ≠ 0) (k : ℕ) : IsPrimitiveRoot (zt ε l k) (l ^ k) := by
   have h := isPrimitiveRoot_eOm ε (pow_ne_zero k hl)
-  rw [Nat.cast_pow] at h
-  exact h
+  rwa [Nat.cast_pow] at h
 
 end UpperTheory.Kd.L.One
 
@@ -626,8 +617,7 @@ theorem UpperTheory.Kd.L.one :
   rw [e1] at e0
   have hdet : en g 0 0 * en g 1 1 - en g 0 1 * en g 1 0 = 1 := by
     have := g.det_coe
-    rw [Matrix.det_fin_two] at this
-    exact this
+    rwa [Matrix.det_fin_two] at this
   have hZ : (N : ℤ) ^ 2 * (en g 0 0 * w1) * en g 1 1 - (N : ℤ) * en g 0 1 * ((N : ℤ) ^ 2 * w2) =
       (N : ℤ) ^ 3 + (l : ℤ) ^ (m + n) * ((N : ℤ) ^ 2 * en g 0 0 * (x.val : ℤ) * (topT l (m + n) N : ℤ) * en g 1 1 -
         (N : ℤ) ^ 3 * en g 0 1 * en g 0 0 * (topT l (m + n) N : ℤ)) := by
@@ -924,8 +914,7 @@ private lemma FF_eq (X : Tower Ω ε) {l : ℕ} [Fact l.Prime] {n m N : ℕ} [Ne
           ex l n w (gm r₀ * liftSL _ (p.1 * Tm (topMu l n m N) p.2)) := by
     symm
     refine Finset.prod_bij (fun p _ => p.1 * Tm (topMu l n m N) p.2) ?_ ?_ ?_ (fun _ _ => rfl)
-    · intro p hp'
-      exact Gs_mul_Tm (hR.1 (Finset.mem_product.1 hp').1) _
+    · exact fun p hp' => Gs_mul_Tm (hR.1 (Finset.mem_product.1 hp').1) _
     · intro p hp' q hq e
       obtain ⟨hp1, hp2⟩ := Finset.mem_product.1 hp'
       obtain ⟨hq1, hq2⟩ := Finset.mem_product.1 hq
@@ -1296,8 +1285,7 @@ theorem UpperTheory.Kd.L.mackey :
       have h1 := (hξ i.1 i.2.1 i.2.2 (hIR i hi)).2 (σ i.1) (hσ _) (hσS _) t (hσt _) _ (hψ1 i.1 i.2.1 i.2.2) r
       have h2 := cgA_map (ρ i.1) h1
       rw [hσd] at h2
-      simp only [map_add (f := _), map_sub, map_mul, map_pow, map_natCast, conj_apply] at h2
-      exact h2
+      simpa only [map_add (f := _), map_sub, map_mul, map_pow, map_natCast, conj_apply] using h2
     have h3 := cgA_sum I mx _ _ hab
     have e1 : (l : Ω) ^ cc * ∑ i ∈ I, (mx i : Ω) * ρ i.1 ((ψ i.1 i.2.1 i.2.2).coeff r) =
         ∑ i ∈ I, (mx i : Ω) * ((l : Ω) ^ cc * ρ i.1 ((ψ i.1 i.2.1 i.2.2).coeff r)) := by

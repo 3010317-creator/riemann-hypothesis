@@ -409,8 +409,7 @@ theorem UpperTheory.V.Cj.H.harmFin :
         exact (cmp_rT _ _ _).symm.trans h1
       · obtain ⟨T, w, hT, hw⟩ := hk ω hl.equiv (fun j => e (p.1 j)) p.2
         have := GlobalTheory.Published.AutFinGL.type_of_map ρ T hT w g
-        rw [hw] at this
-        exact this
+        rwa [hw] at this
   refine FiniteDimensional.of_injective (V₂ := (Fin q → Fin n) × Fin Ξ.d → F)
     (LinearMap.pi fun p => ((LinearMap.proj p ∘ₗ coords Ξ q e) ∘ₗ Submodule.subtype _).codRestrict F fun ω => hle ω.1 ω.2 p)
     fun α β h => Subtype.ext (coords_inj Ξ q he (funext fun p => ?_))
@@ -603,8 +602,7 @@ theorem UpperTheory.V.Cj.H.appFacts :
     rw [app_apply]
 
     simp only [dCo, AlternatingMap.alternatizeUncurryFin_apply, map_sum, map_zsmul]
-    refine Finset.sum_congr rfl fun i _ => congrArg _ ?_
-    exact rT_smLie Ξ N T hT _ _ (hv _)
+    exact Finset.sum_congr rfl fun i _ => congrArg _ (rT_smLie Ξ N T hT _ _ (hv _))
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ConjugateRepresentations.LocalLimitConjugates.AppFacts =====
@@ -723,8 +721,7 @@ theorem absSolve : AbsSolve := by
   refine ⟨fun i => g (Finsupp.single i 1), fun j => ?_⟩
   refine (hsum (fun i => g (Finsupp.single i 1)) (L j)).trans ?_
   rw [hgb]
-  have h3 := hgψ (Finsupp.single j 1)
-  simpa [ψ, φ, Finsupp.linearCombination_single] using h3
+  simpa [ψ, φ, Finsupp.linearCombination_single] using hgψ (Finsupp.single j 1)
 
 end UpperTheory.V.Cj.H
 end -- clump:auto
@@ -1176,8 +1173,7 @@ theorem UpperTheory.V.Cj.H.poinOp :
     intro p hp w
     refine fun s => ⟨?_, ?_⟩
     · exact ((hD p hp q _ (hwm w s).1).1).congr (fun x hx => ite_eq_left hx)
-    · intro x hx
-      exact ite_eq_right hx
+    · exact fun x hx => ite_eq_right hx
   let K : V → G.Om (q + 1) → G.Om q := fun p w => if hp : p ∈ G.Y then ⟨f p w, hf p hp w⟩ else 0
   have hK : ∀ p (hp : p ∈ G.Y) w, ((K p w : G.Om q) : S → V → V [⋀^Fin q]→L[ℝ] (Fin d → ℂ)) = f p w := by
     intro p hp w
@@ -1254,8 +1250,7 @@ variable {Γ V S : Type} [Group Γ] [NormedAddCommGroup V] [NormedSpace ℝ V] {
 private theorem fLim_add {w w' : ℕ → G.Om q} (h : FLim G w) (h' : FLim G w') : FLim G fun j => w j + w' j := by
   intro s K hK hc
   have := (h s K hK hc).add (h' s K hK hc)
-  rw [add_zero] at this
-  exact this
+  rwa [add_zero] at this
 
 private theorem fLim_zsmul (n : ℤ) {w : ℕ → G.Om q} (h : FLim G w) : FLim G fun j => n • w j := by
   intro s K hK hKc

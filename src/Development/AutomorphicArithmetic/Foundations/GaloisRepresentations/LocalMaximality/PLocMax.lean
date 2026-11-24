@@ -172,16 +172,14 @@ theorem UpperTheory.Gal.productCup_of_system.locMax_of :
   obtain ⟨z, rfl⟩ := Ideal.Quotient.mk_surjective zq
   have hmem : (⟨b * v, hbv⟩ : rB ℂ L (xv x) {0}) * (1 - ⟨b * v, hbv⟩ * z) ∈
       Ideal.span (Set.range fun j : Fin d => (⟨_, tco_mem ℂ L (xv x) j⟩ : rB ℂ L (xv x) {0})) := by
-    rw [← Ideal.Quotient.eq_zero_iff_mem, map_mul, map_sub, map_one, map_mul]
-    exact hz
+    rwa [← Ideal.Quotient.eq_zero_iff_mem, map_mul, map_sub, map_one, map_mul]
   obtain ⟨c, hcsum⟩ := Ideal.mem_span_range_iff_exists_fun.mp hmem
   have he1 : e.1 (1 - ⟨b * v, hbv⟩ * z) = 1 := by
     rw [map_sub, map_one, map_mul]
     change 1 - e.1 ⟨b * v, hbv⟩ * e.1 z = 1
     rw [hev, zero_mul, sub_zero]
   have hes : e.1 (⟨b, hb⟩ * (1 - ⟨b * v, hbv⟩ * z)) ≠ 0 := by
-    rw [map_mul, he1, mul_one]
-    exact heb
+    rwa [map_mul, he1, mul_one]
   have hs0 : ((⟨b, hb⟩ * (1 - ⟨b * v, hbv⟩ * z) : rB ℂ L (xv x) {0}) : L) ≠ 0 := by
     intro h
     apply hes

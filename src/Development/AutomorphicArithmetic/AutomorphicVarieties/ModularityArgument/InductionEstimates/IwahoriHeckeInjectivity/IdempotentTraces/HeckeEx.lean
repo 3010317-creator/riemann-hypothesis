@@ -129,8 +129,7 @@ private theorem ops_inv (hΦ : Inv j U Φ) : Inv j U (ops j U h Φ) := by
     Set.InvOn.bijOn ⟨hi u, hi'⟩ (hm u hu) (hm u⁻¹ (U.inv_mem hu))
   refine finsum_mem_eq_of_bijOn _ hb fun c _ => ?_
   have h1 := val_congr (x := x) hΦ (QuotientGroup.out_eq' (QuotientGroup.mk (u * c.out) : G ⧸ U)).symm
-  rw [map_mul, ← mul_assoc] at h1
-  exact h1
+  rwa [map_mul, ← mul_assoc] at h1
 
 private theorem ops_comm (hf : (dbl U h).Finite) (hf' : (dbl U h').Finite) (hΦ : Inv j U Φ) (r r' : G ⧸ U → G)
     (hr : ∀ c, (QuotientGroup.mk (r c) : G ⧸ U) = c) (hr' : ∀ c, (QuotientGroup.mk (r' c) : G ⧸ U) = c)
@@ -156,8 +155,7 @@ private theorem rep_in (P : Subgroup G) (hh : h ∈ P)
       have : (a * h)⁻¹ * (a * t * h) = t := by
         rw [mul_assoc a t h, hcm.eq]
         group
-      rw [this]
-      exact ht
+      rwa [this]
     · exact ⟨c.out, QuotientGroup.out_eq' c, fun h' => absurd h' hc⟩
   choose r h2 h3 using h1
   exact ⟨r, h2, h3⟩
@@ -192,8 +190,7 @@ private theorem norm_one_adelic_split_arch_finite (g : G1 K n) (hu : finPart K n
   have hg := (mem_normOneGL_iff_detModule).1 g.2
   have h2 := infEmb_infPart_mul_finEmb_finPart (g : AdelicGLn.AdelicGL K n)
   have h3 : detModule K n (infEmb K n (infPart K n (g : AdelicGLn.AdelicGL K n))) = 1 := by
-    rw [← h2, map_mul, h1, mul_one] at hg
-    exact hg
+    rwa [← h2, map_mul, h1, mul_one] at hg
   ext1
   rw [Subgroup.coe_mul, ← retract_infEmb, coe_retractOne, MultiplicityOne.coe_finProj, h1, h3, map_one, inv_one, mul_one, mul_one]
   exact h2.symm

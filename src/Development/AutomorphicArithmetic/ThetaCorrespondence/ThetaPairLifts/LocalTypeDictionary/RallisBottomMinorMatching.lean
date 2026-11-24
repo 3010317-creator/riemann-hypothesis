@@ -445,8 +445,7 @@ theorem exists_star (n : ι → ℕ) (h : a + a' = a + a') :
     refine Finset.sum_congr rfl fun T _ => ?_
     ring
   have hlam : ∀ N : ι → Matrix (Fin (a + a')) (Fin (a + a')) ℂ, (∀ τ, (N τ).det ≠ 0) → lam n N ≠ 0 := by
-    intro N hN
-    exact Finset.prod_ne_zero_iff.mpr fun τ _ => pow_ne_zero _ (inv_ne_zero (hN τ))
+    exact fun N hN => Finset.prod_ne_zero_iff.mpr fun τ _ => pow_ne_zero _ (inv_ne_zero (hN τ))
   have hker : LinearMap.ker A ≤ LinearMap.ker B := by
     intro c hc
     rw [LinearMap.mem_ker] at hc ⊢
@@ -503,8 +502,7 @@ theorem exists_star (n : ι → ℕ) (h : a + a' = a + a') :
       fun τ => (κ τ : Matrix (Fin (a + a')) (Fin (a + a')) ℂ)ᵀ * N τ
     have hN' : ∀ τ, (N' τ).det ≠ 0 := by
       intro τ
-      simp only [N', Matrix.det_mul, Matrix.det_transpose]
-      exact mul_ne_zero (hκ τ) (hN τ)
+      simpa only [N', Matrix.det_mul, Matrix.det_transpose] using mul_ne_zero (hκ τ) (hN τ)
     have hX : xPt N' = fun y => ∑ i', (κ y.1 : Matrix (Fin (a + a')) (Fin (a + a')) ℂ).map (starRingEnd ℂ) i' y.2.1 *
         xPt N (y.1, i', y.2.2) := by
       funext ⟨τ, k, i⟩
@@ -798,8 +796,7 @@ theorem GlobalTheory.MinorFrame.exists_unitary_detChar_ne : ∀ {ι : Type} [Fin
       simp [g, hb]
     · simp
   rw [key, key]
-  intro h
-  exact hτ (hz.pow_inj (by omega) (by omega) h)
+  exact fun h => hτ (hz.pow_inj (by omega) (by omega) h)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryDetPowCharacterSeparatesWeights =====
@@ -1001,8 +998,7 @@ variable {ι : Type} [Fintype ι]
 theorem exists_unitary_eval_ne {a d : ℕ} (h : a ≤ d) (P : Pol ι d a) (hP : P ≠ 0) :
     ∃ κ : ι → Matrix.unitaryGroup (Fin d) ℂ,
       eval (basePt ι d a) (rowSub (fun τ => (κ τ : Matrix (Fin d) (Fin d) ℂ)) P) ≠ 0 := by
-  by_contra hall
-  push Not at hall
+  by_contra! hall
   apply hP
   let f : Var ι d a → MvPolynomial (ι × Fin d × Fin d) ℂ := fun y => X (y.1, Fin.castLE h y.2.2, y.2.1)
   have key : ∀ (Q : Pol ι d a) (w : ι × Fin d × Fin d → ℂ),
@@ -1415,15 +1411,13 @@ theorem exists_const_of_equivariant {a d : ℕ} (had : a ≤ d) (n₀ : ι → �
     · exfalso
       have : (v : Pol ι d a) ∈ V ⊓ LinearMap.ker (F - c • q) := by
         refine Submodule.mem_inf.2 ⟨v.2, ?_⟩
-        rw [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.smul_apply, sub_eq_zero]
-        exact hFv
+        rwa [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.smul_apply, sub_eq_zero]
       have h' : (v : Pol ι d a) ∈ (⊥ : Submodule ℂ (Pol ι d a)) := h0 ▸ this
       exact hv.2 (Subtype.ext ((Submodule.mem_bot ℂ).1 h'))
     · intro P hP
       have : P ∈ V ⊓ LinearMap.ker (F - c • q) := by rw [hV']; exact hP
       have := LinearMap.mem_ker.1 (Submodule.mem_inf.1 this).2
-      rw [LinearMap.sub_apply, LinearMap.smul_apply, sub_eq_zero] at this
-      exact this
+      rwa [LinearMap.sub_apply, LinearMap.smul_apply, sub_eq_zero] at this
   refine ⟨c, ?_, hall⟩
   rintro rfl
   obtain ⟨P, hP, hFP⟩ := hF
@@ -1481,8 +1475,7 @@ theorem quot_minor_eq_const_smul_compl : ∀ (D : D7) {a a' d : ℕ} (had : a + 
       inv_mul_cancel₀ (detChar_unitary_ne_zero n₀ κ), one_smul]
 
   have hF : ∃ P ∈ inv (ι := D.what₂.Tau) a d n₀, F P ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     obtain ⟨x, hx⟩ := exists_ne (0 : Pr)
     obtain ⟨P', rfl⟩ := hq's x
     obtain ⟨P₀, hP₀, he⟩ := _root_.GlobalTheory.MinorFrame.exists_mem_inv_eq_of_twisted a' d n₀ Pr q' hq' P'
@@ -1674,8 +1667,7 @@ theorem theta_bottom_minor_match : _root_.GlobalTheory.FunPr.ThetaLocalInputs �
       obtain ⟨Φ₀, hΦ₀, hd, hmod, hI⟩ := hc Ψ hΨ
       have hp0 : p' Φ₀ = 0 := by
         have := kerp' hd
-        rw [LinearMap.mem_ker, map_sub, hp, zero_sub, neg_eq_zero] at this
-        exact this
+        rwa [LinearMap.mem_ker, map_sub, hp, zero_sub, neg_eq_zero] at this
       have h1 := hI 0 (zero_mem _) (by rw [map_zero, hp0])
       have h2 : thetaInt (X.ω t) X.m X.fd 0 = 0 := by funext h; simp [thetaInt, thetaKO_zero]
       rw [h2] at h1
@@ -1722,8 +1714,7 @@ theorem theta_bottom_minor_match : _root_.GlobalTheory.FunPr.ThetaLocalInputs �
       map_add' := fun P Q => by
         show X.I' W.ψ W.θ t (P + Q) = X.I' W.ψ W.θ t P + X.I' W.ψ W.θ t Q
         rw [← eI', ← eI', ← eI', map_add (f := _)]; funext h
-        simp only [thetaInt, thetaKO_add, Pi.add_apply]
-        exact integral_add (iI' t P h) (iI' t Q h)
+        simpa only [thetaInt, thetaKO_add, Pi.add_apply] using integral_add (iI' t P h) (iI' t Q h)
       map_smul' := fun c P => by
         show X.I' W.ψ W.θ t (c • P) = c • X.I' W.ψ W.θ t P
         rw [← eI', ← eI', map_smul]; funext h
@@ -1758,8 +1749,7 @@ theorem theta_bottom_minor_match : _root_.GlobalTheory.FunPr.ThetaLocalInputs �
     apply hinj t
     rw [map_smul, map_smul, ← hlamJ, hJ]
     funext h
-    simp only [Pi.smul_apply, smul_eq_mul]
-    exact (hc t).2.2 h
+    simpa only [Pi.smul_apply, smul_eq_mul] using (hc t).2.2 h
   have hlam1 : lam t₁ ≠ 0 := fun h0 => by
     have := heq t₁
     rw [h0, zero_smul] at this

@@ -167,8 +167,7 @@ private theorem pars_abs (a b : ℕ → ℂ) (ha : Summable a) (hb : Summable b)
   have e : (fun n => conj (b n) * a n) = fun n => a n * conj (b n) := by
     funext n
     ring
-  rw [e]
-  exact hB
+  rwa [e]
 
 private theorem line_exp (k L : ℕ) [NeZero L] (f : CuspForm (Gamma1 L) (k : ℤ)) (y : ℝ) (hy : 0 < y) (x : ℝ) :
     HasSum (fun n : ℕ => coef f n * (Real.exp (-(2 * Real.pi * n) * y) : ℂ) * ex n x) (f (pt x y)) := by
@@ -190,8 +189,7 @@ private theorem line_exp (k L : ℕ) [NeZero L] (f : CuspForm (Gamma1 L) (k : �
     congr 1
     push_cast
     linear_combination (-(2 * (Real.pi : ℂ) * n * y)) * Complex.I_sq
-  rw [e]
-  exact hs
+  rwa [e]
 
 end UpperTheory.V.Af.Rs
 
@@ -218,5 +216,4 @@ theorem UpperTheory.V.Af.Rs.pars :
       Real.exp_add]
     push_cast
     ring
-  rw [e]
-  exact h
+  rwa [e]

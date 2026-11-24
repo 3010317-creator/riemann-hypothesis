@@ -199,8 +199,7 @@ private theorem exists_rational_solution_of_semilinear {K E : Type*} [Field K] [
   have hBA : LinearMap.toMatrix' g * Matrix.of a = 1 := by
     ext i j
     have := congrFun (hg' (Pi.single j 1)) i
-    rw [← LinearMap.toMatrix'_mulVec g] at this
-    rw [Matrix.mulVec_mulVec, Matrix.mulVec_single_one] at this
+    rw [← LinearMap.toMatrix'_mulVec g, Matrix.mulVec_mulVec, Matrix.mulVec_single_one] at this
     simpa [Matrix.one_apply, Pi.single_apply] using this
   have hAy : ((Matrix.of a).map σ).mulVec y = fun i => σ (c i) := by
     funext i
@@ -231,8 +230,7 @@ theorem liftMat_inj (hK : X.KFormL) (hZ : X.CrdZL cr b) (hT : Formalism.IndefR.R
       rcases mul_eq_zero.mp he.symm with h | h
       · exact absurd h hnP'
       · exact inner_self_eq_zero.mp h
-    intro u u' h
-    exact h1 (h2 h)
+    exact fun u u' h => h1 (h2 h)
   obtain ⟨N, ψ, hψ, hψθ, hψw⟩ := hT j
   have hcolM : ∀ k, X.w0C b j (fun l => X.liftMatC cr b j t l k) = X.tC cr b j t (Pi.single k 1) := by
     intro k
@@ -285,8 +283,7 @@ theorem liftMat_inj (hK : X.KFormL) (hZ : X.CrdZL cr b) (hT : Formalism.IndefR.R
     have hmem : X.jL j t (cr.toL X.zs b j t x) ∈ LinearMap.range (LinearMap.adjoint (X.θ' j t)) :=
       hZ j t x
     refine Formalism.IndefR.Cx.eq_zero_of_range_adjoint (X.θ' j t) hmem ?_
-    rw [← htC]
-    exact hT0
+    rwa [← htC]
   have htoL : cr.toL X.zs b j t x = 0 := jL_eq_zero X hK j t _ hjz
   exact hinjL (htoL.trans (map_zero _).symm)
 
@@ -307,8 +304,7 @@ theorem pos_of_inner {n : ℕ} (Y : InfinitePlace K → Matrix (Fin n) (Fin n) �
   rw [hw2, hm, ← Complex.ofReal_mul, Complex.ofReal_inj] at h
   have hpos : 0 < ‖w‖ ^ 2 := by have := norm_pos_iff.mpr hw; positivity
   have hs0 : 0 ≤ ∑ i, ‖Formalism.HermitianLatticesTheory.fcoord (Pi.basisFun K _) Y v x i‖ ^ 2 := Finset.sum_nonneg fun i _ => by positivity
-  by_contra hl
-  push Not at hl
+  by_contra! hl
   have := mul_nonpos_of_nonpos_of_nonneg hl hs0
   linarith
 
@@ -704,8 +700,7 @@ theorem integral_eWf_move : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T
       actG0 (Wc D i) (R.βW i) (R.datWp i R.triv) (R.eG g) ((R.HW i σ).e (R.gW i σ g⁻¹ z) (fun ρ => v ρ)) := by
     intro g z
     have e := congrArg (fun T : MMap (R.MW i σ) => T (fun ρ => v ρ)) (hgW i σ g (R.gW i σ g⁻¹ z))
-    rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply] at e
-    exact e
+    rwa [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply] at e
   have hper : ∀ g : G,
       IntegrableOn (fun h => star (actG0 (Wc D i) (R.βW i) (R.datWp i R.triv) (R.eG g) Φ h) *
         (R.HW i σ).e y (fun ρ => v ρ) h) (R.fdW i) (R.νW i) ∧
@@ -720,8 +715,7 @@ theorem integral_eWf_move : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T
         rw [hS g z]
         simp only [actG0, dite_eq_right hk]
       constructor
-      · simp only [h0, Pi.zero_apply, mul_zero]
-        exact integrableOn_zero
+      · simpa only [h0, Pi.zero_apply, mul_zero] using integrableOn_zero
       · simp only [h0, Pi.zero_apply, mul_zero]
   have eL : ∀ h, star (R.eWf i σ Φ h) * (R.HW i σ).e y (fun ρ => v ρ) h =
       ∑ g, starRingEnd ℂ (RealDat.eC (A := A) σ g) *

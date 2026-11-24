@@ -119,8 +119,7 @@ private theorem UpperTheory.V.Loc.mem_closure_of_kernel_containment {G k J : Typ
     have ha : CommGroup.monoidHomMonoidHomEquiv A k η = 1 := by
       refine Subtype.ext (funext fun j => ?_)
       have hj := CommGroup.apply_monoidHomMonoidHomEquiv k (e j) η
-      rw [hη _ (Subgroup.subset_closure ⟨j, rfl⟩)] at hj
-      exact hj
+      rwa [hη _ (Subgroup.subset_closure ⟨j, rfl⟩)] at hj
     rw [← CommGroup.apply_monoidHomMonoidHomEquiv k ψ η, ha, map_one]
   have key : ∀ φ ∈ Subgroup.closure (Set.range e),
       φ.comp Φ.rangeRestrict ∈ Subgroup.closure (Set.range χ) := by

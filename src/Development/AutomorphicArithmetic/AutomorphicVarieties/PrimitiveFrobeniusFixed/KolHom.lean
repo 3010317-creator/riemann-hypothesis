@@ -53,8 +53,7 @@ section
 variable {Ω : Type} [Field Ω] [Algebra ℚ Ω]
 
 private theorem opP_mul' (δ : G ℚ Ω) (a : ℕ) (x y : Ω) : opP δ a (x * y) = opP δ a x * opP δ a y := by
-  simp only [opP, map_mul, mul_pow]
-  exact mul_div_mul_comm _ _ _ _
+  simpa only [opP, map_mul, mul_pow] using mul_div_mul_comm _ _ _ _
 
 private theorem opP_ne' (δ : G ℚ Ω) (a : ℕ) {x : Ω} (hx : x ≠ 0) : opP δ a x ≠ 0 :=
   div_ne_zero ((map_ne_zero δ).2 hx) (pow_ne_zero _ hx)
@@ -111,8 +110,7 @@ theorem UpperTheory.V.ML.kolHom :
       opP_eq' hM hδ (by rw [hY₀]; exact hy) (hY.trans hY₀.symm)
     have e2 : opP δ a z = opP δ a z₀ :=
       opP_eq' hM hδ (by rw [hz₀]; exact hgy g) (hz.trans hz₀.symm)
-    rw [e1, e2]
-    exact hκ
+    rwa [e1, e2]
   have hmul : ∀ u ∈ fixMu ℚ Ω F, ∀ v ∈ fixMu ℚ Ω F, κ (u * v) = κ u + κ v := by
     intro u hu v hv
     obtain ⟨zu, -, hzu, hκu⟩ := hK' u hu
@@ -177,5 +175,4 @@ theorem UpperTheory.V.ML.kolHom :
   filter_upwards [hS.mem_nhds hx] with w hw
   have hw' : (x : G ℚ Ω)⁻¹ * w ∈ fixMu ℚ Ω F := gbF hw.1
   have e := hmul x x.2 _ hw'
-  rw [mul_inv_cancel_left, hH0 _ hw, add_zero] at e
-  exact e
+  rwa [mul_inv_cancel_left, hH0 _ hw, add_zero] at e

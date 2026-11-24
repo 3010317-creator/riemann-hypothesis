@@ -90,8 +90,7 @@ private theorem l_unit_of_charZero (l : ℕ) [Fact l.Prime] (Ω : Type) [Field �
     IsUnit (l : Γ(UpperTheory.Gal.G3.sp Ω, ⊤)) := by
   have h1 : (l : Ω) ≠ 0 := Nat.cast_ne_zero.mpr (Fact.out : l.Prime).ne_zero
   have h2 : IsUnit (l : Ω) := isUnit_iff_ne_zero.mpr h1
-  have h3 := h2.map (Scheme.ΓSpecIso (CommRingCat.of Ω)).commRingCatIsoToRingEquiv.symm
-  simpa using h3
+  simpa using h2.map (Scheme.ΓSpecIso (CommRingCat.of Ω)).commRingCatIsoToRingEquiv.symm
 
 private theorem pullTot_comp_apply (l : ℕ) [Fact l.Prime] {X Y Z : Scheme.{0}} (f : X ⟶ Y) (g : Y ⟶ Z) (x) :
     pullTot l (sch.map (f ≫ g)) x = pullTot l (sch.map f) (pullTot l (sch.map g) x) := by
@@ -119,8 +118,7 @@ theorem UpperTheory.etaleCohomology_corrOp_comm_pullback :
   have hS0 : Splits s (pullback.snd c u ≫ u) fun j => σ₁ j ≫ v := by
     have h := SB.1 s c J σ (pullback.fst c u) hS
     simp only [σ₁v]
-    rw [← pullback.condition]
-    exact h
+    rwa [← pullback.condition]
   have hS₁ : Splits s₁ (pullback.snd c u) σ₁ := (SB.2 v s₁ s u hv (pullback.snd c u) J σ₁ σ₁s).2 hS0
   have hOp : (et l (sp Ω')).IsOp q₁ q₁ s₁ t₁ A₁ := (pOpEt l q₁ q₁ s₁ t₁ hq A₁).2 hA₁
   have key := (OE _ hT q₁ q₁ s₁ t₁ hq).2 A₁ hOp _ (pullback.snd c u ≫ q₁) (pullback.snd c u) rfl J σ₁
@@ -390,8 +388,7 @@ private theorem bij_bc :
     pullTot_bij_of_deg l _ fun n => hV l Ω Ω' j hl p n 0
   have hu : u = h.isoPullback.hom ≫ pullback.fst p (Spec.map (CommRingCat.ofHom j)) :=
     (h.isoPullback_hom_fst).symm
-  rw [hu, Functor.map_comp, pullTot_comp]
-  rw [LinearMap.coe_comp]
+  rw [hu, Functor.map_comp, pullTot_comp, LinearMap.coe_comp]
   exact (pullTot_bij_of_iso l (sch.mapIso h.isoPullback)).comp hb
 
 theorem UpperTheory.Gal.G3.locTower_of :

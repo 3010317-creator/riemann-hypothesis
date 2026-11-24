@@ -460,8 +460,7 @@ theorem UpperTheory.exists_continuous_isGam_of_torus_cocycle :
       exact (algebraMap ℚ_[l] E).injective.comp (IsFractionRing.injective ℤ_[l] ℚ_[l])
     refine isOfFinOrder_iff_pow_eq_one.2 ⟨2 * e - 1, by have := hD.e_pos; omega, ?_⟩
     apply Units.map_injective (f := (algebraMap ℤ_[l] E : ℤ_[l] →* E)) inj
-    rw [map_pow, map_one]
-    exact h1
+    rwa [map_pow, map_one]
   have hbot : H0dual ((cycA l l E).comp (MonoidHom.id (GQ l))) (resCoef E (chRep T.χ2)) = ⊥ := by
     rw [eq_bot_iff]
     intro f hf
@@ -617,8 +616,7 @@ theorem UpperTheory.exists_crystalline_triangular_lift_of_mem_finiteCocycles :
     simp only [div_eq_mul_inv, MonoidHom.mul_apply, Units.val_mul, Prod.smul_mk, smul_eq_mul]
     ext <;> simp only [] <;> ring
   have hc' : (fun g => ((c g).1, y g)) = c := funext fun g => by rw [← hc2 g]
-  rw [hT, hc']
-  exact hcT
+  rwa [hT, hc']
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.ExistsCrystallineTriangularLiftOfMemFiniteCocycl =====
@@ -823,8 +821,7 @@ private theorem exp_onto {B : Type} [CommRing B] [Algebra ℚ B] :
         rw [mul_pow, ← pow_mul, pow_eq_zero_of_le (by omega : k + 1 ≤ 2 * (k / 2 + 1)) hn, zero_mul]
       obtain ⟨y, hy, hey⟩ := ih (k / 2) (by omega) _ hm
       refine ⟨n + y, nil_add hnil hy, ?_⟩
-      rw [exp_add_of_commute (Commute.all n y) hnil hy, hey]
-      exact h1
+      rwa [exp_add_of_commute (Commute.all n y) hnil hy, hey]
 
 private theorem cont_exp {l : ℕ} [Fact l.Prime] {B : Type} [CommRing B] [Algebra ℚ B] [Algebra ℚ_[l] B]
     [TopologicalSpace B] [IsTopologicalRing B] [ContinuousSMul ℚ_[l] B] {X : Type} [TopologicalSpace X]
@@ -837,8 +834,7 @@ private theorem cont_exp {l : ℕ} [Fact l.Prime] {B : Type} [CommRing B] [Algeb
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [Algebra.smul_def, smul_pow]
   simp only [e]
-  refine continuous_finsetSum _ fun i _ => ?_
-  exact continuous_const.mul ((hf.pow i).smul continuous_const)
+  exact continuous_finsetSum _ fun i _ => continuous_const.mul ((hf.pow i).smul continuous_const)
 
 private theorem continuous_exp_nilpotent_pair {l : ℕ} [Fact l.Prime] {B : Type} [CommRing B] [Algebra ℚ B] [Algebra ℚ_[l] B]
     [TopologicalSpace B] [IsTopologicalRing B] [ContinuousSMul ℚ_[l] B] {X : Type} [TopologicalSpace X]
@@ -912,8 +908,7 @@ private theorem tor_ext {l : ℕ} [Fact l.Prime] {η : GQ l →* ℤˣ} {B B' : 
     exact ⟨fun g hg i => (key g i).1 (hI g hg i), fun i => (key σ i).1 (hs i)⟩
   have htop := Subgroup.topologicalClosure_minimal _ hle hS
   rw [frobDense σ hσ] at htop
-  intro i
-  exact (key g i).2 (htop (Subgroup.mem_top g) i)
+  exact fun i => (key g i).2 (htop (Subgroup.mem_top g) i)
 
 private theorem scal_cocycle {l : ℕ} [Fact l.Prime] {η : GQ l →* ℤˣ} (hI : ∀ g ∈ Iq l, η g = 1)
     (hlc : IsLocallyConstant η) {σ : GQ l} (hσ : IsFrob σ) :
@@ -1074,8 +1069,7 @@ theorem UpperTheory.exists_torus_lift_to_nilpotent_thickening :
   have hπexp : ∀ g i, π (exp (a g i)) = 1 := by
     intro g i
     have h0 := hEnil _ ((isNilpotent_exp_sub_one (han g i)).map π)
-    rw [map_sub, map_one, sub_eq_zero] at h0
-    exact h0
+    rwa [map_sub, map_one, sub_eq_zero] at h0
   have hG : T.Good π Ψ := by
     refine ⟨fun i => ?_, fun i => ?_, fun g hg i => ?_, fun g i => ?_⟩
     · have e1 : (fun g => (T.t g i : B)) =
@@ -1228,8 +1222,7 @@ theorem UpperTheory.exists_unipotent_from_torus_coords :
           linear_combination (((T.t g 0 / T.t g 1 : Bˣ) : B) * ((T.t g 1 / T.t g 2 : Bˣ) : B) *
             (β g').1 * (β g').2 - ((T.t g 1 / T.t g 2 : Bˣ) : B) * (β g).1 * (β g').1) * hh
     · simp only [F, SemidirectProduct.mul_right, map_mul]
-  refine ⟨MonoidHom.mk' F hmul, ?_⟩
-  exact Tor.Coord.mk (fun g => rfl) (fun g => rfl)
+  exact ⟨MonoidHom.mk' F hmul, Tor.Coord.mk (fun g => rfl) (fun g => rfl)⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.ExistsUnipotentFromTorusCoords =====
@@ -1633,8 +1626,7 @@ private theorem gamCr : LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] 
     exact Submodule.neg_mem _ (diff z₀ (resH u H r1) cz₀ (fun g => cu.mat g)).1
   have cχ := T.continuous_χ2 hD.ηlc hT.cont hT.cont_inv
   have cρ : Continuous fun g => (ρ g : Matrix (Fin 3) (Fin 3) B) := by
-    simp only [hρ]
-    exact continuous_triM hch.cont cx cy cz
+    simpa only [hρ] using continuous_triM hch.cont cx cy cz
   have fac : ∀ g : H, GG.ofGL (ρ g) = GG.ofGL (nE ((z - z₀) g)) * u g := by
     intro g
     refine SemidirectProduct.ext (Units.ext ?_) (by simp [r1 g g.2])

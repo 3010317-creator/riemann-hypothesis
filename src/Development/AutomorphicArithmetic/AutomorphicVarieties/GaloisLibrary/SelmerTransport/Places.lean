@@ -103,8 +103,7 @@ theorem UpperTheory.V.Base.places :
         change A.valuation (algebraMap k Ω ((x * y : 𝓞 k) : k)) < 1 at hxy
         change A.valuation (algebraMap k Ω (x : k)) < 1 ∨ A.valuation (algebraMap k Ω (y : k)) < 1
         simp only [map_mul] at hxy
-        by_contra h
-        push Not at h
+        by_contra! h
         have hx1 : A.valuation (algebraMap k Ω (x : k)) = 1 := le_antisymm (hOk x) h.1
         have hy1 : A.valuation (algebraMap k Ω (y : k)) = 1 := le_antisymm (hOk y) h.2
         rw [hx1, hy1, one_mul] at hxy
@@ -133,8 +132,7 @@ theorem UpperTheory.V.Base.places :
       have hz : IsIntegral A z := by
         obtain ⟨q, hqm, hq⟩ := Algebra.IsIntegral.isIntegral (R := k) z
         refine ⟨q.map f, hqm.map f, ?_⟩
-        rw [Polynomial.eval₂_map, hcomp]
-        exact hq
+        rwa [Polynomial.eval₂_map, hcomp]
       obtain ⟨y, rfl⟩ := (IsIntegrallyClosed.isIntegral_iff (R := A) (K := Ω)).mp hz
       exact y.2
     exact ⟨⟨p, hprime, hne⟩, fun x => Iff.rfl⟩
@@ -173,8 +171,7 @@ theorem UpperTheory.V.Base.places :
         intro h
         apply hne
         have h' : w * t = t := by rw [h, one_mul]
-        rw [hw, mul_assoc, hst, mul_one] at h'
-        exact h'
+        rwa [hw, mul_assoc, hst, mul_one] at h'
       have hsI : IsIntegral ℤ s := htI.pow _
       have hwI : IsIntegral ℤ w := huI.mul hsI
       have hval : A.valuation (w - 1) < 1 := by

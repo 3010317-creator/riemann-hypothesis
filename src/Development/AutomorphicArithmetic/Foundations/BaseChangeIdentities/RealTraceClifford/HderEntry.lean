@@ -84,8 +84,7 @@ theorem UpperTheory.RealTr.basic :
     exact Units.ext rfl
   refine ⟨?_, hmem, ?_, ?_, ?_⟩
   · exact isOpen_ne_fun (continuous_id.matrix_det) continuous_const
-  · intro X
-    exact (hmem _).2 (Matrix.isUnit_exp X)
+  · exact fun X => (hmem _).2 (Matrix.isUnit_exp X)
   · intro X g t
     refine (hasDerivAt_pi (φ := fun s : ℝ => (g * NormedSpace.exp (s • X) : Mat n))).2 fun i => ?_
     refine (hasDerivAt_pi (φ := fun s : ℝ => (g * NormedSpace.exp (s • X) : Mat n) i)).2 fun j => ?_
@@ -102,8 +101,7 @@ theorem UpperTheory.RealTr.basic :
       rfl
     show HasDerivAt (fun s : ℝ => (g * NormedSpace.exp (s • X) : Mat n) i j)
       ((g * NormedSpace.exp (t • X) * X : Mat n) i j) t
-    rw [e1, e2]
-    exact hs
+    rwa [e1, e2]
   · intro U _ _ π
     have hone : piM π 1 = 1 := by
       have := hval π 1
@@ -116,8 +114,7 @@ theorem UpperTheory.RealTr.basic :
       simp only [Units.val_mul, IsUnit.unit_spec, map_mul] at this
       rw [this, ← hval π ug.unit, ← hval π uh.unit]
       simp
-    · intro k
-      exact hval π (uG k)
+    · exact fun k => hval π (uG k)
     · intro v v' h
       apply ext_inner_left ℂ
       intro w

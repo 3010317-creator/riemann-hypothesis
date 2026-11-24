@@ -91,9 +91,7 @@ private theorem mk_finprod_congr {K : Type} [Field K] [NumberField K] (S : Set (
     unfold Function.HasFiniteMulSupport
     apply hf.subset
     intro v hv
-    simp only [Set.mem_setOf_eq]
-    intro h0
-    exact hv (by simp [h0])
+    simpa only [Set.mem_setOf_eq] using fun h0 => hv (by simp [h0])
   have e1 := (QuotientGroup.mk' (clSub S)).map_finprod (hfm f hf)
   have e2 := (QuotientGroup.mk' (clSub S)).map_finprod (hfm g hg)
   simp only [QuotientGroup.mk'_apply] at e1 e2
@@ -143,8 +141,7 @@ theorem UpperTheory.V.Kum.radClSurj :
     apply hv
     simp [h0]
   · have hf := FractionalIdeal.finite_factors (I : FractionalIdeal (nonZeroDivisors (𝓞 K)) K)
-    rw [Filter.eventually_cofinite] at hf
-    exact hf
+    rwa [Filter.eventually_cofinite] at hf
   · intro v hv
     rw [hcount v hv, Int.mul_ediv_cancel_left _ hn']
 end -- clump:auto

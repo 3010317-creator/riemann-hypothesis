@@ -98,8 +98,7 @@ private theorem exists_rep {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : 
     · ext y
       simp [Set.mem_smul_set_iff_inv_smul_mem]
     · rw [ae_restrict_iff' (measurableSet_fundamentalDomain (Gam K n)), ae_iff] at h2
-      refine measure_mono_null (fun y hy => ?_) h2
-      exact fun h => hy.1 (h hy.2)
+      exact measure_mono_null (fun y hy => (fun h => hy.1 (h hy.2))) h2
   have h4 : ∀ᵐ y ∂μ, (hm.toLp f) (mk (Gam K n) y) = f (mk (Gam K n) y) := ae_iff.2 h3
   filter_upwards [h4] with y hy
   rw [hy, hf]
@@ -148,8 +147,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.thBasic :
         have hC0 : 0 ≤ C := le_trans (mul_nonneg (norm_nonneg _) hp.le) hb
         rw [← ENNReal.ofReal_mul hC0, ← ofReal_norm_eq_enorm]
         refine ENNReal.ofReal_le_ofReal ?_
-        rw [← div_eq_mul_inv, le_div_iff₀ hp]
-        exact hb
+        rwa [← div_eq_mul_inv, le_div_iff₀ hp]
     choose δ hδ hb using key
     have hinj : Function.Injective δ := fun q q' h => by rw [← hδ q, h, hδ]
     refine (ENNReal.tsum_le_tsum hb).trans ?_

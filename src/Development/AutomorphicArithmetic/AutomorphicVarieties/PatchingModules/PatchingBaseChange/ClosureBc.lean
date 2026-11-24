@@ -53,8 +53,7 @@ private theorem cbc_krull {B E : Type} [CommRing B] [IsLocalRing B] [IsNoetheria
     [Module B E] [Module.Finite B E] (x : E)
     (hx : ∀ N : ℕ, x ∈ (maximalIdeal B ^ N) • (⊤ : Submodule B E)) : x = 0 := by
   have h := Ideal.iInf_pow_smul_eq_bot_of_isLocalRing (M := E) (maximalIdeal B) (maximalIdeal.isMaximal B).ne_top
-  rw [← Submodule.mem_bot B, ← h, Submodule.mem_iInf]
-  exact hx
+  rwa [← Submodule.mem_bot B, ← h, Submodule.mem_iInf]
 
 private theorem cbc_lin {B E : Type} [CommRing B] [AddCommGroup E] [Module B E] (I : Ideal B)
     (f : E →ₗ[B] E) {x : E} (hx : x ∈ I • (⊤ : Submodule B E)) : f x ∈ I • (⊤ : Submodule B E) := by
@@ -172,5 +171,4 @@ theorem UpperTheory.V.Pa.BC.closure_bc :
       · rw [map_add]; exact add_mem hx hy
     have := key _ (hU u hu)
     rw [map_sub, map_one, hψ, hsing] at this
-    rw [map_sub, map_one]
-    exact this
+    rwa [map_sub, map_one]

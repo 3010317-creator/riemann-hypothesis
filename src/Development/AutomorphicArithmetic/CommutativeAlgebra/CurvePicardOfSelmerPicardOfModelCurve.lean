@@ -384,8 +384,7 @@ private lemma val_unif {k B : Type} [Field k] [CommRing B] [IsDedekindDomain B] 
       exact I.add_mem (I.mul_mem_left _ hy) (I.mul_mem_left _ hx)
   obtain ⟨ϖ, hϖ⟩ := P.intValuation_exists_uniformizer
   have hϖP : ϖ ∈ P.asIdeal := by
-    rw [← P.intValuation_lt_one_iff_mem, hϖ]
-    rw [← WithZero.exp_zero, WithZero.exp_lt_exp]
+    rw [← P.intValuation_lt_one_iff_mem, hϖ, ← WithZero.exp_zero, WithZero.exp_lt_exp]
     norm_num
   have hϖI : ϖ ∈ I := by
     have := hdec ϖ
@@ -535,13 +534,11 @@ theorem UpperTheory.tensor_dedekind_local_uniformizer :
       simp only [E, Finset.mem_union, Finset.mem_image]
       exact Or.inr ⟨y, hyY, rfl⟩)
     have hrU : r y ∈ U := by
-      simp only [U, Finset.mem_union, Finset.mem_image]
-      exact Or.inr ⟨y, hyY, rfl⟩
+      simpa only [U, Finset.mem_union, Finset.mem_image] using Or.inr ⟨y, hyY, rfl⟩
     refine ⟨r₀, w₀, hnot (r y) hrU r₀ hr₀, ?_⟩
     have hι : Spz R φ (ι y ⊗ₜ[k] (1 : B)) (algebraMap k B (χ y)) := by
       have := hc (ρ y) 1
-      rw [Algebra.algebraMap_eq_smul_one]
-      exact this
+      rwa [Algebra.algebraMap_eq_smul_one]
     have hzs : Spz R φ (z y) (y - algebraMap k B (χ y)) := (har _ _ _ _ (hy y) hι).2.2
     have h1 := (har _ _ _ _ hr₀ hzs).2.1
     have h2 := (har _ _ _ _ hw₀ hπ₀).2.1
@@ -558,8 +555,7 @@ theorem UpperTheory.tensor_dedekind_local_uniformizer :
       c * x = u * π ^ n → P.intValuation c₀ = WithZero.exp (-(n : ℤ)) := by
     intro c x u c₀ n hc₀ hxU huU hrel
     have hUE : ∀ v ∈ U, v ∈ E := fun v hv => by
-      simp only [E, Finset.mem_union]
-      exact Or.inl (Or.inl hv)
+      simpa only [E, Finset.mem_union] using Or.inl (Or.inl hv)
     obtain ⟨x₀, hx₀⟩ := hex x (hUE x hxU)
     obtain ⟨u₀, hu₀⟩ := hex u (hUE u huU)
     have h1 := (har _ _ _ _ hc₀ hx₀).2.1
@@ -679,8 +675,7 @@ theorem UpperTheory.finite_kummerSelmer_on_prime_stratum :
       rw [hp, map_zero, map_zero]
   let x : Fin n → L := fun i => ι (MvPolynomial.X i)
   have hx : ∀ p, MvPolynomial.aeval x p = ι p := by
-    intro p
-    exact (DFunLike.congr_fun (MvPolynomial.aeval_unique ι) p).symm
+    exact fun p => (DFunLike.congr_fun (MvPolynomial.aeval_unique ι) p).symm
   let F : L ⊗[k] K := ∑ i, x i ⊗ₜ[k] v i
   have hspz := UpperTheory.specialization_tensor_ring_hom_properties k L K
   have hsum : ∀ (R : Subalgebra k L) (φ : R →ₐ[k] k) (hxR : ∀ i, x i ∈ R),
@@ -709,8 +704,7 @@ theorem UpperTheory.finite_kummerSelmer_on_prime_stratum :
     refine hT R hxR φ hs f hfS ?_
     have := hsum R φ hxR
     simp only [hφ] at this
-    rw [hfc]
-    exact this
+    rwa [hfc]
   by_cases hF : F = 0
   · refine wrap ∅ ∅ ?_
     intro R hxR φ _ f _ hf
@@ -769,9 +763,7 @@ theorem UpperTheory.finite_kummerSelmer_on_prime_stratum :
     let b : L ⊗[k] B i := 1 ⊗ₜ[k] (d : B i)
     have hdK : ((d : B i) : K) ≠ 0 := by
       intro h0
-      have : (d : B i) = 0 := by
-        apply IsFractionRing.injective (B i) K
-        exact h0.trans (map_zero _).symm
+      have : (d : B i) = 0 := IsFractionRing.injective (B i) K (h0.trans (map_zero _).symm)
       exact nonZeroDivisors.coe_ne_zero d this
     have hbu : IsUnit (inc L (B i) b) := by
       have hinc : inc L (B i) b = 1 ⊗ₜ[k] ((d : B i) : K) := by simp [b, inc]
@@ -816,8 +808,7 @@ theorem UpperTheory.finite_kummerSelmer_on_prime_stratum :
     have hb0K := (hspzB.1 R φ).2.2.2 K (B i).val b b0 hb0s
     have hmul := ((hspz.1 R φ).2.1 _ _ _ _ hf hb0K).2.1
     have hmul' : Spz R φ (inc L (B i) a) ((f : K) * (B i).val b0) := by
-      rw [← hFab]
-      exact hmul
+      rwa [← hFab]
     have heq : (f : K) * (B i).val b0 = (B i).val a0 := (hspz.1 R φ).1 _ _ _ hmul' ha0K
     have hk : ∀ c : k, algebraMap k K c ∈ (algebraMap (B i) K).range :=
       fun c => ⟨algebraMap k (B i) c, rfl⟩
@@ -828,9 +819,7 @@ theorem UpperTheory.finite_kummerSelmer_on_prime_stratum :
         IsDedekindDomain.HeightOneSpectrum.valuation_of_algebraMap, hz, WithZero.log_exp, neg_neg]
     have hb0ne : (B i).val b0 ≠ 0 := by
       intro h0
-      have hb00 : b0 = 0 := by
-        apply IsFractionRing.injective (B i) K
-        exact h0.trans (map_zero _).symm
+      have hb00 : b0 = 0 := IsFractionRing.injective (B i) K (h0.trans (map_zero _).symm)
       rw [hb00, map_zero] at hPb
       exact WithZero.exp_ne_zero hPb.symm
     have hordmul := (Place.ofHeightOneSpectrum (B i) hk P).ord_mul f.ne_zero hb0ne
@@ -846,8 +835,7 @@ theorem UpperTheory.finite_kummerSelmer_on_prime_stratum :
       change (Place.ofHeightOneSpectrum (B i) hk P).ord (algebraMap (B i) K a0) = _ at hordmul
       rw [h1, h2] at hordmul
       linarith
-    rw [← hfo]
-    exact hdiv
+    rwa [← hfo]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.FiniteKummerSelmerOnPrimeStratum =====
@@ -946,8 +934,7 @@ theorem UpperTheory.finite_kernel_powClasses_of_primitive_root :
   have hbb : ∀ a ∈ S, algebraMap K K' (a : K) = bb a ^ q := by
     intro a ha
     have ha' : ∃ b : K', algebraMap K K' (a : K) = b ^ q := ha
-    simp only [bb, dite_eq_left ha']
-    exact ha'.choose_spec
+    simpa only [bb, dite_eq_left ha'] using ha'.choose_spec
   have hbb0 : ∀ a ∈ S, bb a ≠ 0 := by
     intro a ha h0
     have h := hbb a ha
@@ -972,8 +959,7 @@ theorem UpperTheory.finite_kernel_powClasses_of_primitive_root :
   intro a ha
   have hex : ∃ a' ∈ S, sig a' = sig a := ⟨a, ha, rfl⟩
   have htS : rep (sig a) ∈ S ∧ sig (rep (sig a)) = sig a := by
-    simp only [rep, dite_eq_left hex]
-    exact hex.choose_spec
+    simpa only [rep, dite_eq_left hex] using hex.choose_spec
   refine ⟨rep (sig a), Finset.mem_image.mpr ⟨sig a, hfin.mem_toFinset.mpr ⟨a, ha, rfl⟩, rfl⟩, ?_⟩
   set t := rep (sig a) with ht
   have hat := hbb0 a ha

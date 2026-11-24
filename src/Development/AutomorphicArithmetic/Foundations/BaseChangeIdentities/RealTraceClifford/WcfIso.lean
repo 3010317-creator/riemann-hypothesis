@@ -262,12 +262,10 @@ private theorem chSym_mv {n : ℕ} {W : Type*} [AddCommGroup W] [Module ℂ W] (
   intro c
   by_cases hca : c = a
   · rw [hca]
-    simp only [Function.comp_apply, Equiv.swap_apply_left]
-    exact hP
+    simpa only [Function.comp_apply, Equiv.swap_apply_left] using hP
   by_cases hcb : c = b
   · rw [hcb]
-    simp only [Function.comp_apply, Equiv.swap_apply_right]
-    exact hQ
+    simpa only [Function.comp_apply, Equiv.swap_apply_right] using hQ
   simp only [Function.comp_apply, Equiv.swap_apply_of_ne_of_ne hca hcb]
   have e := LinearMap.congr_fun (h5 c hca hcb).eq x
   simp only [Module.End.mul_apply] at e
@@ -294,11 +292,7 @@ private theorem chSym_swap {n : ℕ} {V : Type} [NormedAddCommGroup V] [InnerPro
   have hu5 := chSym_anti hu1 hu2 hu3
   let Bs : Module.End ℂ S := B.restrict (fun x hx => hB.2 x hx)
   have cBR : ∀ i j, Commute Bs (R i j) := by
-    intro i j
-    apply LinearMap.ext
-    intro y
-    apply Subtype.ext
-    exact LinearMap.congr_fun (hB.1 i j) (y : V)
+    exact fun i j => LinearMap.ext (fun y => Subtype.ext (LinearMap.congr_fun (hB.1 i j) (y : V)))
   have cBX : Commute Bs (R a b - R b a) := (cBR a b).sub_right (cBR b a)
   obtain ⟨cBu, cBu'⟩ := hu4 Bs cBX
   obtain ⟨cHu, cHu'⟩ := hu4 _ c3
@@ -353,8 +347,7 @@ private theorem chSym_swap {n : ℕ} {V : Type} [NormedAddCommGroup V] [InnerPro
   have back : ∀ x, x ∈ wsp F (μ ∘ Equiv.swap a b) ⊓ S → (U' * B) x ∈ wsp F μ ⊓ S := by
     intro x hx
     have e := mvU' _ _ (mB _ x hx)
-    rw [hsw] at e
-    exact e
+    rwa [hsw] at e
   have k1 : u' * Bs * u = Bs := by rw [← cBu'.eq, mul_assoc, hu2, mul_one]
   have k2 : u * u' * Bs = Bs := by rw [hu1, one_mul]
   have t3 := (trAdd V U).2.2.1 (wsp F μ ⊓ S) (wsp F (μ ∘ Equiv.swap a b) ⊓ S) (U' * B) (fd _) (fd _)
@@ -373,8 +366,7 @@ private theorem chSym_swap {n : ℕ} {V : Type} [NormedAddCommGroup V] [InnerPro
       trOn (wsp F (μ ∘ Equiv.swap a b) ⊓ S) B := by
     refine ((trAdd V (U * (U' * B))).2.1 _ B 1 (fun x hx => ?_)
       (fun x hx => mB _ x hx)).2.2 ?_
-    · have e := mvU μ _ (back x hx)
-      exact e
+    · exact mvU μ _ (back x hx)
     · intro x hx
       have hxS := (Submodule.mem_inf.1 hx).2
       show U (U' (B x)) = B x
@@ -1072,8 +1064,7 @@ theorem UpperTheory.RealTr.wcfForm :
       have h4 := hR1 lam ρ hlamS.antitone hρ.antitone w
       have e1 : ∑ a, lam a * lam a = ∑ a, lam a * ν a + ∑ a, lam a * ρ a := hsplit lam
       exact hw1 (h4.2 hlamS hρ (le_antisymm h4.1 (by linarith)))
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   obtain ⟨s, hs, hf⟩ := asymExp n _ hA
   have hsub : s ⊆ {lam} := fun x hx => Finset.mem_singleton.mpr (hone x (hs x hx).1 (hs x hx).2)
   rw [← hcoef]
@@ -1082,8 +1073,7 @@ theorem UpperTheory.RealTr.wcfForm :
     have z := (hlin 0 0 0 lam).2
     rw [zero_smul, zero_mul] at z
     rw [hf, z, zero_smul]
-  · rw [h, Finset.sum_singleton] at hf
-    exact hf
+  · rwa [h, Finset.sum_singleton] at hf
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1124,8 +1114,7 @@ theorem UpperTheory.RealTr.wcfIso :
       rw [hch μ, hbot, inf_bot_eq, trOn_bot]
     have hz : ∀ x : Wt n, cf (0 : FR n) x = 0 := by
       intro x
-      have h := (cfB.2.2.2.1 0 0 0 x).2
-      simpa using h
+      simpa using (cfB.2.2.2.1 0 0 0 x).2
     rw [hS, trOn_bot, zero_smul]
     apply cfB.2.2.1
     intro x

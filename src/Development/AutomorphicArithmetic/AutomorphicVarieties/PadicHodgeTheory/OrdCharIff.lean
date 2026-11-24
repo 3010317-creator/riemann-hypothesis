@@ -52,10 +52,8 @@ private theorem algPow_ne {F : Type} [Field F] [NumberField F] {l : ℕ} [Fact l
     (hh : (F →+* Qbar l) → ℤ) (x : (w.adicCompletion F)ˣ) : algPow w hh (x : w.adicCompletion F) ≠ 0 := by
   unfold algPow
   apply finprod_induction (fun z : Qbar l => z ≠ 0) one_ne_zero
-  · intro a b ha hb
-    exact mul_ne_zero ha hb
-  · intro j
-    exact zpow_ne_zero _ ((map_ne_zero _).mpr x.ne_zero)
+  · exact fun a b ha hb => mul_ne_zero ha hb
+  · exact fun j => zpow_ne_zero _ ((map_ne_zero _).mpr x.ne_zero)
 
 private theorem algPow_mul {F : Type} [Field F] [NumberField F] {l : ℕ} [Fact l.Prime] (w : Plc F)
     (hh : (F →+* Qbar l) → ℤ) (x y : w.adicCompletion F) : algPow w hh (x * y) = algPow w hh x * algPow w hh y := by

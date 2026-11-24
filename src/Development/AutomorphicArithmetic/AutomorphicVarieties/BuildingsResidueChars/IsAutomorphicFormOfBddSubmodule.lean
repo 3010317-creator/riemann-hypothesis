@@ -93,11 +93,9 @@ private theorem UpperTheory.adjoin_apply_mem_of_invariant_submodule {V : Type} [
     rw [Module.algebraMap_end_apply]
     exact U.smul_mem r hu
   | add x y _ _ hx hy =>
-    intro u hu
-    exact U.add_mem (hx u hu) (hy u hu)
+    exact fun u hu => U.add_mem (hx u hu) (hy u hu)
   | mul x y _ _ hx hy =>
-    intro u hu
-    exact hx _ (hy u hu)
+    exact fun u hu => hx _ (hy u hu)
 
 theorem UpperTheory.finiteDimensional_span_adjoin_apply_of_commuting_algebraic :
     ∀ (V : Type) [AddCommGroup V] [Module ℂ V] (s : Set (Module.End ℂ V)) (v : V), (∀ a ∈ s, ∀ b ∈ s, a * b = b * a) → FiniteDimensional ℂ (Submodule.span ℂ s) → (∀ a ∈ s, ∃ P : Polynomial ℂ, P ≠ 0 ∧ Polynomial.aeval a P v = 0) →
@@ -112,7 +110,6 @@ theorem UpperTheory.finiteDimensional_span_adjoin_apply_of_commuting_algebraic :
     have hle : U g ≤ (U g).comap b := by
       rw [Submodule.span_le]
       rintro _ ⟨z, hz, rfl⟩
-      show b (z v) ∈ U g
       exact Submodule.subset_span ⟨b * z, Subalgebra.mul_mem _ (Algebra.subset_adjoin hb) hz, rfl⟩
     exact hle hw
   have hvU : ∀ g : Set (Module.End ℂ V), v ∈ U g :=

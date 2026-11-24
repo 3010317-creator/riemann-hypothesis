@@ -345,8 +345,7 @@ theorem UpperTheory.V.Ws.Gys.extRep :
     refine Prod.ext ?_ ?_
     · apply Subtype.ext
       change ((c.val • (1 : A) : A) : k) = 0
-      rw [AddSubmonoidClass.coe_nsmul]
-      exact hp
+      rwa [AddSubmonoidClass.coe_nsmul]
     · funext j
       apply Subtype.ext
       change ((c.val • (0 : V) : V) : k) = 0
@@ -520,8 +519,7 @@ theorem UpperTheory.V.Ws.Gys.ccEx :
     intro w hw
     have hφ : ∀ a, (starRingEnd ℂ) (w.embedding a) = w.embedding a := by
       intro a
-      have h := ComplexEmbedding.isReal_iff.1 (InfinitePlace.isReal_iff.1 hw)
-      exact RingHom.congr_fun h a
+      exact RingHom.congr_fun (ComplexEmbedding.isReal_iff.1 (InfinitePlace.isReal_iff.1 hw)) a
     letI : Algebra F ℂ := w.embedding.toAlgebra
     let e : Ω ≃ₐ[F] algebraicClosure F ℂ := IsAlgClosure.equiv F Ω (algebraicClosure F ℂ)
     let κ : ℂ →ₐ[F] ℂ :=
@@ -544,8 +542,7 @@ theorem UpperTheory.V.Ws.Gys.ccEx :
         exact j.commutes a
       rw [hj, InfinitePlace.mk_embedding]
   refine ⟨fun w => if hw : w.IsReal then (key w hw).choose else 1, fun w hw => ?_⟩
-  simp only [dite_eq_left hw]
-  exact (key w hw).choose_spec
+  simpa only [dite_eq_left hw] using (key w hw).choose_spec
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.RamifiedLineCharacters.CcOne =====
@@ -626,8 +623,7 @@ theorem UpperTheory.V.Ws.Gys.locNe :
       ext x
       simp [ReciprocityTheory.Gal.H0, hρ]
     rw [htop, Nat.card_congr Submodule.topEquiv.toEquiv, Nat.card_zmod, pow_one]
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   haveI hz : Subsingleton ↥(ReciprocityTheory.Gal.Z1 ρ) :=
     ⟨fun a b => Subtype.ext ((hne a a.2).trans (hne b b.2).symm)⟩
   haveI hs : Subsingleton (ReciprocityTheory.Gal.H1 ρ) :=
@@ -772,8 +768,7 @@ theorem UpperTheory.V.Ws.Gys.ramCard :
     simp only [fn, hg1, one_smul] at h4
     rw [add_right_cancel h4]
   have hc := Nat.card_le_card_of_injective F hF
-  rw [Nat.card_prod, Nat.card_eq_fintype_card (α := Bool), Fintype.card_bool] at hc
-  exact hc
+  rwa [Nat.card_prod, Nat.card_eq_fintype_card (α := Bool), Fintype.card_bool] at hc
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.RamifiedLineCharacters.RamCard =====
@@ -855,8 +850,7 @@ theorem UpperTheory.V.Ws.Gys.selMem :
       refine (QuotientGroup.eq_one_iff g).2 ?_
       apply Subgroup.le_topologicalClosure
       apply Subgroup.subset_normalClosure
-      simp only [Set.mem_iUnion]
-      exact ⟨v, hv, A, hAv, hg⟩
+      simpa only [Set.mem_iUnion] using ⟨v, hv, A, hAv, hg⟩
     show f.1 (toGS Ω _ g) = 0
     rw [h2, h1]
   · have h := hloc ⟨v, hS hv⟩
@@ -893,8 +887,7 @@ variable {R Γ M : Type} [CommRing R] [Group Γ] [TopologicalSpace Γ] [AddCommG
   [DiscreteTopology M]
 
 private theorem coc_one {ρ : Representation R Γ M} {c : Γ → M} (hc : c ∈ Z1 ρ) : c 1 = 0 := by
-  have h := hc.2 1 1
-  simpa using h
+  simpa using hc.2 1 1
 
 private def killSub (ρ : Representation R Γ M) {c : Γ → M} (hc : c ∈ Z1 ρ) : Subgroup Γ where
   carrier := {g | ρ g = 1 ∧ c g = 0}
@@ -966,8 +959,7 @@ theorem UpperTheory.V.Ws.Gys.zunrFin :
   obtain ⟨a, rfl⟩ := QuotientGroup.mk_surjective x
   obtain ⟨b, rfl⟩ := QuotientGroup.mk_surjective y
   have e := hc.2 a b
-  rw [← hcomp] at e
-  exact e
+  rwa [← hcomp] at e
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.RamifiedLineCharacters.ZunrFin =====
@@ -1084,8 +1076,7 @@ theorem UpperTheory.V.Ws.Gys.splitPrimes :
   set M : ℕ := ∏ q ∈ hfin.toFinset, q with hM
   have hM0 : M ≠ 0 := by
     rw [hM, Finset.prod_ne_zero_iff]
-    intro q hq
-    exact ((hfin.mem_toFinset.mp hq).1).ne_zero
+    exact fun q hq => ((hfin.mem_toFinset.mp hq).1).ne_zero
   obtain ⟨w, A, p, σ, -, hp, hpM, -, hpw, hnorm, -, hpl, hIne, hfr, hσ⟩ :=
     UpperTheory.V.Loc.v00 (F := ℚ) U hUo 1 ∅ M hM0
   have hσU : σ ∈ U := by simpa using hσ
@@ -1162,8 +1153,7 @@ theorem UpperTheory.V.Ws.Gys.placesQ :
   have hrng := (UpperTheory.V.Base.galEmbTop ℚ T.F Ω).2.1
   have hoe : Topology.IsOpenEmbedding (UpperTheory.V.Base.galEmb ℚ T.F Ω) := by
     refine ⟨hemb, ?_⟩
-    rw [← MonoidHom.coe_range, UpperTheory.V.Base.range_galEmb]
-    exact hrng
+    rwa [← MonoidHom.coe_range, UpperTheory.V.Base.range_galEmb]
   have hmo : IsOpen ((U.map (resQ T.F) : Subgroup (G ℚ Ω)) : Set (G ℚ Ω)) := by
     rw [Subgroup.coe_map]
     exact hoe.isOpenMap _ hU
@@ -1174,8 +1164,7 @@ theorem UpperTheory.V.Ws.Gys.placesQ :
   let f : ℕ → HeightOneSpectrum (𝓞 T.F) := fun w => if hw : w.Prime then (ex_place T.F hw).choose else v0
   have hf : ∀ w (hw : w.Prime), (w : 𝓞 T.F) ∈ (f w).asIdeal := by
     intro w hw
-    simp only [f, dite_eq_left hw]
-    exact (ex_place T.F hw).choose_spec
+    simpa only [f, dite_eq_left hw] using (ex_place T.F hw).choose_spec
   have himg := hinf.image (f := f) (by
     intro a ha b hb hab
     exact prime_eq (f a) ha.1 hb.1 (hf a ha.1) (by rw [hab]; exact hf b hb.1))
@@ -1190,12 +1179,10 @@ theorem UpperTheory.V.Ws.Gys.placesQ :
     refine Subgroup.mem_inf.mpr ⟨Subgroup.mem_inf.mpr ⟨?_, hg2⟩, hg3⟩
     obtain ⟨σ, -, rfl⟩ := Subgroup.mem_map.mp hg1
     rw [IntermediateField.mem_fixingSubgroup_iff]
-    intro x hx
-    exact σ.commutes ⟨x, hx⟩
+    exact fun x hx => σ.commutes ⟨x, hx⟩
   · intro A hA σ hσ
     have hv : A.valuation (w : Ω) < 1 := by
-      have h0 := (hA (w : 𝓞 T.F)).mpr (hf w hwp)
-      simpa using h0
+      simpa using (hA (w : 𝓞 T.F)).mpr (hf w hwp)
     have hdec : resQ T.F σ ∈ Dec (F := ℚ) A := by
       rw [mem_Dec] at hσ ⊢
       exact hσ
@@ -1219,8 +1206,7 @@ private theorem val_nat {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alge
     A.valuation (n : Ω) < 1 ↔ (n : 𝓞 F) ∈ v.asIdeal := by
   have h1 := h ((n : ℕ) : 𝓞 F)
   have e : algebraMap F Ω (((n : ℕ) : 𝓞 F) : F) = (n : Ω) := by simp
-  rw [e] at h1
-  exact h1
+  rwa [e] at h1
 
 private theorem fin_over (F : Type) [Field F] [NumberField F] (U : Finset ℕ) (hU : ∀ p ∈ U, p ≠ 0) :
     ∃ S : Finset (HeightOneSpectrum (𝓞 F)), ∀ v, v ∈ S ↔ ∃ p ∈ U, (p : 𝓞 F) ∈ v.asIdeal := by
@@ -1230,8 +1216,7 @@ private theorem fin_over (F : Type) [Field F] [NumberField F] (U : Finset ℕ) (
       have h0 : Ideal.span {(p : 𝓞 F)} ≠ ⊥ := by
         rw [Ne, Ideal.span_singleton_eq_bot]
         exact_mod_cast hU p hp
-      refine (Ideal.finite_factors h0).subset fun v hv => ?_
-      exact Ideal.dvd_span_singleton.2 hv
+      exact (Ideal.finite_factors h0).subset fun v hv => Ideal.dvd_span_singleton.2 hv
     refine (Set.Finite.biUnion U.finite_toSet h1).subset fun v hv => ?_
     obtain ⟨p, hp, hv⟩ := hv
     exact Set.mem_biUnion hp hv

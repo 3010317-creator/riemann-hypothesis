@@ -248,8 +248,7 @@ theorem natCast_mem_of_over {PP PP' : PlE D.host} {v : HeightOneSpectrum (𝓞 (
     (h' : NG.OverPl PP' v) {p : ℕ} (hp : (p : 𝓞 D.host.E) ∈ PP.asIdeal) : (p : 𝓞 D.host.E) ∈ PP'.asIdeal := by
   have h1 : (p : 𝓞 (maximalRealSubfield D.host.E)) ∈ v.asIdeal := by
     rw [← h, Ideal.mem_comap, map_natCast]; exact hp
-  rw [← h', Ideal.mem_comap, map_natCast] at h1
-  exact h1
+  rwa [← h', Ideal.mem_comap, map_natCast] at h1
 
 theorem red_one' (hP : IdFrame hF P) {v : HeightOneSpectrum (𝓞 (maximalRealSubfield D.host.E))} {κ : GAf D.host.E D.R.nV}
     (hU : κ ∈ Umax D.host.E D.R.nV) (h : TrivOutside {v} κ) {PP : PlE D.host} (hs : ∃ s : SplitPlace D.host.E, s.w = PP)
@@ -404,8 +403,7 @@ theorem joint_of {Y : R3.Read (A3 := A3) R.toRealDat F.lv2 X0} {M : MtFam D} (ad
       exact GlobalTheory.LevelTypePlace.not_two_primes PP.asIdeal (D.host.g_prime k) hq (hqg k).symm hk
         (GlobalTheory.LevelTypePlace.natCast_mem_of_card PP hcard hq.ne_zero)
     · have := rat.lvl (R.eG.symm (cG.symm g))
-      rw [MulEquiv.trans_apply, MulEquiv.apply_symm_apply, MulEquiv.apply_symm_apply] at this
-      exact this
+      rwa [MulEquiv.trans_apply, MulEquiv.apply_symm_apply, MulEquiv.apply_symm_apply] at this
     · have e : (R.eG.trans cG) (R.eG.symm (cG.symm g)) = g := by
         rw [MulEquiv.trans_apply, MulEquiv.apply_symm_apply, MulEquiv.apply_symm_apply]
       have := rat.psi ⟨R.eG.symm (cG.symm g), h⟩ (e.symm ▸ h')
@@ -475,8 +473,7 @@ theorem joint_of {Y : R3.Read (A3 := A3) R.toRealDat F.lv2 X0} {M : MtFam D} (ad
           Lev.levChi (Vc D j) 1 ((ser.ex.ρ.B i j b).levS (ser.ex.ρ.tw i b k Q ψ)) ((ad.PV j).ψ κ) := by
         rw [← hβ]; rfl
       rw [← e3]
-      simp only [GlobalTheory.FormInner.frameEquiv_apply] at h4
-      exact h4
+      simpa only [GlobalTheory.FormInner.frameEquiv_apply] using h4
 
 end Rows
 

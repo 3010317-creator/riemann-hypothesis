@@ -155,8 +155,7 @@ private theorem inv_rows (p : GL (Fin n) k) (i : Fin n)
     intro ha j hj
     have e := congrFun (congrFun hq a) j
     rw [Matrix.mul_apply, Finset.sum_eq_single a] at e
-    · rw [(hp a ha).2, one_mul] at e
-      exact e
+    · rwa [(hp a ha).2, one_mul] at e
     · intro m _ hma
       rcases lt_or_gt_of_ne hma with hlt | hgt
       · rw [(hp a ha).1 m hlt, zero_mul]
@@ -267,9 +266,7 @@ private theorem rowStep {W : Type} [AddCommGroup W] [Module ℂ W] (τ : Represe
   have h1 : (1 : k) * (1 + w ⬝ᵥ y) = 1 := by rw [hdot']; ring
   have hu' := unip_of (tv y w 1 h1) y w i (tv_apply y w 1 h1) hy' hw'
   have hcu' := chr_of ψ t (tv y w 1 h1) y w i c (tv_apply y w 1 h1) hy' hw' hc hwc
-  have hconj : p * tv x e 1 h0 = tv y w 1 h1 * p := by
-    apply Units.ext
-    exact conj_eq p x c
+  have hconj : p * tv x e 1 h0 = tv y w 1 h1 * p := Units.ext (conj_eq p x c)
   have eq1 : l (τ (p * tv x e 1 h0) v) = chr ψ t (tv x e 1 h0) * l (τ p v) := by
     rw [map_mul, Module.End.mul_apply, hv _ hu hK, map_smul, map_smul, smul_eq_mul]
   have eq2 : l (τ (tv y w 1 h1 * p) v) = chr ψ t (tv y w 1 h1) * l (τ p v) := by
@@ -278,8 +275,7 @@ private theorem rowStep {W : Type} [AddCommGroup W] [Module ℂ W] (τ : Represe
   have eq3 := mul_right_cancel₀ hW eq1
   rw [hcu, hcu'] at eq3
   have eq4 : ψ (t i * y i) = ψ (t i * x i) := Subtype.ext (by exact_mod_cast eq3)
-  rw [hyv] at eq4
-  exact eq4
+  rwa [hyv] at eq4
 
 
 private theorem exists_mem_Kc_rows_unitriangular (p : GL (Fin n) k) (i : Fin n)
@@ -293,10 +289,8 @@ private theorem exists_mem_Kc_rows_unitriangular (p : GL (Fin n) k) (i : Fin n)
   have hdv : ∀ j, valuation k (d j) < 1 := by
     intro j
     by_cases hj : j ≤ i
-    · simp only [d, ite_eq_left hj]
-      exact hd j hj
-    · simp only [d, ite_eq_right hj, map_zero]
-      exact zero_lt_one
+    · simpa only [d, ite_eq_left hj] using hd j hj
+    · simpa only [d, ite_eq_right hj, map_zero] using zero_lt_one
   have hint : ∀ j, d j ∈ 𝒪[k] := fun j => (Valuation.mem_integer_iff _ _).2 (hdv j).le
   have hI := Valuation.integer.integers (valuation k)
   have hmax : ∀ x : 𝒪[k], valuation k (x : k) < 1 → x ∈ 𝓂[k] := by
@@ -371,8 +365,7 @@ private theorem exists_mem_Kc_rows_unitriangular (p : GL (Fin n) k) (i : Fin n)
       have hrow : ∀ j, Q a j = P a j := by
         intro j
         have := hq a j
-        rw [hai, zero_mul, add_zero] at this
-        exact this
+        rwa [hai, zero_mul, add_zero] at this
       exact ⟨fun j hj => by rw [hrow]; exact hz j hj, by rw [hrow]; exact h1⟩
 
 private theorem descent {W : Type} [AddCommGroup W] [Module ℂ W] (τ : Representation ℂ (GL (Fin n) k) W)
@@ -414,8 +407,7 @@ private theorem descent {W : Type} [AddCommGroup W] [Module ℂ W] (τ : Represe
             ring
         rw [e, AddChar.map_sub_eq_div, hs s, div_self']
       have h3 := lev_lt ψ hψ _ h2
-      rw [map_mul, ht i, one_mul] at h3
-      exact h3
+      rwa [map_mul, ht i, one_mul] at h3
     obtain ⟨κ, hκ, hpk⟩ := exists_mem_Kc_rows_unitriangular p i hpi hd
     apply hW
     have e : τ (p * κ) v = τ p v := by

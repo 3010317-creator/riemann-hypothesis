@@ -61,7 +61,5 @@ theorem UpperTheory.V.KH.transport :
   · intro M N e B h
     obtain ⟨hfin, hcard⟩ := h
     exact ⟨Finite.of_equiv _ e, (Nat.card_congr e).symm ▸ hcard⟩
-  · intro M _ B B' hB h
-    exact ⟨h.1, h.2.trans hB⟩
-  · intro M B B' hB h
-    exact ⟨h.1, h.2.trans hB⟩
+  · exact fun M _ B B' hB h => ⟨h.1, h.2.trans hB⟩
+  · exact fun M B B' hB h => ⟨h.1, h.2.trans hB⟩

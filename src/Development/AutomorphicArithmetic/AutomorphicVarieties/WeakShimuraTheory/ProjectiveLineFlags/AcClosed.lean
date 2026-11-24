@@ -93,8 +93,7 @@ theorem UpperTheory.V.Ws.P1.rhoEx :
     have h1 : AdicCont I fun g : G T.L Ω => algebraMap c'.O R (K.κ g : c'.O) :=
       ac_map (algebraMap c'.O R) hI K.κ_cont
     have h2 : AdicCont I fun g : G T.L Ω => Q.r (resLe T.F_le g) a b := by
-      intro N
-      exact (hcont a b N).comp_continuous (P1.towerGal D T).2.2.1
+      exact fun N => (hcont a b N).comp_continuous (P1.towerGal D T).2.2.1
     exact ac_mul h1 h2
   have hker : K.V.pr.ker ≤ ρ'.ker := by
     apply (phiKer K.V).2.2 ρ'.ker
@@ -113,8 +112,7 @@ theorem UpperTheory.V.Ws.P1.rhoEx :
         intro hlt
         apply hv
         left
-        have hmem := (hAv (l : 𝓞 (W.Lp T.L))).mp (by simpa using hlt)
-        simpa using hmem
+        simpa using (hAv (l : 𝓞 (W.Lp T.L))).mp (by simpa using hlt)
       have hN : resLe T.F_le g ∈ (T.fr ∅).N := by
         change ∃ A', Raw.Away (insert l ∅) A' ∧ resLe T.F_le g ∈ Ine A' ∧
           D.rbar ((resQ T.F) (resLe T.F_le g)) = 1
@@ -123,8 +121,7 @@ theorem UpperTheory.V.Ws.P1.rhoEx :
           simp at hp
           subst hp
           exact hl
-        · rw [((P1.towerGal D T).2.2.2.2.1 g).1]
-          exact hr
+        · rwa [((P1.towerGal D T).2.2.2.2.1 g).1]
       rw [MonoidHom.mem_ker, ← Units.val_eq_one, hρ']
       show algebraMap c'.O R (K.κ g : c'.O) • Q.r (resLe T.F_le g) = 1
       rw [hκ, hpair.kill _ hN]

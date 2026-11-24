@@ -244,8 +244,7 @@ private theorem exists_unit {N l : ℕ} (hN : N ≠ 0) (hl : l.Prime) :
   obtain ⟨k, hk1, hk2⟩ := Nat.chineseRemainder hcop l 1
   have hc1 : Nat.Coprime k (ordCompl[l] N) := by
     unfold Nat.Coprime
-    rw [Nat.ModEq.gcd_eq hk1]
-    exact hcl
+    rwa [Nat.ModEq.gcd_eq hk1]
   have hc2 : Nat.Coprime k (ordProj[l] N) := by
     unfold Nat.Coprime
     rw [Nat.ModEq.gcd_eq hk2]
@@ -322,8 +321,7 @@ theorem UpperTheory.HF.artL_spec :
     · rw [Subgroup.zpowers_le, hart]
       exact (memT _).mpr ⟨hex.choose, 1, by simpa using hc1, rfl⟩
   have hu1 : ZMod.unitsMap hA hex.choose = lA := by
-    have h := (key hex.choose 1).mp (by simpa using hc1)
-    simpa using h
+    simpa using (key hex.choose 1).mp (by simpa using hc1)
   have hle2 : T ≤ UpperTheory.HF.Formalism.HC.HostRaw.decG H l := by
     intro g hg
     obtain ⟨u, k, hk, rfl⟩ := (memT g).mp hg
@@ -427,8 +425,7 @@ theorem UpperTheory.HF.diff_mult :
   have hvd : H.vdH l = (multiplicity P (differentIdeal ℤ (𝓞 H.E)) : ℝ) / H.el l := by
     have hr := congrArg (fun q : ℚ => (q : ℝ)) hrat
     push_cast at hr
-    simp only [HostRaw.vdH, Nat.padicValNat_def]
-    exact hr.symm
+    simpa only [HostRaw.vdH, Nat.padicValNat_def] using hr.symm
   have h1 : (multiplicity P (differentIdeal ℤ (𝓞 H.E)) : ℝ) = H.el l * H.vdH l := by
     rw [hvd]
     field_simp

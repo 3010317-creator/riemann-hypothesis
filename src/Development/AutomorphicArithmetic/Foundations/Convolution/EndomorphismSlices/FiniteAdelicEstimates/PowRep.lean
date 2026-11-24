@@ -99,8 +99,7 @@ theorem powRep : PowRep := by
       have e : max t₁.T t₁.r + (k : ℝ) * (R + A.blk.c) + R + A.blk.c =
           max t₁.T t₁.r + ((k + 1 : ℕ) : ℝ) * (R + A.blk.c) := by
         push_cast; ring
-      rw [e, mul_assoc, ← pow_succ] at h
-      exact h
+      rwa [e, mul_assoc, ← pow_succ] at h
   refine ⟨max t₁.T t₁.r + max t₂.T t₂.r + A.blk.c, R + A.blk.c, by positivity, by positivity, fun k => ?_⟩
   have h := hmul _ _ _ _ _ _ _ _ (step k) base₂
   rw [one_mul] at h

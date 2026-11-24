@@ -92,8 +92,7 @@ private theorem sf_pow {j : ℤ} {n : ℕ} {M : Submodule (𝒜 0) A} (h : M ≤
   | zero =>
     simp only [pow_zero, Nat.cast_zero, zero_mul]
     rw [Submodule.one_le]
-    refine ⟨SetLike.GradedOne.one_mem, ?_⟩
-    exact mem_fil_zero wt _
+    exact ⟨SetLike.GradedOne.one_mem, mem_fil_zero wt _⟩
   | succ k ih =>
     have := sf_mul 𝒜 wt φ ih h
     rw [pow_succ]
@@ -122,5 +121,4 @@ theorem UpperTheory.V.Alg.M.latfil_holds :
     (sf_pow 𝒜 wt φ h2 (μ 2)) hf
   have e1 : 2 * ((μ 1 : ℤ) - μ 0 - μ 2) = μ 0 * (-2) + μ 1 * 2 + μ 2 * (-2) := by ring
   have e2 : 2 * μ 0 + 4 * μ 2 = μ 0 * 2 + μ 1 * 0 + μ 2 * 4 := by ring
-  rw [e1, e2]
-  exact key
+  rwa [e1, e2]

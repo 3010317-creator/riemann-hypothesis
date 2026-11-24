@@ -76,8 +76,7 @@ private theorem coset_tr {G H : Type*} [Group G] [Group H] (f : G →* H) (hf : 
   have dec : ∀ (a : G) (c : G ⧸ L), c = QuotientGroup.mk a → ∃ l ∈ L, c.out = a * l := by
     intro a c hc
     have : (QuotientGroup.mk c.out : G ⧸ L) = QuotientGroup.mk a := by rw [QuotientGroup.out_eq', hc]
-    have h2 := QuotientGroup.eq.1 this.symm
-    exact ⟨_, h2, by group⟩
+    exact ⟨_, (QuotientGroup.eq.1 this.symm), by group⟩
   have imgOf : ∀ (p p' : G), t (f p) = f p' → ∀ u ∈ L, ∀ l ∈ L, ∃ g' u' l', u' ∈ L ∧ l' ∈ L ∧ g' = u' * p' * l' ∧ t (f (u * p * l)) = f g' := by
     intro p p' hp u hu l hl
     obtain ⟨u', hu', e1⟩ := hL u hu
@@ -366,8 +365,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.famNe :
       rwa [hi2] at this
     obtain ⟨M', hM', hcmp⟩ := exists_heckeAt_transport_of_linearIsometryEquiv 𝔵.A 𝔵.A' hty hle θ hinv hH hUθ 𝔵.s 𝔵.s_sec _ _ e1 _ (hMh _)
     have h2 := hecke_N hp 𝔵.A 𝔵.A' hty.level hle HE.1 HE'.1 N hN _ _ _ (hMh (hh i x')) hM' (𝔵.s w)
-    rw [hcmp] at h2
-    exact h2
+    rwa [hcmp] at h2
 
   obtain ⟨⟨s₀, hact, hs₀⟩, -⟩ := (uiwAct E μ _ 𝔵.τ₁ 𝔵.τ₂ hp S U hU 𝔵.D hty.level 𝔵.d 𝔵.d' 𝔵.A 𝔵.A' w₀ hw₀ hI ν)
   have hv0 : 𝔵.v 0 = s₀ := actUniq _ _ _ _ (hUq ▸ 𝔵.v_act 0) hact
@@ -375,8 +373,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.famNe :
   have hV : Mh (hh i₀ x₀) = (𝔵.v 0 0 : Eu 𝔵.d →ₗ[ℂ] Eu 𝔵.d) := by
     rw [hv0]
     refine (huniq _ _ ?_).symm
-    rw [hx₀]
-    exact hs₀
+    rwa [hx₀]
   have hinj : Function.Injective (Mh (hh i₀ x₀)) :=
     heckeInj E μ _ 𝔵.τ₁ 𝔵.τ₂ hp κ e hAL.idem S U hU 𝔵.D hty 𝔵.d 𝔵.A w₀ hw₀ hI ν hν _ (hx₀ ▸ hMh _)
   have hN0 : ∀ w, N (𝔵.u 0 0 w) = Mh (hh i₀ x₀) (N w) := by

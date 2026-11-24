@@ -339,8 +339,7 @@ private theorem cyclotomic_class_eq_of_frobenius {Ω : Type} [Field Ω] [CharZer
   have h1 := cyclotomicCharacter.spec p (MulSemiringAction.toRingAut (Ω ≃ₐ[ℚ] Ω) Ω γ) ζ hζ'
   have h2 : ((cyclotomicCharacter Ω p (MulSemiringAction.toRingAut (Ω ≃ₐ[ℚ] Ω) Ω γ) : ℤ_[p]ˣ) : ℤ_[p]) = (q : ℤ_[p]) := h
   rw [h2, map_natCast, ZMod.val_natCast, ← pow_eq_pow_mod _ hζ'] at h1
-  rw [hu, ZMod.val_natCast, ← pow_eq_pow_mod _ hζ]
-  exact h1
+  rwa [hu, ZMod.val_natCast, ← pow_eq_pow_mod _ hζ]
 
 private theorem valuation_prime_lt_one_exclusive {Ω : Type} [Field Ω] (A : ValuationSubring Ω) {p q : ℕ} (h : p.Coprime q)
     (hq : A.valuation (q : Ω) < 1) : ¬ A.valuation (p : Ω) < 1 := fun hp => by
@@ -519,8 +518,7 @@ theorem UpperTheory.V.Cu.RankFourGaloisLemmas.odd :
       exact sub_eq_zero.2 this⟩
     intro g hg
     have hk := ((omT Ω l c).2 D.om hT).2.1
-    rw [← MonoidHom.mem_ker, hk]
-    exact hg
+    rwa [← MonoidHom.mem_ker, hk]
   obtain ⟨a, ha⟩ : ∃ a : (ZMod h.N)ˣ, ψ.toUnitHom a ≠ 1 := by
     by_contra hc
     push Not at hc
@@ -549,8 +547,7 @@ theorem UpperTheory.V.Cu.RankFourGaloisLemmas.odd :
   refine ⟨u ^ 2 ^ n, orderOf ψ, hodd, hlm, hom _ ?_, e1, ?_, ?_⟩
   · rw [map_pow, hu' l (dvd_mul_right _ _), one_pow]
   · rw [e2, ← pow_mul, mul_comm, pow_mul, dirichlet_unit_pow_order_eq_one, one_pow]
-  · rw [e2]
-    exact h1
+  · rwa [e2]
 
 theorem UpperTheory.V.Cu.RankFourGaloisLemmas.unr :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c), Ctx3 D →
