@@ -436,7 +436,7 @@ local instance (priority := high) instModuleOCuspW_OrbitGeo (Xo : Moduli Dw l) (
 local instance (priority := high) instScalarTowerOCuspW_OrbitGeo (Xo : Moduli Dw l) (c : Coeff l) {r : ℕ}
     (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (G : WTZ E) :
     IsScalarTower (𝓞 c.F) c.F ↥(cuspW Xo c U G) :=
-  inferInstance
+  ⟨fun x y z => Subtype.ext (smul_assoc x y (z : Rul Xo c))⟩
 
 local instance (priority := high) instAddCommGroupCuspOn_OrbitGeo {Xo : Moduli Dw l} {c : Coeff l} {r : ℕ}
     (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (Z : Comp Xo c) (G : WTZ E) :
@@ -471,7 +471,7 @@ local instance (priority := high) instModuleOCuspOn_OrbitGeo {Xo : Moduli Dw l} 
 local instance (priority := high) instScalarTowerOCuspOn_OrbitGeo {Xo : Moduli Dw l} {c : Coeff l} {r : ℕ}
     (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (Z : Comp Xo c) (G : WTZ E) :
     IsScalarTower (𝓞 c.F) c.F ↥(cuspOn U Z G) :=
-  inferInstance
+  ⟨fun x y z => Subtype.ext (smul_assoc x y (z : Rul Xo c))⟩
 
 section Points
 
