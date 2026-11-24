@@ -1248,7 +1248,7 @@ theorem exportSt_of_hypotheses_alt (hC : GlobalTheory.Published.CuspRapidDecay) 
   have tC := _root_.GlobalTheory.TwistChr.twChr_of_twAdm_alt hA tA
   have row := _root_.GlobalTheory.BigOn.Exp.rowAt_of_alt hC hA hR hS _root_.GlobalTheory.BigOn.Exp.lowAt_holds_alt tA
   _root_.GlobalTheory.BigOn.Exp.InductionConditions.exportSt ⟨_root_.GlobalTheory.BigOn.Exp.canEx_holds_alt, _root_.GlobalTheory.BigOn.Exp.canProj_alt, tA, row, _root_.GlobalTheory.BigOn.Exp.tieRat_of_alt tA row, _root_.GlobalTheory.BigOn.Exp.recSide_of_twAdm_alt tA, _root_.GlobalTheory.BigOn.Exp.adaptEx_alt,
-    _root_.GlobalTheory.BigOn.Exp.conjBase_of_cusp_decay_and_reciprocity hC hA hR hS, _root_.GlobalTheory.BigOn.Exp.TwConj.conj_tw_of_prints hC hA hR hD hW hS tA tC, _root_.GlobalTheory.BigOn.Exp.baseLe_of_cusp_decay_and_ray_class_field hC hA hR, _root_.GlobalTheory.BigOn.Exp.baseGe_of_alt hC hA hR hS,
+    _root_.GlobalTheory.BigOn.Exp.conjBase_of_cusp_decay_and_reciprocity hC hA hR hS, _root_.GlobalTheory.BigOn.Exp.TwConj.conj_tw_of_prints hC hA hR hD hW hS tA tC, _root_.GlobalTheory.BigOn.Exp.baseLe_holds, _root_.GlobalTheory.BigOn.Exp.baseGe_of_alt hC hA hR hS,
     _root_.GlobalTheory.BigOn.Exp.TupLe.twLe_alt hC hA hR tA tC, _root_.GlobalTheory.BigOn.Exp.twGe_alt hC hA hR hS tA tC⟩
 end GlobalTheory.BigOn.Exp
 end
