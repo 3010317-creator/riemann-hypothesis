@@ -63,6 +63,11 @@ Dirichlet L-functions* (Section 1, p. 65)][xylouris2011], which proves the bound
 read in preparing this reference. This reference is a reader's proposal and has not been checked
 by a mathematician. -/
 @[wikidata Q2703389]
+/-- **Linnik's theorem on least prime in an arithmetic progression**: there exists an absolute
+constant $c$ such that the least prime $p \equiv a \pmod q$ with $\gcd(a, q) = 1$ satisfies $p \ll q^c$.
+
+Proposed reference:
+[U. V. Linnik, *On the least prime in an arithmetic progression. I. The basic theorem*][linnik1944leastprime]. -/
 def Linnik : Prop :=
   ∃ C L : ℝ, 0 < C ∧ 0 < L ∧ ∀ a q : ℕ, 1 ≤ a → 1 ≤ q → a.Coprime q →
     (leastPrimeMod a q : ℝ) ≤ C * (q : ℝ) ^ L
