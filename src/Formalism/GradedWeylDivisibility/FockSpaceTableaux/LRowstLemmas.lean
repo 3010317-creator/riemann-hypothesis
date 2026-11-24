@@ -80,27 +80,6 @@ theorem isWH_algHom (φ : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (w : σ
   have h := isWH_algHom_monomial φ w w' hφ s (AddMonoidAlgebra.coeff f s)
   rwa [hf (mem_support_iff.mp hs)] at h
 
-private theorem weightedHomogeneousComponent_self_of_isWH {w : σ → M} {p : MvPolynomial σ R} {m : M}
-    (hp : IsWeightedHomogeneous w p m) : weightedHomogeneousComponent w m p = p := by
-  classical
-  ext d
-  rw [coeff_weightedHomogeneousComponent]
-  split_ifs with h
-  · rfl
-  · by_contra hd
-    exact h (hp (Ne.symm hd))
-
-private theorem weightedHomogeneousComponent_eq_zero_of_isWH_ne {w : σ → M} {p : MvPolynomial σ R} {m μ : M}
-    (hne : m ≠ μ) (hp : IsWeightedHomogeneous w p m) : weightedHomogeneousComponent w μ p = 0 := by
-  classical
-  ext d
-  rw [coeff_weightedHomogeneousComponent]
-  simp only [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
-  split_ifs with h
-  · by_contra hd
-    exact hne ((hp hd).symm.trans h)
-  · rfl
-
 theorem algHom_weightedHomogeneousComponent (φ : MvPolynomial σ R →ₐ[R] MvPolynomial τ R)
     (w : σ → M) (w' : τ → M) (hφ : ∀ v, IsWeightedHomogeneous w' (φ (X v)) (w v)) (μ : M)
     (f : MvPolynomial σ R) :
@@ -115,9 +94,9 @@ theorem algHom_weightedHomogeneousComponent (φ : MvPolynomial σ R →ₐ[R] Mv
     isWeightedHomogeneous_monomial w s (AddMonoidAlgebra.coeff f s) rfl
   by_cases h : Finsupp.weight w s = μ
   · subst h
-    rw [weightedHomogeneousComponent_self_of_isWH hm, weightedHomogeneousComponent_self_of_isWH hs]
-  · rw [weightedHomogeneousComponent_eq_zero_of_isWH_ne h hm, weightedHomogeneousComponent_eq_zero_of_isWH_ne h hs,
-      map_zero]
+    rw [hm.weightedHomogeneousComponent_same, hs.weightedHomogeneousComponent_same]
+  · rw [hm.weightedHomogeneousComponent_ne μ (Ne.symm h),
+      hs.weightedHomogeneousComponent_ne μ (Ne.symm h), map_zero]
 
 end General
 
