@@ -535,7 +535,6 @@ theorem window (C : ℝ) (hC : 0 < C)
   obtain ⟨hp, h1, h2, h3⟩ := hS n hn
   refine mul_le_mul_of_nonneg_right ?_ (by positivity)
   have hn3 : (n : ℝ) ≤ 3 * x := by linarith
-  have hx3 : (2 * q * T) ^ 2 ≤ 3 * x := by linarith
   have hY : 2 * (q : ℝ) ≤ 2 * x / T := by
     rw [le_div_iff₀ hT0]
     have h2 : (2 : ℝ) * (2 * q * T) ≤ (2 * q * T) ^ 2 := by
@@ -580,7 +579,6 @@ theorem prime_mean_value : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q] (T N 
   obtain ⟨C, hC, hG⟩ := GlobalTheory.GallagherLemma.gallagher
   obtain ⟨B, hB0, hB⟩ := _root_.GlobalTheory.Lin.brun_titchmarsh_const
   refine ⟨C * (4 * B), by positivity, fun q _ T N y a hT hN => ?_⟩
-  have hT0 : 0 < T := by linarith
   have hδ : 0 ≤ 1 / T := by positivity
   have hN0 : 0 ≤ N := (sq_nonneg _).trans hN
   set P := primesIoc N y with hP
