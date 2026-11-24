@@ -543,7 +543,7 @@ theorem lieIrr_of [CompleteSpace H] (hσ : Formalism.MainNotions.S.IsURepOn (For
     have e2 := hL _ (ReciprocityTheory.ChartRestriction.DS.SmDerA.inG_cpart2 ε (Matrix.single a b 1)) (v : H) hv
     rw [dRep_eq_dS] at e1 e2
     exact S.add_mem e1 (S.smul_mem _ e2)
-  rcases GlobalTheory.HcPort.uIrr n ε H σ hσ hirr N hNK hst with h | h
+  rcases CompanionTheory.D.gk.HC.uIrr n ε H σ hσ hirr N hNK hst with h | h
   · left
     refine eq_bot_iff.2 fun v hv => ?_
     have hvN : (⟨v, h1 v (hS hv)⟩ : smD ε σ) ∈ N := hv
@@ -1137,7 +1137,7 @@ theorem infinitesimalEquivalence_unitaryGroupPQ : GlobalTheory.Published.Infinit
     rw [vAct_decomp hρ₁ hG₁ Y, vAct_decomp hρ₂ hG₂ Y]
     simp only [LinearMap.add_apply, LinearMap.smul_apply, map_add (f := _), map_smul, hX _ (cre_mem Y), hX _ (cim_mem Y)]
 
-  obtain ⟨cs, hcs⟩ := GlobalTheory.HcPort.casimirActsByScalar_indefUnitary n ε H₁ σ₁ hU₁ hI₁
+  obtain ⟨cs, hcs⟩ := CompanionTheory.D.gk.HC.casimirActsByScalar_indefUnitary n ε H₁ σ₁ hU₁ hI₁
   have hsm := (CompanionTheory.D.gk.HC.K_finite_smooth_vectors n ε H₁ σ₁ hU₁ hI₁).1
   have hcas : ∀ v, ReciprocityTheory.ChartRestriction.DS.casimir (vE hρ₁ hG₁) v = (cs : ℂ) • v := fun v => Subtype.ext (by
     have h1 := ReciprocityTheory.ChartRestriction.DS.casU_eq_casimir hD₁ v
@@ -1157,7 +1157,7 @@ theorem infinitesimalEquivalence_unitaryGroupPQ : GlobalTheory.Published.Infinit
     have hWK : ReciprocityTheory.ChartRestriction.DS.IsKStableSub ε (vE hρ₁ hG₁) W :=
       ReciprocityTheory.ChartRestriction.DS.isKStableSub_of_kStable hU₁ hD₁ W hWf fun k hk v hv =>
         ⟨⟨_, isKStableOn_kFinVec ε σ₁ k hk v v.2⟩, hSK k hk v hv, rfl⟩
-    have := GlobalTheory.HcPort.graphD hU₁ hU₂ hD₁ hD₂ (vE hρ₁ hG₁) LinearMap.id ((r : ℂ) • e.toLinearMap)
+    have := CompanionTheory.D.gk.HC.graphD hU₁ hU₂ hD₁ hD₂ (vE hρ₁ hG₁) LinearMap.id ((r : ℂ) • e.toLinearMap)
       (fun _ _ h => h) (fun _ _ _ => rfl)
       (fun a b v => by
         simp only [LinearMap.smul_apply, LinearEquiv.coe_coe, map_smul, vE, hcomm])
