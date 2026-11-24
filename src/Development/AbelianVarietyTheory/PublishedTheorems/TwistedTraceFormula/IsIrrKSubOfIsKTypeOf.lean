@@ -96,6 +96,13 @@ namespace GlobalTheory.Published
 
 open GlobalTheory.KFinVec
 
+/-- **Harish-Chandra's density theorem for K-finite vectors**: for any continuous unitary
+representation of a reductive Lie group `G` on a Hilbert space `H`, the subspace `H_K` of
+vectors transforming under finite-dimensional representations of the maximal compact subgroup `K`
+is dense in `H`.
+
+Proposed reference:
+[Harish-Chandra, *Representations of semisimple Lie groups. I*][harishChandra1953rep1]. -/
 def KFiniteVectorsUnitary : Prop :=
   ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
     [Nontrivial H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)),
