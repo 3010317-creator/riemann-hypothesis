@@ -282,7 +282,7 @@ def fdegHC {n : ℕ} (lam : Fin n → ℝ) : ℝ :=
 
 section SmoothH
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
+open scoped Matrix.Norms.Elementwise
 
 variable {n : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 

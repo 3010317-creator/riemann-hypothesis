@@ -54,7 +54,7 @@ open MeasureTheory Matrix Finset
 open scoped InnerProductSpace ContDiff
 open Formalism.MainNotions.S Formalism.MainNotions.CayleySignature Formalism.BasicNotions
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
+open scoped Matrix.Norms.Elementwise
 
 theorem discrete_series_unitary_rep {k r : ℕ} {ε : Fin (2 * r + k + 1) → Bool} {lam : Fin (2 * r + k + 1) → ℝ} {H : Type}
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] {σ : CayleySignature.Mat k r → (H →L[ℂ] H)} (hσ : IsDSHpk k r ε lam σ) :

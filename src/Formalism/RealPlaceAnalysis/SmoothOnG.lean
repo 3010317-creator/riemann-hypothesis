@@ -52,7 +52,7 @@ noncomputable section
 
 namespace Formalism.REAL
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
+open scoped Matrix.Norms.Elementwise
 
 def cpart1 {n : ℕ} (ε : Fin n → Bool) (Z : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ :=
   (1 / 2 : ℂ) • (Z - Jm ε * Zᴴ * Jm ε)
