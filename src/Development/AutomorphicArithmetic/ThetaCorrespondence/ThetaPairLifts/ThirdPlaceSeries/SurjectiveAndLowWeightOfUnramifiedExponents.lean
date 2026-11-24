@@ -1076,9 +1076,7 @@ theorem ontoX_and_lamLow_of_unitaryGroupHypotheses' :
       P.heckeLAdicCharacter P.chebotarevDegreeOne
       P.galoisRepOfPolarizedCuspidal P.baseChangeDefiniteUnitary
       P.bhattScholzeCrystallineLattices P.heckeLAdicCharacterAbove P.cuspRapidDecay
-      (_root_.UpperTheory.One.M.New.llOf_alt P.litN.loc.llc P.litN.loc.conv
-      P.litN.loc.dzi P.litN.loc.brauer P.litN.loc.chev P.globalArtinReciprocity P.litN.loc.exh
-      P.litN.loc.multi P.litN.loc.cos P.litN.loc.zel P.litN.loc.geo P.litN.loc.bz)
+      P.litN.loc.llc
       P.discreteSeriesCover P.casselmanWallach,
     _root_.GlobalTheory.BigTop.lamLow_of_hypotheses_alt_alt P.cuspRapidDecay P.weilSiegelFormulaUnitary
       P.siegelWeilUnitaryConvergent P.doublingMethod P.unramifiedDoublingGL

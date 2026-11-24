@@ -1536,8 +1536,7 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 namespace GlobalTheory.Mem.LiteralAutomorphy
 theorem localLanglandsGL_and_purity_at_member_alt : _root_.GlobalTheory.Mem.LiteralAutomorphy.LocalRepresentationTheoryHypothesesAlt → _root_.GlobalTheory.Mem.LiteralAutomorphy.GlobalAutomorphicGaloisHypotheses' → _root_.UpperTheory.Zero.LLC.RecTExists ∧ _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt := by
   intro L A
-  have hL : _root_.UpperTheory.Zero.LLC.RecTExists :=
-    _root_.GlobalTheory.T.recTExists_of_published_inputs L.llc L.conv L.dzi L.brauer L.chev A.art L.exh L.multi L.cos L.zel L.geo L.bz
+  have hL : _root_.UpperTheory.Zero.LLC.RecTExists := L.llc
   refine ⟨hL, ?_⟩
   have hG : GlobalTheory.GLq.Green := GlobalTheory.GreenBridge.green_of_regular L.green
   exact
