@@ -163,6 +163,12 @@ namespace GlobalTheory.Published
 
 open GlobalTheory.Branching
 
+/-- **Weyl branching law**: the restriction of any finite-dimensional irreducible representation
+of `GL_n(\mathbb{C})` (or `U(n)`) to `GL_{n-1}(\mathbb{C})` (or `U(n-1)`) decomposes multiplicity-free
+into irreducible representations whose highest weights interlace the original highest weight.
+
+Proposed reference:
+[H. Weyl, *The Classical Groups: Their Invariants and Representations*][weyl1939branching]. -/
 def WeylBranching : Prop :=
   ∀ (n N : ℕ) (h : n + 1 = N), 1 ≤ n → ∀ lam : DomWeight N,
     BranchesAlong (MonoidHom.id (GL (Fin n) ℂ)) h lam ∧ BranchesAlong (unitaryIncl n) h lam
