@@ -1,9 +1,66 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.Divisibility.GoodPartHermitianSpec
+public import Formalism.HermitianLattices.HermitianLatticesProofs.DualBasic
 public import Formalism.LocalToGlobal.Divisibility.ClassSumLemmas
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.AuxStatement14
 public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ClassSumDualGeOfFamily
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+public import Mathlib.LinearAlgebra.Matrix.Rank
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -164,9 +221,9 @@ private theorem dot_H_lemma {K : Type} [Field K] [NumberField K] [StarRing K] (S
   have hp : ∀ (x y : Fin S.dim → K) (u w : Fin S.dim → S.V),
       S.pair (∑ k, x k • u k) (∑ l, y l • w l) = ∑ k, ∑ l, star (x k) * y l * S.pair (u k) (w l) := by
     intro x y u w
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, map_smul, smul_eq_mul,
-      starRingEnd_apply, RingHom.id_apply, Finset.mul_sum]
+
+    simp only [map_sum, map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, map_smul, smul_eq_mul,
+    starRingEnd_apply, RingHom.id_apply, Finset.mul_sum]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun l _ => ?_
     ring
@@ -217,8 +274,8 @@ theorem group_action_matrix_adjoint : GaMatAdj := by
   intro K _ _ _ S G _ _ r hr a
   rw [S.gaMat_eq_lift r (gaStar a)]
   unfold gaStar
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   simp only [MonoidAlgebra.lift_single]
   unfold CSD.gaMat
   rw [Matrix.conjTranspose_sum, Finset.sum_mul, Finset.mul_sum]
@@ -237,8 +294,8 @@ theorem gaMat_lvlIdem (P : Subgroup G) (ψ : P →* Kˣ) :
       ∑ h : P, ((Nat.card P : K)⁻¹ * ((ψ h⁻¹ : Kˣ) : K)) • S.actMat r (h : G) := by
   rw [S.gaMat_eq_lift r]
   unfold lvlIdem
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   refine Finset.sum_congr rfl fun h _ => ?_
   rw [MonoidAlgebra.lift_single]
   rfl
@@ -758,8 +815,8 @@ theorem IsAbsIrrChar.map_inv {χ : G → K} (h : IsAbsIrrChar χ) (σ : K →+* 
   have hone : A 1 = 1 := by simp [A, Module.End.one_eq_id]
   have htr : ∀ s, ((A s).map τ).trace = σ (χ s) := by
     intro s
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← hτ, ← hA s, Matrix.trace, Matrix.trace, map_sum]
+
+    rw [← hτ, ← hA s, Matrix.trace, Matrix.trace, map_sum]
     rfl
   have hmap : ∀ s u, (A (s * u)).map τ = (A s).map τ * (A u).map τ := by
     intro s u
@@ -838,8 +895,8 @@ theorem convA {k V G : Type} [Field k] [IsAlgClosed k] [Group G] [Fintype G] [Ad
   set T : V →ₗ[k] V := ∑ s, φ s • ρ s with hTdef
   have hT : ∀ g v, T (ρ g v) = ρ g (T v) := by
     intro g v
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hTdef, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul]
+
+    simp only [hTdef, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul]
     rw [← Equiv.sum_comp (MulAut.conj g).toEquiv]
     refine Finset.sum_congr rfl fun s _ => ?_
     have e1 : φ ((MulAut.conj g).toEquiv s) = φ s := by simpa [MulAut.conj_apply] using hφ g s
@@ -852,8 +909,8 @@ theorem convA {k V G : Type} [Field k] [IsAlgClosed k] [Group G] [Fintype G] [Ad
     intro u
     have : LinearMap.trace k V (T * ρ u) = c * ρ.character u := by
       rw [hc]; simp [character, Module.End.mul_eq_comp]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← this, hTdef, Finset.sum_mul, map_sum]
+
+    rw [← this, hTdef, Finset.sum_mul, map_sum]
     refine Finset.sum_congr rfl fun s _ => ?_
     rw [smul_mul_assoc, map_smul, smul_eq_mul, character, map_mul]
   have h2 := h1 1
@@ -914,8 +971,8 @@ theorem conv_char {χ χ' : G → K} (h : IsAbsIrrChar χ) (h' : IsAbsIrrChar χ
   apply hj
   rw [hfin, hsum] at hA
   simp only [hρ'] at hA
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_mul, map_sum]
+
+  rw [map_mul, map_sum]
   simp only [map_mul]
   rw [hA]
   split_ifs
@@ -1030,13 +1087,12 @@ theorem map_injective_of_injective {K : Type} [Field K] {n d : ℕ} (E : Matrix 
     (hE : Function.Injective E.mulVec) (σ : K →+* ℂ) : Function.Injective (E.map σ).mulVec := by
   have hE' : Function.Injective E.mulVecLin := hE
   have hrk : E.rank = d := by
-    unfold Matrix.rank
-    rw [LinearMap.finrank_range_of_inj hE', Module.finrank_fin_fun]
+    rw [← Matrix.finrank_range_mulVecLin, LinearMap.finrank_range_of_inj hE', Module.finrank_fin_fun]
   have hrkT : Eᵀ.rank = d := by rw [Matrix.rank_transpose, hrk]
   have htop : LinearMap.range Eᵀ.mulVecLin = ⊤ := by
     apply Submodule.eq_top_of_finrank_eq
     rw [Module.finrank_fin_fun]
-    exact hrkT
+    simpa only [Matrix.finrank_range_mulVecLin] using hrkT
   obtain ⟨C, hC⟩ := exists_mul_lemma (A := Eᵀ) (B := (1 : Matrix (Fin d) (Fin d) K))
     (by rw [htop]; exact le_top)
   have hL : Cᵀ * E = 1 := by

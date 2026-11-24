@@ -1,11 +1,45 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PerValNeZero
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPeriodsInFrameOffBoundaryStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwoMarkingsDifferByLevelIsometryStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsStalkFactor
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolomorphicHomDetermined
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPeriodsInFrameOffBoundary
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsStalkFactor
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwoMarkingsDifferByLevelIsometry
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -44,7 +78,7 @@ theorem eventually_coord_eq {B : Type} [TopologicalSpace B] {b₀ : B} {lam : B 
   have hM : ∀ b c, M b c = ∑ m, c m • lam b m := fun b c => by simp [M]
   have hMc : ContinuousAt M b₀ := by
     refine tendsto_finsetSum _ fun m _ => ?_
-    exact ((ContinuousLinearMap.smulRightL ℝ (Fin r → ℝ) W (ContinuousLinearMap.proj m)).continuous.continuousAt.comp
+    exact ((StrongDual.smulRightL ℝ (Fin r → ℝ) W (ContinuousLinearMap.proj m)).continuous.continuousAt.comp
       (continuousAt_pi.1 hl m))
   obtain ⟨K, hK0, hK⟩ := (M b₀).toLinearMap.exists_antilipschitzWith (LinearMap.ker_eq_bot'.2 fun c hc =>
     funext (Fintype.linearIndependent_iff.1 hi c ((hM b₀ c).symm.trans hc)))
@@ -256,7 +290,7 @@ theorem exists_match_of_lifts (h : IsExpChart ch ex) (hx : x ∈ ch.source)
 theorem dirs_surjective (Fu : Fam Xo c σ e) (h : IsExpChart ch ex) (a : CxFr Z σ) (hx : a.1 ∈ ch.source)
     (hi : Inner a.1) {W : Letter Dw → Fin g' → ℂ} (hW : Dirs a (fun w => (ex a.1 w).left) W) :
     LinearMap.range (Fintype.linearCombination ℂ W) = ⊤ := by
-  obtain ⟨i, Q, P, W', y, hP, hu, hy, hv, hQ⟩ := T.exists_periods_in_frame_off_boundary E H Dw l Xo c O β Z σ g e Fu a hi
+  obtain ⟨i, Q, P, W', y, hP, hu, hy, hv, hQ⟩ := _root_.GlobalTheory.ShFam.Hor.exists_per E H Dw l Xo c O β Z σ g e Fu a hi
   choose e₁ h₁ using fun z => exists_up Z.m0.toSABMap.cart hu (Fu.ex i P z)
   choose e₂ h₂ using fun z => exists_up Z.m.cart (x := a.1.1 ≫ genι Z) (y := y) (by rw [← Category.assoc, hy]) (ex a.1 z)
   obtain ⟨-, L, hL, -⟩ := exists_match_of_lifts h hx hP hu hy h₁ h₂
@@ -425,7 +459,7 @@ theorem Marks.trans (h : IsLogChart k ch ex lam ρ) {s s' : Fin n → ℂ} (hs :
   choose W hW _ using fun z : Letter Dw => (h.1.2.2.2.2.2 _ (pt_mem h hs).2.1).2 _ (f.tan z.1 z.2)
   obtain ⟨Q, u, hQ, hu, e₁⟩ := h₁ ⟨_, f⟩ W rfl hW
   obtain ⟨Q', u', hQ', hu', e₂⟩ := h₂ ⟨_, f⟩ W rfl hW
-  have cmp := GlobalTheory.T.two_markings_differ_by_level_isometry E H Dw l Xo c O β Z σ g e Fu ⟨_, f⟩
+  have cmp := _root_.GlobalTheory.ShFam.Hor.TwoMarkings.per_unique E H Dw l Xo c O β Z σ g e Fu ⟨_, f⟩
   obtain rfl : i = j := cmp.1 _ _ _ _ hQ hQ'
   obtain ⟨d, hd, -, e₃⟩ := cmp.2 _ _ _ hQ hQ'
   have hT : ∀ v, T v = T' (u'.symm (d (u v))) := fun v =>

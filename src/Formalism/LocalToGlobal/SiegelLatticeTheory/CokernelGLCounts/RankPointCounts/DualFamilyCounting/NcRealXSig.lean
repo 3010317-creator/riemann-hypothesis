@@ -1,8 +1,49 @@
 module
 
-public import Mathlib
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.NcRealPf
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.LocalJacobianOfDoubleCoset
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.JacobianCoordinates
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.BesselFrame
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -132,9 +173,9 @@ def negF (e f : Fin r → Fin (2 * r + k + 1) → ℂ) (z0 : Fin (2 * r + k + 1)
 theorem hJ_fe (hF : IsFrameJ ε e f wf z0) (a b : Fin r) : hJ ε (f a) (e b) = if a = b then 1 else 0 := by
   have hs : ∀ x y : Fin (2 * r + k + 1) → ℂ, hJ ε y x = conj (hJ ε x y) := by
     intro x y
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hJ, dotProduct, Formalism.REAL.Jm, mulVec_diagonal, map_sum, map_mul, Pi.star_apply,
-      Complex.star_def, Complex.conj_conj]
+
+    simp only [hJ, dotProduct, Formalism.REAL.Jm, mulVec_diagonal, map_sum, map_mul, Pi.star_apply,
+    Complex.star_def, Complex.conj_conj]
     refine Finset.sum_congr rfl fun i _ => ?_
     split_ifs <;> simp <;> ring
   rw [hs, hF.ef b a]
@@ -147,9 +188,9 @@ theorem posF_gram (hF : IsFrameJ ε e f wf z0) (i j : Fin r ⊕ Fin k) :
       if i = j then (((Sum.elim (fun _ => (2 : ℝ)) (fun _ => (1 : ℝ))) i : ℝ) : ℂ) else 0 := by
   have hs : ∀ x y : Fin (2 * r + k + 1) → ℂ, hJ ε y x = conj (hJ ε x y) := by
     intro x y
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hJ, dotProduct, Formalism.REAL.Jm, mulVec_diagonal, map_sum, map_mul, Pi.star_apply,
-      Complex.star_def, Complex.conj_conj]
+
+    simp only [hJ, dotProduct, Formalism.REAL.Jm, mulVec_diagonal, map_sum, map_mul, Pi.star_apply,
+    Complex.star_def, Complex.conj_conj]
     refine Finset.sum_congr rfl fun i _ => ?_
     split_ifs <;> simp <;> ring
   rcases i with a | c <;> rcases j with b | d
@@ -169,9 +210,9 @@ theorem negF_gram (hF : IsFrameJ ε e f wf z0) (i j : Fin r ⊕ Unit) :
       if i = j then (((Sum.elim (fun _ => (-2 : ℝ)) (fun _ => (-1 : ℝ))) i : ℝ) : ℂ) else 0 := by
   have hs : ∀ x y : Fin (2 * r + k + 1) → ℂ, hJ ε y x = conj (hJ ε x y) := by
     intro x y
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hJ, dotProduct, Formalism.REAL.Jm, mulVec_diagonal, map_sum, map_mul, Pi.star_apply,
-      Complex.star_def, Complex.conj_conj]
+
+    simp only [hJ, dotProduct, Formalism.REAL.Jm, mulVec_diagonal, map_sum, map_mul, Pi.star_apply,
+    Complex.star_def, Complex.conj_conj]
     refine Finset.sum_congr rfl fun i _ => ?_
     split_ifs <;> simp <;> ring
   rcases i with a | u <;> rcases j with b | w
@@ -203,9 +244,9 @@ theorem hJ_Qm_self (hF : IsFrameJ ε e f wf z0) (zB : Fin (2 * r + k + 1) → �
     hJ ε (Qm e f wf z0 *ᵥ zB) (Qm e f wf z0 *ᵥ zB) = -((Tz k r zB : ℝ) : ℂ) := by
   have hs : ∀ x y : Fin (2 * r + k + 1) → ℂ, hJ ε y x = conj (hJ ε x y) := by
     intro x y
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hJ, dotProduct, Formalism.REAL.Jm, mulVec_diagonal, map_sum, map_mul, Pi.star_apply,
-      Complex.star_def, Complex.conj_conj]
+
+    simp only [hJ, dotProduct, Formalism.REAL.Jm, mulVec_diagonal, map_sum, map_mul, Pi.star_apply,
+    Complex.star_def, Complex.conj_conj]
     refine Finset.sum_congr rfl fun i _ => ?_
     split_ifs <;> simp <;> ring
   have hc1 : ∀ j : Fin (2 * r + k + 1), (hj : j.val < r) → colQ e f wf z0 j = e ⟨j.val, hj⟩ := by

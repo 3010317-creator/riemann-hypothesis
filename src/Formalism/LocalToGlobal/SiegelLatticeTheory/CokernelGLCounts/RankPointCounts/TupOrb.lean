@@ -1,10 +1,48 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.RepAtTup
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SaturatedPf
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.RatIota
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.GenericRatioOfBoundHolds
+import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SaturatedPf
+import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.TermDefPf
+import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.GenericRatioOfBoundHolds
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.RelativeEquivalence.DCRelEquivAllHolds
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -26,8 +64,8 @@ def rAct {n : ℕ} (β : Matrix (Fin n) (Fin n) E) (f : Fin n → S.V) : Fin n �
 theorem rAct_map {n : ℕ} (β : Matrix (Fin n) (Fin n) E) (f : Fin n → S.V) (k : S.V ≃ₗ[E] S.V) :
     rAct β (fun c => k (f c)) = fun a => k (rAct β f a) := by
   funext a
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [rAct, map_sum, map_smul]
+
+  simp [rAct, map_sum, map_smul]
 
 theorem rAct_mul {n : ℕ} (α β : Matrix (Fin n) (Fin n) E) (f : Fin n → S.V) :
     rAct α (rAct β f) = rAct (α * β) f := by
@@ -151,8 +189,8 @@ theorem zhat_move {Λ : Submodule (𝓞 E) S.V} {T : E} (F : LFlag S r T) {n : S
       = S.hT (n (n.symm (frame F a))) (n (rAct β f b)) := by rw [n.apply_symm_apply]
     _ = S.hT (n.symm (frame F a)) (rAct β f b) := Saturated.isom_apply hn.1.1 _ _
     _ = S.hT (n.symm (frame F a)) (rAct β f' b) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [rAct, map_sum, map_smul]
+
+      simp only [rAct, map_sum, map_smul]
       exact Finset.sum_congr rfl (fun c _ => by rw [key c])
     _ = S.hT (n (n.symm (frame F a))) (n (rAct β f' b)) := (Saturated.isom_apply hn.1.1 _ _).symm
     _ = S.hT (frame F a) (n (rAct β f' b)) := by rw [n.apply_symm_apply]
@@ -310,8 +348,8 @@ theorem move_exists (hΛ : IsRowLat D F0 Λ) {t : TermsOf D u' F0 Λ} {Z₁ Z₂
         fun a => by rw [hf3 a]; rfl, rfl⟩
     have hframe : ∀ a, frame F3 a = n (rAct β (frame F'') a) := fun a => by
       rw [hf3 a, hβ a]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [rAct, map_sum, map_smul, hfr'']
+
+      simp only [rAct, map_sum, map_smul, hfr'']
     have pd3 : PD D Λ (lf D F0) u' F3 :=
       Formalism.L2.SG.Closed.TermStable_holds D u u' F0 Λ hΛ ⟨F₁, p₁⟩ F3 hdc
     have hrep : TermDef.Rep Λ (lf D F0) (PD D Λ (lf D F0) u') t F3 :=

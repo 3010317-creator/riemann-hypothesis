@@ -1,14 +1,65 @@
 module
 
 public import Formalism.LocalToGlobal.KernelLattices.FirstKernelLawReading
-public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.IsAdmissibleFlagPairOfUnitriangularLeftAutomorph
-public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.AlternatingFormStandardHermitian
-public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.ThDistC
-public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
-public import Formalism.LocalToGlobal.GlobalTheory.GL3.LinkThetaStatementFamily
+import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
 public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.DualWeylPoint
+import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LSatLemmas
 public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.TensorBasis
+import Formalism.HermitianLattices.HermitianLatticesProofs.DualBasic
 public import Formalism.LocalRingCardinality.CoeNeZeroOfNotMem
+import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
+public import Formalism.LocalToGlobal.GlobalTheory.GL3.LinkThetaStatementFamily
+import Formalism.LocalToGlobal.GlobalTheory.GL3.PThIndep
+public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.AlternatingFormStandardHermitian
+import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.IsAdmissibleFlagPairOfUnitriangularLeftAutomorph
+public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.ThDistC
+import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.LocalComponentGL
+import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.MatrixFormFourfoldBlock
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.GroupTheory.FiniteAbelian.Basic
+import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -412,9 +463,9 @@ theorem liftL_subD (h : a ≤ b) {β : ι → Matrix (Fin b) (Fin b) K} (hβ : I
     apply MvPolynomial.algHom_ext
     rintro ⟨τ, α, s⟩
     have hs : s.1 < b := lt_of_lt_of_le s.2 h
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [AlgHom.comp_apply, subD, colSub, aeval_X, dif_pos hs, map_sum, map_mul, liftL, Sum.elim_inl, Sum.elim_inr, rename_X,
-      algHom_C, algebraMap_eq]
+
+    simp only [AlgHom.comp_apply, subD, colSub, aeval_X, dif_pos hs, map_sum, map_mul, liftL, Sum.elim_inl, Sum.elim_inr, rename_X,
+    algHom_C, algebraMap_eq]
     have h1 : ∀ r : Fin a, (r : ℕ) < b := fun r => lt_of_lt_of_le r.2 h
     simp only [dif_pos (h1 _)]
     simp only [Finset.sum_mul, Finset.mul_sum]
@@ -602,9 +653,9 @@ theorem frPolyG_colSub (fr : Y → ι → Matrix (Fin a) (Fin a) ℂ) (β : ι �
     · intro c
       simp [colSub]
     · intro v
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [RingHom.comp_apply, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, colSub, aeval_X, map_sum, map_mul, eval_C, eval_X,
-        Matrix.mul_apply]
+
+      simp only [RingHom.comp_apply, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, colSub, aeval_X, map_sum, map_mul, eval_C, eval_X,
+      Matrix.mul_apply]
       exact Finset.sum_congr rfl fun r _ => mul_comm _ _
   exact RingHom.congr_fun e Q
 
@@ -749,8 +800,8 @@ theorem colSc_hom {ν : Fin n → ℕ} {F : MvPolynomial (Fin r × Fin n) K} (hF
   classical
   conv_lhs => rw [F.as_sum]
   conv_rhs => rw [F.as_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Finset.smul_sum]
+
+  rw [map_sum, Finset.smul_sum]
   refine Finset.sum_congr rfl fun m hm => ?_
   rw [colSc_monomial]
   congr 2
@@ -786,8 +837,8 @@ theorem colOne_eq (β : Matrix (Fin n) (Fin n) K) (hβ : ∀ w s, s < w → β w
   simp only [colOne, colSc, colAddS, AlgHom.comp_apply, aeval_X]
   split_ifs with h
   · rw [sum_split t _ fun w hw => by rw [hβ w t hw, C_0, zero_mul]]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_add (f := _), aeval_X, if_pos h, map_sum]
+
+    rw [map_add (f := _), aeval_X, if_pos h, map_sum]
     congr 1
     · obtain ⟨a, s⟩ := v
       simp only at h
@@ -815,8 +866,8 @@ theorem colSub1_cut (β : Matrix (Fin n) (Fin n) K) (t : Fin n) (hid : ∀ s, s 
   simp only [colSub1, colOne, AlgHom.comp_apply, aeval_X]
   split_ifs with h
   · subst h
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_congr rfl fun w _ => ?_
     rw [map_mul, algHom_C, aeval_X]
     by_cases hw : s < w
@@ -952,7 +1003,7 @@ theorem coeff_colSc (t : Fin n) (d : K) (F : MvPolynomial (Fin r × Fin n) K) (m
   classical
   induction F using MvPolynomial.induction_on' with
   | monomial m' c =>
-    rw [colSc_monomial, coeff_smul, coeff_monomial, smul_eq_mul]
+    rw [colSc_monomial, MvPolynomial.coeff_smul, coeff_monomial, smul_eq_mul]
     split_ifs with h
     · rw [h]
     · simp
@@ -1014,7 +1065,7 @@ theorem mem_dualWeyl_of_bor [Infinite K] {ν : Fin n → ℕ} {F : MvPolynomial 
         (fun w => by rw [Matrix.diagonal_apply_eq]; split_ifs; exacts [hx, one_ne_zero])
       rw [colSub1_diag] at h2
       have h3 := congrArg (AddMonoidAlgebra.coeff · m) h2
-      rw [coeff_colSc, coeff_smul, smul_eq_mul] at h3
+      rw [coeff_colSc, MvPolynomial.coeff_smul, smul_eq_mul] at h3
       have h4 : (∏ y, (Matrix.diagonal (fun s => if s = t then x else 1) : Matrix (Fin n) (Fin n) K) y y ^ ν y) = x ^ ν t := by
         rw [Finset.prod_eq_single t]
         · rw [Matrix.diagonal_apply_eq, if_pos rfl]
@@ -1119,7 +1170,7 @@ theorem coeff_psi_mem [Fintype ι] [Infinite K] {ν : ι → Fin n → ℕ} {Q :
     · rw [Function.update_of_ne h]
       exact ⟨fun w s hws => Matrix.one_apply_ne hws.ne', fun w => by simp⟩
   have h3 := congrArg (fun x => AddMonoidAlgebra.coeff (psi τ x) r) (hQ _ hB)
-  simp only [psi_colSub, coeff_map, map_smul, coeff_smul] at h3
+  simp only [psi_colSub, coeff_map, map_smul, MvPolynomial.coeff_smul] at h3
   have h4 : (∏ σ, ∏ x, (Function.update (1 : ι → Matrix (Fin n) (Fin n) K) τ β) σ x x ^ ν σ x) = ∏ x, β x x ^ ν τ x := by
     rw [Finset.prod_eq_single τ]
     · rw [Function.update_self]
@@ -1173,7 +1224,7 @@ theorem coeff_psi_atPos (τ : ι) (π : MvPolynomial (Fin n × Fin n) K →ₗ[K
       rw [coe_basisMonomials, smul_monomial, smul_eq_mul, mul_one]
     have h2 : (monomial (gOf τ m) c : MvPolynomial (Fin n × Fin n) K) = c • monomial (gOf τ m) 1 := by
       rw [smul_monomial, smul_eq_mul, mul_one]
-    rw [psi_monomial, h, map_smul, atPos, Module.Basis.constr_basis, map_smul, psi_psi', coeff_smul, coeff_monomial, coeff_monomial, h2]
+    rw [psi_monomial, h, map_smul, atPos, Module.Basis.constr_basis, map_smul, psi_psi', MvPolynomial.coeff_smul, coeff_monomial, coeff_monomial, h2]
     split_ifs
     · rw [map_smul]
     · rw [smul_zero, map_zero]
@@ -1489,8 +1540,8 @@ theorem kernel_combination_form : KerCombOf := by
     have hq : ∀ k α, TaylorLogMetric.taylor D (TaylorLogMetric.U D (TaylorLogMetric.tor0 D cc δ) (t k) (e N N' L L')) α ∈ TaylorLogMetric.Qbar := fun k α =>
       halg (t k) (by obtain ⟨a, ha, -, hm⟩ := ht k; exact ⟨a, ha, hm⟩) α
     ext α
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     have h1 : MvPowerSeries.coeff α (TaylorLogMetric.pSer D lam Θ) = TaylorLogMetric.lamC lam (TaylorLogMetric.taylor D Θ α) := rfl
     rw [h1, hΘ, taylor_sum D r _ hU, lamC_sum lam _ _ fun k _ => mul_mem (hr k) (hq k α)]
     refine Finset.sum_congr rfl fun k _ => ?_
@@ -1558,8 +1609,8 @@ theorem matOf_mulVec (y : HomE X.E a b) (n : Sp X.E a) : (matOf s y).mulVec (fun
   have hn : n = ∑ j, n j • (Pi.single j (1 : X.E) : Sp X.E a) := by
     ext k; simp [Finset.sum_apply, Pi.single_apply]
   conv_rhs => rw [hn]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Matrix.mulVec, dotProduct, matOf, map_sum, map_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, map_mul]
+
+  simp only [Matrix.mulVec, dotProduct, matOf, map_sum, map_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, map_mul]
   exact Finset.sum_congr rfl fun j _ => mul_comm _ _
 
 theorem matOf_mem (N : Submodule (𝓞 X.E) (Sp X.E a)) (N' : Submodule (𝓞 X.E) (Sp X.E b)) {y : HomE X.E a b} (hy : y ∈ homO N N') :

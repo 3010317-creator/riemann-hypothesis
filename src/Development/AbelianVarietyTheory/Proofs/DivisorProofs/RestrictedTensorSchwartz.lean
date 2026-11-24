@@ -1,14 +1,52 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.SiegelWeilAnisotropicHermitian
-public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingTrRep
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ActFromBlocks
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralAdelicPureTensorEqProductLocalStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzFinitePureTensors
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyIntegralPointsIndicatorIsVacuum
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralAdelicPureTensorEqProductLocal
 public import ReciprocityTheory.GeneralLinearIntegers.AlgebraMapIntMemOint
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingTrRep
 
 @[expose] public section
 
@@ -178,7 +216,7 @@ theorem exists_const_tensor : ∀ (F : Type) [Field F] [NumberField F] (κ : Typ
     rw [e]
     exact Measure.addHaarMeasure_self
   haveI := hμv
-  obtain ⟨c₀, -, hpure⟩ := GlobalTheory.T.integral_adelic_pureTensor_eq_product_local F κ μ μi μv hμv1
+  obtain ⟨c₀, -, hpure⟩ := _root_.GlobalTheory.AdelicHaarPure.integral_pure_haar F κ μ μi μv hμv1
   obtain ⟨cI, hcI0, hcI⟩ := hinf
   choose C hC0 hC using hloc
   have hS : ∀ᶠ v in Filter.cofinite, vac v = GlobalTheory.RatWeilOp.ind κ v ∧ vac₁ v = GlobalTheory.RatWeilOp.ind κ v := hvac.and hvac₁
@@ -246,15 +284,15 @@ theorem exists_const_tensor : ∀ (F : Type) [Field F] [NumberField F] (κ : Typ
     rw [hT i v h2, h1]
   have heΦ : e (∑ i, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (f i) (φ i)) =
       ∑ i, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (ei (f i)) (fun v => ev v (φ i v)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     exact Finset.sum_congr rfl fun i _ => he _ _ (hSB i) (hvacφ i)
   rw [heΦ]
   have hexp : ∀ (g : Fin m → (κ → AF F) → ℂ) (x : κ → AF F),
       (∑ i, g i) x * conj ((∑ i, g i) x) = ∑ i, ∑ j, g i x * conj (g j x) := by
     intro g x
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [Finset.sum_apply, map_sum, Finset.sum_mul_sum]
+
+    simp only [Finset.sum_apply, map_sum, Finset.sum_mul_sum]
   have hint1 : ∀ i j, Integrable (fun x => GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (f i) (φ i) x *
       conj (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (f j) (φ j) x)) μ := fun i j =>
     (hcross (f i) (f j) (φ i) (φ j) (hSB i) (hvacφ i) (hSB j) (hvacφ j)).1

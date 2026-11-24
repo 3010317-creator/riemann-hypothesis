@@ -1,32 +1,57 @@
 module
 
 public import Formalism.HermitianCurvature.StatementNF
-public import Formalism.HermitianCurvature.StatementM
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.Interlace
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.QuasiDeterminantFromEntries
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.AdmissibleRecOfAdmissibleWord
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.FrameOfAdmissibleWord
-public import Formalism.HermitianCurvature.StatementWd
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.PositionInsertionDiagonalCompat
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.KroneckerEmbedMulApply
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.SecondEmbedMulFirstEmbedApply
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.QEFirstMulSecondEqSwap
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.TransferMatrixFactorization
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.EntryCommuteTransposedRMatrix
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ScalarCommuteTransposedRMatrixEntry
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LiftMatrixTransferConjTransposeCommute
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.DiagScalarCommuteOfEntries
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.PartialFlipCommuteDiagScalarOfFree
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.DiagScalarCommuteTransposedRMatrix
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.MultiplicationOpHom
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LevelNablaStarRelations
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ActualAdjointnessFromHermitian
+public import Mathlib.CategoryTheory.Category.Basic
+public import Mathlib.LinearAlgebra.Vandermonde
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.InterlaceSignTwo
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.EulerZetaGammaInvIdentity
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.TransferRtt
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.WeightedSumDifferenceIdentity
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.GammaFamilyCommuteGenerators
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ModelWordsAssemble
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LevelCoordinatesCommute
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -387,8 +412,8 @@ theorem interpolation_inverse_matrix_sum_identity {M N : Type*} [AddCommGroup M]
     intro j hj x
     have e1 : e ((∑ i : Fin m, W ⟨j, hj⟩ i • F (v i)) x) =
         ∑ i : Fin m, W ⟨j, hj⟩ i • ∑ l : Fin m, (v i) ^ (l : ℕ) • c l x := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [LinearMap.sum_apply, map_sum]
+
+      rw [LinearMap.sum_apply, map_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [LinearMap.smul_apply, map_smul, h]
       simp only [Finset.sum_range]
@@ -408,8 +433,8 @@ theorem interpolation_inverse_matrix_sum_identity {M N : Type*} [AddCommGroup M]
       exact absurd (Finset.mem_univ _) hn
   refine ⟨fun j => if hj : j < m then ∑ i : Fin m, W ⟨j, hj⟩ i • F (v i) else 0, fun Y => ?_⟩
   refine LinearMap.ext fun x => he ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [h, LinearMap.sum_apply, map_sum]
+
+  rw [h, LinearMap.sum_apply, map_sum]
   refine Finset.sum_congr rfl fun j hj => ?_
   have hj' : j < m := Finset.mem_range.1 hj
   rw [LinearMap.smul_apply, map_smul]

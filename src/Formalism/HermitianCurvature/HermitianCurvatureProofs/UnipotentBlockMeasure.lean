@@ -1,7 +1,56 @@
 module
 
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.GrowthOfBasic
 public import Formalism.HermitianCurvature.StatementPN
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LocalVolumePositivity
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Mathlib.Topology.UniformSpace.Uniformizable
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -425,28 +474,7 @@ theorem summable_pairs (a : ι → V) (ha : Summable (fun i => ‖a i‖)) :
 
 theorem normsq_tsum (a : ι → V) (ha : Summable (fun i => ‖a i‖)) :
     ‖∑' i, a i‖ ^ 2 = ∑' p : ι × ι, (inner ℂ (a p.1) (a p.2) : ℂ).re := by
-  have hS : HasSum a (∑' i, a i) := ha.of_norm.hasSum
-  have hP : Summable (fun p : ι × ι => (inner ℂ (a p.1) (a p.2) : ℂ).re) :=
-    Complex.reCLM.summable (summable_pairs a ha)
-  have hfib : ∀ i, HasSum (fun j => (inner ℂ (a i) (a j) : ℂ).re)
-      (inner ℂ (a i) (∑' j, a j) : ℂ).re := by
-    intro i
-    have h2 := Complex.reCLM.hasSum ((innerSL ℂ (a i)).hasSum hS)
-    simpa using h2
-  have hout : HasSum (fun i => (inner ℂ (a i) (∑' j, a j) : ℂ).re)
-      (inner ℂ (∑' j, a j) (∑' j, a j) : ℂ).re := by
-    have h2 : HasSum (fun i => (inner ℂ (∑' j, a j) (a i) : ℂ).re)
-        (inner ℂ (∑' j, a j) (∑' j, a j) : ℂ).re := by
-      simpa using Complex.reCLM.hasSum ((innerSL ℂ (∑' j, a j)).hasSum hS)
-    have he : (fun i => (inner ℂ (a i) (∑' j, a j) : ℂ).re)
-        = fun i => (inner ℂ (∑' j, a j) (a i) : ℂ).re := by
-      funext i
-      rw [← inner_conj_symm, Complex.conj_re]
-    rw [he]
-    exact h2
-  have heq := hout.unique (hP.hasSum.prod_fiberwise hfib)
-  rw [← heq]
-  exact (inner_self_eq_norm_sq (𝕜 := ℂ) _).symm
+  apply Formalism.FourierDecayAlt.P.GrowthPolynomialOperator.norm_sq_tsum <;> assumption
 
 end
 

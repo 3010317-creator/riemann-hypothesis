@@ -1,12 +1,47 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdelicPlaceDecomposition
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeStableAlmostAllPlacesLeftStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeStableAlmostAllPlacesRightStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeStableAlmostAllPlacesLeft
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeStableAlmostAllPlacesRight
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -38,8 +73,8 @@ theorem fstA_idemAt (w : Pl (F := F)) : fstA F (idemAt w) = 0 := rfl
 
 theorem fstA_idemSet (S : Finset (Pl (F := F))) : fstA F (idemSet S) = 0 := by
   unfold idemSet
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   exact Finset.sum_eq_zero fun w _ => fstA_idemAt w
 
 theorem evFin_idemAt_ne {w w' : Pl (F := F)} (h : w' ≠ w) : evFin F w' (idemAt w) = 0 := by
@@ -52,14 +87,14 @@ theorem idemAt_mul_ne {w w' : Pl (F := F)} (h : w' ≠ w) : idemAt w * idemAt w'
 theorem evFin_idemSet_mem {S : Finset (Pl (F := F))} {w : Pl (F := F)} (hw : w ∈ S) : evFin F w (idemSet S) = 1 := by
   classical
   unfold idemSet
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Finset.sum_eq_single w (fun w' _ hne => evFin_idemAt_ne (Ne.symm hne)) (fun h => absurd hw h),
-    evFin_idemAt]
+
+  rw [map_sum, Finset.sum_eq_single w (fun w' _ hne => evFin_idemAt_ne (Ne.symm hne)) (fun h => absurd hw h),
+  evFin_idemAt]
 
 theorem evFin_idemSet_not_mem {S : Finset (Pl (F := F))} {w : Pl (F := F)} (hw : w ∉ S) : evFin F w (idemSet S) = 0 := by
   unfold idemSet
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   exact Finset.sum_eq_zero fun w' hw' => evFin_idemAt_ne (by rintro rfl; exact hw hw')
 
 theorem idemSet_mul_self (S : Finset (Pl (F := F))) : idemSet S * idemSet S = idemSet S := by
@@ -179,9 +214,9 @@ theorem finite_bad {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
     Set.Finite {w : Pl (F := F) | ¬ ∀ γ ∈ latAtV X Y w, M * γ * Matrix.transpose N ∈ latAtV X Y w} := by
   have hr : Set.Finite {w : Pl (F := F) | ¬ ∀ γ ∈ latAtV X Y w, γ * Matrix.transpose N ∈ latAtV X Y w} := by
     first
-    | exact GlobalTheory.T.lattice_stable_almost_all_places_right F E n d X Y hY N
-    | exact GlobalTheory.T.lattice_stable_almost_all_places_right F E n d X Y hY.toIsLattice N
-  refine (((GlobalTheory.T.lattice_stable_almost_all_places_left) F E n d X Y hX M).union hr).subset ?_
+    | exact _root_.GlobalTheory.AdelMatLatRight.almost_all_stable_right F E n d X Y hY N
+    | exact _root_.GlobalTheory.AdelMatLatRight.almost_all_stable_right F E n d X Y hY.toIsLattice N
+  refine (((_root_.GlobalTheory.AdelMatLat.almost_all_stable) F E n d X Y hX M).union hr).subset ?_
   intro w hw
   by_contra hc
   simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc

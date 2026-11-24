@@ -1,7 +1,60 @@
 module
 
 public import Formalism.MahlerMeasure.HasOrder
-public import Mathlib
+public import Mathlib.Algebra.Group.ForwardDiff
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.Algebra.BigOperators.Field
+public import Mathlib.RingTheory.Polynomial.Pochhammer
 
 @[expose] public section
 
@@ -327,7 +380,7 @@ theorem fock_add_left (F F' G : MvPolynomial σ ℚ_[p]) :
 theorem fock_smul_left (c : ℚ_[p]) (F G : MvPolynomial σ ℚ_[p]) :
     Formalism.GM.M.fock p (c • F) G = c * Formalism.GM.M.fock p F G := by
   rw [fock_eq_sum (c • F) G F.support support_smul, fock_def', Finset.mul_sum]
-  exact Finset.sum_congr rfl (fun m _ => by rw [coeff_smul, smul_eq_mul]; ring)
+  exact Finset.sum_congr rfl (fun m _ => by rw [MvPolynomial.coeff_smul, smul_eq_mul]; ring)
 
 theorem fock_zero_left (G : MvPolynomial σ ℚ_[p]) : Formalism.GM.M.fock p 0 G = 0 := by
   simp [Formalism.GM.M.fock]
@@ -572,7 +625,7 @@ theorem FT_pow_coeff_norm (hwe : ∀ c, w c ≠ e c) (Tb B : ℕ) (hB : Nat.log 
     intro a ha
     rw [mem_range] at ha
     rw [Module.End.mul_apply, Module.End.mul_apply, Module.End.natCast_apply, map_nsmul, map_nsmul,
-      coeff_smul, nsmul_eq_mul, norm_mul, coeff_Dop_pow _ _ (hwe c), norm_mul, norm_mul]
+      MvPolynomial.coeff_smul, nsmul_eq_mul, norm_mul, coeff_Dop_pow _ _ (hwe c), norm_mul, norm_mul]
     have h1 := ih (b - a) (by omega) (β + a • (Finsupp.single (w c) 1 + Finsupp.single (e c) 1))
     have h2 := norm_desc_le (p := p) (β (w c) + a) a
     have h3 := norm_desc_le (p := p) (β (e c) + a) a
@@ -715,7 +768,7 @@ theorem IsIntP.add {P P' : MvPolynomial σ ℚ_[p]} (h : IsIntP P) (h' : IsIntP 
   intro β; rw [MvPolynomial.coeff_add]; exact (Padic.nonarchimedean _ _).trans (max_le (h β) (h' β))
 
 theorem IsIntP.neg {P : MvPolynomial σ ℚ_[p]} (h : IsIntP P) : IsIntP (-P) := by
-  intro β; rw [coeff_neg, norm_neg]; exact h β
+  intro β; rw [MvPolynomial.coeff_neg, norm_neg]; exact h β
 
 theorem IsIntP.sub {P P' : MvPolynomial σ ℚ_[p]} (h : IsIntP P) (h' : IsIntP P') : IsIntP (P - P') := by
   rw [sub_eq_add_neg]; exact h.add h'.neg
@@ -873,8 +926,8 @@ theorem aeval_expand (LL : Letters (N + 1)) (ρ : Fin r) (f : MvPolynomial (Fin 
     aeval (freezeSub p LL ρ) f = ∑ μ ∈ f.support,
       C (AddMonoidAlgebra.coeff f μ) * ∏ v : Fin (N + 1) × Fin r, freezeSub p LL ρ v ^ μ v := by
   conv_lhs => rw [f.as_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   apply sum_congr rfl
   intro μ _
   rw [aeval_monomial, Finsupp.prod_fintype _ _ (fun _ => pow_zero _), MvPolynomial.algebraMap_eq]
@@ -1189,8 +1242,8 @@ theorem fock_F_pow_expand (hy : ∀ c ∈ univ.erase ρ, w c ≠ e ρ ∧ e c �
   apply sum_congr rfl; intro a' _
   rw [fock_smul_left, fock_smul_right, FT_pow_X_pow_mul w e (e ρ) _ hy, FT_pow_X_pow_mul w e (e ρ) _ hy]
   conv_lhs => rw [((FT w e (univ.erase ρ) ^ (j - a)) G).as_sum, ((FT w e (univ.erase ρ) ^ (j - a')) G').as_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [mul_sum, mul_sum, map_sum, map_sum, fock_sum_left, mul_sum, mul_sum]
+
+  rw [mul_sum, mul_sum, map_sum, map_sum, fock_sum_left, mul_sum, mul_sum]
   apply sum_congr rfl; intro β _
   rw [fock_sum_right, mul_sum, mul_sum]
   apply sum_congr rfl; intro γ _

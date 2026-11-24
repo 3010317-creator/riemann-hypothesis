@@ -1,6 +1,54 @@
 module
 
+import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LocalWeightCharts.DDMulApply
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.DensityLemma.PFibreBoundVDefs
+public import Formalism.HermitianCurvature.FiniteOrderIntersectionInSmooth
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Formalism.HermitianCurvature.BigCellVanishingOfCommute
 
 @[expose] public section
 
@@ -51,21 +99,7 @@ lemma esI_val (a : Fin r) : (esI k r a).val = 2 * r + k - a.val := rfl
 
 lemma sum_split {M : Type*} [AddCommMonoid M] (f : Fin (2 * r + k + 1) → M) :
     ∑ i, f i = ∑ a : Fin r, f (eI k r a) + ∑ j : Fin (k + 1), f (wI k r j) + ∑ a : Fin r, f (esI k r a) := by
-  have hinj : Function.Injective
-      (Sum.elim (eI k r) (Sum.elim (wI k r) (esI k r)) : Fin r ⊕ (Fin (k + 1) ⊕ Fin r) → Fin (2 * r + k + 1)) := by
-    rintro (a | j | a) (b | i | b) h <;>
-      simp only [Sum.elim_inl, Sum.elim_inr, Fin.ext_iff, eI_val, wI_val, esI_val, Sum.inl.injEq,
-        Sum.inr.injEq, reduceCtorEq] at h ⊢ <;>
-      omega
-  have hbij : Function.Bijective
-      (Sum.elim (eI k r) (Sum.elim (wI k r) (esI k r)) : Fin r ⊕ (Fin (k + 1) ⊕ Fin r) → Fin (2 * r + k + 1)) := by
-    rw [Fintype.bijective_iff_injective_and_card]
-    refine ⟨hinj, ?_⟩
-    simp only [Fintype.card_sum, Fintype.card_fin]
-    omega
-  rw [← Fintype.sum_bijective _ hbij (fun x => f (Sum.elim (eI k r) (Sum.elim (wI k r) (esI k r)) x)) f
-    (fun _ => rfl)]
-  simp only [Fintype.sum_sum_type, Sum.elim_inl, Sum.elim_inr, add_assoc]
+  apply WlocSk.NB.sum_split <;> assumption
 
 lemma cases3 {P : Fin (2 * r + k + 1) → Prop} (h1 : ∀ a, P (eI k r a)) (h2 : ∀ j, P (wI k r j))
     (h3 : ∀ a, P (esI k r a)) (i : Fin (2 * r + k + 1)) : P i := by
@@ -344,19 +378,16 @@ theorem nb_Nset (hS : Sᴴ = -S) : unipotentBlockMatrix k r Bm S ∈ Nset k r :=
 
 theorem nb_mem {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) (hB : Bm *ᵥ zW k r z = 0) (hS : Sᴴ = -S) :
     unipotentBlockMatrix k r Bm S ∈ C2.N0set k r z := by
-  show _ ∧ _
   exact ⟨nb_Nset Bm S hS, nb_uMap Bm S hz hB⟩
 
 omit Bm S in
 lemma um_lt (z : Fin (2 * r + k + 1) → ℂ) (n : B.Mat k r) (a : Fin r) (b : Fin (r + 1)) :
     C2.uMap k r z n ⟨a.val, by omega⟩ b = (n *ᵥ fvec k r z b) (eI k r a) := by
-  simp only [C2.uMap]
-  rw [dif_pos a.isLt, herm_esI]
+  simp only [C2.uMap, dif_pos a.isLt, herm_esI]
 
 omit Bm S in
 lemma fvec_lt (z : Fin (2 * r + k + 1) → ℂ) (b : Fin r) : fvec k r z ⟨b.val, by omega⟩ = bvec (eI k r b) := by
-  simp only [fvec]
-  rw [dif_pos b.isLt]
+  simp only [fvec, dif_pos b.isLt]
 
 omit Bm S in
 lemma fvec_last (z : Fin (2 * r + k + 1) → ℂ) : fvec k r z (Fin.last r) = z := by

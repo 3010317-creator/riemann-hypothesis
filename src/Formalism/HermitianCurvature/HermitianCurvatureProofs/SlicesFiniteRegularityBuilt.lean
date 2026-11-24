@@ -1,26 +1,80 @@
 module
 
-public import Mathlib
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.SliceAppend
+
 public import Formalism.HermitianCurvature.StatementJCT
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.UnipotentCoordinatesMeasurePreserving
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComponentFamilySettingOfSetting
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.TheoremPIntegralOfPlaces
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CorollaryU1Plain
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.SeminormCompletion
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RegularisedPairingViaPhase
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BetaSesquilinearity
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComposeDifferentialOperators
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnipotentComposition.Development
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnipotentComposition.DegPderivMul
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnipotentComposition.Expand
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CvRhoOfParts
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.SymmetricScalarBlockMatrixMul
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LevelFormSesquilinearFiniteClass
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.DerivativeBoundInBanachSpace
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.AdditiveCharacterPsi
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactlySupportedBanachModel
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.PhiBoundPartsOfRadicalParametrisation
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.WirtingerIntegrationByParts
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComponentFamilySettingOfSetting
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComposeDifferentialOperators
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CoordinateSizesOfHypotheses
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CorollaryU1Plain
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.DerivativeBoundInBanachSpace
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LevelFormSesquilinearFiniteClass
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.PhiBoundPartsOfRadicalParametrisation
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.RegularisedPairingViaPhase
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.SeminormCompletion
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.SymmetricScalarBlockMatrixMul
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.TheoremPIntegralOfPlaces
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.WirtingerIntegrationByParts
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnipotentComposition.DegPderivMul
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnipotentComposition.Expand
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.CategoryTheory.Countable
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.Monotonicity.Lemmas
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Presheaf
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -293,15 +347,18 @@ theorem budget0_abs (R n N r Cc A₀ : ℝ) (hR1 : 1 ≤ R) (hnR : R ≤ n) (hr 
   have hn1 : 1 ≤ n := le_trans hR1 hnR
   have hR0 : 0 ≤ R := by linarith
   have hn0 : 0 ≤ n := by linarith
-  have hR2 : 1 ≤ R ^ 2 := by nlinarith
-  have hRR : R ≤ R ^ 2 := by nlinarith
-  have hR24 : R ^ 2 ≤ R ^ 4 := by nlinarith
-  have hR34 : R ^ 3 ≤ R ^ 4 := by nlinarith [pow_nonneg hR0 3]
-  have hn13 : n ≤ n ^ 3 := by nlinarith
-  have hn12 : n ≤ n ^ 2 := by nlinarith
+  have hR2 : 1 ≤ R ^ 2 := one_le_pow₀ hR1
+  have hRR : R ≤ R ^ 2 := le_self_pow₀ hR1 (by norm_num)
+  have hR24 : R ^ 2 ≤ R ^ 4 := pow_le_pow_right₀ hR1 (by norm_num)
+  have hR34 : R ^ 3 ≤ R ^ 4 := pow_le_pow_right₀ hR1 (by norm_num)
+  have hn13 : n ≤ n ^ 3 := le_self_pow₀ hn1 (by norm_num)
+  have hn12 : n ≤ n ^ 2 := le_self_pow₀ hn1 (by norm_num)
   have hS0 : 0 ≤ N * n ^ 2 + n ^ 3 := by positivity
   have hR4 : 0 ≤ R ^ 4 := by positivity
-  have e1 : 1 + 10 * R + 12 * (R ^ 2 * n) ≤ 23 * (R ^ 2 * n) := by nlinarith
+  have e1 : 1 + 10 * R + 12 * (R ^ 2 * n) ≤ 23 * (R ^ 2 * n) := by
+    have hR2n1 : 1 ≤ R ^ 2 * n := one_le_mul_of_one_le_of_one_le hR2 hn1
+    have hR2nR : R ≤ R ^ 2 * n := le_trans hRR (le_mul_of_one_le_right (by positivity) hn1)
+    linarith
   have e2 : R ^ 2 * n ≤ R ^ 4 * n ^ 3 := mul_le_mul hR24 hn13 hn0 hR4
   have e3 : R * (N * r) ≤ R ^ 2 * (N * n) :=
     mul_le_mul hRR (mul_le_mul_of_nonneg_left hr hN) (by positivity) (by positivity)
@@ -311,7 +368,12 @@ theorem budget0_abs (R n N r Cc A₀ : ℝ) (hR1 : 1 ≤ R) (hnR : R ≤ n) (hr 
   have e6 : 150 * (R ^ 4 * (N * n ^ 2 + n ^ 3)) ≤ Cc * (R ^ 4 * (N * n ^ 2 + n ^ 3)) :=
     mul_le_mul_of_nonneg_right hCc (mul_nonneg hR4 hS0)
   have e7 : 0 ≤ R ^ 4 * (N * n ^ 2) := by positivity
-  nlinarith [e1, e2, e3, e4, e5, e6, e7, h]
+  have he1 : (127 * R ^ 3 * (N * n ^ 2 + n ^ 3) + 1) + 2 * R * (5 + 3 * R * (N + 2) * n + N * r) =
+      127 * (R ^ 3 * (N * n ^ 2 + n ^ 3)) + (1 + 10 * R + 12 * (R ^ 2 * n)) + 6 * (R ^ 2 * (N * n)) + 2 * (R * (N * r)) := by ring
+  have he2 : 150 * (R ^ 4 * (N * n ^ 2 + n ^ 3)) =
+      127 * (R ^ 4 * (N * n ^ 2 + n ^ 3)) + 23 * (R ^ 4 * n ^ 3) + 8 * (R ^ 4 * (N * n ^ 2)) + 15 * (R ^ 4 * (N * n ^ 2)) := by ring
+  have he3 : Cc * R ^ 4 * (N * n ^ 2 + n ^ 3) = Cc * (R ^ 4 * (N * n ^ 2 + n ^ 3)) := by ring
+  linarith
 
 theorem budget0 (r k N : ℕ) (hk : 2 ≤ k) (A₀ Cc : ℝ) (hCc : 150 ≤ Cc)
     (h : Cc * ((r : ℝ) + 1) ^ 4 * ((N : ℝ) * (2 * (r : ℝ) + k + 1) ^ 2 + (2 * (r : ℝ) + k + 1) ^ 3) ≤ A₀) :
@@ -472,15 +534,18 @@ theorem budgetAs (r k N L j : ℕ) (hk : 2 ≤ k) (hL : L ≤ N) (hj : j ≤ r) 
   have hrn' : r ≤ 2 * r + k + 1 := by omega
   set n := 2 * r + k + 1 with hn_def
   have hn : 1 ≤ n := by omega
-  have hnn : n ≤ n ^ 2 := by nlinarith
-  have hn23 : n ^ 2 ≤ n ^ 3 := by nlinarith
+  have hnn : n ≤ n ^ 2 := Nat.le_self_pow (by norm_num) n
+  have hn23 : n ^ 2 ≤ n ^ 3 := Nat.pow_le_pow_right hn (by norm_num)
   have hLj : L * j ≤ N * n := Nat.mul_le_mul hL hjn
   have hLj2 : L * j ^ 2 ≤ N * n ^ 2 := Nat.mul_le_mul hL (Nat.pow_le_pow_left hjn 2)
   have hNn : N * n ≤ N * n ^ 2 := Nat.mul_le_mul_left N hnn
   have hNr : N * r ≤ N * n := Nat.mul_le_mul_left N hrn'
   have h3a : (r + 1) * ((N + 2) * n) ≤ n * ((N + 2) * n) := Nat.mul_le_mul_right ((N + 2) * n) hrn
-  have hn3 : 1 ≤ n ^ 3 := by nlinarith
-  refine ⟨by nlinarith, by nlinarith, by nlinarith, by nlinarith, by nlinarith⟩
+  have hn3 : 1 ≤ n ^ 3 := Nat.one_le_pow 3 n hn
+  have hjLj : j * (L * j) = L * j ^ 2 := by ring
+  have h3b : 3 * (r + 1) * (N + 2) * n = 3 * ((r + 1) * ((N + 2) * n)) := by ring
+  have h3c : n * ((N + 2) * n) = N * n ^ 2 + 2 * n ^ 2 := by ring
+  refine ⟨by omega, by omega, by omega, by omega, by omega⟩
 
 theorem pos_levels (hL : LettersDD) (hP : PosCore) (hI : IntG) (hT : OrbitSliceIntegrable) : ∃ Cp : ℝ, 0 ≤ Cp ∧
     ∀ Cc : ℝ, 16 * Cp ≤ Cc →
@@ -498,16 +563,7 @@ theorem pos_levels (hL : LettersDD) (hP : PosCore) (hI : IntG) (hT : OrbitSliceI
   refine ⟨Cp, hCp0, ?_⟩
   intro Cc hCc k r Wp Wq _ _ _ _ _ _ T f χ A₀ N P0 hPk hPr hk2 hχ hf hfA hA₀ ε hε i hi hi1 w hw p hc hp a
 
-  obtain ⟨h, n, t, rfl⟩ : ∃ (h : C.LPt) (n : ℕ) (t : ℂ), p = h ++ [(n + 1, t)] := by
-    have hne : p ≠ [] := by
-      rintro rfl
-      have := hp.2
-      simp [D.ptSize] at this
-      omega
-    refine ⟨p.dropLast, (p.getLast hne).1 - 1, (p.getLast hne).2, ?_⟩
-    have h1 : 1 ≤ (p.getLast hne).1 := (hp.1 _ (List.getLast_mem hne)).1
-    rw [Nat.sub_add_cancel h1]
-    exact (List.dropLast_append_getLast hne).symm
+  obtain ⟨h, n, t, rfl⟩ := Formalism.FourierDecayAlt.P.SliceAppend.exists_append_succ hi1 hp
   obtain ⟨hpb, hps⟩ := hp
   subst hps
   set ph := D.ptSize h with hph
@@ -519,47 +575,13 @@ theorem pos_levels (hL : LettersDD) (hP : PosCore) (hI : IntG) (hT : OrbitSliceI
   set ρ := r - D.ptSize (h ++ [(n + 1, t)]) with hρ
   have hsum : ph + (n + 1) + ρ = r := by omega
 
-  have hspec := (Formalism.FourierDecayAlt.P.ptPerm_spec _ _ hloc).1
-  have hspec' := (Formalism.FourierDecayAlt.P.ptPerm_spec _ _ hlocH).1
-  have hσ : ∀ q : Fin (D.ptSize (h ++ [(n + 1, t)])),
-      ((Formalism.FourierDecayAlt.P.Dx2.SL.sigP (n := n) (D.ptPerm h)) (Fin.cast hP q)).val = (D.ptPerm (h ++ [(n + 1, t)]) q).val := by
-    intro q
-    rw [hspec q, Formalism.FourierDecayAlt.P.Dx2.SL.partner_append (n + 1) t h q.val (by have := q.isLt; omega)]
-    by_cases h1 : q.val < D.ptSize h
-    · rw [if_pos h1]
-      have e : Fin.cast hP q = Fin.castAdd (n + 1) ⟨q.val, h1⟩ := Fin.ext rfl
-      rw [e, Formalism.FourierDecayAlt.P.Dx2.SL.blockPerm_castAdd]
-      exact hspec' ⟨q.val, h1⟩
-    · rw [if_neg h1]
-      have e : Fin.cast hP q = Fin.natAdd (D.ptSize h) ⟨q.val - D.ptSize h, by have := q.isLt; omega⟩ :=
-        Fin.ext (by simp; omega)
-      rw [e, Formalism.FourierDecayAlt.P.Dx2.SL.blockPerm_natAdd]
-      simp only [Fin.val_natAdd, Fin.val_rev]
-      omega
-  have hd : ∀ q : Fin (D.ptSize (h ++ [(n + 1, t)])),
-      Formalism.FourierDecayAlt.P.Dx2.SL.dP (n := n) (D.ptDiag h) t (Fin.cast hP q) = D.ptDiag (h ++ [(n + 1, t)]) q := by
-    intro q
-    simp only [D.ptDiag]
-    rw [Formalism.FourierDecayAlt.P.Dx2.SL.scal_append (n + 1) t h q.val (by have := q.isLt; omega)]
-    by_cases h1 : q.val < D.ptSize h
-    · rw [if_pos h1]
-      have e : Fin.cast hP q = Fin.castAdd (n + 1) ⟨q.val, h1⟩ := Fin.ext rfl
-      rw [e, Formalism.FourierDecayAlt.P.Dx2.SL.dP, Fin.addCases_left]; rfl
-    · rw [if_neg h1]
-      have e : Fin.cast hP q = Fin.natAdd (D.ptSize h) ⟨q.val - D.ptSize h, by have := q.isLt; omega⟩ :=
-        Fin.ext (by simp; omega)
-      rw [e, Formalism.FourierDecayAlt.P.Dx2.SL.dP, Fin.addCases_right]
   set G := D.uwG k r T.base.z T.base.z' (D.cutF T.base χ f ε) (D.ptSize (h ++ [(n + 1, t)])) hi w a with hG
   have hS : ∀ γ : B.Mat k ρ, D.sliceAt k r T.base.z T.base.z' G (h ++ [(n + 1, t)]) γ =
       U.PhiFun (p := ph + (n + 1)) (s := 0) k ρ (Formalism.FourierDecayAlt.P.Dx2.SL.sigP (D.ptPerm h))
         (Formalism.FourierDecayAlt.P.Dx2.SL.dP (D.ptDiag h) t) (D.castV (by omega) T.base.z) (D.castV (by omega) T.base.z')
         (D.castF (by omega) G) (fun a => a.elim0) γ := by
     intro γ
-    obtain ⟨-, hT2⟩ := Formalism.FourierDecayAlt.P.Dx2.SL.phi_transport (k := k) (ρ := ρ) hP _ _ hσ _ _ hd
-      (D.castV (by omega) T.base.z) (D.castV (by omega) T.base.z') (D.castF (by omega) G) γ
-    unfold D.sliceAt
-    rw [dite_eq_left (by omega), hT2]
-    simp only [Formalism.FourierDecayAlt.P.Dx2.SL.castV_castV, Formalism.FourierDecayAlt.P.Dx2.SL.castF_castF]
+    exact Formalism.FourierDecayAlt.P.SliceAppend.slice_append k r T.base.z T.base.z' G h n t hloc (by omega) γ
   have e1 : r = ph + (n + 1) + ρ := hsum.symm
   have e2 : ph + (n + 1) + ρ = r := hsum
   have hj1 : 1 ≤ ph + (n + 1) := by omega
@@ -596,8 +618,8 @@ theorem pos_levels (hL : LettersDD) (hP : PosCore) (hI : IntG) (hT : OrbitSliceI
     (by
       rw [hsumR, hAU, hAsR]
       have hR3 : (1 : ℝ) ≤ ((r : ℝ) + 1) ^ 3 := one_le_pow₀ hR1
-      have : 0 ≤ ((r : ℝ) + 1) ^ 3 * ((N : ℝ) * (nd : ℝ) ^ 2 + (nd : ℝ) ^ 3) := by positivity
-      nlinarith)
+      have hmul := le_mul_of_one_le_left (by linarith : 0 ≤ (N : ℝ) * (nd : ℝ) ^ 2 + (nd : ℝ) ^ 3) hR3
+      linarith)
     (by
       rw [hsumR, hAsR]
       have hR4 : 0 ≤ ((r : ℝ) + 1) ^ 4 := by positivity
@@ -611,7 +633,11 @@ theorem pos_levels (hL : LettersDD) (hP : PosCore) (hI : IntG) (hT : OrbitSliceI
       have s3 : Cc * ((r : ℝ) + 1) ^ 4 * ((N : ℝ) * (nd : ℝ) ^ 2 + (nd : ℝ) ^ 3) ≤ A₀ := by
         have hndR : (nd : ℝ) = 2 * (r : ℝ) + k + 1 := by rw [hnd]; push_cast; ring
         rw [hndR]; exact hA₀
-      nlinarith)
+      have he1 : Cp * ((r : ℝ) + 1) ^ 4 * (16 * ((N : ℝ) * (nd : ℝ) ^ 2 + (nd : ℝ) ^ 3)) =
+          16 * Cp * (((r : ℝ) + 1) ^ 4 * ((N : ℝ) * (nd : ℝ) ^ 2 + (nd : ℝ) ^ 3)) := by ring
+      have he2 : Cc * (((r : ℝ) + 1) ^ 4 * ((N : ℝ) * (nd : ℝ) ^ 2 + (nd : ℝ) ^ 3)) =
+          Cc * ((r : ℝ) + 1) ^ 4 * ((N : ℝ) * (nd : ℝ) ^ 2 + (nd : ℝ) ^ 3) := by ring
+      linarith)
   have hfun : D.castF hc (D.sliceAt k r T.base.z T.base.z' G (h ++ [(n + 1, t)])) =
       fun γ => U.PhiFun (p := ph + (n + 1)) (s := 0) k ρ (Formalism.FourierDecayAlt.P.Dx2.SL.sigP (D.ptPerm h))
         (Formalism.FourierDecayAlt.P.Dx2.SL.dP (D.ptDiag h) t) (D.castV e1 T.base.z) (D.castV e1 T.base.z')
@@ -1215,7 +1241,9 @@ lemma one_add_u_le (n : ℕ) {t : ℂ} (ht : t ≠ 0) (u : G.UT (n + 1) → ℂ)
   have hM2 : ‖t‖⁻¹ ≤ max 1 ‖t‖⁻¹ := le_max_right _ _
   have hM1 : 1 ≤ max 1 ‖t‖⁻¹ := le_max_left _ _
   have hZ : 0 ≤ ‖Zu n t u‖ := norm_nonneg _
-  nlinarith [mul_le_mul_of_nonneg_right hM2 hZ]
+  have hmul := mul_le_mul_of_nonneg_right hM2 hZ
+  have he : max 1 ‖t‖⁻¹ * (1 + ‖Zu n t u‖) = max 1 ‖t‖⁻¹ + max 1 ‖t‖⁻¹ * ‖Zu n t u‖ := by ring
+  linarith
 
 lemma det_wMat_ne (m : ℕ) : (G.wMat m).det ≠ 0 := by
   intro h
@@ -1376,7 +1404,11 @@ theorem intG : IntG := by
       have hn1 : (n : ℝ) ≤ R := by
         have : (n : ℝ) ≤ ((n + 1 : ℕ) : ℝ) := by push_cast; linarith
         linarith
-      nlinarith
+      have hmul := mul_le_mul hnR hn1 hn0 (by linarith)
+      have hmul2 := mul_le_mul_of_nonneg_left hnd (by linarith : 0 ≤ R)
+      have hR20 : 0 ≤ R * R := by positivity
+      linarith [show 2 * R * ((2 * (ph + (n + 1) + ρ) + k + 1 : ℕ) : ℝ) =
+        2 * (R * ((2 * (ph + (n + 1) + ρ) + k + 1 : ℕ) : ℝ)) by ring]
     have hI2 : Integrable (fun u : G.UT (n + 1) → ℂ => (1 + ‖u‖) ^ (-a)) volume := integrable_one_add_norm hfr
     have sR := sigma_RC k (ph + (n + 1)) ρ
     have hxi : SFinite (volume : Measure (U.XiH ph (n + 1) σ)) := by
@@ -1697,7 +1729,9 @@ theorem Zv_decay (n : ℕ) {t : ℂ} (ht : t ≠ 0) (u : G.UT (n + 1) → ℂ) {
   have hxy : min 1 ‖t‖ * (1 + ‖u‖) ≤ 1 + ‖Zv n t u‖ := by
     have h1 : min 1 ‖t‖ ≤ 1 := min_le_left _ _
     have h2 : min 1 ‖t‖ ≤ ‖t‖ := min_le_right _ _
-    nlinarith [norm_nonneg u, mul_le_mul_of_nonneg_right h2 (norm_nonneg u)]
+    have hmul := mul_le_mul_of_nonneg_right h2 (norm_nonneg u)
+    have he : min 1 ‖t‖ * (1 + ‖u‖) = min 1 ‖t‖ + min 1 ‖t‖ * ‖u‖ := by ring
+    linarith
   rw [← Real.mul_rpow hm.le (by positivity)]
   first
     | exact Real.rpow_le_rpow_of_nonpos (by positivity) hxy (by linarith)
@@ -1714,7 +1748,7 @@ namespace Formalism.FourierDecayAlt.P.JCTx6.Pos
 
 open Formalism.FourierDecayAlt Formalism.REAL Formalism.QuantumDeterminants
 
-set_option maxHeartbeats 1000000 in
+
 theorem posCore : PosCore := by
   intro hIntG hTrans
   obtain ⟨CcU, hCcU⟩ := Formalism.FourierDecayAlt.P.corollary_u2_germ_hypothesis 127 0
@@ -1807,15 +1841,20 @@ theorem posCore : PosCore := by
       apply div_le_div_of_nonneg_right _ hD.le
       push_cast
       have hm0 : (0 : ℝ) ≤ mm := Nat.cast_nonneg _
-      nlinarith
+      have he : 2 * (R + 1) * (0 * ((n : ℝ) + 1) ^ 2 + 1 + (mm : ℝ) + (o : ℝ)) =
+          2 * (R + 1) * (1 + (mm : ℝ)) + 2 * (R + 1) * (0 + (o : ℝ)) := by ring
+      have h1 : 0 ≤ 2 * (R + 1) * (1 + (mm : ℝ)) := by positivity
+      have h2 : 0 ≤ 5 * R * (0 * ((n : ℝ) + 1) ^ 2 + 1) := by positivity
+      have h3 : 0 ≤ 2 * R * (mm : ℝ) := by positivity
+      linarith
     have hlt : 2 * R * Nd < (((127 : ℕ) : ℝ) + 1) * (R + 1) ^ 3 * (As : ℝ) := by
       have hAs' : (1 : ℝ) ≤ As := by exact_mod_cast hAs1
-      have h1 : 2 * R * Nd < 128 * (R + 1) * Nd := by nlinarith
+      have h1 : 2 * R * Nd < 128 * (R + 1) * Nd := mul_lt_mul_of_pos_right (by linarith) (by linarith)
       have h2 : 128 * (R + 1) * Nd ≤ 128 * (R + 1) ^ 3 * (As : ℝ) := by
         have h3 : (R + 1) ≤ (R + 1) ^ 3 := le_self_pow₀ (by linarith) (by norm_num)
         have h4 : (R + 1) * Nd ≤ (R + 1) ^ 3 * (As : ℝ) :=
           mul_le_mul h3 hnd (by linarith) (by positivity)
-        nlinarith
+        linarith
       norm_num
       linarith
     exact lt_of_lt_of_le hlt (le_trans ha1' hle)
@@ -1892,8 +1931,11 @@ theorem posCore : PosCore := by
       linarith
     have hn0 : (1 : ℝ) ≤ (n : ℝ) + 1 := by linarith [(Nat.cast_nonneg n : (0:ℝ) ≤ n)]
     have h1 : 2 * (((n : ℝ) + 1) * ((n : ℝ) + 1)) ≤ 2 * (R1 * R1) := by gcongr
-    have h2 : 2 * (R1 * R1) < 128 * R1 ^ 3 := by nlinarith
-    have h3 : 128 * R1 ^ 3 ≤ 128 * R1 ^ 3 * (As : ℝ) := by nlinarith
+    have h2 : 2 * (R1 * R1) < 128 * R1 ^ 3 := by
+      have := le_mul_of_one_le_right (by positivity : 0 ≤ R1 * R1) hR1
+      have hpos : 0 < R1 ^ 3 := by positivity
+      linarith [show R1 * R1 * R1 = R1 ^ 3 by ring]
+    have h3 : 128 * R1 ^ 3 ≤ 128 * R1 ^ 3 * (As : ℝ) := le_mul_of_one_le_right (by positivity) hAs'
     linarith
   have hφint : Integrable (fun v : G.UT (n + 1) → ℂ => G.psi U.betaU (G.superSum (G.upper v)) • Φ (Zv n t v))
       (G.muPi U.betaU (G.UT (n + 1))) := by

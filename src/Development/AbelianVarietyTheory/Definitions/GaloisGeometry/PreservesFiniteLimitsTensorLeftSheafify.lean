@@ -1,10 +1,125 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsMatrixForm
-public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsStrictlySemistableAlt
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.YonedaAddNaturalityLeft
+public import Mathlib.CategoryTheory.Adjunction.Additive
+public import Mathlib.AlgebraicGeometry.Sites.ConstantSheaf
+public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.HasExt
+public import Mathlib.Algebra.Category.ModuleCat.Monoidal.Closed
+public import Mathlib.Algebra.Homology.DerivedCategory.Ext.Map
+public import Mathlib.CategoryTheory.Monoidal.Braided.Reflection
+public import Mathlib.CategoryTheory.Sites.Monoidal
+public import Mathlib.RingTheory.PiTensorProduct
+public import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.RingTheory.Flat.CategoryTheory
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Development.AbelianVarietyTheory.Proofs.SatakeParameters.YonedaAddNaturalityLeft, Development.AbelianVarietyTheory.Definitions.GaloisGeometry.PreservesFiniteLimitsTensorLeftSheafify
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.YonedaAddNaturalityLeft =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.SatakeParameters.YonedaAddNaturalityLeft", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsMatrixForm\npublic import Mathlib.CategoryTheory.Adjunction.Additive\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\npublic import Mathlib.AlgebraicGeometry.Sites.ConstantSheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.CategoryTheory.Abelian.GrothendieckCategory.HasExt\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+section -- clump:auto
+@[expose] public section
+
+noncomputable section
+
+open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.Et
+
+namespace GlobalTheory.Et.H0
+
+variable (R : Type) [CommRing R] [TopologicalSpace R] [IsTopologicalRing R]
+
+theorem sh : Presheaf.IsSheaf Scheme.proetaleTopology.{0} (coefPre R) := by
+  rw [Presheaf.isSheaf_iff_isSheaf_forget _ _ (CategoryTheory.forget _)]
+  have h : Presheaf.IsSheaf Scheme.proetaleTopology.{0} (continuousMapPresheaf.{0} R) :=
+    .of_le Scheme.proetaleTopology_le_fpqcTopology (isSheaf_fpqcTopology_continuousMapPresheaf R)
+  have h2 : Presheaf.IsSheaf Scheme.proetaleTopology.{0} (continuousMapPresheaf.{0} R ⋙ uliftFunctor.{1}) := by
+    rw [isSheaf_iff_isSheaf_of_type] at h ⊢
+    exact (Presieve.isSheaf_comp_uliftFunctor _) h
+  exact h2
+
+def yonedaAdd (X : Scheme.{0}) (P : Scheme.{0}ᵒᵖ ⥤ ModuleCat.{1} (ULift.{1} R)) :
+    (uliftYoneda.{1}.obj X ⋙ ModuleCat.free (ULift.{1} R) ⟶ P) ≃+ P.obj (op X) where
+  toEquiv := (((ModuleCat.adj (ULift.{1} R)).whiskerRight Scheme.{0}ᵒᵖ).homEquiv (uliftYoneda.{1}.obj X) P).trans
+    uliftYonedaEquiv
+  map_add' _ _ := rfl
+
+def eAdd (X : Scheme.{0}) : H R 0 X ≃+ C(X, R) :=
+  (Abelian.Ext.addEquiv₀ (X := (freeOn R).obj X) (Y := coef R)).trans <|
+  ((sheafificationAdjunction Scheme.proetaleTopology.{0} (ModuleCat.{1} (ULift.{1} R))).homAddEquiv _ (coef R)).trans <|
+  (yonedaAdd R X (coef R).obj).trans <|
+  ((((isoSheafify _ (sh R)).app (op X)).symm.toLinearEquiv).toAddEquiv.trans AddEquiv.ulift)
+
+theorem eAdd_smul (X : Scheme.{0}) (r : R) (x : H R 0 X) : eAdd R X (r • x) = r • eAdd R X x := by
+  have h1 : Abelian.Ext.addEquiv₀ (X := (freeOn R).obj X) (Y := coef R) (r • x) =
+      ULift.up r • Abelian.Ext.addEquiv₀ (X := (freeOn R).obj X) (Y := coef R) x :=
+    (Abelian.Ext.linearEquiv₀ (R := ULift.{1} R) (X := (freeOn R).obj X) (Y := coef R)).map_smul (ULift.up r) x
+  change AddEquiv.ulift ((((isoSheafify _ (sh R)).app (op X)).symm.toLinearEquiv)
+      (yonedaAdd R X (coef R).obj ((sheafificationAdjunction _ _).homEquiv _ _
+        (Abelian.Ext.addEquiv₀ (X := (freeOn R).obj X) (Y := coef R) (r • x))))) =
+    r • AddEquiv.ulift ((((isoSheafify _ (sh R)).app (op X)).symm.toLinearEquiv)
+      (yonedaAdd R X (coef R).obj ((sheafificationAdjunction _ _).homEquiv _ _
+        (Abelian.Ext.addEquiv₀ (X := (freeOn R).obj X) (Y := coef R) x))))
+  rw [h1]
+  have h2 : yonedaAdd R X (coef R).obj ((sheafificationAdjunction _ _).homEquiv _ _
+      (ULift.up r • Abelian.Ext.addEquiv₀ (X := (freeOn R).obj X) (Y := coef R) x)) =
+      ULift.up r • yonedaAdd R X (coef R).obj ((sheafificationAdjunction _ _).homEquiv _ _
+        (Abelian.Ext.addEquiv₀ (X := (freeOn R).obj X) (Y := coef R) x)) := rfl
+  rw [h2]
+  exact (congrArg AddEquiv.ulift (LinearEquiv.map_smul (((isoSheafify _ (sh R)).app (op X)).symm.toLinearEquiv) (ULift.up r) _)).trans rfl
+
+def e (X : Scheme.{0}) : H R 0 X ≃ₗ[R] C(X, R) :=
+  { eAdd R X with map_smul' := eAdd_smul R X }
+
+end GlobalTheory.Et.H0
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.YonedaAddNaturalityLeft =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Definitions.GaloisGeometry.PreservesFiniteLimitsTensorLeftSheafify =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Definitions.GaloisGeometry.PreservesFiniteLimitsTensorLeftSheafify", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.SatakeParameters.YonedaAddNaturalityLeft\npublic import Mathlib.Algebra.Category.ModuleCat.Monoidal.Closed\npublic import Mathlib.Algebra.Homology.DerivedCategory.Ext.Map\npublic import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.HasExt\npublic import Mathlib.CategoryTheory.Monoidal.Braided.Reflection\npublic import Mathlib.CategoryTheory.Sites.Monoidal\npublic import Mathlib.RingTheory.PiTensorProduct\npublic import Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Flat.CategoryTheory\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\n\n"}
+section -- clump:auto
 @[expose] public section
 
 noncomputable section
@@ -208,21 +323,52 @@ def cupExt (X : Scheme.{0}) {i j n : ℕ} (h : i + j = n) (a : HS R (coef R) i X
     ((a.mapExactFunctor (tensorRight (coef R))).comp (Abelian.Ext.mk₀ (coefMul R)) (add_zero i))
     (show j + i = n by omega)) (zero_add n)
 
+private theorem extComp_isLinear {S D : Type*} [CommRing S] [Category* D] [Abelian D]
+    [HasExt.{1} D] [Linear S D] {A B C M N : D} {i j n : ℕ} (h : j + i = n)
+    (f : Abelian.Ext A B i →ₗ[S] Abelian.Ext M N i)
+    (g : Abelian.Ext A B j →ₗ[S] Abelian.Ext C M j)
+    (d : Abelian.Ext A C 0) (m : Abelian.Ext N B 0)
+    (product : Abelian.Ext A B i → Abelian.Ext A B j → Abelian.Ext A B n)
+    (hprod : product = fun a b => d.comp ((g b).comp ((f a).comp m (add_zero i)) h) (zero_add n)) :
+    (∀ b, IsLinearMap S (fun a => product a b)) ∧
+      (∀ a, IsLinearMap S (product a)) := by
+  subst product
+  let precomp := d.precompOfLinear S B (zero_add n)
+  constructor
+  · intro b
+    exact (precomp.comp (((g b).precompOfLinear S B h).comp
+      ((m.postcompOfLinear S M (add_zero i)).comp f))).isLinear
+  · intro a
+    exact (precomp.comp ((((f a).comp m (add_zero i)).postcompOfLinear S C h).comp g)).isLinear
+
+private theorem cupExt_isLinear (X : Scheme.{0}) {i j n : ℕ} (h : i + j = n) :
+    (∀ b : HS R (coef R) j X,
+      IsLinearMap (ULift.{1} R) (fun a : HS R (coef R) i X => cupExt R X h a b)) ∧
+    (∀ a : HS R (coef R) i X,
+      IsLinearMap (ULift.{1} R) (fun b : HS R (coef R) j X => cupExt R X h a b)) := by
+  let A := (freeOn R).obj X
+  let B := coef R
+  exact extComp_isLinear ((Nat.add_comm j i).trans h)
+    ((tensorRight B).mapExtLinearMap (ULift.{1} R) A B i)
+    ((tensorLeft A).mapExtLinearMap (ULift.{1} R) A B j)
+    (Abelian.Ext.mk₀ (freeDiag R X)) (Abelian.Ext.mk₀ (coefMul R))
+    (cupExt R X h) rfl
+
 theorem cupExt_add_left (X : Scheme.{0}) {i j n : ℕ} (h : i + j = n) (a a' : HS R (coef R) i X)
     (b : HS R (coef R) j X) : cupExt R X h (a + a') b = cupExt R X h a b + cupExt R X h a' b := by
-  simp only [cupExt, Abelian.Ext.mapExactFunctor_add, Abelian.Ext.add_comp, Abelian.Ext.comp_add]
+  exact ((cupExt_isLinear R X h).1 b).map_add a a'
 
 theorem cupExt_add_right (X : Scheme.{0}) {i j n : ℕ} (h : i + j = n) (a : HS R (coef R) i X)
     (b b' : HS R (coef R) j X) : cupExt R X h a (b + b') = cupExt R X h a b + cupExt R X h a b' := by
-  simp only [cupExt, Abelian.Ext.mapExactFunctor_add, Abelian.Ext.add_comp, Abelian.Ext.comp_add]
+  exact ((cupExt_isLinear R X h).2 a).map_add b b'
 
 theorem cupExt_smul_left (X : Scheme.{0}) {i j n : ℕ} (h : i + j = n) (r : ULift.{1} R) (a : HS R (coef R) i X)
     (b : HS R (coef R) j X) : cupExt R X h (r • a) b = r • cupExt R X h a b := by
-  simp only [cupExt, Functor.mapExactFunctor_smul, Abelian.Ext.smul_comp, Abelian.Ext.comp_smul]
+  exact ((cupExt_isLinear R X h).1 b).map_smul r a
 
 theorem cupExt_smul_right (X : Scheme.{0}) {i j n : ℕ} (h : i + j = n) (r : ULift.{1} R) (a : HS R (coef R) i X)
     (b : HS R (coef R) j X) : cupExt R X h a (r • b) = r • cupExt R X h a b := by
-  simp only [cupExt, Functor.mapExactFunctor_smul, Abelian.Ext.smul_comp, Abelian.Ext.comp_smul]
+  exact ((cupExt_isLinear R X h).2 a).map_smul r b
 
 def cupN (X : Scheme.{0}) (i j n : ℕ) (h : i + j = n) : H R i X →ₗ[R] H R j X →ₗ[R] H R n X :=
   LinearMap.mk₂ R (fun a b => cupExt R X h a b)
@@ -247,13 +393,22 @@ variable [FlatCoef R]
 
 def ofPre {X : Scheme.{0}} (γ : freePre R X ⟶ coefPre R) : H R 0 X := Abelian.Ext.mk₀ ((presheafToSheaf _ _).map γ)
 
+private theorem ext_tensor_mk₀ {D : Type*} [Category* D] [Abelian D] [HasExt.{1} D]
+    [MonoidalCategory D] {A B : D} [(tensorLeft A).Additive] [(tensorRight B).Additive]
+    [PreservesFiniteLimits (tensorLeft A)] [PreservesFiniteLimits (tensorRight B)]
+    [PreservesFiniteColimits (tensorLeft A)] [PreservesFiniteColimits (tensorRight B)]
+    (d : A ⟶ A ⊗ A) (g g' : A ⟶ B) (m : B ⊗ B ⟶ B) :
+    (Abelian.Ext.mk₀ d).comp (((Abelian.Ext.mk₀ g').mapExactFunctor (tensorLeft A)).comp
+      (((Abelian.Ext.mk₀ g).mapExactFunctor (tensorRight B)).comp (Abelian.Ext.mk₀ m) (add_zero 0))
+      (zero_add 0)) (zero_add 0) = Abelian.Ext.mk₀ (d ≫ (g ⊗ₘ g') ≫ m) := by
+  simp only [Abelian.Ext.mapExactFunctor_mk₀, Abelian.Ext.mk₀_comp_mk₀]
+  exact congrArg (fun f => Abelian.Ext.mk₀ (d ≫ f))
+    (MonoidalCategory.tensorHom_def'_assoc g g' m).symm
+
 theorem cupExt_mk₀ (X : Scheme.{0}) (g g' : (freeOn R).obj X ⟶ coef R) :
     cupExt R X (rfl : 0 + 0 = 0) (Abelian.Ext.mk₀ g) (Abelian.Ext.mk₀ g') =
       Abelian.Ext.mk₀ (freeDiag R X ≫ (g ⊗ₘ g') ≫ coefMul R) := by
-  simp only [cupExt, Abelian.Ext.mapExactFunctor_mk₀, Abelian.Ext.mk₀_comp_mk₀]
-  congr 1
-  rw [MonoidalCategory.tensorHom_def' (C := Shv R) g g', Category.assoc]
-  rfl
+  exact ext_tensor_mk₀ (freeDiag R X) g g' (coefMul R)
 
 theorem cupN_ofPre (X : Scheme.{0}) (γ γ' : freePre R X ⟶ coefPre R) :
     cupN R X 0 0 0 rfl (ofPre R γ) (ofPre R γ') = ofPre R (freeDiagPre R X ≫ (γ ⊗ₘ γ') ≫ coefMulPre R) := by
@@ -287,15 +442,10 @@ theorem homEquiv_map_ofPre {X : Scheme.{0}} (γ : freePre R X ⟶ coefPre R) :
   exact ((sheafificationAdjunction _ _).unit.naturality γ).symm
 
 theorem exists_ofPre {X : Scheme.{0}} (x : H R 0 X) : ∃ γ : freePre R X ⟶ coefPre R, ofPre R γ = x := by
-  obtain ⟨g, rfl⟩ := (Abelian.Ext.mk₀_bijective ((freeOn R).obj X) (coef R)).surjective x
-  let adj := sheafificationAdjunction Scheme.proetaleTopology.{0} (ModuleCat.{1} (ULift.{1} R))
-  refine ⟨adj.homEquiv _ _ g ≫ (isoSheafify _ (H0.sh R)).inv, ?_⟩
-  refine congrArg Abelian.Ext.mk₀ ((adj.homEquiv _ _).injective ?_)
-  erw [homEquiv_map_ofPre]
-  have hi : (isoSheafify _ (H0.sh R)).inv ≫ toSheafify Scheme.proetaleTopology.{0} (coefPre R) = 𝟙 _ := by
-    rw [← isoSheafify_hom _ (H0.sh R)]
-    exact Iso.inv_hom_id _
-  exact (Category.assoc _ _ _).trans ((congrArg (adj.homEquiv _ _ g ≫ ·) hi).trans (Category.comp_id _))
+  let e := H0.yonedaAdd R X (coefPre R)
+  let v : (coefPre R).obj (op X) := ULift.up (H0.e R X x)
+  refine ⟨e.symm v, (H0.e R X).injective ?_⟩
+  exact (e_ofPre R X (e.symm v)).trans (congrArg ULift.down (e.apply_symm_apply v))
 
 theorem e_cupN (X : Scheme.{0}) (x y : H R 0 X) :
     H0.e R X (cupN R X 0 0 0 rfl x y) = H0.e R X x * H0.e R X y := by
@@ -340,3 +490,7 @@ variable (X : Scheme.{0})
 end Examples
 
 end GlobalTheory.Et
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Definitions.GaloisGeometry.PreservesFiniteLimitsTensorLeftSheafify =====

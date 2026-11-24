@@ -1,35 +1,74 @@
 module
 
 public import Formalism.SharpRestriction.GlobalTheoremInputs
-public import Formalism.SharpRestriction.GrowthBounds.BinomialPolynomialIdentities
-public import Formalism.SharpRestriction.GrowthBounds.FrobeniusPaths
-public import Formalism.SharpRestriction.GrowthBounds.MonomialOrderSegments
-public import Formalism.SharpRestriction.GrowthBounds.CountingStatementReduction
-public import Formalism.SharpRestriction.GrowthBounds.PathWeight
-public import Formalism.SharpRestriction.GrowthBounds.PolBridge
-public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.CMFieldLemmas
-public import Formalism.SharpRestriction.ParConsts
 public import Formalism.SharpRestriction.ParamsHeightRankConstant
-public import Formalism.SharpRestriction.GrowthBounds.SmallOrderPrimes
-public import Formalism.SharpRestriction.GrowthBounds.IsResidueClassZero
-public import Formalism.SharpRestriction.GrowthBounds.Joints
-public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
 public import Formalism.LocalRingCardinality.Lemmas
-public import Formalism.SharpRestriction.GrowthBounds.GLWeightTheory
-public import Formalism.SharpRestriction.GrowthBounds.TopChoiceBounds
 public import Formalism.SharpRestriction.GrowthBounds.CornerGLContinuity
-public import Formalism.SharpRestriction.GrowthBounds.FormalGroupSystem
-public import Formalism.SharpRestriction.GrowthBounds.ProofLW
-public import Formalism.SharpRestriction.GrowthBounds.SelectionLemmas
-public import Formalism.SharpRestriction.GrowthBounds.LatticeSystems
-public import Formalism.SharpRestriction.AdmissibleParameterJoins.GandSk
-public import Formalism.SharpRestriction.GrowthBounds.ProjectionOfIsotypicDecomposition
-public import Formalism.SharpRestriction.GrowthBounds.ValuationLowestDegreeMapFractionField
-public import Formalism.LocalRingCardinality.HostCls
+public import Formalism.SharpRestriction.GrowthBounds.Lemma5aAt
+public import Formalism.SharpRestriction.GrowthBounds.ProjectionLemmaBaseLevel
+public import Formalism.SharpRestriction.GrowthBounds.SourceCleaning
+public import Formalism.SharpRestriction.GrowthBounds.TableLineDegreeFive
 public import Development.AutomorphicArithmetic.OrbitLabellings.EvenAddOrderOfHPOfPowLe
 public import Development.AutomorphicArithmetic.OrbitLabellings.GalEArithFrobEqIotaHP
 public import Development.AutomorphicArithmetic.PrimeDiscriminants.SplitLow
+import Formalism.LocalRingCardinality.HostCls
+public import Formalism.SharpRestriction.AdmissibleParameterJoins.GandSk
+public import Formalism.SharpRestriction.GrowthBounds.BinomialPolynomialIdentities
+public import Formalism.SharpRestriction.GrowthBounds.CountingStatementReduction
+import Formalism.SharpRestriction.GrowthBounds.GLWeightTheory
+public import Formalism.SharpRestriction.GrowthBounds.Joints
+import Formalism.SharpRestriction.GrowthBounds.LatticeSystems
+public import Formalism.SharpRestriction.GrowthBounds.MonomialOrderSegments
+public import Formalism.SharpRestriction.GrowthBounds.PathWeight
+import Formalism.SharpRestriction.GrowthBounds.PolBridge
+public import Formalism.SharpRestriction.GrowthBounds.ProofLW
+public import Formalism.SharpRestriction.GrowthBounds.RootWeights.PositivityConditionHolds
+import Formalism.SharpRestriction.GrowthBounds.RootWeights.WeightConditionFromIntegralForm
+import Formalism.SharpRestriction.GrowthBounds.TopChoiceBounds
+import Formalism.SharpRestriction.GrowthBounds.ValuationLowestDegreeMapFractionField
+import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.HostFacts
+import Formalism.SubspaceCounting.ChoiceOfTopsRefined
+import Formalism.SubspaceCounting.SubspaceCountingProofs.SubspaceCount
 public import Lemmata.GeneralBFactUpperBis.Imports
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Presheaf
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -139,7 +178,7 @@ theorem lo_le_loG (K : Consts) (L : SizeData₂ D) (hK : 0 ≤ K.La) (hLa : La K
     have h3 := mul_nonneg habs hk
     have h4 := mul_nonneg habs hSc.le
     rw [hC']
-    nlinarith
+    linarith
 
   have hpr : (if IsResidueClassZero D p then
       (if (p : ℝ) < L.sc.p0 D.R.k then C * (rG L.sc : ℝ) * L.sc.b' * Real.log L.sc.x
@@ -157,7 +196,7 @@ theorem lo_le_loG (K : Consts) (L : SizeData₂ D) (hK : 0 ≤ K.La) (hLa : La K
       · rw [if_pos h0, if_pos h0, ← rG_eq]
         have h1 : 0 ≤ (rG L.sc : ℝ) * L.sc.b' * Real.log L.sc.x :=
           mul_nonneg (mul_nonneg (Nat.cast_nonneg _) hb') hlx
-        nlinarith [mul_nonneg (sub_nonneg.2 hCC') h1]
+        linarith [mul_nonneg (sub_nonneg.2 hCC') h1]
       · rw [if_neg h0, if_neg h0]
         by_cases h1 : (p : ℝ) < L.sc.X'
         · rw [if_pos h1, if_pos h1]
@@ -170,7 +209,7 @@ theorem lo_le_loG (K : Consts) (L : SizeData₂ D) (hK : 0 ≤ K.La) (hLa : La K
               L.sc.w'' D.R.n * Real.log L.sc.x / L.sc.delta1 + (D.R.t : ℝ) * Real.log L.sc.x / L.sc.delta1 := by
             ring
           rw [e4, e5]
-          nlinarith [mul_nonneg (sub_nonneg.2 hCC') e2, mul_nonneg (sub_nonneg.2 hC'1) e1,
+          linarith [mul_nonneg (sub_nonneg.2 hCC') e2, mul_nonneg (sub_nonneg.2 hC'1) e1,
             mul_nonneg (sub_nonneg.2 hC'1) hη.le, mul_nonneg hC'0 hSc.le, mul_nonneg hC'0 e3]
         · rw [if_neg h1, if_neg h1]
     · rw [if_neg hc, if_neg hc]
@@ -218,7 +257,7 @@ theorem fl_le_flG (L : SizeData₂ D) (C : ℝ) (p : ℕ) (hp : p.Prime) :
   have e1 : 0 ≤ (D.R.f : ℝ) * (D.R.N D.R.m : ℝ) ^ 2 * Real.logb p L.sc.a :=
     mul_nonneg (mul_nonneg hf (by positivity)) hlg
   have e2 : 0 ≤ (D.R.f : ℝ) * Real.logb p L.sc.a ^ 2 := mul_nonneg hf (by positivity)
-  nlinarith [mul_nonneg (sub_nonneg.2 hCC') e1, mul_nonneg (sub_nonneg.2 hCC') e2]
+  linarith [mul_nonneg (sub_nonneg.2 hCC') e1, mul_nonneg (sub_nonneg.2 hCC') e2]
 
 theorem aL_top (L : SizeData₂ D) (t : D.host.TT) : aL L (t : HH D) = L.aT t := by
   unfold aL
@@ -340,7 +379,7 @@ theorem Nm_le_Sc (P : ParameterChoice' D L) : (5 : ℝ) ≤ (D.R.k : ℝ) ∧ (D
     linarith
   have hD : (5 : ℝ) ≤ (D.s.Del : ℝ) := by linarith
   have hkD : 5 * (D.s.Del : ℝ) ≤ (D.R.k : ℝ) * (D.s.Del : ℝ) := mul_le_mul_of_nonneg_right hk (by linarith)
-  refine ⟨hk, ?_, ?_⟩ <;> rw [L.Sc_eq] <;> nlinarith
+  refine ⟨hk, ?_, ?_⟩ <;> rw [L.Sc_eq] <;> linarith
 
 theorem kaJ_le (P : ParameterChoice' D L) (j : ℕ) (hj : j ∈ SizeData₂.lifts D) : kaJ D j ≤ L.Sc := by
   obtain ⟨hk, hN, _⟩ := Nm_le_Sc P
@@ -350,7 +389,7 @@ theorem kaJ_le (P : ParameterChoice' D L) (j : ℕ) (hj : j ∈ SizeData₂.lift
   have ht : (0 : ℝ) ≤ (D.R.t : ℝ) + 1 := by positivity
   have h1 := mul_le_mul_of_nonneg_right hj2 ht
   unfold kaJ
-  nlinarith
+  linarith
 
 theorem w''_le (s : Scale) (n : ℕ) (hn : 1 ≤ n) : s.w'' n ≤ s.b' / s.x ∧ s.b' / s.x ≤ s.b' := by
   have hx := sc_x_pos s
@@ -498,7 +537,7 @@ theorem svBound_of (X : Inst D L) (K : Consts) (hK : K.Nonneg) (P : ParameterCho
     have h1 : (p : ℝ) / ((p : ℝ) ^ 2 - 1) ≤ 4 / 3 * (1 / p) := by
       rw [div_le_iff₀ hd]
       field_simp
-      nlinarith
+      linarith
     have h2 := mul_le_mul_of_nonneg_right h1 (by linarith : (0 : ℝ) ≤ L.sc.a)
     calc (p : ℝ) / ((p : ℝ) ^ 2 - 1) * L.sc.a ≤ 4 / 3 * (1 / p) * L.sc.a := h2
       _ = 4 / 3 * (L.sc.a / p) := by ring
@@ -524,7 +563,7 @@ theorem svBound_of (X : Inst D L) (K : Consts) (hK : K.Nonneg) (P : ParameterCho
     have h5 := mul_le_mul_of_nonneg_left hgam.2 hNv
     have h6 : 0 ≤ (Nv X p t0 : ℝ) * q := mul_nonneg hNv (by linarith)
     apply max_le (by linarith)
-    nlinarith
+    linarith
   have htot : ∑ j ∈ SizeData₂.lifts D,
       max 0 (gU X K (aL L) (bL L) p j t0 - Pr X K (bL L) p j t0 - max (g0 X K (aL L) (bL L) p j t0) 0) ≤
         (D.R.m : ℝ) * (8 / 5 * ((Nv X p t0 : ℝ) * q)) := by
@@ -570,8 +609,8 @@ include b in
 theorem cmp_expand (hs : ∀ a x, cmp (a • x) = φ a • cmp x) (x : V) :
     cmp x = ∑ a, φ (b.repr x a) • cmp (b a) := by
   conv_lhs => rw [← b.sum_repr x]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   exact Finset.sum_congr rfl fun a _ => hs _ _
 
 theorem cmp_inj (hs : ∀ a x, cmp (a • x) = φ a • cmp x) (hli : LinearIndependent Kf (fun a => cmp (b a))) :
@@ -1309,14 +1348,14 @@ theorem sizes_bound_of_log_estimates (K : Consts) (δ Ce : ℝ) (hLa : 0 < K.La)
   have hinv : 0 < 1 / K.La := by positivity
   have hA : 2 * K.La * Ce ^ 2 * l ^ 3 ≤ xd := by
     have : 0 ≤ (38 * Ce + 1 / K.La) * l ^ 3 := by positivity
-    nlinarith
+    linarith
   have hB : 38 * Ce * l ^ 3 ≤ xd := by
     have : 0 ≤ (2 * K.La * Ce ^ 2 + 1 / K.La) * l ^ 3 := by positivity
-    nlinarith
+    linarith
   have hC : 1 / K.La ≤ xd := by
     have h1 : 0 ≤ (2 * K.La * Ce ^ 2 + 38 * Ce) * l ^ 3 := by positivity
     have h2 : 1 / K.La ≤ 1 / K.La * l ^ 3 := le_mul_of_one_le_right hinv.le hl3
-    nlinarith
+    linarith
   have hloga : Real.log L.sc.a = l + xe := by
     unfold Scale.a Scale.b Scale.L
     rw [Real.log_mul hx0.ne' (Real.exp_pos _).ne', Real.log_exp]

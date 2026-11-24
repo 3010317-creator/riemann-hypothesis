@@ -1,6 +1,56 @@
 module
 
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FockJointMultiplicity.JointMultOfSteps
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+public import Mathlib.RingTheory.Derivation.Lie
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -361,8 +411,8 @@ theorem minusPart_smul (c : ℂ) (A : Module.End ℂ (MvPolynomial σ ℂ)) (P :
 
 theorem minusPart_sum {ι : Type*} (t : Finset ι) (A : ι → Module.End ℂ (MvPolynomial σ ℂ))
     (P : MvPolynomial σ ℂ) : minusPart (∑ i ∈ t, A i) P = ∑ i ∈ t, minusPart (A i) P := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [minusPart_eq_sum, LinearMap.sum_apply, map_sum]
+
+  simp only [minusPart_eq_sum, LinearMap.sum_apply, map_sum]
   exact Finset.sum_comm
 
 theorem minusPart_raise (A : Module.End ℂ (MvPolynomial σ ℂ))
@@ -377,8 +427,8 @@ private theorem homogeneousComponent_minusPart (A : Module.End ℂ (MvPolynomial
     (P : MvPolynomial σ ℂ) (e : ℕ) :
     homogeneousComponent e (FockH1Action.minusPart A P) =
       homogeneousComponent e (A (homogeneousComponent (e + 2) P)) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [minusPart_eq_sum, map_sum]
+
+  rw [minusPart_eq_sum, map_sum]
   simp only [hc_hc]
   first
   | rw [Finset.sum_ite_eq]
@@ -585,7 +635,7 @@ theorem coeff_fockAct1_diag (a : Ix p q) (P : Pol p q r s) (m : Ln p q r s →�
       (((wt1 m a : ℚ) + sh1 p q r s a : ℚ) : ℂ) * AddMonoidAlgebra.coeff P m := by
   induction P using MvPolynomial.induction_on' with
   | monomial u c =>
-    rw [fockAct1_Eab_diag_monomial, coeff_smul, smul_eq_mul, coeff_monomial]
+    rw [fockAct1_Eab_diag_monomial, MvPolynomial.coeff_smul, smul_eq_mul, coeff_monomial]
     split_ifs with h
     · rw [h]
     · simp
@@ -596,7 +646,7 @@ theorem coeff_fockAct2_diag (c : Ix r s) (P : Pol p q r s) (m : Ln p q r s →�
       (((wt2 m c : ℚ) + sh2 p q r s c : ℚ) : ℂ) * AddMonoidAlgebra.coeff P m := by
   induction P using MvPolynomial.induction_on' with
   | monomial u b =>
-    rw [fockAct2_Eab_diag_monomial, coeff_smul, smul_eq_mul, coeff_monomial]
+    rw [fockAct2_Eab_diag_monomial, MvPolynomial.coeff_smul, smul_eq_mul, coeff_monomial]
     split_ifs with h
     · rw [h]
     · simp
@@ -609,11 +659,11 @@ theorem mem_wtSub1 (μ : Ix p q → ℚ) (P : Pol p q r s) :
   constructor
   · intro h m hm a
     have hc := congrArg (AddMonoidAlgebra.coeff · m) (h a)
-    rw [coeff_fockAct1_diag, coeff_smul, smul_eq_mul] at hc
+    rw [coeff_fockAct1_diag, MvPolynomial.coeff_smul, smul_eq_mul] at hc
     exact_mod_cast mul_right_cancel₀ (MvPolynomial.mem_support_iff.mp hm) hc
   · intro h a
     ext m
-    rw [coeff_fockAct1_diag, coeff_smul, smul_eq_mul]
+    rw [coeff_fockAct1_diag, MvPolynomial.coeff_smul, smul_eq_mul]
     by_cases hm : m ∈ P.support
     · rw [h m hm a]
     · have h0 : AddMonoidAlgebra.coeff P m = 0 := by simpa [MvPolynomial.mem_support_iff] using hm
@@ -626,11 +676,11 @@ theorem mem_wtSub2 (μ : Ix r s → ℚ) (P : Pol p q r s) :
   constructor
   · intro h m hm c
     have hc := congrArg (AddMonoidAlgebra.coeff · m) (h c)
-    rw [coeff_fockAct2_diag, coeff_smul, smul_eq_mul] at hc
+    rw [coeff_fockAct2_diag, MvPolynomial.coeff_smul, smul_eq_mul] at hc
     exact_mod_cast mul_right_cancel₀ (MvPolynomial.mem_support_iff.mp hm) hc
   · intro h c
     ext m
-    rw [coeff_fockAct2_diag, coeff_smul, smul_eq_mul]
+    rw [coeff_fockAct2_diag, MvPolynomial.coeff_smul, smul_eq_mul]
     by_cases hm : m ∈ P.support
     · rw [h m hm c]
     · have h0 : AddMonoidAlgebra.coeff P m = 0 := by simpa [MvPolynomial.mem_support_iff] using hm

@@ -21,7 +21,7 @@ An unattested module uses the guarded source fallback: stock Lean elaborates it 
 
 Source Lean commands explicitly pass **`-j1`**. `LEAN_NUM_THREADS=1` alone does not limit the [Lean 4.33.1 shell](https://github.com/leanprover/lean4/blob/v4.33.1/src/Lean/Shell.lean#L219), whose default pool uses the hardware thread count. Independent module jobs provide parallelism.
 
-`Trace.lean` uses the pinned Lake's hashing/import-trace operations to reconstruct source/dependency/compiler/options/module/package input hashes. It writes synthetic fetch traces and packs complete `.ltar` artifacts with stock `leantar`; only root-package mappings are published. Ordinary Lake commands retain their normal graph-processing costs. Mathematical verification is separate: see [the Comparator instructions](../README.md#checking-it).
+`Trace.lean` uses the pinned Lake's hashing/import-trace operations to reconstruct source/dependency/compiler/options/module/package input hashes. It writes synthetic fetch traces and packs complete `.ltar` artifacts with stock `leantar`; only root-package mappings are published. Ordinary Lake commands retain their normal graph-processing costs. Mathematical verification is separate: see [the Comparator instructions](../README.md#checking-the-proof-yourself).
 
 ## Produce and test
 
@@ -76,6 +76,17 @@ python3 scripts/publish-lake-cache.py .lake/cache-staging \
 ```
 
 The publisher reads a mode-0600 account R2 token from `~/.riemann-hypothesis-tauceti-r2-token`, scoped to the dedicated bucket in the TauCeti account, and verifies the revision map through the anonymous endpoint. Never copy this credential to a proof-building machine. It rejects incomplete mappings, unexpected files, and links before upload. For a progressive upload, use `sync-cache-artifacts.py DIRECTORY --watch`; finalize with `publish-lake-cache.py DIRECTORY --rev REV --map-only-after-sync`, which checks every remote artifact's presence and size before publishing the map.
+
+### Donor and other self-hosted build runners
+
+Upload credentials never go to a machine that builds pull requests. Self-hosted runners, including those that donors lend to the project, only build and hand their outputs to a GitHub-hosted job:
+
+- Every workflow step that evaluates or runs code of the commit being built (its lakefile, its dependencies' lakefiles, Mathlib's cache tool, `lake build`) runs in a bubblewrap sandbox with all namespaces unshared, a cleared environment, read-only system directories and toolchain, and the job's own work tree as the only writable host path; it cannot see the runner account's home directory. The sandbox has no network (no internet, LAN, host loopback services, metadata endpoint or host abstract sockets). Everything that downloads is trusted code that does not evaluate the commit's lakefile; dependencies, Mathlib's cache included, come from `main`'s own configuration, and a commit whose toolchain or dependency manifest differs from `main`'s is refused. If the sandbox cannot be created, the job fails; there is no unsandboxed fallback. The fragment mode's sandbox is `scripts/rh-buildq/sandbox.py`; the full-build and quick-check modes use the one in `scripts/ci-build.py`.
+- The build jobs hold no R2 credential. They upload new artifacts as a GitHub Actions artifact; a fresh `ubuntu-latest` job in the `ci-cache-publish` environment (deployable from `main` only) verifies them with trusted code before it derives a key from `R2_ACCOUNT_TOKEN`. For full builds this is `publish-ci-cache.py`; for fragment builds it is `scripts/rh-buildq/publish-fragment.py`, which recomputes the target commit, requires every module to be a source file of that commit and every artifact's SHA-256 and stock Lake content hash to match, and only adds map entries. Keep `R2_ACCOUNT_TOKEN` an environment secret of `ci-cache-publish`, never a repository secret.
+- The shared cache is fully trusted by policy: everything built is published. Fragment builds publish by default; a dispatcher can set `fragment_publish=false` to build without publishing. The publisher cannot check that a staged artifact really is what a module's input hash produces: code in the build writes the `.trace` files that carry those hashes, so a hostile commit could publish an artifact under another module's input hash and poison the shared pool.
+- Operator hosts that hold their own credential (the AWS rh-buildq hosts) are not GitHub runners and are not affected.
+
+The fragment security model is described in detail in [`scripts/rh-buildq/README.md`](../scripts/rh-buildq/README.md#security-model).
 
 The original published olean archive and Lake-extras mirrors remain in the separate Riemann Hypothesis Cloudflare account. Production native-cache downloads use the custom domain above; the `r2.dev` development URL throttles a full 175,187-artifact download.
 

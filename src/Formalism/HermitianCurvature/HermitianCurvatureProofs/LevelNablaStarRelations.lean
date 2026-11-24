@@ -1,6 +1,56 @@
 module
 
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.EulerZetaGammaInvIdentity
 public import Formalism.HermitianCurvature.StatementM
+public import Mathlib.Algebra.Order.Group.PiLex
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -9,29 +59,7 @@ open Formalism.FourierDecayAlt.M Formalism.FourierDecayAlt Finset
 namespace Formalism.FourierDecayAlt.P.Mx2
 
 theorem eulerLeibniz : EulerLeibniz := by
-  intro r v f g
-  ext γ
-  have hf : (euler v f).support ⊆ f.support := by
-    intro γ h
-    simp only [euler, LinearMap.coe_mk, AddHom.coe_mk, HahnSeries.mem_support, ne_eq, mul_eq_zero, not_or] at h
-    exact h.2
-  have hg : (euler v g).support ⊆ g.support := by
-    intro γ h
-    simp only [euler, LinearMap.coe_mk, AddHom.coe_mk, HahnSeries.mem_support, ne_eq, mul_eq_zero, not_or] at h
-    exact h.2
-  rw [HahnSeries.coeff_add, HahnSeries.coeff_mul_left' f.isPWO_support hf,
-    HahnSeries.coeff_mul_right' g.isPWO_support hg, ← Finset.sum_add_distrib]
-  show ((ofLex γ v : ℤ) : ℂ) * (f * g).coeff γ = _
-  rw [HahnSeries.coeff_mul, Finset.mul_sum]
-  refine Finset.sum_congr rfl ?_
-  rintro ⟨a, b⟩ h
-  have hab : a + b = γ := (Finset.mem_addAntidiagonal.1 h).2.2
-  subst hab
-  show _ = (((ofLex a v : ℤ) : ℂ) * f.coeff a) * g.coeff b + f.coeff a * (((ofLex b v : ℤ) : ℂ) * g.coeff b)
-  have : ((ofLex (a + b) v : ℤ) : ℂ) = ((ofLex a v : ℤ) : ℂ) + ((ofLex b v : ℤ) : ℂ) := by
-    have h2 : ofLex (a + b) v = ofLex a v + ofLex b v := rfl
-    rw [h2]; push_cast; ring
-  rw [this]; ring
+  apply Formalism.FourierDecayAlt.P.Mx4.eulerLeibniz <;> assumption
 
 theorem eulerCoord : EulerCoord := by
   intro r v w z
@@ -72,16 +100,14 @@ theorem multiplierPair_mul (f fb g gb : Fn r) : fnP f fb * fnP g gb = fnP (f * g
   · show MulOpposite.op (mulOp gb * mulOp fb) = MulOpposite.op (mulOp (fb * gb))
     rw [mulOp_mul, mul_comm]
 theorem multiplierPair_add (f fb g gb : Fn r) : fnP f fb + fnP g gb = fnP (f + g) (fb + gb) := by
-  refine Prod.ext ?_ ?_
-  · exact mulOp_add f g
-  · show MulOpposite.op (mulOp fb + mulOp gb) = MulOpposite.op (mulOp (fb + gb))
-    rw [mulOp_add]
+  refine Prod.ext (mulOp_add f g) ?_
+  show MulOpposite.op (mulOp fb + mulOp gb) = MulOpposite.op (mulOp (fb + gb))
+  rw [mulOp_add]
 theorem multiplierPair_one : (fnP 1 1 : Pr r) = 1 := by
   have : mulOp (1 : Fn r) = 1 := by ext h : 1; simp [mulOp]
   refine Prod.ext ?_ ?_
   · exact this
-  · show MulOpposite.op (mulOp (1 : Fn r)) = 1
-    rw [this]; rfl
+  · exact congrArg MulOpposite.op this
 theorem multiplierPair_neg (f fb : Fn r) : -fnP f fb = fnP (-f) (-fb) := by
   rw [neg_eq_iff_add_eq_zero, multiplierPair_add]; simp
   refine Prod.ext ?_ ?_
@@ -96,15 +122,7 @@ theorem multiplierPair_comm (f fb g gb : Fn r) : fnP f fb * fnP g gb = fnP g gb 
 theorem der_fn (a b : Fn r) (v w : Var r) (f fb : Fn r) :
     mk (mulOp a * euler v) (-(mulOp b * euler w)) * fnP f fb =
       fnP f fb * mk (mulOp a * euler v) (-(mulOp b * euler w)) + fnP (a * euler v f) (b * euler w fb) := by
-  refine Prod.ext ?_ ?_
-  · show mulOp a * euler v * mulOp f = mulOp f * (mulOp a * euler v) + mulOp (a * euler v f)
-    rw [mul_assoc, eulerMul, mul_add, ← mul_assoc, ← mul_assoc, mulOp_mul, mulOp_mul, mulOp_mul, mul_comm a f]
-  · show MulOpposite.op (mulOp fb * -(mulOp b * euler w)) =
-      MulOpposite.op (-(mulOp b * euler w) * mulOp fb + mulOp (b * euler w fb))
-    congr 1
-    rw [neg_mul, mul_assoc, eulerMul, mul_add, ← mul_assoc, mulOp_mul, mulOp_mul, mul_neg, ← mul_assoc, mulOp_mul,
-      mul_comm b fb]
-    abel
+  apply Formalism.FourierDecayAlt.P.Mx4.der_fn <;> assumption
 
 theorem euler_one (v : Var r) : euler v (1 : Fn r) = 0 := by
   have := (eulerCoord r v v 1).2
@@ -142,8 +160,7 @@ theorem smul_fnP (a : ℝ) (f fb : Fn r) : (a : ℂ) • fnP f fb = fnP ((a : �
   · show algebraMap ℂ (Op r) a * mulOp f = mulOp ((a : ℂ) • f)
     ext h : 1; simp [mulOp]
   · show (algebraMap ℂ (Op r)ᵐᵒᵖ) (starRingEnd ℂ (a : ℂ)) * MulOpposite.op (mulOp fb) = MulOpposite.op (mulOp ((a : ℂ) • fb))
-    rw [Complex.conj_ofReal, ← Algebra.smul_def, ← MulOpposite.op_smul]
-    congr 1
+    rw [Complex.conj_ofReal, ← Algebra.smul_def, ← MulOpposite.op_smul, MulOpposite.op_inj]
     ext h : 1; simp [mulOp]
 
 noncomputable def nabE (a TT : ℝ) : Pr r := dzP + (a : ℂ) • (zbP * ggiP TT)
@@ -167,9 +184,7 @@ theorem nabla_zeta_comm (a TT : ℝ) : nabE a TT * (zP : Pr r) = zP * nabE a TT 
 theorem nab_zi (a TT : ℝ) : nabE a TT * (ziP : Pr r) = ziP * nabE a TT - ziP * ziP := by
   rw [ziP, nabE_fn, euler_inv _ _ (coord_ne r _), euler_inv _ _ (coord_ne r _), (eulerCoord r vz vz 0).1,
     (eulerCoord r vzb vzb 0).1, if_pos rfl, if_pos rfl, multiplierPair_mul, sub_eq_add_neg, multiplierPair_neg]
-  congr 2
-  · field_simp [coord_ne r vz]
-  · field_simp [coord_ne r vzb]
+  congr 2 <;> field_simp [coord_ne r vz, coord_ne r vzb]
 theorem nab_zb (a TT : ℝ) : nabE a TT * (zbP : Pr r) = zbP * nabE a TT := by
   rw [zbP, nabE_fn, (eulerCoord r vz vzb 0).1, (eulerCoord r vzb vz 0).1, if_neg vz_ne, if_neg vz_ne.symm]
   simp only [mul_zero]
@@ -181,29 +196,21 @@ theorem nab_zb (a TT : ℝ) : nabE a TT * (zbP : Pr r) = zbP * nabE a TT := by
   rw [this, add_zero]
 theorem nab_gg (a TT : ℝ) : nabE a TT * (ggP TT : Pr r) = ggP TT * nabE a TT + zbP := by
   rw [ggP, nabE_fn, euler_GG_z, euler_gg_zb, zbP]
-  congr 2
-  · field_simp [coord_ne r vz]
-  · field_simp [coord_ne r vzb]
+  congr 2 <;> field_simp [coord_ne r vz, coord_ne r vzb]
 theorem nab_ggi (a TT : ℝ) : nabE a TT * (ggiP TT : Pr r) = ggiP TT * nabE a TT - zbP * ggiP TT * ggiP TT := by
   rw [ggiP, nabE_fn, euler_inv _ _ (gg_ne TT), euler_inv _ _ (gg_ne TT), euler_GG_z, euler_gg_zb, zbP, multiplierPair_mul, multiplierPair_mul,
     sub_eq_add_neg, multiplierPair_neg]
-  congr 2
-  · field_simp [coord_ne r vz]
-  · field_simp [coord_ne r vzb]
+  congr 2 <;> field_simp [coord_ne r vz, coord_ne r vzb]
 theorem nabs_zb (a TT : ℝ) : nabsE a TT * (zbP : Pr r) = zbP * nabsE a TT - 1 := by
   rw [zbP, nabsE_fn, (eulerCoord r vz vz 0).1, (eulerCoord r vzb vzb 0).1, if_pos rfl, if_pos rfl,
     inv_mul_cancel₀ (coord_ne r _), inv_mul_cancel₀ (coord_ne r _), multiplierPair_one]
 theorem nabs_gg (a TT : ℝ) : nabsE a TT * (ggP TT : Pr r) = ggP TT * nabsE a TT - zP := by
   rw [ggP, nabsE_fn, euler_GG_z, euler_gg_zb, zP]
-  congr 2
-  · field_simp [coord_ne r vzb]
-  · field_simp [coord_ne r vz]
+  congr 2 <;> field_simp [coord_ne r vzb, coord_ne r vz]
 theorem nabs_ggi (a TT : ℝ) : nabsE a TT * (ggiP TT : Pr r) = ggiP TT * nabsE a TT + zP * ggiP TT * ggiP TT := by
   rw [ggiP, nabsE_fn, euler_inv _ _ (gg_ne TT), euler_inv _ _ (gg_ne TT), euler_GG_z, euler_gg_zb, zP, multiplierPair_mul, multiplierPair_mul,
     sub_eq_add_neg, multiplierPair_neg]
-  congr 2
-  · field_simp [coord_ne r vzb]
-  · field_simp [coord_ne r vz]
+  congr 2 <;> field_simp [coord_ne r vzb, coord_ne r vz]
 
 theorem partialDeriv_def (l : Fin r) : (pP l : Pr r) = mk (mulOp 1 * euler (vc l)) (-(mulOp 1 * euler (vcb l))) := by
   have : mulOp (1 : Fn r) = 1 := by ext h : 1; simp [mulOp]
@@ -213,9 +220,7 @@ theorem p_c (l : Fin r) : pP l * cP l = cP l * pP l + cP l := by
 theorem p_ci (l : Fin r) : pP l * ciP l = ciP l * pP l - ciP l := by
   rw [partialDeriv_def, ciP, der_fn, euler_inv _ _ (coord_ne r _), euler_inv _ _ (coord_ne r _), (eulerCoord r _ _ 0).1,
     (eulerCoord r _ _ 0).1, if_pos rfl, if_pos rfl, one_mul, one_mul, sub_eq_add_neg, multiplierPair_neg]
-  congr 2
-  · field_simp [coord_ne r (vc l)]
-  · field_simp [coord_ne r (vcb l)]
+  congr 2 <;> field_simp [coord_ne r (vc l), coord_ne r (vcb l)]
 
 theorem eulerComm : EulerComm := by
   intro r v w
@@ -303,43 +308,34 @@ theorem comm_eu (v w : Var r) (f : Fn r) (h : euler v f = 0) :
 
 theorem mk_comm (X Xs Y Ys : Op r) (h1 : X * Y = Y * X) (h2 : Xs * Ys = Ys * Xs) : mk X Xs * mk Y Ys = mk Y Ys * mk X Xs := by
   refine Prod.ext h1 ?_
-  show MulOpposite.op (Ys * Xs) = MulOpposite.op (Xs * Ys)
-  rw [h2]
+  exact congrArg MulOpposite.op h2.symm
 
 theorem partialDeriv_commute_nab (l : Fin r) (a TT : ℝ) : pP l * nabE a TT = nabE a TT * pP l := by
   unfold nabE
   rw [zbP, ggiP, multiplierPair_mul, smul_fnP, mul_add, add_mul, partialDeriv_mul_fn,
     ((zf_smul _ (zf_mul zf_zb (zf_ggi TT))) l).1, ((zf_smul _ (zf_mul zeta_free_of_variable (zf_ggi TT))) l).2, multiplierPair_zero, add_zero]
   congr 1
-  apply mk_comm
-  · exact comm_eu _ _ _ (zf_zi l).1
-  · rw [neg_mul_neg, neg_mul_neg]; exact comm_eu _ _ _ (zf_zbi l).2
+  exact mk_comm _ _ _ _ (comm_eu _ _ _ (zf_zi l).1) (by rw [neg_mul_neg, neg_mul_neg]; exact comm_eu _ _ _ (zf_zbi l).2)
 theorem partialDerivBar_commute_nab (l : Fin r) (a TT : ℝ) : pbP l * nabE a TT = nabE a TT * pbP l := by
   unfold nabE
   rw [zbP, ggiP, multiplierPair_mul, smul_fnP, mul_add, add_mul, partialDerivBar_mul_fn,
     ((zf_smul _ (zf_mul zf_zb (zf_ggi TT))) l).2, ((zf_smul _ (zf_mul zeta_free_of_variable (zf_ggi TT))) l).1, multiplierPair_zero, add_zero]
   congr 1
-  apply mk_comm
-  · exact comm_eu _ _ _ (zf_zi l).2
-  · rw [neg_mul_neg, neg_mul_neg]; exact comm_eu _ _ _ (zf_zbi l).1
+  exact mk_comm _ _ _ _ (comm_eu _ _ _ (zf_zi l).2) (by rw [neg_mul_neg, neg_mul_neg]; exact comm_eu _ _ _ (zf_zbi l).1)
 theorem partialDeriv_commute_nabs (l : Fin r) (a TT : ℝ) : pP l * nabsE a TT = nabsE a TT * pP l := by
   unfold nabsE
   rw [zP, ggiP, multiplierPair_mul, smul_fnP, mul_add, add_mul, partialDeriv_mul_fn,
     ((zf_smul _ (zf_mul zeta_free_of_variable (zf_ggi TT))) l).1, ((zf_smul _ (zf_mul zf_zb (zf_ggi TT))) l).2, multiplierPair_zero, add_zero,
     mul_neg, neg_mul]
   congr 2
-  apply mk_comm
-  · exact comm_eu _ _ _ (zf_zbi l).1
-  · rw [neg_mul_neg, neg_mul_neg]; exact comm_eu _ _ _ (zf_zi l).2
+  exact mk_comm _ _ _ _ (comm_eu _ _ _ (zf_zbi l).1) (by rw [neg_mul_neg, neg_mul_neg]; exact comm_eu _ _ _ (zf_zi l).2)
 theorem partialDerivBar_commute_nabs (l : Fin r) (a TT : ℝ) : pbP l * nabsE a TT = nabsE a TT * pbP l := by
   unfold nabsE
   rw [zP, ggiP, multiplierPair_mul, smul_fnP, mul_add, add_mul, partialDerivBar_mul_fn,
     ((zf_smul _ (zf_mul zeta_free_of_variable (zf_ggi TT))) l).2, ((zf_smul _ (zf_mul zf_zb (zf_ggi TT))) l).1, multiplierPair_zero, add_zero,
     mul_neg, neg_mul]
   congr 2
-  apply mk_comm
-  · exact comm_eu _ _ _ (zf_zbi l).2
-  · rw [neg_mul_neg, neg_mul_neg]; exact comm_eu _ _ _ (zf_zi l).1
+  exact mk_comm _ _ _ _ (comm_eu _ _ _ (zf_zbi l).2) (by rw [neg_mul_neg, neg_mul_neg]; exact comm_eu _ _ _ (zf_zi l).1)
 
 theorem nabs_zbi (a TT : ℝ) : nabsE a TT * (zbiP : Pr r) = zbiP * nabsE a TT + zbiP * zbiP := by
   rw [zbiP, nabsE_fn, eci, eci, if_pos rfl, if_pos rfl, multiplierPair_mul, sub_eq_add_neg, multiplierPair_neg]

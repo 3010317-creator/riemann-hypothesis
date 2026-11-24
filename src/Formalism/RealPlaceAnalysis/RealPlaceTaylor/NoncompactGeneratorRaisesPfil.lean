@@ -1,7 +1,56 @@
 module
 
 public import Formalism.RealPlaceAnalysis.StatementU
-public import Formalism.RealPlaceAnalysis.ThirdArithmeticHolds
+public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.CasComm
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Finiteness.Lattice
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -17,8 +66,7 @@ variable {V : Type} [AddCommGroup V] [Module ℂ V] {n : ℕ} (ε : Fin n → Bo
     (E : Fin n → Fin n → Module.End ℂ V) (u : V)
 
 theorem mem_kSpan_self' : u ∈ kSpan ε E u := by
-  unfold kSpan
-  exact Submodule.mem_sInf.mpr fun S hS => hS.1
+  simpa only [kSpan] using (Submodule.mem_sInf.mpr (fun S hS => hS.1) : u ∈ sInf {p : Submodule ℂ V | u ∈ p ∧ KStable ε E p})
 
 theorem compact_span_compact_stable : KStable ε E (kSpan ε E u) := by
   intro a b hab x hx
@@ -95,10 +143,8 @@ theorem compact_generator_word_mem_pfil (hE : GlRel E) (a b : Fin n) (hab : ε a
   | nil =>
     intro _
     have hy' : E a b y ∈ kSpan ε E u := compact_span_compact_stable ε E u a b hab y hy
-    have h0 := word_action_mem_pfil ε E u 0 [] (le_refl _) (by intro p hp; cases hp) (E a b y) hy'
-    rw [ew_nil] at h0
-    rw [ew_nil]
-    exact h0
+    simpa [ew_nil] using
+      word_action_mem_pfil ε E u 0 [] (le_refl _) (by intro p hp; cases hp) (E a b y) hy'
   | cons p w ih =>
     intro hnc
     have hnc' : ∀ q ∈ w, ε q.1 ≠ ε q.2 := fun q hq => hnc q (List.mem_cons.mpr (Or.inr hq))
@@ -151,12 +197,11 @@ theorem poincare_filtration_zero : pfil ε E u 0 = kSpan ε E u := by
   · apply Submodule.span_le.mpr
     rintro z ⟨w, hw, hnc, y, hy, rfl⟩
     cases w with
-    | nil => rw [SetLike.mem_coe, ew_nil]; exact hy
+    | nil => simpa [ew_nil] using hy
     | cons p w => simp at hw
   · intro y hy
-    have h0 := word_action_mem_pfil ε E u 0 [] (le_refl _) (by intro p hp; cases hp) y hy
-    rw [ew_nil] at h0
-    exact h0
+    simpa [ew_nil] using
+      word_action_mem_pfil ε E u 0 [] (le_refl _) (by intro p hp; cases hp) y hy
 
 theorem pfil_le_cyclic (j : ℕ) : pfil ε E u j ≤ cyc E u := by
   apply Submodule.span_le.mpr
@@ -317,8 +362,6 @@ variable {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V] {n : ℕ}
 private theorem arr_ext {j : ℕ} {F G : Arr V n j} (h : ∀ α, F α = G α) : F = G := by
   first
   | exact PiLp.ext h
-  | exact (WithLp.linearEquiv 2 ℂ ((Fin j → Fin n × Fin n) → V)).injective (funext h)
-  | exact funext h
 
 private theorem arr_sub_apply {j : ℕ} (F G : Arr V n j) (α : Fin j → Fin n × Fin n) :
     (F - G) α = F α - G α := rfl
@@ -461,8 +504,7 @@ theorem word_product_zero (E : Fin n → Fin n → Module.End ℂ V) (α : Fin 0
 
 theorem word_product_succ (E : Fin n → Fin n → Module.End ℂ V) {j : ℕ} (α : Fin (j + 1) → Fin n × Fin n) :
     u1W E α = E (α (Fin.last j)).1 (α (Fin.last j)).2 * u1W E (Fin.init α) := by
-  unfold u1W
-  rw [List.ofFn_succ', List.concat_eq_append, List.reverse_append]
+  simp only [u1W, List.ofFn_succ', List.concat_eq_append, List.reverse_append]
   rfl
 
 theorem commutator_word_operator_sum (E : Fin n → Fin n → Module.End ℂ V) (hE : GlRel E) (c d : Fin n) :
@@ -541,10 +583,10 @@ theorem symmetrization_equivariant (E : Fin n → Fin n → Module.End ℂ V) (h
       intro α; rw [factorAction_apply']; split_ifs <;> simp
     simp only [e1, Finset.sum_sub_distrib]
     rw [sum_update_first_index_swap i c d (fun α β => u1W E α (F β)), sum_update_second_index_swap i c d (fun α β => u1W E α (F β))]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [theta_map_apply, theta_map_apply, map_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [arr_operator_apply, map_add (f := _), map_sum, hder, Finset.sum_add_distrib]
+
+  rw [theta_map_apply, theta_map_apply, map_sum]
+
+  simp only [arr_operator_apply, map_add (f := _), map_sum, hder, Finset.sum_add_distrib]
   rw [hkey]
   exact add_comm _ _
 
@@ -610,8 +652,6 @@ theorem pfil_succ_le_theta_image_sup (j : ℕ) : pfil ε E u (j + 1) ≤
       have hm : α0 i ∈ w.reverse := by
         first
         | exact List.get_mem _ _
-        | exact List.get_mem _ _ _
-        | simp [α0, List.getElem_mem]
       exact hnc (α0 i) (List.mem_reverse.mp hm)
     let F : Arr V n (j + 1) :=
       (WithLp.linearEquiv 2 ℂ ((Fin (j + 1) → Fin n × Fin n) → V)).symm
@@ -657,13 +697,10 @@ theorem permuted_words_diff_mem_pfil (hE : GlRel E) (y : V) (hy : y ∈ kSpan ε
       have e1 : l₁ = [] := by
         first
         | exact List.eq_nil_of_length_eq_zero (by omega)
-        | exact List.length_eq_zero_iff.mp (by omega)
-        | exact List.length_eq_zero.mp (by omega)
       subst e1
       have e2 : l₂ = [] := by
         first
         | exact h.symm.eq_nil
-        | exact h.nil_eq.symm
       subst e2
       rw [sub_self, map_zero]
       exact Submodule.zero_mem _
@@ -717,7 +754,6 @@ theorem symmetrization_perm_sub_mem (hE : GlRel E) (j : ℕ) (F : Arr V n (j + 1
       have h0 : (List.ofFn (β ∘ σ.symm)).Perm (List.ofFn β) := by
         first
         | exact Equiv.Perm.ofFn_comp_perm σ.symm β
-        | exact List.ofFn_comp_perm σ.symm β
       exact (List.reverse_perm _).trans (h0.trans (List.reverse_perm _).symm)
     exact permuted_words_diff_mem_pfil ε E u hE (F β) hβ _ _ hperm
       (reverse_of_fn_noncompact ε (β ∘ σ.symm) (fun i => h (σ.symm i))) j (by simp)
@@ -729,13 +765,11 @@ end U1Theta
 
 theorem thetaFil_of (hp : PfilFacts) : ThetaFil := by
   intro V _ _ n ε E u hE
-  exact ⟨fun j F hF => theta_noncompact_mem_pfil ε E u j F hF, fun j => pfil_succ_le_theta_image_sup ε E u j,
-    fun j F hF σ => symmetrization_perm_sub_mem ε E u hE j F hF σ⟩
+  exact ⟨theta_noncompact_mem_pfil ε E u, pfil_succ_le_theta_image_sup ε E u, symmetrization_perm_sub_mem ε E u hE⟩
 
 theorem arr_module_facts : ArrModule := by
   intro V _ _ n ε E j
-  exact ⟨fun hE => ⟨arr_operators_gl_relation E hE, fun c d F => symmetrization_equivariant E hE c d F⟩,
-    fun hU => arr_operators_compact_unitary ε E hU⟩
+  exact ⟨fun hE => ⟨arr_operators_gl_relation E hE, symmetrization_equivariant E hE⟩, arr_operators_compact_unitary ε E⟩
 
 theorem theta_filtration_holds : ThetaFil := thetaFil_of pfil_facts_hold
 

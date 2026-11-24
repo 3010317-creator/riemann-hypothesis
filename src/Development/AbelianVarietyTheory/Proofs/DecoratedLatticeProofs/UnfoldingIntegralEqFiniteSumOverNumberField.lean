@@ -1,9 +1,53 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PhiTopAgree
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ResiduesOfCompletionAtPrimeWithUniformizerStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralPeriodicCompactSupportEqFiniteSumStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FramePositiveSum
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralPeriodicCompactSupportEqFiniteSum
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ResiduesOfCompletionAtPrimeWithUniformizer
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -111,8 +155,8 @@ variable {U U' : Type} [Fintype U] [DecidableEq U] [Fintype U'] [DecidableEq U']
 theorem ch_eq (he : IsOrd (yPos (fun a => (d a).val) n) e)
     (he' : IsOrd (yPos (fun a => (d' a).val) n') e') (x : (Fin (n' + (c + 1)) → E) →ₗ[E] (Fin (n + c) → E)) :
     ch (toLoc ι e e' x) = ι (Loc.chArg x) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [ch, Loc.chArg, toLoc, map_sum]
+
+  simp only [ch, Loc.chArg, toLoc, map_sum]
   rw [← Fin.sum_univ_eq_sum_range (fun i => ι (Loc.atN (x (Loc.eN E (n' + (c + 1)) (n' + i + 1))) (n + i))) c]
   refine Finset.sum_congr rfl fun i _ => ?_
   have h1 : Pi.single (e' (.inr i.succ)) (1 : E) = Loc.eN E (n' + (c + 1)) (n' + i.val + 1) := by
@@ -268,7 +312,7 @@ theorem sumAgree : SumAgree := by
   classical
   have hq : ι (q : E) = (ϖ : k) := hC.unif.symm
   have hq0 : (q : E) ≠ 0 := fun h0 => ϖ.ne_zero (by rw [← hq, h0, map_zero])
-  obtain ⟨-, -, -, -, -, -, hres, hrep⟩ := GlobalTheory.T.residues_of_completionAtPrimeWithUniformizer E k P q ι ϖ hC hU
+  obtain ⟨-, -, -, -, -, -, hres, hrep⟩ := _root_.GlobalTheory.SymBridge.ComplRes.residues E k P q ι ϖ hC hU
   have hv : valuation k (ϖ : k) < 1 := (hU ϖ).2 le_rfl
   have hψ1 : ∀ b : k, valuation k b ≤ 1 → ψ b = 1 := fun b hb =>
     (hψ 1).2 le_rfl b (by simpa using hb)
@@ -327,11 +371,11 @@ theorem sumAgree : SumAgree := by
     rw [hper _ _ (free_small ϖ hv y hy)]
     congr 1
     rw [neg_add, AddChar.map_add_eq_mul, hψ1 (-ch (freeMat y)) (by rw [Valuation.map_neg]; exact ch_freeMat_int ϖ hv y hy), mul_one]
-  have key := GlobalTheory.T.integral_periodic_compactSupport_eq_finiteSum k ν hν ϖ hU A B T hT1 hT2 _ F hF1 hF2
+  have key := _root_.GlobalTheory.PeriodicIntegral.integral_eq_sum k ν hν ϖ hU A B T hT1 hT2 _ F hF1 hF2
   have hL : opE ψ ν 1 Φ X₀ = ∫ u, F u ∂(Measure.pi fun _ => ν) := rfl
   rw [hL, key]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Loc.E1, map_mul, map_pow, map_inv₀, map_natCast, map_sum, hres]
+
+  simp only [Loc.E1, map_mul, map_pow, map_inv₀, map_natCast, map_sum, hres]
   rw [Fintype.card_congr (freeEquiv hc hoe hoe')]
   congr 1
   symm

@@ -1,31 +1,66 @@
 module
 
 public import Formalism.HermitianCurvature.StatementMA
-public import Formalism.HermitianCurvature.StatementM
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.Interlace
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.QuasiDeterminantFromEntries
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.EulerZetaGammaInvIdentity
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.AdmissibleRecOfAdmissibleWord
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.FrameOfAdmissibleWord
-public import Formalism.HermitianCurvature.StatementWd
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.PositionInsertionDiagonalCompat
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.KroneckerEmbedMulApply
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.SecondEmbedMulFirstEmbedApply
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.QEFirstMulSecondEqSwap
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.TransferMatrixFactorization
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.EntryCommuteTransposedRMatrix
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ScalarCommuteTransposedRMatrixEntry
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LiftMatrixTransferConjTransposeCommute
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.DiagScalarCommuteOfEntries
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.PartialFlipCommuteDiagScalarOfFree
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.DiagScalarCommuteTransposedRMatrix
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.MultiplicationOpHom
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LevelNablaStarRelations
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.Interlace
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.InterlaceSignTwo
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.EulerZetaGammaInvIdentity
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.TransferRtt
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.WeightedSumDifferenceIdentity
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.GammaFamilyCommuteGenerators
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ModelWordsAssemble
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.Analysis.Calculus.FDeriv.Mul
 
 @[expose] public section
 
@@ -980,8 +1015,8 @@ theorem kap_smul (c : ℂ) (f : Ty P → ℂ) : (kap P D fun π => c * f π) = c
 
 theorem kap_sum {ι : Type} (s : Finset ι) (f : ι → Ty P → ℂ) :
     (kap P D fun π => ∑ i ∈ s, f i π) = ∑ i ∈ s, kap P D (f i) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← map_sum]; congr 1; funext π; simp
+
+  rw [← map_sum]; congr 1; funext π; simp
 
 theorem ss_sc (l : ℕ) (w : D.Pr) : Commute (SS P D l) (sc P D w) := by
   show SS P D l * sc P D w = sc P D w * SS P D l
@@ -1147,8 +1182,8 @@ theorem coordinate_polynomial_monic (π : Ty P) : (coordinatePolynomial P π).Mo
 
 theorem star_wC (π : Ty P) (Y : ℂ) : star (wC P π Y) = wC P π (star Y) := by
   have h1 : (wNum P π).map (starRingEnd ℂ) = wNum P π := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [wNum, qP, Polynomial.map_sum, Polynomial.map_prod, conj_two]
+
+    simp [wNum, qP, Polynomial.map_sum, Polynomial.map_prod, conj_two]
   have h2 : (coordinatePolynomial P π).map (starRingEnd ℂ) = coordinatePolynomial P π := by simp [coordinatePolynomial, Polynomial.map_prod]
   have h3 : (wNum P π /ₘ coordinatePolynomial P π).map (starRingEnd ℂ) = wNum P π /ₘ coordinatePolynomial P π := by
     rw [Polynomial.map_divByMonic _ (coordinate_polynomial_monic P π), h1, h2]
@@ -2330,9 +2365,9 @@ theorem IsPoly.dual {f : ℂ → B} (hf : IsPoly f) (φ : Module.Dual ℂ B) : I
   refine ⟨∑ n ∈ p.support, monomial n (φ (p.coeff n)), fun y => ?_⟩
   show φ (f y) = _
   rw [hp, ev_apply]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Polynomial.eval₂_eq_sum, Polynomial.sum_def, RingHom.id_apply,
-    map_sum, eval_finsetSum, eval_monomial]
+
+  simp only [Polynomial.eval₂_eq_sum, Polynomial.sum_def, RingHom.id_apply,
+  map_sum, eval_finsetSum, eval_monomial]
   refine Finset.sum_congr rfl fun n _ => ?_
   rw [← map_pow, ← Algebra.commutes, ← Algebra.smul_def, map_smul, smul_eq_mul, mul_comm]
 
@@ -2357,8 +2392,8 @@ variable (P : Par) (D : DAlg P.r) [Fact (D.Laws P.TT)]
 
 theorem kap_sum (f : Ty P → ℂ) : kap P D f = ∑ π, f π • kap P D (Pi.single π 1) := by
   conv_lhs => rw [pi_eq_sum_univ' f]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul]
+
+  simp only [map_sum, map_smul]
 
 theorem isPoly_kap {F : Ty P → ℂ → ℂ} (hF : ∀ π, IsPolyS (F π)) : IsPoly fun Y => kap P D fun π => F π Y := by
   have : (fun Y => kap P D fun π => F π Y) = fun Y => ∑ π, F π Y • kap P D (Pi.single π 1) := by
@@ -2712,8 +2747,8 @@ variable (P : Par) (D : DAlg P.r) [Fact (D.Laws P.TT)]
 
 theorem kap_sum' (s : Finset ℕ) (f : ℕ → Ty P → ℂ) :
     kap P D (fun π => ∑ l ∈ s, f l π) = ∑ l ∈ s, kap P D (f l) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← map_sum]
+
+  rw [← map_sum]
   congr 1
   funext π
   simp [Finset.sum_apply]
@@ -4175,8 +4210,8 @@ theorem IsPoly.eq_zero {F : ℂ → B} (hF : IsPoly F) {S : Set ℂ} (hS : S.Fin
   intro φ
   have hev : ∀ Z, φ (F Z) = (∑ i ∈ p.support, monomial i (φ (p.coeff i)) : ℂ[X]).eval Z := by
     intro Z
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hp, ev_eq_sum, map_sum, eval_finsetSum]
+
+    rw [hp, ev_eq_sum, map_sum, eval_finsetSum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [map_smul, eval_monomial, smul_eq_mul, mul_comm]
   have h0 : (∑ i ∈ p.support, monomial i (φ (p.coeff i)) : ℂ[X]) = 0 := by
@@ -4678,8 +4713,8 @@ theorem UmUl (hSh : SSShift) (hR : RhoUp) (hNorm : SSNorm) (hMix : SSMixed) (P :
   have e2 : Ul P D u * Um P D u = ∑ l ∈ Icc 1 (P.k - 1), ∑ j ∈ Icc 1 (P.k - 1),
       kap P D (bb P u j) * SS P D j * (kap P D (bb P u l) * star (SS P D l)) :=
     (Finset.sum_mul_sum _ _ _ _).trans Finset.sum_comm
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [e1, e2, ← Finset.sum_sub_distrib, Finset.sum_congr rfl (per_l hSh hR hNorm hMix P D hP u), ← map_sum]
+
+  rw [e1, e2, ← Finset.sum_sub_distrib, Finset.sum_congr rfl (per_l hSh hR hNorm hMix P D hP u), ← map_sum]
   exact congrArg (kap P D) (funext fun π => Finset.sum_apply _ _ _)
 
 theorem raising_lowering_commutator_alt (hSc : SSScalar) (hSh : SSShift) (hR : RhoUp) (hLF : LevFns) (hLN : LevNab) (hLNs : LevNabs)
@@ -4748,8 +4783,8 @@ theorem isPoly_kap (P : Par) (D : DAlg P.r) [Fact (D.Laws P.TT)] (p : Ty P → �
       ∑ π : Ty P, algebraMap ℂ (A P D) ((p π).eval Y) * kap P D (fun j => if π = j then 1 else 0) := by
     intro Y
     conv_lhs => rw [pi_eq_sum_univ (fun π => (p π).eval Y)]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_congr rfl fun π _ => ?_
     rw [map_smul, Algebra.smul_def]
   exact (IsPoly.sum _ _ fun π _ => (IsPoly.scalar (p π)).mul (IsPoly.const _)).congr h

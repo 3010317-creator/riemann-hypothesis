@@ -1,11 +1,56 @@
 module
 
 public import Formalism.LocalToGlobal.Divisibility.CoefModLemmas
-public import Formalism.LocalToGlobal.Columns.PolyFnLemmas
-public import Formalism.LocalToGlobal.Columns.LocWLemmas
+public import Formalism.LocalToGlobal.Columns.AlgebraMapMemMaximalIdealPowIff
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanLocalIff
+import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
+import Formalism.GradedWeylDivisibility.FinalC
+import Formalism.GradedWeylDivisibility.FinalD
+public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LClosedeqLemmas
+import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LDlatLemmas
+public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.NablaLTwist
 public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
 public import Formalism.LocalToGlobal.Columns.CoefficientsModP.LatticeBasisExistsHolds
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanLocalIff
+public import Formalism.LocalToGlobal.Columns.PolyFnLemmas
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -510,10 +555,7 @@ theorem nb_at_comm {lam : ι → DomWeight n} {T : Submodule (𝓞 K) (Pol K ι 
   refine ⟨c * d ^ nbN lam, mul_ne_zero hc0 (pow_ne_zero _ hd0), fun w x hx => ?_, fun w x hx => ?_⟩
   · have hBasis : ∀ τ, ∃ B : GL (Fin n) K, IsBasisAt w (M τ) B := by
       intro τ
-      -- The dependency stubs can still expose the earlier IsLattice signature.
-      first
-      | exact latticeBasisExists_holds K n (M τ) (hM τ) w
-      | exact latticeBasisExists_holds K n (M τ) (hM τ).toIsLattice w
+      exact latticeBasisExists_holds K n (M τ) (hM τ) w
     choose B hB using hBasis
     have h1 := localization_mono w.asIdeal hc2 ((nb_mem_at lam T M w x).1 hx B hB)
     have h2 := nb_scale w lam d B (fun τ => (nb_entries w (M τ) (B τ) (hB τ) d (hd τ).1 (hd τ).2).1)

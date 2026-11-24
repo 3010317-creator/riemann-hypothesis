@@ -1,6 +1,50 @@
 module
 
-public import ReciprocityTheory.CommutativeAlgebra.SaturatedChains.IsSaturatedChain
+public import Mathlib.RingTheory.Ideal.Height
+public import ReciprocityTheory.CommutativeAlgebra.ChainConnInDim
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 public import ReciprocityTheory.CommutativeAlgebra.CohenMacaulay.LocDim
 
 @[expose] public section
@@ -51,17 +95,7 @@ private theorem krullDim_le_height_lemma_3 {α β : Type*} [Preorder α] [Preord
   exact_mod_cast h
 
 private theorem height_le_krullDim_lemma_6 {α : Type*} [Preorder α] (a : α) :
-    (Order.height a : WithBot ℕ∞) ≤ Order.krullDim α := by
-  first
-  | exact Order.height_le_krullDim a
-  | (have H : ∀ s : LTSeries α, ((s.length : ℕ∞) : WithBot ℕ∞) ≤ Order.krullDim α := fun s => by
-       have := le_iSup (fun s : LTSeries α => (s.length : WithBot ℕ∞)) s
-       exact_mod_cast this
-     obtain ⟨k, hk⟩ := WithBot.ne_bot_iff_exists.mp
-       (ne_bot_of_le_ne_bot WithBot.coe_ne_bot (H (RelSeries.singleton _ a)))
-     rw [← hk]
-     refine WithBot.coe_le_coe.mpr (Order.height_le_iff.mpr fun s _ => ?_)
-     exact WithBot.coe_le_coe.mp (by rw [hk]; exact H s))
+    (Order.height a : WithBot ℕ∞) ≤ Order.krullDim α := Order.height_le_krullDim a
 
 theorem ringKrullDim_localization_quotient_eq_height {P : Type*} [CommRing P] (p q : Ideal P)
     [p.IsPrime] [q.IsPrime] (hpq : p ≤ q) :

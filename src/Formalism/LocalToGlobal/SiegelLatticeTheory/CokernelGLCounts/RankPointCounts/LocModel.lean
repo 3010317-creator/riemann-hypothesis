@@ -1,14 +1,60 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DataCut
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.SupportProposition
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.DataInst
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.LocalModelsSplitCofinite
+public import Formalism.DoubleCosetMeasures.LatticeCoset
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.AddedBlockKernelSupport
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.FirstKernelPropertiesOfHypotheses
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ProductFormulaHaar.BasisEApply
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ProductFormulaHaar.DenEqOneOfForallPadicNormLeOne
 public import Formalism.SharpRestriction.CuspSpanNormBounds.LocalOrbitGerms
-public import Formalism.DoubleCosetMeasures.LatticeCoset
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.Valuation.Integral
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -169,7 +215,6 @@ theorem norm_le_one_of_isIntegral_zl {ℓ : ℕ} [Fact ℓ.Prime] {t : ℚ_[ℓ]
   obtain ⟨y, rfl⟩ := IsIntegrallyClosed.isIntegral_iff.1 ht
   first
   | exact PadicInt.norm_le_one y
-  | simpa using PadicInt.norm_le_one y
 
 theorem mem_of_isIntegral_fp (L : LocAt F E sig p) {s : L.Fp} (hs : IsIntegral 𝒪[L.Fp] s) : s ∈ 𝒪[L.Fp] := by
   have hv := Valuation.integer.integers (ValuativeRel.valuation L.Fp)
@@ -193,8 +238,6 @@ theorem trace_mem (L : LocAt F E sig p) {y : L.Ep} (hy : y ∈ L.O) : Algebra.tr
   haveI : Module.Finite L.Fp L.Ep := by
     first
     | exact Module.finite_of_finrank_eq_succ L.rank
-    | exact Module.finite_of_finrank_pos (by rw [L.rank]; norm_num)
-    | exact FiniteDimensional.of_finrank_pos (by rw [L.rank]; norm_num)
   have b := Module.finBasisOfFinrankEq L.Fp L.Ep L.rank
   rw [L.O_def] at hy
   exact mem_of_isIntegral_fp L (DeltaB.trace_isIntegral_rank2 b hy)
@@ -361,10 +404,6 @@ theorem memO_iff {K : Type} [Field K] [ValuativeRel K] (x : K) : x ∈ 𝒪[K] �
   simp only [Valuation.mem_integer_iff]
   first
   | rw [Valuation.Compatible.vle_iff_le (v := ValuativeRel.valuation K), map_one]
-  | rw [Valuation.Compatible.rel_iff_le (v := ValuativeRel.valuation K), map_one]
-  | exact ((Valuation.Compatible.vle_iff_le (v := ValuativeRel.valuation K) x 1).trans (by rw [map_one])).symm
-  | simp [Valuation.Compatible.vle_iff_le (v := ValuativeRel.valuation K)]
-  | exact ValuativeRel.valuation_le_one_iff.symm
 
 theorem iotaF_mem_cof (D : Formalism.BasicNotions.D7) (x : D.host.F) :
     ∀ᶠ p in Filter.cofinite, (D.s.atP p).ιF x ∈ 𝒪[(D.s.atP p).Fp] := by
@@ -393,7 +432,6 @@ theorem iotaF_mem_cof (D : Formalism.BasicNotions.D7) (x : D.host.F) :
   have hva : p.valuation D.host.F (algebraMap (𝓞 D.host.F) D.host.F a) ≤ 1 := by
     first
     | exact p.valuation_le_one a
-    | exact p.valuation_le_one (K := D.host.F) a
   rw [memO_iff, ← map_one (D.s.atP p).ιF, (D.s.atP p).val, map_one, map_div₀, hvb, div_one]
   exact hva
 
@@ -427,7 +465,6 @@ theorem alg_mem_O (D : Formalism.BasicNotions.D7) (p : PlF D) {c : (D.s.atP p).F
   rw [(D.s.atP p).O_def]
   first
   | exact isIntegral_algebraMap (x := (⟨c, hc⟩ : 𝒪[(D.s.atP p).Fp]))
-  | exact (isIntegral_algebraMap (x := (⟨c, hc⟩ : 𝒪[(D.s.atP p).Fp])) : _)
 
 theorem exists_theta (D : Formalism.BasicNotions.D7) :
     ∃ θ : D.host.E, IsIntegral ℤ θ ∧ θ ∉ (algebraMap D.host.F D.host.E).range := by
@@ -485,8 +522,8 @@ theorem epsilonDual_almost_all : EpDualCof := by
   have hc : ∀ j, Matrix.vecMul (bE.repr z) M j ∈ 𝒪[(D.s.atP p).Fp] := by
     intro j
     have h := hz ((D.s.atP p).ιE (bF j)) (iotaE_mem_of_int D p (hbint j))
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← bE.sum_repr z, Finset.sum_mul, map_sum] at h
+
+    rw [← bE.sum_repr z, Finset.sum_mul, map_sum] at h
     convert h using 1
     simp only [Matrix.vecMul, dotProduct]
     refine Finset.sum_congr rfl fun i _ => ?_
@@ -529,8 +566,8 @@ theorem finrank_fp_le (D : Formalism.BasicNotions.D7) (p : PlF D) :
     Submodule.span ℚ_[Loc.resChar p] (Set.range fun i => (D.s.atP p).ιF (b i))
   have hsub : Set.range (D.s.atP p).ιF ⊆ (S : Set (D.s.atP p).Fp) := by
     rintro _ ⟨x, rfl⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← b.sum_repr x, map_sum]
+
+    rw [← b.sum_repr x, map_sum]
     refine Submodule.sum_mem _ fun i _ => ?_
     have : (D.s.atP p).ιF (b.repr x i • b i) =
         ((b.repr x i : ℚ) : ℚ_[Loc.resChar p]) • (D.s.atP p).ιF (b i) := by
@@ -1281,7 +1318,6 @@ theorem autP_thTriv (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep)
   first
   | (simp only [autP, thTriv]; rw [nAut_triv]; simp)
   | (show (((M p).nAut (trivCls (M p) D.R.rS) : ℕ) : ℂ) = 1; rw [nAut_triv]; simp)
-  | simp [autP, thTriv, nAut_triv]
 
 theorem bbtop_good {δ : ∀ p : PlF D, (D.s.atP p).Fp}
     {M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep} (hA : ∀ p, Agree δ M p) (T T' : ℕ)
@@ -1354,7 +1390,6 @@ def qPl (p : PlF D) : ℝ := (Nat.card (IsLocalRing.ResidueField 𝒪[(D.s.atP p
 theorem qPl_eq (p : PlF D) : qPl p = ((Ideal.absNorm p.asIdeal : ℕ) : ℝ) := by
   first
   | rw [qPl, resCard_loc (D.s.atP p)]
-  | simp [qPl, resCard_loc]
 
 theorem two_le_qPl (p : PlF D) : (2 : ℝ) ≤ qPl p := by
   rw [qPl_eq]
@@ -1385,8 +1420,6 @@ theorem geom_Icc_le {x : ℝ} (hx0 : 0 ≤ x) (hx : x ≤ 1 / 2) (a b : ℕ) :
   · have he : Finset.Icc a b = ∅ := by
       first
       | exact Finset.Icc_eq_empty_of_lt hba
-      | exact Finset.Icc_eq_empty (by omega)
-      | simp; omega
     rw [he, Finset.sum_empty]
     exact mul_nonneg (by norm_num) (pow_nonneg hx0 a)
   · have hc : ∀ c, a ≤ c → ∑ i ∈ Finset.Icc a c, x ^ i ≤ 2 * x ^ a - 2 * x ^ (c + 1) := by
@@ -1422,7 +1455,6 @@ theorem prod_bounds {x : ℝ} (hx0 : 0 ≤ x) (hx : x ≤ 1 / 2) {η : ℝ} (hη
           first
           | (rw [← Real.exp_sum]; congr 1; rw [Finset.mul_sum, ← Finset.sum_neg_distrib])
           | (rw [← Real.exp_sum]; congr 1; simp [Finset.mul_sum])
-          | simp [← Real.exp_sum, Finset.mul_sum]
       _ ≤ ∏ i ∈ Finset.Icc a b, (1 - η ^ i * x ^ i) := by
           apply Finset.prod_le_prod₀
           · intro i _; exact (Real.exp_pos _).le
@@ -1449,7 +1481,6 @@ theorem aPD_bounds (hk : 1 ≤ D.R.k) (p : PlF D) (T : ℕ) :
     rw [one_div]
     first
     | exact inv_anti₀ (by norm_num) hq
-    | exact inv_le_inv_of_le (by norm_num) hq
   have key : ∀ a, 1 ≤ a →
       Real.exp (-(4 * (qPl p)⁻¹ ^ a)) ≤ ∏ i ∈ Finset.Icc a D.R.r,
         (1 - Formalism.L2.SG.DataInst.eta₃ p ^ i / ((Ideal.absNorm p.asIdeal : ℕ) : ℝ) ^ i) ∧
@@ -1486,7 +1517,6 @@ theorem alpBound_body (D : Formalism.BasicNotions.D7) : AlpBoundBody D := by
     rw [one_div]
     first
     | exact inv_anti₀ (by norm_num) hq
-    | exact inv_le_inv_of_le (by norm_num) hq
   obtain ⟨a1, a2⟩ := aPD_bounds hk1 p (D.mem u).A.T
   obtain ⟨b1, b2⟩ := aPD_bounds hk1 p (D.mem u').A.T
   rw [← inv_pow]
@@ -1531,12 +1561,9 @@ theorem plF_nonempty (D : Formalism.BasicNotions.D7) : Nonempty (PlF D) := by
   have hnf : ¬ IsField (𝓞 D.host.F) := by
     first
     | exact NumberField.RingOfIntegers.not_isField D.host.F
-    | exact NumberField.RingOfIntegers.not_isField
-    | exact NumberField.RingOfIntegers.not_isField (K := D.host.F)
   have hne : m ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hm hnf
   first
   | exact ⟨⟨m, hm.isPrime, hne⟩⟩
-  | exact ⟨{ asIdeal := m, isPrime := hm.isPrime, ne_bot := hne }⟩
 
 def placeOf (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep) (hOK : ∀ p, (M p).OK) (p : PlF D) :
     PB.Place D.host.E where
@@ -1792,7 +1819,6 @@ theorem resCardD_holds (D : Formalism.BasicNotions.D7) : ResCardD D := by
   have h := LocModel.resCard_loc (D.s.atP p)
   first
   | exact h
-  | simpa using h
 
 theorem placesOver_holds (D : Formalism.BasicNotions.D7) : PlacesOver D := placesOver_of (resCardD_holds D)
 
@@ -1816,6 +1842,5 @@ theorem localModelK_holds (D : Formalism.BasicNotions.D7) : Formalism.L2.SG.Data
   intro Wp Wq _ _ _ _ S δ M hA u u' _ i Y
   first
   | exact LocModel.clK_core hA _ _ i Y
-  | exact LocModel.clK_core hA (D.mem u).A.T (D.mem u').A.T i Y
 
 end Formalism.L2.SG.Pf

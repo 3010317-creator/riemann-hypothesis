@@ -1,14 +1,54 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatAnIffIsConstMul
-public import Formalism.LocalToGlobal.ProjectiveLattices.VAtVNeBot
-public import Formalism.LocalToGlobal.ProjectiveLattices.RulInst
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StableEig
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieOmegaLatticeVectorBundle
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueAct
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelEigenvectorsActionStatement
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueCmEmbeddingEigenvectorSum
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeGram
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelEigenvectorsAction
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueAct
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieOmegaLatticeVectorBundle
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -44,7 +84,7 @@ theorem frame_of_stableEig : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     hs _ (RingHom.id _) _ (by simp only [spMap, CommRingCat.ofHom_id, Spec.map_id]; exact Category.id_comp _) e (fun i => by rw [spMap_dualMap_id, Category.id_comp])
   choose f hf using fun i => MA.onto (e i) (h0.1 i).1
   have hfe : (fun k => MA.pt (f k)) = e := funext hf
-  have hfr := ((GlobalTheory.T.lie_model_eigenvectors_action Y.X (Y.X.presheaf.stalk p.1) Y.t.G (Y.X.fromSpecStalk p.1) F MA).2 (𝓞 E) Y.t.act ρA
+  have hfr := ((_root_.GlobalTheory.CompanionTheory.Ar.Fl.Bridge.comb_eig_frame Y.X (Y.X.presheaf.stalk p.1) Y.t.G (Y.X.fromSpecStalk p.1) F MA).2 (𝓞 E) Y.t.act ρA
     (((RingHom.id _).comp κ).comp (tauIn c σ)) hρA).2 r f
   rw [hfe] at hfr
   obtain ⟨-, hfs⟩ := hfr.1 h0
@@ -54,7 +94,7 @@ theorem frame_of_stableEig : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have h1 : IsEigFrame Y.t.act (Z.ξ₀ ≫ Y.j) (((genMap (Z.ξ₀ ≫ Y.j) p).comp κ).comp (tauIn c σ))
       (fun i => Z.M.pt (j (f i))) := hs _ _ _ hg _ hb
   rw [hκ] at h1
-  obtain ⟨hbi, hbs⟩ := (((GlobalTheory.T.lie_model_eigenvectors_action Y.X Z.Ω Y.t.G (Z.ξ₀ ≫ Y.j) Z.V Z.M).2 (𝓞 E) Y.t.act Z.ρ
+  obtain ⟨hbi, hbs⟩ := (((_root_.GlobalTheory.CompanionTheory.Ar.Fl.Bridge.comb_eig_frame Y.X Z.Ω Y.t.G (Z.ξ₀ ≫ Y.j) Z.V Z.M).2 (𝓞 E) Y.t.act Z.ρ
     (Z.inc.comp (tauIn c σ)) Z.act).2 r fun i => j (f i)).1 h1
   refine ⟨fun i => j (f i), hext, hbi, le_antisymm ?_ (Submodule.span_le.2 ?_)⟩
   · intro e' he'
@@ -75,8 +115,8 @@ theorem frame_of_stableEig : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
       show Z.ρ a (j (ft τ)) = _
       rw [hint, hft1, j.map_smulₛₗ]
       show (genMap (Z.ξ₀ ≫ Y.j) p) (κ _) • _ = Z.inc _ • _
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← hκ]; rfl, by rw [← map_sum, hft2, hw]⟩
+
+      rw [← hκ]; rfl, by rw [← map_sum, hft2, hw]⟩
     have e2 := huq (fun τ => if τ = σ then e' else 0) ⟨fun τ a => by
       by_cases h : τ = σ
       · subst h
@@ -88,8 +128,8 @@ theorem frame_of_stableEig : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
       (mem_eigSp_iff_forall _ _ _).2 fun a => hft1 σ a
     rw [← hfs] at hmem
     obtain ⟨a, ha⟩ := (Submodule.mem_span_range_iff_exists_fun _).1 hmem
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← e3, ← ha, map_sum]
+
+    rw [← e3, ← ha, map_sum]
     refine Submodule.sum_mem _ fun i _ => ?_
     rw [j.map_smulₛₗ]
     exact Submodule.smul_mem _ (⟨genMap (Z.ξ₀ ≫ Y.j) p (a i), _, rfl⟩ : regAt (Z.ξ₀ ≫ Y.j) p)

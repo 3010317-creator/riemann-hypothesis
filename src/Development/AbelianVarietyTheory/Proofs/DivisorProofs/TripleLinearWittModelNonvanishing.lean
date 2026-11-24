@@ -1,16 +1,54 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Development.AbelianVarietyTheory.Definitions.Divisors.RankEqCardIffExistsFrameMatrixFirstColumnBlock
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearWeilFunctionalUnramifiedVector
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AddCharNegEqOne
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharacterTrivialMatrixLatticeOpenCompactBasis
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSmulOfCommuteHeisenbergLinearModelSchwartzBruh
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearWeilFunctionalUnramifiedVector
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerOperatorHeisenbergInnerPreserving
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOpenSubgroupPeriodicStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinsetEqSumAddCosetIndicatorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharacterTrivialMatrixLatticeOpenCompactBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
+import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinsetEqSumAddCosetIndicator
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOpenSubgroupPeriodic
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
+import GroundTheory.GlobalFields.LocalAtPlace
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
 
 @[expose] public section
 
@@ -52,8 +90,8 @@ theorem ip_sum_sum (μ : Measure X) [IsFiniteMeasureOnCompacts μ] {V : Type} (F
   have e : (fun z => (∑ y ∈ F, a y • xs y) z * (starRingEnd ℂ) ((∑ y ∈ F, a y • xs y) z)) =
       fun z => ∑ y ∈ F, ∑ y' ∈ F, a y * (starRingEnd ℂ) (a y') * (xs y z * (starRingEnd ℂ) (xs y' z)) := by
     funext z
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, map_sum]
+
+    simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, map_sum]
     rw [Finset.sum_mul_sum]
     refine Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => ?_
     rw [map_mul]
@@ -118,8 +156,8 @@ theorem expand (μ : Measure T) [IsFiniteMeasureOnCompacts μ] {V : Type} [AddGr
     ip μ x x = (∑ y ∈ F, ∑ y' ∈ F, if y - y' ∈ L then f y * (starRingEnd ℂ) (f y') else 0) * c := by
   have hxe : x = ∑ y ∈ F, f y • xs y := by
     refine hinj hx (Submodule.sum_mem _ fun y _ => Submodule.smul_mem _ _ (hxs y)) ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hf, map_sum]
+
+    rw [hf, map_sum]
     simp only [map_smul, hιxs]
     exact hF
   rw [hxe, ip_sum_sum μ F f xs hxs, Finset.sum_mul]
@@ -218,88 +256,5 @@ theorem ip_cosets {T : Type} [TopologicalSpace T] [MeasurableSpace T] [OpensMeas
     rcases mul_eq_zero.mp e2 with h3 | h3
     · exact absurd (sub_eq_zero.mp h3) hl2
     · exact h3
-
-end GlobalTheory.LinearModelL2
-
-namespace GlobalTheory.LinearModelL2
-
-open GlobalTheory.LinSchur
-open scoped GlobalTheory.VacAny GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-
-theorem linIso_lintegral_eq : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E)
-    (a a' : ℕ) (G : Geo σ a a') (X : Chars F E) (om : Rep σ G.V G.W) (om' : Rep σ G.V' G.W), IsTriple B G X om om' →
-    ∀ v, X.Good v → ∀ (t : E →ₐ[F] Fv F v)
-    (ι : ((Fin a × Fin (a + a') → Fv F v) → ℂ) →ₗ[ℂ] (Matrix (Fin a) (Fin (a + a')) (Fv F v) → ℂ)), G.M.IsLinW B.ψ t 1 1 ι →
-    ∀ φ ∈ SB (Fin a × Fin (a + a') → Fv F v), ∀ φ₁ ∈ SB (Fin a × Fin (a + a') → Fv F v),
-    (∀ μ : @Measure (Fin a × Fin (a + a') → Fv F v) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
-      ∫⁻ x, ‖φ₁ x‖ₑ ^ 2 ∂μ = ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂μ) →
-    ∀ ν : @Measure (Matrix (Fin a) (Fin (a + a')) (Fv F v)) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) ν →
-      ∫⁻ Y, ‖ι φ₁ Y‖ₑ ^ 2 ∂ν = ∫⁻ Y, ‖ι φ Y‖ₑ ^ 2 ∂ν := by
-  intro hP F E _ _ _ _ _ σ B a a' G X om om' hTr v hv t ι hι φ hφ φ₁ hφ₁ hnorm ν hν
-  letI : MeasurableSpace (Fin a × Fin (a + a') → Fv F v) := borel _
-  haveI : BorelSpace (Fin a × Fin (a + a') → Fv F v) := ⟨rfl⟩
-  letI : MeasurableSpace (Matrix (Fin a) (Fin (a + a')) (Fv F v)) := borel _
-  haveI : BorelSpace (Matrix (Fin a) (Fin (a + a')) (Fv F v)) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (Matrix (Fin a) (Fin (a + a')) (Fv F v)) :=
-    inferInstanceAs (LocallyCompactSpace (Fin a → Fin (a + a') → Fv F v))
-  haveI := hν
-  let μ : Measure (Fin a × Fin (a + a') → Fv F v) := Measure.addHaar
-  have hμ : μ.IsAddHaarMeasure := inferInstance
-  obtain ⟨hψc, hψ1, wT, wM, hA⟩ := GlobalTheory.UnitWShape.heisW B G X om om' hTr v t 1 id (fun f hf => hf)
-    (fun γ _ f _ => by simp [actAB, mat])
-  obtain ⟨hT0, hM0, -, -⟩ := hA ι hι
-  have hbij := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Model.IsLin.bij hι
-  have hmaps := hbij.mapsTo
-  have hsb : ∀ w, ∀ f ∈ SB (Fin a × Fin (a + a') → Fv F v), schr (GlobalTheory.LatVac.psiAt B.ψ v) w f ∈ SB _ :=
-    fun w f hf => GlobalTheory.SchrSB.schr_mem_SB B.ψ hTr.base.std.1 v w f hf
-  have hU : ∀ w f f', ip μ (schr (GlobalTheory.LatVac.psiAt B.ψ v) w f) (schr (GlobalTheory.LatVac.psiAt B.ψ v) w f') = ip μ f f' :=
-    fun w f f' => GlobalTheory.schr_unitary (GlobalTheory.LatVac.psiAt B.ψ v) hψc μ hμ w f f'
-  obtain ⟨hLoc, hBasis⟩ := GlobalTheory.T.characterTrivialMatrixLattice_open_compact_basis a (a + a') (GlobalTheory.LatVac.psiAt B.ψ v) hψc hψ1
-  have hB' : ∀ W ∈ 𝓝 (0 : Matrix (Fin a) (Fin (a + a')) (Fv F v)), ∃ i : {s : Fv F v // s ≠ 0},
-      (latt (GlobalTheory.LatVac.psiAt B.ψ v) a (a + a') i.1 : Set _) ⊆ W := fun W hW => by
-    obtain ⟨s, hs, h⟩ := hBasis W hW
-    exact ⟨⟨s, hs⟩, h⟩
-  obtain ⟨⟨s1, hs1⟩, hper1⟩ := GlobalTheory.T.exists_openSubgroup_periodic (fun s : {s : Fv F v // s ≠ 0} => latt (GlobalTheory.LatVac.psiAt B.ψ v) a (a + a') s.1)
-    (fun s => (hLoc s.1 s.2).1) hB' (ι φ) (hmaps hφ)
-  obtain ⟨⟨s2, hs2⟩, hper2⟩ := GlobalTheory.T.exists_openSubgroup_periodic (fun s : {s : Fv F v // s ≠ 0} => latt (GlobalTheory.LatVac.psiAt B.ψ v) a (a + a') s.1)
-    (fun s => (hLoc s.1 s.2).1) hB' (ι φ₁) (hmaps hφ₁)
-  obtain ⟨s, hs, hsub⟩ := hBasis ((latt (GlobalTheory.LatVac.psiAt B.ψ v) a (a + a') s1 : Set _) ∩ latt (GlobalTheory.LatVac.psiAt B.ψ v) a (a + a') s2)
-    (Filter.inter_mem ((hLoc s1 hs1).1.mem_nhds (zero_mem _)) ((hLoc s2 hs2).1.mem_nhds (zero_mem _)))
-  set L := latt (GlobalTheory.LatVac.psiAt B.ψ v) a (a + a') s with hLdef
-  obtain ⟨Fa, hFa⟩ := GlobalTheory.T.exists_finset_eq_sum_addCosetIndicator L (hLoc s hs).1 (ι φ) (hmaps hφ) (fun Y C hC => hper1 Y C (hsub hC).1)
-  obtain ⟨Fb, hFb⟩ := GlobalTheory.T.exists_finset_eq_sum_addCosetIndicator L (hLoc s hs).1 (ι φ₁) (hmaps hφ₁) (fun Y C hC => hper2 Y C (hsub hC).2)
-  have hcm : ∀ y, cind L y ∈ SB (Matrix (Fin a) (Fin (a + a')) (Fv F v)) :=
-    fun y => cind_mem (hLoc s hs).1 (hLoc s hs).2 y
-  obtain ⟨x0, hx0, hιx0⟩ := hbij.surjOn (hcm 0)
-  have hPD := ip_cosets μ (GlobalTheory.LatVac.psiAt B.ψ v) hψc ι hbij.injOn
-    (fun C => schr (GlobalTheory.LatVac.psiAt B.ψ v) (wT C)) (fun l => schr (GlobalTheory.LatVac.psiAt B.ψ v) (wM l))
-    (fun C f hf => ⟨hsb _ f hf, hT0 C f hf⟩) (fun l f hf => ⟨hsb _ f hf, hM0 l f hf⟩)
-    (fun C => hU _) (fun l => hU _) s x0 hx0 hιx0
-  have hιxs : ∀ y, ι (schr (GlobalTheory.LatVac.psiAt B.ψ v) (wT (-y)) x0) = cind L y := fun y => by
-    rw [hT0 _ x0 hx0, hιx0]
-    exact cind_translate L y
-  have eA := expand μ ι hbij.injOn L (fun y => schr (GlobalTheory.LatVac.psiAt B.ψ v) (wT (-y)) x0) (fun y => hsb _ x0 hx0) hιxs
-    (ip μ x0 x0) hPD φ hφ (ι φ) rfl Fa hFa
-  have eB := expand μ ι hbij.injOn L (fun y => schr (GlobalTheory.LatVac.psiAt B.ψ v) (wT (-y)) x0) (fun y => hsb _ x0 hx0) hιxs
-    (ip μ x0 x0) hPD φ₁ hφ₁ (ι φ₁) rfl Fb hFb
-  have eA' := expand ν LinearMap.id (fun _ _ _ _ h => h) L (cind L) hcm (fun y => rfl)
-    (ip ν (cind L 0) (cind L 0)) (ip_cind ν L) (ι φ) (hmaps hφ) (ι φ) rfl Fa hFa
-  have eB' := expand ν LinearMap.id (fun _ _ _ _ h => h) L (cind L) hcm (fun y => rfl)
-    (ip ν (cind L 0) (cind L 0)) (ip_cind ν L) (ι φ₁) (hmaps hφ₁) (ι φ₁) rfl Fb hFb
-  have hipD : ip μ φ₁ φ₁ = ip μ φ φ := by
-    rw [(ip_self μ hφ₁).1, (ip_self μ hφ).1, hnorm μ hμ]
-  have hne : x0 ≠ 0 := fun h => by
-    have e := congrFun hιx0 0
-    rw [h, map_zero] at e
-    simp [cind] at e
-  have hc0 : ip μ x0 x0 ≠ 0 := by
-    rw [(ip_self μ hx0).1]
-    exact_mod_cast (ENNReal.toReal_pos (lintegral_ne_zero μ hx0 hne) (ip_self μ hx0).2).ne'
-  rw [eA, eB] at hipD
-  have hK := mul_right_cancel₀ hc0 hipD
-  have hQ : ip ν (ι φ₁) (ι φ₁) = ip ν (ι φ) (ι φ) := by rw [eA', eB', hK]
-  rw [(ip_self ν (hmaps hφ₁)).1, (ip_self ν (hmaps hφ)).1] at hQ
-  have hR := Complex.ofReal_injective hQ
-  exact (ENNReal.toReal_eq_toReal_iff' (ip_self ν (hmaps hφ₁)).2 (ip_self ν (hmaps hφ)).2).mp hR
 
 end GlobalTheory.LinearModelL2

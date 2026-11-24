@@ -2,7 +2,53 @@ module
 
 public import Formalism.RealPlaceAnalysis.SmoothOnGVIff
 public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.CartanInvolutionConjTransposeMul
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.ComplexifiedDerivativeCommutator
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -123,7 +169,7 @@ theorem rdBracketV_of (h : RdExtV) (_hs : RdSmoothV) : RdBracketV := by
   have hev : ∀ᶠ y in 𝓝 g, HasFDerivAt F (fderiv ℝ F y) y :=
     Filter.eventually_of_mem (hU.mem_nhds hgU) fun y hy =>
       ((hF.differentiableOn (by simp) y hy).differentiableAt (hU.mem_nhds hy)).hasFDerivAt
-  have hsymm := second_derivative_symmetric_of_eventually hev hFd2.hasFDerivAt (g * X) (g * Y)
+  have hsymm : fderiv ℝ (fun y => fderiv ℝ F y) g (g * X) (g * Y) = fderiv ℝ (fun y => fderiv ℝ F y) g (g * Y) (g * X) := second_derivative_symmetric_of_eventually hev hFd2.hasFDerivAt (g * X) (g * Y)
   have hhY : HasFDerivAt (fun y => fderiv ℝ F y (y * Y)) _ g :=
     hFd2.hasFDerivAt.clm_apply LY.hasFDerivAt
   have hhX : HasFDerivAt (fun y => fderiv ℝ F y (y * X)) _ g :=
@@ -136,9 +182,7 @@ theorem rdBracketV_of (h : RdExtV) (_hs : RdSmoothV) : RdBracketV := by
       fderiv ℝ F g (g * Y * X) + fderiv ℝ (fun y => fderiv ℝ F y) g (g * Y) (g * X) := by
     rw [hhX.fderiv]
     rfl
-  have hsymm' : fderiv ℝ (fun y => fderiv ℝ F y) g (g * X) (g * Y) =
-      fderiv ℝ (fun y => fderiv ℝ F y) g (g * Y) (g * X) := hsymm
-  rw [eY, eX, eXY, dY, dX, hsymm', Matrix.mul_sub, map_sub, Matrix.mul_assoc g X Y,
+  rw [eY, eX, eXY, dY, dX, hsymm, Matrix.mul_sub, map_sub, Matrix.mul_assoc g X Y,
     Matrix.mul_assoc g Y X]
   abel
 
@@ -149,8 +193,7 @@ variable {n : ℕ} {ε : Fin n → Bool} {E : Type} [NormedAddCommGroup E] [Norm
 lemma vector_right_derivative_neg (hl : RdLinV) {f : Matrix (Fin n) (Fin n) ℂ → E}
     {B g : Matrix (Fin n) (Fin n) ℂ} (hf : SmoothOnGV ε f) (hB : inG ε B) (hg : inUJ ε g) :
     RdV (-B) f g = -RdV B f g := by
-  have h2 := (hl n ε E f f B B (-1) 0 g hf hf hB hB hg).2.1
-  simpa using h2
+  simpa using (hl n ε E f f B B (-1) 0 g hf hf hB hB hg).2.1
 
 lemma vector_right_derivative_add (hl : RdLinV) {f : Matrix (Fin n) (Fin n) ℂ → E}
     {A B g : Matrix (Fin n) (Fin n) ℂ} (hf : SmoothOnGV ε f) (hA : inG ε A) (hB : inG ε B)

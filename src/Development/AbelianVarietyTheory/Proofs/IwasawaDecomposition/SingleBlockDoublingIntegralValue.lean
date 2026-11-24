@@ -1,17 +1,64 @@
 module
 
+public import Mathlib.Analysis.Matrix.MeasurableSpace
 public import Formalism.LocalToGlobal.Divisibility.QLocTied
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.HostPins
-public import Formalism.DoubleCosetMeasures.LatticeCoset
-public import Formalism.DoubleCosetMeasures.LowerUnipotentOrbits.IsClosedLowUni
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TopoAF
-public import ReciprocityTheory.GeneralLinearIntegers.AlgebraMapIntMemOint
+public import Formalism.SharpRestriction.Divisibility.ZetaProductPairs
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CardGLFiniteFieldEqPowMulProd
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CardResidueRingCompletionChosenUniformiser
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAddHaarCompletionIntegralMatricesVolOne
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHaarGLCompletionIntegersVolOne
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsNrm
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsLocalAtCompletionIntegersChosenUniformiserStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CardResidueRingCompletionChosenUniformiserStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHaarGLCompletionIntegersVolOneStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAddHaarCompletionIntegralMatricesVolOneStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CardGLFiniteFieldEqPowMulProdStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsLocalAtCompletionIntegersChosenUniformiser
+public import Formalism.DoubleCosetMeasures.LatticeCoset
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TopoAF
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Algebra.Group.Units
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.HostPins
 
 @[expose] public section
 
@@ -323,21 +370,21 @@ theorem absNorm_ne_zero₂ : qP P ≠ 0 := by
   rw [Ne, Ideal.absNorm_eq_zero_iff]
   exact P.ne_bot
 
-theorem finite_kF : Finite (kF (OP P) ((piP P : (P.adicCompletion L)ˣ) : P.adicCompletion L) (piP_mem P)) := Nat.finite_of_card_ne_zero (by rw [GlobalTheory.T.card_residueRing_completion_chosenUniformiser L P (piP_mem P)]; exact absNorm_ne_zero₂ P)
+theorem finite_kF : Finite (kF (OP P) ((piP P : (P.adicCompletion L)ˣ) : P.adicCompletion L) (piP_mem P)) := Nat.finite_of_card_ne_zero (by rw [_root_.GlobalTheory.ResidueCardUnif.card_kF_piP L P (piP_mem P)]; exact absNorm_ne_zero₂ P)
 
 theorem vol_Jset (r : ℕ) [MeasurableSpace (P.adicCompletion L)] [BorelSpace (P.adicCompletion L)]
     (ν₁ : Measure (Matrix (Fin r) (Fin r) (P.adicCompletion L))) [ν₁.IsAddLeftInvariant]
     (h1 : ν₁ (intMat (OP P) r r) = 1) :
     (ν₁ (Jset (GLint (OP P) r))).toReal = Formalism.MainNotions.ZetaProductPairs.qE (qP P : ℝ) 1 r := by
-  haveI := isMaximal_span (piP_mem P) (GlobalTheory.T.isLocalAt_completionIntegers_chosenUniformiser L P)
+  haveI := isMaximal_span (piP_mem P) (_root_.GlobalTheory.Mem.HD.isLocalAt_adicCompletionIntegers_uniformizer L P)
   letI : Field (kF (OP P) _ (piP_mem P)) := Ideal.Quotient.field _
   letI : Fintype (kF (OP P) _ (piP_mem P)) := @Fintype.ofFinite _ (finite_kF P)
-  have hc : Nat.card (kF (OP P) _ (piP_mem P)) = qP P := GlobalTheory.T.card_residueRing_completion_chosenUniformiser L P (piP_mem P)
+  have hc : Nat.card (kF (OP P) _ (piP_mem P)) = qP P := _root_.GlobalTheory.ResidueCardUnif.card_kF_piP L P (piP_mem P)
   have h := Formalism.DoubleCosetMeasures.Final.volJadd (P.adicCompletion L) (OP P) (isOpen_OP P) _ (piP_mem P) (Units.ne_zero _)
-    (GlobalTheory.T.isLocalAt_completionIntegers_chosenUniformiser L P) (finite_kF P) r ν₁ (GLint (OP P) r) (fun g hg => hg.1) le_rfl
-  rw [Formalism.DoubleCosetMeasures.Final.glRed (P.adicCompletion L) (OP P) _ (piP_mem P) (Units.ne_zero _) (GlobalTheory.T.isLocalAt_completionIntegers_chosenUniformiser L P)
+    (_root_.GlobalTheory.Mem.HD.isLocalAt_adicCompletionIntegers_uniformizer L P) (finite_kF P) r ν₁ (GLint (OP P) r) (fun g hg => hg.1) le_rfl
+  rw [Formalism.DoubleCosetMeasures.Final.glRed (P.adicCompletion L) (OP P) _ (piP_mem P) (Units.ne_zero _) (_root_.GlobalTheory.Mem.HD.isLocalAt_adicCompletionIntegers_uniformizer L P)
     (finite_kF P) r, h1, mul_one, hc] at h
-  have hG := GlobalTheory.T.card_GL_finiteField_eq_pow_mul_prod (kF (OP P) _ (piP_mem P)) r
+  have hG := _root_.GlobalTheory.Mem.card_GL_eq_pow_mul_qE (kF (OP P) _ (piP_mem P)) r
   rw [Fintype.card_eq_nat_card, hc] at hG
   have h' := congrArg ENNReal.toReal h
   rw [ENNReal.toReal_mul, ENNReal.toReal_pow, ENNReal.toReal_natCast, ENNReal.toReal_natCast, hG] at h'
@@ -350,7 +397,7 @@ theorem vol_II (r t : ℕ) [MeasurableSpace (P.adicCompletion L)] [BorelSpace (P
     (ν₂ (IIset (OP P) ((piP P : (P.adicCompletion L)ˣ) : P.adicCompletion L))).toReal =
       (qP P : ℝ) ^ (-((t * r : ℕ) : ℤ)) := by
   have hq : (Nat.card (kF (OP P) _ (piP_mem P)) : ENNReal) = (qP P : ENNReal) := by
-    rw [GlobalTheory.T.card_residueRing_completion_chosenUniformiser L P (piP_mem P)]
+    rw [_root_.GlobalTheory.ResidueCardUnif.card_kF_piP L P (piP_mem P)]
   have h := Formalism.DoubleCosetMeasures.Final.volII (P.adicCompletion L) (OP P) (isOpen_OP P) _ (piP_mem P) (Units.ne_zero _)
     (finite_kF P) t r ν₂
   rw [h2, hq] at h
@@ -390,9 +437,9 @@ theorem stepAt_one : ∀ (L : Type) [Field L] [NumberField L] (P : HeightOneSpec
       Units.ne_zero _
     rw [MonoidHom.mul_apply, Units.val_mul, hν.unr _ hu, (hnrm _).1 hu, Real.one_rpow]
     simp [Units.val_inv_eq_inv_val, hd]
-  obtain ⟨μ, hμ, hμ1⟩ := GlobalTheory.T.exists_haar_GL_completion_integers_vol_one L P r
-  obtain ⟨ν₁, hν₁, hs₁, hν₁1⟩ := GlobalTheory.T.exists_addHaar_completionIntegralMatrices_vol_one L P r r
-  obtain ⟨ν₂, hν₂, hs₂, hν₂1⟩ := GlobalTheory.T.exists_addHaar_completionIntegralMatrices_vol_one L P t r
+  obtain ⟨μ, hμ, hμ1⟩ := _root_.GlobalTheory.haar_glInt_one L P r
+  obtain ⟨ν₁, hν₁, hs₁, hν₁1⟩ := _root_.GlobalTheory.HaarMat.exists_haar_intMat L P r r
+  obtain ⟨ν₂, hν₂, hs₂, hν₂1⟩ := _root_.GlobalTheory.HaarMat.exists_haar_intMat L P t r
   haveI := hν₁
   haveI := hν₂
   haveI := hs₁

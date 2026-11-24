@@ -1,9 +1,44 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRk
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRankSB
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InducedScalarIrreducible
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
 
 @[expose] public section
 
@@ -130,47 +165,3 @@ theorem detTw_mem_indScal {a n : ℕ} (ν : kˣ →* ℂˣ) {f : GL (Fin (a + n)
     ring
 
 end GlobalTheory.FullRankCoinv.IndTwist
-
-namespace GlobalTheory.FullRankCoinv
-
-open IndTwist
-
-theorem indSp_irreducible : GlobalTheory.FunPr.Hypotheses₂ → ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    (n d : ℕ) (ν : kˣ →* ℂˣ), n ≤ d → GlobalTheory.SmGL.IsSmoothChar ν → GlobalTheory.SmGL.IsUnitaryChar ν →
-    ∀ N : Submodule ℂ (GL (Fin d) k → ℂ), N ≤ GlobalTheory.FullRankCoinv.indSp k n d ν →
-      (∀ f ∈ N, ∀ h₀ : GL (Fin d) k, (fun h => f (h * h₀)) ∈ N) → N = ⊥ ∨ N = GlobalTheory.FullRankCoinv.indSp k n d ν := by
-  intro P k _ _ _ _ n d ν hn hνs hνu N hN hinv
-  obtain ⟨a, rfl⟩ : ∃ a, d = a + n := ⟨d - n, by omega⟩
-  have hu : IsUnitaryChar ν⁻¹ := fun g => by
-    rw [MonoidHom.inv_apply, Units.val_inv_eq_inv_val, norm_inv, hνu g, inv_one]
-  set s : ℂ := (n : ℂ) / 2
-  let M : Submodule ℂ (GL (Fin (a + n)) k → ℂ) := N.comap (detTw (a + n) (-s))
-  have hMle : M ≤ GlobalTheory.RankFibre.indScal ν ν⁻¹ a n := fun g hg => by
-    have := detTw_mem_indScal ν (hN hg)
-    rwa [detTw_detTw_neg] at this
-  have hMinv : ∀ g ∈ M, ∀ h : GL (Fin (a + n)) k, (fun x => g (x * h)) ∈ M := fun g hg h => by
-    show detTw (a + n) (-s) (fun x => g (x * h)) ∈ N
-    have e : detTw (a + n) (-s) (fun x => g (x * h)) =
-        apow (gdet h) s • (fun x => detTw (a + n) (-s) g (x * h)) := by
-      rw [detTw_translate, smul_smul, ← apow_add]; simp
-    rw [e]
-    exact N.smul_mem _ (hinv _ hg h)
-  have hmemM : ∀ f ∈ N, detTw (a + n) s f ∈ M := fun f hf => by
-    show detTw (a + n) (-s) (detTw (a + n) s f) ∈ N
-    rwa [detTw_neg_detTw]
-  rcases GlobalTheory.RankFibre.indScal_irreducible P.bernsteinUnitaryProductIrreducible k a n ν ν⁻¹ hνs hνu hνs.inv hu
-    M hMle hMinv with h | h
-  · left
-    refine (Submodule.eq_bot_iff N).2 fun f hf => ?_
-    have h0 : detTw (a + n) s f = 0 := by
-      have := hmemM f hf
-      rw [h] at this
-      exact (Submodule.mem_bot ℂ).1 this
-    rw [← detTw_neg_detTw (a + n) s f, h0, map_zero]
-  · right
-    refine le_antisymm hN fun f hf => ?_
-    have := h (detTw_mem_indScal ν hf)
-    have h' : detTw (a + n) (-s) (detTw (a + n) s f) ∈ N := this
-    rwa [detTw_neg_detTw] at h'
-
-end GlobalTheory.FullRankCoinv

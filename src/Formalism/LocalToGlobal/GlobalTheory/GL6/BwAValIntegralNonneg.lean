@@ -1,7 +1,54 @@
 module
 
-public import Formalism.LocalToGlobal.GlobalTheory.GL6.LatticeInclusionOfSubIntegral
+public import Formalism.LocalToGlobal.HermitianForms.FormsTied
+public import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
+public import Formalism.GradedWeylDivisibility.FinalC
 public import Formalism.GradedWeylDivisibility.FinalD
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Presheaf
+import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.SharpRestriction.GlobalSchurBounds.ProductFirstZerothParts
 
 @[expose] public section
 
@@ -64,7 +111,6 @@ theorem bwA_val_nat_eq_zero (s : ℕ) (hs : ¬ Pl.resChar w ∣ s) : Pl.val w (s
     have := Pl.ramIdx_pos w
     first
       | exact_mod_cast this
-      | exact WithTop.coe_lt_coe.mpr (by exact_mod_cast this)
   have hA := bwA_val_int_nonneg Pl w (Nat.gcdA (Pl.resChar w) s)
   have hB := bwA_val_int_nonneg Pl w (Nat.gcdB (Pl.resChar w) s)
   have h2 : (0 : WithTop ℤ) < Pl.val w ((Pl.resChar w : LL) * ((Nat.gcdA (Pl.resChar w) s : ℤ) : LL)) := by
@@ -147,7 +193,6 @@ theorem bwA_rowAct_elem_eq (a b : Fin r) (c : R) (f : MvPolynomial (Fin r × Fin
   · intro x
     first
       | simp [Formalism.GradedWeylDivisibility.rowAct, Formalism.GradedWeylDivisibility.rowGen, Polynomial.algebraMap_apply]
-      | simp [Formalism.GradedWeylDivisibility.rowAct, Formalism.GradedWeylDivisibility.rowGen]
   · intro p q hp hq
     simp only [map_add (f := _), Polynomial.eval_add, hp, hq]
   · intro p v hp
@@ -173,7 +218,6 @@ private theorem rowDiv_mem_weyl_of_mem (hn : n ≤ r) (ν : Fin n → ℕ) (a b 
     rw [SetLike.mem_coe, Submodule.mem_comap]
     first
       | exact Submodule.subset_span ⟨(a, b, k) :: w, rfl⟩
-      | exact Submodule.subset_span ⟨(a, b, k) :: w, by simp [Formalism.GradedWeylDivisibility.applyWord, L]⟩
   exact key hf
 
 theorem bwA_weyl_rowAct_elem (hn : n ≤ r) (ν : Fin n → ℕ) (a b : Fin r) (c : R)
@@ -199,12 +243,11 @@ private theorem rowAct_mul_eq_rowAct_rowAct (g h : Matrix (Fin r) (Fin r) R) (f 
   have key : (Formalism.GradedWeylDivisibility.rowAct R (n := n) (g * h)) = (Formalism.GradedWeylDivisibility.rowAct R h).comp (Formalism.GradedWeylDivisibility.rowAct R g) := by
     apply MvPolynomial.algHom_ext
     intro v
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [Formalism.GradedWeylDivisibility.rowAct, AlgHom.comp_apply, MvPolynomial.aeval_X, map_sum, map_mul, MvPolynomial.aeval_C,
-      MvPolynomial.algebraMap_eq, Matrix.mul_apply, Finset.sum_mul, Finset.mul_sum, mul_assoc]
+
+    simp only [Formalism.GradedWeylDivisibility.rowAct, AlgHom.comp_apply, MvPolynomial.aeval_X, map_sum, map_mul, MvPolynomial.aeval_C,
+    MvPolynomial.algebraMap_eq, Matrix.mul_apply, Finset.sum_mul, Finset.mul_sum, mul_assoc]
     first
       | exact Finset.sum_comm
-      | rw [Finset.sum_comm]
   rw [key, AlgHom.comp_apply]
 
 theorem bwA_weyl_rowAct_closure (hn : n ≤ r) (ν : Fin n → ℕ) (g : Matrix (Fin r) (Fin r) R)
@@ -240,7 +283,6 @@ theorem bwA_rowGen_map {R S : Type} [CommRing R] [CommRing S] (φ : R →+* S) {
   · intro x
     first
       | simp [Formalism.GradedWeylDivisibility.rowGen, Polynomial.algebraMap_apply]
-      | simp [Formalism.GradedWeylDivisibility.rowGen]
   · intro p q hp hq
     simp only [map_add (f := _), Polynomial.map_add (f := _), hp, hq]
   · intro p v hp
@@ -273,7 +315,6 @@ theorem bwA_G_C (a b : Fin r) (c : R) : bwA_G (n := n) a b (MvPolynomial.C c) 0 
     unfold Formalism.GradedWeylDivisibility.rowDiv
     first
       | simp [Formalism.GradedWeylDivisibility.rowGen, Polynomial.algebraMap_apply, Polynomial.coeff_C]
-      | simp [Formalism.GradedWeylDivisibility.rowGen, Polynomial.coeff_C]
   rw [h]
   split_ifs with hk
   · subst hk
@@ -335,7 +376,6 @@ theorem bwA_G_mul (a b : Fin r) {p q : MvPolynomial (Fin r × Fin n) R} {μ ν :
   have hx' : x.1 + x.2 = k := by
     first
       | exact Finset.HasAntidiagonal.mem_antidiagonal.mp hx
-      | simpa using hx
   have hdeg : μ + ν + (k : ℤ) • bwA_del a b = (μ + (x.1 : ℤ) • bwA_del a b) + (ν + (x.2 : ℤ) • bwA_del a b) := by
     rw [← hx']
     simp only [Nat.cast_add, add_smul]
@@ -371,7 +411,6 @@ theorem bwA_G_monomial (a b : Fin r) (m : Fin r × Fin n →₀ ℕ) (c : R) :
   all_goals first
     | rfl
     | (rw [Finsupp.weight_apply]; simp [Finsupp.sum])
-    | simp [Finsupp.prod]
 
 theorem bwA_G_of_homog (a b : Fin r) (f : MvPolynomial (Fin r × Fin n) R) (μ : Fin r → ℤ)
     (hf : MvPolynomial.IsWeightedHomogeneous (bwA_wZ r n) f μ) : bwA_G a b f μ := by
@@ -633,8 +672,8 @@ theorem substitution_rename (o : ι → Matrix (Fin N) (Fin N) ℂ) (τ : ι) (q
       (MvPolynomial.rename (Prod.mk τ)).comp (Formalism.GradedWeylDivisibility.rowAct ℂ (n := N) (o τ)) := by
     apply MvPolynomial.algHom_ext
     intro v
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [subP, Formalism.GradedWeylDivisibility.rowAct, MvPolynomial.rename_X, map_sum]
+
+    simp [subP, Formalism.GradedWeylDivisibility.rowAct, MvPolynomial.rename_X, map_sum]
   have h2 := congrArg (fun F : MvPolynomial (Fin N × Fin N) ℂ →ₐ[ℂ] MvPolynomial (ι × Fin N × Fin N) ℂ => F q) h
   simpa using h2
 

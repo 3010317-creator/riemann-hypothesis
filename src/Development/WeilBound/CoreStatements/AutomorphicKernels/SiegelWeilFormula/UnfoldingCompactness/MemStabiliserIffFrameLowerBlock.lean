@@ -1,7 +1,54 @@
 module
 
-public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.UnfoldingCompactness.MatrixOfUnipotentFrame
+import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.SiegelWeilActions.MemStabiliserIffFrameLowerBlock
+public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.DefsPlus
+public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.UnfoldingCompactness.IncMTranspose
+import Development.WeilBound.CoreStatements.AutomorphicKernels.EisensteinSeriesG2.AdelicHomeomorphisms.IsTopologicalGroupG2
+import Development.WeilBound.CoreStatements.AutomorphicKernels.EisensteinSeriesG2.G2HaarMeasure.ContinuousInFrame
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.UnfoldingCompactness.CellsSub
+public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.UnfoldingCompactness.MatrixOfUnipotentFrame
+import Development.WeilBound.ThetaLifts.LatticeBasics.UnfoldB
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -30,31 +77,7 @@ theorem incM_GL_inv_mul (t₀ : GL (Fin n) E) : incM F (t₀⁻¹).1 * incM F t�
   rw [← incM_mul', Units.inv_mul]; ext i j; simp [incM, Matrix.one_apply]
 
 theorem mem_stabiliser_iff_frame_lower_block (hb : IsFrame2 σ Y b) (p : G2 σ Y) : p ∈ par2 σ Y ↔ (inFrame b p).toBlocks₂₁ = 0 := by
-  obtain ⟨-, t₀, ht₀⟩ := hb
-  constructor
-  · intro h
-    obtain ⟨t, ht⟩ := mem_parabolic_GL2_iff.1 h
-    exact ((isPar_frame ht₀ p t).1 ht).1
-  · intro h
-    set P := inFrame b p
-    set P' := inFrame b p⁻¹
-    have hPP : P' * P = 1 := GlobalTheory.EisBL.DoubledParabolic.inFrame_inv_mul b p
-    have h1 : P'.toBlocks₁₁ * P.toBlocks₁₁ = 1 := by
-      have := congrArg Matrix.toBlocks₁₁ hPP
-      rw [toBlocks₁₁_mul', h, Matrix.mul_zero, add_zero] at this
-      rw [this]; ext i j; simp [Matrix.toBlocks₁₁, Matrix.one_apply]
-    have h2 : P.toBlocks₁₁ * P'.toBlocks₁₁ = 1 := mul_eq_one_comm.1 h1
-    set T0 := incM F t₀.1
-    set Ti := incM F (t₀⁻¹).1
-    have hT : T0 * Ti = 1 := incM_GL_mul_inv t₀
-    let t : GL (Fin n) (AE F E) := ⟨T0 * P.toBlocks₁₁ * Ti, T0 * P'.toBlocks₁₁ * Ti, by
-        calc T0 * P.toBlocks₁₁ * Ti * (T0 * P'.toBlocks₁₁ * Ti)
-            = T0 * (P.toBlocks₁₁ * (Ti * T0) * P'.toBlocks₁₁) * Ti := by simp only [Matrix.mul_assoc]
-          _ = 1 := by rw [incM_GL_inv_mul, Matrix.mul_one, h2, Matrix.mul_one, hT], by
-        calc T0 * P'.toBlocks₁₁ * Ti * (T0 * P.toBlocks₁₁ * Ti)
-            = T0 * (P'.toBlocks₁₁ * (Ti * T0) * P.toBlocks₁₁) * Ti := by simp only [Matrix.mul_assoc]
-          _ = 1 := by rw [incM_GL_inv_mul, Matrix.mul_one, h1, Matrix.mul_one, hT]⟩
-    exact mem_parabolic_GL2_iff.2 ⟨t, (isPar_frame ht₀ p t).2 ⟨h, rfl⟩⟩
+  apply PositivityTheory.SiegelWeilFormula.Act.ComplexParameterFamilyContinuity.mem_stabiliser_iff_frame_lower_block <;> assumption
 
 theorem big_inj' (hb : IsFrame2 σ Y b) {ε : ℤˣ} {w : G2 σ Y}
     (hw : inFrame b w = Matrix.fromBlocks 0 1 (((ε : ℤ) : AE F E) • 1) 0) (hnb : IsNMap b nb) {ν ν' : nA σ Y b}
@@ -288,8 +311,8 @@ theorem cells' (B : Base F E) (hB : B.IsGood σ) (hb : IsFrame2 σ Y b) {ε : �
         apply det_one_add_rank_one
         have : (fun j => inclR (F := F) (AF F) (w' j)) ⬝ᵥ (fun i => Λ * inclR (F := F) (AF F) (v i)) =
             Λ * inclR (F := F) (AF F) (w' ⬝ᵥ v) := by
-          set_option synthInstance.maxHeartbeats 100000 in
-            simp [dotProduct, Finset.mul_sum, map_sum, mul_left_comm]
+
+          simp [dotProduct, Finset.mul_sum, map_sum, mul_left_comm]
         rw [this, hvw0, map_zero, mul_zero]
       rw [ht1, Matrix.det_mul, Matrix.det_mul, h11, hdet, mul_one, ← Matrix.det_mul, incM_GL_mul_inv, Matrix.det_one]
 

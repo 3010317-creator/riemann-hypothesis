@@ -1,8 +1,59 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LatExistsDefs
+public import Mathlib.Algebra.Module.Lattice.Full
 public import Lemmata.MiscLemmasD.Imports
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+public import Mathlib.LinearAlgebra.Dimension.OrzechProperty
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.RingTheory.DedekindDomain.Factorization
 
 @[expose] public section
 
@@ -223,8 +274,7 @@ lemma rebase (c1 c2 a : 𝓕) (h1 : c1 ≠ 0) (h2 : c2 ≠ 0) (ha : a ≠ 0) (p 
 private lemma fg_of_le_lemma {M N : Submodule (𝓞 E) V} (hM : M.FG) (h : N ≤ M) : N.FG := by
   haveI := isNoetherian_of_fg_of_noetherian M hM
   have h1 : (Submodule.comap M.subtype N).FG := IsNoetherian.noetherian _
-  have h2 := h1.map M.subtype
-  rwa [Submodule.map_comap_subtype, inf_eq_right.2 h] at h2
+  simpa [Submodule.map_comap_subtype, inf_eq_right.2 h] using h1.map M.subtype
 
 theorem adapted_basis (n : ℕ) : ∀ (w : Fin (n + 1) → V), LinearIndependent E w →
     ∀ (M : Submodule (𝓞 E) V), M.FG →
@@ -268,17 +318,12 @@ theorem adapted_basis (n : ℕ) : ∀ (w : Fin (n + 1) → V), LinearIndependent
 lemma spanE_of_lat {ι : Type} (N : Submodule (𝓞 E) V) (g : ι → V) (Y : Submodule E V)
     (hNY : N ≤ Y.restrictScalars (𝓞 E)) (hY : Y ≤ Submodule.span E (Set.range g))
     (hg : ∀ i, ∃ t : E, t ≠ 0 ∧ t • g i ∈ N) : Submodule.span E (N : Set V) = Y := by
-  apply le_antisymm
-  · rw [Submodule.span_le]
-    intro x hx
-    exact hNY hx
-  · refine hY.trans ?_
-    rw [Submodule.span_le]
-    rintro _ ⟨i, rfl⟩
-    obtain ⟨t, ht, hti⟩ := hg i
-    have h : g i = t⁻¹ • (t • g i) := by rw [smul_smul, inv_mul_cancel₀ ht, one_smul]
-    rw [SetLike.mem_coe, h]
-    exact Submodule.smul_mem _ _ (Submodule.subset_span hti)
+  refine le_antisymm (Submodule.span_le.2 hNY) ?_
+  refine hY.trans (Submodule.span_le.2 ?_)
+  rintro _ ⟨i, rfl⟩
+  obtain ⟨t, ht, hti⟩ := hg i
+  rw [show g i = t⁻¹ • (t • g i) by rw [smul_smul, inv_mul_cancel₀ ht, one_smul]]
+  exact Submodule.smul_mem _ _ (Submodule.subset_span hti)
 
 end Sat
 

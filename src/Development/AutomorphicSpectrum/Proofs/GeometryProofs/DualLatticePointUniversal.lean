@@ -1,9 +1,53 @@
 module
 
-public import Mathlib
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DerRingInjective
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteBaseChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelBaseChangeMapStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelBaseChangeMap
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteBaseChange
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -182,8 +226,8 @@ theorem expand (hβ : IsBaseChange B β) (he : ∀ y, ∑ k, w k y • e k = y) 
   · intro y
     simp only [extForm_apply, algebraMap_smul]
     conv_lhs => rw [← he y]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul]
+
+    simp only [map_sum, map_smul]
   · intro s n h
     simp only [map_smul, smul_eq_mul, mul_smul, ← Finset.smul_sum]
     rw [← h]
@@ -220,8 +264,8 @@ theorem resum (he : ∀ y, ∑ k, w k y • e k = y) (q : J → V) :
       (TrivSqZeroExt.inr (q j) : TrivSqZeroExt R V) • β (e j) := by
     intro j
     conv_rhs => rw [← he (e j)]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.smul_sum]
+
+    rw [map_sum, Finset.smul_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [map_smul, TrivSqZeroExt.inr_smul, smul_assoc, smul_comm]
   simp only [inr_sum, Finset.sum_smul]
@@ -234,8 +278,8 @@ theorem extForm_inr (hβ : IsBaseChange (TrivSqZeroExt R V) β) (he : ∀ y, ∑
       TrivSqZeroExt.inr (φ f) := by
   rw [extForm_sum]
   conv_rhs => rw [← dual_expand he f]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, inr_sum]
+
+  rw [map_sum, inr_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [map_smul, TrivSqZeroExt.inr_smul, Algebra.smul_def, mul_comm]
 
@@ -245,8 +289,8 @@ theorem fst_extForm (hβ : IsBaseChange (TrivSqZeroExt R V) β) (he : ∀ y, ∑
   rw [extForm_sum] at h₁
   have h₂ := congrArg TrivSqZeroExt.fst h₁
   have h₃ := congrArg (w k) h
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul, map_zero, smul_eq_mul] at h₃
+
+  simp only [map_sum, map_smul, map_zero, smul_eq_mul] at h₃
   rw [h₂, ← h₃]
   simp [TrivSqZeroExt.algebraMap_eq_inl, TrivSqZeroExt.fst_sum]
 
@@ -410,7 +454,7 @@ theorem tangent_universal (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj
       (∀ e : L, hom x (Module.Dual.eval R L e) ≫ u = M.pt e) ∧
       ∀ (V : Type) [AddCommGroup V] [Module R V] [Module Rᵐᵒᵖ V] [IsCentralScalar R V] (v : ob x V ⟶ G),
         zsec x ≫ v = 1 → ∃! φ : Module.Dual R L →ₗ[R] V, hom x φ ≫ u = v := by
-  obtain ⟨hfin, hproj, hbc⟩ := GlobalTheory.T.lie_model_finite_base_change S G R x L M
+  obtain ⟨hfin, hproj, hbc⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange S G R x L M
   obtain ⟨n, f, g, -, -, hfg⟩ := Module.Finite.exists_comp_eq_id_of_projective R L
   let e : Fin n → L := fun k => f (Pi.single k 1)
   let w : Fin n → Module.Dual R L := fun k => LinearMap.proj k ∘ₗ g
@@ -419,8 +463,8 @@ theorem tangent_universal (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj
     have h := LinearMap.congr_fun hfg y
     simp only [LinearMap.comp_apply, LinearMap.id_apply] at h
     conv_rhs => rw [← h, ← Finset.univ_sum_single (g y)]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     have : Pi.single k (g y k) = g y k • (Pi.single k 1 : Fin n → R) := by
       rw [← Pi.single_smul, smul_eq_mul, _root_.mul_one]
@@ -429,7 +473,7 @@ theorem tangent_universal (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj
   refine ⟨univ M e w, zsec_univ M e w, eval_univ M he, ?_⟩
   intro V _ _ _ _ v hv
   obtain ⟨L', _, _, ⟨M'⟩⟩ := lieModel_exists S G (TrivSqZeroExt R V) (xB x V)
-  obtain ⟨j, hj1, hj2, -⟩ := GlobalTheory.T.lie_model_base_change_map S G R (TrivSqZeroExt R V) x L L' M M'
+  obtain ⟨j, hj1, hj2, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_baseChange S G R (TrivSqZeroExt R V) x L L' M M'
   letI : Module R L' := Module.compHom L' (algebraMap R (TrivSqZeroExt R V))
   haveI : IsScalarTower R (TrivSqZeroExt R V) L' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   let β : L →ₗ[R] L' := { toFun := j, map_add' := j.map_add, map_smul' := hj2 }

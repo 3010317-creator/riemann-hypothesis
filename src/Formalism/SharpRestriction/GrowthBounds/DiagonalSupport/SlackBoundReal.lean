@@ -1,7 +1,46 @@
 module
 
-public import Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.TwiceValuationFactorialProduct
-public import Formalism.PolynomialDimension.FinalNum
+public import Formalism.SharpRestriction.GrowthBounds.TwistedSubstitution.PlaneCoeff
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Formalism.SharpRestriction.GrowthBounds.DualFockLinear.IsMultiHom
+import Formalism.SharpRestriction.GrowthBounds.PathWeight.GeneratorImageIsSymbol
+import Formalism.SharpRestriction.GrowthBounds.ScaleEdges.DvdOfAdd
+import Formalism.SharpRestriction.GrowthBounds.WittFrameLocaliserOrders
 
 @[expose] public section
 
@@ -20,16 +59,14 @@ variable {n' r : ℕ} [NeZero n'] (Fr : Frames n' r)
 
 theorem llPos_mem (j : ℤ) (l : ℕ) (hl : l < (Fr.LLset j).card) : llPos Fr j l ∈ Fr.LLset j := by
   unfold llPos
-  have hlen : l < ((Fr.LLset j).sort (· ≤ ·)).length := by rw [Finset.length_sort]; exact hl
-  rw [List.getD_eq_getElem _ _ hlen]
-  exact (Finset.mem_sort _).mp (List.getElem_mem hlen)
+  rw [List.getD_eq_getElem _ _ (by rw [Finset.length_sort]; exact hl)]
+  exact (Finset.mem_sort _).mp (List.getElem_mem (by rw [Finset.length_sort]; exact hl))
 
 theorem llPos_inj (j : ℤ) (l l' : ℕ) (hl : l < (Fr.LLset j).card) (hl' : l' < (Fr.LLset j).card)
     (h : llPos Fr j l = llPos Fr j l') : l = l' := by
   unfold llPos at h
-  have h1 : l < ((Fr.LLset j).sort (· ≤ ·)).length := by rw [Finset.length_sort]; exact hl
-  have h2 : l' < ((Fr.LLset j).sort (· ≤ ·)).length := by rw [Finset.length_sort]; exact hl'
-  rw [List.getD_eq_getElem _ _ h1, List.getD_eq_getElem _ _ h2] at h
+  rw [List.getD_eq_getElem _ _ (by rw [Finset.length_sort]; exact hl),
+      List.getD_eq_getElem _ _ (by rw [Finset.length_sort]; exact hl')] at h
   exact (List.Nodup.getElem_inj_iff (Finset.sort_nodup _ _)).mp h
 
 theorem mem_LLset (j x : ℤ) : x ∈ Fr.LLset j ↔
@@ -226,9 +263,7 @@ theorem lg_nonneg (p r n : ℕ) (hp : 2 ≤ p) (hr : 1 ≤ r) : 0 ≤ lg p r n :
   unfold lg
   have hp1 : (1 : ℝ) < p := by exact_mod_cast hp
   have hx : (1 : ℝ) ≤ (n : ℝ) + r := by
-    have : (1 : ℝ) ≤ r := by exact_mod_cast hr
-    have : (0 : ℝ) ≤ n := Nat.cast_nonneg n
-    linarith
+    exact_mod_cast (show 1 ≤ n + r by omega)
   have := Real.logb_nonneg hp1 hx
   linarith
 

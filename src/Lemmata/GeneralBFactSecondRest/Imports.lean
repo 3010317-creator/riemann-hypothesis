@@ -1,6 +1,46 @@
 module
 
-public import Mathlib
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -10,9 +50,9 @@ namespace Bl.general_b_fact_second_rest
 
 private lemma aux {K : Type u_1} [Field K] [NumberField K] (a : K) :
     ∃ d : ℤ, d ≠ 0 ∧ IsIntegral ℤ ((d : K) * a) := by
-  have ha : IsAlgebraic ℤ a := IsFractionRing.isAlgebraic_iff ℤ ℚ K |>.mpr (.of_finite ℚ a)
-  obtain ⟨d, hd, hint⟩ := ha.exists_integral_multiple
-  exact ⟨d, hd, by simpa [zsmul_eq_mul] using hint⟩
+
+  simpa [zsmul_eq_mul] using
+    (IsFractionRing.isAlgebraic_iff ℤ ℚ K |>.mpr (.of_finite ℚ a)).exists_integral_multiple
 
 theorem goal1 :
   ∀ {K : Type u_1} {V : Type u_2} [inst : Field.{u_1} K] [NumberField.{u_1} K] [NumberField.IsTotallyComplex.{u_1} K]
@@ -32,18 +72,15 @@ theorem goal1 :
     obtain ⟨c2, hc2, m2⟩ := h2
     refine ⟨c1 * c2, mul_ne_zero hc1 hc2, ?_⟩
     rw [smul_add]
-    refine L.add_mem ?_ ?_
-    · rw [mul_comm, mul_smul]; exact L.toAddSubgroup.zsmul_mem m1 c2
-    · rw [mul_smul]; exact L.toAddSubgroup.zsmul_mem m2 c1
+    exact L.add_mem (by rw [mul_comm, mul_smul]; exact L.toAddSubgroup.zsmul_mem m1 c2)
+      (by rw [mul_smul]; exact L.toAddSubgroup.zsmul_mem m2 c1)
   | smul a x _ h =>
     obtain ⟨c, hc, m⟩ := h
     obtain ⟨d, hd, hint⟩ := aux a
     refine ⟨d * c, mul_ne_zero hd hc, ?_⟩
-    obtain ⟨r, hr⟩ : ∃ r : NumberField.RingOfIntegers K,
-        algebraMap (NumberField.RingOfIntegers K) K r = (d : K) * a := ⟨⟨_, hint⟩, rfl⟩
+    obtain ⟨r, hr⟩ : ∃ r : NumberField.RingOfIntegers K, algebraMap (NumberField.RingOfIntegers K) K r = (d : K) * a := ⟨⟨_, hint⟩, rfl⟩
     have key : (d * c) • (a • x) = r • (c • x) := by
-      rw [← algebraMap_smul K r (c • x), hr, ← Int.cast_smul_eq_zsmul K,
-        ← Int.cast_smul_eq_zsmul K, smul_smul, smul_smul]
+      rw [← algebraMap_smul K r (c • x), hr, ← Int.cast_smul_eq_zsmul K, ← Int.cast_smul_eq_zsmul K, smul_smul, smul_smul]
       congr 1
       push_cast
       ring

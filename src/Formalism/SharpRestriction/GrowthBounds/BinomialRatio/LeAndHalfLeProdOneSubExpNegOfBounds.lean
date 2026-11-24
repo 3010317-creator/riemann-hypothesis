@@ -1,8 +1,46 @@
 module
 
 public import Formalism.SharpRestriction.GrowthBounds.BinomialRatio.RankDefs
-public import Formalism.SharpRestriction.GrowthBounds.BinomialRatio.ThresholdLowerBounds
+public import Formalism.SharpRestriction.GrowthBounds.BinomialRatio.FamilyFourthBound
 public import Formalism.SharpRestriction.GrowthBounds.BinomialRatio.CoarseDegreeAlternative
+import Formalism.SharpRestriction.GrowthBounds.BinomialRatio.ThresholdLowerBounds
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -162,13 +200,10 @@ theorem one_segment_of_upper_lower {D : Formalism.BasicNotions.D7} (hU : RestUp)
   have hlow := low X W Qq O Kf ι σ jO w hSet hH hc j m hm0 hcore.1 rz ry hd
   have hfac : 1 / 2 ≤ lowFac C0 CE1 CE2 X j ⌈m⌉₊ := by
     have hkm : (X.m : ℝ) = X.k - 1 := by unfold Loc.k; ring
-    unfold lowFac
-    rw [hkm]
-    exact hcore.2
+    simpa [lowFac, hkm] using hcore.2
   have hmm : (0 : ℝ) ≤ (mmB C0 CE1 CE2 X j rz ry : ℝ) := Nat.cast_nonneg _
-  have h1 : 1 / 2 * (mmB C0 CE1 CE2 X j rz ry : ℝ) ≤ lowFac C0 CE1 CE2 X j ⌈m⌉₊ * (mmB C0 CE1 CE2 X j rz ry : ℝ) :=
-    mul_le_mul_of_nonneg_right hfac hmm
-  have h2 : (mmB C0 CE1 CE2 X j rz ry : ℝ) / 2 ≤ (rankOnDigits O C0 CE1 CE2 X j m rz ry : ℝ) := by linarith
+  have h2 : (mmB C0 CE1 CE2 X j rz ry : ℝ) / 2 ≤ (rankOnDigits O C0 CE1 CE2 X j m rz ry : ℝ) := by
+    nlinarith [mul_le_mul_of_nonneg_right hfac hmm]
   exact h2
 
 end Formalism.MainNotions.ColumnSystems.Pf

@@ -1,6 +1,53 @@
 module
 
+import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IntSOfMulEqOne
 public import Formalism.LocalToGlobal.CharacterGerms.ConstantCoeffTripleSubstitution
+import Formalism.LocalToGlobal.CharacterGerms.SubstSubst
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Formalism.LocalToGlobal.ProjectiveLattices.SubConstMemOrig
+public import Mathlib.Algebra.BigOperators.Field
 
 @[expose] public section
 
@@ -53,57 +100,7 @@ private theorem coeff_mvExp_eq_sum_range_of_degree_le {σ : Type} {f : MvPowerSe
 
 theorem exp_add {σ : Type} {f g : MvPowerSeries σ C} (hf : MvPowerSeries.constantCoeff f = 0)
     (hg : MvPowerSeries.constantCoeff g = 0) : mvExp (f + g) = mvExp f * mvExp g := by
-  ext m
-  have hfg : MvPowerSeries.constantCoeff (f + g) = 0 := by rw [map_add (f := _), hf, hg, add_zero]
-  set N := m.degree with hN
-  have hT : ∀ i j : ℕ, N < i + j → MvPowerSeries.coeff m (f ^ i * g ^ j) = 0 :=
-    fun i j h => coeff_mul_eq_zero_of_degree_lt_add_character_germs (coeff_pow_eq_zero_of_degree_lt_character_germs' hf i) (coeff_pow_eq_zero_of_degree_lt_character_germs' hg j) m (by omega)
-
-  have hL : MvPowerSeries.coeff m (mvExp (f + g)) = ∑ i ∈ Finset.range (N + 1), ∑ j ∈ Finset.range (N + 1),
-      MvPowerSeries.coeff m (f ^ i * g ^ j) / ((i.factorial : C) * (j.factorial : C)) := by
-    rw [coeff_mvExp_eq_sum_range_of_degree_le hfg m N le_rfl]
-    have hk : ∀ k ∈ Finset.range (N + 1), MvPowerSeries.coeff m ((f + g) ^ k) / (k.factorial : C) =
-        ∑ i ∈ Finset.range (k + 1), MvPowerSeries.coeff m (f ^ i * g ^ (k - i)) /
-          ((i.factorial : C) * ((k - i).factorial : C)) := by
-      intro k _
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [add_pow, map_sum, Finset.sum_div]
-      refine Finset.sum_congr rfl fun i hi => ?_
-      have hik : i ≤ k := Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)
-      rw [← nsmul_eq_mul', map_nsmul, nsmul_eq_mul, Nat.cast_choose C hik]
-      have h1 : (k.factorial : C) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero k)
-      have h2 : (i.factorial : C) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero i)
-      have h3 : ((k - i).factorial : C) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero _)
-      field_simp
-    rw [Finset.sum_congr rfl hk]
-    rw [Finset.sum_range_diag_flip (N + 1) fun i j =>
-      MvPowerSeries.coeff m (f ^ i * g ^ j) / ((i.factorial : C) * (j.factorial : C))]
-    refine Finset.sum_congr rfl fun i hi => ?_
-    refine Finset.sum_subset (fun j hj => by
-      rw [Finset.mem_range] at hj ⊢
-      omega) fun j hj hj' => ?_
-    rw [Finset.mem_range] at hj hj'
-    rw [hT i j (by omega), zero_div]
-
-  have hR : MvPowerSeries.coeff m (mvExp f * mvExp g) = ∑ i ∈ Finset.range (N + 1), ∑ j ∈ Finset.range (N + 1),
-      MvPowerSeries.coeff m (f ^ i * g ^ j) / ((i.factorial : C) * (j.factorial : C)) := by
-    rw [MvPowerSeries.coeff_mul]
-    have hx : ∀ x ∈ Finset.HasAntidiagonal.antidiagonal m, MvPowerSeries.coeff x.1 (mvExp f) * MvPowerSeries.coeff x.2 (mvExp g) =
-        ∑ i ∈ Finset.range (N + 1), ∑ j ∈ Finset.range (N + 1),
-          MvPowerSeries.coeff x.1 (f ^ i) * MvPowerSeries.coeff x.2 (g ^ j) /
-            ((i.factorial : C) * (j.factorial : C)) := by
-      intro x hx
-      replace hx := Finset.HasAntidiagonal.mem_antidiagonal.mp hx
-      have hd : x.1.degree + x.2.degree = N := by rw [hN, ← hx, map_add (f := _)]
-      rw [coeff_mvExp_eq_sum_range_of_degree_le hf x.1 N (by omega), coeff_mvExp_eq_sum_range_of_degree_le hg x.2 N (by omega), Finset.sum_mul_sum]
-      refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-      rw [div_mul_div_comm]
-    rw [Finset.sum_congr rfl hx, Finset.sum_comm]
-    refine Finset.sum_congr rfl fun i _ => ?_
-    rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun j _ => ?_
-    rw [MvPowerSeries.coeff_mul, Finset.sum_div]
-  rw [hL, hR]
+  apply GlobalTheory.RowVal.mvExp_add <;> assumption
 
 private theorem hasSubst_of_Z0 {σ τ : Type} [Finite σ] {a : σ → MvPowerSeries τ C}
     (ha : ∀ s, MvPowerSeries.constantCoeff (a s) = 0) : MvPowerSeries.HasSubst a := by

@@ -1,9 +1,58 @@
 module
 
-public import Mathlib
 public import Formalism.DistinguishedUnitIdeals.FrobeniusDiffBijective
-public import Formalism.DistinguishedUnitIdeals.DistinguishedOrderProofs.RhoMapFunctorial
 public import Formalism.DistinguishedUnitIdeals.DistinguishedOrderProofs.GroundTheory
+public import Formalism.DistinguishedUnitIdeals.DistinguishedOrderProofs.RhoMapFunctorial
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PowerSeries.NoZeroDivisors
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.Data.Nat.Factorization.Basic
+public import Mathlib.Data.Nat.Multiplicity
+public import Mathlib.NumberTheory.Padics.PadicVal.Basic
 
 @[expose] public section
 
@@ -594,8 +643,8 @@ theorem extension_generated_holds : ExtGOf := by
   obtain ⟨m, hm, hme⟩ := isPhiCombination_of_mem_pull Y.LY hb hu'
   have h0 : ∑ t, b t • L₀.phiIt i k (Y.π.f (m t)) = 0 := by
     have h1 : Y.π.f (Y.ι.f (lam • u)) = 0 := (Y.exact _).2 ⟨_, rfl⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hme, map_sum] at h1
+
+    rw [hme, map_sum] at h1
     simpa only [map_smul, hom_phiIt] using h1
   have hm0 := hind (fun t => Y.π.f (m t)) (fun t => Y.π.map_N i _ (hm t)) h0
   have hex : ∀ t, ∃ w : V₂, Y.ι.f w = m t := fun t => (Y.exact _).1 (hm0 t)
@@ -603,8 +652,8 @@ theorem extension_generated_holds : ExtGOf := by
   have hwN : ∀ t, w t ∈ L₂.N i := fun t => h6 i (w t) (by rw [hw t]; exact hm t)
   have heq : lam • u = ∑ t, b t • L₂.phiIt i k (w t) := by
     apply Y.ι_inj
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hme, map_sum]
+
+    rw [hme, map_sum]
     refine Finset.sum_congr rfl fun t _ => ?_
     rw [map_smul, hom_phiIt, hw t]
   show lam • u ∈ L₂.pull i k
@@ -1045,8 +1094,8 @@ theorem lattice_filtration_second_form : FrobeniusDiffBijective := by
     have e1 : L.φ i ((X : PowerSeries O) ^ M • y (i - 1)) =
         (∑ k ∈ Finset.range K, f1bIt L t (k + 1) i) -
           L.φ i ((X : PowerSeries O) ^ M • ((∑ k ∈ Finset.range K, w k (i - 1)) - y (i - 1))) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [smul_sub, map_sub, Finset.smul_sum, map_sum]
+
+      rw [smul_sub, map_sub, Finset.smul_sum, map_sum]
       simp only [hwe]
       simp [f1bIt]
     have e2 : (X : PowerSeries O) ^ M • y i = (∑ k ∈ Finset.range K, f1bIt L t k i) -
@@ -1320,8 +1369,8 @@ theorem cp_mem_equiv {R M : Type} [CommRing R] [AddCommGroup M] [Module R M] (J 
       simp [Finset.sum_apply, Pi.single_apply]
     have h2 : x = ∑ t, Φ x t • Φ.symm (Pi.single t (1 : R)) := by
       apply Φ.injective
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       simpa only [map_smul, LinearEquiv.apply_symm_apply] using h1
     rw [h2]
     exact Submodule.sum_mem _ fun t _ => Submodule.smul_mem_smul (h t) trivial

@@ -1,22 +1,61 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndicatorIntMMemSB
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExistsStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.KudlaSplittingSplitUnitary
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromBlocksSubOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicIntertwine
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DistribHaarCharEqAddEquivAddHaarChar
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzAdelicEqSpanPure
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDiagonalLagrangianInvariantForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFactorPureTensorComponentAtPlace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAdelicCharacterNontrivialAtPlaces
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicHeisenbergActsByLocalSchrodinger
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilObjectsInhabited
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicHeisenbergActsByLocalSchrodinger
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DistribHaarCharEqAddEquivAddHaarChar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqAdeleSupportedAtFinitePlaceOfSupportedAt
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFactorPureTensorComponentAtPlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnipotentMapsForThetaTriple
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledVacuumTwistedVacuumConditionDoubledLattic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSplittingSplitOm
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalMomentMatrixTransform
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzAdelicEqSpanPure
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAdelicCharacterNontrivialAtPlaces
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilObjectsInhabited
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
 
 @[expose] public section
 
@@ -329,111 +368,6 @@ end Adelic
 
 open GlobalTheory.DblScal GlobalTheory.SplitIdele
 open scoped GlobalTheory.VacAny
-
-theorem scalar_siegel : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E) (n d : ℕ)
-    (X : Spc F E n) (W : Spc F E d) (M : Model σ X W) (χX χW : Chr F E) (om : Rep σ X W) (r s r' s' : ℕ), IsPair B M χX χW om r s r' s' →
-    ∀ (v : Pl (F := F)) (t : E →ₐ[F] Fv F v) (b : GL (Fin n) (Fv F v)) (c : GL (Fin d) (Fv F v))
-      (dd : GlobalTheory.DblScal.DblCo σ X W) (omd : GlobalTheory.DblScal.DblRep σ (n := n) W),
-      IsDblCoord (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (-1) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) X.J) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) W.J) M.co dd →
-      IsUWeilSplit (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (adeleClass F) B.ψ (-1) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) X.J) (dbl ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) W.J)) dd χX (diagCols (Fin d)) omd →
-      GlobalTheory.DblScal.LocOps omd v →
-      ∀ ιd, GlobalTheory.DblScal.IsLinD B.ψ dd t b c ιd → ∀ cd, GlobalTheory.DblScal.IsShapeD omd t c ιd cd →
-      ∀ p ∈ GlobalTheory.DblScal.UDAt σ W.J (evFin F v),
-        (∃ T : Matrix (Fin d) (Fin d) (Fv F v),
-          ((GlobalTheory.DblScal.locMatD t c p).val : Matrix (Fin d ⊕ Fin d) (Fin d ⊕ Fin d) (Fv F v)) *
-            (diagCols (Fin d) : Matrix (Fin d ⊕ Fin d) (Fin d) (Fv F v)) =
-            (diagCols (Fin d) : Matrix (Fin d ⊕ Fin d) (Fin d) (Fv F v)) * T) →
-        cd p = (chrW χX t (GlobalTheory.SplitFlip.gdet (GlobalTheory.DblScal.locMatD t c p)) : ℂ) *
-          GlobalTheory.SplitFlip.apow (GlobalTheory.SplitFlip.gdet (GlobalTheory.DblScal.locMatD t c p)) (-(n : ℂ) / 2) := by
-  intro _ F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hP v t b c dd omd hdd hW hloc ιd hι cd hcd p hp ⟨T, hT⟩
-  have hcm : IsCMExt F E σ := hP.base.cm
-  have hstd := hP.base.std
-  have hX : IsUnit (X.J.map t).det :=
-    isUnit_iff_ne_zero.2 (GlobalTheory.SplitIdele.det_map_ne_zero (GlobalTheory.SplitIdele.det_ne_zero_herm hP.herm) t)
-  have hK : IsUnit (W.J.map t).det :=
-    isUnit_iff_ne_zero.2 (GlobalTheory.SplitIdele.det_map_ne_zero (GlobalTheory.SplitIdele.det_ne_zero_skew hP.skew) t)
-  obtain ⟨R, hR, φ₀, hφ₀, h0⟩ := exists_rest_ne (Fin n × Fin d) v
-  let lam : ((Fin n × Fin d ⊕ Fin n × Fin d → Fv F v) → ℂ) →ₗ[ℂ] ℂ := GlobalTheory.DiagForm.lDiag F (Fin n × Fin d) ∘ₗ
-    { toFun := fun φ => tens (evFin F v) φ R
-      map_add' := fun _ _ => funext fun _ => add_mul _ _ _
-      map_smul' := fun _ _ => funext fun _ => mul_assoc _ _ _ }
-  have hlam : ∀ φ, lam φ = GlobalTheory.DiagForm.lDiag F (Fin n × Fin d) (tens (evFin F v) φ R) := fun _ => rfl
-  obtain ⟨m, hm⟩ := exists_factor ιd _ hι.bij.injOn lam
-  have hinv : ∀ z : Matrix (Fin n) (Fin d) (AE F E), ∀ Φ ∈ schA F (Fin n × Fin d ⊕ Fin n × Fin d),
-      GlobalTheory.DiagForm.lDiag F _ (dd.rho B.ψ (fromCols z z) Φ) = GlobalTheory.DiagForm.lDiag F _ Φ := fun z Φ hΦ => by
-    rw [Darboux.rho, hdd z z, GlobalTheory.DiagForm.lDiag_schr B.ψ _ _ hΦ]
-  have hat : ∀ z : Matrix (Fin n) (Fin d) (AE F E), At (evFin F v) z → At (evFin F v) (fromCols z z) := fun z hz a ha => by
-    ext i (j | j) <;> exact congrFun (congrFun (hz a ha) i) j
-  have hrho : ∀ z : Matrix (Fin n) (Fin d) (AE F E), At (evFin F v) z → ∀ φ ∈ SB (Fin n × Fin d ⊕ Fin n × Fin d → Fv F v),
-      ∃ φ₁ ∈ SB (Fin n × Fin d ⊕ Fin n × Fin d → Fv F v), Acts (evFin F v) (dd.rho B.ψ (fromCols z z)) φ φ₁ ∧
-        m (ιd φ₁) = m (ιd φ) := fun z hz φ hφ => by
-    have h1 := GlobalTheory.SchrSB.schr_mem_SB B.ψ hstd.1 v (GlobalTheory.LatVac.locCo dd v (fromCols z z)) φ hφ
-    have h2 := GlobalTheory.VacBridge.rho_acts_locCo dd B.ψ v _ (hat z hz) φ
-    refine ⟨_, h1, h2, ?_⟩
-    rw [hm _ h1, hm _ hφ, hlam, hlam, ← h2 R (hR φ hφ), hinv z _ (hR φ hφ).2]
-  have hco : ∀ Y₁ Y₂ : Matrix (Fin n) (Fin d) (Fv F v),
-      (b⁻¹).val * fromCols (b.val * Y₁ * c.valᵀ) (b.val * Y₂ * c.valᵀ) * ((dsum c)⁻¹).valᵀ = fromCols Y₁ Y₂ := by
-    intro Y₁ Y₂
-    have e : ∀ Y : Matrix (Fin n) (Fin d) (Fv F v), (b⁻¹).val * (b.val * Y * c.valᵀ) * (c⁻¹).valᵀ = Y := fun Y => by
-      rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, Units.inv_mul, Matrix.one_mul, Matrix.mul_assoc, ← transpose_mul,
-        Units.inv_mul, transpose_one, Matrix.mul_one]
-    rw [show ((dsum c)⁻¹).val = fromBlocks (c⁻¹).val 0 0 (c⁻¹).val from rfl, mul_fromCols, fromBlocks_transpose, fromCols_mul_fromBlocks, transpose_zero, Matrix.mul_zero, Matrix.mul_zero,
-      add_zero, zero_add, e, e]
-  have htr : ∀ C : Matrix (Fin n) (Fin d) (Fv F v), ∀ f ∈ SB (Matrix (Fin n) (Fin d ⊕ Fin d) (Fv F v)),
-      m (fun Y => f (Y + fromCols C C)) = m f := by
-    intro C f hf
-    obtain ⟨φ, hφ, rfl⟩ := hι.bij.surjOn hf
-    obtain ⟨z, hz, z1, z2⟩ := exists_lift hcm t (b.val * C * c.valᵀ) 0
-    obtain ⟨φ₁, hφ₁, ha, e⟩ := hrho z hz φ hφ
-    rw [← e]
-    refine congrArg m (funext fun Y => ?_)
-    rw [hι.trans _ (hat z hz) (by rw [fromCols_map, z2, fromCols_zero]) φ hφ φ₁ hφ₁ ha Y, fromCols_map, z1, hco]
-  have hmu : ∀ D : Matrix (Fin n) (Fin d) (Fv F v), ∀ f ∈ SB (Matrix (Fin n) (Fin d ⊕ Fin d) (Fv F v)),
-      m (fun Y => GlobalTheory.LatVac.psiAt B.ψ v (∑ i, ∑ j, (Y.toCols₁ - Y.toCols₂) i j * D i j) * f Y) = m f := by
-    intro D f hf
-    obtain ⟨φ, hφ, rfl⟩ := hι.bij.surjOn hf
-    obtain ⟨z, hz, z1, z2⟩ := exists_lift hcm t 0
-      (-((X.J.map t)⁻¹ * ((b⁻¹).valᵀ * D * (c⁻¹).val) * ((W.J.map t)⁻¹)ᵀ))
-    obtain ⟨φ₁, hφ₁, ha, e⟩ := hrho z hz φ hφ
-    rw [← e]
-    refine congrArg m (funext fun Y => ?_)
-    obtain ⟨Y₁, Y₂, rfl⟩ : ∃ Y₁ Y₂, Y = fromCols Y₁ Y₂ := ⟨_, _, (fromCols_toCols Y).symm⟩
-    obtain ⟨x₁, hx₁, a1, a2⟩ := exists_lift hcm t (b.val * Y₁ * c.valᵀ) 0
-    obtain ⟨x₂, hx₂, b1, b2⟩ := exists_lift hcm t (b.val * Y₂ * c.valᵀ) 0
-    have hx : At (evFin F v) (fromCols x₁ x₂) := fun a ha => by
-      ext i (j | j)
-      exacts [congrFun (congrFun (hx₁ a ha) i) j, congrFun (congrFun (hx₂ a ha) i) j]
-    have key := hι.mult _ (hat z hz) (by rw [fromCols_map, z1, fromCols_zero]) φ hφ φ₁ hφ₁ ha _ hx
-      (by rw [fromCols_map, a2, b2, fromCols_zero])
-    rw [fromCols_map, a1, b1, hco, symp_dbl_diag] at key
-    change ιd φ₁ (Y₁.fromCols Y₂) = B.ψ (symp (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (-1) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) X.J) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) W.J) (x₁ - x₂) z) * _ at key
-    rw [psi_symp hcm B.ψ t hP.herm.herm hP.skew.skew
-      (fun a ha => by simp [smul_sub, hx₁ a ha, hx₂ a ha]) z1, Matrix.map_sub _ (map_sub _), a1, b1, z2,
-      ← Matrix.sub_mul, ← Matrix.mul_sub, pairing_mul] at key
-    rw [key, toCols₁_fromCols, toCols₂_fromCols]
-    have e2 : b.valᵀ * -(X.J.map t * -((X.J.map t)⁻¹ * ((b⁻¹).valᵀ * D * (c⁻¹).val) * ((W.J.map t)⁻¹)ᵀ) * (W.J.map t)ᵀ) *
-        c.valᵀᵀ = D := by
-      rw [Matrix.mul_neg (X.J.map t), Matrix.neg_mul, neg_neg, transpose_transpose, ← Matrix.mul_assoc (X.J.map t),
-        ← Matrix.mul_assoc (X.J.map t), Matrix.mul_nonsing_inv _ hX, Matrix.one_mul, Matrix.mul_assoc _ _ (W.J.map t)ᵀ,
-        ← transpose_mul, Matrix.mul_nonsing_inv _ hK, transpose_one, Matrix.mul_one, ← Matrix.mul_assoc,
-        ← Matrix.mul_assoc, ← transpose_mul, Units.inv_mul, transpose_one, Matrix.one_mul, Matrix.mul_assoc,
-        Units.inv_mul, Matrix.mul_one]
-    rw [e2]
-  obtain ⟨T₀, y, N, rfl, hN, hdet, hp'⟩ := exists_siegel hcm t hK c hp hT
-  obtain ⟨φ₁, hφ₁, ha⟩ := hloc p hp φ₀ hφ₀
-  have k1 := hW.2.2 _ GlobalTheory.DiagForm.lDiag_adm (fun z Φ hΦ => by rw [mul_diagCols]; exact hinv z Φ hΦ) p N hN _
-    (hR φ₀ hφ₀).2
-  change (GlobalTheory.DiagForm.lDiag F (Fin n × Fin d)) (omd p (tens (evFin F v) φ₀ R)) = _ at k1
-  rw [ha R (hR φ₀ hφ₀), GlobalTheory.ModuNorm.modu_norm_eq_absE F E hcm.1, hdet, Fintype.card_fin,
-    char_idl hcm χX hP.resX, ← hlam, ← hlam, ← hm _ hφ₁, hcd p hp φ₀ hφ₀ φ₁ hφ₁ ha, map_smul,
-    form_comp_invT _ (GlobalTheory.SchrSB.continuous_psiAt _ hstd.1 v) (GlobalTheory.PsiNontriv.psiAt_ne_one _ hstd v) m htr hmu _ T₀ hT
-      (hι.bij.mapsTo hφ₀), hm _ hφ₀, Fintype.card_fin, smul_eq_mul, ← mul_assoc] at k1
-  have k2 := mul_right_cancel₀ h0 k1
-  refine mul_right_cancel₀ (GlobalTheory.SplitFlip.apow_ne_zero (GlobalTheory.SplitFlip.gdet T₀) (n : ℂ)) ?_
-  have k3 := GlobalTheory.SplitFlip.apow_add (GlobalTheory.SplitFlip.gdet T₀) (-(n : ℂ) / 2) n
-  rw [show -(n : ℂ) / 2 + n = n / 2 by ring] at k3
-  rw [k2, hp', map_mul, Units.val_mul, GlobalTheory.SplitFlip.apow_mul, k3]
-  ring
 
 end GlobalTheory.DblSiegelScal
 

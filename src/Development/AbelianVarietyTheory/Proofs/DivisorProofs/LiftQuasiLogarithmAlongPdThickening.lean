@@ -1,11 +1,52 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiffCoeffsInIdealSubstOfConstantCoeffZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SwapSubInOfCob2InStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupLawCoboundarySymmCocycleModStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedInOfQuasiLogarithmStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedInOfQuasiLogarithm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupLawCoboundarySymmCocycleMod
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SwapSubInOfCob2In
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymmetricCocycleModIdealEqCoboundaryQuasiLog
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EpsilonPairingZeta
+import Development.AbelianVarietyTheory.Definitions.Divisors.GhostFrobenius
 
 @[expose] public section
 
@@ -70,27 +111,7 @@ theorem formalGroupLawCoboundaryTwo_sub (μ : Fin d → MvPowerSeries (Fin d ⊕
 theorem map_formalGroupLawCoboundaryTwo (φ : R →+* S) (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R)
     (hμ : ∀ i, constantCoeff (μ i) = 0) (c : MvPowerSeries (Fin d ⊕ Fin d) R) :
     map φ (cob2 μ c) = cob2 (fun i => map φ (μ i)) (map φ c) := by
-  have h1 : ∀ i, constantCoeff ((x1 : Fin d → MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R) i) = 0 :=
-    fun _ => constantCoeff_X _
-  have h2 : ∀ i, constantCoeff ((x2 : Fin d → MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R) i) = 0 :=
-    fun _ => constantCoeff_X _
-  have h3 : ∀ i, constantCoeff ((x3 : Fin d → MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R) i) = 0 :=
-    fun _ => constantCoeff_X _
-  have m1 : (fun i => map φ ((x1 : Fin d → MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R) i)) = x1 :=
-    funext fun _ => map_X _ _
-  have m2 : (fun i => map φ ((x2 : Fin d → MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R) i)) = x2 :=
-    funext fun _ => map_X _ _
-  have m3 : (fun i => map φ ((x3 : Fin d → MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R) i)) = x3 :=
-    funext fun _ => map_X _ _
-  have mop : ∀ (u v : Fin d → MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R),
-      (∀ i, constantCoeff (u i) = 0) → (∀ i, constantCoeff (v i) = 0) →
-      (fun i => map φ (op μ u v i)) =
-        op (fun i => map φ (μ i)) (fun i => map φ (u i)) (fun i => map φ (v i)) :=
-    fun u v hu hv => funext fun i => mvPowerSeriesMap_evalTwoGroups φ (μ i) u v hu hv
-  unfold cob2
-  rw [map_sub, map_add (f := _), map_sub, mvPowerSeriesMap_evalTwoGroups φ c _ _ h2 h3, mvPowerSeriesMap_evalTwoGroups φ c _ _ (const_op μ hμ _ _ h1 h2) h3,
-    mvPowerSeriesMap_evalTwoGroups φ c _ _ h1 (const_op μ hμ _ _ h2 h3), mvPowerSeriesMap_evalTwoGroups φ c _ _ h1 h2, mop _ _ h1 h2, mop _ _ h2 h3,
-    m1, m2, m3]
+  apply GlobalTheory.CocLift.map_formalGroupLawCoboundaryTwo <;> assumption
 
 theorem constantCoeff_coboundaryOne_zero_of_constCoeff (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R) (hμ : ∀ i, constantCoeff (μ i) = 0)
     (f : MvPowerSeries (Fin d) R) (hf : constantCoeff f = 0) : constantCoeff (cob1 μ f) = 0 := by
@@ -273,7 +294,7 @@ theorem lift_quasiLog : ∀ (p : ℕ) [Fact p.Prime] (B O Q : Type) [CommRing B]
   intro p _ B O Q _ _ _ _ θ F d μ hμ C _ _ G Θ hΘ g w hg hw
   have hμ' : IsLift (RingHom.id O) (fun i => map θ (μ i)) :=
     ⟨hμ.law.const, hμ.law.unit, hμ.law.comm, by simpa only [map_id, RingHom.id_apply] using hμ.law⟩
-  have hgD : DIn (⊤ : Ideal O) g := GlobalTheory.T.divided_in_of_quasi_logarithm p O O C (RingHom.id O) G d _ hμ' ⊤ g hg
+  have hgD : DIn (⊤ : Ideal O) g := _root_.GlobalTheory.QLogDiff.dIn_of_QL p O O C (RingHom.id O) G d _ hμ' ⊤ g hg
   obtain ⟨f₀, hf0c, hf0D, hf0Θ, hf0l⟩ := lift_coeffs F G hΘ g w hgD hg.1 hw
   have hμQ : ∀ i, constantCoeff (up Q μ i) = 0 := const_map _ μ hμ.const
   have hμC : ∀ i, constantCoeff (up C (fun i => map θ (μ i)) i) = 0 :=
@@ -320,7 +341,7 @@ theorem lift_quasiLog : ∀ (p : ℕ) [Fact p.Prime] (B O Q : Type) [CommRing B]
       rw [coeff_zero_eq_constantCoeff_apply, hκ0]
       simp
     · rw [hb α, sub_self, map_zero]
-  obtain ⟨hcob2, hsym⟩ := GlobalTheory.T.formalGroupLawCoboundary_symmCocycle_mod p B O Q θ F d μ hμ ⊤ f₀ hf0D
+  obtain ⟨hcob2, hsym⟩ := _root_.GlobalTheory.cob_symCoc_mod p B O Q θ F d μ hμ ⊤ f₀ hf0D
   have hD1 : DIn (RingHom.ker θ) κ₁ := by
     intro α i
     obtain ⟨c, -, e⟩ := dIn_sub hκD (dIn_map K) α i
@@ -344,7 +365,7 @@ theorem lift_quasiLog : ∀ (p : ℕ) [Fact p.Prime] (B O Q : Type) [CommRing B]
         rw [hκ1, swap_sub, hsym, map_sub, ← map_swap]; ring
       rw [this]; exact in_map _
     · rw [map_sub, map_swap, hκ1Θ, swap_zero, sub_zero]
-  obtain ⟨e, he0, hel, heJ, heN⟩ := GlobalTheory.T.swap_sub_in_of_cob2_in p B O Q θ F d μ hμ (RingHom.ker θ) (RingHom.ker θ)
+  obtain ⟨e, he0, hel, heJ, heN⟩ := _root_.GlobalTheory.symmetric_cocycle_is_coboundary_mod p B O Q θ F d μ hμ (RingHom.ker θ) (RingHom.ker θ)
     le_rfl κ₁ (Or.inr hD1) hc1 hJ hcob hsw
   have heΘ : map Θ e = 0 := by
     ext α

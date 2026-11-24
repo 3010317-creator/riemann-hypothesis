@@ -1,6 +1,47 @@
 module
 
-public import Mathlib
+public import Mathlib.RingTheory.Localization.FractionRing
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -13,18 +54,17 @@ theorem goal1 :
   Eq.{1} (Submodule.span.{0, 0} K (SetLike.coe.{0, 0} B)) Top.top.{0} →
     ∀ (x : X), Exists.{1} fun (d : O) ↦ And (Ne.{1} d 0) (Membership.mem.{0, 0} B (HSMul.hSMul.{0, 0, 0} d x)) := by
   intro O K X _ _ _ _ _ _ _ _ _ B hB x
-  have hx : x ∈ Submodule.span K (B : Set X) := by rw [hB]; exact Submodule.mem_top
+  have hx : x ∈ Submodule.span K (B : Set X) := by simp [hB]
   induction hx using Submodule.span_induction with
-  | mem y hy => exact ⟨1, one_ne_zero, by rw [one_smul]; exact hy⟩
-  | zero => exact ⟨1, one_ne_zero, by rw [smul_zero]; exact B.zero_mem⟩
+  | mem y hy => exact ⟨1, one_ne_zero, by simpa using hy⟩
+  | zero => exact ⟨1, one_ne_zero, by simp⟩
   | add y z _ _ hy hz =>
     obtain ⟨d1, hd1, h1⟩ := hy
     obtain ⟨d2, hd2, h2⟩ := hz
     refine ⟨d2 * d1, mul_ne_zero hd2 hd1, ?_⟩
     rw [smul_add]
-    apply B.add_mem
-    · rw [mul_smul]; exact B.smul_mem d2 h1
-    · rw [mul_comm, mul_smul]; exact B.smul_mem d1 h2
+    exact B.add_mem (by rw [mul_smul]; exact B.smul_mem d2 h1)
+      (by rw [mul_comm, mul_smul]; exact B.smul_mem d1 h2)
   | smul k y _ hy =>
     obtain ⟨d, hd, h⟩ := hy
     obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := O) k

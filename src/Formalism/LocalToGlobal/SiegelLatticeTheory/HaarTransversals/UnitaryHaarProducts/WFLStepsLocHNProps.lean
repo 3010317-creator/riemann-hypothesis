@@ -1,7 +1,51 @@
 module
 
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.BesselLevi
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SCompact
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CasimirReductionTheory.OneParameterDerivatives.TauReduction.BlockGramReduction.FreeQuotientRank
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -91,9 +135,8 @@ theorem inN_inv {A Ai : Matrix (Fin n) (Fin n) ℂ} (h1 : A * Ai = 1) (h2 : Ai *
 
 theorem fix_of_span {g : Matrix (Fin n) (Fin n) ℂ} (hge : ∀ a, g *ᵥ e a = e a) (a : ℕ) {x : Fin n → ℂ}
     (hx : x ∈ spanLt e a) : g *ᵥ x = x := by
-  have h := LinearMap.eqOn_span' (R := ℂ) (f := Matrix.mulVecLin g) (g := LinearMap.id)
+  simpa using LinearMap.eqOn_span' (R := ℂ) (f := Matrix.mulVecLin g) (g := LinearMap.id)
     (s := e '' {b | b.1 < a}) (by rintro _ ⟨b, -, rfl⟩; simp [hge b]) hx
-  simpa using h
 
 theorem conj_sub_one_mulVec {H M Hi : Matrix (Fin n) (Fin n) ℂ} (h : H * Hi = 1) (v : Fin n → ℂ) :
     (H * M * Hi - 1) *ᵥ v = H *ᵥ ((M - 1) *ᵥ (Hi *ᵥ v)) := by
@@ -101,28 +144,26 @@ theorem conj_sub_one_mulVec {H M Hi : Matrix (Fin n) (Fin n) ℂ} (h : H * Hi = 
 
 private theorem hJ_mulVec_of_inUJ {H : Matrix (Fin n) (Fin n) ℂ} (hH : Formalism.REAL.inUJ ε H) (x y : Fin n → ℂ) :
     hJ ε (H *ᵥ x) (H *ᵥ y) = hJ ε x y := by
-  have hH' : Hᴴ * Formalism.REAL.Jm ε * H = Formalism.REAL.Jm ε := hH
   unfold hJ
-  conv_rhs => rw [← hH']
+  conv_rhs => rw [← hH]
   simp only [Matrix.star_mulVec, Matrix.dotProduct_mulVec, Matrix.vecMul_vecMul, Matrix.mul_assoc]
 
 theorem inN_conj {H Hi M : Matrix (Fin n) (Fin n) ℂ} (hH : Formalism.REAL.inUJ ε H) (h1 : H * Hi = 1)
     (h2 : Hi * H = 1) (hge : ∀ a, H *ᵥ e a = e a) (hgz : H *ᵥ z = z) (hM : InN ε e z M) :
     InN ε e z (H * M * Hi) := by
-  have hHi_e : ∀ a, Hi *ᵥ e a = e a := fun a => by
-    conv_lhs => rw [← hge a]
-    rw [Matrix.mulVec_mulVec, h2, Matrix.one_mulVec]
-  have hHi_z : Hi *ᵥ z = z := by
-    conv_lhs => rw [← hgz]
-    rw [Matrix.mulVec_mulVec, h2, Matrix.one_mulVec]
+  have hHi_fix : ∀ v : Fin n → ℂ, H *ᵥ v = v → Hi *ᵥ v = v := fun v hv => by
+    calc Hi *ᵥ v = Hi *ᵥ (H *ᵥ v) := by rw [hv]
+      _ = v := by rw [Matrix.mulVec_mulVec, h2, Matrix.one_mulVec]
+  have hHi_e : ∀ a, Hi *ᵥ e a = e a := fun a => hHi_fix _ (hge a)
+  have hHi_z : Hi *ᵥ z = z := hHi_fix _ hgz
   obtain ⟨⟨hM1, hM2⟩, hM3⟩ := hM
   refine ⟨⟨fun a => ?_, ?_⟩, fun y hy => ?_⟩ <;> rw [conj_sub_one_mulVec h1]
   · rw [hHi_e, fix_of_span hge _ (hM1 a)]; exact hM1 a
   · rw [hHi_z, fix_of_span hge _ hM2]; exact hM2
   · have hy' : ∀ a, hJ ε (e a) (Hi *ᵥ y) = 0 := fun a => by
-      have h := hJ_mulVec_of_inUJ hH (e a) (Hi *ᵥ y)
-      rw [hge a, Matrix.mulVec_mulVec, h1, Matrix.one_mulVec] at h
-      rw [← h]; exact hy a
+      rw [← hJ_mulVec_of_inUJ hH (e a) (Hi *ᵥ y), hge a, Matrix.mulVec_mulVec, h1,
+        Matrix.one_mulVec]
+      exact hy a
     rw [fix_of_span hge _ (hM3 _ hy')]; exact hM3 _ hy'
 
 theorem uMat_mul_inv (a : Formalism.REAL.UJ ε) : uMat a * uMat a⁻¹ = 1 := by
@@ -381,15 +422,12 @@ theorem frameFix_isCompact {ε : Fin (2 * r + k + 1) → Bool} {e f : Fin r → 
 theorem locHNProps_holds : LocHNProps := by
   intro k r ε e f wf z0 z c hF hc hz
   refine ⟨(isClosed_inN ε e z).preimage continuous_uMat, frameFix_isCompact hF hz, ⟨?_, ?_, ?_⟩, ?_⟩
-  · show InN ε e z (uMat 1)
-    rw [Formalism.L2.SG.Pf.Tau.uMat_one]; exact inN_one ε e z
+  · simpa [Formalism.L2.SG.Pf.Tau.uMat_one] using inN_one ε e z
   · intro a ha b hb
-    show InN ε e z (uMat (a * b))
-    rw [Formalism.L2.SG.Pf.Tau.uMat_mul]; exact inN_mul ha hb
+    simpa [Formalism.L2.SG.Pf.Tau.uMat_mul] using inN_mul ha hb
   · intro a ha
     exact inN_inv (uMat_mul_inv a) (uMat_inv_mul a) ha
   · rintro h ⟨he, -, hzz⟩ m hm
-    rw [Formalism.L2.SG.Pf.Tau.uMat_mul, Formalism.L2.SG.Pf.Tau.uMat_mul]
-    exact inN_conj h.2 (uMat_mul_inv h) (uMat_inv_mul h) he hzz hm
+    simpa [Formalism.L2.SG.Pf.Tau.uMat_mul] using inN_conj h.2 (uMat_mul_inv h) (uMat_inv_mul h) he hzz hm
 
 end Formalism.L2.SG.Pf.WFL

@@ -1,8 +1,54 @@
 module
 
-public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.LocWSOf
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.SettingConstruction
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.Choice
+import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QuotSetU
+import Formalism.SharpRestriction.CuspSpanNormBounds.BridgeCSB
+import Formalism.SharpRestriction.CuspSpanNormBounds.BridgeLemma3
 public import Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.AmpTensorDSdNonemptyOfSubsingleton
+import Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.TopsChoicePartA
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -133,14 +179,13 @@ theorem sigB_rep (C : Choice X θ) (τ : D.what₂.Tau) :
 private theorem conj_mem_lemma (C : Choice X θ) (τ : D.what₂.Tau) (γ : Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) :
     C.Qi τ * uMat γ * C.Q τ ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS) := by
   obtain ⟨h1, h2, h3, -⟩ := C.isT τ
-  have hγ : (uMat γ)ᴴ * Formalism.REAL.Jm (X.B.I.ε (vOf X τ)) * uMat γ = Formalism.REAL.Jm (X.B.I.ε (vOf X τ)) := γ.2
   have hA : ∀ M : Matrix (Fin X.B.I.n) (Fin (2 * D.R.rS + D.R.k + 1)) ℂ, (C.Qi τ)ᴴ * ((C.Q τ)ᴴ * M) = M := fun M => by
     rw [← Matrix.mul_assoc, ← Matrix.conjTranspose_mul, h2, Matrix.conjTranspose_one, Matrix.one_mul]
   have hB : ∀ M : Matrix (Fin X.B.I.n) (Fin (2 * D.R.rS + D.R.k + 1)) ℂ, C.Q τ * (C.Qi τ * M) = M := fun M => by
     rw [← Matrix.mul_assoc, h2, Matrix.one_mul]
   have hC : ∀ M : Matrix (Fin X.B.I.n) (Fin (2 * D.R.rS + D.R.k + 1)) ℂ,
       (uMat γ)ᴴ * (Formalism.REAL.Jm (X.B.I.ε (vOf X τ)) * (uMat γ * M)) = Formalism.REAL.Jm (X.B.I.ε (vOf X τ)) * M := fun M => by
-    rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, hγ]
+    rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, γ.2]
   show (C.Qi τ * uMat γ * C.Q τ)ᴴ * Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS * (C.Qi τ * uMat γ * C.Q τ) =
     Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS
   rw [← h3]
@@ -225,12 +270,12 @@ theorem sideQ (hRT : ReproTr) (hL2 : L2RightTranslation) (hGp : GapOfHyp) {C : C
         rconv (muGB X (C.Q τ) (C.Qi τ) τ) (eFun (muGB X (C.Q τ) (C.Qi τ) τ) (sigB X (C.Q τ) (C.Qi τ) τ) (v0Of C τ))
           (fun x => wT C u τ (x * C.y τ)) x = wT C u τ (x * C.y τ)) ∧
       l2SG (C.nuS u τ) (fun x => wT C u τ (x * C.y τ)) ≠ 0 ∧ l2SG (C.nuS u τ) (fun x => wT C u τ (x * C.y τ)) < ⊤ := by
-  obtain ⟨hwsm, hw1, hSH, hWc, hWe, hWr, hne, hfin⟩ := hLF u τ
+  obtain ⟨_, hw1, hSH, hWc, hWe, hWr, hne, hfin⟩ := hLF u τ
   have hθ := theta_pos C u τ
   obtain ⟨h, hgap, hok⟩ := hGp D hG τ
   obtain ⟨hz, hTz⟩ := Formalism.L2.SG.Pf.zTr C u τ
   have hT : 0 < Formalism.QuantumDeterminants.Tz D.R.k D.R.rS (zB X (C.Qi τ) u τ) := by rw [hTz]; exact Tr_pos D u
-  obtain ⟨h1, h2, hg, -⟩ := C.isT τ
+  obtain ⟨_, h2, hg, -⟩ := C.isT τ
   have hy := C.y_mem τ
   obtain ⟨hrep, hiso⟩ := sigB_rep C τ
   have hHG := haarTr C τ
@@ -247,9 +292,7 @@ theorem sideQ (hRT : ReproTr) (hL2 : L2RightTranslation) (hGp : GapOfHyp) {C : C
   · obtain ⟨P, hP, hmem⟩ := C.y_low τ
     refine ⟨P, hP, ?_, hmem⟩
     show ‖X.B.σ (vOf X τ) (C.Q τ * C.y τ * C.Qi τ) (X.B.w (vOf X τ))‖ = 1
-    have := hiso (C.y τ) hy (X.B.w (vOf X τ))
-    rw [← hw1]
-    exact this
+    simpa only [sigB, ← hw1] using hiso (C.y τ) hy (X.B.w (vOf X τ))
   · exact hWc.comp (continuous_id.matrix_mul continuous_const).continuousOn hmaps
   · intro hh hhU m hm g hgU
     show wT C u τ (hh * m * g * C.y τ) = _ • _

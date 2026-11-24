@@ -1,7 +1,56 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsWeightedHomogeneousOfMemOrbitSpan
+public import Mathlib.LinearAlgebra.Eigenspace.Basic
+public import Mathlib.Order.CompletePartialOrder
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+public import Mathlib.RingTheory.Derivation.Lie
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -24,12 +73,12 @@ theorem sum_smul_mem_of_sum_pow_smul_mem (W : Submodule K V) (S : Finset ι) (e 
     refine Set.Infinite.mono (s := {0}ᶜ) ?_ (Set.finite_singleton (0 : K)).infinite_compl
     intro u hu
     have := hφ _ (h u hu)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, smul_eq_mul] at this
+
+    simp only [map_sum, map_smul, smul_eq_mul] at this
     simpa [Polynomial.eval_finsetSum, mul_comm] using this
   have := congrArg (Polynomial.lsum (R := K) (fun n => f n • (LinearMap.id : K →ₗ[K] K))) hP
-  set_option synthInstance.maxHeartbeats 100000 in
-    simpa [map_sum, Polynomial.lsum_apply, Polynomial.sum_monomial_index] using this
+
+  simpa [map_sum, Polynomial.lsum_apply, Polynomial.sum_monomial_index] using this
 
 theorem sum_smul_mem_of_sum_zpow_smul_mem (W : Submodule K V) (S : Finset ι) (e : ι → ℤ) (v : ι → V)
     (h : ∀ u : K, u ≠ 0 → ∑ i ∈ S, u ^ e i • v i ∈ W) (f : ℤ → K) :
@@ -325,11 +374,11 @@ theorem colLie_mem_of_colAct_mem {K : Type*} [Field K] [Infinite K] [Fintype κ]
       (fun m => monomial m (AddMonoidAlgebra.coeff w m)) (fun u hu => by
         obtain ⟨g, hg⟩ := exists_colAct_monomial (p := p) (q := q) t k (Units.mk0 u hu)
         have := hW g w hw
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [w.as_sum, map_sum] at this
+
+        rw [w.as_sum, map_sum] at this
         simpa only [hg, Units.val_zpow_eq_zpow_val, Units.val_mk0] using this) Int.cast
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [w.as_sum, map_sum]
+
+    rw [w.as_sum, map_sum]
     simpa only [colLie_monomial] using this
   · refine derivation_mem_of_aeval_mem W (colDer K p q t k l) w fun s => ?_
     obtain ⟨g, hg⟩ := exists_colAct_eq_aeval (p := p) (q := q) t hkl s

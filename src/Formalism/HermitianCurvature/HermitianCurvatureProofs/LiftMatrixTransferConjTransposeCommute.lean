@@ -1,8 +1,56 @@
 module
 
 public import Formalism.HermitianCurvature.StatementWd
+public import Mathlib.CategoryTheory.Category.Basic
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.EntryCommuteTransposedRMatrix
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ScalarCommuteTransposedRMatrixEntry
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -251,19 +299,15 @@ theorem sitesCommute_symm {σ τ : Site A} (h : SitesCommute σ τ) : SitesCommu
 
 theorem liftMatrix_transfer_commute_diagScalar {τ : Site A} {b : SlopeTestRemainingChoices S A} (h : CC τ b) (Y : K) :
     Commute (lift0 (Ts τ Y)) (d0 b) := by
-  have hφ : ∀ (k : K) (r : SlopeTestRemainingChoices S A),
-      Commute ((Matrix.scalar (Ix S) : A →+* SlopeTestRemainingChoices S A) (algebraMap K A k)) r :=
-    fun k r => io_algebraMap_comm k r
-  have h' : ∀ x ∈ ops τ, Commute ((Matrix.scalar (Ix S) : A →+* SlopeTestRemainingChoices S A) x) b := h
-  exact liftMatrix_commute_diagScalar _ _ fun i j => comm_Ts _ hφ τ b h' Y i j
+  exact liftMatrix_commute_diagScalar _ _ fun i j =>
+    comm_Ts (Matrix.scalar (Ix S) : A →+* SlopeTestRemainingChoices S A)
+      (fun k r => io_algebraMap_comm k r) τ b h Y i j
 
 theorem liftMatrix_transfer_conjTranspose_commute {τ : Site A} {b : SlopeTestRemainingChoices S A} (h : CC τ b) (Y : K) :
     Commute (lift0 (Ts τ Y)ᴴ) (d0 b) := by
-  have hφ : ∀ (k : K) (r : SlopeTestRemainingChoices S A),
-      Commute ((Matrix.scalar (Ix S) : A →+* SlopeTestRemainingChoices S A) (algebraMap K A k)) r :=
-    fun k r => io_algebraMap_comm k r
-  have h' : ∀ x ∈ ops τ, Commute ((Matrix.scalar (Ix S) : A →+* SlopeTestRemainingChoices S A) x) b := h
-  exact liftMatrix_commute_diagScalar _ _ fun i j => comm_Ts_star _ hφ τ b h' Y j i
+  exact liftMatrix_commute_diagScalar _ _ fun i j =>
+    comm_Ts_star (Matrix.scalar (Ix S) : A →+* SlopeTestRemainingChoices S A)
+      (fun k r => io_algebraMap_comm k r) τ b h Y j i
 
 theorem exchA_mat (sites : List (Site A)) (w : List (Letter K S)) (Y : K)
     (h1 : ∀ σ ∈ sites, Xp w Y * lift0 (Ts σ Y) * d0 (bT σ w) = d0 (bT σ w) * lift0 (Ts σ Y) * Xp w Y)
@@ -300,12 +344,10 @@ theorem exchB_mat (sites : List (Site A)) (w : List (Letter K S)) (Y : K)
 
 theorem mul_col_fix (B C : SlopeTestRemainingChoices S A) (z : Ix S) (h : ∀ z', C z' e1 = if z' = e1 then 1 else 0) :
     (B * C) z e1 = B z e1 := by
-  rw [Matrix.mul_apply]
-  simp [h]
+  simp [Matrix.mul_apply, h]
 
 theorem mul_col_zero (B C : SlopeTestRemainingChoices S A) (z : Ix S) (h : ∀ z', C z' e1 = 0) : (B * C) z e1 = 0 := by
-  rw [Matrix.mul_apply]
-  simp [h]
+  simp [Matrix.mul_apply, h]
 
 theorem sum_col_fix (B C : Fin 2 → SlopeTestRemainingChoices S A) (z : Ix S)
     (h : ∀ (k : Fin 2) (z' : Ix S), C k z' e1 = if k = 0 ∧ z' = e1 then 1 else 0) :
@@ -400,9 +442,7 @@ theorem eU_apply (a : S) (i j : Fin 2) (x y : Ix S) :
 
 theorem eU_mul_apply (a : S) (i j : Fin 2) (B : SlopeTestRemainingChoices S A) (x y : Ix S) :
     ((eU a i j : SlopeTestRemainingChoices S A) * B) x y = if x a = i then B (Function.update x a j) y else 0 := by
-  rw [Matrix.mul_apply]
-  simp only [eU_apply]
-  by_cases h : x a = i <;> simp [h]
+  by_cases h : x a = i <;> simp [Matrix.mul_apply, eU_apply, h]
 
 theorem eU_comm_of_ne {a c : S} (hc : c ≠ a) (i j k l : Fin 2) :
     Commute (eU c i j : SlopeTestRemainingChoices S A) (eU a k l) := by
@@ -577,9 +617,7 @@ theorem tTFactor : TTFactor := by
   induction w with
   | nil => simp [TTw, Xm, Xp]
   | cons l w ih =>
-    by_cases h : l.plus = true
-    · simp [TTw, Xm, Xp, h, ih, mul_assoc]
-    · simp [TTw, Xm, Xp, h, ih, mul_assoc]
+    cases h : l.plus <;> simp [TTw, Xm, Xp, h, ih, mul_assoc]
 
 end Formalism.FourierDecayAlt.P.Wd8
 

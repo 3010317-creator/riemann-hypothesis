@@ -1,11 +1,49 @@
 module
 
-public import Formalism.FlagUnipotentLattices.AlgebraicIdentityHigherDegree
-public import Formalism.FlagUnipotentLattices.StabiliserComplementDecomposition
-public import Formalism.FlagUnipotentLattices.MinkowskiFactorialBounds.BlockMinorAbsoluteOfExplicit
-public import Formalism.FormalDegreeBessel.FinalDS
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BesselShellMomentBounds
-public import Formalism.SharpRestriction.CuspSpanNormBounds.FrobeniusCoefficientMemLp.FramesPt
+import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.BitVec
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -207,10 +245,7 @@ def NQ (A : ℕ) (p : ℝ) (l : Fin (D.R.rS + 1)) : ℕ :=
   (2 + ⌈p⌉₊) + (if l = Fin.last D.R.rS then (A + 1) / 2 + ⌈p⌉₊ else 0)
 
 theorem sum_NQ (A : ℕ) (p : ℝ) : ∑ l, NQ D A p l = (D.R.rS + 1) * (2 + ⌈p⌉₊) + ((A + 1) / 2 + ⌈p⌉₊) := by
-  unfold NQ
-  rw [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul,
-    Finset.sum_ite_eq']
-  simp
+  simp [NQ, Finset.sum_add_distrib, Finset.sum_ite_eq']
 
 theorem weights_arith (Pi0 Ph0 w Wp : ℝ) (A P : ℕ) (hPi1 : 1 ≤ Pi0) (hPh1 : 1 ≤ Ph0) (hw0 : 0 ≤ w)
     (hw : w ≤ Pi0 ^ 2) (hW0 : 0 ≤ Wp) (hWp : Wp ≤ (Ph0 * Pi0) ^ P) :
@@ -244,8 +279,7 @@ theorem prod_Fl_NQ (v : D.what₂.Tau) (γ : Point D.host.E (D.R.rS + 1)) (A : �
   · simp
   · intro l _ hl
     simp [hl]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · simp
 
 theorem weights_le (T T' : ℕ) (v : D.what₂.Tau) (γ : Point D.host.E (D.R.rS + 1)) (A : ℕ) (p : ℝ) (hp : 0 ≤ p)
     (hG : absV D v (Gglob D T T' γ) ≤ dLoc D v γ) :
@@ -335,9 +369,7 @@ theorem rdE_le (b Ch : ℝ) (hb : 2 ≤ b) (hka : 0 < kaRe D) (hkinv : (kaRe D)�
   have h1 : D.host.rdE ≤ 2 * Real.pi * (kaRe D)⁻¹ := by
     rw [e]
     have hpi := Real.pi_pos
-    have : 2 * Real.pi * ((D.host.g 0 : ℝ) * (D.host.g 1 : ℝ) * D.host.rdE / (2 * Real.pi)) =
-        (D.host.g 0 : ℝ) * (D.host.g 1 : ℝ) * D.host.rdE := by field_simp
-    rw [this]
+    field_simp
     nlinarith
   have h2 : 2 * Real.pi ≤ b ^ (3 : ℝ) := by
     have : (2 : ℝ) ^ 3 ≤ b ^ 3 := pow_le_pow_left₀ (by norm_num) hb 3
@@ -606,10 +638,9 @@ theorem lam_eq_of_dist0 (D : D7) {Ch Cg : ℝ} {T T' : ℕ} {b : ℝ} (X : BData
   have h := X.hnear v
   unfold l1 at h
   funext a
-  have h0 : |(X.L v).lam a - lamSH D.R (D.hc v) a| ≤ 0 :=
-    le_trans (Finset.single_le_sum (f := fun a => |(X.L v).lam a - lamSH D.R (D.hc v) a|)
-      (fun i _ => abs_nonneg _) (Finset.mem_univ a)) h
-  exact sub_eq_zero.mp (abs_nonpos_iff.mp h0)
+  exact sub_eq_zero.mp (abs_nonpos_iff.mp
+    (le_trans (Finset.single_le_sum (f := fun a => |(X.L v).lam a - lamSH D.R (D.hc v) a|)
+      (fun i _ => abs_nonneg _) (Finset.mem_univ a)) h))
 
 end PieceB10
 

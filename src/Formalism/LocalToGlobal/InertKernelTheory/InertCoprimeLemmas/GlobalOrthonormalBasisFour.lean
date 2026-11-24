@@ -1,7 +1,54 @@
 module
 
 public import Formalism.LocalToGlobal.InertKernelTheory.DefsMMOnb
+public import Formalism.LocalToGlobal.InertKernelTheory.DefsMM
+public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
 public import Formalism.LocalToGlobal.GlobalTheory.GL3.IsometryLinkageTrivialLevel
+import Formalism.LocalToGlobal.GlobalTheory.GL3.PHfTrace
+import Formalism.LocalToGlobal.GlobalTheory.GL3.PSelfDual
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.NumberTheory.SumFourSquares
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -339,8 +386,8 @@ theorem span_bq {m : ℕ} (p : ℕ) (e : Fin m → Matrix (Fin 1) (Fin 1) D.host
   rw [Matrix.smul_apply, Matrix.sum_apply, Fintype.sum_prod_type]
   simp only [Matrix.smul_apply, smul_eq_mul, bq, Matrix.of_apply]
   simp only [hφ]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_mul, map_natCast, map_intCast]
+
+  simp only [map_sum, map_mul, map_natCast, map_intCast]
   have key : ∀ i, ∑ k, (∑ pc, (((∏ pc', s pc') / s pc * ((∏ i', dn i') / dn i) : ℕ) : D.host.E) *
       ((Q i k (pos pc) : ℤ) : D.host.E) * φ (c pc i)) *
       (((Q i k (pos (a, c')) : ℤ) : D.host.E) / (n i : D.host.E) * e i 0 0) =
@@ -594,8 +641,8 @@ theorem oneCopyOrth_of (hU : UnitVec) : OneCopyOrth := by
         Algebra.trace D.host.K D.host.E (y 0 0 * D.host.conj (e j)) := by
       intro j
       have h1 := congrArg (fun x => (G0.herm D).hl (e j) x) hexp
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_smul, smul_eq_mul] at h1
+
+      simp only [map_sum, map_smul, smul_eq_mul] at h1
       show _ = (G0.herm D).hl (e j) (y 0 0)
       rw [h1, Finset.sum_eq_single j]
       · show _ = bs.repr (y 0 0) j * G0.hK D (e j) (e j)
@@ -930,8 +977,8 @@ theorem oprj_orth (h2 : ∀ i j, i ≠ j → Algebra.trace D.host.K D.host.E (e 
     (hu : ∀ i, 0 < u i ∧ Algebra.trace D.host.K D.host.E (e i * D.host.conj (e i)) = ((u i : ℚ) : D.host.K))
     (w : D.host.E) (j : Fin k) : Algebra.trace D.host.K D.host.E (oprj D e u w * D.host.conj (e j)) = 0 := by
   unfold oprj
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [sub_mul, map_sub, Finset.sum_mul, map_sum]
+
+  rw [sub_mul, map_sub, Finset.sum_mul, map_sum]
   have h1 : ∀ i, Algebra.trace D.host.K D.host.E ((cf D e u w i : D.host.E) * e i * D.host.conj (e j)) =
       cf D e u w i * Algebra.trace D.host.K D.host.E (e i * D.host.conj (e j)) := by
     intro i; rw [mul_assoc, trace_K_mul]
@@ -943,8 +990,8 @@ theorem oprj_orth (h2 : ∀ i j, i ≠ j → Algebra.trace D.host.K D.host.E (e 
 theorem oprj_pair {x : D.host.E} (hxo : ∀ i, Algebra.trace D.host.K D.host.E (x * D.host.conj (e i)) = 0) (w : D.host.E) :
     Algebra.trace D.host.K D.host.E (x * D.host.conj w) = Algebra.trace D.host.K D.host.E (x * D.host.conj (oprj D e u w)) := by
   unfold oprj
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sub, mul_sub, map_sub, map_sum, Finset.mul_sum, map_sum]
+
+  rw [map_sub, mul_sub, map_sub, map_sum, Finset.mul_sum, map_sum]
   have h1 : ∀ i, Algebra.trace D.host.K D.host.E (x * D.host.conj ((cf D e u w i : D.host.E) * e i)) = 0 := by
     intro i
     have e1 : x * D.host.conj ((cf D e u w i : D.host.E) * e i) =

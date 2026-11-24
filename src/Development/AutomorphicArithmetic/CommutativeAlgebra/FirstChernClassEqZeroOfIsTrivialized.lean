@@ -1,14 +1,57 @@
 module
 
 public import Development.AutomorphicArithmetic.CupPullbacks.ConstCompSingle
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSheafSectionsExtAndGlueStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafSectionsExactStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCochainEvalOnSimplexBasicPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCochainEvEqOfNaturalStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCochainEvalOnSimplexDifferentialValuesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocalPrimitiveRootAndRootsOfUnityStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsKummerTorsorSplittingKummerTorsorSplittingStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSheafSectionsExtAndGlue
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCochainEvEqOfNaturalStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FirstChernClassTateTwistCocycleUniqueNaturalAddiStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsKummerTorsorSplittingKummerTorsorSplitting
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
 
 @[expose] public section
 
@@ -70,7 +113,7 @@ private theorem smap_nsmul (φ : F ⟶ G) {U : Scheme.{0}} (n : ℕ) (a : Sec F 
     Sec.map φ (n • a) = n • Sec.map φ a := map_nsmul (φ.hom.app (op U)).hom n a
 
 private theorem sep {U : Scheme.{0}} {a b : Sec F U} (h : Loc U fun _ g => Sec.res g a = Sec.res g b) : a = b :=
-  (GlobalTheory.T.etaleSheafSections_ext_and_glue R F U).1 a b h
+  (_root_.GlobalTheory.EtC.sec_ext_glue R F U).1 a b h
 
 private theorem glue {U : Scheme.{0}} (P : ∀ (V : Scheme.{0}) (_ : V ⟶ U), Sec F V → Prop)
     (hex : Loc U fun V g => ∃ a, P V g a)
@@ -80,7 +123,7 @@ private theorem glue {U : Scheme.{0}} (P : ∀ (V : Scheme.{0}) (_ : V ⟶ U), S
   unfold Loc at hex
   obtain ⟨S, hS, hP⟩ := hex
   choose s hs using hP
-  obtain ⟨a, ha⟩ := (GlobalTheory.T.etaleSheafSections_ext_and_glue R F U).2 S hS s
+  obtain ⟨a, ha⟩ := (_root_.GlobalTheory.EtC.sec_ext_glue R F U).2 S hS s
     (fun V W g k hg => huniq W (k ≫ g) _ _ (hres V W g k _ (hs V g hg)) (hs W (k ≫ g) _))
   refine ⟨a, fun V g b hb => sep ?_⟩
   unfold Loc
@@ -112,7 +155,7 @@ private theorem unit_res {V U : Scheme.{0}} (g : V ⟶ U) (hq : IsUnit (q : Γ(U
   simpa using hq.map g.appTop.hom
 
 private theorem K_nat {V U : Scheme.{0}} (g : V ⟶ U) (hq : IsUnit (q : Γ(U, ⊤))) (v : (Γ(U, ⊤))ˣ) :
-    Sec.res g (kumT q U v) = kumT q V (ur g v) := (GlobalTheory.T.isKummerTorsorSplitting_kummerTorsorSplitting q).1 V U g v hq
+    Sec.res g (kumT q U v) = kumT q V (ur g v) := (_root_.GlobalTheory.EtC.KummerSplit.isKum_kumT q).1 V U g v hq
 
 private theorem prim_pow {A : Type} [CommRing A] (ζ : Prim q A) : ζ.1 ^ q = 1 := by
   obtain ⟨p, hp⟩ := Polynomial.cyclotomic.dvd_X_pow_sub_one q ℤ
@@ -125,7 +168,7 @@ private theorem K_pow {U : Scheme.{0}} (ζ : Prim q Γ(U, ⊤)) (Z : (Γ(U, ⊤)
   induction n with
   | zero => simp
   | succ n ih =>
-    have h := (GlobalTheory.T.isKummerTorsorSplitting_kummerTorsorSplitting q).2 U ζ (Z ^ n * v) (Z ^ (n + 1) * v) (by
+    have h := (_root_.GlobalTheory.EtC.KummerSplit.isKum_kumT q).2 U ζ (Z ^ n * v) (Z ^ (n + 1) * v) (by
       simp only [Units.val_mul, Units.val_pow_eq_pow_val, hZ]
       ring)
     rw [h, ih, succ_nsmul, add_assoc]

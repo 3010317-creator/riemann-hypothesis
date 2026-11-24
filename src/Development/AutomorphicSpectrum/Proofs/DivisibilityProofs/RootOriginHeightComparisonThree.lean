@@ -1,23 +1,73 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.TowerOrigin
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsLatFlagPair
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.SplitComps
-public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.LocalAtPlaces
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ArMonoReline
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginCompareSecondStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginCompareFirstStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginPointCompareStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootModelFlagCompareStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.JoinModelPointsProjectStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsDenseNonvanishingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.JoinCoordsUnitValues
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ArchBetween
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsPowSubMemSpanOfIsUnitModOfIsAlgClosed
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.Objects
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.BadExists
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.HasMultiplierLine
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsDenseNonvanishing
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.JoinCoordsUnitValues
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootModelFlagCompare
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginCompareFirst
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginCompareSecond
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginPointCompare
+public import GroundTheory.HeightsAndTheta.Heights.Intersections.ProjLineRankTwoPushforwardHypotheses
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.JoinModelPointsProject
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.ArithModel
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Algebra.MvPolynomial
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.BundleChernComparison
+import GroundTheory.HeightsAndTheta.Heights.Intersections.IsSmoothHermFubiniStudyO1
 
 @[expose] public section
+
+attribute [local simp] MvPolynomial.bind₁
 
 open AlgebraicGeometry CategoryTheory NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Top
 open MvPolynomial Filter Topology
@@ -91,8 +141,8 @@ theorem isMultiHomog_rename [DecidableEq K] {κ : K' → K} {u : (Σ k, ι k) �
   intro m hm k
   have e : (rename u G : MRing J) = ∑ m' ∈ G.support, monomial (m'.mapDomain u) (AddMonoidAlgebra.coeff G m') := by
     conv_lhs => rw [G.as_sum]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     simp only [rename_monomial]
   have hm' : m ∈ (rename u G : MRing J).support := hm
   rw [e] at hm'
@@ -375,7 +425,7 @@ theorem side [CharZero M.Ω] (o : RootOrigin Y S M Fx) (o₀ : RootOrigin Y S₀
             Small.HasVal (Ht.joinOf M R i) (Ht.joinDeg M R (some r)) (i (o₀.e r) / o.e r) w v →
             ‖v‖ * (o₀.sing r).h (fun p => w (Cmp.joinInr M.ι R.ι p)) =
               (o.sing r).h (fun p => w (Cmp.joinInl M.ι R.ι p)) := by
-  obtain ⟨f, hf, hfp⟩ := GlobalTheory.T.root_origin_compare_second E H D l Xo c Y S S₀ M R Sys Fx o o₀ i hi hJ hJ₀
+  obtain ⟨f, hf, hfp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.JoinPts.join_points E H D l Xo c Y S S₀ M R Sys Fx o o₀ i hi hJ hJ₀
   obtain ⟨cc, hcc, hne⟩ := exists_scale (Ht.joinOf M R i) hf
   refine ⟨scaleForm cc f, hne, fun w hw hwF => ?_⟩
   have hwF' := hwF
@@ -394,7 +444,7 @@ theorem side [CharZero M.Ω] (o : RootOrigin Y S M Fx) (o₀ : RootOrigin Y S₀
   refine ⟨x, x', orbit_trans ho₁ ⟨fun k => (cc (Sum.inl k) : ℂ), fun k => hc _, rfl⟩,
     orbit_trans ho₂ ⟨fun k => (cc (Sum.inr k) : ℂ), fun k => hc _, rfl⟩, hπ, hop, ?_⟩
   intro r v hv
-  have h1 := GlobalTheory.T.root_origin_compare_first E H D l Xo c Y S S₀ M R Sys Fx o o₀ i hi z₁ z₂ _ hw' hc₁ hc₂ hi₁ hi₂ r _
+  have h1 := _root_.GlobalTheory.CompanionTheory.Ar.SingCmp.sing_agree E H D l Xo c Y S S₀ M R Sys Fx o o₀ i hi z₁ z₂ _ hw' hc₁ hc₂ hi₁ hi₂ r _
     (hasVal_smul hv (c := fun k => (cc k : ℂ)) hc)
   have e₁ : (fun p => (cc (Cmp.joinInl M.ι R.ι p).1 : ℂ) * w (Cmp.joinInl M.ι R.ι p)) =
       fun p => (fun k => (cc (Sum.inl k) : ℂ)) p.1 * w (Cmp.joinInl M.ι R.ι p) := rfl
@@ -482,7 +532,7 @@ theorem side_pt {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)] {
     obtain ⟨x, x', ho₁, ho₂, hπ, hop, hs⟩ := hFp _ hw hzF
     have hunit : ∀ r, Ht.GenUnit (Ht.joinOf M R i) (Ht.joinDeg M R (some r)) (i (o₀.e r) / o.e r) := by
       intro r
-      refine GlobalTheory.T.root_model_flag_compare E H D l Xo c Y S S₀ M R o.𝔐 o₀.𝔐 o.Fl o₀.Fl i o.e o₀.e ?_ ?_ o.lines o₀.lines r
+      refine _root_.GlobalTheory.CompanionTheory.Ar.Ht.CloseGen.genUnit_join E H D l Xo c Y S S₀ M R o.𝔐 o₀.𝔐 o.Fl o₀.Fl i o.e o₀.e ?_ ?_ o.lines o₀.lines r
       · rw [o.g_over, o₀.g_over, ← hi, ← Category.assoc, ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
       · intro s' k
         have hd : dualMap o.g = (dualMap i).comp (dualMap o₀.g) := by
@@ -491,10 +541,10 @@ theorem side_pt {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)] {
         rw [o.g_flag, o₀.g_flag, hd, ← Category.assoc, ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
     have hex := fun r => hunit r ℂ _ hw
     choose val hval0 hval using hex
-    obtain ⟨hw₁, hw₂⟩ := (GlobalTheory.T.join_model_points_project _ _ M R i).2.2.1 ℂ _ hw
+    obtain ⟨hw₁, hw₂⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.Ht.JoinFacts.main _ _ M R i).2.2.1 ℂ _ hw
     rw [Small.LineModel.ptsOver_complex] at hw₁ hw₂
     refine ⟨x', val, ho₂, hval0, hval, fun t ht0 ht τ p => ?_⟩
-    have hid := GlobalTheory.T.root_origin_point_compare E H D l Xo c Y S S₀ M R Sys Fx o o₀ x x' _ _ (fun r => ‖val r‖) t ht0 ht hw₁ hw₂ ho₁ ho₂
+    have hid := _root_.GlobalTheory.CompanionTheory.Ar.OrArch.defect_eq_regWeight_add_bracket E H D l Xo c Y S S₀ M R Sys Fx o o₀ x x' _ _ (fun r => ‖val r‖) t ht0 ht hw₁ hw₂ ho₁ ho₂
       hπ hop (fun r => ⟨norm_pos_iff.2 (hval0 r), hs r _ (hval r)⟩) τ p
     rw [hπ] at hid
     exact hid
@@ -653,7 +703,7 @@ theorem root_isometric : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     have := aeval_zero_of_mem y h
     rw [map_mul] at this
     exact (mul_ne_zero hF₀ hF₁) this
-  have hzc := GlobalTheory.T.complex_points_dense_nonvanishing K J (mCoordIdeal y) _ (F₀ * F₁) hA hFne hz
+  have hzc := _root_.GlobalTheory.CompanionTheory.Ar.Flat.nonvanishing_dense K J (mCoordIdeal y) _ (F₀ * F₁) hA hFne hz
   haveI hnb := mem_closure_iff_nhdsWithin_neBot.1 hzc
   have cont : ∀ {K₁ : Type} [Fintype K₁] {ι : K₁ → Type} [∀ k, Fintype (ι k)] (A : HermLine ι) (_ : IsSmoothHerm A)
       (u : (Σ k, ι k) → Σ k, J k), (∀ k, ∃ a, z (u ⟨k, a⟩) ≠ 0) →

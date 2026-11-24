@@ -1,6 +1,48 @@
 module
 
 public import Formalism.HermitianCurvature.StatementJ
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -23,9 +65,7 @@ end psd
 
 theorem ones_psd {α : Type} (F : Finset α) : TB.PSDOn F (fun _ _ : α => (1 : ℂ)) := by
   unfold TB.PSDOn
-  have := Matrix.posSemidef_vecMulVec_self_star (fun _ : F => (1 : ℂ))
-  convert this using 1
-  ext x y; simp [Matrix.vecMulVec]
+  simpa [Matrix.vecMulVec] using Matrix.posSemidef_vecMulVec_self_star (fun _ : F => (1 : ℂ))
 
 theorem zero_psd {α : Type} (F : Finset α) : TB.PSDOn F (fun _ _ : α => (0 : ℂ)) := by
   unfold TB.PSDOn; exact Matrix.PosSemidef.zero
@@ -102,10 +142,10 @@ theorem quadM (F : Finset α) (k : α → α → ℂ) (a : α → ℂ) :
 
 theorem conj_quad (F : Finset α) (k : α → α → ℂ) (hh : ∀ x ∈ F, ∀ y ∈ F, k y x = conj (k x y)) (a : α → ℂ) :
     conj (∑ x ∈ F, ∑ y ∈ F, conj (a x) * k x y * a y) = ∑ x ∈ F, ∑ y ∈ F, conj (a x) * k x y * a y := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Finset.sum_comm]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum]
+
+  rw [map_sum, Finset.sum_comm]
+
+  simp only [map_sum]
   rw [Finset.sum_comm]
   conv_rhs => rw [Finset.sum_comm]
   apply Finset.sum_congr rfl; intro x hx
@@ -227,10 +267,7 @@ theorem psd_diag {F : Finset α} {k : α → α → ℂ} (hk : TB.PSDOn F k) {x 
     (k x x).im = 0 ∧ 0 ≤ (k x x).re := by
   classical
   have h2 := (psdOn_iff_isPSD F k).1 hk (fun u => if u = x then 1 else 0)
-  have h1 := quad1 F k x hx
-  beta_reduce at h2
-  rw [h1] at h2
-  exact h2
+  simpa [hx, quad1 F k x hx] using h2
 
 theorem psd_off {F : Finset α} {k : α → α → ℂ} (hk : TB.PSDOn F k) {x y : α} (hx : x ∈ F) (hy : y ∈ F) :
     ‖k x y‖ ≤ (k x x).re + (k y y).re := by
@@ -448,13 +485,11 @@ theorem t_OutsideDomination : OutsideDomination := by
   congr 1
   by_cases h : t ∈ ⨅ p, L p
   · rw [if_pos h]
-    have h' : ∀ p, t ∈ L p := AddSubgroup.mem_iInf.1 h
-    exact Finset.prod_eq_one fun p _ => if_pos (h' p)
+    exact Finset.prod_eq_one fun p _ => if_pos (AddSubgroup.mem_iInf.1 h p)
   · rw [if_neg h]
-    have : ∃ p, t ∉ L p := by
-      by_contra hc
-      exact h (AddSubgroup.mem_iInf.2 fun p => by_contra fun hp => hc ⟨p, hp⟩)
-    obtain ⟨p, hp⟩ := this
+    rw [AddSubgroup.mem_iInf] at h
+    push Not at h
+    obtain ⟨p, hp⟩ := h
     exact Finset.prod_eq_zero (Finset.mem_univ p) (if_neg hp)
 
 theorem t_PhaseOk : PhaseOk := by

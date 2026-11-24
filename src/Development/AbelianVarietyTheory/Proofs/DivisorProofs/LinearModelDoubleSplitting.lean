@@ -1,20 +1,147 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndicatorIntMMemSB
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExistsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromBlocksSubOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicHeisenbergActsByLocalSchrodinger
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ProdFnMemSB
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsLinearOfBilinearSchwartzBruhatProduct
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SpanSchwartzBruhatProductEqTop
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ProdFnMemSB
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromBlocksSubOne
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicHeisenbergActsByLocalSchrodinger
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledWeilInertPlaceVacuumEigenfunction
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TotallyDisconnectedProductLocallyCompactStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
+import GroundTheory.GlobalFields.LocalAtPlace
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TotallyDisconnectedProductLocallyCompact, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearModelDoubleSplitting
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TotallyDisconnectedProductLocallyCompact =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.TotallyDisconnectedProductLocallyCompact", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ProdFnMemSB\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsLinearOfBilinearSchwartzBruhatProduct\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SpanSchwartzBruhatProductEqTop\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open scoped TensorProduct
+open GlobalTheory.SplitWeil GlobalTheory.LocFlat.CFac
+
+noncomputable section
+namespace GlobalTheory.SBProdExt
+
+def comapEquiv {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y] (e : X ≃ₜ Y) :
+    SB Y ≃ₗ[ℂ] SB X :=
+  LinearEquiv.ofLinear (comapH e) (comapH e.symm)
+    (LinearMap.ext fun F => Subtype.ext (funext fun x => by simp))
+    (LinearMap.ext fun F => Subtype.ext (funext fun y => by simp))
+
+def restrictEquiv {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y]
+    (f : (X → ℂ) →ₗ[ℂ] (Y → ℂ)) (hf : Set.BijOn f (SB X : Set (X → ℂ)) (SB Y : Set (Y → ℂ))) :
+    SB X ≃ₗ[ℂ] SB Y :=
+  LinearEquiv.ofBijective (f.restrict (p := SB X) (q := SB Y) fun x hx => hf.mapsTo hx)
+    ⟨fun a b hab => Subtype.ext (hf.injOn a.2 b.2 (congrArg Subtype.val hab)),
+     fun y => by
+       obtain ⟨x, hx, hxy⟩ := hf.surjOn y.2
+       exact ⟨⟨x, hx⟩, Subtype.ext hxy⟩⟩
+
+theorem exists_prod_equiv {P Q P' Q' : Type} [TopologicalSpace P] [T2Space P] [LocallyCompactSpace P]
+    [TotallyDisconnectedSpace P] [TopologicalSpace Q] [T2Space Q] [LocallyCompactSpace Q]
+    [TotallyDisconnectedSpace Q] [TopologicalSpace P'] [T2Space P'] [LocallyCompactSpace P']
+    [TotallyDisconnectedSpace P'] [TopologicalSpace Q'] [T2Space Q'] [LocallyCompactSpace Q']
+    [TotallyDisconnectedSpace Q'] (eP : SB P ≃ₗ[ℂ] SB P') (eQ : SB Q ≃ₗ[ℂ] SB Q') :
+    ∃ L : SB (P × Q) ≃ₗ[ℂ] SB (P' × Q'), ∀ a b, L (prodSB a b) = prodSB (eP a) (eQ b) := by
+  obtain ⟨l, hl⟩ := exists_linear_of_bilinear_prodSB P Q (SB (P' × Q'))
+    ((prodSBBil P' Q').compl₁₂ eP.toLinearMap eQ.toLinearMap)
+  obtain ⟨l', hl'⟩ := exists_linear_of_bilinear_prodSB P' Q' (SB (P × Q))
+    ((prodSBBil P Q).compl₁₂ eP.symm.toLinearMap eQ.symm.toLinearMap)
+  have h1 : l.comp l' = LinearMap.id := by
+    refine LinearMap.ext_on_range (Span.span_prodSB_eq_top P' Q') fun q => ?_
+    simp [hl, hl', prodSBBil]
+  have h2 : l'.comp l = LinearMap.id := by
+    refine LinearMap.ext_on_range (Span.span_prodSB_eq_top P Q) fun q => ?_
+    simp [hl, hl', prodSBBil]
+  refine ⟨LinearEquiv.ofLinear l l' h1 h2, fun a b => ?_⟩
+  simp [hl, prodSBBil]
+
+theorem exists_linear_bijOn_prod : ∀ {P Q P' Q' Z Z' : Type} [TopologicalSpace P] [T2Space P] [LocallyCompactSpace P]
+    [TotallyDisconnectedSpace P] [TopologicalSpace Q] [T2Space Q] [LocallyCompactSpace Q] [TotallyDisconnectedSpace Q]
+    [TopologicalSpace P'] [T2Space P'] [LocallyCompactSpace P'] [TotallyDisconnectedSpace P']
+    [TopologicalSpace Q'] [T2Space Q'] [LocallyCompactSpace Q'] [TotallyDisconnectedSpace Q']
+    [TopologicalSpace Z] [TopologicalSpace Z'] (eZ : Z ≃ₜ P × Q) (eZ' : Z' ≃ₜ P' × Q')
+    (f : (P → ℂ) →ₗ[ℂ] (P' → ℂ)) (g : (Q → ℂ) →ₗ[ℂ] (Q' → ℂ)),
+    Set.BijOn f (GlobalTheory.WeilM.SB P : Set (P → ℂ)) (GlobalTheory.WeilM.SB P' : Set (P' → ℂ)) →
+    Set.BijOn g (GlobalTheory.WeilM.SB Q : Set (Q → ℂ)) (GlobalTheory.WeilM.SB Q' : Set (Q' → ℂ)) →
+    ∃ h : (Z → ℂ) →ₗ[ℂ] (Z' → ℂ), Set.BijOn h (GlobalTheory.WeilM.SB Z : Set (Z → ℂ)) (GlobalTheory.WeilM.SB Z' : Set (Z' → ℂ)) ∧
+      ∀ a ∈ GlobalTheory.WeilM.SB P, ∀ b ∈ GlobalTheory.WeilM.SB Q,
+        h (fun z => a (eZ z).1 * b (eZ z).2) = fun z' => f a (eZ' z').1 * g b (eZ' z').2 := by
+  intro P Q P' Q' Z Z' _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ eZ eZ' f g hf hg
+  simp only [GlobalTheory.WeilM.SB_eq] at hf hg ⊢
+  obtain ⟨L, hL⟩ := exists_prod_equiv (restrictEquiv f hf) (restrictEquiv g hg)
+  let E : SB Z ≃ₗ[ℂ] SB Z' := ((comapEquiv eZ).symm.trans L).trans (comapEquiv eZ')
+  obtain ⟨h, hh⟩ := LinearMap.exists_extend ((SB Z').subtype.comp E.toLinearMap)
+  have happ : ∀ F : SB Z, h F.1 = (E F).1 := fun F => LinearMap.congr_fun hh F
+  refine ⟨h, ⟨fun x hx => ?_, fun x hx y hy hxy => ?_, fun y hy => ?_⟩, fun a ha b hb => ?_⟩
+  · rw [happ ⟨x, hx⟩]; exact (E _).2
+  · rw [happ ⟨x, hx⟩, happ ⟨y, hy⟩] at hxy
+    exact congrArg Subtype.val (E.injective (Subtype.ext hxy))
+  · refine ⟨(E.symm ⟨y, hy⟩).1, (E.symm ⟨y, hy⟩).2, ?_⟩
+    rw [happ]; simp
+  · have hF : (fun z => a (eZ z).1 * b (eZ z).2) = (comapEquiv eZ (prodSB ⟨a, ha⟩ ⟨b, hb⟩)).1 := rfl
+    rw [hF, happ]
+    funext z'
+    simp only [E, LinearEquiv.trans_apply, LinearEquiv.symm_apply_apply, hL]
+    rfl
+
+end GlobalTheory.SBProdExt
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TotallyDisconnectedProductLocallyCompact =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearModelDoubleSplitting =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearModelDoubleSplitting", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromBlocksSubOne\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SpanSchwartzBruhatProductEqTop\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicHeisenbergActsByLocalSchrodinger\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledWeilInertPlaceVacuumEigenfunction\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TotallyDisconnectedProductLocallyCompact\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ProdFnMemSB\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar\nimport GroundTheory.GlobalFields.LocalAtPlace\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.MetricSpace.Ultra.TotallySeparated\nimport Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts\n\n"}
+section -- clump:auto
 @[expose] public section
 
 open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.ThK GlobalTheory.KSplit
@@ -101,129 +228,8 @@ theorem coord_inr {m k : Type} [Fintype m] [DecidableEq m] [Field k] {d : ℕ} (
   ext i j
   simp
 
-theorem dblLin : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E) (n d : ℕ)
-    (X : Spc F E n) (W : Spc F E d) (M : Model σ X W) (χX χW : Chr F E) (om : Rep σ X W) (r s r' s' : ℕ), IsPair B M χX χW om r s r' s' →
-    ∀ (v : Pl (F := F)) (t : E →ₐ[F] Fv F v) (b : GL (Fin n) (Fv F v)) (c : GL (Fin d) (Fv F v)), ∀ ι, M.IsLinW B.ψ t b c ι →
-    ∀ dd : GlobalTheory.DblScal.DblCo σ X W, IsDblCoord (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (-1) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) X.J) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) W.J) M.co dd →
-    ∃ ιd, GlobalTheory.DblScal.IsLinD B.ψ dd t b c ιd ∧
-      ∀ φ₁ ∈ SB (Fin n × Fin d → Fv F v), ∀ φ₂ ∈ SB (Fin n × Fin d → Fv F v),
-        ιd (boxFun φ₁ φ₂) = fun Y => ι φ₁ (Y.submatrix id Sum.inl) *
-          starRingEnd ℂ (ι (fun x => starRingEnd ℂ (φ₂ x)) (Y.submatrix id Sum.inr)) := by
-  intro hP F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hpair v t b c ι hι dd hdd
-  classical
-  have hψ1 : ∀ x, ‖B.ψ x‖ = 1 := GlobalTheory.StdCharFromIsStd.norm_psi hpair.base.std
-  have hψc : Continuous B.ψ := hpair.base.std.1
-  have hψv : ∀ x, ‖GlobalTheory.LatVac.psiAt B.ψ v x‖ = 1 := fun x => hψ1 _
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin d) (Fv F v)) :=
-    inferInstanceAs (LocallyCompactSpace (Fin n → Fin d → Fv F v))
-  haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin d) (Fv F v)) :=
-    inferInstanceAs (TotallyDisconnectedSpace (Fin n → Fin d → Fv F v))
-  obtain ⟨ιd, hbij, hprod⟩ := GlobalTheory.T.totally_disconnected_product_locally_compact (Homeomorph.sumArrowHomeomorphProdArrow (X := Fv F v)
-    (ι := Fin n × Fin d) (ι' := Fin n × Fin d)) (colsHomeo (Fin n) (Fin d) (Fin d) (Fv F v)) ι (conjLin ι) hι.bij
-    (conjLin_bijOn ι hι.bij)
-  have hbox : ∀ φ₁ ∈ SB (Fin n × Fin d → Fv F v), ∀ φ₂ ∈ SB (Fin n × Fin d → Fv F v),
-      ιd (boxFun φ₁ φ₂) = fun Y => ι φ₁ (Y.submatrix id Sum.inl) * star (ι (star φ₂) (Y.submatrix id Sum.inr)) :=
-    fun φ₁ h₁ φ₂ h₂ => hprod φ₁ h₁ φ₂ h₂
-
-  have hsplit : ∀ u : Matrix (Fin n) (Fin d ⊕ Fin d) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)),
-      GlobalTheory.LatVac.locCo dd v u = (Sum.elim (GlobalTheory.LatVac.locCo M.co v u.toCols₁).1 (GlobalTheory.LatVac.locCo M.co v u.toCols₂).1,
-        Sum.elim (GlobalTheory.LatVac.locCo M.co v u.toCols₁).2 (-(GlobalTheory.LatVac.locCo M.co v u.toCols₂).2)) := by
-    intro u
-    have e := hdd u.toCols₁ u.toCols₂
-    rw [Matrix.fromCols_toCols] at e
-    refine Prod.ext (funext fun k => ?_) (funext fun k => ?_)
-    · rcases k with k | k <;>
-        simp [GlobalTheory.LatVac.locCo, e]
-    · rcases k with k | k <;>
-        simp [GlobalTheory.LatVac.locCo, e]
-  have hat1 : ∀ u : Matrix (Fin n) (Fin d ⊕ Fin d) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)), At (evFin F v) u → At (evFin F v) u.toCols₁ :=
-    fun u hu a ha => Matrix.ext fun i j => congrFun (congrFun (hu a ha) i) (Sum.inl j)
-  have hat2 : ∀ u : Matrix (Fin n) (Fin d ⊕ Fin d) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)), At (evFin F v) u → At (evFin F v) u.toCols₂ :=
-    fun u hu a ha => Matrix.ext fun i j => congrFun (congrFun (hu a ha) i) (Sum.inr j)
-  have hmap1 : ∀ (u : Matrix (Fin n) (Fin d ⊕ Fin d) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) (π : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E) →+* Fv F v), u.map π = 0 →
-      u.toCols₁.map π = 0 := fun u π h => Matrix.ext fun i j => congrFun (congrFun h i) (Sum.inl j)
-  have hmap2 : ∀ (u : Matrix (Fin n) (Fin d ⊕ Fin d) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) (π : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E) →+* Fv F v), u.map π = 0 →
-      u.toCols₂.map π = 0 := fun u π h => Matrix.ext fun i j => congrFun (congrFun h i) (Sum.inr j)
-  have hc1 : ∀ (u : Matrix (Fin n) (Fin d ⊕ Fin d) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) (π : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E) →+* Fv F v), (u.map π).toCols₁ = u.toCols₁.map π :=
-    fun u π => rfl
-  have hc2 : ∀ (u : Matrix (Fin n) (Fin d ⊕ Fin d) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) (π : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E) →+* Fv F v), (u.map π).toCols₂ = u.toCols₂.map π :=
-    fun u π => rfl
-
-  have hloc : ∀ u : Matrix (Fin n) (Fin d ⊕ Fin d) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)), At (evFin F v) u →
-      ∀ φ ∈ SB (Fin n × Fin d ⊕ Fin n × Fin d → Fv F v), ∀ φ₁, Acts (evFin F v) (dd.rho B.ψ u) φ φ₁ →
-        φ₁ = schr (GlobalTheory.LatVac.psiAt B.ψ v) (GlobalTheory.LatVac.locCo dd v u) φ := fun u hu φ hφ φ₁ hA =>
-    GlobalTheory.TensUniq.eq_of_tens_eq v φ _ _ hφ fun r hr =>
-      (hA r hr).symm.trans (GlobalTheory.VacBridge.rho_acts_locCo dd B.ψ v u hu φ r hr)
-
-  have hschr : ∀ u : Matrix (Fin n) (Fin d ⊕ Fin d) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)), ∀ a ∈ SB (Fin n × Fin d → Fv F v),
-      ∀ b' ∈ SB (Fin n × Fin d → Fv F v),
-      ιd (schr (GlobalTheory.LatVac.psiAt B.ψ v) (GlobalTheory.LatVac.locCo dd v u) (boxFun a b')) = fun Y =>
-        ι (schr (GlobalTheory.LatVac.psiAt B.ψ v) (GlobalTheory.LatVac.locCo M.co v u.toCols₁) a) (Y.submatrix id Sum.inl) *
-          star (ι (schr (GlobalTheory.LatVac.psiAt B.ψ v) (GlobalTheory.LatVac.locCo M.co v u.toCols₂) (star b'))
-            (Y.submatrix id Sum.inr)) := by
-    intro u a ha b' hb
-    have e0 : boxFun a b' = boxFun a (fun x => star ((star b') x)) := by
-      funext x; simp [boxFun]
-    rw [hsplit u, e0, GlobalTheory.DblVacLine.schr_box _ hψv]
-    rw [hbox _ (GlobalTheory.SchrSB.schr_mem_SB B.ψ hψc v _ a ha)
-      (fun x => star (schr (GlobalTheory.LatVac.psiAt B.ψ v) (GlobalTheory.LatVac.locCo M.co v u.toCols₂) (star b') x))
-      (star_mem_SB (GlobalTheory.SchrSB.schr_mem_SB B.ψ hψc v _ _ (star_mem_SB hb)))]
-    have e1 : (star fun x => star (schr (GlobalTheory.LatVac.psiAt B.ψ v) (GlobalTheory.LatVac.locCo M.co v u.toCols₂) (star b') x)) =
-        schr (GlobalTheory.LatVac.psiAt B.ψ v) (GlobalTheory.LatVac.locCo M.co v u.toCols₂) (star b') := by
-      funext x; simp
-    rw [e1]
-  refine ⟨ιd, ⟨hbij, ?_, ?_⟩, hbox⟩
-  · intro u hu hu0 φ hφ φ₁ hφ₁ hA Y
-    rw [hloc u hu φ hφ φ₁ hA]
-    set sh := (b⁻¹).val * u.map (piW t) * ((GlobalTheory.DblScal.dsum c)⁻¹).valᵀ
-    have key := eqOn_SB_of_box (ιd ∘ₗ schrLin (GlobalTheory.LatVac.psiAt B.ψ v) (GlobalTheory.LatVac.locCo dd v u))
-      (LinearMap.funLeft ℂ ℂ (fun Y => Y + sh) ∘ₗ ιd) (fun a ha b' hb => ?_) φ hφ
-    · exact congrFun key Y
-    show ιd (schr _ _ (boxFun a b')) = fun Y => ιd (boxFun a b') (Y + sh)
-    rw [hschr u a ha b' hb, hbox a ha b' hb]
-    funext Y
-    have t1 := hι.trans u.toCols₁ (hat1 u hu) (hmap1 u _ hu0) a ha _ (GlobalTheory.SchrSB.schr_mem_SB B.ψ hψc v _ a ha)
-      (GlobalTheory.VacBridge.rho_acts_locCo M.co B.ψ v _ (hat1 u hu) a) (Y.submatrix id Sum.inl)
-    have t2 := hι.trans u.toCols₂ (hat2 u hu) (hmap2 u _ hu0) _ (star_mem_SB hb) _
-      (GlobalTheory.SchrSB.schr_mem_SB B.ψ hψc v _ _ (star_mem_SB hb))
-      (GlobalTheory.VacBridge.rho_acts_locCo M.co B.ψ v _ (hat2 u hu) _) (Y.submatrix id Sum.inr)
-    have s1 : (Y + sh).submatrix id Sum.inl = Y.submatrix id Sum.inl + (b⁻¹).1 * u.toCols₁.map (piW t) * (c⁻¹).1ᵀ := by
-      rw [show (Y + sh).submatrix id Sum.inl = Y.submatrix id Sum.inl + sh.submatrix id Sum.inl from rfl, coord_inl, hc1]
-    have s2 : (Y + sh).submatrix id Sum.inr = Y.submatrix id Sum.inr + (b⁻¹).1 * u.toCols₂.map (piW t) * (c⁻¹).1ᵀ := by
-      rw [show (Y + sh).submatrix id Sum.inr = Y.submatrix id Sum.inr + sh.submatrix id Sum.inr from rfl, coord_inr, hc2]
-    rw [t1, t2]
-    beta_reduce
-    rw [s1, s2]
-  · intro u hu hu0 φ hφ φ₁ hφ₁ hA x hx hx0
-    rw [hloc u hu φ hφ φ₁ hA]
-    set P := (b⁻¹).val * x.map (piW t) * ((GlobalTheory.DblScal.dsum c)⁻¹).valᵀ
-    set z := B.ψ (symp (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (-1) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) X.J) (dbl ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) W.J)) x u)
-    have key := eqOn_SB_of_box (LinearMap.proj P ∘ₗ ιd ∘ₗ schrLin (GlobalTheory.LatVac.psiAt B.ψ v) (GlobalTheory.LatVac.locCo dd v u))
-      (z • (LinearMap.proj P ∘ₗ ιd)) (fun a ha b' hb => ?_) φ hφ
-    · exact key
-    show ιd (schr _ _ (boxFun a b')) P = z * ιd (boxFun a b') P
-    rw [hschr u a ha b' hb, hbox a ha b' hb]
-    have p1 : P.submatrix id Sum.inl = (b⁻¹).1 * x.toCols₁.map (piW t) * (c⁻¹).1ᵀ := by
-      rw [coord_inl, hc1]
-    have p2 : P.submatrix id Sum.inr = (b⁻¹).1 * x.toCols₂.map (piW t) * (c⁻¹).1ᵀ := by
-      rw [coord_inr, hc2]
-    have m1 := hι.mult u.toCols₁ (hat1 u hu) (hmap1 u _ hu0) a ha _ (GlobalTheory.SchrSB.schr_mem_SB B.ψ hψc v _ a ha)
-      (GlobalTheory.VacBridge.rho_acts_locCo M.co B.ψ v _ (hat1 u hu) a) x.toCols₁ (hat1 x hx) (hmap1 x _ hx0)
-    have m2 := hι.mult u.toCols₂ (hat2 u hu) (hmap2 u _ hu0) _ (star_mem_SB hb) _
-      (GlobalTheory.SchrSB.schr_mem_SB B.ψ hψc v _ _ (star_mem_SB hb))
-      (GlobalTheory.VacBridge.rho_acts_locCo M.co B.ψ v _ (hat2 u hu) _) x.toCols₂ (hat2 x hx) (hmap2 x _ hx0)
-    beta_reduce
-    rw [p1, p2, m1, m2]
-    have hs : symp (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (-1) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) X.J) (dbl ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) W.J)) x u =
-        symp (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (-1) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) X.J) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) W.J) x.toCols₁ u.toCols₁ -
-          symp (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (-1) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) X.J) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) W.J) x.toCols₂ u.toCols₂ := by
-      conv_lhs => rw [← Matrix.fromCols_toCols x, ← Matrix.fromCols_toCols u]
-      exact GlobalTheory.DblVacLine.symp_dbl _ _ _ _ _ _ _ _
-    have hz : z = B.ψ (symp (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (-1) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) X.J) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) W.J) x.toCols₁ u.toCols₁) *
-        star (B.ψ (symp (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (-1) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) X.J) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) W.J) x.toCols₂ u.toCols₂)) := by
-      rw [GlobalTheory.DblVacLine.star_eq_neg B.ψ hψ1, ← AddChar.map_add_eq_mul, ← sub_eq_add_neg, ← hs]
-    rw [hz, star_mul]
-    dsimp only [cA, incM]
-    ring
-
 end GlobalTheory.DblLin
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearModelDoubleSplitting =====

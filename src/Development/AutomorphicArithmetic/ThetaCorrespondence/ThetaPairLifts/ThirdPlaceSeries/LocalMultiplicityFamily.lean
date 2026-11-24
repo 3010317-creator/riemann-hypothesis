@@ -1,15 +1,43 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwistDataAgreeAcrossCoefficientsLocalized
-public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CohomologicalCsdTempered
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SameGaloisLevelExists
-public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RootsOfUnityRingLeWittIntegers
-public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HeckeOpen
-public import Development.AutomorphicArithmetic.Foundations.LocalLanglands.IsRecTOfIsRec
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
-set_option synthInstance.maxHeartbeats 200000
+
 
 section
 noncomputable section
@@ -17,14 +45,14 @@ namespace GlobalTheory.HeightCounting.Fin3
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top
   GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.Mem.R3.Tr GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-set_option synthInstance.maxHeartbeats 400000
-set_option maxHeartbeats 4000000
+
+
 
 variable {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} {w : ColW B f T} {P : Pre2 K w}
 variable {x : St P} (L : LocAll (lay0 (Dof x)))
 variable (l : _root_.GlobalTheory.HeightCounting.Up.StrictHenselianAcyclicLevel hL x)
 
-set_option maxHeartbeats 8000000 in
+
 def yStructureLocal : NExpRealS (datL x L).R (datL x L).cG (SL L l.rat) := by
   let Y : NExpRealS (datL x L).R (datL x L).cG (ratL L l.rat.S) := {
     fi := by with_unfolding_all exact (l.b.YS.fi :)
@@ -79,32 +107,24 @@ def localEigenvalueDegree : ℕ → (DL x L).what₂.FT → ℕ → PlE (DL x L)
 def smallPlaceSet : Finset (PlE (DL x L).host) := (by with_unfolding_all exact (l.rat.In.Sb :))
 theorem twist_ok_local : ∀ v, TwistedAt (DL x L) v → IntegralHeckeForms.TwOK ((_root_.GlobalTheory.HeightCounting.Fin3.characterChoiceLocal L l).twI v) ((_root_.GlobalTheory.HeightCounting.Fin3.characterChoiceLocal L l).k' v) ((_root_.GlobalTheory.HeightCounting.Fin3.characterChoiceLocal L l).Q v)
     (((_root_.GlobalTheory.HeightCounting.Fin3.characterChoiceLocal L l).psi' v).comp ((DL x L).ntw.art ((_root_.GlobalTheory.HeightCounting.Fin3.characterChoiceLocal L l).twI v) ((_root_.GlobalTheory.HeightCounting.Fin3.characterChoiceLocal L l).Q v))) := by
-  intro v hv
-  with_unfolding_all exact (l.c.ok v hv :)
+  -- The kernel checks the conversion between the two character choices.
+  run_tac Lean.Elab.Tactic.closeMainGoalUsing `twistOk fun _ _ =>
+    Lean.Elab.Tactic.elabTerm (Lean.mkIdent `l.c.ok) none
 
-set_option maxHeartbeats 8000000 in
+
 theorem thetaTie_yStructureLocal_nonempty : Nonempty (GlobalTheory.GeoTie.ThetaTie (_root_.GlobalTheory.HeightCounting.Fin3.yStructureLocal L l) (datL x L).geo.fw (DL x L).nth) := by
-  let Y : NExpRealS (datL x L).R (datL x L).cG (ratL L l.rat.S) := by
-    with_unfolding_all exact (yStructureLocal L l :)
-  with_unfolding_all change Nonempty (GlobalTheory.GeoTie.ThetaTie Y (datL x L).geo.fw (DL x L).nth)
   obtain ⟨g⟩ := l.b.geo
   refine ⟨{ side := ?_, isUnramified₂ := ?_ }⟩
   · intro i j b
     let side := g.side (by with_unfolding_all exact (i :)) (by with_unfolding_all exact (j :)) b
     refine { pt := ?_, cover := ?_, ev_eq := ?_, fmUr := ?_, hk := ?_, hk_none := ?_ }
-    · with_unfolding_all exact (side.pt :)
-    · intro z
-      with_unfolding_all exact (side.cover z :)
-    · intro f y
-      with_unfolding_all exact (side.ev_eq f y :)
-    · intro f
-      with_unfolding_all exact (side.fmUr f :)
-    · intro k P hP
-      with_unfolding_all exact (side.hk k P hP :)
-    · intro k P hP y hy c
-      with_unfolding_all exact (side.hk_none k P hP y hy c :)
-  · intro i
-    with_unfolding_all exact (g.isUnramified₂ i :)
+    -- The transported fields have definitionally equal types. The kernel
+    -- checks them in the resulting record without elaborator unification.
+    run_tac
+      for field in [`side.pt, `side.cover, `side.ev_eq, `side.fmUr, `side.hk, `side.hk_none] do
+        Lean.Elab.Tactic.closeMainGoalUsing `thetaTieField fun _ _ =>
+          Lean.Elab.Tactic.elabTerm (Lean.mkIdent field) none
+  · with_unfolding_all exact (g.isUnramified₂ :)
 
 theorem kept_characterChoiceLocal : Kept l.c.ch (_root_.GlobalTheory.HeightCounting.Fin3.characterChoiceLocal L l) :=
   ⟨sameGaloisL L, twistDataAgreeAcrossCoefficients_localized L, sameFormsL L, (by with_unfolding_all exact ((HEq.refl (Dof x).ntwbr) :)), (by with_unfolding_all exact ((HEq.refl l.c.ch.twI) :)), (by with_unfolding_all exact ((HEq.refl l.c.ch.sd) :)),

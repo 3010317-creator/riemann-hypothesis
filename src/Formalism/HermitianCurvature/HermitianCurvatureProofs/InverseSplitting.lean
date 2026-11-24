@@ -1,7 +1,53 @@
 module
 
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LowerParabolicCoordinates
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.StabilizerFourthCondition
+public import Formalism.HermitianCurvature.FiniteOrderIntersectionInSmooth
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.LowerParabolicCoordinates
 
 @[expose] public section
 
@@ -181,13 +227,11 @@ private lemma mul_mem_utset {m : ℕ} {A B : Matrix (Fin m) (Fin m) ℂ} (hA : A
 
 private lemma det_eq_one_of_mem_ltset {m : ℕ} {A : Matrix (Fin m) (Fin m) ℂ} (hA : A ∈ C2.LTset m) :
     A.det = 1 := by
-  rw [Matrix.det_of_lowerTriangular A (fun i j h => hA.1 i j h)]
-  simp [hA.2]
+  simp [Matrix.det_of_lowerTriangular A (fun i j h => hA.1 i j h), hA.2]
 
 private lemma det_eq_one_of_mem_utset {m : ℕ} {A : Matrix (Fin m) (Fin m) ℂ} (hA : A ∈ C2.UTset m) :
     A.det = 1 := by
-  rw [Matrix.det_of_upperTriangular (fun i j h => hA.1 i j h)]
-  simp [hA.2]
+  simp [Matrix.det_of_upperTriangular (fun i j h => hA.1 i j h), hA.2]
 
 private lemma inv_mem_ltset {m : ℕ} {A : Matrix (Fin m) (Fin m) ℂ} (hA : A ∈ C2.LTset m) :
     A⁻¹ ∈ C2.LTset m := by
@@ -327,14 +371,12 @@ theorem upper_splitting : C2.UpSplit := by
   refine ⟨(bᴴ, aᴴ), ⟨conjTranspose_mem_utset_of_mem_ltset hb.1, conjTranspose_mem_utset_of_mem_ltset ha.1,
     by simpa only [Matrix.conjTranspose_conjTranspose] using hb,
     by simpa only [Matrix.conjTranspose_conjTranspose] using ha, ?_⟩, ?_⟩
-  · have hab' : uᴴ = a * b := hab
-    show u = bᴴ * aᴴ
-    rw [← Matrix.conjTranspose_mul, ← hab', Matrix.conjTranspose_conjTranspose]
+  · show u = bᴴ * aᴴ
+    rw [← Matrix.conjTranspose_mul, ← hab, Matrix.conjTranspose_conjTranspose]
   · rintro ⟨q1, q2⟩ ⟨_, _, hq1c, hq2c, hq⟩
-    have hq' : u = q1 * q2 := hq
     have h := huniq (q2ᴴ, q1ᴴ) ⟨hq2c, hq1c, by
       show uᴴ = q2ᴴ * q1ᴴ
-      rw [← Matrix.conjTranspose_mul, ← hq']⟩
+      rw [← Matrix.conjTranspose_mul, ← hq]⟩
     simp only [Prod.mk.injEq] at h
     rw [← h.1, ← h.2, Matrix.conjTranspose_conjTranspose, Matrix.conjTranspose_conjTranspose]
 

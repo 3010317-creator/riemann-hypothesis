@@ -1,6 +1,46 @@
 module
 
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LocalWeightCharts.DDMulApply
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -283,8 +323,7 @@ def psiR (g : Mx k r) : Fin r → ℝ := fun a => (mof g a a).im
 
 theorem lowId_cA (x : CI k r → ℂ) : LowId (cA x) := by
   intro a b hba
-  simp only [cA]
-  rw [dif_neg (not_lt.mpr hba)]
+  simp only [cA, dif_neg (not_lt.mpr hba)]
 
 theorem det_of_lowId {A : Matrix (Fin r) (Fin r) ℂ} (hA : LowId A) : A.det = 1 := by
   have ht : A.BlockTriangular id := fun i j hij => by
@@ -303,10 +342,8 @@ theorem cA_cF (x : CI k r → ℂ) : (cA x)ᴴ * cF x = 1 := by
     Matrix.conjTranspose_one]
 
 theorem nilpotent_chart_matrix_eq (x : CI k r → ℂ) (s : Fin r → ℝ) : mof (phi0 x s) = cM x s := by
-  unfold mof phi0
-  rw [bF_mk, bC_mk]
-  unfold cC
-  rw [← Matrix.mul_assoc, cF_cA, Matrix.one_mul]
+  unfold mof phi0 cC
+  rw [bF_mk, bC_mk, ← Matrix.mul_assoc, cF_cA, Matrix.one_mul]
 
 theorem test_vector_mem_schwartz_bruhat (x : CI k r → ℂ) (s : Fin r → ℝ) : phi0 x s ∈ Nset k r := by
   have hD : (dD k)ᴴ = dD k := by
@@ -407,7 +444,6 @@ theorem cA_psi {g : Mx k r} (hc : ColB g) : cA (psiC g) = bA g := by
     exact (hc.aa a b (not_lt.mp h)).symm
 
 theorem cB_psi (g : Mx k r) : cB (psiC g) = bB g := by
-  ext a j
   rfl
 
 theorem adj_eq {g : Mx k r} (hc : ColB g) (hu : g ∈ UH (Hpk k r)) : (bA g).adjugate = (bF g)ᴴ := by
