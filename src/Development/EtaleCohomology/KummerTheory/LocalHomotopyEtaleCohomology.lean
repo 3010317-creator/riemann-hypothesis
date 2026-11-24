@@ -1001,7 +1001,7 @@ theorem extd (C : CochainComplex A ℤ) (N : ℕ) {j k l : ℤ} (hjk : j + 1 = k
           rw [← Category.assoc, image.fac]
     _ = N • φ := by rw [Injective.comp_factorThru, Abelian.comp_epiDesc]
 
-theorem step (C : CochainComplex A ℤ) (N M : ℕ) {i j k l : ℤ} (_hij : i + 1 = j) (hjk : j + 1 = k)
+theorem step (C : CochainComplex A ℤ) (N M : ℕ) {i j k l : ℤ} (hjk : j + 1 = k)
     (hkl : k + 1 = l) (hH : N • 𝟙 (C.homology k) = 0) [Injective (C.X k)]
     (a : C.X j ⟶ C.X i) (b : C.X k ⟶ C.X j) (hab : a ≫ C.d i j + C.d j k ≫ b = M • 𝟙 (C.X j)) :
     ∃ c : C.X l ⟶ C.X k, (N • b) ≫ C.d j k + C.d k l ≫ c = (N * M) • 𝟙 (C.X k) := by
@@ -1035,7 +1035,7 @@ theorem homot (C : CochainComplex A ℤ) [C.IsStrictlyGE (-1)] (hI : ∀ j, Inje
     subst hij
     obtain ⟨a, b, hab⟩ := ih (i - 1) i (i + 1) (by ring) rfl (by push_cast at hj; omega) (by omega)
     have := hI (i + 1)
-    obtain ⟨c, hc⟩ := step C N (N ^ (n + 1)) (by ring : i - 1 + 1 = i) rfl hjk (hH _ hjm) a b hab
+    obtain ⟨c, hc⟩ := step C N (N ^ (n + 1)) rfl hjk (hH _ hjm) a b hab
     exact ⟨N • b, c, by rw [hc, ← pow_succ']⟩
 
 theorem Ghost_of : LateralTheory.KummerTheory.Ghost := by
