@@ -288,7 +288,7 @@ theorem rho_one_eval : ∀ {Λ A B K : Type} [CommRing Λ] [CommRing A] [CommRin
     (hC.basis 0 bs (C.μ 0 P.oneV)).unique h2.symm h3
   have h5 : φ = ∑ s, φ (bs s) • bs.coord s := by
     refine bs.ext fun t => ?_
-    simp [Finset.sum_apply, Module.Basis.coord_apply, Finsupp.single_apply]
+    simp
   have h6 : φ P.oneV = ∑ s, bs.coord s P.oneV * φ (bs s) := by
     conv_lhs => rw [← bs.sum_repr P.oneV]
 
@@ -643,7 +643,7 @@ theorem semilinear_eq_sum_coord {K B : Type*} {V : Type*} [Field K] [CommRing B]
     (φ : Module.Dual K V) : f φ = ∑ s, f (bs.coord s) * o (φ (bs s)) := by
   have hφ : φ = ∑ s, φ (bs s) • bs.coord s := by
     refine bs.ext fun t => ?_
-    simp [LinearMap.sum_apply, Finsupp.single_apply]
+    simp
   conv_lhs => rw [hφ]
 
   rw [map_sum]
@@ -792,9 +792,6 @@ theorem exists_rho {Λ A B K : Type} [CommRing Λ] [CommRing A] [CommRing B] [Fi
   have hunit : IsUnit (C.ℓ : B) := by
     first
     | exact hC.unit
-    | simpa using hC.unit.map C.ι
-    | simpa using hC.unit.map C.o
-    | simpa using (hC.unit.map C.lam).map C.ι
   obtain ⟨u, hu⟩ := hunit
   let w : C.W j := ((u⁻¹ : Bˣ) : B) ^ e • C.b j z
   let bs₀ := Module.finBasis K (C.V j)

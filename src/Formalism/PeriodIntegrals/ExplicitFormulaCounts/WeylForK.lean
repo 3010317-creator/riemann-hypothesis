@@ -351,10 +351,10 @@ lemma signatureMatrix_eq_blockReindex (ε : Fin N → Bool) : Jm ε = blR ε (fr
   simp only [Matrix.submatrix_apply, Equiv.symm_apply_apply, Jm, Matrix.diagonal_apply,
     (blk ε).injective.eq_iff]
   rcases x with i | j <;> rcases y with i' | j'
-  · by_cases h : i = i' <;> simp [h, Matrix.one_apply, sign_blockEquiv_inl]
+  · by_cases h : i = i' <;> simp [h, sign_blockEquiv_inl]
   · simp
   · simp
-  · by_cases h : j = j' <;> simp [h, Matrix.one_apply, sign_blockEquiv_inr]
+  · by_cases h : j = j' <;> simp [h, sign_blockEquiv_inr]
 
 lemma signatureMatrix_allPos_eq_one (n : ℕ) : Jm (allPos n) = 1 := by
   simp [Jm, allPos]
@@ -1021,7 +1021,7 @@ theorem dominant_restriction_holds : CDomRes := by
           rw [eps_ePl ε k] at he
           exact absurd he (by decide)
         have ha : ePl ε k ≠ eMi ε j := ePl_ne_eMi ε k j
-        simp [root, Pi.single_apply, ha, hb.symm]
+        simp [root, ha, hb.symm]
     have hT1 : ∀ i j, (c (ePl ε i) (eMi ε j) : ℝ) = 0 := by
       intro i j
       by_contra h0
@@ -1052,7 +1052,7 @@ theorem dominant_restriction_holds : CDomRes := by
           rw [eps_eMi ε k] at he
           exact absurd he (by decide)
         have ha : eMi ε k ≠ ePl ε j := eMi_ne_ePl ε k j
-        simp [root, Pi.single_apply, ha, hb.symm]
+        simp [root, ha, hb.symm]
     have hT1 : ∀ i j, (c (eMi ε i) (ePl ε j) : ℝ) = 0 := by
       intro i j
       by_contra h0
@@ -1092,7 +1092,7 @@ def wtTorus {N : ℕ} (θ : Fin N → ℝ) : Matrix (Fin N) (Fin N) ℂ :=
 theorem wt_char_real (f : ℝ → ℂ) (hc : Continuous f) (hm : ∀ s t, f (s + t) = f s * f t)
     (h0 : f 0 = 1) (hn : ∀ t, ‖f t‖ = 1) :
     ∃ m : ℝ, ∀ t, f t = Complex.exp (((m * t : ℝ) : ℂ) * Complex.I) := by
-  first | exact Bl.general_b_fact_left_variant.goal1 .. | (apply Bl.general_b_fact_left_variant.goal1 <;> assumption) | (intros; apply Bl.general_b_fact_left_variant.goal1 <;> assumption)
+  first | (apply Bl.general_b_fact_left_variant.goal1 <;> assumption)
 
 theorem wt_common_eigvec {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] {ι : Type}
     (A : ι → (H →L[ℂ] H)) (W : Submodule ℂ H) [FiniteDimensional ℂ W] (hW : W ≠ ⊥)

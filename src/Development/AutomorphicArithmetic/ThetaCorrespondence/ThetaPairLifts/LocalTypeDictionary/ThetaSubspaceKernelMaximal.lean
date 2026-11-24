@@ -143,7 +143,7 @@ theorem eq_zero_of_thetaSum_rho : ∀ {F E : Type} [Field F] [NumberField F] [Fi
   have hs := (mul_eq_zero.mp hP.symm).resolve_left h0
   have h1 := ENNReal.tsum_eq_zero.mp hs 0
   have e : ((fun _ => (0 : AF F)) : Fin n × Fin d → AF F) + x = x := zero_add x
-  simp only [map_zero, enorm_eq_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, pow_eq_zero_iff] at h1
+  simp only [enorm_eq_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, pow_eq_zero_iff] at h1
   simpa [e] using h1
 
 end GlobalTheory.ThetaSeparates
@@ -170,7 +170,7 @@ theorem _root_.GlobalTheory.T.eq_zero_of_thetaDistribution_heisenbergTranslates 
     {Y : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc F E n} {Wd : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc F E d} (M : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Model σ Y Wd)
     (ψ : AddChar (AF F) ℂ), GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsStd ψ → ∀ Φ ∈ GlobalTheory.WeilM.schA F (Fin n × Fin d),
     (∀ u, GlobalTheory.WeilM.thetaSum F (M.co.rho ψ u Φ) = 0) → Φ = 0 := by
-  first | exact @GlobalTheory.ThetaSeparates.eq_zero_of_thetaSum_rho | exact GlobalTheory.ThetaSeparates.eq_zero_of_thetaSum_rho | (intros; apply GlobalTheory.ThetaSeparates.eq_zero_of_thetaSum_rho <;> assumption)
+  first | exact @GlobalTheory.ThetaSeparates.eq_zero_of_thetaSum_rho
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqZeroOfThetaDistributionHeisenbergTranslatesStatement =====
@@ -192,7 +192,7 @@ open GlobalTheory.SquareComm GlobalTheory.SquareAgree
 theorem _root_.GlobalTheory.T.transposeGramUnitary_surjective_finitePlaceSupported : ∀ (D : D7) (X : HSp D) {d : ℕ} (e : Fin X.rank ≃ Fin d) (Wd : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc D.host.F D.host.E d)
     (hJ : Wd.J = D.host.xi0 • reindex e e X.gramᵀ) (v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := D.host.F)),
     ∀ h ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.UAt D.sp.cm.sig Wd (GlobalTheory.AdelicU.evFin D.host.F v), ∃ h' ∈ GfC X, kapX X e hJ h' = h := by
-  first | exact @GlobalTheory.SquareAgree.KapOnto.kapX_onto | exact GlobalTheory.SquareAgree.KapOnto.kapX_onto | (intros; apply GlobalTheory.SquareAgree.KapOnto.kapX_onto <;> assumption)
+  first | exact @GlobalTheory.SquareAgree.KapOnto.kapX_onto
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.TransposeGramUnitarySurjectiveFinitePlaceSupportStatement =====
@@ -301,7 +301,7 @@ theorem _root_.GlobalTheory.T.finite_adelic_stabilizer_fixes_kappa : _root_.Glob
     GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsTriple Bs Γ Xc om om' →
     ∀ Pi rf rl p p', IsMatch ψ θ A A₁ B α β ωA ωB Pi rf rl p p' →
     ∀ N, GlobalTheory.CoinvKer.IsStabW om Bs.emb (algD Γ.M Bs.ψ Bs.emb) N → ∀ g ∈ GfC X, ∀ ΦD ∈ N, om (1, kapX X e hO.JX g) ΦD ∈ N := by
-  first | exact @_root_.GlobalTheory.StabFinAdelic.kappa_stabilized_of_isStabilizedW | exact _root_.GlobalTheory.StabFinAdelic.kappa_stabilized_of_isStabilizedW | (intros; apply _root_.GlobalTheory.StabFinAdelic.kappa_stabilized_of_isStabilizedW <;> assumption)
+  first | exact @_root_.GlobalTheory.StabFinAdelic.kappa_stabilized_of_isStabilizedW
 end
 end -- clump:auto
 end -- clump:auto
@@ -332,7 +332,7 @@ theorem _root_.GlobalTheory.T.exists_lieGenerator_of_oneParameterSubgroup_realPl
       (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.mat (γ (Multiplicative.ofAdd t))).map (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.piInf (emb w')) = 1) →
     ∃ (τ : D.what₂.Tau) (Y : Matrix (Fin X.rank) (Fin X.rank) ℂ), Y ∈ lieAt X τ ∧
       ∀ t : ℝ, γ (Multiplicative.ofAdd t) = kapX X e hJ (oneP θ X τ Y t) := by
-  first | exact @GlobalTheory.LineAtPlace.exists_oneP | exact GlobalTheory.LineAtPlace.exists_oneP | (intros; apply GlobalTheory.LineAtPlace.exists_oneP <;> assumption)
+  first | exact @GlobalTheory.LineAtPlace.exists_oneP
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsOneParameterSubgroupTransposeGramRealPlaceStatement =====
@@ -668,7 +668,7 @@ theorem _root_.GlobalTheory.T.algD_and_preimage_stable_under_KInf : _root_.Globa
       Q (∑ i, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (f i) (φ i)) ∈ N → Q (∑ i, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (f₁ i) (φ i)) ∈ N) →
     ∀ k ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.KInf σ W B.emb, ∀ Ψ ∈ GlobalTheory.SquareAgree.algD M B.ψ B.emb,
       om (1, k) Ψ ∈ GlobalTheory.SquareAgree.algD M B.ψ B.emb ∧ (Q Ψ ∈ N → Q (om (1, k) Ψ) ∈ N) := by
-  first | exact @_root_.GlobalTheory.KStableSums.kStable_subspace_sums | exact _root_.GlobalTheory.KStableSums.kStable_subspace_sums | (intros; apply _root_.GlobalTheory.KStableSums.kStable_subspace_sums <;> assumption)
+  first | exact @_root_.GlobalTheory.KStableSums.kStable_subspace_sums
 end
 end -- clump:auto
 end -- clump:auto
@@ -785,7 +785,7 @@ theorem _root_.GlobalTheory.T.square_agree_kernel_compact_stable : _root_.Global
     ∀ Pi rf rl p p', IsMatch ψ θ A A₁ B α β ωA ωB Pi rf rl p p' →
     ∀ k ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.KInf D.sp.cm.sig Γ.W Bs.emb, ∀ ΦD ∈ algD Γ.M Bs.ψ Bs.emb, ∀ Φ Φ₁,
     IsDatum Γ.M ψ cA ΦD Φ → IsDatum Γ.M ψ cA (om (1, k) ΦD) Φ₁ → p Φ = 0 → p Φ₁ = 0 := by
-  first | exact @_root_.GlobalTheory.SquareAgree.KerCptW.ker_projection_maximalCompact_stable | exact _root_.GlobalTheory.SquareAgree.KerCptW.ker_projection_maximalCompact_stable | (intros; apply _root_.GlobalTheory.SquareAgree.KerCptW.ker_projection_maximalCompact_stable <;> assumption)
+  first | exact @_root_.GlobalTheory.SquareAgree.KerCptW.ker_projection_maximalCompact_stable
 end
 end -- clump:auto
 end -- clump:auto
@@ -900,7 +900,7 @@ theorem _root_.GlobalTheory.T.square_agree_stabilizer_compact_weyl : _root_.Glob
     GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsTriple Bs Γ Xc om om' →
     ∀ Pi rf rl p p', IsMatch ψ θ A A₁ B α β ωA ωB Pi rf rl p p' →
     ∀ k ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.KInf D.sp.cm.sig Γ.W Bs.emb, ∀ ΦD ∈ algD Γ.M Bs.ψ Bs.emb, om (1, k) ΦD ∈ algD Γ.M Bs.ψ Bs.emb := by
-  first | exact @_root_.GlobalTheory.SquareAgree.StabKW.stabilizer_compact_weyl_eq | exact _root_.GlobalTheory.SquareAgree.StabKW.stabilizer_compact_weyl_eq | (intros; apply _root_.GlobalTheory.SquareAgree.StabKW.stabilizer_compact_weyl_eq <;> assumption)
+  first | exact @_root_.GlobalTheory.SquareAgree.StabKW.stabilizer_compact_weyl_eq
 end
 end -- clump:auto
 end -- clump:auto
@@ -974,7 +974,7 @@ theorem _root_.GlobalTheory.T.weil_algebraic_subspace_kInfty_stable : _root_.Glo
     GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsTriple Bs Γ Xc om om' →
     ∀ Pi rf rl p p', IsMatch ψ θ A A₁ B α β ωA ωB Pi rf rl p p' →
     ∀ k ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.KInf D.sp.cm.sig Γ.V Bs.emb, ∀ ΦD ∈ algD Γ.M Bs.ψ Bs.emb, om (k, 1) ΦD ∈ algD Γ.M Bs.ψ Bs.emb := by
-  first | exact @_root_.GlobalTheory.SquareAgree.CompactStableD.algebraic_vectors_kInfty_stable | exact _root_.GlobalTheory.SquareAgree.CompactStableD.algebraic_vectors_kInfty_stable | (intros; apply _root_.GlobalTheory.SquareAgree.CompactStableD.algebraic_vectors_kInfty_stable <;> assumption)
+  first | exact @_root_.GlobalTheory.SquareAgree.CompactStableD.algebraic_vectors_kInfty_stable
 end
 end -- clump:auto
 end -- clump:auto
@@ -1070,7 +1070,7 @@ theorem _root_.GlobalTheory.T.thetaSum_pure_line_differentiable : _root_.GlobalT
     (∀ᶠ v in Filter.cofinite, φ v = G.M.vac v) → ∀ u : Matrix (Fin a) (Fin (a + a')) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)),
     HasDerivAt (fun t : ℝ => GlobalTheory.WeilM.thetaSum F (G.M.co.rho B.ψ u (om (1, γ (Multiplicative.ofAdd t)) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ))))
       (GlobalTheory.WeilM.thetaSum F (G.M.co.rho B.ψ u (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f₁ φ))) 0 := by
-  first | exact @_root_.GlobalTheory.ThetaLinePureW.hasDerivAt_thetaSum_pure_weight | exact _root_.GlobalTheory.ThetaLinePureW.hasDerivAt_thetaSum_pure_weight | (intros; apply _root_.GlobalTheory.ThetaLinePureW.hasDerivAt_thetaSum_pure_weight <;> assumption)
+  first | exact @_root_.GlobalTheory.ThetaLinePureW.hasDerivAt_thetaSum_pure_weight
 end
 end -- clump:auto
 end -- clump:auto
@@ -1243,7 +1243,7 @@ theorem _root_.GlobalTheory.T.weil_lie_algebra_action_by_line_derivatives : _roo
     ∀ N, GlobalTheory.CoinvKer.IsStabW om Bs.emb (algD Γ.M Bs.ψ Bs.emb) N → ∀ τ, ∀ Y ∈ lieAt X τ, ∀ ΦD ∈ N, ∀ Φ,
     IsDatum Γ.M ψ cA ΦD Φ → ∃ Φ₁D ∈ N, ∃ Φ₁ ∈ algF ψ θ true A B, IsDatum Γ.M ψ cA Φ₁D Φ₁ ∧
       IsDer θ X (fun h => ωA (1, h)) τ Y Φ Φ₁ := by
-  first | exact @_root_.GlobalTheory.SquareAgree.MaxLie.maximal_lie_subalgebra_acts | exact _root_.GlobalTheory.SquareAgree.MaxLie.maximal_lie_subalgebra_acts | (intros; apply _root_.GlobalTheory.SquareAgree.MaxLie.maximal_lie_subalgebra_acts <;> assumption)
+  first | exact @_root_.GlobalTheory.SquareAgree.MaxLie.maximal_lie_subalgebra_acts
 end
 end -- clump:auto
 end -- clump:auto
@@ -1478,7 +1478,7 @@ theorem _root_.GlobalTheory.T.theta_subspace_kernel_maximal : _root_.GlobalTheor
     ∃ K, GlobalTheory.CoinvKer.IsThetaSub om Bs.emb (algD Γ.M Bs.ψ Bs.emb) K ∧ K ≠ algD Γ.M Bs.ψ Bs.emb ∧
       (∀ N, GlobalTheory.CoinvKer.IsThetaSub om Bs.emb (algD Γ.M Bs.ψ Bs.emb) N → K ≤ N → N = K ∨ N = algD Γ.M Bs.ψ Bs.emb) ∧
       ∀ Φ ∈ algF ψ θ true A B, ∀ ΦD ∈ algD Γ.M Bs.ψ Bs.emb, IsDatum Γ.M ψ cA ΦD Φ → (ΦD ∈ K ↔ p Φ = 0) := by
-  first | exact @_root_.GlobalTheory.SquareAgree.kernel_maximal_theta_subspace | exact _root_.GlobalTheory.SquareAgree.kernel_maximal_theta_subspace | (intros; apply _root_.GlobalTheory.SquareAgree.kernel_maximal_theta_subspace <;> assumption)
+  first | exact @_root_.GlobalTheory.SquareAgree.kernel_maximal_theta_subspace
 end
 end -- clump:auto
 end -- clump:auto

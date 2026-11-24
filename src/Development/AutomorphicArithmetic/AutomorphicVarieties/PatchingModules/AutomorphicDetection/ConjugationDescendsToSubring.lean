@@ -112,8 +112,8 @@ private theorem sum_matrix_single_diag_one_eq_one {F : Type} [Field F] {n : Type
   ext u v
   by_cases h : u = v
   · subst h
-    simp [Matrix.sum_apply, Matrix.single_apply, Matrix.one_apply]
-  · simp [Matrix.sum_apply, Matrix.single_apply, Matrix.one_apply, h]
+    simp [Matrix.sum_apply, Matrix.single_apply]
+  · simp [Matrix.sum_apply, Matrix.single_apply, h]
     have he : (Finset.univ.filter fun w : n => w = u ∧ w = v) = ∅ := by
       rw [Finset.filter_eq_empty_iff]
       rintro w - ⟨rfl, rfl⟩
@@ -195,8 +195,8 @@ private theorem separate {F : Type} [Field F] {σ : Type} (d : σ → Type)
     ext u v
     by_cases h : u = v
     · subst h
-      simp [Matrix.sum_apply, Matrix.single_apply, Matrix.one_apply]
-    · simp [Matrix.sum_apply, Matrix.single_apply, Matrix.one_apply, h]
+      simp [Matrix.sum_apply, Matrix.single_apply]
+    · simp [Matrix.sum_apply, Matrix.single_apply, h]
       have he : (Finset.univ.filter fun w : d s => w = u ∧ w = v) = ∅ := by
         rw [Finset.filter_eq_empty_iff]
         rintro w - ⟨rfl, rfl⟩
@@ -931,7 +931,7 @@ theorem UpperTheory.V.Pa.Det.psiMu :
       have hs := (hP s).2 i
       simp only [pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe] at hs
       rw [← hs]
-      simp only [pushRep, mat, MonoidHom.comp_apply, Units.coeHom_apply, Units.val_mul, Matrix.mul_apply,
+      simp only [mat, MonoidHom.comp_apply, Units.coeHom_apply, Units.val_mul, Matrix.mul_apply,
         Finset.sum_mul, Fintype.sum_prod_type, Matrix.GeneralLinearGroup.map_apply]
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
@@ -1699,7 +1699,7 @@ private theorem chi_ofRep {G : Type} [Group G] (ρ : G →* Matrix (Fin n) (Fin 
   rw [map_sub, MonoidAlgebra.mapRingHom_single, Matrix.charpoly]
   congr 1
   ext i j : 2
-  by_cases h : i = j <;> simp [GDet.repAlg, Matrix.charmatrix, h, Matrix.one_apply, Matrix.diagonal_apply]
+  by_cases h : i = j <;> simp [GDet.repAlg, Matrix.charmatrix, h]
 
 private theorem map_ofRep {G : Type} [Group G] (ρ : G →* Matrix (Fin n) (Fin n) R)
     (f : R →+* S) : (GDet.ofRep ρ).map f = GDet.ofRep (f.mapMatrix.toMonoidHom.comp ρ) := by
