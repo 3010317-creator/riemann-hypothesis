@@ -346,7 +346,7 @@ theorem jW_finite : (jW p n).Finite := by
       conv_lhs => rw [h]
       simp only [Finset.sum_range_succ, map_add (f := _), add_mul, Finset.sum_add_distrib, hjW, mul_add,
         Finset.mul_sum]
-      ring
+      ring_nf
   unfold RingHom.Finite
   letI : Algebra (WQ p n) (W2 p n) := (jW p n).toAlgebra
   refine ⟨⟨Finset.univ.image e, ?_⟩⟩
@@ -363,7 +363,7 @@ theorem jW_finite : (jW p n).Finite := by
     have h1 : s a j - s (a + d) j = -((p : WQ p n) ^ a *
         ∑ l ∈ Finset.range d, (p : WQ p n) ^ l * A (Rm^[a + l] w) j) := by
       simp only [hsdef, Finset.sum_range_add, Finset.mul_sum, pow_add]
-      ring
+      ring_nf
     rw [Pi.sub_apply, h1, Ideal.span_singleton_pow]
     exact neg_mem (Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton_self _))
   obtain ⟨L, hL⟩ := IsPrecomplete.prec inferInstance hs
