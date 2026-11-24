@@ -83,6 +83,12 @@ variable {C : Type} [Field C] {v : Valuation C NNReal} {O : Type} [CommRing O] [
   {V : Type} [AddCommGroup V] [Module C V] [Module O V] [IsScalarTower O C V]
   {Ω : Type} [AddCommGroup Ω] [Module C Ω] [Module O Ω] [IsScalarTower O C Ω]
 
+omit [IsAlgClosed C] [CharZero C] in
+private theorem gdChart_e_swap (P : HTPoint C O c κ N V Ω) (x y : V) :
+    P.e x y = -P.e y x := by
+  have h := P.alt (x + y)
+  simp only [map_add (f := _), LinearMap.add_apply, P.alt, zero_add, add_zero] at h
+  linear_combination h
 
 omit [IsAlgClosed C] [CharZero C] in
 theorem proj_ht_mem (P : HTPoint C O c κ N V Ω) (τ : E →+* C) {y : V} (hy : y ∈ P.T) :
@@ -91,7 +97,7 @@ theorem proj_ht_mem (P : HTPoint C O c κ N V Ω) (τ : E →+* C) {y : V} (hy :
 
 omit [IsAlgClosed C] [CharZero C] in
 private theorem htPoint_eq_zero_of_e_left_eq_zero (P : HTPoint C O c κ N V Ω) {x : V} (h : ∀ y, P.e x y = 0) : x = 0 :=
-  P.nondeg x (fun z => by rw [_root_.PositivityTheory.HtPt.Gd.e_swap P z x, h z, neg_zero])
+  P.nondeg x (fun z => by rw [gdChart_e_swap P z x, h z, neg_zero])
 
 omit [IsAlgClosed C] [CharZero C] in
 private theorem htPoint_exists_basis_rho_t_span (P : HTPoint C O c κ N V Ω) :
@@ -317,7 +323,7 @@ theorem exists_alt_bis (hv : v.Integers O) (hc : ∀ x, c (c x) = x) (P : HTPoin
     exact LinearMap.mem_ker.mpr hker
   · rw [← P.perfect]
     intro x hx
-    rw [_root_.PositivityTheory.HtPt.Gd.e_swap P x w, hw, hℓ x hx]
+    rw [gdChart_e_swap P x w, hw, hℓ x hx]
     exact RingHom.mem_range.mpr ⟨_, map_neg _ _⟩
   · rw [Submodule.restrictScalars_mem]
     simp only [eigSp, Submodule.mem_iInf, LinearMap.mem_ker]
