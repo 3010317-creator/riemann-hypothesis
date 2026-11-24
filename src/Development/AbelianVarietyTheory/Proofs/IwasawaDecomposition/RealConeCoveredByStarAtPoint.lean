@@ -104,8 +104,7 @@ theorem exists_of_mem_rcone_image {n m : ℕ} (u : Fin m → Fin n → ℚ) (x :
   obtain ⟨c, hc, rfl⟩ := hx
   let k : Fin m → ℝ := fun j => ((Finset.univ.filter (fun i => u i = u j)).card : ℝ)
   have hk : ∀ j, 0 < k j := fun j => by
-    simp only [k, Nat.cast_pos, Finset.card_pos]
-    exact ⟨j, by simp⟩
+    simpa only [k, Nat.cast_pos, Finset.card_pos] using ⟨j, by simp⟩
   refine ⟨fun j => c (u j) / k j, fun j => div_nonneg (hc _ (by simp)) (hk j).le, ?_⟩
   refine Finset.sum_image' _ fun j _ => ?_
   have : ∀ i ∈ Finset.univ.filter (fun i => u i = u j), (c (u i) / k i) • castR (u i) = (c (u j) / k j) • castR (u j) :=
@@ -222,8 +221,7 @@ theorem star_cover : ∀ (X : Type) [AddCommGroup X] (m : ℕ) (γ : Fin m → L
   have hzk : ∀ k, (z k : ℝ) = (N : ℝ) * (a k : ℝ) := fun k => by
     have := congrFun hz k
     simp only [GordanCones.toQ, Pi.smul_apply, smul_eq_mul] at this
-    have h2 := congrArg (fun q : ℚ => (q : ℝ)) this
-    simpa using h2
+    simpa using congrArg (fun q : ℚ => (q : ℝ)) this
   have hhR : ∀ β : LinearMap.BilinForm ℤ X, (h β : ℝ) = N * dotR a (fun k => (β (p k).1 (p k).2 : ℝ)) := fun β => by
     rw [hh]; push_cast; simp only [hzk, dotR, Finset.mul_sum]
     exact Finset.sum_congr rfl fun _ _ => by ring

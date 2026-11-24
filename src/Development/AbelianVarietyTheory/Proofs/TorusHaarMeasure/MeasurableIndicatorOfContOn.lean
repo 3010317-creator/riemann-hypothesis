@@ -198,8 +198,7 @@ private theorem submatrix_congr_mul_of_blockTriangular {r k : ℕ} (h : k ≤ r)
   have hz : ∀ (m : Fin r) (c : Fin k), m ∉ Set.range (Fin.castLE h) → N m (Fin.castLE h c) = 0 := by
     intro m c hm
     have hmk : k ≤ (m : ℕ) := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hm ⟨⟨m, hc⟩, Fin.ext rfl⟩
     exact hN (show Fin.castLE h c < m from Fin.lt_iff_val_lt_val.mpr (lt_of_lt_of_le c.isLt hmk))
   ext a c
@@ -300,8 +299,7 @@ theorem vanish_off : (MeasInvStatement (E := E)) → (VanishAtSStatement (E := E
     by_cases hz : cpt X x0 z ∈ U
     · have hzO : z ∈ OmF X x0 := hz.1
       have hzδ : δ ≤ ‖z‖ := by
-        by_contra h
-        push Not at h
+        by_contra! h
         exact hz.2 (cpt_mem_satBall X x0 δ (mem_closedBall_zero_iff.mpr h.le))
       simp only [Set.indicator_of_mem hz]
       rw [hχ z hzδ, ← hPF z hzO, zero_sub, norm_neg, pnorm_eq X la P, mul_pow,
@@ -323,14 +321,12 @@ theorem vanish_off : (MeasInvStatement (E := E)) → (VanishAtSStatement (E := E
     · simp only [Set.indicator_apply, ite_eq_right hz]
       simp
   have hR : ∫⁻ z, φ (cpt X x1 z) ∂muF X x1 < ⊤ := by
-    rw [← hMI r X x0 x1 ho0 ho1 φ hφm hφinv]
-    exact hL
+    rwa [← hMI r X x0 x1 ho0 ho1 φ hφm hφinv]
   have hcc : Continuous (cpt X x1) := (ReciprocityTheory.ChartRestriction.G.AR.Up.OntoB.cd_cpt X x1).continuous
   have hVo : IsOpen {z : V (nd X) | cpt X x1 z ∈ U} := hUo.preimage hcc
   have h0V : (0 : V (nd X)) ∈ {z : V (nd X) | cpt X x1 z ∈ U} := by
     show cpt X x1 0 ∈ U
-    rw [ReciprocityTheory.ChartRestriction.G.AR.Up.IW.cpt_zero X x1]
-    exact hx1U
+    rwa [ReciprocityTheory.ChartRestriction.G.AR.Up.IW.cpt_zero X x1]
   obtain ⟨ε, hε, hεV⟩ := Metric.isOpen_iff.mp hVo 0 h0V
   obtain ⟨ρ, hρdef⟩ : ∃ ρ : ℝ, ρ = ε / 2 := ⟨_, rfl⟩
   have hρ : 0 < ρ := by rw [hρdef]; exact half_pos hε
@@ -391,8 +387,7 @@ theorem vanish_off : (MeasInvStatement (E := E)) → (VanishAtSStatement (E := E
       mul_nonneg (sq_nonneg _) (Real.rpow_nonneg hSn _)
     have hr : 1 ≤ m⁻¹ * (X.nfac la (cpt X x1 z) ^ 2 * Real.exp (-ψ (cpt X x1 z)) *
         (X.nfac L (cpt X x1 z) ^ 2) ^ (-(nd X : ℝ)) * densF X x1 z) := by
-      rw [← div_eq_inv_mul, one_le_div hm]
-      exact hz'
+      rwa [← div_eq_inv_mul, one_le_div hm]
     calc ‖P (cpt X x1 z)‖ ^ 2 * (∑ k, ‖s k (cpt X x1 z)‖ ^ 2) ^ (-(nd X : ℝ))
         = ‖P (cpt X x1 z)‖ ^ 2 * (∑ k, ‖s k (cpt X x1 z)‖ ^ 2) ^ (-(nd X : ℝ)) * 1 := (mul_one _).symm
       _ ≤ ‖P (cpt X x1 z)‖ ^ 2 * (∑ k, ‖s k (cpt X x1 z)‖ ^ 2) ^ (-(nd X : ℝ)) *

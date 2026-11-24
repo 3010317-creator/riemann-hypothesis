@@ -409,15 +409,12 @@ theorem admissible_std [IsTopologicalRing LL] [IsDomain O] [IsDiscreteValuationR
   refine ⟨fun X _ _ _ => admissible_coefRep hc hF _ ((LinearMap.fst O _ _).comp e.toLinearMap) ?_ ?_ X,
     fun c h1 h2 X _ _ _ => ?_⟩
   · exact Prod.fst_surjective.comp e.surjective
-  · intro g x
-    exact congrArg Prod.fst (he g x)
+  · exact fun g x => congrArg Prod.fst (he g x)
   · obtain ⟨c, rfl⟩ : ∃ c', c = c' + 1 := ⟨c - 1, by omega⟩
     refine admissible_coefRep hc hF _ ((LinearMap.proj (⟨c, h2⟩ : Fin D.t)).comp
       ((LinearMap.snd O _ _).comp e.toLinearMap)) ?_ ?_ X
-    · intro a
-      exact ⟨e.symm (0, fun _ => a), by simp⟩
-    · intro g x
-      exact congrFun (congrArg Prod.snd (he g x)) ⟨c, h2⟩
+    · exact fun a => ⟨e.symm (0, fun _ => a), by simp⟩
+    · exact fun g x => congrFun (congrArg Prod.snd (he g x)) ⟨c, h2⟩
 
 end Per
 

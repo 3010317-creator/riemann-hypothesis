@@ -87,8 +87,7 @@ theorem exists_lift {R K O : Type} [CommRing R] [CommRing K] [CommRing O] {n : �
     ext i j
     have := hinj (g.1 i j - (β.1 * (Matrix.of Y).map S.subtype * (β⁻¹).1) i j) (by
       rw [map_sub, sub_eq_zero]; exact congrFun (congrFun e3 i) j)
-    rw [mul_sub, sub_eq_zero] at this
-    exact this
+    rwa [mul_sub, sub_eq_zero] at this
 
 open GlobalTheory.LevSplit GlobalTheory.ParahoricLift Formalism.L2.NTheta GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting
 
@@ -155,8 +154,7 @@ theorem lift_of_integral : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank) (Forma
     · rw [RingHom.map_mul, resS_oToS, Ideal.Quotient.eq_zero_iff_mem.2 hy, mul_zero]
     · have e1 : ((w * oToS D.host.F D.host.E y : Formalism.L2.Herm.intAf D.host.F D.host.E) : Formalism.IndefR.Lev.EAf D) =
           finSw D (e + cA D e) := hw
-      rw [e1]
-      exact hsf
+      rwa [e1]
 
 end GlobalTheory.DownLift.SplitIntLift
 

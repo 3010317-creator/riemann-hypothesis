@@ -249,8 +249,7 @@ theorem iInf_map_le_map_iInf : ∀ {B R : Type} [CommRing B] [CommRing R] [Algeb
   rw [hK] at h
   apply h
   rw [Submodule.mem_iInf]
-  intro i
-  exact (mem_map_algebraMap_iff (K i) x).mp ((Submodule.mem_iInf _).mp hx i)
+  exact fun i => (mem_map_algebraMap_iff (K i) x).mp ((Submodule.mem_iInf _).mp hx i)
 
 end GlobalTheory.FlatIdealInf
 end -- clump:auto
@@ -346,8 +345,7 @@ theorem mem_map_ideal_of_cover : ∀ {X Y' : Scheme.{0}} (ρ : Y' ⟶ X) [QuasiC
   have hzi : z ∈ I.subschemeι ⁻¹ᵁ (W i : Y'.Opens) := hi
   have h0 : (I.subschemeι.app (W i).1).hom ((ρ.appLE U (W i) (hW i)).hom b) = 0 := by
     have := hb i
-    rw [hk, RingHom.mem_ker] at this
-    exact this
+    rwa [hk, RingHom.mem_ker] at this
   have e1 : (ρ.appLE U (W i) (hW i)).hom b = resG Y' (hW i) ((ρ.app U.1).hom b) := rfl
   rw [e1, GlobalTheory.Cartier.app_resG] at h0
   rw [← GlobalTheory.Cartier.germ_resG (I.subschemeι.preimage_mono (hW i)) z hzi, h0, map_zero]
@@ -447,8 +445,7 @@ theorem mem_idlAlong_map_of_flat : ∀ {X Y' : Scheme.{0}} (ρ : Y' ⟶ X) [Quas
   have hW : ∀ i, (W i : Y'.Opens) ≤ ρ ⁻¹ᵁ (U : X.Opens) := fun i => heq ▸ le_sSup i.2
   have hcov : ρ ⁻¹ᵁ (U : X.Opens) ≤ ⨆ i, (W i : Y'.Opens) := by
     rw [heq, sSup_le_iff]
-    intro V hV
-    exact le_iSup (fun i : ι => (W i : Y'.Opens)) ⟨V, hV⟩
+    exact fun V hV => le_iSup (fun i : ι => (W i : Y'.Opens)) ⟨V, hV⟩
   letI : Algebra Γ(X, U) R := (ξ.appLE U ⊤ hle ≫ (Scheme.ΓSpecIso (CommRingCat.of R)).hom).hom.toAlgebra
   haveI : Module.Flat Γ(X, U) R := GlobalTheory.FlatPush.flat_sections_to_chart ξ U hle hx hfl
   let K : ι → Ideal Γ(X, U) := fun i => (I.ideal (W i)).comap (ρ.appLE U (W i) (hW i)).hom

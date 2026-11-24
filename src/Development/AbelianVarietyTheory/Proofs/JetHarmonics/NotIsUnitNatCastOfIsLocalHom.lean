@@ -146,8 +146,7 @@ def jetRename {κ κ' : Type} (e : κ → κ') (m : ℕ) : JetR R κ m →ₐ[R]
       (jet_aug_pow κ' m))
 
 theorem jetRename_zR {κ κ' : Type} (e : κ → κ') (m : ℕ) (j : κ) :
-    jetRename (R := R) e m (zR m j) = zR m (e j) := by
-  exact MvPolynomial.aeval_X _ _
+    jetRename (R := R) e m (zR m j) = zR m (e j) := MvPolynomial.aeval_X _ _
 
 theorem jetRename_comp_of_inverse {κ κ' : Type} (e : κ → κ') (e' : κ' → κ)
     (h : ∀ j, e' (e j) = j) (m : ℕ) :
@@ -171,8 +170,7 @@ theorem psJet_eq_jetOfSeries {n d : ℕ} [Nonempty (Fin n × Fin d)] (m : ℕ) (
 
 theorem substJ_zR {n d : ℕ} (m : ℕ) (φ : Fin d → PS R n d)
     (hφ : ∀ j, MvPowerSeries.constantCoeff (φ j) = 0) (q : Fin 1 × Fin d) :
-    substJ m φ hφ (zR m q) = psJet m (φ q.2) := by
-  exact MvPolynomial.aeval_X _ _
+    substJ m φ hφ (zR m q) = psJet m (φ q.2) := MvPolynomial.aeval_X _ _
 
 theorem jetOfSeries_X {κ : Type} [Finite κ] (m : ℕ) (q : κ) :
     jetOfSeries m (MvPowerSeries.X q : MvPowerSeries κ R) = zR m q := by

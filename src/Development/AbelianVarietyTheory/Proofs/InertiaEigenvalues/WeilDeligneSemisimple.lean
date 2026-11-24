@@ -90,8 +90,7 @@ theorem isSemisimpleRepresentation_of_isSmooth [FiniteDimensional ℂ V]
   refine ⟨fun P => ?_⟩
   have hPinv : P.toSubmodule ∈ Module.End.invtSubmodule (ρ (frob h ^ m)) := by
     rw [Module.End.mem_invtSubmodule]
-    intro v hv
-    exact P.apply_mem_toSubmodule _ hv
+    exact fun v hv => P.apply_mem_toSubmodule _ hv
   obtain ⟨Q, hQ, hc⟩ := (Module.End.isSemisimple_iff.mp (hss (frob h ^ m))) _ hPinv
   rw [Module.End.mem_invtSubmodule] at hQ
   let p : Module.End ℂ V := P.toSubmodule.projection Q hc
@@ -201,8 +200,7 @@ theorem isSemisimpleRepresentation_of_isSmooth [FiniteDimensional ℂ V]
   · rw [isCompl_iff, disjoint_iff, codisjoint_iff,
       ← Subrepresentation.toSubmodule_injective.eq_iff,
       ← Subrepresentation.toSubmodule_injective.eq_iff]
-    rw [isCompl_iff, disjoint_iff, codisjoint_iff] at hcompl
-    exact hcompl
+    rwa [isCompl_iff, disjoint_iff, codisjoint_iff] at hcompl
 
 end GlobalTheory.WeilDeligne
 

@@ -314,14 +314,12 @@ lemma sub_mem_of_u_eq (h : M.Ok) {p p' : ℂ} (hp : M.Small p) (hp' : M.Small p'
       have h0 := hW
       unfold Mdl.w at h0
       simp only [hL, hL', ite_false] at h0
-      rw [neg_div, neg_div, neg_inj, one_div, one_div, inv_inj] at h0
-      exact h0
+      rwa [neg_div, neg_div, neg_inj, one_div, one_div, inv_inj] at h0
     have hx : M.x p = M.x p' := by
       have h0 := e
       unfold Mdl.u at h0
       simp only [hL, hL', ite_false] at h0
-      rw [hy, div_left_inj' hy0, neg_inj] at h0
-      exact h0
+      rwa [hy, div_left_inj' hy0, neg_inj] at h0
     obtain ⟨φ, -, hker, hφ⟩ := Mdl.exists_pointHom q M h
     obtain ⟨h1, e1⟩ := hφ p hL
     obtain ⟨h2, e2⟩ := hφ p' hL'
@@ -459,8 +457,7 @@ theorem at_exists_unique : ∀ (q : ℕ) [Fact q.Prime] (M : Mdl q) (ω : ℂ_[q
     obtain ⟨-, hζ1, he1⟩ := (hAt _ _).1 h1
     obtain ⟨-, hζ2, he2⟩ := (hAt _ _).1 h2
     have := norm_ev_sub_eq hbd hc1 hζ1 hζ2
-    rw [he1, he2, sub_self, norm_zero, eq_comm, norm_eq_zero, sub_eq_zero, sub_left_inj] at this
-    exact this
+    rwa [he1, he2, sub_self, norm_zero, eq_comm, norm_eq_zero, sub_eq_zero, sub_left_inj] at this
   · intro ζ p p' h1
     obtain ⟨hp, hζ, he⟩ := (hAt _ _).1 h1
     constructor

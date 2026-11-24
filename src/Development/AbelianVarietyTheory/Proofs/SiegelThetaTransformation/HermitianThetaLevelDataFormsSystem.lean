@@ -1223,9 +1223,7 @@ theorem tail_le (hs : IsSympl X bas) (hn : 4 * (Module.finrank ℚ E * r) + 4 �
   let c : {L' // L' ∈ 𝓛 ∧ L' ≠ L} → ℂ := fun i => (((f i : ℝ) ^ (-(n : ℝ) / 2) : ℝ) : ℂ)
   have hnorm : ∀ i, ‖c i‖ = (f i : ℝ) ^ (-(n : ℝ) / 2) := fun i =>
     Complex.norm_of_nonneg (Real.rpow_nonneg (Nat.cast_nonneg _) _)
-  have res := tail_sum_lt_one f _ n hρn h2 hc c fun i => (hnorm i).le
-  simp only [hnorm] at res
-  exact res
+  simpa only [hnorm] using tail_sum_lt_one f _ n hρn h2 hc c fun i => (hnorm i).le
 
 theorem norm_eq_one_of_ip {φ : TF n g} (hφ : IsSB φ) (h1 : SW.ip φ φ = 1) {c : ℂ}
     (h : SW.ip (c • φ) (c • φ) = 1) : ‖c‖ = 1 := by
@@ -1287,8 +1285,7 @@ theorem isSystem_level : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   have htn := RecSys.norm_eq_one_of_ip hvac'.1 hvac'.2.1 hip
   have hl := hlam ⟨k, hkJ⟩
   refine ⟨?_, fun Λ hΛ => ?_⟩
-  · rw [norm_mul, hl, mul_one] at htn
-    exact htn
+  · rwa [norm_mul, hl, mul_one] at htn
   · rw [(T4 L hL Λ hΛ).2.2.2 γ hγ ⟨k, hkJ⟩ hred _ htn hrel, mul_inv_cancel_right₀ (Units.ne_zero _)]
 
 end GlobalTheory.SW

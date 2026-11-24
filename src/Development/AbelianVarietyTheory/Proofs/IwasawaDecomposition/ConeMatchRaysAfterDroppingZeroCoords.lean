@@ -64,8 +64,7 @@ theorem coef_eq {n : ℕ} {P : Fin n → V} (hP : LinearIndependent ℝ P) {a b 
   funext i; exact sub_eq_zero.1 (this i)
 
 theorem exists_pos_of_sum_eq_one {n : ℕ} (f : Fin n → ℝ) (h : ∑ i, f i = 1) : ∃ i, 0 < f i := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   have : ∑ i, f i ≤ 0 := Finset.sum_nonpos fun i _ => hc i
   linarith
 
@@ -87,8 +86,7 @@ theorem match_vec {k m : ℕ} (P : Fin k → V) (Q : Fin m → V) (hP : LinearIn
   have hcD : ∀ j, c j = ∑ i, t i * D i j := by
     have h1 : ∑ j, c j • Q j = ∑ j, (∑ i, t i * D i j) • Q j := by
       rw [← hsum]
-      simp only [hD, Finset.smul_sum, smul_smul, Finset.sum_smul]
-      exact Finset.sum_comm
+      simpa only [hD, Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
     exact congrFun (coef_eq hQ h1)
   have hDz : ∀ i j, ¬ 0 < c j → D i j = 0 := fun i j h => by
     have h0 : c j = 0 := le_antisymm (not_lt.1 h) (hc j)
@@ -105,16 +103,14 @@ theorem match_vec {k m : ℕ} (P : Fin k → V) (Q : Fin m → V) (hP : LinearIn
     have h1 : ∑ l, (if i = l then (1 : ℝ) else 0) • P l = ∑ l, (∑ j, D i j * E j l) • P l := by
       rw [show ∑ l, (if i = l then (1 : ℝ) else 0) • P l = P i by simp [ite_smul]]
       conv_lhs => rw [hD i]
-      simp only [hDQ, Finset.smul_sum, smul_smul, Finset.sum_smul]
-      exact Finset.sum_comm
+      simpa only [hDQ, Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
     exact (congrFun (coef_eq hP h1) l).symm
   have hED : ∀ j, 0 < c j → ∀ j', ∑ l, E j l * D l j' = if j = j' then 1 else 0 := by
     intro j hj j'
     have h1 : ∑ j', (if j = j' then (1 : ℝ) else 0) • Q j' = ∑ j', (∑ l, E j l * D l j') • Q j' := by
       rw [show ∑ j', (if j = j' then (1 : ℝ) else 0) • Q j' = Q j by simp [ite_smul]]
       conv_lhs => rw [hE j hj]
-      simp only [hD, Finset.smul_sum, smul_smul, Finset.sum_smul]
-      exact Finset.sum_comm
+      simpa only [hD, Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
     exact (congrFun (coef_eq hQ h1) j').symm
   have single : ∀ i j, 0 < D i j * E j i → 0 < c j ∧ 0 < D i j ∧ P i = D i j • Q j := by
     intro i j hpos

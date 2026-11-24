@@ -968,8 +968,7 @@ theorem abLocus_eq_univ_of_definite (Xo : Moduli Dw l) (hq : Dw.q = 0) (T : CDVR
   have h₃ : ActsBy G.G (G.act.act H.w0) (𝟙 _) z₀ := by
     refine actsBy_of_injective (a.comp (algebraMap T.V T.Fr))
       (a.injective.comp (IsFractionRing.injective T.V T.Fr)) _ _ ?_
-    rw [Category.comp_id, ← sp_comp, RingHom.comp_apply, hz₀]
-    exact h₂
+    rwa [Category.comp_id, ← sp_comp, RingHom.comp_apply, hz₀]
   refine Set.eq_univ_of_forall fun p K _ _ t _ => ?_
   obtain ⟨j, hj⟩ := Spec.map_surjective t
   have h₄ := actsBy_baseChange (k := K) j.hom (𝟙 _) _ h₃
@@ -1134,8 +1133,7 @@ theorem exists_model (hr : 1 ≤ Dw.p + Dw.q) (Xo : Moduli Dw l) (c : Coeff l) (
       IsOpen (abLocus Y.t.G) ∧ Y.SplitFibres ∧ Y.N3 ∧ Y.N4 :=
     ⟨_, h.2.2.1, hU ▸ U.isOpen, (hY p W hp hW).2 ⟨l, c, hg⟩⟩
   have he : c.V W = (la.valuation c.F).valuationSubring := hWe
-  rw [he, hX] at h'
-  exact h'
+  rwa [he, hX] at h'
 
 alias sp_comp := _root_.Formalism.L2.Pj.spMap_comp_ring
 

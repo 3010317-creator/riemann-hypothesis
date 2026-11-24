@@ -101,8 +101,7 @@ theorem colLat_block {K : Type} [Field K] [NumberField K] {N n : ℕ} (hN : N = 
     simp only [e1, e2]
     rcases cases_idx hN a with rfl | ⟨a, rfl⟩
     · simp only [h3, (h2 _).2, mul_zero, Finset.sum_const_zero, zero_add, hd]
-    · simp only [h1, (h2 _).1, mul_zero, add_zero]
-      exact hc a
+    · simpa only [h1, (h2 _).1, mul_zero, add_zero] using hc a
 
 theorem localization_sumLat_le {K : Type} [Field K] [NumberField K] {N n : ℕ} (hN : N = n + 1) (w : HeightOneSpectrum (𝓞 K))
     (M M₂ : Submodule (𝓞 K) (Fin n → K)) (t : K) (h : Formalism.HermitianLatticesTheory.localization₂ w.asIdeal M ≤ Formalism.HermitianLatticesTheory.localization₂ w.asIdeal M₂) :
@@ -260,8 +259,7 @@ theorem brOne_mem (hN : N = n + 1) (lam : DomWeight N) (sg : DomWeight n) (f : M
   simp only [brOne, LinearMap.comp_apply, AlgHom.toLinearMap_apply, Submodule.subtype_apply]
   obtain ⟨g, hg, e⟩ := exists_ten_unit (brStdP (K := K) hN (fun _ : Unit => lam) (fun _ : Unit => sg)
     (rename (fun v : Fin N × Fin N => (((), v) : Unit × Fin N × Fin N)) f)).2
-  rw [e, ten_unit, rename_snd_unit]
-  exact hg
+  rwa [e, ten_unit, rename_snd_unit]
 
 theorem brOne_sqAct [CharZero K] (hN : N = n + 1) {lam : DomWeight N} {sg : DomWeight n} (hI : Interlace hN lam sg)
     (hS : SameShift lam sg) (g : GL (Fin n) K) {f : MvPolynomial (Fin N × Fin N) K} (hf : f ∈ nablaSq K N lam) :
@@ -579,8 +577,7 @@ theorem integrality (h6 : Formalism.MainNotions.PrimeDegreeVariant.Conclusion6) 
   rw [← rhoK_coe] at h1 ⊢
   rw [← brAt_eq_pullback hN hI hS B _ t ht hb G]
   have h2 := brStd_mem_delStd (onePlace h6) hN hI hS (s • _) h1
-  rw [LinearMap.map_smul_of_tower] at h2
-  exact h2
+  rwa [LinearMap.map_smul_of_tower] at h2
 
 end GlobalTheory.BranchFormula
 end -- clump:auto

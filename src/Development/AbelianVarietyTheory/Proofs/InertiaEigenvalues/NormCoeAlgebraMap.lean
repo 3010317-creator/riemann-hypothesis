@@ -274,16 +274,14 @@ theorem exists_gam_gamK_torsion :
         have e : ((w * (g : ℤ_[l]ˣ)⁻¹ : ℤ_[l]ˣ) : ℤ_[l]) - 1 =
             ((w : ℤ_[l]) - ((g : ℤ_[l]ˣ) : ℤ_[l])) * (((g : ℤ_[l]ˣ)⁻¹ : ℤ_[l]ˣ) : ℤ_[l]) := by
           rw [sub_mul, Units.mul_inv, Units.val_mul]
-        rw [e, norm_mul, PadicInt.norm_units, mul_one]
-        exact hwg
+        rwa [e, norm_mul, PadicInt.norm_units, mul_one]
       have := Γ.mul_mem hmul g.2
       rwa [inv_mul_cancel_right] at this
     have hwT : (⟨w, hwΓ⟩ : Γ) ∈ CommGroup.torsion Γ := by
       obtain ⟨k, hk, hwk⟩ := isOfFinOrder_iff_pow_eq_one.1 hw
       exact isOfFinOrder_iff_pow_eq_one.2 ⟨k, hk, Subtype.ext (by rw [Subgroup.coe_pow, Subgroup.coe_one]; exact hwk)⟩
     have hwN : (w : ℤ_[l]) ^ hTfin.toFinset.card = 1 := by
-      have h1 := congrArg (fun x : Γ => ((x : ℤ_[l]ˣ) : ℤ_[l])) (hDpow _ hwT)
-      simpa using h1
+      simpa using congrArg (fun x : Γ => ((x : ℤ_[l]ˣ) : ℤ_[l])) (hDpow _ hwT)
     obtain ⟨c, hc⟩ := sub_dvd_pow_sub_pow ((g : ℤ_[l]ˣ) : ℤ_[l]) (w : ℤ_[l]) hTfin.toFinset.card
     apply norm_le_inv_of_lt_one
     rw [← hwN, hc, norm_mul, norm_sub_rev]

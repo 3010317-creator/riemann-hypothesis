@@ -296,8 +296,7 @@ theorem leviV_log_norm {d : V n → ℂ} {e c : ℂ} (he : e * e = 1) (hreal : �
     simpa [Function.comp_def] using this
   have hv : Complex.normSq (d x) = 1 := by
     have := h2.val
-    simp [cJ, sJ, tJ, he] at this
-    exact this
+    simpa [cJ, sJ, tJ, he] using this
   have hh : dDir ξ (fun y => ((Complex.normSq (d y) : ℝ) : ℂ)) x = 0 := by
     rw [h2.hol]; simp [cJ, sJ, tJ]
   have hl : leviV n (fun y => ((Complex.normSq (d y) : ℝ) : ℂ)) x ξ = 2 * c := by

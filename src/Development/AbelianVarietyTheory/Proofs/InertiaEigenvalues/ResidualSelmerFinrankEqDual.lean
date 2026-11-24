@@ -467,8 +467,7 @@ theorem bkOn_orthogonal : LocalTateDuality → ∀ (D : Formalism.BasicNotions.D
     have hca : Continuous fun g => d' g a := (continuous_apply a).comp hd'.continuous
     refine (IsLocallyConstant.iff_eventually_eq _).2 fun g => ?_
     filter_upwards [(hopen.preimage (hca.sub (continuous_const (y := d' g a)))).mem_nhds (x := g) (by simp)] with h hh
-    rw [← sub_eq_zero, ← map_sub, IsLocalRing.residue_eq_zero_iff]
-    exact hh
+    rwa [← sub_eq_zero, ← map_sub, IsLocalRing.residue_eq_zero_iff]
   obtain ⟨f, hf, ef⟩ := (_root_.GlobalTheory.BKLatticeCochain.lift_iff_orthogonal D N X bkP i s hG ρ hρ v hv ϖ hϖ d' hlc (fun g h a => by
     rw [hd'.cocycle, hρ]; simp)).1 ⟨d', hd', fun g a => by simp⟩ d hd
   obtain ⟨ι, hι, eι⟩ := exists_residue_embedding hϖ
@@ -843,8 +842,7 @@ theorem residue_globalCyclotomicCharacter (i : X.Tw) (g : GE N) :
   have := congrArg (fun t => IsLocalRing.residue _ (algebraMap ℤ_[X.l i] (X.O0 i) t)) hw
   simp only [map_sub, map_mul, map_natCast, pow_one] at this
   rw [map_natCast] at h0
-  rw [h0, zero_mul, sub_eq_zero] at this
-  exact this
+  rwa [h0, zero_mul, sub_eq_zero] at this
 
 theorem Tmat_eq_one {bkP : BKPh X} {i : X.Tw} {s : X.Sig i} (h : GalHyp bkP i s) {v : PlE D.host}
     (hl : v ∉ placesOver D.host.E (X.l i)) (hS : v ∉ Spl (X := X) i) (B : ValuationSubring N.Om) (hB : IsPlaceOver B v)
@@ -905,8 +903,7 @@ theorem card_eq (hPT : PoitouTateTotallyComplex) (hLF : LocalFiniteness) (hLD : 
       · exact X.primes_subset_exceptional i h1, hv⟩⟩
   have hdis : Disjoint Sl Sp := Finset.disjoint_left.2 fun v h1 h2 => ((hSp v).1 h2).2 ((hSl v).1 h1)
   have hnot : ∀ v ∉ Sl ∪ Sp, v ∉ placesOver D.host.E (X.l i) ∧ v ∉ Spl (X := X) i := fun v hv => by
-    rw [Finset.mem_union, not_or, hSl, hSp] at hv
-    exact hv
+    rwa [Finset.mem_union, not_or, hSl, hSp] at hv
   have van := fun v (hv : v ∈ Spl (X := X) i) => GlobalTheory.PrimeToInertia.local_cohomology_vanishes D N X bkP i s h v hv (IsLocalRing.ResidueField (X.O0 i)) 1 hker
     (fun g => ⟨0, by simp⟩) (IsLocalRing.ResidueField (X.O0 i)) htors (Tgl i s) (Or.inl rfl)
   have cl : ∀ (τ : GE N →* GL (Fin D.R.r) (X.O0 i)) v, v ∈ placesOver D.host.E (X.l i) →
@@ -957,8 +954,7 @@ theorem card_eq (hPT : PoitouTateTotallyComplex) (hLF : LocalFiniteness) (hLD : 
     mul_pos (Finset.prod_pos fun v _ => Nat.card_pos) (pow_pos Nat.card_pos _)
   refine Nat.eq_of_mul_eq_mul_right hpos ?_
   simp only [Nat.card_unique, mul_one] at e
-  rw [← mul_assoc]
-  exact e
+  rwa [← mul_assoc]
 
 theorem finrank_eq_of_card_eq {k V V' : Type} [Field k] [Finite k] [AddCommGroup V] [Module k V] [AddCommGroup V']
     [Module k V'] (f : Finite V) (f' : Finite V') (e : Nat.card V = Nat.card V') :

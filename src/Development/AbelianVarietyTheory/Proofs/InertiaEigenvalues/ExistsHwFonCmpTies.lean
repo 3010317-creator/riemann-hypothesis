@@ -130,8 +130,7 @@ theorem reps_mul {G : Type*} [Group G] {H V U : Subgroup G} (hVH : V ≤ H) (hUV
     obtain ⟨s, ⟨hs, hsh⟩, hsu⟩ := hS.2 h hh
     obtain ⟨t, ⟨ht, hth⟩, htu⟩ := hT.2 _ hsh
     refine ⟨(s, t), ⟨Finset.mem_product.2 ⟨hs, ht⟩, ?_⟩, ?_⟩
-    · rw [mul_inv_rev, mul_assoc]
-      exact hth
+    · rwa [mul_inv_rev, mul_assoc]
     · rintro ⟨s', t'⟩ ⟨hm, hp⟩
       obtain ⟨hs', ht'⟩ := Finset.mem_product.1 hm
       rw [mul_inv_rev, mul_assoc] at hp
@@ -876,8 +875,7 @@ theorem res_eq_one_iff {P : LocPrime l} {K : FinExt l} {s : ℕ} {LL : FinExt l}
     rw [hg, Units.val_one, map_one] at h
     apply Γ.χΓ_inj
     rw [map_one]
-    apply Units.ext
-    exact Subtype.ext h
+    exact Units.ext (Subtype.ext h)
 
 
 
@@ -917,8 +915,7 @@ theorem sepRA' (LL : FinExt l) (e : OCb l) (he : ¬ IsUnit (e - 1)) (t : RA LL)
     (hx : ∀ k, (t - 1) ^ k ∣ x) : x = 0 := by
   refine sepRA LL e he x ?_
   have h := tmul_sub_one LL (WittVector.teichmuller l e)
-  rw [h, ht]
-  exact hx
+  rwa [h, ht]
 
 theorem teich_pow (LL : FinExt l) (e : OCb l) :
     ((1 : ↥(OL LL)) ⊗ₜ[ℤ_[l]] WittVector.teichmuller l (e ^ l) : RA LL) =
@@ -934,8 +931,7 @@ theorem γ₀_X_eq {K : FinExt l} {s : ℕ} {LL : FinExt l} {Γ : GamS P K s LL}
   have hlin : (Γ.χΓ (Γ.resΓ g) : ↥(OL LL)) = algebraMap ℤ_[l] ↥(OL LL) c := by
     apply Subtype.ext
     have := Γ.χΓ_res g
-    rw [P.PD_χ, ← hc] at this
-    exact this
+    rwa [P.PD_χ, ← hc] at this
   have hact := (GlobalTheory.Cyc.act_unique l ↥(OL LL) hl0 hlu (R.γ₀ (Γ.resΓ g)) R.φ₀ c h0
     (R.γ₀_comm _) (R.γ₀_X _).1 ((R.γ₀_X _).2.trans hlin)).2
   rw [hact, (_root_.GlobalTheory.Cyc.act_laws l ↥(OL LL)).1, GlobalTheory.Cyc.cyc]

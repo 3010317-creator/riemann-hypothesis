@@ -290,8 +290,7 @@ theorem exists_adapted {H : Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw
   have hw' : ∀ τ (i : Fin (Dw.mult τ)),
       IsDerivAt0 (fun z => (F.ex k P z).left) (w (e.symm ⟨τ, i⟩)) (y.u τ i) := fun τ i => by
     have := hw (e.symm ⟨τ, i⟩)
-    rw [Equiv.apply_symm_apply] at this
-    exact this
+    rwa [Equiv.apply_symm_apply] at this
   have hsp : ∀ j, ∃ a : Fin (Dw.mult (e j).1) → ℂ, ∑ i, a i • w (e.symm ⟨(e j).1, i⟩) = Pi.single j 1 := by
     intro j
     obtain ⟨v, hv⟩ := (ht2 (Pi.single j 1)).exists
@@ -316,8 +315,7 @@ theorem exists_adapted {H : Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw
   refine ⟨V, P', hVu, hVt, hP'e, hP', hy.symm.trans hu, fun τ i => ?_⟩
   have := (GlobalTheory.ExpChain.isDerivAt0_ex_iff E H Dw l Xo _ g _ F k P hP k P' (Matrix.mulVecLin V) hP' hex
     _ _).1 (hw' τ i)
-  rw [Matrix.mulVecLin_apply, hVw] at this
-  exact this
+  rwa [Matrix.mulVecLin_apply, hVw] at this
 
 theorem exists_frBor {H : Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {σ : c.F →+* ℂ}
     (U : Unf Xo c σ r) (hU : IsUnf U) (hσ : GoodEmb c σ) (k : U.Comp) (x : (U.X k).dom) (y : FrPt Xo c (CAt σ))

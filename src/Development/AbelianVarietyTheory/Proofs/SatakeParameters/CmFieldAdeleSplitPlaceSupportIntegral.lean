@@ -136,8 +136,7 @@ theorem mem_ALint_of_supported_at_split : ∀ (L : Type) [Field L] [NumberField 
     have hm : A s.v = s.proj (L := L) z - s.i (e : L) * B s.v := by rw [h1]; ring
     rw [hm]
     refine Valuation.map_sub_le _ hp ?_
-    rw [map_mul, he, one_mul]
-    exact hBv
+    rwa [map_mul, he, one_mul]
   have hAi : ∀ w, A w ∈ w.adicCompletionIntegers (maximalRealSubfield L) := by
     intro w
     rcases eq_or_ne w s.v with rfl | hw

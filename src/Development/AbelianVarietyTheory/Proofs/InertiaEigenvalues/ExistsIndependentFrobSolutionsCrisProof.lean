@@ -194,8 +194,7 @@ theorem GlobalTheory.onto_OC_additive_poly : ∀ (l : ℕ) [Fact l.Prime] (E N :
     · intro h; exact absurd (Finset.mem_range.2 (by omega)) h
   have hbound : ∀ j, ‖f.coeff j‖ ≤ 1 := by
     intro j
-    rw [hcoeff]
-    rw [sub_eq_add_neg]
+    rw [hcoeff, sub_eq_add_neg]
     refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ?_ ?_)
     · refine IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg zero_le_one ?_
       intro k hk
@@ -288,10 +287,8 @@ theorem coeff_sum_monomial_pow (l : ℕ) [Fact l.Prime] (E : ℕ) (a : ℕ → �
   · simp [coeff_monomial]
   · intro i _ hik
     rw [coeff_monomial, Finsupp.single_apply, ite_eq_right]
-    intro h
-    exact hik (Nat.pow_right_injective hl h)
-  · intro h
-    exact absurd (Finset.mem_range.mpr (by omega)) h
+    exact fun h => hik (Nat.pow_right_injective hl h)
+  · exact fun h => absurd (Finset.mem_range.mpr (by omega)) h
 
 theorem coeff_sum_monomial_small (l : ℕ) [Fact l.Prime] (E M : ℕ) (a : ℕ → ℂ_[l]) (ρ : ℝ)
     (hρ : 0 < ρ)
@@ -312,8 +309,7 @@ theorem coeff_sum_monomial_small (l : ℕ) [Fact l.Prime] (E M : ℕ) (a : ℕ �
       rw [coeff_monomial, Finsupp.single_apply, ite_eq_right]
       intro hij
       exact h ⟨i, by have := Finset.mem_range.mp hi; omega, hij⟩
-    rw [h0, norm_zero, zero_mul]
-    exact hlpos
+    rwa [h0, norm_zero, zero_mul]
 
 theorem few_roots_small_disc : ∀ (l : ℕ) [Fact l.Prime] (E M : ℕ) (a : ℕ → ℂ_[l]) (ρ : ℝ) (W : ℂ_[l]), M ≤ E → (∀ k, k ≤ E → ‖a k‖ ≤ 1) → 0 < ρ → ρ < 1 → ‖a M‖ * ρ ^ l ^ M = ‖(l : ℂ_[l])‖ → (∀ k, M < k → k ≤ E → ‖a k‖ * ρ ^ l ^ k < ‖(l : ℂ_[l])‖) → ‖W‖ ≤ 1 → Multiset.card ((∑ k ∈ Finset.range (E + 1), Polynomial.monomial (l ^ k) (a k) : Polynomial ℂ_[l]).roots.filter fun z => ‖z - W‖ ≤ ρ) ≤ l ^ M := by
   intro l _ E M a ρ W hME ha hρ0 hρ1 hM hgt hW
@@ -672,8 +668,7 @@ theorem window_around_last_max : ∀ (β : ℤ → ℝ) (c : ℝ) (h : ℕ), 0 <
   rw [hx]
   refine ⟨by omega, by omega, hc₀, fun k => hN ▸ hmax k, fun k hk => hNlast k hk, ?_⟩
   intro k hk
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have := hFB k hlt.le
   omega
 
@@ -787,8 +782,7 @@ theorem poly_root_mod_l : ∀ (l : ℕ) [Fact l.Prime] (h : ℕ) (μ : Fin h →
       (mul_nonneg hP0.le (norm_nonneg _)) hS (by
         intro j hj
         have hj' : j < -(D:ℤ) ∨ (E:ℤ) - D < j := by
-          by_contra hc
-          push Not at hc
+          by_contra! hc
           apply hj
           rw [Finset.mem_image]
           exact ⟨(j + D).toNat, Finset.mem_range.2 (by omega), by omega⟩
@@ -801,8 +795,7 @@ theorem poly_root_mod_l : ∀ (l : ℕ) [Fact l.Prime] (h : ℕ) (μ : Fin h →
       refine Finset.sum_congr rfl fun k _ => ?_
       rw [sub_add_cancel, pwnat, shpow]
       field_simp
-    rw [heq] at htr
-    exact htr
+    rwa [heq] at htr
 
 end GlobalTheory.PolyRoot
 end -- clump:auto
@@ -841,8 +834,7 @@ theorem GlobalTheory.oneVarCount_onto_independentZeros : ∀ (l : ℕ) [Fact l.P
     refine ⟨σ * u ^ l ^ D, hshv u, ?_⟩
     have key := hpoly u
     have e : t * (t' / t) = t' := by field_simp
-    rw [hu, hPW, e] at key
-    exact key
+    rwa [hu, hPW, e] at key
   · have hρ0 : 0 < ρ := lt_of_lt_of_le hl0 hρl
     obtain ⟨Z, hZc, hZ, hsep⟩ := _root_.GlobalTheory.separated_roots_additive_poly l E M h a ρ hME ha haN hρ0 hρ1 haM hak
     choose! u hu using fun (W : ℂ_[l]) (hW : ‖W‖ ≤ 1) => shsurj W hW
@@ -869,8 +861,7 @@ theorem GlobalTheory.oneVarCount_onto_independentZeros : ∀ (l : ℕ) [Fact l.P
       have hmem' : ‖sh (v W - v W')‖ ≤ ‖(l : ℂ_[l])‖ ^ l ^ h := hmem
       rw [hvd, shmul, shpow, hσ, norm_mul, norm_pow, ← hρD] at hmem'
       have hd : ‖sh (u W - u W')‖ ≤ ρ := by
-        by_contra hcon
-        push Not at hcon
+        by_contra! hcon
         have h1 : ρ ^ l ^ D < ‖sh (u W - u W')‖ ^ l ^ D := pow_lt_pow_left₀ hcon hρ0.le (hlD D)
         have h2 := mul_lt_mul_of_pos_left h1 hl0
         linarith
@@ -885,8 +876,7 @@ theorem GlobalTheory.oneVarCount_onto_independentZeros : ∀ (l : ℕ) [Fact l.P
     refine ⟨fun b => v (x b), fun b => hshv (u (x b)), ?_, fun n hn => hx n hn⟩
     intro b
     have key := hpoly (u (x b))
-    rw [hu _ (hZ _ (hxZ b)).1, (hZ _ (hxZ b)).2, mul_zero, sub_zero] at key
-    exact key
+    rwa [hu _ (hZ _ (hxZ b)).1, (hZ _ (hxZ b)).2, mul_zero, sub_zero] at key
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UntiltFrobeniusSeriesOntoAndIndependentZeros =====
@@ -957,8 +947,7 @@ theorem GlobalTheory.PMon.exI_of_ser_core (hser : ∀ (l : ℕ) [Fact l.Prime] (
   let μ' : Fin h → ℂ_[l] := fun i => θ ⟨μ i, (hS _).2 (hμ i)⟩
   have hμ' : μ' ≠ 0 := by
     obtain ⟨i, hi⟩ := hne
-    intro h0
-    exact hi ((hker ⟨μ i, (hS _).2 (hμ i)⟩).1 (congrFun h0 i))
+    exact fun h0 => hi ((hker ⟨μ i, (hS _).2 (hμ i)⟩).1 (congrFun h0 i))
   obtain ⟨y, hy, hz, hind⟩ := hcore l h μ' hh hμ'
   choose b hplus hφ hev using fun a => hb h _ (y a) hh GlobalTheory.RingBasics.norm_p_lt (hy a)
   choose hm hev using hev

@@ -74,14 +74,12 @@ theorem tprod_tprod_update_sigma [DecidableEq (Σ a, β a)] (x : ∀ p, M p) (a�
     · subst hb
       simp
     · rw [Function.update_of_ne hb, Function.update_of_ne]
-      intro h'
-      exact hb (eq_of_heq (Sigma.mk.inj h').2)
+      exact fun h' => hb (eq_of_heq (Sigma.mk.inj h').2)
   · rw [Function.update_of_ne h]
     congr 1
     funext b
     rw [Function.update_of_ne]
-    intro h'
-    exact h (congrArg Sigma.fst h')
+    exact fun h' => h (congrArg Sigma.fst h')
 
 def curryML : (∀ p, M p) →ₘₗ[ℂ] ⨂[ℂ] a, ⨂[ℂ] b, M ⟨a, b⟩ where
   toFun x := tprod ℂ fun a => tprod ℂ fun b => x ⟨a, b⟩
@@ -115,8 +113,7 @@ theorem sigmaCurry_eq_lift : (sigmaCurry M : (⨂[ℂ] p, M p) →ₗ[ℂ] _) = 
 
 @[simp] theorem sigmaCurry_tprod (x : ∀ p, M p) :
     sigmaCurry M (tprod ℂ x) = tprod ℂ fun a => tprod ℂ fun b => x ⟨a, b⟩ := by
-  have h := LinearMap.congr_fun (sigmaCurry_eq_lift M) (tprod ℂ x)
-  simpa [curryML_apply] using h
+  simpa [curryML_apply] using LinearMap.congr_fun (sigmaCurry_eq_lift M) (tprod ℂ x)
 
 end SigmaCurry
 

@@ -467,8 +467,7 @@ theorem εroot_pow (j : ℕ) : AI.εroot j ^ l ^ j = AI.ε := by
   induction j with
   | zero => simp [LocAinf.εroot]
   | succ j ih =>
-    rw [pow_succ', pow_mul, LocAinf.εroot, Function.iterate_succ_apply', frobeniusEquiv_symm_pow_p]
-    exact ih
+    rwa [pow_succ', pow_mul, LocAinf.εroot, Function.iterate_succ_apply', frobeniusEquiv_symm_pow_p]
 
 theorem εroot_sub_pow (j : ℕ) : (AI.εroot j - 1) ^ l ^ j = AI.ε - 1 := by
   rw [sub_pow_char_pow, εroot_pow, one_pow]
@@ -589,8 +588,7 @@ theorem exists_near (K LL : FinExt l) (s : ℕ) (D : Subring (RW LL))
   have hfix : ∀ g ∈ Hinf K, AI.gRW LL g x' = x' := fun g hg => by
     have h1 := (map_mul (AI.gRW LL g) (piR AI LL s ^ N) x).trans
       (congrArg₂ (· * ·) ((map_pow (AI.gRW LL g) _ N).trans (congrArg (· ^ N) (hπ g hg))) (hx g hg))
-    rw [hx']
-    exact h1
+    rwa [hx']
   have hzf : ∀ i, ∀ g ∈ Hinf K, AI.actT g (z i) = z i := fun i g hg => by
     apply IsFractionRing.injective (OCb l) (Cb l)
     rw [← autCb_alg, ← hz', ← coeff_actWCbHom, ← crd_gRW, hfix g hg]
@@ -694,8 +692,7 @@ theorem descent_of_tie (hO : Function.Injective (algebraMap O LL)) {p : ℕ} (hp
       ((GlobalTheory.EtaleExact.ioE_injective E).comp W.EE_inj) c ?_ h
     have := iter_sc_cst E hO c n
     simp only [CharP.cast_eq_zero, sub_zero] at this
-    rw [RingHom.comp_apply, hσ₀]
-    exact this
+    rwa [RingHom.comp_apply, hσ₀]
   let S : Subring RW := ⨅ g ∈ {g | W.resΓ g = 1},
     RingHom.eqLocus (gR g : RW →+* RW) (RingHom.id _)
   have hS : ∀ x, x ∈ S ↔ ∀ g, W.resΓ g = 1 → gR g x = x := fun x => by
@@ -739,8 +736,7 @@ theorem resΓ_eq_one (P : LocPrime l) (K LL : FinExt l) (W : Wach P K LL) (g : �
   apply Units.ext
   apply Subtype.ext
   have := W.χΓ_res g
-  rw [P.PD_χ, h1, Units.val_one, map_one] at this
-  exact this
+  rwa [P.PD_χ, h1, Units.val_one, map_one] at this
 
 theorem frob_iter_teich (j : ℕ) (x : OCb l) :
     (frobW l)^[j] (inclW l (WittVector.teichmuller l x)) =
@@ -799,8 +795,7 @@ theorem mem_range_of_fixed : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI :
       exact mem_perfE_of_io E.tie hO l h1
   · have h1 := ioE_fixed E.tie hO ⟨g, Hinf_le_GK h hg⟩ (resΓ_eq_one P K LL W _ hg)
       (algebraMap (LetA ↥(OL LL) (Module.finrank ℚ_[l] ↥(K0 K))) W.EE letπ)
-    rw [ioE_π E.tie] at h1
-    exact h1
+    rwa [ioE_π E.tie] at h1
 
 end Main
 

@@ -62,8 +62,7 @@ theorem sup_norm_laws : ∀ (q : ℕ) [Fact q.Prime], (∀ (f g : ℂ_[q]⟦X⟧
       rw [h, norm_zero] at h0
       exact zero_ne_one h0
     have hgf : g = f⁻¹ := by
-      rw [PowerSeries.eq_inv_iff_mul_eq_one hc, mul_comm]
-      exact hfg
+      rwa [PowerSeries.eq_inv_iff_mul_eq_one hc, mul_comm]
     rw [hgf]
     exact hinv f hf h0
   have hgauss : ∀ (f g : ℂ_[q]⟦X⟧) (B : ℝ), Bdd f → Bdd g → Bd B (f * g) →
@@ -74,8 +73,7 @@ theorem sup_norm_laws : ∀ (q : ℕ) [Fact q.Prime], (∀ (f g : ℂ_[q]⟦X⟧
   · intro f g hf hg hfg h1
     have hg0 : constantCoeff g = 1 := by
       have hc := congrArg constantCoeff hfg
-      rw [map_mul, h1, one_mul, map_one] at hc
-      exact hc
+      rwa [map_mul, h1, one_mul, map_one] at hc
     have hB : Bd 1 (f * g) := by
       rw [hfg]
       intro n

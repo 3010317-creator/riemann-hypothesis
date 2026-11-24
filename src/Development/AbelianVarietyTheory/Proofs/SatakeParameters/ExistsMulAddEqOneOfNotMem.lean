@@ -113,8 +113,7 @@ theorem localization_dualFr_tauLat_le (τ : ι) {L L' : Submodule (𝓞 E) (Fin 
   refine GlobalTheory.TransLoc.localization_le_of_smul_mem w ha fun φ hφ x hx => ?_
   have := hφ _ (nsmul_mem_tauLat emb τ h hx)
   rw [dotProduct_smul] at this
-  rw [smul_dotProduct, Nat.cast_smul_eq_nsmul]
-  exact this
+  rwa [smul_dotProduct, Nat.cast_smul_eq_nsmul]
 
 theorem localization_nabK_delK_congr (lam : ι → DomWeight n) {M M' : ι → Submodule (𝓞 K) (Fin n → K)}
     (hM : ∀ τ, Submodule.IsFullLattice K (M τ)) (hM' : ∀ τ, Submodule.IsFullLattice K (M' τ)) (w : HeightOneSpectrum (𝓞 K))
@@ -127,8 +126,7 @@ theorem localization_nabK_delK_congr (lam : ι → DomWeight n) {M M' : ι → S
   have h2 := GlobalTheory.TransLoc.nabDelLoc_free_leVV.1 K ι n lam M' hM' w B hB'
   have key : ∀ (T : Submodule (𝓞 K) (Pol K ι n)) (x : VV K lam),
       x ∈ localization₂ w.asIdeal (T.comap ((VV K lam).subtype.restrictScalars (𝓞 K))) ↔ x.1 ∈ localization₂ w.asIdeal T := by
-    intro T x
-    exact Iff.rfl
+    exact fun T x => Iff.rfl
   constructor
   · ext x
     unfold nabK

@@ -193,8 +193,7 @@ theorem exists_mu {F : Type} [Field F] (χ : F) (hχ : χ ≠ 0) (η m S A : (F�
     abel
   refine ⟨η ^ j * m⁻¹, ?_⟩
   have := congrArg Units.val e3
-  rw [Units.val_mul, Units.val_mul (c ^ (j + w) * A), Units.val_mul (c ^ (j + w)), hc] at this
-  exact this
+  rwa [Units.val_mul, Units.val_mul (c ^ (j + w) * A), Units.val_mul (c ^ (j + w)), hc] at this
 
 theorem eigMs_eq {F : Type} [Field F] [CharZero F] (l : ℕ) {r : ℕ} (u : Fin r → ℤ) (w j j' : ℤ) :
     eigMs F l (Finset.univ.val.map u) w j j' =
@@ -357,8 +356,7 @@ def abelian₂ (ζ : LL) : O⟦X⟧ →ₐ[O] LL⟦X⟧ := (W.lev i ζ).comp (cs
 
 theorem lev_eq (ζ : LL) {a : LetA O n} {e : O⟦X⟧} (h : a i = J e) : W.lev i ζ a = abelian₂ W J i ζ e := by
   have := W.lev_letter i ζ (a - cst J e) (by rw [Pi.sub_apply, h, cst_apply, sub_self])
-  rw [map_sub, sub_eq_zero] at this
-  exact this
+  rwa [map_sub, sub_eq_zero] at this
 
 theorem exists_matrix (ζ : LL) {r' : ℕ} (e : ↥(W.N T) →+ (Fin r' → LL⟦X⟧))
     (he : ∀ a x, e (a • x) = W.lev i ζ a • e x) :
@@ -376,8 +374,7 @@ theorem exists_matrix (ζ : LL) {r' : ℕ} (e : ↥(W.N T) →+ (Fin r' → LL�
       rw [Submodule.span_le]
       rintro _ ⟨x, rfl⟩
       exact ⟨fun k => W.lev i ζ (b.repr x k), by rw [Matrix.mulVecLin_apply, ← h1, b.sum_repr]⟩
-    intro y
-    exact this (hs ▸ Submodule.mem_top)
+    exact fun y => this (hs ▸ Submodule.mem_top)
   · have : (⟨th W T J b i c, th_mem_N W T J b i c⟩ : ↥(W.N T)) =
         ∑ k, (Pi.single i (J (c k)) : LetA O n) • b k := by
       apply Subtype.ext
@@ -553,8 +550,7 @@ theorem diagQuot [IsDomain O] [CharZero LL] (hinj : Function.Injective (algebraM
           have := a₀.mul_inv
           linear_combination (c k) * hz - (c k) * hy +
             (X - ((PD.p : ℕ) : O⟦X⟧)) * ((y - z) * c k + ((s ^ j : (O⟦X⟧)ˣ) : O⟦X⟧) * c₁ k) * this)
-      rw [← hθ, ← hθ] at this
-      exact this
+      rwa [← hθ, ← hθ] at this
   · obtain ⟨η, hη⟩ := exists_eta W J i hJ ζ hζ
     obtain ⟨M, hM, hMe⟩ := exists_matrix W T J b i ζ e he
     have hMu : IsUnit M.det :=
@@ -647,8 +643,7 @@ theorem senPair [IsDomain O] [IsLocalRing O] [CharZero LL] (hinj : Function.Inje
   choose c hc hc' using exists_cc (O := O) (F := LL) PD.p PD.hp.ne_zero hu1
   have hk0 : algebraMap O k (PD.p : O) = 0 := by
     have := IsLocalRing.eq_maximalIdeal (RingHom.ker_isMaximal_of_surjective (algebraMap O k) hk)
-    rw [← RingHom.mem_ker, this]
-    exact hl
+    rwa [← RingHom.mem_ker, this]
   have e1 : eigMs LL PD.p U w 0 1 = (U.map fun x => c (0 - (x - w))).map (algebraMap O LL) := by
     rw [eigMs, show Finset.Ico (0 : ℤ) 1 = {0} from rfl, Multiset.map_map, ← Multiset.bind_singleton]
     refine Multiset.bind_congr fun x _ => ?_

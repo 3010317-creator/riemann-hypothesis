@@ -402,8 +402,7 @@ theorem isCompact_congrSubgroup {R : Type} [CommRing R] [TopologicalSpace R] [Is
     have e : {A : Matrix (Fin n) (Fin n) R | ∀ i j, A i j ∈ O} =
         (Set.univ.pi fun _ : Fin n => Set.univ.pi fun _ : Fin n => (O : Set R)) :=
       Set.ext fun A => ⟨fun h i _ j _ => h i j, fun h i j => h i trivial j trivial⟩
-    rw [e]
-    exact this
+    rwa [e]
   have hP := hM.prod (hM.image MulOpposite.continuous_op)
   have hE := (Units.isClosedEmbedding_embedProduct (α := Matrix (Fin n) (Fin n) R)).isCompact_preimage hP
   refine hE.of_isClosed_subset
@@ -695,8 +694,7 @@ theorem exists_local {n : ℕ} (π : NG.AutRep L n) (s : SplitPlace L)
     have e1 : (rtOf π) x y = ((rtOf π).comp e) (s.loc n x) ((rtOf π) ((e (s.loc n x))⁻¹ * x) y) := by
       show _ = (rtOf π) (e (s.loc n x)) _
       rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel_left]
-    rw [e1]
-    exact h1
+    rwa [e1]
   have hv0K : v0 ∈ GlobalTheory.PRep.fixed ((rtOf π).comp e) K0 := GlobalTheory.CuspRep.LocEx.mem_fix.2 fun k hk => hv0N _ (hK0 k hk)
   have h2 : ∀ W : Submodule ℂ π.S, (∀ g, ∀ v ∈ W, ((rtOf π).comp e) g v ∈ W) → W ⊓ GlobalTheory.PRep.fixed ((rtOf π).comp e) K0 = ⊥ → W = ⊥ := by
     intro W hW h
@@ -853,9 +851,7 @@ theorem isLocS_unique {n : ℕ} (π π' : NG.AutRep L n) (s : SplitPlace L)
     have h2 := DFunLike.congr_fun h a
     have h3 : T0.symm ⟨T' a, hTm' a⟩ = 0 := h2
     have h4 := congrArg (fun y => ((T0 y : π'.S) : GAf L n → π'.W)) h3
-    rw [T0.apply_symm_apply] at h4
-    rw [T0.map_zero] at h4
-    exact h4
+    rwa [T0.apply_symm_apply, T0.map_zero] at h4
   have hcomm : ∀ (x : GAf L n), ∃ u, ∀ y, Commute ((e u)⁻¹ * x) (e y) := fun x =>
     ⟨s.loc n x, fun y => GlobalTheory.SplitLocComm.commute_of_loc_eq_one L n s _ _ (by rw [map_mul, map_inv, he2, inv_mul_cancel]) (he1 y)⟩
   obtain ⟨-, hiso⟩ := GlobalTheory.CuspRep.CompUniq.isotypic (GAf L n) _ π.S σ.V σ'.V (rtOf π) e (σ.ρ.comp φ) (σ'.ρ.comp φ)

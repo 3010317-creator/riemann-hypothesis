@@ -242,8 +242,7 @@ theorem Cor.gtComb_iff (hG : GlobalFnsSt) {m : ℕ} (cf : Fin m → A) {u' : Fin
       ((Category.comp_id _).trans (Category.id_comp _).symm)
   refine ⟨fun H => ?_, fun H => (hΦ ν).left_unique h ▸ key ν H⟩
   obtain ⟨ξ, hξ⟩ := exists_gtComb cf u
-  have e := gtComb_unique (key ξ hξ) H
-  exact (e ▸ hΦ ξ : Cor p ν' ξ).right_unique h ▸ hξ
+  exact ((gtComb_unique (key ξ hξ) H) ▸ hΦ ξ : Cor p ν' ξ).right_unique h ▸ hξ
 
 theorem Cor.smulPt (hG : GlobalFnsSt) {O : Type} [CommRing O] [StarRing O] [Module O D₁.X] [Module O D₀.X]
     (oa₁ : D₁.OAct O) (oa₀ : D₀.OAct O) (hl : ∀ (a : O) x, p.xe (a • x) = a • p.xe x)
@@ -288,8 +287,7 @@ theorem eig_iff_coeff (N : Matrix (Fin g) (Fin g) A) (r : A) (w : Fin g → Powe
 theorem comb_iff_coeff (U : Fin m → Fin g → A) (cf : Fin m → PowerSeries A) (w : Fin g → PowerSeries A) :
     (w = ∑ k, cf k • fun j => PowerSeries.C (R := A) (U k j)) ↔
       ∀ n, (fun j => PowerSeries.coeff n (w j)) = ∑ k, PowerSeries.coeff n (cf k) • U k := by
-  simp only [← coeff_comb, funext_iff, PowerSeries.ext_iff]
-  exact forall_comm
+  simpa only [← coeff_comb, funext_iff, PowerSeries.ext_iff] using forall_comm
 
 theorem eig_const_iff (N : Matrix (Fin g) (Fin g) A) (r : A) (z : Fin g → A) :
     (fun j => PowerSeries.C (R := A) (z j)) ᵥ* N.map (PowerSeries.C (R := A)) =

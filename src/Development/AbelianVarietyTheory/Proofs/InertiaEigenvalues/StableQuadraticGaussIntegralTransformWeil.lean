@@ -195,8 +195,7 @@ theorem eq_zpow_smul (O : Subring R) (p : Rˣ) (D : Set R) (hpO : (p : R) ∈ O)
   obtain ⟨n, hn⟩ := hbig
   have hinh : ∃ v : ℤ, ((p ^ v : Rˣ) : R) ∈ D := ⟨n, by simpa using hn 1 (one_mem O)⟩
   have hbdd : ∃ b : ℤ, ∀ v : ℤ, ((p ^ v : Rˣ) : R) ∈ D → b ≤ v := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hall : ∀ v : ℤ, ((p ^ v : Rˣ) : R) ∈ D := by
       intro v
       obtain ⟨w, hw, hwv⟩ := hcon v
@@ -384,8 +383,7 @@ theorem gaussInt_stable_of_dual : ∀ (F E : Type) [NontriviallyNormedField F] [
     have hU0 : {m : A.L | m ∈ M ∧ ‖Algebra.trace F A.K (t * x * Algebra.trace A.K A.L (star y * m))‖ ≤ 1} ∈ 𝓝 (0 : A.L) := by
       have hM : (M : Set A.L) ∈ 𝓝 (0 : A.L) := hMo.mem_nhds M.zero_mem
       have h0 : Metric.closedBall (0 : F) 1 ∈ 𝓝 (Algebra.trace F A.K (t * x * Algebra.trace A.K A.L (star y * (0 : A.L)))) := by
-        simp only [mul_zero, map_zero]
-        exact Metric.closedBall_mem_nhds 0 one_pos
+        simpa only [mul_zero, map_zero] using Metric.closedBall_mem_nhds 0 one_pos
       have hbound : {m : A.L | ‖Algebra.trace F A.K (t * x * Algebra.trace A.K A.L (star y * m))‖ ≤ 1} ∈ 𝓝 (0 : A.L) :=
         Filter.mem_of_superset ((c2.continuousAt (x := (0 : A.L))).preimage_mem_nhds h0)
         (fun m hm => (show ‖Algebra.trace F A.K (t * x * Algebra.trace A.K A.L (star y * m))‖ ≤ 1 by
@@ -431,8 +429,7 @@ theorem gaussInt_stable_of_dual : ∀ (F E : Type) [NontriviallyNormedField F] [
         exact (hy₀q.trans hyq.symm)
       have h1 : A.kerL ψ (t * x) y m₀ = A.kerL ψ (t * x) y₀ m₀ := by
         have := hkadd y₀ (-y₀ + y) m₀
-        rw [add_neg_cancel_left, (hmemD _).1 hrel m₀ hm₀, mul_one] at this
-        exact this
+        rwa [add_neg_cancel_left, (hmemD _).1 hrel m₀ hm₀, mul_one] at this
       rw [add_comm, hgadd, h1, hN _ hm₀]
       ring
     have hpre : (fun y => m₀ + y) ⁻¹' (S q) = S q := by
@@ -459,8 +456,7 @@ theorem gaussInt_stable_of_dual : ∀ (F E : Type) [NontriviallyNormedField F] [
     simp only [hS, Set.mem_iUnion, Set.Finite.mem_toFinset, Set.mem_image, Set.mem_inter_iff, Set.mem_preimage,
       Set.mem_singleton_iff, exists_prop]
     constructor
-    · intro hy
-      exact ⟨_, ⟨y, hy.1, rfl⟩, hy, rfl⟩
+    · exact fun hy => ⟨_, ⟨y, hy.1, rfl⟩, hy, rfl⟩
     · rintro ⟨_, _, hy, _⟩
       exact hy
   have hrest : ∫ y in (Λ : Set A.L) \ (D : Set A.L), g y ∂μ = 0 := by
@@ -583,8 +579,7 @@ theorem algebraMap_continuous_isCompact_preimage {F E : Type} [NontriviallyNorme
   have hrc : Continuous r := IsModuleTopology.continuous_of_linearMap r
   refine ⟨hc, fun O hO => ?_⟩
   refine (hO.image hrc).of_isClosed_subset (hO.isClosed.preimage hc) ?_
-  intro s hs
-  exact ⟨algebraMap A.K A.L s, hs, LinearMap.congr_fun hr s⟩
+  exact fun s hs => ⟨algebraMap A.K A.L s, hs, LinearMap.congr_fun hr s⟩
 
 theorem residue_algebra {K L : Type} [CommRing K] [CommRing L] [StarRing L] [Algebra K L]
     (hK : IsField K) (hinj : Function.Injective (algebraMap K L)) (N : L → K)
@@ -755,8 +750,7 @@ theorem residue_gauss_integral : ∀ (F E : Type) [NontriviallyNormedField F] [N
       ring
     have := setIntegral_comp_mul_unit μ (O : Set A.L) w v hwv hO0 hOT (fun y hy => O.mul_mem hw hy)
       (fun y hy => O.mul_mem hv hy) (fun y => f (A.NL y))
-    simp only [key] at this
-    exact this
+    simpa only [key] using this
 
   have hIOK : IntegrableOn f OK μK := hfc.continuousOn.integrableOn_compact hOKc
   have hintOK : ∫ s in (OK : Set A.K), f s ∂μK = 0 := by
@@ -1006,16 +1000,14 @@ theorem unramified_quadratic_uniformizer_trace_norm : ∀ (K L : Type) [Field K]
       have h := hu.unit.mul_inv
       rw [IsUnit.unit_spec] at h
       have := congrArg (fun u : 𝒪[L] ↦ (u : L)) h
-      simp only [MulMemClass.coe_mul, OneMemClass.coe_one] at this
-      exact this
+      simpa only [MulMemClass.coe_mul, OneMemClass.coe_one] using this
     · left
       have hm : y' ∈ maximalIdeal 𝒪[L] := (mem_maximalIdeal y').2 hu
       rw [hπ.maximalIdeal_eq, Ideal.mem_span_singleton] at hm
       obtain ⟨c, hc⟩ := hm
       refine ⟨(c : L), (memL _).1 c.2, ?_⟩
       have := congrArg (fun u : 𝒪[L] ↦ (u : L)) hc
-      simp only [y', MulMemClass.coe_mul, coe_algebraMap_integer] at this
-      exact this
+      simpa only [y', MulMemClass.coe_mul, coe_algebraMap_integer] using this
   ·
     intro s hs
     obtain ⟨a, ha⟩ := trace_integer_surjective (K := K) (L := L) ⟨s, (memK s).2 hs⟩
@@ -1032,8 +1024,7 @@ theorem unramified_quadratic_uniformizer_trace_norm : ∀ (K L : Type) [Field K]
     refine ⟨((w : 𝒪[L]) : L), (memL _).1 (w : 𝒪[L]).2, ?_⟩
     have := congrArg (fun u : 𝒪[K]ˣ ↦ ((u : 𝒪[K]) : K)) hw
     simp only [coe_normIntegerUnits_eq, IsUnit.unit_spec] at this
-    rw [← coe_norm_integer]
-    exact this
+    rwa [← coe_norm_integer]
 
 end GlobalTheory
 end -- clump:auto
@@ -1132,8 +1123,7 @@ theorem alg_main : ∀ (F E K L : Type) [NontriviallyNormedField F] [IsUltrametr
     · exact Or.inr ⟨z, (hmem z).2 hz, hyz⟩
   · intro s hs
     have hs' : s ≤ᵥ 1 := by
-      rw [hleK, ← ntow]
-      exact hs
+      rwa [hleK, ← ntow]
     obtain ⟨z, hz, hzs⟩ := htr s hs'
     exact ⟨z, (hmem z).2 hz, hzs⟩
   · rintro s hs ⟨r, hr, hsr⟩
@@ -1214,8 +1204,7 @@ theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
     rw [hmem] at hy ⊢
     have hs : σ y = star y := rfl
     rw [hs] at h
-    rw [← h]
-    exact hy
+    rwa [← h]
   · intro V hV
     obtain ⟨r, hr, hrV⟩ := hball V hV
     obtain ⟨n, hn⟩ := hsmall r hr
@@ -1376,8 +1365,7 @@ theorem level1 : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNorme
     rwa [← mul_assoc] at this
 
   have hnt : ∃ s : A.K, algebraMap A.K A.L s ∈ O ∧ A.psiK ψ (t * x * s) ≠ 1 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have h1 : ∀ m ∈ O, A.kerL ψ (t * x) 1 m = 1 := fun m hm => by
       rw [kerL_one]
       exact hcon _ (by rw [htrL]; exact O.add_mem hm (hOs m hm))

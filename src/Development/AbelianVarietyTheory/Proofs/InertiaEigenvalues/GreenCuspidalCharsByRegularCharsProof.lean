@@ -148,8 +148,7 @@ theorem GlobalTheory.GLq.wh_cusp_pos : ∀ (g : ℕ) [Fact g.Prime] (ψ : AddCha
       rw [hz]
       exact GlobalTheory.GLq.Generic.wh_zero_fun ψ _
     rw [this, zero_mul]
-  · intro h0
-    exact absurd (Finset.mem_range.mpr hd) h0
+  · exact fun h0 => absurd (Finset.mem_range.mpr hd) h0
   have h0 : der ψ 0 χ 1 = wh ψ χ := by
     change wh ψ (n := d) (res 0 d χ 1) = wh ψ χ
     congr 1
@@ -223,8 +222,7 @@ theorem wh_hcL_prod (ψ : AddChar (ZMod g) ℂ) (hψ : ψ ≠ 1) :
   intro L
   induction L with
   | nil =>
-    intro _
-    exact GlobalTheory.GLq.Leibniz.wh_gl_zero ψ
+    exact fun _ => GlobalTheory.GLq.Leibniz.wh_gl_zero ψ
   | cons p L ih =>
     intro hL
     have hp := hL p List.mem_cons_self
@@ -263,8 +261,7 @@ theorem exists_generic_constituent : ∀ (g : ℕ) [Fact g.Prime] (ψ : AddChar 
     (GlobalTheory.gl_list_product_perm_char g L L (degL L) rfl (fun q hq => isChar_of_isIrr (hL q hq).2.1)).1
   obtain ⟨Lρ, hirr, hsum⟩ := (GlobalTheory.charDec _ (hcL L (degL L))).1 hch
   have hex : ∃ ρ ∈ Lρ, wh ψ ρ ≠ 0 := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     apply hwh
     rw [hsum, wh_list_sum]
     exact List.sum_eq_zero fun x hx => by
@@ -627,8 +624,7 @@ theorem exists_cusp_of_regular : ∀ (g : ℕ) [Fact g.Prime] (d : ℕ), 0 < d �
       exact ((hpow_eq _ _).2 hi.2).symm
     · rintro ⟨i, hi, hθi⟩
       have hk : kOf θ' ≡ kOf θ * g ^ i [MOD g ^ d - 1] := by
-        rw [← hpow_eq, pow_mul, ← hkOf θ, ← hkOf θ']
-        exact hθi
+        rwa [← hpow_eq, pow_mul, ← hkOf θ, ← hkOf θ']
       funext x
       refine congrArg (fun t : ℂ => (-1 : ℂ) ^ (d - 1) * t) ?_
       have hcl : ∀ k : ℕ, IsClassFn (psi (rootSum θ₀ k) (Fin d → ZMod g)) := fun k e G =>
@@ -725,8 +721,7 @@ theorem le_of_dvd {k : ℕ} (hk : 0 < k) (hdvd : P ∣ X ^ (g ^ k) - X) : d ≤ 
     obtain ⟨R, hR⟩ := hdvd
     have h0 : aeval (AdjoinRoot.root P) (X ^ (g ^ k) - X : (ZMod g)[X]) = 0 := by
       rw [hR, map_mul, AdjoinRoot.aeval_eq, AdjoinRoot.mk_self, zero_mul]
-    rw [map_sub, map_pow, aeval_X, sub_eq_zero] at h0
-    exact h0
+    rwa [map_sub, map_pow, aeval_X, sub_eq_zero] at h0
   have := card_le_of_gen_fixed (L := AdjoinRoot P) (x := AdjoinRoot.root P) hk (adjoin_gen hP) hx
   rw [hcard] at this
   exact (Nat.pow_le_pow_iff_right hg.out.one_lt).1 this
@@ -872,8 +867,7 @@ theorem GlobalTheory.GrPolys.card_monic_coeff_zero_ne_zero :
     tauto
   have hD : Disjoint A B := by
     rw [Set.disjoint_left]
-    intro f hA hB
-    exact hA.2.2 hB.2.2
+    exact fun f hA hB => hA.2.2 hB.2.2
   have hB : B.ncard = g ^ (n - 1) := by
     rw [show B = _ from GlobalTheory.GrPolys.zero_part_eq g n hn, Set.ncard_image_of_injective _
       (fun a b h => mul_left_cancel₀ X_ne_zero h), hcT]
@@ -912,8 +906,7 @@ theorem family (g : ℕ) [Fact g.Prime] (e : ℕ) (he : 0 < e) (K : Type) [Field
       ∀ P P', IsPrimeLab e P → IsPrimeLab e P' → L P = L P' → P = P' := by
   obtain ⟨c, hc1, hc2⟩ := _root_.GlobalTheory.PrimeLabOrbit.primeLab_to_regularChar g e he K hK
   refine ⟨fun P => τ (c P), fun P hP => ⟨h1 _ (hc1 P hP), c P, hc1 P hP, rfl⟩, ?_⟩
-  intro P P' hP hP' h
-  exact hc2 P P' hP hP' ((h2 _ _ (hc1 P hP) (hc1 P' hP')).mp h)
+  exact fun P P' hP hP' h => hc2 P P' hP hP' ((h2 _ _ (hc1 P hP) (hc1 P' hP')).mp h)
 
 theorem factor_lab {f : (ZMod g)[X]} (h0 : f.coeff 0 ≠ 0) :
     ∀ P ∈ UniqueFactorizationMonoid.normalizedFactors f, IsPrimeLab P.natDegree P := by
@@ -976,8 +969,7 @@ theorem count (d : ℕ) (hd : 0 < d) (Lf : ∀ e, (ZMod g)[X] → Gn g e → ℂ
     have hφ : φ (ψ ⟨d, χ⟩) = ⟨d, χ⟩ := by
       have := hfe
       simp only [F] at this
-      rw [← hnf, Multiset.map_singleton, Multiset.singleton_inj] at this
-      exact this
+      rwa [← hnf, Multiset.map_singleton, Multiset.singleton_inj] at this
     set P := ψ ⟨d, χ⟩ with hPdef
     have hdeg : P.natDegree = d := congrArg Sigma.fst hφ
     have h2 : (⟨d, Lf d P⟩ : Pc g) = ⟨P.natDegree, Lf P.natDegree P⟩ := by rw [hdeg]
@@ -1009,8 +1001,7 @@ theorem count (d : ℕ) (hd : 0 < d) (Lf : ∀ e, (ZMod g)[X] → Gn g e → ℂ
   have hcardS : S.card = g ^ d - g ^ (d - 1) + 1 := by
     rw [Finset.card_insert_of_notMem hnot, Finset.card_image_of_injOn, ← hcard,
       Set.ncard_eq_toFinset_card T hfin]
-    rw [Set.Finite.coe_toFinset]
-    exact hFinj
+    rwa [Set.Finite.coe_toFinset]
   omega
 
 end GlobalTheory.GreenRegularCharactersInertiaEigenvalues
@@ -1042,8 +1033,7 @@ theorem GlobalTheory.greenRegularCharacters_holds : GreenRegularCharacters := by
         exact ⟨L, fun P hP => (hL1 P hP).1, hL2, fun h => absurd h hed⟩
   choose Lf hc hi hdd using hex
   intro χ hχ
-  by_contra hno
-  push Not at hno
+  by_contra! hno
   refine count d hd Lf hc hi χ hχ ?_
   intro P hP heq
   obtain ⟨θ, hθ, hs⟩ := hdd d rfl P hP

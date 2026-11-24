@@ -125,8 +125,7 @@ theorem subquot_sameSS_smul {c : O} (hc : IsSMulRegular M c) {X Y : Submodule O 
       exact ⟨y, (hxy' ▸ hx : (y : M) ∈ X), rfl⟩
   · intro g x
     obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ x
-    refine congrArg Submodule.Quotient.mk (Subtype.ext ?_)
-    exact (map_smul (π g) c (x : M)).symm
+    exact congrArg Submodule.Quotient.mk (Subtype.ext (map_smul (π g) c (x : M)).symm)
 
 theorem SameSS.prod_comm {A C : Type} [AddCommGroup A] [Module O A] [AddCommGroup C] [Module O C]
     (α : Representation O G A) (γ : Representation O G C) (hA : IsFiniteLength O A) (hC : IsFiniteLength O C) :
@@ -249,8 +248,7 @@ theorem exists_pow_smul_le (L : Lattice (O := O) ρ) {lam : O} (hlam : Irreducib
   | singleton x =>
     obtain ⟨n, hn⟩ := exists_pow_smul_mem L hlam x
     refine ⟨n, ?_⟩
-    rw [Submodule.smul_span, Set.smul_set_singleton, Submodule.span_singleton_le_iff_mem]
-    exact hn
+    rwa [Submodule.smul_span, Set.smul_set_singleton, Submodule.span_singleton_le_iff_mem]
   | sup A B _ _ hA hB =>
     obtain ⟨m, hm⟩ := hA
     obtain ⟨n, hn⟩ := hB

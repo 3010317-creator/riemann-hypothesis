@@ -227,8 +227,7 @@ theorem wls_fintype {ι : Type} [Fintype ι] [DecidableEq ι] {g : ℕ} (L : Mat
     exact e.sum_comp (fun k => L k i * D k * b k)
   have h3 : ‖b ∘ e‖ = ‖b‖ := e.surjective.pi_norm_comp b
   rw [h1, Matrix.mul_assoc, ← Matrix.mulVec_mulVec, h2, h3] at h
-  rw [Matrix.mul_assoc, ← Matrix.mulVec_mulVec]
-  exact h
+  rwa [Matrix.mul_assoc, ← Matrix.mulVec_mulVec]
 
 theorem dot_le_card_mul_norm_mul_norm {g : ℕ} (x y : Fin g → ℝ) : x ⬝ᵥ y ≤ g * (‖x‖ * ‖y‖) := by
   calc x ⬝ᵥ y = ∑ k, x k * y k := rfl
@@ -320,8 +319,7 @@ theorem bound_one_add {g a : ℕ} (B : Fin a → Matrix (Fin g) (Fin g) ℝ)
       simp [L, Matrix.fromCols_mul_fromRows]
     have h2 := Matrix.rank_mul_le_right (Matrix.fromCols (1 : Matrix (Fin g) (Fin g) ℝ)
         (0 : Matrix (Fin g) (Fin a × Fin g) ℝ)) L
-    rw [h1, Matrix.rank_one, Fintype.card_fin] at h2
-    exact h2
+    rwa [h1, Matrix.rank_one, Fintype.card_fin] at h2
   obtain ⟨K, hK⟩ := wls_fintype L hL
   obtain ⟨A, hA0, hA⟩ : ∃ A : ℝ, 0 ≤ A ∧ ∀ i j k, |R i j k| ≤ A :=
     ⟨‖fun i j k => R i j k‖, norm_nonneg _, fun i j k =>
@@ -587,8 +585,7 @@ theorem inv_entry_norm_le_of_sub_posSemidef (g : ℕ) (Y : Matrix (Fin g) (Fin g
     intro k; simp [hw]
   have hqw : c * (w ⬝ᵥ w) ≤ w j := by
     have := hq w
-    rw [hYw, dotProduct_single, mul_one] at this
-    exact this
+    rwa [hYw, dotProduct_single, mul_one] at this
   have hsq : ∀ k, w k ^ 2 ≤ w ⬝ᵥ w := by
     intro k
     rw [dotProduct]
@@ -691,8 +688,7 @@ theorem mem_castLE_iff {n a : ℕ} (ha : a ≤ n) (k : Fin n) :
   · intro h
     obtain ⟨i, -, rfl⟩ := Finset.mem_map.1 h
     simp
-  · intro h
-    exact Finset.mem_map.2 ⟨⟨k.val, h⟩, Finset.mem_univ _, Fin.ext (by simp)⟩
+  · exact fun h => Finset.mem_map.2 ⟨⟨k.val, h⟩, Finset.mem_univ _, Fin.ext (by simp)⟩
 
 theorem gnorm_poincareGram_single {n : ℕ} (a : ℕ) (z : Fin n → ℂ) (k : Fin n) :
     GlobalTheory.HermFrame.gnorm (GlobalTheory.IndefiniteRowSideFullHecke.HodgePeriodGram.poincareGram a z) (Pi.single k 1) =

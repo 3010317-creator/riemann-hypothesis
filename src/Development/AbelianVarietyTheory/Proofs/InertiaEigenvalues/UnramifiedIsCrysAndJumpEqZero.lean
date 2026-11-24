@@ -102,8 +102,7 @@ theorem average_step (σ : G → A →+* A) (hσ : ∀ g h a, σ (g * h) a = σ 
   have hUl : ∀ g, ∀ n ∈ N, U.map (σ (n * g)) = U.map (σ g) := by
     intro g n hn
     ext k l
-    simp only [Matrix.map_apply, hσ]
-    exact hfix _ (fun m hm => hUfix m hm k l) g n hn
+    simpa only [Matrix.map_apply, hσ] using hfix _ (fun m hm => hUfix m hm k l) g n hn
   have hUr : ∀ g, ∀ n ∈ N, U.map (σ (g * n)) = U.map (σ g) := by
     intro g n hn
     ext k l
@@ -126,8 +125,7 @@ theorem average_step (σ : G → A →+* A) (hσ : ∀ g h a, σ (g * h) a = σ 
   refine ⟨∑ x : G ⧸ N, M x.out * U.map (σ x.out), ?_, ?_, ?_⟩
   · intro i j
     have h1 : ∑ x : G ⧸ N, σ x.out τ = 1 := by
-      rw [← finsum_eq_sum_of_fintype]
-      exact hτ1
+      rwa [← finsum_eq_sum_of_fintype]
     have hent : ∀ x : G ⧸ N, (M x.out * U.map (σ x.out)) i j =
         σ x.out τ * (M x.out * W.map (σ x.out)) i j := by
       intro x
@@ -478,8 +476,7 @@ theorem exists_matrix_coboundary (p : ℕ) [hp : Fact p.Prime] (G : Type) [Group
       rw [Matrix.det_one]
       exact one_ne_zero)
   have hf' : ((Matrix.of v).transpose).det ≠ 0 := by
-    rw [Matrix.det_transpose]
-    exact hf
+    rwa [Matrix.det_transpose]
   have hW : ∀ i j, (Matrix.of v).transpose i j ^ p ^ m = (Matrix.of v).transpose i j :=
     fun i j => (hv j).1 i
   refine ⟨(Matrix.of v).transpose, ?_, hW, fun g => ?_⟩
@@ -665,11 +662,9 @@ theorem exists_witt_matrix
   have h4 : c.mapMatrix W = W₁ := by
     ext i j
     have := (dvd_iff_constantCoeff _).1 (hW i j)
-    rw [Matrix.sub_apply, map_sub, sub_eq_zero] at this
-    exact this
+    rwa [Matrix.sub_apply, map_sub, sub_eq_zero] at this
   change IsUnit (c W.det)
-  rw [RingHom.map_det, h4]
-  exact hW₁
+  rwa [RingHom.map_det, h4]
 
 end Witt
 

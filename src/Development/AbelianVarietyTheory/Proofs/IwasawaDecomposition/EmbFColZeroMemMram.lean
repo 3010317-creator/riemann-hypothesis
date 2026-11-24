@@ -124,8 +124,7 @@ theorem isPrincipalIdealRing_awayFrom {R : Type} [CommRing R] [IsDedekindDomain 
   · rw [h0]; simp [T]
   · have hmax : (I.comap (algebraMap R A)).IsMaximal :=
       Ring.DimensionLEOne.maximalOfPrime h0 (Ideal.comap_isPrime _ _)
-    rw [hmax.eq_of_le (hT Q hQ).ne_top hle]
-    exact hQ
+    rwa [hmax.eq_of_le (hT Q hQ).ne_top hle]
 
 theorem exists_basis {R : Type} [CommRing R] [IsDedekindDomain R] (K : Type) [Field K]
     [Algebra R K] [IsFractionRing R K] (n : ℕ) (SB : Finset (HeightOneSpectrum R))
@@ -167,8 +166,7 @@ theorem exists_basis {R : Type} [CommRing R] [IsDedekindDomain R] (K : Type) [Fi
     apply Submodule.IsLattice.of_fg K
     obtain ⟨X, hX⟩ := hN.fg
     refine ⟨X, ?_⟩
-    simp only [M, ← hX]
-    exact (Submodule.span_span_of_tower R A _).symm
+    simpa only [M, ← hX] using (Submodule.span_span_of_tower R A _).symm
   haveI hM : Submodule.IsFullLattice K M := by
     refine ⟨?_⟩
     simp only [M]
@@ -248,8 +246,7 @@ theorem exists_equiv (E : Type) [Field E] [NumberField E] (n : ℕ)
       exact (Pi.basisFun E (Fin n)).equiv_apply i v (Equiv.refl _)
     rw [← hmap]
     constructor
-    · intro h
-      exact ⟨x, h, rfl⟩
+    · exact fun h => ⟨x, h, rfl⟩
     · rintro ⟨y, hy, h⟩
       have : y = x := γ.injective h
       exact this ▸ hy
@@ -265,8 +262,7 @@ theorem exists_equiv (E : Type) [Field E] [NumberField E] (n : ℕ)
   · rintro ⟨s, hs, h⟩
     obtain ⟨t, ht, h'⟩ := hgen _ h
     refine ⟨t * s, fun hm => (P.isPrime.mem_or_mem hm).elim (ht.2 P hP) hs, ?_⟩
-    rw [key, hsm, mul_smul]
-    exact h'
+    rwa [key, hsm, mul_smul]
   · rintro ⟨s, hs, h⟩
     refine ⟨s, hs, hle ?_⟩
     rw [← hsm]

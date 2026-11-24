@@ -109,8 +109,7 @@ theorem hermForm_eq_of_im {g : ℕ} (H H' : Matrix (Fin g) (Fin g) ℂ)
   apply Complex.ext
   ·
     have hI := both (Complex.I • z) w
-    rw [map_smul, hermForm_smul_left, hermForm_smul_left, Complex.I_mul_im, Complex.I_mul_im] at hI
-    exact hI
+    rwa [map_smul, hermForm_smul_left, hermForm_smul_left, Complex.I_mul_im, Complex.I_mul_im] at hI
   · exact both z w
 
 theorem transport_uniformisation :

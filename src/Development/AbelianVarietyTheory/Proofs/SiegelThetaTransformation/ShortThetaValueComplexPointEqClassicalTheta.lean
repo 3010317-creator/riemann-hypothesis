@@ -136,8 +136,7 @@ theorem ex_prod {n : ℕ} (v : Fin n → Fin r → E) :
   | zero =>
     have h0 := GlobalTheory.Dict.ZGeo.ex_pow A 0 (0 : Fin r → E)
     rw [pow_zero, smul_zero] at h0
-    rw [List.ofFn_zero, List.prod_nil, Fin.sum_univ_zero]
-    exact h0
+    rwa [List.ofFn_zero, List.prod_nil, Fin.sum_univ_zero]
   | succ n ih =>
     rw [List.ofFn_succ, List.prod_cons, ih (fun j => v j.succ), Fin.sum_univ_succ, GlobalTheory.Dict.ZGeo.ex_add]
 
@@ -149,8 +148,7 @@ theorem sub_mem_of_ex_eq (hinj : Function.Injective (pv X idx x)) {u v : Fin r �
     exact mul_right_cancel (a := A.ex (pv X idx x (u - v))) (b := A.ex (pv X idx x v)) (c := 1)
       (by rw [_root_.one_mul]; exact h2.symm)
   obtain ⟨w, hw, hpw⟩ := (A.ex_ker _).1 h1
-  rw [hinj hpw]
-  exact hw
+  rwa [hinj hpw]
 
 
 omit [IsCMField E] in
@@ -316,8 +314,7 @@ theorem points_inZh_geoInj_roots : ∀ (E : Type) [Field E] [NumberField E] [IsC
   have hinj : Function.Injective (pv X idx x) :=
     (hx_laws E r X g bas idx 0 hs ⟨0, rfl⟩ x hx).2.2.2.2.2.1
   refine ⟨fun Jx u hu hdist => ⟨fun i => ZGeo.inZh A hN (hu i).1 (hu i).2, ZGeo.geoInj A hinj hN u hdist⟩, ?_⟩
-  intro mk hm hA hM Y hY q b
-  exact ZGeo.roots A hN hm hA hM (hY q b).1 (hY q b).2
+  exact fun mk hm hA hM Y hY q b => ZGeo.roots A hN hm hA hM (hY q b).1 (hY q b).2
 
 end GlobalTheory.Dict
 end -- clump:auto

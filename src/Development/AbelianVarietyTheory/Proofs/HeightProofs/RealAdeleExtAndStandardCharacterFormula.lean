@@ -58,8 +58,7 @@ theorem half_tmul {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E]
 
 theorem valTau_coe {D : D7} {θ : InfFam D} (hθ : IsInfFam θ) (τ : D.what₂.Tau) (a : AF D.host.F) :
     ((valTau θ τ a : ℝ) : ℂ) = θ τ (fstA D.host.F a ⊗ₜ[D.host.F] (1 : D.host.E)) := by
-  have h := conj_tmul_one hθ τ (fstA D.host.F a)
-  exact Complex.conj_eq_iff_re.1 h
+  exact Complex.conj_eq_iff_re.1 (conj_tmul_one hθ τ (fstA D.host.F a))
 
 theorem real_adele_ext_and_char : ∀ (D : D7) (θ : InfFam D) (σ : (D.what₂.Tau → ℂ) →+ AE D), Chart θ σ → ∀ a : AF D.host.F, sndA D.host.F a = 0 → ((∀ τ, valTau θ τ a = 0) → a = 0) ∧ ∀ ψ : AddChar (AF D.host.F) ℂ, IsStdChar D ψ (-1) → ψ (algebraMap D.host.F (AF D.host.F) (1 / 2) * a) = Complex.exp (-(Real.pi * Complex.I) * ((∑ τ, valTau θ τ a : ℝ) : ℂ)) := by
   intro D θ σ h a ha
@@ -73,8 +72,7 @@ theorem real_adele_ext_and_char : ∀ (D : D7) (θ : InfFam D) (σ : (D.what₂.
     have hinj := Algebra.TensorProduct.includeLeft_injective (R := D.host.F) (S := D.host.F) (A := AF D.host.F)
       (B := D.host.E) (algebraMap D.host.F D.host.E).injective
     apply hinj
-    rw [map_zero]
-    exact h1
+    rwa [map_zero]
   · have hc := hψ.2.2 θ h.inf (fstA D.host.F (algebraMap D.host.F (AF D.host.F) (1 / 2) * a))
     rw [psiInf, pair_fst_of_snd _ (by rw [map_mul, ha, mul_zero])] at hc
     rw [hc]

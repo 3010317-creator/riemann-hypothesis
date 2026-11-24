@@ -154,8 +154,7 @@ theorem intPsd_common_kernel_of_sum_not_posDef : ∀ (a g rk : ℕ) (B : Fin a �
     rcases hnn.lt_or_eq with h | h
     · exact h
     · exfalso
-      have hk := hSR.dotProduct_mulVec_zero_iff.1 h.symm
-      exact hdet (exists_mulVec_eq_zero_iff.1 ⟨x, hx, hk⟩)
+      exact hdet (exists_mulVec_eq_zero_iff.1 ⟨x, hx, (hSR.dotProduct_mulVec_zero_iff.1 h.symm)⟩)
   have hdetZ : (S.submatrix e e).det = 0 := by
     have h := (Int.castRingHom ℝ).map_det (S.submatrix e e)
     have h2 : (Int.castRingHom ℝ).mapMatrix (S.submatrix e e)
@@ -386,8 +385,7 @@ private theorem differentiableOn_finsetProd' {E : Type} [NormedAddCommGroup E] [
   revert h
   refine Finset.induction_on u ?_ ?_
   · intro _
-    simp only [Finset.prod_empty]
-    exact differentiableOn_const _
+    simpa only [Finset.prod_empty] using differentiableOn_const _
   · intro a u ha ih h
     simp only [Finset.prod_insert ha]
     exact (h a (Finset.mem_insert_self a u)).fun_mul
@@ -416,10 +414,8 @@ theorem differentiableOn_inv_of_entries {E : Type} [NormedAddCommGroup E] [Norme
       intro k l
       by_cases hk : k = j
       · subst hk
-        simp only [Matrix.updateRow_self]
-        exact differentiableOn_const _
-      · simp only [Matrix.updateRow_ne hk]
-        exact h k l
+        simpa only [Matrix.updateRow_self] using differentiableOn_const _
+      · simpa only [Matrix.updateRow_ne hk] using h k l
     have := differentiableOn_det_of_entries hupd
     simpa only [Matrix.adjugate_apply] using this
   have hinv : DifferentiableOn ℂ (fun s => ((M s).det)⁻¹) S :=
@@ -435,17 +431,13 @@ theorem differentiableOn_combMat_of_entries {E : Type} [NormedAddCommGroup E] [N
     (h : ∀ m k, DifferentiableOn ℂ (fun s => l s m k) S) (i j : Fin g) :
     DifferentiableOn ℂ (fun s => combMat (l s) ε i j) S := by
   simp only [combMat, Matrix.of_apply]
-  apply DifferentiableOn.fun_sum
-  intro m _
-  exact (h m i).const_mul _
+  exact DifferentiableOn.fun_sum (fun m _ => (h m i).const_mul _)
 
 theorem differentiableOn_combMat_perTau : ∀ (n a g r₀ r : ℕ) (ζ : (Fin n → ℂ) → Fin r₀ → Fin g → ℂ) (lam : (Fin n → ℂ) → Fin r → Fin g → ℂ) (α : Matrix (Fin g) (Fin r₀) ℚ) (φ : Matrix (Fin g) (Fin r) ℚ) (D : ℕ), AnalyticOnNhd ℂ ζ (Metric.ball 0 1) → (∀ (j : Fin r) (k : Fin g), DifferentiableOn ℂ (fun s => lam s j k) (logDom n a)) → (∀ s ∈ logDom n a, IsUnit (GlobalTheory.PeriodFrame.combMat (ζ (logExp a s)) α).det) → (∀ i j, DifferentiableOn ℂ (fun z => GlobalTheory.PeriodFrame.combMat (ζ z) α i j) (Metric.ball 0 1)) ∧ ∀ i j, DifferentiableOn ℂ (fun s => GlobalTheory.PeriodFrame.perTau a ζ lam α φ D s i j) {s | s ∈ logDom n a ∧ logExp a s ∈ Metric.ball (0 : Fin n → ℂ) 1} := by
   intro n a g r₀ r ζ lam α φ D hζ hlam hunit
   have hζd : DifferentiableOn ℂ ζ (Metric.ball 0 1) := hζ.differentiableOn
   have hζe : ∀ m k, DifferentiableOn ℂ (fun z => ζ z m k) (Metric.ball 0 1) := by
-    intro m k
-    have h1 := differentiableOn_pi.1 hζd m
-    exact differentiableOn_pi.1 h1 k
+    exact fun m k => differentiableOn_pi.1 (differentiableOn_pi.1 hζd m) k
   have hA : ∀ i j, DifferentiableOn ℂ (fun z => combMat (ζ z) α i j) (Metric.ball 0 1) :=
     fun i j => differentiableOn_combMat_of_entries α hζe i j
   refine ⟨hA, ?_⟩
@@ -458,18 +450,14 @@ theorem differentiableOn_combMat_perTau : ∀ (n a g r₀ r : ℕ) (ζ : (Fin n 
     · exact (differentiable_apply k).cexp
     · exact differentiable_apply k
   have hAT : ∀ i j, DifferentiableOn ℂ (fun s => combMat (ζ (logExp a s)) α i j) T := by
-    intro i j
-    exact (hA i j).comp hexp.differentiableOn (fun s hs => hs.2)
+    exact fun i j => (hA i j).comp hexp.differentiableOn (fun s hs => hs.2)
   have hinvT : ∀ i j, DifferentiableOn ℂ (fun s => (combMat (ζ (logExp a s)) α)⁻¹ i j) T :=
     differentiableOn_inv_of_entries hAT (fun s hs => hunit s hs.1)
   have hBT : ∀ i j, DifferentiableOn ℂ (fun s => combMat (lam s) φ i j) T := by
-    intro i j
-    exact (differentiableOn_combMat_of_entries φ hlam i j).mono (fun s hs => hs.1)
+    exact fun i j => (differentiableOn_combMat_of_entries φ hlam i j).mono (fun s hs => hs.1)
   simp only [perTau, Matrix.smul_apply, Matrix.mul_apply, smul_eq_mul]
   apply DifferentiableOn.const_mul
-  apply DifferentiableOn.fun_sum
-  intro k _
-  exact (hinvT i k).fun_mul (hBT k j)
+  exact DifferentiableOn.fun_sum (fun k _ => (hinvT i k).fun_mul (hBT k j))
 
 end GlobalTheory.PeriodFrame
 end -- clump:auto
@@ -892,8 +880,7 @@ theorem isUnit_det_combMat_on_ball : ∀ (n a g r₀ r : ℕ) (ha : a ≤ n) (ζ
       p.1 * (G + (D : ℂ)⁻¹ • (p.2 * Dl))) := by fun_prop
   have hQc : ContinuousOn (fun z => combMat (ζ z) α * (G + (D : ℂ)⁻¹ • (τ₀ z * Dl)))
       (Metric.ball (0 : Fin n → ℂ) 1) := by
-    have h := hQ.comp_continuousOn (hPc.prodMk hτc)
-    simpa only [Function.comp_def] using h
+    simpa only [Function.comp_def] using hQ.comp_continuousOn (hPc.prodMk hτc)
   have key := GlobalTheory.eq_on_ball_of_eq_on_logExp_image n a 1 (Matrix (Fin g) (Fin g) ℂ)
     (fun z => combMat (ζ z) α * (G + (D : ℂ)⁻¹ • (τ₀ z * Dl))) (fun _ => 1) le_rfl
     hQc continuousOn_const (by
@@ -1078,8 +1065,7 @@ theorem GlobalTheory.PeriodFrame.not_perTau_mulVec_eq_continuous : ∀ (n a g r�
     rw [h8] at h7
     simp only [Pi.smul_apply, smul_eq_mul, hvq] at h7
     have hN : (N : ℚ) ≠ 0 := by exact_mod_cast hN0.ne'
-    have h9 := (mul_eq_zero.1 h7).resolve_left hN
-    simpa using h9
+    simpa using (mul_eq_zero.1 h7).resolve_left hN
   · exact hsupp i (not_lt.1 hi)
 end -- clump:auto
 end -- clump:auto
@@ -1140,8 +1126,7 @@ theorem posDef_im_on_ball_of_logExp : ∀ (n a : ℕ) (J : Type) [Fintype J] [De
     rwa [Matrix.conjTranspose_eq_transpose_of_trivial] at h1
   refine Matrix.PosDef.of_dotProduct_mulVec_pos ?_ ?_
   · unfold Matrix.IsHermitian
-    rw [Matrix.conjTranspose_eq_transpose_of_trivial]
-    exact hsymm
+    rwa [Matrix.conjTranspose_eq_transpose_of_trivial]
   intro x hx
   set q : (Fin n → ℂ) → ℂ := fun w => ∑ i, ∑ j, (x i : ℂ) * Δ w i j * (x j : ℂ) with hq
   have hqim : ∀ w, (q w).im = star x ⬝ᵥ ((Δ w).map Complex.im *ᵥ x) := by
@@ -1152,9 +1137,7 @@ theorem posDef_im_on_ball_of_logExp : ∀ (n a : ℕ) (J : Type) [Fintype J] [De
     rw [hq]
     apply DifferentiableOn.fun_sum
     intro i _
-    apply DifferentiableOn.fun_sum
-    intro j _
-    exact ((hΔ i j).const_mul (x i : ℂ)).mul_const (x j : ℂ)
+    exact DifferentiableOn.fun_sum (fun j _ => ((hΔ i j).const_mul (x i : ℂ)).mul_const (x j : ℂ))
   have hqpos : ∀ s ∈ logDom n a, 0 < (q (logExp a s)).im := by
     intro s hs
     rw [hqim]
@@ -1394,11 +1377,8 @@ theorem riemann_relations_frame : ∀ (g r : ℕ) (Hm : Matrix (Fin g) (Fin g) �
       rw [hs, ha]
       simp [hermForm]
     rw [frame_hermForm_sum_right] at h1
-    have h2 := congrArg Complex.im h1
-    simpa [Complex.im_sum, Complex.mul_im, hFE] using h2
-  have hdet : P.det ≠ 0 := by
-    have h := GlobalTheory.det_ne_zero_of_real_indep_isotropic g Hm E hpos hind hEE
-    exact h
+    simpa [Complex.im_sum, Complex.mul_im, hFE] using congrArg Complex.im h1
+  have hdet : P.det ≠ 0 := GlobalTheory.det_ne_zero_of_real_indep_isotropic g Hm E hpos hind hEE
   have hU : IsUnit P.det := isUnit_iff_ne_zero.mpr hdet
   set τ := P⁻¹ * Q with hτ
   have hPτ : P * τ = Q := by
@@ -1819,15 +1799,13 @@ theorem GlobalTheory.ShFam.Hor.LogCh.exists_periodChart_of_latFam : ∀ (n a g r
       (Subtype.val : {j : Fin g // rk ≤ j.val} → Fin g) Subtype.val).PosDef := by
     intro z hz
     have h1 := hΔp z hz
-    rw [← heq z hz] at h1
-    exact h1
+    rwa [← heq z hz] at h1
   obtain ⟨hPC, hY⟩ := GlobalTheory.T.periodChart_rescale_ball_to_unitPolydisc n a g rk ha ρ τ₀ B hρ hρ1 hrk hτ₀d hτ₀s hpsd hB htoric habel
   refine ⟨rk, _, B, P, ρ, d, hρ, hρ1, hd, hPC, hP, hPdet, ?_⟩
   intro s hs hz Hm hHm
   have hnz : ∀ i : Fin a, logExp a s (Fin.castLE ha i) ≠ 0 := by
     intro i
-    simp only [logExp, Fin.coe_castLE, i.isLt, ite_true]
-    exact Complex.exp_ne_zero _
+    simpa only [logExp, Fin.coe_castLE, i.isLt, ite_true] using Complex.exp_ne_zero _
   rw [hPH s hs hz Hm hHm, hY _ hnz]
   congr 2
   unfold GlobalTheory.IndefiniteRowSideFullHecke.HodgePeriodGram.hodgeGram

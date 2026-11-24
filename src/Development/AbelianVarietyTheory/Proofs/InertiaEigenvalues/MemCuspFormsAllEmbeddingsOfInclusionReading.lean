@@ -348,8 +348,7 @@ theorem exists_sec_ne_zero (Xo : Moduli Dw l) (c : Coeff l) : ∃ m : ℕ, ∀ (
     (hT _ _)).1
   have h0 := hne 0 _ hv
   have e1 : rdU U f k x₀ = toC (evR Xo c f (U.un k ⟨x₀, hx₀⟩)) := dite_eq_left hx₀
-  rw [e1]
-  exact h0
+  rwa [e1]
 
 theorem rd_pow {σ : c.F →+* ℂ} (U : Unf Xo c σ r) (f : Rul Xo c) (n : ℕ) : rdU U (f ^ (n + 1)) = rdU U f ^ (n + 1) := by
   induction n with
@@ -507,8 +506,7 @@ theorem mem_cusp_of_span (hf : 1 < Module.finrank ℚ E / 2) (U : ∀ σ : c.F �
     have h2 := ss_mul _ hf h1 (isSec_pow _ h1.1.1 (2 * k - 1))
     rw [la_smul _ _ hd.2, rd_pow]
     have e : 2 * k - 1 + 1 = 2 * k := by omega
-    rw [e, ← pow_succ', ← succ_nsmul'] at h2
-    exact h2
+    rwa [e, ← pow_succ', ← succ_nsmul'] at h2
   choose D hD using fun i => ss σ₀ g₀ _ (down σ₀ g₀ _ eW _ (rdm (hb i) σ₀ g₀))
   choose D' hD' using fun j => sb σ₀ g₀ _ (up σ₀ g₀ _ eW _ (rdm (hs j) σ₀ g₀))
   choose B hB using fun j => sb σ hσ _ (up σ hσ _ eW _ (rdm (hs j) σ hσ))
@@ -558,8 +556,7 @@ theorem mem_cusp_of_span (hf : 1 < Module.finrank ℚ E / 2) (U : ∀ σ : c.F �
     have := ss_mul _ hf ((mem_holSub _ _ _).1 hF0.1 j)
       ((hU σ₀ g₀).2.2.2.2.1 0 _ ⟨fun _ _ _ _ => le_rfl, ev⟩ _ hηL j)
     rw [← la_add _ _ _ eA ev, add_zero] at this
-    rw [_root_.GlobalTheory.AllWt.rdU_mul]
-    exact this
+    rwa [_root_.GlobalTheory.AllWt.rdU_mul]
   obtain ⟨et, het⟩ := sb σ₀ g₀ _ ht0
   have R4 : ∑ _u : Unit, α 1 • rdU (U σ) (F * η ^ (L + 1)) = ∑ i, α (et i) • rdU (U σ) (b i) :=
     tr _ _ (dA _ eW) (fun _ : Unit => F * η ^ (L + 1)) b (fun _ => hts) (fun i => cs (hb i)) (fun _ => 1) et

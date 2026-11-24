@@ -298,8 +298,7 @@ theorem haar_comp_field (f : Matrix κ ι K →ₗ[K] Matrix κ ι K) (hf : Line
     IsSB (fun x => φ (f x)) ∧
       haar (fun x => φ (f x)) = ((|Algebra.norm ℚ (LinearMap.det f)| : ℚ) : ℂ) * haar φ := by
   have h := haar_comp ((f.equivOfDetNeZero hf).restrictScalars ℚ) φ hφ
-  rw [← LinearMap.det_restrictScalars]
-  exact h
+  rwa [← LinearMap.det_restrictScalars]
 
 theorem det_mul_right [DecidableEq ι] (A : Matrix ι ι K) :
     LinearMap.det (mulRightLinearMap κ K A) = A.det ^ Fintype.card κ := by
@@ -326,11 +325,9 @@ theorem haar_mul : ∀ (K κ ι : Type) [Field K] [NumberField K] [Fintype κ] [
   refine ⟨fun A hA => ?_, fun A hA => ?_⟩
   · have h := haar_comp_field (mulRightLinearMap κ K A)
       (by rw [det_mul_right]; exact pow_ne_zero _ hA) φ hφ
-    rw [det_mul_right, map_pow, abs_pow, Rat.cast_pow] at h
-    exact h
+    rwa [det_mul_right, map_pow, abs_pow, Rat.cast_pow] at h
   · have h := haar_comp_field (mulLeftLinearMap ι K A)
       (by rw [det_mul_left]; exact pow_ne_zero _ hA) φ hφ
-    rw [det_mul_left, map_pow, abs_pow, Rat.cast_pow] at h
-    exact h
+    rwa [det_mul_left, map_pow, abs_pow, Rat.cast_pow] at h
 
 end GlobalTheory.SW.LinChange

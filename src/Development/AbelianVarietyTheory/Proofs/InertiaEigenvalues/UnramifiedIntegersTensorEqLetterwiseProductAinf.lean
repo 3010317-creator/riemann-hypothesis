@@ -205,8 +205,7 @@ theorem tilt_pow {c : Om l} {m M k : ℕ} (hl : ¬ l ∣ M) (hm : m ∣ M) {x y 
     rw [← pow_mul, mul_comm, pow_mul]
     apply Subtype.ext
     have := map_pow (algebraMap (Om l) ℂ_[l]) c k
-    rw [SubmonoidClass.coe_pow, SubmonoidClass.coe_pow, SubmonoidClass.coe_pow, a1, b1]
-    exact this
+    rwa [SubmonoidClass.coe_pow, SubmonoidClass.coe_pow, SubmonoidClass.coe_pow, a1, b1]
   have e2 : b ^ M = 1 := by
     obtain ⟨d, rfl⟩ := hm
     rw [pow_mul, b2, one_pow]

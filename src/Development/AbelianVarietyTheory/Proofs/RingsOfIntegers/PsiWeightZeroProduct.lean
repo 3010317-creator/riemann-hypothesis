@@ -129,9 +129,7 @@ theorem psi_weight_zero_product (pD : IsPowDeg D' D j) {O : Type} [CommRing O] [
         (val (D.psi (w0 • x)) (𝟙 _) z J)⁻¹ * (val D.rigK (𝟙 _) z J)⁻¹ * val u (𝟙 _ ≫ D.xK x) z J =
         val (D.psi x) (𝟙 _) z J * val D.rigK (𝟙 _) z J := by
       intro x
-      have hc := val_corr hJ (hy x) (𝟙 _)
-      simp only [DegPre.tau, val_mul hJ, val_inv, val_pull hJ] at hc
-      exact hc
+      simpa only [DegPre.tau, val_mul hJ, val_inv, val_pull hJ] using val_corr hJ (hy x) (𝟙 _)
     rw [val_mul hJ', val_mul hJ', val_pull hJ']
     simp only [DegPre.tau, val_mul hJ', val_inv]
     have P := fun x => psi_val pD hJ hJ' x (𝟙 _)

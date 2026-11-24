@@ -168,8 +168,7 @@ theorem powRatAll_true (l : I.Laws) (Z : TC.Later B (I.cols l)) : GL3Theta.PowRa
       show UOQ B.host I.SQ = _
       ext x
       constructor
-      · intro h
-        exact ⟨x, h, rfl⟩
+      · exact fun h => ⟨x, h, rfl⟩
       · rintro ⟨y, hy, rfl⟩
         exact hy)
     (fun z => rfl)
@@ -361,8 +360,7 @@ theorem onMin_canInv_mem (hfit : ∀ s c, (nu s).colLen c ≤ N) (F : FrP D w N 
   have ψ'_mon : ∀ m, ψ' (monomial m 1) = ρ (ψ (monomial m 1)) := fun m => by
     have := (MvPolynomial.basisMonomials ((Bool × HH D) × ℕ × Fin N) (Cw D w)).constr_basis (Cw D w)
       (fun m => ρ (ψ (monomial m 1))) m
-    rw [MvPolynomial.coe_basisMonomials] at this
-    exact this
+    rwa [MvPolynomial.coe_basisMonomials] at this
   have key : ∀ q : MvPolynomial ((Bool × HH D) × ℕ × Fin N) D.what₂.LL,
       ψ' (MvPolynomial.map (P.iL w) q) = ρ (ψ (MvPolynomial.map (P.iL w) q)) := by
     intro q
@@ -880,8 +878,7 @@ theorem kerEntHyp_latS : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok �
     have hBm' := (GlobalTheory.T.dualLattice_localBasis_iff_unimodularCompanion I hOk hPins l Z Y u μ w hw i hi.le c Bm).1 hBm
     have h1 := (GlobalTheory.T.formsLattice_atClass_iff_twistedPolynomial I hOk hPins l Z Y O Pl Bs hQp hStd hBas hEnt u μ w hw i hi (Equiv.refl _) hY c _ (hrat c) Bm
       hBm').2 (hc c)
-    rw [hx]
-    exact h1
+    rwa [hx]
 
 end GlobalTheory.KerLatS
 end -- clump:auto
@@ -998,8 +995,7 @@ theorem exists_unitary_at (p : ℕ) (hp : p.Prime) {N : ℕ} (L : Submodule (�
     obtain ⟨y, hy, hyx⟩ := Submodule.mem_map.1 hkx
     choose c hc using GlobalTheory.IndefiniteRowSideFullHecke.AdmissibleHarmonicLattice.mem_stdMod.1 hy
     refine ⟨k, hk, c, ?_⟩
-    rw [LinearMap.toMatrix'_mulVec, Nat.cast_smul_eq_nsmul]
-    rw [← hyx]
+    rw [LinearMap.toMatrix'_mulVec, Nat.cast_smul_eq_nsmul, ← hyx]
     have : (fun a => (c a : D.host.E)) = y := funext hc
     rw [this]
     rfl
@@ -1158,8 +1154,7 @@ theorem minorXZ_hom (s : Lt) (p : ℕ) (I : Fin p ↪o Fin N1) :
   apply Submodule.smul_mem (MvPolynomial.weightedHomogeneousSubmodule ℤ (wt N0 N1 a) _)
   have := MvPolynomial.IsWeightedHomogeneous.prod Finset.univ _ (fun _ => Additive.ofMul (a s))
     (fun i _ => hent (σ i) i)
-  rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin] at this
-  exact this
+  rwa [Finset.sum_const, Finset.card_univ, Fintype.card_fin] at this
 
 theorem Gxz_hom (nu : Lt → YoungDiagram) (I : KM.ColChoice N1 nu) :
     MvPolynomial.IsWeightedHomogeneous (wt N0 N1 a) (KM.Gxz N0 N1 nu I) (∑ s, (nu s).card • Additive.ofMul (a s)) := by
@@ -1407,12 +1402,10 @@ theorem kerEntHyp_scB {Dx : DivX D} {Tw : TwForms D} (ha : ∀ w u μ τ, ‖a w
     exact ⟨b, by rw [prTC_scB P O B a hC u μ w i hi, norm_mul, nT, one_mul, hb]⟩
   · have e : ∀ c v J, ‖prSC P O (scB a B) u μ w i c v J‖ = ‖prSC P O B u μ w i c v J‖ := fun c v J => by
       rw [prSC_scB P O B a hC u μ w i hi, norm_mul, nS, one_mul]
-    simp only [e]
-    exact h.latS u μ w hw i hi φ
+    simpa only [e] using h.latS u μ w hw i hi φ
   · have e : ∀ c' v' I, ‖prTC P O (scB a B) u μ w i c' v' I‖ = ‖prTC P O B u μ w i c' v' I‖ := fun c' v' I => by
       rw [prTC_scB P O B a hC u μ w i hi, norm_mul, nT, one_mul]
-    simp only [e]
-    exact h.latT u μ w hw i hi φ
+    simpa only [e] using h.latT u μ w hw i hi φ
   · have k0 := h.kform u μ w hw i hi c c' v v' hK I
     have hF := unF_ne P O B hB u μ (hR u μ) w i hi c c'
     have hU0 : ((∏ τ, ((a w u μ τ ^ i) ^ D.R.N i) ^ ((D.chTw u μ).sSharp i τ)) *

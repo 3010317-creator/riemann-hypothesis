@@ -281,8 +281,7 @@ theorem pT_qT (τ : D.what₂.Tau) : I.pT τ * I.qT τ = 1 := by
 theorem qT_pT (τ : D.what₂.Tau) : I.qT τ * I.pT τ = 1 := I.symm.pT_qT τ
 
 theorem qT_gram (τ : D.what₂.Tau) : (I.qT τ)ᴴ * gramAt D V τ * I.qT τ = gramAt D V' τ := by
-  have h := map_gram (tauE D τ) _ (starRingEnd ℂ) (fun x => (tauE_sig D τ x).symm) I.symm.gram
-  exact h
+  exact map_gram (tauE D τ) _ (starRingEnd ℂ) (fun x => (tauE_sig D τ x).symm) I.symm.gram
 
 variable {θ : InfF D}
 
@@ -296,8 +295,7 @@ theorem infMat_kap (hθ : IsInfFam θ) (τ : D.what₂.Tau) (g : GA D V) :
   have e1 : I.aP.map ρ = I.pT τ := by ext i j; exact hρ _
   have e2 : I.aQ.map ρ = I.qT τ := by ext i j; exact hρ _
   have := I.map_conjM ρ (mt V g)
-  rw [e1, e2] at this
-  exact this
+  rwa [e1, e2] at this
 
 def adP (τ : D.what₂.Tau) (X : Matrix (Fin V.rank) (Fin V.rank) ℂ) : Matrix (Fin V'.rank) (Fin V'.rank) ℂ := I.pT τ * X * I.qT τ
 

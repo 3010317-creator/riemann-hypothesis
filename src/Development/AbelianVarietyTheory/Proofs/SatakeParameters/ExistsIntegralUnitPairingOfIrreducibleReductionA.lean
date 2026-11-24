@@ -116,8 +116,7 @@ lemma exists_eq_smul_of_residue_eq_zero {ϖ : R} (hϖ : maximalIdeal R = Ideal.s
     {x : Fin a → R} (h : (fun i => residue R (x i)) = 0) : ∃ z : Fin a → R, x = ϖ • z := by
   have : ∀ i, ϖ ∣ x i := fun i => by
     have h1 : residue R (x i) = 0 := congrFun h i
-    rw [residue_eq_zero_iff, hϖ, Ideal.mem_span_singleton] at h1
-    exact h1
+    rwa [residue_eq_zero_iff, hϖ, Ideal.mem_span_singleton] at h1
   choose z hz using this
   exact ⟨z, funext fun i => by simp [hz i]⟩
 
@@ -191,8 +190,7 @@ theorem main (B : Matrix (Fin a) (Fin a) R)
         rw [this, sub_self]
       obtain ⟨z, hz⟩ := exists_eq_smul_of_residue_eq_zero hϖ h0
       have hq : Submodule.Quotient.mk (p := L) x = ϖ • Submodule.Quotient.mk z := by
-        rw [← Submodule.Quotient.mk_smul, ← hz, Submodule.Quotient.eq, sub_sub_cancel]
-        exact hl
+        rwa [← Submodule.Quotient.mk_smul, ← hz, Submodule.Quotient.eq, sub_sub_cancel]
       rw [hq]
       exact Submodule.smul_mem_smul hϖm Submodule.mem_top
     have htopQ := Submodule.eq_bot_of_le_smul_of_le_jacobson_bot (maximalIdeal R) ⊤
@@ -207,13 +205,11 @@ theorem main (B : Matrix (Fin a) (Fin a) R)
       rw [htopQ] at h1
       exact (Submodule.Quotient.mk_eq_zero L).mp ((Submodule.mem_bot _).mp h1)
     have hdy : algebraMap R k d • y ∈ W := by
-      rw [← hx]
-      exact hxL
+      rwa [← hx]
     exact (W.smul_mem_iff ((map_ne_zero_iff _ hinj).mpr hd)).mp hdy
 
   have hnot : ∃ v ∈ redLattice L, (B.map (residue R)).mulVec v ∉ redLattice L := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     rcases hB _ hcon with h | h
     · exact hA h
     · exact hT h
@@ -233,8 +229,7 @@ theorem main (B : Matrix (Fin a) (Fin a) R)
     simp [hϖres]
   let b := Module.Free.chooseBasis R ((Fin a → R) ⧸ L)
   have hj : ∃ j, b.repr (Submodule.Quotient.mk (B.mulVec w)) j ∉ maximalIdeal R := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hdv : ∀ j, ϖ ∣ b.repr (Submodule.Quotient.mk (B.mulVec w)) j := fun j => by
       have := hcon j
       rwa [hϖ, Ideal.mem_span_singleton] at this
@@ -279,7 +274,6 @@ end GlobalTheory.Cong.UnitPairing
 namespace GlobalTheory.Cong
 
 theorem exists_integral_unit_pairing_of_irreducible_reduction : ∀ (R k : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [Field k] [Algebra R k] [IsFractionRing R k] (a : ℕ) (B : Matrix (Fin a) (Fin a) R), (∀ W : Submodule (IsLocalRing.ResidueField R) (Fin a → IsLocalRing.ResidueField R), (∀ v ∈ W, (B.map (IsLocalRing.residue R)).mulVec v ∈ W) → W = ⊥ ∨ W = ⊤) → ∀ W : Submodule k (Fin a → k), W ≠ ⊥ → W ≠ ⊤ → ∃ w f : Fin a → R, (fun i => algebraMap R k (w i)) ∈ W ∧ (∀ y ∈ W, (fun i => algebraMap R k (f i)) ⬝ᵥ y = 0) ∧ IsUnit (f ⬝ᵥ B.mulVec w) := by
-  intro R k _ _ _ _ _ _ a B hB W hW0 hWt
-  exact UnitPairing.main B hB W hW0 hWt
+  exact fun R k _ _ _ _ _ _ a B hB W hW0 hWt => UnitPairing.main B hB W hW0 hWt
 
 end GlobalTheory.Cong

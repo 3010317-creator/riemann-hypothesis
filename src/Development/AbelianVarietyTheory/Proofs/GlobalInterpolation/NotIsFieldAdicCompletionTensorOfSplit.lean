@@ -149,12 +149,10 @@ theorem _root_.GlobalTheory.SplitPlace.not_isField_of_split : ∀ (F E : Type) [
   have hβF : (β : v.adicCompletion F) ^ 2 + algebraMap F (v.adicCompletion F) (b : F) * β
       + algebraMap F (v.adicCompletion F) (c : F) = 0 := by
     have h := congrArg (v.adicCompletionIntegers F).subtype hβ
-    rw [map_add (f := _), map_add (f := _), map_mul, map_pow, map_zero] at h
-    exact h
+    rwa [map_add (f := _), map_add (f := _), map_mul, map_pow, map_zero] at h
   have hαE : (α : E) ^ 2 + algebraMap F E (b : F) * α + algebraMap F E (c : F) = 0 := by
     have h := congrArg (algebraMap (𝓞 E) E) hα2
-    rw [map_add (f := _), map_add (f := _), map_mul, map_pow, map_zero] at h
-    exact h
+    rwa [map_add (f := _), map_add (f := _), map_mul, map_pow, map_zero] at h
   set x : v.adicCompletion F ⊗[F] E :=
     Algebra.TensorProduct.includeLeft (S := F) (B := E) (β : v.adicCompletion F) with hx
   set y : v.adicCompletion F ⊗[F] E :=
@@ -185,8 +183,7 @@ theorem _root_.GlobalTheory.SplitPlace.not_isField_of_split : ∀ (F E : Type) [
     obtain ⟨ℓ, hℓ, hℓα⟩ :=
       LinearMap.exists_extend_of_notMem (0 : Submodule.span F {(1 : E)} →ₗ[F] F) hnot 1
     refine ⟨ℓ, ?_, hℓα⟩
-    have h := LinearMap.congr_fun hℓ ⟨1, Submodule.mem_span_singleton_self 1⟩
-    simpa using h
+    simpa using LinearMap.congr_fun hℓ ⟨1, Submodule.mem_span_singleton_self 1⟩
   have key := congrArg ((TensorProduct.rid F (v.adicCompletion F)).toLinearMap ∘ₗ
     LinearMap.lTensor (v.adicCompletion F) ℓ) hz
   simp [hy, hℓ1, hℓα, Algebra.TensorProduct.includeLeft_apply] at key

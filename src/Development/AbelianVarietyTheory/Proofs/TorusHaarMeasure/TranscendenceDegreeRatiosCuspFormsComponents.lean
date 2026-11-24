@@ -512,8 +512,7 @@ theorem levi_pos {r : ℕ} {X : Data E r} {L eW : Wt X.Ψ r} {N a : ℕ}
     push Not at hle
     have h1 := mul_nonneg (by linarith : (0 : ℝ) ≤ m) (neg_nonneg.2 hle)
     nlinarith
-  rw [hfW] at hfin
-  exact hfin
+  rwa [hfW] at hfin
 
 end
 
@@ -576,8 +575,7 @@ theorem eq_zero_of_det_fderiv_ne_zero :
     rw [ContinuousLinearMap.coe_toContinuousLinearEquivOfDetNeZero]
     exact ha.hasStrictFDerivAt
   refine eq_zero_of_eventually_eval p (F 0) ?_
-  rw [← hs.map_nhds_eq_of_equiv, Filter.eventually_map]
-  exact hp
+  rwa [← hs.map_nhds_eq_of_equiv, Filter.eventually_map]
 
 end GlobalTheory.JacobianIndependence
 end -- clump:auto
@@ -941,8 +939,7 @@ theorem ratiosFree_of_proper (X : Data E r) (L eW : Wt X.Ψ r) {N : ℕ} (a : �
       funext y
       exact div_eq_mul_inv _ _
     show DifferentiableAt ℂ (fun z => w (jj k) (cpt X x z) / w j0 (cpt X x z)) z
-    rw [he]
-    exact hq
+    rwa [he]
   · filter_upwards [hev] with z hz
     exact hp _ hz.1 hz.2
 
@@ -1038,8 +1035,7 @@ theorem evC_ne_zero_of_nonZeroComp (hG : GenFrEx (T.Q.Xo j) T.Q.c) {u u' : Weigh
     have h1 := esec_evC_aeval h hj hG hT Z' ![(F : T.R j), (g' : T.R j)]
       (MvPolynomial.X 0 * MvPolynomial.X 1)
     simp only [map_mul, MvPolynomial.aeval_X, Matrix.cons_val_zero, Matrix.cons_val_one] at h1
-    rw [esecMul_coe]
-    exact h1
+    rwa [esecMul_coe]
   have hP0 : esecMul h hj F g' = 0 := hinj _ _ fun Z' => by
     rw [hev]
     by_cases hZ : Z' = Z
@@ -1080,19 +1076,16 @@ theorem trdeg_of_ratiosFree (hG : GenFrEx (T.Q.Xo j) T.Q.c) {σ : T.Q.c.F →+* 
   have hv0 : evC hG Z (w j0).1 ≠ 0 := fun h0 => hne ((hk wL (w j0)).mp h0 x0 hx0)
   refine ⟨j0, hv0, ?_⟩
   have hΩ : Algebra.trdeg T.Q.c.F (Om Z) = (ReciprocityTheory.ChartRestriction.G.AR.Inst.nd ((T.U j σ).X k) : Cardinal) := by
-    rw [hnd]
-    exact hΩ0
+    rwa [hnd]
   rw [← hnd]
   refine trdeg_ratios σ hΩ (fun m => evC hG Z (w m).1) j0 jj hv0 (fun m x => rdU (T.U j σ) (w m).1 k x)
     ((T.U j σ).X k).dom ?_ hind
   intro d P hP' hPv x hx
   have hmem := esec_hom_mem h hj (fun m => ((w m).1 : T.R j)) (fun m => (w m).2) P hP'
   have hF : evC hG Z (MvPolynomial.aeval (fun m => ((w m).1 : T.R j)) P) = 0 := by
-    rw [esec_evC_aeval h hj hG hT Z]
-    exact hPv
+    rwa [esec_evC_aeval h hj hG hT Z]
   have h2 := (hk _ ⟨_, hmem⟩).mp hF x hx
-  rw [rdU_aeval (T.U j σ) k hx (h.toLawsCore.unTest j hj σ hσ k ⟨x, hx⟩)] at h2
-  exact h2
+  rwa [rdU_aeval (T.U j σ) k hx (h.toLawsCore.unTest j hj σ hσ k ⟨x, hx⟩)] at h2
 
 end Record
 
@@ -1113,8 +1106,7 @@ theorem trdeg_ratios_record : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (
     have hg : evC hG Z (G.w i1).1 ≠ 0 := fun h0' => hi1 ((hk _ _).mp h0' x1 hx1)
     have het : evC hG Z G.et.1 ≠ 0 := evC_ne_zero_of_nonZeroComp h hj hG G.et hnz Z (G.w i1) hg
     have het0 : ∃ x ∈ ((T.U j σ).X k).dom, rdU (T.U j σ) G.et.1 k x ≠ 0 := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       exact het ((hk _ _).mpr hcon)
     have hr : 0 < g0 D := by
       have hr0 : 0 < D.R.r := by

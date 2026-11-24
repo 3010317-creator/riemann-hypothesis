@@ -177,8 +177,7 @@ theorem exists_antiFrame [Algebra.Unramified (𝓞 (maximalRealSubfield E)) (�
       Matrix.transpose_one] at h3
     have hT : ((Formalism.UG.antiJ E n).map (locEmb v))ᵀ = (Formalism.UG.antiJ E n).map (locEmb v) := by
       ext a b; simp only [Matrix.transpose_apply, Matrix.map_apply, Formalism.UG.antiJ, add_comm b.val a.val]
-    rw [hT] at h3
-    exact h3
+    rwa [hT] at h3
   · rw [mem_ordAt_iff]
     have hm : (fun k => (h.1 *ᵥ Pi.single j 1) k) ∈ locLattice v (Formalism.L2.Col.stdLat E n) := by
       rw [h2]
@@ -186,12 +185,10 @@ theorem exists_antiFrame [Algebra.Unramified (𝓞 (maximalRealSubfield E)) (�
       rw [Matrix.mulVec_mulVec, ← Units.val_mul, inv_mul_cancel, Units.val_one, Matrix.one_mulVec]
       exact single_int (O := (locOrder v).toSubring) j k
     have := locLattice_le v hm i
-    rw [Matrix.mulVec_single_one] at this
-    exact this
+    rwa [Matrix.mulVec_single_one] at this
   · rw [mem_ordAt_iff]
     have := (h2 _).1 (hs j) i
-    rw [Matrix.mulVec_single_one] at this
-    exact this
+    rwa [Matrix.mulVec_single_one] at this
 
 theorem exists_std [Algebra.Unramified (𝓞 (maximalRealSubfield E)) (𝓞 E)]
     (hc : CMData (maximalRealSubfield E) E) (v : IsDedekindDomain.HeightOneSpectrum (𝓞 (maximalRealSubfield E)))

@@ -181,8 +181,7 @@ theorem mem_nabStd_iff {ι : Type} [Fintype ι] {n : ℕ} (lam : ι → DomWeigh
   · intro h
     have := GlobalTheory.IoExtend.map_mem_nabStd e.symm.toRingHom lam h
     rwa [map_symm_map] at this
-  · intro h
-    exact GlobalTheory.IoExtend.map_mem_nabStd e.toRingHom lam h
+  · exact fun h => GlobalTheory.IoExtend.map_mem_nabStd e.toRingHom lam h
 
 theorem map_mem_nabP {ι : Type} [Fintype ι] {n : ℕ} (lam : ι → DomWeight n)
     (M : ι → Submodule (𝓞 K') (Fin n → K')) (M2 : ι → Submodule (𝓞 K) (Fin n → K))
@@ -209,8 +208,7 @@ theorem map_mem_nabP {ι : Type} [Fintype ι] {n : ℕ} (lam : ι → DomWeight 
   have h2 := (mem_localization_comap_iff (RingOfIntegers.mapRingEquiv e) (map e.toRingHom) (map_smul_int' e) w.asIdeal
     (nabStd K' lam) (nabStd K lam) (mem_nabStd_iff e lam) _).1 h1
   change actP lam B⁻¹ (map e.toRingHom F) ∈ _
-  rw [hact]
-  exact h2
+  rwa [hact]
 
 theorem map_mem_nabAtr {E : Type} [Field E] [NumberField E] {ι : Type} [Fintype ι] {n : ℕ} (emb : ι → E →+* K')
     (emb2 : ι → E →+* K) (h : ∀ τ, emb2 τ = e.toRingHom.comp (emb τ)) (lam : ι → DomWeight n)

@@ -306,8 +306,7 @@ theorem homS_of_entB {n' c' n c k₀ : ℕ} (hk' : k₀ ≤ n') (hk : k₀ ≤ n
   obtain ⟨h1', h2'⟩ := fIdx_fPos hk' l'.2
   have := h _ _ h1 h1'
   unfold LocE.entB Loc.atN at this
-  rw [h2, h2', dite_eq_left l.2, eN_eq l'.2] at this
-  exact this
+  rwa [h2, h2', dite_eq_left l.2, eN_eq l'.2] at this
 
 omit [NumberField E] [StarRing E] in
 theorem entB_add_smul {N' N : ℕ} (q k₀ c' n' c n : ℕ) (ex' ex : ℕ → ℕ) (x z : HomE E N' N) (s : E) :
@@ -580,8 +579,7 @@ theorem exists_split {V : Type} {n : ℕ} (F : V → Sp E n → K) (h1 : ∀ x y
     · intro i _ hi
       dsimp only
       rw [ite_eq_right (fun h => hi ((key i).1 h)), mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   · rw [of_not_not fun h => hy (h1 x y h), Finset.sum_eq_zero]
     intro i _
     exact mul_eq_zero_of_right _ (of_not_not fun h => hy ((colFn_indicator (K := K) P _ (ha i)).1 y h))

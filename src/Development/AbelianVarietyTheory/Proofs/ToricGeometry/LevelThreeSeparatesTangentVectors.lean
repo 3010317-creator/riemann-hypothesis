@@ -217,8 +217,7 @@ theorem level_three_separates_tangent_vectors :
       have hd : ∀ p : Fin g → ℂ, HasFDerivAt (fun x => θ (x + (p - z))) (fderiv ℂ θ p) z := by
         intro p
         have := (hθ p).hasFDerivAt
-        rw [show p = z + (p - z) by abel] at this
-        rw [← hasFDerivAt_comp_add_right] at this
+        rw [show p = z + (p - z) by abel, ← hasFDerivAt_comp_add_right] at this
         simpa using this
       have hdd : ∀ p : Fin g → ℂ, Differentiable ℂ (fun x => θ (x + (p - z))) := fun p =>
         hθ.comp (by fun_prop)

@@ -91,8 +91,7 @@ theorem stX_ok (a : I.ι) : (I.stX a).Ok := by
   · intro _ g
     let M : Matrix (Fin (B.R.N B.R.m - 1)) (Fin (B.R.N B.R.m - 1)) B.fields.E := ↑(toGLm _ _ g.1.1)
     have h : Mᴴ * 1 * M = 1 := toGLm_mem_UJ g.1
-    rw [Matrix.mul_one] at h
-    exact h
+    rwa [Matrix.mul_one] at h
   · intro _ g
     exact isOfFinOrder_iff_pow_eq_one.1
       ((MonoidHom.isOfFinOrder Λ.chr (isOfFinOrder_of_finite g.2.1)).mul (hRoot g.2.2))

@@ -117,8 +117,7 @@ theorem family_congr_basis_mod_nilpotent (R : Type) [CommRing R] (M : Type) [Add
   have hnil : IsNilpotent ν := by
     refine ⟨n, ?_⟩
     have := hpow n
-    rw [hIn, Submodule.bot_smul, le_bot_iff, LinearMap.range_eq_bot] at this
-    exact this
+    rwa [hIn, Submodule.bot_smul, le_bot_iff, LinearMap.range_eq_bot] at this
   have hunit : IsUnit (1 + ν) := hnil.isUnit_one_add
   have hbij : Function.Bijective ⇑(1 + ν) := (Module.End.isUnit_iff _).1 hunit
   have hcomp : b' = ⇑(1 + ν) ∘ b := by
@@ -325,8 +324,7 @@ theorem tri_basis : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (t : �
         · simp [mul_comm]
         · intro k _ hk
           simp [hk]
-        · intro h
-          exact absurd hj h
+        · exact fun h => absurd hj h
       · rw [Finset.sum_eq_zero]
         · have h0 : x.2 j = 0 := by simpa using hj
           simp [h0]
@@ -358,8 +356,7 @@ theorem tri_basis : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (t : �
           lt_of_le_of_ne hle (fun e => hne (revLex.toSyn.injective e))
         obtain ⟨_, hdeg⟩ := hLed y
         rw [MonomialOrder.coeff_eq_zero_of_lt (lt_of_le_of_lt hdeg hlt), mul_zero]
-    · intro h
-      exact absurd hx.1 h
+    · exact fun h => absurd hx.1 h
   · rw [Submodule.eq_top_iff']
     have key : ∀ s : revLex.syn, ∀ q : MvPolynomial ℕ R,
         revLex.toSyn (revLex.degree q) = s → q ∈ Submodule.span R (Set.range F) := by
@@ -392,8 +389,7 @@ theorem tri_basis : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (t : �
             exact (MonomialOrder.coeff_degree_ne_zero_iff.2 h0) (by rw [e']; exact hz)
         have h := Submodule.add_mem _ hrest hmem
         rwa [sub_add_cancel] at h
-    intro q
-    exact key _ q rfl
+    exact fun q => key _ q rfl
 
 end GlobalTheory.TriBasis
 end -- clump:auto
@@ -720,8 +716,7 @@ theorem GlobalTheory.BSP.exists_topBasis_of_levels (A : Type) [CommRing A] (L : 
           rw [Finsupp.smul_apply, smul_eq_mul]; ring
         rw [e]; exact Ideal.mul_mem_left _ _ (hC x k n c hc)
     c_self := fun k => by
-      simp only [AddMonoidHom.mk'_apply]
-      exact uniq _ k _ fun n => ⟨_, single_approx n k, by simp⟩
+      simpa only [AddMonoidHom.mk'_apply] using uniq _ k _ fun n => ⟨_, single_approx n k, by simp⟩
     c_ne := fun j k hjk => by
       simp only [AddMonoidHom.mk'_apply]
       exact uniq _ j _ fun n => ⟨_, single_approx n k, by simp [Ne.symm hjk]⟩
@@ -857,8 +852,7 @@ theorem Delta.δ_φ_comm : ∀ (l : ℕ) [Fact l.Prime] (A : Type) [CommRing A] 
   have hgφ : ∀ p, g (D₀.φ p) = D.φ (g p) := Delta.map_φ_of_map_δ D₀ D g hgδ
   have hX : g (MvPolynomial.X 0) = a := by simp [g]
   have := congrArg g (poly_δ_φ l (MvPolynomial.X 0))
-  rw [hgδ, hgφ, hgφ, hgδ, hX] at this
-  exact this
+  rwa [hgδ, hgφ, hgφ, hgδ, hX] at this
 
 end GlobalTheory.BSP
 end -- clump:auto
@@ -1093,8 +1087,7 @@ theorem polyEval_isδ [Fact l.Prime] {A C : Type} [CommRing A] [CommRing C] (D :
     · intro a
       rw [mem_δLocus, polyDelta_C, MvPolynomial.eval₂Hom_C, MvPolynomial.eval₂Hom_C]
       exact hf a
-    · intro p q hp hq
-      exact add_mem hp hq
+    · exact fun p q hp hq => add_mem hp hq
     · intro p k hp
       refine mul_mem hp ?_
       rw [mem_δLocus, polyDelta_X, MvPolynomial.eval₂Hom_X', MvPolynomial.eval₂Hom_X',

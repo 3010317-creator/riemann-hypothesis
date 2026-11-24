@@ -133,9 +133,7 @@ theorem isDR_of_summand (D : D7) (hFont : FontaineAtPlacesOverL (D := D)) (hP : 
   have hcr' : ∀ y, IsCrys ((D.loc (D.nd.l i)).PD K') (matRep (Ms' y)) := fun y =>
     (GlobalTheory.PcRes.main (D.nd.l i) (D.loc (D.nd.l i)) (D.nbr i w hw).Kw K' (D.nbr i w hw).LL h hN hF hS _
       (matRep (Br.loc D.nbr i w hw (rTwO D.nd i r y)))).2.1 (hx y).1
-  have hsub : IsSubOfSums W'.ρ (fun y => ⇑(Ms' y)) := by
-    refine ⟨a, x, j, hjinj, fun g v => ?_⟩
-    exact hjeq (incl g) v
+  have hsub : IsSubOfSums W'.ρ (fun y => ⇑(Ms' y)) := ⟨a, x, j, hjinj, fun g v => (hjeq (incl g) v)⟩
   have hW' : IsCrys ((D.loc (D.nd.l i)).PD K') W'.ρ :=
     (subsum_crys (PD := (D.loc (D.nd.l i)).PD K') (Ms := Ms') (hc := hc')
       (hF := hFont (D.nd.l i) K' (D.nbr i w hw).LL) (S := fun _ => Set.univ)
@@ -197,8 +195,7 @@ theorem left_nondeg (R C : Submodule LL (Fin a → Fin n → LL)) (hRC : IsCompl
   by_contra hne
   have hne' : (⟨u, hu⟩ : ↥R) ≠ 0 := fun h0 => hne (congrArg Subtype.val h0)
   obtain ⟨f, hf⟩ : ∃ f : Module.Dual LL ↥R, f ⟨u, hu⟩ ≠ 0 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     exact hne' ((Module.forall_dual_apply_eq_zero_iff LL _).1 hall)
   obtain ⟨u', hu'⟩ := exists_rep (f ∘ₗ R.projectionOnto C hRC)
   have hann : u' ∈ ann C := by

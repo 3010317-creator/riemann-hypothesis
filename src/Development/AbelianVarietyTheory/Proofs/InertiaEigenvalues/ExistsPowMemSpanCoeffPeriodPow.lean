@@ -346,8 +346,7 @@ theorem irreducible_map_iota_of_eisenstein : ∀ (l : ℕ) [Fact l.Prime] (a : �
       have h3 := congrArg WittVector.constantCoeff h2
       rw [map_mul, map_natCast, CharP.cast_eq_zero, zero_mul] at h3
       exact (w.isUnit.map WittVector.constantCoeff).ne_zero h3
-  have h := (hmon.irreducible_iff_irreducible_map_fraction_map (K := ↥(Kunr l a))).1 hW
-  exact h
+  exact (hmon.irreducible_iff_irreducible_map_fraction_map (K := ↥(Kunr l a))).1 hW
 
 end GlobalTheory.TameFrob
 end -- clump:auto
@@ -409,8 +408,7 @@ theorem norm_iotaO_le_one (l : ℕ) [Fact l.Prime] (a : ℕ) [NeZero a] (w : Wq 
     have hω : ω ^ l ^ a = ω := by
       simp only [ω]
       rw [← map_pow, ← map_pow, Fq.pow_card]
-    by_contra h
-    push Not at h
+    by_contra! h
     have h2 : 1 < l ^ a := Nat.one_lt_pow (NeZero.ne a) (Fact.out : l.Prime).one_lt
     have h3 : ‖ω‖ ^ 1 < ‖ω‖ ^ l ^ a := pow_lt_pow_right₀ h h2
     rw [pow_one, ← norm_pow, hω] at h3
@@ -434,8 +432,7 @@ theorem norm_lt_one_of_isRoot : ∀ (l : ℕ) [Fact l.Prime] (a : ℕ) [NeZero a
   · have : P = 1 := Polynomial.eq_one_of_monic_natDegree_zero hP h0
     rw [this, Polynomial.map_one] at hx
     simp [Polynomial.IsRoot] at hx
-  by_contra hge
-  push Not at hge
+  by_contra! hge
   have hlpos : (0 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).pos
   have hl1 : (1 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).one_lt
 
@@ -578,8 +575,7 @@ theorem isUnit_of_frob_dvd : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : B
     exact hU.dvd_mul_right.1 h3
   have h2 := _root_.GlobalTheory.expand_map_dvd_of_frobS_dvd l bk.a P _ hPm hPd h1
   by_cases hd : P.natDegree = 0
-  · rw [Polynomial.eq_one_of_monic_natDegree_zero hPm hd, Polynomial.coe_one, mul_one]
-    exact hU
+  · rwa [Polynomial.eq_one_of_monic_natDegree_zero hPm hd, Polynomial.coe_one, mul_one]
   exfalso
   have hl0 : (l : Wq l bk.a) ≠ 0 := fun h => by
     have := congrArg (GlobalTheory.TameFrob.iotaO l bk.a) h
@@ -630,8 +626,7 @@ theorem isUnit_of_frob_dvd : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : B
     rw [Polynomial.aeval_def, Polynomial.eval₂_map, hcomp, Polynomial.eval_map]
   have hmdvd : minpoly (↥(Kunr l bk.a)) z ∣ Q.map (GlobalTheory.TameFrob.iota l bk.a) := by
     apply minpoly.dvd
-    rw [haev]
-    exact hzQ
+    rwa [haev]
   have key : ∀ z' : Om l, Polynomial.aeval z' (minpoly (↥(Kunr l bk.a)) z) = 0 → ∀ y : Om l, y ^ l = z' →
       (bk.Ep.map ι).IsRoot y := by
     intro z' hz' y hy
@@ -641,13 +636,11 @@ theorem isUnit_of_frob_dvd : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : B
       rw [Polynomial.IsRoot, ← haev, hc, map_mul, hz', zero_mul]
     have hyE : ((bk.Ep ^ M * P).map ι).IsRoot y := by
       have h4 : ((Polynomial.expand (Wq l bk.a) l Q).map ι).IsRoot y := by
-        rw [Polynomial.IsRoot, Polynomial.map_expand, Polynomial.expand_eval, hy]
-        exact hz'Q
+        rwa [Polynomial.IsRoot, Polynomial.map_expand, Polynomial.expand_eval, hy]
       obtain ⟨c, hc⟩ := h2
       rw [Polynomial.IsRoot, hc, Polynomial.map_mul, Polynomial.eval_mul, h4.eq_zero, zero_mul]
     have hyr : r < ‖y‖ := by
-      by_contra hle
-      push Not at hle
+      by_contra! hle
       have h5 : ‖y‖ ^ l = r := by rw [← norm_pow, hy, hnz']
       have h6 : r ^ l < r := pow_lt_self_of_lt_one₀ hr0 hr1 (Fact.out : l.Prime).one_lt
       have h7 : ‖y‖ ^ l ≤ r ^ l := pow_le_pow_left₀ (norm_nonneg _) hle l
@@ -818,8 +811,7 @@ theorem GlobalTheory.BSP.pow_l_mem_span_coeff : ∀ (l : ℕ) [Fact l.Prime] (K 
   have hlφ : ¬ (l : bk.S) ∣ frobS l bk.a g := by
     obtain ⟨b, hb⟩ := frobS_eq l bk.a g
     rw [hb]
-    intro h
-    exact hlg (hpr.dvd_of_dvd_pow ((dvd_add_left (dvd_mul_right _ b)).1 h))
+    exact fun h => hlg (hpr.dvd_of_dvd_pow ((dvd_add_left (dvd_mul_right _ b)).1 h))
   have hfin : frobS l bk.a g ∣ bk.E ^ M * g := by
     obtain ⟨z, hz⟩ := hEI _ hr
     obtain ⟨w, hw⟩ : (l : bk.S) ^ r ∣ z :=

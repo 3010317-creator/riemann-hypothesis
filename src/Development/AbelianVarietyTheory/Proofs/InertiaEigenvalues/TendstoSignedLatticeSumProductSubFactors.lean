@@ -140,8 +140,7 @@ theorem pos_term_prod : ∀ (K : UQ) (B₁ B₂ : InvAlg K) (ι₁ ι₂ : Type)
     have key : (LinearMap.inl K.O B₁.A B₂.A) (al K a ^ ((p ∘ Sum.inl) i + N) • (e₁ i * r)) =
         al K a ^ (p (Sum.inl i) + N) • (((e₁ i, 0) : B₁.A × B₂.A) * (r, 1)) :=
       Prod.ext rfl (by show (0 : B₂.A) = al K a ^ (p (Sum.inl i) + N) • ((0 : B₂.A) * 1); simp)
-    rw [Submodule.mem_comap, key]
-    exact this
+    rwa [Submodule.mem_comap, key]
   · exact isIntegral_fst ((h (Sum.inl i)).2 (m, 0) hm)
   · have := (h (Sum.inr j)).1 (1, r) (isIntegral_one_pair hr)
     exact ⟨_, this, rfl⟩
@@ -454,8 +453,7 @@ theorem sgnLat_prod : ∀ (K : UQ) (B₁ B₂ : InvAlg K), (B₁.P * B₂.P).Sep
         (LinearMap.mulLeft K.E B₁.g).prodMap (LinearMap.mulLeft K.E B₂.g) := by
       exact LinearMap.ext fun _ => rfl
     have h2 := LinearMap.charpoly_prodMap (LinearMap.mulLeft K.E B₁.g) (LinearMap.mulLeft K.E B₂.g)
-    rw [← h1] at h2
-    exact h2
+    rwa [← h1] at h2
   let f : Fin (finrank K.E B₁.A + finrank K.E B₂.A) → B₁.A × B₂.A :=
     Fin.addCases (fun i => ((e₁ i, 0) : B₁.A × B₂.A)) x
   have hcard : Fintype.card (Fin (finrank K.E B₁.A + finrank K.E B₂.A)) = finrank K.E (B₁.A × B₂.A) := by
@@ -467,14 +465,12 @@ theorem sgnLat_prod : ∀ (K : UQ) (B₁ B₂ : InvAlg K), (B₁.P * B₂.P).Sep
     basisOfTopLeSpanOfCardEqFinrank f htop hcard
   have hbf : ⇑bf = f := coe_basisOfTopLeSpanOfCardEqFinrank f htop hcard
   have hN : finrank K.E B₁.A + finrank K.E B₂.A = finrank K.E (B₁.prod B₂).A := by
-    rw [← Fintype.card_fin (finrank K.E B₁.A + finrank K.E B₂.A)]
-    exact hcard
+    rwa [← Fintype.card_fin (finrank K.E B₁.A + finrank K.E B₂.A)]
   let bF : Basis (Fin (finrank K.E (B₁.prod B₂).A)) K.E (B₁.prod B₂).A := bf.reindex (finCongr hN)
   have hrange : Set.range ⇑bF = Set.range f := by
     exact (Basis.range_reindex bf (finCongr hN)).trans (by rw [hbf])
   have hspanF : Submodule.span K.O (Set.range ⇑bF) = M := by
-    rw [hrange]
-    exact hspan
+    rwa [hrange]
   have key := SgnBasis.sgnLat_span_basis K (B₁.prod B₂) bF
   rw [hspanF] at key
   rw [key, ← he₁, ← he₂, SgnBasis.sgnLat_span_basis K B₁ e₁, SgnBasis.sgnLat_span_basis K B₂ e₂]
@@ -1226,8 +1222,7 @@ theorem abs_sgnLat {K : UQ} (B : InvAlg K) (M : Submodule K.O B.A) : |B.sgnLat M
 theorem isUnit_alg {K : UQ} (B : InvAlg K) {a : K.O} (ha : a ≠ 0) : IsUnit (algebraMap K.O B.A a) := by
   rw [IsScalarTower.algebraMap_apply K.O K.E B.A]
   refine IsUnit.map _ (IsUnit.mk0 _ ?_)
-  intro h
-  exact ha ((IsFractionRing.injective K.O K.E) (by rw [h, map_zero]))
+  exact fun h => ha ((IsFractionRing.injective K.O K.E) (by rw [h, map_zero]))
 
 variable {ι₁ ι₂ : Type} (S₁ : Finset ι₁) (S₂ : Finset ι₂) (L k : ℕ) (p : ι₁ ⊕ ι₂ → ℤ)
 
@@ -1269,8 +1264,7 @@ theorem GlobalTheory.UnitLemma.Desc.hh_prod_tendsto : ∀ (K : UQ) (B₁ B₂ : 
         (LinearMap.mulLeft K.E B₁.g).prodMap (LinearMap.mulLeft K.E B₂.g) :=
       LinearMap.ext fun _ => rfl
     have h2 := LinearMap.charpoly_prodMap (LinearMap.mulLeft K.E B₁.g) (LinearMap.mulLeft K.E B₂.g)
-    rw [← h1] at h2
-    exact h2
+    rwa [← h1] at h2
   have hsB : (B₁.prod B₂).P.Separable := hP ▸ hsep
   have hs₁ : B₁.P.Separable := hL₁.2
   have hs₂ : B₂.P.Separable := hL₂.2

@@ -207,8 +207,7 @@ theorem exists_integral_char (d : G H.E N.Om →* Qbar (N.l i)) (hd : Continuous
         have := mem_range_of_norm N A i (x := x) (by rw [hx]; exact hn σ)
         rw [hx] at this
         exact this) ((isClosed_range_iota N A i).preimage hd)
-    intro g
-    exact hsub (hS ▸ Set.mem_univ g)
+    exact fun g => hsub (hS ▸ Set.mem_univ g)
   choose u hu using hall
   let ξ0 : G H.E N.Om →* N.O i :=
     { toFun := u
@@ -227,8 +226,7 @@ theorem exists_integral_char (d : G H.E N.Om →* Qbar (N.l i)) (hd : Continuous
       exact (Metric.tendsto_nhds.1 this δ hδ).mono fun x hx => by simpa [dist_eq_norm] using hx
     filter_upwards [hcd] with x hx
     apply hk
-    rw [map_sub, hu, hu]
-    exact hx
+    rwa [map_sub, hu, hu]
   · exact hu g
 
 end Coeff

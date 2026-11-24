@@ -52,8 +52,7 @@ namespace GlobalTheory.HWL.LevExp
 
 theorem eq_exp {F : Type} [Field F] [CharZero F] [Algebra ℚ F] (E : PowerSeries F)
     (h0 : PowerSeries.constantCoeff E = 1) (h1 : PowerSeries.derivative (R := F) E = E) :
-    E = PowerSeries.exp F := by
-  exact PowerSeries.exp_unique_of_derivative_eq_self h1 h0
+    E = PowerSeries.exp F := PowerSeries.exp_unique_of_derivative_eq_self h1 h0
 
 theorem map_poly {O A : Type} [CommRing O] [CommRing A] [Algebra O A] {n : ℕ} (f : LetA O n →ₐ[O] A)
     (i : ZMod n) (hf : ∀ a, a i = 0 → f a = 0) (p : ZMod n → Polynomial O) :
@@ -102,8 +101,7 @@ theorem lev_isExp : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l)
   obtain ⟨r, hr⟩ : ∃ r : ℕ, (l : ℝ) ^ (-(r : ℝ)) < ε := by
     obtain ⟨r, hr⟩ := exists_pow_lt_of_lt_one hε (inv_lt_one_of_one_lt₀ hl)
     refine ⟨r, ?_⟩
-    rw [Real.rpow_neg (by positivity), Real.rpow_natCast, ← inv_pow]
-    exact hr
+    rwa [Real.rpow_neg (by positivity), Real.rpow_natCast, ← inv_pow]
   obtain ⟨m₀, hm₀⟩ := R.lev_cont i ζ a k r
   refine ⟨m₀, fun m hm => ?_⟩
   have hv := hm₀ m hm

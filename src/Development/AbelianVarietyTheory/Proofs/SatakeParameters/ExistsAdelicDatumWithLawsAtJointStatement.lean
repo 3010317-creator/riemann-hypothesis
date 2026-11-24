@@ -350,8 +350,7 @@ theorem cong_mem_level_chr_one' : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (
       have h1 := GlobalTheory.TopStep.redGL_of_prinCong (by omega : 0 < cst.D P) hkC
       intro x hx
       have h2 := GlobalTheory.TopStep.redV_redGL κ hx
-      rw [h1, Units.val_one, Matrix.one_mulVec] at h2
-      exact h2
+      rwa [h1, Units.val_one, Matrix.one_mulVec] at h2
     have hh := hL.stabG j b P hP
     refine ⟨GlobalTheory.CongLevel.extE (cOf R j) k, GlobalTheory.Mem.Col2.LevMod.extE_mem_Cbe cst.sharp j P.1 hP hd (L.h j b P) hh k hkG hred, GlobalTheory.CongLevel.extE_inX _ k, ?_⟩
     have hh' := hh
@@ -366,8 +365,7 @@ theorem cong_mem_level_chr_one' : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (
         unfold lamYat at hx' ⊢
         rw [ite_eq_left hP] at hx' ⊢
         have h2 := hcong x hx'
-        rw [LinearMap.smul_apply, LinearMap.sub_apply, LinearMap.id_apply, LinearEquiv.coe_coe]
-        exact h2
+        rwa [LinearMap.smul_apply, LinearMap.sub_apply, LinearMap.id_apply, LinearEquiv.coe_coe]
     rw [smul_inv_smul₀ hq, add_sub_cancel] at h1
     unfold chiInv
     rw [h1, hψ, inv_one, one_mul]
@@ -401,8 +399,7 @@ theorem cong_mem_level_chr_one' : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (
       unfold Jat
       rw [ite_eq_right hP]
       refine _root_.GlobalTheory.ParahoricOfCong.mem_JQ_of_cong P.1 (R.k + j) (R.N j) (cOf R j) _ hg ?_
-      rw [einv]
-      exact hginv
+      rwa [einv]
     · unfold chiInv
       rw [hψ, inv_one, one_mul]
       unfold lamRow
@@ -1031,8 +1028,7 @@ theorem T_mem_under {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : G.Inst D
   have h2 := (mem_seamP t.seam P.1 _).2 h1
   rw [map_natCast] at h2
   unfold IsOver at hv
-  rw [hv, Ideal.mem_comap, map_natCast]
-  exact h2
+  rwa [hv, Ideal.mem_comap, map_natCast]
 
 theorem prV_pullV_congr {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n : ℕ}
     (v : HeightOneSpectrum (𝓞 F)) (g g₁ : GL (Fin n) (E ⊗[F] FiniteAdeleRing (𝓞 F) F))
@@ -1321,14 +1317,12 @@ theorem exists_place {A : AdData t u μ St} {dtU : Formalism.L2.Herm.unitaryOneF
     rw [← t.pr_ok.piT_norm]
     exact Ideal.mul_mem_right _ _ hpi
   have hTQ : (((St j hj).T : ℕ) : 𝓞 D.host.E) ∈ (seamP t.seam P.1).asIdeal := by
-    rw [H.T_eq j hj, ← t.T_rec u, ← map_natCast (RingOfIntegers.mapRingEquiv t.seam.iE), mem_seamP]
-    exact hT
+    rwa [H.T_eq j hj, ← t.T_rec u, ← map_natCast (RingOfIntegers.mapRingEquiv t.seam.iE), mem_seamP]
   have hT0 : (((St j hj).T : ℕ) : 𝓞 D.host.F) ≠ 0 := by
     rw [H.T_eq j hj, ← t.T_rec u]
     exact Nat.cast_ne_zero.2 (t.pr_ok.T_prime _).ne_zero
   have hmem : (((St j hj).T : ℕ) : 𝓞 D.host.F) ∈ (seamP t.seam P.1).asIdeal.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) := by
-    rw [Ideal.mem_comap, map_natCast]
-    exact hTQ
+    rwa [Ideal.mem_comap, map_natCast]
   let v : HeightOneSpectrum (𝓞 D.host.F) := ⟨(seamP t.seam P.1).asIdeal.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)),
     Ideal.IsPrime.comap _, fun h => hT0 (by rw [h] at hmem; exact (Ideal.mem_bot.1 hmem))⟩
   refine ⟨v, hmem, rfl, seamP t.seam P.1, ?_, rfl⟩
@@ -1562,8 +1556,7 @@ theorem sameCoset_symm_iff : ∀ {X : Fields} {Pr : Primes X} (sel : HeightOneSp
   · intro h
     have := congr_of_sub_one κ (cst.D P) a _ hak hg y0 (κ.symm w) hy h
     simpa using this
-  · intro h
-    exact congr_of_sub_one κ.symm (cst.D P) a _ hak hg' y0 w hy h
+  · exact fun h => congr_of_sub_one κ.symm (cst.D P) a _ hak hg' y0 w hy h
 
 end GlobalTheory.CosetLoc
 end -- clump:auto
@@ -1641,8 +1634,7 @@ theorem ptAway_top : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a =
       ((GlobalTheory.TwU.Model.sameCoset_equiv t.sel (t.tup μ) (t.cst μ) P).refl _)
     have key := GlobalTheory.T.sameCouplingCoset_invariant_frame_congruent_one t.sel (t.tup μ) (t.cst μ) P ((frsF t.sel (t.tup μ) p₁ P).trans (frsF t.sel (t.tup μ) p P).symm)
       (y0At A (t.m2 + 1) (Nat.le_of_succ_le hi) β P) hc (hF P).1 (hF P).2 (hok.depthQ P) hb.1 hb.2 ((frsF t.sel (t.tup μ) p P).symm y)
-    rw [← symm_trans_symm] at key
-    exact key
+    rwa [← symm_trans_symm] at key
   rw [hcos]
   funext z
   rw [XiTop_eq, XiTop_eq]

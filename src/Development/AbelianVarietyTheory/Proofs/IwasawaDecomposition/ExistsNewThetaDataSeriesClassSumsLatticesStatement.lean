@@ -650,16 +650,14 @@ theorem isResAt_one_of_unram : ∀ (D : D7) (M : Type) [CommGroup M] (χ : (AE D
     have h2 : toEAf D (x : AE D) * (((w⁻¹ : (Formalism.L2.Herm.intAf D.host.F D.host.E)ˣ) :
         Formalism.L2.Herm.intAf D.host.F D.host.E) : EAf D) = 1 := by
       have := congrArg Subtype.val (Units.mul_inv w)
-      rw [hw] at this
-      exact this
+      rwa [hw] at this
     calc _ = toEAf D ((x⁻¹ : (AE D)ˣ) : AE D) * (toEAf D (x : AE D) * (((w⁻¹ : (Formalism.L2.Herm.intAf D.host.F D.host.E)ˣ) :
           Formalism.L2.Herm.intAf D.host.F D.host.E) : EAf D)) := by rw [h2, mul_one]
       _ = _ := by rw [← mul_assoc, h1, one_mul]
   have hl : IsLocUnit PP u x := by
     refine ⟨hoff, ?_, GlobalTheory.PlaceDatum.finPart_mem_of_toEAf hi, GlobalTheory.PlaceDatum.finPart_mem_of_toEAf ?_, hi, hu⟩
     · have := congrArg (infPart D) hx
-      rw [map_add (f := _), map_sub, map_mul, map_one, hinf, zero_mul, sub_zero, add_zero] at this
-      exact this
+      rwa [map_add (f := _), map_sub, map_mul, map_one, hinf, zero_mul, sub_zero, add_zero] at this
     · rw [hinv]
       exact Subtype.property _
   rw [hl.eq_one hχ hP hQ hPP hn, MonoidHom.one_apply]
@@ -1357,8 +1355,7 @@ theorem continuous_comp_of_isOpen_ker {Γ B Y : Type} [Group Γ] [TopologicalSpa
     · have h1 : φ (g⁻¹ * g') = 1 := hg'
       rw [map_mul, map_inv, inv_mul_eq_one] at h1
       show f (φ g') ∈ s
-      rw [← h1]
-      exact hg
+      rwa [← h1]
     · show φ (g⁻¹ * g) = 1
       rw [inv_mul_cancel, map_one]
   exact hloc.continuous
@@ -1426,16 +1423,14 @@ theorem exists_art_gal (hA : GlobalTheory.Published.GlobalArtinReciprocity) (cf 
     · have h1 : ρ.ι (ρ.κ (D.ntw.emb0 i x)) = (((cf.delAt (D.ntw.l i)).val v : ℂˣ) : ℂ)⁻¹ := by
         have := ρ.read x
         simp only [GlobalTheory.Triple.embSide, ite_true] at this
-        rw [this]
-        exact hx'
+        rwa [this]
       show ρ.κ (algebraMap _ _ ((D.ntw.delta i σ : (D.ntw.O0 i)ˣ) : D.ntw.O0 i)) = _
       rw [hd, ← map_inv₀, ← h1, ρ.ι.symm_apply_apply]
   refine ⟨ρ.κ, ρ.ι, fun x => ?_, hχ, ?_, ?_⟩
   · have := ρ.read x
     cases b <;> simpa [GlobalTheory.Triple.embSide] using this
   · exact continuous_comp_of_isOpen_ker (Formalism.MainNotions.BlochKatoReduction.Gen.psiAt b (D.ntw.delta i)) Units.val hker
-  · rw [heq]
-    exact hL
+  · rwa [heq]
 
 end GlobalTheory.TwInputs.SetupPin
 
@@ -1508,8 +1503,7 @@ theorem eq_zero_of_reps (B : Base S T) (t : Twist D Circle) {I : Type} {y : I �
   funext h
   obtain ⟨c, ⟨γ, k, e⟩, -⟩ := hy h
   have h1 := hlaw γ (y c) k
-  rw [h0 c, map_zero, smul_zero, ← e] at h1
-  exact h1
+  rwa [h0 c, map_zero, smul_zero, ← e] at h1
 
 theorem mtLat_fg_of_reps [IsNoetherianRing O] (B : Base S T) (t : Twist D Circle) {I : Type} [Finite I] {y : I → Bridge.Gf S}
     (hy : Bridge.IsReps (Bridge.ratF S) (B.levJ t) y) (hfg : ∀ c, (B.coefLat σ emb O (y c)).FG) :
@@ -1590,8 +1584,7 @@ theorem latFG_of_good : ∀ (D : D7) (N : NData D.R D.host D.what₂) (X : NTw D
         (algebraMap (𝓞 D.host.E) D.host.E a)⁻¹ hy' 
       change (algebraMap (𝓞 D.host.E) D.host.E a)⁻¹ •
         ((algebraMap (𝓞 D.host.E) D.host.E a) • y) ∈ _ at this
-      rw [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
-      exact this
+      rwa [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
     haveI : Submodule.IsFullLattice D.host.E (ρ.B i j b).F.ΛS := hfull _ _ hB.frame.sdS
     haveI : Submodule.IsFullLattice D.host.E
         ((ρ.B i j b).latAt (finPt (Vc D j) (ρ.rep i j b (ρ.tw i b k Q ψ) c))) :=

@@ -241,8 +241,7 @@ theorem GlobalTheory.SeriesTie.rd_good_model : ∀ (D : D7) (X : RealSide D) (E 
   refine ⟨mv Y.YS Y.Z.good i j b (Formalism.MainNotions.IntegralHeckeForms.eG D.nexp i _ b f), ⟨?_, ?_⟩, ?_⟩
   · have h := LinearMap.mem_range_self (X.R.HW j (sg0 D X.A3.A)).e
       (mv Y.YS Y.Z.good i j b (Formalism.MainNotions.IntegralHeckeForms.eG D.nexp i _ b f))
-    rw [(X.char.models.HW j _).2.1] at h
-    exact h
+    rwa [(X.char.models.HW j _).2.1] at h
   · rw [SetLike.mem_coe, LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero, LinearMap.id_apply]
     rw [← mv_eG Y.YS Y.Z.good i j b X.unif X.idem, hidem]
   · change (Y.Z.ν i j b)⁻¹ • evK Y.YS X.geo.v₀ Y.Z.good i j b _ = _
@@ -353,8 +352,7 @@ theorem tr_smul (y : G) (a : ℂ) (P : W) : tr ι ρ J χ y (a • P) = a • tr
   funext x
   have e : ∀ γ, term ι ρ J χ y x (a • P) γ = a • term ι ρ J χ y x P γ := fun γ => by
     unfold term; split_ifs <;> simp [smul_comm a]
-  simp only [tr, Pi.smul_apply, e]
-  exact (smul_finsum a _).symm
+  simpa only [tr, Pi.smul_apply, e] using (smul_finsum a _).symm
 
 theorem tr_zero (y : G) : tr ι ρ J χ y (0 : W) = 0 := by
   simpa using tr_smul (ι := ι) (ρ := ρ) (χ := χ) y (0 : ℂ) (0 : W)
@@ -364,8 +362,7 @@ theorem tr_mem {R : Type} [Semiring R] [Module R W] {y : G} (hf : Finite (Bridge
   unfold tr
   rw [finsum_eq_sum _ (support_term_finite hf x P)]
   refine Submodule.sum_mem _ fun γ hγ => ?_
-  have h := support_term_subset y x P ((Set.Finite.mem_toFinset _).1 hγ)
-  exact hM γ h
+  exact hM γ (support_term_subset y x P ((Set.Finite.mem_toFinset _).1 hγ))
 
 theorem tr_self {y : G} (hf : Finite (Bridge.stab ι J y)) {F : G → W} (hF : F ∈ GlobalTheory.ExportSeries.lawForms ι ρ J χ) :
     tr ι ρ J χ y (F y) y = (Nat.card (Bridge.stab ι J y) : ℂ) • F y := by
@@ -411,8 +408,7 @@ theorem eq_sum_tr {I : Type} [Fintype I] {y : I → G} (hr : Bridge.IsReps ι J 
       refine finsum_eq_zero_of_forall_eq_zero fun γ => ?_
       unfold term
       rw [dite_eq_right]
-      intro h
-      exact hi (huniq i ⟨γ, ⟨_, h⟩, by simp [mul_assoc]⟩)
+      exact fun h => hi (huniq i ⟨γ, ⟨_, h⟩, by simp [mul_assoc]⟩)
     rw [this, smul_zero]
   · intro h; exact absurd (Finset.mem_univ _) h
 
@@ -650,8 +646,7 @@ theorem tr_mem_mtLat {B : Base S T} (hB : B.Good) {K : Type} [Field K] [NumberFi
       group
     have h1 := Base.act_mem_coefLat hB.frame hc γ y _ (Base.mem_St_of_mem_levJ (B := B) h) hP
     rw [← hx] at h1
-    have h2 := Submodule.smul_mem (B.coefLat σ emb O x) (⟨_, hlam ⟨_, h⟩⟩ : O) h1
-    exact h2
+    exact Submodule.smul_mem (B.coefLat σ emb O x) (⟨_, hlam ⟨_, h⟩⟩ : O) h1
 
 end GlobalTheory.BaseSpan
 

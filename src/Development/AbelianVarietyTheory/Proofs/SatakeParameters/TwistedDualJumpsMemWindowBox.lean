@@ -363,8 +363,7 @@ theorem twistedDualPageWord_small_jumps_card : ∀ {D : D7} (L : SizeData₂ D) 
     · intro a
       have h := (L.cloud_v (D.eTau.symm ⟨plc (letter τ φ i), plc_mem _⟩) a).1
       exact_mod_cast h
-    · intro a
-      exact L.be_close _ a j
+    · exact fun a => L.be_close _ a j
   refine ⟨fun i => ⟨fun u hu => ?_, (hcount i).le⟩, fun i => ⟨?_, hcount i⟩⟩
   · exact Multiset.mem_of_le
       ((_root_.GlobalTheory.HTW.jR_symm_card (hcAt D (letter τ φ i)) j).2 (pos ε (letter τ φ i))).2.2.2 hu
@@ -426,11 +425,9 @@ theorem recWord_jumps : ∀ {D : D7} (L : SizeData₂ D) (C : ℝ) (j : Fin D.R.
     have h2 := bx u hu
     refine ⟨?_, ?_⟩
     · simp only [NWord.win, recWord, Set.mem_setOf_eq]
-      rw [hsz]
-      exact h1
+      rwa [hsz]
     · simp only [recWord, Set.mem_Icc]
-      rw [hMi, hhi]
-      exact h2
+      rwa [hMi, hhi]
   · rw [sum_count_Icc, cd]
 
 end GlobalTheory.HTW.Rec

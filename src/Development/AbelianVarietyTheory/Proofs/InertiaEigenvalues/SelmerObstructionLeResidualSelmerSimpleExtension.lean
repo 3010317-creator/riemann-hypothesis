@@ -94,8 +94,7 @@ theorem comm_span {Λ M C : Type} [CommRing Λ] [AddCommGroup M] [Module Λ M] [
     | add B₁ B₂ _ _ h₁ h₂ => intro m; simp [h₁, h₂]
     | smul c B _ hB' =>
       intro m
-      simp only [LinearMap.smul_apply, ← map_smul]
-      exact hB' (c • m)
+      simpa only [LinearMap.smul_apply, ← map_smul] using hB' (c • m)
   intro A hA B hB
   induction hA using Submodule.span_induction with
   | mem A hA => exact key A hA B hB
@@ -103,8 +102,7 @@ theorem comm_span {Λ M C : Type} [CommRing Λ] [AddCommGroup M] [Module Λ M] [
   | add A₁ A₂ _ _ h₁ h₂ => intro m; simp [h₁, h₂]
   | smul c A _ hA' =>
     intro m
-    simp only [LinearMap.smul_apply, ← map_smul]
-    exact hA' (c • m)
+    simpa only [LinearMap.smul_apply, ← map_smul] using hA' (c • m)
 
 theorem act_add {O Λ K : Type} [CommRing O] [CommRing Λ] [Algebra O Λ] [AddCommGroup K] [Module Λ K] {r : ℕ}
     (P Q : Matrix (Fin r) (Fin r) O) :
@@ -238,8 +236,7 @@ theorem eq_zero_of_comm : ∀ (Γ O Λ K C : Type) [Group Γ] [CommRing O] [IsLo
         ((κ g : Λ) * algebraMap O Λ (((χ g)⁻¹ : Oˣ) : O)) = 1 := by linear_combination hw
     have e2 : w * ((κ g : Λ) * algebraMap O Λ (((χ g)⁻¹ : Oˣ) : O)) *
         ((κ h : Λ) * algebraMap O Λ (((χ h)⁻¹ : Oˣ) : O)) = 1 := by linear_combination hw
-    rw [e1, e2, one_smul, one_smul] at e
-    exact e
+    rwa [e1, e2, one_smul, one_smul] at e
 
   have hall : ∀ (P Q : Matrix (Fin r) (Fin r) O) (m : Fin r → K),
       φ (matAct (M := K) (P.map (algebraMap O Λ)) (matAct (M := K) (Q.map (algebraMap O Λ)) m)) =
@@ -321,8 +318,7 @@ theorem global_euler_char : GlobalFiniteness → GlobalEulerChar → ∀ (F Ω :
     classical
     unfold archH0Card
     rw [Finset.prod_eq_one, one_mul]
-    intro w hw
-    exact absurd (Finset.mem_filter.mp hw).2 (hreal w)
+    exact fun w hw => absurd (Finset.mem_filter.mp hw).2 (hreal w)
   rw [harch, IsTotallyComplex.finrank] at heq
   refine ⟨Finite.of_equiv _ e1.symm, Finite.of_equiv _ e2.symm, ?_⟩
   rw [Nat.card_congr e1, c0, Nat.card_congr e2]
@@ -419,8 +415,7 @@ theorem loc2_surjective : PoitouTateTotallyComplex → ∀ (F Ω : Type) [Field 
   obtain ⟨c, hc, hcd⟩ := (separated_dvr_second_cohomology_mem _ _).1 hv
   refine (separated_dvr_second_cohomology_mem _ _).2 ⟨c, hc, ?_⟩
   funext p
-  have hp := congrFun hcd p
-  exact hp
+  exact congrFun hcd p
 
 end GlobalTheory.LocTwoOnto
 end -- clump:auto
@@ -560,8 +555,7 @@ theorem vanish {f : G F Ω → M} (hf : f ∈ Z1 (rhoS.comp (toGS Ω S) : Repres
       rw [hm _ hτ, ht _ hτN, map_one, Module.End.one_apply, sub_self]
     have := hconj _ ⟨hτN, hfτ⟩ γ
     have e : γ * (γ⁻¹ * σ * γ) * γ⁻¹ = σ := by group
-    rw [e] at this
-    exact this
+    rwa [e] at this
   have hle : NS Ω S ≤ H :=
     Subgroup.topologicalClosure_minimal _ (Subgroup.normalClosure_le_normal hsub) hclosed
   exact (hle hn).2
@@ -582,8 +576,7 @@ theorem selAllLeInf : Formalism.GaloisCohomology.SelAllLeInf := by
     refine ⟨m, fun g hg => ?_⟩
     have gD : g ∈ Dec (F := F) (A.1 v) := Ine_le_Dec _ hg
     have gJ : (⟨g, gD⟩ : Dec (F := F) (A.1 v)) ∈ (Ine (F := F) (A.1 v)).subgroupOf (Dec (F := F) (A.1 v)) := by
-      rw [Subgroup.mem_subgroupOf]
-      exact hg
+      rwa [Subgroup.mem_subgroupOf]
     exact hm ⟨⟨g, gD⟩, gJ⟩
   have hvan : ∀ n ∈ NS Ω S, z.1 n = 0 := fun n hn => vanish rhoS A z.2 hv0 n hn
   obtain ⟨hzc, hzco⟩ := (ReciprocityTheory.Gal.mem_Z1_iff_cocycle _ _).1 z.2

@@ -91,8 +91,7 @@ private theorem exists_algChart_mem_source (hL : L.IsLB) (f : Sp ℂ ⟶ A.left)
   obtain ⟨i, hi⟩ := TopologicalSpace.Opens.mem_iSup.1 hmem
   refine ⟨i, fun a _ => ?_⟩
   have hsub : a = a0 := Subsingleton.elim (α := PrimeSpectrum ℂ) a a0
-  rw [hsub]
-  exact hi
+  rwa [hsub]
 
 private theorem valAt'_unit_ne_zero_cusp_form_evaluations {X : Scheme.{0}} (y : Sp ℂ ⟶ X) (U : X.Opens)
     (h : ⊤ ≤ y ⁻¹ᵁ U) (f : Γ(X, U)ˣ) : valAt' y U f.val ≠ 0 := by
@@ -138,10 +137,7 @@ private theorem exists_ringHom_eq_valAt' {X : Scheme.{0}} (y : Sp ℂ ⟶ X) (U 
 
 private theorem preimage_inf_eq_univ {X : Scheme.{0}} (y : Sp ℂ ⟶ X) {U V : X.Opens}
     (h1 : ⊤ ≤ y ⁻¹ᵁ U) (h2 : ⊤ ≤ y ⁻¹ᵁ V) : ⊤ ≤ y ⁻¹ᵁ (U ⊓ V) := by
-  intro a ha
-  have h1' := h1 ha
-  have h2' := h2 ha
-  exact ⟨h1', h2'⟩
+  exact fun a ha => ⟨(h1 ha), (h2 ha)⟩
 
 private theorem mul_zpow_div_zpow_eq_of_factor {v v' G0 G1 f0 f1 f0' f1' : ℂ} (a b : ℤ) (hG0 : G0 ≠ 0) (hG1 : G1 ≠ 0)
     (hf0' : f0' ≠ 0) (hv : v = G0 ^ a * G1 ^ (-b) * v') (h0 : f0 = G0 * f0') (h1 : f1 = G1 * f1') :
@@ -264,8 +260,7 @@ theorem exists_entire_twist (hL : L.IsLB) {m : T ⊗ A ⟶ A} {a b : ℤ}
       simp only [hfac]
       refine (u.hol _ _).2.mono (fun z hz => ?_)
       have hc := (exAt_mem_twist_chart_iff u p (hw z) (J z0)).2 hz
-      rw [exAt_eq_ex_comp_lift u p z] at hc
-      exact hc
+      rwa [exAt_eq_ex_comp_lift u p z] at hc
     have hf1 : DifferentiableOn ℂ (fun z => u.fr (J z0 1) (w z) ^ b)
         {z | ⊤ ≤ (u.ex z).left ⁻¹ᵁ L.U (J z0 0) ∧ ⊤ ≤ (u.ex (w z)).left ⁻¹ᵁ L.U (J z0 1)} :=
       DifferentiableOn.zpow ((u.fr_hol (J z0 1)).comp hwd.differentiableOn (fun z hz => hz.2))
@@ -375,11 +370,9 @@ theorem exists_hasAnConst (hL : L.IsLB) {χ : u.Λ → ℂ} (hAH : u.IsAH Hm χ)
     obtain ⟨i0, hi0⟩ := exists_algChart_mem_source hL (u.ex z).left
     obtain ⟨i1, hi1⟩ := exists_algChart_mem_source hL (u.ex (z + x)).left
     have hi0' : ⊤ ≤ (u.ex (z + l)).left ⁻¹ᵁ L.U i0 := by
-      rw [hper]
-      exact hi0
+      rwa [hper]
     have hi1' : ⊤ ≤ (u.ex (z + l + x)).left ⁻¹ᵁ L.U i1 := by
-      rw [add_right_comm, hper]
-      exact hi1
+      rwa [add_right_comm, hper]
     have hexAt : exAt u p (z + l) = exAt u p z := by
       unfold exAt
       rw [hper]
@@ -388,8 +381,7 @@ theorem exists_hasAnConst (hL : L.IsLB) {χ : u.Λ → ℂ} (hAH : u.IsAH Hm χ)
     have e2 : valAt' (exAt u p z) (LB.wchart L ![(snd T A).left, (translPt A Θ.pt).left] ![i0, i1])
         (Θ.φ.s ![i0, i1]).val * u.fr i1 (z + x + l) ^ k = r (z + l) * u.fr i0 (z + l) ^ k := by
       have h2 := hr' ![i0, i1] (z + l) hi0' hi1'
-      rw [hexAt, add_right_comm] at h2
-      exact h2
+      rwa [hexAt, add_right_comm] at h2
     have a0 := hAH.2.2.2 l i0 z hi0
     have a1 := hAH.2.2.2 l i1 (z + x) hi1
     have hE : Complex.exp (Real.pi * ((z + x) ⬝ᵥ Hm.mulVec (star (l : Fin g → ℂ))) +
@@ -552,8 +544,7 @@ theorem mem_chart (φ : K → (Y ⟶ X)) (r : Sp ℂ ⟶ Y) :
     ⊤ ≤ r ⁻¹ᵁ LB.wchart L φ fun k => J (r ≫ φ k) := by
   intro p _
   refine Set.mem_iInter.2 fun k => ?_
-  have hk := hJ (r ≫ φ k) (show p ∈ (⊤ : (Sp ℂ).Opens) from trivial)
-  simpa using hk
+  simpa using hJ (r ≫ φ k) (show p ∈ (⊤ : (Sp ℂ).Opens) from trivial)
 
 theorem cval_ne_zero (t : LB.Gen (LB.LinComb L φ ε)) (r : Sp ℂ ⟶ Y) : cval t r J ≠ 0 := by
   intro h0
@@ -591,16 +582,13 @@ theorem cval_corr_one {t : LB.Gen (LB.LinComb L φ ε)}
     (fun k _ _ => k.elim) (fun _ k' _ => k'.elim)
   unfold res LB.oneGen at e
   have h0 : ⊤ ≤ r ⁻¹ᵁ L.wchart (PEmpty.elim : PEmpty.{1} → (Y ⟶ X)) PEmpty.elim := by
-    intro p _
-    exact Set.mem_iInter.2 fun k => k.elim
+    exact fun p _ => Set.mem_iInter.2 fun k => k.elim
   have hV : ⊤ ≤ r ⁻¹ᵁ ((L.wchart φ fun k => J (r ≫ φ k)) ⊓
       L.wchart (PEmpty.elim : PEmpty.{1} → (Y ⟶ X)) PEmpty.elim) := by
-    intro p hp
-    exact ⟨mem_chart hJ φ r hp, h0 hp⟩
+    exact fun p hp => ⟨mem_chart hJ φ r hp, h0 hp⟩
   have e3 := congrArg (valAt' r _) (congrArg Units.val e)
   refine ((valAt'_presheaf_map_homOfLE r inf_le_left hV _).symm.trans e3).trans ?_
-  refine (valAt'_presheaf_map_homOfLE r inf_le_right hV _).trans ?_
-  exact valAt'_one_moduli r _ h0
+  exact (valAt'_presheaf_map_homOfLE r inf_le_right hV _).trans (valAt'_one_moduli r _ h0)
 
 end Values
 
@@ -721,8 +709,7 @@ theorem pow_mul_eq_one (hL : L.IsLB) {χ : u.Λ → ℂ} (hAH : u.IsAH Hm χ)
       Complex.exp ((Real.pi : ℂ) * hermForm Hm 0 l + (Real.pi : ℂ) / 2 * hermForm Hm l l) *
         u.fr (J (u.ex 0).left) (l : Fin g → ℂ) := by
     have := hAH.2.2.2 l (J (u.ex 0).left) 0 (hJ _)
-    rw [zero_add] at this
-    exact this
+    rwa [zero_add] at this
   have hak := congrArg (· ^ k) ha
   rw [mul_zpow, mul_zpow] at hak
   have h0 : hermForm Hm 0 (l : Fin g → ℂ) = 0 := zero_dotProduct _
@@ -825,9 +812,7 @@ theorem GlobalTheory.symLift_act_in_frame : Out.Laws → Out.Laws2 → (∀ (S :
     rw [← Over.comp_left, lift_snd]
   have hW : ∀ w, ⊤ ≤ exAt u p w ⁻¹ᵁ
       LB.wchart P.L (fun _ : Fin 1 => (snd T P.A).left) (fun _ => J (u.ex w).left) := fun w => by
-    have h1 := mem_chart hJ (fun _ : Fin 1 => (snd T P.A).left) (exAt u p w)
-    simp only [hsnd] at h1
-    exact h1
+    simpa only [hsnd] using mem_chart hJ (fun _ : Fin 1 => (snd T P.A).left) (exAt u p w)
   have htr : exAt u p z ≫ (Out.translPt P.A U.pt).left = (u.ex (z + x0)).left := exAt_translPt u hpt0 z
   have hV : ⊤ ≤ exAt u p z ⁻¹ᵁ LB.wchart P.L ![(snd T P.A).left, (Out.translPt P.A U.pt).left]
       ![j0, J (u.ex (z + x0)).left] :=

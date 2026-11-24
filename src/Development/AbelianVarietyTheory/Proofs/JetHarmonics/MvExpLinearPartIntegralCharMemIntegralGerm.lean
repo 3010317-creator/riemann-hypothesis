@@ -130,8 +130,7 @@ theorem mfact_mul_coeff_mvExp_linear [Fintype σ] (y : σ → C) (m : σ →₀ 
   · intro k _ hk
     rw [← MvPolynomial.coe_pow, MvPolynomial.coeff_coe,
       MvPolynomial.coeff_linearCombination_X_pow_of_fintype, ite_eq_right (by rw [hdeg]; exact Ne.symm hk), zero_div]
-  · intro h
-    exact absurd (Finset.self_mem_range_succ _) h
+  · exact fun h => absurd (Finset.self_mem_range_succ _) h
 
 end
 
@@ -183,8 +182,7 @@ theorem subst_zero_eq {C : Type} [Field C] {κ τ : Type} [Fintype κ] (F : MvPo
   · intro d hd
     obtain ⟨w, hw⟩ := Finsupp.ne_iff.1 hd
     have : (d.prod fun s e => (0 : MvPowerSeries τ C) ^ e) = 0 := by
-      refine Finset.prod_eq_zero (i := w) (by simpa using hw) ?_
-      exact zero_pow (by simpa using hw)
+      exact Finset.prod_eq_zero (i := w) (by simpa using hw) (zero_pow (by simpa using hw))
     simp [this]
 
 

@@ -190,11 +190,9 @@ theorem entry_le_of_maps (hQ : Q' * P' = 1) (hP : LocBasisW D ρ L P) (hP' : Loc
     have e2 : (∑ x, c x • fun b => (1 : Matrix (Fin N') (Fin N') D.host.E) b x) b = (c b : D.host.E) := by
       rw [Finset.sum_apply]
       simp [Algebra.smul_def, Matrix.one_apply]
-    rw [e2, Pi.smul_apply, Pi.smul_apply, e1, Algebra.smul_def, Algebra.smul_def] at h1
-    exact h1
+    rwa [e2, Pi.smul_apply, Pi.smul_apply, e1, Algebra.smul_def, Algebra.smul_def] at h1
   have h4 := norm_int_le_one ρ (c b)
-  rw [← key, map_mul, map_mul, norm_mul, norm_mul, hs, hs', one_mul, one_mul] at h4
-  exact h4
+  rwa [← key, map_mul, map_mul, norm_mul, norm_mul, hs, hs', one_mul, one_mul] at h4
 
 def IntIn (ρ : D.host.E →+* ℂ_[p]) (Q' : Matrix (Fin N') (Fin N') D.host.E) (P : Matrix (Fin N) (Fin N) D.host.E)
     (B : Matrix (Fin N') (Fin N) D.host.E) : Prop :=
@@ -412,12 +410,10 @@ theorem sum_cB_cA (hU : ∀ z, ((P (tauPl D z)).map D.host.conj).transpose * P (
   · subst hz
     have e1 : ∑ x, D.host.conj (P' (tauPl D z) x b) * P' (tauPl D z) x b' = if b = b' then 1 else 0 := by
       have := congrFun (congrFun (hU' z) b) b'
-      rw [Matrix.mul_apply, Matrix.one_apply] at this
-      exact this
+      rwa [Matrix.mul_apply, Matrix.one_apply] at this
     have e2 : ∑ x, D.host.conj (P (tauPl D z) x a') * P (tauPl D z) x a = if a' = a then 1 else 0 := by
       have := congrFun (congrFun (hU z) a') a
-      rw [Matrix.mul_apply, Matrix.one_apply] at this
-      exact this
+      rwa [Matrix.mul_apply, Matrix.one_apply] at this
     have e3 : ∑ k, cB D lam P P' (z, a, b) k * cA D lam P P' (z, a', b') k =
         rho D lam (tauPl D z) (∑ x, D.host.conj (P' (tauPl D z) x b) * P' (tauPl D z) x b') *
           rho D lam (tauPl D z) (∑ x, D.host.conj (P (tauPl D z) x a') * P (tauPl D z) x a) := by

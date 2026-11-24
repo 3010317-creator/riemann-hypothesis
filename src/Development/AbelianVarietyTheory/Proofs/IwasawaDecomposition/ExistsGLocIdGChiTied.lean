@@ -191,8 +191,7 @@ theorem exists_gLoc (Ch : Chars X Pr m) (hf : 0 < X.f) (hPr : Pr.Ok) (hCh : Ch.O
     have h2 := DFunLike.congr_fun h1 (((ev i v h).symm.trans (ew i (w0 i) (hw0 i))).symm x)
     have h3 : σ₀ (Ch.psi0 ⟨w0 i, mem_vGs (hw0 i)⟩ (((ev i v h).symm.trans (ew i (w0 i) (hw0 i)))
       (((ev i v h).symm.trans (ew i (w0 i) (hw0 i))).symm x))) = 1 := h2
-    rw [RingEquiv.apply_symm_apply, map_eq_one_iff σ₀ σ₀.injective] at h3
-    exact h3
+    rwa [RingEquiv.apply_symm_apply, map_eq_one_iff σ₀ σ₀.injective] at h3
   · intro j v h w hw n
     show σ₀ (Ch.psi0 ⟨w0 j, mem_vGs (hw0 j)⟩ (((ev j v h).symm.trans (ew j (w0 j) (hw0 j))) (n : kv X.F v))) = _
     rw [map_natCast]

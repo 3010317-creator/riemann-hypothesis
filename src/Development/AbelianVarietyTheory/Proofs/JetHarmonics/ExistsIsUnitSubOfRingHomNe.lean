@@ -58,8 +58,7 @@ namespace GlobalTheory
 
 theorem _root_.GlobalTheory.exists_isUnit_sub_of_ringHom_ne : ∀ (A O : Type) [CommRing A] [Module.Finite ℤ A] [CommRing O] [IsLocalRing O] (g : ℕ), g.Prime → ¬ IsUnit (g : O) → (∀ x : A, x ^ g - x ∈ Ideal.span {(g : A)}) → ∀ σ σ' : A →+* O, σ ≠ σ' → ∃ a : A, IsUnit (σ a - σ' a) := by
   intro A O _ _ _ _ g hg hgO hA σ σ' hne
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   apply hne
   have hgm : (g : O) ∈ IsLocalRing.maximalIdeal O :=
     (IsLocalRing.mem_maximalIdeal _).mpr (mem_nonunits_iff.mpr hgO)
@@ -84,8 +83,7 @@ theorem _root_.GlobalTheory.exists_isUnit_sub_of_ringHom_ne : ∀ (A O : Type) [
         rw [this]
         exact J.mul_mem_left _ hy
   have hgk : (g : IsLocalRing.ResidueField O) = 0 := by
-    rw [← map_natCast (IsLocalRing.residue O), IsLocalRing.residue_eq_zero_iff]
-    exact hgm
+    rwa [← map_natCast (IsLocalRing.residue O), IsLocalRing.residue_eq_zero_iff]
   have hle : J ≤ Ideal.span {(g : O)} • J := by
     rw [hJ, Ideal.span_le]
     rintro _ ⟨a, -, rfl⟩
@@ -126,8 +124,7 @@ theorem _root_.GlobalTheory.exists_isUnit_sub_of_ringHom_ne : ∀ (A O : Type) [
     classical
     exact ⟨s.image (fun a => σ a - σ' a), by rw [Finset.coe_image]⟩
   have hjac : Ideal.span {(g : O)} ≤ (⊥ : Ideal O).jacobson := by
-    rw [IsLocalRing.jacobson_eq_maximalIdeal ⊥ bot_ne_top]
-    exact hspan
+    rwa [IsLocalRing.jacobson_eq_maximalIdeal ⊥ bot_ne_top]
   have hbot := Submodule.eq_bot_of_le_smul_of_le_jacobson_bot _ J hfg hle hjac
   ext a
   have := hmem a

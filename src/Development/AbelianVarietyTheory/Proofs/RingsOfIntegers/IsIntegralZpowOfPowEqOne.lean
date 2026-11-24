@@ -143,8 +143,7 @@ theorem datum_isIntegral : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       refine (isIntegral_int_ringHom_apply d.eF.toRingHom (hph x)).mul ?_
       exact GlobalTheory.PlaceInt.isIntegral_zpow_of_pow_eq_one hpd
         (GlobalTheory.DatumInverseCharacter.root_pow d.c₂ (Dvd.intro_left _ hM.symm)) _
-    have hb := isIntegral_int_ringHom_apply d.eF.symm.toRingHom he
-    simpa using hb
+    simpa using isIntegral_int_ringHom_apply d.eF.symm.toRingHom he
   exact isIntegral_int_ringHom_apply d.eF.toRingHom (hz.mul hφ)
 
 end GlobalTheory.PlaceInt

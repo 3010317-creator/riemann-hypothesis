@@ -177,8 +177,7 @@ theorem flip_translates : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : In
     intro PP hPP
     rw [hsum, Finset.sum_mul, Finset.sum_eq_single_of_mem PP hPP]
     · exact (hes PP hPP).1.1
-    · intro Q hQ hne
-      exact GlobalTheory.Tow.idemAt_orth (hes Q hQ) (hes PP hPP) hne
+    · exact fun Q hQ hne => GlobalTheory.Tow.idemAt_orth (hes Q hQ) (hes PP hPP) hne
 
   have hfixT : ∀ w ∈ latO V W (ΛV : Set (Fin V.rank → D.host.E)) (ΛW : Set (Fin W.rank → D.host.E)) (fun _ => True),
       IsHalf eT w → heisO ψ V W w f₀ = f₀ := fun w hw hhw =>
@@ -406,8 +405,7 @@ theorem idemSum_flip_subset : ∀ (D : D7) (e eT e' : AE D) (P T : Finset (Forma
   have hmul : ∀ Q ∈ P, e * es Q = es Q := fun Q hQ => by
     rw [hsum, Finset.sum_mul, Finset.sum_eq_single_of_mem Q hQ]
     · exact (hes Q hQ).1.1
-    · intro R hR hne
-      exact GlobalTheory.Tow.idemAt_orth (hes R hR) (hes Q hQ) hne
+    · exact fun R hR hne => GlobalTheory.Tow.idemAt_orth (hes R hR) (hes Q hQ) hne
   have hconj : ∀ PP ∈ P, IsIdemAt (cA D (es PP)) (Formalism.L2.DIV.conjPl PP) := fun PP hPP =>
     GlobalTheory.MovedIdem.isIdemAt_conj (hes PP hPP) fun _ => Iff.rfl
   have hne : ∀ (a : AE D) (Q : HeightOneSpectrum (𝓞 D.host.E)), IsIdemAt a Q → a ≠ 0 := by
@@ -642,8 +640,7 @@ theorem cflip_sum_idem {S : Finset (Formalism.L2.DIV.Pl D.host.E)} {es : Formali
   refine Finset.sum_congr rfl fun PP hPP => ?_
   rw [Finset.mul_sum, Finset.sum_eq_single_of_mem PP hPP]
   · exact (hes PP hPP).1.1
-  · intro Q hQ hne
-    exact GlobalTheory.Tow.idemAt_orth (hes PP hPP) (hes Q hQ) (Ne.symm hne)
+  · exact fun Q hQ hne => GlobalTheory.Tow.idemAt_orth (hes PP hPP) (hes Q hQ) (Ne.symm hne)
 
 theorem cflip_mul_cA_eq_zero {e u v : AE D} (he : e * cA D e = 0) (hu : e * u = u) (hv : e * v = v) : u * cA D v = 0 := by
   rw [← hu, ← hv, map_mul]
@@ -731,8 +728,7 @@ theorem centralFlip_phase : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V W :
     let xb : (AE D)ˣ := ⟨_, _, hxb, by rw [mul_comm]; exact hxb⟩
     have hxx : x = xa * xb := by
       apply Units.ext
-      simp only [xa, xb, Units.val_mul]
-      exact cflip_unit_split hx0
+      simpa only [xa, xb, Units.val_mul] using cflip_unit_split hx0
     have hxaD : IsFlipDet V (es P) m xa := hxa
     have hxbD : IsFlipDet V (∑ Q ∈ T', es Q) m xb := hxb
     obtain ⟨rP, hrP, hPstep⟩ := GlobalTheory.T.weilOperator_inv_centralFlip_invariantForm_eq D ψ V W χV χW om hW P (es P) m zP xa ℓ hesP hm hzP hxaD

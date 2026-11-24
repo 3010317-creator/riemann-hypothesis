@@ -115,8 +115,7 @@ theorem heckeCharacterisation_places_parts_of_weak : ∀ {D : D7} {G : Type} [Gr
         rw [Formalism.DivisionValues.GluingInclusion.conjIdeal_eq, hf]
       obtain ⟨Q, hQ⟩ := h.inert.onto P hio
       refine ⟨Q, (h.inert.tie.okI A3.A.μ0 Q).2 ?_, hQ⟩
-      rw [hQ0, Finset.coe_empty, Set.union_empty, hQ]
-      exact hio
+      rwa [hQ0, Finset.coe_empty, Set.union_empty, hQ]
     · have hso : Formalism.IndefR.Bridge.SplitOff P (R.Sb : Set (Pl D.host.E)) := by
         refine ⟨?_, hnS, fun Q hQ he => ?_⟩
         · rw [Formalism.DivisionValues.GluingInclusion.conjIdeal_eq]
@@ -130,8 +129,7 @@ theorem heckeCharacterisation_places_parts_of_weak : ∀ {D : D7} {G : Type} [Gr
           rw [hQP]; exact this
       obtain ⟨P0, hP0⟩ := h.base.fam.pl_onto P hso
       refine ⟨P0, (ht.ok A3.A.μ0 P0).2 ?_, hP0⟩
-      rw [hQ0, Finset.coe_empty, Set.union_empty, hP0]
-      exact hso
+      rwa [hQ0, Finset.coe_empty, Set.union_empty, hP0]
   refine ⟨fun e => (GlobalTheory.CoreOfWeak.core_of_weak R F h e).1, ?_, ?_, hon, fun c => rfl, fun i c => rfl, ?_⟩
   · intro v
     rw [h.inert.SF v, h.allPl]

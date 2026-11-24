@@ -148,8 +148,7 @@ theorem column_value {R : Type} [CommRing R] {d : ℕ} {O : Type} [CommRing O] [
   · rw [add_sub_right_comm]
     exact I.add_mem (constantCoeff_dmonOf_sub_mem R d B.G.F I ι u y f hf mo) hr
   · unfold FB.nabVal
-    rw [hG, PullbackColumn.dpolyOf_monomial_one]
-    exact e
+    rwa [hG, PullbackColumn.dpolyOf_monomial_one]
 
 end GlobalTheory.ColumnValue
 
@@ -314,8 +313,7 @@ theorem sum_prod_nabVal_leading_minors_of_column_jets : ∀ (R : Type) [CommRing
   · intro mo hmo hne
     obtain ⟨b, hb, hb'⟩ := exists_col mo al (hdeg mo hmo) hne
     rw [Finset.prod_eq_zero (Finset.mem_univ b) (by rw [hval mo hmo b hb, ite_eq_right hb']), mul_zero]
-  · intro hal'
-    exact absurd halP hal'
+  · exact fun hal' => absurd halP hal'
 
 end GlobalTheory
 end -- clump:auto
@@ -532,8 +530,7 @@ theorem mem_span_of_val_le (x y : TWO.Ov v) (hx : (x : F) ≠ 0) (h : v (x : F) 
     have := WithTop.add_lt_add_right hne (not_le.1 hlt)
     rw [← e, zero_add] at this
     exact absurd h (not_le.2 this)
-  refine Ideal.mem_span_singleton'.2 ⟨⟨(y : F) / x, h0⟩, Subtype.ext ?_⟩
-  exact div_mul_cancel₀ _ hx
+  exact Ideal.mem_span_singleton'.2 ⟨⟨(y : F) / x, h0⟩, Subtype.ext (div_mul_cancel₀ _ hx)⟩
 
 theorem val_le_of_mem_span {x y : TWO.Ov v} (h : y ∈ Ideal.span {x}) : v (x : F) ≤ v (y : F) := by
   obtain ⟨c, rfl⟩ := Ideal.mem_span_singleton'.1 h
@@ -702,8 +699,7 @@ theorem val_eigen_columns {R : Type} [CommRing R] {d : ℕ} {O : Type} [CommRing
       simp [Finset.sum_mul]
   have hρ' : ((ep : ℚ) : WithTop ℚ) ≤ v (algebraMap (TWO.Ov v) F ρ) := by
     rw [← hep, ← hpF]; exact val_le_of_mem_span v hρ
-  rw [v.map_add_eq_of_lt_left (lt_of_le_of_lt hmain (lt_of_lt_of_le (by exact_mod_cast hD) hρ'))]
-  exact hmain
+  rwa [v.map_add_eq_of_lt_left (lt_of_le_of_lt hmain (lt_of_lt_of_le (by exact_mod_cast hD) hρ'))]
 
 theorem val_factorial {F : Type} [Field F] (v : AddValuation F (WithTop ℚ)) {p n : ℕ} (hp : p.Prime)
     (hpu : ¬ IsUnit (p : TWO.Ov v)) (hn : n < p) : v (n.factorial : F) = 0 := by

@@ -73,13 +73,11 @@ theorem continuous_family : ∀ {F E : Type} [Field F] [NumberField F] [Field E]
       intro u hu
       have hu1 : u.1 = 0 := (InfiniteAdeleRing.ringEquiv_mixedSpace F).injective (by rw [map_zero]; exact hu)
       funext i
-      show u * liftV y i = 0
       exact Prod.ext (show u.1 * _ = 0 by rw [hu1, zero_mul]) (show u.2 * 0 = 0 from mul_zero _)
     have := (hR 0).1 0 (liftV y) hat
     simpa using this
   have hev : ∀ y : Fin n × Fin d → mixedEmbedding.mixedSpace F, (fun i => evI F (liftV y i)) = y := by
     intro y; funext i
-    show InfiniteAdeleRing.ringEquiv_mixedSpace F ((InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (y i)) = y i
     exact RingEquiv.apply_symm_apply _ _
   have hfin : ∀ y : Fin n × Fin d → mixedEmbedding.mixedSpace F, (fun i => (liftV y i).2) = 0 := by
     intro y; funext i; rfl

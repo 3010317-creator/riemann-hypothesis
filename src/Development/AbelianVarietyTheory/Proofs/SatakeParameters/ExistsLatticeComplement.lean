@@ -74,8 +74,7 @@ theorem _root_.GlobalTheory.LatticeComplement.isSSRep_of_intertwine {k : Type} [
   intro W hW
   unfold _root_.Formalism.MainNotions.N.IsInv at hW
   have hinj : ∀ v : Fin b → k, P *ᵥ v = 0 → v = 0 := fun v hv => by
-    have h := congrArg (fun w => E *ᵥ w) hv
-    simpa [Matrix.mulVec_mulVec, hEP] using h
+    simpa [Matrix.mulVec_mulVec, hEP] using congrArg (fun w => E *ᵥ w) hv
   obtain ⟨U, hU, hc⟩ := hρ (W.map (Matrix.mulVecLin P)) (by
     unfold _root_.Formalism.MainNotions.N.IsInv
     rintro g _ ⟨w, hw, rfl⟩
@@ -132,8 +131,7 @@ private theorem exists_smul_primitive_vector_of_dvr {O : Type} [CommRing O] [IsD
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [← hy i]; ring
   refine ⟨d, hd0, y, funext fun i => by simp [← hy i, mul_comm], ?_⟩
-  by_contra hno
-  push Not at hno
+  by_contra! hno
   have hmax : ∑ i, c i * y i ∈ IsLocalRing.maximalIdeal O :=
     Ideal.sum_mem _ fun i _ => Ideal.mul_mem_left _ _
       ((IsLocalRing.mem_maximalIdeal _).mpr (mem_nonunits_iff.mpr (hno i)))
@@ -215,8 +213,7 @@ private theorem exists_quotient_of_eigenvector_lemma_2 {O K : Type} [CommRing O]
     have hcol : ∀ x, (((ρ g : GL (Fin (n + 1)) O) : Matrix (Fin (n + 1)) (Fin (n + 1)) O) * T) x 0 =
         ((χ g : Oˣ) : O) * T x 0 := by
       intro x
-      have h := congrFun (hv g) x
-      simpa [Matrix.mul_apply, Matrix.mulVec, dotProduct, T] using h
+      simpa [Matrix.mul_apply, Matrix.mulVec, dotProduct, T] using congrFun (hv g) x
     simp only [B, Matrix.mul_assoc]
     rw [← hT, Matrix.mul_apply, Matrix.mul_apply, Finset.mul_sum]
     refine Finset.sum_congr rfl fun x _ => ?_
@@ -274,8 +271,7 @@ private theorem exists_quotient_of_eigenvector_lemma_2 {O K : Type} [CommRing O]
         ((ρ g : GL (Fin (n + 1)) O) : Matrix (Fin (n + 1)) (Fin (n + 1)) O).charpoly := by
       have h := Matrix.charpoly_units_conj M
         ((ρ g : GL (Fin (n + 1)) O) : Matrix (Fin (n + 1)) (Fin (n + 1)) O)
-      rw [← Matrix.coe_units_inv] at h
-      exact h
+      rwa [← Matrix.coe_units_inv] at h
     rw [← hconj, MonoidHom.coe_toHomUnits, hσ, Matrix.charpoly, Matrix.charpoly,
       Matrix.det_succ_column_zero, Fin.sum_univ_succ]
     have hsub : (B g).charmatrix.submatrix (Fin.succAbove 0) Fin.succ =
@@ -386,8 +382,7 @@ theorem _root_.GlobalTheory.LatticeComplement.exists_lattice_complement : ∀ (�
       intro g
       apply smul_right_injective (Fin (r + (t + 1)) → O) hd0
       have h := hxe g
-      rw [Matrix.mulVec_smul, smul_comm] at h
-      exact h
+      rwa [Matrix.mulVec_smul, smul_comm] at h
     obtain ⟨ρ₁, hc₁, hss₁, hch₁⟩ := exists_quotient_of_eigenvector_lemma_2 (n := r + t) (algebraMap O K) ρ
       (χ (Fin.last t)) y i₀ hi₀ hy hc hss
     obtain ⟨ρ', hc', hss', hch'⟩ := ih ρ₁ (fun c => χ c.castSucc) hc₁ hss₁ ⟨L, inferInstance, f, ρ₀, by

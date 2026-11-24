@@ -205,8 +205,7 @@ theorem norm_sq_contract_le {V V₂ : Type} [NormedAddCommGroup V] [InnerProduct
     have h3 := Finset.sum_mul_sq_le_sq_mul_sq Finset.univ (fun c => ‖l c‖) (fun c => ‖a c y‖)
     rw [ha y] at h3
     refine h2.trans (le_of_sq_le_sq ?_ (by positivity))
-    rw [mul_pow, Real.sq_sqrt h0]
-    exact h3
+    rwa [mul_pow, Real.sq_sqrt h0]
   calc ‖∑ c, l c • a c‖ ^ 2 ≤ (Real.sqrt (∑ c, ‖l c‖ ^ 2)) ^ 2 := by gcongr
     _ = _ := Real.sq_sqrt h0
 
@@ -326,8 +325,7 @@ theorem reducedWigner_lowering : ∀ (V : Type) [NormedAddCommGroup V] [InnerPro
       map_add' := fun x y => by simp
       map_smul' := fun c x => by simp }
   let q : ℂ → ℂ := fun u => ∏ j, (u + shf β M j)
-  have hq : Continuous q := by
-    exact continuous_finsetProd _ (fun j _ => continuous_id.add continuous_const)
+  have hq : Continuous q := continuous_finsetProd _ (fun j _ => continuous_id.add continuous_const)
   have hKy : ∀ u, K u (PiLp.single 2 (Fin.last n) v) = q u • v := by
     intro u
     rw [hK2]
@@ -367,8 +365,7 @@ namespace GlobalTheory
 theorem hw_component_tensor_dual_standard (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V] [FiniteDimensional ℂ V] (n : ℕ) (E : Fin (n + 1) → Fin (n + 1) → Module.End ℂ V) (Et : Fin (n + 1) → Fin (n + 1) → Module.End ℂ (PiLp 2 (fun _ : Fin (n + 1) => V))) (Om : Module.End ℂ (PiLp 2 (fun _ : Fin (n + 1) => V))) (θ : Fin (n + 1) → ℂ) (lam : ℂ) (y : (PiLp 2 (fun _ : Fin (n + 1) => V))) (hEt : ∀ a b y c, Et a b y c = E a b (y c) - if c = b then y a else 0) (hOm : ∀ y a, Om y a = ∑ c, E a c (y c)) (hy : y ≠ 0) (hw : IsHW Et θ y) (hl : Om y = lam • y) : ∃ c, y c ≠ 0 ∧ IsHW E (fun a => θ a + if a = c then 1 else 0) (y c) ∧ lam = θ c + 1 - ((c : ℕ) : ℂ) + (n : ℂ) := by
   classical
   have hex : ∃ c, y c ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hy (by ext c; simpa using h c)
   obtain ⟨c, hc, hmin⟩ := (wellFounded_lt (α := Fin (n + 1))).has_min {c | y c ≠ 0} hex
   have hlt : ∀ d, d < c → y d = 0 := fun d hd => by
@@ -505,8 +502,7 @@ theorem casimir_eigenspace_irred_dual_standard : ∀ (V : Type) [NormedAddCommGr
   have hirr : ∀ S' : Submodule ℂ (PiLp 2 (fun _ : Fin (n + 1) => V)), S' ≤ S → Stab Et S' →
       S' = ⊥ ∨ S' = S := by
     intro S' hle hst
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     obtain ⟨h0, h1⟩ := hcon
     have hT : S'ᗮ ⊓ S ≠ ⊥ := by
       intro h
@@ -747,8 +743,7 @@ theorem GlobalTheory.tensor_dual_standard : ∀ (V : Type) [NormedAddCommGroup V
       by_cases h : c = d
       · simp [h]
       · simp [h, Ne.symm h]
-    simp only [h1, hπ.1.1]
-    exact tensorOp_one
+    simpa only [h1, hπ.1.1] using tensorOp_one
   · intro a ha b hb
     have h1 : dualMat k r B (a * b) = dualMat k r B a * dualMat k r B b := by
       ext c d
@@ -759,8 +754,7 @@ theorem GlobalTheory.tensor_dual_standard : ∀ (V : Type) [NormedAddCommGroup V
       rw [HermitianFormSums.herm_lsum, star_sum]
       refine Finset.sum_congr rfl fun e _ => ?_
       rw [star_mul]
-    simp only [h1, hπ.1.2 a ha b hb]
-    exact tensorOp_mul _ _ _ _
+    simpa only [h1, hπ.1.2 a ha b hb] using tensorOp_mul _ _ _ _
   · refine tensorOp_continuousOn (fun c d => ?_) hπ.2
     unfold dualMat herm
     fun_prop
@@ -932,8 +926,7 @@ theorem _root_.GlobalTheory.WigSh.exists_wigMap_chain_lowering : ∀ (V : Type) 
         congr 1
         push_cast
         ring
-      rw [← key]
-      exact hType₂
+      rwa [← key]
     · intro M v hv
       have hadj := _root_.GlobalTheory.adjoint_mem_CapSp_subA V V₁ n r z π π₁ B
         (A₁ (B (Fin.last n))) (_root_.Formalism.FourierDecayAlt.Qr.shf β M) ⟨hType.2.1, hType.2.2.1⟩ ⟨hType₁.2.1, hType₁.2.2.1⟩

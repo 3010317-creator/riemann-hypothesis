@@ -726,10 +726,8 @@ theorem gelf_by_parts : ∀ (D : D7) (θ : InfF D), IsInfFam θ → ∀ (V : HSp
     · intro c x hx
       rw [Module.algebraMap_end_apply]
       exact Z.smul_mem c hx
-    · intro u v _ _ hu hv x hx
-      exact Z.add_mem (hu x hx) (hv x hx)
-    · intro u v _ _ hu hv x hx
-      exact hu _ (hv x hx)
+    · exact fun u v _ _ hu hv x hx => Z.add_mem (hu x hx) (hv x hx)
+    · exact fun u v _ _ hu hv x hx => hu _ (hv x hx)
   refine ⟨(z Fs).1, Submodule.mem_inf.2 ⟨hzQ Fs hFQ, hzZ Fs hF'.2⟩, fun φ hφ => ?_⟩
   have e : gelf θ V τ k φ = (gelfA E k ⟨φ, hφ.1⟩).1 := GlobalTheory.Mem.RealTranslate.gelf_eq hθ τ k ⟨φ, hφ.1⟩
   rw [e]
@@ -816,8 +814,7 @@ theorem lift_add_left (hθ : IsInfFam θ) (hκ : IsKerSys θ V W κ) (hq : IsQuo
     (hF : F ∈ Decay θ V) (f f' : M) : lift κ μ 𝓕 (f + f') F = lift κ μ 𝓕 f F + lift κ μ 𝓕 f' F := by
   have I := (GlobalTheory.T.thetaKernelLift_converges_continuous_growth_deriv D θ hθ V W M κ hκ μ 𝓕 hq F hF).1
   funext h
-  simp only [lift, map_add (f := _), Pi.add_apply, add_mul]
-  exact integral_add (I f h) (I f' h)
+  simpa only [lift, map_add (f := _), Pi.add_apply, add_mul] using integral_add (I f h) (I f' h)
 
 theorem lift_add_right (hθ : IsInfFam θ) (hκ : IsKerSys θ V W κ) (hq : IsQuot V μ 𝓕) {F F' : GA D V → ℂ}
     (hF : F ∈ Decay θ V) (hF' : F' ∈ Decay θ V) (f : M) :
@@ -829,13 +826,11 @@ theorem lift_add_right (hθ : IsInfFam θ) (hκ : IsKerSys θ V W κ) (hq : IsQu
 
 theorem lift_smul_left (c : ℂ) (F : GA D V → ℂ) (f : M) : lift κ μ 𝓕 (c • f) F = c • lift κ μ 𝓕 f F := by
   funext h
-  simp only [lift, map_smul, Pi.smul_apply, smul_eq_mul, mul_assoc]
-  exact integral_const_mul _ _
+  simpa only [lift, map_smul, Pi.smul_apply, smul_eq_mul, mul_assoc] using integral_const_mul _ _
 
 theorem lift_smul_right (c : ℂ) (F : GA D V → ℂ) (f : M) : lift κ μ 𝓕 f (c • F) = c • lift κ μ 𝓕 f F := by
   funext h
-  simp only [lift, Pi.smul_apply, smul_eq_mul, mul_left_comm _ c]
-  exact integral_const_mul _ _
+  simpa only [lift, Pi.smul_apply, smul_eq_mul, mul_left_comm _ c] using integral_const_mul _ _
 
 
 variable (θ κ μ 𝓕) in
@@ -903,8 +898,7 @@ theorem lift_adjoin (hθ : IsInfFam θ) (hκ : IsKerSys θ V W κ) (hq : IsQuot 
     obtain ⟨F', hF', e⟩ := GlobalTheory.T.gelfand_operator_adjoint_decaying D θ hθ V μ 𝓕 hq τ Z hZ k F hF
     refine ⟨F', hF', funext fun h => ?_⟩
     have := e _ (isMod_ker hθ hκ f h)
-    rw [ha] at this
-    exact this
+    rwa [ha] at this
   | algebraMap r =>
     intro f F hF
     exact ⟨r • F, Submodule.smul_mem _ r hF, by rw [Module.algebraMap_end_apply, lift_smul_left, lift_smul_right]⟩
@@ -1216,8 +1210,7 @@ theorem liftAut : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, LiftAut 
   rcases lt_or_gt_of_ne ha.1 with hr | hr
   · obtain ⟨om, hw, hc, e⟩ := exists_thKer hψ Wf ha hr
     obtain ⟨f, e⟩ := e Φ
-    simp only [e]
-    exact (isKerSys_thKer hθ hψ hw hc).lift hP hθ hq hF f
+    simpa only [e] using (isKerSys_thKer hθ hψ hw hc).lift hP hθ hq hF f
   · have ha' : admitted W V χ' χ := ⟨ha.1.symm, ha.2.2.1, ha.2.1, ha.2.2.2.2, ha.2.2.2.1⟩
     obtain ⟨om, hw, hc, e⟩ := exists_thKer hψ Wf ha' hr
     have hΦ := (GlobalTheory.Mem.ThetaClosed.thetaFun_closed D ψ hψ V W Φ.1).2.2 ha.1 (mem_ThS.1 Φ.2)
@@ -1238,8 +1231,7 @@ theorem liftAut : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, LiftAut 
         obtain ⟨C, hC⟩ := hN f
         refine ⟨C, fun g g' => ?_⟩
         have hb := hC g' g
-        rw [mul_comm (height θ W g' : ℝ)] at hb
-        exact hb
+        rwa [mul_comm (height θ W g' : ℝ)] at hb
       · intro τ X hX f
         obtain ⟨f', hf'⟩ := hk.derW τ X hX f
         exact ⟨f', fun g g' => hf' g' g⟩

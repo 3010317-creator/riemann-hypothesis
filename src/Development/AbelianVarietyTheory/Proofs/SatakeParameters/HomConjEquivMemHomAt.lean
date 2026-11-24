@@ -78,8 +78,7 @@ theorem latSum_transport_equiv {E : Type} [Field E] [NumberField E] {H H₂ M : 
   have h4 : (r₂ : H₂) = e (e.symm r₂) := (e.apply_symm_apply _).symm
   rw [h4, hF]
   apply hG
-  rw [← hB, map_sub, ← h4]
-  exact h2
+  rwa [← hB, map_sub, ← h4]
 
 noncomputable def homConjEquiv {E : Type} [Field E] [NumberField E] [StarRing E] {a b : ℕ}
     (γ : Sp E a ≃ₗ[E] Sp E a) (γ' : Sp E b ≃ₗ[E] Sp E b) : HomE E a b ≃ₗ[𝓞 E] HomE E a b where
@@ -100,8 +99,7 @@ theorem homConjEquiv_mem_homAt {E : Type} [Field E] [NumberField E] [StarRing E]
   constructor
   · intro h P hP y hy
     have h1 := h P hP (γ y) ((mem_localization_gmap P γ N _).2 (by simpa using hy))
-    have h2 := (mem_localization_gmap P γ' N' _).1 h1
-    simpa using h2
+    simpa using (mem_localization_gmap P γ' N' _).1 h1
   · intro h P hP y hy
     have h1 := h P hP (γ.symm y) ((mem_localization_gmap P γ N _).1 hy)
     exact (mem_localization_gmap P γ' N' _).2 (by simpa using h1)

@@ -118,16 +118,14 @@ theorem basic_of_equiv_pt (p : ℕ) (R A : Type) [CommRing R] [CommRing A] [Alge
     rw [map_natCast, map_natCast]
   refine ⟨?_, fun x hx => ?_, fun x r => ?_, fun s r => ?_⟩
   · have h := complete (p : R)
-    rw [← IsAdicComplete.congr_ringEquiv _ e, Ideal.map_span, Set.image_singleton, hpe]
-    exact h
+    rwa [← IsAdicComplete.congr_ringEquiv _ e, Ideal.map_span, Set.image_singleton, hpe]
   · apply e.injective
     rw [map_zero]
     apply torsionFree _ hp
     rw [← hpe, ← map_mul, hx, map_zero]
   · obtain ⟨s, z, hz⟩ := dense (p : R) (e x) r
     refine ⟨s, e.symm z, e.injective ?_⟩
-    rw [map_add (f := _), map_mul, map_pow, he, hpe, RingEquiv.apply_symm_apply]
-    exact hz
+    rwa [map_add (f := _), map_mul, map_pow, he, hpe, RingEquiv.apply_symm_apply]
   · rw [← dvd_iff (p : R) s r, ← hpe, ← he, ← map_pow, map_dvd_iff]
 
 end GlobalTheory.PrincipalCompletion

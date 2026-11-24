@@ -85,8 +85,7 @@ theorem cspan_eq (lam : ι → DomWeight n) : CSpan lam = Formalism.L2.DIV.VV �
   · rw [Submodule.span_le]
     rintro _ ⟨P, hP, rfl⟩
     show MvPolynomial.map (RingHom.id ℂ) P ∈ _
-    rw [MvPolynomial.map_id]
-    exact hP
+    rwa [MvPolynomial.map_id]
   · have h := Formalism.L2.Col.map_mem_CSpan (RingHom.id ℂ) lam F hF
     rwa [MvPolynomial.map_id] at h
 
@@ -187,8 +186,7 @@ theorem map_mem_RatPol (lam : ι → DomWeight n) {F : MvPolynomial (ι × Fin n
       have h0 : f τ ∈ delSq K n (lam τ) := by rw [← nablaSq_eq_delSq]; exact hf τ
       have h := Submodule.mem_map_of_mem (f := (Formalism.GradedWeylDivisibility.blockEmb K (k := n) (n := n) τ).toLinearMap) h0
       unfold delSq Formalism.GradedWeylDivisibility.weyl at h
-      rw [Submodule.map_span, ← Set.range_comp] at h
-      exact h
+      rwa [Submodule.map_span, ← Set.range_comp] at h
     have h2 : (∏ τ, Formalism.GradedWeylDivisibility.blockEmb K τ (f τ)) ∈ Submodule.span K (∏ τ, T τ) := by
       rw [← Submodule.prod_span]
       exact prod_mem_prod_sub _ _ _ fun τ _ => h1 τ
@@ -521,8 +519,7 @@ theorem val_tied : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.P
       have h := mem_closure_iff (I.rec7 l Z).what₂.embLL ((I.rec7 l Z).plEq w) (intW (I.rec7 l Z).what₂.places w)
         ((I.rec7 l Z).val_nonneg_iff w) (lamTG (D := I.rec7 l Z) (I.fm l u a) i) P
       simp only [lamTG, delSq_shW] at h
-      rw [← hlam]
-      exact h
+      rwa [← hlam]
     have hfin : Finite (I.stp u a i).Cl := by
       have := ((l.ch u a).step i).fin_orb
       exact Finite.instSigma

@@ -77,8 +77,7 @@ theorem cong_symm {n : ℕ} {κ : Sp E n ≃ₗ[E] Sp E n} (hκ : κ ∈ GLint E
   intro w hw
   have hu : κ.symm w ∈ stdAt E n P := glint_mem (⟨κ, hκ⟩⁻¹ : GLint E n P) hw
   have := neg_mem (h _ hu)
-  rw [LinearEquiv.apply_symm_apply, ← smul_neg, neg_sub] at this
-  exact this
+  rwa [LinearEquiv.apply_symm_apply, ← smul_neg, neg_sub] at this
 
 def abelian₂ (P : HeightOneSpectrum (𝓞 E)) (n M : ℕ) (v : Sp E n) : Prop :=
   (∀ l, IntAt P ((qOf P : E) ^ M * v l)) ∧ ∀ l : Fin n, l.1 + 1 < n → IntAt P (v l)
@@ -109,8 +108,7 @@ theorem abelian₂.of_basis {n n' M : ℕ} (y : HomE E n' n) (hy : ∀ j, abelia
   · exact intAt_form_of_mem_stdAt ((qOf P : E) ^ M) (LinearMap.proj l ∘ₗ y) (fun i => (hy i).1 l) hv
   · have := intAt_form_of_mem_stdAt (1 : E) (LinearMap.proj l ∘ₗ y)
       (fun i => by rw [one_mul]; exact (hy i).2 l hl) hv
-    rw [one_mul] at this
-    exact this
+    rwa [one_mul] at this
 
 end Local
 
@@ -163,8 +161,7 @@ theorem lam_of_topDat_ne (i : ℕ) (P : rowSG Pr sel mu) (hP : P.1 ∉ Pr.vGs)
     have := hlast j
     have e : l = ⟨R.N (i + 1) - 1, hN⟩ := Fin.ext (by show l.1 = R.N (i + 1) - 1; omega)
     simp only [LinearMap.comp_apply, atNL, dite_eq_left hN, LinearMap.proj_apply] at this
-    rw [e]
-    exact this
+    rwa [e]
 
 end Chain
 
@@ -274,8 +271,7 @@ theorem topDat_frames {m2 : ℕ} (hm : R.m = m2 + 2) (hc : cst.Ok) (P : rowSG Pr
         rfl
       have h2 := GlobalTheory.ftY_pert_qM sel mu cst hc P hP hD (atNL X.E (R.N (m2 + 1 + 1)) (R.N (m2 + 1 + 1) - 1) ∘ₗ y)
         _ y'' hδ hy''s
-      rw [add_sub_cancel] at h2
-      exact h2
+      rwa [add_sub_cancel] at h2
   · have h0 : topDat Ch sel mu cst (m2 + 1) P y y'' = 0 := by
       by_contra hne
       exact hg (lam_of_topDat_ne Ch sel mu cst _ P hP y y'' hne)

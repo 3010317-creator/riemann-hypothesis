@@ -242,12 +242,9 @@ theorem GlobalTheory.jointTop_slice : ∀ {σ σ₀ : Type} [DecidableEq σ] (ι
   refine ⟨(slice ι P).support.map (outerEmb (ι := ι)), fun i => coefAt ι (outerBack (ι := ι) i) P,
     fun i => (outerBack (ι := ι) i).prod (fun r n => (MvPolynomial.X r.1 : MvPolynomial σ ℂ) ^ n), ?_, ?_, ?_⟩
   · rw [Finset.sum_map]
-    simp only [outerBack_emb]
-    exact slice_decomp hι P
-  · intro i _
-    exact coefAt_jointTop hι _ z y κ α β P hP
-  · intro i _
-    exact vars_outer_prod _
+    simpa only [outerBack_emb] using slice_decomp hι P
+  · exact fun i _ => coefAt_jointTop hι _ z y κ α β P hP
+  · exact fun i _ => vars_outer_prod _
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsJointHighestWeightHarmonicSliceOuterVariables =====
@@ -596,8 +593,7 @@ theorem kop_yz (w : GlobalTheory.ExportSeries.Weight D n) (τ : D.what₂.Tau) (
   rw [Finset.sum_congr rfl fun j _ => term_mix (w.p τ) τ _ _ j j (yRow_ge _ d) (zRow_lt _ c) P]
   have hne : (yRow (w.p τ) d : Fin m) ≠ zRow (w.p τ) c := by
     intro h; have := congrArg Fin.val h; have := yRow_ge (w.p τ) d; have := zRow_lt (w.p τ) c; omega
-  rw [ite_eq_right hne, add_zero, Finset.sum_neg_distrib]
-  rw [neg_inj]
+  rw [ite_eq_right hne, add_zero, Finset.sum_neg_distrib, neg_inj]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [GlobalTheory.Capelli.pderiv_swap]
   rfl
@@ -618,8 +614,7 @@ theorem jointTop_of_lowestKType (D : D7) (n m : ℕ) (w : GlobalTheory.ExportSer
     ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro i j hij
     have h := hN.1 τ i j hij
-    rw [sop_eq, ite_eq_right hij.ne, add_zero] at h
-    exact h
+    rwa [sop_eq, ite_eq_right hij.ne, add_zero] at h
   · intro i
     have h := hN.2 τ i
     rw [sop_eq, ite_eq_left rfl] at h
@@ -629,8 +624,7 @@ theorem jointTop_of_lowestKType (D : D7) (n m : ℕ) (w : GlobalTheory.ExportSer
   · intro c c' hcc
     have h := hK.1 τ (zRow _ c) (zRow _ c') (iff_of_true (zRow_lt _ c) (zRow_lt _ c'))
       (by rw [Fin.lt_def] at hcc ⊢; exact hcc)
-    rw [fockTargetMatrixUnit_first_block_eq_capelli, ite_eq_right hcc.ne, add_zero] at h
-    exact h
+    rwa [fockTargetMatrixUnit_first_block_eq_capelli, ite_eq_right hcc.ne, add_zero] at h
   · intro c
     have h := he (zRow _ c)
     rw [fockTargetMatrixUnit_first_block_eq_capelli, ite_eq_left rfl] at h
@@ -638,8 +632,7 @@ theorem jointTop_of_lowestKType (D : D7) (n m : ℕ) (w : GlobalTheory.ExportSer
   · intro d d' hdd
     have h := hK.1 τ (yRow _ d') (yRow _ d) (iff_of_false (yRow_ge _ d') (yRow_ge _ d))
       (by have := d.2; have := d'.2; rw [Fin.lt_def] at hdd ⊢; simp only [yRow]; omega)
-    rw [kop_y, ite_eq_right hdd.ne, sub_zero, neg_eq_zero] at h
-    exact h
+    rwa [kop_y, ite_eq_right hdd.ne, sub_zero, neg_eq_zero] at h
   · intro d
     have h := he (yRow _ d)
     rw [kop_y, ite_eq_left rfl] at h
@@ -648,8 +641,7 @@ theorem jointTop_of_lowestKType (D : D7) (n m : ℕ) (w : GlobalTheory.ExportSer
     rw [h2, sub_smul, neg_smul]
   · intro c d
     have h := hH τ (yRow _ d) (zRow _ c) (not_lt.1 (yRow_ge _ d)) (zRow_lt _ c)
-    rw [kop_yz, neg_eq_zero] at h
-    exact h
+    rwa [kop_yz, neg_eq_zero] at h
 
 end GlobalTheory.JointDict
 end -- clump:auto

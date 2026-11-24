@@ -124,8 +124,7 @@ theorem setOf_sub_mem_eq_iff {V : Type} [AddCommGroup V] {A : Type} [Ring A] [Mo
   constructor
   · intro h
     have hb : b ∈ {z | z - b ∈ M} := by simp
-    rw [h] at hb
-    exact hb
+    rwa [h] at hb
   · intro h
     ext z
     simp only [Set.mem_setOf_eq]
@@ -153,8 +152,7 @@ theorem cosetIn_smul_eq_iff : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {sel 
     exact Submodule.map_id _
   have hY' : p'.1.2 = {z | z - y ∈ locLat (rowSG Pr sel mu) p'.1.1.deco.1.N
       fun P => if P.1 ∈ Pr.vGs then 0 else (cst.M : ℤ)} := by
-    rw [h2, hN]
-    exact hY
+    rwa [h2, hN]
   have hc := GlobalTheory.BaseCosetPt.cosetIn_eq_of p P hP y _ (by simp [hP]) hY
   have hc' := GlobalTheory.BaseCosetPt.cosetIn_eq_of p' P hP y _ (by simp [hP]) hY'
   set w : Pr.vGs := ⟨P.1, hP⟩ with hw
@@ -276,9 +274,7 @@ theorem GlobalTheory.Mem.Col2.TC.typeRead_core : ∀ {B : Base} {X : PreX B.toPr
       (baseLb B.host.E (B.R.N (B.R.m - 1)) ((B.primes X).vT u)) := by
     have := F.levJ.Uloc_lev v hx
     have hgram' : gramN (I.rec7 l Z) ((I.rec7 l Z).R.m - 1) (Nat.sub_le _ _) = 1 := hgram
-    rw [hLb] at this
-    rw [hgram'] at this
-    exact this
+    rwa [hLb, hgram'] at this
   have hT : v ∉ plUnder B.host.F ((B.primes X).vT u) := fun hvT => rls_T_notUnder hPr u v
       ((mem_plUnder_iff_norm B.sp.cm (rls_vT_iff hX hPr u) ((B.primes X).T u) (hPr.piT_norm u) v).1 hvT)
       ⟨(wOf a v ha).1, (wOf a v ha).2, (hwOf a v ha _).2 rfl⟩
@@ -307,8 +303,7 @@ theorem GlobalTheory.Mem.Col2.TC.typeRead_core : ∀ {B : Base} {X : PreX B.toPr
         apply Units.ext
         refine Eq.trans ?_ ((hred a ha).trans hMe.symm)
         rfl
-      rw [e2]
-      exact hM
+      rwa [e2]
     · have e1 := red_put_off B.sp.cm (B.R.N (B.R.m - 1)) _ (B.primes X).vGs v x hJ w (fun h => hw ((hwOf a v ha w).1 h))
       show _ ∈ ((I.idx I.mu0).levG (B.R.m - 1) b w).H
       erw [e1]
@@ -331,8 +326,7 @@ theorem GlobalTheory.Mem.Col2.TC.typeRead_core : ∀ {B : Base} {X : PreX B.toPr
     have key := (fix_map_iff (e j v hv) _ _).2 hfix'
     rw [hfr j v hv]
     have hM : redM (I.rec7 l Z).host.F v (F.gl.mat j v hv 1 x) = _ := (hred j hv).symm
-    rw [hM]
-    exact key
+    rwa [hM]
   · intro hall
     refine ⟨hJ, hm0, funext fun P => (hcos P).2 ?_⟩
     refine (fix_inv_iff _ _).2 ?_
@@ -343,8 +337,7 @@ theorem GlobalTheory.Mem.Col2.TC.typeRead_core : ∀ {B : Base} {X : PreX B.toPr
       rw [hfr a v ha] at h2
       refine (fix_map_iff (e a v ha) _ _).1 ?_
       have hM : redM (I.rec7 l Z).host.F v (F.gl.mat a v ha 1 x) = _ := (hred a ha).symm
-      rw [hM] at h2
-      exact h2
+      rwa [hM] at h2
     · have e1 := red_put_off B.sp.cm (B.R.N (B.R.m - 1)) _ (B.primes X).vGs v x hJ ⟨P.1, hvG P⟩
         (fun h => hw ((hwOf a v ha _).1 h))
       erw [e1]
@@ -497,8 +490,7 @@ theorem reL_rfl' {a : ℕ} (L : Submodule (𝓞 E) (Fin a → E)) : reL (rfl : a
   constructor
   · rintro ⟨y, hy, rfl⟩
     exact hy
-  · intro hx
-    exact ⟨x, hx, rfl⟩
+  · exact fun hx => ⟨x, hx, rfl⟩
 
 theorem reGL_mem_UPts (σ : E →ₐ[F] E) {a b : ℕ} (h : a = b) (G : Matrix (Fin a) (Fin a) E) (J : Matrix (Fin b) (Fin b) E)
     (hJ : J = G.reindex (finCongr h) (finCongr h)) (R : Type) [CommRing R] [Algebra F R] (x : GL (Fin a) (E ⊗[F] R)) :
@@ -690,8 +682,7 @@ theorem assemble {G : Type} [Group G] {Ch : Type} [Finite Ch] {Qt : Type} [Finit
     show κ ∈ H β ↔ κ • (⟨β, ((1 : G) : G ⧸ H β)⟩ : Σ β, G ⧸ H β) = ⟨β, ((1 : G) : G ⧸ H β)⟩
     rw [e]
     constructor
-    · intro hk
-      exact congrArg (Sigma.mk β) (QuotientGroup.eq.mpr (by simpa using hk))
+    · exact fun hk => congrArg (Sigma.mk β) (QuotientGroup.eq.mpr (by simpa using hk))
     · intro hk
       have h2 : (κ : G ⧸ H β) = ((1 : G) : G ⧸ H β) := eq_of_heq (Sigma.mk.inj hk).2
       simpa using QuotientGroup.eq.mp h2

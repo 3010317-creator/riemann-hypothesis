@@ -110,8 +110,7 @@ theorem exists_split (X : Type) [AddCommGroup X] [Module R X] [Module.Projective
     simp only [LinearMap.comp_apply, h, map_zero, LinearMap.id_apply] at this
     exact this.symm
   obtain ⟨a, ha⟩ : ∃ a, s x a ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hsx (Finsupp.ext h)
   let f : X →ₗ[R] R := Finsupp.lapply a ∘ₗ s
   have hI : LinearMap.range f ≠ ⊥ := by
@@ -182,7 +181,6 @@ theorem finitely_many_iso_classes : ∀ (E : Type) [Field E] [NumberField E] (q 
     ∃ (n : ℕ) (Y : Fin n → ModuleCat.{0} (𝓞 E)), ∀ (X : Type) [AddCommGroup X] [Module (𝓞 E) X]
       [Module.Finite (𝓞 E) X] [Module.Projective (𝓞 E) X], Module.finrank (𝓞 E) X ≤ q →
       ∃ k, Nonempty (X ≃ₗ[𝓞 E] Y k) := by
-  intro E _ _ q
-  exact exists_finite_reps q
+  exact fun E _ _ q => exists_finite_reps q
 
 end GlobalTheory.ProjModFinIso

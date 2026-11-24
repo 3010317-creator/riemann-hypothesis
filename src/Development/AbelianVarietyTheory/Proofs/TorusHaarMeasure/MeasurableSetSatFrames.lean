@@ -127,8 +127,7 @@ theorem cpt_mem_satFrames_iff (X : Data E r) {x0 : Frame X.Ψ r} (ho : IsOrth X 
   · rintro ⟨z', hz', b, hb, h⟩
     rw [← ExtFPf.rmul_oneF X (cpt X x0 z)] at h
     rw [FundSetPf.cpt_uniq X ho (ExtFPf.oneF_mem X) hb h]; exact hz'
-  · intro hz
-    exact ⟨z, hz, ExtFPf.oneF X, ExtFPf.oneF_mem X, (ExtFPf.rmul_oneF X _).symm⟩
+  · exact fun hz => ⟨z, hz, ExtFPf.oneF X, ExtFPf.oneF_mem X, (ExtFPf.rmul_oneF X _).symm⟩
 
 theorem cpt_lact (X : Data E r) (x0 : Frame X.Ψ r) (γ : GL (Fin r) E) (z : V (nd X)) :
     cpt X (lact γ x0) z = lact γ (cpt X x0 z) := (FundSetPf.lact_rmul γ _ _).symm

@@ -235,8 +235,7 @@ theorem exists_open_compact_annihilator : ∀ (F E : Type) [NontriviallyNormedFi
     have : {z : A.K | c • z ∈ A.OK} = (fun z : A.K => c⁻¹ • z) '' A.OK := by
       ext z
       constructor
-      · intro hz
-        exact ⟨c • z, hz, inv_smul_smul₀ hc z⟩
+      · exact fun hz => ⟨c • z, hz, inv_smul_smul₀ hc z⟩
       · rintro ⟨w, hw, rfl⟩
         show c • c⁻¹ • w ∈ A.OK
         rwa [smul_inv_smul₀ hc]
@@ -366,8 +365,7 @@ theorem Et.norm_facts : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivial
     rw [Algebra.norm_algebraMap_of_basis b]
     simp
   · intro y y'
-    simp only [Et.NL]
-    exact map_mul (Algebra.norm A.K) y y'
+    simpa only [Et.NL] using map_mul (Algebra.norm A.K) y y'
   · intro t
     apply hinj
     rw [hN, map_one]
@@ -376,8 +374,7 @@ theorem Et.norm_facts : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivial
     have h := hy.map (algebraMap A.K A.L)
     rw [hN] at h
     exact isUnit_of_mul_isUnit_left h
-  · intro y hy
-    exact hy.map (Algebra.norm A.K)
+  · exact fun y hy => hy.map (Algebra.norm A.K)
 
 end GlobalTheory.JR
 end -- clump:auto
@@ -417,8 +414,7 @@ theorem charIntegral_inv_OK : ∀ (F E : Type) [NontriviallyNormedField F] [Nont
   ext y
   simp only [Set.mem_setOf_eq, Algebra.traceForm_apply]
   constructor
-  · intro h x hx
-    exact h x (by simpa [hM] using (show x ∈ (M : Set A.K) from hx))
+  · exact fun h x hx => h x (by simpa [hM] using (show x ∈ (M : Set A.K) from hx))
   · intro h z hz
     exact h z (show z ∈ (M : Set A.K) by rw [hM]; exact hz)
 
@@ -556,8 +552,7 @@ theorem GlobalTheory.JR.truncated_integral_eq_vol_mul_orbL : ∀ (F E : Type) [N
     · intro y hy
       by_contra hn
       exact hy (by simp only [h, Set.indicator_of_notMem (show f y ∉ (D : Set A.K) from hn), mul_zero])
-    · intro y hy
-      exact hSu y hy
+    · exact fun y hy => hSu y hy
   have hμ := (GlobalTheory.JR.exists_meas_and_scale F E A ψ hψ).2 m x
   rw [hμ, integral_smul_measure, ENNReal.toReal_ofReal (TruncInt.absK_nonneg A _)]
   have hxa : A.absK a / A.absK x ≠ 0 :=
@@ -585,8 +580,7 @@ theorem GlobalTheory.JR.truncated_integral_eq_vol_mul_orbL : ∀ (F E : Type) [N
     · obtain ⟨s, hσs, hs2, -⟩ := hσD a' hb
       rw [hσs]; exact hsec a' s hs2
     · have he := hor.resolve_left hb
-      simp only [σ, dite_eq_right hb, dite_eq_left he]
-      exact Classical.choose_spec he
+      simpa only [σ, dite_eq_right hb, dite_eq_left he] using Classical.choose_spec he
   have hσ : ∀ y : A.L, IsUnit y → A.NL (σ (A.NL y)) = A.NL y := fun y _ => hσN _ (Or.inr ⟨y, rfl⟩)
   rw [m.nat.2 σ hσ h hTest hsupp]
   set T : Set A.K := {a' | (x : A.K) * a' - a ∈ (D : Set A.K)} with hT
@@ -733,8 +727,7 @@ theorem whittaker_swap : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivia
     have : M = (fun w : A.K => c⁻¹ • w) '' A.OK := by
       ext z
       constructor
-      · intro hz
-        exact ⟨c • z, hz, by simp [smul_smul, inv_mul_cancel₀ hc]⟩
+      · exact fun hz => ⟨c • z, hz, by simp [smul_smul, inv_mul_cancel₀ hc]⟩
       · rintro ⟨w, hw, rfl⟩
         change c • c⁻¹ • w ∈ A.OK
         simpa [smul_smul, mul_inv_cancel₀ hc] using hw
@@ -771,8 +764,7 @@ theorem whittaker_swap : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivia
       refine ⟨?_, subset_tsupport _ ?_⟩
       · by_contra hz
         exact hzy (by simp [hz])
-      · intro h0
-        exact hzy (by simp [h0])
+      · exact fun h0 => hzy (by simp [h0])
     exact IsCompact.of_isClosed_subset (hMcpt.prod hφ.2) (isClosed_tsupport _)
       (closure_minimal hsub (hMclosed.prod (isClosed_tsupport _)))
   have hswap := integral_integral_swap_of_hasCompactSupport hcont hsupp (μ := μK) (ν := μ)

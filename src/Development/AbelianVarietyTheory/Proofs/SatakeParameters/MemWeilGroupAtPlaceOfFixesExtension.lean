@@ -87,8 +87,7 @@ theorem modEq_of_cong {v' : HeightOneSpectrum (𝓞 L)} (h' : IsPlaceOver A v') 
   have h0 := (Ideal.Quotient.eq_zero_iff_mem).mpr hmem
   rw [map_sub, map_pow, map_pow, hζ, sub_eq_zero] at h0
   apply Units.ext
-  simp only [Units.val_pow_eq_pow_val]
-  exact h0.symm
+  simpa only [Units.val_pow_eq_pow_val] using h0.symm
 
 theorem dvd_of_modEq {q f n : ℕ} (hq : 1 < q) (h : q ^ n ≡ 1 [MOD q ^ f - 1]) : f ∣ n := by
   have h1 : 1 ≤ q ^ n := Nat.one_le_pow _ _ (by omega)
@@ -107,8 +106,7 @@ theorem actsAs_of_agree {q f a b : ℕ} {σ : G K Ω} {g : G L Ω} (hg : ∀ z :
   subst e
   refine ⟨hσ.1, fun x hx => ?_⟩
   have := hσ.2 x hx
-  rw [pow_mul, pow_mul] at this
-  exact this
+  rwa [pow_mul, pow_mul] at this
 
 end GlobalTheory.AboveL.WeilUp
 

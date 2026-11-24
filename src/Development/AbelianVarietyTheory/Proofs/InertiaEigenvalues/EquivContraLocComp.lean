@@ -87,16 +87,14 @@ theorem iSup_range_eq (V : Submodule ℂ (Sm E a)) (hs : _root_.GlobalTheory.Cus
       | cpt k =>
         refine comm (.cpt k) (fun g => ?_) f v
         have h2 := congrArg (rt E a) (infGL_comm (Unitary.toUnits k) (locGL E a w g))
-        rw [map_mul, map_mul] at h2
-        exact h2
+        rwa [map_mul, map_mul] at h2
       | lie X => exact comm (.lie X) (fun g => lie_rt_fin X (locGL E a w g)) f v
     exact this hφ
   · obtain ⟨f, h0, h1, hf⟩ := h
     refine h0 (LinearMap.ext fun v => ?_)
     have : f v ∈ ⨆ f : Maps V w σ, LinearMap.range f.1 :=
       Submodule.mem_iSup_of_mem (⟨f, h1, hf⟩ : Maps V w σ) ⟨v, rfl⟩
-    rw [hb] at this
-    exact this
+    rwa [hb] at this
 
 theorem exists_comp_ne_zero (V : Submodule ℂ (Sm E a)) (hs : _root_.GlobalTheory.CuspRep.IsStable V) (hi : ∀ W ≤ V, _root_.GlobalTheory.CuspRep.IsStable W → W = ⊥ ∨ W = V)
     (w : HeightOneSpectrum (𝓞 E)) (σ : SmIrr (GL (Fin a) (w.adicCompletion E)))

@@ -100,8 +100,7 @@ private lemma dvd_pow_of_prime_dvd_imp (n k : ℕ) (h : ∀ p, p.Prime → p ∣
   by_cases hp : p.Prime ∧ p ∣ n
   · have h1 : 1 ≤ k.factorization p := (hp.1.dvd_iff_one_le_factorization hk).1 (h p hp.1 hp.2)
     have h2 : n.factorization p < n := Nat.factorization_lt p hn
-    simp only [Finsupp.smul_apply, smul_eq_mul]
-    exact le_trans h2.le (Nat.le_mul_of_pos_right n h1)
+    simpa only [Finsupp.smul_apply, smul_eq_mul] using le_trans h2.le (Nat.le_mul_of_pos_right n h1)
   · have : n.factorization p = 0 := by
       by_cases hp' : p.Prime
       · exact Nat.factorization_eq_zero_of_not_dvd (fun hd => hp ⟨hp', hd⟩)
@@ -187,8 +186,7 @@ private lemma sum_inv_le_mul_sum_squarefree_inv_totient (Q q : ℕ) (hq : 1 ≤ 
         rw [Finset.sum_image]
         · refine Finset.sum_congr rfl fun n hn => ?_
           rw [← Nat.cast_mul, Nat.mul_div_cancel' (hfib n hn).1]
-        · intro x hx y hy hxy
-          exact (Nat.div_left_inj (hfib x hx).1 (hfib y hy).1).1 hxy
+        · exact fun x hx y hy hxy => (Nat.div_left_inj (hfib x hx).1 (hfib y hy).1).1 hxy
     _ ≤ ∑ m ∈ N.divisors, (1:ℝ) / (f * m) := by
         refine Finset.sum_le_sum_of_subset_of_nonneg ?_ (fun _ _ _ => by positivity)
         intro m hm
@@ -305,9 +303,7 @@ private lemma filter_coprime_range_prime_eq_erase_zero (p : ℕ) (hp : p.Prime) 
     simp [Nat.coprime_zero_right] at h2
     exact hp.one_lt.ne' h2
   · rintro ⟨h1, h2⟩
-    refine ⟨h2, (Nat.Prime.coprime_iff_not_dvd hp).2 ?_⟩
-    intro h
-    exact h1 (Nat.eq_zero_of_dvd_of_lt h h2)
+    exact ⟨h2, (Nat.Prime.coprime_iff_not_dvd hp).2 (fun h => h1 (Nat.eq_zero_of_dvd_of_lt h h2))⟩
 
 open Complex DirichletCharacter ArithmeticFunction MeasureTheory Filter Topology in
 private lemma cexp_mul_div_eq_natMod_left (d : ℕ) (hd : 0 < d) (n a : ℕ) :

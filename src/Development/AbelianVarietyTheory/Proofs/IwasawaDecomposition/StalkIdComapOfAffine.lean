@@ -117,8 +117,7 @@ theorem map_le_stalkId_comap (π : X' ⟶ X) (J : X.IdealSheafData) (x' : X') :
         (((J.comap π).subschemeι.stalkMap z).hom.comp (π.stalkMap ((J.comap π).subschemeι z)).hom) := by
       have h0 := (GlobalTheory.Vanishing.le_ker_iff_stalk ((J.comap π).subschemeι ≫ π)).1
         (Scheme.IdealSheafData.le_map_comap J π) z
-      rw [Scheme.Hom.stalkMap_comp] at h0
-      exact h0
+      rwa [Scheme.Hom.stalkMap_comp] at h0
     rw [← RingHom.comap_ker, GlobalTheory.Vanishing.ker_stalkMap] at h
     exact Ideal.map_le_iff_le_comap.2 h
   · rw [GlobalTheory.Vanishing.stalkId_eq_top _ hx]
@@ -141,8 +140,7 @@ theorem stalkId_comap (π : X' ⟶ X) (J : X.IdealSheafData) (x' : X') :
       ((stalkId J (π (V.ι z))).map (π.stalkMap (V.ι z)).hom).map (V.ι.stalkMap z).hom := by
     have h0 := map_le_stalkId_comap V.ι (J.comap π) z
     rw [h1, Scheme.Hom.stalkMap_comp] at h0
-    rw [Ideal.map_map]
-    exact h0
+    rwa [Ideal.map_map]
   have hb : Function.Bijective (V.ι.stalkMap z).hom := ConcreteCategory.bijective_of_isIso _
   rwa [Ideal.map_le_iff_le_comap, Ideal.comap_map_of_bijective _ hb] at h2
 

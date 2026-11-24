@@ -61,8 +61,7 @@ theorem exists_eq_nsmul_of_forall_dvd_of_bijective {La : Type} [AddCommGroup La]
   let g : La →ₗ[ℤ] ℤ :=
     { toFun := fun x => EF c x / N
       map_add' := fun x y => by
-        simp only [map_add (f := _)]
-        exact Int.add_ediv_of_dvd_left (hc x)
+        simpa only [map_add (f := _)] using Int.add_ediv_of_dvd_left (hc x)
       map_smul' := fun r x => by
         simp only [map_smul, smul_eq_mul, RingHom.id_apply]
         exact Int.mul_ediv_assoc r (hc x) }
@@ -177,8 +176,7 @@ private theorem exists_rel_of_dvd_pairing_of_card_mul_eq {La Q P : Type} [AddCom
   have hUW : U ≤ W := by
     intro t ht
     rw [hmemW]
-    intro x hx
-    exact (hmemV x).mp hx t ht
+    exact fun x hx => (hmemV x).mp hx t ht
   have hPS : Nat.card P ≤ Nat.card S := by
     refine Nat.card_le_card_of_injective
       (fun p => ⟨π (hRsurj p).choose, (hRsurj p).choose, p, (hRsurj p).choose_spec, rfl⟩) ?_
@@ -242,8 +240,7 @@ private theorem exists_rel_of_dvd_pairing_of_card_mul_eq {La Q P : Type} [AddCom
     obtain ⟨a', p', hr, rfl⟩ := hxS
     exact hz _ _ (ha a' p' hr)
   have haST : π a ∈ ST := by
-    rw [hSTUset, SetLike.mem_coe, hUWeq]
-    exact haW
+    rwa [hSTUset, SetLike.mem_coe, hUWeq]
   obtain ⟨a0, p0, h0, _, he⟩ := haST
   obtain ⟨c, hc⟩ := hπeq _ _ he
   exact ⟨p0, hc ▸ hRinv a0 c p0 h0⟩

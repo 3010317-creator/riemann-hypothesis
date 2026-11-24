@@ -985,8 +985,7 @@ theorem odd_det_of_mem_symplecticGroup (h : fromBlocks a b c d ∈ symplecticGro
   rw [hb0, Matrix.mul_zero, sub_zero] at h2
   have h3 := (isUnit_det_of_left_inverse h2).ne_zero
   rw [← Int.cast_det, Ne, ZMod.intCast_zmod_eq_zero_iff_dvd] at h3
-  rw [← Int.not_even_iff_odd, even_iff_two_dvd]
-  exact h3
+  rwa [← Int.not_even_iff_odd, even_iff_two_dvd]
 
 end General
 

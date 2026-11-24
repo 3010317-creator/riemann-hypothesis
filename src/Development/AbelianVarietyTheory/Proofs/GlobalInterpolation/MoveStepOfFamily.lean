@@ -166,8 +166,7 @@ theorem mem_homAt_iff {P : HeightOneSpectrum (𝓞 E)} {N : Submodule (𝓞 E) (
   · rintro h ⟨j, i⟩
     have h1 := h _ ((hg _).2 (single_mem_stdAt P j))
     rw [← g'.apply_symm_apply (x _), hg', stdAt, mem_localization_standardLattice] at h1
-    have h2 := h1 i
-    simpa [crd_apply, LinearMap.toMatrix'_apply] using h2
+    simpa [crd_apply, LinearMap.toMatrix'_apply] using h1 i
   · intro h y hy
     obtain ⟨z, rfl⟩ := g.surjective y
     rw [hg, stdAt, mem_localization_standardLattice] at hy
@@ -264,8 +263,7 @@ theorem isTransv_surjInv {R : Type*} [Ring R] [Module R G] (A B : Submodule R G)
       ((Function.surjInv (Submodule.Quotient.mk_surjective (B.comap A.subtype)) z : ↥A) : G) := by
   have hs := Function.surjInv_eq (Submodule.Quotient.mk_surjective (B.comap A.subtype))
   refine ⟨fun c => Subtype.prop _, fun c c' h => ?_, fun a ha => ⟨Submodule.Quotient.mk ⟨a, ha⟩, ?_⟩⟩
-  · rw [← hs c, ← hs c', Submodule.Quotient.eq]
-    exact h
+  · rwa [← hs c, ← hs c', Submodule.Quotient.eq]
   · exact (Submodule.Quotient.eq (B.comap A.subtype)).1 (hs (Submodule.Quotient.mk ⟨a, ha⟩)).symm
 
 end Transversal
@@ -328,8 +326,7 @@ theorem cosSum_inter (E : Type) [Field E] [NumberField E] (W : Type) [AddCommGro
         rwa [e] at this)
       refine Prod.ext h3 (hy.2.1 _ _ ?_).symm
       have e : r p.1 - y p.2 - (r q.1 - y q.2) = y q.2 - y p.2 := by rw [h3]; abel
-      rw [← e]
-      exact h
+      rwa [← e]
     · obtain ⟨i, hi⟩ := hr.2.2 a ha
       obtain ⟨j, hj⟩ := hy.2.2 (-(a - r i)) ⟨L₁.neg_mem hi, As.neg_mem (As.sub_mem ha (hrA i))⟩
       refine ⟨(i, j), ?_⟩
@@ -340,8 +337,7 @@ theorem cosSum_inter (E : Type) [Field E] [NumberField E] (W : Type) [AddCommGro
     refine ⟨fun j => ⟨_, hy₁ j, rfl⟩, fun i j h => hy.2.1 i j ?_, ?_⟩
     · obtain ⟨s, hs, e⟩ := h
       rw [← map_sub] at e
-      rw [← hι e]
-      exact hs
+      rwa [← hι e]
     · rintro _ ⟨a, ha, rfl⟩
       obtain ⟨u, hu, v, hv, rfl⟩ := Submodule.mem_sup.1 (h1 ha)
       obtain ⟨j, hj⟩ := hy.2.2 u hu
@@ -484,8 +480,7 @@ theorem relIndex_eq_prod_locP (E : Type) [Field E] [NumberField E] (W : Type) [A
       fun x hx => mem_localization_of_mem P.1 hx)
   have hg : ∀ (P : S) (x : M₁.toAddSubgroup) (y : (localization₂ P.1.asIdeal M₁).toAddSubgroup),
       g P x = (QuotientAddGroup.mk y : Q P) ↔ (x : W) - y ∈ localization₂ P.1.asIdeal M₂ := by
-    intro P x y
-    exact QuotientAddGroup.eq_iff_sub_mem
+    exact fun P x y => QuotientAddGroup.eq_iff_sub_mem
   let f : M₁.toAddSubgroup →+ ∀ P : S, Q P := AddMonoidHom.pi g
   have hker : f.ker = M₂.toAddSubgroup.addSubgroupOf M₁.toAddSubgroup := by
     ext x
@@ -496,8 +491,7 @@ theorem relIndex_eq_prod_locP (E : Type) [Field E] [NumberField E] (W : Type) [A
       by_cases hP : P ∈ S
       · simpa using (hg ⟨P, hP⟩ x 0).1 (h ⟨P, hP⟩)
       · exact hD.2 P hP (mem_localization_of_mem P x.2)
-    · intro h P
-      exact (hg P x 0).2 (by simpa using mem_localization_of_mem P.1 h)
+    · exact fun h P => (hg P x 0).2 (by simpa using mem_localization_of_mem P.1 h)
   have hsurj : Function.Surjective f := by
     intro y
     choose x hx using fun P : S => QuotientAddGroup.mk_surjective (y P)
@@ -747,8 +741,7 @@ theorem sum_reps {M : Type*} [AddCommMonoid M] {L₁ L₂ : AddSubgroup V} [Fint
     set c := ((⟨x, hS.1 x hx⟩ : L₂) : L₂ ⧸ L₁.addSubgroupOf L₂) with hc
     have := QuotientAddGroup.eq.1 ((QuotientAddGroup.out_eq' c).trans hc)
     rw [AddSubgroup.mem_addSubgroupOf] at this
-    have h2 := hf _ (Quotient.out c : L₂).2 _ (-(Quotient.out c : L₂) + ⟨x, hS.1 x hx⟩ : L₂).2 this
-    simpa using h2
+    simpa using hf _ (Quotient.out c : L₂).2 _ (-(Quotient.out c : L₂) + ⟨x, hS.1 x hx⟩ : L₂).2 this
 
 theorem card_reps {L₁ L₂ : AddSubgroup V} (h : relIdx L₁ L₂ ≠ 0) {S : Finset V} (hS : IsReps L₁ L₂ S) :
     S.card = relIdx L₁ L₂ := by
@@ -1013,8 +1006,7 @@ theorem mem_mulLat_iff {N : Submodule (𝓞 E) (Sp E a)} {N' : Submodule (𝓞 E
     constructor
     · rintro ⟨y, hy, rfl⟩
       simpa [e, smul_smul, hcE] using hy
-    · intro hx
-      exact ⟨_, hx, by simp [e, smul_smul, hcE]⟩
+    · exact fun hx => ⟨_, hx, by simp [e, smul_smul, hcE]⟩
   rw [h1, mem_homAt_iff hU h, ← GlobalTheory.ThetaMove.PeriodTwist.twO_perO E a b AA N N' c _ h.1.fg hc (expS_bound S)]
   refine forall₂_congr fun P hP => ?_
   rw [mem_localization_twist _ hc (expS_bound S), expS, ite_eq_left hP, zpow_one]
@@ -1269,8 +1261,7 @@ theorem mUof_conj {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R)
   have hTP := h4.2 hP
   have hv := (GlobalTheory.ThetaMove.split_of_conj_ne₂ X P (P.under (𝓞 X.F)) hX hne rfl).1
   have hTc : ((Pr.T u : ℕ) : 𝓞 X.E) ∈ (conjPrime₂ P).asIdeal := by
-    rw [mem_conjP, map_natCast]
-    exact hTP
+    rwa [mem_conjP, map_natCast]
   have hgT : ∀ Q : HeightOneSpectrum (𝓞 X.E), ((Pr.T u : ℕ) : 𝓞 X.E) ∈ Q.asIdeal → ∀ k, ((Pr.g k : ℕ) : 𝓞 X.E) ∉ Q.asIdeal := by
     intro Q hQ k hk
     have hc : IsCoprime ((Pr.T u : ℕ) : 𝓞 X.E) ((Pr.g k : ℕ) : 𝓞 X.E) :=
@@ -1287,11 +1278,9 @@ theorem mUof_conj {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R)
   have hplc : Formalism.EigenvalueLevelCeiling.plc (P.under (𝓞 X.F)) = Pr.T u := by
     have h6 : ((Pr.T u : ℕ) : 𝓞 X.F) ∈ (P.under (𝓞 X.F)).asIdeal := by
       change _ ∈ Ideal.comap _ _
-      rw [Ideal.mem_comap, map_natCast]
-      exact hTP
+      rwa [Ideal.mem_comap, map_natCast]
     have h7 : ((Pr.T u : ℕ) : 𝓞 X.F ⧸ (P.under (𝓞 X.F)).asIdeal) = 0 := by
-      rw [← map_natCast (Ideal.Quotient.mk _), Ideal.Quotient.eq_zero_iff_mem]
-      exact h6
+      rwa [← map_natCast (Ideal.Quotient.mk _), Ideal.Quotient.eq_zero_iff_mem]
     have := (P.under (𝓞 X.F)).isPrime
     exact CharP.ringChar_of_prime_eq_zero (hPr.T_prime u) h7
   have hmu := mu.2

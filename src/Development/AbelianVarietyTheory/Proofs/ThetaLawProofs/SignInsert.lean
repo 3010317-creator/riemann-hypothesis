@@ -262,8 +262,7 @@ theorem koszul_isCx : ∀ (R : Type) [CommRing R] (x : KeyIn R) (n l d : ℕ) (s
       · exact ⟨0, fun h => absurd h hj⟩
     choose c hc using h1
     refine ⟨fun i j j' => if h : j' = j + 1 then Matrix.of fun k' k => c i j (h ▸ k) k' else 0, fun i j hj k => ?_⟩
-    simp only [dite_eq_left, Matrix.of_apply]
-    exact hc i j k hj
+    simpa only [dite_eq_left, Matrix.of_apply] using hc i j k hj
   · refine isCx_kosD (N := fun j => (l - j * n) ^ x.P.g) m _ (fun i i' j hj => ?_) (fun i => ?_)
     · ext k' k
       have hj0 : j < x.P.g := by omega
@@ -272,8 +271,7 @@ theorem koszul_isCx : ∀ (R : Type) [CommRing R] (x : KeyIn R) (n l d : ℕ) (s
       have e₂ := coords_mul x (b j) (b (j + 1)) (m i' j (j + 1)) _ _ _ (hm i' j hj0) (hm i (j + 1) hj1 k)
       have hu := hb j hj0.le (mulSec x.P.L (cast_step hl hj0) (s i)
         (mulSec x.P.L (cast_step hl hj1) (s i') (b (j + 2) k)))
-      have e₃ := hu.unique e₁ (fun c => (mul_left_comm _ _ _).trans (e₂ c))
-      exact congrFun e₃ k'
+      exact congrFun (hu.unique e₁ (fun c => (mul_left_comm _ _ _).trans (e₂ c))) k'
     · ext a k
       exact ring_eval (cst x.P.A.hom (x.P.L.U (ch a))) (valT (T := R) (z a).left (x.P.L.U (ch a))) _
         (EtBaseChange.valT_eq (T := R) (z a).left _ (hz a)) (valH_cst x (z a) _ (hz a)) _ _ _ _ (hs a i)

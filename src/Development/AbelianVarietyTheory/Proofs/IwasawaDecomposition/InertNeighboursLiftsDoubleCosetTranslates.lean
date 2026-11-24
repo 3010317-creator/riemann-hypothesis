@@ -190,8 +190,7 @@ theorem exists_approx (x : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (J : Id
       ((fun v : Fin n → E => fun i => iA F E (v i)) '' (Formalism.UG.CS.globLat x (stdLat E n) : Set (Fin n → E))) := by
     rw [Formalism.UG.P.span_recovery_of_integral_adelic_approx Formalism.UG.P.integral_adele_approximation_holds F E (Fin n) (stdLat E n)
       (Module.Finite.iff_fg.2 (stdLat_lattice (E := E) (n := n)).fg) hspan x _]
-    rw [mem_latS_std, hxu]
-    exact hu
+    rwa [mem_latS_std, hxu]
   rw [← hxu]
   refine Submodule.span_induction (p := fun z _ => ∃ v ∈ Formalism.UG.CS.globLat x (stdLat E n), ∀ i, ∃ t ∈ idS F J,
     ((x⁻¹).1 *ᵥ z) i = pullV x v i + (t : E ⊗[F] Formalism.L2.Herm.Af F)) ?_ ?_ ?_ ?_ h1
@@ -957,8 +956,7 @@ theorem dv_of_divAt (hβ : IsBaseFrame V 1 Λ 1) {ϖ : D.host.E} {d : List ℤ} 
   have e2 : swapAE D (finPart D e) = finSw D e := rfl
   have e3 : (fun i : Fin V.rank => swapAE D (finPart D (incA D (ϖ ^ d.getD i.1 0)))) =
       fun i : Fin V.rank => iA D.host.F D.host.E (ϖ ^ d.getD i.1 0) := funext fun i => finSw_incA _
-  rw [e1, e2, e3] at h1
-  exact h1
+  rwa [e1, e2, e3] at h1
 
 def inCoord (c : GL (Fin V.rank) (Lev.EAf D)) : GA D V →* GL (Fin V.rank) (Lev.EAf D) :=
   (MulAut.conj c⁻¹).toMonoidHom.comp (finE V)
@@ -1119,8 +1117,7 @@ theorem sum_reps [NeZero V.rank] (hβ : IsBaseFrame V 1 Λ 1) (hP : IsPrimeIdem 
     rw [map_mul, map_inv]; group
 
 theorem conjPl_eq_of_conjP {Q : Pl D.host.E} (h : conjPrime₂ Q = Q) : Formalism.DivisionValues.conjPl Q = Q := by
-  rw [GlobalTheory.LabChar.conjPl_eq_cP]
-  exact h
+  rwa [GlobalTheory.LabChar.conjPl_eq_cP]
 
 theorem isConjPl_self {Q : Pl D.host.E} (h : conjPrime₂ Q = Q) : Formalism.IndefR.Lev.IsConjPl Q Q := by
   have := isConjPl_conj Q
@@ -1203,13 +1200,11 @@ theorem inert_neighbours : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColI
     · have h' : (q.1.1 : PlI X.B px).1 ∈ L.Pg := h
       rw [hL.Pg] at h'
       exact (q.1.1 : PlI X.B px).2.2.2 (Or.inr h')
-    · refine (hL.is.Q_pl t _ h).2 _ h ?_
-      exact isConjPl_self (D := X.toD7) hQc
+    · exact (hL.is.Q_pl t _ h).2 _ h (isConjPl_self (D := X.toD7) hQc)
   rw [hβ] at hm
   have key := exists_hecke (Vc X.toD7 i) (LiftBrg.rkEq X i) (L.ΛV i) (L.datVt i t) hm _ hQc hoff hQ A k hF.2.1 hF.2.2.1
     hF.2.2.2.1 hF.2.2.2.2.1 q.2 hs
-  rw [← hβ] at key
-  exact key
+  rwa [← hβ] at key
 
 end GlobalTheory.InertNbr
 end -- clump:auto

@@ -92,8 +92,7 @@ theorem adAt_eq_zero_of_prV (P : HeightOneSpectrum (𝓞 E)) (z : AfE F E) (h : 
     rw [Finsupp.sum_mapRange_index (fun i => TensorProduct.tmul_zero _ _)]
 
     rw [Finsupp.sum, map_sum] at h
-    rw [Finsupp.sum]
-    exact h
+    rwa [Finsupp.sum]
   have h2 := TensorProduct.sum_tmul_basis_left_eq_zero b _ h1
   have h3 : ∀ i, c i (P.under (𝓞 F)) = 0 := fun i => by
     have h4 := DFunLike.congr_fun h2 i
@@ -314,8 +313,7 @@ theorem hatL_ext {L : Submodule (𝓞 E) (Sp E n)} {M : Submodule (𝓞 E) (Sp E
 theorem std_ext (x : Sp E N) : x ∈ stdLat E N ↔ iniH hN x ∈ stdLat E n ∧ x (Br.iL hN) ∈ (1 : Submodule (𝓞 E) E) := by
   rw [mem_stdLat, mem_stdLat, Submodule.mem_one]
   constructor
-  · intro h
-    exact ⟨fun i => h _, h _⟩
+  · exact fun h => ⟨fun i => h _, h _⟩
   · rintro ⟨h1, h2⟩ j
     by_cases hj : j = Br.iL hN
     · rw [hj]; exact h2
@@ -562,8 +560,7 @@ theorem pt_tilF (hI : I.Ok) (u : B.Word) (p : XPt (B.primes X) B.R I.sel (I.tup 
       obtain ⟨i, hi⟩ := hgw w
       have h1 : ((B.primes X).T u : 𝓞 B.fields.E) ∈ w.1.asIdeal := by
         have h2 : algebraMap (𝓞 B.host.F) (𝓞 B.host.E) (B.T u : 𝓞 B.host.F) ∈ w.1.asIdeal := hT
-        rw [map_natCast] at h2
-        exact h2
+        rwa [map_natCast] at h2
       have hc : Nat.Coprime ((B.primes X).T u) ((B.primes X).g i) :=
         (Nat.coprime_primes (hPr.T_prime u) (hPr.g_prime i)).2 (hPr.T_ne_g u i)
       have h3 : ((1 : ℕ) : 𝓞 B.fields.E) ∈ w.1.asIdeal := by
@@ -649,8 +646,7 @@ theorem exists_ka (hI : I.Ok) (u : B.Word) {Lb : Unit → Submodule (𝓞 B.host
   have hxk : y ((I.perIn u I.mu0).tilC c) * x * k () = ratAd B.host.F (m.1 : UF B.fields.E (B.R.N B.R.m))⁻¹ * (extGL (N_m_succ B.R) y' * k ()) := by
     rw [hx]; group
   have hq : PtOf (y ((I.perIn u I.mu0).tilC c) * x * k ()) ((I.stp u I.mu0 B.R.m).act (I.perIn u I.mu0).b0 κ0 ((I.stp u I.mu0 B.R.m).rep ((I.perIn u I.mu0).tilC c))).1.1 := by
-    rw [hxk, hact]
-    exact hp'
+    rwa [hxk, hact]
   have hxU : x ∈ U () := (hR.lev ((I.perIn u I.mu0).tilC c) x _ hq).2 ⟨κ0, hgam, rfl, hcos⟩
   have hchr := hR.chr ((I.perIn u I.mu0).tilC c) ⟨x, hxU⟩ κ0 hgam hq
   refine ⟨⟨x, hxU⟩⁻¹, ?_, ?_⟩
@@ -662,8 +658,7 @@ theorem exists_ka (hI : I.Ok) (u : B.Word) {Lb : Unit → Submodule (𝓞 B.host
     show _ = extGL (N_m_succ B.R) y' * x⁻¹
     rw [hx, e]
     group
-  · rw [map_inv, inv_inv]
-    exact hchr
+  · rwa [map_inv, inv_inv]
 
 end GlobalTheory.Mem.Col2.TilX
 
@@ -750,8 +745,7 @@ theorem hermitianForm_lastCoordinateUniformizerVector_self (hg : gramN (I.rec7 l
   rw [Pi.single_eq_same]
   have h := congrArg (algebraMap (𝓞 B.fields.E) B.fields.E) ((base_fields_primes_ok B X).2.1.piT_norm u)
   rw [map_mul, map_natCast] at h
-  rw [mul_comm]
-  exact h
+  rwa [mul_comm]
 
 end GlobalTheory.Mem.Col2.TilX
 
@@ -779,8 +773,7 @@ theorem line_of_orth {E : Type} [Field E] {N n : ℕ} (hN : N = n + 1) (σ : E �
         intro e
         exact hi (by rw [e]; exact j.2)
     have h1 := h (Pi.single j 1)
-    rw [e, hform_one_single, map_one, one_mul] at h1
-    exact h1
+    rwa [e, hform_one_single, map_one, one_mul] at h1
   have hl : w (Br.iL hN) ≠ 0 := fun hl => hw (by
     funext i
     by_cases hi : i.1 < n
@@ -830,8 +823,7 @@ theorem lastCoordinateUniformizerVector_spans_orthogonal_line (hg : gramN (I.rec
     have h1 := (I.rec7 l Z).sp.z_orth ((Crd.co (I.rec7 l Z).sp.X' (rankP (I.rec7 l Z))).symm x)
     rw [hT_co (I.rec7 l Z).sp.cm ((I.rec7 l Z).sp.X (I.rec7 l Z).R.m) (rankN (I.rec7 l Z) _ le_rfl)] at h1
     have h2 : hform (sigD (I.rec7 l Z) : (I.rec7 l Z).host.E →+* (I.rec7 l Z).host.E) (gramN (I.rec7 l Z) B.R.m le_rfl) (iXc (I.rec7 l Z) x) (zc (I.rec7 l Z)) = 0 := h1
-    rw [hg] at h2
-    exact h2
+    rwa [hg] at h2
 
 end GlobalTheory.Mem.Col2.TilX
 
@@ -986,8 +978,7 @@ theorem til_fv_eq (hI : I.Ok) (l : I.Laws) (Z : TC.Later B (I.cols l))
       (Ideal.Quotient.mk v.1.asIdeal s : Res v.1) • pv := by
     rw [hpv]
     have h2a := h2
-    rw [hresv] at h2a
-    exact h2a
+    rwa [hresv] at h2a
   have h9 : ((I.atIn u I.mu0).A B.R.m).fv v ((I.perIn u I.mu0).tilC c) ((Ideal.Quotient.mk v.1.asIdeal s : Res v.1) • pv) =
       Ideal.Quotient.mk v.1.asIdeal (s * rv) := by
     exact (congrArg (fun w => ((I.atIn u I.mu0).A B.R.m).fv v ((I.perIn u I.mu0).tilC c) w) (h2'.symm.trans h1)).trans (h3.trans h8)
@@ -1175,8 +1166,7 @@ theorem GlobalTheory.Mem.Col2.TC.til_ties : ∀ {B : Base} {X : PreX B.toPre} (I
           refine TilX.eq_extM_of_ext hN (inclE (F := B.host.F) (FiniteAdeleRing (𝓞 B.host.F) B.host.F)) hpi0
             (TilX.iXm_apply hiX hN) hg'.1 ?_
           have h2 := hg'.2
-          rw [show Tl.z0 = _ from TilX.lastCoordinateUniformizerVector_eq_single u] at h2
-          exact h2
+          rwa [show Tl.z0 = _ from TilX.lastCoordinateUniformizerVector_eq_single u] at h2
         have e' : g = TilX.extGL hN (KP.y c).1 := Units.ext e
         rw [e']
         exact hka1 c }
@@ -1192,7 +1182,6 @@ theorem GlobalTheory.Mem.Col2.TC.til_ties : ∀ {B : Base} {X : PreX B.toPre} (I
       (fun τ => (congrFun hy1 τ).symm.trans ((hs τ).trans (congrArg₂ (· * ·) (hemb τ) (congrFun hy2 τ))))
     have e2 := trFr_apply B.fields.emb B.embLL ((I.stp u I.mu0 B.R.m).gam _ ((I.stp u I.mu0 B.R.m).mv (I.perIn u I.mu0).b0 ((I.perIn u I.mu0).tilPt c)))
       ((I.stp u I.mu0 B.R.m).chr _ ((I.stp u I.mu0 B.R.m).mv (I.perIn u I.mu0).b0 ((I.perIn u I.mu0).tilPt c))) (φ ((I.perIn u I.mu0).tilC c)) s
-    rw [e1, ← hka2 c] at e2
-    exact e2
+    rwa [e1, ← hka2 c] at e2
 
 end

@@ -103,8 +103,7 @@ theorem complete_tensor (w : W) [h : IsAdicComplete (Ideal.span {w}) W] :
       x ∈ (Ideal.span {(1 : O) ⊗ₜ[Z] w} ^ n • ⊤ : Submodule (O ⊗[Z] W) (O ⊗[Z] W)) ↔
         ∀ i, crd b i x ∈ (Ideal.span {w} ^ n • ⊤ : Submodule W W) := by
     intro n x
-    simp only [smul_eq_mul, Ideal.mul_top, Ideal.span_singleton_pow]
-    exact mem_pow_iff b w n x
+    simpa only [smul_eq_mul, Ideal.mul_top, Ideal.span_singleton_pow] using mem_pow_iff b w n x
   have H1 : IsHausdorff (Ideal.span {(1 : O) ⊗ₜ[Z] w}) (O ⊗[Z] W) := by
     refine ⟨fun x hx => ?_⟩
     have hi : ∀ i, crd b i x = 0 := fun i =>
@@ -225,8 +224,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (LL : FinExt l),
     refine tensor_eq_of_crd_eq b fun i => ?_
     rw [map_zero]
     exact tiltWitt_eq_zero_of_prime_mul_eq_zero _ (by rw [← hl', hx, map_zero])
-  · intro y y' h
-    exact tensor_eq_of_crd_eq b fun i => inclW_injective (by rw [← hinc, ← hinc, h])
+  · exact fun y y' h => tensor_eq_of_crd_eq b fun i => inclW_injective (by rw [← hinc, ← hinc, h])
   · intro y x hyx
     have hi : ∀ i, ∃ a' : Loc.Ainf l, inclW l a' = crd b i x := fun i =>
       ainf_saturated_in_tiltWitt_prime (crd b i y) (crd b i x)

@@ -84,8 +84,7 @@ theorem cong_mem_level_chr_one : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (C
       have h1 := GlobalTheory.TopStep.redGL_of_prinCong (by omega : 0 < cst.D P) hkC
       intro x hx
       have h2 := GlobalTheory.TopStep.redV_redGL κ hx
-      rw [h1, Units.val_one, Matrix.one_mulVec] at h2
-      exact h2
+      rwa [h1, Units.val_one, Matrix.one_mulVec] at h2
     have hh := hL.stabG j b P hP
     refine ⟨GlobalTheory.CongLevel.extE (cOf R j) k, GlobalTheory.Mem.Col2.LevMod.extE_mem_Cbe cst.sharp j P.1 hP hd (L.h j b P) hh k hkG hred, GlobalTheory.CongLevel.extE_inX _ k, ?_⟩
     have hh' := hh
@@ -100,8 +99,7 @@ theorem cong_mem_level_chr_one : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (C
         unfold lamYat at hx' ⊢
         rw [ite_eq_left hP] at hx' ⊢
         have h2 := hcong x hx'
-        rw [LinearMap.smul_apply, LinearMap.sub_apply, LinearMap.id_apply, LinearEquiv.coe_coe]
-        exact h2
+        rwa [LinearMap.smul_apply, LinearMap.sub_apply, LinearMap.id_apply, LinearEquiv.coe_coe]
     rw [smul_inv_smul₀ hq, add_sub_cancel] at h1
     unfold chiInv
     rw [h1, hψ, inv_one, one_mul]
@@ -135,8 +133,7 @@ theorem cong_mem_level_chr_one : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (C
       unfold Jat
       rw [ite_eq_right hP]
       refine _root_.GlobalTheory.ParahoricOfCong.mem_JQ_of_cong P.1 (R.k + j) (R.N j) (cOf R j) _ hg ?_
-      rw [einv]
-      exact hginv
+      rwa [einv]
     · unfold chiInv
       rw [hψ, inv_one, one_mul]
       unfold lamRow

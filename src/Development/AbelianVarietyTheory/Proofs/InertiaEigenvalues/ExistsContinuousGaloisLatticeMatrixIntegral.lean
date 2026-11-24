@@ -253,7 +253,6 @@ theorem isMat_exists_and_props : ∀ (l : ℕ) [Fact l.Prime] (K LL : FinExt l) 
         if h : σ ∈ GK K then zC (b.repr (actT T.L ⟨σ, h⟩ (b j)) i) else 0,
       fun a => Matrix.of fun i j => zC (b.repr (⟨_, T.L.T.smul_mem a (b j).2⟩ : ↥T.L.T) i),
       b, fun g i j => ?_, fun a i j => rfl⟩
-    show (if h : (g : GQ l) ∈ GK K then zC (b.repr (actT T.L ⟨g, h⟩ (b j)) i) else 0) = _
     exact dite_eq_left g.2
   · intro d M A hMA
     obtain ⟨b, hM, hA⟩ := hMA
@@ -267,7 +266,6 @@ theorem isMat_exists_and_props : ∀ (l : ℕ) [Fact l.Prime] (K LL : FinExt l) 
     have h1 := continuous_coord_lat (R := ℤ_[l]) (F := ℚ_[l]) (L := ↥LL.1) (O := ↥(OL LL)) hc T b
       (b j) i
     have h2 : Continuous (algebraMap ℚ_[l] (PadicComplex l)) := continuous_algebraMap _ _
-    refine (h2.comp h1).congr fun g => ?_
-    exact ((hM ⟨g.1, g.2⟩ i j).trans (zCHom_apply _).symm).symm
+    exact (h2.comp h1).congr fun g => ((hM ⟨g.1, g.2⟩ i j).trans (zCHom_apply _).symm).symm
 
 end GlobalTheory.Cyc

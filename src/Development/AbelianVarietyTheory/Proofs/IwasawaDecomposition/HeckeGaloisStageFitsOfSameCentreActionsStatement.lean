@@ -144,8 +144,7 @@ theorem fits_swap : ∀ {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} {w :
     rw [grpEquiv_apply, ← hpe, Equiv.symm_apply_apply]
   refine ⟨⟨⟨(Equiv.sigmaCongrRight fun k => plEquiv N.naut x.o.N.naut k).trans plg, fun kv => ?_⟩, ?_, ?_⟩, ?_⟩
   · obtain ⟨h1, h2⟩ := hplg ⟨kv.1, plEquiv N.naut x.o.N.naut kv.1 kv.2⟩
-    refine ⟨?_, h2⟩
-    exact h1.trans (TypesTrue.plGw_plEquiv hG hG' kv.1 kv.2)
+    exact ⟨h1.trans (TypesTrue.plGw_plEquiv hG hG' kv.1 kv.2), h2⟩
   · show IsIdempotentElem N.ntypes.e0
     rw [he0]
     exact hidem.map φ.symm
@@ -168,13 +167,11 @@ theorem fits_swap : ∀ {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} {w :
     · have h1 := hc.amb μ ⟨_, hz1 z⟩ z' (fun g => by
         show _ = (φ (z : MonoidAlgebra ℂ (G0g N.nd))).coeff (e (eR g))
         exact (hz g).trans (hφ _ _).symm) xx
-      rw [cen_transport hP hA e he μ z ⟨_, hz1 z⟩ (fun g => hφ _ g)]
-      exact h1
+      rwa [cen_transport hP hA e he μ z ⟨_, hz1 z⟩ (fun g => hφ _ g)]
     · have h1 := hc.mt μ j ⟨_, hz1 z⟩ z' (fun g => by
         show _ = (φ (z : MonoidAlgebra ℂ (G0g N.nd))).coeff (e (eR g))
         exact (hz g).trans (hφ _ _).symm) xx
-      rw [cen_transport₂ hP hM e he μ j z ⟨_, hz1 z⟩ (fun g => hφ _ g)]
-      exact h1
+      rwa [cen_transport₂ hP hM e he μ j z ⟨_, hz1 z⟩ (fun g => hφ _ g)]
 
 end GlobalTheory.Mem.R3.Rw.SwapN
 end -- clump:auto

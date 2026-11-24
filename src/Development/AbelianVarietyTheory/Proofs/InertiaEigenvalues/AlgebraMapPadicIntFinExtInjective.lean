@@ -65,8 +65,7 @@ theorem algebraMap_padicInt_finExt_injective {l : ℕ} [Fact l.Prime] (LL : FinE
 
 theorem algebraMap_padicInt_OL_injective {l : ℕ} [Fact l.Prime] (LL : FinExt l) :
     Function.Injective (algebraMap ℤ_[l] ↥(OL LL)) := by
-  intro a b h
-  exact algebraMap_padicInt_finExt_injective LL (congrArg Subtype.val h)
+  exact fun a b h => algebraMap_padicInt_finExt_injective LL (congrArg Subtype.val h)
 
 private theorem associated_prime_of_valuation_eq_one {l : ℕ} [Fact l.Prime] (P : LocPrime l) (LL : FinExt l)
     (c : ℤ_[l]) (hc : P.v LL (algebraMap ℤ_[l] ↥LL.1 c) = 1) : Associated c (l : ℤ_[l]) := by
@@ -98,8 +97,7 @@ theorem associated_of_v_sub_one {l : ℕ} [Fact l.Prime] (P : LocPrime l) (LL : 
   have hx : algebraMap ↥(OL LL) ↥LL.1 x = algebraMap ℤ_[l] ↥LL.1 y := by
     rw [← hy]
     rfl
-  rw [map_sub, map_one, ← hx]
-  exact h
+  rwa [map_sub, map_one, ← hx]
 
 theorem exists_units_hom_lift {Γ R S : Type} [Group Γ] [CommRing R] [CommRing S] (φ : R →+* S)
     (hφ : Function.Injective φ) (c : Γ →* Sˣ) (hex : ∀ g, ∃ y : R, φ y = (c g : S)) :
@@ -136,7 +134,6 @@ theorem exists_cyclotomicChar_padicInt_units : ∀ {l : ℕ} [Fact l.Prime] (P :
   refine ⟨χ, hχ, fun hs => ?_⟩
   apply associated_of_v_sub_one P LL _ _ (hχ W.gam)
   have hg := W.gam_gen
-  rw [hs, Nat.cast_one] at hg
-  exact hg
+  rwa [hs, Nat.cast_one] at hg
 
 end GlobalTheory

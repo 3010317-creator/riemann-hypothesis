@@ -68,8 +68,7 @@ theorem linIndep_rows_iff_map {k₁ k₂ : Type} [Field k₁] [Field k₂] (ι :
     have h : ∀ c : Fin m → k, ∑ i, c i • y.row i = c ᵥ* y := fun c => by
       ext j
       simp [Matrix.vecMul, dotProduct, Finset.sum_apply]
-    simp only [h]
-    exact ⟨fun H c hc => funext (H c hc), fun H c hc i => congrFun (H c hc) i⟩
+    simpa only [h] using ⟨fun H c hc => funext (H c hc), fun H c hc i => congrFun (H c hc) i⟩
   have inv : ∀ {k : Type} [Field k] (y : Matrix (Fin m) (Fin n) k),
       LinearIndependent k y.row → ∃ B : Matrix (Fin n) (Fin m) k, y * B = 1 := by
     intro k _ y hy
@@ -84,8 +83,7 @@ theorem linIndep_rows_iff_map {k₁ k₂ : Type} [Field k₁] [Field k₂] (ι :
       exact congrArg (fun f => f c) hg
     refine Matrix.ext fun i j => ?_
     have := congrFun (hc (Pi.single i 1)) j
-    rw [Matrix.single_one_vecMul] at this
-    rw [Matrix.row_apply] at this
+    rw [Matrix.single_one_vecMul, Matrix.row_apply] at this
     rw [this, Matrix.one_apply, Pi.single_apply]
     simp only [eq_comm]
   constructor
@@ -120,9 +118,7 @@ theorem residue_eq_zero_iff (x : GlobalTheory.SplitHecke.Ov D v) :
       exact zero_ne_one h1
     have hmem : (x : Fv D.host.F v)⁻¹ ∈ v.adicCompletionIntegers D.host.F :=
       (HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).2 (by rw [map_inv₀, h1, inv_one])
-    refine IsUnit.of_mul_eq_one (a := x) ⟨_, hmem⟩ (Subtype.ext ?_)
-    show (x : Fv D.host.F v) * (x : Fv D.host.F v)⁻¹ = 1
-    exact mul_inv_cancel₀ h0
+    exact IsUnit.of_mul_eq_one (a := x) ⟨_, hmem⟩ (Subtype.ext (mul_inv_cancel₀ h0))
   · intro hlt hu
     obtain ⟨w, hw⟩ := hu.exists_right_inv
     have h2 := congrArg (fun t : GlobalTheory.SplitHecke.Ov D v => Valued.v (t : Fv D.host.F v)) hw

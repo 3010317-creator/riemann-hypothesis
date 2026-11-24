@@ -83,8 +83,7 @@ theorem locM_one (v : HeightOneSpectrum (𝓞 F)) :
 
 theorem matrix_ext_loc {M N : Matrix (Fin n) (Fin n) (FiniteAdeleRing (𝓞 F) F)}
     (h : ∀ v, locM v M = locM v N) : M = N := by
-  refine Matrix.ext fun i j => FiniteAdeleRing.ext F fun v => ?_
-  exact congrFun (congrFun (h v) i) j
+  exact Matrix.ext fun i j => FiniteAdeleRing.ext F fun v => congrFun (congrFun (h v) i) j
 
 theorem gl_ext_loc {g h : GL (Fin n) (FiniteAdeleRing (𝓞 F) F)} (e : ∀ v, locGL v g = locGL v h) :
     g = h :=
@@ -133,8 +132,7 @@ theorem eventually_intAt (M : Matrix (Fin n) (Fin n) (FiniteAdeleRing (𝓞 F) F
   rw [Filter.eventually_all]
   intro i
   rw [Filter.eventually_all]
-  intro j
-  exact (M i j).2
+  exact fun j => (M i j).2
 
 theorem upper_eq_uni_mul_diag {K : Type} [Field K] (b : GL (Fin n) K) (hb : b.val.BlockTriangular id) :
     ∃ u t : GL (Fin n) K, PIW.ClassFinD.IsUpperUni u.val ∧ PIW.ClassFinD.IsDiagM t.val ∧ b = u * t := by
@@ -183,8 +181,7 @@ theorem iwasawaAf : PIW.ClassFinD.IwasawaAf := by
     IntAt v (locGL v g).val ∧ IntAt v (locGL v g)⁻¹.val
   have hgood : ∀ᶠ v in Filter.cofinite, good v := by
     refine (eventually_intAt g.val).and ((eventually_intAt (g⁻¹).val).mono fun v h => ?_)
-    rw [← map_inv]
-    exact h
+    rwa [← map_inv]
   have hloc : ∀ v : HeightOneSpectrum (𝓞 F), ∃ u t k : GL (Fin n) (v.adicCompletion F),
       IsUpperUni u.val ∧ IsDiagM t.val ∧ IntAt v k.val ∧ IntAt v k⁻¹.val ∧ locGL v g = u * t * k ∧
       (good v → u = 1 ∧ t = 1 ∧ k = locGL v g) := by

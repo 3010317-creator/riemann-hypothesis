@@ -63,8 +63,7 @@ theorem rowDeg_dominated_of_mem_dualWeyl (k : Type) [Field k] (N : ℕ) (ν : Fi
     obtain ⟨K, sz, hsz, I, hshape, rfl⟩ := hx
     intro m hm
     have h := bidetDominance k N N K sz hsz I m hm
-    rw [hshape] at h
-    exact h
+    rwa [hshape] at h
   | zero =>
     intro m hm
     simp at hm
@@ -74,7 +73,6 @@ theorem rowDeg_dominated_of_mem_dualWeyl (k : Type) [Field k] (N : ℕ) (ν : Fi
     · exact hx m h
     · exact hy m h
   | smul c x _ hx =>
-    intro m hm
-    exact hx m (support_smul hm)
+    exact fun m hm => hx m (support_smul hm)
 
 end GlobalTheory.Alc

@@ -266,8 +266,7 @@ theorem mono_char_of_mul_poly_div_pow (χ : ℂ → ℂ)
     by_cases t0 : t = 0
     · subst t0
       apply hdvd
-      rw [dvd_iff_isRoot]
-      exact ht
+      rwa [dvd_iff_isRoot]
     · have := hp t t0
       rw [hpq, eval_mul, eval_pow, eval_sub, eval_X, eval_C, sub_zero, ht, mul_zero] at this
       exact mul_ne_zero (pow_ne_zero _ t0) (hne t t0) this
@@ -346,8 +345,7 @@ theorem exists_isWt_of_isPolyRep : ∀ (n : ℕ) (ι : Type) [Fintype ι] [Decid
     intro D hD
     simpa [T] using hc ⟨D, hD⟩
   obtain ⟨a, ha⟩ : ∃ a, v a ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hv0 (funext h)
   have cancel : ∀ x y : ℂ, x • v = y • v → x = y := by
     intro x y h
@@ -790,8 +788,7 @@ theorem unitriangular_induction_transvection :
           obtain ⟨rfl, rfl⟩ := hqe
           exact hs
         · have := hq.2
-          rw [ent, ite_eq_right hqe, add_zero] at this
-          exact this
+          rwa [ent, ite_eq_right hqe, add_zero] at this
     have PU' : P U' := ih _ hlt U' hU' hd' rfl
     have PT : P (T s) := htr a b hab s (T s) rfl
     have hUeq : U = U' * T s := by

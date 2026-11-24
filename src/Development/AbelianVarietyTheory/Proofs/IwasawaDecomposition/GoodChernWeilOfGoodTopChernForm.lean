@@ -799,8 +799,7 @@ theorem trace_mul_emb_mul_transpose (A : Matrix (Fin M × Fin M) (Fin M × Fin M
   rw [← Finset.sum_sub_distrib]
   refine Finset.sum_congr rfl fun x _ => ?_
   rw [Matrix.mul_apply]
-  simp only [emb_mul_transpose_apply]
-  exact sum_mul_embF (fun y => A x y) x.1 x.2
+  simpa only [emb_mul_transpose_apply] using sum_mul_embF (fun y => A x y) x.1 x.2
 
 theorem sum_kron_swap (P Q : Matrix (Fin M) (Fin M) R) :
     ∑ x : Fin M × Fin M, Matrix.kroneckerMap (· * ·) P Q x (x.2, x.1) = (P * Q).trace := by
@@ -948,8 +947,7 @@ theorem exists_vandermonde_solution (n i : ℕ) : ∃ x : Fin (n + 1) → ℝ, �
     ∑ a, x a * ((2 : ℝ) ^ (a : ℕ)) ^ (b : ℕ) = if (b : ℕ) = i then 1 else 0 := by
   set V := Matrix.vandermonde (fun a : Fin (n + 1) => (2 : ℝ) ^ (a : ℕ)) with hV
   have hinj : Function.Injective (fun a : Fin (n + 1) => (2 : ℝ) ^ (a : ℕ)) := by
-    intro a a' h
-    exact Fin.ext ((pow_right_strictMono₀ one_lt_two).injective h)
+    exact fun a a' h => Fin.ext ((pow_right_strictMono₀ one_lt_two).injective h)
   have hdet : IsUnit V.det := isUnit_iff_ne_zero.mpr (Matrix.det_vandermonde_ne_zero_iff.mpr hinj)
   set δ : Fin (n + 1) → ℝ := fun b => if (b : ℕ) = i then 1 else 0 with hδ
   refine ⟨δ ᵥ* V⁻¹, fun b => ?_⟩
@@ -1297,8 +1295,7 @@ theorem ptr_mul_trProd_mem_reach (n : ℕ) (S : Type) [CommRing S] [Algebra ℝ 
       · intro a ha har
         rw [Finset.mem_range] at ha
         rw [ite_eq_right (by omega), mul_zero]
-      · intro h
-        exact absurd (Finset.mem_range.2 (by omega)) h
+      · exact fun h => absurd (Finset.mem_range.2 (by omega)) h
     simp only [Pi.smul_apply, Finset.sum_apply]
     have e2 : ∑ j, c j • ((ρ.tensor (σ j)).ptr (r + i) A * trProd l A) =
         (∑ j, c j • (ρ.tensor (σ j)).ptr (r + i) A) * trProd l A := by
@@ -1460,8 +1457,7 @@ namespace GlobalTheory.GoodMetric.ChernSpan
 
 theorem topCoeff_sum' {n : ℕ} {κ : Type} (s : Finset κ) (P : κ → MvPolynomial (Fin n × Fin n) ℂ) :
     topCoeff (∑ i ∈ s, P i) = ∑ i ∈ s, topCoeff (P i) := by
-  simp only [topCoeff, coeff_sum, Finset.mul_sum]
-  exact Finset.sum_comm
+  simpa only [topCoeff, coeff_sum, Finset.mul_sum] using Finset.sum_comm
 
 theorem topCoeff_real_smul {n : ℕ} (r : ℝ) (P : MvPolynomial (Fin n × Fin n) ℂ) :
     topCoeff (r • P) = (r : ℂ) * topCoeff P := by
@@ -1677,8 +1673,7 @@ theorem _root_.GlobalTheory.GoodMetric.goodChernWeil_of_goodTopChernForm :
   have hlinT := _root_.GlobalTheory.GoodMetric.hasChernIntegral_of_eq_sum F σ X ι m E ⊤ H₀ R J (fun j => (ρ j).M) Eb H₀' (MvPolynomial.X ((), X.dim)) a t hH₀ hH₀'
     (hdens ⊤ H₀ H₀' hH₀ hH₀'eq) ht
   have hs := hCW F σ X Y ι m E E' φ f gr hRef hGr H₀ hH₀ R
-  rw [hs.2.symm.trans hlinT.2]
-  exact hlinO
+  rwa [hs.2.symm.trans hlinT.2]
 
 end GlobalTheory.GoodMetric.Bridge
 end -- clump:auto

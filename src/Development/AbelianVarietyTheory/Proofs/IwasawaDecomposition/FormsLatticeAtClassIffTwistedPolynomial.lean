@@ -237,8 +237,7 @@ theorem wtS : ∀ (D : D7) (u : D.what₂.Word) (μ : D.what₂.Tup) {C : Column
   have hc : ((((j + 1) * (D.R.t + 1) / 2 : ℕ) : ℤ) : ℚ) = ((j : ℚ) + 1) * ((D.R.t : ℚ) + 1) / 2 := by
     obtain ⟨a, ha⟩ := D.R.t_odd
     have e : (j + 1) * (D.R.t + 1) = 2 * ((j + 1) * (a + 1)) := by rw [ha]; ring
-    rw [e, Nat.mul_div_cancel_left _ (by norm_num)]
-    rw [ha]
+    rw [e, Nat.mul_div_cancel_left _ (by norm_num), ha]
     push_cast
     ring
   have hsh : shiftOf (lamTG M (j + 1)) τ = (M.lam (j + 1) τ).detShift - ((((j + 1) * (D.R.t + 1) / 2 : ℕ)) : ℤ) := by
@@ -344,13 +343,11 @@ theorem core (D : D7) (O : ∀ u a, GL3Theta.LiftObj D (D.chTw u a)) (u : D.what
     | zero =>
       have e : (fun τ r => (M.lam 0 τ).natW r + (shiftOf (lamTG M 0) τ + twB D u μ 0 τ).toNat) = nuT D u 0 :=
         funext fun τ => funext fun r => (wt0 D u μ M τ).2 r
-      rw [e] at h
-      exact h
+      rwa [e] at h
     | succ j =>
       have e : (fun τ r => (M.lam (j + 1) τ).natW r + (shiftOf (lamTG M (j + 1)) τ + twB D u μ (j + 1) τ).toNat) =
           extNu (D.R.N (j + 1)) (nuT D u j) := funext fun τ => funext fun r => (wtS D u μ M j hi τ).2 r
-      rw [e] at h
-      exact h
+      rwa [e] at h
   refine ⟨Submodule.mkQ _ ⟨_, hQ⟩, ?_⟩
   funext z
   show evP O u μ i ⟨_, hQ⟩ z = f z
@@ -495,8 +492,7 @@ theorem fnOf_inv_iff_twSub_mem : ∀ {E ι : Type} [Field E] [Fintype ι] {n : �
       Finset.prod_ne_zero_iff.mpr fun τ _ => zpow_ne_zero _ (hx τ).ne_zero
     rw [map_sub, sub_eq_zero]
     exact mul_left_cancel₀ hne h1
-  · intro h
-    exact ⟨_, h, fun z => by rw [hf, fnOf_inv_twSub]⟩
+  · exact fun h => ⟨_, h, fun z => by rw [hf, fnOf_inv_twSub]⟩
 
 end GlobalTheory.IntegralityCompare
 end -- clump:auto
@@ -874,8 +870,7 @@ theorem detPow_mul_mem_delW_iff : ∀ (p : ℕ) [Fact p.Prime] (T : Type) [Finty
     have hΨ : Ψ = Φ := mul_left_cancel₀ (detPoly_ne_zero ℂ_[p] N k) hpoly
     subst hΨ
     exact hG
-  · intro h
-    exact AddSubgroup.mem_comap.mp (delW_le_comap p T N ν k h)
+  · exact fun h => AddSubgroup.mem_comap.mp (delW_le_comap p T N ν k h)
 
 end GlobalTheory.DetShiftWeyl
 
@@ -980,8 +975,7 @@ theorem li_map {ι K : Type} [Field K] [Module.Flat ℤ K] {e : ι → MvPolynom
       fun k => map (Int.castRingHom K) (e k) := by
     funext k
     simp [algebraTensorAlgEquiv_tmul]
-  rw [key] at h2
-  exact h2
+  rwa [key] at h2
 
 end GlobalTheory.IntSpanCmp
 
@@ -1014,8 +1008,7 @@ theorem keyCoord {L K : Type} [Field L] [Field K] [Module.Flat ℤ K] (ψ : L �
     have := congrArg Subtype.val (b.sum_repr ⟨g, hg⟩)
     rw [Submodule.coe_sum] at this
     simp only [SetLike.val_smul] at this
-    simp only [crd, dite_eq_left hg, e]
-    exact this.symm
+    simpa only [crd, dite_eq_left hg, e] using this.symm
   have mapExp : ∀ (K' : Type) [CommRing K'], ∀ g ∈ N,
       map (Int.castRingHom K') g = ∑ k, (crd g k : K') • map (Int.castRingHom K') (e k) := by
     intro K' _ g hg
@@ -1164,8 +1157,7 @@ theorem intSpan_iff_delW : ∀ (D : D7) (Pl : Examples₂.EntPl D) (w : D.what�
     exact AddSubgroup.mem_map_iff_mem (polFunHom_inj n)
   rw [hInt, hD]
   constructor
-  · intro h
-    exact map_mem (Pl.iL w) (fun r hr => (Pl.iL_int w r).1 hr) h
+  · exact fun h => map_mem (Pl.iL w) (fun r hr => (Pl.iL_int w r).1 hr) h
   · intro h
     have := keyCoord (Pl.iL w) (ballO (D.what₂.places.resChar w)) G R hR h
     have hset : (((ballO (D.what₂.places.resChar w)).comap (Pl.iL w).toAddMonoidHom :
@@ -1174,8 +1166,7 @@ theorem intSpan_iff_delW : ∀ (D : D7) (Pl : Examples₂.EntPl D) (w : D.what�
       ext x
       rw [SetLike.mem_coe, SetLike.mem_coe, Subring.mem_toAddSubgroup]
       exact (Pl.iL_int w x).symm
-    rw [hset] at this
-    exact this
+    rwa [hset] at this
 
 end GlobalTheory.IntSpanCmp
 end -- clump:auto
@@ -1291,8 +1282,7 @@ theorem basis_change : ∀ (D : D7) {p : ℕ} [Fact p.Prime] (lam : TaylorLogMet
       simp only [hρe, Pi.smul_apply, smul_eq_mul, map_mul, hh, Matrix.mul_apply, Matrix.mulVec, dotProduct,
         hA, Matrix.map_apply, hxb, Finset.mul_sum]
       exact Finset.sum_congr rfl fun _ _ => by ring
-    rw [key, norm_mul, map_natCast, norm_natCast_of_not_dvd hs, one_mul] at hb
-    exact hb
+    rwa [key, norm_mul, map_natCast, norm_natCast_of_not_dvd hs, one_mul] at hb
   have hd1 := norm_det_le_one g hgi
   have hd2 := norm_det_le_one h hhi
   have hprod : ‖g.det‖ * ‖h.det‖ = 1 := by
@@ -1898,8 +1888,7 @@ theorem lattice_iff_weyl : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok 
       h.trans (congrArg (twSub _ Bm _) hR0)
     have he : (fun τ => ((I.rec7 l Z).what₂.embLL).comp (Formalism.L2.G.Cmp.tEL (I.rec7 l Z) τ)) = embT (I.rec7 l Z) :=
       funext fun τ => RingHom.ext fun x => Formalism.L2.G.Cmp.tEL_emb _ τ x
-    rw [he] at h'
-    exact h'
+    rwa [he] at h'
   set c0 := ∏ τ, (g τ).det ^ (-((I.rec7 l Z).chTw u μ).sSharp i τ) with hc0def
   have hc0 : ‖c0‖ = 1 := by
     rw [hc0def, norm_prod]

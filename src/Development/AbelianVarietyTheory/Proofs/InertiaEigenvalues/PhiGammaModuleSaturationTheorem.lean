@@ -73,14 +73,11 @@ theorem exists_indep_span {Q : Type} [AddCommGroup Q] [Module k⸨X⸩ Q] [Modul
   haveI : Module.Finite k⟦X⟧ P := Module.Finite.iff_fg.mpr hP
   haveI : NoZeroSMulDivisors k⟦X⟧ Q := by
     refine ⟨fun {c x} h => ?_⟩
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     have hc : algebraMap k⟦X⟧ k⸨X⸩ c ≠ 0 := by
-      intro h0
-      exact hne.1 ((IsFractionRing.injective k⟦X⟧ k⸨X⸩) (by rw [h0, map_zero]))
+      exact fun h0 => hne.1 ((IsFractionRing.injective k⟦X⟧ k⸨X⸩) (by rw [h0, map_zero]))
     have h' : algebraMap k⟦X⟧ k⸨X⸩ c • x = 0 := by
-      rw [algebraMap_smul]
-      exact h
+      rwa [algebraMap_smul]
     exact hne.2 ((smul_eq_zero.mp h').resolve_left hc)
   haveI : Module.Free k⟦X⟧ P := Module.free_of_finite_type_torsion_free'
   let b := Module.Free.chooseBasis k⟦X⟧ P
@@ -173,8 +170,7 @@ theorem comap_pull {V : Type} [AddCommGroup V] [Module k⸨X⸩ V] [Module k⟦X
   obtain ⟨_, ⟨p, hp, rfl⟩, q, hq, hpq⟩ := Submodule.mem_sup.1 (hle hy)
   obtain ⟨a, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun k⟦X⟧).1 hq
   have hq' : ∑ j, a j • D.φ i (s j) = g (y - p) := by
-    rw [map_sub, eq_sub_iff_add_eq']
-    exact hpq
+    rwa [map_sub, eq_sub_iff_add_eq']
   have ha : ∀ j, algebraMap k⟦X⟧ k⸨X⸩ (a j) = 0 := fun j => by
     obtain ⟨t, ht⟩ := exists_dual he j
     obtain ⟨u, hu⟩ := exists_form D i (t.comp π)
@@ -195,8 +191,7 @@ theorem comap_pull {V : Type} [AddCommGroup V] [Module k⸨X⸩ V] [Module k⟦X
     refine Finset.sum_eq_zero fun j _ => ?_
     rw [← algebraMap_smul k⸨X⸩ (a j), ha, zero_smul]
   have : y = p := sub_eq_zero.1 (hg (hz.trans (map_zero g).symm))
-  rw [this]
-  exact hp
+  rwa [this]
 
 end GlobalTheory.IndependentSpanDual
 end -- clump:auto
@@ -259,8 +254,7 @@ theorem isLat_comap (f : W →ₗ[LaurentSeries k] V) (hf : Function.Injective f
   · refine eq_top_iff.2 fun w _ => ?_
     obtain ⟨m, hm⟩ := exists_pow_smul_mem hN.2 (f w)
     have hmem : ((PowerSeries.X : PowerSeries k) ^ m) • w ∈ N.comap (f.restrictScalars (PowerSeries k)) := by
-      rw [Submodule.mem_comap, LinearMap.restrictScalars_apply, LinearMap.map_smul_of_tower]
-      exact hm
+      rwa [Submodule.mem_comap, LinearMap.restrictScalars_apply, LinearMap.map_smul_of_tower]
     have hne : algebraMap (PowerSeries k) (LaurentSeries k) ((PowerSeries.X : PowerSeries k) ^ m) ≠ 0 := by
       rw [map_pow]
       refine pow_ne_zero _ ?_

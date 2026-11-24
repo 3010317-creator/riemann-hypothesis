@@ -124,8 +124,7 @@ theorem decoOf_dia_eq : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   classical
   have hg : g ∈ UAd hc n := by
     have := mul_mem h.uni (inv_mem hk.uni)
-    rw [mul_inv_cancel_right] at this
-    exact this
+    rwa [mul_inv_cancel_right] at this
   have hkc := hk.lat
   rw [hk0] at hkc
   have hkI : ∀ z : Fin n → AfE F E, (∀ i, z i ∈ RInt F E) ↔
@@ -190,8 +189,7 @@ theorem decoOf_dia_eq : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     (mem_globLat g x).1 (hN ▸ hx)
   refine ⟨hg, decoSet_ext ?_ (fun P x hx => ?_) fun w x hx => ?_⟩
   · show (decoOf ST SG g).1.N = _
-    rw [hraw]
-    exact hN
+    rwa [hraw]
   · show (c P).1 * (decoOf ST SG g).1.f P x = _
     have hl : (lastIdx n).1 + 1 = n := Nat.sub_add_cancel (Nat.pos_of_ne_zero (NeZero.ne n))
     have h1 := h.f P x hx _ hl

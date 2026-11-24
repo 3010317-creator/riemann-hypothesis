@@ -176,8 +176,7 @@ private lemma related_of_same_reduction_lemma_5 (M : ℕ) {Λ₁ Λ₂ : _root_.
       refine ⟨c, c.isIntegral_coe, ?_⟩
       have hce : (c : E) * M = (s₁ : E) * γ₁ x a - s₂ * γ₂ x a := by
         have := congrArg (algebraMap (𝓞 E) E) hc
-        rw [map_mul, map_natCast] at this
-        exact this
+        rwa [map_mul, map_natCast] at this
       rw [hce, hγx, hγ₂x, Matrix.mulVec_smul, Matrix.mulVec_single_one]
       simp only [Pi.smul_apply, smul_eq_mul, Matrix.col_apply]
     choose c hc hce using hcong
@@ -289,8 +288,7 @@ private lemma finite_stabiliser_DH (M : ℕ) {Λ : _root_.GlobalTheory.SW.Lt E n
     push_cast
     rw [mul_assoc]
     rfl
-  rw [e]
-  exact h2
+  rwa [e]
 
 open Matrix Complex NumberField Filter Topology in
 open scoped ComplexConjugate ComplexOrder Real in
@@ -368,8 +366,7 @@ private lemma exists_moves_mem_Vset_of_mem_DH {M : ℕ} {h : Matrix (Fin n) (Fin
     constructor
     · rintro ⟨w, hw, rfl⟩
       simpa [hinv'] using hw
-    · intro hx
-      exact ⟨_, hx, hinv x⟩
+    · exact fun hx => ⟨_, hx, hinv x⟩
   have hmov : _root_.GlobalTheory.SW.Moves h Λ Λ' := fun v => by rw [hmem, hinv']
   refine ⟨Λ', ⟨hfg.map _, fun x => ?_, ?_⟩, hmov⟩
   · rw [hmem x, hsd]

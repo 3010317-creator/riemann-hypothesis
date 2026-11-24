@@ -103,8 +103,7 @@ theorem split_of_free {v : Fin (2 * r + k + 1) → ℂ} (hv : ∀ a : Fin r, v (
         apply Fin.ext
         show b.val = i.val
         rw [hib, hval]
-      · intro h'
-        exact absurd (Finset.mem_univ _) h'
+      · exact fun h' => absurd (Finset.mem_univ _) h'
     · apply Finset.sum_eq_zero
       intro b _
       rw [ite_eq_right]
@@ -201,8 +200,7 @@ theorem omg_norm : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)) (g : M
     simp [fvec]
   have hvz' : herm (Hpk k r) v z' = star (Zhat k r z z' g).det := by
     have h := hkey (Fin.last r)
-    rw [hlast, Matrix.one_apply_eq, mul_one] at h
-    exact h
+    rwa [hlast, Matrix.one_apply_eq, mul_one] at h
   have hWv : herm (Hpk k r) (Wb v) z' = star (Zhat k r z z' g).det := by
     rw [form_Wb_right hfree hz', hvz']
   have hWW : herm (Hpk k r) (Wb v) (Wb v) =

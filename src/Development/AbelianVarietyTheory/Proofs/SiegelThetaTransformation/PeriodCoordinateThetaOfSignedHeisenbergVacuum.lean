@@ -403,9 +403,7 @@ theorem periods_spB (hs : IsSympl X bas) {b : Fin g ⊕ Fin g → Fin r → E}
 
 theorem exists_half {w : E} (hw : IsIntegral ℤ w) {L : Lt E r} (hL : SelfD X L) {u : Fin r → E}
     (hu : u ∈ L) : ∃ c : ℚ, (c = 0 ∨ c = 1 / 2) ∧ eps1 X w u = cexp (2 * π * I * c) := by
-  have hwu : w • u ∈ L := by
-    have h := L.smul_mem (⟨w, hw⟩ : 𝓞 E) hu
-    exact h
+  have hwu : w • u ∈ L := L.smul_mem (⟨w, hw⟩ : 𝓞 E) hu
   obtain ⟨k, hk⟩ := (hL.2 u).1 hu (w • u) hwu
   simp only [Dict.eps1, hk]
   rcases Int.even_or_odd' k with ⟨m, rfl | rfl⟩

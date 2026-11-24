@@ -418,8 +418,7 @@ theorem exists_compl (hs : ∀ x, s (s x) = x) {n : ℕ} {J : Matrix (Fin (n + 1
     ∃ (P : Matrix (Fin (n + 1)) (Fin (n + 1)) E) (J' : Matrix (Fin n) (Fin n) E),
       P.det ≠ 0 ∧ (∀ i, P i 0 = x i) ∧ cT s P * J * P = blk (hform s J x x) J' := by
   obtain ⟨k, hk⟩ : ∃ k, x k ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     simp [hform, h] at hx
   let P₀ : Matrix (Fin (n + 1)) (Fin (n + 1)) E :=
     ((1 : Matrix _ _ E).updateCol k x).submatrix id (Equiv.swap 0 k)
@@ -471,8 +470,7 @@ variable {E : Type} [Field E] [CharZero E] {s : E →+* E}
 
 theorem exists_aniso (hs : ∀ x, s (s x) = x) {n : ℕ} {J : Matrix (Fin (n + 1)) (Fin (n + 1)) E}
     (hJ : HN s J) : ∃ x, hform s J x x ≠ 0 := by
-  by_contra h
-  push Not at h
+  by_contra! h
   have hd : ∀ i, J i i = 0 := fun i => by
     simpa [hform, Pi.single_apply, apply_ite s] using h (Pi.single i 1)
   have h0 : J = 0 := by
@@ -981,8 +979,7 @@ theorem exists_unique_stepRel : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
       if h : ∃ g : HA (AF F) σ J, g • ratTup (F := F) (AF F) x = y then h.choose else 1
     have ht : ∀ y, (∃ g : HA (AF F) σ J, g • ratTup (F := F) (AF F) x = y) →
         t y • ratTup (F := F) (AF F) x = y := fun y hy => by
-      simp only [t, dite_eq_left hy]
-      exact hy.choose_spec
+      simpa only [t, dite_eq_left hy] using hy.choose_spec
     exact Measure.ext_of_lintegral _ fun f hf => (k₁ f hf t ht).trans (k₂ f hf t ht).symm
 
 end GlobalTheory.GaugeEx
@@ -1160,8 +1157,7 @@ theorem fibAt_basis (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
     exact ((Matrix.isUnits_det_units P)).map _
   have := _root_.GlobalTheory.GaugeEx.fibAt_similitude F E σ R hR M _ J lam ν β 1 m _ hl hν hu isUnit_one
     (fun z => by rw [one_mul, qR_mulVec]) h
-  rw [one_mul, (modu_basic R).2.2.1, inv_one, mul_one, hdet] at this
-  exact this
+  rwa [one_mul, (modu_basic R).2.2.1, inv_one, mul_one, hdet] at this
 
 theorem isStdX_basis : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (s : StdMeas b) (M : ℕ) (J J' : Matrix (Fin M) (Fin M) E) (P : GL (Fin M) E) (β : F) (ν' : Measure (Fin 1 → Fin M → AF F ⊗[F] E)), J' = Formalism.UG.cT (σ : E →+* E) (P : Matrix (Fin M) (Fin M) E) * J * (P : Matrix (Fin M) (Fin M) E) → IsStdX s σ J' β ν' → IsStdX s σ J β (ν'.map (lrAct ((P : Matrix (Fin M) (Fin M) E).map (inclR (AF F))) 1)) := by
   intro F E _ _ _ _ _ σ hσ d b s M J J' P β ν' hJ ⟨mi, mv, hi, hv, hp⟩
@@ -1191,8 +1187,7 @@ theorem isStdX_basis : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   simp only [hg, Units.val_one, hI, hV, h1I, h1V] at h1
   have h2 := _root_.GlobalTheory.GaugeEx.ProdScale.isProd_smul F E d b 1 M _ _ _
     (modu (Ainf F ⊗[F] E) (inclR (Ainf F) (P : Matrix (Fin M) (Fin M) E).det)) _ h1 hfin
-  rw [hone, one_smul] at h2
-  exact h2
+  rwa [hone, one_smul] at h2
 
 end GlobalTheory.GaugeEx.BasisX
 end -- clump:auto
@@ -1269,8 +1264,7 @@ theorem stepData_basis (hσ : ∀ z, σ (σ z) = z) {M : ℕ} {J : Matrix (Fin (
       (Formalism.UG.cT (σ : E →+* E) (Q : Matrix (Fin M) (Fin M) E) * J' * Q.val) := by
   obtain ⟨hJ, ha, hx0, hB0, hJ', hJ'nd⟩ := h
   refine ⟨isHermND_basis σ hσ hJ P, ha, ?_, fun j => ?_, ?_, isHermND_basis σ hσ hJ'nd Q⟩
-  · rw [hE, hform_basis, hx]
-    exact hx0
+  · rwa [hE, hform_basis, hx]
   · rw [hE, hform_basis, hx]
     have hcol : Matrix.mulVec (P : Matrix (Fin (M + 1)) (Fin (M + 1)) E) (fun i => B₂ i j) =
         Matrix.mulVec B (fun k => (Q : Matrix (Fin M) (Fin M) E) k j) := by
@@ -1281,8 +1275,7 @@ theorem stepData_basis (hσ : ∀ z, σ (σ z) = z) {M : ℕ} {J : Matrix (Fin (
       funext k
       have h0 := hB0 k
       rw [hE, hform_eq, Matrix.dotProduct_mulVec] at h0
-      rw [← Matrix.vecMul_vecMul]
-      exact h0
+      rwa [← Matrix.vecMul_vecMul]
     rw [hcol, hform_eq, Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, hz, zero_dotProduct]
   · rw [hJ']
     have e1 := cT_mul_lemma (σ : E →+* E) B (Q : Matrix (Fin M) (Fin M) E)
@@ -1540,8 +1533,7 @@ theorem exists_const (hσ : IsCMExt F E σ) {d : ℕ} {b : Module.Basis (Fin d) 
     haveI := hμ
     refine ⟨Units.mk0 (Measure.haarScalarFactor μ (G.μ (M + 1) J))
       (Measure.haarScalarFactor_pos_of_isHaarMeasure _ _).ne', ?_⟩
-    rw [Units.val_mk0, ← Measure.isMulLeftInvariant_eq_smul]
-    exact hrel
+    rwa [Units.val_mk0, ← Measure.isMulLeftInvariant_eq_smul]
   refine ⟨fun M J x B => if h : ∃ u : ℝ≥0ˣ, ∃ (a : F) (J' : Matrix (Fin M) (Fin M) E), 2 ≤ M ∧
       StepData σ J x a B J' ∧ StepRel s σ J x a B J' ((u : ℝ≥0) • G.μ (M + 1) J) (G.μ M J')
     then h.choose else 1, ?_⟩
@@ -1572,8 +1564,7 @@ theorem exists_std_family (hσ : IsCMExt F E σ) {d : ℕ} {b : Module.Basis (Fi
     intro M J x a B J' hM hS
     have r := (hc M J x a B J' hM hS).smul hσ hS (α M J' : ℝ≥0)
     rw [smul_smul] at r
-    rw [hαstep M J x a B J' hM hS, Units.val_mul, mul_comm]
-    exact r
+    rwa [hαstep M J x a B J' hM hS, Units.val_mul, mul_comm]
   case inv =>
     intro M J x a B J' x₂ B₂ P Q hM hS hx hPB
     obtain ⟨J₂, hJ₂⟩ : ∃ J₂, J₂ = Formalism.UG.cT (σ : E →+* E) (P : Matrix (Fin (M + 1)) (Fin (M + 1)) E) *
@@ -1703,8 +1694,7 @@ theorem fval_off (l : Lv4 𝒮 K w Z) (L : SizeData₂ (w.D Z)) (hL : L.sc = K.s
   unfold F0K at key
   simp only at key
   have e : j - 1 + 1 = j := by omega
-  rw [e] at key
-  exact key
+  rwa [e] at key
 
 theorem not_mem_of_untw (l : Lv4 𝒮 K w Z) (v : B.places.Pl) (hv : (w.D Z).what₂.muAt v = (w.D Z).what₂.mu0) : v ∉ l.Wt := by
   intro hvW
@@ -1715,8 +1705,7 @@ theorem not_mem_of_untw (l : Lv4 𝒮 K w Z) (v : B.places.Pl) (hv : (w.D Z).wha
   apply hne
   rw [← h2, ← h1]
   change w.I.xi ((w.D Z).what₂.muAt v) = 1
-  rw [hv]
-  exact h3
+  rwa [hv]
 
 theorem rowLay_of (l : Lv4 𝒮 K w Z) (Y : DivX (w.D Z)) (hMj : MjAre l.what₂.r.Z Y)
     (hk : ∀ σ, Y.kapR σ = kapSharp (w.D Z)) : V4.RowLay (w.D Z) l.p0 Y :=

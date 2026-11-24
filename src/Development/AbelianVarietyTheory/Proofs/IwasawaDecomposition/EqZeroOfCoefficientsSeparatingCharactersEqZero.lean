@@ -172,8 +172,7 @@ theorem _root_.GlobalTheory.SeparatingCharacters.eq_zero_of_coefficients_eq_zero
     obtain ⟨y, rfl⟩ := QuotientAddGroup.mk_surjective r
     have hnot : -x + y ∉ Γ := fun h => hqr (QuotientAddGroup.eq.mpr h)
     obtain ⟨a, ha⟩ : ∃ a, χ a (-x + y) ≠ 1 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hnot ((hsep _).1 h)
     refine ⟨ψ a, ⟨ψ a, hSψ a, rfl⟩, ?_⟩
     simp only [hψ]
@@ -199,8 +198,7 @@ theorem _root_.GlobalTheory.SeparatingCharacters.eq_zero_of_coefficients_eq_zero
   let L₀ : C(G ⧸ Γ, ℂ) →ₗ[ℂ] ℂ :=
     { toFun := fun f => ∫ x in 𝓕, f (QuotientAddGroup.mk x : G ⧸ Γ) * Φ x ∂μ
       map_add' := fun f g => by
-        simp only [ContinuousMap.add_apply, add_mul]
-        exact integral_add (hint f) (hint g)
+        simpa only [ContinuousMap.add_apply, add_mul] using integral_add (hint f) (hint g)
       map_smul' := fun c f => by
         simp only [ContinuousMap.smul_apply, smul_eq_mul, mul_assoc, RingHom.id_apply]
         exact integral_const_mul c _ }
@@ -260,21 +258,18 @@ theorem _root_.GlobalTheory.SeparatingCharacters.eq_zero_of_coefficients_eq_zero
   set U : Set G := {x | Φ x ≠ 0} with hU
   have hUo : IsOpen U := isOpen_ne_fun hΦc continuous_const
   have hUF : μ (U ∩ 𝓕) = 0 := by
-    rw [ae_iff, Measure.restrict_apply hUo.measurableSet] at hae
-    exact hae
+    rwa [ae_iff, Measure.restrict_apply hUo.measurableSet] at hae
   have hUinv : ∀ γ : Γ, γ +ᵥ U = U := by
     intro γ
     ext x
     constructor
     · rintro ⟨y, hy, rfl⟩
       change Φ ((γ : G) + y) ≠ 0
-      rw [hΦp _ γ.2]
-      exact hy
+      rwa [hΦp _ γ.2]
     · intro hx
       refine ⟨-(γ : G) + x, ?_, ?_⟩
       · change Φ (-(γ : G) + x) ≠ 0
-        rw [← hΦp _ γ.2, add_neg_cancel_left]
-        exact hx
+        rwa [← hΦp _ γ.2, add_neg_cancel_left]
       · change (γ : G) + (-(γ : G) + x) = x
         exact add_neg_cancel_left _ _
   have hU0 : μ U = 0 := h𝓕.measure_zero_of_invariant U hUinv hUF
@@ -282,7 +277,6 @@ theorem _root_.GlobalTheory.SeparatingCharacters.eq_zero_of_coefficients_eq_zero
   funext x
   by_contra hx
   have : x ∈ U := hx
-  rw [hUe] at this
-  exact this
+  rwa [hUe] at this
 
 end GlobalTheory.SeparatingCharacters

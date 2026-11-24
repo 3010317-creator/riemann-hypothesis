@@ -82,8 +82,7 @@ theorem colT_ne_zero_of_good : ∀ (E : Type) [Field E] [NumberField E] (a : ℕ
     ∀ (m : ℕ) (f : GA E a → ℂ), m + 1 < a → Good ψ (m + 1) f → f ≠ 0 → colT ψ (m + 1) f ≠ 0 := by
   intro E _ _ a ψ hψ m f hma hG hf
   obtain ⟨g₀, hg₀⟩ : ∃ g₀, f g₀ ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hf (funext h)
   have hPer : Per (ratV E (UnipotentBlockColumnIndex a (m + 1) (m + 1))) (fun x => f (blkU x * g₀)) :=
     per_blk hG.cont (fun c g => hG.left _ (isMir_blkU c) g) g₀
@@ -93,11 +92,9 @@ theorem colT_ne_zero_of_good : ∀ (E : Type) [Field E] [NumberField E] (a : ℕ
     simp only [Pi.zero_apply] at h1
     apply hg₀
     have e : (blkU (0 : UnipotentBlockColumnIndex a (m + 1) (m + 1) → Ad E) : GA E a) = 1 := posU_zero _
-    rw [e, one_mul] at h1
-    exact h1
+    rwa [e, one_mul] at h1
   obtain ⟨ξ, hξ⟩ : ∃ ξ : UnipotentBlockColumnIndex a (m + 1) (m + 1) → E, coefF ψ (m + 1) ξ f g₀ ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hΦ0 (GlobalTheory.T.periodic_eq_zero_of_fourier_coefficients_zero E _ ψ hψ _ hPer h)
   have hξ0 : ξ ≠ 0 := by
     rintro rfl
@@ -106,8 +103,7 @@ theorem colT_ne_zero_of_good : ∀ (E : Type) [Field E] [NumberField E] (a : ℕ
     have e : ∀ x : UnipotentBlockColumnIndex a (m + 1) (m + 1) → Ad E, ψ (-dot (0 : UnipotentBlockColumnIndex a (m + 1) (m + 1) → E) x) = 1 := by
       intro x
       simp [dot]
-    simp only [coefF, e, one_mul]
-    exact hv
+    simpa only [coefF, e, one_mul] using hv
   obtain ⟨γ, hγ, hγξ⟩ := GlobalTheory.T.exists_rationalMirabolic_moving_row_to_last E a m hma ξ hξ0
   intro h
   apply hξ
@@ -116,8 +112,7 @@ theorem colT_ne_zero_of_good : ∀ (E : Type) [Field E] [NumberField E] (a : ℕ
   rw [GlobalTheory.T.whittakerCoefficient_rationalMirabolic_mul E a ψ hψ m f hG.cont hG.left γ hγ (eLast a (m + 1)) g₀] at h1
   have e : (fun t : UnipotentBlockColumnIndex a (m + 1) (m + 1) => ∑ s : UnipotentBlockColumnIndex a (m + 1) (m + 1), eLast a (m + 1) s * γ.val s.1.1 t.1.1) = ξ :=
     funext hγξ
-  rw [e] at h1
-  exact h1
+  rwa [e] at h1
 
 end GlobalTheory.CuspGeneric
 end -- clump:auto
@@ -160,8 +155,7 @@ theorem colT_add (hψ : StdPsi ψ) {m : ℕ} {f f' : GA E a → ℂ} (hf : Good 
   have := _root_.GlobalTheory.CuspGeneric.avg_add_of_per _ (ratV E (UnipotentBlockColumnIndex a (m + 1) (m + 1))) (isCoLat_ratV E _) _ _
     (per_coef hψ (eLast a (m + 1)) hf.cont (hl_of_good hf le_rfl) g)
     (per_coef hψ (eLast a (m + 1)) hf'.cont (hl_of_good hf' le_rfl) g)
-  simp only [colT, coefF, mul_add]
-  exact this
+  simpa only [colT, coefF, mul_add] using this
 
 theorem colT_smul (m : ℕ) (c : ℂ) (f : GA E a → ℂ) :
     colT ψ (m + 1) (fun g => c * f g) = fun g => c * colT ψ (m + 1) f g := by
@@ -249,8 +243,7 @@ theorem isGeneric_of_isLocComp : ∀ (E : Type) [Field E] [NumberField E] [_root
         exact congrFun (whit_smul (a - 1) c (f v).1.1) h }
   have hl : ∀ v, l v = whit ψ (a - 1) (f v).1.1 h := fun _ => rfl
   have hne : l (σ.ρ gw v₀) ≠ 0 := by
-    rw [hl, hrt, ← e]
-    exact hg₀
+    rwa [hl, hrt, ← e]
   have hlaw : ∀ (u : GlobalTheory.SmGL.unipB (w.adicCompletion E) (Fin a)) v,
       l (σ.ρ u v) = (locPsi hψ w (∑ p : Fin a × Fin a with (p.2 : ℕ) = p.1 + 1, (u : GL (Fin a) (w.adicCompletion E)).val p.1 p.2) : ℂ) * l v := by
     intro u v

@@ -423,8 +423,7 @@ theorem phaseCondition_basisChange : ∀ (L : Type) [Field L] [Valued L (WithZer
     rw [mul_comm]
     refine hlt _ _ (hP k j) ?_
     rw [Matrix.mul_apply]
-    refine Valuation.map_sum_lt _ one_ne_zero fun l _ => ?_
-    exact hlt _ _ (hPσ i l) (hv l k)
+    exact Valuation.map_sum_lt _ one_ne_zero fun l _ => hlt _ _ (hPσ i l) (hv l k)
   · intro i j
     rw [← hCx]
     exact intMul _ _ (intMul _ _ hPσ hint) hQ' i j
@@ -880,18 +879,15 @@ theorem class_fixed_phase : ∀ (L : Type) [Field L] [CharZero L] [Valued L (Wit
     exact hmemV _
   have hwAll : w ∈ ⨆ c, V c := (iSup_le fun k => le_iSup V _) hwO
   obtain ⟨d, hd⟩ : ∃ d, w ∉ P d := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     obtain ⟨F, hF⟩ := (Submodule.mem_iSup_iff_exists_finset).1 hwAll
     exact hw0 (eq_zero_of_mem_compl hind F w hF hcon)
   obtain ⟨k, hk⟩ : ∃ k : KInt σ (JT : Matrix (Fin n') (Fin n') L), k • QuotientAddGroup.mk x = d := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hd ((iSup_le fun k => le_iSup₂_of_le (f := fun j (_ : j ≠ d) => V j) (k • QuotientAddGroup.mk x) (hcon k) le_rfl) hwO)
   have hsplit : w ∈ V d ⊔ P d := by
     have e := iSup_split_single V d
-    rw [e] at hwAll
-    exact hwAll
+    rwa [e] at hwAll
   obtain ⟨a, ha, b, hb, hab⟩ := Submodule.mem_sup.1 hsplit
   have ha0 : a ≠ 0 := by
     rintro rfl
@@ -1173,8 +1169,7 @@ theorem mem_of_orbits (π : G →* Module.End ℂ M) (V : ι → Submodule ℂ M
       exact Set.mem_iUnion₂.mpr ⟨k, hk, orbit_stable k g hjk⟩
     have hB : ∀ (g : G), ∀ j ∈ ((⋃ k ∈ F, orbit G k) \ orbit G i),
         g • j ∈ ((⋃ k ∈ F, orbit G k) \ orbit G i) := by
-      intro g j hj
-      exact ⟨hU g j hj.1, fun h => hj.2 (by simpa using orbit_stable i g⁻¹ h)⟩
+      exact fun g j hj => ⟨hU g j hj.1, fun h => hj.2 (by simpa using orbit_stable i g⁻¹ h)⟩
     have hAB : Disjoint (orbit G i) ((⋃ k ∈ F, orbit G k) \ orbit G i) := Set.disjoint_sdiff_right
     have hafix := fixed_part π V hV hπ hA hB hAB ha hb hu
     have hbfix : ∀ g, π g b = b :=
@@ -1204,8 +1199,7 @@ theorem fixed_mem_of_orbit_height : ∀ {G ι M : Type} [Group G] [MulAction G �
     intro p u hp hgood hu
     obtain ⟨F, hF⟩ := hc4 u
     have hF' : u = ∑ j ∈ F.filter p, c j u := by
-      rw [Finset.sum_filter_of_ne (fun j _ h => by_contra fun hpj => h (hp j hpj))]
-      exact hF
+      rwa [Finset.sum_filter_of_ne (fun j _ h => by_contra fun hpj => h (hp j hpj))]
     refine GradedFixed.mem_of_orbits π V hV hπ S (F.filter p)
       (fun j hj => hgood j (Finset.mem_filter.mp hj).2) u hu ?_
     exact GradedFixed.mem_WA_of_sum V c hc1 hc3
@@ -1457,8 +1451,7 @@ theorem fixed_mem_span (hP : GlobalTheory.Hk3.LocPair ϖ σ q δ JS JT ψ ρ ω)
       refine Submodule.span_le.2 ?_ hu
       rintro _ ⟨y, hy, rfl⟩
       refine Submodule.mem_iSup_of_mem (QuotientAddGroup.mk y) (Submodule.mem_iSup_of_mem ?_ (hmemV y))
-      rw [hμmk, hμmk]
-      exact hy
+      rwa [hμmk, hμmk]
   exact _root_.GlobalTheory.fixed_mem_of_orbit_height π V hind htop hline hπ μ hμ S hS hstep w (fun k => hw k (Subgroup.mem_comap.1 k.2))
 
 end Half

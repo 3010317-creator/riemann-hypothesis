@@ -408,9 +408,7 @@ theorem smooth_of_hasVec {V : Type} [AddCommGroup V] [Module ℂ V] {π : Repres
   rw [Finset.prod_eq_single i (fun b _ hb => by simp [t, hb]) (by simp)] at hth
   rw [hv _ hg, hth] at hx2
   have : ((ψ i (t x i) : ℂ) - 1) • v = 0 := by rw [sub_smul, hx2, one_smul, sub_self]
-  have h3 := (smul_eq_zero.1 this).resolve_right hv0
-  show ψ i x = 1
-  exact Units.ext (by simpa [t, sub_eq_zero] using h3)
+  exact Units.ext (by simpa [t, sub_eq_zero] using ((smul_eq_zero.1 this).resolve_right hv0))
 
 theorem val_det_block {h : GL (Fin n) k} (hh : h ∈ KO k (Fin n)) (m : ℕ)
     (hm : ∀ a b : Fin n, (a : ℕ) < m → m ≤ (b : ℕ) → valuation k (h.val a b) < 1) :
@@ -650,8 +648,7 @@ theorem exists_vec {n : ℕ} (a : NG.AlgWt L n) (S : Submodule ℂ (GAf L n → 
     let x : J := ⟨_, h1⟩ * ε ⟨s.loc n κ, h⟩
     have hx : (x : GAf L n) = κ := inv_mul_cancel_right κ _
     have := hfT.2 x
-    rw [hx, map_mul, h2, one_mul] at this
-    exact this
+    rwa [hx, map_mul, h2, one_mul] at this
   obtain ⟨u, hu0, hu⟩ := GlobalTheory.LocVec.main L n a S hS s σ hσ c hc hci K (χ.comp ε) (fun g hg => hg.2) hopen f hf hf0 hrt
   refine ⟨c, hv, u, hu0, fun h hh => ?_⟩
   let g := GeneralLinearGroup.map c.symm.toRingHom h
@@ -667,8 +664,7 @@ theorem exists_vec {n : ℕ} (a : NG.AlgWt L n) (S : Submodule ℂ (GAf L n → 
   refine ⟨e g, he1 g, he2 g, by rw [he2]; exact hg, fun hJ => ?_⟩
   have e1 : GeneralLinearGroup.map c.toRingHom g = h := Units.ext (Matrix.ext fun p q => c.apply_symm_apply _)
   have := hu g ⟨hJ, hg⟩
-  rw [e1] at this
-  exact this
+  rwa [e1] at this
 
 end Global
 

@@ -77,8 +77,7 @@ theorem ip_prod {G H : Type} [Group G] [Group H] [Fintype G] [Fintype H] (A C : 
 theorem ip_sum_left {G ι : Type} [Group G] [Fintype G] (S : Finset ι) (f : ι → G → ℂ) (β : G → ℂ) :
     ip (fun x => ∑ i ∈ S, f i x) β = ∑ i ∈ S, ip (f i) β := by
   unfold ip
-  simp only [Finset.sum_mul, Finset.mul_sum]
-  exact Finset.sum_comm
+  simpa only [Finset.sum_mul, Finset.mul_sum] using Finset.sum_comm
 
 alias isClass_of_isChar := _root_.GlobalTheory.CharDec.isClass_of_isChar
 
@@ -230,8 +229,7 @@ theorem finiteRing_sq_sub_mul_sq_eq_of_card : ∀ (L' L : List (Pc g)) (n : ℕ)
       have hres := _root_.GlobalTheory.GLq.ResCuspProd.main g L a (degL M) hL hc
       simp only [hres]
       rw [ip_sum_left]
-      refine Finset.sum_congr rfl fun I _ => ?_
-      exact ip_prod _ _ _ _
+      exact Finset.sum_congr rfl fun I _ => ip_prod _ _ _ _
     have hrest : ∀ i : Fin L.length, L.get i = ⟨a, ψ⟩ →
         (L.Perm (⟨a, ψ⟩ :: ((({i} : Finset _)ᶜ.sort (· ≤ ·)).map L.get))) ∧
         degL ((({i} : Finset _)ᶜ.sort (· ≤ ·)).map L.get) = degL M := by
@@ -265,8 +263,7 @@ theorem finiteRing_sq_sub_mul_sq_eq_of_card : ∀ (L' L : List (Pc g)) (n : ℕ)
       · rw [ip_sub_cusp L hc a ψ hψ _ (Finset.mem_filter.1 hmem).2, ite_eq_left ⟨i₀, rfl, hi₀⟩, one_mul]
         obtain ⟨hp, hd⟩ := hrest i₀ hi₀
         have hp' : ((({i₀} : Finset _)ᶜ.sort (· ≤ ·)).map L.get).Perm M := (hp.symm.trans hperm).cons_inv
-        have hnd' := (List.nodup_cons.1 (hp.nodup_iff.1 hnd)).2
-        exact (ih _ _ hd rfl (hcRest _) hcM).2 hp' hnd'
+        exact (ih _ _ hd rfl (hcRest _) hcM).2 hp' ((List.nodup_cons.1 (hp.nodup_iff.1 hnd)).2)
       · intro I hI hne
         rw [ip_sub_cusp L hc a ψ hψ I (Finset.mem_filter.1 hI).2]
         split_ifs with hex

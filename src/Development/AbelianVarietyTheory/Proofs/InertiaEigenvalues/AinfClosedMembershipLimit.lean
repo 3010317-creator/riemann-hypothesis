@@ -239,8 +239,7 @@ theorem abstract {S R A F : Type} [CommRing S] [CommRing A] [IsDomain A] [CommRi
       rw [mulVec_sub, mulVec_mulVec, hPY, hr, e1]
       funext i
       simp [mulVec, dotProduct]
-    have e3 := congrFun (Matrix.eq_zero_of_mulVec_eq_zero hP e2) i
-    simpa [mulVec, dotProduct, hc] using e3
+    simpa [mulVec, dotProduct, hc] using congrFun (Matrix.eq_zero_of_mulVec_eq_zero hP e2) i
   have hall := approx l ev mem hadd hsm hsat hA hS Y hY hgen
   have hdn : d ≤ n := by
     choose C hC using fun j => hall _ (hm1 (Pi.single j 1))
@@ -334,8 +333,7 @@ theorem exists_pow_mul (x : Cb l) : ∃ (c : ℕ) (o : OCb l),
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := OCb l) x
   have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
   have : ∃ c, b ∣ bk.flat ^ c := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hb0 (AinfDiv.flat_haus bk b fun n => (ValuationRing.dvd_total _ _).resolve_right (h n))
   obtain ⟨c, q, hq⟩ := this
   refine ⟨c, q * a, ?_⟩
@@ -400,8 +398,7 @@ theorem GlobalTheory.BSP.saturated_module_free : ∀ (l : ℕ) [Fact l.Prime] (K
   change cW _ ≠ 0
   rw [RingHom.map_det]
   have e : cW.mapMatrix (Y.map (inclW l)) = Y.map (al.comp cA) := Matrix.ext fun i j => hcc _
-  rw [e]
-  exact hY
+  rwa [e]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

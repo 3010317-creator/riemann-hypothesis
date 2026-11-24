@@ -198,8 +198,7 @@ theorem under_ne_of_vT (u : B.Word) (i : Fin 2) {v : HeightOneSpectrum (𝓞 B.h
     rw [← hPr.piT_norm u]; exact Ideal.mul_mem_right _ _ h1
   refine T_notMem X u i h ?_
   show (B.T u : 𝓞 B.host.F) ∈ P.asIdeal.comap (algebraMap (𝓞 B.host.F) (𝓞 B.host.E))
-  rw [Ideal.mem_comap, map_natCast]
-  exact h2
+  rwa [Ideal.mem_comap, map_natCast]
 
 theorem exists_natCast {w : HeightOneSpectrum (𝓞 B.host.E)} (hw : w ∈ (B.primes X).vGs) (c : 𝓞 B.host.E ⧸ w.asIdeal) :
     ∃ n : ℕ, (n : 𝓞 B.host.E ⧸ w.asIdeal) = c := by
@@ -216,8 +215,7 @@ theorem exists_natCast {w : HeightOneSpectrum (𝓞 B.host.E)} (hw : w ∈ (B.pr
   letI : Field (𝓞 B.host.E ⧸ w.asIdeal) := Ideal.Quotient.field _
   haveI : Fintype (𝓞 B.host.E ⧸ w.asIdeal) := Fintype.ofFinite _
   have hc : Fintype.card (𝓞 B.host.E ⧸ w.asIdeal) = B.host.g i := by
-    rw [← Nat.card_eq_fintype_card, ← Submodule.cardQuot_apply, ← Ideal.absNorm_apply]
-    exact hN
+    rwa [← Nat.card_eq_fintype_card, ← Submodule.cardQuot_apply, ← Ideal.absNorm_apply]
   haveI : CharP (𝓞 B.host.E ⧸ w.asIdeal) (B.host.g i) := charP_of_card_eq_prime hc
   obtain ⟨a, rfl⟩ := (ZMod.ringEquiv (𝓞 B.host.E ⧸ w.asIdeal) hc).surjective c
   exact ⟨a.val, by rw [ZMod.natCast_val]; rfl⟩
@@ -248,8 +246,7 @@ theorem exists_w (G : GLoc B.host.F B.host.E B.sp.cm.sig B.host.g) (hG : G.piG =
     exact (hPr.g_prime i).ne_zero (Nat.cast_eq_zero.1 this.symm)
   refine (Formalism.L2.Col.mem_divs h0 w).2 ((hw _).2 ?_)
   have := G.sp_pi i v h
-  rw [hG, sig_eq] at this
-  exact this
+  rwa [hG, sig_eq] at this
 
 variable (I : TC B X)
 
@@ -353,8 +350,7 @@ theorem chr_colLev (Λ : LevFam B.host.E B.LL (B.R.N 0) (B.primes X).vGs) (hΛ :
       (piProj (fun w => Formalism.L2.Col.HX (𝓞 B.host.E ⧸ w.1.asIdeal) (B.R.N 0) B.R.k B.R.t 0) w)
   change (((∏ w, f w) g : B.LLˣ) : B.LL) = _
   have hp : (∏ w, f w) g = ∏ w, f w g := prod_hom_apply Finset.univ f g
-  rw [hp]
-  rw [Units.coe_prod]
+  rw [hp, Units.coe_prod]
   refine Finset.prod_congr rfl fun w _ => ?_
   erw [MonoidHom.comp_apply]
   show ((lamGen _ _ _ _ _ _ _ : B.LLˣ) : B.LL) = _

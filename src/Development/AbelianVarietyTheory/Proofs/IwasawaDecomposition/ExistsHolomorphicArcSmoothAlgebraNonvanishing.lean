@@ -79,8 +79,7 @@ theorem exists_line (m : ℕ) (q : MvPolynomial (Fin m) ℂ) (hq : q ≠ 0) (b�
     ∃ (v : Fin m → ℂ) (ρ : ℝ), 0 < ρ ∧
       ∀ u ∈ Metric.ball (0 : ℂ) ρ, u ≠ 0 → MvPolynomial.eval (b₀ + u • v) q ≠ 0 := by
   obtain ⟨w, hw⟩ : ∃ w, MvPolynomial.eval w q ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hq (MvPolynomial.funext fun x => by simpa using h x)
   let v := w - b₀
   let Q : Polynomial ℂ := MvPolynomial.aeval
@@ -128,8 +127,7 @@ theorem exists_holPts_ne_zero : ∀ (F A : Type) [Field F] [CommRing A] [IsDomai
   have he : ∀ a, e (ι a) = ψ₀ a := fun a => IsLocalization.Away.lift_eq g _ a
   let P : MvPolynomial (Fin m) F →+* R := MvPolynomial.eval₂Hom (algebraMap F R) fun i => ι (s i)
   have hPC : ∀ k, P (MvPolynomial.C k) = ι (algebraMap F A k) := fun k => by
-    simp only [P, MvPolynomial.eval₂Hom_C]
-    exact IsScalarTower.algebraMap_apply F A R k
+    simpa only [P, MvPolynomial.eval₂Hom_C] using IsScalarTower.algebraMap_apply F A R k
   have hPX : ∀ i, P (MvPolynomial.X i) = ι (s i) := fun i => by simp [P]
   have heC : ∀ k, e (P (MvPolynomial.C k)) = σ k := fun k => by rw [hPC, he]; rfl
 

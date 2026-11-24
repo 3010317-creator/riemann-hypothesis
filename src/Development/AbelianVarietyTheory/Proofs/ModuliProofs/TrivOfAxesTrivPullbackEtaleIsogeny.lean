@@ -134,11 +134,9 @@ theorem triv_of_triv_pull_isogeny :
         have : (b ≫ ψ) ^ n = b ≫ (𝟙 A ^ n) ≫ ψ := by
           rw [← Category.assoc, MonObj.comp_pow, Category.comp_id, MonObj.pow_comp]
         rw [this]
-        apply Over.OverMorphism.ext
-        exact pullback.condition.trans (Category.assoc _ _ _).symm
+        exact Over.OverMorphism.ext (pullback.condition.trans (Category.assoc _ _ _).symm)
       have := key b (r ≫ snd B B)
-      rw [← hr, lift_comp_fst_snd] at this
-      exact this
+      rwa [← hr, lift_comp_fst_snd] at this
   · rw [← Over.comp_left, lift_fst, Over.id_left]
 
 end GlobalTheory.IsogenyBitriv

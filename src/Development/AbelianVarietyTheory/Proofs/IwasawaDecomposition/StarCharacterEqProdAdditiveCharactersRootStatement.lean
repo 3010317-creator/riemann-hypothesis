@@ -409,12 +409,10 @@ theorem mem_of_inclE_mem_wInt : ∀ (D : D7) (X : HidaSetting D) (w : HeightOneS
   rw [hoc] at h2
   have hz : Formalism.L2.DIV.cmpS X.B.I.F Wx (Ideal.Quotient.mk Wx c) = Formalism.L2.DIV.cmpS X.B.I.F Wx 0 := by
     rw [map_zero]
-    show Ideal.Quotient.mk _ (Formalism.L2.DIV.oToS X.B.I.F X.B.I.E c) = 0
     exact Ideal.Quotient.eq_zero_iff_mem.2 h2
   have hcW : c ∈ Wx := Ideal.Quotient.eq_zero_iff_mem.1 (Formalism.L2.DIV.cmpS_inj Wx hWx0 hz)
   have : e c = α := by rw [hc]; exact e.apply_symm_apply α
-  rw [← this]
-  exact hcW
+  rwa [← this]
 
 end GlobalTheory.Mem.SymChar
 end -- clump:auto
@@ -761,8 +759,7 @@ theorem sum_edge {Q : Type} [AddCommMonoid Q] {r t : ℕ} (ht : t < r) (P : Fin 
   · rw [ite_eq_left ((hP _).2 rfl)]
   · intro b _ hb
     rw [ite_eq_right]
-    intro h
-    exact hb (Fin.ext ((hP b).1 h))
+    exact fun h => hb (Fin.ext ((hP b).1 h))
   · simp
 
 def extF {Q : Type} [AddCommGroup Q] {r : ℕ} (F : Fin r → Fin r → Q) (a b : ℕ) : Q :=
@@ -936,8 +933,7 @@ theorem resid_at_w : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Formalism.L2.
     rw [hφ]
     apply hmk
     have := dual_row X w hN (X.vectorsInLattice.1 a).2 (posE D a) (GlobalTheory.T.flagDualVector_pairing_symmetricFrame_mod_place D X w kv.1 hg a) (posN D a)
-    rw [symVec_posN] at this
-    exact this
+    rwa [symVec_posN] at this
   · refine Finset.sum_congr rfl fun i _ => ?_
     by_cases hi : i.1 + 1 < D.R.k
     · rw [dite_eq_left hi, dite_eq_left hi]
@@ -951,11 +947,9 @@ theorem resid_at_w : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Formalism.L2.
         rw [symVec_posB X w hw] at this
         have e1 : (posB D ⟨i.1 + 1, hi⟩) = ⟨D.R.rS + i.1 + 1, by have := rank_eq D; omega⟩ :=
           Fin.ext (by simp only [posB]; omega)
-        rw [e1] at this
-        exact this
+        rwa [e1] at this
       · have hs : side X w = false := by simp [side, hw]
-        rw [ite_eq_right (by simp [hs])]
-        rw [QuotientAddGroup.mk'_apply, QuotientAddGroup.eq_zero_iff]
+        rw [ite_eq_right (by simp [hs]), QuotientAddGroup.mk'_apply, QuotientAddGroup.eq_zero_iff]
         have hew := _root_.GlobalTheory.Mem.SymChar.EwZero.ew_mem_wInt D X kv hw
         have hbw : X.B.I.fmat k *ᵥ X.bw ⟨i.1 + 1, hi⟩ ∈ X.B.I.Lf :=
           Formalism.L2.SG.Pf.unitaryCongruence.K_mv X.B.I hk (X.vectorsInLattice.2.2 _).1
@@ -1117,8 +1111,7 @@ theorem isMatIn_inv : ∀ (D : D7) (X : HidaSetting D) (kv : Σ k : Fin 2, D.nd.
     have e : Formalism.UG.inclE (F := X.B.I.F) (Formalism.MainNotions.S.Af X.B.I.F) (((D.host.g kv.1 : ℕ) : 𝓞 X.B.I.E) : X.B.I.E) =
         ((D.host.g kv.1 : ℕ) : X.B.I.E ⊗[X.B.I.F] Formalism.MainNotions.S.Af X.B.I.F) := by
       simp [map_natCast]
-    rw [e, Nat.cast_smul_eq_nsmul] at h1
-    exact h1
+    rwa [e, Nat.cast_smul_eq_nsmul] at h1
   have hT : ∀ i, T (QuotientAddGroup.mk' W (u i)) =
       ∑ j, ((N : Matrix (Fin D.R.r) (Fin D.R.r) (ZMod (D.host.g kv.1))) j i).val • QuotientAddGroup.mk' W (u j) := by
     intro i
@@ -1334,8 +1327,7 @@ abbrev mkW (X : HidaSetting D) (w : HeightOneSpectrum (𝓞 D.host.E)) :
 theorem mkW_eq {X : HidaSetting D} {w : HeightOneSpectrum (𝓞 D.host.E)}
     {a b : X.B.I.E ⊗[X.B.I.F] Formalism.MainNotions.S.Af X.B.I.F} (h : a - b ∈ wInt X w) : mkW X w a = mkW X w b := by
   show (QuotientAddGroup.mk a : QW X w) = QuotientAddGroup.mk b
-  rw [QuotientAddGroup.eq_iff_sub_mem]
-  exact h
+  rwa [QuotientAddGroup.eq_iff_sub_mem]
 
 theorem mkW_zero {X : HidaSetting D} {w : HeightOneSpectrum (𝓞 D.host.E)}
     {a : X.B.I.E ⊗[X.B.I.F] Formalism.MainNotions.S.Af X.B.I.F} (h : a ∈ wInt X w) : mkW X w a = 0 := by
@@ -1358,8 +1350,7 @@ theorem modW_of {X : HidaSetting D} {w : HeightOneSpectrum (𝓞 D.host.E)} {g :
   unfold ModW
   rw [hφ, ← map_nsmul, nsmul_one] at h
   show (c - ((t.val : ℕ) : X.B.I.E ⊗[X.B.I.F] Formalism.MainNotions.S.Af X.B.I.F)) ∈ (wInt X w).toAddSubgroup
-  rw [← QuotientAddGroup.eq_iff_sub_mem]
-  exact h
+  rwa [← QuotientAddGroup.eq_iff_sub_mem]
 
 theorem read (X : HidaSetting D) (w : HeightOneSpectrum (𝓞 D.host.E)) {g : ℕ} {u : Fin D.R.r → VA X.B.I}
     {x : X.B.I.Gf} {M : Matrix (Fin D.R.r) (Fin D.R.r) (ZMod g)} (hM : GlobalTheory.Mem.SymFrame.IsMatIn X w u x M)
@@ -1484,8 +1475,7 @@ theorem resBar : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Formalism.L2.SG.I
       rw [hs, ite_eq_right (by simp), map_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
       by_cases hi : i.val + 1 < D.R.k
-      · rw [dite_eq_left hi, dite_eq_left hi]
-        rw [← Formalism.L2.SG.Pf.unitaryCongruence.hA_symm]
+      · rw [dite_eq_left hi, dite_eq_left hi, ← Formalism.L2.SG.Pf.unitaryCongruence.hA_symm]
         have e := GlobalTheory.St.G.FrameClose.hA_move k⁻¹ (X.bw ⟨i.val + 1, hi⟩) (X.bwd i)
         rw [inv_inv] at e
         rw [← e, ← symVec_bwd X w hE i ⟨D.R.rS + D.R.k - 1 - i.val, by omega⟩ rfl,

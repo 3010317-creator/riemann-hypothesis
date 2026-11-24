@@ -80,8 +80,7 @@ theorem inj_iff_surj {k U : Type} [Field k] [AddCommGroup U] [Module k U] (S : M
     have hs : Function.Surjective (Sq.restrict hSq) := by
       rintro ⟨_, y, hy, rfl⟩
       obtain ⟨p, hp, h⟩ := hsur y hy
-      refine ⟨⟨Q.mkQ p, p, hp, rfl⟩, Subtype.ext ?_⟩
-      exact ((Submodule.Quotient.eq _).mpr h).symm
+      exact ⟨⟨Q.mkQ p, p, hp, rfl⟩, Subtype.ext ((Submodule.Quotient.eq _).mpr h).symm⟩
     have hi := LinearMap.injective_iff_surjective.mpr hs
     intro p hp h
     have h0 : Sq.restrict hSq ⟨Q.mkQ p, p, hp, rfl⟩ = 0 :=
@@ -143,8 +142,7 @@ theorem graded_inj {l : ℕ} (R : RingPG k l) {g : V →ₗ[k] V} (hg : Semi R.�
 
 theorem sen_compare : ∀ {k : Type} [Field k] {l : ℕ} [Fact l.Prime] [CharP k l] (R : RingPG k l) {V : Type} [AddCommGroup V] [Module k⸨X⸩ V] [Module k⟦X⟧ V] [Module k V] [IsScalarTower k⟦X⟧ k⸨X⸩ V] [IsScalarTower k k⸨X⸩ V] [IsScalarTower k k⟦X⟧ V] [FiniteDimensional k⸨X⸩ V] (g : V →ₗ[k] V), Semi R.γ g → ∀ N₁ N₂ : Submodule k⟦X⟧ V, IsLat N₁ → IsLat N₂ → CondC g N₁ → CondC g N₂ → ∀ s : ℕ, sh s N₁ ≤ N₂ → N₂ ≤ sh (-s) N₁ → ∀ y : k, sen g N₂ y ≠ 0 → ∃ j : ℤ, |j| ≤ s ∧ sen g N₁ (y + j) ≠ 0 := by
   intro k _ l _ _ R V _ _ _ _ _ _ _ _ g hg N₁ N₂ h₁ h₂ c₁ c₂ s lo hi y hy
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   apply hy
   set S : Module.End k V := nab g - algebraMap k (Module.End k V) y with hSdef
   have hS : ∀ p, S p = nab g p - y • p := fun p => rfl
@@ -175,8 +173,7 @@ theorem sen_compare : ∀ {k : Type} [Field k] {l : ℕ} [Fact l.Prime] [CharP k
         (fun z hz hz' => graded_inj R hg h₁.1 c₁ b y hsen z hz.2 hz') (x - S p)
         ⟨N₂.sub_mem hx (st2 p hp), hp'⟩
       refine ⟨p + q, N₂.add_mem hp hq.1, ?_⟩
-      rw [map_add (f := _), ← sub_sub, Nat.cast_succ, ← add_assoc]
-      exact hq'
+      rwa [map_add (f := _), ← sub_sub, Nat.cast_succ, ← add_assoc]
   haveI := Window.finite_quot h₂.1
   refine gmult_eq_zero_of_inj (nab g) _ _ y st2 (st N₂ c₂ 1) ?_
   refine (inj_iff_surj S (N₂.restrictScalars k) ((sh 1 N₂).restrictScalars k) st2 (st N₂ c₂ 1)).mpr ?_

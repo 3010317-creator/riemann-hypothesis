@@ -154,8 +154,7 @@ theorem taylor_two {φ φ' φ'' : ℝ → ℂ} (h1 : ∀ t, HasDerivAt φ (φ' t
       have := (h1 x).fun_sub ((hasDerivAt_id x).smul_const (φ' 0))
       simpa using this.hasDerivWithinAt) a1 h0 (show t ∈ _ from ⟨neg_abs_le t, le_abs_self t⟩)
   rw [sub_zero, Real.norm_eq_abs, mul_assoc, abs_mul_abs_self, zero_smul, sub_zero] at this
-  rw [sq, sub_right_comm]
-  exact this
+  rwa [sq, sub_right_comm]
 
 theorem hasDerivAt_of_sq {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] {F : ℝ → E} {F' : E} {K : ℝ}
     (h : ∀ t, |t| ≤ 1 → ‖F t - F 0 - t • F'‖ ≤ K * t ^ 2) : HasDerivAt F F' 0 := by
@@ -283,8 +282,7 @@ theorem orbit_bound (h : Std ε σ) {a : H} (ha : Sm ε σ a) (ha0 : a ≠ 0) (N
       rw [← sigma_mul h.1 hg (hZG hy), mul_comm |B|]
       refine (ℓ.2.2 _ (mul_mem_UJ hg (hZG hy))).trans ((wt_mul_le N g y).trans ?_)
       exact mul_le_mul_of_nonneg_left ((hB ⟨y, hy, rfl⟩).trans (le_abs_self B)) (wt_pos N g).le)
-  rw [Fintype.sum_unique, ← mul_assoc] at this
-  exact this
+  rwa [Fintype.sum_unique, ← mul_assoc] at this
 
 theorem hasDerivAt_coef (h : Std ε σ) {ℓ : H →ₗ[ℂ] ℂ} (hℓ : Sobolev₂ (lieSet ε) σ ℓ) {v : H} (hv : Sm ε σ v)
     {X : Mx n} (hX : X ∈ lieSet ε) {g : Mx n} (hg : g ∈ UJset ε) (s : ℝ) :
@@ -398,8 +396,7 @@ theorem coefBound_of_casselmanWallach : GlobalTheory.Published.CasselmanWallach 
     have := hb ⟨(M : ℂ)⁻¹ • ℓ, sob_smul _ hℓ, fun g hg' => by
       rw [e, div_le_iff₀' hM]; exact hg g hg'⟩ w hw
     rw [e, div_le_iff₀ hM] at this
-    rw [mul_right_comm]
-    exact this
+    rwa [mul_right_comm]
 
 end GlobalTheory.TypeSum
 

@@ -183,8 +183,7 @@ theorem exists_isIntegral_mul_inv_pow {y : Kbar v} (hy : ¬ IsIntegral (v.adicCo
       spectralNorm (v.adicCompletion K) (Kbar v) a * spectralNorm (v.adicCompletion K) (Kbar v) b :=
     fun a b => spectralAlgNorm_mul a b
   have hy1 : 1 < spectralNorm (v.adicCompletion K) (Kbar v) y := by
-    rw [isIntegral_iff_spectralNorm_le_one, not_le] at hy
-    exact hy
+    rwa [isIntegral_iff_spectralNorm_le_one, not_le] at hy
   have hy0 : y ≠ 0 := by
     rintro rfl
     exact hy isIntegral_zero
@@ -409,8 +408,7 @@ theorem localArtin_normU : ∀ (K L Ω : Type) [Field Ω] [Field K] [NumberField
         rwa [Polynomial.hom_eval₂, map_zero] at this
       · rintro ⟨p, hp, hp'⟩
         refine ⟨p, hp, (ε : (Kbar v') →+* Kbar v).injective ?_⟩
-        rw [Polynomial.hom_eval₂, map_zero, hc]
-        exact hp'
+        rwa [Polynomial.hom_eval₂, map_zero, hc]
     let gK' : GalLoc v := ε.symm.trans (gK.trans ε)
     have hg' : Lifts ι gK' g := fun z => by
       change ε (gK (ε.symm (ε (ι'.toRingHom z)))) = ε (ι'.toRingHom _)
@@ -448,8 +446,7 @@ theorem localArtin_normU : ∀ (K L Ω : Type) [Field Ω] [Field K] [NumberField
         (localArtinMap (v.adicCompletion K) (Kbar v') (a g) ⟨y, hy⟩) = ⟨y, hy⟩ := by
       rw [HK, ← AlgEquiv.mul_apply, inv_mul_cancel, AlgEquiv.one_apply]
     have e2 := congrArg (fun y : maximalAbelianExtension (v.adicCompletion K) (Kbar v') => (y : Kbar v')) e
-    simp only [AlgEquiv.restrictNormalHom_apply] at e2
-    exact e2
+    simpa only [AlgEquiv.restrictNormalHom_apply] using e2
   have key : localArtinMap (v.adicCompletion K) (Kbar v') (a g) =
       localArtinMap (v.adicCompletion K) (Kbar v') (normUnits (v.adicCompletion K) (v'.adicCompletion L) (a' g')) := by
     refine AlgEquiv.ext fun y => Subtype.ext ?_

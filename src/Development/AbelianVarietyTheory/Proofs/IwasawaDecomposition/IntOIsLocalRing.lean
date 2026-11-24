@@ -70,8 +70,7 @@ theorem intO_isLocalRing (C : Type) [NontriviallyNormedField C] [IsUltrametricDi
   · refine Or.inr (hu _ ?_)
     have : ‖(1 : C) + (-(a : C))‖ = max ‖(1 : C)‖ ‖-(a : C)‖ :=
       IsUltrametricDist.norm_add_eq_max_of_norm_ne_norm (by rw [norm_neg, norm_one]; exact h.ne')
-    rw [norm_neg, norm_one, max_eq_left h.le, ← sub_eq_add_neg] at this
-    exact this
+    rwa [norm_neg, norm_one, max_eq_left h.le, ← sub_eq_add_neg] at this
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {X : Scheme.{0}}
   (t : SAB H X)
@@ -102,9 +101,7 @@ theorem latDR_free : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
     ext <;> simp [dualMap]
   have h3 : spMap (dualMap (RingHom.id ↥(intO C))) = 𝟙 _ := by rw [h2]; exact Spec.map_id _
   have hD0 : ∀ w, IsTanAtG t xO w → ∃! a : Fin n → ↥(intO C), IsCombAtG t xO D a w := by
-    have h := hDb _ (RingHom.id ↥(intO C))
-    simp only [h1, h3, Category.id_comp] at h
-    exact h
+    simpa only [h1, h3, Category.id_comp] using hDb _ (RingHom.id ↥(intO C))
   have hDk := fun j => isTanAtG_map t (intO C).subtype (hD j)
   refine ⟨n, fun e => spMap (dualMap (intO C).subtype) ≫ D e, hDk, hDb C _, fun cf w hw => ⟨?_, fun hc => ?_⟩⟩
   · rintro ⟨xO', hx, vO, hv, rfl⟩

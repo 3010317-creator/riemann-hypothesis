@@ -183,9 +183,7 @@ theorem exists_small_frame_mem (n : ℕ) : ∃ k : ℕ, ∀ (V : Type) [AddCommG
       (hB.trans (le_self_pow₀ hB1 (by norm_num))) W' hrank hnd' hsp'
     have hwv : ∀ i, h (w i) v = 0 := fun i => ((hmem _).1 (hw1 i).2).2
     refine ⟨Fin.cons v w, ?_, ?_, ?_⟩
-    · intro i
-      refine Fin.cases ⟨hv1, hv2⟩ (fun i => ?_) i
-      exact ⟨(hw1 i).1, ((hmem _).1 (hw1 i).2).1⟩
+    · exact fun i => Fin.cases ⟨hv1, hv2⟩ (fun i => ⟨(hw1 i).1, ((hmem _).1 (hw1 i).2).1⟩) i
     · intro i j
       refine Fin.cases ?_ (fun i => ?_) i <;> refine Fin.cases ?_ (fun j => ?_) j
       · intro hij; exact absurd rfl hij

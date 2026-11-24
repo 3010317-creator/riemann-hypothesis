@@ -243,8 +243,7 @@ theorem exists_adele_unit_congr_one : ∀ (D : D7) (m : ℕ), Odd m → ∀ (z y
       (val_le_one (GlobalTheory.SplitHeckeLabel.trace_mem_intAf hyiI v))
       (val_le_one (GlobalTheory.SplitHeckeLabel.trace_mem_intAf hrI v)) ?_
     have := congrArg (evalV D.host.F v) R1
-    simp only [map_add (f := _), map_mul, map_natCast, map_ofNat] at this
-    exact this
+    simpa only [map_add (f := _), map_mul, map_natCast, map_ofNat] using this
   have hMone : ∀ v, ¬ P v → Valued.v ((M : v.adicCompletion D.host.F)) = 1 := fun v hv =>
     le_antisymm (_root_.GlobalTheory.AdLat.valued_natCast_le_one v M) (not_lt.1 hv)
   have hMne : ∀ v, ¬ P v → (M : v.adicCompletion D.host.F) ≠ 0 := fun v hv h => by
@@ -423,8 +422,7 @@ theorem exists_int_unit_root : ∀ (D : D7) (z : (Af D.host.F ⊗[D.host.F] D.ho
     have h := congrArg (fun u : (Formalism.L2.DIV.AfE D.host.F D.host.E)ˣ =>
       ((u * Formalism.L2.DIV.conjId D.sp.cm.sig x : (Formalism.L2.DIV.AfE D.host.F D.host.E)ˣ) : Formalism.L2.DIV.AfE D.host.F D.host.E)) hxz
     simp only [Formalism.L2.DIV.h90, MonoidHom.div_apply, MonoidHom.id_apply, div_mul_cancel] at h
-    rw [Units.val_mul, hconj] at h
-    exact h
+    rwa [Units.val_mul, hconj] at h
   refine ⟨Units.map (swapEquiv D).symm.toRingHom.toMonoidHom x, ?_, ?_, ?_⟩
   · rw [GlobalTheory.IdemSupport.mem_intAE_iff, ← swapEquiv_apply]
     change swapEquiv D ((swapEquiv D).symm (x : Formalism.L2.DIV.AfE D.host.F D.host.E)) ∈ _
@@ -518,8 +516,6 @@ theorem finPart_jI (a : Ainf D.host.F ⊗[D.host.F] D.host.E) : finPart D (jI D 
   induction a using TensorProduct.induction_on with
   | zero => simp
   | tmul p q =>
-    show (sndA D.host.F (iI D.host.F p)) ⊗ₜ[D.host.F] q = 0
-    show (0 : Af D.host.F) ⊗ₜ[D.host.F] q = 0
     exact TensorProduct.zero_tmul _ _
   | add p q hp hq => rw [LinearMap.map_add (f := _), RingHom.map_add (f := _), hp, hq, add_zero]
 
@@ -527,8 +523,6 @@ theorem infPart_jF (b : Af D.host.F ⊗[D.host.F] D.host.E) : infPart D (jF D b)
   induction b using TensorProduct.induction_on with
   | zero => simp
   | tmul p q =>
-    show (fstA D.host.F (iF D.host.F p)) ⊗ₜ[D.host.F] q = 0
-    show (0 : Ainf D.host.F) ⊗ₜ[D.host.F] q = 0
     exact TensorProduct.zero_tmul _ _
   | add p q hp hq => rw [LinearMap.map_add (f := _), RingHom.map_add (f := _), hp, hq, add_zero]
 
@@ -1028,8 +1022,7 @@ theorem exists_principal_root {D : D7} (V : HSp D) (γ : GA D V) (hγ : γ ∈ G
   have hn : star d * d = 1 := by
     have := det_conj_mul V γ
     apply GlobalTheory.DetRootRows.inclR_injective (F := D.host.F) (AF D.host.F)
-    rw [map_mul, map_one, ← hc, ← hdet]
-    exact this
+    rwa [map_mul, map_one, ← hc, ← hdet]
   obtain ⟨e, he0, he⟩ : ∃ e : D.host.E, e ≠ 0 ∧ e = d * star e := by
     by_cases hd : d = -1
     · obtain ⟨a, ha⟩ := GlobalTheory.RecDict.cmData_sig_ne_id D.sp.cm
@@ -1121,8 +1114,7 @@ theorem isRat_twist : GlobalTheory.Published.RayClassFieldSt → ∀ (D : D7) (G
     (fun u hu1 hu2 h => hinj _ _ (_root_.GlobalTheory.TwistRat.Right.dd_mul_right D _ T.Q.l.M C.d.pd _ C.σ₂ δ δc hAux hTw dd' hdd2 u hu1 (hlev ▸ hu2) h))
     (wtA (κ i)) (κ i).n).1 φ' hφ'
   refine ⟨_, key, ?_⟩
-  simp only [hw]
-  exact castDict_mul hV dd φ'
+  simpa only [hw] using castDict_mul hV dd φ'
 
 end GlobalTheory.TwistRat
 end -- clump:auto

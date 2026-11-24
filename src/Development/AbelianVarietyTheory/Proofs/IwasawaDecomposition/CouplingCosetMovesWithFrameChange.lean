@@ -61,7 +61,6 @@ theorem frsF_ya_symm {X : Fields} {Pr : Primes X} {R : Ranks} {sel : HeightOneSp
   simp only [frsF, dite_eq_right hP, e1]
   show _ = (g.1.1 * r.1.1.1.2 P * ((g.2.2.1 P)⁻¹).1) ((g.2.2.1 P).1 ((r.1.1.1.2 P).symm y))
   have e2 : ((g.2.2.1 P)⁻¹).1 ((g.2.2.1 P).1 ((r.1.1.1.2 P).symm y)) = (r.1.1.1.2 P).symm y := by
-    show (g.2.2.1 P).1.symm ((g.2.2.1 P).1 _) = _
     exact LinearEquiv.symm_apply_apply _ _
   rw [LinearEquiv.mul_apply, LinearEquiv.mul_apply, e2]
   show g.1.1 y = g.1.1 ((r.1.1.1.2 P) ((r.1.1.1.2 P).symm y))
@@ -76,9 +75,7 @@ theorem invActs_cqOf : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {sel : Heigh
   · rintro ⟨_, ⟨y, hy, rfl⟩, hz⟩
     refine ⟨(g.2.2.1 P).1.symm z, ⟨y, hy, ?_⟩, LinearEquiv.apply_symm_apply _ _⟩
     rw [frsF_ya_symm Λ Θ g r P hP y] at hz
-    rw [← (g.2.2.1 P).2]
-    rw [map_smul, map_sub, LinearEquiv.apply_symm_apply]
-    exact hz
+    rwa [← (g.2.2.1 P).2, map_smul, map_sub, LinearEquiv.apply_symm_apply]
   · rintro ⟨z0, ⟨y, hy, hz⟩, rfl⟩
     refine ⟨g.1.1 y, ⟨y, hy, rfl⟩, ?_⟩
     rw [frsF_ya_symm Λ Θ g r P hP y, ← map_sub, ← map_smul]

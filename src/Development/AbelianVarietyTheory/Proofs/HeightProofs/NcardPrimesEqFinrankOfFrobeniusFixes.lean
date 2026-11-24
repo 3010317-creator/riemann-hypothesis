@@ -78,8 +78,7 @@ theorem mem_of_smul_eq (H : Subgroup (N ≃ₐ[K] N)) (𝔭 : HeightOneSpectrum 
   have hσ' : ∀ x : 𝓞 N, Ideal.Quotient.mk P (σ • x) = Ideal.Quotient.mk P x ^ q := fun x => by
     have := hσ x
     rw [hu, ← hq'] at this
-    rw [← map_pow, Ideal.Quotient.eq]
-    exact this
+    rwa [← map_pow, Ideal.Quotient.eq]
   have hσH : σ ∈ H := h σ ⟨P, hP, hPo, fun x => by
     rw [← Ideal.Quotient.eq, map_pow]; exact hσ' x⟩
   have hpow : ∀ (i : ℕ) (x : 𝓞 N), Ideal.Quotient.mk P ((σ ^ i) • x) = Ideal.Quotient.mk P x ^ (q ^ i) := by
@@ -98,8 +97,7 @@ theorem mem_of_smul_eq (H : Subgroup (N ≃ₐ[K] N)) (𝔭 : HeightOneSpectrum 
     rfl
   have h1 : σ * τ * (σ ^ i)⁻¹ ∈ H := h _ ⟨P, hP, hPo, fun x => by
     rw [← Ideal.Quotient.eq, map_pow, mul_smul, mul_smul, hσ', hτ', ← hpow, smul_inv_smul]⟩
-  have h2 := H.mul_mem (H.mul_mem (H.inv_mem hσH) h1) (H.pow_mem hσH i)
-  simpa [mul_assoc] using h2
+  simpa [mul_assoc] using H.mul_mem (H.mul_mem (H.inv_mem hσH) h1) (H.pow_mem hσH i)
 
 theorem ncard_primes_eq_finrank_of_frob_fix (K N : Type) [Field K] [NumberField K] [Field N] [NumberField N]
     [Algebra K N] [IsGalois K N] (M : IntermediateField K N) (𝔭 : HeightOneSpectrum (𝓞 K))
@@ -129,8 +127,7 @@ theorem ncard_primes_eq_finrank_of_frob_fix (K N : Type) [Field K] [NumberField 
       ext x
       simp only [f, Ideal.under, Ideal.mem_comap, Ideal.mem_inv_pointwise_smul_iff]
       have : (σ⁻¹ * τ) • algebraMap (𝓞 M) (𝓞 N) x = algebraMap (𝓞 M) (𝓞 N) x := by
-        apply RingOfIntegers.ext
-        exact e' _ (x : M).2
+        exact RingOfIntegers.ext (e' _ (x : M).2)
       rw [mul_smul, inv_smul_eq_iff] at this
       rw [this]
   have hr : Set.range f = 𝔭.asIdeal.primesOver (𝓞 M) := by

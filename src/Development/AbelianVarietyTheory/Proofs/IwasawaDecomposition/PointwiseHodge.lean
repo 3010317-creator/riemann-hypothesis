@@ -218,8 +218,7 @@ theorem modelGram_smooth_isUnit : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     have hu := isUnit_det_one_sub_map_conj _ (hw ⟨τ, h⟩)
     simp only [modelGram, dite_eq_left h]
     refine ⟨?_, ?_⟩
-    · simp only [reindex_apply]
-      exact (hA.inv hu).submatrix _ _
+    · simpa only [reindex_apply] using (hA.inv hu).submatrix _ _
     · rw [det_reindex_self]
       exact isUnit_nonsing_inv_det_iff.mpr hu
   · by_cases h' : conjEmb τ (H.rt : E) = H.rt0
@@ -229,12 +228,10 @@ theorem modelGram_smooth_isUnit : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       have hu := isUnit_det_one_sub_conjTranspose _ (hw ⟨conjEmb τ, h'⟩)
       simp only [modelGram, dite_eq_right h, dite_eq_left h']
       refine ⟨?_, ?_⟩
-      · simp only [reindex_apply]
-        exact (hA.inv hu).submatrix _ _
+      · simpa only [reindex_apply] using (hA.inv hu).submatrix _ _
       · rw [det_reindex_self]
         exact isUnit_nonsing_inv_det_iff.mpr hu
-    · simp only [modelGram, dite_eq_right h, dite_eq_right h']
-      exact ⟨mContDiffAt_const 1, by simp⟩
+    · simpa only [modelGram, dite_eq_right h, dite_eq_right h'] using ⟨mContDiffAt_const 1, by simp⟩
 
 end GlobalTheory.PointChern
 end -- clump:auto
@@ -461,9 +458,7 @@ theorem inv_one_sub_mul_conjTranspose (z : Matrix (Fin p) (Fin q) ℂ) (hu : IsU
   have hAQ : (1 - zᴴ * z) * (1 - zᴴ * z)⁻¹ = 1 := mul_nonsing_inv _ hu
   set Q := (1 - zᴴ * z)⁻¹
   have hQ : Q = 1 + zᴴ * (z * Q) := by
-    rw [Matrix.sub_mul, Matrix.one_mul, sub_eq_iff_eq_add] at hAQ
-    rw [Matrix.mul_assoc] at hAQ
-    exact hAQ
+    rwa [Matrix.sub_mul, Matrix.one_mul, sub_eq_iff_eq_add, Matrix.mul_assoc] at hAQ
   have key : z * (Q * zᴴ) = z * zᴴ + z * (zᴴ * (z * (Q * zᴴ))) := by
     nth_rewrite 1 [hQ]
     simp only [Matrix.add_mul, Matrix.mul_add, Matrix.one_mul, Matrix.mul_assoc]
@@ -747,8 +742,7 @@ theorem norm_lt_one_of_posDef {Z : Matrix m n ℂ} (hP : (1 - Zᴴ * Z).PosDef) 
   have h4 : ‖toEuclideanLin Z x‖ < 1 := by nlinarith
   refine lt_of_le_of_lt ?_ h4
   rw [l2_opNorm_def]
-  refine ContinuousLinearMap.opNorm_le_of_unit_norm h3 fun y hy => ?_
-  exact hmax (by simpa using hy)
+  exact ContinuousLinearMap.opNorm_le_of_unit_norm h3 fun y hy => hmax (by simpa using hy)
 
 theorem posDef_iff_norm_lt_one (Z : Matrix m n ℂ) : (1 - Zᴴ * Z).PosDef ↔ ‖Z‖ < 1 :=
   ⟨norm_lt_one_of_posDef, posDef_one_sub_conjTranspose_mul⟩

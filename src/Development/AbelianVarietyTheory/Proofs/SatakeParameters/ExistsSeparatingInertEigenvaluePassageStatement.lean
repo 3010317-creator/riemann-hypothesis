@@ -118,8 +118,7 @@ theorem inertFullEigenspaceSum_le_maxGenEigenspace {K : Type} [Field K] [NumberF
   unfold InertDat3.inertTypeEigenspaceSum Formalism.L2.Col.eigSum
   refine iSup₂_le fun x hx => ?_
   have h := Formalism.L2.Col.eigAt_le Dd.opAll x (Sum.inr k)
-  rw [hx.2 k] at h
-  exact h
+  rwa [hx.2 k] at h
 
 theorem maxGen_zero_top {K V : Type} [Field K] [AddCommGroup V] [Module K V] :
     (0 : Module.End K V).maxGenEigenspace 0 = ⊤ := by
@@ -608,8 +607,7 @@ theorem sep_extend {α κ K : Type} [Field K] [CharZero K] (S : Finset α) (C : 
       rw [← h] at hm
       exact hnot _ hm
     · simp only [ite_eq_right h1, ite_eq_right h2]
-      intro h
-      exact hne (hidx a ha h1 a' ha' h2 (e.injective (Subtype.ext h)))
+      exact fun h => hne (hidx a ha h1 a' ha' h2 (e.injective (Subtype.ext h)))
 
 end GlobalTheory.TrPass
 
@@ -673,8 +671,7 @@ theorem exists_inert_passage : HoweUnram → ∀ {D : D7} {G : Type} [Group G] [
   · intro j p hp p' hp' hk
     obtain ⟨k0, hk0⟩ := hk
     by_cases hC : Cons j p.2 ∧ Cons j p'.2
-    · by_contra hcon
-      push Not at hcon
+    · by_contra! hcon
       obtain ⟨hw, ha⟩ := hspec j _ hC.1
       obtain ⟨hw', ha'⟩ := hspec j _ hC.2
       have := (key j _ _ _ _ _ _ hw hw' k0.1).2 (fun y => by

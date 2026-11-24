@@ -196,8 +196,7 @@ theorem psi_mem {n : ℕ}
       (HA.mat _ _ _ x).val).map (GlobalTheory.LFun.finAdEquiv F₀ E).toRingHom =
       Formalism.UG.cT (conjFin (IsCMField.complexConj E).toRingEquiv)
         ((HA.mat _ _ _ x).val.map (GlobalTheory.LFun.finAdEquiv F₀ E).toRingHom) := by
-    refine Matrix.ext fun i j => ?_
-    exact finAdEquiv_sigR (E := E) _
+    exact Matrix.ext fun i j => finAdEquiv_sigR (E := E) _
   change Formalism.UG.cT (conjFin (IsCMField.complexConj E).toRingEquiv)
       ((HA.mat _ _ _ x).val.map (GlobalTheory.LFun.finAdEquiv F₀ E).toRingHom) *
       (HA.mat _ _ _ x).val.map (GlobalTheory.LFun.finAdEquiv F₀ E).toRingHom = 1
@@ -254,8 +253,7 @@ theorem exists_finset_double_cosets : ∀ (E : Type) [Field E] [NumberField E] [
   have hgf : Formalism.UG.cT (conjFin (IsCMField.complexConj E).toRingEquiv)
       (Matrix.GeneralLinearGroup.map (pFin E) g.1).val * (Matrix.GeneralLinearGroup.map (pFin E) g.1).val = 1 := by
     have h := congrArg (fun M => M.map (pFin E)) hg
-    rw [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)] at h
-    exact h
+    rwa [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)] at h
   have hmem : Matrix.GeneralLinearGroup.map (GlobalTheory.LFun.finAdEquiv (maximalRealSubfield E) E).symm.toRingHom
       (Matrix.GeneralLinearGroup.map (pFin E) g.1) ∈
       HR (FiniteAdeleRing (𝓞 (maximalRealSubfield E)) (maximalRealSubfield E))
@@ -281,8 +279,7 @@ theorem exists_finset_double_cosets : ∀ (E : Type) [Field E] [NumberField E] [
           (Matrix.map ((Matrix.GeneralLinearGroup.map (GlobalTheory.LFun.finAdEquiv (maximalRealSubfield E) E).symm.toRingHom)
             (Matrix.GeneralLinearGroup.map (pFin E) g.1)).val (GlobalTheory.LFun.finAdEquiv (maximalRealSubfield E) E).toRingHom) :=
       Matrix.ext fun i j => finAdEquiv_sigR (E := E) _
-    rw [e, hU]
-    exact hgf
+    rwa [e, hU]
   let u : HA (FiniteAdeleRing (𝓞 (maximalRealSubfield E)) (maximalRealSubfield E))
       (IsCMField.complexConj E : E →ₐ[maximalRealSubfield E] E) (1 : Matrix (Fin n) (Fin n) E) := ⟨_, hmem⟩
   have hu : psi E n u = Matrix.GeneralLinearGroup.map (pFin E) g.1 :=

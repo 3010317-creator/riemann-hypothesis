@@ -207,8 +207,7 @@ theorem zero_iff {κ κ' : Type} {m : ℕ} (ψ : Jet V κ m →ₐ[V] Jet V κ' 
     have h1 := AlgHom.congr_fun h (Ideal.Quotient.mk _ (MvPolynomial.X j))
     rw [aug_X, AlgHom.comp_apply] at h1
     have h2 := AlgHom.congr_fun (jetZero_eq (V := V) κ' m) (ψ (Ideal.Quotient.mk _ (MvPolynomial.X j)))
-    rw [AlgHom.comp_apply, h1, map_zero] at h2
-    exact h2
+    rwa [AlgHom.comp_apply, h1, map_zero] at h2
 
 theorem coef_sq (φ : V →+* V') {κ κ' : Type} {m : ℕ} (g : Jet V κ m →ₐ[V] Jet V κ' m)
     (g' : Jet V' κ m →ₐ[V'] Jet V' κ' m)
@@ -312,8 +311,7 @@ theorem univ_toAlg (G : Over (Sp V)) [GrpObj G] (κ : Type) (z : GlobalTheory.Po
         (∀ j, jetZeroR V κ' m (ψ (zR m j)) = 0) ∧ y = algOverHom ψ ≫ toAlg (z m) := by
   obtain ⟨h1, h2, h3⟩ := hz
   refine ⟨fun m => ?_, fun m => ?_, fun κ' m y hy => ?_⟩
-  · apply Over.OverMorphism.ext
-    exact congrArg CommaMorphism.left (h1 m)
+  · exact Over.OverMorphism.ext (congrArg CommaMorphism.left (h1 m))
   · apply Over.OverMorphism.ext
     have h := congrArg CommaMorphism.left (h2 m)
     change spMap _ ≫ (z m).left = (spMap (algebraMap V V) ≫ 𝟙 _) ≫ η[G].left at h
@@ -333,18 +331,15 @@ theorem univ_toAlg (G : Over (Sp V)) [GrpObj G] (κ : Type) (z : GlobalTheory.Po
         spMap_comp_alg]
     obtain ⟨ψ, ⟨a1, a2⟩, hu⟩ := h3 (Jet V κ' m) jetAug m (ker_aug_pow κ' m) _ hy'
     refine ⟨ψ, ⟨(zero_iff ψ).2 a1, ?_⟩, fun ψ' h' => hu ψ' ⟨(zero_iff ψ').1 h'.1, ?_⟩⟩
-    · apply Over.OverMorphism.ext
-      exact congrArg CommaMorphism.left a2
-    · apply Over.OverMorphism.ext
-      exact congrArg CommaMorphism.left h'.2
+    · exact Over.OverMorphism.ext (congrArg CommaMorphism.left a2)
+    · exact Over.OverMorphism.ext (congrArg CommaMorphism.left h'.2)
 
 variable (φ : V →+* V') (G : Over (Sp V)) [GrpObj G] (G' : Over (Sp V')) [GrpObj G'] (Fm : G'.left ⟶ G.left)
   (hP : IsGrpPullback G' G (spMap φ) Fm)
 
 include hP in
 theorem pb_ext {T : Over (Sp V')} (a b : T ⟶ G') (h : a.left ≫ Fm = b.left ≫ Fm) : a = b := by
-  apply Over.OverMorphism.ext
-  exact hP.1.hom_ext h ((Over.w a).trans (Over.w b).symm)
+  exact Over.OverMorphism.ext (hP.1.hom_ext h ((Over.w a).trans (Over.w b).symm))
 
 variable {d : ℕ} (z : GlobalTheory.PowGerm.JetPts G (Fin 1 × Fin d)) (z' : GlobalTheory.PowGerm.JetPts G' (Fin 1 × Fin d))
   (hz : ∀ m, (z' m).left ≫ Fm = spMap (jetCoef φ (Fin 1 × Fin d) m) ≫ (z m).left)

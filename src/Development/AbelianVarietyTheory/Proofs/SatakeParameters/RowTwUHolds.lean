@@ -182,8 +182,7 @@ theorem VGe_symm {w : D.what₂.places.Pl} (A B : HLat D.what₂.LL) (e : A.V �
   refine ⟨a, e.symm z, ?_, map_smul _ _ _, ha⟩
   obtain ⟨t, ht, hz⟩ := (D.mem_locW_iff w _ _).1 hz
   refine (D.mem_locW_iff w _ _).2 ⟨t, ht, (he _).2 ?_⟩
-  rw [← algebraMap_smul D.what₂.LL t, map_smul, LinearEquiv.apply_symm_apply, algebraMap_smul]
-  exact hz
+  rwa [← algebraMap_smul D.what₂.LL t, map_smul, LinearEquiv.apply_symm_apply, algebraMap_smul]
 
 end GlobalTheory.Proof.LatticeValuationBound
 
@@ -463,8 +462,7 @@ theorem colHt_eq (nD : YoungDiagram) (s : Fin (X.G.P.n' v))
     (hnu : ∀ r, (((nD.rowLen r : ℕ) : ℤ)) = X.nuv v (j + 1) s (r + 1)) (c : ℕ) :
     X.colHt v (j + 1) s c = nD.colLen c := by
   have hle : nD.colLen c ≤ NN X.G.P.m X.t (j + 1) := by
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     have h2 : c < nD.rowLen (NN X.G.P.m X.t (j + 1)) :=
       YoungDiagram.mem_iff_lt_rowLen.1 (YoungDiagram.mem_iff_lt_colLen.2 hlt)
     have h3 := hnu (NN X.G.P.m X.t (j + 1))
@@ -507,8 +505,7 @@ def fi : ZMod (X.G.P.n' v) × ℕ × Fin (NN X.G.P.m X.t j) → X.FrI j :=
   fun x => ⟨v, (toFin x.1, x.2)⟩
 
 theorem toFin_injective {n : ℕ} [NeZero n] : Function.Injective (toFin : ZMod n → Fin n) := by
-  intro a b h
-  exact ZMod.val_injective n (congrArg Fin.val h)
+  exact fun a b h => ZMod.val_injective n (congrArg Fin.val h)
 
 theorem zi_injective : Function.Injective (zi X j v) := by
   rintro ⟨s, y⟩ ⟨s', y'⟩ h
@@ -842,8 +839,7 @@ theorem ThZA_map (X : Sys p) (K : Type) [Field K] [Algebra (K0 p) K] (j : ℕ)
 theorem p_ne_zero (K : Type) [Field K] [Algebra (K0 p) K] : (p : K) ≠ 0 := by
   have h : (p : WW p) ≠ 0 := WittVector.p_nonzero p (kb p)
   have h2 := (map_ne_zero_iff _ (IsFractionRing.injective (WW p) (K0 p))).mpr h
-  have h3 := (map_ne_zero (algebraMap (K0 p) K)).mpr h2
-  simpa using h3
+  simpa using (map_ne_zero (algebraMap (K0 p) K)).mpr h2
 
 theorem geC_of_mem {X : Sys p} (Y : Pend X) (g : ℝ) (y : Y.Kc) (hy : y ∈ Y.Oc) :
     Y.geC ((p : Y.Kc) ^ ⌈g⌉ * y) g := by
@@ -1171,8 +1167,7 @@ theorem frobSet_ne' (D : D7) {p : ℕ} (hp : p.Prime) : ∃ g, g ∈ frobSet D p
 theorem hEv_of_hNeZero {D : D7} {p : ℕ} (hp : p.Prime) (hN : HNeZero D.host p) : HEv D p := by
   obtain ⟨P, hP', hL, σ, hσ, hg⟩ := Classical.epsilon_spec (frobSet_ne' D hp)
   have h1 := @hN P hP' hL σ hσ
-  rw [hg] at h1
-  exact h1
+  rwa [hg] at h1
 
 end Formalism.MainNotions.G
 
@@ -1291,8 +1286,7 @@ theorem lowS_le : ∀ (D : D7) (u : D.what₂.Word) (w : D.what₂.places.Pl)
           FOrb D j (D.what₂.places.resChar w) (true, t) - OrbitPlaces.errF L K ce j (D.what₂.places.resChar w) (true, t) else 0 := by
     refine Finset.sum_le_sum fun j hj => ?_
     by_cases hX : (D.what₂.places.resChar w : ℝ) ≤ L.sc.X'' D.R.n
-    · simp only [ite_eq_left hX]
-      exact FInert_sub_EatI X K ce hg.1 hc hev hs hj
+    · simpa only [ite_eq_left hX] using FInert_sub_EatI X K ce hg.1 hc hev hs hj
     · simp [hX]
   have hv : ((D.R.m : ℝ) - 1) * (padicValNat (D.what₂.places.resChar w) (D.mem u).C.DGam : ℝ) =
       ((D.R.m : ℝ) - 1) * WeilJacquetShalikaLaw.vDG D u w := rfl

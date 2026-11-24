@@ -93,8 +93,7 @@ theorem exponent_prime_of_ne (p : Ideal R) [p.IsPrime] (hp : p ≠ ⊥) (h : p �
   unfold exponent
   refine Associates.count_eq_zero_of_ne w.associates_irreducible
     (HeightOneSpectrum.associates_irreducible ⟨p, inferInstance, hp⟩) ?_
-  intro h1
-  exact h (associated_iff_eq.1 (Associates.mk_eq_mk_iff_associated.1 h1)).symm
+  exact fun h1 => h (associated_iff_eq.1 (Associates.mk_eq_mk_iff_associated.1 h1)).symm
 
 theorem log_valuation_of_integer (F : Type) [Field F] [Algebra R F] [IsFractionRing R F] (x : R) (hx : x ≠ 0) :
     WithZero.log (w.valuation F (algebraMap R F x)) = -(exponent w (Ideal.span {x}) : ℤ) := by
@@ -121,8 +120,7 @@ theorem exponent_relNorm_prime (v : HeightOneSpectrum (𝓞 E)) (s : Finset (Hei
       simp [w0]
     · intro w _ hw
       rw [exponent_prime_of_ne w p hp, Nat.cast_zero, mul_zero]
-      intro he
-      exact hw (HeightOneSpectrum.ext he.symm)
+      exact fun he => hw (HeightOneSpectrum.ext he.symm)
     · intro h'; exact absurd hw0 h'
   · rw [exponent_prime_of_ne v _ hq h, mul_zero, Nat.cast_zero]
     refine (Finset.sum_eq_zero fun w hw => ?_).symm

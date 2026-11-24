@@ -96,8 +96,7 @@ theorem _root_.GlobalTheory.PlaceInt.placeIdem : _root_.ReciprocityTheory.ChartR
       constructor
       · rintro ⟨y, hy, h⟩
         exact inj h ▸ hy
-      · intro h
-        exact ⟨_, h, rfl⟩
+      · exact fun h => ⟨_, h, rfl⟩
     simp only [key]
     rw [eq_comm, SetLike.ext_iff]
   by_cases hex : ∃ ψ0 : E →+* k, Q ψ0 = P
@@ -144,8 +143,7 @@ theorem _root_.GlobalTheory.PlaceInt.placeIdem : _root_.ReciprocityTheory.ChartR
       have : b - 1 = -i := by rw [hb, ← hyi]; ring
       rw [this]
       exact P.neg_mem hi
-    rw [hQ, map_sub, map_one] at this
-    exact this
+    rwa [hQ, map_sub, map_one] at this
   have hb0 : ∀ ψ, Q ψ ≠ P → σ ψ b ∈ maximalIdeal V := by
     intro ψ h
     rw [← hQ]

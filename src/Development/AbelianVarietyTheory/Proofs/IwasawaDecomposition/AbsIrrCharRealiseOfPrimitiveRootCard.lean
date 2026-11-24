@@ -148,10 +148,8 @@ theorem isChar_of_abByP : ∀ (K L : Type) [Field K] [Field L] [Algebra K L] [Ch
           exact lt_of_le_of_ne (Subgroup.card_le_card_group T)
             (fun h => hT (Subgroup.eq_top_of_card_eq T h))
         refine _root_.GlobalTheory.BI.isChar_ind K L G T ψ (ih _ hlt T rfl ?_ (_root_.GlobalTheory.BI.AbByP.subgroup G T hA) ψ hψ)
-        intro g
-        exact Subtype.ext (by simpa using hG g)
-  intro G _ _
-  exact key _ G rfl
+        exact fun g => Subtype.ext (by simpa using hG g)
+  exact fun G _ _ => key _ G rfl
 end GlobalTheory.BI
 end -- clump:auto
 end -- clump:auto
@@ -287,8 +285,7 @@ theorem card_fixedBy_quotient_eq_relIndex_of_pRegular :
       have h2 := Subgroup.zpow_mem _ hy n
       have h3 : (g⁻¹ * c * g) ^ n = g⁻¹ * c ^ n * g⁻¹⁻¹ := by
         rw [← conj_zpow, inv_inv]
-      rw [h3] at h2
-      exact h2
+      rwa [h3] at h2
     · intro hg
       have := (hN _).1 (N.inv_mem hg) c (Subgroup.mem_zpowers c)
       rw [inv_inv] at this
@@ -390,8 +387,7 @@ theorem exists_sylow_over_subgroup (G : Type) [Group G] [Finite G] (C : Subgroup
     have hcN : c ∈ N := (hN c).2 fun d hd => C.mul_mem (C.mul_mem hc hd) (C.inv_mem hc)
     refine ⟨⟨c, hcN⟩, ?_, rfl⟩
     have : QuotientGroup.mk' C' ⟨c, hcN⟩ = 1 := by
-      rw [QuotientGroup.mk'_apply, QuotientGroup.eq_one_iff]
-      exact hc
+      rwa [QuotientGroup.mk'_apply, QuotientGroup.eq_one_iff]
     change QuotientGroup.mk' C' ⟨c, hcN⟩ ∈ (P : Subgroup (N ⧸ C'))
     rw [this]
     exact one_mem _
@@ -403,8 +399,7 @@ theorem exists_sylow_over_subgroup (G : Type) [Group G] [Finite G] (C : Subgroup
     have h2 : QuotientGroup.mk' C' (h ^ p ^ k) = 1 := by
       rw [map_pow]
       exact congrArg Subtype.val hk
-    rw [QuotientGroup.mk'_apply, QuotientGroup.eq_one_iff] at h2
-    exact h2
+    rwa [QuotientGroup.mk'_apply, QuotientGroup.eq_one_iff] at h2
   · intro N' hN'
     obtain rfl : N' = N := by
       ext g
@@ -440,10 +435,8 @@ theorem exists_abelianByPrimePower_not_dvd_card_fixedBy₂ :
       ∀ d ∈ Subgroup.zpowers (x ^ p ^ k), g * d * g⁻¹ ∈ Subgroup.zpowers (x ^ p ^ k) := by
     intro g
     constructor
-    · intro hg d hd
-      exact (Subgroup.mem_normalizer_iff.1 hg d).1 hd
-    · intro h
-      exact Subgroup.mem_normalizer_fintype h
+    · exact fun hg d hd => (Subgroup.mem_normalizer_iff.1 hg d).1 hd
+    · exact fun h => Subgroup.mem_normalizer_fintype h
   refine ⟨H, ⟨p, hp, (Subgroup.zpowers (x ^ p ^ k)).subgroupOf H, ⟨?_⟩, ?_, ?_⟩, ?_⟩
   · intro n hn g
     rw [Subgroup.mem_subgroupOf] at hn ⊢
@@ -639,8 +632,7 @@ theorem isIrreducible_of_sum_char_mul_char_inv [Fintype G] {k : Type} [Field k] 
   let idI : ρ.IntertwiningMap ρ := ⟨LinearMap.id, fun g => by rw [LinearMap.id_comp, LinearMap.comp_id]⟩
   have hid0 : idI ≠ 0 := by
     obtain ⟨v, hv⟩ := exists_ne (0 : V)
-    intro e
-    exact hv (congrArg (fun φ : ρ.IntertwiningMap ρ => φ.toLinearMap v) e)
+    exact fun e => hv (congrArg (fun φ : ρ.IntertwiningMap ρ => φ.toLinearMap v) e)
   have hcG : (Fintype.card G : k) ≠ 0 := by rw [← Nat.card_eq_fintype_card]; exact hcard
   refine { exists_pair_ne := ⟨⊥, ⊤, fun e => ?_⟩, eq_bot_or_eq_top := fun U => ?_ }
   · exact (top_ne_bot : (⊤ : Submodule k V) ≠ ⊥) (congrArg Subrepresentation.toSubmodule e).symm

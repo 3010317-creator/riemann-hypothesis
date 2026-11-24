@@ -63,8 +63,7 @@ theorem card_unitri (Fr : Fin r → Fin r → Prop) (hFr : ∀ i j, Fr i j → i
     have hne : i ≠ j := (ne_of_lt hij).symm
     simp only [mk, ite_eq_right hne]
     rw [dite_eq_right]
-    intro h
-    exact absurd (hFr i j h) (not_lt.2 hij.le)
+    exact fun h => absurd (hFr i j h) (not_lt.2 hij.le)
   have hdet : ∀ f, (mk f).det = 1 := by
     intro f
     rw [Matrix.det_of_upperTriangular (fun i j hij => hlow f i j hij)]
@@ -213,10 +212,8 @@ theorem index_of_lvlTie {D : D7} {G : Type} [Group G] {Q0 : Subgroup G} {ψ0 : Q
         rw [hφ]
         exact hE PP i j
       show φ (eC g) ∈ _
-      rw [hy']
-      exact hy
-    · intro hm
-      exact ⟨_, hm, fun PP i j => (hφ _ PP i j).symm⟩
+      rwa [hy']
+    · exact fun hm => ⟨_, hm, fun PP i j => (hφ _ PP i j).symm⟩
   have hsplit := card_pairs_split (r := D.R.r) (a := D.R.rS) (c := D.R.rS + D.R.k) (by omega) hrk
   rw [Nat.add_sub_cancel_left] at hsplit
   have hP0 : Nat.card (_root_.Formalism.L2.DIV.P0 Pg D.R.r ψ).H =

@@ -86,8 +86,6 @@ theorem _root_.GlobalTheory.AlphaPair.exists_ptEquiv {f : S' ⟶ S} {F : G'.left
   · intro y
     apply Over.OverMorphism.ext
     simp [φ, ψ]
-  · intro x y
-    apply Over.OverMorphism.ext
-    exact (gp.2 (Over.mk a) x y (φ x) (φ y) rfl rfl).symm
+  · exact fun x y => Over.OverMorphism.ext (gp.2 (Over.mk a) x y (φ x) (φ y) rfl rfl).symm
 
 end GlobalTheory.AlphaPair

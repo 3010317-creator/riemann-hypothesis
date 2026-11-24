@@ -146,8 +146,7 @@ theorem exists_form_of_mem (φ : X ⟶ PSpace R N) [IsClosedImmersion φ] (J : X
   refine ⟨Finset.univ.sup n + d, fun e he => ?_⟩
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le' (le_of_add_le_right he)
   refine ⟨MvPolynomial.X a ^ k * F, (isHomogeneous_X_pow a k).mul hF, ?_, fun b => ?_⟩
-  · rw [pullForm_X_pow_mul k hF, pullRatio_self, one_pow, one_mul]
-    exact e₁
+  · rwa [pullForm_X_pow_mul k hF, pullRatio_self, one_pow, one_mul]
   · obtain ⟨l, rfl⟩ := Nat.exists_eq_add_of_le'
       ((Finset.le_sup (f := n) (Finset.mem_univ b)).trans (Nat.le_of_add_le_add_right he))
     rw [pullForm_X_pow_mul _ hF, pow_add, mul_assoc]

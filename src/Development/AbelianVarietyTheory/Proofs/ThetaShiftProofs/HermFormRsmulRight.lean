@@ -186,8 +186,7 @@ theorem block_le {g : ℕ} (Ψ : Finset (E →+* ℂ))
     · subst h1; simp [π, τ'.2]
     · subst h1
       have := (hΨ τ'.1).1 τ'.2
-      simp only [π, this, dite_eq_right, not_false_eq_true]
-      exact Subtype.ext (cc2 _)
+      simpa only [π, this, dite_eq_right, not_false_eq_true] using Subtype.ext (cc2 _)
   set q : Fin g → ℂ := fun i => ∑ j, z i * Hm i j * (starRingEnd ℂ) (z j) with hq
   have key : m = fun τ => ∑ i, if π (ty i) = τ then (q i).re else 0 := by
     refine coeff_eq Ψ hΨ _ _ fun a => ?_
@@ -213,8 +212,7 @@ theorem block_le {g : ℕ} (Ψ : Finset (E →+* ℂ))
     · simp [hi, hπρ]
     · by_cases hi' : π (ty i) = τ' <;> simp [hi, hi']
   have h5 : (∑ i, if π (ty i) = τ' ∧ ty i ≠ ρ then q i else 0).re ≥ 0 := by
-    rw [h2] at h3
-    exact h3
+    rwa [h2] at h3
   have h6 : hermForm Hm (fun j => if ty j = ρ then z j else 0) (fun j => if ty j = ρ then z j else 0) =
       ∑ i, if ty i = ρ then q i else 0 := by convert h1
   rw [h6, h4]; linarith
@@ -349,7 +347,6 @@ theorem lengths_along_flow : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
           exact map_mul τ.1 (a : E) _
         rw [e2, maj_smul]; ring) (relab c σ τ) τ' hτ
     simp only [(relab_inj c σ).eq_iff] at key
-    rw [Data.tt, one_div, inv_inv]
-    exact key
+    rwa [Data.tt, one_div, inv_inv]
 
 end GlobalTheory.ArchLen

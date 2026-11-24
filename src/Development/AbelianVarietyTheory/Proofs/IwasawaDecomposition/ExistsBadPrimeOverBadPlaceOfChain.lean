@@ -72,9 +72,7 @@ theorem exists_SBof_over : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok 
       · obtain ⟨P, hP, hPv⟩ := (key 1).2 h
         exact ⟨P, Finset.mem_union_right _ hP, hPv⟩
     obtain ⟨P, hP, hPv⟩ := hv'
-    refine ⟨P, Finset.mem_union_left _ hP, ?_⟩
-    exact hPv
-  · refine ⟨P, Finset.mem_union_right _ hP, ?_⟩
-    exact rfl
+    exact ⟨P, Finset.mem_union_left _ hP, hPv⟩
+  · exact ⟨P, Finset.mem_union_right _ hP, rfl⟩
 
 end GlobalTheory.Mem.Col2.AdT

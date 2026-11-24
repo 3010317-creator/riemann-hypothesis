@@ -67,8 +67,7 @@ theorem charpoly_dvd (y : A) (hs : (LinearMap.mulLeft E y).charpoly.Separable) (
     (hf : aeval y f = 0) : (LinearMap.mulLeft E y).charpoly ∣ f := by
   have h0 : aeval (LinearMap.mulLeft E y) f = 0 := by
     have := Polynomial.aeval_algHom_apply (Algebra.lmul E A) y f
-    rw [hf, map_zero] at this
-    exact this
+    rwa [hf, map_zero] at this
   by_cases hz : f = 0
   · rw [hz]; exact dvd_zero _
   classical
@@ -98,8 +97,7 @@ theorem adjoin_eq_top (y : A) (hs : (LinearMap.mulLeft E y).charpoly.Separable) 
     (Algebra.adjoin.powerBasis hi).finrank
   have h3 : Subalgebra.toSubmodule (Algebra.adjoin E ({y} : Set A)) = ⊤ :=
     Submodule.eq_top_of_finrank_eq (le_antisymm (Submodule.finrank_le _) (h1.trans h2.ge))
-  rw [← Algebra.toSubmodule_eq_top]
-  exact h3
+  rwa [← Algebra.toSubmodule_eq_top]
 
 theorem isReduced (y : A) (hs : (LinearMap.mulLeft E y).charpoly.Separable) : IsReduced A := by
   have h3 := adjoin_eq_top y hs

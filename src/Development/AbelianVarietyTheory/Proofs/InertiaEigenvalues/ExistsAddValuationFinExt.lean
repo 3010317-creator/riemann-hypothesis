@@ -96,8 +96,7 @@ theorem _root_.GlobalTheory.Per.Val.mem_OL_iff (LL : _root_.Formalism.BasicNotio
   · intro h
     have hl : minpoly ℚ_[l] x ∈ lifts (algebraMap ℤ_[l] ℚ_[l]) := by
       rw [lifts_iff_coeff_lifts]
-      intro n
-      exact ⟨⟨_, h n⟩, rfl⟩
+      exact fun n => ⟨⟨_, h n⟩, rfl⟩
     obtain ⟨q, hq, -, hm⟩ := lifts_and_natDegree_eq_and_monic hl (minpoly.monic hK)
     refine ⟨q, hm, ?_⟩
     rw [IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] ↥LL.1, ← eval₂_map, hq]
@@ -196,11 +195,9 @@ theorem _root_.GlobalTheory.Per.Val.vf_add (x y : _root_.Formalism.BasicNotions.
   rw [hna, hnb, hnc] at hmax
   rcases le_total a b with h | h
   · rw [min_eq_left h]
-    rw [max_eq_left ((prime_rpow_neg_le_iff b a).2 h), prime_rpow_neg_le_iff] at hmax
-    exact hmax
+    rwa [max_eq_left ((prime_rpow_neg_le_iff b a).2 h), prime_rpow_neg_le_iff] at hmax
   · rw [min_eq_right h]
-    rw [max_eq_right ((prime_rpow_neg_le_iff a b).2 h), prime_rpow_neg_le_iff] at hmax
-    exact hmax
+    rwa [max_eq_right ((prime_rpow_neg_le_iff a b).2 h), prime_rpow_neg_le_iff] at hmax
 
 open Polynomial in
 variable {l : ℕ} [Fact l.Prime] in

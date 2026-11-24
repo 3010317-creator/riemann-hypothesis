@@ -82,21 +82,18 @@ theorem mem_locW_delAtr_iff : ∀ {E K ι : Type} [Field E] [NumberField E] [Sta
         rw [← hGF]
         show actP lam (vlBdF emb (fun _ : ι => B))⁻¹ (actP lam (vlBdF emb (fun _ : ι => B)) G) = G
         rw [← polyAction_mul, inv_mul_cancel, polyAction_one₂]
-      rw [e]
-      exact hG
+      rwa [e]
     · intro h
       refine ⟨_, h, ?_⟩
       show actP lam (vlBdF emb (fun _ : ι => B)) (actP lam (vlBdF emb (fun _ : ι => B))⁻¹ F.1) = F.1
       rw [← polyAction_mul, mul_inv_cancel, polyAction_one₂]
   rw [h0, hmem, rhoVr_inv_coe]
   constructor
-  · intro h
-    exact vl_map_mem_intSpan Pl pw hval σ w lam lam' hn h
+  · exact fun h => vl_map_mem_intSpan Pl pw hval σ w lam lam' hn h
   · intro h
     obtain ⟨G, hG, hGe⟩ := vl_exists_of_mem_intSpan Pl pw hval σ w lam lam' hn h
     have hG' : actP lam (vlBdF emb (fun _ : ι => B))⁻¹ F.1 = G :=
       (MvPolynomial.map_injective σ σ.injective hGe).symm
-    rw [hG']
-    exact hG
+    rwa [hG']
 
 end GlobalTheory.WeylLocOnePlace

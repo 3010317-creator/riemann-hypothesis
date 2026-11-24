@@ -291,8 +291,7 @@ theorem extPeriodMatrix : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (a b : T
     have h := hv g
     rw [homRep_apply, hvβ] at h
     have e1 : (fun i => actSt P (g : GQ l) (vecM β i)) = vecM (β.map σ) := rfl
-    rw [e1, homUnit_mulVec] at h
-    exact h
+    rwa [e1, homUnit_mulVec] at h
   have hR : (((ρ₂ g)⁻¹ : GL b ↥(MaximalUnramifiedExtension l)) : Matrix b b ↥(MaximalUnramifiedExtension l)).map (ks P) * (ρ₂ g : Matrix b b ↥(MaximalUnramifiedExtension l)).map (ks P) = 1 := by
     rw [← Matrix.map_mul, Units.inv_mul, Matrix.map_one _ (map_zero _) (map_one _)]
   have hQ2 : (Q₂ : Matrix b b (Bst P)).map σ =
@@ -392,8 +391,7 @@ theorem coboundary_block_zero : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (n
     rw [h1, hβ g, Matrix.mulVec_sub, Matrix.mulVec_mulVec, hC, ← Matrix.mulVec_mulVec, hD]
   funext i
   have h := congrFun hv (i, ⟨0, hr⟩)
-  rw [Pi.sub_apply, blockDiagonal_map_mulVec] at h
-  exact h
+  rwa [Pi.sub_apply, blockDiagonal_map_mulVec] at h
 
 end GlobalTheory.PMon
 
@@ -623,7 +621,6 @@ theorem ratCocycle_trivial : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (n : 
     let φ : P.R.BdR →+* P.R.BdR := (P.actQdR (g : GQ l)).toAlgHom.toRingHom
     have h1 : Matrix.GeneralLinearGroup.map φ pG = pG := by
       ext i j
-      show φ (kd P _) = kd P _
       exact act_kd P g (hp i j)
     have h2 : Matrix.GeneralLinearGroup.map φ pG⁻¹ = pG⁻¹ := by rw [map_inv, h1]
     intro i j
@@ -713,8 +710,7 @@ theorem coef_unr_continuous : ∀ (l : ℕ) [Fact l.Prime] (r : ℕ), 0 < r → 
   · intro t m
     have key : ψ (e.symm ⟨((x t : ↥(MaximalUnramifiedExtension l)) : Om l), hmem t⟩) = ((x t : ↥(MaximalUnramifiedExtension l)) : Om l) := by
       have h1 := congrArg Subtype.val (e.apply_symm_apply ⟨((x t : ↥(MaximalUnramifiedExtension l)) : Om l), hmem t⟩)
-      rw [LinearEquiv.ofInjective_apply] at h1
-      exact h1
+      rwa [LinearEquiv.ofInjective_apply] at h1
     set a := e.symm ⟨((x t : ↥(MaximalUnramifiedExtension l)) : Om l), hmem t⟩
     have hxt : x t = ∑ k, a k • ω k := by
       apply Subtype.ext
@@ -810,8 +806,7 @@ theorem exists_ratForm : ∀ (l : ℕ) [Fact l.Prime] (n : Type) [Fintype n] [De
     intro i j k
     refine hcoef ↥(GK K) (fun g => (σ g : Matrix n n ↥(MaximalUnramifiedExtension l)) i j * ω k) (fun g => ?_) ?_
     · rw [map_mul, hσ.rat, hω]
-    · show Continuous fun g => (((σ g : Matrix n n ↥(MaximalUnramifiedExtension l)) i j : ↥(MaximalUnramifiedExtension l)) : Om l) * ((ω k : ↥(MaximalUnramifiedExtension l)) : Om l)
-      exact (hσ.cont i j).mul continuous_const
+    · exact (hσ.cont i j).mul continuous_const
   choose A hAc hA using hA
   let T : ↥(GK K) → Matrix (n × Fin r) (n × Fin r) ℚ_[l] := fun g x y => A x.1 y.1 y.2 g x.2
   let B : ↥(GK K) → Matrix (n × Fin r) (n × Fin r) ↥(MaximalUnramifiedExtension l) := fun g =>
@@ -850,8 +845,7 @@ theorem exists_ratForm : ∀ (l : ℕ) [Fact l.Prime] (n : Type) [Fintype n] [De
     split_ifs
     · rw [hW]; exact fr_comm (hω k) m
     · exact map_zero _
-  · intro g
-    exact hT g
+  · exact fun g => hT g
   · intro c hc hcc
     have hC : ∀ i : n, ∃ a : ↥(GK K) → Fin r → ℚ_[l], Continuous a ∧ ∀ g (m : Fin r),
         fr l m (c g i) = ∑ k, (W : Matrix (Fin r) (Fin r) ↥(MaximalUnramifiedExtension l)) m k * algebraMap ℚ_[l] ↥(MaximalUnramifiedExtension l) (a g k) :=
@@ -896,8 +890,7 @@ theorem frobeniusSemistablePow_unramifiedToBst {l : ℕ} [Fact l.Prime] (P : Loc
   | succ m ih =>
     rw [pow_succ', AlgHom.mul_apply, ih, add_comm, fr_add, fr_one]
     have := phiSt_algebraMap P (fr l m c)
-    rw [Polynomial.algebraMap_apply, Polynomial.algebraMap_apply] at this
-    exact this
+    rwa [Polynomial.algebraMap_apply, Polynomial.algebraMap_apply] at this
 
 theorem frobeniusSemistablePow_galoisAction_comm {l : ℕ} [Fact l.Prime] (P : LocPrime l) (g : GQ l) (m : ℕ) (b : Bst P) :
     (phiSt P ^ m) (actSt P g b) = actSt P g ((phiSt P ^ m) b) := by
@@ -919,8 +912,7 @@ theorem inv_entries_mem_finiteExtension_unramified {l : ℕ} [Fact l.Prime] {N :
     rw [Matrix.inv_def, ← hA, ← RingHom.map_adjugate, ← RingHom.map_det]
     simp only [Matrix.smul_apply, RingHom.mapMatrix_apply, Matrix.map_apply, smul_eq_mul, Ring.inverse_eq_inv']
     exact S.mul_mem (S.inv_mem (A.det).2) (A.adjugate i j).2
-  rw [Matrix.coe_units_inv]
-  exact hmem
+  rwa [Matrix.coe_units_inv]
 
 theorem period_resScalars : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (n : Type) [Fintype n] [DecidableEq n] (K : FinExt l) (r : ℕ)
     (σ : ↥(GK K) →* GL n ↥(MaximalUnramifiedExtension l)) (Q : GL n (Bst P)) (ρ₀ : ↥(GK K) →* GL (n × Fin r) ℚ_[l])
@@ -1445,8 +1437,7 @@ theorem rat_inv {n : Type} [Fintype n] [DecidableEq n] {r : ℕ} (p : GL n ↥(M
           rw [← Units.val_mul, mul_inv_cancel, Units.val_one, mul_one]
       _ = M * (p : Matrix n n ↥(MaximalUnramifiedExtension l)) * ((p⁻¹ : GL n ↥(MaximalUnramifiedExtension l)) : Matrix n n ↥(MaximalUnramifiedExtension l)) := (mul_assoc _ _ _).symm
       _ = _ := by rw [h1, one_mul]
-  intro i j
-  exact congrFun (congrFun h2 i) j
+  exact fun i j => congrFun (congrFun h2 i) j
 
 theorem redStep : RedStep := by
   intro l _ P AI T n _ _ K r ρ hR hD hS IH

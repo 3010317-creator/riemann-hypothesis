@@ -66,8 +66,7 @@ theorem splits_of_monic_of_valuationRing_of_isAlgClosed (O K : Type*) [CommRing 
   refine Polynomial.Splits.of_splits_map_of_injective (IsFractionRing.injective O K)
     (IsAlgClosed.splits _) fun a ha => ?_
   have hroot : Polynomial.eval₂ (algebraMap O K) a f = 0 := by
-    rw [Polynomial.mem_roots (hf.map _).ne_zero, Polynomial.IsRoot, Polynomial.eval_map] at ha
-    exact ha
+    rwa [Polynomial.mem_roots (hf.map _).ne_zero, Polynomial.IsRoot, Polynomial.eval_map] at ha
   have hint : IsIntegral O a := ⟨f, hf, hroot⟩
   obtain ⟨b, hb⟩ := IsIntegrallyClosed.algebraMap_eq_of_integral hint
   exact ⟨b, hb⟩
@@ -106,7 +105,6 @@ theorem valuationRing_henselian_and_lift_of_isAlgClosed :
   intro X f hf x hx
   have := hf
   obtain ⟨⟨y, hy⟩, hy'⟩ := reducePoint_residue_surjective f O (𝟙 _) ⟨x, by simpa using hx⟩
-  refine ⟨y, hy, ?_⟩
-  exact congrArg Subtype.val hy'
+  exact ⟨y, hy, congrArg Subtype.val hy'⟩
 
 end GlobalTheory

@@ -387,8 +387,7 @@ theorem isomOK {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (B : Base D cc δ) :
     refine LinearMap.ext_on (span_range_emb4_eq_top D) ?_
     rintro _ ⟨y, rfl⟩
     exact LinearMap.congr_fun (h1 y) u
-  intro x y
-  exact LinearMap.congr_fun (h2 x) y
+  exact fun x y => LinearMap.congr_fun (h2 x) y
 
 end
 
@@ -402,8 +401,7 @@ theorem delta_ne_zero {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (B : Base
     simp
   have h1 : B.L.ω₁ ∈ B.L.lattice.toAddSubgroup := B.L.ω₁_mem_lattice
   rw [B.lat, hz, AddSubgroup.mem_bot] at h1
-  have h2 := B.L.indep.ne_zero 0
-  exact h2 (by simpa using h1)
+  exact (B.L.indep.ne_zero 0) (by simpa using h1)
 
 theorem selfDual_La {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (hcc : TaylorLogMetric.IsCurveIdeal D cc)
     (hδ : TaylorLogMetric.IsDiscriminantTwelfthRootOfIdealLattice D cc δ) (h0 : δ ≠ 0) (N N' : ℕ) (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E))
@@ -411,8 +409,7 @@ theorem selfDual_La {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (hcc : Tayl
     IsSelfDual (formV (TaylorLogMetric.area (TaylorLogMetric.lamOf D cc δ)) D.what₂.Tau N N') (TaylorLogMetric.La D (TaylorLogMetric.tor0 D cc δ) L L') := by
   have hI := hermitian_form_integral_values D cc hcc δ hδ h0 N N' L L' hA
   apply le_antisymm
-  · intro v hv
-    exact self_dual_lattice D cc hcc δ hδ h0 N N' L L' hA v (fun y hy => hv y hy)
+  · exact fun v hv => self_dual_lattice D cc hcc δ hδ h0 N N' L L' hA v (fun y hy => hv y hy)
   · intro v hv y hy
     obtain ⟨a, b, -, hab⟩ := hI v hv y hy
     refine ⟨b, ?_⟩
@@ -507,8 +504,7 @@ theorem reix_pow {n : Type} [Fintype n] (Λ : AddSubgroup (n → ℂ)) :
   constructor
   · rintro ⟨u, hu, rfl⟩ a
     exact hu (e4.symm a).1 (e4.symm a).2
-  · intro hz
-    exact ⟨(reix n).symm z, fun i j => hz (e4 (i, j)), (reix n).apply_symm_apply z⟩
+  · exact fun hz => ⟨(reix n).symm z, fun i j => hz (e4 (i, j)), (reix n).apply_symm_apply z⟩
 
 theorem reix_isom (L : PeriodPair) (n : Type) [Fintype n] [DecidableEq n] :
     IsIsom (formV (Formalism.L2.Th1.F.area L) n 2 2) (matH (blk4 (hOne L n)))
@@ -521,8 +517,7 @@ theorem reix_isom (L : PeriodPair) (n : Type) [Fintype n] [DecidableEq n] :
   rw [Fintype.sum_prod_type, Finset.sum_comm]
   refine Finset.sum_congr rfl fun τ _ => ?_
   have := Equiv.sum_comp e4.symm (fun p : Fin 2 × Fin 2 => x τ p.1 p.2 * conj (y τ p.1 p.2))
-  rw [Fintype.sum_prod_type] at this
-  exact this
+  rwa [Fintype.sum_prod_type] at this
 
 variable {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ}
 
@@ -596,8 +591,7 @@ theorem int_mem_inverse_half_different {x : D.host.E} (hx : IsIntegral ℤ x) : 
   have h2 : ((⟨x, hx⟩ : 𝓞 D.host.E) • (1 : D.host.E)) ∈ (D.host.AA0 : Submodule (𝓞 D.host.E) D.host.E) :=
     Submodule.smul_mem _ _ h1
   have e : ((⟨x, hx⟩ : 𝓞 D.host.E) • (1 : D.host.E)) = x := by rw [Algebra.smul_def, mul_one]; rfl
-  rw [e] at h2
-  exact h2
+  rwa [e] at h2
 
 theorem exists_nat_clearing_order_denominators (D : D7) : ∃ k : ℕ, 0 < k ∧ ∀ a ∈ D.host.AA0, IsIntegral ℤ ((k : D.host.E) * a) := by
   obtain ⟨k, hk, h⟩ := FL.exists_int_clearing_order_denominators D
@@ -652,8 +646,7 @@ theorem betaSemi (hcc : TaylorLogMetric.IsCurveIdeal D cc) (hδ : TaylorLogMetri
   rintro _ ⟨z, hz, rfl⟩
   refine ⟨cmTheta 1 D.host.d • z, fun a => ?_, map_smul B.gC _ z⟩
   have := lamMM_smul (AR.om D) (hz a)
-  rw [← theta_eq] at this
-  exact this
+  rwa [← theta_eq] at this
 
 theorem up : ∃ N : ℕ, 0 < N ∧
     ∀ x ∈ imgLat (B.gC : (Fin 4 × D.what₂.Tau → ℂ) →ₗ[ℂ] (Fin 4 × D.what₂.Tau → ℂ)) (pow4 B.lamM),

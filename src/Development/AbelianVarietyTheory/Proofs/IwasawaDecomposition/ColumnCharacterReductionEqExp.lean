@@ -157,8 +157,7 @@ theorem exists_nat_sub_mem {A : Type} [CommRing A] (J : Ideal A) {p : ℕ} (hp :
   refine ⟨(e.symm (Ideal.Quotient.mk J a)).val, ?_⟩
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_sub, sub_eq_zero, map_natCast]
   have h2 := map_natCast e (e.symm (Ideal.Quotient.mk J a)).val
-  rw [ZMod.natCast_zmod_val, RingEquiv.apply_symm_apply] at h2
-  exact h2
+  rwa [ZMod.natCast_zmod_val, RingEquiv.apply_symm_apply] at h2
 
 theorem columnCharacter_reduction_eq_exp (Ch : Chars X Pr m) (hPr : Pr.Ok) (cm : CMData X.F X.E) (σ₀ : X.K →+* ℂ) (xi : X.E)
     (hW : Ch.WeilTied σ₀ xi) (t : 𝓞 X.E) (ht : xi * (t : X.E) = 1) (G : GLoc X.F X.E cm.sig Pr.g) (hpi : G.piG = Pr.piG)
@@ -224,8 +223,7 @@ theorem columnCharacter_reduction_eq_exp (Ch : Chars X Pr m) (hPr : Pr.Ok) (cm :
         rw [hz]
       rw [e, Examples₂.adicCompl_val_algebraMap]
       exact (HeightOneSpectrum.valuation_lt_one_iff_mem (K := X.F) v _).2 hn
-    rw [map_sub, sub_eq_zero, map_natCast] at h1
-    exact h1
+    rwa [map_sub, sub_eq_zero, map_natCast] at h1
   rw [hres, hpsi k v h w' hunder n]
   have hfx : f xi * f (t : X.E) = 1 := by rw [← map_mul, ht, map_one]
   have hc' : Valued.v (f (algebraMap X.F X.E (c : X.F)) - f xi) < 1 := by
@@ -267,8 +265,7 @@ theorem columnCharacter_reduction_eq_exp (Ch : Chars X Pr m) (hPr : Pr.Ok) (cm :
   have hq : (qOf w'.1 : ℂ) = ((Pr.g k : ℕ) : ℂ) := by
     show ((Ideal.absNorm w.asIdeal : ℕ) : ℂ) = _
     rw [hwN]
-  rw [hq] at hfin
-  exact hfin
+  rwa [hq] at hfin
 
 end Generic
 

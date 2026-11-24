@@ -147,8 +147,7 @@ theorem valued_eq_intValuation (y : 𝓞 E) (hy : y ≠ 0) : Valued.v (φ y) = P
   have h0 : P.intValuation y ≠ 0 := P.intValuation_ne_zero y hy
   have hle : WithZero.log (P.intValuation y) ≤ 0 := by
     have := P.intValuation_le_one y
-    rw [← WithZero.exp_log h0, ← WithZero.exp_zero, WithZero.exp_le_exp] at this
-    exact this
+    rwa [← WithZero.exp_log h0, ← WithZero.exp_zero, WithZero.exp_le_exp] at this
   have key : P.intValuation y = WithZero.exp (-((WithZero.log (P.intValuation y)).natAbs : ℤ)) := by
     rw [← WithZero.exp_log h0]
     congr 1
@@ -211,16 +210,14 @@ theorem idemAt_mul_eq_zero {e f : AE D} {P Q : HeightOneSpectrum (𝓞 D.host.E)
     · have h2 : π (e - e * f) = 0 := by
         rw [map_sub, h0, GlobalTheory.SplitLinear.chart_e hee hπ, sub_self]
       have := (hπ.2.1 _).1 h2
-      rw [mul_sub, ← mul_assoc, hee, sub_eq_zero] at this
-      exact this
+      rwa [mul_sub, ← mul_assoc, hee, sub_eq_zero] at this
   have h2 : f = e * f := by
     have hi : IsIdempotentElem (ρ (e * f)) := by
       unfold IsIdempotentElem; rw [← map_mul, hg]
     rcases IsIdempotentElem.iff_eq_zero_or_one.1 hi with h0 | h0
     · exfalso; apply hne
       have := (hρ.2.1 (e * f)).1 h0
-      rw [mul_comm e f, ← mul_assoc, hff, mul_comm] at this
-      exact this
+      rwa [mul_comm e f, ← mul_assoc, hff, mul_comm] at this
     · have h2 : ρ (f - e * f) = 0 := by
         rw [map_sub, h0, GlobalTheory.SplitLinear.chart_e hff hρ, sub_self]
       have := (hρ.2.1 _).1 h2

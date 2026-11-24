@@ -68,8 +68,7 @@ theorem hasRes_mk_iff {P : HeightOneSpectrum (𝓞 E)} {z : P.adicCompletion E} 
       ring
     rw [e]
     exact Valuation.map_add_lt _ h h2
-  · intro h
-    exact ⟨r, rfl, h⟩
+  · exact fun h => ⟨r, rfl, h⟩
 
 theorem hasRes_le_one {P : HeightOneSpectrum (𝓞 E)} {z : P.adicCompletion E} {c : 𝓞 E ⧸ P.asIdeal}
     (h : HasRes P z c) : Valued.v z ≤ 1 := by
@@ -168,8 +167,7 @@ theorem isPointOf_last_coordinate_dilation_one_prime_alt : ∀ (F E : Type) [Fie
       ∀ i, (((δ⁻¹ : GL (Fin n) (AfE F E)) : Matrix (Fin n) (Fin n) (AfE F E)) *ᵥ z) i ∈ RInt F E := by
     intro z
     constructor
-    · intro hz i
-      exact PtExist.mulVec_int hδi' hz i
+    · exact fun hz i => PtExist.mulVec_int hδi' hz i
     · intro hz i
       have := PtExist.mulVec_int hδi hz i
       rwa [Matrix.mulVec_mulVec, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.one_mulVec] at this
@@ -226,8 +224,7 @@ theorem isPointOf_last_coordinate_dilation_one_prime_alt : ∀ (F E : Type) [Fie
           have := hδr i l hi
           by_cases hl : l = i
           · rw [ite_eq_left hl, ← hcr, hasRes_mk_iff] at this
-            rw [ite_eq_left hl]
-            exact this
+            rwa [ite_eq_left hl]
           · rw [ite_eq_right hl] at this
             rw [ite_eq_right hl, sub_zero]
             exact hasRes_lt_one this)

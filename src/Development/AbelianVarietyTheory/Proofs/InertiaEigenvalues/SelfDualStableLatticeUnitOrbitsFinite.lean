@@ -205,10 +205,8 @@ theorem exists_hull : ∀ (K : UQ) (B : InvAlg K) (x : B.A) (c : K.O), c ≠ 0 �
       exact Submodule.mul_mem_mul (show a * u ∈ Λ from (integralClosure K.O B.A).mul_mem ha hu') hl
     · intro p q hp hq
       rw [mul_add]; exact add_mem hp hq
-  · intro y hy
-    exact hLJ ((hdual y).mpr fun z hz => hy z (hLJ hz))
-  · intro y hy z hz
-    exact (hdual (γ * y)).mp (hcJ y hy) (γ * z) (hcJ z hz)
+  · exact fun y hy => hLJ ((hdual y).mpr fun z hz => hy z (hLJ hz))
+  · exact fun y hy z hz => (hdual (γ * y)).mp (hcJ y hy) (γ * z) (hcJ z hz)
 
 end GlobalTheory.HullLat
 end -- clump:auto
@@ -267,8 +265,7 @@ theorem finite_spec [IsDedekindDomain (integralClosure K.O L)] :
     rw [Ideal.dvd_iff_le, Ideal.map_le_iff_le_comap]
     have hp : (v.asIdeal.comap (algebraMap K.O C)).IsPrime := Ideal.comap_isPrime _ _
     have hne : v.asIdeal.comap (algebraMap K.O C) ≠ ⊥ := by
-      intro h
-      exact v.ne_bot (Ideal.eq_bot_of_comap_eq_bot h)
+      exact fun h => v.ne_bot (Ideal.eq_bot_of_comap_eq_bot h)
     have hmax := hp.isMaximal hne
     rw [IsLocalRing.eq_maximalIdeal hmax]
   have := Ideal.finite_factors hI
@@ -312,8 +309,7 @@ theorem ker_valHom [IsDedekindDomain (integralClosure K.O L)] [IsFractionRing (i
     constructor
     · intro h
       rw [h, WithZero.coe_one]
-    · intro h
-      exact WithZero.coe_injective (h.trans WithZero.coe_one.symm)
+    · exact fun h => WithZero.coe_injective (h.trans WithZero.coe_one.symm)
   rw [h1]
   show _ ↔ IsIntegral K.O (x : L) ∧ IsIntegral K.O ((x⁻¹ : Lˣ) : L)
   rw [key, key]
@@ -805,8 +801,7 @@ theorem mem_stabLat_iff (t : Aˣ) (L : Submodule O A) : t ∈ stabLat O L ↔ t 
     constructor
     · rintro ⟨b, hb, rfl⟩
       rw [← mul_assoc, Units.inv_mul, one_mul]; exact hb
-    · intro h
-      exact ⟨_, h, by rw [← mul_assoc, Units.mul_inv, one_mul]⟩
+    · exact fun h => ⟨_, h, by rw [← mul_assoc, Units.mul_inv, one_mul]⟩
   constructor
   · intro ht
     ext y
@@ -853,8 +848,7 @@ theorem relIndex_ne_zero_of_between (K : UQ) (B : InvAlg K) (L : Submodule K.O B
           = algebraMap K.O B.A c * algebraMap K.O B.A c * (((u : B.Aˣ) : B.A) * (((u : B.Aˣ)⁻¹ : B.Aˣ) : B.A)) * y := by ring
         _ = _ := by rw [Units.mul_inv, mul_one]
     · rintro _ ⟨y, hy, rfl⟩
-      simp only [LinearMap.mulLeft_apply]
-      exact h _ hu.1 y hy
+      simpa only [LinearMap.mulLeft_apply] using h _ hu.1 y hy
   rw [Subgroup.relIndex, hsub]
   haveI : Finite (MulAction.orbit G L) := horb.to_subtype
   haveI : Finite (G ⧸ MulAction.stabilizer G L) := Finite.of_equiv _ (MulAction.orbitEquivQuotientStabilizer G L)
@@ -965,8 +959,7 @@ theorem orbits_finite : ∀ (K : UQ) (B : InvAlg K), B.P.Separable → ∀ x : B
     rintro t ⟨hs, -⟩
     refine ⟨isIntegral_of_isLat_stable L hL.1 (t : B.A) fun y hy => (hs y).mp hy, ?_⟩
     refine isIntegral_of_isLat_stable L hL.1 _ fun y hy => (hs _).mpr ?_
-    rw [← mul_assoc, Units.mul_inv, one_mul]
-    exact hy
+    rwa [← mul_assoc, Units.mul_inv, one_mul]
 
 end GlobalTheory.UnitLemma.OrbitFinite
 end -- clump:auto

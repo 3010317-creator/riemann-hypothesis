@@ -92,8 +92,7 @@ theorem disc (r R : ℝ) (hr : 0 < r) (hrR : r < R) (hR : R < 1) :
     constructor
     · rintro ⟨hw, hw0⟩
       refine ⟨(w - c) / a, ⟨?_, by simpa [hsurj] using hw0⟩, hsurj w⟩
-      rw [norm_div, Complex.norm_real, Real.norm_of_nonneg ha.le, div_le_iff₀ ha]
-      exact hw
+      rwa [norm_div, Complex.norm_real, Real.norm_of_nonneg ha.le, div_le_iff₀ ha]
     · rintro ⟨z, ⟨hz, hz0⟩, rfl⟩
       refine ⟨?_, hz0⟩
       rw [hφn, mul_comm]
@@ -104,8 +103,7 @@ theorem disc (r R : ℝ) (hr : 0 < r) (hrR : r < R) (hR : R < 1) :
   simp only [hord, Function.comp_apply (f := F) (g := φ) (x := 0), hφ0] at h2 h3
   rw [hset]
   refine ⟨h1.image _, ?_, fun s hs hs0 => ?_⟩
-  · rw [finsum_mem_image hinj.injOn]
-    exact h2
+  · rwa [finsum_mem_image hinj.injOn]
   · obtain ⟨z, rfl⟩ : ∃ z, φ z = s := ⟨_, hsurj s⟩
     rw [finsum_mem_image hinj.injOn]
     rw [hφn, mul_comm] at hs

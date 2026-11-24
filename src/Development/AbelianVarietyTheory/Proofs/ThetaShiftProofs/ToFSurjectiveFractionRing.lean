@@ -459,8 +459,7 @@ theorem phiRel_constFam (hy : p.y = e q₀.y) (hm : p.g.b.left ≫ φ = spMap f 
       MulZeroClass.zero_mul]
   have fin := eq_constFam hW F hG hj (s := (((κ * ξ : Fˣ)⁻¹ : Fˣ) : F) • t) (s₀ := t₀)
     (by rw [map_smul, comp, smul_smul, Units.inv_mul, one_smul]) (fun χ hχ => by rw [map_smul, off χ hχ, smul_zero])
-  rw [← fin, smul_smul, Units.mul_inv, one_smul]
-  exact hrel
+  rwa [← fin, smul_smul, Units.mul_inv, one_smul]
 
 end Main
 
@@ -516,8 +515,7 @@ theorem exists_transport (hG : GlobalFnsSt) {j : ℕ} (q : QkPt a.D₀ F j) (hd 
     rw [← zpow_add, ← add_mul]
     simp
   · have := hdn j h
-    simp only [Int.mul_ediv_cancel' (hd _)] at this
-    exact this
+    simpa only [Int.mul_ediv_cancel' (hd _)] using this
   · have := hdn 1 q.g
     simp only [Nat.cast_one, _root_.one_mul] at this
     exact (gtRel_zpow_iff (toF_X_ne_zero (k := k) F) _ _ _).1 this

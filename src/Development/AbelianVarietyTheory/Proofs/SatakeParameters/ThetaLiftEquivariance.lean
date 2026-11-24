@@ -180,8 +180,7 @@ theorem minf_le_leftInv {V : Formalism.BasicNotions.TH.HSp D} {n : ℕ} {Sp : D.
     (θ : D.what₂.Tau → (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ))
     (PW : Formalism.IndefR.principalLevelFrame.RowPsi V n) (M : Formalism.IndefR.Mult.DSModel V Sp) :
     Formalism.IndefR.principalLevelFrame.Minf θ PW M ≤ LeftInvM M := by
-  refine iSup_le fun N => Submodule.span_le.2 fun T hT v γ hγ x => ?_
-  exact (hT.aut v).left γ hγ x
+  exact iSup_le fun N => Submodule.span_le.2 fun T hT v γ hγ x => (hT.aut v).left γ hγ x
 
 theorem yv_apply {j : Fin D.R.m} {j' : ℕ} {hj : j.1 + 1 = j'} {Y : RowMod D P.rep j'} (hc : GlobalTheory.NJoin.IsCanon X j hj Y)
     (y : ↥Y.C) (x : GA D (Wc D j)) :

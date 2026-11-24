@@ -93,8 +93,7 @@ theorem quad_mul {S : AddSubgroup M} {f g : M → ℂ} (hf : Quad S f) (hg : Qua
 
 theorem quad_conj {S : AddSubgroup M} {f : M → ℂ} (hf : Quad S f) : Quad S (fun x => conj (f x)) := by
   refine ⟨fun x hx => mu_conj (hf.1 x hx), fun x hx y hy z hz => ?_⟩
-  have h1 := congrArg conj (hf.2 x hx y hy z hz)
-  simpa only [map_mul] using h1
+  simpa only [map_mul] using congrArg conj (hf.2 x hx y hy z hz)
 
 theorem quad_mono {S S' : AddSubgroup M} {f : M → ℂ} (h : S' ≤ S) (hf : Quad S f) : Quad S' f :=
   ⟨fun x hx => hf.1 x (h hx), fun x hx y hy z hz => hf.2 x (h hx) y (h hy) z (h hz)⟩
@@ -184,8 +183,7 @@ theorem chr_eq_one {y z : Matrix κ ι ℚ} {N : ℕ} (hy : IntM ((N : ℚ) • 
   obtain ⟨n, hn⟩ := IsIntegrallyClosed.isIntegral_iff.mp h
   unfold chr
   rw [← hn, mul_comm]
-  simp only [eq_intCast, Rat.cast_intCast]
-  exact Complex.exp_int_mul_two_pi_mul_I _
+  simpa only [eq_intCast, Rat.cast_intCast] using Complex.exp_int_mul_two_pi_mul_I _
 
 theorem isSB_mul_chr {φ : Matrix κ ι ℚ → ℂ} (h : IsSB φ) (y : Matrix κ ι ℚ) :
     IsSB (fun x => φ x * chr y x) := by

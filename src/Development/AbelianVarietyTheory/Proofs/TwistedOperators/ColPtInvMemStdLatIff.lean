@@ -143,8 +143,7 @@ theorem finEmb_mem_stabGL : ∀ {D : D7} {A B : HSp D} {c : ℕ} {ε : D.host.E}
       funext k
       exact congrFun (congrFun d.perp k) p)
     have := congrArg (toEAf D) (congrFun hx i)
-    rw [RingHom.map_mulVec] at this
-    exact this
+    rwa [RingHom.map_mulVec] at this
   have hK : ∀ z ∈ Formalism.L2.Herm.hatL (F := D.host.F) Λ, Y.1 *ᵥ z ∈ Formalism.L2.Herm.hatL (F := D.host.F) Λ :=
     fun z hz => (hy z).1 hz
   have hKi : ∀ z ∈ Formalism.L2.Herm.hatL (F := D.host.F) Λ, (Y⁻¹).1 *ᵥ z ∈ Formalism.L2.Herm.hatL (F := D.host.F) Λ :=
@@ -321,8 +320,7 @@ theorem colPt_inv_mem_stdLat_iff : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc :
       Formalism.UG.stabGL (Formalism.L2.Herm.hatL (F := D.host.F) (G.Λ (.top D.R.m))) := by
     rw [e]; exact _root_.GlobalTheory.FinEmbLat.finEmb_mem_stabGL G.sp.topDec _ k h1
   have h3 := conj_stab S.N (X := .top D.R.m) (by simp [DefNode]) _ h2
-  have h4 := topLast_stab S.N _ h3
-  exact actO_inv_mem_latO_iff _ _ _ _ _ h4 x
+  exact actO_inv_mem_latO_iff _ _ _ _ _ (topLast_stab S.N _ h3) x
 
 end GlobalTheory.LastColLat
 end -- clump:auto

@@ -73,9 +73,7 @@ theorem exists_algHom_of_specializes_genericPoint :
             rw [e]
             rfl
         _ = spMap (algebraMap F K) := hq
-    have h2 := Spec.map_injective h1
-    exact congrArg CommRingCat.Hom.hom h2
-  refine ⟨{ ψ₀ with commutes' := fun a => congrArg (fun g : F →+* K => g a) hc }, ?_⟩
-  exact e.symm
+    exact congrArg CommRingCat.Hom.hom (Spec.map_injective h1)
+  exact ⟨{ ψ₀ with commutes' := fun a => congrArg (fun g : F →+* K => g a) hc }, e.symm⟩
 
 end GlobalTheory.FlagBundle

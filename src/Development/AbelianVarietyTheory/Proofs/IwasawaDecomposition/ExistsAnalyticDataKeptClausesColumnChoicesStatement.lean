@@ -164,8 +164,7 @@ theorem plEq_conjPl (D : D7) (w : D.what₂.places.Pl) :
   change _ ↔ x ∈ (D.plEq w).asIdeal.map (Formalism.DivisionValues.cO D.what₂.LL)
   rw [Ideal.mem_map_of_equiv]
   constructor
-  · intro h
-    exact ⟨_, h, Formalism.DivisionValues.ValuationRepresentative.cO_cO x⟩
+  · exact fun h => ⟨_, h, Formalism.DivisionValues.ValuationRepresentative.cO_cO x⟩
   · rintro ⟨y, hy, rfl⟩
     rwa [Formalism.DivisionValues.ValuationRepresentative.cO_cO]
 
@@ -215,8 +214,7 @@ theorem GlobalTheory.Mem.R3.tupL_of_twisted : ∀ (X : Stages) (px : PreX X.B.to
       · rintro ⟨w', hw', e⟩
         rw [X.toD7.plEq.injective e] at hw'
         exact (Set.Finite.mem_toFinset hWf).1 hw'
-      · intro h
-        exact ⟨w, (Set.Finite.mem_toFinset hWf).2 h, rfl⟩
+      · exact fun h => ⟨w, (Set.Finite.mem_toFinset hWf).2 h, rfl⟩
     · show I.xi (ixOf I (usedOf I T Wt) (muP (X.toD7.plEq.symm (X.toD7.plEq w)))) = _
       rw [hss]
       by_cases h : w ∈ Wt
@@ -231,8 +229,7 @@ theorem GlobalTheory.Mem.R3.tupL_of_twisted : ∀ (X : Stages) (px : PreX X.B.to
       · rintro ⟨w', hw', rfl⟩
         rw [Equiv.symm_apply_apply]
         exact (Set.Finite.mem_toFinset hWf).1 hw'
-      · intro h
-        exact ⟨_, (Set.Finite.mem_toFinset hWf).2 h, Equiv.apply_symm_apply _ _⟩
+      · exact fun h => ⟨_, (Set.Finite.mem_toFinset hWf).2 h, Equiv.apply_symm_apply _ _⟩
     refine ⟨?_, ?_, ?_, ?_, ?_⟩
     · intro v hv
       rw [hμ0]
@@ -301,8 +298,7 @@ theorem models_seed : GlobalTheory.Published.DiscreteSeriesExists → ∀ D : D7
     ∀ (Ks : Type) [Field Ks] [Algebra Ks D.what₂.LL], (∀ x : D.host.E, ∃ y : Ks, algebraMap Ks D.what₂.LL y = D.embE x) →
       ∃ MW : ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), DSModel (Wc D i) (parAt (Wc D i) σ),
         Formalism.IndefR.Seed.ModWAt D.what₂.embLL MW ∧ GlobalTheory.RealGeo.FrameKs Ks MW := by
-  intro h D _
-  exact exists_models h D
+  exact fun h D _ => exists_models h D
 
 end GlobalTheory.ChainModels
 end -- clump:auto
@@ -366,8 +362,7 @@ theorem psiV_int (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (-1)) (v
   · show evalV D.host.F w (singleV D.host.F v y) ∈ _
     by_cases hw : w = v
     · subst hw
-      rw [GlobalTheory.SplitIdem.evalV_singleV_same]
-      exact hy
+      rwa [GlobalTheory.SplitIdem.evalV_singleV_same]
     · rw [GlobalTheory.SplitIdem.evalV_singleV_ne _ v _ hw]
       exact zero_mem _
 
@@ -535,8 +530,7 @@ theorem edgeSum_eq_supSum {κ : Type} [CommRing κ] {r : ℕ} (g : GL (Fin r) κ
   split_ifs with h
   · rw [Finset.sum_eq_single ⟨i.1 + 1, h⟩]
     · exact ite_eq_left (show supEdge i ⟨i.1 + 1, h⟩ from rfl)
-    · intro j _ hj
-      exact ite_eq_right (fun hj' => hj (Fin.ext hj'))
+    · exact fun j _ hj => ite_eq_right (fun hj' => hj (Fin.ext hj'))
     · intro hn; exact absurd (Finset.mem_univ _) hn
   · refine Finset.sum_eq_zero fun j _ => ?_
     refine ite_eq_right (fun hj => ?_)

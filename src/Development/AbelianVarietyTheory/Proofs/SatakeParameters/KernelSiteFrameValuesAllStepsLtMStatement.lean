@@ -257,8 +257,7 @@ theorem applyFrame : Formalism.L2.KerInert.SecondKernelDifference.ApplyFrame := 
   · refine Finset.sum_congr rfl fun α _ => ?_
     rw [MvPolynomial.coeff_map, map_mul, MvPolynomial.eval_C, mul_assoc]
   · intro α _ hα
-    rw [MvPolynomial.notMem_support_iff] at hα
-    rw [MvPolynomial.coeff_map] at hα
+    rw [MvPolynomial.notMem_support_iff, MvPolynomial.coeff_map] at hα
     rw [map_mul, hα, zero_mul]
 
 theorem entQFrame : Formalism.L2.KerInert.SecondKernelDifference.EntQFrame := by
@@ -383,8 +382,7 @@ theorem GlobalTheory.TwV.DelA.actC_inv_read : ∀ {p : ℕ} [Fact p.Prime] (X : 
     split_ifs at hb with h2 <;> split_ifs with h1
     · exact absurd h2 ((hev v s).1 h1)
     · simp only [Matrix.map_apply, Matrix.transpose_apply] at hb
-      rw [hinv] at hb
-      exact hb
+      rwa [hinv] at hb
     · simp only [Matrix.map_apply] at hb
       have e : ((atR D M⁻¹ (pos ⟨v, s⟩))⁻¹ : GL (Fin (D.R.N (j + 1))) ℂ) = atR D M (pos ⟨v, s⟩) := by rw [← hinv, inv_inv]
       refine Eq.trans ?_ hb
@@ -400,8 +398,7 @@ theorem GlobalTheory.TwV.DelA.actC_inv_read : ∀ {p : ℕ} [Fact p.Prime] (X : 
   unfold actC
   rw [map_natActR]
   unfold natActR
-  rw [LinearMap.smul_apply, AlgHom.toLinearMap_apply]
-  rw [hsc, hsub]
+  rw [LinearMap.smul_apply, AlgHom.toLinearMap_apply, hsc, hsub]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ComplexBlockActionInvReadAsSubstitution =====
@@ -762,8 +759,7 @@ theorem target_scalar : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H
     rw [map_ne_zero, ← Matrix.GeneralLinearGroup.val_det_apply]
     exact Units.ne_zero _
   have hq : ∀ τ, embT D τ (gMat J (j + 1) hj 1).det ≠ 0 := fun τ => by
-    rw [map_ne_zero]
-    exact hq0
+    rwa [map_ne_zero]
   have hm : ∀ τ, embT D τ (mM d (j + 1) hj La').1.det = embT D τ (uB J (j + 1) hj La'.1).1.det / embT D τ γ.1.det := fun τ => by
     rw [eq_div_iff (hg0 τ), ← map_mul, hdm]
   simp only [hm]
@@ -1081,9 +1077,7 @@ theorem tieDel_all_steps : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv 
   have hj1 : j + 1 ≤ D.R.m := hj
   by_cases hne : Nonempty (Lv.comp j) ∧ Nonempty (Lv.comp (j + 1))
   swap
-  · refine ⟨1, norm_one, ?_⟩
-    intro La _ x c' L' _
-    exact absurd ⟨⟨La.1⟩, ⟨c'⟩⟩ hne
+  · exact ⟨1, norm_one, (fun La _ x c' L' _ => absurd ⟨⟨La.1⟩, ⟨c'⟩⟩ hne)⟩
   obtain ⟨⟨a⟩, ⟨a'⟩⟩ := hne
   obtain ⟨hn1, -, hsame⟩ := GlobalTheory.T.stepDeterminantConstant_unit_independent S hPos ι hι j hj1 a a'
   set cK := cKs S ι j hj1 a a' with hcK
@@ -1131,8 +1125,7 @@ theorem tieDel_all_steps : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv 
           ι (d.uS S j La) * ι (d.uT S j La') = scT d S ι j La'.1 La'.2 := by
       intro La La' _ _
       have e := _root_.GlobalTheory.TwV.DelA.unit_mul_scal_eq_scT S hPos ι hι d j hj1 La La'
-      rw [hsame] at e
-      exact e
+      rwa [hsame] at e
     have hDel := _root_.GlobalTheory.TwV.DelB.delPolAt_site S hDict hPair hPos hLaw d ι hι (fun j => phi0 (sysS H X std) D (hT.gat_pos u w hg) ι j)
       (fun j c' L' => GlobalTheory.FrameB.tauV ℂ_[D.what₂.places.resChar w] d.fd2 (ltC S.g S.hLT) j (c', L'))
       (fun j c' L' => scT d S ι j c' L') (sO d ι) (gmS d) j hj cK hN hMove hOp hDeg hEq hsc

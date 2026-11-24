@@ -68,8 +68,7 @@ theorem fourB_nnreal_smul {V : Type} [MeasurableSpace V] (μ : Measure V) (c : �
 
 theorem fourB_const_mul {V : Type} [MeasurableSpace V] (μ : Measure V) (a : ℂ) (B : V → V → ℂ)
     (g : V → ℂ) (y : V) : fourB μ B (fun z => a * g z) y = a * fourB μ B g y := by
-  simp only [fourB, mul_assoc]
-  exact integral_const_mul a _
+  simpa only [fourB, mul_assoc] using integral_const_mul a _
 
 theorem fourB_twice_nnreal_smul {V : Type} [MeasurableSpace V] (μ : Measure V) (c : ℝ≥0) (B : V → V → ℂ)
     (f : V → ℂ) (y : V) :
@@ -188,9 +187,7 @@ theorem selfDual_scale [U : Unram F E] (A : Et F E) (ψ : AddChar F ℂ) (x : A.
     congr 1
     have e := integral_units_smul μ (unitL A x) (fun z => fourB μ B1 f z * B1 z y)
     refine Eq.trans ?_ e
-    show ∫ y', fourB μ B1 f (unitL A x • y') * B1 y' (unitL A x • y) ∂μ = _
-    refine integral_congr_ae (Eventually.of_forall fun y' => ?_)
-    exact congrArg _ (kerL_swap A ψ x y' y)
+    exact integral_congr_ae (Eventually.of_forall fun y' => (congrArg _ (kerL_swap A ψ x y' y)))
   rw [h3, hF f hf y, hN]
   have hc' : (c : ℂ) ≠ 0 := by exact_mod_cast hc
   push_cast

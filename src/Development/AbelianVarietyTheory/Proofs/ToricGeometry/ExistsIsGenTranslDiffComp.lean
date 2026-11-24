@@ -101,8 +101,7 @@ theorem exists_isGen_translDiff_comp {S : Scheme.{0}} (A : Over S) [GrpObj A] (L
       rw [comp_lift_assoc, whiskerRight_fst_assoc, whiskerRight_snd]
     · change (g ▷ A ≫ snd T A).left = (snd T' A).left
       rw [whiskerRight_snd]
-  rw [h3] at h4
-  exact h4
+  rwa [h3] at h4
 
 theorem kTriv_of_global : ∀ (A : Over (Sp ℂ)) [GrpObj A] (L : LB A.left), IsAbelianScheme A → L.IsLB →
     (∀ (R : Type) [CommRing R] [Algebra ℂ R], ∀ (x : Over.mk (spMap (algebraMap ℂ R)) ⟶ A),
@@ -127,7 +126,6 @@ theorem kTriv_of_global : ∀ (A : Over (Sp ℂ)) [GrpObj A] (L : LB A.left), Is
       (fun q => hUV (hU.range_fromSpec.le ⟨q, rfl⟩)) c hc)
   have h2 : hU.fromSpec ≫ x.left = hU.fromSpec ≫ (1 : Over.mk t ⟶ A).left :=
     congrArg (·.left) h1
-  rw [IsAffineOpen.fromSpec, Category.assoc, Category.assoc, cancel_epi] at h2
-  exact h2
+  rwa [IsAffineOpen.fromSpec, Category.assoc, Category.assoc, cancel_epi] at h2
 
 end GlobalTheory

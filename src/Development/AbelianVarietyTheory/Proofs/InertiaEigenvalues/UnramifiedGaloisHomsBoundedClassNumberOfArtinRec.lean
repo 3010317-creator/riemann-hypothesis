@@ -378,8 +378,7 @@ theorem length_addMonoidHom_le_of_card_eq (l : ℕ) [Fact l.Prime] [Algebra ℤ_
   | _ n ih =>
   intro A _ _ hn
   by_cases h1 : n = 1
-  · haveI : Subsingleton A := by
-      exact (Nat.card_eq_one_iff_unique.1 (hn.trans h1)).1
+  · haveI : Subsingleton A := (Nat.card_eq_one_iff_unique.1 (hn.trans h1)).1
     haveI : Subsingleton (A →+ M) :=
       ⟨fun f g => by ext x; rw [Subsingleton.elim x 0, map_zero, map_zero]⟩
     rw [Module.length_eq_zero]
@@ -417,8 +416,7 @@ theorem length_addMonoidHom_le : ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRi
     (A : Type) [AddCommGroup A] [Finite A],
     Module.length O (A →+ M) ≤
       Module.length O (O ⧸ Ideal.span {(l : O)}) * (padicValNat l (Nat.card A) : ℕ∞) := by
-  intro l _ O _ _ _ _ M _ _ eM A _ _
-  exact length_addMonoidHom_le_of_card_eq l eM _ A rfl
+  exact fun l _ O _ _ _ _ M _ _ eM A _ _ => length_addMonoidHom_le_of_card_eq l eM _ A rfl
 
 end GlobalTheory.HomLen
 end -- clump:auto
@@ -453,8 +451,7 @@ theorem vhE_of_globalArtinReciprocity (hA : GlobalTheory.Published.GlobalArtinRe
     have hz : ∀ g h : G E Ω, (z : G E Ω → M) (g * h) = (z : G E Ω → M) g + (z : G E Ω → M) h := by
       intro g h
       have := z.2 g h
-      rw [hρ] at this
-      exact this
+      rwa [hρ] at this
     have hI : ∀ v, ∀ σ ∈ Ine (F := E) (Av v), (z : G E Ω → M) σ = 0 := by
       intro v σ hσ
       have h1 := hU v hx

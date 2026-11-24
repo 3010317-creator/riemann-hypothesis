@@ -1297,8 +1297,7 @@ theorem isMov_quot {g g' a : GA D T} (ha : a ∈ GinfC T) {L L' : Lt D.host.E T.
     rw [← Matrix.mulVec_mulVec, ← e, Matrix.mulVec_mulVec, e1, Matrix.one_mulVec]
   · rintro ⟨u₀, h0, rfl⟩
     obtain ⟨u₁, h1, e⟩ := (h _).1 ((h' _).2 ⟨u₀, h0, rfl⟩)
-    rw [← Matrix.mulVec_mulVec, e, Matrix.mulVec_mulVec, e1, Matrix.one_mulVec]
-    exact h1
+    rwa [← Matrix.mulVec_mulVec, e, Matrix.mulVec_mulVec, e1, Matrix.one_mulVec]
 
 theorem eq_one_of_rat {θ : InfFam D} (hθ : IsInfFam θ) {δ : GA D T} (h1 : δ ∈ GQ T) (h2 : δ ∈ GfC T) : δ = 1 := by
   obtain ⟨ga, hga, hδ'⟩ := id h1
@@ -1322,8 +1321,7 @@ theorem frOf_injective (hr : T.rank = r) {X : Data D.host.E r} (eT : D.what₂.T
   funext ρ
   have := congrFun h (eT ρ)
   unfold frOf at this
-  rw [Equiv.symm_apply_apply] at this
-  exact this
+  rwa [Equiv.symm_apply_apply] at this
 
 theorem thR_smul {E : Type} [Field E] [NumberField E] [IsCMField E] {r g n : ℕ} (X : Data E r)
     (bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] X.Λ) (idx : Fin g ≃ X.Ψ × Fin r) (a : ℂ) (φ : TF n g) (x : Frame X.Ψ r)

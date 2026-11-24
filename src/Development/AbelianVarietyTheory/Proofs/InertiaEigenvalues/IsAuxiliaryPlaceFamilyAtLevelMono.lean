@@ -263,8 +263,7 @@ theorem _root_.GlobalTheory.exists_low_coeff_not_dvd_of_congr_mul : ∀ (O : Typ
     rw [(IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).1 hϖ,
       Ideal.mem_span_singleton] at hmax
     exact hmax
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hDg : ∀ i ≤ (v + 1) * m₀, ϖ ^ (v + 1) ∣ PowerSeries.coeff i (D * g) := by
     intro i hi
     have h1 := dvd_trans (pow_dvd_pow ϖ hv) (hf i (hi.trans hM))
@@ -403,14 +402,12 @@ theorem _root_.GlobalTheory.not_dvd_coeff_aeval_oneAddX_pow_sub_one :
     exact mul_dvd_mul (hlow m₀ (hdeg m₀)) h1
   have hmem : m₀ ∈ F.support := by
     rw [MvPolynomial.mem_support_iff]
-    intro h0
-    exact hm₀ (h0 ▸ dvd_zero _)
+    exact fun h0 => hm₀ (h0 ▸ dvd_zero _)
   intro hdiv
   rw [hexp, ← Finset.add_sum_erase _ _ hmem] at hdiv
   have hrest : ϖ ^ (μ + 1) ∣ ∑ m ∈ F.support.erase m₀, F.coeff m * c m :=
     Finset.dvd_sum fun m hm => hterm m (Finset.ne_of_mem_erase hm)
-  have h2 := (dvd_add_left hrest).1 hdiv
-  exact hm₀ (by simpa using dvd_sub h2 hmain)
+  exact hm₀ (by simpa using dvd_sub ((dvd_add_left hrest).1 hdiv) hmain)
 
 end GlobalTheory
 end -- clump:auto
@@ -447,8 +444,7 @@ theorem pow_sub_dvd_choose_prime_pow_of_lt :
   have h2 : l ^ (a - v) ∣ m * (l ^ a).choose (l ^ v * m) := by
     rcases le_or_gt v a with h | h
     · have key' : l ^ v * l ^ (a - v) ∣ l ^ v * (m * (l ^ a).choose (l ^ v * m)) := by
-        rw [← pow_add, Nat.add_sub_of_le h, ← mul_assoc]
-        exact key
+        rwa [← pow_add, Nat.add_sub_of_le h, ← mul_assoc]
       exact (Nat.mul_dvd_mul_iff_left (pow_pos hl.pos v)).1 key'
     · rw [show a - v = 0 by omega, pow_zero]
       exact one_dvd _
@@ -476,15 +472,12 @@ theorem exists_toNat_addVal_algebraMap_eq_mul (O : Type) [CommRing O] [IsDomain 
     ∃ e : ℕ, e ≠ 0 ∧ ∀ x : O,
       (addVal O' (algebraMap O O' x)).toNat = e * (addVal O x).toNat := by
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
-  have h0 : algebraMap O O' ϖ ≠ 0 := by
-    intro h
-    exact hϖ.ne_zero (hinj (by simpa using h))
+  have h0 : algebraMap O O' ϖ ≠ 0 := fun h => hϖ.ne_zero (hinj (by simpa using h))
   have h1 : addVal O' (algebraMap O O' ϖ) ≠ ⊤ := by
     rwa [Ne, addVal_eq_top_iff]
   have h2 : addVal O' (algebraMap O O' ϖ) ≠ 0 := by
     rw [Ne, addVal_eq_zero_iff]
-    intro h
-    exact hϖ.not_isUnit (IsLocalHom.map_nonunit _ h)
+    exact fun h => hϖ.not_isUnit (IsLocalHom.map_nonunit _ h)
   obtain ⟨e, he⟩ := ENat.ne_top_iff_exists.1 h1
   refine ⟨e, ?_, fun x => ?_⟩
   · rintro rfl
@@ -707,8 +700,7 @@ theorem value_at_root_sub_one : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDisc
         refine lt_of_le_of_ne (hI k i hi) fun heq => hne ?_
         exact hBB k hk hkB i hi (I k) (hIS k) (fun m hm => heq ▸ hI k m hm) (hI k))
     rw [hval _ (hIS k)] at key
-    rw [Polynomial.aeval_def, Polynomial.eval₂_eq_sum, Polynomial.sum_def]
-    exact key
+    rwa [Polynomial.aeval_def, Polynomial.eval₂_eq_sum, Polynomial.sum_def]
 
 end GlobalTheory.PolyCycloValue
 end -- clump:auto
@@ -799,8 +791,7 @@ theorem exists_low_coeff_of_limit (O : Type) [CommRing O] [IsDomain O] [IsDiscre
       apply hne
       ext q
       simpa using congrFun h3 (τ.symm q))
-    rw [← τ.sum_comp (fun q => m₀ q * c q), ← τ.sum_comp (fun q => m q * c q)]
-    exact h2
+    rwa [← τ.sum_comp (fun q => m₀ q * c q), ← τ.sum_comp (fun q => m q * c q)]
   choose m₀ hm₀ hmin using hS
   obtain ⟨B, hB⟩ := (Set.finite_range (fun p : I × σ => m₀ p.1 p.2)).bddAbove
   have hB' : ∀ x q, m₀ x q ≤ B := fun x q => hB ⟨(x, q), rfl⟩
@@ -920,8 +911,7 @@ theorem exists_low_coeff_of_factor (O : Type) [CommRing O] [IsDomain O]
     refine (Ideal.span_le (I := (lowIdeal (ϖ ^ (V + 1)) ((V + 1) * m₀)).comap S)).2 ?_ hf
     rintro p (⟨i, rfl⟩ | ⟨i, rfl⟩)
     · change S _ ∈ lowIdeal _ _
-      simp only [hS, MvPolynomial.aeval_X]
-      exact pow_sub_one_mem_lowIdeal ϖ l hl hd _ _ _ (he2 i)
+      simpa only [hS, MvPolynomial.aeval_X] using pow_sub_one_mem_lowIdeal ϖ l hl hd _ _ _ (he2 i)
     · change S _ ∈ lowIdeal _ _
       simp only [hS, map_sub, map_pow, map_add (f := _), map_one, MvPolynomial.aeval_X, add_sub_cancel]
       rw [← pow_mul, ← pow_add]
@@ -936,8 +926,7 @@ theorem exists_low_coeff_of_factor (O : Type) [CommRing O] [IsDomain O]
     simp only [Sum.elim_inl, Sum.elim_inr, zero_mul, Finset.sum_const_zero, add_zero]
     calc _ ≤ (Finset.univ : Finset (Fin R)).card • (nmax * l ^ s) := by
           apply Finset.sum_le_card_nsmul
-          intro i _
-          exact Nat.mul_le_mul (hn i) (Nat.pow_le_pow_right hl.pos (he1 i))
+          exact fun i _ => Nat.mul_le_mul (hn i) (Nat.pow_le_pow_right hl.pos (he1 i))
       _ = m₀ := by simp [hm₀]
   have hlt : m₀ < l ^ M := by
     have h1 : M < l ^ M := Nat.lt_pow_self hl.one_lt
@@ -1001,8 +990,7 @@ theorem order_eval : ∀ (O₀ : Type) [CommRing O₀] [IsDomain O₀] [IsDiscre
   have hdv : ∀ (A : Type) [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] (π : A),
       Irreducible π → ¬ IsUnit (l : A) → π ∣ (l : A) := by
     intro A _ _ _ π hπ h
-    rw [← Ideal.mem_span_singleton, ← hπ.maximalIdeal_eq]
-    exact h
+    rwa [← Ideal.mem_span_singleton, ← hπ.maximalIdeal_eq]
   obtain ⟨a, ha⟩ := exists_low_coeff_of_limit O₀ ϖ₀ hϖ₀ l hl (hdv _ _ hϖ₀ hlu) (Fin R ⊕ Fin R)
     (R + R) finSumFinEquiv.symm D M₀ I μ F (fun M hM x => by
       obtain ⟨m, h1, h2⟩ := hF M hM x
@@ -1029,10 +1017,8 @@ theorem order_eval : ∀ (O₀ : Type) [CommRing O₀] [IsDomain O₀] [IsDiscre
         have h4 := q.2
         simp at h3; omega
       · simp at h2 ⊢; omega
-    · intro i
-      exact Nat.mul_le_mul_left a i.2.le
-    · intro i
-      exact Nat.le_add_left _ _
+    · exact fun i => Nat.mul_le_mul_left a i.2.le
+    · exact fun i => Nat.le_add_left _ _
   obtain ⟨W₁, hW₁⟩ := ha e he0
   obtain ⟨N₁, hN₁⟩ := exists_levels O₀ ϖ₀ hϖ₀ l hl hl0 hlu I μ W₁
   obtain ⟨N₂, hN₂⟩ := exists_levels O ϖ hϖ l hl hl0' hlu' J v W₂
@@ -1155,8 +1141,7 @@ theorem conjCl_of_isQ {ι : Type} {P : ι → PlE D.host} {Q : Finset (PlE D.hos
     ConjCl (D := D) Q := by
   intro v hv v' h
   obtain ⟨q, hq⟩ := (hQ v).1 hv
-  refine (hQ v').2 ⟨q, ?_⟩
-  exact _root_.GlobalTheory.ToricFactor.over_over hq (Or.inr (isConjPl_symm h))
+  exact (hQ v').2 ⟨q, _root_.GlobalTheory.ToricFactor.over_over hq (Or.inr (isConjPl_symm h))⟩
 
 theorem l_ne_zero_Ok (i : X.Tw) (k : ℕ) : ((X.l i : ℕ) : X.Ok i k) ≠ 0 ∧ ((X.l i : ℕ) : X.O i) ≠ 0 ∧
     ((X.l i : ℕ) : X.O0 i) ≠ 0 := by

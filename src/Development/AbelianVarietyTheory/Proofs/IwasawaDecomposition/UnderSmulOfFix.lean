@@ -61,8 +61,7 @@ theorem under_smul_of_fix {E K : Type} [Field E] [NumberField E] [Field K] [Numb
   rw [Ideal.under_def, Ideal.under_def, Ideal.mem_comap, Ideal.mem_comap, Ideal.mem_pointwise_smul_iff_inv_smul_mem]
   have : σ⁻¹ • algebraMap (𝓞 K) (𝓞 E) x = algebraMap (𝓞 K) (𝓞 E) x := by
     rw [inv_smul_eq_iff]
-    apply Subtype.val_injective
-    exact (h x).symm
+    exact Subtype.val_injective (h x).symm
   rw [this]
 
 theorem exists_over {E K : Type} [Field E] [NumberField E] [Field K] [NumberField K] [Algebra K E]
@@ -105,8 +104,7 @@ theorem fix_of_sqrt (σ : H.E ≃ₐ[ℚ] H.E) (h : σ H.sqrtMinusD = H.sqrtMinu
     rw [IntermediateField.mem_fixedField_iff]
     intro f hf
     have : Subgroup.zpowers σ ≤ MulAction.stabilizer _ H.sqrtMinusD := by
-      rw [Subgroup.zpowers_le]
-      exact h
+      rwa [Subgroup.zpowers_le]
     exact this hf
   exact (IntermediateField.mem_fixedField_iff _ _).1 (this x.2) σ (Subgroup.mem_zpowers σ)
 

@@ -87,8 +87,7 @@ theorem isUnit_evalₐ (y : AdicCompletion I R) (hy : IsUnit (AdicCompletion.eva
     obtain ⟨b, hb⟩ := hy.exists_right_inv
     obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective b
     have h1 : a * b - 1 ∈ I ^ 1 := by
-      rw [← Ideal.Quotient.eq]
-      exact hb
+      rwa [← Ideal.Quotient.eq]
     rw [pow_one] at h1
     have hn : IsNilpotent (Ideal.Quotient.mk (I ^ (n + 1)) (a * b - 1)) :=
       ⟨n + 1, by rw [← map_pow, Ideal.Quotient.eq_zero_iff_mem]; exact Ideal.pow_mem_pow h1 _⟩
@@ -135,8 +134,7 @@ theorem algebraMap_pow_ne_zero (hx0 : x ≠ 0) (hxu : ¬ IsUnit x) (m : ℕ) : (
 theorem exists_eq_mul_unit (hx0 : x ≠ 0) (hxu : ¬ IsUnit x) (y : AdicCompletion (Ideal.span {x}) V) (hy : y ≠ 0) :
     ∃ (a : V) (n : ℕ), a ∣ x ^ n ∧ ∃ u : (AdicCompletion (Ideal.span {x}) V)ˣ, y = algebraMap V (AdicCompletion (Ideal.span {x}) V) a * u := by
   obtain ⟨n, hn⟩ : ∃ n, AdicCompletion.evalₐ (Ideal.span {x}) n y ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hy (AdicCompletion.ext_evalₐ fun n => by rw [hc n, map_zero])
   obtain ⟨a, ha⟩ := Ideal.Quotient.mk_surjective (AdicCompletion.evalₐ (Ideal.span {x}) (n + 1) y)
   have hna : ¬ x ^ n ∣ a := by
@@ -177,8 +175,7 @@ theorem GlobalTheory.adicCompletion_valuationRing_props : ∀ (V : Type) [CommRi
   have hnt : Nontrivial (AdicCompletion (Ideal.span {x}) V) := ⟨⟨_, _, hne⟩⟩
   have hdom : IsDomain (AdicCompletion (Ideal.span {x}) V) := by
     refine @NoZeroDivisors.to_isDomain _ _ hnt ⟨fun {y z} hyz => ?_⟩
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     obtain ⟨a, n, ⟨c, hc1⟩, u, rfl⟩ := exists_eq_mul_unit hx0 hxu y hc.1
     obtain ⟨b, m, ⟨d, hd1⟩, w, rfl⟩ := exists_eq_mul_unit hx0 hxu z hc.2
     apply algebraMap_pow_ne_zero hx0 hxu (n + m)

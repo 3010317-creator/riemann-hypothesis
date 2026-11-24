@@ -261,10 +261,8 @@ theorem exists_errX : ∀ (D : D7) (H : Formalism.L2.Herm.ColsHermS D), ∃ eX :
   refine ⟨errOfTies D H, rfl, fun _ => rfl, fun _ _ => rfl, ?_, ?_, seenDef D H, tauOfDef D H⟩
   · intro u i v h
     have := (H.levelZeroCompatibility u).splitG_pi i v h
-    rw [H.piG u D.u₀, Examples₂.star_eq_conj] at this
-    exact this
-  · intro u v z hz y
-    exact (H.levelZeroCompatibility u).fM_pi _ _ z hz y
+    rwa [H.piG u D.u₀, Examples₂.star_eq_conj] at this
+  · exact fun u v z hz y => (H.levelZeroCompatibility u).fM_pi _ _ z hz y
 
 end GlobalTheory.Mem.ErrTies
 end -- clump:auto
@@ -393,8 +391,7 @@ theorem natCast_kv_eq_zero (F : Type) [Field F] [NumberField F]
   have hmax : algebraMap (𝓞 F) (v.adicCompletionIntegers F) (p : 𝓞 F) ∈
       IsLocalRing.maximalIdeal (v.adicCompletionIntegers F) :=
     (Valuation.mem_maximalIdeal_iff _ Valued.v).2 hval
-  have hres := (IsLocalRing.residue_eq_zero_iff _).2 hmax
-  simpa using hres
+  simpa using (IsLocalRing.residue_eq_zero_iff _).2 hmax
 
 theorem mem_range_of_pow_g (B : Base) (i : Fin 2) (z : ℂ) (hz : z ^ B.host.g i = 1) : ∃ r : B.LL, B.embLL r = z := by
   have hp : (B.host.g i).Prime := B.host.g_prime i
@@ -452,8 +449,7 @@ theorem dGamChoice_of_lcm (X : Stages) (hDG : ∀ u μ, (X.C.chTw u μ).DGam = G
   rw [hc, hDG u X.C.mu0]
   have hf : X.B.fields.f = X.B.R.f := (GlobalTheory.Mem.FieldsLaws.fields_satisfy_definite_laws X.B).2
   refine GlobalTheory.Mem.Col2.DGam_dvd_of_minkMult X.B.R (GlobalTheory.Mem.FieldsLaws.fields_ok (B := X.B)) M ?_
-  rw [hf]
-  exact hM
+  rwa [hf]
 
 theorem colLay_of_herm (X : Stages) (hX : Nonempty (PreX X.B.toPre))
     (hDG : ∀ u μ, (X.C.chTw u μ).DGam = GlobalTheory.Mem.Col2.DGam X.B.fields.E X.B.R)

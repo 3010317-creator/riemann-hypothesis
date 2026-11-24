@@ -108,8 +108,7 @@ theorem smul_mem_DΔ (T : LocLat G Qp LL O) {a : LetA O n₀} (ha : ∀ i, ∀ �
 theorem approx (T : LocLat G Qp LL O) (hT : IsCrys PD T.ρ) (x : W.DD T) :
     ∃ (m : ℕ) (y z : W.DD T), y ∈ W.N T ∧ ((letπ : LetA O n₀) ^ m) • x = y + PD.p • z := by
   refine (W.N_base T hT).inductionOn x ?_ ?_ ?_
-  · intro y
-    exact ⟨0, y, 0, y.2, by simp⟩
+  · exact fun y => ⟨0, y, 0, y.2, by simp⟩
   · rintro e x ⟨m, y, z, hy, h⟩
     obtain ⟨a, m', ha⟩ := W.EE_dense e 1
     rw [pow_one, Ideal.mem_span_singleton'] at ha
@@ -268,8 +267,7 @@ theorem card_ne_zero {l : ℕ} [Fact l.Prime] [CharP k l]
       simp only [Finset.mem_coe, Multiset.mem_toFinset]
       rw [Polynomial.mem_nthRoots (by omega)]
       exact (e δ).2
-    · intro a _ b _ h
-      exact e.injective (Subtype.ext h)
+    · exact fun a _ b _ h => e.injective (Subtype.ext h)
   rw [Ne, CharP.cast_eq_zero_iff k l]
   intro h
   have := Nat.le_of_dvd hpos h

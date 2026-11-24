@@ -197,8 +197,7 @@ theorem card_Del {l : ℕ} (hl : 2 ≤ l) (hk : (PD.p : k) = 0) (ι : k⸨X⸩ �
   have h3 : (PowerSeries.map (algebraMap O k) W.π₀₁ : k⟦X⟧) = (u : k⟦X⟧) * (PowerSeries.X : k⟦X⟧) ^ (l - 1) := by
     apply HahnSeries.ofPowerSeries_injective (Γ := ℤ)
     rw [map_mul, map_pow]
-    rw [h2, vv_eq_coe_X] at hu
-    exact hu
+    rwa [h2, vv_eq_coe_X] at hu
   have h4 := congrArg (PowerSeries.constantCoeff (R := k)) h3
   have h5 : PowerSeries.constantCoeff W.π₀₁ = 1 - (PD.p : O) + W.DelF.card := by
 
@@ -1176,8 +1175,7 @@ theorem sen_eq_rootMultiplicity {m : ℕ} (g : V →ₗ[k] V) (e : Fin m → V) 
       map_smul' := fun c y => by
         funext j
         have : (⟨(c • y).1, (c • y).2⟩ : N) = (PowerSeries.C c : k⟦X⟧) • ⟨y.1, y.2⟩ := by
-          apply Subtype.ext
-          exact (algebraMap_smul k⟦X⟧ c y.1).symm
+          exact Subtype.ext (algebraMap_smul k⟦X⟧ c y.1).symm
         change PowerSeries.constantCoeff (b.repr _ j) = _
         rw [this]; simp }
   have hr : ∀ (y : P) j, r y j = PowerSeries.constantCoeff (b.repr ⟨y.1, y.2⟩ j) := fun _ _ => rfl

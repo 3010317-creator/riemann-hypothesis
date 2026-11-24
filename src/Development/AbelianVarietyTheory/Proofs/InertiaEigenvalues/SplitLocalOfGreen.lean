@@ -127,8 +127,7 @@ theorem stdBlock_iff (a : ℕ) (y : Gn p (a + 1)) :
       have hi' : (i : ℕ) < a + 1 := by omega
       have hj' : (j : ℕ) < a + 1 := by omega
       simp only [tl, entN, hi', hj', and_self, dite_eq_left, Matrix.one_apply, Fin.ext_iff] at this
-      simp only [Fin.ext_iff]
-      exact this
+      simpa only [Fin.ext_iff] using this
     · have hne : i ≠ j := fun e => by rw [e] at hi; omega
       rw [ite_eq_right hne]
       exact h1 i j hj (by omega)
@@ -314,8 +313,7 @@ theorem stdTrace_eq (a c : ℕ) (θ : (ZMod p)ˣ →* ℂˣ) (ψ : Gn p (a + 1 +
         constructor
         · rintro ⟨-, -, h⟩ i j hij
           exact h i j (by have := i.isLt; omega)
-        · intro h
-          exact ⟨hx.1, hx.2, fun i j hj => h i j (by omega)⟩
+        · exact fun h => ⟨hx.1, hx.2, fun i j hj => h i j (by omega)⟩
       have hd : Matrix.GeneralLinearGroup.det x =
           Matrix.GeneralLinearGroup.det (toG (tl (a + 1) (x : Mt p (a + 1 + c)))) := by
         rw [LabelDet.det_par (a + 1) c x hx.1, hx.2, LabelDet.toG_one, map_one, mul_one]
@@ -392,8 +390,7 @@ theorem exists_irr_hc_of_stdTrace_ne_zero : ∀ (p : ℕ) [Fact p.Prime] (r a c 
   subst hr
   obtain ⟨L, hLirr, hL⟩ := (HCChar.hc_isChar_and_res_decomp p (a + 1) c (a + 1 + c) rfl).2 ψ hψ
   obtain ⟨q, hq, hqt⟩ : ∃ q ∈ L, stdTrace a θ q.1 ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hne
     rw [stdTrace_eq]
     have e1 : (∑ y : Gn p (a + 1), if StdBlock a y then

@@ -67,8 +67,7 @@ theorem dimOK (D : D7) : DimOK D := fun i σ ρ => GlobalTheory.Mem.WeylDimPos.d
 
 theorem cartanOK (D : D7) : CartanOK D := by
   refine ⟨fun V S M _ τ => GlobalTheory.Chain.VacVec.cart_isCartanInv M τ, fun V hs hp τ => ?_⟩
-  have h := GlobalTheory.RepsObj.gramAt_posDef hp hs τ
-  exact ⟨by simp, by simp, by simpa using h⟩
+  exact ⟨by simp, by simp, by simpa using (GlobalTheory.RepsObj.gramAt_posDef hp hs τ)⟩
 
 theorem spOK (D : D7) : SpOK D := by
   refine ⟨fun τ => Or.inl ?_, fun τ => Or.inl (D.X'_posDef τ)⟩
@@ -90,8 +89,7 @@ theorem selfDualOK (D : D7) : SelfDualOK D := by
     refine (hL.fg.map f).of_le fun x hx => ⟨_, h2 x hx, ?_⟩
     change (N : D.host.E)⁻¹ • ((N : D.host.E) • x) = x
     rw [smul_smul, inv_mul_cancel₀ hM0, one_smul]
-  · intro s hs hli
-    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+  · exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
   · rw [← GlobalTheory.SDFrameLattice.mem_dualL_iff, hd]
 
 

@@ -116,8 +116,7 @@ theorem inK_sum_real {ε : Fin n → Bool} {r : ℕ} (X : Fin r → Mx n) (c : F
     inK ε (∑ j, (c j : ℂ) • X j) := by
   classical
   refine Finset.sum_induction _ (inK ε) (fun _ _ ha hb => inK_add'' ha hb) (inK_zero' ε) ?_
-  intro j _
-  exact inK_smul_real ε (hX j) (c j)
+  exact fun j _ => inK_smul_real ε (hX j) (c j)
 
 def entryDer (ε : Fin n → Bool) (k : KG ε) (a b : Fin n) : Mx n →ₗ[ℝ] ℂ where
   toFun Y := ∑ l, toMK k a l * Y l b
@@ -315,8 +314,7 @@ lemma abs_sub_lt_of_cell_eq {h x y : ℝ} (hh : 0 < h) (hx : |x| ≤ 1) (hy : |y
     Nat.floor_le_floor (div_le_div_of_nonneg_right (by linarith) hh.le)
   have hc' : ⌊(x + 1) / h⌋₊ = ⌊(y + 1) / h⌋₊ := by
     have := congrArg Fin.val hc
-    simp only [cell, min_eq_left hfa, min_eq_left hfb] at this
-    exact this
+    simpa only [cell, min_eq_left hfa, min_eq_left hfb] using this
   have h1 := Nat.floor_le ha0
   have h2 := Nat.lt_floor_add_one ((x + 1) / h)
   have h3 := Nat.floor_le hb0
@@ -324,8 +322,7 @@ lemma abs_sub_lt_of_cell_eq {h x y : ℝ} (hh : 0 < h) (hx : |x| ≤ 1) (hy : |y
   rw [hc'] at h1 h2
   have hab : |(x + 1) / h - (y + 1) / h| < 1 := abs_sub_lt_iff.2 ⟨by linarith, by linarith⟩
   have : (x + 1) / h - (y + 1) / h = (x - y) / h := by ring
-  rw [this, abs_div, abs_of_pos hh, div_lt_one hh] at hab
-  exact hab
+  rwa [this, abs_div, abs_of_pos hh, div_lt_one hh] at hab
 
 end GlobalTheory.HaarSmallBall
 
@@ -396,8 +393,7 @@ theorem smallBall : ∀ {n : ℕ} (ε : Fin n → Bool), ∃ c : ℝ, 0 < c ∧ 
     push_cast; ring
   have hcovR : (1 : ℝ) ≤ (m : ℝ) ^ (2 * n * n) * (muK ε B).toReal := by
     have := ENNReal.toReal_mono (ENNReal.mul_ne_top (ENNReal.natCast_ne_top _) (measure_ne_top _ _)) hcov
-    rw [ENNReal.toReal_mul, ENNReal.toReal_natCast, hcard, ENNReal.toReal_one] at this
-    exact this
+    rwa [ENNReal.toReal_mul, ENNReal.toReal_natCast, hcard, ENNReal.toReal_one] at this
   have hmδ : (m : ℝ) * δ ≤ C := by
     have hfl : ((⌊2 / h⌋₊ : ℕ) : ℝ) ≤ 2 / h := Nat.floor_le (by positivity)
     have h2h : 2 / h * δ = 4 * (n : ℝ) ^ 2 := by rw [hhdef]; field_simp; ring
@@ -1122,8 +1118,7 @@ theorem sqrt_integral_normSq_le_integral_kernel_mul_translate :
   rcases hA0.lt_or_eq with hpos | hz
   · have hs : 0 < Real.sqrt (∫ x, ‖p x‖ ^ 2 ∂(muK ε)) := Real.sqrt_pos.2 hpos
     refine le_of_mul_le_mul_left ?_ hs
-    rw [Real.mul_self_sqrt hA0]
-    exact hmain
+    rwa [Real.mul_self_sqrt hA0]
   · rw [← hz, Real.sqrt_zero]
     exact integral_nonneg fun k => mul_nonneg (hκ0 k) (Real.sqrt_nonneg _)
 
@@ -1176,9 +1171,7 @@ theorem orth_translate_lowV {n : ℕ} (ε : Fin n → Bool) (i : ℕ) (p κ : KG
   | succ i =>
     have hq : (fun x : KG ε => star (κ (x⁻¹ * k))) ∈ lowV ε (i + 1) := by
       have h1 : κ ∈ polyV ε i := hκ
-      have h2 := mul_right_mem k h1
-      have h3 := inv_mem h2
-      exact star_mem h3
+      exact star_mem (inv_mem (mul_right_mem k h1))
     have h4 := h _ hq
     have h5 : ∫ x, star (star (κ (x⁻¹ * k)) * p x) ∂(muK ε) = 0 := by
       have := congrArg star h4
@@ -1276,8 +1269,7 @@ theorem norm_sub_expK_sq_le : ∀ {n : ℕ} (ε : Fin n → Bool) (d : ℕ) (φ 
       funext t
       show φ (k * e s * e (t - s)) = φ (k * e t)
       rw [mul_assoc, ← he_add, add_sub_cancel]
-    rw [hfun] at h2
-    exact h2
+    rwa [hfun] at h2
   have hgc : ∀ k, Continuous (fun s => R (k * e s)) := fun k =>
     hRc.comp (continuous_const.mul he_cont)
   have hftc : ∀ k, ∫ s in (0:ℝ)..1, R (k * e s) = φ (k * e 1) - φ k := by
@@ -1366,8 +1358,7 @@ noncomputable section
 namespace GlobalTheory.KFourier
 
 theorem toMK_injective_of_gap {n : ℕ} (ε : Fin n → Bool) : Function.Injective (fun k : KG ε => toMK k) := by
-  intro a b h
-  exact Subtype.ext (Subtype.ext (Units.ext h))
+  exact fun a b h => Subtype.ext (Subtype.ext (Units.ext h))
 
 theorem integrable_real_of_continuousK {n : ℕ} {ε : Fin n → Bool} {f : KG ε → ℝ} (hf : Continuous f) :
     Integrable f (muK ε) :=

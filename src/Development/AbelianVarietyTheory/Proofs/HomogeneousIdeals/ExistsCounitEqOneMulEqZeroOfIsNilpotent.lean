@@ -210,8 +210,7 @@ theorem exists_derivations_sum_sub_mem_sq [Bialgebra k H] [Algebra.FiniteType k 
     have h3 : Ideal.Quotient.mk (I ^ 2) y = q y := by
       rw [hq, hp, (hmem y).1 hy]; simp
 
-    rw [h3, map_sum]
-    exact h2
+    rwa [h3, map_sum]
   have h2 : ∑ i, p (z i) * p (invariantDerivation (φ i) (hφ i) y) ∈ I ^ 2 :=
     Ideal.sum_mem _ fun i _ ↦ by rw [sq]; exact Ideal.mul_mem_mul (hpI _) (hpI _)
   convert add_mem h2 h1 using 1
@@ -229,8 +228,7 @@ theorem mem_ker_counit_pow_of_isNilpotent [CharZero k] [Bialgebra k H] [Algebra.
   have hE : ∀ y, E y = ∑ i, x i * D i y := fun y ↦ by
     have := congr($(map_sum (Derivation.coeFnAddMonoidHom (R := k) (A := H) (M := H))
       (fun i ↦ x i • D i) Finset.univ) y)
-    rw [Finset.sum_apply] at this
-    exact this
+    rwa [Finset.sum_apply] at this
   have hn := derivation_sub_nsmul_mem_pow I E
     (fun y ↦ by rw [hE]; exact Ideal.sum_mem _ fun i _ ↦ Ideal.mul_mem_right _ _ (hx i))
     (fun y hy ↦ by rw [hE]; exact hD y hy)

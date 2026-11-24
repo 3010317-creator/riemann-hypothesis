@@ -124,12 +124,10 @@ theorem scalar_eq_one {g n : ℕ} (hn : Even n) (σ : Matrix (Fin g ⊕ Fin g) (
   obtain ⟨w₀, hw₀⟩ : ∃ w, thetaChar τ c₁ c₂ w ≠ 0 := by
     obtain ⟨m, rfl⟩ := ThetaRatio.exists_eq_halfVec h₁
     obtain ⟨m', rfl⟩ := ThetaRatio.exists_eq_halfVec h₂
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     refine theta_ne_zero hτ (halfVec m) (halfVec m') (funext fun w => ?_)
     have := hc w
-    rw [ThetaRatio.thetaChar_ofRealVec] at this
-    exact this
+    rwa [ThetaRatio.thetaChar_ofRealVec] at this
   have hi : ∀ w, h *ᵥ (h⁻¹ *ᵥ w) = w := fun w => by
     rw [mulVec_mulVec, mul_nonsing_inv _ hu, one_mulVec]
   have hi' : ∀ w, h' *ᵥ (h⁻¹ *ᵥ w) = zAct σ τ w := fun w => by
@@ -340,8 +338,7 @@ open GlobalTheory.Dict
 theorem GlobalTheory.Dict.conjI_half {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
     (l : Geo.Tor.Level H) : conjI (Mfr l) = l.Mb := by
   have hb : ∀ a : 𝓞 E, Lev.bar a = H.bar a := fun a => by
-    apply IsFractionRing.injective (𝓞 E) E
-    exact (H.bar_eq a).symm
+    exact IsFractionRing.injective (𝓞 E) E (H.bar_eq a).symm
   ext a
   rw [Lev.mem_conjI, hb, Mfr,
     Ideal.mem_map_iff_of_surjective (H.bar : 𝓞 E →+* 𝓞 E) H.bar.surjective]

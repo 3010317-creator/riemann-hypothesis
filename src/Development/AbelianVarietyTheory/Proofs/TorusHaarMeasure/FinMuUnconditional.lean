@@ -197,8 +197,7 @@ theorem exists_unitaryStab_mul_compact_of_le_firstMinimum :
       (γ : Matrix (Fin r) (Fin r) E).map τ.1 *
         (((g : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ) * mat x0 τ)
     rw [hu, Matrix.mul_assoc]
-  rw [key]
-  exact hb
+  rwa [key]
 
 end GlobalTheory.FiniteCovolume
 end -- clump:auto
@@ -240,8 +239,7 @@ theorem compactSpace_unitary_of_definite :
   obtain ⟨horth, ι, hc, -, hι⟩ := h (x0F X) hx0
   have hK := (isCompact_orth_bounded r X R).image_of_continuousOn
     (hc.mono fun x hx => hx.1)
-  refine ⟨hK.of_isClosed_subset isClosed_univ fun g _ => ?_⟩
-  exact ⟨_, ⟨horth g, hR _ (horth g)⟩, hι g⟩
+  exact ⟨hK.of_isClosed_subset isClosed_univ fun g _ => ⟨_, ⟨horth g, hR _ (horth g)⟩, hι g⟩⟩
 
 end GlobalTheory.FinCovol
 end -- clump:auto
@@ -295,9 +293,7 @@ theorem gamDisc : (∀ (r : ℕ) (X : Data E r) (H : Subgroup (X.Ψ → GL (Fin 
   have hF : ∀ γ, (F γ).Finite := by
     intro γ
     refine Set.Subsingleton.finite ?_
-    intro g hg g' hg'
-    refine Subtype.ext (funext fun τ => Units.ext ?_)
-    exact (hg τ).trans (hg' τ).symm
+    exact fun g hg g' hg' => Subtype.ext (funext fun τ => Units.ext ((hg τ).trans (hg' τ).symm))
   have hT : (⋃ γ ∈ S, F γ).Finite := hS.biUnion fun γ _ => hF γ
   have hC : ((⋃ γ ∈ S, F γ) \ {1})ᶜ ∈ 𝓝 (1 : H) :=
     (hT.subset Set.diff_subset).isClosed.isOpen_compl.mem_nhds (by simp)

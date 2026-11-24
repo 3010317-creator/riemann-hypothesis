@@ -75,8 +75,7 @@ theorem trace_idem_ne_zero (e : B.A) (he : IsIdempotentElem e) (h0 : e ≠ 0) :
   intro h
   have := (LinearMap.IsIdempotentElem.trace_eq_zero_iff hid).1 h
   apply h0
-  have h1 := LinearMap.congr_fun this 1
-  simpa using h1
+  simpa using LinearMap.congr_fun this 1
 
 theorem exists_lb (a : K.O) (ha : K.Small a) (T : K.E) (hT : T ≠ 0) :
     ∃ L : ℤ, ∀ n : ℤ, al K a ^ n * T ∈ (algebraMap K.O K.E).range → L ≤ n := by
@@ -89,14 +88,11 @@ theorem exists_lb (a : K.O) (ha : K.Small a) (T : K.E) (hT : T ≠ 0) :
   have hinf := Ideal.iInf_pow_eq_bot_of_isLocalRing (IsLocalRing.maximalIdeal K.O)
     (IsLocalRing.maximalIdeal.isMaximal K.O).ne_top
   obtain ⟨m0, hm0⟩ : ∃ m : ℕ, x ∉ IsLocalRing.maximalIdeal K.O ^ m := by
-    by_contra h
-    push Not at h
+    by_contra! h
     apply hx0
-    rw [← Ideal.mem_bot, ← hinf, Ideal.mem_iInf]
-    exact h
+    rwa [← Ideal.mem_bot, ← hinf, Ideal.mem_iInf]
   refine ⟨1 - m0, fun n hn => ?_⟩
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   obtain ⟨m, rfl⟩ := Int.exists_eq_neg_ofNat (show n ≤ 0 by omega)
   obtain ⟨o, ho⟩ := hn
   have hinv : al K a ^ (-(m : ℤ)) * al K a ^ m = 1 := by
@@ -245,7 +241,6 @@ theorem finite_term_ne_zero : ∀ (K : UQ) (B : InvAlg K) (ι : Type) [Fintype �
   refine Set.mem_biUnion (x := p) ?_ hp
   refine Set.mem_biUnion (Finset.mem_coe.2 (Finset.mem_image_of_mem _ hJ))
     (Set.mem_biUnion (Finset.mem_coe.2 (Finset.mem_image_of_mem _ hJ')) ?_)
-  intro i _
-  exact ⟨hLo i _ htU M (p i) (hp i).1 htD, hH i _ hyU (p i) ((hp i).2 _ hyM)⟩
+  exact fun i _ => ⟨hLo i _ htU M (p i) (hp i).1 htD, hH i _ hyU (p i) ((hp i).2 _ hyM)⟩
 
 end GlobalTheory.UnitLemma.Desc

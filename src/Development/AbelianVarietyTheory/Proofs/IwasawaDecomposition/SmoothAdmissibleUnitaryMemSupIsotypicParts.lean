@@ -128,8 +128,7 @@ theorem mem_sSup_irr : ∀ x ∈ F, x ∈ sSup {W | IrrSub ρ W} := by
     fun U => Submodule.finiteDimensional_of_le inf_le_right
   suffices key : ∀ d : ℕ, ∀ U : Submodule ℂ V, Stab ρ U → Module.finrank ℂ ↥(U ⊓ F) ≤ d →
       ∀ x ∈ U ⊓ F, x ∈ sSup {W | IrrSub ρ W} by
-    intro x hx
-    exact key _ ⊤ (fun _ _ _ => Submodule.mem_top) le_rfl x ⟨Submodule.mem_top, hx⟩
+    exact fun x hx => key _ ⊤ (fun _ _ _ => Submodule.mem_top) le_rfl x ⟨Submodule.mem_top, hx⟩
   intro d
   induction d with
   | zero =>
@@ -216,8 +215,7 @@ theorem irr_le_isotIn {D : D7} {n : ℕ} {A : Type} [AddCommGroup A] [Module ℂ
   classical
   obtain ⟨s₀, hs₀, hs₀0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hW0
   obtain ⟨l, hl⟩ : ∃ l : Module.Dual ℂ A, l s₀ ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hs₀0 ((Module.forall_dual_apply_eq_zero_iff ℂ s₀).1 hcon)
   let m : A →ₗ[ℂ] (GAf D.host.E n → ℂ) :=
     { toFun := fun a g => l (ρ g a)
@@ -252,8 +250,7 @@ theorem irr_le_isotIn {D : D7} {n : ℕ} {A : Type} [AddCommGroup A] [Module ℂ
       apply hl
       rw [← hw']
       have : mW w 1 = l (ρ 1 w) := rfl
-      rw [this, map_one, Module.End.one_apply] at h1
-      exact h1
+      rwa [this, map_one, Module.End.one_apply] at h1
   let e := LinearEquiv.ofInjective mW hinj
   have he : ∀ w : W, ((e w : LinearMap.range mW) : GAf D.host.E n → ℂ) = m w := fun w => rfl
   let π : FinTyp D.host.E n :=
@@ -303,9 +300,7 @@ theorem irr_le_isotIn {D : D7} {n : ℕ} {A : Type} [AddCommGroup A] [Module ℂ
     obtain ⟨w, rfl⟩ := e.surjective f
     have : (⟨rt D.host.E n h ((e w : LinearMap.range mW) : GAf D.host.E n → ℂ), π.stable h _ (e w).2⟩ : π.S) =
         e ⟨ρ h w, hWs h w w.2⟩ := by
-      apply Subtype.ext
-      show rt D.host.E n h (m w) = m (ρ h w)
-      exact (hm h w).symm
+      exact Subtype.ext (hm h w).symm
     rw [this, hΦe, hΦe]
   have hrange : LinearMap.range Φ ≤ C := by
     rintro _ ⟨f, rfl⟩
@@ -374,8 +369,7 @@ theorem span_isotIn : ∀ (D : D7) (n : ℕ) (A : Type) [AddCommGroup A] [Module
           intro c hc
           obtain ⟨w, hw, e⟩ := hW'W hc
           have : w = c := Subtype.ext e
-          rw [← this]
-          exact hw
+          rwa [← this]
         rcases hWi _ hle' hs with h | h
         · left
           rw [eq_bot_iff]

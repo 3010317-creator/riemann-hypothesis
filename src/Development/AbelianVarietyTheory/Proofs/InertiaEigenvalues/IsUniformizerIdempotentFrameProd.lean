@@ -169,14 +169,12 @@ theorem isFrame_prod : ∀ (K : UQ) (B₁ B₂ : InvAlg K) (ι₁ ι₂ : Type) 
       obtain ⟨hA, hB⟩ := unit_inl B₁.σ B₂.σ (π₁ i) (e₁ i) hu hσ h1
       refine ⟨hA, hB, ?_⟩
       show K.eta (Algebra.norm K.E ((π₁ i, 1) : B₁.A × B₂.A)) = -1
-      rw [norm_prod_one]
-      exact hη
+      rwa [norm_prod_one]
     · rw [Finset.inr_mem_disjSum] at hi
       obtain ⟨⟨hu, hσ⟩, h1, hη⟩ := hπ₂ j hi
       obtain ⟨hA, hB⟩ := unit_inr B₁.σ B₂.σ (π₂ j) (e₂ j) hu hσ h1
       refine ⟨hA, hB, ?_⟩
       show K.eta (Algebra.norm K.E ((1, π₂ j) : B₁.A × B₂.A)) = -1
-      rw [norm_one_prod]
-      exact hη
+      rwa [norm_one_prod]
 
 end GlobalTheory.UnitLemma.Desc

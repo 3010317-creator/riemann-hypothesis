@@ -135,8 +135,7 @@ theorem norm_of_mem_Ks : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (j : ℕ), 
   have hint : IsIntegral ↥(K0 K) ζ := Algebra.IsIntegral.isIntegral ζ
   rw [Ks_eq_restrictScalars K j ζ hζ, IntermediateField.mem_restrictScalars] at hx
   have hx' : x ∈ Algebra.adjoin ↥(K0 K) {ζ} := by
-    rw [← IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic hint.isAlgebraic]
-    exact hx
+    rwa [← IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic hint.isAlgebraic]
   rw [Algebra.adjoin_singleton_eq_range_aeval] at hx'
   obtain ⟨q, hq⟩ := hx'
   have hcast : ((Nat.totient (l ^ j) : ℕ) : ℝ) = (l : ℝ) ^ (j - 1) * ((l : ℝ) - 1) := by
@@ -151,8 +150,7 @@ theorem norm_of_mem_Ks : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (j : ℕ), 
     exact (map_sub (algebraMap (Om l) (PadicComplex l)) ζ 1).trans (by rw [map_one]; rfl)
   set r := q %ₘ minpoly ↥(K0 K) ζ with hr
   have hrx : aeval ζ r = x := by
-    rw [hr, aeval_modByMonic_eq_self_of_root (minpoly.aeval _ _)]
-    exact hq
+    rwa [hr, aeval_modByMonic_eq_self_of_root (minpoly.aeval _ _)]
   have hr0 : r ≠ 0 := by
     intro h
     rw [h, map_zero] at hrx

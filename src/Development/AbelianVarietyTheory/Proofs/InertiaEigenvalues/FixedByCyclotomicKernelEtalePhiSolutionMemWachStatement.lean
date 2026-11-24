@@ -185,8 +185,7 @@ theorem idem_eq_zero (ι : B →+* R) (τ : B) (hu : IsUnit (ι τ)) (hinj : Fun
     have e3 : ε = τ ^ m * (τ * (s * k) ^ (m + 1)) + (p : B) * (w * r0 ^ (N + 1) * k2) := by
       linear_combination -e2 + hk2 + k2 * h6
     refine ⟨τ * (s * k) ^ (m + 1), ι (w * r0 ^ (N + 1) * k2), ?_⟩
-    have e4 := congrArg ι e3
-    simpa only [map_add (f := _), map_mul, map_pow, map_natCast] using e4
+    simpa only [map_add (f := _), map_mul, map_pow, map_natCast] using congrArg ι e3
   obtain ⟨r1, hr1⟩ := hnear (ι ε) hN
   obtain ⟨e5, he5⟩ := hsat ε r1 hr1
   have h7 : ε = (p : B) * e5 := hinj (by rw [map_mul, map_natCast, he5, hr1])
@@ -408,8 +407,7 @@ theorem const_dvd (ι : B →+* R) (io : LetA O n →ₐ[O] B) (τ : B) (hp : (p
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   obtain ⟨N, hN⟩ := IsDiscreteValuationRing.associated_pow_irreducible hp hϖ
   have h1 : ϖ ∣ d := by
-    rw [← Ideal.mem_span_singleton, ← hϖ.maximalIdeal_eq]
-    exact hdu
+    rwa [← Ideal.mem_span_singleton, ← hϖ.maximalIdeal_eq]
   obtain ⟨w, hw⟩ : (p : O) ∣ d ^ (N + 1) :=
     (hN.dvd.trans (pow_dvd_pow_of_dvd h1 N)).trans (pow_dvd_pow d (Nat.le_succ N))
   have hE : (letE i : LetA O n) * letE i = letE i := by
@@ -538,8 +536,7 @@ theorem eroot_pow (j : ℕ) : AI.εroot j ^ l ^ j = AI.ε := by
   induction j with
   | zero => simp [LocAinf.εroot]
   | succ j ih =>
-    rw [pow_succ', pow_mul, LocAinf.εroot, Function.iterate_succ_apply', frobeniusEquiv_symm_pow_p]
-    exact ih
+    rwa [pow_succ', pow_mul, LocAinf.εroot, Function.iterate_succ_apply', frobeniusEquiv_symm_pow_p]
 
 theorem piR_succ : piR AI LL s + 1 = fW LL (WittVector.teichmuller l (AI.εroot s)) := by
   have h : piR AI LL s = fW LL (piW AI s) := rfl

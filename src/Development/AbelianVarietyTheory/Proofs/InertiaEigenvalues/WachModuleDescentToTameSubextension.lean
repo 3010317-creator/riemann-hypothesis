@@ -515,8 +515,7 @@ theorem free_and_invariants (ξ : (↥(OL LL))⟦X⟧)
   have hinj : Function.Injective (algebraMap ℤ_[l] ↥(OL LL)) := by
     intro a b hab
     apply (IsFractionRing.injective ℤ_[l] ℚ_[l])
-    apply (algebraMap ℚ_[l] ↥LL.1).injective
-    exact congrArg Subtype.val hab
+    exact (algebraMap ℚ_[l] ↥LL.1).injective (congrArg Subtype.val hab)
   have hex : ∀ g, ∃ y : ℤ_[l], algebraMap ℤ_[l] ↥(OL LL) y = (W.χΓ g : ↥(OL LL)) := by
     intro g
     obtain ⟨a, rfl⟩ := W.resΓ_onto g
@@ -566,8 +565,7 @@ theorem trace_param (h1 : Module.finrank ↥(K0 K) ↥K.1 = 1) :
   have hinj : Function.Injective (algebraMap ℤ_[l] ↥(OL LL)) := by
     intro a b hab
     apply (IsFractionRing.injective ℤ_[l] ℚ_[l])
-    apply (algebraMap ℚ_[l] ↥LL.1).injective
-    exact congrArg Subtype.val hab
+    exact (algebraMap ℚ_[l] ↥LL.1).injective (congrArg Subtype.val hab)
   have hex : ∀ g, ∃ y : ℤ_[l], algebraMap ℤ_[l] ↥(OL LL) y = (W.χΓ g : ↥(OL LL)) := by
     intro g
     obtain ⟨a, rfl⟩ := W.resΓ_onto g
@@ -836,8 +834,7 @@ theorem act_root (P : LocPrime l) (K LL : FinExt l) {n : ℕ}
   have h2 : (χ (W.resΓ g) : ℤ_[l]) - a ∈ RingHom.ker (PadicInt.toZMod (p := l)) := by
     rw [PadicInt.ker_toZMod, PadicInt.maximalIdeal_eq_span_p, ← pow_one (l : ℤ_[l]),
       ← PadicInt.norm_le_pow_iff_mem_span_pow]
-    rw [← h1] at ha
-    exact ha
+    rwa [← h1] at ha
   rw [RingHom.mem_ker, map_sub, map_natCast, sub_eq_zero] at h2
   rw [hga, resid, red_val, h2, ZMod.val_natCast, ← pow_eq_pow_mod _ hz]
 
@@ -955,8 +952,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
 theorem γD_smulA (g : W.Gam) (a : LetA O n) (x : W.DD T) :
     W.γD T g (a • x) = W.γA g a • W.γD T g x := by
   have := W.γD_smul T g (algebraMap (LetA O n) W.EE a) x
-  rw [algebraMap_smul, W.γE_ext, algebraMap_smul] at this
-  exact this
+  rwa [algebraMap_smul, W.γE_ext, algebraMap_smul] at this
 
 theorem mem_DelF_iff (g : W.Gam) : g ∈ W.DelF ↔ IsOfFinOrder g := by
   rw [W.DelF_def, isOfFinOrder_iff_pow_eq_one]
@@ -1041,8 +1037,7 @@ theorem div_param [IsDomain O] {e s' : ℕ} {π' : LetA O n} {E : ZMod n → Pol
     PowerSeries.HasSubst.of_constantCoeff_zero' (h0 i)
   have hne : ∀ i, π' i ≠ 0 := fun i => by
     rw [hw]
-    refine mul_ne_zero ?_ (pow_ne_zero _ PowerSeries.X_ne_zero)
-    exact (Pi.isUnit_iff.mp w.isUnit i).ne_zero
+    exact mul_ne_zero (Pi.isUnit_iff.mp w.isUnit i).ne_zero (pow_ne_zero _ PowerSeries.X_ne_zero)
   have hdiv : ∀ i, ∃ g, a i = π' i * g := fun i => by
     have e1 : f i = PowerSeries.X * (PowerSeries.mk fun p => PowerSeries.coeff (p + 1) (f i)) +
         PowerSeries.C (PowerSeries.constantCoeff (f i)) := PowerSeries.eq_X_mul_shift_add_const _

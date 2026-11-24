@@ -277,8 +277,7 @@ theorem _root_.GlobalTheory.PMonE.exists_window_radii : ∀ (F : Type) [Nontrivi
   have hPsucc : ∀ j, P (j + 1) = P j * ρ' j := fun j => prod_range_succ _ _
   have hPmono : Monotone fun j => ‖P j‖ := by
     refine monotone_nat_of_le_succ fun j => ?_
-    simp only [hPsucc, norm_mul]
-    exact le_mul_of_one_le_right (norm_nonneg _) (hρ'1 j)
+    simpa only [hPsucc, norm_mul] using le_mul_of_one_le_right (norm_nonneg _) (hρ'1 j)
   have hP0 : P 0 = 1 := by simp [hP]
   have hc1 : 1 ≤ ‖P k‖ := by
     have := hPmono (Nat.zero_le k); simpa [hP0] using this
@@ -427,8 +426,7 @@ theorem window_ineq : ∀ (p h : ℕ), 1 < p → 0 < h → ∀ a ρ : ℤ → �
       have h4 := hlt
       have h5 := hper (-1)
       rw [show (-1 : ℤ) + h = (h : ℤ) - 1 by ring] at h5
-      rw [h5, mul_div_cancel₀ _ hp0.ne'] at h4
-      exact h4
+      rwa [h5, mul_div_cancel₀ _ hp0.ne'] at h4
     linarith
   · intro hJ
     apply hdiv
@@ -680,8 +678,7 @@ theorem norm_pw_mono {F : Type*} [NormedField F] (p : ℕ) [Fact p.Prime] [CharP
     have hN : p ^ m ≠ 0 := pow_ne_zero _ (Fact.out : p.Prime).ne_zero
     have e1 := iter_frobSymm_pow p m y
     have e2 := iter_frobSymm_pow p m y'
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have := pow_lt_pow_left₀ hc (norm_nonneg _) hN
     rw [← norm_pow, ← norm_pow, e1, e2] at this
     linarith
@@ -1346,8 +1343,7 @@ theorem winThm : WinThm := by
     have hsub : ∀ x : {x : Fin (k + 1) → F // (∀ j, ‖x j‖ ≤ ‖π j‖) ∧ ∀ r, rowS p ϖ lam 2 2 x r = 0},
         ∀ j, ‖x.1 j‖ ≤ ‖π j‖ ^ p ^ (k + 1) := by
       intro x
-      by_contra hx
-      push Not at hx
+      by_contra! hx
       exact hcon ⟨x.1, x.2.1, hx, x.2.2⟩
     haveI : Finite {x : Fin (k + 1) → F // (∀ j, ‖x j‖ ≤ ‖π j‖ ^ p ^ (k + 1)) ∧
         ∀ r, rowT p ϖ lam 2 x r = 0} := Nat.finite_of_card_ne_zero (by rw [cI]; positivity)
@@ -1515,8 +1511,7 @@ theorem tilt_orth_of_untilt_orth : ∀ (l : ℕ) [Fact l.Prime] (h : ℕ) (m : F
   have ho := horth (fun i => ((n i : ℕ) : ℚ_[l])) j
   simp only [hnj, one_mul] at ho
 
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   set b := sh (∑ i, (c i : Fl l) * m i)
   set a := ∑ i, algebraMap ℚ_[l] ℂ_[l] ((n i : ℕ) : ℚ_[l]) * sh (m i)
   have : ‖a‖ ≤ max ‖b‖ ‖b - a‖ := by

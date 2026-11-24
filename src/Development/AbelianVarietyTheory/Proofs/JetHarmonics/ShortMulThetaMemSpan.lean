@@ -146,8 +146,7 @@ theorem char_sum (D : Datum H) {N : ℕ} (hN : 0 < N) {I : Ideal (𝓞 E)}
     { toFun := fun x => z ^ D.EF (qRep x) (cHalf H I • v)
       map_zero_eq_one' := by
         have := hmk 0
-        rw [map_zero, LinearMap.zero_apply, zpow_zero] at this
-        exact this
+        rwa [map_zero, LinearMap.zero_apply, zpow_zero] at this
       map_add_eq_mul' := fun x y => by
         obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ x
         obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ y
@@ -348,8 +347,7 @@ theorem detSpan_block (M₁ : Submodule (𝓞 E) (Fin n₁ → E)) (M₂ : Submo
       induction j using Fin.addCases <;> simp [a, b]
     have e2 : v.det = ∑ s : Finset (Fin (n₁ + n₂)), (Matrix.of (s.piecewise a b)).det := by
       have := (Matrix.detRowAlternating (n := Fin (n₁ + n₂)) (R := E)).toMultilinearMap.map_add_univ a b
-      rw [← e] at this
-      exact this
+      rwa [← e] at this
     rw [SetLike.mem_coe, e2]
     refine Submodule.sum_mem _ fun s _ => det_pure_mem M₁ M₂ _ (fun i => ?_) (fun i => ?_) (fun i => ?_)
     · by_cases hi : i ∈ s
@@ -636,8 +634,7 @@ theorem totalDegree_rename_eq {σ τ : Type} {f : σ → τ} (hf : Function.Inje
   rw [support_rename_of_injective hf, Finset.sup_image]
   congr 1
   ext m
-  simp only [Function.comp_apply]
-  exact Finsupp.sum_mapDomain_index_inj hf
+  simpa only [Function.comp_apply] using Finsupp.sum_mapDomain_index_inj hf
 
 def pairing {σ S : Type} [CommRing S] [Algebra k S] (G : (σ →₀ ℕ) → S) : MvPolynomial σ k →+ S where
   toFun P := ∑ mo ∈ P.support, algebraMap k S (P.coeff mo) * G mo
@@ -755,8 +752,7 @@ theorem mIdx_block (Λ₁ : GenLat E n₁) (Λ₂ : GenLat E n₂) (N r : ℕ) :
   congr 1
   apply index_block
   · intro v
-    simp only [Submodule.mem_toAddSubgroup]
-    exact mem_smul_std_block _ v
+    simpa only [Submodule.mem_toAddSubgroup] using mem_smul_std_block _ v
   · intro v
     simp only [Submodule.mem_toAddSubgroup, Submodule.mem_inf, GlobalTheory.ShortLawsCompare.mem_std_block]
     constructor
@@ -849,8 +845,7 @@ theorem inZh_row {n : ℕ} {Λ : GenLat E n} {N : ℕ} {T : Over Xo.X} {a : Fin 
     · intro v hv
       unfold stdLat
       rw [Submodule.mem_pi]
-      intro i _
-      exact hρ v hv
+      exact fun i _ => hρ v hv
 
 theorem inZh_append {n₁ n₂ : ℕ} {Λ₁ : GenLat E n₁} {Λ₂ : GenLat E n₂} {N : ℕ} {T : Over Xo.X}
     {a₁ : Fin n₁ → (T ⟶ Xo.univ.t.G)} {a₂ : Fin n₂ → (T ⟶ Xo.univ.t.G)}
@@ -948,15 +943,13 @@ theorem sum_blockPoly {S : Type} [CommRing S] [Algebra c.F S] {n₁ n₂ : ℕ} 
       congr 1
       ext ℓ
       unfold colOf
-      simp only [Finsupp.coe_equivFunOnFinite_symm]
-      exact block_apply_left m₁ m₂ ℓ.1 ℓ.2 b
+      simpa only [Finsupp.coe_equivFunOnFinite_symm] using block_apply_left m₁ m₂ ℓ.1 ℓ.2 b
     · refine Finset.prod_congr rfl (fun b _ => ?_)
       rw [Fin.append_right]
       congr 1
       ext ℓ
       unfold colOf
-      simp only [Finsupp.coe_equivFunOnFinite_symm]
-      exact block_apply_right m₁ m₂ ℓ.1 ℓ.2 b
+      simpa only [Finsupp.coe_equivFunOnFinite_symm] using block_apply_right m₁ m₂ ℓ.1 ℓ.2 b
 
 theorem totalDegree_blockPoly {n₁ n₂ : ℕ} {P₁ : MvPolynomial (LtN Dw n₁) c.F} {P₂ : MvPolynomial (LtN Dw n₂) c.F}
     (h₁ : P₁ ≠ 0) (h₂ : P₂ ≠ 0) : (BlockLatticeAdmissibility.blockPoly P₁ P₂).totalDegree = P₁.totalDegree + P₂.totalDegree := by
@@ -1068,10 +1061,8 @@ private theorem frMap_cancel' {S T U : Type} [CommRing S] [Algebra c.F S] [CommR
       · simp only [Over.mk_hom]
         rw [Category.assoc, hs₁, hsn, hs₂]
     refine ⟨pm, ?_, ?_, ?_⟩
-    · rw [ts, ts]
-      exact hsn
-    · rw [tf, tf]
-      exact hfn
+    · rwa [ts, ts]
+    · rwa [tf, tf]
     · intro i h
       have e₁ := PPx_le_preimage y.x y'.x pm₁ (by rw [ts, ts]; exact hs₁) i
       have e₂ := PPx_le_preimage y.x y''.x pm₂ (by rw [ts, ts]; exact hs₂) i
@@ -1159,21 +1150,16 @@ theorem shortValAt_mul (hC : ChartIndepSt2) [StarRing (𝓞 E)] (nab : NabV Xo c
     fun q => Fin.append (tp₁' (fun j => q (Fin.castAdd n₂ j))) (tp₂' (fun j => q (Fin.natAdd n₁ j))),
     fun q i => Fin.append (F₁' (fun j => q (Fin.castAdd n₂ j)) (e i).1) (F₂' (fun j => q (Fin.natAdd n₁ j)) (e i).2),
     hff, hmT, ?_, ?_, ?_, ?_, ?_⟩
-  · intro i
-    exact inZh_append (hz₁' _) (hz₂' _)
+  · exact fun i => inZh_append (hz₁' _) (hz₂' _)
   · exact geoInj_append e hg₁' hg₂'
   · intro q b
     refine Fin.addCases (fun j => ?_) (fun j => ?_) b
-    · simp only [Fin.append_left]
-      exact ht₁' _ j
-    · simp only [Fin.append_right]
-      exact ht₂' _ j
+    · simpa only [Fin.append_left] using ht₁' _ j
+    · simpa only [Fin.append_right] using ht₂' _ j
   · intro q i b
     refine Fin.addCases (fun j => ?_) (fun j => ?_) b
-    · simp only [Fin.append_left]
-      exact hF₁' _ _ j
-    · simp only [Fin.append_right]
-      exact hF₂' _ _ j
+    · simpa only [Fin.append_left] using hF₁' _ _ j
+    · simpa only [Fin.append_right] using hF₂' _ _ j
   · have hψφ : ∀ s, (ψ₁.comp φ₁) s = ψ₁ (φ₁ s) := fun s => rfl
     have hψφ₂ : ∀ s, ψ₁ (φ₁ s) = ψ₂ (φ₂ s) := fun s => by rw [← hψφ, heq]; rfl
     rw [map_mul, hψφ, hψφ, hψφ₂ v₂, hv₁, hv₂]
@@ -1306,8 +1292,7 @@ theorem hv_push [StarRing (𝓞 E)] {nab : NabV Xo c} {nab₂ : NabV Xo₂ c₂}
   have e₁ : (fun ℓ : Lt1 Dw => y.u ℓ.1 ℓ.2) = fun ℓ => y₂.u ℓ.1 ℓ.2 ≫ ν.φ := funext fun ℓ => (hu _ _).symm
   have h₁ : IsChart y C.d C.B.G.F C.B.A.act C.uvec (fun m => pu ν h0 _ (C.x m)) := by
     refine (isChart_iff y C.d _ _ _ _).2 ?_
-    rw [e₁]
-    exact hc₁
+    rwa [e₁]
   let C₁ : ChartAt Xo c y := ⟨C.d, C.B, C.uvec, fun m => pu ν h0 _ (C.x m), e, C'.wP, C.h, h₁,
     (isFrame_iff y C.d _ _ _ _ _ _ _ e).2 g₁, C'.prim, C.gauge, g₂⟩
   have hg₁ : ∀ i, IsGerm y C₁.d C₁.x C₁.B.A.act C₁.e C₁.wP k (F i) (g i) := fun i =>
@@ -1910,9 +1895,7 @@ theorem mul_mem_span (hC : ChartIndepSt2) [StarRing (𝓞 E)] {nab : NabV Xo c} 
       rw [eβ]
       simp only [map_mul, map_inv₀, map_one]
       field_simp
-    rw [Finset.mul_sum]
-    rw [Finset.sum_congr rfl fun x' _ => e₃ x']
-    rw [← Finset.mul_sum, hlin]
+    rw [Finset.mul_sum, Finset.sum_congr rfl fun x' _ => e₃ x', ← Finset.mul_sum, hlin]
     ring
   rw [main]
   refine Submodule.sum_mem _ fun x' _ => ?_

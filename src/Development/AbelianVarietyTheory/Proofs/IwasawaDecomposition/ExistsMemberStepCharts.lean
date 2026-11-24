@@ -168,11 +168,9 @@ theorem chart_exists (Hw : ∀ w : SG, Subgroup (GL (Fin n) (𝓞 E ⧸ w.1.asId
         obtain ⟨c, hc'⟩ := hs.2 (decoCls n ST SG (Subgroup.pi Set.univ Hw) ((decoOf ST SG x.1).dia c₀))
         refine ⟨c, hA ?_⟩
         refine (key c).trans (Eq.trans ?_ (adToCls_mk hc n ST SG _ x).symm)
-        rw [← cls_dia n _ c₀, rla_dia_inv]
-        exact hc'
+        rwa [← cls_dia n _ c₀, rla_dia_inv]
   · have h := decoRaw_carries hc n ST SG (hy c) x
-    rw [← rlc_decoOf_val hc n ST SG (hy c), hd', DecoSet.dia_L, ← hlat] at h
-    exact h
+    rwa [← rlc_decoOf_val hc n ST SG (hy c), hd', DecoSet.dia_L, ← hlat] at h
   · refine Iff.trans ?_ (stabRat_rangeD hc n ST SG (Subgroup.pi Set.univ Hw) c₀ (s c) ⟨y c, hy c⟩ (hd c) γ)
     rw [rla_mem_range_stabRat]
     refine Iff.trans (b := γ.1 ∈ (st c).range) ⟨fun ⟨a, h⟩ => ⟨a, congrArg Subtype.val h⟩, fun ⟨a, h⟩ => ⟨a, Subtype.ext h⟩⟩ ?_
@@ -327,8 +325,7 @@ theorem prefRep_normal {G D A : Type} [Group G] [MulAction G D] [Nonempty A] (f 
     obtain ⟨a, rfl⟩ : ∃ a : G, a • q = p := MulAction.orbitRel_apply.1 (Quotient.exact h)
     funext r
     refine propext ⟨fun ⟨g, e⟩ => ⟨g * a, by rw [mul_smul]; exact e⟩, fun ⟨g, e⟩ => ⟨g * a⁻¹, ?_⟩⟩
-    rw [mul_smul, inv_smul_smul]
-    exact e
+    rwa [mul_smul, inv_smul_smul]
   have hex : ∃ p, Quotient.mk (MulAction.orbitRel G D) p = Quotient.mk _ q ∧ pref p := by
     obtain ⟨g, e⟩ := Classical.epsilon_spec (p := fun r => ∃ g : G, r = f (g • q)) ⟨_, 1, rfl⟩
     have h : Quotient.mk (MulAction.orbitRel G D) (g • q) = Quotient.mk _ q := Quotient.sound (MulAction.orbitRel_apply.2 ⟨g, rfl⟩)
@@ -600,8 +597,7 @@ theorem exists_charts : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok →
     ⟨key, fun β => ⟨_, hs β⟩, fun β x => ?_, fun _ => k1, fun _ v hv _ _ => k2 v hv, fun _ => k3, fun c => ?_, fun c x q h => ?_,
       fun c x κ h1 h2 => ?_, fun c a => K5 _ _ _⟩⟩, fun c => K4 _ _, fun h => ?_⟩
   · exact (K1 β ▸ Iff.rfl : x ∈ (K β).lev.Lb ↔ x ∈ baseLb B.fields.E (B.R.N i) ((B.primes X).vT u)).trans (mem_baseLb hPr u _ x)
-  · have e := K4 (chOf c) ⟨c, rfl⟩
-    exact e ▸ yStd_spec I hI u i c
+  · exact (K4 (chOf c) ⟨c, rfl⟩) ▸ yStd_spec I hI u i c
   · have e : ((K (chOf c)).y ⟨c, rfl⟩).1 = I.yStd u i c := K4 (chOf c) ⟨c, rfl⟩
     replace h : PtOf (I.yStd u i c * x * kStd X u (B.R.N i)) q := e ▸ h
     have e2 := (K2 (chOf c)).trans (levU_congr I ((hp _ c).1 rfl).1 ((hp _ c).1 rfl).2).symm

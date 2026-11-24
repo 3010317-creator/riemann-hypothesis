@@ -317,8 +317,7 @@ theorem exists_isProd : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     exact Measure.restrict_eq_self_of_ae_mem hν0
   refine ⟨ν.comap e, ⟨hi, hv, hs⟩, fun S fi fv hfi hfv => ?_⟩
   have h := hν S fi fv hfi hfv
-  rw [← hmap, hemb.restrict_map, hemb.lintegral_map] at h
-  exact h
+  rwa [← hmap, hemb.restrict_map, hemb.lintegral_map] at h
 
 end GlobalTheory.GaugeEx
 end -- clump:auto
@@ -368,8 +367,7 @@ theorem existsUnique_isStdX : ∀ (F E : Type) [Field F] [NumberField F] [Field 
       (tupMeas (s.lamV v) 1 M) (isAddHaarMeasure_tupMeas_of_lc _ (s.haar_lamV v) 1 M) (s.nuV v)
       (s.haar_nuV v)
     refine ⟨_, fib, ?_, rfl⟩
-    simp only [isUnit_iff_ne_zero]
-    exact hfib
+    simpa only [isUnit_iff_ne_zero] using hfib
   choose mv hmv using hex
   have hconv : Conv b mi mv := by
     refine ⟨(bI mi hmi).2.1, fun v => (bV v _ (hmv v)).2.1, ?_⟩

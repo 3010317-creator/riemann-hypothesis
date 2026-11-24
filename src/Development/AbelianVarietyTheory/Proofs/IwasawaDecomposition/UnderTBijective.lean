@@ -65,14 +65,12 @@ theorem underT_bijective {Z : Dat} (hX : Z.X.Ok) (hPr : Z.Pr.Ok) (u : Z.Pr.Word)
     · exact Subtype.ext e
     · refine absurd ?_ (conj_piT_notMem hPr u Q)
       have := decoFin_mem_of_mem_divs P.2
-      rw [e, mem_conjP] at this
-      exact this
+      rwa [e, mem_conjP] at this
   · rintro ⟨v, hv⟩
     have := v.isMaximal
     obtain ⟨Q, hQ, hQv⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 Z.X.E) v.asIdeal
     have hT : ((Z.Pr.T u : ℕ) : 𝓞 Z.X.E) ∈ Q := by
-      rw [hQv.over, Ideal.under_def, Ideal.mem_comap, map_natCast] at hv
-      exact hv
+      rwa [hQv.over, Ideal.under_def, Ideal.mem_comap, map_natCast] at hv
     have hne : Q ≠ ⊥ := fun e => by
       rw [e, Ideal.mem_bot] at hT
       exact (hPr.T_prime u).ne_zero (by exact_mod_cast hT)
@@ -88,8 +86,7 @@ theorem seenBar_of_not {X : Fields} {Pr : Primes X} (hPr : Pr.Ok) (u : Pr.Word) 
     X.embO τ (X.conjO (Pr.piT u)) ∈ w.asIdeal := by
   rw [← map_natCast (X.embO τ), ← hPr.piT_norm u, map_mul] at hw
   refine (w.isPrime.mem_or_mem hw).resolve_left fun h => hs fun τ' => ?_
-  rw [show X.embO τ' (Pr.piT u) = X.embO τ (Pr.piT u) from RingOfIntegers.ext (hPr.piT_Kq u _ _)]
-  exact h
+  rwa [show X.embO τ' (Pr.piT u) = X.embO τ (Pr.piT u) from RingOfIntegers.ext (hPr.piT_Kq u _ _)]
 
 theorem mk_surj {X : Fields} (P : HeightOneSpectrum (𝓞 X.E)) : Function.Surjective (Ideal.Quotient.mk P.asIdeal) :=
   Ideal.Quotient.mk_surjective

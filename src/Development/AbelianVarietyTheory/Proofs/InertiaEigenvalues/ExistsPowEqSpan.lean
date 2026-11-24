@@ -92,8 +92,7 @@ theorem exists_pow_sub_one {L : Type} [Field L] [NumberField L] (S : Finset (Hei
   exact hmk w (ha w hw) k
 
 private theorem isIntegral_natCast_lemma (q : ℕ) : IsIntegral ℤ (q : ℂ) := by
-  have h := (isIntegral_algebraMap : IsIntegral ℤ (algebraMap ℤ ℂ (q : ℤ)))
-  simpa using h
+  simpa using (isIntegral_algebraMap : IsIntegral ℤ (algebraMap ℤ ℂ (q : ℤ)))
 
 private theorem unitOff_one_lemma {q : ℕ} : UnitOff q 1 := by
   unfold UnitOff
@@ -107,10 +106,8 @@ private theorem unitOff_conj_lemma {q : ℕ} {u : ℂ} (hu : UnitOff q u) : Unit
   unfold UnitOff at hu ⊢
   obtain ⟨hu0, m, hu1, hu2⟩ := hu
   refine ⟨(map_ne_zero _).2 hu0, m, ?_, ?_⟩
-  · have h := map_isIntegral_int (starRingEnd ℂ) hu1
-    simpa [map_mul, map_pow, map_natCast] using h
-  · have h := map_isIntegral_int (starRingEnd ℂ) hu2
-    simpa [map_mul, map_pow, map_natCast, map_inv₀] using h
+  · simpa [map_mul, map_pow, map_natCast] using map_isIntegral_int (starRingEnd ℂ) hu1
+  · simpa [map_mul, map_pow, map_natCast, map_inv₀] using map_isIntegral_int (starRingEnd ℂ) hu2
 
 private theorem unitOff_norm_lemma {q : ℕ} {u : ℂ} (hu : UnitOff q u) : UnitOff q ((‖u‖ : ℝ) : ℂ) := by
   have hsq : ((‖u‖ : ℝ) : ℂ) ^ 2 = u * starRingEnd ℂ u := by
@@ -133,8 +130,7 @@ private theorem unitOff_prod_lemma {q : ℕ} {I : Type} (s : Finset I) (f : I �
 private theorem unitOff_val_lemma {L : Type} [Field L] [NumberField L] (φ : L →+* ℂ) (b c : 𝓞 L) (q N : ℕ)
     (hb : b ≠ 0) (hc : c * b = (q : 𝓞 L) ^ N) : UnitOff q (φ (algebraMap (𝓞 L) L b)) := by
   have hφb : φ (algebraMap (𝓞 L) L b) ≠ 0 := by
-    rw [Ne, map_eq_zero_iff φ φ.injective, map_eq_zero_iff _ (IsFractionRing.injective (𝓞 L) L)]
-    exact hb
+    rwa [Ne, map_eq_zero_iff φ φ.injective, map_eq_zero_iff _ (IsFractionRing.injective (𝓞 L) L)]
   have hint : ∀ x : 𝓞 L, IsIntegral ℤ (φ (algebraMap (𝓞 L) L x)) := fun x =>
     map_isIntegral_int φ (RingOfIntegers.isIntegral_coe x)
   have hrel : φ (algebraMap (𝓞 L) L c) * φ (algebraMap (𝓞 L) L b) = (q : ℂ) ^ N := by
@@ -157,8 +153,7 @@ theorem unitOff_val : ∀ (L : Type) [Field L] [NumberField L] (χ : Formalism.L
   have hav : ∀ w : HeightOneSpectrum (𝓞 L), a ∈ w.asIdeal → w = v := by
     intro w haw
     have h1 : v.asIdeal ^ h ≤ w.asIdeal := by
-      rw [hspan, Ideal.span_singleton_le_iff_mem]
-      exact haw
+      rwa [hspan, Ideal.span_singleton_le_iff_mem]
     have h2 : v.asIdeal ≤ w.asIdeal := fun x hx =>
       w.isPrime.mem_of_pow_mem h (h1 (Ideal.pow_mem_pow hx h))
     exact (HeightOneSpectrum.ext (v.isMaximal.eq_of_le w.isPrime.ne_top h2)).symm
@@ -169,8 +164,7 @@ theorem unitOff_val : ∀ (L : Type) [Field L] [NumberField L] (χ : Formalism.L
     rw [hb]
     exact pow_ne_zero _ ha0
   have hbL : algebraMap (𝓞 L) L b ≠ 0 := by
-    rw [Ne, map_eq_zero_iff _ (IsFractionRing.injective (𝓞 L) L)]
-    exact hb0
+    rwa [Ne, map_eq_zero_iff _ (IsFractionRing.injective (𝓞 L) L)]
   obtain ⟨k, hkL⟩ : ∃ k : Lˣ, (k : L) = algebraMap (𝓞 L) L b := ⟨Units.mk0 _ hbL, rfl⟩
   have hbw : ∀ w : HeightOneSpectrum (𝓞 L), w ≠ v → b ∉ w.asIdeal := fun w hw hbw' =>
     hw (hav w (w.isPrime.mem_of_pow_mem M (hb ▸ hbw')))

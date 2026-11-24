@@ -81,8 +81,7 @@ theorem scalar_weight_sum {ι : Type} (S : Finset ι) (w : ι → ℤ) (a : ι �
     have h1 : HasDerivAt (fun u : ℂ => (w s : ℂ) * (u * Complex.I)) ((w s : ℂ) * Complex.I)
         ((0 : ℝ) : ℂ) := by
       simpa using ((hasDerivAt_id ((0 : ℝ) : ℂ)).mul_const Complex.I).const_mul (w s : ℂ)
-    have h2 := h1.cexp.mul_const (a s)
-    simpa using h2
+    simpa using h1.cexp.mul_const (a s)
   have hg := hG.comp_ofReal
   have hz : (fun t : ℝ => ∑ s ∈ S, Complex.exp ((w s : ℂ) * ((t : ℂ) * Complex.I)) * a s)
       = fun _ => (0 : ℂ) := by
@@ -464,8 +463,7 @@ theorem subst_comp_gder (p : D.what₂.Tau → ℕ) (τ : D.what₂.Tau) (g : Gl
       ∑ d, C (A d) * ∑ b, C (B d b) * Y b = ∑ b, C (∑ d, A d * B d b) * Y b := by
     intro A B Y
 
-    simp only [Finset.mul_sum, map_sum, Finset.sum_mul, map_mul, mul_assoc]
-    exact Finset.sum_comm
+    simpa only [Finset.mul_sum, map_sum, Finset.sum_mul, map_mul, mul_assoc] using Finset.sum_comm
   have lin : ∀ (E : Derivation ℂ (PolF D m n) (PolF D m n)) (k : Fin n → ℂ) (Y : Fin n → PolF D m n),
       E (∑ b, C (k b) * Y b) = ∑ b, C (k b) * E (Y b) := by
     intro E k Y
@@ -677,8 +675,7 @@ theorem transp_conj
     have h2 : GlobalTheory.ExportSeries.fockSubst (m := m) w.p g (GlobalTheory.ExportSeries.fockSubst w.p g⁻¹ P) = P := by
       rw [← AlgHom.comp_apply, ← GlobalTheory.ExportSeries.fockSubst_mul, mul_inv_cancel, GlobalTheory.ExportSeries.fockSubst_one]; rfl
     simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, h2] at h1
-    simp only [Module.End.mul_apply, AlgHom.toLinearMap_apply]
-    exact h1.symm
+    simpa only [Module.End.mul_apply, AlgHom.toLinearMap_apply] using h1.symm
   rw [key]
   exact transp_mul (transp_mul (transp_subst hr hg) h) (transp_subst hr (isUF_inv hg))
 

@@ -78,10 +78,7 @@ theorem frame_basis : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
       (∀ g, FrameRelR R σ J J' (P : Matrix (Fin M) (Fin M) E) g (e g)) → e = e0 := by
     intro e he
     ext g
-    apply Subtype.ext
-    apply Units.ext
-    refine Eq.trans ?_ (hm g).symm
-    exact eq_conj h.1 (he g)
+    exact Subtype.ext (Units.ext (Eq.trans (eq_conj h.1 (he g)) (hm g).symm))
   refine ⟨⟨e0, fun g => ?_, hu⟩, fun e he => ?_⟩
   · exact conj_rel h.2.1 _
   · rw [hu e he]

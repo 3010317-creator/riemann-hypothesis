@@ -455,8 +455,7 @@ theorem exists_caseA_enl : ∀ (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (�
     rw [h0]
     exact le_sup_left
   · intro τ x
-    apply le_sup_left (b := (D.nbr i w hw).LL.1)
-    exact AlgHom.fieldRange_le_normalClosure τ ⟨x, rfl⟩
+    exact le_sup_left (b := (D.nbr i w hw).LL.1) (AlgHom.fieldRange_le_normalClosure τ ⟨x, rfl⟩)
 
 end GlobalTheory.UseLoc
 end -- clump:auto
@@ -487,8 +486,7 @@ theorem charL_chiOC_apply (C : TruncatedSeriesCountingIdentities.CoefExt D i w h
 
 theorem inc_cycLL_apply (C : TruncatedSeriesCountingIdentities.CoefExt D i w hw) (g) : Units.map C.inc.toMonoidHom (cycLL (Br.PD D.loc D.nbr i w hw) (Br.LL D.nbr i w hw) g) =
       cycLL (Br.PD D.loc D.nbr i w hw) ↥C.LL.1 g := by
-    apply Units.ext
-    exact (IntermediateField.inclusion C.le).commutes _
+    exact Units.ext ((IntermediateField.inclusion C.le).commutes _)
 
 theorem locChi_zpow_apply (χ : GE D.nd →* (D.nd.O i)ˣ) (k : ℤ) (g) : Br.locChi D.nbr i w hw (χ ^ k) g = Br.locChi D.nbr i w hw χ g ^ k := by
     show Units.map _ ((χ ^ k) _) = (Units.map _ (χ _)) ^ k
@@ -771,9 +769,7 @@ theorem isUnit_of_incO {LL LL' : FinExt l} (h : LL.1 ≤ LL'.1) (x : ↥(OL LL))
     rw [← he] at hy
     exact (isIntegral_algHom_iff ((IntermediateField.inclusion h).restrictScalars ℤ_[l])
       (IntermediateField.inclusion h).injective).1 hy
-  refine isUnit_iff_exists_inv.2 ⟨⟨(x : ↥LL.1)⁻¹, hinv⟩, Subtype.ext ?_⟩
-  show (x : ↥LL.1) * (x : ↥LL.1)⁻¹ = 1
-  exact mul_inv_cancel₀ hx0'
+  exact isUnit_iff_exists_inv.2 ⟨⟨(x : ↥LL.1)⁻¹, hinv⟩, Subtype.ext (mul_inv_cancel₀ hx0')⟩
 
 theorem dvd_of_not_isUnit (P : LocPrime l) (LL : FinExt l) {lam y : ↥(OL LL)} (hl : Irreducible lam)
     (hy : ¬ IsUnit y) : lam ∣ y := by
@@ -783,8 +779,7 @@ theorem dvd_of_not_isUnit (P : LocPrime l) (LL : FinExt l) {lam y : ↥(OL LL)} 
   have hy0' : (y : ↥LL.1) ≠ 0 := fun e => hy0 (Subtype.ext e)
   have hu0 : (y : ↥LL.1) / lam ≠ 0 := div_ne_zero hy0' hl0
   have key : 0 ≤ P.v LL ((y : ↥LL.1) / lam) ∨ 0 ≤ P.v LL ((y : ↥LL.1) / lam)⁻¹ := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     obtain ⟨h1, h2⟩ := hc
     have hs : P.v LL ((y : ↥LL.1) / lam) + P.v LL ((y : ↥LL.1) / lam)⁻¹ = 0 := by
       rw [← AddValuation.map_mul, mul_inv_cancel₀ hu0, AddValuation.map_one]
@@ -1045,8 +1040,7 @@ theorem exists_setC : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
     (GlobalTheory.Pass.stepSub_holds D i r ρ hGood π hDec {π} rfl).1.1
   refine ⟨C, hA, lam, hlam, θ, h, w', η, typ, U, ?_, ?_⟩
   · refine ⟨D.R.t_odd.pos, ?_, ?_, ?_, ?_, ?_⟩
-    · rw [Br.PD_p]
-      exact hS
+    · rwa [Br.PD_p]
     · exact hL5 _ (WpO D.nd i ρ π) θ hWcont hθc
     · exact (hL4 _ (WpO D.nd i ρ π) θ hL6.1 hθcr).1
     · intro a τ hO b
@@ -1322,12 +1316,10 @@ theorem exists_retraction {l : ℕ} [Fact l.Prime] {LL LL' : FinExt l} (h : LL.1
   obtain ⟨p, hp, hpr⟩ := _root_.GlobalTheory.UseLoc.extRet_exists h r hr hr1
   have h1 : p 1 = 1 := by
     have := hpr 1
-    rw [hr1] at this
-    exact this
+    rwa [hr1] at this
   refine ⟨p, hp, fun a => ?_, fun x hx => ?_⟩
   · have := hp a 1
-    rw [mul_one, h1, mul_one] at this
-    exact this
+    rwa [mul_one, h1, mul_one] at this
   · have := hpr ⟨x, hx⟩
     rw [show p x = _ from this]
     exact (r ⟨x, hx⟩).2
@@ -1358,9 +1350,7 @@ theorem descHf : ∀ (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (𝓞 D.host
   obtain ⟨u, hu⟩ := Submodule.Quotient.mk_surjective _ (z g)
   have h1 : (Submodule.Quotient.mk (p := stdG ↥(OL C.LL) ↥C.LL.1 k) (incV C.le k u)) =
       Submodule.Quotient.mk (c g + ((mapM (algebraMap ↥(OL C.LL) ↥C.LL.1) (locOC C M) g).mulVec m - m)) := by
-    refine (liftQ_mk C.le k u).symm.trans ?_
-    refine Eq.trans ?_ (hcm g)
-    exact congrArg (liftQ C.le k) hu
+    exact (liftQ_mk C.le k u).symm.trans (Eq.trans (congrArg (liftQ C.le k) hu) (hcm g))
   obtain ⟨n, hn⟩ := (Submodule.Quotient.eq (stdG ↥(OL C.LL) ↥C.LL.1 k)).1 h1
   refine hu.symm.trans ((Submodule.Quotient.eq (stdG (Br.OLL D.nbr i w hw) (Br.LL D.nbr i w hw) k)).2 ?_)
   refine ⟨fun j => ⟨p (n j), hpO _ (n j).2⟩, ?_⟩
@@ -1476,8 +1466,7 @@ theorem main : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (i : D
       exact (Submodule.Quotient.eq _).2 Submodule.mem_top
     rw [h0]
     exact zero_le
-  · intro c hc z hz
-    exact _root_.GlobalTheory.UseLoc.DescBD.main D i w hw C 1 _ z (h2 c hc z hz)
+  · exact fun c hc z hz => _root_.GlobalTheory.UseLoc.DescBD.main D i w hw C 1 _ z (h2 c hc z hz)
   · intro z hz
     have := _root_.GlobalTheory.UseLoc.descUr_mem D i w hw C 1 _ _ z (h3 z hz)
     rwa [← GlobalTheory.BridgeInertia.inertEq D i w hw] at this

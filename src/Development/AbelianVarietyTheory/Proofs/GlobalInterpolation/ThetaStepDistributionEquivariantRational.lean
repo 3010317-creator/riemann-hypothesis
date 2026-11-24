@@ -242,8 +242,7 @@ theorem jetLin_monomial (J : (DVar ι a b →₀ ℕ) → K) (m : (ι × Fin b �
       (J (m.comapDomain Sum.inr Sum.inr_injective.injOn)) := by
   have := (basisMonomials ((ι × Fin b × Fin b) ⊕ DVar ι a b) K).constr_basis K (fun m =>
     (monomial (m.comapDomain Sum.inl Sum.inl_injective.injOn) (J (m.comapDomain Sum.inr Sum.inr_injective.injOn)) : Pol K ι b)) m
-  rw [coe_basisMonomials] at this
-  exact this
+  rwa [coe_basisMonomials] at this
 
 theorem tabFn_monomial (J : (DVar ι a b →₀ ℕ) → K) (m : DVar ι a b →₀ ℕ) : tabFn J (monomial m 1) = J m := by
   have := (basisMonomials (DVar ι a b) K).constr_basis K J m
@@ -650,8 +649,7 @@ theorem muProdLaw (hD : X.AbelianUnramifiedExtensionConditions) (hPr : Pr.Ok) (h
       exact nc Q hQ (hP.symm ▸ hQ))
     (fun v => by
       by_cases h : B v
-      · simp only [rep, dite_eq_left h]
-        exact HeightOneSpectrum.ext h.choose_spec.2
+      · simpa only [rep, dite_eq_left h] using HeightOneSpectrum.ext h.choose_spec.2
       · simp only [rep, dite_eq_right h, hsel'])
     hx fun P hP => ⟨unr P fun h => hP (vB _ h), vx P hP⟩
   rw [HChar.inf_mul, GlobalTheory.NormOneUnit.inf_eq_one hξ, mul_one] at key
@@ -692,11 +690,9 @@ theorem muProdLaw (hD : X.AbelianUnramifiedExtensionConditions) (hPr : Pr.Ok) (h
         fun P hP => by rw [rep_mem P hP]
       · exact Finset.mem_filter.2 ⟨vB _ ⟨P, hP, rfl⟩, P, hP, rfl⟩
       · have h := (Finset.mem_filter.1 hv).2
-        simp only [rep, dite_eq_left h]
-        exact h.choose_spec.1
+        simpa only [rep, dite_eq_left h] using h.choose_spec.1
       · have h := (Finset.mem_filter.1 hv).2
-        simp only [rep, dite_eq_left h]
-        exact HeightOneSpectrum.ext h.choose_spec.2
+        simpa only [rep, dite_eq_left h] using HeightOneSpectrum.ext h.choose_spec.2
     rw [map_mul, a1, map_prod, ← Finset.prod_mul_distrib, ← hinf, eq_inv_of_mul_eq_one_left key, ← Finset.prod_inv_distrib,
       Units.coe_prod]
     refine Finset.prod_congr rfl fun v _ => ?_
@@ -732,8 +728,7 @@ theorem weights {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R) (
     have h2 := GlobalTheory.GO.ChSrc.zOf_spec R _ ((W.hc u τ).e_int ⟨i, hi⟩) (i + 1)
     rw [h1, add_sub_cancel_left]
     apply Int.cast_injective (α := ℚ)
-    rw [Int.cast_sub, half, ← hz]
-    exact h2
+    rwa [Int.cast_sub, half, ← hz]
   · have hN : R.N i < R.N (i + 1) := by unfold Ranks.N; rw [add_mul]; omega
     have h1 := W.lamTrue_new u hi τ ⟨R.N (i + 1) - 1, by omega⟩ (by show ¬ R.N (i + 1) - 1 < R.N i; omega)
     apply Int.cast_injective (α := ℚ)

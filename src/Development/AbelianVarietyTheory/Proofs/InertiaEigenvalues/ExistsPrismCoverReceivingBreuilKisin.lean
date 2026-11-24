@@ -595,8 +595,7 @@ theorem isPushout_of_away {A C A' C' : Type} [CommRing A] [CommRing C] [CommRing
   haveI : IsScalarTower A C C' := IsScalarTower.of_algebraMap_eq fun a => (RingHom.congr_fun e a).symm
   haveI : IsLocalization (Submonoid.powers x) C := H
   haveI : IsLocalization (Algebra.algebraMapSubmonoid A' (Submonoid.powers x)) C' := by
-    rw [Algebra.algebraMapSubmonoid, Submonoid.map_powers]
-    exact H'
+    rwa [Algebra.algebraMapSubmonoid, Submonoid.map_powers]
   haveI : Algebra.IsPushout A A' C C' :=
     Algebra.isPushout_of_isLocalization (Submonoid.powers x) C A' C'
   exact (CommRingCat.isPushout_iff_isPushout (R := A) (R' := C) (S := A') (S' := C')).2
@@ -743,8 +742,7 @@ theorem exists_cover_receiving_bk : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) 
   refine _root_.GlobalTheory.BSP.cover_of_stable_of_map_ne_top l _ B Q c (_root_.GlobalTheory.ProdStable.prodStable l _ n _ (fun i => ⟨_, (En i).I_eq⟩) Q π hbij B c hstab) ?_
   intro 𝔪 hm
   obtain ⟨i, hi⟩ : ∃ i, s i ∉ 𝔪 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     exact hm.ne_top (eq_top_iff.2 (hspan ▸ Ideal.span_le.2 (Set.range_subset_iff.2 hall)))
   exact map_ne_top_of_comp c (π i) _ (hc i) 𝔪
     (map_ne_top_of_isLoc_ff (s i) (h i) (hL i) (En i).inl ((hcov i).ff 1) 𝔪 hm hi)

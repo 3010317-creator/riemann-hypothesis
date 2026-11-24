@@ -60,9 +60,7 @@ theorem matched_operators_theta_intertwine : ∀ {D : D7} {G : Type} [Group G] [
   have hWinj : Function.Injective (R.HW i (sg0 D A)).e := (hC.models.HW i (sg0 D A)).1
   have key : ∀ h, IsOpsW R i h → ∀ y, R.thG i t (hV P cV y) = h P cW (R.thG i t y) := by
     intro h hh y
-    have h1 := hM y (hV P cV y) (hhV P hP cV y)
-    have h2 := hh P hP0 cW (R.thG i t y)
-    exact hWinj (h1.trans h2.symm)
+    exact hWinj ((hM y (hV P cV y) (hhV P hP cV y)).trans (hh P hP0 cW (R.thG i t y)).symm)
   refine ⟨key, ?_⟩
   intro c w hw
   have XW := GlobalTheory.T.sphericalOperators_forms_on_rank_space_normal R F hC hS hX SF hSF i

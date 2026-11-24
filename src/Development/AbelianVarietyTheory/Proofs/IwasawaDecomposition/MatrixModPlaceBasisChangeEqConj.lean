@@ -162,8 +162,7 @@ theorem fmat_mulVec_mem_wLf (w : HeightOneSpectrum (𝓞 D.host.E)) {k : X.B.I.G
   | mem z h =>
     obtain ⟨⟨l, hl⟩, rfl⟩ := h
     have := hz l hl 1
-    rw [one_smul] at this
-    exact this
+    rwa [one_smul] at this
   | zero => rw [Matrix.mulVec_zero]; exact zero_mem _
   | add a b _ _ ha hb => rw [Matrix.mulVec_add]; exact add_mem ha hb
   | smul c a _ ha =>

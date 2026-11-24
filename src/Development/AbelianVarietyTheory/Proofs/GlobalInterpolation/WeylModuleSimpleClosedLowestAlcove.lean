@@ -81,12 +81,10 @@ theorem inducedSimpleLowestAlcove : GlobalTheory.Published.InducedSimpleLowestAl
     rw [h, Submodule.mem_bot] at hm
     exact hwNe k N N le_rfl _ hm
   refine ⟨hne, fun M hM hG => ?_⟩
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   have key := _root_.GlobalTheory.Alc.hw_mem_of_lt p hp k N lam.natW hN.1 (natW_alcove_bound p N lam hl)
   have good := _root_.GlobalTheory.Alc.good_nablaSq_and_submodules k N lam
   have h1 := (key ⊥ M (good_top_bot k N N).2 (good.2 M hG) (bot_lt_iff_ne_bot.2 hc.1) hM).1
-  have h2 := (key M (nablaSq k N lam) (good.2 M hG) good.1 (lt_of_le_of_ne hM hc.2) le_rfl).2
-  exact h2 h1
+  exact ((key M (nablaSq k N lam) (good.2 M hG) good.1 (lt_of_le_of_ne hM hc.2) le_rfl).2) h1
 
 end GlobalTheory.Alc

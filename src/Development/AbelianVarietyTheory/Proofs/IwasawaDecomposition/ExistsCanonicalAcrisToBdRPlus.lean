@@ -152,8 +152,7 @@ theorem exists_isEps : ∃ e : Per.Fl l, IsEps e := by
   obtain ⟨ζ, ε, h0, -, h1, h⟩ := GlobalTheory.MemLoc.exists_zeta_eps l
   refine ⟨ε, Subtype.ext ?_, fun h2 => h1 ?_⟩
   · have := h 0
-    rw [h0, map_one] at this
-    exact this
+    rwa [h0, map_one] at this
   · have h3 := h 1
     have h4 : rootT ε 1 = 1 := h2
     rw [h4] at h3
@@ -258,8 +257,7 @@ theorem exists_isCrisP : ∀ (l : ℕ) [Fact l.Prime], ∃ j : Per.Acris l →+*
     obtain ⟨a, ha⟩ := CrisMap.bound l n d d.2
     refine ⟨a, ?_⟩
     have h2 : Per.ev l n (e'.symm (j (e x))) = Ideal.Quotient.mk _ (d : Per.AinfP l) := by
-      rw [← he1, RingEquiv.apply_symm_apply]
-      exact hd
+      rwa [← he1, RingEquiv.apply_symm_apply]
     simp only [RingHom.comp_apply, RingEquiv.toRingHom_eq_coe, RingHom.coe_coe]
     rw [map_mul, map_pow, map_natCast, ← (Ideal.Quotient.eq).2 ha, map_mul, map_pow, map_natCast, h2]
 

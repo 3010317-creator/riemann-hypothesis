@@ -117,8 +117,7 @@ theorem step_poly (q n t : ℕ) (ν s : ℂ) (a : ℕ → ℂ) :
     ext i
     simp only [Finset.mem_filter, Finset.mem_range]
     omega
-  simp only [stepMat, ite_mul, zero_mul, mul_ite, mul_zero]
-  exact e1 _ _ _
+  simpa only [stepMat, ite_mul, zero_mul, mul_ite, mul_zero] using e1 _ _ _
 
 theorem blockPoly_comp (ν s : ℂ) (q t : ℕ) : (blockPoly ν q t).comp (C s * X) = blockPoly (ν * s) q t := by
   unfold blockPoly
@@ -165,8 +164,7 @@ theorem chain_poly (q t m : ℕ) (n : ℕ → ℕ) (hn : ∀ j, n (j + 1) = n j 
         ∑ l ∈ Finset.range (n (j + 1) + 1), W (j + 1) k l *
           ∑ i ∈ Finset.range (n j + 1), stepMat q (n j) t (ν j) (s j) l i * a i := by
       intro k
-      simp only [h1 j hjm, Finset.sum_mul, Finset.mul_sum, mul_assoc]
-      exact Finset.sum_comm
+      simpa only [h1 j hjm, Finset.sum_mul, Finset.mul_sum, mul_assoc] using Finset.sum_comm
     simp only [e]
     rw [ih (j + 1) (by omega), hn j, step_poly, mul_comp, blockPoly_comp, comp_assoc,
       Finset.prod_eq_prod_Ico_succ_bot hjm, Finset.prod_eq_prod_Ico_succ_bot hjm, mul_assoc]
@@ -413,13 +411,11 @@ theorem exists_transfer : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T :
       have h4 := funext (w1 (D.R.m - 1) (by omega) k)
       simp only [hmm] at h4
       rw [funext (w0 k), ← hX] at h4
-      simp only [h4]
-      exact h3
+      simpa only [h4] using h3
     · have h3 := step_match (ν := ν j) (s := s j) (hC.chain.ωY t j hj) hP (unrPl_step (u2 (j + 1) (by omega) hj.le) u1)
         (unrPl_step (v2 (j + 1) (by omega) hj.le) v1) he h1 h2 hx (hY _ (by omega)) (hY _ hj.le)
         (hn j) hq rfl rfl (W (j + 1) k)
-      simp only [funext (w1 j (by omega) k)]
-      exact h3
+      simpa only [funext (w1 j (by omega) k)] using h3
   · have hq0 : A.q P ≠ 0 := by
       rw [hq]
       exact fun h => (R.pl P).ne_bot (Ideal.absNorm_eq_zero_iff.1 h)

@@ -99,8 +99,7 @@ theorem thetaInner_sum_sum {ψ : AddChar (AF D.host.F) ℂ} {μ : Measure (WO S 
   have e : (fun w => star ((∑ i ∈ Q, f i) w) * (∑ j ∈ Q, g j) w) =
       fun w => ∑ i ∈ Q, ∑ j ∈ Q, star (f i w) * g j w := by
     funext w
-    simp only [Finset.sum_apply, star_sum, Finset.sum_mul, Finset.mul_sum]
-    exact Finset.sum_comm
+    simpa only [Finset.sum_apply, star_sum, Finset.sum_mul, Finset.mul_sum] using Finset.sum_comm
   rw [e, integral_finsetSum _ fun i hi => integrable_finsetSum _ fun j hj => hint i hi j hj]
   exact Finset.sum_congr rfl fun i hi => integral_finsetSum _ fun j hj => hint i hi j hj
 
@@ -162,8 +161,7 @@ theorem separate : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (
       refine hce.conj.infPart_half ((PlaceModel.isHalf_iff S T).1 ?_)
       rw [cA_cA]; exact hye
     rw [PlaceModel.symplO_skew, AddChar.map_neg_eq_inv, (hdual y hinf).1 hy u hu, inv_one]
-  by_contra hno
-  push Not at hno
+  by_contra! hno
   have hrx : IsHalf (cA D e) (r • x) := half'.2 (by rw [smul_comm, half'.1 hx])
   have hmem := hce.mem_of_dual hdual (r • x) ((PlaceModel.isHalf_iff S T).1 hrx) (fun y hy => by
     obtain ⟨hy1, hy2⟩ := AddSubgroup.mem_inf.1 hy
@@ -270,8 +268,7 @@ theorem orth_of_disjoint : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : 
 
   have hdisjP : ∀ q, P Φ₁ q = 0 ∨ P Φ₂ q = 0 := by
     intro q
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     obtain ⟨t, ht⟩ := Function.ne_iff.1 hne.1
     obtain ⟨t', ht'⟩ := Function.ne_iff.1 hne.2
     obtain ⟨hq1, h1⟩ := hPne Φ₁ q t ht

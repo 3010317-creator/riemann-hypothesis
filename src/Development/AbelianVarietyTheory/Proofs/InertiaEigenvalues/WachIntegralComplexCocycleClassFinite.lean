@@ -118,8 +118,7 @@ theorem mem_N_of_jD (E : EtTie W RA RW inclR φR gR πA) (T : LocLat G Qp LL O)
     · intro z
       obtain ⟨α, hα, -⟩ := hbA z z.2
       refine ⟨fun j => algebraMap _ W.EE (α j), ?_⟩
-      simp only [Submodule.subtype_apply, algebraMap_smul]
-      exact hα
+      simpa only [Submodule.subtype_apply, algebraMap_smul] using hα
     · rintro e y ⟨μ, rfl⟩
       exact ⟨e • μ, by simp [Finset.smul_sum, smul_smul]⟩
     · rintro y y' ⟨μ, rfl⟩ ⟨μ', rfl⟩
@@ -173,8 +172,7 @@ theorem of_tie (E : EtTie W RA RW inclR φR gR πA) (T : LocLat G Qp LL O) (hT :
     ∃ a : ℕ, W.X ^ a • m ∈ W.N T := by
   have hy : ((Multiset.replicate M 0).map fun j => (W.φA ^ j) W.Q).prod • (W.φD T m - m) ∈
       W.N T := by
-    rw [Multiset.map_replicate, Multiset.prod_replicate, pow_zero]
-    exact hm
+    rwa [Multiset.map_replicate, Multiset.prod_replicate, pow_zero]
   have hb : TWmap φR T (E.jD T m) - E.jD T m = E.jD T (W.φD T m - m) := by
     rw [map_sub, E.jD_φ]
   obtain ⟨a, ha⟩ := hF _ _ hy _ hb 0 (fun j hj => (Multiset.eq_of_mem_replicate hj).le)
@@ -182,8 +180,7 @@ theorem of_tie (E : EtTie W RA RW inclR φR gR πA) (T : LocLat G Qp LL O) (hT :
   obtain ⟨h1, k, hk, -⟩ := hP1
   have hz := hk _ ha
   refine ⟨k + a, mem_N_of_jD E T hT h1 h6 _ ?_⟩
-  rw [GlobalTheory.NL.FrobDenom.jD_smulA, map_pow, map_pow, pow_add, mul_smul]
-  exact hz
+  rwa [GlobalTheory.NL.FrobDenom.jD_smulA, map_pow, map_pow, pow_add, mul_smul]
 
 end Generic
 
@@ -555,8 +552,7 @@ theorem main : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf 
     rw [hb, mul_smul]
   refine ⟨?_, fun h0 => ?_⟩
   · refine _root_.GlobalTheory.NL.PoleCrys.main D HW F l K s LL h T hT (Multiset.replicate (mx M) 0) y z ?_ hz' hc
-    rw [Multiset.map_replicate, Multiset.prod_replicate, pow_zero]
-    exact hy
+    rwa [Multiset.map_replicate, Multiset.prod_replicate, pow_zero]
   · obtain ⟨m, hm⟩ := ((GlobalTheory.NL.HerrComplexH1.herr_H1_description D HW F l K s LL h T hT).1.2 ⟨(y, z), hc⟩).1 h0
     have hm1 : y = ((HW l).W K s LL h).φD T m - m := congrArg Prod.fst hm
     have hm2 : z = ((HW l).W K s LL h).γ T m - m := congrArg Prod.snd hm

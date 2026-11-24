@@ -96,8 +96,7 @@ theorem numGood_comp : ∀ (K V : Type) [Field K] [NumberField K] [AddCommGroup 
     have hwv : LiesOver w v := rfl
     have hv : LiesOver v la := by
       have hw' : w.asIdeal.comap (algebraMap (𝓞 K) (𝓞 K₁)) = la.asIdeal := hw
-      rw [IsScalarTower.algebraMap_eq (𝓞 K) (𝓞 K') (𝓞 K₁), ← Ideal.comap_comap] at hw'
-      exact hw'
+      rwa [IsScalarTower.algebraMap_eq (𝓞 K) (𝓞 K') (𝓞 K₁), ← Ideal.comap_comap] at hw'
     have : w.asIdeal.LiesOver v.asIdeal := ⟨hwv.symm⟩
     have h1 := hf la v hv F hF (hne F h0)
     have h2 := mul_le_mul_of_nonneg_left h1 (Nat.cast_nonneg (α := ℝ) (w.asIdeal.ramificationIdx (𝓞 K')))
@@ -107,7 +106,6 @@ theorem numGood_comp : ∀ (K V : Type) [Field K] [NumberField K] [AddCommGroup 
     linarith
   · intro σ F hF h0
     have h1 := ha (σ.comp (algebraMap K' K₁)) F hF (hne F h0)
-    rw [RingHom.comp_assoc, ← IsScalarTower.algebraMap_eq] at h1
-    exact h1
+    rwa [RingHom.comp_assoc, ← IsScalarTower.algebraMap_eq] at h1
 
 end GlobalTheory.ArcCM

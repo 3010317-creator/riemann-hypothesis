@@ -166,8 +166,7 @@ theorem basis_expand {E N : Type} [Field E] [AddCommGroup N] [Module F N] [Algeb
     z = ∑ j, bE j ⊗ₜ[F] TensorProduct.equivFinsuppOfBasisLeft bE z j := by
   classical
   have h := TensorProduct.equivFinsuppOfBasisLeft_symm_apply bE (TensorProduct.equivFinsuppOfBasisLeft bE z)
-  rw [LinearEquiv.symm_apply_apply, Finsupp.sum_fintype _ _ (by simp)] at h
-  exact h
+  rwa [LinearEquiv.symm_apply_apply, Finsupp.sum_fintype _ _ (by simp)] at h
 
 theorem tensorFam {E : Type} [Field E] [NumberField E] [Algebra F E] (v : HeightOneSpectrum (𝓞 F))
     {ι : Type} [Fintype ι] (m : ι → E ⊗[F] FiniteAdeleRing (𝓞 F) F) (hm : ∀ i, prV (E := E) v (m i) = 0)
@@ -189,8 +188,7 @@ theorem tensorFam {E : Type} [Field E] [NumberField E] [Algebra F E] (v : Height
     rw [hexp p.1, map_sum] at h
     simp only [prV_tmul] at h
     have := congrArg (fun z => TensorProduct.equivFinsuppOfBasisLeft bE z p.2) h
-    simp only [basis_coeff, map_zero, Finsupp.coe_zero, Pi.zero_apply] at this
-    exact this
+    simpa only [basis_coeff, map_zero, Finsupp.coe_zero, Pi.zero_apply] using this
   obtain ⟨t, ht, hty⟩ := scalarFam v a ha (M * c) (Nat.mul_pos hM hc0)
   choose y hy he using hty
   refine ⟨t, ht, fun i => ⟨∑ j, (algebraMap (𝓞 E) E (o j) ⊗ₜ[F] (1 : FiniteAdeleRing (𝓞 F) F)) *
@@ -325,8 +323,7 @@ theorem localization_le_localization_of_le_localization (p : Ideal R) [p.IsPrime
   obtain ⟨s, hs, hx⟩ := (mem_locP p M x).1 hx
   obtain ⟨t, ht, hx'⟩ := (mem_locP p M₁ _).1 (h hx)
   refine (mem_locP p M₁ x).2 ⟨t * s, p.primeCompl.mul_mem ht hs, ?_⟩
-  rw [mul_smul]
-  exact hx'
+  rwa [mul_smul]
 
 end General
 
@@ -492,12 +489,10 @@ theorem seam_locP_inj {D : D7} {X : Fields} (s : Seam D X) {n : ℕ} (P : Height
           rw [f.map_smulₛₗ, hfy, hzx]
           show ψ (ψ.symm r) • x = r • x
           rw [RingEquiv.apply_symm_apply]
-        rw [this]
-        exact hz
+        rwa [this]
     · rintro ⟨y, ⟨r, hr, hy⟩, rfl⟩
       refine ⟨ψ r, ?_, r • y, hy, ?_⟩
-      · intro hm
-        exact hr ((mem_seamP s P r).1 hm)
+      · exact fun hm => hr ((mem_seamP s P r).1 hm)
       · rw [f.map_smulₛₗ]
         rfl
   rw [hlat, hlat, hloc, hloc] at h
@@ -514,8 +509,7 @@ theorem locP_map_equiv {R W W' : Type*} [CommRing R] [AddCommGroup W] [Module R 
       apply e.injective
       rw [map_smul, e.apply_symm_apply]
       exact hzx.symm
-    rw [this]
-    exact hz
+    rwa [this]
   · rintro ⟨y, ⟨s, hs, hy⟩, rfl⟩
     exact ⟨s, hs, s • y, hy, by simp⟩
 
@@ -585,8 +579,7 @@ theorem mem_latAd_iff {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
         Formalism.UG.inclE (F := F) (FiniteAdeleRing (𝓞 F) F) ((c : 𝓞 E) : E) • (fun a => Formalism.UG.inclE (F := F) (FiniteAdeleRing (𝓞 F) F) (z a)) from
         funext fun a => by simp only [Pi.smul_apply, smul_eq_mul, Algebra.smul_def, map_mul], Matrix.mulVec_smul]
       exact (Formalism.L2.Herm.hatL (F := F) Lb).smul_mem (⟨_, hc⟩ : Formalism.L2.Herm.intAf F E) hz
-  · intro hw
-    exact Submodule.subset_span hw
+  · exact fun hw => Submodule.subset_span hw
 
 theorem locP_latAd_le {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {N : ℕ}
     (Lb : Submodule (𝓞 E) (Fin N → E)) (hfg : Lb.FG) (hsp : Submodule.span E (Lb : Set (Fin N → E)) = ⊤)
@@ -655,8 +648,7 @@ theorem decoAt_eq : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : G.In
   have e := locP_mvL (A.crd i hi) Q.asIdeal _ _
     (_root_.GlobalTheory.CompanLocP.locP_companion_eq D.sp (gramN D i hi) a Q.asIdeal _ _ hfg₁ hfg (key _ rfl) (key _ hσ))
   apply seam_locP_inj t.seam P.1
-  rw [hp.lat, hp₁.lat]
-  exact e
+  rwa [hp.lat, hp₁.lat]
 
 end GlobalTheory.LatAway
 end -- clump:auto

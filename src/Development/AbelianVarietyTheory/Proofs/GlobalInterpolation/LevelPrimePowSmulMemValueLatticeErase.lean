@@ -483,8 +483,7 @@ theorem frame_ker_decomp (hn : 0 < n) (p : LocF.PP Lc n) (h : GL (Fin n) Lc.K)
     intro g g' hg hg' a b
     have h3 := (hg' _).2 (single_std b)
     have h4 : ((g⁻¹ * g' : GL (Fin n) Lc.K) : Matrix (Fin n) (Fin n) Lc.K).mulVec (Pi.single b 1) ∈ Lc.std n := by
-      rw [← hg, Matrix.mulVec_mulVec, ← Units.val_mul, mul_inv_cancel_left]
-      exact h3
+      rwa [← hg, Matrix.mulVec_mulVec, ← Units.val_mul, mul_inv_cancel_left]
     have := (mem_std _).1 h4 a
     simpa using this
   have k1 := key _ _ h2 hh
@@ -503,8 +502,7 @@ theorem frame_ker_decomp (hn : 0 < n) (p : LocF.PP Lc n) (h : GL (Fin n) Lc.K)
     rw [Matrix.map_mul, eA, eB, ← Units.val_mul, Matrix.map_one _ (map_zero _) (map_one _), mul_assoc,
       mul_inv_cancel_left, inv_mul_cancel, Units.val_one]
   · rw [← mul_assoc, ← inv_mul_eq_iff_eq_mul]
-    apply Units.ext
-    exact eA.symm
+    exact Units.ext eA.symm
 
 end Lattice
 
@@ -582,17 +580,14 @@ theorem pow_smul_mem_valB_erase : ∀ (D : D7) (u : D.what₂.Word) (X : Ch D u)
     fun a => ⟨Co.j w v a, (Co.j_int w hw v a).2 a.2, rfl⟩
   have hT : (X.A.T : ℂ) ≠ 0 := by
     have := (M.Lc v).q_ne
-    intro h0
-    apply this
-    exact (congrArg Nat.cast (Nat.cast_eq_zero.1 h0)).trans Nat.cast_zero
+    exact fun h0 => this ((congrArg Nat.cast (Nat.cast_eq_zero.1 h0)).trans Nat.cast_zero)
   have hmv0 : ∀ g : ∀ v, GL (Fin (D.R.N i)) (M.Lc v).K,
       Co.mv w g (X.fm.tauOf w v) = Matrix.GeneralLinearGroup.map ψ (g v) := by
     intro g
     have : ∀ v', v' = v → Matrix.GeneralLinearGroup.map (D.what₂.embLL.comp (Co.j w v')) (g v') =
         Matrix.GeneralLinearGroup.map ψ (g v) := by
       rintro _ rfl; rfl
-    simp only [PtModel.Coord.mv, hs, ite_true]
-    exact this _ (Equiv.symm_apply_apply _ _)
+    simpa only [PtModel.Coord.mv, hs, ite_true] using this _ (Equiv.symm_apply_apply _ _)
   have hmv1 : ∀ τ, τ ≠ X.fm.tauOf w v → Co.mv w (Function.update h v h₁) τ = Co.mv w h τ := by
     intro τ hτ
     have hne : (X.fm.tauOf w).symm τ ≠ v := fun e => hτ (by rw [← e, Equiv.apply_symm_apply])
@@ -660,8 +655,7 @@ theorem pow_smul_mem_valB_erase : ∀ (D : D7) (u : D.what₂.Word) (X : Ch D u)
   refine ⟨Function.update h v h₁, fun v' => ?_, z', hz', by rw [map_smul, hy, ez]⟩
   by_cases hv' : v' = v
   · subst hv'
-    rw [Function.update_self, ite_eq_left ⟨hs, Finset.notMem_erase _ _⟩]
-    exact hf
+    rwa [Function.update_self, ite_eq_left ⟨hs, Finset.notMem_erase _ _⟩]
   · rw [Function.update_of_ne hv']
     have := hh v'
     simpa only [Finset.mem_erase, ne_eq, hv', not_false_eq_true, true_and] using this

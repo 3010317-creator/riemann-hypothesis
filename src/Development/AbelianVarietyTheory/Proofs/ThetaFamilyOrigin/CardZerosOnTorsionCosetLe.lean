@@ -209,8 +209,7 @@ theorem exists_ratio {M : LB X} (s t : M.Sec) (V : X.Opens) (hV : V ≤ Out.nonz
   have hu' : ∀ k, IsUnit (resG X (inf_le_right : V ⊓ M.U k ≤ _) (t.f k)) := fun k =>
     X.toRingedSpace.isUnit_of_isUnit_germ _ _ fun y hy => by
       have := hu k y hy.1 hy.2
-      rw [← gr_eq_gs y _ hy.2, ← gr_res y inf_le_right hy] at this
-      exact this
+      rwa [← gr_eq_gs y _ hy.2, ← gr_res y inf_le_right hy] at this
   choose u hu'' using fun k => (hu' k).exists_left_inv
   let a : ∀ k, Γ(X, V ⊓ M.U k) := fun k => resG X inf_le_right (s.f k) * u k
   have ha : ∀ k (y : X) (hy : y ∈ V ⊓ M.U k),
@@ -535,8 +534,7 @@ theorem card_zeros_on_torsion_coset_le :
     exact ⟨c, fun t => (hc t).exists⟩
   · obtain ⟨h', hh'⟩ := hpull K P N k h
     refine ⟨h', fun z => ?_⟩
-    rw [hh']
-    rw [e z]
+    rw [hh', e z]
     rfl
 
 end GlobalTheory

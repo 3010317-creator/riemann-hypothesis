@@ -59,8 +59,7 @@ theorem bounded_cover {L : Type} [Field L] [NumberField L] [IsCMField L] {n : �
   refine ⟨f0 * j, Finset.mem_image.2 ⟨(f0, j), Finset.mem_product.2 ⟨hf0, hj⟩, rfl⟩, ?_⟩
   have h1 : (f0 * j)⁻¹ * κ = κ' := by
     rw [mul_inv_rev, mul_assoc, e, ← mul_assoc, inv_mul_cancel, one_mul]
-  rw [h1]
-  exact hκ'
+  rwa [h1]
 
 theorem finite_index_conj : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) (J : Subgroup (GAf L n)),
     IsBounded J → ∀ (h : GAf L n) (N : ℕ), 0 < N →
@@ -79,8 +78,7 @@ theorem finite_index_conj : ∀ (L : Type) [Field L] [NumberField L] [IsCMField 
   have hu := (hc _ hcf).1
   have e : (h * f * h⁻¹)⁻¹ * (MulAut.conj h).toMonoidHom κ = h⁻¹⁻¹ * (f⁻¹ * κ) * h⁻¹ := by
     simp only [MulEquiv.coe_toMonoidHom, MulAut.conj_apply, mul_inv_rev, inv_inv, mul_assoc, inv_mul_cancel_left]
-  rw [e]
-  exact hu
+  rwa [e]
 
 end GlobalTheory.CongIndex
 

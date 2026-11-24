@@ -177,8 +177,7 @@ theorem exists_nsmul_mem (M : Submodule (𝓞 E) (Fin N → E)) (hspan : Submodu
     (z : Fin N → E ⊗[F] 𝔸) : ∃ n : ℕ, 0 < n ∧ n • z ∈ Formalism.L2.Herm.hatL (F := F) M := by
   obtain ⟨m, hm, h⟩ := GlobalTheory.AutInhab.lamAf_absorbs (F := F) M hspan z
   refine ⟨m, hm, ?_⟩
-  rw [hatL_eq_lamAf, ← Nat.cast_smul_eq_nsmul (E ⊗[F] 𝔸)]
-  exact h
+  rwa [hatL_eq_lamAf, ← Nat.cast_smul_eq_nsmul (E ⊗[F] 𝔸)]
 
 theorem iA_smul_incl (s : 𝓞 E) (u : Fin N → E) :
     iA F E (algebraMap (𝓞 E) E s) • (fun i => iA F E (u i)) = fun i => iA F E ((s • u) i) := by
@@ -247,8 +246,7 @@ theorem mvL_mulVec_mem_iff (R : GL (Fin N) E) (X : Submodule (𝓞 E) (Fin N →
     have h2 := congrArg (fun w => ((R⁻¹ : GL (Fin N) E) : Matrix (Fin N) (Fin N) E) *ᵥ w) hxv'
     simp only [Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec] at h2
     exact h2 ▸ hx
-  · intro hv
-    exact ⟨v, hv, rfl⟩
+  · exact fun hv => ⟨v, hv, rfl⟩
 
 theorem span_std : Submodule.span E ((Formalism.L2.Col.stdLat E N : Submodule (𝓞 E) (Fin N → E)) : Set (Fin N → E)) = ⊤ := by
   rw [eq_top_iff]
@@ -288,12 +286,10 @@ theorem key_iff (y : GL (Fin N) (E ⊗[F] 𝔸)) (R : GL (Fin N) E) (M : Submodu
   constructor
   · rintro ⟨s, hs, hm⟩
     refine ⟨s, hs, ?_⟩
-    rw [GlobalTheory.LatAway.mem_latAd_iff, e]
-    exact hm
+    rwa [GlobalTheory.LatAway.mem_latAd_iff, e]
   · rintro ⟨s, hs, hm⟩
     refine ⟨s, hs, ?_⟩
-    rw [GlobalTheory.LatAway.mem_latAd_iff, e] at hm
-    exact hm
+    rwa [GlobalTheory.LatAway.mem_latAd_iff, e] at hm
 
 theorem localization_eq_stdAt_of_congAt : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E] {N : ℕ} (P : HeightOneSpectrum (𝓞 E)) (d : ℕ), 1 ≤ d → ∀ (y : GL (Fin N) (E ⊗[F] FiniteAdeleRing (𝓞 F) F)) (R : GL (Fin N) E) (M : Submodule (𝓞 E) (Fin N → E)), M.FG → Submodule.span E (M : Set (Fin N → E)) = ⊤ → CongAt (F := F) P d (y⁻¹ * ratA F R) → Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (latAd y M) = mvL R (stdAt E N P) → Formalism.HermitianLatticesTheory.localization₂ P.asIdeal M = stdAt E N P := by
   intro F E _ _ _ _ _ _ N P d hd y R M hfg hspan hcong hloc

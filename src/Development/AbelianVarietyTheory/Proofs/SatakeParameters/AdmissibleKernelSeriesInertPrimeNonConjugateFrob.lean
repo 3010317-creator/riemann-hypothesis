@@ -395,9 +395,7 @@ theorem orb_bijective (D : D7) (p : ℕ) (R : Finset (OrbitPlaces.Pl D)) (hR : O
     rfl
   · intro z
     obtain ⟨r, ⟨hr, e, he⟩, -⟩ := hR z
-    refine ⟨(⟨r, hr⟩, (e : ZMod (nP D p))), ?_⟩
-    show OrbitPlaces.orbMap D p r (e : ZMod (nP D p)) = z
-    exact (PI.OrbJet.OrbW.posPl_eq_orbMap D p r e).symm.trans he
+    exact ⟨(⟨r, hr⟩, (e : ZMod (nP D p))), (PI.OrbJet.OrbW.posPl_eq_orbMap D p r e).symm.trans he⟩
 
 theorem subst_entLog_orb (D : D7) (p : ℕ) [Fact p.Prime] {M N N' : ℕ} (κ : Fin M → OrbitPlaces.Pl D × Fin N)
     (y : ZV (nP D p) M N') :
@@ -544,8 +542,7 @@ theorem orbitIdentity_all_of_integralClass_hostLog : ∀ (D : D7) (p : ℕ) [Fac
   have hc := _root_.GlobalTheory.KerStd.HypOrbit.hypZ_of_inHyp D p h5 σ om oms R eA f f' Θ
   rw [← hρe, ← hπe] at hc
   have hA := congrArg (subst πs) hZ
-  rw [hR1, hc] at hA
-  rw [Formalism.DworkPowerSeriesWeights.thetaZ, subst_mul hπs] at hA
+  rw [hR1, hc, Formalism.DworkPowerSeriesWeights.thetaZ, subst_mul hπs] at hA
   have hlin : subst (Formalism.DworkPowerSeriesWeights.linSub Formalism.DworkPowerSeriesWeights.idM) (subst g U) = subst g U := by
     have : (Formalism.DworkPowerSeriesWeights.linSub Formalism.DworkPowerSeriesWeights.idM : ZV (nP D p) M N' → MvPowerSeries (ZV (nP D p) M N') ℂ_[p]) = X :=
       funext fun x => Formalism.DworkPowerSeriesWeights.OrbMul.linSub_idM x
@@ -741,8 +738,7 @@ theorem fOf_fOf'_dual : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (σ : MaximalUnram
       ∑ t : ZMod (nP D p), ∑ t' : ZMod (nP D p), (if t.val % 2 = 0 then σ^[t.val + 1] (om k) else 0) *
         (if t'.val % 2 = 0 then 0 else σ^[t'.val] (oms k')) *
         (if posPl D p r0 (t.val + 1) = posPl D p r1 t'.val ∧ a = a' ∧ b = b' then 1 else 0) := by
-    rw [Finset.sum_congr rfl fun i _ => by rw [hf i, hf' i, Finset.sum_mul_sum]]
-    rw [Finset.sum_comm]
+    rw [Finset.sum_congr rfl fun i _ => by rw [hf i, hf' i, Finset.sum_mul_sum], Finset.sum_comm]
     refine Finset.sum_congr rfl fun t _ => ?_
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun t' _ => ?_
@@ -1235,8 +1231,7 @@ theorem norm_hK_le_one : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lam : Qbar →+*
     simp only [Matrix.mul_apply, Matrix.map_apply, map_sum, map_mul, Finset.sum_mul]
     rw [Finset.sum_comm]
   show ‖((hK D lam P P' b w a b₀ i : MaximalUnramifiedExtension p) : ℂ_[p])‖ ≤ 1
-  rw [e, hρC]
-  exact hint
+  rwa [e, hρC]
 
 end GlobalTheory.KerStd.HypCoord
 end -- clump:auto
@@ -1434,8 +1429,7 @@ theorem even_case {m d : ℕ} [NeZero d] (hd : 2 * m = d) (σ : K →+* K) (om o
     have := congrArg Matrix.transpose (mul_eq_one_comm.1 hMQ)
     simpa [Matrix.transpose_mul] using this
   have := congrFun (congrFun hMQ' i) j
-  rw [Matrix.mul_apply, Matrix.one_apply] at this
-  exact this
+  rwa [Matrix.mul_apply, Matrix.one_apply] at this
 
 theorem sum_eq_ite {d : ℕ} [NeZero d] (σ : K →+* K) (om oms : Fin (d / 2) → K)
     (hT : TrDual d σ om oms) (s t : ZMod d) (hst : s.val % 2 = t.val % 2) :

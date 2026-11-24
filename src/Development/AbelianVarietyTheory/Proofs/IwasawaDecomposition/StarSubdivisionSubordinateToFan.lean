@@ -62,11 +62,9 @@ theorem linearOn_of_forall_inRCone {O : Type} [CommRing O] (χ : InvFun O) {X : 
     simp only [InvFun.evalZ, hpt]
   have e : (fun x y => ∑ j, c j * (γ' j x y : ℝ)) = fun x y => ∑ i, (∑ j, c j * a j i) * (γ i x y : ℝ) := by
     funext x y
-    simp only [hpt, Finset.mul_sum, Finset.sum_mul, mul_assoc]
-    exact Finset.sum_comm
+    simpa only [hpt, Finset.mul_sum, Finset.sum_mul, mul_assoc] using Finset.sum_comm
   rw [e, hχ _ (fun i => Finset.sum_nonneg fun j _ => mul_nonneg (hc j) (ha j i))]
-  simp only [hev, Finset.mul_sum, Finset.sum_mul, mul_assoc]
-  exact Finset.sum_comm
+  simpa only [hev, Finset.mul_sum, Finset.sum_mul, mul_assoc] using Finset.sum_comm
 
 theorem subordinate_of_isStarOf : ∀ (O : Type) [CommRing O] (bar : O → O) (q : ℕ) (ψ w ψ' : InvFun O),
     IsStarOf bar q ψ w ψ' → Subordinate bar q ψ' ψ := by

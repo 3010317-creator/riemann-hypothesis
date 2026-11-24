@@ -484,8 +484,7 @@ theorem fockT_apply (Y : Matrix (Fin m) (Fin m) ℂ) (P : MvPolynomial (FVar D m
   congr 1
   simp only [smul_smul, ← Finset.sum_smul]
   congr 1
-  simp [Matrix.trace, mul_ite, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun _ _ => by ring
+  simpa [Matrix.trace, mul_ite, Finset.mul_sum] using Finset.sum_congr rfl fun _ _ => by ring
 
 theorem fockS_apply (Z : Matrix (Fin n) (Fin n) ℂ) (P : MvPolynomial (FVar D m n) ℂ) :
     fockS τ (sgB pS) (sgB pT) Z P = ∑ j, ∑ k, ∑ i, C (Z j k * (sgn (sgB pS j) * sgn (sgB pS k))) * tT τ pS pT P (i, j) (i, k) +
@@ -501,8 +500,7 @@ theorem fockS_apply (Z : Matrix (Fin n) (Fin n) ℂ) (P : MvPolynomial (FVar D m
   congr 1
   simp only [← Finset.sum_smul]
   congr 1
-  simp [Matrix.trace, mul_ite, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun _ _ => by ring
+  simpa [Matrix.trace, mul_ite, Finset.mul_sum] using Finset.sum_congr rfl fun _ _ => by ring
 
 theorem sum_aK {R : Type} [CommRing R] (c : ℂ →+* R) (X : Matrix (Fin n) (Fin n) ℂ) (Y : Matrix (Fin m) (Fin m) ℂ)
     (T : Fin m × Fin n → Fin m × Fin n → R) :
@@ -747,8 +745,7 @@ theorem exists_raise_lower_at (h : GlobalTheory.FockCompare.Chart θ σ) (hψ : 
         refine Or.inr (Subtype.ext ?_)
         split_ifs at e ⊢
         · rw [one_smul] at e
-          rw [hy]
-          exact e
+          rwa [hy]
         · rw [neg_one_smul, smul_neg, ← sub_eq_add_neg] at e
           rw [hx]
           exact e)
@@ -807,8 +804,7 @@ theorem lieFockUpTo_at : ∀ (D : D7) (V W : HSp D) (A : GlobalTheory.ChainFr.Fr
     have e := coe_toB hψ g.1 g.2
     have h6 := hl (toB hψ g.1 g.2) (e.symm ▸ g.2) 1 z
     simp only [one_mul, map_one, Module.End.one_apply] at h6
-    rw [← GlobalTheory.DefLift.Gen.coe_add_smul, hN X X' h5, e] at h6
-    exact h6
+    rwa [← GlobalTheory.DefLift.Gen.coe_add_smul, hN X X' h5, e] at h6
   have hS : ∀ X, ∃ κ : ℂ, X ∈ lieAt V τ → ∀ f, IsThetaFunO ψ V W f →
       IsFockVacAt (heisO ψ V W) θ τ (cplxO (A.cart τ) (B.cart τ)) f → ∀ (P : PolF D W.rank V.rank) (z : WO V W),
       HasDerivAt (fun t : ℝ => ω (oneP θ V τ X t, 1) (ptF ψ θ A B f P) z)
@@ -1114,8 +1110,7 @@ theorem GlobalTheory.Mem.LieSum.hasDerivAt_add : ∀ (D : D7) (V W : HSp D) (θ 
   have hs := GlobalTheory.Mem.LieSum.sum_of_curves hψ hW γ₁ γ₂
     (by simp only [γ₁]; rw [GlobalTheory.Mem.Lift.oneP_zero hθ]; rfl)
     (by simp only [γ₂]; rw [GlobalTheory.Mem.Lift.oneP_zero hθ]; rfl) F hF e₁ e₂ (fun t => by rw [e₃, hγ]) ev d₁ d₂ d₃ dv hA₂
-  rw [hs, Pi.add_apply, k₁.unique (h₁ z), k₂.unique (h₂ z)] at k₃
-  exact k₃
+  rwa [hs, Pi.add_apply, k₁.unique (h₁ z), k₂.unique (h₂ z)] at k₃
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilDatumRealPlaceDerivativesAdd =====
@@ -1261,8 +1256,7 @@ theorem realAllO : ∀ D : D7, Formalism.IndefR.WeilFull.RealAllO D := by
       ptF ψ θ A B f (fockS τ (A.ε τ) (B.ε τ) ((A.fr τ * XS * (A.fr τ)⁻¹).map (starRingEnd ℂ)) P + κS XS • P) x +
       ptF ψ θ A B f (fockT τ (A.ε τ) (B.ε τ) (B.fr τ * XT * (B.fr τ)⁻¹) P + κT XT • P) x := by
     rw [← Pi.add_apply (ptF ψ θ A B f _), ← lin, frA, frB, eS, eT, eA, eB, comb _ _ _ _ _ _ _ q]
-  rw [e]
-  exact sm
+  rwa [e]
 
 end GlobalTheory.WeilReal
 

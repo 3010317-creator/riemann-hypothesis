@@ -122,8 +122,7 @@ theorem etSet_of_kerSet :
         exact h)
       ext1
       change w ≫ ψ.left = (toUnit (Over.mk (w ≫ G.hom))).left ≫ (η[G'] : 𝟙_ (Over S) ⟶ G').left
-      rw [htu]
-      exact hw2
+      rwa [htu]
   have hsqS : ∀ (C : Over S) (j : C ⟶ G), IsReduced C.left → Set.range j.left = K →
       j.left ≫ ψ.left = C.hom ≫ (η[G'] : 𝟙_ (Over S) ⟶ G').left := by
     intro C j _ hjr

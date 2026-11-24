@@ -338,8 +338,7 @@ theorem bimult_defect (hG : GlobalFnsSt) (hφ : Function.Injective φ) (hD : IsP
       (Ω (cP D' _ a * cP D' _ b))⁻¹ * Ω (cP D' _ a) * Ω (cP D' _ b) * (Ω 1)⁻¹ * τ' a b := fun a b => by
     have e := tau_val hD (Z := (TK R').left) _ _ sq hJ hJ' a b
     simp only [Category.id_comp] at e
-    rw [← cPoint_add]
-    exact e
+    rwa [← cPoint_add]
   have key : τ (hD.xe a + hD.xe a') (hD.xe b) * θ (cP D T (hD.xe a)) (cP D T (hD.xe a')) (cP D T (hD.xe b)) =
       unitAt (A := FractionRing R) (genMap hφ) y r * (τ (hD.xe a) (hD.xe b) * τ (hD.xe a') (hD.xe b)) := by
     refine Eq.trans (congrArg₂ (· * ·) rfl ?_)
@@ -465,8 +464,7 @@ theorem exists_of_ratio (hL : Laws) {k k₂ K : Type} [Field k] [Field k₂] [Fi
     rw [hq]; exact hu χ z J hJ
   have f : IsPolFibre i D₀.P D'.P (proj h₁) := ⟨hg, pull_grp h₁, LBIso.symm ⟨h₁.w, h₁.w_gen⟩⟩
   refine ⟨rescale D' q, hD, proj (D := D₀) (D' := D') h₁, f, ?_⟩
-  rw [hp]
-  exact e₂
+  rwa [hp]
 
 def toC : (FractionRing ℂ)ˣ →* ℂˣ := Units.map (FractionRing.algEquiv ℂ ℂ).toRingHom.toMonoidHom
 

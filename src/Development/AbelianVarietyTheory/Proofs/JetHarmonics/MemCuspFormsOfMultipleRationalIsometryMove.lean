@@ -175,5 +175,4 @@ theorem GlobalTheory.LevelCusp.mem_SS_of_isMatch : ∀ (E : Type) [Field E] [Num
     rfl
   · have hT := hb _ (flow_real_mem_dom X hξ.2.1 s x hx)
     rw [BoundedSectionAlgebra.pnorm_eq, BoundedSectionAlgebra.nfac_flow_real X hξ.2.1] at hT
-    rw [fjI_zero, le_div_iff₀ (BoundedSectionAlgebra.nfac_pos X hx la)]
-    exact hT
+    rwa [fjI_zero, le_div_iff₀ (BoundedSectionAlgebra.nfac_pos X hx la)]

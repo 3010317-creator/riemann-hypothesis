@@ -305,8 +305,7 @@ theorem GlobalTheory.basisAlong_of_independent_fibres : Out.Laws → ∀ (Z : Sc
           (fun _ => by rw [e₁, Category.id_comp]), Category.id_comp (h ▷ G).left]
     constructor
     · intro hc z J hJ
-      refine Eq.trans ?_ (ev z J hJ)
-      exact congrArg (gs (𝟙 _) z _) ((hc _).trans (hu _).symm)
+      exact Eq.trans (congrArg (gs (𝟙 _) z _) ((hc _).trans (hu _).symm)) (ev z J hJ)
     · intro hc j
       exact (sec_ext_val hL (fun y J hJ => (hc y J hJ).trans (ev y J hJ).symm) j).trans (hu j)
   obtain ⟨c, hc, hu⟩ := main
@@ -1100,8 +1099,7 @@ theorem exists_integral_chart {o : Type} [CommRing o] [IsDomain o] [IsNoetherian
     rw [← spMap_comp]; infer_instance
   have hs : (spMap ((e : L →+* j.range).comp (algebraMap R₀ L)) ≫ x) ≫ s = spMap (algebraMap o j.range) := by
     rw [Category.assoc, ← hβ]
-    refine (spMap_comp β.hom _).trans (congrArg spMap (RingHom.ext fun a => ?_))
-    exact e.commutes a
+    exact (spMap_comp β.hom _).trans (congrArg spMap (RingHom.ext fun a => (e.commutes a)))
   refine ⟨Ω, inferInstance, inferInstance, j.range, _, ho, ?_, hs, ?_, fun z => ?_, ?_⟩
   · obtain ⟨q, hq⟩ := (PrimeSpectrum.localization_away_comap_range L f).ge hf
     obtain ⟨q', rfl⟩ := (spMap (e : L →+* j.range)).surjective q
@@ -1114,8 +1112,7 @@ theorem exists_integral_chart {o : Type} [CommRing o] [IsDomain o] [IsNoetherian
     exact ⟨_, ⟨a, rfl⟩, _, ⟨c, rfl⟩, rfl⟩
   · have hfl : Flat (spMap (algebraMap o j.range)) := by rw [← hs]; infer_instance
     have h2 : (algebraMap o j.range).Flat := (HasRingHomProperty.Spec_iff (P := @Flat)).1 hfl
-    have h3 := injective_of_flat h2
-    exact fun a b h => h3 (Subtype.ext h)
+    exact fun a b h => (injective_of_flat h2) (Subtype.ext h)
 
 theorem eval₂_mul_eq_zero {o R σ : Type} [CommRing o] [CommRing R] {I : Ideal (MvPolynomial σ o)}
     (hI : ∀ F ∈ I, ∀ e, MvPolynomial.homogeneousComponent e F ∈ I) (β : o →+* R) {v : σ → R}
@@ -1188,9 +1185,7 @@ theorem closure_ratios_eq_top (h₁ : Out.Laws) (h₂ : Out.Laws2) {o : Type} [C
       exact (congrArg (· ≫ i) hψ).trans (IsOpenImmersion.lift_fac _ _ _)
     exact congrArg CommRingCat.Hom.hom (Spec.map_injective h4)
   have h5 : ∀ a ∈ R, a ∈ K := fun a ha => by
-    have : a = (ψ.hom ⟨a, ha⟩ : K) := by
-      have h6 := (DFunLike.congr_fun h3 (⟨a, ha⟩ : R)).symm
-      exact h6
+    have : a = (ψ.hom ⟨a, ha⟩ : K) := (DFunLike.congr_fun h3 (⟨a, ha⟩ : R)).symm
     rw [this]; exact Subtype.property _
   refine eq_top_iff.2 fun z _ => ?_
   obtain ⟨a, ha, c, hc, rfl⟩ := hR z

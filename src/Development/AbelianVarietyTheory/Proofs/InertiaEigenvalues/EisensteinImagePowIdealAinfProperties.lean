@@ -102,8 +102,7 @@ theorem pow_dvd_of_pow_dvd_lpow_mul (m k : ℕ) (a : Ainf l)
   | succ k ih =>
     apply ih
     apply pow_dvd_of_pow_dvd_l_mul bk m
-    rw [← mul_assoc, ← pow_succ']
-    exact h
+    rwa [← mul_assoc, ← pow_succ']
 
 theorem pow_dvd_of_ev_pow_dvd (m : ℕ) : ∀ s : bk.S,
     bk.ev bk.E ^ m ∣ bk.ev s → bk.E ^ m ∣ s := by
@@ -119,8 +118,7 @@ theorem pow_dvd_of_ev_pow_dvd (m : ℕ) : ∀ s : bk.S,
       have hθ := bk.θ_ev r s hmk
       rw [(theta_eq_zero_iff bk _).mpr h1] at hθ
       have hr0 : r = 0 := intToOC_injective K (by rw [← hθ, map_zero])
-      rw [hr0, map_zero, Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton] at hmk
-      exact hmk
+      rwa [hr0, map_zero, Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton] at hmk
     obtain ⟨s', rfl⟩ := hE
     rw [pow_succ']
     apply mul_dvd_mul_left

@@ -125,8 +125,7 @@ theorem eSerC_laws (L : LabelDatum g) (hg : 5 ≤ g) (hA : AllLab L) (n : ℕ) :
       rw [ite_eq_right (Ne.symm hb)]
   · intro f a
     rw [eSerC_eq_sum L n hfin, Finset.sum_mul, Finset.mul_sum]
-    refine Finset.sum_congr rfl fun χ hχ => ?_
-    exact (horth χ χ ((hmem f χ).1 hχ).1 ((hmem f χ).1 hχ).1).2.1 a
+    exact Finset.sum_congr rfl fun χ hχ => (horth χ χ ((hmem f χ).1 hχ).1 ((hmem f χ).1 hχ).1).2.1 a
   · intro f f' hne
     rw [eSerC_eq_sum L n hfin, eSerC_eq_sum L n hfin, Finset.sum_mul_sum]
     refine Finset.sum_eq_zero fun χ hχ => Finset.sum_eq_zero fun χ' hχ' => ?_
@@ -137,8 +136,7 @@ theorem eSerC_laws (L : LabelDatum g) (hg : 5 ≤ g) (hA : AllLab L) (n : ℕ) :
     exact hne ((huniq χ h1).unique h2 h4)
   · intro f hf
     rw [eSerC_eq_sum L n hfin]
-    refine Finset.sum_eq_zero fun χ hχ => ?_
-    exact absurd (hmon χ f ((hmem f χ).1 hχ).2) hf
+    exact Finset.sum_eq_zero fun χ hχ => absurd (hmon χ f ((hmem f χ).1 hχ).2) hf
   · have hS : {f : (ZMod g)[X] | f.Monic ∧ f.natDegree = n ∧ f.coeff 0 ≠ 0}.Finite :=
       (finite_natDegree_eq n).subset fun f hf => hf.2.1
     refine ⟨hS.toFinset, ?_⟩
@@ -151,8 +149,7 @@ theorem eSerC_laws (L : LabelDatum g) (hg : 5 ≤ g) (hA : AllLab L) (n : ℕ) :
     have hirr : IsIrr χ := by simpa using hχ
     obtain ⟨f, hf, hu⟩ := huniq χ hirr
     rw [Finset.sum_eq_single_of_mem f (by simpa using hmon χ f hf), ite_eq_left hf]
-    intro b _ hb
-    exact ite_eq_right fun h => hb (hu b h)
+    exact fun b _ hb => ite_eq_right fun h => hb (hu b h)
 
 theorem ser_vanish (L : LabelDatum g) (h5 : 5 ≤ g) {k l n : ℕ} (σ : Fin k ⊕ Fin l ≃ Fin n)
     (f f₁ f₂ : (ZMod g)[X]) (hf : f ≠ f₁ * f₂) :
@@ -371,8 +368,7 @@ theorem series_prod₂ (S : Sys g) {a b : ℕ} {W W' : Type} [AddCommGroup W] [M
   · refine Subtype.ext (Subtype.ext (funext fun x => ?_))
     have := hv x
     change v.1.1 (1 * x) = 0 at this
-    rw [one_mul] at this
-    exact this
+    rwa [one_mul] at this
   · intro p x y h0 hx hy v
     have hp : p ∈ parab ℚ_[g] (two (stdSum h)) := by
       rw [mem_parab_iff]

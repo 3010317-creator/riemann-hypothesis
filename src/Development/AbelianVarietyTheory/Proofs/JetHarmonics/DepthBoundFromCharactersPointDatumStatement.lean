@@ -443,8 +443,7 @@ theorem exists_transl_smul (hL : Laws) (q : ℕ) (hq : 1 ≤ q) (c : 𝓞 E) (s 
     induction hx : y.v (ζ * e) using WithTop.recTopCoe with
     | top =>
       obtain ⟨M, rfl⟩ : ∃ M', M = M' + 1 := ⟨M - 1, by omega⟩
-      rw [hx, succ_nsmul, add_top] at h4
-      exact h4
+      rwa [hx, succ_nsmul, add_top] at h4
     | coe x =>
       rw [hx, ← WithTop.coe_nsmul, WithTop.coe_eq_zero, smul_eq_zero] at h4
       rw [h4.resolve_left (by omega)]; rfl
@@ -807,8 +806,7 @@ theorem exists_linear_quotient (halg : JetSer.JetAlgSt) (hrep : JetSer.RepSt) (h
     (LB.LinComb U.LG.L (K := Fin 1) (fun _ => 𝟙 G.left) (fun _ => (k : ℤ))) (fun _ => j), fun σ f => ⟨?_, ?_⟩⟩
   · rintro ⟨S, hS, e⟩
     exact (Units.eq_mul_inv_iff_mul_eq u).2 (e.trans ((hτ _ _).1 hS))
-  · intro e
-    exact ⟨_, (hτ _ _).2 rfl, (Units.eq_mul_inv_iff_mul_eq u).1 e⟩
+  · exact fun e => ⟨_, (hτ _ _).2 rfl, (Units.eq_mul_inv_iff_mul_eq u).1 e⟩
 
 end Group
 

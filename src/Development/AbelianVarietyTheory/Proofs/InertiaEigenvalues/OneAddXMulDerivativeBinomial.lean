@@ -127,8 +127,7 @@ theorem map_binomial_of_exp (f : O⟦X⟧ →ₐ[O] L⟦X⟧) (m : L) (hf : f X 
   have hfg : (f : O⟦X⟧ →+* L⟦X⟧) = (g : L⟦X⟧ →+* L⟦X⟧).comp (PowerSeries.map (algebraMap O L)) := by
     refine GlobalTheory.Fon.ps_hom_ext (fun r => ?_) ?_ ?_
     · change f (C r) = g (PowerSeries.map (algebraMap O L) (C r))
-      rw [map_C, gC]
-      rw [← PowerSeries.algebraMap_apply, ← f.commutes]
+      rw [map_C, gC, ← PowerSeries.algebraMap_apply, ← f.commutes]
       rfl
     · change f X = g (PowerSeries.map (algebraMap O L) X)
       rw [map_X, gX, hf]
@@ -213,8 +212,7 @@ theorem exists_ev (H : EvLaw l (O := O) v inferInstance) : ∃ ev : L → (O⟦X
     intro ζ
     rw [map_sub, map_mul, constantCoeff_exp, constantCoeff_C, mul_one, map_one, sub_add_cancel]
     by_cases h : ∃ j : ℕ, IsPrimitiveRoot ζ (l ^ j)
-    · simp only [z, ite_eq_left h]
-      exact h.imp fun j hj => hj.pow_eq_one
+    · simpa only [z, ite_eq_left h] using h.imp fun j hj => hj.pow_eq_one
     · simp [z, ite_eq_right h]
   have hex : ∀ ζ : Set.range z, ∃ ev : O⟦X⟧ →ₐ[O] L⟦X⟧, ev X = C (ζ : L) * exp L - 1 := by
     rintro ⟨_, ζ, rfl⟩
@@ -290,8 +288,7 @@ theorem nonempty_wSer_of_evLaw [NeZero n] [IsHausdorff (Ideal.span {(l : O)}) O]
     rintro i ζ ⟨j, h⟩ f
     have := ev_gam H h.pow_eq_one (l : ℤ_[l]) (a := l) (by simp) (hX ζ ⟨j, h⟩) (hX _ (exists_primitive_pow h l))
       (f (i - 1))
-    rw [GlobalTheory.Fon.gam_l, map_natCast] at this
-    exact this
+    rwa [GlobalTheory.Fon.gam_l, map_natCast] at this
   · rw [hp]
     intro i ζ h
     rw [hjunk ζ h]
@@ -389,8 +386,7 @@ theorem evLaw_integers {l : ℕ} [Fact l.Prime] (P : LocPrime l) (LL : FinExt l)
   refine ⟨m₀, fun m hm' => ?_⟩
   rw [← WithTop.coe_natCast, (NormVal.locPrime_v_normalised l P LL).2.1]
   have := (hm m hm').le
-  rw [dist_comm, dist_eq_norm] at this
-  exact this
+  rwa [dist_comm, dist_eq_norm] at this
 
 theorem nonempty_wSer : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l) (s : ℕ) (LL : FinExt l), Good K s LL → ∀ Γ : GamS P K s LL, Nonempty (WSer Γ) := by
   intro l _ P K s LL _ Γ

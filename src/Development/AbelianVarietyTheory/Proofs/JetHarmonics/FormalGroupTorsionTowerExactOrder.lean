@@ -121,8 +121,7 @@ theorem tower_exact_order : ∀ (K : Type) [NormedField K] [IsUltrametricDist K]
   have hτ0 : ev1 (nMul F 0) (t n) = 0 := (base (t n) (ht n)).1
   have hpn : ev1 (nMul F (p ^ n)) (t n) = 0 := by
     have h := hB 0 n 1
-    rw [Nat.mul_one, Nat.zero_add, (base (t 0) (ht 0)).2.1, ht0] at h
-    exact h
+    rwa [Nat.mul_one, Nat.zero_add, (base (t 0) (ht 0)).2.1, ht0] at h
   refine seq_eq_iff_modEq_of_op (fun a b => ev F.toPowerSeries ![a, b])
     (fun d => ev1 (nMul F d) (t n)) (base (t n) (ht n)).2.2.2.1 (p ^ n)
     (pow_pos (Fact.out : p.Prime).pos n) (by simp only [hpn, hτ0]) ?_ i j
@@ -136,8 +135,7 @@ theorem tower_exact_order : ∀ (K : Type) [NormedField K] [IsUltrametricDist K]
     simp
   · have h1k : ev1 (nMul F (p ^ k)) (t (k + 1)) = t 1 := by
       have h := hB 1 k 1
-      rw [Nat.mul_one, Nat.add_comm 1 k, (base (t 1) (ht 1)).2.1] at h
-      exact h
+      rwa [Nat.mul_one, Nat.add_comm 1 k, (base (t 1) (ht 1)).2.1] at h
     exact addOrderOf_eq_prime_pow (fun h => ht1 (by rw [← h1k]; exact (hx' _).1 h)) ((hx' _).2 hpn)
 
 end GlobalTheory.ConvSer

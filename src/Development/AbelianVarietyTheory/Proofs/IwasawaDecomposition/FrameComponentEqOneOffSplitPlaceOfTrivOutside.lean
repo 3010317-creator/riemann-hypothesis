@@ -75,8 +75,7 @@ theorem cpt_conj_finE_eq_one : ∀ (D : D7) (V : HSp D) (n : ℕ) (hF : D.host.F
   obtain ⟨⟨β0, β0', h1, -, hβ⟩, -⟩ := hP
   let v : HeightOneSpectrum (𝓞 (maximalRealSubfield D.host.E)) := Q.under _
   have hvs : v ∉ ({s.v} : Set (HeightOneSpectrum (𝓞 (maximalRealSubfield D.host.E)))) := by
-    intro h
-    exact hQ (congrArg HeightOneSpectrum.asIdeal (Set.mem_singleton_iff.1 h))
+    exact fun h => hQ (congrArg HeightOneSpectrum.asIdeal (Set.mem_singleton_iff.1 h))
   let f : ReciprocityTheory.Aut.AL D.host.E →+* Q.adicCompletion D.host.E :=
     (GlobalTheory.StdFrames.cpt Q).comp ((Formalism.IndefR.Lev.swapAE D).comp (GlobalTheory.Mem.R3.swapCast hF).symm.toRingHom)
   have hf0 : ∀ c : ReciprocityTheory.Aut.AFplus D.host.E, ReciprocityTheory.Aut.evalAt D.host.E v c = 0 →
@@ -97,8 +96,7 @@ theorem cpt_conj_finE_eq_one : ∀ (D : D7) (V : HSp D) (n : ℕ) (hF : D.host.F
     intro y y' h
     have hm : y - y' ∈ RingHom.ker
         (Algebra.TensorProduct.map (AlgHom.id (maximalRealSubfield D.host.E) D.host.E) (ReciprocityTheory.Aut.evalAt D.host.E v)) := by
-      rw [RingHom.mem_ker, map_sub, sub_eq_zero]
-      exact h
+      rwa [RingHom.mem_ker, map_sub, sub_eq_zero]
     rw [Algebra.TensorProduct.lTensor_ker _ hsurj] at hm
     have hle : RingHom.ker (ReciprocityTheory.Aut.evalAt D.host.E v) ≤ (RingHom.ker f).comap
         (Algebra.TensorProduct.includeRight : ReciprocityTheory.Aut.AFplus D.host.E →ₐ[maximalRealSubfield D.host.E] ReciprocityTheory.Aut.AL D.host.E) := by
@@ -106,8 +104,7 @@ theorem cpt_conj_finE_eq_one : ∀ (D : D7) (V : HSp D) (n : ℕ) (hF : D.host.F
       rw [Ideal.mem_comap, RingHom.mem_ker]
       exact hf0 c hc
     have h2 := Ideal.map_le_iff_le_comap.2 hle hm
-    rw [RingHom.mem_ker, map_sub, sub_eq_zero] at h2
-    exact h2
+    rwa [RingHom.mem_ker, map_sub, sub_eq_zero] at h2
   have hK : (κ.1 : Matrix (Fin n) (Fin n) (ReciprocityTheory.Aut.AL D.host.E)).map f = 1 := by
     have e := hκ v hvs
     ext i j

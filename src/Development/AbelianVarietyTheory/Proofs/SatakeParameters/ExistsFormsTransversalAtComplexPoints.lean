@@ -326,9 +326,7 @@ theorem null_negEv_of_det_eq_zero : ∀ (X : Scheme.{0}) (p : X ⟶ Sp ℂ) (d :
     rw [hTz]; exact (ch.differentiableAt_ev (φ j) hzs hz).hasFDerivAt
   set M : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ) :=
     ContinuousLinearMap.pi fun j => -((fderiv ℂ (g j) (ch.e z)).comp T) with hM
-  have hHM : HasFDerivAt H M w := by
-    refine hasFDerivAt_pi'.2 fun j => ?_
-    exact ((hL j).comp w T.hasFDerivAt).neg
+  have hHM : HasFDerivAt H M w := hasFDerivAt_pi'.2 fun j => ((hL j).comp w T.hasFDerivAt).neg
   obtain ⟨v, hv0, hv⟩ := Matrix.exists_mulVec_eq_zero_iff.2 hdet
   have hTv : T v = ∑ b, v b • EuclideanSpace.single b (1 : ℂ) := by
     ext i
@@ -346,9 +344,7 @@ theorem null_negEv_of_det_eq_zero : ∀ (X : Scheme.{0}) (p : X ⟶ Sp ℂ) (d :
     rfl
   refine ⟨w, ⟨(hHM.restrictScalars ℝ).differentiableAt, ?_⟩, ?_⟩
   · rw [(hHM.restrictScalars ℝ).fderiv]
-    refine LinearMap.det_eq_zero_iff_ker_ne_bot.2 ((Submodule.ne_bot_iff _).2 ⟨v, ?_, hv0⟩)
-    show M v = 0
-    exact hMv
+    exact LinearMap.det_eq_zero_iff_ker_ne_bot.2 ((Submodule.ne_bot_iff _).2 ⟨v, hMv, hv0⟩)
   · funext j
     simp only [hH, hg, Function.comp_apply, hTz, ch.e.left_inv hzs, GlobalTheory.CxPts.ev_eq hz]
 
@@ -468,8 +464,7 @@ theorem eq_top_of_forall_cxPts_mem : ∀ (X : Scheme.{0}) (p : X ⟶ Sp ℂ) [Lo
   intro X p _ U hall
   by_contra hU
   obtain ⟨x, hx⟩ : ∃ x : X, x ∉ U := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hU (eq_top_iff.2 fun y _ => h y)
   obtain ⟨V, hV, hxV, -⟩ := (TopologicalSpace.Opens.isBasis_iff_nbhd.1 X.isBasis_affineOpens) (show x ∈ (⊤ : X.Opens) from trivial)
   have hV : IsAffineOpen V := hV
@@ -586,8 +581,7 @@ theorem mem_minimalPrimes_of_le_sup_sq {A : Type} [CommRing A] {I m : Ideal A} [
   have hidem : IsIdempotentElem (m.map π) := by
     refine le_antisymm Ideal.mul_le_left ?_
     have h1 : m.map π ≤ (I ⊔ m ^ 2).map π := Ideal.map_mono hsq
-    rw [Ideal.map_sup, Ideal.map_quotient_self, bot_sup_eq, Ideal.map_pow, pow_two] at h1
-    exact h1
+    rwa [Ideal.map_sup, Ideal.map_quotient_self, bot_sup_eq, Ideal.map_pow, pow_two] at h1
   obtain ⟨e, he, hme⟩ := (Ideal.isIdempotentElem_iff_of_fg _ (hfg.map π)).1 hidem
   have hPq : (P.map π).IsPrime := Ideal.map_isPrime_of_surjective hπ
     (by rw [Ideal.mk_ker]; exact hIP)
@@ -780,8 +774,7 @@ theorem exists_transversal_forms_first_separate (X : Scheme.{0}) [IsIntegral X] 
       refine MeasureTheory.measure_union_null hE (MeasureTheory.measure_iUnion_null fun j => ?_)
       rw [MeasureTheory.volume_pi]
       exact MeasureTheory.Measure.pi_hyperplane (μ := fun _ : Fin d => (MeasureTheory.volume : MeasureTheory.Measure ℂ)) j (a j)
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     have hu : (Set.univ : Set (Fin d → ℂ)) ⊆ E ∪ ⋃ j, {c : Fin d → ℂ | c j = a j} := by
       intro c _
       by_cases hc : c ∈ E
@@ -852,8 +845,7 @@ theorem exists_transversal_forms_first_separate (X : Scheme.{0}) [IsIntegral X] 
       have h2 := (hjet y hy f₀ hf₀ hyf₀).1
       have h3 : CxPts.evHom hyf₀ (fRatio ι h f₀ hh hf₀) = 0 :=
         RingHom.mem_ker.1 (Ideal.pow_le_self two_ne_zero h2)
-      rw [_root_.GlobalTheory.EtProj.Jets.ev_ratio_eq_zero_iff, mem_ptsIn_fOpen_iff, not_not] at h3
-      exact h3
+      rwa [_root_.GlobalTheory.EtProj.Jets.ev_ratio_eq_zero_iff, mem_ptsIn_fOpen_iff, not_not] at h3
     have hyg := hgS y hy j
     rw [mem_ptsIn_fOpen_iff, not_not] at hyg
     set P := (ι.base (y.1 (IsLocalRing.closedPoint ℂ))).asHomogeneousIdeal.toIdeal
@@ -907,10 +899,8 @@ theorem exists_forms_transversal (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp �
     obtain ⟨hy0, hyj⟩ := hS y hy
     refine ⟨hy0, fun j => ?_⟩
     have h1 := hyj j
-    rw [← CxPts.ev_eq hy0] at h1
-    exact h1
-  · intro y hy h0
-    exact htr y hy h0
+    rwa [← CxPts.ev_eq hy0] at h1
+  · exact fun y hy h0 => htr y hy h0
 
 end GlobalTheory.EtProj.Transv
 end -- clump:auto

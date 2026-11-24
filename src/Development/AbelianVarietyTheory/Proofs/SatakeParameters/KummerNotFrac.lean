@@ -107,8 +107,7 @@ open scoped Formalism.Per
 namespace GlobalTheory.Published
 
 theorem FontaineBcris.fund_holds (l : ℕ) [Fact l.Prime] (C : Core l) : C.Fund := by
-  intro b h1 h2
-  exact GlobalTheory.MemLoc.fundamental_exact l C b h1 h2
+  exact fun b h1 h2 => GlobalTheory.MemLoc.fundamental_exact l C b h1 h2
 
 theorem FontaineBcris_holds : FontaineBcris :=
   FontaineBcris.of_rest fun l _ C =>
@@ -369,14 +368,12 @@ theorem clos_eq_zero_of_mul_mem {R : Type} [CommRing R] [IsDomain R] (p : ℕ) (
       · rw [pow_succ, mul_assoc, hPb', hbk]
       · have : ((p : ℕ) : R) ^ (r + (k + 1)) * b' * u =
             ((p : ℕ) : R) ^ (r + k) * (((p : ℕ) : R) * b') * u := by ring
-        rw [this, hPb']
-        exact hbu
+        rwa [this, hPb']
 
   by_contra ha0
   classical
   have hex : ∃ n : ℕ, ¬ π ^ n ∣ a := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact ha0 (hsep a h)
   have hn0 : Nat.find hex ≠ 0 := by
     intro h0
@@ -491,8 +488,7 @@ theorem exists_full_frac : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) [IsDoma
       ext z
       show e s (e g (ι z)) = e (s * g) (ι z)
       rw [he, he, he, map_mul, AlgEquiv.mul_apply]
-    intro z
-    exact RingHom.congr_fun this z
+    exact fun z => RingHom.congr_fun this z
   have hne : ∀ g (z : P.R.B), z ≠ 0 → ι (P.actQ g z) ≠ 0 := fun g z hz =>
     (map_ne_zero_iff ι hι).2 ((map_ne_zero_iff _ (P.actQ g).injective).2 hz)
   let T : GQ l → FractionRing P.R.B := fun g => ι ((kummer P g : ℚ_[l]) • P.tB)

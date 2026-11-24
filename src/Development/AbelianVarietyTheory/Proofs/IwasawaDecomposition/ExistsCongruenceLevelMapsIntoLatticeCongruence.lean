@@ -198,8 +198,7 @@ theorem selfDual_lattice_coords_smul_ringOfIntegers_mem (V : HSp D) (y : 𝓞 D.
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [mul_smul]
     exact algebraMap_smul D.host.E y (x i • V.frame i)
-  rw [e]
-  exact h
+  rwa [e]
 
 end GlobalTheory.StdFrameCong
 
@@ -290,8 +289,7 @@ theorem finCong_of_cong {D : D7} {V : HSp D} {n : ℕ} {P : principalLevelFrame.
       Keeps (swapCast hF).symm.toRingHom β β' (Formalism.MainNotions.StandardLattice.latHat D.host.F D.host.E (L0c D V))
         (κ.1 : Matrix (Fin n) (Fin n) (AL D.host.E)) := fun κ h y hy => by
     have e1 := (((hK κ).1 h).2.1 y).1 hy
-    rw [hmat κ] at e1
-    exact e1
+    rwa [hmat κ] at e1
   intro z hz
   rw [pj_latHat_eq] at hz ⊢
   obtain ⟨w, hw, hw'⟩ := sub_one_mulVec_mem (e := (swapCast hF).symm.toRingHom) hββ' hβ'β
@@ -305,8 +303,7 @@ theorem finCong_of_cong {D : D7} {V : HSp D} {n : ℕ} {P : principalLevelFrame.
     N _ hκ.2 z hz
   refine ⟨w, hw, ?_⟩
   show finMat D.sp.cm.sig V.gram (P.ψ κ) *ᵥ z - z = N • w
-  rw [hmat κ]
-  exact hw'
+  rwa [hmat κ]
 
 theorem exists_cong_finCong : ∀ (D : D7) (V : HSp D) (n : ℕ) (P : principalLevelFrame.RowPsi V n)
     (hF : D.host.F = maximalRealSubfield D.host.E), StdFrame hF P → ∀ N : ℕ, 0 < N → ∃ N' : ℕ, 0 < N' ∧

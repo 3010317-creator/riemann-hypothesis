@@ -73,8 +73,7 @@ theorem norm_sum_lt_of_ultra {E ι : Type} [SeminormedAddCommGroup E] [IsUltrame
 
 theorem exists_eq_sup {f : ℕ → ℝ} {M : ℝ} (hM : 0 < M) (hle : ∀ n, f n ≤ M)
     (hsup : ∀ r : ℝ, 0 ≤ r → (∀ n, f n ≤ r) → M ≤ r) (ht : Tendsto f atTop (nhds 0)) : ∃ n, f n = M := by
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have hlt : ∀ n, f n < M := fun n => lt_of_le_of_ne (hle n) (hne n)
   obtain ⟨N, hN⟩ := eventually_atTop.1 (ht.eventually (gt_mem_nhds (half_pos hM)))
   obtain ⟨k, -, hk⟩ := Finset.exists_max_image (Finset.range (N + 1)) f ⟨0, by simp⟩
@@ -174,8 +173,7 @@ theorem norm_mul_disc (l : ℕ) [hl : Fact l.Prime] (K : FinExt l) (bk : BK K) (
     obtain ⟨n, s, h⟩ := IsLocalization.Away.surj ((l : ℕ) : bk.S) p
     refine ⟨n, s, ?_⟩
     have h' := congrArg (ofPre l (X : bk.S) ρ) h
-    rw [map_mul, map_pow, map_natCast, map_natCast] at h'
-    exact h'
+    rwa [map_mul, map_pow, map_natCast, map_natCast] at h'
   have step2 : ∀ p q : PreDisc l (X : bk.S) ρ, ‖ofPre l (X : bk.S) ρ p * ofPre l (X : bk.S) ρ q‖ =
       ‖ofPre l (X : bk.S) ρ p‖ * ‖ofPre l (X : bk.S) ρ q‖ := by
     intro p q

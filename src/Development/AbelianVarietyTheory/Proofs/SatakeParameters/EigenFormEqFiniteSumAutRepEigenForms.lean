@@ -164,8 +164,7 @@ theorem values_mem_sSup (W : Wt E n) [Nontrivial W.Sp] (f : W.Sp →ₗ[ℂ] (UA
       have hN'M : N' ≤ M := by
         intro x hx
         obtain ⟨y, hy, e⟩ := hNM hx
-        rw [← Subtype.ext e]
-        exact hy
+        rwa [← Subtype.ext e]
       have hN's : GlobalTheory.SpanIsot.Stab ρC N' := fun g x hx => hN g.1 g.2 x.1 hx
       have hNe : N'.map C.subtype = N := by
         rw [Submodule.map_comap_subtype]

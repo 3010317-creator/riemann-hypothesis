@@ -64,8 +64,7 @@ theorem val_lt_one_of_norm_lt_one (e : ℚ_[g] ≃+* F) (he : Continuous e) {z :
   have h3 : {x : F | valuation F x < 1} ∈ nhds (0 : F) :=
     (IsValuativeTopology.mem_nhds_zero_iff _).2 ⟨1, fun x hx => by simpa using hx⟩
   obtain ⟨n, hn⟩ := (h2.eventually h3).exists
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   have : 1 ≤ valuation F (e z ^ n) := by rw [map_pow]; exact one_le_pow₀ hc
   exact absurd hn (not_lt.2 this)
 
@@ -82,8 +81,7 @@ theorem val_le_one_of_norm_le_one (e : ℚ_[g] ≃+* F) (he : Continuous e) {z :
   have hm := PadicInt.sub_zmodRepr_mem zi
   rw [IsLocalRing.mem_maximalIdeal, PadicInt.mem_nonunits] at hm
   have hm' : ‖z - (zi.zmodRepr : ℚ_[g])‖ < 1 := by
-    rw [PadicInt.norm_def, PadicInt.coe_sub, PadicInt.coe_natCast] at hm
-    exact hm
+    rwa [PadicInt.norm_def, PadicInt.coe_sub, PadicInt.coe_natCast] at hm
   have h1 := val_lt_one_of_norm_lt_one e he hm'
   have hz' : e z = e (z - (zi.zmodRepr : ℚ_[g])) + (zi.zmodRepr : F) := by
     rw [map_sub, map_natCast]; ring
@@ -92,8 +90,7 @@ theorem val_le_one_of_norm_le_one (e : ℚ_[g] ≃+* F) (he : Continuous e) {z :
 
 theorem norm_lt_one_of_val_lt_one (e : ℚ_[g] ≃+* F) (he : Continuous e) {y : ℚ_[g]}
     (hy : valuation F (e y) < 1) : ‖y‖ < 1 := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   have hy0 : y ≠ 0 := by rintro rfl; simp at hc; exact absurd hc (by norm_num)
   have h1 : ‖y⁻¹‖ ≤ 1 := by rw [norm_inv]; exact inv_le_one_of_one_le₀ hc
   have h2 := val_le_one_of_norm_le_one e he h1
@@ -119,8 +116,7 @@ theorem entry_of_val (e : ℚ_[g] ≃+* F) (he : Continuous e) (x : F) (c : ℕ)
   have hm : zi - (c : ℤ_[g]) ∈ IsLocalRing.maximalIdeal ℤ_[g] := by
     rw [IsLocalRing.mem_maximalIdeal, PadicInt.mem_nonunits, PadicInt.norm_def]
     simpa using h1
-  rw [← PadicInt.ker_toZMod, RingHom.mem_ker, map_sub, map_natCast, sub_eq_zero] at hm
-  exact hm
+  rwa [← PadicInt.ker_toZMod, RingHom.mem_ker, map_sub, map_natCast, sub_eq_zero] at hm
 
 end Val
 

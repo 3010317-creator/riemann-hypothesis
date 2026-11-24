@@ -112,8 +112,7 @@ theorem sum_indicator (H₁ H₂ : Subgroup G) :
   · intro b hb
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hb ⊢
     exact ⟨hb, b.2⟩
-  · intro a _ b _ h
-    exact Subtype.ext h
+  · exact fun a _ b _ h => Subtype.ext h
   · intro g hg
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hg
     exact ⟨⟨g, hg.2⟩, by simpa using hg.1, rfl⟩
@@ -266,10 +265,8 @@ theorem _root_.GlobalTheory.GLm.Pattern.pattern_group : ∀ (g : ℕ) [Fact g.Pr
         Nat.card {M : _root_.GlobalTheory.GLq.Mt g N // _root_.GlobalTheory.GLm.InPat Φ M} := by
       refine Nat.card_congr (Equiv.ofBijective
         (fun x => ⟨(x.1 : _root_.GlobalTheory.GLq.Mt g N), x.2⟩) ⟨?_, ?_⟩)
-      · intro x y hxy
-        exact Subtype.ext (Units.ext (congrArg Subtype.val hxy))
-      · intro M
-        exact ⟨⟨(hunit M.1 M.2).unit, M.2⟩, rfl⟩
+      · exact fun x y hxy => Subtype.ext (Units.ext (congrArg Subtype.val hxy))
+      · exact fun M => ⟨⟨(hunit M.1 M.2).unit, M.2⟩, rfl⟩
     let e2 : {M : _root_.GlobalTheory.GLq.Mt g N // _root_.GlobalTheory.GLm.InPat Φ M} ≃
         ({p : Fin N × Fin N // Φ p.1 p.2} → ZMod g) :=
       { toFun := fun M p => M.1 p.1.1 p.1.2
@@ -336,8 +333,7 @@ theorem conj_entry (A B : Mt g N) (u v : Fin N) (t : ZMod g) (x y : Fin N) :
   · simp
   · intro j _ hj
     simp [hj]
-  · intro hv
-    exact absurd (Finset.mem_univ v) hv
+  · exact fun hv => absurd (Finset.mem_univ v) hv
 
 theorem sumAt_one {E : Fin N → Fin N → Prop} (hE : ∀ a, ¬ E a a) : sumAt E (1 : Mt g N) = 0 := by
   unfold sumAt
@@ -460,8 +456,7 @@ theorem exists_conj (ψ : AddChar (ZMod g) ℂ) (hψ : ψ ≠ 1) {Φ Φ₁ E : F
   have hv := congrArg (fun z : ℂˣ => (z : ℂ)) heq
   simp only [patChar_val] at hv
   change ψ (sumAt E ((h⁻¹ * a₀ * h : Gn g N) : Mt g N)) = ψ (sumAt E (a₀ : Mt g N)) at hv
-  rw [hconj, hA2, ht, ha₀, hzero, AddChar.map_zero_eq_one] at hv
-  exact hv
+  rwa [hconj, hA2, ht, ha₀, hzero, AddChar.map_zero_eq_one] at hv
 
 private theorem card_filter_fst_eq_and_snd (W : Fin N → Prop) (p : Fin N) :
     (Finset.univ.filter fun r : Fin N × Fin N => r.1 = p ∧ W r.2).card = (Finset.univ.filter W).card := by
@@ -530,8 +525,7 @@ theorem exchange (ψ : AddChar (ZMod g) ℂ) (hψ : ψ ≠ 1) (Φ₁ Φ₂ E : F
     congr 1
     · congr 1
       ext r
-      simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-      exact and_comm
+      simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using and_comm
     · have e₁ : (Finset.univ.filter fun r : Fin N × Fin N => Φ₁ r.1 r.2 ∧ ¬ Φ₂ r.1 r.2) =
           Finset.univ.filter fun r : Fin N × Fin N => r.1 = p ∧ W r.2 :=
         Finset.filter_congr fun r _ => d1 r.1 r.2
@@ -700,25 +694,21 @@ theorem sum_graph_eq_sum_entN {A : Type} [AddCommMonoid A] {N : ℕ} (M : Matrix
           · exact absurd ⟨ha, rfl⟩ hc
         · intro b _ hb
           rw [ite_eq_right]
-          intro h
-          exact hb (Fin.ext h.2)
-        · intro h
-          exact absurd (Finset.mem_univ _) h
+          exact fun h => hb (Fin.ext h.2)
+        · exact fun h => absurd (Finset.mem_univ _) h
       · rw [Finset.sum_eq_zero]
         · unfold entN
           rw [dite_eq_right (fun hh => hf hh.2)]
         · intro b _
           rw [ite_eq_right]
-          intro h
-          exact hf (h.2 ▸ b.isLt)
+          exact fun h => hf (h.2 ▸ b.isLt)
     · rw [ite_eq_right ha]
       exact Finset.sum_eq_zero (fun b _ => ite_eq_right (fun h => ha h.1))
   rw [Finset.sum_congr rfl (fun a _ => h1 a)]
   rw [Fin.sum_univ_eq_sum_range (fun a => if a ∈ S then entN M a (f a) else 0) N]
   rw [← Finset.sum_filter]
   apply Finset.sum_subset
-  · intro a ha
-    exact (Finset.mem_filter.mp ha).2
+  · exact fun a ha => (Finset.mem_filter.mp ha).2
   · intro a haS hnot
     have hlt : ¬ a < N := fun hlt => hnot (Finset.mem_filter.mpr ⟨Finset.mem_range.mpr hlt, haS⟩)
     unfold entN
@@ -1057,8 +1047,7 @@ theorem inPat_iff {g : ℕ} [Fact g.Prime] (N k : ℕ) (hk : k < N) (M : Mt g N)
       have := hz a h2.1
       rw [entN, dite_eq_left ⟨a.2, hk⟩] at this
       have hb : b = ⟨k, hk⟩ := Fin.ext h2.2
-      rw [Matrix.one_apply_ne h.ne, hb]
-      exact this
+      rwa [Matrix.one_apply_ne h.ne, hb]
     · rw [(hU a b).2 h, h, Matrix.one_apply_eq]
     · rw [(hU a b).1 h, Matrix.one_apply_ne h.ne']
 

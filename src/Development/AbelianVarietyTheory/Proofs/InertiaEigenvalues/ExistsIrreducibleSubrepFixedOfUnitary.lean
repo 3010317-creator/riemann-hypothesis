@@ -87,8 +87,7 @@ theorem exists_orthogonal_projection_finite {W : Type} [AddCommGroup W] [Module 
       intro i
       have := congr_fun hm i
       simpa [T] using this
-    have h2 := key m h1 m m.2
-    exact Subtype.ext (hB _ h2)
+    exact Subtype.ext (hB _ (key m h1 m m.2))
   have hsurj : Function.Surjective T :=
     (LinearMap.injective_iff_surjective_of_finrank_eq_finrank
       (by rw [Module.finrank_fin_fun])).mp hinj
@@ -164,8 +163,7 @@ theorem exists_compl_proj (ρ : Representation ℂ H W) (B : W →ₗ⋆[ℂ] W 
     apply Finset.sum_nbij' (fun o => ρ k o) (fun o => ρ k⁻¹ o)
     · intro o ho
       obtain ⟨k', rfl⟩ := hmem o ho
-      simp only [s, Set.Finite.mem_toFinset, Set.mem_range]
-      exact ⟨⟨k, hk⟩ * k', by simp [map_mul]⟩
+      simpa only [s, Set.Finite.mem_toFinset, Set.mem_range] using ⟨⟨k, hk⟩ * k', by simp [map_mul]⟩
     · intro o ho
       obtain ⟨k', rfl⟩ := hmem o ho
       simp only [s, Set.Finite.mem_toFinset, Set.mem_range]
@@ -189,8 +187,7 @@ theorem exists_compl_proj (ρ : Representation ℂ H W) (B : W →ₗ⋆[ℂ] W 
 
   rw [map_sum, LinearMap.sum_apply, Finset.sum_congr rfl hterm, Finset.sum_const] at h0
   have hz1 : z ∈ s := by
-    simp only [s, Set.Finite.mem_toFinset, Set.mem_range]
-    exact ⟨1, by simp⟩
+    simpa only [s, Set.Finite.mem_toFinset, Set.mem_range] using ⟨1, by simp⟩
   have hcard : s.card ≠ 0 := Finset.card_ne_zero.2 ⟨z, hz1⟩
   rw [nsmul_eq_mul] at h0
   rcases mul_eq_zero.1 h0 with h | h

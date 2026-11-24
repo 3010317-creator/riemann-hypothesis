@@ -154,8 +154,7 @@ theorem clNat_of_tie {W : LocWach PD LL O v n} {RA RW : Type} [CommRing RA] [Com
       have h2 := (hcv' g ⟨_, c'.2.2 g (Set.mem_univ _)⟩ rfl).1 hg
       have h3 := congrArg (oneTensor RW f) h1
       rw [map_neg, map_sub, oneTensor_act, ← h2] at h3
-      have h4 := one_tmul_inj hR T' _ _ h3
-      exact sub_eq_zero.2 (congrArg Subtype.val h4)
+      exact sub_eq_zero.2 (congrArg Subtype.val (one_tmul_inj hR T' _ _ h3))
     · have h1 := (hcv γ ⟨_, c.2.2 γ (Set.mem_univ _)⟩ rfl).2 hγ
       have h2 := (hcv' γ ⟨_, c'.2.2 γ (Set.mem_univ _)⟩ rfl).2 hγ
       have h3 := congrArg (oneTensor RW f) h1
@@ -164,8 +163,7 @@ theorem clNat_of_tie {W : LocWach PD LL O v n} {RA RW : Type} [CommRing RA] [Com
         rw [hpr, E.jD_map]
         rfl
       rw [map_sub, map_sub, oneTensor_act, h5, ← h2] at h3
-      have h4 := one_tmul_inj hR T' _ _ h3
-      exact sub_eq_zero.2 (congrArg Subtype.val h4)
+      exact sub_eq_zero.2 (congrArg Subtype.val (one_tmul_inj hR T' _ _ h3))
   rw [← key]
   rfl
 
@@ -212,8 +210,7 @@ theorem le_v_iff (P : LocPrime l) (LL : FinExt l) (x : ℚ_[l]) (k : ℕ) :
     constructor
     · rintro ⟨z, rfl⟩
       exact z.2
-    · intro hy
-      exact ⟨⟨y, hy⟩, rfl⟩
+    · exact fun hy => ⟨⟨y, hy⟩, rfl⟩
   have h2 : P.v LL (algebraMap ℚ_[l] ↥LL.1 ((l : ℚ_[l]) ^ k * y)) =
       (k : WithTop ℚ) + P.v LL (algebraMap ℚ_[l] ↥LL.1 y) := by
     rw [map_mul, map_pow, map_natCast, AddValuation.map_mul, AddValuation.map_pow, P.v_l]
@@ -226,8 +223,7 @@ theorem le_v_iff (P : LocPrime l) (LL : FinExt l) (x : ℚ_[l]) (k : ℕ) :
 theorem norm_eq_of_v_eq (P : LocPrime l) (LL : FinExt l) (x : ℚ_[l]) (k : ℕ)
     (h : P.v LL (algebraMap ℚ_[l] ↥LL.1 x) = (k : WithTop ℚ)) : ‖x‖ = (l : ℝ) ^ (-(k : ℤ)) := by
   refine le_antisymm ((le_v_iff P LL x k).1 h.ge) ?_
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have h1 : ‖x‖ ≤ (l : ℝ) ^ (-((k + 1 : ℕ) : ℤ)) := by
     rw [Padic.norm_le_pow_iff_norm_lt_pow_add_one]
     simpa using hlt
@@ -280,8 +276,7 @@ theorem exists_lift_dense (P : LocPrime l) (K : FinExt l) (s : ℕ) (LL : FinExt
   have := W.χΓ_res (η' : ↥(GK K))
   rw [P.PD_χ] at this
   change _ = algebraMap ℚ_[l] ↥LL.1 (P.χQ η : ℚ_[l]) at this
-  rw [hη1, Units.val_one, map_one] at this
-  exact this
+  rwa [hη1, Units.val_one, map_one] at this
 
 end Concrete
 

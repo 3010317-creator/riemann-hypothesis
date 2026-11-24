@@ -211,8 +211,7 @@ theorem level_abs {Γ Gf W : Type} [Group Γ] [Group Gf] [NormedAddCommGroup W] 
     {ρ : Γ →* Module.End ℂ W} {J : Subgroup Gf} {χ : J →* ℂˣ} {f : Gf → W} (hf : f ∈ Bridge.AdForms ι ρ J χ)
     {k : Gf} (hk : k ∈ J) (h1 : ((χ ⟨k, hk⟩ : ℂˣ) : ℂ) = 1) (h : Gf) : f (h * k) = f h := by
   have h3 := hf 1 h ⟨k, hk⟩
-  rw [h1, map_one, map_one, one_mul, one_smul] at h3
-  exact h3
+  rwa [h1, map_one, map_one, one_mul, one_smul] at h3
 
 theorem ext_level {V : HSp D} (c : CoefA V) (hc : c.Is) {β : GL (Fin V.rank) (Lev.EAf D)} {L : LevDat D.host.E ℂ V.rank}
     {f : Bridge.Gf V → c.W}

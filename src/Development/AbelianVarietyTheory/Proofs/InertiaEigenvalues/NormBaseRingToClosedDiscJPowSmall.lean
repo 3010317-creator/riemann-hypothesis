@@ -121,15 +121,13 @@ theorem GlobalTheory.BSP.norm_toDisc_J_pow_small : ∀ (l : ℕ) [Fact l.Prime] 
       Ideal.span_le, Ideal.span_le, Set.singleton_subset_iff, Set.singleton_subset_iff]
     constructor
     · show s (l : bk.S) ∈ ballIdeal l (s X) ρ t
-      rw [map_natCast, mem_ballIdeal]
-      exact hlmem
+      rwa [map_natCast, mem_ballIdeal]
     · show s bk.E ∈ ballIdeal l (s X) ρ t
       obtain ⟨q, hq⟩ := exists_E_eq bk
       rw [hq, map_add (f := _), map_mul, map_pow, map_natCast, mem_ballIdeal, map_add (f := _), map_mul, mul_comm, ← Algebra.smul_def]
       refine add_mem (Submodule.subset_span ⟨0, bk.Ep.natDegree, 0, ?_, by simp⟩) (Submodule.smul_mem _ _ hlmem)
       show (l:ℝ)^0 * (ρ:ℝ)^bk.Ep.natDegree ≤ t * (l:ℝ)^0
-      simp only [pow_zero, one_mul, mul_one]
-      exact le_max_right _ _
+      simpa only [pow_zero, one_mul, mul_one] using le_max_right _ _
   refine ⟨n, fun x hx => ?_⟩
   rw [Ideal.map_pow] at hx
   have hx' := pow_le_ballIdeal ht0.le hJ n hx

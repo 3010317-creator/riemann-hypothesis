@@ -130,8 +130,7 @@ private theorem exists_nondegenerate_X_symmetric_form_quotient {k : Type} [Field
         (rep (Submodule.Quotient.mk a) - a) * rep (Submodule.Quotient.mk b) +
           a * (rep (Submodule.Quotient.mk b) - b) := by ring
     have h0 := h1 _ (this ▸ dvd_add (dvd_mul_of_dvd_left ha _) (dvd_mul_of_dvd_right hb _))
-    rw [map_sub, sub_eq_zero] at h0
-    exact h0
+    rwa [map_sub, sub_eq_zero] at h0
   refine ⟨LinearMap.mk₂ k g ?_ ?_ ?_ ?_, ?_, ?_⟩
   · intro x y z
     obtain ⟨a, rfl⟩ := hsurj x
@@ -161,8 +160,7 @@ private theorem exists_nondegenerate_X_symmetric_form_quotient {k : Type} [Field
     obtain ⟨a, rfl⟩ := hsurj x
     obtain ⟨c, hc⟩ := h2 a fun b => by
       have := hx (Submodule.Quotient.mk b)
-      rw [LinearMap.mk₂_apply, hg] at this
-      exact this
+      rwa [LinearMap.mk₂_apply, hg] at this
     rw [Submodule.Quotient.mk_eq_zero, Submodule.mem_span_singleton]
     exact ⟨c, by rw [hc, smul_eq_mul, mul_comm]⟩
 
@@ -230,8 +228,7 @@ theorem _root_.GlobalTheory.SimilarTranspose.main : ∀ (k ι : Type) [Field k] 
     have := hBn (o (v - w)) fun n => by
       have := h0 (o.symm n)
       simpa [Q] using this
-    rw [map_eq_zero_iff _ o.injective, sub_eq_zero] at this
-    exact this
+    rwa [map_eq_zero_iff _ o.injective, sub_eq_zero] at this
   · have := congrArg (LinearMap.toMatrix₂' k) hQ
     rw [LinearMap.toMatrix₂'_compl₁₂, LinearMap.toMatrix₂'_compl₁₂] at this
     simpa [LinearMap.toMatrix'_id, LinearMap.toMatrix'_toLin'] using this.symm

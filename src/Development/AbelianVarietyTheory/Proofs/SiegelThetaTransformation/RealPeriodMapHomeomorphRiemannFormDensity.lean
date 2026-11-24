@@ -196,8 +196,7 @@ theorem zR_laws : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : �
         zR X idx (lact γ x) (fun τ k => ((γ : Matrix (Fin r) (Fin r) E).map τ.1) *ᵥ v τ k) :=
       (LinearMap.continuous_of_finiteDimensional (zRLin X idx (lact γ x) (n := n))).comp hA
     have hc2 : Continuous fun v : WR X n => zR X idx x v := by
-      simp only [← hL]
-      exact L.continuous
+      simpa only [← hL] using L.continuous
     have heq := hD.equalizer hc1 hc2 (by
       funext y
       simp only [Function.comp_apply]

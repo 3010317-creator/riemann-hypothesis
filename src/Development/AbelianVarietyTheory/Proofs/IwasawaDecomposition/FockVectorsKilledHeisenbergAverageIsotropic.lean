@@ -133,8 +133,7 @@ theorem val_lt_one_of_mem (he : Formalism.L2.NTheta.IsIdemAt e PP) (hπ : Chart 
       exact fun h => h0 (Subtype.ext h)
     rw [he.2 x h0, hπ.2.2.2, isInt_Ov] at hx
     have hx' : ¬ Valued.v ((π.comp (incA D)) (x : D.host.E)⁻¹) ≤ 1 := hx
-    rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 hx0)] at hx'
-    exact hx'
+    rwa [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 hx0)] at hx'
 
 theorem exists_chart_levels (he : Formalism.L2.NTheta.IsIdemAt e PP) (hπ : Chart e v π) :
     ∃ φ : Datum.EAf D →+* Fv D.host.F v, (∀ z, φ (toEAf D z) = π z) ∧
@@ -324,8 +323,7 @@ theorem exists_eigen {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp
     refine Matrix.ext fun i j => ?_
     rw [Matrix.smul_apply, vecMulVec_apply, vecMulVec_apply, Pi.smul_apply, nsmul_eq_mul, nsmul_eq_mul, mul_left_comm]
   have hhalf : IsHalf e (vecMulVec c (k • l)) := fun i j => by
-    rw [vecMulVec_apply, Pi.smul_apply, nsmul_eq_mul]
-    rw [← hl j]
+    rw [vecMulVec_apply, Pi.smul_apply, nsmul_eq_mul, ← hl j]
     linear_combination (c i * k * l j) * h3
   refine ⟨Matrix.ext fun i j => by
     rw [Matrix.map_apply, ← hhalf i j, RingHom.map_mul, ho.infPart_eq, zero_mul]; rfl, ?_⟩

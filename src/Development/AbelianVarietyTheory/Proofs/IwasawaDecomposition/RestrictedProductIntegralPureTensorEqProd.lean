@@ -90,10 +90,8 @@ theorem map_eq_smul_prod {ι Z Zi : Type} {Zv : ι → Type} [MeasurableSpace Z]
     have hfv : ∀ v, Measurable (fv v) := by
       intro v
       by_cases hv : v ∈ S
-      · simp only [fv, dite_eq_left hv]
-        exact measurable_one.indicator (ht' _)
-      · simp only [fv, dite_eq_right hv]
-        exact measurable_zero
+      · simpa only [fv, dite_eq_left hv] using measurable_one.indicator (ht' _)
+      · simpa only [fv, dite_eq_right hv] using measurable_zero
     have hfv' : ∀ v : S, fv v = (t v).indicator 1 := fun v => by simp only [fv, dite_eq_left v.2]
     have h1 := h (s.indicator 1) fv (measurable_one.indicator hs') hfv
     have hm : MeasurableSet (s ×ˢ Set.pi Set.univ t) :=

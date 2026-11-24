@@ -237,7 +237,6 @@ theorem om_ptTop_movedVec : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
   have hexp : ∀ τ, HasInfExp D (L.mu t ((j : ℕ) + 1)) τ (-(((rowEntries D sc.cGap τ).e j : ℤ) : ℚ)) := fun τ => by
     have h := GlobalTheory.GridJoin.ColIt.hasInfExp_mu L hL t j τ
     have e : (((rowEntries D sc.cGap τ).e j : ℤ) : ℚ) = (D.hc τ).e j := by
-      show (((num D sc.cGap τ).e ((j : ℕ) + 1) : ℤ) : ℚ) = _
       exact GlobalTheory.SignedHC.GridData.extend_cast 1 (D.hc τ).e_int ⟨j, j.2⟩
     rwa [e]
   have key := GlobalTheory.VacuumCharacter.vacuum_character D W.ψ W.θ (G.V (.top j)) (G.V (.top ((j : ℕ) + 1)))
@@ -585,8 +584,7 @@ theorem trRow_fockSubAll : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts}
   have hc : ¬ ((p : ℕ) < (G.V (.grid i D.R.m)).rank ↔ (q : ℕ) < 0) := by simp [p.2]
   simp only [ite_eq_right hc]
   have hH : ∀ τ', homMat _ _ (u, v) τ' = ((v τ' : Matrix.unitaryGroup _ ℂ) : Matrix _ _ ℂ) ⊗ₖ (star ((u τ' : Matrix.unitaryGroup _ ℂ) : Matrix _ _ ℂ))ᵀ := fun _ => rfl
-  simp only [hH]
-  exact sum_conjSub_cast _ _ _ _ (v τ).2.1 τ p q
+  simpa only [hH] using sum_conjSub_cast _ _ _ _ (v τ).2.1 τ p q
 
 end GlobalTheory.RowReal
 end -- clump:auto

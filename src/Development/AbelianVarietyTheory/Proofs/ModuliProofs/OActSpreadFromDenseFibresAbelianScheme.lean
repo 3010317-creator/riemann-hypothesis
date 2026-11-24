@@ -164,8 +164,7 @@ theorem ext_of_dense [IsReduced S] [Smooth A.hom] [IsSeparated A.hom] (f g : A �
       rw [Scheme.Pullback.range_fst]
       exact ⟨t, ht⟩
     obtain ⟨z, hz⟩ := hy'
-    have hinv : hpb.isoPullback.inv ≫ φ = pullback.fst A.hom x := by
-      exact hpb.isoPullback_inv_fst
+    have hinv : hpb.isoPullback.inv ≫ φ = pullback.fst A.hom x := hpb.isoPullback_inv_fst
     refine ⟨(φ ≫ f.left) (hpb.isoPullback.inv z), ?_⟩
     rw [← Scheme.Hom.comp_apply, ← key, Scheme.Hom.comp_apply, ← hz, ← hinv, Scheme.Hom.comp_apply]
   obtain ⟨e, he⟩ := H3 _ _ (pullback.diagonal A.hom) (pullback.lift f.left g.left hw) hin

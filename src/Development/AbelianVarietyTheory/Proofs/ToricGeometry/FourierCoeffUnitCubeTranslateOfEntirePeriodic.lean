@@ -114,8 +114,7 @@ theorem setIntegral_unitCube_add_right_of_periodic {ι E : Type*} [Fintype ι] [
       = F (x + t) := fun x => hG (x + t)
   simp only [hG] at h1
   simp only [h4] at h2
-  rw [← h1, ← h2]
-  exact h3
+  rwa [← h1, ← h2]
 
 theorem setIntegral_unitCube_add_of_entire_periodic {g : ℕ} {f : (Fin g → ℂ) → ℂ}
     (hf : Differentiable ℂ f) (hper : ∀ (i : Fin g) z, f (z + Pi.single i 1) = f z)
@@ -131,8 +130,7 @@ theorem setIntegral_unitCube_add_of_entire_periodic {g : ℕ} {f : (Fin g → �
       refine Continuous.continuousOn ?_
       unfold Function.uncurry
       fun_prop
-    · intro x _
-      exact (hf.comp ((differentiable_const _).add differentiable_id)).differentiableOn
+    · exact fun x _ => (hf.comp ((differentiable_const _).add differentiable_id)).differentiableOn
   have h := SCV.eq_of_invariant_real isOpen_univ isPreconnected_univ hd
     (fun z _ t _ => by
       have := setIntegral_unitCube_add_right_of_periodic

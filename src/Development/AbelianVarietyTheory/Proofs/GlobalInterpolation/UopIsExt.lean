@@ -124,8 +124,7 @@ theorem uext_sub_mem {p p₁ : PP Lc n} {x y : Fin n → Lc.K} (hx : p.IsUp x p�
   have h4 := p₁.2.add _ h3 _ h2
   rw [← smul_add, sub_add_cancel, hx.2.2, hy.2.2] at h4
   have h5 : ((q : Lc.K))⁻¹ • (x - y) ∈ p₁.ker := ⟨h3, by linear_combination -h4⟩
-  rw [hx.2.1] at h5
-  exact h5
+  rwa [hx.2.1] at h5
 
 theorem uext_isUp_of_sub {p p₁ : PP Lc n} {x y : Fin n → Lc.K} (hy : p.IsUp y p₁) (hx : x ∈ p.1.L)
     (hxy : ((q : Lc.K))⁻¹ • (x - y) ∈ p.1.L) : p.IsUp x p₁ := by
@@ -133,8 +132,7 @@ theorem uext_isUp_of_sub {p p₁ : PP Lc n} {x y : Fin n → Lc.K} (hy : p.IsUp 
   have h2 := uext_mem_of_ne p₁ hy.2.2
   have h5 : ((q : Lc.K))⁻¹ • (x - y) ∈ p₁.ker := by rw [hy.2.1]; exact hxy
   have h4 := p₁.2.add _ h5.1 _ h2
-  rw [← smul_add, sub_add_cancel, hy.2.2, h5.2, zero_add] at h4
-  exact h4
+  rwa [← smul_add, sub_add_cancel, hy.2.2, h5.2, zero_add] at h4
 
 end LocF
 
@@ -172,8 +170,7 @@ theorem uop_isExt : ∀ (D : D7) (u : D.what₂.Word) (X : Ch D u) (i : ℕ) (M 
       if hy : X.fm.fv i v c y = 1 then (huniq (M.rep c) _ (hf y hy)).exists.choose else (M.rep c).2 v
     have ht : ∀ y, X.fm.fv i v c y = 1 → ((M.rep c).2 v).IsUp (s y) (t y) := by
       intro y hy
-      simp only [t, dite_eq_left hy]
-      exact (huniq (M.rep c) _ (hf y hy)).exists.choose_spec
+      simpa only [t, dite_eq_left hy] using (huniq (M.rep c) _ (hf y hy)).exists.choose_spec
     let P : X.fm.lv i v c → M.Pt := fun y => ((M.rep c).1, Function.update (M.rep c).2 v (t y))
     have hbij : Set.BijOn P
         ((Finset.univ.filter (fun x : X.fm.lv i v c => X.fm.fv i v c x = 1) : Finset _) : Set _)
@@ -182,8 +179,7 @@ theorem uop_isExt : ∀ (D : D7) (u : D.what₂.Word) (X : Ch D u) (i : ℕ) (M 
       · intro y hy
         have hy' : X.fm.fv i v c y = 1 := by simpa using hy
         refine ⟨rfl, fun v' hv' => Function.update_of_ne hv' _ _, s y, hf y hy', ?_⟩
-        simp only [P, Function.update_self]
-        exact ht y hy'
+        simpa only [P, Function.update_self] using ht y hy'
       · intro y hy y' hy' e
         have h1 : X.fm.fv i v c y = 1 := by simpa using hy
         have h2 : X.fm.fv i v c y' = 1 := by simpa using hy'
@@ -202,10 +198,8 @@ theorem uop_isExt : ∀ (D : D7) (u : D.what₂.Word) (X : Ch D u) (i : ℕ) (M 
         refine Prod.ext h1.symm (funext fun v' => ?_)
         by_cases hv : v' = v
         · subst hv
-          simp only [P, Function.update_self]
-          exact h4
-        · simp only [P, Function.update_of_ne hv]
-          exact (h2 v' hv).symm
+          simpa only [P, Function.update_self] using h4
+        · simpa only [P, Function.update_of_ne hv] using (h2 v' hv).symm
     have e1 := finsum_mem_eq_of_bijOn (f := fun y => Φ (P y)) (g := Φ) P hbij (fun _ _ => rfl)
     beta_reduce
     rw [← e1, finsum_mem_coe_finset, Submodule.coe_sum]

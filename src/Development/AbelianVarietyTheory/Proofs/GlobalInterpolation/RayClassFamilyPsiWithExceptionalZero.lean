@@ -815,8 +815,7 @@ theorem contour (𝓕 : LFam) (χ : AddChar 𝓕.G ℂ) (Z : Finset ℝ) (c₀ C
     by_cases h : χ = 1
     · simp only [ite_eq_left h]
       exact analyticAt_const.div (analyticAt_id.sub analyticAt_const) (sub_ne_zero.2 hs)
-    · simp only [ite_eq_right h]
-      exact analyticAt_const
+    · simpa only [ite_eq_right h] using analyticAt_const
   have key := shift
     (fun s => deriv (𝓕.F χ) s / 𝓕.F χ s - (if χ = 1 then 1 / (s - 1) else 0))
     (insert 1 (Z'.image (fun β : ℝ => (β : ℂ))))
@@ -851,13 +850,11 @@ theorem contour (𝓕 : LFam) (χ : AddChar 𝓕.G ℂ) (Z : Finset ℝ) (c₀ C
     gcongr
   · intro p hp
     rcases Finset.mem_insert.1 hp with rfl | hp
-    · simp only [one_re, one_im]
-      exact ⟨by linarith, hc1, trivial⟩
+    · simpa only [one_re, one_im] using ⟨by linarith, hc1, trivial⟩
     · obtain ⟨β, h1, rfl⟩ := Finset.mem_image.1 hp
       obtain ⟨h2, h3⟩ := Finset.mem_filter.1 h1
       have := (hZ1 β h2).2.1
-      simp only [ofReal_re, ofReal_im]
-      exact ⟨h3, by linarith, trivial⟩
+      simpa only [ofReal_re, ofReal_im] using ⟨h3, by linarith, trivial⟩
   · intro s h1 h2 h3 h4
     rw [Finset.mem_insert, not_or] at h4
     have hF : 𝓕.F χ s ≠ 0 := fun h0 => by

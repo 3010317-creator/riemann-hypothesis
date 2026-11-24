@@ -452,8 +452,7 @@ theorem lift_frame : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r :
     by_cases hm : (m : ℕ) < X.p0
     · simp only [s, ite_eq_left hm]
       exact DifferentiableOn.fun_sum fun j _ => (differentiableOn_const _).mul (differentiableOn_pi.1 (hv ρ j) k)
-    · simp only [s, ite_eq_right hm]
-      exact differentiableOn_const _
+    · simpa only [s, ite_eq_right hm] using differentiableOn_const _
   refine ⟨s, GlobalTheory.SCV.analyticAt_of_differentiableOn hsd (hBo.mem_nhds hb₀), ?_⟩
   have hev : ∀ᶠ b in 𝓝 b₀, s b ∈ X.dom :=
     (hsd.continuousOn.continuousAt (hBo.mem_nhds hb₀)).preimage_mem_nhds
@@ -547,8 +546,7 @@ theorem pm_lift_pointwise : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     constructor
     · rintro ⟨a, rfl⟩
       exact (W.φ k₁ a).2
-    · intro hv
-      exact ⟨(W.φ k₁).symm ⟨v, hv⟩, by simp [φL]⟩
+    · exact fun hv => ⟨(W.φ k₁).symm ⟨v, hv⟩, by simp [φL]⟩
   have hspan : Submodule.span E (Set.range φL) = ⊤ := by rw [hrange]; exact (U.X k₁).Λ_span
   have hcc : cc (-(U.X k₁).ξ0) = -(-(U.X k₁).ξ0) := by
     have h0 := (U.X k₁).ξ0_im
@@ -640,8 +638,7 @@ theorem exists_analytic_frame_lift : ∀ (E : Type) [Field E] [NumberField E] [I
       (W.F.fibre i _ _ (hper _ hb₀) (hper w hw)).2 ⟨LinearEquiv.refl _ _, LinearEquiv.refl _ _, fun _ _ => rfl,
         fun a _ => ⟨0, by simp⟩, fun a => ⟨0, by simp⟩, fun a => funext fun t => (hg.false t).elim⟩
     have e1 : cxPt T.Z q₀ = cxPt T.Z q := cxPt_congr (hu₀.symm.trans (hfib.trans hq2))
-    rw [← hq1, ← e1, hq₀, c'.e.left_inv hyc]
-    exact hkx
+    rwa [← hq1, ← e1, hq₀, c'.e.left_inv hyc]
   · obtain ⟨W, hinj⟩ := GlobalTheory.HodgeSmooth.exists_unfWit_inj hσ hU hr
     obtain ⟨i, B, P, hB, hb₀, -, hper, hdiff, hq⟩ := _root_.GlobalTheory.ShFam.chart_lift_periods_of_openPart E H Dw l Xo c O β Y T F e σ W.g _ W.F X j hj hjo y hy c' hyc
     obtain ⟨q₀, -, hu₀⟩ := hq _ hb₀
@@ -966,8 +963,7 @@ theorem GlobalTheory.HodgeGramGen.hodge_gram_frame : ∀ (E : Type) [Field E] [N
     · by_cases h' : conjEmb τ (H.rt : E) = H.rt0
       · simp only [dite_eq_right h, dite_eq_left h', submatrix_apply]
         exact GlobalTheory.HodgeGramGen.an_coOm_inv _ hj hp _ hx _ _
-      · simp only [dite_eq_right h, dite_eq_right h']
-        exact analyticAt_const
+      · simpa only [dite_eq_right h, dite_eq_right h'] using analyticAt_const
   · intro τ a b
     exact GlobalTheory.HodgeGramGen.an_moeb _ hj hp _ hx _ _
   · intro τ
@@ -985,8 +981,7 @@ theorem GlobalTheory.HodgeGramGen.hodge_gram_frame : ∀ (E : Type) [Field E] [N
           ⇑(finCongr ((mult_of_not_mem Dw h).trans hq.symm)) := rfl
         rw [e1, e2, isUnit_submatrix_equiv, isUnit_iff_isUnit_det]
         exact isUnit_nonsing_inv_det _ (isUnit_coOm _ hj hp hx _)
-      · simp only [dite_eq_right h, dite_eq_right h', det_one]
-        exact isUnit_one
+      · simpa only [dite_eq_right h, dite_eq_right h', det_one] using isUnit_one
   · intro τ
     have hd := domPt_mem (U.X k') hj (fun t : GlobalTheory.AllWt.Psi H => ρ t.1 t.2) hp hx τ
     have e : (1 - ((zr x τ).submatrix id ⇑(finCongr hq.symm))ᴴ * (zr x τ).submatrix id ⇑(finCongr hq.symm)) =
@@ -1096,16 +1091,14 @@ theorem lieGram_local_model : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     simp [φ, coordOf]
   refine ⟨φ, fun w τ => (K w τ)ᵀ * G (s w) τ, cc, hcc, ?_, ?_, ?_, ?_, ?_⟩
   · refine (EuclideanSpace.equiv (Fin X.dim) ℂ).symm.analyticAt _ |>.comp ?_
-    refine analyticAt_pi_iff.2 fun i => ?_
-    exact (hza (ix i).1 (ix i).2.1 (ix i).2.2).comp hs
+    exact analyticAt_pi_iff.2 fun i => (hza (ix i).1 (ix i).2.1 (ix i).2.2).comp hs
   · intro τ a b
     simp only [Matrix.mul_apply, Matrix.transpose_apply]
     exact Finset.analyticAt_fun_sum Finset.univ (fun i _ => (hK τ i a).mul ((hGa τ i b).comp hs))
   · intro τ
     rw [Matrix.det_mul, Matrix.det_transpose]
     exact (hKu τ).mul (hGu τ)
-  · rw [hco]
-    exact hzD
+  · rwa [hco]
   · filter_upwards [hKev, hev] with w ⟨⟨g0, hg0⟩, hKw⟩ ⟨hsw, _⟩ τ
     have hex : ∃ g, FrameAt e f₀ A₀ A (c'.e.symm w) g := ⟨g0, hg0⟩
     rw [lieGram, dite_eq_left hex]

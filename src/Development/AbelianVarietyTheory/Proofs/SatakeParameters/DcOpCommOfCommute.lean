@@ -126,8 +126,7 @@ theorem fin_lift (V : HSp D) (x : Bridge.Gf V) : ∃ g ∈ GfC V, fin V g = x :=
     rw [map_one]
   obtain ⟨g₁, g₂, h₁, h₂, rfl⟩ := ((GlobalTheory.T.supported_subgroup_split_commute_primeIdempotents V).1 f hff hc).2.1 g
   have a : infHom V g₁ = 1 := by
-    apply Units.ext
-    exact map_eq_one_of_supp (infPart D) f (TensorProduct.zero_tmul _ _) _ h₁
+    exact Units.ext (map_eq_one_of_supp (infPart D) f (TensorProduct.zero_tmul _ _) _ h₁)
   have b : finHom V g₂ = 1 := by
     apply Units.ext
     refine map_eq_one_of_supp (finPart D) (1 - f) ?_ _ h₂
@@ -394,8 +393,7 @@ theorem side_adj_comm (V : HSp D) (β : GL (Fin V.rank) (EAf D)) (Λ : Submodule
       exact l1 g hg
     have he' : IsIdemAt (cA D e) (pl i'.1) := by
       have := idem_conj V he
-      rw [← hP'] at this
-      exact this
+      rwa [← hP'] at this
     have hAL' : ∀ x ∈ T.hA i', x ∈ Lc := fun x hx => by
       obtain ⟨g, hg, rfl⟩ := loc_supp V (T.hA_loc i' hi' x hx) he'
       exact l1 g ((suppAt_conj V he g).1 hg)
@@ -418,8 +416,7 @@ theorem side_adj_comm (V : HSp D) (β : GL (Fin V.rank) (EAf D)) (Λ : Submodule
         obtain ⟨g, hg, rfl⟩ := hB x hx
         refine l1 g ?_
         unfold SuppAt at hg ⊢
-        rw [← h02.1]
-        exact hg
+        rwa [← h02.1]
       refine (GlobalTheory.DoubleCosetComm.dcOp_comm_and_card (levEnv V β L).J Lc (levEnv V β L).χ (T.hx i) (T.hx j) (T.hA i)
         (T.hA j) (T.hA i') F l2 l3 l4 hAL hBL hAL' (T.hDC i hi) (T.hDC j hj) hDC' fun k h => ?_).1
       have := hF 1 h k

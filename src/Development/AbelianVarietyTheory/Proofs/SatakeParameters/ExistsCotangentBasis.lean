@@ -86,8 +86,7 @@ theorem exists_basis_mod_sq {A : Type} [CommRing A] [Algebra ℂ A] (e : A →+*
     exact ⟨x, (hφ x).trans hy⟩
   have hker : ∀ x : RingHom.ker (algebraMap A ℂ), φ x = 0 → (x : A) ∈ RingHom.ker e ^ 2 := by
     intro x hx
-    rw [hφ, ← map_zero (kerCotangentToTensor ℂ A ℂ), hinj.eq_iff, Ideal.toCotangent_eq_zero] at hx
-    exact hx
+    rwa [hφ, ← map_zero (kerCotangentToTensor ℂ A ℂ), hinj.eq_iff, Ideal.toCotangent_eq_zero] at hx
   choose g hg using fun j => hsurj (b j)
   have hmemg : ∀ c : Fin d → ℂ, ∑ j, c j • (g j : A) ∈ RingHom.ker (algebraMap A ℂ) := fun c =>
     Ideal.sum_mem _ fun j _ => by rw [Algebra.smul_def]; exact Ideal.mul_mem_left _ _ (g j).2
@@ -105,8 +104,7 @@ theorem exists_basis_mod_sq {A : Type} [CommRing A] [Algebra ℂ A] (e : A →+*
   · intro c hc
     have h0 : φ (∑ j, c j • (g j : A)) = 0 := by
       have h1 := hφ ⟨_, hmemg c⟩
-      rw [(Ideal.toCotangent_eq_zero _ _).2 hc, map_zero] at h1
-      exact h1
+      rwa [(Ideal.toCotangent_eq_zero _ _).2 hc, map_zero] at h1
     rw [hφg] at h0
     funext i
     exact Fintype.linearIndependent_iff.1 b.linearIndependent c h0 i

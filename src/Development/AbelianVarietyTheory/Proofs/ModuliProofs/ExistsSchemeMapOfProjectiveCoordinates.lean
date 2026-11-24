@@ -129,8 +129,7 @@ theorem coord_germ {M : LB X} {th : σ → M.Sec} {R : Type} [CommRing R] {x : S
   refine ⟨gm (𝟙 _) p _ (τ.s fun _ => k), fun i => ?_⟩
   have e := congrArg (gs (𝟙 _) p _) (h i (fun _ => k) (RepBC.pull_le M x _))
   rw [gs_appLE x _ _ _ (𝟙 _) p hp, gs_mul _ p _ hp, gs_res _ p _ hp, gs_one p ⊤ trivial, Category.id_comp] at e
-  rw [← gs_unit _ p _ hp]
-  exact e
+  rwa [← gs_unit _ p _ hp]
 
 theorem lbIso_of_coord (A B : LB X) (a : σ → A.Sec) (b : σ → B.Sec)
     (H : ∀ y : X, ∃ (R : Type) (_ : CommRing R) (x : Sp R ⟶ X) (v : σ → R), IsOpenImmersion x ∧ y ∈ Set.range x ∧
@@ -145,8 +144,7 @@ theorem lbIso_of_coord (A B : LB X) (a : σ → A.Sec) (b : σ → B.Sec)
     ((Sp R).presheaf.germ ⊤ p trivial).hom.comp (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom
   constructor
   · have : ∃ i, IsUnit (ψ (v i)) := by
-      by_contra hn
-      push Not at hn
+      by_contra! hn
       have : Ideal.span (Set.range v) ≤ (IsLocalRing.maximalIdeal _).comap ψ := by
         rw [Ideal.span_le]
         rintro _ ⟨i, rfl⟩
@@ -224,8 +222,7 @@ theorem exists_map_of_coord : ∀ (R σ : Type) [CommRing R] (I : Ideal (MvPolyn
     obtain ⟨⟨w, hw⟩, h⟩ := key p C (r ≫ pullback.fst _ _)
     have := uniq C _ _ w (by rw [Category.assoc, hg, ← Category.assoc, e, Category.assoc _ (g q), hg, Category.assoc _ (u q)])
       ((h w).1 hw) (((key q C (r ≫ pullback.snd _ _)).2 w).1 (e ▸ hw))
-    rw [Category.assoc, Category.assoc] at this
-    exact this
+    rwa [Category.assoc, Category.assoc] at this
   let f : Y ⟶ Z := 𝒰.glueMorphisms g hglue
   have hf : ∀ p, u p ≫ f = g p := fun p => Scheme.Cover.ι_glueMorphisms 𝒰 _ hglue p
   have hfs : f ≫ s = sY := by

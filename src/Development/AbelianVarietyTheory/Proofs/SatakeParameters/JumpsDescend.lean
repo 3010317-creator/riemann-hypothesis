@@ -100,14 +100,12 @@ theorem jumps_descend : ∀ (K L Ω : Type) [Field Ω] [Field K] [NumberField K]
   have hdM : Bw'.IsdRE P L₁ (rE.comp (GlobalTheory.AboveLRes.decRes A)) := (hmodM.isdRAt_iff P).1 ⟨LL', r', hmod', hdR'⟩
   have hdR2 : IsDR (P.PD Bw'.Kw) (GlobalTheory.Pst.resTo (Bw.repE L₁ rE) hle) := by
     unfold IsDR
-    rw [← hrep, Module.finrank_fin_fun]
-    exact hdM
+    rwa [← hrep, Module.finrank_fin_fun]
   have hdR : IsDR (P.PD Bw.Kw) (Bw.repE L₁ rE) := (GlobalTheory.Per.TiedRestrict.isDR_restrict_iff hle (Bw.repE L₁ rE) T).2 hdR2
   have hdE : Bw.IsdRE P L₁ rE := by
     have := hdR
     unfold IsDR at this
-    rw [Module.finrank_fin_fun] at this
-    exact this
+    rwa [Module.finrank_fin_fun] at this
 
   let τ'' : ↥Bw'.Kw.1 →ₐ[ℚ_[l]] ↥L₁.1 := (IntermediateField.inclusion hLL).comp τ₁
   have hiM : IsInduced Bw' τL τ'' := fun x => hi₁ x

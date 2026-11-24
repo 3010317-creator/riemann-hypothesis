@@ -85,8 +85,7 @@ theorem exists_unit_of_span {k F R : Type} [Field k] [Infinite k] [Field F] [Com
   refine ⟨x, x.2, ?_⟩
   by_contra hn
   obtain ⟨m, hm, hxm⟩ := exists_max_ideal_of_mem_nonunits hn
-  apply hx
-  exact Set.mem_biUnion (x := S ⟨m, hm⟩) (by simp) hxm
+  exact hx (Set.mem_biUnion (x := S ⟨m, hm⟩) (by simp) hxm)
 
 section Generic
 
@@ -143,8 +142,7 @@ theorem finrank_twInv [FiniteDimensional Qp LL] (ν : Representation LL G (Fin 1
     rw [← he, e.injective.eq_iff]
   have h1 : finrank Qp ↥(twInv PD χ) = finrank Qp ↥(DdR PD ν) := by
     have := LinearEquiv.finrank_map_eq e ((DdR PD ν).restrictScalars Qp)
-    rw [hm] at this
-    exact this
+    rwa [hm] at this
   rw [← Module.finrank_mul_finrank Qp K ↥(twInv PD χ), ← Module.finrank_mul_finrank Qp LL ↥(DdR PD ν), h,
     finrank_fintype_fun_eq_card, Fintype.card_fin, mul_one, mul_comm (finrank Qp LL)] at h1
   exact Nat.eq_of_mul_eq_mul_left finrank_pos h1

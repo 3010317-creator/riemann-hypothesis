@@ -138,8 +138,7 @@ theorem exists_sum_of_mem_iSup {A B : Type} [AddCommGroup A] [AddCommGroup B] [M
       · rw [ite_eq_left (Fin.lt_def.mp hi), Pi.single_eq_same]
       · intro k _ hk
         rw [Pi.single_eq_of_ne hk, map_zero, ite_self]
-      · intro h
-        exact absurd (Finset.mem_univ i) h
+      · exact fun h => absurd (Finset.mem_univ i) h
     · rw [iSup_neg hi, Submodule.mem_bot] at hy
       exact ⟨0, by simp [hy]⟩
   · exact ⟨0, by simp⟩
@@ -197,8 +196,7 @@ theorem exact_dd (x : Fin g → ∀ j, V (j + 1) →ₗ[K] V j)
         (by rw [Finset.card_insert_of_notMem (htI J hJ)]; omega)
       have e := dd_succ_insert x t c J j
       rw [htv] at e
-      rw [e] at h1
-      exact h1
+      rwa [e] at h1
     obtain ⟨u, hu⟩ := ih (j₀ + 1) (by omega) (fun J => c (insert t J)) hC2
     have h0 := hcyc ∅ (by simp) j₀ (by simp)
     have e0 := dd_succ x t c ∅ (by simp) j₀
@@ -343,8 +341,7 @@ theorem kosD_mulVec {K : Type} [CommRing K] {g : ℕ} {N : ℕ → ℕ}
       rw [Finset.card_insert_of_notMem hi]
     · intro J _ hJ
       rw [ite_eq_right (fun h' => hJ h'.2)]
-    · intro h'
-      exact absurd (Finset.mem_univ _) h'
+    · exact fun h' => absurd (Finset.mem_univ _) h'
 
 theorem koszul_exact_of_graded_regular : ∀ (K : Type) [CommRing K] (g : ℕ) (N : ℕ → ℕ) (m : Fin g → ∀ j j', Matrix (Fin (N j)) (Fin (N j')) K), (∀ i i' j, j + 2 ≤ g → m i j (j + 1) * m i' (j + 1) (j + 2) = m i' j (j + 1) * m i (j + 1) (j + 2)) → (∀ (i : Fin g) (j : ℕ) (y : Fin (N (j + 1)) → K), j + 1 + i ≤ g → (m i j (j + 1)).mulVec y ∈ (⨆ (i' : Fin g) (_ : i' < i), LinearMap.range (m i' j (j + 1)).mulVecLin) → y ∈ ⨆ (i' : Fin g) (_ : i' < i), LinearMap.range (m i' (j + 1) (j + 2)).mulVecLin) → ∀ v : KIx g 0 N → K, (kosD m (fun _ => 0)).mulVec v = 0 → ∃ w : KIx g 0 N → K, ∀ p : (Σ I : Finset (Fin g), Fin (N I.card)), p.1 ≠ ∅ → v (.inl p) = (kosD m (fun _ => 0)).mulVec w (.inl p) := by
   intro K _ g N m hcomm hreg v hv
@@ -459,8 +456,7 @@ theorem phi_mulVec (x : KeyIn K) {n l : ℕ} {s : Fin x.P.g → RR x n}
         rw [Finset.sum_comm]
         simp only [h, Finset.mul_sum]
     _ = _ := by
-        simp only [phi, Finset.mul_sum]
-        exact Finset.sum_congr rfl fun _ _ => by ring
+        simpa only [phi, Finset.mul_sum] using Finset.sum_congr rfl fun _ _ => by ring
 
 theorem mem_iff {g : ℕ} {a b : ℕ} (i : Fin g) (M : Fin g → Matrix (Fin a) (Fin b) K) (y : Fin a → K) :
     y ∈ (⨆ (i' : Fin g) (_ : i' < i), LinearMap.range (M i').mulVecLin) ↔

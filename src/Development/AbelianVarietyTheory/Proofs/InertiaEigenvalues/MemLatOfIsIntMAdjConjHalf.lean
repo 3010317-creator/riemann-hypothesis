@@ -94,10 +94,8 @@ theorem tie_mul_inv_mem {Q : HeightOneSpectrum (𝓞 D.host.E)} {f : AE D} (hf :
     by_contra h; exact ht ((hf t ht0).2 h)
   have h2 := mul_mem (GlobalTheory.IdemIntegral.toEAf_mem_of_finPart h1) (GlobalTheory.IdemIntegral.eToEAf_int D b)
   have e : c = (t : D.host.E)⁻¹ * (b : D.host.E) := by
-    rw [eq_inv_mul_iff_mul_eq₀ ht0']
-    exact hbc
-  rw [e, map_mul (incA D), ← mul_assoc, map_mul (toEAf D)]
-  exact h2
+    rwa [eq_inv_mul_iff_mul_eq₀ ht0']
+  rwa [e, map_mul (incA D), ← mul_assoc, map_mul (toEAf D)]
 
 theorem toEAf_cA_idem_mul_inv_mem {Pg Q : Finset (Formalism.L2.DIV.Pl D.host.E)} (hP : GlobalTheory.ExportSeries.PlacesOK Pg Q)
     {c : D.host.E} (hc : c ∈ D.host.AA⁻¹) :

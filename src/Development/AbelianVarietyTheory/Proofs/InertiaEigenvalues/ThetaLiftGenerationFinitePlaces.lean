@@ -332,16 +332,14 @@ theorem mirC_conj : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type)
     unfold mirC
     rw [h2]
     refine ite_congr_of_iff (and_congr (h1 g) ?_)
-    rw [ite_eq_right Bool.false_ne_true, ite_eq_right Bool.false_ne_true]
-    exact h3
+    rwa [ite_eq_right Bool.false_ne_true, ite_eq_right Bool.false_ne_true]
   · refine ⟨_, gl_inv_mulVec_ne_zero (R.eG x PP) ha, fun g => ?_⟩
     have h3 := conj_triv_mod_line_iff (R.eG x PP) (R.eG g PP) a
     rw [← he] at h3
     unfold mirC
     rw [h2]
     refine ite_congr_of_iff (and_congr (h1 g) ?_)
-    rw [ite_eq_left rfl, ite_eq_left rfl]
-    exact h3
+    rwa [ite_eq_left rfl, ite_eq_left rfl]
 
 end GlobalTheory.DownLift.GenFinite
 end -- clump:auto
@@ -476,8 +474,7 @@ theorem pi_lift_indep (R : RealDat D A Ks) (i : Fin D.R.m) (t : T) (hP : R.FullP
       (levChi (Vc D i) (R.βV i) (flagL (R.datVt i t)) κ)⁻¹ • R.ωP i t (κ⁻¹, 1) φ := by
   have hd : κ⁻¹ * κ' ∈ levG (Vc D i) (R.βV i) (R.datVt i t) := by
     have h0 := lift_div_mem hκ hκ'
-    rw [levG_flag1] at h0
-    exact h0
+    rwa [levG_flag1] at h0
   have hdi : (κ⁻¹ * κ')⁻¹ ∈ levG (Vc D i) (R.βV i) (R.datVt i t) := Subgroup.inv_mem _ hd
   have hm := typeVec_move R i t hP hκ.1 hκ.2.1 hφ
   have e : ((κ'⁻¹, 1) : GA D (Vc D i) × GA D (Wc D i)) = ((κ⁻¹ * κ')⁻¹, 1) * (κ⁻¹, 1) := by

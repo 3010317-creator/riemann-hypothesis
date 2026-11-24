@@ -152,9 +152,7 @@ theorem exists_finset_typeNorm_principal : ∀ (E : Type) [Field E] [NumberField
     intro a σ
     have := norm_typeNorm_sq_eq E r n hr K hK (a : E) σ
     rw [Ideal.absNorm_span_singleton, Nat.cast_natAbs, Int.cast_abs]
-    rw [← Algebra.coe_norm_int] at this
-    rw [Rat.cast_intCast] at this
-    exact this
+    rwa [← Algebra.coe_norm_int, Rat.cast_intCast] at this
   let Φ : Ideal (𝓞 E) → Submodule (𝓞 K) K := fun I => ∏ τ : E →+* ℂ, extendIdealHom (f τ) I ^ r τ
   have hΦmul : ∀ I J, Φ (I * J) = Φ I * Φ J := by
     intro I J

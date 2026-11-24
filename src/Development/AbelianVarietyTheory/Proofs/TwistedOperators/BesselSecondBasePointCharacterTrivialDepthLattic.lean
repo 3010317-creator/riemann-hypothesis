@@ -185,8 +185,7 @@ theorem coef_mem (p : Fin c) (hp : p.rev ≠ p) {y : Fin B.rank → D.host.E} (h
     · intro q _ hq
       rw [antiDiagonalSignGramMatrix, ite_eq_right, zero_mul]
       rw [Fin.val_rev]
-      intro h
-      exact hq (Fin.ext (by omega))
+      exact fun h => hq (Fin.ext (by omega))
     · exact fun h => absurd (Finset.mem_univ p) h
   rw [e]
   exact hu p
@@ -205,8 +204,7 @@ theorem qX_apply {A B B₀ : HSp D} {c ρ : ℕ} (d : HermitianOrthogonalExtensi
   have h2 : star (s i) * (-D.host.xi0) ^ (i.1 + 1) = 1 := by
     have h3 : (w.qX *ᵥ fun k => w.e k i) i = 1 := by
       have := congrFun (congrFun (qX_e w) i) i
-      rw [Matrix.one_apply_eq] at this
-      exact this
+      rwa [Matrix.one_apply_eq] at this
     have h4 : (fun k => w.e k i) = (-D.host.xi0) ^ (i.1 + 1) • fun k => d.a k (Fin.castLE (by omega) i) := by
       rw [he]; rfl
     have h5 : ((d.aᴴ * B.gram) *ᵥ fun k => d.a k (Fin.castLE (by omega) i)) (Fin.castLE (by omega) i : Fin c).rev = 1 := by
@@ -218,8 +216,7 @@ theorem qX_apply {A B B₀ : HSp D} {c ρ : ℕ} (d : HermitianOrthogonalExtensi
       have := congrArg Fin.val h
       rw [Fin.val_rev, Fin.val_castLE] at this
       omega
-    rw [k, h4, mulVec_smul, Pi.smul_apply, h5, smul_eq_mul, mul_one] at h3
-    exact h3
+    rwa [k, h4, mulVec_smul, Pi.smul_apply, h5, smul_eq_mul, mul_one] at h3
   rw [k, ← mul_assoc, mul_comm _ (star (s i)), h2, one_mul]
 
 end SlopeTestRemainingChoices

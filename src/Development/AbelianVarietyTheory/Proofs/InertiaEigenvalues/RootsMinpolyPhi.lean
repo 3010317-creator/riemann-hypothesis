@@ -404,10 +404,8 @@ theorem list_map (L : LabelDatum g) (τ : ℂ ≃+* ℂ) (Q : List ((ZMod g)[X] 
       · exact hP2
       · exact h1 q hq
     · simp only [List.map_cons, h2]
-    · simp only [List.map_cons, List.prod_cons]
-      exact hp.1.1.mul h3
-    · simp only [List.map_cons, List.prod_cons]
-      exact hP1.mul hp.1.1.ne_zero h3.ne_zero h4
+    · simpa only [List.map_cons, List.prod_cons] using hp.1.1.mul h3
+    · simpa only [List.map_cons, List.prod_cons] using hP1.mul hp.1.1.ne_zero h3.ne_zero h4
 
 theorem hasLabel_map (L : LabelDatum g) (τ : ℂ ≃+* ℂ) {n : ℕ} {χ : Gn g n → ℂ} {f f' : (ZMod g)[X]}
     (hr : Rel L τ f f') (h : HasLabel L χ f) : HasLabel L (τ ∘ χ) f' := by
@@ -457,8 +455,7 @@ theorem eSer_galois : Green → ∀ D : Formalism.BasicNotions.D7, ESerTie D →
   have e : labAct D τ k f = Classical.epsilon (Rel L τ f) := by
     unfold labAct Rel phi
     rw [hL]
-  rw [e]
-  exact h
+  rwa [e]
 
 end GlobalTheory.GLq.GalSer
 end -- clump:auto

@@ -1077,10 +1077,8 @@ theorem exists_rep {A M O ι : Type} [CommRing A] [AddCommGroup M] [Module A M] 
   choose pc hpc using fun j k => (gg j k).2
   refine ⟨Σ j', Fin (n j'), inferInstance, fun i j q => (pc q.1 q.2).1,
     fun i j q => if q.1 = j then (if (pc q.1 q.2).2 = i then w q.1 q.2 else 0) else 0, fun j => ?_⟩
-  rw [Finset.sum_comm]
-  rw [Fintype.sum_sigma]
-  rw [Finset.sum_eq_single j (fun j' _ hj' => by simp [hj']) (by simp)]
-  rw [← hgg j]
+  rw [Finset.sum_comm, Fintype.sum_sigma]
+  rw [Finset.sum_eq_single j (fun j' _ hj' => by simp [hj']) (by simp), ← hgg j]
   refine Finset.sum_congr rfl fun k _ => ?_
   simp only [ite_true, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ]
   rw [← hpc j k]
@@ -1219,8 +1217,7 @@ theorem desc_eq_X_pow_smul_nabla_pow {O K : Type} [CommRing O] [NormedField K] [
     have e2 : ((fun _ => PowerSeries.derivative (R := K) (X : K⟦X⟧)) : ZMod a → K⟦X⟧) • w = w := by
       simp only [PowerSeries.derivative_X]
       exact one_smul _ w
-    rw [e1, e1, e2] at h
-    exact h
+    rwa [e1, e1, e2] at h
   have hcomm : ∀ (j : ℕ) (w : Vec K a ι),
       (C.nabla ^ j) ((X : K⟦X⟧) • C.nabla w) = (X : K⟦X⟧) • (C.nabla ^ (j + 1)) w + j • (C.nabla ^ j) w := by
     intro j

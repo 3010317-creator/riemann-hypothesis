@@ -333,8 +333,7 @@ theorem map_inv_mat {E K : Type} [Field E] [Field K] (f : E →+* K) {n : ℕ} (
   have h1 : ((Matrix.GeneralLinearGroup.map f γE : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) = (γE : Matrix (Fin n) (Fin n) E).map f := rfl
   have h2 : ((Matrix.GeneralLinearGroup.map f γE⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) = ((γE⁻¹ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E).map f := rfl
   simp only [Matrix.coe_units_inv] at h h2
-  rw [h1] at h
-  rw [h2] at h
+  rw [h1, h2] at h
   exact h.symm
 
 theorem isAlgWeight_of_equiv {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} {W W' : Type}
@@ -1127,8 +1126,7 @@ theorem addChar_extend {K : Type} [Ring K] (S : Subring K) (ψ : AddChar S ℂ) 
   refine ⟨{ toFun := fun x => ((Additive.toMul (h x) : ℂˣ) : ℂ)
             map_zero_eq_one' := by simp
             map_add_eq_mul' := fun x y => by simp [map_add (f := _)] }, fun x => ?_⟩
-  have e := congrArg (fun φ => ((Additive.toMul (φ x) : ℂˣ) : ℂ)) hh
-  simpa [f, g, charUnit] using e
+  simpa [f, g, charUnit] using congrArg (fun φ => ((Additive.toMul (φ x) : ℂˣ) : ℂ)) hh
 
 theorem exists_localAddChar_lifting_residueChar : ∀ (D : D7) (s : ReciprocityTheory.Aut.SplitPlace D.host.E) (φ : s.v.adicCompletionIntegers (maximalRealSubfield D.host.E) →+* kP s.w), Function.Surjective φ → (∀ x, φ x = 0 ↔ Valued.v (x : s.v.adicCompletion (maximalRealSubfield D.host.E)) < 1) → ∀ ψ' : AddChar (kP s.w) ℂ, ψ' ≠ 1 → ∃ ψ₀ : AddChar (s.v.adicCompletion (maximalRealSubfield D.host.E)) ℂ, NG.IsPsi0 s ψ₀ ∧ ∀ x : s.v.adicCompletionIntegers (maximalRealSubfield D.host.E), ψ₀ (x : s.v.adicCompletion (maximalRealSubfield D.host.E)) = ψ' (φ x) := by
   intro D s φ hφs hφ0 ψ' hne
@@ -1144,8 +1142,7 @@ theorem exists_localAddChar_lifting_residueChar : ∀ (D : D7) (s : ReciprocityT
     show ψ' (φ ⟨x, hx1⟩) = 1
     rw [e2, AddChar.map_zero_eq_one]
   · obtain ⟨y, hy⟩ : ∃ y, ψ' y ≠ 1 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       apply hne
       ext y
       rw [hc y, AddChar.one_apply]
@@ -1184,8 +1181,7 @@ theorem levelUni_typePlace : ∀ (D : D7) (T : Type) (L : LevCh D T) (μ0 : T), 
       exact GlobalTheory.ChainOnto.TameRes.valuation_eq_one_of_not_mem s.w a ha
     have h2 : (L.xiH t).locK s.w k = 1 := hunr _ hunit
     have e : (L.C.mu0 i * L.xiH t).locK s.w k = (L.C.mu0 i).locK s.w k * (L.xiH t).locK s.w k := rfl
-    rw [e, h2, mul_one]
-    exact h1
+    rwa [e, h2, mul_one]
   obtain ⟨ξ, hξc, hξr⟩ := GlobalTheory.T.exists_splitPlaceComponent_heckeChar_residue D s φ hφs hφ0 hφa _ _ hres
   refine ⟨ψ₀, ξ, hP0, hξc, ⟨GlobalTheory.T.split_place_residue_map_unit_character D hr L.Pg (L.Q t) ψ (L.chi ((i : ℕ) + 1)) (L.xiR t) s φ hφ0 hφk hs hoffG hoffQ, ?_⟩⟩
   intro κ h hκ u hu
@@ -1636,8 +1632,7 @@ theorem tup_read {μ : D.what₂.Tup} {i : Fin D.R.m} {c : CoefA (Vc D i)} {T : 
       obtain ⟨x', hx', -⟩ := hk' s ϖ k h1 h2 h3 h4 x
       refine ⟨τ.e x', ?_⟩
       change r _ = NG.tN _ s ϖ k (r _)
-      rw [hrj, hrj]
-      exact hx'
+      rwa [hrj, hrj]
     · obtain ⟨x, rfl⟩ := τ.lat.1 y hy
       have hx : x ∈ τ.u.nab := by
         classical
@@ -1775,8 +1770,7 @@ theorem rat_castFr {V : HSp D} {n : ℕ} (hn : V.rank = n) (hg : V.gram = 1) {P 
   subst hn
   obtain ⟨hbij, e, he⟩ := GlobalTheory.MtInRat.toGf_bij_ratIso D V P hg hP
   constructor
-  · intro h
-    exact ⟨(e ⟨g, h⟩).1, (e ⟨g, h⟩).2, congrArg Subtype.val (he ⟨g, h⟩).1⟩
+  · exact fun h => ⟨(e ⟨g, h⟩).1, (e ⟨g, h⟩).2, congrArg Subtype.val (he ⟨g, h⟩).1⟩
   · rintro ⟨γ, hγ, h⟩
     obtain ⟨g', hg'⟩ := e.surjective ⟨γ, hγ⟩
     have h1 : toGf P g'.1 = toGf P g := (he g').1.symm.trans (by rw [hg']; exact Subtype.ext h)
@@ -1864,8 +1858,7 @@ theorem all_read (hX : X.B.fields.Ok) (hI : I.Ok) (hV : ValsIn I) (hg : GrpAt X 
     eG (lev0 I) (chr0 I) hlev (s _).pres (s _).act_tie (hs _).1 (c0 i) _ _ (hmap i) (hs _).2.1
     (GlobalTheory.MtIn.levChi_integral X px I _ L hI hL i _) e li span lat
   refine ⟨m, ?_⟩
-  rw [hL.C, hL.xiH, ixOf_eq I (t := Top.Bl.tAll I a) rfl] at h1
-  exact h1
+  rwa [hL.C, hL.xiH, ixOf_eq I (t := Top.Bl.tAll I a) rfl] at h1
 
 end Cols
 
@@ -1883,13 +1876,11 @@ theorem selHalf_of (p : ColPin w) : SelHalf w.I := by
   have hab : ∀ v, (w.I.sel v).under (𝓞 B.host.F) = v := fun v => by
     have h := p.above v
     unfold Formalism.L2.Host.aboveF at h
-    rw [Set.Finite.mem_toFinset] at h
-    exact h
+    rwa [Set.Finite.mem_toFinset] at h
   have hmem : ∀ v, ((q : 𝓞 B.host.E) ∈ (w.I.sel v).asIdeal) → (q : 𝓞 B.host.F) ∈ v.asIdeal := fun v h => by
     rw [← hab v]
     show (q : 𝓞 B.host.F) ∈ (w.I.sel v).asIdeal.comap (algebraMap _ _)
-    rw [Ideal.mem_comap, map_natCast]
-    exact h
+    rwa [Ideal.mem_comap, map_natCast]
   have := p.half v v' q hq (hmem v hqP) (hmem v' hqP')
   exact congrArg HeightOneSpectrum.asIdeal this
 
@@ -1925,8 +1916,7 @@ theorem real_state (pin : ColPin w) {Fm : ∀ i, principalLevelFrame.RowPsi (Vc 
     have e1 : x.m.z.R.C = cfOf x := x.m.z.lev.C
     have e2 : x.m.z.R.xiH t = w.I.xi (x.r.Y.tup t) :=
       (x.m.z.lev.xiH t).trans (congrArg w.I.xi ((congrFun x.r.tup t).trans (x.m.tup t)).symm)
-    rw [e1, e2] at h1
-    exact h1
+    rwa [e1, e2] at h1
   · obtain ⟨L, hL⟩ := GlobalTheory.MtIn.LevAll.exists_levOf_all (w.st x.o.Z) w.px w.I w.ok (selHalf_of pin) _ _ x.m.z.lev Set.univ
     have hm : P.q.p.mL μ ((i : ℕ) + 1) = lMat (D := Dof x) (famR (w.st x.o.Z) w.I P.hX Set.univ P.z.Xg P.z.tr).A (lev0 w.I) (chr0 w.I) i
         (tAll w.I μ) := by
@@ -1953,8 +1943,7 @@ theorem inMt_state (pin : ColPin w) :
 theorem sMt : SMt := by
   unfold SMt
   apply StepW.of_all
-  intro K B f T w hK hF hs P x
-  exact hs.1.elim fun pin => (inMt_state x pin).elim fun m _ => ⟨m⟩
+  exact fun K B f T w hK hF hs P x => hs.1.elim fun pin => (inMt_state x pin).elim fun m _ => ⟨m⟩
 
 end State
 

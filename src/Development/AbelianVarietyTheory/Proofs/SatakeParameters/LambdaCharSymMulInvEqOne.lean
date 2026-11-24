@@ -229,8 +229,7 @@ theorem mat_intAt {k₀ rS r t n : ℕ} {g : Sp E (n + 0) ≃ₗ[E] Sp E (n + 0)
   have h3 := h2 ⟨p, hp⟩
   rw [scE_lt _ hp, zpow_zero, inv_one, one_mul] at h3
   unfold mat atN
-  rw [dite_eq_left (show p < n + 0 from hp)]
-  exact h3
+  rwa [dite_eq_left (show p < n + 0 from hp)]
 
 theorem mat_col (hq : q ≠ 0) (hP : (q : 𝓞 E) ∈ P.asIdeal) {k₀ rS r t n : ℕ} (hr : k₀ + rS < r) (hn : r ≤ n)
     {g : Sp E (n + 0) ≃ₗ[E] Sp E (n + 0)} (hg : g ∈ JGsym P q k₀ rS r t n 0)

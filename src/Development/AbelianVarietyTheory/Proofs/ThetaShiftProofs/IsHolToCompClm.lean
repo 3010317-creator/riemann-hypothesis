@@ -453,8 +453,7 @@ theorem cohCharts_congr {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {D : 
     {s : Sp S ⟶ Sp R} {g g' : Out.GtPt D.toPre (Over.mk s)} (e : g.b = g'.b) {α : D.toPre.X} {jM : D.toPre.P.L.ι}
     {jf jt : Fin 4 → D.toPre.P.L.ι} (h : FormalValue.CohCharts g α jM jf jt) : FormalValue.CohCharts g' α jM jf jt := by
   dsimp only [FormalValue.CohCharts, FormalValue.basePt, FormalValue.coordφ] at h ⊢
-  rw [← e]
-  exact h
+  rwa [← e]
 
 theorem exists_expansion (h : ThetaHyp W th σ fam) (hθ : Λ.u.IsFn th θ) {f : Λ.A.V → ℂ⸨X⸩} (hf : Ξ.Vals σ f)
     (z : Fin Λ.A.gB → ℂ) (e : ℕ) : ∃ (F : Finset Λ.A.X) (B : Λ.A.X → ℂ⟦X⟧), 0 ∈ F ∧ B 0 = PowerSeries.C (θ z) ∧
@@ -707,8 +706,7 @@ include hxU in
 theorem le_section_dom {j : Y.t.PP.L.ι} (hj : ⊤ ≤ (xg ≫ Y.m.φ) ⁻¹ᵁ Y.t.PP.L.U j) :
     ⊤ ≤ (xg ≫ Y.m.φ) ⁻¹ᵁ (Y.t.G.hom ⁻¹ᵁ U ⊓ Y.t.PP.L.U j) := by
   have : ⊤ ≤ (xg ≫ Y.m.φ ≫ Y.t.G.hom) ⁻¹ᵁ U := by
-    rw [Y.m.cart.1.w]
-    exact hxU
+    rwa [Y.m.cart.1.w]
   exact fun z hz => ⟨this hz, hj hz⟩
 
 include hL hL2 hf hw₂ hw₁ hw₀ hU hp e₀ eg hxU
@@ -1199,8 +1197,7 @@ theorem nonempty_holArc : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [N
         ∀ v', x (Λ.ε (K.gam v').y) = eTwoPi (-(s * (Fu.Di K.i).EF v v')))
     simp only [hsm, ← K.EF_eq]
     have := hrie (K.gam v)
-    simp only [K.gam.surjective.forall] at this
-    exact this
+    simpa only [K.gam.surjective.forall] using this
 
 end GlobalTheory.ArcPts
 end -- clump:auto

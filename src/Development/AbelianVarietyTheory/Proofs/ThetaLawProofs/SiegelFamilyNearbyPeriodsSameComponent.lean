@@ -340,8 +340,7 @@ theorem eq_of_out {J R : Type} {s t : Matrix J J R} (hs : s.IsSymm) (ht : t.IsSy
   rcases Sym2.eq_iff.mp h2 with ⟨h3, h4⟩ | ⟨h3, h4⟩
   · rwa [h3, h4] at h1
   · rw [h3, h4] at h1
-    rw [← hs.apply i j, ← ht.apply i j]
-    exact h1
+    rwa [← hs.apply i j, ← ht.apply i j]
 
 theorem exists_nhds_subset_image :
     ∀ (h : ℕ) (B : Set (Fin (h * (h + 1) / 2) → ℂ)) (τ : (Fin (h * (h + 1) / 2) → ℂ) → Matrix (Fin h) (Fin h) ℂ) (b₀ : Fin (h * (h + 1) / 2) → ℂ), IsOpen B → b₀ ∈ B → (∀ i j, DifferentiableOn ℂ (fun b => τ b i j) B) → (∀ b ∈ B, (τ b).IsSymm ∧ ((τ b).map Complex.im).PosDef) → Set.InjOn τ B → ∃ N ∈ nhds (τ b₀), ∀ t ∈ N, t.IsSymm → (t.map Complex.im).PosDef → ∃ b ∈ B, τ b = t := by
@@ -399,8 +398,7 @@ theorem exists_separating_pairs {R S : Type} [CommRing R] [CommRing S] (φ : R �
     simp only [F, map_mul, map_sub, map_sum, Algebra.TensorProduct.lift_tmul, map_one, map_zero] at h2
     rcases mul_eq_zero.1 h2 with h3 | h3
     · have h4 := (sub_eq_zero.1 h3).symm
-      rw [_root_.one_mul, _root_.mul_one] at h4
-      exact h4
+      rwa [_root_.one_mul, _root_.mul_one] at h4
     · exact (hne h3).elim
 
 theorem eq_of_valAtHom_eq {X : Scheme.{0}} {U : X.Opens} (hU : IsAffineOpen U) (x x' : Sp ℂ ⟶ X)
@@ -431,8 +429,7 @@ theorem exists_open_injOn :
     refine tendsto_finsetSum _ fun p _ => ?_
     exact ((hc p.1).comp_of_eq continuousAt_fst rfl).mul ((hc p.2).comp_of_eq continuousAt_snd rfl)
   have hF0 : F (b₀, b₀) ≠ 0 := by
-    simp only [F, ← valAt'_mul, ← valAt'_sum, hs1, valAt'_one _ h₀]
-    exact one_ne_zero
+    simpa only [F, ← valAt'_mul, ← valAt'_sum, hs1, valAt'_one _ h₀] using one_ne_zero
   obtain ⟨u, hu, v, hv, huv⟩ := mem_nhds_prod_iff.1 (hF.eventually_ne hF0)
   obtain ⟨B', hB'sub, hB'o, hB'⟩ := mem_nhds_iff.1
     (Filter.inter_mem (hCo.mem_nhds hb₀C) (Filter.inter_mem hu hv))

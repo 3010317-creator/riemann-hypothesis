@@ -71,8 +71,7 @@ theorem dvr_dvd_pow {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRin
     rwa [Ne, IsDiscreteValuationRing.addVal_eq_top_iff]
   obtain ⟨n, hn⟩ := WithTop.ne_top_iff_exists.1 hyt
   have ha1 : 1 ≤ IsDiscreteValuationRing.addVal O a := by
-    rw [ENat.one_le_iff_ne_zero, Ne, IsDiscreteValuationRing.addVal_eq_zero_iff]
-    exact ha
+    rwa [ENat.one_le_iff_ne_zero, Ne, IsDiscreteValuationRing.addVal_eq_zero_iff]
   refine ⟨n, IsDiscreteValuationRing.addVal_le_iff_dvd.1 ?_⟩
   rw [IsDiscreteValuationRing.addVal_pow, ← hn]
   calc ((n : ℕ∞)) = n • (1 : ℕ∞) := by simp
@@ -124,8 +123,7 @@ theorem isIntegral_idem_mul_of_quot {R A : Type} [CommRing R] [CommRing A] [Alge
     (h : IsIntegral R (Ideal.Quotient.mk (Ideal.span {1 - f}) w)) : IsIntegral R (f * w) := by
   obtain ⟨q, hq, hqw⟩ := h
   have h0 : aeval w q ∈ Ideal.span {1 - f} := by
-    rw [← Ideal.Quotient.eq_zero_iff_mem]
-    rw [← hqw, ← aeval_def]
+    rw [← Ideal.Quotient.eq_zero_iff_mem, ← hqw, ← aeval_def]
     exact (aeval_algHom_apply (Ideal.Quotient.mkₐ R (Ideal.span {1 - f})) w q).symm
   obtain ⟨c, hc⟩ := Ideal.mem_span_singleton.1 h0
   have h1 : f * aeval w q = 0 := by
@@ -221,7 +219,6 @@ theorem span_adjoin_gen_eq_top {K : UQ} (B : InvAlg K) (hP : B.P.Separable) :
   obtain ⟨f, rfl⟩ := Sandwich.exists_aeval B hP x
   rw [aeval_eq_sum_range]
   refine Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ?_)
-  show B.g ^ i ∈ Algebra.adjoin K.O {B.g}
   exact Subalgebra.pow_mem _ (Algebra.subset_adjoin (Set.mem_singleton _)) i
 
 theorem pow_smul_mem_adjoin_gen : ∀ (K : UQ) (B : InvAlg K) (a : K.O), B.P.Separable → K.Small a →
@@ -232,8 +229,7 @@ theorem pow_smul_mem_adjoin_gen : ∀ (K : UQ) (B : InvAlg K) (a : K.O), B.P.Sep
   have h := hm m le_rfl r hr
   have e : (al K a ^ m) • r = algebraMap K.O B.A a ^ m * r := by
     rw [Algebra.smul_def, al, ← map_pow, ← map_pow, ← IsScalarTower.algebraMap_apply]
-  rw [e]
-  exact h
+  rwa [e]
 
 end GlobalTheory.UnitLemma.Desc
 end -- clump:auto
@@ -262,8 +258,7 @@ theorem exists_pow_smul_mem_adjoin_g : ∀ (K : UQ) (B : InvAlg K) (a : K.O), B.
 variable {K : UQ} (B : InvAlg K)
 
 theorem al_ne (a : K.O) (ha : K.Small a) : al K a ≠ 0 := by
-  intro h
-  exact ha.1 ((IsFractionRing.injective K.O K.E) (by simpa using h))
+  exact fun h => ha.1 ((IsFractionRing.injective K.O K.E) (by simpa using h))
 
 theorem sigma_smul (c : K.E) (x : B.A) : B.σ (c • x) = K.c c • B.σ x := by
   rw [Algebra.smul_def, Algebra.smul_def, map_mul, B.σ_alg]
@@ -351,8 +346,7 @@ theorem exists_pos : ∀ (K : UQ) (B : InvAlg K) (ι : Type) [Fintype ι] (e π 
         exact isIntegral_algebraMap.mul hx
     have hbdd : BddAbove P := by
       have hm0 : ∃ m ∈ M, f * m ≠ 0 := by
-        by_contra hcon
-        push Not at hcon
+        by_contra! hcon
         have hle : Submodule.span K.E (M : Set B.A) ≤ LinearMap.ker (LinearMap.mulLeft K.E f) := by
           rw [Submodule.span_le]; intro m hm; exact hcon m hm
         rw [hM.1.2] at hle
@@ -362,8 +356,7 @@ theorem exists_pos : ∀ (K : UQ) (B : InvAlg K) (ι : Type) [Fintype ι] (e π 
       obtain ⟨z, hz⟩ := hfld m0 hfm0
       obtain ⟨k, hk⟩ := _root_.GlobalTheory.UnitLemma.Desc.smul_pow_integral K B a ha (f * z)
       refine ⟨k, fun p hp => ?_⟩
-      by_contra hlt
-      push Not at hlt
+      by_contra! hlt
       have h1 : IsIntegral K.O ((t ^ (-p)) • (e i * m0)) := hp m0 hm0
       have h2 : IsIntegral K.O ((t ^ (-p)) • (e i * m0) * (t ^ k • (f * z)) * f) :=
         (h1.mul hk).mul (isIntegral_idem B hf)

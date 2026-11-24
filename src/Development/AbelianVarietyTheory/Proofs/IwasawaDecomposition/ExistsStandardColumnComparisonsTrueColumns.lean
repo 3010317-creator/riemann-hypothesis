@@ -182,8 +182,7 @@ theorem mem_of_inJ {n k r t m rS : ℕ} (h : r ≤ n) (hr : r = k + 2 * rS + 1) 
     refine ⟨fun i j hij => ?_, fun i => ?_, fun i j hi hj => ?_⟩
     · refine q1 (Fin.castLE h i) (Fin.castLE h j) ?_
       simp only [Fin.coe_castLE]
-      rw [facts_lt hr i.2, facts_lt hr j.2]
-      exact hij
+      rwa [facts_lt hr i.2, facts_lt hr j.2]
     · exact q2 (Fin.castLE h i) (by simp only [Fin.coe_castLE]; unfold rSym; omega)
     · exact q3 (Fin.castLE h i) (Fin.castLE h j) (by simpa using hi) (by simpa using hj)
   · intro x y hy
@@ -193,11 +192,8 @@ theorem memX (κ : Type) [Field κ] (n k r t m rS : ℕ) (h : r ≤ n) (hr : r =
     (hn : n = r + m * t + 1) (M : GL (Fin n) κ) :
     M ∈ HXmsym κ n k r t m rS h ↔ M ∈ Formalism.L2.Forms.JSymG κ n k rS t true := by
   constructor
-  · intro hM
-    show InJSym k rS t true _ ∧ InJSym k rS t true _
-    exact ⟨inJ_of_mem h hr ht hn hM, inJ_of_mem h hr ht hn (Subgroup.inv_mem _ hM)⟩
-  · intro hM
-    exact mem_of_inJ h hr ht hn hM.1
+  · exact fun hM => ⟨inJ_of_mem h hr ht hn hM, inJ_of_mem h hr ht hn (Subgroup.inv_mem _ hM)⟩
+  · exact fun hM => mem_of_inJ h hr ht hn hM.1
 
 end GlobalTheory.MemXSym
 end -- clump:auto
@@ -393,8 +389,7 @@ theorem cmp_base (hPr : (B.primes X).Ok) (G : GLoc B.host.F B.host.E B.sp.cm.sig
   refine nonempty_cmp B.host B.sp.cm (levOk_base B X) G hPr.g_ne (fun w hw => ?_) fun j w hw => (hm w).2 ⟨j, ?_⟩
   · obtain ⟨i, hi⟩ := (hm w).1 hw
     exact ⟨i, (hPr.piG_norm i) ▸ Ideal.mul_mem_left _ _ hi⟩
-  · rw [hG] at hw
-    exact hw
+  · rwa [hG] at hw
 
 theorem exists_nat (hPr : (B.primes X).Ok) (w : (B.primes X).vGs) (c : 𝓞 B.fields.E ⧸ w.1.asIdeal) : ∃ n : ℕ, c = n := by
   classical
@@ -480,8 +475,7 @@ theorem main_base (hPr : (B.primes X).Ok) (u : B.Word) (G : GLoc B.host.F B.host
   rw [hVM]
   refine (Matrix.diagonal_map (map_zero _)).trans (congrArg diagonal (funext fun i => ?_))
   split_ifs
-  · refine (C.ρ_eq j v h _).trans (congrArg _ ?_)
-    exact Formalism.UG.P.afsplit_prV_inclE v _
+  · exact (C.ρ_eq j v h _).trans (congrArg _ (Formalism.UG.P.afsplit_prV_inclE v _))
   · exact map_one _
 
 theorem frExt_of {D : D7} (hiX : ∀ x j, iXc D x j = if h : j.1 < D.R.N D.R.m - 1 then x ⟨j.1, h⟩ else 0) (p : D.host.E)
@@ -1326,8 +1320,7 @@ theorem fun_transport {a b : ℕ} (h : a = b) (σ : E →ₐ[F] E) (J : Matrix (
   ext g
   simp only [Subgroup.mem_map]
   constructor
-  · intro hg
-    exact ⟨g, hg, reGL_rfl _ g⟩
+  · exact fun hg => ⟨g, hg, reGL_rfl _ g⟩
   · rintro ⟨g', hg', e⟩
     have : g' = g := (reGL_rfl _ g').symm.trans e
     exact this ▸ hg'
@@ -1353,8 +1346,7 @@ theorem pi_kills {D : D7} {u : D.what₂.Word} {A : AtTTied u} {i : ℕ} {hi : i
     (m : K.lev.fM (A.eV v).1 (A.eV v).2) : a • m = 0 := by
   obtain ⟨c, -⟩ := K.y_bij.2 (Quotient.mk'' 1)
   obtain ⟨x, hx⟩ : ∃ x, (D.fm u).fv i v c x ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact (D.fm u).fv_ne i v c (LinearMap.ext hc)
   obtain ⟨z, rfl⟩ := P.pr_surj v c x
   have hin : ∀ z : ↥(Ld D u i hi c), ((bc (prV (E := D.host.E) (A.eV v).1) (K.y c).1)⁻¹).1 *ᵥ

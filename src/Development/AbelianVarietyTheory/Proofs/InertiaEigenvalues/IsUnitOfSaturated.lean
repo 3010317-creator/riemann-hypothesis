@@ -149,8 +149,7 @@ theorem echelon_projector_frobenius (l : ℕ) [Fact l.Prime] (C : Type) [Field C
     intro i hi j
     rw [hQ, LinearMap.toMatrix'_apply]
     have h1 := hWcoord _ (Submodule.sub_projection_mem hc (Pi.single j (1 : C))) i ((hmemI i).mp hi)
-    rw [Pi.sub_apply, sub_eq_zero, Pi.single_apply] at h1
-    rw [← hP] at h1
+    rw [Pi.sub_apply, sub_eq_zero, Pi.single_apply, ← hP] at h1
     exact h1.symm
   have hcol : ∀ i, ∀ j ∉ I, Q i j = 0 := by
     intro i j hj
@@ -217,8 +216,7 @@ theorem shape_mul {T : Type*} [CommRing T] {d : ℕ} (I : Finset (Fin d)) (P P' 
     by_cases hkI : k ∈ I
     · rw [hP' k hkI j, ite_eq_right hk, mul_zero]
     · rw [hP i k hkI, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ j) h
+  · exact fun h => absurd (Finset.mem_univ j) h
 
 theorem mul_eq_of_ker {C : Type*} [CommRing C] {d : ℕ} (Y Q M : Matrix (Fin d) (Fin d) C)
     (hQ : ∀ v, Y.mulVec v = 0 → Q.mulVec v = v) (hM : Y * M = 0) : Q * M = M := by
@@ -404,8 +402,7 @@ theorem isUnit_of_saturated : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : 
       apply WittVector.isUnit_of_coeff_zero_ne_zero
       intro h
       apply h0
-      rw [← RingHom.mapMatrix_apply, ← RingHom.map_det]
-      exact h
+      rwa [← RingHom.mapMatrix_apply, ← RingHom.map_det]
     exact (Matrix.isUnit_iff_isUnit_det Y).2 hu
 
 end GlobalTheory.SatInvUnit

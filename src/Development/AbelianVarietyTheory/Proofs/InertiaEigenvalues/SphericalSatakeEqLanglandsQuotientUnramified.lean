@@ -116,8 +116,7 @@ theorem isL_single_unrChar : LanglandsExhaustionGL → LanglandsMultisegments �
     rw [← hord.1, Multiset.map_map, Multiset.map_map]
     simp only [Function.comp_def, hlen]
     exact e1
-  rw [← hm]
-  exact hL
+  rwa [← hm]
 
 end GlobalTheory.LocLanglands.SatakeL
 end -- clump:auto

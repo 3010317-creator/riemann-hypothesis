@@ -215,8 +215,7 @@ theorem nonempty_coker_equiv_ker_matAct {O : Type} [CommRing O] [IsDomain O] {n 
   have hAι : ∀ y, matAct (M := FractionRing O) A (ι y) = ι (A.mulVec y) := by
     intro y
     have key := matAct_comp_linear A (Algebra.linearMap O (FractionRing O)) y
-    rw [matAct_self_apply] at key
-    exact key
+    rwa [matAct_self_apply] at key
   have hAπ : ∀ x, matAct (M := KmodO O) A (π x) = π (matAct (M := FractionRing O) A x) :=
     fun x => matAct_comp_linear A (LinearMap.range (Algebra.linearMap O (FractionRing O))).mkQ x
   have hπι : ∀ y, π (ι y) = 0 := by

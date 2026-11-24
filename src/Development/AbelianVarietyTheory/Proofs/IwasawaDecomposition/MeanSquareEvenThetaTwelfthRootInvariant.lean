@@ -132,8 +132,7 @@ theorem half_ne_zero :
   have hd : differentIdeal (𝓞 H.K) (𝓞 H.E) ≠ ⊥ := differentIdeal_ne_bot
   apply hd
   have := H.𝔟_spec.1
-  rw [h0, Ideal.bot_mul] at this
-  exact this
+  rwa [h0, Ideal.bot_mul] at this
 
 theorem half_mul_inv :
     ((H.𝔟 : Ideal (𝓞 H.E)) : FractionalIdeal (𝓞 H.E)⁰ H.E) * H.AA0 = 1 :=
@@ -198,8 +197,7 @@ theorem ellT_eq_ellLat : ∀ (D : D7) (M : IntermediateField ℚ ℂ) [NumberFie
         have hint : IsIntegral ℤ (x * φ j) := by
           refine (isIntegral_algHom_iff (M.val.toRingHom.toIntAlgHom) M.val.injective).1 ?_
           have := hx j hj
-          rw [hτ] at this
-          exact this
+          rwa [hτ] at this
         let c : 𝓞 M := ⟨x * φ j, hint⟩
         have : c • φ (b : D.host.E) ∈ ellLat D.host embE (D.eTau τ).1 :=
           Submodule.smul_mem _ _ (map_mem_ellLat D.host embE _ _
@@ -443,8 +441,7 @@ theorem span_gen [NumberField M] (hF : FieldOK D.host D.what₂.embLL D.embE) (h
     | add x y _ _ hx hy => rw [map_add (f := _)]; exact N.add_mem hx hy
     | smul r y _ hy =>
       have := N.smul_mem (RingOfIntegers.mapRingHom (into D M hL) r) hy
-      rw [Algebra.smul_def, map_mul]
-      exact this
+      rwa [Algebra.smul_def, map_mul]
   apply le_antisymm
   · rw [Submodule.span_singleton_le_iff_mem]
     refine key _ _ ?_ _ (hg.le (Submodule.mem_span_singleton_self _))

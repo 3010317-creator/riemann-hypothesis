@@ -152,8 +152,7 @@ theorem const_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : R
     refine ⟨∑ k, v₀ k • Ha.Pw w (Θ.bas (Pi.single (.inl k) 1)), ?_⟩
     have : Θ.h.mulVec (∑ k, v₀ k • Ha.Pw w (Θ.bas (Pi.single (.inl k) 1))) = v₀ := by
       rw [Matrix.mulVec_sum]
-      simp only [Matrix.mulVec_smul, (Θ.per w _).1]
-      exact (pi_eq_sum_univ' v₀).symm
+      simpa only [Matrix.mulVec_smul, (Θ.per w _).1] using (pi_eq_sum_univ' v₀).symm
     rwa [this]
   obtain ⟨fr, hfr⟩ := Θ.frame w hw
   have hKf := hK fr hfr
@@ -194,8 +193,7 @@ theorem const_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : R
         valAt' ((u.ex z).left ≫ φ) (Y.t.G.hom ⁻¹ᵁ M.U ⊓ Y.t.PP.L.U j) (M.θ j) =
         valAt' ((u.ex z).left ≫ Φ) ((LB.div (Y.t.PP.L.pull Y.m.φ) Y.oF.t.PP.L).U (fun _ => j, k)) (w₁.s (fun _ => j, k)).val * (K * thetaChar (Θ.τ w) Θ.c₁ Θ.c₂ (Θ.h.mulVec z) * fr j₀ z) := by
       have := hKf z (ψ z) j k j₀ (hψ1 z) (hψ2 z) (by rw [hψ z]; exact hz1) (by rw [hψ z]; exact hz0)
-      rw [hψ z, Category.assoc, hΦ1] at this
-      exact this
+      rwa [hψ z, Category.assoc, hΦ1] at this
     have a2 := GlobalTheory.ThetaFn.valAt'_appLE' (u.ex z).left φ hle hDx (M.θ j)
     rw [hfun (fun _ => j) i hle, ReciprocityTheory.ChartRestriction.G.TB.ValAt.valAt'_mul] at a2
     dsimp only at a2
@@ -217,8 +215,7 @@ theorem const_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : R
   have memE : ∀ U : x.P.A.left.Opens, y₀ ∈ U → ⊤ ≤ (eSec x.P.A) ⁻¹ᵁ U := fun U h => by
     rw [← hu0']; exact (top_iff _ _).2 h
   have R1 : u.fr i 0 = valAt' (𝟙 (Sp ℂ)) ((x.P.L.pull (eSec x.P.A)).U (fun _ => i)) (x.rig.s (fun _ => i)).val := by
-    refine hrig (fun _ => i) fun q hq => Set.mem_iInter.2 fun _ => ?_
-    exact memE _ hi hq
+    exact hrig (fun _ => i) fun q hq => Set.mem_iInter.2 fun _ => memE _ hi hq
   have R2 := maps_val' φ (yF ≫ Y.j) he Y.t.PP.L Y.t.PP.rig x.P.L wx x.rig hrigx (𝟙 _) j i
     (fun q hq => memE (φ ⁻¹ᵁ Y.t.PP.L.U j) hj hq) (fun q hq => memE _ hi hq)
   rw [Category.id_comp, Category.id_comp] at R2

@@ -450,8 +450,7 @@ theorem nonneg_of_isIntegral (u : AddValuation A (WithTop ℤ))
   have h1 : IsIntegral v.integer x := by
     obtain ⟨p, hp, hz⟩ := hx
     refine ⟨p.map f, hp.map f, ?_⟩
-    rw [Polynomial.eval₂_map]
-    exact hz
+    rwa [Polynomial.eval₂_map]
   exact (Valuation.integer.integers v).mem_of_integral h1
 
 def centre (u : AddValuation A (WithTop ℤ)) (hu : ∀ a : ↥(As O A), 0 ≤ u (a : A)) :
@@ -486,8 +485,7 @@ theorem centre_isMaximal (u : AddValuation A (WithTop ℤ)) (hu : ∀ a : ↥(As
   haveI := centre_isPrime u hu
   refine Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := O) _ ?_
   have hle : IsLocalRing.maximalIdeal O ≤ (centre u hu).comap (algebraMap O ↥(As O A)) := by
-    rw [hϖ.maximalIdeal_eq, Ideal.span_singleton_le_iff_mem]
-    exact hpos
+    rwa [hϖ.maximalIdeal_eq, Ideal.span_singleton_le_iff_mem]
   have := (IsLocalRing.maximalIdeal.isMaximal O).eq_of_le (Ideal.IsPrime.ne_top inferInstance) hle
   change ((centre u hu).comap (algebraMap O ↥(As O A))).IsMaximal
   rw [← this]

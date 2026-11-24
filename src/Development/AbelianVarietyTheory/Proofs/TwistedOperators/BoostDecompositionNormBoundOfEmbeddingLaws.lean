@@ -166,9 +166,7 @@ theorem boost_exists : ∀ (m : ℕ) (ε : Fin m → Bool) (a b : Fin m → ℂ)
       rw [← Complex.mul_conj']
       congr 1
       have := congrFun (congrFun hherm j) i
-      rw [conjTranspose_apply] at this
-      show _ = A j i
-      exact this
+      rwa [conjTranspose_apply] at this
     rw [htr] at this
     exact_mod_cast this
   have hab2 : ∑ i, ‖a i + b i‖ ^ 2 = c2 + nb := by
@@ -177,8 +175,7 @@ theorem boost_exists : ∀ (m : ℕ) (ε : Fin m → Bool) (a b : Fin m → ℂ)
     cases h : ε i <;> simp [ha i, hb i, h]
   refine ⟨A, hU, fun i => ?_, ?_⟩
   · have := congrFun hAa i
-    rw [Pi.smul_apply, Pi.add_apply, smul_eq_mul] at this
-    exact this
+    rwa [Pi.smul_apply, Pi.add_apply, smul_eq_mul] at this
   · have h0 : 0 ≤ ∑ i, ∑ j, ‖A i j‖ ^ 2 := Finset.sum_nonneg fun i _ => Finset.sum_nonneg fun j _ => sq_nonneg _
     unfold hsn
     rw [Real.sq_sqrt h0, hT, hab2]
@@ -301,8 +298,7 @@ theorem exists_unitary_col (m : ℕ) (ε : Fin m → Bool) (z : Fin m) (u : Fin 
     have hez : e z = 1 := by simp [he]
     have hvz : v z = (t : ℂ) := by simp [hv, hφt']
     have hTz : T i z = v i := by
-      rw [hTe, hez, hvz]
-      rw [show star ((1 : ℂ) + (t : ℂ)) = 1 + (t : ℂ) by simp, star_one, mul_one]
+      rw [hTe, hez, hvz, show star ((1 : ℂ) + (t : ℂ)) = 1 + (t : ℂ) by simp, star_one, mul_one]
       have : c * ((e i + v i) * (1 + (t : ℂ))) = e i + v i := by rw [mul_comm (e i + v i), ← mul_assoc, hc, one_mul]
       rw [this]
       by_cases h : i = z

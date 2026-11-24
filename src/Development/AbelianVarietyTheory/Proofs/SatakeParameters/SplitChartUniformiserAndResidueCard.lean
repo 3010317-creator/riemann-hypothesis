@@ -130,8 +130,7 @@ theorem valued_unif (ϖ : 𝓞 E) (h1 : ϖ ∈ P.asIdeal) (h2 : ϖ ∉ P.asIdeal
   have hx : P.valuation E ((s : E) / ϖ) ≤ 1 := by
     rw [map_div₀]
     refine div_le_one_of_le₀ ?_ zero_le
-    rw [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.valuation_of_algebraMap]
-    exact hle
+    rwa [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.valuation_of_algebraMap]
   obtain ⟨n, d, h⟩ := P.exists_primeCompl_mul_eq_of_integer _ hx
   have hd : Valued.v (φ ((d : 𝓞 E) : E)) = 1 :=
     le_antisymm (map_mem v φ d) (not_lt.1 (mt (hP d).2 d.2))
@@ -169,8 +168,7 @@ theorem card_residueField :
         algebraMap (𝓞 F) (v.adicCompletion F) r := by
       rw [IsScalarTower.algebraMap_apply (𝓞 F) F (v.adicCompletion F), ← hφ]
       rfl
-    rw [AddSubgroupClass.coe_sub, e1]
-    exact hr
+    rwa [AddSubgroupClass.coe_sub, e1]
   rw [Ideal.absNorm_apply, Submodule.cardQuot_apply, ← hker]
   exact (Nat.card_congr (RingHom.quotientKerEquivOfSurjective hsurj).toEquiv).symm
 

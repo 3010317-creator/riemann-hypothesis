@@ -92,7 +92,6 @@ theorem unitIdl_le_ker : GlobalTheory.Mem.Chr.unitIdl E ≤ (GlobalTheory.Mem.Un
 
 theorem infConn_le_unitIdl : infConn E ≤ GlobalTheory.Mem.Chr.unitIdl E := by
   rintro _ ⟨y, -, rfl⟩ v
-  show Valued.v (1 : v.adicCompletion E) = 1
   exact map_one _
 
 theorem diagUnits_range_le_ker : (diagUnits E).range ≤ (GlobalTheory.Mem.UnitIndex.classHom E).ker := by
@@ -109,8 +108,7 @@ theorem localIdele_mem_unitIdl (v : HeightOneSpectrum (𝓞 E)) (x : (v.adicComp
   intro w
   by_cases hw : w = v
   · subst hw
-    rw [localIdele_snd_self']
-    exact hx
+    rwa [localIdele_snd_self']
   · rw [localIdele_snd_ne' E v w hw]
     exact map_one _
 

@@ -159,8 +159,7 @@ theorem exists_pole {τ : A} (hτ : ι τ = t) (X : Matrix n n R)
   obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le
     ((Finset.le_sup (f := fun q : n × n => k q.1 q.2) (Finset.mem_univ (i, j))).trans hK)
   have := (hk i j).mul_ι (τ ^ d)
-  rw [map_pow, hτ, ← mul_assoc, ← pow_add, add_comm] at this
-  exact this
+  rwa [map_pow, hτ, ← mul_assoc, ← pow_add, add_comm] at this
 
 theorem contract {τ : A} (hτ : ι τ = t) {S : Subring R}
     (meet : ∀ x, (∀ m, Near ι p t m x) → ∃ r, x = (p : R) * r)
@@ -277,8 +276,7 @@ theorem pole_pow {φ : R →+* R} (h3 : ∀ m x, Near ι p t m x → Near ι p t
     have h2 := h1.add (Near.of_mul (p * 0) (r * φ ((φ ^ N) x)))
     rw [map_mul, map_pow, ← mul_assoc, ← hr, ← add_mul, add_sub_cancel, ← pow_mul,
       ← mul_assoc] at h2
-    rw [pow_succ', pow_succ']
-    exact h2
+    rwa [pow_succ', pow_succ']
 
 theorem map_pow_smul (f : E →+* R) (k : ℕ) (z : Matrix n n E) :
     f.mapMatrix ((p : E) ^ k • z) = (p : R) ^ k • f.mapMatrix z := by
@@ -297,8 +295,7 @@ theorem mem_of_pow_smul {S : Subring R} (hsat : ∀ x, (p : R) * x ∈ S → x �
   | succ k ih =>
     refine ih fun i j => hsat _ ?_
     have := h i j
-    rw [pow_succ', mul_smul] at this
-    exact this
+    rwa [pow_succ', mul_smul] at this
 
 theorem padic_conj {φ : R →+* R} {io : E →+* R} {S : Subring R} (hφS : ∀ x ∈ S, φ x ∈ S)
     (hioS : ∀ e, io e ∈ S) (hsat : ∀ x, (p : R) * x ∈ S → x ∈ S)
@@ -686,8 +683,7 @@ theorem res_eq_one (Γ : GamS P K s LL) (g : ↥(GK K)) (h1 : P.χQ (g : GQ l) =
   apply Units.ext
   apply Subtype.ext
   have := Γ.χΓ_res g
-  rw [P.PD_χ, h1, Units.val_one, map_one] at this
-  exact this
+  rwa [P.PD_χ, h1, Units.val_one, map_one] at this
 
 theorem chi_eq_one (P : LocPrime l) (h : Good K s LL) {g : GQ l} (hg : g ∈ Hinf K) :
     P.χQ g = 1 :=
@@ -1010,8 +1006,7 @@ theorem exists_det_ne_zero {A C Q ι : Type} [CommRing A] [Field C] [Fintype Q] 
     congr 1
     ext i k
     simp [Matrix.sum_apply]
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have h0 : F = 0 := by
     refine MvPolynomial.funext_set (fun _ => S) (fun _ => hS) fun x hx => ?_
     choose a ha using fun i => hSA (x i) (hx i trivial)
@@ -1153,8 +1148,7 @@ theorem generic (b : Module.Basis ι O T) (c : Module.Basis κ Z T) (ρ : H →*
   obtain ⟨e', he''⟩ := exists_basis bM _ u hsurj e fun i => by
     have := he' i
     simp only [hbM, hσ, hτ, map_one] at this
-    rw [hbM, hut]
-    exact this
+    rwa [hbM, hut]
   exact ⟨e', fun g i => by rw [he'']; exact he i g⟩
 
 end Generic
@@ -1536,8 +1530,7 @@ theorem fixH_iff {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAinf l P) (K
     (x : RW LL) : FixH AI K x ↔ ∀ g : ↥(GK K), P.χQ (g : GQ l) = 1 → AI.gRW LL (g : GQ l) x = x := by
   unfold FixH
   constructor
-  · intro h g hχ
-    exact h g.1 g.2 hχ
+  · exact fun h g hχ => h g.1 g.2 hχ
   · intro h g hg hχ
     have h1 := h ⟨g, hg⟩
     dsimp only at h1

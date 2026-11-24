@@ -106,8 +106,7 @@ theorem exists_ne_zero_smul_mem {G : Type} [Group G] {LL : Type} [Field LL] {O :
     obtain ⟨p, q, hq, rfl⟩ := IsFractionRing.div_surjective (A := O) c
     have hq0 : q ≠ 0 := nonZeroDivisors.ne_zero hq
     have hq1 : algebraMap O LL q ≠ 0 := by
-      intro h
-      exact hq0 (IsFractionRing.injective O LL (by rw [h, map_zero]))
+      exact fun h => hq0 (IsFractionRing.injective O LL (by rw [h, map_zero]))
     refine ⟨a * q, mul_ne_zero ha hq0, ?_⟩
     have h1 : q • ((algebraMap O LL p / algebraMap O LL q) • x) = p • x := by
       rw [← algebraMap_smul LL q, smul_smul, mul_div_cancel₀ _ hq1, algebraMap_smul]
@@ -246,8 +245,7 @@ theorem exists_finset_red (L : Lattice (O := O) ρ) (I : Submodule O ↥L.T) (hI
       refine ⟨Submodule.Quotient.mk c0, fun c a h1 h1' => ?_⟩
       rw [Submodule.Quotient.eq]
       have := redT_mem_BQ L I hI (a - a0) (by rw [Submodule.Quotient.mk_sub, h0, h1, sub_self])
-      rw [map_sub, h0', h1'] at this
-      exact this
+      rwa [map_sub, h0', h1'] at this
     · exact ⟨0, fun c a h1 h1' => absurd ⟨c, a, h1, h1'⟩ h⟩
   choose ψ hψ using key
   refine ⟨Finset.univ.image ψ, ?_, fun c a ha hac => ?_⟩
@@ -276,8 +274,7 @@ theorem ker_bounded_gen [IsDomain O] [IsDiscreteValuationRing O] [IsFractionRing
   rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
   have := redT_mem_BQ L _ hI (ℓ ^ k • a)
     (by rw [Submodule.Quotient.mk_smul]; exact hk _ ha)
-  rw [map_smul, hac] at this
-  exact this
+  rwa [map_smul, hac] at this
 
 end Gen
 
@@ -338,8 +335,7 @@ theorem card_le_of_double_annihilator (O : Type) [CommRing O] (X Y E : Type) [Ad
     apply h1
     intro y hy
     have := congrFun hx ⟨y, (h2 y hy).1⟩
-    rw [hL, ite_eq_left hy] at this
-    exact this
+    rwa [hL, ite_eq_left hy] at this
   have hmem : ∀ x (y : F), L x y ∈ Es := by
     intro x y
     apply h3
@@ -589,7 +585,6 @@ theorem redT_mem_Z1Q_of_ne (l : ℕ) [Fact l.Prime] (K : FinExt l) (LL : Type) [
     · rintro ⟨y, hy, hxy⟩
       refine ⟨⟨y, hy⟩, Subtype.ext ?_⟩
       rw [← hxy]
-      show c • y = b • y
       exact hsm y
   have ha : (a : _ → A.V) ∈ latticeCocycles LA := a.2
   obtain ⟨⟨hcont, hcoc⟩, -⟩ := ha
@@ -603,8 +598,7 @@ theorem redT_mem_Z1Q_of_ne (l : ℕ) [Fact l.Prime] (K : FinExt l) (LL : Type) [
     · show (a : _ → A.V) g0 - (a : _ → A.V) g0 ∈ (fun v : A.V => c • v) '' (LA.T : Set A.V)
       rw [sub_self]; exact ⟨0, LA.T.zero_mem, smul_zero c⟩
     · intro g hg
-      rw [hval, hval, Submodule.Quotient.eq, hmem]
-      exact hg
+      rwa [hval, hval, Submodule.Quotient.eq, hmem]
   · intro g h
     change (Submodule.Quotient.mk (evT LA (g * h) a) : ↥LA.T ⧸ (Ideal.span {b} • ⊤ : Submodule O ↥LA.T)) =
       Submodule.Quotient.mk (evT LA g a) + actQ LA _ hI g (Submodule.Quotient.mk (evT LA h a))
@@ -985,8 +979,7 @@ theorem cobO_red [IsTopologicalRing LL] [IsDomain O] [IsDiscreteValuationRing O]
   have e1 := (Submodule.Quotient.eq I).1 (e0.trans
     (rfl : redT LA I d g = Submodule.Quotient.mk (evT LA g d)))
   have h2 := hsI _ e1 _ (LA'.stable g _ hw)
-  rw [Submodule.coe_sub] at h2
-  exact h2
+  rwa [Submodule.coe_sub] at h2
 
 theorem level_pairing_abstract [IsTopologicalRing LL] [IsDomain O] [IsDiscreteValuationRing O]
     [IsFractionRing O LL]

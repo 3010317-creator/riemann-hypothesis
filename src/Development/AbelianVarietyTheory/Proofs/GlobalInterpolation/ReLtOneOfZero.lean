@@ -256,7 +256,6 @@ private theorem sum_integral_separated_windows_le (h : ℝ → ℝ) (hc : Contin
       have ht' : t ∈ ⋃ a ∈ S, Set.Ioc (a - r) (a + r) := ht
       rw [Set.mem_iUnion₂] at ht'
       obtain ⟨a, ha, hta⟩ := ht'
-      show t ∈ Set.Ioc (-T) T
       exact ⟨by linarith [(hin a ha).1, hta.1], by linarith [(hin a ha).2, hta.2]⟩
   · intro a ha b hb hab
     rw [Function.onFun, Set.disjoint_left]
@@ -264,8 +263,7 @@ private theorem sum_integral_separated_windows_le (h : ℝ → ℝ) (hc : Contin
     have := hsep a ha b hb hab
     rcases abs_cases (a - b) with ⟨e, _⟩ | ⟨e, _⟩ <;> rw [e] at this <;>
       linarith [hta.1, hta.2, htb.1, htb.2]
-  · intro a _
-    exact hc.integrableOn_Ioc
+  · exact fun a _ => hc.integrableOn_Ioc
 
 open Complex DirichletCharacter ArithmeticFunction MeasureTheory Filter Topology in
 private theorem mul_rpow_sub_one_le_rpow_sub_rpow (θ : ℝ) (h0 : 0 < θ) (h1 : θ ≤ 1) (x : ℝ) (hx : 1 ≤ x) :
@@ -990,8 +988,7 @@ theorem ncard_cells_le : ∃ C : ℝ, 0 < C ∧ ∀ Q : ℝ, 3 ≤ Q → ∀ T :
         · exact absurd hL (LFunction_ne_zero_of_one_le_re χ (.inr hne1) h.ge)
       have hz : riemannZeta ρ = 0 := by
         have e : LFunction χ ρ = riemannZeta ρ := congrFun LFunction_modOne_eq ρ
-        rw [← e]
-        exact hL
+        rwa [← e]
       have key := hQ₂ Qn (le_trans (le_max_right _ _) (le_max_left _ _)) ρ hre hrelt hbig him' hz
       have : Subsingleton (ZMod (0 + 1)) := ZMod.subsingleton_iff.2 rfl
       have hχ : ∀ a : ZMod (0 + 1), χ a = 1 := fun a => by
@@ -999,8 +996,7 @@ theorem ncard_cells_le : ∃ C : ℝ, 0 < C ∧ ∀ Q : ℝ, 3 ≤ Q → ∀ T :
       show (1 / 2 : ℝ) ≤ ‖∑ n ∈ Finset.Ioc (Qn ^ 3) (Qn ^ 6),
           ((∑ d ∈ n.divisors.filter (fun d => d ≤ Qn ^ 3), (moebius d : ℤ) : ℤ) : ℂ) *
             χ (n : ZMod (0 + 1)) * (n : ℂ) ^ (-ρ)‖
-      simp only [hχ]
-      exact key
+      simpa only [hχ] using key
     · exact hQ₁ Qn (le_trans (le_max_left _ _) (le_max_left _ _)) (N + 1) χ
         (ne_one_of_primitive hN hprim) hlevN ρ hre him' hL
   rw [← Finset.coe_image, Set.ncard_coe_finset]
@@ -1014,8 +1010,7 @@ theorem ncard_cells_le : ∃ C : ℝ, 0 < C ∧ ∀ Q : ℝ, 3 ≤ Q → ∀ T :
     obtain ⟨R, hRU, hcard, hinj⟩ := exists_subset_injOn_card_image U f
     rw [hcard]
     refine hsp Qn hQn2 R ?_ ?_
-    · intro p hp
-      exact hA p (hU (hRU hp)) (hns p (hRU hp))
+    · exact fun p hp => hA p (hU (hRU hp)) (hns p (hRU hp))
     · intro N χ ρ ρ' h1 h2 hne
       by_cases hfl : ⌊ρ.im⌋ = ⌊ρ'.im⌋
       · exfalso

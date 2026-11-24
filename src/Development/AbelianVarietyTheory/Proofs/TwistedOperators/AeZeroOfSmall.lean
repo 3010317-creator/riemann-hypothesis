@@ -279,8 +279,7 @@ theorem _root_.GlobalTheory.exists_summation_kernel_periodic : ∀ (G : Type) [A
     | H x =>
     induction q using QuotientAddGroup.induction_on with
     | H y =>
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hpq
     rw [QuotientAddGroup.eq]
     apply (hχΓ (-x + y)).mp
@@ -344,8 +343,7 @@ theorem _root_.GlobalTheory.exists_summation_kernel_periodic : ∀ (G : Type) [A
       simp only [hβ, QuotientAddGroup.mk_zero]
       rw [hb1 (Set.mem_singleton 0)]
       simp
-    have hpos := (isOpen_ne_fun hβc continuous_const).measure_pos μ ⟨0, hβ00⟩
-    exact hpos.ne' hzero
+    exact ((isOpen_ne_fun hβc continuous_const).measure_pos μ ⟨0, hβ00⟩).ne' hzero
   set m := (μ 𝓕).toReal with hm
   have hm0 : 0 ≤ m := ENNReal.toReal_nonneg
   set δ := ε / (2 * (|M| + 1) * (m + 1)) with hδdef
@@ -482,8 +480,7 @@ theorem chi_ker (hψ : IsCharAF D.host.F ψ) (x : WO S T) :
       rw [key, hc, ← hψa, ← hlaws.2.2.2.1]
       exact h ⟨γ, hγ⟩
     have hback := smul_mem_ratL a⁻¹ hx'
-    rw [hc, smul_smul, ← map_mul, inv_mul_cancel₀ ha, map_one, one_smul] at hback
-    exact hback
+    rwa [hc, smul_smul, ← map_mul, inv_mul_cancel₀ ha, map_one, one_smul] at hback
   · intro hx γ
     exact chi_rat hψ γ.2 hx
 
@@ -670,8 +667,7 @@ theorem schur (hψ : IsCharAF D.host.F ψ) (S T : HSp D) : Schur ψ S T := by
   funext x
   have h1 := hpt (heisO ψ S T x f) (isTheta_heis hE hf x)
   rw [hAc x f hf, heisO_apply_zero, heisO_apply_zero] at h1
-  rw [Pi.smul_apply, smul_eq_mul]
-  exact h1
+  rwa [Pi.smul_apply, smul_eq_mul]
 
 theorem word_bound (hψ : IsExpChar ψ) (Ls : List (ℝ →+ WO S T)) (hL : ∀ L ∈ Ls, IsRealDir L) :
     ∀ g, IsThetaFunO ψ S T g → ∃ (Ms : List (List (ℝ →+ WO S T))) (C : ℝ), 0 ≤ C ∧ (∀ M ∈ Ms, ∀ L ∈ M, IsRealDir L) ∧
@@ -701,8 +697,7 @@ theorem word_bound (hψ : IsExpChar ψ) (Ls : List (ℝ →+ WO S T)) (hL : ∀ 
       · obtain ⟨M', hM', rfl⟩ := List.mem_map.1 hM
         rcases List.mem_append.1 hL'' with h | h
         · exact hM1 M' hM' L'' h
-        · rw [List.mem_singleton.1 h]
-          exact hL'
+        · rwa [List.mem_singleton.1 h]
       · exact hM2 M hM L'' hL''
     · intro Φ hΦ B hB hΦB w
       have hΦ' := (hasDerivAt_and_isTheta isExpChar_one hL' hΦ).2
@@ -793,17 +788,14 @@ theorem eq_mul_of_chi (hψ : IsCharAF D.host.F ψ) {m : (WO S T → ℂ) →ₗ[
     funext x
     have hline : ∀ w, HasDerivAt (fun t : ℝ => Ψ (w + L t)) (dHeis 1 S T L Ψ w) 0 := by
       intro w
-      have hw := hd.1 w
-      simp only [heisO_one_apply] at hw
-      exact hw
+      simpa only [heisO_one_apply] using hd.1 w
     have hsum : HasDerivAt (fun t : ℝ => tr s c Ψ (x + L t)) (tr s c (dHeis 1 S T L Ψ) x) 0 := by
       have hterm : ∀ a ∈ s, HasDerivAt (fun t : ℝ => c a * (cf Ψ a * chiR ψ S T a (x + L t)))
           (c a * (cf (dHeis 1 S T L Ψ) a * chiR ψ S T a x)) 0 := fun a _ =>
         ((claws a Ψ hΨ).2 L _ (hper _ hd.2).1 (hper _ hd.2).2 hline x).const_mul (c a)
       simp only [tr_apply]
       have hs' := HasDerivAt.sum hterm
-      rw [Finset.sum_fn] at hs'
-      exact hs'
+      rwa [Finset.sum_fn] at hs'
     have e : (fun t : ℝ => heisO 1 S T (L t) (tr s c Ψ) x) = fun t => tr s c Ψ (x + L t) := by
       funext t
       rw [heisO_one_apply]
@@ -814,8 +806,7 @@ theorem eq_mul_of_chi (hψ : IsCharAF D.host.F ψ) {m : (WO S T → ℂ) →ₗ[
   have hfix : ∀ u ∈ V, u.map (infPart D) = 0 → ∀ y, Φ (u + y) = Φ y := by
     intro u hu hu0 y
     have hy := congrFun (hVΦ u hu hu0) y
-    rw [heisO_one_apply, add_comm] at hy
-    exact hy
+    rwa [heisO_one_apply, add_comm] at hy
 
   have tr_level : ∀ s c, HasLevel 1 S T V (tr s c Φ) := by
     intro s c u hu hu0
@@ -927,8 +918,7 @@ theorem thetaUnique (hψ : IsCharAF D.host.F ψ) (S T : HSp D) : ThetaUnique ψ 
   have e4 : ℓ f * g 0 = ℓ g * f 0 := by
     apply mul_right_cancel₀ hs
     linear_combination e1
-  rw [div_mul_eq_mul_div, eq_div_iff hg0]
-  exact e4
+  rwa [div_mul_eq_mul_div, eq_div_iff hg0]
 
 theorem covolOneExists (S T : HSp D) : CovolOneExists S T := by
   obtain ⟨h1, h2, h3, h4, h5, K, hK, hcov⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
@@ -960,8 +950,7 @@ theorem heisenbergLemma (hψ : IsCharAF D.host.F ψ) (S T : HSp D) : HeisenbergL
     hv' (f * star f') hΦ.cont (periodic_of_one hΦ)
   have key' := GlobalTheory.mean_periodic_indep_of_covolume_one (WO S T) (ratL T S) K hK hcov μ' μ 𝓕' 𝓕 hμ' h𝓕' hv' hμ h𝓕
     hv (f * star f') hΦ.cont (periodic_of_one hΦ)
-  simp only [heisO_apply_zero]
-  exact ⟨key.1, key'.1, key.2⟩
+  simpa only [heisO_apply_zero] using ⟨key.1, key'.1, key.2⟩
 
 theorem thetaFacts (D : D7) : ThetaFacts D := by
   intro ψ hψ S T

@@ -161,8 +161,7 @@ lemma inPsi_conj_iff (τ : E →+* ℂ) : InPsi H (ComplexEmbedding.conjugate τ
   rw [ComplexEmbedding.conjugate_coe_eq, h2 _ h1]
   have h3 : τ (H.rt : E) = H.rt0 ∨ τ (H.rt : E) = -H.rt0 := sq_eq_sq_iff_eq_or_eq_neg.1 (h1.trans H.sqrt_neg_disc_sq.symm)
   constructor
-  · intro a b
-    exact h0 (by linear_combination (-1/2 : ℂ) * a - (1/2 : ℂ) * b)
+  · exact fun a b => h0 (by linear_combination (-1/2 : ℂ) * a - (1/2 : ℂ) * b)
   · intro a
     rw [h3.resolve_left a, neg_neg]
 
@@ -224,8 +223,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Recip
       intro w x
       obtain ⟨y, hy, e⟩ := hT.frob la (hl ▸ hI) w x
       have := hla y hy
-      rw [e, ← hl, map_sub, map_sub, map_pow, map_pow] at this
-      exact this
+      rwa [e, ← hl, map_sub, map_sub, map_pow, map_pow] at this
     unfold tauIn
     rw [pos_succ]
     by_cases a : g = RF.bg s

@@ -96,8 +96,7 @@ theorem exists_local_geom (h : IsGaloisCover Ga ρ π) {T : Scheme.{0}} (x x' : 
     have hw : V.ι w ∈ (V : Set T) := by
       rw [← Scheme.Opens.range_ι V]
       exact ⟨w, rfl⟩
-    rw [Scheme.Hom.comp_apply]
-    exact hw
+    rwa [Scheme.Hom.comp_apply]
   let l := IsOpenImmersion.lift D (V.ι ≫ m a) hsub
   have hl : l ≫ D = V.ι ≫ m a := IsOpenImmersion.lift_fac _ _ _
   refine ⟨V, a, hpV, ?_⟩
@@ -197,8 +196,7 @@ theorem isPullback (h : IsGaloisCover Ga ρ π) (h' : IsGaloisCover Ga ρ' π') 
     refine ⟨ρ' a y, ?_⟩
     have hz' := congrArg (fun m : Sp K ⟶ _ => m z) ha
     simp only [Scheme.Hom.comp_apply, hz, hr1, hr2] at hz'
-    rw [← Scheme.Hom.comp_apply, ← hφeq, Scheme.Hom.comp_apply]
-    exact hz'
+    rwa [← Scheme.Hom.comp_apply, ← hφeq, Scheme.Hom.comp_apply]
   have : Etale φ := by
     have : Etale (φ ≫ pullback.snd π v) := by rw [hφ2]; exact h'.etale
     exact Etale.of_comp (f := φ) (pullback.snd π v)

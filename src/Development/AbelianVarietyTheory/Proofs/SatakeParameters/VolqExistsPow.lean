@@ -220,16 +220,14 @@ theorem volq_relIndex (hq : (qOf P).Prime) {n c : ℕ} (J : Subgroup (Sp E (n + 
         induction m with
         | zero => rfl
         | succ m ih => rw [pow_succ', pow_succ', Module.End.mul_apply, ih]; rfl
-      rw [e] at this
-      exact this
+      rwa [e] at this
     · rw [AddSubgroup.mem_comap, map_nsmul]
       exact h₂ _ (by omega) v hv
     · have := h₁ (b₁ + b₂) (by omega) _ hv
       simpa using this
     · have := (hs (h.symm v)).2 hv
       change h.symm (r (h (h.symm v))) ∈ _ at this
-      rw [h.apply_symm_apply] at this
-      exact this
+      rwa [h.apply_symm_apply] at this
   refine volq_index _ hq (k := 2 * (b₁ + b₂) + c) fun g => ?_
   rw [Subgroup.mem_subgroupOf, Subgroup.coe_pow]
   refine ⟨pow_mem g.2.2 _, fun v => ⟨fun hv => ?_, key g.1 g.2 v⟩⟩

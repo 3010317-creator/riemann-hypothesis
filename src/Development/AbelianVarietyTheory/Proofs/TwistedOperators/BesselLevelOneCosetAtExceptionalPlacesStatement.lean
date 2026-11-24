@@ -788,8 +788,7 @@ theorem exists_mem_pow {ϖ : 𝒪[k]} (hϖ : Irreducible ϖ) (e : ℕ) {x : k} (
   have hv : valuation k ((ϖ : k) ^ e) ≠ 0 := (Valuation.ne_zero_iff _).2 (pow_ne_zero _ h0)
   have h1 : x / (ϖ : k) ^ e ∈ 𝒪[k] := by
     change valuation k _ ≤ 1
-    rw [map_div₀, div_le_one₀ (zero_lt_iff.2 hv), map_pow]
-    exact hx
+    rwa [map_div₀, div_le_one₀ (zero_lt_iff.2 hv), map_pow]
   refine ⟨⟨_, h1⟩ * ϖ ^ e, Ideal.mul_mem_left _ _ (Ideal.pow_mem_pow ?_ _), ?_⟩
   · rw [hϖ.maximalIdeal_eq]; exact Ideal.mem_span_singleton_self _
   · push_cast
@@ -1350,8 +1349,7 @@ theorem stair_bd (hO : OffQ D) (G : GridData L sc) {v : GlobalTheory.FinPl.Pl D}
       (D.host.AA⁻¹ * ((G.pl.modulBar sc : Ideal (𝓞 D.host.E)) : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E)) ^ (c - q.1) *
       (D.host.AAbar * ((G.pl.modul sc : Ideal (𝓞 D.host.E)) : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E)⁻¹) ^ (q.1 + 1) := by
     simp only [stairId, Places.stA, Places.stAbar, mul_inv, inv_inv, ← inv_pow]
-  rw [e]
-  exact b
+  rwa [e]
 
 theorem latO_of_latRow (G : GridData L sc) (i : ℕ) {Y : WO (G.V (.grid (i + 1) 0)) (G.V (.grid i 0))} (hY : Y ∈ latRow G i) :
     Y ∈ latO (negSp (G.V (.grid (i + 1) 0))) (G.V (.grid i 0)) (G.Λ (.grid (i + 1) 0) : Set _) (G.Λ (.grid i 0) : Set _)
@@ -1547,8 +1545,7 @@ theorem frame_bf : OnStd fun {D} _ _ {sc} {G} W F => ∀ σ (h : 2 * (σ + 1) + 
     h1, h2, h3, ?_, ?_, ?_, hs, ht, fun a ha =>
       ⟨GlobalTheory.T.split_frame_odd_lattice_left D hq T L μ0 hL sc G W M hM F hF σ h v hv k p β ϖ κ h1 h2 h3 h4 h5 h6 h7 s hs a ha,
        GlobalTheory.T.split_frame_odd_lattice_right D hq T L μ0 hL sc G W M hM F hF σ h v hv k p β ϖ κ h1 h2 h3 h4 h5 h6 h7 t ht a ha⟩⟩
-  · intro a b e
-    exact Fin.ext (Fin.mk.inj (h5 e))
+  · exact fun a b e => Fin.ext (Fin.mk.inj (h5 e))
   · intro a b e
     have := Fin.mk.inj (h5 e)
     have ha := a.2; have hb := b.2

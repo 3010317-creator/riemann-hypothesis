@@ -183,8 +183,7 @@ theorem lift_diag : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type)
     · rw [hoth PP' (Or.inl hP') he]
       have h1 : upperLeftBlock (r_le_V i) (1 : GL (Fin (Vc D i).rank) (kP PP')) = 1 := blockDiagonalExtendByOnePrimeField_one _ _
       have h2 : R.eG g ⟨PP', hP'⟩ = 1 := hg ⟨PP', hP'⟩ (fun h => he (congrArg Subtype.val h))
-      rw [h2]
-      exact h1
+      rwa [h2]
   · have key : levFn (R.βV i) (flagL (R.datVt i t)) (finE (Vc D i) κ) = 1 := by
       unfold levFn
       rw [Finset.prod_eq_one, Finset.prod_eq_one, mul_one, mul_one]
@@ -293,10 +292,8 @@ theorem mirC_hyperplane_reindex : ∀ (D : D7) (G : Type) [Group G] [Fintype G] 
     rw [Set.mem_setOf_eq, Set.mem_setOf_eq, ← key g]
     simp only [mirC, Bool.false_eq_true, ↓reduceIte, zpow_one]
     split_ifs with hc
-    · simp only [ne_eq, Units.ne_zero, not_false_eq_true, true_iff]
-      exact hc
-    · simp only [ne_eq, not_true_eq_false, false_iff]
-      exact hc
+    · simpa only [ne_eq, Units.ne_zero, not_false_eq_true, true_iff] using hc
+    · simpa only [ne_eq, not_true_eq_false, false_iff] using hc
   rw [hset]
   apply finsum_mem_eq_of_bijOn (fun g => Matrix.GeneralLinearGroup.map ρk.symm.toRingHom (R.eG g P))
   · refine ⟨?_, ?_, ?_⟩
@@ -319,8 +316,7 @@ theorem mirC_hyperplane_reindex : ∀ (D : D7) (G : Type) [Group G] [Fintype G] 
       refine ⟨R.eG.symm (Pi.mulSingle P (Matrix.GeneralLinearGroup.map ρk.toRingHom g₀)), ⟨?_, ?_⟩, ?_⟩
       · intro PP' hq
         rw [MulEquiv.apply_symm_apply, Pi.mulSingle_eq_of_ne hq]
-      · rw [MulEquiv.apply_symm_apply, Pi.mulSingle_eq_same, hcomp]
-        exact hg₀
+      · rwa [MulEquiv.apply_symm_apply, Pi.mulSingle_eq_same, hcomp]
       · show Matrix.GeneralLinearGroup.map ρk.symm.toRingHom (R.eG (R.eG.symm _) P) = g₀
         rw [MulEquiv.apply_symm_apply, Pi.mulSingle_eq_same, hcomp]
   · intro g _

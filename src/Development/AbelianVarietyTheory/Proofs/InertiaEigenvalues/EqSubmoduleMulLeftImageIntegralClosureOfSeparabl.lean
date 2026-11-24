@@ -71,8 +71,7 @@ theorem isReduced_of_charpoly_separable {E A : Type} [Field E] [CommRing A] [Alg
   have hf : aeval (LinearMap.mulLeft E g) (f ^ m) = 0 := by
     have h2 : aeval g (f ^ m) = 0 := by rw [map_pow, hm]
     have := aeval_algHom_apply (Algebra.lmul E A) g (f ^ m)
-    rw [h2, map_zero] at this
-    exact this
+    rwa [h2, map_zero] at this
   have h1 := GlobalTheory.CharpolyDvd.charpoly_dvd_pow_finrank _ _ hf
   rw [← pow_mul] at h1
   obtain ⟨q, hq⟩ := hP.squarefree.isRadical _ _ h1
@@ -105,8 +104,7 @@ theorem isPrincipalIdealRing_integralClosure_field {O E L : Type} [CommRing O] [
     have hne : P.comap (algebraMap O (integralClosure O L)) ≠ ⊥ := fun h0 => h (Ideal.eq_bot_of_comap_eq_bot h0)
     have hmax : (P.comap (algebraMap O (integralClosure O L))).IsMaximal :=
       Ring.DimensionLEOne.maximalOfPrime hne inferInstance
-    refine ⟨hP, ⟨?_⟩⟩
-    exact (IsLocalRing.eq_maximalIdeal hmax).symm
+    exact ⟨hP, ⟨(IsLocalRing.eq_maximalIdeal hmax).symm⟩⟩
 
 theorem isPrincipalIdealRing_integralClosure {O E A : Type} [CommRing O] [IsDomain O]
     [IsDiscreteValuationRing O] [Field E] [Algebra O E] [IsFractionRing O E] [CommRing A]

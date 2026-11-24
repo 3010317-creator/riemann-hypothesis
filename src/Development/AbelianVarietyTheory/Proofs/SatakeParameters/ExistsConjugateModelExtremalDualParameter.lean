@@ -392,8 +392,7 @@ theorem ker_le_of_latIdx_eq : ∀ (L : Type) [Field L] [Valued L (WithZero (Mult
   have hcard : (h '' Sx).ncard = Sx.ncard := by
     rw [himg]
     unfold latIdx at hidx
-    rw [← hSx, ← hSy, Nat.card_coe_set_eq, Nat.card_coe_set_eq] at hidx
-    exact hidx
+    rwa [← hSx, ← hSy, Nat.card_coe_set_eq, Nat.card_coe_set_eq] at hidx
   have hinj : Set.InjOn h Sx := (Set.ncard_image_iff hfin).1 hcard
   let u0 : intVec L n := ⟨u, hu⟩
   have h0 : h (QuotientAddGroup.mk (x *ᵥ ((u0 : intVec L n) : Fin n → L))) = h (QuotientAddGroup.mk (x *ᵥ ((0 : intVec L n) : Fin n → L))) := by
@@ -540,15 +539,12 @@ noncomputable def vNN : Valuation L NNReal :=
 theorem vNN_le_one_iff (x : L) : vNN L x ≤ 1 ↔ x ∈ Formalism.UG.intL L := by
   have h := (WithZeroMulInt.toNNReal_strictMono (e := 2) (by norm_num)).le_iff_le
     (a := (Valued.v x : WithZero (Multiplicative ℤ))) (b := 1)
-  rw [map_one] at h
-  exact h
+  rwa [map_one] at h
 
 theorem vNN_integers : (vNN L).Integers ↥(Formalism.UG.intL L) := by
   refine ⟨Subtype.val_injective, ?_, ?_⟩
-  · intro x
-    exact (vNN_le_one_iff L _).2 x.2
-  · intro r hr
-    exact ⟨⟨r, (vNN_le_one_iff L _).1 hr⟩, rfl⟩
+  · exact fun x => (vNN_le_one_iff L _).2 x.2
+  · exact fun r hr => ⟨⟨r, (vNN_le_one_iff L _).1 hr⟩, rfl⟩
 
 theorem exists_clear {ι : Type} (s : Finset ι) (f : ι → L) :
     ∃ c : L, c ≠ 0 ∧ c ∈ Formalism.UG.intL L ∧ ∀ i ∈ s, c * f i ∈ Formalism.UG.intL L := by
@@ -594,8 +590,7 @@ theorem smith_valued : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicat
     intro d
     induction d with
     | zero =>
-      intro n X
-      exact ⟨1, 1, Fin.elim0, by simp, by simp, fun j => j.elim0⟩
+      exact fun n X => ⟨1, 1, Fin.elim0, by simp, by simp, fun j => j.elim0⟩
     | succ d ih =>
       intro n X
       cases n with
@@ -604,10 +599,7 @@ theorem smith_valued : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicat
         let g : Fin (n + 1) → Fin (d + 1) → ↥(Formalism.UG.intL L) := fun j i => X i j
         obtain ⟨i₀, a, u, s, hu, -, hs, hz, hnz⟩ := exists_pivot (vNN_integers L) g
         by_cases ha : a = 0
-        · have hX : X = 0 := by
-            apply Matrix.ext
-            intro i j
-            exact congrFun (hz ha j) i
+        · have hX : X = 0 := Matrix.ext (fun i j => congrFun (hz ha j) i)
           exact ⟨1, 1, 0, by simp, by simp, fun j k => by simp [hX]⟩
         obtain ⟨j₀, hj₀, hs₀⟩ := hnz ha
         have hcol : ∀ i, X i j₀ = a * u i := fun i => congrFun hj₀ i
@@ -813,8 +805,7 @@ theorem dual_subset : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicati
   have h4 : xᵀ *ᵥ (P'ᵀ *ᵥ w) = Qᵀ *ᵥ (Dᵀ *ᵥ w) := by
     rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, ← Matrix.transpose_mul, ← Matrix.transpose_mul, hx,
       ← Matrix.mul_assoc, ← Matrix.mul_assoc, hPP', Matrix.one_mul]
-  rw [h4, ← Matrix.mulVec_add, ← hz]
-  exact h3
+  rwa [h4, ← Matrix.mulVec_add, ← hz]
 
 end GlobalTheory.LatticeDuality
 end -- clump:auto
@@ -1267,12 +1258,10 @@ theorem GlobalTheory.Hk3.HoweG.selfDual_lattice_of_gram_int : ∀ (L : Type) [Fi
     · funext k; simp
   have hN : ∀ u : Fin n → L, (∀ i, u i ∈ Formalism.UG.intL L) → (∀ i, (x *ᵥ u) i ∈ Formalism.UG.intL L) →
       ∃ t : Fin n → L, (∀ i, t i ∈ Formalism.UG.intL L) ∧ u = (a : Matrix (Fin n) (Fin n) L) *ᵥ t := by
-    intro u hu hxu
-    exact (ha u).mp ⟨u, 0, hu, hxu, fun _ => Subring.zero_mem _, by simp⟩
+    exact fun u hu hxu => (ha u).mp ⟨u, 0, hu, hxu, fun _ => Subring.zero_mem _, by simp⟩
   have hY : ∀ w : Fin n' → L, (∀ i, w i ∈ Formalism.UG.intL L) →
       ∃ t : Fin n → L, (∀ i, t i ∈ Formalism.UG.intL L) ∧ y *ᵥ w = (a : Matrix (Fin n) (Fin n) L) *ᵥ t := by
-    intro w hw
-    exact (ha _).mp ⟨0, w, fun _ => Subring.zero_mem _, by simp, hw, by simp⟩
+    exact fun w hw => (ha _).mp ⟨0, w, fun _ => Subring.zero_mem _, by simp, hw, by simp⟩
   have hformM : ∀ (M : Matrix (Fin n) (Fin n) L) (t : Fin n → L) (V : Matrix (Fin n) (Fin n) L) (j : Fin n),
       Formalism.UG.hform σ (JS : Matrix (Fin n) (Fin n) L) (M *ᵥ t) (fun l => V l j) =
         ∑ k, σ (t k) * (Formalism.UG.cT σ M * (JS : Matrix (Fin n) (Fin n) L) * V) k j := by
@@ -1338,8 +1327,7 @@ theorem GlobalTheory.Hk3.HoweG.selfDual_lattice_of_gram_int : ∀ (L : Type) [Fi
       intro i
       rw [he, Matrix.mulVec_add, Matrix.mulVec_mulVec]
       exact Subring.add_mem _ (hxu i) (iMV _ _ hxy hw i)
-    · intro hxv
-      exact hN v hv hxv
+    · exact fun hxv => hN v hv hxv
   · intro z
     constructor
     · rintro ⟨t, v, ht, hv, rfl⟩
@@ -1438,8 +1426,7 @@ theorem vacuum_sum_selfDual_fixed : ∀ (L : Type) [Field L] [CharZero L] [Value
     have hw : ∀ i j, (u + v - v') i j ∈ Formalism.UG.intL L := fun i j => (Formalism.UG.intL L).sub_mem (huv i j) (hv' i j)
     have hl : ρ ((u + v - v') * A) s = s := by
       apply hvac
-      rw [Matrix.sub_mul]
-      exact hdiff
+      rwa [Matrix.sub_mul]
     rw [hcomb u v hu hv]
     calc ρ (u * A + v * A) s = ρ (v' * A + (u + v - v') * A) s := by
           congr 1; rw [Matrix.sub_mul, Matrix.add_mul]; abel
@@ -1503,7 +1490,6 @@ theorem sum_charSum_eq_card_filter {B ι M : Type} [AddCommGroup B] [Fintype B] 
         intro b
         have e : φ b = 1 := by rw [h1, AddChar.one_apply]
         exact ((inv_mul_eq_one₀ (hne b x hx)).mp e).symm
-      show ∑ b, φ b = 0
       exact AddChar.sum_eq_zero_of_ne_one hφ
   calc ∑ b, (χ b x)⁻¹ • ∑ y ∈ Y, χ b y • v y = ∑ y ∈ Y, (∑ b, (χ b x)⁻¹ * χ b y) • v y := by
         simp_rw [Finset.smul_sum, smul_smul, Finset.sum_smul]; exact Finset.sum_comm
@@ -1685,13 +1671,11 @@ theorem locVac_mem_span_vac : ∀ (L : Type) [Field L] [CharZero L] [Valued L (W
   have hzero : ∀ c, c ≠ 0 → f c = 0 := by
     intro c hc
     obtain ⟨u, hu, hχu⟩ : ∃ u ∈ intMatSub (L := L) n n', χ c u ≠ 1 := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       have hint := intMat_of_psi hU hδ.1 hSint hTint ψ hpsi_ne c.out hcon
       apply hc
       rw [hΛ] at hint
-      rw [← QuotientAddGroup.out_eq' c, QuotientAddGroup.eq_zero_iff]
-      exact hint
+      rwa [← QuotientAddGroup.out_eq' c, QuotientAddGroup.eq_zero_iff]
     have hsum : (f.support.sum fun d => (χ d u - 1) • f d) = 0 := by
       have e1 : ρ u w = f.support.sum fun d => χ d u • f d := by
 
@@ -1897,8 +1881,7 @@ theorem gramClass_orbit_mod_lower : ∀ (L : Type) [Field L] [CharZero L] [Value
     intro y y' hl
     refine ⟨ψ ((GlobalTheory.Hk3.locH σ δ JS JT y' (y - y') + σ (GlobalTheory.Hk3.locH σ δ JS JT y' (y - y'))) / 2), hψ0 _, ?_⟩
     have h1 := congrArg (fun F : Module.End ℂ M => F s) (hP.rho_mul y' (y - y'))
-    simp only [Module.End.mul_apply, hvac _ hl, LinearMap.smul_apply, add_sub_cancel] at h1
-    exact h1
+    simpa only [Module.End.mul_apply, hvac _ hl, LinearMap.smul_apply, add_sub_cancel] using h1
   refine ⟨Submodule.sum_mem _ fun y hy => ?_, ?_⟩
   · obtain ⟨hyC, heq⟩ := Finset.mem_filter.1 hy
     obtain ⟨h, hh, hyl⟩ := _root_.GlobalTheory.Hk3.HoweG.exists_intUnitary_of_gramClass L ϖ σ q n n' JS JT hP.unr hP.odd hP.intS hP.intT hP.hermS hP.hermT x y hx (hC y hyC).2.1 (hC y hyC).2.2 heq

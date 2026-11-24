@@ -70,8 +70,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (τ : Ain
   have cancel : ∀ M M' : Matrix (Fin d') (Fin d) (WCb l), F'.T * M = F'.T * M' → M = M' := by
     intro M M' h
     have h2 := congrArg (fun Z => (↑u⁻¹ : Matrix (Fin d') (Fin d') (WCb l)) * Z) h
-    simp only [← hu, ← Matrix.mul_assoc, Units.inv_mul, Matrix.one_mul] at h2
-    exact h2
+    simpa only [← hu, ← Matrix.mul_assoc, Units.inv_mul, Matrix.one_mul] using h2
   have hzmul : ∀ {m n o : Type} [Fintype n] (A : Matrix m n ℤ_[l]) (B : Matrix n o ℤ_[l]),
       zW (A * B) = zW A * zW B := fun A B => Matrix.map_mul
   set Xm : Matrix (Fin d') (Fin d) (WCb l) := (↑u⁻¹ : Matrix (Fin d') (Fin d') (WCb l)) * (zW f * F.T) with hXm

@@ -177,8 +177,7 @@ theorem vanish (S : Sys g) {U : Type} [AddCommGroup U] [Module ℂ U] (ρ : Repr
   have h0 : ρ.asAlgebraHom (S.e (a + b) (f₁ * f₂)) v = 0 := by
     rw [hv, ← Module.End.mul_apply, ← map_mul, ← S.central (a + b) F (N * A * B), ← mul_assoc,
       S.orth _ _ _ (Ne.symm hF), zero_mul, map_zero, LinearMap.zero_apply]
-  rw [← hm]
-  exact h0
+  rwa [← hm]
 
 variable {V W W' : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W]
   [AddCommGroup W'] [Module ℂ W']
@@ -202,8 +201,7 @@ theorem has_of_eqv (S : Sys g) {n : ℕ} (π : Representation ℂ (GL (Fin n) �
     intro k hk
     rw [← h, hk]
     simp
-  · rw [key, ← Module.End.mul_apply, ← map_mul, hE, ← map_mul, S.idem]
-    exact hne
+  · rwa [key, ← Module.End.mul_apply, ← map_mul, hE, ← map_mul, S.idem]
 
 private theorem inc_apply_eq_algebraMap {n : ℕ} (k : GL (Fin n) ℤ_[g]) (i j : Fin n) :
     ((inc g n k : GL (Fin n) ℚ_[g]) : Matrix (Fin n) (Fin n) ℚ_[g]) i j =
@@ -340,8 +338,7 @@ private theorem nonzero_lemma_7 {a b : ℕ} {V₀ W₀ W₁ : Type} [AddCommGrou
   · apply hΛ0
     refine LinearMap.ext fun w => ?_
     have hw : w ∈ Z := ht ▸ Submodule.mem_top
-    have h1 := (hmem w).1 hw 1
-    simpa using h1
+    simpa using (hmem w).1 hw 1
 
 theorem series_of_mapsToProd (g : ℕ) [Fact g.Prime] (S : Sys g) (n a b : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V]
     (π : Representation ℂ (GL (Fin n) ℚ_[g]) V) (W W' : Type) [AddCommGroup W] [Module ℂ W] [AddCommGroup W']

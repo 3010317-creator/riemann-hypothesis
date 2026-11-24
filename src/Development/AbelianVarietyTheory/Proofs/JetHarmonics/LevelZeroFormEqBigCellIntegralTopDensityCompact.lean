@@ -155,8 +155,7 @@ lemma measurePreserving_snocMeasurableEquiv (n : ℕ) :
 
 lemma ae_coords_ne_zero (n : ℕ) : ∀ᵐ c : Fin n → ℂ, ∀ i, c i ≠ 0 := by
   rw [ae_all_iff]
-  intro i
-  exact Measure.ae_eval_ne (fun _ : Fin n => (volume : Measure ℂ)) i 0
+  exact fun i => Measure.ae_eval_ne (fun _ : Fin n => (volume : Measure ℂ)) i 0
 
 theorem iterated_integral_eq_integral_pi :
     ∀ (n : ℕ) (W : ℕ → ℂ → ℝ) (R : (j : ℕ) → (Fin j → ℂ) → ℝ), (∀ j t, 0 ≤ W j t) → (∀ c : Fin n → ℂ, (∀ i, c i ≠ 0) → 0 ≤ R n c) → AEMeasurable (fun c : Fin n → ℂ => (∏ i : Fin n, W ((i : ℕ) + 1) (c i)) * R n c) → (∀ j, j < n → ∀ c : Fin j → ℂ, (∀ i, c i ≠ 0) → Integrable (fun t : ℂ => W (j + 1) t * R (j + 1) (Fin.snoc c t)) ∧ R j c = ∫ t : ℂ, W (j + 1) t * R (j + 1) (Fin.snoc c t)) → Integrable (fun c : Fin n → ℂ => (∏ i : Fin n, W ((i : ℕ) + 1) (c i)) * R n c) ∧ R 0 (fun i => i.elim0) = ∫ c : Fin n → ℂ, (∏ i : Fin n, W ((i : ℕ) + 1) (c i)) * R n c := by
@@ -215,8 +214,7 @@ theorem iterated_integral_eq_integral_pi :
       rw [integrable_prod_iff hFm]
       constructor
       · filter_upwards [ae_coords_ne_zero n] with c hc
-        simp only [hFeq]
-        exact (hstep n (Nat.lt_succ_self n) c hc).1.const_mul _
+        simpa only [hFeq] using (hstep n (Nat.lt_succ_self n) c hc).1.const_mul _
       · refine hint.congr ?_
         filter_upwards [ae_coords_ne_zero n] with c hc
         rw [← hslice c hc]

@@ -69,8 +69,7 @@ omit [CharZero L] [Algebra ℚ L] in
 theorem lev_eq (W : LocWach PD L O v n) (i : ZMod n) (ζ : L) (a : LetA O n) :
     W.lev i ζ a = evOne W i ζ (a i) := by
   have h := W.lev_letter i ζ (a - fun _ => a i) (by simp)
-  rw [map_sub, sub_eq_zero] at h
-  exact h
+  rwa [map_sub, sub_eq_zero] at h
 
 theorem evOne_X (W : LocWach PD L O v n) (i : ZMod n) {ζ : L} (h : ∃ j : ℕ, IsPrimitiveRoot ζ (PD.p ^ j)) :
     evOne W i ζ X = C ζ * exp L - 1 := by
@@ -102,8 +101,7 @@ theorem levLaws_of_evLaw (W : LocWach PD L O v n) (hp : PD.p = l) (c : W.Gam →
     have := ev_gam H (j := j) (hp ▸ h.pow_eq_one) (l : ℤ_[l]) (a := l) (by simp) (evOne_X W i ⟨j, h⟩)
       (evOne_X W (i - 1) (root_pow hpr ⟨j, h⟩ l)) (f (i - 1))
     rw [map_natCast] at this
-    rw [lev_eq, lev_eq, e, hp]
-    exact this
+    rwa [lev_eq, lev_eq, e, hp]
 
 end Generic
 

@@ -122,8 +122,7 @@ theorem GlobalTheory.TwV.Joint.locSp_kerN_succ : ∀ {D : D7} {L : SizeData₂ D
         (congrArg Units.val hB))) (congrArg DFunLike.coe hi))
   rw [hfr, hbas]
   have hiw : J.rho std v = ((I.at' j hj).st.loc ((I.at' j hj).st.eC.symm La.1).1).iw v := (J.iw j hj _ v).symm
-  rw [hiw]
-  exact hR
+  rwa [hiw]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.FrameLocalLatticeSpanKernelLatticeSucc =====
@@ -314,8 +313,7 @@ theorem datLoc_homRe : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (SS : Finset (H
   have hx : (fun z => Ξ (homRe rfl rfl z)) = Ξ := by
     funext z
     congr 1
-  rw [hx]
-  exact h
+  rwa [hx]
 
 end GlobalTheory.TwU
 end -- clump:auto

@@ -215,8 +215,7 @@ theorem sum_re_add_conj {E : Type} [Field E] [NumberField E] [NumberField.IsCMFi
     constructor
     · intro h
       refine ⟨ComplexEmbedding.conjugate τ, ?_, ComplexEmbedding.involutive_conjugate E τ⟩
-      rw [X.cmType, ComplexEmbedding.involutive_conjugate E τ]
-      exact h
+      rwa [X.cmType, ComplexEmbedding.involutive_conjugate E τ]
     · rintro ⟨σ, hσ, rfl⟩
       exact (X.cmType σ).1 hσ
   have hsum : ∑ τ ∈ Ψ, τ (x + ReciprocityTheory.ChartRestriction.G.FD.cc x) = ∑ τ : E →+* ℂ, τ x := by
@@ -419,8 +418,7 @@ theorem maxCusps_mem_SSgt_of_coef_eq_zero : ∀ (E : Type) [Field E] [NumberFiel
         simpa [Pi.single_apply] using h2.symm
       have h3 := hK cu χ ⟨hχ, fun k => ⟨m k, hχm k⟩⟩
         ⟨η, hη, hξ.1, by simpa only [hνχ] using hν⟩ x hx
-      rw [show phZ X cu χ = fun k => (m k : ℝ) from funext hχm] at h3
-      exact h3
+      rwa [show phZ X cu χ = fun k => (m k : ℝ) from funext hχm] at h3
   · rfl
   · rfl
 
@@ -644,8 +642,7 @@ theorem mem_crdI_one_iff (X : Data E r) (cu : CuspFD X ρ) (v : Fin ρ → E) :
       exact X.Λ.smul_mem a' hx.1
     | zero => simp
     | add x y _ _ hx hy =>
-      simp only [Pi.add_apply, add_smul, Finset.sum_add_distrib]
-      exact X.Λ.add_mem hx hy
+      simpa only [Pi.add_apply, add_smul, Finset.sum_add_distrib] using X.Λ.add_mem hx hy
     | smul c x _ hx =>
       have : (∑ i, (c • x) i • cu.e i) = c • ∑ i, x i • cu.e i := by
         simp [Finset.smul_sum, smul_assoc]

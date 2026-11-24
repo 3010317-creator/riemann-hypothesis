@@ -148,8 +148,7 @@ theorem iso_of_common_functional : ∀ (E : Type) [Field E] [NumberField E] [_ro
       (B₁.flip.codRestrict (LinearMap.range B₂.flip) hmem ψ))
     rw [LinearEquiv.ofInjective_apply, LinearMap.codRestrict_apply] at h1
     have h2 := LinearMap.congr_fun h1 φ
-    rw [LinearMap.flip_apply, LinearMap.flip_apply] at h2
-    exact h2
+    rwa [LinearMap.flip_apply, LinearMap.flip_apply] at h2
   have hTo : ∀ o φ, T (π.op (s₁ o) φ) = π.op (s₂ o) (T φ) := fun o φ =>
     uniq _ _ fun χ => by rw [hT]; exact key o φ (T φ) (fun χ => (hT φ χ).symm) χ
   have injT : Function.Injective T := fun x y h =>
@@ -191,8 +190,7 @@ theorem typeClosure_of_intertwine : ∀ (E : Type) [Field E] [NumberField E] [_r
     haveI : Module.Projective ℂ ((U →ₗ[ℂ] ℂ) ⧸ Submodule.span ℂ (Set.range ev)) :=
       @Module.Projective.of_free _ _ _ _ _ hfr
     refine Submodule.span_eq_top_of_ne_zero fun z hz => ?_
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hz (Subtype.ext (Subtype.ext (Subtype.ext (funext fun h => hc _ ⟨h, rfl⟩))))
   let L : U →ₗ[ℂ] ℂ :=
     (LinearMap.proj g).comp ((Sm E a).subtype.comp (π.V.subtype.comp (f.comp U.subtype)))
@@ -205,8 +203,7 @@ theorem typeClosure_of_intertwine : ∀ (E : Type) [Field E] [NumberField E] [_r
     funext k
     show _ = (f (cptOn π k u)).1.1 g
     rw [hf k u hu, cptOn_val]
-  rw [key]
-  exact hL
+  rwa [key]
 
 end GlobalTheory.IdemAdj
 end -- clump:auto
@@ -255,8 +252,7 @@ theorem toSubmodule_bot : (⊥ : Subrepresentation ρ).toSubmodule = ⊥ := rfl
 
 theorem ne_bot_iff_toSubmodule {S : Subrepresentation ρ} : S ≠ ⊥ ↔ S.toSubmodule ≠ ⊥ := by
   constructor
-  · intro h h'
-    exact h (Subrepresentation.toSubmodule_injective h')
+  · exact fun h h' => h (Subrepresentation.toSubmodule_injective h')
   · rintro h rfl
     exact h rfl
 
@@ -355,8 +351,7 @@ theorem exists_typeComplement : ∀ (K V : Type) [Group K] [AddCommGroup V] [Mod
     refine iSup₂_le fun S ⟨hA, hn⟩ => ?_
     by_contra hc
     have hne : ∃ s ∈ S.toSubmodule, p s ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hc fun s hs => (Submodule.projection_apply_eq_zero_iff hXY₀).mp (h s hs)
     obtain ⟨_, ⟨e⟩⟩ := imRep_atom p hp hA hne
     have hle : imRep p hp S ≤ X := by
@@ -479,8 +474,7 @@ lemma right_ker_zero (hσ : Function.Surjective σ) (B : V →ₗ[ℂ] V →ₗ[
   have hle : T ≤ S := fun x hx => (Submodule.mem_inf.mp hx).1
   have hmem : ∀ y ∈ S.toSubmodule, (∀ x ∈ S₁.toSubmodule, B x y = 0) → y ∈ T.toSubmodule := by
     intro y hy h0
-    simp only [T, Submodule.mem_inf, Submodule.mem_iInf, LinearMap.mem_ker]
-    exact ⟨hy, h0⟩
+    simpa only [T, Submodule.mem_inf, Submodule.mem_iInf, LinearMap.mem_ker] using ⟨hy, h0⟩
   rcases h.le_iff.mp hle with h' | h'
   · intro y hy h0
     have hT : T.toSubmodule = ⊥ := congrArg Subrepresentation.toSubmodule h'
@@ -574,8 +568,7 @@ lemma exists_atom_pair
     (B : V →ₗ[ℂ] V →ₗ[ℂ] ℂ) (Y : Subrepresentation ρ) (ψ : V)
     (h : ∃ y ∈ Y.toSubmodule, B y ψ ≠ 0) :
     ∃ S₁ : Subrepresentation ρ, IsAtom S₁ ∧ S₁ ≤ Y ∧ ∃ x ∈ S₁.toSubmodule, B x ψ ≠ 0 := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   obtain ⟨y, hy, hne⟩ := h
   apply hne
   have hle : Y.toSubmodule ≤ LinearMap.ker (B.flip ψ) := by
@@ -643,8 +636,7 @@ theorem exists_isAtom_le : ∀ (n : ℕ) (Y : Subrepresentation ρ),
     by_cases hA : IsAtom Y
     · exact ⟨Y, hA, le_rfl⟩
     · have : ∃ Z, Z < Y ∧ Z ≠ ⊥ := by
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         exact hA ⟨hne, hc⟩
       obtain ⟨Z, hZY, hZ⟩ := this
       have hlt : Z.toSubmodule < Y.toSubmodule :=
@@ -668,8 +660,7 @@ theorem isSemisimple_ofInvariant (U : Submodule ℂ V) (hU : ∀ k, ∀ u ∈ U,
   obtain ⟨g, hg⟩ := LinearMap.exists_extend (p := U) l
   have h : ∀ k, l ((ofInvariant U hU).toRepresentation k v) = g (ρ k v) := fun k => by
     rw [← hg]; rfl
-  simp only [h]
-  exact hc g v v.2
+  simpa only [h] using hc g v v.2
 
 theorem le_iSup_atoms
     (H : ∀ v : V, ∃ U : Submodule ℂ V, v ∈ U ∧ FiniteDimensional ℂ U ∧ (∀ k, ∀ u ∈ U, ρ k u ∈ U) ∧
@@ -735,8 +726,7 @@ theorem le_iSup_atoms
   have : (w' : V) = 0 := (Submodule.mem_bot ℂ).1 hw'0
   have hxw : x = w := by
     rw [← hsum, ‹(w' : V) = 0›, add_zero]
-  rw [hxw]
-  exact hw
+  rwa [hxw]
 
 theorem semisimple_of_locallyFinite : ∀ (K V : Type) [Group K] [TopologicalSpace K]
     [IsTopologicalGroup K] [CompactSpace K] [AddCommGroup V] [Module ℂ V]
@@ -1022,19 +1012,16 @@ theorem exists_idem_adj : AutomorphicFormsFiniteGL → ∀ (L : Type) [Field L] 
       rcases hs with rfl | rfl <;> exact fun k => rfl
     have hBf : ∀ k φ ψ, B (π.finPart k φ) (π.finPart (σ k) ψ) = B φ ψ := fun k φ ψ => by
       have := hfinB k φ ψ
-      rw [hσ] at this
-      exact this
+      rwa [hσ] at this
     have hBc : ∀ k φ ψ, B (cptOn π k φ) (cptOn π (barKHom L a k) ψ) = B φ ψ := fun k φ ψ => by
       have := hcptB k φ ψ
-      rw [hsK] at this
-      exact this
+      rwa [hsK] at this
     have hKc' : IsCompact ((K'.map σ : Subgroup _) : Set (GL (Fin a) (Af L))) := by
       rw [Subgroup.coe_map]; exact hKc.image hσc
     have hC := _root_.GlobalTheory.IsotypicOrth.orth_isCompl (Kinf L a) π.V (cptOn π) (barKHom L a) barKHom_surjective hfin hsum B hl hr hBc X Y hXY hnoiso
     refine ⟨(Submodule.projection _ _ hC) ∘ₗ LocGL.idem π.isSmooth_finPart hKc', fun φ ψ => ?_⟩
     change B (e (PT φ)) ψ = B φ (Submodule.projection _ _ hC (LocGL.idem π.isSmooth_finPart hKc' ψ))
-    rw [idem_adj π.isSmooth_finPart σ hKc hKc' B hBf]
-    rw [hPT]
+    rw [idem_adj π.isSmooth_finPart σ hKc hKc' B hBf, hPT]
     refine adj_of_isCompl B hXY hC (fun y hy x' hx' => ?_) (fun x hx y' hy' => ?_) φ _
     · simp only [Submodule.mem_iInf, LinearMap.mem_ker] at hx'
       exact hx' y hy
@@ -1131,12 +1118,10 @@ theorem isCsd_of_paired : GlobalTheory.Published.AutomorphicFormsFiniteGL → �
   obtain ⟨P₁, e1⟩ := hadj invTOp (Or.inl rfl) B₁ l1 r1 f1 c1 x1
   obtain ⟨P₂, e2⟩ := hadj conjOp (Or.inr rfl) B₂ l2 r2 f2 c2 x2
   obtain ⟨v, hv⟩ : ∃ v, P v ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hP0 (LinearMap.ext h)
   obtain ⟨g, hg⟩ : ∃ g : Module.Dual ℂ π.V, g (P v) ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hv ((Module.forall_dual_apply_eq_zero_iff ℂ (P v)).1 h)
   have hf : (g ∘ₗ P) ∘ₗ P = g ∘ₗ P := by rw [LinearMap.comp_assoc, hPP]
   obtain ⟨ψ₁, hψ₁⟩ := _root_.GlobalTheory.functional_fixed_by_idempotent_represented B₁ l1 r1 P P₁ hPP hfin e1 (g ∘ₗ P) hf

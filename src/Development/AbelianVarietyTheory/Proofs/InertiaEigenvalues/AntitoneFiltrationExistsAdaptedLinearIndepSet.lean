@@ -121,8 +121,7 @@ theorem filtration_adapted_basis {L M : Type} [Field L] [AddCommGroup M] [Module
     obtain ⟨a0, h0⟩ := Nat.find_spec hex
     refine ⟨a0, fun a => ?_⟩
     have h := Nat.find_min' hex ⟨a, rfl⟩
-    rw [← h0] at h
-    exact h
+    rwa [← h0] at h
   have hbot : A a0 = ⊥ := by
     rw [eq_bot_iff]
     intro x hx
@@ -131,8 +130,7 @@ theorem filtration_adapted_basis {L M : Type} [Field L] [AddCommGroup M] [Module
     intro a
     rcases le_total a a0 with h | h
     · exact hA h hx
-    · rw [Submodule.eq_of_le_of_finrank_le (hA h) (ha0 a)]
-      exact hx
+    · rwa [Submodule.eq_of_le_of_finrank_le (hA h) (ha0 a)]
   obtain ⟨a1, ha1⟩ : ∃ a1, ∀ a, Module.finrank L (A a) ≤ Module.finrank L (A a1) := by
     have hex : ∃ m, ∃ a, Module.finrank L ↥(⨆ b, A b) - Module.finrank L (A a) = m := ⟨_, 0, rfl⟩
     obtain ⟨a1, h1⟩ := Nat.find_spec hex

@@ -291,8 +291,7 @@ theorem comparison_cocycles : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R
         have h0 : rect (Z g) (0 : Fin a → ((Fin a' → A) ⧸ W) ⧸ S) = 0 := by
           funext c
           simp [rect]
-        rw [h0, sub_zero] at e
-        exact e
+        rwa [h0, sub_zero] at e
     have hgS : ∀ j, gens j ∈ S := fun j =>
       (Submodule.Quotient.mk_eq_zero S).1 (congrFun hz j)
     rw [eq_top_iff]
@@ -332,8 +331,7 @@ theorem comparison_cocycles : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R
     have e2 := congrFun (hm (σ b)) c
     rw [hσ, sub_self] at e2
     show W.mkQ (Z' (σ b) c - Matrix.vecMul (Z (σ b) c) E) = 0
-    rw [map_sub, e1, hvm (Z (σ b) c), ← hrect]
-    exact e2
+    rwa [map_sub, e1, hvm (Z (σ b) c), ← hrect]
 
 end GlobalTheory.NewPrime
 end -- clump:auto
@@ -445,8 +443,7 @@ theorem exists_lamHom : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.hos
   have h4 : ((X.l i : ℕ) : B) ^ (nu X i + 1) = 0 := by
     have h := hK _ (Ideal.mul_mem_mul (Ideal.mem_span_singleton_self _) hm)
     rw [map_mul, map_pow, map_natCast] at h
-    rw [pow_succ]
-    exact h
+    rwa [pow_succ]
   have hn : 1 < X.l i ^ M := Nat.one_lt_pow (by omega) hp.one_lt
   haveI : NeZero (X.l i ^ M) := ⟨by omega⟩
   have hu : ∀ q, (1 + ξ q) ^ (X.l i ^ M) = 1 := fun q =>
@@ -466,8 +463,7 @@ theorem exists_lamHom : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.hos
         MonoidAlgebra.of (X.O0 i) (Del X i M ι) (delAll X i M d g) = 1 :=
       Units.inv_mul ((MonoidAlgebra.of (X.O0 i) (Del X i M ι)).toHomUnits (delAll X i M d g))
     have h2 := congrArg φ h1
-    rw [map_mul, map_one, hφ] at h2
-    exact h2
+    rwa [map_mul, map_one, hφ] at h2
 
 end GlobalTheory.NewPrime.LamHom
 end -- clump:auto
@@ -723,8 +719,7 @@ theorem dual_decomp {R : Type} [CommRing R] (b : DualNumber R) (r s : R) (h : r 
 theorem dual_fst_of_eps_mul {R : Type} [CommRing R] (f : DualNumber R) (r : R) (n : ℕ)
     (h : (DualNumber.eps : DualNumber R) * (TrivSqZeroExt.inl r) ^ n * f = 0) :
     r ^ n * f.fst = 0 := by
-  have hs := congrArg TrivSqZeroExt.snd h
-  simpa [mul_comm] using hs
+  simpa [mul_comm] using congrArg TrivSqZeroExt.snd h
 
 theorem dual_inl_pow {R : Type} [CommRing R] (r : R) (n : ℕ) (h : r ^ n = 0) :
     (TrivSqZeroExt.inl r : DualNumber R) ^ n = 0 := by
@@ -778,8 +773,7 @@ theorem exists_ring (O A : Type) [CommRing O] [CommRing A] [Algebra O A] (m : �
     rw [← hp, e, AdjoinRoot.mk_eq_zero, Polynomial.X_pow_dvd_iff] at h1
     have h2 := h1 (m - 1) (Nat.sub_lt hm Nat.one_pos)
     rw [Polynomial.coeff_X_pow_mul', ite_eq_left le_rfl, Nat.sub_self] at h2
-    rw [← hp, hg]
-    exact h2
+    rwa [← hp, hg]
 
 end GlobalTheory.SqZeroPow
 end -- clump:auto
@@ -949,8 +943,7 @@ theorem frob_scalar (bkP : BKPh X) (h : GalHyp bkP i s) {z : GE N} {L : Subgroup
   obtain ⟨e, he, -, hu, -⟩ := _root_.GlobalTheory.TwSys.TameScalar.exists_scalar_tmat_of_tame_inertia D N X bkP i s z h.1 hz
   have c0 : residue (X.O0 i) e ≠ 0 := (residue_ne_zero_iff_isUnit _).2 e.isUnit
   have c1 : residue (X.O0 i) e ≠ 1 := by
-    rw [← residue_ne_zero_iff_isUnit, map_sub, map_one, sub_ne_zero] at hu
-    exact hu
+    rwa [← residue_ne_zero_iff_isUnit, map_sub, map_one, sub_ne_zero] at hu
   have key : ∀ τ : GE N, IsFrob (N.plOm.1 P) (normV P) τ → resT i s τ = residue (X.O0 i) e • 1 := by
     intro τ hτ
     obtain ⟨g, hg⟩ := hS τ hτ
@@ -1156,8 +1149,7 @@ theorem noInvDual_of_setup : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R 
   obtain ⟨e, he, -, hu, hε⟩ := GlobalTheory.TwSys.TameScalar.exists_scalar_tmat_of_tame_inertia D N X bkP i s z h.1 hz
   have c0 : residue (X.O0 i) e ≠ 0 := (residue_ne_zero_iff_isUnit _).2 e.isUnit
   have c1 : residue (X.O0 i) e ≠ 1 := by
-    rw [← residue_ne_zero_iff_isUnit, map_sub, map_one, sub_ne_zero] at hu
-    exact hu
+    rwa [← residue_ne_zero_iff_isUnit, map_sub, map_one, sub_ne_zero] at hu
   have e1 : resT i s z = residue (X.O0 i) e • 1 := by
     rw [resT_apply, he]
     ext a b
@@ -1791,8 +1783,7 @@ theorem step : Cheb → PoitouTateTotallyComplex → CohDimTwo → TameLocal →
   have hx₀ : matAct Ψ (fun c => Ψ.adjugate c b') = 0 := by
     funext u
     have e1 := congrFun (congrFun (Matrix.mul_adjugate Ψ) u) b'
-    rw [hdet, zero_smul] at e1
-    exact e1
+    rwa [hdet, zero_smul] at e1
   obtain ⟨h, hh, hB⟩ := _root_.GlobalTheory.NewPrime.FormNonzero.exists_bform_ne_zero D N X bkP i s hl M L' z hMν hz hL' A κ Q ρ hSet hK hρ hAnti (hκz z hz) hκL a Ψ Z hZ _ b _ y
     hx₀ hadj hyc
   obtain ⟨x, hx, -⟩ := (hZ A).1 _ hx₀

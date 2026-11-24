@@ -271,8 +271,7 @@ theorem descent_free_cocycle : ∀ (A B D T : Type) [CommRing A] [CommRing B] [C
       ext i j; simp [ε', hφ23]
     have e13 : φ.mapMatrix (ε.map q₁₃) = ε'.map M := by
       ext i j; simp [ε', hφ13]
-    rw [e12, e23, e13] at key
-    exact key
+    rwa [e12, e23, e13] at key
   have hN' : ∀ z, z ∈ N ↔ (fun i => z i ⊗ₜ[A] (1 : B)) = ε'.mulVec fun i => (1 : B) ⊗ₜ[A] z i := by
     intro z
     rw [hN z]

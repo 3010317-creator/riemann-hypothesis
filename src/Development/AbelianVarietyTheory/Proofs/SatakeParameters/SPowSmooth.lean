@@ -380,8 +380,7 @@ theorem GDatum.isSemisimpleRing (G : GDatum) : IsSemisimpleRing (ℚ ⊗[ℤ] G.
   obtain ⟨k, hk⟩ := IsSemiprimaryRing.isNilpotent (R := ℚ ⊗[ℤ] G.O)
   have hnil : ∀ z ∈ Ring.jacobson (ℚ ⊗[ℤ] G.O), z ^ k = 0 := fun z hz => by
     have := Ideal.pow_mem_pow hz k
-    rw [hk, Submodule.zero_eq_bot, Submodule.mem_bot] at this
-    exact this
+    rwa [hk, Submodule.zero_eq_bot, Submodule.mem_bot] at this
   intro z hz
   rw [Submodule.mem_bot]
   obtain ⟨N, hN, x, hx⟩ := GDatum.exists_smul_eq_tmul G z
@@ -434,8 +433,7 @@ theorem GDatum.isSemisimpleRing (G : GDatum) : IsSemisimpleRing (ℚ ⊗[ℤ] G.
   have hy0 : y = 0 := by
     ext i j
     have := htr (Φ.symm (Matrix.single j i 1))
-    rw [AlgEquiv.apply_symm_apply, Matrix.trace_single_mul, one_smul] at this
-    exact this
+    rwa [AlgEquiv.apply_symm_apply, Matrix.trace_single_mul, one_smul] at this
   have hx0 : x = 0 := by
     have h0 : x ⊗ₜ[ℤ] (1 : ℤ_[q]) = 0 := Φ.injective (hy0.trans (map_zero Φ).symm)
     have hinj := Algebra.TensorProduct.includeLeft_injective (R := ℤ) (S := ℤ) (A := G.O) (B := ℤ_[q])
@@ -531,8 +529,7 @@ theorem cenOrder_le_range (F : Type) [Field F] [NumberField F] (ℓ : ℕ) [Fact
     apply Algebra.adjoin_le
     rintro _ ⟨c, rfl⟩
     exact ⟨c ⊗ₜ[ℤ] (1 : ℤ_[ℓ]), by rw [toLocal_tmul]; simp⟩
-  intro y hy
-  exact hle hy
+  exact fun y hy => hle hy
 
 theorem cenOrder_equiv : ∀ (F : Type) [Field F] [NumberField F] (ℓ : ℕ) [Fact ℓ.Prime],
     ∃ κ : 𝓞 F ⊗[ℤ] ℤ_[ℓ] ≃+* cenOrder ℓ F,

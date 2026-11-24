@@ -79,8 +79,7 @@ theorem absNorm_eq_of_split_factor (h2 : Module.finrank F E = 2) {v : HeightOneS
     have h3 := congrArg (Ideal.map (algebraMap (𝓞 F) (𝓞 E))) hI
     rw [Ideal.map_span, Set.image_singleton, map_natCast, Ideal.map_mul, hm, mul_assoc] at h3
     have h4 : P.asIdeal * P.asIdeal ∣ P.asIdeal * (P'.asIdeal * I.map (algebraMap (𝓞 F) (𝓞 E))) := by
-      rw [← h3, ← sq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-      exact hmem
+      rwa [← h3, ← sq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
     have h5 := (mul_dvd_mul_iff_left P.ne_bot).1 h4
     rcases P.prime.dvd_or_dvd h5 with h6 | h6
     · rw [Ideal.dvd_iff_le] at h6

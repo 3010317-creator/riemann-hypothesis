@@ -85,12 +85,10 @@ theorem partial_bot (ρ : Representation k Γ V) : Partial ρ ⊥ := by
   · intro W hW _
     refine ⟨⊥, hb, disjoint_bot_right, ?_⟩
     rw [le_bot_iff.mp hW, bot_sup_eq]
-  · intro j hj
-    exact absurd hj (Nat.not_lt_zero j)
+  · exact fun j hj => absurd hj (Nat.not_lt_zero j)
   · simp
   · simp
-  · intro j hj
-    exact absurd hj (Nat.not_lt_zero j)
+  · exact fun j hj => absurd hj (Nat.not_lt_zero j)
 
 private theorem stable_sup' (f : Representation k Γ V) (A B : Submodule k V) (hA : Stable f A)
     (hB : Stable f B) : Stable f (A ⊔ B) := by
@@ -169,8 +167,7 @@ theorem partial_step (ρ : Representation k Γ V) (U U' : Submodule k V) (hU : S
         have := sub_mem hw (hX hb)
         rwa [add_sub_cancel_right] at this
       have ha0 : a = 0 := Submodule.disjoint_def.mp hdisj a ha haW
-      rw [ha0, zero_add]
-      exact hb
+      rwa [ha0, zero_add]
   have hWsle : ∀ j < m, Ws j ≤ U' := fun j hj => hsup ▸ Finset.le_sup (Finset.mem_range.mpr hj)
   have hsuple : ∀ t ⊆ Finset.range m, t.sup Ws ≤ U' :=
     fun t ht => Finset.sup_le fun j hj => hWsle j (Finset.mem_range.mp (ht hj))
@@ -221,8 +218,7 @@ theorem partial_step (ρ : Representation k Γ V) (U U' : Submodule k V) (hU : S
         rw [hA g x (hC'le hx)]
         exact hC's g x hx
       · rw [Submodule.disjoint_def]
-        intro x hxW hxC
-        exact Submodule.disjoint_def.mp hdis' x ⟨hxW, hC'le hxC⟩ hxC
+        exact fun x hxW hxC => Submodule.disjoint_def.mp hdis' x ⟨hxW, hC'le hxC⟩ hxC
       · refine le_antisymm (sup_le hWU (hC'le.trans hle)) ?_
         rw [← hsupU]
         refine sup_le (hsup'' ▸ sup_le_sup_right inf_le_left C') ?_
@@ -239,16 +235,14 @@ theorem partial_step (ρ : Representation k Γ V) (U U' : Submodule k V) (hU : S
       intro g x hx
       rw [hA g x (hWsle j hjm hx)]
       exact hWst j hjm g x hx
-    · simp only [ite_eq_right hjm]
-      exact hWmst
+    · simpa only [ite_eq_right hjm] using hWmst
   · intro t ht i hi hit
     have hle' : t.sup (fun j => if j < m then Ws j else Wm) ≤ (t.erase m).sup Ws ⊔ Wm := by
       refine Finset.sup_le fun j hj => ?_
       by_cases hjm : j < m
       · simp only [ite_eq_left hjm]
         exact le_sup_of_le_left (Finset.le_sup (Finset.mem_erase.mpr ⟨hjm.ne, hj⟩))
-      · simp only [ite_eq_right hjm]
-        exact le_sup_right
+      · simpa only [ite_eq_right hjm] using le_sup_right
     have hT0 : t.erase m ⊆ Finset.range m := by
       intro j hj
       obtain ⟨hjm, hjt⟩ := Finset.mem_erase.mp hj
@@ -271,8 +265,7 @@ theorem partial_step (ρ : Representation k Γ V) (U U' : Submodule k V) (hU : S
         have h1 := Finset.mem_range.mp (ht hj)
         have h2 : j ≠ i := fun h => hit (h ▸ hj)
         omega
-      simp only [ite_eq_left hjm]
-      exact hWsle j hjm
+      simpa only [ite_eq_left hjm] using hWsle j hjm
   · rw [Finset.range_add_one, Finset.sup_insert, ite_eq_right (lt_irrefl m),
       Finset.sup_congr rfl (fun j hj => ite_eq_left (Finset.mem_range.mp hj)), hsup, sup_comm, hsupU]
   · intro j hj g v hv
@@ -315,9 +308,7 @@ private theorem partial_of_stable_finrank [FiniteDimensional k V] (ρ : Represen
         (ih _ (hn ▸ Submodule.finrank_lt_finrank_of_lt hlt) U' rfl hU')
 
 theorem partial_of_stable [FiniteDimensional k V] (ρ : Representation k Γ V) (U : Submodule k V) :
-    Stable ρ U → Partial ρ U := by
-  intro hU
-  exact partial_of_stable_finrank ρ _ U rfl hU
+    Stable ρ U → Partial ρ U := fun hU => partial_of_stable_finrank ρ _ U rfl hU
 
 theorem exists_isSemisimplificationOf : ∀ {k Γ : Type} [Field k] [Group Γ] {V : Type} [AddCommGroup V]
     [Module k V] [FiniteDimensional k V] (ρ : Representation k Γ V),
@@ -345,8 +336,7 @@ theorem exists_isSemisimplificationOf : ∀ {k Γ : Type} [Field k] [Group Γ] {
           intro hx
           obtain ⟨a, ha, hai⟩ := Finset.mem_map.mp hx
           exact hit (Fin.ext hai ▸ ha))
-      rw [Finset.sup_map] at h
-      exact h
+      rwa [Finset.sup_map] at h
     · refine eq_top_iff.mpr ?_
       rw [← hsup]
       exact Finset.sup_le fun i hi => le_iSup_of_le (⟨i, Finset.mem_range.mp hi⟩ : Fin m) le_rfl

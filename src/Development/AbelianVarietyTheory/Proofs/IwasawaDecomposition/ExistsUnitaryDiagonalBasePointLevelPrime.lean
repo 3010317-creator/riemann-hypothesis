@@ -97,8 +97,7 @@ theorem exists_unit (hc : Formalism.BasicNotions.CMData F E) {π : 𝓞 E} (h0 :
     intro P hP hP'
     exact false_of_mem_of_conj_mem_of_isCoprime hcp P (hmem hP) ((mem_conjP P π).1 (hmem hP'))
   have hc0 : (algebraMap (𝓞 E) E (cO E π)) ≠ 0 := by
-    intro h
-    exact h1 ((map_eq_zero_iff _ (FaithfulSMul.algebraMap_injective (𝓞 E) E)).1 h)
+    exact fun h => h1 ((map_eq_zero_iff _ (FaithfulSMul.algebraMap_injective (𝓞 E) E)).1 h)
   have hst : star (algebraMap (𝓞 E) E (cO E π)) = algebraMap (𝓞 E) E π := by
     change star (starRingEnd E (algebraMap (𝓞 E) E π)) = _
     rw [starRingEnd_apply, star_star]
@@ -219,8 +218,7 @@ theorem exists_base (hc : Formalism.BasicNotions.CMData F E) {π : 𝓞 E} {T : 
           apply hv
           rw [← hwv]
           change algebraMap (𝓞 F) (𝓞 E) (T : 𝓞 F) ∈ w.asIdeal
-          rw [map_natCast, ← hπ]
-          exact hmw
+          rwa [map_natCast, ← hπ]
         rw [map_sub, hw w hnot, map_one, sub_self])
       rwa [map_sub, map_one, sub_eq_zero] at h
     apply Units.ext

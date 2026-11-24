@@ -87,8 +87,7 @@ private theorem inv_lemma' {R Q : Type} [CommRing R] [AddCommGroup Q] [Module R 
 private theorem sum_smul_sum_smul_eq_mul_apply {R Q : Type} [CommRing R] [AddCommGroup Q] [Module R Q] {n : ℕ}
     (c d : Matrix (Fin n) (Fin n) R) (q : Fin n → Q) (i : Fin n) :
     ∑ j, c i j • ∑ l, d j l • q l = ∑ l, (c * d) i l • q l := by
-  simp only [Matrix.mul_apply, Finset.smul_sum, Finset.sum_smul, mul_smul]
-  exact Finset.sum_comm
+  simpa only [Matrix.mul_apply, Finset.smul_sum, Finset.sum_smul, mul_smul] using Finset.sum_comm
 
 private theorem sum_smul_one_apply_smul {R Q : Type} [CommRing R] [AddCommGroup Q] [Module R Q] {n : ℕ}
     (m : R) (q : Fin n → Q) (i : Fin n) :
@@ -577,8 +576,7 @@ theorem roots_move : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
     have hCE : (l.M : E) • mk (C i) = (k1 : E) • mk (A' i) - ∑ j, (g1 i j : E) • mk (A j) := by
       have := congrArg mk (hC i)
 
-      simp only [map_sub, map_sum, LinearMap.map_smul, cs, hMc, hk1c] at this
-      exact this
+      simpa only [map_sub, map_sum, LinearMap.map_smul, cs, hMc, hk1c] using this
     have hmkC : mk (C i) = (l.M : E)⁻¹ • ((k1 : E) • mk (A' i) - ∑ j, (g1 i j : E) • mk (A j)) := by
       rw [← hCE, smul_smul, inv_mul_cancel₀ hM0, one_smul]
     have hsplit : W i = mk (C i) + ((k1 : E) • (Y' q' i - (l.M : E)⁻¹ • mk (A' i)) -
@@ -615,8 +613,7 @@ theorem roots_move : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
     intro i
     have := congrFun hsW i
     have e : ((s0 ^ J : 𝓞 E) : E) = (s0 : E) ^ J := map_pow (algebraMap (𝓞 E) E) s0 J
-    rw [e]
-    exact this
+    rwa [e]
 
   have addL : ∀ v v' z, EF X (v + v') z = EF X v z + EF X v' z := fun v v' z => by
     change EFBil X (v + v') z = EFBil X v z + EFBil X v' z
@@ -694,8 +691,7 @@ theorem roots_move : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
     (Nat.Coprime.pow_left J (Nat.Coprime.mul_right hM2 hk1.symm)) hza hzb
   have hcX : ∑ k, EF X ((h * Y q) k) (d k) = c := by rw [hXeq, hc]
   have hmain := heisG_add_two hs hL hΛ' (NumberField.RingOfIntegers.isIntegral_coe H.w0) hvac (h * Y q) hdmem hcX
-  rw [hYd]
-  exact hmain
+  rwa [hYd]
 
 end GlobalTheory.Dict.RootsMove
 end -- clump:auto

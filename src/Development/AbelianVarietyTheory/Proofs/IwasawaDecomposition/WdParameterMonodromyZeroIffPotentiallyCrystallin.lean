@@ -79,8 +79,7 @@ theorem apply_mem_kur (g : GQ l) (c : ↥(MaximalUnramifiedExtension l)) : g (c 
 
 theorem mem_of_fixed (K : FinExt l) (x : Om l) (hx : ∀ g ∈ GK K, g x = x) : x ∈ K.1 := by
   have : IsGalois ℚ_[l] (Om l) := {}
-  rw [← InfiniteGalois.fixedField_fixingSubgroup K.1, IntermediateField.mem_fixedField_iff]
-  exact hx
+  rwa [← InfiniteGalois.fixedField_fixingSubgroup K.1, IntermediateField.mem_fixedField_iff]
 
 def incl (K : FinExt l) : ↥(K0 K) →ₐ[ℚ_[l]] ↥(MaximalUnramifiedExtension l) :=
   IntermediateField.inclusion (inf_le_right : K.1 ⊓ MaximalUnramifiedExtension l ≤ MaximalUnramifiedExtension l)
@@ -169,8 +168,7 @@ theorem finrank_dst {n : ℕ} (b : Basis (Fin n) ↥(MaximalUnramifiedExtension 
       exact ⟨fun i => ⟨c i, hK i, (c i).2⟩, hc⟩
   have h1 := LinearMap.finrank_range_of_inj hinj
   rw [hrange, finrank_pi_fintype] at h1
-  rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul] at h1
-  exact h1
+  rwa [Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul] at h1
 
 end
 
@@ -320,8 +318,7 @@ theorem exists_mul_pow_eq_smul {k M : Type*} [Field k] [AddCommGroup M] [Module 
     refine ⟨c * d, mul_ne_zero hc hd, ?_⟩
     have h2 : N (φ ((φ ^ n) x)) = c • φ (N ((φ ^ n) x)) := LinearMap.congr_fun h _
     rw [h1, map_smul, smul_smul] at h2
-    rw [pow_succ']
-    exact h2
+    rwa [pow_succ']
 
 section Rep
 
@@ -383,8 +380,7 @@ theorem isCrys_of_isSst (hV : IsSst P ρ) (hN : ∀ x ∈ Dpst P ρ, monV P ↥L
     ext x
     rw [← mem_Dst_and_monV_eq_zero_iff l P K LL V ρ x]
     exact ⟨fun h => h.1, fun h => ⟨h, hN x (Dst_resTo_le P ρ le_rfl h)⟩⟩
-  rw [IsCrys, ← finrank_map_crisIncl, e]
-  exact hV
+  rwa [IsCrys, ← finrank_map_crisIncl, e]
 
 theorem mem_closure_of_isCrys (hV : IsPst P ρ) (hc : IsCrys (P.PD K) ρ) (x : V ⊗[ℚ_[l]] Bst P)
     (hx : x ∈ Dpst P ρ) : x ∈ AddSubgroup.closure {y | ∃ (c : ↥(MaximalUnramifiedExtension l)) (s : V ⊗[ℚ_[l]] Bst P),

@@ -251,8 +251,7 @@ theorem killed_of_harmonic (hom : IsWeilDatumO ψ S T χS χT om) (hθ : IsInfFa
   have a3 := congrFun (congrArg (om (h, g)) key) w
   rw [LinearMap.add_apply, LinearMap.smul_apply, map_add (f := _), map_smul, map_zero] at a3
   simp only [Pi.add_apply, Pi.smul_apply, Rder]
-  rw [a1, a2]
-  exact a3
+  rwa [a1, a2]
 
 def killedSub (hom : IsWeilDatumO ψ S T χS χT om) (hθ : IsInfFam θ) (M : DSModel T Sp) {Y : Type} [AddCommGroup Y]
     [Module ℂ Y] (pt : Y →ₗ[ℂ] (WO S T → ℂ)) (hpt : ∀ P, IsThetaFunO ψ S T (pt P)) : Submodule ℂ Y where
@@ -305,8 +304,7 @@ theorem values_killed (hom : IsWeilDatumO ψ S T χS χT om) (hθ : IsInfFam θ)
         w ∈ N.comap (io (PiTensorProduct.tprod ℂ v₀)))
       have hm : w₀ ∈ N.comap (io (PiTensorProduct.tprod ℂ v₀)) := by
         show io (PiTensorProduct.tprod ℂ v₀) w₀ ∈ N
-        rw [e₀]
-        exact hΔ
+        rwa [e₀]
       rw [h0, Submodule.mem_bot] at hm
       rw [hm, norm_zero] at hw₀
       exact zero_ne_one hw₀

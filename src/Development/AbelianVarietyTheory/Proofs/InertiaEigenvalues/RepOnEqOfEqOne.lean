@@ -65,8 +65,7 @@ theorem exists_fg_cocycle [CompactSpace Γ] (z : Z1 (repOn ρ κ B)) :
   apply Subtype.ext
   have e := congrFun (repOn_map ρ κ (Submodule.span Λ (Set.range fun p : Γ × Fin r => z.1 p.1 p.2)).subtype g
     (fun a => ⟨z.1 h a, Submodule.subset_span ⟨(h, a), rfl⟩⟩)) a
-  have e2 := congrFun (z.2.2 g h) a
-  exact e2.trans (congrArg (z.1 g a + ·) e.symm)
+  exact (congrFun (z.2.2 g h) a).trans (congrArg (z.1 g a + ·) e.symm)
 
 omit [TopologicalSpace Γ] [TopologicalSpace B] [DiscreteTopology B] in
 theorem repOn_eq_of_eq_one {g : Γ} (h1 : ρ g = 1) (h2 : κ g = 1) (m : Fin r → B) : repOn ρ κ B g m = m := by
@@ -101,8 +100,7 @@ theorem selColim : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.w
   unfold Formalism.GaloisCohomology.bkCond at hv ⊢
   split_ifs at hv ⊢ with hl hS
   · refine hSat v hl B' B hB B'.subtype B'.injective_subtype _ ?_
-    rw [← hmap] at hv
-    exact hv
+    rwa [← hmap] at hv
   · trivial
   · have hS1 : v ∉ Spl i := fun h => hS (Or.inl h)
     have hQ : v ∉ Q := fun h => hS (Or.inr h)
@@ -115,7 +113,6 @@ theorem selColim : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.w
     show z'.1 g.1.1 = repOn (Tgl i s) κ B' g.1.1 0 - 0
     rw [LinearMap.map_zero, sub_zero]
     funext a
-    apply Subtype.ext
-    exact (hz g.1.1 a).trans (congrFun e a)
+    exact Subtype.ext ((hz g.1.1 a).trans (congrFun e a))
 
 end GlobalTheory.SelFun.Colim

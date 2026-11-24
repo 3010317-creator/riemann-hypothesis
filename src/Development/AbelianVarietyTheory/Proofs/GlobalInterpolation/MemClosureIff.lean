@@ -71,8 +71,7 @@ theorem roundAct_eq {R : Type} [CommRing R] (l : DomWeight n) (g : GL (Fin n) R)
   unfold roundAct sqAct Formalism.UG.dwAct detPow
   have h : Matrix.GeneralLinearGroup.det (inside₂ R n g) = (Matrix.GeneralLinearGroup.det g)⁻¹ := by
     rw [← map_inv]
-    apply Units.ext
-    exact Matrix.det_transpose _
+    exact Units.ext (Matrix.det_transpose _)
   rw [h, _root_.inv_zpow', show ((inside₂ R n g : GL (Fin n) R) : Matrix (Fin n) (Fin n) R)ᵀ = _ from Matrix.transpose_transpose _]
 
 theorem blk_roundAct (lam : ι → DomWeight n) (g : ι → GL (Fin n) ℂ) :
@@ -364,10 +363,8 @@ theorem delAtr_off {K ι : Type} [Field K] [NumberField K] [Fintype ι] (emb : �
       rw [e, mem_conjP, map_natCast]
       exact hT P hP
   constructor
-  · intro x hx
-    exact (mem_locP _ _ _).1 (e ▸ le_locP _ _ hx)
-  · intro x hx
-    exact (mem_locP _ _ _).1 (e ▸ le_locP _ _ hx)
+  · exact fun x hx => (mem_locP _ _ _).1 (e ▸ le_locP _ _ hx)
+  · exact fun x hx => (mem_locP _ _ _).1 (e ▸ le_locP _ _ hx)
 
 theorem localization_kerAt_eq {d : Deco E n ST ∅} (hd : d.Ok) (P : ST) : localization₂ P.1.asIdeal (d.kerAt P) = localization₂ P.1.asIdeal d.L := by
   apply le_antisymm

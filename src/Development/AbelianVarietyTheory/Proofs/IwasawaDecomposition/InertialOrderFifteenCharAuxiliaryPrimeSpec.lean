@@ -203,8 +203,7 @@ theorem away_ae (l : ℕ) (hl : l ≠ 0) : ∀ᶠ v : HeightOneSpectrum (𝓞 E)
   have h0 : Ideal.span {((l : ℕ) : 𝓞 E)} ≠ 0 := by
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact_mod_cast hl
-  refine (Ideal.finite_factors h0).subset fun v hv => ?_
-  exact Ideal.dvd_span_singleton.mpr (not_not.1 hv)
+  exact (Ideal.finite_factors h0).subset fun v hv => Ideal.dvd_span_singleton.mpr (not_not.1 hv)
 
 theorem almostIn_of_valuesIn {K : Type} [Field K] {ε : K →+* ℂ} {χ : HChar E} (h : χ.ValuesIn 0 ε) : AlmostIn ε χ := by
   filter_upwards [unr_ae χ] with v hv
@@ -314,8 +313,7 @@ theorem IsGal.ramExactly (ha : IsGlobalArtin art) (h : IsGal art κ ι χ 0 r) {
 theorem IsGal.pow_eq_one (ha : IsGlobalArtin art) (h : IsGal art κ ι χ 0 r) {m : ℕ} (hm : χ.OrderDvd m) (g : G E Ω) :
     r g ^ m = 1 := by
   have := DFunLike.congr_fun (h.2.2.pow_eq_one ha.quot.surjective hm) g
-  rw [MonoidHom.pow_apply, ← map_pow, MonoidHom.one_apply, inQ_eq_one, map_pow] at this
-  exact this
+  rwa [MonoidHom.pow_apply, ← map_pow, MonoidHom.one_apply, inQ_eq_one, map_pow] at this
 
 
 omit [TopologicalSpace O] in

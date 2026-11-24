@@ -255,17 +255,14 @@ theorem frame_lev : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a =>
     rw [hx, hy, hc]; group
   have ha : CongAt (seamP t.seam P.1) 1 (y⁻¹ * ratA D.host.F (seamGL t.seam (frsF t.sel (t.tup μ) p P))) := by
     have h0 := hp.frame P
-    rw [hD] at h0
-    exact h0
+    rwa [hD] at h0
   have hb : CongAt (seamP t.seam P.1) 1 ((y * c)⁻¹ * ratA D.host.F (seamGL t.seam (frsF t.sel (t.tup μ) p₁ P))) := by
     have h0 := hp₁.frame P
-    rw [hD, hy₁] at h0
-    exact h0
+    rwa [hD, hy₁] at h0
   have he : CongAt (seamP t.seam P.1) 1 (c⁻¹ * ratA D.host.F (seamGL t.seam Gg.1)) := by
     have h0 := hin
     unfold InFrame NearAt at h0
-    rw [hdep] at h0
-    exact h0
+    rwa [hdep] at h0
   set m := (frsF t.sel (t.tup μ) p P)⁻¹ * frsF t.sel (t.tup μ) p₁ P * (Gg⁻¹).1 with hm
   have hM : CongAt (seamP t.seam P.1) 1 (ratA D.host.F (seamGL t.seam m)) := by
     have hGi := GlobalTheory.CplPt.seamGL_int t.seam Gg⁻¹

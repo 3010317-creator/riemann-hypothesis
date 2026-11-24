@@ -60,15 +60,13 @@ theorem cosetIn_smul_unitary : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (sel
       swap
       · have h0 : q.1.2 = ∅ := by
           have := q.2
-          rw [ysAt_ys_of_ne sel mu cst hj] at this
-          exact this
+          rwa [ysAt_ys_of_ne sel mu cst hj] at this
         rw [h0] at hy
         exact absurd hy (Set.notMem_empty y)
       obtain ⟨y0, hy0, hY⟩ := PtAt.mem_ybSet q hj
       have hy' : y - y0 ∈ locLat (rowSG Pr sel mu) q.1.1.deco.1.N
           (fun P => if P.1 ∈ Pr.vGs then 0 else (cst.M : ℤ)) := by
-        rw [hY] at hy
-        exact hy
+        rwa [hY] at hy
       have hA : (qOf P.1 : X.E) • y0 ∈ Formalism.HermitianLatticesTheory.localization₂ P.1.asIdeal q.1.1.deco.1.N := by
         have := Submodule.mem_iInf _ |>.1 hy0 P
         rw [Submodule.mem_comap] at this
@@ -106,8 +104,7 @@ theorem cosetIn_smul_unitary : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (sel
         rw [LinearEquiv.apply_symm_apply]
       rw [e3]
       have hv0 : f.symm ((qOf P.1 : X.E) • y) ∈ stdAt X.E (R.N j) P.1 := by
-        rw [← hf.1, LinearEquiv.apply_symm_apply]
-        exact hx
+        rwa [← hf.1, LinearEquiv.apply_symm_apply]
       rw [map_smul] at hv0
       have hred := redV_redGL κ hv0
       rw [hκ, Units.val_one, Matrix.one_mulVec] at hred

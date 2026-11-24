@@ -104,12 +104,10 @@ theorem torsSq_conj : ∀ (R Ix : Type) [CommRing R] [Fintype Ix] [DecidableEq I
   have hGG' : G' * G = 1 := mul_eq_one_comm.mp hGG
   have hev : ∀ (p : {p // Even (deg p)}) r,
       r ∉ Set.range (fun p : {p // Even (deg p)} => p.1) → deg p.1 ≠ deg r := by
-    intro p r hr hd
-    exact hr ⟨⟨r, hd ▸ p.2⟩, rfl⟩
+    exact fun p r hr hd => hr ⟨⟨r, hd ▸ p.2⟩, rfl⟩
   have hod : ∀ (p : {p // Even (deg p)}) r,
       r ∉ Set.range (fun p : {p // Even (deg p)} => (e p).1) → deg r ≠ deg (e p).1 := by
-    intro p r hr hd
-    exact hr ⟨e.symm ⟨r, hd ▸ (e p).2⟩, by simp⟩
+    exact fun p r hr hd => hr ⟨e.symm ⟨r, hd ▸ (e p).2⟩, by simp⟩
   refine ⟨_, ⟨G' * h * G, ?_, ?_, e, rfl⟩, ?_⟩
   · intro p q hpq
     rw [Matrix.mul_apply]
@@ -318,8 +316,7 @@ theorem kosBlock_mul_kosD (m m' : Fin g → ∀ j j', Matrix (Fin (N j)) (Fin (N
           ev (∅ : Finset (Fin g)).card * C (∅ : Finset (Fin g)).card := he
       have := congrFun (congrFun he' a) b
       rw [Matrix.mul_apply, Matrix.mul_apply] at this
-      simp only [kosD, ite_true]
-      exact this
+      simpa only [kosD, ite_true] using this
     · simp [kosD, h]
   · rw [kosBlock_mul_inr, mul_kosBlock_inr]
     simp [kosD]

@@ -67,8 +67,7 @@ omit [IsUltrametricDist C] in
 theorem mulVec_mem {r : ℕ} (X : AddSubgroup C) (B : Matrix (Fin r) (Fin r) C)
     (hB : ∀ a b, ∀ x ∈ X, B a b * x ∈ X) (v : Fin r → C) (hv : ∀ a, v a ∈ X) (a : Fin r) :
     B.mulVec v a ∈ X := by
-  simp only [Matrix.mulVec, dotProduct]
-  exact X.sum_mem fun b _ => hB a b _ (hv b)
+  simpa only [Matrix.mulVec, dotProduct] using X.sum_mem fun b _ => hB a b _ (hv b)
 
 theorem inj_of_lattice {r : ℕ} (X : AddSubgroup C) (hX1 : ∀ x ∈ X, ‖x‖ ≤ 1) (g : C ≃+* C)
     (hgX : ∀ x ∈ X, g x ∈ X) (p : C) (hp : p ≠ 0) (π : C) (hπ : ‖π‖ < 1) (hgπ : g π = π)
@@ -196,8 +195,7 @@ theorem pow_lt_rho {j : ℕ} (hj : Lev l j) : (l : ℝ) ^ (-(j : ℤ)) < rho1 l 
 theorem rho_lt_one : rho1 l < 1 := by
   have h1 : (1 : ℝ) < l := by exact_mod_cast hl.1.one_lt
   rw [rho1]
-  apply Real.rpow_lt_one_of_one_lt_of_neg h1
-  exact div_neg_of_neg_of_pos (by norm_num) (by linarith)
+  exact Real.rpow_lt_one_of_one_lt_of_neg h1 (div_neg_of_neg_of_pos (by norm_num) (by linarith))
 
 theorem norm_root_sub_one {ζ : PadicComplex l} (h : IsPrimitiveRoot ζ l) : ‖ζ - 1‖ = rho1 l := by
   have := GlobalTheory.Cyc.norm_primitiveRoot_sub_one l 1 le_rfl ζ (by rwa [pow_one])
@@ -217,8 +215,7 @@ theorem root_mem_inC (K : FinExt l) {j : ℕ} (hj : 1 ≤ j) {ζ : PadicComplex 
   · refine pow_mem (?_ : η ∈ Ks K j) k
     refine (le_sup_right : _ ≤ Ks K j) (IntermediateField.subset_adjoin _ _ ?_)
     exact (hη.pow_eq_one_iff_dvd _).2 (dvd_pow_self l (by omega))
-  · simp only [PadicComplex.coe_eq, map_pow]
-    exact hk
+  · simpa only [PadicComplex.coe_eq, map_pow] using hk
 
 theorem chiC_mem_inC (χ : GQ l →* ℚ_[l]ˣ) (i : ℤ) (g : GQ l)
     (F : IntermediateField ℚ_[l] (Om l)) : chiC χ i g ∈ inC F :=
@@ -305,8 +302,7 @@ theorem exists_factor {F : IntermediateField ℚ_[l] (Om l)} {r : ℕ}
   by_cases hz : B = 0
   · exact ⟨0, 0, h0, by simp, fun a b => h0, by simp [hz]⟩
   obtain ⟨a₀, b₀, hne⟩ : ∃ a b, B a b ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hz (Matrix.ext hcon)
   haveI : Nonempty (Fin r × Fin r) := ⟨(a₀, b₀)⟩
   obtain ⟨q, hq⟩ := Finite.exists_max fun q : Fin r × Fin r => ‖B q.1 q.2‖

@@ -91,8 +91,7 @@ theorem normV_eq_pow {K L : Type} [Field K] [NumberField K] [Field L] [NumberFie
   letI : Algebra (𝓞 K ⧸ v.asIdeal) (𝓞 L ⧸ v'.asIdeal) :=
     (Ideal.quotientMap v'.asIdeal (algebraMap (𝓞 K) (𝓞 L)) hc.ge).toAlgebra
   refine ⟨Module.finrank (𝓞 K ⧸ v.asIdeal) (𝓞 L ⧸ v'.asIdeal), ?_⟩
-  simp only [normV, Nat.card_eq_fintype_card]
-  exact Module.card_eq_pow_finrank
+  simpa only [normV, Nat.card_eq_fintype_card] using Module.card_eq_pow_finrank
 end GlobalTheory.AboveL
 
 namespace GlobalTheory.AboveL
@@ -106,8 +105,7 @@ theorem actsAs_restrictScalars {A : ValuationSubring Ω} {σ : G L Ω} {q f a b 
     ActsAs A q (σ.restrictScalars K : G K Ω) (f * a) (f * b) := by
   refine ⟨restrictScalars_mem_Dec hσ.1, fun x hx => ?_⟩
   have := hσ.2 x hx
-  rw [← pow_mul, ← pow_mul] at this
-  exact this
+  rwa [← pow_mul, ← pow_mul] at this
 
 theorem restrictScalars_mem_Ine_iff {A : ValuationSubring Ω} {σ : G L Ω} :
     (σ.restrictScalars K : G K Ω) ∈ Ine (F := K) A ↔ σ ∈ Ine (F := L) A := Iff.rfl

@@ -79,8 +79,7 @@ theorem exists_basis (hS : SecBaseChangeSt) {K : Type} [Field K] (P : PolAV (Spe
     rintro _ ⟨x, rfl⟩
     rw [Scheme.Opens.range_ι]
     have : q x = default := Subsingleton.elim _ _
-    rw [this]
-    exact hpV
+    rwa [this]
   obtain ⟨t, rfl⟩ : ∃ t : Spec (CommRingCat.of F) ⟶ V.toScheme, t ≫ V.ι ≫ (baseOver (Spec (CommRingCat.of K))).hom = q := by
     refine ⟨IsOpenImmersion.lift V.ι q hr, ?_⟩
     rw [hbo]
@@ -122,8 +121,7 @@ theorem boxProduct_span : Laws → ∀ (R : Type) [CommRing R] [IsDomain R] (j :
         exact (comb_apply A.A A.L (k : ℤ) (Over.mk (TFK (R := R) F).hom) _ b jj).trans (hc jj))
     funext l
     have h1 := congrArg (Scheme.ΓSpecIso (CommRingCat.of F)).hom.hom (h0 l)
-    rw [← CommRingCat.comp_apply, Iso.inv_hom_id, CommRingCat.id_apply, map_zero] at h1
-    exact h1
+    rwa [← CommRingCat.comp_apply, Iso.inv_hom_id, CommRingCat.id_apply, map_zero] at h1
   choose t' ht' using fun a : Fin j → Fin (k ^ A.g) =>
     exists_boxSec_pow_ext R j A A' pA F k (fun i => σ (a i))
   have hind := boxProduct_linearIndependent R j A A' pA F k (k ^ A.g) σ hb t' ht'

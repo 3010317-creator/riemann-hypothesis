@@ -119,8 +119,7 @@ theorem exists_pow_eq_ratId_mul (x : (AfE F E)ˣ) :
     have e : (((u⁻¹ : (FiniteAdeleRing (𝓞 E) E)ˣ) : FiniteAdeleRing (𝓞 E) E) P) * ((u : FiniteAdeleRing (𝓞 E) E) P) = 1 := by
       exact congrArg (fun t : FiniteAdeleRing (𝓞 E) E => t P) (Units.inv_mul u)
     have e2 := congrArg Valued.v e
-    rw [map_mul, hu P, mul_one, map_one] at e2
-    exact e2
+    rwa [map_mul, hu P, mul_one, map_one] at e2
   refine ⟨a, Units.map ι.symm.toRingHom.toMonoidHom u, ?_, ?_⟩
   · rw [intU, Submonoid.mem_units_iff]
     constructor
@@ -183,8 +182,7 @@ theorem normOne_idele_pow_eq_normOne_principal_mul_unit (σ : E →ₐ[F] E) (h�
   obtain ⟨a, k₀, hk₀, he⟩ := exists_pow_eq_ratId_mul (F := F) x
   set h := Fintype.card (ClassGroup (𝓞 E))
   have hx' : x * conjId σ x = 1 := by
-    rw [U1, MonoidHom.mem_ker] at hx
-    exact hx
+    rwa [U1, MonoidHom.mem_ker] at hx
   have hw : x ^ h * conjId σ (x ^ h) = 1 := by rw [map_pow, ← mul_pow, hx', one_pow]
   have hw' : x ^ h = (conjId σ (x ^ h))⁻¹ := eq_inv_of_mul_eq_one_left hw
   let sa : Eˣ := Units.map (σ : E →+* E).toMonoidHom a
@@ -263,8 +261,7 @@ theorem mt_finite_order : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dt
     rw [hq, map_mul, map_mul, sq]
   by_cases hμ : μ = D.what₂.mu0
   · refine ⟨2 * n, by omega, ?_⟩
-    rw [pow_mul, hsq, (H.ref hμ).2]
-    exact hmun
+    rwa [pow_mul, hsq, (H.ref hμ).2]
   · obtain ⟨ξ, hξ, hmt⟩ := H.tw μ hμ rfl
     have htor := (t.tup μ).2
     simp only [tupGrp, finChar, Subgroup.mem_inf] at htor
@@ -313,8 +310,7 @@ theorem norm_twG_int_le (X : Sys p) (E : CEmb X.G) (v : X.Pl) (s : Fin (X.G.P.n'
   have h := E.int (X.G.P.j v y)
   unfold twG
   simp only [RingHom.comp_apply, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom]
-  rw [hy, (X.G.P.setting v).ι_comp]
-  exact h
+  rwa [hy, (X.G.P.setting v).ι_comp]
 
 theorem norm_twG_unit (X : Sys p) (E : CEmb X.G) (v : X.Pl) (s : Fin (X.G.P.n' v)) (u : (X.G.P.W v)ˣ) :
     ‖twG X E v s (algebraMap _ _ (u : X.G.P.W v))‖ = 1 := by
@@ -485,8 +481,7 @@ theorem lambdaCharacter_norm_eq_p_pow_of_pos : Sites (fun {D L hT Gi Gl Kc Dx cX
   have hnorm_m : ‖TaylorLogMetric.lamC S.lam (S.muT (j + 1) x)‖ ^ m = ‖TaylorLogMetric.lamC S.lam (S.muT (j + 1) (ratId D.host.F D.host.E z))‖ := by
     have h1 := congrArg (fun q => ‖S.lam q‖) eQ
     simp only [map_pow, norm_pow, map_mul, norm_mul, hnormk, mul_one] at h1
-    rw [hlamC _ ha, hlamC _ hb]
-    exact h1
+    rwa [hlamC _ ha, hlamC _ hb]
   have hratN := GlobalTheory.TwU.RatNorm.norm_lamC_type_normOne D _ (sysS H X std) S.E.toCEmb (hT.gat_pos u w hg) S.lam (J.rho std) hPos e (z : D.host.E) hz'
   rw [← hrat z hz'] at hratN
 

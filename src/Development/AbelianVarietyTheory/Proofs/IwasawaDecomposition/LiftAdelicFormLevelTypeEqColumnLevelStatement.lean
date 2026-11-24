@@ -407,7 +407,6 @@ theorem redG_apply' (x : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (hx : x �
 theorem redH_apply' (m : Formalism.L2.Col.JH hc n ∅ SG H) (w : SG) :
     ((Formalism.L2.Col.redH hc n ∅ SG H m : H) : Formalism.L2.Col.GLG (E := E) (n := n) (SG := SG)) w =
       redFn (1 : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) w.1 ((m : Formalism.L2.Col.J0 hc n ∅) : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) := by
-  show Formalism.L2.Col.redG hc n ∅ SG (m : Formalism.L2.Col.J0 hc n ∅) w = _
   exact redG_apply' hc n SG _ (m : Formalism.L2.Col.J0 hc n ∅).2 w
 
 end StdSide'
@@ -433,8 +432,7 @@ theorem levFn_datVt (X : Stages) {T : Type} (L : Formalism.IndefR.Links.LevCh X.
   unfold levFn
   rw [h0, one_mul]
   congr 1
-  refine Finset.prod_congr rfl fun PP _ => ?_
-  exact Finset.prod_range_one _
+  exact Finset.prod_congr rfl fun PP _ => Finset.prod_range_one _
 
 theorem chr_eq_one {E K : Type} [Field E] [NumberField E] [Field K] {n : ℕ} {SG : Finset (HeightOneSpectrum (𝓞 E))}
     (Λ : Formalism.L2.Col.LevFam E K n SG) (h : Λ.grp) (e : h.1 = 1) : Λ.chr h = 1 := by
@@ -614,8 +612,7 @@ theorem lev_type_eq : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B
           (Formalism.L2.Col.mtTyKK I.Ch I.sel t.1 ((i : ℕ) + 1)).inv.grp).symm k) : _) : Formalism.L2.Col.GLG (E := _) (n := _) (SG := _)) w =
         redFn (1 : GL (Fin X.B.R.nV) (LiftBrg.EA X)) (w.1 : Pl X.toD7.host.E)
           ((k : Formalism.L2.Col.UAd X.toD7.sp.cm X.B.R.nV) : GL (Fin X.B.R.nV) (LiftBrg.EA X)) := by
-    intro w
-    exact (redH_apply' _ _ _ _ _ w).trans (congrArg _ hxk)
+    exact fun w => (redH_apply' _ _ _ _ _ w).trans (congrArg _ hxk)
   have hcrk : ∀ PP : Pl X.toD7.host.E,
       redFn (1 : GL (Fin (Vc X.toD7 i).rank) (LiftBrg.EA X)) PP
           (LiftBrg.castGL hrk ((k : Formalism.L2.Col.UAd X.toD7.sp.cm X.B.R.nV) : GL (Fin X.B.R.nV) (LiftBrg.EA X))) =

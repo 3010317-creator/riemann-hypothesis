@@ -157,8 +157,7 @@ lemma eq_of_tendsto (ψ : (ι → ℂˣ) →* ℂˣ) (hψ : Continuous ψ) {X X'
       (∀ i, Tendsto (fun m => (Y m i : ℂ)) atTop (𝓝 (v i : ℂ))) → Tendsto Y atTop (𝓝 v) := by
     intro Y v hY
     rw [tendsto_pi_nhds]
-    intro i
-    exact Units.isEmbedding_val₀.isInducing.tendsto_nhds_iff.2 (hY i)
+    exact fun i => Units.isEmbedding_val₀.isInducing.tendsto_nhds_iff.2 (hY i)
   have h1 := (hψ.tendsto w).comp (conv hX)
   have h2 := (hψ.tendsto w').comp (conv hX')
   have h3 : (ψ ∘ X) = (ψ ∘ X') := funext h
@@ -357,8 +356,7 @@ lemma char_trivial (e : ℂˣ →* ℂˣ) (he : Continuous e) (θ : ℂ) (hθ : 
       have hnorm : ‖(t' : ℂ) + θ‖ = ‖(t : ℂ) + θ‖ := him.resolve_right hθ
       rw [hnorm] at h
       have h' := mul_right_cancel₀ hnA h
-      have hre := congrArg Complex.re h'
-      simpa using hre
+      simpa using congrArg Complex.re h'
     have hk : 0 < n.natAbs := Int.natAbs_pos.2 hn
     have hS : {t : ℝ | u t ^ n.natAbs = 1}.Finite := by
       have hfin : {z : ℂ | z ^ n.natAbs = 1}.Finite := by
@@ -374,10 +372,8 @@ lemma char_trivial (e : ℂˣ →* ℂˣ) (he : Continuous e) (θ : ℂ) (hθ : 
       simp only [Units.val_mk0, Units.val_one] at h
       show u t ^ n.natAbs = 1
       rcases Int.natAbs_eq n with h' | h'
-      · rw [h', zpow_natCast] at h
-        exact h
-      · rw [h', zpow_neg, zpow_natCast, inv_eq_one] at h
-        exact h
+      · rwa [h', zpow_natCast] at h
+      · rwa [h', zpow_neg, zpow_natCast, inv_eq_one] at h
     have htM := hM hmem
     rw [abs_le] at ht
     linarith [ht.1]
@@ -539,8 +535,7 @@ theorem im_embedding_ne_zero_of_not_mem_range_of_totallyReal_quadratic
     have hr : ComplexEmbedding.IsReal (φ.comp (algebraMap F E)) :=
       InfinitePlace.isReal_mk_iff.1 (IsTotallyReal.isReal _)
     have := ComplexEmbedding.isReal_iff.1 hr
-    have h2 := RingHom.congr_fun this c
-    exact Complex.conj_eq_iff_im.1 h2
+    exact Complex.conj_eq_iff_im.1 (RingHom.congr_fun this c)
   have hli : LinearIndependent F ![(1 : E), θ] := by
     rw [LinearIndependent.pair_iff]
     intro s t hst
@@ -622,8 +617,7 @@ theorem infinitePlace_eq_of_embedding_comp_algebraMap_eq (F E : Type) [Field F] 
   have hcard : Fintype.card (E →ₐ[F] ℂ) = 2 := by
     rw [AlgHom.card, Algebra.IsQuadraticExtension.finrank_eq_two]
   have hcab : c = a ∨ c = b := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     have h3 : ({a, b, c} : Finset (E →ₐ[F] ℂ)).card = 3 := by
       rw [Finset.card_insert_of_notMem, Finset.card_pair]
       · exact fun e => hne.2 e.symm
@@ -663,8 +657,7 @@ private theorem exists_integral_generator_common_denom_of_finrank_two
     by_contra! hx
     have htop : (⊤ : IntermediateField F E) = ⊥ := by
       ext x
-      simp only [IntermediateField.mem_top, true_iff]
-      exact IntermediateField.mem_bot.mpr (hx x)
+      simpa only [IntermediateField.mem_top, true_iff] using IntermediateField.mem_bot.mpr (hx x)
     have h1 := IntermediateField.finrank_eq_one_iff.mpr htop
     rw [IntermediateField.finrank_top'] at h1
     omega

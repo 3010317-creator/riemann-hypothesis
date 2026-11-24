@@ -78,10 +78,8 @@ theorem haar_fd_phi : ∀ (D : D7) (V V' : HSp D) (I : GlobalTheory.Mem.Isom.Iso
   · let f : ratL V' S → ratL V S := fun y => ⟨(I.phi S).symm y, (hrat _).1 (by simpa using y.2)⟩
     have hf : Function.Bijective f := by
       constructor
-      · intro a b hab
-        exact Subtype.ext ((I.phi S).symm.injective (congrArg Subtype.val hab))
-      · intro x
-        exact ⟨⟨I.phi S x, (hrat _).2 x.2⟩, Subtype.ext (by simp [f])⟩
+      · exact fun a b hab => Subtype.ext ((I.phi S).symm.injective (congrArg Subtype.val hab))
+      · exact fun x => ⟨⟨I.phi S x, (hrat _).2 x.2⟩, Subtype.ext (by simp [f])⟩
     refine h𝓕.preimage_of_equiv hmp'.quasiMeasurePreserving hf ?_
     intro y x
     simp [f, AddSubgroup.vadd_def]

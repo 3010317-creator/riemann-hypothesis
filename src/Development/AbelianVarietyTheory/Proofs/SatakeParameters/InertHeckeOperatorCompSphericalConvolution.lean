@@ -203,8 +203,7 @@ theorem exists_trivOutside_loc_eq : ∀ (L : Type) [Field L] [NumberField L] [Is
   let g : GL (Fin n) (AL L) := ⟨A, conjT (conjAL L) A, hA, mul_eq_one_comm.mp hA⟩
   have hg : g ∈ GA L n := hA
   refine ⟨⟨g, hg⟩, ?_, ?_⟩
-  · intro u hu
-    exact hAu u (by simpa using hu)
+  · exact fun u hu => hAu u (by simpa using hu)
   · have hbc : Formalism.UG.bc (n := Fin n)
         (Dv.e : L ⊗[maximalRealSubfield L] v.adicCompletion (maximalRealSubfield L) →+* w.adicCompletion L)
         (Matrix.GeneralLinearGroup.map (compAt L v) g) = Dv.P * y * Dv.P⁻¹ := by
@@ -559,8 +558,7 @@ theorem conv_of (Dv : InertDatum L n v w) (U : Subgroup (GAf L n))
     have hc : (((d.out⁻¹ • e).out : GU Dv.σw n) : GU Dv.σw n ⧸ K) = ↑(d.out⁻¹ * e.out) := by
       rw [QuotientGroup.out_eq', ← smul_eq_mul, ← MulAction.Quotient.smul_mk, QuotientGroup.out_eq']
     show h' (d.out⁻¹ • e).out ≠ 0
-    rw [eq_of_coset (hRi h' hh') hc]
-    exact he'
+    rwa [eq_of_coset (hRi h' hh') hc]
   have hL1 : (∑ᶠ e : GU Dv.σw n ⧸ K, conv K h h' e.out • f (g * (heT e).choose)) =
       ∑ e ∈ hSe.toFinset, (∑ d ∈ (hfin h hh).toFinset, h d.out * h' (d.out⁻¹ * e.out)) •
         f (g * (heT e).choose) := by
@@ -577,8 +575,7 @@ theorem conv_of (Dv : InertDatum L n v w) (U : Subgroup (GAf L n))
       rw [Function.mem_support] at he
       have h1 : conv K h h' e.out ≠ 0 := fun h0 => he (by rw [h0, zero_smul])
       obtain ⟨d, hd⟩ : ∃ d : GU Dv.σw n ⧸ K, h d.out * h' (d.out⁻¹ * e.out) ≠ 0 := by
-        by_contra hcon
-        push Not at hcon
+        by_contra! hcon
         exact h1 (finsum_eq_zero_of_forall_eq_zero hcon)
       exact hmem d e (left_ne_zero_of_mul hd) (right_ne_zero_of_mul hd)
   have hR1 : (∑ᶠ d : GU Dv.σw n ⧸ K, h d.out • ∑ᶠ e : GU Dv.σw n ⧸ K,

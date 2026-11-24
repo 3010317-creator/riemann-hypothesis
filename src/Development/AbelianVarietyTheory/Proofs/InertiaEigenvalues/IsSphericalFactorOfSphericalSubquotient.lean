@@ -127,8 +127,7 @@ private theorem vv_pow_smul_mem_of_sen_eq_zero (C : Finset n) (i0 : n) (hi0 : i0
         rw [ite_eq_left ⟨rfl, hj.1, hj.2⟩, mul_one]
       · intro l _ hl
         simp only [N1, Matrix.of_apply, ite_eq_right (fun h : l = c ∧ j = i0 ∧ P => hl h.1), mul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ c) h
+      · exact fun h => absurd (Finset.mem_univ c) h
     · rw [ite_eq_right hj]
       refine Finset.sum_eq_zero fun l _ => ?_
       simp only [N1, Matrix.of_apply, ite_eq_right (fun h : l = c ∧ j = i0 ∧ P => hj ⟨h.2.1, h.2.2⟩), mul_zero]
@@ -181,15 +180,13 @@ private theorem vv_pow_smul_mem_of_sen_eq_zero (C : Finset n) (i0 : n) (hi0 : i0
       by_cases hz : Y i0 i0 = 0
       · have hj0 : Y i0 j = 0 := by
           have h := hYmax j hj
-          rw [hz, map_zero, le_zero_iff, Valuation.zero_iff] at h
-          exact h
+          rwa [hz, map_zero, le_zero_iff, Valuation.zero_iff] at h
         rw [hj0, hz]
         simp
       · rw [mul_neg, mul_div_cancel₀ _ hz, add_neg_cancel]
     · intro l _ hl
       simp only [N2, Matrix.of_apply, ite_eq_right (fun h : l = i0 ∧ j ∈ C ∧ j ≠ i0 => hl h.1), mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
 
 private theorem exists_KO_mul_eq_zero_below_order (β : n → α) : ∀ (C : Finset n), (∀ i ∉ C, ∀ j ∈ C, β j ≤ β i) →
     ∀ X : Matrix n n k, (∀ i ∉ C, ∀ j ∈ C, X i j = 0) → (∀ i ∉ C, ∀ j ∉ C, β j < β i → X i j = 0) →
@@ -245,71 +242,52 @@ private theorem exists_fixed_ne_zero_of_piTensor_fixed {Γ X : α → Type} [∀
     (a : α) : ∃ v ∈ fixed (ρ a) (K a), v ≠ 0 := by
   let B : ∀ b, Module.Basis _ ℂ (X b) := fun b => Module.Basis.ofVectorSpace ℂ (X b)
   let Bt := Basis.piTensorProduct B
-  obtain ⟨t, ht⟩ : ∃ t, Bt.repr w t ≠ 0 := by
-    by_contra hcon
-    apply hw0
-    have : Bt.repr w = 0 := Finsupp.ext fun t => by
-      by_contra h
-      exact hcon ⟨t, h⟩
-    simpa using congrArg Bt.repr.symm this
+  obtain ⟨t, ht⟩ : ∃ t, Bt.repr w t ≠ 0 := Finsupp.ne_iff.1 (Bt.repr.map_ne_zero_iff.2 hw0)
   let S : Finset α := Finset.univ.erase a
   have hSne : ∀ b ∈ S, b ≠ a := fun b hb => Finset.ne_of_mem_erase hb
   have hSmem : ∀ b, b ≠ a → b ∈ S := fun b hb => Finset.mem_erase.2 ⟨hb, Finset.mem_univ _⟩
+  have hp₁ : ∀ [DecidableEq α] (x : ∀ i, X i) (u : X a),
+      (∏ b ∈ S, (B b).repr (Function.update x a u b) (t b)) = ∏ b ∈ S, (B b).repr (x b) (t b) :=
+    fun x u => Finset.prod_congr rfl fun b hb => by rw [Function.update_of_ne (hSne b hb)]
+  have hp₂ : ∀ [DecidableEq α] (x : ∀ i, X i) {i} (hi : i ≠ a) (u : X i),
+      (∏ b ∈ S, (B b).repr (Function.update x i u b) (t b)) =
+      (B i).repr u (t i) * ∏ b ∈ S.erase i, (B b).repr (x b) (t b) := by
+    intro _ x i hi u
+    rw [← Finset.mul_prod_erase _ _ (hSmem i hi), Function.update_self]
+    congr 1
+    exact Finset.prod_congr rfl fun b hb => by
+      rw [Function.update_of_ne (Finset.ne_of_mem_erase hb)]
   let C : (∀ i, X i) →ₘₗ[ℂ] X a :=
     { toFun := fun x => (∏ b ∈ S, (B b).repr (x b) (t b)) • x a
       map_update_add' := by
         intro _ x i y z
         by_cases hi : i = a
         · subst hi
-          have hp : ∀ [DecidableEq α] (u : X i),
-              (∏ b ∈ S, (B b).repr (Function.update x i u b) (t b)) =
-              ∏ b ∈ S, (B b).repr (x b) (t b) := fun u =>
-            Finset.prod_congr rfl fun b hb => by rw [Function.update_of_ne (hSne b hb)]
-          rw [hp, hp, hp, Function.update_self, Function.update_self, Function.update_self, smul_add]
-        · have hia : i ∈ S := hSmem i hi
-          have hp : ∀ [DecidableEq α] (u : X i),
-              (∏ b ∈ S, (B b).repr (Function.update x i u b) (t b)) =
-              (B i).repr u (t i) * ∏ b ∈ S.erase i, (B b).repr (x b) (t b) := by
-            intro _ u
-            rw [← Finset.mul_prod_erase _ _ hia, Function.update_self]
-            congr 1
-            exact Finset.prod_congr rfl fun b hb => by rw [Function.update_of_ne (Finset.ne_of_mem_erase hb)]
-          rw [hp, hp, hp, Function.update_of_ne (Ne.symm hi), Function.update_of_ne (Ne.symm hi),
-            Function.update_of_ne (Ne.symm hi), map_add, Finsupp.add_apply, add_mul, add_smul]
+          rw [hp₁, hp₁, hp₁, Function.update_self, Function.update_self, Function.update_self,
+            smul_add]
+        · rw [hp₂ _ hi, hp₂ _ hi, hp₂ _ hi, Function.update_of_ne (Ne.symm hi),
+            Function.update_of_ne (Ne.symm hi), Function.update_of_ne (Ne.symm hi), map_add,
+            Finsupp.add_apply, add_mul, add_smul]
       map_update_smul' := by
         intro _ x i c y
         by_cases hi : i = a
         · subst hi
-          have hp : ∀ [DecidableEq α] (u : X i),
-              (∏ b ∈ S, (B b).repr (Function.update x i u b) (t b)) =
-              ∏ b ∈ S, (B b).repr (x b) (t b) := fun u =>
-            Finset.prod_congr rfl fun b hb => by rw [Function.update_of_ne (hSne b hb)]
-          rw [hp, hp, Function.update_self, Function.update_self, smul_comm, RingHom.id_apply]
-        · have hia : i ∈ S := hSmem i hi
-          have hp : ∀ [DecidableEq α] (u : X i),
-              (∏ b ∈ S, (B b).repr (Function.update x i u b) (t b)) =
-              (B i).repr u (t i) * ∏ b ∈ S.erase i, (B b).repr (x b) (t b) := by
-            intro _ u
-            rw [← Finset.mul_prod_erase _ _ hia, Function.update_self]
-            congr 1
-            exact Finset.prod_congr rfl fun b hb => by rw [Function.update_of_ne (Finset.ne_of_mem_erase hb)]
-          rw [hp, hp, Function.update_of_ne (Ne.symm hi), Function.update_of_ne (Ne.symm hi), map_smul,
-            Finsupp.smul_apply, smul_eq_mul, mul_assoc, mul_smul, RingHom.id_apply] }
+          rw [hp₁, hp₁, Function.update_self, Function.update_self, smul_comm, RingHom.id_apply]
+        · rw [hp₂ _ hi, hp₂ _ hi, Function.update_of_ne (Ne.symm hi),
+            Function.update_of_ne (Ne.symm hi), map_smul, Finsupp.smul_apply, smul_eq_mul,
+            mul_assoc, mul_smul, RingHom.id_apply] }
   let C' := PiTensorProduct.lift C
-  have hC : ∀ y, C' y = 0 → (Bt.repr y) t = 0 := by
-    intro y hy
-    have key : ∀ y, (B a).repr (C' y) (t a) = Bt.repr y t := by
-      intro y
-      induction y using PiTensorProduct.induction_on with
-      | smul_tprod r x =>
-        simp only [map_smul, Finsupp.smul_apply, smul_eq_mul]
-        congr 1
-        simp only [C', PiTensorProduct.lift.tprod, Bt, Basis.piTensorProduct_repr_tprod_apply]
-        show (B a).repr ((∏ b ∈ S, (B b).repr (x b) (t b)) • x a) (t a) = _
-        rw [map_smul, Finsupp.smul_apply, smul_eq_mul]
-        exact Finset.prod_erase_mul _ _ (Finset.mem_univ a)
-      | add y z hy hz => simp only [map_add (f := _), Finsupp.add_apply, hy, hz]
-    rw [← key, hy, map_zero, Finsupp.zero_apply]
+  have key : ∀ y, (B a).repr (C' y) (t a) = Bt.repr y t := by
+    intro y
+    induction y using PiTensorProduct.induction_on with
+    | smul_tprod r x =>
+      simp only [map_smul, Finsupp.smul_apply, smul_eq_mul]
+      congr 1
+      simp only [C', PiTensorProduct.lift.tprod, Bt, Basis.piTensorProduct_repr_tprod_apply]
+      show (B a).repr ((∏ b ∈ S, (B b).repr (x b) (t b)) • x a) (t a) = _
+      rw [map_smul, Finsupp.smul_apply, smul_eq_mul]
+      exact Finset.prod_erase_mul _ _ (Finset.mem_univ a)
+    | add y z hy hz => simp only [map_add (f := _), Finsupp.add_apply, hy, hz]
   have hequi : ∀ (κ : Γ a) y, C' (piTensor ρ (Pi.mulSingle a κ) y) = ρ a κ (C' y) := by
     intro κ y
     induction y using PiTensorProduct.induction_on with
@@ -323,7 +301,8 @@ private theorem exists_fixed_ne_zero_of_piTensor_fixed {Γ X : α → Type} [∀
       exact Finset.prod_congr rfl fun b hb => by
         rw [Pi.mulSingle_eq_of_ne (Finset.ne_of_mem_erase hb), map_one, Module.End.one_apply]
     | add y z hy hz => simp only [map_add (f := _), hy, hz]
-  refine ⟨C' w, GlobalTheory.Parabolic.mem_fixed.2 fun κ hκ => ?_, fun h => ht (hC w h)⟩
+  refine ⟨C' w, GlobalTheory.Parabolic.mem_fixed.2 fun κ hκ => ?_, fun h =>
+    ht (by rw [← key, h, map_zero, Finsupp.zero_apply])⟩
   rw [← hequi]
   congr 1
   refine hw _ fun b => ?_

@@ -381,8 +381,7 @@ theorem norm_eq_integral : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T 
   have hx : ∀ u h, R.extV i t u h = (R.cV i).ρ h⁻¹ ((R.HV i t).e u ((finHom (Vc D i)).rangeRestrict h)) :=
     fun _ _ => rfl
   refine ⟨c, hc0, fun u u' => ⟨?_, fun a a' => ?_⟩⟩
-  · simp only [hx]
-    exact (hH.2.2 u u').trans (hcl _ (hmem u) _ (hmem u')).2
+  · simpa only [hx] using (hH.2.2 u u').trans (hcl _ (hmem u) _ (hmem u')).2
   · simp only [hx]
     exact integrableOn_coord (R.νV i t) (finHom (Vc D i)).rangeRestrict _ ho (R.cV i).ρ hc.2.2.1 _ hχ (GQ (Vc D i)) _ _ (hmem u) (hmem u')
       (hcl _ (hmem u) _ (hmem u)).1 (hcl _ (hmem u') _ (hmem u')).1 a a'
@@ -716,8 +715,7 @@ theorem upVec_mem_range : GlobalTheory.Published.CuspRapidDecay → ∀ (D : D7)
     exact (coVec_level R F hL i t v b y hT (Formalism.IndefR.Bridge.ratF (Vc D i) γ * x) k).trans
       (congrArg _ (coVec_rat hP R F hL i t v b y hT γ x))
   obtain ⟨u, hu⟩ : f ∈ LinearMap.range (R.HV i t).e := by
-    rw [(hL.models.HV i t).2.1]
-    exact hmem
+    rwa [(hL.models.HV i t).2.1]
   refine ⟨u, ?_⟩
   show (R.cV i).ext ((R.HV i t).e u) = _
   rw [hu, hext]
@@ -1425,8 +1423,7 @@ theorem exists_ip {F : Face D A} (hL : Laws R F) (hLP : LevProd R i) {γ : GA D 
       have hs := shift hL (fun g => star ((R.HW i (sg0 D A)).e x v (g * k⁻¹)) * T' v' (g * γ))
         (fun δ' hδ' g => by simp only [mul_assoc, linv hT v hδ', linv hT' v' hδ']) k
       simp only [mul_inv_cancel_right, rinv hLP hT v (inv_mem hk)] at hs
-      simp only [← mul_assoc]
-      exact hs
+      simpa only [← mul_assoc] using hs
     have h2 := (hc v v').2
     rw [hy] at h2
     simp only [heckeOn_apply, Finset.mul_sum] at h2

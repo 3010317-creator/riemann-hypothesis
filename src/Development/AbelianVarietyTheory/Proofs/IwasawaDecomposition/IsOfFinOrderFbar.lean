@@ -96,8 +96,7 @@ theorem redHom_inj {Ω : Type} [Field Ω] (B : ValuationSubring Ω) {g l : ℕ} 
   have hprim : IsPrimitiveRoot (t (x * y⁻¹)) n := by
     refine ⟨by rw [← map_pow, hn, pow_orderOf_eq_one, map_one], fun m hm => orderOf_dvd_of_pow_eq_one ?_⟩
     refine ht _ _ (pow_ne_zero _ hz) one_ne_zero ?_
-    rw [map_pow, map_one]
-    exact hm
+    rwa [map_pow, map_one]
   have hprimB : IsPrimitiveRoot (⟨t (x * y⁻¹), hmem⟩ : B) n :=
     IsPrimitiveRoot.coe_submonoidClass_iff.1 hprim
   have hred1 : ρ ⟨t (x * y⁻¹), hmem⟩ = 1 := by
@@ -111,8 +110,7 @@ theorem redHom_inj {Ω : Type} [Field Ω] (B : ValuationSubring Ω) {g l : ℕ} 
     have h2 : redHom B κ t (x * y⁻¹) * redHom B κ t y = 1 * redHom B κ t y := by
       rw [← map_mul, ← hxy, one_mul, h]
     have h3 := mul_right_cancel₀ hy0 h2
-    rw [← hρ]
-    exact h3
+    rwa [← hρ]
   have : NeZero ((n : ℕ) : Formalism.CyclotomicNorms.Fbar l) := ⟨fun h0 =>
     (Nat.Prime.coprime_iff_not_dvd hl.out).1 hcop.symm ((CharP.cast_eq_zero_iff _ l n).1 h0)⟩
   have h3 : IsPrimitiveRoot (1 : Formalism.CyclotomicNorms.Fbar l) n := by

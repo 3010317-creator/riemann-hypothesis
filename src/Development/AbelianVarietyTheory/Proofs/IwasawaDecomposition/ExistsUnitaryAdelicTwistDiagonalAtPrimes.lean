@@ -109,9 +109,7 @@ theorem exists_tw : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     ⟨(⟨decoRaw ST SG (1 : GL (Fin n) (AfE F E)),
       decorated_lattice_exists hc n ST SG 1 (one_mem _)⟩, fun P => Finset.notMem_empty _ P.2 |>.elim),
       fun P => Finset.notMem_empty _ P.2 |>.elim⟩
-  have hb : IsPtOf hc 1 p := by
-    apply (PtDeco.isPtOf_iff_decoRaw F E hc n ST SG ∅ 1 p rfl).2
-    exact ⟨one_mem _, rfl⟩
+  have hb : IsPtOf hc 1 p := (PtDeco.isPtOf_iff_decoRaw F E hc n ST SG ∅ 1 p rfl).2 ⟨one_mem _, rfl⟩
   have hpt : IsPtOf hc g p := by
     refine ⟨hg, ?_, fun P x hx i hi => ?_, fun w x hx i => ?_, fun P => absurd P.2 (Finset.notMem_empty _)⟩
     · exact c1
@@ -162,7 +160,6 @@ theorem exists_tw : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
       simp only [Matrix.map_mul, hMi, mul_one] at h
       rw [h, Matrix.map_one _ (map_zero _) (map_one _)]
     have h := congrFun (congrFun hM i) j
-    rw [Matrix.map_apply, Matrix.one_apply] at h
-    exact h
+    rwa [Matrix.map_apply, Matrix.one_apply] at h
 
 end GlobalTheory.Mem.Col2.TwUnit

@@ -106,8 +106,7 @@ theorem main : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) 
 
   let T1 : σ.V →ₗ[ℂ] (GAf L n → a.W) := S'.subtype ∘ₗ Φ.toLinearMap ∘ₗ LinearMap.codRestrict S T0 hT0S
   have hT1 : Good T1 := by
-    refine ⟨fun x hx u => ?_, fun u => (Φ _).2⟩
-    exact hΦ x ⟨T0 u, hT0S u⟩ ⟨T0 _, hT0S _⟩ (hT0eq x hx u)
+    exact ⟨fun x hx u => (hΦ x ⟨T0 u, hT0S u⟩ ⟨T0 _, hT0S _⟩ (hT0eq x hx u)), fun u => (Φ _).2⟩
   have hrc := hS'irr.2.2 Wd ⟨hWdS'.trans hS'irr.1.le, hstab⟩ hWdS'
   rcases hrc with h0 | h0
   · exfalso
@@ -118,8 +117,7 @@ theorem main : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) 
     apply hT0inj
     have h2 : Φ (LinearMap.codRestrict S T0 hT0S u) = 0 := Subtype.ext hmem
     rw [map_zero]
-    have h3 := Φ.injective (h2.trans Φ.map_zero.symm)
-    exact congrArg Subtype.val h3
+    exact congrArg Subtype.val (Φ.injective (h2.trans Φ.map_zero.symm))
   · rw [← h0]; exact hWdle
 
 end GlobalTheory.SpanLoc

@@ -83,8 +83,7 @@ theorem sym_box (hG : GlobalFnsSt) {R : Type} [CommRing R] [IsDomain R] {j : ℕ
       val E.sym (eSec E.P.A) z K = 1 := by
     intro E z K hK
     have h := val_corr hK E.sym_rig (𝟙 _)
-    rw [val_pull hK, Category.id_comp, val_one] at h
-    exact h
+    rwa [val_pull hK, Category.id_comp, val_one] at h
   have key := GlobalTheory.CubBox.box_unique (φ' := ![(ι[D'.P.A]).left, 𝟙 D'.P.A.left]) (φ := ![(ι[D.P.A]).left, 𝟙 D.P.A.left])
     (ε := ![1, -1]) (ρ := fun i => (pD.pw.pr i).left) D.P.isLB D'.P.isLB pD.w pD.w_gen hψ D'.sym_gen D.sym_gen
     D'.P.A.hom (eSec D'.P.A) he hp
@@ -126,8 +125,7 @@ theorem main : GlobalFnsSt → ∀ (R : Type) [CommRing R] [IsDomain R] (j : ℕ
       val (D.psi (pD.xe χ i)) (𝟙 _) y J := fun i => by
     have h := val_corr hJ (hE (pD.xe χ i)) (𝟙 _)
     rw [val_mul hJ, val_pull hJ, Category.id_comp] at h
-    rw [hc, hb]
-    exact h
+    rwa [hc, hb]
   have h1 := psi_val pD hJ hJ' χ (𝟙 _)
   have h2 := psi_val pD hJ hJ' (-χ) (𝟙 _)
   have h3 := sym_box hG pD (D'.xK χ) y hJ hJ'

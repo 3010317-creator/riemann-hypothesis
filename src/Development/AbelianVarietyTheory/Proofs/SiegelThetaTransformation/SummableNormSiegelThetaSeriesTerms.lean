@@ -75,8 +75,7 @@ theorem summable_prod_pi {J A : Type} [inst : Fintype J] (f : J → A → ℝ)
   have hsub : s ⊆ Fintype.piFinset (fun j : J => s.image (fun n : J → A => n j)) := by
     intro n hn
     rw [Fintype.mem_piFinset]
-    intro j
-    exact Finset.mem_image_of_mem _ hn
+    exact fun j => Finset.mem_image_of_mem _ hn
   calc ∑ n ∈ s, ∏ j : J, f j (n j)
       ≤ ∑ n ∈ Fintype.piFinset (fun j : J => s.image (fun n : J → A => n j)),
           ∏ j : J, f j (n j) :=
@@ -85,10 +84,8 @@ theorem summable_prod_pi {J A : Type} [inst : Fintype J] (f : J → A → ℝ)
         (Finset.prod_univ_sum (fun j : J => s.image (fun n : J → A => n j)) f).symm
     _ ≤ ∏ j : J, ∑' a, f j a := by
         apply Finset.prod_le_prod₀
-        · intro j _
-          exact Finset.sum_nonneg fun a _ => h0 j a
-        · intro j _
-          exact (hs j).sum_le_tsum _ fun a _ => h0 j a
+        · exact fun j _ => Finset.sum_nonneg fun a _ => h0 j a
+        · exact fun j _ => (hs j).sum_le_tsum _ fun a _ => h0 j a
 
 end GlobalTheory.SummableProdPi
 end -- clump:auto

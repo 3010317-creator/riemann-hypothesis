@@ -126,12 +126,10 @@ theorem gMat_det : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [
       (Subgroup.one_mem _)
     have h2 := congrArg Matrix.det h
     rw [Matrix.det_mul, det_cT, Matrix.det_one, hs] at h2
-    rw [mul_comm]
-    exact h2
+    rwa [mul_comm]
   · exact det_toStdCo_stdG _ _ _ _
   · have h := det_norm_of_UJ (sigD D : D.host.E →+* D.host.E) (gramN D k hk) (J.A.crd k hk) γ hco hγ
-    rw [hs, mul_comm] at h
-    exact h
+    rwa [hs, mul_comm] at h
 
 end GlobalTheory.TwV.DelB
 

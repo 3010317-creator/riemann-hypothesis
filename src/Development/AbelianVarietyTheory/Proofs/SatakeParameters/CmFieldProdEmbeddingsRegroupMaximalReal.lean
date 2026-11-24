@@ -66,8 +66,7 @@ theorem cm_conj_comp_eq (E : Type) [Field E] [NumberField E] (τ : E →+* ℂ) 
     (ComplexEmbedding.conjugate τ).comp (algebraMap (maximalRealSubfield E) E) =
       τ.comp (algebraMap (maximalRealSubfield E) E) := by
   have h := IsTotallyReal.complexEmbedding_isReal (τ.comp (algebraMap (maximalRealSubfield E) E))
-  rw [ComplexEmbedding.isReal_iff] at h
-  exact h
+  rwa [ComplexEmbedding.isReal_iff] at h
 
 theorem cm_prod_regroup_maximalReal (E : Type) [Field E] [NumberField E] [IsCMField E]
     (k : (E →+* ℂ) → ℤ) (hk : ∀ τ, k (ComplexEmbedding.conjugate τ) = k τ) :
@@ -93,8 +92,7 @@ theorem cm_prod_regroup_maximalReal (E : Type) [Field E] [NumberField E] [IsCMFi
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_insert,
       Finset.mem_singleton]
     constructor
-    · intro h
-      exact cm_eq_or_conj_of_comp_eq E τ₀ τ (h.trans h0.symm)
+    · exact fun h => cm_eq_or_conj_of_comp_eq E τ₀ τ (h.trans h0.symm)
     · rintro (rfl | rfl)
       · exact h0
       · exact h1

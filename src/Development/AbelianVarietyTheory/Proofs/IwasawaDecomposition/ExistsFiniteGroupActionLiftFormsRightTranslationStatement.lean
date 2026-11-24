@@ -160,8 +160,7 @@ theorem lamKV_inv_mul_diagEmb : ∀ {κ K : Type} [CommRing κ] [Field K] {a n r
     intro i j hij
     apply hy
     have hij' : (fun i : Fin a => Formalism.L2.Col.coarse r [t] i.val) j < (fun i : Fin a => Formalism.L2.Col.coarse r [t] i.val) i := hij
-    rw [hf] at hij'
-    exact hij'
+    rwa [hf] at hij'
   let Y : Formalism.L2.Col.blockUT a κ r [t] := ⟨y, hy'⟩
   let Dd : Formalism.L2.Col.blockUT a κ r [t] :=
     ⟨_, Formalism.L2.Col.diagEmb_mem_blockUT hrn [t] (Formalism.L2.DIV.upperLeftBlock hra y)⟩
@@ -390,8 +389,7 @@ theorem lamQ_castGL_inv : ∀ {κ K : Type} [CommRing κ] [Field K] {a n r b : �
     intro i j hij
     apply hy
     show Formalism.L2.DIV.blk2 r j < Formalism.L2.DIV.blk2 r i
-    rw [← coarseBlockIndex_single_eq_twoBlock hn, ← coarseBlockIndex_single_eq_twoBlock hn]
-    exact hij
+    rwa [← coarseBlockIndex_single_eq_twoBlock hn, ← coarseBlockIndex_single_eq_twoBlock hn]
   have he : (⟨_, hz⟩ : ↥(Formalism.L2.Col.HQ κ a r b)) = (⟨y, hy'⟩ : ↥(Formalism.L2.Col.HQ κ a r b))⁻¹ := by
     ext1
     simp [hc]
@@ -467,8 +465,7 @@ theorem castGL_inv_mul_diag_mem_HKV {κ : Type} [CommRing κ] {a n r t : ℕ} (h
     intro i j hij
     apply hy
     have hij' : Formalism.L2.Col.coarse r (List.replicate 1 t) j.val < Formalism.L2.Col.coarse r (List.replicate 1 t) i.val := hij
-    rw [coarse_eq_blkOf' hn', coarse_eq_blkOf' hn'] at hij'
-    exact hij'
+    rwa [coarse_eq_blkOf' hn', coarse_eq_blkOf' hn'] at hij'
   have hy2 : y ∈ Formalism.L2.DIV.blockTri (Formalism.L2.DIV.blk2 r) := Formalism.L2.DIV.blockTri_blkOf_le r t hy
   show _ ∈ Formalism.L2.Col.HK a κ r (List.replicate 1 t)
   refine Formalism.L2.Col.mem_HK.2 ⟨Subgroup.mul_mem _ (Subgroup.inv_mem _ hy')
@@ -611,7 +608,6 @@ theorem inv_redZ_mul_g0Hat_type : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Co
           Formalism.L2.Col.unipotentGroupBlockEmbedding (X.B.primes px) I.sel t.1 (Formalism.L2.Col.r_le_nV X.B.R) (redQ X I U L eG i t κ)) w =
           (LiftBrg.castGL (LiftBrg.rkEq X i).symm (Formalism.L2.DIV.redFn (L.βV i) w.1 y))⁻¹ *
             Formalism.L2.Col.diagEmb _ (Formalism.L2.Col.r_le_nV X.B.R) (Formalism.L2.DIV.upperLeftBlock (L.datVt i t).hr (Formalism.L2.DIV.redFn (L.βV i) w.1 y)) := by
-        show (redZ X I U L i t A k κ w)⁻¹ * _ = _
         exact congrArg₂ (· * ·) (congrArg (·⁻¹) (hZ w)) (hG1 w hw)
       rw [lev_lam_congr' e (hmem w) hz ex]
       have key : (Formalism.L2.Col.mtTyK I.Ch ((i : ℕ) + 1) ⟨w.1, hw⟩).lam ⟨_, hz⟩ =
@@ -629,7 +625,6 @@ theorem inv_redZ_mul_g0Hat_type : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Co
           Formalism.L2.Col.unipotentGroupBlockEmbedding (X.B.primes px) I.sel t.1 (Formalism.L2.Col.r_le_nV X.B.R) (redQ X I U L eG i t κ)) w =
           (LiftBrg.castGL (LiftBrg.rkEq X i).symm (Formalism.L2.DIV.redFn (L.βV i) w.1 y) :
             GL (Fin X.B.R.nV) (𝓞 X.B.fields.E ⧸ w.1.asIdeal))⁻¹ * 1 := by
-        show (redZ X I U L i t A k κ w)⁻¹ * _ = _
         exact congrArg₂ (· * ·) (congrArg (·⁻¹) (hZ w)) (hG2 w hw)
       rw [lev_lam_congr' e (hmem w) hz ex]
       have key : (Formalism.L2.Col.mtTyQ X.B.R (t.1 : Formalism.L2.DIV.Chr X.B.fields.F X.B.fields.E X.B.fields.K) (Formalism.L2.Col.QE I.sel (t.1 : Formalism.L2.DIV.Chr X.B.fields.F X.B.fields.E X.B.fields.K))
@@ -788,8 +783,7 @@ theorem ptS_mul_Q : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B p
     intro g hg
     refine (hAU _).2 ?_
     have e : A * (A⁻¹ * castGL (rkEq X i).symm g * A) * A⁻¹ = castGL (rkEq X i).symm g := by group
-    rw [e, castGL_castGL_symm]
-    exact hg
+    rwa [e, castGL_castGL_symm]
   have hxU : Formalism.UG.bc (swapAE X.toD7) ((x : Bridge.Gf (Vc X.toD7 i)) : GL (Fin (Vc X.toD7 i).rank) _) ∈
       Formalism.L2.DIV.UA X.toD7.sp.cm (Vc X.toD7 i).gram := by
     obtain ⟨g, hg⟩ := x.2

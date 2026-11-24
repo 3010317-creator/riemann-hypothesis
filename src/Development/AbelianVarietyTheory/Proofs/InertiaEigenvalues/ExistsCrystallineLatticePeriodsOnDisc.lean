@@ -436,8 +436,7 @@ theorem sum_lat (T : Submodule ℤ_[l] V) (b : Module.Basis (Fin d) ℤ_[l] T) (
 
   rw [map_sum] at h
   simp only [map_smul, Submodule.subtype_apply] at h
-  simp only [algebraMap_smul]
-  exact h.symm
+  simpa only [algebraMap_smul] using h.symm
 
 theorem span_lat (T : Submodule ℤ_[l] V) (hT : Submodule.span ℚ_[l] (T : Set V) = ⊤)
     (b : Module.Basis (Fin d) ℤ_[l] T) : ⊤ ≤ Submodule.span ℚ_[l] (Set.range fun i => (b i : V)) := by
@@ -674,8 +673,7 @@ theorem exists_lattice_generators : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) 
       rw [Finset.sum_apply] at h2
       simp only [Pi.smul_apply, smul_eq_mul] at h2
       rw [← h2, Pi.single_apply, Matrix.one_apply]
-    · intro j _ hj
-      exact Finset.sum_eq_zero fun a _ => by simp [G, hj]
+    · exact fun j _ hj => Finset.sum_eq_zero fun a _ => by simp [G, hj]
     · intro h; exact absurd (Finset.mem_univ j') h
 
 end GlobalTheory.BdRLatticeGens

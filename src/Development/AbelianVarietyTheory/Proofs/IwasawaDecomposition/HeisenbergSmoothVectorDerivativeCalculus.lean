@@ -88,8 +88,7 @@ theorem heis_dH (h : IsHeis (fun x y => om x y) ρ) {f : B} (hf : Sm ρ f) (w y 
   have hd : Differentiable ℝ (fun u => ρ u f) :=
     (show ContDiff ℝ ∞ (fun u => ρ u f) from hf).differentiable (by simp)
   have h1 : HasDerivAt (fun t : ℝ => ρ w (ρ (t • y) f)) (ρ w (dH ρ y f)) 0 := by
-    have hl := hasDerivAt_dH y hf
-    exact ((ρ w).restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt (0 : ℝ) hl
+    exact ((ρ w).restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt (0 : ℝ) (hasDerivAt_dH y hf)
   have h2 : HasDerivAt (fun t : ℝ => ρ w (ρ (t • y) f))
       (fderiv ℝ (fun u => ρ u f) w y + (π * I * (om w y : ℂ)) • ρ w f) 0 := by
     have hp := hasDerivAt_phase (om w y) (hasDerivAt_line hd w y)
@@ -151,8 +150,7 @@ theorem dH_dH (h : IsHeis (fun x y => om x y) ρ) {f : B} (hf : Sm ρ f) (u v : 
   have h1 := hasDerivAt_dH u (sm_dH h hf v)
   have hA : HasDerivAt (fun t : ℝ => fderiv ℝ (fun u => ρ u f) (0 + t • u) v)
       (fderiv ℝ (fderiv ℝ fun u => ρ u f) 0 u v) 0 := by
-    have hl := (hasDerivAt_line hd2 0 u).clm_apply (hasDerivAt_const (0 : ℝ) v)
-    simpa using hl
+    simpa using (hasDerivAt_line hd2 0 u).clm_apply (hasDerivAt_const (0 : ℝ) v)
   have hB := (hasDerivAt_lin (om u v)).smul (hasDerivAt_dH u hf)
   have h2 := hA.add hB
   have e : (fun t : ℝ => ρ (t • u) (dH ρ v f)) = fun t : ℝ =>

@@ -212,8 +212,7 @@ theorem det_lmat {A : Matrix n n R} (hA : A.BlockTriangular (blk e)) (D : ∀ a,
   · simp only [card_blk]
   · intro p q h
     simp [lmat, hA h]
-  · intro a x y
-    exact if_congr Subtype.ext_iff.symm (hD a x.1 y.1) rfl
+  · exact fun a x y => if_congr Subtype.ext_iff.symm (hD a x.1 y.1) rfl
 
 theorem det_rmat (g : Levi R m) :
     (rmat e (leviEmb R e g : Matrix n n R)).det =
@@ -227,8 +226,7 @@ theorem det_rmat (g : Levi R m) :
     obtain ⟨⟨b, j'⟩, rfl⟩ := e.surjective j'
     have : b < a := by simpa using h
     simp [rmat, leviEmb_apply_ne R e g this.ne]
-  · intro a x y
-    exact if_congr Subtype.ext_iff.symm (leviEmb_apply_same R e g a y.1 x.1) rfl
+  · exact fun a x y => if_congr Subtype.ext_iff.symm (leviEmb_apply_same R e g a y.1 x.1) rfl
 
 theorem unipEquiv_mul (u : unipRad R e) (x : Idx e → R) :
     unipEquiv e (u * (unipEquiv e).symm x) =

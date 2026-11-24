@@ -166,8 +166,7 @@ theorem hcT_sum {a b n : ℕ} {ι : Type} [Fintype ι] (c : ℂ) (Φ : ι → Gn
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun y _ => ?_
   by_cases hP : InPar a ((y⁻¹ * x * y : Gn g n) : Mt g n)
-  · simp only [hP, ↓reduceIte, Finset.mul_sum]
-    exact Finset.sum_congr rfl fun i _ => by ring
+  · simpa only [hP, ↓reduceIte, Finset.mul_sum] using Finset.sum_congr rfl fun i _ => by ring
   · simp only [hP, ↓reduceIte, mul_zero, Finset.sum_const_zero]
 
 def ext0 (a b : ℕ) (α : Gn g a → ℂ) (β : Gn g b → ℂ) (n : ℕ) (z : Gn g n) : ℂ :=
@@ -191,16 +190,14 @@ theorem stage_left {m c n : ℕ} (hn : n = m + c) (k : ℂ) (φ F : Gn g m → �
   have e1 : (fun (u : Gn g m) (v : Gn g c) => F u * γ v) =
       fun u v => k * ∑ h : Gn g m, φ (h⁻¹ * u * h) * γ v := by
     funext u v
-    simp only [hF, Finset.mul_sum, Finset.sum_mul]
-    exact Finset.sum_congr rfl fun h _ => by ring
+    simpa only [hF, Finset.mul_sum, Finset.sum_mul] using Finset.sum_congr rfl fun h _ => by ring
   have e2 := hcT_sum (a := m) (b := c) (n := n) k (fun h u v => φ (h⁻¹ * u * h) * γ v) x
   beta_reduce at e2
   have e3 : ∀ h : Gn g m, hcT m c (fun u v => φ (h⁻¹ * u * h) * γ v) n x =
       hcT m c (fun u v => φ u * γ v) n x := by
     intro h
     have := congrFun (hcT_conj hn (fun u v => φ u * γ v) h 1) x
-    simp only [inv_one, one_mul, mul_one] at this
-    exact this
+    simpa only [inv_one, one_mul, mul_one] using this
   unfold hc
   rw [e1, e2]
   simp only [e3, Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
@@ -212,16 +209,14 @@ theorem stage_right {a m n : ℕ} (hn : n = a + m) (k : ℂ) (φ F : Gn g m → 
   have e1 : (fun (u : Gn g a) (v : Gn g m) => α u * F v) =
       fun u v => k * ∑ h : Gn g m, α u * φ (h⁻¹ * v * h) := by
     funext u v
-    simp only [hF, Finset.mul_sum]
-    exact Finset.sum_congr rfl fun h _ => by ring
+    simpa only [hF, Finset.mul_sum] using Finset.sum_congr rfl fun h _ => by ring
   have e2 := hcT_sum (a := a) (b := m) (n := n) k (fun h u v => α u * φ (h⁻¹ * v * h)) x
   beta_reduce at e2
   have e3 : ∀ h : Gn g m, hcT a m (fun u v => α u * φ (h⁻¹ * v * h)) n x =
       hcT a m (fun u v => α u * φ v) n x := by
     intro h
     have := congrFun (hcT_conj hn (fun u v => α u * φ v) 1 h) x
-    simp only [inv_one, one_mul, mul_one] at this
-    exact this
+    simpa only [inv_one, one_mul, mul_one] using this
   unfold hc
   rw [e1, e2]
   simp only [e3, Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
@@ -279,7 +274,6 @@ private lemma tl_tl_of_le {a m n : ℕ} (h : a ≤ m) (M : Mt g n) : tl a (tl m 
   ext i j
   have := i.2
   have := j.2
-  show entN (tl m M) i j = entN M i j
   exact entN_tl M (by omega) (by omega)
 
 private lemma br_tl_eq_tl_br {a b m k n : ℕ} (h : a + b ≤ m) (hk : b ≤ k) (M : Mt g n) :
@@ -541,17 +535,14 @@ theorem main : ∀ (g : ℕ) [Fact g.Prime] (a b n : ℕ) (α : Gn g a → ℂ) 
     refine Finset.card_nbij' flipG flipG ?_ ?_ ?_ ?_
     · intro q hq
       simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hq ⊢
-      rw [flipG_coe, inPar_flip]
-      exact hq
+      rwa [flipG_coe, inPar_flip]
     · intro q hq
       simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hq ⊢
       rw [flipG_coe]
       apply (inPar_flip (a := a) (b := b) (flip (q : Mt g (a + b)))).mp
       rwa [flip_flip]
-    · intro q _
-      exact flipG_flipG q
-    · intro q _
-      exact flipG_flipG q
+    · exact fun q _ => flipG_flipG q
+    · exact fun q _ => flipG_flipG q
   obtain ⟨p, hp⟩ := flipG_conj x
   let Fba : Gn g (a + b) → ℂ := fun z =>
     if InPar b (z : Mt g (a + b)) then

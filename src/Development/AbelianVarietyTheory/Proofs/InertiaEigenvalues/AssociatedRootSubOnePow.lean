@@ -247,8 +247,7 @@ theorem ev_C {O : Type} [CommRing O] (φ : O⟦X⟧ →ₐ[O] O) (c : O) : φ (C
 theorem ev_unique {O : Type} [CommRing O] (φ ev : O⟦X⟧ →ₐ[O] O) (x : O) (hφ : φ X = x)
     (h : ∀ f, X - C x ∣ f - C (ev f)) (f : O⟦X⟧) : φ f = ev f := by
   have := map_dvd φ (h f)
-  rw [map_sub, map_sub, ev_C, ev_C, hφ, sub_self, zero_dvd_iff, sub_eq_zero] at this
-  exact this
+  rwa [map_sub, map_sub, ev_C, ev_C, hφ, sub_self, zero_dvd_iff, sub_eq_zero] at this
 
 theorem dvd_ev_sub {O : Type} [CommRing O] (φ : O⟦X⟧ →ₐ[O] O) (f : O⟦X⟧) :
     φ X ∣ φ f - constantCoeff f := by
@@ -337,8 +336,7 @@ theorem assoc_l {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] (�
       rw [hcoe, Polynomial.coeToPowerSeries.ringHom_apply, Polynomial.coeff_coe]
       simpa [Polynomial.coeff_one_add_X_pow]
     rw [map_sub] at hc'
-    simp only [coeff_one, one_ne_zero, ite_false, sub_zero, hp] at hc'
-    exact hc'
+    simpa only [coeff_one, one_ne_zero, ite_false, sub_zero, hp] using hc'
   rw [h1, map_prod] at h
   rw [h]
   have : (ζ - 1) ^ (l - 1) = ∏ _b ∈ (Finset.univ : Finset (ZMod l)).erase 0, (ζ - 1) := by
@@ -369,8 +367,7 @@ theorem ev_act_X {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [
   have hbin : φ (bin (l := l) O δ) = φ (bin (l := l) O d) := by
     rw [hzero, zero_dvd_iff] at h2'
     exact sub_eq_zero.mp h2'
-  rw [act_X, map_sub, map_one, hbin, bin_nat, map_pow, h3]
-  rw [ZMod.val_mul, ← pow_mul]
+  rw [act_X, map_sub, map_one, hbin, bin_nat, map_pow, h3, ZMod.val_mul, ← pow_mul]
   congr 1
   exact pow_eq_pow_mod _ hζ
 
@@ -596,8 +593,7 @@ theorem exists_sum_int {l k : ℕ} (hl : 0 < l) {w : ℂ} (h : w ^ l ^ (k + 1) =
     · intro a ha
       simp only [Finset.mem_range, Finset.mem_filter] at ha ⊢
       exact ⟨by rw [pow_succ']; exact Nat.mul_lt_mul_of_pos_left ha hl, dvd_mul_right _ _⟩
-    · intro a _ b _ hab
-      exact Nat.eq_of_mul_eq_mul_left hl hab
+    · exact fun a _ b _ hab => Nat.eq_of_mul_eq_mul_left hl hab
     · intro b hb
       simp only [Finset.mem_range, Finset.mem_filter] at hb
       obtain ⟨h1, a, rfl⟩ := hb
@@ -756,8 +752,7 @@ theorem exists_const_of_lvl_invariant {l : ℕ} [Fact l.Prime] {O : Type} [CommR
     have ha' : ¬ l ∣ a := (Finset.mem_filter.1 ha).2
     have e1 : π (act O (a : ℤ_[l]) (lvl l O k)) = 0 := by
       have := root_pow hl k ht ha'
-      rw [← AlgHom.comp_apply, algHom_lvl, AlgHom.comp_apply, act_one_add_X, bin_nat, map_pow]
-      exact this
+      rwa [← AlgHom.comp_apply, algHom_lvl, AlgHom.comp_apply, act_one_add_X, bin_nat, map_pow]
     have e2 := (hz _).2 (hb a ha')
     rw [hbr] at e2
     simp only [map_sub, map_add (f := _), map_mul, e1, (hz _).2 dvd_rfl, zero_mul, add_zero,
@@ -787,8 +782,7 @@ theorem exists_const_of_lvl_invariant {l : ℕ} [Fact l.Prime] {O : Type} [CommR
     rw [← Polynomial.degree_C_mul (p := r) hn', sub_eq_zero.1 h8]
     exact Polynomial.degree_C_le
   refine ⟨r.coeff 0, q, ?_⟩
-  rw [Polynomial.eq_C_of_degree_le_zero h9, Polynomial.coe_C] at hq
-  exact hq
+  rwa [Polynomial.eq_C_of_degree_le_zero h9, Polynomial.coe_C] at hq
 
 end GlobalTheory.CycFr
 end -- clump:auto
@@ -875,9 +869,7 @@ theorem exists_lift {l : ℕ} [hl : Fact l.Prime] (Δ : Subgroup ℤ_[l]ˣ) [Fin
       nsmul_eq_mul, mul_one, map_zero] at this
       rw [Nat.cast_pred hl.out.pos] at this
       simp at this
-    · apply Subtype.ext
-      apply Units.ext
-      exact sub_eq_zero.1 h
+    · exact Subtype.ext (Units.ext (sub_eq_zero.1 h))
   have hbij : Function.Bijective f := by
     refine hinj.bijective_of_nat_card_le ?_
     rw [hΔ, Nat.card_eq_fintype_card, ZMod.card_units]
@@ -1062,8 +1054,7 @@ theorem _root_.GlobalTheory.CycFr.sub_one_mem_max [IsLocalRing O] (hl : ¬ IsUni
     (hζ : ζ ^ l = 1) : ζ - 1 ∈ IsLocalRing.maximalIdeal O := by
   have hp : l.Prime := Fact.out
   have h0 : (l : IsLocalRing.ResidueField O) = 0 := by
-    rw [← map_natCast (IsLocalRing.residue O), IsLocalRing.residue_eq_zero_iff]
-    exact hl
+    rwa [← map_natCast (IsLocalRing.residue O), IsLocalRing.residue_eq_zero_iff]
   haveI : CharP (IsLocalRing.ResidueField O) l := (CharP.charP_iff_prime_eq_zero hp).2 h0
   rw [← IsLocalRing.residue_eq_zero_iff, map_sub, map_one]
   have h1 : (IsLocalRing.residue O ζ - 1) ^ l = 0 := by
@@ -1084,8 +1075,7 @@ theorem _root_.GlobalTheory.CycFr.prime_X_sub_C [IsLocalRing O]
   · have : Prime (σ (X - C x)) := by rw [hXσ]; exact X_prime
     exact (MulEquiv.prime_iff σ.toMulEquiv).mp this
   · have h := map_dvd σ hd
-    rw [hXσ, hσC, X_dvd_iff, constantCoeff_C] at h
-    exact h
+    rwa [hXσ, hσC, X_dvd_iff, constantCoeff_C] at h
 
 section Fields
 
@@ -1119,8 +1109,7 @@ private lemma exists_descent_of_cyclotomic_action {Δ : Subgroup ℤ_[l]ˣ} {j :
     exact dvd_mul_of_dvd_left (_root_.GlobalTheory.CycFr.X_dvd_act_X c) _
   have key : j.comp (substAlgHom hs) = (_root_.GlobalTheory.CycFr.act O c).comp j := by
     apply _root_.GlobalTheory.CycFr.algHom_ext_X
-    · simp only [AlgHom.comp_apply, coe_substAlgHom, subst_X hs, hy]
-      exact hX'
+    · simpa only [AlgHom.comp_apply, coe_substAlgHom, subst_X hs, hy] using hX'
     · simp only [AlgHom.comp_apply, coe_substAlgHom, subst_X hs, hy]
   exact congrArg (fun f => f a) key
 
@@ -1219,8 +1208,7 @@ theorem _root_.GlobalTheory.CycFr.exists_frame [IsDiscreteValuationRing O]
   have hϖmem : ∀ τ, ϖ τ ∈ IsLocalRing.maximalIdeal O := by
     intro τ
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-    intro hu'
-    exact hl ((hϖ τ).isUnit_iff.mp (hu'.pow _))
+    exact fun hu' => hl ((hϖ τ).isUnit_iff.mp (hu'.pow _))
   choose lev hlev using fun τ =>
     _root_.GlobalTheory.NB.LT.exists_algEquiv_X_add_C (IsLocalRing.maximalIdeal O) (ϖ τ) (hϖmem τ)
   set E : O⟦X⟧ := ∏ τ, (X - C (ϖ τ)) with hEdef
@@ -1283,8 +1271,7 @@ theorem _root_.GlobalTheory.CycFr.exists_frame [IsDiscreteValuationRing O]
         rw [map_mul, hjX]
         exact hξ.mul_mul hjEassoc
       refine hA.dvd.trans ?_
-      rw [map_sub, hγ, hjX]
-      exact hdiff
+      rwa [map_sub, hγ, hjX]
     obtain ⟨κ', hκ'⟩ := hXE
     have hγX' : γ X = X * (1 + κ' * E) := by linear_combination hκ'
     obtain ⟨V, hV, hV0⟩ := _root_.GlobalTheory.CycFr.exists_act_X (O := O) (u : ℤ_[l])
@@ -1361,8 +1348,7 @@ theorem _root_.GlobalTheory.CycFr.exists_frame [IsDiscreteValuationRing O]
       (PowerSeries.isUnit_iff_constantCoeff).mp (w'.isUnit.map σ)
     refine ⟨ζ - 1, ?_⟩
     have h2 : Associated ((ζ - 1) ^ Nat.card Δ) (ϖ ⟨0, he⟩) := by
-      have : ϖ ⟨0, he⟩ = (ζ - 1) ^ Nat.card Δ * constantCoeff (σ (w' : O⟦X⟧)) := by
-        exact h1.symm
+      have : ϖ ⟨0, he⟩ = (ζ - 1) ^ Nat.card Δ * constantCoeff (σ (w' : O⟦X⟧)) := h1.symm
       rw [this]
       exact associated_mul_unit_right _ _ hunit
     rw [← hed, mul_comm, pow_mul]

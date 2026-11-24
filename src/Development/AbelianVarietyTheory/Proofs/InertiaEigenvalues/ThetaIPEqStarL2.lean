@@ -299,8 +299,7 @@ theorem GlobalTheory.LocKerMod.latIndex_embV_inert : ∀ (D : D7) (T : HSp D) (v
     funext i
     have := hcomp w x i
     subst h
-    rw [proj_emb_self] at this
-    exact this
+    rwa [proj_emb_self] at this
   have hK : ∀ x, M x = 0 → P x = 0 := by
     intro x hx
     funext i
@@ -336,7 +335,6 @@ theorem GlobalTheory.LocKerMod.latIndex_embV_inert : ∀ (D : D7) (T : HSp D) (v
     rw [Submodule.mem_toAddSubgroup, AddSubgroup.mem_map]
     constructor
     · rintro ⟨a, ha, rfl⟩
-      show (fun i => compAt D.host.F w (a i)) ∈ GlobalTheory.LFun.latAt w (frameLat T)
       exact compAt_mem_latAt w (hermitianSpaceBaseLattice_eq_frameLattice T ▸ ha)
     · intro hy
       refine ⟨_, singleAt_mem_lamHat hy, ?_⟩
@@ -442,13 +440,11 @@ theorem latIndex_split : ∀ (D : D7) (T : HSp D) (v : HeightOneSpectrum (𝓞 D
       M.map (GlobalTheory.LFun.compAt D.host.F u) = (GlobalTheory.LFun.locMat D.sp.cm.sig T.gram hh g).1 := by
     intro u hh
     have e := GlobalTheory.LFun.finMat_map_compAt D.sp.cm.sig T.gram hh (GlobalTheory.FinZeta.embV T v g)
-    rw [proj_emb_self] at e
-    exact e
+    rwa [proj_emb_self] at e
   have hMu : ∀ u : HeightOneSpectrum (𝓞 D.host.E), u.under (𝓞 D.host.F) ≠ v → M.map (GlobalTheory.LFun.compAt D.host.F u) = 1 := by
     intro u hh
     have e := GlobalTheory.LFun.finMat_map_compAt D.sp.cm.sig T.gram (rfl : u.under (𝓞 D.host.F) = _) (GlobalTheory.FinZeta.embV T v g)
-    rw [proj_emb_ne _ _ hh, map_one, Units.val_one] at e
-    exact e
+    rwa [proj_emb_ne _ _ hh, map_one, Units.val_one] at e
   set ε : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F ⊗[D.host.F] D.host.E := GlobalTheory.LFun.singleAt D.host.F w 1 + GlobalTheory.LFun.singleAt D.host.F w' 1 with hεdef
   have hεw : GlobalTheory.LFun.compAt D.host.F w ε = 1 := by
     rw [hεdef, map_add (f := _), GlobalTheory.LFun.compAt_singleAt, GlobalTheory.LFun.compAt_singleAt_ne hne, add_zero]
@@ -647,8 +643,7 @@ theorem idx_split : ∀ (D : D7) (T : HSp D) (v : HeightOneSpectrum (𝓞 D.host
       obtain ⟨x, hx, hx₀⟩ :=
         Submodule.exists_mem_ne_zero_of_ne_bot (LinearMap.ker_ne_bot_of_finrank_lt (f := g) hdim)
       have hsmul (a : D.host.E) : a • e x ∈ T.L0 := by
-        rw [← T.baseLattice_isUnimodular]
-        rw [Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
+        rw [← T.baseLattice_isUnimodular, Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
         intro y hy
         have hxy : T.hT (e x) y = 0 :=
           congrArg (fun f : Module.Dual D.host.E W => f ⟨y, Submodule.subset_span hy⟩) (LinearMap.mem_ker.mp hx)
@@ -751,8 +746,7 @@ theorem norm_inert (q : ℕ) (hq : 0 < q) (z : ℂ) (hz : ‖z‖ = 1) (N : ℕ)
   obtain ⟨k, rfl⟩ := Int.eq_ofNat_of_zero_le hm
   simp only [Int.toNat_natCast, zpow_natCast, norm_pow, norm_mul, norm_inv, hz, one_mul, Complex.norm_natCast]
   push_cast
-  rw [← pow_mul, ← pow_mul, ← pow_mul, inv_pow, ← pow_mul]
-  rw [show N * (k * 2) = 2 * (k * N) by ring]
+  rw [← pow_mul, ← pow_mul, ← pow_mul, inv_pow, ← pow_mul, show N * (k * 2) = 2 * (k * N) by ring]
   exact inv_mul_cancel₀ (pow_ne_zero _ hq'.ne')
 
 theorem sq_norm_mul_latIndex : ∀ (D : D7) (T : HSp D) (N : ℕ) (χ : (AE D)ˣ →* Circle) (v : HeightOneSpectrum (𝓞 D.host.F)) (φ : GlobalTheory.FinZeta.Gv T v → ℂ), GlobalTheory.FinZeta.IsLocKer T N (GlobalTheory.LFun.val χ) v φ → (∀ w : HeightOneSpectrum (𝓞 D.host.E), w.under (𝓞 D.host.F) = v → GlobalTheory.LFun.UnrAt χ w) → ∀ a : GlobalTheory.FinZeta.Gv T v, ‖φ a‖ ^ 2 * (latIndex T (GlobalTheory.FinZeta.embV T v a) : ℝ) ^ N = 1 := by
@@ -859,8 +853,7 @@ theorem goodMod : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (
   have e : coef R i t μ 𝓕 (GlobalTheory.FinZeta.embV (Wc D i) v a) = star (φ a) := by
     unfold coef
     rw [thetaInner_eq_star_l2, thetaInner_eq_star_l2, h1, star_mul', mul_div_assoc, div_self (star_ne_zero.2 hne'), mul_one]
-  rw [e, norm_star]
-  exact hmod
+  rwa [e, norm_star]
 
 end GlobalTheory.RawLift.GoodModulus
 

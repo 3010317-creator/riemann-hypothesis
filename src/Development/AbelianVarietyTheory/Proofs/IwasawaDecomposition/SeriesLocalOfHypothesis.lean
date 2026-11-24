@@ -662,8 +662,7 @@ theorem para_of_colMat_fixed : ∀ (L : Type) [Field L] [NumberField L] [IsCMFie
     let y : GL (Fin n) (Os s) :=
       Matrix.nonsingInvUnit (Matrix.transvection i j x') (by rw [Matrix.det_transvection_of_ne _ _ hne]; exact isUnit_one)
     have hent : ∀ a c, y.val a c = (1 : Matrix (Fin n) (Fin n) (Os s)) a c + if a = i ∧ c = j then x' else 0 := by
-      intro a c
-      exact transvection_apply' i j a c x'
+      exact fun a c => transvection_apply' i j a c x'
     refine ⟨φ x', Matrix.GeneralLinearGroup.map φ y, ?_, ?_⟩
     · refine Matrix.ext fun a c => ?_
       show φ (y.val a c) = _
@@ -715,8 +714,7 @@ theorem para_of_colMat_fixed : ∀ (L : Type) [Field L] [NumberField L] [IsCMFie
         rw [← h2]
         exact h1.symm
       obtain ⟨z, hz⟩ : ∃ z, f z ≠ 0 := by
-        by_contra hcon
-        push Not at hcon
+        by_contra! hcon
         exact hf (funext hcon)
       have h0 : (ψ₀ x0 - 1) • f z = 0 := by rw [sub_smul, one_smul, ← key, sub_self]
       rcases smul_eq_zero.1 h0 with h | h
@@ -902,8 +900,7 @@ theorem nat_mem_of_overPl {P P' : Formalism.L2.DIV.Pl D.host.E} {v} (h : NG.Over
     (hp : (p : 𝓞 D.host.E) ∈ P.asIdeal) : (p : 𝓞 D.host.E) ∈ P'.asIdeal := by
   have h1 : (p : 𝓞 (maximalRealSubfield D.host.E)) ∈ v.asIdeal := by
     rw [← h, Ideal.mem_comap, map_natCast]; exact hp
-  rw [← h', Ideal.mem_comap, map_natCast] at h1
-  exact h1
+  rwa [← h', Ideal.mem_comap, map_natCast] at h1
 
 theorem twist_off {T : Type} {Lc : Formalism.IndefR.Links.LevCh D T} {μ0 : T} (hL : Lc.Is μ0) (t : T) {PP} (hPP : PP ∈ Lc.Q t) {v}
     (hv : NG.OverPl PP v) : v ∉ GlobalTheory.PendOf.gPl D := by
@@ -1005,8 +1002,7 @@ theorem coeff_conj {H : Type} [Group H] (z : Subalgebra.center ℂ (MonoidAlgebr
   have hc := (Subalgebra.mem_center_iff.1 z.2) (MonoidAlgebra.single u 1)
   have := congrArg (fun z => z.coeff (g * u)) hc
   simp only [MonoidAlgebra.single_mul_apply, MonoidAlgebra.mul_single_apply, one_mul, mul_one, mul_inv_cancel_right] at this
-  rw [mul_assoc]
-  exact this
+  rwa [mul_assoc]
 
 end Core
 

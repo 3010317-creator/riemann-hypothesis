@@ -801,8 +801,7 @@ theorem isUnit_det_rhoMat {D : D7} {Gt : GatTies D} {c : LatCmp D} {Tw : TwForms
   rw [RingHom.mapMatrix_apply] at e
   have hu := (hg ((posJ Gt u w h Fl j).symm τ).1).map (Kp.iK.comp (((Fl.Pj j).ι ((posJ Gt u w h Fl j).symm τ).1).comp
     (RingEquiv.toRingHom (((Fl.Pj j).σ ((posJ Gt u w h Fl j).symm τ).1) ^ ((posJ Gt u w h Fl j).symm τ).2.val))))
-  rw [e] at hu
-  exact hu
+  rwa [e] at hu
 
 
 open Classical in
@@ -832,8 +831,7 @@ theorem exists_th_served : ∀ {D : D7} {Dx : DivX D} (Gt : GatTies D) {c : LatC
   refine ⟨Th, hlam, g, ?_, ?_⟩
   · intro j _ La hL v
     refine ⟨hg j La v, ?_⟩
-    simp only [g, dite_eq_left hL]
-    exact (hL v).choose_spec.2
+    simpa only [g, dite_eq_left hL] using (hL v).choose_spec.2
   · intro j _ hN hN' La La' _ _
     refine ⟨fun _ => 1, fun _ => norm_one, ?_⟩
     have hTh : Th j La La' = linAt (coefInv (Formalism.BasicNotions.tauPl D)
@@ -867,10 +865,8 @@ theorem exists_th_served : ∀ {D : D7} {Dx : DivX D} (Gt : GatTies D) {c : LatC
         linAt (coef (Formalism.BasicNotions.tauPl D) (blk (ev j) (fun τ => rhoMat K0 (j + 1) τ (g (j + 1) La')) (finCongr hN'.symm))
           (blkInv (ev j) (fun τ => rhoMat K0 j τ (g j La)) (finCongr hN.symm))) (Th j La La') := by
       rw [hTh, linAt_comp]
-      simp only [hS]
-      exact (linAt_delta _).symm
-    rw [← hC] at key
-    exact key
+      simpa only [hS] using (linAt_delta _).symm
+    rwa [← hC] at key
 
 end Main
 
@@ -1221,8 +1217,7 @@ theorem splitPlaceEmbedding_baseField_eq_completion (q : Fin (D.gat u v hg).P.nV
       ((Gs u v hg).eQ q _ rfl).symm (algebraMap D.host.F ((((Gs u v hg).pl q).1).adicCompletion D.host.F) a) := by
   apply ((Gs u v hg).eQ q _ rfl).injective
   rw [KerOne.splitPlaceIdempotent_cmEmbedding_compat]
-  refine ((Gs u v hg).spl_F _ _ a).trans ?_
-  exact (RingEquiv.apply_symm_apply _ _).symm
+  exact ((Gs u v hg).spl_F _ _ a).trans (RingEquiv.apply_symm_apply _ _).symm
 
 theorem pl_inj : Function.Injective (fun q : Fin (D.gat u v hg).P.nV => ((Gs u v hg).pl q).1) :=
   fun _ _ h => (Gs u v hg).pl.injective (Subtype.ext h)

@@ -80,8 +80,7 @@ private theorem krullDim_zeroLocus_le_of_isEmbedding {S T : Type} [CommRing S] [
   refine Order.krullDim_le_of_strictMono (fun a => ⟨f a.1, ?_⟩) ?_
   · have ha : p ≤ a.1 := by
       have := a.2
-      rw [PrimeSpectrum.mem_zeroLocus, SetLike.coe_subset_coe] at this
-      exact this
+      rwa [PrimeSpectrum.mem_zeroLocus, SetLike.coe_subset_coe] at this
     rw [PrimeSpectrum.mem_zeroLocus, SetLike.coe_subset_coe]
     exact (hle p a.1).2 ha
   · refine Monotone.strictMono_of_injective (fun a b hab => ?_) (fun a b hab => ?_)
@@ -144,8 +143,7 @@ theorem _root_.GlobalTheory.ZM.FullLevel.dim_generic_chart {o K : Type} [CommRin
     have : x y₀ ∈ Set.range (pullback.snd j pr) := by
       rw [IsOpenImmersion.range_pullbackSnd]
       show pr (x y₀) ∈ j.opensRange
-      rw [hVa.opensRange_fromSpec]
-      exact hyV
+      rwa [hVa.opensRange_fromSpec]
     obtain ⟨p, hp⟩ := this
     refine ⟨I.inv p, ?_⟩
     show (I.inv ≫ I.hom ≫ pullback.snd j pr) p = _

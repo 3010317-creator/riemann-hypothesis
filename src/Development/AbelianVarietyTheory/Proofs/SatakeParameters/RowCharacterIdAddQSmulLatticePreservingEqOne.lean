@@ -142,8 +142,7 @@ theorem entB_one_add_q {k₀ n c : ℕ} (hk : k₀ ≤ n) (ex : ℕ → ℕ) (y 
         y (Loc.eN E (n + c) (LocE.fIdx k₀ c n p')) ⟨_, hfl⟩)) := by
     have h1 := hy _ (GlobalTheory.CongLevel.bvec_mem P (qOf P) hQ0 (n + c) (LocE.scE n ex) (LocE.fIdx k₀ c n p'))
     have h2 := (GlobalTheory.CongLevel.mem_sclLat P (qOf P) (n + c) _ _).1 h1 ⟨_, hfl⟩
-    rw [map_smul, Pi.smul_apply, smul_eq_mul] at h2
-    exact h2
+    rwa [map_smul, Pi.smul_apply, smul_eq_mul] at h2
   have key : LocE.entB (qOf P) k₀ c n c n ex ex (LinearMap.id + ((qOf P : ℕ) : E) • y) p p' =
       (if p = p' then 1 else 0) + ((qOf P : ℕ) : E) * ((((qOf P : ℕ) : E) ^ LocE.scE n ex (LocE.fIdx k₀ c n p))⁻¹ *
       (((qOf P : ℕ) : E) ^ LocE.scE n ex (LocE.fIdx k₀ c n p') *
@@ -197,8 +196,7 @@ theorem lamRow_one_add_q : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Ch
     intro x hx
     have h := hy x (by unfold lamYat; rw [ite_eq_left hP]; exact hx)
     unfold lamYat at h
-    rw [ite_eq_left hP] at h
-    exact h
+    rwa [ite_eq_left hP] at h
   have hM := fun p p' (hp : p < R.N j + cOf R j) (hp' : p' < R.N j + cOf R j) =>
     entB_one_add_q (k₀ := R.k) hk (fun i => i + 1) y hy' hp hp'
   unfold lamRow

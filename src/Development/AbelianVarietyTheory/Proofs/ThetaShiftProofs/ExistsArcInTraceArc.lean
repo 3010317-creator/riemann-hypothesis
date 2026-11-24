@@ -373,8 +373,7 @@ theorem corr_of_genVal_frac {B : Over (Sp ℂ)} [GrpObj B] {L : LB B.left} {g : 
     ((genVal_pull_of (Category.id_comp _) h).trans (genVal_pull_of (Category.id_comp _) rfl).symm)
   refine corr_of_val hL fun y J hJ => ?_
   have e := val_corr hJ c (inv (Out.jFK (R := ℂ) ℂ))
-  rw [val_pull hJ, val_pull hJ, IsIso.inv_hom_id] at e
-  exact e
+  rwa [val_pull hJ, val_pull hJ, IsIso.inv_hom_id] at e
 
 section Values
 

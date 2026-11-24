@@ -59,10 +59,8 @@ namespace GlobalTheory.WeilExp
 theorem le_wchart_iff {X Y Z : Scheme.{0}} (L : LB X) {K : Type} [Fintype K] (φ : K → (Y ⟶ X)) (j : K → L.ι)
     (x : Z ⟶ Y) : ⊤ ≤ x ⁻¹ᵁ LB.wchart L φ j ↔ ∀ k, ⊤ ≤ (x ≫ φ k) ⁻¹ᵁ L.U (j k) := by
   constructor
-  · intro h k t _
-    exact Set.mem_iInter.1 (h (Set.mem_univ t)) k
-  · intro h t _
-    exact Set.mem_iInter.2 fun k => h k (Set.mem_univ t)
+  · exact fun h k t _ => Set.mem_iInter.1 (h (Set.mem_univ t)) k
+  · exact fun h t _ => Set.mem_iInter.2 fun k => h k (Set.mem_univ t)
 
 section Transl
 
@@ -266,7 +264,6 @@ theorem weilIs_exp_riemannForm : Out.WeilSt → (∀ (X : Scheme.{0}) (x : Sp �
     (val_constGen hv P.L V c _ _)).symm
   refine (congrArg (_ * ·) (val_pullGen hv _ _ _ _ _ _ _ n₁)).trans
     (Eq.trans ?_ (congrArg (_ * · * (c : ℂ)) (val_pullGen hv _ _ _ _ _ _ _ n₃).symm))
-  rw [(tr θx _ hpx z).1, (tr θy _ hpy z).1]
-  exact key
+  rwa [(tr θx _ hpx z).1, (tr θy _ hpy z).1]
 
 end GlobalTheory.WeilExp

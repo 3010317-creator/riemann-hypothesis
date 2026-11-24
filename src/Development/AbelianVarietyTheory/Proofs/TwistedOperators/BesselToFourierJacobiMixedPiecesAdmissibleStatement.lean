@@ -864,8 +864,7 @@ theorem ann_open (hψ : Continuous ψ) (hψ1 : ∀ x, ‖ψ x‖ = 1) (C : Set (
   refine eq_one_of_pow_near _ (hψ1 _) fun n => ?_
   have hn : (n • a, a') ∈ u ×ˢ v := ⟨hCu (hΓC _ (by rw [map_nsmul]; exact nsmul_mem ha n)), ha'⟩
   have := huv hn
-  simp only [Set.mem_setOf_eq, hpow] at this
-  exact this
+  simpa only [Set.mem_setOf_eq, hpow] using this
 
 
 set_option synthInstance.maxHeartbeats 400000 in
@@ -883,8 +882,7 @@ theorem ann_isCompact (K : Set (Mx D W.rank ρ)) (hK : IsCompact K) (hSK : ∀ a
       have h2 := sub_mem hxS h1
       rwa [sub_sub_cancel] at h2
     · refine ⟨{a | MxAt (fun _ => True) a}ᶜ, ?_, (isClosed_mxAt _ _).isOpen_compl, hbF⟩
-      intro x hx hxS
-      exact hx hxS.1
+      exact fun x hx hxS => hx hxS.1
   exact hK.of_isClosed_subset hcl hSK
 
 theorem symplO_extY (u : WO V W) (b : Mx D W.rank ρ) :
@@ -954,8 +952,7 @@ theorem pcBF_A₂_compact_open : OnStd fun {D} _ _ {sc} {G} W F => ∀ ρ (h : 2
             N • symplO (G.V (.grid (2 * ρ + 2) 0)) (G.V (.grid (2 * ρ + 1) 0)) ((F.dB ρ h).extX _ (u ⬝ (F.dB ρ h).jX)) ((F.dB ρ h).extY _ a')
           from map_nsmul (symplL (G.V (.grid (2 * ρ + 2) 0)) (G.V (.grid (2 * ρ + 1) 0)) ((F.dB ρ h).extY _ a')) N _]
         rw [symplO_extY]
-      rw [e1]
-      exact h2
+      rwa [e1]
     have hmem := hC _ (mxAt_mul_rat (fun i j => nsmul_mem (hfin i j) N) _) key
     refine ⟨_, hmem, ?_⟩
     show algebraMap D.host.F (AE D) ((Na * Nb : ℕ) : D.host.F)⁻¹ • ((F.dB ρ h).extY (G.V (.grid (2 * ρ + 1) 0)) (N • a') ⬝ (F.dB ρ h).jY) = a'
@@ -1146,8 +1143,7 @@ theorem extY_jY_mem {S S₀ T : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) {LS : L
       simp only [GlobalTheory.FinPl.colMul, Matrix.mulVec, dotProduct, Finset.sum_apply, Pi.smul_apply, smul_eq_mul,
         Finset.mul_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
-      simp only [Finset.sum_mul]
-      exact Finset.sum_congr rfl fun x _ => by ring
+      simpa only [Finset.sum_mul] using Finset.sum_congr rfl fun x _ => by ring
     rw [e1]
     exact sum_mem fun i _ => hs.2.1 i
 
@@ -1266,15 +1262,12 @@ variable {D : D7}
 theorem mxAt_mul_right {m n k : ℕ} {a : Mx D m n} (ha : MxAt (fun _ => True) a) (M : Mx D n k) :
     MxAt (fun _ => True) (a ⬝ M) := by
   intro i j
-  simp only [Matrix.mul_apply]
-  exact Ideal.sum_mem _ fun l _ => Ideal.mul_mem_right _ _ (ha i l)
+  simpa only [Matrix.mul_apply] using Ideal.sum_mem _ fun l _ => Ideal.mul_mem_right _ _ (ha i l)
 
 theorem finLat_comap_extX {V V₀ W : HSp D} {ρ : ℕ} (d : GlobalTheory.MixModel.HypDec V V₀ ρ) {Γ : AddSubgroup (WO V W)}
     (hΓ : FinLat Γ) : FinLat (Γ.comap (d.extX W)) := by
   haveI : T2Space (AE D) := (Formalism.IndefR.Eqv.ae_facts D).2.1
-  have hc : Continuous (d.extX W) := by
-    show Continuous fun a : Mx D W.rank ρ => a ⬝ d.pX
-    exact continuous_id.matrix_mul continuous_const
+  have hc : Continuous (d.extX W) := continuous_id.matrix_mul continuous_const
   have hinv : ∀ a : Mx D W.rank ρ, d.extX W a ⬝ d.jX = a := fun a => by
     rw [GlobalTheory.MixModel.HypDec.extX_apply, Matrix.mul_assoc, GlobalTheory.MixModel.HypDec.pX_jX, Matrix.mul_one]
   refine ⟨fun a ha => ?_, ?_, ?_⟩
@@ -1282,9 +1275,7 @@ theorem finLat_comap_extX {V V₀ W : HSp D} {ρ : ℕ} (d : GlobalTheory.MixMod
     exact mxAt_mul_right (hΓ.fin _ ha) _
   · have hK : IsCompact ((fun w : WO V W => w ⬝ d.jX) '' (Γ : Set (WO V W))) :=
       hΓ.cpt.image (continuous_id.matrix_mul continuous_const)
-    refine hK.of_isClosed_subset (hΓ.cpt.isClosed.preimage hc) ?_
-    intro a ha
-    exact ⟨_, ha, hinv a⟩
+    exact hK.of_isClosed_subset (hΓ.cpt.isClosed.preimage hc) (fun a ha => ⟨_, ha, hinv a⟩)
   · obtain ⟨U, hU, h0, hUA⟩ := hΓ.opn
     refine ⟨d.extX W ⁻¹' U, hU.preimage hc, by simpa using h0, fun a ha haf => ?_⟩
     exact hUA _ ha (by rw [GlobalTheory.MixModel.HypDec.extX_apply]; exact mxAt_mul_right haf _)

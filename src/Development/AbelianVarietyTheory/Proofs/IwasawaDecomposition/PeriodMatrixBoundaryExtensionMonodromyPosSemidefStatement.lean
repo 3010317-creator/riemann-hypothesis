@@ -117,9 +117,7 @@ theorem periodic_strip_shift_nonneg (c : ℝ) (f : ℂ → ℂ) (m : ℤ)
     have hc := Complex.imCLM.intervalIntegral_comp_comm (hvert x hx)
     simp only [Complex.imCLM_apply] at hc
     rw [← hc]
-    apply intervalIntegral.integral_nonneg h2pi
-    intro y _
-    exact (hpos _ (by simp [hx])).le
+    exact intervalIntegral.integral_nonneg h2pi (fun y _ => (hpos _ (by simp [hx])).le)
   have key : ∀ x₁ x₂ : ℝ, x₁ ≤ x₂ → x₂ < c →
       (∫ y : ℝ in (0:ℝ)..(2 * Real.pi), f (x₁ + y * I)).im
         = (∫ y : ℝ in (0:ℝ)..(2 * Real.pi), f (x₂ + y * I)).im + m * (x₂ - x₁) := by
@@ -155,8 +153,7 @@ theorem periodic_strip_shift_nonneg (c : ℝ) (f : ℂ → ℂ) (m : ℤ)
       rw [Set.uIcc_of_le h12] at hz
       show z.re < c
       linarith [hz.1.2]
-  by_contra hm
-  push Not at hm
+  by_contra! hm
   have hm1 : (m : ℝ) ≤ -1 := by exact_mod_cast (by omega : m ≤ -1)
   set a := (∫ y : ℝ in (0:ℝ)..(2 * Real.pi), f ((c - 1 : ℝ) + y * I)).im with ha
   have ha0 : 0 ≤ a := hVim (c - 1) (by linarith)
@@ -810,8 +807,7 @@ theorem locally_bounded : (∀ (H : ℂ → ℂ) (r C : ℝ) (N : ℕ), 0 < r �
       (∀ k : Fin n, (k : ℕ) < a → z₀ k = 0 → k ∉ S → ‖z k‖ = r) → ‖Φ z‖ ≤ M := by
     intro S
     refine Finset.induction_on S ?_ ?_
-    · intro z _ hz hc
-      exact hM z ⟨hz, fun k hk h0 => hc k hk h0 (by simp)⟩
+    · exact fun z _ hz hc => hM z ⟨hz, fun k hk h0 => hc k hk h0 (by simp)⟩
     · intro k S hkS ih z hgen hz hc
       by_cases hk : (k : ℕ) < a ∧ z₀ k = 0
       · refine norm_le_of_circle hext hΦ hgr hr0 hsub hz hgen hk.2 fun t ht => ?_

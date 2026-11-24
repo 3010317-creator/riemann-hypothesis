@@ -311,14 +311,12 @@ private theorem v0_int_lemma_5 {K : Type} [Field K] [NumberField K] [StarRing K]
       rw [Matrix.mulVec_mulVec, hM3']
     refine ⟨(B.vPr ℓ * B.S.lvlE B.r ℓ.P ℓ.ψ).mulVec y, ?_, ?_⟩
     · show (B.vE ℓ).mulVec ((B.vPr ℓ * B.S.lvlE B.r ℓ.P ℓ.ψ).mulVec y) ∈ B.S.nabLat
-      rw [Matrix.mulVec_mulVec, ← Matrix.mul_assoc, hM4, hAE]
-      exact hyN
+      rwa [Matrix.mulVec_mulVec, ← Matrix.mul_assoc, hM4, hAE]
     · rw [Matrix.mulVec_mulVec, hM5', hfix, hjy]
   · rintro ⟨F, hF0, rfl⟩
     have hyN : (B.S.lvlPr B.r ℓ.P ℓ.ψ * B.vE ℓ).mulVec F ∈ B.S.lvlNab B.r ℓ.P ℓ.ψ := by
       show (B.S.lvlE B.r ℓ.P ℓ.ψ).mulVec ((B.S.lvlPr B.r ℓ.P ℓ.ψ * B.vE ℓ).mulVec F) ∈ B.S.nabLat
-      rw [Matrix.mulVec_mulVec, hM2]
-      exact hF0
+      rwa [Matrix.mulVec_mulVec, hM2]
     refine ⟨(hM.2 _).1 hyN, j ((B.S.lvlPr B.r ℓ.P ℓ.ψ * B.vE ℓ).mulVec F), ?_⟩
     rw [hF.op_eq, Matrix.mulVec_mulVec, hM1']
 
@@ -468,8 +466,7 @@ private theorem mem_glued_lemma_10 (D : D7) (G : Type) [Group G] [Fintype G] (Pl
     constructor
     · rintro ⟨z, hz, rfl⟩
       simpa using hz
-    · intro h
-      exact ⟨_, h, by simp⟩
+    · exact fun h => ⟨_, h, by simp⟩
 
   have hloc : ∀ w : D.what₂.places.Pl,
       Submodule.span (𝓞 D.what₂.LL) {y : X.RR.V | X.jEE y ∈ X.RRset (D.what₂.muAt w)} =
@@ -485,8 +482,7 @@ private theorem mem_glued_lemma_10 (D : D7) (G : Type) [Group G] [Fintype G] (Pl
     obtain ⟨d, hd, hdx⟩ := h (D.plEq.symm w')
     rw [Equiv.apply_symm_apply] at hd hdx
     exact ⟨d, hd, hdx⟩
-  · intro h w
-    exact h (D.plEq w)
+  · exact fun h w => h (D.plEq w)
 
 theorem rrDef_iff_glued : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (m : ℕ) (A : FamIn D.what₂.LL G Pl0 T m) (EE : Type) [NormedAddCommGroup EE] [InnerProductSpace ℂ EE] [FiniteDimensional ℂ EE] (X : RowSide D EE) (P : Subgroup G) (ψ : P →* D.what₂.LLˣ) (Zs : DefSub A.fam.amb) (S : IndefData (A.side P ψ Zs)) (tup : T → D.what₂.Tup) (eRR : (Fin S.D → D.what₂.LL) ≃ₗ[D.what₂.LL] X.RR.V) (jA : ∀ t, (Fin (rDim D A P ψ t) → D.what₂.LL) →ₛₗ[D.what₂.embLL] X.Amb (tup t)), (∀ w, D.what₂.muAt w = tup (S.μ (D.plEq w))) → (∀ t : T, (∃ w, t = S.μ w) → Submodule.span (𝓞 D.what₂.LL) {y : X.RR.V | X.jEE y ∈ X.RRset (tup t)} = (matLat (S.ι t) ((A.side P ψ Zs).abelian₂ t)).map ((eRR : (Fin S.D → D.what₂.LL) →ₗ[D.what₂.LL] X.RR.V).restrictScalars (𝓞 D.what₂.LL))) → (X.RRDef ↔ X.RR.L = S.RR.map ((eRR : (Fin S.D → D.what₂.LL) →ₗ[D.what₂.LL] X.RR.V).restrictScalars (𝓞 D.what₂.LL))) := by
   intro D G _ _ Pl0 T m A EE _ _ _ X P ψ Zs S tup eRR jA hmu hspan
@@ -523,8 +519,7 @@ theorem rr_lat_of_rowSide : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T
   rintro t ⟨w', rfl⟩
   apply span_ratPoints_eq_matLat D G Pl0 T m A EE X P ψ Zs S tup eRR jA s hOk hX
   have h := hint (D.plEq.symm w')
-  rw [hmu, Equiv.apply_symm_apply] at h
-  exact h
+  rwa [hmu, Equiv.apply_symm_apply] at h
 
 end GlobalTheory.CompanionTheory.MemQ
 
@@ -546,8 +541,7 @@ theorem oLat_add_mem {O : Type} [CommRing O] {φ : O →+* ℂ} {V : Type} [AddC
   simp [add_smul, Finset.sum_add_distrib]
 
 theorem oLat_zero_mem {O : Type} [CommRing O] {φ : O →+* ℂ} {V : Type} [AddCommGroup V] [Module ℂ V]
-    (L : Formalism.BasicNotions.Rows.OLat O φ V) : (0 : V) ∈ L.carrier := by
-  exact ⟨0, by simp⟩
+    (L : Formalism.BasicNotions.Rows.OLat O φ V) : (0 : V) ∈ L.carrier := ⟨0, by simp⟩
 
 theorem oLat_gen_mem {O : Type} [CommRing O] {φ : O →+* ℂ} {V : Type} [AddCommGroup V] [Module ℂ V]
     (L : Formalism.BasicNotions.Rows.OLat O φ V) {v : V} (hv : v ∈ L.gen) : v ∈ L.carrier := by
@@ -649,8 +643,7 @@ variable {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar}
 
 theorem sm_ne_zero_of_ne {M : DSModel V S} {u : MMap M} (hu : u ≠ 0) : ∀ τ, ∃ w : M.sm τ, w ≠ 0 := by
   intro τ
-  by_contra h
-  push Not at h
+  by_contra! h
   exact hu (MultilinearMap.ext fun v => (u.map_coord_zero τ (h (v τ))).trans rfl)
 
 theorem ipM_smul_measure_self (M : DSModel V S) (μ : Measure (GA D V)) (𝓕 : Set (GA D V)) {u : MMap M} {a : ℝ} (ha : 0 ≤ a)
@@ -832,8 +825,7 @@ end Polar
 
 theorem exists_nonreal {K : Type} [Field K] (v : InfinitePlace K) (hv : v.IsComplex) :
     ∃ a : K, star (v.embedding a) ≠ v.embedding a := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   apply InfinitePlace.not_isReal_iff_isComplex.2 hv
   rw [InfinitePlace.isReal_iff]
   ext a

@@ -128,10 +128,8 @@ theorem res_character_eq_zero_iff {d a : ℕ} (had : a ≤ d) (V : FDRep ℂ (Gn
   simp only [e] at h
   rw [h]
   constructor
-  · intro H v hv
-    exact H v fun u => hv u u.2
-  · intro H v hv
-    exact H v fun u hu => hv ⟨u, hu⟩
+  · exact fun H v hv => H v fun u => hv u u.2
+  · exact fun H v hv => H v fun u hu => hv ⟨u, hu⟩
 
 def cb (d a : ℕ) : Fin d → Fin 2 := fun i => if (i : ℕ) < a then 0 else 1
 

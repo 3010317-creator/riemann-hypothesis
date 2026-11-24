@@ -73,8 +73,7 @@ theorem intAt_inv_of_isUnit {a : E} (ha : IntAt P a) (hu : IsUnit (redP P a)) : 
     exact hs0 ((hu.mul_left_eq_zero).1 hsp)
   have hr0 : algebraMap (𝓞 E) E r ≠ 0 := by
     rw [Ne, FaithfulSMul.algebraMap_eq_zero_iff]
-    intro h0
-    exact hr (h0 ▸ Ideal.zero_mem _)
+    exact fun h0 => hr (h0 ▸ Ideal.zero_mem _)
   have ha0 : a ≠ 0 := by
     rintro rfl
     rw [mul_zero] at h
@@ -132,16 +131,14 @@ theorem inv_extI_mul_mem {N n : ℕ} (hN : N = n + 1) (c : ℕ) (g : GLint E N P
   have eg : ∀ i, g.1 x i = ∑ l : Fin n, x l.castSucc * g.1 (Pi.single l.castSucc 1) i +
       x (Fin.last n) * g.1 (Pi.single (Fin.last n) 1) i := fun i => by
     have := apply_eq_sum (g.1 : Sp E (n + 1) →ₗ[E] Sp E (n + 1)) x i
-    rw [Fin.sum_univ_castSucc] at this
-    exact this
+    rwa [Fin.sum_univ_castSucc] at this
   refine mem_stdAt.2 fun k => ?_
   show IntAt P (((qOf P : E) ^ c)⁻¹ * (g.1 x k - (extI rfl P j).1 x k))
   rw [extI_val]
   refine Fin.lastCases ?_ (fun i => ?_) k
   · have e : sumE rfl j.1 1 x (Fin.last n) = x (Fin.last n) := by
       have := sumE_last (rfl : n + 1 = n + 1) j.1 1 x
-      rw [Units.val_one, one_mul] at this
-      exact this
+      rwa [Units.val_one, one_mul] at this
     rw [e, eg]
     have e2 : ((qOf P : E) ^ c)⁻¹ * (∑ l : Fin n, x l.castSucc * g.1 (Pi.single l.castSucc 1) (Fin.last n) +
         x (Fin.last n) * g.1 (Pi.single (Fin.last n) 1) (Fin.last n) - x (Fin.last n)) =

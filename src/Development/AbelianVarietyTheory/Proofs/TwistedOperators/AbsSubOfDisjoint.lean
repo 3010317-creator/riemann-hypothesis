@@ -97,8 +97,7 @@ theorem sum_pad {n p : ℕ} (f : Fin p → ℤ) (hf : ∀ i : Fin p, n ≤ i →
   apply sum_range_eq_sum_range_of_eventually_zero
   · intro j hj
     by_cases h : j < p
-    · simp only [h, dite_true]
-      exact hf ⟨j, h⟩ hj
+    · simpa only [h, dite_true] using hf ⟨j, h⟩ hj
     · simp [h]
   · intro j hj
     simp [not_lt.mpr hj]
@@ -120,8 +119,7 @@ private theorem sum_filter_lt_eq_sum_range_min (n i : ℕ) (G : ℕ → ℤ) :
   rw [sum_filter_lt_eq_sum_range (fun k : Fin n => G k) i]
   have hs : Finset.range (min n i) = (Finset.range i).filter (fun j => j < n) := by
     ext j
-    simp only [Finset.mem_filter, Finset.mem_range, lt_min_iff]
-    exact And.comm
+    simpa only [Finset.mem_filter, Finset.mem_range, lt_min_iff] using And.comm
   rw [hs, Finset.sum_filter]
   exact Finset.sum_congr rfl fun j _ => by split_ifs <;> rfl
 
@@ -480,8 +478,7 @@ theorem weight_nat {σ : Type} {k n : ℕ} (z : Fin k × Fin n → σ) (v : MvPo
     ∃ a' : Fin k → ℕ, ∀ i, (a' i : ℤ) = a i := by
   classical
   have hne : v.support.Nonempty := by
-    rw [Finset.nonempty_iff_ne_empty, Ne, MvPolynomial.support_eq_empty]
-    exact hv
+    rwa [Finset.nonempty_iff_ne_empty, Ne, MvPolynomial.support_eq_empty]
   obtain ⟨m, hm⟩ := hne
   refine ⟨fun i => ∑ t, m (z (i, t)), fun i => ?_⟩
   have h := (rowOp_eq_smul_iff z i v (a i : ℂ)).1 (ha i) m hm
@@ -655,8 +652,7 @@ theorem column_degrees (σ : Type) [Fintype σ] [DecidableEq σ] (k l n : ℕ)
       rw [hQ]
       refine mul_ne_zero (Finset.prod_ne_zero_iff.2 fun D hD => sub_ne_zero.2 ?_)
         (mem_support_iff.1 hm0)
-      intro h
-      exact (Finset.mem_erase.1 hD).1 (by exact_mod_cast h.symm)
+      exact fun h => (Finset.mem_erase.1 hD).1 (by exact_mod_cast h.symm)
     have hQ0 : Q ≠ 0 := fun h => hQm0 (by simp [h])
     have hEQ : E Q = (zdeg m0 : ℂ) • Q := by
       ext m
@@ -745,8 +741,7 @@ theorem sum_Ici_sub_succ {n : ℕ} (α : ℕ → ℕ) (hα : Antitone α) (h0 : 
   · intro i hi
     rw [Finset.mem_Ici, Fin.le_def] at hi
     exact Finset.mem_Ico.2 ⟨hi, i.2⟩
-  · intro i _ j _ h
-    exact Fin.ext h
+  · exact fun i _ j _ h => Fin.ext h
   · intro b hb
     rw [Finset.mem_Ico] at hb
     exact ⟨⟨b, hb.2⟩, Finset.mem_Ici.2 (Fin.le_def.2 hb.1), rfl⟩
@@ -1115,8 +1110,7 @@ theorem partial_sum_le {σ : Type} [DecidableEq σ] {p r : ℕ} (z : Fin p × Fi
     have hw : Function.Injective (fun k : Fin r => z (c, k)) :=
       fun k l h => congrArg Prod.snd (hz h)
     have huw : ∀ k l : Fin r, z (b, k) ≠ z (c, l) := by
-      intro k l h
-      exact (ne_of_lt hbc) (congrArg Prod.fst (hz h))
+      exact fun k l h => (ne_of_lt hbc) (congrArg Prod.fst (hz h))
     have hT := GlobalTheory.rowAdd_invariant_iff (K := ℂ) (fun k : Fin r => z (b, k))
       (fun k : Fin r => z (c, k)) hw huw P
     have h0 : ∑ k, X (z (b, k)) * pderiv (z (c, k)) P = 0 := by
@@ -1132,8 +1126,7 @@ theorem partial_sum_le {σ : Type} [DecidableEq σ] {p r : ℕ} (z : Fin p × Fi
     intro k m hm
     exact_mod_cast (GlobalTheory.JointHarm.colOp_eq_smul_iff z k P _).mp (ha' k) m hm
   obtain ⟨m, hm⟩ : P.support.Nonempty := by
-    rw [Finset.nonempty_iff_ne_empty, Ne, MvPolynomial.support_eq_empty]
-    exact hP
+    rwa [Finset.nonempty_iff_ne_empty, Ne, MvPolynomial.support_eq_empty]
   have key := GlobalTheory.column_degree_le z hz P a hrowdeg hinv
     (Finset.univ.filter (fun k : Fin r => (k : ℕ) < i)) m hm
   have hcard : (Finset.univ.filter (fun k : Fin r => (k : ℕ) < i)).card ≤ i := by
@@ -1146,8 +1139,7 @@ theorem partial_sum_le {σ : Type} [DecidableEq σ] {p r : ℕ} (z : Fin p × Fi
           simp only [Finset.mem_map, Finset.mem_filter, Finset.mem_univ, true_and,
             Fin.valEmbedding_apply] at hx
           obtain ⟨k, hk, hkx⟩ := hx
-          rw [Finset.mem_range, ← hkx]
-          exact hk
+          rwa [Finset.mem_range, ← hkx]
       _ = i := Finset.card_range i
   rw [sum_range_extZero, sum_range_extZero]
   calc ∑ k ∈ Finset.univ.filter (fun k : Fin r => (k : ℕ) < i), a' k

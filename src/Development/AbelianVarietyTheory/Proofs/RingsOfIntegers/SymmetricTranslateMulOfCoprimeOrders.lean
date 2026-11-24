@@ -114,11 +114,9 @@ theorem moves_mul_of_coprime : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   constructor
   · intro h
     obtain ⟨G, hG, -⟩ := (GlobalTheory.existsUnique_moves E H Dw l Xo S x k hk (a * b) hab F).1
-    rw [key F₂ G h hG]
-    exact hG
+    rwa [key F₂ G h hG]
   · intro h
     obtain ⟨G, hG, -⟩ := (GlobalTheory.existsUnique_moves E H Dw l Xo S x k hk a ha F₁).1
-    rw [← key G F₂ hG h]
-    exact hG
+    rwa [← key G F₂ hG h]
 
 end GlobalTheory.PlaceInt

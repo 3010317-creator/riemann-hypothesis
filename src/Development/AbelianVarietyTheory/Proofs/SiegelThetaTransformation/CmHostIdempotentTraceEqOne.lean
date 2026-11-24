@@ -932,8 +932,7 @@ theorem _root_.GlobalTheory.Phase.transS_intertwines : ∀ (κ ι : Type) [Finty
       σ.toBlocks₂₂ y.1 y.2 y'.1 y'.2 s1 s2 s3 s4)
   · have hy : _root_.GlobalTheory.Phase.Inter.rowAct σ (T y) = y := T.symm_apply_apply y
     have key := transS_heisS_rowAct hσ φ ψ hT (T y)
-    rw [hy] at key
-    exact key
+    rwa [hy] at key
 
 end GlobalTheory.Phase
 end -- clump:auto

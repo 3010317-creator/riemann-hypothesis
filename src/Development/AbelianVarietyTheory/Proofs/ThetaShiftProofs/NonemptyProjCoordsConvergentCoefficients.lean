@@ -252,8 +252,7 @@ theorem hasSum_Sum_prodCoeff (hn : n ≠ 0) (ha : ∑ i, a i = 0) (v : A.V) :
 
 theorem exists_Sum_ne_zero_of_prod_ne_zero (hn : n ≠ 0) (ha : ∑ i, a i = 0) {v : A.V}
     (hv : ∏ i, A.Sum 1 0 th w (v + a i) ≠ 0) : ∃ α, ∃ th' ∈ A.Theta n α, A.Sum n α th' w v ≠ 0 := by
-  by_contra h0
-  push Not at h0
+  by_contra! h0
   have h1 := hasSum_Sum_prodCoeff hT h hw hn ha v
   simp only [h0 _ _ (prodCoeff_mem_Theta hT h hw ha _)] at h1
   exact hv (h1.unique hasSum_zero)
@@ -350,8 +349,7 @@ theorem exists_no_common_zero (hA : AnFin A) (hN : 2 ≤ N) {n : ℕ} {α : Fin 
   choose c hc using fun a => hs (α a) (th a) (hth a)
   have key : ∀ (c : Fin m → ℂ⸨X⸩) v, ∑ i, c i * f i v = ∑ l, (∑ i, c i * R i l) * A.FSum N (α l) (th l) v :=
     fun c v => by
-      simp only [hR', Finset.mul_sum, Finset.sum_mul, mul_assoc]
-      exact Finset.sum_comm
+      simpa only [hR', Finset.mul_sum, Finset.sum_mul, mul_assoc] using Finset.sum_comm
   obtain ⟨c', hc', hc''⟩ := exists_inverse_mem Conv.convLaurent c R hR fun a l =>
     Fintype.linearIndependent_iffₛ.1 hli (fun l => ∑ i, c a i * R i l) (fun l => if a = l then 1 else 0) (by
       funext v
@@ -382,8 +380,7 @@ theorem exists_no_common_zero (hA : AnFin A) (hN : 2 ≤ N) {n : ℕ} {α : Fin 
       (⟨_, Conv.halfRing_mono (l₂ a i) (hT₂ a i)⟩ : Conv.halfRing T) *
         ⟨f i v, Conv.halfRing_mono (l₁ i) (hT₁' i v)⟩ := by
     apply Subtype.ext
-    simp only [AddSubmonoidClass.coe_finsetSum, MulMemClass.coe_mul, ← hF]
-    exact hρ' β t ht v
+    simpa only [AddSubmonoidClass.coe_finsetSum, MulMemClass.coe_mul, ← hF] using hρ' β t ht v
   refine hne ((Conv.ev_eq_of_hasSum hw ⟨_, hm⟩ (AnArc.hasSum_coeff_FSum hT ht hw v)).symm.trans ?_)
   rw [e]
 

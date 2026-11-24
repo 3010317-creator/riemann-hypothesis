@@ -181,8 +181,7 @@ theorem lastMax_E_pow_mul {h : K⟦X⟧} {d : ℕ}
     have h' := lastMax_E_mul l e ih
     rw [← mul_assoc, ← pow_succ'] at h'
     have hidx : d + (m + 1) * e = d + m * e + e := by ring
-    rw [hidx]
-    exact h'
+    rwa [hidx]
 
 theorem exists_lastMax_of_mem {O : Type} [CommRing O] [Algebra O K] [IsUnitBall O K] {h : K⟦X⟧}
     (hh : h ∈ Rpi O K l e) (h0 : h ≠ 0) :
@@ -522,8 +521,7 @@ private lemma prime_mul_mem_chars_succ_of_mem [NeZero e] {P : _root_.GlobalTheor
       by_cases hσ : σ - 1 = τ
       · obtain rfl := eq_add_of_sub_eq hσ
         rw [add_sub_cancel_right, Function.update_self, Pi.zero_apply]
-        rw [_root_.GlobalTheory.BK.PhiMod.phiD_apply, add_sub_cancel_right] at h
-        exact h
+        rwa [_root_.GlobalTheory.BK.PhiMod.phiD_apply, add_sub_cancel_right] at h
       · simp [Function.update_of_ne hσ]
     simpa using congrFun (P.phiD.injective heq) τ
   · rw [_root_.GlobalTheory.BK.Descent.actD_phiD, _root_.GlobalTheory.BK.PhiMod.phiD_apply,
@@ -752,8 +750,7 @@ theorem GlobalTheory.CharsDesc.chars_subset_sig : ∀ (l : ℕ) [Fact l.Prime] (
   have hT := hType k' hk'I ζ hk'π' x hxD
   obtain ⟨c', hc', hcc⟩ := hpoly ζ c.val (eval_eq_zero_of_aeval_eq_zero hx0 hact hT)
   have hval := hζ.pow_inj (ZMod.val_lt c) (ZMod.val_lt c') hcc
-  rw [ZMod.val_injective e hval]
-  exact hc'
+  rwa [ZMod.val_injective e hval]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameInertiaCharactersSubsetTameType =====

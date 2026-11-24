@@ -97,8 +97,7 @@ private theorem resG_eq_presheaf_map {X : Scheme.{0}} {U V : X.Opens} (h : V ≤
 theorem exists_secCoord_of_chart {X : Scheme.{0}} (M : LB X) (hM : M.IsLB) {I : Type} (th : I → M.Sec)
     {R : Type} [CommRing R] (x : Sp R ⟶ X) (j₀ : M.ι) (h₀ : ⊤ ≤ x ⁻¹ᵁ M.U j₀) : ∃ v, SecCoord M th x v := by
   have hV : ∀ j : PUnit → M.ι, (M.pull x).U j ≤ x ⁻¹ᵁ (M.U (j PUnit.unit) ⊓ M.U j₀) := by
-    intro j y hy
-    exact ⟨pull_U_le_preimage_U M x j PUnit.unit hy, h₀ trivial⟩
+    exact fun j y hy => ⟨pull_U_le_preimage_U M x j PUnit.unit hy, h₀ trivial⟩
   let τ : (M.pull x).Gen := ⟨fun j => res (hV j) (pullU x _ (M.g (j PUnit.unit) j₀))⟩
   refine ⟨fun i => (Scheme.ΓSpecIso (CommRingCat.of R)).hom.hom ((x.appLE (M.U j₀) ⊤ h₀).hom ((th i).f j₀)), τ, ?_, ?_⟩
   · intro j j'
@@ -111,8 +110,7 @@ theorem exists_secCoord_of_chart {X : Scheme.{0}} (M : LB X) (hM : M.IsLB) {I : 
     have hc' := congrArg (x.appLE _ _ hT).hom hc
     rw [map_mul, appLE_resG, appLE_resG, appLE_resG] at hc'
     have hjj : (M.pull x).U j ⊓ (M.pull x).U j' ≤ x ⁻¹ᵁ (M.U (j PUnit.unit) ⊓ M.U (j' PUnit.unit)) := by
-      intro y hy
-      exact ⟨pull_U_le_preimage_U M x j _ hy.1, pull_U_le_preimage_U M x j' _ hy.2⟩
+      exact fun y hy => ⟨pull_U_le_preimage_U M x j _ hy.1, pull_U_le_preimage_U M x j' _ hy.2⟩
     simp only [τ, Units.val_mul, res_val_lemma, pullU_val_eq_app, resG_app_eq_appLE, resG_appLE, pull_g_lemma_6 M x j j' hjj]
     exact hc'.symm
   · intro i j h
@@ -159,8 +157,7 @@ theorem secCoord_local : ∀ (X : Scheme.{0}) (M : LB X) (I : Type) (th : I → 
       rw [hV'.range_fromSpec] at h1
       exact h1)
     refine ⟨Γ(X, V), inferInstance, hV'.fromSpec, v, inferInstance, ?_, hv⟩
-    rw [hV'.range_fromSpec]
-    exact hpV
+    rwa [hV'.range_fromSpec]
 
 end GlobalTheory.ZM.LocalCoord
 end

@@ -105,8 +105,7 @@ theorem locVac_span_classes_indep : ∀ (L : Type) [Field L] [CharZero L] [Value
   · have hb : (fun c : Matrix (Fin n') (Fin n) L ⧸ Λ => Submodule.span ℂ {ρ c.out s}) = fun _ => ⊥ := by
       funext c; rw [hs, map_zero, Submodule.span_singleton_eq_bot]
     rw [hb, iSupIndep_def]
-    intro i
-    exact disjoint_bot_left
+    exact fun i => disjoint_bot_left
   have hnz : ∀ x, ρ x s ≠ 0 := by
     intro x h0
     have := congrArg (fun f => f s) (hρ (-x) x)
@@ -125,8 +124,7 @@ theorem locVac_span_classes_indep : ∀ (L : Type) [Field L] [CharZero L] [Value
     (fun y => ρ y.out s) (fun y u => heig s hvac y.out u u.2) I
     (by
       intro y _ y' _ hyy
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       apply hyy
       have hm := hdist y.out y'.out (fun u hu => hcon ⟨u, hu⟩)
       rw [hΛ] at hm

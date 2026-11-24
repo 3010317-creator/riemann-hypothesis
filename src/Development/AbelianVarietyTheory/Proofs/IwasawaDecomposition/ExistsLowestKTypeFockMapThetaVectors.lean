@@ -150,8 +150,7 @@ theorem invT_conj {k : Matrix (Fin m) (Fin m) ℂ} (hk : k ∈ Matrix.unitaryGro
     ((k.map star)⁻¹)ᵀ = k := by
   have h : kᵀ * k.map star = 1 := by
     have := congrArg Matrix.transpose (Unitary.star_mul_self_of_mem hk)
-    rw [Matrix.transpose_mul, Matrix.transpose_one] at this
-    exact this
+    rwa [Matrix.transpose_mul, Matrix.transpose_one] at this
   rw [Matrix.inv_eq_left_inv h, Matrix.transpose_transpose]
 
 theorem mem_K_allPos {u : Matrix (Fin m) (Fin m) ℂ} (hu : u ∈ Matrix.unitaryGroup (Fin m) ℂ) :
@@ -376,8 +375,7 @@ theorem exists_ioP : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type
     obtain ⟨a, b⟩ := hact u hu 1 (one_mem _) fun τ => by rw [congrFun e τ]; exact one_mem_K
     rw [← h1 u hu a x w]
     have := b (io x w)
-    rw [e] at this
-    exact this
+    rwa [e] at this
   · have hs := GlobalTheory.PointAtPlaceHom.atTau_spec hθ (Wc D i) τ (conj_mem_UH (R.MW i (sg0 D A)) τ hk)
     have e : (fun ρ => (R.MW i (sg0 D A)).fr ρ * compAt R.θ ρ (Formalism.L2.Theta.mt (Wc D i)
         (atTau R.θ (Wc D i) τ (((R.MW i (sg0 D A)).fr τ)⁻¹ * k * (R.MW i (sg0 D A)).fr τ))) *
@@ -401,8 +399,7 @@ theorem exists_ioP : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type
       · rw [Pi.mulSingle_eq_of_ne h]; exact one_mem_K
     rw [← h2 τ k hk v u hu w]
     have := b (io (PiTensorProduct.tprod ℂ v) w)
-    rw [e, e'] at this
-    exact this
+    rwa [e, e'] at this
 
 end GlobalTheory.JointHarm
 
