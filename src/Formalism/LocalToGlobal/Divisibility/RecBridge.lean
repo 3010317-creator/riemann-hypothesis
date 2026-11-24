@@ -684,6 +684,10 @@ def Compl3 (L : SizeData₂ D) (Z : DivX D) (Csz C : ℝ) : Prop :=
     (hExpl6 D L Z Csz u' + (∑ t : D.host.TT, (L.aT t : ℝ)) * Real.log ((D.mem u').A.T : ℝ))| ≤
     C * ((D.host.TT.card : ℝ) * L.sc.a * L.La + (D.R.m : ℝ) * L.B0)
 
+/-- Assembles the per-scale divisibility link `LinkDIV_at L C Cabs CH` from the per-word bounds
+`WordFacts`, the frame-number bound `FrameNumberBound`, the `g`-place and off-`g` energy bounds
+`adm11` (rewriting `∏ g ∈ L.gTypes, g = g 0 * g 1` via `prod_gTypes`), the complement count bound
+`adm13`, rationality of `Bu`, fullness of the common lattice `RR`, and `ZeroAbove`. -/
 theorem linkDIV_at_words (L : SizeData₂ D) (Z : DivX D) (Csz C Cabs CH : ℝ)
     (hh : ∀ u, D.div.h u = hExpl6 D L Z Csz u) (hW : ∀ u, WordFacts L C Cabs u) (h5 : Compl3 L Z Csz C)
     (hH : Formalism.MainNotions.LocalQuadraticParts.FrameNumberBound D L Z Csz CH) (h11 : Formalism.MainNotions.LocalQuadraticParts.adm11 D L C) (h13 : Formalism.MainNotions.LocalQuadraticParts.adm13 D)
@@ -936,6 +940,9 @@ structure BridgeRowsF {eps : ℝ} (Fm : FamP eps) (Rw : Σ' x0 : ℝ, ∀ x, Fm.
   rr : ∃ x0 : ℝ, ∀ x ≥ x0, ∀ i : Fm.Ix x, (Fm.D x i).RRFull
   la : ∃ x0 : ℝ, ∀ x ≥ x0, ∀ i : Fm.Ix x, 0 ≤ (Fm.L x i).La
 
+/-- Family-level divisibility bridge: combines the row-face package `BridgeRowsF` across all
+large scales `x` and indices `i : Fm.Ix x` to produce `LinkDIVt Fm Cabs CH`, taking the maximum
+of the component thresholds and applying `linkDIV_at_words` at each `(x, i)`. -/
 theorem linkDIVt_of_rowsF {eps : ℝ} (Fm : FamP eps)
     (Rw : Σ' x0 : ℝ, ∀ x, Fm.x1 < x → x0 ≤ x → ∀ i : Fm.Ix x, DivisionRowsFace (Fm.L x i)) (Cabs CH : ℝ)
     (B : BridgeRowsF Fm Rw Cabs CH) : LinkDIVt Fm Cabs CH := by
