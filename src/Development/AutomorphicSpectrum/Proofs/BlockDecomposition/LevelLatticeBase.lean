@@ -466,20 +466,6 @@ namespace GlobalTheory.CompanionTheory.LatVal
 
 variable {W B : Type} [CommRing W] [CommRing B] [Algebra ℚ B] (f : W →+* B) (ξ : W) (l M : ℕ)
 
-theorem f_mem_IB : f ξ ∈ Lat.IB f ξ := Ideal.subset_span (Set.mem_singleton _)
-
-theorem η_mem_IB : Lat.η f ξ l M ∈ Lat.IB f ξ := by
-  unfold Lat.η
-  rw [Algebra.smul_def]
-  exact Ideal.mul_mem_left _ _ (f_mem_IB f ξ)
-
-theorem dpE_succ_mem_IB (i : ℕ) : Lat.dpE f ξ l M (i + 1) ∈ Lat.IB f ξ := by
-  unfold Lat.dpE
-  rw [Algebra.smul_def]
-  exact Ideal.mul_mem_left _ _ (Ideal.pow_mem_of_mem _ (η_mem_IB f ξ l M) _ (Nat.succ_pos i))
-
-theorem dpE_zero_eq : Lat.dpE f ξ l M 0 = 1 := by simp [Lat.dpE]
-
 theorem exists_rep_B (x : B) (hx : x ∈ Lat.sub f ξ l M) : ∃ a : W, x - f a ∈ Lat.IB f ξ := by
   apply GlobalTheory.CompanionTheory.LatPrime.exists_sub_mem_IB <;> assumption
 
@@ -497,7 +483,7 @@ theorem mem_of_dvd {a b : W} {x y : Lat.A f ξ l M}
   have hI : y - Lat.ofW f ξ l M c * x ∈ Lat.I f ξ l M := by
     show Lat.ι f ξ l M (y - Lat.ofW f ξ l M c * x) ∈ Lat.IB f ξ
     have h1 : f (b - a * c) ∈ Lat.IB f ξ := by
-      rw [hd, map_mul]; exact Ideal.mul_mem_right _ _ (f_mem_IB f ξ)
+      rw [hd, map_mul]; exact Ideal.mul_mem_right _ _ (GlobalTheory.CompanionTheory.LatPrime.f_mem_IB f ξ)
     have h2 := Ideal.add_mem _ (Ideal.sub_mem _ hy (Ideal.mul_mem_left _ (f c) hx)) h1
     have e : Lat.ι f ξ l M (y - Lat.ofW f ξ l M c * x)
         = Lat.ι f ξ l M y - f b - f c * (Lat.ι f ξ l M x - f a) + f (b - a * c) := by
