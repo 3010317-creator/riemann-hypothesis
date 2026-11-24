@@ -701,7 +701,7 @@ theorem nineFree_of_use :
     ReciprocityTheory.ChartRestriction.G.Geo.ArithIntersectionSystemStatement → PositivityTheory.MbHsUse.HSUse → ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.MoriwakiBigStatement → ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement → Prov.ZhangDimensionPushDownGrassmannianHeightBounds := by
   intro hI hU hBig hRes
   obtain ⟨-, -, -, -, hZ, hD⟩ := GlobalTheory.CompanionTheory.Ar.Giv.hsLinks_of_use hU hBig
-  exact ⟨hZ, hD, trivial, _root_.GlobalTheory.CompanionTheory.Ar.Giv.pushDown hI, GlobalTheory.CompanionTheory.Ar.Giv.grassmannian_height_bound_of_systems hI hU hBig hRes⟩
+  exact ⟨hZ, hD, trivial, trivial, GlobalTheory.CompanionTheory.Ar.Giv.grassmannian_height_bound_of_systems hI hU hBig hRes⟩
 
 end GlobalTheory.CompanionTheory.Ar.Link
 end -- clump:auto
