@@ -71,15 +71,28 @@ variable {N A}
 
 theorem Tm.of_unr {w : PlE H} {y : A.LP w} (h : A.unr y) : Tm N A y := fun σ hσ _ => ((A.unr_iff_ine y).1 h).2 σ hσ
 
-theorem Sqf.of_unr {w : PlE H} {y : A.LP w} (h : A.unr y) : Sqf N A y := fun γ hγ z hz => by
-  rw [((A.unr_iff_ine y).1 h).2 γ hγ.1] at hz
-  have h1 : ((X - 1 : ℂ[X]) ^ A.lpDim y).IsRoot z := (rootMultiplicity_pos'.1 (lt_of_lt_of_le (thr_pos w) hz)).2
+/-- Positive multiplicity in a power of the unramified characteristic polynomial
+forces the root to be one. -/
+theorem eq_one_of_rootMultiplicity_X_sub_one_pos {n : ℕ} {z : ℂ}
+    (hz : 0 < ((X - 1 : ℂ[X]) ^ n).rootMultiplicity z) : z = 1 := by
+  have h1 : ((X - 1 : ℂ[X]) ^ n).IsRoot z := (rootMultiplicity_pos'.1 hz).2
   have h2 : z - 1 = 0 := by
     simp only [IsRoot, eval_pow, eval_sub, eval_X, eval_one] at h1
     exact pow_eq_zero_iff (by rintro e; rw [e] at h1; simp at h1) |>.1 h1
-  rw [sub_eq_zero.1 h2, one_pow]
+  exact sub_eq_zero.1 h2
+
+theorem Sqf.of_unr {w : PlE H} {y : A.LP w} (h : A.unr y) : Sqf N A y := fun γ hγ z hz => by
+  rw [((A.unr_iff_ine y).1 h).2 γ hγ.1] at hz
+  rw [eq_one_of_rootMultiplicity_X_sub_one_pos (lt_of_lt_of_le (thr_pos w) hz), one_pow]
 
 theorem Nc.of_unr {w : PlE H} {y : A.LP w} (h : A.unr y) : Nc N A y := ⟨.of_unr h, A.unr_mono0 y h, .of_unr h⟩
+
+/-- Outside the `Nc` locus the unramified guard is false as well, so the
+transported relation imposes only equality of dimensions. -/
+theorem RelW.iff_dim_of_not_nc {w : PlE H} {x y : A.LP w} (hy : ¬ Nc N A y) :
+    RelW N A x y ↔ A.lpDim x = A.lpDim y :=
+  ⟨fun k => k.dim, fun hd => ⟨hd, fun hu => (hy (Nc.of_unr hu)).elim,
+    fun hc => (hy hc).elim, fun hc => (hy hc).elim⟩⟩
 
 theorem tm_tw {w : PlE H} (y : A.LP w) (s : ℝ) : Tm N A (A.lpTw y s) ↔ Tm N A y :=
   forall₂_congr fun σ hσ => by rw [A.inePol_tw _ _ σ hσ, A.lpDim_tw]

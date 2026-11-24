@@ -76,6 +76,9 @@ def SqW (y : WD h) : Prop :=
 
 def NcW (y : WD h) : Prop := TmW y ∧ y.mono0 ∧ SqW y
 
+/-- Guarded local compatibility: dimension equality is unconditional;
+class equality requires an unramified target, while the inertia and monodromy
+conclusions require `NcW` of the target. -/
 structure Aw (x y : WD h) : Prop where
   dim : x.lpDim = y.lpDim
   unr : y.unr → x = y
