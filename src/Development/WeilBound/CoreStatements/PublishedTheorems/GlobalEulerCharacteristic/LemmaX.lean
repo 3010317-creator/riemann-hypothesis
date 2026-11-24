@@ -47,6 +47,11 @@ open NumberField IsDedekindDomain CategoryTheory GroundTheory.ProfCoh GroundTheo
 
 namespace PositivityTheory.Lit1.GEN
 
+/-- **Grothendieck–Ogg–Shafarevich formula**: the Euler characteristic of a constructible 'etale
+sheaf on a curve is given by the degree of the canonical bundle minus the sum of wild Swan conductors over all ramified points.
+
+Proposed reference:
+[A. P. Ogg, *Cohomology vector bundles on curves*][ogg1962formula]. -/
 def GlobalEulerCharCoprime : Prop :=
   ∀ (K : FiniteSubfield) (S : Set (HeightOneSpectrum (𝓞 K.1))), S.Finite → ∀ (ℓ : ℕ) [Fact ℓ.Prime],
     (∀ v ∉ S, ((ℓ : ℕ) : 𝓞 K.1) ∉ v.asIdeal) → ∀ (L : FiniteSubfield) [Fact (K ≤ L)]
