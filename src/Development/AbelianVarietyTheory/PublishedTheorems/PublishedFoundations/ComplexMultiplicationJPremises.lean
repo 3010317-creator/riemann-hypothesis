@@ -77,6 +77,11 @@ def IsIdealLattice (𝔞 : (FractionalIdeal (𝓞 K)⁰ K)ˣ) (L : PeriodPair) :
 
 end Defs
 
+/-- **Deuring's criterion for complex multiplication**: the $j$-invariant of an elliptic
+curve with complex multiplication by an imaginary quadratic order generates the ring class field.
+
+Proposed reference:
+[M. Deuring, *Die Typen der Multiplikatorenringe elliptischer Funktionenk\"orper*][deuring1941cm]. -/
 def ComplexMultiplicationJSt : Prop :=
   ∀ (K : Type) [Field K] [NumberField K] [IsTotallyComplex K] [Algebra K ℂ],
     Module.finrank ℚ K = 2 →
