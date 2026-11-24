@@ -1,0 +1,31 @@
+name: module paths
+
+# Module paths stay portable: ASCII letters, digits and `_` in every component (#179). A path
+# with `₂` in it breaks checkouts and tools on some systems. The check reads file names and
+# the member names recorded in clump files; it builds nothing.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - src/**
+      - scripts/portable-paths.py
+      - .github/workflows/module-paths.yml
+  pull_request:
+    paths:
+      - src/**
+      - scripts/portable-paths.py
+      - .github/workflows/module-paths.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  portable:
+    name: Module paths are portable
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Check the module names under src/
+        run: python3 scripts/portable-paths.py check
