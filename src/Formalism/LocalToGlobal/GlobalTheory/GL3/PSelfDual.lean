@@ -35,6 +35,10 @@ namespace CS
 theorem s_sq : (D.host.sqd) ^ 2 = -(D.host.d : D.host.E) :=
   D.host.sqd_sq
 
+theorem K_repr (x : D.host.E) (hx : x ∈ D.host.K) :
+    ∃ p q : ℚ, x = (p : D.host.E) + (q : D.host.E) * D.host.sqd :=
+  Formalism.L2.Ker.Cd.IntegralLatticeDensity.CS.K_repr (Formalism.L2.Ker.Car.ofRec D) x hx
+
 theorem embedding_sqrt_neg_d : D.host.φ₀ (D.host.sqd) = Complex.I * (Real.sqrt D.host.d : ℂ) :=
   D.host.φ₀_mem
 
