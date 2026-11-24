@@ -255,7 +255,7 @@ theorem c_bounds (hX : X.Hyp p K) (h41 : ∀ t ∈ X.F.TT, (9 / 10 : ℝ) * (X.d
           ring
   linarith [hdeg.1, h41y]
 
-theorem Bdeg_bounds (hX : X.Hyp p K) (hk : 1088 ≤ X.Ck)
+theorem Bdeg_bounds (hX : X.Hyp p K)
     (h41 : ∀ t ∈ X.F.TT, (9 / 10 : ℝ) * (X.deg t : ℝ) ≤ (X.a' p K t : ℝ))
     (j : ℤ) (b : ℤ → ℕ) (hA : X.AdmLL p K j b) (x : ℤ) (hx : x ∈ X.F.letters j) (hlt : x < X.F.fr j 0) :
     (X.a' p K (posOf n' x) : ℝ) / (p : ℝ) ^ (X.F.dist j x + X.Rj p K j) - 2 * Dat.k (r := r) K * (X.Ns : ℝ) ≤
