@@ -47,6 +47,14 @@ noncomputable section
 
 namespace GlobalTheory.Published
 
+/-- **Classification of Discrete Series Representations for Unitary Groups**.
+
+Every irreducible discrete series representation of the unitary group $U(p, q)$ is determined up to
+equivalence by its Harish-Chandra parameter $\lambda$. Moreover, each discrete series representation
+admits a unique minimal $K$-type given by Blattner's formula $\mu = \lambda + \rho_n - \rho_c$, and every
+other $K$-type occurring in the representation is obtained by adding non-compact roots.
+
+Reference: [knapp1986], Chapter IX. -/
 def DiscreteSeriesClassification : Prop :=
   ∀ n : ℕ, ∃ (H : (Fin n → Bool) → (Fin n → ℝ) → Type) (_ : ∀ ε lam, NormedAddCommGroup (H ε lam))
     (_ : ∀ ε lam, InnerProductSpace ℂ (H ε lam))
