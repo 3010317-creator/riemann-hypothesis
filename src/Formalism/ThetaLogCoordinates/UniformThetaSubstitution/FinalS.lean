@@ -407,7 +407,7 @@ theorem FirstDeriv_of (hL : LawSymm) : FirstDeriv := by
   exact LogarithmEquivalence.integral_mul' (integral_single_log_derivative hp hnp 0) hI
 
 open GramFrameCompositionLinFacts MvPowerSeries in
-theorem CobLin_of (_hL : LawSymm) : CobLin := by
+theorem CobLin_of : CobLin := by
   intro K _ _ _ p _ _ F hF G hG hS
   obtain ⟨hF0, -, -⟩ := hF
   obtain ⟨hD0, hDi⟩ := hS
@@ -1904,10 +1904,10 @@ theorem lemmaTwo : LemmaTwo := LemmaTwo_of lemmaOne _root_.Formalism.InvariantFa
 theorem lamModule : LamModule := LamModule_of _root_.Formalism.InvariantFactorPaths.G7.dwork_multivariable
 theorem zeroCondition : StepZero := StepZero_of lamModule simeqRules _root_.Formalism.InvariantFactorPaths.G7.formal_law_symmetric
 theorem firstDeriv : FirstDeriv := FirstDeriv_of _root_.Formalism.InvariantFactorPaths.G7.formal_law_symmetric
-theorem cobLin : CobLin := CobLin_of _root_.Formalism.InvariantFactorPaths.G7.formal_law_symmetric
+theorem cobLin : CobLin := CobLin_of
 theorem stepI : StepI := StepI_of lemmaOne firstDeriv cobLin
 theorem stepII : StepII := StepII_of _root_.Formalism.InvariantFactorPaths.G7.dwork_multivariable _root_.Formalism.InvariantFactorPaths.G7.divided_derivative deIntegral _root_.Formalism.InvariantFactorPaths.G7.formal_law_symmetric
-theorem stepH : StepH := StepH_of lemmaTwo _root_.Formalism.InvariantFactorPaths.G7.swap_rules _root_.Formalism.InvariantFactorPaths.G7.formal_law_symmetric
+theorem stepH : StepH := StepH_of lemmaTwo _root_.Formalism.InvariantFactorPaths.G7.swap_rules
 theorem stepIV : StepIV := StepIV_of _root_.Formalism.InvariantFactorPaths.G7.dwork_multivariable
 theorem betaIsG : BetaIsG :=
   BetaIsG_of zeroCondition stepI stepII stepH _root_.Formalism.InvariantFactorPaths.G7.c_add_sigma_c_eq_zero stepIV _root_.Formalism.InvariantFactorPaths.G7.swap_rules simeqRules
