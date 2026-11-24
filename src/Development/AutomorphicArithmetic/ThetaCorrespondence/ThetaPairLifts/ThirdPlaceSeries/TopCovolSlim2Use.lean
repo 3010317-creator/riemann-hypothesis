@@ -280,7 +280,7 @@ theorem FubiniStudyChowHeightFormula₂.fubiniStudyChowHeight_of_arExists (hE : 
       (fun u hu => hg u ((hf.zero_iff u).1 hu)), ?_⟩⟩
     rintro ⟨c, rfl⟩ u hu
     rw [map_mul, (hf.zero_iff u).2 hu, zero_mul]
-  have hMH : IsMultiHomog δ f := by
+  have hMH : GroundTheory.Heights₂.Heights.IsMultiHomog δ f := by
     intro d hd
     have h : ∀ b, ∑ j : Fin (N + 1), d (b, j) = δ := hf.homog d (MvPolynomial.mem_support_iff.2 hd)
     funext b
