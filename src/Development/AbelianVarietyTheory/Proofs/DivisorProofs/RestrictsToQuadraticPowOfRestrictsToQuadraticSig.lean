@@ -64,7 +64,7 @@ theorem sig_invol {σ : E →ₐ[F] E} (h : IsCMExt F E σ) (x : E) : σ (σ x) 
 
 theorem sig_ne {σ : E →ₐ[F] E} (h : IsCMExt F E σ) : ∃ x, σ x ≠ x := by
   by_contra hc
-  push_neg at hc
+  push Not at hc
   obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := ⟨(IsAlgClosed.lift (R := ℚ) (M := ℂ) (S := E)).toRingHom⟩
   have hr : NumberField.ComplexEmbedding.IsReal τ := by
     ext x
@@ -130,7 +130,7 @@ theorem exists_isEtaF {σ : E →ₐ[F] E} (h : IsCMExt F E σ) :
     ∃ η : (AF F)ˣ →* Circle, Formalism.IndefR.DatumF.IsEtaF E η := by
   obtain ⟨a, ha⟩ : ∃ a, a ∉ normGrp F E := by
     by_contra hc
-    push_neg at hc
+    push Not at hc
     exact normGrp_ne_top h (eq_top_iff.2 fun a _ => hc a)
   obtain ⟨η, h1, h2⟩ := GlobalTheory.VolHeckeCompare.exists_char_of_not_mem _ (sq_mem_normGrp h) a ha
   refine ⟨η, ?_, fun b => h1 (Subgroup.mem_sup_left ⟨b, rfl⟩), fun x => h1 (Subgroup.mem_sup_right ⟨x, rfl⟩),
