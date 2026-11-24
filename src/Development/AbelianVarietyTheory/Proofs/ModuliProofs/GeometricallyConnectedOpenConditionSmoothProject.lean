@@ -90,7 +90,7 @@ theorem preconnectedSpace_of_line {R F : Type} [CommRing R] [Field F]
     {f' : X' ⟶ Spec (CommRingCat.of F)} (h : IsPullback π f' f (Spec.map (CommRingCat.ofHom g)))
     (v : Fin P.a → F) (hv : ∀ w, (P.D₀.map g).mulVec w = 0 → ∃ c : F, w = c • v) :
     PreconnectedSpace X' :=
-  _root_.GlobalTheory.ConnSpread.preconnectedSpace_of_line P h v hv
+  _root_.GlobalTheory.AlgGroup.preconnectedSpace_of_line P h v hv
 
 theorem exists_nonempty_fibre {R K : Type} [CommRing R] [Field K] {Z Z₀ : Scheme.{0}} (s : Z ⟶ Sp R)
     (hs : IsOpenMap s) (x : R →+* K) {π : Z₀ ⟶ Z} {q : Z₀ ⟶ Sp K} (h : π ≫ s = q ≫ spMap x) (z : Z₀) :
