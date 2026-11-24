@@ -83,8 +83,7 @@ theorem prim_reflect {M : ℕ} [NeZero M] (ψ : DirichletCharacter ℂ M) (hψ :
 /-- Right-half-plane nonvanishing for all Dirichlet characters forces all zeros in the
 open critical strip onto the critical line. A zero to the left is first reduced to a
 primitive character and then reflected into the right half-plane. -/
-theorem strip (h : HalfPlane) : Strip := by
-  unfold HalfPlane at h
+theorem strip (h : DirichletLNonvanishingRightOfHalf) : DirichletLZerosOnLine := by
   intro N _ χ s hs0 hs1 hz
   have hs : s ≠ 1 := fun e => by rw [e, Complex.one_re] at hs1; exact lt_irrefl _ hs1
   have hs0' : s ≠ 0 := fun e => by rw [e, Complex.zero_re] at hs0; exact lt_irrefl _ hs0
@@ -102,7 +101,7 @@ theorem strip (h : HalfPlane) : Strip := by
 /-- Specialize the strip result to the character of modulus one. Outside the open
 critical strip, use zeta nonvanishing for real part at least one and the classification
 of zeros for nonpositive real part. -/
-theorem zeta (h : HalfPlane) : Zeta := by
+theorem zeta (h : DirichletLNonvanishingRightOfHalf) : RiemannZetaZerosOnLine := by
   intro s hz htriv _
   by_cases hpos : 0 < s.re
   · by_cases hlt : s.re < 1
