@@ -601,10 +601,8 @@ theorem bmA_prod_update_sub {n : ℕ} (g : Fin n → A) (k : Fin n) (a b : A) :
     | succ k => rw [bmA_prod_update_succ, bmA_prod_update_succ, bmA_prod_update_succ, ih, mul_sub]
 
 theorem bmA_prod_update_zero' {n : ℕ} (g : Fin n → A) (k : Fin n) :
-    (List.ofFn (Function.update g k 0)).prod = 0 := by
-  have := bmA_prod_update_sub g k 0 0
-  rw [sub_self, sub_self] at this
-  exact this
+    (List.ofFn (Function.update g k 0)).prod = 0 :=
+  List.prod_eq_zero (List.mem_ofFn.2 ⟨k, Function.update_self ..⟩)
 
 theorem bmA_two (c X Y : A) (hX : c * X = X * c) (hY : c * Y = Y * c) (P Q : Prop) [Decidable P] [Decidable Q] :
     ((if P then c else 0) - X) * ((if Q then c + 1 else 0) - Y) -
@@ -742,16 +740,7 @@ theorem bmA_Pi_zero (E : Fin n → Fin n → Module.End R M) (u : ℤ)
     (h2 : ∀ x : Module.End R M, x + x = 0 → x = 0) (β : Fin n → Fin n) (k l : Fin n) (hkl : k ≠ l)
     (hβ : β k = β l) : bmPi E u β = 0 := by
   have h := bmA_Pi_perm E u hE h2 (Equiv.swap k l) β
-  have e : β ∘ Equiv.swap k l = β := by
-    funext x
-    simp only [Function.comp_apply]
-    by_cases hx : x = k
-    · subst hx
-      rw [Equiv.swap_apply_left, hβ]
-    · by_cases hx' : x = l
-      · subst hx'
-        rw [Equiv.swap_apply_right, hβ]
-      · rw [Equiv.swap_apply_of_ne_of_ne hx hx']
+  have e : β ∘ Equiv.swap k l = β := by simp [Equiv.comp_swap_eq_update, hβ]
   rw [e, Equiv.Perm.sign_swap hkl] at h
   simp only [Units.val_neg, Units.val_one, neg_smul, one_smul] at h
   apply h2
@@ -763,13 +752,7 @@ theorem bmA_row_zero (E : Fin n → Fin n → Module.End R M) (u : ℤ)
     (hc : c k = c l) :
     ∑ α : Equiv.Perm (Fin n), ((Equiv.Perm.sign α : ℤˣ) : ℤ) • bmM E u (c ∘ α) β = 0 := by
   set S : Module.End R M := ∑ α : Equiv.Perm (Fin n), ((Equiv.Perm.sign α : ℤˣ) : ℤ) • bmM E u (c ∘ α) β with hS
-  have hcs : c ∘ Equiv.swap k l = c := by
-    funext x
-    by_cases h1 : x = k
-    · subst h1; simp [hc]
-    · by_cases h3 : x = l
-      · subst h3; simp [hc]
-      · simp [Equiv.swap_apply_of_ne_of_ne h1 h3]
+  have hcs : c ∘ Equiv.swap k l = c := by simp [Equiv.comp_swap_eq_update, hc]
   have h3 : S = - S := by
     conv_lhs => rw [hS, ← Equiv.sum_comp (Equiv.mulLeft (Equiv.swap k l))]
     rw [hS, ← Finset.sum_neg_distrib]
@@ -1101,11 +1084,8 @@ theorem bmE_comm_apply {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M] 
 
 theorem bmE_eq_zero_of_comp {R σ B : Type*} [CommRing R] [AddCommMonoid B] (w : σ → B)
     (G : MvPolynomial σ R) (h : ∀ β, weightedHomogeneousComponent w β G = 0) : G = 0 := by
-  classical
-  ext d
-  have := congrArg (AddMonoidAlgebra.coeff · d) (h (Finsupp.weight w d))
-  rw [coeff_weightedHomogeneousComponent, if_pos rfl, AddMonoidAlgebra.coeff_zero] at this
-  rw [this, AddMonoidAlgebra.coeff_zero]
+  rw [← finsum_weightedHomogeneousComponent w G]
+  simp [h]
 
 theorem bmE_comp_ne_iff {R σ B : Type*} [CommRing R] [AddCommMonoid B] [DecidableEq B] (w : σ → B)
     (G : MvPolynomial σ R) (β : B) :
@@ -1326,9 +1306,7 @@ theorem bmH_disj {n : ℕ} (L : Fin (n + 1) → ℤ) (μ ν : Fin n → ℤ) (h�
 
 theorem bm_sep {n : ℕ} (lam : Fin n → ℕ) (d : ℕ) (β β' : Fin n → ℤ) (h : bmAdm lam d β) (h' : bmAdm lam d β')
     (hne : β ≠ β') : ∃ u, bmChi lam β u ≠ bmChi lam β' u := by
-  obtain ⟨i, hi⟩ : ∃ i, β i ≠ β' i := by
-    by_contra hc
-    exact hne (funext fun i => by by_contra h''; exact hc ⟨i, h''⟩)
+  obtain ⟨i, hi⟩ := Function.ne_iff.mp hne
   refine ⟨((lam i : ℤ) - β' i) - ((i : ℕ) : ℤ), ?_⟩
   have h0 : bmChi lam β' (((lam i : ℤ) - β' i) - ((i : ℕ) : ℤ)) = 0 := by
     unfold bmChi
@@ -1354,9 +1332,7 @@ theorem bm_list_kills {n : ℕ} (lam sg : Fin n → ℕ) (hI : Interlace (lamZ l
   have hIL := bm_IL_of lam sg hI
   have hcast : ∀ s, ((lam s - sg s : ℕ) : ℤ) = (lam s : ℤ) - (sg s : ℤ) := fun s =>
     Nat.cast_sub (hIL s).1
-  obtain ⟨i, hi⟩ : ∃ i, β i ≠ ((lam i - sg i : ℕ) : ℤ) := by
-    by_contra hc
-    exact hne (funext fun i => by by_contra h''; exact hc ⟨i, h''⟩)
+  obtain ⟨i, hi⟩ := Function.ne_iff.mp hne
   refine ⟨((lam i : ℤ) - β i) - ((i : ℕ) : ℤ), ?_, ?_⟩
   · unfold bmList
     rw [List.mem_flatMap]
@@ -2464,17 +2440,11 @@ theorem bmK_list_mem {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M] (C
     exact hC a _ (ih G hG)
 
 theorem bmK_antitone {n : ℕ} (lam sg : Fin n → ℕ) (hIL : bmIL lam sg) : Antitone sg := by
-  intro i j hij
-  obtain ⟨i, hi⟩ := i
-  obtain ⟨j, hj⟩ := j
-  simp only [Fin.mk_le_mk] at hij
-  induction j, hij using Nat.le_induction with
-  | base => exact le_rfl
-  | succ k hik ih =>
-    have h1 := (hIL ⟨k, by omega⟩).2
-    have h2 := (hIL ⟨k + 1, hj⟩).1
-    rw [bmG_nuNext_of_succ lam ⟨k, by omega⟩ ⟨k + 1, hj⟩ rfl] at h1
-    exact le_trans (le_trans h2 h1) (ih (by omega))
+  refine bmG_antitone sg fun i => ?_
+  have := (hIL i).2
+  unfold nuNext at this ⊢
+  split_ifs at this ⊢
+  exacts [(hIL _).1.trans this, Nat.zero_le _]
 
 def bmW (R : Type*) [CommRing R] (n : ℕ) (lam : Fin n → ℕ) (d : ℕ) : Submodule R (BP R n) :=
   dualWeyl R (n + 1) n lam ⊓ weightedHomogeneousSubmodule R (lastW n) d
