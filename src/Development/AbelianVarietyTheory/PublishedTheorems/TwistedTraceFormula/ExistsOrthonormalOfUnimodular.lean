@@ -401,6 +401,11 @@ namespace GlobalTheory.Published
 
 open GlobalTheory.HermLocal
 
+/-- **Landherr local-global principle for Hermitian forms**: two non-degenerate Hermitian
+forms over a number field are isometric globally if and only if they are isometric over every local completion.
+
+Proposed reference:
+[F. Landherr, *\"Aquivalenzklassen Hermitescher Formen*][landherr1936equivalence]. -/
 def HermitianLocalGlobal : Prop :=
   (∀ (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K],
     (2 : K) ≠ 0 →
