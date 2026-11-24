@@ -78,6 +78,13 @@ Hermitian form `J` of rank `M ≥ 2` over a CM extension `E / F`: if `S` is a fi
 of `F` at which `SU(J)_S` is non-compact, then `SU(J)(F) · SU(J)_S` is dense in `SU(J)(𝔸_F)`.
 
 See [Platonov and Rapinchuk, *Algebraic Groups and Number Theory*, Theorem 7.12][platonovRapinchuk1994]. -/
+/-- **Strong approximation theorem for special unitary groups**: let `G = SU(V)` be a
+special unitary group over a number field `F` such that `G(F_v)` is non-compact for at least
+one archimedean or non-archimedean place `v_0`. Then `G(F)` is dense in the restricted
+adelic group `G(\mathbb{A}^{v_0})`.
+
+Proposed reference:
+[M. Kneser, *Starke Approximation in algebraischen Gruppen. I*][kneser1965]. -/
 def StrongApproxSU : Prop :=
   ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E),
     IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), 2 ≤ M → IsHermND σ J →
